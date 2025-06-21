@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7900C271443;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79077271444;
 	Sat, 21 Jun 2025 19:56:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750535761; cv=none; b=C2Gtk77VRaa3PZJevV8p/dT09JhRFsI0WWCzd4I6G5p8t//QmKO5ykE/sdkG4syLxeAnXWtuItxXAbgjmOBvVcIu7lKE/0HXtdOKwWIHVyzz3oKu3IiuRB+CQYtKUr1bhJNUa6yHts6QUWaudhXNwpVi9HnCHFW69FNGItZ/cqs=
+	t=1750535761; cv=none; b=t4VjhCI2mKvqi6RtV0CPJ6N45VLIF7NrIbQr7nDqL+2DRUiEEY8Yiq+5nwNsJGv+flSdI0Uk117nZCA+c+ZBfyFI0vllvcXhhI0tsLG4nNBWacp+RKOQmNb1exOsgs6zVEhqPHFo8OSeu7Qw36RlyDV/jwPMGJswKX0PvR6ANXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750535761; c=relaxed/simple;
-	bh=XT+7KR3Tg4iAhlUU3c6mKrOGy1MIPvbKyEPBCyZpAmw=;
+	bh=DJWn2NdXSfYMasLzdx/Yi+SRy9LroDQ3ca9CsyiDFIY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H+6DphEkaREz2jTCWTl+RGv9wYyQ2CEb0UkwpuAy8MJUlx4kouPXJ9kYw+mGj1UMW79sqgQydUPYVTLrOVuXsn6rOB8oGQoTaUvXQ0mJ5EM6dvop8RLYhhi0Tofr0qjiOd+uNA/UCiNnubSIbOYRVjedmNlX4sy6LnakVsK3lpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mr9b/2tO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=p9EzdDq7+Ng/eZpT+AZUebk9VasFujhuOsJc8wFl9AA0M5apxlNsQkgBBNPQ7Cowr8wylrLB1a5OJSKyCQk4ag5Cd5RFRfRA6oxs4Twg2jlhI76rJgTt8VDNMB0EGkE9mUIllrFEmfu2S+rzGyjWXHEVnjXD1CB4tX+v77QWcXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxXFEcru; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mr9b/2tO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7949C4CEF5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxXFEcru"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6E7CC4AF0F;
 	Sat, 21 Jun 2025 19:56:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750535761;
-	bh=XT+7KR3Tg4iAhlUU3c6mKrOGy1MIPvbKyEPBCyZpAmw=;
+	bh=DJWn2NdXSfYMasLzdx/Yi+SRy9LroDQ3ca9CsyiDFIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Mr9b/2tONdxjdtQPHr8vCSRa3QhLMe7nFcNBmlW/BSzlQVKiiICG8v3hg/ih/1uD0
-	 /RZ7I0P1SMCIIhXHBK26Q4nyLzWOK9uvbEYLI67eDTxMSxlkL79rhIMjY7FP2vTWRE
-	 GlxyuiViNNjjVzOHyiGxU1xMAUPXRqEWwKq2gyRi65wOwfKWGxPsOrYuMW09i5dfQm
-	 2QX87s7Zc0TQwRYZjaS1tqAL6u2bgGYlowDiJvIP3nCoj1aJB+SJPqRxmrztE4eoAI
-	 VKjxZrDKUu3xdSE85JkVbl3KposaReH0ogsdDwJk+jnN8JexaQmmPPUQovMFRjK8Xc
-	 CZ3JGdYql7xBg==
+	b=jxXFEcrugy1YL8nO4LprIAPvIGOTHSsE4W8YhBNZNBFdAqHcnlzV/KwTNleFa2R62
+	 soRWcHtyqG+Psy/L9r8EVnS0VUz/lArjD9wCcM4L71XehQYBSn8r2bLke6qpQS4Q4I
+	 OJpisPFUAk+UK6ZGZqAP1P4VsYbpXpTHTyK8jw3ao7JDzMkMf3HqB9+1hrXwuZNa0s
+	 fk73T1XxAQ80RCvXWNIP+LjBnyJOC0t43P9tb2w3qrPjBSuvcnHwZFxEKVVLxo6srm
+	 i34Kb+gx6/By/QB0jBkdrdY/uCVxGAFYAurV2nW8NUNUuuAZx2tBpsByXfLBnUihZz
+	 +owtG1foQ2SyQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uT4Ji-00000000e3o-2inP;
+	id 1uT4Ji-00000000e4S-3pCG;
 	Sat, 21 Jun 2025 21:55:58 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -37,9 +37,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Akira Yokosawa" <akiyks@gmail.com>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 04/15] scripts: test_doc_build.py: make capture assynchronous
-Date: Sat, 21 Jun 2025 21:55:43 +0200
-Message-ID: <90999a8bd725a32298000aa64d4e1cff1672ae9a.1750535171.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v2 14/15] docs: conf.py: several coding style fixes
+Date: Sat, 21 Jun 2025 21:55:53 +0200
+Message-ID: <9b642e7063eff6a1d1a6a24bddcabee1fab97a2a.1750535171.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750535171.git.mchehab+huawei@kernel.org>
 References: <cover.1750535171.git.mchehab+huawei@kernel.org>
@@ -49,447 +49,689 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Prepare the tool to allow writing the output into log files.
-For such purpose, receive stdin/stdout messages asynchronously.
+conf.py is missing a SPDX header and doesn't really have
+a proper python coding style. It also has an obsolete
+commented LaTeX syntax that doesn't work anymore.
+
+Clean it up a little bit with some help from autolints
+and manual adjustments.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/test_doc_build.py | 393 +++++++++++++++++++++++++-------------
- 1 file changed, 255 insertions(+), 138 deletions(-)
+ Documentation/conf.py | 354 +++++++++++++++++++++---------------------
+ 1 file changed, 174 insertions(+), 180 deletions(-)
 
-diff --git a/scripts/test_doc_build.py b/scripts/test_doc_build.py
-index 482716fbe91d..94f2f2d8c3b7 100755
---- a/scripts/test_doc_build.py
-+++ b/scripts/test_doc_build.py
-@@ -2,7 +2,7 @@
- # SPDX-License-Identifier: GPL-2.0
- # Copyright(c) 2025: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
- #
--# pylint: disable=C0103,R1715
-+# pylint: disable=R0903,R0913,R0914,R0917
+diff --git a/Documentation/conf.py b/Documentation/conf.py
+index 4ba4ee45e599..e4dde5aa4559 100644
+--- a/Documentation/conf.py
++++ b/Documentation/conf.py
+@@ -1,24 +1,28 @@
+-# -*- coding: utf-8 -*-
+-#
+-# The Linux Kernel documentation build configuration file, created by
+-# sphinx-quickstart on Fri Feb 12 13:51:46 2016.
+-#
+-# This file is execfile()d with the current directory set to its
+-# containing dir.
+-#
+-# Note that not all possible configuration values are present in this
+-# autogenerated file.
+-#
+-# All configuration values have a default; values that are commented out
+-# serve to show the default.
++# SPDX-License-Identifier: GPL-2.0-only
++# pylint: disable=C0103,C0209
++
++"""
++The Linux Kernel documentation build configuration file.
++"""
  
- """
- Install minimal supported requirements for different Sphinx versions
-@@ -10,20 +10,20 @@ and optionally test the build.
- """
+-import sys
+ import os
+-import sphinx
+ import shutil
++import sys
++
++import sphinx
++
++# If extensions (or modules to document with autodoc) are in another directory,
++# add these directories to sys.path here. If the directory is relative to the
++# documentation root, use os.path.abspath to make it absolute, like shown here.
++sys.path.insert(0, os.path.abspath("sphinx"))
++
++from load_config import loadConfig               # pylint: disable=C0413,E0401
++
++# Minimal supported version
++needs_sphinx = "3.4.3"
  
- import argparse
-+import asyncio
- import os.path
- import sys
- import time
+ # Get Sphinx version
+-major, minor, patch = sphinx.version_info[:3]
++major, minor, patch = sphinx.version_info[:3]          # pylint: disable=I1101
+ 
+ # Include_patterns were added on Sphinx 5.1
+ if (major < 5) or (major == 5 and minor < 1):
+@@ -26,23 +30,23 @@ if (major < 5) or (major == 5 and minor < 1):
+ else:
+     has_include_patterns = True
+     # Include patterns that don't contain directory names, in glob format
+-    include_patterns = ['**.rst']
++    include_patterns = ["**.rst"]
+ 
+ # Location of Documentation/ directory
+-doctree = os.path.abspath('.')
++doctree = os.path.abspath(".")
+ 
+ # Exclude of patterns that don't contain directory names, in glob format.
+ exclude_patterns = []
+ 
+ # List of patterns that contain directory names in glob format.
+ dyn_include_patterns = []
+-dyn_exclude_patterns = ['output']
++dyn_exclude_patterns = ["output"]
+ 
+ # Properly handle include/exclude patterns
+ # ----------------------------------------
+ 
++
+ def update_patterns(app):
 -
--from subprocess import run
-+import subprocess
+     """
+     On Sphinx, all directories are relative to what it is passed as
+     SOURCEDIR parameter for sphinx-build. Due to that, all patterns
+@@ -53,15 +57,12 @@ def update_patterns(app):
+     exclude relative patterns that start with "../".
+     """
  
- # Minimal python version supported by the building system
--python_bin = "python3.9"
-+MINIMAL_PYTHON_VERSION = "python3.9"
+-    sourcedir = app.srcdir  # full path to the source directory
+-    builddir = os.environ.get("BUILDDIR")
+-
+     # setup include_patterns dynamically
+     if has_include_patterns:
+         for p in dyn_include_patterns:
+             full = os.path.join(doctree, p)
  
- # Starting from 8.0.2, Python 3.9 becomes too old
--python_changes = {(8, 0, 2): "python3"}
-+PYTHON_VER_CHANGES = {(8, 0, 2): "python3"}
+-            rel_path = os.path.relpath(full, start = app.srcdir)
++            rel_path = os.path.relpath(full, start=app.srcdir)
+             if rel_path.startswith("../"):
+                 continue
  
- # Sphinx versions to be installed and their incremental requirements
--sphinx_requirements = {
-+SPHINX_REQUIREMENTS = {
-     (3, 4, 3): {
-         "alabaster": "0.7.13",
-         "babel": "2.17.0",
-@@ -101,141 +101,258 @@ sphinx_requirements = {
+@@ -71,15 +72,17 @@ def update_patterns(app):
+     for p in dyn_exclude_patterns:
+         full = os.path.join(doctree, p)
+ 
+-        rel_path = os.path.relpath(full, start = app.srcdir)
++        rel_path = os.path.relpath(full, start=app.srcdir)
+         if rel_path.startswith("../"):
+             continue
+ 
+         app.config.exclude_patterns.append(rel_path)
+ 
++
+ # helper
+ # ------
+ 
++
+ def have_command(cmd):
+     """Search ``cmd`` in the ``PATH`` environment.
+ 
+@@ -88,24 +91,23 @@ def have_command(cmd):
+     """
+     return shutil.which(cmd) is not None
+ 
+-# If extensions (or modules to document with autodoc) are in another directory,
+-# add these directories to sys.path here. If the directory is relative to the
+-# documentation root, use os.path.abspath to make it absolute, like shown here.
+-sys.path.insert(0, os.path.abspath('sphinx'))
+-from load_config import loadConfig
+ 
+ # -- General configuration ------------------------------------------------
+ 
+-# If your documentation needs a minimal Sphinx version, state it here.
+-needs_sphinx = '3.4.3'
+-
+-# Add any Sphinx extension module names here, as strings. They can be
+-# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
+-# ones.
+-extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include',
+-              'kfigure', 'sphinx.ext.ifconfig', 'automarkup',
+-              'maintainers_include', 'sphinx.ext.autosectionlabel',
+-              'kernel_abi', 'kernel_feat', 'translations']
++# Add any Sphinx extensions in alphabetic order
++extensions = [
++    "automarkup",
++    "kernel_abi",
++    "kerneldoc",
++    "kernel_feat",
++    "kernel_include",
++    "kfigure",
++    "maintainers_include",
++    "rstFlatTable",
++    "sphinx.ext.autosectionlabel",
++    "sphinx.ext.ifconfig",
++    "translations",
++]
+ 
+ # Since Sphinx version 3, the C function parser is more pedantic with regards
+ # to type checking. Due to that, having macros at c:function cause problems.
+@@ -180,28 +182,28 @@ autosectionlabel_maxdepth = 2
+ # Load math renderer:
+ # For html builder, load imgmath only when its dependencies are met.
+ # mathjax is the default math renderer since Sphinx 1.8.
+-have_latex =  have_command('latex')
+-have_dvipng = have_command('dvipng')
++have_latex = have_command("latex")
++have_dvipng = have_command("dvipng")
+ load_imgmath = have_latex and have_dvipng
+ 
+ # Respect SPHINX_IMGMATH (for html docs only)
+-if 'SPHINX_IMGMATH' in os.environ:
+-    env_sphinx_imgmath = os.environ['SPHINX_IMGMATH']
+-    if 'yes' in env_sphinx_imgmath:
++if "SPHINX_IMGMATH" in os.environ:
++    env_sphinx_imgmath = os.environ["SPHINX_IMGMATH"]
++    if "yes" in env_sphinx_imgmath:
+         load_imgmath = True
+-    elif 'no' in env_sphinx_imgmath:
++    elif "no" in env_sphinx_imgmath:
+         load_imgmath = False
+     else:
+         sys.stderr.write("Unknown env SPHINX_IMGMATH=%s ignored.\n" % env_sphinx_imgmath)
+ 
+ if load_imgmath:
+     extensions.append("sphinx.ext.imgmath")
+-    math_renderer = 'imgmath'
++    math_renderer = "imgmath"
+ else:
+-    math_renderer = 'mathjax'
++    math_renderer = "mathjax"
+ 
+ # Add any paths that contain templates here, relative to this directory.
+-templates_path = ['sphinx/templates']
++templates_path = ["sphinx/templates"]
+ 
+ # The suffix(es) of source filenames.
+ # You can specify multiple suffix as a list of string:
+@@ -209,15 +211,15 @@ templates_path = ['sphinx/templates']
+ source_suffix = '.rst'
+ 
+ # The encoding of source files.
+-#source_encoding = 'utf-8-sig'
++# source_encoding = 'utf-8-sig'
+ 
+ # The master toctree document.
+-master_doc = 'index'
++master_doc = "index"
+ 
+ # General information about the project.
+-project = 'The Linux Kernel'
+-copyright = 'The kernel development community'
+-author = 'The kernel development community'
++project = "The Linux Kernel"
++copyright = "The kernel development community"         # pylint: disable=W0622
++author = "The kernel development community"
+ 
+ # The version info for the project you're documenting, acts as replacement for
+ # |version| and |release|, also used in various other places throughout the
+@@ -232,82 +234,86 @@ author = 'The kernel development community'
+ try:
+     makefile_version = None
+     makefile_patchlevel = None
+-    for line in open('../Makefile'):
+-        key, val = [x.strip() for x in line.split('=', 2)]
+-        if key == 'VERSION':
+-            makefile_version = val
+-        elif key == 'PATCHLEVEL':
+-            makefile_patchlevel = val
+-        if makefile_version and makefile_patchlevel:
+-            break
+-except:
++    with open("../Makefile", encoding="utf=8") as fp:
++        for line in fp:
++            key, val = [x.strip() for x in line.split("=", 2)]
++            if key == "VERSION":
++                makefile_version = val
++            elif key == "PATCHLEVEL":
++                makefile_patchlevel = val
++            if makefile_version and makefile_patchlevel:
++                break
++except Exception:
+     pass
+ finally:
+     if makefile_version and makefile_patchlevel:
+-        version = release = makefile_version + '.' + makefile_patchlevel
++        version = release = makefile_version + "." + makefile_patchlevel
+     else:
+         version = release = "unknown version"
+ 
+-#
+-# HACK: there seems to be no easy way for us to get at the version and
+-# release information passed in from the makefile...so go pawing through the
+-# command-line options and find it for ourselves.
+-#
++
+ def get_cline_version():
+-    c_version = c_release = ''
++    """
++    HACK: There seems to be no easy way for us to get at the version and
++    release information passed in from the makefile...so go pawing through the
++    command-line options and find it for ourselves.
++    """
++
++    c_version = c_release = ""
+     for arg in sys.argv:
+-        if arg.startswith('version='):
++        if arg.startswith("version="):
+             c_version = arg[8:]
+-        elif arg.startswith('release='):
++        elif arg.startswith("release="):
+             c_release = arg[8:]
+     if c_version:
+         if c_release:
+-            return c_version + '-' + c_release
++            return c_version + "-" + c_release
+         return c_version
+-    return version # Whatever we came up with before
++    return version  # Whatever we came up with before
++
+ 
+ # The language for content autogenerated by Sphinx. Refer to documentation
+ # for a list of supported languages.
+ #
+ # This is also used if you do content translation via gettext catalogs.
+ # Usually you set "language" from the command line for these cases.
+-language = 'en'
++language = "en"
+ 
+ # There are two options for replacing |today|: either, you set today to some
+ # non-false value, then it is used:
+-#today = ''
++# today = ''
+ # Else, today_fmt is used as the format for a strftime call.
+-#today_fmt = '%B %d, %Y'
++# today_fmt = '%B %d, %Y'
+ 
+ # The reST default role (used for this markup: `text`) to use for all
+ # documents.
+-#default_role = None
++# default_role = None
+ 
+ # If true, '()' will be appended to :func: etc. cross-reference text.
+-#add_function_parentheses = True
++# add_function_parentheses = True
+ 
+ # If true, the current module name will be prepended to all description
+ # unit titles (such as .. function::).
+-#add_module_names = True
++# add_module_names = True
+ 
+ # If true, sectionauthor and moduleauthor directives will be shown in the
+ # output. They are ignored by default.
+-#show_authors = False
++# show_authors = False
+ 
+ # The name of the Pygments (syntax highlighting) style to use.
+-pygments_style = 'sphinx'
++pygments_style = "sphinx"
+ 
+ # A list of ignored prefixes for module index sorting.
+-#modindex_common_prefix = []
++# modindex_common_prefix = []
+ 
+ # If true, keep warnings as "system message" paragraphs in the built documents.
+-#keep_warnings = False
++# keep_warnings = False
+ 
+ # If true, `todo` and `todoList` produce output, else they produce nothing.
+ todo_include_todos = False
+ 
+-primary_domain = 'c'
+-highlight_language = 'none'
++primary_domain = "c"
++highlight_language = "none"
+ 
+ # -- Options for HTML output ----------------------------------------------
+ 
+@@ -315,43 +321,45 @@ highlight_language = 'none'
+ # a list of builtin themes.
+ 
+ # Default theme
+-html_theme = 'alabaster'
++html_theme = "alabaster"
+ html_css_files = []
+ 
+ if "DOCS_THEME" in os.environ:
+     html_theme = os.environ["DOCS_THEME"]
+ 
+-if html_theme == 'sphinx_rtd_theme' or html_theme == 'sphinx_rtd_dark_mode':
++if html_theme in ["sphinx_rtd_theme", "sphinx_rtd_dark_mode"]:
+     # Read the Docs theme
+     try:
+         import sphinx_rtd_theme
++
+         html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+ 
+         # Add any paths that contain custom static files (such as style sheets) here,
+         # relative to this directory. They are copied after the builtin static files,
+         # so a file named "default.css" will overwrite the builtin "default.css".
+         html_css_files = [
+-            'theme_overrides.css',
++            "theme_overrides.css",
+         ]
+ 
+         # Read the Docs dark mode override theme
+-        if html_theme == 'sphinx_rtd_dark_mode':
++        if html_theme == "sphinx_rtd_dark_mode":
+             try:
+-                import sphinx_rtd_dark_mode
+-                extensions.append('sphinx_rtd_dark_mode')
++                import sphinx_rtd_dark_mode            # pylint: disable=W0611
++
++                extensions.append("sphinx_rtd_dark_mode")
+             except ImportError:
+-                html_theme == 'sphinx_rtd_theme'
++                html_theme = "sphinx_rtd_theme"
+ 
+-        if html_theme == 'sphinx_rtd_theme':
+-                # Add color-specific RTD normal mode
+-                html_css_files.append('theme_rtd_colors.css')
++        if html_theme == "sphinx_rtd_theme":
++            # Add color-specific RTD normal mode
++            html_css_files.append("theme_rtd_colors.css")
+ 
+         html_theme_options = {
+-            'navigation_depth': -1,
++            "navigation_depth": -1,
+         }
+ 
+     except ImportError:
+-        html_theme = 'alabaster'
++        html_theme = "alabaster"
+ 
+ if "DOCS_CSS" in os.environ:
+     css = os.environ["DOCS_CSS"].split(" ")
+@@ -359,14 +367,14 @@ if "DOCS_CSS" in os.environ:
+     for l in css:
+         html_css_files.append(l)
+ 
+-if  html_theme == 'alabaster':
++if html_theme == "alabaster":
+     html_theme_options = {
+-        'description': get_cline_version(),
+-        'page_width': '65em',
+-        'sidebar_width': '15em',
+-        'fixed_sidebar': 'true',
+-        'font_size': 'inherit',
+-        'font_family': 'serif',
++        "description": get_cline_version(),
++        "page_width": "65em",
++        "sidebar_width": "15em",
++        "fixed_sidebar": "true",
++        "font_size": "inherit",
++        "font_family": "serif",
+     }
+ 
+ sys.stderr.write("Using %s theme\n" % html_theme)
+@@ -374,104 +382,79 @@ sys.stderr.write("Using %s theme\n" % html_theme)
+ # Add any paths that contain custom static files (such as style sheets) here,
+ # relative to this directory. They are copied after the builtin static files,
+ # so a file named "default.css" will overwrite the builtin "default.css".
+-html_static_path = ['sphinx-static']
++html_static_path = ["sphinx-static"]
+ 
+ # If true, Docutils "smart quotes" will be used to convert quotes and dashes
+ # to typographically correct entities.  However, conversion of "--" to "—"
+ # is not always what we want, so enable only quotes.
+-smartquotes_action = 'q'
++smartquotes_action = "q"
+ 
+ # Custom sidebar templates, maps document names to template names.
+ # Note that the RTD theme ignores this
+-html_sidebars = { '**': ['searchbox.html', 'kernel-toc.html', 'sourcelink.html']}
++html_sidebars = {"**": ["searchbox.html",
++                        "kernel-toc.html",
++                        "sourcelink.html"]}
+ 
+ # about.html is available for alabaster theme. Add it at the front.
+-if html_theme == 'alabaster':
+-    html_sidebars['**'].insert(0, 'about.html')
++if html_theme == "alabaster":
++    html_sidebars["**"].insert(0, "about.html")
+ 
+ # The name of an image file (relative to this directory) to place at the top
+ # of the sidebar.
+-html_logo = 'images/logo.svg'
++html_logo = "images/logo.svg"
+ 
+ # Output file base name for HTML help builder.
+-htmlhelp_basename = 'TheLinuxKerneldoc'
++htmlhelp_basename = "TheLinuxKerneldoc"
+ 
+ # -- Options for LaTeX output ---------------------------------------------
+ 
+ latex_elements = {
+     # The paper size ('letterpaper' or 'a4paper').
+-    'papersize': 'a4paper',
+-
++    "papersize": "a4paper",
+     # The font size ('10pt', '11pt' or '12pt').
+-    'pointsize': '11pt',
+-
++    "pointsize": "11pt",
+     # Latex figure (float) alignment
+-    #'figure_align': 'htbp',
+-
++    # 'figure_align': 'htbp',
+     # Don't mangle with UTF-8 chars
+-    'inputenc': '',
+-    'utf8extra': '',
+-
++    "inputenc": "",
++    "utf8extra": "",
+     # Set document margins
+-    'sphinxsetup': '''
++    "sphinxsetup": """
+         hmargin=0.5in, vmargin=1in,
+         parsedliteralwraps=true,
+         verbatimhintsturnover=false,
+-    ''',
+-
++    """,
+     #
+     # Some of our authors are fond of deep nesting; tell latex to
+     # cope.
+     #
+-    'maxlistdepth': '10',
+-
++    "maxlistdepth": "10",
+     # For CJK One-half spacing, need to be in front of hyperref
+-    'extrapackages': r'\usepackage{setspace}',
+-
++    "extrapackages": r"\usepackage{setspace}",
+     # Additional stuff for the LaTeX preamble.
+-    'preamble': '''
++    "preamble": """
+         % Use some font with UTF-8 support with XeLaTeX
+         \\usepackage{fontspec}
+         \\setsansfont{DejaVu Sans}
+         \\setromanfont{DejaVu Serif}
+         \\setmonofont{DejaVu Sans Mono}
+-    ''',
++    """,
  }
  
+ # Load kerneldoc specific LaTeX settings
+-latex_elements['preamble'] += '''
++latex_elements["preamble"] += """
+         % Load kerneldoc specific LaTeX settings
+-	\\input{kerneldoc-preamble.sty}
+-'''
+-
+-# With Sphinx 1.6, it is possible to change the Bg color directly
+-# by using:
+-#	\definecolor{sphinxnoteBgColor}{RGB}{204,255,255}
+-#	\definecolor{sphinxwarningBgColor}{RGB}{255,204,204}
+-#	\definecolor{sphinxattentionBgColor}{RGB}{255,255,204}
+-#	\definecolor{sphinximportantBgColor}{RGB}{192,255,204}
+-#
+-# However, it require to use sphinx heavy box with:
+-#
+-#	\renewenvironment{sphinxlightbox} {%
+-#		\\begin{sphinxheavybox}
+-#	}
+-#		\\end{sphinxheavybox}
+-#	}
+-#
+-# Unfortunately, the implementation is buggy: if a note is inside a
+-# table, it isn't displayed well. So, for now, let's use boring
+-# black and white notes.
++        \\input{kerneldoc-preamble.sty}
++"""
  
-+class AsyncCommands:
-+    """Excecute command synchronously"""
-+
-+    stdout = None
-+    stderr = None
-+    output = None
-+
-+    async def _read(self, stream, verbose, is_info):
-+        """Ancillary routine to capture while displaying"""
-+
-+        while stream is not None:
-+            line = await stream.readline()
-+            if line:
-+                out = line.decode("utf-8", errors="backslashreplace")
-+                self.output += out
-+                if is_info:
-+                    if verbose:
-+                        print(out.rstrip("\n"))
-+
-+                    self.stdout += out
-+                else:
-+                    if verbose:
-+                        print(out.rstrip("\n"), file=sys.stderr)
-+
-+                    self.stderr += out
-+            else:
-+                break
-+
-+    async def run(self, cmd, capture_output=False, check=False,
-+                  env=None, verbose=True):
-+
-+        """
-+        Execute an arbitrary command, handling errors.
-+
-+        Please notice that this class is not thread safe
-+        """
-+
-+        self.stdout = ""
-+        self.stderr = ""
-+        self.output = ""
-+
-+        if verbose:
-+            print("$ ", " ".join(cmd))
-+
-+        proc = await asyncio.create_subprocess_exec(cmd[0],
-+                                                    *cmd[1:],
-+                                                    env=env,
-+                                                    stdout=asyncio.subprocess.PIPE,
-+                                                    stderr=asyncio.subprocess.PIPE)
-+
-+        # Handle input and output in realtime
-+        await asyncio.gather(
-+            self._read(proc.stdout, verbose, True),
-+            self._read(proc.stderr, verbose, False),
-+        )
-+
-+        await proc.wait()
-+
-+        if check and proc.returncode > 0:
-+            raise subprocess.CalledProcessError(returncode=proc.returncode,
-+                                                cmd=" ".join(cmd),
-+                                                output=self.stdout,
-+                                                stderr=self.stderr)
-+
-+        if capture_output:
-+            if proc.returncode > 0:
-+                print("Error {proc.returncode}", file=sys.stderr)
-+                return ""
-+
-+            return self.output
-+
-+        ret = subprocess.CompletedProcess(args=cmd,
-+                                          returncode=proc.returncode,
-+                                          stdout=self.stdout,
-+                                          stderr=self.stderr)
-+
-+        return ret
-+
-+
-+class SphinxVenv:
-+    """
-+    Installs Sphinx on one virtual env per Sphinx version with a minimal
-+    set of dependencies, adjusting them to each specific version.
-+    """
-+
-+    def __init__(self):
-+        """Initialize instance variables"""
-+
-+        self.built_time = {}
-+        self.first_run = True
-+
-+    async def _handle_version(self, args, cur_ver, cur_requirements, python_bin):
-+        """Handle a single Sphinx version"""
-+
-+        cmd = AsyncCommands()
-+
-+        ver = ".".join(map(str, cur_ver))
-+
-+        if not self.first_run and args.wait_input and args.make:
-+            ret = input("Press Enter to continue or 'a' to abort: ").strip().lower()
-+            if ret == "a":
-+                print("Aborted.")
-+                sys.exit()
-+        else:
-+            self.first_run = False
-+
-+        venv_dir = f"Sphinx_{ver}"
-+        req_file = f"requirements_{ver}.txt"
-+
-+        print(f"\nSphinx {ver} with {python_bin}")
-+
-+        # Create venv
-+        await cmd.run([python_bin, "-m", "venv", venv_dir], check=True)
-+        pip = os.path.join(venv_dir, "bin/pip")
-+
-+        # Create install list
-+        reqs = []
-+        for pkg, verstr in cur_requirements.items():
-+            reqs.append(f"{pkg}=={verstr}")
-+
-+        reqs.append(f"Sphinx=={ver}")
-+
-+        await cmd.run([pip, "install"] + reqs, check=True, verbose=True)
-+
-+        # Freeze environment
-+        result = await cmd.run([pip, "freeze"], verbose=False, check=True)
-+
-+        # Pip install succeeded. Write requirements file
-+        if args.write:
-+            with open(req_file, "w", encoding="utf-8") as fp:
-+                fp.write(result.stdout)
-+
-+        if args.make:
-+            start_time = time.time()
-+
-+            # Prepare a venv environment
-+            env = os.environ.copy()
-+            bin_dir = os.path.join(venv_dir, "bin")
-+            env["PATH"] = bin_dir + ":" + env["PATH"]
-+            env["VIRTUAL_ENV"] = venv_dir
-+            if "PYTHONHOME" in env:
-+                del env["PYTHONHOME"]
-+
-+            # Test doc build
-+            await cmd.run(["make", "cleandocs"], env=env, check=True)
-+            make = ["make"] + args.make_args + ["htmldocs"]
-+
-+            print(f". {bin_dir}/activate")
-+            print(" ".join(make))
-+            print("deactivate")
-+            await cmd.run(make, env=env, check=True)
-+
-+            end_time = time.time()
-+            elapsed_time = end_time - start_time
-+            hours, minutes = divmod(elapsed_time, 3600)
-+            minutes, seconds = divmod(minutes, 60)
-+
-+            hours = int(hours)
-+            minutes = int(minutes)
-+            seconds = int(seconds)
-+
-+            self.built_time[ver] = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
-+
-+            print(f"Finished doc build for Sphinx {ver}. Elapsed time: {self.built_time[ver]}")
-+
-+    async def run(self, args):
-+        """
-+        Navigate though multiple Sphinx versions, handling each of them
-+        on a loop.
-+        """
-+
-+        cur_requirements = {}
-+        python_bin = MINIMAL_PYTHON_VERSION
-+
-+        for cur_ver, new_reqs in SPHINX_REQUIREMENTS.items():
-+            cur_requirements.update(new_reqs)
-+
-+            if cur_ver in PYTHON_VER_CHANGES:          # pylint: disable=R1715
-+
-+                python_bin = PYTHON_VER_CHANGES[cur_ver]
-+
-+            if args.min_version:
-+                if cur_ver < args.min_version:
-+                    continue
-+
-+            if args.max_version:
-+                if cur_ver > args.max_version:
-+                    break
-+
-+            await self._handle_version(args, cur_ver, cur_requirements,
-+                                       python_bin)
-+
-+        if args.make:
-+            print()
-+            print("Summary:")
-+            for ver, elapsed_time in sorted(self.built_time.items()):
-+                print(f"\tSphinx {ver} elapsed time: {elapsed_time}")
-+
-+
- def parse_version(ver_str):
-     """Convert a version string into a tuple."""
+ # Grouping the document tree into LaTeX files. List of tuples
+ # (source start file, target name, title,
+ #  author, documentclass [howto, manual, or own class]).
+ # Sorted in alphabetical order
+-latex_documents = [
+-]
++latex_documents = []
  
-     return tuple(map(int, ver_str.split(".")))
+ # Add all other index files from Documentation/ subdirectories
+-for fn in os.listdir('.'):
++for fn in os.listdir("."):
+     doc = os.path.join(fn, "index")
+     if os.path.exists(doc + ".rst"):
+         has = False
+@@ -480,34 +463,39 @@ for fn in os.listdir('.'):
+                 has = True
+                 break
+         if not has:
+-            latex_documents.append((doc, fn + '.tex',
+-                                    'Linux %s Documentation' % fn.capitalize(),
+-                                    'The kernel development community',
+-                                    'manual'))
++            latex_documents.append(
++                (
++                    doc,
++                    fn + ".tex",
++                    "Linux %s Documentation" % fn.capitalize(),
++                    "The kernel development community",
++                    "manual",
++                )
++            )
+ 
+ # The name of an image file (relative to this directory) to place at the top of
+ # the title page.
+-#latex_logo = None
++# latex_logo = None
+ 
+ # For "manual" documents, if this is true, then toplevel headings are parts,
+ # not chapters.
+-#latex_use_parts = False
++# latex_use_parts = False
+ 
+ # If true, show page references after internal links.
+-#latex_show_pagerefs = False
++# latex_show_pagerefs = False
+ 
+ # If true, show URL addresses after external links.
+-#latex_show_urls = False
++# latex_show_urls = False
+ 
+ # Documents to append as an appendix to all manuals.
+-#latex_appendices = []
++# latex_appendices = []
+ 
+ # If false, no module index is generated.
+-#latex_domain_indices = True
++# latex_domain_indices = True
+ 
+ # Additional LaTeX stuff to be copied to build directory
+ latex_additional_files = [
+-    'sphinx/kerneldoc-preamble.sty',
++    "sphinx/kerneldoc-preamble.sty",
+ ]
  
  
--parser = argparse.ArgumentParser(description="Build docs for different sphinx_versions.")
--
--parser.add_argument('-v', '--version', help='Sphinx single version',
--                    type=parse_version)
--parser.add_argument('--min-version', "--min", help='Sphinx minimal version',
--                    type=parse_version)
--parser.add_argument('--max-version', "--max", help='Sphinx maximum version',
--                    type=parse_version)
--parser.add_argument('-a', '--make_args',
--                    help='extra arguments for make htmldocs, like SPHINXDIRS=netlink/specs',
--                    nargs="*")
--parser.add_argument('-w', '--write', help='write a requirements.txt file',
--                    action='store_true')
--parser.add_argument('-m', '--make',
--                    help='Make documentation',
--                    action='store_true')
--parser.add_argument('-i', '--wait-input',
--                    help='Wait for an enter before going to the next version',
--                    action='store_true')
--
--args = parser.parse_args()
--
--if not args.make_args:
--    args.make_args = []
--
--if args.version:
--    if args.min_version or args.max_version:
--        sys.exit("Use either --version or --min-version/--max-version")
--    else:
--        args.min_version = args.version
--        args.max_version = args.version
--
--sphinx_versions = sorted(list(sphinx_requirements.keys()))
--
--if not args.min_version:
--    args.min_version = sphinx_versions[0]
--
--if not args.max_version:
--    args.max_version = sphinx_versions[-1]
--
--first_run = True
--cur_requirements = {}
--built_time = {}
--
--for cur_ver, new_reqs in sphinx_requirements.items():
--    cur_requirements.update(new_reqs)
--
--    if cur_ver in python_changes:
--        python_bin = python_changes[cur_ver]
--
--    ver = ".".join(map(str, cur_ver))
--
--    if args.min_version:
--        if cur_ver < args.min_version:
--            continue
--
--    if args.max_version:
--        if cur_ver > args.max_version:
--            break
--
--    if not first_run and args.wait_input and args.make:
--        ret = input("Press Enter to continue or 'a' to abort: ").strip().lower()
--        if ret == "a":
--            print("Aborted.")
--            sys.exit()
--    else:
--        first_run = False
--
--    venv_dir = f"Sphinx_{ver}"
--    req_file = f"requirements_{ver}.txt"
--
--    print(f"\nSphinx {ver} with {python_bin}")
--
--    # Create venv
--    run([python_bin, "-m", "venv", venv_dir], check=True)
--    pip = os.path.join(venv_dir, "bin/pip")
--
--    # Create install list
--    reqs = []
--    for pkg, verstr in cur_requirements.items():
--        reqs.append(f"{pkg}=={verstr}")
--
--    reqs.append(f"Sphinx=={ver}")
--
--    run([pip, "install"] + reqs, check=True)
--
--    # Freeze environment
--    result = run([pip, "freeze"], capture_output=True, text=True, check=True)
--
--    # Pip install succeeded. Write requirements file
--    if args.write:
--        with open(req_file, "w", encoding="utf-8") as fp:
--            fp.write(result.stdout)
--
--    if args.make:
--        start_time = time.time()
--
--        # Prepare a venv environment
--        env = os.environ.copy()
--        bin_dir = os.path.join(venv_dir, "bin")
--        env["PATH"] = bin_dir + ":" + env["PATH"]
--        env["VIRTUAL_ENV"] = venv_dir
--        if "PYTHONHOME" in env:
--            del env["PYTHONHOME"]
--
--        # Test doc build
--        run(["make", "cleandocs"], env=env, check=True)
--        make = ["make"] + args.make_args + ["htmldocs"]
--
--        print(f". {bin_dir}/activate")
--        print(" ".join(make))
--        print("deactivate")
--        run(make, env=env, check=True)
--
--        end_time = time.time()
--        elapsed_time = end_time - start_time
--        hours, minutes = divmod(elapsed_time, 3600)
--        minutes, seconds = divmod(minutes, 60)
--
--        hours = int(hours)
--        minutes = int(minutes)
--        seconds = int(seconds)
--
--        built_time[ver] = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
--
--        print(f"Finished doc build for Sphinx {ver}. Elapsed time: {built_time[ver]}")
--
--if args.make:
--    print()
--    print("Summary:")
--    for ver, elapsed_time in sorted(built_time.items()):
--        print(f"\tSphinx {ver} elapsed time: {elapsed_time}")
-+async def main():
-+    """Main program"""
+@@ -516,12 +504,11 @@ latex_additional_files = [
+ # One entry per manual page. List of tuples
+ # (source start file, name, description, authors, manual section).
+ man_pages = [
+-    (master_doc, 'thelinuxkernel', 'The Linux Kernel Documentation',
+-     [author], 1)
++    (master_doc, "thelinuxkernel", "The Linux Kernel Documentation", [author], 1)
+ ]
+ 
+ # If true, show URL addresses after external links.
+-#man_show_urls = False
++# man_show_urls = False
+ 
+ 
+ # -- Options for Texinfo output -------------------------------------------
+@@ -529,11 +516,15 @@ man_pages = [
+ # Grouping the document tree into Texinfo files. List of tuples
+ # (source start file, target name, title, author,
+ #  dir menu entry, description, category)
+-texinfo_documents = [
+-    (master_doc, 'TheLinuxKernel', 'The Linux Kernel Documentation',
+-     author, 'TheLinuxKernel', 'One line description of project.',
+-     'Miscellaneous'),
+-]
++texinfo_documents = [(
++        master_doc,
++        "TheLinuxKernel",
++        "The Linux Kernel Documentation",
++        author,
++        "TheLinuxKernel",
++        "One line description of project.",
++        "Miscellaneous",
++    ),]
+ 
+ # -- Options for Epub output ----------------------------------------------
+ 
+@@ -544,9 +535,9 @@ epub_publisher = author
+ epub_copyright = copyright
+ 
+ # A list of files that should not be packed into the epub file.
+-epub_exclude_files = ['search.html']
++epub_exclude_files = ["search.html"]
+ 
+-#=======
++# =======
+ # rst2pdf
+ #
+ # Grouping the document tree into PDF files. List of tuples
+@@ -558,14 +549,14 @@ epub_exclude_files = ['search.html']
+ # multiple PDF files here actually tries to get the cross-referencing right
+ # *between* PDF files.
+ pdf_documents = [
+-    ('kernel-documentation', u'Kernel', u'Kernel', u'J. Random Bozo'),
++    ("kernel-documentation", "Kernel", "Kernel", "J. Random Bozo"),
+ ]
+ 
+ # kernel-doc extension configuration for running Sphinx directly (e.g. by Read
+ # the Docs). In a normal build, these are supplied from the Makefile via command
+ # line arguments.
+-kerneldoc_bin = '../scripts/kernel-doc.py'
+-kerneldoc_srctree = '..'
++kerneldoc_bin = "../scripts/kernel-doc.py"
++kerneldoc_srctree = ".."
+ 
+ # ------------------------------------------------------------------------------
+ # Since loadConfig overwrites settings from the global namespace, it has to be
+@@ -573,5 +564,8 @@ kerneldoc_srctree = '..'
+ # ------------------------------------------------------------------------------
+ loadConfig(globals())
+ 
 +
-+    parser = argparse.ArgumentParser(description="Build docs for different sphinx_versions.")
+ def setup(app):
+-	app.connect('builder-inited', update_patterns)
++    """Patterns need to be updated at init time on older Sphinx versions"""
 +
-+    parser.add_argument('-v', '--version', help='Sphinx single version',
-+                        type=parse_version)
-+    parser.add_argument('--min-version', "--min", help='Sphinx minimal version',
-+                        type=parse_version)
-+    parser.add_argument('--max-version', "--max", help='Sphinx maximum version',
-+                        type=parse_version)
-+    parser.add_argument('-a', '--make_args',
-+                        help='extra arguments for make htmldocs, like SPHINXDIRS=netlink/specs',
-+                        nargs="*")
-+    parser.add_argument('-w', '--write', help='write a requirements.txt file',
-+                        action='store_true')
-+    parser.add_argument('-m', '--make',
-+                        help='Make documentation',
-+                        action='store_true')
-+    parser.add_argument('-i', '--wait-input',
-+                        help='Wait for an enter before going to the next version',
-+                        action='store_true')
-+
-+    args = parser.parse_args()
-+
-+    if not args.make_args:
-+        args.make_args = []
-+
-+    if args.version:
-+        if args.min_version or args.max_version:
-+            sys.exit("Use either --version or --min-version/--max-version")
-+        else:
-+            args.min_version = args.version
-+            args.max_version = args.version
-+
-+    sphinx_versions = sorted(list(SPHINX_REQUIREMENTS.keys()))
-+
-+    if not args.min_version:
-+        args.min_version = sphinx_versions[0]
-+
-+    if not args.max_version:
-+        args.max_version = sphinx_versions[-1]
-+
-+    venv = SphinxVenv()
-+    await venv.run(args)
-+
-+
-+# Call main method
-+if __name__ == "__main__":
-+    asyncio.run(main())
++    app.connect("builder-inited", update_patterns)
 -- 
 2.49.0
 
