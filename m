@@ -1,91 +1,61 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9639230E83E
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 21:02:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7D01D5ACE;
+	Sat, 21 Jun 2025 21:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750539722; cv=none; b=Wf8r0EAQCZGtl7BKKH892Dbe01/U6GaGZVlxv0N0+IbmCtCQ0lrhrj3NbuPJ5j9bXy9/bfwIk0hExZpvYz+FA8Nm+D8EzqymOxuNnZ1FVd5lgkMufRBiPhnlpUgFS74Po1DSRFxRXYR9Yaifgy+VCErRn5PjOA+lWxxwMfL/cSk=
+	t=1750539890; cv=none; b=e+C7rGXvujqRTNcP7e6fvKxSHVAu01/b54nTcfD3FU487NLqsemJg2szcIENnH5EaAciLrbA1LSn4sYc14tQG6/phtFvoY3A1B5kB8O+mO6Vco3nOBsSFIfZ8uYHZYGSxv/P0TSU45TcKal9gPiydlfoq0o8mamjKwrjFfmvfOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750539722; c=relaxed/simple;
-	bh=CWKocNmJtlgQBDkHUd8H3Y04xz9HO9H7TLpK3RRI7MY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ztd3MJWSkVXx6/BL2znkEwKDde/NZXbdLNO9QZqfWvtNO3vBPUcmTGHk67L5YBe+EyDs7mlYcSmKh0V54eIvagKKZ9RsMMX8O9dK2JbcZkvZIezQ1oOCf9prCGKeRLOaBUp3dsPMWMoAi5vOL3OoV1JNHAaDUmxcJsOtQXJWmYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wIo7Usvd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sY9bux3M; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750539890; c=relaxed/simple;
+	bh=I+H/ACdKPJZiazgKrac5bRP/4sQkTk9nIYPRUqznQ7M=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=TlDv+W7zK5KuI7oPp2ccwd11qz3K5ZNy86Rhcf7hQkPXFCxt62gj8YuJ4a0Jirgoc/KaWcU36wkqGpYefNEwli/K7Lhl1O/RYZCagN91hiJGUU6IgQi8UDyRQF5f+IvpVjVIcd+n5cJK4NFXYs4Ei0l6gzbo4f4zvbPy8wns/oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SHvMKmZC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wIo7Usvd";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sY9bux3M"
-Date: Sat, 21 Jun 2025 23:01:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750539718;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vYscUytm02mG7YCektXYT1S3617896cFR5+QSWvcyE4=;
-	b=wIo7UsvdJcgUMRda0T4t0KB3sOCHJJ3YaDoXJu3UwVG4IkaRyY+dQpRJKgwOtE2BhkzRDz
-	ogUF5BLrhXmmb6GMkom/AqZ+u1jKM5CcrN+KYRSRhpUMg4yEUNrjcAE9lxSv6uv5jBBXFw
-	RhACwT9iJ2ixoOf6ps+PVDGgyomIy9D02ho9Bg0OKZeO60F4AoOw+kUASUVA+TWRA9iWxm
-	mu5V2cV+ul1K+aro2s/b2MeZXktxkvaH1ZP1MCE1idNCRb1v+UM78y4fBPyWAx5XCkb48G
-	eL/NDA2RHwis5RzbnQY8mXiu8Eb5nxHrvHSWLJPy0CphlpP+TE8ym18c932ckg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750539718;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vYscUytm02mG7YCektXYT1S3617896cFR5+QSWvcyE4=;
-	b=sY9bux3MAQdbzLmX0ZtbCrFwBg9wCvrKLAWqX9j50szL7tUlxyDQ73FNnlHNUEaYctBbby
-	3YysM86Rf3OtbXAw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Calvin Owens <calvin@wbinvd.org>
-Cc: linux-kernel@vger.kernel.org, "Lai, Yi" <yi1.lai@linux.intel.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org
-Subject: Re: [tip: locking/urgent] futex: Allow to resize the private local
- hash
-Message-ID: <20250621210157.J4QMzB0C@linutronix.de>
-References: <20250618160333.PdGB89yt@linutronix.de>
- <aFLuDoX9BGBUC3tW@mozart.vkv.me>
- <20250618170924.Z34OXf1E@linutronix.de>
- <aFMoDcWy-OzE3yoV@mozart.vkv.me>
- <aFNCHS-5LLywIAC7@mozart.vkv.me>
- <aFR8EuMg82aMCvjo@mozart.vkv.me>
- <20250620103110.xd5CEFDs@linutronix.de>
- <aFWuwdJUEUD8VcTJ@mozart.vkv.me>
- <aFYEpPIwhlL1WvR0@mozart.vkv.me>
- <aFZeHv72yPGovnRv@mozart.vkv.me>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SHvMKmZC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2130FC4CEE7;
+	Sat, 21 Jun 2025 21:04:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750539890;
+	bh=I+H/ACdKPJZiazgKrac5bRP/4sQkTk9nIYPRUqznQ7M=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=SHvMKmZCkSpZ7VJko/5vLNJI7f1Mc4vSlEVWHE8hQMbJxG9mO4BAaNuayQVytTDzf
+	 NUCx+Z2ansv6KkVCwFAbpl6qVnO8hQLoI/VCnTP0G9nIXtUrcCRbyXBmpfFMYLncAp
+	 L0YMxSU/CYTST4o4L3Bi37qQe7msF4Xkh7yt+QtTOt4RgYbdkOiqGwDwhyz8mIJRdi
+	 BuS/rcy+m/8UkHKdmTmyjRy8P58uZhyf5oS673ayorBKLni5bW1YktdA9DBvYjDP4T
+	 IdqNT6zo/H/ja4zuWBKSStVNdWqdjUH4bBNWPAFfboJ7tmd4Nd8Om10AEWdksfhsyO
+	 OfvvunTqLdwhA==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aFZeHv72yPGovnRv@mozart.vkv.me>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250618121358.503781-10-apatel@ventanamicro.com>
+References: <20250618121358.503781-1-apatel@ventanamicro.com> <20250618121358.503781-10-apatel@ventanamicro.com>
+Subject: Re: [PATCH v6 09/23] clk: Add clock driver for the RISC-V RPMI clock service group
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, Atish Patra <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Anup Patel <apatel@ventanamicro.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Anup Patel <apatel@ventanamicro.com>, Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Rafael J . Wysocki <rafael@kernel.org>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Uwe =?utf-8?q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Date: Sat, 21 Jun 2025 14:04:49 -0700
+Message-ID: <175053988941.4372.15869767607401919839@lazor>
+User-Agent: alot/0.11
 
-On 2025-06-21 00:24:14 [-0700], Calvin Owens wrote:
-> 
-> I went back to the original GCC config, and set up yocto to log what it
-> was doing over /dev/kmsg so maybe we can isolate the trigger.
-> 
-> I got a novel oops this time:
+Quoting Anup Patel (2025-06-18 05:13:44)
+> From: Rahul Pathak <rpathak@ventanamicro.com>
+>=20
+> The RPMI specification defines a clock service group which can be
+> accessed via SBI MPXY extension or dedicated S-mode RPMI transport.
+>=20
+> Add mailbox client based clock driver for the RISC-V RPMI clock
+> service group.
+>=20
+> Co-developed-by: Anup Patel <apatel@ventanamicro.com>
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> Signed-off-by: Rahul Pathak <rpathak@ventanamicro.com>
+> ---
 
-I think I got it:
-
-Could you please try this:
-
-diff --git a/include/linux/futex.h b/include/linux/futex.h
-index 005b040c4791b..b37193653e6b5 100644
---- a/include/linux/futex.h
-+++ b/include/linux/futex.h
-@@ -89,6 +89,7 @@ void futex_hash_free(struct mm_struct *mm);
- static inline void futex_mm_init(struct mm_struct *mm)
- {
- 	RCU_INIT_POINTER(mm->futex_phash, NULL);
-+	mm->futex_phash_new = NULL;
- 	mutex_init(&mm->futex_hash_lock);
- }
- 
-
-Sebastian
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
