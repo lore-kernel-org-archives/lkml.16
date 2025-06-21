@@ -1,138 +1,186 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532981DFF7;
-	Sat, 21 Jun 2025 13:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9391D14658D;
+	Sat, 21 Jun 2025 13:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750510910; cv=none; b=bVHcYNUFZXjjDvUzpCIoZ1VlN6Xcju1SyX/BEVno1gc0zYoMNkQRg5ZcfjUXh9to+xLbIy4sILx8t9tNdBiB36uZ12rs3eQVShqU/nIco7tFFVsbPNO1Yq8ihpAUzT/Y/F2jQSJ1DsAI/OS4PJglg0equMTq0NkNkhzAvPWGM+Y=
+	t=1750511066; cv=none; b=hnw5x9LURy5PDOwLtiRKak9fZHkZq+KOvHWKxBVm8D4ygC9m143ew9BSG/KNg6FBYnkHgUgYFKJYG5lMO6QE1CHhDyqXtNza0F8+4WzJi8bcicGiNgTHO2z4y5xmRlWw6rXI7RMgJexF2T4a3RAkJC+IrzTf5k0MaZOHhg4N4OE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750510910; c=relaxed/simple;
-	bh=UmuaVwVACEk8G368/vsvTByhNseq8/MmDXVCYyOC58Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UNFhVV9hxcsFNPOfPJqQnre6wjvFs/mT7q8Cr64nmKXguSdE32zv84DSwDL+f5o8iRAYlA02Dk717rQdhmBBE7171HncGxoslQO2oFU91NcgCwnKH2rz+y/OBiUfh3dJ8nvNuiuOD8GAmX/3kA+A626ZK9oAJ29jeBcSPBiQqag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IiOjOyn/; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750511066; c=relaxed/simple;
+	bh=6QweQXZQALbbMOaee2zdfPr5OeodNyxqG/Scf710cxs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UOI4psvhqtJbgx6xZ9388Wg9vAr8w7U4mBX7pytb8zDDCIasr+8EATHAD545GBdGeLQGSIEVctt2x8eU/DDc75lBRzR2zSiWCdVokwBwohLndz95RPIYnRn6a8E/ef4Vv19yVKOSLQHho/6FjtkLpohDpa8qS/U7UuaNIH/ohvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TnnenCXF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IiOjOyn/"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-235ea292956so29125665ad.1;
-        Sat, 21 Jun 2025 06:01:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750510909; x=1751115709; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=++Wr/hdHcpVIEXymOHZrBQsfIoJyvz7x05Ev90joOPw=;
-        b=IiOjOyn/3c/ZvdQgUURx2Lv6YPTgGNNh1QtJyFIJdXgSGkkoSQ+kIClLDiuDAS0EEC
-         Fv30LFDTMCLNMIT/RryzSBjHfU7TMPWgr0H7bwLbfJBHrz+EvHGRgz3fWPZFxr/B56Zu
-         kDC463AOLypG0Q8ESdHz5lraeQ9jmf5q+QO3FFWDPoXQYdd4bSZeTCGkeZp+LEdj7XGo
-         d0HTPXzS4zV4A2qp4CXlqqGluN6KSiZKeVpXC3cWLe6V/9l4PSxbexGG3cpcWrowrlW9
-         U0qYXgI5CP8k8c+akGWf9H58C4Y6adWPCRc48DG7hJUWMiU7J22luod/3waMaGb+dWmM
-         NVyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750510909; x=1751115709;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=++Wr/hdHcpVIEXymOHZrBQsfIoJyvz7x05Ev90joOPw=;
-        b=S96mV0ES9x2MhcJcDk6NuzITYy5f9949uALf2uy8hSZCgcLh2tRAOtFA13jusc7tuM
-         na8QrRpBhruyAYuGwDXMP0Cxg9lF7BTfwIgKGEFNYZq0NdEJzL1kox99WYBh5IqYaIwr
-         iOnO/6XBlM59s8nL+b/0VdX0f21gyfJwMdqo3NMt8jKrDI5wvAd28Zqm9Sij8hek9fWX
-         MbuQZJFATo/GHmRhO0lvL1fN6bWPrzsqLU8C2njw4z4t/sql1xoY9Sm6Ra+xQ3XwyajU
-         63QaouYKscpFS04kYPiM/tnqeCrbvZoS+6Et8xAiOH+v/wEIHBgVElodNQIcdKB6UdtX
-         2pOA==
-X-Forwarded-Encrypted: i=1; AJvYcCW5p3jInB7CI9Fo/bCsLp4ILov4rjm0RwN8r7n/vCZqoaSsZRgkoc4A3cpEFZI0KuZrnZ3puUaY28yPACI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhJC//Akt2aQDTxjeFslrZXRDoNWk79mQaatzxtWAWHKluoA6J
-	+ZXQ4vb25/TbR4ZbusrM4nSOQ5953Ri+QWht0bf7QnPpj28Pg+kOGYXq
-X-Gm-Gg: ASbGnctgGsy57Ne2sMERQA0FZ/rg/d2FMLOnlfqNTRiFPhEtNI/Jyd4MtrzkGY3Cfg8
-	QeUWM8VadUZxgVZ2dfN0HN8mvE/eVPM3NrUit3o+yjEtE63kBYwHmqyOTr3c3BaSOK+pihQuK5R
-	LrmzpU8I3iLZOFzNbT5vY3cgGJ8Xo2S/WYvY+zIG3HWxO+J+vlazAPoRnmEiuCtbXFThQDBLyEe
-	w45Gau70MrV5NWIHb3hDOCJjWkz554i4jM9OP5zTa1ESquMhrVHfqgmNVu72kudCKRaFqi9xNkF
-	jv0HrnfEjIFEjpHu0r+JCL3Jzh+h0IIjkV7iAq5cex/UZPVC3IFLG4ZmgxZABrW3ZWnKLvySfII
-	S+WTEpFWY2kBlyHsCNkMqRqYmT1gbOWwE9CrTZY+4/uU6ueMGdQ==
-X-Google-Smtp-Source: AGHT+IHdzUQZnMVQWroq2Y86Ji+WHfkeOg/cc6RKLkTNOoQTQIJHGPYR88ZHTNwdnPBk+xf98vMmoA==
-X-Received: by 2002:a17:902:bb8d:b0:235:ef67:b5a0 with SMTP id d9443c01a7336-237d9a71c36mr64793695ad.36.1750510908606;
-        Sat, 21 Jun 2025 06:01:48 -0700 (PDT)
-Received: from DESKTOP-RD0GVCL.localdomain (124-218-195-161.cm.dynamic.apol.com.tw. [124.218.195.161])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8640ab9sm40575145ad.145.2025.06.21.06.01.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Jun 2025 06:01:48 -0700 (PDT)
-From: LiangCheng Wang <zaq14760@gmail.com>
-Date: Sat, 21 Jun 2025 21:01:34 +0800
-Subject: [PATCH v1 1/1] staging: atomisp: fix coding style in
- ia_css_output.host.c
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TnnenCXF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74F15C4CEF2;
+	Sat, 21 Jun 2025 13:04:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750511066;
+	bh=6QweQXZQALbbMOaee2zdfPr5OeodNyxqG/Scf710cxs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TnnenCXFW7vJf31aTnnfEPGIEs+iB7gwSJD9CNB5PkWHBg36P4o+/B7bmH0uple71
+	 D8diICfZ9o5SHR4v3LXcLuMTv5brc6XHNy1x09RJtnO2kWeOhq0e2qGQw8nk0G2aW5
+	 gaJC3j+yhAtIU8Psio7gCpV8jOVsbXWA+Oy0rgmzkXhNV/riGlnHIe32+5Zyq7IDua
+	 G8bkMIDQiHb2nt+qe1FSI9VzlsLco03TODaOKcQ/2JcP2SdkRGOAglQpMdv9t/fWCL
+	 XidDV5PURr77Wv5Sk8/K4vL2k+GCxXzQaYaMjUL74DhcmpBwwNI2NdZw4xU8TF44UC
+	 0wK506ekmZWGA==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-606ddbda275so5184618a12.1;
+        Sat, 21 Jun 2025 06:04:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUeejFiIMWf9jWlA8/6u/f69zr2rUvVAHaTKWrpbO27jbVLjbZkvl79vj1VoKbdNM4OQ8s=@vger.kernel.org, AJvYcCVqJk106W+7+sKXwML/ZnrvGJkTsWUtji1fkkZKsX+GKWy+oVF+KorsCFpEgDL7nIiibqwTAFZqubi+6Z+a@vger.kernel.org
+X-Gm-Message-State: AOJu0YysDVAAGwC0XXpcXpQ+sVDByeCGOuwkXnG4sF4LXqal3MDJF33Y
+	1CrKyV4td0PLtSb7ypP10InVJgRb0tJLvpVPVQogP24mxSF9MO4jQRMhINLseSoboogK/g9/hXm
+	5qHsA+QIF8jO6Ax/me2KOgpmuEpAezM8=
+X-Google-Smtp-Source: AGHT+IGQRBL7DB8zJkZfP/u9p4DyAOzBJCLKNF0rZHsbTnJjr7rxQP9EqSolOu/bt3jwR6t+h1VwdsfN9OfxeHg6ay4=
+X-Received: by 2002:a05:6402:254a:b0:606:f836:c656 with SMTP id
+ 4fb4d7f45d1cf-60a1d167667mr6466277a12.19.1750511064924; Sat, 21 Jun 2025
+ 06:04:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250621-bar-v1-1-5a3e7004462c@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAC2tVmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDMyND3aTEIl1Tc+MkiyQTg7QkCwMloMqCotS0zAqwKdFKZYYKhvqGSrG
- 1tQDlMHRVXQAAAA==
-X-Change-ID: 20250621-bar-573b8b40fb80
-To: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hansg@kernel.org>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-staging@lists.linux.dev, LiangCheng Wang <zaq14760@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750510907; l=1991;
- i=zaq14760@gmail.com; h=from:subject:message-id;
- bh=UmuaVwVACEk8G368/vsvTByhNseq8/MmDXVCYyOC58Q=;
- b=tloAjt8E0c/tquzQidruBT8mvc3LN9b7bnhxWNqp4xkKJlVl9EYzEysGN/Uvis81F/ujTTdeQ
- zOz/hWwP9EZAPLr9Zyu/sCqna7coxuEGRIyqUBH260HD8bs/hHBrtOQ
-X-Developer-Key: i=zaq14760@gmail.com; a=ed25519;
- pk=/x4391DbJ19fFQI7t33HWt3lsHfYPl2I2ax8C+Vxr+M=
+References: <20250611014651.3042734-1-maobibo@loongson.cn> <20250611015145.3042884-1-maobibo@loongson.cn>
+ <CAAhV-H6Eru5e6+_i+4DY9qwshibY43hjbS-QC-fhLD04-4mOGw@mail.gmail.com> <20250621122059.6caf299a@pumpkin>
+In-Reply-To: <20250621122059.6caf299a@pumpkin>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 21 Jun 2025 21:04:14 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7Wnk7j1ukDLT+KZ6+tJuxMFv5qG-YGsJsXfB=2-eC=Ow@mail.gmail.com>
+X-Gm-Features: AX0GCFvQ5gbsr-dpIjkLorh1D2lUieAd7aI8t2hGmm4nmDBKryyUuUy3Dz3kdjk
+Message-ID: <CAAhV-H7Wnk7j1ukDLT+KZ6+tJuxMFv5qG-YGsJsXfB=2-eC=Ow@mail.gmail.com>
+Subject: Re: [PATCH v3 9/9] LoongArch: KVM: INTC: Add address alignment check
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Bibo Mao <maobibo@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fix two checkpatch.pl ERRORs:
-- Use tab instead of space for indentation
-- Move trailing statement to next line after if statement
+Hi, David,
 
-Signed-off-by: LiangCheng Wang <zaq14760@gmail.com>
----
-This patch fixes coding style violations detected by checkpatch.pl in the atomisp driver under staging.
+On Sat, Jun 21, 2025 at 7:21=E2=80=AFPM David Laight
+<david.laight.linux@gmail.com> wrote:
+>
+> On Thu, 19 Jun 2025 16:47:22 +0800
+> Huacai Chen <chenhuacai@kernel.org> wrote:
+>
+> > Hi, Bibo,
+> >
+> > On Wed, Jun 11, 2025 at 9:51=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> =
+wrote:
+> > >
+> > > IOCSR instruction supports 1/2/4/8 bytes access, the address should
+> > > be naturally aligned with its access size. Here address alignment
+> > > check is added in eiointc kernel emulation.
+> > >
+> > > At the same time len must be 1/2/4/8 bytes from iocsr exit emulation
+> > > function kvm_emu_iocsr(), remove the default case in switch case
+> > > statements.
+> > Robust code doesn't depend its callers do things right, so I suggest
+> > keeping the default case, which means we just add the alignment check
+> > here.
+>
+> kernel code generally relies on callers to DTRT - except for values
+> that come from userspace.
+>
+> Otherwise you get unreadable and slow code that continuously checks
+> for things that can't happen.
+Generally you are right - but this patch is not the case.
 
-- Use tabs instead of spaces for indentation
-- Move trailing `if` statements to multiline format
+Adding a "default" case here doesn't make code slower or unreadable,
+and the code becomes more robust.
 
-This cleanup improves code readability and follows Linux kernel coding standards.
----
- .../atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c   | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Huacai
 
-diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c
-index d09365e0c47104dbffbd455bfd649b9079f88c9c..044c7d3706f486ba7cae5941ac598044c831b6c2 100644
---- a/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c
-+++ b/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c
-@@ -74,7 +74,7 @@ int ia_css_output0_config(struct sh_css_isp_output_isp_config       *to,
- }
- 
- int ia_css_output1_config(struct sh_css_isp_output_isp_config       *to,
--		          const struct ia_css_output1_configuration *from,
-+			  const struct ia_css_output1_configuration *from,
- 			  unsigned int size)
- {
- 	return ia_css_output_config(to, (const struct ia_css_output_configuration *)from, size);
-@@ -127,7 +127,8 @@ ia_css_output_dump(
-     const struct sh_css_isp_output_params *output,
-     unsigned int level)
- {
--	if (!output) return;
-+	if (!output)
-+		return;
- 	ia_css_debug_dtrace(level, "Horizontal Output Flip:\n");
- 	ia_css_debug_dtrace(level, "\t%-32s = %d\n",
- 			    "enable", output->enable_hflip);
-
----
-base-commit: 3f75bfff44be0646580fe4efda45d646f9c1693b
-change-id: 20250621-bar-573b8b40fb80
-
-Best regards,
--- 
-LiangCheng Wang <zaq14760@gmail.com>
-
+>
+>         David
+>
+> >
+> > And I think this patch should also Cc stable and add a Fixes tag.
+> >
+> >
+> > Huacai
+> >
+> > >
+> > > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> > > ---
+> > >  arch/loongarch/kvm/intc/eiointc.c | 21 +++++++++++++--------
+> > >  1 file changed, 13 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/i=
+ntc/eiointc.c
+> > > index 8b0d9376eb54..4e9d12300cc4 100644
+> > > --- a/arch/loongarch/kvm/intc/eiointc.c
+> > > +++ b/arch/loongarch/kvm/intc/eiointc.c
+> > > @@ -311,6 +311,12 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcp=
+u,
+> > >                 return -EINVAL;
+> > >         }
+> > >
+> > > +       /* len must be 1/2/4/8 from function kvm_emu_iocsr() */
+> > > +       if (addr & (len - 1)) {
+> > > +               kvm_err("%s: eiointc not aligned addr %llx len %d\n",=
+ __func__, addr, len);
+> > > +               return -EINVAL;
+> > > +       }
+> > > +
+> > >         vcpu->stat.eiointc_read_exits++;
+> > >         spin_lock_irqsave(&eiointc->lock, flags);
+> > >         switch (len) {
+> > > @@ -323,12 +329,9 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcp=
+u,
+> > >         case 4:
+> > >                 ret =3D loongarch_eiointc_readl(vcpu, eiointc, addr, =
+val);
+> > >                 break;
+> > > -       case 8:
+> > > +       default:
+> > >                 ret =3D loongarch_eiointc_readq(vcpu, eiointc, addr, =
+val);
+> > >                 break;
+> > > -       default:
+> > > -               WARN_ONCE(1, "%s: Abnormal address access: addr 0x%ll=
+x, size %d\n",
+> > > -                                               __func__, addr, len);
+> > >         }
+> > >         spin_unlock_irqrestore(&eiointc->lock, flags);
+> > >
+> > > @@ -682,6 +685,11 @@ static int kvm_eiointc_write(struct kvm_vcpu *vc=
+pu,
+> > >                 return -EINVAL;
+> > >         }
+> > >
+> > > +       if (addr & (len - 1)) {
+> > > +               kvm_err("%s: eiointc not aligned addr %llx len %d\n",=
+ __func__, addr, len);
+> > > +               return -EINVAL;
+> > > +       }
+> > > +
+> > >         vcpu->stat.eiointc_write_exits++;
+> > >         spin_lock_irqsave(&eiointc->lock, flags);
+> > >         switch (len) {
+> > > @@ -694,12 +702,9 @@ static int kvm_eiointc_write(struct kvm_vcpu *vc=
+pu,
+> > >         case 4:
+> > >                 ret =3D loongarch_eiointc_writel(vcpu, eiointc, addr,=
+ val);
+> > >                 break;
+> > > -       case 8:
+> > > +       default:
+> > >                 ret =3D loongarch_eiointc_writeq(vcpu, eiointc, addr,=
+ val);
+> > >                 break;
+> > > -       default:
+> > > -               WARN_ONCE(1, "%s: Abnormal address access: addr 0x%ll=
+x, size %d\n",
+> > > -                                               __func__, addr, len);
+> > >         }
+> > >         spin_unlock_irqrestore(&eiointc->lock, flags);
+> > >
+> > > --
+> > > 2.39.3
+> > >
+> >
+>
