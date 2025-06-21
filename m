@@ -1,87 +1,113 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63911E4A4;
-	Sat, 21 Jun 2025 16:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE0E30E859;
+	Sat, 21 Jun 2025 16:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750523054; cv=none; b=ku8Zh5WS4PRQjdw2Tf6CiM2dQdim6FI8D3BmahfqlhOTDb319LCqypts0kdBSNhJyMYBqb2gmXii26rOAk2C/PWQEcVH/i+DzLRiG6JDSKp6GetNHkLDkhSohK/9bZujRwTArDNVuBBxsBo9P2ZH+Vu3QvOdTmB8eqXOJcSoZ1A=
+	t=1750523298; cv=none; b=bYXFOym3fw6/eCY7DcCSOZnLWsM4pdlEibu4DFFBpjbAUeCzCi8mRfNNQsEQPW3mW6FgDbbcfYamqre3hrXiDHomV0sbm9VEK3SkXMATF9Pr9A/oTHtIiwQvmZ2s7JAfiyZiw/UxphTaBUoPh0vj7q0dpRQ5ju+EinAiqG1ZgC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750523054; c=relaxed/simple;
-	bh=eiUYB0OsVU+n1MaEMpwIEV7gsdrcmIJQB/BK030GGt0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BB+ICg+PG0nooAkbJR1rKpdUZ8ydk7hCOKTDDwlC6XaHHr3WQsIeMHb6cTYpXFIVIvjsUHQQHvzZRIGQE233jzOQVQu5bmJGlsOxULlJ/8NLfbnKb9p7rYyDydJB5YTUeJuUGaEsVucdHPOOHxffGgPyrlsDlkhVwCpGxmqfjrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lZAxpDUP; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750523298; c=relaxed/simple;
+	bh=6TLyncxbiWa3QR4O3QZL40faVkmdmv9hfurNhPDlKI8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I+GiHnZMhnHJLH01e3xa+rjxqX6COGNBU2JnP/67TSqTWH3KvmBVgDaTa4Tnv8nf0VkOI+ZWzldhHF8ytY17wZo6xIk6dta3lvALfcbTSL98nVypWST8erbj26U1TKhNBYe9aghn1IEwQitrlR1nxJqurAmwGvGKa+9m1Rkub5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fSZnu0gN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lZAxpDUP"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b31aecc78a3so481566a12.1;
-        Sat, 21 Jun 2025 09:24:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750523052; x=1751127852; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eiUYB0OsVU+n1MaEMpwIEV7gsdrcmIJQB/BK030GGt0=;
-        b=lZAxpDUPU5UZ4oIRPZKydmx+xRlW/RoN7Sj9EAwf+sBPv90zWWCclsGSJlwSmlHyHP
-         bAnNo3rk9FDstNxbRXgcEAoC73sBt+tm8jwlJMTSnwfrmGA9FozwZz5zA50FTO12oc6w
-         0gt0DKoB+VfpCk5qF5d4xbQ7gDXU8HbLoEPeiJjhPwK59QcwDgg6izqu+KNywiD/izbv
-         r6MeX+dbAz7fgDSUgGgY2keVw0H7wuF5X3Tws++reG4pY8B309L66aVj3Pf1SyoyBA4y
-         6HC4SYNjDxNKs3AS5iFMMwA8N30PWUinNnubVmMqr/uso6tiMoGhZdzXUhEgktfBOKco
-         +ivw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750523052; x=1751127852;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eiUYB0OsVU+n1MaEMpwIEV7gsdrcmIJQB/BK030GGt0=;
-        b=J7MzDLsjbGqyCOkTTmpqhPqVGyIg8eH692UA2Vh5F4FsIiPHmMbQsGw7Lhz0f6Cd0t
-         hN98fMrwKIayKxnr60UxjByVbSX0YVmZ4Dd09oNn5BWqyejCSaqK3gRom3TdwZ8TbIQ0
-         q8ldZnQKr+Rspv0Cx9s3BnaKGccXmA03cA6KS4ZYYLlsp+xDFfH6d6w1aKH1Fxo7wldu
-         Dfwc4vFrDh68b/xvLlnbxwsVRV2LiKvR7bfcUpkocgmA+puoRyq7byglu5gZmLi49Jur
-         KNpSKj7vgqvgPpCykI3uiq9fDOArmGJxAghS3/eEdW0qROowXlloNeTPQNRvA14rOMUh
-         NZQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVLuvyp7zVNO6Y/zK7a4ADImIHTVt/S8RybcwBFOrohrWNf1OVvb0A9DDMvAskfNPEbb0EGS3dQt8//J78UFVo=@vger.kernel.org, AJvYcCWjVw7wbWtdlOYuiIRB3X31GKcPWaETAatErCtWePATizVySyqjgVBakn/Ykni69am7+s67WIY5J8kfwlY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4AuNI5Q6AEM4oA3Nr5MGCfhjiKTruJks98OMqxcuskJSPvAIC
-	SXBJZFZ5ihZNKvGdcSOXznr5ObjEkuGxWvrGPOWwmL6/Flq4mFpm6rYYr77E3OYtHYe29HOh+j8
-	lGOQLB/VVgii11/ypiO4ciEQT5Uubrrk=
-X-Gm-Gg: ASbGncs6s0zETsHEBwW7xNzHU7cJALULxlKKicHzuAWUB9OyeLn//WO1ZV6NZQo9QGG
-	o0/m4f+q121dZgs8R/F2ZvI21Zi72kyXzJUpg/Sqby/HNESuUUjPIvqTnjubkM6YR7kHKTldzTT
-	tJIGJXjkwAuDS6IuDtvnsEe9WeMzw8LinDeziTZGSgN48=
-X-Google-Smtp-Source: AGHT+IFwECQIHlbcWhvDGYlEVxqhVwL+k+ZZ8wTsYkeWvyY+BIjP4jj5N0iL9hFrlqIVzBqKTd3AKdAFLBI13L3+jFA=
-X-Received: by 2002:a17:90b:2ecb:b0:313:f9fc:7214 with SMTP id
- 98e67ed59e1d1-3159d628b4cmr4323355a91.1.1750523052185; Sat, 21 Jun 2025
- 09:24:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fSZnu0gN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82A38C4CEE7;
+	Sat, 21 Jun 2025 16:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750523298;
+	bh=6TLyncxbiWa3QR4O3QZL40faVkmdmv9hfurNhPDlKI8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fSZnu0gNmiIiQoieyVjJpI2tN/8I+Ne1vrehIbv3wqpVI0h9dpgFkTpYY6bQM1drs
+	 M2dX8Lct3XJngcX/CndTpHkIx21fg4NEpHKh/rpaC1mS6AXEA2JnNgNkFnfSGNyVSo
+	 bhspClhqM4xi87BBLJnEi0JRw8tGNbPyoG4ALFDBmP+qPQGKOO/wcUyzdqwyNnCJ/a
+	 3M7KkDomWJji06YPnvSb74H3r7LTuMEjGxjIcrHKQDUfofalpHoKgccXM0KUs+9hwb
+	 eJjbh8db6ffDtkeldXh7T73UWkyNh9aT0fDkWBMEnhxDUZrWTC+vy0KGqigTWUorX+
+	 iAqZ17CT7Smgw==
+Date: Sat, 21 Jun 2025 17:28:08 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Conor Dooley <conor@kernel.org>, Marcelo Schmitt
+ <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lars@metafoo.de,
+ Michael.Hennerich@analog.com, nuno.sa@analog.com, andy@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linus.walleij@linaro.org, brgl@bgdev.pl, marcelo.schmitt1@gmail.com
+Subject: Re: [PATCH v5 01/11] dt-bindings: iio: adc: Add AD4170
+Message-ID: <20250621172808.6f304023@jic23-huawei>
+In-Reply-To: <eeb66815-3f7d-41fc-9d32-c28a3dda7749@baylibre.com>
+References: <cover.1749582679.git.marcelo.schmitt@analog.com>
+	<4df9d4d0de83090300b6870afc8ae7b22279cd22.1749582679.git.marcelo.schmitt@analog.com>
+	<20250616-neurology-explicit-ec2a829bd718@spud>
+	<eeb66815-3f7d-41fc-9d32-c28a3dda7749@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250614081312.763606-1-ewhk9887@gmail.com> <20250614081312.763606-2-ewhk9887@gmail.com>
- <CANiq72=QUbe-koU-BEhEJ1-7AafC0kGcG6HOhiVaR1TWqPoLFg@mail.gmail.com> <965a9fcd6bba9915b4e0cdc442067c7479477b84.camel@microchip.com>
-In-Reply-To: <965a9fcd6bba9915b4e0cdc442067c7479477b84.camel@microchip.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 21 Jun 2025 18:24:00 +0200
-X-Gm-Features: Ac12FXyXVkE_qjpRCuHCcaABTW5sEO1KQfHpAgGaeXmStAgHMi1DGl7Qk5rOh1o
-Message-ID: <CANiq72mALYRi5O+gmLbv=vy=9caJ0NCkpBwSyCq4A+YPV5QgFA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] spi: spi-pci1xxxx: Drop MSI-X usage as unsupported by
- DMA engine
-To: Thangaraj.S@microchip.com
-Cc: ewhk9887@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 19, 2025 at 5:44=E2=80=AFAM <Thangaraj.S@microchip.com> wrote:
->
-> Thanks for pointing it out. There was a mistake on my end during patch
-> generation - the patch isn't part of a series, but it was mistakenly
-> created with an incorrect header. Apologies for the confusion, and I'll
-> make sure to avoid this in the future.
 
-You're welcome, and no worries! Email/Git can be tricky sometimes :)
+> >> +
+> >> +$defs:
+> >> +  reference-buffer:
+> >> +    description: |
+> >> +      Enable precharge buffer, full buffer, or skip reference buffering of
+> >> +      the positive/negative voltage reference. Because the output impedance
+> >> +      of the source driving the voltage reference inputs may be dynamic,
+> >> +      resistive/capacitive combinations of those inputs can cause DC gain
+> >> +      errors if the reference inputs go unbuffered into the ADC. Enable
+> >> +      reference buffering if the provided reference source has dynamic high
+> >> +      impedance output. Note the absolute voltage allowed on REFINn+ and REFINn-
+> >> +      inputs is from AVSS - 50 mV to AVDD + 50 mV when the reference buffers are
+> >> +      disabled but narrows to AVSS to AVDD when reference buffering is enabled
+> >> +      or in precharge mode. The valid options for this property are:
+> >> +      0: Reference precharge buffer.
+> >> +      1: Full reference buffering.
+> >> +      2: Bypass reference buffers (buffering disabled).
+> >> +    $ref: /schemas/types.yaml#/definitions/uint32
+> >> +    enum: [0, 1, 2]
+> >> +    default: 1  
+> > 
+> > Why make this property a uint32, rather than a string where you can use
+> > something like "precharge", "full" and "bypass" (or "disabled")? The
+> > next similar device could use something slightly different then the
+> > binding becomes pretty clunky.
+> > Can you explain why this is a dt property rather than something
+> > adjustable at runtime?
+> > 
+> > Otherwise, what you have here looks sane enough to me - but I'd like to
+> > see some comments from Jonathan or David etc about your approach to the
+> > excitation properties.  
+> 
+> This looks like something that should be in the devicetree to me. For example
+> if the external reference supply is high impedance, buffering is pretty
+> much required. And using precharge is an application design choice to
+> reduce THD at the expense of other limitations.
+> 
 
-Cheers,
-Miguel
+Agreed that this pretty much only makes sense in DT.
+
+In the ideal world we would have firm rules on when to enable buffering
+etc and then the DT would describe the impedance of the circuit connected
+and any other relevant properties and then we'd have the driver enable it
+only when those rigid rules dictated that we should.
+
+Sadly no such simple rules exist (as far as I know) so we just expose the thing
+that gets set dependent on someone's judgement of the suitability of
+the buffering choice given the circuit being connected to the input.
+
+If we pushed it to userspace we'd just end up with a per device blob
+that dictated the mode to pick on boot and left it like that.  So effectively
+another bit of firmware :(
+
+
+J
+
+<cropping other comments>
