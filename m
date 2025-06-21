@@ -1,74 +1,57 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24022036ED;
-	Sat, 21 Jun 2025 18:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95B62561BB;
+	Sat, 21 Jun 2025 18:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750531990; cv=none; b=gXf03W5WgLZxK4CClloeOfq2rEpK08Cm9+0RMYq3EaI5verDzqLZ9HnsNC3Nf85AzbX7ByVt7fvaVhtUPMsuDSXeLAZW+2FfVPMeHpuIzhtpPGWpGwQfIGwoZjuoYbLOZ1C+CoDuq7Kij2tHo84dO/HQpVSgpXZeepRintFdUJM=
+	t=1750531998; cv=none; b=giJ48X/WsKr+zStQ7s2my7HeJFX4TSOmJ1GrWe9XogiEk2IxCugSARnkiuoy0l9jYu46bJXR0RpNBCfIPdS93MZZwl4ojC1LU9jJ5HrWT+XkSt7mdyvqIkAUSQTNmJzfB7Y1ZLCm3WtSfiabVMO0BP8wObCk01F9s12jDoCoirk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750531990; c=relaxed/simple;
-	bh=YNKJd0VKgqr5yaVjjFu1/l5WHZ+8KFVf4/a2EGCCWuk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ToE5qd/Yv4Bev0fDaytFA64YQUI+E3VBY7D7tNOuioRP+4E0JqaPaMLTmHQXsTnNd1192OM7FjR6l2laa8KXWHcAU4OXWcJblLkScNCXcwVFjF6F5MC4J5ZogXMBOsT/TAMkxRbA4dAJPGVZjZQQ41LxGcVn7LlFvrf0mF/CsOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R4TG6upD; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750531998; c=relaxed/simple;
+	bh=uxoKRcY2W6kCcNzZ8+R+4JIj5r251Ne/rkyNdGnRGY8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sY8T9M86MGCp1qfChj2WfbfNd+lHR8q6zAFSby0P6b+4Pkbjh/6bE++QXlvHGdvQ/MhluNlXvkvgy6Aq31bzplbEMup7UW3ioJnlyZdEEBdtgIaMCkV/9CcP5OlC2DMwolblkDGIpnI6BOM8mJIXJHftLkDv6YCWtiZXyjmHp+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=O/Fzwsk3; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R4TG6upD"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b31d489a76dso2458479a12.1;
-        Sat, 21 Jun 2025 11:53:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750531988; x=1751136788; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=c5cZFNuGdSyl5svvXZPVc0fkJaaimEDabqtK2WLJV+k=;
-        b=R4TG6upDMYE8Hx6BaPnco5VxR4r1U1JpcLogrn2bXvH1aU1/z/iFTKrNybCn7VUa6i
-         7XHFogtiutwgTuzZDzX/7ZLFx9lhdUKIq/R6EuJAwidHr0QmxZ2IvR5I4jDx0PO8abB/
-         83z25DT5Cjy5eqjijp2rAjg5BZgL2NKo3SCw2JvAdIkQkUt+Ngl0PJCzJ3SzYBM2zLHe
-         umvE6gIRjxmkjAjOdJX9ep1Q4pcLKptbupvhgmS6TJJ1D209pQvolfcgm5K6xz2KkS3g
-         j9Xhe/YtCnvd+Vt7rErdKseROoohzw1cc/UfTm03+uyCtH203u6T7jakK8CHxi/qD8L2
-         z9PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750531988; x=1751136788;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c5cZFNuGdSyl5svvXZPVc0fkJaaimEDabqtK2WLJV+k=;
-        b=Nj9zUA5lNFxUMuSmZMY3j/AgotFelkaSPQlza0m0l5W6dBZX6iQL0xQRCjm775p2x5
-         jnhOdFLDQOcupH/vTp/oU+FlyCiDXnK/70OEJoG8wyDD8PyPPw7d0OTgxnveR1tZjqBA
-         hJ9gFNwjfkjVYHwIidS4OMNF3kO/4BmGgQbtclATTAQPlBOzHS0znBckR6LVOB4ToIeP
-         KBMPkieggn1z9FGROUOjn7bnP0GSCsK5/K2gloo3s+sEDSlhH9miZpJuAbKeS6D5IPs/
-         K2gTYfIY28/isW8U9T+ZtXOQpOKx3WL1oYSnoShz4nMnC73oaOx42QQVWSoFYatfCib8
-         bnlA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9904oPgrWXeSbTxxZ0FVrY/tQg47Lw5fuXYgkIBndUVDgBSRThi98WNW8y21/CJYuTqpio6Nw7amC+J+a@vger.kernel.org, AJvYcCXnyXXSG8n54NXv6n1aUhROekSj7npYJjP7oc3zeGwHWN6ko4iwqQGe1f7Z/53lTPI9ojutmGXImIg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMvc6WudD4zG0potdCafCQP1xbRXV7zHx2801tf9HgaDgPauBY
-	fRgHKE6t50F5464w+fG9ylXwhAvNLWf47fuPrChuAvHNtdRkO8tvAewM
-X-Gm-Gg: ASbGncvWjg8loOFdswPD59/bCvKdA5WfY+wJyIxBygBhv1wZAE7vxfTE0+L5F+5C1ZA
-	WdYM98x66BD2sqEeb/KOixN4/wbw4ZQVEJzwqfLTbJkS/Z43JVNCVAX1yKwzrJKE+eYh0lIuu8a
-	Fp7szlJX9hx9uyQ7VHUrmvf6aAl4nqK+LNs+YtmlvqCJArkorYnlekeJfLeJ1maWLuK/8j4iOjk
-	OFLYCvFkoYFZ4KtLKVav9VbiJ4kJ5w/AIG5ycYRys/jTVZSgbDAB3M8p6/rggn+prsCsHi3PYSt
-	uYUNFxBtYYxq707G7lRZNjbeZiAYeUh5ZmJ6yHsqCoyAqAvQSM4dzawTM3qsBWYDHHfBUGOZAKv
-	5ZCMC2zwwZA==
-X-Google-Smtp-Source: AGHT+IG3qDiusxD+PSHaBKJnh1NwZDOcuLxH1zCfqUODtSQRJQxUNB8T2PUnSKnsGJjStsQ1IMmhfg==
-X-Received: by 2002:a17:903:4b2b:b0:234:e0c3:8406 with SMTP id d9443c01a7336-237d9775527mr117117205ad.1.1750531988057;
-        Sat, 21 Jun 2025 11:53:08 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14d:4c64:81ec:7409:107a:a63b:a3da])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8640c61sm46053545ad.141.2025.06.21.11.53.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Jun 2025 11:53:07 -0700 (PDT)
-From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-To: jic23@kernel.org,
-	dlechner@baylibre.com,
-	nuno.sa@analog.com,
-	andy@kernel.org,
-	conor@kernel.org
-Cc: ~lkcamp/patches@lists.sr.ht,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: adc: spear_adc: mask SPEAR_ADC_STATUS_AVG_SAMPLE before setting register
-Date: Sat, 21 Jun 2025 15:41:44 -0300
-Message-ID: <20250621185301.9536-1-rodrigo.gobbi.7@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O/Fzwsk3"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55LIYZgV008646;
+	Sat, 21 Jun 2025 18:53:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=Dd9iZj99umaHJEcHImbFxWpsE+0f+
+	IXdMuohHxZlqSE=; b=O/Fzwsk3oCw8QyOBgSkKsURbsi3AIghTBVfbcOBuToQ9i
+	YvOnSzdRxOdpUAbvQ3BiYSFi/pTlNkqFz9YKblD4wGuQby1DUrLHdeN97h0yTyrp
+	pmJ38rziy37BuCKRypH8V7r37RyomFYkCo704U4r9seeGtU5sffX71iR7sbfTJjw
+	X7XjwQ2VbUPTAKBFtlv1dpL7M1cwlnxA5k7HQXy0lRyxO11l6fNNiSRE4KvHw00e
+	Dt4eiXFii2f9UtAxcFYZReJ1EiUw2L5XAyKEh4UUEu7eiweHpFj1T/WiPaOiZPWB
+	9v3+H9wUltsrNMSySW600cm4eCJEsnwOjDr150IBA==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47ds7crchy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 21 Jun 2025 18:53:04 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55LE4TMP034526;
+	Sat, 21 Jun 2025 18:53:03 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47dk67wej7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 21 Jun 2025 18:53:03 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55LIr2XG002700;
+	Sat, 21 Jun 2025 18:53:02 GMT
+Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 47dk67wej2-1;
+	Sat, 21 Jun 2025 18:53:02 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: perex@perex.cz, tiwai@suse.com, phasta@kernel.org,
+        andriy.shevchenko@linux.intel.com, linux-sound@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] ALSA: intel8x0: Fix incorrect codec index usage in mixer for ICH4
+Date: Sat, 21 Jun 2025 11:52:24 -0700
+Message-ID: <20250621185233.4081094-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,60 +59,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-21_06,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 suspectscore=0
+ malwarescore=0 phishscore=0 bulkscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506210119
+X-Proofpoint-GUID: OEZ8hdpfEkdqASKukuF-8mLYe3dSoj20
+X-Proofpoint-ORIG-GUID: OEZ8hdpfEkdqASKukuF-8mLYe3dSoj20
+X-Authority-Analysis: v=2.4 cv=G5McE8k5 c=1 sm=1 tr=0 ts=6856ff90 b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=96bbWqfXC7VXjgqvvdgA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIxMDEyMCBTYWx0ZWRfX0w0VY+4531sR T+oMjgoTVRmfuruY4b7xt3sd2AZmPM+NrrDuCbWtUf7DMH60UMQxiNdLt+YegzYucPrscONfQDF LSDqfynpTPGROj1lvBDoOb18SwuJXTtxpNBBhSnpyU3kqQkHbb1hensvGqKXtj2YcXj3ku7TdpM
+ r/RfXqDA5MEt9R/3SXCWuGY1DQLQwbCChFpxBjc4HGDzr32sKuC0h5/g1lzaVOKQWnOzNm+PVij XG9T+T6WC6l5e3EdFj1RCQqjM5K3DQtCPxW/QnFUSrrv81Xj1HFVZWpwpEL37PiGs1YoMMLB64M 1Fh2DMErlilAS895llH44+MH9mWZNYbSYRjb4Ah+eg5yA13jpsSSJ9JhVn+55UO9P/POxA6ycpw
+ 0MFgB0ZN1xvFLhefLq5xlqRQiTsqB6dqbhqgntM9ZVRTw0EPi5rQHuI8qTWQyTFkehtZbF7l
 
-SPEAR_ADC_STATUS_AVG_SAMPLE info is a bit field coded inside the following
-bits: 5,6,7 and 8 of a device status register. Since the value came from dt,
-mask it in order to avoid touching other register bits.
+code mistakenly used a hardcoded index (codec[1]) instead of
+iterating, over the codec array using the loop variable i.
+Use codec[i] instead of codec[1] to match the loop iteration.
 
-Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 ---
-During the submission of patches related to the yaml creation of spear_adc [1],
-there was a discussion about the average-samples value/dt property. It turns out
-that the dt property value is direclty written to a device status register.
-Considering some defines at the .c file, we have this:
+ sound/pci/intel8x0.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-#define SPEAR_ADC_STATUS_ADC_ENABLE		BIT(4)
-#define SPEAR_ADC_STATUS_AVG_SAMPLE(x)		((x) << 5)
-#define SPEAR_ADC_STATUS_VREF_INTERNAL		BIT(9)
-
-SPEAR_ADC_STATUS_AVG_SAMPLE info is a bit field coded inside the following
-bits: 5,6,7 and 8. The bit 9 is a different info, vref in this case.
-Currently, there is no control if the average-samples is outside of allowed
-range, which is 0x15 since the driver exists. There is no documentation about
-how that information is managed by the device, but I`m suggesting to add a mask
-with the max value for those bits before configuring the samples bits.
-
-@Conor, I`m considering to add the "Suggested-by:" with your name here due [1].
-Are you ok with that? If you agree, I can submit a v2 with that.
-Tks and regards.
-
-[1] https://lore.kernel.org/linux-devicetree/20250506-equivocal-snooper-8a7d1ce931c8@spud/#t
----
- drivers/iio/adc/spear_adc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iio/adc/spear_adc.c b/drivers/iio/adc/spear_adc.c
-index e3a865c79686..cf412ece90cf 100644
---- a/drivers/iio/adc/spear_adc.c
-+++ b/drivers/iio/adc/spear_adc.c
-@@ -37,6 +37,8 @@
- #define SPEAR_ADC_DATA_MASK		0x03ff
- #define SPEAR_ADC_DATA_BITS		10
- 
-+#define SPEAR_ADC_AVG_SAMPLE_MASK 0x01E0
-+
- #define SPEAR_ADC_MOD_NAME "spear-adc"
- 
- #define SPEAR_ADC_CHANNEL_NUM		8
-@@ -158,7 +160,7 @@ static int spear_adc_read_raw(struct iio_dev *indio_dev,
- 		mutex_lock(&st->lock);
- 
- 		status = SPEAR_ADC_STATUS_CHANNEL_NUM(chan->channel) |
--			SPEAR_ADC_STATUS_AVG_SAMPLE(st->avg_samples) |
-+			(SPEAR_ADC_STATUS_AVG_SAMPLE(st->avg_samples) & SPEAR_ADC_AVG_SAMPLE_MASK) |
- 			SPEAR_ADC_STATUS_START_CONVERSION |
- 			SPEAR_ADC_STATUS_ADC_ENABLE;
- 		if (st->vref_external == 0)
+diff --git a/sound/pci/intel8x0.c b/sound/pci/intel8x0.c
+index 51e7f1f1a48e4..b521cec203336 100644
+--- a/sound/pci/intel8x0.c
++++ b/sound/pci/intel8x0.c
+@@ -2249,7 +2249,7 @@ static int snd_intel8x0_mixer(struct intel8x0 *chip, int ac97_clock,
+ 			tmp |= chip->ac97_sdin[0] << ICH_DI1L_SHIFT;
+ 			for (i = 1; i < 4; i++) {
+ 				if (pcm->r[0].codec[i]) {
+-					tmp |= chip->ac97_sdin[pcm->r[0].codec[1]->num] << ICH_DI2L_SHIFT;
++					tmp |= chip->ac97_sdin[pcm->r[0].codec[i]->num] << ICH_DI2L_SHIFT;
+ 					break;
+ 				}
+ 			}
 -- 
-2.49.0
+2.46.0
 
