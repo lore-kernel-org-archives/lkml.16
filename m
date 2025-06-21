@@ -1,160 +1,63 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BB9146A66
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 04:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4A427494;
+	Sat, 21 Jun 2025 04:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750479195; cv=none; b=d+M3ogwoFEjIt+10SfRaPYYrfeC6ww0PalFMnf19L+0nEGj0YvM1G+tQtUASCYzj6BZxz9yxZosQGgskzkipfpOGl/mgovju1ZJYZMrgpuOyalEafLK8JVs2RXRKUYgS5t0iqDqXQ+iwTfqxGxPpUMbYNTDy8Bd66nQ4Ts6XBTc=
+	t=1750479270; cv=none; b=r3bj27Pz5nuc+G93+yBRsVEWAf+l8oBl8NkYOBMmptrqvo7PVOD4VieydSyOVg72OfIrkfJK7J6GIqelu+xzALRFUaYDSkEWG/nWWIhzsxqTVfaOS6mmhyPA7PgC3GrTtv9jE29rrSBP+DFII0rN+OY4IsHv9Uw53FtCw2mn5Ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750479195; c=relaxed/simple;
-	bh=iNBqdvzRqvmlcLnFyD/xAgbAkKbUplPAdShitn7Qiow=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RHYlyTnmPSilQUUkpJi5FFkLnwQ+yLpTnxyn5nVUmtxvlx7z32PGlfHW8/Krb9W3SQqF8pnviD+tXVU1B3MaaeIvT0dqxx0pRIZcmrZ50pN+ZCt2LKBIxMspnkbvVIRaNyinP3zRGkA47SFNOROxluYXZ03CS3vVdio24iTaees=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bhJQytKc; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bhJQytKc"
-Message-ID: <2d04fee6-5d95-4c50-b2b1-ee67f42932e2@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750479180;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jcR9MO+hlXNQyGNXtt8eel8mEQz/tmmVsCpo4bl1TuM=;
-	b=bhJQytKcmXzZHfXkKScUGun4ArSRk5pFSwjbO7AGNiThQclcGPOq3XPM+KL7q78BpOIgUK
-	CNaTy6mWdzeoS6+QWpkC1dSBUC+t57/HF+dCDjp/3kMjGG2pX7A9aBaqORPmKZp+Gfdf4/
-	0wZk5mkoTqN2DirLqB3OSe9VNX7DvCY=
-Date: Fri, 20 Jun 2025 21:12:40 -0700
+	s=arc-20240116; t=1750479270; c=relaxed/simple;
+	bh=HChYt6JMy5R2uE8Aiw6/iMT0U+wx2wA1/MHdZ+BKFJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E92WLv5d+hu62C6QVX8VhUrEFsjiLO90Yb5OIlf7Dy8MwruPWirQLmXLpM7ENQh/7e45y8IQ55QaGZB34OycLV5hKArI8Ou+lV5VmUKK3lNxTBKbfBToDVit8/3rHVfcTELj8AemzSxDCjbGdY496JisYoh5d3mPPwgZd7fJu5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 55L4ELYX026694;
+	Sat, 21 Jun 2025 06:14:21 +0200
+Date: Sat, 21 Jun 2025 06:14:21 +0200
+From: Willy Tarreau <w@1wt.eu>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/4] selftests/nolibc: rename Makefile
+Message-ID: <20250621041421.GA26603@1wt.eu>
+References: <20250620-nolibc-selftests-v1-0-f6b2ce7c5071@weissschuh.net>
+ <20250620-nolibc-selftests-v1-3-f6b2ce7c5071@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] RDMA/siw: work around clang stack size warning
-To: Arnd Bergmann <arnd@kernel.org>, Bernard Metzler <bmt@zurich.ibm.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Potnuri Bharat Teja <bharat@chelsio.com>, Showrya M N <showrya@chelsio.com>,
- Eric Biggers <ebiggers@google.com>, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-References: <20250620114332.4072051-1-arnd@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <20250620114332.4072051-1-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250620-nolibc-selftests-v1-3-f6b2ce7c5071@weissschuh.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-在 2025/6/20 4:43, Arnd Bergmann 写道:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> clang inlines a lot of functions into siw_qp_sq_process(), with the
-> aggregate stack frame blowing the warning limit in some configurations:
-> 
-> drivers/infiniband/sw/siw/siw_qp_tx.c:1014:5: error: stack frame size (1544) exceeds limit (1280) in 'siw_qp_sq_process' [-Werror,-Wframe-larger-than]
-> 
-> The real problem here is the array of kvec structures in siw_tx_hdt that
-> makes up the majority of the consumed stack space.
+Hi Thomas,
 
-Because the array of kvec structures in siw_tx_hdt consumes the majority 
-of the stack space, would it be possible to use kmalloc or a similar 
-dynamic memory allocation function instead of allocating this memory on 
-the stack?
-
-Would using kmalloc (or an equivalent) also effectively resolve the 
-stack usage issue?
-Please note that I’m not questioning the value of this commit—I’m simply 
-curious whether there might be an alternative solution to the problem.
-
-Thanks,
-Yanjun.Zhu
-
+On Fri, Jun 20, 2025 at 11:39:32PM +0200, Thomas Wei�schuh wrote:
+> The nolibc tests are not real kselftests, they work differently and
+> provide a different interface. Users trying to use them like real
+> selftests may be confused and the tests are not executed by CI systems.
 > 
-> Ideally there would be a way to avoid allocating the array on the
-> stack, but that would require a larger rework. Add a noinline_for_stack
-> annotation to avoid the warning for now, and make clang behave the same
-> way as gcc here. The combined stack usage is still similar, but is spread
-> over multiple functions now.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->   drivers/infiniband/sw/siw/siw_qp_tx.c | 22 ++++++++++++++++------
->   1 file changed, 16 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/infiniband/sw/siw/siw_qp_tx.c b/drivers/infiniband/sw/siw/siw_qp_tx.c
-> index 6432bce7d083..3a08f57d2211 100644
-> --- a/drivers/infiniband/sw/siw/siw_qp_tx.c
-> +++ b/drivers/infiniband/sw/siw/siw_qp_tx.c
-> @@ -277,6 +277,15 @@ static int siw_qp_prepare_tx(struct siw_iwarp_tx *c_tx)
->   	return PKT_FRAGMENTED;
->   }
->   
-> +static noinline_for_stack int
-> +siw_sendmsg(struct socket *sock, unsigned int msg_flags,
-> +	    struct kvec *vec, size_t num, size_t len)
-> +{
-> +	struct msghdr msg = { .msg_flags = msg_flags };
-> +
-> +	return kernel_sendmsg(sock, &msg, vec, num, len);
-> +}
-> +
->   /*
->    * Send out one complete control type FPDU, or header of FPDU carrying
->    * data. Used for fixed sized packets like Read.Requests or zero length
-> @@ -285,12 +294,11 @@ static int siw_qp_prepare_tx(struct siw_iwarp_tx *c_tx)
->   static int siw_tx_ctrl(struct siw_iwarp_tx *c_tx, struct socket *s,
->   			      int flags)
->   {
-> -	struct msghdr msg = { .msg_flags = flags };
->   	struct kvec iov = { .iov_base =
->   				    (char *)&c_tx->pkt.ctrl + c_tx->ctrl_sent,
->   			    .iov_len = c_tx->ctrl_len - c_tx->ctrl_sent };
->   
-> -	int rv = kernel_sendmsg(s, &msg, &iov, 1, iov.iov_len);
-> +	int rv = siw_sendmsg(s, flags, &iov, 1, iov.iov_len);
->   
->   	if (rv >= 0) {
->   		c_tx->ctrl_sent += rv;
-> @@ -427,13 +435,13 @@ static void siw_unmap_pages(struct kvec *iov, unsigned long kmap_mask, int len)
->    * Write out iov referencing hdr, data and trailer of current FPDU.
->    * Update transmit state dependent on write return status
->    */
-> -static int siw_tx_hdt(struct siw_iwarp_tx *c_tx, struct socket *s)
-> +static noinline_for_stack int siw_tx_hdt(struct siw_iwarp_tx *c_tx,
-> +					 struct socket *s)
->   {
->   	struct siw_wqe *wqe = &c_tx->wqe_active;
->   	struct siw_sge *sge = &wqe->sqe.sge[c_tx->sge_idx];
->   	struct kvec iov[MAX_ARRAY];
->   	struct page *page_array[MAX_ARRAY];
-> -	struct msghdr msg = { .msg_flags = MSG_DONTWAIT | MSG_EOR };
->   
->   	int seg = 0, do_crc = c_tx->do_crc, is_kva = 0, rv;
->   	unsigned int data_len = c_tx->bytes_unsent, hdr_len = 0, trl_len = 0,
-> @@ -586,14 +594,16 @@ static int siw_tx_hdt(struct siw_iwarp_tx *c_tx, struct socket *s)
->   		rv = siw_0copy_tx(s, page_array, &wqe->sqe.sge[c_tx->sge_idx],
->   				  c_tx->sge_off, data_len);
->   		if (rv == data_len) {
-> -			rv = kernel_sendmsg(s, &msg, &iov[seg], 1, trl_len);
-> +
-> +			rv = siw_sendmsg(s, MSG_DONTWAIT | MSG_EOR, &iov[seg],
-> +					 1, trl_len);
->   			if (rv > 0)
->   				rv += data_len;
->   			else
->   				rv = data_len;
->   		}
->   	} else {
-> -		rv = kernel_sendmsg(s, &msg, iov, seg + 1,
-> +		rv = siw_sendmsg(s, MSG_DONTWAIT | MSG_EOR, iov, seg + 1,
->   				    hdr_len + data_len + trl_len);
->   		siw_unmap_pages(iov, kmap_mask, seg);
->   	}
+> To make space for an integration with the kselftest framework, move the
+> custom tests out of the way.
+> The custom tests are still useful to keep as they provide functionality
+> not provided by kselftests.
 
+I'm wondering, what prevents us from merging the new rules into the
+current makefile instead of renaming it, especially considering the
+fact that we initially took care of not confiscating the "all" target ?
+I'm asking because: 
+
+  $ make -f Makefile.nolibc help
+
+is clearly less convenient and intuitive than:
+
+  $ make help
+
+Regards,
+Willy
