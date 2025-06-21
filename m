@@ -1,78 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8CB1798F;
-	Sat, 21 Jun 2025 15:14:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661B0E545
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 15:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750518841; cv=none; b=IqQp6ub1qoBxNQER9/QFYvALMoIq3ebgNqsnOynkxoZWz6yLCwX5oBxg17M8I5eTZn+aAgofNuj+5Fe5NKmro07MoZjfK0iGPKEOqroXL6OoVIB+8ERv2km+Gin3DL9yHdq2+Wt6i9F4AK9xV6SVQTPNcLDZr5kDID4X4MM7olM=
+	t=1750519137; cv=none; b=oD1Yo3qQp4g/g2cru50J1NJXebLrpCf3b+goRXa0w18QleHWq0kM7+JToCw/RQlJ41crbgAukAFhmauz337XJjRz6Y9MheKDEDQjJBNi9XaavK9oEcyicwPeYamQC64VGrYBQm2ZDdUhtIpdjKVUsuqtX7Y13wqDHyvt7R3ELYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750518841; c=relaxed/simple;
-	bh=i5wqI008MJuV9pDmuCckzYYxukm/wwBTLtaZLeZMBeM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lAN75IQJr9wv1KCVJiXY8fkTKzMNSeu+iQchUIF1nXl1mp4t+ZJrkhyjeKZFTdQyHt2zmx5QonZhDX/fMHx1VzqL/NQnr7js0w+C8gjztfQH3yUGIob4ld9/3jkwlfJDdeDEyRRYl7/GdSe6N4hidMupzjOMO86LAhaNe09cuXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iThjldCZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750519137; c=relaxed/simple;
+	bh=tjKrZCbWpfg3r5pr2zmj4X9W+p5uffoo7a6en2/CBK8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=bqj0yPCUsag6/pEhm6UgZ2G5TXJ2BI2ASlcszQxyo9lPP3iDp3lRyTx+I+NHI/iw1z1a2nZGKj116+zxR7laPSYluj5z4maAIsh42LPX+jhUznn612sLtEWmfPjdja03RzTzSSnjrMdNdw72gka6N1Pkah4ptL2SQuWroJ84qlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aOSFqs+T; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iThjldCZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9004C4CEE7;
-	Sat, 21 Jun 2025 15:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750518841;
-	bh=i5wqI008MJuV9pDmuCckzYYxukm/wwBTLtaZLeZMBeM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=iThjldCZ47F9p7nsl2IaAGrgkxYPVSXZCLIurQ26Kn87kNh4lqRINUzilFh9IqhVh
-	 dX1yAlP6iKyHtIiZ7HeMDKA2KE+NFBsJoD2DjOeWqytf5i7Y5QlrVYgS2VfWGldoyG
-	 d1W5UnoBh93oLzNVXcMG70MBDuvItJN4v0htbiyuNvXcuFAMp0EiqI21i5OMhyTF4H
-	 sCBOJjl2GhTR6ev+/6g8TSXyeNu9nkEzedMyttmwyYS/dbcekq92fYOw3OYLSQErtc
-	 WotFnCE/svv0noVKVPTYBm+Gsjarb0qPIBFLB/wAW46Snw+pYxLAfFQ7k8Wdb915aR
-	 Y6t5GUA42lQwQ==
-From: Chuck Lever <cel@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <linux-nfs@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	Jeff Layton <jlayton@kernel.org>
-Subject: [GIT PULL] First round of NFSD fixes for v6.16
-Date: Sat, 21 Jun 2025 11:13:59 -0400
-Message-ID: <20250621151359.499129-1-cel@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aOSFqs+T"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-453647147c6so17460195e9.2
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 08:18:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750519133; x=1751123933; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ID1LpGQL7wBZfMuzOe2EP3tHYeGa/XqzG9jcaHohObI=;
+        b=aOSFqs+TJG03/46GuZels5VIBf8x2E8eUmoOptSjiKc4hiHoR+W75x8scPFViRs8aN
+         ECRYGLALFyFqMapFhLXYWER67Lr4wrNUSeKv6wTiLc9X/nc9cMOLmwP5Xpj+kuaJwql9
+         /qUikhAOSoFZFVy2O23OMHLa3o0o24KM/S4XbzgaNGDVG/RbKokULPCZNee+SC+bQKN6
+         bop9RWvvYdDjoV7UmUxyC9dUDyvV2bW0DpEFpeWnvYeNeNpqJcKsf43xXmlREydd53vU
+         CU35u9sKTWOfXQSWjKaVD0UYSqzSvkBCXDAoo0DKGTR/T5gFkZ7iyC8GSJRZtiMjDbli
+         eTxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750519133; x=1751123933;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ID1LpGQL7wBZfMuzOe2EP3tHYeGa/XqzG9jcaHohObI=;
+        b=tL65IsDg57/qB9Fbf8vzJLd4eztW19IrvXN5A6ZikPgYLudqJHMi/cECUKbpn37oCM
+         syFRmMAi2rO40JIPxl9lXC3LpLHUach7YvhiXbcGhSm0mAKsfStR5rpO+le6+7FGYDIV
+         Muisf3XFHhuD46lw4SpKXqri8Pi1wIrl+jWg7ZxQU+u/erz/pCXmXK76QmIAN9wCSsCG
+         vk8KPw0WnBSYEiAWbtV/9Y8hUVQAz+pwMDh7TcswC9N0Bme8kjsYu6eCwPpv1iNmW8z9
+         rdu7SWfNQFJooqwJBAyYryr9Bnbm2WGLDSoICewcJhXpLgAkr5BPQZHMz5AtOsgI1mjo
+         pqBw==
+X-Gm-Message-State: AOJu0Yxu4vqE7f6tLlW5DKP+OZvRC9H8egAQMtno6qEiSskev5xuCgAO
+	gQZ3fmKNgV5RG7MP5W5O2v6lMM9jKhpi0O9mhvzOuCK6vvyMPkFcL9XovC8hNvtIHPBjzUBZ6sN
+	I1hNlGP7P3FtEfrri9h5ATDi1MiRAxk1a35mK
+X-Gm-Gg: ASbGncsYYvdtR5DQVrsdUmWU7ETEEiY6kkjAki/JyjwOXBhci38X3WSEXwYgi+87GYY
+	EulS4Ikxd2xoMggMVPRJx2LqQwX2hVIZThtdBQIqgenEg08I+lEeylZ0e82q1P61AzdCv69cNFh
+	L892ewq4Wg5iTnXA09ig+8rm3ayOaoyZX1ap/PDv6WBPreM4DajHpM
+X-Google-Smtp-Source: AGHT+IGFFkWs0v+oHaqguPggxHqcYF6J700ttKO9QT+CJz1xtbJjbZs6p9ink2qFj79QUAyfET5+2M8eUAzEa+zmC8s=
+X-Received: by 2002:a05:600c:450d:b0:453:2433:1c5b with SMTP id
+ 5b1f17b1804b1-453653cead1mr60619415e9.5.1750519133274; Sat, 21 Jun 2025
+ 08:18:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Walt Holman <waltholman09@gmail.com>
+Date: Sat, 21 Jun 2025 10:18:42 -0500
+X-Gm-Features: Ac12FXwQA-yjIG99XqzTyfnTKrJOLAVV8_eA1I03gV_gI_2r_zumkIuIkY5cspU
+Message-ID: <CAMb39_mAWfeuyDjHR4Ej9fH=PXdH0qUda50R=iqGKVzN1mcHPQ@mail.gmail.com>
+Subject: AMDGPU - Regression: Black screen due to commit 16dc8bc27c2aa3c93905d3e885e27f1e3535f09a
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: mario.limonciello@amd.com, alexander.deucher@amd.com
+Content-Type: text/plain; charset="UTF-8"
 
-The following changes since commit 425364dc49f050b6008b43408aa96d42105a9c1d:
+Hello,
 
-  xdrgen: Fix code generated for counted arrays (2025-05-16 10:58:48 -0400)
+With the latest drm fixes this week on 6.16-rc2, I am experiencing a
+black screen instead of the sddm greeter and the GPU appears to be
+locked up. I can ssh into the laptop and reboot it, but that's about
+it. I have bisected the commit to commit id:
+16dc8bc27c2aa3c93905d3e885e27f1e3535f09a and upon reverting the
+commit, the system works as normal. The hardware is an Asus Rog
+Zephyrus G16 with AMD Ryzen AI 9 HX 370 w/ Radeon 890M video. I'm able
+to test patches etc.. if need be.
 
-are available in the Git repository at:
+16dc8bc27c2aa3c93905d3e885e27f1e3535f09a is the first bad commit
+commit 16dc8bc27c2aa3c93905d3e885e27f1e3535f09a (HEAD)
+Author: Mario Limonciello <mario.limonciello@amd.com>
+Date:   Thu May 29 09:46:32 2025 -0500
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.16-1
+    drm/amd/display: Export full brightness range to userspace
 
-for you to fetch changes up to 94d10a4dba0bc482f2b01e39f06d5513d0f75742:
+    [WHY]
+    Userspace currently is offered a range from 0-0xFF but the PWM is
+    programmed from 0-0xFFFF.  This can be limiting to some software
+    that wants to apply greater granularity.
 
-  sunrpc: handle SVC_GARBAGE during svc auth processing as auth error (2025-06-19 09:35:45 -0400)
+    [HOW]
+    Convert internally to firmware values only when mapping custom
+    brightness curves because these are in 0-0xFF range. Advertise full
+    PWM range to userspace.
 
-----------------------------------------------------------------
-nfsd-6.16 fixes:
+    Cc: Mario Limonciello <mario.limonciello@amd.com>
+    Cc: Alex Deucher <alexander.deucher@amd.com>
+    Reviewed-by: Roman Li <roman.li@amd.com>
+    Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+    Signed-off-by: Alex Hung <alex.hung@amd.com>
+    Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+    Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+    (cherry picked from commit 8dbd72cb790058ce52279af38a43c2b302fdd3e5)
+    Cc: stable@vger.kernel.org
 
-- Two fixes for commits in the nfsd-6.16 merge
-- One fix for the recently-added NFSD netlink facility
-- One fix for a remote SunRPC crasher
-
-----------------------------------------------------------------
-Benjamin Coddington (1):
-      SUNRPC: Cleanup/fix initial rq_pages allocation
-
-Chuck Lever (1):
-      NFSD: Avoid corruption of a referring call list
-
-Jeff Layton (2):
-      nfsd: use threads array as-is in netlink interface
-      sunrpc: handle SVC_GARBAGE during svc auth processing as auth error
-
- fs/nfsd/nfs4callback.c |  1 +
- fs/nfsd/nfsctl.c       |  5 ++---
- net/sunrpc/svc.c       | 17 +++--------------
- 3 files changed, 6 insertions(+), 17 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 41
++++++++++++++++++++++++++++--------------
+ 1 file changed, 27 insertions(+), 14 deletions(-)
