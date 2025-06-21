@@ -1,75 +1,47 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131318F5C;
-	Sat, 21 Jun 2025 13:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70272DDC1;
+	Sat, 21 Jun 2025 13:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750514018; cv=none; b=eRm2zTKTpV4FZ6FPjgZAzTT4jSvXEMggEKxlSNuaQ1dpn6QJdL28eGapnlgt8t2ZS1rGbPSHiaVHL4zM0CG59/1gzWbqZ1p0qUUkPJlGMtBz9CQB/+EyPJRpQWj+t16T7yR0q3NTaQFZLeiQ8iAtGGvpoKD4E+Eu6Ot5Cn22CMk=
+	t=1750514255; cv=none; b=ThQy7HTPS1elin/aY0/ZjDu88DSOpYdb80wUXzEHbsZIwoo+p2TcXejkSMM3lOy1AdycS6hEM22je1EV4EHZDMU64sG5O8g0V+pQCV8E5hZmfCyxupCJOc65+yJs8GEiI4Y9cZ1H3X/aJ9/smf66ISmpqVz+zPvRyiuXPptHClM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750514018; c=relaxed/simple;
-	bh=KsF5PKXjAY3Cx3H01+h3wogIpa3o2Izv1KlwW3dlvGg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mzCJfxHTEoYeGNVLFhHWPH67EeoPwRC/DaTK+psRRxfWvLC02T+1Bddb6ZqMrLawvFiiDHw/TymCxmcXyxt429heC6GoFc53akKKnSVnu6vUJBGcjPH98nvYGet7K3DtOzKLf/gphReVZxiROGEWTUAU62ifDMeu/lbI15SykYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EMvAKnYS; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750514255; c=relaxed/simple;
+	bh=ID7rjaE4ykN+fwkjvNTq6vv6yfCyYfVW7wahp8XmlUE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P1JJL0gkfw9bRn6jdLvffBcLw4DquEdYlTms4RRSPQKx8QdvphHar3wwffZxcxh4UnCSCVMjqOLI0aivLDTb5VPK+rQKyD3QskcQPbZ1tGmvC7T8cN6geWDDBqJetQWaT84gBfhUVdYz5J0pb8B/pOO4HqTuSTqpcqZ420Ov36w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dRaMfz+/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EMvAKnYS"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-235ef29524fso5220215ad.1;
-        Sat, 21 Jun 2025 06:53:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750514016; x=1751118816; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bTflLiAJEMI7+0/3feKtggy4eDDBbx+qju7cZDBIaN0=;
-        b=EMvAKnYShmepOJflMkw7LefDU9HxAcbjLy2R83MEoVgLHOkv9zKwV8UIC4RckiCrt5
-         Ix+OhgyxQ2zHDZgWfCdt2AhlJ8btS70mdIHklaUTgGI0mkDvsI4rN9yj9khMArBRNCzZ
-         dy7heG1MI6khWRDrM7GDTsIeyavLbZR/QfoFZGby502DOH13dMUpgErpaQkJdEGDt+di
-         tEk1LF7B5BF8Hfu/8dGz+OmKfGSrZPvFikm7gJ1LjIiTGXYDbScCG+0HbV0j4BDCAXBu
-         /8p9fDi+lzvbtAoShphjbjUSVhoj/LECeiB5fuMfTP/vlB8GKTV8fsWdO0MxBG9m1RfI
-         zvPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750514016; x=1751118816;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bTflLiAJEMI7+0/3feKtggy4eDDBbx+qju7cZDBIaN0=;
-        b=HzBEpP4MVTfqK94Fet0hxbPw05qjT5DtOSm1jvBxbBwJX2KvXfOFF4476Tmjq8xjjE
-         ORjfMTlDmHyh/j2PA8NUJqvkL2ouVVmF4B2mUCT4c0sdk9hZa6h7ie6zjYHGwb5lOLqt
-         pt1SeLPQEvTeYo0SWQDjZLzCY+4IR//kYq7rY/riAKIFM+bNObIr7zU8K7ZEBrjwLRc5
-         zCCmucEs3S/fwNjoO/Gfcb5Vt6DNR/MC98V2M2vG63ZouDHhGzyOCC5dN9AYsfslA4Oz
-         oyQ8U96LN/11ZbvbNk2h33QcMqa6qTLNoCBy+rlzOZu4xPDH6ilLvSN3DKbGA6cV4JJU
-         AeKw==
-X-Forwarded-Encrypted: i=1; AJvYcCWUdxtuS6pJMiKPKDUW3BQXAstA4eZcYM7k8Wm0MadK3/tEYEU3FwWzjyfzjvcOwnAjkKAY1tlbEjf3o5Cj@vger.kernel.org, AJvYcCXQ+N8FQNpvtFyQFe8Djeom7PPSmXTLcPhyQISZ38Rnm7w+0cwDlkmC2LSniwNiEDSQRoEa2wL7ZCUy@vger.kernel.org
-X-Gm-Message-State: AOJu0YytVx+q6NjEsyOVMPT4BfdO/GDrEqmIfo8h24lC8nmDLsVcrh1b
-	WermY+HtfcO0kRe6Y+utqIb27rch8jMAE0tWlYF7br2HgNYpXUsmxXvo
-X-Gm-Gg: ASbGncurV699sKktFhcjmg0x3bxM4xvjJcxTLbIxlUiDY3FgiExD3IB3dvmMERhvMSv
-	Iuoqe0f+Kmc5//qKodLn8BdOJfx51Qm4K1fiIaAUBQ2G1cuptVDLLCg2w+/5FpB6939yoOEm8XN
-	Rl4NN9QBAYLLFvViV6YJA6cGE3gSFpWDtpS6nErPfxX7Zs8RnrC/1UxcyBdXgm4FsxpHoPywsJ0
-	FjHv3khHJh5x9PjWw6U0ACaLdm15TNBsM2ofjpEH0Zrd3hwG62G5XFKxsXfxbNMTw45sWptO1Qz
-	5+GiU/SSjl6HJBaLDzb/xlYnUeRBgDPFURbiQCe96H5ONQVPUx5r3gJBsGn923U=
-X-Google-Smtp-Source: AGHT+IHNSz1H+Y6EvxrMfpwVtSmD5EjhjR2Uj7VVL9JBRhFfCwNGQaZuAsJ9UFVRyUwVzOhTpkaRDg==
-X-Received: by 2002:a17:902:d4ce:b0:235:f1e4:3381 with SMTP id d9443c01a7336-237d9a2539fmr35469485ad.8.1750514016224;
-        Sat, 21 Jun 2025 06:53:36 -0700 (PDT)
-Received: from rock-5b.. ([45.32.55.39])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86103c1sm40700275ad.105.2025.06.21.06.53.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Jun 2025 06:53:35 -0700 (PDT)
-From: Jianfeng Liu <liujianfeng1994@gmail.com>
-To: linux-rockchip@lists.infradead.org
-Cc: Jianfeng Liu <liujianfeng1994@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: Add bluetooth support to ArmSoM Sige7
-Date: Sat, 21 Jun 2025 21:53:14 +0800
-Message-ID: <20250621135319.61766-1-liujianfeng1994@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRaMfz+/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78B62C4CEE7;
+	Sat, 21 Jun 2025 13:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750514255;
+	bh=ID7rjaE4ykN+fwkjvNTq6vv6yfCyYfVW7wahp8XmlUE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=dRaMfz+/QwayoSc09I81w3rRWTBbhVPP3Gwcpl4sDv3QqhcqZODVA31iRbfq6SwCq
+	 YolgwDJd0LK9hKxPw/pIess9wEKNBx3KumKidug7lcoQiCfB6phSeEbe7PJyULpGOg
+	 ha9rj1aUtT1oo0PsVS+fvLVukPLl1wn+XpV6PgEHeBedx3ejc11lzn/T9hADd1bh2R
+	 sEnWlXiCkZ5R7zgMtMyWe9HS1RpG8dBvHPxRlNE0FxdDml5boVve+cfITQTC0M0/+1
+	 1fW9oYL9Y6G9foE+RF0fng+zIJ5BmU7swp/w/NduVldTQxf/lMEUscAK4/Z84pwuDP
+	 7R3iwdJXnTKKA==
+From: Alexey Gladkov <legion@kernel.org>
+To: Masahiro Yamada <masahiroy@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>
+Cc: linux-kernel@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	Alexey Gladkov <legion@kernel.org>
+Subject: [PATCH v4 0/7] Add generated modalias to modules.builtin.modinfo
+Date: Sat, 21 Jun 2025 15:57:12 +0200
+Message-ID: <cover.1750511018.git.legion@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,70 +50,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-ArmSoM Sige7 has onboard AP6275P Wi-Fi6 (PCIe) and BT5 (UART) module
-which is similar with Khadas Edge2. This commit enables bluetooth
-at uart6.
+The modules.builtin.modinfo file is used by userspace (kmod to be specific) to
+get information about builtin modules. Among other information about the module,
+information about module aliases is stored. This is very important to determine
+that a particular modalias will be handled by a module that is inside the
+kernel.
 
-Signed-off-by: Jianfeng Liu <liujianfeng1994@gmail.com>
----
+There are several mechanisms for creating modalias for modules:
 
- .../boot/dts/rockchip/rk3588-armsom-sige7.dts | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
+The first is to explicitly specify the MODULE_ALIAS of the macro. In this case,
+the aliases go into the '.modinfo' section of the module if it is compiled
+separately or into vmlinux.o if it is builtin into the kernel.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-armsom-sige7.dts b/arch/arm64/boot/dts/rockchip/rk3588-armsom-sige7.dts
-index ae9274365be..39197ee1983 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-armsom-sige7.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-armsom-sige7.dts
-@@ -373,6 +373,20 @@ vcc5v0_host_en: vcc5v0-host-en {
- 			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 	};
-+
-+	wireless-bluetooth {
-+		bt_reset_pin: bt-reset-pin {
-+			rockchip,pins = <3 RK_PA6 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		bt_wake_pin: bt-wake-pin {
-+			rockchip,pins = <3 RK_PD5 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+
-+		bt_wake_host_irq: bt-wake-host-irq {
-+			rockchip,pins = <0 RK_PC5 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+	};
- };
- 
- &pwm1 {
-@@ -767,6 +781,28 @@ &uart2 {
- 	status = "okay";
- };
- 
-+&uart6 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart6m1_xfer &uart6m1_ctsn &uart6m1_rtsn>;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		clocks = <&hym8563>;
-+		clock-names = "lpo";
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <RK_PC5 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "host-wakeup";
-+		device-wakeup-gpios = <&gpio3 RK_PD5 GPIO_ACTIVE_HIGH>;
-+		shutdown-gpios = <&gpio3 RK_PA6 GPIO_ACTIVE_HIGH>;
-+		max-speed = <1500000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&bt_wake_host_irq &bt_wake_pin &bt_reset_pin>;
-+		vbat-supply = <&vcc_3v3_s3>;
-+		vddio-supply = <&vcc_1v8_s3>;
-+	};
-+};
-+
- &usbdp_phy1 {
- 	status = "okay";
- };
+The second is the use of MODULE_DEVICE_TABLE followed by the use of the
+modpost utility. In this case, vmlinux.o no longer has this information and
+does not get it into modules.builtin.modinfo.
+
+For example:
+
+$ modinfo pci:v00008086d0000A36Dsv00001043sd00008694bc0Csc03i30
+modinfo: ERROR: Module pci:v00008086d0000A36Dsv00001043sd00008694bc0Csc03i30 not found.
+
+$ modinfo xhci_pci
+name:           xhci_pci
+filename:       (builtin)
+license:        GPL
+file:           drivers/usb/host/xhci-pci
+description:    xHCI PCI Host Controller Driver
+
+The builtin module is missing alias "pci:v*d*sv*sd*bc0Csc03i30*" which will be
+generated by modpost if the module is built separately.
+
+To fix this it is necessary to add the generated by modpost modalias to
+modules.builtin.modinfo.
+
+Fortunately modpost already generates .vmlinux.export.c for exported symbols. It
+is possible to use this file to create a '.modinfo' section for builtin modules.
+The modules.builtin.modinfo file becomes a composite file. One part is extracted
+from vmlinux.o, the other part from .vmlinux.export.o.
+
+Notes:
+- v4:
+  * Rework the patchset based on top of Masahiro Yamada's patches.
+  * Add removal of unnecessary __mod_device_table__* symbols to avoid symbol
+    table growth in vmlinux.
+  * rust code takes into account changes in __mod_device_table__*.
+  * v3: https://lore.kernel.org/all/cover.1748335606.git.legion@kernel.org/
+
+- v3:
+  * Add `Reviewed-by` tag to patches from Petr Pavlu.
+  * Rebase to v6.15.
+  * v2: https://lore.kernel.org/all/20250509164237.2886508-1-legion@kernel.org/
+
+- v2:
+  * Drop patch for mfd because it was already applied and is in linux-next.
+  * The generation of aliases for builtin modules has been redone as
+    suggested by Masahiro Yamada.
+  * Rebase to v6.15-rc5-136-g9c69f8884904
+  * v1: https://lore.kernel.org/all/cover.1745591072.git.legion@kernel.org/
+
+
+Alexey Gladkov (3):
+  scsi: Always define blogic_pci_tbl structure
+  modpost: Add modname to mod_device_table alias
+  modpost: Create modalias for builtin modules
+
+Masahiro Yamada (4):
+  module: remove meaningless 'name' parameter from __MODULE_INFO()
+  kbuild: always create intermediate vmlinux.unstripped
+  kbuild: keep .modinfo section in vmlinux.unstripped
+  kbuild: extract modules.builtin.modinfo from vmlinux.unstripped
+
+ drivers/scsi/BusLogic.c           |  2 -
+ include/asm-generic/vmlinux.lds.h |  2 +-
+ include/crypto/algapi.h           |  4 +-
+ include/linux/module.h            | 21 ++++-----
+ include/linux/moduleparam.h       |  9 ++--
+ include/net/tcp.h                 |  4 +-
+ rust/kernel/device_id.rs          |  8 ++--
+ scripts/Makefile.vmlinux          | 74 +++++++++++++++++++++----------
+ scripts/Makefile.vmlinux_o        | 26 +----------
+ scripts/mksysmap                  |  6 +++
+ scripts/mod/file2alias.c          | 34 ++++++++++++--
+ scripts/mod/modpost.c             | 17 ++++++-
+ scripts/mod/modpost.h             |  2 +
+ 13 files changed, 131 insertions(+), 78 deletions(-)
+
 -- 
-2.43.0
+2.49.0
 
