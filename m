@@ -1,70 +1,78 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEFA271442
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 20:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BD3221FC6
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 20:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750539083; cv=none; b=Y5M4TG2qj/1P/THcYJ5D7xkTmGF+NUnryAqSWfXNRiWLA0EosBk5GhGOc7mwi8fvvTARWj3vX9wmpXeKEzLBpSaR6hr4/ADYPg07iaPjNiDXM9okr2ShJDxImF6kb5C5zCO7EaSK4aPIRFBxGpi5t5eyYXSTCSOlWE8zrv9Uj9E=
+	t=1750539498; cv=none; b=elvjwzDRQN5fxDuYPNrC+611vJTPJrKZwZCcP2sqYx7jcp1ejY+cOvMFVy48Z5h+gbkffa/9jSbouHPJS/xQ6fRrevr0dcn7SVZ1YwlWnVh5jtUXDcO+LN49AMoDycjq4BdVA6j0EdU9EgVCYurpmyHoDNePQTyFbJ0JcPdez2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750539083; c=relaxed/simple;
-	bh=v9SEfWHaLKLzZ51yBh3GMJkvnWnGKDt6pqWgxr1ZXrk=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=TWDLmZKd2rgPdGYnUtKA0S8tCvHZrOFYli2iK7WMpPE/t05dj+2UWqZLJe1Op8lzJpClaOZNfkLlmg9H6u1+TeJE1v+MXIGJjBsbsNAINqimA4h4hLT+BNFgoKuZYMiIJywtY3ag87r9OkOGPW7qNBQHR4pUHSEMA2XvBLK075E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bitology.eu; spf=pass smtp.mailfrom=bitology.eu; dkim=pass (2048-bit key) header.d=bitology.eu header.i=@bitology.eu header.b=L3VmS15f; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bitology.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitology.eu
+	s=arc-20240116; t=1750539498; c=relaxed/simple;
+	bh=siVc9RXe7otepqDtpg3E1usZhGrwMlWqN9Q+Gtweicg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n5jBy/egXMsPvdaUuBnjPoMN5BjAbUtbVa4+G0IEaQJA8dWBvGIMlKS1tSpc14TUEGp6zvSuEcU0qJ7LGtOkCoC8YAIB8RIKXnj9hC0+dGFSPEEB7tI/jr9bR24FpnNL8wflPC/rd7UOcPSYxtE4mwIaDlLWj2+VGYkVd6TghBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Vnlcnr9X; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitology.eu header.i=@bitology.eu header.b="L3VmS15f"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitology.eu
-	; s=ds202506; h=Content-Transfer-Encoding:Content-Type:Subject:From:To:
-	MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:
-	Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=GC5wteb01X8aWqz8GPS3uLooUpeEnYoTVV8sCOwJyWg=; b=L3VmS15fm8qNYpybnHgvJ62FYQ
-	6RKW90wCcoSiGMF4JQj3WsUf2PbwOtjRaEeugJkC9UZS7jlJLnvybgL32SK5SYG/r9zcX9VDyopV0
-	jdb5hbXtd5cvIH3G6RskChKTpH8u2MSRrTH7ztJRaTF+sKNNncTk35I8WYhhnuVg/Jg7DkEXqBSQ+
-	TP8XBuGqkax9k9PYwdjEN0L/fDCJBSOzUtpwM8Tbw00m0uFEmg5QLB2tKRkKU9T0X3t6htTk5sDzM
-	LeNtYWKE2MWheY6BBuVxfM6KuGUNstXYWIrytBEEJKMiJ+/SXu1LzU/ovnlkA5Cha5mPnsSj3wdqJ
-	gk2zSrBg==;
-Received: from smtp
-	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	id 1uT5BB-005RP9-A9
-	for linux-kernel@vger.kernel.org;
-	Sat, 21 Jun 2025 22:51:13 +0200
-Message-ID: <dc59820f-9856-4f56-b57f-c733b4c05a67@bitology.eu>
-Date: Sat, 21 Jun 2025 22:50:50 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Vnlcnr9X"
+Message-ID: <2211ddf3-88d3-40c4-a6f4-22e31c5446ea@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750539494;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B8MS0cazfGUsxYyk6B/exVLlLdNWKEHr5YMhhdcZ8Lk=;
+	b=Vnlcnr9XHU8OHhGIdcjxkNPWIroG2eGXz8aQ8mLBrhK33Mawsjq1mozTFagGPXv5F8+2lr
+	pw8/YyITMAtjJZYpA7WY9n4f0IsqlvBEzC5iPTEVOapuDnJFaHWVc2E2fe+Y4vpC5GfD5k
+	aStdtJPPrfct4QtlL+YjjMol2svOBBc=
+Date: Sat, 21 Jun 2025 21:58:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-kernel@vger.kernel.org
-From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <bit-budi@bitology.eu>
-Subject: Some updates on Philosophy perspective (was low jitter, fair pay
- philosophy)
+Subject: Re: [patch 07/13] ptp: Split out PTP_SYS_OFFSET ioctl code
+To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
+Cc: Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org
+References: <20250620130144.351492917@linutronix.de>
+ <20250620131944.156514985@linutronix.de>
+ <83c30e4a-d674-47a7-bda9-4b2fc0d590e3@linux.dev> <87a560q10x.ffs@tglx>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <87a560q10x.ffs@tglx>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-I have moved to using MIT licence. It seems GNU really tries to be this.
+On 21/06/2025 21:42, Thomas Gleixner wrote:
+> On Sat, Jun 21 2025 at 21:14, Vadim Fedorenko wrote:
+>> On 20/06/2025 14:24, Thomas Gleixner wrote:
+>>> +	pct = &sysoff->ts[0];
+>>> +	for (unsigned int i = 0; i < sysoff->n_samples; i++) {
+>>> +		struct ptp_clock_info *ops = ptp->info;
+>>
+>> Looks like *ops initialization can be moved outside of the loop.
+> 
+> Well it can, but does it matter? No, because this is only a coding
+> artifact. The compiler can evaluate ptp->info inside of the loop at his
+> own peril even on both usage sites.
+> 
+> Though what's more important is that from a context point of view, ops
+> belongs into the loop, because that's where it is used and not outside,
+> no?
 
-My own suggested developments is called Bit Wavelet, Bit DAW, Bit CPU.
+Well, in the original code it was always outside of any loops. And the
+scope a bit bigger, all these functions work with ptp_clock object, so
+the context is really subjective. It just looks a bit weird to de-
+reference something, which is known not to change, every iteration. Of
+course the compiler is smart enough to optimize it, but still..
 
-Website is now Bitology.EU, and Euro from Brüsseels seems optimal, as 
-digital IT currency. (not Ethereum "hacking" or mining crypto.)
 
-As before: https://www.youtube.com/@Ram_Bitstreams_EU
-w/ playlists aswell.
-
-!-!
-
-Light,
-Ywe Cærlyn
-Bit Budi
-https://bitology.eu/
-
+> Thanks,
+> 
+>          tglx
 
