@@ -1,102 +1,99 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8351459F6;
-	Sat, 21 Jun 2025 08:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8571E78F3A;
+	Sat, 21 Jun 2025 08:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750492916; cv=none; b=nPvksLUxxgvGn0xo2Byi7SrvH0CBtAFQmRu0X2aLpkctOu/y9knxZP6WurTOYbvmRXurph+vU8W+CRx3UmZomKg1FcsTnQweC3h5Ase1wze1truu5aV2inKgQfYxpcaEiqNWOsxlkN8iokS+IbjXGPRidrpeYt9ZZCcSZcLvu6M=
+	t=1750492976; cv=none; b=Aa+em8JrZjTljaufuslajZO0QmdDVxRQD8pfhBg80sAOfKHA8ayvfZVmX1I9ckbb8pYf3Z9Yv+DccSKGO4JKN023S+SUqvNZNYucqwAXhfBntX+sFnuwNRFvCZcwPcmIZp1Y6MapfGl+bl0Dw9KGPj3og5XCv0c1Bu1qqIq0eNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750492916; c=relaxed/simple;
-	bh=O7kwbBlgpkTAY+8xG44BORrnfHtrt65qBceqCJuFong=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RdyeiPhZSCC7NUDvXeRVMDOcKeI8/lGOHcACa72WZIRbq/bq8vx110j+lxmqikvZ4njg0zdyQk47JINiNArEwI/81MFTSFJLA6ihL6SQNEuTW+wisfYDSbJqp06JYR7gXJcZh+snNj/U2wFBLbntyPbpXAt/IL8isW7LUWEMyQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=hXhQ/77i; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1750492976; c=relaxed/simple;
+	bh=J8A43S5sbZL2YZQ2prAaDwMBU97QZPOKqyN8mGDG2Jg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=W22uX5VlliZHGu33Ji3uVpQuxDi619EAvaRAKnvtSa7QE1B8Mn3c5F0h0RvgQrtwfKAwPJWXDPNYalEJFD6D/64DK41xHWxRrl29vbBUn8yB4bff+KdYgSVIj12pykz4gQDM3luUpLWfCICTtqdQfX9cmzVUIENr+EKxsbx/FhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QBq6hmdY; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hXhQ/77i"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=m1bFZYsCLNp2mN1YOVPVqOstkZgIwKgoP+6BvR6MCpc=; b=hXhQ/77im1dtpQfBmy42Bu0qSg
-	OW8fQfF5qmq9MN/sEbCv31W3mJm5DZBzpflkNqn/qMdQjwHfFE9/DRJfN3MSWwGOp/uSZBGguiUZF
-	RCxE+RFNiQE5xaMYE6OquNYCZQzs6wVIqdJ1HBuSNQV8++DQNEeYw/yVDnosmTqbTBlA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uStAZ-00GZJI-Jx; Sat, 21 Jun 2025 10:01:47 +0200
-Date: Sat, 21 Jun 2025 10:01:47 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	thomas.petazzoni@bootlin.com, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Mark Einon <mark.einon@gmail.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-	Keyur Chudgar <keyur@os.amperecomputing.com>,
-	Quan Nguyen <quan@os.amperecomputing.com>,
-	=?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>,
-	Michael Chan <michael.chan@broadcom.com>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Doug Berger <opendmb@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Sunil Goutham <sgoutham@marvell.com>,
-	Hans Ulli Kroll <ulli.kroll@googlemail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Ioana Ciornei <ioana.ciornei@nxp.com>,
-	Jijie Shao <shaojijie@huawei.com>,
-	Jian Shen <shenjian15@huawei.com>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Parthiban Veerasooran <parthiban.veerasooran@microchip.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
-	MD Danish Anwar <danishanwar@ti.com>,
-	Roger Quadros <rogerq@kernel.org>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Imre Kaloz <kaloz@openwrt.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Steve Glendinning <steve.glendinning@shawell.net>,
-	UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH net-next RFC] net: Throw ASSERT_RTNL into phy_detach
-Message-ID: <5c32afad-5e25-4a35-8bdd-b78949c117ce@lunn.ch>
-References: <20250620143341.2158655-1-kory.maincent@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBq6hmdY"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b2c4476d381so1958766a12.0;
+        Sat, 21 Jun 2025 01:02:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750492975; x=1751097775; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mvzxg1criaakvyYttx7b2bRm4XJ4WjO4hy5LV+VQtjE=;
+        b=QBq6hmdY0SneqfoOar+53+kLA0oo7a4zkMjk6U6pjorG81fBYj0iZ/6J4I4SXcx0P/
+         R70mCEb8jK+AnVg/cjP02L/GDKq6VbI5tW+wP05A2y9+FNGq9kBndazAM587K8CE5DtK
+         OrVFuKW3w4Qq/+wWGaYjWoO8Shj4Nf6IqCLEHySq0w5Wwnt50YMnV6tMADdqUm42vscG
+         8nRFmUIiMPeDbL5mDCbVUuA8XEi6x8j6veqzdPdyI4R6JKdu5A4MCdvmAVwsjDgLBPme
+         44HxK4GPHIBYckODL/Vo8qpAEmQ7Q4JoPvXTq8VBHtY9ZSzKHrRtJ/QUznYeR6u/xN9x
+         vzZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750492975; x=1751097775;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mvzxg1criaakvyYttx7b2bRm4XJ4WjO4hy5LV+VQtjE=;
+        b=rlp0htm8owTQATPNUCPCxfDjVxocP1sJNizEV7W1LmObm9hGwcF1tnvAzezjVRWPq+
+         90qV3FNrx0lkyu4+CsPkKw+7XLNjUcD2fUtDkPvFoUUxOxBVomEYG2BAz3CTkwf8nbx1
+         moXSrNrDrxQ2qVu4Kh8gPd/lAaydrg2t4zKxfb4tonr92JmCGTQoWVLxMczQFtZfyDhB
+         UmmqKXNTveard1R954EijpRpXGOiT/GvJKENWm9f0cdcET0g9VmRNwLL8NHGiSjPTXLb
+         P607E85qeQkE9WGAzvJVHFjG7LWhLcRlbG0I6cLGTjuQqc4zZKdtUoqInyVj/WcSNppr
+         7zig==
+X-Forwarded-Encrypted: i=1; AJvYcCWBSigtQLOVFb8R4MpGuuBfcpKHuZxm3/WU22G0u5lASd4P08G8Y53iJrkioAUL9bcOTQl/CO3NSiwi1BA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkFoaEibEgo7xAAejiodx5CfurKj98nFDza1KIpro2DUPkkgrk
+	qI9OFnoOO3WIPrlttbONyC8MzyvISrY+yChXgT1aUsfDO/Wwm46GTKYI
+X-Gm-Gg: ASbGncuXsXyS1vZQdRwagFL5FT30at2wzV3j4Jcw7nv9XRiYTCP8lUlRHr1W6Tp2QSs
+	bWtG//PQDO+msc+PhcwKka9ySqewAipbfHFv7cIJp0dAjJN4gTnKCwYhWDyAJdPVkACCYZXlhkO
+	dI/MkGKR2zfXrdDjJaK4qGUxq32U5Ef5mVPrCVtkzHTuChSKyaXDxoVzoouZOI41Zz/7v/Mlcn1
+	T6CURmRFstRkqxwXR2EuTsYEkHjJtsSsBB09Ab+6fnr/bKw6YcRfEQcamfXcWn5eIxkKUlwSwX/
+	rud0NJUtg/QBfqnnS6DVMkxEBwzGmh5t1iOeYK/uJYs9aBS/AOpOc8EKbBWSreyRqsteFXpylW7
+	UtDO2hnC1Tg==
+X-Google-Smtp-Source: AGHT+IFthS9ajgZZShzVqoxrXr3psnI1oJaxz+jRjKjcpG/pueolDrKYIyn88Qlws6c3fNe7xYEG6g==
+X-Received: by 2002:a17:903:1746:b0:235:e94b:62dd with SMTP id d9443c01a7336-237db06dfdfmr95191595ad.12.1750492974657;
+        Sat, 21 Jun 2025 01:02:54 -0700 (PDT)
+Received: from faisal-ThinkPad-T490.. ([49.207.215.194])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8608e24sm35531285ad.127.2025.06.21.01.02.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Jun 2025 01:02:54 -0700 (PDT)
+From: Faisal Bukhari <faisalbukhari523@gmail.com>
+To: jdelvare@suse.com,
+	wsa@kernel.org
+Cc: linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] docs: Fix typo in Documentation/i2c/busses/i2c-parport.rst
+Date: Sat, 21 Jun 2025 13:32:44 +0530
+Message-ID: <20250621080244.158018-1-faisalbukhari523@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620143341.2158655-1-kory.maincent@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-> +/**
-> + * phy_disconnect_rtnl - disable interrupts, stop state machine, and detach a PHY
-> + *		    device
-> + * @phydev: target phy_device struct
-> + *
-> + * This is a wrapper around phy_disconnect that takes the rtnl semaphore.
-> + */
+Fixes a spelling mistake: "resitors" → "resistors".
 
-Developers are likely to get this wrong, because generally they don't
-need to bother with RTNL, the core does it. Could you add some
-guidance here when this should be used, and when not.
+Signed-off-by: Faisal Bukhari <faisalbukhari523@gmail.com>
+---
+ Documentation/i2c/busses/i2c-parport.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	Andrew
+diff --git a/Documentation/i2c/busses/i2c-parport.rst b/Documentation/i2c/busses/i2c-parport.rst
+index a9b4e8133700..4cbf45952d52 100644
+--- a/Documentation/i2c/busses/i2c-parport.rst
++++ b/Documentation/i2c/busses/i2c-parport.rst
+@@ -84,7 +84,7 @@ Remarks:
+                    \|
+ 
+    must be 74HC05, they must be open collector output.
+- - All resitors are 10k.
++ - All resistors are 10k.
+  - Pins 18-25 of the parallel port connected to GND.
+  - Pins 4-9 (D2-D7) could be used as VDD is the driver drives them high.
+    The ADM1032 evaluation board uses D4-D7. Beware that the amount of
+-- 
+2.43.0
+
