@@ -1,113 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f226.google.com (mail-pg1-f226.google.com [209.85.215.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE0E30E859;
-	Sat, 21 Jun 2025 16:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421D61F239B
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 16:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750523298; cv=none; b=bYXFOym3fw6/eCY7DcCSOZnLWsM4pdlEibu4DFFBpjbAUeCzCi8mRfNNQsEQPW3mW6FgDbbcfYamqre3hrXiDHomV0sbm9VEK3SkXMATF9Pr9A/oTHtIiwQvmZ2s7JAfiyZiw/UxphTaBUoPh0vj7q0dpRQ5ju+EinAiqG1ZgC0=
+	t=1750523334; cv=none; b=Nkoq270MNoV/0wMpeKwrQMZMwb5/TlZm0NIeOwTVhw+7tTDf4XboQTREVpUmSKMDFDEf4qfkrply3QbSmKRfB9Mfv7Pl5jb6WmB8+BXKnpMhKkf+oxwg0PQAt07HKwPuq8F9nLSoNf+ALPHDJmWXkjf1X0Nkj4+R6va44cZoEhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750523298; c=relaxed/simple;
-	bh=6TLyncxbiWa3QR4O3QZL40faVkmdmv9hfurNhPDlKI8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I+GiHnZMhnHJLH01e3xa+rjxqX6COGNBU2JnP/67TSqTWH3KvmBVgDaTa4Tnv8nf0VkOI+ZWzldhHF8ytY17wZo6xIk6dta3lvALfcbTSL98nVypWST8erbj26U1TKhNBYe9aghn1IEwQitrlR1nxJqurAmwGvGKa+9m1Rkub5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fSZnu0gN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750523334; c=relaxed/simple;
+	bh=Br/AjUiqPK7kWS3d/p1T4f7jWJcitMJB/k21O5avM0M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mKrRTA53ZmFTMOQs+BeSDfcSAxT6rUzJwyozJlX+iggg+7uY2r8WtkJgM75hJhptE12hWeS6hVquYFEtr3Y2IxLW+qIHs1D+K0C6XwN8UhfmHjYMimea3SbtC4C7gM28JfNwiRiiZ5AqWvr3BzJpancvUksnfKPeHd4RPnVPoLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=NW5GhdnB; arc=none smtp.client-ip=209.85.215.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fSZnu0gN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82A38C4CEE7;
-	Sat, 21 Jun 2025 16:28:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750523298;
-	bh=6TLyncxbiWa3QR4O3QZL40faVkmdmv9hfurNhPDlKI8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fSZnu0gNmiIiQoieyVjJpI2tN/8I+Ne1vrehIbv3wqpVI0h9dpgFkTpYY6bQM1drs
-	 M2dX8Lct3XJngcX/CndTpHkIx21fg4NEpHKh/rpaC1mS6AXEA2JnNgNkFnfSGNyVSo
-	 bhspClhqM4xi87BBLJnEi0JRw8tGNbPyoG4ALFDBmP+qPQGKOO/wcUyzdqwyNnCJ/a
-	 3M7KkDomWJji06YPnvSb74H3r7LTuMEjGxjIcrHKQDUfofalpHoKgccXM0KUs+9hwb
-	 eJjbh8db6ffDtkeldXh7T73UWkyNh9aT0fDkWBMEnhxDUZrWTC+vy0KGqigTWUorX+
-	 iAqZ17CT7Smgw==
-Date: Sat, 21 Jun 2025 17:28:08 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Conor Dooley <conor@kernel.org>, Marcelo Schmitt
- <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, lars@metafoo.de,
- Michael.Hennerich@analog.com, nuno.sa@analog.com, andy@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linus.walleij@linaro.org, brgl@bgdev.pl, marcelo.schmitt1@gmail.com
-Subject: Re: [PATCH v5 01/11] dt-bindings: iio: adc: Add AD4170
-Message-ID: <20250621172808.6f304023@jic23-huawei>
-In-Reply-To: <eeb66815-3f7d-41fc-9d32-c28a3dda7749@baylibre.com>
-References: <cover.1749582679.git.marcelo.schmitt@analog.com>
-	<4df9d4d0de83090300b6870afc8ae7b22279cd22.1749582679.git.marcelo.schmitt@analog.com>
-	<20250616-neurology-explicit-ec2a829bd718@spud>
-	<eeb66815-3f7d-41fc-9d32-c28a3dda7749@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="NW5GhdnB"
+Received: by mail-pg1-f226.google.com with SMTP id 41be03b00d2f7-b31ef5f24b7so321295a12.0
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 09:28:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1750523332; x=1751128132; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jqc1pNioaqt03KwmwQ7jb1MxVBLMpBdNgYbtBd1e3XU=;
+        b=NW5GhdnBwU0xlJ5NsLYEEsg4VZeJbHAfcGzBOEmuGPMTCwIAD46mTXiAZzPy/z7W7r
+         vrROsgrJZ5x6FDzX0H0SsBT8ImbiNToj8BSQYfA50WGBGm0uw2BeJI+cMp73CPYSdXMx
+         2emtcemFp+Gqpfa2e3MxGkMW5Xjfc8GT+5OywsUHkD4KBriO/N33oZwxLlFZHnqbAEbx
+         UXgDKrg23LuJOISYYoLH/w4EQEc7+W+D06A4c8L3uH5afFP0osb/miGzC+MRUx7oD0fW
+         1e3kgvqhmD/zVKxdXgTZmF2QONZwCEjKXVQkgbjp9DVoGcHRdMwk4GOYyFjg0xyXrxw8
+         R2aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750523332; x=1751128132;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jqc1pNioaqt03KwmwQ7jb1MxVBLMpBdNgYbtBd1e3XU=;
+        b=I0fACZO4IovIVPBN1xlsF803Cl1QD8ezVYr2Bi484BBxyo21re3nEH58bDVzmZb5Xe
+         G8fD5Bu+I46CRZpVkqvQJJoXeJLb+951e3/e0m9xmv91pUgeUTsdOZlxwnscs1KAbe4a
+         bCZDM6vkSFnGtR2I3hQYHc5gbh6y2QHCo9bV9Pw9ljkXXphaV1EHXT43ryGaA4RuUNeV
+         nyj0GKX860+ooO+liTNyy2AN/xIs16RANOutYsulbAOXb1JO1pT0K56EES6wu6tvxggV
+         WJAUf/UQlOkifIw62kG8Kn6oRNTC2xmZdg+BsKbu7uskI03IfvZTx50P1G0xiDHmtZV0
+         xGmg==
+X-Forwarded-Encrypted: i=1; AJvYcCWjiWAt+a9tED6RuCrBoARDa747jGzK8oJMwU79G2NfllgX6d12LyohKOHLuGeZ0MDXl9Gx+2/xDUKIQ6U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxscMgVGgUigvv/dGu3qHmD3SPaYL6RbV9DXp4Xx9KFAEFAlRdO
+	CzeGuuvp5D92b+Kzdo+u8xb1a9LGZp3AqsfUIzAJv8fYmSKOvA33+nwvwstbSwZth7C+VPgCnxr
+	yNfSm7WxdBkQgkVbzXKE2WnC6xvNaPZJKE0dF
+X-Gm-Gg: ASbGnctcLZg5vTNzqXB982Q6FwvkeY3iwFKfIPvNvc4qi5L9yvxpD8dtsJzkcY7uVpF
+	g9Tdub4hbd/DydFGGSuK6+nFcIRD8AES5dNfrk4lxpez45KZ0cao8YQO9kdOiu+zEcHehEPCSOR
+	YdmMDAxtNGmBhfnre7J690DkHJJ5z2NilIi6d34cccEeNyQemWHbQsNz3oyyTwAM4HZb+nzaCg+
+	757kVlMdAxzTQ9cqynOBv2ce5DI9L6MCgKxWbWAt+s9V864LjEd5LRDcEeSelwv/bmh1fd6yjD8
+	BDrh2FVEkClpBLSNSr0qufgh2ib7PnHeSVMk1jgCiLv4mNnh8gYS5VE=
+X-Google-Smtp-Source: AGHT+IEBFdypyH71FaCNERa1yO+D1fgnOThDQ8WvWeH0QQB+6Sdy5Xr31fsXZ/ez38hI2Xk/wp4CgKkZkJ4t
+X-Received: by 2002:a05:6a00:a1f:b0:736:559f:eca9 with SMTP id d2e1a72fcca58-7490d6117damr4263850b3a.3.1750523332468;
+        Sat, 21 Jun 2025 09:28:52 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
+        by smtp-relay.gmail.com with ESMTPS id 41be03b00d2f7-b31f1259cfcsm222403a12.26.2025.06.21.09.28.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Jun 2025 09:28:52 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::1199])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id D48AF3400D0;
+	Sat, 21 Jun 2025 10:28:51 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id B7A81E42425; Sat, 21 Jun 2025 10:28:51 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Ming Lei <ming.lei@redhat.com>
+Cc: Caleb Sander Mateos <csander@purestorage.com>,
+	Uday Shankar <ushankar@purestorage.com>,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ublk: fix narrowing warnings in UAPI header
+Date: Sat, 21 Jun 2025 10:28:41 -0600
+Message-ID: <20250621162842.337452-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+When a C++ file compiled with -Wc++11-narrowing includes the UAPI header
+linux/ublk_cmd.h, ublk_sqe_addr_to_auto_buf_reg()'s assignments of u64
+values to u8, u16, and u32 fields result in compiler warnings. Add
+explicit casts to the intended types to avoid these warnings. Drop the
+unnecessary bitmasks.
 
-> >> +
-> >> +$defs:
-> >> +  reference-buffer:
-> >> +    description: |
-> >> +      Enable precharge buffer, full buffer, or skip reference buffering of
-> >> +      the positive/negative voltage reference. Because the output impedance
-> >> +      of the source driving the voltage reference inputs may be dynamic,
-> >> +      resistive/capacitive combinations of those inputs can cause DC gain
-> >> +      errors if the reference inputs go unbuffered into the ADC. Enable
-> >> +      reference buffering if the provided reference source has dynamic high
-> >> +      impedance output. Note the absolute voltage allowed on REFINn+ and REFINn-
-> >> +      inputs is from AVSS - 50 mV to AVDD + 50 mV when the reference buffers are
-> >> +      disabled but narrows to AVSS to AVDD when reference buffering is enabled
-> >> +      or in precharge mode. The valid options for this property are:
-> >> +      0: Reference precharge buffer.
-> >> +      1: Full reference buffering.
-> >> +      2: Bypass reference buffers (buffering disabled).
-> >> +    $ref: /schemas/types.yaml#/definitions/uint32
-> >> +    enum: [0, 1, 2]
-> >> +    default: 1  
-> > 
-> > Why make this property a uint32, rather than a string where you can use
-> > something like "precharge", "full" and "bypass" (or "disabled")? The
-> > next similar device could use something slightly different then the
-> > binding becomes pretty clunky.
-> > Can you explain why this is a dt property rather than something
-> > adjustable at runtime?
-> > 
-> > Otherwise, what you have here looks sane enough to me - but I'd like to
-> > see some comments from Jonathan or David etc about your approach to the
-> > excitation properties.  
-> 
-> This looks like something that should be in the devicetree to me. For example
-> if the external reference supply is high impedance, buffering is pretty
-> much required. And using precharge is an application design choice to
-> reduce THD at the expense of other limitations.
-> 
+Reported-by: Uday Shankar <ushankar@purestorage.com>
+Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+Fixes: 99c1e4eb6a3f ("ublk: register buffer to local io_uring with provided buf index via UBLK_F_AUTO_BUF_REG")
+---
+ include/uapi/linux/ublk_cmd.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Agreed that this pretty much only makes sense in DT.
+diff --git a/include/uapi/linux/ublk_cmd.h b/include/uapi/linux/ublk_cmd.h
+index 77d9d6af46da..c062109cb686 100644
+--- a/include/uapi/linux/ublk_cmd.h
++++ b/include/uapi/linux/ublk_cmd.h
+@@ -448,14 +448,14 @@ struct ublk_auto_buf_reg {
+  */
+ static inline struct ublk_auto_buf_reg ublk_sqe_addr_to_auto_buf_reg(
+ 		__u64 sqe_addr)
+ {
+ 	struct ublk_auto_buf_reg reg = {
+-		.index = sqe_addr & 0xffff,
+-		.flags = (sqe_addr >> 16) & 0xff,
+-		.reserved0 = (sqe_addr >> 24) & 0xff,
+-		.reserved1 = sqe_addr >> 32,
++		.index = (__u16)sqe_addr,
++		.flags = (__u8)(sqe_addr >> 16),
++		.reserved0 = (__u8)(sqe_addr >> 24),
++		.reserved1 = (__u32)(sqe_addr >> 32),
+ 	};
+ 
+ 	return reg;
+ }
+ 
+-- 
+2.45.2
 
-In the ideal world we would have firm rules on when to enable buffering
-etc and then the DT would describe the impedance of the circuit connected
-and any other relevant properties and then we'd have the driver enable it
-only when those rigid rules dictated that we should.
-
-Sadly no such simple rules exist (as far as I know) so we just expose the thing
-that gets set dependent on someone's judgement of the suitability of
-the buffering choice given the circuit being connected to the input.
-
-If we pushed it to userspace we'd just end up with a per device blob
-that dictated the mode to pick on boot and left it like that.  So effectively
-another bit of firmware :(
-
-
-J
-
-<cropping other comments>
