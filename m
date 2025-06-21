@@ -1,95 +1,134 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward102b.mail.yandex.net (forward102b.mail.yandex.net [178.154.239.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C696F101EE;
-	Sat, 21 Jun 2025 15:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B21101EE;
+	Sat, 21 Jun 2025 15:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750519265; cv=none; b=oeKRUwPMttTTsSEv2icdpd9IZtCP58VGXQxWkuqy2clWBWf2GUV7OBN4DWc3VTwu9WxnFhlPr//aXTwmfb2VvjBUNOtYPlavrnPev41TahL8PA3J851IJ+Ijmebm6flYEZvX9+LvcPoemCAEL2c7BLX/9bN7QZRLW8tIgOT5bTk=
+	t=1750519351; cv=none; b=Gl0hX7K2syy9Ub7waNzu2Oy1dN/qEsaEBNzFZZr86FEERL/r5DLpDWVHafs7Y3T7ac5XxbOzTCSxryYpxGhewOIYCRUEcH4C0mIHX0cMaJ8XpqAwya6jzDdC6CF7ecKCqabK/SsD7mqtcq/ncMSHlb8hxOqZPVLJoATLyk7OXBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750519265; c=relaxed/simple;
-	bh=JroJlkuo3LEOnGb3aGB2QIHQjVZIx4hFM1GZ7mqINXY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IYKWn1ntGLnjgR3LIIiaHwWCjtWcfgUAlO3iuql97GJ6qdCOB0zKHSKsv9VPZ8IQ70cDW1zAzTFTleFo5UOiNJLpu9QCFdZ7jN6fey6yheafVfR3EmcF8gJ+5LmVIsClVeauOvoE09dxfnGXR9Izt66d6Pc6DSGeTiWuzPbeRMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hE6C33UC; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750519351; c=relaxed/simple;
+	bh=7Lp59rNsPbydTS6B3+sgFgdCEpgsqeTBKtTqJF6iyAI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sveEvEUHttUnyL42DBPKjt0GdnMKdOK7W/zrwhos8sFKKPr9qRNUFenmgSg7t5MN1tipVv7iT7AxsvBFYrYBzoKRCs2jEX/c4mKRygzX1zf+wfidfM0hsGCG0RZYfLL2yMKAWPIgdckKSXdcdX02tRvyfBORsUplqMVqJPhY99c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=SUfLyCew; arc=none smtp.client-ip=178.154.239.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hE6C33UC"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b2700de85d0so492437a12.2;
-        Sat, 21 Jun 2025 08:21:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750519263; x=1751124063; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JroJlkuo3LEOnGb3aGB2QIHQjVZIx4hFM1GZ7mqINXY=;
-        b=hE6C33UCnri0RizsmW+/LTPeVrx2VbxmiOtONdC0y6ch+BY9V4VRJga0IIqMhzLBaO
-         NKGEF99bH7C11QrDtycpV17jeBCGF05FUPKXRtkuWkA/uCIZjGlZoEmrPDX2bThDfy2h
-         MWjRCe3VbQrm+gtM43KBVFvDyCh4v3bvt1p0dGDI1uZLEoNTzYtCzpA+2aXl4ODhVCGC
-         2GNany2tJzN1C08Rv3vSEXfLi3VgVz9AXY/2sYFx8EBNu0ckK5Hc491CQ/12nbH0zTi7
-         ZhCKBKjiNZyHtCx7AiW7A13TroInhQ3NcHXw9qRh3WIBMUZA9qEuQDBJaz4s9hrizVCi
-         zTyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750519263; x=1751124063;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JroJlkuo3LEOnGb3aGB2QIHQjVZIx4hFM1GZ7mqINXY=;
-        b=dETYHR3isNX9V4UL8OXsbULqAaMJa0L25syC80TfNcgXXY3KUYWpig2QrBVvD53UQh
-         kR97cWwTzpY9uZ0IegEvGXIgVS798IfSxcHs1nTBFM1vOmyLoPiCchl/zgcyahYEqSC9
-         pC/POhku7/fqcRri/khH2M7fZP72QVDEu1pJNVNZvsUR75bFiQBkPE6Jl6jwHoBDhuKP
-         gXq8EPDK7WGqIrw2ZyD3d8rPYx4nLYBSiMxHXUi3hpiPPK9O1krNUjURMdotfzg1Yx/c
-         h1e54xBoYsjgHIoBaWvBIKXAZ0ytLqSNLnGByHGbzZwIeMeH8za7mq5N/I9+z7aSP7Lk
-         Z+9A==
-X-Forwarded-Encrypted: i=1; AJvYcCUQLVAsEDpaLRzj8NlDe9brCyFrsQUfRlnILBv7myotNzh8VZ4Uh/2aUgJ4XnyJe7hP+5gx49umi9VJA3JjtA==@vger.kernel.org, AJvYcCUegf/YQPfNUnPVSdrSnk0IyepwsegQwZlU2A56pTHFnU5sQdCb/C5CJ2KuPEx5wDkNksN2JA47XdbzbBc=@vger.kernel.org, AJvYcCWj5CUW/Zks8rZ/qeLTdWydiZLwkmrtK1VPK3ZvcNaa9PjfPnytOvQgcMUeOb2jYEwtrVM1k08V64UMS5IA@vger.kernel.org, AJvYcCXiLtRfkRNK5pkux3rwFehBCE5bGm2YDD+y/w3EH3Vaukk6a/YLZpfv88jO0hNsLM42Tm3fLV1Ke8B4pg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXIp62F/5rOkGr4VHfA7PCMeWkTDj1+vZeIzVeBu6QyFPsFae0
-	mjZF/K55Irck2T5qDE5AH3z7oFj1c9xKr8ME41zA9IYwAYb1cx4F3ASwCVscLpgBvpvMaaldcaY
-	UdCxUgeOIW3EiMLGFPpV8BHZ7hLMF5JU=
-X-Gm-Gg: ASbGncvkfMBPiy9WMSm0uymaug7zL3URv6BLK/sJynIMuewhAsrYSWtuUMP7hUPBITI
-	h0t4wDAD02zQRGaqizcxL9o+oAkrKtI97H2LBjn5NcR0P3ZM/O9Cuw/k7Hi0bjW2lt15Q9wtRfb
-	fTg5V+5abI9YLHC1SbU1aitRCdumAXarcJWn+hPdYMCKE=
-X-Google-Smtp-Source: AGHT+IEqJJ0jiqUgppcuTUoCFeTLTOefLevfVhkZ3AnKg/JwHW+l7uzSplwtqftwTmPlghZqIoDwqspmO4gvPqbpOTE=
-X-Received: by 2002:a17:90b:4b49:b0:313:151a:8653 with SMTP id
- 98e67ed59e1d1-3159d9152abmr3676608a91.8.1750519263003; Sat, 21 Jun 2025
- 08:21:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="SUfLyCew"
+Received: from mail-nwsmtp-smtp-production-main-73.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-73.sas.yp-c.yandex.net [IPv6:2a02:6b8:c23:2f3c:0:640:5ff5:0])
+	by forward102b.mail.yandex.net (Yandex) with ESMTPS id C67C4609B2;
+	Sat, 21 Jun 2025 18:22:18 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-73.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id pLScBAbLgmI0-w71e1y8x;
+	Sat, 21 Jun 2025 18:22:17 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
+	s=mail; t=1750519337;
+	bh=WHGANRH7wsHF0bZfk8XocJJcEhb3nNf/wmYuKEj1e6Q=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=SUfLyCewFsrnYcbtQQo2FwmOzrEGAKWAc8mni/jQhxp8sPlhMLjqBTAMgAEVJbyYM
+	 GFVVsLQzUL6g3NP1aH5tz2xJgQ0Y0VXDAN7cXCnOomFaPy5Lp4EvP0zlWbZRc+/mRB
+	 t0Vodddd7H6bAxBNVfomIVESZi5wEtWh6jjmrsUw=
+Authentication-Results: mail-nwsmtp-smtp-production-main-73.sas.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
+From: =?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
+To: linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Cc: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	lossin@kernel.org,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	will@kernel.org,
+	longman@redhat.com,
+	felipe_life@live.com,
+	daniel@sedlak.dev,
+	bjorn3_gh@protonmail.com,
+	=?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
+Subject: [PATCH 1/3 v4] rust: add C wrappers for `ww_mutex` inline functions
+Date: Sat, 21 Jun 2025 18:21:40 +0300
+Message-ID: <20250621152142.25167-1-work@onurozkan.dev>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1750511018.git.legion@kernel.org> <6e2f70b07a710e761eb68d089d96cee7b27bb2d5.1750511018.git.legion@kernel.org>
-In-Reply-To: <6e2f70b07a710e761eb68d089d96cee7b27bb2d5.1750511018.git.legion@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 21 Jun 2025 17:20:49 +0200
-X-Gm-Features: Ac12FXyUUusE04-VI0Jbem7xB-mpUmVLWcavnYAiHbpPmDRMU-Iciw-FoK4G0YA
-Message-ID: <CANiq72k+ojA3=JfwhvjZ_=+uGBG-WmhLOigzPUXdoY8VQXbf=A@mail.gmail.com>
-Subject: Re: [PATCH v4 6/7] modpost: Add modname to mod_device_table alias
-To: Alexey Gladkov <legion@kernel.org>, FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Daniel Gomez <da.gomez@samsung.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, linux-kernel@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 21, 2025 at 3:57=E2=80=AFPM Alexey Gladkov <legion@kernel.org> =
-wrote:
->
-> +/* Format: __mod_device_table__kmod_<modname>__<type>__<name> */
+Some of the kernel's `ww_mutex` functions are implemented as
+`static inline`, so they are inaccessible from Rust as bindgen
+can't generate code on them. This patch provides C function wrappers
+around these inline implementations, so bindgen can see them and generate
+the corresponding Rust code.
 
-Should we mention that `__kmod_` and `__` will be the search strings,
-or otherwise the Rust formatting (i.e. that is carries a line etc.)?
+Signed-off-by: Onur Özkan <work@onurozkan.dev>
+---
+ rust/helpers/helpers.c  |  1 +
+ rust/helpers/ww_mutex.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
+ create mode 100644 rust/helpers/ww_mutex.c
 
-Cc'ing Tomo: do we need an update on `rust/kernel/net/phy.rs`? Should
-we factor out the formatting?
+diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+index 0f1b5d115985..fd071cbe20a1 100644
+--- a/rust/helpers/helpers.c
++++ b/rust/helpers/helpers.c
+@@ -44,3 +44,4 @@
+ #include "wait.c"
+ #include "workqueue.c"
+ #include "xarray.c"
++#include "ww_mutex.c"
+diff --git a/rust/helpers/ww_mutex.c b/rust/helpers/ww_mutex.c
+new file mode 100644
+index 000000000000..61a487653394
+--- /dev/null
++++ b/rust/helpers/ww_mutex.c
+@@ -0,0 +1,39 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/ww_mutex.h>
++
++void rust_helper_ww_mutex_init(struct ww_mutex *lock, struct ww_class *ww_class)
++{
++	ww_mutex_init(lock, ww_class);
++}
++
++void rust_helper_ww_acquire_init(struct ww_acquire_ctx *ctx, struct ww_class *ww_class)
++{
++	ww_acquire_init(ctx, ww_class);
++}
++
++void rust_helper_ww_acquire_done(struct ww_acquire_ctx *ctx)
++{
++	ww_acquire_done(ctx);
++}
++
++void rust_helper_ww_acquire_fini(struct ww_acquire_ctx *ctx)
++{
++	ww_acquire_fini(ctx);
++}
++
++void rust_helper_ww_mutex_lock_slow(struct ww_mutex *lock, struct ww_acquire_ctx *ctx)
++{
++	ww_mutex_lock_slow(lock, ctx);
++}
++
++int rust_helper_ww_mutex_lock_slow_interruptible(struct ww_mutex *lock, struct ww_acquire_ctx *ctx)
++{
++	return ww_mutex_lock_slow_interruptible(lock, ctx);
++}
++
++bool rust_helper_ww_mutex_is_locked(struct ww_mutex *lock)
++{
++	return ww_mutex_is_locked(lock);
++}
++
+-- 
+2.49.0
 
-Thanks!
-
-Cheers,
-Miguel
