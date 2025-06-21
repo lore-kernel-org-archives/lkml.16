@@ -1,86 +1,96 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D58210E5
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 03:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B011510E5;
+	Sat, 21 Jun 2025 03:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750476926; cv=none; b=kRX4Ki7ztIhyhQ0ICxvLAnoYKC8hFiEEVo26r/SuTFQt43ybPXXMopvq9jwV9yfYDu8sn8aQL+i3JXyKKlM78GivXahgaxf04d181Ri0GMPDW4jZlgVFjJJgWOy03HGN0IuMJSO/SdPZ0SkNhx6vBlDKOiJFFwhtCUycOdp6wUM=
+	t=1750477032; cv=none; b=MI1oY8u7DRJJKxQVDbgq5gW4sxlQ3ZJ4tZAPcx0vtR9d0k0b4TC136dcv4Nc21G0wFkQFO/1zpmC4JlwsBmqUVccc5h/4pgrLMsFwtm9K9QHDOsblPPLn6if4+VFflujSu3CjWYcPT7+mfjSk9eQoZN4omG7AgDSixSnTBHbD/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750476926; c=relaxed/simple;
-	bh=eOLBai7j8+8NLikgepiPGrNyAvVYgF3/D0CWtMFasHk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QlTqr4PGeWRDlxpXiARscgxk/Pz8pn+yib/n1WL6Gy6/eDyw9g369wIhIustqrNwiXkMOy8LAudSi6FlV0qw9Kiw44/axK+IQxh5mvWNWjGaxHzx4W1/UYTDVM6t7QGa+fyaLceVGty5n3aoUfYI0s+tQOsB3Ci/HVa+Tw8UQNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=t0tHDc4k; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1750477032; c=relaxed/simple;
+	bh=9H/qYeTAQ/zxcfO5P9LTtIB4ECRa8QU9rE7gTO2GCKE=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=p47URasjQ5qyfWVXnIkM9SJWMrl8oBCJRNSfw40C/5ur0hzWi8N5ZpYPGkDYr5cR2ucbRfEPP7DgXpPnpc4+y/AU5rj29n0GGaNlMOVsbBRMdlB6U6mJ6ZNK93WbRxZzkeciIOU3/X2rVI5LEEUk/6va8QpjHiqQ/KzS3iLGWLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=fg1Rl96B; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="t0tHDc4k"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750476916; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Hilh9U+GU8w5Sd/eiSB6zkwXKCB3Iw8Lnj4ZM9d3woY=;
-	b=t0tHDc4kF7V8xrfBbH2mJs/LlTwR08GCMUGhWtiv4lH3Poo1K3F4XQrK9vC+ewX+Ck1IFqGGPeM0L8PEETUenwuZvHGPjczLssZUY+QKqIQrO3c27BS9HhrtSJShhPMASsJvanRSq/Q1G6hXrxHFh0KbY0KQ+sju86aa8WVl31A=
-Received: from 192.168.0.102(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WeMhrAi_1750476914 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 21 Jun 2025 11:35:15 +0800
-Message-ID: <7a2dbb2b-7421-40f0-8f41-b920a518c8aa@linux.alibaba.com>
-Date: Sat, 21 Jun 2025 11:35:14 +0800
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="fg1Rl96B"
+Received: from [IPv6:::1] ([172.59.160.63])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55L3ZpFw045279
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Fri, 20 Jun 2025 20:35:52 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55L3ZpFw045279
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1750476959;
+	bh=e8u5GdAoNmNNX+7s1We8IvN8ajhS7ttID7S5qCJy8UE=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=fg1Rl96BlDPtm6MboBx7fzOIQO56zmQRAwuRt6FlJ5Bapo9PGVzdpzLSAZ7ASFEqt
+	 crVA+NGYkWM8aOcqXlpqzrou88mmD1SFu6F9BHL274OJAOuur9ixBDgdltznH6dZIN
+	 +chniuJQEHRtEdALpdS2BYSxcF4ACV9O+nY66VgpTTY22vDrz95BqnQ4FfEdVo3mFl
+	 IusBJiUv0S0TVZHL6KVEXvkZPywCUakX8e9TTo4aeDnU9pKw7AbsN8tkC8QDECWNU4
+	 KjiJbxr4qL4CmijeMCqcaTL7z6U/F9Nl6/Q+DFkXCEaRC1qlc6HVuA5XygN3fnbJDO
+	 U+mqPnogQOeIw==
+Date: Fri, 20 Jun 2025 20:35:45 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Dave Hansen <dave.hansen@intel.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>
+CC: acme@redhat.com, aik@amd.com, akpm@linux-foundation.org,
+        alexander.shishkin@linux.intel.com, ardb@kernel.org, ast@kernel.org,
+        bp@alien8.de, brijesh.singh@amd.com, changbin.du@huawei.com,
+        christophe.leroy@csgroup.eu, corbet@lwn.net,
+        daniel.sneddon@linux.intel.com, dave.hansen@linux.intel.com,
+        ebiggers@google.com, geert+renesas@glider.be, houtao1@huawei.com,
+        jgg@ziepe.ca, jgross@suse.com, jpoimboe@kernel.org,
+        kai.huang@intel.com, kees@kernel.org, kirill.shutemov@linux.intel.com,
+        leitao@debian.org, linux-doc@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux@rasmusvillemoes.dk, luto@kernel.org,
+        mcgrof@kernel.org, mhiramat@kernel.org, michael.roth@amd.com,
+        mingo@kernel.org, mingo@redhat.com, namhyung@kernel.org,
+        paulmck@kernel.org, pawan.kumar.gupta@linux.intel.com,
+        peterz@infradead.org, rick.p.edgecombe@intel.com, rppt@kernel.org,
+        sandipan.das@amd.com, shijie@os.amperecomputing.com,
+        sohil.mehta@intel.com, tglx@linutronix.de, tj@kernel.org,
+        tony.luck@intel.com, vegard.nossum@oracle.com, x86@kernel.org,
+        xin3.li@intel.com, xiongwei.song@windriver.com, ytcoode@gmail.com
+Subject: Re: [PATCHv6 07/16] x86/vsyscall: Reorganize the #PF emulation code
+User-Agent: K-9 Mail for Android
+In-Reply-To: <b6f8a90d-4309-45c5-84cd-32e281d076fb@intel.com>
+References: <9d351d80-66fe-486f-bdb3-370859dc47cc@intel.com> <262c0fd2-ac66-4ce7-903f-4062f1fe1d6e@citrix.com> <b6f8a90d-4309-45c5-84cd-32e281d076fb@intel.com>
+Message-ID: <D5C8ABB5-5185-43EC-8C3E-106DBBEBF389@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: add memfd, shmem quota files to shmem
- section
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Hugh Dickins <hughd@google.com>
-References: <20250617161359.166955-1-lorenzo.stoakes@oracle.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250617161359.166955-1-lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+On June 20, 2025 4:21:38 PM PDT, Dave Hansen <dave=2Ehansen@intel=2Ecom> wr=
+ote:
+>On 6/20/25 16:08, Andrew Cooper wrote:
+>>> But, the resulting code is wonky=2E It needs to do something more like=
+ this:
+>>>
+>>> 	if ((error_code & (X86_PF_WRITE | X86_PF_USER)) !=3D X86_PF_USER)
+>>> 		return false;
+>>>
+>>> 	if (error_code & X86_PF_INSTR))
+>>> 		return __emulate_vsyscall(regs, address);
+>> To do this, LASS needs a proper interlink against NX || SMEP=2E
+>>=20
+>> If neither NX nor SMEP are active, the CPU does not report X86_PF_INSTR=
+,
+>> meaning that fetches are reported as plain reads=2E
+>Interesting point=2E
+>
+>I think the easiest way to do this is just make a cpuid_deps[] entry for
+>LASS and NX=2E If there's a CPU where LASS is available but where NX isn'=
+t
+>available, we have much bigger problems on our hands=2E
 
-
-On 2025/6/18 00:13, Lorenzo Stoakes wrote:
-> These files seem best suited to shmem.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-
-Thanks.
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-
-> ---
->   MAINTAINERS | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 08045f9efadd..eda30a41e5ad 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15735,7 +15735,6 @@ F:	Documentation/admin-guide/mm/
->   F:	Documentation/mm/
->   F:	include/linux/gfp.h
->   F:	include/linux/gfp_types.h
-> -F:	include/linux/memfd.h
->   F:	include/linux/memory_hotplug.h
->   F:	include/linux/memory-tiers.h
->   F:	include/linux/mempolicy.h
-> @@ -25041,8 +25040,11 @@ M:	Hugh Dickins <hughd@google.com>
->   R:	Baolin Wang <baolin.wang@linux.alibaba.com>
->   L:	linux-mm@kvack.org
->   S:	Maintained
-> +F:	include/linux/memfd.h
->   F:	include/linux/shmem_fs.h
-> +F:	mm/memfd.c
->   F:	mm/shmem.c
-> +F:	mm/shmem_quota.c
->   
->   TOMOYO SECURITY MODULE
->   M:	Kentaro Takeda <takedakn@nttdata.co.jp>
-
+Indeed=2E There is exactly zero reason to support this case=2E
