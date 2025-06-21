@@ -1,105 +1,282 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4325.protonmail.ch (mail-4325.protonmail.ch [185.70.43.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DB512CD96
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 06:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8447530E841;
+	Sat, 21 Jun 2025 07:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750489107; cv=none; b=ZrIRPPauEfO+hz/xdEo0cJp+Aahy0BIdz3r3XKM+4ZLlscQQYYzIg4mU2jnL/ywfEfRbNu1dj00VDyAGNpobCRyTU3+oHVy2I65w7GWmi5kopbN/FlzADCLeRQZ9vb4Nlo3NPG6ji7CScaTGmsPhV3PYTxB7tP2DPBwvYrjNEiY=
+	t=1750489661; cv=none; b=FcVOphKhmvB8HZiT5jOnsk8haRDiffAYLcTpiMPHGljbLKHuEW2Sc5EgeDp9NCQ901g6LBvxXmVY5LDpfSNGIptmPGEvt7caIl1X7v+NH1PX/6Qr/5Lb5L4vvisoW7mRwMeUnUT3bcHPnzfgy30gchucbnwcxQ1W392/hNTIwl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750489107; c=relaxed/simple;
-	bh=bUNdx/2ldmooF+wfGIUFoptMG2S7gkeOO/JL2A6zVvE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nHlJXjTKXbSmQhgDGMQcoJ764PYuYsFsmkWm6qNrk0BWqtIl4gZC04anHKPKK+TdhthPEQj6QV2K7ZPiJuMZndCIWteGDqVF7Pvb4aBaVfpNal0qqPlQO1mgP0cL+NxmKgyPGWWd7rXBiYR9ZUzscgkU1h3apTJncsWYtx9DAjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XgrHcWKs; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750489661; c=relaxed/simple;
+	bh=96zSTCit7Jr8EU5mbUWe0rSqS11+bPPmhWpuoBr06qI=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KZk2qkVWv29a4MW9EdXrJH2V3KfiyqwC003ucwoo+uv6s2d337y8P2Vj7TK0V8tq2fYBPnZ/ZXqFxgckExsqxWj52HcmF/yc7XsKYE5MRIPVoTv8wes99LVneAsCG8aMv9/uX/Ig+w8PwEku0SxePMyesWTrCZQcqtV8WOeMhq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=xeQhI8zc; arc=none smtp.client-ip=185.70.43.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XgrHcWKs"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7d38cfa9773so269296185a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 23:58:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750489105; x=1751093905; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bUNdx/2ldmooF+wfGIUFoptMG2S7gkeOO/JL2A6zVvE=;
-        b=XgrHcWKsXOXcN9ClWAG7NHF/Ts1fYscQ+LrGvxsB4jZVRNhKAGRw3CEczmQ9FdXvSt
-         Ttj5oBrxlzRIL1RMcEyQBbE/ycDGzEaSpKi1sn8sqIuT/a5y0kQUvPzKygddgOaNqlXq
-         T3VIMmMHeguDhISW1VW6DfzEVMKJYME+bf39cAzGdjiO9MSI2EnIZVEESUaXLqhIynk8
-         F/UqnWx9/XLuTVKHvXJvjsUzw1aziMapJBQzpupMBQGM9UzDrpHZki3KxKtmkgYmvS6B
-         bXuS1wbYIIpv5Kis2ioTan0X9sx/1915VZaHBJI8iYnJ/R39Hy+1Ii36bk3Drvu6ZHLm
-         U5CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750489105; x=1751093905;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bUNdx/2ldmooF+wfGIUFoptMG2S7gkeOO/JL2A6zVvE=;
-        b=nzdd/fRXbj4/9pZs/DIttjuuc9DvkGFFVvYEd9A65sMQcycWcyLri86cWqVRtuTLCy
-         b8WwaShaYP5TvrK0mJ9B0xvk6XduEF9FomdaPttx3Gbzijjh0iJf6OeQQ6F+R1363nOI
-         r40QAsT4yWwVoixAYESAOPsJBCLIJInw5mN5FmpaoNbj0YMZkDaQidZSRL7EQqL8vjVj
-         a8JoGJb03z06+J4xPmaq2ecIb4/LCS/Pht+B4851ONwHF+yM3EkPO7K3BrlUiew5MUoQ
-         LOsSiW5yKhRhNGEKrSETvgIFouRAyqqAVSawRhU/qrm/huV+gy18aggDKCBlBzsmj9e/
-         P9tw==
-X-Forwarded-Encrypted: i=1; AJvYcCVYp5oujK3/uNx5GrY1wQ2EAC1oWUVcfjj0JenVgpTsr8HyUQxn5FsmDFB5lyWhYYHK7PG2F8Ktz0ocMsQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXlrW3CYAmyvopFSb2HvCW+13cE2+CMjJ1HvZfBVFWFlKR3Ie3
-	zR2p2DylVUobFSP5QM6OqAHZSKiFyHXUv/xwulfG12RZrvKgPKtcDCevlIw/3BCRJoNYIjySHY1
-	sbovrG4/mxL5zrvob0KhYNK6hl9Q9TsnZ9w28kd5T
-X-Gm-Gg: ASbGncsaUCOHxXnwxHx0lhs4QkDUdDVY6k+W7IsM6JBExn3ZJNldRKmiJXO6dXQDBBt
-	M0Sq7iPtwHize0fI2q9F9iFXELmrnPGqSiGwQplt0y5H02Y17IPNjCOssPSQnw8CBN3K4Hpr9WR
-	G80Q+KwqZSQY3BGwuKwasZ/03wlW2U4IaE/C36IQ2y6A==
-X-Google-Smtp-Source: AGHT+IEHz/JR7YYi2lViA2o0Sn5CmXAFfiTDbM+tNqv2elv69zznKvkvAvdBvr86Y6n0SdUPLLuoC5Osau5RVKtSEw4=
-X-Received: by 2002:a05:620a:3185:b0:7d0:97b1:bfa with SMTP id
- af79cd13be357-7d3f98c769amr837848985a.8.1750489104823; Fri, 20 Jun 2025
- 23:58:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="xeQhI8zc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1750489656; x=1750748856;
+	bh=obItk7XiDSFuvyadkI1YtM3uHao6+KxIagO4SDlclFQ=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=xeQhI8zclnuRzNshWNH2SVMvCU4GXCv/+q95m0IKNKxqH6tOlyRU28p9iqTdE/8+a
+	 yRjlxjQHeVUaESVbnu+M50FsGK+W3NrioPsUYkHEf2A4qtNONa13xIAro5dCpUwWtm
+	 3FDDrXSjiteZwSd0PYxZ1nxhac8tawuiJq355+pqmlqFQaCZSQq0egLwGdgVmDvVFr
+	 6kLb9XN2yxyRokVv8SRqT6/zn4scd8IdCXZ7N4oydDthUP+BgbtO5L4gkrHwO6Jvk1
+	 4IQjQXL9Fp/V1XP1/lMwGKhCQlqeZa7iTceuoJESfDGoL257Kua5xXBZpsUTwmU8ih
+	 jFcjqJAE8rEUg==
+Date: Sat, 21 Jun 2025 07:07:33 +0000
+To: Luca Weiss <luca@lucaweiss.eu>, "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, "andersson@kernel.org" <andersson@kernel.org>, "konradybcio@kernel.org" <konradybcio@kernel.org>
+From: cristian_ci <cristian_ci@protonmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "~postmarketos/upstreaming@lists.sr.ht" <~postmarketos/upstreaming@lists.sr.ht>, "phone-devel@vger.kernel.org" <phone-devel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: msm8953: Add device tree for Billion Capture+
+Message-ID: <bWiyUA5cF4NjzEaUwhpDvfeqs0hEizZKFKxQpsfj6htES5mPGO2Yf2AHZQcUEyR4x7Zx9kVvwenpc2djbCN148IbjtgLh7Gq_1HXicp8kms=@protonmail.com>
+In-Reply-To: <d4564d4b-9510-47f8-9930-65d3c4e90e6c@lucaweiss.eu>
+References: <20250620-rimob-initial-devicetree-v1-0-8e667ea21f82@protonmail.com> <20250620-rimob-initial-devicetree-v1-3-8e667ea21f82@protonmail.com> <d4564d4b-9510-47f8-9930-65d3c4e90e6c@lucaweiss.eu>
+Feedback-ID: 27475468:user:proton
+X-Pm-Message-ID: 5e5c42a87c2bd67bc63aad9df28de1391b9b1ead
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618-reftrack-dbgfs-v15-0-24fc37ead144@kernel.org> <20250619171339.1bf28dc7@kernel.org>
-In-Reply-To: <20250619171339.1bf28dc7@kernel.org>
-From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 20 Jun 2025 23:58:14 -0700
-X-Gm-Features: AX0GCFsu87MFC7EBTBMwXAysv70gmAeinWhBQnHzTvKtmqPLtPM0HB23PPllhK0
-Message-ID: <CANn89iLX9XTk96=mU7pSmNkyFfj0DpMe_mTfOc+TYArLkwYXLg@mail.gmail.com>
-Subject: Re: [PATCH v15 0/9] ref_tracker: add ability to register a debugfs
- file for a ref_tracker_dir
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Jeff Layton <jlayton@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	"David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, Krzysztof Karas <krzysztof.karas@intel.com>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	intel-gfx@lists.freedesktop.org, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 19, 2025 at 5:13=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wr=
-ote:
->
-> On Wed, 18 Jun 2025 10:24:13 -0400 Jeff Layton wrote:
-> > For those just joining in, this series adds a new top-level
-> > "ref_tracker" debugfs directory, and has each ref_tracker_dir register =
-a
-> > file in there as part of its initialization. It also adds the ability t=
-o
-> > register a symlink with a more human-usable name that points to the
-> > file, and does some general cleanup of how the ref_tracker object names
-> > are handled.
->
-> Thanks Jeff!
->
-> I'm going to apply this based on v6.16-rc2 and merge to net-next.
-> If anyone would like to also pull into their trees the hash will
-> be 707bd05be75f. Happy to create a branch if necessary, too.
+On Saturday, June 21st, 2025 at 00:20, Luca Weiss <luca@lucaweiss.eu> wrote=
+:
 
-Nice work Jeff, thanks a lot !
+> > +
+> > + reserved-memory {
+> > + qseecom@0 {
+>=20
+>=20
+> qseecom@84a00000 ?
+>=20
+> > + reg =3D <0x00 0x84a00000 0x00 0x1900000>;
+> > + no-map;
+> > + };
+
+Looking at downstream devicetree, every reserved-memory nodes with "removed=
+-dma-pool" compatible has unit address 0. OTOH, kernel documentation [1] sa=
+ys:
+"  Following the generic-names recommended practice, node names should
+  reflect the purpose of the node (ie. "framebuffer" or "dma-pool").
+  Unit address (@<address>) should be appended to the name if the node
+  is a static allocation."
+
+In my case, downstream devicetree shows:
+
+=09=09other_ext_region@0 {
+=09=09=09compatible =3D "removed-dma-pool";
+=09=09=09no-map;
+=09=09=09reg =3D <0x00 0x84a00000 0x00 0x1e00000>;
+=09=09};
+
+which will be 'qseecom' reserved-memory node in mainline devicetree.
+
+OTOH, 'qseecom' node in downstream devicetree also shows:
+
+=09=09qseecom@84a00000 {
+=09=09=09compatible =3D "qcom,qseecom";
+=09=09=09reg =3D <0x84a00000 0x1900000>;
+                        ...
+
+If you confirm what you suggest, 'qseecom' reserved-memory node will look l=
+ike the following:
+
+=09=09qseecom_mem: qseecom@84a00000 {
+=09=09=09reg =3D <0x0 0x84a00000 0x0 0x1900000>;
+=09=09=09no-map;
+=09=09};
+
+[1] https://www.kernel.org/doc/Documentation/devicetree/bindings/reserved-m=
+emory/reserved-memory.yaml
+
+> > + cont_splash_mem: cont-splash@90001000 {
+> > + reg =3D <0x0 0x90001000 0x0 (1080 * 1920 * 3)>;
+> > + no-map;
+> > + };
+> > + };
+> > +
+> > + vph_pwr: vph-pwr-regulator {
+> > + compatible =3D "regulator-fixed";
+> > + regulator-name =3D "vph_pwr";
+> > + regulator-always-on;
+> > + regulator-boot-on;
+> > + };
+> > +};
+> > +
+> > +
+> > +&hsusb_phy {
+> > + vdd-supply =3D <&pm8953_l3>;
+> > + vdda-pll-supply =3D <&pm8953_l7>;
+> > + vdda-phy-dpdm-supply =3D <&pm8953_l13>;
+> > +
+> > + status =3D "okay";
+> > +};
+> > +
+> > +&pm8953_resin {
+> > + linux,code =3D <KEY_VOLUMEDOWN>;
+> > + status =3D "okay";
+> > +};
+> > +
+> > +&rpm_requests {
+> > + regulators {
+> > + compatible =3D "qcom,rpm-pm8953-regulators";
+> > + vdd_s1-supply =3D <&vph_pwr>;
+> > + vdd_s2-supply =3D <&vph_pwr>;
+> > + vdd_s3-supply =3D <&vph_pwr>;
+> > + vdd_s4-supply =3D <&vph_pwr>;
+> > + vdd_s5-supply =3D <&vph_pwr>;
+> > + vdd_s6-supply =3D <&vph_pwr>;
+> > + vdd_s7-supply =3D <&vph_pwr>;
+> > + vdd_l1-supply =3D <&pm8953_s3>;
+> > + vdd_l2_l3-supply =3D <&pm8953_s3>;
+> > + vdd_l4_l5_l6_l7_l16_l19-supply =3D <&pm8953_s4>;
+> > + vdd_l8_l11_l12_l13_l14_l15-supply =3D <&vph_pwr>;
+> > + vdd_l9_l10_l17_l18_l22-supply =3D <&vph_pwr>;
+> > + vdd_l23-supply =3D <&pm8953_s3>;
+> > +
+> > + pm8953_s1: s1 {
+> > + regulator-min-microvolt =3D <870000>;
+> > + regulator-max-microvolt =3D <1156000>;
+> > + };
+> > +
+> > + pm8953_s3: s3 {
+> > + regulator-min-microvolt =3D <1224000>;
+> > + regulator-max-microvolt =3D <1224000>;
+> > + };
+> > +
+> > + pm8953_s4: s4 {
+> > + regulator-min-microvolt =3D <1900000>;
+> > + regulator-max-microvolt =3D <2050000>;
+> > + };
+> > +
+> > + pm8953_l1: l1 {
+> > + regulator-min-microvolt =3D <1000000>;
+> > + regulator-max-microvolt =3D <1000000>;
+> > + };
+> > +
+> > + pm8953_l2: l2 {
+> > + regulator-min-microvolt =3D <975000>;
+> > + regulator-max-microvolt =3D <1225000>;
+> > + };
+> > +
+> > + pm8953_l3: l3 {
+> > + regulator-min-microvolt =3D <925000>;
+> > + regulator-max-microvolt =3D <925000>;
+> > + };
+> > +
+> > + pm8953_l5: l5 {
+> > + regulator-min-microvolt =3D <1800000>;
+> > + regulator-max-microvolt =3D <1800000>;
+> > + };
+> > +
+> > + pm8953_l6: l6 {
+> > + regulator-min-microvolt =3D <1800000>;
+> > + regulator-max-microvolt =3D <1800000>;
+> > + };
+> > +
+> > + pm8953_l7: l7 {
+> > + regulator-min-microvolt =3D <1800000>;
+> > + regulator-max-microvolt =3D <1900000>;
+> > + };
+> > +
+> > + pm8953_l8: l8 {
+> > + regulator-min-microvolt =3D <2900000>;
+> > + regulator-max-microvolt =3D <2900000>;
+> > + };
+> > +
+> > + pm8953_l9: l9 {
+> > + regulator-min-microvolt =3D <3000000>;
+> > + regulator-max-microvolt =3D <3300000>;
+> > + };
+> > +
+> > + pm8953_l10: l10 {
+> > + regulator-min-microvolt =3D <2850000>;
+> > + regulator-max-microvolt =3D <2850000>;
+> > + };
+> > +
+> > + pm8953_l11: l11 {
+> > + regulator-min-microvolt =3D <2950000>;
+> > + regulator-max-microvolt =3D <2950000>;
+> > + };
+> > +
+> > + pm8953_l12: l12 {
+> > + regulator-min-microvolt =3D <1800000>;
+> > + regulator-max-microvolt =3D <2950000>;
+> > + };
+> > +
+> > + pm8953_l13: l13 {
+> > + regulator-min-microvolt =3D <3125000>;
+> > + regulator-max-microvolt =3D <3125000>;
+> > + };
+> > +
+> > + pm8953_l16: l16 {
+> > + regulator-min-microvolt =3D <1800000>;
+> > + regulator-max-microvolt =3D <1800000>;
+> > + };
+> > +
+> > + pm8953_l17: l17 {
+> > + regulator-min-microvolt =3D <2850000>;
+> > + regulator-max-microvolt =3D <2850000>;
+> > + };
+> > +
+> > + pm8953_l19: l19 {
+> > + regulator-min-microvolt =3D <1200000>;
+> > + regulator-max-microvolt =3D <1350000>;
+> > + };
+> > +
+> > + pm8953_l22: l22 {
+> > + regulator-min-microvolt =3D <2800000>;
+> > + regulator-max-microvolt =3D <2800000>;
+> > + };
+> > +
+> > + pm8953_l23: l23 {
+> > + regulator-min-microvolt =3D <975000>;
+> > + regulator-max-microvolt =3D <1225000>;
+> > + };
+> > + };
+> > +};
+> > +
+> > +&sdhc_1 {
+> > + vmmc-supply =3D <&pm8953_l8>;
+> > + vqmmc-supply =3D <&pm8953_l5>;
+> > +
+> > + status =3D "okay";
+> > +};
+> > +
+> > +&sdhc_2 {
+> > + vmmc-supply =3D <&pm8953_l11>;
+> > + vqmmc-supply =3D <&pm8953_l12>;
+> > +
+> > + cd-gpios =3D <&tlmm 133 GPIO_ACTIVE_HIGH>;
+> > +
+> > + pinctrl-0 =3D <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
+> > + pinctrl-1 =3D <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off>;
+> > + pinctrl-names =3D "default", "sleep";
+> > +
+> > + status =3D "okay";
+> > +};
+> > +
+> > +&tlmm {
+> > + gpio-reserved-ranges =3D <0 4>, <135 4>;
+>=20
+>=20
+> Any ideas what's connected to these pins? If you do, good to document
+> this like in other devices.
+>=20
+> Regards
+> Luca
+>=20
+
+Unfortunately, downstream devicetree's pinctrl (kernel sources not availabl=
+e) doesn't mention anywhere 'gpio0', 'gpio1', 'gpio2', 'gpio3', 'gpio135', =
+'gpio136', 'gpio137' and 'gpio138' (but, for example, 'gpio4' and 'gpio139'=
+ are shown, instead). So, I've no ideas what these reserved gpios are used =
+for.
