@@ -1,80 +1,64 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A581F5E6;
-	Sat, 21 Jun 2025 20:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAAB4CE08;
+	Sat, 21 Jun 2025 20:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750538671; cv=none; b=pTgZaP5ZO0YM5qro5G7EKrPWyFNP2knR1z/6APFf6RQup+sj1jhueb0Q8xLz5VemOmMQLPqxa7opZrD0QErs0gKnVPRhBeypAX6oO6iPpovoYQuAAtKHEQVtGiO5zyoW7t5cmzKJeH9y6m+NEJtAVH9AO6IqA8bf8q1Y6SZKuIk=
+	t=1750539079; cv=none; b=klq8TnUY6+FZf6Mbd52Tnj5khPOSjE4smHKmu8onjvsFYdKJy5J/++meZqC+DnWtYmkGv4SP0mCNQU7roLt1IUCvZBjwTbR28M071BSAWHers1U05PH9AoN7WVgxW3QfbUbaV1zOcX7iwDU8fX8sVMaWCX8i9I+5+lYC8uVEX+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750538671; c=relaxed/simple;
-	bh=P89KZvCJZCwzhvtoknxL77RvxV6jVy7/qA7INZizj3Y=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=J3YoK36DQ3MUVAExyefj7VOD3SBwxUtRfD/0FJzrMWW7pR4O8nzgNJndU40cz557EA9DMCWQXh8OFD3CUPkGaZvrLFAGLNtTrSQ8Q7CNX6+c34cV1HOx5cRvI06j/I9dTK62VpiPqiZZcmvlxsfa4PhmhBtoYJw/lUeRW5X5668=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TcFf+daJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Jem5puHm; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750539079; c=relaxed/simple;
+	bh=B+DuNopW44+Lh7XHj4O2MzRgvBUrBmL58pqFDgxbbnQ=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=bBwaiadZ/cKoamoWl/954D2MuUZ6s8peDXYoVKUiRc9EE5rgw3Hj3H9HY91BZErDRUtSTk6WCrOmaIuXsFOsp3xoNpSbtEBbNX9HlfbzZWtcd+l3g8DsbfcLNrlj3KRQt8IDIo3t9mSmji+lb4/lfLdbZhRmn4jxy6nYepxuLvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M677msOz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TcFf+daJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jem5puHm"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750538667;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ngcP24uDNqaeTF7ZEpDIvhpdOdD9ObmW7Xhx1/y8BFI=;
-	b=TcFf+daJZQH0kPs201twgopdn3C3XKuKviz/BE5aZNxsGyw0EXX3KGMrHtnzQB0z+47Hde
-	Cs2SBQID1vc1Udrix2pX1NW0AsofJ7hPAv+uCWTOmTap72yauJoEUrZoGJ/dNkQzqSS3rR
-	ED6fl6yhEqx71uW0PQC/npjNb6jcepNJB1WK4HU0KOBCVjeEkV7jVcsED4Mer97MGwMIbY
-	OqbPT1/Z0vibdu5bGZBBLfV3HELs1is/ZgiSnxwKWuKj2fOuKykUgLYXpwmDefgKZXmswA
-	qt9M9SeGikB9goW4f/LcgggbIiQoJyilvZyd1eGwfvgKf7vBxxDWHpH6mml8zQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750538667;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ngcP24uDNqaeTF7ZEpDIvhpdOdD9ObmW7Xhx1/y8BFI=;
-	b=Jem5puHmK29iF20Nh/aabkqakF/Gnrni4T4JUoyGc3JuRBa83mrXhixr1ZjS1CGhCV3Gp9
-	D4XgZZXx7PyX+OAQ==
-To: Vadim Fedorenko <vadim.fedorenko@linux.dev>, LKML
- <linux-kernel@vger.kernel.org>
-Cc: Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org
-Subject: Re: [patch 10/13] ptp: Split out PTP_MASK_CLEAR_ALL ioctl code
-In-Reply-To: <80052862-683c-4a53-b7a2-8d767a057022@linux.dev>
-References: <20250620130144.351492917@linutronix.de>
- <20250620131944.344887489@linutronix.de>
- <80052862-683c-4a53-b7a2-8d767a057022@linux.dev>
-Date: Sat, 21 Jun 2025 22:44:27 +0200
-Message-ID: <877c14q0yc.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M677msOz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2648FC4CEE7;
+	Sat, 21 Jun 2025 20:51:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750539077;
+	bh=B+DuNopW44+Lh7XHj4O2MzRgvBUrBmL58pqFDgxbbnQ=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=M677msOz5QqeisCcomJhJdH5mYIg/X0Hre6RPDykAA70W0SIYwwLTZFI7lVeZE6yx
+	 gQ6Dm38jBqTdYeQyJ8rMR9JEEm8NyKQkpT+6PgiaNFBOhzd6A0kU08FQq0JsKZjkQU
+	 CVpr3J8GrtqicvzX0SNORe/q1KgPyqfH3+CKWSQJrXLFznFu6DM7ioajp3yBr8OgyP
+	 MHK7xkBpyMMkdVipmlBhLrzaejUUh3pyXUXHCOHsi8FzkLgTIb28b35wcuIkLw2C9a
+	 P534mf/f8T6+DXXJ5IlYQH8LovHalYJ5wG7L0mr05NWoWD7yLJO/ZwRGRFmGe6YuNC
+	 GOF7v1iWW9U3A==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <jvsdn67x2qm2avaktnpqzoixcd46xuuf6i5kpeolsnewgoqt6q@jid7unlmmu65>
+References: <20250506-qcom-apcs-mailbox-cc-v1-0-b54dddb150a5@linaro.org> <20250506-qcom-apcs-mailbox-cc-v1-1-b54dddb150a5@linaro.org> <7vszdea2djl43oojvw3vlrip23f7cfyxkyn6jw3wc2f7yowht5@bgsc2pqscujc> <aCNGSwL7043GoJBz@linaro.org> <20250514160841.GA2427890-robh@kernel.org> <aCUHTJGktLFhXq4Q@linaro.org> <20250521-psychedelic-cute-grouse-ee1291@kuoka> <aC-AqDa8cjq2AYeM@linaro.org> <20250523-markhor-of-fortunate-experience-1f575e@kuoka> <jvsdn67x2qm2avaktnpqzoixcd46xuuf6i5kpeolsnewgoqt6q@jid7unlmmu65>
+Subject: Re: [PATCH 1/4] dt-bindings: mailbox: qcom,apcs: Add separate node for clock-controller
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Stephan Gerhold <stephan.gerhold@linaro.org>, Saravana Kannan <saravanak@google.com>, Rob Herring <robh@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Georgi Djakov <djakov@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
+Date: Sat, 21 Jun 2025 13:51:16 -0700
+Message-ID: <175053907628.4372.13105365536734444855@lazor>
+User-Agent: alot/0.11
 
-On Sat, Jun 21 2025 at 21:36, Vadim Fedorenko wrote:
-> On 20/06/2025 14:24, Thomas Gleixner wrote:
->> Continue the ptp_ioctl() cleanup by splitting out the PTP_MASK_CLEAR_ALL ioctl
->> code into a helper function.
->>   	case PTP_MASK_CLEAR_ALL:
->> -		bitmap_clear(tsevq->mask, 0, PTP_MAX_CHANNELS);
->> -		break;
->> +		return ptp_mask_clear_all(pccontext->private_clkdata);
->>   
->>   	case PTP_MASK_EN_SINGLE:
->>   		if (copy_from_user(&i, (void __user *)arg, sizeof(i))) {
->> 
->
-> Not quite sure there is a benefit of having a function for this type,
-> apart from having one style. But it adds some LoC...
+Quoting Bjorn Andersson (2025-06-10 20:31:57)
+>=20
+> I'm still sceptical here.
+>=20
+> In the first snippet above, we describe a single IP block which provides
+> mailboxes and clocks.
+>=20
+> In the second snippet we're saying that the IP block is a mailbox, and
+> then it somehow have a subcomponent which is a clock provider.
+>=20
+> It seems to me that we're choosing the second option because it better
+> fits the Linux implementation, rather than that it would be a better
+> representation of the hardware. To the point that we can't even describe
+> the register range of the subcomponent...
+>=20
 
-Sure it's debatable benefit, but it makes the code more consistent and
-does not introduce this oddball in the middle of the other function
-calls.
-
-Thanks,
-
-        tglx
+Agreed. Don't workaround problems in the kernel by changing the binding
+to have sub-nodes.
