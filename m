@@ -1,43 +1,43 @@
 Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67B7270EC3;
-	Sat, 21 Jun 2025 20:35:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7A0271454;
+	Sat, 21 Jun 2025 20:35:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750538132; cv=none; b=LzJH6Sef7Xi2spfZLEBLDk6BMP7qz46y8MAjyFEownVQdEZgp1GFAEdmz48zH43pUc0Igw2VO+NVNyccuQKexUiex2ASWQI7t7nIE1sYTmRDmqQHAQ0ytJnQk8kwjoF40uhgCOv/01aKQMyTg7GdeaWfoSOfndFEIWwPxBosN2c=
+	t=1750538132; cv=none; b=HCJ4Q1pJxPBAdHsvGfJ/z872phBfty/ipKFnzgEsSshfjozzjKUZgk9AymuNovLozCTMRBLfzERXI2VIwYHf+9TTiNavVVaWjIzGhH2ZHZsF3neu8CYUe0eQkJfyD2Qwwo4vwSJ1vgfztgClrcILGeuOG4z1d54aLhldG0BViAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750538132; c=relaxed/simple;
-	bh=+tg+/selIsk1K4SgMwFprCsk6T3OcPFBih5+vmWXiG4=;
+	bh=hgyF5qXQdsldMVeKTROkq4cIqxZZPrXcb24sgEudAuY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YYr/7EQ0d0/4ghGTAK0M818g+TUiY82g+skfL9ajO6HPhBNjA8ms5hPLrBS6KZRYSD+5oDmqcDMURPVsigKuQpU1ellINRbMMbOUUCvTAVZo7MVsR99uaOhUl+SbV5ry57w9xU48sA+rL/KK2u0R3NrCZ629XR3J/6is8ZkmiSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=Uktu6SBA; arc=none smtp.client-ip=45.79.88.28
+	 MIME-Version; b=kZy6yJQxpMo9pvXOYvoEOEsbgrm47FH8ZPNq8GNeoepDLwIaHBKQtZ8PSxmnbzB2memWbZF9iNDGTE0VfbN9k0uEMH7kFKLa6cRNx041Paf7rbA+OyTmi9GMbO417BUJKBCepMwkQmYNQWFZYFgE61hBOsUqJYswri+x67Uvq4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=L8VdigIi; arc=none smtp.client-ip=45.79.88.28
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Uktu6SBA"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net E6C8F41AD8
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="L8VdigIi"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 757B441F2B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1750538130; bh=JVMKs6c/9IMxrm7+AbKDFaW9ihwnMSixkjpZKCTY79I=;
+	t=1750538130; bh=t5O6xZ0asJB+PqlMyDbZnxO5S+2Br3NznwxuBU17ipc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Uktu6SBAGTvlkdfQEahylKALHjr49IeEiEB6ooqSFtcmR8DomUdc0AK+jiE1u/EtY
-	 0TCLIcRFlgJf6V4RMss2HvNBWgjXbi8ucUZSgTQQwepUDwGlx3jixjzjlI3EpRNrPe
-	 5pal/FpGpkLxhDB27qH8Z5xlFb+N58tj7Uzdmz1ulZOPvdFmnG3zMrGel11pew1RXc
-	 FFUBBKSLrf+MM2kkHCy27QrJ20I/GA076SOF6eHWLxT3Dh0Vge13zzVf/EIdFsvRL/
-	 U6RPnSmWpsoqU2S8jxvAL4PoGP2ogk8uZq6UdrM0JmrGjn3RH9jbxyyUhatfEfqhTW
-	 N9VnwfBcRuZsA==
+	b=L8VdigIi2YeigH9E6OnEpO551bOSOSz+jABgghdJX9mJGQWzmB0rxwrKeMjGk8Fd6
+	 /CxU5z2SXq7tpYBxe2IQ5xmgj47UD/TimGVAGtD/bFwxkSBsp1dDGOw9rKXryNh4KH
+	 q6yjBAWkHOYYOO/Q70hZ2Htw0G0Y07tuUIBOvpu4NGLCm61f7nzcd1x0b1y7X/YH8K
+	 a2nTuEPBPQyt9yGUQwDCMQXeH3+8JIK/ptLyXD8i9k/f936JW84NxRYyffBauUUKHG
+	 qIRyO7F9cCwtYmMoBjamqCHcYQMPuC21XAGtgAQyFkIb1I+kX4mQHi8RIsJgK6B4/r
+	 jQISqHclwTTpQ==
 Received: from trenco.lwn.net (unknown [IPv6:2601:280:4600:2da9:67c:16ff:fe81:5f9b])
-	by ms.lwn.net (Postfix) with ESMTPA id E6C8F41AD8;
-	Sat, 21 Jun 2025 20:35:29 +0000 (UTC)
+	by ms.lwn.net (Postfix) with ESMTPA id 757B441F2B;
+	Sat, 21 Jun 2025 20:35:30 +0000 (UTC)
 From: Jonathan Corbet <corbet@lwn.net>
 To: linux-doc@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Akira Yokosawa <akiyks@gmail.com>,
 	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 5/9] docs: kdoc: coalesce the new-section handling
-Date: Sat, 21 Jun 2025 14:35:08 -0600
-Message-ID: <20250621203512.223189-6-corbet@lwn.net>
+Subject: [PATCH 6/9] docs: kdoc: rework the handling of SPECIAL_SECTION
+Date: Sat, 21 Jun 2025 14:35:09 -0600
+Message-ID: <20250621203512.223189-7-corbet@lwn.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250621203512.223189-1-corbet@lwn.net>
 References: <20250621203512.223189-1-corbet@lwn.net>
@@ -49,55 +49,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Merge the duplicated code back into a single implementation.  Code movement
-only, no logic changes.
+Move the recognition of this state to when we enter it, rather than when we
+exit, eliminating some twisty logic along the way.
+
+Some changes in output do result from this shift, generally for kerneldoc
+comments that do not quite fit the format.  See, for example,
+struct irqdomain.  As far as I can tell, the new behavior is more correct
+in each case.
 
 Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 ---
- scripts/lib/kdoc/kdoc_parser.py | 49 +++++++++------------------------
- 1 file changed, 13 insertions(+), 36 deletions(-)
+ scripts/lib/kdoc/kdoc_parser.py | 48 ++++++++++++++-------------------
+ 1 file changed, 20 insertions(+), 28 deletions(-)
 
 diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
-index 185ffe4e1469..a336d543e72b 100644
+index a336d543e72b..5998b02ca3a0 100644
 --- a/scripts/lib/kdoc/kdoc_parser.py
 +++ b/scripts/lib/kdoc/kdoc_parser.py
-@@ -1310,10 +1310,10 @@ class KernelDoc:
-         else:
-             self.emit_msg(ln, f"Cannot find identifier on line:\n{line}")
- 
--    def process_decl(self, ln, line):
--        """
--        STATE_DECLARATION: We've seen the beginning of a declaration
--        """
-+    #
-+    # Helper function to determine if a new section is being started.
-+    #
-+    def is_new_section(self, ln, line):
+@@ -1316,21 +1316,25 @@ class KernelDoc:
+     def is_new_section(self, ln, line):
          if doc_sect.search(line):
              self.entry.in_doc_sect = True
++            self.state = state.BODY
++            #
++            # Pick out the name of our new section, tweaking it if need be.
++            #
              newsection = doc_sect.group(1)
-@@ -1346,6 +1346,14 @@ class KernelDoc:
-                 self.entry.contents += "\n"
- 
-             self.state = state.BODY
-+            return True
-+        return False
-+
-+    def process_decl(self, ln, line):
-+        """
-+        STATE_DECLARATION: We've seen the beginning of a declaration
-+        """
-+        if self.is_new_section(ln, line):
-             return
- 
-         if doc_end.search(line):
-@@ -1395,38 +1403,7 @@ class KernelDoc:
-         """
-         STATE_BODY: the bulk of a kerneldoc comment.
-         """
--        if doc_sect.search(line):
--            self.entry.in_doc_sect = True
--            newsection = doc_sect.group(1)
 -
 -            if newsection.lower() in ["description", "context"]:
 -                newsection = newsection.title()
@@ -105,32 +82,71 @@ index 185ffe4e1469..a336d543e72b 100644
 -            # Special case: @return is a section, not a param description
 -            if newsection.lower() in ["@return", "@returns",
 -                                      "return", "returns"]:
--                newsection = "Return"
++            if newsection.lower() == 'description':
++                newsection = 'Description'
++            elif newsection.lower() == 'context':
++                newsection = 'Context'
++                self.state = state.SPECIAL_SECTION
++            elif newsection.lower() in ["@return", "@returns",
++                                        "return", "returns"]:
+                 newsection = "Return"
 -
 -            # Perl kernel-doc has a check here for contents before sections.
 -            # the logic there is always false, as in_doc_sect variable is
 -            # always true. So, just don't implement Wcontents_before_sections
 -
 -            # .title()
--            newcontents = doc_sect.group(2)
--            if not newcontents:
--                newcontents = ""
--
--            if self.entry.contents.strip("\n"):
--                self.dump_section()
--
--            self.entry.begin_section(ln, newsection)
--            self.entry.leading_space = None
--
--            self.entry.contents = newcontents.lstrip()
--            if self.entry.contents:
--                self.entry.contents += "\n"
++                self.state = state.SPECIAL_SECTION
++            elif newsection[0] == '@':
++                self.state = state.SPECIAL_SECTION
++            #
++            # Initialize the contents, and get the new section going.
++            #
+             newcontents = doc_sect.group(2)
+             if not newcontents:
+                 newcontents = ""
+@@ -1344,8 +1348,6 @@ class KernelDoc:
+             self.entry.contents = newcontents.lstrip()
+             if self.entry.contents:
+                 self.entry.contents += "\n"
 -
 -            self.state = state.BODY
-+        if self.is_new_section(ln, line):
-             return
+             return True
+         return False
  
-         if doc_end.search(line):
+@@ -1395,8 +1397,9 @@ class KernelDoc:
+         """
+         STATE_SPECIAL_SECTION: a section ending with a blank line
+         """
+-        if KernRe(r"\s*\*\s*\S").match(line):
++        if KernRe(r"\s*\*\s*$").match(line):
+             self.entry.begin_section(ln, dump = True)
++            self.state = state.BODY
+         self.process_body(ln, line)
+ 
+     def process_body(self, ln, line):
+@@ -1424,20 +1427,9 @@ class KernelDoc:
+             cont = doc_content.group(1)
+ 
+             if cont == "":
+-                if self.entry.section == self.section_context:
+-                    self.entry.begin_section(ln, dump = True)
+-                    self.state = state.BODY
+-                else:
+-                    if self.entry.section != SECTION_DEFAULT:
+-                        self.state = state.SPECIAL_SECTION
+-                    else:
+-                        self.state = state.BODY
+-
+                     self.entry.contents += "\n"
+-
+             else:
+-                if self.entry.section.startswith('@') or        \
+-                   self.entry.section == self.section_context:
++                if self.state == state.SPECIAL_SECTION:
+                     if self.entry.leading_space is None:
+                         r = KernRe(r'^(\s+)')
+                         if r.match(cont):
 -- 
 2.49.0
 
