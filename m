@@ -1,81 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9882036FF;
-	Sat, 21 Jun 2025 15:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C696F101EE;
+	Sat, 21 Jun 2025 15:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750519180; cv=none; b=sxqYMGi9XUvPMKxweWYg96osdau9XgkFSNTZ+gDdPiqf0VGWvVYrQavAQXJlLBI6XRbhC1mY5fP+nLtep/s+GJE0JVePh0xGQQSN2aLgVU39FH83QeytvuKezrRNBeEPd6R77MiEjAMH+qtImBKdHsviP867dSUId4V64HclnnY=
+	t=1750519265; cv=none; b=oeKRUwPMttTTsSEv2icdpd9IZtCP58VGXQxWkuqy2clWBWf2GUV7OBN4DWc3VTwu9WxnFhlPr//aXTwmfb2VvjBUNOtYPlavrnPev41TahL8PA3J851IJ+Ijmebm6flYEZvX9+LvcPoemCAEL2c7BLX/9bN7QZRLW8tIgOT5bTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750519180; c=relaxed/simple;
-	bh=NUoh38uATli7F617RTVUNNksneLgpeAkF5iLzKe0WLQ=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=sOGfG+yjexD3LVxgrZAadW+u0/cqjNBZg+g5JyDcVL4L6V9Z1mnLy5bDHufn85DD5VkwEmRNuxE5FChkS1bXK5NQXkkHY7NyiJbEkzF+tnbYEdSG18Nq8zv3lo3Rd8hOPSawvlS6QKQRqnAJ/D5ThjvL4Vs0PT0A/lRgQGCwLS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6LSQLbP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750519265; c=relaxed/simple;
+	bh=JroJlkuo3LEOnGb3aGB2QIHQjVZIx4hFM1GZ7mqINXY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IYKWn1ntGLnjgR3LIIiaHwWCjtWcfgUAlO3iuql97GJ6qdCOB0zKHSKsv9VPZ8IQ70cDW1zAzTFTleFo5UOiNJLpu9QCFdZ7jN6fey6yheafVfR3EmcF8gJ+5LmVIsClVeauOvoE09dxfnGXR9Izt66d6Pc6DSGeTiWuzPbeRMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hE6C33UC; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6LSQLbP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D858C4CEE7;
-	Sat, 21 Jun 2025 15:19:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750519180;
-	bh=NUoh38uATli7F617RTVUNNksneLgpeAkF5iLzKe0WLQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=L6LSQLbPgouhy9Udih3S6ASuObVfTCO7gVrSRIL8wtk1yFzf+A/7qhQP4JuzTkIHm
-	 HG9LSKNBzPmqgtiywqYzkiojcTI8MLV8Gbfy4ZL8JWslyNfMyahjLm/rv1gydhsvHN
-	 DNxdG2A+grdBkWeiAw8rA6m45fct95PRHo6yyToLPKNuu7WZxf/dlh9cOrTo+ymPLy
-	 jRaQs+wcxxOmBlDaJWGL3eNMB6wQd+b26ZzVSIO4xvu1nlAhUbycMJMpZ6HyXfBK8h
-	 Lgx6lw3K11p+08GxP7jrUKsvPxFLfrhep6+zNque0gzPgYwXu+WxHsAyDKFIvIgTY0
-	 YSw53WilY+QmA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB06638111DD;
-	Sat, 21 Jun 2025 15:20:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hE6C33UC"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b2700de85d0so492437a12.2;
+        Sat, 21 Jun 2025 08:21:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750519263; x=1751124063; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JroJlkuo3LEOnGb3aGB2QIHQjVZIx4hFM1GZ7mqINXY=;
+        b=hE6C33UCnri0RizsmW+/LTPeVrx2VbxmiOtONdC0y6ch+BY9V4VRJga0IIqMhzLBaO
+         NKGEF99bH7C11QrDtycpV17jeBCGF05FUPKXRtkuWkA/uCIZjGlZoEmrPDX2bThDfy2h
+         MWjRCe3VbQrm+gtM43KBVFvDyCh4v3bvt1p0dGDI1uZLEoNTzYtCzpA+2aXl4ODhVCGC
+         2GNany2tJzN1C08Rv3vSEXfLi3VgVz9AXY/2sYFx8EBNu0ckK5Hc491CQ/12nbH0zTi7
+         ZhCKBKjiNZyHtCx7AiW7A13TroInhQ3NcHXw9qRh3WIBMUZA9qEuQDBJaz4s9hrizVCi
+         zTyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750519263; x=1751124063;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JroJlkuo3LEOnGb3aGB2QIHQjVZIx4hFM1GZ7mqINXY=;
+        b=dETYHR3isNX9V4UL8OXsbULqAaMJa0L25syC80TfNcgXXY3KUYWpig2QrBVvD53UQh
+         kR97cWwTzpY9uZ0IegEvGXIgVS798IfSxcHs1nTBFM1vOmyLoPiCchl/zgcyahYEqSC9
+         pC/POhku7/fqcRri/khH2M7fZP72QVDEu1pJNVNZvsUR75bFiQBkPE6Jl6jwHoBDhuKP
+         gXq8EPDK7WGqIrw2ZyD3d8rPYx4nLYBSiMxHXUi3hpiPPK9O1krNUjURMdotfzg1Yx/c
+         h1e54xBoYsjgHIoBaWvBIKXAZ0ytLqSNLnGByHGbzZwIeMeH8za7mq5N/I9+z7aSP7Lk
+         Z+9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUQLVAsEDpaLRzj8NlDe9brCyFrsQUfRlnILBv7myotNzh8VZ4Uh/2aUgJ4XnyJe7hP+5gx49umi9VJA3JjtA==@vger.kernel.org, AJvYcCUegf/YQPfNUnPVSdrSnk0IyepwsegQwZlU2A56pTHFnU5sQdCb/C5CJ2KuPEx5wDkNksN2JA47XdbzbBc=@vger.kernel.org, AJvYcCWj5CUW/Zks8rZ/qeLTdWydiZLwkmrtK1VPK3ZvcNaa9PjfPnytOvQgcMUeOb2jYEwtrVM1k08V64UMS5IA@vger.kernel.org, AJvYcCXiLtRfkRNK5pkux3rwFehBCE5bGm2YDD+y/w3EH3Vaukk6a/YLZpfv88jO0hNsLM42Tm3fLV1Ke8B4pg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXIp62F/5rOkGr4VHfA7PCMeWkTDj1+vZeIzVeBu6QyFPsFae0
+	mjZF/K55Irck2T5qDE5AH3z7oFj1c9xKr8ME41zA9IYwAYb1cx4F3ASwCVscLpgBvpvMaaldcaY
+	UdCxUgeOIW3EiMLGFPpV8BHZ7hLMF5JU=
+X-Gm-Gg: ASbGncvkfMBPiy9WMSm0uymaug7zL3URv6BLK/sJynIMuewhAsrYSWtuUMP7hUPBITI
+	h0t4wDAD02zQRGaqizcxL9o+oAkrKtI97H2LBjn5NcR0P3ZM/O9Cuw/k7Hi0bjW2lt15Q9wtRfb
+	fTg5V+5abI9YLHC1SbU1aitRCdumAXarcJWn+hPdYMCKE=
+X-Google-Smtp-Source: AGHT+IEqJJ0jiqUgppcuTUoCFeTLTOefLevfVhkZ3AnKg/JwHW+l7uzSplwtqftwTmPlghZqIoDwqspmO4gvPqbpOTE=
+X-Received: by 2002:a17:90b:4b49:b0:313:151a:8653 with SMTP id
+ 98e67ed59e1d1-3159d9152abmr3676608a91.8.1750519263003; Sat, 21 Jun 2025
+ 08:21:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net: pse-pd: Fix ethnl_pse_send_ntf() stub
- parameter
- type
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175051920775.1881425.6913266452611460719.git-patchwork-notify@kernel.org>
-Date: Sat, 21 Jun 2025 15:20:07 +0000
-References: <20250620091641.2098028-1-kory.maincent@bootlin.com>
-In-Reply-To: <20250620091641.2098028-1-kory.maincent@bootlin.com>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: kuba@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- o.rempel@pengutronix.de, lkp@intel.com, thomas.petazzoni@bootlin.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- pabeni@redhat.com
+References: <cover.1750511018.git.legion@kernel.org> <6e2f70b07a710e761eb68d089d96cee7b27bb2d5.1750511018.git.legion@kernel.org>
+In-Reply-To: <6e2f70b07a710e761eb68d089d96cee7b27bb2d5.1750511018.git.legion@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 21 Jun 2025 17:20:49 +0200
+X-Gm-Features: Ac12FXyUUusE04-VI0Jbem7xB-mpUmVLWcavnYAiHbpPmDRMU-Iciw-FoK4G0YA
+Message-ID: <CANiq72k+ojA3=JfwhvjZ_=+uGBG-WmhLOigzPUXdoY8VQXbf=A@mail.gmail.com>
+Subject: Re: [PATCH v4 6/7] modpost: Add modname to mod_device_table alias
+To: Alexey Gladkov <legion@kernel.org>, FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Daniel Gomez <da.gomez@samsung.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, linux-kernel@vger.kernel.org, 
+	linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-scsi@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+On Sat, Jun 21, 2025 at 3:57=E2=80=AFPM Alexey Gladkov <legion@kernel.org> =
+wrote:
+>
+> +/* Format: __mod_device_table__kmod_<modname>__<type>__<name> */
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Should we mention that `__kmod_` and `__` will be the search strings,
+or otherwise the Rust formatting (i.e. that is carries a line etc.)?
 
-On Fri, 20 Jun 2025 11:16:41 +0200 you wrote:
-> The ethnl_pse_send_ntf() stub function has incorrect parameter type when
-> CONFIG_ETHTOOL_NETLINK is disabled. The function should take a net_device
-> pointer instead of phy_device pointer to match the actual implementation.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506200355.TqFiYUbN-lkp@intel.com/
-> Fixes: fc0e6db30941 ("net: pse-pd: Add support for reporting events")
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> 
-> [...]
+Cc'ing Tomo: do we need an update on `rust/kernel/net/phy.rs`? Should
+we factor out the formatting?
 
-Here is the summary with links:
-  - [net-next] net: pse-pd: Fix ethnl_pse_send_ntf() stub parameter type
-    https://git.kernel.org/netdev/net-next/c/99aa0bbb082e
+Thanks!
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Cheers,
+Miguel
