@@ -1,161 +1,122 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40914A23;
-	Sat, 21 Jun 2025 05:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F202818B47C;
+	Sat, 21 Jun 2025 05:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750485017; cv=none; b=NmkHFMpcJqtPCerXxYh19F4vK2GL0Kk5VwXk6EqnQX7UBuCzB/vlHi8wBNP74xWOJOTVccgN8ClT2S1H51f7uvv916D/GKunmpJYgmuM4mIh0gp8xVwuO3yeGTQAzsB+G8YE+5CPcxmzUWY6GhJA+WYcygoEG57otFz2PdSMrKQ=
+	t=1750485128; cv=none; b=iIxQYqGKGwqeDt9/uOloBtanaudkdE82WxxyGnKL2f+eEnkfMsDnqH1h0qLnYqp2UnkFzapjgRBJGAnxjPWWpnq0004gLR2MlSY9laNlk2GksLzErGNpLwmoyOYIMX1FyNBMiLLU/mmsarVU1YccU+CCrCSO3SVrjHV2Q+exzuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750485017; c=relaxed/simple;
-	bh=Lcr+i3rWI4p9OEA9sI3nyijlU/z3uHQM8QMAaNeBLfY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YkiAyEDbvyaueEiCubO6WwK7SAtIYjJE/y4Ami1UArikDV7DMkEU+6ol72qh4OXuf8RCxDOszdTRexfv2FVfSBMdkXRNUW17GyKSm9otji/akTmqxylXgUYWRCXL33IYueD2sdk8wHS0ZfTNrEnADqWXlWb+1fkIfIXkZeLQawk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=markus.stockhausen@gmx.de header.b=iSiYv3n2; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1750485128; c=relaxed/simple;
+	bh=I2qfDeaK/yT5SBxGqMaxj0vINrFUNTL30vXC81G8BN4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rtyuOtv2vrpN+Gr/GScQqFG8jwBKFMIYFjt+FDznUuZt+LkgYU+mg6o2u4m8WyqxhmqimrGhhCtwGhMPDfPYXeQzxXaO47eytF/eQ/5pNXL16F3bY++RubdTL8m7fmGamHlpT1u+2HDiaU76WRZN82CaNrPRXsVRqLrN83wA1BA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G38nV9c8; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=markus.stockhausen@gmx.de header.b="iSiYv3n2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1750485011; x=1751089811;
-	i=markus.stockhausen@gmx.de;
-	bh=RT8JT+qpbvXJIk8NZJrHDXUHQpc7EOuAc02Q6zYaxf0=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=iSiYv3n2XH2zOgOFOIS402ZM5WxJx7qrbmmG2Btr9YiiZ6eh+J/A4yiXWCX0+2gX
-	 5gVunHQ6MktTY8kWH2xa43i4CaST03CetsQCqP+b8sMrMM9Hqxp1amXgVwfJtSIbW
-	 514NCZ+LyD30LhzlFQspwJDZWH1+1iS760h64Fwc+JlB9LLSEKET8aF6AqbpOl0Mt
-	 s8GiiP/o7dil57nex48nWDB46J45bFGGWIhP6HUYNlRvg318B2+zs9/f+EpKlzOxx
-	 ZqyXOlmM//2NgvsYPaL4zATgCP9T4IzKM+BL6PpMN8TGin5gzinKh2Qe3saFFcmyw
-	 VEv2sX9zYXAv6mZKIw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from openwrt ([94.31.70.55]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N95iR-1unblN4AWl-00w6kU; Sat, 21
- Jun 2025 07:50:11 +0200
-From: Markus Stockhausen <markus.stockhausen@gmx.de>
-To: tsbogend@alpha.franken.de,
-	tglx@linutronix.de,
-	linux-mips@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G38nV9c8"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4533fbbd21bso1237325e9.2;
+        Fri, 20 Jun 2025 22:52:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750485125; x=1751089925; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WQpUEjf0YxYX6Ci4pItp/DxE3akefzENzegjXg1pXvE=;
+        b=G38nV9c8u5CkpiZyU99Zqfgb7VbRBVX4PV0Y7sZAfvozMzifxVMF2cm3p7Nw0TVc4I
+         j4COGTefAZBm/YikEtZ4gfoO1WeNFzT+m78Zyb6vuW0YHdyV24UGOairikzy/0l0n9jh
+         C2y6SWBdKyM1M+CPMeEfcrBpUqbSiUyJaaaEwfxwscWOhxqR6BE5iUAo0xFACQRWrgR4
+         FJ0DA6nQoaYO1SRfD6TGpJOya70uDrUtJnFOMlhV/PI2KzkRF5CRFPzWCK93DEDDbIIW
+         QtRSrN4FYbPGlUmfq+19pi4cYoi5u0hIhQZjjj6gbIYO5zJDalZ4DJbochBQHQOd0myu
+         V/1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750485125; x=1751089925;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WQpUEjf0YxYX6Ci4pItp/DxE3akefzENzegjXg1pXvE=;
+        b=OqlK2q8E0TbkFlNogYctHCr/B+stiIr3lqIMo04YtEY8d4897nrOD9nghVxYR/Cywd
+         sVa63qS9Zy5UY2y7QtDBFPetYFo0rQnKbyg/+4J3okbuM346so0tpLCzXnvaNWGZgUcV
+         K56w9/zPPBiz65vQvCS8JN/I7cKF17t74y6jYHzZPRTTSWRwf82Hs8nEAqwJXHHG4ynv
+         skbksaqtp5tCZYIizQq49JiqqzDtES7mwLij0fFMYiL56h3LMm9WYiob3M1CJcX8eP8h
+         cJvuC9cJEu1Swr3izrEp3DYLpK7e+hzIzYD5BNOcpaIC7wmRfSrK74DnXIv0uj9hjC5Z
+         B0fA==
+X-Forwarded-Encrypted: i=1; AJvYcCWBUtza94n1Hvp6CdCRDekSmeIeN/kzPehGzk/n63+uOvgpki1k2zxm1iyrCZL2ul6OSbaLVecYemFu@vger.kernel.org, AJvYcCWv3hfE457+LaikYWLllRXTvCTnrqx3caTWIevJuawqA8ou9XgrzuP9x+eFKF0kB0TLARGwFwvNX7jY5LYH@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQzMUm+9wLsOO6syG76UYwEuv9ogy9u6MuVEj+XnSKZeM92U8G
+	TiTjLNdBIae1rr41S4ylAXiI9eOEQZoqxfwgIZMlQODxgPVjVz5tIgU8
+X-Gm-Gg: ASbGncsWVdwnq+LkiyDIzSdLFaqd6Ua4aPUrc/yN3KnRFKq610GnRP3vysQWQUv1A2Y
+	OKEBrv5zOzamgqoQPx0RXYHXUdzZSf57CrtV2uMElAkXQLg64O3G1IKXQJyNm2F0IhYeliSRaXq
+	ynpcWiJvexFr5oKAJ3l9cdx7wU6mBtrOJixgpH+RIRX/2tc9OA2uorsD2zS+d6/FkePFIXEAWlY
+	Q5mVbBuGKFIl6kn+dzaHOeL9zs283+fUQZDRD5io0UcNxuwo0Q7p4tbvk32CANLu+RnbWIMIufD
+	pf1Q1Gu4fSRTFX9VpdijHxJVpvmC4HnORVX2Bwmv/ho4utZFCBD5Qq3zwWEp94GhkO5G0RHwBRY
+	TQKgJvmdNMf8Mt8pD/tm2c0/ny557tTJgWA==
+X-Google-Smtp-Source: AGHT+IGpx8LAUbfT+/oAv5emrbinMdbFFJI0Ah20iXYdZhFuPKxIxIt+hSS5OM2azlVyMH9Ov14N1A==
+X-Received: by 2002:a05:600c:5494:b0:453:590b:d392 with SMTP id 5b1f17b1804b1-453657bf79cmr18822625e9.2.1750485124972;
+        Fri, 20 Jun 2025 22:52:04 -0700 (PDT)
+Received: from localhost.localdomain ([102.46.244.122])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d1190d13sm3785172f8f.90.2025.06.20.22.52.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 22:52:04 -0700 (PDT)
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+To: rafael@kernel.org,
+	lenb@kernel.org
+Cc: skhan@linuxfoundation.com,
+	linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	s.gottschall@dd-wrt.com
-Cc: Markus Stockhausen <markus.stockhausen@gmx.de>
-Subject: [PATCH v3] irqchip/mips-gic: allow forced affinity
-Date: Sat, 21 Jun 2025 01:49:51 -0400
-Message-ID: <20250621054952.380374-1-markus.stockhausen@gmx.de>
-X-Mailer: git-send-email 2.47.0
+	linux-kernel-mentees@lists.linux.dev,
+	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Subject: [PATCH] ACPI: fan: Replace sprintf/scnprintf with sysfs_emit in show functions
+Date: Sat, 21 Jun 2025 08:52:00 +0300
+Message-Id: <20250621055200.166361-1-abdelrahmanfekry375@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:2WUfsjsdwLmaYTLXA7lOqBCCjYxPpfY/UtXMi8pA8jYWTF66P7d
- 3dPHewLadmyznGdYhX4dCAx/Bxratbs72HOQw84l6CQsl5KxFa84gwievqxPQooQi5thkm3
- 2x5BOzPoU3rzzvmlrSAQj+iaZhYuK6rWbEo4EwH1o4yjqRzXbZtxzLCCOWriLI1R+Pgu+bc
- 8wyjwM5us2ReaQPV5t0Sw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:z9Ty9Te/pHg=;Y3ODNalVYkX9XvnU9ah/zmYYmu3
- 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
+Content-Transfer-Encoding: 8bit
 
-Devices of the Realtek MIPS Otto platform use the official rtl-otto-timer
-as clock event generator and cpu clocksource. It is registered for cpu
-startup via cpuhp_setup_state() and forces the affinity of the clockevent
-interrupts to the appropriate cpu via irq_force_affinity().
+Update two sysfs show() functions in the ACPI fan driver to use sysfs_emit()
+and sysfs_emit_at() instead of sprintf() and scnprintf().
 
-On the "smaller" devices with a vendor specific interrupt controller
-(supported by irq-realtek-rtl) the registration works fine. The "larger"
-RTL931x series is based on a MIPS interAptiv dual core with a MIPS GIC
-controller. Interrupt routing setup is cancelled because gic_set_affinity(=
-)
-does not accept the current (not yet online) cpu as a target.
+- show_fan_speed(): replaced sprintf() with sysfs_emit().
+- show_state(): replaced scnprintf() with sysfs_emit() for the first write,
+  and retained sysfs_emit_at() for incremental writes.
 
-Relax the checks by evaluating the force parameter that is provided for
-exactly this purpose like in other drivers. With this patch affinity can
-be set as follows:
+This change is in accordance with Documentation/filesystems/sysfs.rst,
+which recommends using sysfs_emit/sysfs_emit_at in all sysfs show()
+callbacks for buffer safety, clarity, and consistency.
 
-- force =3D false: allow to set affinity to any online cpu
-- force =3D true: allow to set affinity to any cpu
+Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+---
+ drivers/acpi/fan_attr.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Co-developed-by: Sebastian Gottschall <s.gottschall@dd-wrt.com>
-Signed-off-by: Sebastian Gottschall <s.gottschall@dd-wrt.com>
-Signed-off-by: Markus Stockhausen <markus.stockhausen@gmx.de>
-=2D--
-
-v3: fixed Signed-off-by chain
-v2: simplified condition
-
-=2D--
- drivers/irqchip/irq-mips-gic.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/irqchip/irq-mips-gic.c b/drivers/irqchip/irq-mips-gic=
-.c
-index 34e8d09c12a0..19a57c5e2b2e 100644
-=2D-- a/drivers/irqchip/irq-mips-gic.c
-+++ b/drivers/irqchip/irq-mips-gic.c
-@@ -375,9 +375,13 @@ static int gic_set_affinity(struct irq_data *d, const=
- struct cpumask *cpumask,
- 	/*
- 	 * The GIC specifies that we can only route an interrupt to one VP(E),
- 	 * ie. CPU in Linux parlance, at a time. Therefore we always route to
--	 * the first online CPU in the mask.
-+	 * the first forced or online CPU in the mask.
- 	 */
--	cpu =3D cpumask_first_and(cpumask, cpu_online_mask);
-+	if (force)
-+		cpu =3D cpumask_first(cpumask);
-+	else
-+		cpu =3D cpumask_first_and(cpumask, cpu_online_mask);
-+
- 	if (cpu >=3D NR_CPUS)
- 		return -EINVAL;
-=20
-=2D-=20
-2.47.0
+diff --git a/drivers/acpi/fan_attr.c b/drivers/acpi/fan_attr.c
+index 22d29ac2447c..6a53da3d6d82 100644
+--- a/drivers/acpi/fan_attr.c
++++ b/drivers/acpi/fan_attr.c
+@@ -22,9 +22,9 @@ static ssize_t show_state(struct device *dev, struct device_attribute *attr, cha
+ 	int count;
+ 
+ 	if (fps->control == 0xFFFFFFFF || fps->control > 100)
+-		count = scnprintf(buf, PAGE_SIZE, "not-defined:");
++		count = sysfs_emit(buf, "not-defined:");
+ 	else
+-		count = scnprintf(buf, PAGE_SIZE, "%lld:", fps->control);
++		count = sysfs_emit(buf, "%lld:", fps->control);
+ 
+ 	if (fps->trip_point == 0xFFFFFFFF || fps->trip_point > 9)
+ 		count += sysfs_emit_at(buf, count, "not-defined:");
+@@ -59,7 +59,7 @@ static ssize_t show_fan_speed(struct device *dev, struct device_attribute *attr,
+ 	if (status)
+ 		return status;
+ 
+-	return sprintf(buf, "%lld\n", fst.speed);
++	return sysfs_emit(buf, "%lld\n", fst.speed);
+ }
+ 
+ static ssize_t show_fine_grain_control(struct device *dev, struct device_attribute *attr, char *buf)
+-- 
+2.25.1
 
