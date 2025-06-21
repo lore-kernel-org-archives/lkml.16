@@ -1,37 +1,37 @@
-Received: from forward200d.mail.yandex.net (forward200d.mail.yandex.net [178.154.239.221])
+Received: from forward200a.mail.yandex.net (forward200a.mail.yandex.net [178.154.239.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39C12036ED;
-	Sat, 21 Jun 2025 18:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5482586EC;
+	Sat, 21 Jun 2025 18:53:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750531999; cv=none; b=DdLCkttVagvYf92H2bdf2Vp3nkLPRokvaOK5wsy4M0t69Nyummqy2k8f7o7wB43zR5jWlR2u2uqLqwdsOC9h4ymPGDPIcW2qdsbno4xbjbSXQugitOrPKbAoCgF9x2x1mUXOjDNWAfd8u/4ivbg+QmV9el8QiLLMGOVW+pTYmkY=
+	t=1750532015; cv=none; b=k6gkzSVpGWeFrbnDxWR0zmkzd/wKvS0YVvAxsI1fGw8e/3/UbWY4O362cYP7jIlqQNbaxoSY8MRcJTpQu9znQsQ+Mm6I9tGrNlRv0B8dPQxGygkTyDfkrIV2x+fk/M8F/tYTkF6I6kDlMbBI4gjADXCpb+jwug18AN9S6vzYMAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750531999; c=relaxed/simple;
-	bh=znL4Zc3S4t3FyzyWArcnH6Jx4XM0uFtnH/0Pcek5cQA=;
+	s=arc-20240116; t=1750532015; c=relaxed/simple;
+	bh=yVVnEH9fmkzK+0YZ+K9vNjzUCtTtl03sbReclJYtVa4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m/EZiwKl+GiobymZnYNTBe2MHxtYioLIXPyptkpxNDqIvhx6jxb0/+jAacUccJ2mShPXu55VeXrKc+V6k7FXb0gvBbraeY5Qmo9rcSfQyuX6lJkzygzznTYJ+HXju6dRZcyFa4iJaUguv9LJM9r0spM8canBDE/DwH0qio0xIaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=Cd0G1E9K; arc=none smtp.client-ip=178.154.239.221
+	 MIME-Version:Content-Type; b=l+UzNwhacOsX6AJHu165EDpG3lS6E917ZORtJ0ln7HhLFeU1an7eF9GIF5YklL7APvSPJV1x+tQYaftJ3Mo89xSiiqKELui8x4M7rw+UcVEJ/6uMYqiVG9vweAHbfrbUv0FyzzBgpa23JClAk6G6KAOpbGj/vZCMdFO0TIxSfig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=fElG/WuA; arc=none smtp.client-ip=178.154.239.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="Cd0G1E9K"
-Received: from forward100d.mail.yandex.net (forward100d.mail.yandex.net [IPv6:2a02:6b8:c41:1300:1:45:d181:d100])
-	by forward200d.mail.yandex.net (Yandex) with ESMTPS id EF48063526;
-	Sat, 21 Jun 2025 21:45:28 +0300 (MSK)
+	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="fElG/WuA"
+Received: from forward101a.mail.yandex.net (forward101a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:d101])
+	by forward200a.mail.yandex.net (Yandex) with ESMTPS id C61A360FAB;
+	Sat, 21 Jun 2025 21:45:36 +0300 (MSK)
 Received: from mail-nwsmtp-smtp-production-main-91.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-91.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:3b23:0:640:a115:0])
-	by forward100d.mail.yandex.net (Yandex) with ESMTPS id 926F060975;
-	Sat, 21 Jun 2025 21:45:20 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-91.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id uiVAZ68LnCg0-S7mslwtW;
-	Sat, 21 Jun 2025 21:45:18 +0300
+	by forward101a.mail.yandex.net (Yandex) with ESMTPS id 87BCF60AAC;
+	Sat, 21 Jun 2025 21:45:28 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-91.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id uiVAZ68LnCg0-NWzhbek5;
+	Sat, 21 Jun 2025 21:45:27 +0300
 X-Yandex-Fwd: 1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
-	s=mail; t=1750531519;
-	bh=0ipQNjbd7rx7eDMk+d+z9kiN5etFmfMNR8/fpV+diMs=;
+	s=mail; t=1750531528;
+	bh=hHGbALiWPmJEfMV3qXWuFzW80cAnKcktMEEA4gLoXME=;
 	h=Cc:Message-ID:References:Date:In-Reply-To:Subject:To:From;
-	b=Cd0G1E9K1gU0MnD3tYM6s46ER3c4buatUv+AWJJzDR/BKeH6UTey00ALcc3FLEd4x
-	 vybDW+tAJnJMtm+qZfy6iT0K5HPgf+eJ6zGmFZWknc2ogHXIM+94ARFPApD2Q6sBB1
-	 mYxKpPz0wWQHj0yjm62QHbEmra0ChtMxCZq40A14=
+	b=fElG/WuA/5xkVQxqFufU2FP8ePAWR8cRE8DiDyHm0Alxn4xBd0xFepTNG7ptE5/bn
+	 VNFxFCrkKEm0DpdU7feUSA5gYbdEWFDugM2dFi5MU6hK2NJhaQQZmk4Hj8CmV7NuX1
+	 Ns66VfWDW6KaJ0aQYF4363Mr/eSvLLueZ0o1Y8d8=
 Authentication-Results: mail-nwsmtp-smtp-production-main-91.iva.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
 From: =?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
 To: linux-kernel@vger.kernel.org,
@@ -53,9 +53,9 @@ Cc: ojeda@kernel.org,
 	daniel@sedlak.dev,
 	bjorn3_gh@protonmail.com,
 	=?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
-Subject: [PATCH v5 1/3] rust: add C wrappers for `ww_mutex` inline functions
-Date: Sat, 21 Jun 2025 21:44:52 +0300
-Message-ID: <20250621184454.8354-2-work@onurozkan.dev>
+Subject: [PATCH v5 3/3] add KUnit coverage on Rust `ww_mutex` implementation
+Date: Sat, 21 Jun 2025 21:44:54 +0300
+Message-ID: <20250621184454.8354-4-work@onurozkan.dev>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250621184454.8354-1-work@onurozkan.dev>
 References: <20250621184454.8354-1-work@onurozkan.dev>
@@ -68,85 +68,141 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Some of the kernel's `ww_mutex` functions are implemented as
-`static inline`, so they are inaccessible from Rust as bindgen
-can't generate code on them. This patch provides C function wrappers
-around these inline implementations, so bindgen can see them and generate
-the corresponding Rust code.
+Adds coverage around the core `ww_mutex` functionality
 
 Signed-off-by: Onur Özkan <work@onurozkan.dev>
 ---
- rust/helpers/helpers.c  |  3 ++-
- rust/helpers/ww_mutex.c | 39 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 41 insertions(+), 1 deletion(-)
- create mode 100644 rust/helpers/ww_mutex.c
+ rust/kernel/sync/lock/ww_mutex.rs | 120 ++++++++++++++++++++++++++++++
+ 1 file changed, 120 insertions(+)
 
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index 0f1b5d115985..2f82774b34cf 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -27,9 +27,9 @@
- #include "mm.c"
- #include "mutex.c"
- #include "page.c"
--#include "platform.c"
- #include "pci.c"
- #include "pid_namespace.c"
-+#include "platform.c"
- #include "rbtree.c"
- #include "rcu.c"
- #include "refcount.c"
-@@ -43,4 +43,5 @@
- #include "vmalloc.c"
- #include "wait.c"
- #include "workqueue.c"
-+#include "ww_mutex.c"
- #include "xarray.c"
-diff --git a/rust/helpers/ww_mutex.c b/rust/helpers/ww_mutex.c
-new file mode 100644
-index 000000000000..61a487653394
---- /dev/null
-+++ b/rust/helpers/ww_mutex.c
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: GPL-2.0
+diff --git a/rust/kernel/sync/lock/ww_mutex.rs b/rust/kernel/sync/lock/ww_mutex.rs
+index dcb23941813c..98ee5bee9188 100644
+--- a/rust/kernel/sync/lock/ww_mutex.rs
++++ b/rust/kernel/sync/lock/ww_mutex.rs
+@@ -419,3 +419,123 @@ fn drop(&mut self) {
+         unsafe { bindings::ww_mutex_unlock(self.mutex.as_ptr()) };
+     }
+ }
 +
-+#include <linux/ww_mutex.h>
++#[kunit_tests(rust_kernel_ww_mutex)]
++mod tests {
++    use crate::c_str;
++    use crate::prelude::*;
++    use pin_init::stack_pin_init;
 +
-+void rust_helper_ww_mutex_init(struct ww_mutex *lock, struct ww_class *ww_class)
-+{
-+	ww_mutex_init(lock, ww_class);
++    use super::*;
++
++    // A simple coverage on `define_ww_class` macro.
++    define_ww_class!(TEST_WOUND_WAIT_CLASS, wound_wait, c_str!("test_wound_wait"));
++    define_ww_class!(TEST_WAIT_DIE_CLASS, wait_die, c_str!("test_wait_die"));
++
++    #[test]
++    fn test_ww_mutex_basic_lock_unlock() -> Result {
++        stack_pin_init!(let class = WwClass::new_wound_wait(c_str!("test_mutex_class")));
++
++        stack_pin_init!(let mutex = WwMutex::new(42, &class));
++
++        // Lock without context
++        let guard = mutex.lock(None)?;
++        assert_eq!(*guard, 42);
++
++        // Drop the lock
++        drop(guard);
++
++        // Lock it again
++        let mut guard = mutex.lock(None)?;
++        *guard = 100;
++        assert_eq!(*guard, 100);
++
++        Ok(())
++    }
++
++    #[test]
++    fn test_ww_mutex_trylock() -> Result {
++        stack_pin_init!(let class = WwClass::new_wound_wait(c_str!("trylock_class")));
++
++        stack_pin_init!(let mutex = WwMutex::new(123, &class));
++
++        // trylock on unlocked mutex should succeed
++        let guard = mutex.try_lock(None)?;
++        assert_eq!(*guard, 123);
++        drop(guard);
++
++        // lock it first
++        let _guard1 = mutex.lock(None)?;
++
++        // trylock should fail when already locked
++        assert!(mutex.try_lock(None).is_err());
++
++        Ok(())
++    }
++
++    #[test]
++    fn test_ww_mutex_is_locked() -> Result {
++        stack_pin_init!(let class = WwClass::new_wait_die(c_str!("locked_check_class")));
++
++        stack_pin_init!(let mutex = WwMutex::new("hello", &class));
++
++        // should not be locked initially
++        assert!(!mutex.is_locked());
++
++        let guard = mutex.lock(None)?;
++        assert!(mutex.is_locked());
++
++        drop(guard);
++        assert!(!mutex.is_locked());
++
++        Ok(())
++    }
++
++    #[test]
++    fn test_ww_acquire_context() -> Result {
++        stack_pin_init!(let class = WwClass::new_wound_wait(c_str!("ctx_class")));
++
++        stack_pin_init!(let mutex1 = WwMutex::new(1, &class));
++        stack_pin_init!(let mutex2 = WwMutex::new(2, &class));
++
++        let mut ctx = KBox::pin_init(WwAcquireCtx::new(&class), GFP_KERNEL)?;
++
++        // acquire multiple mutexes with same context
++        let guard1 = mutex1.lock(Some(&ctx))?;
++        let guard2 = mutex2.lock(Some(&ctx))?;
++
++        assert_eq!(*guard1, 1);
++        assert_eq!(*guard2, 2);
++
++        ctx.as_mut().done();
++
++        // we shouldn't be able to lock once it's `done`.
++        assert!(mutex1.lock(Some(&ctx)).is_err());
++        assert!(mutex2.lock(Some(&ctx)).is_err());
++
++        Ok(())
++    }
++
++    #[test]
++    fn test_with_global_classes() -> Result {
++        stack_pin_init!(let wound_wait_mutex = WwMutex::new(100, &TEST_WOUND_WAIT_CLASS));
++        stack_pin_init!(let wait_die_mutex = WwMutex::new(200, &TEST_WAIT_DIE_CLASS));
++
++        let ww_guard = wound_wait_mutex.lock(None)?;
++        let wd_guard = wait_die_mutex.lock(None)?;
++
++        assert_eq!(*ww_guard, 100);
++        assert_eq!(*wd_guard, 200);
++
++        assert!(wound_wait_mutex.is_locked());
++        assert!(wait_die_mutex.is_locked());
++
++        drop(ww_guard);
++        drop(wd_guard);
++
++        assert!(!wound_wait_mutex.is_locked());
++        assert!(!wait_die_mutex.is_locked());
++
++        Ok(())
++    }
 +}
-+
-+void rust_helper_ww_acquire_init(struct ww_acquire_ctx *ctx, struct ww_class *ww_class)
-+{
-+	ww_acquire_init(ctx, ww_class);
-+}
-+
-+void rust_helper_ww_acquire_done(struct ww_acquire_ctx *ctx)
-+{
-+	ww_acquire_done(ctx);
-+}
-+
-+void rust_helper_ww_acquire_fini(struct ww_acquire_ctx *ctx)
-+{
-+	ww_acquire_fini(ctx);
-+}
-+
-+void rust_helper_ww_mutex_lock_slow(struct ww_mutex *lock, struct ww_acquire_ctx *ctx)
-+{
-+	ww_mutex_lock_slow(lock, ctx);
-+}
-+
-+int rust_helper_ww_mutex_lock_slow_interruptible(struct ww_mutex *lock, struct ww_acquire_ctx *ctx)
-+{
-+	return ww_mutex_lock_slow_interruptible(lock, ctx);
-+}
-+
-+bool rust_helper_ww_mutex_is_locked(struct ww_mutex *lock)
-+{
-+	return ww_mutex_is_locked(lock);
-+}
-+
 -- 
 2.49.0
 
