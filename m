@@ -1,87 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C752229CE6;
-	Sat, 21 Jun 2025 15:35:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6CB21FF45
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 15:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750520145; cv=none; b=b6ph95U4i+8Y1PZxqBVLhrZeXwX+eLilWdWUXNAPGTPdPmSTQNhBZBmz+EFT8Ax9gjmECfnONTviS9r8SSCoOTWViIyEFTVuqH1uI5jNtg57Hf/FhbEXJB4jGoYZyt7vfX96s4vEDQkBXZdJR8f61eF3fh2p+G2xYsJ7GeP9x9I=
+	t=1750520150; cv=none; b=tq/gSD4X3OWEl0r1PeNTlZ1sKAxy/KUKh4WdQ0GmXQiStithImKa9cEqODPj1tzULK6W9Vnp5vGZEkTClngbNLmcILV5U7JEEdUXfmvDD8TKbSatDBYD79Jc5rEMogmftlr6pZC6ZooFk0ms05ZEM9uMhcuQYJR7aO68+IHJlXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750520145; c=relaxed/simple;
-	bh=uaqrAVHz4P77UurQRE+V0vifBS02a/slmFHXIxT4b3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mdPgVO1XxSPK4dG+7oqZP7H2ARCEMMKVuMV9GCFYP36hGVYuJwsnpbeyi9NZOyxOHYxUMxiaBVGeW6XLfA6Dl3SE0/v5EACl0apIq07jX2f1uxXAzTLc5lY1wvcG7UbP+TNm1lo1UI6eREubWs4HABzP7PJyuaOvHZ/930VfPHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UBL8oLAr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750520150; c=relaxed/simple;
+	bh=Z0YvMrEXahV6Bau7dFtEzJFPdcZeXuaz5bkrjlZVLCU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lAOS8IgdEdx0210jG25DyZtZoZ8ZYwyJcSKU7nimKThPodnvaazWFsh1BZ37Ebkg0cf0DkKJvg6yk/G46JMLX9ktwg1BUGitILxvpxz0STcJ8RK0CAhfXwwqJy32MJNY4r6mJK4O21OyJ5uq+hhgtytm9DtM5j71V4WpXlAuWIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=CT5VV+2m; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UBL8oLAr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8A9AC4CEE7;
-	Sat, 21 Jun 2025 15:35:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750520145;
-	bh=uaqrAVHz4P77UurQRE+V0vifBS02a/slmFHXIxT4b3E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=UBL8oLArVeOqAbPKjTPsumI1euKNLdReRm74C0srTEOCHR2z3d9+wkvIUjkpi+O5B
-	 NQAzQI9TLQpdNMbF65s0gxzKM7uPaygkOBb5oZpf9BIWc7cF1m3a+B/XSvwEfMUItR
-	 8rAS0V3TI1IF7vrYZM+6Q+CCar9HGizxy5Dej19mZAFuPDMzI2RqHp3JdZViMsluSA
-	 wvDtcHtApWRaONp8VzFrhPOarVTbx4TtDyWclGDIdIXzxafgNsTKXvTOpjQgpmEtyB
-	 iu+EcJymhAi6zTU3OPZbCxNVVBLVTEZvOLGw6GU57lE2qch48ESWnPH7El5QKBhg6+
-	 MsrfSu7HYXNvw==
-Date: Sat, 21 Jun 2025 08:35:43 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jijie Shao <shaojijie@huawei.com>
-Cc: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
- <andrew+netdev@lunn.ch>, <horms@kernel.org>, <shenjian15@huawei.com>,
- <wangpeiyang1@huawei.com>, <liuyonglong@huawei.com>,
- <chenhao418@huawei.com>, <jonathan.cameron@huawei.com>,
- <shameerali.kolothum.thodi@huawei.com>, <salil.mehta@huawei.com>,
- <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 3/3] net: hibmcge: configure FIFO thresholds
- according to the MAC controller documentation
-Message-ID: <20250621083543.67459b3b@kernel.org>
-In-Reply-To: <20250619144423.2661528-4-shaojijie@huawei.com>
-References: <20250619144423.2661528-1-shaojijie@huawei.com>
-	<20250619144423.2661528-4-shaojijie@huawei.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="CT5VV+2m"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60789b450ceso5361998a12.2
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 08:35:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1750520146; x=1751124946; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3/J+4tuN+K5ETkGh73Z2WxB3VAuuxIUgavzZX0gT9Qc=;
+        b=CT5VV+2mB0Sm9ewjUD+9HdFIjbt4t1zzciLGQS6+abKSh9CT20f7L1z09INvlrutk1
+         ZNgMCtuG5cy2j+gnYByxuBmYbqrDeVDfZTndJkYsrVRkwKoYnRwcB7Boe8Yl3xvDQehS
+         U7OyM1ZeKIOvU81UL/yQSl//y45CWy97Cmzak=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750520146; x=1751124946;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3/J+4tuN+K5ETkGh73Z2WxB3VAuuxIUgavzZX0gT9Qc=;
+        b=VS9wjaOlmHLoT1K8yyvytc2Fz1KwugNk+Y6pTpDkvkqlI1NUhS9PRitgpqm/gPpacp
+         oyF54AqA1dXKZ8xaLpqV06edgeqBiguwV1/m60LBDEeA/tUoXxz3PiMC6rurhomzMmOv
+         4/e+ajikxIpfLfpQjadA+niHqVr9Hhr3q988GwcO6QbMhL8eQLdUUiT07lq/68ylZWt7
+         KYAX4PQSbYT/8TE1Z9EL+bHVoTBq3BYMwN3jtM0I/X4rcJQ06VcIAVnRcNpRjCf8A7TR
+         FNJXDap8XV7plG7QRJIRuKeT1TOI4wqlTPlbzY9P/UWOKWxffs/UvfLHWp0CFQrRdYcO
+         sYSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVW60IWeEEnMtY/Tak8c3PCMEqYzAj5t5giC1zdenGtsWUzOZkLUv4XqFvYDi7MksSIDG3Z8Dh+q54ATYs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywhodw05yCNMjEgR+9WdwUtoN4HIHgS0rTkzaMIGLh7dnDcM7VN
+	3+RoAgzK+3rvbrgR7nnTTC6yFAnb0ApxO79Adrv9t3Vu/yz8w8S9+X2omhCQaxUvo0iwq6rUcwE
+	Uk+vNdx8=
+X-Gm-Gg: ASbGncuVhHPjM/hois9ay+3mAntmUnMIVpCIjbDf3qXjN1fVETrUFSTRKkYHmtrt2nx
+	j43xvUTr5aiD195nDJ45gZMW85k6efM1EXxRVM+b9cTW/xRMv1j3MJL+6rH/p/utTKhFndkycxK
+	eksccjY1CEoRA16yMHTb2fhSuUMmRc5GT9onV4jKwDOKRomAmNpdGKygQqQqGHdL9cJtdH94DHn
+	5ekAX8I39i69LvU69bxyMFe+kKvqi7NTVwT+J15CdhhabrEW4RgxNapS305G47KOECvG/hHQmLL
+	czOHI9CkTnlINhp+TlwxJUuAd1Bc5RzfQ1GBmTwMeIgEO0Bg4p/TbsSZcUT3DHnT3RvggsbsyRc
+	1PNJjndbwce2GrHSGTskhn55gh9wLqn3YJ7Bq
+X-Google-Smtp-Source: AGHT+IFj8Ig4RX4AdHEEoaPSWvJxnNSwLLSEueC+YZWyjIDw4DSXa4DojOtDSnz5I3GEkvqvXmyO6A==
+X-Received: by 2002:aa7:df0a:0:b0:60b:af9a:726c with SMTP id 4fb4d7f45d1cf-60baf9a8055mr571981a12.25.1750520145884;
+        Sat, 21 Jun 2025 08:35:45 -0700 (PDT)
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com. [209.85.208.52])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60a185795b8sm3360346a12.33.2025.06.21.08.35.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Jun 2025 08:35:45 -0700 (PDT)
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6070293103cso5135774a12.0
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 08:35:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUOLBo+TJS2/lMmubo6N3OYhqA+gywEkNQZsYv6dH0qwJaKAWWBdBg2R7eT4+irzq8sa1HgqjOM1CJ3dxU=@vger.kernel.org
+X-Received: by 2002:a17:906:f5a9:b0:ad8:a935:b905 with SMTP id
+ a640c23a62f3a-ae057d7a6b1mr515906766b.22.1750520144897; Sat, 21 Jun 2025
+ 08:35:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CAJZ5v0iNVFFJVgzeMx=+UMw5MTOUgdu_WGpJxE3qjHikQ4Sp4A@mail.gmail.com>
+In-Reply-To: <CAJZ5v0iNVFFJVgzeMx=+UMw5MTOUgdu_WGpJxE3qjHikQ4Sp4A@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 21 Jun 2025 08:35:28 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgPwhqr7mwmXDzYkfAcMRu3zyKRxz3hh-wfg-BQxj+UZg@mail.gmail.com>
+X-Gm-Features: AX0GCFtfvCldbS-qaKxG9GOLReH4rkHdVfY5_ZteJ4VslcEcSQtyhd00NZjb348
+Message-ID: <CAHk-=wgPwhqr7mwmXDzYkfAcMRu3zyKRxz3hh-wfg-BQxj+UZg@mail.gmail.com>
+Subject: Re: [GIT PULL] ACPI fix for v6.16-rc3
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 19 Jun 2025 22:44:23 +0800 Jijie Shao wrote:
-> +		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_TX_FULL_M, full);
-> +		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_TX_EMPTY_M	, empty);
-> +	}
-> +
-> +	if (dir & HBG_DIR_RX) {
-> +		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_RX_FULL_M, full);
-> +		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_RX_EMPTY_M	, empty);
+On Sat, 21 Jun 2025 at 04:31, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> This fixes a crash in ACPICA while attempting to evaluate a control
+> method that expects more arguments than are being passed to it, which
+> was exposed by a defective firmware update from a prominent OEM on
+> multiple systems.
 
-nit checkpatch says:
+Christ. Reading the ACPI issues page makes me go "D'oh".
 
-WARNING: line length of 81 exceeds 80 columns
-#62: FILE: drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c:306:
-+		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_TX_EMPTY_M	, empty);
+Does anybody know what the heck Windows does in this situation? Does
+it just happen to work because it uses random arguments and happily
+dereferences bogus things without realizing, or does it do the "zero
+out missing arguments" thing?
 
-ERROR: space prohibited before that ',' (ctx:WxW)
-#62: FILE: drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c:306:
-+		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_TX_EMPTY_M	, empty);
- 		                                                      	^
+Because clearly that firmware bug must have passed entirely unnoticed
+by people testing that thing on Windows...
 
-WARNING: line length of 81 exceeds 80 columns
-#67: FILE: drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c:311:
-+		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_RX_EMPTY_M	, empty);
-
-ERROR: space prohibited before that ',' (ctx:WxW)
-#67: FILE: drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c:311:
-+		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_RX_EMPTY_M	, empty);
- 		                                                      	^
-
-total: 2 errors, 2 warnings, 0 checks, 79 lines checked
-
-NOTE: For some of the reported defects, checkpatch may be able to
-      mechanically convert to the typical style using --fix or --fix-inplace.
--- 
-pw-bot: cr
+              Linus
