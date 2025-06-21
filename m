@@ -1,34 +1,34 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.35])
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9D8EC2
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 03:26:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F886EC2
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 03:27:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750476365; cv=none; b=YTfd7GQg/W5FLEEfD9XGJJRTRgSbmviDV889HNlHli5VeMr4lOmstPTTbyvj7/pPBhVnDtUHVXRWSOMJtJoYb7WdeaZn7qJjowhWDmMzxpKMVuolX2LNDnpf+3PgOmwzJubFMeb5ekPc70F/FgrKv0WOcsKw1hhrLGFoVkXIOwU=
+	t=1750476471; cv=none; b=JuHTfCj90alcDbyNTABCcOd21ovyQdR+BszCLgGSYmEwk6iUoidNVYZ0aM7Iq8QO7jE1DRRfWI6MAebuS7/zem6np7ms9oWIPv+H56kMNYG9XJIkpkJASXqDxUWhUlA73MKA7Ny0X4SL6GQhgfPDAHAE40ld+Hh9MDILE+knLZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750476365; c=relaxed/simple;
-	bh=TkL8NC+n40cKBwgvT0qUslQgj2wJRIbnRLG+IBmSscY=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=e0LQt+Bj/E2XWtMnXC43r2CfYG0JFdPOFfdszEI7xVTiebStoFu5IGZR5evKd+twMeHgajKCdK++MyDFFdTuy3KglxuNY31ceJ+VH+HpuhzU1OhvZ5AXphc1oaOiuF6VRecZxNVvCgUk9DXQl3waFUzZFeXFFn3Xn1+Yx4PBFLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.35
+	s=arc-20240116; t=1750476471; c=relaxed/simple;
+	bh=sfYs9D91OAJaQCwk0QS24+rWVG0p4vN0q6to+fuW+ks=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=k8M49AQHJWbTHz36bwiFHw5RglMprBaqxhxbMGtFYEsXdIVxRnN5+kKo5x+gmVfN+bdAYJcBXMY4B9HX0Xv69ARdVt/UniUGhffNgWcvDioTUAcoZHN+jHnX0NtIWJQ7rkvCzm8TgOTxV7xheoG0eBPr9ZBZH50/6mBFHTyy3pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bPKVk55gbz8R039;
-	Sat, 21 Jun 2025 11:25:50 +0800 (CST)
-Received: from njb2app06.zte.com.cn ([10.55.23.119])
-	by mse-fl2.zte.com.cn with SMTP id 55L3PmqI092905;
-	Sat, 21 Jun 2025 11:25:48 +0800 (+08)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bPKXv1QrNz51STR;
+	Sat, 21 Jun 2025 11:27:43 +0800 (CST)
+Received: from njy2app02.zte.com.cn ([10.40.13.116])
+	by mse-fl1.zte.com.cn with SMTP id 55L3Recj078408;
+	Sat, 21 Jun 2025 11:27:40 +0800 (+08)
 	(envelope-from long.yunjian@zte.com.cn)
-Received: from mapi (njy2app03[null])
+Received: from mapi (njy2app04[null])
 	by mapi (Zmail) with MAPI id mid201;
-	Sat, 21 Jun 2025 11:25:49 +0800 (CST)
-Date: Sat, 21 Jun 2025 11:25:49 +0800 (CST)
-X-Zmail-TransId: 2afb6856263d54d-d0810
+	Sat, 21 Jun 2025 11:27:42 +0800 (CST)
+Date: Sat, 21 Jun 2025 11:27:42 +0800 (CST)
+X-Zmail-TransId: 2afc685626aeffffffffdc3-be099
 X-Mailer: Zmail v1.0
-Message-ID: <20250621112549751vVGpmB0y4iZLN_I_Dzik5@zte.com.cn>
+Message-ID: <20250621112742498q_NLTyjSUQoBWFl8SFHu1@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,19 +36,19 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 From: <long.yunjian@zte.com.cn>
-To: <alexander.deucher@amd.com>
-Cc: <christian.koenig@amd.com>, <airlied@gmail.com>, <simona@ffwll.ch>,
-        <hawking.zhang@amd.com>, <kevinyang.wang@amd.com>, <xiang.liu@amd.com>,
-        <tao.zhou1@amd.com>, <yanzhen@vivo.com>, <fang.yumeng@zte.com.cn>,
-        <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <xu.lifeng1@zte.com.cn>,
-        <ouyang.maochun@zte.com.cn>, <mou.yi@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIXSBkcm0vYW1kZ3B1OiBVc2Ugc3RyX29uX29mZigpIGhlbHBlcg==?=
+To: <harry.wentland@amd.com>
+Cc: <sunpeng.li@amd.com>, <siqueira@igalia.com>, <alexander.deucher@amd.com>,
+        <christian.koenig@amd.com>, <airlied@gmail.com>, <simona@ffwll.ch>,
+        <fang.yumeng@zte.com.cn>, <amd-gfx@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <mou.yi@zte.com.cn>, <xu.lifeng1@zte.com.cn>,
+        <ouyang.maochun@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIXSBkcm0vYW1kL2Rpc3BsYXk6IFVzZSBzdHJfb25fb2ZmKCkgaGVscGVy?=
 Content-Type: text/plain;
 	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 55L3PmqI092905
+X-MAIL:mse-fl1.zte.com.cn 55L3Recj078408
 X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6856263E.000/4bPKVk55gbz8R039
+X-Fangmail-MID-QID: 685626AF.000/4bPKXv1QrNz51STR
 
 From: Yumeng Fang <fang.yumeng@zte.com.cn>
 
@@ -56,51 +56,29 @@ Remove hard-coded strings by using the str_on_off() helper.
 
 Signed-off-by: Yumeng Fang <fang.yumeng@zte.com.cn>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_aca.c | 3 ++-
- drivers/gpu/drm/amd/amdgpu/amdgpu_mca.c | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/pg/dcn35/dcn35_pg_cntl.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_aca.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_aca.c
-index cbc40cad581b..c3c88d8e1ce2 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_aca.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_aca.c
-@@ -22,6 +22,7 @@
-  */
-
- #include <linux/list.h>
-+#include <linux/string_choices.h>
- #include "amdgpu.h"
- #include "amdgpu_aca.h"
- #include "amdgpu_ras.h"
-@@ -873,7 +874,7 @@ static int amdgpu_aca_smu_debug_mode_set(void *data, u64 val)
- 	if (ret)
- 		return ret;
-
--	dev_info(adev->dev, "amdgpu set smu aca debug mode %s success\n", val ? "on" : "off");
-+	dev_info(adev->dev, "amdgpu set smu aca debug mode %s success\n", str_on_off(val));
-
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_mca.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_mca.c
-index 3ca03b5e0f91..81dcc7ebac3b 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_mca.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_mca.c
-@@ -20,6 +20,7 @@
-  * OTHER DEALINGS IN THE SOFTWARE.
+diff --git a/drivers/gpu/drm/amd/display/dc/pg/dcn35/dcn35_pg_cntl.c b/drivers/gpu/drm/amd/display/dc/pg/dcn35/dcn35_pg_cntl.c
+index af21c0a27f86..509bdb1ca9bc 100644
+--- a/drivers/gpu/drm/amd/display/dc/pg/dcn35/dcn35_pg_cntl.c
++++ b/drivers/gpu/drm/amd/display/dc/pg/dcn35/dcn35_pg_cntl.c
+@@ -24,6 +24,7 @@
   *
   */
+
 +#include <linux/string_choices.h>
- #include "amdgpu_ras.h"
- #include "amdgpu.h"
- #include "amdgpu_mca.h"
-@@ -519,7 +520,7 @@ static int amdgpu_mca_smu_debug_mode_set(void *data, u64 val)
- 	if (ret)
- 		return ret;
+ #include "reg_helper.h"
+ #include "core_types.h"
+ #include "dcn35_pg_cntl.h"
+@@ -236,7 +237,7 @@ void pg_cntl35_hubp_dpp_pg_control(struct pg_cntl *pg_cntl, unsigned int hubp_dp
+ 	}
 
--	dev_info(adev->dev, "amdgpu set smu mca debug mode %s success\n", val ? "on" : "off");
-+	dev_info(adev->dev, "amdgpu set smu mca debug mode %s success\n", str_on_off(val));
+ 	DC_LOG_DEBUG("HUBP DPP instance %d, power %s", hubp_dpp_inst,
+-		power_on ? "ON" : "OFF");
++		str_on_off(power_on));
 
- 	return 0;
- }
+ 	if (hubp_dpp_inst < MAX_PIPES) {
+ 		pg_cntl->pg_pipe_res_enable[PG_HUBP][hubp_dpp_inst] = power_on;
 -- 
 2.25.1
