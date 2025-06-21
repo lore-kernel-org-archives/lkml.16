@@ -1,179 +1,221 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F8317BD9
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 12:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC6E17BD9;
+	Sat, 21 Jun 2025 12:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750507243; cv=none; b=AMdQvUIMBu6qrPdiWJ80XW8kKJa6RAtcDeMtyMwc3ndmkf6OhMz3hhv/YpQgge0tYUNrNYZ/3PozCHZpIrxWEsdHiylrp5ZYGUZLTt0F7SwhooOxV58HYm5QBSXnmnDvAPAnI7CkRqd0wK1giKSDS9SxQAVMQsV9T/BtcHJOoEw=
+	t=1750507692; cv=none; b=Kq53NieCq0SyrQvds8vIItS+m1WMJPs99wt7EzdySrww9iE9u5/eHcVHibhab8o5l8fSE6M+WY3VSvYv/SkqtJfh3xkq0tE7Ecxohu1N0uhlX8PMnnqQrZT+qHwNn/BdaMhW2fQoo4K1EzmGe7pSH6wNk2kp6kRhzusp6JJ6LNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750507243; c=relaxed/simple;
-	bh=06b6ZB5lwM/+7QVClkjf63LNjiJ13J1H1t09RZJr+54=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QvLY7Jw5K5iyz9lWGLY7FASBoPpRmNQMqpQ3PZIoFEAvD+Ov5dtgcO36LjmVo3MfCCEhmqgSRLsJWL1nfgh7sWrwxGbv2cTOeQIOQ/59XGZpp61BeYhU47VcJsSWwmwwVw79DTgBnabG6Mn0hggkYbUqcf0oW14U7vwNSTREukU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=a4hVjmb4; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1750507692; c=relaxed/simple;
+	bh=eme3eN0v4jAXtO6uAZL3O4EW4lsug/bRAd0x4+ylYfA=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=EjQnJ+2Gd8i1Qj6z7nJ9JBkH1LH8cxWIwu0i8bB15svEJ57qX7TUUDWsuIOABCjRK2TR191FH7WGx3g/clUvFJ4tStayS1+Iz+zbPjIZjaZDip86okgIybEgZka+wPKzMeegw9cRQNmUUieBJJNiZ8Cx4TRJ3KNZ4UvXbFaagMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AG7o8d1e; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GhWkuvOy; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="a4hVjmb4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: MIME-Version: Message-ID: Date: Subject: Cc:
- To: From; q=dns/txt; s=fe-e1b5cab7be; t=1750507240;
- bh=ir11YpcbwxWD+w+nzz2s0FsuVrnNjiwPhxkmWuSazqw=;
- b=a4hVjmb4qgrHZyT/Z/dbYlgWi3rqWBQmLoP58Ke/OEUJ/AAFO17k+l2duSjEy9ipM5VuMQ4HR
- KbTXRhboC+bNaQ8Kovnv18qd3/0ThTcLbpYI7x3VIhkby0zJus0gYEAwlgNERdzhXINfoTWjqJi
- gOhMlYWs6KFWjgVaiVt09iKfR1GCtYCwVP0OPCfOJHWmoJFqKOCOqYBc2uAztvwtCAMWs6/8N5z
- YTcDzJXIBzv/cv1hA9/crF5nVEfk6Fesk5k/pVvWVP8GY87sYyIs4ViYL6wkH2M20fzMH9fWuqB
- +earWtnqaJpRwRS61jNJRlX0SiGuI7meBTZhWjeU3Fag==
-X-Forward-Email-ID: 685699d9f0bccf4584158851
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-Forward-Email-Version: 1.0.3
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-From: Jonas Karlman <jonas@kwiboo.se>
-To: Heiko Stuebner <heiko@sntech.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonas Karlman <jonas@kwiboo.se>
-Cc: devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: Fix pinctrl node names for RK3528
-Date: Sat, 21 Jun 2025 11:38:57 +0000
-Message-ID: <20250621113859.2146400-1-jonas@kwiboo.se>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AG7o8d1e";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GhWkuvOy"
+Date: Sat, 21 Jun 2025 12:08:01 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750507682;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8/sXKMFK/P5+c+TJ7ezzdyMwrZL/+aZ2ngFHLrqGkRA=;
+	b=AG7o8d1evJkN4LjEdn/Pi2pHQnWP39MiztTzvIgWg0Df7rzp6AqrlJ+sLk5QXrcfwvjU2t
+	1xCzj+Z5YQeO13eM/irgLhGZRhcuwAE3BgVqiOXqlj6i4EbL4s/q+Brt8dGnp8PBGlAXGh
+	hz4zTWeVEDWb2x67/V5voOuWV2BfiT/+ps39Xj11oMkiVKoKxQRfK4Z081zSFMyInTyezx
+	mDAfbKEbse3KwS9vn4/yLOTOXSwrAx6Nzh2aBqHpyNgXjYzubfnpklOhuSDeHVu9/t6OcM
+	wEgmE2JRZnksrxuBuYFu/ZCwAiJE7+e95FIvEHfwsNrYON5ezKi/xgfYmWgvOw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750507682;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8/sXKMFK/P5+c+TJ7ezzdyMwrZL/+aZ2ngFHLrqGkRA=;
+	b=GhWkuvOyWtIMuAyW5BhBJlMx6WMGkjr/BloVgyL61w7e1cBsOJweJ8XkiHE+6iQ3XLge+1
+	wT+1Vw3OZ8XXIiBg==
+From: "tip-bot2 for Vitaly Kuznetsov" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/boot] x86/efi: Implement support for embedding SBAT data for x86
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Ard Biesheuvel <ardb@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250603091951.57775-1-vkuznets@redhat.com>
+References: <20250603091951.57775-1-vkuznets@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <175050768133.406.17562579654562902112.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Following warnings can be observed with CHECK_DTBS=y for the RK3528:
+The following commit has been merged into the x86/boot branch of tip:
 
-  rk3528-pinctrl.dtsi:101.36-105.5: Warning (node_name_chars_strict):
-    /pinctrl/fephy/fephym0-led_dpx: Character '_' not recommended in node name
-  rk3528-pinctrl.dtsi:108.38-112.5: Warning (node_name_chars_strict):
-    /pinctrl/fephy/fephym0-led_link: Character '_' not recommended in node name
-  rk3528-pinctrl.dtsi:115.36-119.5: Warning (node_name_chars_strict):
-    /pinctrl/fephy/fephym0-led_spd: Character '_' not recommended in node name
-  rk3528-pinctrl.dtsi:122.36-126.5: Warning (node_name_chars_strict):
-   /pinctrl/fephy/fephym1-led_dpx: Character '_' not recommended in node name
-  rk3528-pinctrl.dtsi:129.38-133.5: Warning (node_name_chars_strict):
-    /pinctrl/fephy/fephym1-led_link: Character '_' not recommended in node name
-  rk3528-pinctrl.dtsi:136.36-140.5: Warning (node_name_chars_strict):
-    /pinctrl/fephy/fephym1-led_spd: Character '_' not recommended in node name
-  rk3528-pinctrl.dtsi:782.32-790.5: Warning (node_name_chars_strict):
-    /pinctrl/rgmii/rgmii-rx_bus2: Character '_' not recommended in node name
-  rk3528-pinctrl.dtsi:793.32-801.5: Warning (node_name_chars_strict):
-    /pinctrl/rgmii/rgmii-tx_bus2: Character '_' not recommended in node name
-  rk3528-pinctrl.dtsi:804.36-810.5: Warning (node_name_chars_strict):
-    /pinctrl/rgmii/rgmii-rgmii_clk: Character '_' not recommended in node name
-  rk3528-pinctrl.dtsi:813.36-823.5: Warning (node_name_chars_strict):
-    /pinctrl/rgmii/rgmii-rgmii_bus: Character '_' not recommended in node name
+Commit-ID:     61b57d35396a4b4bcca9944644b24fc6015976b5
+Gitweb:        https://git.kernel.org/tip/61b57d35396a4b4bcca9944644b24fc6015976b5
+Author:        Vitaly Kuznetsov <vkuznets@redhat.com>
+AuthorDate:    Tue, 03 Jun 2025 11:19:51 +02:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Sat, 21 Jun 2025 13:53:44 +02:00
 
-Rename the affected nodes to fix these warnings.
+x86/efi: Implement support for embedding SBAT data for x86
 
-Fixes: a31fad19ae39 ("arm64: dts: rockchip: Add pinctrl and gpio nodes for RK3528")
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Similar to zboot architectures, implement support for embedding SBAT data
+for x86. Put '.sbat' section in between '.data' and '.text' as the former
+also covers '.bss' and '.pgtable' and thus must be the last one in the
+file.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Link: https://lore.kernel.org/20250603091951.57775-1-vkuznets@redhat.com
 ---
- .../boot/dts/rockchip/rk3528-pinctrl.dtsi     | 20 +++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ arch/x86/boot/Makefile                 |  2 +-
+ arch/x86/boot/compressed/Makefile      |  5 ++++-
+ arch/x86/boot/compressed/sbat.S        |  7 ++++++-
+ arch/x86/boot/compressed/vmlinux.lds.S |  8 ++++++-
+ arch/x86/boot/header.S                 | 31 +++++++++++++++++--------
+ drivers/firmware/efi/Kconfig           |  2 +-
+ 6 files changed, 44 insertions(+), 11 deletions(-)
+ create mode 100644 arch/x86/boot/compressed/sbat.S
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3528-pinctrl.dtsi b/arch/arm64/boot/dts/rockchip/rk3528-pinctrl.dtsi
-index ea051362fb26..59b75c91bbb7 100644
---- a/arch/arm64/boot/dts/rockchip/rk3528-pinctrl.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3528-pinctrl.dtsi
-@@ -98,42 +98,42 @@ eth_pins: eth-pins {
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index 640fcac..3f9fb36 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -71,7 +71,7 @@ $(obj)/vmlinux.bin: $(obj)/compressed/vmlinux FORCE
  
- 	fephy {
- 		/omit-if-no-ref/
--		fephym0_led_dpx: fephym0-led_dpx {
-+		fephym0_led_dpx: fephym0-led-dpx {
- 			rockchip,pins =
- 				/* fephy_led_dpx_m0 */
- 				<4 RK_PB5 2 &pcfg_pull_none>;
- 		};
+ SETUP_OBJS = $(addprefix $(obj)/,$(setup-y))
  
- 		/omit-if-no-ref/
--		fephym0_led_link: fephym0-led_link {
-+		fephym0_led_link: fephym0-led-link {
- 			rockchip,pins =
- 				/* fephy_led_link_m0 */
- 				<4 RK_PC0 2 &pcfg_pull_none>;
- 		};
+-sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|efi.._stub_entry\|efi\(32\)\?_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|_e\?data\|z_.*\)$$/\#define ZO_\2 0x\1/p'
++sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|efi.._stub_entry\|efi\(32\)\?_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|_e\?data\|_e\?sbat\|z_.*\)$$/\#define ZO_\2 0x\1/p'
  
- 		/omit-if-no-ref/
--		fephym0_led_spd: fephym0-led_spd {
-+		fephym0_led_spd: fephym0-led-spd {
- 			rockchip,pins =
- 				/* fephy_led_spd_m0 */
- 				<4 RK_PB7 2 &pcfg_pull_none>;
- 		};
+ quiet_cmd_zoffset = ZOFFSET $@
+       cmd_zoffset = $(NM) $< | sed -n $(sed-zoffset) > $@
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index f4f7b22..3a38fdc 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -106,6 +106,11 @@ vmlinux-objs-$(CONFIG_UNACCEPTED_MEMORY) += $(obj)/mem.o
+ vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
+ vmlinux-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+ vmlinux-libs-$(CONFIG_X86_64)	+= $(objtree)/arch/x86/boot/startup/lib.a
++vmlinux-objs-$(CONFIG_EFI_SBAT) += $(obj)/sbat.o
++
++ifdef CONFIG_EFI_SBAT
++$(obj)/sbat.o: $(CONFIG_EFI_SBAT_FILE)
++endif
  
- 		/omit-if-no-ref/
--		fephym1_led_dpx: fephym1-led_dpx {
-+		fephym1_led_dpx: fephym1-led-dpx {
- 			rockchip,pins =
- 				/* fephy_led_dpx_m1 */
- 				<2 RK_PA4 5 &pcfg_pull_none>;
- 		};
+ $(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
+ 	$(call if_changed,ld)
+diff --git a/arch/x86/boot/compressed/sbat.S b/arch/x86/boot/compressed/sbat.S
+new file mode 100644
+index 0000000..838f70a
+--- /dev/null
++++ b/arch/x86/boot/compressed/sbat.S
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Embed SBAT data in the kernel.
++ */
++	.pushsection ".sbat", "a", @progbits
++	.incbin CONFIG_EFI_SBAT_FILE
++	.popsection
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index 3b2bc61..587ce3e 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -43,6 +43,14 @@ SECTIONS
+ 		*(.rodata.*)
+ 		_erodata = . ;
+ 	}
++#ifdef CONFIG_EFI_SBAT
++	.sbat : ALIGN(0x1000) {
++		_sbat = . ;
++		*(.sbat)
++		_esbat = ALIGN(0x1000);
++		. = _esbat;
++	}
++#endif
+ 	.data :	ALIGN(0x1000) {
+ 		_data = . ;
+ 		*(.data)
+diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+index e1f4fd5..9bea5a1 100644
+--- a/arch/x86/boot/header.S
++++ b/arch/x86/boot/header.S
+@@ -179,15 +179,11 @@ pecompat_fstart:
+ #else
+ 	.set	pecompat_fstart, setup_size
+ #endif
+-	.ascii	".text"
+-	.byte	0
+-	.byte	0
+-	.byte	0
+-	.long	ZO__data
+-	.long	setup_size
+-	.long	ZO__data			# Size of initialized data
+-						# on disk
+-	.long	setup_size
++	.ascii	".text\0\0\0"
++	.long	textsize            		# VirtualSize
++	.long	setup_size			# VirtualAddress
++	.long	textsize			# SizeOfRawData
++	.long	setup_size			# PointerToRawData
+ 	.long	0				# PointerToRelocations
+ 	.long	0				# PointerToLineNumbers
+ 	.word	0				# NumberOfRelocations
+@@ -196,6 +192,23 @@ pecompat_fstart:
+ 		IMAGE_SCN_MEM_READ		| \
+ 		IMAGE_SCN_MEM_EXECUTE		# Characteristics
  
- 		/omit-if-no-ref/
--		fephym1_led_link: fephym1-led_link {
-+		fephym1_led_link: fephym1-led-link {
- 			rockchip,pins =
- 				/* fephy_led_link_m1 */
- 				<2 RK_PA6 5 &pcfg_pull_none>;
- 		};
++#ifdef CONFIG_EFI_SBAT
++	.ascii	".sbat\0\0\0"
++	.long	ZO__esbat - ZO__sbat            # VirtualSize
++	.long	setup_size + ZO__sbat           # VirtualAddress
++	.long	ZO__esbat - ZO__sbat            # SizeOfRawData
++	.long	setup_size + ZO__sbat           # PointerToRawData
++
++	.long	0, 0, 0
++	.long	IMAGE_SCN_CNT_INITIALIZED_DATA	| \
++		IMAGE_SCN_MEM_READ		| \
++		IMAGE_SCN_MEM_DISCARDABLE	# Characteristics
++
++	.set	textsize, ZO__sbat
++#else
++	.set	textsize, ZO__data
++#endif
++
+ 	.ascii	".data\0\0\0"
+ 	.long	ZO__end - ZO__data		# VirtualSize
+ 	.long	setup_size + ZO__data		# VirtualAddress
+diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
+index db8c5c0..16baa03 100644
+--- a/drivers/firmware/efi/Kconfig
++++ b/drivers/firmware/efi/Kconfig
+@@ -286,7 +286,7 @@ config EFI_SBAT
  
- 		/omit-if-no-ref/
--		fephym1_led_spd: fephym1-led_spd {
-+		fephym1_led_spd: fephym1-led-spd {
- 			rockchip,pins =
- 				/* fephy_led_spd_m1 */
- 				<2 RK_PA5 5 &pcfg_pull_none>;
-@@ -779,7 +779,7 @@ rgmii_miim: rgmii-miim {
- 		};
- 
- 		/omit-if-no-ref/
--		rgmii_rx_bus2: rgmii-rx_bus2 {
-+		rgmii_rx_bus2: rgmii-rx-bus2 {
- 			rockchip,pins =
- 				/* rgmii_rxd0 */
- 				<3 RK_PA3 2 &pcfg_pull_none>,
-@@ -790,7 +790,7 @@ rgmii_rx_bus2: rgmii-rx_bus2 {
- 		};
- 
- 		/omit-if-no-ref/
--		rgmii_tx_bus2: rgmii-tx_bus2 {
-+		rgmii_tx_bus2: rgmii-tx-bus2 {
- 			rockchip,pins =
- 				/* rgmii_txd0 */
- 				<3 RK_PA1 2 &pcfg_pull_none_drv_level_2>,
-@@ -801,7 +801,7 @@ rgmii_tx_bus2: rgmii-tx_bus2 {
- 		};
- 
- 		/omit-if-no-ref/
--		rgmii_rgmii_clk: rgmii-rgmii_clk {
-+		rgmii_rgmii_clk: rgmii-rgmii-clk {
- 			rockchip,pins =
- 				/* rgmii_rxclk */
- 				<3 RK_PA5 2 &pcfg_pull_none>,
-@@ -810,7 +810,7 @@ rgmii_rgmii_clk: rgmii-rgmii_clk {
- 		};
- 
- 		/omit-if-no-ref/
--		rgmii_rgmii_bus: rgmii-rgmii_bus {
-+		rgmii_rgmii_bus: rgmii-rgmii-bus {
- 			rockchip,pins =
- 				/* rgmii_rxd2 */
- 				<3 RK_PA7 2 &pcfg_pull_none>,
--- 
-2.49.0
-
+ config EFI_SBAT_FILE
+ 	string "Embedded SBAT section file path"
+-	depends on EFI_ZBOOT
++	depends on EFI_ZBOOT || (EFI_STUB && X86)
+ 	help
+ 	  SBAT section provides a way to improve SecureBoot revocations of UEFI
+ 	  binaries by introducing a generation-based mechanism. With SBAT, older
