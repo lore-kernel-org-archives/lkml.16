@@ -1,217 +1,103 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11303EED7;
-	Sat, 21 Jun 2025 07:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD921A5B92;
+	Sat, 21 Jun 2025 07:49:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750492008; cv=none; b=HM+UDif5qHkcKziUYipfVW1XQ2ZmnCVelGy34c0gCnqJwFAxO037BgOh44BeV8jFS9AS+pF5eMCQVqHkY2QnftTc79jhLXiZdRcHHcyfmps4m8rt5aoxrPs4bWUZOp8qrPmeA/El/wPB4kKi48BpK8NPBQW5vQrQzI6rt2W5eBE=
+	t=1750492150; cv=none; b=jjSsYi0zYJmy6jDsrAR/3mT1DeN/6wnZFfUyLaVV1GqSD48Q8Mckqx1moUkv0z7DxvwYI2vjN9kGuELlf1Y92+PcGUmCkeZWK031kKxURx+NeClfmwMY1PPeTrXriTcSNLZwuLLaEAIVyFTQn8EB1Or7OD6RAT53dEO6ao7yaFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750492008; c=relaxed/simple;
-	bh=DBxrikfhg8Wp0otCdHRK8j20NjDY96mwubx80hCnJfw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LkNJwr+EbIG+6Y0ZqI7IsT1NaKe+16olJQW6rQQXrEOe2NrdcgSEhMkjNxU8y5IueDQg4Y+c+MKPPynr1kvvm59uaWqAl9CjwowEUq532iQ8MzjMu335szskt2im4Hb38HMyVeHIPtSFbZLEpV65jVChPP4uBQdH+es3LvX/Mfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bPRHl4vchzYQtvb;
-	Sat, 21 Jun 2025 15:46:43 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 9AD9D1A176C;
-	Sat, 21 Jun 2025 15:46:42 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgBXu19gY1ZobKe_QA--.33653S3;
-	Sat, 21 Jun 2025 15:46:42 +0800 (CST)
-Message-ID: <558c7f74-3d0a-4394-b9ab-3eafab136a23@huaweicloud.com>
-Date: Sat, 21 Jun 2025 15:46:40 +0800
+	s=arc-20240116; t=1750492150; c=relaxed/simple;
+	bh=riedDhamIxPVl4kiJ6Gpc+XKm7V9/2sxZKIPr7BRD5Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W3Jgsyv7ehR13tggn4wlKjZpZzux1fX17ihl72P+0oQymizSYmajHX6MgQ1F76ppIgchiM9e+dhIviBmTB3QUcaqm5ZcYJawoitib9Vhm/oL0pR44lTKut5wXTBvK97ZGKKD/gxqNxRvq6f4E6DTGl50lxFht60K/4mHoBs7n2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=UfFDcif/; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="UfFDcif/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=zYaB1DlldGqizxY5vhtPCShgVb/Bxfuf0aPOV2eFYk8=; b=UfFDcif/rzsbiq+2cUiLy3JXbs
+	tRIlg0zDrBjJ3UPyAQjv+IBB6AsBgjgqUolPtYvliFRC6SYFgE/4g5g/BxGaoN4RYVGbTfNrwi4p4
+	huusiJdjr4uhxau7X9JpLQam7z1KRlIGdd4oOtKe89q6qBe+HeIXNLTXxHAgn1wY2ugQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uSsy9-00GZFX-V4; Sat, 21 Jun 2025 09:48:57 +0200
+Date: Sat, 21 Jun 2025 09:48:57 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	thomas.petazzoni@bootlin.com, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Mark Einon <mark.einon@gmail.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+	Keyur Chudgar <keyur@os.amperecomputing.com>,
+	Quan Nguyen <quan@os.amperecomputing.com>,
+	=?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>,
+	Michael Chan <michael.chan@broadcom.com>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Doug Berger <opendmb@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Sunil Goutham <sgoutham@marvell.com>,
+	Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Ioana Ciornei <ioana.ciornei@nxp.com>,
+	Jijie Shao <shaojijie@huawei.com>,
+	Jian Shen <shenjian15@huawei.com>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Parthiban Veerasooran <parthiban.veerasooran@microchip.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
+	MD Danish Anwar <danishanwar@ti.com>,
+	Roger Quadros <rogerq@kernel.org>,
+	Jiawen Wu <jiawenwu@trustnetic.com>,
+	Mengyuan Lou <mengyuanlou@net-swift.com>,
+	Imre Kaloz <kaloz@openwrt.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Steve Glendinning <steve.glendinning@shawell.net>,
+	UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH net-next RFC] net: Throw ASSERT_RTNL into phy_detach
+Message-ID: <44e36ef6-6ee4-4cc5-87a9-aa6441eb0e16@lunn.ch>
+References: <20250620143341.2158655-1-kory.maincent@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/6] ext4/jbd2: reintroduce
- jbd2_journal_blocks_per_page()
-To: Jan Kara <jack@suse.cz>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
- ojaswin@linux.ibm.com, yi.zhang@huawei.com, libaokun1@huawei.com,
- yukuai3@huawei.com, yangerkun@huawei.com
-References: <20250611111625.1668035-1-yi.zhang@huaweicloud.com>
- <20250611111625.1668035-6-yi.zhang@huaweicloud.com>
- <ugup3tdvaxgzc6agaidbdh7sdcpzcqvwzsurqkesyhsyta7q7y@h3q6mrc2jcno>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <ugup3tdvaxgzc6agaidbdh7sdcpzcqvwzsurqkesyhsyta7q7y@h3q6mrc2jcno>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgBXu19gY1ZobKe_QA--.33653S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3WryrKrWkWFyfXF43WrW5trb_yoW7KF1UpF
-	4DCFy8Cry8ZFy7uFn2gFsrZFyIg3y0kF4UWr9a9F1kta90q3s3tFnrtw1YyFy5Ar4DGa10
-	vF4UC39rW3yjvFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUF1
-	v3UUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620143341.2158655-1-kory.maincent@bootlin.com>
 
-On 2025/6/20 0:44, Jan Kara wrote:
-> On Wed 11-06-25 19:16:24, Zhang Yi wrote:
->> From: Zhang Yi <yi.zhang@huawei.com>
->>
->> This partially reverts commit d6bf294773a4 ("ext4/jbd2: convert
->> jbd2_journal_blocks_per_page() to support large folio"). This
->> jbd2_journal_blocks_per_folio() will lead to a significant
->> overestimation of journal credits. Since we still reserve credits for
->> one page and attempt to extend and restart handles during large folio
->> writebacks, so we should convert this helper back to
->> ext4_journal_blocks_per_page().
->>
->> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-> 
-> Here I'm not decided. Does it make any particular sense to reserve credits
-> for one *page* worth of blocks when pages don't have any particular meaning
-> in our writeback code anymore? We could reserve credits just for one
-> physical extent and that should be enough.
+On Fri, Jun 20, 2025 at 04:33:27PM +0200, Kory Maincent wrote:
+> phy_detach needs the rtnl lock to be held. It should have been added before
+> to avoid this massive change among lots of net drivers but there was no
+> clear evidence of such needs at that time. This imply a lock change in
+> this API. Add phy_detach_rtnl, phy_diconnect_rtnl, phylink_connect_phy_rtnl
+> and phylink_fwnode_phy_connect_rtnl helpers to take the lock before calling
+> their respective function.
 
-Indeed, reserving credits for a single page is no longer suitable in the
-currently folio based context. It do seems more appropriate to allocate
-credits for a single extent.
+Did you count how many instances don't need to take the lock, because
+it is already held? I'm just wondering if the opposite patch would be
+smaller, making phy_detach() take RTNL, and add a new function which
+does not.
 
-> For blocksize == pagesize (most
-> common configs) this would be actually equivalent. If blocksize < pagesize,
-> this could force us to do some more writeback retries and thus get somewhat
-> higher writeback CPU overhead but do we really care for these configs?  It
-> is well possible I've overlooked something and someone will spot a
-> performance regression in practical setup with this in which case we'd have
-> to come up with something more clever but I think it's worth it to start
-> simple and complicate later.
-
-This can indeed be a problem if the file system is already fragmented
-enough. However, thanks to the credits extension logic in
-__ext4_journal_ensure_credits(), I suppose that on most file system images,
-it will not trigger excessive retry operations. Besides, although there
-might be some lock cost in jbd2_journal_extend(), I suppose it won't be a
-big deal.
-
-Perhaps we could reserve more credits through a complex formula at the
-outset, which would lower the cost of expanding the credits. But I don't
-think this will help much in reducing the number of retries, it may only
-be helpful in extreme cases (the running transaction stats to commit, we
-cannot extend it).
-
-So, I think we can implement it by reserving for an extent for the time
-being. Do you agree?
-
-Thanks,
-Yi.
-
-> 
-> 
->> ---
->>  fs/ext4/ext4_jbd2.h  | 7 +++++++
->>  fs/ext4/inode.c      | 6 +++---
->>  fs/jbd2/journal.c    | 6 ++++++
->>  include/linux/jbd2.h | 1 +
->>  4 files changed, 17 insertions(+), 3 deletions(-)
->>
->> diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
->> index 63d17c5201b5..c0ee756cb34c 100644
->> --- a/fs/ext4/ext4_jbd2.h
->> +++ b/fs/ext4/ext4_jbd2.h
->> @@ -326,6 +326,13 @@ static inline int ext4_journal_blocks_per_folio(struct inode *inode)
->>  	return 0;
->>  }
->>  
->> +static inline int ext4_journal_blocks_per_page(struct inode *inode)
->> +{
->> +	if (EXT4_JOURNAL(inode) != NULL)
->> +		return jbd2_journal_blocks_per_page(inode);
->> +	return 0;
->> +}
->> +
->>  static inline int ext4_journal_force_commit(journal_t *journal)
->>  {
->>  	if (journal)
->> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
->> index 67e37dd546eb..9835145b1b27 100644
->> --- a/fs/ext4/inode.c
->> +++ b/fs/ext4/inode.c
->> @@ -2556,7 +2556,7 @@ static int mpage_map_and_submit_extent(handle_t *handle,
->>   */
->>  static int ext4_da_writepages_trans_blocks(struct inode *inode)
->>  {
->> -	int bpp = ext4_journal_blocks_per_folio(inode);
->> +	int bpp = ext4_journal_blocks_per_page(inode);
->>  
->>  	return ext4_meta_trans_blocks(inode,
->>  				MAX_WRITEPAGES_EXTENT_LEN + bpp - 1, bpp);
->> @@ -2634,7 +2634,7 @@ static int mpage_prepare_extent_to_map(struct mpage_da_data *mpd)
->>  	ext4_lblk_t lblk;
->>  	struct buffer_head *head;
->>  	handle_t *handle = NULL;
->> -	int bpp = ext4_journal_blocks_per_folio(mpd->inode);
->> +	int bpp = ext4_journal_blocks_per_page(mpd->inode);
->>  
->>  	if (mpd->wbc->sync_mode == WB_SYNC_ALL || mpd->wbc->tagged_writepages)
->>  		tag = PAGECACHE_TAG_TOWRITE;
->> @@ -6255,7 +6255,7 @@ int ext4_meta_trans_blocks(struct inode *inode, int lblocks, int pextents)
->>   */
->>  int ext4_writepage_trans_blocks(struct inode *inode)
->>  {
->> -	int bpp = ext4_journal_blocks_per_folio(inode);
->> +	int bpp = ext4_journal_blocks_per_page(inode);
->>  	int ret;
->>  
->>  	ret = ext4_meta_trans_blocks(inode, bpp, bpp);
->> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
->> index d480b94117cd..7fccb425907f 100644
->> --- a/fs/jbd2/journal.c
->> +++ b/fs/jbd2/journal.c
->> @@ -84,6 +84,7 @@ EXPORT_SYMBOL(jbd2_journal_start_commit);
->>  EXPORT_SYMBOL(jbd2_journal_force_commit_nested);
->>  EXPORT_SYMBOL(jbd2_journal_wipe);
->>  EXPORT_SYMBOL(jbd2_journal_blocks_per_folio);
->> +EXPORT_SYMBOL(jbd2_journal_blocks_per_page);
->>  EXPORT_SYMBOL(jbd2_journal_invalidate_folio);
->>  EXPORT_SYMBOL(jbd2_journal_try_to_free_buffers);
->>  EXPORT_SYMBOL(jbd2_journal_force_commit);
->> @@ -2661,6 +2662,11 @@ int jbd2_journal_blocks_per_folio(struct inode *inode)
->>  		     inode->i_sb->s_blocksize_bits);
->>  }
->>  
->> +int jbd2_journal_blocks_per_page(struct inode *inode)
->> +{
->> +	return 1 << (PAGE_SHIFT - inode->i_sb->s_blocksize_bits);
->> +}
->> +
->>  /*
->>   * helper functions to deal with 32 or 64bit block numbers.
->>   */
->> diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
->> index 43b9297fe8a7..f35369c104ba 100644
->> --- a/include/linux/jbd2.h
->> +++ b/include/linux/jbd2.h
->> @@ -1724,6 +1724,7 @@ static inline int tid_geq(tid_t x, tid_t y)
->>  }
->>  
->>  extern int jbd2_journal_blocks_per_folio(struct inode *inode);
->> +extern int jbd2_journal_blocks_per_page(struct inode *inode);
->>  extern size_t journal_tag_bytes(journal_t *journal);
->>  
->>  static inline int jbd2_journal_has_csum_v2or3(journal_t *journal)
->> -- 
->> 2.46.1
->>
-
+	Andrew
