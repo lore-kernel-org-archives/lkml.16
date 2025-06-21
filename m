@@ -1,79 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A7672629;
-	Sat, 21 Jun 2025 14:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2497D7262D;
+	Sat, 21 Jun 2025 15:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750517991; cv=none; b=knuwzQU1/tuCdRYwQInUBjF/JcWNTSIvIp1gPfrQaxX/OovUDUEeIMutz6kvN0VHIkpN9Df0LUjBDySgqYZvcKxlrTNGKyKxcvLiZg/J5UCJYRRL+6DTlSSu/ZlZxr1FXbrwxWlWVBInrljSmkoJGf4w71pN/G8ElmupD2s9Qao=
+	t=1750518187; cv=none; b=FEXA9Cn6ynpkx4mMEcHpVDMzyP79WKj6jL97pAIbz1eYjaDf6Q7AzrfCWoufj3KAfxIP3+4KftjU8/yZX+CslrSAlIyOG/lPOtr+uEE9DihmXeSQr/H34txUhw8/v8ZzaD8pnPl2fYwfpYIfk5/Uj5pg66ww4YOlgnYkzpgOcYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750517991; c=relaxed/simple;
-	bh=9IFTSYd97DuqqHreOaWo70EA069Nr2zggBk/86tCMys=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=nXpEfOaVKk1+eJxLBh/6CT3XZnNPP4/Zk2+VNyAM0e87K+5uPRlJu4791TcEJ3zm8wGgjSCwwYuc4dVzoeqxpak7K4G5TXp2NNh1julM5PYqbkD0JGcMbgHtYXeVFKwkuTZHDaD6nL0Ub2KAkeTXpEJUoA/U2px8EgPl68TJM/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8q6nWZh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750518187; c=relaxed/simple;
+	bh=g66sLXmUcEXF/ehSdvRAG1Aw/xp6rPKby5bIA+HLI28=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OsYMY06lci0TAgJu4RGxRfpigjoQc/b2yRO8QuqG5SkZjjUcKNI7aq8oO/9Ladmfe3FrQ1LNC3zRtMG0C+unKRRudibG/nBP546CuKoU+ulKyJ2U3rLFsnfSGe+cmfJzVjnk/hZNzCLim0+68YJi2YUIsRf+cGc6hpgo4fc9q9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ChvvTk+E; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8q6nWZh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C935DC4CEE7;
-	Sat, 21 Jun 2025 14:59:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750517990;
-	bh=9IFTSYd97DuqqHreOaWo70EA069Nr2zggBk/86tCMys=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=W8q6nWZhFy8dueJxM0rqyjZ3SSx083cQbHU1jipM076nHq5STdtduOMzehotCxxyR
-	 mQAtJuF0HNGR3+HkEkV61qw+M+0Bn4jxFSaL5s/k9Vc6jXCHvyJG3Ng+8K8DZXYrdf
-	 PTLsHHFZS8g9U6NHujxWAFpPaT/IwDCZPPrXF4ZT7Lk0SpmtQNjHHr5DKggoLvHpsh
-	 AOCEK6bQPEZ6ZjEpMuL5BL7VaeqMfrpLiIUxdxoA8xviH8pttwiehF2epiu6XdWqbQ
-	 BkABlRx4u2fpcvjnSgvxc2aODP/tIaN0sKxWibraRKDFnYIUUiOAdR0EZfYLv8mRbs
-	 1kzC3Gtne6uVA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADFBC38111DD;
-	Sat, 21 Jun 2025 15:00:19 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ChvvTk+E"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234b440afa7so29483755ad.0;
+        Sat, 21 Jun 2025 08:03:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750518185; x=1751122985; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZQ2meP6AQOt18RTp1pYruaymRIfMLYo2hgcL5xk8YIk=;
+        b=ChvvTk+ExhntdAFQNPmxjCBrKzx8nfk7UOpy1cRa6HdiPjBhL29bxLNOG41IKjfl28
+         deXvrgCviXYhdmzH8QRhaPSpQaC3+vj2UcHmuOAa6PFNmNruqOeFAo0UXYiiSTUezSay
+         vRvsa9T6obMSmqiP32h2sSDVoYNuGM9kI2jYlNTIKk6rnmDWc5TyDRrSJbNxi9U6/xYC
+         t/cxfuWL4wdEVQd2y7mjdgGIkgC5wz3hJq3mWbWzmrorZE2zEqOH5s+6KuMeBwSA4Y59
+         ZEKmxwuOM7L/zbQQRcMlqXTKVOL4xE1MhuLavnGQcYs7d6UiWbk3ppqTZ+XCnSTsG5f0
+         SOMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750518185; x=1751122985;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZQ2meP6AQOt18RTp1pYruaymRIfMLYo2hgcL5xk8YIk=;
+        b=oD3/F+nVFkxgMh+M1AXJU8pu9biuzaFFRHk9SDel9FQ1asIPJg9XEuxVKdLr16/v4f
+         uAKXd32KguDN26OUYPd2cs4riGNaKrf5+xs1eyC/yRM4uXFJWmd4cgpbtRppax9NRqvr
+         ilmBC/4mYQrATT0uqpBknOCzEf1Kl4XhN997YdNgoGIJwUteiixWu6JbFiiVGx4Rbr6j
+         Dt4VKBfNalUtFB1cedMpLSEYUUF9qBIz6Nhk35zZboOE+cCynDqzQg2hU4TrEiOO3ei1
+         luKvWiwVaK5kFsrve7RAoP49x/heU7BFbgRfudnZpUWldi2LH1ZsLfrM52VllvpRZnR0
+         NQIg==
+X-Forwarded-Encrypted: i=1; AJvYcCW6h5L7OfY6BSEDHH7dnoX243nHu/MFpDOWk18ad15+Mw0vZZFM9O6iT3vE8Fz3sZEbLjd246r/35pnQw==@vger.kernel.org, AJvYcCWuUXVCv1DPl6YfgxUY4YQFfeM4Mz0yLugnv261bL+eNHQ1BYsjfktSjhFV84lwxrrikd7g7VIKIrodqxY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJkeiukOD58KVy75bedSgFtJcn7MavL8MN1e9b/RC669Ed633E
+	D6oEeoOpWkojTF7Xpxs9iB6iQtc1zXrvQqzmY0anzYMXlNVPMYtYZ4CuMgx86A==
+X-Gm-Gg: ASbGnctu2ZTLupXGUJZDvHG25i5PXhE3/IVKhScObQ2URxx5t2qQvehZSdUxj8VKnzC
+	nwfgZ9S3WUPUQCt/gNFs6QISJzPGIvwKAz86bjTu9R8POvvDCsgG5QAr8LY2XxMWLOrzOtwTNBU
+	dpMwr0A0wHhKXqRq/F1csik51ogu7H38M9bKTCirjiDIX8+yJvIulnbXLiefwmpUa5u184OarmC
+	m1TrN63MBggrrEJcBPH9xG7gbgVXc+2xvMPtrH63v/2pgmNSYTsskdnJA8vTY8r0GLvVK3TTd/U
+	m5bwQmwTIgB7KeqtmJvzxzZA6cOIEJHtJQf7Q/zLvNWCiG1heDrdA7KO67aRFQ==
+X-Google-Smtp-Source: AGHT+IEA6XqOqvZVfygiiLvTsTGD9tG4qpIqBoGaxNVST5TuhNXyOINNzuNNRpL9nPwbc/NOtrHvjA==
+X-Received: by 2002:a17:903:32cc:b0:234:8f5d:e3b6 with SMTP id d9443c01a7336-237d96b63b2mr91537635ad.3.1750518185333;
+        Sat, 21 Jun 2025 08:03:05 -0700 (PDT)
+Received: from localhost ([216.228.127.128])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83f14a2sm42814815ad.80.2025.06.21.08.03.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Jun 2025 08:03:04 -0700 (PDT)
+Date: Sat, 21 Jun 2025 11:03:02 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] RDMA: hfi1: cpumasks usage fixes
+Message-ID: <aFbJpqbP-tU4q84P@yury>
+References: <20250604193947.11834-1-yury.norov@gmail.com>
+ <20250612081229.GQ10669@unreal>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2] netmem: fix skb_frag_address_safe with
- unreadable
- skbs
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175051801849.1877807.4023369290062514193.git-patchwork-notify@kernel.org>
-Date: Sat, 21 Jun 2025 15:00:18 +0000
-References: <20250619175239.3039329-1-almasrymina@google.com>
-In-Reply-To: <20250619175239.3039329-1-almasrymina@google.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- ap420073@gmail.com, sdf@fomichev.me
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612081229.GQ10669@unreal>
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Thu, 19 Jun 2025 17:52:38 +0000 you wrote:
-> skb_frag_address_safe() needs a check that the
-> skb_frag_page exists check similar to skb_frag_address().
+On Thu, Jun 12, 2025 at 11:12:29AM +0300, Leon Romanovsky wrote:
+> On Wed, Jun 04, 2025 at 03:39:36PM -0400, Yury Norov wrote:
+> > The driver uses cpumasks API in a non-optimal way; partially because of
+> > absence of proper functions. Fix this and nearby logic.
+> > 
+> > Yury Norov [NVIDIA] (7):
+> >   cpumask: add cpumask_clear_cpus()
+> >   RDMA: hfi1: fix possible divide-by-zero in find_hw_thread_mask()
+> >   RDMA: hfi1: simplify find_hw_thread_mask()
+> >   RDMA: hfi1: simplify init_real_cpu_mask()
+> >   RDMA: hfi1: use rounddown in find_hw_thread_mask()
+> >   RDMA: hfi1: simplify hfi1_get_proc_affinity()
+> >   RDMI: hfi1: drop cpumask_empty() call in hfi1/affinity.c
+> > 
+> >  drivers/infiniband/hw/hfi1/affinity.c | 96 +++++++++++----------------
+> >  include/linux/cpumask.h               | 12 ++++
+> >  2 files changed, 49 insertions(+), 59 deletions(-)
 > 
-> Cc: ap420073@gmail.com
-> 
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> Acked-by: Stanislav Fomichev <sdf@fomichev.me>
-> 
-> [...]
+> Dennis?
 
-Here is the summary with links:
-  - [net-next,v2] netmem: fix skb_frag_address_safe with unreadable skbs
-    https://git.kernel.org/netdev/net-next/c/4672aec56d2e
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+So?.. Any feedback?
