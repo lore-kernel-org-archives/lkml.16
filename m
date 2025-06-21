@@ -1,87 +1,139 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5CE1A5B99;
-	Sat, 21 Jun 2025 09:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72891A23B6;
+	Sat, 21 Jun 2025 09:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750497618; cv=none; b=ChtxjIyeZ5BEgmD9qMCO7zDpLi8Q1hqJnUmtLzIkOZL3HSJsMWCrAKUQJjvi5AEGxRGEK9KTZnQs8AAAaR/vUaceODwMXui58Xgv8eTBXD732GWNwKhq25BSiIqH3H7a1DKkznVUB13unpzZ36b+7jymC4z7qwsPQKRj4ZB2+cA=
+	t=1750497694; cv=none; b=Uc2CvU21yZs97gIG3jYgzmrKLFpp+ZDAEuvNyqh54ICi5VcveE5/zSCegA1djbsplRJXFRgtO9+LTjKbuesbDbt+FPtfrU3Pz5i5Z9/fvag1g/9shxopUDCfBZG8Nj7tie1mBhtxwb/RubmMINeOjsp90h++7drpzryYN+iDdbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750497618; c=relaxed/simple;
-	bh=toupD9+AQbYUeU5Tc+TD0Yk8NrBjlSM4Q+eiJFhhiEM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d2OKXBsqbSLeHxUSw5LMuZx0zsKlcjos2Dd0k5Q7iCuCyISipqBeuE2r6M4C0G6KVpO51UjknnfHkP9++3WrqpgVdKUWMdqPCpQevHlzFN80CGI3VKo/tINsSW2hZiesTMWBw8MV9WR6wb7QxDPKKUt9IxR87rmkp0MhC5eU48g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uLIfli8Z; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750497694; c=relaxed/simple;
+	bh=4qdEsGlCBHQX9nBVHiBVWpPuog5cz+ELrrOp+xiPHBk=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Rr4cIfaul0D1NZEEq4+mOefWiXbMxhIQeoQC6b3I2/cW4IfvUagHHLwHs2w5yuxlbmomOUtxjlxHAzF6ikWHG+GHtETCzn9TqmqFYWVmsGBX7bPMjJMvjIPi3dvvxYCBFGxPNePxvl9cGX1nevQPSAPdu6RN4Tc3uKgtFIsvBko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Lwb1Fk50; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=K0dDBIUE; arc=none smtp.client-ip=202.12.124.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uLIfli8Z"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=FyfL9prHLKhHbqgEe+wwi0u4/Cr2AD00/3GDODY/t8M=; b=uLIfli8Z/LRRwFGc5OR0bOhwOO
-	qqca39KikuN6TmQ1SA5qATe7tuqA5OIxHg6u7Mpsyd2GU2TSm2oPic/sjVphVnm7tYI9nxRRU4RdK
-	sD/2X5vn7heLHAMk2MnQqhgvm3KswvxaUhrykKV0IDMmAApxqnOw7EaFtnkIecj+eL1OSuBDrfvD1
-	jFLlJNAK0gAAeIe6oxnH6B+e5vZqQeMI1LHPmT8tK9wN8tfSmcLWhvKyfe4xsVvea/5mBnT+yzkQl
-	tZV4RKreYONiWZiaopf/uhjVR8PTKrcRDW8nt0jtGP3XKnUzQCYi9b5SZMaIA5lr9WxJqy6TuU2T9
-	I5Yl+CsA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSuOI-0000000EujU-0zr0;
-	Sat, 21 Jun 2025 09:20:02 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2C4C03087E7; Sat, 21 Jun 2025 11:20:01 +0200 (CEST)
-Date: Sat, 21 Jun 2025 11:20:01 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-Subject: Re: [Patch v4 07/13] perf/x86/intel: Allocate arch-PEBS buffer and
- initialize PEBS_BASE MSR
-Message-ID: <20250621092001.GT1613376@noisy.programming.kicks-ass.net>
-References: <20250620103909.1586595-1-dapeng1.mi@linux.intel.com>
- <20250620103909.1586595-8-dapeng1.mi@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Lwb1Fk50";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="K0dDBIUE"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id BB2DF11400F2;
+	Sat, 21 Jun 2025 05:21:30 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Sat, 21 Jun 2025 05:21:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1750497690;
+	 x=1750584090; bh=ks3h8kqTA1Gd5HYWPg1HjxoNrsoTSLNAQpFpPQpS1BI=; b=
+	Lwb1Fk50lqZhMxrwSSnou4213Axyfsk4OYHx7I4uDTzR6Xoooy87fciBcG1faSL9
+	uh9GCM4XLGHKiczdX3wI60boToc9SPn6wcQMowANgl8yQ0BIKlK2Znmyl45WgptL
+	BiJzC5+FItaayZkmUBprH+hjSDywRUrK3iNqt0ocZUKHVU4Eqm0ud2EH8HDOCxXP
+	tkUSBdG0bK9esafHmCIFGwumS9sPde9Gy7yxqSYlVN0XZyOFQYkcXW8KpuRPjXXo
+	nRmhYFEwgxdYFYw6OW5QUQdreBuFzYznYSNouW4oSTWoTNYXXhYDMURnTfUwjSg0
+	OjCQIDHofxsCciVKBAcxpA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1750497690; x=
+	1750584090; bh=ks3h8kqTA1Gd5HYWPg1HjxoNrsoTSLNAQpFpPQpS1BI=; b=K
+	0dDBIUEAwJeXnjheoU8xaXyFF9hJgp2CSmqrNG1on/konNrF19GuTJrq2+DfDlmx
+	ALYzkEPk2zEqTpkJ62uMA8S86pVHwmFnW8gzo8T9k51MxHcO3pE6nha9WjcR5viA
+	qGWSEBEfHNBC8T+4hR7itgxtKXRYUQ86C6a3AioL1zqWtQBJizbtsFZW/WoPwwJm
+	Tt/dYP6VJ7nGQ2H8xDHIXTywmA+p1MyCN2vZaXYAE1fpw6cJuXKtLmti7XxDySjk
+	vxznUQEM6lvJtluD9LVj9asHCrCpy2GOC2WIy2AXbIHlW7ncNJ/XfVP5tXRTupE1
+	bi15YHDQEOuGu+17OoNIg==
+X-ME-Sender: <xms:mnlWaK6bNL4S_cieJ1Hvs65rgdnv37dk42HMikV4mpqfIW6cmv5btg>
+    <xme:mnlWaD65ovBoZQrSyZtIOKxwqDya9bN4EGX_9YGW6PNLCiiWR4JmmGZS_BICbwRxU
+    E5PruexhcU6GKLd298>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddutdeludcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpedvjefghfdvueelffekffekvedvleevveeitedthedugeejveeiledujeeutedvleen
+    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhprghsthgvsghinhdrtghomhenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghr
+    nhgusgdruggvpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouhhtpdhrtg
+    hpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughu
+    mhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtoheprghrnhgusehkvghrnhgvlh
+    drohhrghdprhgtphhtthhopehhohhrmhhssehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhinhhgoheskhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtohepthhglhigsehlihhnuhhtrhhonhhigidruggvpdhrtghp
+    thhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopehprg
+    gsvghnihesrhgvughhrghtrdgtohhm
+X-ME-Proxy: <xmx:mnlWaJfrPig7I2IzHkzat4jY2IGQFpaAIMSIJN5NqDb1uQVw9WXjrw>
+    <xmx:mnlWaHJlixBk9Rmdyi_o7UBwes8mhdd4MryOUQXJhELLEJtdI-YH8Q>
+    <xmx:mnlWaOJh2uU0lHzrNGH7ZaiJvhqcAJ-Q6JhEt66_sfTczmBMFsP53A>
+    <xmx:mnlWaIxVK8vuUHcth_jaxrEs7aOVvGjoBbnnL47wbBUyvgQhqVeyjw>
+    <xmx:mnlWaPeTpImvQDmMcY-e2EXScz0qZ8bViMDnzP7ntkB-r501HnoOkoNQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 00D73700062; Sat, 21 Jun 2025 05:21:29 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620103909.1586595-8-dapeng1.mi@linux.intel.com>
+X-ThreadId: T00f0f82e82a5e42a
+Date: Sat, 21 Jun 2025 11:21:09 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Simon Horman" <horms@kernel.org>, "Arnd Bergmann" <arnd@kernel.org>
+Cc: "Andrew Lunn" <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Thomas Gleixner" <tglx@linutronix.de>,
+ "Ingo Molnar" <mingo@kernel.org>, Netdev <netdev@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <75623e39-14da-4e4d-8129-790ed08b66ae@app.fastmail.com>
+In-Reply-To: <20250621074915.GG9190@horms.kernel.org>
+References: <20250620112633.3505634-1-arnd@kernel.org>
+ <20250621074915.GG9190@horms.kernel.org>
+Subject: Re: [PATCH] myri10ge: avoid uninitialized variable use
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 20, 2025 at 10:39:03AM +0000, Dapeng Mi wrote:
+On Sat, Jun 21, 2025, at 09:49, Simon Horman wrote:
+> On Fri, Jun 20, 2025 at 01:26:28PM +0200, Arnd Bergmann wrote:
+>> 
+>> It would be nice to understand how to make other compilers catch this as
+>> well, but for the moment I'll just shut up the warning by fixing the
+>> undefined behavior in this driver.
+>> 
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Hi Arnd,
+>
+> That is a lovely mess.
+>
+> Curiously I was not able to reproduce this on s390 with gcc 10.5.0.
+> Perhaps I needed to try harder. Or perhaps the detection is specific to a
+> very narrow set of GCC versions.
 
-> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-> index b6eface4dccd..72b925b8c482 100644
-> --- a/arch/x86/events/intel/ds.c
-> +++ b/arch/x86/events/intel/ds.c
-> @@ -625,13 +625,22 @@ static int alloc_pebs_buffer(int cpu)
->  	int max, node = cpu_to_node(cpu);
->  	void *buffer, *insn_buff, *cea;
->  
-> -	if (!x86_pmu.ds_pebs)
-> +	if (!intel_pmu_has_pebs())
->  		return 0;
->  
-> -	buffer = dsalloc_pages(bsiz, GFP_KERNEL, cpu);
-> +	/*
-> +	 * alloc_pebs_buffer() could be called by init_arch_pebs_buf_on_cpu()
-> +	 * which is in atomic context.
-> +	 */
-> +	buffer = dsalloc_pages(bsiz, preemptible() ? GFP_KERNEL : GFP_ATOMIC, cpu);
->  	if (unlikely(!buffer))
->  		return -ENOMEM;
+I was using my gcc binaries from
+https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/arm64/10.5.0/
+but more likely this is kernel configuration specific than the exact
+toolchain version.
 
-Here we go again.. that is CPU_STARTING context, that has IRQs disabled
-and as such no allocation is allowed. Not even GFP_ATOMIC -- this will
-break PREEMPT_RT.
+The warning clearly depends on the myri10ge_send_cmd() function getting
+inlined into the caller, and inlining is highly configuration specific.
+
+See https://pastebin.com/T23wHkCx for the .config I used to produce
+this.
+
+> Regardless I agree with your analysis, but I wonder if the following is
+> also needed so that .data0, 1 and 2 are always initialised when used.
+
+Right, I stopped adding initializations when all the warnings were
+gone, so I missed the ones you found. ;-)
+
+I've integrated your changes now, let me know if I should resend it
+right away, or you want to play around with that .config some more
+first and reproduce the warning.
+
+      Arnd
