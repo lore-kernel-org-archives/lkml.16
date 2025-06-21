@@ -1,97 +1,239 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CC69149C41;
-	Sat, 21 Jun 2025 08:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EE2149C41;
+	Sat, 21 Jun 2025 08:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750495665; cv=none; b=df+eGTa6aDaTNrDeIVa/VAi9QFhQ+yVMs04AQKo6GAkABi+14WZun1XU2ikazrP/3+tUbVvLMcXpGo/K9FyqeubhjT1TrjDex4y9UiqO0no4ePT3hvy5ipj/mJ6Ak8uwgx31uDWTEOX4jyf3BVygGMNN0vdzJtXpmCHxuK/uuaM=
+	t=1750495852; cv=none; b=bxEo7TCrPk1rbAdNXNQwtnvz1EWgoTVMH9wj1TtXj2Q411v0Hy/ZsCKso62Uq/t9gjqb1eyIR2qNgxzouyOFoqoDXUJHKmuVbDKH5wcwjxUQBFunrts4v7Hm3y88Ekmr2k8gPuPNrIEWowx9PqYzI1F/EunQaVcNCOY37jyLCAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750495665; c=relaxed/simple;
-	bh=bEnX1lr/fBedx4vzGgYMYRn4xNBRE4X3SQZFlixhEMM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YFGfZWjTDoAlFcRjvTAOiOW372t3QOztkwPWY8i2+g21jONqfTkQ83OykoIs7AaIO7iyY61Tct1faB6Og1EL4CfB7iVKLTqGlXJWwxdz33ICPqIAbBWFnJ0aNndYQuaSlJh2z3+A5yZo999gUZBZpry8C9Q6XXUgA0ZSugKTiAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 55L8ldQx026961;
-	Sat, 21 Jun 2025 10:47:39 +0200
-Date: Sat, 21 Jun 2025 10:47:39 +0200
-From: Willy Tarreau <w@1wt.eu>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/4] selftests/nolibc: rename Makefile
-Message-ID: <20250621084739.GC26934@1wt.eu>
-References: <20250620-nolibc-selftests-v1-0-f6b2ce7c5071@weissschuh.net>
- <20250620-nolibc-selftests-v1-3-f6b2ce7c5071@weissschuh.net>
- <20250621041421.GA26603@1wt.eu>
- <20db87b0-05ff-476b-a58f-d0945bfacf20@t-8ch.de>
+	s=arc-20240116; t=1750495852; c=relaxed/simple;
+	bh=rKyE8IXZALHKw3NE/EHwg4GeUXpJIUOSLMr19SCqxSA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aIPjTu+Iy/O7img/4tt0LlIuwLktFkbL0vHLDxIO8+aa5mMpP+dHx4rcMZvbj61eN+M7Wor4xYu7F1s/7v33y0fz+2UXq7EeIWx9yoM1HIc84r6F8Zcr+vKM8a2KcY1KatphcSb33cVSHczT1IrQFo6LS65Tj57d+DCbelPKg70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n1poLS87; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n1poLS87"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FBC6C4CEE7;
+	Sat, 21 Jun 2025 08:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750495851;
+	bh=rKyE8IXZALHKw3NE/EHwg4GeUXpJIUOSLMr19SCqxSA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=n1poLS87RgFr/Y73+xM9/JN7R23jpVHrIX2E6wpZrygMI+ASCHH/oJwjvwpgGJNnC
+	 5x/tg5U0ftKRTBNT3ZlS5BJRWsLGVNTQoWyxRZwveRMhetNKNRzBEVYaJQZFk0jDRq
+	 h+9xJ7gHkRtjsVdj5F3L6ChRgeq0kdaUUALr0XTVredpZLvmlkJQJwuRRYaAHX8pAG
+	 L6WjHwH+HBx7pTdQufNJxfSuQqj9M45Gzow7prVFK2uMCd9u7gJtTkP2K7YANnZj0y
+	 vPu0cjri9U3DT9T1fqlOZUXlwbXXJcJ2VLS6S1qjPB5kdKb8zwTgqcvistf3qAaDPc
+	 1VXzAaavGEbDw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uStw1-008mP9-7S;
+	Sat, 21 Jun 2025 09:50:49 +0100
+Date: Sat, 21 Jun 2025 09:50:48 +0100
+Message-ID: <87frftfpg7.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Raghavendra Rao Ananta <rananta@google.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Mingwei Zhang <mizhang@google.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] KVM: arm64: Introduce attribute to control GICD_TYPER2.nASSGIcap
+In-Reply-To: <20250613155239.2029059-4-rananta@google.com>
+References: <20250613155239.2029059-1-rananta@google.com>
+	<20250613155239.2029059-4-rananta@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20db87b0-05ff-476b-a58f-d0945bfacf20@t-8ch.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: rananta@google.com, oliver.upton@linux.dev, mizhang@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Sat, Jun 21, 2025 at 10:34:38AM +0200, Thomas Weißschuh wrote:
-> On 2025-06-21 06:14:21+0200, Willy Tarreau wrote:
-> > Hi Thomas,
-> > 
-> > On Fri, Jun 20, 2025 at 11:39:32PM +0200, Thomas Weißschuh wrote:
-> > > The nolibc tests are not real kselftests, they work differently and
-> > > provide a different interface. Users trying to use them like real
-> > > selftests may be confused and the tests are not executed by CI systems.
-> > > 
-> > > To make space for an integration with the kselftest framework, move the
-> > > custom tests out of the way.
-> > > The custom tests are still useful to keep as they provide functionality
-> > > not provided by kselftests.
-> > 
-> > I'm wondering, what prevents us from merging the new rules into the
-> > current makefile instead of renaming it, especially considering the
-> > fact that we initially took care of not confiscating the "all" target ?
+On Fri, 13 Jun 2025 16:52:37 +0100,
+Raghavendra Rao Ananta <rananta@google.com> wrote:
 > 
-> We'll have conflicts around CFLAGS, the nolibc-test target and probably
-> other things.
-
-OK I understand.
-
-> It will also make everything harder to understand and may
-> break unexpectedly in the future.
+> KVM unconditionally advertises GICD_TYPER2.nASSGIcap (which internally
+> implies vSGIs) on GICv4.1 systems. Allow userspace to change whether a
+> VM supports the feature. Only allow changes prior to VGIC initialization
+> as at that point vPEs need to be allocated for the VM.
 > 
-> > I'm asking because: 
-> > 
-> >   $ make -f Makefile.nolibc help
-> > 
-> > is clearly less convenient and intuitive than:
-> > 
-> >   $ make help
+> For convenience, bundle support for vLPIs and vSGIs behind this feature,
+> allowing userspace to control vPE allocation for VMs in environments
+> that may be constrained on vPE IDs.
 > 
-> Is your issue specifically with the help target?
+> Signed-off-by: Raghavendra Rao Ananta <rananta@google.com>
+> Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
+> ---
+>  .../virt/kvm/devices/arm-vgic-v3.rst          | 29 +++++++++++++++
+>  arch/arm64/include/uapi/asm/kvm.h             |  3 ++
+>  arch/arm64/kvm/vgic/vgic-init.c               |  3 ++
+>  arch/arm64/kvm/vgic/vgic-kvm-device.c         | 37 +++++++++++++++++++
+>  arch/arm64/kvm/vgic/vgic-mmio-v3.c            | 10 ++++-
+>  arch/arm64/kvm/vgic/vgic-v3.c                 |  5 ++-
+>  arch/arm64/kvm/vgic/vgic-v4.c                 |  2 +-
+>  include/kvm/arm_vgic.h                        |  3 ++
+>  8 files changed, 88 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/virt/kvm/devices/arm-vgic-v3.rst b/Documentation/virt/kvm/devices/arm-vgic-v3.rst
+> index e860498b1e35..049d77eae591 100644
+> --- a/Documentation/virt/kvm/devices/arm-vgic-v3.rst
+> +++ b/Documentation/virt/kvm/devices/arm-vgic-v3.rst
+> @@ -306,3 +306,32 @@ Groups:
+>  
+>      The vINTID specifies which interrupt is generated when the vGIC
+>      must generate a maintenance interrupt. This must be a PPI.
+> +
+> +  KVM_DEV_ARM_VGIC_GRP_FEATURES
+> +   Attributes:
+> +
+> +    KVM_DEV_ARM_VGIC_FEATURE_nASSGIcap
+> +      Control whether support for SGIs without an active state is exposed
+> +      to the VM. attr->addr points to a __u8 value which indicates whether
+> +      he feature is enabled / disabled.
 
-Not just but that's an entry point. Admittedly it's not a big problem,
-I was merely asking if there was a real reason for splitting them apart
-or if it was just to keep the stuff clean.
+s/he/the/
 
-> We should be able to show the help message from the main Makefile with a
-> hint to the Makefile.nolibc.
+> +
+> +      A value of 0 indicates that the feature is disabled. A nonzero value
+> +      indicates that the feature is enabled.
+> +
+> +      This attribute can only be set prior to initializing the VGIC (i.e.
+> +      KVM_DEV_ARM_VGIC_CTRL_INIT).
+> +
+> +      Support for SGIs without an active state depends on hardware support.
+> +      Userspace can discover support for the feature by reading the
+> +      attribute after creating a VGICv3. It is possible that
+> +      KVM_DEV_ARM_VGIC_CTRL_INIT can later fail if this feature is enabled
+> +      and KVM is unable to allocate GIC vPEs for the VM.
 
-I thought about it as well, we could have a help target in the main
-makefile that just emits "Please run make -f Makefile.nolibc with the
-following targets:", and then runs "make -f Makefile.nolibc help".
+Can you please add a sentence about the default behaviour? We
+currently rely on the GICv4.1 capabilities to be available by default,
+and it'd be important to capture this.
 
-> Another, more general, possibility would be to move the special Makefile
-> to tools/testing/nolibc/ and keep only the selftest parts in
-> tools/testing/selftests/nolibc/.
+> +
+> +  Errors:
+> +
+> +    =======  ========================================================
+> +    -ENXIO   Invalid attribute in attr->attr
+> +    -EFAULT  Invalid user address in attr->addr
+> +    -EBUSY   The VGIC has already been initialized
+> +    -EINVAL  KVM doesn't support the requested feature setting
+> +    =======  ========================================================
+> diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
+> index ed5f3892674c..41e9ce412afd 100644
+> --- a/arch/arm64/include/uapi/asm/kvm.h
+> +++ b/arch/arm64/include/uapi/asm/kvm.h
+> @@ -417,6 +417,7 @@ enum {
+>  #define KVM_DEV_ARM_VGIC_GRP_LEVEL_INFO  7
+>  #define KVM_DEV_ARM_VGIC_GRP_ITS_REGS 8
+>  #define KVM_DEV_ARM_VGIC_GRP_MAINT_IRQ  9
+> +#define KVM_DEV_ARM_VGIC_GRP_FEATURES 10
+>  #define KVM_DEV_ARM_VGIC_LINE_LEVEL_INFO_SHIFT	10
+>  #define KVM_DEV_ARM_VGIC_LINE_LEVEL_INFO_MASK \
+>  			(0x3fffffULL << KVM_DEV_ARM_VGIC_LINE_LEVEL_INFO_SHIFT)
+> @@ -429,6 +430,8 @@ enum {
+>  #define   KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES	3
+>  #define   KVM_DEV_ARM_ITS_CTRL_RESET		4
+>  
+> +#define   KVM_DEV_ARM_VGIC_FEATURE_nASSGIcap	0
+> +
+>  /* Device Control API on vcpu fd */
+>  #define KVM_ARM_VCPU_PMU_V3_CTRL	0
+>  #define   KVM_ARM_VCPU_PMU_V3_IRQ		0
+> diff --git a/arch/arm64/kvm/vgic/vgic-init.c b/arch/arm64/kvm/vgic/vgic-init.c
+> index 5e0e4559004b..944e24750ac4 100644
+> --- a/arch/arm64/kvm/vgic/vgic-init.c
+> +++ b/arch/arm64/kvm/vgic/vgic-init.c
+> @@ -157,6 +157,9 @@ int kvm_vgic_create(struct kvm *kvm, u32 type)
+>  
+>  	kvm->arch.vgic.in_kernel = true;
+>  	kvm->arch.vgic.vgic_model = type;
+> +	if (type == KVM_DEV_TYPE_ARM_VGIC_V3)
+> +		kvm->arch.vgic.nassgicap = kvm_vgic_global_state.has_gicv4_1 &&
+> +					   gic_cpuif_has_vsgi();
+>  
+>  	kvm->arch.vgic.vgic_dist_base = VGIC_ADDR_UNDEF;
+>  
+> diff --git a/arch/arm64/kvm/vgic/vgic-kvm-device.c b/arch/arm64/kvm/vgic/vgic-kvm-device.c
+> index e28cf68a49c3..629f56063a13 100644
+> --- a/arch/arm64/kvm/vgic/vgic-kvm-device.c
+> +++ b/arch/arm64/kvm/vgic/vgic-kvm-device.c
+> @@ -626,6 +626,26 @@ static int vgic_v3_set_attr(struct kvm_device *dev,
+>  		dev->kvm->arch.vgic.mi_intid = val;
+>  		return 0;
+>  	}
+> +	case KVM_DEV_ARM_VGIC_GRP_FEATURES: {
+> +		u8 __user *uaddr = (u8 __user *)attr->addr;
+> +		u8 val;
+> +
+> +		if (attr->attr != KVM_DEV_ARM_VGIC_FEATURE_nASSGIcap)
+> +			return -ENXIO;
+> +
+> +		if (get_user(val, uaddr))
+> +			return -EFAULT;
+> +
+> +		guard(mutex)(&dev->kvm->arch.config_lock);
+> +		if (vgic_initialized(dev->kvm))
+> +			return -EBUSY;
+> +
+> +		if (!(kvm_vgic_global_state.has_gicv4_1 && gic_cpuif_has_vsgi()) && val)
+> +			return -EINVAL;
+> +
+> +		dev->kvm->arch.vgic.nassgicap = val;
+> +		return 0;
+> +	}
+>  	default:
+>  		return vgic_set_common_attr(dev, attr);
+>  	}
+> @@ -646,6 +666,17 @@ static int vgic_v3_get_attr(struct kvm_device *dev,
+>  		guard(mutex)(&dev->kvm->arch.config_lock);
+>  		return put_user(dev->kvm->arch.vgic.mi_intid, uaddr);
+>  	}
+> +	case KVM_DEV_ARM_VGIC_GRP_FEATURES: {
+> +		u8 __user *uaddr = (u8 __user *)attr->addr;
+> +		u8 val;
+> +
+> +		if (attr->attr != KVM_DEV_ARM_VGIC_FEATURE_nASSGIcap)
+> +			return -ENXIO;
+> +
+> +		guard(mutex)(&dev->kvm->arch.config_lock);
+> +		val = dev->kvm->arch.vgic.nassgicap;
+> +		return put_user(val, uaddr);
+> +	}
+>  	default:
+>  		return vgic_get_common_attr(dev, attr);
+>  	}
+> @@ -683,8 +714,14 @@ static int vgic_v3_has_attr(struct kvm_device *dev,
+>  			return 0;
+>  		case KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES:
+>  			return 0;
+> +		default:
+> +			return -ENXIO;
+>  		}
+> +	case KVM_DEV_ARM_VGIC_GRP_FEATURES:
+> +		return attr->attr != KVM_DEV_ARM_VGIC_FEATURE_nASSGIcap ?
+> +		       -ENXIO : 0;
 
-I hadn't thought about this, but that could indeed make sense. Let's see
-later how it goes and let's not add burden about this for now. Please just
-keep your patch as-is.
+Do we really want to advertise KVM_DEV_ARM_VGIC_FEATURE_nASSGIcap even
+when we don't have GICv4.1? This seems rather odd. My take on this API
+is that this should report whether the feature is configurable, making
+it backward compatible with older versions of KVM.
 
 Thanks,
-Willy
+
+	M.
+
+-- 
+Jazz isn't dead. It just smells funny.
