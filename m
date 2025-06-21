@@ -1,180 +1,137 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A38917BD3;
-	Sat, 21 Jun 2025 16:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C4841760
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 16:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750522530; cv=none; b=cPEa7DiSRE4C/kRw7OX+zLVd+lw2ShugDd5DDnEsGisItCdx3h1SEfhGwNp3aNRSDUH04S8DeD13sOHF+kdpZwcA2JnvhH8RLBshV+Ma5C89FT4WggP8JPGLcKUF02ahHDh25I3a69IIR8ch3Viv9e0XlQHRhD5FZAeeYwyLLMM=
+	t=1750522543; cv=none; b=JyJodHhrUhJd9Lf9rqPvnUR9t0ByMKQVxGE+jWrQUDb7gxK0PDI8yoK5YfsD/fPTtzjeOYz+NV++aqFkUFgI450ikB516yRTjiSMh1g5wvnf1jA84gTjh3U1zMjRzo+LMgf/1ZHcuFIQ5grkkRTNwfzR2XWpZ6YgeSmGtsoRAIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750522530; c=relaxed/simple;
-	bh=qevLr9ZSYFJHw6aDBo4jErxE+t1JmLp7MzC4B/E+PK8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bOM9g2doNHqkFWcgOue0hJ5U5GyoNy3iA2k5+HgwoBZsK2b8HsVMDIpBr+MlFK00niViSE9dRxwxX9woG0JL3lh4YQ3rml5NVbvwJ2fiYZs4MnzH+Wo92+Dj0Cc9CWFy1uYGJSSSThgL06UZbNvm6Wlzpy2QZPXY6w1q9Ciy6II=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=miU7wr+6; arc=none smtp.client-ip=209.85.214.169
+	s=arc-20240116; t=1750522543; c=relaxed/simple;
+	bh=BkUZHxWuDCBAQER5ld+ZZ+mr0I+SwoBxQU3VuNcheKA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cVShSUsBz5j/Y+pQLidIWHl6Ef3ddCdYXDy3u832nFx3eqe8swLcMRCLq/s4uTMnCcUQgfolQlmQYOifVLs/QgEVg0pJW9NoaKH2qyxNYrnFaZIFc5r/Jr0DLpaiqhBtvZVS9amcrz9FXGa3sS7qvNXC3aRgV6iKNSp6SaSY934=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=isZsuDFM; arc=none smtp.client-ip=209.85.208.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="miU7wr+6"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-234ae2bf851so4614545ad.1;
-        Sat, 21 Jun 2025 09:15:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="isZsuDFM"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6099d89a19cso6163311a12.2
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 09:15:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750522528; x=1751127328; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Myn92VBW7kfeyp03lVrVe0paNOHV5SuRywd7zrehoAo=;
-        b=miU7wr+6bbgMGO23SLgv67j7tm9ZW8Ljo+rBBhxNmEHKQXrk1QUSzXMZSXipTcex8T
-         DJQcy7lC26YaH8zaxNrzPehoSv0KwfztWsYC64qS+MOL5TDLeAUMLv19T9V6SOFOPGmg
-         iK9lbdIWNhxN+mIHi6iEPbJBS4H27o/TNajQ9hQHHiBRGoLtCYICTAJVfUYZkH8BOPOl
-         lYMkFbh6LvOIcVYIM5LFQSqczVphCp14tGRUH2/6js2Tl2lWrYOTzvo9kKECmHOZPLaR
-         Ngy8AH6TomrEM0wURnFNix5XBLLZfGff9Fp9hWLsIfJEsU2SNzVPurZUTBYxdtDPe7GI
-         lG2A==
+        d=gmail.com; s=20230601; t=1750522540; x=1751127340; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9MerQjCeoB/tfauO+gxNkhr//t2Y54VYSS0pmA0OG84=;
+        b=isZsuDFMtG/57BbXOOCZ4lSbpL2oKaN5qyxTEhKlKA17zSpWFkGcLyZuC79rNZVyiR
+         Q5GNRFpx+EeipU/qJM2rpt8cd+br+GlY9VjC4WFcx+eCc7Ac6N33jc9nL/BIUI4ltkLE
+         yILLWnQDEtvS1rIAUL6XFjPHgwie1WQkW/QvTjuFyQxTWsSgV6Xze9HG5qP9Sv6c9KPr
+         Eq8RIOPmsDsDzxLwVkVtgHJ2V6Aa9lxdSg138CCOiLFPputRvv3f5vFH5NOjeBK4d4HV
+         73951/bnkXf1vr5uuP++uT+KbgSXGfOLlffUzOu3+EN+Ydc/YCzkASySabJ0Z8TksJD2
+         pN+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750522528; x=1751127328;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Myn92VBW7kfeyp03lVrVe0paNOHV5SuRywd7zrehoAo=;
-        b=vQzzMVnHCRZSNIemocVvrTzhwS48lHNYD7soD2n5lS9geSBwdKkmix7OXllUpPQGNQ
-         w/4eTRNPIu8sdiaX49GCXmtAjIn1MC8ngcK7osgAVwVzv59OAATuLa+hp18Aofj3WFnk
-         0HMS+Vy2VeTaJ1ZTm8eBIdNsnj1bQ7/4uJShPXhK722ZZzWBTymlez5uVnXVYP77RMAl
-         BqUHFf9Nw8qn0P79JUzaY6V2gGxLmxosKQhhsGD+bKR75O231l6pPb7fET2287Vl1373
-         c83U2X0AV2PmCYIogBwqMPexoJbFq5nnj1GYQoEi+HpYZescUibzKbDDLemzqnSqqRNu
-         5iog==
-X-Forwarded-Encrypted: i=1; AJvYcCU26mk1IzNAcywWyBiRzIeJCAMR606oHnyOs0wJ3NqDNqH37CXanE7YmBoEZimpDdITtCIvDvx83U5jsdcBgA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvDWd7xbcWs3lQHPT+EOKVAINd5DCvuYx4kYVTGPAxrSKPvVYD
-	LifoMzs8nrAm4u2dxw4HIU6fX3qXRMlhjln0OyHl0et1LbBkAkB+MT0s2dyTGp8I8U5txPd5sui
-	2/D2bc2ri95W8aji2D6cOOj9jKouTv1g=
-X-Gm-Gg: ASbGncv66htHrt6gMM4C8Y/+wcVIT3JgTxdKy9uiN/1HKZraNkBQP88XHlebaMjimBT
-	4MlZpZLKo4QQgavGn5I4mP5aE0MnwX0o9rk7ZmCHXCeFaabB7C4uHafBwtUrYDJWHoCz9T9rBoL
-	m5VfEyXQhzfqA8X3E7E8ZyfspPYhnG8nYBv80vg1d+RSE=
-X-Google-Smtp-Source: AGHT+IHSbJKRuHAxrxbdHOWYsKCLNdbjb9gfKKnd0t9mQuMtndfb3xW4O9A85hrvQwa3gH5XB9iA48xT+v8VnMQePdA=
-X-Received: by 2002:a17:90a:c88b:b0:311:b0d3:851 with SMTP id
- 98e67ed59e1d1-3159d8d1ab9mr4014904a91.4.1750522527784; Sat, 21 Jun 2025
- 09:15:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750522540; x=1751127340;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9MerQjCeoB/tfauO+gxNkhr//t2Y54VYSS0pmA0OG84=;
+        b=ni+ZvpVofIZZ3E3q5T0kgLK6DxCovYW6uZygBAQBihSFRuJPhSxSufYUB2J20Dcibr
+         k/OScFmuAj+c5xj260etXb3u4AQ0EE6o+2/bp5/p1ggxr3kLZWJ8qNXzKTJhxX168DFR
+         QqBbng1nGwEBYeBlnJcZGFgmA0YRbKgA4DLoE4ZQ1bVl42T2+t0ttfmBv4o61i+MKBEa
+         HDKSrdCZxiVr4tiGc7H7jEMahgRlAwn0yJJWo6hX0fpsFNUF4uxXCj1YuzCVLe00KyRN
+         V3VJUx8Uxh8VwZqgGtjHYaOIVu/BczZNVIK7Ozs+DYOnnXXHKTrG043xOfDPEwvvsKZY
+         2eVw==
+X-Forwarded-Encrypted: i=1; AJvYcCVoIKD7BqaOUCVZK2JYldYGqOq+vGVv/0EYRBORNCyFCiXsT8JDvkWnuluzNcOCPxNaLIpdpDrcKTCxRsg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3g9Nk6od+k/hKOoQMtbcw6AnhQiywWswk3RX3EKRmUrCPv9cF
+	pILXqnm79N6UD1GBgG+6/EQpgC/igafLZD3BznIB32nodKHAIzml2HnU
+X-Gm-Gg: ASbGncsQfhzoANaZ5BKE1pVK5xPKeldeqs2H7KMLIbuobVJEoTyi1wlA2+drOK+cmAz
+	87PfIcZY3jb01niHwFf8l21nyKE8mvwYhec8ppdkHyRb5k4jhjpot31sHuWqzZZ14eoJ9Xy9GP4
+	rAQ+/ra5H7BNCxgsj86DoS+WHHRWewpngoLdZUhhP4vvZyHpl293qc+Z5JZ31D8qbcCgj3YhdJz
+	YvWAmw0n6xuviYlbN0ceHto/SEpIPFX2vm1lQDeqweJZ05vpydx6Apjdd1UlFMximKmGe/X0lB0
+	eBE2yvEYSggdGWqkcs7CpQs4TL1QvxC3HQzfnQx6nBxXghaSSGjxeC18
+X-Google-Smtp-Source: AGHT+IEV3zNBZRAZaL6Ty9ZazSqmnCQisegd5org4xX7GQNi4SF20RwV+ACtN3Sv9ZZx5uzjTUvwkA==
+X-Received: by 2002:a17:907:6088:b0:ad8:8529:4f9b with SMTP id a640c23a62f3a-ae057bc4354mr695132566b.38.1750522539633;
+        Sat, 21 Jun 2025 09:15:39 -0700 (PDT)
+Received: from localhost ([185.246.188.73])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-60a18cba458sm3425202a12.59.2025.06.21.09.15.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Jun 2025 09:15:39 -0700 (PDT)
+Date: Sat, 21 Jun 2025 19:15:31 +0300
+From: Ahmed Salem <x0rw3ll@gmail.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: airlied@redhat.com, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [RFC PATCH] amd64-agp: do not bind to pci driver if probing fails
+Message-ID: <7rv3j2it6wbv4gu7jgsews3niste5y52h67scwwjpblhy2royh@hqfmpbjzdj77>
+References: <c5kqcudzrcafm24nr5ixgalhxdkxl3uoueerjlp6tbksj3hzy7@klytjugpkvdm>
+ <aFZ_YJH30f1WDneD@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250621152142.25167-1-work@onurozkan.dev> <20250621152142.25167-2-work@onurozkan.dev>
-In-Reply-To: <20250621152142.25167-2-work@onurozkan.dev>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 21 Jun 2025 18:15:15 +0200
-X-Gm-Features: Ac12FXw49WODaYF3lqZkNRYeMz9Fu1o-g2jfGAxPF-tQ7YxMWBsh7k76BnVCMcA
-Message-ID: <CANiq72=ER=1QqW8tbqjuPWcqR2oM2bEEm=O382x68G-whGc3MA@mail.gmail.com>
-Subject: Re: [PATCH 2/3 v4] implement ww_mutex abstraction for the Rust tree
-To: =?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, lossin@kernel.org, a.hindborg@kernel.org, 
-	aliceryhl@google.com, tmgross@umich.edu, dakr@kernel.org, 
-	peterz@infradead.org, mingo@redhat.com, will@kernel.org, longman@redhat.com, 
-	felipe_life@live.com, daniel@sedlak.dev, bjorn3_gh@protonmail.com, 
-	thatslyude@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFZ_YJH30f1WDneD@wunner.de>
 
-Hi Onur,
+Hi Lukas,
 
-A few docs-related nits, for these and future patches (some apply
-several times).
+On 25/06/21 11:46AM, Lukas Wunner wrote:
+> On Sat, Jun 21, 2025 at 04:55:52AM +0300, Ahmed Salem wrote:
+> > --- a/drivers/char/agp/amd64-agp.c
+> > +++ b/drivers/char/agp/amd64-agp.c
+> > @@ -768,10 +768,15 @@ int __init agp_amd64_init(void)
+> >  
+> >  		/* Look for any AGP bridge */
+> >  		agp_amd64_pci_driver.id_table = agp_amd64_pci_promisc_table;
+> > -		err = driver_attach(&agp_amd64_pci_driver.driver);
+> > -		if (err == 0 && agp_bridges_found == 0) {
+> > +		if ((int *)agp_amd64_pci_driver.probe != 0) {
+> >  			pci_unregister_driver(&agp_amd64_pci_driver);
+> >  			err = -ENODEV;
+> > +		} else {
+> > +			err = driver_attach(&agp_amd64_pci_driver.driver);
+> > +			if (err == 0 && agp_bridges_found == 0) {
+> > +				pci_unregister_driver(&agp_amd64_pci_driver);
+> > +				err = -ENODEV;
+> > +			}
+> 
+> Is the "probe" member in agp_amd64_pci_driver overwritten with a
+> zero pointer anywhere?  I don't see that it is, so it seems the
+> else-branch is never entered.
+> 
 
-On Sat, Jun 21, 2025 at 5:22=E2=80=AFPM Onur =C3=96zkan <work@onurozkan.dev=
-> wrote:
->
-> Suggested-by: thatslyude@gmail.com
+That is a great question. I thought since pci_register_driver calls the
+probe function, it would return with or without a zero, saving that
+value in the .probe member. (I find my lack of C
+experience...disturbing)
 
-Please use the usual format for names/emails, like in the other tags.
-(Link also typically goes after Suggested-by to link to the
-suggestion).
+> I had already prepared a fix for this, but waited for 0-day to
+> crunch through it.  I've just submitted it, so that's what I had
+> in mind:
+> 
+> https://lore.kernel.org/r/f8ff40f35a9a5836d1371f60e85c09c5735e3c5e.1750497201.git.lukas@wunner.de/
+> 
 
-> +    declare_err!(EDEADLK, "Resource deadlock avoided.");
+That one I've seen even prior to catching this one, and this is
+originally what I had in mind based on what commit 6fd024893911
+("amd64-agp: Probe unknown AGP devices the right way") removed (i.e.
+!pci_find_capability) when you suggested checking for caps beforehand,
+but I figured "why make other calls when .probe already does it right
+off the bat?" Clearly, I was in the wrong there.
 
-This should go after `ERANGE`.
+Nonetheless, thank you so much for the review, and Ccing me in the above
+patch. Ultimately, what matters to me is getting the right fix in order,
+and learning not only what I'd missed here (i.e. Reported-by trailer;
+just wasn't quite certain how to approach the situation with SDN in
+mind, as well as the original Cced developers), but also fundamental C
+knowledge I've been trying to acquire. I appreciate you!
 
-> +//! This module provides Rust abstractions for the Linux kernel's `ww_mu=
-tex` implementation,
-> +//! which provides deadlock avoidance through a wait-wound or wait-die a=
-lgorithm.
+--
+Best regards,
+Ahmed Salem <x0rw3ll@gmail.com>
 
-Please link the C header like other modules do (with the `srctree/` syntax)=
-.
-
-In addition, if there are good C docs, you can link those, e.g.
-
-    https://docs.kernel.org/locking/ww-mutex-design.html
-
-> +use crate::prelude::EBUSY;
-
-Please import the entire prelude, rather than a subset -- that is its
-goal after all.
-
-In turn, that means you can drop other imports.
-
-> +/// Represents a group of mutexes that can participate in deadlock avoid=
-ance together.
-> +/// All mutexes that might be acquired together should use the same clas=
-s.
-
-The first paragraph is a title ("short description"), which is used in
-lists of Rust items, so it is best to keep it short. So I would
-recommend moving the second sentence to a new paragraph.
-
-I would also probably suggest dropping the "Represents", i.e. you can
-just start with "A group ...", since it is an item.
-
-> +            // Ref: https://github.com/torvalds/linux/blob/master/includ=
-e/linux/ww_mutex.h#L85-L89
-
-These line numbers will likely go stale, and we typically don't link like t=
-his.
-
-If you feel like you should link to particular lines, then I can
-suggest git.kernel.org/linus/ instead and a tag to keep it stable,
-e.g.:
-
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/include/linux/ww_mutex.h?h=3Dv6.16-rc2#n85
-
-Also, please use <> to wrap links.
-
-> +    /// Creates a `WwClass`.
-> +    ///
-> +    /// It's `pub` only so it can be used by the `define_ww_class!` macr=
-o.
-> +    ///
-> +    /// You should not use this function directly. Use the `define_ww_cl=
-ass!`
-> +    /// macro or call `WwClass::new_wait_die` or `WwClass::new_wound_wai=
-t` instead.
-
-Please use intra-doc links wherever they may work, e.g. [`WwClass`].
-
-> +/// // Create mutexes
-
-Period at the end.
-
-> +/// let mut ctx =3D KBox::pin_init(WwAcquireCtx::new(&class), GFP_KERNEL=
-).unwrap();
-
-Please avoid `unwrap()` and other panics in examples (and in KUnit
-tests too -- I will mention it there). `assert*!` is fine, though, if
-you want to show that something is a particular value (that is
-relevant for the example) etc.
-
-More generally, the idea is to try to write code in examples like we
-would in normal kernel code.
-
-> /// use kernel::error::code::EDEADLK;
-
-Some of these should be already available from the prelude, which gets
-imported automatically, i.e. please check if you can reduce the number
-of imports in the examples.
-
-Thanks!
-
-Cheers,
-Miguel
+> Thanks,
+> 
+> Lukas
