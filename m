@@ -1,88 +1,99 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B1A30E85B;
-	Sat, 21 Jun 2025 09:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA18D30E85B;
+	Sat, 21 Jun 2025 09:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750498901; cv=none; b=dvReR/yx3pP249+gwUOJqr2g1JPf76hQgRUhew+vCpbncl6qECQqegu5XfGJByb8R3ANrS72+IE3EGc5Hb24wDsGyMvaxR9Nmt/9vbzmXNLAOJMvVjuoDpVi16Pj2rycwzUkPKyiiF7BdCgLriQ5pINmch3NfEgSa5zzkopRAIg=
+	t=1750498967; cv=none; b=EjLB6PQ4/RC+ZNxzOpDs8+/rGlibJepxh7oOjJhqC+/Ae7dZ9TwvopkiSjA2+GPKviysKKLq1WvV2bX3uUTm+IQblwg3NH1X1WguKYB/RbyEd7IFLN88Xwf7pPmFPwP+9xEsVwFNw7d5h0+zYzFRoEaFswdCeAASE3ayzdpdKxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750498901; c=relaxed/simple;
-	bh=m7TJTsHJa6TY4PrTqVO0kYjSdkPRDBut4S3vVyW0uWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PxsiXTqTlr5quUAUWNKP+i+cW9MqYFkvxvyUzpy3VS33t8qrosZttYF9wSviw3bCyslV3Ku+NSNlkjhrW9nJzQQYoNte9twJpkunA6zkeSFsEgnKC6C8vO6ZkqHKv9BUKqyqssyNmNeQTEn8Pqv1UBOIyapVUTAaNK7N29ixwwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WRD9COay; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750498967; c=relaxed/simple;
+	bh=NT0F2kuWnh95YvWs0guj2pG5hfl85ndEjZGTNruras4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=esad70CkFIRhQBtHHsthaVBCs4NDxi97sX50Pu7e/kaHmS8mASYamIYTgCih2DGxrH1Ceg5IUCRf93paBKULFLqDXO90KfnQvl19PAd9f14hJIDftG5mrJilPeHLjGxp3aIZ+3s7lqoW3WgvBVYvxjMm9UopJuDrbonWiDshK4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iRb2qtgV; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WRD9COay"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4zMCTLG4kJDerA+w9GW+UhDLBS5IcHFJTTe8BRiVuPI=; b=WRD9COaye/In2P/qqwHo6+wXXp
-	NNtVnX/0EK3usiitUDi8Z/1DnzuZxNj76BVu0ZfNj5yFlUFEKVvfE2iHXuSuKjs8Qsts+xy/0Q+cw
-	PJfCT6LneGZ1jZ58tZggeKUXVPDsxR3HTCWY4hKTD7DiLFVC5oy45n9KdZjpYOh8acECTNVHsDbPQ
-	aBZ3rRRg5+/B5BUf/R6BoxJY9brGg2JHk0sxwvqdmTGB/Lncs3BSAxMXMcttW8jlYHWIFMUc/X7gd
-	UBk+Ww37KwpNKbevzFPaQdSLKzddRCMn9tuZgwxRR9D1I+WnZKS5b6+Ut9mwInLNySv9u7zDG2fxJ
-	bDYnqunA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSuj9-00000004tB4-0oaN;
-	Sat, 21 Jun 2025 09:41:35 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4578B3087E7; Sat, 21 Jun 2025 11:41:34 +0200 (CEST)
-Date: Sat, 21 Jun 2025 11:41:34 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-Subject: Re: [Patch v4 09/13] perf/x86/intel: Setup PEBS data configuration
- and enable legacy groups
-Message-ID: <20250621094134.GX1613376@noisy.programming.kicks-ass.net>
-References: <20250620103909.1586595-1-dapeng1.mi@linux.intel.com>
- <20250620103909.1586595-10-dapeng1.mi@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iRb2qtgV"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-742c7a52e97so2166875b3a.3;
+        Sat, 21 Jun 2025 02:42:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750498965; x=1751103765; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=82F/qIrMwud8Iq3aKIO9cVAcwnGn2gOc9FkvWYWa8Q8=;
+        b=iRb2qtgV2BL6VDzoHevnbvoP4QDkW4rJrwb2YKa26e5svnGwPdneJNX6Srs2Nrm/yy
+         3YhL/ls8HjI8nBhrLOvYK+UAoBRRPcGnli+Bmo6ScyOJnpledSB0OUnvpucFJgquNJmf
+         IKtxcmKkblH4XceUE1/yRNV+43tnk4boHWuQz2Tz7Q9MUA+cmPcyNmzewZdCxKi3X9fv
+         qL4QdkoHuAsP6vFEucvMPs8V0konc5n3IPThsDeZsYFk4mH9HtSDk/spK6lsr5SrVQ21
+         F1a4pJ7HmR82IRKWCl477WukA69HZ36zsuesF5MZNpo1hxBBhc1O3gC5RkeOeoeAYIM1
+         ipaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750498965; x=1751103765;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=82F/qIrMwud8Iq3aKIO9cVAcwnGn2gOc9FkvWYWa8Q8=;
+        b=EQUmhb6308om5+25nO1u9QH13hkJ4ViMV6pZqV7fvUPdrTNlQRpkdoR5rjFNnpBHvq
+         X+Bdd+f0gDbrpYkfxJ7r7/bIo9a+aIqKYbDXm+o6y1OOOkEuEW//aKPH4JLf/OoCfqru
+         FcA02JuFJZN3qDouMw5M2VIxDoeYUJUx1sbbkdO3xe7qdM/ecOdyzrsZQVxgKS7yuLdy
+         JZCx/WGFnWd4Kb1D0oSn+SO0uokpCkK7m/48kw0SlntYPBh/OjA9Spq7q9p954otpleT
+         U0x0htOnVCIO2ZhCFZfHeN1LJiFVMJCRb/nDzNgEZltzHKinzjRk1RVFPnITBQab7ew9
+         2Z9A==
+X-Forwarded-Encrypted: i=1; AJvYcCXFjAvf5w9e2pOp7Wrfrb8oURkycPovpn3ZlKOes+2peQuW8IcMp6Ng0Sf9QdJCVSW1pWHkceC/qMKxv4w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj7ypAefYKBK1DCV5/VCsOZX4+laVHcmK2NkLeEkIRJu5ETcIf
+	Qw+5autPAjo+2yb9cyzMMxYBSezCtidfDsRukFKuKI3gGaC54n9LAbAh
+X-Gm-Gg: ASbGncu0CsroG+FcE+K96A3sLzJQzFnAGjft4soEh9bVZG/gWZqIwilqvbYrMoiS4B3
+	g8jby8DyaykAIfcLssXjV28MBfsB8suvtzrbV29SycORGYIcJXWKDNnBHQnHIb0ryCpETR8oYrf
+	8nkEYEGEVzfISo2cnv9VleWiM+VIUYtaN3c+BnOKZJMisQSa+8msdws0YCQ8cxES6XcbqAASiYH
+	Tp9S3SJEGFmU6y4L2vRi99FRHyVowemxWVAPeyP+0oYpw5hx7tGIM2/JSc0U2dBsTpJ4uIl+PWJ
+	L5z1LwUqz6dHgmKYoCsk608vxdq5jGUqWt1DaqQ5b81+AJtMtKpiKmJ2G7L5migHFrfGEs0uJrP
+	IJrszJiX28befF9TAj/OF
+X-Google-Smtp-Source: AGHT+IGCdtyBmtNboqAeTb8dM4d0OF3DNlAYrpvaG4ezgQSszXwNLgXBZCtm/LihmMUbzARLeGdL6Q==
+X-Received: by 2002:a05:6a00:928c:b0:748:fcfa:8bd5 with SMTP id d2e1a72fcca58-7490d74e2c9mr9889200b3a.3.1750498964922;
+        Sat, 21 Jun 2025 02:42:44 -0700 (PDT)
+Received: from faisal-ThinkPad-T490.. ([49.207.215.194])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a64bde4sm3845704b3a.124.2025.06.21.02.42.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Jun 2025 02:42:44 -0700 (PDT)
+From: Faisal Bukhari <faisalbukhari523@gmail.com>
+To: corbet@lwn.net
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Fix typo in Documentation/userspace-api/sysfs-platform_profile.rst
+Date: Sat, 21 Jun 2025 15:12:24 +0530
+Message-ID: <20250621094224.164677-1-faisalbukhari523@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620103909.1586595-10-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 20, 2025 at 10:39:05AM +0000, Dapeng Mi wrote:
+Documentation/userspace-api/sysfs-platform_profile.rst
+Fixes a spelling mistake: "setttings" → "settings".
 
-> +static inline void __intel_pmu_update_event_ext(int idx, u64 ext)
-> +{
-> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> +	u32 msr = idx < INTEL_PMC_IDX_FIXED ?
-> +		  x86_pmu_cfg_c_addr(idx, true) :
-> +		  x86_pmu_cfg_c_addr(idx - INTEL_PMC_IDX_FIXED, false);
-> +
-> +	cpuc->cfg_c_val[idx] = ext;
-> +	wrmsrq(msr, ext);
-> +}
+Signed-off-by: Faisal Bukhari <faisalbukhari523@gmail.com>
+---
+ Documentation/userspace-api/sysfs-platform_profile.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +static inline unsigned int x86_pmu_cfg_c_addr(int index, bool gp)
-> +{
-> +	u32 base = gp ? MSR_IA32_PMC_V6_GP0_CFG_C : MSR_IA32_PMC_V6_FX0_CFG_C;
-> +
-> +	return base + (x86_pmu.addr_offset ? x86_pmu.addr_offset(index, false) :
-> +					     index * MSR_IA32_PMC_V6_STEP);
-> +}
-
-This seems like an aweful lot of conditions just to get an ddress.
-
-Also, IIRC we have intel_pmu_v6_addr_offset() and that does: index *
-MSR_IA32_PMC_V6_STEP, so something is very redundant here.
-
+diff --git a/Documentation/userspace-api/sysfs-platform_profile.rst b/Documentation/userspace-api/sysfs-platform_profile.rst
+index 7f013356118a..e6878ea82fda 100644
+--- a/Documentation/userspace-api/sysfs-platform_profile.rst
++++ b/Documentation/userspace-api/sysfs-platform_profile.rst
+@@ -44,7 +44,7 @@ added. Drivers which wish to introduce new profile names must:
+ "Custom" profile support
+ ========================
+ The platform_profile class also supports profiles advertising a "custom"
+-profile. This is intended to be set by drivers when the setttings in the
++profile. This is intended to be set by drivers when the settings in the
+ driver have been modified in a way that a standard profile doesn't represent
+ the current state.
+ 
+-- 
+2.43.0
 
