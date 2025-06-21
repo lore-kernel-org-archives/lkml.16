@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D022741AF;
-	Sat, 21 Jun 2025 21:52:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E55718B0F;
+	Sat, 21 Jun 2025 22:02:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750542772; cv=none; b=SewOFKajAleZ1VjnLtYTulSh7MezOKiZc57d4L4kPOZTEwH7NaAYubpnoNiR03oubki8zVStciF3xENEXJK3JcTV6q3F4bdty/V6CdIVHuYXf3De50BdgIZ5m9SXiyonafw3+brP5JB9IY5srTF+ROJBCKudx1OWJp3AopFARRM=
+	t=1750543336; cv=none; b=dmmrvjXqAWbbR+VtF+lTiS1IEmjZLvBhhpqiUvKOpdfGfSvJ1dvzTZeCYVdNC1I6P71dcWuPqYWcn+IApzj7+fQXp2oQ+hoOko4jMvU7wZfxoG6GXjQqrrSxTy+l0F7ONcdfyTmRKBtYRJAE2qkHF7xYTtOU4wTW9hL/5ViN8/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750542772; c=relaxed/simple;
-	bh=dUdUWZGtBD23U+ihPBC5BGmCbIJ5i9RGd9rC/GvA320=;
+	s=arc-20240116; t=1750543336; c=relaxed/simple;
+	bh=NCq/juDCvtziWom7lNki6q2dc5bMdd/bHo61zp1H9tA=;
 	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=hatztd6BKlLsw+PzpQyhtpUZvE2rA6IkyOht8UXKj7A0J5PeBioaf3oV2yNXH8sql6Qmr7J6IEAnm8fH1mBMKpv+hsysl3brgghJidcGIR3k13zBtR0ztv331K28JfOu7bLOfHXg9P4WWbLLSSJxdwLt8Ktgk1emai6E9YM6xDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNkGpGC1; arc=none smtp.client-ip=10.30.226.201
+	 To:Date:Message-ID; b=iJcXf9tkLSKkpSMoFEcaEfz6mi25k7dq0XMFl5Syfvmq8jxSbbGkOY7H7UyFZnj9PFlaYe0lShlLGjwCVUMbCjsjMoaeEu3kW1E/3S1kuVpLR5CSi/E1S3+lo7Xw/9lgBZsYAUNqquILrmkt5vf+/SNgEhdqA8tek5PH9KEyA8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lkPbYw8j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CNkGpGC1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAC21C4CEE7;
-	Sat, 21 Jun 2025 21:52:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lkPbYw8j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D5F3C4CEE7;
+	Sat, 21 Jun 2025 22:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750542771;
-	bh=dUdUWZGtBD23U+ihPBC5BGmCbIJ5i9RGd9rC/GvA320=;
+	s=k20201202; t=1750543335;
+	bh=NCq/juDCvtziWom7lNki6q2dc5bMdd/bHo61zp1H9tA=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=CNkGpGC1QTuntxEszxeykAPy/b2wWKWygsbZloOzpvurxkxwr0K4N4cIqMAWmJr3k
-	 Ob3RYhCmhgIdjq5LAAi+djlhZYWPemXpSmVSVI9LzHjSFDDMV4Lij91/f7/Nyfg4Zq
-	 w5NHBgQL0w8GicxKTvq94M6+Djmf6W5hmlIn2GbN16HmeftrEFhD0GHXPQYpZUBz06
-	 /6n8nBSMjElyOuHP/mVPWEzXO8d1FfwofdDVH/G8lZZROjeMTudGKzPazU0QR/jQ0U
-	 GSfNBcPvtMmdti5FevTucwwO0fAlszNzjEzHgYZ2P/+AjK4A6HrEGbnlon747jlgfj
-	 0A2PZ86imlWGQ==
+	b=lkPbYw8jpj54Yd4O9J2KbLskEJtKWd28rL4D9WaG9WyAkZkFzOiWtkskuUhn2hwsU
+	 tXvZwWNNtuMl9nG/uvYTVd/yxnEJLMgK3GQc+iccwIf9kJyk4gsmy0f21mox7c5yN3
+	 nZVoyCEpUfNoY49YD1DaJD3p+0lVM/+P0KxqXlMDwHhWpgNlkAAcZC6HO1Y/vBm1y2
+	 dLQb+w7ZnHCdT+jvqyC8skN+M+rXEE8FpKx0inNUVnCndEPXc/R1TpUtczLTv97iiZ
+	 smN+t2SoN77eEg7pnbT/lhzt616KaDinjqCvai+V2XUNY1AK4vWx35cFKBGbH6D0FB
+	 cqPPbuguykEvQ==
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -34,26 +34,25 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250210113614.4149050-3-rohit.visavalia@amd.com>
-References: <20250210113614.4149050-1-rohit.visavalia@amd.com> <20250210113614.4149050-3-rohit.visavalia@amd.com>
-Subject: Re: [PATCH v3 2/2] clk: xilinx: vcu: Update vcu init/reset sequence
+In-Reply-To: <20250516-dtb-check-mt8188-v2-1-fb60bef1b8e1@collabora.com>
+References: <20250516-dtb-check-mt8188-v2-0-fb60bef1b8e1@collabora.com> <20250516-dtb-check-mt8188-v2-1-fb60bef1b8e1@collabora.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: clock: mediatek: Add #reset-cells property for MT8188
 From: Stephen Boyd <sboyd@kernel.org>
-Cc: javier.carrasco.cruz@gmail.com, geert+renesas@glider.be, u.kleine-koenig@baylibre.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rohit Visavalia <rohit.visavalia@amd.com>
-To: Rohit Visavalia <rohit.visavalia@amd.com>, michal.simek@amd.com, mturquette@baylibre.com, vishal.sagar@amd.com
-Date: Sat, 21 Jun 2025 14:52:51 -0700
-Message-ID: <175054277123.4372.1455513715429068984@lazor>
+Cc: Conor Dooley <conor.dooley@microchip.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Julien Massot <julien.massot@collabora.com>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Conor Dooley <conor+dt@kernel.org>, Friday Yang <friday.yang@mediatek.com>, Garmin Chang <garmin.chang@mediatek.com>, Julien Massot <julien.massot@collabora.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, kernel@collabora.com
+Date: Sat, 21 Jun 2025 15:02:14 -0700
+Message-ID: <175054333472.4372.4818173316901510961@lazor>
 User-Agent: alot/0.11
 
-Quoting Rohit Visavalia (2025-02-10 03:36:14)
-> Updated vcu init/reset sequence as per design changes.
-> If VCU reset GPIO is available then do assert and de-assert it before
-> enabling/disabling gasket isolation.
-> This GPIO is added because gasket isolation will be removed during startup
-> that requires access to SLCR register space. Post startup, the ownership =
-of
-> the register interface lies with logiCORE IP.
+Quoting Julien Massot (2025-05-16 07:12:13)
+> The '#reset-cells' property is permitted for some of the MT8188
+> clock controllers, but not listed as a valid property.
 >=20
-> Signed-off-by: Rohit Visavalia <rohit.visavalia@amd.com>
+> Fixes: 9a5cd59640ac ("dt-bindings: clock: mediatek: Add SMI LARBs reset f=
+or MT8188")
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
+ora.com>
+> Signed-off-by: Julien Massot <julien.massot@collabora.com>
 > ---
 
-Applied to clk-next
+Applied to clk-fixes
