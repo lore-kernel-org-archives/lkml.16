@@ -1,32 +1,31 @@
 Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4355C1531E3
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 08:44:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CC69149C41;
+	Sat, 21 Jun 2025 08:47:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750495468; cv=none; b=Bxb64ICreC0iwoHqTyTbY5zWAGCuthuceG6Kxe0Qt4UgvP7KUi1ZWVxmvL9qhlCsNuwaGaCnqjPznbLzcGmzrZmZVpANm24brONWydicfxn9woGZtexB094qsH6dU4zQq0Ht0OdKqJwWkNJQH5kuD1P5UrGRI16z+aSDzVKGkww=
+	t=1750495665; cv=none; b=df+eGTa6aDaTNrDeIVa/VAi9QFhQ+yVMs04AQKo6GAkABi+14WZun1XU2ikazrP/3+tUbVvLMcXpGo/K9FyqeubhjT1TrjDex4y9UiqO0no4ePT3hvy5ipj/mJ6Ak8uwgx31uDWTEOX4jyf3BVygGMNN0vdzJtXpmCHxuK/uuaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750495468; c=relaxed/simple;
-	bh=Ss4fSQN+dHlsHOaJIQb8+zdTYKAwWsf4AR7WLQWm5bY=;
+	s=arc-20240116; t=1750495665; c=relaxed/simple;
+	bh=bEnX1lr/fBedx4vzGgYMYRn4xNBRE4X3SQZFlixhEMM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N4VVMqUCgcR3l0sLWNnjxwR407xkiwlURQmXth8qdNxc74dQdNGtVIEsqzE1XrrsmTPYZmLqmMydwoYeNCePSm2hGdQujhuoYrlPNladrlssTGp/zXPohWjhlCIHTECv1q7dH6V/EDghT8dqsKDQYZ63Lu0MdSjWWRiixx33Gtk=
+	 Content-Type:Content-Disposition:In-Reply-To; b=YFGfZWjTDoAlFcRjvTAOiOW372t3QOztkwPWY8i2+g21jONqfTkQ83OykoIs7AaIO7iyY61Tct1faB6Og1EL4CfB7iVKLTqGlXJWwxdz33ICPqIAbBWFnJ0aNndYQuaSlJh2z3+A5yZo999gUZBZpry8C9Q6XXUgA0ZSugKTiAY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
 Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 55L8iC7L026949;
-	Sat, 21 Jun 2025 10:44:12 +0200
-Date: Sat, 21 Jun 2025 10:44:12 +0200
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 55L8ldQx026961;
+	Sat, 21 Jun 2025 10:47:39 +0200
+Date: Sat, 21 Jun 2025 10:47:39 +0200
 From: Willy Tarreau <w@1wt.eu>
 To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-        linux-kernel@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 1/3] tools/nolibc: merge i386 and x86_64 into a
- single x86 arch
-Message-ID: <20250621084412.GB26934@1wt.eu>
-References: <20250620103705.10208-1-w@1wt.eu>
- <20250620103705.10208-2-w@1wt.eu>
- <d577e0ed-0cdd-4fe9-a678-9669993ee9f7@t-8ch.de>
+Cc: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/4] selftests/nolibc: rename Makefile
+Message-ID: <20250621084739.GC26934@1wt.eu>
+References: <20250620-nolibc-selftests-v1-0-f6b2ce7c5071@weissschuh.net>
+ <20250620-nolibc-selftests-v1-3-f6b2ce7c5071@weissschuh.net>
+ <20250621041421.GA26603@1wt.eu>
+ <20db87b0-05ff-476b-a58f-d0945bfacf20@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,24 +35,63 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d577e0ed-0cdd-4fe9-a678-9669993ee9f7@t-8ch.de>
+In-Reply-To: <20db87b0-05ff-476b-a58f-d0945bfacf20@t-8ch.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Sat, Jun 21, 2025 at 10:29:41AM +0200, Thomas Weiﬂschuh wrote:
-> On 2025-06-20 12:37:03+0200, Willy Tarreau wrote:
-> > This remained the only exception to the kernel's architectures
-> > organization and it's always a bit cumbersome to deal with. Let's merge
-> > i386 and x86_64 into x86. This will result in a single arch-x86.h file
-> > by default, and we'll no longer need to merge the two manually during
-> > installation. Requesting either i386 or x86_64 will also result in
-> > installing x86.
+On Sat, Jun 21, 2025 at 10:34:38AM +0200, Thomas Weiﬂschuh wrote:
+> On 2025-06-21 06:14:21+0200, Willy Tarreau wrote:
+> > Hi Thomas,
+> > 
+> > On Fri, Jun 20, 2025 at 11:39:32PM +0200, Thomas Weiﬂschuh wrote:
+> > > The nolibc tests are not real kselftests, they work differently and
+> > > provide a different interface. Users trying to use them like real
+> > > selftests may be confused and the tests are not executed by CI systems.
+> > > 
+> > > To make space for an integration with the kselftest framework, move the
+> > > custom tests out of the way.
+> > > The custom tests are still useful to keep as they provide functionality
+> > > not provided by kselftests.
+> > 
+> > I'm wondering, what prevents us from merging the new rules into the
+> > current makefile instead of renaming it, especially considering the
+> > fact that we initially took care of not confiscating the "all" target ?
 > 
-> We should do this in any case, independently from the series.
+> We'll have conflicts around CFLAGS, the nolibc-test target and probably
+> other things.
 
-I agree, initially I made it part of the small improvements series but
-I thought it was less important.
+OK I understand.
 
-> Acked-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+> It will also make everything harder to understand and may
+> break unexpectedly in the future.
+> 
+> > I'm asking because: 
+> > 
+> >   $ make -f Makefile.nolibc help
+> > 
+> > is clearly less convenient and intuitive than:
+> > 
+> >   $ make help
+> 
+> Is your issue specifically with the help target?
 
-Thanks!
+Not just but that's an entry point. Admittedly it's not a big problem,
+I was merely asking if there was a real reason for splitting them apart
+or if it was just to keep the stuff clean.
+
+> We should be able to show the help message from the main Makefile with a
+> hint to the Makefile.nolibc.
+
+I thought about it as well, we could have a help target in the main
+makefile that just emits "Please run make -f Makefile.nolibc with the
+following targets:", and then runs "make -f Makefile.nolibc help".
+
+> Another, more general, possibility would be to move the special Makefile
+> to tools/testing/nolibc/ and keep only the selftest parts in
+> tools/testing/selftests/nolibc/.
+
+I hadn't thought about this, but that could indeed make sense. Let's see
+later how it goes and let's not add burden about this for now. Please just
+keep your patch as-is.
+
+Thanks,
 Willy
