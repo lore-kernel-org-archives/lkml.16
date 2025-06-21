@@ -1,139 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5CB19BBC;
-	Sat, 21 Jun 2025 16:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A266319BBC;
+	Sat, 21 Jun 2025 16:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750522867; cv=none; b=jOd9/GUCkcHhTbSVuGB/aYjemQcvI1a4kyqQsPzUYRcMf3UC+bk3D3AUiiy10elIBcDiDze2uWOMppa63A9SehJ397UISyT2l+nyr31ImKqbFgjl0jtCGDJ/39+EsZ05zfyUds4e0eBSMsEGLPHyuWs0StNcsvOHoQkPVHnx2Bs=
+	t=1750523006; cv=none; b=gjTh+mf6Rh0yus62l8QGC5oYyds0M4wjZePYrfnyWV+1VFnrytcyT8a6tUE79iuqd8WPXtS2ZD5Oos1a9d6LB3z187nKJE0VYRK3h7PpPWUu/Va+OA8S2lZHVw4zTpPQIvUG7FVm+p/aStOmXXHLtWmn1ZVe6Oxte30N/tmBjV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750522867; c=relaxed/simple;
-	bh=LB/sUlImxWZJV0axEKn9tfOzZFIfxAbqgGkgEQtBZ0Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AvLuAC7YxUroj3JaMgxXes2usSPBm6lhlxZVGF+cZxqJ6d3aEwk69Zx72JPO7jpYpFNTPdPioX/xwepoFtEzXcffso5ywvNfxFKN/tU8nxEl6ZHcW+dEKByyW74eaNCqzliJWzE37KIW4qW6PRhRa9bF4UyJT/Z4O7vQzRYyycU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/d/N0HL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750523006; c=relaxed/simple;
+	bh=WB1nStiz+B1oko4C3hYJUaedCDpytgQex/IhUk2nRrI=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=rXi8/gmmEsQitMMTeT9bMpN07ejH+Y7rmtC139NuEewYU20CVjsfDM8v4/XtqTbnYAySSR1D+1lblyPzaIb2QpT6eoo+WGHVei0tZb3CyneF0JL/EaC7LWuJAyceAQ5RzlDW0doHW+u/4l0AFUlJdU+l+a6JLw1eDx0CYKqAGHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M5EkpPNL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o1xDO2Ua; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/d/N0HL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A41B3C4CEE7;
-	Sat, 21 Jun 2025 16:20:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750522866;
-	bh=LB/sUlImxWZJV0axEKn9tfOzZFIfxAbqgGkgEQtBZ0Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=U/d/N0HLO8IFfTdRJMTxTwOkneCdUwP4t3AQn83qfjTgPQO3APcqH4LMOoLjK2K1T
-	 sa3CeeUbyK90l4uX4GRdYkSa49x0PryTnGqiwaT0xJm5qyxKATcw6P6J5UHnBVTmTD
-	 kAjgCbF2EFt1Wjau1mvOQMmAH44ZWBIU1AxBU8xAO5/6EBhSvtl+SBSHlRYZpVfHSx
-	 6URQ42efVcH0z1j+DWyV7k8JUgoxSGmkJRaWogr2or4k9bs62SoJKNfOmDYn9bKuaf
-	 mAROyXgGnXfyKhUSqi424U3buI/n4HOvMMK01HrrCJKuDpckWdVCVhbuQlGBbcBSoN
-	 c1JJU77lAQcIQ==
-Date: Sat, 21 Jun 2025 17:20:54 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jorge Marques <gastmaier@gmail.com>
-Cc: Jorge Marques <jorge.marques@analog.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, David
- Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 8/8] iio: adc: Add events support to ad4052
-Message-ID: <20250621172054.3698f3ff@jic23-huawei>
-In-Reply-To: <2uknsmgz57wie4cv2tll3ttfyiw7lyjyaryc74nd3o5fteoazk@vbgdt5ofkn5r>
-References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
-	<20250610-iio-driver-ad4052-v3-8-cf1e44c516d4@analog.com>
-	<20250614113616.4663269f@jic23-huawei>
-	<2uknsmgz57wie4cv2tll3ttfyiw7lyjyaryc74nd3o5fteoazk@vbgdt5ofkn5r>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M5EkpPNL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o1xDO2Ua"
+Date: Sat, 21 Jun 2025 16:23:21 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750523002;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lEKLPjakLvDWMUf3G/xeHfCAtz8WHESqBsDCqmStx6I=;
+	b=M5EkpPNLnx7td8yNAhql3R6ogrfVFjlllXrFmsfMdi94G+9r6j9qNak84y1vyR6D+eJWlD
+	Qulft+A3Lh0l5oVgk431KJ0O6a7O58H/ISGgEYwOztvaxu1t4V0imjKi8J16Iw6/fgZsNy
+	82e9Xp2XyNAhAJx9t+v9MPN9KhdEAfwt+QsxSi38eLWW5zMifx0/ydK3YMpmQ1OEWHuGQz
+	CWZ41ux7mpMtP01B84rL5abmmrbqQWZSUrp5v7fheORDie3BFUuyIvaXUKgdfio1yYYJIH
+	PgITWYkxl/uYoZbxW53Fd3UlzBnLx9QuR+ONIV7l2xo5eO3HOYeDb4WeNms/rQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750523002;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lEKLPjakLvDWMUf3G/xeHfCAtz8WHESqBsDCqmStx6I=;
+	b=o1xDO2Uaw0QGenysFpro4mNZElU3RDZHIYweH64oE1YD8EdL0qJxOm+pFybx6R/FbY01dv
+	5TttTN3gxsGmGYCQ==
+From: "tip-bot2 for Markus Stockhausen" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/drivers] irqchip/mips-gic: Allow forced affinity
+Cc: Sebastian Gottschall <s.gottschall@dd-wrt.com>,
+ Markus Stockhausen <markus.stockhausen@gmx.de>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250621054952.380374-1-markus.stockhausen@gmx.de>
+References: <20250621054952.380374-1-markus.stockhausen@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <175052300141.406.12227606749602048237.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
+The following commit has been merged into the irq/drivers branch of tip:
 
-> > > +
-> > > +static int ad4052_read_event_value(struct iio_dev *indio_dev,
-> > > +				   const struct iio_chan_spec *chan,
-> > > +				   enum iio_event_type type,
-> > > +				   enum iio_event_direction dir,
-> > > +				   enum iio_event_info info, int *val,
-> > > +				   int *val2)
-> > > +{
-> > > +	struct ad4052_state *st = iio_priv(indio_dev);
-> > > +	int ret;
-> > > +
-> > > +	if (!iio_device_claim_direct(indio_dev))
-> > > +		return -EBUSY;
-> > > +
-> > > +	if (st->wait_event) {
-> > > +		ret = -EBUSY;
-> > > +		goto out_release;  
-> >   
-> 
-> Below are two distinct options with different implications.
-> > Not being able to read event parameters whilst monitoring them seems
-> > very restrictive.  Can't we cache the values?  Either play games to ensure
-> > we get them from the regmap cache or just cache these few values in st.
-> > 
-> > Checking what you are monitoring for feels like the sort of thing
-> > userspace might well do.  
-> 
-> (1)
-> I agree, I can investigate regcache_cache_only and the other cache
-> options to achieve this. If I come to the conclusion it is not possible,
-> storing into st will achieve the same.
-> 
-> > 
-> > Even blocking changing the monitoring parameters is unusually strict.
-> > Why not just drop out of monitor mode, update them and go back in?
-> >   
-> (2)
-> The core point of the blocking behaviour is to not have hidden downtimes
-> in the monitoring for the user. An early driver used to do what you
-> describe and it was a design decision.
-> 
-> Since a custom regmap_bus was necessary to restrict the regmap access
-> speed (ADC access is faster), bringing back this by behavior embedding
-> it in the custom regmap now seems plausible, with proper explanation in
-> the rst page. This should fully dismiss the st->wait_event -> -EBUSY.
-> 
-> Considering (1) and (2), what is the preferred approach?
+Commit-ID:     2250db8628a0d8293ad2e0671138b848a185fba1
+Gitweb:        https://git.kernel.org/tip/2250db8628a0d8293ad2e0671138b848a185fba1
+Author:        Markus Stockhausen <markus.stockhausen@gmx.de>
+AuthorDate:    Sat, 21 Jun 2025 01:49:51 -04:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Sat, 21 Jun 2025 18:20:54 +02:00
 
-Key here is that the user made the choice to change the parameters.
-Most of the time they won't choose to do that, but if they do then
-that's what they want to do. Why make them turn the monitoring off,
-change value and turn it on again if we can support it reasonably
-cleanly.  In many devices there is no interruption to monitoring so
-we may well have userspace code written against assumption it
-can just update this stuff without that dance.  So prefer (2)
-but (1) is better than nothing if (2) proves too complex.
+irqchip/mips-gic: Allow forced affinity
 
-J
-> 
-> Regards,
-> Jorge
-> > > +	}
-> > > +
-> > > +	switch (info) {
-> > > +	case IIO_EV_INFO_VALUE:
-> > > +		ret = __ad4052_read_event_info_value(st, dir, val);
-> > > +		break;
-> > > +	case IIO_EV_INFO_HYSTERESIS:
-> > > +		ret = __ad4052_read_event_info_hysteresis(st, dir, val);
-> > > +		break;
-> > > +	default:
-> > > +		ret = -EINVAL;
-> > > +		break;
-> > > +	}
-> > > +
-> > > +out_release:
-> > > +	iio_device_release_direct(indio_dev);
-> > > +	return ret ? ret : IIO_VAL_INT;
-> > > +}  
+Devices of the Realtek MIPS Otto platform use the official rtl-otto-timer
+as clock event generator and CPU clocksource. It is registered for each CPU
+startup via cpuhp_setup_state() and forces the affinity of the clockevent
+interrupts to the appropriate CPU via irq_force_affinity().
 
+On the "smaller" devices with a vendor specific interrupt controller
+(supported by irq-realtek-rtl) the registration works fine. The "larger"
+RTL931x series is based on a MIPS interAptiv dual core with a MIPS GIC
+controller. Interrupt routing setup is cancelled because gic_set_affinity()
+does not accept the current (not yet online) CPU as a target.
+
+Relax the checks by evaluating the force parameter that is provided for
+exactly this purpose like in other drivers. With this the affinity can be
+set as follows:
+
+ - force = false: allow to set affinity to any online cpu
+ - force = true:  allow to set affinity to any cpu
+
+Co-developed-by: Sebastian Gottschall <s.gottschall@dd-wrt.com>
+Signed-off-by: Sebastian Gottschall <s.gottschall@dd-wrt.com>
+Signed-off-by: Markus Stockhausen <markus.stockhausen@gmx.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250621054952.380374-1-markus.stockhausen@gmx.de
+
+---
+ drivers/irqchip/irq-mips-gic.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/irqchip/irq-mips-gic.c b/drivers/irqchip/irq-mips-gic.c
+index 34e8d09..19a57c5 100644
+--- a/drivers/irqchip/irq-mips-gic.c
++++ b/drivers/irqchip/irq-mips-gic.c
+@@ -375,9 +375,13 @@ static int gic_set_affinity(struct irq_data *d, const struct cpumask *cpumask,
+ 	/*
+ 	 * The GIC specifies that we can only route an interrupt to one VP(E),
+ 	 * ie. CPU in Linux parlance, at a time. Therefore we always route to
+-	 * the first online CPU in the mask.
++	 * the first forced or online CPU in the mask.
+ 	 */
+-	cpu = cpumask_first_and(cpumask, cpu_online_mask);
++	if (force)
++		cpu = cpumask_first(cpumask);
++	else
++		cpu = cpumask_first_and(cpumask, cpu_online_mask);
++
+ 	if (cpu >= NR_CPUS)
+ 		return -EINVAL;
+ 
