@@ -1,75 +1,126 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68FB17BD3
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 01:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B64F101EE;
+	Sat, 21 Jun 2025 01:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750470604; cv=none; b=HwI88ZmyKJnvjU1v8HvFysXIDuGMLeOrcR8/uSZ3f8bs/lRdMdaHRwbKh/rrajzT0uMbsz4XTWcXUZO+hVMXtLzwgeBvugVVxC5+bXB18Fg6AU11Zz843CddfOU+zVtSKLrNHCqQWzPmZ5xU7NhjuyJ41b12N4mAo7cht5eAICI=
+	t=1750470663; cv=none; b=WJ8XP1kG/39iFZmzFlLpAscU0c+iOiX/7hwQHgPa3vHZSoIfDKTYOI0vL8dKEijsHJwTLa8bgCr0WVJC9dGMAKJK5CucEgjrgozR37jB88Rf+liOeCJ1pMp6XxImYKGNdKi8gWia3JNzOxtGLeiC2/HaMMJ2U6WQRa0dRNAX6+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750470604; c=relaxed/simple;
-	bh=/sxYexQ+58dkjFennMReNmcOGzMTMGYGFx6L+JikHA8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=hZBgw6PlA6GKQz6oso/qj/LgJVsDh4+x0mAng5dUmiSaw1iIcZUulLcgpmcyFaSUcnD26keqHMQm1DPD1jWwN7jxzJSfso8oP9aAHAeFF/G2bGGNi+D9Nf866Otu/gm37jJ00WHLXDThdNR41angBs9uvg9FoLCYPan7Zx8/d+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddcf82bb53so20805385ab.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:50:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750470602; x=1751075402;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vRMMmdlDx1Nx9RYKLwiUmguyu2r/kk1t9Vx+YhjJB+M=;
-        b=kLfGIglG/eFrANPOPCWXwc2kgkWw9urTu+X4MgGloFZB+blOkMcx9vIdHneQ6+u3Pu
-         yfGKEVajyJ+SCt+ESroC20AD8xaUTl5a2BolnT7VbXpuToemt3AOCY7uKNuGHqKm3wN8
-         t31mMbz8nW8lrzoLBootgsPeZaJuJTwoB5sQiTyaAhdEmsX7qdnpo4HzVOTE9Yrpmqrd
-         T3Gq0vsIEQ8f6CLMstziaf3MfPbmy92eYTD8RZN4eAk/Cn8HiPJBF9hL+CpfclKdrxPa
-         AJijQ+uR3H3rDaU9A5LVVZDHnbUrs55qu12+0Ppdynn/TXPTLHussLp50cwoIKJOiBo1
-         WwsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX+miwyIVuochaTwtlc7hDQ7Iqb6p4cZ9fJfO9KlBkGpJdK0RUMrNgf5X3osfBW5wRRcdsJYxYZHq90KXE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/+R33CdBnPD7+34hkAa97sDvhNkdDtzcNWprmy1JKe7h8aIC+
-	n7vYHzeJGET/r2PCs5HyM2z2rroO5Z6Wj1ySxZobAUnHTYG12/35YvoDbGnDdRespEVYFp9yQs7
-	n+PqnCvpMEZEk2gF3VLJbgHyJM7Tptyab/Jkx7odndAi619c1HEOrVPD7Ljc=
-X-Google-Smtp-Source: AGHT+IExPTz/TzN6V5eviaV1lQBhH7Own0NZuZKCXjy5BaTddYMoA6CTovIN3EB34VgXECbEagv9d7pAY+IIwZ1r77ZGiUVH9TkR
+	s=arc-20240116; t=1750470663; c=relaxed/simple;
+	bh=CqB9U1kAeWjj00zaEbXn60zKQ0vRDB/j9sJHI+2TPao=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eP8x9YoJPiH3gAUVbj7uny+YGkWzMTbCvWhp3CxoEfDweTfTP9mXVCYPJjydISPM07HFkdXigwMnoC/CkLXW4waH7+nEjjAZG51g+77LnGv7/jFkH74b7TXYmyabLDcu2aIioH0G/cYPPWR8Xg7uvgF74YEmHt2G4Ah5PtNJb3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cy9H482d; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cy9H482d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAA20C4CEE3;
+	Sat, 21 Jun 2025 01:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750470663;
+	bh=CqB9U1kAeWjj00zaEbXn60zKQ0vRDB/j9sJHI+2TPao=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cy9H482d/LPVT6Z10rQA/pRBwBRNaVCJQrxku13iKsfV4l9UP/OgB0+O12q0qCOih
+	 oMaohiiNE7RnEWJgUTCJOfKvZY88AnB36C2fl8DtpbdqQPyBL30qaTqU+Rr8K6auFn
+	 fB4sbRIlvl22Q5FQKy4FV5BFxd/C83np/uMwxzmP+S3IchQ7MzDvD027nDUT8AsXo0
+	 WycQxS+3vAYwoND/9LsVNqD9pRL1f9GTIHmDjFPFpoxUAx3d8h5jZ7GR+rDxQTPC/i
+	 kqLCZYkgOOXohMoZOqiy5SS9gyxPmQoGg0AuSX6jMZVwxYODgGvNQlmZDzGsHwEa/h
+	 czGmPclNEvSBg==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	"Jason A . Donenfeld " <Jason@zx2c4.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Eric Biggers <ebiggers@kernel.org>
+Subject: [PATCH] crypto: testmgr/sha512 - Omit generic_driver for no-op tests
+Date: Fri, 20 Jun 2025 18:49:23 -0700
+Message-ID: <20250621014923.25064-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1749:b0:3dc:90fc:282d with SMTP id
- e9e14a558f8ab-3de38cb1f1amr54420815ab.16.1750470601859; Fri, 20 Jun 2025
- 18:50:01 -0700 (PDT)
-Date: Fri, 20 Jun 2025 18:50:01 -0700
-In-Reply-To: <675cb812.050a0220.37aaf.00b6.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68560fc9.a00a0220.137b3.005c.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] INFO: task hung in bch2_page_fault
-From: syzbot <syzbot+32415e0466b02533303c@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-syzbot has bisected this issue to:
+Some of the entries in alg_test_descs[] exist purely for the benefit of
+marking the algorithm as "FIPS allowed", and they use a no-op test
+function.  These entries don't need generic_driver filled in.
 
-commit 8b1f46bff38f075b8d4071e7ac1edecb441fd53c
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Sun Dec 29 00:57:04 2024 +0000
+Fixes: 50058ca36580 ("crypto: sha512 - Replace sha512_generic with wrapper around SHA-512 library")
+Signed-off-by: Eric Biggers <ebiggers@kernel.org>
+---
 
-    bcachefs: Dropped superblock write is no longer a fatal error
+I'm planned to fold this into the fixed commit, as this patch just
+removes lines that commit added.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=140d530c580000
-start commit:   9afe652958c3 Merge tag 'x86_urgent_for_6.16-rc3' of git://..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=160d530c580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=120d530c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6a237c32900fc479
-dashboard link: https://syzkaller.appspot.com/bug?extid=32415e0466b02533303c
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=130d790c580000
+ crypto/testmgr.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-Reported-by: syzbot+32415e0466b02533303c@syzkaller.appspotmail.com
-Fixes: 8b1f46bff38f ("bcachefs: Dropped superblock write is no longer a fatal error")
+diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+index 9b4235adcb036..825a3a617f2a7 100644
+--- a/crypto/testmgr.c
++++ b/crypto/testmgr.c
+@@ -4318,11 +4318,10 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 		.suite = {
+ 			.aead = __VECS(hmac_sha384_des3_ede_cbc_tv_temp)
+ 		}
+ 	}, {
+ 		.alg = "authenc(hmac(sha384),ctr(aes))",
+-		.generic_driver = "authenc(hmac-sha384-lib,ctr(aes-generic))",
+ 		.test = alg_test_null,
+ 		.fips_allowed = 1,
+ 	}, {
+ 		.alg = "authenc(hmac(sha384),cts(cbc(aes)))",
+ 		.generic_driver = "authenc(hmac-sha384-lib,cts(cbc(aes-generic)))",
+@@ -4330,11 +4329,10 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 		.suite = {
+ 			.aead = __VECS(krb5_test_aes256_cts_hmac_sha384_192)
+ 		}
+ 	}, {
+ 		.alg = "authenc(hmac(sha384),rfc3686(ctr(aes)))",
+-		.generic_driver = "authenc(hmac-sha384-lib,rfc3686(ctr(aes-generic)))",
+ 		.test = alg_test_null,
+ 		.fips_allowed = 1,
+ 	}, {
+ 		.alg = "authenc(hmac(sha512),cbc(aes))",
+ 		.generic_driver = "authenc(hmac-sha512-lib,cbc(aes-generic))",
+@@ -4357,16 +4355,14 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 		.suite = {
+ 			.aead = __VECS(hmac_sha512_des3_ede_cbc_tv_temp)
+ 		}
+ 	}, {
+ 		.alg = "authenc(hmac(sha512),ctr(aes))",
+-		.generic_driver = "authenc(hmac-sha512-lib,ctr(aes-generic))",
+ 		.test = alg_test_null,
+ 		.fips_allowed = 1,
+ 	}, {
+ 		.alg = "authenc(hmac(sha512),rfc3686(ctr(aes)))",
+-		.generic_driver = "authenc(hmac-sha512-lib,rfc3686(ctr(aes-generic)))",
+ 		.test = alg_test_null,
+ 		.fips_allowed = 1,
+ 	}, {
+ 		.alg = "blake2b-160",
+ 		.test = alg_test_hash,
+@@ -5350,16 +5346,14 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 		.alg = "pkcs1(rsa,sha3-512)",
+ 		.test = alg_test_null,
+ 		.fips_allowed = 1,
+ 	}, {
+ 		.alg = "pkcs1(rsa,sha384)",
+-		.generic_driver = "pkcs1(rsa,sha384-lib)",
+ 		.test = alg_test_null,
+ 		.fips_allowed = 1,
+ 	}, {
+ 		.alg = "pkcs1(rsa,sha512)",
+-		.generic_driver = "pkcs1(rsa,sha512-lib)",
+ 		.test = alg_test_null,
+ 		.fips_allowed = 1,
+ 	}, {
+ 		.alg = "pkcs1pad(rsa)",
+ 		.test = alg_test_null,
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+base-commit: c075093bd9493fb2032a2e1cbb3df4c03f92fa1f
+-- 
+2.50.0
+
