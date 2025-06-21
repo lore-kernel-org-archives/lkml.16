@@ -1,61 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7D01D5ACE;
-	Sat, 21 Jun 2025 21:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0DF5211F;
+	Sat, 21 Jun 2025 21:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750539890; cv=none; b=e+C7rGXvujqRTNcP7e6fvKxSHVAu01/b54nTcfD3FU487NLqsemJg2szcIENnH5EaAciLrbA1LSn4sYc14tQG6/phtFvoY3A1B5kB8O+mO6Vco3nOBsSFIfZ8uYHZYGSxv/P0TSU45TcKal9gPiydlfoq0o8mamjKwrjFfmvfOA=
+	t=1750539936; cv=none; b=mO3dzcXc28CskE4deuFmBOil5BGmX8bNLQOLAeYmcB/505R5we77P0MHxJUgDK3OzxfiEKcXSy/kCO8Fwu9yo0XfKuD1AFS1s9ENx58EDvG7S3waW5MwYbpJ0lT02zPSQ2Pr2J51wepq/YG+C0auINJqZj0UYlB0mYJY7NQ62rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750539890; c=relaxed/simple;
-	bh=I+H/ACdKPJZiazgKrac5bRP/4sQkTk9nIYPRUqznQ7M=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=TlDv+W7zK5KuI7oPp2ccwd11qz3K5ZNy86Rhcf7hQkPXFCxt62gj8YuJ4a0Jirgoc/KaWcU36wkqGpYefNEwli/K7Lhl1O/RYZCagN91hiJGUU6IgQi8UDyRQF5f+IvpVjVIcd+n5cJK4NFXYs4Ei0l6gzbo4f4zvbPy8wns/oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SHvMKmZC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750539936; c=relaxed/simple;
+	bh=uHXyp3Zng1zPWvFAZPvcN7Y3LKBB44r8ugHzcvP0qSg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=uicfD6VbnzbpuP9jqZByggRAI/xb3rBHqOeWhSsvLrfg2pvNh8h0vnVPvtrZY9bzmZO1h3dnhCzKWzqi8gpkAQK9F49Kj+yj9iRsQSNlr82KEDLKDniP10nvgpMrOspZV+kzocsRaM+e11szQslLzAxtNkUqJ1mmNTHxxVzTs1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bf99f81M; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SHvMKmZC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2130FC4CEE7;
-	Sat, 21 Jun 2025 21:04:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750539890;
-	bh=I+H/ACdKPJZiazgKrac5bRP/4sQkTk9nIYPRUqznQ7M=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=SHvMKmZCkSpZ7VJko/5vLNJI7f1Mc4vSlEVWHE8hQMbJxG9mO4BAaNuayQVytTDzf
-	 NUCx+Z2ansv6KkVCwFAbpl6qVnO8hQLoI/VCnTP0G9nIXtUrcCRbyXBmpfFMYLncAp
-	 L0YMxSU/CYTST4o4L3Bi37qQe7msF4Xkh7yt+QtTOt4RgYbdkOiqGwDwhyz8mIJRdi
-	 BuS/rcy+m/8UkHKdmTmyjRy8P58uZhyf5oS673ayorBKLni5bW1YktdA9DBvYjDP4T
-	 IdqNT6zo/H/ja4zuWBKSStVNdWqdjUH4bBNWPAFfboJ7tmd4Nd8Om10AEWdksfhsyO
-	 OfvvunTqLdwhA==
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bf99f81M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750539935; x=1782075935;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uHXyp3Zng1zPWvFAZPvcN7Y3LKBB44r8ugHzcvP0qSg=;
+  b=Bf99f81MyJ7FZ5EyUm5JFFnX0N2hVo4ug9aqXFfFozk7DkstychLetnA
+   QNfYOmAyOtAyVQIyLAM6SHJo1sLzJYOgmGDS54YNBUr9aO5w/q1MetLnr
+   A1Gy+JHr/oVq6VAK6u3wMBXqhw5jw4jttZdNp64K6vWrlo4QheTjh5JD+
+   6NN+1dpnJDw3MAjqKNbwY1s2JqEKwIJ+FoPrTEiFQ1UDDlv/Oo4tXIvgG
+   jDkWpXSJDqSz7uuNlQCdJkOQTsBVWnf9wSwq/cuRHYA92xgf/K/ZuytLB
+   kyjmK1iUzvHLXdhJGEG4M/kI/OMkrYkKKNidTDsyjxQaduwpgKRt/CJQc
+   A==;
+X-CSE-ConnectionGUID: pKW4L6v1QgiHnZKZjqCW8Q==
+X-CSE-MsgGUID: UJinG2JkSLSOPkI9gqXUPg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11470"; a="63826245"
+X-IronPort-AV: E=Sophos;i="6.16,254,1744095600"; 
+   d="scan'208";a="63826245"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2025 14:05:34 -0700
+X-CSE-ConnectionGUID: vYJoPVrsQjiJRkLoUA3TjA==
+X-CSE-MsgGUID: UlFMvWQqQVWCHV4hCakmVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,254,1744095600"; 
+   d="scan'208";a="155775310"
+Received: from mdroper-mobl2.amr.corp.intel.com (HELO xpardee-desk.intel.com) ([10.124.222.74])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2025 14:05:32 -0700
+From: Xi Pardee <xi.pardee@linux.intel.com>
+To: xi.pardee@linux.intel.com,
+	irenic.rajneesh@gmail.com,
+	david.e.box@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH v1 0/5] Enable SSRAM support in PTL and LNL
+Date: Sat, 21 Jun 2025 14:05:20 -0700
+Message-ID: <20250621210529.237964-1-xi.pardee@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250618121358.503781-10-apatel@ventanamicro.com>
-References: <20250618121358.503781-1-apatel@ventanamicro.com> <20250618121358.503781-10-apatel@ventanamicro.com>
-Subject: Re: [PATCH v6 09/23] clk: Add clock driver for the RISC-V RPMI clock service group
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, Atish Patra <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Anup Patel <apatel@ventanamicro.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Anup Patel <apatel@ventanamicro.com>, Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Rafael J . Wysocki <rafael@kernel.org>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Uwe =?utf-8?q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Date: Sat, 21 Jun 2025 14:04:49 -0700
-Message-ID: <175053988941.4372.15869767607401919839@lazor>
-User-Agent: alot/0.11
+Content-Transfer-Encoding: 8bit
 
-Quoting Anup Patel (2025-06-18 05:13:44)
-> From: Rahul Pathak <rpathak@ventanamicro.com>
->=20
-> The RPMI specification defines a clock service group which can be
-> accessed via SBI MPXY extension or dedicated S-mode RPMI transport.
->=20
-> Add mailbox client based clock driver for the RISC-V RPMI clock
-> service group.
->=20
-> Co-developed-by: Anup Patel <apatel@ventanamicro.com>
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> Signed-off-by: Rahul Pathak <rpathak@ventanamicro.com>
-> ---
+This series enables SSRAM support, including achieving PMC information
+and low power mode substate requirements from telemetry region, in Lunar
+Lake and Panther Lake platforms for Intel PMC Core driver. 
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+The first patch enables SSRAM support for Lunar Lake. The next three
+patches introduces a new table in telemetry region to get substate
+requirement information for platforms starting from Panther Lake. The
+last patch enables SSRAM support for Panther Lake.
+
+Xi Pardee (5):
+  platform/x86:intel/pmc: Enable SSRAM support for Lunar Lake
+  platform/x86:intel/pmc: Move telemetry endpoint register handling
+  platform/x86:intel/pmc: Improve function to show substate header
+  platform/x86:intel/pmc: Show substate requirement for S0ix blockers
+  platform/x86:intel/pmc: Enable SSRAM support for Panther Lake
+
+ drivers/platform/x86/intel/pmc/arl.c  |   1 +
+ drivers/platform/x86/intel/pmc/core.c | 163 +++++++++++++++++++++-----
+ drivers/platform/x86/intel/pmc/core.h |  14 +++
+ drivers/platform/x86/intel/pmc/lnl.c  |  17 +++
+ drivers/platform/x86/intel/pmc/mtl.c  |   1 +
+ drivers/platform/x86/intel/pmc/ptl.c  |  30 +++++
+ 6 files changed, 194 insertions(+), 32 deletions(-)
+
+-- 
+2.43.0
+
