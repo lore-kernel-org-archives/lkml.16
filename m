@@ -1,221 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B76221FA4;
-	Sat, 21 Jun 2025 13:57:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CB5EAC6;
+	Sat, 21 Jun 2025 14:00:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750514277; cv=none; b=WYrp0KbTXKWBMomr8i98rzDm8hG19rjnfe29j9Yp4nSHWRAUOn0IrfPe+QxXhJFQimeY/NXSSsQmjL21o6B7dMR8D0YklS47QmaMAXL1GtuNkaqMKouJGaF4PiOliUSn6+2gl522T7ycTCyV96t1XviHOkeD0HAnM3hBPWQbJGY=
+	t=1750514445; cv=none; b=oVDAcmnhTgtfInSaAyo4My+o6Nl4vQO20d84MPjgwSPj11xal3LhhgfCGV/yNYHSkDa608wVCQsTlJnruz1Mvg61btx/zWmujewpBIdpw3+krN01+MCz9pkTTZk3AYxUGTDN/MQYZIOVYdTuKJ39I05FkMCpjY63p1eEf9B96vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750514277; c=relaxed/simple;
-	bh=nEVwenXZZz5nM7DkAj/oakR9uk7yJuktxc9Q++SALQI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VzwfyfygNW/MUJrdAvlqZl/21HUzu20S6gLisfLLxgy3bQ6pProLawUHkVs6/heJQLBRIIE2NKPP4Ak6uhsWp+i1puwWLjAAgMVqI1TRWEePLkddYqTyeXm4KKXBX5Heso249Ek+GUGryLpT0Dy2UQt66xbn92Ii5wApRNbAdzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQAmjQmS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750514445; c=relaxed/simple;
+	bh=iWwPWigBSD6SY/lPTD3aG7MYAMwd0R9tXnWiBx8/wHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=V52yLHPGAkkbx6JJOkM9cfc2qMwNUZdQV6yE9pxJ490T/p7ROWsyUCaNahc38dIKsSw3q86K6whQDgyxYtD7xwvloLfH8l7NON+Qgm5Enx7Vcdw8OrygnSGEBpPMEjjRrn5Ux2XdctptaI5DkfhzL5OeE/g+iu/isxyRPqj3+gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Asvw3BZ4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQAmjQmS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97DA7C4CEE7;
-	Sat, 21 Jun 2025 13:57:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Asvw3BZ4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F615C4CEE7;
+	Sat, 21 Jun 2025 14:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750514277;
-	bh=nEVwenXZZz5nM7DkAj/oakR9uk7yJuktxc9Q++SALQI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QQAmjQmSnGNaSRJWHBTNWcBSGB0eex/eBbsr/t3VEr//g5kgG81MHjaNEp4mWrD3x
-	 wkq3ozdRubVpozvitVwkRaCMhEub3MwaFF6EdOM3uv2vPKShW2wZobF0Ntp8jjM0mY
-	 Kz7jyViiU0EXr7Y4dd0qCMSj/EaKjJoTbNbH+gvlxMu/5saB6qEq3mJP5T3rsqcIxH
-	 RRuhpyGsLiJm7Yj06iAVfoksO9N+K0gsC3uNLOBDokdNc0NBwREKfFgc5W8Lv/VBBR
-	 LG6YcjYvAtkX1vMPX1z0o1BXrw4Xd1J3D9SDhh6Z7lH38zTzDy8cdEU4TaKAcLG8px
-	 eIe4d6VMI66Jg==
-From: Alexey Gladkov <legion@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>
-Cc: linux-kernel@vger.kernel.org,
-	linux-modules@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	Alexey Gladkov <legion@kernel.org>
-Subject: [PATCH v4 7/7] modpost: Create modalias for builtin modules
-Date: Sat, 21 Jun 2025 15:57:19 +0200
-Message-ID: <321947106ec997b5a2a9c93ec2229cb2f9eb377c.1750511018.git.legion@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1750511018.git.legion@kernel.org>
-References: <cover.1750511018.git.legion@kernel.org>
+	s=k20201202; t=1750514444;
+	bh=iWwPWigBSD6SY/lPTD3aG7MYAMwd0R9tXnWiBx8/wHM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Asvw3BZ4fp7iC6bNQ8vSLnnOSbsKiMkG9c1BCmxy4Mp5Rg3OdoiSuLc151Y/vbI8d
+	 7Z5qP4+RixQnJDch8O+WIe1tNu8G9C4paPfj1rVU0RmVVotWYlrHCdRP4RjFbxnjiE
+	 QubF/JiqcJnbtiLyuaOMc5iGf6tQ2zCa7n3tpyBFV3LDiJ6dTII9qPvk9oeGTRZWex
+	 tWut7p8nHaaDDmcS3mxMLnBMaPGE8cBDwA0MPNILbepWcS5s8YMWzbdJt59JWYOWhj
+	 8Y5uhfpd90OqKPnbhgqkMRdpge3TXMzDZGQC9tfH5eZ5u92eexshnQzONSzkLfxJmd
+	 NC2SIV23+BeSw==
+Date: Sat, 21 Jun 2025 07:00:43 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Simon Horman <horms@kernel.org>
+Cc: Kory Maincent <kory.maincent@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>,
+ thomas.petazzoni@bootlin.com, Oleksij Rempel <o.rempel@pengutronix.de>,
+ Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH net-next] ethtool: pse-pd: Add missing linux/export.h
+ include
+Message-ID: <20250621070043.21e1c852@kernel.org>
+In-Reply-To: <20250620101452.GE194429@horms.kernel.org>
+References: <20250619162547.1989468-1-kory.maincent@bootlin.com>
+	<20250620101452.GE194429@horms.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-For some modules, modalias is generated using the modpost utility and
-the section is added to the module file.
+On Fri, 20 Jun 2025 11:14:52 +0100 Simon Horman wrote:
+> On Thu, Jun 19, 2025 at 06:25:47PM +0200, Kory Maincent wrote:
+> > Fix missing linux/export.h header include in net/ethtool/pse-pd.c to resolve
+> > build warning reported by the kernel test robot.
+> > 
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202506200024.T3O0FWeR-lkp@intel.com/
+> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>  
+> 
+> The change that introduced this warning introduced a log of such warnings.
+> Including a lot in the Networking subsystem. (I did not count them.)
+> 
+> So I agree with the point from Sean Christopherson [*] is that if the patch
+> that introduced the warnings isn't reverted
 
-When a module is added inside vmlinux, modpost does not generate
-modalias for such modules and the information is lost.
+It was reverted, thankfully. So I assume we treat this patch as 
+a normal "include what you need" case and therefore apply.. ?
 
-As a result kmod (which uses modules.builtin.modinfo in userspace)
-cannot determine that modalias is handled by a builtin kernel module.
-
-$ cat /sys/devices/pci0000:00/0000:00:14.0/modalias
-pci:v00008086d0000A36Dsv00001043sd00008694bc0Csc03i30
-
-$ modinfo xhci_pci
-name:           xhci_pci
-filename:       (builtin)
-license:        GPL
-file:           drivers/usb/host/xhci-pci
-description:    xHCI PCI Host Controller Driver
-
-Missing modalias "pci:v*d*sv*sd*bc0Csc03i30*" which will be generated by
-modpost if the module is built separately.
-
-To fix this it is necessary to generate the same modalias for vmlinux as
-for the individual modules. Fortunately '.vmlinux.export.o' is already
-generated from which '.modinfo' can be extracted in the same way as for
-vmlinux.o.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Alexey Gladkov <legion@kernel.org>
----
- include/linux/module.h   |  4 ----
- scripts/Makefile.vmlinux |  5 ++++-
- scripts/mksysmap         |  3 +++
- scripts/mod/file2alias.c | 16 ++++++++++++++++
- scripts/mod/modpost.c    | 17 ++++++++++++++++-
- scripts/mod/modpost.h    |  2 ++
- 6 files changed, 41 insertions(+), 6 deletions(-)
-
-diff --git a/include/linux/module.h b/include/linux/module.h
-index e0f826fab2ac..3aeee5d0a77c 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -251,14 +251,10 @@ struct module_kobject *lookup_or_create_module_kobject(const char *name);
- 	__PASTE(type,			\
- 	__PASTE(__, name)))))
- 
--#ifdef MODULE
- /* Creates an alias so file2alias.c can find device table. */
- #define MODULE_DEVICE_TABLE(type, name)			\
- static typeof(name) __mod_device_table(type, name)	\
-   __attribute__ ((used, alias(__stringify(name))))
--#else  /* !MODULE */
--#define MODULE_DEVICE_TABLE(type, name)
--#endif
- 
- /* Version of form [<epoch>:]<version>[-<extra-version>].
-  * Or for CVS/RCS ID version, everything but the number is stripped.
-diff --git a/scripts/Makefile.vmlinux b/scripts/Makefile.vmlinux
-index fdab5aa90215..fcc188d26ead 100644
---- a/scripts/Makefile.vmlinux
-+++ b/scripts/Makefile.vmlinux
-@@ -89,8 +89,11 @@ endif
- remove-section-y                                   := .modinfo
- remove-section-$(CONFIG_ARCH_VMLINUX_NEEDS_RELOCS) += '.rel*'
- 
-+remove-symbols := -w --strip-symbol='__mod_device_table__*'
-+
- quiet_cmd_strip_relocs = OBJCOPY $@
--      cmd_strip_relocs = $(OBJCOPY) $(addprefix --remove-section=,$(remove-section-y)) $< $@
-+      cmd_strip_relocs = $(OBJCOPY) $(addprefix --remove-section=,$(remove-section-y)) \
-+                         $(remove-symbols) $< $@
- 
- targets += vmlinux
- vmlinux: vmlinux.unstripped FORCE
-diff --git a/scripts/mksysmap b/scripts/mksysmap
-index a607a0059d11..c4531eacde20 100755
---- a/scripts/mksysmap
-+++ b/scripts/mksysmap
-@@ -59,6 +59,9 @@
- # EXPORT_SYMBOL (namespace)
- / __kstrtabns_/d
- 
-+# MODULE_DEVICE_TABLE (symbol name)
-+/ __mod_device_table__/d
-+
- # ---------------------------------------------------------------------------
- # Ignored suffixes
- #  (do not forget '$' after each pattern)
-diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-index 13021266a18f..7da9735e7ab3 100644
---- a/scripts/mod/file2alias.c
-+++ b/scripts/mod/file2alias.c
-@@ -1527,5 +1527,21 @@ void handle_moddevtable(struct module *mod, struct elf_info *info,
- 		}
- 	}
- 
-+	if (mod->is_vmlinux) {
-+		struct module_alias *alias;
-+
-+		/*
-+		 * If this is vmlinux, record the name of the builtin module.
-+		 * Traverse the linked list in the reverse order, and set the
-+		 * builtin_modname unless it has already been set in the
-+		 * previous call.
-+		 */
-+		list_for_each_entry_reverse(alias, &mod->aliases, node) {
-+			if (alias->builtin_modname)
-+				break;
-+			alias->builtin_modname = xstrndup(modname, modnamelen);
-+		}
-+	}
-+
- 	free(zeros);
- }
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index be89921d60b6..67668b159444 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -2021,11 +2021,26 @@ static void write_if_changed(struct buffer *b, const char *fname)
- static void write_vmlinux_export_c_file(struct module *mod)
- {
- 	struct buffer buf = { };
-+	struct module_alias *alias, *next;
- 
- 	buf_printf(&buf,
--		   "#include <linux/export-internal.h>\n");
-+		   "#include <linux/export-internal.h>\n"
-+		   "#include <linux/module.h>\n");
- 
- 	add_exported_symbols(&buf, mod);
-+
-+	buf_printf(&buf,
-+		   "#undef __MODULE_INFO_PREFIX\n"
-+		   "#define __MODULE_INFO_PREFIX\n");
-+
-+	list_for_each_entry_safe(alias, next, &mod->aliases, node) {
-+		buf_printf(&buf, "MODULE_INFO(%s.alias, \"%s\");\n",
-+			   alias->builtin_modname, alias->str);
-+		list_del(&alias->node);
-+		free(alias->builtin_modname);
-+		free(alias);
-+	}
-+
- 	write_if_changed(&buf, ".vmlinux.export.c");
- 	free(buf.p);
- }
-diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
-index 9133e4c3803f..2aecb8f25c87 100644
---- a/scripts/mod/modpost.h
-+++ b/scripts/mod/modpost.h
-@@ -99,10 +99,12 @@ buf_write(struct buffer *buf, const char *s, int len);
-  * struct module_alias - auto-generated MODULE_ALIAS()
-  *
-  * @node: linked to module::aliases
-+ * @modname: name of the builtin module (only for vmlinux)
-  * @str: a string for MODULE_ALIAS()
-  */
- struct module_alias {
- 	struct list_head node;
-+	char *builtin_modname;
- 	char str[];
- };
- 
--- 
-2.49.0
+> then a more comprehensive approach is needed to address these warnings.
+> 
+> [*] Re: [PATCH 3/6] KVM: x86: hyper-v: Fix warnings for missing export.h header inclusion
+>     https://lore.kernel.org/netdev/aEl9kO81-kp0hhw0@google.com/
 
