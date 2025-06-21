@@ -1,138 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427EF254B1B;
-	Sat, 21 Jun 2025 20:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E020A2CCC9
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 20:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750536883; cv=none; b=fzh79smARhTClwI7CqKQoMR3RXNMikQjxg29vnRcBT9yj9ZZUEy/gndLNuBKJVRq6escFw3Ii0E5MXUwkr7OGUXH+02JUDGX9yB8BCy1FRZNPRCnOFUhs7boNlVK6z2clQmc4OVcfvluZh/ZVejrGkdyDRfR0DL2DQhqRgdrg2A=
+	t=1750536992; cv=none; b=mQoFAcBcB8SmDYs2p3Okn8SyQg7f2Gve2A9DkTPxznYfl8OVGJz2b4HTkXTmir/oggC+FQ8QffxXaaTAkjGfyQSi4oNXk3Iegt+fblU0cVa44KA7f/9pKtIM7u+A/WB+pFfObdL8HQ+k59/HIJoCvcrFVdzQ/wQJ3uOE591VNA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750536883; c=relaxed/simple;
-	bh=zZzvv7syD7RJHM6RRPrJTTpfCXEIXDOxqqgFV+x/N0A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JnP3bwPLH8ExTnhP1DiDTMEStjMJ0hMIh6K6lieOGSbk7R2h2ix9XkCMKJ4XVEb8Zs6jZDIrGmyhu+NUeFrjxC6/wF1uM1fmAkllYeQs9vFJiC7+k/HJ+Q6Z0Bx4bXF7cnK8rxcWGhY6TU3zwWRSPkM6fG8PZHHhBgfgjsfbABk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zh5mjLSA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750536992; c=relaxed/simple;
+	bh=ke9U4Cti0uC9mj0+Rmq+zFQgQASUeLq3A28PjKKdDiU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mBpZcRYQ6bcvI5UPEZRj2+Bap1DNFrImvhvyV9o8hwXRWKKRlSyhiTptfLp54A7b/RB+lw+heOJX3QYTeBnNj03UHl2M+n9hI3sg59W5sd8Kuwbq42iuuFOXhbodrw1T+BOX2PMeRlkYOilsAcg4m5IUykkeaOwlrhvmqEOUE5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=B8hadyRy; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zh5mjLSA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E314C4CEE7;
-	Sat, 21 Jun 2025 20:14:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750536881;
-	bh=zZzvv7syD7RJHM6RRPrJTTpfCXEIXDOxqqgFV+x/N0A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Zh5mjLSAWCcoW06+um80+Gp9E62vt5YLpPKiE3xuZe1dcHQn9TfQrTt3GkaYlLbro
-	 tA8b5OHhkXlwEypJ/GgYrjyVcP97AbOtv0Qd9+fxHoyswb3uLhuas2/wHDFzm6YN+/
-	 Mm9F0ZlmgTreFQPco5iJPhCVMQsjYdFTRkv8oBeK+HTISd11d2fFfQfyGIwwrGBBXm
-	 w/rfrgAlFxBzNgN3hYTW6YqtbGlH2LqiOFdUNuYk9WptSsXUkfAZlavzCJGkXSQC7W
-	 0Hqnhhe1vKNpKxodcKtlPICPUnneiwkOfOpQYFFH4SNe0QkA+qCkBPCqcndTChXFP4
-	 gdwYqnNa4qZgQ==
-Message-ID: <c42243fd-ffd2-4144-875e-b156133eb031@kernel.org>
-Date: Sat, 21 Jun 2025 22:14:37 +0200
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="B8hadyRy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=zeS+
+	qIee4NCMPlUvtBrpNi9v9d85NzTNxC5UTevgIDI=; b=B8hadyRylbkh1vOoo38K
+	y7mfBfXm5++to/aLu6ekjiS4s9MOi39ssDjDZDO7JRd7bDbrmoyilZALYbBHJFC/
+	Ig4mSEwyMbxnSqi+ffoeLW+P4XPORtLutsE5rbRt2yew2PZVg4hcnYrG54YJ2/c8
+	B15KugNLq2SNKettJivLwsFoUU85Vtm3THk4VOHmKxW8LqgKvzXB4MyBPtJiulYu
+	79/33wBrLKUl6o+rLFpBGXk1lpjBPLelP/Mp7ngrT868QyVInWYJey+Ct5gzEH2H
+	FU4lNtJmiR09BJSk9Jzi6haKuRRFvVlX8bF/kRBWQzsgWKf4VxXZMhLBvxqf/0qJ
+	BQ==
+Received: (qmail 3213934 invoked from network); 21 Jun 2025 22:16:20 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 21 Jun 2025 22:16:20 +0200
+X-UD-Smtp-Session: l3s3148p1@85rcpho4FJSySS9C
+Date: Sat, 21 Jun 2025 22:16:19 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: lkml <linux-kernel@vger.kernel.org>,
+	linux-i2c <linux-i2c@vger.kernel.org>
+Subject: Re: [GIT PULL] i2c-host-fixes for v6.16-rc3
+Message-ID: <aFcTE3XBrkdENtgD@shikoro>
+References: <rf6vyyocdxdtllhsydpbj5pnaptfjlagsqumblg7ysqby3k44k@mmcwop7nfbqg>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: accel: bmc150: Do not configure IRQ registers if no
- IRQ connected
-To: Marek Vasut <marek.vasut@mailbox.org>, Jonathan Cameron <jic23@kernel.org>
-Cc: Marek Vasut <marek.vasut+bmc150@mailbox.org>, linux-iio@vger.kernel.org,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, David Lechner <dlechner@baylibre.com>,
- Julien Stephan <jstephan@baylibre.com>, Peter Zijlstra
- <peterz@infradead.org>, Salvatore Bonaccorso <carnil@debian.org>,
- linux-kernel@vger.kernel.org
-References: <20250613124648.14141-1-marek.vasut+bmc150@mailbox.org>
- <79946c40-e2ce-4fbc-a6b2-b37f6fd69d1d@kernel.org>
- <20250621181733.3cb6111e@jic23-huawei>
- <07d91b36-dbeb-42b3-8dd7-b0771df9b306@mailbox.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <07d91b36-dbeb-42b3-8dd7-b0771df9b306@mailbox.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-Hi Marek,
-
-On 21-Jun-25 7:24 PM, Marek Vasut wrote:
-> On 6/21/25 7:17 PM, Jonathan Cameron wrote:
->> On Mon, 16 Jun 2025 14:42:54 +0200
->> Hans de Goede <hansg@kernel.org> wrote:
->>
->>> Hi,
->>>
->>> On 13-Jun-25 14:45, Marek Vasut wrote:
->>>> The BMC150 on Onemix 2S does not have IRQ line described in ACPI tables,
->>>> which leads to bmc150_accel_core_probe() being called with irq=0, which
->>>> leads to bmc150_accel_interrupts_setup() never being called, which leads
->>>> to struct bmc150_accel_data *data ->interrupts[i].info being left unset
->>>> to NULL. Later, userspace can indirectly trigger bmc150_accel_set_interrupt()
->>>> which depends on struct bmc150_accel_data *data ->interrupts[i].info being
->>>> non-NULL, and which triggers NULL pointer dereference. This is triggered
->>>> e.g. from iio-sensor-proxy.
->>>>
->>>> Fix this by skipping the IRQ register configuration in case there is no
->>>> IRQ connected in hardware, in a manner similar to what the driver did in
->>>> the very first commit which added the driver.
->>>
->>> ...
->>>
->>>> Fixes: 8e22f477e143 ("iio: bmc150: refactor interrupt enabling")
->>>> Signed-off-by: Marek Vasut <marek.vasut+bmc150@mailbox.org>
->>>> ---
->>>> Cc: "Nuno Sá" <nuno.sa@analog.com>
->>>> Cc: Andy Shevchenko <andy@kernel.org>
->>>> Cc: David Lechner <dlechner@baylibre.com>
->>>> Cc: Jonathan Cameron <jic23@kernel.org>
->>>> Cc: Julien Stephan <jstephan@baylibre.com>
->>>> Cc: Peter Zijlstra <peterz@infradead.org>
->>>> Cc: Salvatore Bonaccorso <carnil@debian.org>
->>>> Cc: linux-iio@vger.kernel.org
->>>> Cc: linux-kernel@vger.kernel.org
->>>> ---
->>>>   drivers/iio/accel/bmc150-accel-core.c | 3 +++
->>>>   1 file changed, 3 insertions(+)
->>>>
->>>> diff --git a/drivers/iio/accel/bmc150-accel-core.c b/drivers/iio/accel/bmc150-accel-core.c
->>>> index 744a034bb8b5..1c3583ade2b4 100644
->>>> --- a/drivers/iio/accel/bmc150-accel-core.c
->>>> +++ b/drivers/iio/accel/bmc150-accel-core.c
->>>> @@ -550,6 +550,9 @@ static int bmc150_accel_set_interrupt(struct bmc150_accel_data *data, int i,
->>>>       if (ret < 0)
->>>>           return ret;
->>>>   +    if (!info)
->>>> +        return 0;
->>>> +
->>>>       /* map the interrupt to the appropriate pins */
->>>>       ret = regmap_update_bits(data->regmap, info->map_reg, info->map_bitmask,
->>>>                    (state ? info->map_bitmask : 0));
->>>
->>> AFAIK the proper fix would be to not register any IIO-triggers. This fix will
->>> avoid the problem, but userspace might still try to use non-working triggers
->>> which will now silently fail.
->>>
->>> I'm not an IIO expert, but IIRC other drivers simply skip registering their triggers
->>> when there is no interrupt support.
->>
->> Absolutely. It is annoyingly common for devices to have some or none of the interrupt
->> lines actually wired so drivers should not present the interfaces if they aren't.
->> It is acceptable for a new driver to just fail to probe if handling the device with no
->> interrupts is particularly complex but in general at least some functionality tends
->> to be easy to implement so we prefer that.
-> I haven't gotten to this again ... yet ... I can try and add some sort of polling fallback maybe ?
-
-IIO has separate interfaces for exporting channels which can be polled by
-userspace and for triggers which is a more event driven interface.
-
-It should be possible to modify the driver to skip the trigger registration,
-while keeping the channels. E.g. iio-sensor-proxy will then automaticallt
-switch to polling in userspace.
-
-Regards,
-
-Hans
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="NACoSndAyAY0Jvnv"
+Content-Disposition: inline
+In-Reply-To: <rf6vyyocdxdtllhsydpbj5pnaptfjlagsqumblg7ysqby3k44k@mmcwop7nfbqg>
 
 
+--NACoSndAyAY0Jvnv
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi Andi,
+
+> I've collected one fix for rc3. It=E2=80=99s rebased on top of the latest
+> patch you merged from my fixes branch, which in turn is based on
+> rc2, so there's no tag for it.
+
+Hmm, rebasing to rc2 was probably a not so good idea. After I pulled
+your branch, I now have the Tegra patch from rc1 twice. So, I will
+"drop" this pull request and apply the k1 patch myself with your tag.
+I think this is the easiest solution...
+
+> I still haven't had the chance to read your naming conversion
+> series, last week has been quite packed. If you feel it's ready
+> to move forward, please go ahead. Otherwise, if you can give me
+> one more week, I'll make sure to review it properly.
+
+Oh, the patch is fine. It is just a scripted search-and-replace,
+verified by buildbots. I didn't want a review, just an OK that I am not
+interfering with a plan of yours I might be unaware of.
+
+Have a nice weekend, too!
+
+   Wolfram
+
+
+--NACoSndAyAY0Jvnv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhXEw8ACgkQFA3kzBSg
+KbazrA//ahXlV51TzNb40wWLYt5JrrLPBbyghwIhlXtOJ8oFygUKfyteja2BvYoq
+So83s6BaxDYNaeiZ6SWa1G8UcjqO2SpWb3798iZWH1l/WY9WLV/NN9sxtY/fThbY
+uJ1B6ZP6URMr1Gq2m2jYfW2b+RzXArKVy/X0O1ytDG6Kwdh5anIzhUHe/JSSVLbG
++ooQ2WlzgRZd4AORLyzBo8FOhiWtvXB0mEQG5y8QhOp12QhWF4kiFqIFgt0rTPZr
+LrxmWDdlpfBuRwN/Pggm1E1PqLeqCLvSFeYBSIhfF+t2K12ZDEaBFGbZV3jvumOP
+5VSZE0b7r7cwK5N2K01xG1ooEPBcHOOJtJ0n0ZKfHCnbjN9bWm2yW5tC5s7d8nK+
+afgIKStG8MNQpQ/lvySk6n2+zEAqN8hLF/bPz/HDN94tq1xC0A5O57pgOWd1Djqo
+7d+XPmih/W5IIIf5wuxEPArYuMO0k1wWZnS8SA9k4tAGY8KlCYBw9UrOIxAJwHxW
+IJuC2uitcBFloKTncoZM7kbFJTmYjEHwj8sfOZhcj23vA4uyQyp2XvHzMuUL4vfD
+F6LKE/6rlnj67YDTi2SuxQ0IgRF6funyy1lpy8o4kQFliUvt7roTbvfCOjpw6WpS
+fl1noJ3uoYv5KXWqlPKeCkXYKVKOq5rxAS5Dy7WTh14ifkLIXA0=
+=PgiN
+-----END PGP SIGNATURE-----
+
+--NACoSndAyAY0Jvnv--
