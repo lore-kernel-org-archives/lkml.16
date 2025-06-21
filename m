@@ -1,52 +1,71 @@
-Received: from magratgarlick.emantor.de (magratgarlick.emantor.de [78.46.208.201])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87431E570D;
-	Sat, 21 Jun 2025 11:35:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.208.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD2A16F0FE;
+	Sat, 21 Jun 2025 11:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750505709; cv=none; b=QwdZCiCB6UNDkwsCahuSWWWdaG/fPrtj/hKb7Wtz544BIAo40rbSeDt0toS07UHT3yQkKbvO7+FYyFxCsY/neUBXtKeDOv/UXweHKuLWq33wrLhD5gebnylonJs4gpsZkLc3X5reebvv7vItGpdI87J8Z6e+oVp5LMJE4nPYWo0=
+	t=1750505816; cv=none; b=thpeweHrcIa9g1DvM/DOAgHVTkdVgXAF33Ney28xqG+XldJTwncXUR/gUv+vMnmzo6tebO7gj73nIfi/EEk4ZIwDOS1ISuTj8vhBWJUI5yXC4C07XBMH/uhZkO0ENj+sBQcZZFfw/RVeEotTqfSuLBA62+qYjuaDXzhAYVOr8ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750505709; c=relaxed/simple;
-	bh=wtQdv7kksrOQPuEY+BaKisntblqSf0kwZEDIPm6kl9c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J0PnuAnsozFI83Km/11zzkvxfAqLel/oufBAlBorucWOFevb5omVUdTHOvXs7xqx88gmOIaXJpzhGzD+OppxxYnIYg7uvLNp25NW8IdlIwPYtpa4FF7DcI9XknKHtBttaoolDdBXKxkX6mzt0C1Eh4vpEdrAble4ddP3VCTrN70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=czerwinskis.de; spf=pass smtp.mailfrom=czerwinskis.de; dkim=pass (1024-bit key) header.d=czerwinskis.de header.i=@czerwinskis.de header.b=rvkqfDKf; dkim=pass (1024-bit key) header.d=czerwinskis.de header.i=@czerwinskis.de header.b=fhawEpOI; arc=none smtp.client-ip=78.46.208.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=czerwinskis.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=czerwinskis.de
+	s=arc-20240116; t=1750505816; c=relaxed/simple;
+	bh=mV0/m19M4pHbxXr+qp1ElJCzSPGhO1oydQg5fcI09WU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eOb0Cc5G35UNJCihlVj/w10IBu3FH8TO6PKZywVbUCHre75KAtCuv0Z8dZdEcuQCh6Y9GjrV4UnTyJ8P3rhESYhaiMMKNibq5CR+Jikb4KDdxS+BHuhMBz+JPYrlXTr72qhkSAOiDEJeeJFI3etsHyK+kLYhLGtSZrj8/iUbVmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fBN0Lqkf; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=czerwinskis.de header.i=@czerwinskis.de header.b="rvkqfDKf";
-	dkim=pass (1024-bit key) header.d=czerwinskis.de header.i=@czerwinskis.de header.b="fhawEpOI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=czerwinskis.de;
-	s=mail; t=1750505357;
-	bh=wtQdv7kksrOQPuEY+BaKisntblqSf0kwZEDIPm6kl9c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rvkqfDKfFZxb3xOuEPo7zG5S0eEdwePwawZVcwrIrfMwhUfU/nbQY9yFKG2meg9Br
-	 u+ANVyxxuUn+xWH8/Ht5ZmRK165P+vmS5G6k+rNscMuI4X+JnB9Cy5vk+uWV72TK5l
-	 Z5AdztY8EMQgXwiFpX0eOp3lSllRgbTauz27ITiE=
-Received: by magratgarlick.emantor.de (Postfix, from userid 114)
-	id 4321096628; Sat, 21 Jun 2025 13:29:17 +0200 (CEST)
-X-Spam-Level: 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=czerwinskis.de;
-	s=mail; t=1750505356;
-	bh=wtQdv7kksrOQPuEY+BaKisntblqSf0kwZEDIPm6kl9c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=fhawEpOI5rnHuiuSwfsdeMaxCMtU+QRnR5OnxKsfcF9JicQOix1YlhDP8GKQN+dUO
-	 Y9rKgAHYvFa04gxplfhmrRN9LSIWorGlafhYYOLOjIQZORbaz6ELhtQn/bUZxoHdut
-	 tbpVKScbXl9mF+yaE7AEe20eMhxuhqfM2o9RvkiQ=
-Received: from localhost (unknown [IPv6:2a0e:c5c1:0:100:cc93:f0a3:c76:aa90])
-	by magratgarlick.emantor.de (Postfix) with ESMTPSA id 07E3B96628;
-	Sat, 21 Jun 2025 13:29:16 +0200 (CEST)
-From: Rouven Czerwinski <rouven@czerwinskis.de>
-To: Arend van Spriel <arend.vanspriel@broadcom.com>
-Cc: kernel@pengutronix.de,
-	Rouven Czerwinski <rouven@czerwinskis.de>,
-	linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fBN0Lqkf"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6070293103cso4893725a12.0;
+        Sat, 21 Jun 2025 04:36:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750505813; x=1751110613; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sda2OhoJ3w8LYPtAn5n421n5aeMrDBa7WPjqMgtd13s=;
+        b=fBN0Lqkf1GLMhu59pHmgcVeA37gUSiz6bvLFy1yzsO38xI28l7PwzPK/5HeYne8Uu4
+         4ujKyE0bhUrOb2DZUtKqeM+fsQ9fAOQv2TpjYRNZeFKVXlQuyYL1qQPzlakGJk6OgiRm
+         NYR8gEdQgUebA6YZxCb9yrlOdO0EdrSolPQhKCPPLHiqTwCrWquZCPa9KuuP7A2ruk/t
+         bpuiosCXjgwa8BGwacgSo/axtB6oYRTWR5akV5t4K/ejcQkBMtANfbs13NAF+mPtB1To
+         dvgq6CIefyOHSHOjUXKgI8LHvlV7AjlbExVuFCt/l1FW6OEAOIB0wRbMnsuiuGAK82yb
+         cNlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750505813; x=1751110613;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sda2OhoJ3w8LYPtAn5n421n5aeMrDBa7WPjqMgtd13s=;
+        b=tNRSPVg43EYvA3TwTB6tj3oiculDLGV+S1Ar2dqM2w9q6h8if2c3w3RfhTXLQbpP8l
+         MTQEqwWAo2LR1qiV+oEETIoHsExzUu7kP3W/dIdxfRfeKeRJWt7NNXFfEQJob0nqfuK5
+         Jw1Ialx1v51SUs2QaRfIJxHX2TqPGkFgD1Lg3MjwvjZedY+e71mIxrYdHHUVHR4RXeYx
+         DaFc0VzPXh3h8a72WET15ptn7FCHlhKCezpnNxllLeXNSQSVrGl2iqrg7MxgCO8ngfvI
+         1uQhUrUd5Y3UwvzFxv6RHIF5v3VRRpW+SC843pnwUz0HNJtf0OtVexp9mnuMyhMf4sh6
+         y1Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCXnDGZyUvJKfemek7mUOg1CqrSTk4MUFByp4DUi+KH8nhqsMpM2H7DcMa7Z69bqTVguEhi7nqDJGHpgN4g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztP1fBTFsPTHyTmINeGjunWL6vKJrCJrUVeIxVCkCyimK54bUW
+	9ll7f80B7dWuiUgO6JfLJfCXcXbQZEI9KXHYERfXVOSEhVyRNBHujdxImZg6vSZcUbYA4g==
+X-Gm-Gg: ASbGncsgpv7TagIlrv9gIOpb/fBDIsQ9mJaceiSzSgmYGftalZ+kqekMyAeQFJQ/Zzb
+	OmkMznIK36EBrFwpVe+P7nsiaN5bKIUWVgoO68Lr6DueBFZoMoDOmFuwEuXs91WOsNnQF7HEMzA
+	I9vzw3/c6Jgk/27fCK2iLQi2hF5r4c6RXzF1eFKJXNCjBDTjcNvLiDxVVPBRVtKWwEyUXaS+B0E
+	Q74WN04ZZhKGHFatQEC6PlGiNkKzkaIbI8sS/A+Xy1AvlaIWe02/RKO8KZ193KUkUvNIOR8izFg
+	0LpIFLBkUZ1L2WnUzm56j8M2f3x0UPUdTTxAeFLFCNahlH06bA/v/pjuiA8AnPpQxEvbYkeNzzx
+	IRQtxUgKOiZbCvQPtyr3kohiFe91ZqfJd0qdXjvPjRJjpu3df6i6S6Wnq6VITYA==
+X-Google-Smtp-Source: AGHT+IH/5TXSI1rj6xMu+Z81IX/O+NCoOrZDWhCbbXjbeQkCbJVMBKJOWDLDRetam300s58ViUcaow==
+X-Received: by 2002:a05:6402:35c2:b0:608:6189:eb59 with SMTP id 4fb4d7f45d1cf-60a1ccb4db9mr6411974a12.13.1750505812856;
+        Sat, 21 Jun 2025 04:36:52 -0700 (PDT)
+Received: from legolas.fritz.box (p200300d0af416e00f1f3934e32485304.dip0.t-ipconnect.de. [2003:d0:af41:6e00:f1f3:934e:3248:5304])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60a1855374csm2968698a12.31.2025.06.21.04.36.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Jun 2025 04:36:52 -0700 (PDT)
+From: Markus Theil <theil.markus@gmail.com>
+To: linux-crypto@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] brcmfmac: remove unreachable poll mode for sdio
-Date: Sat, 21 Jun 2025 13:29:10 +0200
-Message-ID: <20250621112912.180436-1-rouven@czerwinskis.de>
+Cc: davem@davemloft.net,
+	herbert@gondor.apana.org.au,
+	Markus Theil <theil.markus@gmail.com>,
+	Stephan Mueller <smueller@chronox.de>
+Subject: [PATCH] crypto: jitter - fix intermediary handling
+Date: Sat, 21 Jun 2025 13:36:43 +0200
+Message-ID: <20250621113643.107745-1-theil.markus@gmail.com>
 X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -56,111 +75,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The sdio interface implements an unreachable poll mode. Remove it since
-the code can't be reached, if the poll mode needs to be implemented it
-can simply be resurrected using the usual git means.
+The intermediary value was included in the wrong
+hash state. While there, adapt to user-space by
+setting the timestamp to 0 if stuck and inserting
+the values nevertheless.
 
-Signed-off-by: Rouven Czerwinski <rouven@czerwinskis.de>
+Acked-by: Stephan Mueller <smueller@chronox.de>
+Signed-off-by: Markus Theil <theil.markus@gmail.com>
 ---
- .../broadcom/brcm80211/brcmfmac/sdio.c        | 48 +------------------
- 1 file changed, 2 insertions(+), 46 deletions(-)
+ crypto/jitterentropy-kcapi.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index cf26ab15ee0c..26e09a7acb02 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -404,7 +404,6 @@ struct brcmf_sdio_hdrinfo {
- struct brcmf_sdio_count {
- 	uint intrcount;		/* Count of device interrupt callbacks */
- 	uint lastintrs;		/* Count as of last watchdog timer */
--	uint pollcnt;		/* Count of active polls */
- 	uint regfails;		/* Count of R_REG failures */
- 	uint tx_sderrs;		/* Count of tx attempts with sd errors */
- 	uint fcqueued;		/* Tx packets that got queued */
-@@ -476,11 +475,8 @@ struct brcmf_sdio {
- 	u8 sdpcm_ver;	/* Bus protocol reported by dongle */
+diff --git a/crypto/jitterentropy-kcapi.c b/crypto/jitterentropy-kcapi.c
+index c24d4ff2b4a8..1266eb790708 100644
+--- a/crypto/jitterentropy-kcapi.c
++++ b/crypto/jitterentropy-kcapi.c
+@@ -144,7 +144,7 @@ int jent_hash_time(void *hash_state, __u64 time, u8 *addtl,
+ 	 * Inject the data from the previous loop into the pool. This data is
+ 	 * not considered to contain any entropy, but it stirs the pool a bit.
+ 	 */
+-	ret = crypto_shash_update(desc, intermediary, sizeof(intermediary));
++	ret = crypto_shash_update(hash_state_desc, intermediary, sizeof(intermediary));
+ 	if (ret)
+ 		goto err;
  
- 	bool intr;		/* Use interrupts */
--	bool poll;		/* Use polling */
- 	atomic_t ipend;		/* Device interrupt is pending */
- 	uint spurious;		/* Count of spurious interrupts */
--	uint pollrate;		/* Ticks between device polls */
--	uint polltick;		/* Tick counter */
+@@ -157,11 +157,12 @@ int jent_hash_time(void *hash_state, __u64 time, u8 *addtl,
+ 	 * conditioning operation to have an identical amount of input data
+ 	 * according to section 3.1.5.
+ 	 */
+-	if (!stuck) {
+-		ret = crypto_shash_update(hash_state_desc, (u8 *)&time,
+-					  sizeof(__u64));
++	if (stuck) {
++		time = 0;
+ 	}
  
- #ifdef DEBUG
- 	uint console_interval;
-@@ -3178,7 +3174,7 @@ static int brcmf_debugfs_sdio_count_read(struct seq_file *seq, void *data)
- 
- 	seq_printf(seq,
- 		   "intrcount:    %u\nlastintrs:    %u\n"
--		   "pollcnt:      %u\nregfails:     %u\n"
-+		   "pollcnt:       0\nregfails:     %u\n"
- 		   "tx_sderrs:    %u\nfcqueued:     %u\n"
- 		   "rxrtx:        %u\nrx_toolong:   %u\n"
- 		   "rxc_errors:   %u\nrx_hdrfail:   %u\n"
-@@ -3192,7 +3188,7 @@ static int brcmf_debugfs_sdio_count_read(struct seq_file *seq, void *data)
- 		   "tx_ctlpkts:   %lu\nrx_ctlerrs:   %lu\n"
- 		   "rx_ctlpkts:   %lu\nrx_readahead: %lu\n",
- 		   sdcnt->intrcount, sdcnt->lastintrs,
--		   sdcnt->pollcnt, sdcnt->regfails,
-+		   sdcnt->regfails,
- 		   sdcnt->tx_sderrs, sdcnt->fcqueued,
- 		   sdcnt->rxrtx, sdcnt->rx_toolong,
- 		   sdcnt->rxc_errors, sdcnt->rx_hdrfail,
-@@ -3669,43 +3665,6 @@ static void brcmf_sdio_bus_watchdog(struct brcmf_sdio *bus)
- {
- 	brcmf_dbg(TIMER, "Enter\n");
- 
--	/* Poll period: check device if appropriate. */
--	if (!bus->sr_enabled &&
--	    bus->poll && (++bus->polltick >= bus->pollrate)) {
--		u32 intstatus = 0;
--
--		/* Reset poll tick */
--		bus->polltick = 0;
--
--		/* Check device if no interrupts */
--		if (!bus->intr ||
--		    (bus->sdcnt.intrcount == bus->sdcnt.lastintrs)) {
--
--			if (!bus->dpc_triggered) {
--				u8 devpend;
--
--				sdio_claim_host(bus->sdiodev->func1);
--				devpend = brcmf_sdiod_func0_rb(bus->sdiodev,
--						  SDIO_CCCR_INTx, NULL);
--				sdio_release_host(bus->sdiodev->func1);
--				intstatus = devpend & (INTR_STATUS_FUNC1 |
--						       INTR_STATUS_FUNC2);
--			}
--
--			/* If there is something, make like the ISR and
--				 schedule the DPC */
--			if (intstatus) {
--				bus->sdcnt.pollcnt++;
--				atomic_set(&bus->ipend, 1);
--
--				bus->dpc_triggered = true;
--				queue_work(bus->brcmf_wq, &bus->datawork);
--			}
--		}
--
--		/* Update interrupt tracking */
--		bus->sdcnt.lastintrs = bus->sdcnt.intrcount;
--	}
- #ifdef DEBUG
- 	/* Poll for console output periodically */
- 	if (bus->sdiodev->state == BRCMF_SDIOD_DATA && BRCMF_FWCON_ON() &&
-@@ -4080,9 +4039,6 @@ brcmf_sdio_probe_attach(struct brcmf_sdio *bus)
- 
- 	/* Set the poll and/or interrupt flags */
- 	bus->intr = true;
--	bus->poll = false;
--	if (bus->poll)
--		bus->pollrate = 1;
- 
- 	return 0;
- 
++	ret = crypto_shash_update(hash_state_desc, (u8 *)&time, sizeof(__u64));
++
+ err:
+ 	shash_desc_zero(desc);
+ 	memzero_explicit(intermediary, sizeof(intermediary));
 -- 
 2.49.0
 
