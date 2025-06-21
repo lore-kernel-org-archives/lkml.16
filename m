@@ -1,40 +1,31 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A35EAC6;
-	Sat, 21 Jun 2025 14:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527B7EAC6
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 14:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750515816; cv=none; b=hW6bkcrwd92uIDkkh1Gxi2FfxvRRDPSh2o+KGWm3ezsUNGRjNjTKpC05p1nfv9Hl9br4WMi1nQNpqoV3SgBjqUvG6g7JUBrGkFyNq037KZDR1OjA+T6uUKxIniEYsvdMLoIceS1cY5SDR2ihpqWdGYXB0uhnY7h8OYVxzmsBjJw=
+	t=1750516039; cv=none; b=eaaHd2YnoQU8nixcvdHxMxr1Cq8ehbSUov0RB+32IwjmKdxwoW+4Y53TvHAjXdFeupDNlL/okiY6EV1nYO4OaJT0T93ZHGjaQbfuKA2Ej+isgwKXtQhkScod1prvjFACCy16fDpH0I/BcMErDrDoU9KT6Hll3XYkQDQqmZA0AIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750515816; c=relaxed/simple;
-	bh=9X11Q5xppWHkVzzWlRnS3XXcKyky3uW7NnCIal+uUU0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KnKse9+8FzA7v+f6YjKG8eNMkPS+kMp8pPDXZrAxeXnH9wlcS3sRuLWWOa84KVGQqkvCr/e7krNb8qGOjt4AXJ8BaGv+9gpHUMe9sMUkc+siGxNaGbLSb1TP7nOP/aMQb5q+7KXmjzPfTGb6qWFu7VqVpirFJklvYMtVJULhhE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=i8rMPC0l; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="i8rMPC0l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750515806;
-	bh=9X11Q5xppWHkVzzWlRnS3XXcKyky3uW7NnCIal+uUU0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=i8rMPC0lgJCdheF47QVC4kGCe3t6g8sS0ljLNZZjrkus+XFOZJlQDbq5byd8ufiWP
-	 6G86sATxHvWLaQLpPkD5IFmSkOE631QQP6FpruZnXMoF6U1XYQcfvmfUIBogoLln2A
-	 +1cf0/oZC7/VKjSq3YuaOOvZgYq2hj7Zb8b6/Jc+hEnpeUaBTM1o3g6V5EV2hlRhbu
-	 W1x97ONOOzYEOZv+zmy4qm9QLgkOUAQgZI2JKdJNWb+m30myWZQkcWVfeplLbQAWdK
-	 Hj2rKAoYH0nnwRRF75T/xU0bdJftzctY1pTidd71rJHlueGbl/87rjvzu8tWASgT4d
-	 5g6+WnJnKo3lg==
-Received: from [10.40.0.100] (185-251-200-162.lampert.tv [185.251.200.162])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: mriesch)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9ABCC17E046C;
-	Sat, 21 Jun 2025 16:23:24 +0200 (CEST)
-Message-ID: <0eb440d8-fdc3-4ceb-8856-cda43afde4d1@collabora.com>
-Date: Sat, 21 Jun 2025 16:23:23 +0200
+	s=arc-20240116; t=1750516039; c=relaxed/simple;
+	bh=0MdFw4ehLSSpE3Iq9nRUjhjj7+K2E8iVjs/Vm0LIXTY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=rGzA/+8Hwq5/fFB841YQHB2ehRIaAgP+EhTCXZ9VH0+UMBLiOMyoJDRpajdddTfyRByih/01/lLI95j0+Iglt0d7wVL8LJanMeaQSNnl0dTWJYSwnjq2rBM0fgM5AXAwDTl4kglMs5znd5r/u2Ytea/Xq+qg9TvcOaY2Vc84EsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55LERCwr007953;
+	Sat, 21 Jun 2025 23:27:12 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55LERCfZ007950
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Sat, 21 Jun 2025 23:27:12 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <9a1a4a25-f7cb-4eaa-bcaa-d655a444076f@I-love.SAKURA.ne.jp>
+Date: Sat, 21 Jun 2025 23:27:12 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,73 +33,99 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 19/55] media: i2c: imx415: Use the v4l2 helper for
- obtaining the clock
-To: Mehdi Djait <mehdi.djait@linux.intel.com>,
- laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com
-Cc: akinobu.mita@gmail.com, stanislaw.gruszka@linux.intel.com,
- hdegoede@redhat.com, arnd@arndb.de, alain.volmat@foss.st.com,
- andrzej.hajda@intel.com, benjamin.mugnier@foss.st.com,
- dave.stevenson@raspberrypi.com, hansg@kernel.org, hverkuil@xs4all.nl,
- jacopo.mondi@ideasonboard.com, jonas@kwiboo.se,
- kieran.bingham@ideasonboard.com, khalasa@piap.pl,
- prabhakar.csengg@gmail.com, mani@kernel.org, m.felsch@pengutronix.de,
- martink@posteo.de, mattwmajewski@gmail.com, matthias.fend@emfend.at,
- mchehab@kernel.org, naush@raspberrypi.com, nicholas@rothemail.net,
- nicolas.dufresne@collabora.com, paul.elder@ideasonboard.com,
- dan.scally@ideasonboard.com, pavel@kernel.org, petrcvekcz@gmail.com,
- rashanmu@gmail.com, ribalda@chromium.org, rmfrfs@gmail.com,
- zhengsq@rock-chips.com, slongerbeam@gmail.com, sylvain.petinot@foss.st.com,
- s.nawrocki@samsung.com, tomi.valkeinen@ideasonboard.com,
- umang.jain@ideasonboard.com, zhi.mao@mediatek.com,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-References: <cover.1750352394.git.mehdi.djait@linux.intel.com>
- <0cc24a56cfdd04b871f06a12c30e40bf1012935e.1750352394.git.mehdi.djait@linux.intel.com>
+Subject: Re: [syzbot] [ocfs2?] possible deadlock in
+ ocfs2_try_remove_refcount_tree
+To: syzbot <syzbot+1fed2de07d8e11a3ec1b@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <00000000000032dd730620055fde@google.com>
 Content-Language: en-US
-From: Michael Riesch <michael.riesch@collabora.com>
-In-Reply-To: <0cc24a56cfdd04b871f06a12c30e40bf1012935e.1750352394.git.mehdi.djait@linux.intel.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <00000000000032dd730620055fde@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Virus-Status: clean
+X-Anti-Virus-Server: fsav303.rs.sakura.ne.jp
 
-Hi Mehdi,
+#syz test
 
-Thanks for your patch!
+diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
+index 6aaa94c554c1..8bdeea60742a 100644
+--- a/fs/ocfs2/ocfs2.h
++++ b/fs/ocfs2/ocfs2.h
+@@ -494,8 +494,6 @@ struct ocfs2_super
+ 	struct rb_root	osb_rf_lock_tree;
+ 	struct ocfs2_refcount_tree *osb_ref_tree_lru;
+ 
+-	struct mutex system_file_mutex;
+-
+ 	/*
+ 	 * OCFS2 needs to schedule several different types of work which
+ 	 * require cluster locking, disk I/O, recovery waits, etc. Since these
+diff --git a/fs/ocfs2/refcounttree.c b/fs/ocfs2/refcounttree.c
+index 8f732742b26e..c8467b92b64e 100644
+--- a/fs/ocfs2/refcounttree.c
++++ b/fs/ocfs2/refcounttree.c
+@@ -928,8 +928,8 @@ int ocfs2_try_remove_refcount_tree(struct inode *inode,
+ 	struct ocfs2_inode_info *oi = OCFS2_I(inode);
+ 	struct ocfs2_dinode *di = (struct ocfs2_dinode *)di_bh->b_data;
+ 
+-	down_write(&oi->ip_xattr_sem);
+ 	down_write(&oi->ip_alloc_sem);
++	down_write(&oi->ip_xattr_sem);
+ 
+ 	if (oi->ip_clusters)
+ 		goto out;
+@@ -945,8 +945,8 @@ int ocfs2_try_remove_refcount_tree(struct inode *inode,
+ 	if (ret)
+ 		mlog_errno(ret);
+ out:
+-	up_write(&oi->ip_alloc_sem);
+ 	up_write(&oi->ip_xattr_sem);
++	up_write(&oi->ip_alloc_sem);
+ 	return 0;
+ }
+ 
+diff --git a/fs/ocfs2/super.c b/fs/ocfs2/super.c
+index 3d2533950bae..4461daf909cf 100644
+--- a/fs/ocfs2/super.c
++++ b/fs/ocfs2/super.c
+@@ -1997,8 +1997,6 @@ static int ocfs2_initialize_super(struct super_block *sb,
+ 	spin_lock_init(&osb->osb_xattr_lock);
+ 	ocfs2_init_steal_slots(osb);
+ 
+-	mutex_init(&osb->system_file_mutex);
+-
+ 	atomic_set(&osb->alloc_stats.moves, 0);
+ 	atomic_set(&osb->alloc_stats.local_data, 0);
+ 	atomic_set(&osb->alloc_stats.bitmap_data, 0);
+diff --git a/fs/ocfs2/sysfile.c b/fs/ocfs2/sysfile.c
+index 53a945da873b..03e7a0cd55aa 100644
+--- a/fs/ocfs2/sysfile.c
++++ b/fs/ocfs2/sysfile.c
+@@ -98,11 +98,9 @@ struct inode *ocfs2_get_system_file_inode(struct ocfs2_super *osb,
+ 	} else
+ 		arr = get_local_system_inode(osb, type, slot);
+ 
+-	mutex_lock(&osb->system_file_mutex);
+ 	if (arr && ((inode = *arr) != NULL)) {
+ 		/* get a ref in addition to the array ref */
+ 		inode = igrab(inode);
+-		mutex_unlock(&osb->system_file_mutex);
+ 		BUG_ON(!inode);
+ 
+ 		return inode;
+@@ -112,11 +110,8 @@ struct inode *ocfs2_get_system_file_inode(struct ocfs2_super *osb,
+ 	inode = _ocfs2_get_system_file_inode(osb, type, slot);
+ 
+ 	/* add one more if putting into array for first time */
+-	if (arr && inode) {
+-		*arr = igrab(inode);
+-		BUG_ON(!*arr);
+-	}
+-	mutex_unlock(&osb->system_file_mutex);
++	if (inode && arr && !*arr && !cmpxchg(&(*arr), NULL, inode))
++		igrab(*arr);
+ 	return inode;
+ }
+ 
 
-On 6/19/25 19:59, Mehdi Djait wrote:
-> devm_clk_get() fails on ACPI-based platforms, where firmware does not
-> provide a direct reference to the clock producer.
-> 
-> Replace devm_clk_get() with the new v4l2 helper
-> devm_v4l2_sensor_clk_get() that works on both DT- and ACPI-based
-> platforms to retrieve a reference to the clock producer from firmware.
-> 
-> Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
-> 
-> diff --git a/drivers/media/i2c/imx415.c b/drivers/media/i2c/imx415.c
-> index 9f37779bd611..f7897660f44f 100644
-> --- a/drivers/media/i2c/imx415.c
-> +++ b/drivers/media/i2c/imx415.c
-> @@ -1251,7 +1251,7 @@ static int imx415_parse_hw_config(struct imx415 *sensor)
->  		return dev_err_probe(sensor->dev, PTR_ERR(sensor->reset),
->  				     "failed to get reset GPIO\n");
->  
-> -	sensor->clk = devm_clk_get(sensor->dev, "inck");
-> +	sensor->clk = devm_v4l2_sensor_clk_get(sensor->dev, "inck");
-
-Matthias Fend discovered a while ago that the driver is not in agreement
-with the DT binding, which does not require a certain clock name.
-However, the corresponding patch [0] has not landed in v6.16-rc1 AFAIK.
-
-Can we translate the line above directly to
-    sensor->clk = devm_v4l2_sensor_clk_get(sensor->dev, NULL);
-?
-
-Best regards,
-Michael
-
->  	if (IS_ERR(sensor->clk))
->  		return dev_err_probe(sensor->dev, PTR_ERR(sensor->clk),
->  				     "failed to get clock\n");
-
-
-[0] https://lore.kernel.org/all/20250514-imx415-v1-1-bb29fa622bb1@emfend.at/
