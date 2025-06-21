@@ -1,48 +1,88 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7891D43AA8
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 11:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B50EA95C;
+	Sat, 21 Jun 2025 11:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750505151; cv=none; b=usdN/1KjgTHy/UUZsHMETugv9+XbRmMEG9q9ZfCFQlpX2xNOv+1DrR7AXJ/vMRhBzlV7nNJ/zQc3YCtX0Jm4CbKWdfeaM8XZOAr47XQ6IpOZrKpA0XONVv/8wwoc2Mea8Za01mEiMvcK3gJuGvRU3jkHdzoJ8V7abcDuo23rGE0=
+	t=1750505512; cv=none; b=uXATQouWrwb3igNB5kVm1xslg2g6WrKUWjkPjlM2YS3YkDHTIEBZ7eVnLQcFih1RTr9wmJtO0S75gKpUYqtT1PmRFjnKseIPWQ+AojgXMnpHmTeaR/obAMaVXmaIa4AiIif8JuQbMVs9TJicYORgLYyjBhMrWNiSM3fHf+plI48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750505151; c=relaxed/simple;
-	bh=sN9g8anDqB/hfRISr+88Pl51E8jeOfwy3U9zxCrkx3U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Hk6p4LKjrNduiEWegs64qoItCp0tib0Ho2N/3ZqMMlPAYhxsOphfS/7hxzaxqYaFvX+J5ztlsPyGZihVfWo0fMO51DBCj3ja/kLN8gR6dA0NB96Roa4fHWIECmN+H92B3D3C3EvZq5UjurfOWZooVvSE+IbViRHAGlcWwGA/a/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55LAfnwE039467;
-	Sat, 21 Jun 2025 19:41:49 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55LAfno7039464
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Sat, 21 Jun 2025 19:41:49 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <ced3af37-9b56-471b-b053-f4ee8c9d8196@I-love.SAKURA.ne.jp>
-Date: Sat, 21 Jun 2025 19:41:50 +0900
+	s=arc-20240116; t=1750505512; c=relaxed/simple;
+	bh=fMeNHwlvdxhVpulaFu75Rk3QBuy7carLB9qer/sIg78=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=PtumY/BnfK57I/UWLHwhVPeTve1SGeTrcQGVjTPBwhOXwTXpuVSiKK81KaJinjeMhzu0bvV5NP1AtitvW1dEIHIQ7+RF8/N4ihdKDBRB34zi0oZvFkxvGR79FEN2jfsJmZWKKtG4CHIFRYh3orthXK16l716cTsCnzVKG7MEng8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rWBssDVI; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rWBssDVI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31EF6C4CEEF;
+	Sat, 21 Jun 2025 11:31:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750505512;
+	bh=fMeNHwlvdxhVpulaFu75Rk3QBuy7carLB9qer/sIg78=;
+	h=From:Date:Subject:To:Cc:From;
+	b=rWBssDVIxN+heJAm5e8YCmpldEd1eH8gFArkMiaSt8gi15lqMH9wmudwKChiKyfmt
+	 vVKjwVVOK+1URHQ5eyi0sMjZkEX4XkFJWbhi4f/8WseOyCHJDeVVnGgl88A/FA4YUd
+	 HpdUeBY1Dvu/sGIr8hJVgjQqFkGfSz5xpS4107tsXPY9yh9dvzTQ4Lce6+f9BDcBHK
+	 mxuk8s5P94Howle3SM+CF6yaaDH8mIqMjpgjWUwLx9xnQRq+WBayeIsogE+y+xRmIn
+	 I/ijXokhyBajJVjQUxXmvG77lM7RtLHVsT8biuvebI1HDwW4TVwit6DrirF2q7JtmI
+	 dqceAIMthxFSA==
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-606477d77easo1666438eaf.1;
+        Sat, 21 Jun 2025 04:31:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWTXlu6XUlWU1S5p7nhs20kdU140SRNLHOXjESwlVkEVxiO3gPVXCdWBYKNWJkr4pgEpcG44+qRSG1mFAo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcJD2ExguazNaY/phDhjUfeTzgwTM7MH5lQQz636Vz5u9v5VQ7
+	izAixG8B7jrBTDK41HMobhbHgepZZOSjXK2TM9U0n7iUzV1jaM2QRbg5r9XG/MiAuJiR5ywXAzw
+	/K2JWSFupmqlYNjoM+a975MmQ31Wq20Y=
+X-Google-Smtp-Source: AGHT+IE5n394XM+7zHcgyPrTHWVFOTviAqX3t2Z6skAUnNv3LIEPZutFXJKATyqljUcH6zXQJn4KIzwJGUFjlx85eA0=
+X-Received: by 2002:a05:6820:6ac3:b0:611:6cb6:46bf with SMTP id
+ 006d021491bc7-6116cb647f2mr1044516eaf.4.1750505511421; Sat, 21 Jun 2025
+ 04:31:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [cgroups?] WARNING in NUM (2)
-To: syzbot <syzbot+ee0ddd3c79cac08cd4f6@syzkaller.appspotmail.com>,
-        linux-kernel@vger.kernel.org
-References: <684f296b.a00a0220.279073.0033.GAE@google.com>
-Content-Language: en-US
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <684f296b.a00a0220.279073.0033.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Anti-Virus-Server: fsav201.rs.sakura.ne.jp
-X-Virus-Status: clean
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Sat, 21 Jun 2025 13:31:37 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iNVFFJVgzeMx=+UMw5MTOUgdu_WGpJxE3qjHikQ4Sp4A@mail.gmail.com>
+X-Gm-Features: AX0GCFsZ4VbA-qN3-aLKoEtFFt1821bPf6EqEI0cFHzu1w7RgboPt-kPW8xdR6I
+Message-ID: <CAJZ5v0iNVFFJVgzeMx=+UMw5MTOUgdu_WGpJxE3qjHikQ4Sp4A@mail.gmail.com>
+Subject: [GIT PULL] ACPI fix for v6.16-rc3
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-#syz dup: WARNING in rhashtable_init_noprof
+Hi Linus,
+
+Please pull from the tag
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ acpi-6.16-rc3
+
+with top-most commit 6fcab2791543924d438e7fa49276d0998b0a069f
+
+ ACPICA: Refuse to evaluate a method if arguments are missing
+
+on top of commit e04c78d86a9699d136910cfc0bdcf01087e3267e
+
+ Linux 6.16-rc2
+
+to receive an ACPI fix for 6.16-rc3.
+
+This fixes a crash in ACPICA while attempting to evaluate a control
+method that expects more arguments than are being passed to it, which
+was exposed by a defective firmware update from a prominent OEM on
+multiple systems.
+
+Thanks!
+
+
+---------------
+
+Rafael J. Wysocki (1):
+      ACPICA: Refuse to evaluate a method if arguments are missing
+
+---------------
+
+ drivers/acpi/acpica/dsmethod.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
