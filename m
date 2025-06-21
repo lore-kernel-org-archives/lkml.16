@@ -1,87 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14DB46B8;
-	Sat, 21 Jun 2025 08:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1190518DB26
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 08:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750494205; cv=none; b=cRRqtFyXxbxIukJHqIIXb/D8r9AwRT5NoG7rqjZ/GvXc9SO0vpk7RobOhViJqfn+qV/ZjrxhImz+c+5nQlpPu6jHISmSvmLdXtmTYY/Q5dTMCA03IQKxReVNiCo2BY3cJuruKDLi2sEcYJ44W0lZK8Zb0LEBaWOFhbhEDgsFtak=
+	t=1750494285; cv=none; b=GG6U3t4rDEoMI4zvtaPUXhM/1QOpQNtOZmd2P5meGeu7uewmLdMsAW8M38sybBmG6P3XF4fiHayEmRA+8xUD+cxvmfZyGROWdqJiSE9ZgCUm4lohOuCoHyVP24SY9Vq2eTO/lj/kT+/BVaLGe0KLc+ZB6DbEjse9X4RP+6G0LR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750494205; c=relaxed/simple;
-	bh=SZjLcvfhH4BHwBWNAGHSLpHqW7zEvj6pGY9nmqQyAlg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wt9K5l84Z4XwG/F47kLE318EM3QiCrlZbt4LJxGlfW5EGtthoLDzvT+Xw5SuT3glkn/hA02r9PWLLcO5UVrtaLaTvgjtsUnPxR+cFiMHDpY6Or5x1f4/8KaVEGAdW/cHAZk44Qivs14dCV0jI5y8JMyCg0cD6GZeDZvh2JgXPvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tVVXGTYc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750494285; c=relaxed/simple;
+	bh=7n0RFAglSWOxR23I0nQyN0/6VhmDLC2SweABMfse6hs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b2XLgIVbHe8RICJ4fdSlS+qRjBVyH8tqf1Cvub3xlaEGTzlmJFoIk+s5QWRFg2ze15V2Rf2+AJqpgXK3Xtv8HNJo0HZCXUDKWBFvRFdnRagbSVf2OQknsqmp2qf/Ewzta4uTYS5lRiGzAsjqvCvymhFZDMnCG4j+E+NwmH+nYlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=Cibhg5Xx; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tVVXGTYc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7377BC4CEEE;
-	Sat, 21 Jun 2025 08:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750494204;
-	bh=SZjLcvfhH4BHwBWNAGHSLpHqW7zEvj6pGY9nmqQyAlg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tVVXGTYc4mfuDnvYMLh1NrppnoOGb+K1KQgM2Q3KpnwsIQ59+9qNGxscrPzAO/NGV
-	 W99yYhXSpEj22QBVlN7paaEhPzeBVn9emmy6lJdRnruFvzQnsYPbWRAnoSdn3jbYGu
-	 THJSWLcKqSXIQy0fMeU402mGaALMJ7SXRpixRW7T+W6U9NtLFHZ9YM3WVGMSgbtWLT
-	 cbqsRNmmbNgBove4OXbMMyu8TZKXIZ0lQcx2310OuBqRRAqyOvF+EIg7DsAexKRPOR
-	 J4tmDlZUdEP3bBn1po1y5SmN0aeJHXqI8JVtkHM1IFk9ppqmf8OrDlFAcW0QgJP3Dv
-	 pA6+ubRxQYdBQ==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-553b16a0e38so2716301e87.1;
-        Sat, 21 Jun 2025 01:23:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUfG2lzicsV29XAayh+5cnIsy41cfuvah/nNPlsrgdhWEFzRcH5cmyAn/FFCFe0d63kbjMN3JTiBso=@vger.kernel.org, AJvYcCXAJGhP4el9hQjZN7eMSKuYbdYUbnLirvWkHQJGWEOCQGzrAqgrE2WR+j1PESO0RkrbsQM2AX1s42qm+qS3@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRStfHtcju52ZujYUnLaK+1a66b4eYt03nN2tpvlfSFNd0Ysfx
-	UXncwDRi5e24jCI7dbqsGFrXuSe/LNZsmeOQFjIhh3iP3QDYNxTQeOGo8P/vJGrHEGmNNQGNl4P
-	byFHRjrzwzgEsy/VQN+3qdaZoNXhS+yY=
-X-Google-Smtp-Source: AGHT+IGUaaV1RTtm4HIkvdnEESt1QJhuZXxuKWNHTfE35/8j+dlKegSg1Gi6VqJ+Jwq2tEcaijJpeRCltz80kSljnKc=
-X-Received: by 2002:a05:6512:3d8f:b0:553:5176:48a with SMTP id
- 2adb3069b0e04-553e3bc0523mr1818526e87.21.1750494202845; Sat, 21 Jun 2025
- 01:23:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Cibhg5Xx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=7n0R
+	FAglSWOxR23I0nQyN0/6VhmDLC2SweABMfse6hs=; b=Cibhg5Xx5U5Eya0oInkl
+	VnkG96RNG+1xn6d5poNegQmdCeMwknwxoHwKNAxx8fzmDhN6MVhvaKyEFqP6UCoz
+	8nHwfh9dpyr+fUs7EA3BLFA/TW/b9P1//k5pUJdMnrWyl5huIQNFOr6elofe5jP0
+	pcAlsPgQZ6cevFZq2ZFrqlgUpS/MBK/YeRsqCqFsKRQsfm0dKJKBen/ruNzGg91q
+	+NJ7/NY61N0jtFUiT1ge8XvQhHR1SjmSiJXpF26d5gHuwaCgROhnNzAtUB31+Ulq
+	kHiPecN/nQgBMrzZCuhhSRPP6rKOh9JazTVu8oHVTBK1crHPujAW76jlsEH9D0Qa
+	Ow==
+Received: (qmail 3046642 invoked from network); 21 Jun 2025 10:24:38 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 21 Jun 2025 10:24:38 +0200
+X-UD-Smtp-Session: l3s3148p1@Ss6ZtRA4cNOySS9C
+Date: Sat, 21 Jun 2025 10:24:37 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Faisal Bukhari <faisalbukhari523@gmail.com>
+Cc: jdelvare@suse.com, wsa@kernel.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: Fix typo in
+ Documentation/i2c/busses/i2c-parport.rst
+Message-ID: <aFZsRY5p0ILZotXH@shikoro>
+References: <20250621080244.158018-1-faisalbukhari523@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619151759.355893-1-vkuznets@redhat.com>
-In-Reply-To: <20250619151759.355893-1-vkuznets@redhat.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sat, 21 Jun 2025 10:23:11 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHPvqaF3VK3E5HbvrChQ2iCqDRhkP6M25xAWaprx-XcxQ@mail.gmail.com>
-X-Gm-Features: AX0GCFv8BftNe3NMI8IxGnRlQkF40I8Z0M68n_oGN-aCMNCp5ccps2Xx8g4YYlY
-Message-ID: <CAMj1kXHPvqaF3VK3E5HbvrChQ2iCqDRhkP6M25xAWaprx-XcxQ@mail.gmail.com>
-Subject: Re: [PATCH v4] x86/efi: Implement support for embedding SBAT data for x86
-To: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: x86@kernel.org, linux-efi@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Borislav Petkov <bp@alien8.de>, Peter Jones <pjones@redhat.com>, Daniel Berrange <berrange@redhat.com>, 
-	Emanuele Giuseppe Esposito <eesposit@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
-	Greg KH <gregkh@linuxfoundation.org>, Luca Boccassi <bluca@debian.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="maIgzWED4xBPFXVq"
+Content-Disposition: inline
+In-Reply-To: <20250621080244.158018-1-faisalbukhari523@gmail.com>
 
-On Thu, 19 Jun 2025 at 17:18, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->
-> Similar to zboot architectures, implement support for embedding SBAT data
-> for x86. Put '.sbat' section in between '.data' and '.text' as the former
-> also covers '.bss' and '.pgtable' and thus must be the last one in the
-> file.
->
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
-> Changes since v3:
-> - Update optional PE header so .sbat is accounted in
-> 'SizeOfInitializedData' and not in 'SizeOfCode'.
 
-As discussed in the other thread [0], let's not fiddle with these
-fields - they aren't actually used anywhere.
+--maIgzWED4xBPFXVq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So, Boris, Ingo, Dave, mind applying the v3 [1] of this patch? It
-already has my R-b
+On Sat, Jun 21, 2025 at 01:32:44PM +0530, Faisal Bukhari wrote:
+> Fixes a spelling mistake: "resitors" =E2=86=92 "resistors".
 
-Thanks,
+Please always check against linux-next before sending patches.
 
-[0] https://lore.kernel.org/linux-efi/871preptml.fsf@redhat.com/T/#t
-[1] https://lore.kernel.org/linux-efi/877c17pxsz.fsf@redhat.com/T/#t
+
+--maIgzWED4xBPFXVq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhWbEEACgkQFA3kzBSg
+KbZStQ/9GoFT6KdvrafsrTaCchXn7rl0wMJ4Y7x40R2E0bslAbgIbFERG0jZr2H3
+1NQe/R5GFhCqTZ3ELG1QcPRumxAblaeSjxywdZxMvuRyDlR04REnjzGcNtadIB4z
+V+6qdupuCggMG6oe5RmlN95lXUWOsimUbzXXh5Ai478Sq3NXE0BVTJYE5UOSFhE8
+n5Kn+xRMBs5XO9TgzaRXTUFPZxxAk409Iz53nZ7ESS8DCYY5JXIZg01k31HQSjUq
+hdDth7jLIkYBacthqRQQjWPlvKDsVSPAsQtvqctBw/6+UaMDX5TMZkPBJHHoEhx0
+lUPPs7owt6TJk7RxpuZH8OTaQIxgoiF2ldN4qJJDAmlj9XIZw6RfttI8nXdKfs1W
+8jVTBmMGTKUvncKVyPuoEO7NlZ9gJbFnETzpy+1kvRegEvGlJn4dPNtMGsXr6Ciz
+KPqPYNk8DtZxcGtuVYCnHLEKYMBkXvQ/nQmO8n93TPSENgymgV2uoOstI0WVzMtd
+W6aPVUopVULAbh/jf7FrCb/+oxin0E2vIqi9lDtcFBmIhZg6asotGkvSGbu+/1kI
+FYku3yTOmItsWZTYK1P8b/XFbRdzLX2NFVFqZ0xIxWvEnimtRpidLEILC2At5egn
+5WHZXyut4EPD/8rmow36rbFMnDmgexQYnE1gorsuXlPFhyt19rg=
+=lzIv
+-----END PGP SIGNATURE-----
+
+--maIgzWED4xBPFXVq--
