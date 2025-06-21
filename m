@@ -1,71 +1,156 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7239A42AB4;
-	Sat, 21 Jun 2025 06:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2241195808;
+	Sat, 21 Jun 2025 06:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750486428; cv=none; b=DD5NK3iLYHbQRlXutZLtUHTXfEf33gwsitndDuA9hHdXox1M99kf1k9rHT+YSHWNQATlIy878TWUCt4TVMlW8JXKN3oD0gKiTRoG8QpMsqzd0BnGCfzZcZjEjxol/WsvTPONjPB1jkVgLMBgr9Hjv5Wmf/jI5Fon5vCFgf9xsuQ=
+	t=1750487401; cv=none; b=c9JlZSaroIvVXN9fwglmnMQn1fa0X9BbxsCG4YRrS5Bir5vN4fqL7S2r4NTXUDVprqIlVF3ygdKu8LjXqTRmZMRP0X00FHEpTMhIC5CnFZVTqG8d5SktewauapZuWXUgr5n2K50MQZaroNUSDQM+S5sNcXKWs0jJWwwDg44uyKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750486428; c=relaxed/simple;
-	bh=+MFPLH4Gx4kKmyet7Yf7HYWSSo7bAmrt3yU2CCSMjR8=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=MCVjnrZT2C421B26rb/umpUx8XM8LfoeDEGP5VsqaKvejaN0r/VMk8awFfTa6yLoZrC7sl1JoaxSckowP6bM4gJ1OS0GnynUjW8s6yW/MiohVycsunTUBzPhKbOGYI+waXFFR2iJo/4lL/GyjVBCaSq4+bhZNcnAUyTsovNCkpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bPPDP6T0gz8R03y;
-	Sat, 21 Jun 2025 14:13:41 +0800 (CST)
-Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-	by mse-fl1.zte.com.cn with SMTP id 55L6DUru045308;
-	Sat, 21 Jun 2025 14:13:30 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp05[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Sat, 21 Jun 2025 14:13:32 +0800 (CST)
-Date: Sat, 21 Jun 2025 14:13:32 +0800 (CST)
-X-Zmail-TransId: 2afc68564d8c4f6-d43aa
-X-Mailer: Zmail v1.0
-Message-ID: <20250621141332600IBeDo5rQkiGqGJB-pegOm@zte.com.cn>
-In-Reply-To: <20250613114413940fzngS9J_4rTlJabuvcRv1@zte.com.cn>
-References: 20250613114413940fzngS9J_4rTlJabuvcRv1@zte.com.cn
+	s=arc-20240116; t=1750487401; c=relaxed/simple;
+	bh=+8nxB59T4nNd/zAuaPjugmozXPdx/wYZUcfV2AVIE7k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Sm7gZCMrxtyIrw25+y/dtb741NTHPmlUoFbsmJ6KIsBEasLXiLbONCUzE5v/YF+0G58SdIs0NwUNte1k2MlY9H9Fs9JjK02VnlcG8UKAQcN5TcBtEiJXSb6cQHbDGUkxKihQ80rk392jERdduFhD5c+tQGrORQHy1Nm5YSiC+PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b1JPIFFc; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b1JPIFFc"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a4ee391e6fso364585f8f.3;
+        Fri, 20 Jun 2025 23:29:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750487398; x=1751092198; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NkjbtNwR+2HkOqNIDNJiFuWYyKYkGQKZSPa6ldxqxrI=;
+        b=b1JPIFFcGcLvyoaCXr4m1Gcqowx73LwYz0RgY4y1MKYJNFogkoTvonMH7EDPcTjZgg
+         5T5+ALx2dO8iEDJQSSrZ8moznlg2EaoegDDycL+GpdIBmLrPNNdF0od2wUvdezA/GWvU
+         rporetJH50E2WkLCa8bGuVw3nK3IqDYjVM0VwOXzrSDwT8Fk3JNHbwt01FfNiAsH+PoQ
+         EaDdZPJ0hsSV3jiaNq2+ncm16w1/yWeCz8LrsbGmZhiVUvoGC3zOIrUgdG3jula93eS1
+         nhYjQH0V0keU6AS6QzsxhDbdVbkuS0FT6EhdQZHtFN9T7xU8sKFcszrWM+BtZOEWriaN
+         F3og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750487398; x=1751092198;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NkjbtNwR+2HkOqNIDNJiFuWYyKYkGQKZSPa6ldxqxrI=;
+        b=euXD0hXhwdxgcPc5clqEUkdrFZ2CK3Yut8iHgRvioRSwyImH7pQlymvbNmgAP9COh/
+         9dLU3Ei4NnEx+HfwXF3DNMIe4X/si+t4U7H4CB7OD884nbnG+gmxP+Jv4NnNifRGuRYF
+         Nq3iSry+n6zr8UpTR+SNn6DlNznwvYotuqoboZr0COWhT6cyqWgwk2T8GLvJ/6RHHJcr
+         YSbPW59qewoFnNOb52k8cUvvjcJtPqCH5qqVi9A7E2w7aI9NdyqmXgXwn8sbpGPi4Ybo
+         Ba/V5MA6F/cR8QYBpb0GcUgoI3a3scMeFuNq9dULo77D3C/cfX+Im5/ShCB6UgIQb5W/
+         FWLw==
+X-Forwarded-Encrypted: i=1; AJvYcCUnhDza0Jwz4AB7wcmBr862xyK+XtN67+d4Cra/3VhkaKKZUQe0aEXLZNlUXvub0W3g6EC2hHtgSjjPfg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+LfVupY9djuleYR7pAeuMaT+MjMRQNUIu+W7ei+xcobbWqr5y
+	cHCdPQK1bHMzny62NlWe2j5unuLLjO4wfUyZJIY572vvm/eWNlNbG+8N
+X-Gm-Gg: ASbGncuh7qIJERwA+LSncKqnCzMHJwNLhGPasJQ8+dpXuU8J9FYbYsWVXHAZjBPbPbc
+	yAzgfNa/Mk/EdMIqm1yRkVZBg/xfCO7I3cps1wM12lgDJ69A7qi27l5M7L0Cq5oIQ7ZTi8LN/Pd
+	qoYs5fkekBRZvcMcGCevJMQ0ZvT2QBxkLLBbKOgGcFGh3C65AoEHMhOEKJCNCy4YUlEWWzBzCsl
+	Mc4R1Z2vhRDi8eQAHZmMJ3w2PVaWBqKtEG6DYG3nyP28dyYVknG0thYZu+Mq57L4pNM8OwSlU1G
+	+65RTQEhxXoPRKq80wZwTYcwzyJE/eWh3gs45OHaVIMN+lqocTQ00u5pHBN4hZ15k73NzM+p069
+	E4DikS6H+oLZvTlK2Fi3AsOo=
+X-Google-Smtp-Source: AGHT+IE/hg0M6sQ7nkl4Ba9kld0aQ2r8UvzDVcYS3F+oasLbyx+jmasGilFbARj3pfUJY1NIUWai6A==
+X-Received: by 2002:a5d:5f4a:0:b0:3a3:6e85:a550 with SMTP id ffacd0b85a97d-3a6d12a1d62mr1739186f8f.5.1750487397581;
+        Fri, 20 Jun 2025 23:29:57 -0700 (PDT)
+Received: from localhost.localdomain ([102.46.244.122])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646d1391sm44165945e9.9.2025.06.20.23.29.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 23:29:57 -0700 (PDT)
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+To: andy@kernel.org,
+	hansg@kernel.org,
+	mchehab@kernel.org,
+	sakari.ailus@linux.intel.com,
+	gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Subject: [PATCH] staging: media: atomisp: Replace scnprintf with sysfs_emit in bo_show
+Date: Sat, 21 Jun 2025 09:29:44 +0300
+Message-Id: <20250621062944.168386-1-abdelrahmanfekry375@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <jiang.kun2@zte.com.cn>
-Cc: <alexs@kernel.org>, <si.yanteng@linux.dev>, <corbet@lwn.net>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yang.yang29@zte.com.cn>, <wang.yaxin@zte.com.cn>,
-        <fan.yu9@zte.com.cn>, <he.peilin@zte.com.cn>, <tu.qiang35@zte.com.cn>,
-        <qiu.yutan@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
-        <ye.xingchen@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSMKgbGludXggbmV4dCAyLzNdIERvY3MvemhfQ046IFRyYW5zbGF0ZSB4ZnJtX3Byb2MucnN0CiB0byBTaW1wbGlmaWVkIENoaW5lc2U=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 55L6DUru045308
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 68564D95.000/4bPPDP6T0gz8R03y
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-> Subject: [PATCH linux next 2/3] Docs/zh_CN: Translate xfrm_proc.rst
->  to Simplified Chinese
-> Date: Fri, 13 Jun 2025 11:44:13 +0800 (CST)	[thread overview]
-> Message-ID: <20250613114413940fzngS9J_4rTlJabuvcRv1@zte.com.cn> (raw)
-> 
-> From: Wang Yaxin <wang.yaxin@zte.com.cn>
-> 
-> translate the "xfrm_proc.rst" into Simplified Chinese.
-> 
-> Update to commit 304b44f0d5a4("xfrm: Add dir validation to
->  "in" data path lookup")
-> 
-> Signed-off-by: Wang Yaxin <wang.yaxin@zte.com.cn>
-> Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
+Convert buffer output to use sysfs_emit/sysfs_emit_at API for safer
+PAGE_SIZE handling and standardized sysfs output.
 
-Reviewed-by: xu xin <xu.xin16@zte.com.cn>
+Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+---
+ drivers/staging/media/atomisp/pci/hmm/hmm.c | 24 ++++++---------------
+ 1 file changed, 7 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/staging/media/atomisp/pci/hmm/hmm.c b/drivers/staging/media/atomisp/pci/hmm/hmm.c
+index 84102c3aaf97..cae1fccd06af 100644
+--- a/drivers/staging/media/atomisp/pci/hmm/hmm.c
++++ b/drivers/staging/media/atomisp/pci/hmm/hmm.c
+@@ -37,51 +37,41 @@ static const char hmm_bo_type_string[] = "pv";
+ static ssize_t bo_show(struct device *dev, struct device_attribute *attr,
+ 		       char *buf, struct list_head *bo_list, bool active)
+ {
+-	ssize_t ret = 0;
++	ssize_t offset = 0;
+ 	struct hmm_buffer_object *bo;
+ 	unsigned long flags;
+ 	int i;
+ 	long total[HMM_BO_LAST] = { 0 };
+ 	long count[HMM_BO_LAST] = { 0 };
+-	int index1 = 0;
+-	int index2 = 0;
+ 
+-	ret = scnprintf(buf, PAGE_SIZE, "type pgnr\n");
+-	if (ret <= 0)
+-		return 0;
+-
+-	index1 += ret;
++	offset += sysfs_emit(buf, "type pgnr\n");
+ 
+ 	spin_lock_irqsave(&bo_device.list_lock, flags);
+ 	list_for_each_entry(bo, bo_list, list) {
+ 		if ((active && (bo->status & HMM_BO_ALLOCED)) ||
+ 		    (!active && !(bo->status & HMM_BO_ALLOCED))) {
+-			ret = scnprintf(buf + index1, PAGE_SIZE - index1,
++			offset += sysfs_emit_at(buf, offset,
+ 					"%c %d\n",
+ 					hmm_bo_type_string[bo->type], bo->pgnr);
+ 
+ 			total[bo->type] += bo->pgnr;
+ 			count[bo->type]++;
+-			if (ret > 0)
+-				index1 += ret;
+ 		}
+ 	}
+ 	spin_unlock_irqrestore(&bo_device.list_lock, flags);
+ 
+ 	for (i = 0; i < HMM_BO_LAST; i++) {
+ 		if (count[i]) {
+-			ret = scnprintf(buf + index1 + index2,
+-					PAGE_SIZE - index1 - index2,
++			offset += sysfs_emit_at(buf,
++					offset,
+ 					"%ld %c buffer objects: %ld KB\n",
+ 					count[i], hmm_bo_type_string[i],
+ 					total[i] * 4);
+-			if (ret > 0)
+-				index2 += ret;
+ 		}
+ 	}
+ 
+-	/* Add trailing zero, not included by scnprintf */
+-	return index1 + index2 + 1;
++	/* Direct return of accumlated length */
++	return offset;
+ }
+ 
+ static ssize_t active_bo_show(struct device *dev, struct device_attribute *attr,
+-- 
+2.25.1
+
