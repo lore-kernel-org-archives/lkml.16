@@ -1,164 +1,289 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7206D1990C7
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 11:05:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4701719A2A3;
+	Sat, 21 Jun 2025 11:10:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750503942; cv=none; b=H9oEK/4VttDfwvh+vk1uceZq/MGxZ0IH2fVSjEYk1t2DDjIpinc6/LoOjfAeB/CStpQAFLw4VvGosNa0+4g9+1pGy80cORiFLVW915jyt1ZTeGQ6CXofz+X7rqxBI84MXw/jTjA7VYadGccJ0mfQOHpeo944KtfzgR6MULfqAGY=
+	t=1750504219; cv=none; b=HUIAvyXBZ6jkyRE10RJCHa5tQB9Mz+i+AtTg7vCmxvJt2XSSJIHLEvt5vfDnSRsqNF4XBZo0B7D1pIkYsg8qTyzbE/85446pgUdyFMB+EfpnR4yzqlEQ/IFwQ90IOBQxYOSGjklCSQ7YTK3tJbYix+5swPpRiNS1R/Dl+N7LZMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750503942; c=relaxed/simple;
-	bh=1Z6zEw+mZOPSEcs3lq8hEcv43J7vcMirXB/zQftXcPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t7AicqGNZfJnF2JG0uVAQCsKrTEeNYC3CylwuSds7CWqbNFKmMYEh81HZ/Wsk0e/Z3qJJMe+RDj9Lu7R4/ZEBbIqVrMn+8hFTjQcW4mXIA2PNveQs7X63lNDxqhorEvKdd/fY94mip6jQYJJXSijKYazD3AfSDGpt3yPSyceSHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mVnfEMuP; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750504219; c=relaxed/simple;
+	bh=ldQYMyu30F91c9EamhYo1fhn0ulnE2mF6Pd/xq6bofo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UoIOP8QKWDfwQur7xWKXhWWMglAnXiLXBBdgsBnK0JiJ507OAy9RbVLjuE3SZD7nijXzv3J9zyvaxnSMXf3cO9PhJWD6OSnfu34f6T8MXY5Mm9yvvPZ5/a6DCC1oSC2L35MKkrtGfvTkIH7VdGVbU/EuU+qT/7lZ2NUFWGy9u98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HpDsmgcz; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mVnfEMuP"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55L8QrjT032324
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 11:05:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ZXB1PpY2F+oO4eun6xnjvuN7Pt+G5hZZsl3ci+crjeY=; b=mVnfEMuPdyLGuHoA
-	kILuSg3gk3biD+dVOqrc3o+02/83aNxhBZAG46Tjcz0rq4CZopM250wi8x+FxALp
-	B5sNmDcnhfGFhjgHLLj+dy1fTYBIjrcEnpK3f/DpYxG+m+ZkRcoaZnWpdNUm8Hui
-	zTxk3TEYQpJm0OYhpzEy+ezXZasRUpQirygHPRXsc4r193vIGWY0Nin0E06ZzsMk
-	KDT5T0tefcPzqj0hEUxEP8rORlSVW6gbmwkAbu/mKm/nmnRv146ObtAieTNM2ep8
-	Twel9Qev+qmOktzAJ7SIyLIa9IEFvRIve6m5MZh+qFX+JahypDNq2ie878/Qwgl1
-	NtMqXw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ds7s05eq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 11:05:38 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d21080c26fso69759085a.1
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 04:05:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HpDsmgcz"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32ae3e94e57so18189401fa.1;
+        Sat, 21 Jun 2025 04:10:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750504214; x=1751109014; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oCATkS1iFox8++RsOPPrNMNCnqTikPTJEA4op0lJe48=;
+        b=HpDsmgczaW68T59uTfxrSLJHaJbMqOMP6f6tN0D0z8bgFfrG3tvTfYFdLYUcgv7bvj
+         4CkAGWo0KddmrIwP1edKzMK7b/grtb0N9kr/AzGlfy3GfO/QCNqvl+VWybChiYBvt/Ck
+         BLFdiopEv/PcC6HSKwFYt2ZKDfa6UScwqmNKtTIGFzPIjiuRAKs910J5QVv7IPLk83oo
+         RjFR/cSF3ndd3RW1tpgRAgMMZ6NZ+g096j/CgIz9JU3BPsjhPkDL1zR1c5bcmmAp5doQ
+         x244ynLOqLMTUJMMyiwXFU2AgTlBGrIyUFmc8opC/kf2e2TiJ3vSPW55jepN6BF5AS9x
+         A7TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750503937; x=1751108737;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZXB1PpY2F+oO4eun6xnjvuN7Pt+G5hZZsl3ci+crjeY=;
-        b=GNTucWfpqOT0lPG3FQnZvMDqMf6fEE/qS3w+PMZzrWmJgL2qqov95bSHvGQ6CBYyDF
-         lAUoyDSSJK30sbH6NahSHye6rBdAsu2tOdt0qZp6073yfSFfBIOFMn8KjF5WRHUJi9Ry
-         FBVV/+hYtB16fgeal08d8jF2D0OXRFWT8PT1MvcsjtQ6iR2m4LkOF8YtBXopsXr0+06w
-         UbDPfWvTHBz261zgYeE/scn4qog5pKBctQNSsIhI0pIThI6whfbtVkyro8AO/BEpeEqU
-         yNdd3g0aitzNtRnJIeRXRRFlweHM87kTd89f+JdFXjiLjpQuDQOZulE38MLVArZ6MHVn
-         /3sg==
-X-Forwarded-Encrypted: i=1; AJvYcCWxJ0RDzhvKo9UioqqWqnHVqakXd2W7P9/8ZDL6oFRg7BHPn+fquoZ2QwizosqswqWPuSoyc3XiWuO4wJI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf1XSqPlR3CjKzGbgXr2euv7A6AtoEI4ZVd6W2ZVQ147gm302j
-	yj+B2rFU4I0jLo5PgmKgGc4qg8JetwHuUjNHpfS24YTdbyfAU4lZP5Rd7rlX/Yg0AbGWV+7aB66
-	z6dg0XzbDnZVaOqlDnN4yHe8MFyRRRU3d5qvFmcnBf5605YgGnHllYKAiqop78m9pShg=
-X-Gm-Gg: ASbGnctFEV8BvsSwswOVJWWezDSFGeBS6mEjrqCLMznaHl6IkpyTEUyZcIuAFj5DNYN
-	lvVsLYXsWi2SE8qU4Ijdx2F6FmSh9fA/bGZjLTivpeU6KZG+AKnQj+8hNVm3svrYw6NZLbA50Xo
-	fxS2ctXxkZDG4g0mKDU/GdU6zq4Haqx7MfUQGKZ/P+AVQVFngHZrAqr0bh5EwRGKCBZl2wKFUOz
-	Y77Rz9sCJSoWG6pjcHzMi18r5yKFyVIi+hYYHy+R07gSDO9H0e7cscv1KAbpEKCNvZjtSFV3lyx
-	+wTzkCWmPg/cblkETPOkkxezy5r27w1hPVLjsy0xmHyBrtYiUfKwXYrH+XzCZsQ8OxPSC5PYQTC
-	qzgo=
-X-Received: by 2002:a05:620a:454d:b0:7ce:e99e:bc87 with SMTP id af79cd13be357-7d3f98e6631mr327303585a.6.1750503937125;
-        Sat, 21 Jun 2025 04:05:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEHqOaBfvcVqUGoQF69dqHQtBc9kWD43zsEVDVJq6OnhZKAULdX2fWNm3oy3pXRp98yWUAaPw==
-X-Received: by 2002:a05:620a:454d:b0:7ce:e99e:bc87 with SMTP id af79cd13be357-7d3f98e6631mr327302485a.6.1750503936671;
-        Sat, 21 Jun 2025 04:05:36 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053ecb9b0sm346802466b.39.2025.06.21.04.05.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Jun 2025 04:05:35 -0700 (PDT)
-Message-ID: <13471ca7-0e3c-444a-947b-51bce87396cb@oss.qualcomm.com>
-Date: Sat, 21 Jun 2025 13:05:33 +0200
+        d=1e100.net; s=20230601; t=1750504214; x=1751109014;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oCATkS1iFox8++RsOPPrNMNCnqTikPTJEA4op0lJe48=;
+        b=kJCftfyll/pg1PzzfmQnHVt4s3MGpOI5PHRlwyf7T2IqdIVOhoAobPNVPh6+RhR/d9
+         UN4q5/qtp1Z9QfJnCquNhQkn5xYZAdascK9Qeyv0Zg7fEto6hilCpSMvhyq78zIF5pnH
+         MyLCRZQzLRa5ernaFWWhtCXd0+7QjRH//zUqrbc5rwB10IDKU1fNz3HVcIGBKaILHEvH
+         RMQZG0FsDUgwrAnmh45jQWnEKZ8vh8d0GuDfn3xQptwmUTSt64kAhZhXZ3RZfsi+Bfsj
+         T8rLariUJosZDRQZQauCwwIVZ1/3CgbUcm0GvkaSImSglTz293YgF3laJseoTY5AYjC9
+         PqRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV01pxZT8EawnN36q9mOzO/J+2FVKgslGJYZhy9r2M9woUvUIt0OVkTYKPUAHAvN0Quehw27ozXcUgU@vger.kernel.org, AJvYcCXiKRRo1U0fIAZsmSwmjAPUKQ5sAh5XcUGKF/ar8Map4B7OsfDP/skyE9bZ6YxFWqaBWSIIa8yxZa7JKpg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2uw6MeXcp7UNoAjD7Z3abHVGE99uHZmCO45g0XvFvcfqDCGuP
+	25uQNra0NaGvDShzhCCzgvCXCXaZvhrDC10ee4CFJD6Tk2drtR8z/WPOe1G8sEQaXGpLOwzPx/U
+	qeVI9EFWiFXGU3QwPdnYWdmFprjskuL4=
+X-Gm-Gg: ASbGncuMQkmGKGWcCo5HcVkRV0i21whhEQkeFRJpNIEA204Z7JU3h9q9EGKFLFDdm1y
+	xfeJTsRLdUBSDdm0aj8X35GHyIrfDr9m5M6EmvtjB3gE1zgVB/Fq3Uv1WIMmDv+DxjI1pdaTEJJ
+	ri7+C7ogFODuoXBKJs5qnGLkMaqMnBMuDcFqjz8OvCCQ==
+X-Google-Smtp-Source: AGHT+IEcRGbY27V9LDU9tTnEdUHT83kyWethAu8wzs4LLENYLbhYvB5hnKQ7sgV1vRFpPAr2Hsu1cGDkxrJ4lWmqN84=
+X-Received: by 2002:a05:6512:3b29:b0:553:399d:58e6 with SMTP id
+ 2adb3069b0e04-553e3bf3e68mr2312939e87.31.1750504213974; Sat, 21 Jun 2025
+ 04:10:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: sa8775p: rename bus clock to follow the
- bindings
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Mahadevan <quic_mahap@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250602-sa8775p-fix-dts-v1-1-f9f6271b33a3@oss.qualcomm.com>
- <74f7053c-10d6-4aca-a87a-0ac7f55c2f1f@oss.qualcomm.com>
- <jvld427airqpexaiglxe5hbt2svidbqkg3kvc3ysrwmqquwmi7@kif7otpk24zh>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <jvld427airqpexaiglxe5hbt2svidbqkg3kvc3ysrwmqquwmi7@kif7otpk24zh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 6AAv1GwfkdIVIF8XmK_4jCdCNvyXl9Z_
-X-Authority-Analysis: v=2.4 cv=cIPgskeN c=1 sm=1 tr=0 ts=68569202 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=HVaNLapQHXJw-jFKH6IA:9
- a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-ORIG-GUID: 6AAv1GwfkdIVIF8XmK_4jCdCNvyXl9Z_
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIxMDA2NSBTYWx0ZWRfX8h4JM7NOuOsf
- m4zRnIT3wH/O/DDz9/gcVuf8j7uKzXd/b6Dl+ri+AaW9lnIJEnfJGpJhR31ye+fqG9xqpfrgAEP
- 6ZE7GIyoALVmPOkoBTjeSD/RTgbffy4WoysdBkZeAKGjaG0Ng3YUfz/JJ4D4pmwW4OrXEYljJ9b
- P8tMMOoMSf6XBGRoRyxbsrT+UimdcBCiamnd0sqc/2QFz5SbAhbcgLP1xXg417086QaaFu3ZERZ
- opEuuo8SlwWlekdqDdmv0dqm7Urlmu8BOdvwl2KOcDeDvOUdXBs+kVkGpBC0Dldje8NaCcMzEYl
- 9u7RcxVHzeD3nTLdd3yvvRhqTFLgvXXKrJ2dnHTuHmZKhY62mrSPyYrvl1CgvfWvexypXVkmPPC
- qnY4iC5drhWqnBzxBPNIMVNfvMNR8hC6CkkAKi7IADM9EBxIiU0oqbNMYxc5i/zubGoCTJ1i
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-21_02,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 lowpriorityscore=0 clxscore=1015 suspectscore=0 impostorscore=0
- phishscore=0 bulkscore=0 priorityscore=1501 malwarescore=0 adultscore=0
- mlxlogscore=993 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506210065
+References: <20250620-usb_authentication-v1-0-0d92261a5779@ssi.gouv.fr> <20250620-usb_authentication-v1-3-0d92261a5779@ssi.gouv.fr>
+In-Reply-To: <20250620-usb_authentication-v1-3-0d92261a5779@ssi.gouv.fr>
+From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+Date: Sat, 21 Jun 2025 16:09:57 +0500
+X-Gm-Features: AX0GCFvJVISjqcev-lDUZRK6hgKmzgeZVy_yG5gOpNIHjCrFRLOu9HQsvLYwb18
+Message-ID: <CACzwLxiybz489fCY3+CSbU1=yPR7mKXCbDadK1E-p25onDAGkw@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/4] usb: core: Plug the usb authentication capability
+To: nicolas.bouchinet@oss.cyber.gouv.fr
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, 
+	Kannappan R <r.kannappan@intel.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Stefan Eichenberger <stefan.eichenberger@toradex.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Pawel Laszczak <pawell@cadence.com>, Ma Ke <make_ruc2021@163.com>, 
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>, Luc Bonnafoux <luc.bonnafoux@ssi.gouv.fr>, 
+	Luc Bonnafoux <luc.bonnafoux@oss.cyber.gouv.fr>, 
+	Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/15/25 2:34 PM, Dmitry Baryshkov wrote:
-> On Sat, Jun 14, 2025 at 10:10:59PM +0200, Konrad Dybcio wrote:
->> On 6/2/25 9:23 AM, Dmitry Baryshkov wrote:
->>> DT bindings for the DPU SA8775P declare the first clock to be "nrt_bus",
->>> not just "bus". Fix the DT file accordingly.
->>>
->>> Fixes: 2f39d2d46c73 ("arm64: dts: qcom: sa8775p: add display dt nodes for MDSS0 and DPU")
->>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
->>> ---
->>>  arch/arm64/boot/dts/qcom/sa8775p.dtsi | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
->>> index 45f536633f6449e6ce6bb0109b5446968921f684..7eac6919b2992a3512df1e042af22d0cbad04853 100644
->>> --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
->>> @@ -4122,7 +4122,7 @@ mdss0_mdp: display-controller@ae01000 {
->>>  					 <&dispcc0 MDSS_DISP_CC_MDSS_MDP_LUT_CLK>,
->>>  					 <&dispcc0 MDSS_DISP_CC_MDSS_MDP_CLK>,
->>>  					 <&dispcc0 MDSS_DISP_CC_MDSS_VSYNC_CLK>;
->>> -				clock-names = "bus",
->>> +				clock-names = "nrt_bus",
->>
->> Is it the "nrt" clock though, and not "rt"?
->>
->> There used to be a split for non-/real-time use cases, but
->> I have little idea about the specifics.
-> 
-> I think this matches the SM8550 / SM8650. SM8550 provides a good
-> example, because it lists both "bus" and "nrt_bus" clocks:
-> 
->                                 clocks = <&gcc GCC_DISP_AHB_CLK>,
->                                          <&gcc GCC_DISP_HF_AXI_CLK>,
-> 					 [...]
->                                 clock-names = "bus",
->                                               "nrt_bus",
-> 
-> So, I think, let's fix the clock name here to follow the the schema and
-> other pltforms.
+On Fri, Jun 20, 2025 at 7:27=E2=80=AFPM <nicolas.bouchinet@oss.cyber.gouv.f=
+r> wrote:
+>
+> From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+>
+> Plugs the usb authentication implementation in the usb stack and more
+> particularly in the usb_parse_configuration function after the BOS has
+> been parsed and the usb authentication capacity has been controlled.
+>
+> The authentication bulk is implemented by the usb_authenticate_device
+> function.
+>
+> The authorization decision enforcement is done via the authorized field o=
+f
+> the usb_device and the associated authorization and deauthorization funct=
+ions.
+> The usb_device also contains an authenticated field that could be used to=
+ track
+> the result of the authentication process and allow for more complex secur=
+ity
+> policy: the user could manually authorize a device that failed the
+> authentication or manually deauthorize a device that was previously
+> authenticated.
+>
+> The usb_authenticate_device returns 0 or an error code. If 0 is
+> returned, the authorized and authenticated fields of the usb_device are
+> updated with the result of the authentication.
+>
+> Co-developed-by: Luc Bonnafoux <luc.bonnafoux@ssi.gouv.fr>
+> Signed-off-by: Luc Bonnafoux <luc.bonnafoux@ssi.gouv.fr>
+> Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+> ---
+>  drivers/usb/core/config.c | 51 +++++++++++++++++++++++++++++++++++++++++=
++++++-
+>  drivers/usb/core/hub.c    |  6 ++++++
+>  drivers/usb/core/usb.c    |  5 +++++
+>  include/linux/usb.h       |  2 ++
+>  4 files changed, 63 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
+> index 13bd4ec4ea5f7a6fef615b6f50b1acb3bbe44ba4..45ee8e93e263c41f1bf4271be=
+4e69ccfcac3f650 100644
+> --- a/drivers/usb/core/config.c
+> +++ b/drivers/usb/core/config.c
+> @@ -14,6 +14,7 @@
+>  #include <asm/byteorder.h>
+>  #include "usb.h"
+>
+> +#include "authent.h"
+>
+>  #define USB_MAXALTSETTING              128     /* Hard limit */
+>
+> @@ -824,7 +825,50 @@ static int usb_parse_configuration(struct usb_device=
+ *dev, int cfgidx,
+>                 kref_init(&intfc->ref);
+>         }
+>
+> -       /* FIXME: parse the BOS descriptor */
+> +       /* If device USB version is above 2.0, get BOS descriptor */
+> +       /*
+> +        * Requirement for bcdUSB >=3D 2.10 is defined in USB 3.2 =C2=A79=
+.2.6.6
+> +        * "Devices with a value of at least 0210H in the bcdUSB field of=
+ their
+> +        * device descriptor shall support GetDescriptor (BOS Descriptor)=
+ requests."
+> +        *
+> +        * To discuss, BOS request could be also sent for bcdUSB >=3D 0x0=
+201
+> +        */
+> +       // Set a default value for authenticated at true in order not to =
+block devices
+> +       // that do not support the authentication
+> +       dev->authenticated =3D 1;
+> +
+> +       if (le16_to_cpu(dev->descriptor.bcdUSB) >=3D 0x0201) {
+> +               pr_notice("bcdUSB >=3D 0x0201\n");
+> +               retval =3D usb_get_bos_descriptor(dev);
+> +               if (!retval) {
+> +                       pr_notice("found BOS\n");
+> +#ifdef CONFIG_USB_AUTHENTICATION
+> +                       if (dev->bos->authent_cap) {
+> +                               /* If authentication cap is present, star=
+t device authent */
+> +                               pr_notice("found Authent BOS\n");
+> +                               retval =3D usb_authenticate_device(dev);
+> +                               if (retval !=3D 0) {
+> +                                       pr_err("failed to authenticate th=
+e device: %d\n",
+> +                                              retval);
+> +                               } else if (!dev->authenticated) {
+> +                                       pr_notice("device has been reject=
+ed\n");
+> +                                       // return early from the configur=
+ation process
+> +                                       return 0;
 
-if we don't know any better, let's just make the checker happy
+Returning 0 after rejecting a device leaves udev half-initialised and still
+linked in usb_bus_type (the hub driver only aborts after this call).
+The next hot-plug may oops on dangling pointers.
+Please consider returning -EPERM instead of 0.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
-Konrad
+> +                               } else {
+> +                                       pr_notice("device has been author=
+ized\n");
+> +                               }
+> +                       } else {
+> +                               // USB authentication unsupported
+> +                               // Apply security policy on failed device=
+s
+> +                               pr_notice("no authentication capability\n=
+");
+> +                       }
+> +#endif
+> +               } else {
+> +                       // Older USB version, authentication not supporte=
+d
+> +                       // Apply security policy on failed devices
+> +                       pr_notice("device does not have a BOS descriptor\=
+n");
+> +               }
+> +       }
+>
+>         /* Skip over any Class Specific or Vendor Specific descriptors;
+>          * find the first interface descriptor */
+> @@ -1051,6 +1095,7 @@ int usb_get_bos_descriptor(struct usb_device *dev)
+>         length =3D bos->bLength;
+>         total_len =3D le16_to_cpu(bos->wTotalLength);
+>         num =3D bos->bNumDeviceCaps;
+> +
+>         kfree(bos);
+>         if (total_len < length)
+>                 return -EINVAL;
+> @@ -1122,6 +1167,10 @@ int usb_get_bos_descriptor(struct usb_device *dev)
+>                         dev->bos->ptm_cap =3D
+>                                 (struct usb_ptm_cap_descriptor *)buffer;
+>                         break;
+> +               case USB_AUTHENT_CAP_TYPE:
+> +                       dev->bos->authent_cap =3D
+> +                               (struct usb_authent_cap_descriptor *)buff=
+er;
+> +                       break;
+>                 default:
+>                         break;
+>                 }
+> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> index 0e1dd6ef60a719f59a22d86caeb20f86991b5b29..753e55155ea34a7739b5f530d=
+ad429534e60842d 100644
+> --- a/drivers/usb/core/hub.c
+> +++ b/drivers/usb/core/hub.c
+> @@ -2640,6 +2640,12 @@ int usb_new_device(struct usb_device *udev)
+>         udev->dev.devt =3D MKDEV(USB_DEVICE_MAJOR,
+>                         (((udev->bus->busnum-1) * 128) + (udev->devnum-1)=
+));
+>
+> +       // TODO: Check the device state, we want to avoid semi-initialize=
+d device to userspace.
+> +       if (!udev->authenticated) {
+> +               // If the device is not authenticated, abort the procedur=
+e
+> +               goto fail;
+> +       }
+> +
+>         /* Tell the world! */
+>         announce_device(udev);
+>
+> diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
+> index 0b4685aad2d50337f3cacb2198c95a68ae8eff86..76847c01d3493e2527992a3bb=
+927422519d9a974 100644
+> --- a/drivers/usb/core/usb.c
+> +++ b/drivers/usb/core/usb.c
+> @@ -46,6 +46,7 @@
+>  #include <linux/dma-mapping.h>
+>
+>  #include "hub.h"
+> +#include "authent_netlink.h"
+>
+>  const char *usbcore_name =3D "usbcore";
+>
+> @@ -1080,6 +1081,10 @@ static int __init usb_init(void)
+>         usb_debugfs_init();
+>
+>         usb_acpi_register();
+> +
+> +       // TODO : check error case
+> +       usb_auth_init_netlink();
+> +
+>         retval =3D bus_register(&usb_bus_type);
+>         if (retval)
+>                 goto bus_register_failed;
+> diff --git a/include/linux/usb.h b/include/linux/usb.h
+> index b46738701f8dc46085f251379873b6a8a008d99d..e9037c8120b43556f8610f9ac=
+b3ad4129e847b98 100644
+> --- a/include/linux/usb.h
+> +++ b/include/linux/usb.h
+> @@ -431,6 +431,8 @@ struct usb_host_bos {
+>         struct usb_ssp_cap_descriptor   *ssp_cap;
+>         struct usb_ss_container_id_descriptor   *ss_id;
+>         struct usb_ptm_cap_descriptor   *ptm_cap;
+> +       /* Authentication capability */
+> +       struct usb_authent_cap_descriptor *authent_cap;
+>  };
+>
+>  int __usb_get_extra_descriptor(char *buffer, unsigned size,
+>
+> --
+> 2.50.0
+>
