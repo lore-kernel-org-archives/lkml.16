@@ -1,129 +1,87 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411EC2063D2
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 16:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748342063D2;
+	Sat, 21 Jun 2025 16:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750522211; cv=none; b=i8hp1/2pfKWZY4cZIfF5kZG3VHEYwheRmZHCZXP7nMXBYOdTs+D9A/aNujrJNXhlrBVl4B9AbzFZIMnh8ukWnQA9xmuP0vbEcA66cdVJmnEhf592UBb8M8uzdEaXqAeKffuqwBr/PiCsmaNCjGVJnJXnHDLu9QceJg+e4Q5SUd0=
+	t=1750522224; cv=none; b=QYV3uL0I1RXoiQtwgUeIRa7tmuJqI+ssblGCGcUlOxdgXwigXxbtZcQxD8/9BSU9i6haKNeKoNBaU9GCgV6G52GeRopJbyZnDC/xNsg1QBJ2ewiKIs1RoIlQT52H8wOQ8rLcHjRj7DcxNDxB4EauwjxMnh0cuHwdq4ReLK1PPcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750522211; c=relaxed/simple;
-	bh=SDTl3xy6j3Dqzdg8SG0MCWZcS3XIFlPcXcqe56Gq4JU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iarApAAj4pMjPWN8dVbPe4zmdhtdgQQzBsCQ7NuwxYww+Sa1Xg1oeQb7n9zl7+eHhymhKxkwt03g0C5sZc98ZOJWoqoVacS+pgydW2puGBFrfRxR2YI6wp80k0Ik8j1IXV+0OSx0lWFyMpRQQzPdyHQzZREMYjZ8LLnwZY4YpVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mcaVUkos; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750522224; c=relaxed/simple;
+	bh=yw1oz3Hw9jie0HQzYjN0TuWHel9ojqMEUURJZRcbeBA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=baQqtRGRk14SaEmyz6eeVp2XkSaUDQNUyNnzrpBAvRG0WDLRI6Wm2lIZUfoYpLUD9p1/g+6jX60Zy31LGiXt1abfeViKoUMmvdznpKem1UVhT45Too8YtgLEAbjcG9DvhICTsj0kP3I1Z0uj/eyyf4BJ98LSasx4bX/+KnJtP4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DTwQfDpI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mcaVUkos"
-Message-ID: <cd5670d7-b2ba-487b-94c4-bb781a9d0bf1@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750522195;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZbR8+eD0l+HPJUYQuSGTTOhQsUZE6eRuwbpXbCLLz4Y=;
-	b=mcaVUkosaNLFM1EVr+vpueBjIr/s0OJO6U4bCFy79sMrluP7ZUzGWvPWBFLMezhXruI/uH
-	UxcvrKWSs5PpyU0Ha6csTluxZFKO6VNRrAv16n3UwxzDmfmwSk9bU8d/wZADVwd4mRHud0
-	40uc6jW7FjlVRRI0pihXGr8t6WMjshU=
-Date: Sat, 21 Jun 2025 09:09:41 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTwQfDpI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B6C2C4CEE7;
+	Sat, 21 Jun 2025 16:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750522224;
+	bh=yw1oz3Hw9jie0HQzYjN0TuWHel9ojqMEUURJZRcbeBA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DTwQfDpIQAUAgHndhDEMI3xP6dAfY4+xdRyoahIOWHLRVkp4ticYMx1t0BB3lfTc9
+	 OBEbTMUFNL8A1mGPeYY1OVDIOLfmU7xwzgVS3BcKYGITpVy0nmz2gKXBZR7wyApc6P
+	 M6gH1gKDPyjSklKiGKBxh2OdbiVwgy1hutDrZDrzlfjiCCca8HF/r1S139gdeRRK/c
+	 ZruE3vyBasXiG8LjShuHr9p9QGjbbbd3CtfhtFf96J1y5kETOtdaOl4LJQCTi3EUHb
+	 x1nPHr30AXlTUoEVM14i4vv+a4cBwcn6d7nZq2leXXiXYgrlGIQt1ApPXhOc1YECJA
+	 2IwcNCLO5aP3w==
+Date: Sat, 21 Jun 2025 18:10:15 +0200
+From: Alexey Gladkov <legion@kernel.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
+	linux-kbuild@vger.kernel.org, linux-scsi@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: Re: [PATCH v4 6/7] modpost: Add modname to mod_device_table alias
+Message-ID: <aFbZZ_d2NgeoSBiW@example.org>
+References: <cover.1750511018.git.legion@kernel.org>
+ <6e2f70b07a710e761eb68d089d96cee7b27bb2d5.1750511018.git.legion@kernel.org>
+ <CANiq72k+ojA3=JfwhvjZ_=+uGBG-WmhLOigzPUXdoY8VQXbf=A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] RDMA/siw: work around clang stack size warning
-To: Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
- Bernard Metzler <bmt@zurich.ibm.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Leon Romanovsky <leon@kernel.org>, Nathan Chancellor <nathan@kernel.org>
-Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Potnuri Bharat Teja <bharat@chelsio.com>, Showrya M N <showrya@chelsio.com>,
- Eric Biggers <ebiggers@google.com>, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-References: <20250620114332.4072051-1-arnd@kernel.org>
- <2d04fee6-5d95-4c50-b2b1-ee67f42932e2@linux.dev>
- <ca2eaa50-c3ed-491d-ab38-65a7c1dc2820@app.fastmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <ca2eaa50-c3ed-491d-ab38-65a7c1dc2820@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <CANiq72k+ojA3=JfwhvjZ_=+uGBG-WmhLOigzPUXdoY8VQXbf=A@mail.gmail.com>
 
+On Sat, Jun 21, 2025 at 05:20:49PM +0200, Miguel Ojeda wrote:
+> On Sat, Jun 21, 2025 at 3:57 PM Alexey Gladkov <legion@kernel.org> wrote:
+> >
+> > +/* Format: __mod_device_table__kmod_<modname>__<type>__<name> */
+> 
+> Should we mention that `__kmod_` and `__` will be the search strings,
+> or otherwise the Rust formatting (i.e. that is carries a line etc.)?
 
-在 2025/6/21 1:43, Arnd Bergmann 写道:
-> On Sat, Jun 21, 2025, at 06:12, Zhu Yanjun wrote:
->> 在 2025/6/20 4:43, Arnd Bergmann 写道:
->>
->> Because the array of kvec structures in siw_tx_hdt consumes the majority
->> of the stack space, would it be possible to use kmalloc or a similar
->> dynamic memory allocation function instead of allocating this memory on
->> the stack?
->>
->> Would using kmalloc (or an equivalent) also effectively resolve the
->> stack usage issue?
-> Yes, moving the allocation somewhere else (kmalloc, static variable,
-> per siw_sge, per siw_wqe) would avoid the high stack usage effectively,
-> it's a tradeoff and I picked the solution that made the most sense
-> to me, but there is a good chance another alternative is better here.
->
-> The main differences are:
->
-> - kmalloc() adds runtime overhead that may be expensive in a
->    fast path
->
-> - kmalloc() can fail, which adds complexity from error handling.
->    Note that small allocations with GFP_KERNEL do not fail but instead
->    wait for memory to become available
->
-> - If kmalloc() runs into a low-memory situation, it can go through
->    writeback, which in turn can use more stack space than the
->    on-stack allocation it was replacing
->
-> - static allocations bloat the kernel image and require locking that
->    may be expensive
->
-> - per-object preallocations can be wasteful if a lot of objects
->    are created, and can still require locking if the object is used
->    from multiple threads
->
-> As I wrote, I mainly picked the 'noinline_for_stack' approach
-> here since that is how the code is known to work with gcc, so
-> there is little risk of my patch causing problems.
->
-> Moving the both the kvec array and the page array into
-> the siw_wqe is likely better here, I'm not familiar enough
-> with the driver to tell whether that is an overall improvement.Th
-Thank you very much. There are several possible solutions to this issue, 
-and the appropriate one depends on the specific scenario. For the 
-problem in siw, the noinline_for_stack approach has been selected. In my 
-opinion, this appears to be more of a workaround than a true fix. While 
-it does mitigate the issue, the underlying problem in siw still remains.
+Ok. Make sense.
 
-That said, now that we have a clearer understanding of the problem and 
-its root cause through discussions and extended analysis, a more robust 
-and long-term solution should eventually be proposed.
+Basically there's a comment for the MODULE_DEVICE_TABLE macro that tells
+where and how that symbol is parsed.
 
-Thanks,
-
-Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
-
-Zhu Yanjun
-
->
-> A related change I would like to see is to remove the
-> kmap_local_page() in this driver and instead make it
-> depend on 64BIT or !CONFIG_HIGHMEM, to slowly chip away
-> at the code that is highmem aware throughout the kernel.
-> I'm not sure if that that would also help drop the array
-> here.
->
->       Arnd
+> Cc'ing Tomo: do we need an update on `rust/kernel/net/phy.rs`? Should
+> we factor out the formatting?
+> 
+> Thanks!
+> 
+> Cheers,
+> Miguel
+> 
 
 -- 
-Best Regards,
-Yanjun.Zhu
+Rgrds, legion
 
