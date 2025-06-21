@@ -1,168 +1,145 @@
-Received: from sonic311-30.consmr.mail.ne1.yahoo.com (sonic311-30.consmr.mail.ne1.yahoo.com [66.163.188.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41CD25A2D8
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 17:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.188.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99C1246769;
+	Sat, 21 Jun 2025 17:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750526645; cv=none; b=MwkYrMXnHgk5XqAgC9hH4jwx0cmAKbf7VlrfQxHYFW17STn7F32IkMSr+2LaPVRYrqvILdx/cpyLctoiBF1+SRloYCqkpkIRC2jhwMU+SDo8izFRwgb6V2stDwgcIQy95N7LZHaKylZm81r06xAMa6i9pe4nyf9Dy/KqGQuiJFs=
+	t=1750526670; cv=none; b=gtGZdSHL9kolGwHGbg4iN1RrRWx5Jtn6KUtyh77CnMw4+vFrjSEPH+PCz6xE01Ul32QAJt0ex4kTEq04hBRhfP3/P1495h1zYoYx4DweXOAR0GmFayrRCkOfuOzbovV/74vdQ4auKdururL7vuRsMLWVZ9mRgXoBCN+DCf5gIuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750526645; c=relaxed/simple;
-	bh=PXNl/4U8SPxf6zMvJk8C55Fc9VC3ay7Kotmda9k1aiY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RlgOvfrAlTRggYLwOINjKySQIpH1vi8HYumq7zUvxoxp/lcTuGYda2bIz9kiedsWTRE7aBygNAfqQ91oMrpLHwAJJD0asqTFv8P+CubOQnmlr6e7xltTTdGqhK/bGZk4RiajmuXxnFetwo1O5O025VA2VG0WTTZw2cEvnu8oniY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=WavFRWZA; arc=none smtp.client-ip=66.163.188.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+	s=arc-20240116; t=1750526670; c=relaxed/simple;
+	bh=/dvkpugllr2kB/Z4YTxbkwU2tzsLEtBNrbNIU9jQNsw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n9jfFQxq18Ywc/d4RH5I/wLY7YzcNbq0TsYOk/wghRo2gdAEMaRjvuwxD2IIVbkDj4Y1VSst77iqDbUNGIUC7pbsu2h6NXczosGM+7hvg51abaijaXZY6na1CwLwqrLfqZnNQk35qv/5nN8MfUPMCfTPH2NBc5KtUKeq4T85a0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=BZXVOmdc; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=GUqLV1hf; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="WavFRWZA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1750526642; bh=W/cTrlOevtxan2rTu6YSeU2owjx8zOs1+huUBxSxev0=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=WavFRWZAyL+1UxvSxNxOzCi53CfDmj4Bqwu0ZtYGNXsOggopcifDCuFVUMUHyXpg7L6uU41MQgnTZod7IjnbpakRcaLG+1U5ao8LlXGmuF5K40BOjn0y+LvV8oiTUVnlDbGRN1xw8VPzqbJLlK4rIU02c0QedwakH63sH2eCJQnFJgnKnCjf6mUl8SHXfW1Yrqcm7dVjZa/RcREk/T1f4sMIJbKSzN1xgt6D/jIFsxe5DvIut6Mh+484S2wxlc4KQKzOVizPZ/IHCHnYvb5zR5MT+//EyCm3OpOLXZFkTosvZRgh94hl35DpPX9o1RPL8xDyhX+llZ2RdL1Gz9r1Hg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1750526642; bh=siaMc1Pc1Y6p7sggT57dif6f4Luw/nMeR2jpnOfiNY2=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=Gkb3M8dyPWy2thVL7P8oI5F+y+vkpFGlQx459dKe2dt6ajJaIqWw4zWMYKXZIKhvBFy6mI18EdbUMgLvqjrHl3INGLHluXsC+F4aqWx7LC3KXAxpmAOJKLWVtaLnRC7ni4YNbZ5q/azzv+yUL01QygAUVdnK45E6u8DyLNuWkybhUSxo88Lqwt2ddWMNvvbcnk4M5hFNyOESjTZLQCkgtnmJLICYzU9eD0tfT9PaAGNgz1vvsmene55uCfpK1eayXDUKJRFUZqkML3u9vUtOwm6J8OiQQenXIsnOca9xkHQQA6ovg09u9EhFNwSh4yf1kXSMNBHfF+7LI9mUQUenuQ==
-X-YMail-OSG: IWDPGnAVM1lWRUNQZCk2bf1RzWdc32XWZTKIiidnTEv71DHLxeCYV.OjDgSX0pr
- QT8nd17cvTeY6_XAVHxDKZz505daLZs48wX4a8usru0WB.TSasTv.Sb4SgNUUoaEOKn4hvaTjlnC
- GncHDbvdu9bPuSGknf9Tq21nMS7EQAagnEuwCDZYz51iVNryOb_ZS5eZOyayn5i8uypGFTe4k3hQ
- IkP4zO1kTHP09rZ3c_4xxb2nNrxtVw3xyJtZ4xHlQXea1SZzkL2_CdMiL2x.szgFZ44OKHPyBDYV
- sdGVfjVjyovapu4oKdfetr5tLV2Uk_8Y9gDSIhydtsvW2KaIdmylTnCFGmJqj7p1vbvSFSI2AYuk
- d9nJfdA8MYXstYdg_pF9BBq4JNvCs4OyLBTVQolmLct2Ts.r2PNmI8rYaQmw4kGXb0cA4oTF_1kC
- o.lPHdKlzn2NwjC88DQnn6pkUSbHel7ohom3Swkpeh1lTS6TirGlIXXMW0Mu7j9vp0GKsr3cx7pZ
- YYOazd1QvMgL62RvywhkHn1YcLnBFAjXx6EZ8UIIFaAD0gQr32J1bd9sW.iCgnBcIdlDT4HbEYBW
- GXQTSk1_jsW3NCPUP.rdWF41EZ7CCSvYxrDauepSweNLs2NNWKb.A6g9vv45NhapfEp8RHSysUgy
- p8taRsWnm2RKrxRPzi9M5qJWa.EBMrqalPSETiWKR6Hdz4tUWKrK7jeTtbgX4auIlaVtAUMvGFlT
- 8Aha59fpj_EzZ.rlr9KFWGCUGw__m6Rp74dwuhK5EEJ7AB85Y6QXhn0CMBVdoqUQklTQrXKZzxwW
- 1ut6uA2xmfQIHYfuJDH8DZF2D0UU22QluHybk0evv1_oKT8lSriZ7ZsjMldbYxyRbohun_Hq4a2i
- 3D4O6AWJWsWdBSq6o4WhHXLtXScPm786shHJfMOGNmc08D8Um1_c7N1uebj46M7ad6VUU.CJL2td
- _tTADvImukczkyXQtjRzFoOWBbisAHoRcPWPctMdey0yzWz4sLCpEBUoPI32CGd0vND1f_OziKTs
- hbgQ5C_sV1vtsPixyEW174si_xvZj0aMsX8h46.Z_FIZyke.zwYp1XF56w3sIpZJh0zzXb1fdpqI
- .ZwjxRzB4lUqdX4lC1VQywqk94heJVqYfjM053cle.J6DKpT9YVBlOh36EVSP7qRGQi9Cj9NxE8p
- 8lxb6kTAPy6iY0J31m1Lchnqyeu6IWd5WUwV2tiLcIqCbMxpgxSUMO2Evt5Mopm6nVjqbaqfLH3W
- wtNIFaNo4iIdPgNYyqA4etrb8gcBGInA0cYnB2hBKpbZTomFJVQrS9bPIGeQWERlJ5sKL6tKa1hL
- mAhjUFJnOAAMn7XMrudvN_4SqsmK3N4TdMQRMIMMdbymo_l9LxGWVWyF5OSMrBLQpRsXBzsoNy97
- jf6m.LlbE.9AUeK7VskgfOJ2XVJD3iz5WkiOOBisWwSivgBrXs6pHPBGs0Bk.O29kz0vokk0OtrL
- XvxeoljlLHKtsjaWl4NXdW4ALjpy8eZcPeiwcRQvPrtXN45VXRagbFXETNFY65h1cEUt4D8kL0xy
- 6e.M3pQiX0EoepAjEb4kE0_eXF0rcy2dC05j0POLyF9tWiwl_0728X.kdFjMO3fmzJA23iP.CzZT
- wP7JoLjE_SEG0Iu7.hN2zPjiEEtdAoOgUgw4PANW.mPE9vyXwfDr1ilgmY2Aduttsj0.ckTLvDb2
- .uEUpXLXcD3UWt1fkgLfNmbdD63sMdADQvNwOxCCEwEHHi0Qxw8OWsqLjx9gosw5M.nM3N4PVhAT
- egMyDDq6tB_q9PNXoEOtPBe0oIMXi4OctYnUxChF5B6CzlhVJWhRBUAdRNabtJJNx4UKPpvUs2Mb
- DUJ1Odcnca6RSXb5Oy9hkpmbXQ7CqdNhQK42HYTYxYT.OH4prsT1H24oMtugVp1QSvwq0kLSAC_T
- 8gKE.e698KtL6fniemQc4GsYCQ2m1sFc_NAxQw2DuZYwsFc6VerqVh884hdy0qSABLLWUJDLw30t
- YZ9IUVEmzW6iL89zdtR01yOwo8D1HQYpqx.oleZut5d_zVEFXVaoSBf_v.2QKLFTyeODAUwoBQgO
- jRtUkVPZ3lkdd.CUF0jV3ViPE9q7_nb32_.iia6F8ZusyBMcxOpjbR5oET2JwV78m5AfYf6fBFhz
- qjyF6v_eiO5sNG5HrIex1_kZo37EvlnpwmZkr9RVvT9uo88NN8TolnFO8WNSnzHQzY929ACmp7hq
- sr_0b6_c8dhobMyT5hSK5f40h84pTln77cV69QeP5TEjO5sZ8bl1ME9Rhy6asYmpf7vIMhWqZeFe
- H7maYBirO_4l6VPeBF5zkPA8m36KW7yP8B_KC
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: c9865e50-085c-43f5-ab63-822986864379
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ne1.yahoo.com with HTTP; Sat, 21 Jun 2025 17:24:02 +0000
-Received: by hermes--production-gq1-74d64bb7d7-dp9cd (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 5256f3ef263223dbc5f852ba156c094e;
-          Sat, 21 Jun 2025 17:23:55 +0000 (UTC)
-From: Casey Schaufler <casey@schaufler-ca.com>
-To: casey@schaufler-ca.com,
-	paul@paul-moore.com,
-	eparis@redhat.com,
-	linux-security-module@vger.kernel.org,
-	audit@vger.kernel.org
-Cc: jmorris@namei.org,
-	serge@hallyn.com,
-	keescook@chromium.org,
-	john.johansen@canonical.com,
-	penguin-kernel@i-love.sakura.ne.jp,
-	stephen.smalley.work@gmail.com,
-	linux-kernel@vger.kernel.org,
-	selinux@vger.kernel.org
-Subject: [RFC PATCH 15/15] LSM: Remove exclusive LSM flag
-Date: Sat, 21 Jun 2025 10:18:50 -0700
-Message-ID: <20250621171851.5869-16-casey@schaufler-ca.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250621171851.5869-1-casey@schaufler-ca.com>
-References: <20250621171851.5869-1-casey@schaufler-ca.com>
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="BZXVOmdc";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="GUqLV1hf"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bPh6L5kL4z9t7l;
+	Sat, 21 Jun 2025 19:24:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1750526666;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LxQLxg1SC5GL/sLkLv30CRCGpGY4vKeQ9jJV108hObw=;
+	b=BZXVOmdcVtRCR1N3rVLRLKtGwYKmVeGBABsQkuybwYaSD+QmJ/20/+EdoaR/HFxy+GJ3lK
+	EuEVaSbs544aYJ2QYOJ2jAwvTUuNN0Xfgy6EYcSY5LjqpH+6BRKRs64KOdnSIov/0myZr7
+	fjtoph+/Tkhul2sakdhN4UAsuUAM2D7nS+P95AjAF6DdIN3yNeyDB7Ufa5phuCgEyPEnoL
+	i8G55tC+PCmZk3ytFEfzAOUJh5NxcIp6SE/4cMRlewf3fHXUJlJGNDMOu+KF5KHflJ+fr+
+	IManHCwiPlhyl7/qoiogKjb8fjtyt0LJl95c8XJOyCQDlIMSnXCRcBReb+QBPg==
+Message-ID: <07d91b36-dbeb-42b3-8dd7-b0771df9b306@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1750526664;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LxQLxg1SC5GL/sLkLv30CRCGpGY4vKeQ9jJV108hObw=;
+	b=GUqLV1hfZo7rzb3uxA3jnBhUHDmc/9d+PACgXKbd/qmyCj6J10KqHzOak68SpJsFb9Eyz5
+	YUWTXiEm/Ipk9ru3hIL1xY6NKFdHf/L54CplFZGP37admrJolmzonFLQZKjMp+U9HRX8Fz
+	A1lsavfQIQIJiO1oOIqfqxsQ8iogaOnhQQffzvDj9tBT3a0RKOOQ/JnVV4yHDGhQYSVhhg
+	izut2EIkVqovBFCnt7OMGymgJmwI7HEakHpvzwmHMkgd2q3+9o8SXUrlRW8VBLqZGrqYcb
+	t1ENPzE4EYJYx4+X4wQclRekGFxCITx6j+NdBScLdJAPFg0PsFnc/wv03ehKdg==
+Date: Sat, 21 Jun 2025 19:24:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH] iio: accel: bmc150: Do not configure IRQ registers if no
+ IRQ connected
+To: Jonathan Cameron <jic23@kernel.org>, Hans de Goede <hansg@kernel.org>
+Cc: Marek Vasut <marek.vasut+bmc150@mailbox.org>, linux-iio@vger.kernel.org,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, David Lechner <dlechner@baylibre.com>,
+ Julien Stephan <jstephan@baylibre.com>, Peter Zijlstra
+ <peterz@infradead.org>, Salvatore Bonaccorso <carnil@debian.org>,
+ linux-kernel@vger.kernel.org
+References: <20250613124648.14141-1-marek.vasut+bmc150@mailbox.org>
+ <79946c40-e2ce-4fbc-a6b2-b37f6fd69d1d@kernel.org>
+ <20250621181733.3cb6111e@jic23-huawei>
+Content-Language: en-US
+From: Marek Vasut <marek.vasut@mailbox.org>
+In-Reply-To: <20250621181733.3cb6111e@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-MBO-RS-META: f3isaeah9xzascc7uifdkj8gu7qanwcu
+X-MBO-RS-ID: 360c4c3517a10077c8a
+X-Rspamd-Queue-Id: 4bPh6L5kL4z9t7l
 
-Only SELinux specifies LSM_FLAG_EXCLUSIVE, so there is no point in
-enforcing it. There is no expectation that new exclusive security
-modules will be accepted, as the reasons for exclusivity have been
-addressed. The LSM_FLAG_EXCLUSIVE flag and its enforcement can be
-removed.
-
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
----
- include/linux/lsm_hooks.h |  1 -
- security/lsm_init.c       | 17 +----------------
- security/selinux/hooks.c  |  2 +-
- 3 files changed, 2 insertions(+), 18 deletions(-)
-
-diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-index 06e840fd4b63..717541fcd653 100644
---- a/include/linux/lsm_hooks.h
-+++ b/include/linux/lsm_hooks.h
-@@ -149,7 +149,6 @@ extern void security_add_hooks(struct security_hook_list *hooks, int count,
- 			       const struct lsm_id *lsmid);
- 
- #define LSM_FLAG_LEGACY_MAJOR	BIT(0)
--#define LSM_FLAG_EXCLUSIVE	BIT(1)
- 
- enum lsm_order {
- 	LSM_ORDER_FIRST = -1,	/* This is only for capabilities. */
-diff --git a/security/lsm_init.c b/security/lsm_init.c
-index 784f8296966f..3d8f59104d8f 100644
---- a/security/lsm_init.c
-+++ b/security/lsm_init.c
-@@ -28,7 +28,6 @@ static __initdata const char *lsm_order_cmdline;
- static __initdata const char *lsm_order_legacy;
- 
- /* Ordered list of LSMs to initialize. */
--static __initdata struct lsm_info *lsm_exclusive;
- static __initdata struct lsm_info *lsm_order[MAX_LSM_COUNT + 1];
- 
- #define lsm_order_for_each(iter)					\
-@@ -150,8 +149,7 @@ static bool __init lsm_order_exists(struct lsm_info *lsm)
-  * @src: source of the addition
-  *
-  * Append @lsm to the enabled LSM array after ensuring that it hasn't been
-- * explicitly disabled, is a duplicate entry, or would run afoul of the
-- * LSM_FLAG_EXCLUSIVE logic.
-+ * explicitly disabled or is a duplicate entry.
-  */
- static void __init lsm_order_append(struct lsm_info *lsm, const char *src)
- {
-@@ -173,19 +171,6 @@ static void __init lsm_order_append(struct lsm_info *lsm, const char *src)
- 		return;
- 	}
- 
--	if (lsm->flags & LSM_FLAG_EXCLUSIVE) {
--		if (lsm_exclusive) {
--			lsm_pr_dbg("skip exclusive LSM conflict %s:%s\n",
--				   src, lsm->id->name);
--			lsm_enabled_set(lsm, false);
--			return;
--		} else {
--			lsm_pr_dbg("select exclusive LSM %s:%s\n",
--				   src, lsm->id->name);
--			lsm_exclusive = lsm;
--		}
--	}
--
- 	lsm_enabled_set(lsm, true);
- 	lsm_order[lsm_count] = lsm;
- 	lsm_idlist[lsm_count++] = lsm->id;
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 9578b63bbd2a..039d03be91f0 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -7675,7 +7675,7 @@ void selinux_complete_init(void)
-    all processes and objects when they are created. */
- DEFINE_LSM(selinux) = {
- 	.id = &selinux_lsmid,
--	.flags = LSM_FLAG_LEGACY_MAJOR | LSM_FLAG_EXCLUSIVE,
-+	.flags = LSM_FLAG_LEGACY_MAJOR,
- 	.enabled = &selinux_enabled_boot,
- 	.blobs = &selinux_blob_sizes,
- 	.init = selinux_init,
--- 
-2.47.0
-
+On 6/21/25 7:17 PM, Jonathan Cameron wrote:
+> On Mon, 16 Jun 2025 14:42:54 +0200
+> Hans de Goede <hansg@kernel.org> wrote:
+> 
+>> Hi,
+>>
+>> On 13-Jun-25 14:45, Marek Vasut wrote:
+>>> The BMC150 on Onemix 2S does not have IRQ line described in ACPI tables,
+>>> which leads to bmc150_accel_core_probe() being called with irq=0, which
+>>> leads to bmc150_accel_interrupts_setup() never being called, which leads
+>>> to struct bmc150_accel_data *data ->interrupts[i].info being left unset
+>>> to NULL. Later, userspace can indirectly trigger bmc150_accel_set_interrupt()
+>>> which depends on struct bmc150_accel_data *data ->interrupts[i].info being
+>>> non-NULL, and which triggers NULL pointer dereference. This is triggered
+>>> e.g. from iio-sensor-proxy.
+>>>
+>>> Fix this by skipping the IRQ register configuration in case there is no
+>>> IRQ connected in hardware, in a manner similar to what the driver did in
+>>> the very first commit which added the driver.
+>>
+>> ...
+>>
+>>> Fixes: 8e22f477e143 ("iio: bmc150: refactor interrupt enabling")
+>>> Signed-off-by: Marek Vasut <marek.vasut+bmc150@mailbox.org>
+>>> ---
+>>> Cc: "Nuno Sá" <nuno.sa@analog.com>
+>>> Cc: Andy Shevchenko <andy@kernel.org>
+>>> Cc: David Lechner <dlechner@baylibre.com>
+>>> Cc: Jonathan Cameron <jic23@kernel.org>
+>>> Cc: Julien Stephan <jstephan@baylibre.com>
+>>> Cc: Peter Zijlstra <peterz@infradead.org>
+>>> Cc: Salvatore Bonaccorso <carnil@debian.org>
+>>> Cc: linux-iio@vger.kernel.org
+>>> Cc: linux-kernel@vger.kernel.org
+>>> ---
+>>>   drivers/iio/accel/bmc150-accel-core.c | 3 +++
+>>>   1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/drivers/iio/accel/bmc150-accel-core.c b/drivers/iio/accel/bmc150-accel-core.c
+>>> index 744a034bb8b5..1c3583ade2b4 100644
+>>> --- a/drivers/iio/accel/bmc150-accel-core.c
+>>> +++ b/drivers/iio/accel/bmc150-accel-core.c
+>>> @@ -550,6 +550,9 @@ static int bmc150_accel_set_interrupt(struct bmc150_accel_data *data, int i,
+>>>   	if (ret < 0)
+>>>   		return ret;
+>>>   
+>>> +	if (!info)
+>>> +		return 0;
+>>> +
+>>>   	/* map the interrupt to the appropriate pins */
+>>>   	ret = regmap_update_bits(data->regmap, info->map_reg, info->map_bitmask,
+>>>   				 (state ? info->map_bitmask : 0));
+>>
+>> AFAIK the proper fix would be to not register any IIO-triggers. This fix will
+>> avoid the problem, but userspace might still try to use non-working triggers
+>> which will now silently fail.
+>>
+>> I'm not an IIO expert, but IIRC other drivers simply skip registering their triggers
+>> when there is no interrupt support.
+> 
+> Absolutely. It is annoyingly common for devices to have some or none of the interrupt
+> lines actually wired so drivers should not present the interfaces if they aren't.
+> It is acceptable for a new driver to just fail to probe if handling the device with no
+> interrupts is particularly complex but in general at least some functionality tends
+> to be easy to implement so we prefer that.
+I haven't gotten to this again ... yet ... I can try and add some sort 
+of polling fallback maybe ?
