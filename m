@@ -1,132 +1,282 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179E76136;
-	Sat, 21 Jun 2025 00:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C916136
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 00:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750466822; cv=none; b=NM8jzVXl9max6yXDcwld8GhpbQabHaaI61uq7zW6IC4Dj3j6zuIDfmrOFGdC2hSwVDZKQWuPf72952dxMVZQVR5Gu/7uBhNA69X45p6Z6U5aBir5wDLl2H6sLFU26unUkGvUA+oYbofbY0FpQzGbuH0kJx1be/M81exkaEo612E=
+	t=1750466910; cv=none; b=K/ACl+z+vktEjhYwEMF3W3rZ70WQE6Uybr9tlOODWBFnOtL/SYb5wXulnibrzHbaEAud3PbGuJfwkXZb0WiPPXKqJntzYBqutI1fj/rNkkE9AOf0cp6AWNBoRwzCrmoPd51XzA3j4ChmNLG5+ypSHY0Fs6JU2q/nZwY3GCOkw7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750466822; c=relaxed/simple;
-	bh=i/YXw29fFmHQpzSs5Fl6EM8Oy29peb0zYlxMPflx9s8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Z94XS0Oou+95H9ktY1VnlLVFOxeTCxk435vQNXagOLYl21o5HYaSggT7jFX3gpFSyHxqGyYHY2CUnozIF61ELF9VyXHUSoJBNQlKDHc9/r5fsXQiRLOWHV16M6Jp6qFjpKHipR0+94BJqWiDPpdSB4hGt/kUeY4cIyrnJy2jEgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Y75q0L7H; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1750466910; c=relaxed/simple;
+	bh=U0JwxxIfwXvGo6vMahD+cNcGsEiy9pwPwz5Y3tqlH2M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=esJ3vqb8v5QmhPtX9BpJcTZRfchdXL0eEnXlxvgxYn+9l/jn1OD8BaKR1WwYTlT8/ZpRvwZeNLmxBCvyfcs6ZCcOe4qotvMXerthxXe2NXA+gaMVSs/7/uRgEq1RI2gc9tQM+/V0iyBYvXst5h5MkpAjwCAC+CCqXAlTZKDD35E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QKHZpPnV; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Y75q0L7H"
-Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55L0jkwd005127
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 20 Jun 2025 17:45:46 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55L0jkwd005127
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1750466754;
-	bh=SozjncbjIgbRZKFKMsBb5zTkiUYeneB0+jkJcg4j6s4=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=Y75q0L7HtfSeWqBkKbDOfuH9lSjkL34QWktpd4ex6AP/CBySW6NdTYZEUdVnTESx4
-	 neNn/2g/zEnLNRRb0LID7jnyYFmbIDucsXWk/r9fmZdW/xqt1UKeTACF77RfNUcPR5
-	 IDJfNYVHFswnY+/ziZEvPwL1NOcqHrNzkOmRPigLHm51n9BOetoF9a/FnhVLX5kzh+
-	 ceqXED9/YAtIQzMBxHkzPV/KJfxDUIPKk8i1YGXE0B8eEGMrRhUVreNBQ4CBuma8Yc
-	 l/PFAkfe2Iv+7xiT4zPRljgG9XsHRzjVyDbC5Er8Kb8rapy8AAVqZO46GVEHTTgrEl
-	 bJTn5MZgQE5GQ==
-Date: Fri, 20 Jun 2025 17:45:46 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Xin Li <xin@zytor.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-CC: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Xiongwei Song <xiongwei.song@windriver.com>,
-        Xin Li <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>,
-        Alexey Kardashevskiy <aik@amd.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-        Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>,
-        Breno Leitao <leitao@debian.org>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>, Hou Tao <houtao1@huawei.com>,
-        Juergen Gross <jgross@suse.com>,
-        Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>,
-        Eric Biggers <ebiggers@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>, Yuntao Wang <ytcoode@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>,
-        Huang Shijie <shijie@os.amperecomputing.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-mm@kvack.org, Yian Chen <yian.chen@intel.com>
-Subject: Re: [PATCHv6 01/16] x86/cpu: Enumerate the LASS feature bits
-User-Agent: K-9 Mail for Android
-In-Reply-To: <aa91aadb-758e-42db-86ab-451384e466ed@zytor.com>
-References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com> <20250620135325.3300848-2-kirill.shutemov@linux.intel.com> <d3055288-c640-4df3-978e-abb97b1610e7@zytor.com> <tfpekzid4hu4xguq3fetosyltg3owjy2cactqklohfohalhbza@hx7qdrpcymrn> <aa91aadb-758e-42db-86ab-451384e466ed@zytor.com>
-Message-ID: <D8783A84-119A-4981-9EB1-12C21BB34714@zytor.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QKHZpPnV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750466907;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FkU+gPOIhbeinrV8TQvkcE3b9DDKVV+TZ4jA0J9V37s=;
+	b=QKHZpPnV/uKWsLaHUJp7wbohnOt14HWbcf65wavpKlnZKk9PA3xxKDN9UDqvYFMn9qMqfP
+	h4KPzNrYrKkkqwgWTg1J6tXNlVrL0wzzjwT5nvnNfOrk+XR8EasSlJsIB1/xfXYYPhSZVy
+	7QiR8Nd+ImZeHRX6MqA71wldx3yjTK8=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-610-PSBpcU_WONG57eYCaXboZg-1; Fri,
+ 20 Jun 2025 20:48:23 -0400
+X-MC-Unique: PSBpcU_WONG57eYCaXboZg-1
+X-Mimecast-MFC-AGG-ID: PSBpcU_WONG57eYCaXboZg_1750466902
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0186E19560AD;
+	Sat, 21 Jun 2025 00:48:21 +0000 (UTC)
+Received: from dell-per7425-02.rhts.eng.pek2.redhat.com (dell-per7425-02.rhts.eng.pek2.redhat.com [10.73.116.18])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 05352180045B;
+	Sat, 21 Jun 2025 00:48:13 +0000 (UTC)
+From: Li Wang <liwang@redhat.com>
+To: akpm@linux-foundation.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Keith Lucas <keith.lucas@oracle.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Shuah Khan <shuah@kernel.org>
+Subject: [PATCH] ksm_tests: Skip hugepage test when Transparent Hugepages are disabled
+Date: Sat, 21 Jun 2025 08:48:08 +0800
+Message-ID: <20250621004808.368878-1-liwang@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On June 20, 2025 4:46:21 PM PDT, Xin Li <xin@zytor=2Ecom> wrote:
->On 6/20/2025 10:31 AM, Kirill A=2E Shutemov wrote:
->> On Fri, Jun 20, 2025 at 08:36:30AM -0700, Xin Li wrote:
->>> On 6/20/2025 6:53 AM, Kirill A=2E Shutemov wrote:
->>>> diff --git a/arch/x86/Kconfig=2Ecpufeatures b/arch/x86/Kconfig=2Ecpuf=
-eatures
->>>> index 250c10627ab3=2E=2E9574c198fc08 100644
->>>> --- a/arch/x86/Kconfig=2Ecpufeatures
->>>> +++ b/arch/x86/Kconfig=2Ecpufeatures
->>>> @@ -124,6 +124,10 @@ config X86_DISABLED_FEATURE_PCID
->>>>    	def_bool y
->>>>    	depends on !X86_64
->>>> +config X86_DISABLED_FEATURE_LASS
->>>> +	def_bool y
->>>> +	depends on !X86_64
->>>> +
->>>>    config X86_DISABLED_FEATURE_PKU
->>>>    	def_bool y
->>>>    	depends on !X86_INTEL_MEMORY_PROTECTION_KEYS
->>>=20
->>> You don't need to add X86_DISABLED_FEATURE_LASS, because the LASS code
->>> is NOT optional at build time, i=2Ee=2E, you now don't have CONFIG_X86=
-_LASS=2E
->>=20
->> Hmm=2E But it is optional=2E It depends on CONFIG_X86_64=2E I don't thi=
-nk we
->> want it to be advertised on 32-bit kernels=2E
->>=20
->
->I kind of ignore 32-bit=2E=2E=2E
->
->But I simply hate adding a disabled feature that depends on !X86_64;
->x86_64 has a broad scope, and new CPU features are often intentionally
->not enabled for 32-bit=2E
->
->(X86_DISABLED_FEATURE_PCID is the only one before LASS)
->
->
+Some systems (e.g. minimal or real-time kernels) may not enable
+Transparent Hugepages (THP), causing MADV_HUGEPAGE to return EINVAL.
+This patch introduces a runtime check using the existing THP sysfs
+interface and skips the hugepage merging test (`-H`) when THP is
+not available.
 
-More importantly, it is wrong=2E=20
+To avoid those failures:
 
-The 32-bit build can depend on this feature not existing, therefore it SHO=
-ULD be listed as a disabled feature=2E
+  # -----------------------------
+  # running ./ksm_tests -H -s 100
+  # -----------------------------
+  # ksm_tests: MADV_HUGEPAGE: Invalid argument
+  # [FAIL]
+  not ok 1 ksm_tests -H -s 100 # exit=2
+
+  # --------------------
+  # running ./khugepaged
+  # --------------------
+  # Reading PMD pagesize failed# [FAIL]
+  not ok 1 khugepaged # exit=1
+
+  # --------------------
+  # running ./soft-dirty
+  # --------------------
+  # TAP version 13
+  # 1..15
+  # ok 1 Test test_simple
+  # ok 2 Test test_vma_reuse dirty bit of allocated page
+  # ok 3 Test test_vma_reuse dirty bit of reused address page
+  # Bail out! Reading PMD pagesize failed# Planned tests != run tests (15 != 3)
+  # # Totals: pass:3 fail:0 xfail:0 xpass:0 skip:0 error:0
+  # [FAIL]
+  not ok 1 soft-dirty # exit=1
+  # SUMMARY: PASS=0 SKIP=0 FAIL=1
+
+  # -------------------
+  # running ./migration
+  # -------------------
+  # TAP version 13
+  # 1..3
+  # # Starting 3 tests from 1 test cases.
+  # #  RUN           migration.private_anon ...
+  # #            OK  migration.private_anon
+  # ok 1 migration.private_anon
+  # #  RUN           migration.shared_anon ...
+  # #            OK  migration.shared_anon
+  # ok 2 migration.shared_anon
+  # #  RUN           migration.private_anon_thp ...
+  # # migration.c:196:private_anon_thp:Expected madvise(ptr, TWOMEG, MADV_HUGEPAGE) (-1) == 0 (0)
+  # # private_anon_thp: Test terminated by assertion
+  # #          FAIL  migration.private_anon_thp
+  # not ok 3 migration.private_anon_thp
+  # # FAILED: 2 / 3 tests passed.
+  # # Totals: pass:2 fail:1 xfail:0 xpass:0 skip:0 error:0
+  # [FAIL]
+  not ok 1 migration # exit=1
+
+Signed-off-by: Li Wang <liwang@redhat.com>
+Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Joey Gouly <joey.gouly@arm.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Keith Lucas <keith.lucas@oracle.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Shuah Khan <shuah@kernel.org>
+---
+ tools/testing/selftests/mm/khugepaged.c   |  5 +++++
+ tools/testing/selftests/mm/ksm_tests.c    |  6 ++++++
+ tools/testing/selftests/mm/migration.c    |  8 ++++++++
+ tools/testing/selftests/mm/soft-dirty.c   |  9 ++++++++-
+ tools/testing/selftests/mm/thp_settings.c | 11 +++++++++++
+ tools/testing/selftests/mm/thp_settings.h |  2 ++
+ 6 files changed, 40 insertions(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/mm/khugepaged.c b/tools/testing/selftests/mm/khugepaged.c
+index 8a4d34cce36b..6822eb7ea58e 100644
+--- a/tools/testing/selftests/mm/khugepaged.c
++++ b/tools/testing/selftests/mm/khugepaged.c
+@@ -1190,6 +1190,11 @@ int main(int argc, char **argv)
+ 		.read_ahead_kb = 0,
+ 	};
+ 
++	if (!thp_is_enabled()) {
++		printf("Transparent Hugepages not available\n");
++		return KSFT_SKIP;
++	}
++
+ 	parse_test_type(argc, argv);
+ 
+ 	setbuf(stdout, NULL);
+diff --git a/tools/testing/selftests/mm/ksm_tests.c b/tools/testing/selftests/mm/ksm_tests.c
+index dcdd5bb20f3d..1fb2263faa8d 100644
+--- a/tools/testing/selftests/mm/ksm_tests.c
++++ b/tools/testing/selftests/mm/ksm_tests.c
+@@ -15,6 +15,7 @@
+ #include "../kselftest.h"
+ #include <include/vdso/time64.h>
+ #include "vm_util.h"
++#include "thp_settings.h"
+ 
+ #define KSM_SYSFS_PATH "/sys/kernel/mm/ksm/"
+ #define KSM_FP(s) (KSM_SYSFS_PATH s)
+@@ -555,6 +556,11 @@ static int ksm_merge_hugepages_time(int merge_type, int mapping, int prot,
+ 	unsigned long scan_time_ns;
+ 	int pagemap_fd, n_normal_pages, n_huge_pages;
+ 
++	if (!thp_is_enabled()) {
++		printf("Transparent Hugepages not available\n");
++		return KSFT_SKIP;
++	}
++
+ 	map_size *= MB;
+ 	size_t len = map_size;
+ 
+diff --git a/tools/testing/selftests/mm/migration.c b/tools/testing/selftests/mm/migration.c
+index 1e3a595fbf01..a306f8bab087 100644
+--- a/tools/testing/selftests/mm/migration.c
++++ b/tools/testing/selftests/mm/migration.c
+@@ -5,6 +5,8 @@
+  */
+ 
+ #include "../kselftest_harness.h"
++#include "thp_settings.h"
++
+ #include <strings.h>
+ #include <pthread.h>
+ #include <numa.h>
+@@ -185,6 +187,9 @@ TEST_F_TIMEOUT(migration, private_anon_thp, 2*RUNTIME)
+ 	uint64_t *ptr;
+ 	int i;
+ 
++	if (!thp_is_enabled())
++		SKIP(return, "Transparent Hugepages not available");
++
+ 	if (self->nthreads < 2 || self->n1 < 0 || self->n2 < 0)
+ 		SKIP(return, "Not enough threads or NUMA nodes available");
+ 
+@@ -214,6 +219,9 @@ TEST_F_TIMEOUT(migration, shared_anon_thp, 2*RUNTIME)
+ 	uint64_t *ptr;
+ 	int i;
+ 
++	if (!thp_is_enabled())
++		SKIP(return, "Transparent Hugepages not available");
++
+ 	if (self->nthreads < 2 || self->n1 < 0 || self->n2 < 0)
+ 		SKIP(return, "Not enough threads or NUMA nodes available");
+ 
+diff --git a/tools/testing/selftests/mm/soft-dirty.c b/tools/testing/selftests/mm/soft-dirty.c
+index 8e1462ce0532..72d8ded87756 100644
+--- a/tools/testing/selftests/mm/soft-dirty.c
++++ b/tools/testing/selftests/mm/soft-dirty.c
+@@ -6,8 +6,10 @@
+ #include <stdint.h>
+ #include <malloc.h>
+ #include <sys/mman.h>
++
+ #include "../kselftest.h"
+ #include "vm_util.h"
++#include "thp_settings.h"
+ 
+ #define PAGEMAP_FILE_PATH "/proc/self/pagemap"
+ #define TEST_ITERATIONS 10000
+@@ -78,8 +80,13 @@ static void test_hugepage(int pagemap_fd, int pagesize)
+ {
+ 	char *map;
+ 	int i, ret;
+-	size_t hpage_len = read_pmd_pagesize();
+ 
++	if (!thp_is_enabled()) {
++		printf("Skipping test: Transparent Hugepages not available\n");
++		return KSFT_SKIP;
++	}
++
++	size_t hpage_len = read_pmd_pagesize();
+ 	if (!hpage_len)
+ 		ksft_exit_fail_msg("Reading PMD pagesize failed");
+ 
+diff --git a/tools/testing/selftests/mm/thp_settings.c b/tools/testing/selftests/mm/thp_settings.c
+index ad872af1c81a..bad60ac52874 100644
+--- a/tools/testing/selftests/mm/thp_settings.c
++++ b/tools/testing/selftests/mm/thp_settings.c
+@@ -381,3 +381,14 @@ unsigned long thp_shmem_supported_orders(void)
+ {
+ 	return __thp_supported_orders(true);
+ }
++
++bool thp_is_enabled(void)
++{
++	if (access(THP_SYSFS, F_OK) != 0)
++		return false;
++
++	int mode = thp_read_string("enabled", thp_enabled_strings);
++
++	/* THP is considered enabled if it's either "always" or "madvise" */
++	return mode == 1 || mode == 3;
++}
+diff --git a/tools/testing/selftests/mm/thp_settings.h b/tools/testing/selftests/mm/thp_settings.h
+index fc131d23d593..6c07f70beee9 100644
+--- a/tools/testing/selftests/mm/thp_settings.h
++++ b/tools/testing/selftests/mm/thp_settings.h
+@@ -84,4 +84,6 @@ void thp_set_read_ahead_path(char *path);
+ unsigned long thp_supported_orders(void);
+ unsigned long thp_shmem_supported_orders(void);
+ 
++bool thp_is_enabled(void);
++
+ #endif /* __THP_SETTINGS_H__ */
+-- 
+2.49.0
+
