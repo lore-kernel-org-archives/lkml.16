@@ -1,139 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward502d.mail.yandex.net (forward502d.mail.yandex.net [178.154.239.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D02E1624E9;
-	Sat, 21 Jun 2025 10:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6256430E842;
+	Sat, 21 Jun 2025 10:40:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750502188; cv=none; b=AFWEqiRBcw6rKsL04QvKGjKaql+8IDZOhwo7vOeA1vf91MYPi6hAgsRn1I1RXv+WOFBl2imTWlS+ByCGKJGrSlqUZODHDaCtNH1GzJGAuv12yK1+xVoztkeUoCT2n1cuTtfg+pEHBj4G1CQH4YqMesxf1d/36FVjz2xjZD5lmL4=
+	t=1750502413; cv=none; b=EEkujAYIVHCYB29DThJDmcx19devNRR4n8LhvsUxIlLnHljlJTxQbCOhAUDmwRwE7WovIX8q+hgE3OurGyyRtaP3IU/AuIgShnTx5MOS+hP3Rek18nLhsIdEpAR3N2KHU7D1WxU+QJg/uD8lKjCMXZcbIkg5sbaZMmnXedsnn6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750502188; c=relaxed/simple;
-	bh=XdhXJ6xgtEXxF6yH2/iVd6cbk2kpHK0jLlVvy4AbYBs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bl63OInrHQLKHWO/gDbcx72rtfl0ML/mXpF7dYhIgah4XJjL9N69u47lEpP5u2yQ6vjZLijrqTX5Nt7McIMU9UbJlIUj3lJW+G38yq+IsIOsvKFKi74R9d3pg+vW41HdqQuy3vtFycd6069hH6YhtfYImz+nuQxKCZTmw/UK9jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F3In1HUI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750502413; c=relaxed/simple;
+	bh=MbJ56eGUoKOruETAA7fRRk8d/cPg4/Kbu9VBh/8LUzc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=u9HIQsNKEEba9Ry5GtwDBcvWwqeVAHLGsaNII5oJccIaztpcD3WtOn6pBGKi8E/ZnIn6R5kA1IPE7cvTZQV1ZpNv5/XDd83MwFXcx8Wae1K9U+Ol+jF5VvBJEw3bLzPtOIi7hJ5Hed1hQzIrdKL3swf51NOmoTwnpzkNLPZ7fLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=oZQ1sD7s; arc=none smtp.client-ip=178.154.239.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F3In1HUI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1061C4CEE7;
-	Sat, 21 Jun 2025 10:36:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750502188;
-	bh=XdhXJ6xgtEXxF6yH2/iVd6cbk2kpHK0jLlVvy4AbYBs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F3In1HUIGF53PwoOpZt39X/4nPxZYqMpOneJJ/Jap14f0/AWjnp5znxKJSYSu35G3
-	 skFxN+tDbpi4T03ooAwHY7SxmtXwVI/+t6EiSC+56WU9uIDcHG6MA3SebwIi+Y1D7N
-	 9cQ+G9gPjdp6ea8IhygJykAPh3Tp38uWHXIJFLCqYvDhe+wtPURqz/vwBXvMPWxIyB
-	 mfizEMaNie3s+81xGjQ3XcU2FEKkpA18TJOG2OMamcFD7tls6J8orOmqaRivLI2Ude
-	 7ptRl+Uf2iwrJbqZsjEcz+w4rJw8IPop3JX2BedH5DCh6AkE912g8AH9Fv80jqyMbR
-	 IeApTrpuRqTVw==
-Date: Sat, 21 Jun 2025 11:36:23 +0100
-From: Simon Horman <horms@kernel.org>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, xiaoning.wang@nxp.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev
-Subject: Re: [PATCH net-next 2/3] net: enetc: separate 64-bit counters from
- enetc_port_counters
-Message-ID: <20250621103623.GB71935@horms.kernel.org>
-References: <20250620102140.2020008-1-wei.fang@nxp.com>
- <20250620102140.2020008-3-wei.fang@nxp.com>
+	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="oZQ1sD7s"
+Received: from mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:832b:0:640:fda5:0])
+	by forward502d.mail.yandex.net (Yandex) with ESMTPS id 5DA3261298;
+	Sat, 21 Jun 2025 13:32:44 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id dWNfMBYLimI0-wwrEJ3Lf;
+	Sat, 21 Jun 2025 13:32:43 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
+	s=mail; t=1750501963;
+	bh=Z3ZRLrkQIS7QBG05Pth/MJ3flxSjMxjBWX3IXE/GqtY=;
+	h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
+	b=oZQ1sD7sM8hB9lPXZLY6SQkgbICLHbbBpoyIfDPvRlrudqVZMEoXVFKpZHt82ujRb
+	 ULh/GP7QTdt/haEc31GlxIdr5GMMDj+NRue8bNTHeYHVBD/hdkBhacCcRkRuEbM0iU
+	 MudL24e+OF5UqBOa7ffHJjX+WVSAIILoN+FcvTNA=
+Authentication-Results: mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
+Date: Sat, 21 Jun 2025 13:32:37 +0300
+From: Onur <work@onurozkan.dev>
+To: "Benno Lossin" <lossin@kernel.org>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <peterz@infradead.org>, <mingo@redhat.com>, <will@kernel.org>,
+ <boqun.feng@gmail.com>, <longman@redhat.com>, <ojeda@kernel.org>,
+ <alex.gaynor@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <dakr@kernel.org>, <thatslyude@gmail.com>
+Subject: Re: [PATCH V3] implement `ww_mutex` abstraction for the Rust tree
+Message-ID: <20250621133237.5ccdfa3a@nimda.home>
+In-Reply-To: <DAQL7NBDD68Q.1ZS3PUR0AGN0R@kernel.org>
+References: <20250619140656.498-1-work@onurozkan.dev>
+	<DAQL7NBDD68Q.1ZS3PUR0AGN0R@kernel.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620102140.2020008-3-wei.fang@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 20, 2025 at 06:21:39PM +0800, Wei Fang wrote:
-> Some counters in enetc_port_counters are 32-bit registers, and some are
-> 64-bit registers. But in the current driver, they are all read through
-> enetc_port_rd(), which can only read a 32-bit value. Therefore, separate
-> 64-bit counters (enetc_pm_counters) from enetc_port_counters and use
-> enetc_port_rd64() to read the 64-bit statistics.
-> 
-> Signed-off-by: Wei Fang <wei.fang@nxp.com>
+On Thu, 19 Jun 2025 16:42:15 +0200
+"Benno Lossin" <lossin@kernel.org> wrote:
 
-This patch looks fine to me, as does the following one.
-However, they multiple sparse warnings relating
-to endianness handling in the ioread32() version of _enetc_rd_reg64().
+> On Thu Jun 19, 2025 at 4:06 PM CEST, Onur =C3=96zkan wrote:
+> > From: onur-ozkan <work@onurozkan.dev>
+>=20
+> Can you double-check your name in your git config? This doesn't match
+> the Signed-off-by below.
 
-I've collected together my thoughts on that in the form of a patch.
-And I'd appreciate it if we could resolve this one way or another.
+That's strange. It should be "Onur =C3=96zkan", gitconfig is the correct
+one. I will re-check that on V4 patch.
 
-From: Simon Horman <horms@kernel.org>
-Subject: [PATCH RFC net] net: enetc: Correct endianness handling in
- _enetc_rd_reg64
+> > <work@onurozkan.dev> ---
+> >  rust/helpers/helpers.c            |   1 +
+> >  rust/helpers/ww_mutex.c           |  39 +++
+> >  rust/kernel/error.rs              |   1 +
+> >  rust/kernel/sync/lock.rs          |   1 +
+> >  rust/kernel/sync/lock/ww_mutex.rs | 556
+> > ++++++++++++++++++++++++++++++ 5 files changed, 598 insertions(+)
+> >  create mode 100644 rust/helpers/ww_mutex.c
+> >  create mode 100644 rust/kernel/sync/lock/ww_mutex.rs
+>=20
+> Can you split this patch into multiple smaller ones? For example all
+> the tests can be done separately as well as the abstractions for
+> `ww_class`, `ww_acquire_ctx` and `ww_mutex`.
+>=20
+> Thanks.
 
-enetc_hw.h provides two versions of _enetc_rd_reg64.
-One which simply calls ioread64() when available.
-And another that composes the 64-bit result from ioread32() calls.
+I will try to separate them. It's my first big (relatively) patch-based
+work. I am still tryin to get used to it :)
 
-In the second case the code appears to assume that each ioread32()
-call returns a little-endian value. The high and the low 32 bit
-values are then combined to make a 64-bit value which is then
-converted to host byte order.
 
-However, both the bit shift and the logical or used to combine
-the two 32-bit values assume that they are operating on host-byte
-order entities. This seems broken and I assume that the code
-has only been tested on little endian systems.
+> > +/// ```
+> > +/// use kernel::c_str;
+> > +/// use kernel::define_ww_class;
+> > +///
+> > +/// define_ww_class!(WOUND_WAIT_GLOBAL_CLASS, wound_wait,
+> > c_str!("wound_wait_global_class")); +///
+> > define_ww_class!(WAIT_DIE_GLOBAL_CLASS, wait_die,
+> > c_str!("wait_die_global_class")); +/// ``` +#[macro_export]
+> > +macro_rules! define_ww_class {
+>=20
+> What's the reason for this being a macro?
 
-Correct this by converting the 32-bit little endian values
-to host byte order before operating on them.
+It's for creating global classes which was suggested in previous
+reviews. A similar approach is used on the C side as well with
+`DEFINE_WD_CLASS`.
 
-Also, use little endian types to store these values, to make
-the logic clearer and is moreover good practice.
+> > +    ($name:ident, wait_die, $class_name:expr) =3D> {
+> > +        static $name: $crate::sync::lock::ww_mutex::WwClass =3D {
+> > +            $crate::sync::lock::ww_mutex::WwClass {
+> > +                inner:
+> > $crate::types::Opaque::new($crate::bindings::ww_class {
+> > +                    stamp: $crate::bindings::atomic_long_t {
+> > counter: 0 },
+> > +                    acquire_name: $class_name.as_char_ptr(),
+> > +                    mutex_name: $class_name.as_char_ptr(),
+> > +                    is_wait_die: 1,
+> > +                    // TODO: Replace with
+> > `bindings::lock_class_key::default()` once stabilized for `const`.
+> > +                    //
+> > +                    // SAFETY: This is always zero-initialized
+> > when defined with `DEFINE_WD_CLASS`
+> > +                    // globally on C side.
+> > +                    //
+> > +                    // Ref:
+> > https://github.com/torvalds/linux/blob/master/include/linux/ww_mutex.h#=
+L85-L89
+> > +                    acquire_key: unsafe { core::mem::zeroed() },
+> > +                    // TODO: Replace with
+> > `bindings::lock_class_key::default()` once stabilized for `const`.
+> > +                    //
+> > +                    // SAFETY: This is always zero-initialized
+> > when defined with `DEFINE_WD_CLASS`
+> > +                    // globally on C side.
+> > +                    //
+> > +                    // Ref:
+> > https://github.com/torvalds/linux/blob/master/include/linux/ww_mutex.h#=
+L85-L89
+> > +                    mutex_key: unsafe { core::mem::zeroed() },
+> > +                }),
+> > +            }
+> > +        };
+> > +    };
+> > +}
+> > +
+> > +/// Implementation of C side `ww_class`.
+>=20
+> This isn't informative at all. The names already match, so I wouldn't
+> have thought otherwise.
 
-Flagged by Sparse
+I didn't want to duplicate the docs. I will update it (and others) on
+V4.
 
-Fixes: 69c663660b06 ("net: enetc: Correct endianness handling in _enetc_rd_reg64")
-Signed-off-by: Simon Horman <horms@kernel.org>
----
-I have marked this as RFC as I am unsure that the above is correct.
+> > +///
+> > +/// Represents a group of mutexes that can participate in deadlock
+> > avoidance together. +/// All mutexes that might be acquired
+> > together should use the same class. +///
+> > +/// # Examples
+> > +///
+> > +/// ```
+> > +/// use kernel::sync::lock::ww_mutex::WwClass;
+> > +/// use kernel::c_str;
+> > +/// use pin_init::stack_pin_init;
+> > +///
+> > +/// stack_pin_init!(let _wait_die_class =3D
+> > WwClass::new_wait_die(c_str!("graphics_buffers"))); +///
+> > stack_pin_init!(let _wound_wait_class =3D
+> > WwClass::new_wound_wait(c_str!("memory_pools"))); +/// +/// #
+> > Ok::<(), Error>(()) +/// ```
+> > +#[pin_data]
+> > +pub struct WwClass {
+> > +    /// Wrapper of the underlying C `ww_class`.
+> > +    ///
+> > +    /// You should not construct this type manually. Use the
+> > `define_ww_class` macro
+> > +    /// or call `WwClass::new_wait_die` or
+> > `WwClass::new_wound_wait` instead.
+> > +    #[pin]
+> > +    pub inner: Opaque<bindings::ww_class>,
+>=20
+> Why `pub`? Abstractions normally don't expose `Opaque` wrappers for
+> bindings. Especially because this type is marked `#[pin_data]` this
+> seems wrong, because this would allow people to construct it in a
+> non-pinned state & also non-initialized state.
 
-The version of _enetc_rd_reg64() that is a trivial wrapper around
-ioread64() assumes that the call to ioread64() returns a host byte order
-value?
+It was for `define_ww_class` macro. It obviously says you shouldn't do
+that but sure, I can undo the `pub` and create a `const` function for
+`define_ww_class`.
 
-If that is the case then is it also the case that the ioread32() calls,
-in this version of _enetc_rd_reg64() also return host byte order values.
-And if so, it is probably sufficient for this version to keep using u32
-as the type for low, high, and tmp.  And simply:
 
-	return high << 32 | low;
----
- drivers/net/ethernet/freescale/enetc/enetc_hw.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_hw.h b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
-index cb26f185f52f..3f40fcdbc4a7 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_hw.h
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
-@@ -502,15 +502,15 @@ static inline u64 _enetc_rd_reg64(void __iomem *reg)
- /* using this to read out stats on 32b systems */
- static inline u64 _enetc_rd_reg64(void __iomem *reg)
- {
--	u32 low, high, tmp;
-+	__le32 low, high, tmp;
- 
- 	do {
--		high = ioread32(reg + 4);
--		low = ioread32(reg);
--		tmp = ioread32(reg + 4);
-+		high = (__force __le32)ioread32(reg + 4);
-+		low = (__force __le32)ioread32(reg);
-+		tmp = (__force __le32)ioread32(reg + 4);
- 	} while (high != tmp);
- 
--	return le64_to_cpu((__le64)high << 32 | low);
-+	return (u64)le32_to_cpu(high) << 32 | le32_to_cpu(low);
- }
- #endif
- 
--- 
-2.47.2
-
+Regards,
+Onur
