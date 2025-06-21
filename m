@@ -1,167 +1,91 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC9F272E42;
-	Sat, 21 Jun 2025 20:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F1C1B043E
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 20:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750538134; cv=none; b=T6f4mDgv/shnNjmdPQe9WKh/kl6m7pgUwse3vjzGV/oNC7x8hieYKPwJgtcix8DR7hahga4m40wbyqwXoxBAM3YZyhNYiuspF8LiNCW+e0KhXngG5YdhskmL8XXDU4LYAfyGK3SZ4gbld0I0qDu7A2xpODXCDCgaSGL9XBCejk4=
+	t=1750538205; cv=none; b=XmdRh/+cipUzh76BRf4S2qFkb1nmj/nuiyw5CUdwuxrWDCTkSAzmGRk1DscBoHjb1fpZcQpFV7F37vXEOLHe9I3IgMf5wmHop9WcMvME83i7Ql5XBt1KfeZafcFRbJoWrpK8KAu9LbObYA8BXYWSOTZgUyRwcmsm6PxxquQUl+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750538134; c=relaxed/simple;
-	bh=ozdZY6KDzV6ie0g+Vi70jxsyCl/MWPzeGOSBtx/vfqs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dd0rM5XjSCiMdaChBWJrZSACB0choOriEBX+HBLD12fQBMeD+W1lVp1AVIzKn4Wcu8KT8mocDhfQv8fzXcrdAafCybJRi4nfeQXn6dnH4ZKXwXHUPqd6Fg76SM47mb9akEaWsIo5N0w4YCVlB4FWRA879wKICw7nqWKllCNVhss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=bVRh2zv5; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1750538205; c=relaxed/simple;
+	bh=IL4FMTqf/x+Br6L5l1f33GaS1KFdfsOZFdGiVZX9Cm0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fJEVWM7W9VmeyReC1twgnnxAF9ZSsLVOXDCxqd/Eo7TTeTGstK1OMDgfq0jX0rjXpcDg6rGVC2+kXBu2TKr0a1l/FAXvIOvtJ2m4zvkyDy5wO4AX+nHMiSJKQjPlTNDVsMvicML1btGmfjro5Eb+mvWVkTfj1m7D8f86e6jhK4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XjEcP2HO; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="bVRh2zv5"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 18C8F41F33
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1750538132; bh=lxJdgmDPCnFc/wdxyRX/baI+nLdfvPrKONhfAX9HTxw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bVRh2zv50ruq9t+3JB7R/Txc4s7Aapvz2onZp3z8EmhIg2LRdBpxAghjmwf2P6PNJ
-	 PxWpM2lYfxSfcFG3l7/UW028EqzvbBw/6OUttnlRGQpJ/IXZ45JKYScBQPmok9uLTW
-	 8SPv2tnWp7RYITqzYh0Y5OSkxoVgHu2XVDkW530xiL4SiMdSDY2MuEyBNFmBf8E8gM
-	 goYbbhbvRFKRfldJLAX15mGMibMmZHS2ZkbMM7IfUODogMLTyr5bxwDG7MkfuMiNGz
-	 /S839Dt2naqAQ+oAuXR5OSyPwwPnHenZT74W3sV2x5PeDoSb8MfrNo+0798rUOpM3Y
-	 uNH4JlsmJfLgQ==
-Received: from trenco.lwn.net (unknown [IPv6:2601:280:4600:2da9:67c:16ff:fe81:5f9b])
-	by ms.lwn.net (Postfix) with ESMTPA id 18C8F41F33;
-	Sat, 21 Jun 2025 20:35:32 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Akira Yokosawa <akiyks@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 9/9] docs: kdoc: finish disentangling the BODY and SPECIAL_SECTION states
-Date: Sat, 21 Jun 2025 14:35:12 -0600
-Message-ID: <20250621203512.223189-10-corbet@lwn.net>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250621203512.223189-1-corbet@lwn.net>
-References: <20250621203512.223189-1-corbet@lwn.net>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XjEcP2HO"
+Message-ID: <80052862-683c-4a53-b7a2-8d767a057022@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750538200;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4z+b6jov035aId35pJXpy5WeiWjPI6mbrPX66w3Fa6k=;
+	b=XjEcP2HO+F1ojbxigb47Q4fx3ECpX642YaFhkzBUi7HISvvrbRAxE55WkSd4Hw3+E0WMGe
+	wc4iTtsLTmKCmPTiATf//ZgJJRTrBNBImE82D0aIj5Li0+jx5Ozw2nbehU9OGCEYCr/6nQ
+	ekXN8q+X8h/muamq1rEwiB1lxiRlBdg=
+Date: Sat, 21 Jun 2025 21:36:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [patch 10/13] ptp: Split out PTP_MASK_CLEAR_ALL ioctl code
+To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
+Cc: Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org
+References: <20250620130144.351492917@linutronix.de>
+ <20250620131944.344887489@linutronix.de>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250620131944.344887489@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Move the last SPECIAL_SECTION special case into the proper handler
-function, getting rid of more if/then/else logic.  The leading-space
-tracking was tightened up a bit in the move.  Add some comments describing
-what is going on.
+On 20/06/2025 14:24, Thomas Gleixner wrote:
+> Continue the ptp_ioctl() cleanup by splitting out the PTP_MASK_CLEAR_ALL ioctl
+> code into a helper function.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>   drivers/ptp/ptp_chardev.c |    9 +++++++--
+>   1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> --- a/drivers/ptp/ptp_chardev.c
+> +++ b/drivers/ptp/ptp_chardev.c
+> @@ -442,6 +442,12 @@ static long ptp_pin_setfunc(struct ptp_c
+>   		return ptp_set_pinfunc(ptp, pin_index, pd.func, pd.chan);
+>   }
+>   
+> +static long ptp_mask_clear_all(struct timestamp_event_queue *tsevq)
+> +{
+> +	bitmap_clear(tsevq->mask, 0, PTP_MAX_CHANNELS);
+> +	return 0;
+> +}
+> +
+>   long ptp_ioctl(struct posix_clock_context *pccontext, unsigned int cmd,
+>   	       unsigned long arg)
+>   {
+> @@ -504,8 +510,7 @@ long ptp_ioctl(struct posix_clock_contex
+>   		return ptp_pin_setfunc(ptp, cmd, argptr);
+>   
+>   	case PTP_MASK_CLEAR_ALL:
+> -		bitmap_clear(tsevq->mask, 0, PTP_MAX_CHANNELS);
+> -		break;
+> +		return ptp_mask_clear_all(pccontext->private_clkdata);
+>   
+>   	case PTP_MASK_EN_SINGLE:
+>   		if (copy_from_user(&i, (void __user *)arg, sizeof(i))) {
+> 
 
-No changes to the generated output.
+Not quite sure there is a benefit of having a function for this type,
+apart from having one style. But it adds some LoC...
 
-Signed-off-by: Jonathan Corbet <corbet@lwn.net>
----
- scripts/lib/kdoc/kdoc_parser.py | 80 ++++++++++++++++++++-------------
- 1 file changed, 48 insertions(+), 32 deletions(-)
-
-diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
-index a6ee8bac378d..3557c512c85a 100644
---- a/scripts/lib/kdoc/kdoc_parser.py
-+++ b/scripts/lib/kdoc/kdoc_parser.py
-@@ -1405,10 +1405,53 @@ class KernelDoc:
-         """
-         STATE_SPECIAL_SECTION: a section ending with a blank line
-         """
-+        #
-+        # If we have hit a blank line (only the " * " marker), then this
-+        # section is done.
-+        #
-         if KernRe(r"\s*\*\s*$").match(line):
-             self.entry.begin_section(ln, dump = True)
-+            self.entry.contents += '\n'
-             self.state = state.BODY
--        self.process_body(ln, line)
-+            return
-+        #
-+        # Not a blank line, look for the other ways to end the section.
-+        #
-+        if self.is_new_section(ln, line) or self.is_comment_end(ln, line):
-+            return
-+        #
-+        # OK, we should have a continuation of the text for this section.
-+        #
-+        if doc_content.search(line):
-+            cont = doc_content.group(1)
-+            #
-+            # If the lines of text after the first in a special section have
-+            # leading white space, we need to trim it out or Sphinx will get
-+            # confused.  For the second line (the None case), see what we
-+            # find there and remember it.
-+            #
-+            if self.entry.leading_space is None:
-+                r = KernRe(r'^(\s+)')
-+                if r.match(cont):
-+                    self.entry.leading_space = len(r.group(1))
-+                else:
-+                    self.entry.leading_space = 0
-+            #
-+            # Otherwise, before trimming any leading chars, be *sure*
-+            # that they are white space.  We should maybe warn if this
-+            # isn't the case.
-+            #
-+            for i in range(0, self.entry.leading_space):
-+                if cont[i] != " ":
-+                    self.entry.leading_space = i
-+                    break
-+            #
-+            # Add the trimmed result to the section and we're done.
-+            #
-+            self.entry.contents += cont[self.entry.leading_space:] + '\n'
-+        else:
-+            # Unknown line, ignore
-+            self.emit_msg(ln, f"bad line: {line}")
- 
-     def process_body(self, ln, line):
-         """
-@@ -1419,37 +1462,10 @@ class KernelDoc:
- 
-         if doc_content.search(line):
-             cont = doc_content.group(1)
--
--            if cont == "":
--                    self.entry.contents += "\n"
--            else:
--                if self.state == state.SPECIAL_SECTION:
--                    if self.entry.leading_space is None:
--                        r = KernRe(r'^(\s+)')
--                        if r.match(cont):
--                            self.entry.leading_space = len(r.group(1))
--                        else:
--                            self.entry.leading_space = 0
--
--                    # Double-check if leading space are realy spaces
--                    pos = 0
--                    for i in range(0, self.entry.leading_space):
--                        if cont[i] != " ":
--                            break
--                        pos += 1
--
--                    cont = cont[pos:]
--
--                    # NEW LOGIC:
--                    # In case it is different, update it
--                    if self.entry.leading_space != pos:
--                        self.entry.leading_space = pos
--
--                self.entry.contents += cont + "\n"
--            return
--
--        # Unknown line, ignore
--        self.emit_msg(ln, f"bad line: {line}")
-+            self.entry.contents += cont + "\n"
-+        else:
-+            # Unknown line, ignore
-+            self.emit_msg(ln, f"bad line: {line}")
- 
-     def process_inline(self, ln, line):
-         """STATE_INLINE: docbook comments within a prototype."""
--- 
-2.49.0
 
