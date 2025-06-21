@@ -1,568 +1,236 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DB71531C1;
-	Sat, 21 Jun 2025 15:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD76288CC
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 15:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750520382; cv=none; b=OcXLSfWVkRxOukldG/zDW7cyn0IVVP2xxYL4OcVCknJ5zR5NojyOjG7U6ogeyEEegZQHNLrVaq/OpOaZpckz04dR2mWIXWinVikr/Pl7TYEQEBapqNlKLCN0s8YlIldBPLc9xgRgfBhZizhj+kQDvBXB3cynJAVTHofdNygTRb0=
+	t=1750520546; cv=none; b=NFgF4ivG8P5GIle/WpVNRiaO3xD7J4IlENlHH2aPpjja+Z5Qb1HHdkbkwX/CVq7Znzd4qYyJihwPGOWXMz+I5PjX2pN4WJ8v9aDUZfSJCEhZgo7WQ6Am3yVCcjfk/qnf3ev9+/woC1+2agMNQoPY2dXQwulP2ail3PdECX+AlIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750520382; c=relaxed/simple;
-	bh=dplF8ekAxy0g9mjGS0TkbciEvIH5BOn328ZM7y56QMU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A/2NIA+JMu9IGaWONYuYZbbOQpwbL7wG3VeMDYneqcPkX7KhPgGI1wrWZnDVj99EBGOiIy8DXva8hNk9UDan6MuXfgjYfB4HX6wyqFHtIpDO53s1U7VfvcOX2aE+ycJEk7cTcGW58hecPuikawH7fG1TfOCxIKDAVROq4IHYVqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CxLZRfsZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750520546; c=relaxed/simple;
+	bh=Xr/UM44xfNVWN+nqycgJvhMyK92KfXG2//OD+BsMsGI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=VYMIXDZjzCR2fIoyYRVyliUZywxF6ZBTN8j4MRPIxxiShPVBxKXBn2iPIvsxaZz/qgNk/GGDCDIN8bhQjELnM6Y9RgORZGPfJgpV64sRDhD8wQ/CgBxHUtmUcxx3ypkhcDhQnQyutO21IecmuKSleRvzq8/y2JuHyoUSKsTu8GE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DZuoZrQy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qRpVT1Ez; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CxLZRfsZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6970C4AF09;
-	Sat, 21 Jun 2025 15:39:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750520382;
-	bh=dplF8ekAxy0g9mjGS0TkbciEvIH5BOn328ZM7y56QMU=;
-	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
-	b=CxLZRfsZuT4zKM7mMcYSLnekN+VWNdM4ntkVy+cR4qqOAE3ft82UDnVDoVHgWfNWJ
-	 QExaIOemdfA8xa0ujTNgPcHDkJekn7qHUr6aZVTglWNI0gRJAjrAmvoeMH+KenBmA8
-	 7tpmAkdInLLEiwt08YzLgHCdwXQoipVT7/TR5Pwu4DEC52DYGs2dk8xUVq8/dSS1yL
-	 fm2zjxSgLDpmgrKlrUxaRMN4JbI6Ypq2CGvH3MYjypNxeiUsFFcXMWGD+XXjvAUxey
-	 gPkvilmUZHShVf29t21iwWlCc0NhuG0rjZ2RzKV52jFBrT9CTKHq1k5hYneGXILzFB
-	 90FTrhtwujmSg==
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-32b43cce9efso23542411fa.3;
-        Sat, 21 Jun 2025 08:39:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWKWaAb17mxjkQByI/X9mQlUqLr0VidsV9ghBsDaeRRn4oijGSJEaVBa3jojdiMTchNgyCTn/q/mRGu@vger.kernel.org, AJvYcCX1X7fKKZjDiV2fG3tO/pFOe8LehyauKzqpgSFy6QFSJDNJnCaoD3i0TVqnaF8fio2xz8iko49iAQBS1Td/@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLxBuesn3PLLiDN6I0QKLD9BqUMXcu4Pop9fulLLCm2ShujzFz
-	Do+UC4ZRJFq+bhz3wzx1sobOgYRh8tLhx53vEyWz2K5BmA59QNdYPmoijqwP/OsAfIkp1+j6rCO
-	OFck30BlhOdPby/daBbwfPcmlGU01hCY=
-X-Google-Smtp-Source: AGHT+IHp+KTn6vrfzc/etDt3kJzlnpgqNnQtsoMZL4Gc1/QE7cGkyToUM5xdaei/51KZAZZFA9559BxEBagsXbi5UnM=
-X-Received: by 2002:a2e:bea9:0:b0:32a:91e6:1a26 with SMTP id
- 38308e7fff4ca-32b991634e6mr22175591fa.3.1750520380134; Sat, 21 Jun 2025
- 08:39:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DZuoZrQy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qRpVT1Ez"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750520542;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s4i8scJlAGV+GpOYEKKV1KzgbXWXKbnRcAtdwbZvm+o=;
+	b=DZuoZrQywZo0EWOkvlZ6JKShxNfBI3anJJsSF2LlOA6eey7KS5Ix8wFcpkZuxC/uwWdblX
+	fSmnXB0Is9HURc/t2PsZSw8X0uNseZamH3EPrKEsxRQWEK4LNKFMBcRibffpZjRwb+3UFE
+	v3dAWwA/7ffliEoymEbNogcswsrVM/4o6Qxth3HYnO4Te+69qBVXqSwrwCcqQ0ciSZ2sOC
+	AZ/W3ZK56dXwazVHeRzW4CzUotkAsnyglnnPFhYvlZrfnA/gkvWXCn4xhPn7lpCnOFZiei
+	QcgeoyP3b8BDJ2Pj4L3BTs4/mmTuTem8MYPzCx1SO2GRQfgSRz6VI+esqORTYg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750520542;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s4i8scJlAGV+GpOYEKKV1KzgbXWXKbnRcAtdwbZvm+o=;
+	b=qRpVT1Ez6I3Jig3Hq77jQ0ZnWSZC25OrI+fIwOXae+2eNk5uqx6Qnyya1ircIFNVxhf0Jj
+	P2HAVkROxC6gJ+Cw==
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Alexandre Ghiti
+ <alex@ghiti.fr>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Nathan Chancellor
+ <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Andy Lutomirski <luto@kernel.org>, Vincenzo Frascino
+ <vincenzo.frascino@arm.com>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v3 3/3] vdso: Reject absolute relocations during build
+In-Reply-To: <20250612155635-ecade4e1-0235-464a-bcb3-293f7452510a@linutronix.de>
+References: <20250611-vdso-absolute-reloc-v3-0-47897d73784b@linutronix.de>
+ <20250611-vdso-absolute-reloc-v3-3-47897d73784b@linutronix.de>
+ <7ddda233-99f7-468b-842d-8469f0a86e77@ghiti.fr>
+ <20250612155635-ecade4e1-0235-464a-bcb3-293f7452510a@linutronix.de>
+Date: Sat, 21 Jun 2025 17:42:20 +0200
+Message-ID: <87cyaxp0df.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619173007.3367034-1-wens@kernel.org> <20250619173007.3367034-6-wens@kernel.org>
- <20250621153229.6796e824@minigeek.lan>
-In-Reply-To: <20250621153229.6796e824@minigeek.lan>
-Reply-To: wens@kernel.org
-From: Chen-Yu Tsai <wens@kernel.org>
-Date: Sat, 21 Jun 2025 23:39:27 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65-KNN2x+HNE7cSPiTRyo0s5O_yiC147YKDkMhVJjW7Qw@mail.gmail.com>
-X-Gm-Features: AX0GCFsagBrOtjfAiLiTlC6pylx4Eb7dHXq8d26EI-noP8C4gcnGxxd8rnfNPHE
-Message-ID: <CAGb2v65-KNN2x+HNE7cSPiTRyo0s5O_yiC147YKDkMhVJjW7Qw@mail.gmail.com>
-Subject: Re: [PATCH 5/5] arm64: dts: allwinner: t527: Add OrangePi 4A board
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Jernej Skrabec <jernej@kernel.org>, 
-	Samuel Holland <samuel@sholland.org>, devicetree@vger.kernel.org, 
-	linux-sunxi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 21, 2025 at 10:33=E2=80=AFPM Andre Przywara <andre.przywara@arm=
-.com> wrote:
+On Thu, Jun 12 2025 at 16:21, Thomas Wei=C3=9Fschuh wrote:
+> On Thu, Jun 12, 2025 at 10:31:20AM +0200, Alexandre Ghiti wrote:
+> We could introduce per-architecture configuration. Essentially reverting =
+parts
+> of commit aff69273af61 ("vdso: Improve cmd_vdso_check to check all dynami=
+c relocations").
+> The final logic for the intermediary objects still needs to be more compl=
+icated
+> than for the final .so as those contain relocations in the debug informat=
+ion.
 >
-> On Fri, 20 Jun 2025 01:30:07 +0800
-> Chen-Yu Tsai <wens@kernel.org> wrote:
+> Or we could add a C hostprog for validation.
+> That would be much more flexible than the inline shell command.
+> It would then also be easier to use an allow-list than the brittle deny-l=
+ist.
 >
-> Hi Chen-Yu,
->
-> many thanks for piecing this together!
-> I compared this against the schematic, and found only some minor nits,
-> see below.
->
-> > From: Chen-Yu Tsai <wens@csie.org>
-> >
-> > The OrangePi 4A is a typical Raspberry Pi model B sized development
-> > board from Xunlong designed around an Allwinner T527 SoC.
-> >
-> > The board has the following features:
-> > - Allwinner T527 SoC
-> > - AXP717B + AXP323 PMICs
-> > - Up to 4GB LPDDR4 DRAM
-> > - micro SD slot
-> > - optional eMMC module
-> > - M.2 slot for PCIe 2.0 x1
-> > - 16 MB SPI-NOR flash
-> > - 4x USB 2.0 type-A ports (one can be used in gadget mode)
-> > - 1x Gigabit ethernet w/ Motorcomm PHY (through yet to be supported GMA=
-C200)
-> > - 3.5mm audio jack via internal audio codec
-> > - HDMI 2.0 output
-> > - eDP, MIPI CSI (2-lane and 4-lane) and MIPI DSI (4-lane) connectors
-> > - USB type-C port purely for power
-> > - AP6256 (Broadcom BCM4345) WiFi 5.0 + BT 5.0
-> > - unsoldered headers for ADC and an additional USB 2.0 host port
-> > - 40-pin GPIO header
-> >
-> > Add a device tree for it, enabling all peripherals currently supported.
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > ---
-> >  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
-> >  .../dts/allwinner/sun55i-t527-orangepi-4a.dts | 378 ++++++++++++++++++
-> >  2 files changed, 379 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/allwinner/sun55i-t527-orangepi-=
-4a.dts
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/d=
-ts/allwinner/Makefile
-> > index 773cc02a13d0..780aeba0f3a4 100644
-> > --- a/arch/arm64/boot/dts/allwinner/Makefile
-> > +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> > @@ -57,3 +57,4 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h700-anbernic-rg=
-35xx-sp.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun55i-a527-cubie-a5e.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun55i-h728-x96qpro+.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun55i-t527-avaota-a1.dtb
-> > +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun55i-t527-orangepi-4a.dtb
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun55i-t527-orangepi-4a.dts =
-b/arch/arm64/boot/dts/allwinner/sun55i-t527-orangepi-4a.dts
-> > new file mode 100644
-> > index 000000000000..8a62607e584c
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/allwinner/sun55i-t527-orangepi-4a.dts
-> > @@ -0,0 +1,378 @@
-> > +// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
-> > +/*
-> > + * Copyright (C) 2025 Chen-Yu Tsai <wens@csie.org>
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "sun55i-a523.dtsi"
-> > +
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/leds/common.h>
-> > +
-> > +/ {
-> > +     model =3D "OrangePi 4A";
-> > +     compatible =3D "xunlong,orangepi-4a", "allwinner,sun55i-t527";
-> > +
-> > +     aliases {
-> > +             serial0 =3D &uart0;
-> > +     };
-> > +
-> > +     chosen {
-> > +             stdout-path =3D "serial0:115200n8";
-> > +     };
-> > +
-> > +     ext_osc32k: ext-osc32k-clk {
-> > +             #clock-cells =3D <0>;
-> > +             compatible =3D "fixed-clock";
-> > +             clock-frequency =3D <32768>;
-> > +             clock-output-names =3D "ext_osc32k";
-> > +     };
-> > +
-> > +     leds {
-> > +             compatible =3D "gpio-leds";
-> > +
-> > +             /* PWM capable pin, but PWM isn't supported yet. */
-> > +             led {
-> > +                     function =3D LED_FUNCTION_STATUS;
-> > +                     color =3D <LED_COLOR_ID_GREEN>;
-> > +                     gpios =3D <&pio 3 20 GPIO_ACTIVE_HIGH>; /* PD20 *=
-/
-> > +             };
-> > +     };
-> > +
-> > +     wifi_pwrseq: pwrseq {
-> > +             compatible =3D "mmc-pwrseq-simple";
-> > +             reset-gpios =3D <&r_pio 1 1 GPIO_ACTIVE_LOW>; /* PM1 */
-> > +             clocks =3D <&rtc CLK_OSC32K_FANOUT>;
-> > +             clock-names =3D "ext_clock";
-> > +     };
-> > +
-> > +     reg_otg_vbus: regulator-otg-vbus {
-> > +             compatible =3D "regulator-fixed";
-> > +             regulator-name =3D "otg-vbus";
-> > +             regulator-min-microvolt =3D <5000000>;
-> > +             regulator-max-microvolt =3D <5000000>;
-> > +             vin-supply =3D <&reg_vcc5v>;
-> > +             gpio =3D <&r_pio 0 4 GPIO_ACTIVE_HIGH>;   /* PL4 */
-> > +             enable-active-high;
-> > +     };
-> > +
-> > +     reg_pcie_vcc3v3: regulator-pcie-vcc3v3 {
-> > +             compatible =3D "regulator-fixed";
-> > +             regulator-name =3D "vcc-pcie-3v3";
-> > +             regulator-min-microvolt =3D <3300000>;
-> > +             regulator-max-microvolt =3D <3300000>;
-> > +             vin-supply =3D <&reg_vcc5v>;
-> > +             gpio =3D <&r_pio 0 8 GPIO_ACTIVE_HIGH>;   /* PL8 */
-> > +             enable-active-high;
-> > +     };
-> > +
-> > +     reg_usb_vbus: regulator-usb-vbus {
-> > +             compatible =3D "regulator-fixed";
-> > +             regulator-name =3D "usb-vbus";
-> > +             regulator-min-microvolt =3D <5000000>;
-> > +             regulator-max-microvolt =3D <5000000>;
-> > +             vin-supply =3D <&reg_vcc5v>;
-> > +             gpio =3D <&r_pio 0 12 GPIO_ACTIVE_HIGH>;  /* PL12 */
-> > +             enable-active-high;
-> > +     };
-> > +
-> > +     reg_vcc5v: regulator-vcc5v {
-> > +             /* board wide 5V supply from USB type-C port */
-> > +             compatible =3D "regulator-fixed";
-> > +             regulator-name =3D "vcc-5v";
-> > +             regulator-min-microvolt =3D <5000000>;
-> > +             regulator-max-microvolt =3D <5000000>;
-> > +             regulator-always-on;
-> > +     };
-> > +};
-> > +
-> > +&ehci0 {
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&ehci1 {
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&mmc0 {
-> > +     vmmc-supply =3D <&reg_cldo3>;
-> > +     cd-gpios =3D <&pio 5 6 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>; /* PF6 =
-*/
-> > +     bus-width =3D <4>;
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&mmc1 {
-> > +     bus-width =3D <4>;
-> > +     mmc-pwrseq =3D <&wifi_pwrseq>;
-> > +     non-removable;
-> > +     vmmc-supply =3D <&reg_dldo1_323>;
-> > +     vqmmc-supply =3D <&reg_bldo1>;
-> > +     status =3D "okay";
-> > +
-> > +     brcmf: wifi@1 {
-> > +             compatible =3D "brcm,bcm4329-fmac";
-> > +             reg =3D <1>;
-> > +             interrupt-parent =3D <&r_pio>;
-> > +             interrupts =3D <1 0 IRQ_TYPE_LEVEL_LOW>; /* PM0 */
-> > +             interrupt-names =3D "host-wake";
-> > +     };
-> > +};
-> > +
-> > +&mmc2 {
-> > +     bus-width =3D <8>;
-> > +     cap-mmc-hw-reset;
-> > +     mmc-ddr-1_8v;
-> > +     mmc-hs200-1_8v;
-> > +     non-removable;
-> > +     vmmc-supply =3D <&reg_cldo3>;
-> > +     vqmmc-supply =3D <&reg_cldo1>;
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&ohci0 {
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&ohci1 {
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&pio {
-> > +     vcc-pb-supply =3D <&reg_cldo3>;   /* via VCC-IO */
-> > +     vcc-pc-supply =3D <&reg_cldo1>;
-> > +     vcc-pd-supply =3D <&reg_cldo3>;
-> > +     vcc-pe-supply =3D <&reg_aldo2>;
-> > +     vcc-pf-supply =3D <&reg_cldo3>;   /* VCC-IO for 3.3v; VCC-MCSI fo=
-r 1.8v */
-> > +     vcc-pg-supply =3D <&reg_bldo1>;
-> > +     vcc-ph-supply =3D <&reg_cldo3>;   /* via VCC-IO */
-> > +     vcc-pi-supply =3D <&reg_cldo3>;
-> > +     vcc-pj-supply =3D <&reg_cldo1>;
-> > +     vcc-pk-supply =3D <&reg_cldo1>;
-> > +};
-> > +
-> > +&r_i2c0 {
-> > +     status =3D "okay";
-> > +
-> > +     axp717: pmic@35 {
-> > +             compatible =3D "x-powers,axp717";
-> > +             reg =3D <0x35>;
-> > +             interrupt-controller;
-> > +             #interrupt-cells =3D <1>;
-> > +             interrupts-extended =3D <&nmi_intc 0 IRQ_TYPE_LEVEL_LOW>;
-> > +
-> > +             vin1-supply =3D <&reg_vcc5v>;
-> > +             vin2-supply =3D <&reg_vcc5v>;
-> > +             vin3-supply =3D <&reg_vcc5v>;
-> > +             vin4-supply =3D <&reg_vcc5v>;
-> > +             aldoin-supply =3D <&reg_vcc5v>;
-> > +             bldoin-supply =3D <&reg_vcc5v>;
-> > +             cldoin-supply =3D <&reg_vcc5v>;
-> > +
-> > +             regulators {
-> > +                     /* Supplies the "little" cluster (1.4 GHz cores) =
-*/
-> > +                     reg_dcdc1: dcdc1 {
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <900000>;
-> > +                             regulator-max-microvolt =3D <1160000>;
-> > +                             regulator-name =3D "vdd-cpul";
-> > +                     };
-> > +
-> > +                     reg_dcdc2: dcdc2 {
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <920000>;
-> > +                             regulator-max-microvolt =3D <920000>;
-> > +                             regulator-name =3D "vdd-gpu-sys";
-> > +                     };
-> > +
-> > +                     reg_dcdc3: dcdc3 {
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <1160000>;
-> > +                             regulator-max-microvolt =3D <1160000>;
-> > +                             regulator-name =3D "vcc-dram";
-> > +                     };
-> > +
-> > +                     reg_dcdc4: dcdc4 {
-> > +                             /* feeds 3.3V pin on GPIO header */
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <3300000>;
-> > +                             regulator-max-microvolt =3D <3300000>;
-> > +                             regulator-name =3D "vdd-io";
-> > +                     };
-> > +
-> > +                     reg_aldo1: aldo1 {
-> > +                             regulator-name =3D "avdd-csi";
-> > +                     };
-> > +
-> > +                     reg_aldo2: aldo2 {
-> > +                             regulator-name =3D "vcc-pe";
-> > +                     };
-> > +
-> > +                     reg_aldo3: aldo3 {
-> > +                             /* supplies the I2C pins for this PMIC */
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <3300000>;
-> > +                             regulator-max-microvolt =3D <3300000>;
-> > +                             regulator-name =3D "vcc-pl-usb";
-> > +                     };
-> > +
-> > +                     reg_aldo4: aldo4 {
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <1800000>;
-> > +                             regulator-max-microvolt =3D <1800000>;
-> > +                             regulator-name =3D "vcc-pll-dxco-avcc";
-> > +                     };
-> > +
-> > +                     reg_bldo1: bldo1 {
-> > +                             regulator-min-microvolt =3D <1800000>;
-> > +                             regulator-max-microvolt =3D <1800000>;
-> > +                             regulator-name =3D "vcc-pg-wifi";
-> > +                     };
-> > +
-> > +                     reg_bldo2: bldo2 {
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <1800000>;
-> > +                             regulator-max-microvolt =3D <1800000>;
-> > +                             regulator-name =3D "vcc-pm-lpddr";
-> > +                     };
-> > +
-> > +                     reg_bldo3: bldo3 {
-> > +                             regulator-name =3D "dvdd-csi";
->
-> In my version of the schematic this is AFVCC-CSI (whatever that means),
+> Or we don't do anything, relying on the selftests to detect miscompilatio=
+ns.
 
-I believe it's power for the autofocus part, if one is included.
+That's a bad idea :)
 
-> and ...
->
-> > +                     };
-> > +
-> > +                     reg_bldo4: bldo4 {
->
-> ... BLDO4 is DVDD-CSI.
+> I'll run this by tglx. If somebody else has any opinions, I'm all ears.
 
-You are right. I must've edited the wrong entry.
+This is all a mess because the relocation type numbers and their R_*
+names are not uniform accross architectures. Neither are the valid
+relocation types which are suitable for VDSO.
 
-> Not that it really matters, since both are not used yet ...
+I don't think you can reasonably cover all of it with readelf and
+grep. I did some unrelated relocation analysis some time ago and I just
+modified the python script (yes, I hate to use libelf) to show case how
+insane this gets. This is just as much as I needed to analyse files
+compiled with some random cross gcc I had handy. But you surely get the
+idea.
 
-Actually, I believe the names you gave are from the first page, but if
-you look at the page with the camera connectors, neither of them are used.
-The connectors both get power only from VCC3V3-CSI, which is CLDO2.
-So neither of them are connected.
+Thanks,
 
-> > +                             /* not connected */
-> > +                     };
-> > +
-> > +                     reg_cldo1: cldo1 {
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <1800000>;
-> > +                             regulator-max-microvolt =3D <1800000>;
-> > +                             regulator-name =3D "vcc-cvp-pc-lvds-mcsi-=
-pk-efuse-pcie-edp-1v8";
-> > +                     };
-> > +
-> > +                     reg_cldo2: cldo2 {
-> > +                             regulator-min-microvolt =3D <3300000>;
-> > +                             regulator-max-microvolt =3D <3300000>;
-> > +                             regulator-name =3D "vcc3v3-csi";
-> > +                     };
-> > +
-> > +                     reg_cldo3: cldo3 {
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <3300000>;
-> > +                             regulator-max-microvolt =3D <3300000>;
-> > +                             regulator-name =3D "vcc-io-mmc-nand-pd-pi=
--usb";
-> > +                     };
-> > +
-> > +                     reg_cldo4: cldo4 {
-> > +                             regulator-min-microvolt =3D <3300000>;
-> > +                             regulator-max-microvolt =3D <3300000>;
-> > +                             regulator-name =3D "vcc-3v3-phy1-lcd";
-> > +                     };
-> > +
-> > +                     reg_cpusldo: cpusldo {
-> > +                             /* supplies the management core */
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <900000>;
-> > +                             regulator-max-microvolt =3D <900000>;
-> > +                             regulator-name =3D "vdd-cpus";
->
-> This also supplies some 0.9V USB circuitry, so maybe add this to the
-> name?
+        tglx
+---
+#!/usr/bin/env python3
 
-Sure.
+import sys
 
-> > +                     };
-> > +             };
-> > +     };
-> > +
-> > +     axp323: pmic@36 {
-> > +             compatible =3D "x-powers,axp323";
-> > +             reg =3D <0x36>;
-> > +             #interrupt-cells =3D <1>;
-> > +             interrupt-controller;
-> > +             status =3D "okay";
-> > +
-> > +             vin1-supply =3D <&reg_vcc5v>;
-> > +             vin2-supply =3D <&reg_vcc5v>;
-> > +             vin3-supply =3D <&reg_vcc5v>;
-> > +
-> > +             regulators {
-> > +                     reg_aldo1_323: aldo1 {
-> > +                             regulator-min-microvolt =3D <3300000>;
-> > +                             regulator-max-microvolt =3D <3300000>;
-> > +                             regulator-name =3D "vcc-wifi";
-> > +                     };
-> > +
-> > +                     reg_dldo1_323: dldo1 {
-> > +                             regulator-min-microvolt =3D <3300000>;
-> > +                             regulator-max-microvolt =3D <3300000>;
-> > +                             regulator-name =3D "vcc-wifi2";
-> > +                     };
-> > +
-> > +                     /* Supplies the "big" cluster (1.8 GHz cores) */
-> > +                     reg_dcdc1_323: dcdc1 {
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <900000>;
-> > +                             regulator-max-microvolt =3D <1150000>;
-> > +                             regulator-name =3D "vdd-cpub";
-> > +                     };
-> > +
-> > +                     /* DCDC2 is polyphased with DCDC1 */
-> > +
-> > +                     /* Some RISC-V management core related voltage */
-> > +                     reg_dcdc3_323: dcdc3 {
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <900000>;
-> > +                             regulator-max-microvolt =3D <900000>;
-> > +                             regulator-name =3D "vdd-dnr";
-> > +                     };
-> > +             };
-> > +     };
-> > +};
-> > +
-> > +&r_pio {
-> > +/*
-> > + * Specifying the supply would create a circular dependency.
-> > + *
-> > + *   vcc-pl-supply =3D <&reg_aldo3>;
-> > + */
-> > +     vcc-pm-supply =3D <&reg_bldo2>;
-> > +};
-> > +
-> > +&uart0 {
-> > +     pinctrl-names =3D "default";
-> > +     pinctrl-0 =3D <&uart0_pb_pins>;
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&uart1 {
-> > +     pinctrl-names =3D "default";
-> > +     pinctrl-0 =3D <&uart1_pins>, <&uart1_rts_cts_pins>;
-> > +     uart-has-rtscts;
-> > +     status =3D "okay";
-> > +
-> > +     bluetooth {
-> > +             compatible =3D "brcm,bcm4345c5";
-> > +             clocks =3D <&rtc CLK_OSC32K_FANOUT>;
-> > +             clock-names =3D "lpo";
-> > +             vbat-supply =3D <&reg_aldo1_323>;
->
-> Is that some kind of trick, to accommodate *two* power rails for the
-> chip? Because to me it looks like the AXP323 ALDO1 and DLDO1 are
-> connected together and both supply the WiFi-BT-combo chip.
-> It's probably fine to model this way, since ALDO1 is the weaker of
-> the two, and I'd guess the WiFi needs more power, but worth a comment, I
-> guess.
+from argparse import ArgumentParser
+from elftools.elf.elffile import ELFFile
+from elftools.elf.relocation import RelocationSection
+from elftools.elf.enums import ENUM_RELOC_TYPE_i386, ENUM_RELOC_TYPE_x64
+from elftools.elf.enums import ENUM_RELOC_TYPE_ARM, ENUM_RELOC_TYPE_AARCH64
+from elftools.elf.descriptions import describe_reloc_type
 
-Yeah, it's mostly a trick. I suppose we can use the regulator coupler
-thing to couple them together, but the kernel coupler driver currently
-doesn't do non-always-on regulator coupling. I would need to look into
-why that's the case.
+class relocs(object):
+    def __init__(self, arch, sections, types):
+        self.arch =3D arch
+        self.sections =3D sections
+        self.types =3D types
 
-Mark (CC-ed), do you have any idea off the top of your head?
+i386_relocs =3D relocs('EM_386',
+                     [ '.rel.text' ],
+                     [ ENUM_RELOC_TYPE_i386['R_386_NONE'],
+                       ENUM_RELOC_TYPE_i386['R_386_PC32'],
+                       ENUM_RELOC_TYPE_i386['R_386_GOTPC'],
+                       ENUM_RELOC_TYPE_i386['R_386_GOTOFF'],
+                      ])
 
-> Rest looks good to me.
+x86_64_relocs =3D relocs('EM_X86_64',
+                       [ '.rela.text' ],
+                       [ ENUM_RELOC_TYPE_x64['R_X86_64_NONE'],
+                         ENUM_RELOC_TYPE_x64['R_X86_64_PC32'],
+                        ])
 
-Thanks.
+arm_relocs =3D relocs('EM_ARM',
+                       [ '.rela.text' ],
+                       # Probably incomplete
+                       [ ENUM_RELOC_TYPE_ARM['R_ARM_NONE'],
+                         ENUM_RELOC_TYPE_ARM['R_ARM_REL32'],
+                        ])
+
+arm64_relocs =3D relocs('EM_AARCH64',
+                       [ '.rela.text' ],
+                       # Probably incomplete
+                       [ ENUM_RELOC_TYPE_AARCH64['R_AARCH64_NONE'],
+                         ENUM_RELOC_TYPE_AARCH64['R_AARCH64_ADR_PREL_LO21'],
+                        ])
+
+# Minimal set for an example VDSO build
+ENUM_RELOC_TYPE_RISCV =3D dict(
+    R_RISCV_BRANCH        =3D 0x10,
+    R_RISCV_PCREL_HI20    =3D 0x17,
+    R_RISCV_PCREL_LO12_I  =3D 0x18,
+    R_RISCV_RVC_BRANCH    =3D 0x2c,
+    R_RISCV_RVC_JUMP      =3D 0x2d,
+    R_RISCV_RELAX         =3D 0x33,
+)
+
+riscv_relocs =3D relocs('EM_RISCV',
+                       [ '.rela.text' ],
+                       [ ENUM_RELOC_TYPE_RISCV['R_RISCV_BRANCH'],
+                         ENUM_RELOC_TYPE_RISCV['R_RISCV_PCREL_HI20'],
+                         ENUM_RELOC_TYPE_RISCV['R_RISCV_PCREL_LO12_I'],
+                         ENUM_RELOC_TYPE_RISCV['R_RISCV_RVC_BRANCH'],
+                         ENUM_RELOC_TYPE_RISCV['R_RISCV_RVC_JUMP'],
+                         ENUM_RELOC_TYPE_RISCV['R_RISCV_RELAX'],
+                        ])
+supported_archs =3D {
+    'i386'      : i386_relocs,
+    'x86_64'    : x86_64_relocs,
+    'arm'       : arm_relocs,
+    'arm64'     : arm64_relocs,
+    'riscv'     : riscv_relocs,
+}
+
+# Probably incomplete
+invalid_relocs =3D [ '.rela.dyn', '.rela.plt' ]
+
+def check_relocations(file, arch):
+    elf =3D ELFFile(file)
+    res =3D 0
+
+    if elf.header['e_machine'] !=3D arch.arch:
+        print(elf.header['e_machine'], arch.arch)
+        raise Exception('Architecture mismatch')
+
+    for section in elf.iter_sections():
+        if not isinstance(section, RelocationSection):
+            continue
+
+        if section.name in invalid_relocs:
+            print('Invalid VDSO relocation section: %s' %section.name)
+            res +=3D 1
+            continue
+
+        if section.name not in arch.sections:
+            continue
+
+        for reloc in section.iter_relocations():
+            if reloc['r_info_type'] in arch.types:
+                continue
+            res +=3D 1
+
+            symt =3D elf.get_section(section['sh_link'])
+            sym =3D symt.get_symbol(reloc['r_info_sym'])
+
+            type =3D describe_reloc_type(reloc['r_info_type'], elf)
+
+            print("Invalid VDSO relocation: %s %s" %(type, sym.name))
+
+    return res
+
+if __name__ =3D=3D '__main__':
+    parser =3D ArgumentParser(usage =3D 'usage: %(prog)s arch elf-file',
+                            description =3D 'magic VDSO section checker',
+                            prog =3D 'vdsoreloc')
+
+    parser.add_argument('arch',
+                        choices =3D supported_archs.keys(),
+                        help =3D 'Target architecture')
+    parser.add_argument('file', help =3D 'ELF file to parse')
+    args =3D parser.parse_args()
+
+    with open(args.file, 'rb') as file:
+        try:
+            res =3D check_relocations(file, supported_archs[args.arch])
+            sys.exit(res)
+        except Exception as ex:
+            # Do something sensible here
+            print(ex)
+            sys.exit(1)
 
 
-ChenYu
-
-> Cheers,
-> Andre
->
->
-> > +             vddio-supply =3D <&reg_bldo1>;
-> > +             device-wakeup-gpios =3D <&r_pio 1 3 GPIO_ACTIVE_HIGH>; /*=
- PM3 */
-> > +             host-wakeup-gpios =3D <&r_pio 1 4 GPIO_ACTIVE_HIGH>; /* P=
-M4 */
-> > +             shutdown-gpios =3D <&r_pio 1 2 GPIO_ACTIVE_HIGH>; /* PM2 =
-*/
-> > +     };
-> > +};
-> > +
-> > +&usb_otg {
-> > +      /*
-> > +       * The OTG controller is connected to one of the type-A ports.
-> > +       * There is a regulator, controlled by a GPIO, to provide VBUS p=
-ower
-> > +       * to the port, and a VBUSDET GPIO, to detect externally provide=
-d
-> > +       * power. But without ID or CC pins there is no real way to do a
-> > +       * runtime role detection.
-> > +       */
-> > +     dr_mode =3D "host";
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&usbphy {
-> > +     usb0_vbus-supply =3D <&reg_otg_vbus>;
-> > +     usb0_vbus_det-gpios =3D <&r_pio 0 7 GPIO_ACTIVE_HIGH>; /* PL7 */
-> > +     usb1_vbus-supply =3D <&reg_usb_vbus>;
-> > +     status =3D "okay";
-> > +};
->
