@@ -1,81 +1,118 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CD226FA69;
-	Sat, 21 Jun 2025 19:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA5F149C4A;
+	Sat, 21 Jun 2025 19:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750533952; cv=none; b=KsTj32GRNHqK+zcpRkJJQujyamIWBamXHkpTquenQCyTEYnAawWFjDwaLVlSJAwHvnHReHmujTZ/fQpc2yz9Do0/udzUJlBWUkGik7bOLy21wHg6qNTiA84xTD/mv8eA9Hu8/T29ZLHT8Ms6SB3NPNNT9TEs6UIad85ULmKe7Qw=
+	t=1750534121; cv=none; b=UMJbXNgKY3goF/2yNVOWiwQTBAEl7eOs96TWiSWEdzuHNClBIgEcYunsu6RkFxKZF6C5z1MM4g8UQ9zl2ApCUKcxuUE4PSzmzoAq8My9EY3TmwnlELjdWfX0fuiBRoKsJRRaGQnMNc0+lj4ALxkYF7YbfvsxGEg+HJTmFidYIac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750533952; c=relaxed/simple;
-	bh=d9iqq3vckYw2vO4HcqvOvSnmkJbcSMdATrWyE0y8tE8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WdzSLEHOcWbUeO0dDUbP+SMFrd2abZUAavakzaPExhOD4krK5IV2s4IP+ezUhHBwtm/MLxlfcMsvkPbpWWBt7Z+19m1hR7/1KExB3AeCvbUXCEH3rK9dtd7WxShBThSSfgeTT2DmssSZ7FJ4mlEegCG+vz4qc5rzs46RrDf/XDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=ZTuS8u6A; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1750534121; c=relaxed/simple;
+	bh=S4OKtTT6cWKlwgjl1Q3CUq8rOGPPkatKfAaWVfK8JkA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jtgvuRenQQQ7vMXlI0eUSzeEnYtSdshIGEgDXvuwLxp17Cg+wFI8H47tctZ6ixCT//GN3uvWZLWlBI3Kp8nbapAeX8n3W+YJiiuiaXhRRMPb+VPHJyf13LFqWz1mHiUCpHfiGMhDo+dp/kpBr8lhDNejjkSxmSSnZHsCZws3lwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BqRO8KZ1; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="ZTuS8u6A"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 25AD941AD8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1750533938; bh=ypb/p53KFCvA4VENKQxB0IcEn+Ljxsb5kKH2leHdIUo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=ZTuS8u6AGzTcWaPW5eL2u4JnCkuXG23sougrIj5ilkBrnvkVABRWPzT5hLSsWjH8I
-	 2Rx9G7oVYaa35QEFTnoKaOFURDjWgEVrqeOO+6A4Rf3eXLZnrNdZ0vae1rqtKg4lSS
-	 K212FbgqHapryfiuSn/QmJeeBaj6Mb/rvlD3v9Wvrn1c9JESzTC6kO2YJZNB7LumsB
-	 rE7Jbk+8Qr6JJA7n/zN3h8Sc3NC5e4E3yPM2eLxPP4cPM2zKmyPBm+pdu/UG3zRsqA
-	 v4I9U5CvHL3f6OOT0Cl0QEDthdtewrYZc4sfqyHYYjU19Wsdtf1b6eTJlMXjO1rGV+
-	 Nse4x2UhKKvbg==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9:67c:16ff:fe81:5f9b])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 25AD941AD8;
-	Sat, 21 Jun 2025 19:25:38 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Faisal Bukhari <faisalbukhari523@gmail.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Fix typo in
- Documentation/userspace-api/sysfs-platform_profile.rst
-In-Reply-To: <20250621094224.164677-1-faisalbukhari523@gmail.com>
-References: <20250621094224.164677-1-faisalbukhari523@gmail.com>
-Date: Sat, 21 Jun 2025 13:25:37 -0600
-Message-ID: <87plewdhhq.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BqRO8KZ1"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ade5b8aab41so601445266b.0;
+        Sat, 21 Jun 2025 12:28:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750534118; x=1751138918; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gYQ4/itaUR6tob8HAxT8Q/X5YuehU1pRS4XG3Rk4W2g=;
+        b=BqRO8KZ1+IXTonTjzbzZv+XTbBfuYn1vXI3IEY0g8GSErLbX8wQFQPWscJyALZSAq6
+         s0Oe0cR/7TRj/kGcGhPspgRxRhsHmwPBXDmDG26Omdh7fkHxbKUAxPyb43/Gx/A99TvZ
+         lWmsexbutKGd0msId5zCfAnSSas4mMglY39ebwTDv8J+ZGx6wySXte0OlpV2nfczH1JP
+         PIPntjiZq9OWtyRNG3yrEh6PpzF7xwboAGQ39tCQBcpaQ0dOGGOs5rLk5qnwFbuKkyfX
+         9w+HjrYyYwZ1LljIjiQNnXijtjqd2SlZT66aNhHjMmao5HxFHBNx9OT0+gPxsEBKrMLq
+         FkPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750534118; x=1751138918;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gYQ4/itaUR6tob8HAxT8Q/X5YuehU1pRS4XG3Rk4W2g=;
+        b=O7IzGp+hNUVD925WOItwUrmWO1uf1Se4vOA+3930nh2e7Hxp5GalOxNIFgpsuxcQRj
+         U0UKuA3GHY6mZLGEzhmWHSZ7Zct6946JV8qKZHqjQ4y6v/uJjSx2W80lmPJd60XDhsdB
+         gQWrLiQ8DyYWyI2mZDzqV48RzVj5D3MiXdh7drs2uby4Pt3vI1XASwhwqF/XwSsbSjze
+         acMC7EMHgTbvBXb6pmu9G3MHv4cgcGMVmztt7eQSQRt1FSBQjjgmk/ydSpIyVLs8Uo50
+         wp2a0U8WynhF4TT9FGQq6ywugZ0E1TV8BnKfBaRw/DuvNNGcS1B29dtU9tLrLAcGnKiX
+         tBwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5zhxfZTVHIp0IpmmViz5Sdfh0Iebpe7BUys/vOTwYrzGm+JaKEd8vIdz4Nn1Mtc3zCJd8lK8IZQU=@vger.kernel.org, AJvYcCWEx8C3rJaf+HveBNbqqjpoCJfnfmOHRK4YlA8iHLFPy0a3JcduoCkUwUO9NI/hHPs3hpkYO1rF0yam@vger.kernel.org, AJvYcCXlG5UjfXXKAbZ6rTJ6O04dq7b5VDOeHL55zvJGeC8lanwWlueUf1qLt/pIF6lzSc867VgXTCt8h7QSH1HI@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRO8N5x2BDIMmuAa+3iy+9g7e8uwbfKSjM9acD1/EZ1ZgcexN8
+	wWM1dPiojG0A60nHEHSj8ySsVfvKSKHYZULPLrzK+DlB4sb+pnrX6Selw04jjLq/QLatARtDwJ6
+	UYzt/svWtoZmB+8KjWguSo8JckLB6jpg=
+X-Gm-Gg: ASbGncvazsAK5AmxItgfW2BkQrTEjgLlT63IiAT93H16T0mx4q70phgTzEEbeitMg7A
+	NbMRs1KlbuROA1D48abc7WCp0vM3PNDtfD1wNJxivbN6KK5odQ9jd55d+yFQsREYp0eDOu6N8dL
+	qBZjo+bdS8XvAzQvSOWxmDvlhRdo04WoDHD7df+2h5GHw=
+X-Google-Smtp-Source: AGHT+IGq4wdlZtzL7/eUZnOvJdxZsa9RJazImtZ/DLpYCh8M2bkcJZ2WqbFB+XVyYbn+lvT0ARUe1vhYgow95ctqU1Q=
+X-Received: by 2002:a17:906:6a2a:b0:ad8:9909:20b5 with SMTP id
+ a640c23a62f3a-ae057c3ceb1mr704858266b.56.1750534118213; Sat, 21 Jun 2025
+ 12:28:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250610215933.84795-1-l.rubusch@gmail.com> <20250610215933.84795-9-l.rubusch@gmail.com>
+ <aErE0xmlm4qBHg03@smile.fi.intel.com> <CAFXKEHao9xKsizGLMQxikcLbG5Him9n9i3btLtqK2Orj_39a9Q@mail.gmail.com>
+ <CAHp75VfxqMh8j=TAPFXTDx2PSPVU=No=vDdo+-J-ETDavuYnRA@mail.gmail.com>
+In-Reply-To: <CAHp75VfxqMh8j=TAPFXTDx2PSPVU=No=vDdo+-J-ETDavuYnRA@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sat, 21 Jun 2025 22:28:02 +0300
+X-Gm-Features: AX0GCFsnAsR5Ei8YbwLlhR2Ri10EzbsrReRb2rkRRuCTnBFAkwAXJzvprrgTzcc
+Message-ID: <CAHp75VfCJSytzFHKAjCiW8xBsb+qQQjb7kyBnoH14FWtqmJkGg@mail.gmail.com>
+Subject: Re: [PATCH v9 08/11] iio: accel: adxl345: add inactivity feature
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, jic23@kernel.org, dlechner@baylibre.com, 
+	nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, eraretuya@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Faisal Bukhari <faisalbukhari523@gmail.com> writes:
+On Sat, Jun 21, 2025 at 10:24=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Sat, Jun 21, 2025 at 9:54=E2=80=AFPM Lothar Rubusch <l.rubusch@gmail.c=
+om> wrote:
+> > On Thu, Jun 12, 2025 at 2:15=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@intel.com> wrote:
+> > > On Tue, Jun 10, 2025 at 09:59:30PM +0000, Lothar Rubusch wrote:
 
-> Documentation/userspace-api/sysfs-platform_profile.rst
-> Fixes a spelling mistake: "setttings" =E2=86=92 "settings".
+...
+
+> > > > +             val =3D (adxl345_odr_tbl[odr][0] > max_boundary)
+> > > > +                     ? min_boundary : max_boundary - adxl345_odr_t=
+bl[odr][0];
+> > >
+> > > clamp() ?
+> >
+> > Isn't clamp() dealing with signed ints?
 >
-> Signed-off-by: Faisal Bukhari <faisalbukhari523@gmail.com>
-> ---
->  Documentation/userspace-api/sysfs-platform_profile.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> clamp() is a macro.
 >
-> diff --git a/Documentation/userspace-api/sysfs-platform_profile.rst b/Doc=
-umentation/userspace-api/sysfs-platform_profile.rst
-> index 7f013356118a..e6878ea82fda 100644
-> --- a/Documentation/userspace-api/sysfs-platform_profile.rst
-> +++ b/Documentation/userspace-api/sysfs-platform_profile.rst
-> @@ -44,7 +44,7 @@ added. Drivers which wish to introduce new profile name=
-s must:
->  "Custom" profile support
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->  The platform_profile class also supports profiles advertising a "custom"
-> -profile. This is intended to be set by drivers when the setttings in the
-> +profile. This is intended to be set by drivers when the settings in the
->  driver have been modified in a way that a standard profile doesn't repre=
-sent
->  the current state.
+> > Also, I'll take the diff from
+> > max_boundary here.
+>
+> How does it affect usage of the clamp()?
 
-Thanks, but this one is already fixed in docs-next.
+I see what you mean, but this can be done by clamping the signed values.
+So, in any case try to improve this and add a comment explaining why
+the maximum boundary is adjusted.
 
-jon
+> > So, I'll try staying with the current line and hope
+> > it's fine.
+>
+> I suggest you spend some time thinking about this expression on how to
+> make it easier to read and understand. In my opinion clamp() helps a
+> lot in this case.
+
+--=20
+With Best Regards,
+Andy Shevchenko
