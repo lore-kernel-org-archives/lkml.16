@@ -1,177 +1,156 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB991A2632
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 09:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0A61E7C34
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 09:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750499485; cv=none; b=KVX2nLsoVsNdMH3NRMazFQjKWZ+rv596oJ9m6MHvr714jAA88UsQT2XacpmYb3btZxyC7l2F3J5ccrPNLJkUDTKu1Tgwx/U2Xa6au7O3rOs3AmvEnj4kuvOjQTOk9eD78fadKMR9owcT/MIYmt5MnZPyJ/Ut84Cw8WmqHlTVXrY=
+	t=1750499543; cv=none; b=XKzBoMukTPdi8UNv2LXpXip+1JHJqCaLkr1cmeDST9blbs3iUYlNjW8RAqvd16JM0c07xk22uJgTSBtqISTsMj3+kUB48z6xQTcgPgRi2006k3H39hM30wRqMgEAEnpCHlI7IBiloFruCqM+piAFCGRFTAyaXlOwuJv7r2VJWtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750499485; c=relaxed/simple;
-	bh=3ULX4pNN1yhGvSmInOOQo2ojV0oALaYBxzGB5RB/3pk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hCBW/NONsWQKAFdE8mej5t4amhSkpdhAydr898YTW3Bom7fDQKkjNqPL2bXzgy4KWtj/d5qSJ3bSbtMuMdVhV96wQ+1PJNoDRURLHb/lshLvz1+mKaFPhz5Y8+mnidIgZvWuMci1EOPCw1s7t7Kz0g3tQgJUWMFaMJrfIcHMneM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xdpbyMSs; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750499543; c=relaxed/simple;
+	bh=TIOGS5SCJXWCddfJl4KBZfmMAUXC5JfjUaRnfjaBJvQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ChNf6y+y9bw3YrJZBuNqUQ6I/5xNEAzL6Gm/nL3XB1OrTH67FFZWBzmlGFZjctIBfED36ztZJW2s9RJwOqObDWrOTwCMGdEHAj8nOMj9wErF/jXAsjrsaX+CUucW2/uHs56f2oZr11X9ivdq8wD/NuuU6iXP4hdSWVHnYkqsCCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kZ41U0ng; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xdpbyMSs"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-609b169834cso4525a12.0
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 02:51:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750499482; x=1751104282; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RXiTK9ai0RMYw2I7MTiCd/MyYR0qzc/Wl4Xxa7/KqEI=;
-        b=xdpbyMSsLicNk/eGoapOXUF/e3hn56wpZBDFCpcHHzEM0UeTLKVoeqRiQpLa3r2E4G
-         8oSun1XGF5WmmmKe7zrqHzmGmfXODQT8175EEkAd8QMqZiwFOo/tMS7oDsF0Sq/7F960
-         LHdyBijK1B7orRZIFAkeiJpn2KWXvaiG1B3vi4UusBzBM3zmMjwrrsl23lNCtkytf7jp
-         hvtd7/zV0AXF8Wc1Px7NoXtWHm4UEsgWyXHxUpOwa2Z1bg1iY3JJHb+cxgFvErG+mPXI
-         L5lzOiIw9vIEFOWv8WQ0MGGfiDCM7NP7JVujeLJz08gHR6WzQM6sCrPjn2U3bkUAVdFB
-         aazA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kZ41U0ng"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55L6iMql012611
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 09:52:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	MrVWxOcdaryip895kznrb0Ayb7JA8Nch7LFAlupRSz8=; b=kZ41U0ng980P4AQ9
+	F/kx6YTwZUCE5XLx0Iyg0VqMuJPM/q9dRTg/Nv0RTqEui9C6dPqBWF+hC+d/gblQ
+	RfTckV/npgfTNKGrbj8EgmDdnbGT4VjzEPzmaAwMGadrO/hTH4L3ximxKlTMtiiA
+	BHtl33HcOY5NPf64eAJ9HtMEG3EMEwtGP5UQYSrleNy/SByFz/h0rpmq+hhRM0tp
+	0PbTr0ID10lIzmSTJFA1UK9srjHd5dFKZiqzkgOmV4qBo1nHRQq8BPDqTidRV/iv
+	RPT1bulkVNM4DcYWgotYxuthWGXEcHzV2T0jvh/bFZrfuwt0+Q0Gh+myjhldCcCo
+	xFcw1A==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47dm2mggbq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 09:52:20 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d09a3b806aso53725285a.0
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 02:52:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750499482; x=1751104282;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RXiTK9ai0RMYw2I7MTiCd/MyYR0qzc/Wl4Xxa7/KqEI=;
-        b=DTj7/bK3PCeX2RxIIQ8estY9sD5a9KwEIcv06h4QL1EIQxTtQp+XcxgflblG5aNOlw
-         br78QkFSpl8BDq+jqM6rgomw9c65aWe8gJgtcg/AoHkT4DA9OljHmLEKtZ7gv4GvTMYb
-         G3kxFHdnOCpqsmio75zNBSGWq3sSHwpwWX25MaDFoejwJ1JScae2jWOixqZegyNH0QTz
-         6e6+BIulHLyIX2sGZssdbRqtHFK79+cjBngB99I+yRYEaY6NR3tickXzssX5m86mWtFi
-         14otlLfaVjd0rxi8oUw6nqCHTxS6q17csG06QY0FAoaM3JPPUxzfwc16acYwwOARBXu5
-         uQ+w==
-X-Forwarded-Encrypted: i=1; AJvYcCXX0gFLdToodISjfXb0yc6TnTDVH/YEPggcVcP9HT3z4+cuHtmLZVa82pIFALWGipd+n2EoKbgp8FIJw3s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIvUf+st2M2RvIUxOnF891BORYQTo/B0fFvDF9p/pgjlBVoBnT
-	nyI1abV8o3aQAiqXkEfqP9SQEOCnB5bhf8Y7tbVWi/NNWeY9tDNmnhGSVWm0wxvBTl2lGLMlgZW
-	slxrgQ4XS4EadZ77ERu7xFXZ7RR25mymYrwV1NLsE
-X-Gm-Gg: ASbGnctuHf+qfQHoHGcC2cpwNkv8IFT+21e4TUe8WOdWQU/TdnEzi+zZjbjeujYgili
-	K3ovqyWaaKCgixb3ZwcDXrXm3F7agBjKp7M/xcRZHkxBWDQwEhx9uogrEoiTfsa9Q1iz6mwEgo7
-	5SqCH9UH8nPNvuFv8KUu5packm11xIhx28klfkaXzKiQ==
-X-Google-Smtp-Source: AGHT+IGldXRRyGclzWs2ch/3ldmLdzSY+pLtWdYwUnObWuiqLlq1UyJityOItEmN8ekOKN884+J4tIcOemMnNMFs7c0=
-X-Received: by 2002:a05:6402:1514:b0:609:b4b1:514b with SMTP id
- 4fb4d7f45d1cf-60b91dee24dmr36620a12.3.1750499481874; Sat, 21 Jun 2025
- 02:51:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750499540; x=1751104340;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MrVWxOcdaryip895kznrb0Ayb7JA8Nch7LFAlupRSz8=;
+        b=gnOV3J1kFFO7oS9k2ee4vo+NMW9SpZvaJy97yMUppSYtG+z+JKijULhNFavAQ3x5py
+         elNJarP6ZH6eVFkzYHQnjUSKmn7jwqh4GyiOHeGGHM/sw7Rkq7itvcbUuKb8VREWNkBz
+         g7LhSPJYUu2s2x0daunsI2dXgWWaaciv16BRRnq9bhIQqgE5c++pSujd1abH8W2ixlEx
+         Ox64hc2oU9iiSdntkX57hkRajhxFLSy/03eGFW+V1CqjxEn+m0BxCcdUAkbSIKTHeuGj
+         X+PfCCD3TvyBSEUHLKP9s3o6UsoTeXAfJqDkVtMExS2HKvcqFypYpSmOC3MlaN8Wp3cf
+         j0KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU7/K9ecfF7lUogFotOGXaBC0PKOdnivJNlXTRmw7eJANCuNV52xPqaNLZUk6q8oBMa9Gz1ZbAusTJsnls=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygycwD92J6wor1yFSGeFKnwp4FTiiuvK1428zgW1k71TYT0i49
+	qKcnJJUOJ9Yi06/eRW+xrmPHt3jy/foSVbeJR417hilzUaQNpI9xa0DyBCS+wIglK9kt6hxwwhg
+	+pkswQiGiQv0CHPedcIlBEbLD2VN/Ztr7R9B3wRgn1ZDDSyKFTnTfCiTXloE+rNpwGSg=
+X-Gm-Gg: ASbGncscfkll1BXBWkMYIah5Js0ubOtoH7BFgsX8nPtGR4dn1uT0ph0Ks+0pf9wM6mm
+	x3/+0yrQS6VwBLFoPTxW2ixnHxzUjB9FHq80/SOJVhqN3sD9AqqvvKRWarXTmkcDv+P6PlbXMer
+	rfqwGmInWWMG2aPci91j1Ax4uJqPefkXyu9OfXc2vkeElegeheXepyU6uUFAyoPfnfLU25430Yi
+	+Ai4E4nmHKkrJQE3ee+WrGynJRjhFWHqVFwkOEK+WLI/UsudZg/FWvvwvdWPuua6C5VKCOPNiVK
+	l+WgGPejlr7rQ5Yzisr7mirY0xU6NFotp65n36h0Ff6B/oS3GKYds+f+ruFIdKp9UUYmhkzDFEF
+	lIjk=
+X-Received: by 2002:a05:620a:8392:b0:7d2:2019:c14b with SMTP id af79cd13be357-7d3f991e6ddmr314325185a.10.1750499539920;
+        Sat, 21 Jun 2025 02:52:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEq734alkVNfmP2y8YBUA+DkY0abDKaREh8B4fbmcqxx1pQveG+x3JgzRBjRxMOuxlvhFuZAw==
+X-Received: by 2002:a05:620a:8392:b0:7d2:2019:c14b with SMTP id af79cd13be357-7d3f991e6ddmr314323985a.10.1750499539490;
+        Sat, 21 Jun 2025 02:52:19 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053ee4e32sm339696066b.57.2025.06.21.02.52.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Jun 2025 02:52:19 -0700 (PDT)
+Message-ID: <8555840a-5cbe-4650-9499-f3876528891b@oss.qualcomm.com>
+Date: Sat, 21 Jun 2025 11:52:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610214140.2775339-1-mclapinski@google.com> <CAMj1kXErKwmiM5AiGOCE5D39U+3o_MXz5vqJmE5pkjQV308d9w@mail.gmail.com>
-In-Reply-To: <CAMj1kXErKwmiM5AiGOCE5D39U+3o_MXz5vqJmE5pkjQV308d9w@mail.gmail.com>
-From: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
-Date: Sat, 21 Jun 2025 11:51:10 +0200
-X-Gm-Features: Ac12FXzFNlYK9kPHV2cPPfeGTHkBGZk61mIh-96UkeYfbMpEavNzS6zsw9pKyms
-Message-ID: <CAAi7L5dmAYJoB0BfKvoT0iKOeWuc5hLqFPBPQr99TkdEB1dtHg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] x86/boot/compressed: Fix avoiding memmap in physical KASLR
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/5] thermal: qcom-spmi-temp-alarm: add support for
+ GEN2 rev 2 PMIC peripherals
+To: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>, amitk@kernel.org,
+        thara.gopinath@gmail.com, rafael@kernel.org, daniel.lezcano@linaro.org
+Cc: rui.zhang@intel.com, lukasz.luba@arm.com, david.collins@oss.qualcomm.com,
+        stefan.schmidt@linaro.org, quic_tsoni@quicinc.com,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmitry.baryshkov@linaro.org,
+        dmitry.baryshkov@oss.qualcomm.com
+References: <20250620001918.4090853-1-anjelique.melendez@oss.qualcomm.com>
+ <20250620001918.4090853-5-anjelique.melendez@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250620001918.4090853-5-anjelique.melendez@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: YDNqDkjdSD9ahUA5M3J2MfM_4RFQhXVt
+X-Proofpoint-ORIG-GUID: YDNqDkjdSD9ahUA5M3J2MfM_4RFQhXVt
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIxMDA1NyBTYWx0ZWRfX4g/l3x1SeKSn
+ KQX/wm/Y3i7COxdzjHv7KWo+fbW61cbhtFbcj53hfQy9Xojy9nrPsAHCHE9zGH2wCMRZMC9ULYM
+ VTtvexLdneHarEUnlEtdClyCQKdi0ZT6ECfpjexFr//Pd9X2iqepfuSWtzzcnAVkdQa2lSub5Ez
+ ODE6uH5a/CmPXHELrmtAlFiKVh7TVH41/jc40QR3010BwGeQh5MVQgZovI0OPqes05FP+hnYVCY
+ 5MCcAPD6UQ+dhuh6NI9Q7FsLzMC+zESz8EzlmJL4ODGBCbsfN3lBl+gJEtodEn6cNPQktqhfmux
+ P7Ogv9BVmLE4EprsO5fdydN8rEJwBslSvhg55S8vwjuTHKjG3SQNPZaR+4piDn9u7UofYMFWNnH
+ Hj5RmcB88R4v5G2n32eI/qRWllDxwabH4cmGJLFUyV57OFee3HhB3bhycHHXZKBgsqtChsVq
+X-Authority-Analysis: v=2.4 cv=Q93S452a c=1 sm=1 tr=0 ts=685680d4 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=iJ2Ah6jtJjwnyIaW4igA:9
+ a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-21_02,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 adultscore=0 priorityscore=1501 mlxscore=0 suspectscore=0
+ clxscore=1015 lowpriorityscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
+ impostorscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506210057
 
-Hi Ard,
+On 6/20/25 2:19 AM, Anjelique Melendez wrote:
+> Add support for TEMP_ALARM GEN2 PMIC peripherals with digital major
+> revision 2.  This revision utilizes individual temp DAC registers
+> to set the threshold temperature for over-temperature stages 1 (warning),
+> 2 (system shutdown), and 3 (emergency shutdown) instead of a single
+> register to specify a set of thresholds.
+> 
+> Signed-off-by: David Collins <david.collins@oss.qualcomm.com>
 
-On Sat, Jun 21, 2025 at 10:19=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org> w=
-rote:
->
-> Hi Michal,
->
-> On Tue, 10 Jun 2025 at 23:42, Michal Clapinski <mclapinski@google.com> wr=
-ote:
-> >
-> > The intent of the code was to cancel KASLR if there are more than 4
-> > memmap args. Unfortunately, it was only doing that if the memmap args
-> > were comma delimited, not if they were entirely separate.
-> > This change fixes it.
-> >
-> > Signed-off-by: Michal Clapinski <mclapinski@google.com>
-> > ---
-> > I would like KASLR to support more than 4 memmap args. Do you think
-> > I can just increase the MAX_MEMMAP_REGIONS or should I implement
-> > support for the general case?
-> >
-> >  arch/x86/boot/compressed/kaslr.c | 3 ---
-> >  1 file changed, 3 deletions(-)
-> >
-> > diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compresse=
-d/kaslr.c
-> > index f03d59ea6e40..4aa9c9781ca7 100644
-> > --- a/arch/x86/boot/compressed/kaslr.c
-> > +++ b/arch/x86/boot/compressed/kaslr.c
-> > @@ -162,9 +162,6 @@ static void mem_avoid_memmap(char *str)
-> >  {
-> >         static int i;
-> >
-> > -       if (i >=3D MAX_MEMMAP_REGIONS)
-> > -               return;
-> > -
->
-> It isn't obvious at all why simply dropping this condition is fine.
-> Could you elaborate?
+A lone s-o-b from a non-author, without a c-d-b or similar is
+ambiguous
 
-Of course. Let's look at the whole function without my change:
+[...]
 
-static void mem_avoid_memmap(char *str)
-{
-        static int i;
+>  /*
+>   * This function intializes the internal temp value based on only the
+>   * current thermal stage and threshold.
+> @@ -486,6 +620,8 @@ static int qpnp_tm_probe(struct platform_device *pdev)
+>  	chip->subtype = subtype;
+>  	if (subtype == QPNP_TM_SUBTYPE_GEN1)
+>  		chip->data = &spmi_temp_alarm_data;
+> +	else if (subtype == QPNP_TM_SUBTYPE_GEN2 && dig_major >= 2)
+> +		chip->data = &spmi_temp_alarm_gen2_rev2_data;
+>  	else if (subtype == QPNP_TM_SUBTYPE_GEN2 && dig_major >= 1)
+>  		chip->data = &spmi_temp_alarm_gen2_rev1_data;
 
-        if (i >=3D MAX_MEMMAP_REGIONS)
-                return;
+how about:
 
-        while (str && (i < MAX_MEMMAP_REGIONS)) {
-                int rc;
-                u64 start, size;
-                char *k =3D strchr(str, ',');
+if (subtype == ..GEN1)
+	...
+else if (subtype == GEN2 && dig_major == 0)
+	...
+else if (subtype == GEN2 && dig_major == 1)
+	...
+else if (subtype == GEN2 && dig_major == (>=?) 2)
+	...
+else
+	ENODEV
 
-                if (k)
-                        *k++ =3D 0;
-
-                rc =3D parse_memmap(str, &start, &size);
-                if (rc < 0)
-                        break;
-                str =3D k;
-
-                if (start =3D=3D 0) {
-                        /* Store the specified memory limit if size > 0 */
-                        if (size > 0 && size < mem_limit)
-                                mem_limit =3D size;
-
-                        continue;
-                }
-
-                mem_avoid[MEM_AVOID_MEMMAP_BEGIN + i].start =3D start;
-                mem_avoid[MEM_AVOID_MEMMAP_BEGIN + i].size =3D size;
-                i++;
-        }
-
-        /* More than 4 memmaps, fail kaslr */
-        if ((i >=3D MAX_MEMMAP_REGIONS) && str)
-                memmap_too_large =3D true;
-}
-
-This function is called for every memmap=3D param. Let's say we supply
-only separate memmap=3D params (instead of comma delimited). Then on the
-4th param, `i` will be equal to MAX_MEMMAP_REGIONS but the last `if`
-won't execute since `str` will be null. Then on the 5th param the
-first `if` (the one I want to remove) will execute and
-`memmap_too_large` will never be set.
-
-With my change, while parsing the 5th param, the `while` loop will be
-skipped since `i` is not smaller than MAX_MEMMAP_REGIONS and the last
-`if` will execute setting `memmap_too_large`. Basically, my change is
-safe because the `if` I want to remove is already baked into the
-`while` loop condition.
-
-
->
-> >         while (str && (i < MAX_MEMMAP_REGIONS)) {
-> >                 int rc;
-> >                 u64 start, size;
-> > --
-> > 2.50.0.rc0.642.g800a2b2222-goog
-> >
+Konrad
