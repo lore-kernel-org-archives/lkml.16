@@ -1,72 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5D721CA14;
-	Sat, 21 Jun 2025 16:03:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4EEC4207A;
+	Sat, 21 Jun 2025 16:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750521835; cv=none; b=BKmlGpjeoMBOlrdX6HBQZiOGSy6rlCxeOG6AtH6Zx/sb8BHDczJU2n8TWKqK0E2egItx7rL4f7qCZbmAyYqVhSsrql3AyY3KixNc7EnpoTqT6g0rPIdCX67C10S66A8L1L8tT8FAbpoXckXh4XDPqzghovDFvbB5bkC0AZNo3WY=
+	t=1750522038; cv=none; b=D8imvqY11duNaHJylBEhGCilyZqP2+pbvvwqAO6yZrGgi2Bk//WQNrJazB5quzzq00bE2+IGGQMtu+xY/+DPqOgor/0mmTRY9VAJlX3VVq/pdWsp4AJMVZF6xBugDb4UA4euH9qctt4K1pWNWsxVxVutaGK/a/iyfx7UlXrlINk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750521835; c=relaxed/simple;
-	bh=fK0szu7oKlcx4ykmNjXo08CHT5AcRlE5UnCS2Rd0ivU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GtFAj3epPbTp7hXWNRGfZYj8xuC3C5I9Ohvx854wEdhcdqDPbHPFdJkeqcZcAwD354EJBodSldBPN5SuNcXqkQicjbpeID7mtsd5/tP5tSW2TZizA4sD9Z4CbfEVbqJYnB6wrG/eBiMxaTYTrrbKSYULU5iHLOQyJfqD+dHafwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u+fEWf3J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750522038; c=relaxed/simple;
+	bh=AtD0WPHmwHEkjbgjKd6OvQ1DlE7GB95bsgIbqGMhEOY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NpAgWZa1jSad6crUjv0jmt3hENsCfweNnBzmxaGlOvNUdx5ZvFGNyStOJYt/SA6lWD95ZL54e9q29mB9cG1WdUqgeKpQI2hnov8DzZoeqxV/XrHxGE5tc8kw/sYUmnAnbF/X0TY9s+fpbGIOlLxBxlrH5UGvvce03mkt6Ye9ZJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TvNWobMp; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u+fEWf3J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B37C1C4CEE7;
-	Sat, 21 Jun 2025 16:03:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750521835;
-	bh=fK0szu7oKlcx4ykmNjXo08CHT5AcRlE5UnCS2Rd0ivU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=u+fEWf3JpwaQFvkurB2cj92/djRgmEnGIJEl/mdWXIDbOTH6jDwNn+smq87gvEsye
-	 AHgqB+9DY9lSohUc8SQeXlqHSMdQx+vXQzyGbvLvCVQgfTqH8+y3Bky1JitoAOr/8d
-	 vikt6nrEmTk7LevSkyKPD4S/C+UQi++L8dBwQzFJGhBXZzM6y0k1KvOQqw4hjvdgo2
-	 /mpgXcomEDj5y/vOKWA1fHDoQcQH2dEZN2C9tm+lCX/en02EmtVDx8tCXP9o2GAdXG
-	 BeG7V07ritbMdx/ZOP7zS9wNpTlqdOt7VpBnlpJgtqG83FrdoZ0GfD6t+aLV9c9ydg
-	 0TmmFq8UUK0pw==
-Message-ID: <5e0a5cac-b88b-4721-a516-b179f9cfd3a0@kernel.org>
-Date: Sat, 21 Jun 2025 18:03:50 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TvNWobMp"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2369dd5839dso6222915ad.3;
+        Sat, 21 Jun 2025 09:07:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750522035; x=1751126835; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ajQtgc7bclxcGCfy/XXGZgpXq5TCKj7iHP18vW/22w8=;
+        b=TvNWobMpd3sj9RMysaNnahGyqe141cBz6PDv209NvTl10bMDpV7lfe3vfwgr2CKcmy
+         iDMUJ3u5mr8fA0hTZfrw/2OBVfub9L2mTyR34/d5Od74cWvrvVfG+fhFPtMzqrrpVnX6
+         5Jt15NhMoQBRUWM0iSSgojidCUGkMQv153Ahzg8O1ZdawldFUYyzMB2y1xbFa3HzAUJi
+         UoVOUug2tYUGciemYYP2gxqiBldhhT7WY69ZfklX1s+rUh8WSxYBsTDDIfEIkoRQnsx3
+         diGfnBVwxIclKyd+D+q+Q/3w0FWcZG+E+Im2ZHkATn9prniZCBbaMPBl0wnD++Nc2AjM
+         lEcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750522035; x=1751126835;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ajQtgc7bclxcGCfy/XXGZgpXq5TCKj7iHP18vW/22w8=;
+        b=viVxYoajjJ3mX3V+zB1q+1Ay0hPS4NhZkq9fOj4ZHxrrhueguBujBTsg79gh0ZOYq1
+         wQZ5JTIrH1EsjG+bZuXyHE18eFpgE1nztJssWEgI17sK35DdR6glNe783EZb8wMXFqRC
+         7x2DUzne1DwulxJQGJLu608W0Gpre1Jz/okPfe1ii3XOlOY7NH/kcjf6njOYXsERRQ0a
+         wxGdqo8Bvcpt/HiXiakkOwjk9hWvlOpqyWLzGJEY95iSBninzBICHDEelduybxhqGCZ4
+         Uom9rJTDwGzxVhB2e44vbZ2r0LkfLqJDmCDTUbL750tJumSa3bS9qFt5ngTc9hnHrA1t
+         THag==
+X-Forwarded-Encrypted: i=1; AJvYcCXoGX6T0W1pcGGVVpi2ksQnGOV5BJ9VFWbGAIbFMHwYIOrfcjgJcQvBMHlbiBdbFk/Kr+mMpka/jnGkSGmHiA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvE/g2eE9cDBy1+AhwiBZWLl9nfnaSXTj1lIo+2DwdAFWkb4+1
+	6geLfer5Zr5mspI3tKC5mh1kPu2I3yXUHlESQDYdnJ23mefDLjX5r1NbomfW/GBkek4bKuZv/jS
+	S710edx5FcKzha5A0fjFZoKnf4xacDnA=
+X-Gm-Gg: ASbGncunNQo56GL6/+sl9pK/mhSBPmqqhcIdg6mXfZvRxlLDvbQOwsjC/kthdEooueH
+	b+aruYjDz5MafAFV03xl/IsYcWmQWywzq0NFDJSXXHD25LzIdbQrdGD4B4Mhfq90pkOD85YUn93
+	Ur9GwB7bHcxkZrLITef0jrV6UHETp0IfJ2GL0WNizig9k=
+X-Google-Smtp-Source: AGHT+IG6iGrjwtr5gmBCm7JqmpGiMTIcHXdasNLVivu7539ejoXqYxEhehCw/CPcTx2MnSPreVu4LSnUB/eS7FWU1EM=
+X-Received: by 2002:a17:902:f547:b0:235:239d:2e3d with SMTP id
+ d9443c01a7336-237d9a7513cmr35867345ad.9.1750522035189; Sat, 21 Jun 2025
+ 09:07:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpu: Add Apple SoC GPU
-To: fnkl.kernel@gmail.com
-Cc: Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Simona Vetter <simona@ffwll.ch>, David Airlie <airlied@gmail.com>,
- Neal Gompa <neal@gompa.dev>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
- Janne Grunau <j@jannau.net>, asahi@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250613-sgx-dt-v2-0-fb2b7d1c3ff7@gmail.com>
- <20250613-sgx-dt-v2-1-fb2b7d1c3ff7@gmail.com>
-Content-Language: en-US
-From: Sven Peter <sven@kernel.org>
-In-Reply-To: <20250613-sgx-dt-v2-1-fb2b7d1c3ff7@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250621152142.25167-1-work@onurozkan.dev>
+In-Reply-To: <20250621152142.25167-1-work@onurozkan.dev>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 21 Jun 2025 18:07:02 +0200
+X-Gm-Features: Ac12FXxSfnvN5aXmlOVsQAKlwfWdQUDM8zUvoRwwKSWswZ5mQmTRRDhiaWaBOW0
+Message-ID: <CANiq72mh9a7RpJpRx1toS4z46cHmeXni1oPTpUdi58wQhyN4xA@mail.gmail.com>
+Subject: Re: [PATCH 1/3 v4] rust: add C wrappers for `ww_mutex` inline functions
+To: =?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, lossin@kernel.org, a.hindborg@kernel.org, 
+	aliceryhl@google.com, tmgross@umich.edu, dakr@kernel.org, 
+	peterz@infradead.org, mingo@redhat.com, will@kernel.org, longman@redhat.com, 
+	felipe_life@live.com, daniel@sedlak.dev, bjorn3_gh@protonmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 13.06.25 23:17, Sasha Finkelstein via B4 Relay wrote:
-> From: Sasha Finkelstein <fnkl.kernel@gmail.com>
-> 
-> Add bindings for the GPU present in Apple SoCs
-> 
-> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
-> ---
+On Sat, Jun 21, 2025 at 5:22=E2=80=AFPM Onur =C3=96zkan <work@onurozkan.dev=
+> wrote:
+>
+>  #include "workqueue.c"
+>  #include "xarray.c"
+> +#include "ww_mutex.c"
 
-Reviewed-by: Sven Peter <sven@kernel.org>
+Please keep the list sorted.
 
+Also, a couple nits on the series:
 
-Thanks,
+  - The title would normally be ... vN 1/M ..., rather than the other
+way around. You can make Git generate it for you with `git
+format-patch -vN`.
 
+  - Typically you want to give a changelog, either per-patch (ideal,
+especially for non-trivial patches that change a lot) after the first
+`---` line, or per-series (in the cover letter, which is also
+generally good to have for multi-patch series).
 
-Sven
+Thanks!
 
+Cheers,
+Miguel
