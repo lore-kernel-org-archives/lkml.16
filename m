@@ -1,76 +1,92 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74860433AD;
-	Sat, 21 Jun 2025 02:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A21EED7;
+	Sat, 21 Jun 2025 02:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750473806; cv=none; b=kHW2GdPdekMbV597/1x1exq7urbhLtLwf+BxVdFIqmX56aRxHKhgQWChRwZb+fT+wdKmgdOCzejYXFoIYnCkzAT/zR3wqo4vLGOd7oT34DNchyX4Cv9+HckpP3ae9FhaPfxX9rEEWRfmuoKa/NXAJrRicKfYxu2X+2BCVduOizQ=
+	t=1750473881; cv=none; b=az6u5mrk5vX1m1BlrVaWTKTnXVvu6iuaV8j0bspMBuDm5siKxyB/lGe+9IixfLTpOoIXV1rlNP+q5sZRuOWyE0rc13U6daQCvPUwVsNokJwyktaK6MtOJt8YoGpvxY21VjVT7UTBb4qZSq8xxp0Eh40XqrGB8wDR1KS0ZYUN40c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750473806; c=relaxed/simple;
-	bh=/mUu8wiWZRM27Ynp507EXjtNZKfG8JErGdZOjnS3KN4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i1K20r+purG0G0rnWBaI3Oa0Org8I1WtJR/7rTyHZYqevhSPZ1rJwl+8RJpEiljKGYsADtPJn5EbEaS6hb9DCJy+5DUPKC5WCTLRPaxWxLP/Au0aGH9d8htJ5sGflGpROlbI7MZ9z6e85R2zN62Myb3C/xesTvC5rya5jKxRxrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cQzNMoWH; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750473881; c=relaxed/simple;
+	bh=HozVrZqVjuX7vUbn+808ik80PslBbRRFfupD4/mrc1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D9dubTdtV72/5113a2k9bXsdtRk4cqaWn67OQS2Ov3xdOdmHXXsNi4kAZNBLkKL9QshW3qiGU2MBTcXi6vsVUB5aJM2n/eylWeBFht5DeCO3eUYjOAkCe38rPeCF2+1LIA2HxmdURn4PLtooB899BJOqDNL0AECUGMvnhP/FqGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dlYceuU9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cQzNMoWH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=VuSXAJjGHGfDeGAQI0t00L+PSs0s6DTtv7L+mZ2k2xE=; b=cQzNMoWHO+ZRNfu6LICot/mnyK
-	4NMiJ9zNI1mfQoDnUm5PgxqEp6HtcT+Oh7IHtiAQOvL6ZkY7YwByf2nQ1Cy8W06OJlmylqGeIMwaf
-	0nowHA+p3BawmKPcW1XcBscMzyzxv0zn1mz5wAq4ln619wnxK8kiXf2AO2HjVrSRhTnByCqkz5OEA
-	A8jmN/byt7umWpSb0bgc1Sq6pejgvmFA3ls33AoS7+LHxAZWyn5CgI57UD2F2IUN1EaTpyNGQpHv7
-	RuR7ZC6w6ovO7fhnaxRueB/r6hOt/rKIqjPWV+Xi+r5v1Al5+iQUGS24Rcw8WDBvGw4EQp9ZsYAaw
-	M9YsjY9Q==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSoCL-0000000EGH5-3niq;
-	Sat, 21 Jun 2025 02:43:18 +0000
-Message-ID: <969c90d3-eacf-484e-97dc-ab02c52c9453@infradead.org>
-Date: Fri, 20 Jun 2025 19:43:15 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dlYceuU9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB2ABC4CEE3;
+	Sat, 21 Jun 2025 02:44:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750473881;
+	bh=HozVrZqVjuX7vUbn+808ik80PslBbRRFfupD4/mrc1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dlYceuU9ZhWgtjiDdbXo/5YUu1/eK4C92c1C8VaQXB8zRu0hAWmxDxaC3jFtlktw4
+	 VHbv0QaNOaiZHSkUq/fp/VpNOFLrFwqWCurfoSRnxVdrtikW8pPIcopcPBhfsMq05Z
+	 +003e4e7z+K9CK6FTULwgJhpZ9honrIqHCCeUQmio0MxjDMP+ljP7QLYBo5B/K/86j
+	 Bk3q98McC1bHFFcE2GixM72EeCnQC9t8qX5h3l5O1yIGqMbRpF9fVCc/XPeb+DikHv
+	 0koPRM3ZcL7GQsuqYyAfkNEudUgpcbiNvFpfBO3cr9z/UjNHfnAAlQFM8fTyMPwED7
+	 MJuYwIDcFVKiw==
+Date: Fri, 20 Jun 2025 16:44:39 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Song Liu <song@kernel.org>
+Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com,
+	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+	kpsingh@kernel.org, mattbobrowski@google.com, amir73il@gmail.com,
+	gregkh@linuxfoundation.org, daan.j.demeyer@gmail.com
+Subject: Re: [PATCH v2 bpf-next 2/5] bpf: Introduce bpf_cgroup_read_xattr to
+ read xattr of cgroup's node
+Message-ID: <aFYcl8KQU9upkZ0f@slm.duckdns.org>
+References: <20250619220114.3956120-1-song@kernel.org>
+ <20250619220114.3956120-3-song@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: Tree for Jun 20 (pinctrl-zynq)
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
-References: <20250620221305.720fedbf@canb.auug.org.au>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250620221305.720fedbf@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619220114.3956120-3-song@kernel.org>
 
-
-
-On 6/20/25 5:13 AM, Stephen Rothwell wrote:
-> Hi all,
+On Thu, Jun 19, 2025 at 03:01:11PM -0700, Song Liu wrote:
+> BPF programs, such as LSM and sched_ext, would benefit from tags on
+> cgroups. One common practice to apply such tags is to set xattrs on
+> cgroupfs folders.
 > 
-> Changes since 20250619:
+> Introduce kfunc bpf_cgroup_read_xattr, which allows reading cgroup's
+> xattr.
 > 
+> Note that, we already have bpf_get_[file|dentry]_xattr. However, these
+> two APIs are not ideal for reading cgroupfs xattrs, because:
+> 
+>   1) These two APIs only works in sleepable contexts;
+>   2) There is no kfunc that matches current cgroup to cgroupfs dentry.
+> 
+> Signed-off-by: Song Liu <song@kernel.org>
+...
+> +__bpf_kfunc int bpf_cgroup_read_xattr(struct cgroup *cgroup, const char *name__str,
+> +					struct bpf_dynptr *value_p)
+> +{
+> +	struct bpf_dynptr_kern *value_ptr = (struct bpf_dynptr_kern *)value_p;
+> +	u32 value_len;
+> +	void *value;
+> +
+> +	/* Only allow reading "user.*" xattrs */
+> +	if (strncmp(name__str, XATTR_USER_PREFIX, XATTR_USER_PREFIX_LEN))
+> +		return -EPERM;
 
-on i386 or x86_64, when:
+Just out of curiosity, what security holes are there if we allow BPF
+programs to read other xattrs? Given how priviledged BPF programs already
+are, does this make meaningful difference?
 
-# CONFIG_OF is not set
+From cgroup POV:
 
-ld: drivers/pinctrl/pinctrl-zynq.o: in function `pinconf_generic_dt_node_to_map_all':
-pinctrl-zynq.c:(.text+0x539): undefined reference to `pinconf_generic_dt_node_to_map'
+ Acked-by: Tejun Heo <tj@kernel.org>
 
-or
-
-ld: vmlinux.o: in function `pinconf_generic_dt_node_to_map_all':
-include/linux/pinctrl/pinconf-generic.h:231:(.text+0x270bb2c): undefined reference to `pinconf_generic_dt_node_to_map'
+Thanks.
 
 -- 
-~Randy
-
+tejun
