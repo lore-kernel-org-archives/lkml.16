@@ -1,142 +1,162 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B56211F;
-	Sat, 21 Jun 2025 19:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 148AE185E4A
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 19:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750533330; cv=none; b=D+ymbIQiNN2yMBWWIvX62rRTEAZhvL3A+iXbzdwMBemcRxNNQ5+4BI8PWr8tiGcBcR5LA8Sj6I3RLblHJB9lbPPVFLf2cXWWoc2CTJJxapNQLASjvMMk5cPMfFaeCHhOjl9gnAupdUbqq59HOqSUHaE2LlAn5e8Yq9cT8IlOUWc=
+	t=1750533487; cv=none; b=gRq7Aqki6G/lx3MSv6EpuJ3/uqRZx/om/lUxitLeJf3BBcj1WNeYPL2t6vrSYLA5W9Mw3gc26uuIxChNJISzdLBlzEacFHzkhBvkmNsh4gtKR3KHNGtbSDvdue30RkEle/AE8vTUuGJyVHG7gAmqjTQwG75BnHhYDXavxNXYJbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750533330; c=relaxed/simple;
-	bh=KzUQDnReREBPfVZQbb3GMmWlm2zqkpJbIDRwtszYAKg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nx4zFZJbYsRa2c9AR2cTW5rOkkmnhCt0bvwxD9WgVevQGiQ7HPngRniDA3k7b7Ye2X6a/S5VTnbkmcszyjwrs92w8GxW5q8ZFGQas1W/7cayZ/lEX04/lO6+L8/DWBSsflqP+pML+knbPNc/ZXIrd06c9fW2PeonT/L1eq0ySVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nC4a2Wdw; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750533487; c=relaxed/simple;
+	bh=XE5B+PrttvOG0WztdNX2inda4S/t1YtPipFew/hr/4Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PYMEcTX70jOwn28o/Vu8nwl6pR38CVzNK0yX+C8l3A7eY7thCNBXT9MMIzsvsGUw+jIKp80LTDrcaanS0uQ7gLijVSlmA3w0+Zib4lbzIiQprzEvT6ISm12p+S9zNHETs4reGp0sPBUah1MIW6tt32G9Urg9nLFgkvKt0n3iCFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=sLef4a0G; arc=none smtp.client-ip=209.85.167.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nC4a2Wdw"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b26df8f44e6so3381185a12.2;
-        Sat, 21 Jun 2025 12:15:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="sLef4a0G"
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-40ad1f7c23bso819581b6e.2
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 12:18:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750533328; x=1751138128; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FyabKKZRpe1kbc7KaEKrqFY9IqxUD7ZU2rCerIRqy7M=;
-        b=nC4a2WdwIuxRa0T5XJiPacTlmkXN3IW+Os26yLMj+ltIbNpp9r4ZRh+/REqc3bgYPA
-         V9IChSrs1/YodXKluAmPxln5BJu/pTqmX/UGizTOf06+qUBFhK5dBSrW6XMtiMTaIUyd
-         JnKyEFpBEZyoLdG3itDv8wuDGFN2E5E0rPJUy/GBBTzw/SWzPhpX9thaxRQpmXd0sUcA
-         1FYwa+h2gQKEqxq4YkKeA+3UTPu0sRdZRoJW6cvfyOSa4ekoGIZlPWo/sHgtNRV6W3lL
-         WWel5m82lB785Q441e2NCge8CgCoSjuA3oRXPvocF/nZriFZJV0Pumy8NNsTNiyipX5d
-         MGpw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750533484; x=1751138284; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qDqnnBv0DNrWAt+UkIR6UGFfAeWU8x15pwwMWRrWyZA=;
+        b=sLef4a0Gl5u+64mAUfYYSJR3IX6eqScn8OIYdoi82x95sNwDd4iZPI1NIxZuqY3vFC
+         K0U5OExu4EBdFapKykWudxVVSmeyAl0ru/FoIO4nTp/L6MreQYy2fgK7t7GpanW5WXtg
+         qBHaK7qVlZAUnY3bLQ0MDPYWEZR+Al3JHiaTi5lIACIQZkzW5MOBm9b61gDoaILBiNCe
+         Y0g8rIpOjX4oyjbPsXEAIaXTHDMfK6ySVCEPz4JEMStOGE1aeu8BgV9vn3u64P8vNjkk
+         FbpZ6MhARV+s/h9Qgzp+8fiLf0DD7feyij7f8uJ52bzsXmZFyBJupcriEt7CvRlUnUFy
+         525A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750533328; x=1751138128;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FyabKKZRpe1kbc7KaEKrqFY9IqxUD7ZU2rCerIRqy7M=;
-        b=Zep3qnMBkkyzOTxeJxXmPteBPPHTHNrJY5DFTj8QarkukE8O5ZxIY+cWgL1ISR9zg9
-         t2nGVfDGxyLcKdLoBlltwLL4AzlLWCkb2W3b0yupCVENGujQDMsEZxjcTotv7N6yuxcl
-         vf8SNrKPAlbgZH75TVvLrlFauWNI6rue4Pr5CZx8V5C/EkObBn40+h7p6rTWlWmsykRD
-         pr87z06jqOEBj/w7BQMTjj1Zse8ru6qV/oUp/A8B5NW5vvkffDMhWU/udSinc/i26MoR
-         T27CzcXAOrxjOR5cnD1uH/9GVgTo/cFfz8zQbZkrxP6yE5VWOu1DFZQUntT0vm517G94
-         13pQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVuXP53GV5ae/GSL8SYulpq1tb4uNQgMzse/mI8Dvw2Gthz3xWtjuwVuoXDDxMJLd52/5IWcDe9SrcoHZU=@vger.kernel.org, AJvYcCWUXCZxanspRu+G+hZjB3jh/vCHMfUg878MCZx7Q2Tqf55bgy9M68Zr8Hoy004PJTYDLdwhH7sfTLbz6wE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDjHLhYrIYNktiydonID1WvpMjBuZrGTUHLFs36I4WexUhCmjG
-	VSn9/sZR6kt0ZMbCG9QorHqJJwYhX80z29HtJ85FG9TiG1KSWD3qFmZD
-X-Gm-Gg: ASbGnct8d4oMzzFxna7C/eABXKFF/6UshUksijfAg0ggOnFA8Q1LvyuC3jLrxNWCffz
-	EyB0u22sT0N+OaOXzvzGRegVO28uBDG/xmQVkVRE+Gfa3KrTCKyekD1IQaaR1Uzyon1TPusWHQM
-	ikkdQoWWggZA8dBWVwcdK12C9ykdQPJSsC2JjBo2EOHeVWthfVaTPNhD6AVk0TULBpRIN9fEWjh
-	SBGSAOu8xBXBZ3+PRiXJL84cwXmbD0d0Ma3WaozE9lX3fqBoedpEOn4O/pw9nOWbIZvVtSizMYO
-	7P/IfLI3gEYhtG2rbtDohtP/HOGPmEkYrzvuyyBdEk0Ho9OxiKRGLPNUXJFQfzWVFe+TjDE5QLH
-	TSQOQwBT12Q==
-X-Google-Smtp-Source: AGHT+IH0/oCczFhSPKQ3YqY770/xMT6R9Vz+U/odFqTFEILAvRAB8bWMSAOlsFEqbW1XlAarUlPBfQ==
-X-Received: by 2002:a17:902:db11:b0:235:f45f:ed55 with SMTP id d9443c01a7336-237d977a56cmr120790325ad.1.1750533328466;
-        Sat, 21 Jun 2025 12:15:28 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14d:4c64:81ec:7409:107a:a63b:a3da])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86628ffsm44843365ad.156.2025.06.21.12.15.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Jun 2025 12:15:28 -0700 (PDT)
-From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-To: vkoul@kernel.org,
-	yung-chuan.liao@linux.intel.com,
-	pierre-louis.bossart@linux.dev,
-	sanyog.r.kale@intel.com
-Cc: ~lkcamp/patches@lists.sr.ht,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] soundwire: debugfs: move debug statement outside of error handling
-Date: Sat, 21 Jun 2025 16:09:38 -0300
-Message-ID: <20250621191522.14415-1-rodrigo.gobbi.7@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1750533484; x=1751138284;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qDqnnBv0DNrWAt+UkIR6UGFfAeWU8x15pwwMWRrWyZA=;
+        b=FkL9dSO+KQ/kewTTEZTVrLhZFHMieFUGl0EFbAR8xEHMioD+ryDLJfOTzljlWeAJb4
+         fC2FaCtuBPTDcur23G8C5f2Yz0QXUT+aRqNFanCjC14i+fJEWzK8vo2l7rTNZJRcg0yG
+         tH784MbRWheTSBmcUFSL9SAJ45X1nqzNixJbjF0M3FDB/Is7MS0Ble3clsEaPbZJWOqM
+         hB4hAWI+LeV3YtPf0OLZB+hFuqKcZbEDl3DC2hHy4BmP12KqErjlSvGw6TS0Pe0i9uRr
+         s1eKaDLpfQYdsouEanvPbU2qygoE5HNZhdkFIP8cyEKHP1iAViemhjLtqBjh+xt4kjoQ
+         dtpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVL6lUAbBUFi9fvthDO1z259/LM6Tpt8aJZTp1DpjzfXbBSmkIEp4sEU/bQumR4RyhXpUdq1eAMXue26xw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz50iS1HVMMpOnrXYZt1j/xLZ1RY/P0eL085R4S4GXTH39Z6kNf
+	Ii6hINgKF1F0pRq1d96oNaPj6B9OIGZUzc7rYU5+VyJgKhKM0U2bTs/2D1/smau7Qlk=
+X-Gm-Gg: ASbGncvZ8mNeujyZdFQZFPLLlZAkAXdr+PZxpiWNsK67zTe/fIstcDlFiGQ/0eAxUoo
+	WvdQx+FHh4pjO/HbjP5ZZlVRF6m0yBu+TFoyT4ieYMDJG+Qft/30JE2uSAeSI1gLkgv8j6uW6+B
+	oW7VSPJwK0IfDIi5lNPHc+JWNrfyphxQW2ZETL4r5K/bdprSdhvBdGmO9Pt1kgDSTxCFMYi8Xu/
+	fh62hHkQdr/MIBi7aHb5uNo/QSOAwADX+FzORn7fSE2IEOzlrXxDClpqAoPjXRkeEmjVV8K7E5P
+	krDs8POjqFk8pIvJzG4ZOW/Oakt8vV3la7TL8AeyPtOy5ZIcFjJdsUE6TlTAxsgkHYtmlVt8RXT
+	1T7+KwhVwsf/hbLvtds7LsjWlnsixFeTWXbJJFA2Vy+lTXG2alw==
+X-Google-Smtp-Source: AGHT+IHNg+F7/FEkXh5lzf0AI+54cGfLcpIAxTNe2osOdreyIYLLq1fTcJJ5ffTvCxyOVUG8NIlGmA==
+X-Received: by 2002:a05:6808:199d:b0:403:51ac:23ea with SMTP id 5614622812f47-40ac6f69cd6mr6064565b6e.9.1750533484042;
+        Sat, 21 Jun 2025 12:18:04 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:5a14:cde7:1a11:c454? ([2600:8803:e7e4:1d00:5a14:cde7:1a11:c454])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40ac6c30aa7sm771843b6e.20.2025.06.21.12.18.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Jun 2025 12:18:02 -0700 (PDT)
+Message-ID: <8437d9db-8123-4c50-9f5b-b9adf265f32c@baylibre.com>
+Date: Sat, 21 Jun 2025 14:18:00 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: adc: spear_adc: mask SPEAR_ADC_STATUS_AVG_SAMPLE
+ before setting register
+To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>, jic23@kernel.org,
+ nuno.sa@analog.com, andy@kernel.org, conor@kernel.org
+Cc: ~lkcamp/patches@lists.sr.ht, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250621185301.9536-1-rodrigo.gobbi.7@gmail.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250621185301.9536-1-rodrigo.gobbi.7@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The start_t and finish_t variables are not properly initialized
-if errors happens over request_firmware actions.
-This was also detected by smatch:
+On 6/21/25 1:41 PM, Rodrigo Gobbi wrote:
+> SPEAR_ADC_STATUS_AVG_SAMPLE info is a bit field coded inside the following
+> bits: 5,6,7 and 8 of a device status register. Since the value came from dt,
+> mask it in order to avoid touching other register bits.
 
-drivers/soundwire/debugfs.c:301 cmd_go() error: uninitialized symbol 'finish_t'.
-drivers/soundwire/debugfs.c:301 cmd_go() error: uninitialized symbol 'start_t'.
+We have macros already that is the usual way for doing stuff like
+this in the kernel.
 
-Initialize those variables and move the debug statement outside of
-firmware error handling.
+> 
+> Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+> ---
+> During the submission of patches related to the yaml creation of spear_adc [1],
+> there was a discussion about the average-samples value/dt property. It turns out
+> that the dt property value is direclty written to a device status register.
+> Considering some defines at the .c file, we have this:
+> 
+> #define SPEAR_ADC_STATUS_ADC_ENABLE		BIT(4)
 
-Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/linux-sound/0db6d0bf-7bac-43a7-b624-a00d3d2bf829@stanley.mountain/
-Fixes: bb5cb09eedce ("soundwire: debugfs: add interface for BPT/BRA transfers")
----
-@Vinod Koul, tks for the suggestion. I`ve kept the ktime_t initialization, after moving
-the debug statement, they are not actually needed, but I think there is no harm to keep that.
-Tks and regards.
 
-Changelog:
-v2: moving debug statement
-v1: https://lore.kernel.org/linux-sound/20250617015230.54981-1-rodrigo.gobbi.7@gmail.com/#t
----
- drivers/soundwire/debugfs.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+> #define SPEAR_ADC_STATUS_AVG_SAMPLE(x)		((x) << 5)
 
-diff --git a/drivers/soundwire/debugfs.c b/drivers/soundwire/debugfs.c
-index 3099ea074f10..42d2aba285f5 100644
---- a/drivers/soundwire/debugfs.c
-+++ b/drivers/soundwire/debugfs.c
-@@ -237,8 +237,8 @@ static int cmd_go(void *data, u64 value)
- {
- 	const struct firmware *fw = NULL;
- 	struct sdw_slave *slave = data;
--	ktime_t start_t;
--	ktime_t finish_t;
-+	ktime_t start_t = 0;
-+	ktime_t finish_t = 0;
- 	int ret;
- 
- 	if (value != 1)
-@@ -291,6 +291,9 @@ static int cmd_go(void *data, u64 value)
- 
- 	finish_t = ktime_get();
- 
-+	dev_dbg(&slave->dev, "command completed, num_byte %zu status %d, time %lld ms\n",
-+		num_bytes, ret, div_u64(finish_t - start_t, NSEC_PER_MSEC));
-+
- out:
- 	if (fw)
- 		release_firmware(fw);
-@@ -298,9 +301,6 @@ static int cmd_go(void *data, u64 value)
- 	pm_runtime_mark_last_busy(&slave->dev);
- 	pm_runtime_put(&slave->dev);
- 
--	dev_dbg(&slave->dev, "command completed, num_byte %zu status %d, time %lld ms\n",
--		num_bytes, ret, div_u64(finish_t - start_t, NSEC_PER_MSEC));
--
- 	return ret;
- }
- DEFINE_DEBUGFS_ATTRIBUTE(cmd_go_fops, NULL,
--- 
-2.49.0
+Replace this line with:
+
+#define SPEAR_ADC_STATUS_AVG_SAMPLE_MASK	GENMASK(8, 5)
+
+
+> #define SPEAR_ADC_STATUS_VREF_INTERNAL		BIT(9)
+> 
+> SPEAR_ADC_STATUS_AVG_SAMPLE info is a bit field coded inside the following
+> bits: 5,6,7 and 8. The bit 9 is a different info, vref in this case.
+> Currently, there is no control if the average-samples is outside of allowed
+> range, which is 0x15 since the driver exists. There is no documentation about
+> how that information is managed by the device, but I`m suggesting to add a mask
+> with the max value for those bits before configuring the samples bits.
+> 
+> @Conor, I`m considering to add the "Suggested-by:" with your name here due [1].
+> Are you ok with that? If you agree, I can submit a v2 with that.
+> Tks and regards.
+> 
+> [1] https://lore.kernel.org/linux-devicetree/20250506-equivocal-snooper-8a7d1ce931c8@spud/#t
+> ---
+>  drivers/iio/adc/spear_adc.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/adc/spear_adc.c b/drivers/iio/adc/spear_adc.c
+> index e3a865c79686..cf412ece90cf 100644
+> --- a/drivers/iio/adc/spear_adc.c
+> +++ b/drivers/iio/adc/spear_adc.c
+> @@ -37,6 +37,8 @@
+>  #define SPEAR_ADC_DATA_MASK		0x03ff
+>  #define SPEAR_ADC_DATA_BITS		10
+>  
+> +#define SPEAR_ADC_AVG_SAMPLE_MASK 0x01E0
+
+...instead of adding this.
+
+> +
+>  #define SPEAR_ADC_MOD_NAME "spear-adc"
+>  
+>  #define SPEAR_ADC_CHANNEL_NUM		8
+> @@ -158,7 +160,7 @@ static int spear_adc_read_raw(struct iio_dev *indio_dev,
+>  		mutex_lock(&st->lock);
+>  
+>  		status = SPEAR_ADC_STATUS_CHANNEL_NUM(chan->channel) |
+> -			SPEAR_ADC_STATUS_AVG_SAMPLE(st->avg_samples) |
+> +			(SPEAR_ADC_STATUS_AVG_SAMPLE(st->avg_samples) & SPEAR_ADC_AVG_SAMPLE_MASK) |
+
+Then here we can use:
+
+			FIELD_PREP(SPEAR_ADC_STATUS_AVG_SAMPLE_MASK, st->avg_samples)
+
+(#include <linux/bitfield.h> for this)
+
+>  			SPEAR_ADC_STATUS_START_CONVERSION |
+>  			SPEAR_ADC_STATUS_ADC_ENABLE;
+>  		if (st->vref_external == 0)
+
+And do something similar with SPEAR_ADC_STATUS_CHANNEL_NUM() while we are
+at it as if follows the same pattern.
 
