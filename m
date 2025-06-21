@@ -1,100 +1,162 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690431A265E;
-	Sat, 21 Jun 2025 12:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DCD202984;
+	Sat, 21 Jun 2025 12:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750508474; cv=none; b=nc4AOw86CKW3YmspTwnuPRxBI+wXjoUtiFoPhWN/NEnvBtrR7nBTpHqxbMkTRutzS80fwOKGlbOCb25FaG3sMSvbfXn3EIbGhnA+SaFKdNCzpbNkMGFdADn0nCdOd2NMmwy+5fuBtIqLF5wHzwIH+r3cyagG+InZVswB2LzAuBU=
+	t=1750508503; cv=none; b=BP3amhBqKQzFjNoC0bNvSOvZP/hNacIROVfctze+6YS3iUHCBDDSYmPiCVJEgTsF8YTLAXhNrJpz+YZEQYSSaw58P+BTyA2cAaAWu4VGh7CJx2CAraD1Dk2aycvSGxTnB8nCkBhUOuAsLefS1O3QrgwLjldlZaZqcAPPnoxYZjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750508474; c=relaxed/simple;
-	bh=mJSNLN94yCCCB04rPzGHW0u9z5VpgtHFtBKWC0jstGM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XFFKMS38n/UmutvQkys94HnbDIcA0ukeR5WtCtV74JIsV2b4ASXoADBValV0Du/oOiS2O4T/9ffcNv521Q6IGG1QDROJA93iW6PN+LrqYGz+BH2fl5PZl+TiD1NDwL5js5hZk11BVqCDsHw91+rQb4HdTPXEoSpvBI/rI+ww5Bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ak9kxhnT; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750508503; c=relaxed/simple;
+	bh=bCXTNJFcuWJBhQPSMtN4ZX7UKwXQjfj35CtPr9jKOqg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jFZFVU33vJpnMZ9NEjSM3wBfVdEaZrEBJC6CZp8bFbiYPIYgtNvapqsUPe4Acf41wCzhHpKr90ibe+MlOcGj/UzolyNVXIR0Cmrg1FlIFszJUWGPFQDaNiEQb6pexUE48u1Ylfn6zzrDNOFqzZ2cFKjnmx/cpP3Y2eo5nDuTFP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ayZRG9S6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ak9kxhnT"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-31384c8ba66so289253a91.1;
-        Sat, 21 Jun 2025 05:21:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750508472; x=1751113272; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mJSNLN94yCCCB04rPzGHW0u9z5VpgtHFtBKWC0jstGM=;
-        b=ak9kxhnTri8ALzS2keG9zet5ayaLo9Vs8Ep6xyKNsflId8y7pPB5JrwE5ZcomuUeIe
-         BWjM/4Hwmb5V4Nf2vE0+zFOddTO1wzPd5TxflYSVsRF4TJBfNdDmGOuVYXaVKpPpEDC+
-         YsvdzJkEfhVn6uIhOUl2Cd5KyF28cmABs2U7fKi+BKXgH2uWKk5TQsuYE8Xxmcwy5HT5
-         uhD+2ehiqvx9xnjfc4ZasOt6nhwc602UZ0qW4iY+ntbetqtI8XVzKqLbjHH9/sVCC7yB
-         tPJR99RGTgk/+VDOZZKDubYCjvW4LmoYEWyomALNRwb5v4IU1Ble7fXJBjUdpcfu2tJ1
-         I1rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750508473; x=1751113273;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mJSNLN94yCCCB04rPzGHW0u9z5VpgtHFtBKWC0jstGM=;
-        b=PWRAqYw4gxME1+WeI0NvpRZyqno+Ms7PJ5dJ0iott824TyrE8LLoFwfsR0dMPHZlkk
-         F2GRkeqyrwVmWy0dVySjLYB7fK/NOxLGOVE/iDnqw2BYh3SO+rjm4BbgmeWn0qzJYn32
-         bUCo/4SngFk+i4VyQjitcCSrrShkt8s/ypmdWfmSFdT1L3DEHUjK/w0/0j3ORinGqyaL
-         565+dSp5NP+vVx13q/nmb7UO/9ghsKIAURnJiGLV4fDVK3VAuAS1sdso3vs3BPP4VPjV
-         GTmA7SNs4ehd791VLCZo8rcYlY2XBcLd695sljWWTVrLXMrR6gaac6ONb9EB/M149flM
-         Ixbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUcyeHwFnIxBTNKTjNyurOMt2PUYlkVpHi8CN2+qvPd2PsG1ntYQv7K12eMBbQhNp/x2Tayx0TCWv1h75/Q@vger.kernel.org, AJvYcCVXoaZQsOd1/p+7BIx5kgv8T/+bi8ihlhxWJyL0FqlUk0xoIOyEe8rKKHpswBnkQNllDz+BX1qv9SnB@vger.kernel.org, AJvYcCVdiPIGtFd/79dLLxgredR4zTD2CM3kFiBow/e8zhuk+ASX0sEzb8Maz2z1wvdx+36RK0H64sja3PwH@vger.kernel.org, AJvYcCXNdW9BPiu+soUIh8ZEd+fQyXaWZVfN9h0ysQ0EAH1XDkbS+WT9xo6uaDREdm4audZTgKJ6Uw1lSXvMoNXTOys=@vger.kernel.org, AJvYcCXnOTmCT2P4etY5t5+SUP30N9Zhh/sD7xK4f1uTNAmb6+CK/Pgi4HjKWknyn+Iq6RjhWLoZJtP3HGd/@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj+DLw4Qs/CXdLTGQ1oUrrb5yojee/x6H50R+tkkU+O5T5ogW5
-	A30+/w7uU/I+MstcX4+E191ttYpivMEUtjpZ6Q0YZZMlo3N2+5JupBkzt9ZpbRZPDqoDgKUkyGE
-	oPQzdFyur2CA4t63rAAWxfhP4sZc/41A=
-X-Gm-Gg: ASbGnctqfUayJM/zqPpXcDZKQrupfy7TWkI07OsU+BLoKXgxjzRvrmEn3jBNzn0benS
-	sLbZ3Ree41AhGDOJp4VHdNC5yMW/7KkCAu4E1Cm3Tot3xKIUVINtDfCD80qCTlR8idUui55m26D
-	5cHBNw2yrxwskkvFo1JRtBxP73Si8JqNsC9As9WWcSfhk=
-X-Google-Smtp-Source: AGHT+IHBkoA8R73wdbCEFSmfGebQhGfDwh3U+PqjqU9Rd7GJGvM7aIk3FgAkUqqEjAXM3xI4sgTT1lGB5ApP/eWh1zs=
-X-Received: by 2002:a17:90b:57ec:b0:311:9c9a:58e8 with SMTP id
- 98e67ed59e1d1-3159d90f997mr3211194a91.7.1750508472604; Sat, 21 Jun 2025
- 05:21:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ayZRG9S6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DA27C4CEE7;
+	Sat, 21 Jun 2025 12:21:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750508502;
+	bh=bCXTNJFcuWJBhQPSMtN4ZX7UKwXQjfj35CtPr9jKOqg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ayZRG9S6pP2L6sR2ryTFXX6BpMhybkfKb/gETZJZmi5xivacmFCxLXIVnn64H3nT8
+	 YPZL15zbwt5fl9/RVcvroT7HaIFKjlGlC5mbbzwiNqPQr3zfRd5Wdzls2HuxPVi4DS
+	 9MnUC5iTTGCBH1tOjDaIWd1aTsHeIZaH8psfTDghMq4k1nu7sLJRvu4P/RWUBR9/2i
+	 arZb2xw5XFMPYdo/kk9J2F7mPanI7Zzbw06lOqauOjlfEra+ZNkzsHn6R7rCdwKWlW
+	 vyHlZwnTSeVOGCazoa7OAHX8YZJOb0IW6PnNYjJE3GAFVrRGTmnRZ8io1D0L6O7n3O
+	 B6lF61kpayVnA==
+Received: by pali.im (Postfix)
+	id 95CEA3D2; Sat, 21 Jun 2025 14:21:39 +0200 (CEST)
+Date: Sat, 21 Jun 2025 14:21:39 +0200
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Paulo Alcantara <pc@manguebit.org>
+Cc: Steve French <sfrench@samba.org>, Remy Monsen <monsen@monsen.cc>,
+	linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cifs: Fix lstat() and AT_SYMLINK_NOFOLLOW to work on
+ broken symlink nodes
+Message-ID: <20250621122139.3xq675cbs5kgkd7t@pali>
+References: <20250610213404.16288-1-pali@kernel.org>
+ <26e59412fa2c70efad5f9c585bfc198f@manguebit.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250618122801eucas1p2f9ca464e9e5c8d954d5150500952aeed@eucas1p2.samsung.com>
- <20250618-rust-next-pwm-working-fan-for-sending-v4-0-a6a28f2b6d8a@samsung.com>
- <aFSw44++s7xMkJ9I@x1>
-In-Reply-To: <aFSw44++s7xMkJ9I@x1>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 21 Jun 2025 14:21:00 +0200
-X-Gm-Features: Ac12FXwlYvFTtsebXFsluqzoJQuMLv7aX97g0RdMlPc1xrNUVWgbbVLGEB9yHw4
-Message-ID: <CANiq72=YsoFSSm9QU0W2ZQseeQTWFNkXYVR1mODdv3HHg-0PAQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/9] Rust Abstractions for PWM subsystem with TH1520
- PWM driver
-To: Drew Fustini <fustini@kernel.org>
-Cc: Michal Wilczynski <m.wilczynski@samsung.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Drew Fustini <drew@pdp7.com>, 
-	Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Benno Lossin <lossin@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-clk@vger.kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <26e59412fa2c70efad5f9c585bfc198f@manguebit.org>
+User-Agent: NeoMutt/20180716
 
-On Fri, Jun 20, 2025 at 2:52=E2=80=AFAM Drew Fustini <fustini@kernel.org> w=
-rote:
->
-> Did I do something wrong?
+On Friday 20 June 2025 20:44:37 Paulo Alcantara wrote:
+> Pali Rohár <pali@kernel.org> writes:
+> 
+> > Currently Linux SMB client returns EIO for lstat() and AT_SYMLINK_NOFOLLOW
+> > calls on symlink node when the symlink target location is broken or cannot
+> > be read or parsed.
+> >
+> > Fix this problem by relaxing the errors from various locations which parses
+> > information about symlink file node (UNIX SMB1, native SMB2+, NFS-style,
+> > WSL-style) and let readlink() syscall to return EIO when the symlink target
+> > location is not available.
+> 
+> Please, don't.  We still want those validations for the other types of
+> symlinks.
 
-No -- the file just doesn't exist in the patches.
+Well, validation was not removed. Validation is still there, just the
+error is signalled by the readlink() syscall instead of the lstat() or
+AT_SYMLINK_NOFOLLOW syscalls.
 
-Cheers,
-Miguel
+My opinion is that the lstat() or AT_SYMLINK_NOFOLLOW should work on
+symlink node independently of where the symlink points (and whether the
+symlink target is valid POSIX path or not). That is because the lstat()
+and AT_SYMLINK_NOFOLLOW says that the symlink target location must not
+be used and must not be resolved.
+
+But still the invalid / incorrect / broken or non-representable symlink
+target path in POSIX notation should be reported as an issue and the
+readlink() is the correct syscall which should report these errors.
+
+> The problem is just that cifs.ko can't handle absolute
+> symlink targets in the form of '\??\UNC\srv\share\foo', while Windows
+> client can.  They are still valid symlink targets, but cifs.ko doesn't
+> know how to follow them.
+
+Windows client can represent and follow such symlink because the symlink
+is in the NT style format and Windows kernel uses NT style of paths
+internally. Linux kernel uses POSIX paths and POSIX does not contain any
+GLOBAL?? namespace for NT object hierarchy.
+
+Leaking raw NT object hierarchy from SMB to POSIX userspace via
+readlink() syscall is a bad idea. Applications are really not expecting
+that the readlink() syscall will return NT kernel internals (exported
+over SMB protocol and passed to cifs.ko).
+
+For UNC paths encoded in NT object hierarchy, which is just some subset
+of all possible NT paths, I had an idea that we could convert these
+paths to some format like:
+
+   <prefix>/server/share/path...
+
+Where <prefix> would be specified by the string mount option. So user
+could say that wants all UNC symlinks pointing to /mnt/unc/.
+
+And in the same way if user would want to create symlink pointing to
+/mnt/unc/server/share/path... then cifs.ko will transform it into valid
+NT UNC path and create a symlink to this location.
+
+But this would solve only problem with UNC symlink, not symlinks
+pointing to NT object hierarchy in general.
+
+> The following should do it and then restore old behavior
+> 
+> diff --git a/fs/smb/client/reparse.c b/fs/smb/client/reparse.c
+> index bb25e77c5540..11d44288e75a 100644
+> --- a/fs/smb/client/reparse.c
+> +++ b/fs/smb/client/reparse.c
+> @@ -875,15 +875,8 @@ int smb2_parse_native_symlink(char **target, const char *buf, unsigned int len,
+>  			abs_path += sizeof("\\DosDevices\\")-1;
+>  		else if (strstarts(abs_path, "\\GLOBAL??\\"))
+>  			abs_path += sizeof("\\GLOBAL??\\")-1;
+> -		else {
+> -			/* Unhandled absolute symlink, points outside of DOS/Win32 */
+> -			cifs_dbg(VFS,
+> -				 "absolute symlink '%s' cannot be converted from NT format "
+> -				 "because points to unknown target\n",
+> -				 smb_target);
+> -			rc = -EIO;
+> -			goto out;
+> -		}
+> +		else
+> +			goto out_unhandled_target;
+>  
+>  		/* Sometimes path separator after \?? is double backslash */
+>  		if (abs_path[0] == '\\')
+> @@ -910,13 +903,7 @@ int smb2_parse_native_symlink(char **target, const char *buf, unsigned int len,
+>  			abs_path++;
+>  			abs_path[0] = drive_letter;
+>  		} else {
+> -			/* Unhandled absolute symlink. Report an error. */
+> -			cifs_dbg(VFS,
+> -				 "absolute symlink '%s' cannot be converted from NT format "
+> -				 "because points to unknown target\n",
+> -				 smb_target);
+> -			rc = -EIO;
+> -			goto out;
+> +			goto out_unhandled_target;
+>  		}
+>  
+>  		abs_path_len = strlen(abs_path)+1;
+> @@ -966,6 +953,7 @@ int smb2_parse_native_symlink(char **target, const char *buf, unsigned int len,
+>  		 * These paths have same format as Linux symlinks, so no
+>  		 * conversion is needed.
+>  		 */
+> +out_unhandled_target:
+>  		linux_target = smb_target;
+>  		smb_target = NULL;
+>  	}
+
+I'm really not sure if removing the messages and error reporting about
+symlinks which cannot be represented in POSIX system is a good idea.
