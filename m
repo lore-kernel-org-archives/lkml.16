@@ -1,238 +1,229 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C7B272E4E
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 18:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93AB21C9E8;
+	Sat, 21 Jun 2025 18:14:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750529670; cv=none; b=VrMPKbG787UY44ZeZhkbKjEJtWAH1KrWXjse7aDITXPXO8XYe3V25G2pEdPz6exiHFy4llwocxwmSFM0ngmxkF+TQvb6Km9WZO/XTloLaoHOHdzSsJVvi4Qh9cUAhnWEFNihBnbv0VpugpLsPws7O27JK1MJ1wObdihl+ngGCcs=
+	t=1750529690; cv=none; b=pgGRfNZfnbWYbxDiSbGBU0tE73Ovqm0ywXHf4SC9vVgjvSvAfQtwapwl5Y3gWXd7I9Z/8AB+fvlv26/J7YUreD3EnuaUs2Ql+bynRy4kfekzCmGFZAh8uSB/9LsCueguFMwyR2ggrRG1BWaCp97G3Dve3Ls46t96dnfxoyg4R20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750529670; c=relaxed/simple;
-	bh=FpW79T9YvftggI3m1nG4aTepTbBBYG8c+lDmZC/zvy8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Vg/HuivcWVUSSIFkyqm1NN+Ic3tPPjW6krtrWjRxlWKHcIXTEbhI+mSKWrtfaUm2ukwzKnkLm0/SSzl6rLQ03pIp0G/Z6gP4VGmumaOmLusHAClZc5r0Xj7u9RrqXmnYNOPxA4OoIUeKpYHMF63XP4cjqvZwNWA1e81BTRLXxks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pSQQbo2N; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750529690; c=relaxed/simple;
+	bh=1cs0cXbMkZOrpNtAR1gyFyo5vtKD+GK9iev2+1bElYs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NIYkp4/7xTnLHP8kt+UdFL6M+RaEk03fWnkq76ILsKyTuUv37fx6xkXHkovcQlLhTiOTgB6x1fPYWNM/4XcwoPIgcr3O3QiPFCefFfJHbzvJ9noaVYTEmDXgGzVOnTLTwbIRVQ0crigl1cEMKHwaka65+2ayNiXOXHWBJ9u8eqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OKW7wi8Z; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pSQQbo2N"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55LEN1Zr007788
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 18:14:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	6W7bz7mumVKjkQi3vedorRqnABekWR1kRWVKvxBpQYs=; b=pSQQbo2NxtSZglt2
-	IKG9FzI57m0lbu6GkQyas+xghftyNTqeJ3KfqzdzQdnXH7VjZrk3HESksmcRzIS7
-	SqxFZJ06tx/AwWwg48Z5LK9n48id+Thi9wI7SDSCqU8hFfYMO72eiXCqMGNyahRW
-	88/ihr1ZtqpuoCMEGQCuuKiRY3FcHrEEUyNIuRxmOeJtvxFMS0z/IcVG8JrttVb2
-	60eU9UblrNHKjShsZb32+jK0OZnLSkwCww3kTOPcY46j95Kta+cpcJM7w816Cju/
-	Q1hNaFk34yPIcKbmWLio3i2TR35TF8r9IvQXWvwHbgB1aAfu8xSttyvgvqZNGAFD
-	5+xPEg==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47dxejr7ps-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 18:14:28 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d09ed509aaso407458985a.3
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 11:14:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OKW7wi8Z"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e81881bdd55so454198276.0;
+        Sat, 21 Jun 2025 11:14:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750529687; x=1751134487; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w2Q+TpFevmaKqs+ZnGNjN0BGT/qoqb8hQl4f0eoBZew=;
+        b=OKW7wi8ZKzplO2RefjIoZ2JiIMizVjHShtTbEt7YMTy9fuZ7OiyHyjS68ySw97sY06
+         J43sGkMEWASvLyxV4hXDtipJBqYcdNlQAxLB1H1n7sfpBn/tC946eYRxg2GDssS0EjSv
+         HJEHWQ++6xO3lapxixsZtGeqUAqJrM9l+GXck97QT9a/ywwVN0ZGalEb0qri/DJ/UQki
+         y5o5WkVIO2vQOG+GdzysZLpmaRQmXcWnQ/VCY82lizWpLL2DYLlI9fOZD7ICoRZmNnKN
+         vQH8b/EByP9216mwqoDlCEL+Um3GVyK0YO2sYMF0a3hdBTtjlSg34BDEWXuGIUMLlbAF
+         FwoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750529666; x=1751134466;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750529687; x=1751134487;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6W7bz7mumVKjkQi3vedorRqnABekWR1kRWVKvxBpQYs=;
-        b=wdW+ViBYRqkKcDij0pT7jGtP8oySGuc/RjkcOnKREtQ/dRd0UsmCz49LRoBBiStPmL
-         8aYJlvfP2LH4jEdlf6kNsN8g12Y6OiNhUmH7UuD7f9vO9ajEtZ8qv2ud1Oi68Gx4dhPs
-         uoozMWHt1+jyf5+CqLEzMebYlP3ygUwocN6C4pn3PvpAMqbwHDmr/gaiXP1pnxe6HAO1
-         cCczcH5BaUE6CAD9zEgzRoW3x2pqiyLbmReOQ7Lw8hE2sBkuu2deN4NQONbHR2M2mJTc
-         r07deWwT3JRYz7jwHyu/De/nsasGrYi4r1Eju3h3da11nDUAXSU8Nkhx9mVqDaOztbY1
-         R13g==
-X-Forwarded-Encrypted: i=1; AJvYcCW/eH0kQkkJu6NspmoWRs8E0ZTmcbUT+3dTyO9EECBTOvL7FOX3l4VPu2MYRg8pSyQveNBZPMNx5/6QVM8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsvqjypETUcrAA0SNz3LtFEhaN9uXL1OeEaYrLoOBjnDdq8h3u
-	YNj16+gvzSCWLuAKwjcAr9W6hadZPzf8oAV3JNSH2VIK1UuzImzrjm2el2F/1rr0VI7NR98gs50
-	k85cpPoaBIbZcsr7GQR/fIaA76wi2MmPY2FiANcHOP9EBsIIFUL3eHuK+CeoqgM7Od27/pNhuQe
-	NJ4w==
-X-Gm-Gg: ASbGncvv/y8JHOPTxhM9OQHTS95pvbt+WqO9eja7Fxtvtixyd0/+04mNG5lVheoQk16
-	JgQdzfGrCOq9GMv/QM2L8bVnQAHQNIw4tYQJdjt9wD5pB+S9d5WJfzObmc9W4DkXsjnoVhjrooW
-	tBEDRHT78CAaPv1dKDUYscCJrUiqYZb+Wysej4rLf6Ks+/H/P/bbtzTPnpWbbhlBTAXrrS29hY+
-	8KSgOPXy3nE74BOMr6M+OJLLvnNOMpMAWVi6flT+UjVgAh8ZRmBiCXDNbU8TaL37tJmFhyt7cju
-	q9N0uLuqfb6qpwBlNAW8/Wd2XG+gvBRqf+0b/MtWFQWS5oRr4gX/+9wnnNw2WfO+nejPqpYsn7k
-	NLp2EhcagF/aqKnfbePlCxLtzko/Vx5bZHjY=
-X-Received: by 2002:a05:620a:4711:b0:7d3:f0b0:3923 with SMTP id af79cd13be357-7d3f98c058cmr794839485a.11.1750529666466;
-        Sat, 21 Jun 2025 11:14:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGNu3e+Vqi/twA6YrEVVy5gvr3OvSabeNJNWBdMJf9Nc3t7dBPNmwhVHngVNg58YjWOkm3g1w==
-X-Received: by 2002:a05:620a:4711:b0:7d3:f0b0:3923 with SMTP id af79cd13be357-7d3f98c058cmr794837585a.11.1750529666039;
-        Sat, 21 Jun 2025 11:14:26 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553e414cf36sm752336e87.86.2025.06.21.11.14.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Jun 2025 11:14:25 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Sat, 21 Jun 2025 21:13:03 +0300
-Subject: [PATCH 8/8] usb: typec: ucsi: yoga-c630: register DRM HPD bridge
+        bh=w2Q+TpFevmaKqs+ZnGNjN0BGT/qoqb8hQl4f0eoBZew=;
+        b=DT/I/LQtafMlc5sy60YaZ+zvX4lySoUw23pwX9uImjq+imGGzvSV9ea33LtbmsvVbq
+         86iQJZXaeqizNZxmgFO8Ib8uhQJCIOTpmS73PtjqU5aOcQL7r/3PSz+jmW9x/naqDihr
+         zhfa25Qi1ouy25+LtvOiHcN+cIClbsLHs1Dq8ZX140F8sFH6NqQv24VEF40ZkKdV65wi
+         QWOSRcqxRhp202uhwMcJWCiZcXvdNkeDH0vKj6aqCXf6vHeP2gcTk0Em7u5hZJ/EQ4bB
+         76yoI6FvbKl6IMalWzfnCxOk80STz2gEeAooAcJDtwXjigk2Xe3jsLIoYZi83yRVyN+z
+         roog==
+X-Forwarded-Encrypted: i=1; AJvYcCVS/lovcMZKFT+us/yXBjDl00y9J5TuNB/yvJouUT+48DFyXBHGeWYvGQdbSaibckNCzBttjSLxcbq4bMuX@vger.kernel.org, AJvYcCXFWCLpvR5l7KKRdlAhbcUKCjaJjLvQ836V4x8khyFswh1rNC4BRSttyn6XEAzx5kbHTZFt/bdNIrk=@vger.kernel.org, AJvYcCXYNSI8xn9qqVzeUJRFSiG5nkRhh+RZzrafh+eN67SPSymrzvziS8bsuCGGJ1Us7s+EDFGr/EN9/C8k@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrRXCNgzjsU8tHWhCyRrHr0+6gK7b2MuO+Gf3OxJwd1BN0W8Ix
+	wpxI8dyx7xqNsymf2exPJhre4t5WsfUwaXdByZ0/GjdFf5KolRss9GGYLXcUEDXSFmVcAd9GRFX
+	F8Pf+ycvfOYCjNcAwfoK7JBBZHc7gAUo=
+X-Gm-Gg: ASbGncvabSV8bNoJc3msr6YlS6L5dHa0D8q2gm2Co+Do7pnWUVGw2POsTdX4TJaptyP
+	2U+VAy+kwSrhWdRODfDSKRh7OqdLiNGOEpAXPzRnkYbdXAXryFxX4FYbzr7x1Tgdf90nDh383cI
+	vsD7J0AWQAUOJmVDKPRuXSrIxPsSPVUyIcieRFANgSZrbnUBDXUE9lWw==
+X-Google-Smtp-Source: AGHT+IGA9AGyGrH8+MZOMf2hY13oCcyT6tXGS7nvIUzHT6jvDU8fAF1eZgZWaJWEa2kRbPBhZmU+hgzHnxfEDsIXCuQ=
+X-Received: by 2002:a05:690c:4b10:b0:712:a286:2ca2 with SMTP id
+ 00721157ae682-712c654cc21mr48843047b3.7.1750529686775; Sat, 21 Jun 2025
+ 11:14:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250621-c630-ucsi-v1-8-a86de5e11361@oss.qualcomm.com>
-References: <20250621-c630-ucsi-v1-0-a86de5e11361@oss.qualcomm.com>
-In-Reply-To: <20250621-c630-ucsi-v1-0-a86de5e11361@oss.qualcomm.com>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3461;
- i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=FpW79T9YvftggI3m1nG4aTepTbBBYG8c+lDmZC/zvy8=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoVvZzIqHyyr70rdlkR2ynE+980npLhS9AnFqt6
- 48F5PPvF/+JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaFb2cwAKCRCLPIo+Aiko
- 1acnB/9NmCptu0kBEeP30DyUCAMSo1tFZMXGQ0MnaP11ImnSRZ78l+nehBzl2wZFKmSH1tlyXRv
- VTRUtBAkt61D7csum9Mqp7qLHsb1fBFFdnVOCafQRNGngXFcNI03wcCzvg3x4QQ5dSjXRYLeFI9
- 9XOK2lnYEJpSZJ1Qa2sE4d+lHf4tabQ44cGvYHE3URRdZIzqwcRhqA0EHbtPAk8MnQzpHgfBFL/
- XK7wx2ETVGeH4GbNbkXwyj3Hhd316On6ZIChDR7yWA0ja1sV7PuiPtXxMjtfQh3GZ6XdBCamoU0
- k2vNfS0l6QvnQLiFtAZZmYR3OaXo2ByvBLg6KhKZ77a1uTvN
-X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-GUID: 75jievH2aGgDFHFEeiCd8a8j21Ow5UuD
-X-Proofpoint-ORIG-GUID: 75jievH2aGgDFHFEeiCd8a8j21Ow5UuD
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIxMDExNSBTYWx0ZWRfXxDNgw30IA/0k
- WCjhUKnoVpR5U+M/nPJLmlf0MgGXsCiWKJ3S8gwy3SYEulDufgsYRW/jEDPC+2WiBnLjf1+ggaZ
- Rw/xdH4QXV9VgSM6/9th73j0Fz6l9CLn5D4WdT1G43jm+MzC/G5xM17M8szmylPUjV4z+Q5l9MY
- AKkfUyqmk7s38i68jnPijVK9LbTyLfavOTnJW6Rbti9PucPEC/jh9rjHj5YyqQ+ytxT7X70d201
- HNoP1eOt7qBb9iubwE1cqx5Vd+ZMfDzcskvatyyoHCOCC0gRLanRB57IZx/dgXbOZPnCyEbKvgD
- mxM9ztUX6a4SLrWqVqR2kITsRExbcmlaR7hfWy85C1/B1CfBDCxCNGipwkFUvYlGwzNtYjSLOPm
- 6A1BKnGklDgqanD1lq42Oh1JUiK7ZO2GaD8fGvB/OCtyYZ4eIBfIWlsLZjoQ7x0xQqXAu42u
-X-Authority-Analysis: v=2.4 cv=GcwXnRXL c=1 sm=1 tr=0 ts=6856f684 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=6fbo0VkVZcmtXeJ5A9EA:9 a=QEXdDO2ut3YA:10
- a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-21_06,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 priorityscore=1501 phishscore=0 spamscore=0 suspectscore=0
- malwarescore=0 impostorscore=0 clxscore=1015 bulkscore=0 adultscore=0
- mlxlogscore=999 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506210115
+References: <20250610215933.84795-1-l.rubusch@gmail.com> <20250610215933.84795-2-l.rubusch@gmail.com>
+ <20250614144208.363c29cf@jic23-huawei> <CAFXKEHbh=_A9WvEvkBaz9nNEGX5bxWu2sFvbMtqLM-Ag0cdY0A@mail.gmail.com>
+ <20250621175540.4520a6b5@jic23-huawei>
+In-Reply-To: <20250621175540.4520a6b5@jic23-huawei>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Sat, 21 Jun 2025 20:14:10 +0200
+X-Gm-Features: AX0GCFsNDDjLn6YMSBTV1uxtMOIo0Uzp9OlHogY4u2dUzB0-PPE_mCNSP_fcweY
+Message-ID: <CAFXKEHZ_2SJKYzh6i0YauaEdqF8nYdDR-6CY+G3sFtdspsNveA@mail.gmail.com>
+Subject: Re: [PATCH v9 01/11] iio: accel: adxl345: apply scale factor to tap threshold
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, dlechner@baylibre.com, 
+	nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, eraretuya@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Qualcomm platforms DisplayPort driver expects to have a drm bridge in
-the final device on the USB-C chain. Register the DRM HPD bridge in
-order to fulfill this requirement and to send HPD events to the DRM
-driver.
+Hi Jonathan,
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
----
- drivers/usb/typec/ucsi/Kconfig          |  1 +
- drivers/usb/typec/ucsi/ucsi_yoga_c630.c | 39 +++++++++++++++++++++++++++++++++
- 2 files changed, 40 insertions(+)
+On Sat, Jun 21, 2025 at 6:55=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
+ wrote:
+>
+> On Mon, 16 Jun 2025 00:20:49 +0200
+> Lothar Rubusch <l.rubusch@gmail.com> wrote:
+>
+> > On Sat, Jun 14, 2025 at 3:42=E2=80=AFPM Jonathan Cameron <jic23@kernel.=
+org> wrote:
+> > >
+> > > On Tue, 10 Jun 2025 21:59:23 +0000
+> > > Lothar Rubusch <l.rubusch@gmail.com> wrote:
+> > >
+> > > > The threshold for tap detection was still not scaled. The datasheet=
+ sets
+> > > > a scale factor of 62.5mg/LSB. Remove commit about not scaled thresh=
+old
+> > > > for tap detection, and apply scaling to it.
+> > > >
+> > >
+> > > Given tap detection algorithms are not generally well defined and not=
+ a simple
+> > > threshold (generally) what scaling should we be aiming for here?
+> > > Even if it were a simple threshold, when a channel provides _raw the
+> > > expectation is that event config is vs _raw, not the base units.
+> > >
+> > > So if this doesn't care about the current fullscale range (which the
+> > > comment implied was the case) it would need to rescale when the
+> > > IIO_INFO_SCALE changes.
+> > >
+> > > That comment is I think indicating we decided to gloss over the
+> > > detail because it's going into a (potentially) non trivial algorithm =
+anyway.
+> > >
+> > > Jonathan
+> > >
+> >
+> > Well, the tap threshold so far was around in "raw" LSB bits. At that
+> > time I only left the comment that the value is not scaled. The current
+> > patch is just putting now the scale factor and the sysfs handle then
+> > will take values of 'g' and not just raw bits. This is like for the
+> > other scaled values such as periods.
+>
+> Tricky corner because tap isn't a simple threshold - it it were I'd have
+> a cleaner argument.
+>
+> If we were doing this it would need to be scalling to m/s^2 not g but
+> that's not important for this discussion.
+>
+> Huh. For thresholds I thought we had this clear in the ABI docs, but we d=
+on't.
+> The ABI doc refers to having _raw_ in the name which I'm not sure has bee=
+n true
+> in a very long time.  The convention is intended to be if the channel
+> has _raw the thresholds are in that unit (i.e. ADC counts) and if not
+> they are in the processed value units.
+>
+> It has to be this way because of non linear sensors.  We have cases
+> where there isn't a transform we can sensibly convert in the kernel
+> to set a 'raw' threshold.   (involves cube roots for instance).
+> As a side note, those sensors are one of the few cases where we have
+> both _RAW and _PROCESSED because the thresholds have to relate to _RAW
+> but we need _PROCESSED to give standard units.
+>
+> Now for this case where it's kind of tangentially connected by the
+> particular algorithm to the raw reading things are non obvious.
+> The tap detector could just as easily be a threshold on jerk -
+> rate of change of acceleration or some 'score' calculated from
+> a bunch of inputs in which case we couldn't apply a scaling.
+>
+> >
+> > I think at the time I left the thresholds a bit out, because for me
+> > it's clear what a time is. But I'm not sure, if actually the
+> > thresholds are going so much by the unit values. So, in particular
+> > what is missing here? Is it just about the commit message, or does it
+> > need technical further adjustments?
+>
+> I don't think the patch is needed. For this particular parameter there
+> isn't a clear concept of scale (putting aside that for this particular
+> sensor there is one).  Thus it's a twiddle control. No need to connect
+> it to real world units at all.  Also change this is an ABI change
+> so we should do it only if we are considering the change to be fixing
+> a bug.
+>
 
-diff --git a/drivers/usb/typec/ucsi/Kconfig b/drivers/usb/typec/ucsi/Kconfig
-index 8bf8fefb4f07bccc4be90a4b7f771d91294386b0..52b53bb6dfed28c4272f8ccc5e31601aede29911 100644
---- a/drivers/usb/typec/ucsi/Kconfig
-+++ b/drivers/usb/typec/ucsi/Kconfig
-@@ -85,6 +85,7 @@ config CROS_EC_UCSI
- config UCSI_LENOVO_YOGA_C630
- 	tristate "UCSI Interface Driver for Lenovo Yoga C630"
- 	depends on EC_LENOVO_YOGA_C630
-+	select DRM_AUX_HPD_BRIDGE if DRM_BRIDGE && OF
- 	help
- 	  This driver enables UCSI support on the Lenovo Yoga C630 laptop.
- 
-diff --git a/drivers/usb/typec/ucsi/ucsi_yoga_c630.c b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
-index f85170417d19cdc5ae39a15e2f97010259ef12f6..0187c1c4b21abc7b5429526ebb4538c28b2e2e77 100644
---- a/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
-+++ b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
-@@ -12,10 +12,14 @@
- #include <linux/container_of.h>
- #include <linux/module.h>
- #include <linux/notifier.h>
-+#include <linux/of.h>
-+#include <linux/property.h>
- #include <linux/string.h>
- #include <linux/platform_data/lenovo-yoga-c630.h>
- #include <linux/usb/typec_dp.h>
- 
-+#include <drm/bridge/aux-bridge.h>
-+
- #include "ucsi.h"
- 
- #define LENOVO_EC_USB_MUX	0x08
-@@ -29,6 +33,7 @@
- struct yoga_c630_ucsi {
- 	struct yoga_c630_ec *ec;
- 	struct ucsi *ucsi;
-+	struct auxiliary_device *bridge;
- 	struct notifier_block nb;
- 	u16 version;
- };
-@@ -193,6 +198,13 @@ static void yoga_c630_ucsi_read_port0_status(struct yoga_c630_ucsi *uec)
- 				      ccst == 1 ?
- 				      TYPEC_ORIENTATION_REVERSE :
- 				      TYPEC_ORIENTATION_NORMAL);
-+
-+	if (uec->bridge)
-+		drm_aux_hpd_bridge_notify(&uec->bridge->dev,
-+					  dppn != 0 ?
-+					  connector_status_connected :
-+					  connector_status_disconnected);
-+
- }
- 
- static int yoga_c630_ucsi_notify(struct notifier_block *nb,
-@@ -237,6 +249,24 @@ static int yoga_c630_ucsi_probe(struct auxiliary_device *adev,
- 	uec->ec = ec;
- 	uec->nb.notifier_call = yoga_c630_ucsi_notify;
- 
-+	device_for_each_child_node_scoped(&adev->dev, fwnode) {
-+		u32 port;
-+
-+		ret = fwnode_property_read_u32(fwnode, "reg", &port);
-+		if (ret < 0) {
-+			dev_err(&adev->dev, "missing reg property of %pfwP\n", fwnode);
-+			return ret;
-+		}
-+
-+		/* DP is only on port0 */
-+		if (port != 0)
-+			continue;
-+
-+		uec->bridge = devm_drm_dp_hpd_bridge_alloc(&adev->dev, to_of_node(fwnode));
-+		if (IS_ERR(uec->bridge))
-+			return PTR_ERR(uec->bridge);
-+	}
-+
- 	uec->ucsi = ucsi_create(&adev->dev, &yoga_c630_ucsi_ops);
- 	if (IS_ERR(uec->ucsi))
- 		return PTR_ERR(uec->ucsi);
-@@ -255,8 +285,17 @@ static int yoga_c630_ucsi_probe(struct auxiliary_device *adev,
- 	if (ret)
- 		goto err_unregister;
- 
-+	if (uec->bridge) {
-+		ret = devm_drm_dp_hpd_bridge_add(&adev->dev, uec->bridge);
-+		if (ret)
-+			goto err_ucsi_unregister;
-+	}
-+
- 	return 0;
- 
-+err_ucsi_unregister:
-+	ucsi_unregister(uec->ucsi);
-+
- err_unregister:
- 	yoga_c630_ec_unregister_notify(uec->ec, &uec->nb);
- 
+Great to hear! To be honest, I was a bit worried that finally I missed
+scaling the threshold to units of g. Then I made it right just by
+chance, using the raw values. Patch will be dropped in v10.
 
--- 
-2.39.5
+Best,
+L
 
+> Jonathan
+>
+> >
+> > Best,
+> > L
+> > >
+> > > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> > > > ---
+> > > >  drivers/iio/accel/adxl345_core.c | 11 +++++------
+> > > >  1 file changed, 5 insertions(+), 6 deletions(-)
+> > > >
+> > > > diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/a=
+dxl345_core.c
+> > > > index 7c093c0241de..d80efb68d113 100644
+> > > > --- a/drivers/iio/accel/adxl345_core.c
+> > > > +++ b/drivers/iio/accel/adxl345_core.c
+> > > > @@ -697,17 +697,15 @@ static int adxl345_read_event_value(struct ii=
+o_dev *indio_dev,
+> > > >               switch (info) {
+> > > >               case IIO_EV_INFO_VALUE:
+> > > >                       /*
+> > > > -                      * The scale factor would be 62.5mg/LSB (i.e.=
+ 0xFF =3D 16g) but
+> > > > -                      * not applied here. In context of this gener=
+al purpose sensor,
+> > > > -                      * what imports is rather signal intensity th=
+an the absolute
+> > > > -                      * measured g value.
+> > > > +                      * Scale factor is 62.5mg/LSB i.e. 0xff =3D 1=
+6g
+> > > >                        */
+> > > >                       ret =3D regmap_read(st->regmap, ADXL345_REG_T=
+HRESH_TAP,
+> > > >                                         &tap_threshold);
+> > > >                       if (ret)
+> > > >                               return ret;
+> > > > -                     *val =3D sign_extend32(tap_threshold, 7);
+> > > > -                     return IIO_VAL_INT;
+> > > > +                     *val =3D 62500 * sign_extend32(tap_threshold,=
+ 7);
+> > > > +                     *val2 =3D MICRO;
+> > > > +                     return IIO_VAL_FRACTIONAL;
+> > > >               case IIO_EV_INFO_TIMEOUT:
+> > > >                       *val =3D st->tap_duration_us;
+> > > >                       *val2 =3D 1000000;
+> > > > @@ -746,6 +744,7 @@ static int adxl345_write_event_value(struct iio=
+_dev *indio_dev,
+> > > >       case IIO_EV_TYPE_GESTURE:
+> > > >               switch (info) {
+> > > >               case IIO_EV_INFO_VALUE:
+> > > > +                     val =3D DIV_ROUND_CLOSEST(val * MICRO + val2,=
+ 62500);
+> > > >                       ret =3D regmap_write(st->regmap, ADXL345_REG_=
+THRESH_TAP,
+> > > >                                          min(val, 0xFF));
+> > > >                       if (ret)
+> > >
+>
