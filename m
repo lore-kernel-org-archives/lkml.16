@@ -1,190 +1,568 @@
-Received: from mx1.manguebit.org (mx1.manguebit.org [143.255.12.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E672AE8D;
-	Sat, 21 Jun 2025 15:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=143.255.12.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DB71531C1;
+	Sat, 21 Jun 2025 15:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750520321; cv=none; b=cSmFC03Y2kRp/IEgUvHAZbvsNhdha7ei2lrSNRPE22MwlArqE7871Qfn82DaFgU7OXuAOlByuQ9DgT32UCJwTHuv597hrqjgaZBdsvmYClAFUS9NIAp3qXns3ErtznIYsyaJpofetMj9ciRDjMIQni2JrQsAhmM0RuLORVObUX0=
+	t=1750520382; cv=none; b=OcXLSfWVkRxOukldG/zDW7cyn0IVVP2xxYL4OcVCknJ5zR5NojyOjG7U6ogeyEEegZQHNLrVaq/OpOaZpckz04dR2mWIXWinVikr/Pl7TYEQEBapqNlKLCN0s8YlIldBPLc9xgRgfBhZizhj+kQDvBXB3cynJAVTHofdNygTRb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750520321; c=relaxed/simple;
-	bh=LeDpyYSR6p+/K41s/GHHCawtvnbpcs6sOzpl7rZSVfE=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
-	 MIME-Version:Content-Type; b=lGtiRFtU97bzFQExLcA/8vswapvpJVRgGYlaDI2b2wEqFqdph6CmygMJZCDHDou6IXptAzHCij0Qfhz/MHwiVcv5P/LnrD2N/40ML4xRdbgwblaMi5QkYOAM9I89dzccZa81IaXLeG1rfsfrvw6aCvhNvsZrcFC+qDdTgb87e5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.org; spf=pass smtp.mailfrom=manguebit.org; dkim=pass (2048-bit key) header.d=manguebit.org header.i=@manguebit.org header.b=Y0wTNBvk; arc=none smtp.client-ip=143.255.12.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.org
+	s=arc-20240116; t=1750520382; c=relaxed/simple;
+	bh=dplF8ekAxy0g9mjGS0TkbciEvIH5BOn328ZM7y56QMU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A/2NIA+JMu9IGaWONYuYZbbOQpwbL7wG3VeMDYneqcPkX7KhPgGI1wrWZnDVj99EBGOiIy8DXva8hNk9UDan6MuXfgjYfB4HX6wyqFHtIpDO53s1U7VfvcOX2aE+ycJEk7cTcGW58hecPuikawH7fG1TfOCxIKDAVROq4IHYVqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CxLZRfsZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manguebit.org header.i=@manguebit.org header.b="Y0wTNBvk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=manguebit.org; s=dkim; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Date:References:In-Reply-To:Subject:Cc:To:From:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=U2ZsFZSJxpetuM39KNMl2GJu7AoJ2Q1cr/uPrANJIyo=; b=Y0wTNBvkGB5oRX4OPVlQNf1J/v
-	tIyhKnQsiPxkssvSkM/XZTVuOY7v4FOXv/jujcAfLGq6NBfZLo8s0nT+zq2r86EyC1TSKmvXPZl0A
-	b98cwFDI23Y6nKNA70Pi1txlytkWA+QgZXngCuAcZCVsZTlstbQQMUZboThGXWMEYkZdHY5BZRRTv
-	NIbnMEWyOaIvCAuYCRJ79zEgulAGNf16bbHP/ocbJcO8sIkDuBGzN+w/JPJjNOoojlE0zT+u5sY5O
-	Ww9wmxkdQJ9/NGJcGNjtm7hkYMQH/mzbxsSKxtVckTLoc/lpEgBU2UbRObEYz81cJL1m2mnpPANOE
-	2SS/p5Aw==;
-Received: from pc by mx1.manguebit.org with local (Exim 4.98.2)
-	id 1uT0Id-00000000NPZ-3kAc;
-	Sat, 21 Jun 2025 12:38:35 -0300
-Message-ID: <82bf746b2c44f9cccd7e3f4ca349d145@manguebit.org>
-From: Paulo Alcantara <pc@manguebit.org>
-To: Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>
-Cc: Steve French <sfrench@samba.org>, Remy Monsen <monsen@monsen.cc>,
- linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cifs: Fix lstat() and AT_SYMLINK_NOFOLLOW to work on
- broken symlink nodes
-In-Reply-To: <20250621122139.3xq675cbs5kgkd7t@pali>
-References: <20250610213404.16288-1-pali@kernel.org>
- <26e59412fa2c70efad5f9c585bfc198f@manguebit.org>
- <20250621122139.3xq675cbs5kgkd7t@pali>
-Date: Sat, 21 Jun 2025 12:38:34 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CxLZRfsZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6970C4AF09;
+	Sat, 21 Jun 2025 15:39:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750520382;
+	bh=dplF8ekAxy0g9mjGS0TkbciEvIH5BOn328ZM7y56QMU=;
+	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
+	b=CxLZRfsZuT4zKM7mMcYSLnekN+VWNdM4ntkVy+cR4qqOAE3ft82UDnVDoVHgWfNWJ
+	 QExaIOemdfA8xa0ujTNgPcHDkJekn7qHUr6aZVTglWNI0gRJAjrAmvoeMH+KenBmA8
+	 7tpmAkdInLLEiwt08YzLgHCdwXQoipVT7/TR5Pwu4DEC52DYGs2dk8xUVq8/dSS1yL
+	 fm2zjxSgLDpmgrKlrUxaRMN4JbI6Ypq2CGvH3MYjypNxeiUsFFcXMWGD+XXjvAUxey
+	 gPkvilmUZHShVf29t21iwWlCc0NhuG0rjZ2RzKV52jFBrT9CTKHq1k5hYneGXILzFB
+	 90FTrhtwujmSg==
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-32b43cce9efso23542411fa.3;
+        Sat, 21 Jun 2025 08:39:41 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWKWaAb17mxjkQByI/X9mQlUqLr0VidsV9ghBsDaeRRn4oijGSJEaVBa3jojdiMTchNgyCTn/q/mRGu@vger.kernel.org, AJvYcCX1X7fKKZjDiV2fG3tO/pFOe8LehyauKzqpgSFy6QFSJDNJnCaoD3i0TVqnaF8fio2xz8iko49iAQBS1Td/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLxBuesn3PLLiDN6I0QKLD9BqUMXcu4Pop9fulLLCm2ShujzFz
+	Do+UC4ZRJFq+bhz3wzx1sobOgYRh8tLhx53vEyWz2K5BmA59QNdYPmoijqwP/OsAfIkp1+j6rCO
+	OFck30BlhOdPby/daBbwfPcmlGU01hCY=
+X-Google-Smtp-Source: AGHT+IHp+KTn6vrfzc/etDt3kJzlnpgqNnQtsoMZL4Gc1/QE7cGkyToUM5xdaei/51KZAZZFA9559BxEBagsXbi5UnM=
+X-Received: by 2002:a2e:bea9:0:b0:32a:91e6:1a26 with SMTP id
+ 38308e7fff4ca-32b991634e6mr22175591fa.3.1750520380134; Sat, 21 Jun 2025
+ 08:39:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250619173007.3367034-1-wens@kernel.org> <20250619173007.3367034-6-wens@kernel.org>
+ <20250621153229.6796e824@minigeek.lan>
+In-Reply-To: <20250621153229.6796e824@minigeek.lan>
+Reply-To: wens@kernel.org
+From: Chen-Yu Tsai <wens@kernel.org>
+Date: Sat, 21 Jun 2025 23:39:27 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65-KNN2x+HNE7cSPiTRyo0s5O_yiC147YKDkMhVJjW7Qw@mail.gmail.com>
+X-Gm-Features: AX0GCFsagBrOtjfAiLiTlC6pylx4Eb7dHXq8d26EI-noP8C4gcnGxxd8rnfNPHE
+Message-ID: <CAGb2v65-KNN2x+HNE7cSPiTRyo0s5O_yiC147YKDkMhVJjW7Qw@mail.gmail.com>
+Subject: Re: [PATCH 5/5] arm64: dts: allwinner: t527: Add OrangePi 4A board
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Jernej Skrabec <jernej@kernel.org>, 
+	Samuel Holland <samuel@sholland.org>, devicetree@vger.kernel.org, 
+	linux-sunxi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Pali Roh=C3=A1r <pali@kernel.org> writes:
+On Sat, Jun 21, 2025 at 10:33=E2=80=AFPM Andre Przywara <andre.przywara@arm=
+.com> wrote:
+>
+> On Fri, 20 Jun 2025 01:30:07 +0800
+> Chen-Yu Tsai <wens@kernel.org> wrote:
+>
+> Hi Chen-Yu,
+>
+> many thanks for piecing this together!
+> I compared this against the schematic, and found only some minor nits,
+> see below.
+>
+> > From: Chen-Yu Tsai <wens@csie.org>
+> >
+> > The OrangePi 4A is a typical Raspberry Pi model B sized development
+> > board from Xunlong designed around an Allwinner T527 SoC.
+> >
+> > The board has the following features:
+> > - Allwinner T527 SoC
+> > - AXP717B + AXP323 PMICs
+> > - Up to 4GB LPDDR4 DRAM
+> > - micro SD slot
+> > - optional eMMC module
+> > - M.2 slot for PCIe 2.0 x1
+> > - 16 MB SPI-NOR flash
+> > - 4x USB 2.0 type-A ports (one can be used in gadget mode)
+> > - 1x Gigabit ethernet w/ Motorcomm PHY (through yet to be supported GMA=
+C200)
+> > - 3.5mm audio jack via internal audio codec
+> > - HDMI 2.0 output
+> > - eDP, MIPI CSI (2-lane and 4-lane) and MIPI DSI (4-lane) connectors
+> > - USB type-C port purely for power
+> > - AP6256 (Broadcom BCM4345) WiFi 5.0 + BT 5.0
+> > - unsoldered headers for ADC and an additional USB 2.0 host port
+> > - 40-pin GPIO header
+> >
+> > Add a device tree for it, enabling all peripherals currently supported.
+> >
+> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > ---
+> >  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+> >  .../dts/allwinner/sun55i-t527-orangepi-4a.dts | 378 ++++++++++++++++++
+> >  2 files changed, 379 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/allwinner/sun55i-t527-orangepi-=
+4a.dts
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/d=
+ts/allwinner/Makefile
+> > index 773cc02a13d0..780aeba0f3a4 100644
+> > --- a/arch/arm64/boot/dts/allwinner/Makefile
+> > +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> > @@ -57,3 +57,4 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h700-anbernic-rg=
+35xx-sp.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun55i-a527-cubie-a5e.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun55i-h728-x96qpro+.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun55i-t527-avaota-a1.dtb
+> > +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun55i-t527-orangepi-4a.dtb
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun55i-t527-orangepi-4a.dts =
+b/arch/arm64/boot/dts/allwinner/sun55i-t527-orangepi-4a.dts
+> > new file mode 100644
+> > index 000000000000..8a62607e584c
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/allwinner/sun55i-t527-orangepi-4a.dts
+> > @@ -0,0 +1,378 @@
+> > +// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+> > +/*
+> > + * Copyright (C) 2025 Chen-Yu Tsai <wens@csie.org>
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "sun55i-a523.dtsi"
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/leds/common.h>
+> > +
+> > +/ {
+> > +     model =3D "OrangePi 4A";
+> > +     compatible =3D "xunlong,orangepi-4a", "allwinner,sun55i-t527";
+> > +
+> > +     aliases {
+> > +             serial0 =3D &uart0;
+> > +     };
+> > +
+> > +     chosen {
+> > +             stdout-path =3D "serial0:115200n8";
+> > +     };
+> > +
+> > +     ext_osc32k: ext-osc32k-clk {
+> > +             #clock-cells =3D <0>;
+> > +             compatible =3D "fixed-clock";
+> > +             clock-frequency =3D <32768>;
+> > +             clock-output-names =3D "ext_osc32k";
+> > +     };
+> > +
+> > +     leds {
+> > +             compatible =3D "gpio-leds";
+> > +
+> > +             /* PWM capable pin, but PWM isn't supported yet. */
+> > +             led {
+> > +                     function =3D LED_FUNCTION_STATUS;
+> > +                     color =3D <LED_COLOR_ID_GREEN>;
+> > +                     gpios =3D <&pio 3 20 GPIO_ACTIVE_HIGH>; /* PD20 *=
+/
+> > +             };
+> > +     };
+> > +
+> > +     wifi_pwrseq: pwrseq {
+> > +             compatible =3D "mmc-pwrseq-simple";
+> > +             reset-gpios =3D <&r_pio 1 1 GPIO_ACTIVE_LOW>; /* PM1 */
+> > +             clocks =3D <&rtc CLK_OSC32K_FANOUT>;
+> > +             clock-names =3D "ext_clock";
+> > +     };
+> > +
+> > +     reg_otg_vbus: regulator-otg-vbus {
+> > +             compatible =3D "regulator-fixed";
+> > +             regulator-name =3D "otg-vbus";
+> > +             regulator-min-microvolt =3D <5000000>;
+> > +             regulator-max-microvolt =3D <5000000>;
+> > +             vin-supply =3D <&reg_vcc5v>;
+> > +             gpio =3D <&r_pio 0 4 GPIO_ACTIVE_HIGH>;   /* PL4 */
+> > +             enable-active-high;
+> > +     };
+> > +
+> > +     reg_pcie_vcc3v3: regulator-pcie-vcc3v3 {
+> > +             compatible =3D "regulator-fixed";
+> > +             regulator-name =3D "vcc-pcie-3v3";
+> > +             regulator-min-microvolt =3D <3300000>;
+> > +             regulator-max-microvolt =3D <3300000>;
+> > +             vin-supply =3D <&reg_vcc5v>;
+> > +             gpio =3D <&r_pio 0 8 GPIO_ACTIVE_HIGH>;   /* PL8 */
+> > +             enable-active-high;
+> > +     };
+> > +
+> > +     reg_usb_vbus: regulator-usb-vbus {
+> > +             compatible =3D "regulator-fixed";
+> > +             regulator-name =3D "usb-vbus";
+> > +             regulator-min-microvolt =3D <5000000>;
+> > +             regulator-max-microvolt =3D <5000000>;
+> > +             vin-supply =3D <&reg_vcc5v>;
+> > +             gpio =3D <&r_pio 0 12 GPIO_ACTIVE_HIGH>;  /* PL12 */
+> > +             enable-active-high;
+> > +     };
+> > +
+> > +     reg_vcc5v: regulator-vcc5v {
+> > +             /* board wide 5V supply from USB type-C port */
+> > +             compatible =3D "regulator-fixed";
+> > +             regulator-name =3D "vcc-5v";
+> > +             regulator-min-microvolt =3D <5000000>;
+> > +             regulator-max-microvolt =3D <5000000>;
+> > +             regulator-always-on;
+> > +     };
+> > +};
+> > +
+> > +&ehci0 {
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&ehci1 {
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&mmc0 {
+> > +     vmmc-supply =3D <&reg_cldo3>;
+> > +     cd-gpios =3D <&pio 5 6 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>; /* PF6 =
+*/
+> > +     bus-width =3D <4>;
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&mmc1 {
+> > +     bus-width =3D <4>;
+> > +     mmc-pwrseq =3D <&wifi_pwrseq>;
+> > +     non-removable;
+> > +     vmmc-supply =3D <&reg_dldo1_323>;
+> > +     vqmmc-supply =3D <&reg_bldo1>;
+> > +     status =3D "okay";
+> > +
+> > +     brcmf: wifi@1 {
+> > +             compatible =3D "brcm,bcm4329-fmac";
+> > +             reg =3D <1>;
+> > +             interrupt-parent =3D <&r_pio>;
+> > +             interrupts =3D <1 0 IRQ_TYPE_LEVEL_LOW>; /* PM0 */
+> > +             interrupt-names =3D "host-wake";
+> > +     };
+> > +};
+> > +
+> > +&mmc2 {
+> > +     bus-width =3D <8>;
+> > +     cap-mmc-hw-reset;
+> > +     mmc-ddr-1_8v;
+> > +     mmc-hs200-1_8v;
+> > +     non-removable;
+> > +     vmmc-supply =3D <&reg_cldo3>;
+> > +     vqmmc-supply =3D <&reg_cldo1>;
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&ohci0 {
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&ohci1 {
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&pio {
+> > +     vcc-pb-supply =3D <&reg_cldo3>;   /* via VCC-IO */
+> > +     vcc-pc-supply =3D <&reg_cldo1>;
+> > +     vcc-pd-supply =3D <&reg_cldo3>;
+> > +     vcc-pe-supply =3D <&reg_aldo2>;
+> > +     vcc-pf-supply =3D <&reg_cldo3>;   /* VCC-IO for 3.3v; VCC-MCSI fo=
+r 1.8v */
+> > +     vcc-pg-supply =3D <&reg_bldo1>;
+> > +     vcc-ph-supply =3D <&reg_cldo3>;   /* via VCC-IO */
+> > +     vcc-pi-supply =3D <&reg_cldo3>;
+> > +     vcc-pj-supply =3D <&reg_cldo1>;
+> > +     vcc-pk-supply =3D <&reg_cldo1>;
+> > +};
+> > +
+> > +&r_i2c0 {
+> > +     status =3D "okay";
+> > +
+> > +     axp717: pmic@35 {
+> > +             compatible =3D "x-powers,axp717";
+> > +             reg =3D <0x35>;
+> > +             interrupt-controller;
+> > +             #interrupt-cells =3D <1>;
+> > +             interrupts-extended =3D <&nmi_intc 0 IRQ_TYPE_LEVEL_LOW>;
+> > +
+> > +             vin1-supply =3D <&reg_vcc5v>;
+> > +             vin2-supply =3D <&reg_vcc5v>;
+> > +             vin3-supply =3D <&reg_vcc5v>;
+> > +             vin4-supply =3D <&reg_vcc5v>;
+> > +             aldoin-supply =3D <&reg_vcc5v>;
+> > +             bldoin-supply =3D <&reg_vcc5v>;
+> > +             cldoin-supply =3D <&reg_vcc5v>;
+> > +
+> > +             regulators {
+> > +                     /* Supplies the "little" cluster (1.4 GHz cores) =
+*/
+> > +                     reg_dcdc1: dcdc1 {
+> > +                             regulator-always-on;
+> > +                             regulator-min-microvolt =3D <900000>;
+> > +                             regulator-max-microvolt =3D <1160000>;
+> > +                             regulator-name =3D "vdd-cpul";
+> > +                     };
+> > +
+> > +                     reg_dcdc2: dcdc2 {
+> > +                             regulator-always-on;
+> > +                             regulator-min-microvolt =3D <920000>;
+> > +                             regulator-max-microvolt =3D <920000>;
+> > +                             regulator-name =3D "vdd-gpu-sys";
+> > +                     };
+> > +
+> > +                     reg_dcdc3: dcdc3 {
+> > +                             regulator-always-on;
+> > +                             regulator-min-microvolt =3D <1160000>;
+> > +                             regulator-max-microvolt =3D <1160000>;
+> > +                             regulator-name =3D "vcc-dram";
+> > +                     };
+> > +
+> > +                     reg_dcdc4: dcdc4 {
+> > +                             /* feeds 3.3V pin on GPIO header */
+> > +                             regulator-always-on;
+> > +                             regulator-min-microvolt =3D <3300000>;
+> > +                             regulator-max-microvolt =3D <3300000>;
+> > +                             regulator-name =3D "vdd-io";
+> > +                     };
+> > +
+> > +                     reg_aldo1: aldo1 {
+> > +                             regulator-name =3D "avdd-csi";
+> > +                     };
+> > +
+> > +                     reg_aldo2: aldo2 {
+> > +                             regulator-name =3D "vcc-pe";
+> > +                     };
+> > +
+> > +                     reg_aldo3: aldo3 {
+> > +                             /* supplies the I2C pins for this PMIC */
+> > +                             regulator-always-on;
+> > +                             regulator-min-microvolt =3D <3300000>;
+> > +                             regulator-max-microvolt =3D <3300000>;
+> > +                             regulator-name =3D "vcc-pl-usb";
+> > +                     };
+> > +
+> > +                     reg_aldo4: aldo4 {
+> > +                             regulator-always-on;
+> > +                             regulator-min-microvolt =3D <1800000>;
+> > +                             regulator-max-microvolt =3D <1800000>;
+> > +                             regulator-name =3D "vcc-pll-dxco-avcc";
+> > +                     };
+> > +
+> > +                     reg_bldo1: bldo1 {
+> > +                             regulator-min-microvolt =3D <1800000>;
+> > +                             regulator-max-microvolt =3D <1800000>;
+> > +                             regulator-name =3D "vcc-pg-wifi";
+> > +                     };
+> > +
+> > +                     reg_bldo2: bldo2 {
+> > +                             regulator-always-on;
+> > +                             regulator-min-microvolt =3D <1800000>;
+> > +                             regulator-max-microvolt =3D <1800000>;
+> > +                             regulator-name =3D "vcc-pm-lpddr";
+> > +                     };
+> > +
+> > +                     reg_bldo3: bldo3 {
+> > +                             regulator-name =3D "dvdd-csi";
+>
+> In my version of the schematic this is AFVCC-CSI (whatever that means),
 
-> On Friday 20 June 2025 20:44:37 Paulo Alcantara wrote:
->> Pali Roh=C3=A1r <pali@kernel.org> writes:
->>=20
->> > Currently Linux SMB client returns EIO for lstat() and AT_SYMLINK_NOFO=
-LLOW
->> > calls on symlink node when the symlink target location is broken or ca=
-nnot
->> > be read or parsed.
->> >
->> > Fix this problem by relaxing the errors from various locations which p=
-arses
->> > information about symlink file node (UNIX SMB1, native SMB2+, NFS-styl=
-e,
->> > WSL-style) and let readlink() syscall to return EIO when the symlink t=
-arget
->> > location is not available.
->>=20
->> Please, don't.  We still want those validations for the other types of
->> symlinks.
->
-> Well, validation was not removed. Validation is still there, just the
-> error is signalled by the readlink() syscall instead of the lstat() or
-> AT_SYMLINK_NOFOLLOW syscalls.
->
-> My opinion is that the lstat() or AT_SYMLINK_NOFOLLOW should work on
-> symlink node independently of where the symlink points (and whether the
-> symlink target is valid POSIX path or not). That is because the lstat()
-> and AT_SYMLINK_NOFOLLOW says that the symlink target location must not
-> be used and must not be resolved.
->
-> But still the invalid / incorrect / broken or non-representable symlink
-> target path in POSIX notation should be reported as an issue and the
-> readlink() is the correct syscall which should report these errors.
+I believe it's power for the autofocus part, if one is included.
 
-The only issue is breaking existing customer or user applications that
-really don't care if cifs.ko could follow those kind of symlinks.
+> and ...
+>
+> > +                     };
+> > +
+> > +                     reg_bldo4: bldo4 {
+>
+> ... BLDO4 is DVDD-CSI.
 
-Samba create symlinks to represent DFS links with targets like
-'msdfs:srv1\share,srv2\share', which are not valid POSIX paths.  Does
-that mean the filesystem should not allow readlink(2) to succeed just
-because it is not a valid POSIX path?  Is that what you mean?
+You are right. I must've edited the wrong entry.
 
->> The problem is just that cifs.ko can't handle absolute
->> symlink targets in the form of '\??\UNC\srv\share\foo', while Windows
->> client can.  They are still valid symlink targets, but cifs.ko doesn't
->> know how to follow them.
->
-> Windows client can represent and follow such symlink because the symlink
-> is in the NT style format and Windows kernel uses NT style of paths
-> internally. Linux kernel uses POSIX paths and POSIX does not contain any
-> GLOBAL?? namespace for NT object hierarchy.
->
-> Leaking raw NT object hierarchy from SMB to POSIX userspace via
-> readlink() syscall is a bad idea. Applications are really not expecting
-> that the readlink() syscall will return NT kernel internals (exported
-> over SMB protocol and passed to cifs.ko).
->
-> For UNC paths encoded in NT object hierarchy, which is just some subset
-> of all possible NT paths, I had an idea that we could convert these
-> paths to some format like:
->
->    <prefix>/server/share/path...
->
-> Where <prefix> would be specified by the string mount option. So user
-> could say that wants all UNC symlinks pointing to /mnt/unc/.
->
-> And in the same way if user would want to create symlink pointing to
-> /mnt/unc/server/share/path... then cifs.ko will transform it into valid
-> NT UNC path and create a symlink to this location.
+> Not that it really matters, since both are not used yet ...
 
-That's really a terrible idea.  The symlink targets in the form of
-'\??\UNC\...' could be resolved by cifs.ko.  The ones that refer to a
-file outside the mounted share, we would set those as automounts.
+Actually, I believe the names you gave are from the first page, but if
+you look at the page with the camera connectors, neither of them are used.
+The connectors both get power only from VCC3V3-CSI, which is CLDO2.
+So neither of them are connected.
 
-> But this would solve only problem with UNC symlink, not symlinks
-> pointing to NT object hierarchy in general.
+> > +                             /* not connected */
+> > +                     };
+> > +
+> > +                     reg_cldo1: cldo1 {
+> > +                             regulator-always-on;
+> > +                             regulator-min-microvolt =3D <1800000>;
+> > +                             regulator-max-microvolt =3D <1800000>;
+> > +                             regulator-name =3D "vcc-cvp-pc-lvds-mcsi-=
+pk-efuse-pcie-edp-1v8";
+> > +                     };
+> > +
+> > +                     reg_cldo2: cldo2 {
+> > +                             regulator-min-microvolt =3D <3300000>;
+> > +                             regulator-max-microvolt =3D <3300000>;
+> > +                             regulator-name =3D "vcc3v3-csi";
+> > +                     };
+> > +
+> > +                     reg_cldo3: cldo3 {
+> > +                             regulator-always-on;
+> > +                             regulator-min-microvolt =3D <3300000>;
+> > +                             regulator-max-microvolt =3D <3300000>;
+> > +                             regulator-name =3D "vcc-io-mmc-nand-pd-pi=
+-usb";
+> > +                     };
+> > +
+> > +                     reg_cldo4: cldo4 {
+> > +                             regulator-min-microvolt =3D <3300000>;
+> > +                             regulator-max-microvolt =3D <3300000>;
+> > +                             regulator-name =3D "vcc-3v3-phy1-lcd";
+> > +                     };
+> > +
+> > +                     reg_cpusldo: cpusldo {
+> > +                             /* supplies the management core */
+> > +                             regulator-always-on;
+> > +                             regulator-min-microvolt =3D <900000>;
+> > +                             regulator-max-microvolt =3D <900000>;
+> > +                             regulator-name =3D "vdd-cpus";
 >
->> The following should do it and then restore old behavior
->>=20
->> diff --git a/fs/smb/client/reparse.c b/fs/smb/client/reparse.c
->> index bb25e77c5540..11d44288e75a 100644
->> --- a/fs/smb/client/reparse.c
->> +++ b/fs/smb/client/reparse.c
->> @@ -875,15 +875,8 @@ int smb2_parse_native_symlink(char **target, const =
-char *buf, unsigned int len,
->>  			abs_path +=3D sizeof("\\DosDevices\\")-1;
->>  		else if (strstarts(abs_path, "\\GLOBAL??\\"))
->>  			abs_path +=3D sizeof("\\GLOBAL??\\")-1;
->> -		else {
->> -			/* Unhandled absolute symlink, points outside of DOS/Win32 */
->> -			cifs_dbg(VFS,
->> -				 "absolute symlink '%s' cannot be converted from NT format "
->> -				 "because points to unknown target\n",
->> -				 smb_target);
->> -			rc =3D -EIO;
->> -			goto out;
->> -		}
->> +		else
->> +			goto out_unhandled_target;
->>=20=20
->>  		/* Sometimes path separator after \?? is double backslash */
->>  		if (abs_path[0] =3D=3D '\\')
->> @@ -910,13 +903,7 @@ int smb2_parse_native_symlink(char **target, const =
-char *buf, unsigned int len,
->>  			abs_path++;
->>  			abs_path[0] =3D drive_letter;
->>  		} else {
->> -			/* Unhandled absolute symlink. Report an error. */
->> -			cifs_dbg(VFS,
->> -				 "absolute symlink '%s' cannot be converted from NT format "
->> -				 "because points to unknown target\n",
->> -				 smb_target);
->> -			rc =3D -EIO;
->> -			goto out;
->> +			goto out_unhandled_target;
->>  		}
->>=20=20
->>  		abs_path_len =3D strlen(abs_path)+1;
->> @@ -966,6 +953,7 @@ int smb2_parse_native_symlink(char **target, const c=
-har *buf, unsigned int len,
->>  		 * These paths have same format as Linux symlinks, so no
->>  		 * conversion is needed.
->>  		 */
->> +out_unhandled_target:
->>  		linux_target =3D smb_target;
->>  		smb_target =3D NULL;
->>  	}
->
-> I'm really not sure if removing the messages and error reporting about
-> symlinks which cannot be represented in POSIX system is a good idea.
+> This also supplies some 0.9V USB circuitry, so maybe add this to the
+> name?
 
-Those messages are just useless and noisy.  Do you think it's useful
-printing that message for _every_ symlink when someone is calling
-readdir(2) in a directory that contain such files?
+Sure.
+
+> > +                     };
+> > +             };
+> > +     };
+> > +
+> > +     axp323: pmic@36 {
+> > +             compatible =3D "x-powers,axp323";
+> > +             reg =3D <0x36>;
+> > +             #interrupt-cells =3D <1>;
+> > +             interrupt-controller;
+> > +             status =3D "okay";
+> > +
+> > +             vin1-supply =3D <&reg_vcc5v>;
+> > +             vin2-supply =3D <&reg_vcc5v>;
+> > +             vin3-supply =3D <&reg_vcc5v>;
+> > +
+> > +             regulators {
+> > +                     reg_aldo1_323: aldo1 {
+> > +                             regulator-min-microvolt =3D <3300000>;
+> > +                             regulator-max-microvolt =3D <3300000>;
+> > +                             regulator-name =3D "vcc-wifi";
+> > +                     };
+> > +
+> > +                     reg_dldo1_323: dldo1 {
+> > +                             regulator-min-microvolt =3D <3300000>;
+> > +                             regulator-max-microvolt =3D <3300000>;
+> > +                             regulator-name =3D "vcc-wifi2";
+> > +                     };
+> > +
+> > +                     /* Supplies the "big" cluster (1.8 GHz cores) */
+> > +                     reg_dcdc1_323: dcdc1 {
+> > +                             regulator-always-on;
+> > +                             regulator-min-microvolt =3D <900000>;
+> > +                             regulator-max-microvolt =3D <1150000>;
+> > +                             regulator-name =3D "vdd-cpub";
+> > +                     };
+> > +
+> > +                     /* DCDC2 is polyphased with DCDC1 */
+> > +
+> > +                     /* Some RISC-V management core related voltage */
+> > +                     reg_dcdc3_323: dcdc3 {
+> > +                             regulator-always-on;
+> > +                             regulator-min-microvolt =3D <900000>;
+> > +                             regulator-max-microvolt =3D <900000>;
+> > +                             regulator-name =3D "vdd-dnr";
+> > +                     };
+> > +             };
+> > +     };
+> > +};
+> > +
+> > +&r_pio {
+> > +/*
+> > + * Specifying the supply would create a circular dependency.
+> > + *
+> > + *   vcc-pl-supply =3D <&reg_aldo3>;
+> > + */
+> > +     vcc-pm-supply =3D <&reg_bldo2>;
+> > +};
+> > +
+> > +&uart0 {
+> > +     pinctrl-names =3D "default";
+> > +     pinctrl-0 =3D <&uart0_pb_pins>;
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&uart1 {
+> > +     pinctrl-names =3D "default";
+> > +     pinctrl-0 =3D <&uart1_pins>, <&uart1_rts_cts_pins>;
+> > +     uart-has-rtscts;
+> > +     status =3D "okay";
+> > +
+> > +     bluetooth {
+> > +             compatible =3D "brcm,bcm4345c5";
+> > +             clocks =3D <&rtc CLK_OSC32K_FANOUT>;
+> > +             clock-names =3D "lpo";
+> > +             vbat-supply =3D <&reg_aldo1_323>;
+>
+> Is that some kind of trick, to accommodate *two* power rails for the
+> chip? Because to me it looks like the AXP323 ALDO1 and DLDO1 are
+> connected together and both supply the WiFi-BT-combo chip.
+> It's probably fine to model this way, since ALDO1 is the weaker of
+> the two, and I'd guess the WiFi needs more power, but worth a comment, I
+> guess.
+
+Yeah, it's mostly a trick. I suppose we can use the regulator coupler
+thing to couple them together, but the kernel coupler driver currently
+doesn't do non-always-on regulator coupling. I would need to look into
+why that's the case.
+
+Mark (CC-ed), do you have any idea off the top of your head?
+
+> Rest looks good to me.
+
+Thanks.
+
+
+ChenYu
+
+> Cheers,
+> Andre
+>
+>
+> > +             vddio-supply =3D <&reg_bldo1>;
+> > +             device-wakeup-gpios =3D <&r_pio 1 3 GPIO_ACTIVE_HIGH>; /*=
+ PM3 */
+> > +             host-wakeup-gpios =3D <&r_pio 1 4 GPIO_ACTIVE_HIGH>; /* P=
+M4 */
+> > +             shutdown-gpios =3D <&r_pio 1 2 GPIO_ACTIVE_HIGH>; /* PM2 =
+*/
+> > +     };
+> > +};
+> > +
+> > +&usb_otg {
+> > +      /*
+> > +       * The OTG controller is connected to one of the type-A ports.
+> > +       * There is a regulator, controlled by a GPIO, to provide VBUS p=
+ower
+> > +       * to the port, and a VBUSDET GPIO, to detect externally provide=
+d
+> > +       * power. But without ID or CC pins there is no real way to do a
+> > +       * runtime role detection.
+> > +       */
+> > +     dr_mode =3D "host";
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&usbphy {
+> > +     usb0_vbus-supply =3D <&reg_otg_vbus>;
+> > +     usb0_vbus_det-gpios =3D <&r_pio 0 7 GPIO_ACTIVE_HIGH>; /* PL7 */
+> > +     usb1_vbus-supply =3D <&reg_usb_vbus>;
+> > +     status =3D "okay";
+> > +};
+>
