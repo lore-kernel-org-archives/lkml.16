@@ -1,81 +1,118 @@
-Received: from cvsmtppost37.nm.naver.com (cvsmtppost37.nm.naver.com [114.111.35.170])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5301CD208
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 08:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.111.35.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4181DE3BA;
+	Sat, 21 Jun 2025 08:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750495915; cv=none; b=oBkY3YXhyVBGdXDF1hqaas7Ryo1H3vKRcVmNzwdx7NXMvyT3PQfbEktw+90k5YbJjIYJV6kuFqj4tImIQIp4RRq7zLQGMf47NjZ1bvle+BDO/21rOwWpGJ6F7HDvtYwM31fOoW0w6tUGcdDrjg1F8j5PySvMGIXAhzx8kqzEak4=
+	t=1750496195; cv=none; b=Cqta/h3W4gQW4JrK3lhrRsByt6LjdFOamI2uy5TUrd/eT+w/yoZsMUxeNDh9cYGFvS4TdfK/cjtA+EYHqZkAfqEsHmn/GwiO+S8vIgV9ahKYmSCUA/QvRZrltAzd2+8DrRpECyIcm2HFODk1VP2pj4fA3B9HTJUngAL3BGwjR/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750495915; c=relaxed/simple;
-	bh=rKtFqi4VVgxh1mefZj2DobHy7+yO6s5RafJYIJAk6MQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kgrsv7Liw40N0sUsV+5fFjKJxgo184WE3t+D31oXFtG9efhU68pf/oo5D9ghv54FoN+bnUvB59OQpADZen2A8eycNJmElLVLL93nI95oV7b5j2OJTZPxb8FwXBfcMey6IN8K3Ef6kHCafTxjygMi7B8MFZYpnFZTfoLXYOVuR60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=naver.com; spf=pass smtp.mailfrom=naver.com; dkim=pass (2048-bit key) header.d=naver.com header.i=@naver.com header.b=JZdzsuWd; arc=none smtp.client-ip=114.111.35.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=naver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=naver.com
+	s=arc-20240116; t=1750496195; c=relaxed/simple;
+	bh=lozJVjeayu4fuBFr7YB8LDGyPpQu/TGuMPYpYyOubJE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PH0VHptS2mT3JiKrQE3J37/92vEL5QGGzrucI4AeaFBsGbl7fNDpQhhK2fENLJuodMV0Zp2l3UwXwKjOgRvr1xG43uY9NTuu430oR7o8W6ctU6Mog8Iy1FN5qaV5qmBeOZ6mPOMoF6VobUGbu2SpSifuRBTDk8gotJ1TP6x/Vto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JOcAmgTS; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=naver.com header.i=@naver.com header.b="JZdzsuWd"
-Received: from cvsendbo006.nm ([10.112.20.43])
-  by cvsmtppost37.nm.naver.com with ESMTP id 8Rv4yiJgTgyIXlaekh9u0Q
-  for <linux-kernel@vger.kernel.org>;
-  Sat, 21 Jun 2025 08:41:44 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=naver.com; s=s20171208;
-	t=1750495304; bh=rKtFqi4VVgxh1mefZj2DobHy7+yO6s5RafJYIJAk6MQ=;
-	h=From:To:Subject:Date:Message-ID:From:Subject:Feedback-ID:
-	 X-Works-Security;
-	b=JZdzsuWd6+2ijbjDgh0FkHf9nE9O49YX21Bz5TeTkxwmmS9em2vKYAIRV8Z8H5eM9
-	 o+pKujuhjYy2qHWsa58HCEGrOPsjmJGJ6KPEgqDHrKAa8YhMDVA5urVMakQGkbyUeI
-	 R2PUv+h5w5KROFUqhndMfN1rgXgiHosJQ7NlmUHL/A+nhBEgDJWoGgSpp3hLxb0NMg
-	 QkZnPjCXVbJcE/BYX8MuNpzlx7+S1NjUhtZ/mUUfnfvgyoFPGEmLFoDJTj3IIuC/ko
-	 VPOKE85KyTNSCggZzLKVateqAx2LTxB+Osq5/DZhqpfIB+koDdSTMGg9GfFwWBFSl1
-	 afs2C+PheMyCA==
-X-Session-ID: 50YONv5+QGuiAFKKIujcIw
-X-Works-Send-Opt: k/YdjAJYjHmlKxu/FoJYKxgXKBwkx0eFjAJYKg==
-X-Works-Smtp-Source: XZnrFAg9FqJZ+HmqKAvZ+6E=
-Received: from asya.. ([121.138.252.96])
-  by cvnsmtp003.nm.naver.com with ESMTP id 50YONv5+QGuiAFKKIujcIw
-  for <multiple recipients>
-  (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
-  Sat, 21 Jun 2025 08:41:43 -0000
-From: Cherniaev Andrei <dungeonlords789@naver.com>
-To: linux-kbuild@vger.kernel.org
-Cc: masahiroy@kernel.org,
-	yann.morin.1998@free.fr,
-	linux-kernel@vger.kernel.org,
-	Cherniaev Andrei <dungeonlords789@naver.com>
-Subject: [PATCH 1/1] kconfig: fix 'space' to (de)select options
-Date: Sat, 21 Jun 2025 17:41:24 +0900
-Message-ID: <20250621084124.7134-1-dungeonlords789@naver.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JOcAmgTS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750496193; x=1782032193;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lozJVjeayu4fuBFr7YB8LDGyPpQu/TGuMPYpYyOubJE=;
+  b=JOcAmgTSqsuzUHqVkv4Promp7cQ1Y7544qRf+MlVuq1jRdfogr4JGjbS
+   JkrYz+5rzhg6ZMnlLGmzApW+veItyQvgeFPhgs2JSPcFggwiQrobo30v3
+   AFL6fDSAtPCzNJat4zaGDN7xmxaXCHeNCJHtuDGnmq+BGxR6Rcb5IEXw5
+   3YigTbCaQoN4NW5G7hLbuJ4XsDkAXW+294/GtFSQoW3cAbprLiRy8IiU1
+   XP6PHyyF369qTLXUwJGYM6oNpGkwdE8n2ZwAffLcx/hph2bFRMczNi0Bm
+   qaJg+UHBEu19+9jkQcOgCNEG2PKT24UgOmYlqiePBjepOIT9MVLogongO
+   g==;
+X-CSE-ConnectionGUID: eP5q64BRSwewEkbfn7xvZw==
+X-CSE-MsgGUID: 7Nj52L2aR7m+3LiLzwF3MA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="40359655"
+X-IronPort-AV: E=Sophos;i="6.16,253,1744095600"; 
+   d="scan'208";a="40359655"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2025 01:56:33 -0700
+X-CSE-ConnectionGUID: UR9IhsTnQHedEH4bECr6Yg==
+X-CSE-MsgGUID: JcJqLz9gSfy5YSgtYqhRzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,253,1744095600"; 
+   d="scan'208";a="151256679"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 21 Jun 2025 01:56:29 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uSu1T-000MUk-1Q;
+	Sat, 21 Jun 2025 08:56:27 +0000
+Date: Sat, 21 Jun 2025 16:55:56 +0800
+From: kernel test robot <lkp@intel.com>
+To: liquancin.mereenamathai@in.bosch.com, linux-iio@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+	andy@kernel.org, vassilisamir@gmail.com, marcelo.schmitt1@gmail.com,
+	javier.carrasco.cruz@gmail.com, Xu.Zhang@cn.bosch.com,
+	Maoting.Bian@cn.bosch.com, Liquancin.MereenaMathai@in.bosch.com
+Subject: Re: [PATCH v1 1/2] Add the iio driver for bosch pressure sensor
+ bmp390. The bmp390 is a pressure sensor module. It will support SPI and I2C
+ protocol based on configuration.
+Message-ID: <202506211617.KOMMf9eA-lkp@intel.com>
+References: <20250620045456.1151-2-liquancin.mereenamathai@in.bosch.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620045456.1151-2-liquancin.mereenamathai@in.bosch.com>
 
-Fix that by treating 'space' as we treat y/m/n, ie. as an action key, not as shortcut to jump to prompt. This is copy of commit https://gitlab.com/buildroot.org/buildroot/-/raw/master/support/kconfig/patches/16-fix-space-to-de-select-options.patch
+Hi,
 
-Signed-off-by: "Yann E. MORIN" <yann.morin.1998@free.fr>
-Signed-off-by: Cherniaev Andrei <dungeonlords789@naver.com>
----
- scripts/kconfig/lxdialog/menubox.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/scripts/kconfig/lxdialog/menubox.c b/scripts/kconfig/lxdialog/menubox.c
-index 6e6244df0c56..d4c19b7beebb 100644
---- a/scripts/kconfig/lxdialog/menubox.c
-+++ b/scripts/kconfig/lxdialog/menubox.c
-@@ -264,7 +264,7 @@ int dialog_menu(const char *title, const char *prompt,
- 		if (key < 256 && isalpha(key))
- 			key = tolower(key);
- 
--		if (strchr("ynmh", key))
-+		if (strchr("ynmh ", key))
- 			i = max_choice;
- 		else {
- 			for (i = choice + 1; i < max_choice; i++) {
+[auto build test WARNING on jic23-iio/togreg]
+[also build test WARNING on linus/master v6.16-rc2 next-20250620]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/liquancin-mereenamathai-in-bosch-com/Add-the-iio-driver-for-bosch-pressure-sensor-bmp390-The-bmp390-is-a-pressure-sensor-module-It-will-support-SPI-and-I2C-p/20250620-125832
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+patch link:    https://lore.kernel.org/r/20250620045456.1151-2-liquancin.mereenamathai%40in.bosch.com
+patch subject: [PATCH v1 1/2] Add the iio driver for bosch pressure sensor bmp390. The bmp390 is a pressure sensor module. It will support SPI and I2C protocol based on configuration.
+config: loongarch-randconfig-r122-20250621 (https://download.01.org/0day-ci/archive/20250621/202506211617.KOMMf9eA-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 15.1.0
+reproduce: (https://download.01.org/0day-ci/archive/20250621/202506211617.KOMMf9eA-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506211617.KOMMf9eA-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/iio/pressure/bmp390/bmp390_i2c.c:38:16: sparse: sparse: symbol 'iio_i2c_dev' was not declared. Should it be static?
+--
+>> drivers/iio/pressure/bmp390/bmp390_iio_buffer.c:41:56: sparse: sparse: dereference of noderef expression
+>> drivers/iio/pressure/bmp390/bmp390_iio_buffer.c:41:56: sparse: sparse: dereference of noderef expression
+   drivers/iio/pressure/bmp390/bmp390_iio_buffer.c:44:40: sparse: sparse: dereference of noderef expression
+   drivers/iio/pressure/bmp390/bmp390_iio_buffer.c:44:40: sparse: sparse: dereference of noderef expression
+   drivers/iio/pressure/bmp390/bmp390_iio_buffer.c:47:43: sparse: sparse: dereference of noderef expression
+   drivers/iio/pressure/bmp390/bmp390_iio_buffer.c:47:43: sparse: sparse: dereference of noderef expression
+
+vim +/iio_i2c_dev +38 drivers/iio/pressure/bmp390/bmp390_i2c.c
+
+    33	
+    34	/*********************************************************************/
+    35	/* global variables */
+    36	/*********************************************************************/
+    37	static struct i2c_client *bmp3_i2c_client;
+  > 38	struct iio_dev *iio_i2c_dev;
+    39	
+
 -- 
-2.48.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
