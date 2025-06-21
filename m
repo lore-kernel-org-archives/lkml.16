@@ -1,123 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C1039FCE;
-	Sat, 21 Jun 2025 17:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1427F23774;
+	Sat, 21 Jun 2025 17:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750526028; cv=none; b=t4ZmHU8xLxg6jH0QWlNX6suLksPf5GkJm+IXlfgom+fBYb2q/u+TSZJI4LCW3V4j0b+CoE7jwWi8LQ4zIpxlvvD4tBLS0eQtCiH9XNh4FW2hE6JzfucM14AhtSlDTzaZpUuzt3K7NFkJdUnsyoHdhbJ70H1pbdyPPuovWCE0ROI=
+	t=1750526160; cv=none; b=oH8K8bmqFbKnl+AoQP/uCRx84TXSxk/97jWvh9tRG2GU6gJJSUqOwk96zJZTz+Ci2NJp1q3s5LRCmcngDsrbUsTvvvDdLzwD6xKrnTTHGEf29JTBGVr41BNCS4I2KFUgBzmf6aHFbX8WmK3pojwCsrIRxvQfTHNrcIlt3bZ+V48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750526028; c=relaxed/simple;
-	bh=lvT6pah/8tMihrRud+kdGk+RX76wGL1s+4E/f+JJp6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Fxk1Qj7mayAIKOe08PHFWlE1gYi621MmgLiRfYHdj50ZiaI0MKjbqNX5ZZrVmLY6appEpb7CGPE/pYvD7TJ5mZ0Ey+eQbt4G0XWWGyAGwBoGQ6+TXBp0jN9bZ7I2NNDcUN0zbrQbW6ffJ5IAQx5x1+QHJvEgEUcBammMqxHypwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WtcxbVY5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750526160; c=relaxed/simple;
+	bh=Mp1+rOXGv2rJw4OpimMo2D0L5w8oPmSBucuZSeNNowU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hRkPjjottrr+XkyN6VBdqgcNFN0rT7tK8mPdfZNdYBROPYdPhwTGpNpkL6imJOxowtnIBs2aMGHoKyVX7rlAlk0mE+ClyOy5FsKAZFR38i8EowS3ndW4rOrIRKNc8QdHCnqUT81ls6wGc0Y4aQ75c4iAWAKq3h8QSsD7aoLGbQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=oaXgOkPA; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WtcxbVY5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E6D9C4CEE7;
-	Sat, 21 Jun 2025 17:13:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750526027;
-	bh=lvT6pah/8tMihrRud+kdGk+RX76wGL1s+4E/f+JJp6E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WtcxbVY5LhnLEb5uns95DL0tpvX9bVYV6oBS0yYClNpvNO/dDWJOPcw5o2B9rwL9+
-	 1AyrW/MR1AA2I1F1rCyHzMbWC2DwzTuRbJpUvWyDX88g401CuYw8tmwKwiRM1BHnaT
-	 yHi62bv+n8MeIh0sa/l7SdMMe+iGBo2yBRKqRsjGGDDnfG6UCiITA7oCwMYTSnP6Mu
-	 CTX/mBecaW/0NAznXkvxi/4sphYT1/16H7iiB/4lsnpP26TsGzmR1yEmO/to5en4t/
-	 Xg0zS8mN2cANreRfAoyJVtNChyIMM0y/0srq67TFOHiES5zKMVaXFD2gtioWqhSANS
-	 lZUD/O2OY/coQ==
-Date: Sat, 21 Jun 2025 18:13:39 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, "linux-iio@vger.kernel.org"
- <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, David Lechner <dlechner@baylibre.com>, Nuno
- =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH v1 1/1] iio: imu: inv_icm42600: Convert to uXX and sXX
- integer types
-Message-ID: <20250621181339.0331ab8b@jic23-huawei>
-In-Reply-To: <CAHp75Ve0aQLaRS1-J5WoCxUAfX+Y=s2oj4ZkVvUG1XysXopZxw@mail.gmail.com>
-References: <20250616090423.575736-1-andriy.shevchenko@linux.intel.com>
-	<FR3P281MB1757C6A610D39EA737A19EFBCE70A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-	<CAHp75Ve68H448v3Tgv930yoMYCCKVC3kefuP+Rermj7SaiP41g@mail.gmail.com>
-	<FR3P281MB175775DBE90C5469637F3C66CE73A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-	<CAHp75Ve0aQLaRS1-J5WoCxUAfX+Y=s2oj4ZkVvUG1XysXopZxw@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="oaXgOkPA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=3x
+	NFDTVICOmQII4bpxC9EylMmJp+OdhmQkqvvlvB3sI=; b=oaXgOkPABowmc3wQTU
+	8YNokkfZjhb5BUu7P/eqfjHdkKeyamOuyUiGOa/cNN3/J9IPg3BL87Inb97NlVzF
+	BYIp5WtNUm2cqd5xiu7nDv3Q0Y+b+ENvSkJNhyi2YOF5miNw7awbemNtyqSTSldy
+	Ve95sNvU8m/3eMlDmS92q5yoY=
+Received: from ThinkBook-14.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wAHZEWw6FZoUNUDBA--.9633S2;
+	Sun, 22 Jun 2025 01:15:29 +0800 (CST)
+From: Haiyue Wang <haiyuewa@163.com>
+To: Alistair Popple <apopple@nvidia.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-fsdevel@vger.kernel.org (open list:FUSE: FILESYSTEM IN USERSPACE),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Haiyue Wang <haiyuewa@163.com>
+Subject: [PATCH v3] fuse: Fix runtime warning on truncate_folio_batch_exceptionals()
+Date: Sun, 22 Jun 2025 01:13:51 +0800
+Message-ID: <20250621171507.3770-1-haiyuewa@163.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wAHZEWw6FZoUNUDBA--.9633S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZFWUArW5Zw1UAw1fCw1xXwb_yoWrKF4rpF
+	yYyF1UGr48Wr1UJr18A3WUtr1FvayDAF4UXr4xAr18tF17uw1DXr1qkr48KF98Jr1xX39r
+	trnrXw4vqryxXaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zieT5dUUUUU=
+X-CM-SenderInfo: 5kdl53xhzdqiywtou0bp/1tbiYBBya2hUqsLhZQABs4
 
-On Tue, 17 Jun 2025 21:33:46 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+The WARN_ON_ONCE is introduced on truncate_folio_batch_exceptionals() to
+capture whether the filesystem has removed all DAX entries or not.
 
-> On Tue, Jun 17, 2025 at 5:43=E2=80=AFPM Jean-Baptiste Maneyrol
-> <Jean-Baptiste.Maneyrol@tdk.com> wrote:
-> > >From: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > >Sent: Monday, June 16, 2025 16:33
-> > >On Mon, Jun 16, 2025 at 5:16=E2=80=AFPM Jean-Baptiste Maneyrol
-> > ><Jean-Baptiste.Maneyrol@tdk.com> wrote:
-> > > =20
-> > >> thanks a lot for having done all the work. =20
-> > >
-> > >Please, avoid top-posting!
-> > > =20
-> > >> Do you think it is possible to add a fixes tag so it can be backport=
-ed to ease automatic backport of further patches?
-> > >> Otherwise for sure all further fixes will have to be backported manu=
-ally. =20
-> > >
-> > >The idea behind the series that it may depend on some kind of
-> > >cleanups. In such a case (according to Greg KH) no need to have Fixes
-> > >tag on a cleanup, because it's confusing. On the contrary the
-> > >infrastructure for stable kernels will catch this up. You need to
-> > >follow the Documentation on how to submit for stable (basically the
-> > >main hint is to use stable@ in the Cc line _inside_ the commit
-> > >message, as a tag).
-> > > =20
-> > >> The driver code is full of intXX_t and uintXX_t types which is
-> > >> not the pattern we use in the IIO subsystem. Switch the driver
-> > >> to use kernel internal types for that. No functional changes. =20
->=20
-> > >> As noted before the pattern is used in less than 10% files in IIO,
-> > >> So it's safe to assume that IIO prefers uXX/sXX types over C99 ones.=
- =20
-> > > =20
-> >
-> > it is good for me if we can add Cc to stable.
-> > I don't know if I need to add the Cc tag here or when a fixed patch will
-> > require the rework. In doubt, here it is.
-> >
-> > Acked-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-> > Cc: stable@vger.kernel.org =20
->=20
-> It makes no sense here. This is a standalone change. It's not part of
-> any "fixes" series. You need to attach this patch to your series as
-> patch 1 and mark Cc stable all of the patches.
->=20
+And the fix has been applied on the filesystem xfs and ext4 by the
+commit 0e2f80afcfa6 ("fs/dax: ensure all pages are idle prior to filesystem unmount").
 
-I think this is hypothetical at the moment as the only series outstanding
-is the WOM one which isn't a fix.  So I don't think this patch will
-ever end up carrying a stable tag.  However, first time we get a fix
-that needs it, if Greg etc don't sort it out anyway (they often do!)
-then a simple mail to stable@vger.kernel.org to tell them to pick this
-and the fix will resolve it.
+Apply the missed fix on filesystem fuse to fix the runtime warning:
 
-For now I'll queue this patch up and ask for a rebase on the WOM
-series on top of it.
+[    2.011450] ------------[ cut here ]------------
+[    2.011873] WARNING: CPU: 0 PID: 145 at mm/truncate.c:89 truncate_folio_batch_exceptionals+0x272/0x2b0
+[    2.012468] Modules linked in:
+[    2.012718] CPU: 0 UID: 1000 PID: 145 Comm: weston Not tainted 6.16.0-rc2-WSL2-STABLE #2 PREEMPT(undef)
+[    2.013292] RIP: 0010:truncate_folio_batch_exceptionals+0x272/0x2b0
+[    2.013704] Code: 48 63 d0 41 29 c5 48 8d 1c d5 00 00 00 00 4e 8d 6c 2a 01 49 c1 e5 03 eb 09 48 83 c3 08 49 39 dd 74 83 41 f6 44 1c 08 01 74 ef <0f> 0b 49 8b 34 1e 48 89 ef e8 10 a2 17 00 eb df 48 8b 7d 00 e8 35
+[    2.014845] RSP: 0018:ffffa47ec33f3b10 EFLAGS: 00010202
+[    2.015279] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+[    2.015884] RDX: 0000000000000000 RSI: ffffa47ec33f3ca0 RDI: ffff98aa44f3fa80
+[    2.016377] RBP: ffff98aa44f3fbf0 R08: ffffa47ec33f3ba8 R09: 0000000000000000
+[    2.016942] R10: 0000000000000001 R11: 0000000000000000 R12: ffffa47ec33f3ca0
+[    2.017437] R13: 0000000000000008 R14: ffffa47ec33f3ba8 R15: 0000000000000000
+[    2.017972] FS:  000079ce006afa40(0000) GS:ffff98aade441000(0000) knlGS:0000000000000000
+[    2.018510] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    2.018987] CR2: 000079ce03e74000 CR3: 000000010784f006 CR4: 0000000000372eb0
+[    2.019518] Call Trace:
+[    2.019729]  <TASK>
+[    2.019901]  truncate_inode_pages_range+0xd8/0x400
+[    2.020280]  ? timerqueue_add+0x66/0xb0
+[    2.020574]  ? get_nohz_timer_target+0x2a/0x140
+[    2.020904]  ? timerqueue_add+0x66/0xb0
+[    2.021231]  ? timerqueue_del+0x2e/0x50
+[    2.021646]  ? __remove_hrtimer+0x39/0x90
+[    2.022017]  ? srso_alias_untrain_ret+0x1/0x10
+[    2.022497]  ? psi_group_change+0x136/0x350
+[    2.023046]  ? _raw_spin_unlock+0xe/0x30
+[    2.023514]  ? finish_task_switch.isra.0+0x8d/0x280
+[    2.024068]  ? __schedule+0x532/0xbd0
+[    2.024551]  fuse_evict_inode+0x29/0x190
+[    2.025131]  evict+0x100/0x270
+[    2.025641]  ? _atomic_dec_and_lock+0x39/0x50
+[    2.026316]  ? __pfx_generic_delete_inode+0x10/0x10
+[    2.026843]  __dentry_kill+0x71/0x180
+[    2.027335]  dput+0xeb/0x1b0
+[    2.027725]  __fput+0x136/0x2b0
+[    2.028054]  __x64_sys_close+0x3d/0x80
+[    2.028469]  do_syscall_64+0x6d/0x1b0
+[    2.028832]  ? clear_bhb_loop+0x30/0x80
+[    2.029182]  ? clear_bhb_loop+0x30/0x80
+[    2.029533]  ? clear_bhb_loop+0x30/0x80
+[    2.029902]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[    2.030423] RIP: 0033:0x79ce03d0d067
+[    2.030820] Code: b8 ff ff ff ff e9 3e ff ff ff 66 0f 1f 84 00 00 00 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 41 c3 48 83 ec 18 89 7c 24 0c e8 c3 a7 f8 ff
+[    2.032354] RSP: 002b:00007ffef0498948 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+[    2.032939] RAX: ffffffffffffffda RBX: 00007ffef0498960 RCX: 000079ce03d0d067
+[    2.033612] RDX: 0000000000000003 RSI: 0000000000001000 RDI: 000000000000000d
+[    2.034289] RBP: 00007ffef0498a30 R08: 000000000000000d R09: 0000000000000000
+[    2.034944] R10: 00007ffef0498978 R11: 0000000000000246 R12: 0000000000000001
+[    2.035610] R13: 00007ffef0498960 R14: 000079ce03e09ce0 R15: 0000000000000003
+[    2.036301]  </TASK>
+[    2.036532] ---[ end trace 0000000000000000 ]---
 
-It crossed with David's series doing {} to replace explicit memsets
-so needed a tiny bit of hand tweaking.
-Pushed out as testing for 0-day to look at.
+Fixes: bde708f1a65d ("fs/dax: always remove DAX page-cache entries when breaking layouts")
 
-Thanks,
+Signed-off-by: Haiyue Wang <haiyuewa@163.com>
+---
+v3:
+  - Rewrite the commit message to make things clean
+v2: https://lore.kernel.org/linux-fsdevel/20250608042418.358-1-haiyuewa@163.com/
+  - Use 'FUSE_IS_DAX()' to control DAX checking
+v1: https://lore.kernel.org/linux-fsdevel/20250604142251.2426-1-haiyuewa@163.com/
+---
+ fs/fuse/inode.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Jonathan
-
+diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+index bfe8d8af46f3..9572bdef49ee 100644
+--- a/fs/fuse/inode.c
++++ b/fs/fuse/inode.c
+@@ -9,6 +9,7 @@
+ #include "fuse_i.h"
+ #include "dev_uring_i.h"
+ 
++#include <linux/dax.h>
+ #include <linux/pagemap.h>
+ #include <linux/slab.h>
+ #include <linux/file.h>
+@@ -162,6 +163,9 @@ static void fuse_evict_inode(struct inode *inode)
+ 	/* Will write inode on close/munmap and in all other dirtiers */
+ 	WARN_ON(inode->i_state & I_DIRTY_INODE);
+ 
++	if (FUSE_IS_DAX(inode))
++		dax_break_layout_final(inode);
++
+ 	truncate_inode_pages_final(&inode->i_data);
+ 	clear_inode(inode);
+ 	if (inode->i_sb->s_flags & SB_ACTIVE) {
+-- 
+2.49.0
 
