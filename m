@@ -1,149 +1,176 @@
-Received: from mail-pg1-f196.google.com (mail-pg1-f196.google.com [209.85.215.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.smtpout.orange.fr (smtp-24.smtpout.orange.fr [80.12.242.24])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909A25258;
-	Sat, 21 Jun 2025 04:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7D019006B;
+	Sat, 21 Jun 2025 05:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750481829; cv=none; b=TUdM+oRVeOPOc8SFSINA+asEs2VwrDeVLGkPwEsTc5A0G7z2wYUcdlNlKm7wyOwHBMatmRUsjBejA11ExQgMtoZtEhWAWX57HRHfjGEavk4jJR++L0Ax0Gkh6X5uNG7CpFgyNyv/Nk68gq9pgzXpdX1/fQDghaj/XIRJ00GaDO0=
+	t=1750482848; cv=none; b=mF/eXnScN8YTU3Rl0ESzLgM/nQxO/m9fUw2e2CcmZC/dzTrToDzNaKuFUHZRVV8gMhFsMp1XOZg4fD1AUqzC3u8d0I8YwQPdG0HLpC/7jWKcjQj5sPM0gTAxtPqmQtUJxVufEPIHoG1aRFs2WtovQg8e7ro21Iqd20t6463SjWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750481829; c=relaxed/simple;
-	bh=SZMVQplISMRTt/KEL+/WHBkKFvZGfIuPgMGfMq6ma8k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=h3MAExkkeP4z+fzo1NMMuISwob5X/VnxWBzHDOXo2+quh9o4b1Q1YM27YZUUuVwBqkEtMQCd7TRAU3ymvEKwxJT/7UOLcC4bTtqAeEZtbq4Dqu8oJjk/tUImhcPfYJCKDeQV6h+t5jVP92Kd7u1peVR9mh083lrmlw8JZOeNhkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C3/5QXrK; arc=none smtp.client-ip=209.85.215.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750482848; c=relaxed/simple;
+	bh=Fs13S5mV2N+rapmpO5PMhl2lHEXr1e5vKrcHlEZHAwk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mZlZ6rYqJ63GrhQJIQq7lSaX0OHlYQnO88YMezwxDgEDSTtIGboyamBaKux7iQAzCNm81eJi075I4cHnfvC2qx4WpE0pnIXEdc/S2L0KG1IzoOyHwmrkA+LsXyBrKzCPYP+NU+xMz8cjYQOKNsbVO5ho9u1QzkSBqrGLqEVjdzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=lklxg3aA; arc=none smtp.client-ip=80.12.242.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3/5QXrK"
-Received: by mail-pg1-f196.google.com with SMTP id 41be03b00d2f7-af51596da56so2089656a12.0;
-        Fri, 20 Jun 2025 21:57:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750481825; x=1751086625; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Gk9KzOnDrveEvUaMvbrRa1a7xuC2txgmZLY22etVjU=;
-        b=C3/5QXrKu9RZYgpk7k1dfdPE6sFIF63t03NBWlwMVyHCWFj2c9SXsTf8mdGdRvMlMl
-         xhAIX0OgO9DCaywANuyUEkuKKdxJMAWLCrGW6a5B7aAxNwpkw84q4DBGkVPEwReJ3rve
-         JCcAqqgJ9tezz3GJC/0pGlDnEUS/7H+GJA/NZUSyGcsnOhXbi4qPMyQtul2SREm2tdfb
-         NxBPYa6dR/ff/uWHLiZMSuY80cEXSZE/EN526xBZPjq2O19hQuZ/njwFiAfJ/SLK/XYh
-         Ti75XrF6Uf1mtQEjKgdDQnIdKYBwYkayb6WYiBpPLoGnkhxAtCuiMzp3pb9aDmNiq41K
-         2hMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750481825; x=1751086625;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4Gk9KzOnDrveEvUaMvbrRa1a7xuC2txgmZLY22etVjU=;
-        b=RbmoSjToRcrV3vD5vzDAjZIPmFVbpFs5BR2Ep5ppuB5EyWQLJp+MCGBn5pFIjlnc91
-         tWyYNc1cOSu/uFFp0IGFx9mM4ggt7POBSVbhkZqavaWbU7RdoacX32GSeE/DDvCgS9tp
-         3uCvZePQ62GhH9L2PIY/YZDHjh5IPkQpoGQbHi5cRSBoV/aRbhfYu2qxZYue8pOrbJ9H
-         sUAZhz9CWyQu7Vz0jygFJsOWZpeGPR+90aosbi2l581iN1s93B93YlEQxCpp3i0wnScs
-         MjVARH4uISBZzvkiVun/mVuqS78X/WbCQ/yo2t1keroxB+kAclvA331lFfg8YjSJBgiV
-         Zkfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUwFSswbrkG+FsFL6Xdyn9tbR2j10f6QWCMoW+aze+C3a22Km2pxoW5l36abZoKLWjEXdLxIFIv8DX9CZrq@vger.kernel.org, AJvYcCVpnShyDFz3t69kjaE27XZP0wYL5lmYvuJuszQY2Y6QxtRHtRLEHWgJcRpezLHOnfQSJbM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmBAvpZefs5SChI9unjzsbZ1NJonNxeKn9Ogr6O6q+ImoLfaSY
-	dt98/LCUMJymQbPWUuXo7uaRut23LYnLw2pVS7efZQDrTfGjYBqeYm1c
-X-Gm-Gg: ASbGncuexoLoulZZU0La1tjPkVHOkpq9JDhVqkKzTrfTY9GsHxagHc7osZPCn76aafp
-	YW09J3G6jVCNGw3ga9OFwaMJa5K6qEqz9x9BAaXsD0pTU10y+7OCx4gobQ+k3w+LKPBwgknZ64N
-	g5oGV+c42Jto5v8Y5kSH1Hh3wqe4wp7Fq8IjERJmFIKtbYkkWf/AOeXSz9zMSlxw39jtb6Tw4J0
-	cCv1zHtwmKONU2MQZTExMyqBdy5DcYHPXXaAyapWN9EbozZzh7Z46YD/BSDk1p9cdebDBTavY+E
-	iX+07M4utiv2m/qimwGNyI6MTn9eaNi6o9uHYfqqwz+Q7t7OG4PPmQyBN9oDwoJKGjbbYhQArH4
-	D090=
-X-Google-Smtp-Source: AGHT+IHFsyBci8OAgKje9b5uzYUXjzK7zIS6C+PIkxYu+QCnmHONTiB7jHCMRL82Q/cufbSMYuCUEw==
-X-Received: by 2002:a05:6a20:ce43:b0:21e:f2c4:7743 with SMTP id adf61e73a8af0-22026d5f209mr9090570637.7.1750481824780;
-        Fri, 20 Jun 2025 21:57:04 -0700 (PDT)
-Received: from localhost.localdomain ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f1242bfasm2433134a12.46.2025.06.20.21.57.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 21:57:04 -0700 (PDT)
-From: Menglong Dong <menglong8.dong@gmail.com>
-X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
-To: alexei.starovoitov@gmail.com
-Cc: ast@kernel.org,
-	daniel@iogearbox.net,
-	john.fastabend@gmail.com,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Menglong Dong <dongml2@chinatelecom.cn>
-Subject: [PATCH bpf-next v2] bpf: make update_prog_stats always_inline
-Date: Sat, 21 Jun 2025 12:55:01 +0800
-Message-Id: <20250621045501.101187-1-dongml2@chinatelecom.cn>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="lklxg3aA"
+Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+ ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id SqY8ult9WtM5zSqY8u8f72; Sat, 21 Jun 2025 07:13:57 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1750482837;
+	bh=IYhV88Q6nKwevP/PKhZdWN/QZe4dYz40IUyaHhJ3CI8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=lklxg3aASpFJJtcsQqG1LQUQ/ZcSCn5T1QcnsoQILED/TWnQNnO9OhF57F3iaM3fH
+	 /GMipG+UVB1KbY+oJxeo/XCAOd44294grIvD3ByjY9jyKfEp5Ydh3SPr2LnP6+zXGB
+	 CPs2/GX9ECGwSzxbY2KKAIDF4PhE1c2PQzIcN72Mj79rGdj4T7EA7aa4AzRBUO9Xb9
+	 qSgThA7gft2uqhlmkWr0uOnzT2Qs/P0YqoCXU/IgsdiHY37MEAu0XnWM/m/PizH5TV
+	 cz0kubJvwAkPDdHLqxT1DPXRSSuIm+FYqTF3vvl6vVyBgUZxHByPgdUHQHiY2lojTF
+	 C3fw9I9ALomHw==
+X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Sat, 21 Jun 2025 07:13:57 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+Message-ID: <3c63b547-d3fc-40b8-9b7d-61660dc89425@wanadoo.fr>
+Date: Sat, 21 Jun 2025 07:13:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] tpm: Replace scnprintf() with sysfs_emit() and
+ sysfs_emit_at() in sysfs show functions
+To: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>, peterhuewe@gmx.de,
+ jarkko@kernel.org
+Cc: jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250619131312.407615-1-chelsyratnawat2001@gmail.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250619131312.407615-1-chelsyratnawat2001@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-The function update_prog_stats() will be called in the bpf trampoline.
-In most cases, it will be optimized by the compiler by making it inline.
-However, we can't rely on the compiler all the time, and just make it
-__always_inline to reduce the possible overhead.
+Le 19/06/2025 à 15:13, Chelsy Ratnawat a écrit :
+> Replace calls to scnprintf() with sysfs_emit() and sysfs_emit_at() in
+> sysfs show functions. These helpers are preferred in sysfs callbacks
+> because they automatically handle buffer sizing (PAGE_SIZE) and
+> improve safety and readability.
+> 
+> Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+> ---
+> Changes in v2:
+> - Corrected sysfs_emit_at() usage to pass buf as first argument
+> 
+>   drivers/char/tpm/tpm_ppi.c | 26 +++++++++++++-------------
+>   1 file changed, 13 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm_ppi.c b/drivers/char/tpm/tpm_ppi.c
+> index bc7b1b4501b3..2c0d1859284d 100644
+> --- a/drivers/char/tpm/tpm_ppi.c
+> +++ b/drivers/char/tpm/tpm_ppi.c
+> @@ -52,7 +52,7 @@ static ssize_t tpm_show_ppi_version(struct device *dev,
+>   {
+>   	struct tpm_chip *chip = to_tpm_chip(dev);
+>   
+> -	return scnprintf(buf, PAGE_SIZE, "%s\n", chip->ppi_version);
+> +	return sysfs_emit(buf, "%s\n", chip->ppi_version);
+>   }
+>   
+>   static ssize_t tpm_show_ppi_request(struct device *dev,
+> @@ -87,11 +87,11 @@ static ssize_t tpm_show_ppi_request(struct device *dev,
+>   		else {
+>   			req = obj->package.elements[1].integer.value;
+>   			if (tpm_ppi_req_has_parameter(req))
+> -				size = scnprintf(buf, PAGE_SIZE,
+> +				size = sysfs_emit(buf,
+>   				    "%llu %llu\n", req,
+>   				    obj->package.elements[2].integer.value);
+>   			else
+> -				size = scnprintf(buf, PAGE_SIZE,
+> +				size = sysfs_emit(buf,
+>   						"%llu\n", req);
 
-Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
----
-v2:
-- split out __update_prog_stats() and make update_prog_stats()
-  __always_inline, as Alexei's advice
----
- kernel/bpf/trampoline.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+Nitpick: Can fit on the same line now
 
-diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-index c4b1a98ff726..1f92246117eb 100644
---- a/kernel/bpf/trampoline.c
-+++ b/kernel/bpf/trampoline.c
-@@ -911,18 +911,16 @@ static u64 notrace __bpf_prog_enter_recur(struct bpf_prog *prog, struct bpf_tram
- 	return bpf_prog_start_time();
- }
- 
--static void notrace update_prog_stats(struct bpf_prog *prog,
--				      u64 start)
-+static void notrace __update_prog_stats(struct bpf_prog *prog, u64 start)
- {
- 	struct bpf_prog_stats *stats;
- 
--	if (static_branch_unlikely(&bpf_stats_enabled_key) &&
--	    /* static_key could be enabled in __bpf_prog_enter*
--	     * and disabled in __bpf_prog_exit*.
--	     * And vice versa.
--	     * Hence check that 'start' is valid.
--	     */
--	    start > NO_START_TIME) {
-+	/* static_key could be enabled in __bpf_prog_enter*
-+	 * and disabled in __bpf_prog_exit*.
-+	 * And vice versa.
-+	 * Hence check that 'start' is valid.
-+	 */
-+	if (start > NO_START_TIME) {
- 		u64 duration = sched_clock() - start;
- 		unsigned long flags;
- 
-@@ -934,6 +932,13 @@ static void notrace update_prog_stats(struct bpf_prog *prog,
- 	}
- }
- 
-+static __always_inline void notrace update_prog_stats(struct bpf_prog *prog,
-+						      u64 start)
-+{
-+	if (static_branch_unlikely(&bpf_stats_enabled_key))
-+		__update_prog_stats(prog, start);
-+}
-+
- static void notrace __bpf_prog_exit_recur(struct bpf_prog *prog, u64 start,
- 					  struct bpf_tramp_run_ctx *run_ctx)
- 	__releases(RCU)
--- 
-2.39.5
+>   		}
+>   	} else if (obj->package.count == 2 &&
+> @@ -100,7 +100,7 @@ static ssize_t tpm_show_ppi_request(struct device *dev,
+>   		if (obj->package.elements[0].integer.value)
+>   			size = -EFAULT;
+>   		else
+> -			size = scnprintf(buf, PAGE_SIZE, "%llu\n",
+> +			size = sysfs_emit(buf, "%llu\n",
+>   				 obj->package.elements[1].integer.value);
+>   	}
+>   
+> @@ -211,9 +211,9 @@ static ssize_t tpm_show_ppi_transition_action(struct device *dev,
+>   	}
+>   
+>   	if (ret < ARRAY_SIZE(info) - 1)
+> -		status = scnprintf(buf, PAGE_SIZE, "%d: %s\n", ret, info[ret]);
+> +		status = sysfs_emit(buf, "%d: %s\n", ret, info[ret]);
+>   	else
+> -		status = scnprintf(buf, PAGE_SIZE, "%d: %s\n", ret,
+> +		status = sysfs_emit(buf, "%d: %s\n", ret,
+>   				   info[ARRAY_SIZE(info)-1]);
+
+Nitpick: Alignment could be updated (same for others below)
+
+>   	return status;
+>   }
+> @@ -255,22 +255,22 @@ static ssize_t tpm_show_ppi_response(struct device *dev,
+>   	res = ret_obj[2].integer.value;
+>   	if (req) {
+>   		if (res == 0)
+> -			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
+> +			status = sysfs_emit(buf, "%llu %s\n", req,
+>   					   "0: Success");
+>   		else if (res == 0xFFFFFFF0)
+> -			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
+> +			status = sysfs_emit(buf, "%llu %s\n", req,
+>   					   "0xFFFFFFF0: User Abort");
+>   		else if (res == 0xFFFFFFF1)
+> -			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
+> +			status = sysfs_emit(buf, "%llu %s\n", req,
+>   					   "0xFFFFFFF1: BIOS Failure");
+>   		else if (res >= 1 && res <= 0x00000FFF)
+> -			status = scnprintf(buf, PAGE_SIZE, "%llu %llu: %s\n",
+> +			status = sysfs_emit(buf, "%llu %llu: %s\n",
+>   					   req, res, "Corresponding TPM error");
+>   		else
+> -			status = scnprintf(buf, PAGE_SIZE, "%llu %llu: %s\n",
+> +			status = sysfs_emit(buf, "%llu %llu: %s\n",
+>   					   req, res, "Error");
+>   	} else {
+> -		status = scnprintf(buf, PAGE_SIZE, "%llu: %s\n",
+> +		status = sysfs_emit(buf, "%llu: %s\n",
+>   				   req, "No Recent Request");
+>   	}
+>   
+> @@ -314,7 +314,7 @@ static ssize_t show_ppi_operations(acpi_handle dev_handle, char *buf, u32 start,
+>   		}
+>   
+>   		if (ret > 0 && ret < ARRAY_SIZE(info))
+> -			str += scnprintf(str, PAGE_SIZE, "%d %d: %s\n",
+> +			str += sysfs_emit_at(buf, str - buf, "%d %d: %s\n",
+>   					 i, ret, info[ret]);
+
+You should remove 'str' and use an int for the length instead.
+This would be much standard.
+
+ > git grep sysfs_emit_at[^,]*,[^,-]*-
+does not find any such pointer manipulation to compute the length.
+
+CJ
+
+
+
+>   	}
+>   
 
