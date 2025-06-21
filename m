@@ -1,129 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD6B199BC;
-	Sat, 21 Jun 2025 16:58:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6166E1D5AB5
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 16:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750525115; cv=none; b=qF0Y8DFdem01N5uBKpYZozbPH1DD/nlmTH9RZFArocmwCsazuGvaPa9EKkI1olVZd+vIICRzrfDkzRtG3wZskPiRvvzPwNTCgY5hL4T844bsT7QodnepoWBkegn29NcEwkZ6dFQDrF0oNkWf3EeazLafsWDCYE19B56ruEqH9RU=
+	t=1750525125; cv=none; b=JQ28vXuUUNIJPuzpaCklaBpQSsFAMI6VcMISFQ0eJWQGubfH2WUlO+S+Zb4+OpDbOpajlMR4aHb464v1MxzmdD4f0a4Azlwtwrx3ayJdZb5gyjb83fYCRJ/JdUAHCT1dLKq8OCIbn+rZKIaLS/3DhjNlaGPG0UQxlSAVsoeZlbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750525115; c=relaxed/simple;
-	bh=pgvEFoHgM1otb7ZNHD/JiN1YKjs47RtPcLXUKBUPcpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q17uA6DrZvPuG2HOJPT6RukCcwggZC0M8dlO0iCETFcdmKxuION2m2Xq2kAPiIcBfOUq8eq7hXMtMUZR1bsItXZ41W5L/tWJieEk25eDUO171vysgVS8hAIvlPeudlZh/Xy1DR/U7Ns5g6/FsxJURkMHxEBUPcPs+I2IcNBdUP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h7zuMRzv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750525125; c=relaxed/simple;
+	bh=MYt2MM/R1BIsqZYsFpNLDqolMhT71IOw7GSie+ikohU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hREQxi++iyy5H65e3eFGWmzRr2Di2ZiuupGOMlLgWAu31D0e1ba6RW/KwG5Cu5eTai/GkZCjPNV3OX/obmZE/Fm+f0xs2fwOv0d6ejWXOA1qs+O/3/eFNkMGdQzPnOtBk6OVVSmcf72zobTlbnHASHv1Ur052GBKTege7R7zsL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=FFK8NHgQ; arc=none smtp.client-ip=121.127.44.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h7zuMRzv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25C23C4CEE7;
-	Sat, 21 Jun 2025 16:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750525114;
-	bh=pgvEFoHgM1otb7ZNHD/JiN1YKjs47RtPcLXUKBUPcpE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=h7zuMRzvanUNmYdOYp370APiNwoSXF/pTcQ6UeF+Ag4AlXaN+4GL0wloPCf/yrPl7
-	 qstTQfOd4QAMpym73sPrMMlRKJhLUO20E/gEMDjj9cWXNcva4VWRb/OoJxi5cjeo7a
-	 WuTqhEC0J40etibBuiUGdZV9Tpgh3BptflnqWA6Z8Th2job7RiYTAlkEppK3Rk7e8S
-	 EAgI1Y/+xlJ/x1SyQeYfmXVnTNXP4TvSjXNKhj4UazJA0gyBcOowsCYp0+54fTAKLA
-	 EcVG8ZfY+Jl/EhHhOfJAbsNkzvYm5FR/bvxbrtOqJq4MrQIapQVLnwwgzwN9BfcArb
-	 nCUdd8I1XwjEg==
-Date: Sat, 21 Jun 2025 17:58:24 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, dlechner@baylibre.com,
- nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, eraretuya@gmail.com
-Subject: Re: [PATCH v9 05/11] iio: accel: adxl345: simplify reading the FIFO
-Message-ID: <20250621175824.57bb9d9c@jic23-huawei>
-In-Reply-To: <CAFXKEHaGk5NZ4dT9xLkAfirn974P9miwjs=5N+PTqJ2x00QOiA@mail.gmail.com>
-References: <20250610215933.84795-1-l.rubusch@gmail.com>
-	<20250610215933.84795-6-l.rubusch@gmail.com>
-	<20250614144750.1f1a7a0f@jic23-huawei>
-	<CAFXKEHaGk5NZ4dT9xLkAfirn974P9miwjs=5N+PTqJ2x00QOiA@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="FFK8NHgQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: MIME-Version: Message-ID: Date: Subject: Cc:
+ To: From; q=dns/txt; s=fe-e1b5cab7be; t=1750525121;
+ bh=4cuZR2OeJH9U0xo9iqQwKBOuSBnLCscDjqcJkUSqVlk=;
+ b=FFK8NHgQ31ekNfm4u/gEMUnu+arZHGBeICnZcwormlTzeGgUHp7RTxHAvi65fQ/oyahysMyU7
+ Bev4WfdhxEihd3Y8MGixvmFNbxfCufUssYi/d9dKX+jVNCFwez0BKGJW6Grs5jFZFu/W7+9yH+r
+ TisXaNByNgCgHrj61053DTz1Euh/0GQwrZo297nb94//7V5efIjbZ5DMH3wCzGW4O2LJdGnhXQU
+ 1ztZa+K/4e3BT9mti8+a+rE+sghTc5JvMDdKkK4W5ONj/FKJ+DdHc7ZxufjQP2yqIDdE82NrgR0
+ dEPMKsTBkMhTleSOnLi717gqMEiNa39EVp2WVZpwEGlA==
+X-Forward-Email-ID: 6856e4be9932e6905b7c425e
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 121.127.44.73
+X-Forward-Email-Version: 1.0.3
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+From: Jonas Karlman <jonas@kwiboo.se>
+To: Heiko Stuebner <heiko@sntech.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonas Karlman <jonas@kwiboo.se>
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: rockchip: Fix eMMC HS200 mode on Radxa E20C
+Date: Sat, 21 Jun 2025 16:58:30 +0000
+Message-ID: <20250621165832.2226160-1-jonas@kwiboo.se>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, 16 Jun 2025 00:14:47 +0200
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+eMMC HS200 mode (1.8V I/O) is supported by the MMC host controller on
+RK3528 and works with the optional on-board eMMC module on Radxa E20C.
 
-> Hi Jonathan,
->=20
-> On Sat, Jun 14, 2025 at 3:47=E2=80=AFPM Jonathan Cameron <jic23@kernel.or=
-g> wrote:
-> >
-> > On Tue, 10 Jun 2025 21:59:27 +0000
-> > Lothar Rubusch <l.rubusch@gmail.com> wrote:
-> > =20
-> > > Bulk reading from the FIFO can be simplified. Remove unnecessary
-> > > variables and simplify reading sets of x-, y- and z-axis measurements.
-> > >
-> > > This is a refactoring change and should not impact functionality.
-> > >
-> > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> > > ---
-> > >  drivers/iio/accel/adxl345_core.c | 6 ++----
-> > >  1 file changed, 2 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adx=
-l345_core.c
-> > > index 18c625d323ba..dcfbfe4cac0f 100644
-> > > --- a/drivers/iio/accel/adxl345_core.c
-> > > +++ b/drivers/iio/accel/adxl345_core.c
-> > > @@ -884,15 +884,13 @@ static int adxl345_get_samples(struct adxl345_s=
-tate *st)
-> > >   */
-> > >  static int adxl345_fifo_transfer(struct adxl345_state *st, int sampl=
-es)
-> > >  {
-> > > -     size_t count;
-> > >       int i, ret =3D 0;
-> > >
-> > > -     /* count is the 3x the fifo_buf element size, hence 6B */
-> > > -     count =3D sizeof(st->fifo_buf[0]) * ADXL345_DIRS;
-> > >       for (i =3D 0; i < samples; i++) {
-> > >               /* read 3x 2 byte elements from base address into next =
-fifo_buf position */
-> > >               ret =3D regmap_bulk_read(st->regmap, ADXL345_REG_XYZ_BA=
-SE,
-> > > -                                    st->fifo_buf + (i * count / 2), =
-count);
-> > > +                                    st->fifo_buf + (i * ADXL345_DIRS=
-),
-> > > +                                    2 * ADXL345_DIRS); =20
-> >                                        sizeof(st->fifo_buf[0]) * ADXL34=
-5_DIRS);
-> >
-> > As it's not locally obvious where that 2 comes from. =20
->=20
-> Hm, I left the comment some lines above: "read 3x 2 byte elements from
-> base address into next fifo_buf position" - so, the 2 comes from the 2
-> bytes. 3x because of the 3-axis sensor, so 3 axis times 2 bytes. How
-> can I improve it? The patch is just a simplification, removing that
-> unnecessary count variable.
+Be explicit about HS200 support in the device tree for Radxa E20C.
 
- sizeof(st->fifo_buf[0]) * ADXL345_DIRS);
+Fixes: 3a01b5f14a8a ("arm64: dts: rockchip: Enable onboard eMMC on Radxa E20C")
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+---
+This also help assist boot firmware that consume Linux device tree's to
+use HS200 mode when booting from eMMC, see [1] for a related U-Boot fix.
 
-improves it by making it clear where the 2 comes from.
-Getting rid of count is good, but that remaining 2 *=20
-should be replaced by using sizeof() the buffer element.
+[1] https://source.denx.de/u-boot/u-boot/-/commit/f8cb3fde935ed003ad1d7cf6a06d59586fe65cd5
+---
+ arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-The comment would then be unnecessary as we are sizing it directly from
-the fifo storage.  Fine to leave it if you like though.
-
-Jonathan
-
-
->=20
-> > =20
-> > >               if (ret)
-> > >                       return ret;
-> > > =20
-> > =20
+diff --git a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
+index e4333674a0ec..12eec2c1db22 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
+@@ -283,6 +283,7 @@ &saradc {
+ &sdhci {
+ 	bus-width = <8>;
+ 	cap-mmc-highspeed;
++	mmc-hs200-1_8v;
+ 	no-sd;
+ 	no-sdio;
+ 	non-removable;
+-- 
+2.49.0
 
