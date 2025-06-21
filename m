@@ -1,118 +1,88 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4325.protonmail.ch (mail-4325.protonmail.ch [185.70.43.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA5F149C4A;
-	Sat, 21 Jun 2025 19:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DBC1361;
+	Sat, 21 Jun 2025 19:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750534121; cv=none; b=UMJbXNgKY3goF/2yNVOWiwQTBAEl7eOs96TWiSWEdzuHNClBIgEcYunsu6RkFxKZF6C5z1MM4g8UQ9zl2ApCUKcxuUE4PSzmzoAq8My9EY3TmwnlELjdWfX0fuiBRoKsJRRaGQnMNc0+lj4ALxkYF7YbfvsxGEg+HJTmFidYIac=
+	t=1750534270; cv=none; b=mXxzhAkJU7w+WfXop83UcU4YmRFeDXRuqucMR8hHJB8rbCIY8bxjMwPSr/Og+73CqHDGFCcTsYBFvI0nVNErYMoIjhpPNs8acVMZh2qHVv0f4baVtbwqPxnV3hiX5wHI9GKfQv9nh0LI2CWBYfHC7azG/BQ0uTS1Vq1j2o4p5Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750534121; c=relaxed/simple;
-	bh=S4OKtTT6cWKlwgjl1Q3CUq8rOGPPkatKfAaWVfK8JkA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jtgvuRenQQQ7vMXlI0eUSzeEnYtSdshIGEgDXvuwLxp17Cg+wFI8H47tctZ6ixCT//GN3uvWZLWlBI3Kp8nbapAeX8n3W+YJiiuiaXhRRMPb+VPHJyf13LFqWz1mHiUCpHfiGMhDo+dp/kpBr8lhDNejjkSxmSSnZHsCZws3lwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BqRO8KZ1; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750534270; c=relaxed/simple;
+	bh=8GUx0CFXgZvbQXHjRU4GIpNFxMcjxps2dflD5GrQv+g=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EoDa5NXA3jkBM2G1V1uGZxbjx1MPI/mR2o143UBb+ZBQNtPd+LHqpYYOib2wGkvNfKyUM2yMvLlNqVJNQLWLaIS0utnZeEj+7AWSQVsZiabzfNMPLLm2o4FllRAkwkhi2lBCmZMNyYsBSObJjR6xAdtacc12dqZaOXc9ZvuQ2P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=HduF9m21; arc=none smtp.client-ip=185.70.43.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BqRO8KZ1"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ade5b8aab41so601445266b.0;
-        Sat, 21 Jun 2025 12:28:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750534118; x=1751138918; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gYQ4/itaUR6tob8HAxT8Q/X5YuehU1pRS4XG3Rk4W2g=;
-        b=BqRO8KZ1+IXTonTjzbzZv+XTbBfuYn1vXI3IEY0g8GSErLbX8wQFQPWscJyALZSAq6
-         s0Oe0cR/7TRj/kGcGhPspgRxRhsHmwPBXDmDG26Omdh7fkHxbKUAxPyb43/Gx/A99TvZ
-         lWmsexbutKGd0msId5zCfAnSSas4mMglY39ebwTDv8J+ZGx6wySXte0OlpV2nfczH1JP
-         PIPntjiZq9OWtyRNG3yrEh6PpzF7xwboAGQ39tCQBcpaQ0dOGGOs5rLk5qnwFbuKkyfX
-         9w+HjrYyYwZ1LljIjiQNnXijtjqd2SlZT66aNhHjMmao5HxFHBNx9OT0+gPxsEBKrMLq
-         FkPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750534118; x=1751138918;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gYQ4/itaUR6tob8HAxT8Q/X5YuehU1pRS4XG3Rk4W2g=;
-        b=O7IzGp+hNUVD925WOItwUrmWO1uf1Se4vOA+3930nh2e7Hxp5GalOxNIFgpsuxcQRj
-         U0UKuA3GHY6mZLGEzhmWHSZ7Zct6946JV8qKZHqjQ4y6v/uJjSx2W80lmPJd60XDhsdB
-         gQWrLiQ8DyYWyI2mZDzqV48RzVj5D3MiXdh7drs2uby4Pt3vI1XASwhwqF/XwSsbSjze
-         acMC7EMHgTbvBXb6pmu9G3MHv4cgcGMVmztt7eQSQRt1FSBQjjgmk/ydSpIyVLs8Uo50
-         wp2a0U8WynhF4TT9FGQq6ywugZ0E1TV8BnKfBaRw/DuvNNGcS1B29dtU9tLrLAcGnKiX
-         tBwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5zhxfZTVHIp0IpmmViz5Sdfh0Iebpe7BUys/vOTwYrzGm+JaKEd8vIdz4Nn1Mtc3zCJd8lK8IZQU=@vger.kernel.org, AJvYcCWEx8C3rJaf+HveBNbqqjpoCJfnfmOHRK4YlA8iHLFPy0a3JcduoCkUwUO9NI/hHPs3hpkYO1rF0yam@vger.kernel.org, AJvYcCXlG5UjfXXKAbZ6rTJ6O04dq7b5VDOeHL55zvJGeC8lanwWlueUf1qLt/pIF6lzSc867VgXTCt8h7QSH1HI@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRO8N5x2BDIMmuAa+3iy+9g7e8uwbfKSjM9acD1/EZ1ZgcexN8
-	wWM1dPiojG0A60nHEHSj8ySsVfvKSKHYZULPLrzK+DlB4sb+pnrX6Selw04jjLq/QLatARtDwJ6
-	UYzt/svWtoZmB+8KjWguSo8JckLB6jpg=
-X-Gm-Gg: ASbGncvazsAK5AmxItgfW2BkQrTEjgLlT63IiAT93H16T0mx4q70phgTzEEbeitMg7A
-	NbMRs1KlbuROA1D48abc7WCp0vM3PNDtfD1wNJxivbN6KK5odQ9jd55d+yFQsREYp0eDOu6N8dL
-	qBZjo+bdS8XvAzQvSOWxmDvlhRdo04WoDHD7df+2h5GHw=
-X-Google-Smtp-Source: AGHT+IGq4wdlZtzL7/eUZnOvJdxZsa9RJazImtZ/DLpYCh8M2bkcJZ2WqbFB+XVyYbn+lvT0ARUe1vhYgow95ctqU1Q=
-X-Received: by 2002:a17:906:6a2a:b0:ad8:9909:20b5 with SMTP id
- a640c23a62f3a-ae057c3ceb1mr704858266b.56.1750534118213; Sat, 21 Jun 2025
- 12:28:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="HduF9m21"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1750534265; x=1750793465;
+	bh=8GUx0CFXgZvbQXHjRU4GIpNFxMcjxps2dflD5GrQv+g=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=HduF9m21l/K79zE4ap77nzeXyKdalQiw6+opOnSaflFcjHm8nKdTYT2+rFFoaj4mW
+	 ld1RU0SPZb44WH86P8Mws8AHvgIFoyLDx9inR+HqIDnI8grVo3AgklsHghAwUrNUz5
+	 sL3F1tJlho634mWRjKJTtvhuqHr37a+GCIRgF+KfzK18Fnmlz6QsihL8ufuJvz4IIO
+	 1WuoiQN0todaSE+Vr4R6TT7H4o/VALHlphnNMOk+YAlngAdFJmuXXqwfSUZ5xji/EH
+	 /jWAJO0TTyrTctOefo3KI0yfaoohj2xyaWYjMavw6xAr4crZHiDbuE3ZhSIl+dEXIb
+	 FhiRvrkAI7tLg==
+Date: Sat, 21 Jun 2025 19:31:00 +0000
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+From: cristian_ci <cristian_ci@protonmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: msm8953: Add device tree for Billion Capture+
+Message-ID: <Fp48ghZvedurtk8ta0jccDkZvg7whZFgX0Ra7_AQuMwS12QxAxHqgcOMP_SbXsnLNme2LWWz6ZshoGFTQT6nVvfe-4B_v-2hkRxpgcb9bq0=@protonmail.com>
+In-Reply-To: <557166bd-cbe2-4a7b-bd6c-8daec1cecc3d@oss.qualcomm.com>
+References: <20250620-rimob-initial-devicetree-v1-0-8e667ea21f82@protonmail.com> <20250620-rimob-initial-devicetree-v1-3-8e667ea21f82@protonmail.com> <557166bd-cbe2-4a7b-bd6c-8daec1cecc3d@oss.qualcomm.com>
+Feedback-ID: 27475468:user:proton
+X-Pm-Message-ID: 15bc67b8a7af4ebeea515c3c4e5f83471731488c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610215933.84795-1-l.rubusch@gmail.com> <20250610215933.84795-9-l.rubusch@gmail.com>
- <aErE0xmlm4qBHg03@smile.fi.intel.com> <CAFXKEHao9xKsizGLMQxikcLbG5Him9n9i3btLtqK2Orj_39a9Q@mail.gmail.com>
- <CAHp75VfxqMh8j=TAPFXTDx2PSPVU=No=vDdo+-J-ETDavuYnRA@mail.gmail.com>
-In-Reply-To: <CAHp75VfxqMh8j=TAPFXTDx2PSPVU=No=vDdo+-J-ETDavuYnRA@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 21 Jun 2025 22:28:02 +0300
-X-Gm-Features: AX0GCFsnAsR5Ei8YbwLlhR2Ri10EzbsrReRb2rkRRuCTnBFAkwAXJzvprrgTzcc
-Message-ID: <CAHp75VfCJSytzFHKAjCiW8xBsb+qQQjb7kyBnoH14FWtqmJkGg@mail.gmail.com>
-Subject: Re: [PATCH v9 08/11] iio: accel: adxl345: add inactivity feature
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, lars@metafoo.de, 
-	Michael.Hennerich@analog.com, jic23@kernel.org, dlechner@baylibre.com, 
-	nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, eraretuya@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 21, 2025 at 10:24=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Sat, Jun 21, 2025 at 9:54=E2=80=AFPM Lothar Rubusch <l.rubusch@gmail.c=
-om> wrote:
-> > On Thu, Jun 12, 2025 at 2:15=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@intel.com> wrote:
-> > > On Tue, Jun 10, 2025 at 09:59:30PM +0000, Lothar Rubusch wrote:
+On Saturday, June 21st, 2025 at 12:17, Konrad Dybcio <konrad.dybcio@oss.qua=
+lcomm.com> wrote:
+> > +
+> > +&sdhc_1 {
+> > + vmmc-supply =3D <&pm8953_l8>;
+> > + vqmmc-supply =3D <&pm8953_l5>;
+>=20
+>=20
+> you should add regulator-allow-set-load to these vregs
 
-...
+So, do you mean I should add 'regulator-allow-set-load' property to 'pm8953=
+_l5' and 'pm8953_l8' regulators? If so, should I do that for 'pm8953_l11' a=
+nd 'pm8953_l12' regulators too (sdhc_2)?
 
-> > > > +             val =3D (adxl345_odr_tbl[odr][0] > max_boundary)
-> > > > +                     ? min_boundary : max_boundary - adxl345_odr_t=
-bl[odr][0];
-> > >
-> > > clamp() ?
-> >
-> > Isn't clamp() dealing with signed ints?
->
-> clamp() is a macro.
->
-> > Also, I'll take the diff from
-> > max_boundary here.
->
-> How does it affect usage of the clamp()?
+> [...]
+>=20
+> > +&tlmm {
+> > + gpio-reserved-ranges =3D <0 4>,
+>=20
+>=20
+> These GPIOs correspond to I2C/SPI_1
+>=20
+> <135 4>;
+>=20
+>=20
+> And these correspond to I2C/SPI_7
+>=20
+> Without much more knowledge, I would guesstimate one of them is
+> for a fingerprint reader and the other for NFC eSE
+>=20
+> Konrad
 
-I see what you mean, but this can be done by clamping the signed values.
-So, in any case try to improve this and add a comment explaining why
-the maximum boundary is adjusted.
-
-> > So, I'll try staying with the current line and hope
-> > it's fine.
->
-> I suggest you spend some time thinking about this expression on how to
-> make it easier to read and understand. In my opinion clamp() helps a
-> lot in this case.
-
---=20
-With Best Regards,
-Andy Shevchenko
+I made that check in past and, while it looks like 'gpio16' and 'gpio17' ar=
+e assigned to nfc pinctrl (though, nfc appears not to be implemented in thi=
+s device, considering also the lack of 'phandle' for such pinctrls) in down=
+stream dts, the devicetree pinctrl still doesn't mentions the gpios associa=
+ted with the fingerprint node (which is, instead, implemented in this devic=
+e). So, I'm not able to verify if gpios 0-3 and gpios 135-138 are related t=
+o fingerprint and secure element, respectively.
