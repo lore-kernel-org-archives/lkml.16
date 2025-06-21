@@ -1,236 +1,208 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD76288CC
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 15:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F77BE545
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 15:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750520546; cv=none; b=NFgF4ivG8P5GIle/WpVNRiaO3xD7J4IlENlHH2aPpjja+Z5Qb1HHdkbkwX/CVq7Znzd4qYyJihwPGOWXMz+I5PjX2pN4WJ8v9aDUZfSJCEhZgo7WQ6Am3yVCcjfk/qnf3ev9+/woC1+2agMNQoPY2dXQwulP2ail3PdECX+AlIY=
+	t=1750520664; cv=none; b=e7ty5/0CnRXlEt2fl4EnWJYnpF52bDquwV7GfYV29/H0A8WMTRxLrWA8tMqmMgWaaOvT2ZTJg8xifZV8XJ46ZPjpr2zejl+bkuj1o9UWC7nGMmqlfiYIDtc0d9aZWxG1spYsLBd6cCbM+ndY0kg/9K2B+rK9jK0I18WbvIj8rtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750520546; c=relaxed/simple;
-	bh=Xr/UM44xfNVWN+nqycgJvhMyK92KfXG2//OD+BsMsGI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=VYMIXDZjzCR2fIoyYRVyliUZywxF6ZBTN8j4MRPIxxiShPVBxKXBn2iPIvsxaZz/qgNk/GGDCDIN8bhQjELnM6Y9RgORZGPfJgpV64sRDhD8wQ/CgBxHUtmUcxx3ypkhcDhQnQyutO21IecmuKSleRvzq8/y2JuHyoUSKsTu8GE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DZuoZrQy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qRpVT1Ez; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DZuoZrQy";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qRpVT1Ez"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750520542;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s4i8scJlAGV+GpOYEKKV1KzgbXWXKbnRcAtdwbZvm+o=;
-	b=DZuoZrQywZo0EWOkvlZ6JKShxNfBI3anJJsSF2LlOA6eey7KS5Ix8wFcpkZuxC/uwWdblX
-	fSmnXB0Is9HURc/t2PsZSw8X0uNseZamH3EPrKEsxRQWEK4LNKFMBcRibffpZjRwb+3UFE
-	v3dAWwA/7ffliEoymEbNogcswsrVM/4o6Qxth3HYnO4Te+69qBVXqSwrwCcqQ0ciSZ2sOC
-	AZ/W3ZK56dXwazVHeRzW4CzUotkAsnyglnnPFhYvlZrfnA/gkvWXCn4xhPn7lpCnOFZiei
-	QcgeoyP3b8BDJ2Pj4L3BTs4/mmTuTem8MYPzCx1SO2GRQfgSRz6VI+esqORTYg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750520542;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s4i8scJlAGV+GpOYEKKV1KzgbXWXKbnRcAtdwbZvm+o=;
-	b=qRpVT1Ez6I3Jig3Hq77jQ0ZnWSZC25OrI+fIwOXae+2eNk5uqx6Qnyya1ircIFNVxhf0Jj
-	P2HAVkROxC6gJ+Cw==
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Alexandre Ghiti
- <alex@ghiti.fr>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Nathan Chancellor
- <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Andy Lutomirski <luto@kernel.org>, Vincenzo Frascino
- <vincenzo.frascino@arm.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v3 3/3] vdso: Reject absolute relocations during build
-In-Reply-To: <20250612155635-ecade4e1-0235-464a-bcb3-293f7452510a@linutronix.de>
-References: <20250611-vdso-absolute-reloc-v3-0-47897d73784b@linutronix.de>
- <20250611-vdso-absolute-reloc-v3-3-47897d73784b@linutronix.de>
- <7ddda233-99f7-468b-842d-8469f0a86e77@ghiti.fr>
- <20250612155635-ecade4e1-0235-464a-bcb3-293f7452510a@linutronix.de>
-Date: Sat, 21 Jun 2025 17:42:20 +0200
-Message-ID: <87cyaxp0df.ffs@tglx>
+	s=arc-20240116; t=1750520664; c=relaxed/simple;
+	bh=7f7amSMuVqhnt1E7Yynp2wql3yl9a1bwxxi+tQFLazo=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Ut/rtwKP0+FTWHsSTEmpeOyjBl0pJ83XlH2RhjqrsWzkNuIVNnhIcL2N1lz4pxGtS4tZEaFtkvPFojGszr1/xW2jUsfRfpamGBGQojRiCp8yp5O0TPqtW4V+aiu8VWX75GmJjJL7VgyzQiNfl2r0KxJBgI6SD5nNuLGqvT/P510=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3ddcb80387dso22089885ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 08:44:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750520661; x=1751125461;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=m974jTPBLyvTsEP3vtFsrxB17Zgl/ZsCY0f0QXJptmo=;
+        b=WcbVmljbaqK/Q6LwSZLN6aupTSFoBTLlP1jZWJz8fb6JnNJs/ADctjqNlpGPauT3uB
+         S1KfU56ikfY1vYvOy1RltKqbI2dEaLootBsOmm8l6KWWA+sRLuBiEhHujEcwdx76Rk+v
+         mD5Z2ZS0JMsfHqVKSrDY1Hfe0dvIa3Q5fSbAyuvMXs58VjwCWSsx1TE8HTnZ+dPwWbnh
+         kPKlFtdOYqcYprR3eDyfPjOuYKP8VcWcu2HDk9lOSnx2qj1muAgOX56XHPniFvMdgDwG
+         fCZkXs0+UYhKqkEfhg3z5A8XN4dZNSzfY8ZqdjKc61Hj9SOcRK63tK5kWtVPzETjO1SW
+         NCgw==
+X-Forwarded-Encrypted: i=1; AJvYcCXBraLdtw31fyvgvL5+ZFFfqUzZo1Sla0gYcq2AMMQHFh6Kfd+/MW5IfGL1FXeI9cp0OrDZMVVWamFkfCM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGPhbPx1ESm/DCDiwwS6ECUdLyUSiowcbQn17XE1xqWX8RHh25
+	mQapbEpSTDkJkti5GMa7jQl3pd+/1UV44eTjl5W4fMBeJ75w6u5FAnN7d/D5C63/Zg6kVeViaGI
+	syiP0IMNfNXlHNOvEg2VFDiqwt94KY3LSCl7VkxQehc+y1YehggQK2jdZgHQ=
+X-Google-Smtp-Source: AGHT+IHwyNpkzILG4TLDEfcttKctS3gu2nXueqeVy3zSwIrOQDqY2onr/pX9M5nFRaev+NCWYF5JIDiT3B6K2QQ1b7UQNy/dSn5p
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a05:6e02:19cc:b0:3dd:b540:b795 with SMTP id
+ e9e14a558f8ab-3de3954f063mr70603995ab.3.1750520661604; Sat, 21 Jun 2025
+ 08:44:21 -0700 (PDT)
+Date: Sat, 21 Jun 2025 08:44:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6856d355.a00a0220.137b3.007d.GAE@google.com>
+Subject: [syzbot] [mm?] INFO: rcu detected stall in exit_to_user_mode_loop
+From: syzbot <syzbot+2642f347f7309b4880dc@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 12 2025 at 16:21, Thomas Wei=C3=9Fschuh wrote:
-> On Thu, Jun 12, 2025 at 10:31:20AM +0200, Alexandre Ghiti wrote:
-> We could introduce per-architecture configuration. Essentially reverting =
-parts
-> of commit aff69273af61 ("vdso: Improve cmd_vdso_check to check all dynami=
-c relocations").
-> The final logic for the intermediary objects still needs to be more compl=
-icated
-> than for the final .so as those contain relocations in the debug informat=
-ion.
->
-> Or we could add a C hostprog for validation.
-> That would be much more flexible than the inline shell command.
-> It would then also be easier to use an allow-list than the brittle deny-l=
-ist.
->
-> Or we don't do anything, relying on the selftests to detect miscompilatio=
-ns.
+Hello,
 
-That's a bad idea :)
+syzbot found the following issue on:
 
-> I'll run this by tglx. If somebody else has any opinions, I'm all ears.
+HEAD commit:    52da431bf03b Merge tag 'libnvdimm-fixes-6.16-rc3' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15caf50c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6a237c32900fc479
+dashboard link: https://syzkaller.appspot.com/bug?extid=2642f347f7309b4880dc
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
 
-This is all a mess because the relocation type numbers and their R_*
-names are not uniform accross architectures. Neither are the valid
-relocation types which are suitable for VDSO.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-I don't think you can reasonably cover all of it with readelf and
-grep. I did some unrelated relocation analysis some time ago and I just
-modified the python script (yes, I hate to use libelf) to show case how
-insane this gets. This is just as much as I needed to analyse files
-compiled with some random cross gcc I had handy. But you surely get the
-idea.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/97afcc470d39/disk-52da431b.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/dc0ebacae4ba/vmlinux-52da431b.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/85dd67feecea/bzImage-52da431b.xz
 
-Thanks,
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+2642f347f7309b4880dc@syzkaller.appspotmail.com
 
-        tglx
+rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+rcu: 	1-...!: (0 ticks this GP) idle=1c34/1/0x4000000000000000 softirq=161556/161556 fqs=0
+rcu: 	(detected by 0, t=10506 jiffies, g=161353, q=257 ncpus=2)
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1
+CPU: 1 UID: 0 PID: 3068 Comm: syz.2.12969 Not tainted 6.16.0-rc2-syzkaller-00047-g52da431bf03b #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:bytes_is_nonzero mm/kasan/generic.c:89 [inline]
+RIP: 0010:memory_is_nonzero mm/kasan/generic.c:104 [inline]
+RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:129 [inline]
+RIP: 0010:memory_is_poisoned mm/kasan/generic.c:161 [inline]
+RIP: 0010:check_region_inline mm/kasan/generic.c:180 [inline]
+RIP: 0010:kasan_check_range+0xa5/0x2c0 mm/kasan/generic.c:189
+Code: 34 19 4d 89 f4 4d 29 dc 49 83 fc 10 7f 29 4d 85 e4 0f 84 41 01 00 00 4c 89 cb 48 f7 d3 4c 01 fb 41 80 3b 00 0f 85 de 01 00 00 <49> ff c3 48 ff c3 75 ee e9 21 01 00 00 44 89 dd 83 e5 07 0f 84 b5
+RSP: 0018:ffffc90000a08b70 EFLAGS: 00000046
+RAX: 0000000000000001 RBX: ffffffffffffffff RCX: ffffffff819ed95d
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffffffff99d17f20
+RBP: ffffc90000a08c78 R08: ffffffff99d17f23 R09: 1ffffffff33a2fe4
+R10: dffffc0000000000 R11: fffffbfff33a2fe4 R12: 0000000000000001
+R13: ffff88805f06d5e8 R14: fffffbfff33a2fe5 R15: 1ffffffff33a2fe4
+FS:  0000000000000000(0000) GS:ffff888125d85000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6119f32f98 CR3: 000000000df38000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ instrument_atomic_read include/linux/instrumented.h:68 [inline]
+ atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
+ queued_spin_is_locked include/asm-generic/qspinlock.h:57 [inline]
+ debug_spin_unlock kernel/locking/spinlock_debug.c:101 [inline]
+ do_raw_spin_unlock+0x4d/0x240 kernel/locking/spinlock_debug.c:141
+ __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:150 [inline]
+ _raw_spin_unlock_irqrestore+0x78/0x110 kernel/locking/spinlock.c:194
+ debug_object_activate+0x2e2/0x420 lib/debugobjects.c:836
+ debug_hrtimer_activate kernel/time/hrtimer.c:445 [inline]
+ debug_activate kernel/time/hrtimer.c:484 [inline]
+ enqueue_hrtimer+0x30/0x3a0 kernel/time/hrtimer.c:1088
+ __run_hrtimer kernel/time/hrtimer.c:1778 [inline]
+ __hrtimer_run_queues+0x656/0xc60 kernel/time/hrtimer.c:1825
+ hrtimer_interrupt+0x45b/0xaa0 kernel/time/hrtimer.c:1887
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1039 [inline]
+ __sysvec_apic_timer_interrupt+0x10b/0x410 arch/x86/kernel/apic/apic.c:1056
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1050 [inline]
+ sysvec_apic_timer_interrupt+0xa1/0xc0 arch/x86/kernel/apic/apic.c:1050
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+RIP: 0010:lock_is_held_type+0x137/0x190 kernel/locking/lockdep.c:5948
+Code: 01 75 44 48 c7 04 24 00 00 00 00 9c 8f 04 24 f7 04 24 00 02 00 00 75 4c 41 f7 c4 00 02 00 00 74 01 fb 65 48 8b 05 89 73 3a 07 <48> 3b 44 24 08 75 43 89 d8 48 83 c4 10 5b 41 5c 41 5d 41 5e 41 5f
+RSP: 0018:ffffc900047272d0 EFLAGS: 00000206
+RAX: fafe2bb1bb0f2700 RBX: 0000000000000001 RCX: fafe2bb1bb0f2700
+RDX: 0000000000000000 RSI: ffffffff8db5a486 RDI: ffffffff8be1b800
+RBP: 00000000ffffffff R08: 0000000000000000 R09: ffffffff822cc8f7
+R10: dffffc0000000000 R11: fffff940002e65a9 R12: 0000000000000246
+R13: ffff888030045a00 R14: ffffffff8e13eda0 R15: 0000000000000001
+ lookup_page_ext mm/page_ext.c:254 [inline]
+ page_ext_lookup+0xe7/0x180 mm/page_ext.c:520
+ page_ext_iter_begin include/linux/page_ext.h:132 [inline]
+ page_table_check_clear+0x278/0x700 mm/page_table_check.c:78
+ ptep_get_and_clear_full arch/x86/include/asm/jump_label.h:-1 [inline]
+ get_and_clear_full_ptes include/linux/pgtable.h:714 [inline]
+ zap_present_folio_ptes mm/memory.c:1505 [inline]
+ zap_present_ptes mm/memory.c:1590 [inline]
+ do_zap_pte_range mm/memory.c:1691 [inline]
+ zap_pte_range mm/memory.c:1735 [inline]
+ zap_pmd_range mm/memory.c:1827 [inline]
+ zap_pud_range mm/memory.c:1856 [inline]
+ zap_p4d_range mm/memory.c:1877 [inline]
+ unmap_page_range+0x3249/0x41c0 mm/memory.c:1898
+ unmap_single_vma mm/memory.c:1941 [inline]
+ unmap_vmas+0x399/0x580 mm/memory.c:1985
+ exit_mmap+0x248/0xb50 mm/mmap.c:1284
+ __mmput+0x118/0x420 kernel/fork.c:1121
+ exit_mm+0x1da/0x2c0 kernel/exit.c:581
+ do_exit+0x640/0x22e0 kernel/exit.c:943
+ do_group_exit+0x21c/0x2d0 kernel/exit.c:1104
+ get_signal+0x125e/0x1310 kernel/signal.c:3034
+ arch_do_signal_or_restart+0x9a/0x750 arch/x86/kernel/signal.c:337
+ exit_to_user_mode_loop+0x75/0x110 kernel/entry/common.c:111
+ exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
+ syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
+ do_syscall_64+0x2bd/0x3b0 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f611918e929
+Code: Unable to access opcode bytes at 0x7f611918e8ff.
+RSP: 002b:00007f6119f330e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 00007f61193b5fa8 RCX: 00007f611918e929
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00007f61193b5fa8
+RBP: 00007f61193b5fa0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f61193b5fac
+R13: 0000000000000000 R14: 00007fff0affa0b0 R15: 00007fff0affa198
+ </TASK>
+rcu: rcu_preempt kthread timer wakeup didn't happen for 10505 jiffies! g161353 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
+rcu: 	Possible timer handling issue on cpu=1 timer-softirq=69309
+rcu: rcu_preempt kthread starved for 10506 jiffies! g161353 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=1
+rcu: 	Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
+rcu: RCU grace-period kthread stack dump:
+task:rcu_preempt     state:I stack:26888 pid:16    tgid:16    ppid:2      task_flags:0x208040 flags:0x00004000
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5396 [inline]
+ __schedule+0x16a2/0x4cb0 kernel/sched/core.c:6785
+ __schedule_loop kernel/sched/core.c:6863 [inline]
+ schedule+0x165/0x360 kernel/sched/core.c:6878
+ schedule_timeout+0x12b/0x270 kernel/time/sleep_timeout.c:99
+ rcu_gp_fqs_loop+0x301/0x1540 kernel/rcu/tree.c:2054
+ rcu_gp_kthread+0x99/0x390 kernel/rcu/tree.c:2256
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x3f9/0x770 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+
 ---
-#!/usr/bin/env python3
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-import sys
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-from argparse import ArgumentParser
-from elftools.elf.elffile import ELFFile
-from elftools.elf.relocation import RelocationSection
-from elftools.elf.enums import ENUM_RELOC_TYPE_i386, ENUM_RELOC_TYPE_x64
-from elftools.elf.enums import ENUM_RELOC_TYPE_ARM, ENUM_RELOC_TYPE_AARCH64
-from elftools.elf.descriptions import describe_reloc_type
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-class relocs(object):
-    def __init__(self, arch, sections, types):
-        self.arch =3D arch
-        self.sections =3D sections
-        self.types =3D types
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-i386_relocs =3D relocs('EM_386',
-                     [ '.rel.text' ],
-                     [ ENUM_RELOC_TYPE_i386['R_386_NONE'],
-                       ENUM_RELOC_TYPE_i386['R_386_PC32'],
-                       ENUM_RELOC_TYPE_i386['R_386_GOTPC'],
-                       ENUM_RELOC_TYPE_i386['R_386_GOTOFF'],
-                      ])
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-x86_64_relocs =3D relocs('EM_X86_64',
-                       [ '.rela.text' ],
-                       [ ENUM_RELOC_TYPE_x64['R_X86_64_NONE'],
-                         ENUM_RELOC_TYPE_x64['R_X86_64_PC32'],
-                        ])
-
-arm_relocs =3D relocs('EM_ARM',
-                       [ '.rela.text' ],
-                       # Probably incomplete
-                       [ ENUM_RELOC_TYPE_ARM['R_ARM_NONE'],
-                         ENUM_RELOC_TYPE_ARM['R_ARM_REL32'],
-                        ])
-
-arm64_relocs =3D relocs('EM_AARCH64',
-                       [ '.rela.text' ],
-                       # Probably incomplete
-                       [ ENUM_RELOC_TYPE_AARCH64['R_AARCH64_NONE'],
-                         ENUM_RELOC_TYPE_AARCH64['R_AARCH64_ADR_PREL_LO21'],
-                        ])
-
-# Minimal set for an example VDSO build
-ENUM_RELOC_TYPE_RISCV =3D dict(
-    R_RISCV_BRANCH        =3D 0x10,
-    R_RISCV_PCREL_HI20    =3D 0x17,
-    R_RISCV_PCREL_LO12_I  =3D 0x18,
-    R_RISCV_RVC_BRANCH    =3D 0x2c,
-    R_RISCV_RVC_JUMP      =3D 0x2d,
-    R_RISCV_RELAX         =3D 0x33,
-)
-
-riscv_relocs =3D relocs('EM_RISCV',
-                       [ '.rela.text' ],
-                       [ ENUM_RELOC_TYPE_RISCV['R_RISCV_BRANCH'],
-                         ENUM_RELOC_TYPE_RISCV['R_RISCV_PCREL_HI20'],
-                         ENUM_RELOC_TYPE_RISCV['R_RISCV_PCREL_LO12_I'],
-                         ENUM_RELOC_TYPE_RISCV['R_RISCV_RVC_BRANCH'],
-                         ENUM_RELOC_TYPE_RISCV['R_RISCV_RVC_JUMP'],
-                         ENUM_RELOC_TYPE_RISCV['R_RISCV_RELAX'],
-                        ])
-supported_archs =3D {
-    'i386'      : i386_relocs,
-    'x86_64'    : x86_64_relocs,
-    'arm'       : arm_relocs,
-    'arm64'     : arm64_relocs,
-    'riscv'     : riscv_relocs,
-}
-
-# Probably incomplete
-invalid_relocs =3D [ '.rela.dyn', '.rela.plt' ]
-
-def check_relocations(file, arch):
-    elf =3D ELFFile(file)
-    res =3D 0
-
-    if elf.header['e_machine'] !=3D arch.arch:
-        print(elf.header['e_machine'], arch.arch)
-        raise Exception('Architecture mismatch')
-
-    for section in elf.iter_sections():
-        if not isinstance(section, RelocationSection):
-            continue
-
-        if section.name in invalid_relocs:
-            print('Invalid VDSO relocation section: %s' %section.name)
-            res +=3D 1
-            continue
-
-        if section.name not in arch.sections:
-            continue
-
-        for reloc in section.iter_relocations():
-            if reloc['r_info_type'] in arch.types:
-                continue
-            res +=3D 1
-
-            symt =3D elf.get_section(section['sh_link'])
-            sym =3D symt.get_symbol(reloc['r_info_sym'])
-
-            type =3D describe_reloc_type(reloc['r_info_type'], elf)
-
-            print("Invalid VDSO relocation: %s %s" %(type, sym.name))
-
-    return res
-
-if __name__ =3D=3D '__main__':
-    parser =3D ArgumentParser(usage =3D 'usage: %(prog)s arch elf-file',
-                            description =3D 'magic VDSO section checker',
-                            prog =3D 'vdsoreloc')
-
-    parser.add_argument('arch',
-                        choices =3D supported_archs.keys(),
-                        help =3D 'Target architecture')
-    parser.add_argument('file', help =3D 'ELF file to parse')
-    args =3D parser.parse_args()
-
-    with open(args.file, 'rb') as file:
-        try:
-            res =3D check_relocations(file, supported_archs[args.arch])
-            sys.exit(res)
-        except Exception as ex:
-            # Do something sensible here
-            print(ex)
-            sys.exit(1)
-
-
+If you want to undo deduplication, reply with:
+#syz undup
