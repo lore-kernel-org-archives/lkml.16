@@ -1,97 +1,162 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52FCE17BD3;
-	Sat, 21 Jun 2025 16:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E51817BD3;
+	Sat, 21 Jun 2025 16:16:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750522551; cv=none; b=DR2t3FEU/tVItq8rJ6Ap0WL3Ge0ktt0eAE+AkZntWqW/sTYuC2gqUTb0z3NPUT95Jp8wKTu1PhHEjVxAwW9xKo+NnncI2q813Wx9FlE4zQrH1OvJ+zJalWSo4MdveoggxhmzJVNXB5hZT6gq5t7p+zlBEzUhiLew/pwDDY9DJwY=
+	t=1750522617; cv=none; b=XYs51ah085erDclQK6LbhpBv/duzNnyNK5Mvrj4u1gs9NkjZ4yYIBjO1l4qTQr+mbBNhanVcoFhtvWvKR1Y8XAxnOkfBefn7K0+5JL1J5UzynbXt0U7tD50jdc6rSwM/JAfiTh9jZAzYokwMZ/zCJl8Dd9QVYCBQuKZSR2rUuPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750522551; c=relaxed/simple;
-	bh=n357qJFQBqLi+JsoIcjMnt0bY0ZFXO5WwFENlJWZb1o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cl9YHuMSMtxXEO9MaDB8Dd5W5RCqLizR3nZZNsi9slK+k1eYF3k/yTcg3VG5ItF5kPu2kfXRWCjVxua0MmClpn0xmySpU9EFF7gefE0XwNTxDAz0QoVE/6G4/1IAqGG1+DL/kAcyOgN/H7gmj+qjAF22bOY124q3kbRDEcCNqmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a19wLU22; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750522617; c=relaxed/simple;
+	bh=Qv21DpKuY5ulUd/lhpFtmQI0Y3I4JarC2uI/1WkzTHE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qhou0Xw0oFVbDblx6uVyprNu9OEAqamctkS4KJzKeXsMRMbegTF5xqtgGQ3c296RWGA66J2xiTkVl8Tq6hIANXjBiyFYTDaa06u7zM8BhhNIsaNpNRrPiXN2Jae29+34khR0bh0p3GCwXrKIyJaAqTkW2qB29NtvM62BkPemBi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWAMRLP/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a19wLU22"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-313bcf6e565so423922a91.0;
-        Sat, 21 Jun 2025 09:15:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750522549; x=1751127349; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oTphWV5KXEfki4j6Qlyh+v0dvGQtMnU3uiVUzb7r5TQ=;
-        b=a19wLU22pMZf2iQCoohsr1+qFiz4Qk7/zcCfdoj27uUvJYhJuhCQV9uoCYv2/MCQtY
-         8OKuNyBokohMg6KDe8+HGkFVQ1+bucR4c5hLneYCDAeRhkEgl6V/z5Xb9WqiXw2jHqDh
-         zE/xnVccdzN/0tqjfbUfZHeuOILZqk5udURDP6z6phRL4jcMSx9QbXoQnx37Sd+wwaT4
-         DxM/vyFHip4Oc4cCJ9RFf0yxhTPSujBk4rtpgGaJOCboqehjyZUjbuzcYSj5zh4BCZy4
-         LAZW9PuA43QjZUr+FPUm2LSSgMEQVYN1CbUFY71UT2dTbMTxhYXdEWx/KN7rsID+saAC
-         bR6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750522549; x=1751127349;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oTphWV5KXEfki4j6Qlyh+v0dvGQtMnU3uiVUzb7r5TQ=;
-        b=dhHsB7UAUIoYF3OXNe6xHEG5T7B+nDdmAhXnmSXIezEIT8fNCR0jtdMJXRkA/YvBuN
-         5Chirsx4XcbXooDi0+5hxk1SiKGhHshz2qOCFJr6bld1LGRPf0B/HBT7+zAbYHAY1pRk
-         QFcf/L3ZE42c2KKHIC4y0MxE223HI9Pio+G8fBYwy/S57Po1ZopBr5QmzbtdlSxq1Chb
-         H3qXHvW/X5EMFvA9JSFvk9kwv43FTOBK9C7YyXoxRCheT15rVgcsxd68Lk0BnwbB+s5Q
-         kAckug38hJA7NXT0ZBkgh6mQr5+rFKRdoiH2wgT6R8/TARm8/WDp8PK39M6tes+65T/Y
-         P+jw==
-X-Forwarded-Encrypted: i=1; AJvYcCW6WMSQKJI73rKtceFs2XUt/svDeveVI4IfWulvq5WxqOSwjXrja6jTof1K+swdDEPfaFiXDG6aok+Qc61gNg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTWCGR/hfbAKmQLU8gZjFx9DEpNF0TsoHZZnKb4TnEPzPZpfUB
-	hRTsUzDSEcGhE783vhWTL9ezjbV6xG3sCqi3Vq05f5Y9Uc/USPHsjJCInhk6SUQibQLPMnObH6i
-	+vDCeLVTNzxYQAwed1VhCbOsjJjrAGZw=
-X-Gm-Gg: ASbGnctYiadhw2K7CWmFpr50TsGcMb22JRPVpGFZ/Lg5fVuoV+OjkI4WncQkckeI8GW
-	exzsYuzn0K7yX6R85fpQGSfz08668OyYO4S7F65rhXqgabIsbXhZoTYbT/9O+yX1Yuh32rRVFJ6
-	SiHGKuoKt4IgzsEolK73v4hBwqrNw6I3uE8Idt7Zr2SZE=
-X-Google-Smtp-Source: AGHT+IEDloU8q5oGNsKYZ8D7kAMCez97xUQY1+c3Vr0VqxbolK7l+Hrx9uqQSoOhzSUPG7SKRu6pJ7EfbgLRigTe3IU=
-X-Received: by 2002:a17:90b:5603:b0:311:a314:c2c9 with SMTP id
- 98e67ed59e1d1-3159d63225bmr4471975a91.1.1750522549541; Sat, 21 Jun 2025
- 09:15:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWAMRLP/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13AACC4CEE7;
+	Sat, 21 Jun 2025 16:16:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750522617;
+	bh=Qv21DpKuY5ulUd/lhpFtmQI0Y3I4JarC2uI/1WkzTHE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jWAMRLP/E9lB1GnDW9CuOx7pDPmUgG0AAYQDBx9az9cVjKiWC47nj1HZn7JvbKT+b
+	 6U5PcNKUXrGyEX2vHTbnHdBhFVPcYz4VjGj4LnzlI9WuYU65InMOnnrTuzrggSuTqu
+	 c0UpCjdB7LIB4DAf9N8k+movBQoBMYvlUUYLSeLjV8XlDfNSzjUdHUPd8P8GuWvnRi
+	 TwEsOjwekxmWPk9fFBNhcFFIIZ2l18sGbASeqchc9FOTkZ9qEUdCQUJFmaSOtkAM9l
+	 eQdjDB7NADDveq/efMaBOve171g0ioXBXagVCjAO5KnI36tHzDrQgwaoHIHyCG69Ke
+	 fbXiXIFfT5GIA==
+Date: Sat, 21 Jun 2025 17:16:48 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jorge Marques <gastmaier@gmail.com>
+Cc: Jorge Marques <jorge.marques@analog.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, David
+ Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Uwe
+ =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 6/8] iio: adc: Add offload support for ad4052
+Message-ID: <20250621171648.6f40904f@jic23-huawei>
+In-Reply-To: <hdwuh3ouw4gzpbj7u7dtzaphdjonecls2xuu7p4nmi7wwrcmye@jhhhqvdlbuv3>
+References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
+	<20250610-iio-driver-ad4052-v3-6-cf1e44c516d4@analog.com>
+	<20250614112022.24bf9212@jic23-huawei>
+	<hdwuh3ouw4gzpbj7u7dtzaphdjonecls2xuu7p4nmi7wwrcmye@jhhhqvdlbuv3>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250621152142.25167-1-work@onurozkan.dev> <20250621152142.25167-3-work@onurozkan.dev>
-In-Reply-To: <20250621152142.25167-3-work@onurozkan.dev>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 21 Jun 2025 18:15:36 +0200
-X-Gm-Features: Ac12FXzulo0t4CrkhybO-x92FQwOFFZvP7gwbGxQjSlAko2tomskIgyhfZR67RE
-Message-ID: <CANiq72=H9vH=eeWHeP-xnGVcu8Ds_p8UriFiPAkefdiKg7doRA@mail.gmail.com>
-Subject: Re: [PATCH 3/3 v4] add KUnit coverage on Rust `ww_mutex` implementation
-To: =?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, lossin@kernel.org, a.hindborg@kernel.org, 
-	aliceryhl@google.com, tmgross@umich.edu, dakr@kernel.org, 
-	peterz@infradead.org, mingo@redhat.com, will@kernel.org, longman@redhat.com, 
-	felipe_life@live.com, daniel@sedlak.dev, bjorn3_gh@protonmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jun 21, 2025 at 5:22=E2=80=AFPM Onur =C3=96zkan <work@onurozkan.dev=
-> wrote:
->
-> +        let guard =3D mutex.lock(None).unwrap();
+On Fri, 20 Jun 2025 20:52:10 +0200
+Jorge Marques <gastmaier@gmail.com> wrote:
 
-Like in examples in docs, please try to avoid panicking if possible.
-`assert*!s` are fine, though -- they are mapped especially and do not
-panic.
+> On Sat, Jun 14, 2025 at 11:20:22AM +0100, Jonathan Cameron wrote:
+> > On Tue, 10 Jun 2025 09:34:39 +0200
+> > Jorge Marques <jorge.marques@analog.com> wrote:
+> >   
+> > > Support SPI offload with appropriate FPGA firmware. Since the SPI-Engine
+> > > offload module always sends 32-bit data to the DMA engine, the
+> > > scantype.storagebytes is set to 32-bit and the SPI transfer length is
+> > > based on the scantype.realbits. This combination allows to optimize the
+> > > SPI to transfer only 2 or 3 bytes (depending on the granularity and
+> > > mode), while the number of samples are computed correctly by tools on
+> > > top of the iio scantype.
+> > > 
+> > > Signed-off-by: Jorge Marques <jorge.marques@analog.com>  
+> > Minor comments inline.  I think they are all follow up from comments on
+> > earlier patches that apply here as well.
+> >   
+> > > ---
+> > >  drivers/iio/adc/ad4052.c | 244 ++++++++++++++++++++++++++++++++++++++++++++++-
+> > >  1 file changed, 242 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/iio/adc/ad4052.c b/drivers/iio/adc/ad4052.c
+> > > index 842f5972a1c58701addf5243e7b87da9c26c773f..7d32dc4701ddb0204b5505a650ce7caafc2cb5ed 100644
+> > > --- a/drivers/iio/adc/ad4052.c
+> > > +++ b/drivers/iio/adc/ad4052.c
+> > > @@ -11,6 +11,8 @@
+> > >  #include <linux/delay.h>
+> > >  #include <linux/err.h>
+> > >  #include <linux/gpio/consumer.h>
+> > > +#include <linux/iio/buffer.h>
+> > > +#include <linux/iio/buffer-dmaengine.h>
+> > >  #include <linux/iio/iio.h>
+> > >  #include <linux/iio/sysfs.h>
+> > >  #include <linux/interrupt.h>
+> > > @@ -23,6 +25,8 @@
+> > >  #include <linux/regmap.h>
+> > >  #include <linux/regulator/consumer.h>
+> > >  #include <linux/spi/spi.h>
+> > > +#include <linux/spi/offload/consumer.h>
+> > > +#include <linux/spi/offload/provider.h>
+> > >  #include <linux/string.h>
+> > >  #include <linux/types.h>
+> > >  #include <linux/units.h>
+> > > @@ -111,6 +115,7 @@ enum ad4052_interrupt_en {
+> > >  
+> > >  struct ad4052_chip_info {
+> > >  	const struct iio_chan_spec channels[1];
+> > > +	const struct iio_chan_spec offload_channels[1];  
+> > 
+> > If there is only ever one of these drop the array.
+> >   
+> Hi Jonathan,
+> 
+> It is hard to predict if no other similar device will have only two
+> channels. But I would say most drivers end-up having more channels.
 
-KUnit tests now support `-> Result` too, so you can use that too,
-which is also handy to write code more kernel like, e.g. to replace
-things that the test is not really concerned about but that should
-generally not fail like the memory allocation `unwrap()` that you have
-below.
+Ok. I don't mind that much, but it does feel like planning for a future
+that might or might not come.   Easy enough to refactor later.
 
-Thanks!
+> >   
+> > >  
+> > > +static int ad4052_update_xfer_offload(struct iio_dev *indio_dev,
+> > > +				      struct iio_chan_spec const *chan)
+> > > +{
+> > > +	struct ad4052_state *st = iio_priv(indio_dev);
+> > > +	const struct iio_scan_type *scan_type;
+> > > +	struct spi_transfer *xfer = &st->offload_xfer;
+> > > +
+> > > +	scan_type = iio_get_current_scan_type(indio_dev, chan);
+> > > +	if (IS_ERR(scan_type))
+> > > +		return PTR_ERR(scan_type);
+> > > +
+> > > +	xfer->bits_per_word = scan_type->realbits;
+> > > +	xfer->offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
+> > > +	xfer->len = scan_type->realbits == 24 ? 4 : 2;  
+> > 
+> > Same question on length vs bits_per_word applies here as in the earlier
+> > patch.
+> >   
+> To be able to optimize the SPI message, len must be a multiple of 16
+> bits. To achieve maximum throughput, no extra bits (and therefore SCLK
+> clock cycles) must be transferred during the SPI transfer. This is set
+> by bits_per_word, 24-bits means 24 SCLK.
 
-Cheers,
-Miguel
+I got that intention, what I wasn't sure on was what the spi subsystem
+would do with this case.
+
+I checked the docs and this case is called out though only in the
+spi_device docs for bits_per_word (not mentioned in the spi_transfer
+docs) so fair enough.  Just seemed strange!
+ 
+> 
+> Finally, storagebits is the number of bits actually used to store the
+> reading, and for the offload channel is the DMA width, always 32-bits.
+> An abstraction to obtain the DMA width should be created, so the 32-bits
+> value is not hard-coded into the driver, still, for this series, it is.
+> 
+Thanks
+
+Jonathan
+
+
