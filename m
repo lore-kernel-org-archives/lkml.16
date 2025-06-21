@@ -1,120 +1,160 @@
-Received: from mta21.hihonor.com (mta21.honor.com [81.70.160.142])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225817FD
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 04:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BB9146A66
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 04:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750479007; cv=none; b=Wyxim5D7N+sLEDlUVK25EiRnwt0qUBo9nJQ2TgG1sCHsZ0kRxZl2G/4r0dT8x7zxXiet0NUgkGCbenwcpb3jkM394iHr2wNyof+QpE4sq8MH64f7lgO7m58T9iqkvTWqHnZsX2MqnnKEEoSO3NQ58v62W7x7Dnwiz56wwQIZbOQ=
+	t=1750479195; cv=none; b=d+M3ogwoFEjIt+10SfRaPYYrfeC6ww0PalFMnf19L+0nEGj0YvM1G+tQtUASCYzj6BZxz9yxZosQGgskzkipfpOGl/mgovju1ZJYZMrgpuOyalEafLK8JVs2RXRKUYgS5t0iqDqXQ+iwTfqxGxPpUMbYNTDy8Bd66nQ4Ts6XBTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750479007; c=relaxed/simple;
-	bh=9OQ35JojopA4/79f1LPUMo+a0RFRyC+3+Fm70Q9yVsw=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=okI5OX4G5uNaWAF9kAGfHfhTKndTG+NGWG9nbFtMbb0RLu5/EWK/e+8eH7w6fsDmPlna4wtt7DELtGW/xyyLQm985QpuZk3l9Ow5127iRCo7LWglWO4h3JVHONSRFCODlOzUlZOVKlTI4vzr3VfpIbwRTrHaZV4M8CyqqRYTNKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w001.hihonor.com (unknown [10.68.25.235])
-	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4bPLR16WfxzYlMtj;
-	Sat, 21 Jun 2025 12:07:41 +0800 (CST)
-Received: from a005.hihonor.com (10.68.18.24) by w001.hihonor.com
- (10.68.25.235) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 21 Jun
- 2025 12:09:56 +0800
-Received: from a007.hihonor.com (10.68.22.31) by a005.hihonor.com
- (10.68.18.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 21 Jun
- 2025 12:09:56 +0800
-Received: from a007.hihonor.com ([fe80::e866:83ac:f23b:c25c]) by
- a007.hihonor.com ([fe80::e866:83ac:f23b:c25c%10]) with mapi id
- 15.02.1544.011; Sat, 21 Jun 2025 12:09:56 +0800
-From: liuwenfang <liuwenfang@honor.com>
-To: 'Tejun Heo' <tj@kernel.org>
-CC: 'David Vernet' <void@manifault.com>, 'Andrea Righi' <arighi@nvidia.com>,
-	'Changwoo Min' <changwoo@igalia.com>, 'Ingo Molnar' <mingo@redhat.com>,
-	'Peter Zijlstra' <peterz@infradead.org>, 'Juri Lelli'
-	<juri.lelli@redhat.com>, 'Vincent Guittot' <vincent.guittot@linaro.org>,
-	'Dietmar Eggemann' <dietmar.eggemann@arm.com>, 'Steven Rostedt'
-	<rostedt@goodmis.org>, 'Ben Segall' <bsegall@google.com>, 'Mel Gorman'
-	<mgorman@suse.de>, 'Valentin Schneider' <vschneid@redhat.com>,
-	"'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] sched_ext: Fix cpu_released while RT task and SCX task are
- scheduled concurrently
-Thread-Topic: [PATCH] sched_ext: Fix cpu_released while RT task and SCX task
- are scheduled concurrently
-Thread-Index: AdviYdJPAxrzVE2lRZOpYb+Wb9OtGg==
-Date: Sat, 21 Jun 2025 04:09:55 +0000
-Message-ID: <fca528bb34394de3a7e87a873fadd9df@honor.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1750479195; c=relaxed/simple;
+	bh=iNBqdvzRqvmlcLnFyD/xAgbAkKbUplPAdShitn7Qiow=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RHYlyTnmPSilQUUkpJi5FFkLnwQ+yLpTnxyn5nVUmtxvlx7z32PGlfHW8/Krb9W3SQqF8pnviD+tXVU1B3MaaeIvT0dqxx0pRIZcmrZ50pN+ZCt2LKBIxMspnkbvVIRaNyinP3zRGkA47SFNOROxluYXZ03CS3vVdio24iTaees=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bhJQytKc; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bhJQytKc"
+Message-ID: <2d04fee6-5d95-4c50-b2b1-ee67f42932e2@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750479180;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jcR9MO+hlXNQyGNXtt8eel8mEQz/tmmVsCpo4bl1TuM=;
+	b=bhJQytKcmXzZHfXkKScUGun4ArSRk5pFSwjbO7AGNiThQclcGPOq3XPM+KL7q78BpOIgUK
+	CNaTy6mWdzeoS6+QWpkC1dSBUC+t57/HF+dCDjp/3kMjGG2pX7A9aBaqORPmKZp+Gfdf4/
+	0wZk5mkoTqN2DirLqB3OSe9VNX7DvCY=
+Date: Fri, 20 Jun 2025 21:12:40 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH] RDMA/siw: work around clang stack size warning
+To: Arnd Bergmann <arnd@kernel.org>, Bernard Metzler <bmt@zurich.ibm.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Potnuri Bharat Teja <bharat@chelsio.com>, Showrya M N <showrya@chelsio.com>,
+ Eric Biggers <ebiggers@google.com>, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+References: <20250620114332.4072051-1-arnd@kernel.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20250620114332.4072051-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Supposed RT task(rt1) is running on one CPU with its rq->scx.cpu_released
-set to true, if the rt1 becomes sleeping, then the scheduler will balance
-the remote SCX task(scx1) because there is no other RT task on its rq,
-and rq->scx.cpu_released is false. While one RT task(rt2) is placed on
-this rq(maybe rt2 wakeup or migration occurs) before the scx1 is enqueued,
-then the scheduler will pick rt2. At last, rt2 will be running on this cpu
-with rq->scx.cpu_released being false!
-The main reason is that consume_remote_task() will unlock rq lock.
+在 2025/6/20 4:43, Arnd Bergmann 写道:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> clang inlines a lot of functions into siw_qp_sq_process(), with the
+> aggregate stack frame blowing the warning limit in some configurations:
+> 
+> drivers/infiniband/sw/siw/siw_qp_tx.c:1014:5: error: stack frame size (1544) exceeds limit (1280) in 'siw_qp_sq_process' [-Werror,-Wframe-larger-than]
+> 
+> The real problem here is the array of kvec structures in siw_tx_hdt that
+> makes up the majority of the consumed stack space.
 
-So, expose the switch_class() and check sched class again to fix the value
-of rq->scx.cpu_released.
+Because the array of kvec structures in siw_tx_hdt consumes the majority 
+of the stack space, would it be possible to use kmalloc or a similar 
+dynamic memory allocation function instead of allocating this memory on 
+the stack?
 
-Signed-off-by: liuwenfang liuwenfang@honor.com
+Would using kmalloc (or an equivalent) also effectively resolve the 
+stack usage issue?
+Please note that I’m not questioning the value of this commit—I’m simply 
+curious whether there might be an alternative solution to the problem.
 
----
- kernel/sched/ext.c   | 2 +-
- kernel/sched/sched.h | 6 ++++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+Thanks,
+Yanjun.Zhu
 
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index f5133249f..6bbea0ea1 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -3187,7 +3187,7 @@ preempt_reason_from_class(const struct sched_class *c=
-lass)
- 	return SCX_CPU_PREEMPT_UNKNOWN;
- }
-=20
--static void switch_class(struct rq *rq, struct task_struct *next)
-+void switch_class(struct rq *rq, struct task_struct *next)
- {
- 	const struct sched_class *next_class =3D next->sched_class;
-=20
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 47972f34e..d377075d0 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1738,6 +1738,7 @@ static inline void scx_rq_clock_invalidate(struct rq =
-*rq)
- 	WRITE_ONCE(rq->scx.flags, rq->scx.flags & ~SCX_RQ_CLK_VALID);
- }
-=20
-+void switch_class(struct rq *rq, struct task_struct *next);
- #else /* !CONFIG_SCHED_CLASS_EXT */
- #define scx_enabled()		false
- #define scx_switched_all()	false
-@@ -2470,6 +2471,11 @@ static inline void put_prev_set_next_task(struct rq =
-*rq,
-=20
- 	prev->sched_class->put_prev_task(rq, prev, next);
- 	next->sched_class->set_next_task(rq, next, true);
-+
-+#ifdef CONFIG_SCHED_CLASS_EXT
-+	if (scx_enabled())
-+		switch_class(rq, next);
-+#endif
- }
-=20
- /*
---=20
-2.17.1
+> 
+> Ideally there would be a way to avoid allocating the array on the
+> stack, but that would require a larger rework. Add a noinline_for_stack
+> annotation to avoid the warning for now, and make clang behave the same
+> way as gcc here. The combined stack usage is still similar, but is spread
+> over multiple functions now.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>   drivers/infiniband/sw/siw/siw_qp_tx.c | 22 ++++++++++++++++------
+>   1 file changed, 16 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/infiniband/sw/siw/siw_qp_tx.c b/drivers/infiniband/sw/siw/siw_qp_tx.c
+> index 6432bce7d083..3a08f57d2211 100644
+> --- a/drivers/infiniband/sw/siw/siw_qp_tx.c
+> +++ b/drivers/infiniband/sw/siw/siw_qp_tx.c
+> @@ -277,6 +277,15 @@ static int siw_qp_prepare_tx(struct siw_iwarp_tx *c_tx)
+>   	return PKT_FRAGMENTED;
+>   }
+>   
+> +static noinline_for_stack int
+> +siw_sendmsg(struct socket *sock, unsigned int msg_flags,
+> +	    struct kvec *vec, size_t num, size_t len)
+> +{
+> +	struct msghdr msg = { .msg_flags = msg_flags };
+> +
+> +	return kernel_sendmsg(sock, &msg, vec, num, len);
+> +}
+> +
+>   /*
+>    * Send out one complete control type FPDU, or header of FPDU carrying
+>    * data. Used for fixed sized packets like Read.Requests or zero length
+> @@ -285,12 +294,11 @@ static int siw_qp_prepare_tx(struct siw_iwarp_tx *c_tx)
+>   static int siw_tx_ctrl(struct siw_iwarp_tx *c_tx, struct socket *s,
+>   			      int flags)
+>   {
+> -	struct msghdr msg = { .msg_flags = flags };
+>   	struct kvec iov = { .iov_base =
+>   				    (char *)&c_tx->pkt.ctrl + c_tx->ctrl_sent,
+>   			    .iov_len = c_tx->ctrl_len - c_tx->ctrl_sent };
+>   
+> -	int rv = kernel_sendmsg(s, &msg, &iov, 1, iov.iov_len);
+> +	int rv = siw_sendmsg(s, flags, &iov, 1, iov.iov_len);
+>   
+>   	if (rv >= 0) {
+>   		c_tx->ctrl_sent += rv;
+> @@ -427,13 +435,13 @@ static void siw_unmap_pages(struct kvec *iov, unsigned long kmap_mask, int len)
+>    * Write out iov referencing hdr, data and trailer of current FPDU.
+>    * Update transmit state dependent on write return status
+>    */
+> -static int siw_tx_hdt(struct siw_iwarp_tx *c_tx, struct socket *s)
+> +static noinline_for_stack int siw_tx_hdt(struct siw_iwarp_tx *c_tx,
+> +					 struct socket *s)
+>   {
+>   	struct siw_wqe *wqe = &c_tx->wqe_active;
+>   	struct siw_sge *sge = &wqe->sqe.sge[c_tx->sge_idx];
+>   	struct kvec iov[MAX_ARRAY];
+>   	struct page *page_array[MAX_ARRAY];
+> -	struct msghdr msg = { .msg_flags = MSG_DONTWAIT | MSG_EOR };
+>   
+>   	int seg = 0, do_crc = c_tx->do_crc, is_kva = 0, rv;
+>   	unsigned int data_len = c_tx->bytes_unsent, hdr_len = 0, trl_len = 0,
+> @@ -586,14 +594,16 @@ static int siw_tx_hdt(struct siw_iwarp_tx *c_tx, struct socket *s)
+>   		rv = siw_0copy_tx(s, page_array, &wqe->sqe.sge[c_tx->sge_idx],
+>   				  c_tx->sge_off, data_len);
+>   		if (rv == data_len) {
+> -			rv = kernel_sendmsg(s, &msg, &iov[seg], 1, trl_len);
+> +
+> +			rv = siw_sendmsg(s, MSG_DONTWAIT | MSG_EOR, &iov[seg],
+> +					 1, trl_len);
+>   			if (rv > 0)
+>   				rv += data_len;
+>   			else
+>   				rv = data_len;
+>   		}
+>   	} else {
+> -		rv = kernel_sendmsg(s, &msg, iov, seg + 1,
+> +		rv = siw_sendmsg(s, MSG_DONTWAIT | MSG_EOR, iov, seg + 1,
+>   				    hdr_len + data_len + trl_len);
+>   		siw_unmap_pages(iov, kmap_mask, seg);
+>   	}
+
