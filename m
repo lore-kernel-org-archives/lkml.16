@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41EF2270EBF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41963270EBB;
 	Sat, 21 Jun 2025 19:56:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750535761; cv=none; b=V5RVYktysQ0hv+bNChqpMVl9BMJg9EdTFWatbQSY474gfbWJ2f9H9lP5fkVO2NepDrqLXCeylTNyR5s8PMdpEO4gbPyrtAwg+wrMn6Ppad7Y2QmC+iHcQEneH3ve/jXpw94zLFE/JIxCkINwrdkmp5lhsyEFkCkpuR6KjBbr+UM=
+	t=1750535761; cv=none; b=W+/viKaC8dVx2g58QulOav0z/a2iY6mpLCv3wZIPe+UmLWZtV+OcmxcRTvzEpTO4IHk/BpX2mO7gEKxHI+U4vNLIlDgggDxulci4p3bKueBHhVwDxQFFg0H0CotoBhOXTuavpIqbyoFJH1ZnlgQFF4F0GLP4vuE8Puof/Xojd7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750535761; c=relaxed/simple;
-	bh=3yI0hd++pTAVk6UlNj1uaAE4va43OAIfWkR3JnQPolk=;
+	bh=oiyShiLy6Ub+4Mg4ssKBBXxMfSoqaxymRvpCFzMMomw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W4RGvrZHhrh0gx6XOpM91DW/8bNcSAOAvmoGHUgiHjLvd20vBRxCh/Jjec2kWGYaDJJUqFplNfo5vsf8JYpwzEgJHtkqoyO0+QTFS74Pq9ZSFz7orPHmShWQbmRk4FI680cgDpro178CCcqsdkOENSMnURjjsKLNsT+/JlKQ3fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hBGPoQ6I; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hebPHuVefkOVDAJ5ikT1AboJ2ETow+6gUmEudHGl39B6QOzxer29GVZF3UndkOElgob7YVoFDpaivf8pnk6mRph1scrFpfLl47H9r1beMPPvtBHdRBM204+Sr3MZC7CBsK7b+iUBx7xLnntNjmQk1SkbA5sK+Pk3UGyuhL25zP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L210lewo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hBGPoQ6I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF44DC4AF0E;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L210lewo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA56BC4CEF4;
 	Sat, 21 Jun 2025 19:56:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750535760;
-	bh=3yI0hd++pTAVk6UlNj1uaAE4va43OAIfWkR3JnQPolk=;
+	bh=oiyShiLy6Ub+4Mg4ssKBBXxMfSoqaxymRvpCFzMMomw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hBGPoQ6I5ihvFzE3BhClvLrR5MeGUfP3lE+/jI6+EoJgc2UJjsWi5OgY7YY5UenuJ
-	 C9q8kL2ROLsMzi2MqK2fJwyN+ZxAeHmjjEItV4CPhrZnIBMZa2/UnZkj+8okOSP5D8
-	 u8+YwfyyEC1i+NZQwY1Zff4WZopx+NzbmdEKRZIQR7oD+BokXvOgk6dIwkoC3MB/Q8
-	 GiGTE+3l4csDVvqmnpJWkYYv4HzZZPeIfHDVZvT4jhFXrcrV+tveTuCtdAGGPilyds
-	 cX8Vwxx6Ftyxl7peaDYNG6JssTJKb+WgGTxyNK1T9RnysaPW3x4x4aqv2VfDQIeoNd
-	 LKZUgvrAzr21g==
+	b=L210lewoTx/bkGvcjNi6kCGjARZfGNNhxfm9nfNA14b0iiCRrfZs563PY2peN+EAe
+	 WrXV+gb0/+NVub2kiVObZOOWpV+/uxPK6My/j8WdV6ZbErpBXkmG8uvWpMB5VVI/gr
+	 Jb3hB2/Qqt2VrbbrwzpX0O9AEfMlrNE0kCfY7qyTur7ySPpN8SjSXtDvhn9tO/0ihO
+	 wrjf81tw9DwD3gEgevi+3EuQOnnIlp2P821o5AKHTRacJ5uH0KzxLBT/1YGevT6FcW
+	 IE3O5E7hVQBBiwA725BV21NYWE5Oq16mBZeTMnjLnaqL8zplv9GH2GLkhy3Ubar7FP
+	 ku6PavIR4hSaA==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uT4Ji-00000000e4O-3hyM;
+	id 1uT4Ji-00000000e44-39j2;
 	Sat, 21 Jun 2025 21:55:58 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -36,11 +36,10 @@ To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Akira Yokosawa" <akiyks@gmail.com>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 13/15] docs: sphinx: add a file with the requirements for lowest version
-Date: Sat, 21 Jun 2025 21:55:52 +0200
-Message-ID: <3bfcb9d4ddb303e2f0dd678fc590bac52bb4c1dc.1750535171.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v2 08/15] scripts: test_doc_build.py: improve cmd.log logic
+Date: Sat, 21 Jun 2025 21:55:47 +0200
+Message-ID: <48078563434a857be8077d9707e539faa70a3521.1750535171.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750535171.git.mchehab+huawei@kernel.org>
 References: <cover.1750535171.git.mchehab+huawei@kernel.org>
@@ -53,71 +52,65 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Those days, it is hard to install a virtual env that would
-build docs with Sphinx 3.4.3, as even python 3.13 is not
-compatible anymore with it.
-
-	/usr/bin/python3.9 -m venv sphinx_3.4.3
-	. sphinx_3.4.3/bin/activate
-	pip install -r Documentation/sphinx/min_requirements.txt
+Simplify the logic which handles with new lines.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/doc-guide/sphinx.rst        | 23 +++++++++++++++++++++++
- Documentation/sphinx/min_requirements.txt | 10 ++++++++++
- 2 files changed, 33 insertions(+)
- create mode 100644 Documentation/sphinx/min_requirements.txt
+ scripts/test_doc_build.py | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/doc-guide/sphinx.rst b/Documentation/doc-guide/sphinx.rst
-index 5a91df105141..607589592bfb 100644
---- a/Documentation/doc-guide/sphinx.rst
-+++ b/Documentation/doc-guide/sphinx.rst
-@@ -131,6 +131,29 @@ It supports two optional parameters:
- ``--no-virtualenv``
- 	Use OS packaging for Sphinx instead of Python virtual environment.
+diff --git a/scripts/test_doc_build.py b/scripts/test_doc_build.py
+index 087b8c476f05..7ea6add48f9a 100755
+--- a/scripts/test_doc_build.py
++++ b/scripts/test_doc_build.py
+@@ -157,14 +157,16 @@ class AsyncCommands:
+         self.fp = fp
  
-+Installing Sphinx Minimal Version
-+---------------------------------
+     def log(self, out, verbose, is_info=True):
++        out = out.removesuffix('\n')
 +
-+When changing Sphinx build system, it is important to ensure that
-+the minimal version will still be supported. Nowadays, it is
-+becoming harder to do that on modern distributions, as it is not
-+possible to install with Python 3.13 and above.
-+
-+Testing with the lowest supported Python version as defined at
-+Documentation/process/changes.rst can be done by creating
-+a venv with it with, and install minimal requirements with::
-+
-+	/usr/bin/python3.9 -m venv sphinx_min
-+	. sphinx_min/bin/activate
-+	pip install -r Documentation/sphinx/min_requirements.txt
-+
-+A more comprehensive test can be done by using:
-+
-+	scripts/test_doc_build.py
-+
-+Such script create one Python venv per supported version,
-+optionally building documentation for a range of Sphinx versions.
-+
+         if verbose:
+             if is_info:
+-                print(out.rstrip("\n"))
++                print(out)
+             else:
+-                print(out.rstrip("\n"), file=sys.stderr)
++                print(out, file=sys.stderr)
  
- Sphinx Build
- ============
-diff --git a/Documentation/sphinx/min_requirements.txt b/Documentation/sphinx/min_requirements.txt
-new file mode 100644
-index 000000000000..52d9f27010e8
---- /dev/null
-+++ b/Documentation/sphinx/min_requirements.txt
-@@ -0,0 +1,10 @@
-+alabaster >=0.7,<0.8
-+docutils>=0.15,<0.18
-+jinja2>=2.3,<3.1
-+PyYAML>=5.1,<6.1
-+Sphinx==3.4.3
-+sphinxcontrib-applehelp==1.0.2
-+sphinxcontrib-devhelp==1.0.1
-+sphinxcontrib-htmlhelp==1.0.3
-+sphinxcontrib-qthelp==1.0.2
-+sphinxcontrib-serializinghtml==1.1.4
+         if self.fp:
+-            self.fp.write(out.rstrip("\n") + "\n")
++            self.fp.write(out + "\n")
+ 
+     async def _read(self, stream, verbose, is_info):
+         """Ancillary routine to capture while displaying"""
+@@ -301,10 +303,10 @@ class SphinxVenv:
+             make = ["make"] + args.make_args + ["htmldocs"]
+ 
+             if args.verbose:
+-                print(f". {bin_dir}/activate")
++                cmd.log(f". {bin_dir}/activate", verbose=True)
+             await cmd.run(make, env=env, check=True, verbose=True)
+             if args.verbose:
+-                print("deactivate")
++                cmd.log("deactivate", verbose=True)
+ 
+             end_time = time.time()
+             elapsed_time = end_time - start_time
+@@ -356,10 +358,11 @@ class SphinxVenv:
+                                        python_bin)
+ 
+         if args.make:
+-            print()
+-            print("Summary:")
++            cmd = AsyncCommands(fp)
++            cmd.log("\nSummary:", verbose=True)
+             for ver, elapsed_time in sorted(self.built_time.items()):
+-                print(f"\tSphinx {ver} elapsed time: {elapsed_time}")
++                cmd.log(f"\tSphinx {ver} elapsed time: {elapsed_time}",
++                        verbose=True)
+ 
+         if fp:
+             fp.close()
 -- 
 2.49.0
 
