@@ -1,193 +1,126 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D010B2745C;
-	Sat, 21 Jun 2025 11:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3C11A2632;
+	Sat, 21 Jun 2025 11:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750504865; cv=none; b=izXt+qMEgtDCXahfhlmhO05TlJwkO0FLi7i9nEH6FZN0sUvfDPsQ0Rws1a1EZF8zQwGP47Ce99Nw9+BoMNvZpzj5HvGPFre0aR69l3XdlkqSdXGTQFe9qDMtEkV6Ueq18k+I7CkDUj3M1zhxLPdLukglU/LBQewXDHrjA+zeZQg=
+	t=1750504922; cv=none; b=tiCG8LDieJmy/NSVuwCledpZ8VjgZn7wrogN/M6nViXA5DTj2+DffvrLzftSbrfYbSC1xWXaET9U0GtdcjNVzsEPjb7pOUSFEW0ZZo1rqOTrKawXM5yTcHL6jWzEvBIbEtL5c48FDJgPurpBsyLtKE95DfY41pgPncenanWIkIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750504865; c=relaxed/simple;
-	bh=NR5ZXDg0NMK7LZl7jdtTqHrpcosN3wt+H3ZvZL64uuA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gww6Uge/dXME+wuxc7o2lWhsV8DqaRAOjf9fql6fOZpJ7vfBAzUi/CCGRo6lgUBnhV0aAvTfXIql4QGIWQEwvu6t37EcQSVcMqexHqpbPRyKVKy6gGedP4gPY9CZyRAOMlLI4JVINtwR+nEMtPZNrYEyk6oDe66fJTfNvV3tmL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C9fUaMmt; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1750504922; c=relaxed/simple;
+	bh=ohRWAiCfbgS/aXA4RVDCNgMCTaTOzaemdQHvS/o3vaA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aQKJpq9UE9vuVniZWoAyXS5hstLFgkMhIBBDhNqbsuNIi7jERU4y9M4Hjel+eIo5XTZI0YnHxV5esOdS0i+m6MI+BcoRvZUYrq23ssUzleIJ7xp1gmUpC8SjnAvsHgt6hQOhY5jSLktjk8f3ymAi6TNO3LH4nAqKKtbqAvZG3Fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LgspikS3; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9fUaMmt"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-453636fa0ceso18661645e9.3;
-        Sat, 21 Jun 2025 04:21:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LgspikS3"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7490acf57b9so1226539b3a.2;
+        Sat, 21 Jun 2025 04:22:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750504861; x=1751109661; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TVtHXMoHrZpItcZ9JNMwabBUxiaMZC31W4Vj2gMNddg=;
-        b=C9fUaMmt/zQSHNMJwFLGtEYDinTX7XnL/DxsERk0APy/z0VtXOeJmuPpskJ3MGZkrd
-         1dUOL1fyu8LtRO42i4/xxvsHxcmm32VOZhCKAXghKWE0RmC8KxMgFS7j2tEC4f9l4K1H
-         1Bj3qgrnwv7AOMwXs7an4aYYIVU1I8Iw0uFXyRJzB84ONqnuc10VEDgfkWOWGTQC/ycp
-         AXfuBaJ+OFcn19/NExei6t0BN8d8bINLoq0IjXyx9pA2XT8kb7lev/zGAJiNzzjT/X1M
-         eS2jVzwtC9v6pRCP82jWsuVjIgKTPByyUr7sv6PdZc4FyjZqmWOP/CqGOolKL8yN2rH5
-         QUgA==
+        d=gmail.com; s=20230601; t=1750504920; x=1751109720; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=woaxyv+j8Y1KBB+MeQ1QihpwoORfG9XIi5cXFKLshHY=;
+        b=LgspikS3QWbS7AEfkDfIyHrBxJXHptEDK4tNt+Fni4VsppADcWd4cpOTbk8gsZJFGn
+         ZzWC5mYPEPJmcU4Y5rArCcoS6i0HI9YvIpkZUnqQJELHVL9fcD/Be43LC9XCHg44duDy
+         qOwv82obbAQyiDpYZUI/x4lSNglNIpWMWSVTd6PpNk9CPe1sBGeruaBqz3hRQVgIvuI9
+         I/gq1BgDpNS39Jx5rW7ZcHALVpkCauGk80ZZ6BlhB3MxiYH0/L2XN/WhtlijHX90OcHp
+         4YARCs9B/jWQW+ROfpwJxoDHxqdo+WdR3+MwwJwiaK/VimspuEcud3t29U8VywpI+XQH
+         1xGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750504861; x=1751109661;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TVtHXMoHrZpItcZ9JNMwabBUxiaMZC31W4Vj2gMNddg=;
-        b=oSxm9drFjkHwxkd2/PCXe/0CiWdmj13Yf5q0LrLxBIceBoaXCw6XViI4sFIH9qJTwe
-         bOdGyW82g4lMu4/eIZ415Tdg5AlMGBQMVvBndnK/xopLO2t5yTIXi6ZgPsdg0h/aFwK/
-         kSXZLUDLBRIzEOydaRUcz/VWAnrCftkYWtV2opwlF5MCEUTEHyshWjl1thxqw3q7O7VA
-         dInRabQXzIZX+SyaCy7L2G8C8z/9DLiDeC9zvm8OSKFDJTEp2H0wbQeDLgIW5LJy1+XG
-         MEE5uGVQzX6v2oSLwvbBS/xSJYrOWbGPTIEySpIDPyOlCnZBGykDABH/Nl2Y542ru245
-         qazw==
-X-Forwarded-Encrypted: i=1; AJvYcCWnB52WIyq1ELvarf6F+KRvQF1sLUfhboirkqIxFu0VTD36zfqdBYBK4iUOJgbo/puT7djFr3NapDVgHO+E@vger.kernel.org, AJvYcCXUnVm79Cf7UixJdfFluyNnzmxnh/ieeNYD6+SeNAvNgY0UlccSCkw9IIcS4QlhkXGgK9E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVnj34Ijrq8XEhybBwFe05LLiWdMEHjZDFvUqUcWnKAzCjrlIr
-	d/lG/V42csbOjg9dZGjUkMNG1hJknyt7Qr30ecrpizDM0NFDN8PZpgN7qLk4iA==
-X-Gm-Gg: ASbGncv25fexLfjdBeGG9T4MreJVs4jSOtgr612hTqG1LE5ONVJbt7EE1Qe3hQZ5gBo
-	W3JfXNH/gvYxYQPmG4TRisoZWZE6uBMhTTQJIr39cPrxsUiecC33XZAbTHUKGjK3deg2P0tBXVG
-	2TVM2H9FPFAfl5XJTvAzkop4LbNoV+5HaL/P//a9G8EYutb8g5mljZfWVYoJIo6n1bcc6CqRxAC
-	E+ad63J7isQewpn3DzOtrb7Zt0GncDFvfKry4XdXNrzq7GteWpoI8/SNnTqv6OlyUHVsMyXpDwz
-	8pzghe1ObU6s/QTjsVNqw5OUMEfPKoKUmxZnLUCJMt/jpiDs5iyM4py3TiUVcvP3BGZ7A9dNu0s
-	rPa8vcjl6OA8feAkIKYfiKSnl
-X-Google-Smtp-Source: AGHT+IFjYknI/NeOW18++Rn42Mxx5swXjhEFW71pYEimDWbmXgcrBx4iFJVHTv3S7pkDar/TjlhEEA==
-X-Received: by 2002:a05:600c:a48:b0:453:6b3a:6c06 with SMTP id 5b1f17b1804b1-4536b3a708amr19192415e9.29.1750504860877;
-        Sat, 21 Jun 2025 04:21:00 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535e9844a9sm86192885e9.12.2025.06.21.04.21.00
+        d=1e100.net; s=20230601; t=1750504920; x=1751109720;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=woaxyv+j8Y1KBB+MeQ1QihpwoORfG9XIi5cXFKLshHY=;
+        b=cydzBnGzkhkILjKrfTh6nlsJs+YUrBakmoMe/JHJjvGG2UOhoCHEOXJzRf6ODDSCcH
+         GYIzD4+mem1tgQ3Hhkf5T7r2OfRTPGYtyqUxPOgTx7IHtuHt8x0XC2VExpRG4sjtMV2D
+         SiGFE/t0DYBUCyM8qRlDeAlHGkVF6C4V7+hYAic7UpCi2kGQZ3u5sr+OLPg4+U7fZ3mZ
+         nrwg8vqby8TqEdJ9UED7ou7OVw73o93uOEDDRYbS1D/mZ3wz529CPvCbiJRD+mZDrOfU
+         NGIZy/4xRiXNdX7e1A0Rgv/YIpRke3+XJ03s3o8N/IBRG8WVcT5K5DWI9walGwaA++5T
+         Jq+A==
+X-Forwarded-Encrypted: i=1; AJvYcCXRNfaiQoekEDDupNMVEPNIsov8+/46C/B2UM4etV6Jltlgn9RxF8spD2R/myh+9iZxV0IqlBsELrJV/h0+@vger.kernel.org, AJvYcCXjCGgvgdImHP89VL7bJIesQ0oibfNiPJeSi16747o0QL4kVMXp8RonRon1fkOQ5XIBXTW0TjFR@vger.kernel.org, AJvYcCXqE6dv92Wkb9BEaKzHCjMKHVnViAZaKg0wsFjkxZmeMFs2TL1NHkkGUqtIJWDlkyNUvKrryH/pKH8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyG1UkW/qyVmf11Ebb5oyJRGYRtvucyDBO8BIFk3DDOn/UCTLt4
+	DB6BWzJ3NlbY9txf3iCD8tmOVLbRSgZCY8cULxHQJ+Flj+Drd1YGKP52
+X-Gm-Gg: ASbGncty4QxyQxJHcDrGoTJqQNtPTRC17qBpizN+x0LtGk+XDgSrC9i55cxIFCHNMIK
+	WKygWHFb28IZ3StVwHfGE60xkVcJhjvO6Cs7WWES0s4zVrqtt/IGLmpTJmjVP3ZXBxmNr4cg2GH
+	6pS7MKiKg0+2sFqQwZdJnRek6atzakQRF5+DdhU11ojvMrutAwUYFw7skb6q1qwYTk+kn7CCVbm
+	fAHLxvXXCT9wKHlsllS4LJ1Pr1VD/KUY/BCOE8w6aOEQzvBQn2xNs25yv/iW8QXo6jI7l6wAzlo
+	w1xelkGZEUaMj/sYx+fQ19zFU4Eb08Wd2eUe2dJOXfV2adtpKLM6otwOn6OTiw==
+X-Google-Smtp-Source: AGHT+IG/O8T1LnjkmwUuzaEvqwFNIWd0CfKLMGROZs4Ty0QlCl2WpaGZb0qmuhiRZruQg4JzjsVl/Q==
+X-Received: by 2002:a05:6a21:68b:b0:21a:d061:2f84 with SMTP id adf61e73a8af0-22026fa63a8mr9871935637.30.1750504920143;
+        Sat, 21 Jun 2025 04:22:00 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a4ac6b2sm4099007b3a.69.2025.06.21.04.21.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Jun 2025 04:21:00 -0700 (PDT)
-Date: Sat, 21 Jun 2025 12:20:59 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Bibo Mao <maobibo@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 9/9] LoongArch: KVM: INTC: Add address alignment
- check
-Message-ID: <20250621122059.6caf299a@pumpkin>
-In-Reply-To: <CAAhV-H6Eru5e6+_i+4DY9qwshibY43hjbS-QC-fhLD04-4mOGw@mail.gmail.com>
-References: <20250611014651.3042734-1-maobibo@loongson.cn>
-	<20250611015145.3042884-1-maobibo@loongson.cn>
-	<CAAhV-H6Eru5e6+_i+4DY9qwshibY43hjbS-QC-fhLD04-4mOGw@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        Sat, 21 Jun 2025 04:21:59 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 0A4874207D0B; Sat, 21 Jun 2025 18:21:54 +0700 (WIB)
+Date: Sat, 21 Jun 2025 18:21:54 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Cc: corbet@lwn.net, davem@davemloft.net, edumazet@google.com,
+	horms@kernel.org, kuba@kernel.org, pabeni@redhat.com,
+	linux-doc@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	skhan@linuxfoundation.com, jacob.e.keller@intel.com,
+	alok.a.tiwari@oracle.com
+Subject: Re: [PATCH net-next v3] docs: net: sysctl documentation cleanup
+Message-ID: <aFaV0kD6zI6N0Keg@archie.me>
+References: <20250620215542.153440-1-abdelrahmanfekry375@gmail.com>
+ <aFZ5OhP3Ci5KzOff@archie.me>
+ <CAGn2d8OT0SS+wYphKBmM21Lo__N_ZFRyZCQ8pL34c0Z0bqDoag@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="LQzEutQpcKFcOvi9"
+Content-Disposition: inline
+In-Reply-To: <CAGn2d8OT0SS+wYphKBmM21Lo__N_ZFRyZCQ8pL34c0Z0bqDoag@mail.gmail.com>
+
+
+--LQzEutQpcKFcOvi9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 19 Jun 2025 16:47:22 +0800
-Huacai Chen <chenhuacai@kernel.org> wrote:
-
-> Hi, Bibo,
+On Sat, Jun 21, 2025 at 12:58:46PM +0300, Abdelrahman Fekry wrote:
+> On Sat, Jun 21, 2025 at 12:20 Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+> >
+> > On Sat, Jun 21, 2025 at 12:55:42AM +0300, Abdelrahman Fekry wrote:
+> > > +     Possible values:
+> > > +     - 0 (disabled)
+> > > +     - 1 (enabled)
+> > > +
+> > > +     Default: 0 (disabled)
+> >
+> > I see boolean lists as normal paragraph instead, so I have to separate
+> > them:
+> >
 >=20
-> On Wed, Jun 11, 2025 at 9:51=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wr=
-ote:
-> >
-> > IOCSR instruction supports 1/2/4/8 bytes access, the address should
-> > be naturally aligned with its access size. Here address alignment
-> > check is added in eiointc kernel emulation.
-> >
-> > At the same time len must be 1/2/4/8 bytes from iocsr exit emulation
-> > function kvm_emu_iocsr(), remove the default case in switch case
-> > statements. =20
-> Robust code doesn't depend its callers do things right, so I suggest
-> keeping the default case, which means we just add the alignment check
-> here.
+> Thanks for the fix , should I resend it or is your modification enough?
 
-kernel code generally relies on callers to DTRT - except for values
-that come from userspace.
+Resend (v4), with the review suggestion applied.
 
-Otherwise you get unreadable and slow code that continuously checks
-for things that can't happen.
+Thanks.
 
-	David
+--=20
+An old man doll... just what I always wanted! - Clara
 
->=20
-> And I think this patch should also Cc stable and add a Fixes tag.
->=20
->=20
-> Huacai
->=20
-> >
-> > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> > ---
-> >  arch/loongarch/kvm/intc/eiointc.c | 21 +++++++++++++--------
-> >  1 file changed, 13 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/int=
-c/eiointc.c
-> > index 8b0d9376eb54..4e9d12300cc4 100644
-> > --- a/arch/loongarch/kvm/intc/eiointc.c
-> > +++ b/arch/loongarch/kvm/intc/eiointc.c
-> > @@ -311,6 +311,12 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
-> >                 return -EINVAL;
-> >         }
-> >
-> > +       /* len must be 1/2/4/8 from function kvm_emu_iocsr() */
-> > +       if (addr & (len - 1)) {
-> > +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", _=
-_func__, addr, len);
-> > +               return -EINVAL;
-> > +       }
-> > +
-> >         vcpu->stat.eiointc_read_exits++;
-> >         spin_lock_irqsave(&eiointc->lock, flags);
-> >         switch (len) {
-> > @@ -323,12 +329,9 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
-> >         case 4:
-> >                 ret =3D loongarch_eiointc_readl(vcpu, eiointc, addr, va=
-l);
-> >                 break;
-> > -       case 8:
-> > +       default:
-> >                 ret =3D loongarch_eiointc_readq(vcpu, eiointc, addr, va=
-l);
-> >                 break;
-> > -       default:
-> > -               WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx,=
- size %d\n",
-> > -                                               __func__, addr, len);
-> >         }
-> >         spin_unlock_irqrestore(&eiointc->lock, flags);
-> >
-> > @@ -682,6 +685,11 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
-> >                 return -EINVAL;
-> >         }
-> >
-> > +       if (addr & (len - 1)) {
-> > +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", _=
-_func__, addr, len);
-> > +               return -EINVAL;
-> > +       }
-> > +
-> >         vcpu->stat.eiointc_write_exits++;
-> >         spin_lock_irqsave(&eiointc->lock, flags);
-> >         switch (len) {
-> > @@ -694,12 +702,9 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
-> >         case 4:
-> >                 ret =3D loongarch_eiointc_writel(vcpu, eiointc, addr, v=
-al);
-> >                 break;
-> > -       case 8:
-> > +       default:
-> >                 ret =3D loongarch_eiointc_writeq(vcpu, eiointc, addr, v=
-al);
-> >                 break;
-> > -       default:
-> > -               WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx,=
- size %d\n",
-> > -                                               __func__, addr, len);
-> >         }
-> >         spin_unlock_irqrestore(&eiointc->lock, flags);
-> >
-> > --
-> > 2.39.3
-> > =20
->=20
+--LQzEutQpcKFcOvi9
+Content-Type: application/pgp-signature; name=signature.asc
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaFaVzgAKCRD2uYlJVVFO
+owp9AQC6yCLXGLrK6u9AU7f1j4MGLkn7iAokGhf3h4Sn5sFUFwD+NWMMTo0awl4Q
+nQikhcvXjjXr+nCOmOTomS1uS3ZQEwU=
+=8KNA
+-----END PGP SIGNATURE-----
+
+--LQzEutQpcKFcOvi9--
