@@ -1,162 +1,281 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2041.outbound.protection.outlook.com [40.107.92.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DCD202984;
-	Sat, 21 Jun 2025 12:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750508503; cv=none; b=BP3amhBqKQzFjNoC0bNvSOvZP/hNacIROVfctze+6YS3iUHCBDDSYmPiCVJEgTsF8YTLAXhNrJpz+YZEQYSSaw58P+BTyA2cAaAWu4VGh7CJx2CAraD1Dk2aycvSGxTnB8nCkBhUOuAsLefS1O3QrgwLjldlZaZqcAPPnoxYZjw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750508503; c=relaxed/simple;
-	bh=bCXTNJFcuWJBhQPSMtN4ZX7UKwXQjfj35CtPr9jKOqg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jFZFVU33vJpnMZ9NEjSM3wBfVdEaZrEBJC6CZp8bFbiYPIYgtNvapqsUPe4Acf41wCzhHpKr90ibe+MlOcGj/UzolyNVXIR0Cmrg1FlIFszJUWGPFQDaNiEQb6pexUE48u1Ylfn6zzrDNOFqzZ2cFKjnmx/cpP3Y2eo5nDuTFP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ayZRG9S6; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B9E17A31E;
+	Sat, 21 Jun 2025 12:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750509604; cv=fail; b=aKzfe9BlkKiIcGFyjFCORey7nkkTlHhZFu5uAh7HsOudD9B2/KYVHIZBJbQj3OXxWTGX5Riq/0+ki26j4xbmvbzrdpc5r4NpdphD7M3m2ni6d9yzEVL0Qu+yVdIH2I6bPe9qOP3pRiTa+L8f8OB6D8QBHh1CV13QRryqtR+Dp8o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750509604; c=relaxed/simple;
+	bh=8GRiU+z/5BsyCj3Z89mTPy8lJQsFDrqWPFzAFn2A+w0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Bo1SEqbxCjFbzFsuUPi6K6dHf/w1LLBOUXo3xBytdR5fWqK0HagpSlbFqzc8Eeg9udPV1ZLGAhB/f8frSs+VFn0gHHgR1iCc7NN2HcKmpkOXOSk5gnFTWyiZxf9hjXxnzm569Ai66+cpT29Pm/z1wU1kKp4TQFupppJBFVibME0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=I9Idt5J1; arc=fail smtp.client-ip=40.107.92.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ayZRG9S6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DA27C4CEE7;
-	Sat, 21 Jun 2025 12:21:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750508502;
-	bh=bCXTNJFcuWJBhQPSMtN4ZX7UKwXQjfj35CtPr9jKOqg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ayZRG9S6pP2L6sR2ryTFXX6BpMhybkfKb/gETZJZmi5xivacmFCxLXIVnn64H3nT8
-	 YPZL15zbwt5fl9/RVcvroT7HaIFKjlGlC5mbbzwiNqPQr3zfRd5Wdzls2HuxPVi4DS
-	 9MnUC5iTTGCBH1tOjDaIWd1aTsHeIZaH8psfTDghMq4k1nu7sLJRvu4P/RWUBR9/2i
-	 arZb2xw5XFMPYdo/kk9J2F7mPanI7Zzbw06lOqauOjlfEra+ZNkzsHn6R7rCdwKWlW
-	 vyHlZwnTSeVOGCazoa7OAHX8YZJOb0IW6PnNYjJE3GAFVrRGTmnRZ8io1D0L6O7n3O
-	 B6lF61kpayVnA==
-Received: by pali.im (Postfix)
-	id 95CEA3D2; Sat, 21 Jun 2025 14:21:39 +0200 (CEST)
-Date: Sat, 21 Jun 2025 14:21:39 +0200
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Paulo Alcantara <pc@manguebit.org>
-Cc: Steve French <sfrench@samba.org>, Remy Monsen <monsen@monsen.cc>,
-	linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cifs: Fix lstat() and AT_SYMLINK_NOFOLLOW to work on
- broken symlink nodes
-Message-ID: <20250621122139.3xq675cbs5kgkd7t@pali>
-References: <20250610213404.16288-1-pali@kernel.org>
- <26e59412fa2c70efad5f9c585bfc198f@manguebit.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="I9Idt5J1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QR5EsIHdFgfDLYt8YToIi6n/H4+muoURIcYnYYvUTMC0soYCj2G7KWMFr3+Loh0SjYk7xkksl23eRNSilzavWkB6gQaFaa0Rtp3TXOIM4xi4hOBZ9MY6sepkwUqVbPuRKYGt381XLf3ktc8ABClmq5Xu+86XutqMG/2L9MEpmrNek9l5EVIFiERT6XWht0WkrAkLu+JwY2lyKY+b3girht8SQ/XGhiU2efff/ITsDNWKkUImQSqOpwe4foYGjryGqPPm+SHF6eZ45aNdgVpxx5SVHBg64leGnKin3cOx1Pf2OpZgcHkgVIbuo33QdmAs2jHi1a1hCWEw7aBEiMPA+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=M/r5nKLOpLVqtysU7Ue9BISGQW4R4frbj7crEdX7oPk=;
+ b=r7YuZWiz+7VkBJkH/yvHqpYB7+r60Am9qdqov1KUcSQMtJUcb71Nz6BWG2RvwEjLf2zba+da/W1Ebjhph6IUPsGXwgmXRmlUEVY+SvPiyFaTAdjpMUkI1OI7DqupTRo06s+rvPOMOYAgGTnJn6ohD5aS0M2UfYHrLFSYL8+wbRb89fvg60ad3sqJY3lqEkV8HyFN6tTqo/+INsR3UNIBCrDs5QyHScsERDrS6+jV0m2VA90Z6AXpH4g49wl7KVEeV668dgqwQ5x97MXsMhsIfu+PIAf/1FfPYMKpHTcKbFRpjqrsaS2RoiUSRTaTcN9NGJsvRvAcUu7OQLa9b8UPsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M/r5nKLOpLVqtysU7Ue9BISGQW4R4frbj7crEdX7oPk=;
+ b=I9Idt5J1K0bNODvRHqbseiza5I5iq7q0kOcxgNNoUu+FgiOKzhlOaO/WYRaFn8UrLS4lN6/PtCjbs/uZdyJo93956LcUpyzcuNF7LW6V42m7+akQjPyd3XFqeLqoSneGhfXkgxfg+G3WwsmMdoq69OAICsOOlxIEKRnxVVs+aoo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4123.namprd12.prod.outlook.com (2603:10b6:5:21f::23)
+ by CH3PR12MB7569.namprd12.prod.outlook.com (2603:10b6:610:146::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Sat, 21 Jun
+ 2025 12:40:00 +0000
+Received: from DM6PR12MB4123.namprd12.prod.outlook.com
+ ([fe80::512d:6caa:552a:7ebf]) by DM6PR12MB4123.namprd12.prod.outlook.com
+ ([fe80::512d:6caa:552a:7ebf%5]) with mapi id 15.20.8857.022; Sat, 21 Jun 2025
+ 12:39:59 +0000
+Message-ID: <feed5d33-63a5-4657-b9d8-34bd7f969ed3@amd.com>
+Date: Sat, 21 Jun 2025 18:09:51 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ASoC: amd: ps: fix for soundwire failures during
+ hibernation exit sequence
+Content-Language: en-US
+To: broonie@kernel.org
+Cc: alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
+ tiwai@suse.com, Basavaraj.Hiregoudar@amd.com, Sunil-kumar.Dommati@amd.com,
+ venkataprasad.potturu@amd.com, Syed.SabaKareem@amd.com,
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250621095002.1336167-1-Vijendar.Mukunda@amd.com>
+From: "Mukunda,Vijendar" <vijendar.mukunda@amd.com>
+In-Reply-To: <20250621095002.1336167-1-Vijendar.Mukunda@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0173.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:26::28) To DM6PR12MB4123.namprd12.prod.outlook.com
+ (2603:10b6:5:21f::23)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <26e59412fa2c70efad5f9c585bfc198f@manguebit.org>
-User-Agent: NeoMutt/20180716
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4123:EE_|CH3PR12MB7569:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54dd3252-e535-4c13-2f01-08ddb0c0bbce
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RHE5U2M4WksrR1pIRXZVUE9CNlZTc2FNK0tpcGlGdXVQSGFiWUpVTFVBeURu?=
+ =?utf-8?B?MHZSejVUTG83VEJqMXdYWktRVEFjYWJqWlB5SHJ2VldJc08zamxoajIvSHZr?=
+ =?utf-8?B?TDQ5OWVRUUpSZ3E1N2Z5bE85NmdBd1RXWE5XMTI5K0UzcXFMZUIvVnRVSEp0?=
+ =?utf-8?B?K3RRQWtwRXp1N0ZtRnRaWCthT0p3MjNoaTVBMnJpTFZ4UjRraVh2MW5FdFRW?=
+ =?utf-8?B?bnNLcUhRNGpCejByNWFtMEZIcmRqYjEweWN1R1ZaZ1Q2K2hZRTNhKzZvckhP?=
+ =?utf-8?B?aWhxeTd6ODE3a3gyR3U1YnVLZUdVZXRQK05HWnJoaWZmNzJmeFo0UkdBZ1pS?=
+ =?utf-8?B?V2tLUFN6eEphSS9DUFBCNFp2OVpRVHYwaUVmS1BVbDR3M0ozOEtOaHM2YnJ4?=
+ =?utf-8?B?dWxaR2FFWkJjSEQwaFlpQU0vekp5UnlkWEZXVkhqcC85MGd5RXh1bWVmQzIw?=
+ =?utf-8?B?cDRnWURUdCtvd0RJNWhXU012OU9hTEVkOVdtMHd2alVPc0dmUytEQXZXQ3V1?=
+ =?utf-8?B?WFdwMUVrU3JJbE5RNktJM1hWWkY4L2JoRjJsaWxKUXRhNGFHR1Uzcml4OVZw?=
+ =?utf-8?B?cnUzMGVzSU1mU011VFI0ZUtFbnF3VGg0ZDJIdmxwQk4xc2xaK3NEL1pEWEky?=
+ =?utf-8?B?OFB2SUZKM2tJV0NYVWRGR29LaytYbzAyUU1XaDMzakgva3pkQzZqdXlwUjFP?=
+ =?utf-8?B?bWJFT21NQ1lVRTZVNkIxd21NckZGU0N2WnJZcmlDcnp3dWN0WXZ0MVFRSG5t?=
+ =?utf-8?B?TVBlVDRlVHl5U1FSS2JrSldDRjRCSzA4UDRBQlBtNVlraFNsTkxoUXJlYWJN?=
+ =?utf-8?B?Z0JPR0RXQUM1UzJuN3hMWWdRS3dNbENYZmRCUDZ3bjdVKzVvUEpWeUZTdlpD?=
+ =?utf-8?B?MDU2V3dKaDdNN3R2TmE3RERSK0d6cDljNnp0UlkzQVlQZFJ2L0RhaWJxMUt3?=
+ =?utf-8?B?M3Jkd1dncWVTS0o4T08vankyejROajVSVVNpVHhrTE5DSnM0aDFNd2UwL1Bh?=
+ =?utf-8?B?bVNvR1NlbVVBbUdTeTBPTEJPTSt0Wm42QUtBd0ZBQjY2cFBtMWJmQjdCcTUv?=
+ =?utf-8?B?a1VGVzNjbXJlNWgxb0cxN0piMHNRR0twcDNPYnJNRzR6bXBscnZMVXdZQzJ0?=
+ =?utf-8?B?ZmlEL0VBYVNDNjAvNkVpWUgxL1hvNmFNeDZmM2lGY3ZJSnJjWUY0cEtyV3BZ?=
+ =?utf-8?B?amNwcWN0MHZmN1hRSnQzTUplQlhtSnd1VVNyQXowWUl0akpOd1BZMWpob00y?=
+ =?utf-8?B?YmM3cDkwazlYSUJmQkZDVmdJbGhMWnVYaVVQMVl0Qk1ubGd6K080cFp5R1JP?=
+ =?utf-8?B?L0FNNEwweVIrdDc5d1Q1ZG9kZ0tiZ2tUblhCMHZ1VlJnNytQaGg1YmFPWDQ0?=
+ =?utf-8?B?SXpZTXBPOWwvblBxSjFqOVZSRm1LUkZ6NERkQmVvYVY4RWMva2RIenBmNXNX?=
+ =?utf-8?B?ZmliNFdXTnJUdkhhSEZNVklJR1FDeTJsazVYSW9UVXl0RkhJWGI5VHRVckFR?=
+ =?utf-8?B?aDRCeElxUjhGeGJWTjNGYTN2eEg0a1ZIZXcyS0NVN2RyamRFRnNLSStSWjRW?=
+ =?utf-8?B?UXZ3VEJKVGwzbkxBcGpVQXo0Q1lYZ3dudHgxNkNqVFpSWEYybE1Sc1ZlUTlB?=
+ =?utf-8?B?OWhBU0RzWUlYcSsrWDY3NW0xTUw0c1U1WlJKMUNIbVZROXRISi9NeHVPQzZI?=
+ =?utf-8?B?dnFjVjRYOXpaakErNmZmNzJ3QWdlZStJQnozdlNEREtQVXpvMzlkOG16UEJ6?=
+ =?utf-8?B?V3piUkx0QlIrc2o2WC9BQWFWUWlWaGFKc3ZmaEtmMDZOMUlUbGJVVmdWM3RW?=
+ =?utf-8?B?TWl3aTFwWGxkaUVacE01WEVzdVUwdXY0RGtLZ3lUN29KS2xGcUdvRGt5RXgx?=
+ =?utf-8?B?UVBxdWZKV2oyc1FnaHRJZG8xZVFGc2UyckFTTFdCSGxMTUVPRHBLMXdJMW0x?=
+ =?utf-8?Q?8f8f+PfaWD8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4123.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dTZNTlhzNVFWLzl5RjVkdE5OWElWbmRxWC9oWStYNG4xVG5hblpuWlJOc0da?=
+ =?utf-8?B?aEE1aXA5dWlDUElmenRSVHNKOEU2aFFiVEt6VjJkNDRyKzdURTZYWTdUam1H?=
+ =?utf-8?B?WHE4cGp4N0pWQkIvRVFQRU8rTmNISUhkZGdQQXdReElwYWlzSktYeWh4OWhV?=
+ =?utf-8?B?REpjbER0NVdPMnlRMEVSSlJwR0dOU29wcnN2cUVONldNRTFGL1dlSkF0VDV5?=
+ =?utf-8?B?MHc2ZzFLdFJzUUsyOHQwK3pGS3pvMktCekZlN2x4T1g2dUl6dHZ0TUhJUVpF?=
+ =?utf-8?B?anRodXNzaXJQalZJR1dnS0lrM0Fla3R1RkhJRldoQ2pybXNlWVRoVHhBdkVz?=
+ =?utf-8?B?WUQvV281dU4yaWVTNmRpSW13MkZEVklHNEJIa3pERnVFQUdOb0ZTa3pYb1E0?=
+ =?utf-8?B?VEpQZnRFYjZZMUhpdTFLSTRwQ1NDZFhxUllYZGtlT3UwbnFEUnRhNXFJbFZr?=
+ =?utf-8?B?eSt2S3l4R3BBMml0VEsvRUxqSGVaYTBhUnlwSU84MVk2a29aRTZTUjE1SlNT?=
+ =?utf-8?B?K0RkM21OSVhaUmtJT2Z3ZVhidVIzY1hkZjgwR0ZIVFoxZTR3ci9tNHYwTmhl?=
+ =?utf-8?B?TGFweU02cHZ4emUxMmJCTkkvZFZ6dGV2V01xeEI0ZG9XcDdQdXZtaFdsZHRW?=
+ =?utf-8?B?SHZVdVlXR05pOVl0ZEtFYWRUb3hKKzBTdW45bGdycldkOTVTOHhGSmdab3Vq?=
+ =?utf-8?B?VkFHRE1SMlgvaEROcUJTc2xOUXYzR3QxU3B6TFBROVNhSjJOa1dTN3V1VzRV?=
+ =?utf-8?B?bitCelM4M1BUMTFjMm1xR2NaRjFNeTFzMk14R0hNb2VpMXM3dXU1Y0NDeXQ3?=
+ =?utf-8?B?cEF1VUZ4TjU3OGplZTlNSHgzWUxoTkJIWE95R0lueEVjY0RsLzBaREt1Ynoy?=
+ =?utf-8?B?a1I0eS9QVm45dDJDOE5OeldudlhJSzYvM3ZjMUMyWUUrRG96UCtxTkFBTHk4?=
+ =?utf-8?B?U1lEbURWZU9FMDRWSW9YL3A5OFlOa01YMzJybWdPckhzNFNpVU9aVXpFUE1r?=
+ =?utf-8?B?OEtWeVV0WUF2alRQRjVNZ1FyNjdDbG55ZnV2eHM1MUdKczUwZTFsZEg3YUpa?=
+ =?utf-8?B?enhvdkNHcGZsK0xla3RkRnA1SGZtcmpMUDFXOVR4bU5mQWk3SjZ5ZUZLQm5x?=
+ =?utf-8?B?N2cvK0pIMXYvMFBXQjl4SmJJVnVWWlpyWVAva0o1dWZzVnIxT0RXMlFUUXVJ?=
+ =?utf-8?B?UkUwc0dyZ2R3OVlOaCsxVXRNTTkyZ2tVbkR0Z05vNDJsaWRqUUFzc2s3MUhW?=
+ =?utf-8?B?QzlzeTl2Wm9pY2NwdDR5KzNHaVkvaEt5Rk0ydEFjSEcrelJjK2U1OGtEN2lT?=
+ =?utf-8?B?UVM3a0JtVWx3ekpvR29CYXIxM2VyU1ZZbEl0MjJLUWx3aFlIOGhXRTQ3bGU0?=
+ =?utf-8?B?NXpEaDlZc1E4VklFTUNnQXZUYmM2blRMcTNwdGQ3SXlCZ0VQNmkyZXE0bHV5?=
+ =?utf-8?B?L0RtNGVkTzBpSHIyZ0xQQ3FQSThFcUM3OHgyRHB4MEJJRGdlWk1vY2pQanBV?=
+ =?utf-8?B?ei9xVzBkbGViUS9IZk1zUU5hWVo0aTdKT3pWN3lUemF6cTA3UU5jRVM1Rk5W?=
+ =?utf-8?B?ajljbFdjVnRFTFZlaTFDRy84dVBVWmVYRTl4amFZWTE2ZFZNWU42LzRnSncv?=
+ =?utf-8?B?cm9xMEI1YzhZYUVDR1RIbkEwTzdHeExiSjNOUThYSkl6aUZaaFFyQXJuYWlt?=
+ =?utf-8?B?Q0xrY3dLSWNueFIxNzJ4NjNZS1pPbWRSWlJMZlEzM0xMSDNVajVBcmZZelJF?=
+ =?utf-8?B?LzQwN2c0OWRQMllnUit4dTBDNVpDSGlaNWd0QUdNOWhMMjRkOWZhNnBld0c1?=
+ =?utf-8?B?elZ0MHpyZHYwcFhadDdHdnBaM2pCVE0vQld2cHd3Z1QwTHYwUHdRQ01LZHpi?=
+ =?utf-8?B?NUd3KzNEM05XUStobG9JcWUvdTdZSXg5b0FKb1diaDlmVmxBbHF1algvTHJn?=
+ =?utf-8?B?SW5xV2QrVU1telZEMjFPdWV5bURNVUlhZUxta0F3dHpUUkFPTEJsdWJpWUxi?=
+ =?utf-8?B?OGtGZW9KL0pqanZUbEo0S3BMNDFhQmdFVDRRTDAwRTI2clRmbk55YkhjbXFN?=
+ =?utf-8?B?OXZRMVNxL3VGZ0N1VnRZUVpDK3VzeXBoQitWdXpEQWFkYUowTzduVHhUZS9n?=
+ =?utf-8?Q?XzM5Dbi7UZC9axQJ0WrLxPJyW?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54dd3252-e535-4c13-2f01-08ddb0c0bbce
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4123.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2025 12:39:59.5891
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yw5/Ltf0iyjhLbik/n0i8L8YCCgIDeNljBqI40b3XAoxQm4RXZo35pQ3WPmroyULfYTmax445qdJfmVUOau6kA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7569
 
-On Friday 20 June 2025 20:44:37 Paulo Alcantara wrote:
-> Pali Rohár <pali@kernel.org> writes:
-> 
-> > Currently Linux SMB client returns EIO for lstat() and AT_SYMLINK_NOFOLLOW
-> > calls on symlink node when the symlink target location is broken or cannot
-> > be read or parsed.
-> >
-> > Fix this problem by relaxing the errors from various locations which parses
-> > information about symlink file node (UNIX SMB1, native SMB2+, NFS-style,
-> > WSL-style) and let readlink() syscall to return EIO when the symlink target
-> > location is not available.
-> 
-> Please, don't.  We still want those validations for the other types of
-> symlinks.
-
-Well, validation was not removed. Validation is still there, just the
-error is signalled by the readlink() syscall instead of the lstat() or
-AT_SYMLINK_NOFOLLOW syscalls.
-
-My opinion is that the lstat() or AT_SYMLINK_NOFOLLOW should work on
-symlink node independently of where the symlink points (and whether the
-symlink target is valid POSIX path or not). That is because the lstat()
-and AT_SYMLINK_NOFOLLOW says that the symlink target location must not
-be used and must not be resolved.
-
-But still the invalid / incorrect / broken or non-representable symlink
-target path in POSIX notation should be reported as an issue and the
-readlink() is the correct syscall which should report these errors.
-
-> The problem is just that cifs.ko can't handle absolute
-> symlink targets in the form of '\??\UNC\srv\share\foo', while Windows
-> client can.  They are still valid symlink targets, but cifs.ko doesn't
-> know how to follow them.
-
-Windows client can represent and follow such symlink because the symlink
-is in the NT style format and Windows kernel uses NT style of paths
-internally. Linux kernel uses POSIX paths and POSIX does not contain any
-GLOBAL?? namespace for NT object hierarchy.
-
-Leaking raw NT object hierarchy from SMB to POSIX userspace via
-readlink() syscall is a bad idea. Applications are really not expecting
-that the readlink() syscall will return NT kernel internals (exported
-over SMB protocol and passed to cifs.ko).
-
-For UNC paths encoded in NT object hierarchy, which is just some subset
-of all possible NT paths, I had an idea that we could convert these
-paths to some format like:
-
-   <prefix>/server/share/path...
-
-Where <prefix> would be specified by the string mount option. So user
-could say that wants all UNC symlinks pointing to /mnt/unc/.
-
-And in the same way if user would want to create symlink pointing to
-/mnt/unc/server/share/path... then cifs.ko will transform it into valid
-NT UNC path and create a symlink to this location.
-
-But this would solve only problem with UNC symlink, not symlinks
-pointing to NT object hierarchy in general.
-
-> The following should do it and then restore old behavior
-> 
-> diff --git a/fs/smb/client/reparse.c b/fs/smb/client/reparse.c
-> index bb25e77c5540..11d44288e75a 100644
-> --- a/fs/smb/client/reparse.c
-> +++ b/fs/smb/client/reparse.c
-> @@ -875,15 +875,8 @@ int smb2_parse_native_symlink(char **target, const char *buf, unsigned int len,
->  			abs_path += sizeof("\\DosDevices\\")-1;
->  		else if (strstarts(abs_path, "\\GLOBAL??\\"))
->  			abs_path += sizeof("\\GLOBAL??\\")-1;
-> -		else {
-> -			/* Unhandled absolute symlink, points outside of DOS/Win32 */
-> -			cifs_dbg(VFS,
-> -				 "absolute symlink '%s' cannot be converted from NT format "
-> -				 "because points to unknown target\n",
-> -				 smb_target);
-> -			rc = -EIO;
-> -			goto out;
-> -		}
-> +		else
-> +			goto out_unhandled_target;
+On 21/06/25 15:17, Vijendar Mukunda wrote:
+> During the hibernate entry sequence, ACP registers will be reset to
+> default values and acp ip will be completely powered off including acp
+> SoundWire pads. During resume sequence, if acp SoundWire pad keeper enable
+> register is not restored along with pad pulldown control register value,
+> then SoundWire manager links won't be powered on correctly results in
+> peripheral register access failures and completely audio function is
+> broken.
+>
+> Add code to store the acp SoundWire pad keeper enable register and acp pad
+> pulldown ctrl register values before entering into suspend state and
+> restore the register values during resume sequence based on condition check
+> for acp SoundWire pad keeper enable register for ACP6.3, ACP7.0 & ACP7.1
+> platforms.
+>
+> Fixes: 491628388005 ("ASoC: amd: ps: add callback functions for acp pci driver pm ops")
+> Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+> ---
+>  sound/soc/amd/ps/acp63.h     |  5 +++++
+>  sound/soc/amd/ps/ps-common.c | 18 ++++++++++++++++++
+>  2 files changed, 23 insertions(+)
+>
+> diff --git a/sound/soc/amd/ps/acp63.h b/sound/soc/amd/ps/acp63.h
+> index 85feae45c44c..babf2fa7ea27 100644
+> --- a/sound/soc/amd/ps/acp63.h
+> +++ b/sound/soc/amd/ps/acp63.h
+> @@ -82,6 +82,7 @@
+>  #define ACP63_SDW0_DMA_MAX_STREAMS	6
+>  #define ACP63_SDW1_DMA_MAX_STREAMS	2
+>  #define ACP63_P1_AUDIO_TX_THRESHOLD	6
+> +#define ACP_SW_PAD_KEEPER_EN		0x0001454
 >  
->  		/* Sometimes path separator after \?? is double backslash */
->  		if (abs_path[0] == '\\')
-> @@ -910,13 +903,7 @@ int smb2_parse_native_symlink(char **target, const char *buf, unsigned int len,
->  			abs_path++;
->  			abs_path[0] = drive_letter;
->  		} else {
-> -			/* Unhandled absolute symlink. Report an error. */
-> -			cifs_dbg(VFS,
-> -				 "absolute symlink '%s' cannot be converted from NT format "
-> -				 "because points to unknown target\n",
-> -				 smb_target);
-> -			rc = -EIO;
-> -			goto out;
-> +			goto out_unhandled_target;
->  		}
+>  /*
+>   * Below entries describes SDW0 instance DMA stream id and DMA irq bit mapping
+> @@ -334,6 +335,8 @@ struct acp_hw_ops {
+>   * @addr: pci ioremap address
+>   * @reg_range: ACP reigister range
+>   * @acp_rev: ACP PCI revision id
+> + * @acp_sw_pad_keeper_en: store acp SoundWire pad keeper enable register value
+> + * @acp_pad_pulldown_ctrl: store acp pad pulldown control register value
+>   * @acp63_sdw0-dma_intr_stat: DMA interrupt status array for ACP6.3 platform SoundWire
+>   * manager-SW0 instance
+>   * @acp63_sdw_dma_intr_stat: DMA interrupt status array for ACP6.3 platform SoundWire
+> @@ -367,6 +370,8 @@ struct acp63_dev_data {
+>  	u32 addr;
+>  	u32 reg_range;
+>  	u32 acp_rev;
+> +	u32 acp_sw_pad_keeper_en;
+> +	u32 acp_pad_pulldown_ctrl;
+>  	u16 acp63_sdw0_dma_intr_stat[ACP63_SDW0_DMA_MAX_STREAMS];
+>  	u16 acp63_sdw1_dma_intr_stat[ACP63_SDW1_DMA_MAX_STREAMS];
+>  	u16 acp70_sdw0_dma_intr_stat[ACP70_SDW0_DMA_MAX_STREAMS];
+> diff --git a/sound/soc/amd/ps/ps-common.c b/sound/soc/amd/ps/ps-common.c
+> index 1c89fb5fe1da..f18d2a0d83aa 100644
+> --- a/sound/soc/amd/ps/ps-common.c
+> +++ b/sound/soc/amd/ps/ps-common.c
+> @@ -160,6 +160,8 @@ static int __maybe_unused snd_acp63_suspend(struct device *dev)
 >  
->  		abs_path_len = strlen(abs_path)+1;
-> @@ -966,6 +953,7 @@ int smb2_parse_native_symlink(char **target, const char *buf, unsigned int len,
->  		 * These paths have same format as Linux symlinks, so no
->  		 * conversion is needed.
->  		 */
-> +out_unhandled_target:
->  		linux_target = smb_target;
->  		smb_target = NULL;
->  	}
+>  	adata = dev_get_drvdata(dev);
+>  	if (adata->is_sdw_dev) {
+> +		adata->acp_sw_pad_keeper_en = readl(adata->acp63_base + ACP_SW_PAD_KEEPER_EN);
+> +		adata->acp_pad_pulldown_ctrl = readl(adata->acp63_base + ACP_PAD_PULLDOWN_CTRL);
+>  		adata->sdw_en_stat = check_acp_sdw_enable_status(adata);
+>  		if (adata->sdw_en_stat) {
+>  			writel(1, adata->acp63_base + ACP_ZSC_DSP_CTRL);
+> @@ -197,6 +199,7 @@ static int __maybe_unused snd_acp63_runtime_resume(struct device *dev)
+>  static int __maybe_unused snd_acp63_resume(struct device *dev)
+>  {
+>  	struct acp63_dev_data *adata;
+> +	u32 acp_sw_pad_keeper_en;
+>  	int ret;
+>  
+>  	adata = dev_get_drvdata(dev);
+> @@ -209,6 +212,12 @@ static int __maybe_unused snd_acp63_resume(struct device *dev)
+>  	if (ret)
+>  		dev_err(dev, "ACP init failed\n");
+>  
+> +	acp_sw_pad_keeper_en = readl(adata->acp63_base + ACP_SW_PAD_KEEPER_EN);
+> +	dev_dbg(dev, "ACP_SW_PAD_KEEPER_EN:0x%x\n", acp_sw_pad_keeper_en);
+> +	if (!acp_sw_pad_keeper_en) {
+> +		writel(adata->acp_sw_pad_keeper_en, adata->acp63_base + ACP_SW_PAD_KEEPER_EN);
+> +		writel(adata->acp_pad_pulldown_ctrl, adata->acp63_base + ACP_PAD_PULLDOWN_CTRL);
+> +	}
+>  	return ret;
+>  }
+>  
+> @@ -408,6 +417,8 @@ static int __maybe_unused snd_acp70_suspend(struct device *dev)
+>  
+>  	adata = dev_get_drvdata(dev);
+>  	if (adata->is_sdw_dev) {
+> +		adata->acp_sw_pad_keeper_en = readl(adata->acp63_base + ACP_SW0_PAD_KEEPER_EN);
+As register offsets, ACP_SW_PAD_KEEPER_EN & ACP_SW0_PAD_KEEPER_EN
+are same, will use the same register macro and post the v2 version.
 
-I'm really not sure if removing the messages and error reporting about
-symlinks which cannot be represented in POSIX system is a good idea.
+
+> +		adata->acp_pad_pulldown_ctrl = readl(adata->acp63_base + ACP_PAD_PULLDOWN_CTRL);
+>  		adata->sdw_en_stat = check_acp_sdw_enable_status(adata);
+>  		if (adata->sdw_en_stat) {
+>  			writel(1, adata->acp63_base + ACP_ZSC_DSP_CTRL);
+> @@ -445,6 +456,7 @@ static int __maybe_unused snd_acp70_runtime_resume(struct device *dev)
+>  static int __maybe_unused snd_acp70_resume(struct device *dev)
+>  {
+>  	struct acp63_dev_data *adata;
+> +	u32 acp_sw_pad_keeper_en;
+>  	int ret;
+>  
+>  	adata = dev_get_drvdata(dev);
+> @@ -459,6 +471,12 @@ static int __maybe_unused snd_acp70_resume(struct device *dev)
+>  	if (ret)
+>  		dev_err(dev, "ACP init failed\n");
+>  
+> +	acp_sw_pad_keeper_en = readl(adata->acp63_base + ACP_SW_PAD_KEEPER_EN);
+> +	dev_dbg(dev, "ACP_SW_PAD_KEEPER_EN:0x%x\n", acp_sw_pad_keeper_en);
+> +	if (!acp_sw_pad_keeper_en) {
+> +		writel(adata->acp_sw_pad_keeper_en, adata->acp63_base + ACP_SW0_PAD_KEEPER_EN);
+> +		writel(adata->acp_pad_pulldown_ctrl, adata->acp63_base + ACP_PAD_PULLDOWN_CTRL);
+> +	}
+>  	return ret;
+>  }
+>  
+
