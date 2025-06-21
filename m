@@ -1,54 +1,36 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84D81F3FE2;
-	Sat, 21 Jun 2025 09:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E744A30E848
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 09:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750499030; cv=none; b=GMdvveXRVXLzLpnYzCuKEiasO17oJU1iE0h/dwgtbBMIiaVIdj1vrpZp3ezszTovqfImc1L7zvyb2jLN+OMQ7IIHjpkpcO+J61PyOiJNuOgSXAtHqAfLrH8Kd0UHwb87BxmwjaZSPUOdcXeUchZeP/UVXDcx9f8hd97lmsaUES8=
+	t=1750499171; cv=none; b=i1gYb6p6XGGDYA6nWvO/eKpysSozECqDvMJrcfV2K0vEmZOqsliunv46kysjkGMXa0jHse4M4BS8yFh1zmiwKV9P3xgX3Znv1XLp5GNRCFzilUTLFewA5QGSYXOOxSeuCxzrtk69FtnVFGFj47QM8ThHNHqrQk/GGPsp52lxhok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750499030; c=relaxed/simple;
-	bh=ffbNxgpOKvf281WhBccu7KyQlAKq2ILH5jdDQNCbOnU=;
+	s=arc-20240116; t=1750499171; c=relaxed/simple;
+	bh=HFKZINh5TgeyGaBB2usbyBwS5zbXVVJu61rS6Lpc7zs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RfHHpG0+QLiPlBBpl5vQGaWODtiitlU197cmpf7DNYggGJRgXwFgmM/adjBEDgCpVFecd00D3ajyKceYkhI/5Yq6nP/Pn1aLyEPO5OH+oh+MY1KrbiBvjLxGmlXKyoDCSPeofmt+rTZN7ry9YL6CUdC9olhFt/1HH1O2Ya67hIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qiTGoo4H; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qiTGoo4H"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=zmAq7HGZLVbDEt7lvz/S/aJJLYAju8H/HDm67PyTXKI=; b=qiTGoo4HeOjnzjRyJVZ/IctsiS
-	aqollM0W3kTQ/nMqN8cv2wur3MvEX/2SaJ1ZkDajp0V0Q6+n+fCDg0sBs4PupZ1gsI74wr34vdSYE
-	rORIrBjSk9MoT6Rre66/jrCd9y0T8DCjbI3SLRjE8w25SJqy8eVGADPFOl4dZdQLQdxYSdd9Kj9Sx
-	KZ+prkxBLnMeyu6i1CChavDwQkWxhYRCxO+VGlVlc1VLTgVhYMH86uawvbzXyJ56gr/Xh3Oc+NoDc
-	1MzoI5Yvu2KJK/bOaJW3UvgZjLAsZPANmXifzcouMD+mOr4oHNOD1rSfU2sgbAEAyqDeOL9E4Rnss
-	jNjSatSQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSulD-0000000Ewyh-25cU;
-	Sat, 21 Jun 2025 09:43:43 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 13DBF30BC49; Sat, 21 Jun 2025 11:43:43 +0200 (CEST)
-Date: Sat, 21 Jun 2025 11:43:43 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-Subject: Re: [Patch v4 09/13] perf/x86/intel: Setup PEBS data configuration
- and enable legacy groups
-Message-ID: <20250621094343.GY1613376@noisy.programming.kicks-ass.net>
-References: <20250620103909.1586595-1-dapeng1.mi@linux.intel.com>
- <20250620103909.1586595-10-dapeng1.mi@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UkXPQDMAi4ZoWmWBLb1IqBwkKMGatzfovtZhYIXVj0nBgrr0CHImEPWD1CZeuiKusBLYYJHIGFG7pZ472nV4Gc7vS3AvejZH48bjUehiwPI8WpwybrY40Q8YZLXGeQm5G68kzOWJ2Z5mfdr3+Zrawawfw9SKpQV901pWiL5WDyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 424172C06849;
+	Sat, 21 Jun 2025 11:46:08 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 2CF521E4C40; Sat, 21 Jun 2025 11:46:08 +0200 (CEST)
+Date: Sat, 21 Jun 2025 11:46:08 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Ahmed Salem <x0rw3ll@gmail.com>
+Cc: airlied@redhat.com, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [RFC PATCH] amd64-agp: do not bind to pci driver if probing fails
+Message-ID: <aFZ_YJH30f1WDneD@wunner.de>
+References: <c5kqcudzrcafm24nr5ixgalhxdkxl3uoueerjlp6tbksj3hzy7@klytjugpkvdm>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,26 +39,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250620103909.1586595-10-dapeng1.mi@linux.intel.com>
+In-Reply-To: <c5kqcudzrcafm24nr5ixgalhxdkxl3uoueerjlp6tbksj3hzy7@klytjugpkvdm>
 
-On Fri, Jun 20, 2025 at 10:39:05AM +0000, Dapeng Mi wrote:
+On Sat, Jun 21, 2025 at 04:55:52AM +0300, Ahmed Salem wrote:
+> --- a/drivers/char/agp/amd64-agp.c
+> +++ b/drivers/char/agp/amd64-agp.c
+> @@ -768,10 +768,15 @@ int __init agp_amd64_init(void)
+>  
+>  		/* Look for any AGP bridge */
+>  		agp_amd64_pci_driver.id_table = agp_amd64_pci_promisc_table;
+> -		err = driver_attach(&agp_amd64_pci_driver.driver);
+> -		if (err == 0 && agp_bridges_found == 0) {
+> +		if ((int *)agp_amd64_pci_driver.probe != 0) {
+>  			pci_unregister_driver(&agp_amd64_pci_driver);
+>  			err = -ENODEV;
+> +		} else {
+> +			err = driver_attach(&agp_amd64_pci_driver.driver);
+> +			if (err == 0 && agp_bridges_found == 0) {
+> +				pci_unregister_driver(&agp_amd64_pci_driver);
+> +				err = -ENODEV;
+> +			}
 
-> +		if (cpuc->n_pebs == cpuc->n_large_pebs)
-> +			index.split.thresh = ARCH_PEBS_THRESH_MUL;
-> +		else
-> +			index.split.thresh = ARCH_PEBS_THRESH_SINGLE;
+Is the "probe" member in agp_amd64_pci_driver overwritten with a
+zero pointer anywhere?  I don't see that it is, so it seems the
+else-branch is never entered.
 
-> +	if (cpuc->n_pebs == cpuc->n_large_pebs)
-> +		index.split.thresh = ARCH_PEBS_THRESH_MUL;
-> +	else
-> +		index.split.thresh = ARCH_PEBS_THRESH_SINGLE;
+I had already prepared a fix for this, but waited for 0-day to
+crunch through it.  I've just submitted it, so that's what I had
+in mind:
 
-> +/*
-> + * The largest PEBS record could consume a page, ensure
-> + * a record at least can be written after triggering PMI.
-> + */
-> +#define ARCH_PEBS_THRESH_MUL	((PEBS_BUFFER_SIZE - PAGE_SIZE) >> PEBS_BUFFER_SHIFT)
-> +#define ARCH_PEBS_THRESH_SINGLE	1
+https://lore.kernel.org/r/f8ff40f35a9a5836d1371f60e85c09c5735e3c5e.1750497201.git.lukas@wunner.de/
 
-Can we please do something like s/MUL/MULTI/ or so. My brain keeps
-trying to make it MULtiply and that doesn't really work.
+Thanks,
+
+Lukas
