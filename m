@@ -1,58 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 0.smtp.remotehost.it (0.smtp.remotehost.it [213.190.28.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E55718B0F;
-	Sat, 21 Jun 2025 22:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BAE218BC3D;
+	Sat, 21 Jun 2025 22:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.190.28.75
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750543336; cv=none; b=dmmrvjXqAWbbR+VtF+lTiS1IEmjZLvBhhpqiUvKOpdfGfSvJ1dvzTZeCYVdNC1I6P71dcWuPqYWcn+IApzj7+fQXp2oQ+hoOko4jMvU7wZfxoG6GXjQqrrSxTy+l0F7ONcdfyTmRKBtYRJAE2qkHF7xYTtOU4wTW9hL/5ViN8/c=
+	t=1750543794; cv=none; b=H/vEc68f3jMIzop2XsJzE51w/t80Xlm46psEeShfJIt9Vm4/JfcESSpeCSiLQd9ML3M5PwPTzrKbJvUVeAMD4UMCm0sV61PueZaC9D8YNYQ/X2AetHghvNgBc8PxQ22lEu14Hi3W7dqf9yB84dA3QstR9CZBsA/GNFDdxBtUxn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750543336; c=relaxed/simple;
-	bh=NCq/juDCvtziWom7lNki6q2dc5bMdd/bHo61zp1H9tA=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=iJcXf9tkLSKkpSMoFEcaEfz6mi25k7dq0XMFl5Syfvmq8jxSbbGkOY7H7UyFZnj9PFlaYe0lShlLGjwCVUMbCjsjMoaeEu3kW1E/3S1kuVpLR5CSi/E1S3+lo7Xw/9lgBZsYAUNqquILrmkt5vf+/SNgEhdqA8tek5PH9KEyA8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lkPbYw8j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750543794; c=relaxed/simple;
+	bh=JL8JXZZ5aKXQBRPPO1WgrrfbaqmlVeLMlBsDRVaSVGI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O1mo25WdKk4L4EQdNcVotDerXEfdOOhVpnMHRB+dW+TDQ14sikBzbVFCrmXZMc3gJ9GzWO/PNaBbJ89RWpphh63c4iwj23s2VXcXhW10nvtSM6KcBDFyK4HCMVUmhXdAJ30RF6JDFcaR7+tQWfQewKJ6B6U/FH8fjO5n0Z58oJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hardfalcon.net; spf=pass smtp.mailfrom=hardfalcon.net; dkim=permerror (0-bit key) header.d=hardfalcon.net header.i=@hardfalcon.net header.b=NEbXPDm8; arc=none smtp.client-ip=213.190.28.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hardfalcon.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hardfalcon.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lkPbYw8j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D5F3C4CEE7;
-	Sat, 21 Jun 2025 22:02:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750543335;
-	bh=NCq/juDCvtziWom7lNki6q2dc5bMdd/bHo61zp1H9tA=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=lkPbYw8jpj54Yd4O9J2KbLskEJtKWd28rL4D9WaG9WyAkZkFzOiWtkskuUhn2hwsU
-	 tXvZwWNNtuMl9nG/uvYTVd/yxnEJLMgK3GQc+iccwIf9kJyk4gsmy0f21mox7c5yN3
-	 nZVoyCEpUfNoY49YD1DaJD3p+0lVM/+P0KxqXlMDwHhWpgNlkAAcZC6HO1Y/vBm1y2
-	 dLQb+w7ZnHCdT+jvqyC8skN+M+rXEE8FpKx0inNUVnCndEPXc/R1TpUtczLTv97iiZ
-	 smN+t2SoN77eEg7pnbT/lhzt616KaDinjqCvai+V2XUNY1AK4vWx35cFKBGbH6D0FB
-	 cqPPbuguykEvQ==
-Content-Type: text/plain; charset="utf-8"
+	dkim=permerror (0-bit key) header.d=hardfalcon.net header.i=@hardfalcon.net header.b="NEbXPDm8"
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=hardfalcon.net;
+	s=dkim_2024-02-03; t=1750543783;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PegGxcLfwuSo+lJV1jU/nlXdfzTdLtnNvs0VCn+jX/k=;
+	b=NEbXPDm8IfnQmfhplyKdPApG32U2hX/+pNHcUmyr7K0xMSJrQm0Mhad6Qm2cqt8SPXu/+B
+	0iAvTtrpNkyhgcAw==
+Message-ID: <79673bf1-1ee7-4c42-8134-ca6ead0a36ac@hardfalcon.net>
+Date: Sun, 22 Jun 2025 00:09:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250516-dtb-check-mt8188-v2-1-fb60bef1b8e1@collabora.com>
-References: <20250516-dtb-check-mt8188-v2-0-fb60bef1b8e1@collabora.com> <20250516-dtb-check-mt8188-v2-1-fb60bef1b8e1@collabora.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: clock: mediatek: Add #reset-cells property for MT8188
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Julien Massot <julien.massot@collabora.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Conor Dooley <conor+dt@kernel.org>, Friday Yang <friday.yang@mediatek.com>, Garmin Chang <garmin.chang@mediatek.com>, Julien Massot <julien.massot@collabora.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, kernel@collabora.com
-Date: Sat, 21 Jun 2025 15:02:14 -0700
-Message-ID: <175054333472.4372.4818173316901510961@lazor>
-User-Agent: alot/0.11
+Subject: Re: [PATCH 6.15 000/780] 6.15.3-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ronald Warsow <rwarsow@gmx.de>, stable@vger.kernel.org,
+ patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Sasha Levin <sashal@kernel.org>
+References: <20250617152451.485330293@linuxfoundation.org>
+ <f2b87714-0ef6-4210-9b30-86b4c79d1ed8@gmx.de>
+ <2025061848-clinic-revered-e216@gregkh>
+ <c8e4e868-aafb-4df1-8d07-62126bfe2982@hardfalcon.net>
+ <097ef8cc-5304-4a7d-abc0-fd011d1235d5@hardfalcon.net>
+ <2025061930-jumbo-bobsled-521a@gregkh>
+Content-Language: en-US, de-DE, en-US-large
+From: Pascal Ernster <git@hardfalcon.net>
+In-Reply-To: <2025061930-jumbo-bobsled-521a@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Quoting Julien Massot (2025-05-16 07:12:13)
-> The '#reset-cells' property is permitted for some of the MT8188
-> clock controllers, but not listed as a valid property.
->=20
-> Fixes: 9a5cd59640ac ("dt-bindings: clock: mediatek: Add SMI LARBs reset f=
-or MT8188")
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
-ora.com>
-> Signed-off-by: Julien Massot <julien.massot@collabora.com>
-> ---
+[2025-06-19 06:17] Greg Kroah-Hartman:
+> On Wed, Jun 18, 2025 at 10:31:43PM +0200, Pascal Ernster wrote:
+>> Hello again,
+>>
+>>
+>> I've sent this email a few minutes ago but mixed up one of the In-Reply-To
+>> message IDs, so I'm resending it now with (hopefully) the correct
+>> In-Reply-To message IDs.
+>>
+>>
+>> I've bisected this and found that the issue is caused by commit
+>> f46262bbc05af38565c560fd960b86a0e195fd4b:
+>>
+>> 'Revert "mm/execmem: Unify early execmem_cache behaviour"'
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?id=f46262bbc05af38565c560fd960b86a0e195fd4b
+>>
+>> https://lore.kernel.org/stable/20250617152521.879529420@linuxfoundation.org/
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/queue-6.15/revert-mm-execmem-unify-early-execmem_cache-behaviour.patch?id=344d39fc8d8b7515b45a3bf568c115da12517b22
+> 
+> Thank you for digging into this.  Looks like I took the last patch in a
+> patch series and not the previous ones, which caused this problem.  I've
+> dropped this one now and will add it back next week after I also add all
+> the other ones in the series.
 
-Applied to clk-fixes
+
+You're welcome! :)
+
+Btw, the same patch has turned up again in the stable queue für 6.15.4:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/log/queue-6.15/revert-mm-execmem-unify-early-execmem_cache-behaviour.patch
+
+Is this intentional or a mistake?
+
+
+Regards
+Pascal
