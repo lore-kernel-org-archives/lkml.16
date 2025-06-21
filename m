@@ -1,102 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0833DDC1;
-	Sat, 21 Jun 2025 15:47:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FC170805;
+	Sat, 21 Jun 2025 15:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750520828; cv=none; b=c5GD+h32zKHZI+YdFm0eiHhIgLuZffr0NzqY468vAaIRh+ivv2VxtjEkQi95PzJrXudbDv8/NkybmW6dLExbpvee9lM+9U33tP5OPCrUQeOBoJyU6mUWcbMRYy7a3FN2luvCesesuOr5idsZgPCZH6zxMtsjUEOeoVOPXDFEdDg=
+	t=1750520874; cv=none; b=ndhk9VnNMMq1OZZbg0T6uOMzSOs5dmQNo57E0KGr7gK0U9XedB/RNSxOuG+0RhYm7h1ZlU3poabFZ+kvuD55Gl67dE55NonVllN017seau4/F3lWLIeLH1oK0oDYMghQNfIKFMd4sOLAVNZtqYdkGJwPlnpFAQ7dNEWlBL5zRM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750520828; c=relaxed/simple;
-	bh=JGad2WjHIb8ZSwLQLKjJVJXPHLkmGN1ja8YbDynBoUY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SPJOOhd0K2lKzvgN6vxWNHDIlxbs/BPKQy+3E6JP2SCBBWHR2kgXHZtznvNsrrWVWby8pBespoR/hIX30dctyThrSlvVG6yz2W1YHNOsTKLOuGzySUpwUfK8VI0yv+kzvBfVk1d8vjB8K6Q4S3+RZZO+VMK9u3cSXTjDCm37Dy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZbuA+Ky; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750520874; c=relaxed/simple;
+	bh=OhJGen9BmoUDhaSg0p06AzqUODWIabM5BgNANGCgIRI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OuPgkJ+Crtw7GlOgnWLhcXLRIBodGY57bhK7C0a2Cdcb0Th1SfU0jmIN1LYjfW9HDiOnIZkDOCF5XDh/0NuvHo2nPecGu8d7oLYNb3sgClTNYSDn56IUAjhWt+cmDfcDL4b6f/L0kjEeQ4mP6zXBbKY+mFPYEHXMtiA34NPL6+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IMMEK3l9; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZbuA+Ky"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61972C4CEEF;
-	Sat, 21 Jun 2025 15:47:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750520828;
-	bh=JGad2WjHIb8ZSwLQLKjJVJXPHLkmGN1ja8YbDynBoUY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cZbuA+KySSuVFGKsiGCI9pOjANieYcLc7XUELfbiE3vzk2tXSaVt1N5GwnQzDrc0T
-	 3W/U/LSC/cixWDosaQ4N2odQ3ebZSDzIbXRnLYrNO566BrNMETsK8BZRqs1WI8CS1p
-	 bd6Z2lB8PxlHwZeA3YURkauE9yoalWD5Ji7QquHD+JSEsykO4aY/GXjCQBRFgIe7H8
-	 VOdgEbm7MBiGzszmMLsPJE4mMoDFfu8D1YwBOtnLh0g/ezeSyxvgVRjNNe/j93HYnY
-	 +apscx4V83cWAL3ZJQpfZKH0JRMqLm+7MWjlY9Be57P2zUcbt/D+zgr00sTGTy38Gi
-	 146CWd1tJHHEw==
-Message-ID: <d6b778ee-02c0-4dd2-b33f-cec16c17807c@kernel.org>
-Date: Sat, 21 Jun 2025 17:47:02 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IMMEK3l9"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70e75f30452so20615747b3.2;
+        Sat, 21 Jun 2025 08:47:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750520871; x=1751125671; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cpGki5Co3f638TWpjKASGjh1tadBeAb2a3w6y9GgK10=;
+        b=IMMEK3l9dfUZ7p7eoaZWp9Vg0DzAR3lh3KW0R+ciBc4uy9At6EBLgSV82KK/KXtd+P
+         HeF2DCvA/Viynjl+ADAlg1XZlbVFCGUrlpus6m+yHeQ+KhJNBi2epLhuljCgf3JiETGL
+         ZX+fIRDKmHdhaJkT1K3vAOB0HpvsVLAjiYAUEk+afKMffhLpzvmBP1wfUqw2sipn+lz2
+         yI2FQHM85tz+Cqr82LnGDTYDWW8qw1Z+P64I1CRhuNbWNoAsRF42jnE5HWpthMpKC4EB
+         rRVlPAmolLPe8/vS8JmsztfHPhC2hv4+jiEHFgEDPR834f1PaqtTrfXlQhqm2I04w+jC
+         xMpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750520871; x=1751125671;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cpGki5Co3f638TWpjKASGjh1tadBeAb2a3w6y9GgK10=;
+        b=DLNANx3BAZeJN6xUfclawumIrCIPrpwtJxE+/OyufHXaGjssZkNyxsOxMzKOLqJnLt
+         +IuwmL+XmhSQc/DP51pkUgulcHuPdVQgKTQyu45N1Diu/W+SHyj3EgrVtQ295spFrFrD
+         l2Qc192IC5xVYLfoecqVK7mF9nFtF5IApQzX2rytRNWfKLGzvWmO9EV6HKnfqlzMtwwy
+         SvE+oiRnozx6K5RsRfXJoIPPx1tNn97p/K7la1b8wB+2fYuvMzY3HxTJhj8Rd9TqCgUM
+         qyvlrkaSst8AfsGdsRSvDKKBsf0YJreYfnnDqVfT/yvY3gB0MnnSVRz07dNFON01IMWt
+         rEYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVG2S0ihm03PdmSIWvQrb0jZgeuIlNLQ8gAAIw7JllBw0uNj9JUkilnm3bF4dZX2d5YDIqj1RIe23ipNrc=@vger.kernel.org, AJvYcCXXa6ERvNWy4Ywo50FoXhzZ1uu8VrMzqipSt4JBzLtiEf3VdGNkJi3qr1z8TWnOg16g6tWhWAFaQfbSk+o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyo7mmfDn8kjqRlZX0sLwTGDaarKb/5H35ZV6tBoc4Fs58iSzpL
+	creoDeoDgrKWq9iAkP1XTudP196OVSVtoNyFN35kuQ9hD+Xuj+6MH3Mt
+X-Gm-Gg: ASbGncsPlC1YGROfnOn36G1wBe9CVT6KfF0bbVgJ9sD8ru9qtI5PN3OuRU0clmgCBDy
+	XiHk/H8khHjoEHCw1beu1NDrkBeV8sJQd10Ym6jBvKx/5F74chyByQGxwpa0KzFgJlnpT9Y1vrT
+	Wo2g+McyPAbe6fMysyN7nsevY7H5CuW2tXKYUaIwFsr+X2m4AEmmwxTotJphH0opWxtOVd/27Er
+	ebX9KgFzBeyaG8ZkRQFC9luZPl293EbJ1TPC6UGLMcKXSXTsG8fV3Ue40Np7oYOf/xJ9DyWs99N
+	mMS+EzrdJsIvoecpLfVmh8+zQiDSg/94eLnIEdXAIJfh4Dj/u/A3YhEeTfcNRHiy5VkwPUu9xUu
+	m
+X-Google-Smtp-Source: AGHT+IFEDy0WG+IfEf4L6ErwkURMaZ5O/oualofAgFC/Dm7kNLF6iEpxzpmPTZGD/+q2JyrWzFrdbQ==
+X-Received: by 2002:a05:690c:a9a:b0:70b:6651:b3e2 with SMTP id 00721157ae682-712c63b17f4mr101479707b3.6.1750520871533;
+        Sat, 21 Jun 2025 08:47:51 -0700 (PDT)
+Received: from trojai4.cs.purdue.edu ([128.210.0.165])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-712c4a162d2sm8617647b3.32.2025.06.21.08.47.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Jun 2025 08:47:51 -0700 (PDT)
+From: Alex Guo <alexguo1023@gmail.com>
+To: mchehab@kernel.org
+Cc: alexguo1023@gmail.com,
+	hverkuil@xs4all.nl,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] media: dvb-usb: az6027: fix null-ptr-deref in az6027_i2c_xfer
+Date: Sat, 21 Jun 2025 11:47:49 -0400
+Message-Id: <20250621154749.515315-1-alexguo1023@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 07/10] power: reset: macsmc-reboot: Add driver for
- rebooting via Apple SMC
-To: Nick Chan <towinchenmi@gmail.com>, Lee Jones <lee@kernel.org>
-Cc: asahi@lists.linux.dev, Neal Gompa <neal@gompa.dev>,
- linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
- "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
- Hector Martin <marcan@marcan.st>, Conor Dooley <conor+dt@kernel.org>,
- Janne Grunau <j@jannau.net>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Sebastian Reichel <sre@kernel.org>, Alyssa Rosenzweig
- <alyssa@rosenzweig.io>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Marc Zyngier <maz@kernel.org>
-References: <20250610-smc-6-15-v7-0-556cafd771d3@kernel.org>
- <20250610-smc-6-15-v7-7-556cafd771d3@kernel.org>
- <7297d4b1-84a2-4bb1-8a33-29c827247df7@gmail.com>
-Content-Language: en-US
-From: Sven Peter <sven@kernel.org>
-In-Reply-To: <7297d4b1-84a2-4bb1-8a33-29c827247df7@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 16.06.25 06:13, Nick Chan wrote:
-> 
-> 
-> On 10/6/2025 23:29, Sven Peter wrote:
->> From: Hector Martin <marcan@marcan.st>
->>
->> This driver implements the reboot/shutdown support exposed by the SMC
->> on Apple Silicon machines, such as Apple M1 Macs.
->>
->> Signed-off-by: Hector Martin <marcan@marcan.st>
->> Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
->> Reviewed-by: Neal Gompa <neal@gompa.dev>
->> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
->> Signed-off-by: Sven Peter <sven@kernel.org>
->> ---
->>   MAINTAINERS                         |   1 +
->>   drivers/power/reset/Kconfig         |   9 ++
->>   drivers/power/reset/Makefile        |   1 +
->>   drivers/power/reset/macsmc-reboot.c | 290 ++++++++++++++++++++++++++++++++++++
->>   4 files changed, 301 insertions(+)
-> [...]
-> 
-> It seems that the reboot driver still probes even without the smc_reboot node in the smc node:
+msg is controlled by user. If accessing msg.buf without sanity
+check, null pointer deref would happen. Although there are some
+existing checks on msg.len, they do not cover all buffer access
+points. Therefore, we add an additional check on msg.len to
+prevent potential crashes.
 
+Similar commit: commit 0ed554fd769a ("media: dvb-usb: az6027:
+fix null-ptr-deref in az6027_i2c_xfer()")
 
-That's odd...
+Signed-off-by: Alex Guo <alexguo1023@gmail.com>
+---
+ drivers/media/usb/dvb-usb/az6027.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Lee, is it expected that a mfd sub-device declared with
-MFD_CELL_OF("macsmc-reboot", NULL, NULL, 0, 0, "apple,smc-reboot"),
-is loaded even if there's no corresponding node in the device tree?
-
-I'll have to re-add the check that makes sure the sub-device is 
-available then.
-
-
-Thanks,
-
-
-Sven
-
+diff --git a/drivers/media/usb/dvb-usb/az6027.c b/drivers/media/usb/dvb-usb/az6027.c
+index 056935d3cbd6..0c53c8508fc1 100644
+--- a/drivers/media/usb/dvb-usb/az6027.c
++++ b/drivers/media/usb/dvb-usb/az6027.c
+@@ -988,7 +988,7 @@ static int az6027_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[], int n
+ 			/* write/read request */
+ 			if (i + 1 < num && (msg[i + 1].flags & I2C_M_RD)) {
+ 				req = 0xB9;
+-				if (msg[i].len < 1) {
++				if (msg[i].len < 2) {
+ 					i = -EOPNOTSUPP;
+ 					break;
+ 				}
+@@ -1005,7 +1005,7 @@ static int az6027_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[], int n
+ 
+ 				/* demod 16bit addr */
+ 				req = 0xBD;
+-				if (msg[i].len < 1) {
++				if (msg[i].len < 2) {
+ 					i = -EOPNOTSUPP;
+ 					break;
+ 				}
+-- 
+2.34.1
 
