@@ -1,76 +1,109 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37CEB130E58;
-	Sun, 22 Jun 2025 23:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00771167DB7;
+	Sun, 22 Jun 2025 23:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750634958; cv=none; b=KjCAztOlKVl2yitqEKfskEWRp2JZ2kZbIsAWX7C+5qgBcd8/4Nt8ROzUvRG+yabq8uYw9qCQhb4giPdhJTSQfMoZ0WWGLIyGW5WKnePUxc3ZUTK6JqbujhnNx3YxEJowXiE821ALC3aYNkOhMPgxxw4zmGEiWldlVm+m4IXPxCE=
+	t=1750635733; cv=none; b=O7nzcT+szPykG88NtmP9UqV/venXuP+yKj0lzQAAIz9fP7L7+/FG6GGLIcYTTtl9M0NJGQjtLpxO6rIc7Vq6Dx1HgszyV1gKuCJrOMiWBbdFGLbhWDlLoqe+dMFfE7cPPFP+WQS77RWzfggbdrCEVgFnz94eywa+jPEooxY9uhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750634958; c=relaxed/simple;
-	bh=utef2ijBgl6MqBj1W8ynsNdT601dtQuJ6jqVXcsMwrs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VaR/AfaTJ2V1v5a2q1zAS5v6MS8xmT/tqaXvlLK+7WE+a35krC1Iqhiw61IP3h/8xjhSTq7j1GzYOZnnG94nLvJDXcwGNOjNaoRzQZDjut56IKQjWvG95zxnpnx/tCY9YxaQ+9wb7WkJ5XPNWiyS9R1zWW6Lo9NLQz4mH+wyJHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=TOq4+f1G; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1750635733; c=relaxed/simple;
+	bh=xu5TIHGybIPfNvLwyvfLcbEZ6GtCVWyyWGe0mtahQNc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hL6g0Qz1eTfoPT8VaxaIiiEftl9TTkP2xLnSlFJkqdliRVpijgGDqs0M+F/7/OgG9NyWojh3QNhya5/bo4J2V4L0ZrG+KGEVwehvdVNqiU4/xljkQM4CHN6ZZPjS8vQJPrPBnRa7zhW0xVuDX5EJILTyuuYwBWizTdXgcMt3UoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TyDOcPcd; arc=none smtp.client-ip=209.85.160.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="TOq4+f1G"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=BLTDFCMmA7PLyZaXCasScMe0cVZwvQg8HDFH/FOFRrE=; b=TOq4+f1GoiaGpUp1U99sLa/zOR
-	TcKyezF5U+jjoYY1NmInatBn+wi0L4xIDSWTBB9ewWggxT5q0ZjtDcVN9POjFtYg4bE8UHY/wKL2X
-	mKftjuDin4tNkar7xo7p0oGGxzjLD077AM/FoeKqSyWpvSHw+DLAHA9x6rM1vmTzh+dSNVfhSOOU0
-	8C1ilOfgiaclBzc6SgJnQlVFVmQgIScE1nTb+ggMl/QzMbLykvSQIHl6Yi6JD5WroTNcm0mJUwgX9
-	Qruep7z+8rulQLIlAH3kvQYDjXoNNZ1lf10mCbZD5zt6CtYqZh8TCWPMNTUFWl4852Oxtduo0wquL
-	52B2X7MA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uTU7d-00000001Iud-1qx4;
-	Sun, 22 Jun 2025 23:29:13 +0000
-Date: Mon, 23 Jun 2025 00:29:13 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the vfs tree with the vfs-fixes tree
-Message-ID: <20250622232913.GZ1880847@ZenIV>
-References: <20250623091250.2a3a399b@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TyDOcPcd"
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2eb6c422828so2123061fac.1;
+        Sun, 22 Jun 2025 16:42:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750635731; x=1751240531; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X02XUS5FnsxUiuzmvCAP6QQynrT5d6AhXsvxvVft44c=;
+        b=TyDOcPcdgIE4VrFzK4t12N9f9dC5czMRgaqEWG2vdFWKvfTAoHMZxLcQVABzOgCumn
+         X3KVo4zQqGlp3c4ftN1R6/RKB7EGSZao+nqri3mjhQjlojQkJ6+hrfhEDx1IrXdYrLH6
+         DRKB/bpNE86Fb/aaOp54MSr45HoN4W7MowP3cM0IBUfskxp3IVOAMl3KLX9bPK+UvMV9
+         rhSo4pRkIiVNpnEtRkpOhQSjIzI9YPJ6BNvxej4tUSnUnuCpaXU/parlYodFgYTyPK1e
+         wKXywQrFym6dappxA+3xtMXNpmgrTegLjQCwm+euASF3XOf/yGqduAuAaUKzLyDzxNM6
+         7WCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750635731; x=1751240531;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X02XUS5FnsxUiuzmvCAP6QQynrT5d6AhXsvxvVft44c=;
+        b=c2WkT9GIEKl53rBQF88UwqMJjqx4+7Zpb8PGTK6bA/pqSSJm9sJEEZD1ohLgQD9O4V
+         lPZ5JYDIdArcsdxpajbBnCrDUSr20p/ZIVaqaYIdYaSm6NNLrcJSOCdq7c+hsRGoS9zI
+         wCeJ1a85pgirxjizfN+nCZMWAQbPkMODwraSYV+NNbIWBbN6daCPE+yrkVjXEHDeH4TY
+         FP3hpUVTEzEFocA80QSYCE4xbYrdNePJnRTIFY7Rho7YUhnviXuX/q4lI0O4pVGbkReJ
+         FGMjQOgckRvdtyDKc1oCQqlfOT4EMkRbuRUpmwIhVF0PKRGcptidpIx/qwiVskrO+4wo
+         uJ4g==
+X-Forwarded-Encrypted: i=1; AJvYcCWQeI4dNrCse/CjvkuuJWFJecZW/PM1ZcJIXwz5Am2jN/siU0RriM9Ctp7gUG8a99L6lsw54tUr0r6rCbi1@vger.kernel.org, AJvYcCXcxZejUoSIkZ8keH54yq/qaZRgVB85/RHAqlhXHAsdHji/uOP+pzZP4R4GYynImT23zHi+zY+vlA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEim7HTGz3ZWhm5P3tOZ1G77ZfwbcmxB4V9JDNAYDWQnpm0h0M
+	LAsXD0i1CUbN9Nc+1jcCMqiDoyYSNIh/YFMKiGLgX/eVz1W2ENCJbjyu4WPPV0z8BJWUqn3cQN+
+	GJF0SK9oSgtKPXoaqlXqbyfPToioIrbU=
+X-Gm-Gg: ASbGnctOk9CozLye4/IixE/KY1+H6NkiiaQb95CCyByNDTYkY3MqkUtX4bU+Jo0sDym
+	9MNgj3HmAc6JtDaeUpR34s6isKXiGaGX2O8Oqp2uRrm4Th8fnjbX0sMu5MTz/gT7wRzw+sXhWzE
+	iC523CNlFl2qn1niAnBgV+iDC0LHCZuJ/ZQ5WMAEDaowTb
+X-Google-Smtp-Source: AGHT+IFiMcGR2ysePMIV8Y5lW6ZrANq6bvDnxE1/zoKJXL4wWWd25sjw7GvrVPtZMFV78GwzvcJfprs6bZqwWA7WIxA=
+X-Received: by 2002:a05:6871:2108:b0:2d5:97d0:c03c with SMTP id
+ 586e51a60fabf-2ef2aab2ca4mr7071617fac.18.1750635730847; Sun, 22 Jun 2025
+ 16:42:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250623091250.2a3a399b@canb.auug.org.au>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+References: <20250606-mbox-drop-reacquire-lock-v1-1-d36d1a13d83f@linaro.org>
+In-Reply-To: <20250606-mbox-drop-reacquire-lock-v1-1-d36d1a13d83f@linaro.org>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Date: Sun, 22 Jun 2025 18:41:59 -0500
+X-Gm-Features: Ac12FXyYldMHAZzPimUiIoS4Skvo9wHzp8jNLBh5ctWPaYdaDoFaftPVoeq4ze0
+Message-ID: <CABb+yY2HYgS25xouVJpq+Aia1M=b1_ocbHiyrnVqZcf0c0xcGg@mail.gmail.com>
+Subject: Re: [PATCH] mailbox: stop the release and reacquire of the chan lock
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: peter.griffin@linaro.org, andre.draszik@linaro.org, 
+	willmcvicker@google.com, cristian.marussi@arm.com, sudeep.holla@arm.com, 
+	kernel-team@android.com, arm-scmi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 23, 2025 at 09:12:50AM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the vfs tree got a conflict in:
-> 
->   Documentation/filesystems/porting.rst
-> 
-> between commit:
-> 
->   2e7072350656 ("replace collect_mounts()/drop_collected_mounts() with safer variant")
-> 
-> from the vfs-fixes tree and commits:
-> 
->   05fb0e666495 ("new helper: set_default_d_op()")
->   691fb82ca6cc ("make d_set_d_op() static")
-> 
-> from the vfs tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+On Fri, Jun 6, 2025 at 8:41=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linaro.=
+org> wrote:
+>
+> There are two cases where the chan lock is released and reacquired
+> were it shouldn't really be:
+>
+> 1/ released at the end of add_to_rbuf() and reacquired at the beginning
+> of msg_submit(). After the lock is released at the end of add_to_rbuf(),
+> if the mailbox core is under heavy load, the mailbox software queue may
+> fill up without any of the threads getting the chance to drain the
+> software queue.
+>         T#0 acquires chan lock, fills rbuf, releases the lock, then
+>         T#1 acquires chan lock, fills rbuf, releases the lock, then
+>         ...
+>         T#MBOX_TX_QUEUE_LEN returns -ENOBUFS;
+> We shall drain the software queue as fast as we can, while still holding
+> the channel lock.
+>
+I don't see any issue to fix to begin with.
+T#0 does drain the queue by moving on to submit the message after
+adding it to the rbuf.
+And until the tx is done, T#1 would still be only adding to the rbuf
+because of chan->active_req.
 
-Sorry - should've folded that into #for-next.
+> 2/ tx_tick() releases the lock after setting chan->active_req =3D NULL.
+> This gives again the possibility for the software queue to fill up, as
+> described in case 1/.
+>
+This again is not an issue. The user(s) should account for the fact
+that the message bus
+ may be busy and there can be only limited buffers in the queue.
+
+Thanks
