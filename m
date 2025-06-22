@@ -1,81 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EED7262C;
-	Sun, 22 Jun 2025 21:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453DA188735;
+	Sun, 22 Jun 2025 21:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750626328; cv=none; b=SlEeSjrZjyoeOUCXZjKt1U3GSe9q6lNUdTjF/JWtSBxYmw+OLI0kxvgyg6s/fYgNasiQnP1FShKVb7X4ifsVeaoMt+rDCMDzC+FtU1qww4n7pfvQ4SbGdekSaCngf0hdWQtW4VjZInDct3sCl32t/IJmrsNxVK1/nn5TKP9yGRo=
+	t=1750626381; cv=none; b=u6WDyvSDXR6uKYT/jZyylEAgHPN4hXgpEmo1Lkv0R6DxMA3M0Q1PRB1fgDaBWzKxYTMdNFJrdQmjfMniba/ApsCYhEPjQfA4ObXp16p760aSvF5N1febQbRXVPxquJvekZz/7TD3G3YZLhdlDuTeV63ZzXSsFWkRWMdyWC16CHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750626328; c=relaxed/simple;
-	bh=KXGsiCcxvJEz00xQ2OZixbsrcar3B71UqawKSxkF7Nc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=BRohXYgLL7dFjl5rI3lGp5CV6pW7qPa3JwwnRgcyXA1tkFcc9p0GbZdnuWc7lDc+hPbb1CpnpOsImzT+nj4kWkLf0VLtgiVwZk+eOsAskIs3r3X+qXvDi9455/E9KQ0EDu4LZYcNRwA9XDfkb6kWC1NwD3gtVB/M0f8URB6/mbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GcnoiiR8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750626381; c=relaxed/simple;
+	bh=NWzDGpNRKAx5LTZPPv+zsQaAeKN6TjUwwcjut2zfsDs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lKdpInf+OmRwyMyV40hNeY/GYUHol2BPlxrfqCCbVNJnEzgJD6Nk82rQKNkl9NFIABpYpC6YN3+Y2QF8JHTDjQtVZ6NRwbYKeASMdZw5wzr2YmZvnOlycZYws61Hdtkt3AZC1iYKZlDUZoCX6IzXLCzamg0xWIrMzFdGapHJLOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EE/KdmJb; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GcnoiiR8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25579C4CEE3;
-	Sun, 22 Jun 2025 21:05:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750626328;
-	bh=KXGsiCcxvJEz00xQ2OZixbsrcar3B71UqawKSxkF7Nc=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=GcnoiiR88VTISGNdpBA46mn+Nom2RFmOHKHTPA5/2kj/a3VmoFaVO9Swi9V6Ofvzw
-	 mw9XVEmf4kopJUdiFqvjW9s7fIQ1vowlr4lsisvFYrzfkMhKtS1FdNlhP1HSGYlAu+
-	 H3rwNr61pPO1qPsyKHM8P2pQx4RiiWGBq+5C1YPj1SlkXhXNhz5WvuL3hGQdIjctse
-	 LAHI5MScieuFhpPhywbHHpwiMajH66jGU+yIssroJ41P66xHEufWIbe3OqG/XCw2ev
-	 ttqEuvDuKqhDdTt5lO0apR94HxPF9q24lxVGm+jHe3Fk6kRW+ZmA7er8EeAOQhPxU2
-	 Yaj+NdbPQQekQ==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EE/KdmJb"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e81e8321f11so436661276.0;
+        Sun, 22 Jun 2025 14:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750626379; x=1751231179; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NWzDGpNRKAx5LTZPPv+zsQaAeKN6TjUwwcjut2zfsDs=;
+        b=EE/KdmJbirNHOqTDFaaY3vhNhosDMx9VcgPYhIbv8CIvnQ8jvUreofksZxqT++RYnl
+         4j2kXpu6jY27s5UVS4qtRE7id58J9KqbIqn6Wo1vH7NA4q113qK+XW4w7bv9rRcoQEVB
+         XSCVxP2XaKdex8ScYRiN+Gxf/XGTF2yEfSg0F19HsdejCk8XI/PyybnV34YqSWWAlVuk
+         EyoVB11iDWgotWScQsQENz1WpyFMY+4upSzUSZh6CeJvxTUugHXpiB5Ii/4UHgOft8X1
+         Emimwp//FMBsyuuduy8+fygK2LlkgQ7pHM0Pt2DSgKb8jZVGmqTgNiKJbcZimIe+op8W
+         D6zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750626379; x=1751231179;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NWzDGpNRKAx5LTZPPv+zsQaAeKN6TjUwwcjut2zfsDs=;
+        b=J7McfQGG36X9SKb5eblIgs6RTr0Gd63o67GFOBnNhU1yFwW7fqxdjdQcbtw+VnaP2d
+         JCpBr4u5gDMNm/ujhfcCjzvgQgr7S/8fx2T+yiyy8VXDqonGf25AfZduSACyA2smgmA1
+         7V0HFe944HNbuC2gd+NK/e4IcTX1QyG4y6L0GhKzNe/QbJQ1GluNTF9i3P6/f5os9ZZQ
+         +eqQ1BpGn2T4RPgjkYhIiGyO5/aWRJIfB2wZg+LVKHOnbUFLzqDLy9bDr0q/j/G+tVPb
+         FU6zR5yOvQE9nc77kO/R/NL6VS/Dl2RC2Yg9vd6NS4jd5o4lfRJJK2GxqGayNbiEL3as
+         HLaw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNGJ/X78H5KcrnHxYDYFFoja5IhHJn/sBbUjM5uq7SukOi3cL7nqSaOjI6eOLQVi1e4lzFHt/Q/TxT1HU=@vger.kernel.org, AJvYcCXBZTe2LC1LJGNXvjRdhRzzZrwa6WStVYnf02sTd1Gm7jW/X0huS2h0UfkfINbWo7ooaFjPGlH9E/JJDmc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgYdb58Dr7lUKxEV8du6aycz/P/UfZ7cb+jcIHgbMJNchqsgf0
+	PRp7xwDwzOBHIFHRY2ynFd42k5EGM8yoreHRK0Q8so5Sv47T2ul66N+1vt5W3lVZxqggqLA47aO
+	TEDeji92qhxGECSn83Wptf/eOVqVT9e7kiYjcPg8=
+X-Gm-Gg: ASbGncvascAHvj52nrYQ7zBN7TErjlLWum/Yem/6Ebu8icxzkqJYjbHms0rQeg4gw95
+	YPEugr9i5+XlWAotyNh/UzV6xULcdzyrjyVaZuODuApJmro3v77lPrEj5TcDUey/xdjGfbK3zcB
+	8V0V7U5IxmMZrnLroEwZiiGiMfY5HE1RRze6FBn7i9o3qC
+X-Google-Smtp-Source: AGHT+IFGrqBN/2R6ntMvJfxc6o4I97fmHwiONrNJOzkLPDItxQYsP9dIxzwq0CFddIgNcyu3n3mT8YG03yCt0yae9ts=
+X-Received: by 2002:a05:690c:4d42:b0:70e:6261:f7f1 with SMTP id
+ 00721157ae682-712c64f59e2mr71429197b3.7.1750626379016; Sun, 22 Jun 2025
+ 14:06:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250622065340.184048-1-abdelrahmanfekry375@gmail.com>
+ <CAHp75VcKQGvcgv+72=9CY9yvvmzTDUaiP8xZZzQCyd553_tqYw@mail.gmail.com>
+ <CAHp75Vc7=WYeay0xsvVd5NZ-mm+WdU1LrzzFAE1GrdpzH2JjEQ@mail.gmail.com>
+ <CAGn2d8M9_NG5f1gpksdrMkUs_0Q2LBS=qAZeAciF9-j38Nq6Nw@mail.gmail.com> <CAHp75VeTbMORBBd0N65w3m4nZ8s6GUKaK8u40P_+Ki8yPPyCxA@mail.gmail.com>
+In-Reply-To: <CAHp75VeTbMORBBd0N65w3m4nZ8s6GUKaK8u40P_+Ki8yPPyCxA@mail.gmail.com>
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Date: Mon, 23 Jun 2025 00:06:08 +0300
+X-Gm-Features: AX0GCFun8UdhqvDtHP3vM1IGjNHE-0ZTSOfl74h7mVd0WUwZRJgKG90DamOkZvk
+Message-ID: <CAGn2d8OrqEqZnkENHau6b75WqpN9V_pG1kJChMEQvwQOa40cmA@mail.gmail.com>
+Subject: Re: [PATCH v2] staging: media: atomisp: Replace scnprintf with
+ sysfs_emit in bo_show
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: andy@kernel.org, hansg@kernel.org, mchehab@kernel.org, 
+	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-staging@lists.linux.dev, skhan@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 22 Jun 2025 23:05:23 +0200
-Message-Id: <DATD8MLNW17U.IESO4O1MWAPO@kernel.org>
-Cc: "Will Deacon" <will@kernel.org>, "Peter Zijlstra"
- <peterz@infradead.org>, "Mark Rutland" <mark.rutland@arm.com>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/5] rust: make `Arc::into_unique_or_drop` associated
- function
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Gary Guo" <gary@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
- Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary
- Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, "Tamir Duberstein"
- <tamird@gmail.com>, "Xiangfei Ding" <dingxiangfei2009@gmail.com>, "Alex
- Mantel" <alexmantel93@mailbox.org>
-X-Mailer: aerc 0.20.1
-References: <20250622125802.3224264-1-gary@kernel.org>
- <20250622125802.3224264-3-gary@kernel.org>
-In-Reply-To: <20250622125802.3224264-3-gary@kernel.org>
 
-On Sun Jun 22, 2025 at 2:57 PM CEST, Gary Guo wrote:
-> From: Gary Guo <gary@garyguo.net>
+On Sun, Jun 22, 2025 at 11:52=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> Make `Arc::into_unique_or_drop` to become a mere associated function
-> instead of a method (i.e. removing the `self` receiver).
+> On Sun, Jun 22, 2025 at 11:42=E2=80=AFPM Abdelrahman Fekry
+> <abdelrahmanfekry375@gmail.com> wrote:
+> > On Sun, Jun 22, 2025 at 23:39 Andy Shevchenko <andy.shevchenko@gmail.co=
+m> wrote:
+> >> On Sun, Jun 22, 2025 at 11:37=E2=80=AFPM Andy Shevchenko
+> >> <andy.shevchenko@gmail.com> wrote:
+> >> > On Sun, Jun 22, 2025 at 9:54=E2=80=AFAM Abdelrahman Fekry
+> >> > <abdelrahmanfekry375@gmail.com> wrote:
+
+
+> First of all, it's a bare minimum, which means that you should go
+> deeper into the code to understand the issue to begin with. Second,
+> the comment should be put in the proper place. In the code it's
+> useless as it describes something that is absent in the code for odd
+> reasons. Talk to your mentors and ask them for help because explaining
+> more is basically doing your job for you. And IIUC the purpose of
+> mentoring is to make sure you learn something and have acknowledged
+> this in practice.
 >
-> It's a general convention for Rust smart pointers to avoid having
-> methods defined on them, because if the pointee type has a method of the
-> same name, then it is shadowed. This is normally for avoiding semver
-> breakage, which isn't an issue for kernel codebase, but it's still
-> generally a good practice to follow this rule, so that `ptr.foo()` would
-> always be calling a method on the pointee type.
->
-> Signed-off-by: Gary Guo <gary@garyguo.net>
-
-Reviewed-by: Benno Lossin <lossin@kernel.org>
-
----
-Cheers,
-Benno
-
-> ---
->  rust/kernel/sync/arc.rs | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+Thanks , i will come back with v3 with more explanation and details.
+> --
+> With Best Regards,
+> Andy Shevchenko
