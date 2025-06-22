@@ -1,126 +1,146 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436D21459F6
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 05:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8238A35977
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 05:19:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750569544; cv=none; b=HpOs4AoNKpplsMRMMvNcNI5/X9BmrU8HaIfKmXUXyHL3Q85NlDIwZcAUNsuHdfG03LJLKrUOTRWDiuxG6F5ky5Bbfo3iB3Byiufqs7Ezks4C7RIE4IjP+SuhQn8xUQqLZVReQWx0QqJiYvSGfNuNQ05oXWl2B0pX4gAsWiHO8KY=
+	t=1750569558; cv=none; b=dMlJ+8/m/ZHqWY8BSh97AZM8tVm/cWOu2CBo9PwHGTaMJHBjxtIANfDvTvVvcMTOXTZmExYyDcDQetZ1dFV6TKbTP9ocIOzIWCMQN2JN1ehH8KDqiqmDm27jovIp4cKxQHGiamhkuQ/nW4fJguEnGobaOjXc4Xj7lX4RNc3xEV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750569544; c=relaxed/simple;
-	bh=U4AiRsbPPCAHbz/XLAd6rrTpFIr7TntUer09KzM2vlc=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=dGRHY0Yrt1Gk88GHMQ6K+iErZPfIWutUWWjKyGa4OqQ8D4mOSpFLv+DmvjHthumEHnOaL9Ua3Nkdus3YWE/2EdbsFg7kn2CpSM5QJ61y0q30Au2oVdw/y3f4tOPKubtXu7fLv3CGjYTvVPycl6bkNXnKx0p7W+lryltQpNd/6aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3de0dc57859so30672105ab.2
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 22:19:03 -0700 (PDT)
+	s=arc-20240116; t=1750569558; c=relaxed/simple;
+	bh=z5fO1xc0VujNNO0FEO5eIbPobYTVvwrqvk6sA4Hr3Fc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=fZjRTCPVbSn6pVXBknhOo89ZToXnRX/z8CNGg/lJS54K0VUiaVStqfePsZJm2mAbIQ1XZ4qZkQQT7HymJRq7RTcA1nSWimx755hpP94nt0U68nq6NtkDF5IjpiFgX1jx7HJp0sZrgo/DcpvX+2hEj4h7JxBCUXvo0swFiPqoXVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=elQvZZSM; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="elQvZZSM"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-45310223677so23406745e9.0
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 22:19:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750569555; x=1751174355; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xvYslitUMqBt0gBMwySKkrly+VfBVue7PGZMHtctv/o=;
+        b=elQvZZSMgLK82PJkeJflKZdyqNCbl9mLBxoxv4DcOVGHrx/mH6picFJxr2/SEHdBft
+         ObAxfGlZiiVi6g5EPc7rpbORML1kRnSWasvMl7kEwsUl4BqaxN5WY3BeCLNdGd1c5Iuw
+         czvfFUQkwYnWNLVyucgpikDV+R8ZIKnrEXdC/OpbkMSyQSLkIb52Ltw3PzyFKqjElHtg
+         cfQnbQOOnhWWJgrP5PXp6CCScTf0Zy9tMvGHKh35IhX1GGm6r1tDeC6j/KtqaCNg+T5r
+         MHCFjOqCLKegrRQL8hu66nzqR+GvCUBF0MeZt3ZE89f7mEP75uKfrafOtzrkyGVr2qNs
+         3yUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750569542; x=1751174342;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xpv2ROL0LWyoxEugpot2FMMru148+1TNHtu5oP9SL0w=;
-        b=uXWhsHMz7ML1Gb+R1fDbdsFLbbH3eDNOq3omASOhhttjt742XQZs7Xh9bMi9PypCLv
-         0QikJIECNlNHSRsVOL053flCDXvqjbodaU3xKL2p2t42Sfdbax0fyQKXtuelrFM5TWDy
-         U8G94QOhO/7e/U1jS6mXF2oc27o1TGp8Kkxt9RQ26PC6pzXHuhRgdDG94NyT1KjSBB+B
-         irXZHSjw3z8EuCceEfxzcIfGCCCx4kXrbuycrtlmzV9dN2Ue2tzDnAa+pqZAJY7+ACJQ
-         jpKhaBw7Rtgpvtb+LYtLPfkQPAY2PSxZ/j1+wayw7APA8j7yQEXWXU2SOI1bds8XbAIU
-         ZU5A==
-X-Forwarded-Encrypted: i=1; AJvYcCWBQbBd9gcs6WivrfBGmKZtZe7hA2ufAe3Iqzf2pTZ+7v7CruBnJ24DP4Xa/JnzQptNpwrei7XdraaZji4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyi8woulvWSts3HXaeq0MWxHxI0YBCPzijQbrhv0wZl0UDmaz5P
-	4VjK2Ka6G1yGWZnxzKz/kqpsz2BE1u1sTJyZEUVwb+uCzrkpYDZ1mq+OZVAPNbKjZjmUgA6CrnX
-	U5pNjYYrC4Ef7clqUGoBF+2+XpB0TdiNIJxAr8RfJ+4CDslIBx/AwT0YGCqk=
-X-Google-Smtp-Source: AGHT+IFd0dAJuj69QITmP1AaUqSU20aHJEyvElVUMyOXCo3cNAiYPZD/BrdFzsR8O/Xc6fZQFNYTT2zK3TIF0qVETV+huV6xTuE6
+        d=1e100.net; s=20230601; t=1750569555; x=1751174355;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xvYslitUMqBt0gBMwySKkrly+VfBVue7PGZMHtctv/o=;
+        b=JfrQg7MJB+3PwNaFjMZjB5Xe1snO7NmSIlGFlxQirjVYONqN8syDDx+/XxSUTOeNNy
+         52khiPIA9o72JjskIJX11FCn3nejGTSJo/vmmtd7yEKNsdp94pFHJKEy3qYPAerdpfIp
+         J5GPtafzno72XcfMzM/KP/Jt3dH5//RFzAxKkl/16vYBkxYKPHF2zrUhqtpggRijYCSs
+         TRZRs/T8qTNatd53uVBqwdaB3jaXq9bhaBr6j430Yn3zb9wW9ZYdMyrP7Iyyh+qfopGQ
+         aLJck8VTA99FE0UJ8aortQubB37DA0eZ+MUobbqjOpJWy/MMHJT+RfiHScaRtJi8aNYP
+         KjrA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7tWghwrG6VKtf6wYln3TRZuOMmbqVhTmTPZEmzZeduAA0Y7B+uPQWa7rF/p8m1Yzl6k45gZbTjityc7g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxakFDbfFs54GWyHopJQWhrh4ggck97jfsAt+CxSh6xcUlirVKF
+	op1yuzWjOm7iyOl5BbRz/8vYFGj1n0BVqt9hQzLXCwkjVDprCceim+MA
+X-Gm-Gg: ASbGncvigy9d3H7kwFhgtOa7UHcBFoD9+0cfmmhR1F+b3TAWUjaTTiElgoEribbRSnW
+	njhBfR99WY98jAk8EEkDX1ZUOpe653pECrs8PKtayJgaamDiQfCg9ROac91r6oW6aiT/Ee6/Ktr
+	Tgpmpz64SnDE461DvksREYbfgnWlTLGP298bEy5oE0pyI0N61eIRWq5cCrWp9zHS4wkA+IeEOTX
+	t4mkLKcAaHxOsH1tnS6n/feQr8+5hiv9yF5Kjp2ucW/08oN6cytLnbN1R2tpdDyOoh5ELfzQWXN
+	NC3goZCBC85qG6HThOXtdGnf/YpOHjTj0YtzG9YEDV0Xb3g0X1KGbnc5Pv+cc7J8ph/Lh4ZRL/4
+	9R7oLnyPilytT7afLFRRysoIE8E8dUQbwcGiy72qAbFbuXFcwHno6EA2fWMvmCbI+ibPRL6M=
+X-Google-Smtp-Source: AGHT+IG2ItlSP7G+r/LWNbalZIeLjB/48RCjBxhLQj8TTmjNIL6SoIT8uXoqAVp1G28YhdjtzRkkAA==
+X-Received: by 2002:a05:600c:3b84:b0:441:b698:3431 with SMTP id 5b1f17b1804b1-453659ec191mr67080645e9.28.1750569554647;
+        Sat, 21 Jun 2025 22:19:14 -0700 (PDT)
+Received: from localhost.localdomain (ec2-3-122-242-201.eu-central-1.compute.amazonaws.com. [3.122.242.201])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45359a09ee6sm60885395e9.1.2025.06.21.22.19.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Jun 2025 22:19:14 -0700 (PDT)
+From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+To: ryabinin.a.a@gmail.com,
+	hch@infradead.org,
+	elver@google.com,
+	arnd@arndb.de,
+	glider@google.com,
+	andreyknvl@gmail.com
+Cc: dvyukov@google.com,
+	vincenzo.frascino@arm.com,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	kasan-dev@googlegroups.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	snovitoll@gmail.com
+Subject: [PATCH] mm: unexport globally copy_to_kernel_nofault
+Date: Sun, 22 Jun 2025 10:19:06 +0500
+Message-Id: <20250622051906.67374-1-snovitoll@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:178e:b0:3dd:b4f4:2bcc with SMTP id
- e9e14a558f8ab-3de38c986b2mr74603765ab.13.1750569542396; Sat, 21 Jun 2025
- 22:19:02 -0700 (PDT)
-Date: Sat, 21 Jun 2025 22:19:02 -0700
-In-Reply-To: <20250622044632.1474-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68579246.a70a0220.62859.0001.GAE@google.com>
-Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
- (3)
-From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+`copy_to_kernel_nofault()` is an internal helper which should not be
+visible to loadable modules – exporting it would give exploit code a
+cheap oracle to probe kernel addresses.  Instead, keep the helper
+un-exported and compile the kunit case that exercises it only when
+`mm/kasan/kasan_test.o` is linked into vmlinux.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
+Fixes: ca79a00bb9a8 ("kasan: migrate copy_user_test to kunit")
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Suggested-by: Marco Elver <elver@google.com>
+Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+---
+ mm/kasan/kasan_test_c.c | 4 ++++
+ mm/maccess.c            | 1 -
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-=====================================================
-BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
-BUG: KMSAN: kernel-infoleak in _inline_copy_to_user include/linux/uaccess.h:196 [inline]
-BUG: KMSAN: kernel-infoleak in _copy_to_user+0xcc/0x120 lib/usercopy.c:26
- instrument_copy_to_user include/linux/instrumented.h:114 [inline]
- _inline_copy_to_user include/linux/uaccess.h:196 [inline]
- _copy_to_user+0xcc/0x120 lib/usercopy.c:26
- copy_to_user include/linux/uaccess.h:225 [inline]
- vmci_host_do_receive_datagram drivers/misc/vmw_vmci/vmci_host.c:438 [inline]
- vmci_host_unlocked_ioctl+0x1e74/0x51f0 drivers/misc/vmw_vmci/vmci_host.c:932
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0x239/0x400 fs/ioctl.c:893
- __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
- x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Uninit was stored to memory at:
- kmemdup_noprof+0xb0/0x100 mm/util.c:139
- kmemdup_noprof include/linux/fortify-string.h:765 [inline]
- dg_dispatch_as_host drivers/misc/vmw_vmci/vmci_datagram.c:272 [inline]
- vmci_datagram_dispatch+0x4eb/0x1560 drivers/misc/vmw_vmci/vmci_datagram.c:340
- ctx_fire_notification drivers/misc/vmw_vmci/vmci_context.c:257 [inline]
- ctx_free_ctx drivers/misc/vmw_vmci/vmci_context.c:435 [inline]
- kref_put include/linux/kref.h:65 [inline]
- vmci_ctx_put+0x88e/0x15d0 drivers/misc/vmw_vmci/vmci_context.c:497
- vmci_ctx_destroy+0x15d/0x250 drivers/misc/vmw_vmci/vmci_context.c:195
- vmci_host_do_init_context drivers/misc/vmw_vmci/vmci_host.c:341 [inline]
- vmci_host_unlocked_ioctl+0x4579/0x51f0 drivers/misc/vmw_vmci/vmci_host.c:928
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0x239/0x400 fs/ioctl.c:893
- __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
- x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Local variable ev.i.i created at:
- ctx_fire_notification drivers/misc/vmw_vmci/vmci_context.c:248 [inline]
- ctx_free_ctx drivers/misc/vmw_vmci/vmci_context.c:435 [inline]
- kref_put include/linux/kref.h:65 [inline]
- vmci_ctx_put+0x76b/0x15d0 drivers/misc/vmw_vmci/vmci_context.c:497
- vmci_ctx_destroy+0x15d/0x250 drivers/misc/vmw_vmci/vmci_context.c:195
-
-Bytes 28-31 of 40 are uninitialized
-Memory access of size 40 starts at ffff8880470d5780
-Data copied to user address 000000000000a4bf
-
-CPU: 1 UID: 0 PID: 6789 Comm: syz.0.16 Not tainted 6.16.0-rc2-syzkaller-00318-g739a6c93cc75-dirty #0 PREEMPT(undef) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-=====================================================
-
-
-Tested on:
-
-commit:         739a6c93 Merge tag 'nfsd-6.16-1' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1392b30c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=db26f33438d76de9
-dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=167c2182580000
+diff --git a/mm/kasan/kasan_test_c.c b/mm/kasan/kasan_test_c.c
+index 5f922dd38ffa..094ecd27b707 100644
+--- a/mm/kasan/kasan_test_c.c
++++ b/mm/kasan/kasan_test_c.c
+@@ -1977,6 +1977,7 @@ static void rust_uaf(struct kunit *test)
+ 	KUNIT_EXPECT_KASAN_FAIL(test, kasan_test_rust_uaf());
+ }
+ 
++#ifndef MODULE
+ static void copy_to_kernel_nofault_oob(struct kunit *test)
+ {
+ 	char *ptr;
+@@ -2011,6 +2012,7 @@ static void copy_to_kernel_nofault_oob(struct kunit *test)
+ 
+ 	kfree(ptr);
+ }
++#endif /* !MODULE */
+ 
+ static void copy_user_test_oob(struct kunit *test)
+ {
+@@ -2131,7 +2133,9 @@ static struct kunit_case kasan_kunit_test_cases[] = {
+ 	KUNIT_CASE(match_all_not_assigned),
+ 	KUNIT_CASE(match_all_ptr_tag),
+ 	KUNIT_CASE(match_all_mem_tag),
++#ifndef MODULE
+ 	KUNIT_CASE(copy_to_kernel_nofault_oob),
++#endif
+ 	KUNIT_CASE(rust_uaf),
+ 	KUNIT_CASE(copy_user_test_oob),
+ 	{}
+diff --git a/mm/maccess.c b/mm/maccess.c
+index 831b4dd7296c..486559d68858 100644
+--- a/mm/maccess.c
++++ b/mm/maccess.c
+@@ -82,7 +82,6 @@ long copy_to_kernel_nofault(void *dst, const void *src, size_t size)
+ 	pagefault_enable();
+ 	return -EFAULT;
+ }
+-EXPORT_SYMBOL_GPL(copy_to_kernel_nofault);
+ 
+ long strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr, long count)
+ {
+-- 
+2.34.1
 
