@@ -1,168 +1,159 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9B73C0C;
-	Sun, 22 Jun 2025 17:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5185F3C0C;
+	Sun, 22 Jun 2025 17:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750614744; cv=none; b=PVhKEoZx9aNAKZR7lINmwuq7t5NJ8w2OT0EgT/ke7ANFY+pz2dv5UP0WLxWkHQ8XcjLSYacmZqbN1OPyGPpAIHdlquiOWam8tIDFligqzXVGbq4OiQbrgqo4qG8h1WbJAMsCQ/BDYBKmEfSiwO1TSmBKcSVgSriRFi//ltJAeds=
+	t=1750614803; cv=none; b=Of6g7V07stJDCpTp+PYFCcC2fuSBTtpL5l1O1to90h+m2IZucRuN81RSCi3wkoe3lD2QWc1ww4ziRawMAB1hl9TbIAprNvcLRgzMMhcrGVODztuvNkgbkkiGcf9QwfCJzZ35x+iTuQM0Avv6akIiM/tzhCqICntE/h/NDQjJBuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750614744; c=relaxed/simple;
-	bh=2ySbfvowmGyVdShZeOrCyc7ENx6FiVyD4Zyff7UgliI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RITLl0aSHL4abbkPtB7+eGO7b1K+GItVE83nDxadmwaeHK/uKVjSFOalQKFm4iUtNXPiNarFJ6fPMqq5IkbCyDgXK/CMU2sYxyYpvHT1ejIvXpQQx+8q/YUbg3grdTo8Uy+YMIYWpL8KVHV6udeihABZQ3Lz8t7NFh6L2GXWRk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Hu55d6Pk; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1750614803; c=relaxed/simple;
+	bh=NEqfhCbHA77ivX87O3SQQe/0s1ft+C0ZxROAW6GszLY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=igxQ2e8KoW1ERcwvdpgCh38XPr2qh7Y0In+DvwGSuCT9/JQWGvGlU7C7F42aPPFPWmBqYZ8Iy6jysADIoOGCQRov/pqKymPUqzltN50pgxbKkIPM7OFTv+UvIH8RlvlCi44R3u8eEQuqkj8Nr5oz4plZRmjRlFA6kGWmHtUgiBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WdJEUMFk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Hu55d6Pk"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55MCEp9T005772;
-	Sun, 22 Jun 2025 17:51:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=bEXHaYmDWX15yhX9P8pzH4iO6nQh8BF0Gm4
-	umihiL14=; b=Hu55d6Pkp0vtQlnIcJMG8RGcalx3/j8Fs/kCxThZpef7h5lzn5J
-	2UjbOaXMQoz8KbKerMfgGGYWX3C7q6U5dzb9z5WOCCeFsXpO0i6/SZL0Xi7qXNwF
-	7scfbICcmTnjrmom8eCKp8fCEuz+E1p5mlw1ejpJyK+e+2uvDOT+Qszqr0YlMT61
-	ZiHsr9o+soN5i2fRpeDQMIEGfA8VwbCkqiFVaHE7DvsU/myZ2JirCwWELceUZtVn
-	V1uGfqA4KG6CZmB+iKqdfQqOOC5MEY0m618Q95v3wDFP4VFpppuZAZMUKqeW1qcf
-	wuIbxv570aYoQHuGkp5Zw6FHNglqdE7TDNA==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47eccdgn4e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 17:51:53 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 55MHpoXs024348;
-	Sun, 22 Jun 2025 17:51:50 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 47dntkjh95-1;
-	Sun, 22 Jun 2025 17:51:50 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55MHpoYi024342;
-	Sun, 22 Jun 2025 17:51:50 GMT
-Received: from hu-maiyas-hyd.qualcomm.com (hu-nitirawa-hyd.qualcomm.com [10.213.109.152])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 55MHpofs024341;
-	Sun, 22 Jun 2025 17:51:50 +0000
-Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 2342877)
-	id 8BB0361C6BD; Sun, 22 Jun 2025 23:21:49 +0530 (+0530)
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-To: mani@kernel.org, James.Bottomley@HansenPartnership.com,
-        martin.petersen@oracle.com, bvanassche@acm.org, andersson@kernel.org,
-        neil.armstrong@linaro.org, konrad.dybcio@oss.qualcomm.com,
-        dmitry.baryshkov@oss.qualcomm.com, quic_cang@quicinc.com,
-        vkoul@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, Nitin Rawat <quic_nitirawa@quicinc.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Aishwarya <aishwarya.tcv@arm.com>,
-        Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
-Subject: [PATCH V2] scsi: ufs: qcom : Fix NULL pointer dereference in ufs_qcom_setup_clocks
-Date: Sun, 22 Jun 2025 23:21:48 +0530
-Message-ID: <20250622175148.15978-1-quic_nitirawa@quicinc.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WdJEUMFk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B24A8C4CEE3;
+	Sun, 22 Jun 2025 17:53:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750614802;
+	bh=NEqfhCbHA77ivX87O3SQQe/0s1ft+C0ZxROAW6GszLY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WdJEUMFklOf00eIO/dcuyUvKFnZ0Yy5VMv77/X9JmcKeUytRx+bstS9oF+YEyHjVQ
+	 fYVgcU0hv3p4xWR3Ep1AXe+xKyy2bSfRA3kGai0e1VKq/9+4bLaXDcCOuKmAe8fO6v
+	 AFtn64KoShaDBh+IO7wAQdb0y9HHTxKUKnXPnM5w0NUzLT2VJuWpYwibE+LZdOG7a7
+	 JKsO/mkWgZ8CBlDyHadALLqnTGt7JtlUhZ+isPxtlIhljme5DhJTVw4v1q5btRAqL/
+	 PidMbBhZtY/6omI7mVSnujCm2z+4NmnS0//tad8clvkKpI2awX1ZwIfU/Y0Npkk7Pj
+	 cbH3ydvDo0oOw==
+Date: Sun, 22 Jun 2025 19:53:18 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Akira Yokosawa <akiyks@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, Linux
+ Doc Mailing List <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v3 15/15] docs: conf.py: Check Sphinx and docutils
+ version
+Message-ID: <20250622195318.1a2a3728@foz.lan>
+In-Reply-To: <c05dd5dc-1e30-4a2c-80dc-70e8b62cc681@gmail.com>
+References: <cover.1750571906.git.mchehab+huawei@kernel.org>
+	<972673b0a5bf5537d47780d6f8e70ae45456e751.1750571906.git.mchehab+huawei@kernel.org>
+	<c05dd5dc-1e30-4a2c-80dc-70e8b62cc681@gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=LOVmQIW9 c=1 sm=1 tr=0 ts=685842ba cx=c_pps
- a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=7CQSdrXTAAAA:8 a=pGLkceISAAAA:8
- a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=GEESCAkq0iLmtVC71CkA:9
- a=a-qgeE7W1pNrGK8U0ZQC:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: tPpPFcLpflMB3ALJ2oJZC2CagTNh9zJo
-X-Proofpoint-ORIG-GUID: tPpPFcLpflMB3ALJ2oJZC2CagTNh9zJo
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDExMyBTYWx0ZWRfX5Y3033DbUPko
- sITrigtoRzSzRHTTt3T5aQwFkYWH9fb0Qq+IX3Vee5124yET0mjnOreEg+6RbdW4VnXExkW5aHp
- t7S/nucioHdexnu1kM/dFti/rhA/m4b7NbeD4G9xbgKbfe1Oo5D0yfthQANXqaXFPj8ksCZ8uJn
- QdOSyEl95kvhEuzVXgWI8+/amwa0hFJ+VwGj0iqublb6Gs5mIe/nnC0Blqc9ltzvQoxLzFZrBWQ
- ZZwTaeFPYpFlIdYi+ijyVSgFlMiCfFiH6b/80OI2v08sijRNpRkfN1CcM8I2CvDI1TTSPr7hD4+
- n6k97Wyj5cq6WvGeyN/X7FAtyZPnZFrt9Q8KjmE1zqnNSziGo3geVp3P550ijs1J9diCqA2sxT/
- 3mlePPQbvYatrkWpr5AST8608NDejceyhcoS/fq561R5uCdUPGINfCBo18qPShWON/FEAxz4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-22_06,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 bulkscore=0 adultscore=0 mlxlogscore=999 phishscore=0
- lowpriorityscore=0 priorityscore=1501 impostorscore=0 spamscore=0
- suspectscore=0 malwarescore=0 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506220113
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Fix a NULL pointer dereference in ufs_qcom_setup_clocks due to an
-uninitialized 'host' variable. The variable 'phy' is now assigned
-after confirming 'host' is not NULL.
+Hi Akira,
 
-Call Stack:
+Em Sun, 22 Jun 2025 20:19:52 +0900
+Akira Yokosawa <akiyks@gmail.com> escreveu:
 
-Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000000
+> On Sun, 22 Jun 2025 08:02:44 +0200, Mauro Carvalho Chehab wrote:
+> > As reported by Akira, there were incompatibility issues with
+> > Sphinx and docutils with docutils 0.19. There's already
+> > a fix for it, but, as there are incompatibility issues with
+> > different versions, better to add a check to verify if the
+> > combination is supported/tested.
+> >   
+> 
+> I've been skeptical of adding such checks in conf.py.
+> 
+> What happened the other day was that Jon used a deprecated (and rarely
+> used) method of docutils which failed to work properly only in
+> docutils 0.19 (there is no mention of related issues in its and 
+> nearby release notes).
 
-ufs_qcom_setup_clocks+0x28/0x148 ufs_qcom (P)
-ufshcd_setup_clocks (drivers/ufs/core/ufshcd-priv.h:142)
-ufshcd_init (drivers/ufs/core/ufshcd.c:9468)
-ufshcd_pltfrm_init (drivers/ufs/host/ufshcd-pltfrm.c:504)
-ufs_qcom_probe+0x28/0x68 ufs_qcom
-platform_probe (drivers/base/platform.c:1404)
-really_probe (drivers/base/dd.c:579 drivers/base/dd.c:657)
-__driver_probe_device (drivers/base/dd.c:799)
-driver_probe_device (drivers/base/dd.c:829)
-__driver_attach (drivers/base/dd.c:1216)
-bus_for_each_dev (drivers/base/bus.c:370)
-driver_attach (drivers/base/dd.c:1234)
-bus_add_driver (drivers/base/bus.c:678)
-driver_register (drivers/base/driver.c:249)
-__platform_driver_register (drivers/base/platform.c:868)
-ufs_qcom_pltform_init+0x28/0xff8 ufs_qcom
-do_one_initcall (init/main.c:1274)
-do_init_module (kernel/module/main.c:3041)
-load_module (kernel/module/main.c:3511)
-init_module_from_file (kernel/module/main.c:3704)
-__arm64_sys_finit_module (kernel/module/main.c:3715.
+True, but the same also happened with me at the parser_yaml code.
 
-Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-Fixes: 77d2fa54a945 ("scsi: ufs: qcom : Refactor phy_power_on/off calls")
-Tested-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> # sc8180x-primus
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Reported-by: Aishwarya <aishwarya.tcv@arm.com>
-Closes: https://lore.kernel.org/lkml/20250620214408.11028-1-aishwarya.tcv@arm.com/
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Closes: https://lore.kernel.org/linux-scsi/CA+G9fYuFQ2dBvYm1iB6rbwT=4b1c8e4NJ3yxqFPGZGUKH3GmMA@mail.gmail.com/T/#t
-Co-developed-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
-Signed-off-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
-Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
----
- drivers/ufs/host/ufs-qcom.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> Your integration of parser_yaml extension will raise the minimum
+> version of docutils to 0.17.1. 
+>
+> I think all you will need is just
+> to check:
+> 
+>     docutils < 0.17.1
+> , and to make a warning regardless of Sphinx versions.
 
-diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-index ba4b2880279c..318dca7fe3d7 100644
---- a/drivers/ufs/host/ufs-qcom.c
-+++ b/drivers/ufs/host/ufs-qcom.c
-@@ -1124,7 +1124,7 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
- 				 enum ufs_notify_change_status status)
- {
- 	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
--	struct phy *phy = host->generic_phy;
-+	struct phy *phy;
- 	int err;
+That's not the best solution. 
 
- 	/*
-@@ -1135,6 +1135,8 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
- 	if (!host)
- 		return 0;
+See, Docutils 0.17 was released in Jun, 2021. and 0.17.1 on
+October, 2021. If we look at the Sphinx releases, we have:
 
-+	phy = host->generic_phy;
+======  ===================
+Sphinx  Release Date
+------  -------------------
+4.1.0	June 10, 2021
+4.1.1	July 25, 2021
+4.1.2	August 1, 2021
+4.1.3	August 15, 2021
+4.2.0	September 28, 2021
+======  ===================
+
+As Sphinx policy is to not even fix bugs when a new release
+happens, it means that, at the best, the minimal version made to be
+compatible with 0.17 is 4.1.x, and the minimal compatible with
+0.17.1 is 4.2.x.
+
+So, if we want not to raise the minimal version to 4.2.x (*), the right 
+fix is this (I'll be sending at the upcoming YAML patch series I'll be
+sending next week):
+
+diff --git a/Documentation/sphinx/parser_yaml.py b/Documentation/sphinx/parser_yaml.py
+index 8288e2ff7c7c..1602b31f448e 100755
+--- a/Documentation/sphinx/parser_yaml.py
++++ b/Documentation/sphinx/parser_yaml.py
+@@ -77,6 +77,10 @@ class YamlParser(Parser):
+ 
+                 result.append(line, document.current_source, lineoffset)
+ 
++            # Fix backward compatibility with docutils < 0.17.1
++            if "tab_width" not in vars(document.settings):
++                document.settings.tab_width = 8
 +
- 	switch (status) {
- 	case PRE_CHANGE:
- 		if (on) {
---
-2.48.1
+             rst_parser = RSTParser()
+             rst_parser.parse('\n'.join(result), document)
 
+What happens is that Sphinx is a shell case built on the top of
+docutils: the actual ReST parser is inside docutils. 
+
+(*) the exact patch where 0.17.1 support was added/tested on
+    Sphinx needs to be checked
+
+Now, there is another alternative: raise the bar, increasing minimal
+versions for Python and Sphinx. Yet, I would do it only once per year.
+
+> That said, these dependencies should be recognized and taken care of by
+> pip/PyPI (or whatever distro package management system), and already met;
+> unless you have done something strange/dangerous and screwed up your Sphinx
+> installation.
+>
+> My limited imagination prevents me from coming up with any plausible
+> scenario where these checks at every sphinx-build invocation can be helpful.
+> 
+
+Heh, playing with scripts/test_doc_build.py, pip allowed to create
+several environments that are valid for the package management software
+but either:
+
+- cause sphinx-build to crash even before returning Sphinx version;
+- crash in the middle of the compilation.
+
+As I said, Sphinx is a shell on the top of docutils. Some of the code
+there seem to depend on subtile behaviors, like the one with
+the tab_width affecting parser_yaml.py on certain Sphinx/docutils
+combinations or the one fixed by Jon with regards to setup a class
+for the broken references.
+
+The idea of this patch is to warn the one building the docs
+that he might be navigating turbulent waters when it is unknown
+if the combination is supported. It also better defines the
+scope of backward compatibility we want to provide.
+
+Thanks,
+Mauro
