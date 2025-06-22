@@ -1,215 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B1D13B58C
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 07:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8341A13B58C;
+	Sun, 22 Jun 2025 07:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750577293; cv=none; b=MalMVOIRN+XDZK3W+g0AMSbEHKww4sjwX2+PKnWGqYpJxe3jMNeE4pmS/mkaOHCS4u350jUvxmfSaidy+EunVClc3LfYOkkgCKu/F+bDPIIy8EXocUX6hLnGQBuEZ65vlDz2FFohHb73yTvObEwkkSptElhs1dLVs4i/+bXdmus=
+	t=1750577401; cv=none; b=et1PDQhgkHiGxwf2tIuP3kkqs+fTtI1TzYpbduSl2svgJcaK3IBDrwLTc2+4kfAy92vvtUKZ2DKWnuI0y9dZlr3JHP05BU/7oxHI3UqRCclxgPypLIKT9FONopcnq32NMcB6zRCZqJm3UIUBUSz8Y9jsWNUFwhCUJSM2nsJJiI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750577293; c=relaxed/simple;
-	bh=ZZ2XvIKaZc+qHuHN/cwtEjIrE44seOhCx+4+J1dO8A0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QnlpT98jxCGCyB7mdyqfrAemdbGJQ9EBRE78WncQXjxO37D9TNrwjuS6g+u8qPqzPM05cg0zP6a14wcbs/QH+pL1zzRTyIskm6QKhzbCqcOHGYxPXHRu+BlhRfjpWgaTLeCDuRWF4PTNf7E726ejZCi5AWkxR1HQr7xfhm2qOnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dDIcZ4SF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750577401; c=relaxed/simple;
+	bh=WHG3l2194eAYfNypkbJz/TxSuFIa2gD7sthVM1KzmN8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jApN37pU6Qcz4o5INHEHa92A20TCMoCsId/HjvK0tLg6blvfFHsYSQaeZ03mHcSddeU2BVfNyaJ5eGjnr65N2KnG+/2OUryJY07SfzwoozQy0ilW7gJZdrGITrYidgfUQ5fiYgCctwXZTRpaph7HljKxGiEMsLZjUkp2dSp2h8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=aBICUCzT; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dDIcZ4SF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A27CC4CEE3;
-	Sun, 22 Jun 2025 07:28:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750577293;
-	bh=ZZ2XvIKaZc+qHuHN/cwtEjIrE44seOhCx+4+J1dO8A0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dDIcZ4SFurenyXdrjh4EbhutJVTqpVHg32N3U4WBEIc0CaHcRtNS7tEN80nD8nUM+
-	 iwfLM7W9KJX09tue4HZdoUJyaPjLM29CulNmr9zeRxt8884jD7z8TdVaooA95KDJum
-	 VXxKHHYVjyP7TXFHYQcV3kDkMUH7HoZtbvUtQn7U4p59CCCcGuqomgO6O32id7LDOV
-	 Rc27LHD+iAt4jI7SpDyRC1MZfj5fvdn8zaD0kJZNyV9kzfN2EBER2zMjFjf/5RmSwF
-	 5qSsj8EnuQtbY0TDwFpBavMZpy6Jb7a/v4LVCjoMqM7GdS/VtzJ9kQ6X04aipb4HkJ
-	 l2zMK4nDPAwpw==
-Date: Sun, 22 Jun 2025 10:28:04 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Peter Xu <peterx@redhat.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Nikita Kalyazin <kalyazin@amazon.com>,
-	Hugh Dickins <hughd@google.com>, Oscar Salvador <osalvador@suse.de>,
-	Michal Hocko <mhocko@suse.com>,
-	David Hildenbrand <david@redhat.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	Ujwal Kundur <ujwal.kundur@gmail.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	James Houghton <jthoughton@google.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Axel Rasmussen <axelrasmussen@google.com>
-Subject: Re: [PATCH 1/4] mm: Introduce vm_uffd_ops API
-Message-ID: <aFewhN5AF2d7vJFq@kernel.org>
-References: <20250620190342.1780170-1-peterx@redhat.com>
- <20250620190342.1780170-2-peterx@redhat.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aBICUCzT"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55M4K2gY030003;
+	Sun, 22 Jun 2025 07:29:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=mcitZQcakbXoqMQg7LWame7U/gV0A
+	djN+l9YkVHU9tY=; b=aBICUCzTfhkd4uHrcDLPVEjHxPcssJFLjimeZjVUIlp13
+	rt0pHQ+o7X3Pv2UGa7uU8GNYw6uTEplHbXWLgWaQrwffao7hfCAhkrOwy/YiICOi
+	NLRfCsWF1ayZa8iOlWnTHjVuYgOsMgLaneHvgS+uI8USjulLThkHdNvM6mMc3TNc
+	D0/LL/Miu1Sz7U3M/f3vlHisGok/NLEQAH+JWm50U6+HEqxYWx30/ZVrPNWiWjlv
+	E1GprJvJFSpsQTxwVpGI9CyCyvGVQ2RmNE2Z6QnSYeZhpmM1Y9ib52sNEu6mr7TZ
+	iTNsszcKbgf7TozMvh7GzWT+ZhF/bvrDQh3sepITg==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47ds8mruab-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 22 Jun 2025 07:29:52 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55M2HZAs008544;
+	Sun, 22 Jun 2025 07:29:51 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47dk6e6pk5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 22 Jun 2025 07:29:51 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55M7THri031282;
+	Sun, 22 Jun 2025 07:29:51 GMT
+Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 47dk6e6pjk-1;
+	Sun, 22 Jun 2025 07:29:51 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, davthompson@nvidia.com,
+        michaelsh@nvidia.com, vadimp@nvidia.com,
+        platform-driver-x86@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] platform/mellanox: Fix spelling and comment clarity in Mellanox drivers
+Date: Sun, 22 Jun 2025 00:29:11 -0700
+Message-ID: <20250622072921.4111552-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620190342.1780170-2-peterx@redhat.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-22_02,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxscore=0
+ adultscore=0 malwarescore=0 mlxlogscore=999 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506220043
+X-Authority-Analysis: v=2.4 cv=IcWHWXqa c=1 sm=1 tr=0 ts=6857b0f1 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=Dpny8YC7gtef0Hx4SHEA:9 cc=ntf awl=host:13207
+X-Proofpoint-ORIG-GUID: _NgjJGt7GntB2N7GuV2_CW4Nt0DbpiWf
+X-Proofpoint-GUID: _NgjJGt7GntB2N7GuV2_CW4Nt0DbpiWf
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDA0MyBTYWx0ZWRfXyf9Hy07fOMYd d3n8rPOatxcc7Wm1SMN37lfwqwl6DJXm/0UsIIvf1bzZrWiEI01eh3wCMc2WbejiKBWN1o0LBiX 86XyDdzuZCRedGuUbw30wEVJzlzCizLpg9Tj/36xHcVPgqKM98GD9tE7lYyzTnRRgy5n4I0MaKu
+ RXfgJxCupBESGTw01m+oOYV84fko3HQ7wvetWptnN3Siuvt6cld06TRsoydSUIbNjrBiPCGC12G 2fyNg+Nc/zmz1xX4yjtzc2LV6fmPVRJ6wosqSFVUoDoIP8QjOUUnNBSoBaQBic22DTM5lRqnIB3 0wzJ75w/yhf3ezXB3POtVO5T5+Kmb5ri1p4Uk9kMesbDGSnrZbU9vzqqEKFr4S3afY/ygIvqFKU
+ vXL/vmUTlHtsnLTNztqJVK7kJotN8TJS3VTsjNwyEpQbqN6NyT+dpzD6vvhhd877NAfyc1lD
 
-Hi Peter,
+This commit corrects several minor typographical errors in comments
+and error messages across multiple Mellanox platform driver.
+Fixed spelling of "thresholds", "region", "platform", "default",
+and removed redundant spaces in comment strings and error logs.
 
-On Fri, Jun 20, 2025 at 03:03:39PM -0400, Peter Xu wrote:
-> Introduce a generic userfaultfd API for vm_operations_struct, so that one
-> vma, especially when as a module, can support userfaults without modifying
-> the core files.  More importantly, when the module can be compiled out of
-> the kernel.
-> 
-> So, instead of having core mm referencing modules that may not ever exist,
-> we need to have modules opt-in on core mm hooks instead.
-> 
-> After this API applied, if a module wants to support userfaultfd, the
-> module should only need to touch its own file and properly define
-> vm_uffd_ops, instead of changing anything in core mm.
-> 
-> Note that such API will not work for anonymous. Core mm will process
-> anonymous memory separately for userfault operations like before.
-> 
-> This patch only introduces the API alone so that we can start to move
-> existing users over but without breaking them.
-> 
-> Currently the uffd_copy() API is almost designed to be the simplistic with
-> minimum mm changes to move over to the API.
-> 
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  include/linux/mm.h            | 71 +++++++++++++++++++++++++++++++++++
->  include/linux/userfaultfd_k.h | 12 ------
->  2 files changed, 71 insertions(+), 12 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 98a606908307..8dfd83f01d3d 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -576,6 +576,70 @@ struct vm_fault {
->  					 */
->  };
->  
-> +#ifdef CONFIG_USERFAULTFD
-> +/* A combined operation mode + behavior flags. */
-> +typedef unsigned int __bitwise uffd_flags_t;
-> +
-> +enum mfill_atomic_mode {
-> +	MFILL_ATOMIC_COPY,
-> +	MFILL_ATOMIC_ZEROPAGE,
-> +	MFILL_ATOMIC_CONTINUE,
-> +	MFILL_ATOMIC_POISON,
-> +	NR_MFILL_ATOMIC_MODES,
-> +};
-> +
-> +/* VMA userfaultfd operations */
-> +typedef struct {
-> +	/**
-> +	 * @uffd_features: features supported in bitmask.
-> +	 *
-> +	 * When the ops is defined, the driver must set non-zero features
-> +	 * to be a subset (or all) of: VM_UFFD_MISSING|WP|MINOR.
-> +	 */
-> +	unsigned long uffd_features;
-> +	/**
-> +	 * @uffd_ioctls: ioctls supported in bitmask.
-> +	 *
-> +	 * Userfaultfd ioctls supported by the module.  Below will always
-> +	 * be supported by default whenever a module provides vm_uffd_ops:
-> +	 *
-> +	 *   _UFFDIO_API, _UFFDIO_REGISTER, _UFFDIO_UNREGISTER, _UFFDIO_WAKE
-> +	 *
-> +	 * The module needs to provide all the rest optionally supported
-> +	 * ioctls.  For example, when VM_UFFD_MISSING was supported,
-> +	 * _UFFDIO_COPY must be supported as ioctl, while _UFFDIO_ZEROPAGE
-> +	 * is optional.
-> +	 */
-> +	unsigned long uffd_ioctls;
-> +	/**
-> +	 * uffd_get_folio: Handler to resolve UFFDIO_CONTINUE request.
-> +	 *
-> +	 * @inode: the inode for folio lookup
-> +	 * @pgoff: the pgoff of the folio
-> +	 * @folio: returned folio pointer
-> +	 *
-> +	 * Return: zero if succeeded, negative for errors.
-> +	 */
-> +	int (*uffd_get_folio)(struct inode *inode, pgoff_t pgoff,
-> +			      struct folio **folio);
-> +	/**
-> +	 * uffd_copy: Handler to resolve UFFDIO_COPY|ZEROPAGE request.
-> +	 *
-> +	 * @dst_pmd: target pmd to resolve page fault
-> +	 * @dst_vma: target vma
-> +	 * @dst_addr: target virtual address
-> +	 * @src_addr: source address to copy from
-> +	 * @flags: userfaultfd request flags
-> +	 * @foliop: previously allocated folio
-> +	 *
-> +	 * Return: zero if succeeded, negative for errors.
-> +	 */
-> +	int (*uffd_copy)(pmd_t *dst_pmd, struct vm_area_struct *dst_vma,
-> +			 unsigned long dst_addr, unsigned long src_addr,
-> +			 uffd_flags_t flags, struct folio **foliop);
-> +} vm_uffd_ops;
-> +#endif
+These changes are cosmetic and do not affect runtime behavior.
 
-Can't we define vm_uffd_ops in userfaultfd_k.h?
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+ drivers/platform/mellanox/mlxbf-tmfifo.c |  2 +-
+ drivers/platform/mellanox/mlxreg-dpu.c   |  2 +-
+ drivers/platform/mellanox/mlxreg-lc.c    | 10 +++++-----
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-A forward declaration in mm.h should suffice and modules that want to use
-uffd can include userfaultfd_k.h.
-
-> +
->  /*
->   * These are the virtual MM functions - opening of an area, closing and
->   * unmapping it (needed to keep files on disk up-to-date etc), pointer
-> @@ -653,6 +717,13 @@ struct vm_operations_struct {
->  	 */
->  	struct page *(*find_special_page)(struct vm_area_struct *vma,
->  					  unsigned long addr);
-> +#ifdef CONFIG_USERFAULTFD
-> +	/*
-> +	 * Userfaultfd related ops.  Modules need to define this to support
-> +	 * userfaultfd.
-> +	 */
-> +	const vm_uffd_ops *userfaultfd_ops;
-> +#endif
->  };
->  
->  #ifdef CONFIG_NUMA_BALANCING
-> diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
-> index ccad58602846..e79c724b3b95 100644
-> --- a/include/linux/userfaultfd_k.h
-> +++ b/include/linux/userfaultfd_k.h
-> @@ -80,18 +80,6 @@ struct userfaultfd_ctx {
->  
->  extern vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason);
->  
-> -/* A combined operation mode + behavior flags. */
-> -typedef unsigned int __bitwise uffd_flags_t;
-> -
-> -/* Mutually exclusive modes of operation. */
-> -enum mfill_atomic_mode {
-> -	MFILL_ATOMIC_COPY,
-> -	MFILL_ATOMIC_ZEROPAGE,
-> -	MFILL_ATOMIC_CONTINUE,
-> -	MFILL_ATOMIC_POISON,
-> -	NR_MFILL_ATOMIC_MODES,
-> -};
-> -
->  #define MFILL_ATOMIC_MODE_BITS (const_ilog2(NR_MFILL_ATOMIC_MODES - 1) + 1)
->  #define MFILL_ATOMIC_BIT(nr) BIT(MFILL_ATOMIC_MODE_BITS + (nr))
->  #define MFILL_ATOMIC_FLAG(nr) ((__force uffd_flags_t) MFILL_ATOMIC_BIT(nr))
-> -- 
-> 2.49.0
-> 
-
+diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+index aae99adb29eb0..6264379d96907 100644
+--- a/drivers/platform/mellanox/mlxbf-tmfifo.c
++++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+@@ -1287,7 +1287,7 @@ static void mlxbf_tmfifo_get_cfg_mac(u8 *mac)
+ 		ether_addr_copy(mac, mlxbf_tmfifo_net_default_mac);
+ }
+ 
+-/* Set TmFifo thresolds which is used to trigger interrupts. */
++/* Set TmFifo thresholds which is used to trigger interrupts. */
+ static void mlxbf_tmfifo_set_threshold(struct mlxbf_tmfifo *fifo)
+ {
+ 	u64 ctl;
+diff --git a/drivers/platform/mellanox/mlxreg-dpu.c b/drivers/platform/mellanox/mlxreg-dpu.c
+index 52260106a9f16..39f89c47144a2 100644
+--- a/drivers/platform/mellanox/mlxreg-dpu.c
++++ b/drivers/platform/mellanox/mlxreg-dpu.c
+@@ -483,7 +483,7 @@ static int mlxreg_dpu_config_init(struct mlxreg_dpu *mlxreg_dpu, void *regmap,
+ 							  mlxreg_dpu->io_data,
+ 							  sizeof(*mlxreg_dpu->io_data));
+ 		if (IS_ERR(mlxreg_dpu->io_regs)) {
+-			dev_err(dev, "Failed to create regio for client %s at bus %d at addr 0x%02x\n",
++			dev_err(dev, "Failed to create region for client %s at bus %d at addr 0x%02x\n",
+ 				data->hpdev.brdinfo->type, data->hpdev.nr,
+ 				data->hpdev.brdinfo->addr);
+ 			return PTR_ERR(mlxreg_dpu->io_regs);
+diff --git a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/mellanox/mlxreg-lc.c
+index aee395bb48ae4..8eef3d990d1ae 100644
+--- a/drivers/platform/mellanox/mlxreg-lc.c
++++ b/drivers/platform/mellanox/mlxreg-lc.c
+@@ -57,9 +57,9 @@ enum mlxreg_lc_state {
+  * @dev: platform device;
+  * @lock: line card lock;
+  * @par_regmap: parent device regmap handle;
+- * @data: pltaform core data;
++ * @data: platform core data;
+  * @io_data: register access platform data;
+- * @led_data: LED platform data ;
++ * @led_data: LED platform data;
+  * @mux_data: MUX platform data;
+  * @led: LED device;
+  * @io_regs: register access device;
+@@ -171,7 +171,7 @@ static int mlxreg_lc_chan[] = {
+ 	0x4e, 0x4f
+ };
+ 
+-/* Defaul mux configuration. */
++/* Default mux configuration. */
+ static struct mlxcpld_mux_plat_data mlxreg_lc_mux_data[] = {
+ 	{
+ 		.chan_ids = mlxreg_lc_chan,
+@@ -181,7 +181,7 @@ static struct mlxcpld_mux_plat_data mlxreg_lc_mux_data[] = {
+ 	},
+ };
+ 
+-/* Defaul mux board info. */
++/* Default mux board info. */
+ static struct i2c_board_info mlxreg_lc_mux_brdinfo = {
+ 	I2C_BOARD_INFO("i2c-mux-mlxcpld", 0x32),
+ };
+@@ -758,7 +758,7 @@ mlxreg_lc_config_init(struct mlxreg_lc *mlxreg_lc, void *regmap,
+ 		platform_device_register_resndata(dev, "mlxreg-io", data->hpdev.nr, NULL, 0,
+ 						  mlxreg_lc->io_data, sizeof(*mlxreg_lc->io_data));
+ 		if (IS_ERR(mlxreg_lc->io_regs)) {
+-			dev_err(dev, "Failed to create regio for client %s at bus %d at addr 0x%02x\n",
++			dev_err(dev, "Failed to create region for client %s at bus %d at addr 0x%02x\n",
+ 				data->hpdev.brdinfo->type, data->hpdev.nr,
+ 				data->hpdev.brdinfo->addr);
+ 			err = PTR_ERR(mlxreg_lc->io_regs);
 -- 
-Sincerely yours,
-Mike.
+2.46.0
+
