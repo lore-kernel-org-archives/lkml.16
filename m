@@ -1,107 +1,133 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EBB36124
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 08:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8633597E
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 08:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750581081; cv=none; b=GTpVgvmGeprHX+DsXFCE2j/LXIHbOeSHPajOcmgox2DEI+ukRodwoRlhqpZB0vur2LVo+O/a5dzhWg1GhRbM2W39w/gcfVjl6tJmIyvPaiHeiAMac6yFKvJm7IwOR//9ByK2iGoqVQeU7Q4xXLcSbbLDdU7IIv4v2DpiCdP4n30=
+	t=1750581713; cv=none; b=CsXy6csCYLiM1+I1bnzSn/FbAGyMgYN8HZ/RHQ0Ysp9tyGa0EEyNvXLRRIdZ2EA3fsGkjGGKtV2j0g+pOjmAr3VxKjzfb/ON2c7KUsQQlggUU9J9bSinfbAqqmy/PtgEkKBdD6Che+ttSf95mUHkKY0J7ROUF8TU/GTT1yBEFkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750581081; c=relaxed/simple;
-	bh=EU8TGzBywjtlF5+Y85zUPRkRo3SFXeaZMlSCvkIqnm0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KCy1XsIIBkwHvGLx3huOPKG9XquYGEUdaybMLNoEjaQN1250Yo6xUS6CCi3Kt78jnPqwEXN4A6TSA5jYFrF1JHhKv/a4qTBCwCehR/AzIyQk5DSh/JAdRlUOZxN5CFogZIQDrE3+GYrDl+8Slm2MLei/CWRnM+F/JSvyRY1q2as=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UXeckWk8; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750581713; c=relaxed/simple;
+	bh=f+pZAgvSHM5ty2elyfv0XQznFSFM224bvAgYcjL8CPU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=rndAcW2sDALyMO3U6G3sbEu7QSSQEsfXN1F7IMZVoDv68pBvduM9n8pZ/j2kZmJPNeWLA3WWz82Xk7C6xkyxqjnm2HujyQma37msA3GJuMGW6hjzaCUW+QIA/GWvSjYLzWFm/fSTwTnxksf2t8W9N6k8NMFjKIi2z1mMINm2xMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=f8Cwx2Wb; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UXeckWk8"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-450cfb79177so15943805e9.0
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 01:31:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750581077; x=1751185877; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PPldOG1Bzc8WL3Z0YGlfMcNARm20zqpGMY+YUO0H/Kc=;
-        b=UXeckWk8HjTY4lncsfDZjG5ylaYbnJzM4Gg2XEOxn6xT2XCfeskWxzCVBfpPAvL3j5
-         gorb1fWe0IcDMF2OPW0tQ+JKORkkE9DKgegvj8NeXPrSAF81YeHbvfReCEo+DiYUKlCc
-         XiLnvIat+9oVugtCSF1agSpuRjQEBj3lZ+fxde0byjXB/yxrJ7d9A23Nae8NAo7AL8Ng
-         sx018ne2NnXQh/P7UZhJMLVBUT1Zb/slksnMwI5ULXJa+fHtWoHrcjdV32dNTim7H8Bc
-         vtERCANRp+VxyJUiFQibucp6wqyhldOH3i5w3E+PzFMZGN0s4R1uy6NzZtwuS2cX8af5
-         D9qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750581077; x=1751185877;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PPldOG1Bzc8WL3Z0YGlfMcNARm20zqpGMY+YUO0H/Kc=;
-        b=q2uhV/JrMdiKj91b5zXtPPsrai9eHsopwWKIlsciwbkXTz4macc+/GCDdhoFx7aw47
-         tbFmfhIrAps7ux+5SaGbvcYrb9FhQRQalFRNGljzu2M1xx0a09UoMud1pTy12wYDkO3T
-         4B8XxQGe68rWV95uvPkLFv0x73OMA1i0Y5vLUkNzEmlSBE+Oenu+HF+eDgjikJaPQvQ9
-         Qb4DRE+ddtJzngCk+JiT02wve4ChgvWdieSwOtE7kXWsaMBWsZLak/6qy9VcTRhwYbb7
-         xYsLuAValJFEX77QJDbbpmHywP+4jhXuqFh+EJk35z3ap+s/kTlWqtjXbKvv6BC9PLtC
-         P0PA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0TTvP1wwl8xcolk0sMMVH7sGpZ42PRDgUuyxUfMnERHKhK67SowLlyLof44OdzWLSLrMhuHkCvjfEp1k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzbD1MoBqPiTDx/aw0sAvFD0oPIZc8wa0WTGBJa4WTzaYYbFCC
-	lY0AtyQWExV6HSsZJ1fG997/x5v93tmRRFFv2GdifZZpZi4ZJnMgOxT2
-X-Gm-Gg: ASbGncs18Fd+pb6QOhRzDPSAA4RlbTWnpPNLUKae6GgxnbnQB2M4h9FNlcPNQTU3K1U
-	iq2FI3Xn5CmxXq4KI6G6DPdZmqh8IUxtpznhf/b2hQx8cJ31/nfeDP2mpzAvQ341vQkOKP9YL8p
-	t7uEpo546/eNFaKJ1XMwt1igkJto0/jRke+vgsL3WgQad4pSHZWCsjNMTGEGx5bFtbyHkkuvEta
-	liiKPpZvuQfqvaaElLYcz76goVs63sf5aDXkv6XC6hfDrlH6jINvINiXbFFzhri4hkhzodXTNtI
-	/6SvuqJMu6J+v/kB3VgJ5zFylgi2Mfi3iuZ+lIopdnRBAFtS57DH0njNua+SIo717KbzcPKUKlC
-	zDG01tbP0Snc=
-X-Google-Smtp-Source: AGHT+IHQs5acA6zjKZ8lH0avLduGPS64M3j/5dlm9zJID3GUEhZp54uYM9dXMxOIUg1lXOc1KSWdTQ==
-X-Received: by 2002:a5d:5e88:0:b0:3a4:f63b:4bfc with SMTP id ffacd0b85a97d-3a6d12d909bmr7896433f8f.34.1750581076851;
-        Sun, 22 Jun 2025 01:31:16 -0700 (PDT)
-Received: from HYB-DlYm71t3hSl.ad.analog.com ([2001:a61:12d0:5a01:b4d7:fc8d:4cb4:dd35])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d1187e5fsm6471224f8f.70.2025.06.22.01.31.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 01:31:16 -0700 (PDT)
-Date: Sun, 22 Jun 2025 10:31:14 +0200
-From: Jorge Marques <gastmaier@gmail.com>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Jorge Marques <jorge.marques@analog.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Frank Li <Frank.Li@nxp.com>, 
-	=?utf-8?Q?Przemys=C5=82aw?= Gaj <pgaj@cadence.com>, linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] i3c: master: Add inline i3c_master_readsl and
- i3c_master_writesl
-Message-ID: <ngtav2drgruaqyuwhhwdlsaex3c7fz5hbex47nzflabcwst2ln@6bmr73eqfzri>
-References: <20250620-i3c-writesl-readsl-v1-0-e0aa1c014dff@analog.com>
- <20250620-i3c-writesl-readsl-v1-1-e0aa1c014dff@analog.com>
- <aFXPXTUSvgj-a2zC@shikoro>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="f8Cwx2Wb"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D980A40E016E;
+	Sun, 22 Jun 2025 08:41:49 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id YBjn2mLEh3zz; Sun, 22 Jun 2025 08:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1750581706; bh=PjP8JJ94ZC2xsboy60q4WseN7XkRNV8+WKP/i+0DV9c=;
+	h=Date:From:To:Cc:Subject:From;
+	b=f8Cwx2WbRi/jDtc8lXQMX5ss/BJFWTOT+nVwqwy4UKw0yI7Huu2RVepbaBaWXGiBj
+	 3FbnQ0+Skjnsmb+3xJKxcYvqEUY8SnBdL7UhxsN+jobih6OVyWNMnuKfDeTEucAwvg
+	 4eV30VEfNZA/0POnVHJf/32WcCncud7NJJWfC5FpzrnXTg7zrPA+QasfcrnwwqR9vv
+	 vXTHCa3BqlhsLmUILMSeyigiGzVQ4Vd8G5UYdSK8nkhCCWS92euq/H+RcgoEkDYMNy
+	 +7yjG/PpAVrlCEpPLrltQluowSHf7m9zLijyzbyAX9s8UH/rAUBf3IVOmhk2/ye3PY
+	 vsIUMIEGiNsdlMMKzCwv4+F2VZkg/Q4g9XoykuV0gHGvEd/hbC9yVTahuFWFEShfpz
+	 waDU3nDjjgcF2UQ7UXgfRwfpUSxM+q6prI5q8ND/phj7zXYWLEuwsd1VEFeujKXnfH
+	 8OeX1HE37Z4p5eddDSERfTgQGTOLjoCvzMsYbG+P6oGZ/CVjBzEK7IkKeWTQgWSszm
+	 liHwnrOoJOZd8A67RRVQxEfigwbyU2K5ddMRWSghQBybwOj8e5lTV5SQ4Nu3lgOXFC
+	 RgT4uY3fBnadYCq66B+dZQXlwbts0zCdOHnjcWIQgI/N+NfUr8t3tDekFrzmVhFQYj
+	 cPeWfs0S0evG+mZmw6vL/EuU=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 123EA40E015D;
+	Sun, 22 Jun 2025 08:41:43 +0000 (UTC)
+Date: Sun, 22 Jun 2025 10:41:37 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] x86/urgent for v6.16-rc3
+Message-ID: <20250622084137.GAaFfBwdb_Ei3zCHN_@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aFXPXTUSvgj-a2zC@shikoro>
 
-On Fri, Jun 20, 2025 at 11:15:09PM +0200, Wolfram Sang wrote:
-> On Fri, Jun 20, 2025 at 06:54:59PM +0200, Jorge Marques wrote:
-> > The i3c abstraction excepts u8 buffers, but some controllers have a bus
-> > width of 32-bits and don't support flagging valid bytes, so it is
-> > required to read/write long words and to use memcpy on the remainder of
-> > the number of bytes by 32-bits to not write/read outside the buffer
-> > bounds.
-> > 
-> > Signed-off-by: Jorge Marques <jorge.marques@analog.com>
-> 
-> Suggested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> 
-> > + * i3c_master_writesl- Write bytes to long memory region from byte array
-> 
-Hi Wolfram,
-> Frank proposed the name 'i3c_writel_fifo' which I like a tad better.
-> Opinions?
->
-I don't oppose the change and I'll rename, as well moving the method to
-internals.h
+Hi Linus,
 
-  i3c_master_writesl -> i3c_writel_fifo
-  i3c_master_readsl -> i3c_readl_fifo
+please pull the x86/urgent lineup for v6.16-rc3.
 
-Best Regards,
-Jorge
+Thx.
+
+---
+
+The following changes since commit 9afe652958c3ee88f24df1e4a97f298afce89407:
+
+  Merge tag 'x86_urgent_for_6.16-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip (2025-06-16 11:36:21 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip tags/x86_urgent_for_v6.16_rc3
+
+for you to fetch changes up to 2aebf5ee43bf0ed225a09a30cf515d9f2813b759:
+
+  x86/alternatives: Fix int3 handling failure from broken text_poke array (2025-06-18 13:59:56 +0200)
+
+----------------------------------------------------------------
+- Make sure the array tracking which kernel text positions need to be
+  alternatives-patched doesn't get mishandled by out-of-order modifications,
+  leading to it overflowing and causing page faults when patching
+
+- Avoid an infinite loop when early code does a ranged TLB invalidation before
+  the broadcast TLB invalidation count of how many pages it can flush, has
+  been read from CPUID
+
+- Fix a CONFIG_MODULES typo
+
+- Disable broadcast TLB invalidation when PTI is enabled to avoid an overflow
+  of the bitmap tracking dynamic ASIDs which need to be flushed when the
+  kernel switches between the user and kernel address space
+
+- Handle the case of a CPU going offline and thus reporting zeroes when
+  reading top-level events in the resctrl code
+
+----------------------------------------------------------------
+Dave Hansen (1):
+      x86/mm: Disable INVLPGB when PTI is enabled
+
+Lukas Bulwahn (1):
+      x86/its: Fix an ifdef typo in its_alloc()
+
+Masami Hiramatsu (Google) (1):
+      x86/alternatives: Fix int3 handling failure from broken text_poke array
+
+Qinyun Tan (1):
+      x86,fs/resctrl: Remove inappropriate references to cacheinfo in the resctrl subsystem
+
+Rik van Riel (1):
+      x86/mm: Fix early boot use of INVPLGB
+
+ arch/x86/kernel/alternative.c      |  4 ++--
+ arch/x86/kernel/cpu/amd.c          |  2 +-
+ arch/x86/kernel/cpu/resctrl/core.c |  6 ++++--
+ arch/x86/mm/pti.c                  |  5 +++++
+ fs/resctrl/ctrlmondata.c           | 13 +++++++++----
+ fs/resctrl/internal.h              |  4 ++--
+ fs/resctrl/monitor.c               |  6 ++++--
+ fs/resctrl/rdtgroup.c              |  6 +++---
+ include/linux/resctrl.h            |  4 ++--
+ 9 files changed, 32 insertions(+), 18 deletions(-)
+
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
