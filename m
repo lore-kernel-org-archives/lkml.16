@@ -1,103 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6C735977;
-	Sun, 22 Jun 2025 23:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3492A33E1;
+	Sun, 22 Jun 2025 23:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750633553; cv=none; b=Wi75Ie2BsoV1K3jkiu2f/6HplA1WRshoJr3hZexvEvjWLiy9RnB8TntWhGQaul3YwqpoY2lY1y0VyMbSMp4zI44GREmV9aHLkoNwh930HWhY8ItIIwvZoNiuSCgFvizWrEsb4TewrnzGvK0sEmzgtaSxzGKyX+wX7u3/3j0u72Y=
+	t=1750633982; cv=none; b=NEZxmPRp5JV/X+Vnyah0z7bYMOM5LgZAglio+8eAIE19OoPzqIrCRxacwtLxW6sHon26g+CNN+DnU+uaXZCy+6KvEl33KDQXXkG+652jYXC5Ma6W0/brw8PjSADO2R2srXO4ikp4jrNSZ7/jesQG/gV4y+42DJNYAGUaRqorI3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750633553; c=relaxed/simple;
-	bh=PseveSieBkz6aK3pTCE1wpNXkrVYYBVptg5kuZ6+eEU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D6YKlfsTvTqjO97bN1kZ6RZMr6dyzY/P89bjMjcWoiquYiscWA6UC5k2U1n68kcCrK4irwoB/kDd3lvCSqbgcJEmrPw7CkiIaK/1g7ap4avU/1VFZN6ZGzGt/87TZjUXixjUOdXY9GZpDxCc6iFFQA/xq3PAuLmEopEwTvCNsNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I0YFAydG; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750633982; c=relaxed/simple;
+	bh=GhOPkCem6q1ZnegDfQgpQBsKwmd/t7yaOcJz3uKoqGA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=T3KbudKv4EWvW6Mf7rfxcXTWOS/gHcJ0qYAig073SsKH0qluB7RRNA/Gsghs8UieeL9IkjRXKUQB3/cdNd+rG5TcmVifYmc3t46ViuN31tGIPENuolVAhVVTIav3dnTqFvUpcofCgarDV6/EiMlZ5jmVgZeUS6N6CiuSoL20FbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Vnj+rdcR; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I0YFAydG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750633552; x=1782169552;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PseveSieBkz6aK3pTCE1wpNXkrVYYBVptg5kuZ6+eEU=;
-  b=I0YFAydGOVCAYUl825p/0UdWUGtRc+Dr8bu1cu7DiOeRgZ2P2ECyPBfI
-   e3Uhk6zp4nSGSrBbkILP11XL8Zutf7ytMpnExZhtVkZefifYql6F44v3r
-   SjZC9KwcbC8wfxyKz35yCyWdrhjgiPnjye+Nn0FwGMlXWNNrj6FDz9uaq
-   f7YZX6I6Fe8tUesVJMd4NGgFQFIp7cEeuIcLU7EjpbCummXzvFPXKZrLD
-   ya70GEbXtqb5DIWcX7li2SfeToiGetf5GB7+vTRX88ZF0z3txX3LwqjtW
-   NRNjCNq9m32yWEknFJdYc+8gPJs91ySX1o3llZCe3hmGvlUlSGhkynDWM
-   A==;
-X-CSE-ConnectionGUID: YKGn7i6ETVWF5jIc+em+lQ==
-X-CSE-MsgGUID: k+ZA7U2ETXmwXKqOszE/6g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="56496755"
-X-IronPort-AV: E=Sophos;i="6.16,257,1744095600"; 
-   d="scan'208";a="56496755"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 16:05:51 -0700
-X-CSE-ConnectionGUID: L2Sd27kZS5C0EmD94BmUIg==
-X-CSE-MsgGUID: fa9dnmWJTvqs+4ig8zOW8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,257,1744095600"; 
-   d="scan'208";a="150909124"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 22 Jun 2025 16:05:49 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uTTkw-000NZG-1h;
-	Sun, 22 Jun 2025 23:05:46 +0000
-Date: Mon, 23 Jun 2025 07:05:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Christian Marangi <ansuelsmth@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Christian Marangi <ansuelsmth@gmail.com>
-Subject: Re: [PATCH v14] pwm: airoha: Add support for EN7581 SoC
-Message-ID: <202506230615.9m8ZE43C-lkp@intel.com>
-References: <20250616201532.29047-1-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Vnj+rdcR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1750633972;
+	bh=ZZlcUupFv8lbRmaho4dfXx3P45VrTD9lGZNwNyQtL4M=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Vnj+rdcR3ez2f7wznYh15Uzk+zcdmC1pZTFFk3bsQV224ZNk8c7uHO0wZmijV4x6P
+	 5SqPom6eFBL4sYEKs16oAARJ1FkYdhto+FnLCRv0/ByVOqYCmB3+DXL8dClxZNPdlQ
+	 HMp/BByH4ylLNAfW7iMhIrK23le23Hpurh6Cec76/ojT86RhzW00pD7runrl2ysdtb
+	 aGTDiuwxypVmgWDMyW+fg1Faamt7xq2SzhgRkRXjJw7b7q9XWPwh37sFYZQTaRhfYJ
+	 8uvEgLwqRluTdsiiz6C0aLy4NYVHFYZ05XeDcrI6GXGijpqACJkKBXztKvpk00WLgM
+	 N76keGuYWPvjQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bQRnw5cxTz4wd0;
+	Mon, 23 Jun 2025 09:12:52 +1000 (AEST)
+Date: Mon, 23 Jun 2025 09:12:50 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Al Viro <viro@ZenIV.linux.org.uk>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the vfs tree with the vfs-fixes tree
+Message-ID: <20250623091250.2a3a399b@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616201532.29047-1-ansuelsmth@gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/p=KpbD2Ey1Kil/F508vJwrd";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi Christian,
+--Sig_/p=KpbD2Ey1Kil/F508vJwrd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-kernel test robot noticed the following build errors:
+Hi all,
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.16-rc3 next-20250620]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Today's linux-next merge of the vfs tree got a conflict in:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/pwm-airoha-Add-support-for-EN7581-SoC/20250617-042042
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250616201532.29047-1-ansuelsmth%40gmail.com
-patch subject: [PATCH v14] pwm: airoha: Add support for EN7581 SoC
-config: m68k-randconfig-r072-20250623 (https://download.01.org/0day-ci/archive/20250623/202506230615.9m8ZE43C-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 13.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250623/202506230615.9m8ZE43C-lkp@intel.com/reproduce)
+  Documentation/filesystems/porting.rst
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506230615.9m8ZE43C-lkp@intel.com/
+between commit:
 
-All errors (new ones prefixed by >>):
+  2e7072350656 ("replace collect_mounts()/drop_collected_mounts() with safe=
+r variant")
 
-   m68k-linux-ld: drivers/pwm/pwm-airoha.o: in function `airoha_pwm_apply':
->> pwm-airoha.c:(.text+0x8f8): undefined reference to `__umoddi3'
+from the vfs-fixes tree and commits:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  05fb0e666495 ("new helper: set_default_d_op()")
+  691fb82ca6cc ("make d_set_d_op() static")
+
+from the vfs tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/filesystems/porting.rst
+index 200226bfd6cf,579f17df46cf..000000000000
+--- a/Documentation/filesystems/porting.rst
++++ b/Documentation/filesystems/porting.rst
+@@@ -1249,9 -1252,18 +1249,27 @@@ an extra reference to new mount - it sh
+ =20
+  ---
+ =20
+ +collect_mounts()/drop_collected_mounts()/iterate_mounts() are gone now.
+ +Replacement is collect_paths()/drop_collected_path(), with no special
+ +iterator needed.  Instead of a cloned mount tree, the new interface retur=
+ns
+ +an array of struct path, one for each mount collect_mounts() would've
+ +created.  These struct path point to locations in the caller's namespace
+ +that would be roots of the cloned mounts.
+++
+++---
+++
++ **mandatory**
++=20
++ If your filesystem sets the default dentry_operations, use set_default_d_=
+op()
++ rather than manually setting sb->s_d_op.
++=20
++ ---
++=20
++ **mandatory**
++=20
++ d_set_d_op() is no longer exported (or public, for that matter); _if_
++ your filesystem really needed that, make use of d_splice_alias_ops()
++ to have them set.  Better yet, think hard whether you need different
++ ->d_op for different dentries - if not, just use set_default_d_op()
++ at mount time and be done with that.  Currently procfs is the only
++ thing that really needs ->d_op varying between dentries.
+
+--Sig_/p=KpbD2Ey1Kil/F508vJwrd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhYjfIACgkQAVBC80lX
+0Gy9jQf+ME37wKvD+euYFfAaEvIZAEtbe6kuyzBLo8k1aamFllvyScaEoEg9uPKY
+V0A1NeKcYKfZNaOx1payQ22cKEnOGeHZzgspAJOk7+b7VdB2AuGckoWQw7FTucHU
+tsJpLxF0hG5+AJi5Vu+2fkhEs4ujsgH9fgII64OoIT1w7s+l8e9FtyveDHc+jDGp
+tp5D0jOlncBRvcD8LA8Q9UzgtxGnH6KB4KhXgM53/2/JR8/B3YY6TlBJ0kxOojxj
+5xqqW3O4fr9EiM8h1pnpezUyyOhYfORYg5srVnuoMeMvGQ3J1AeMOL04U2uVlJCM
+yp3JiFeShwJMOccLcnZDKSFLKckPig==
+=hCP0
+-----END PGP SIGNATURE-----
+
+--Sig_/p=KpbD2Ey1Kil/F508vJwrd--
