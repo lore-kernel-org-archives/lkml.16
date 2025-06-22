@@ -1,151 +1,126 @@
-Received: from poodle.tulip.relay.mailchannels.net (poodle.tulip.relay.mailchannels.net [23.83.218.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEA319A;
-	Sun, 22 Jun 2025 19:04:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.249
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750619077; cv=pass; b=eGRuSEBeYlLqjX+ovTSp3Mch7LCYfwFjl/lhGyFi6bL9qAlGV0UtbKY2xP00+Bb2RpJ7h7R97CkSFZJcsN38YNLqax2mRf3Xy9qG6+B6qlc8dZajqDxlxysKMXcG/yABlt0O/Ku76m5SH5R/4m+wC5UIcCpbL7cLZpco9vGgzKU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750619077; c=relaxed/simple;
-	bh=bKcIu4YmFvKnN7tEOiXGIjqjmyQYPGhJ4shpLTJX2d4=;
-	h=From:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc:Date; b=q3So938cIZyzAzcB0RglBSfc5XZ6/1mou5jepi79U/Jzr3e2yHRr55QJ7kQuz83h6YF2LIbwZHxyBjBQTPYPcFXYRqwREvGcgmEXPLQWrCWPzUaA/5TBHg7BP2J+E5qw5ktOUgsK6/WYV/rsUOloMk80vYulGgnVXYpGgRnbiM8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com; spf=pass smtp.mailfrom=smankusors.com; dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b=QjWNTScA; arc=pass smtp.client-ip=23.83.218.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smankusors.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A88155C97
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 19:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750619344; cv=none; b=hRlOEMduLtE6PGBy6CpDD0QpxHpL3VuWoAH43cdAiTGZ4xqRrLPMsNUNwIvOqmjdMcUPgjwy+sUy86ZlvEjeBfls/uXpyl/hMqFHFy0E5rA2w5RLorI/y8VDucIjHJjYPFJTLgeN58PvlqXnbxpbGfHE97UuCljsAg7upkbA4nQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750619344; c=relaxed/simple;
+	bh=5uq9U95xetAEdfYaxJoX7pftJ4HxoJ8sSXX494DjvuQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=D8FUZgZ/Cx/jvJ/F0jtteHVfiC+Kw+cK6rHIM/sKLANwR43kERlOgyim+iHvv2FGxuZe5mdB43gQOiySRHbeL28VZDrRak11KAOPWQRz7l/Y1Wft4nEh6JCAmh6omIfnJMcxV9s0iqFKhEdJjaR1Io6NH8gd8SQ0h7NhXkIO2A0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AOZWAFw2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b="QjWNTScA"
-X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id D45BE8A52EE;
-	Sun, 22 Jun 2025 18:26:55 +0000 (UTC)
-Received: from fr-int-smtpout7.hostinger.io (100-108-113-245.trex-nlb.outbound.svc.cluster.local [100.108.113.245])
-	(Authenticated sender: hostingeremail)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 943338A4683;
-	Sun, 22 Jun 2025 18:26:51 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1750616813; a=rsa-sha256;
-	cv=none;
-	b=nyWMhpQ0DI3j/beyGc2JzLVAXqwVuiHWm6ZYXfopny/wFGf+TNFwtaiZnfj7CD4g0r8dBP
-	ew/a6Py9Lcdyb2TMJCwZ/isA4QXzJTvgDJkaE7wh/+fHvzn97jZqP5sEc3kWThCcfHB+zf
-	spVhOHnOLB8Nyg4u6XEefqK17hOw1aYdJTgh59xdTpB5nTBDl1nEuE2qrkLrNOGY1rnMLL
-	SJBOiv/2xBw51qMNoezTPL4LecHE736ZEzk3boibMZMfn9F3/l68TBK5qQmEGNhFR0VEmv
-	L3kUoM6TFJCLs0DTRG8CSz8c7w5jh6oZNtsCRoeXSw/U/qEeT+JT5wEOhnR8wg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1750616813;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=t2GFeEqAL58m2f02+3xj/U2MJQmHIsbUnxB2cKRe7HM=;
-	b=DP7/qmzzxJk4RaG4zVZd8k5aVbj22IgE93HCLEPyNakEO7zN+NplhPLkv3ziOxaiBYNu3W
-	rkZhx8O4HZ64KTqjdNkEnYMSV5RKHrCeM5yWbxbrcM7PGav+tmuCGFld3DKAsT3INTiIfk
-	1x6lE6GGg9Yghnvj86xoeEjmf1CttJVWkbzYT9qCPyAF9R23dBOL5MNXDLhHP0CsdnVP0h
-	94DKEwoAqB/nqYnYkHMdtdlmk79qAm9s0QAE6vkZViQKaaCbo80whyeKifJYMjUDLiPawo
-	kw23GKOUvd8VNHdZpdfNgrPJbvCgM3euwqK3eBZzH1Uzn8tGNWU3oKx/8BXYxg==
-ARC-Authentication-Results: i=1;
-	rspamd-6597f9cdc7-npqlj;
-	auth=pass smtp.auth=hostingeremail smtp.mailfrom=linux@smankusors.com
-X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: hostingeremail|x-authuser|linux@smankusors.com
-X-MailChannels-Auth-Id: hostingeremail
-X-Scare-Glossy: 0c7b7ccd4fa228b3_1750616815774_3533473480
-X-MC-Loop-Signature: 1750616815774:3947712857
-X-MC-Ingress-Time: 1750616815774
-Received: from fr-int-smtpout7.hostinger.io (fr-int-smtpout7.hostinger.io
- [89.116.146.203])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.108.113.245 (trex/7.0.3);
-	Sun, 22 Jun 2025 18:26:55 +0000
-Received: from [172.17.0.2] (unknown [36.79.123.39])
-	(Authenticated sender: linux@smankusors.com)
-	by smtp.hostinger.com (smtp.hostinger.com) with ESMTPSA id 4bQKRq3F3wzKLLGv;
-	Sun, 22 Jun 2025 18:26:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smankusors.com;
-	s=hostingermail-a; t=1750616809;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t2GFeEqAL58m2f02+3xj/U2MJQmHIsbUnxB2cKRe7HM=;
-	b=QjWNTScASiUYMENJ1b402rf/xnzF13ssi+tXlV0dKgZ3SNzfibI2hEk8q1eLE5x5mthetI
-	/L8fS8h7p19XLmdVsn6R2v1u/g9/wpihQQpUHp5PfzWZr4y9+uH/KUnnarCciU6VdxJaGr
-	4su8twYsggwuOw6AKSPtCZ5JI6Xcs9aAyLRfetcayv4aZTXieVCysVhhDrjr1V3ocpRhK+
-	rRPC1I5CcIlzZyMAfwPVQFBHoCFCFgY+KyhaXoCV/aqrP687ncpZ+xUX+e6B5cfydrVN7Z
-	Srq5EbY0DJJ6wUBAlWKl/tDv4UmVNT8/6IbHpBOB6wCbxMpGgXyl5YGSrw2mnA==
-From: Antony Kurniawan Soemardi <linux@smankusors.com>
-Subject: [PATCH v2 4/5] dt-bindings: arm: qcom: add Sony Xperia SP
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AOZWAFw2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 605A9C4CEE3;
+	Sun, 22 Jun 2025 19:09:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750619344;
+	bh=5uq9U95xetAEdfYaxJoX7pftJ4HxoJ8sSXX494DjvuQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=AOZWAFw2G6nw//KwBElILCC717XC2H1Zc5M2VkGzloauCOeuG/qWoqmUHzk6JTe7d
+	 8vo2mpdIio5AF5Cq7zj8dXbfWVk6ThhiYO6VW9gYHFSxHrm1PcGqnGK55cWY250rXc
+	 dJVEJwqgZacqgvBqeQfyOLapn0Oegd9htjezBFXg9/+T2Fn4RjWzJ1p2OlNxeEO9Hd
+	 vAEOkWO8dpURmuOP60VT3+n2Cdbi9AqFaQivz8+60H2UyBGTIrj64YpsdErqY6gTXV
+	 eptmOApQzuLOg/nrRL6uWDArZ73lSilwMgZ+s0WWy9rEvfJkNH59C4LFp+ifMfxTye
+	 XPXDPlh6kuK0Q==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,  Pratyush Yadav
+ <pratyush@kernel.org>,  Cheng Ming Lin <chengminglin@mxic.com.tw>,  Cheng
+ Ming Lin <linchengming884@gmail.com>,  mwalle@kernel.org,
+  miquel.raynal@bootlin.com,  richard@nod.at,  vigneshr@ti.com,
+  linux-mtd@lists.infradead.org,  linux-kernel@vger.kernel.org,
+  alvinzhou@mxic.com.tw,  leoyu@mxic.com.tw, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 1/3] mtd: spi-nor: macronix: Drop the redundant flash
+ info fields
+In-Reply-To: <ff485da8-1a02-40a9-9286-94459e52b26c@roeck-us.net>
+References: <20250407075400.1113177-1-linchengming884@gmail.com>
+	<20250407075400.1113177-2-linchengming884@gmail.com>
+	<d98f6eee-d5f7-43b7-bbc8-d6e7e274723a@roeck-us.net>
+	<mafs05xh6pf7s.fsf@kernel.org>
+	<da58fc81-3c99-4951-85bc-e3c139283b5a@roeck-us.net>
+	<a2a0c40e-69d7-4408-add2-88616c92b0ca@roeck-us.net>
+	<aa2a4480-9b78-4ed9-8f9d-b18a87eb01e9@linaro.org>
+	<ff485da8-1a02-40a9-9286-94459e52b26c@roeck-us.net>
+Date: Sun, 22 Jun 2025 21:09:01 +0200
+Message-ID: <mafs01prbvbjm.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-msm8960-sdcard-v2-4-340a5e8f7df0@smankusors.com>
-References: <20250623-msm8960-sdcard-v2-0-340a5e8f7df0@smankusors.com>
-In-Reply-To: <20250623-msm8960-sdcard-v2-0-340a5e8f7df0@smankusors.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Antony Kurniawan Soemardi <linux@smankusors.com>, 
- Max Shevchenko <wctrl@proton.me>, Rudraksha Gupta <guptarud@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750616795; l=1221;
- i=linux@smankusors.com; s=20250609; h=from:subject:message-id;
- bh=bKcIu4YmFvKnN7tEOiXGIjqjmyQYPGhJ4shpLTJX2d4=;
- b=xvNmIM2GYI2GF2ZQkDVjAXE2rM2uhPGwdqvnY03K/QghECbts+o7+KAgTnaF2UcmqBJwXm4s4
- 0kIhReoGUB2CIMZRXh7knEFFKwtp1Grp93Chgq63Th1U7cXPF9F0/dc
-X-Developer-Key: i=linux@smankusors.com; a=ed25519;
- pk=65wTy06fJl2/h/EJwjr704YG+yjHFhZObJBWzzK+N00=
-Date: Sun, 22 Jun 2025 18:26:47 +0000 (UTC)
-X-CM-Analysis: v=2.4 cv=Vv1xAP2n c=1 sm=1 tr=0 ts=68584ae9 a=vFgqIyFt8cetXi1S0ACNwg==:117 a=vFgqIyFt8cetXi1S0ACNwg==:17 a=IkcTkHD0fZMA:10 a=wxLWbCv9AAAA:8 a=bYGVSWbl8t4XKdEgDhAA:9 a=QEXdDO2ut3YA:10 a=QJY96suAAestDpCc5Gi9:22
-X-CM-Envelope: MS4xfJxIfTay/nKcFcvrBvYfiT8b3u36onuCWFGoq8WJO0/X8OHNDkCSEykctn+1MOK2KD+K2OKfwb5lngihcYGKR5JpegIylBIIbpioJHl2fSENlgXQYRVo 9XM88AgeDAQDHdDiIvCguHzVTHpQ14Fik5aNSlPyrnbjEclpSIhX7dpHjFI/7x1z7lR42q+oyUXDS6aDMF/FHa+YuVS/WGVa8m9sJhvwLbsnILrgr9kmYzIj hvxwncx6vwVGyonx/KWLFjDVo27CcHN8OU6Tfrp9Xf0yw4A9PxyGYQaDlRc6I0woAU/D+VQfn+tVXgN/1/T2inRgic8a+7aNfwxU8i13yfwH4+cMCvSOtSgx iWOMJispdG6RQtL8iQUIWsO5NVLv049b5Cuk01QNIr5Te3onYeWg1zh++Cmx2vxkEjsuUvfgdc3dY13bLxLOE/sgd/Z0/010Atasxk8wJOtdIdeWZyeuliLT qozCc8b266LPxjWfrRnMU+7gWD7qOvnjfN854xw5IIc1/SXb6sjmDbC8cYI=
-X-AuthUser: linux@smankusors.com
+Content-Type: text/plain
 
-Document the Sony Xperia SP (huashan), which uses the MSM8960T SoC.
+Hi Guenter,
 
-The MSM8960T is a variant of the MSM8960 featuring an upgraded GPU
-(Adreno 320 instead of Adreno 225) and a slightly overclocked CPU
-(1.7GHz instead of 1.5GHz).
+On Tue, Jun 10 2025, Guenter Roeck wrote:
 
-Signed-off-by: Antony Kurniawan Soemardi <linux@smankusors.com>
----
- Documentation/devicetree/bindings/arm/qcom.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+> On 6/9/25 23:46, Tudor Ambarus wrote:
+>> On 6/10/25 1:14 AM, Guenter Roeck wrote:
+>>> On 6/8/25 18:13, Guenter Roeck wrote:
+>>>> On 6/8/25 05:53, Pratyush Yadav wrote:
+>>>>> On Sat, Jun 07 2025, Guenter Roeck wrote:
+[...]
+>>>>>> With this patch in place, some of my qemu tests no longer recognize the
+>>>>>> flash chips (MX25L25635E/F). Do you have a suggestion on how to handle
+>>>>>> this other than avoiding Macronix flash chips when working with qemu ?
+>>>>>
+>>>>> Could you share some logs? Does the flash fail to detect, or does the
+>>>>> SFDP-based probing fail? Since this is qemu, it would be even better if
+>>>>> you can share a setup/reproduction guide. I have been meaning to set up
+>>>>> qemu for SPI NOR testing for some time now, but never got around to
+>>>>> figuring it out.
+>>>>>
+>>>>
+>>>> I suspect that the SFDP data for the affected flashes is incorrect in
+>>>> qemu.
+>>>> Since this is very likely a qemu problem, I'll just configure
+>>>> different flash
+>>>> chips when running affected tests.
+>>>>
+[...]
+>
+> Some debugging shows two problems with qemu: The returned SFPD data for one
+> of the flashes is wrong and does not reflect the data qemu is supposed
+> to provide, and qemu does not provide SFPD data for all flashes.
+>
+> I don't know if the bad data is due to a bad Linux driver (unlikely), a bug
+> in qemu's SPI emulation code, or a bug in qemu's flash emulation code.
+> Unfortunately I don't really have time to track this down further.
 
-diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
-index 56f78f0f3803fedcb6422efd6adec3bbc81c2e03..6a957901a664b26c586e45876447b83f849fb5ba 100644
---- a/Documentation/devicetree/bindings/arm/qcom.yaml
-+++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-@@ -44,6 +44,7 @@ description: |
-         msm8953
-         msm8956
-         msm8960
-+        msm8960t
-         msm8974
-         msm8974pro
-         msm8976
-@@ -203,6 +204,12 @@ properties:
-               - samsung,expressatt
-           - const: qcom,msm8960
- 
-+      - items:
-+          - enum:
-+              - sony,huashan
-+          - const: qcom,msm8960t
-+          - const: qcom,msm8960
-+
-       - items:
-           - enum:
-               - lge,hammerhead
+I used the command you posted in [0] and tried to reproduce the bug, but
+for me the flash probes just fine:
+
+    root@romulus:/sys/bus/spi/devices/spi0.0/spi-nor# cat manufacturer 
+    macronix
+    root@romulus:/sys/bus/spi/devices/spi0.0/spi-nor# cat jedec_id 
+    c22019
+    root@romulus:/sys/bus/spi/devices/spi0.0/spi-nor# uname -a
+    Linux romulus 6.16.0-rc2-00308-gf7301f856d35-dirty #5 SMP Sat Jun 21 19:29:15 CEST 2025 armv6l GNU/Linux
+
+The rootfs is also mounted on a mtdblock device backed by this flash,
+and everything appears to work fine.
+
+Which version of qemu are you using? I can see that SFDP data for
+mx25l25635e was added to qemu in commit dc907a667c ("m25p80: Add the
+mx25l25635e SFPD table"), which was released in v7.2.0. Older versions
+of qemu might run into trouble with this flash if SFDP data is not
+available.
+
+FWIW, my qemu version:
+
+    $ qemu-system-arm --version
+    QEMU emulator version 10.0.0
+    Copyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers
+
+[0] https://lore.kernel.org/linux-mtd/da58fc81-3c99-4951-85bc-e3c139283b5a@roeck-us.net/
 
 -- 
-2.34.1
-
+Regards,
+Pratyush Yadav
