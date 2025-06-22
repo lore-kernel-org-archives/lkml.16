@@ -1,175 +1,100 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48B519995E
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 09:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6682A1A2389;
+	Sun, 22 Jun 2025 09:22:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750584133; cv=none; b=VXB7EjQECnMGiKaAu8DDeaPGtlhNqSffbqxjIVgesyPcw10hDFp+4Gzb6Hyon5faxEdv9LtKogysNstHXL2snlzBdi8hRdzRo2hH6JzUFBD8QctbF9ytZepkrvRw/BQ6igpqhCbZUuyVXVmiacqoy27ScVkPOz1NM3GC4/+KP7A=
+	t=1750584153; cv=none; b=QB4gtOKSsIx9tOtvYKh17WiuSxKM3QJX4c3pyOg5F4KBOJU+t6JcaA0yaD5mURlVqH58StOgt/I6q3e/Q6fhnXGEOnd1Gly9CXqiQRS/yiK/hqub/Eg/KCCLusMDyVSprnhvg6tqbilrvnyjUBR7AYlXgG51W8Z1xucr5l5Pl0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750584133; c=relaxed/simple;
-	bh=G2ndV+MQ36l3fmzDtWBM3JUhQ84vhzEGz9R9pdPXqtA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=jbwV2AnbYtOQgZDcslIj866k/XvIgjJJYpAodSBBbzGaA9Rh1vJ8PVGC1Sgg8OTCZLZ43iGkXwHYWqOkzgpijRE0fuQuXNw+oiyF221Ok2ccjdaaWK2aE/kBL3r5JMZ4+J7RzbtakWUdCNHpUSrUK71v57t2JXYG303ZyTlB6pQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=Q0+59x/c; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1750584153; c=relaxed/simple;
+	bh=cNpoVNKfaRvJYkUqsAXIJEOXd4xAotnHUkbzDkwbB50=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pbw+NLUlUsq3Q8v6Zu4VX1uuIGb3QNSQf4LmKZQYiWkLCfnv9t1IxsQyowdE8jQcie1iuyb9bZl+nvUyUzzFsG3jxEudzZYeJ0QQ2N5CnzEOVAYYpwMrq4dUUU7dvZ43uQ8XTJqJuPx3wDi9r7iWNCQWhoXNUwDuBCCQoVXqgGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lm7xo8PL; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="Q0+59x/c"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55M528BI012266;
-	Sun, 22 Jun 2025 05:22:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=HNtXL
-	lkrbNK2ae+OChWznVZiy3xck+hIBQLK1M8aHhY=; b=Q0+59x/c8npg74NeDQWVK
-	miUor0Gq+GhWu1Bp/CwchAsVBEbZWe6pRd12IPW7Lm3ydsBss0PZtuUBMf5YVwtl
-	nqYT9hPensH1skZM/FqXXsUAEcSgMdZhWwu2wvHiZ31ge8hf110zbYa+4MNHj3fa
-	67ft6zSNvjgqjTK3tUOt+lVKh/C6jf3SjR09ioYMX4lVuDIATcw3bSAgg+4jIimI
-	yjZpPMTMwa5oDplxufth4x1fPqhVxYv8StMUfSYuqZuQV1IAVP4YTpBk/5vQdKzS
-	fQQdPMyrZYsY4Be9QwpIAMz9Gd911nWW5xxgk2iNGAWvWRaJcXuerziH1KITqU4U
-	A==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 47dsn7bkpv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 05:22:02 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 55M9Lkgp063097
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sun, 22 Jun 2025 05:21:46 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Sun, 22 Jun 2025 05:21:46 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Sun, 22 Jun 2025 05:21:46 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
- Transport; Sun, 22 Jun 2025 05:21:46 -0400
-Received: from HYB-DlYm71t3hSl.ad.analog.com (HYB-DlYm71t3hSl.ad.analog.com [10.32.14.29])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 55M9LVbB002307;
-	Sun, 22 Jun 2025 05:21:35 -0400
-From: Jorge Marques <jorge.marques@analog.com>
-Date: Sun, 22 Jun 2025 11:18:59 +0200
-Subject: [PATCH v2 2/3] i3c: master: cdns: Use i3c_master_writesl() and
- i3c_master_readsl()
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lm7xo8PL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750584151; x=1782120151;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=cNpoVNKfaRvJYkUqsAXIJEOXd4xAotnHUkbzDkwbB50=;
+  b=Lm7xo8PLBsK/3z67PJtmABN5/FtGpzO3Ipnl+TC+aXNPu+lK5FOEelCX
+   9pjkeyKCwUtEY5yGpjzjBeuIIIYw4X17NPSGI7oom+ete8zPTvs8QWgVe
+   Puqu5xSeUZWVVe0YaoInx6SqqNTL248JWlT8gjYYcNKqzOlXhmTlv4S9u
+   W4g099cF6gKEbSYK9cpt9gwpDbmqTCw6t4uNVLx2gTJwWUmZ9JKEO2gNC
+   eYDlG9OLbeJRHk7gLVZD5aQuTIFCN3jWJpFr2+f2kWsiJZSgQFZCYenRO
+   7NoMbRAJaROp2GEnYpp2kTAJzf630hxdT/14fyNlZuJ+TLBkxALibMe+Y
+   Q==;
+X-CSE-ConnectionGUID: USR3Zs3QS5KCnTXMMNf60A==
+X-CSE-MsgGUID: 5QJSkoOZTTq4F8CSYeAtxw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11470"; a="52670865"
+X-IronPort-AV: E=Sophos;i="6.16,256,1744095600"; 
+   d="scan'208";a="52670865"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 02:22:30 -0700
+X-CSE-ConnectionGUID: QbvLu81GQNq0qwqKXna+9Q==
+X-CSE-MsgGUID: kb6lFv/uTTGwjZ2nqcNSug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,256,1744095600"; 
+   d="scan'208";a="156809187"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 22 Jun 2025 02:22:26 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uTGu8-000NB0-0y;
+	Sun, 22 Jun 2025 09:22:24 +0000
+Date: Sun, 22 Jun 2025 17:22:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tao Chen <chen.dylane@linux.dev>, ast@kernel.org, daniel@iogearbox.net,
+	john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
+	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
+	jolsa@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Tao Chen <chen.dylane@linux.dev>
+Subject: Re: [PATCH bpf-next] bpf: Add load_time in bpf_prog fdinfo
+Message-ID: <202506221641.xWzKiW3U-lkp@intel.com>
+References: <20250620051017.111559-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250622-i3c-writesl-readsl-v2-2-2afd34ec6306@analog.com>
-References: <20250622-i3c-writesl-readsl-v2-0-2afd34ec6306@analog.com>
-In-Reply-To: <20250622-i3c-writesl-readsl-v2-0-2afd34ec6306@analog.com>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Frank Li
-	<Frank.Li@nxp.com>,
-        =?utf-8?q?Przemys=C5=82aw_Gaj?= <pgaj@cadence.com>
-CC: <linux-i3c@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        "Jorge
- Marques" <jorge.marques@analog.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750583937; l=2213;
- i=jorge.marques@analog.com; s=20250303; h=from:subject:message-id;
- bh=G2ndV+MQ36l3fmzDtWBM3JUhQ84vhzEGz9R9pdPXqtA=;
- b=6UjcbzqVvZ0MDA4cGh0jcPXQMkgtWJsMgUAp+JZv9v77SFFVIcm377k5eSTqzJOERSVd3mqPh
- QfLJjktqYIuDRaZjM1SiujngWWbxWnDNvjmrFPUv9Alq74lV35J+yWW
-X-Developer-Key: i=jorge.marques@analog.com; a=ed25519;
- pk=NUR1IZZMH0Da3QbJ2tBSznSPVfRpuoWdhBzKGSpAdbg=
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=GLsIEvNK c=1 sm=1 tr=0 ts=6857cb3a cx=c_pps
- a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=gAnH3GRIAAAA:8 a=wBeUhC9FeeX9q1_Bn2kA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDA1NiBTYWx0ZWRfX5Kb3dTJYyylB
- iaWUEXH7Le0RO5rSgHaP3WA2wQPG96CEkE34ApdRht4SfoyvtFBjBkKM8qZMCqNOQ7f6UB/9a6l
- rIucK4pW6yPqDhREQyJqKcwr/dDSjlwNzcLBDiI70b+LMNIbQScenIkH1CebS3unxMyrJ4YZKYO
- 6OhrbbRfEHIrKFw005bvZErgXppThkLhTUtoNr+ztvepVQ6+zQgGDyG9mdNp7orOWc3ymISo+v0
- /2WvzZYXE2zbDka0iRPMVWaYcAKhpTYJbpahm3rAWU8Fr7jowcVDcvaLUpjddXw4rLxw0l0047l
- DDMAFtx2zKLDQrn+xQ/AKOhrXUJxSN4odRI0Wts0HZMmEcIgDLfs71Et9MnUdjmx1HAdeuBNTop
- PMZBMCVFQ8AGIH4nXh/tpIUJKpvCRrZWJgSOAIEFIifYMBC3UTzaD9+y9ONairin/uqFn9fM
-X-Proofpoint-GUID: MJ-2Q7Sa5SSomXW1FOY3EPwni_BTskM0
-X-Proofpoint-ORIG-GUID: MJ-2Q7Sa5SSomXW1FOY3EPwni_BTskM0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-22_03,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 mlxscore=0 malwarescore=0 mlxlogscore=807 lowpriorityscore=0
- priorityscore=1501 phishscore=0 clxscore=1015 bulkscore=0 suspectscore=0
- adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506220056
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620051017.111559-1-chen.dylane@linux.dev>
 
-Use common inline i3c_master_writesl()/i3c_master_readsl() methods to
-simplify code since the FIFO of controller is a 32bit width.
+Hi Tao,
 
-Signed-off-by: Jorge Marques <jorge.marques@analog.com>
----
- drivers/i3c/master/i3c-master-cdns.c | 25 +++++--------------------
- 1 file changed, 5 insertions(+), 20 deletions(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/drivers/i3c/master/i3c-master-cdns.c b/drivers/i3c/master/i3c-master-cdns.c
-index fd3752cea654954ed1e37337754e45fddbbbf68e..321c04d2109ec1951f2b07a9d1b88c6aaf055c95 100644
---- a/drivers/i3c/master/i3c-master-cdns.c
-+++ b/drivers/i3c/master/i3c-master-cdns.c
-@@ -23,6 +23,8 @@
- #include <linux/spinlock.h>
- #include <linux/workqueue.h>
- 
-+#include "../internals.h"
-+
- #define DEV_ID				0x0
- #define DEV_ID_I3C_MASTER		0x5034
- 
-@@ -427,25 +429,13 @@ to_cdns_i3c_master(struct i3c_master_controller *master)
- static void cdns_i3c_master_wr_to_tx_fifo(struct cdns_i3c_master *master,
- 					  const u8 *bytes, int nbytes)
- {
--	writesl(master->regs + TX_FIFO, bytes, nbytes / 4);
--	if (nbytes & 3) {
--		u32 tmp = 0;
--
--		memcpy(&tmp, bytes + (nbytes & ~3), nbytes & 3);
--		writesl(master->regs + TX_FIFO, &tmp, 1);
--	}
-+	i3c_writel_fifo(master->regs + TX_FIFO, bytes, nbytes);
- }
- 
- static void cdns_i3c_master_rd_from_rx_fifo(struct cdns_i3c_master *master,
- 					    u8 *bytes, int nbytes)
- {
--	readsl(master->regs + RX_FIFO, bytes, nbytes / 4);
--	if (nbytes & 3) {
--		u32 tmp;
--
--		readsl(master->regs + RX_FIFO, &tmp, 1);
--		memcpy(bytes + (nbytes & ~3), &tmp, nbytes & 3);
--	}
-+	i3c_readl_fifo(master->regs + RX_FIFO, bytes, nbytes);
- }
- 
- static bool cdns_i3c_master_supports_ccc_cmd(struct i3c_master_controller *m,
-@@ -1330,12 +1320,7 @@ static void cdns_i3c_master_handle_ibi(struct cdns_i3c_master *master,
- 	buf = slot->data;
- 
- 	nbytes = IBIR_XFER_BYTES(ibir);
--	readsl(master->regs + IBI_DATA_FIFO, buf, nbytes / 4);
--	if (nbytes % 3) {
--		u32 tmp = __raw_readl(master->regs + IBI_DATA_FIFO);
--
--		memcpy(buf + (nbytes & ~3), &tmp, nbytes & 3);
--	}
-+	i3c_readl_fifo(master->regs + IBI_DATA_FIFO, buf, nbytes);
- 
- 	slot->len = min_t(unsigned int, IBIR_XFER_BYTES(ibir),
- 			  dev->ibi->max_payload_len);
+[auto build test ERROR on bpf-next/master]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Tao-Chen/bpf-Add-load_time-in-bpf_prog-fdinfo/20250620-131249
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
+patch link:    https://lore.kernel.org/r/20250620051017.111559-1-chen.dylane%40linux.dev
+patch subject: [PATCH bpf-next] bpf: Add load_time in bpf_prog fdinfo
+config: m68k-randconfig-r123-20250622 (https://download.01.org/0day-ci/archive/20250622/202506221641.xWzKiW3U-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 8.5.0
+reproduce: (https://download.01.org/0day-ci/archive/20250622/202506221641.xWzKiW3U-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506221641.xWzKiW3U-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   m68k-linux-ld: kernel/bpf/syscall.o: in function `bpf_prog_show_fdinfo':
+>> syscall.c:(.text+0x1088): undefined reference to `__udivdi3'
+   m68k-linux-ld: drivers/clocksource/timer-tegra186.o: in function `tegra186_wdt_get_timeleft':
+   timer-tegra186.c:(.text+0x130): undefined reference to `__udivdi3'
 
 -- 
-2.49.0
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
