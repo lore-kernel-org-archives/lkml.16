@@ -1,177 +1,114 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0CA6FC3
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 12:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E591990B7;
+	Sun, 22 Jun 2025 12:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750593712; cv=none; b=F6Xf12WJfAIcIMZlqgrjBJCwBsztTxxwyl84rI3pRKkc8ZlNJAQx1xugXWlbjJf9RH7juYRq2X2FZJcDfN9tElUV5+eMZiDj4+8NvV2UGpnu+5BCmZGqRffVGPiRghWH0XkzbFWx7+WYcoU1Ofvzm5Lde3J0eCLUI7dLsYPt3gQ=
+	t=1750594124; cv=none; b=P4OhF/6KvqArYR6QYmZag3wsGMNFoT4sWPPS8uuc6B0lFqA6SQKF66i2UIr3Y+61AFlQPq3kMaKf/xVcHdvSVxeaF2lF4UOtLJn/z+jG0nRA+gI28h4SCGjFD+SWhdEhXJ4wpvZAIo1/4efDk1rOpUxSYx01JORVrhWpdVyJUu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750593712; c=relaxed/simple;
-	bh=BZwLqKOu3ML8s0DAyY2KEpvGUAKDnGUqm/A5wdYulQQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R0tD/uiDI+ffcrwn4uQRDdR8Led5GsI+A8bNK63VCnTDApmg7TY9b3lmtRVEFYUUMgt2IylujGxhnmbBe59ceMabvxBP1bFB7e79ojT4aoeEeTtKz3ZIoH2YrcOs/i8iv1FUdfXGBjMQ7E5o4NoIbeLSbF+JZMQnlf9eueO0C0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UtUoQ9Sn; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750594124; c=relaxed/simple;
+	bh=F0Ocl7lREMAUGCCy9bfS3tlYnFAI+Y1/tYE1Gdg+p9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nlx+BxihXY38DLNx3hD6sIPA2D5oafkjYlpODmVOP3527/h+izHHtIDVhBFWfbXAGgrh2PiZ+EC7GbhIz6DUST3MbUvBdB4E+gE8iletLsbCfYN2xn3lF9O2sih8RUFCsn4ggf+nwAZkv5Ra5xshmX8TNjrXOsdjA9/EXhbbNnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JudOeVKl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UtUoQ9Sn"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55M0XUSh030749;
-	Sun, 22 Jun 2025 12:01:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=fxxkq8WjWJfHkmAF9
-	Cy2K99ipkyuSuX2PR6bpaiFFZk=; b=UtUoQ9SnKbgeR8d7GsD8dJ+7BD4sukbBU
-	13j2pS/ysUlxNlJ8waHN94fgOtB4SXnVdzXwtuaf8G9Jy65sOyqqNDkxuLUJfJJY
-	Cxw5+rvdea8IVSjnOwGrHFqu6XZgAeyq4AE7gNfwPQFsseoCCNSspjLU2czH1QrU
-	sYdkWRlTcon1bsthUCP85msBmWIgARIxq2BIsgc7zUrjwKsed8O36TC6f/FShgIk
-	iG82k0NxMtgmiV6mRyi9q7fH+9Bj374Bl1luy6Ida62QMcMQo0xi3E7rM8Mqyp00
-	zpUGbsszt1s0M8QIWxOyEQOQrxQU+xkzGg+++we3kNY4pufyy07pw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dmfdvknd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 12:01:38 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55MC1bem009702;
-	Sun, 22 Jun 2025 12:01:37 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dmfdvknb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 12:01:37 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55M8wFrU014698;
-	Sun, 22 Jun 2025 12:01:36 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e9s21brn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 12:01:36 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55MC1Xu956295844
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 22 Jun 2025 12:01:33 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3316F20049;
-	Sun, 22 Jun 2025 12:01:33 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BB50220040;
-	Sun, 22 Jun 2025 12:01:31 +0000 (GMT)
-Received: from ltczz402-lp1.aus.stglabs.ibm.com (unknown [9.40.194.31])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 22 Jun 2025 12:01:31 +0000 (GMT)
-From: Donet Tom <donettom@linux.ibm.com>
-To: Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Ritesh Harjani <ritesh.list@gmail.com>,
-        Hari Bathini <hbathini@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, Donet Tom <donettom@linux.ibm.com>
-Subject: [PATCH v2 2/2] book3s64/radix : Optimize vmemmap start alignment
-Date: Sun, 22 Jun 2025 07:01:25 -0500
-Message-ID: <895c4afd912c85d344a2065e348fac90529ed48f.1750593372.git.donettom@linux.ibm.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <7f95fe91c827a2fb76367a58dbea724e811fb152.1750593372.git.donettom@linux.ibm.com>
-References: <7f95fe91c827a2fb76367a58dbea724e811fb152.1750593372.git.donettom@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JudOeVKl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEA24C4CEE3;
+	Sun, 22 Jun 2025 12:08:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750594124;
+	bh=F0Ocl7lREMAUGCCy9bfS3tlYnFAI+Y1/tYE1Gdg+p9U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JudOeVKlSIahD+xmK00EfCagq4++UwNYXtlk/yHDEPEqKaib2UVPeCSXdftWDuPsC
+	 bE4EPe3FNtvaKe7HVz57MerwweB1PYyO17210KnjRMdMOqlsbIz49vwZ7jI0hOKWyW
+	 P5WdGMFdf9n7iiCIFQJ+3W2poLLtS0T2mduoEB7TXrJy2L7Dk9MlvgCvvng3hNEA45
+	 czTOFImUfY07Cm5aW7611H/anJJSU28BxGiEf2e0lAOkkKfpUdY8Vq2rrGfDZbqab9
+	 1o2w8Sa6Rpx+ZCuNuyDw5PBGdxgwP1oOhfQreU/LZ6ecIiBQzfEGQZPOwMKaliIpts
+	 GvJOD+YdO4lGw==
+Date: Sun, 22 Jun 2025 14:08:38 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <lossin@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] rust: devres: get rid of Devres' inner Arc
+Message-ID: <aFfyRuYPxUfc7TM-@pollux>
+References: <20250612145145.12143-1-dakr@kernel.org>
+ <20250612145145.12143-4-dakr@kernel.org>
+ <DASVDU1WY5RH.1VLCIQ4TIS0FP@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: BRuroSmTb4v8LM2ozv5DJh5jLy1-JILn
-X-Proofpoint-GUID: ZWHvOwZ1p-CMSgjhV1MIPy4z--10CIk1
-X-Authority-Analysis: v=2.4 cv=BpqdwZX5 c=1 sm=1 tr=0 ts=6857f0a2 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=KK6s22nVDRcosj11uTcA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDA3MiBTYWx0ZWRfXyUAaRK5pqt5V 08G3kghaOWKvzu/eddS+WFWvVnQuiBz0js2uUkMZcqJRS/Lekf+bZw8D1h9+dQDQHJ+1mKFjJGl pdxC0CEubigz20bxClHH10n6uIsTqvQUnrUAkGkG/4Mui95CMQQrcSixjqv2x7qUEbn7Nabzkk+
- 3vnFJLj0wM75ZRXDIanjsn1Tf1fZIPGNcHm85QJXQ2KrHbezc2nPx5a/ele4hTusXewB2G7nbuI iQDJKSzuIp6zQFuWsX4KTkvfyW2rJi0Rovj47lRx2tCuvsaE9RvD9foBXUpbdSf+QCa78zSC0BV PQI0wuM30wkdS748BphgiQGtJ/zjwt1+i3Q0IlTZbbfMnKAJtCShmuXuG9e+fGB5i6zpMs0hEqE
- WQpPox+Yo6OC9UWAK/jB4ctPD4UvrkbkkIZQPH0fLVdXwp4K4pO7SEP/i+dYgr43E4o8TBaj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-22_03,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- impostorscore=0 clxscore=1015 spamscore=0 mlxlogscore=999
- priorityscore=1501 phishscore=0 malwarescore=0 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506220072
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DASVDU1WY5RH.1VLCIQ4TIS0FP@kernel.org>
 
-If we always align the vmemmap start to PAGE_SIZE, there is a
-chance that we may end up allocating page-sized vmemmap backing
-pages in RAM in the altmap not present case, because a PAGE_SIZE
-aligned address is not PMD_SIZE-aligned.
+On Sun, Jun 22, 2025 at 09:05:51AM +0200, Benno Lossin wrote:
+> On Thu Jun 12, 2025 at 4:51 PM CEST, Danilo Krummrich wrote:
+> > +#[pin_data(PinnedDrop)]
+> > +pub struct Devres<T> {
+> > +    dev: ARef<Device>,
+> > +    callback: unsafe extern "C" fn(*mut c_void),
+> 
+> Do I remember correctly that we at some point talked about adding a
+> comment here for why this is needed? (ie it's needed, because
+> `Self::callback` might return different addresses?)
 
-In this patch, we are aligning the vmemmap start address to
-PMD_SIZE if altmap is not present. This ensures that a PMD_SIZE
-page is always allocated for the vmemmap mapping if altmap is
-not present.
+Correct -- thanks for reminding me of that. Will add the corresponding comment.
 
-If altmap is present, Make sure we align the start vmemmap addr to
-PAGE_SIZE so that we calculate the correct start_pfn in altmap
-boundary check to decide whether we should use altmap or RAM based
-backing memory allocation. Also the address need to be aligned for
-set_pte operation. If the start addr is already PMD_SIZE aligned
-and with in the altmap boundary then we will try to use a pmd size
-altmap mapping else we go for page size  mapping.
+> > +    #[pin]
+> > +    data: Revocable<T>,
+> > +    #[pin]
+> > +    devm: Completion,
+> > +    #[pin]
+> > +    revoke: Completion,
+> 
+> Probably a good idea to add some doc comments explaining what these two
+> completions track.
+> 
+> (feel free to do these in another patch or in a follow-up)
 
-So if altmap is present, we try to use the maximum number of
-altmap pages; otherwise, we allocate a PMD_SIZE RAM page.
+No, I think it'd be good to do it right away -- will add them.
 
-Signed-off-by: Donet Tom <donettom@linux.ibm.com>
----
- arch/powerpc/mm/book3s64/radix_pgtable.c | 29 +++++++++++++++---------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+> > +#[pinned_drop]
+> > +impl<T> PinnedDrop for Devres<T> {
+> > +    fn drop(self: Pin<&mut Self>) {
+> >          // SAFETY: When `drop` runs, it is guaranteed that nobody is accessing the revocable data
+> >          // anymore, hence it is safe not to wait for the grace period to finish.
+> > -        if unsafe { self.0.data.revoke_nosync() } {
+> > -            // We revoked `self.0.data` before the devres action did, hence try to remove it.
+> > -            if !DevresInner::remove_action(&self.0) {
+> > +        if unsafe { self.data.revoke_nosync() } {
+> > +            // We revoked `self.data` before the devres action did, hence try to remove it.
+> > +            if !self.remove_action() {
+> >                  // We could not remove the devres action, which means that it now runs concurrently,
+> > -                // hence signal that `self.0.data` has been revoked successfully.
+> > -                self.0.revoke.complete_all();
+> > +                // hence signal that `self.data` has been revoked by us successfully.
+> > +                self.revoke.complete_all();
+> > +
+> > +                // Wait for `Self::devres_callback` to be done using this object.
+> > +                self.devm.wait_for_completion();
+> >              }
+> > +        } else {
+> > +            // `Self::devres_callback` revokes `self.data` for us, hence wait for it to be done
+> > +            // using this object.
+> > +            self.devm.wait_for_completion();
+> 
+> I don't understand this change, maybe it's best to move that into a
+> separate commit?
 
-diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
-index 3d67aee8c8ca..c630cece8ed4 100644
---- a/arch/powerpc/mm/book3s64/radix_pgtable.c
-+++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
-@@ -1122,18 +1122,25 @@ int __meminit radix__vmemmap_populate(unsigned long start, unsigned long end, in
- 	pte_t *pte;
- 
- 	/*
--	 * Make sure we align the start vmemmap addr so that we calculate
--	 * the correct start_pfn in altmap boundary check to decided whether
--	 * we should use altmap or RAM based backing memory allocation. Also
--	 * the address need to be aligned for set_pte operation.
--
--	 * If the start addr is already PMD_SIZE aligned we will try to use
--	 * a pmd mapping. We don't want to be too aggressive here beacause
--	 * that will cause more allocations in RAM. So only if the namespace
--	 * vmemmap start addr is PMD_SIZE aligned we will use PMD mapping.
-+	 * If altmap is present, Make sure we align the start vmemmap addr
-+	 * to PAGE_SIZE so that we calculate the correct start_pfn in
-+	 * altmap boundary check to decide whether we should use altmap or
-+	 * RAM based backing memory allocation. Also the address need to be
-+	 * aligned for set_pte operation. If the start addr is already
-+	 * PMD_SIZE aligned and with in the altmap boundary then we will
-+	 * try to use a pmd size altmap mapping else we go for page size
-+	 * mapping.
-+	 *
-+	 * If altmap is not present, align the vmemmap addr to PMD_SIZE and
-+	 * always allocate a PMD size page for vmemmap backing.
-+	 *
- 	 */
- 
--	start = ALIGN_DOWN(start, PAGE_SIZE);
-+	if (altmap)
-+		start = ALIGN_DOWN(start, PAGE_SIZE);
-+	else
-+		start = ALIGN_DOWN(start, PMD_SIZE);
-+
- 	for (addr = start; addr < end; addr = next) {
- 		next = pmd_addr_end(addr, end);
- 
-@@ -1159,7 +1166,7 @@ int __meminit radix__vmemmap_populate(unsigned long start, unsigned long end, in
- 			 * in altmap block allocation failures, in which case
- 			 * we fallback to RAM for vmemmap allocation.
- 			 */
--			if (!IS_ALIGNED(addr, PMD_SIZE) || (altmap &&
-+			if (altmap && (!IS_ALIGNED(addr, PMD_SIZE) ||
- 			    altmap_cross_boundary(altmap, addr, PMD_SIZE))) {
- 				/*
- 				 * make sure we don't create altmap mappings
--- 
-2.47.1
+We can't do that, without this change the code would be incorrect.
 
+What happens here is that, if drop() races with devres_callback() we have to
+make drop() wait until devres_callback() is completed, because otherwise
+devres_callback() might experience a use-after-free.
+
+Previoulsly this has been taken care of by Arc<DevresInner>, which C devres held
+a reference of.
