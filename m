@@ -1,144 +1,124 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A9421B8F6
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 22:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153B019DF4D
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 22:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750632022; cv=none; b=EiAAC9SsfjUCOSKDJhDL0OLuJrNX+FACKuOcmjJ9av0j187XidfDxEtrqRb9Kf6kHcovH1hNpBV0lzQbXLKCzBDJjBHPNkATysG2N7fufMP2RCiDfKFkN8CDANjS6i6jrDAOh/H8B9G+szv22KDt4C9dlbxgKreG3RvYdV9KffQ=
+	t=1750632043; cv=none; b=mqCBXYR2Q409hM36mF6urToJuG0HyuiX5mRkR7xbfaobMIjjevUEYq0D7f4XSau/CTKwwhYPeWWlgK8hM3evW875HFWCnpQZB/JCEROrbioUUxvt7byKpJ7yyGdn/XkOfBcyQJLQ6t+UvWZWxzjgJW7KigI7LyEmSVrTvnIm2iI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750632022; c=relaxed/simple;
-	bh=NtNiMvKdOWr3HqkXnYgNIycEVjCa6Icct59Mbr/Nz2k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mZP/mJwgEnzayl2+B+ZWvs96gseOZvYqh8wCyT6mpTLI4OWWX8y4H2UkQOIsghH9juqgdYBFwktI7W7zoZYkGOhFAPjIm9R6/H24N3FlcQYd/mdbgSDMpJwsbi/ZlgtAxTSMhLjcRZieRfRe82GENrxYHYDBmSsLnqL4JCkBPPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kBR0oqsd; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750632043; c=relaxed/simple;
+	bh=dUR7hyQwheUBWNHY4rNwjcMtYPvmh/QenZMXaal3W2Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EMYiTTcr0bvdOYlD/thASUsEC82udDFBLqAj5z4dOdSGyAEGgStNrA67gDoob9xq5GyhnyLTpz3micgG4OoC6MVa5x1pJ4uNnXnhNIyvui4Oz1lwbinBq3SeD7MKRD2+gK0oP31lQA7V/cbmNbGpaZ1vC3Kg4OCkOfYJuiIKDaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W6gyhmF2; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kBR0oqsd"
-Message-ID: <8ed873ce-619d-4bdd-8fba-222320229efe@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750632008;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y7Sy6lOD9pKGTeDWHlQhBUIbqmjZyBGP1EAU8WiJo4s=;
-	b=kBR0oqsdgRAxdmgUMJDEVuGLu8q7wZFZrkw2kY2Ty5EzASKQorg1pEsBMR70YK25OhD7K3
-	XYxxKHegpUhVvZ76kB7HSR5/RqIez09ZtrG5AZzqHqwR5pnUkMSQQI+JWJwnGHBgV0MOi9
-	slP+7NTxaCfXk70+nJc87idbF+oItI4=
-Date: Sun, 22 Jun 2025 15:39:54 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W6gyhmF2"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4a58ef58a38so256061cf.0
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 15:40:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750632041; x=1751236841; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ByKFnzhwxRKZs2K5naolZtHtX13ocHKu0HolQhra1WM=;
+        b=W6gyhmF29whtB8EqUQE7HnkDlc5jxwXqOOpFt7Ow2ooxMHHvMDY2K/Zky2vLsS5Kr6
+         /cwtvJiBX4eD8VjEzQdXdMX2l0c+ruvyoIFQKAGg8sHQIRJgL1cT/iTppXNWIZa5hXvI
+         rS9zF9Xv5oS/pYLB+vpMZzMZXpFq5kDebxaNa5lduzuBXwNpw4pirxl858D6Ib0M8ksq
+         W4MwiN6itqU+XiuX6rp/NJZE4U7dGrzdF/lw0OgJouy+2kDOrpoAEIlACgLGSgM5Kw7H
+         w5uAmYtwvulD948U3c2+b6wayrAioK+xuhN88vjIRk4NFubbi2gsVg9jvRYRHFK6rctG
+         AGWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750632041; x=1751236841;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ByKFnzhwxRKZs2K5naolZtHtX13ocHKu0HolQhra1WM=;
+        b=l8iQ1VDC4N3ekoyBYOYISpJErRUxzbs1SEXVR8KHAURYb2k4y8bSXvjPI46Rsx+i5+
+         /0tl6TYOOtU5fNmOWgYps0EIow5BuCn/L3fH1ioi8I/hUeRCe0YL9qOLlAbL989nZPr+
+         qzaGXlTTq9n95gLCpbwoFtUBFQLEYvBCYTGsl2/0lStaqyHzgIcbd7/lvyk5RDVsZ/qB
+         pqLHj6CJNEUluRKiHLvjog3eFrlmA3KEmL9JkQ60L4AvkC9sJnh9J4KKIkmh18WkVc2l
+         NqvZ88XMfFxXSjlYKBipTB3iD/ktiUnOmqj10FNbgiVQHH0gbIg82tijpwqcDxZfREk1
+         aQ5A==
+X-Forwarded-Encrypted: i=1; AJvYcCVE0uhBqVwhgg/GtytCuy3fXBXTOJwWesNB4LyXlTLr/znQHXCO7Qnrdg532F/81Oq/qAXv+/jfNYq0dLc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuN79GCkcTVtyN1+daQyBCmKDcPjq+6MUrfGfGDJGeydlBzk7B
+	2aOg2Q/99uRqOARDKPNFVuQ89r3SXwaHC8ruwx3X7DMzoHmXY2sLm3B0VatF+LouGDJVsvEWiTv
+	P9paniIcXuN0UoY6/NbSaSC7qx1DWO5UIJ9oSh1e9
+X-Gm-Gg: ASbGncvVhT5vVx/zzABcz8fAYk8UD3OenwNF8ZtcAF/5fdJPPxCfmKBpwze/CzT4Rch
+	DBcaAfeipSUDq+zIPvfzJLR96GSiAitJw7SkvnlcYrEBj9bF4gEpVXteU16OLvSS1fJaWqnTMop
+	szEYSm0tqcJ2OTQONJdz8ANT4pRyuFAgXO67XwLZUh8A==
+X-Google-Smtp-Source: AGHT+IE5tQt4/6FQY068Z1ESwzF+FC2nnkGkiztgAHajhv0/xdX+Nl4gX51C+4BpqQLa4eiGBPAjj2LMCvfE8u61t4s=
+X-Received: by 2002:a05:622a:2cf:b0:494:763e:d971 with SMTP id
+ d75a77b69052e-4a786d943ebmr4256801cf.23.1750632040553; Sun, 22 Jun 2025
+ 15:40:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v2 0/8] net/mlx5: HWS, Optimize matchers ICM
- usage
-To: Mark Bloch <mbloch@nvidia.com>, "David S. Miller" <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Eric Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- Simon Horman <horms@kernel.org>
-Cc: saeedm@nvidia.com, gal@nvidia.com, leonro@nvidia.com, tariqt@nvidia.com,
- Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, moshe@nvidia.com
-References: <20250622172226.4174-1-mbloch@nvidia.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <20250622172226.4174-1-mbloch@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250620093102.2416767-1-hao.ge@linux.dev> <aFU7f5fcD9RJ3Mpa@arm.com>
+In-Reply-To: <aFU7f5fcD9RJ3Mpa@arm.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Sun, 22 Jun 2025 15:40:29 -0700
+X-Gm-Features: Ac12FXxuYKdmyFuraLrFI24DrexQbVSu7tvYSsKFqmip14JtfwI2W93zOOFLmWI
+Message-ID: <CAJuCfpELs1Y_YaT3-f8-dnsPqkwgGShEVU9tqJe=3RJU3BK_6w@mail.gmail.com>
+Subject: Re: [PATCH v3] mm/alloc_tag: Fix the kmemleak false positive issue in
+ the allocation of the percpu variable tag->counters
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Hao Ge <hao.ge@linux.dev>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, Hao Ge <gehao@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-在 2025/6/22 10:22, Mark Bloch 写道:
-> This series optimizes ICM usage for unidirectional rules and
-> empty matchers and with the last patch we make hardware steering
-> the default FDB steering provider for NICs that don't support software
-> steering.
+On Fri, Jun 20, 2025 at 3:44=E2=80=AFAM Catalin Marinas <catalin.marinas@ar=
+m.com> wrote:
+>
+> On Fri, Jun 20, 2025 at 05:31:02PM +0800, Hao Ge wrote:
+> > From: Hao Ge <gehao@kylinos.cn>
+> >
+> > When loading a module, as long as the module has memory
+> > allocation operations, kmemleak produces a false positive
+> > report that resembles the following:
+> >
+> > unreferenced object (percpu) 0x7dfd232a1650 (size 16):
+> >   comm "modprobe", pid 1301, jiffies 4294940249
+> >   hex dump (first 16 bytes on cpu 2):
+> >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> >   backtrace (crc 0):
+> >     kmemleak_alloc_percpu+0xb4/0xd0
+> >     pcpu_alloc_noprof+0x700/0x1098
+> >     load_module+0xd4/0x348
+> >     codetag_module_init+0x20c/0x450
+> >     codetag_load_module+0x70/0xb8
+> >     load_module+0xef8/0x1608
+> >     init_module_from_file+0xec/0x158
+> >     idempotent_init_module+0x354/0x608
+> >     __arm64_sys_finit_module+0xbc/0x150
+> >     invoke_syscall+0xd4/0x258
+> >     el0_svc_common.constprop.0+0xb4/0x240
+> >     do_el0_svc+0x48/0x68
+> >     el0_svc+0x40/0xf8
+> >     el0t_64_sync_handler+0x10c/0x138
+> >     el0t_64_sync+0x1ac/0x1b0
+> >
+> > This is because the module can only indirectly reference alloc_tag_coun=
+ters
+> > through the alloc_tag section, which misleads kmemleak.
+> >
+> > However, we don't have a kmemleak ignore interface for percpu
+> > allocations yet. So let's create one and invoke it for tag->counters.
+> >
+> > Fixes: 12ca42c23775 ("alloc_tag: allocate percpu counters for module ta=
+gs dynamically")
+> > Signed-off-by: Hao Ge <gehao@kylinos.cn>
+>
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 
-In this patchset, ICM is not explained. I googled this ICM. And I got 
-the following
+Thanks!
+For lib/alloc_tag.c:
 
-"
-ICM stands for Internal Context Memory, a specialized memory region used 
-by Mellanox/NVIDIA network devices (e.g., ConnectX series NICs) to store 
-hardware context and rule tables for offloaded operations like flow 
-steering, filtering, and traffic redirection.
-
-ICM is crucial when using hardware steering (HWS), where the NIC itself 
-performs packet matching and forwarding without involving the host CPU.
-"
-If I am missing something, please correct me.
-
-Zhu Yanjun
-
-> 
-> Hardware steering (HWS) uses a type of rule table container (RTC) that
-> is unidirectional, so matchers consist of two RTCs to accommodate
-> bidirectional rules.
-> 
-> This small series enables resizing the two RTCs independently by
-> tracking the number of rules separately. For extreme cases where all
-> rules are unidirectional, this results in saving close to half the
-> memory footprint.
-> 
-> Results for inserting 1M unidirectional rules using a simple module:
-> 
-> 			Pages		Memory
-> Before this patch:	300k		1.5GiB
-> After this patch:	160k		900MiB
-> 
-> The 'Pages' column measures the number of 4KiB pages the device requests
-> for itself (the ICM).
-> 
-> The 'Memory' column is the difference between peak usage and baseline
-> usage (before starting the test) as reported by `free -h`.
-> 
-> In addition, second to last patch of the series handles a case where all
-> the matcher's rules were deleted: the large RTCs of the matcher are no
-> longer required, and we can save some more ICM by shrinking the matcher
-> to its initial size.
-> 
-> Finally the last patch makes hardware steering the default mode
-> when in swichdev for NICs that don't have software steering support.
-> 
-> Changelog
-> =========
-> Changes from v1 [0]:
-> - Fixed author on patches 5 and 6.
-> 
-> References
-> ==========
-> [0] v1: https://lore.kernel.org/all/20250619115522.68469-1-mbloch@nvidia.com/
-> 
-> Moshe Shemesh (1):
->    net/mlx5: Add HWS as secondary steering mode
-> 
-> Vlad Dogaru (5):
->    net/mlx5: HWS, remove unused create_dest_array parameter
->    net/mlx5: HWS, Refactor and export rule skip logic
->    net/mlx5: HWS, Create STEs directly from matcher
->    net/mlx5: HWS, Decouple matcher RX and TX sizes
->    net/mlx5: HWS, Track matcher sizes individually
-> 
-> Yevgeny Kliteynik (2):
->    net/mlx5: HWS, remove incorrect comment
->    net/mlx5: HWS, Shrink empty matchers
-> 
->   .../net/ethernet/mellanox/mlx5/core/fs_core.c |   2 +
->   .../mellanox/mlx5/core/steering/hws/action.c  |   7 +-
->   .../mellanox/mlx5/core/steering/hws/bwc.c     | 284 ++++++++++++++----
->   .../mellanox/mlx5/core/steering/hws/bwc.h     |  14 +-
->   .../mellanox/mlx5/core/steering/hws/debug.c   |  20 +-
->   .../mellanox/mlx5/core/steering/hws/fs_hws.c  |  15 +-
->   .../mellanox/mlx5/core/steering/hws/matcher.c | 166 ++++++----
->   .../mellanox/mlx5/core/steering/hws/matcher.h |   3 +-
->   .../mellanox/mlx5/core/steering/hws/mlx5hws.h |  36 ++-
->   .../mellanox/mlx5/core/steering/hws/rule.c    |  35 +--
->   .../mellanox/mlx5/core/steering/hws/rule.h    |   3 +
->   11 files changed, 403 insertions(+), 182 deletions(-)
-> 
-> 
-> base-commit: 091d019adce033118776ef93b50a268f715ae8f6
-
+Acked-by: Suren Baghdasaryan <surenb@google.com>
