@@ -1,153 +1,149 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B023D6D
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 03:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A21EED7;
+	Sun, 22 Jun 2025 03:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750562989; cv=none; b=rCjfcKHsFdDJ8ESlT/XCXfy0c5RHlT5+ieiU2Etprvw8+4TSAJWjGxM4wtkXn7DP+9WiIJm+ohMjp4exhwWdrUq5vyia0rWo9qd2IVvB4du2wfqF8Jl1/2cma71mQ7A8zsUYPUZE5P+ZqHRtTkMu552adZujy452yaq0dd+pMJc=
+	t=1750563733; cv=none; b=UZksYJqvW9jvuqwq5kOkRTuXa7DDqBRF/f5CvkruL9T1zPceModUkMuKaX0olznv/efRpNfC+NyPt+AC8ciUQ/Zt+/rkZsF756kuNXedbTtPjH3Z8ZyuaK/OcCEyndY6T46h0or4KP5mBkR9zx1p/cVyQRu2zS5qzU3++MORfTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750562989; c=relaxed/simple;
-	bh=reQ/ACXzC0FPxqlDRYXVLqxNB2esQfycAhNqUDmVLbg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IDHGRXNU5GBuLwUZ8sxfuq1oxj5pi2qgEjh6uY9MgUME4VBehC/sWlGQDrzMwORYnwQfFI8XPUn0q7qUgT6Wgcnk16mSX8ovIZjcbrP4hyIsozc7zsB5G3U4M5lvc76yL1CD3WPSUq/uBiw3hQg7BjLQGmDYUcsMAB7TUlq1ek0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=hmpmnB+/; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	s=arc-20240116; t=1750563733; c=relaxed/simple;
+	bh=df/RU6vS7r46gg5CHN26K4KwETwBocAQpsujB+Fqij8=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=GlxBXuQt1yhilWa9r5ZTkpsa/1xYWikzZNISKI2J5abudlmM/5C27KlV5O537WxJoszaNDkgYizbiZFgsgBvnnV07lBzswruDssyOhp9vkk8tI6sJJ3UTM0HcY4NHLjpNCKt2tawtekGwpfk+IM06wFx6v0Y1b9eUN6kmDiSj2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F6fJs+ha; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="hmpmnB+/"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6fada2dd785so39477006d6.2
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 20:29:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F6fJs+ha"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-748d982e97cso2738043b3a.1;
+        Sat, 21 Jun 2025 20:42:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1750562986; x=1751167786; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cgrserUFU/DcGo28DBPZa+gth4hnjdPTKAQjzFeKIM8=;
-        b=hmpmnB+/0htnlBZhnKYEm/ndtv4SnPGFeK4mOk7/JiQAdPGOac3ZCr1te0PzGvxsev
-         lQHqBApyz0hezG8GvPLvhV7Z1yygx2ySvInDX9MzakrqlQnt3zQux+g+MzlRF1Tt+eEe
-         xb1zk+YGiP1WbMdnAfy6A1+GQSWL6DCQyYErhD2Op9fXORH9HU2F6G6pHUo/zwpH68ao
-         e7QgJbEXr6KinRJwapGjyMlDiSpqm+JM8TIOmhjw1tQ/by1gwqYQrwUcTpdxalSGN//F
-         m+LcM2h93xvMCDbfYb0jPlonkKkSdkQog9ZnJDU8h9oeA/VLbHqPeZlzzrqg38EP2N+w
-         ymeQ==
+        d=gmail.com; s=20230601; t=1750563731; x=1751168531; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4H7Ru0v2s37Emrsos5i13ygignUvfaRQ2BrMRVg3z4Y=;
+        b=F6fJs+haFjFRwdrtCzb1MlWOP64AndryR3sMpJKRnNGirvdwO4LARupuh2VvuJ+202
+         mPyutfTQ2aIIhhHg+/DhoWYR3Z/i65niO9266sQnBej3hX1TdJcDGZIGVbC8MGvcXSP1
+         /rUmBZbja+yK7IKLufJul+1/XGk/j63Uw9MWsqgRP3QMxphD++7I0hd6XEXDiOTGYTit
+         w+Ls4TGNW1HkiKvdSt9BOpTZG9P3tNHy3o0MvXFdq6xKbKUMyo7II7LgCFVlmJpIGPk1
+         arUQ7Lz4RBTmgKaoq+mN+4Co8sxpWXyrNxHGJ8sP/D0fkbxAL3XbeLD6wM9jDmzXQkH6
+         Bfvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750562986; x=1751167786;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cgrserUFU/DcGo28DBPZa+gth4hnjdPTKAQjzFeKIM8=;
-        b=VaDFJNRNHKE2l92hx6SYeMd1RA31RKErVmbKZAKI/W39m+JD1LrzGPyzjXDhUxdp6l
-         +TnVI6JGcAFieM/cSs/oUojoR0KdU/JYFO6jBomBcSsuKM8PrCPPPvnd1aj6vVAs3Mk5
-         DW57wwCcnFnBozimSxkKp64uNPe947q4KbR4MwnoiL6JgTspC3ujEhvqGHyRAgFPjw3P
-         538BEuGeJ20UiYRj7o84XBcw0mbVTTxEBeBcYBAohr3qZ1F/+xhxCBV1eqGxlqGmPMEO
-         GSEHkkZk58NBloHQ7bSfFGfGv7X9M64yxPdmozAyhIx308hstZ6XwqXDxEbJF1W/zzoI
-         c3ZA==
-X-Forwarded-Encrypted: i=1; AJvYcCWpPkEdj89N9hvmnVZW4m4UmEfjsL69PkEt3iBcHJZYSSIduA5Trjst6EpZBF7FJKbRxZM6TzpDWdUh8Hk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5g08HW6KhH5HF8hgufGK+7/CXJ0tNCR4rqYqvm7QFoc69Urho
-	J3P+aNqZoBZmSDTX43sBg//ArjlS+DzQzlT8sl4yZlFEXnZPbla2ww8jnyd+/4gPsUY=
-X-Gm-Gg: ASbGncsAyU0bRCZSFjv+cPvaKKg1A1y4OnnLWZxhtPltdJGgKOODhF28wzb8EAmR6xn
-	XDe2MMvHF6R2LfrwU1TDOwn405Eql4z3uRp+nFfvhzwtnU5SRtdIBUW/R06KyFwxBhMRZlE+JXr
-	hzEVgM1lExpAreFhR24r0nXbjkzR9atDSxruw5y78s4Mdt9O5gChoWUlkCuDpJeVmo9Fyoa0ZhF
-	lDfh19/N0E5/FLXX4lI/JludPTa5MeL2wp+GffNDlIaWWOzF15C+N3NiJYZbFJuljDlBaO4cPN1
-	p7NJ8kZKd4SZtTvj9A2ZahtafqrvG64vNMNxHVIltrt8JPJTGaxK4wPnos0Yr/BS/dJeSo/GIbd
-	VwBI+dRUXZDto8vujmrLJhduiCwVnEWWw9Hw=
-X-Google-Smtp-Source: AGHT+IFeIAU1AkteDl39FgQydYRwtm5GM125i8YSXLkjgyUSEEtkYenBUd8CxZ/YJ2gC3UkZwdaRjQ==
-X-Received: by 2002:a05:6214:509c:b0:6fa:fb7d:6e4c with SMTP id 6a1803df08f44-6fd0a54d8c8mr142353156d6.25.1750562985883;
-        Sat, 21 Jun 2025 20:29:45 -0700 (PDT)
-Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd0945183dsm30014526d6.44.2025.06.21.20.29.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Jun 2025 20:29:45 -0700 (PDT)
-From: Alex Elder <elder@riscstar.com>
-To: lee@kernel.org,
-	alexandre.belloni@bootlin.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: dlan@gentoo.org,
-	wangruikang@iscas.ac.cn,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	troymitchell988@gmail.com,
-	guodong@riscstar.com,
-	devicetree@vger.kernel.org,
-	spacemit@lists.linux.dev,
-	linux-rtc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/7] spacemit: introduce P1 PMIC support
-Date: Sat, 21 Jun 2025 22:29:32 -0500
-Message-ID: <20250622032941.3768912-1-elder@riscstar.com>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1750563731; x=1751168531;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4H7Ru0v2s37Emrsos5i13ygignUvfaRQ2BrMRVg3z4Y=;
+        b=k2HaSy2as1rOymRLECjoavP2r84QeCPpz/8RxZ/C7sgIQRmj9kUlCBYxpLMs0cCpUW
+         z6Vof0l/sdnhgLeBvl0pUVqHaLlHf7AkOK3IBhNqsjHqO9hJGJMS8MBy1nisp4aMXgbW
+         bXmV/xJMy2Rp5JN8W+KlvR49wT8muaCWYkSAB5B3lUOySbp1YBXUi9XUT7kfISbB6270
+         eDu+SM4mFxP4Ze4OCnwY19MjUfHiugdM2yqaaYXeDlV4rXgPpuMOTknypQYofCSpEOhm
+         4QoTSmVhxE9fIBpmIwLaOka4RJ01uE2Ug9PXT38IyeGdt8b0X1fEo/+HRxao4Hja3uXW
+         js2w==
+X-Forwarded-Encrypted: i=1; AJvYcCVW+6bKUBzklzMNCckOncxU9Ry+yT6t3fC1fyuY9Gw/zWWQiK9lWar5qy0+O2lUim3604sim51yqvLCT/qoDeCETTXjDg==@vger.kernel.org, AJvYcCVbf/ajvZpTnAk+QrPXpqiKHPhjIzyZggqo8Nk9WvbP2aRvgZzQ0iUy3x2mRsMu+U/+p5cCMTHrxcxGd8g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG/D1onjZ3k9s/3nEHWZc7IC/+1swR6FQ/NvkhlIy500RRDWk6
+	gdoOEx5aVzjrHE2Ya5MKIAG5CD9nCBezfzYhRAYdjFYABSXfhzqZ9wZLYaYj7Rvv
+X-Gm-Gg: ASbGnctFgW69/ceGGQAZDZ6nuzbgMkUlNCFxeiRwDy0Cws5qsyTwMKKNAMpzQNchmOE
+	6L+u9YsF/zduzDsqJlOe4mv2Y5nZ8azu4mwsT4XfpxPGp0h9UUk6d/z/TbYSuH+Gv+3O4eDR2AC
+	y8jMZKcFJX5iT1GjXOgMNj7QfMUfxw/ngbnLrTmovNoi2h2e5CIhsdKD+3zxCD+Q4IkAIePVJj9
+	0Fp85m8q1SUnPM5/+6v4z8E7+MsbX6PeqULaR1zvvhilocHGumMa5vKo5bTYt68VM8tsHZJUf3j
+	CcFSsWyzOBj1ZHi0zNWmjUeady+QjqjIC/0ckd9Vw/AvY98tCVdDoaedbJNZ7kmjmpATd2wfxUn
+	eSmtLfOco0f+ZtAK/+38xu6uRF6md35krsHgzBxNFsPuT4g==
+X-Google-Smtp-Source: AGHT+IGdcLTzkQtcTmvpAChLvudbT7/DyVZc2q+ShaOKWzMv+CGFskqvnJ+nsaUjtRYZ3TwD3zClBw==
+X-Received: by 2002:a05:6a20:9146:b0:21a:b78b:e916 with SMTP id adf61e73a8af0-22026f15bf1mr13176386637.27.1750563731358;
+        Sat, 21 Jun 2025 20:42:11 -0700 (PDT)
+Received: from [127.0.0.1] (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f124249bsm4124215a12.38.2025.06.21.20.42.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Jun 2025 20:42:11 -0700 (PDT)
+Date: Sat, 21 Jun 2025 20:42:11 -0700
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: Kurt Borja <kuurtb@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
+ =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ =?ISO-8859-1?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>,
+ Joshua Grisham <josh@joshuagrisham.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>,
+ Mario Limonciello <mario.limonciello@amd.com>
+CC: Antheas Kapenekakis <lkml@antheas.dev>, Prasanth Ksr <prasanth.ksr@dell.com>,
+ Jorge Lopez <jorge.lopez2@hp.com>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v3_0/6=5D_platform/x86=3A_firmwar?=
+ =?US-ASCII?Q?e=5Fattributes=5Fclass=3A_Add_a_high_level_API?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <DASQQCLO08Q6.WGADUXY300N0@gmail.com>
+References: <20250621-fw-attrs-api-v3-0-3dd55e463396@gmail.com> <DA17A4BC-938D-45BC-848E-BD8FB43597BB@gmail.com> <DASQQCLO08Q6.WGADUXY300N0@gmail.com>
+Message-ID: <DF4ABD29-158B-4D7E-8096-5C4ADC851A2B@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-
-The SpacemiT P1 is an I2C-controlled PMIC that implements 6 buck
-converters and 12 LDOs.  It contains a load switch, ADC channels,
-GPIOs, a real-time clock, and a watchdog timer.
-
-This series introduces a multifunction driver for the P1 PMIC as well
-as drivers for its regulators and RTC.
-
-This series is available here:
-  https://github.com/riscstar/linux/tree/outgoing/pmic-v3
-
-					-Alex
-Between version 2 and version 3:
-  - Removed "spacemit-pmic.c" and updated "simple-mfd-i2c.c" instead
-  - Added an RTC driver, so that the MFD has more than one sub-device
-  - Other suggestions were directed at "spacemit-pmic.c"
-
-Here is version 2 of this series:
-  https://lore.kernel.org/lkml/20250613210150.1468845-1-elder@riscstar.com/
-
-Between version 1 and version 2:
-  - Added Reviewed-by tag from Mark Brown to patch 3
-  - Implemented suggestions from Vivian Wang:
-      - Fixed a typo in the subject line in patch 1
-      - Now use module_i2c_driver() for the PMIC driver in patch 2
-      - Added MODULE_ALIAS() for both drivers (patches 2 and 3)
-      - Defined and used DRV_NAME in both drivers
-      - Added additional Kconfig module help text for both drivers
-
-Here is version 1 of this series:
-  https://lore.kernel.org/lkml/20250613210150.1468845-1-elder@riscstar.com/
-
-Alex Elder (7):
-  dt-bindings: mfd: add support the SpacemiT P1 PMIC
-  mfd: simple-mfd-i2c: add SpacemiT P1 support
-  regulator: spacemit: support SpacemiT P1 regulators
-  rtc: spacemit: support the SpacemiT P1 RTC
-  riscv: dts: spacemit: enable the i2c8 adapter
-  riscv: dts: spacemit: define fixed regulators
-  riscv: dts: spacemit: define regulator constraints
-
- .../devicetree/bindings/mfd/spacemit,p1.yaml  |  86 ++++++++++
- .../boot/dts/spacemit/k1-bananapi-f3.dts      | 138 +++++++++++++++
- arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi  |   7 +
- arch/riscv/boot/dts/spacemit/k1.dtsi          |  11 ++
- drivers/mfd/Kconfig                           |  10 ++
- drivers/mfd/simple-mfd-i2c.c                  |  18 ++
- drivers/regulator/Kconfig                     |  12 ++
- drivers/regulator/Makefile                    |   1 +
- drivers/regulator/spacemit-p1.c               | 157 ++++++++++++++++++
- drivers/rtc/Kconfig                           |  10 ++
- drivers/rtc/Makefile                          |   1 +
- drivers/rtc/rtc-p1.c                          | 137 +++++++++++++++
- 12 files changed, 588 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/spacemit,p1.yaml
- create mode 100644 drivers/regulator/spacemit-p1.c
- create mode 100644 drivers/rtc/rtc-p1.c
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
-base-commit: 5d4809e25903ab8e74034c1f23c787fd26d52934
--- 
-2.45.2
 
+On June 21, 2025 8:27:06 PM PDT, Kurt Borja <kuurtb@gmail=2Ecom> wrote:
+>On Sun Jun 22, 2025 at 12:01 AM -03, Derek J=2E Clark wrote:
+>>
+>>
+>> On June 21, 2025 5:04:03 PM PDT, Kurt Borja <kuurtb@gmail=2Ecom> wrote:
+>>>Hi all,
+>>>
+>>>I apologize for taking so long=2E I've been a bit busy these last few
+>>>weeks=2E
+>>>
+>>>After my discussion with Joshua on v2, I realized the API I made was no=
+t
+>>>ergonomic at all and it didn't exactly respond to driver needs=2E In th=
+is
+>>>version I tried a completely different approach and IMO it's much much
+>>>better now=2E
+>>>
+>>>First of all I adopted standard sysfs terminology for everything=2E A
+>>>"firmware attribute" is just an attribute_group under the attributes/
+>>>directory so everything related to this concept is just called "group"
+>>>now=2E Everything refered as properties in the previous patch are now j=
+ust
+>>>plain "attributes"=2E
+>>>
+>>>This new API revolves around the `fwat_{bool,enum,int,str}_data`
+>>>structs=2E These hold all the metadata a "firmware_attribute" of that
+>>>given type needs=2E
+>>>
+>>>These structs also hold `read` and `write` callbacks for the
+>>>current_value attribute, because obviously that value is always dynamic=
+=2E
+>>>However the rest of attributes (default_value, display_name, min, max,
+>>>etc) are constant=2E
+>>
+>> Hi Kurt,
+>>
+>> In the lenovo-wmi drivers the min/max for multiple attributes are actua=
+lly dynamic based on if power is AC connected or on battery=2E Looking at p=
+atch 2 I might be able to do some pointer manipulation with the attribute's=
+ "data" member for those events to make this work, but it would be a lot ea=
+sier if there was a simple way for me to call my own functions here instead=
+=2E Perhaps a function pointer could be used to override the default method=
+ here?=20
+>
+>Hi Derek,
+>
+>All attributes in a given group have the same show method=2E Maybe we can
+>let users override this with their own show method, i=2Ee=2E Add a
+>
+>	ssize_t (*attr_show)(struct device *dev, const struct fwat_attribute *at=
+tr, const char *buf)
+>
+>to struct fwat_group_data=2E That should be fairly simple to implement=2E
+>
+>Did you have another solution in mind?
+>
+>
+
+That should work, yeah=2E=20
+- Derek
