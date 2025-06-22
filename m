@@ -1,160 +1,206 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C88EED7;
-	Sun, 22 Jun 2025 03:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92774EED7;
+	Sun, 22 Jun 2025 03:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750563771; cv=none; b=E7147Kr/JOzwxk3uyaKZabALhJnNz7UfVjXzIbSzOCRjqxvyg7ebsml1EqfwzCaKxjwOxWesz2JMvgdBaf+s9iXMNX5CgP/3tTem1fpJoBpb/R/FwAPpYomPOUjCqBG1dlfT75qljCd0XNKrcNkwbW3qtp7hwTXffv24wwGALbc=
+	t=1750563777; cv=none; b=t7keBaME6YSDgDFzud+RSn7mkt+u0tUxHWMCbFwenJRN5KERc4VewdPcDiKEmIGGh7aNe9mm4ynQx10Q7eAXzu6bfJPqAu/pz8q2eVpPyE54zxF2Nhp15THhCuf+smRCh3NtQtFy27khcDSrkhXqNB1I5Dd5MesnNrUSMOf1SlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750563771; c=relaxed/simple;
-	bh=3LjE801mRj78RJWJDrIvDPdML4nIV3zCJzVY+sv4Wuc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=q/C4GmOtfA8OQTMoNjdijByZM8ASIqURyslDNsnlsdZa9WDOGJMgb18cCE9ILnnXgwjSaTt2g/R21ka2WbMRoaQIM+DOeG7IRnCmv9A6CSemnvHLA/1PxfZ0J7XAnHJO/8hl/y0DmMDfZENTmx0e0rhdS8xqHbksSMA4Aimp7iU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SCkE6a7Z; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1750563777; c=relaxed/simple;
+	bh=HjVBTL34rvRjutnml6EYDYfk9467BjGj5hhYsottzmU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LIoIwTpfH6OAlQ+7Yn+8KuD6pDEiAPk82r+E7bmdNj71hcLjHMQlcGV5lZaOSJF2HhqNPpPcEX0L6hJK0uwQtDmpdLB6OYlpvpMmMmMijR8uMmN6+5E1Sbn3RsLslt7DjyANKl0W2dmt3BW81eVvbyOCQZdoZZi7pL4YwM/TxA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aEBxg8g0; arc=none smtp.client-ip=209.85.215.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SCkE6a7Z"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-234bfe37cccso40828505ad.0;
-        Sat, 21 Jun 2025 20:42:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aEBxg8g0"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b26df8f44e6so3638593a12.2;
+        Sat, 21 Jun 2025 20:42:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750563769; x=1751168569; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eUhqmKLTOnc3oh3BthyzyWc2QzYwhIjxAnoQpkwuDh0=;
-        b=SCkE6a7ZhPJu5GvxKvRQe0JrDydy6chIZPovwm4VdWCy0BT7tSTKOfc6/QPt3gpl0S
-         8+VvkDiQ5wiJNPlCJLAVGFcbIjMHXOKlNzSWG+Qz2u0Rd1CcG8YTjpO8ifCL7SAbJJ7V
-         U51vWNt2kDatht3Rihet+Ibmvmk+Ni7Bx0GSbAVidyEvgxM4PpLQJ9ToTX4Yd1JBAURm
-         kJ4GtODc/R8Sy7DZaO5jKK5pgXU32z6ipBu3zjwzXUqpIPdKAolqoCHCFj42tGYp95uw
-         szK68IQ3LAd63SsBZ95r7K2zdyy0GCclQi4rsWaJL1RpF2qShDMVdylVpfKui8MImqaz
-         kGdg==
+        d=gmail.com; s=20230601; t=1750563775; x=1751168575; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ACa23R2a+vWrpVNOMeXLchvOc5aLFqZI4f5KCyJMeas=;
+        b=aEBxg8g0FzvrCVfIOYF5v6VivPlbKOnSN+tgZpocP3e2UdxH5Y5i7hwD9CXsIRNKB5
+         JvxIE/YkYoebJu+CeaT31WTlAOacUC0aJtfo+wPdRu6CzSusL4hg53YFKAbqn1K2fFHd
+         hp5ijLi2qv5dWmY0sTCAqTNlGn7PvUwSmEhvymY3mIYcQ79GUdX4QxLLbXVVHCu/GNMR
+         ytbkBLorLesoMVU9EnGQk9dtuKReJjpzu7t3sRme20UypyyCpCWX7QfnxWUuwrRjtBV5
+         pIHTdtwuq494Ucbam/C1+YSL69T5/m73BcOmvigdBvuxfPq5slxLBTcQstmxr83sx3pk
+         8BhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750563769; x=1751168569;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1750563775; x=1751168575;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=eUhqmKLTOnc3oh3BthyzyWc2QzYwhIjxAnoQpkwuDh0=;
-        b=KcYeWB3pj6PXKgVP7XBujb9m/WHUuw9SVVN3m+sqs3kjaKjpKSqF7PHp4PI9M3KfxM
-         OckbCcfn2cttLpG5leLiRSm/1LESETMnxsush3bCedWuki6mxMmCByMIs+/a8oLEDZ7D
-         1GFiCha+T1Eljb7NRN+AKgv9jOtw7pvnxH6eze1YEBji/mT452BLvrKJi2xsypMnKPHy
-         C857Wh17QD3h2p3pgNL7F8dbOlp6bsbiY9fv0OLSTz1ZXTNyUvdLCe2oLYvK0jwGM1F1
-         3gKS/GqnjfUBFZUmD9m8LLOCgz2ZXLzwR17J7OhdRPnvwGfyXdW0MIC96AHCfRaJ2pIG
-         gyrg==
-X-Forwarded-Encrypted: i=1; AJvYcCWvvNDfbhqNfsU1AFun3zsBHpKmFHg43nXAcIdTkD9d9s3AS1Wa2+ICEi+RiF2KWJis54ARCNFQ/yOSgjM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwefN2rEfix2yqCA7cXVKfsRQxtmp7plC5DNJcXEPVSm4RJHAxi
-	O/2WHK6Yx96fAEcgDEcyKI58Mdf9noua8W/d2bjiueMtFdtDM8umGIXR
-X-Gm-Gg: ASbGncum36tLO9PcMsQ1OJSIhHGj7ey+DnSgzimKisSepPw93xqBIyeySiqaHfPW9PI
-	rQ53mQ8fsAuNFGg84I8bIgmC1rrKBwh9j8wDpZ1tm76ROggt/CiPrleUnYUo5kMkuydP1fEfOCF
-	Tva/8XxHQvbtm2AFj7KdHxqZ61OLmMEk6QCxLZTJ33SE2xR2lCqwNFhdDl29XNYzOqMNGga/vd+
-	K5zSoLN6CjZXZzuS8ddb0pj7cW3CecABksEcCXGOOkuT8Bdx4iIwoqlEWjgC0L56SsxJBqRHxgQ
-	5z7+NZxCx1xX4PBGSLfBvhsz80ihI8FNz0PacUvWhySCyhM3MmKdPcgNccJSu26BmOAWT4boegD
-	iGhEbTSpgtzKkaBlDnlrxha5uvT/kdWbz0vN3ox2cK8jDuWRp3A==
-X-Google-Smtp-Source: AGHT+IHTdgSE4SBzwLy/M2GSba4+YuxiCFZJDaI1tx98HQ3ewLX2HhxNyL81uwei6qLUpOCQtvyW4w==
-X-Received: by 2002:a17:902:f645:b0:236:6fbb:a5f3 with SMTP id d9443c01a7336-237d9a3fa8bmr128954155ad.40.1750563769288;
-        Sat, 21 Jun 2025 20:42:49 -0700 (PDT)
-Received: from DESKTOP-RD0GVCL.localdomain (124-218-195-161.cm.dynamic.apol.com.tw. [124.218.195.161])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8753900sm51467165ad.253.2025.06.21.20.42.47
+        bh=ACa23R2a+vWrpVNOMeXLchvOc5aLFqZI4f5KCyJMeas=;
+        b=LxZxa4ZwPHE9rj6Tf8VUuUBjsPe7dq/e+z2wT6+etYRR/rLv+hy2L0+LuZ2JwdT67s
+         iul7HlGli5rwTS8MQqnkTmbv1NrDnGUaqSb4pzr+J9+ILioyPVEuK2T2i3RBt3+VGDLf
+         yYHzGFtIS/Ph3tddXTRM+LyDiNvhfwuU4kCUyIrzsZ5rud9s1MsKXEtHHTI2BAmmI3zN
+         P1UL/Bj8OUqWoz9bUTdakEtDU5maxAzt12NHmous6XPzAF0Klb74/sJwjVwckyg0RORX
+         8JG6yWd8aor9PFC3/kJNmDmjXWj7cpof78HhWHQm+eWU8Z7BDdIPjVArcTSMf1pGjmcQ
+         IlRg==
+X-Forwarded-Encrypted: i=1; AJvYcCUzB9AYCyJaUGuadOnfcR31mfXEei/OE9wRn2Y92O0PctAWyLhW6i0qLw8ANvKyDf9Z/atGNa7YjCbL+4U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFfwoQiRl6z93GvQB0j45vfUQCBKOaWIqBJqzxpslYF9vP/rzg
+	Q7vY5J5XzodaSx7Xh1pKxNSfLtcxLgZmSa5vVGEFxccZvSwC5yE16qnh
+X-Gm-Gg: ASbGnctBUJkuSuQ1iGiBoRb4xxBf5jSXEGc7cG59RSJ4IsZmZOkpYvmUypmMVXuarTF
+	u6OKPV0pL8Hx3bUyjaf1qKvQ70QGTWXDWOzbX2QdcqrXTjUhmcHgNLzfXDKxiGurnzcVcDTetKV
+	T/0PCrzuZMSCrXNKMCw4FToe/1Apn3baOmVS2a/Bx95aioj7IrRJezfz/Sc+MoGkuyK7dMwUkIc
+	zlwxrN+C8khIWZPqCDQy1p+Ncwc7VK6wVkQgBoDkFfEkeyIIs/972zjmNYxXY/IvaItxMc1n0+m
+	ujSBAxImZHIvxSOJfhHL77u/Srf7btjnnow+GBhHxw5S94KMlJhqZQI7ZKDWYnq+TiB/e5MSy5y
+	D96ibIRAjX1vSWs6l8dhk5hO8wHD547jEl7nmQKqb5CscTqnyx237Vyq0IgSXpbFQHdE28OLT1Q
+	==
+X-Google-Smtp-Source: AGHT+IEpj0VOlzI9r7mWn9sjy0q/1s9TFnZUb9JfOL27IcJREPBlXh9zEia6LgG2v+7itLsR3B9dEQ==
+X-Received: by 2002:a17:90b:2703:b0:314:2a2e:9da9 with SMTP id 98e67ed59e1d1-3159d8d661fmr11658363a91.25.1750563774425;
+        Sat, 21 Jun 2025 20:42:54 -0700 (PDT)
+Received: from cosmo-ubuntu-2404.dhcpserver.bu9bmc.local (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3158a333a79sm8222291a91.45.2025.06.21.20.42.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Jun 2025 20:42:48 -0700 (PDT)
-From: LiangCheng Wang <zaq14760@gmail.com>
-Date: Sun, 22 Jun 2025 11:42:25 +0800
-Subject: [PATCH v3] staging: media: atomisp: fix coding style in
- ia_css_output.host.c
+        Sat, 21 Jun 2025 20:42:54 -0700 (PDT)
+From: Cosmo Chou <chou.cosmo@gmail.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	joel@jms.id.au,
+	andrew@codeconstruct.com.au
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	chou.cosmo@gmail.com,
+	cosmo.chou@quantatw.com
+Subject: [PATCH] ARM: dts: aspeed: bletchley: enable USB PD negotiation
+Date: Sun, 22 Jun 2025 11:42:47 +0800
+Message-ID: <20250622034247.3985727-1-chou.cosmo@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250622-bar-v3-1-4cc91ef01c3a@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAKB7V2gC/23MQQ7CIBCF4as0sxYDlEJ15T2MC8BpO4ktDRiia
- Xp3aVeauPwn870FEkbCBOdqgYiZEoWpRH2owA926pHRvTRILhuupWDORtaY2rVO8c61HMrnHLG
- j175yvZUeKD1DfO+jWWzXX58FE6yxNRrOldLSX/rR0uPowwibz/KPkcUo1L7zxpy0UN9mXdcPY
- SfqGMoAAAA=
-X-Change-ID: 20250621-bar-573b8b40fb80
-To: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hansg@kernel.org>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-staging@lists.linux.dev, LiangCheng Wang <zaq14760@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750563768; l=2932;
- i=zaq14760@gmail.com; h=from:subject:message-id;
- bh=3LjE801mRj78RJWJDrIvDPdML4nIV3zCJzVY+sv4Wuc=;
- b=m4F5K0BM3M7HijaPnofVrKrPD6OSzQ/Pn31CfNCSwRSPo8QoBxE55HVoy7HKW5Hrtftoj0E7A
- ozHQutCYpLJAfNwoOrDqXa83eZG88YRR8LEpc/8Bwa6SE34z5xzHGtO
-X-Developer-Key: i=zaq14760@gmail.com; a=ed25519;
- pk=/x4391DbJ19fFQI7t33HWt3lsHfYPl2I2ax8C+Vxr+M=
+Content-Transfer-Encoding: 8bit
 
-Fix multiple checkpatch.pl ERRORs and coding style issues:
+- Enable USB Power Delivery with revision 2.0 for all sleds
+- Configure dual power/data roles with sink preference
 
-- Use tabs instead of spaces for indentation
-- Move trailing `if` statements to multiline format
-- Remove excessive space between type and asterisk in function
-  arguments
-
-This cleanup improves code readability and follows Linux kernel
-coding standards.
-
-Signed-off-by: LiangCheng Wang <zaq14760@gmail.com>
+Signed-off-by: Cosmo Chou <chou.cosmo@gmail.com>
 ---
-This patch fixes coding style violations detected by checkpatch.pl in the atomisp driver under staging.
+ .../aspeed/aspeed-bmc-facebook-bletchley.dts  | 66 ++++++++++++-------
+ 1 file changed, 42 insertions(+), 24 deletions(-)
 
-- Use tabs instead of spaces for indentation
-- Move trailing `if` statements to multiline format
-- Remove excessive spaces between type and asterisk in function parameters
-
-This cleanup improves code readability and follows Linux kernel coding standards.
----
-Changes in v3:
-- Removed extra spaces between type and asterisk (e.g., `*to`) in function
-  declarations, as pointed out by Andy Shevchenko
-- Update commit message to reflect all the coding style fixes
-- Link to v2: https://lore.kernel.org/r/20250621-bar-v2-1-4e6cfc779614@gmail.com
-
-Changes in v2:
-- Fix patch subject prefix to "staging: media: atomisp:" to comply with media CI style.
-- No other functional changes.
-
-Link to v1: https://lore.kernel.org/r/20250621-bar-v1-1-5a3e7004462c@gmail.com
----
- .../atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c
-index d09365e0c47104dbffbd455bfd649b9079f88c9c..2af83d51b5b3a6ad2edf9b835a342455e7536f6c 100644
---- a/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c
-+++ b/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c
-@@ -73,8 +73,8 @@ int ia_css_output0_config(struct sh_css_isp_output_isp_config       *to,
- 	return ia_css_output_config(to, (const struct ia_css_output_configuration *)from, size);
- }
+diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-bletchley.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-bletchley.dts
+index 5be0e8fd2633..ad0051825a32 100644
+--- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-bletchley.dts
++++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-bletchley.dts
+@@ -398,10 +398,13 @@ sled1_fusb302: typec-portc@22 {
+ 		connector {
+ 			compatible = "usb-c-connector";
+ 			label = "USB-C";
+-			power-role = "source";
+-			data-role = "host";
+-			pd-disable;
+-			typec-power-opmode = "default";
++			pd-revision = /bits/ 8 <0x2 0x0 0x1 0x20>;
++			power-role = "dual";
++			try-power-role = "sink";
++			data-role = "dual";
++			source-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
++			sink-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
++			op-sink-microwatt = <10000000>;
+ 		};
+ 	};
  
--int ia_css_output1_config(struct sh_css_isp_output_isp_config       *to,
--		          const struct ia_css_output1_configuration *from,
-+int ia_css_output1_config(struct sh_css_isp_output_isp_config *to,
-+			  const struct ia_css_output1_configuration *from,
- 			  unsigned int size)
- {
- 	return ia_css_output_config(to, (const struct ia_css_output_configuration *)from, size);
-@@ -127,7 +127,8 @@ ia_css_output_dump(
-     const struct sh_css_isp_output_params *output,
-     unsigned int level)
- {
--	if (!output) return;
-+	if (!output)
-+		return;
- 	ia_css_debug_dtrace(level, "Horizontal Output Flip:\n");
- 	ia_css_debug_dtrace(level, "\t%-32s = %d\n",
- 			    "enable", output->enable_hflip);
-
----
-base-commit: 3f75bfff44be0646580fe4efda45d646f9c1693b
-change-id: 20250621-bar-573b8b40fb80
-
-Best regards,
+@@ -484,10 +487,13 @@ sled2_fusb302: typec-portc@22 {
+ 		connector {
+ 			compatible = "usb-c-connector";
+ 			label = "USB-C";
+-			power-role = "source";
+-			data-role = "host";
+-			pd-disable;
+-			typec-power-opmode = "default";
++			pd-revision = /bits/ 8 <0x2 0x0 0x1 0x20>;
++			power-role = "dual";
++			try-power-role = "sink";
++			data-role = "dual";
++			source-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
++			sink-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
++			op-sink-microwatt = <10000000>;
+ 		};
+ 	};
+ 
+@@ -570,10 +576,13 @@ sled3_fusb302: typec-portc@22 {
+ 		connector {
+ 			compatible = "usb-c-connector";
+ 			label = "USB-C";
+-			power-role = "source";
+-			data-role = "host";
+-			pd-disable;
+-			typec-power-opmode = "default";
++			pd-revision = /bits/ 8 <0x2 0x0 0x1 0x20>;
++			power-role = "dual";
++			try-power-role = "sink";
++			data-role = "dual";
++			source-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
++			sink-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
++			op-sink-microwatt = <10000000>;
+ 		};
+ 	};
+ 
+@@ -656,10 +665,13 @@ sled4_fusb302: typec-portc@22 {
+ 		connector {
+ 			compatible = "usb-c-connector";
+ 			label = "USB-C";
+-			power-role = "source";
+-			data-role = "host";
+-			pd-disable;
+-			typec-power-opmode = "default";
++			pd-revision = /bits/ 8 <0x2 0x0 0x1 0x20>;
++			power-role = "dual";
++			try-power-role = "sink";
++			data-role = "dual";
++			source-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
++			sink-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
++			op-sink-microwatt = <10000000>;
+ 		};
+ 	};
+ 
+@@ -742,10 +754,13 @@ sled5_fusb302: typec-portc@22 {
+ 		connector {
+ 			compatible = "usb-c-connector";
+ 			label = "USB-C";
+-			power-role = "source";
+-			data-role = "host";
+-			pd-disable;
+-			typec-power-opmode = "default";
++			pd-revision = /bits/ 8 <0x2 0x0 0x1 0x20>;
++			power-role = "dual";
++			try-power-role = "sink";
++			data-role = "dual";
++			source-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
++			sink-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
++			op-sink-microwatt = <10000000>;
+ 		};
+ 	};
+ 
+@@ -828,10 +843,13 @@ sled6_fusb302: typec-portc@22 {
+ 		connector {
+ 			compatible = "usb-c-connector";
+ 			label = "USB-C";
+-			power-role = "source";
+-			data-role = "host";
+-			pd-disable;
+-			typec-power-opmode = "default";
++			pd-revision = /bits/ 8 <0x2 0x0 0x1 0x20>;
++			power-role = "dual";
++			try-power-role = "sink";
++			data-role = "dual";
++			source-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
++			sink-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
++			op-sink-microwatt = <10000000>;
+ 		};
+ 	};
+ 
 -- 
-LiangCheng Wang <zaq14760@gmail.com>
+2.43.0
 
