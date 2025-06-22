@@ -1,123 +1,101 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DB21CF5C0
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 18:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A138914A62B;
+	Sun, 22 Jun 2025 18:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750617617; cv=none; b=FpKg+eAHsze77hz6+zDBrGa/kM4NALDY+nKKE1lgHEeuWXOO6OaTa5jIasaNn5VZWLJJLnSri26QIc8SCCnC4ox2GeezOWeUY2dix8dRaPJbBdAWYXJkgquaGNw7GWjcXn/bElZU9eExmNmws+fjVY9AhHbJ9ae3LCnFUxsIbF4=
+	t=1750617805; cv=none; b=cPnaxWuVGxyhxNtoBRMEI7b/Qzle8Wk9FbbZyJ4uDqGwzY4DzPDcS3WjwgUeWnl4f0251+fZnD7LNJ8F+x+DPPNObDJEM8a4dLhdW6xPjCPM/erGlPUy6TIkbkAOKqOsFtIqqqAwVHKOn9RGRc9M+3P77I+TZxvH7vkMjMQIThQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750617617; c=relaxed/simple;
-	bh=ZoxmH2TunrCDCDjgQPo3z/O4uHmyvfwyJdTVjc+Ssq8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lU2NOopSTeUcZb3xI0l0Fi7wObpfpxqEVeCzHwSpuyd0/mj053Uq7BabPtbG9BnxjNL/gNSA0Qh7ZEyW32zjC66zlWlA1y0W2dvTMl1tteg/88tzhfT3H9VS863xT5LjktMRlmhQQISeXGQFu0dvVsFanFgblfSzaJcxJBL1xCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DUSzGStS; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750617805; c=relaxed/simple;
+	bh=3H2wKWU2193WXNtIUhATRt/ZTw4+1SQggiDA+AaWVjI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=E7XzzzCdO5K5VAiFzqIUfNADvLUyxudW5lLWnY43METlr6gfWwixpas0NiStI/tLQf5+F5Jc5lJwD42yqiBNJI9NwrZUMtoDwr5CwGm5O5jXALS2Oiny9gNjwlf7CVb2ndja652Ymmj2lMU61L7JDAv1+QVP8BkeybN3rO9Mumw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=XHPUHLQg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DUSzGStS"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e81cf6103a6so2990719276.3
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 11:40:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750617614; x=1751222414; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8pKAhYxGuiuuHrWTlzTbWt/XivMd2PwwJn1ZE/8WZ34=;
-        b=DUSzGStSVoswk00F/8oYBcr0tzz/uN4k9WOjy2vHwqMgvkSC7Xjj2TSr5ktRU4qK32
-         pAOBZFwdAMhAGkNAKPU8D3bh0+Mu2ITXBq0iVErkFRjDY2ebaHWLcEoyrXzZUvyYt5sm
-         RD7kaXKq6w3B//JiuuAK7xrJbWPqjgzqllCnOtX3p2+ayZk0CC08moEWd7FbDSF4lUFE
-         kZ8uXCDrbe7uPBOC2r28iqGRV4BG93jsAo4H2ygEKhmXfuzAX8W2HubHyKk9/atkrBmm
-         N+TeEyIVAdXmYpa3ba/M4f+1CWe57B54279QjJf9mmYdjTYzc83IvPkMYezDW6vgOcRM
-         EgiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750617614; x=1751222414;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8pKAhYxGuiuuHrWTlzTbWt/XivMd2PwwJn1ZE/8WZ34=;
-        b=IKu9kCZeF6QiWDhiZ2GgeMlEgodugWo4xXzrMFU5eRszKdR63nXS4kDMEoWKDZ7PHM
-         DPp1vNSwc24pmLnvmaZj4geyvhF1XioSLET/penA3vhhUem/ihfDl1mvz+LaVy9QG5Rr
-         iKDx1qC2N9+yi+qzFNZYXvrVdHMpzurAQy1rAUq/nhuxkkXP3b3hnRtuHvqBf/afpcWN
-         aeKJQzllqRyGca+oWSFwus5BLbnooZGvH9jJInYkSpDq0p2lB907UrssedGtby6d2s+z
-         iov9tgezvaKk+V9kXC4Xh2E/TKSKn5Lpg6I2A9JA88GVpHzumZb6xcs0mbXC/F8F6dCw
-         3rCw==
-X-Forwarded-Encrypted: i=1; AJvYcCWVywu8eeT9yLSFhMp6/DLPmHIju+hnayvxQNV9Y2tXGT1d3nX27Gxm8x5VMSwwn5l26EXGmkEtgLGFYQg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgSYQEzZXlYpTpbOEtj2hkSEzs5ZgMIB0IliHwkWfcKetATuyv
-	Awg126H57DhvCuREkcmjWg5VQyOHZn5s9NA71j+ikc7b7ZDvVv4HWZntitkg/f/kOoWqutGCwUP
-	ulIjC9g3jNM5VxaV1k7+0VP/o+haE/Yo=
-X-Gm-Gg: ASbGncsKeXjpRb2QgjA+qNqp09aX6Yicrgk6SG8Vz8X6XELFpeT4nDybRiGBOtmM6tx
-	7Aw36DcRVwU7ZfDZ9UqCEnlsjgME9hrzuvjtBUVYFg0vNja7UNbPUcXaQkNMCOshkyJ8ufB7QQb
-	NygX/EHo8xfvZ8LjH+O6h9WFLXaX9cG5Qi80UFSwh8+DM=
-X-Google-Smtp-Source: AGHT+IFhTdBizPB0Z0iefmRozxDDJKg6OZOX6PwtomxBoo+nbCvl40HQaDyH9b9TDVnPz4fDGqqyN2clo2Vn+n4+Scc=
-X-Received: by 2002:a05:6902:2b93:b0:e81:5824:2334 with SMTP id
- 3f1490d57ef6-e842bb65727mr11527595276.0.1750617614013; Sun, 22 Jun 2025
- 11:40:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="XHPUHLQg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D189C4CEE3;
+	Sun, 22 Jun 2025 18:43:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1750617805;
+	bh=3H2wKWU2193WXNtIUhATRt/ZTw4+1SQggiDA+AaWVjI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XHPUHLQglzrHpK2ZS8imdC6/smERAODfvRVpH2JeWdzBL/q/n5IqHb2TQkI29zi1K
+	 6oTx1a73gchf1/xMbFySG6/bhXW+GAtxWzT92/UQIr9+80WcSclzzzznwEJHOhgdE7
+	 /RQmsUSfX9zDx/b250gr43W8i8T4klKuUDPcoL2k=
+Date: Sun, 22 Jun 2025 11:43:22 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Shivank Garg <shivankg@amd.com>, seanjc@google.com, david@redhat.com,
+ vbabka@suse.cz, shuah@kernel.org, pbonzini@redhat.com, brauner@kernel.org,
+ viro@zeniv.linux.org.uk, ackerleytng@google.com, paul@paul-moore.com,
+ jmorris@namei.org, serge@hallyn.com, pvorel@suse.cz, bfoster@redhat.com,
+ tabba@google.com, vannapurve@google.com, chao.gao@intel.com,
+ bharata@amd.com, nikunj@amd.com, michael.day@amd.com, yan.y.zhao@intel.com,
+ Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com, michael.roth@amd.com,
+ aik@amd.com, jgg@nvidia.com, kalyazin@amazon.com, peterx@redhat.com,
+ jack@suse.cz, rppt@kernel.org, hch@infradead.org, cgzones@googlemail.com,
+ ira.weiny@intel.com, rientjes@google.com, roypat@amazon.co.uk,
+ ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
+ rakie.kim@sk.com, byungchul@sk.com, gourry@gourry.net,
+ kent.overstreet@linux.dev, ying.huang@linux.alibaba.com,
+ apopple@nvidia.com, chao.p.peng@intel.com, amit@infradead.org,
+ ddutile@redhat.com, dan.j.williams@intel.com, ashish.kalra@amd.com,
+ gshan@redhat.com, jgowans@amazon.com, pankaj.gupta@amd.com,
+ papaluri@amd.com, yuzhao@google.com, suzuki.poulose@arm.com,
+ quic_eberman@quicinc.com, aneeshkumar.kizhakeveetil@arm.com,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-coco@lists.linux.dev
+Subject: Re: [PATCH 2/2] filemap: Add __filemap_get_folio_mpol()
+Message-Id: <20250622114322.c6c35800e01e4cc4007a0f89@linux-foundation.org>
+In-Reply-To: <aFWR-2WAQ283SZvg@casper.infradead.org>
+References: <20250618112935.7629-4-shivankg@amd.com>
+	<20250620143502.3055777-2-willy@infradead.org>
+	<aFWR-2WAQ283SZvg@casper.infradead.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250608163559.36401-1-a.jahangirzad@gmail.com>
-In-Reply-To: <20250608163559.36401-1-a.jahangirzad@gmail.com>
-From: Amir Mohammad Jahangirzad <a.jahangirzad@gmail.com>
-Date: Sun, 22 Jun 2025 22:09:58 +0330
-X-Gm-Features: Ac12FXxP9dKC0EW5LLLMgzVNPUlDuRamk8QpCw-O_zA9AQIV4PwNdsnIrDG_dsA
-Message-ID: <CADf5TKvyKvaP3eZUR81ND6JQUfVqUEroCrXp=joZ8GHdu2EBbA@mail.gmail.com>
-Subject: Re: [PATCH] fs/orangefs: use snprintf() instead of sprintf()
-To: hubcap@omnibond.com
-Cc: martin@omnibond.com, devel@lists.orangefs.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 8, 2025 at 8:06=E2=80=AFPM Amir Mohammad Jahangirzad
-<a.jahangirzad@gmail.com> wrote:
->
-> sprintf() is discouraged for use with bounded destination buffers
-> as it does not prevent buffer overflows when the formatted output
-> exceeds the destination buffer size. snprintf() is a safer
-> alternative as it limits the number of bytes written and ensures
-> NUL-termination.
->
-> Replace sprintf() with snprintf() for copying the debug string
-> into a temporary buffer, using ORANGEFS_MAX_DEBUG_STRING_LEN as
-> the maximum size to ensure safe formatting and prevent memory
-> corruption in edge cases.
->
->
-> Signed-off-by: Amir Mohammad Jahangirzad <a.jahangirzad@gmail.com>
-> ---
->  fs/orangefs/orangefs-debugfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/orangefs/orangefs-debugfs.c b/fs/orangefs/orangefs-debugf=
-s.c
-> index f7095c91660c..e1613e0847e8 100644
-> --- a/fs/orangefs/orangefs-debugfs.c
-> +++ b/fs/orangefs/orangefs-debugfs.c
-> @@ -396,7 +396,7 @@ static ssize_t orangefs_debug_read(struct file *file,
->                 goto out;
->
->         mutex_lock(&orangefs_debug_lock);
-> -       sprintf_ret =3D sprintf(buf, "%s", (char *)file->private_data);
-> +       sprintf_ret =3D snprintf(buf, ORANGEFS_MAX_DEBUG_STRING_LEN, "%s"=
-, (char *)file->private_data);
->         mutex_unlock(&orangefs_debug_lock);
->
->         read_ret =3D simple_read_from_buffer(ubuf, count, ppos, buf, spri=
-ntf_ret);
-> --
-> 2.43.0
->
+On Fri, 20 Jun 2025 17:53:15 +0100 Matthew Wilcox <willy@infradead.org> wrote:
 
-Hi there,
+> On Fri, Jun 20, 2025 at 03:34:47PM +0100, Matthew Wilcox (Oracle) wrote:
+> > +struct folio *__filemap_get_folio_mpol(struct address_space *mapping,
+> > +		pgoff_t index, fgf_t fgp_flags, gfp_t gfp,
+> > +		struct mempolicy *policy)
+> >  {
+> >  	struct folio *folio;
+> >  
+> > @@ -1982,7 +1984,7 @@ struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
+> >  			err = -ENOMEM;
+> >  			if (order > min_order)
+> >  				alloc_gfp |= __GFP_NORETRY | __GFP_NOWARN;
+> > -			folio = filemap_alloc_folio(alloc_gfp, order, NULL);
+> > +			folio = filemap_alloc_folio(alloc_gfp, order, policy);
+> >  			if (!folio)
+> >  				continue;
+> 
+> This is missing the EXPORT_SYMBOL_GPL() change
 
-Just following up to see if there's anything you'd like me to change or
-address in the patch before it can move forward.
+I added this:
 
-Please let me know if any updates are needed.
+--- a/mm/filemap.c~filemap-add-__filemap_get_folio_mpol-fix
++++ a/mm/filemap.c
+@@ -2032,7 +2032,7 @@ no_page:
+ 		folio_clear_dropbehind(folio);
+ 	return folio;
+ }
+-EXPORT_SYMBOL(__filemap_get_folio);
++EXPORT_SYMBOL(__filemap_get_folio_mpol);
+ 
+ static inline struct folio *find_get_entry(struct xa_state *xas, pgoff_t max,
+ 		xa_mark_t mark)
+_
 
-Regards,
-Amir Mohammad Jahangirzad
