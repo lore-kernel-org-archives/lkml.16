@@ -1,243 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCE87263C;
-	Sun, 22 Jun 2025 20:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750625590; cv=fail; b=emqcEp7inO4ADxXxoM9DT2Crl7aSXgAeO05ZaveJZMKZdLosap2fzl05zIriHgEgoS0EseE6Pu+w0gT4e5a4ISYZg/cDnoQYZliKJ/ZcH/KU2Y7bo/UcetHlsfJz1Oq3or5pL6/uWvjoaaTBxslbZ/81LRszy05ixPOrxs8JNF0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750625590; c=relaxed/simple;
-	bh=E+zb4sUbu1hC01SgCBZ5S53eIqdhyKKdm/gOUOTtzYo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=MPuHctw8sWjhU5DSMIXUB3bKEOMxxirtpT2WZ5XkAwrRzWCflGL/omUFjmsuCaYzx2Rpru2tn0sXdEMs1O/iWE9ty0H1vnUnZw/0Q1LOQXZzaFfpP3vt7hLtz7SqkcD2GgyS4wJN09UpsBM/53dCL6XU0ZHjgA1e0P5hZvkiyFs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CrQDuYL4; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AED1E8356;
+	Sun, 22 Jun 2025 20:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750625624; cv=none; b=V8W4FvpsDJ9Xr+M0uWjmLH9PmjDXOs94/RO+XXb+GkSDaswS85xazHEQ9GcNDCYZm0XN9aoJL/4SldegM9bFyaI4njiY+WVEIp0Stmtk2+IVx+67KYkB5PM9HE5WxtrJya6FkGGTAWrt6yxYc6S+pF2c1VIhjP7U0cEa545Ka9g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750625624; c=relaxed/simple;
+	bh=ETNTMcoDtb6Zz4KxYImd27LRIowUhqZRAL6C5iDjpvI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ImG51mziBapldBnlRzwl7uY+nNi3z/0cg2VpWUoEUm9uQsZtKnlaLPOe7N4ICZcJtgH4BZwFs54ahyrtDxgThvwGqFgD94udlMs/mNf34C1Xg6RuOvSAdl74fbON+rO8Aho9q1HX4gsMqXUKBQPEEEPdyv9ct5bJTaGh77Cy0Dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPCofERL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CrQDuYL4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750625589; x=1782161589;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:mime-version;
-  bh=E+zb4sUbu1hC01SgCBZ5S53eIqdhyKKdm/gOUOTtzYo=;
-  b=CrQDuYL43HRy35tDUxK6ptoTqV70ctMaK7AZr1so55tJ/2NJyaLSqVpK
-   jNnJ488kwWNpoWkUxQE4nsHnA7GQoifX6ynijEI8uvGQd/UllDia2sFcD
-   tRNR6ADAv855grJkFwxZ+49xz4vflsmAEAZHi3tT50I3i41AVxXdAheOz
-   xen2CzdYCPW8sB5CS5Xr0qR5RloDJv+IUGnLbHWnUYbFLiTw2LBujIlSn
-   tNNmYb0WIGQPuPXvtS0X7fpyb8Qp/FlqZjC48DLevdZYH44Npjtk1XktP
-   oQ/SZch9dXnzovxhxKfI+lhBvvkxmsvuboiNpQFWxQ3r7Qbe5NyFIraPQ
-   Q==;
-X-CSE-ConnectionGUID: uKbhcedjQImTGjVHv4+5tg==
-X-CSE-MsgGUID: d5SrhcYPS2eE0rwPbnTW5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="52542534"
-X-IronPort-AV: E=Sophos;i="6.16,257,1744095600"; 
-   d="scan'208,223";a="52542534"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 13:53:08 -0700
-X-CSE-ConnectionGUID: 4orxn0aVTzu2jC8dqLpcKA==
-X-CSE-MsgGUID: e13fi5HGSC6LVopaJaECGQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,257,1744095600"; 
-   d="scan'208,223";a="151551926"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 13:53:08 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Sun, 22 Jun 2025 13:53:07 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Sun, 22 Jun 2025 13:53:07 -0700
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (40.107.100.87)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Sun, 22 Jun 2025 13:53:07 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NZeQvIUa1lXDx9Ocs/LVnZjUqs/Pd3ACimLPBG30RPSsnz1p5HA8Dz5P9TshyTHZY74lWToCeydiZST7F8lpGKxXKa4iZodx4UHnhCyCWRw458vbLz2BltY18DlIbfmRx5w1wOAoD51dNu2VjFs1tW0R3dlWou/GUIJuLVdFh6OYvlJg3VFN65ZK23vkHer0mt7TKtby34bOKrknqmMDODIlUbo1lkplgtk0nuJajk24ISx0KWlOvhJ5CQKjf1OXy5gVtuXDwSE6c72R42gUjka2EaOXZ4wi5F9cNejJD9yr6A6fqHsMfvVYgydKCBF45glzjTo8+sqQpBSW93YgVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Nmi92ACQ61ScegL5LxDsyWNQdgCSWd/pAWArfZ3CHaw=;
- b=WC3zvahSjHsEZbKbsuQmRY3WfxTOmADGX8vP1KGVgwfel+TTzbt7BOebl1g5OK1pD8hb1k16wCJtgaOz3vqfXeH1ab8opdWblxBWH+Rm4W0tQ3y+7XYyoB48znoSXMoff3IG8tj1993UnY04F0mNXz+oebdv64UfHQ6oCJh5bELyczgQxo+EVt1HGFQ+zrc7tc8CUSDgflpHavV8m5AOaSx+e8IjVUeDlkOqO8Tusi4/sUhGUt+N6SetKeq4AcZrNd1VXjJIeczpRoxUFb6gMqbun2/ZthSqftzPl7H8tMzoTuHz8L/H3W1EJ5Wv7qoRlHu9gyVFy/z7mFurkUdJQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DM3PPF63A6024A9.namprd11.prod.outlook.com
- (2603:10b6:f:fc00::f27) by IA1PR11MB7175.namprd11.prod.outlook.com
- (2603:10b6:208:419::5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Sun, 22 Jun
- 2025 20:52:37 +0000
-Received: from DM3PPF63A6024A9.namprd11.prod.outlook.com
- ([fe80::9ce0:77f1:dff6:ada1]) by DM3PPF63A6024A9.namprd11.prod.outlook.com
- ([fe80::9ce0:77f1:dff6:ada1%5]) with mapi id 15.20.8835.027; Sun, 22 Jun 2025
- 20:52:37 +0000
-From: "Korenblit, Miriam Rachel" <miriam.rachel.korenblit@intel.com>
-To: Damian Tometzki <damian@riscv-rocks.de>
-CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: wlwifi AX201: WARN_ON in iwl_mvm_mld_mac_ctxt_cmd_common repeated
- UMAC FW crashes on 6.16-rc2
-Thread-Topic: wlwifi AX201: WARN_ON in iwl_mvm_mld_mac_ctxt_cmd_common
- repeated UMAC FW crashes on 6.16-rc2
-Thread-Index: AQHb464+XlvO2cQaC0asQs5rNKi6/rQPpyww
-Date: Sun, 22 Jun 2025 20:52:37 +0000
-Message-ID: <DM3PPF63A6024A9D829CDC0DFA239FE0885A37EA@DM3PPF63A6024A9.namprd11.prod.outlook.com>
-References: <aFgvmhSbup2BnUHu@fedora>
- <CAL=B37mqrHOzEQzPX3=6S5XaUZexYRUXNBgUuGsiX6+4iHWO8g@mail.gmail.com>
-In-Reply-To: <CAL=B37mqrHOzEQzPX3=6S5XaUZexYRUXNBgUuGsiX6+4iHWO8g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM3PPF63A6024A9:EE_|IA1PR11MB7175:EE_
-x-ms-office365-filtering-correlation-id: c4101a9f-5ed2-4538-7a31-08ddb1ceb875
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|4053099003|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?VEtUSWR0R3lHRElHOWhmL0FWVkxFRVc0aGd6NGNINE5JQ3ZGSm5NRW42NGZ2?=
- =?utf-8?B?QWxINFB5Rk9LSUZnSzVIVjlRMUxNdm1EYUxOTjhva0pYUmVFTjNmcVZCZzNP?=
- =?utf-8?B?M29kS0R4ZkQ5VExTeWUrN21qNytaOTlHR0ozRzNYc2h0Q2ZFMC8yMlJtOHZm?=
- =?utf-8?B?a1VzU1ZwTGJrYlFVeDg4QmZ5cmo2OVVhMnEwYmdCRFVwcWpSL3N5dXhzQjJi?=
- =?utf-8?B?bzZONSsxMzVFMWdwckJ4Mjk4dXpkL2ZQWlNZdXRJNU53TGdJdkc3dzNUSHFJ?=
- =?utf-8?B?MGJYWmpvZlE3a0xsenJydlVqL1dyOWM4YXZjbmhLbEVhS3ZlTDBhZlRpM3Vm?=
- =?utf-8?B?WHh0eXJaMGlUTFdRaTNxS3pOZ2xXRThLM0lkMWMranFnelRVbWloSEswOXZ1?=
- =?utf-8?B?Q3FITEYzc3dpNVVyK1BuR2hnM3l2RmxUK3RyUTFJQ2l4NjZ0OHZOZFhtdkh3?=
- =?utf-8?B?SnlhRmQvalk2ZUlyd0pDOEF0V2xxQWJaWm5YYmlhbDNVaGg3Q1RjWURYM1Rm?=
- =?utf-8?B?MUxwbWJ6VWVDUmxmbkpWQ0hvZjQrcWRRcTJWTjlyTTJDSlp0MHp6WnlGSnY0?=
- =?utf-8?B?djViOWpEaEdhQ3Rrd3EzY21zeWp5VUdBQzl2VjhvMFVaVnNvKzQxUC9zRWVS?=
- =?utf-8?B?OGVKSUdmakcwdUpTNkhTVVdJTWZ2YU9FYlNYZ1hrV2lndzNtTjFIdlBrK0VO?=
- =?utf-8?B?M1pBd1IyUUNaMElhNUtLelBJa2dJQlZQYkVaQ3BkZVJ3WTczR1FlYzBUdUNs?=
- =?utf-8?B?aGpBM0J1SnNxMXhoQVRHMnJGWUdRd0czbStEeEc0N3hycS9MYmNhNFBnbk1S?=
- =?utf-8?B?eVkvVUh4VDUvbjFSUmtBNHFCdmhwN3NtczU0cFJnK1hsR0x3Q3FRc0lJdVRF?=
- =?utf-8?B?cThBOFVBeVZNZTRZOTJXNWtwbFZjWXBzSWVnVWtFNXpYdWRtMjdRR0htODNY?=
- =?utf-8?B?U2drUER0dGU0cXpVbHpyNTB6bmVMSDR6YmRRQXRtaDNmUDlTMmtQMzI5T2gz?=
- =?utf-8?B?UFNxVFpGN2kyZXIwNm1USXVqeVFDdmpJSUVjRWc3QVFEcWIxeWNlem9IUTFW?=
- =?utf-8?B?bmNqNVY5L2ttckR3bVhvalpBcVh5YXE5b2Y2b2xIaU1BVkkxejNhTlVKb1BF?=
- =?utf-8?B?L25uRVNTMkMyZGNkR21DbE54Q2Q3T3lFTnFrYUlYaDdFSmpneHhnTzNCbmVm?=
- =?utf-8?B?eFVNTGNUZ2czSVlEeDU3Mm56MlhIYUkwZDV0R01BSVAxWU5pMmVPOXhwV0lr?=
- =?utf-8?B?SmppZU9ualh5VzBzMEd2ZXB2VTFudElWVVo0bUdQUzVWVEk4VStaSWpKcEFx?=
- =?utf-8?B?TnNqUjBmb2sxdG40MzVLUlNzME1iUlUvSFZzYk1yMTcvWHQzY0VIdXFTVERl?=
- =?utf-8?B?MzRQTTBnVjN0RlZyYjA3RGFRNlNxaS9PeHZucTZrL2tPMk1IaUtNWFhWY1BN?=
- =?utf-8?B?OEozZkRyb1JDYkZlR0N1SG10MUV1Y3g4TFU4WEJyeEhtaTZjZkVFSlpEQ0RM?=
- =?utf-8?B?WkRyZXBaSE95VXkzWFFLdkhsRkZMalUrVk43TG1uV1FXNktDODI3WERpU2x2?=
- =?utf-8?B?OHF1VHZEenVvOEdrbldEdzBBbnFSWFhRU0hud0xOY3VOd25QdXdqVVF2V2hx?=
- =?utf-8?B?SjBJRUR2aXU3QVl1Ym1UNVoxcEVGaS9nSk1pTUtGUGFlN0xNTjFJTEV5YWhm?=
- =?utf-8?B?K3BZUHYzbnlJM1BSSTJaS3VRSU5KUmxwM1JCZnBJaDZkb3VvL2JqbnpzWjhU?=
- =?utf-8?B?b1Z6Q0lJR091WUhDS0F1R0t5T2hEQWtMcm0zcFBDSm1MbGpSaWoySXQ1d1Vv?=
- =?utf-8?B?T0Z5V3R0RHlrNHhrWmtydjFKQTlNTmQvWXNzYU1oT1paaWkvNnFRTVZMOW11?=
- =?utf-8?B?K00xelBESkZ1QklrcmtISEpudUR2ekZtTUIwQlNtQ2w2OWpjRUdrc0Y3ZkpX?=
- =?utf-8?B?RlNzMDlFTG9JZm96bE5Oem1xR1lUTEhKY29oZlpad3dBbXlzRlJFOTdJYjlw?=
- =?utf-8?Q?0/ddcwQ1EWdvtZkXBP8yIEFnJ9oq9Q=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM3PPF63A6024A9.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(4053099003)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VmdhUjdwb1Z0ZmlpbVNTQUVkRXN3ZXdMVmRUdzhmWEE3biszUmxZeHFRNlVn?=
- =?utf-8?B?T0RIODBvN2NTZlc0bk5vaXBPZ1VXRkp6ZnM4cC9maThzdWdYaS82U0lFT2p6?=
- =?utf-8?B?WWpUUTI3NHFhbTFndHkzRGJTY21raGRDNTV5VWlneHBLKzBSOFBaTk1mWEhl?=
- =?utf-8?B?djFXeVJzWjRaSitHeERROStXZkZyeUpIYmo1OHRpbTI2NUp1RzNoQ2lCRWc3?=
- =?utf-8?B?dk5ySVk2MjQ2dmVTRUJNTGlOQUZFUmtQWXRzUEtRQ24weXdMbE9MSDVBR3lT?=
- =?utf-8?B?MVczZHcyV0QvUWJnbVlTRWdSL0hZQnpJZnQxV1M4QkVId0tTWm9oMTU0T3NY?=
- =?utf-8?B?S3JxMGJJTHhSbEYyQWxEbEkzVGViYkpHbzRsNzVjRVExemZzRUVNRC9xTDlQ?=
- =?utf-8?B?Y2wrYmQwdVkzU1QwSmJEOE10Qy9EZVczMnpMNldyWFdrUXRuRXVjL3lCbDh5?=
- =?utf-8?B?MHlLZDY5Qnl2azhNVitwMWdiU21la2dsb3MydzZzSHVrakF2Q0I2VTk1elBB?=
- =?utf-8?B?YUdZeXdpV2p1NFllUzhGbGFsMWF4cjdieXFRaU1tdG1IblJkL1RSMmNXTzdE?=
- =?utf-8?B?bTlXWXM4U3hza21rOERwYXBwSFpvdnpDSDViR2pQSFNEUzEySjRYdVpLVDJz?=
- =?utf-8?B?OXFlWkFLeWF1L0RlRktSNjdMNTMwdUJGc1dla01aS0J5MEczUkhWQi91UnJR?=
- =?utf-8?B?NktHN2tzSnhVMVVNa3Q3VWVjaElMMzNVMlZmRmpQUDlkRENEaWFWODNrZEF2?=
- =?utf-8?B?b3FSUlpMcDhhUFpqeUlEWHl5aGk0c1pYT2c3TE9SOWU2TTFDWWFzdTBadHBl?=
- =?utf-8?B?VEljNjIvS1pvT3dveWViaFlMNEw4QjhrS3VuWU1UUy93SVdBaGNZQ0pjMDBq?=
- =?utf-8?B?U1N1RG5VWThBdnYvYk5Fb2V4eUpXdm5qeXFBZVRtbEFUK2xBYWd1UUJ0T1Va?=
- =?utf-8?B?TXR1WXpjaU8yM21xa3puOXFJNjVmTVNvMlNkdjYyZXZIRTdTbmpKQWo2c0dq?=
- =?utf-8?B?dUFrZlRMaFloZFNGbjZMMWZJeEFSb2NxeVFKNnBDMFROQStlQUhzdEdnM0NC?=
- =?utf-8?B?ZUlZd3RQUERXMFNRaThkdVRHSGpEeEVYQTRmUHZmUTRMVVdZbndMRU9JajhR?=
- =?utf-8?B?U0w5bzk1Tkl0VzlpbDJydklmamNKTndCSk9LVUo0b25BbEhNTk9uazJMbEJX?=
- =?utf-8?B?cm9TSFlWcGNwTkdvRWRVM3VnVGlBZzBkY3dCeXBpMitnc1g2NnV6dlYxSnBE?=
- =?utf-8?B?Y1hSZTJ2N3BnM3Exdzd1TnUzaHRvMnVDeThRdkRzN3RvTkhBcHZxb1Zabnoz?=
- =?utf-8?B?WTlNL01RQ2gwOSt4eEQwM1pCSmhKc0l1dVNzdmxPd1R4UTFheHlQNlNyNS81?=
- =?utf-8?B?ekhBS3R3TGpoeFFZcWlmMnB5Y0FnNmJWV3NDdm9oUE9sWTgrRDdTNjk0V0xz?=
- =?utf-8?B?dllWbEFJWHJGU2NXc0ZiMzhGM0xETkZ5UE5HMVVmNzl0bXJkNm1ROUkvUm9B?=
- =?utf-8?B?TFMvb3F0aFBJbW5YbXR1bzYzallxSkZMYUdaeDVvNzdtRGJvQ1VmZ1hEV2Ex?=
- =?utf-8?B?cExvUlZZZEhIVjNGZjZTdFJJdFI4dGVTdWcxamhMWkQ5cXZEam91NDF2VCs3?=
- =?utf-8?B?WjF1TlVxczBuWHNCclAxNXlneUNmTlpLZUQyY3l4TUZUbHl6d3gzOVluT2Zj?=
- =?utf-8?B?RVliRWFXbWttTmxKNG9NZGZvMi92K0g3N0p6emxEY1VmaEJyTVB0cmpzY1V2?=
- =?utf-8?B?c0VwRU1QN1Nsd09NSXp6cjQ1UWNRNHh3Z3pCdUR2K1VmbHhreG5wWmg3VkJW?=
- =?utf-8?B?VkxvTlVrNFdGSVEwVUszWmpITEJXd2hxMzJXRDNBZ2g1V2JnQVVOZVYvRmEw?=
- =?utf-8?B?MHZUUDFsa0VaODVIOWl4UDQ0YUd2cDVFQnd3YUhPNVNQamdyZ1lzYmFYMmZx?=
- =?utf-8?B?TUNrMEhiTi9TMUlMOSt4NVlMbmJJcE13SmlDTXBQUTVDUDgrK1VWQVo3eWNX?=
- =?utf-8?B?U0lpaXlTNnBscENYNXYrTFRXcnBLQXE1VEpPbC8zOFo3VnZsN3RiV3ExUW4w?=
- =?utf-8?B?R3hDLzhpU3JJaDFjUy94RnEzZjVOVVd0WmprcHowd2FtNGlpbDEyR1dWVUoy?=
- =?utf-8?B?UVB4bGVPc094SHhDWHAxRndMM1R0cFUxcTBlVU9HSG10UFBHWXN2ZE9YcTdm?=
- =?utf-8?B?eGc9PQ==?=
-Content-Type: multipart/mixed;
-	boundary="_002_DM3PPF63A6024A9D829CDC0DFA239FE0885A37EADM3PPF63A6024A9_"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPCofERL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DF8AC4CEE3;
+	Sun, 22 Jun 2025 20:53:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750625623;
+	bh=ETNTMcoDtb6Zz4KxYImd27LRIowUhqZRAL6C5iDjpvI=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=EPCofERLyS7eERNMKxP4WuVN8DKo9AGNz11NJl3+zmRyK88oSu3ABuLtMvJ+A0L7s
+	 3SecOZvoKdcvbqKKKb8uCOirLGkklN3Xh4Eaba8c/djwHYjOJNvCvrFIOv5gdUMCDO
+	 lAdjrwJz7LE5lg/CHrP679FVcqyf7PCI1Dq4CLhzvwra2C5xMWZwyIiuNdtjynqTUE
+	 kyzxc9IHjLn5XiEnHDFOUQzM22Qcq9oVHuHNwjZGYF2gOPUyoZk4wDg46Jqz7tDDxv
+	 74gaFXW3L2qbBtsMPg9axVYUark9zZW+mac1kVLb7orRd6XtAiKJ8JTeOq7JWSl7Vv
+	 /AEr7AkHBqgjQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM3PPF63A6024A9.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4101a9f-5ed2-4538-7a31-08ddb1ceb875
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2025 20:52:37.2462
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DucLZ+qYDDD0u6exhkFetvwdyqlHhG3HdPEKKNBzmRKOrM7GcqSu+lmsh6by5uDtM3rEPuMlcJtiHULJZ8dMaRps4AeYBmk+lk6F0IiEbY51DRMx5lnSH/unq3pkbTZC
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB7175
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 22 Jun 2025 22:53:38 +0200
+Message-Id: <DATCZMJJ1SQT.24OPC80MXN1E5@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Thomas Gleixner" <tglx@linutronix.de>, "Bjorn
+ Helgaas" <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v4 4/6] rust: irq: add support for threaded IRQs and
+ handlers
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>, "Daniel Almeida"
+ <daniel.almeida@collabora.com>
+X-Mailer: aerc 0.20.1
+References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com> <20250608-topics-tyr-request_irq-v4-4-81cb81fb8073@collabora.com> <aEbTOhdfmYmhPiiS@pollux> <5B3865E5-E343-4B5D-9BF7-7B9086AA9857@collabora.com> <aEckTQ2F-s1YfUdu@pollux.localdomain>
+In-Reply-To: <aEckTQ2F-s1YfUdu@pollux.localdomain>
 
---_002_DM3PPF63A6024A9D829CDC0DFA239FE0885A37EADM3PPF63A6024A9_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+On Mon Jun 9, 2025 at 8:13 PM CEST, Danilo Krummrich wrote:
+> On Mon, Jun 09, 2025 at 01:24:40PM -0300, Daniel Almeida wrote:
+>> > On 9 Jun 2025, at 09:27, Danilo Krummrich <dakr@kernel.org> wrote:
+>> >> +#[pin_data]
+>> >> +pub struct ThreadedRegistration<T: ThreadedHandler + 'static> {
+>> >> +    inner: Devres<RegistrationInner>,
+>> >> +
+>> >> +    #[pin]
+>> >> +    handler: T,
+>> >> +
+>> >> +    /// Pinned because we need address stability so that we can pass=
+ a pointer
+>> >> +    /// to the callback.
+>> >> +    #[pin]
+>> >> +    _pin: PhantomPinned,
+>> >> +}
+>> >=20
+>> > Most of the code in this file is a duplicate of the non-threaded regis=
+tration.
+>> >=20
+>> > I think this would greatly generalize with specialization and an Handl=
+erInternal
+>> > trait.
+>> >=20
+>> > Without specialization I think we could use enums to generalize.
+>> >=20
+>> > The most trivial solution would be to define the Handler trait as
+>> >=20
+>> > trait Handler {
+>> >   fn handle(&self);
+>> >   fn handle_threaded(&self) {};
+>> > }
+>> >=20
+>> > but that's pretty dodgy.
+>>=20
+>> A lot of the comments up until now have touched on somehow having thread=
+ed and
+>> non-threaded versions implemented together. I personally see no problem =
+in
+>> having things duplicated here, because I think it's easier to reason abo=
+ut what
+>> is going on this way. Alice has expressed a similar view in a previous i=
+teration.
+>>=20
+>> Can you expand a bit more on your suggestion? Perhaps there's a clean wa=
+y to do
+>> it (without macros and etc), but so far I don't see it.
+>
+> I think with specialization it'd be trivial to generalize, but this isn't
+> stable yet. The enum approach is probably unnecessarily complicated, so I=
+ agree
+> to leave it as it is.
+>
+> Maybe a comment that this can be generalized once we get specialization w=
+ould be
+> good?
+>
+>> >> +impl<T: ThreadedHandler + 'static> ThreadedRegistration<T> {
+>> >> +    /// Registers the IRQ handler with the system for the given IRQ =
+number.
+>> >> +    pub(crate) fn register<'a>(
+>> >> +        dev: &'a Device<Bound>,
+>> >> +        irq: u32,
+>> >> +        flags: Flags,
+>> >> +        name: &'static CStr,
+>> >> +        handler: T,
+>> >> +    ) -> impl PinInit<Self, Error> + 'a {
+>> >=20
+>> > What happens if `dev`  does not match `irq`? The caller is responsible=
+ to only
+>> > provide an IRQ number that was obtained from this device.
+>> >=20
+>> > This should be a safety requirement and a type invariant.
+>>=20
+>> This iteration converted register() from pub to pub(crate). The idea was=
+ to
+>> force drivers to use the accessors. I assumed this was enough to make th=
+e API
+>> safe, as the few users in the kernel crate (i.e.: so far platform and pc=
+i)
+>> could be manually checked for correctness.
+>>=20
+>> To summarize my point, there is still the possibility of misusing this f=
+rom the
+>> kernel crate itself, but that is no longer possible from a driver's
+>> perspective.
+>
+> Correct, you made Registration::new() crate private, such that drivers ca=
+n't
+> access it anymore. But that doesn't make the function safe by itself. It'=
+s still
+> unsafe to be used from platform::Device and pci::Device.
+>
+> While that's fine, we can't ignore it and still have to add the correspon=
+ding
+> safety requirements to Registration::new().
+>
+> I think there is a way to make this interface safe as well -- this is als=
+o
+> something that Benno would be great to have a look at.
 
-PiA+IFZHDQo+ID4gRGVtaWFuIFRvbWV0emtpDQo+IA0KPiBIaSB0b2dldGhlciwNCj4gDQo+IEkg
-aWRlbnRpZmllZCBjb21taXQgODNmM2FjMjg0OGI0NmUzZTVhZjVkMDZiNWYxNzZjIGFzIHRoZSBj
-YXVzZSBvZiB0aGUgaXNzdWUuDQo+IEFmdGVyIHJldmVydGluZyBpdCwgdGhlIHN5c3RlbSBpcyB3
-b3JraW5nIGFnYWluLg0KPiANCj4gQmVzdCByZWdhcmRzDQo+IERhbWlhbg0KDQpIaSBEYW1pYW4s
-DQoNClRoYW5rcyBmb3IgdGhlIHJlcG9ydCENCg0KQ2FuIHlvdSB0ZXN0IHRoZSBhdHRhY2hlZCBm
-aXg/DQoNCk1pcmkNCg==
+Finally had some time to look through this thread, thought I needed a
+whole lot of context, but turns out the question is simple :)
 
---_002_DM3PPF63A6024A9D829CDC0DFA239FE0885A37EADM3PPF63A6024A9_
-Content-Type: application/octet-stream;
-	name="0001-wifi-iwlwifi-mvm-assume-1-as-the-default-mac_config_.patch"
-Content-Description: 0001-wifi-iwlwifi-mvm-assume-1-as-the-default-mac_config_.patch
-Content-Disposition: attachment;
-	filename="0001-wifi-iwlwifi-mvm-assume-1-as-the-default-mac_config_.patch";
-	size=1421; creation-date="Sun, 22 Jun 2025 20:50:10 GMT";
-	modification-date="Sun, 22 Jun 2025 20:52:36 GMT"
-Content-Transfer-Encoding: base64
+Your idea looks sound :)
 
-RnJvbSA4YzM5MzMxZDAxZGIwZjEwNDdmMzg5ZDg5Zjg4NTE2ZGIxZWY5MGUxIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBNaXJpIEtvcmVuYmxpdCA8bWlyaWFtLnJhY2hlbC5rb3JlbmJs
-aXRAaW50ZWwuY29tPgpEYXRlOiBTdW4sIDIyIEp1biAyMDI1IDIzOjQyOjA0ICswMzAwClN1Ympl
-Y3Q6IFtQQVRDSF0gd2lmaTogaXdsd2lmaTogbXZtOiBhc3N1bWUgJzEnIGFzIHRoZSBkZWZhdWx0
-IG1hY19jb25maWdfY21kCiB2ZXJzaW9uCk9yZ2FuaXphdGlvbjogSW50ZWwgSXNyYWVsICg3NCkg
-TGltaXRlZAoKVW5mb3J0dW5hdGVseSwgRldzIG9mIHNvbWUgZGV2aWNlcyBkb24ndCBoYXZlIHRo
-ZSB2ZXJzaW9uIG9mIHRoZQppd2xfbWFjX2NvbmZpZ19jbWQgZGVmaW5lZCBpbiB0aGUgVExWcy4g
-V2Ugc2VuZCAwIGFzIHRoZSAnZGVmIGFyZ3VtZW50CnRvICBpd2xfZndfbG9va3VwX2NtZF92ZXIs
-IHNvIGZvciBzdWNoIEZXcywgdGhlIHJldHVybiB2YWx1ZSB3aWxsIGJlIDAsCmxlYWRpbmcgdG8g
-YSB3YXJuaW5nLCBhbmQgdG8gbm90IHNlbmRpbmcgdGhlIGNvbW1hbmQuCgpGaXggdGhpcyBieSBh
-c3N1bWluZyB0aGF0IHRoZSBkZWZhdWx0IHZlcnNpb24gaXMgMS4KClNpZ25lZC1vZmYtYnk6IE1p
-cmkgS29yZW5ibGl0IDxtaXJpYW0ucmFjaGVsLmtvcmVuYmxpdEBpbnRlbC5jb20+CkNoYW5nZS1J
-ZDogSWJhNDg3YjNhZGRmYWQ5NWU1MWM3ZDVhZDc5Yzk2MmJlM2VhYjA0NmYKLS0tCiBkcml2ZXJz
-L25ldC93aXJlbGVzcy9pbnRlbC9pd2x3aWZpL212bS9tbGQtbWFjLmMgfCAyICstCiAxIGZpbGUg
-Y2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9kcml2
-ZXJzL25ldC93aXJlbGVzcy9pbnRlbC9pd2x3aWZpL212bS9tbGQtbWFjLmMgYi9kcml2ZXJzL25l
-dC93aXJlbGVzcy9pbnRlbC9pd2x3aWZpL212bS9tbGQtbWFjLmMKaW5kZXggM2MyNTVhZTkxNmM4
-Li40OGFiNmEyYTk4Y2MgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbmV0L3dpcmVsZXNzL2ludGVsL2l3
-bHdpZmkvbXZtL21sZC1tYWMuYworKysgYi9kcml2ZXJzL25ldC93aXJlbGVzcy9pbnRlbC9pd2x3
-aWZpL212bS9tbGQtbWFjLmMKQEAgLTMyLDcgKzMyLDcgQEAgc3RhdGljIHZvaWQgaXdsX212bV9t
-bGRfbWFjX2N0eHRfY21kX2NvbW1vbihzdHJ1Y3QgaXdsX212bSAqbXZtLAogCXVuc2lnbmVkIGlu
-dCBsaW5rX2lkOwogCWludCBjbWRfdmVyID0gaXdsX2Z3X2xvb2t1cF9jbWRfdmVyKG12bS0+Zncs
-CiAJCQkJCSAgICBXSURFX0lEKE1BQ19DT05GX0dST1VQLAotCQkJCQkJICAgIE1BQ19DT05GSUdf
-Q01EKSwgMCk7CisJCQkJCQkgICAgTUFDX0NPTkZJR19DTUQpLCAxKTsKIAogCWlmIChXQVJOX09O
-KGNtZF92ZXIgPCAxIHx8IGNtZF92ZXIgPiAzKSkKIAkJcmV0dXJuOwotLSAKMi4zNC4xCgo=
+---
+Cheers,
+Benno
 
---_002_DM3PPF63A6024A9D829CDC0DFA239FE0885A37EADM3PPF63A6024A9_--
+> I'm thinking of something like
+>
+> 	/// # Invariant
+> 	///
+> 	/// `=C3=ACrq` is the number of an interrupt source of `dev`.
+> 	struct IrqRequest<'a> {
+> 	   dev: &'a Device<Bound>,
+> 	   irq: u32,
+> 	}
+>
+> and from the caller you could create an instance like this:
+>
+> 	// INVARIANT: [...]
+> 	let req =3D IrqRequest { dev, irq };
+>
+> I'm not sure whether this needs an unsafe constructor though.
+
