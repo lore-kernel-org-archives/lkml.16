@@ -1,89 +1,117 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116AE4409
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 20:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29B5D299;
+	Sun, 22 Jun 2025 20:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750623004; cv=none; b=sv9q0IBIbEsok3/kBSjBkVokRbEB4lmBFvyycXnVso3ay+9AtHThsoqK9f03QxsG3y8zH5jmg04Qcf6/RI07oxhcmKyLqIf4pLwxBejMhjPolmty/kEhauRpd6jer9lLXr6gymumO5KCS4ZjzQr/AyuOeJYvRDRc9D5j6C1e/r0=
+	t=1750623245; cv=none; b=M/UJp8Gwm8kLTpuv04M6/SohPuz52gKcVY1jAMXx644NsMD02JXXJWx+inq+4A1EVkYuqjYJ+SmUU/2l8mrs9QkOAUcQHHSAFNBATnTpta8PLpxPZrcjYalkhUE1sEz3RqilYY6MQRK9UJyPgAHHjMGknM8yUc6cl4aXnkr2nlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750623004; c=relaxed/simple;
-	bh=RLlTtbGIkd2WnrLY6pst/lSjGikLjHy+0aURPSy6JZw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T+5ho7GkJWrA/9iRC7f0mmHHjrTeL5sd355V7vVDv3WxudeBLnjVG/88lZgV64VsVcqct/4VsYYGKBsFfwJgHSXkrDucSpPoFm3X3OJh8GzYWGJ35zO2dLe2G4lO1qJkTfuPBU+ItlbEOkt3+6Lqgg4moo/Of+QeyoXveL7zG/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W3l04Kk5; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750623245; c=relaxed/simple;
+	bh=35x6Mxn3trce9gfGtiBjrHl6Aqu//3K9ejdgH0ORui8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=ap14juVBrX+BcNqnM+r99Cd8i5AaakmoI1RMIh/BxuU2GEHpYp6+SJ62IJEKnhixmfzvPndhTYHH9NU9iVc6oqG+kOSB/2AdZhNMO/zYBVjMQIQDdzlvdPQt59zikmmRWR4sIV1o/4yjyZFdneQR7P0h9waXDG3jUgxw0c1g+KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMADnHIx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W3l04Kk5"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e81749142b3so2987666276.3
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 13:10:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750623002; x=1751227802; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RLlTtbGIkd2WnrLY6pst/lSjGikLjHy+0aURPSy6JZw=;
-        b=W3l04Kk5XaTUIBe0uAlSGDPecw6TvBh+/0Tq/XjKReuCVYaO3pCfMbUz0B3IQ/fpZ6
-         qZJMKF38AKRe/cf7wQUQYYWdGo0V8i7KFiaxiwTheNhzPBQ00XBupqWxxOuJsWd52B2G
-         DXGsaSyCSck4oUyllSQVMoHLJRx2z+jlvh+ofHBf3hHJwROiFgH0J88gmygPocHkPEHr
-         4qfgdNX2FsR4td82X6yPXt/99Q9p3bqF/nh2tK5LBqezVG0XAOjSjs6PQSJ85ysgvCLm
-         I/mWedG9d8Vy8czhWu0M53jKukOkpZiKW+XjXZEgb4C0bvAcJC0/dCmX8BYV7lAHtMBp
-         kniQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750623002; x=1751227802;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RLlTtbGIkd2WnrLY6pst/lSjGikLjHy+0aURPSy6JZw=;
-        b=U1xGHM21JLGGY27+55nm19vTDXiqvwbbLlureOUaik2hcK1xtwfbdeivpBoLVeJf8v
-         0jrAQipcfzNwShkREZLklnhHuLILhe5pXlt+v2zxa383r6NDYeZU9FbMxLn1yLU7Z5Lz
-         fQP9aVRpx7gEO1mEWy3mUvp3DKfJ173j1Ew80jBe9s5FLXWYFv7OZapv0a7s9EOoGqP0
-         9Od71R+vrvn+qlGRmB4cew30SYKs/zW+u0Rd26Lfw8WSrLjNwhvmbC9DMAtVQeXVZLB1
-         yoG9ceyfyGBJeGjgQiWZTdnahx9Wjy9mZLbPaXXFRIfkuzZ3IEkU3dwt3YvNZLXMrQ8h
-         yyww==
-X-Forwarded-Encrypted: i=1; AJvYcCURRLrfX9jYz3WD1KYbY0fmVjIbeqLD12esiVg12sQGEbaUKJ6NcSYLl+gTKWHA6q2Ppt8hkiI9dwd7gx4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDlXJ6zqS+cxY1Qrci+VDcPqKuSDfU9x8pjiNrvm0RyVYyqGUg
-	Cbmo+E6zhmJ73bJUI1qx/s3Cftt1fIXjd6OkLB8FLZ48O5DpJGnEHt5WxAXrnQyzPp8Y9vWslAZ
-	8Tepzo32glR22SXkziPirjD44temZTRCUiDGCAvQ=
-X-Gm-Gg: ASbGnctNPt9lL2bK9yGy0nU+cE5EY7alnFyyiTLa0vykSCxhWh1q+3xZMu4ErPlggji
-	bolqsKFDaDgrVcBjf2ysR1Wt0zCh+Onl2CTXXTA8IFx6EhtvNM7TYVU7rOx+G7EMvNybGiRSZP1
-	OsQSKew/QME2+KdeJbyUjimrl9g7+IaWrTjZXoRAVJLKYIngA5MEt25Snt1RZJi/0aP16lMXFG
-X-Google-Smtp-Source: AGHT+IH/QbHlv0d5LvDariDLVy9bYP9kuiri86X6R6Wf+mNq5l225sSWKZu2l5H1dZZKJaJklP1fhfovASEYZhGPfCk=
-X-Received: by 2002:a05:6902:2601:b0:e81:9e35:c60c with SMTP id
- 3f1490d57ef6-e842bc773f3mr13107484276.8.1750623001848; Sun, 22 Jun 2025
- 13:10:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMADnHIx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E421C4CEE3;
+	Sun, 22 Jun 2025 20:14:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750623245;
+	bh=35x6Mxn3trce9gfGtiBjrHl6Aqu//3K9ejdgH0ORui8=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=GMADnHIxayoLHisZ14MSmoav5j5XAYJaDcq7jq9h62Bc7timN/epnfj4mEkzE7Luf
+	 gXboIyIIH80JkOnmRCI1a3H4WeqlhCFOues64G3mzWgA5ljyuL4eZxDGXYd7NhheRc
+	 SqRmLdGctBn7Gv6uZwldmOeGsm8M462aABC+7+T75ryM8354hKfffk9YQFYE6m8JMO
+	 OrmVuNIqDLPQ7ZamSmo7Boi4l9pwPuBrKjqhEzkBPemm2zoCpbmQq3gPEm1UjDMPyu
+	 S8XFpqEFMtcKrOdi7vKO4D9qkdYqt9BmA3YJATVqfEpBn13c5Ai2HwikdAXEkccNsE
+	 mxabx9zRySkaQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250608163559.36401-1-a.jahangirzad@gmail.com>
- <CADf5TKvyKvaP3eZUR81ND6JQUfVqUEroCrXp=joZ8GHdu2EBbA@mail.gmail.com> <20250622184815.GW1880847@ZenIV>
-In-Reply-To: <20250622184815.GW1880847@ZenIV>
-From: Amir Mohammad Jahangirzad <a.jahangirzad@gmail.com>
-Date: Sun, 22 Jun 2025 23:39:44 +0330
-X-Gm-Features: AX0GCFuYDKS6wqvx3AWbJ5HrmH8X0x0efV9w6EhbpCgQ35IdWOoVIV48DnoMY68
-Message-ID: <CADf5TKvorgeCJ=6u6=jhxetUhDx3SCnUBe+cpbUQu5gADqRRCg@mail.gmail.com>
-Subject: Re: [PATCH] fs/orangefs: use snprintf() instead of sprintf()
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: hubcap@omnibond.com, martin@omnibond.com, devel@lists.orangefs.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 22 Jun 2025 22:14:00 +0200
+Message-Id: <DATC5A2JBHZQ.33AFQQP6V6L1A@kernel.org>
+Subject: Re: [PATCH 4/4] rust: devres: implement register_foreign_release()
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>
+Cc: <gregkh@linuxfoundation.org>, <rafael@kernel.org>, <ojeda@kernel.org>,
+ <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
+ <bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250612145145.12143-1-dakr@kernel.org>
+ <20250612145145.12143-5-dakr@kernel.org>
+ <DASVTOJU2OE8.GU1NH3MZ3SX@kernel.org> <aFf7QVhqE6dhp0m2@pollux>
+In-Reply-To: <aFf7QVhqE6dhp0m2@pollux>
 
-On Sun, Jun 22, 2025 at 10:18=E2=80=AFPM Al Viro <viro@zeniv.linux.org.uk> =
-wrote:
+On Sun Jun 22, 2025 at 2:46 PM CEST, Danilo Krummrich wrote:
+> On Sun, Jun 22, 2025 at 09:26:33AM +0200, Benno Lossin wrote:
+>> On Thu Jun 12, 2025 at 4:51 PM CEST, Danilo Krummrich wrote:
+>> > +pub trait Release {
+>> > +    /// Called once the [`Device`] given to [`register_foreign_releas=
+e`] is unbound.
+>> > +    fn release(&self);
+>>=20
+>> Would it make sense to also supply the `Device` that this is attached
+>> to? In case you have one object in multiple `register_foreign_release`
+>> calls with different devices, or is that something that doesn't happen?
 >
-> On Sun, Jun 22, 2025 at 10:09:58PM +0330, Amir Mohammad Jahangirzad wrote=
-:
->
-> > > Replace sprintf() with snprintf() for copying the debug string
-> > > into a temporary buffer, using ORANGEFS_MAX_DEBUG_STRING_LEN as
-> > > the maximum size to ensure safe formatting and prevent memory
-> > > corruption in edge cases.
->
-> Out of curiosity - have you actually looked at the format used there?
+> No, doing that wouldn't make any sense. A resource should only be bound t=
+o the
+> lifetime of a single device.
 
-No, I just found this through static analysis. Is there any issue with it?
+But the API doesn't prevent it... Does it make more sense to instead ask
+the user to provide a closure?
+
+>> > +}
+>> > +
+>> > +impl<T: Release> Release for crate::sync::ArcBorrow<'_, T> {
+>> > +    fn release(&self) {
+>> > +        self.deref().release();
+>> > +    }
+>> > +}
+>> > +
+>> > +impl<T: Release> Release for Pin<&'_ T> {
+>> > +    fn release(&self) {
+>> > +        self.deref().release();
+>> > +    }
+>> > +}
+>>=20
+>> We should also implement it for `&T`, since that is `Box`'s `Borrowed`.
+>
+> That should implicitly be the case when T: Release, where T is P<T>.
+
+I don't understand? When `P` is set to `Box<T>` in the
+`register_foreign_release` below, then `P::Borrow<'_> =3D=3D &'_ T` and the
+bound of `&T: Release` is not satisfied.
+
+>> > +
+>> > +/// Consume the `data`, [`Release::release`] and [`Drop::drop`] `data=
+` once `dev` is unbound.
+>> > +///
+>> > +/// # Examples
+>> > +///
+>> > +/// ```no_run
+>> > +/// use kernel::{device::{Bound, Device}, devres, devres::Release, sy=
+nc::Arc};
+>> > +///
+>> > +/// struct Registration<T> {
+>>=20
+>> Maybe add some explanation above/below this example. It looks like a new
+>> bus registration?
+>
+> *class device registration, see Registration::new() below. But I can also=
+ add a
+> brief comment to the struct. It's indeed a bit subtly this way. :)
+
+I'd just add a small paragraph explaining what it does :)
+
+---
+Cheers,
+Benno
