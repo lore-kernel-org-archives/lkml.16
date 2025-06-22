@@ -1,90 +1,159 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA841D90A5;
-	Sun, 22 Jun 2025 13:11:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B886279F5;
+	Sun, 22 Jun 2025 13:20:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750597917; cv=none; b=lbAu+LEC/EmkiD4t7pgWlIqYVKEzc/yoAjaggOKAqSKtCx76mMAWh+Aq63Om9B6jVzEXvTuUZC96LEGBNPuoItD+xlSBMObVbRewFtJ3ykFrrCBcPmOyOh5gNXwo2BKmUpnXBvO/QJrqPTyyRFDUXUt3bwGOxXsXvoDQXCg7Wlo=
+	t=1750598437; cv=none; b=oM680pVurBu4vIAo+NGJoNBw5MdB25SBvOmDjK5x7Sq2BJB044+N675S0ejlfFUsW8Twe1oHFRwdJ+id7HSaeKfre7kGWQoGiM6oy1d/pc7hk+OIwGq9zQnp+eu0V0WmA2M5BAo6pESxUqKcyTH0ggH0j+jdQyqHb1CbXbnwnEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750597917; c=relaxed/simple;
-	bh=iFTfBogO7Ou6dRiZk4dXS5Xfb9kUSJe7BRtNpxUsngQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AE6ARbwwSmYill8ncQ+xXmV1mNZ5bB+3gJ0sMMEZhw8+qWqFsf2yMhB+KcCnnW324e0j7BfNT4266rwkRSeJUNdAeqfNlFPPJfZ8f3YEBS6ok8UvzjUCki85HalUGxWUEIN2+KVtUqr0gNi+uFCCId/n8ozRrf1SeBgSqdzRmrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ktbrle9t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750598437; c=relaxed/simple;
+	bh=Cn1n7b6pShVyFBv3SDRXx21S0jh5xAzkcYyVKt0Jndk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=lKdZacu+tDMqG1Y3NZWQNriTNvZLvawGwmsF+zkoLysNwWjEgx2AaJik+lQl+uJQ/FvpXnbT/c0UqfnQxy8FeDM8cU+GlzSZROMqLsXndmIMfl65mXFJt1GfFNeVsHAfP3lcbYa745yOvS+WS8Kp91OCFPBInmO6qQGyw+13+uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ph263ev0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ktbrle9t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E755C4AF09;
-	Sun, 22 Jun 2025 13:11:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ph263ev0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB2CEC4CEE3;
+	Sun, 22 Jun 2025 13:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750597917;
-	bh=iFTfBogO7Ou6dRiZk4dXS5Xfb9kUSJe7BRtNpxUsngQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ktbrle9tgQ0Yh/RcyjFd4TYWZaFmKdCVBAEFkwa7BfUSGEdBFDxZuz+VVCrVwucSG
-	 mj+LXayg2pbut5kZ9Hl5KYktVrKosVVhiWUlLGY1sYKbsCS4nvpPAEuM354mFZyY8b
-	 at4PlTfECuJi0BpJsyByBsmO3FJPAUp3YIV5x+zy3Cd9f/JBPeiyacksF5K8ieW8hW
-	 5vOdu0TvXPTyBq93nKnOLq6HbgRGPxkme6AT9QF8zt38rYR5e5ga0qKezpcyc8Oq6e
-	 Wd4D9d/1QXfHZq3anZawevsTPISu7E9e6oudLK3gtOyMNhKJVm5XheEqaXIGoP/bGE
-	 Wb9ZOL2jjix/A==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-601dfef6a8dso5252600a12.1;
-        Sun, 22 Jun 2025 06:11:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU2bZlsqo5MDQ34cHvS5uJUHFiHPy1gyemNaITEiHPP4hbmaujnWtxEI4um1b7Dwr1PD9z4EeeY@vger.kernel.org, AJvYcCVvJzxrNa10AAzaJauGpFKuImeXpEhGrYXA9dhSwLyTL9c7kgJxGzkXShL1U7wRBNJK0kyXPxoskAVs0AU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQmYO5SZGve4GbSMgYEj7CB2koOEiLKfb5IB86h89htz20qAm+
-	QIXoDTHO3fV0qn2jZXzmNS9mqAjRPTcq66xfA0B/8SgcReqt59c262MtxijI5olAKpK5vYOEYza
-	088y8OjXl2xSjz77MolXx4iFmwcrzJa4=
-X-Google-Smtp-Source: AGHT+IGp9Zdaokzz3FwUEoyQYdRXVh7NwJHpk8jxjbFMKjmQdM6VeSLuT3NcA4XIzfjMQ4yJApFLtG9aPRAplFTZyCk=
-X-Received: by 2002:a05:6402:35cb:b0:607:1984:5009 with SMTP id
- 4fb4d7f45d1cf-60a1d167699mr8209874a12.20.1750597915758; Sun, 22 Jun 2025
- 06:11:55 -0700 (PDT)
+	s=k20201202; t=1750598437;
+	bh=Cn1n7b6pShVyFBv3SDRXx21S0jh5xAzkcYyVKt0Jndk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ph263ev0NRT7TZyjwIdML8FlqZ2u78Tnjy4sNE9GmT1sSdvSCHUU/ctyNjpW59b1h
+	 rsxOSsys2WAPOI2EBKB82G2k67QhCYQ1eUMc/H/wQ0pulV2X6wYbTV8tzuhjpHozuy
+	 4pVieGojkBko6QhNKc4am+SLHTOU3bwfDvFW6aM9e9c45RUgcX4QPvNvMpkGKG/nAU
+	 VQs8RuUE4RKaHGo54H4hQL8gQp9uy9qIwYnNlREonA8Y30zWOQuf+jxo1M0c6xsQzu
+	 DhQ158rKvzBOgtocr50qhI/8gg69p43M/kfR7f0tEPpJFKpYVH/zPVE5J889tS5yyu
+	 /0uw9bYt+kuCw==
+Date: Sun, 22 Jun 2025 15:20:28 +0200
+From: Wolfram Sang <wsa@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andi Shyti <andi.shyti@kernel.org>
+Subject: [PULL REQUEST] i2c-for-6.16-rc3
+Message-ID: <aFgDHBHwY5ElWILx@shikoro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250622110148.3108758-1-chenhuacai@loongson.cn> <2025062206-roundish-thumb-a20e@gregkh>
-In-Reply-To: <2025062206-roundish-thumb-a20e@gregkh>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 22 Jun 2025 21:11:44 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4S=z5O0+pq-x9X4-VjYsJQVxib+V-35g50WeaivryHLA@mail.gmail.com>
-X-Gm-Features: AX0GCFs3ooE5xKM6IATv-GyKY4DmnLVVqYAEs6tbglCMyQwyFvGaUkVD3I9PD14
-Message-ID: <CAAhV-H4S=z5O0+pq-x9X4-VjYsJQVxib+V-35g50WeaivryHLA@mail.gmail.com>
-Subject: Re: [PATCH for 6.1/6.6] platform/loongarch: laptop: Fix build error
- due to backport
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Sasha Levin <sashal@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org, ziyao@disroot.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pCZzTLcJSLnQEWsb"
+Content-Disposition: inline
 
-On Sun, Jun 22, 2025 at 9:10=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Sun, Jun 22, 2025 at 07:01:48PM +0800, Huacai Chen wrote:
-> > In 6.1/6.6 there is no BACKLIGHT_POWER_ON definition so a build error
-> > occurs due to recently backport:
-> >
-> >   CC      drivers/platform/loongarch/loongson-laptop.o
-> > drivers/platform/loongarch/loongson-laptop.c: In function 'laptop_backl=
-ight_register':
-> > drivers/platform/loongarch/loongson-laptop.c:428:23: error: 'BACKLIGHT_=
-POWER_ON' undeclared (first use in this function)
-> >   428 |         props.power =3D BACKLIGHT_POWER_ON;
-> >       |                       ^~~~~~~~~~~~~~~~~~
-> >
-> > Use FB_BLANK_UNBLANK instead which has the same meaning.
-> >
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >  drivers/platform/loongarch/loongson-laptop.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> What commit id is this fixing?
 
-commit 53c762b47f726e4079a1f06f684bce2fc0d56fba upstream.
+--pCZzTLcJSLnQEWsb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->
-> thanks,
->
-> greg k-h
+The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+
+  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.16-rc3
+
+for you to fetch changes up to a6c23dac756b9541b33aa3bcd30f464df2879209:
+
+  i2c: k1: check for transfer error (2025-06-21 22:17:02 +0200)
+
+----------------------------------------------------------------
+i2c-for-6.16-rc3
+
+- subsystem: convert drivers to use recent callbacks of struct i2c_algorithm
+  A typical after-rc1 cleanup, which I couldn't send in time for rc2
+- tegra: fix YAML conversion of device tree bindings
+- k1: re-add a check which got lost during upstreaming
+
+----------------------------------------------------------------
+Akhil R (1):
+      dt-bindings: i2c: nvidia,tegra20-i2c: Specify the required properties
+
+Alex Elder (1):
+      i2c: k1: check for transfer error
+
+Wolfram Sang (2):
+      i2c: use inclusive callbacks in struct i2c_algorithm
+      Merge tag 'i2c-host-fixes-6.16-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux into i2c/for-current
+
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+Krzysztof Kozlowski (1):
+      (Rev.) dt-bindings: i2c: nvidia,tegra20-i2c: Specify the required properties
+
+Troy Mitchell (1):
+      (Rev.) i2c: k1: check for transfer error
+
+ .../bindings/i2c/nvidia,tegra20-i2c.yaml           | 24 +++++++++++++++++++++-
+ drivers/i2c/algos/i2c-algo-bit.c                   |  4 ++--
+ drivers/i2c/algos/i2c-algo-pca.c                   |  4 ++--
+ drivers/i2c/algos/i2c-algo-pcf.c                   |  4 ++--
+ drivers/i2c/busses/i2c-amd-mp2-plat.c              |  2 +-
+ drivers/i2c/busses/i2c-aspeed.c                    |  8 ++++----
+ drivers/i2c/busses/i2c-at91-master.c               |  4 ++--
+ drivers/i2c/busses/i2c-axxia.c                     |  2 +-
+ drivers/i2c/busses/i2c-bcm-iproc.c                 |  2 +-
+ drivers/i2c/busses/i2c-cadence.c                   | 10 ++++-----
+ drivers/i2c/busses/i2c-cgbc.c                      |  4 ++--
+ drivers/i2c/busses/i2c-eg20t.c                     |  2 +-
+ drivers/i2c/busses/i2c-emev2.c                     |  6 +++---
+ drivers/i2c/busses/i2c-exynos5.c                   |  6 +++---
+ drivers/i2c/busses/i2c-gxp.c                       |  6 +++---
+ drivers/i2c/busses/i2c-img-scb.c                   |  2 +-
+ drivers/i2c/busses/i2c-imx-lpi2c.c                 |  8 ++++----
+ drivers/i2c/busses/i2c-imx.c                       |  8 ++++----
+ drivers/i2c/busses/i2c-k1.c                        |  2 +-
+ drivers/i2c/busses/i2c-keba.c                      |  2 +-
+ drivers/i2c/busses/i2c-mchp-pci1xxxx.c             |  2 +-
+ drivers/i2c/busses/i2c-meson.c                     |  4 ++--
+ drivers/i2c/busses/i2c-microchip-corei2c.c         |  2 +-
+ drivers/i2c/busses/i2c-mt65xx.c                    |  2 +-
+ drivers/i2c/busses/i2c-mxs.c                       |  2 +-
+ drivers/i2c/busses/i2c-nomadik.c                   |  4 ++--
+ drivers/i2c/busses/i2c-npcm7xx.c                   |  6 +++---
+ drivers/i2c/busses/i2c-omap.c                      |  6 +++---
+ drivers/i2c/busses/i2c-pnx.c                       |  2 +-
+ drivers/i2c/busses/i2c-pxa.c                       | 16 +++++++--------
+ drivers/i2c/busses/i2c-qcom-cci.c                  |  4 ++--
+ drivers/i2c/busses/i2c-qcom-geni.c                 |  4 ++--
+ drivers/i2c/busses/i2c-qup.c                       |  8 ++++----
+ drivers/i2c/busses/i2c-rcar.c                      | 10 ++++-----
+ drivers/i2c/busses/i2c-s3c2410.c                   |  6 +++---
+ drivers/i2c/busses/i2c-sh7760.c                    |  4 ++--
+ drivers/i2c/busses/i2c-sh_mobile.c                 |  4 ++--
+ drivers/i2c/busses/i2c-stm32f7.c                   |  4 ++--
+ drivers/i2c/busses/i2c-synquacer.c                 |  4 ++--
+ drivers/i2c/busses/i2c-tegra.c                     |  6 +++---
+ drivers/i2c/busses/i2c-xiic.c                      |  4 ++--
+ drivers/i2c/busses/i2c-xlp9xx.c                    |  2 +-
+ drivers/i2c/i2c-atr.c                              |  2 +-
+ drivers/i2c/i2c-mux.c                              |  6 +++---
+ drivers/i2c/muxes/i2c-demux-pinctrl.c              |  4 ++--
+ 45 files changed, 125 insertions(+), 103 deletions(-)
+
+--pCZzTLcJSLnQEWsb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhYAxwACgkQFA3kzBSg
+KbbvMQ//ZaW8089u9TGQ9uqxHFipU7cRSqagTjj/SqE9pm4P6ddQhQ8S1DiisWwv
+Lg5bNCbafAiYm0GcC3xU9sypzjRvwWVOGUO5HZwGdOLjfBWYZOs5g+AjWwI161on
+EirbZXu/4ZtTc0DC0s0PycgB2BKYKcYQHeiBVpRdEtvBN27uJqgQXZKDziCUoWvx
+rZvpoUz9HkkJ3wcATcqt1S3SettxRo36+qOuj8GKvRwnLZiJnUyf4LdKemdWheAC
+ryFbWbeyFeR6joae0K9/rcyT3TPOSf3q2aE+KMnQ0REVafvGZOMqBmmwxTl5Ocs7
+RZchENJJKVbjQBTOmDB+Oo7hot6FnEz3VWcajXH3C9tQHgZDHANj/ZnD/AtWualz
+1UWRjJIjKstLHnM26uwrvka0esd8GuP3+Wmnt+dBuwuIIDdXKx4IRBvAq5SJGxYT
+ELwTQzRdSpisKlhAGPMK7pAquwiYMEggoAtQ/rx9oWAoUbq5pTO1HL1SW6xS1rbv
+OnL4tkzeEcD2E1OZ6ru6ZedEhxoe0+1a7RonFbciH9ENae/UhhuthOs0fW1uI0Vo
+ZWyYyE2OE3G+/qYueQVkbUH4JRhBA3MVb3R9DmK90dLwFz/wwpIYbquRaZ0Y1SZI
+/WY1HESzV6SsDXSGKvVgj5Uak1fZnq3YwATZqVTqgJdHtX+Ammg=
+=dxDU
+-----END PGP SIGNATURE-----
+
+--pCZzTLcJSLnQEWsb--
