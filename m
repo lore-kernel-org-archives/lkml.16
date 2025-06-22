@@ -1,154 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C32652222A0;
-	Sun, 22 Jun 2025 21:38:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C03347DD;
+	Sun, 22 Jun 2025 21:41:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750628288; cv=none; b=LXmZ0duc1WHv0Jy3wJl6BQpF2M7UrhSs2b/BiphKEgjf8DBFlLyRhAg6zYLUUvgkNSQV4bLiNrxXy8qqGOHV40mWDFeiGs/8NtuUnomLM0e8luhOx1KhzcjsdFSmwB3eUbuJ3bf08ec1ssZFgdjQ3glB2Xmfv6GXIH+vpeIkJcU=
+	t=1750628473; cv=none; b=W9r2xwI221HgJX1FJoflFazZViViInu+4WlB3YrxVpc2WKuD1uEta4cG/g9vH9m1InG+cmfaRTQ8cHYBCU+5DUsAqbRVusGvWNExhTBMOF9ySpNZyoIuHMsjN0q3DhVYHTD9uDydzT4z/pHKGfyP1pUQ56kV9PUE7p8OEOigvl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750628288; c=relaxed/simple;
-	bh=ymfyB5LlwDbRaP7p17J2Z3u41y4+obtRgutiM/OpQ2k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Se2HuzRNJMWCG0mibqaWwWu7wvHhZ0E6fZaePEWUEEwcxVoRyGoTQ/K3SufKr+e7tYKUTR1QadCb4b8E1FhUHGmm+BH84cFaW68fGtYQSvp7prGEYfGtKNqyunTb1fxTSCT2j8UkhEGSeTodFhbUO7GCrxvGHcLVE7wrsgXUbE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hCeBDslP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750628473; c=relaxed/simple;
+	bh=LQrIN+geecZWTNDisR2vl++YpvOGXO+4QUOlTJNrNTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cdvDP54+J80Kb/Dgea7jNBzVkA/ZADSWa28qhgrW+/T1zJjB0kc0mfhkTOIP5WtqDVtgMyMHlUciNk4FKX1mZc09IGxl2Qmttw3eX6t3s6etengb9vqk2TJBtP3KDRPSho0JJTwr5Qi029i1aqSNdrfRnakzE33ceYMWndL8SRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dg6TPwab; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hCeBDslP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 440C3C4CEED;
-	Sun, 22 Jun 2025 21:38:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dg6TPwab"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75214C4CEE3;
+	Sun, 22 Jun 2025 21:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750628288;
-	bh=ymfyB5LlwDbRaP7p17J2Z3u41y4+obtRgutiM/OpQ2k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hCeBDslPZK3Y0nq+wMvdaiYBEHpwK0wkveZwzRxTNHBgSHv4DcgQ4oANd/DmmNuQ9
-	 Bc0qJxz/gbmIGvwWfGN6VuyoNdH4xA9rbagaNXPtiS3o7CdaimZkZEwXNYXH/oZhfH
-	 vwYps+1bjg5qKjf5bKcjoOPnMSUIthU9fs7yJnFyC++/ybsLxMzcQFcoC4A5zp4BFr
-	 tVPvz36P1rvsV3hc2jj2Vc21a1AGGF89lGG+ntV7TltlERogmBxUF54XN8FyG1ih1h
-	 P/owAe8s+bD5QRw2FyyPyqjCOrZpSBaQOUwbnb+y/4UjTtJPmVtNDFSjXmqPJVBrVb
-	 9K5Bppypg8+tg==
-From: SeongJae Park <sj@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH 5/5] mm/damon/sysfs: decouple from damon_ops_id
-Date: Sun, 22 Jun 2025 14:37:59 -0700
-Message-Id: <20250622213759.50930-6-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250622213759.50930-1-sj@kernel.org>
-References: <20250622213759.50930-1-sj@kernel.org>
+	s=k20201202; t=1750628473;
+	bh=LQrIN+geecZWTNDisR2vl++YpvOGXO+4QUOlTJNrNTo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dg6TPwabIow8q3puHzCNxj5ZRBMz/0A5ZDR9W/k1aN96iLUPwgaHwcAlHVw4iUrvr
+	 mzm52XU6QHnxgEDc9sIupKZNp7UHRLSHL4NwzROqQcnNz5pyf0tbJEnuZlDj46dFri
+	 rtCYQFSyqhp7i7epxP8Vjs540hjfHhHivBX41AMAUJGUnqSPf5t8Ww99iTE35Ng2Jd
+	 1EJLQg4pWyhS+srGqUFFwJ085yO1lhJ9ERPFj22aRUtgde/TFop4JeXS8fvDi0WAtn
+	 oUhAfAAPrLc/BW6DgYOQTsC9ZjGoBBQ8aaeBSIs38/pAdDLdelvRS30+DKQDMtE/jQ
+	 dcPMcI+jOsiJQ==
+Date: Sun, 22 Jun 2025 23:41:09 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Akira Yokosawa
+ <akiyks@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 14/15] docs: conf.py: several coding style fixes
+Message-ID: <20250622234109.1aecc840@foz.lan>
+In-Reply-To: <87zfdza43l.fsf@trenco.lwn.net>
+References: <cover.1750571906.git.mchehab+huawei@kernel.org>
+	<063c106d96e86ca30c3266f7819f30b7247881ed.1750571906.git.mchehab+huawei@kernel.org>
+	<87zfdza43l.fsf@trenco.lwn.net>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Decouple DAMON sysfs interface from damon_ops_id.  For this, define and
-use new mm/damon/sysfs.c internal data structure that maps the
-user-space keywords and damon_ops_id, instead of having the implicit and
-unflexible array index rule.
+Em Sun, 22 Jun 2025 14:55:26 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- mm/damon/sysfs.c | 56 +++++++++++++++++++++++++++++++++++-------------
- 1 file changed, 41 insertions(+), 15 deletions(-)
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+> 
+> > conf.py is missing a SPDX header and doesn't really have
+> > a proper python coding style. It also has an obsolete
+> > commented LaTeX syntax that doesn't work anymore.
+> >
+> > Clean it up a little bit with some help from autolints
+> > and manual adjustments.
+> >
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > ---
+> >  Documentation/conf.py | 351 +++++++++++++++++++++---------------------
+> >  1 file changed, 172 insertions(+), 179 deletions(-)  
+> 
+> This file is definitely getting out of hand...:)
 
-diff --git a/mm/damon/sysfs.c b/mm/damon/sysfs.c
-index 1af6aff35d84..1b1476b79cdb 100644
---- a/mm/damon/sysfs.c
-+++ b/mm/damon/sysfs.c
-@@ -811,11 +811,24 @@ static const struct kobj_type damon_sysfs_attrs_ktype = {
-  * context directory
-  */
- 
--/* This should match with enum damon_ops_id */
--static const char * const damon_sysfs_ops_strs[] = {
--	"vaddr",
--	"fvaddr",
--	"paddr",
-+struct damon_sysfs_ops_name {
-+	enum damon_ops_id ops_id;
-+	char *name;
-+};
-+
-+static const struct damon_sysfs_ops_name damon_sysfs_ops_names[] = {
-+	{
-+		.ops_id = DAMON_OPS_VADDR,
-+		.name = "vaddr",
-+	},
-+	{
-+		.ops_id = DAMON_OPS_FVADDR,
-+		.name = "fvaddr",
-+	},
-+	{
-+		.ops_id = DAMON_OPS_PADDR,
-+		.name = "paddr",
-+	},
- };
- 
- struct damon_sysfs_context {
-@@ -934,14 +947,16 @@ static void damon_sysfs_context_rm_dirs(struct damon_sysfs_context *context)
- static ssize_t avail_operations_show(struct kobject *kobj,
- 		struct kobj_attribute *attr, char *buf)
- {
--	enum damon_ops_id id;
- 	int len = 0;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(damon_sysfs_ops_names); i++) {
-+		const struct damon_sysfs_ops_name *ops_name;
- 
--	for (id = 0; id < NR_DAMON_OPS; id++) {
--		if (!damon_is_registered_ops(id))
-+		ops_name = &damon_sysfs_ops_names[i];
-+		if (!damon_is_registered_ops(ops_name->ops_id))
- 			continue;
--		len += sysfs_emit_at(buf, len, "%s\n",
--				damon_sysfs_ops_strs[id]);
-+		len += sysfs_emit_at(buf, len, "%s\n", ops_name->name);
- 	}
- 	return len;
- }
-@@ -951,8 +966,16 @@ static ssize_t operations_show(struct kobject *kobj,
- {
- 	struct damon_sysfs_context *context = container_of(kobj,
- 			struct damon_sysfs_context, kobj);
-+	int i;
- 
--	return sysfs_emit(buf, "%s\n", damon_sysfs_ops_strs[context->ops_id]);
-+	for (i = 0; i < ARRAY_SIZE(damon_sysfs_ops_names); i++) {
-+		const struct damon_sysfs_ops_name *ops_name;
-+
-+		ops_name = &damon_sysfs_ops_names[i];
-+		if (ops_name->ops_id == context->ops_id)
-+			return sysfs_emit(buf, "%s\n", ops_name->name);
-+	}
-+	return -EINVAL;
- }
- 
- static ssize_t operations_store(struct kobject *kobj,
-@@ -960,11 +983,14 @@ static ssize_t operations_store(struct kobject *kobj,
- {
- 	struct damon_sysfs_context *context = container_of(kobj,
- 			struct damon_sysfs_context, kobj);
--	enum damon_ops_id id;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(damon_sysfs_ops_names); i++) {
-+		const struct damon_sysfs_ops_name *ops_name;
- 
--	for (id = 0; id < NR_DAMON_OPS; id++) {
--		if (sysfs_streq(buf, damon_sysfs_ops_strs[id])) {
--			context->ops_id = id;
-+		ops_name = &damon_sysfs_ops_names[i];
-+		if (sysfs_streq(buf, ops_name->name)) {
-+			context->ops_id = ops_name->ops_id;
- 			return count;
- 		}
- 	}
--- 
-2.39.5
+Yes. I almost removed all commented code to make it a little more
+palatable.
+
+> I notice a lot of the changes are just from 'single quotes' to "double
+> quotes".  That adds a lot of churn; is there a reason for it?
+
+Those churns are from black/autopep8, which also addressed other 
+coding style issues(*).
+
+I don't mind much about using either single or double quote, but
+having a standard is a good thing. At the plus side, as C uses 
+double quotes for strings this is closer to the kernel coding style.
+
+So, I opted to merge such changes from the lint tools.
+
+(*) I didn't blidnly accept all coding style changes from linters,
+    dropping the ones that would make the final code worse.
+
+Thanks,
+Mauro
