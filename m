@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09005BA34;
-	Sun, 22 Jun 2025 12:58:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C98BA34;
+	Sun, 22 Jun 2025 12:58:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750597131; cv=none; b=Tejul+trGmkw2jZv+PhjBZWRkF8yHu5GMvtUMB2rLthnwYUiIO+3rh7t22X8zMPmgD2A57RVKcKwIPhdwlaPxA8rtQxgE0X4Xglfx4fdwUX+OGSet4hfu4BsrGjjW0Eh/Jpt5REP8nOtTTrTDyYmzPSshYtiCaVJPtq3olVipkU=
+	t=1750597136; cv=none; b=c1MxA2fyIPY/6d/vajfzupoyi30dieOI7AgJ1G1Kt21eNLA+J5gr1QOwFBaLLawmHtan6bhdKFkrVLS0gHl5PbDlC4XG9eSaUTt/p2y8C8Pt5oNwki2eiSodwF6SoE9PYiSvyQr5qbv6XAode5hTksVaaUoak38MQkBmJqh4uJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750597131; c=relaxed/simple;
-	bh=HqNms1bRkXnM2krBDVuunrgP1o3ALeek4T92TsKQ6A4=;
+	s=arc-20240116; t=1750597136; c=relaxed/simple;
+	bh=Ygh4EXiwp2YXoTEH7jX4nu7C8/6De8xwJ1XjogF3BR0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ekL3oJXBNyNf/og3JE27aqsbpPCR0csgI7MteuiI/Pd1puKEITXiMXb2rgNBB/5W4kgh6G3KPhq2AxKYnJsUnOZ8UpiDMTX7tRnT7/G25Wc5PHsPGHrc7BXbmbw99w8Vd0K82ZhNqGMtiPLrtfA6pFbiBFewdGdlazzSM/SunuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sMOvgrws; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ij5g5XrWWtpRtyanI/eYGYvX6nCg1RBCxPWoZgbW7vK5zcax8FwDieWBFcRK3jNYeG4ArE/HwtwMUxTS7B4b1CJWmobZTdiMG2R80AoDTlp/hStMATbdXdW3fBhnlwZuA1p43+IIcSuIQ9sDxGvZyBDYylSFx82kCYJ9zSDpaKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ScK0MfYW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sMOvgrws"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E58CFC4CEE3;
-	Sun, 22 Jun 2025 12:58:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ScK0MfYW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA1FBC4CEF4;
+	Sun, 22 Jun 2025 12:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750597130;
-	bh=HqNms1bRkXnM2krBDVuunrgP1o3ALeek4T92TsKQ6A4=;
+	s=k20201202; t=1750597136;
+	bh=Ygh4EXiwp2YXoTEH7jX4nu7C8/6De8xwJ1XjogF3BR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sMOvgrwsVphIwHzs98bhZVY32GdsLvKEwvhQxaSQ9OLE8RNpKyLsY/Z1JjLnpcy+G
-	 2rzyzCXV42hdXyn1ZPT5jJgM+Mz4q9TRLSvwcq7tMOPsYcBna4qNV6UNiGbSkr7lR4
-	 +nqylULGWJsEA6F4zgIYKpMzk67M5rWjzNUkNwkab/iKSkn0lmwCyuK7zB1ZXfICeE
-	 QGw0R/fTiW5kz3E28nRPK/eb43GuNU+bo/i1JaFRWdrJLhU1H3cjeGjTRthhqBWqmn
-	 DNya15uGisdBt7TYDi7f/aHYFW6aa7IVEbidexpnPJikY8wWg85UEjTwsB4JSrRBA6
-	 +uo3X8NktGEnw==
+	b=ScK0MfYWKPDgvbWd81ROUZJ66XHOAWa63OJIO9JH3ZhZnVkY9n8SrRCfxPzI8SjLo
+	 Rbk16grZwvLZ+/yzZF7zEmnGt1E8zkXtOIkjesSpMxWKur8SMOo2bV/HpvDrgRoHR7
+	 qw81z+qfoctHWXRa7BdlVpw0ULMgvMopVRbGMr1oEaWy/QADe7YfaG6VxEDz1RAzpx
+	 by/iHS5Kp50rd7hx7GbAXgNOaGmS4JrtoST00BP4rFtkpsShvS9/5qeULAYHzBcqk1
+	 TN9cnmQZ1+K1yTEYZ0ScXVZqTg3Z+hjpMW3uLGTOevz4HIRapGXy4xkFM6tsziLNaW
+	 hQzn9MVDg5GjQ==
 From: Gary Guo <gary@kernel.org>
 To: Miguel Ojeda <ojeda@kernel.org>,
 	Alex Gaynor <alex.gaynor@gmail.com>,
@@ -37,20 +37,17 @@ To: Miguel Ojeda <ojeda@kernel.org>,
 	Alice Ryhl <aliceryhl@google.com>,
 	Trevor Gross <tmgross@umich.edu>,
 	Danilo Krummrich <dakr@kernel.org>,
-	Will Deacon <will@kernel.org>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	Alex Mantel <alexmantel93@mailbox.org>
+Cc: Will Deacon <will@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Mitchell Levy <levymitchell0@gmail.com>,
-	Lyude Paul <lyude@redhat.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>
-Cc: rust-for-linux@vger.kernel.org,
-	Fiona Behrens <me@kloenk.dev>,
+	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/5] rust: implement `kernel::sync::Refcount`
-Date: Sun, 22 Jun 2025 13:57:27 +0100
-Message-ID: <20250622125802.3224264-2-gary@kernel.org>
+Subject: [PATCH v4 2/5] rust: make `Arc::into_unique_or_drop` associated function
+Date: Sun, 22 Jun 2025 13:57:28 +0100
+Message-ID: <20250622125802.3224264-3-gary@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250622125802.3224264-1-gary@kernel.org>
 References: <20250622125802.3224264-1-gary@kernel.org>
@@ -64,159 +61,66 @@ Content-Transfer-Encoding: 8bit
 
 From: Gary Guo <gary@garyguo.net>
 
-This is a wrapping layer of `include/linux/refcount.h`. Currently the
-kernel refcount has already been used in `Arc`, however it calls into
-FFI directly.
+Make `Arc::into_unique_or_drop` to become a mere associated function
+instead of a method (i.e. removing the `self` receiver).
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-Reviewed-by: Fiona Behrens <me@kloenk.dev>
+It's a general convention for Rust smart pointers to avoid having
+methods defined on them, because if the pointee type has a method of the
+same name, then it is shadowed. This is normally for avoiding semver
+breakage, which isn't an issue for kernel codebase, but it's still
+generally a good practice to follow this rule, so that `ptr.foo()` would
+always be calling a method on the pointee type.
+
 Signed-off-by: Gary Guo <gary@garyguo.net>
 ---
- rust/helpers/refcount.c      | 10 +++++
- rust/kernel/sync.rs          |  2 +
- rust/kernel/sync/refcount.rs | 86 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 98 insertions(+)
- create mode 100644 rust/kernel/sync/refcount.rs
+ rust/kernel/sync/arc.rs | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/rust/helpers/refcount.c b/rust/helpers/refcount.c
-index d6adbd2e45a1..d175898ad7b8 100644
---- a/rust/helpers/refcount.c
-+++ b/rust/helpers/refcount.c
-@@ -7,11 +7,21 @@ refcount_t rust_helper_REFCOUNT_INIT(int n)
- 	return (refcount_t)REFCOUNT_INIT(n);
- }
+diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
+index c7af0aa48a0a..09a471fea4da 100644
+--- a/rust/kernel/sync/arc.rs
++++ b/rust/kernel/sync/arc.rs
+@@ -320,7 +320,7 @@ pub fn ptr_eq(this: &Self, other: &Self) -> bool {
+     /// use kernel::sync::{Arc, UniqueArc};
+     ///
+     /// let arc = Arc::new(42, GFP_KERNEL)?;
+-    /// let unique_arc = arc.into_unique_or_drop();
++    /// let unique_arc = Arc::into_unique_or_drop(arc);
+     ///
+     /// // The above conversion should succeed since refcount of `arc` is 1.
+     /// assert!(unique_arc.is_some());
+@@ -336,18 +336,18 @@ pub fn ptr_eq(this: &Self, other: &Self) -> bool {
+     /// let arc = Arc::new(42, GFP_KERNEL)?;
+     /// let another = arc.clone();
+     ///
+-    /// let unique_arc = arc.into_unique_or_drop();
++    /// let unique_arc = Arc::into_unique_or_drop(arc);
+     ///
+     /// // The above conversion should fail since refcount of `arc` is >1.
+     /// assert!(unique_arc.is_none());
+     ///
+     /// # Ok::<(), Error>(())
+     /// ```
+-    pub fn into_unique_or_drop(self) -> Option<Pin<UniqueArc<T>>> {
++    pub fn into_unique_or_drop(this: Self) -> Option<Pin<UniqueArc<T>>> {
+         // We will manually manage the refcount in this method, so we disable the destructor.
+-        let me = ManuallyDrop::new(self);
++        let this = ManuallyDrop::new(this);
+         // SAFETY: We own a refcount, so the pointer is still valid.
+-        let refcount = unsafe { me.ptr.as_ref() }.refcount.get();
++        let refcount = unsafe { this.ptr.as_ref() }.refcount.get();
  
-+void rust_helper_refcount_set(refcount_t *r, int n)
-+{
-+	refcount_set(r, n);
-+}
-+
- void rust_helper_refcount_inc(refcount_t *r)
- {
- 	refcount_inc(r);
- }
- 
-+void rust_helper_refcount_dec(refcount_t *r)
-+{
-+	refcount_dec(r);
-+}
-+
- bool rust_helper_refcount_dec_and_test(refcount_t *r)
- {
- 	return refcount_dec_and_test(r);
-diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
-index 36a719015583..09e81a1c2966 100644
---- a/rust/kernel/sync.rs
-+++ b/rust/kernel/sync.rs
-@@ -15,6 +15,7 @@
- mod locked_by;
- pub mod poll;
- pub mod rcu;
-+mod refcount;
- 
- pub use arc::{Arc, ArcBorrow, UniqueArc};
- pub use condvar::{new_condvar, CondVar, CondVarTimeoutResult};
-@@ -22,6 +23,7 @@
- pub use lock::mutex::{new_mutex, Mutex, MutexGuard};
- pub use lock::spinlock::{new_spinlock, SpinLock, SpinLockGuard};
- pub use locked_by::LockedBy;
-+pub use refcount::Refcount;
- 
- /// Represents a lockdep class. It's a wrapper around C's `lock_class_key`.
- #[repr(transparent)]
-diff --git a/rust/kernel/sync/refcount.rs b/rust/kernel/sync/refcount.rs
-new file mode 100644
-index 000000000000..a0fc22f6d645
---- /dev/null
-+++ b/rust/kernel/sync/refcount.rs
-@@ -0,0 +1,86 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Atomic reference counting.
-+//!
-+//! C header: [`include/linux/refcount.h`](srctree/include/linux/refcount.h)
-+
-+use crate::types::Opaque;
-+
-+/// Atomic reference counter.
-+///
-+/// This type is conceptually an atomic integer, but provides saturation semantics compared to
-+/// normal atomic integers. Values in the negative range when viewed as a signed integer are
-+/// saturation (bad) values. For details about the saturation semantics, please refer to top of
-+/// [`include/linux/refcount.h`](srctree/include/linux/refcount.h).
-+///
-+/// Wraps the kernel's C `refcount_t`.
-+#[repr(transparent)]
-+pub struct Refcount(Opaque<bindings::refcount_t>);
-+
-+impl Refcount {
-+    /// Construct a new [`Refcount`] from an initial value.
-+    #[inline]
-+    pub fn new(value: i32) -> Self {
-+        // SAFETY: There are no safety requirements for this FFI call.
-+        Self(Opaque::new(unsafe { bindings::REFCOUNT_INIT(value) }))
-+    }
-+
-+    #[inline]
-+    fn as_ptr(&self) -> *mut bindings::refcount_t {
-+        self.0.get()
-+    }
-+
-+    /// Set a refcount's value.
-+    #[inline]
-+    pub fn set(&self, value: i32) {
-+        // SAFETY: `self.as_ptr()` is valid.
-+        unsafe { bindings::refcount_set(self.as_ptr(), value) }
-+    }
-+
-+    /// Increment a refcount.
-+    ///
-+    /// It will saturate if overflows and `WARN`. It will also `WARN` if the refcount is 0, as this
-+    /// represents a possible use-after-free condition.
-+    ///
-+    /// Provides no memory ordering, it is assumed that caller already has a reference on the
-+    /// object.
-+    #[inline]
-+    pub fn inc(&self) {
-+        // SAFETY: self is valid.
-+        unsafe { bindings::refcount_inc(self.as_ptr()) }
-+    }
-+
-+    /// Decrement a refcount.
-+    ///
-+    /// It will `WARN` on underflow and fail to decrement when saturated.
-+    ///
-+    /// Provides release memory ordering, such that prior loads and stores are done
-+    /// before.
-+    #[inline]
-+    pub fn dec(&self) {
-+        // SAFETY: `self.as_ptr()` is valid.
-+        unsafe { bindings::refcount_dec(self.as_ptr()) }
-+    }
-+
-+    /// Decrement a refcount and test if it is 0.
-+    ///
-+    /// It will `WARN` on underflow and fail to decrement when saturated.
-+    ///
-+    /// Provides release memory ordering, such that prior loads and stores are done
-+    /// before, and provides an acquire ordering on success such that memory deallocation
-+    /// must come after.
-+    ///
-+    /// Returns true if the resulting refcount is 0, false otherwise.
-+    #[inline]
-+    #[must_use = "use `dec` instead if you do not need to test if it is 0"]
-+    pub fn dec_and_test(&self) -> bool {
-+        // SAFETY: `self.as_ptr()` is valid.
-+        unsafe { bindings::refcount_dec_and_test(self.as_ptr()) }
-+    }
-+}
-+
-+// SAFETY: `refcount_t` is thread-safe.
-+unsafe impl Send for Refcount {}
-+
-+// SAFETY: `refcount_t` is thread-safe.
-+unsafe impl Sync for Refcount {}
+         // If the refcount reaches a non-zero value, then we have destroyed this `Arc` and will
+         // return without further touching the `Arc`. If the refcount reaches zero, then there are
+@@ -364,7 +364,7 @@ pub fn into_unique_or_drop(self) -> Option<Pin<UniqueArc<T>>> {
+             // must pin the `UniqueArc` because the values was previously in an `Arc`, and they pin
+             // their values.
+             Some(Pin::from(UniqueArc {
+-                inner: ManuallyDrop::into_inner(me),
++                inner: ManuallyDrop::into_inner(this),
+             }))
+         } else {
+             None
 -- 
 2.49.0
 
