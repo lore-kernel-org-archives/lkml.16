@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE56B17A319;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0DD18A93F;
 	Sun, 22 Jun 2025 06:02:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750572171; cv=none; b=aVbTjNKsrEuk/aSQoLtj8bSbv8TUI3SXldeH2W01niFUjwF/RF4QHsdHeWrz5cY4jBEtdqBGWLJSSo/FRQeCGXzD2s4EEXOYC49aLnzTHXtRkGiaYD8PUyFZLdtJnFQGD7Z8Q5KegW08QWK7AoR02cvSJSMaXjN53EMdti8fqH0=
+	t=1750572172; cv=none; b=cedPW3n2utj/96sgP6OE872iVhbD26K1IwXei8yIygRwNayu8EelTnU03sssOw+q5oWlxucWlWR00eEUkoNLI0n9976FLrBayVCii+EyXn1LWPTEegWtIR7pDnVLpaICNH4zS6xRKNcY8h0jY995ezwucxk520O3iuQyQc8SHZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750572171; c=relaxed/simple;
-	bh=XM0BRurxei07tGyc7KMfzzV3AHmUgy9wbspSPKa3nxo=;
+	s=arc-20240116; t=1750572172; c=relaxed/simple;
+	bh=3yI0hd++pTAVk6UlNj1uaAE4va43OAIfWkR3JnQPolk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DO9ltz47JiU/w+yU1TZzuS/I+q4lnw6hB8I81Q8NvHN+C4ClgbVe8ZPbgfVJZg1//23+N0yR6wHUxgU4pB3iLk5FkwqGQ5/du6z8AChXiMCpcPN/fYR4xZU1sviKCzpY8NeTNlkrPmK0/7pC+Wyd2u2IsxPxTOViaXjTpUkY1wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RsT33Zkc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Se7VumUIjlYA6grzVYCE5U00+Ln6yD74noRdxpr9SuB067RkmpxVwRWEl9azdoE4FsSPzWsSWAmUIb2wAf88W6qTmK67sNcidxY2GZaHbS4U1rbMcKfWdXkvbRx70CTU6ZNa1WXcde573aaLvyY51JmSSAqEPTNKB3ejsG4kd4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PtnFKHB/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RsT33Zkc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E32BC4CEFB;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PtnFKHB/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66186C4AF0C;
 	Sun, 22 Jun 2025 06:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750572171;
-	bh=XM0BRurxei07tGyc7KMfzzV3AHmUgy9wbspSPKa3nxo=;
+	bh=3yI0hd++pTAVk6UlNj1uaAE4va43OAIfWkR3JnQPolk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RsT33Zkc4H6wRI7CB6iSPcF9cwtnImpY4rDabkTXmrw6CGqjLHtd0Is63E07kk5tb
-	 b065nL0H/0wypKOi2uDnRe7d46I6o68gtLIE4cEOLEKtuY4q8Nw1lzdiIn0U5h4gfj
-	 nyoUDqchwXxdRfffBUgUtrBC+JFJHaM/0TZ3PfP6NbgeuT+juXC8IXXHp5xixvyIty
-	 9TS0w6/jC0qQZqtz7r/Y1g06F0WM7kbfXhyf5x8DVHvZtXAq0eV0c8w64mXkxjXIBP
-	 FOgOW/pPEIEIVYzXGW0eckb9j4qRHCbaLiyJAEFQfjl8sI0jY+GNnYtwgMQtqdvkt+
-	 a80ZE/tR8Ir9A==
+	b=PtnFKHB/W7NTw9PGTMng2N4qb+pAy0jragCYcBjAxyJ3iJPPwIMFC7BHvCZYor37c
+	 +RLdABfzQp/FoBARjDcPsGicErpKR0BwKgvaPSUD6xOw/PijG2gjDcwHSvJcPYE92s
+	 e9nQ5MW+6ijxI4tKDyfBuqXc70WdEn5KNsvodRLMg3K7tdfDsgEvAIa5cBA9R6FIQG
+	 0J0G96OqC5I8gBnuYog4t1EacK70NF+0wtvKQSjgDAFuc9AIX039A8AUia4V0H0EZe
+	 UEJojV1Cn2wr+RyUrIMoqsccwoNurGOf4bZkoXE1duZiLy7jL8wNx6rtUoPobN3ZwQ
+	 sY0UqdOqmX9EQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uTDmz-00000000o2i-2OKT;
+	id 1uTDmz-00000000o2q-2cbr;
 	Sun, 22 Jun 2025 08:02:49 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -36,10 +36,11 @@ To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Akira Yokosawa" <akiyks@gmail.com>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 11/15] scripts: sphinx-pre-install: fix release detection for Fedora
-Date: Sun, 22 Jun 2025 08:02:40 +0200
-Message-ID: <c2a34860bd986cc5f81fc25554ed91629736e995.1750571906.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 13/15] docs: sphinx: add a file with the requirements for lowest version
+Date: Sun, 22 Jun 2025 08:02:42 +0200
+Message-ID: <e38a44ee64ebfa37eac5f64e47af51c7ac051d5a.1750571906.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750571906.git.mchehab+huawei@kernel.org>
 References: <cover.1750571906.git.mchehab+huawei@kernel.org>
@@ -52,30 +53,71 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Fedora distros are now identified as:
+Those days, it is hard to install a virtual env that would
+build docs with Sphinx 3.4.3, as even python 3.13 is not
+compatible anymore with it.
 
-	Fedora Linux 42
-
-Fix the way script detects it.
+	/usr/bin/python3.9 -m venv sphinx_3.4.3
+	. sphinx_3.4.3/bin/activate
+	pip install -r Documentation/sphinx/min_requirements.txt
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/sphinx-pre-install | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/doc-guide/sphinx.rst        | 23 +++++++++++++++++++++++
+ Documentation/sphinx/min_requirements.txt | 10 ++++++++++
+ 2 files changed, 33 insertions(+)
+ create mode 100644 Documentation/sphinx/min_requirements.txt
 
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index 2a311ed00179..3f8d6925e896 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -413,7 +413,7 @@ sub give_redhat_hints()
- 	my $old = 0;
- 	my $rel;
- 	my $noto_sans_redhat = "google-noto-sans-cjk-ttc-fonts";
--	$rel = $1 if ($system_release =~ /release\s+(\d+)/);
-+	$rel = $1 if ($system_release =~ /(release|Linux)\s+(\d+)/);
+diff --git a/Documentation/doc-guide/sphinx.rst b/Documentation/doc-guide/sphinx.rst
+index 5a91df105141..607589592bfb 100644
+--- a/Documentation/doc-guide/sphinx.rst
++++ b/Documentation/doc-guide/sphinx.rst
+@@ -131,6 +131,29 @@ It supports two optional parameters:
+ ``--no-virtualenv``
+ 	Use OS packaging for Sphinx instead of Python virtual environment.
  
- 	if (!($system_release =~ /Fedora/)) {
- 		$map{"virtualenv"} = "python-virtualenv";
++Installing Sphinx Minimal Version
++---------------------------------
++
++When changing Sphinx build system, it is important to ensure that
++the minimal version will still be supported. Nowadays, it is
++becoming harder to do that on modern distributions, as it is not
++possible to install with Python 3.13 and above.
++
++Testing with the lowest supported Python version as defined at
++Documentation/process/changes.rst can be done by creating
++a venv with it with, and install minimal requirements with::
++
++	/usr/bin/python3.9 -m venv sphinx_min
++	. sphinx_min/bin/activate
++	pip install -r Documentation/sphinx/min_requirements.txt
++
++A more comprehensive test can be done by using:
++
++	scripts/test_doc_build.py
++
++Such script create one Python venv per supported version,
++optionally building documentation for a range of Sphinx versions.
++
+ 
+ Sphinx Build
+ ============
+diff --git a/Documentation/sphinx/min_requirements.txt b/Documentation/sphinx/min_requirements.txt
+new file mode 100644
+index 000000000000..52d9f27010e8
+--- /dev/null
++++ b/Documentation/sphinx/min_requirements.txt
+@@ -0,0 +1,10 @@
++alabaster >=0.7,<0.8
++docutils>=0.15,<0.18
++jinja2>=2.3,<3.1
++PyYAML>=5.1,<6.1
++Sphinx==3.4.3
++sphinxcontrib-applehelp==1.0.2
++sphinxcontrib-devhelp==1.0.1
++sphinxcontrib-htmlhelp==1.0.3
++sphinxcontrib-qthelp==1.0.2
++sphinxcontrib-serializinghtml==1.1.4
 -- 
 2.49.0
 
