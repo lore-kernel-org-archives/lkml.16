@@ -1,105 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2115F3597E;
-	Sun, 22 Jun 2025 11:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5398F6C;
+	Sun, 22 Jun 2025 11:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750591720; cv=none; b=HHPURaIjlruOFlPOj3rj4SLdXBOEKGNzmYSK+ltcVgN7nkwRZ06ZoOwT/KwwiOgstY04CJzvFeEltCpVgOXzsJXmNG4FVFZ/eG8VCvS192JT9r5RTl/6BvWOmUwq3eTXRRyKtW4gIG80mGKaHhI/Qd7woqmARJMOYjrbrp2AE1I=
+	t=1750591969; cv=none; b=awOoK5vU8yua6PR+evA9mwe++Io43YBSg9S6kuAci9kH66+q5C7szLv2pvVhtkjFTLUuxsU5+nXThWpTGrFzS9LjTPyNR6cIYWrqmfYxgVL6XeftbWcUJwrZpP+6uFBVa6WBd8GTkxuNZnGpk8O8P5y8zXN/bK7rTH1J0NlG8qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750591720; c=relaxed/simple;
-	bh=ccM+5sy/6LKqUPj2PgVcorSMUeYj0bS0wfIWWu4+I2s=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qxqAUgv0bBNiJ5CmasUYCYr9xb6RQeZFEgpg5F+GGk4hNXiV2F6jUXCTymIU3EIMz34c0NoIH2nkgleTCNOiqhHcZs01y/U2ZF8csI2ULloM75vEptuAmDDf2OlCM8ZOFC9yDKCWiDkYIUwo6rk1/lPTfF8y3J7tFKFMRddG5yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=omg6hZVZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750591969; c=relaxed/simple;
+	bh=IJiv3hE1wDMzwaAq3JfeL4/9M01bCH9YX87/pK7mNnU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Bjl2skvNwiSzca/JEWg6IGLJtf/ZgvCjeH14ehBN23wtKmjqiNRIeNi4g8Uguuo3boJ+QjSJXuReJzgMRO2h5dqA/Pu2umWysicC+1drahFqsqq0WjwjBlFO7Jd37+nQyuyrL5A48DH066h0nKNGE/UQgt3kgKSNSgvUu0Np0kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OUeTKK1w; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="omg6hZVZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C22B7C4CEE3;
-	Sun, 22 Jun 2025 11:28:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750591719;
-	bh=ccM+5sy/6LKqUPj2PgVcorSMUeYj0bS0wfIWWu4+I2s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=omg6hZVZho1+29wHipxVg/mmZLJNeKAcFHMMc7/+fYJZCUc33zWXje40rF55SiX3q
-	 re4JgRlYMuotXA+KNmDrUBG5OhIKUocwFVM4wW1t3zlDaE5dPORhCbeQzbKzkkkLXD
-	 3RpjOnxZSim7osLzFQxcvOCDqIqIngZDBlXn8BdDvDXeOQr/tJqPOqTBL+Db1ITC2c
-	 qZSCVOu4MkMHMa/CRcMXLByU6HxI/OaA9TDmCvT8a5ZCGz7JHOIkGHbMdDOaNpvzyz
-	 24HBIkUJWYxUcbp9H2z1m6slSSLVGqPpNqIF9I/6sEzcPzJ+0lwDCGkiYjdZU4xvVT
-	 en2SfLWJJphGA==
-Date: Sun, 22 Jun 2025 12:28:32 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
- corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
- Michael.Hennerich@analog.com, bagasdotme@gmail.com,
- linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/8] iio: accel: adxl313: add buffered FIFO watermark
- with interrupt handling
-Message-ID: <20250622122832.5bd40e1a@jic23-huawei>
-In-Reply-To: <20250615222258.117771-4-l.rubusch@gmail.com>
-References: <20250615222258.117771-1-l.rubusch@gmail.com>
-	<20250615222258.117771-4-l.rubusch@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OUeTKK1w"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-236470b2dceso33607135ad.0;
+        Sun, 22 Jun 2025 04:32:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750591967; x=1751196767; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JxlHCW5J5W//sSxxNrD+r8cZizDDAra8GMTsBk/cjyY=;
+        b=OUeTKK1wYEPKsGN2aZdbxJQXtXXYZfGkw75d4Xr8EFRBf/zae5kuRYQn9hW1rUVvXD
+         rLHuyUssm4xLblOf00/5NNRhgcTxfyTfNG2W1YkccXuslor1H8tqwBB/gZto5T49kFbm
+         Hf0pjnets7FVrLXODCLW3tJz2KTKouVFdkr9JaRU+EgDvgLK0jwJoIYBWhBLXBJyAWSC
+         nmvdF0avuMe9ivzgITkmhEIu2KPxXSYsBPY8yHgBw1NTJ4MEPkTU30+nIYPrgpIvsQ48
+         WSNTelrGKq4GzTG4RlZgfcWsLuOlgtp/eUqDY3WidrZY8PPRh1f39Z29KXU6dpx50lWP
+         6Ccg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750591967; x=1751196767;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JxlHCW5J5W//sSxxNrD+r8cZizDDAra8GMTsBk/cjyY=;
+        b=qyw+u+9fQsunrD6pgsAUDmgVLamJ4q5Jgpl41YXpHuwapoxy2b3gAGzhqXh3jwHTw/
+         kPKRgOhLP7O++P+xIX87GFbQwGlk796qsZO/Rs65o90UcQi1fmHpI991fj5RYhDhHX6X
+         fPUWpdD0qQfW8xSYf+nKzzVkr9WUnsHAKlHOWibkcaaUrKumpRaVYy4QixCIfA/nzURG
+         Q9A5r0WLxcuQkR7WpzEQO6CNW4jW0Wm/nWyEqGfnlXLnzNkpjAR/0Ecyxgk6L9LD2Syx
+         N5ONZb70rOJrYYDClCwOGrjLx9YyMJUzuryC8i5kpIaA6v10HLsx4jJvk02dWtmTGFz1
+         ZlKw==
+X-Forwarded-Encrypted: i=1; AJvYcCVXbNTqvAulW5NADsgbOyXrk3zfSvUBTZaqGtLSu2jEtBes0cL3SmelYvf/jhVCf+wTffaTJbllqj/VWTzD@vger.kernel.org, AJvYcCVxF0MD1wwpXkVJx7IJHjmV+ZP7msZfKxVHWAw4fc2K1Nga8W+p2anQFReEyc2VsEMndjR8RWOWh+ICzw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrhqeGRuUdSUK1jZQs+2S0p50F6wyFH0DojMdK++4QtSgYGcvc
+	5LSh5cOPGKndgJPIbYpPjoCDvweF7l61wG+2n8eOm3oXFSSo5Rp+YNvi
+X-Gm-Gg: ASbGncvNreVfmzKubmU8UTBgXsCQbg9yv8MKLKhGAZg2FsW95+hJfjfb+v+FCBGqoPT
+	NUZFyw3CdVrPgX5Mmtiv+N8KcvLtEm2qImmVnxS4X290XeGLPpt60aRyg1shOKuaMxu0anD1Dlp
+	TL8oung1N5uMjS7EW0jbOdAbJennZrhOxbxCL52OhD7xFdQfLwQbz66FYMsn9z+Gy3IV6BDZNhv
+	gSXaGzeLkJbY/Hyk1wvaZU2oQD1g9EZ4/cH5dT4AwJJhCMKC+FTy8TdykSjqsgF/roiK+cPiS8L
+	jwKIB9eTw7q8cqR0MSm6Yifr1W1mYxYHZ49RjXpMLjMreN/Av0IUHR9gNFAgulKyMnAC6HF5flg
+	Wf06aPyE8dg==
+X-Google-Smtp-Source: AGHT+IHHFbj/kq9EPq21LTyPgUqm27w+L1j9eV2b86yHj5xiuvp6tZ/8OE0FT2bcCqrou9weIAS9jg==
+X-Received: by 2002:a17:902:f68b:b0:236:6f5f:cab4 with SMTP id d9443c01a7336-237d9875dffmr152612645ad.5.1750591967141;
+        Sun, 22 Jun 2025 04:32:47 -0700 (PDT)
+Received: from danascape.tail34aafc.ts.net ([2402:e280:218d:2e5:cdf6:1ef3:8163:b6ad])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83c0b61sm59506555ad.54.2025.06.22.04.32.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Jun 2025 04:32:46 -0700 (PDT)
+From: Saalim Quadri <danascape@gmail.com>
+To: lains@riseup.net
+Cc: jikos@kernel.org,
+	bentiss@kernel.org,
+	gregkh@linuxfoundation.org,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC] Writing a Driver for Xinmeng M71 Keyboard (Battery Status Support)
+Date: Sun, 22 Jun 2025 17:02:42 +0530
+Message-Id: <20250622113242.183562-1-danascape@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, 15 Jun 2025 22:22:53 +0000
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+Hello everyone,
 
-> Cover the following tasks:
-> =E2=80=93 Add scan_mask and scan_index to the IIO channel configuration. =
-The
-> scan_index sets up buffer usage. According to the datasheet, the ADXL313
-> uses a 13-bit wide data field in full-resolution mode. Set the
-> signedness, number of storage bits, and endianness accordingly.
->=20
-> =E2=80=93 Parse the devicetree for an optional interrupt line and configu=
-re the
-> interrupt mapping based on its presence. If no interrupt line is
-> specified, keep the FIFO in bypass mode as currently implemented.
->=20
-> =E2=80=93 Set up the interrupt handler. Add register access to detect and
-> evaluate interrupts. Implement functions to clear status registers and
-> reset the FIFO.
->=20
-> =E2=80=93 Implement FIFO watermark configuration and handling. Allow the
-> watermark level to be set, evaluate the corresponding interrupt, read
-> the FIFO contents, and push the data to the IIO channel.
->=20
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+I'm currently working with a Xinmeng M71 wireless keyboard, which is recognized by the kernel as a hid-generic device and functions well.
 
-Just the follow on comment that I posted on v4 thread after you sent this.
-(obviously in addition to what you've been discussing with Andy)
+I'd like to extend its support in Linux by writing a driver that can expose its battery status to userspace,
+I used hidtools to record descriptors of the keyboards, I discharged my keyboard over the week and charged it and recorded the responses from it,
+like when it started charging/discharging, I saw hex values change reporting me the percentage of the charge
 
-> diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adxl313=
-_core.c
-> index 99a7f3755031..488680807a8f 100644
-> --- a/drivers/iio/accel/adxl313_core.c
-> +++ b/drivers/iio/accel/adxl313_core.c
+E: 000002.772731 20 13 0a 01 00 04 05 63 01 00 00 00 00 00 00 00 00 00 00 00 8b
+# ReportID: 19 /Array ['0a', '01', '0xff020002', '04', '05', '63', '11', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '9b'] 
+E: 000005.642942 20 13 0a 01 00 04 05 63 11 00 00 00 00 00 00 00 00 00 00 00 9b
+# ReportID: 19 /Array ['0a', '01', '0xff020002', '04', '05', '64', '11', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '9c'] 
+E: 000005.860767 20 13 0a 01 00 04 05 64 11 00 00 00 00 00 00 00 00 00 00 00 9c
 
-> +
-> +static int adxl313_fifo_transfer(struct adxl313_data *data, int samples)
-> +{
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	for (i =3D 0; i < samples; i++) {
-> +		ret =3D regmap_bulk_read(data->regmap, ADXL313_REG_XYZ_BASE,
-> +				       data->fifo_buf + (i * ADXL313_NUM_AXIS),
-> +				       2 * ADXL313_NUM_AXIS);
+I would appreciate guidance on, how can I continue this, I am familiar with Linux Kernel and writing drivers, but would like to ask some pointers regarding the same.
+I saw a reference that logitech HID driver uses it, but it looked quite complex to me.
 
-the sizeof() thing that I gave a late reply to in v4 thread applies here.
+I'm comfortable writing kernel C code but relatively new to the HID subsystem. Any documentation pointers, example patches, or suggestions to get started would be highly appreciated.
 
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
+Looking forward to your responses.
+
+Thank you very much,
+
+Sincerely,
+Saalim Quadri
