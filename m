@@ -1,103 +1,84 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A3D610C;
-	Sun, 22 Jun 2025 20:46:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC93EED7;
+	Sun, 22 Jun 2025 20:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750625177; cv=none; b=K/1IQJBIU7FRa7sM6IlC9Z/O1PO2DigbGvm4jSR6EK5Gl2AKZBqptEjv0Jfwk1QxMc5zJAUgdu3CIMRJ7BKg3iEtppt6WhigqBJ8eXe4Ph8aVGrKL6AIYPF4GYfBpfQ4aVs6TAA2bnK8ZcVaZYZ5mroMyVHR0/ktCNJ1hI377b4=
+	t=1750625281; cv=none; b=D880t6gzMENFqNrS/vCrMUy6NRtIa0Oi19mSqvHUGFRcsJenWsb7fd/kX+XR1p5vK1OVE7T9uBTWZqyKF2ejcWgn1gpxJIfbkj0QIaqziXf2S6UoAJYegUascRAH30PBOYvJnygie4sAuZfrcdg+OzvHsJEXdQzWHWMmDWj21Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750625177; c=relaxed/simple;
-	bh=GwKR947l0oDsjvW7HGqBolLdH9hIFFWEoUtSTpR6+4w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m53QpxB0fC1silYna1TKbiZSLDo1+LzIVhOl8ByIdF/ZX8tJxCgZpFjW8290aQOGRGcQiUj1gibSLyaDqYCpmI4947+A1nIJUZFLDfqT+C15Q+0m7UV822XE6fSashsPPsqr9vGFf1E6ri6gxU34BriVP40PeSK+eZKv0iTLIUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MkG8alJL; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750625281; c=relaxed/simple;
+	bh=1yzpw0aUJx2y0SjGulr7CeIflyI3UmgsKgd71+6sBYc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=Ea0FRx4vjDYIjpmC3ptahscbBM1CdqlJ/hXVkuis27fdrUwVBrRLKSDcglZqZkOULyYSkOJz1pNRsJ+FCl6yeuLeKMCoE5j9wM4MA2SaIySjCx07mCX/PkUWWRLfjRGSmWBFzgR1otclzUddWpgTGgiyWAJKYstIlS+Hyuha6D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oP/qc13G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MkG8alJL"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e82492d2b38so285013276.1;
-        Sun, 22 Jun 2025 13:46:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750625175; x=1751229975; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0GabHvsY3bDW7rA/BLlKelKFYiDWDiaFpKx8UrlL7A0=;
-        b=MkG8alJLofpOhF/rpjkmRszVc4vGmApbu1YFzlm404ID94uUuaVWPrFayggSJrm8Pb
-         +W4K6xqUAbwY11et+MmyhOk1cdr5JlS5BvFAjvUoJGj5ngEsCSj7FE5TKso+toPHGNVh
-         H4VwNYJwOepPciCtKyMe7OxEaqXTdDFi/CaG8/Kx1m/TCgmZFgH7EH1n7P2HwJ9kxTrl
-         05rsvwwit625Lscs57Hz4+Me66j3+eDdOUzdZ4bXnnMRN7WgDPM3xKPQwmpMO7tNSyeI
-         SQHdJ3Bazw2eqnN2D2iwJdzjD9PzpVnajrheiEUkJGcsRaKntj/vfldk4VbdivX/rdbK
-         6YAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750625175; x=1751229975;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0GabHvsY3bDW7rA/BLlKelKFYiDWDiaFpKx8UrlL7A0=;
-        b=XHKgbYs0TJzwj3MQB6DGsqokmTm4WsXMTL7zuWhSIlFp2tz93vjhOPQIMsmaFQzj9c
-         heAHvVHzcEwoD9Hyy3rjD46Vol5Ydq44XkFcTpW/d+CicP3D2PEAig5hiftJsiLfoziX
-         LjNMDSgvVaUR7Ko3tfBXWB+82apj37MUqs9kyfG5Vkn/Ciqal82+ctVb2WVGXRFJOb8z
-         uP2Y7v5FgH8wS84Yp48C5wR88jHhyVZVPyB5zsz4g7w1QN8Jsv1dHBoywy275ASyzGkV
-         a1m7bjvTQO2BzksauIQh9oEkc2ydB0tufwo5HwFk575FhoJKfNK9OUizWd0njZOVGDwd
-         Eh9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUXClHQ+Sl3d84jaUD1tjeIiV3uTRUGqzs5Mt1/yr0J1ueSLcBDoNYXm8ttsBzTSmoGPVFgHXa+RhdzXTY=@vger.kernel.org, AJvYcCWIulyuEwQcMB0C1KjrQUXV/Q2k6GOQ7I/yLI0YHkd5+28DUy4cIT+F/HhUlBWLwmjCsFNCGwAghGJd9c8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0qqoXlkTwlklt7BSXEjnUujENJxe5Uwkn19/rj+SfFuxSITag
-	0IZDKmGL7JgB0mBGly/Uc7aQbnlgglZQkL+Z7ty3fRKmAYtD3a4DTJJiPUPX6LzHAvNp3ycT5TL
-	+7NTLzK8u4BVTbCq97cK9EJWUG5lzQZc=
-X-Gm-Gg: ASbGncs6Y5NqyiJbj7SXtUciJcCTIPa01aC0W93JLXkeclLWOuOstHIhmvcMnuuAAOK
-	cqxGCiQQlxiG/odMZeeA46S3ryoAouwbZQxjW5+MJf9jQeU7tYVFU01TmxnkFTItSAIZU8TJUhR
-	kjjSbxa1SUlo4jp4wvRCgtSk9/7qmfcl044LDpPzjpRDGJ
-X-Google-Smtp-Source: AGHT+IEmVlg/KOIX1VTwQesijc92a1D2RId/mLgev7pZcFOOQiaylUYoPLlZbiWQVi5ktMhE8d91KsTNaUz4jGYnOqY=
-X-Received: by 2002:a05:690c:d93:b0:712:c55c:4e61 with SMTP id
- 00721157ae682-712c64e8187mr66589657b3.5.1750625175439; Sun, 22 Jun 2025
- 13:46:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oP/qc13G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC089C4CEE3;
+	Sun, 22 Jun 2025 20:47:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750625280;
+	bh=1yzpw0aUJx2y0SjGulr7CeIflyI3UmgsKgd71+6sBYc=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=oP/qc13GwziYzi4HK3bDWf6l9ZKRotOoHV3Dple7fZ26zmxRLWQLU4HOh8b11JfA1
+	 nRNfMw42DZusrKt45ramcPB9dNRSJR0lsFPwJ0eQ7tUqoOhbFbt8mhNYYT/pPYsZyR
+	 B8HxKI+d8XyBYZGTVoLySPENgIbEzY+yLR76fJ52eNlKwfh7ixG+Q2tIiMQzbx+4Ja
+	 gRGeJ2tDGI52A8m7rYscsNQFzaqCOh9JTV5HzJ75qkCnVhFs0RcwLuiS3ALxBVwGzx
+	 uPE/0CmVDNCz82cOgeUDlL3l9VQ2J8Z+Ytkd5yYEj7BcFoB18PDdWGAjPlnFmRNFeD
+	 mX6ZOUsdZVEdA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250622065340.184048-1-abdelrahmanfekry375@gmail.com>
- <CAHp75VcKQGvcgv+72=9CY9yvvmzTDUaiP8xZZzQCyd553_tqYw@mail.gmail.com> <CAHp75Vc7=WYeay0xsvVd5NZ-mm+WdU1LrzzFAE1GrdpzH2JjEQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vc7=WYeay0xsvVd5NZ-mm+WdU1LrzzFAE1GrdpzH2JjEQ@mail.gmail.com>
-From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-Date: Sun, 22 Jun 2025 23:46:04 +0300
-X-Gm-Features: AX0GCFvlIHgr7FAfwpYiKvbyIOWPCmbwyRuZ8_Mzqkhx21I0MX5OTBJ3q9AxdAM
-Message-ID: <CAGn2d8M4vZzJSczv72AFS_ngPiCc=Hg5=U3wQFCtHp9EZvqDoQ@mail.gmail.com>
-Subject: Re: [PATCH v2] staging: media: atomisp: Replace scnprintf with
- sysfs_emit in bo_show
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: andy@kernel.org, hansg@kernel.org, mchehab@kernel.org, 
-	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-staging@lists.linux.dev, skhan@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 22 Jun 2025 22:47:55 +0200
+Message-Id: <DATCV8XFK7TO.2MYZKKA28JEQV@kernel.org>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 4/4] rust: devres: implement register_release()
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
+ <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <david.m.ertman@intel.com>, <ira.weiny@intel.com>, <leon@kernel.org>,
+ <kwilczynski@kernel.org>, <bhelgaas@google.com>
+X-Mailer: aerc 0.20.1
+References: <20250622164050.20358-1-dakr@kernel.org>
+ <20250622164050.20358-5-dakr@kernel.org>
+In-Reply-To: <20250622164050.20358-5-dakr@kernel.org>
 
-On Sun, Jun 22, 2025 at 11:39=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Sun, Jun 22, 2025 at 11:37=E2=80=AFPM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Sun, Jun 22, 2025 at 9:54=E2=80=AFAM Abdelrahman Fekry
-> > <abdelrahmanfekry375@gmail.com> wrote:
->
-> ...
->
-> > > +       /* Changing to sysfs_emit changes the behaviour if failed*/
-> >
-> > This comment, besides missing the space, is useless here. You need to
-> > use the comment block for the proposed change.
->
-> Also the text of the comment is a noise. You need to explain better
-> what's going on here.
->
-Sorry for the mess, so the comment is enough if well written or i
-should do something else?
-Thanks!
-> --
-> With Best Regards,
-> Andy Shevchenko
+On Sun Jun 22, 2025 at 6:40 PM CEST, Danilo Krummrich wrote:
+> +impl<T: Release> Release for crate::sync::ArcBorrow<'_, T> {
+> +    fn release(&self) {
+> +        self.deref().release();
+> +    }
+> +}
+> +
+> +impl<T: Release> Release for Pin<&'_ T> {
+
+You don't need the `'_` here.
+
+> +    fn release(&self) {
+> +        self.deref().release();
+> +    }
+> +}
+
+I still think we're missing a `impl<T: Release> Release for &T`.
+
+And maybe a closure design is better, depending on how much code is
+usually run in `release`, if it's a lot, then we should use the trait
+design. If it's only 1-5 lines, then a closure would also be fine. I
+don't have a strong preference, but if it's mostly one liners, then
+closures would be better.
+
+If you keep the trait design & we resolve the `&T: Release` question:
+
+Reviewed-by: Benno Lossin <lossin@kernel.org>
+
+---
+Cheers,
+Benno
