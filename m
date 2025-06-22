@@ -1,85 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A272AD04;
-	Sun, 22 Jun 2025 19:39:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6112A1F0991;
+	Sun, 22 Jun 2025 19:44:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750621172; cv=none; b=eteHKeoEWZza1QKgYmPPmo2p1kn1euKOmIxrC6/w1ak2+9Yog+sehjoWLwss8YVL85OJRrK/eS8oTOpMC6JjfWZTQdCHBOeaJs6MUbS3/OtpGcVDtAcxsL8UYIpTwjVlMpoYyCpQFcJgItcD7Vc6IanQETzw4HgOkxxNs8hWs1c=
+	t=1750621495; cv=none; b=JNa6Ql8ERYrf+vF6JYvKTDQbO3o9ex3oeX4g5DoFfqkrRhwg9sfmNTFXr+mwdSpRn+0iuh5nYk3mQbjWohp9DQvoXQqThPI7Wjxb+SnFuX/n4RvyXaAV+ePv57kkQL0nD9QrIy5NtAuflQ1Q5fIU3oCFAzuu1SDxfodCm6HuJSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750621172; c=relaxed/simple;
-	bh=6B2mJNnldTxxbfO15czbGzLC76lbIyUbKE9PZ4W8o+s=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=hnbcq6mq/s1NnUFxF9z2+TippfR/rl4yRk+J9yDjOxMItZno/91UCydAjeRn6BKtGUXP0IZPhST9xqN7Ro5umUN7/pg09mEYyYZNbtIYRU7cO8QGww33N0EsDPOZ6PuHCRwvd/i5/VXio3ia4FbmlrfIfSIWwvqACpB3FtSyf9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=NMauDljP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750621495; c=relaxed/simple;
+	bh=d6AfsluOuu/DSo/pl5Iw3jcwxIdjlkLMgVdfv/HPrv8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XjmGkssAgZpJQPZIOYH/sKQrackTmM4ko4776D0n44syHR+ecHnZllaqPDV7niXMcvqGKoGNWnlOXslqOXtThRxsbq8vdVhLjCU6+jdvDNeH6PxxFmjYXp7jklYKq2hu9TvYHXeC7juhKhTa9tqbkdLK2GKOTLhbCXFcQShTwHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NyUFmWlQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="NMauDljP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC27CC4CEE3;
-	Sun, 22 Jun 2025 19:39:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1750621172;
-	bh=6B2mJNnldTxxbfO15czbGzLC76lbIyUbKE9PZ4W8o+s=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NyUFmWlQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE4F6C4CEE3;
+	Sun, 22 Jun 2025 19:44:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750621494;
+	bh=d6AfsluOuu/DSo/pl5Iw3jcwxIdjlkLMgVdfv/HPrv8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NMauDljPDLEI4fpcPBqY2UPgIIbNDeVttAGYIqwiUwHhHSXHYldSUheeFWNNWhMj7
-	 ZV+FlxXiFdLyJb1wCCPEsmP6zjwhf/ZfcIw/AIRPihkVD+39Z8Bwo+6UvZTy2lPNdI
-	 kGqFBbMZErbWxdKxZjTGGzQFlaDUFZ+cKI8k8uE4=
-Date: Sun, 22 Jun 2025 12:39:31 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>, "Liam R . Howlett"
- <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn
- <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, David Hildenbrand
- <david@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou
- <chengming.zhou@linux.dev>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, Stefan Roesch
- <shr@devkernel.io>
-Subject: Re: [PATCH v3 3/4] mm: prevent KSM from breaking VMA merging for
- new VMAs
-Message-Id: <20250622123931.30b1739642be8ec1e9ca04e2@linux-foundation.org>
-In-Reply-To: <5861f8f6-cf5a-4d82-a062-139fb3f9cddb@lucifer.local>
-References: <cover.1748537921.git.lorenzo.stoakes@oracle.com>
-	<3ba660af716d87a18ca5b4e635f2101edeb56340.1748537921.git.lorenzo.stoakes@oracle.com>
-	<5861f8f6-cf5a-4d82-a062-139fb3f9cddb@lucifer.local>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	b=NyUFmWlQxp6bOTOiVFZLKOrnWuxmZvE/HqCQUg7/1aUCOvlUytQ4XrYttbYTfaB5U
+	 BG6WpZqPgJLl1rrcwh0LU6GGYRsVUN3yUNUt7OgJqlm8rVI83hjekieeH6pcg4jMtj
+	 0mLmiz4JZ0zl3PMUiirPfPZ821OxJ9jVpEiTRiibVnL4puLaK+VT8144Bx45y3wk1v
+	 YlNyhatsGCmr3iqcWfPzwDHYr87qAZOtWwoQRy5Hv1lDy09DnEXVjWEgQufZLiWxF+
+	 I9Ihz7iPtkgKqEDy/nYMd907rednTVVxUeipbkn0y5llAQ0aaZn6j4+QWj8KjLfPV+
+	 sSxzYv5GT5C1g==
+Date: Sun, 22 Jun 2025 21:44:50 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>
+Subject: Re: [PATCH 0/6] Some improvements for the doc build system
+Message-ID: <20250622214450.2a1a9639@foz.lan>
+In-Reply-To: <874iw7boqv.fsf@trenco.lwn.net>
+References: <cover.1750406900.git.mchehab+huawei@kernel.org>
+	<87ldpkdgv6.fsf@trenco.lwn.net>
+	<20250622060015.76a0b29a@foz.lan>
+	<874iw7boqv.fsf@trenco.lwn.net>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 20 Jun 2025 13:48:09 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+Em Sun, 22 Jun 2025 12:44:08 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-> Hi Andrew,
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 > 
-> Sending a fix-patch for this commit due to a reported syzbot issue which
-> highlighted a bug in the implementation.
+> > Em Sat, 21 Jun 2025 13:39:09 -0600
+> > Jonathan Corbet <corbet@lwn.net> escreveu:
+> >  
+> >> OK, I've applied it, but ... someday, I think the test_doc_build tool
+> >> should be properly documented and put somewhere under tools/testing.  
+> >
+> > I added a better documentation for the tool at the v2.
+> >
+> > With regards to move to tools, I'm not certain about it as I can see
+> > advantages and disadvantages. 
+> >
+> > Creating a new directory to have just one tool on it seems overkill
+> > to me. Also, it is easier to type "scripts/..." than 
+> > "tools/testing/build/..." :-)
+> >
+> > There is another aspect: while doing conf.py and Documentation/Makefile
+> > cleanup, I noticed that there are still lots of hacks inside them,
+> > that are there from the early days when we adopted Sphinx. Perhaps
+> > it could make sense to move part of the logic there to this new
+> > build tool, which could, for instance, replace the logic inside
+> > scripts/sphinx-pre-install and get rid of some magic at the Makefile
+> > like the one which handles SPHINXDIRS.
+> >
+> > So, at least for now, I would prefer to keep it under scripts.  
 > 
-> I discuss the syzbot report at [0].
+> I pretty strongly disagree ... scripts/ is a dumping ground, nobody
+> really knows what all that stuff there is, nobody is responsible for it.
+> Something under tools/ would be more evident as to its purpose and
+> maintainership.  We could maybe just do tools/docs/ and move things like
+> sphinx-pre-install there as well...
 > 
-> [0]: https://lore.kernel.org/all/a55beb72-4288-4356-9642-76ab35a2a07c@lucifer.local/
-> 
-> There's a very minor conflict around the map->vm_flags vs. map->flags change,
-> easily resolvable, but if you need a respin let me know.
+> Anyway, I won't try to hold up this work based on that, but now you know
+> how I feel...:)
 
-I actually saw 4 conflicts, fixed various things up and...
+A tools/docs with all doc-related tool there is certainly appealing.
+Yet, I would move all such scripts on a separate patchset.
 
-> @@ -2487,6 +2496,11 @@ static int __mmap_new_vma(struct mmap_state *map, struct vm_area_struct **vmap)
->  	if (error)
->  		goto free_iter_vma;
-> 
-> +	if (!map->check_ksm_early) {
-> +		update_ksm_flags(map);
-> +		vm_flags_init(vma, map->vm_flags);
-> +	}
-> +
-
-Guessing map->flags was intended here, I made that change then unmade
-it in the later mm-update-core-kernel-code-to-use-vm_flags_t-consistently.patch.
-
-I'll do a full rebuild at a couple of bisection points, please check
-that all landed OK.
-
+Thanks,
+Mauro
