@@ -1,266 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6191EDA3F;
-	Sun, 22 Jun 2025 20:45:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A3D610C;
+	Sun, 22 Jun 2025 20:46:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750625107; cv=none; b=RuFCKwr6coNvi8d7fv7mZkGMD0VkKnaY894W8vU40Obx4STQOBwOhwXB000J2n54SRU9z4KspECHv0hbsRbGDqVUV7PzEJqtBamHrHoJTXdHXesKbLTIjN9eZQTz2Y6v7O6VoEtBJf2x9k+VOFjubFKZrpvhYNo9rclpg1CGBPo=
+	t=1750625177; cv=none; b=K/1IQJBIU7FRa7sM6IlC9Z/O1PO2DigbGvm4jSR6EK5Gl2AKZBqptEjv0Jfwk1QxMc5zJAUgdu3CIMRJ7BKg3iEtppt6WhigqBJ8eXe4Ph8aVGrKL6AIYPF4GYfBpfQ4aVs6TAA2bnK8ZcVaZYZ5mroMyVHR0/ktCNJ1hI377b4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750625107; c=relaxed/simple;
-	bh=ReU+ICFxV1DbFe9c9FqjmqnDj9yHlrBDBsoKH+nem8c=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=WOYCBp7JGaLZJpsAHqDnpAi7UaueoZy+HsIwsvk28WsRfPkp9zV+5X66TjoA9lD404x1ZQto0EIuGgdQT/LvN6Nh80OfE2razbCytOkl5OzyKHUgV6LIw2EU+ZDIVu8onNmYbXlKNn+G2vnNhBagV2xvsumUbUJX3q+cnNlKlkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UcujbnmE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750625177; c=relaxed/simple;
+	bh=GwKR947l0oDsjvW7HGqBolLdH9hIFFWEoUtSTpR6+4w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m53QpxB0fC1silYna1TKbiZSLDo1+LzIVhOl8ByIdF/ZX8tJxCgZpFjW8290aQOGRGcQiUj1gibSLyaDqYCpmI4947+A1nIJUZFLDfqT+C15Q+0m7UV822XE6fSashsPPsqr9vGFf1E6ri6gxU34BriVP40PeSK+eZKv0iTLIUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MkG8alJL; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UcujbnmE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FCB1C4CEE3;
-	Sun, 22 Jun 2025 20:45:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750625107;
-	bh=ReU+ICFxV1DbFe9c9FqjmqnDj9yHlrBDBsoKH+nem8c=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=UcujbnmEBJI7mFL8pyTps6zpf1/yEBSrWJUAnbJzT1LvyjPpthJ1X/yBd5fbiv2rx
-	 NN2ssfVEWrJOqvMB7e/sQfAkfWoNwiDludqmLdHyxsKBPnnif2sn79Q8dVmwgyqEKu
-	 qUTL5kDz4q3FjEp72ZdIOCDLhlirZPzrHfT5NJDmVu7CuxE3sU4a3Nr9xzh4dHRdTT
-	 gMvMVCGlOZepCwPWKnefqygGVvYeCHo/wDtSP23n9WrPtEgjAxC3cS4IZd6yAuWtUV
-	 W5Hd2C0NOUYpIGOMPVO/APIaVM2QVxm6cXqp3KiQg93tOffaDlExwG8pCsNv7hFofK
-	 Z5yBPVyf4tB4Q==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MkG8alJL"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e82492d2b38so285013276.1;
+        Sun, 22 Jun 2025 13:46:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750625175; x=1751229975; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0GabHvsY3bDW7rA/BLlKelKFYiDWDiaFpKx8UrlL7A0=;
+        b=MkG8alJLofpOhF/rpjkmRszVc4vGmApbu1YFzlm404ID94uUuaVWPrFayggSJrm8Pb
+         +W4K6xqUAbwY11et+MmyhOk1cdr5JlS5BvFAjvUoJGj5ngEsCSj7FE5TKso+toPHGNVh
+         H4VwNYJwOepPciCtKyMe7OxEaqXTdDFi/CaG8/Kx1m/TCgmZFgH7EH1n7P2HwJ9kxTrl
+         05rsvwwit625Lscs57Hz4+Me66j3+eDdOUzdZ4bXnnMRN7WgDPM3xKPQwmpMO7tNSyeI
+         SQHdJ3Bazw2eqnN2D2iwJdzjD9PzpVnajrheiEUkJGcsRaKntj/vfldk4VbdivX/rdbK
+         6YAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750625175; x=1751229975;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0GabHvsY3bDW7rA/BLlKelKFYiDWDiaFpKx8UrlL7A0=;
+        b=XHKgbYs0TJzwj3MQB6DGsqokmTm4WsXMTL7zuWhSIlFp2tz93vjhOPQIMsmaFQzj9c
+         heAHvVHzcEwoD9Hyy3rjD46Vol5Ydq44XkFcTpW/d+CicP3D2PEAig5hiftJsiLfoziX
+         LjNMDSgvVaUR7Ko3tfBXWB+82apj37MUqs9kyfG5Vkn/Ciqal82+ctVb2WVGXRFJOb8z
+         uP2Y7v5FgH8wS84Yp48C5wR88jHhyVZVPyB5zsz4g7w1QN8Jsv1dHBoywy275ASyzGkV
+         a1m7bjvTQO2BzksauIQh9oEkc2ydB0tufwo5HwFk575FhoJKfNK9OUizWd0njZOVGDwd
+         Eh9g==
+X-Forwarded-Encrypted: i=1; AJvYcCUXClHQ+Sl3d84jaUD1tjeIiV3uTRUGqzs5Mt1/yr0J1ueSLcBDoNYXm8ttsBzTSmoGPVFgHXa+RhdzXTY=@vger.kernel.org, AJvYcCWIulyuEwQcMB0C1KjrQUXV/Q2k6GOQ7I/yLI0YHkd5+28DUy4cIT+F/HhUlBWLwmjCsFNCGwAghGJd9c8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0qqoXlkTwlklt7BSXEjnUujENJxe5Uwkn19/rj+SfFuxSITag
+	0IZDKmGL7JgB0mBGly/Uc7aQbnlgglZQkL+Z7ty3fRKmAYtD3a4DTJJiPUPX6LzHAvNp3ycT5TL
+	+7NTLzK8u4BVTbCq97cK9EJWUG5lzQZc=
+X-Gm-Gg: ASbGncs6Y5NqyiJbj7SXtUciJcCTIPa01aC0W93JLXkeclLWOuOstHIhmvcMnuuAAOK
+	cqxGCiQQlxiG/odMZeeA46S3ryoAouwbZQxjW5+MJf9jQeU7tYVFU01TmxnkFTItSAIZU8TJUhR
+	kjjSbxa1SUlo4jp4wvRCgtSk9/7qmfcl044LDpPzjpRDGJ
+X-Google-Smtp-Source: AGHT+IEmVlg/KOIX1VTwQesijc92a1D2RId/mLgev7pZcFOOQiaylUYoPLlZbiWQVi5ktMhE8d91KsTNaUz4jGYnOqY=
+X-Received: by 2002:a05:690c:d93:b0:712:c55c:4e61 with SMTP id
+ 00721157ae682-712c64e8187mr66589657b3.5.1750625175439; Sun, 22 Jun 2025
+ 13:46:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250622065340.184048-1-abdelrahmanfekry375@gmail.com>
+ <CAHp75VcKQGvcgv+72=9CY9yvvmzTDUaiP8xZZzQCyd553_tqYw@mail.gmail.com> <CAHp75Vc7=WYeay0xsvVd5NZ-mm+WdU1LrzzFAE1GrdpzH2JjEQ@mail.gmail.com>
+In-Reply-To: <CAHp75Vc7=WYeay0xsvVd5NZ-mm+WdU1LrzzFAE1GrdpzH2JjEQ@mail.gmail.com>
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Date: Sun, 22 Jun 2025 23:46:04 +0300
+X-Gm-Features: AX0GCFvlIHgr7FAfwpYiKvbyIOWPCmbwyRuZ8_Mzqkhx21I0MX5OTBJ3q9AxdAM
+Message-ID: <CAGn2d8M4vZzJSczv72AFS_ngPiCc=Hg5=U3wQFCtHp9EZvqDoQ@mail.gmail.com>
+Subject: Re: [PATCH v2] staging: media: atomisp: Replace scnprintf with
+ sysfs_emit in bo_show
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: andy@kernel.org, hansg@kernel.org, mchehab@kernel.org, 
+	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-staging@lists.linux.dev, skhan@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 22 Jun 2025 22:45:02 +0200
-Message-Id: <DATCT1EG0Z70.3ON7LFZEEZ93M@kernel.org>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v2 3/4] rust: devres: get rid of Devres' inner Arc
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
- <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
- <david.m.ertman@intel.com>, <ira.weiny@intel.com>, <leon@kernel.org>,
- <kwilczynski@kernel.org>, <bhelgaas@google.com>
-X-Mailer: aerc 0.20.1
-References: <20250622164050.20358-1-dakr@kernel.org>
- <20250622164050.20358-4-dakr@kernel.org>
-In-Reply-To: <20250622164050.20358-4-dakr@kernel.org>
 
-On Sun Jun 22, 2025 at 6:40 PM CEST, Danilo Krummrich wrote:
-> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-> index 250073749279..15a0a94e992b 100644
-> --- a/rust/kernel/devres.rs
-> +++ b/rust/kernel/devres.rs
-> @@ -13,20 +13,31 @@
->      ffi::c_void,
->      prelude::*,
->      revocable::{Revocable, RevocableGuard},
-> -    sync::{rcu, Arc, Completion},
-> -    types::{ARef, ForeignOwnable},
-> +    sync::{rcu, Completion},
-> +    types::{ARef, ForeignOwnable, Opaque},
->  };
-> =20
-> +use pin_init::Wrapper;
-> +
-> +/// [`Devres`] inner data accessed from [`Devres::callback`].
->  #[pin_data]
-> -struct DevresInner<T> {
-> -    dev: ARef<Device>,
-> -    callback: unsafe extern "C" fn(*mut c_void),
-> +struct Inner<T> {
->      #[pin]
->      data: Revocable<T>,
-> +    /// Tracks whether [`Devres::callback`] has been completed.
-> +    #[pin]
-> +    devm: Completion,
-> +    /// Tracks whether revoking [`Self::data`] has been completed.
->      #[pin]
->      revoke: Completion,
->  }
-> =20
-> +impl<T> Inner<T> {
-> +    fn as_ptr(&self) -> *const Self {
-> +        self
-> +    }
-> +}
-
-Instead of creating this function, you can use `ptr::from_ref`.
-
-> +
->  /// This abstraction is meant to be used by subsystems to containerize [=
-`Device`] bound resources to
->  /// manage their lifetime.
->  ///
-> @@ -88,100 +99,106 @@ struct DevresInner<T> {
->  /// # fn no_run(dev: &Device<Bound>) -> Result<(), Error> {
->  /// // SAFETY: Invalid usage for example purposes.
->  /// let iomem =3D unsafe { IoMem::<{ core::mem::size_of::<u32>() }>::new=
-(0xBAAAAAAD)? };
-> -/// let devres =3D Devres::new(dev, iomem, GFP_KERNEL)?;
-> +/// let devres =3D KBox::pin_init(Devres::new(dev, iomem), GFP_KERNEL)?;
->  ///
->  /// let res =3D devres.try_access().ok_or(ENXIO)?;
->  /// res.write8(0x42, 0x0);
->  /// # Ok(())
->  /// # }
->  /// ```
-> -pub struct Devres<T>(Arc<DevresInner<T>>);
-> +#[pin_data(PinnedDrop)]
-> +pub struct Devres<T> {
-> +    dev: ARef<Device>,
-> +    /// Pointer to [`Self::devres_callback`].
-> +    ///
-> +    /// Has to be stored, since Rust does not guarantee to always return=
- the same address for a
-> +    /// function. However, the C API uses the address as a key.
-> +    callback: unsafe extern "C" fn(*mut c_void),
-> +    /// Contains all the fields shared with [`Self::callback`].
-> +    // TODO: Replace with `UnsafePinned`, once available.
-> +    #[pin]
-> +    inner: Opaque<Inner<T>>,
-> +}
-> =20
-> -impl<T> DevresInner<T> {
-> -    fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Arc<Dev=
-resInner<T>>> {
-> -        let inner =3D Arc::pin_init(
-> -            try_pin_init!( DevresInner {
-> -                dev: dev.into(),
-> -                callback: Self::devres_callback,
-> +impl<T> Devres<T> {
-> +    /// Creates a new [`Devres`] instance of the given `data`.
-> +    ///
-> +    /// The `data` encapsulated within the returned `Devres` instance' `=
-data` will be
-> +    /// (revoked)[`Revocable`] once the device is detached.
-> +    pub fn new<'a, E>(
-> +        dev: &'a Device<Bound>,
-> +        data: impl PinInit<T, E> + 'a,
-> +    ) -> impl PinInit<Self, Error> + 'a
-> +    where
-> +        T: 'a,
-> +        Error: From<E>,
-> +    {
-> +        let callback =3D Self::devres_callback;
-> +
-> +        try_pin_init!(&this in Self {
-> +            inner <- Opaque::pin_init(try_pin_init!(Inner {
->                  data <- Revocable::new(data),
-> +                devm <- Completion::new(),
->                  revoke <- Completion::new(),
-> -            }),
-> -            flags,
-> -        )?;
-> -
-> -        // Convert `Arc<DevresInner>` into a raw pointer and make devres=
- own this reference until
-> -        // `Self::devres_callback` is called.
-> -        let data =3D inner.clone().into_raw();
-> +            })),
-> +            callback,
-> +            dev: {
-> +                // SAFETY: It is valid to dereference `this` to find the=
- address of `inner`.
-
-    // SAFETY: `this` is a valid pointer to uninitialized memory.
-
-> +                let inner =3D unsafe { core::ptr::addr_of_mut!((*this.as=
-_ptr()).inner) };
-
-We can use `raw` instead of `addr_of_mut!`:
-
-    let inner =3D unsafe { &raw mut (*this.as_ptr()).inner };
-
-> =20
-> -        // SAFETY: `devm_add_action` guarantees to call `Self::devres_ca=
-llback` once `dev` is
-> -        // detached.
-> -        let ret =3D
-> -            unsafe { bindings::devm_add_action(dev.as_raw(), Some(inner.=
-callback), data as _) };
-> -
-> -        if ret !=3D 0 {
-> -            // SAFETY: We just created another reference to `inner` in o=
-rder to pass it to
-> -            // `bindings::devm_add_action`. If `bindings::devm_add_actio=
-n` fails, we have to drop
-> -            // this reference accordingly.
-> -            let _ =3D unsafe { Arc::from_raw(data) };
-> -            return Err(Error::from_errno(ret));
-> -        }
-> +                // SAFETY:
-> +                // - `dev.as_raw()` is a pointer to a valid bound device=
-.
-> +                // - `inner` is guaranteed to be a valid for the duratio=
-n of the lifetime of `Self`.
-> +                // - `devm_add_action()` is guaranteed not to call `call=
-back` until `this` has been
-> +                //    properly initialized, because we require `dev` (i.=
-e. the *bound* device) to
-> +                //    live at least as long as the returned `impl PinIni=
-t<Self, Error>`.
-
-Just wanted to highlight that this is a very cool application of the
-borrow checker :)
-
-> +                to_result(unsafe {
-> +                    bindings::devm_add_action(dev.as_raw(), Some(callbac=
-k), inner.cast())
-> +                })?;
-> =20
-> -        Ok(inner)
-> +                dev.into()
-> +            },
-> +        })
->      }
-> =20
-> -    fn as_ptr(&self) -> *const Self {
-> -        self as _
-> +    fn inner(&self) -> &Inner<T> {
-> +        // SAFETY: `inner` is valid and properly initialized.
-
-We should have an invariant here that `inner` is always accessed
-read-only and that it is initialized.
-
----
-Cheers,
-Benno
-
-> +        unsafe { &*self.inner.get() }
->      }
-> =20
-> -    fn remove_action(this: &Arc<Self>) -> bool {
-> -        // SAFETY:
-> -        // - `self.inner.dev` is a valid `Device`,
-> -        // - the `action` and `data` pointers are the exact same ones as=
- given to devm_add_action()
-> -        //   previously,
-> -        // - `self` is always valid, even if the action has been release=
-d already.
-> -        let success =3D unsafe {
-> -            bindings::devm_remove_action_nowarn(
-> -                this.dev.as_raw(),
-> -                Some(this.callback),
-> -                this.as_ptr() as _,
-> -            )
-> -        } =3D=3D 0;
-> -
-> -        if success {
-> -            // SAFETY: We leaked an `Arc` reference to devm_add_action()=
- in `DevresInner::new`; if
-> -            // devm_remove_action_nowarn() was successful we can (and ha=
-ve to) claim back ownership
-> -            // of this reference.
-> -            let _ =3D unsafe { Arc::from_raw(this.as_ptr()) };
-> -        }
-> -
-> -        success
-> +    fn data(&self) -> &Revocable<T> {
-> +        &self.inner().data
->      }
+On Sun, Jun 22, 2025 at 11:39=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Sun, Jun 22, 2025 at 11:37=E2=80=AFPM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Sun, Jun 22, 2025 at 9:54=E2=80=AFAM Abdelrahman Fekry
+> > <abdelrahmanfekry375@gmail.com> wrote:
+>
+> ...
+>
+> > > +       /* Changing to sysfs_emit changes the behaviour if failed*/
+> >
+> > This comment, besides missing the space, is useless here. You need to
+> > use the comment block for the proposed change.
+>
+> Also the text of the comment is a noise. You need to explain better
+> what's going on here.
+>
+Sorry for the mess, so the comment is enough if well written or i
+should do something else?
+Thanks!
+> --
+> With Best Regards,
+> Andy Shevchenko
