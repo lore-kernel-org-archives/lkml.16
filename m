@@ -1,343 +1,139 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76BC1E1DE7;
-	Sun, 22 Jun 2025 13:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CFF1C5D72;
+	Sun, 22 Jun 2025 13:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750599790; cv=none; b=OuJ3KE7eJysqJg6Zi/XYJ0Z4Er0njs+ZO+iZ5dPLuwBvEkke/kFaKelZS9DLpZTV6aQWTAOcYe00sDnU0vkCFZADiM0ImqFdgog+zkg1psReTWCGL93Cp2Y3zlIjB4tZc/WRQxyo8VzjS1ceQAsnDw09aWqKONMOP8ypAqAH95M=
+	t=1750599907; cv=none; b=XYn5npqm6IQK5LchxgD22PwaEMPWSTdnaTPFp0o5Ub33uLdAexxmdoqFXXdwU47+YEtmnKOSSrNZbf16GMiKHRR4iFaZ6BfUqGqNV5Y26cI/Tmkw3dcgjHFR16NL+CIQGbEiNsjxjC5oHH3uMD9NNWKoEnZkmeJlfg5TKnN2GHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750599790; c=relaxed/simple;
-	bh=DcAbh50nJ/9+gl7gbnxkWQz+6p4e4XzKjPqGtKppBoU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=njsFpiGoHGJJwqThMaUeaVQQfhNz7I3azng54cJx++quIKa11HeFSctRstjfOPlDNoK2vPWv3jZjaqCP+dxp5q/S1NiLEyavlWuMpdJvFRl+kEN6+ybDph5zjaXuU7rM3+Ks/GIBGzRyOCItqZmFvAvg4R81I4EMl8+W0es71mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ov07dk9i; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750599907; c=relaxed/simple;
+	bh=ilWn7XOeuXoC5juMb98+zBTI8Ka9Yofz9iKQirS48FM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FbPsr0xC4OTBJ0roujnZPZzjEhRn51leendd2EUSZqYWFDwBMJ6IBh/ilnRVjXeJuo3KGmaQ7Cc4Yh8O4qrh0hPTQTuB9+SWCmQzpyPDvwZoWF4+9eE5zFeHlr/kyZFbNzuA7tVpy2R/36DSYxB35+FgmJOqu0NuJgvOZPuwU3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IN8V4yeE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ov07dk9i"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-606b6dbe316so6470898a12.3;
-        Sun, 22 Jun 2025 06:43:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750599787; x=1751204587; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CKxND9wDhUqTTJe60cYRYDByv8VnJJT28t+GbpuOw+w=;
-        b=Ov07dk9ibMvwXbBuSomem/2yRePWXGi7pf1JxvCxPBCuZHp8MCErnOXEueN1R5ExsI
-         bRzP+N1PrhNxRjf7oaUF6h0MY14QzKEOiOqx24yb1HIcvkDNdgr15ET5ecdHBGQ23bH5
-         vRScPSoh+xS7nCUFIPdDi6UBaOeGES7+lHyNhWxQkOdrATSZH6FzjvHfS430b65oasRM
-         IZS4KpELDLaBg4rAytY3iO6K6a67RLyuQv3Vz7/Q0TV0lDfRDrFEoSNuFQl+NP2T9cva
-         zPjzIYdxhG0QF+4bf7IqowzBznJAeq0EYKKqpRh0gU11RtZjvLzv1NpdfOJnrz13ziqE
-         Ew/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750599787; x=1751204587;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CKxND9wDhUqTTJe60cYRYDByv8VnJJT28t+GbpuOw+w=;
-        b=NZy1RRyjrTM8npRtHszW+2URs3OQ2NRgdayHdbCl3t/JER6u2lmSzT6wg2S8O6L6/9
-         OwU8VQREUksE3H8G4vcb1H+0EjD9dDvFEUzIVD3faj4cl5r60+dWu5wmEfFW+5E7hD1B
-         fsoZGa29BUqi3/icSywo1jn7izpPtTOwdVfZaLfPYgOjEXoAba/4Zl9+A8i7dY524gbk
-         EByP4DDECZL9PE7ANhGx9QoMs5XsJr/oLJKyh8+o6TqnWDDGPylEinEE+x++xIpUwJLL
-         xDpX8Xf4HlyjC0mn81HWcyOyDyNNSo34Pnmxsm7PAjcdGkQraWy/2eY5c06vJF2fj7MQ
-         DXyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVtEfbjbD0X77CrDEgJ9xMpAKsjMIR9CULpGE5pmfZcQH3GYAthPOYiwS/ESXi66X4USIIbkOJur2cU@vger.kernel.org, AJvYcCW+x296bnlGUq49caZWU+ssZrBl238gHrkJw6DsQniKSTfW/SEXTnNIwkMYG6vLtYeWtPe2Z489JuFqhEsM@vger.kernel.org, AJvYcCWz0990XIh1wSRsE0MAmLT77cn8+hEen99ndhqKS6NeoCZLYjwOywv4Ac6DtmUw9Zyq4jKS2QFLP5XU6QqsuA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9bs72ke41ElzA8fYo0VjgidIfTALh5mXrwlF1xIG86hPjq9AX
-	/B17LtH1jFn+FnkjzaxF6xYYPRnPaP/jPJUo+D+3I8vcApkZFfFQTz9Y7drrNQw=
-X-Gm-Gg: ASbGncuWa7V7ar/DTGGsjm7WYs6e3Kwcm37+kn2aJdYtzq78KN61d2baCwtakvT7AVG
-	O/FIfwqmwsCG3DZYiWx8IeRaSWp7+/MajCOYNNBOUJaPbN3WzA8XdNhZhDsXxlXI75IEDqxtpS6
-	hV2n1Ocjcd6BCuGlg7R0kggRAof3z2L4Hv+31+VZyzzk6snE5Seup71bsIyLC9ancuH5HuJwJhZ
-	lI3887i4sQV++Y6eRPFF/qjHorc1WUSsij23kN2NLPVAaQeWYAaH3lDEVNSXEtPU8Y31oL7vXtC
-	DWNzfO+4F4IdN/Q88AwS4Vd2pTpQz3HBK9y4K68pOw4DUBB+ldPYbjdeuO6s2yv6epgqXp7h+nk
-	RBmY=
-X-Google-Smtp-Source: AGHT+IHeC3wpaGuXsxsGS1ou5yDXSrA2CWtnGo1/tOsnyk09UcUcyVKGoDq84C/WLDo5IEQIppyBxQ==
-X-Received: by 2002:a05:6402:2355:b0:5f6:fab2:9128 with SMTP id 4fb4d7f45d1cf-60a1d16761dmr8484214a12.19.1750599786714;
-        Sun, 22 Jun 2025 06:43:06 -0700 (PDT)
-Received: from alex-x1.localdomain ([84.226.118.249])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60a18cb9e5dsm4654457a12.53.2025.06.22.06.43.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 06:43:06 -0700 (PDT)
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Subject: [PATCH v1 2/2] arm64: dts: qcom: x1-asus-zenbook: support sound
-Date: Sun, 22 Jun 2025 15:40:01 +0200
-Message-ID: <20250622134301.10403-3-alex.vinarskis@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250622134301.10403-1-alex.vinarskis@gmail.com>
-References: <20250622134301.10403-1-alex.vinarskis@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IN8V4yeE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B42E8C4CEE3;
+	Sun, 22 Jun 2025 13:44:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750599906;
+	bh=ilWn7XOeuXoC5juMb98+zBTI8Ka9Yofz9iKQirS48FM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IN8V4yeEMylfbYbyYA8FLNbgYoY1BfApbZ5g0TcohHGDBdlMh37EUk0ArfrbBaahu
+	 dJvvnQvpb/iknUC35OeXduRnT+evU6FeRmx5UuQgBElNwojkWwUBHdrS3vOzgV7sCs
+	 Bmw+/V6omWi5HsR+rGuph0ikcXO5xTGol0gS2jX1Et0yCEdv5pTN292WzeMlbKNevi
+	 omeKCixrwDS77vRjcV0ai57Y9Y0gN0+Uif2ctRqQj2umvkpTKwiotsfVrfueYAvezF
+	 4y2k37vLg2rzuvZvFOG44+g7dUh6SFWR58M/uKyKj44YXoQ+R0MCz+b5ARqSD49JZ8
+	 t7kwtZALsNuZA==
+Date: Sun, 22 Jun 2025 14:44:55 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lars@metafoo.de,
+ Michael.Hennerich@analog.com, dlechner@baylibre.com, nuno.sa@analog.com,
+ andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linus.walleij@linaro.org, brgl@bgdev.pl, broonie@kernel.org,
+ lgirdwood@gmail.com, marcelo.schmitt1@gmail.com
+Subject: Re: [PATCH v6 01/12] dt-bindings: iio: adc: Add AD4170
+Message-ID: <20250622144455.6723be23@jic23-huawei>
+In-Reply-To: <20250619-sitter-uranium-e7298befd733@spud>
+References: <cover.1750258776.git.marcelo.schmitt@analog.com>
+	<6399c1eb6d8e1bbdf720f189a7244b1d75a90ed2.1750258776.git.marcelo.schmitt@analog.com>
+	<20250619-sitter-uranium-e7298befd733@spud>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Works:
-* Both speakers
-* Both MICs
-* Headphones jack, L/R channels
-* Headphones jack, MIC
+On Thu, 19 Jun 2025 16:35:48 +0100
+Conor Dooley <conor@kernel.org> wrote:
 
-Now working/untested:
-* Sound over DisplayPort
-* Sound over HDMI
+> On Wed, Jun 18, 2025 at 02:34:57PM -0300, Marcelo Schmitt wrote:
+> > Add device tree documentation for AD4170 and similar sigma-delta ADCs.
+> > The AD4170 is a 24-bit, multichannel, sigma-delta ADC.
+> > 
+> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> > ---
+> > Change log v5 -> v6
+> > - Made reference-buffer string type.
+> > - Moved required section before patternProperties.
+> > - Made avss, refin1n, refin2n documentation open to accepting positive and
+> >   negative voltage specifications where appropriate.
+> > 
+> > The point of making avss-supply, refin1n-supply and refin2n-supply documentation
+> > open to negative voltage values is to allow device tree to specify the regulator
+> > true voltage level so the drivers won't need to workaround negative supplies in
+> > the future.
+> > 
+> >  .../bindings/iio/adc/adi,ad4170.yaml          | 558 ++++++++++++++++++
+> >  MAINTAINERS                                   |   7 +
+> >  2 files changed, 565 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+> > new file mode 100644
+> > index 000000000000..b7fe664bb87d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+> > @@ -0,0 +1,558 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/adc/adi,ad4170.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Analog Devices AD4170 and similar Analog to Digital Converters
+> > +
+> > +maintainers:
+> > +  - Marcelo Schmitt <marcelo.schmitt@analog.com>
+> > +
+> > +description: |
+> > +  Analog Devices AD4170 series of Sigma-delta Analog to Digital Converters.
+> > +  Specifications can be found at:
+> > +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4170-4.pdf
+> > +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4190-4.pdf
+> > +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4195-4.pdf
+> > +
+> > +$ref: /schemas/spi/spi-peripheral-props.yaml#
+> > +
+> > +$defs:
+> > +  reference-buffer:
+> > +    description: |
+> > +      Enable precharge buffer, full buffer, or skip reference buffering of
+> > +      the positive/negative voltage reference. Because the output impedance
+> > +      of the source driving the voltage reference inputs may be dynamic,
+> > +      resistive/capacitive combinations of those inputs can cause DC gain
+> > +      errors if the reference inputs go unbuffered into the ADC. Enable
+> > +      reference buffering if the provided reference source has dynamic high
+> > +      impedance output. Note the absolute voltage allowed on REFINn+ and REFINn-
+> > +      inputs is from AVSS - 50 mV to AVDD + 50 mV when the reference buffers are
+> > +      disabled but narrows to AVSS to AVDD when reference buffering is enabled
+> > +      or in precharge mode.  
+> 
+> > The valid options for this property are:
+> > +      0: Reference precharge buffer.
+> > +      1: Full reference buffering.
+> > +      2: Bypass reference buffers (buffering disabled).  
+> 
+> You forgot to remove this text. With that gone, I think this is
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> and that's explicitly an ack not an r-b cos I would like to see the lads
+> being happy with what you've done.
+Hi Conor, All,
 
-Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
----
- .../boot/dts/qcom/x1-asus-zenbook-a14.dtsi    | 194 ++++++++++++++++++
- 1 file changed, 194 insertions(+)
+I'm fine with it (late reply to earlier version) but I'm definitely keen to
+get other opinions on this as we are setting a new standard for how to cleanly
+handle excitation voltages etc in this binding.
 
-diff --git a/arch/arm64/boot/dts/qcom/x1-asus-zenbook-a14.dtsi b/arch/arm64/boot/dts/qcom/x1-asus-zenbook-a14.dtsi
-index c8d6d66d05c8..80cd3613c5b8 100644
---- a/arch/arm64/boot/dts/qcom/x1-asus-zenbook-a14.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1-asus-zenbook-a14.dtsi
-@@ -22,6 +22,32 @@ aliases {
- 		serial1 = &uart14;
- 	};
- 
-+	wcd938x: audio-codec {
-+		compatible = "qcom,wcd9385-codec";
-+
-+		pinctrl-0 = <&wcd_default>;
-+		pinctrl-names = "default";
-+
-+		qcom,micbias1-microvolt = <1800000>;
-+		qcom,micbias2-microvolt = <1800000>;
-+		qcom,micbias3-microvolt = <1800000>;
-+		qcom,micbias4-microvolt = <1800000>;
-+		qcom,mbhc-buttons-vthreshold-microvolt = <75000 150000 237000 500000 500000 500000 500000 500000>;
-+		qcom,mbhc-headset-vthreshold-microvolt = <1700000>;
-+		qcom,mbhc-headphone-vthreshold-microvolt = <50000>;
-+		qcom,rx-device = <&wcd_rx>;
-+		qcom,tx-device = <&wcd_tx>;
-+
-+		reset-gpios = <&tlmm 191 GPIO_ACTIVE_LOW>;
-+
-+		vdd-buck-supply = <&vreg_l15b_1p8>;
-+		vdd-rxtx-supply = <&vreg_l15b_1p8>;
-+		vdd-io-supply = <&vreg_l15b_1p8>;
-+		vdd-mic-bias-supply = <&vreg_bob1>;
-+
-+		#sound-dai-cells = <1>;
-+	};
-+
- 	gpio-keys {
- 		compatible = "gpio-keys";
- 
-@@ -149,6 +175,88 @@ linux,cma {
- 		};
- 	};
- 
-+	sound {
-+		compatible = "qcom,x1e80100-sndcard";
-+		model = "X1E80100-ASUS-Zenbook-A14";
-+		audio-routing = "SpkrLeft IN", "WSA WSA_SPK1 OUT",
-+				"SpkrRight IN", "WSA WSA_SPK2 OUT",
-+				"IN1_HPHL", "HPHL_OUT",
-+				"IN2_HPHR", "HPHR_OUT",
-+				"AMIC2", "MIC BIAS2",
-+				"VA DMIC0", "MIC BIAS1",
-+				"VA DMIC1", "MIC BIAS1",
-+				"VA DMIC0", "VA MIC BIAS1",
-+				"VA DMIC1", "VA MIC BIAS1",
-+				"TX SWR_INPUT1", "ADC2_OUTPUT";
-+
-+		va-dai-link {
-+			link-name = "VA Capture";
-+
-+			cpu {
-+				sound-dai = <&q6apmbedai VA_CODEC_DMA_TX_0>;
-+			};
-+
-+			codec {
-+				sound-dai = <&lpass_vamacro 0>;
-+			};
-+
-+			platform {
-+				sound-dai = <&q6apm>;
-+			};
-+		};
-+
-+		wcd-capture-dai-link {
-+			link-name = "WCD Capture";
-+
-+			cpu {
-+				sound-dai = <&q6apmbedai TX_CODEC_DMA_TX_3>;
-+			};
-+
-+			codec {
-+				sound-dai = <&wcd938x 1>, <&swr2 1>,
-+					    <&lpass_txmacro 0>;
-+			};
-+
-+			platform {
-+				sound-dai = <&q6apm>;
-+			};
-+		};
-+
-+		wcd-playback-dai-link {
-+			link-name = "WCD Playback";
-+
-+			cpu {
-+				sound-dai = <&q6apmbedai RX_CODEC_DMA_RX_0>;
-+			};
-+
-+			codec {
-+				sound-dai = <&wcd938x 0>, <&swr1 0>,
-+					    <&lpass_rxmacro 0>;
-+			};
-+
-+			platform {
-+				sound-dai = <&q6apm>;
-+			};
-+		};
-+
-+		wsa-dai-link {
-+			link-name = "WSA Playback";
-+
-+			cpu {
-+				sound-dai = <&q6apmbedai WSA_CODEC_DMA_RX_0>;
-+			};
-+
-+			codec {
-+				sound-dai = <&left_spkr>, <&right_spkr>,
-+					    <&swr0 0>, <&lpass_wsamacro 0>;
-+			};
-+
-+			platform {
-+				sound-dai = <&q6apm>;
-+			};
-+		};
-+	};
-+
- 	vreg_edp_3p3: regulator-edp-3p3 {
- 		compatible = "regulator-fixed";
- 
-@@ -372,6 +480,13 @@ vreg_bob2: bob2 {
- 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- 		};
- 
-+		vreg_l1b_1p8: ldo1 {
-+			regulator-name = "vreg_l1b_1p8";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
- 		vreg_l2b_3p0: ldo2 {
- 			regulator-name = "vreg_l2b_3p0";
- 			regulator-min-microvolt = <3072000>;
-@@ -843,6 +958,24 @@ keyboard@15 {
- 	};
- };
- 
-+&lpass_tlmm {
-+	spkr_01_sd_n_active: spkr-01-sd-n-active-state {
-+		pins = "gpio12";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+		output-low;
-+	};
-+};
-+
-+&lpass_vamacro {
-+	pinctrl-0 = <&dmic01_default>;
-+	pinctrl-names = "default";
-+
-+	vdd-micb-supply = <&vreg_l1b_1p8>;
-+	qcom,dmic-sample-rate = <4800000>;
-+};
-+
- &mdss {
- 	status = "okay";
- };
-@@ -1045,6 +1178,59 @@ &spi10 {
- 	/* Unknown device */
- };
- 
-+&swr0 {
-+	status = "okay";
-+
-+	pinctrl-0 = <&wsa_swr_active>, <&spkr_01_sd_n_active>;
-+	pinctrl-names = "default";
-+
-+	/* WSA8845, Left Speaker */
-+	left_spkr: speaker@0,0 {
-+		compatible = "sdw20217020400";
-+		reg = <0 0>;
-+		reset-gpios = <&lpass_tlmm 12 GPIO_ACTIVE_LOW>;
-+		#sound-dai-cells = <0>;
-+		sound-name-prefix = "SpkrLeft";
-+		vdd-1p8-supply = <&vreg_l15b_1p8>;
-+		vdd-io-supply = <&vreg_l12b_1p2>;
-+		qcom,port-mapping = <1 2 3 7 10 13>;
-+	};
-+
-+	/* WSA8845, Right Speaker */
-+	right_spkr: speaker@0,1 {
-+		compatible = "sdw20217020400";
-+		reg = <0 1>;
-+		reset-gpios = <&lpass_tlmm 12 GPIO_ACTIVE_LOW>;
-+		#sound-dai-cells = <0>;
-+		sound-name-prefix = "SpkrRight";
-+		vdd-1p8-supply = <&vreg_l15b_1p8>;
-+		vdd-io-supply = <&vreg_l12b_1p2>;
-+		qcom,port-mapping = <4 5 6 7 11 13>;
-+	};
-+};
-+
-+&swr1 {
-+	status = "okay";
-+
-+	/* WCD9385 RX */
-+	wcd_rx: codec@0,4 {
-+		compatible = "sdw20217010d00";
-+		reg = <0 4>;
-+		qcom,rx-port-mapping = <1 2 3 4 5>;
-+	};
-+};
-+
-+&swr2 {
-+	status = "okay";
-+
-+	/* WCD9385 TX */
-+	wcd_tx: codec@0,3 {
-+		compatible = "sdw20217010d00";
-+		reg = <0 3>;
-+		qcom,tx-port-mapping = <2 2 3 4>;
-+	};
-+};
-+
- &tlmm {
- 	gpio-reserved-ranges = <44 4>,  /* SPI11, TZ Protected */
- 			       <90 1>;	/* Unknown, TZ Protected */
-@@ -1175,6 +1361,14 @@ usb1_pwr_3p3_reg_en: usb1-pwr-3p3-reg-en-state {
- 		bias-disable;
- 	};
- 
-+	wcd_default: wcd-reset-n-active-state {
-+		pins = "gpio191";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+		output-low;
-+	};
-+
- 	wcn_bt_en: wcn-bt-en-state {
- 		pins = "gpio116";
- 		function = "gpio";
--- 
-2.45.2
+Thanks
+
+Jonathan
+
 
