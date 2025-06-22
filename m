@@ -1,229 +1,151 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2075.outbound.protection.outlook.com [40.107.93.75])
+Received: from poodle.tulip.relay.mailchannels.net (poodle.tulip.relay.mailchannels.net [23.83.218.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4933E72625;
-	Sun, 22 Jun 2025 19:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEA319A;
+	Sun, 22 Jun 2025 19:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.249
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750618954; cv=fail; b=Ri+3OK1WqEDf40akGHIYWCcD7entagAKPO7Cj0/YK/Y6VqETaMpx4+/ZIuYDJUkPAsmPUAJtknm2dpDuYOgkGGtVnElrTjRsAX0EgS4PpVsWws4rgSM5XJdtorYe9urTwADEM4qniyut99Fdw3WSZEMO1DXakKdOK1zF42ynytc=
+	t=1750619077; cv=pass; b=eGRuSEBeYlLqjX+ovTSp3Mch7LCYfwFjl/lhGyFi6bL9qAlGV0UtbKY2xP00+Bb2RpJ7h7R97CkSFZJcsN38YNLqax2mRf3Xy9qG6+B6qlc8dZajqDxlxysKMXcG/yABlt0O/Ku76m5SH5R/4m+wC5UIcCpbL7cLZpco9vGgzKU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750618954; c=relaxed/simple;
-	bh=Qy+e82zKdTOo+UEEzhyZj/Cz5lzmKgwEC98As2+KIlo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=IgeUBp/CKOtaq4sVP4hNCpWRuyZe6vwNdvKDGLtAtkgw25pf9OGmPSjnBqltVkQK4Fmceawwlzzs0b6G2AaUDOQHcLffv0hYd5xLSTgfcbWCyx81P6kQ+Ry4hTmQQ5C5PiYL3/t/AXiLlJafcYPYUk1VGFqBhHnFwilCCaEq3lM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ans+2pyg; arc=fail smtp.client-ip=40.107.93.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1750619077; c=relaxed/simple;
+	bh=bKcIu4YmFvKnN7tEOiXGIjqjmyQYPGhJ4shpLTJX2d4=;
+	h=From:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc:Date; b=q3So938cIZyzAzcB0RglBSfc5XZ6/1mou5jepi79U/Jzr3e2yHRr55QJ7kQuz83h6YF2LIbwZHxyBjBQTPYPcFXYRqwREvGcgmEXPLQWrCWPzUaA/5TBHg7BP2J+E5qw5ktOUgsK6/WYV/rsUOloMk80vYulGgnVXYpGgRnbiM8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com; spf=pass smtp.mailfrom=smankusors.com; dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b=QjWNTScA; arc=pass smtp.client-ip=23.83.218.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smankusors.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ans+2pyg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MxaTd1VXV1tQh4JN1aLNddnZe7kg1xGRXKrsk4C7RPCojvDd9R7Il41Mx2t8kpfRghbMZql/WvPrNw2sRjm/vgJkZS/+jwccjxRZRVodvk1mJMqAsTr22n4arM6/k1OcVC/GbJNnhaSxV41QPKVgzO5E4JvQ75x0NzUvnG9FZLxFMepfbrTHe0PqJ6deK4UvuOsuopTwc7mpIVXcbbzev+2vEL1R7q2t3+envFNTIvjtFYrwxMeUoI1c6dtdgGafTlwa/HF7UNLV071ehnLPnXy/H7raEIQqgdP7vlaG9LnvCUAmtmM6MAH8jy8ml8bMnqInEeBlUfEGmlEQIJccww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=piFz6VUhxmOMQd2w6w7A5HRtw0SnS71S+PPc/KNu7co=;
- b=dbcT0qlhW9rMXB6FUhE+PmwLTbKe3sNQR9N3yb/J0RhxhBwJlTcv0Zh1zdxjXR/6juIRxHHUIvg3xWpdmF3bNxavn2zvDpr1tt0cFgk3SO9ha+PokPFciQMBWSeo5L+PWg+qA4rZi4ZHTAlXYCmOlrkjYsbPnk+9IimC0AIZSOZ/bSbXBUNJp+0KzzHgR9OVkUNQHAysgcUS5r1y3wKDUCqfgPlK89lWgB+ZpdgOVGHrFIOq0wrJh+txCtVWC7T+/vx3dEVTEAbBwxdpQFjTMOj2ov0LjadLC/R51blk88YuHKBfCUZwhEnT+eF87VDMxHeMYwQjONAmwOn7zxPy+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=piFz6VUhxmOMQd2w6w7A5HRtw0SnS71S+PPc/KNu7co=;
- b=Ans+2pygTty7XKJYVaaR1wS5Fx5FHzyrmesr3BGG0SNv9kvaws6tzpufLL+2JzIQYxEjHNwDRH4JdTsZoM54H+VuwkGvcQ99eOhCr7BoRnl7HHwj3HJjvUkfLN+e1NQOfAECBmmsyf/b6ISRBIIPCv4DGh1Mg2lBtFG1zPXTDWw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
- (2603:10b6:a0f:fc02::9aa) by DS7PR12MB5838.namprd12.prod.outlook.com
- (2603:10b6:8:79::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Sun, 22 Jun
- 2025 19:02:29 +0000
-Received: from SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
- ([fe80::40bb:ae48:4c30:c3bf]) by SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
- ([fe80::40bb:ae48:4c30:c3bf%8]) with mapi id 15.20.8722.031; Sun, 22 Jun 2025
- 19:02:29 +0000
-Message-ID: <d1d7feed-c450-4b88-ab73-a673f4029433@amd.com>
-Date: Mon, 23 Jun 2025 00:32:05 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] filemap: Add __filemap_get_folio_mpol()
-To: Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>
-Cc: seanjc@google.com, david@redhat.com, vbabka@suse.cz, shuah@kernel.org,
- pbonzini@redhat.com, brauner@kernel.org, viro@zeniv.linux.org.uk,
- ackerleytng@google.com, paul@paul-moore.com, jmorris@namei.org,
- serge@hallyn.com, pvorel@suse.cz, bfoster@redhat.com, tabba@google.com,
- vannapurve@google.com, chao.gao@intel.com, bharata@amd.com, nikunj@amd.com,
- michael.day@amd.com, yan.y.zhao@intel.com, Neeraj.Upadhyay@amd.com,
- thomas.lendacky@amd.com, michael.roth@amd.com, aik@amd.com, jgg@nvidia.com,
- kalyazin@amazon.com, peterx@redhat.com, jack@suse.cz, rppt@kernel.org,
- hch@infradead.org, cgzones@googlemail.com, ira.weiny@intel.com,
- rientjes@google.com, roypat@amazon.co.uk, ziy@nvidia.com,
- matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com,
- byungchul@sk.com, gourry@gourry.net, kent.overstreet@linux.dev,
- ying.huang@linux.alibaba.com, apopple@nvidia.com, chao.p.peng@intel.com,
- amit@infradead.org, ddutile@redhat.com, dan.j.williams@intel.com,
- ashish.kalra@amd.com, gshan@redhat.com, jgowans@amazon.com,
- pankaj.gupta@amd.com, papaluri@amd.com, yuzhao@google.com,
- suzuki.poulose@arm.com, quic_eberman@quicinc.com,
- aneeshkumar.kizhakeveetil@arm.com, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-security-module@vger.kernel.org, kvm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-coco@lists.linux.dev
-References: <20250618112935.7629-4-shivankg@amd.com>
- <20250620143502.3055777-2-willy@infradead.org>
- <aFWR-2WAQ283SZvg@casper.infradead.org>
- <20250622114322.c6c35800e01e4cc4007a0f89@linux-foundation.org>
-Content-Language: en-US
-From: Shivank Garg <shivankg@amd.com>
-In-Reply-To: <20250622114322.c6c35800e01e4cc4007a0f89@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BM1P287CA0015.INDP287.PROD.OUTLOOK.COM
- (2603:1096:b00:40::33) To SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
- (2603:10b6:a0f:fc02::9aa)
+	dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b="QjWNTScA"
+X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id D45BE8A52EE;
+	Sun, 22 Jun 2025 18:26:55 +0000 (UTC)
+Received: from fr-int-smtpout7.hostinger.io (100-108-113-245.trex-nlb.outbound.svc.cluster.local [100.108.113.245])
+	(Authenticated sender: hostingeremail)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 943338A4683;
+	Sun, 22 Jun 2025 18:26:51 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1750616813; a=rsa-sha256;
+	cv=none;
+	b=nyWMhpQ0DI3j/beyGc2JzLVAXqwVuiHWm6ZYXfopny/wFGf+TNFwtaiZnfj7CD4g0r8dBP
+	ew/a6Py9Lcdyb2TMJCwZ/isA4QXzJTvgDJkaE7wh/+fHvzn97jZqP5sEc3kWThCcfHB+zf
+	spVhOHnOLB8Nyg4u6XEefqK17hOw1aYdJTgh59xdTpB5nTBDl1nEuE2qrkLrNOGY1rnMLL
+	SJBOiv/2xBw51qMNoezTPL4LecHE736ZEzk3boibMZMfn9F3/l68TBK5qQmEGNhFR0VEmv
+	L3kUoM6TFJCLs0DTRG8CSz8c7w5jh6oZNtsCRoeXSw/U/qEeT+JT5wEOhnR8wg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1750616813;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=t2GFeEqAL58m2f02+3xj/U2MJQmHIsbUnxB2cKRe7HM=;
+	b=DP7/qmzzxJk4RaG4zVZd8k5aVbj22IgE93HCLEPyNakEO7zN+NplhPLkv3ziOxaiBYNu3W
+	rkZhx8O4HZ64KTqjdNkEnYMSV5RKHrCeM5yWbxbrcM7PGav+tmuCGFld3DKAsT3INTiIfk
+	1x6lE6GGg9Yghnvj86xoeEjmf1CttJVWkbzYT9qCPyAF9R23dBOL5MNXDLhHP0CsdnVP0h
+	94DKEwoAqB/nqYnYkHMdtdlmk79qAm9s0QAE6vkZViQKaaCbo80whyeKifJYMjUDLiPawo
+	kw23GKOUvd8VNHdZpdfNgrPJbvCgM3euwqK3eBZzH1Uzn8tGNWU3oKx/8BXYxg==
+ARC-Authentication-Results: i=1;
+	rspamd-6597f9cdc7-npqlj;
+	auth=pass smtp.auth=hostingeremail smtp.mailfrom=linux@smankusors.com
+X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: hostingeremail|x-authuser|linux@smankusors.com
+X-MailChannels-Auth-Id: hostingeremail
+X-Scare-Glossy: 0c7b7ccd4fa228b3_1750616815774_3533473480
+X-MC-Loop-Signature: 1750616815774:3947712857
+X-MC-Ingress-Time: 1750616815774
+Received: from fr-int-smtpout7.hostinger.io (fr-int-smtpout7.hostinger.io
+ [89.116.146.203])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.108.113.245 (trex/7.0.3);
+	Sun, 22 Jun 2025 18:26:55 +0000
+Received: from [172.17.0.2] (unknown [36.79.123.39])
+	(Authenticated sender: linux@smankusors.com)
+	by smtp.hostinger.com (smtp.hostinger.com) with ESMTPSA id 4bQKRq3F3wzKLLGv;
+	Sun, 22 Jun 2025 18:26:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smankusors.com;
+	s=hostingermail-a; t=1750616809;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t2GFeEqAL58m2f02+3xj/U2MJQmHIsbUnxB2cKRe7HM=;
+	b=QjWNTScASiUYMENJ1b402rf/xnzF13ssi+tXlV0dKgZ3SNzfibI2hEk8q1eLE5x5mthetI
+	/L8fS8h7p19XLmdVsn6R2v1u/g9/wpihQQpUHp5PfzWZr4y9+uH/KUnnarCciU6VdxJaGr
+	4su8twYsggwuOw6AKSPtCZ5JI6Xcs9aAyLRfetcayv4aZTXieVCysVhhDrjr1V3ocpRhK+
+	rRPC1I5CcIlzZyMAfwPVQFBHoCFCFgY+KyhaXoCV/aqrP687ncpZ+xUX+e6B5cfydrVN7Z
+	Srq5EbY0DJJ6wUBAlWKl/tDv4UmVNT8/6IbHpBOB6wCbxMpGgXyl5YGSrw2mnA==
+From: Antony Kurniawan Soemardi <linux@smankusors.com>
+Subject: [PATCH v2 4/5] dt-bindings: arm: qcom: add Sony Xperia SP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PPFF6E64BC2C:EE_|DS7PR12MB5838:EE_
-X-MS-Office365-Filtering-Correlation-Id: 989488bc-1f70-400e-8bc4-08ddb1bf5555
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aTVBS3JJT2E5SEVNV2lMOU5VOHF4Rk56SHZtTWpMaXlxcitzWG1iNFFiUmsw?=
- =?utf-8?B?VU9wU0c1amk0RC8vamtQcTBZeXljdjByYXVwMU1oNmFobkNpeUVPNnJNMFJJ?=
- =?utf-8?B?N3o3QUY2WTVkeCs1NUw0OThldjR2aWJRZ1lzaU9MUkI5Z21VYlJlcG4va2dM?=
- =?utf-8?B?LzFlOHR2Nk9sTWsvR3lLUVJJNE1NcFZad0hQLzhrdEwrcElDR0gwd3kvYWdD?=
- =?utf-8?B?bWxnMmo3UjJ5OEV4V3lwUmszeXhaend1aGgyZEtKRFpPR1o1elhRdlV5OXBv?=
- =?utf-8?B?Ymo2TGhVbkFZUnFyZmpPMzV3bG9NYUxLRlg5SUNBMVVSZllBKzhxM0FHNTZT?=
- =?utf-8?B?aUFHZFNJeFAzQks5WUNDcTAzM0ZTd3VwbFV4T0xTaFc2SVpJTnZKWktkenkr?=
- =?utf-8?B?dk5vWjczLzdZSHl2WGErcFE3UkVDYW9rWWgrN0thV1Q3eGJrSk9yMXl5WHpX?=
- =?utf-8?B?Sy94UkxSZ3JIWGtZOUtFZm9BaDkwbEVUL2tDMitnMGJxdDA0dzZTdUIyc2k1?=
- =?utf-8?B?eGJTTXlEQ2cxeHdnWnBsc2hzWFNlaGcxNVBCREI5NnFnV3dXY0QwZDU3SWhX?=
- =?utf-8?B?TDdWVVNrZklsY1IvdFVHQk1PQVoydUdCMklIWWVkQzlmRklaejM2TmNnRWFz?=
- =?utf-8?B?OEplZjVwenRQd1dTNElvNFRLY01hZzhwNGpRMlFBQWxuSUlVSmM1b3AxamNr?=
- =?utf-8?B?VEV4UnRQY1pRZlRUQy81TWlHYVhHMmhPMVJCUlpQMnZQdHdubDlmUWxVYk9k?=
- =?utf-8?B?TGlnTG82a3pFdHc5Z1paQUUrNmxzZDl5Mzl1dTVHMjh0R0xPWVJZS3AyaU5V?=
- =?utf-8?B?N1hzU1VtMStvVUdYWmpHbHN4byswN2VieGtFU3lMN0tVNFZNSEg0NDExaENL?=
- =?utf-8?B?ODFUVHBIN3B4S0VDUldNMDNybmRkN2N4QnpTV0hac2xMV2VoNW5JbGZTdE5w?=
- =?utf-8?B?T1AvbW9mSnUxR2pkc2JybnZoZlg2YlIvTmk5Z0ZSWDBsY2tGaWtITlBQLzVP?=
- =?utf-8?B?dXdwcDNPeWNzMmd2aUZ4RFB0a0EvcHRrK3RhclVXUXpLdUsrMVhpYUFSblh3?=
- =?utf-8?B?OWs3dlNBR0MzMkdUbWJLV2RjM1Q5YnhOK3JnYWNvWDY4bHE0REpMVy80Tmo3?=
- =?utf-8?B?a1VvRDNLK05QcktpT1djemtHcmFzSVFiZmFBWm5rWmRxSG1uNC9PWm5PM1BQ?=
- =?utf-8?B?ekhvK3JLUXlQOHNpcXFmN3p2a0tKeFBLN2NSbUNUY2xmd3lWNWhHNGEwZm9J?=
- =?utf-8?B?TEFRSi9CUDhKS09FVzBNL0ZiY0pTWmNkdmQ3MzM0VHhZQklGVjQ0VFRFMkJM?=
- =?utf-8?B?T3JMVitEc0lPcW9tcDg4YlZ2UGEvS1V4UWZicnBwR1prTjZ0RkRNOFhpbTNX?=
- =?utf-8?B?WXo0aHNKSUl0U3F0TEkvaEdjT0NtUFM3eFEwTFMzZWNpTlVUWFd5dXBObitw?=
- =?utf-8?B?SDdnZ1N5NEI1SExrajRMR3hhRUpoTDc5b28xL1EwN0dXVm5rVWlQM0hsM2dh?=
- =?utf-8?B?eHJyQVJFc0UzNUdBWkZIOXZCdkMrSk04VFFzdEpLYWpYZ2R6U1lGYjFnWDhv?=
- =?utf-8?B?ZTMvMWdKbmJGL0xUMjV1aVFFb1pXM3NSY1JkdmtwYmtiK2NVcWpja2JJeWpI?=
- =?utf-8?B?YUQxanRNdEFUZmMrUHBvRmtIajlZRlVweFZ3eVl2UDdScU53aXE5NTF5U05v?=
- =?utf-8?B?MitlbitpTGoxSG11QkNJeGV1V0FHRFFiMkFJSkpSazBBOWpDWGFBc1R2cUs1?=
- =?utf-8?B?WVAybnZXbEwwakd2dGdVVmhWaXNUOTJXS0U5OU5jUm1sTUhaaVNJRk5QZ1VL?=
- =?utf-8?B?NThBRWNnUjBqc2crVEg4bnNYWmhRKys0dkczNzRhbnM3ZGRRREtCUjd3QnJN?=
- =?utf-8?B?cU1kVkpiRUQ1ZitJSXUrWFlUa0oxd0I2NUUxUWxhTUVwYkE9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ5PPFF6E64BC2C.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Vm5JOGkyM3pUWUJiQ2laM2I4ci9keWNkUFVUcXpkdkoyS0tIWVNpeG9pRWVk?=
- =?utf-8?B?bHdEb25Udi82TklBZGtpV2Q5Ym9TaHJ0SzNCOU8yWlVDeHEzY1drUVk5aXdF?=
- =?utf-8?B?RUx5TkpTbEFQblhqb3F4K2M2ZW1LVzFJajF4OFFENmFkMTBoa2VnU0ZmYkZn?=
- =?utf-8?B?OWc3a3VRdnJHazlqZzlyRzQ3bm9xL1M3aVJpa01vaWpFWmpxM1dTeHdZUGxP?=
- =?utf-8?B?RE56dXFPNC85ZVdZZXE1RzdxWlhPOFRabCtudm5yZStaa2dHNVh4K0lkTWZ2?=
- =?utf-8?B?UXBoM05CckpGd3g1WUppbHNsZGRJL2FaQmdLOUV3VkxnZ0JrM1JXdE5mU0N6?=
- =?utf-8?B?djR0SEtadzRSVUM0TlpWdkJ6QmlEQWlSSmJBU3BqM1lXNjlhcEhIUHpRUENm?=
- =?utf-8?B?eWV2Z1VSbnFCMm1MSXdhR2ViQWY0T1NtYkM0cW84WnhFZTQxems2VFI2Zkpz?=
- =?utf-8?B?SVZkeTN2dnp6ZldqL3VibkVEdkx3d0MxUnVGSkJKa3ZOOVJPQkkwa2FtTVB5?=
- =?utf-8?B?L3h4aTFrY21uNlNuVHJBM29XMWowd3M4WmJZRzlsbkwwWHorVk5QdDMwekRH?=
- =?utf-8?B?SHZKbE9rajdrY0VUQ1p4YVY3OCtndSt6WEFNY1d2Ulk3ZTV6R0NmZU82bVIw?=
- =?utf-8?B?R0piSTRJTWlCRzRJZTFBSkNVbWdzZVlybUV6OGRIMWMzN3hoSVE5em1IUXZD?=
- =?utf-8?B?QzdQSk5kdjM4MTdHSWM1SnBBT0JZV0hwQWFpVDMxWmUrL2lrQ3BBK0xxK05Y?=
- =?utf-8?B?QngvNGZ1T3NTNFlzT01NUVhlZDExUGxyNFluTWZSRUhMczRXQzNrTWlhQTJI?=
- =?utf-8?B?RGZFRmZobFhzcHNSZXN4ZzlRa3I0VEkvQnp1RmFWbmM5VVlaN2ZScHFRc2ZM?=
- =?utf-8?B?MkYrNndkbUNXN3FCN1ZLUEQ4cDg3Q25WejJiVjYvbnVBSHZHRWtSaXRTMnNB?=
- =?utf-8?B?YmdLSW4yOC9zeEt1WE91VVgxWTRTQ2pRdFZNWmRsL2U3QlUrL1llTVNrQlBY?=
- =?utf-8?B?cXJaRnFRSHFvbkYxQXZHdjdWUG1ZWEd2QWg3Y2JtbmVhQ2Z3b3B6Lzlnc3J6?=
- =?utf-8?B?ODVPU3ozeGZYd0pKOG8xeFZnUkEwMjJxSEltNDdaK1kzME5iYjNEZEhrUkxE?=
- =?utf-8?B?OC9ORWZLdVFmRUdyS3VoRE9vcGJtQVQwWmhMUys4cDZIcFdzbGhod201ODZZ?=
- =?utf-8?B?MnYrOXFEZGVxbXhDci94b1RXeGgwdFR0bzRXQUlxeTFRQXMxRTJRYzkyMnRk?=
- =?utf-8?B?STdZbzc0RDBNdGlxZEZGTHhabjEvb1FPVWxDaiszd2RrWU9DT2Z5RFkyLy9u?=
- =?utf-8?B?dzBkSEszdno1SFl2dGpjbDB0VXUzbEx4ZWVlMU9vUCtOTXoyK2F3Z3lBWCtK?=
- =?utf-8?B?b0pEV1FBTzhWV2dDTGdoNlFKL0l4WVM2eXg5cm9zK2lKMnl3cWliYjYwZHRs?=
- =?utf-8?B?Q2MrQnpHTG12ZWcwcE5sMDNhR3pUTHhTRy91R1pwQWEvRlUxSCtCOGNyTVUx?=
- =?utf-8?B?RlhvZkdiSTk5eXFORkN0UythdTBBa0ZwdW5xbTlqd05TNUhRUVlJc3h0UHRu?=
- =?utf-8?B?bzRHb1MzYXlOSzlyZ0FsZzNHdkpMOXpVVVh2NHhEMHFER3pMV3MyT3ROeDNn?=
- =?utf-8?B?bDdxaUFkMTBGbG9UYVdsYStFRVI5MEdLTHNPNmZ1dHJwRWt2STI4dXZ6K2pS?=
- =?utf-8?B?Y3dGYnM1S2d2cHhHUHhzT2dYeUQxTjJDUm5xVi9MOWNUWnRxb1BlYm9hYklX?=
- =?utf-8?B?VVAvd3VYd01zQ051TytlWWRpUTN6WGliWWRKVE9Oa05rRVp1VXVpMWpReDI4?=
- =?utf-8?B?Q2g0cTd0U0JFUWtBSDcxQXFOd3lmNTAraDZseXc5THNyZmUrUERtc1ZXL0ZX?=
- =?utf-8?B?TzFhaVFCRTJHRHVTTGV1cW94bFlmUTBBelowLzhweldlZy9IWWpTL2dlMXdS?=
- =?utf-8?B?UFQ5MlVtNDlJSHlHZmYyOEJoR0dXZHdVa3gyTzRBYkxxWElOWE5iOXZQeWFk?=
- =?utf-8?B?bUQwc1RCcUxsb0hmUXd2TE13YTlzODhlK05Bb2Zyam9raU1hWEZGY1IrOXZa?=
- =?utf-8?B?OEFFdCtmWU90TUx3NXhlWVRwVldGMmhkZkVsWlJPK1RBaE1LaEtjNkVkckFt?=
- =?utf-8?Q?372k/HEMCSKYW/3j5yTIvlQiY?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 989488bc-1f70-400e-8bc4-08ddb1bf5555
-X-MS-Exchange-CrossTenant-AuthSource: SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2025 19:02:29.0038
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ybDEWp8KB4n4OOeQGgccK/ewj3DbuBq4pO9xFFBjuia0T4XWkIAAlBvo4pM15szJGtIqkQfFUAY/W1rDiN/GdQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5838
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250623-msm8960-sdcard-v2-4-340a5e8f7df0@smankusors.com>
+References: <20250623-msm8960-sdcard-v2-0-340a5e8f7df0@smankusors.com>
+In-Reply-To: <20250623-msm8960-sdcard-v2-0-340a5e8f7df0@smankusors.com>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Antony Kurniawan Soemardi <linux@smankusors.com>, 
+ Max Shevchenko <wctrl@proton.me>, Rudraksha Gupta <guptarud@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750616795; l=1221;
+ i=linux@smankusors.com; s=20250609; h=from:subject:message-id;
+ bh=bKcIu4YmFvKnN7tEOiXGIjqjmyQYPGhJ4shpLTJX2d4=;
+ b=xvNmIM2GYI2GF2ZQkDVjAXE2rM2uhPGwdqvnY03K/QghECbts+o7+KAgTnaF2UcmqBJwXm4s4
+ 0kIhReoGUB2CIMZRXh7knEFFKwtp1Grp93Chgq63Th1U7cXPF9F0/dc
+X-Developer-Key: i=linux@smankusors.com; a=ed25519;
+ pk=65wTy06fJl2/h/EJwjr704YG+yjHFhZObJBWzzK+N00=
+Date: Sun, 22 Jun 2025 18:26:47 +0000 (UTC)
+X-CM-Analysis: v=2.4 cv=Vv1xAP2n c=1 sm=1 tr=0 ts=68584ae9 a=vFgqIyFt8cetXi1S0ACNwg==:117 a=vFgqIyFt8cetXi1S0ACNwg==:17 a=IkcTkHD0fZMA:10 a=wxLWbCv9AAAA:8 a=bYGVSWbl8t4XKdEgDhAA:9 a=QEXdDO2ut3YA:10 a=QJY96suAAestDpCc5Gi9:22
+X-CM-Envelope: MS4xfJxIfTay/nKcFcvrBvYfiT8b3u36onuCWFGoq8WJO0/X8OHNDkCSEykctn+1MOK2KD+K2OKfwb5lngihcYGKR5JpegIylBIIbpioJHl2fSENlgXQYRVo 9XM88AgeDAQDHdDiIvCguHzVTHpQ14Fik5aNSlPyrnbjEclpSIhX7dpHjFI/7x1z7lR42q+oyUXDS6aDMF/FHa+YuVS/WGVa8m9sJhvwLbsnILrgr9kmYzIj hvxwncx6vwVGyonx/KWLFjDVo27CcHN8OU6Tfrp9Xf0yw4A9PxyGYQaDlRc6I0woAU/D+VQfn+tVXgN/1/T2inRgic8a+7aNfwxU8i13yfwH4+cMCvSOtSgx iWOMJispdG6RQtL8iQUIWsO5NVLv049b5Cuk01QNIr5Te3onYeWg1zh++Cmx2vxkEjsuUvfgdc3dY13bLxLOE/sgd/Z0/010Atasxk8wJOtdIdeWZyeuliLT qozCc8b266LPxjWfrRnMU+7gWD7qOvnjfN854xw5IIc1/SXb6sjmDbC8cYI=
+X-AuthUser: linux@smankusors.com
 
+Document the Sony Xperia SP (huashan), which uses the MSM8960T SoC.
 
+The MSM8960T is a variant of the MSM8960 featuring an upgraded GPU
+(Adreno 320 instead of Adreno 225) and a slightly overclocked CPU
+(1.7GHz instead of 1.5GHz).
 
-On 6/23/2025 12:13 AM, Andrew Morton wrote:
-> On Fri, 20 Jun 2025 17:53:15 +0100 Matthew Wilcox <willy@infradead.org> wrote:
-> 
->> On Fri, Jun 20, 2025 at 03:34:47PM +0100, Matthew Wilcox (Oracle) wrote:
->>> +struct folio *__filemap_get_folio_mpol(struct address_space *mapping,
->>> +		pgoff_t index, fgf_t fgp_flags, gfp_t gfp,
->>> +		struct mempolicy *policy)
->>>  {
->>>  	struct folio *folio;
->>>  
->>> @@ -1982,7 +1984,7 @@ struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
->>>  			err = -ENOMEM;
->>>  			if (order > min_order)
->>>  				alloc_gfp |= __GFP_NORETRY | __GFP_NOWARN;
->>> -			folio = filemap_alloc_folio(alloc_gfp, order, NULL);
->>> +			folio = filemap_alloc_folio(alloc_gfp, order, policy);
->>>  			if (!folio)
->>>  				continue;
->>
->> This is missing the EXPORT_SYMBOL_GPL() change
-> 
-> I added this:
-> 
-> --- a/mm/filemap.c~filemap-add-__filemap_get_folio_mpol-fix
-> +++ a/mm/filemap.c
-> @@ -2032,7 +2032,7 @@ no_page:
->  		folio_clear_dropbehind(folio);
->  	return folio;
->  }
-> -EXPORT_SYMBOL(__filemap_get_folio);
-> +EXPORT_SYMBOL(__filemap_get_folio_mpol);
->  
->  static inline struct folio *find_get_entry(struct xa_state *xas, pgoff_t max,
->  		xa_mark_t mark)
-> _
-> 
+Signed-off-by: Antony Kurniawan Soemardi <linux@smankusors.com>
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Hi Andrew,
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 56f78f0f3803fedcb6422efd6adec3bbc81c2e03..6a957901a664b26c586e45876447b83f849fb5ba 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -44,6 +44,7 @@ description: |
+         msm8953
+         msm8956
+         msm8960
++        msm8960t
+         msm8974
+         msm8974pro
+         msm8976
+@@ -203,6 +204,12 @@ properties:
+               - samsung,expressatt
+           - const: qcom,msm8960
+ 
++      - items:
++          - enum:
++              - sony,huashan
++          - const: qcom,msm8960t
++          - const: qcom,msm8960
++
+       - items:
+           - enum:
+               - lge,hammerhead
 
-Thank you for addressing this.
+-- 
+2.34.1
 
-If you don’t mind me asking,
-I was curious why we used EXPORT_SYMBOL instead of EXPORT_SYMBOL_GPL here.
-I had previously received feedback recommending the use of EXPORT_SYMBOL_GPL
-to better align with the kernel’s licensing philosophy, which made sense to me.
-
-Thanks,
-Shivank
