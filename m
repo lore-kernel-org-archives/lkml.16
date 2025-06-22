@@ -1,114 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A245D3C3C;
-	Sun, 22 Jun 2025 18:06:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28BD3C3C
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 18:20:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750615577; cv=none; b=ktzMMI8sOMGDJAHEtjsIG0xPfJhAdtrluLPpPyplDmzeLf5ywRlfkuC5AS0/Rd1+zVULTlyXGzP0o2L0OUS0UB8CjbVVIMWBy1WPE+a7GCeTbf4m4VDvoejkJAtUljtABmzFcyuc1tgt/Xz06Q+exeQKAqBrDZ74lbiAT5DWCLc=
+	t=1750616415; cv=none; b=XfzIu7/UDS2IKSlvzeoj0dRvt0YhYdgbmd3TA1Jbl0+o6ll6fgsCEj0XG5OT3tlphurUDQJvcNmIK/t6RWTm1CWAgqyyeEW6dfpkwXRGSnEH1sqY4ocfw/XpYg1Bgnvaf78be1wqMRomW3VG3FrfhCvgWMZaEBGl+0+O1KjWSxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750615577; c=relaxed/simple;
-	bh=G+1VV+8Dv8WE4EtqdZO2Q5kzqJq8urctAMEctkTRWpw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eqg73JmNlTwmGbiVvr+k2ftZqU2QMbCdqUl02s0EaVZ30eUPv1uFDSwPwQfTgsQqVCbXLWn1EC0q6Up/dfCC1Y+Y+2fBgKdz+daHjtXpnPwQ4yYn1RnXe+CdqO2JdBWTqSb+ChdZkCLL0+f01+apnDy4rfDz4cBMrUKrbFvfhr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XCFhi6Kq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750616415; c=relaxed/simple;
+	bh=xKpjszj45fccyF1wniGznLW5sJu/kWH0mimsGFl4PHs=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=pvEL0FHQf8CRuTrmTKLuw/zlY46fHkaH23+DfgzpJvyl0yu8Lus83amSXeQoslLCRCs7Em9Sgsff/LrICHKbI6CrYHb4B8Kug/dHSikcbzOuzHCdzgDP5h1Z1cGTmM7obrEZ5Tlp4ICkr20P4HHi4LZbhbf1z8ICj92VBOc6/0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=0PRlNCEP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XCFhi6Kq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 050E8C4CEE3;
-	Sun, 22 Jun 2025 18:06:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750615577;
-	bh=G+1VV+8Dv8WE4EtqdZO2Q5kzqJq8urctAMEctkTRWpw=;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="0PRlNCEP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE17AC4CEE3;
+	Sun, 22 Jun 2025 18:20:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1750616415;
+	bh=xKpjszj45fccyF1wniGznLW5sJu/kWH0mimsGFl4PHs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XCFhi6Kq496aOfHR+0tWDo3R9Ag9+NNYzjTdZDpWhUoYaWlJzTRr4cYTj0AeRcDjY
-	 lUCO3tkB/PqEMtVVHAFk/miBPbM+jUgxmhdqQxGJAkJ+scVhw8x3R0zs6VL3J6e1un
-	 X/YP0lwqL9EznIaPTe33fScZTosK2FppZl9/Z3ds0lfdrByz6O2PPm96Pw70MTiYrw
-	 JTv/78J4nKGCXd8bjnHAP2dPDui2r/JHE55sRajd3IvPBhGMp5/FOm22oXDgzxYaL0
-	 fYgQdW3qBFTF7rlOhyXgIMDb61POye2Bh0I/VYNKqM1tmI+UpcS1NpBdTLMv6WKzF0
-	 1QTj2zMw2kJDA==
-Date: Sun, 22 Jun 2025 20:06:13 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Akira Yokosawa <akiyks@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, Linux
- Doc Mailing List <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v3 15/15] docs: conf.py: Check Sphinx and docutils
- version
-Message-ID: <20250622200613.5ad18093@foz.lan>
-In-Reply-To: <c05dd5dc-1e30-4a2c-80dc-70e8b62cc681@gmail.com>
-References: <cover.1750571906.git.mchehab+huawei@kernel.org>
-	<972673b0a5bf5537d47780d6f8e70ae45456e751.1750571906.git.mchehab+huawei@kernel.org>
-	<c05dd5dc-1e30-4a2c-80dc-70e8b62cc681@gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	b=0PRlNCEP8rSWb7O6GfUFvJYxk9E9xLV6tn+3XmNq/Sh/bsTbwOcbOF35r64cC55Tk
+	 ZlsN2aFPatj5qhqfY2CUeB4epG4XgQFLWa3V4OEnqgDpt0n3zJ7LOEmj+gxs+HD/Rd
+	 fGc9E1e/gTr2y1q5FNO5XhmCARnUFIe8xPRE6SJ0=
+Date: Sun, 22 Jun 2025 11:20:14 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+Cc: andreyknvl@gmail.com, arnd@arndb.de, david@redhat.com,
+ dvyukov@google.com, elver@google.com, glider@google.com, hch@infradead.org,
+ kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, ryabinin.a.a@gmail.com, vincenzo.frascino@arm.com
+Subject: Re: [PATCH v2] mm: unexport globally copy_to_kernel_nofault
+Message-Id: <20250622112014.76bdd8929ecdb1c1fb3015b5@linux-foundation.org>
+In-Reply-To: <20250622141142.79332-1-snovitoll@gmail.com>
+References: <CA+fCnZeb4eKAf18U7YQEUvS1GVJdC1+gn3PSAS2b4_hnkf8xaw@mail.gmail.com>
+	<20250622141142.79332-1-snovitoll@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Em Sun, 22 Jun 2025 20:19:52 +0900
-Akira Yokosawa <akiyks@gmail.com> escreveu:
+On Sun, 22 Jun 2025 19:11:42 +0500 Sabyrzhan Tasbolatov <snovitoll@gmail.com> wrote:
 
-> > After check Sphinx release notes, it seems that the
-> > version compatibility is given by:
-> >=20
-> >         =3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D   =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >         Sphinx   Min Docutils   Max Docutils
-> >         Version  Version        Version
-> >         -------  ------------   ------------
-> >         3.4.3    >=3D 0.12.0      < 0.18.0
-> >         4.0.0    >=3D 0.12.0      < 0.19.0
-> >         6.0.0    >=3D 0.18.0      < 0.20.0
-> >         7.0.0    >=3D 0.18.1      < 0.21.0
-> >         7.2.0    >=3D 0.18.1      < 0.20.0
-> >         7.4.0    >=3D 0.18.1      < 0.21.0
-> >         8.0.0    >=3D 0.20.0      < 0.22.0
-> >         8.2.3    >=3D 0.20.0      < 0.22.0
-> >         =3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D   =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >  =20
->=20
-> <nitpick>
-> So this is what I see in the changelog (not looked into < 6.0.0):
->=20
->          =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->           Sphinx version     docutils version
->           (since)              min       max
->          ----------------- ------------ -------
->          6.0.0             >=3D 0.18      < 0.20
->          6.2.0             >=3D 0.18.1    < 0.20
-> 	 7.0.1             >=3D 0.18.1    < 0.21
->          7.3.0             >=3D 0.18.1    < 0.22
-> 	 7.4.0             >=3D 0.20      < 0.22
-> 	 (up to 8.2.3)
->          =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> This Looks quite different from yours ...
-> </nitpick>
+> `copy_to_kernel_nofault()` is an internal helper which should not be
+> visible to loadable modules – exporting it would give exploit code a
+> cheap oracle to probe kernel addresses.  Instead, keep the helper
+> un-exported and compile the kunit case that exercises it only when
+> `mm/kasan/kasan_test.o` is linked into vmlinux.
 
-Thanks for your feedback!
+The recent 707f853d7fa3 ("module: Provide
+EXPORT_SYMBOL_GPL_FOR_MODULES() helper") quietly added a thing which
+might be useful here.  As far as I understand it, this will permit us
+to export copy_to_kernel_nofault to kasan_test_c.o and to nothing else.
 
-Getting this right is not too easy, specially since not all
-changelog mentions docutil version. Btw, one of the factors I=20
-used when building my table were to check the release dates=20
-of Sphinx and docutils. So, I manually adjusted some entries,
-as changelog usually say something like:
+"might".  It depends on how "exploit code" might get hold of the
+symbol.  Perhaps you/we can discuss this further.  Is the problem that
+copy_to_kernel_nofault() is non-static?  Or it the problem that
+"exploit code" is itself a kernel module?
 
-	Release 5.0.0 (released May 30, 2022)=C2=B6
-	Dependencies
+In other words, a fuller investigation of how this export presently benefits
+exploiters would help us understand how much
+EXPORT_SYMBOL_GPL_FOR_MODULES() will improve the situation.
 
-	5.0.0 b1
-
-	    #10164: Support Docutils 0.18. Patch by Adam Turner.
-
-But doesn't mention minimal supported version.
-
-I'll re-check and adjust it as needed, if Jon decides to pick it.
-
-Thanks,
-Mauro
