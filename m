@@ -1,92 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D311719C558;
-	Sun, 22 Jun 2025 10:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB4FC1D07BA;
+	Sun, 22 Jun 2025 11:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750589604; cv=none; b=a7VNK9lyv62FTRWhBy0X2XwBxAL10jxPjIolxUXR/IP9cPGGSDSPr8ln4UxvXMPiqLDKnj+go9zJTfB5kIXI5Rxz7/vzbsqLoOmhcSauZ06e0d9GJ7JFugu5sQQlYl9ZEGy4kw7lHJmdbTT+YPr0N6sMBXxrclpu/gWPZ+uBMW4=
+	t=1750590243; cv=none; b=FRYVl/JGfv7yu4aMC6WkYk1iBSnLXqFkF744dMwdWC4fRbVuci0bLjKE/HwmuoE1WPPG1ZegimEwp2xM1LIBlnijoI8MTNR1vnpek70pLIL8d/XaDjwBilgr8axAxEwaeSEYSGNFwOsb8LkviC9vAPfXsvI2dNvBA9n8hCcbrD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750589604; c=relaxed/simple;
-	bh=6jnf6D10aFmi6G2vOcTm+WV4qZfsRTSty4FoqUHTack=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BvFi3/Kme3mCED7ejQ6GhWL4WRMU+sYOtHK6KqXRqD5dnVG8TeO+X2bD89WHGJTWgyteWQ9+g738NYs36IW8DsLrk4ndxblYRwQdtca/VCjWWgwc4GciORGZjjNGfefRAhRZQrvb4TbFrGXtqC3SRREI7OTXQXOIkopa0QHy86Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a2rGRIV2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a2rGRIV2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59305C4CEED;
-	Sun, 22 Jun 2025 10:53:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750589604;
-	bh=6jnf6D10aFmi6G2vOcTm+WV4qZfsRTSty4FoqUHTack=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=a2rGRIV2qg2Nvn54LoXm0ZZckv3t7uA1WKvdAL4eBIBY7x9QuPMigDZ7pFR6o/H/B
-	 N7kJF0gLWbqh2PgWRWerA0lU0PH0yhebLLJoazudxF90mq3xkdKsdmUuyNeDqlGx4T
-	 N0FsBtLOCA/vgzw2Atvj1eBlFrYvE42WEsYnjrgrqLKecAGI9Bj7i4+cw5mSvgvum8
-	 vfpp5kPiClcRGV/14DhiDwo988tmQsbCkESeSxzVCY3dZSu3fRGAl4l3IdXxkNRHs+
-	 1DU4qQ5jB8O15efsRdyAL/+y89MeZqFLxUpQRg0jDVP6r5WqE1HKk4ZQMaGhQAJZhL
-	 G2UuOSs56WJng==
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-6065251725bso2472741eaf.1;
-        Sun, 22 Jun 2025 03:53:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUGHyPy/raAa2JV/swQLktX8Qa7Dt2SKFVjxFYhZOpgVM2fb4rrkGniby/DAQYCUOsSrdA2awncTw7N@vger.kernel.org, AJvYcCWpTegXcp0hponqirIcboZ1JnSg8TRF57a7tjTIgyfbN8QJXMDGcApBs2rC9rla+YjxxxTzCkySbxxRkdsW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+TLlHiDpoKJBYaV7WFAUlGe7TF/K1nA+ogllsvQyE7puGykno
-	ZQfJPNf9dfW1nE/0PaaKxgpfCAPMqXuBG/WzMJaUTbbNzbFrVLYuitTnj+42BU/eI3WqFmNIbNb
-	EJhET2krAPRLerm1Bqa0FV8z7qM83C/4=
-X-Google-Smtp-Source: AGHT+IFmlCBsLwqiKzlxCrOdlC59t+rjhy3dEIa1Lu4jcof1y1YoLFIq1VXwkehHaNpuoM/JgQ59ax7/po1kMZ7iivE=
-X-Received: by 2002:a4a:e90a:0:b0:611:50ea:5495 with SMTP id
- 006d021491bc7-6115ba72989mr6170823eaf.7.1750589603697; Sun, 22 Jun 2025
- 03:53:23 -0700 (PDT)
+	s=arc-20240116; t=1750590243; c=relaxed/simple;
+	bh=Qc+kl+BZULne/++22l7jmMT41bJToxl4RbYBXn5+pWY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NNcZV07z+z+pwua9vKGF84HaduDoJpiOWhd0+5elPEQsSynKCvZdSTkuhwYibX041IB1P+Mbr7BBOE/9XHX2j7hgVCbdponNLGYKCkBGgDEu+Cq1+LYhzWhL16zYWgLY4UiEjpdmfCgIlRFc8Tzk/GfvulkoGrHb+i8TZeBlG/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.149])
+	by gateway (Coremail) with SMTP id _____8AxDGut4ldo7R0bAQ--.61247S3;
+	Sun, 22 Jun 2025 19:02:05 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.149])
+	by front1 (Coremail) with SMTP id qMiowMAxjhum4ldoBa0lAQ--.33504S2;
+	Sun, 22 Jun 2025 19:02:03 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Xuerui Wang <kernel@xen0n.name>,
+	stable@vger.kernel.org,
+	ziyao@disroot.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH for 6.1/6.6] platform/loongarch: laptop: Fix build error due to backport
+Date: Sun, 22 Jun 2025 19:01:48 +0800
+Message-ID: <20250622110148.3108758-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJZ5v0iNVFFJVgzeMx=+UMw5MTOUgdu_WGpJxE3qjHikQ4Sp4A@mail.gmail.com>
- <CAHk-=wgPwhqr7mwmXDzYkfAcMRu3zyKRxz3hh-wfg-BQxj+UZg@mail.gmail.com>
-In-Reply-To: <CAHk-=wgPwhqr7mwmXDzYkfAcMRu3zyKRxz3hh-wfg-BQxj+UZg@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Sun, 22 Jun 2025 12:53:08 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gH=0m_RCDa1++GUt4Qa28MdFPsNYc46ZMB7OnVJL=F4g@mail.gmail.com>
-X-Gm-Features: AX0GCFtRM6G6nHbDUMpveea0ygHdrwkRhtTNsoIcK-473kzovj7z9EdmyrVf2bY
-Message-ID: <CAJZ5v0gH=0m_RCDa1++GUt4Qa28MdFPsNYc46ZMB7OnVJL=F4g@mail.gmail.com>
-Subject: Re: [GIT PULL] ACPI fix for v6.16-rc3
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Saket Dumbre <saket.dumbre@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxjhum4ldoBa0lAQ--.33504S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cr4DtFyrZF1UWFyfWFWDKFX_yoW8JFWkp3
+	9rC34UArWUGrs2qa1Dt348ur45Za43A3y2vay7A34q9asxX34j9r1Utas8GF12qay8Ar1Y
+	qF95G3W5uF45uwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
 
-On Sat, Jun 21, 2025 at 5:35=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Sat, 21 Jun 2025 at 04:31, Rafael J. Wysocki <rafael@kernel.org> wrote=
-:
-> >
-> > This fixes a crash in ACPICA while attempting to evaluate a control
-> > method that expects more arguments than are being passed to it, which
-> > was exposed by a defective firmware update from a prominent OEM on
-> > multiple systems.
->
-> Christ. Reading the ACPI issues page makes me go "D'oh".
->
-> Does anybody know what the heck Windows does in this situation? Does
-> it just happen to work because it uses random arguments and happily
-> dereferences bogus things without realizing, or does it do the "zero
-> out missing arguments" thing?
+In 6.1/6.6 there is no BACKLIGHT_POWER_ON definition so a build error
+occurs due to recently backport:
 
-Saket said: "I didn't run into this same bug on Windows though and the
-interpreter just aborted out with a different error message saying
-that this method already exists elsewhere. Maybe Windows thinks that
-when RUCC is called with 2 args instead of 3, it is perhaps referring
-to a different method with the same name, but warns that this name
-already exists (AE_ALREADY_EXISTS)."
+  CC      drivers/platform/loongarch/loongson-laptop.o
+drivers/platform/loongarch/loongson-laptop.c: In function 'laptop_backlight_register':
+drivers/platform/loongarch/loongson-laptop.c:428:23: error: 'BACKLIGHT_POWER_ON' undeclared (first use in this function)
+  428 |         props.power = BACKLIGHT_POWER_ON;
+      |                       ^~~~~~~~~~~~~~~~~~
 
-> Because clearly that firmware bug must have passed entirely unnoticed
-> by people testing that thing on Windows...
+Use FB_BLANK_UNBLANK instead which has the same meaning.
 
-Well, given the above, I'm wondering how it has been tested on
-Windows.  It looks like somebody set a really low bar for the
-verification of it.
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ drivers/platform/loongarch/loongson-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cheers, Rafael
+diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
+index 61b18ac206c9..5fcfa3a7970b 100644
+--- a/drivers/platform/loongarch/loongson-laptop.c
++++ b/drivers/platform/loongarch/loongson-laptop.c
+@@ -425,7 +425,7 @@ static int laptop_backlight_register(void)
+ 
+ 	props.max_brightness = status;
+ 	props.brightness = ec_get_brightness();
+-	props.power = BACKLIGHT_POWER_ON;
++	props.power = FB_BLANK_UNBLANK;
+ 	props.type = BACKLIGHT_PLATFORM;
+ 
+ 	backlight_device_register("loongson_laptop",
+-- 
+2.47.1
+
