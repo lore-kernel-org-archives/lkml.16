@@ -1,68 +1,102 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2DC01F4629
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 22:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDD586349;
+	Sun, 22 Jun 2025 22:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750632212; cv=none; b=Y3dYNS90y6CKPfhbrjIXKmmou8ZlLFSMv3D+wxbPducTKY9Wk73lG1hSOopMse7GGP3b3c/3fxctg4aLiVY1fy62DT9PCdjp72qX04nMc5mJMuy3CKDCTcTKeAKTJLo9rhsaHCH+tglbeQ1Bq89/hw44B+zfj1WPS6lQlf2CbdI=
+	t=1750632528; cv=none; b=fi6bpvyAs4AGUnwIn4Pp1UgbxdwGmvCBrnnCwTOhO1it7VtTMY9wB/14U2LP8nKF7xhiWRlq3N5n3QOp0Ll02sTj7PFwCDdiyj8MaZalUj9qHJkLgz5guo6LvYcEqx0a7LeoknAi2izeAsooHs7072r8p3h+8H6Adiw+j6EG+Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750632212; c=relaxed/simple;
-	bh=TgV7Hxb3xbHEX9bBWK8mzUFy/ZId3IWnjXib8sWDA94=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IXU1MVIs7h4FaZ4qhnVexeEZm963jifPLDDHQw+hSA26bKLqTVl19RQM/95VrsXZHaoSfyHc8jjgzrs220nnNnilr1yWbVfOTin2f5IQTnhh2RA2vQGJfwMlW0R8cG6vLNYb0QjCqre4gnL1rbINNyP+oDYZpTiMmG/n8+ctd3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=q1HM5cnj; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1750632528; c=relaxed/simple;
+	bh=T5+Prpht3oUvEsd/DGDLvYFZkGwgGKSbQdhp2/015Qo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ecTV+nhK18m1dXZ/38qzDwoMSyDNuwBMT7SjBRqhFFl1Po/ryGKR8Rs3A+HNwyQo4r9Fith+/4eAjR+wmZiaL90BQqSlKaPk/DqcRXXWKgTZlLHF/5V/HvVPkta2BUgTBJ7XiTPQP1qLUQ3SAdtZzrOAwRhjncsKZ42ofWfbYYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=v/rlhubF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="q1HM5cnj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=34Elb6DXLSKatN2LwDoEbE44Yuov3/0AHslvennSdKY=; b=q1HM5cnjIWMCg7fy0h9PueY9ch
-	mBcU72oDpf1y4zU1Cg1gOAcdNOwr8NaRBWofg1bIwguEZRw+y3WIsnzTUea350Hl9o00h8DMw+zJD
-	n7Y8LZUxMVy8K3W1Cf3jEGmBmIEDlrNzSVs6vqK3RvPeHE+hELnylgRYoml+6+2JW0E31regde9Tu
-	HTqt8P1F98oXir3Rk9SONTD8TIcKUYYw2ljQo92WekGKgm9wG4TSlk+GipQDU1vB35SCQYhcHRwJD
-	HYLAfjZ0YrmWbt7o5m9PHm6WRyUuMj6eBsjahRGqs94xqxGPECsaeOTt9DJ/Gcm8uxJ9MiuEtysvQ
-	aYVUoPmw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uTTPL-00000000kmR-40GW;
-	Sun, 22 Jun 2025 22:43:28 +0000
-Date: Sun, 22 Jun 2025 23:43:27 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Arrsh Khusaria <arrshk01@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Fixed spacing errors in drivers/staging/fbtft/fbtft-bus.c
-Message-ID: <20250622224327.GY1880847@ZenIV>
-References: <CAC6rj2wiGOWUyhhGDRA-U8i=ZToorF4o6hwFeuC3RBDZ+rtoJQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="v/rlhubF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C218FC4CEE3;
+	Sun, 22 Jun 2025 22:48:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1750632528;
+	bh=T5+Prpht3oUvEsd/DGDLvYFZkGwgGKSbQdhp2/015Qo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=v/rlhubFFaG3l6cMyZwfDk6KrVEWd4cTEInXO1IL+xCdsCzCNA3mM5gfQ2JuTjAHz
+	 vBdRWrdJkcyLvJIX1z0dR7NoZxeaiKY1/lis5Wm6jGigeDststZSSkgGqSJIdTUlYf
+	 9ykFRgsyhVNIyZYr1arpcza25KWiYSLe+ih6MCyM=
+Date: Sun, 22 Jun 2025 15:48:47 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: <jiang.kun2@zte.com.cn>
+Cc: <bsingharora@gmail.com>, <david@redhat.com>, <yang.yang29@zte.com.cn>,
+ <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+ <linux-doc@vger.kernel.org>, <wang.yong12@zte.com.cn>,
+ <wang.yaxin@zte.com.cn>, <fan.yu9@zte.com.cn>, <he.peilin@zte.com.cn>,
+ <tu.qiang35@zte.com.cn>, <qiu.yutan@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
+ <ye.xingchen@zte.com.cn>, <xu.xin16@zte.com.cn>
+Subject: Re: [PATCH linux next] tools/accounting/delaytop: add delaytop  to
+ record top-n task delay
+Message-Id: <20250622154847.f7ea3c8c5b2c1193bf9bcbcf@linux-foundation.org>
+In-Reply-To: <20250619211843633h05gWrBDMFkEH6xAVm_5y@zte.com.cn>
+References: <20250619211843633h05gWrBDMFkEH6xAVm_5y@zte.com.cn>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAC6rj2wiGOWUyhhGDRA-U8i=ZToorF4o6hwFeuC3RBDZ+rtoJQ@mail.gmail.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 23, 2025 at 03:50:24AM +0530, Arrsh Khusaria wrote:
-> Hi,
-> This patch fixes spacing issues in drivers/staging/foo/foo.c,
-> such as spacing before parentheses and indentation, to comply with the
-> kernel coding style guidelines.
+On Thu, 19 Jun 2025 21:18:43 +0800 (CST) <jiang.kun2@zte.com.cn> wrote:
+
+> From: Yaxin Wang <wang.yaxin@zte.com.cn>
 > 
-> There are no functional changes.
+> Problem
+> =======
+> The "getdelays" can only display the latency of a single task
+> by specifying a PID, but it has the following limitations:
+> 1. single-task perspective: only supports querying the
+> latency (CPU, I/O, memory, etc.) of an individual task via
+> PID and cannot provide a global analysis of high-latency
+> processes across the system.
+> 2. lack of High-Latency process awareness: when the overall
+> system latency is high (e.g., a spike in CPU latency), there
+> is no way to quickly identify the top N processes contributing
+> to the highest latency.
+> 3. poor interactivity: It lacks dynamic sorting and refresh
+> capabilities (similar to top), making it difficult to monitor
+> latency changes in real time.
 > 
-> This is my first kernel patch. Please let me know if anything needs to be
-> improved.
+> Solution
+> ========
+> To address these limitations, we introduce the "delaytop" with
+> the following capabilities:
+> 1. system view: monitors latency metrics (CPU, I/O, memory, IRQ,
+> etc.) for all system processes
+> 2. supports field-based sorting (e.g., default sort by CPU latency
+> in descending order)
+> 3. dynamic interactive interface:
+> focus on specific processes with --pid;
+> limit displayed entries with --processes 20;
+> control monitoring duration with --iterations;
+> 
+> Use case
+> ========
+> bash# ./delaytop
 
-Er...  Trying to compile the result, perhaps?
+Looks nice, thanks.
 
-> Removed unnecessary whitespace and trailing comma inside a function
-> parameter list, as reported by checkpatch.pl. No functional changes.
+>  tools/accounting/Makefile   |   2 +-
+>  tools/accounting/delaytop.c | 673 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 674 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/accounting/delaytop.c
 
-... and not treating the output of checkpatch.pl as unfallible oracle.
+Some documentation would be nicer ;)
 
-Seriously, try to build the resulting tree and see what happens.
+hp2:/usr/src/25> grep -rli getdelays Documentation 
+Documentation/translations/zh_CN/accounting/delay-accounting.rst
+Documentation/translations/zh_CN/accounting/taskstats.rst
+Documentation/accounting/delay-accounting.rst
+Documentation/accounting/cgroupstats.rst
+Documentation/accounting/taskstats.rst
+
