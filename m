@@ -1,88 +1,95 @@
-Received: from submarine.notk.org (submarine.notk.org [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73D3AAD2C;
-	Sun, 22 Jun 2025 20:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6F12F2E;
+	Sun, 22 Jun 2025 20:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750624431; cv=none; b=kpn0ROq0zKg752SwX3MVTLADoWHsq0nFA9YXCngxD/OYJVAoBNTlEcSvMrmWRsVAQbOGHDYidUipsTSLQ3+VcURT0RwGnJnNs9eTXvzVNVNE+vfXkknc2bTWBNMWuD0N1QaJsai+QgrNKG6DwpZC77aa6obHzjWLyF+stsBWghk=
+	t=1750624583; cv=none; b=WwEAtLqEby1GY7M+JEO2Gxat2zPFoVL3I38sLTOkvDimgH61230qO1dTCR6QmnPlvjvnLNyUmnVjczMFhHPQ0LQAq0EezhbLQKPHDcnDzhxQcOKE6EH6ziKTZ84sz80/giZolQ0HG8RxocRGxyA9b5WLT5fv7F+HashhZWRJnxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750624431; c=relaxed/simple;
-	bh=9qt3VEXjww2Y9h5OxVP6h/ujNfIbEToBjPUBwys0V/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Buba9oNsSLUBInPCwOyWVbdxWr24YkQJvB8Qhcn+wEFiKhP8QOJ3E5lNxGmvgJIILxN5D+msytXK66gdD/Z2nv4j7BZEmLKvqgAQBt121L9mmoq5ryz6aICK99lnZDuo7KmYbMo+sWLxa/pZk3BnAdr/YelvleUisZ171uvTkps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=NPTorpW/; arc=none smtp.client-ip=62.210.214.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+	s=arc-20240116; t=1750624583; c=relaxed/simple;
+	bh=hz3Jdtz+LsvuzD4rQ7JolouH51M+SUxhZRQ2TBHTSzs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EmOSQvqbgmCx4RJhqbLKEUyH2LPFmxyng7GPVwRfdMEIGdwFUwTQ4Z30J+fl2mop8hcDJMSsrapQhCR2Mb60S59pH4efSxmN/NVvjTMgF2Dq8bTXWw7sHHew1Xs3H/MTmIQAwNfmYSBITVTzxGEBpFiCxyKpb2Jo2756GTf+dfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OEOoQyZS; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="NPTorpW/"
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id 4771F14C2D3;
-	Sun, 22 Jun 2025 22:33:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1750624421;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7DSenrNn0CjeH9c6zMLb3QHWm1cFVCBKUwae6Q8W2io=;
-	b=NPTorpW/lzclVnSb68yVyhn4kVW8XqeeISVm8ANNTsHFAzcn7dygCvR+j/CeXXuHVh5mp6
-	55uZrJyjustbhXTXG0b3xSMro/Aubr/tcjaVW0mZn7q29HwR2fZQCIOS+FmSbevDnbTRa0
-	pbRNPe7rvGMTtOkYjTKoAh70yy2yzTO0mwQ0Yam6qzeWAVC2MSqJXDWylYI66vcBdClciL
-	CPsA6WHrwLKb5tn4Fw3IMd3OdaRxC/jr3LiPFi37gr4ht5OdYtMHzXWnFLPJR7BtFXzQbw
-	prss4uI3jXmVanj3jP5/wRoaDI5dG9xH4F+lWNccWjpMovHUhLdg8PhjuFprpQ==
-Received: from localhost (gaia.codewreck.org [local])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 8e85e19f;
-	Sun, 22 Jun 2025 20:33:36 +0000 (UTC)
-Date: Mon, 23 Jun 2025 05:33:21 +0900
-From: Dominique Martinet <asmadeus@codewreck.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	Michael Grzeschik <m.grzeschik@pengutronix.de>,
-	stable@vger.kernel.org, Yuhao Jiang <danisjiang@gmail.com>,
-	security@kernel.org, v9fs@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net/9p: Fix buffer overflow in USB transport layer
-Message-ID: <aFhokd2CQwn_XBzJ@codewreck.org>
-References: <20250620-9p-usb_overflow-v2-1-026c6109c7a1@codewreck.org>
- <2025062007-ravishing-overcrowd-7342@gregkh>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OEOoQyZS"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-607434e1821so5182444a12.0;
+        Sun, 22 Jun 2025 13:36:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750624580; x=1751229380; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hz3Jdtz+LsvuzD4rQ7JolouH51M+SUxhZRQ2TBHTSzs=;
+        b=OEOoQyZSG4uYjYVoD+WbYJHkhZj4fafSgoTiQ9hwBN8o773HUitsjGoT0FDGaNViUY
+         Iwc0dQWFTa//RyBPWRogR4dKLqLZDg6VCUCCPLnW7q4CuPVlguPxf6nxFov3IokCg2rW
+         8sa4zvMA58NvajIVNcbDTAxSQ0HYZWsEjoOW9FcrMNpCkyCGP+KjzZpR9ob3PI61dIxH
+         8FTMvrunn17LvCPM5ZPelkVUFesSIBvXfDDHEPn+kY/nPTREaTciWzdmY8lKga3WtQBj
+         TvSPDfkkfEh5LO49KYhYDvwTHpHruvXSxZvIebVJZEsHgfK75/fi5PFaMiyBlGge3OrE
+         1Fhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750624580; x=1751229380;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hz3Jdtz+LsvuzD4rQ7JolouH51M+SUxhZRQ2TBHTSzs=;
+        b=SiNoBMlhXLyygFNoR0TSmpI4Ebfo01tqtX87cnobLfmfCITEcT1pPQA+IK4RKVW59h
+         4og2Nw3H6SKHEwRYQQyBtGsipzy0p8I6BTysqsqHWplGNa3bxleCJNFnGtUOowiNmqVv
+         PmnpcL2cHFw7kEW78xKtnyWLAkSv5nkVG3NPd7yUxcCa2QFSfTAGIDhdEmojt5FPeeYR
+         rXQF0hmX0nRC5CubkmdUuIuGfucWB2JtsqD52SEceYad5hcFy3TUyFzkkwQD1OKq4ECF
+         st9iSiwy68g8gFuywvinVS+na7LzkbIMRw6cObjNg/10ZlzdDWmLm/wpkE7EvmltDKq3
+         5OQw==
+X-Forwarded-Encrypted: i=1; AJvYcCXCjJMk9ZROhKM9mxF8Wlu6HNDR0zRdW4V3sYHMwRx2Qq9CWzCfRB4B6klZaMCeDopEGQ2O7/qJrYUtMYo=@vger.kernel.org, AJvYcCXdaImSYn+nEazf3Nz6rAIXJf1IGf8MjAtWgEbnpOEMQtHTwCEO43ptzumoRmEeRD4XqWY5UiNUsaT7mmc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxG8jKUC3CCPuS4TTByejelBNlP32KGlN5D4tkZHw5LYfzlZxu2
+	tKu50W8O952QGNknoyZ8PecA3mH+E0CAWU44R3+RHkJT+RHxB7I8pfgzdImuOW1EdzCbjy+ohti
+	fV1ObG5pPYkT9jEXguhwCX6oJ0iSf7rI=
+X-Gm-Gg: ASbGncssGGrYR0LhMVlHkRXAPu58VQa6Tzq3JNNXVns2ZKl7qZquzYfFmBoKoN61Bfk
+	vXhAryctxDaR5Tdd1toGvze8fsUWMPowMSZl1/oSIMaTVXOfUc1ywtXRVkqqTFoh5+U3ePipn5L
+	IvwGZqcieGZNI/IzOpPLQflBZ+6gzJf4qwH6d4z+L0pRMw9GUfsHhjng==
+X-Google-Smtp-Source: AGHT+IE1qtYTmD5i8tt1tLxHs2WkHZN3ZMS3MWRlSqhlP1av9VhwsiUOIXlfY7gC43dVW4482nERLdrtCfcCVeuroFw=
+X-Received: by 2002:a17:907:7f05:b0:ad8:8621:924f with SMTP id
+ a640c23a62f3a-ae057c5bfa7mr962698266b.56.1750624579604; Sun, 22 Jun 2025
+ 13:36:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2025062007-ravishing-overcrowd-7342@gregkh>
+References: <20250622065340.184048-1-abdelrahmanfekry375@gmail.com>
+In-Reply-To: <20250622065340.184048-1-abdelrahmanfekry375@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sun, 22 Jun 2025 23:35:43 +0300
+X-Gm-Features: AX0GCFurLx4IgrMkKza5bDYc9jpXk2K2q9Q6k47AZNNXK8As68byYvLJwDsXEcQ
+Message-ID: <CAHp75Ve_3M3rqmHP5rcbwvhH9x2gUOPzezOCiNzzPp4PmMKtzg@mail.gmail.com>
+Subject: Re: [PATCH v2] staging: media: atomisp: Replace scnprintf with
+ sysfs_emit in bo_show
+To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Cc: andy@kernel.org, hansg@kernel.org, mchehab@kernel.org, 
+	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-staging@lists.linux.dev, skhan@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Greg Kroah-Hartman wrote on Fri, Jun 20, 2025 at 06:56:24AM +0200:
-> > -	memcpy(p9_rx_req->rc.sdata, req->buf, req->actual);
-> > +	if (req_size > p9_rx_req->rc.capacity) {
-> > +		dev_err(&cdev->gadget->dev,
-> > +			"%s received data size %u exceeds buffer capacity %zu\n",
-> > +			ep->name, req_size, p9_rx_req->rc.capacity);
-> 
-> Do you want a broken device to be able to flood the kernel log?  You
-> might want to change this to dev_dbg() instead.
+On Sun, Jun 22, 2025 at 9:54=E2=80=AFAM Abdelrahman Fekry
+<abdelrahmanfekry375@gmail.com> wrote:
+>
+> Convert buffer output to use sysfs_emit/sysfs_emit_at API for safer
+> PAGE_SIZE handling and standardized sysfs output.
 
-I realize I hadn't replied to this one -- I (still) consider 9p mounts
-to be somewhat privileged/trusted, so I'm fine flooding kernel logs with
-a broken device.
-If the trust model changes (I've been askedto make 9p mountable by
-non-root users... perhaps after we've caught up with syzcallers
-reports but not holding my breath) then we can revisit this, but 9p IO
-errors are rather badly behaved afaik (connection possibly never
-recovers) so I'd rather the first error stands out.
+...
 
-> > -	p9_rx_req->rc.size = req->actual;
-> > +	memcpy(p9_rx_req->rc.sdata, req->buf, req_size);
-> >  
-> > -	p9_client_cb(usb9pfs->client, p9_rx_req, REQ_STATUS_RCVD);
-> > +	p9_rx_req->rc.size = req_sizel;
-> 
-> Did this code build properly?
+> v2:
 
-Thanks/sorry for this one as well :/
+> - Addressing a possible change in behaviour if sysfs_emit fails.
 
--- 
-Dominique
+I don't see it being done. Can you elaborate, please?
+
+--=20
+With Best Regards,
+Andy Shevchenko
