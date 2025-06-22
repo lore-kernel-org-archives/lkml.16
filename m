@@ -1,184 +1,162 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07D22581;
-	Sun, 22 Jun 2025 06:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A928632B;
+	Sun, 22 Jun 2025 06:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750574923; cv=none; b=VbE2oCCXop2aZ5C0775kEWXAYGcHDjU5Q4bJFs8tJ0fTiIxG7zjEITtSRuW4V8bqSmt2dx7T+eDMmu8nrQQMxKH1YOv476JcWfV6OpzfuDQXZ5QUX0wp7oZMbZy4qlfbhPD2OktK3I382mez4g/mPsxqFNA0t5wv3NSk626shpc=
+	t=1750575251; cv=none; b=fH6SAPJyvgRoe10XN/r+mZZ7pYy7Fe2vC6C7fszu5aH+EGXyory6N/T33Gsp3uPcc85qc4gjp6NnZOm8VtICEZrvHXQRnL0KPOrqss08DT0loRirkm53U7WO+Ln923Dl+Pzbreat7r6ou6DGZrB3L3nap9LkcSSGjHXQ078x2ZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750574923; c=relaxed/simple;
-	bh=ken8puwclcNgHFq68mfenvEGASAjx50Nx4u0UKKqKc0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QllBXfj+LU1KFrlLNVIie0LRTgUBwekxbkOSpJDU+h6AO+S/sms+rM6EwwegWTdmY5q2amMrFmq/wxq2l9kUyMEmcyCvc+UWAqOBa+1Yuq73TdkRmq4LkBqruiQTHXXrZsNXAQOJn99zA2Vpm0nokv2ILmHcCF+dA63Wo+8eljM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h9sbttc0; arc=none smtp.client-ip=209.85.216.44
+	s=arc-20240116; t=1750575251; c=relaxed/simple;
+	bh=y+V1uFlm7MNi2yr+Kq0y/HSDVPLN1zc1MGZNQ695iXc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WHRjrfp5I1X17eYAGiNxi1spmEdYHrXetpeIcKRs2sBV2pjSCOOlSs6fEMACtmKZLgo9zA7LvUSvlnViZcX/rLrq2OOfTiN5eZuYTFouRsz8+G9qBTOciD2mcHZEbTeIwSuwC4/ADQ1ZyvImq/2a88SZVq+3n9e0BsPkdTWYAlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fuKsuAQA; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9sbttc0"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-31223a4cddeso2280279a91.1;
-        Sat, 21 Jun 2025 23:48:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fuKsuAQA"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-45360a81885so956425e9.2;
+        Sat, 21 Jun 2025 23:54:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750574921; x=1751179721; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3ikRz4wnk0lbFqmVhhlnU6ujDGF3hUYEk5WhcaI60D4=;
-        b=h9sbttc0hlCVc9+wdhVD2ablsESwriA3udEjqm5Hv6dOtfnHW+Bor/KQMK0TdbTriw
-         eXek6hReJglKLldvfeiF3zyVrO3nhS/uEGSTR5D4WqmWF8eBt9CLMBD7c1D2rYbvmikr
-         c/1xsku+vvSCKzugA6YLDZlmqEsDiXfVgylkhb7b6AJrhlmpf5YvKpzvi98TaeDmITed
-         ifaJ3IHZzwU3zU/HGTWGt82yoQlG3bDZJhY/HJK2dRGrbPTsZg90jRIiFMMYxvyfaumM
-         rXJeueJCXR97YiwyfgGNYT8s9HV2zLnzstQlWCOpBd1u9K9EzRZ91vaTz1ek7SGPxebF
-         9PCQ==
+        d=gmail.com; s=20230601; t=1750575248; x=1751180048; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AKQhZ8dZeOW7ZtXU8mvGFMoD5xv3BUDMxbPdweeK0AI=;
+        b=fuKsuAQALTWHUZ843MNKjQZIyy4gHQud3nWBPKv9ZWRoBbBV4H9qibmZNH2+QPO1ly
+         Y4M54zzKXP+3hqTIDzfQk7rqOThNFAaU0birkuvuo5i+Xv0mMMrT+hvEzDWh/47a1hBt
+         GzGEhZHL3Rny7dVjPQXF4f3cPLkrlXxlTJp1xcoc3Epz+85J8nYGCJ/T7/KB4skwuNrH
+         r+ExYooMKPqRMJZEUuXGJA5W5AVEHqq5GZ3O+3BkeJ5YbMlIYbF8JuQL9QbPK3m2nOE4
+         vids9q39O2wyN5Gxz90sVmdYVg2vbmg+VIVOwKxKgGw8WY0orraOO3xQiGbAf0l6m2kk
+         U7JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750574921; x=1751179721;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3ikRz4wnk0lbFqmVhhlnU6ujDGF3hUYEk5WhcaI60D4=;
-        b=TpAr+YivjwBsXqGPtiX3z5VRm9zX1cLkVjADs8zVR9LrxhXZZdSXQVbLuj3faf/+pm
-         o5lIlQoCsrgpOICN9YzA7knyEHWbDeXmoGqAFefnkPeJvzhkLwk9ZWtZ+N5UZmh3WDwj
-         cmO3soKuiDp45/GJ4GZqGFDqo1/bceHRjo8ehDrzWIP7zdq38JHLL9jzEXEEEI5rLtl4
-         d8mo9HXI0pe/nPu7J1jD7SiA37cRyVaWOOsJoJO+J0TzltUT2Pd3nAGs0vZFib/1KmO5
-         fsaZPrRDuZ6Iq2ATZB8OCmWpQK+IbTgBwoxSPI3VSFQWqraPiib/XsieSJtb74R9on3M
-         ERpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXU4lVHJAF78O1ULUBRPv1HVpxE7LzeoR1EIwZi1WqzMi8raZsE6pWyXqQC0bKb+9lLq/Vg44LOfYJHGgAv2evrjjl2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7smw238Epo6rtGZanOE7Zn/CbL0XC7Ij7TPRuhhTxpqUst9qH
-	T8olWLDLzobLh6LTARRK46oHcxbOuSvmp9dIpcMqyDKOwHbueCnGXR4lVtQjC7Y3TNQ=
-X-Gm-Gg: ASbGncsKG4JhCrKbpsWSj1p4RD8oYqaujfjgs5s6TdHrwe68UfxfckL+0VqpdPCyhxf
-	Cxe/xwmyf+X/xPas4gbSetQlXvrbFurrL/30559dWYYlc+cUweDbEkB1YR4eBJb62x5I8eoS7Jk
-	R20TkrE7g0v7DXfCqszaiIYvTbblKcR6qjDB0HKiFqPNDH6Cv++hEWEDtj43LXlIOHW81pwGcs/
-	lKbbwO5Os7tUvXhII1ZWNRa47VAO76TG4lCI+LnaRDHbYmHqcyjQdM+dFFWkJkNvo5m/sg8It1z
-	g1/f6duzM4vx24whSAedI9cfNOzfx+5oNpXc6LzHBZwPJIeoW4bOb4LnSZb1JYFhwKqA
-X-Google-Smtp-Source: AGHT+IHfshealo1W0FfHBth8WYDVeEbFWywIsu2h8iW6w8zyRGEpc8wmAd32L6qLE/gwyiJxUvzjig==
-X-Received: by 2002:a17:90b:57e7:b0:311:ffe8:20e9 with SMTP id 98e67ed59e1d1-3159d8c5337mr15089422a91.17.1750574920802;
-        Sat, 21 Jun 2025 23:48:40 -0700 (PDT)
-Received: from localhost ([203.123.65.120])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3159df71c4bsm5142980a91.2.2025.06.21.23.48.39
+        d=1e100.net; s=20230601; t=1750575248; x=1751180048;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AKQhZ8dZeOW7ZtXU8mvGFMoD5xv3BUDMxbPdweeK0AI=;
+        b=vbPwAStxOhspiFO9Mkn5Q+KP6abhJ5WNonKAcyH4v9wnnsHGZ5upNEvreJo7Q00bc2
+         Z8eJGe9ZXOnsAJFR4f9ZsyR/IWfJ62Hleebq8v2Ma8M7WOvScACKv5oE66bjDYBa+Q3u
+         v2xzDzl/+6XtFf5IfYR+8ERofrP7qOziQttjEUSJebRmd4xZe+uT80+spH1F+92R+TzM
+         LOTCIJyKMyt7jVl26mCTL28iK1d3LPeToyud0VAZlJmhSUgT6P3e5AuSYNr6JyL7g3H4
+         S4nybpuIYuTCwfbImFOSkR1cdeR7/5Sx8lhLGnK9M0uRvEAIjOqDO15OrOG4Cs+I0r0J
+         vuNg==
+X-Forwarded-Encrypted: i=1; AJvYcCXMmAnH0C4+FVXmP+OlF6UAkuEz7/B2w8oVNztaFU+k34kbmShMQ6eYbehL0tD8RsTEBVNd1BTKC5SggA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjvzQBsTiHStBdomx838KcDRv6EnmtyGunRQXVhQJ4ZNnW/+Nk
+	Yik6Ye4SuzkgaKVEke7FB4UqqJ0P72SBSPlQDPW3CzQHuGMnJRay++vf
+X-Gm-Gg: ASbGncuMNA1gLg1F4VAQ7o7O7+d/GBsRP/VaTgaQbawSmzLZWTuaPpXLvQomle/zmWT
+	x9kjwjh8ML0rNC+RZi+kR+ruSURMXfkty0IssvHzRnEl8aLV5J33xEUpF75Gxm8767dTV7UlH4L
+	AZ4eizi1ZyjuV4ZzpMqyf1wnAwm1aVppFgIw93T+gSNIWn568MMW9c1bD898MiTJ8PA9tDGEO2D
+	xnECY5wQsufHnpb3MrENQMF4Ab5eSMtmuQvY5FAf3xJd9RcvetAki+bCk1gpqlt1o/z0ChxuXBB
+	A4t+8GS+A20eSJQruReQdOtPkoGZ+SJzV2MYlQ5Zro3sw2MPJQsa08bSDSYuHo7Kcn5YNPg0/v9
+	5SPTyP5TGo38NyGXEsnOOEOFI
+X-Google-Smtp-Source: AGHT+IExP4WFR6DFGR0lMKjyTFJaG5ZsU4nOX8iA3vhlq5spPOb76BvedsWJNEMS5tZZjqcVc+b98w==
+X-Received: by 2002:a05:600c:524b:b0:439:9a40:aa27 with SMTP id 5b1f17b1804b1-453659b8b23mr29407995e9.5.1750575247520;
+        Sat, 21 Jun 2025 23:54:07 -0700 (PDT)
+Received: from localhost.localdomain ([156.208.241.250])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f17c35sm6497432f8f.31.2025.06.21.23.54.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Jun 2025 23:48:40 -0700 (PDT)
-Date: Sun, 22 Jun 2025 16:48:35 +1000
-From: Xiang Shen <turyshen@gmail.com>
-To: Hans de Goede <hansg@kernel.org>, acelan.kao@canonical.com, 
-	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: intel-vbtn: Fix code style issues
-Message-ID: <hlsev7jydwejtdlyay6e6f53yorf2aguhxykscuukqfxugg7ff@hmmpcg7s4sx6>
-References: <20250620003849.54442-1-turyshen@gmail.com>
- <fdb9c21f-aada-498a-92ec-bc48aceeb76e@kernel.org>
+        Sat, 21 Jun 2025 23:54:07 -0700 (PDT)
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+To: andy@kernel.org,
+	hansg@kernel.org,
+	mchehab@kernel.org,
+	sakari.ailus@linux.intel.com,
+	gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Subject: [PATCH v2] staging: media: atomisp: Replace scnprintf with sysfs_emit in bo_show
+Date: Sun, 22 Jun 2025 09:53:40 +0300
+Message-Id: <20250622065340.184048-1-abdelrahmanfekry375@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fdb9c21f-aada-498a-92ec-bc48aceeb76e@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 20, 2025 at 12:00:03PM +1000, Hans de Goede wrote:
-> Hi,
-> 
-> On 20-Jun-25 2:38 AM, Xiang Shen wrote:
-> > Fix checkpatch code style errors:
-> > 
-> > ERROR: do not use assignment in if condition
-> > +	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
-> > 
-> > ERROR: do not use assignment in if condition
-> > +	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
-> > 
-> > Signed-off-by: Xiang Shen <turyshen@gmail.com>
-> 
-> Thank you for your patch, but this change really does not make
-> the code more readable.
-> 
-> The contrary the suggested changes are making the code harder
-> to read, so NACK.
-> 
-> Note checkpatch is just a tool, sometimes there are good reasons
-> to deviate from the style checks done by checkpatch.
-> 
-> Next time when submitting a patch to fix checkpatch issues please
-> take a look at the resulting code after the patch and only submit
-> the patch upstream if it actually is an improvement.
-> 
-> Regards,
-> 
-> Hans
-> 
-Hi Hans,
+Convert buffer output to use sysfs_emit/sysfs_emit_at API for safer
+PAGE_SIZE handling and standardized sysfs output.
 
-Thanks for the feedback. 
+Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+---
+v2:
+- Change the place of ssize_t offset.
+- Addressing a possible change in behaviour if sysfs_emit fails.
+v1: https://lore.kernel.org/all/20250621062944.168386-1-abdelrahmanfekry375@gmail.com/
+- Convert scnprintf with sysfs_emit/sysfs_emit_at in bo_show func.
+ drivers/staging/media/atomisp/pci/hmm/hmm.c | 25 +++++++--------------
+ 1 file changed, 8 insertions(+), 17 deletions(-)
 
-That's fine if breaking the "rule" is the only way to keep the file readable.
+diff --git a/drivers/staging/media/atomisp/pci/hmm/hmm.c b/drivers/staging/media/atomisp/pci/hmm/hmm.c
+index 84102c3aaf97..b5d0516e36dc 100644
+--- a/drivers/staging/media/atomisp/pci/hmm/hmm.c
++++ b/drivers/staging/media/atomisp/pci/hmm/hmm.c
+@@ -37,51 +37,42 @@ static const char hmm_bo_type_string[] = "pv";
+ static ssize_t bo_show(struct device *dev, struct device_attribute *attr,
+ 		       char *buf, struct list_head *bo_list, bool active)
+ {
+-	ssize_t ret = 0;
+ 	struct hmm_buffer_object *bo;
+ 	unsigned long flags;
+ 	int i;
+ 	long total[HMM_BO_LAST] = { 0 };
+ 	long count[HMM_BO_LAST] = { 0 };
+-	int index1 = 0;
+-	int index2 = 0;
++	ssize_t offset = 0;
+ 
+-	ret = scnprintf(buf, PAGE_SIZE, "type pgnr\n");
+-	if (ret <= 0)
+-		return 0;
+-
+-	index1 += ret;
++	/* Changing to sysfs_emit changes the behaviour if failed*/
++	offset += sysfs_emit(buf, "type pgnr\n");
+ 
+ 	spin_lock_irqsave(&bo_device.list_lock, flags);
+ 	list_for_each_entry(bo, bo_list, list) {
+ 		if ((active && (bo->status & HMM_BO_ALLOCED)) ||
+ 		    (!active && !(bo->status & HMM_BO_ALLOCED))) {
+-			ret = scnprintf(buf + index1, PAGE_SIZE - index1,
++			offset += sysfs_emit_at(buf, offset,
+ 					"%c %d\n",
+ 					hmm_bo_type_string[bo->type], bo->pgnr);
+ 
+ 			total[bo->type] += bo->pgnr;
+ 			count[bo->type]++;
+-			if (ret > 0)
+-				index1 += ret;
+ 		}
+ 	}
+ 	spin_unlock_irqrestore(&bo_device.list_lock, flags);
+ 
+ 	for (i = 0; i < HMM_BO_LAST; i++) {
+ 		if (count[i]) {
+-			ret = scnprintf(buf + index1 + index2,
+-					PAGE_SIZE - index1 - index2,
++			offset += sysfs_emit_at(buf,
++					offset,
+ 					"%ld %c buffer objects: %ld KB\n",
+ 					count[i], hmm_bo_type_string[i],
+ 					total[i] * 4);
+-			if (ret > 0)
+-				index2 += ret;
+ 		}
+ 	}
+ 
+-	/* Add trailing zero, not included by scnprintf */
+-	return index1 + index2 + 1;
++	/* Direct return of accumulated length */
++	return offset;
+ }
+ 
+ static ssize_t active_bo_show(struct device *dev, struct device_attribute *attr,
+-- 
+2.25.1
 
-However, there are only three files (x86/sony-laptop.c and x86/dell/dell_rbu.c) out of 273 files in the whole drivers/platform folder that have such an error.
-Perhaps there are other approaches to make them more readable without breaking the rule.
-
-
-BRs,
-Xiang
-
-> 
-> 
-> > ---
-> >  drivers/platform/x86/intel/vbtn.c | 38 +++++++++++++++++--------------
-> >  1 file changed, 21 insertions(+), 17 deletions(-)
-> > 
-> > diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
-> > index 232cd12e3c9f..bcc97b06844e 100644
-> > --- a/drivers/platform/x86/intel/vbtn.c
-> > +++ b/drivers/platform/x86/intel/vbtn.c
-> > @@ -160,30 +160,34 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
-> >  
-> >  	guard(mutex)(&priv->mutex);
-> >  
-> > -	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
-> > +	ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event);
-> > +	if (ke) {
-> >  		if (!priv->has_buttons) {
-> >  			dev_warn(&device->dev, "Warning: received 0x%02x button event on a device without buttons, please report this.\n",
-> >  				 event);
-> >  			return;
-> >  		}
-> >  		input_dev = priv->buttons_dev;
-> > -	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
-> > -		if (!priv->has_switches) {
-> > -			/* See dual_accel_detect.h for more info */
-> > -			if (priv->dual_accel)
-> > -				return;
-> > -
-> > -			dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
-> > -			ret = input_register_device(priv->switches_dev);
-> > -			if (ret)
-> > -				return;
-> > -
-> > -			priv->has_switches = true;
-> > -		}
-> > -		input_dev = priv->switches_dev;
-> >  	} else {
-> > -		dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
-> > -		return;
-> > +		ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event);
-> > +		if (ke) {
-> > +			if (!priv->has_switches) {
-> > +				/* See dual_accel_detect.h for more info */
-> > +				if (priv->dual_accel)
-> > +					return;
-> > +
-> > +				dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
-> > +				ret = input_register_device(priv->switches_dev);
-> > +				if (ret)
-> > +					return;
-> > +
-> > +				priv->has_switches = true;
-> > +			}
-> > +			input_dev = priv->switches_dev;
-> > +		} else {
-> > +			dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
-> > +			return;
-> > +		}
-> >  	}
-> >  
-> >  	if (priv->wakeup_mode) {
-> 
