@@ -1,201 +1,215 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044FD18BC3D;
-	Sun, 22 Jun 2025 12:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE6431DED6D;
+	Sun, 22 Jun 2025 12:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750595046; cv=none; b=HRzy2H7oHN6icc+bLL7FcwfAAP8lEDZkhsUjnWydSASuBZ8ckDCLjgkN4zd2sSdivEhYOfOzuQQwENwBur/WwYB/KpRhgZKTRYvPIQP1OwG+sBvFvjkxyx8awu74G51BHzZdy734HM9D0+mrIpJG5QGsM7iY8YTx+VoW4GgOrmQ=
+	t=1750595385; cv=none; b=I6ISHuaHYy/QFulLTJCXlGuoEDl9kygP1kZ4beI63iEK1sSGGemRzicDGKBWd/oeh1bHcCPkZ+dOMQ3MEc/1w/Wx9BfM3YZUSvRl8gE8GTqq9qSpjearqJrnK1itDkiyYlRrD5cc0baxO/OMe9BKiExshiIZQya5TFdsjO10wYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750595046; c=relaxed/simple;
-	bh=fdRTmHnZjrd/Y2Yy2A93S0bYYm0T0zmIFgpz+WeulNI=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=XUT4No5CjMdTOIpmcMS4iux5ctxQKM127BjKNrafSBf8ZeII/FsbEZwa0MZYB+Ju85Tf0bKgXfs/MiJYhKh5njVB17mmmO8pFToYgIRd/a674LV4s1aHiwnMUS54uiHu9u6cOgGo1ZaZfDHk9FDgTamKW+F0oneRBa1sh03kOlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=efjBIm44; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750595385; c=relaxed/simple;
+	bh=x3Tl8ENdDkTbFqKFT8QM98diGnmwQXw3ZGN9E02Igv4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XhoV4GH6dkvg4LUKiycsl90A5awB4KbNYT9RheQLg/+oz6FlcsZrikzTJ7/XWYrBo7r7dVOgL6nG9gI69JwHT+Im2S7j/iNb06OO0h7YRIC+u/l3ZoYdVrm9Qx+4yBcEvxiUOtVu1rVFh5aBV7ufIMG1CChaoMDV9ck26WtNlrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B9y4N23+; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="efjBIm44"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55M2t9VA032052;
-	Sun, 22 Jun 2025 12:23:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Q7F8/U
-	+mi73XJ2L7J7qWmJE6+y5i8b44RdJ+g6ZHMcI=; b=efjBIm44OX5HPReK0KT8gO
-	/Y0LeLWtO8RgrRMimsgifSaxZQqFFoYVTi4gfbhFcdyJzg37hRbofMoD7ikLkvLq
-	VXeWTClN/YMP4EvVgR8jrIPI8X5p+NLVOy5tsZ6qY1A1cov2aarhrG+/nmTCIe2C
-	mDpPMH2+kvi5n3eYc6WGyBhIVTmmCSnxJh3SshnCziEsO6acTFT/ZXO+vmtrT4/c
-	7vuEPXfWpBZiakjbXuNarqPzGKnVDP5i0muotY4oZusU1aJh7WX1/KOlROKOKncC
-	JR78Vub+laygydGRLvBDKswrlAafnaDq0iqa2tVas9XcxOaF5Ah9ZTGCA5/RyzhQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dm8hvpp9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 12:23:57 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55MCNv1O024687;
-	Sun, 22 Jun 2025 12:23:57 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dm8hvpp6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 12:23:57 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55M7eBw1002568;
-	Sun, 22 Jun 2025 12:23:56 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e8jksmua-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 12:23:55 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55MCNtAA24118004
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 22 Jun 2025 12:23:55 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 35A2558056;
-	Sun, 22 Jun 2025 12:23:55 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8B7C158052;
-	Sun, 22 Jun 2025 12:23:54 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.92.25])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 22 Jun 2025 12:23:54 +0000 (GMT)
-Message-ID: <82acbfc071095da7cc153ec8f2fbdca6316c82bd.camel@linux.ibm.com>
-Subject: Re: [PATCH v4 2/2] tpm: tpm_crb_ffa: try to probe tpm_crb_ffa when
- it's built-in
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Yeoreum Yun <yeoreum.yun@arm.com>, jarkko@kernel.org, sudeep.holla@arm.com,
-        peterhuewe@gmx.de, jgg@ziepe.ca, stuart.yoder@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-In-Reply-To: <20250618102302.2379029-3-yeoreum.yun@arm.com>
-References: <20250618102302.2379029-1-yeoreum.yun@arm.com>
-	 <20250618102302.2379029-3-yeoreum.yun@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 22 Jun 2025 08:23:54 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B9y4N23+"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ade6ef7e6b5so63320166b.3;
+        Sun, 22 Jun 2025 05:29:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750595382; x=1751200182; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vyMc7SlAsIwQqZXqc0Yozk4T29hi06CER9FeMOKcH+0=;
+        b=B9y4N23+1TxUVc41DWkh+gNI+lt1iyWztb9vz40cxWhFN2aVXMiNgHh/jYOaYZ4rbl
+         CBZqHxs9E8u88lpxPZN0mWRlLa9S/N4H3EE45FsINh9D1OJicMco+OucG2hxT+g8XocM
+         vPvkNJb+Yp4obC+9d9+7gIM0x0sb9oQ8UQF2yF0MYjzqcc4b0RIuz2mOm1V5Ffk1VmSE
+         FpysV1f5m94EWz7fkvRW+z8X2IUMouz9I9tefSzLW1oE/DgOuwFvZFj4yKFS5ICG2IUt
+         c2wwZY1A3scDeITBh8GPq4pYPA38SThH9QQ+vKy+Z/zZVAtHQB5m/WBwr5rJefa2hAu+
+         pS7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750595382; x=1751200182;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vyMc7SlAsIwQqZXqc0Yozk4T29hi06CER9FeMOKcH+0=;
+        b=dtnOJLoRVV+mstzhHs49zxWntZvBcV+I6IKkv04Vzb1GOWny2atGKkd341lLxyglN9
+         SztQ9i6g1lACpuiFxKQWGHa/WLf7VoRGmPGVML7zzTi7oiAnK2fzq3BnVZaLPh1K5HIO
+         AfVNdAqNQEiJULFKZSflKwtF7gQ73GgyMqMO74l2h5AC0qLThi23X9XCimA51036rL9M
+         ea/NrPr8ZIzwC+tlZbNM8BBdA6okqPDa1VH6HrPX4FFFRdo3XXRi0d1bMes7ZVyziCJS
+         xD078kXXaoC38aJS1N6AfPJ8OXxmWHvscEMkqK8gsOmOh0G+91tRWwIPK+1kUHxILmLb
+         SOyg==
+X-Forwarded-Encrypted: i=1; AJvYcCV0Hjojtp37KFfXaJuSbHHVEQ/Mqmy/BuAsLETYsbuzgxXFPtxSfY5Sqto/tXNjKJ60QvLvUvfYdXBC@vger.kernel.org, AJvYcCV9xLNQqYF/ha3KHxtx/BDSoDLIJUh7bvqLNPEJ9K2V3swiD1j8bQm6CEKFuI7vO4DgyIGNBD2PiJI=@vger.kernel.org, AJvYcCVoWJ4cL7R3NoO7zAL7buCuSqTDa3tTWJiqcTJrG4Tu8uulGEwj5UxpEjPAlzSvtGH+Imb6+RBKlhUKQhQ2@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxhAyMe9AwACSrcJvwC4qYZZzqxqMPBkQin1YblfYLS665sQ4t
+	FLtKd/mHhVXQZKHH3zIdJCWoCA/bsqALz/GSidvP0YyAoIu8G1X2BVEN
+X-Gm-Gg: ASbGncvuoXT5uv2ePgAJ5VZ8PW1hUz5vGT+MCn9SxsJRoOtFzVjYvuMJqmLqHQhIT8Z
+	/lacldqSF0VI7iTE6jdlhtDuy9e6gSU4gfV7bhQ0AOGsCYj4riRnp2hOdRuFJClnerzq2OUgSyq
+	J7RR+6i15Jlw9P2QuQqQbI08AvuvPA9Wr4ZNyYKE84dZKgDK8/p8QYoKom1oFR8IHG1fEz9rBNZ
+	GnLUSwXRwBWJ0DsGgJPhpx0P+z1q5cG+6EIC84C7lZxSCrav6/9SIXa6kHm8MOLLSdrvhrNnn6D
+	ETJi7E6oIUgp03d2kBbrpdmsFr03msWGK9fM8yA55F7UDzzggOPSS7DIPsgeqBiDOESYrbDapbR
+	0GrHi7GWbzTORcuszvkWu8A9b4iNa4JCcWNnoxBKDrgo=
+X-Google-Smtp-Source: AGHT+IHb13r//By+XO2L1rvSx2zzW4cP/nSWQ2gVEIkMDTpE+0nYpLfCa4LDBZN+WkOVzGXMfHJ72g==
+X-Received: by 2002:a17:907:c24:b0:adb:1331:a508 with SMTP id a640c23a62f3a-ae0578fbb18mr300664066b.5.1750595381962;
+        Sun, 22 Jun 2025 05:29:41 -0700 (PDT)
+Received: from localhost.localdomain (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053edc0e9sm533917566b.54.2025.06.22.05.29.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Jun 2025 05:29:41 -0700 (PDT)
+From: Lothar Rubusch <l.rubusch@gmail.com>
+To: jic23@kernel.org,
+	dlechner@baylibre.com,
+	nuno.sa@analog.com,
+	andy@kernel.org,
+	corbet@lwn.net,
+	lucas.p.stankus@gmail.com,
+	lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	bagasdotme@gmail.com
+Cc: l.rubusch@gmail.com,
+	linux-iio@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 1/8] iio: accel: adxl313: make use of regmap cache
+Date: Sun, 22 Jun 2025 12:29:30 +0000
+Message-Id: <20250622122937.156930-2-l.rubusch@gmail.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250622122937.156930-1-l.rubusch@gmail.com>
+References: <20250622122937.156930-1-l.rubusch@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDA3NiBTYWx0ZWRfX8TnzgF/9CxZc 4VXGQ3mJdEYXHR0EbygG6IMVeHVAyZhhAipmbftjbNOQqK/MItklH8swl7LDw4XOzFgtpvD29vX bbDLGr2ZrCUuJ0JlgqrBOhDAd6jmHJKrELYolZc6yrESr71T3vuE/GZrsHG51/gnIZIgARFvZNc
- 6xteH/mlCins3SZkgmPsG2QDLbL0f61d6hYacBlMjQZfoNOV8mNZStDLWPhkQTTr6ZH+MMCLiIz pxukxj1fTADDUYsHKfWDlKEPe+jqWi5wr7axE6AmJRU6+49Hf0TNpc9pSHJukT7WGZF1gnXJveR G0DLlousKZFm8Odg18s9hdo/Og7FDsfHn2mqkztuNQeTvnky/JxWKseWhVMyFFEBtOr67ewhQ38
- i1sOMYKHiH9tqHLGwOgMUwDV241YMuuVaJbHoxTkDJLrljQWzJphlf98n5yYG5zAPWjwyhF+
-X-Proofpoint-GUID: FtRl5aB2iy992nm6u0N62rVbDKcdzle8
-X-Proofpoint-ORIG-GUID: BWgFVlbVuMyff2u4xjoRrzmut-6DCtPI
-X-Authority-Analysis: v=2.4 cv=combk04i c=1 sm=1 tr=0 ts=6857f5dd cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=7CQSdrXTAAAA:8 a=VnNF1IyMAAAA:8 a=dY7dXPFekxP_jGxdfwkA:9 a=QEXdDO2ut3YA:10
- a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-22_04,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 spamscore=0 adultscore=0 mlxlogscore=999 clxscore=1015
- impostorscore=0 suspectscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506220076
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2025-06-18 at 11:23 +0100, Yeoreum Yun wrote:
-> To generate the boot_aggregate log in the IMA subsystem using TPM PCR val=
-ues,
-> the TPM driver must be built as built-in and must be probed before
-> the IMA subsystem is initialized.
->=20
-> However, when the TPM device operates over the FF-A protocol using the CR=
-B interface,
-> probing fails and returns -EPROBE_DEFER
-> if the tpm_crb_ffa device =E2=80=94 an FF-A device that provides
-> the communication interface to the tpm_crb driver =E2=80=94 has not yet b=
-een probed.
->=20
-> This issue occurs because both crb_acpi_driver_init() and
-> tpm_crb_ffa_driver_init() are registered with device_initcall.
-> As a result, crb_acpi_driver_init() may be invoked before
-> tpm_crb_ffa_driver_init(), which is responsible for probing the tpm_crb_f=
-fa device.
->=20
-> When this happens, IMA fails to detect the TPM device and
-> logs the following message:
->=20
->   | ima: No TPM chip found, activating TPM-bypass!
->=20
-> Consequently, it cannot generate the boot_aggregate log with
-> the PCR values provided by the TPM.
->=20
-> To resolve this issue, the tpm_crb_ffa_init() function explicitly attempt=
-s to
-> probe the tpm_crb_ffa by register tpm_crb_ffa driver so that
-> when tpm_crb_ffa device is created before tpm_crb_ffa_init(),
-> probe the tpm_crb_ffa device in tpm_crb_ffa_init() to finish probe the
-> TPM device completely.
->=20
-> This ensures that the TPM device using CRB over FF-A
-> can be successfully probed, even if crb_acpi_driver_init() is called firs=
-t.
->=20
-> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
-> ---
->  drivers/char/tpm/tpm_crb_ffa.c | 19 ++++++++++++++++---
->  1 file changed, 16 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ff=
-a.c
-> index 4ead61f01299..462fcf610020 100644
-> --- a/drivers/char/tpm/tpm_crb_ffa.c
-> +++ b/drivers/char/tpm/tpm_crb_ffa.c
-> @@ -115,6 +115,7 @@ struct tpm_crb_ffa {
->  };
-> =20
->  static struct tpm_crb_ffa *tpm_crb_ffa;
-> +static struct ffa_driver tpm_crb_ffa_driver;
-> =20
->  static int tpm_crb_ffa_to_linux_errno(int errno)
->  {
-> @@ -168,13 +169,23 @@ static int tpm_crb_ffa_to_linux_errno(int errno)
->   */
->  int tpm_crb_ffa_init(void)
->  {
-> +	int ret =3D 0;
-> +
-> +	if (!IS_MODULE(CONFIG_TCG_ARM_CRB_FFA)) {
-> +		ret =3D ffa_register(&tpm_crb_ffa_driver);
-> +		if (ret) {
-> +			tpm_crb_ffa =3D ERR_PTR(-ENODEV);
-> +			return ret;
-> +		}
-> +	}
-> +
->  	if (!tpm_crb_ffa)
-> -		return -ENOENT;
-> +		ret =3D -ENOENT;
-> =20
->  	if (IS_ERR_VALUE(tpm_crb_ffa))
-> -		return -ENODEV;
-> +		ret =3D -ENODEV;
-> =20
-> -	return 0;
-> +	return ret;
->  }
->  EXPORT_SYMBOL_GPL(tpm_crb_ffa_init);
-> =20
-> @@ -369,7 +380,9 @@ static struct ffa_driver tpm_crb_ffa_driver =3D {
->  	.id_table =3D tpm_crb_ffa_device_id,
->  };
-> =20
-> +#ifdef MODULE
->  module_ffa_driver(tpm_crb_ffa_driver);
-> +#endif
-> =20
->  MODULE_AUTHOR("Arm");
->  MODULE_DESCRIPTION("TPM CRB FFA driver");
+Setup regmap cache to cache register configuration, reducing bus traffic
+for repeated accesses to non volatile registers.
 
-LGTM.  Using ifndef/ifdef MODULE is similar to how module_init() works for =
-both
-builtin and loadable kernel modules. Except module_init() is on the
-device_initcall().
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+---
+ drivers/iio/accel/adxl313.h      |  3 +++
+ drivers/iio/accel/adxl313_core.c | 18 ++++++++++++++++++
+ drivers/iio/accel/adxl313_i2c.c  |  6 ++++++
+ drivers/iio/accel/adxl313_spi.c  |  6 ++++++
+ 4 files changed, 33 insertions(+)
 
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+diff --git a/drivers/iio/accel/adxl313.h b/drivers/iio/accel/adxl313.h
+index 72f624af4686..2bc86ac8ffd4 100644
+--- a/drivers/iio/accel/adxl313.h
++++ b/drivers/iio/accel/adxl313.h
+@@ -22,6 +22,7 @@
+ #define ADXL313_REG_BW_RATE		0x2C
+ #define ADXL313_REG_POWER_CTL		0x2D
+ #define ADXL313_REG_INT_MAP		0x2F
++#define ADXL313_REG_INT_SOURCE		0x30
+ #define ADXL313_REG_DATA_FORMAT		0x31
+ #define ADXL313_REG_DATA_AXIS(index)	(0x32 + ((index) * 2))
+ #define ADXL313_REG_FIFO_CTL		0x38
+@@ -54,6 +55,8 @@ extern const struct regmap_access_table adxl312_writable_regs_table;
+ extern const struct regmap_access_table adxl313_writable_regs_table;
+ extern const struct regmap_access_table adxl314_writable_regs_table;
+ 
++bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg);
++
+ enum adxl313_device_type {
+ 	ADXL312,
+ 	ADXL313,
+diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adxl313_core.c
+index 2f26da5857d4..39f16f97bb4a 100644
+--- a/drivers/iio/accel/adxl313_core.c
++++ b/drivers/iio/accel/adxl313_core.c
+@@ -46,6 +46,24 @@ const struct regmap_access_table adxl314_readable_regs_table = {
+ };
+ EXPORT_SYMBOL_NS_GPL(adxl314_readable_regs_table, IIO_ADXL313);
+ 
++bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case ADXL313_REG_DATA_AXIS(0):
++	case ADXL313_REG_DATA_AXIS(1):
++	case ADXL313_REG_DATA_AXIS(2):
++	case ADXL313_REG_DATA_AXIS(3):
++	case ADXL313_REG_DATA_AXIS(4):
++	case ADXL313_REG_DATA_AXIS(5):
++	case ADXL313_REG_FIFO_STATUS:
++	case ADXL313_REG_INT_SOURCE:
++		return true;
++	default:
++		return false;
++	}
++}
++EXPORT_SYMBOL_NS_GPL(adxl313_is_volatile_reg, "IIO_ADXL313");
++
+ static int adxl312_check_id(struct device *dev,
+ 			    struct adxl313_data *data)
+ {
+diff --git a/drivers/iio/accel/adxl313_i2c.c b/drivers/iio/accel/adxl313_i2c.c
+index a4cf0cf2c5aa..e8636e8ab14f 100644
+--- a/drivers/iio/accel/adxl313_i2c.c
++++ b/drivers/iio/accel/adxl313_i2c.c
+@@ -21,6 +21,8 @@ static const struct regmap_config adxl31x_i2c_regmap_config[] = {
+ 		.rd_table	= &adxl312_readable_regs_table,
+ 		.wr_table	= &adxl312_writable_regs_table,
+ 		.max_register	= 0x39,
++		.volatile_reg	= adxl313_is_volatile_reg,
++		.cache_type	= REGCACHE_MAPLE,
+ 	},
+ 	[ADXL313] = {
+ 		.reg_bits	= 8,
+@@ -28,6 +30,8 @@ static const struct regmap_config adxl31x_i2c_regmap_config[] = {
+ 		.rd_table	= &adxl313_readable_regs_table,
+ 		.wr_table	= &adxl313_writable_regs_table,
+ 		.max_register	= 0x39,
++		.volatile_reg	= adxl313_is_volatile_reg,
++		.cache_type	= REGCACHE_MAPLE,
+ 	},
+ 	[ADXL314] = {
+ 		.reg_bits	= 8,
+@@ -35,6 +39,8 @@ static const struct regmap_config adxl31x_i2c_regmap_config[] = {
+ 		.rd_table	= &adxl314_readable_regs_table,
+ 		.wr_table	= &adxl314_writable_regs_table,
+ 		.max_register	= 0x39,
++		.volatile_reg	= adxl313_is_volatile_reg,
++		.cache_type	= REGCACHE_MAPLE,
+ 	},
+ };
+ 
+diff --git a/drivers/iio/accel/adxl313_spi.c b/drivers/iio/accel/adxl313_spi.c
+index 9a16b40bff34..68e323e81aeb 100644
+--- a/drivers/iio/accel/adxl313_spi.c
++++ b/drivers/iio/accel/adxl313_spi.c
+@@ -24,6 +24,8 @@ static const struct regmap_config adxl31x_spi_regmap_config[] = {
+ 		.max_register	= 0x39,
+ 		/* Setting bits 7 and 6 enables multiple-byte read */
+ 		.read_flag_mask	= BIT(7) | BIT(6),
++		.volatile_reg	= adxl313_is_volatile_reg,
++		.cache_type	= REGCACHE_MAPLE,
+ 	},
+ 	[ADXL313] = {
+ 		.reg_bits	= 8,
+@@ -33,6 +35,8 @@ static const struct regmap_config adxl31x_spi_regmap_config[] = {
+ 		.max_register	= 0x39,
+ 		/* Setting bits 7 and 6 enables multiple-byte read */
+ 		.read_flag_mask	= BIT(7) | BIT(6),
++		.volatile_reg	= adxl313_is_volatile_reg,
++		.cache_type	= REGCACHE_MAPLE,
+ 	},
+ 	[ADXL314] = {
+ 		.reg_bits	= 8,
+@@ -42,6 +46,8 @@ static const struct regmap_config adxl31x_spi_regmap_config[] = {
+ 		.max_register	= 0x39,
+ 		/* Setting bits 7 and 6 enables multiple-byte read */
+ 		.read_flag_mask	= BIT(7) | BIT(6),
++		.volatile_reg	= adxl313_is_volatile_reg,
++		.cache_type	= REGCACHE_MAPLE,
+ 	},
+ };
+ 
+-- 
+2.39.5
+
