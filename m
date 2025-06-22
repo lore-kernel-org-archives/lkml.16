@@ -1,105 +1,136 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8B71BC4E;
-	Sun, 22 Jun 2025 07:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49EC91BC4E;
+	Sun, 22 Jun 2025 07:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750578852; cv=none; b=Ia1xfGS0+Ow9TCwC6xB+aBTelAzWOflJmklGBv44JC5XhLdzkRN/T8LaUxtgn8IYtMDXOD4kb7DZU5omnwt2SsnXyyPKpOpbD4VQtUxPjevEasTBtdrFOG7LBgvqn/es4ybS1lL0ULlC/vQBotocv8f878CZSt35D71GrY8jD2U=
+	t=1750578927; cv=none; b=JevTEZ0SwVBK22CWR/54qUtPsIbh4IQk4upqOAg7A6CcDNgfKviz3GSj7tw391Yq8n3N1qXD+GUlpwo5BxHjsMfeg7YXJSIxtvAbIg/xwAYXJKGJEU1603DdFuFfftaQG4/bfXEzygri+Ky4WTa29yC215fIymJZd4xk52y6YYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750578852; c=relaxed/simple;
-	bh=m3QhgC9Oxl2Bc7EUQ1UlUUrTpGTYUv9PwwzaefYP+9Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Z2AKWLzBcUUosZKvwbdW9NBVbw969aVrWS8gJHGCvyWH/gFq9/zx8hQyU5gMFVUK2dUPZh8NKtOOa4+3+LpVcuaymZYvcaAGUoN5qWnGHchDgRx/NSFJi7C0sgxVVIYQLbs8k9rO7z1IgQWjrbrTCcRipMJ99SnHcPBWF9aKRUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=g8+IyqL2; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1750578927; c=relaxed/simple;
+	bh=AadL+OIcSNlzqYxlZODabKBrojBYlaOaFNc2cb3or2Y=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=TeaMjOVjHcIS+mSa9dJTeD63dlsPJt6PEc/n6n8L1pHXE2weD3cnyEfaBFVtRHL/kgL2TVn2ucU0dn8BAjnY1sCABpG3d7OlsI4VPsDbrUEtL/qBvArlJY3DIw7sk2ECBEMu56lBKc+O9mrf5mF9DrGtz5HQ/bYBlJ+o0Kxt8mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AdaDiqh8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="g8+IyqL2"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8BADC40E016E;
-	Sun, 22 Jun 2025 07:53:58 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id r08CE6IFBEys; Sun, 22 Jun 2025 07:53:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1750578835; bh=UNHDt2clM+6bGn8vHpQjAgNYRNnxjqxu28E8pcHqDfQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=g8+IyqL2f61heXobF4c7RXeJ+VYQ0BisnYVF1mjpWi0prw3wc8HexwbtO5sYRTCno
-	 6xM1H2ueCn07LMhJHXY/t0FkHhneyJgByiZADyeDFNL7mnAtgq2ZUyEFHZWPYP5BNz
-	 HPCntH0BnMNGy3Nxv5PZ+qAOX5iZvKuGGHIxp4vSj6nV64/XyiPwMAcA+J+4ddzeU2
-	 us2+Eo+Yoz5ozCYdLZJFZG6yC02U8nbtlhuq6NzWZQvq2FYAemdU1QiIc4JGTmQFWV
-	 o2TzyLIagYY+96bvvR2R5xEnUh3nlndza79rbEathUVhzerI/0RGTWkS/onQJ8b2Un
-	 Gg/dre5uGhnf4T1D4dRLVfdZAN2t+ImDUv9YYQqqehcSFsRzH5axkLBDPtFE1aZ9zC
-	 OeoC77TDbcOumkmFpmg3lYEKH/Hj2W5R//N+LkiWyEq/xuhwrlyeYj2AuHZGy9ZICh
-	 VbGkXu1oz63KxuLzXmrrXRg+NS323jdfcptQlPtDWdwDet5WKZNVSucQoJ5GiXLtMM
-	 P73H8NYYgTkJU6uPPXIHrQlKP4T0xfM9vFe3hzDvhBuBDZNgx4MSOW+zrFZcjy+ZQ0
-	 5Qu3YkYEHKs/UFHNTqa8d2Z+F/AAomgAoTkfkCFVkBRjC6TkZQXO9eXg24zcyCodkU
-	 aJDEH/Hva2UZDCAnmxWfszQk=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 28EDE40E015D;
-	Sun, 22 Jun 2025 07:53:52 +0000 (UTC)
-Date: Sun, 22 Jun 2025 09:53:45 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] EDAC urgent for v6.16-rc3
-Message-ID: <20250622075345.GAaFe2iR1i-n1neZcW@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AdaDiqh8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7345CC4CEE3;
+	Sun, 22 Jun 2025 07:55:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750578926;
+	bh=AadL+OIcSNlzqYxlZODabKBrojBYlaOaFNc2cb3or2Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AdaDiqh8xL2zuNluDxJtLIhShUj/7TQg/GfP7ubkie25wEhnD5S21RjgOu1tAEWCH
+	 nkgy61FWr1V6ph4Exu9qFu29lUcy+wVWu05k2Z4Z9oBMHkxnwzkFH8qSr2IkYlbyJ7
+	 krqCUsMb8daPF6DLFZ9pJRCv40fribwlecP7XZeGGgoOZo2WjQ/H2T2SOMX5dwsfqw
+	 NcA+bIznkaT7MpjJhvDMTuvs3+VTxyF24pe/shqkuIVt3A57uTLD1XnZduRDCCrrgM
+	 5NeVstUIIiqXdnpqeu9qiEoOCJdo/R+YbiD20/jRLXP7dqo3hq9et0tboNKRlHIYjC
+	 06f2xfw0Q4A2g==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 22 Jun 2025 09:55:22 +0200
+Message-Id: <DASWFQXR9V54.18EU85NWBUC97@kernel.org>
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Alice Ryhl" <aliceryhl@google.com>, "Alexander Viro"
+ <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Christian Brauner" <brauner@kernel.org>
+Cc: "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Trevor Gross" <tmgross@umich.edu>,
+ "Danilo Krummrich" <dakr@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH] poll: rust: allow poll_table ptrs to be null
+X-Mailer: aerc 0.20.1
+References: <20250620-poll-table-null-v1-1-b3fe92a4fd0d@google.com>
+In-Reply-To: <20250620-poll-table-null-v1-1-b3fe92a4fd0d@google.com>
 
-Hi Linus,
+On Fri Jun 20, 2025 at 1:49 PM CEST, Alice Ryhl wrote:
+> It's possible for a poll_table to be null. This can happen if an
+> end-user just wants to know if a resource has events right now without
+> registering a waiter for when events become available. Furthermore,
+> these null pointers should be handled transparently by the API, so we
+> should not change `from_ptr` to return an `Option`. Thus, change
+> `PollTable` to wrap a raw pointer rather than use a reference so that
+> you can pass null.
+>
+> Comments mentioning `struct poll_table` are changed to just `poll_table`
+> since `poll_table` is a typedef. (It's a typedef because it's supposed
+> to be opaque.)
+>
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+> This issue was discovered from a syzkaller report on Rust Binder.
+>
+> Intended for Christian Brauner's tree.
+> ---
+>  rust/helpers/helpers.c   |  1 +
+>  rust/helpers/poll.c      | 10 ++++++++
+>  rust/kernel/sync/poll.rs | 65 +++++++++++++++++-------------------------=
+------
+>  3 files changed, 34 insertions(+), 42 deletions(-)
 
-please pull two urgent EDAC fixes for v6.16-rc3.
+Looks good, one safety comment concern below, with that fixed:
 
-Thx.
+Reviewed-by: Benno Lossin <lossin@kernel.org>
+
+>      /// Register this [`PollTable`] with the provided [`PollCondVar`], s=
+o that it can be notified
+>      /// using the condition variable.
+> -    pub fn register_wait(&mut self, file: &File, cv: &PollCondVar) {
+> -        if let Some(qproc) =3D self.get_qproc() {
+> -            // SAFETY: The pointers to `file` and `self` need to be vali=
+d for the duration of this
+> -            // call to `qproc`, which they are because they are referenc=
+es.
+> -            //
+> -            // The `cv.wait_queue_head` pointer must be valid until an r=
+cu grace period after the
+> -            // waiter is removed. The `PollCondVar` is pinned, so before=
+ `cv.wait_queue_head` can
+> -            // be destroyed, the destructor must run. That destructor fi=
+rst removes all waiters,
+> -            // and then waits for an rcu grace period. Therefore, `cv.wa=
+it_queue_head` is valid for
+> -            // long enough.
+> -            unsafe { qproc(file.as_ptr() as _, cv.wait_queue_head.get(),=
+ self.0.get()) };
+> -        }
+> +    pub fn register_wait(&self, file: &File, cv: &PollCondVar) {
+> +        // SAFETY: The pointers `self.table` and `file` are valid for th=
+e duration of this call.
+
+`self.table` might be null, which I think we agreed to is not "valid".
+
+> +        // The `cv.wait_queue_head` pointer must be valid until an rcu g=
+race period after the
+> +        // waiter is removed. The `PollCondVar` is pinned, so before `cv=
+.wait_queue_head` can be
+> +        // destroyed, the destructor must run. That destructor first rem=
+oves all waiters, and then
+> +        // waits for an rcu grace period. Therefore, `cv.wait_queue_head=
+` is valid for long enough.
+
+Could you use bullet points for the different requirements?
 
 ---
+Cheers,
+Benno
 
-The following changes since commit e04c78d86a9699d136910cfc0bdcf01087e3267e:
+> +        unsafe { bindings::poll_wait(file.as_ptr(), cv.wait_queue_head.g=
+et(), self.table) }
+>      }
+>  }
+> =20
+>
+> ---
+> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+> change-id: 20250620-poll-table-null-bf9a6a6c569e
+>
+> Best regards,
 
-  Linux 6.16-rc2 (2025-06-15 13:49:41 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git edac_urgent_for_v6.16_rc3
-
-for you to fetch changes up to 88efa0de3285be66969b71ec137d9dab1ee19e52:
-
-  EDAC/igen6: Fix NULL pointer dereference (2025-06-18 20:19:45 +0200)
-
-----------------------------------------------------------------
-- amd64: Correct the number of memory controllers on some AMD Zen clients
-
-- igen6: Handle firmware-disabled memory controllers properly
-
-----------------------------------------------------------------
-Avadhut Naik (1):
-      EDAC/amd64: Correct number of UMCs for family 19h models 70h-7fh
-
-Qiuxu Zhuo (1):
-      EDAC/igen6: Fix NULL pointer dereference
-
- drivers/edac/amd64_edac.c |  1 +
- drivers/edac/igen6_edac.c | 24 +++++++++++++-----------
- 2 files changed, 14 insertions(+), 11 deletions(-)
-
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
