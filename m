@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCA52F2E;
-	Sun, 22 Jun 2025 11:47:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2504BBA34;
+	Sun, 22 Jun 2025 11:49:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750592844; cv=none; b=QRaMvl+kz4Myh6OzAWiZqepOFR64RC8YKahs++RIUsxI6or7lPD1S0ILgKd2R8f2LNRUMp1YnFKV1Ju+YJ0SNBIMuN6iAsOp3Da7q9PE28yBr709TA1qga3dXO+BRTQpggpgdU+bfIEIFe8sgazzsdI4Gxl1K7LYvYt70xrAoQE=
+	t=1750592942; cv=none; b=jjok1MkmX/8T5b/ykPEp6lWF/LtdB1qA3MHuBvJggK0Qdawcuesuu9WhsacZQ5cN7Tnqpy/Jxr1f/lT2C5XreBKMVdlSwGAYW9vRlGzV7RTweVPin/WYeWhEbs1KTz2QPEasNekgJMMvEiDo61deyas0cSPSw0mbnz3VrXBvb+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750592844; c=relaxed/simple;
-	bh=OcWyqnnyP49TnV8sUEiWR78wpLcWlD2ua3iEpIK94m8=;
+	s=arc-20240116; t=1750592942; c=relaxed/simple;
+	bh=kPiv8Htn2RzUtKSYQkgG0DhzX60RgBfLfRLL7aPdIWY=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EEDKUIK8ZcUDUcDDdi2jQeSZqfKaZJ98cAfDYYMnkbp4UT6o/OBlprXoT0APTOT9cjRKrmmBSeHwvXIeCb+CQFEKIcIdWrv+w3DU0yFWJ4HcSbtoGtaQAJVKzW/BfWWNnacSbF08HAoVo2dPZqdNBWfFh3GN9wfUZWqfQGGMH7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yvhe39KH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=LHrTaUpcorgpI8zxTEZGW3gF3omFqVHwB7tJ6tubNq03NTD6NXqsyKYOpkUy9yEKtTfBDkDGzcqOgFqx4S2bblr210YbC8a0bWgC8Iu3VVBIouKsnNFVAlUe6NknVIfixUOm6AAv1Nrs3xDLn+KAYdpZEL4Gp+hNaSvqLV9f5QU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ngC/ny9h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yvhe39KH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8058CC4CEE3;
-	Sun, 22 Jun 2025 11:47:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ngC/ny9h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90DFEC4CEE3;
+	Sun, 22 Jun 2025 11:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750592843;
-	bh=OcWyqnnyP49TnV8sUEiWR78wpLcWlD2ua3iEpIK94m8=;
+	s=k20201202; t=1750592941;
+	bh=kPiv8Htn2RzUtKSYQkgG0DhzX60RgBfLfRLL7aPdIWY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Yvhe39KHqVU4OgOZhCtMQdTsKP2EeDErx1x7YwXZy8wGffIA+h4pCSp80DyeY1eC+
-	 gh7Gi/N/4Mpttkezxogr5qeXyr9s2s0npY21IpBX8OvT3cMAV357k/1Vt84OU//XMD
-	 sA9kTWLHw/07N4U5RYFe3/LCZyHqB5oLmIy6O4jcNgkOIJ/DO4r/xn66IZCjGgjnuL
-	 PHqz1srcudhhNb2r+VR6607dOVfOJSTsAYVMd2VrQIdi22ppAseRPSdLyzzzFvgBwt
-	 AUeuY823bDTKiZeOJUqeKxq/mAbmdUjDMyQ/K6qPz0Fr6bFkdtPfiyesJtCe/5h257
-	 qBsQMCnC7ImrQ==
-Date: Sun, 22 Jun 2025 13:47:19 +0200
+	b=ngC/ny9hw+XJ4twDaIqHmb6Y08WEorqs0Zwz7LvjhjHIaN0FKYBmAn5XLxRascwwf
+	 Cp5heVSfVY5MC2w0Kt5rmVdzy9UzzuHCEPEsvHOH229wdINauaGl9pwyIhq0dmDwK9
+	 iLpMGe2unXcEO+40TpjVszYKcRJQTcgmlFWmv05shVt7q7RvT2JW8a5anYhMAVdVWi
+	 Sv3+hz1ZTWCA750/5vcfg8Ereux+IzYE05PQtONIFl8qltzgH5NK7zbj9gau+FG+lh
+	 w9FpjNQqja52zudme9IlID0wtG8JO5/P5arsej8wR0Etv3c+O5/qUoDp0Ggp52sCIP
+	 hec/UPJDUwI0Q==
+Date: Sun, 22 Jun 2025 13:48:57 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Akira Yokosawa
  <akiyks@gmail.com>
-Subject: Re: [PATCH 2/9] docs: kdoc: consolidate the "begin section" logic
-Message-ID: <20250622134719.1b9818c7@foz.lan>
-In-Reply-To: <20250621203512.223189-3-corbet@lwn.net>
+Subject: Re: [PATCH 3/9] docs: kdoc: separate out the handling of the
+ declaration phase
+Message-ID: <20250622134857.543cb85a@foz.lan>
+In-Reply-To: <20250621203512.223189-4-corbet@lwn.net>
 References: <20250621203512.223189-1-corbet@lwn.net>
-	<20250621203512.223189-3-corbet@lwn.net>
+	<20250621203512.223189-4-corbet@lwn.net>
 X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,119 +47,167 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Em Sat, 21 Jun 2025 14:35:05 -0600
+Em Sat, 21 Jun 2025 14:35:06 -0600
 Jonathan Corbet <corbet@lwn.net> escreveu:
 
-> Pull the repeated "begin a section" logic into a single place and hide it
-> within the KernelEntry class.
+> The BODY_MAYBE state really describes the "we are in a declaration" state.
+> Rename it accordingly, and split the handling of this state out from that
+> of the other BODY* states.  This change introduces a fair amount of
+> duplicated code that will be coalesced in a later patch.
 > 
 > Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 
-Heh, I had a code snippet similar to this one on one of my test branches ;-)
-
 LGTM.
-
 Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
 > ---
->  scripts/lib/kdoc/kdoc_parser.py | 32 +++++++++++++++++---------------
->  1 file changed, 17 insertions(+), 15 deletions(-)
+>  scripts/lib/kdoc/kdoc_parser.py | 93 +++++++++++++++++++++++++++------
+>  1 file changed, 78 insertions(+), 15 deletions(-)
 > 
 > diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
-> index c46e1b6a7d4b..d29a61a06f6d 100644
+> index d29a61a06f6d..f1491f8c88e7 100644
 > --- a/scripts/lib/kdoc/kdoc_parser.py
 > +++ b/scripts/lib/kdoc/kdoc_parser.py
-> @@ -169,6 +169,15 @@ class KernelEntry:
->          self.warnings.append(log_msg)
->          return
->  
-> +    #
-> +    # Begin a new section.
-> +    #
-> +    def begin_section(self, line_no, title = SECTION_DEFAULT, dump = False):
-> +        if dump:
-> +            self.dump_section(start_new = True)
-> +        self.section = title
-> +        self.new_start_line = line_no
-> +
->      def dump_section(self, start_new=True):
->          """
->          Dumps section contents to arrays/hashes intended for that purpose.
-> @@ -1231,12 +1240,11 @@ class KernelDoc:
->          # Check for a DOC: block and handle them specially.
->          #
->          if doc_block.search(line):
-> -            self.entry.new_start_line = ln
->  
->              if not doc_block.group(1):
-> -                self.entry.section = "Introduction"
-> +                self.entry.begin_section(ln, "Introduction")
+> @@ -86,7 +86,7 @@ class state:
+>      # Parser states
+>      NORMAL        = 0        # normal code
+>      NAME          = 1        # looking for function name
+> -    BODY_MAYBE    = 2        # body - or maybe more description
+> +    DECLARATION   = 2        # We have seen a declaration which might not be done
+
+A way better now.
+
+>      BODY          = 3        # the body of the comment
+>      BODY_WITH_BLANK_LINE = 4 # the body which has a blank line
+>      PROTO         = 5        # scanning prototype
+> @@ -96,7 +96,7 @@ class state:
+>      name = [
+>          "NORMAL",
+>          "NAME",
+> -        "BODY_MAYBE",
+> +        "DECLARATION",
+>          "BODY",
+>          "BODY_WITH_BLANK_LINE",
+>          "PROTO",
+> @@ -1287,7 +1287,7 @@ class KernelDoc:
+>              r = KernRe("[-:](.*)")
+>              if r.search(line):
+>                  self.entry.declaration_purpose = trim_whitespace(r.group(1))
+> -                self.state = state.BODY_MAYBE
+> +                self.state = state.DECLARATION
 >              else:
-> -                self.entry.section = doc_block.group(1)
-> +                self.entry.begin_section(ln, doc_block.group(1))
+>                  self.entry.declaration_purpose = ""
 >  
->              self.entry.identifier = self.entry.section
->              self.state = state.DOCBLOCK
-> @@ -1270,8 +1278,7 @@ class KernelDoc:
->              self.state = state.BODY
->              self.entry.identifier = self.entry.identifier.strip(" ")
->              # if there's no @param blocks need to set up default section here
-> -            self.entry.section = SECTION_DEFAULT
-> -            self.entry.new_start_line = ln + 1
-> +            self.entry.begin_section(ln + 1)
->              #
->              # Find the description portion, which *should* be there but
->              # isn't always.
-> @@ -1312,8 +1319,7 @@ class KernelDoc:
->              r = KernRe(r"\s*\*\s*\S")
->              if r.match(line):
->                  self.dump_section()
-> -                self.entry.section = SECTION_DEFAULT
-> -                self.entry.new_start_line = ln
-> +                self.entry.begin_section(ln)
->                  self.entry.contents = ""
+> @@ -1310,9 +1310,82 @@ class KernelDoc:
+>          else:
+>              self.emit_msg(ln, f"Cannot find identifier on line:\n{line}")
 >  
->          if doc_sect.search(line):
-> @@ -1340,8 +1346,7 @@ class KernelDoc:
->              if self.entry.contents.strip("\n"):
->                  self.dump_section()
->  
-> -            self.entry.new_start_line = ln
-> -            self.entry.section = newsection
+> +    def process_decl(self, ln, line):
+> +        """
+> +        STATE_DECLARATION: We've seen the beginning of a declaration
+> +        """
+> +        if doc_sect.search(line):
+> +            self.entry.in_doc_sect = True
+> +            newsection = doc_sect.group(1)
+> +
+> +            if newsection.lower() in ["description", "context"]:
+> +                newsection = newsection.title()
+> +
+> +            # Special case: @return is a section, not a param description
+> +            if newsection.lower() in ["@return", "@returns",
+> +                                      "return", "returns"]:
+> +                newsection = "Return"
+> +
+> +            # Perl kernel-doc has a check here for contents before sections.
+> +            # the logic there is always false, as in_doc_sect variable is
+> +            # always true. So, just don't implement Wcontents_before_sections
+> +
+> +            # .title()
+> +            newcontents = doc_sect.group(2)
+> +            if not newcontents:
+> +                newcontents = ""
+> +
+> +            if self.entry.contents.strip("\n"):
+> +                self.dump_section()
+> +
 > +            self.entry.begin_section(ln, newsection)
->              self.entry.leading_space = None
+> +            self.entry.leading_space = None
+> +
+> +            self.entry.contents = newcontents.lstrip()
+> +            if self.entry.contents:
+> +                self.entry.contents += "\n"
+> +
+> +            self.state = state.BODY
+> +            return
+> +
+> +        if doc_end.search(line):
+> +            self.dump_section()
+> +
+> +            # Look for doc_com + <text> + doc_end:
+> +            r = KernRe(r'\s*\*\s*[a-zA-Z_0-9:\.]+\*/')
+> +            if r.match(line):
+> +                self.emit_msg(ln, f"suspicious ending line: {line}")
+> +
+> +            self.entry.prototype = ""
+> +            self.entry.new_start_line = ln + 1
+> +
+> +            self.state = state.PROTO
+> +            return
+> +
+> +        if doc_content.search(line):
+> +            cont = doc_content.group(1)
+> +
+> +            if cont == "":
+> +                self.state = state.BODY
+> +                self.entry.contents += "\n"  # needed?
+> +
+> +            else:
+> +                # Continued declaration purpose
+> +                self.entry.declaration_purpose = self.entry.declaration_purpose.rstrip()
+> +                self.entry.declaration_purpose += " " + cont
+> +
+> +                r = KernRe(r"\s+")
+> +                self.entry.declaration_purpose = r.sub(' ',
+> +                                                       self.entry.declaration_purpose)
+> +            return
+> +
+> +        # Unknown line, ignore
+> +        self.emit_msg(ln, f"bad line: {line}")
+> +
+> +
+>      def process_body(self, ln, line):
+>          """
+> -        STATE_BODY and STATE_BODY_MAYBE: the bulk of a kerneldoc comment.
+> +        STATE_BODY: the bulk of a kerneldoc comment.
+>          """
 >  
->              self.entry.contents = newcontents.lstrip()
-> @@ -1370,9 +1375,7 @@ class KernelDoc:
+>          if self.state == state.BODY_WITH_BLANK_LINE:
+> @@ -1385,16 +1458,6 @@ class KernelDoc:
 >  
->              if cont == "":
->                  if self.entry.section == self.section_context:
-> -                    self.dump_section()
+>                      self.entry.contents += "\n"
+>  
+> -            elif self.state == state.BODY_MAYBE:
 > -
-> -                    self.entry.new_start_line = ln
-> +                    self.entry.begin_section(ln, dump = True)
->                      self.state = state.BODY
->                  else:
->                      if self.entry.section != SECTION_DEFAULT:
-> @@ -1427,8 +1430,7 @@ class KernelDoc:
->  
->          if self.inline_doc_state == state.INLINE_NAME and \
->             doc_inline_sect.search(line):
-> -            self.entry.section = doc_inline_sect.group(1)
-> -            self.entry.new_start_line = ln
-> +            self.entry.begin_section(ln, doc_inline_sect.group(1))
->  
->              self.entry.contents = doc_inline_sect.group(2).lstrip()
->              if self.entry.contents != "":
-> @@ -1627,7 +1629,7 @@ class KernelDoc:
->          """STATE_PROTO: reading a function/whatever prototype."""
->  
->          if doc_inline_oneline.search(line):
-> -            self.entry.section = doc_inline_oneline.group(1)
-> +            self.entry.begin_section(ln, doc_inline_oneline.group(1))
->              self.entry.contents = doc_inline_oneline.group(2)
->  
->              if self.entry.contents != "":
+> -                # Continued declaration purpose
+> -                self.entry.declaration_purpose = self.entry.declaration_purpose.rstrip()
+> -                self.entry.declaration_purpose += " " + cont
+> -
+> -                r = KernRe(r"\s+")
+> -                self.entry.declaration_purpose = r.sub(' ',
+> -                                                       self.entry.declaration_purpose)
+> -
+>              else:
+>                  if self.entry.section.startswith('@') or        \
+>                     self.entry.section == self.section_context:
+> @@ -1687,7 +1750,7 @@ class KernelDoc:
+>          state.NORMAL:			process_normal,
+>          state.NAME:			process_name,
+>          state.BODY:			process_body,
+> -        state.BODY_MAYBE:		process_body,
+> +        state.DECLARATION:		process_decl,
+>          state.BODY_WITH_BLANK_LINE:	process_body,
+>          state.INLINE:			process_inline,
+>          state.PROTO:			process_proto,
 
 
 
