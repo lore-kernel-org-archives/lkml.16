@@ -1,96 +1,77 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BCA42F2E;
-	Sun, 22 Jun 2025 20:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+Received: from submarine.notk.org (submarine.notk.org [62.210.214.84])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB7581EB1AC;
+	Sun, 22 Jun 2025 20:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750624772; cv=none; b=U9zqbfebl6HqYen6EiA9ulv6wxAzmsHnQRovWMgWfdGLvDNnUA4RGhM3rPZwR3oalo/pgmU9JF0FYAnO3f1/9m4rNZVadiOLG/Hs6Tmi/+qBTUlRY+0FYabkP6BA12qjDQ5w6ugSo3OoUxehBGB30j2GQ+euqrgk9JBqydzIumM=
+	t=1750624792; cv=none; b=XR5bHNem+qSx2z6RgmE0XTmRJfVk5yJZsInXQSWkiJzD/JOYJqTUUoMLv4xz9364sQs/kGUIQtpjgsahWyO7xkx4FwUOF0h4JOGOO9RCt8/EFtvpRb5PL0LCRFk6zMjdP10V9FM9aNOEI1cfSDXTm8+2L/WDX6uRcXi3n1aTlzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750624772; c=relaxed/simple;
-	bh=N6guHtyGMULMEJD0DmeqXfTFFtMsmAZzCxdt3JROOYM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qbn9fkxfqUxc1Tv9ig69Ser+Ph4+ZdSFviRwaFJR3lME7iV3yZDfOf2QFd1/ILO9ufN/XA9FV0bQIagmpD9FBdwwL6CQvW+NEnejSCkNaYnpyv7nmGmTM6sWMWFgS/u7k0Scf4ZJGJtcmngecaguFMcss22KNpOqDSlDKlaXzNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ihf5DAYh; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750624792; c=relaxed/simple;
+	bh=QNJR0KkCTh+OAKdt0AhF1h0Y5GIdyFPZKwAp9ESeI60=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jiGEYylwVAWB6gr5XbFCJR8rJJ1WWAZG1R819cOlIDiTSjnHQvfGaA/HTs9RMZCWq2yVlnvi0sUF+EeKNrtyf742P3m1a5OGwwUkgQ17u8vZp8WPq9yk0a8SKGobq9TKSQmAiJx3vuomalTym0g+xet/rS5pAJtpIxhFn2oHoKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=rXJtwHAC; arc=none smtp.client-ip=62.210.214.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ihf5DAYh"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-adeaa4f3d07so719746466b.0;
-        Sun, 22 Jun 2025 13:39:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750624770; x=1751229570; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sSQmRB6rd2h8MVTx7uEJn3zEtDJCTLtNHMbRBxoBn+U=;
-        b=ihf5DAYh+1WKvSsH8urT/PRRPMLwp2B+uz297krVYmzkRWfe+WztSpOWKKB1iV90yW
-         TenMtfLHLeeutcyYFUA+VNB9LtM+lCuiBA9O8umyIGQ+fwh6bzVFjUypzHN5WEJRbhcv
-         6dZmf6R++fA+8QKTTZYhgSpBhEtDprQrb4gN7vjBZbZllehZnRi0WLoUAo1GicjycJwL
-         Yq3w3pOVPc4nbVbHjHMW52QWlselqy8fTMWYK138vtVBMTsq0qAtzvZATR/uojFzaRei
-         C1rynKNBMf/MYxu7YPAFoKbRI+S64pdvN6yHE9VYoCH2nWQSVV03+ZnfPCEzWQtKImrx
-         FQ8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750624770; x=1751229570;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sSQmRB6rd2h8MVTx7uEJn3zEtDJCTLtNHMbRBxoBn+U=;
-        b=vV6+n4//3YsbgmTcau8Rm3jqeEDHgbNAwDyt0tgKKbtp6xjtwythB7mlEGN76xN3f0
-         n7KAS6BiYIKY5RRqEZ9O2shonqpRLmHdRV/1tJdeNjbg7pbUzf9Izaz0dy++cem2fzHD
-         CndNXU6ETpUugk7h/BrrG6gYClE4vk4vwiSd757S6mPuHEZn4VMXAMwE/xBw4x5qbODX
-         kqs+DfqCyEvdPYXXwkLVUuvFpmQsqLFgceYAPVWKHeqlXXI4zL6fij0OYTnbH7t4ZedY
-         ro7bmuAynFlBT+tRBMGMP8wuUIhcMkp6NZat0uDmTlqXwvhrTqOjWrNpL3jdBc/ywD9e
-         vR6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUbr9CFurqz6cucfi0XBHFU7Svkl0hw6ZsCYq9RfdMsRly5uG0434v0QWKm999F94T5LzUehidvVopD8xg=@vger.kernel.org, AJvYcCXVa1QZfL1gQA3HzZUXns6Ahv1pBml+N2KynZiZ3lF+BKilIv4W7guqd+y+85Uq3SmBsW1+9J9rC9eWRpk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2JKj8xuVDL5KHPYR4lR6nDj203mhU2EV7igLjLTeFDRPzS3Bs
-	Wt3mtQp0WPeg7IGb+eaYmwJbg8PN4yxzlOK4HGAAisUXm27rYRzV4ykWPjNwbeef0p+XlBQRAzj
-	AmASLPQzLgvSs6QbfSrgsZsb3jiVBgtA=
-X-Gm-Gg: ASbGncsOU97bX42lAgKRsnTNfvKe2HnBFyOG90bzurISjtbqZbGNvH9LeOE3MXqvMMM
-	ilO2+7lCOAzZpJMkUVEIXkWU5VlNMNwFmPt9yLViNda55Kt0jE8tP51TeW6Jpu+GmlGLhYVNxUt
-	KzCOLsrwBk6aQq94d8JhA92xOSvOQDKoAQZSWMTD3fTkhG6B/7oPIzpw==
-X-Google-Smtp-Source: AGHT+IE5Og/WZWlEkV1UzETWK6WHUVp7h5VoEVNPzXLtExpnzD5jPbsGBhn4lHPKUW0pDk/8U4CEsAuh7LKSEOmRoz8=
-X-Received: by 2002:a17:906:f5a9:b0:ad8:a935:b905 with SMTP id
- a640c23a62f3a-ae057d7a6b1mr795786866b.22.1750624769749; Sun, 22 Jun 2025
- 13:39:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="rXJtwHAC"
+Received: from gaia.codewreck.org (localhost [127.0.0.1])
+	by submarine.notk.org (Postfix) with ESMTPS id 8321714C2D3;
+	Sun, 22 Jun 2025 22:39:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
+	s=2; t=1750624789;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4LmQyjY+PPhdIwsfTnogU5Qv4nLE52Xwy953v02UeKs=;
+	b=rXJtwHACGTmeR8vom572roucFa4PvjjNf1l6K9JotlgPqoan8+gl9N6Qwpl9x6J92+e7Nv
+	bH+XbpZvC7ZZItHbwdWNQVG8AxhGA9WN/rTpRU2sETIZWsCrbKBcff6NgItAKN+b40Y4bZ
+	QHrErFVHAYTbEbFfiiWw8b7c1E56JyXIAGFO/RH/dUNXHAPyl0VWQ3bPOFqRaWAmB10oYQ
+	nLjSmzuUeIix8QMXK+lPE6na6vh9eWcGp3EUyM/fJ9RgfKXRAIToouOQmudEEeY2S8N00m
+	B8GwJ42RSWl7mKiqkE291nSIfiFr97pjmFSdU5fhtLBXnbW/jsBsBKDNlxS/ng==
+Received: from localhost (gaia.codewreck.org [local])
+	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 6511ba9f;
+	Sun, 22 Jun 2025 20:39:44 +0000 (UTC)
+Date: Mon, 23 Jun 2025 05:39:29 +0900
+From: asmadeus@codewreck.org
+To: Kees Cook <kees@kernel.org>
+Cc: Dominique Martinet via B4 Relay <devnull+asmadeus.codewreck.org@kernel.org>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Michael Grzeschik <m.grzeschik@pengutronix.de>,
+	stable@vger.kernel.org, Yuhao Jiang <danisjiang@gmail.com>,
+	security@kernel.org, v9fs@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] net/9p: Fix buffer overflow in USB transport layer
+Message-ID: <aFhqAergj6LowmyE@codewreck.org>
+References: <20250622-9p-usb_overflow-v3-1-ab172691b946@codewreck.org>
+ <659844BA-48EF-47E1-8D66-D4CA98359BBF@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250622065340.184048-1-abdelrahmanfekry375@gmail.com> <CAHp75VcKQGvcgv+72=9CY9yvvmzTDUaiP8xZZzQCyd553_tqYw@mail.gmail.com>
-In-Reply-To: <CAHp75VcKQGvcgv+72=9CY9yvvmzTDUaiP8xZZzQCyd553_tqYw@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sun, 22 Jun 2025 23:38:53 +0300
-X-Gm-Features: AX0GCFvAarN_hJUIGnkkqkGeTc0xTTJwApkpFWobyp93oaVzvKfSCAh2aYpZQSE
-Message-ID: <CAHp75Vc7=WYeay0xsvVd5NZ-mm+WdU1LrzzFAE1GrdpzH2JjEQ@mail.gmail.com>
-Subject: Re: [PATCH v2] staging: media: atomisp: Replace scnprintf with
- sysfs_emit in bo_show
-To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-Cc: andy@kernel.org, hansg@kernel.org, mchehab@kernel.org, 
-	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-staging@lists.linux.dev, skhan@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <659844BA-48EF-47E1-8D66-D4CA98359BBF@kernel.org>
 
-On Sun, Jun 22, 2025 at 11:37=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Sun, Jun 22, 2025 at 9:54=E2=80=AFAM Abdelrahman Fekry
-> <abdelrahmanfekry375@gmail.com> wrote:
+Kees Cook wrote on Sun, Jun 22, 2025 at 01:02:20PM -0700:
+> >-	p9_rx_req->rc.size = req->actual;
+> >+	memcpy(p9_rx_req->rc.sdata, req->buf, req_size);
+> 
+> Is rc.sdata always rc.capacity sized? If so, this world be a good first adopter of the __counted_by annotation for pointer struct members, available in Clang trunk and soon in GCC:
+> https://gcc.gnu.org/pipermail/gcc-patches/2025-May/683696.html
 
-...
+I think so, I'll add the annotation in another patch when time allows
+(and try to revert this commit to check it works, even if I have no
+reason to believe it wouldn't catch this)
 
-> > +       /* Changing to sysfs_emit changes the behaviour if failed*/
->
-> This comment, besides missing the space, is useless here. You need to
-> use the comment block for the proposed change.
+(... And this made me realize commit 60ece0833b6c ("net/9p: allocate
+appropriate reduced message buffers") likely broke everything for
+9p/rdma 3 years ago, as rdma is swapping buffers around...
+I guess it doesn't have (m)any users...)
 
-Also the text of the comment is a noise. You need to explain better
-what's going on here.
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Dominique Martinet | Asmadeus
