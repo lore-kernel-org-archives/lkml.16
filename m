@@ -1,81 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5382AEFD;
-	Sun, 22 Jun 2025 21:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481701553AA;
+	Sun, 22 Jun 2025 21:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750629057; cv=none; b=WozOWstX8Ci0QjjBbgdigch5MF/XWAGyhDWDhh4mMpCpck4lfPwS0FLMm27XcRG1D8BdGo1TSrXO+WeW+TMcaf1K3Ba2G92cem6Z9ixfOCnfTLUigf0ayWf2mDf0RS2RTLr+j/fs3Bgu0kv1K/U9aI2BOUwiNbgopVnwC3JCyhA=
+	t=1750629176; cv=none; b=DvwbjyvIrrslQMCT/IBMM69OnVbAZQN+Tl4QEqHLPukn1j4zCYQi65dGoJTXOFJCRhjFNWljz1cwGthqYxxEebteOJTHI6y7c/l+JSr7QmzPT7iSN7hqBk+XSR7vc4eUAT89Re0axFfATlcB9RfzeU/Yr5bCDyZFh6vbekJ9YOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750629057; c=relaxed/simple;
-	bh=frdPYxCj18DQDvdQK20a0LWeLfpgZmyklV7JLc+bVMs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WVaDaFGoyPdNk0k5v3juwZDsmjUPMGTC+QUZymrxWES8PAb0+xv/OB00CyvXdOKwN76IDogT8PT33ZuyfEIbMhshHCH1p6RQ/KFWISKNiEOzX3kJXhDaNNC7yYgm3ir0Zikyza36YwSEc6jQ5QQDj0XjVS8CsVyMoQSs4oYOpTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQnZprVk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750629176; c=relaxed/simple;
+	bh=MFoB1pe1Pk6OGrsdr7WmLS+bdpTvmHdl6RjAA9FZgMg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Vo47NuJKxQq5irwn2EMZvJXcw0Ts/R+VpbL5wakIxClQ7Y/oehyzcJv7OtXnT0XRiIjis5kllHORZx4Mh+UGvRN6CnG6eyE9QjI9ycHdHQxTlRuG9ustVjP4aFuztJgnX5d+LQ4wBc8SjazOG0twx7X2/E0Jpw+gQm8Wzvyf9nQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=soMrQf+z; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQnZprVk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE10AC4CEE3;
-	Sun, 22 Jun 2025 21:50:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750629057;
-	bh=frdPYxCj18DQDvdQK20a0LWeLfpgZmyklV7JLc+bVMs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qQnZprVkfOrvy+AuWmGZkh0o/Hw++L1WvPiZ+8tssbTOAmLTZj4oy9UZXj2LdI9om
-	 BFOhmA67GWKuDnQehlUNZgSdNyISr+LK74zwCzYu3IfWW3T91WP66TnTYUuq8Aa+lo
-	 gHocm1aCHmvg7DRx81JUlhhGngFHarNBi7h2Kt0Kf8qkRCLt7ZMR0Ih2A1SJAfVGcW
-	 d3KVwtgLkAzwz5pXXsGHPMT2p51FiHIsQdEJ4QUYcFWHl4yTyGpvjYVD+1MejJhMet
-	 UwksGrRUggyzVbW71WqROtagPzRMox6nbzqNHTAa6XwA3gXMTa3MbTfL1SZI8Zx7lM
-	 R3wbDl/PEFtuQ==
-Date: Sun, 22 Jun 2025 23:50:52 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Akira Yokosawa <akiyks@gmail.com>, linux-kernel@vger.kernel.org, Linux
- Doc Mailing List <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v3 15/15] docs: conf.py: Check Sphinx and docutils
- version
-Message-ID: <20250622235052.05804137@foz.lan>
-In-Reply-To: <87v7ona3z7.fsf@trenco.lwn.net>
-References: <cover.1750571906.git.mchehab+huawei@kernel.org>
-	<972673b0a5bf5537d47780d6f8e70ae45456e751.1750571906.git.mchehab+huawei@kernel.org>
-	<c05dd5dc-1e30-4a2c-80dc-70e8b62cc681@gmail.com>
-	<87v7ona3z7.fsf@trenco.lwn.net>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="soMrQf+z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1750629165;
+	bh=8CojO+csQa2sT3R102SAXROdW8IVnRvkoL6GwU0YPuw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=soMrQf+z5fE8I7vzIQ2tNwh+BitiLCBfjxt2Cn4bMa2aCr0QNuApepYA1H4NFwE2u
+	 mX4NqcvJcVKeguz7tTotvY+MNdK6A5wNNpwkQMDwrjJ9L3WFmPbptmHLBSEOMJsLUG
+	 PusruXZICD2S02McegEmW7H/8f2fQLrIK7r4Ufkb4XtUgUkPC09aEQ/gsVTFtloBBM
+	 cBuYsGomJNEJb1dwpdIP/1q+yTNfuolRwENzOts7DEi/ZPXgWPBo4RMhcVkt1uhkyR
+	 3yEyRZ5BPK6QCof6amgnfUExEXzZkw+Nm6lZsRGVMAaVn0BfZ9+9yphGFc+t66G+ig
+	 lOk0hV6OFawRA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bQQ1T2tJmz4wvb;
+	Mon, 23 Jun 2025 07:52:45 +1000 (AEST)
+Date: Mon, 23 Jun 2025 07:52:44 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: "Paul E. McKenney" <paulmck@kernel.org>, Frederic Weisbecker
+ <frederic@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Boqun
+ Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the rcu tree
+Message-ID: <20250623075244.49a3ef8c@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/JYckUGj1YRDw38VzwdzCBRc";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/JYckUGj1YRDw38VzwdzCBRc
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-Em Sun, 22 Jun 2025 14:58:04 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+Hi all,
 
-> Akira Yokosawa <akiyks@gmail.com> writes:
-> 
-> > On Sun, 22 Jun 2025 08:02:44 +0200, Mauro Carvalho Chehab wrote:  
-> >> As reported by Akira, there were incompatibility issues with
-> >> Sphinx and docutils with docutils 0.19. There's already
-> >> a fix for it, but, as there are incompatibility issues with
-> >> different versions, better to add a check to verify if the
-> >> combination is supported/tested.
-> >>   
-> >
-> > I've been skeptical of adding such checks in conf.py.  
-> 
-> I have to kind of agree with this concern.  We have managed without this
-> complexity so far.  It looks like we could always be behind on
-> maintaining it going forward.  Do we *really* need this one?
+The following commit is also in Linus Torvalds' tree as a different commit
+(but the same patch):
 
-IMO having a check is interesting, as the dependency between
-Sphinx and docutils is high. Yet, with the testing script, this may
-not be needed, provided that we run it to check if changes at Sphinx
-extensions won't cause regressions. Still, the dependency check
-at test_doc_build.py is not complete.
+  02ce081ed63a ("rcu: Return early if callback is not specified")
 
-Anyway, if you prefer, don't pick this one. We can revisit it later
-when needed.
+This is commit
 
-Thanks,
-Mauro
+  33b6a1f155d6 ("rcu: Return early if callback is not specified")
+
+in Linus' tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/JYckUGj1YRDw38VzwdzCBRc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhYeywACgkQAVBC80lX
+0GwDmwf/YInwNf+2lnhknU6FKmykZ/1qTKvpyRsVkp32a/1F+jLrXM0ogwYvWAc3
+va3eKAwnfcXeJh0giBDh7ozk908gWfV96MaaBf0/mhJSDVBS6F8n8EkH8GqFcknh
+b/9GgtN/P3GbGjeOo5jHGte5guPM4R+RsQEZ6wV3o+xikyvBenRQp2JOPgiu6swZ
+mbWGb00qIYLvBuP3ucoF2pbn25RKZ+xMJFN0HIzYG+aR0zY88VC5/v8CRVqzDORP
+bbn17dTGTZgdyVjDh80m1jpmufpSYXErUs0UOTrtd5zVLAMiq6QaFdZWIsm+qKkV
+ASRpSmn2B4aSoZo3sMuw6skSRLR38A==
+=LX5I
+-----END PGP SIGNATURE-----
+
+--Sig_/JYckUGj1YRDw38VzwdzCBRc--
