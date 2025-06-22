@@ -1,142 +1,179 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8DB13B58B
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 09:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A437418E1A;
+	Sun, 22 Jun 2025 09:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750584728; cv=none; b=QIIr5Lw4EoZb+8FLriv0GmG1pxV9rJLvtEZvRzf/5RBNyFGzZ3e+ETMfcvzJ3SV5C712zFZexGjcNlIvA4NH3DAhTTSHCfNe0XEX0lW1DzKrVy3pFdmQXnZigzH1KCJcwjO8MI20XGfwkEkyyHrNjgUyeGSduv8L5oZzvGf2j5I=
+	t=1750584814; cv=none; b=N6uK/royVV1Eu1EFXw1Dwz2gWR1ZsWktH3Msr+wXeBQbuhlmngeAtQ1ayNRMadhDPNTNAvrp9QOdchpQ5Ec5+5iP1N8+OJ1AnY2ozK+f+3JbPU0FvxrAD9xezGumH6tzhT+vKUmqoX9lzb1Ofvy3Py/EmnhCuK6ZcAKS0+OD4DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750584728; c=relaxed/simple;
-	bh=SK/Scp2evJ7oxS0LuSoIroKqQUaFdexYMVy5yXP/mHs=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fgYmU6+gQjpUJ6mlFnD7tqlqkmzoSlo+5aUjVdcQy0trb9v7ZeMBPqSHuYY3/qba7baCjfnINq4TKo1CwI7cn1nOPWC7h19Fy48GTcrVmDGL1uEWSyRzayKg/K23UV5qVHDUPa5qZlz2vs7fbVssMjXsdgO0XYj6fD7Bhd1wotw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OQFUkg8X; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=tgQ2rV1b; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zAbZ+Ilk; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=eTDuhkp/; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1750584814; c=relaxed/simple;
+	bh=3Z08jdlIHcA4c+ovnj3MepowoUSoFcvbFQogJV3s/Wk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HH0gh+R/M8PuZhN9voKRzElXHxZVVqgtqi+E71bX0DzYQL1ap8zuYbPxbbGnqLGbNgwjJcXXdKBiHBTCq5EMT35W2ojuB6a+L6ZT9zpySFhlqS/emDf3J/Ye7DBfCcr2IunQZlmGc3fouNOPSGeStq2PNRaWI+Jgg8Cnb7XTDRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AkMnSn8Y; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OQFUkg8X";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="tgQ2rV1b";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zAbZ+Ilk";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eTDuhkp/"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CE4121F388;
-	Sun, 22 Jun 2025 09:32:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750584725; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eXbPdzoN3z/dImJCR/ZE4KPTLkgMQ7udahG1QxRCciI=;
-	b=OQFUkg8XjI1aabOHPu3kkiSoWQ2F1V/4o+zBljmMxc9/0I81CVGpHMuRYxr2/YY8OY97GY
-	YM6O1rpkHRKkbPadSGlmA0REHvfO+MYRRYN+rIf39JvXMyPVq5o6Xzdh4pBHD2pjqkjfQb
-	qe0OIjjH/7Ojcn+NIH3TCedo8oxJE3s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750584725;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eXbPdzoN3z/dImJCR/ZE4KPTLkgMQ7udahG1QxRCciI=;
-	b=tgQ2rV1b7Pxv6g8kz7u225K2dltzt3zRrOG+TGnvHJZeVxHSZuLPAtiodVkRb1uEX7JxDC
-	8QyZP11WTXXLaeDA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=zAbZ+Ilk;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="eTDuhkp/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750584723; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eXbPdzoN3z/dImJCR/ZE4KPTLkgMQ7udahG1QxRCciI=;
-	b=zAbZ+Ilkl+fDVaaL7Rk7Ji8pjqxyhtQ4KZku8aZN2IfHnZQwv8+mcn3FCgc1S9q9rrXUlZ
-	RryUk3R4fIBZVI5GH5xuIcwD7Yrz/X4/C56zaKnzITeQNosx0IdM1OBMKHoaWk4EbDBysi
-	r1YV+8ePh6i7fOqyO6yj5M3mCKpsKIU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750584723;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eXbPdzoN3z/dImJCR/ZE4KPTLkgMQ7udahG1QxRCciI=;
-	b=eTDuhkp/QI1HflyMmK5c3NVzQ+LlUSUAP7Zn7IDFtzz811sDRru7s5dDkflrRqrI5rdGVl
-	f668Gzvt0q21kNDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A1D7D13A69;
-	Sun, 22 Jun 2025 09:32:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ht3xJZPNV2iWLAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Sun, 22 Jun 2025 09:32:03 +0000
-Date: Sun, 22 Jun 2025 11:32:03 +0200
-Message-ID: <87ldpkw298.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: SunOfLife1 <sunoflife1.git@gmail.com>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: hda/realtek - Enable mute LED on HP Pavilion Laptop 15-eg100
-In-Reply-To: <20250621053832.52950-1-sunoflife1.git@gmail.com>
-References: <87qzzu8tuc.wl-tiwai@suse.de>
-	<20250621053832.52950-1-sunoflife1.git@gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AkMnSn8Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750584813; x=1782120813;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3Z08jdlIHcA4c+ovnj3MepowoUSoFcvbFQogJV3s/Wk=;
+  b=AkMnSn8YYV6BJnnydZ5Kehktdf7p2EDUIdEmAy7bmp3E44peM1Sk0j+f
+   ice2/U9gsg4SEiR8z1Wcq0uSLhQPMYiDM/YYbSYlrAhDNZswqYVdeTLIQ
+   AIaDFFY1LzzSZbpXa3E8zVYz334fKlLsnXatNROurSFXxOS6xzKglKpB2
+   gOl/C1xAvj4V9aCJF1Icexf7hlOH8aNsZ1nwSoEaLfHI57MSszg3Fe/oh
+   0jW7uBfN6aTb6xMFs4m+QbExlt8DVEWemAWFmhZYVfr62HkE5exX4WmU2
+   Jyglo3vEODF9FyW6rSsJIB1e9CLc5CZrEl50ZrI4Qok3exGILBrkjdrJ+
+   w==;
+X-CSE-ConnectionGUID: xH2F776jTau6slBwaFy0FA==
+X-CSE-MsgGUID: 4unat7QLTSSx115Utuw7yA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11470"; a="52671248"
+X-IronPort-AV: E=Sophos;i="6.16,256,1744095600"; 
+   d="scan'208";a="52671248"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 02:33:32 -0700
+X-CSE-ConnectionGUID: 36sjy7DyT/ewbISEKvtofg==
+X-CSE-MsgGUID: MBzS2UecQH6f7owpkj2ZqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,256,1744095600"; 
+   d="scan'208";a="156810984"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 22 Jun 2025 02:33:27 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uTH4n-000NBI-0H;
+	Sun, 22 Jun 2025 09:33:25 +0000
+Date: Sun, 22 Jun 2025 17:32:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Colton Lewis <coltonlewis@google.com>, kvm@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Shuah Khan <skhan@linuxfoundation.org>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Colton Lewis <coltonlewis@google.com>
+Subject: Re: [PATCH v2 17/23] KVM: arm64: Account for partitioning in
+ PMCR_EL0 access
+Message-ID: <202506221711.tFNGpzj4-lkp@intel.com>
+References: <20250620221326.1261128-19-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: CE4121F388
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-2.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid]
-X-Spam-Score: -2.01
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620221326.1261128-19-coltonlewis@google.com>
 
-On Sat, 21 Jun 2025 07:36:14 +0200,
-SunOfLife1 wrote:
-> 
-> Sorry about that! This is my first time doing anything like this. ^^;
-> I've restored the original patch description with the proper sign-off. Hopefully this is suitable now. :)
-> 
-> 
-> The HP Pavilion Laptop 15-eg100 has Realtek HDA codec ALC287.
-> It needs the ALC287_FIXUP_HP_GPIO_LED quirk to enable the mute LED.
-> 
-> Signed-off-by: Yasmin Fitzgerald <sunoflife1.git@gmail.com>
+Hi Colton,
 
-Applied now.  Thanks.
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on 79150772457f4d45e38b842d786240c36bb1f97f]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Colton-Lewis/arm64-cpufeature-Add-cpucap-for-HPMN0/20250621-102220
+base:   79150772457f4d45e38b842d786240c36bb1f97f
+patch link:    https://lore.kernel.org/r/20250620221326.1261128-19-coltonlewis%40google.com
+patch subject: [PATCH v2 17/23] KVM: arm64: Account for partitioning in PMCR_EL0 access
+config: arm64-randconfig-r073-20250622 (https://download.01.org/0day-ci/archive/20250622/202506221711.tFNGpzj4-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250622/202506221711.tFNGpzj4-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506221711.tFNGpzj4-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from arch/arm64/include/asm/kvm_host.h:32,
+                    from include/linux/kvm_host.h:45,
+                    from arch/arm64/kvm/sys_regs.c:16:
+   arch/arm64/include/asm/kvm_pmu.h:236:50: warning: 'struct arm_pmu' declared inside parameter list will not be visible outside of this definition or declaration
+    static inline bool kvm_pmu_is_partitioned(struct arm_pmu *pmu)
+                                                     ^~~~~~~
+   arch/arm64/include/asm/kvm_pmu.h:241:52: warning: 'struct arm_pmu' declared inside parameter list will not be visible outside of this definition or declaration
+    static inline u64 kvm_pmu_host_counter_mask(struct arm_pmu *pmu)
+                                                       ^~~~~~~
+   arch/arm64/include/asm/kvm_pmu.h:246:53: warning: 'struct arm_pmu' declared inside parameter list will not be visible outside of this definition or declaration
+    static inline u64 kvm_pmu_guest_counter_mask(struct arm_pmu *pmu)
+                                                        ^~~~~~~
+   arch/arm64/kvm/sys_regs.c:856:6: warning: no previous prototype for 'pmu_access_el0_disabled' [-Wmissing-prototypes]
+    bool pmu_access_el0_disabled(struct kvm_vcpu *vcpu)
+         ^~~~~~~~~~~~~~~~~~~~~~~
+   arch/arm64/kvm/sys_regs.c: In function 'access_pmu_evtyper':
+   arch/arm64/kvm/sys_regs.c:1076:7: error: implicit declaration of function 'kvm_vcpu_pmu_is_partitioned'; did you mean 'kvm_pmu_is_partitioned'? [-Werror=implicit-function-declaration]
+      if (kvm_vcpu_pmu_is_partitioned(vcpu))
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+          kvm_pmu_is_partitioned
+   arch/arm64/kvm/sys_regs.c: In function 'set_pmcr':
+>> arch/arm64/kvm/sys_regs.c:1271:33: error: dereferencing pointer to incomplete type 'struct arm_pmu'
+          new_n <= kvm->arch.arm_pmu->hpmn_max))
+                                    ^~
+   cc1: some warnings being treated as errors
 
 
-Takashi
+vim +1271 arch/arm64/kvm/sys_regs.c
+
+  1253	
+  1254	static int set_pmcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
+  1255			    u64 val)
+  1256	{
+  1257		u8 new_n = FIELD_GET(ARMV8_PMU_PMCR_N, val);
+  1258		struct kvm *kvm = vcpu->kvm;
+  1259	
+  1260		mutex_lock(&kvm->arch.config_lock);
+  1261	
+  1262		/*
+  1263		 * The vCPU can't have more counters than the PMU hardware
+  1264		 * implements. Ignore this error to maintain compatibility
+  1265		 * with the existing KVM behavior.
+  1266		 */
+  1267		if (!kvm_vm_has_ran_once(kvm) &&
+  1268		    !vcpu_has_nv(vcpu)	      &&
+  1269		    new_n <= kvm_arm_pmu_get_max_counters(kvm) &&
+  1270		    (!kvm_vcpu_pmu_is_partitioned(vcpu) ||
+> 1271		     new_n <= kvm->arch.arm_pmu->hpmn_max))
+  1272			kvm->arch.nr_pmu_counters = new_n;
+  1273	
+  1274		mutex_unlock(&kvm->arch.config_lock);
+  1275	
+  1276		/*
+  1277		 * Ignore writes to RES0 bits, read only bits that are cleared on
+  1278		 * vCPU reset, and writable bits that KVM doesn't support yet.
+  1279		 * (i.e. only PMCR.N and bits [7:0] are mutable from userspace)
+  1280		 * The LP bit is RES0 when FEAT_PMUv3p5 is not supported on the vCPU.
+  1281		 * But, we leave the bit as it is here, as the vCPU's PMUver might
+  1282		 * be changed later (NOTE: the bit will be cleared on first vCPU run
+  1283		 * if necessary).
+  1284		 */
+  1285		val &= ARMV8_PMU_PMCR_MASK;
+  1286	
+  1287		/* The LC bit is RES1 when AArch32 is not supported */
+  1288		if (!kvm_supports_32bit_el0())
+  1289			val |= ARMV8_PMU_PMCR_LC;
+  1290	
+  1291		__vcpu_assign_sys_reg(vcpu, r->reg, val);
+  1292		kvm_make_request(KVM_REQ_RELOAD_PMU, vcpu);
+  1293	
+  1294		return 0;
+  1295	}
+  1296	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
