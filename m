@@ -1,37 +1,36 @@
 Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 205B11422AB;
-	Sun, 22 Jun 2025 10:20:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B3D51422AB;
+	Sun, 22 Jun 2025 10:20:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750587636; cv=none; b=fLN7i4BdVzL+UoPwMMxz0iYh44Aacvgw+n2GZoX91yUnF5yLW0650P+m4nFuseqXBXmjEMsUGHOtPeiGGOgSA0sMe653M20yYHuFK9BAMSqmTZfN5ooHGoUfRwDQBkf954T/HJcnvJCbkP5VsOaVg9Y0j6VpvpokrKCQpxBfWRA=
+	t=1750587640; cv=none; b=pxEnSG9Lptp3i6OrCIRNpmDN4C2nFsNQW1Xg8j4wMKg8D5jBvxK3v6sKkywvV+G9nDYsEQRYqdUiosDmbotMeoHT8XrQmEI7ZD5frCbI5QCu2/ehEsczQclE9SHqULrTjJY6ewXkGTgrQ3Cij08GBwH9Aio4gihSpD+SJ48LUG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750587636; c=relaxed/simple;
-	bh=UYxQJS6ZJHCmE3zbSwM0x0YAEUS01DTZiXJZEvopO2E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j4gaoou2pGk97zYSIgdAyBQ7pTpxAcEGkE5e4AZxdGixCA8RPzuHw2FUFFASAp3I1y81bH1VgbrqP7QWyBtnO2x4uopd2XSrVpn9PFu/vRTVgUG7Sk3w8r6JOxsDVYBOSHXmp/dfCdMRLaj1xUN4pFpwjLt98k1M3FIkZxekMtk=
+	s=arc-20240116; t=1750587640; c=relaxed/simple;
+	bh=HySJmJimN0Mbor6aO2XQhe3eawUJ2DpD2MDAE2rsTBw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b3/YrTDGvGEX+vD4wdm3XF7tLG6j+VK1TjmI8Q+uQeEnDof8jmztxfNNN5LkH2QBAPiKT+6qK/viZP5CF0qe84RcmVlBzYOnYq/TT5/fqJfoBXnqhKOZbUJLZu9JiC6NZ1YULHlfH6u3oaZeJV/7eKXCoSTvEoI1aaFfeV3VHR8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
 Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bQ62q2tJCz9sbF;
-	Sun, 22 Jun 2025 11:52:51 +0200 (CEST)
+	by localhost (Postfix) with ESMTP id 4bQ62n4sxNz9sWb;
+	Sun, 22 Jun 2025 11:52:49 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
 	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id OYHyRMeMBap9; Sun, 22 Jun 2025 11:52:51 +0200 (CEST)
+	with ESMTP id pIyFw4tvJjvf; Sun, 22 Jun 2025 11:52:49 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bQ62q20ksz9sXD;
-	Sun, 22 Jun 2025 11:52:51 +0200 (CEST)
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4bQ62n3Qplz9sTD;
+	Sun, 22 Jun 2025 11:52:49 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 3CD248B764;
-	Sun, 22 Jun 2025 11:52:51 +0200 (CEST)
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 6704E8B765;
+	Sun, 22 Jun 2025 11:52:49 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
 	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id ItRVmE4jH7_E; Sun, 22 Jun 2025 11:52:51 +0200 (CEST)
+	with ESMTP id SWopfc0YWtyj; Sun, 22 Jun 2025 11:52:49 +0200 (CEST)
 Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 4E5C18B763;
-	Sun, 22 Jun 2025 11:52:50 +0200 (CEST)
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 6A6848B763;
+	Sun, 22 Jun 2025 11:52:48 +0200 (CEST)
 From: Christophe Leroy <christophe.leroy@csgroup.eu>
 To: Michael Ellerman <mpe@ellerman.id.au>,
 	Nicholas Piggin <npiggin@gmail.com>,
@@ -55,58 +54,73 @@ Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
 	linuxppc-dev@lists.ozlabs.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [PATCH 2/5] uaccess: Add speculation barrier to copy_from_user_iter()
-Date: Sun, 22 Jun 2025 11:52:40 +0200
-Message-ID: <f4b2a32853b5daba7aeac9e9b96ec1ab88981589.1750585239.git.christophe.leroy@csgroup.eu>
+Subject: [PATCH 0/5] powerpc: Implement masked user access
+Date: Sun, 22 Jun 2025 11:52:38 +0200
+Message-ID: <cover.1750585239.git.christophe.leroy@csgroup.eu>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1750585239.git.christophe.leroy@csgroup.eu>
-References: <cover.1750585239.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750585958; l=1183; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=UYxQJS6ZJHCmE3zbSwM0x0YAEUS01DTZiXJZEvopO2E=; b=CZDMdcFmnufRcPRhMzoZv84scqPZFsLBFe6GrnY1YvrDPqC/h/DYWJVikSKeIb35hKqIXPgrn /bJG+wBOUX6CLrIA00TjhTQhNdgXy5elmLQw6y5gHEPFOZkqvKJl1vx
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750585958; l=2465; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=HySJmJimN0Mbor6aO2XQhe3eawUJ2DpD2MDAE2rsTBw=; b=avw+yxifZez04tL6hY4uI10f64fY7knh0RlaYqBAin24xTC5w1XQBwEkR2nEsI8dapqkvp3tb 3bSsrPI4uwKB/yFAZpo4xgJKt+m/LB7sfSbDkCIdrD3prqpxjkg79xc
 X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
 Content-Transfer-Encoding: 8bit
 
-The results of "access_ok()" can be mis-speculated.  The result is that
-you can end speculatively:
+Masked user access avoids the address/size verification by access_ok().
+Allthough its main purpose is to skip the speculation in the
+verification of user address and size hence avoid the need of spec
+mitigation, it also has the advantage to reduce the amount of
+instructions needed so it also benefits to platforms that don't
+need speculation mitigation, especially when the size of the copy is
+not know at build time.
 
-	if (access_ok(from, size))
-		// Right here
+Unlike x86_64 which masks the address to 'all bits set' when the
+user address is invalid, here the address is set to an address in
+the gap. It avoids relying on the zero page to catch offseted
+accesses. On book3s/32 it makes sure the opening remains on user
+segment. The overcost is a single instruction in the masking.
 
-For the same reason as done in copy_from_user() by
-commit 74e19ef0ff80 ("uaccess: Add speculation barrier to
-copy_from_user()"), add a speculation barrier to copy_from_user_iter().
+First patch adds masked_user_read_access_begin() and
+masked_user_write_access_begin() to match with user_read_access_end()
+and user_write_access_end().
 
-See commit 74e19ef0ff80 ("uaccess: Add speculation barrier to
-copy_from_user()") for more details.
+Second patch adds speculation barrier to copy_from_user_iter() so that
+the barrier in powerpc raw_copy_from_user() which is redundant with
+the one in copy_from_user() can be removed.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- lib/iov_iter.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Third patch removes the redundant barrier_nospec() in
+raw_copy_from_user().
 
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index f9193f952f49..ebf524a37907 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -50,6 +50,13 @@ size_t copy_from_user_iter(void __user *iter_from, size_t progress,
- 	if (should_fail_usercopy())
- 		return len;
- 	if (access_ok(iter_from, len)) {
-+		/*
-+		 * Ensure that bad access_ok() speculation will not
-+		 * lead to nasty side effects *after* the copy is
-+		 * finished:
-+		 */
-+		barrier_nospec();
-+
- 		to += progress;
- 		instrument_copy_from_user_before(to, iter_from, len);
- 		res = raw_copy_from_user(to, iter_from, len);
+Fourth patch removes the unused size parameter when enabling/disabling
+user access.
+
+Last patch implements masked user access.
+
+Christophe Leroy (5):
+  uaccess: Add masked_user_{read/write}_access_begin
+  uaccess: Add speculation barrier to copy_from_user_iter()
+  powerpc: Remove unused size parametre to KUAP enabling/disabling
+    functions
+  powerpc: Move barrier_nospec() out of allow_read_{from/write}_user()
+  powerpc: Implement masked user access
+
+ arch/powerpc/Kconfig                         |   2 +-
+ arch/powerpc/include/asm/book3s/32/kup.h     |   2 +-
+ arch/powerpc/include/asm/book3s/64/kup.h     |   4 +-
+ arch/powerpc/include/asm/kup.h               |  24 ++--
+ arch/powerpc/include/asm/nohash/32/kup-8xx.h |   2 +-
+ arch/powerpc/include/asm/nohash/kup-booke.h  |   2 +-
+ arch/powerpc/include/asm/uaccess.h           | 140 ++++++++++++++++---
+ fs/select.c                                  |   2 +-
+ include/linux/uaccess.h                      |   8 ++
+ kernel/futex/futex.h                         |   4 +-
+ lib/iov_iter.c                               |   7 +
+ lib/strncpy_from_user.c                      |   2 +-
+ lib/strnlen_user.c                           |   2 +-
+ 13 files changed, 158 insertions(+), 43 deletions(-)
+
 -- 
 2.49.0
 
