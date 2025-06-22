@@ -1,108 +1,100 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B94EC2
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 16:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B724AEC2;
+	Sun, 22 Jun 2025 16:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750611462; cv=none; b=DlY2aofJffy7Dm6c2r4BhOpb5p5CU1He/x/k9sYPV78bZz9Hoz7lIXJVQ4UUQpvb4B5OfhuAwajhYR98WMO3Wj11Wn4vxKfV+fXdzG8fyPrBamW+PvCH4sANTo/LxwSilNoBcjHJevAxeQ0kDFu9Io2sWxnIjiuGnXIS+0sQVrs=
+	t=1750611489; cv=none; b=jwCvQxnkkZHCZN3a3YDSNsiPZd+gLj3cGbUZ3Fi1ysHf/R64zZME4ueTiE/EgxAahprFBzSsKlPdbaEuswUTSfQaXGtWoKsRExdVVSBSi6xmHYxq0u/ypoZmbH9SK8WHa3Cyo9OOa4vkJlxgoDuj4sXuRs1y0eJNhh3DhbpigpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750611462; c=relaxed/simple;
-	bh=1zZuv+eB2qla/l9yYAzq0vGiZJhKLWAqb60fO58Zdrw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Sq7lFfBJaNUNwLNF8YoELYMZBLItP5uJ0/5Pivd2zmZJvNfC48KzQZe6nOKn2PQXqQgZEtkXjbzP1auOZ12EHrQ+8TgJA1I/gSZrN3ZkDlFVuFhBpwCLqdsUK+kzwwrnmwma5dlfIIIAbwqorj7jWzEsKPoGH4R7R718YFKrtDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UGd/swRH; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1750611489; c=relaxed/simple;
+	bh=rOVpL9hYzvCT5GZEhiHfaK9LPKp2hOf8C2uhsw2yo+w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sQgOqYgYnihe4CW3+kd0mRXV7OyfujuLJr5mmj3pnCrkx3lGGTlhrlJLh7rpua61WlVbHhxpAKWAHNN59vfIz9z9vmzKo71AE1BbtNvHdJXzyVCy/hxikLp4QxqTi5gRTfvbcZSJdLbvNHdIlZuWZixxGObSL2UNfduWyjvBWRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GS6pgGjb; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UGd/swRH"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-607c2b96b29so5869202a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 09:57:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GS6pgGjb"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2355360ea88so6407765ad.2;
+        Sun, 22 Jun 2025 09:58:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1750611458; x=1751216258; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kH6SnANQ47m1wSFT64o9y3OjbbEmJRBS7PRTptJ1lvQ=;
-        b=UGd/swRHHEY7t85CVU4pc1uQAJzqTmXBm1XrVSWycA2Z74edZHxNFZ9u0EDJxVXwIT
-         YzfuTSEnqMhwkSH+Suu0iq6jwn068rAf7FgCpYSt0WMjFIDBDCuv7xkREgW4eHBVDAUq
-         tu72ZmSJZHOQXNorcSuz3u2eMa4QiKQb3L/yU=
+        d=gmail.com; s=20230601; t=1750611487; x=1751216287; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/+7TppqGvsREnHGgpRvwQAWJkzsnrqFs/bVySJ4eKvc=;
+        b=GS6pgGjba6xj6MPS83e93enLeCnwKaE1x4sj2DtGJZAd+Hn8I59DgGd9jZCD/AZWc/
+         8Ose7CwN2jh/Y6K2YjhiU5nDNkEVjTDoT+HGP0uVNxyCjXNIQoWl1sZ8q8IrUKsFUJKj
+         IGFO20De/yXytBHJm68Q5egatdx1HQqjuLmOhN2dzUfwgL3zzVPXe2U+uJDiL6fPyCfv
+         WZcFCeZ1bSD9wtWW2cEPd9T4BIzR++3fR+Qk8Fz2q8ERDRUS7pm7sZCtfIv16KUCCYgx
+         3QaTd2jBi8xfYmbZPucfOOUkG2mfKhCmgPg+OwVUQe21jDNsLM/EoHQBIp0f33o0f8c5
+         n4Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750611458; x=1751216258;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1750611487; x=1751216287;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kH6SnANQ47m1wSFT64o9y3OjbbEmJRBS7PRTptJ1lvQ=;
-        b=FU9gedIcMGVJU+t4pvJUBa75Jm2+rd14CAsIZpvpI7Vvkbw+1kU190kwizzcDysZ05
-         ro/Oh0kpLz2vqv23LVBdgRJN5LYr9+GHc+JStNn/dv4Qb7PnNJUJHGPUuXSs6BzqkJeD
-         h5WaQrP6y5geKV/dm/7KLvQh+RmGZpt4YhSnbE9W5nmOVG0r2hYR+q3X+73iYxhFUEZ9
-         5qoiFwNQbT+bnPOBLl/wmQk9DnBNDVIfa1LGtSKZZuSeVle7ZWJpdoM/o5Eoq/8zBlKa
-         16rC7xHQZAwGubUcAOo68ZCgOYxi107N0J8r+WjhkF5mCrM28rQgPiBea/WaQKddOs0c
-         HvZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWhE3bSQam1pT8SUjmfaag/zgid88Ff5+3XSudZppdJxQlOKTi5mnZa0yaHQZTZmDPCYZO5x+FISG71IIQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkTyXg3S9BzbjGaw/SpakvcPv9Va2/lwfD9pPlAkG6JQtF8Y5g
-	+gN7lYPLOG2Y26IuWgjavLkUJ6WBQ6g57R4FlqrKUsXn763hEu/hkr12THpwVrryOfdSzqhjMnS
-	zfEP8
-X-Gm-Gg: ASbGncvWbw07wftnVTH5lrnwtpClhiygQ/jdsKc241ih460j9v9C85nfaX+K39ZDvNf
-	+KucDCrqDZRuk3v1Ezol1X0rn4D8BRKkFPU49BZ7s4XrtEbvildNbFGlrfA6xEyS6kWrRod25f9
-	YLMtzssiZ7rCCc0HHHerDiAf5NEPuOB2KFe3Gb6OdfA2ghCjYskTiu6MPcs7aHc8f3Xz5KtZt6u
-	BA6LyXeLA9yw1Tl9vaM7qqQVLYtuRNUxbANMTYSzcNGo6PEwWIpDCjjdfGg/2sFFNgn1M6DB/ki
-	fdbXRF3sqReMdFcQ0SVOFbTiC7xNKHtsqB6+fygUVORZ+rsYdszv6xMeZcxmto1lx78PU3LKYVX
-	aQ9dQtTCfj9aEw2rHYQ+okoJsLyXLFTwXhwbY
-X-Google-Smtp-Source: AGHT+IG9/uqv1p+Z2f2kYs1fHuco52bdVwkStB0cF5AVN6utVvQ/6Kl0F37YNG22pcCI/ePy0/u51w==
-X-Received: by 2002:a05:6402:35c5:b0:607:27bb:7bf with SMTP id 4fb4d7f45d1cf-60a1cf3413emr9264020a12.32.1750611458030;
-        Sun, 22 Jun 2025 09:57:38 -0700 (PDT)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60a18504e16sm4888227a12.6.2025.06.22.09.57.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Jun 2025 09:57:36 -0700 (PDT)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-60702d77c60so6642813a12.3
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 09:57:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUmanUAXdif1pzIwYrq9VmEGTmR43eP/ILhP2ejfGgpfOSNX9BKnaVDyaAMj1FGDO4/O1ytXgDXi4Svf/s=@vger.kernel.org
-X-Received: by 2002:a05:6402:1e90:b0:608:3571:6942 with SMTP id
- 4fb4d7f45d1cf-60a1cca9d65mr7384121a12.1.1750611456313; Sun, 22 Jun 2025
- 09:57:36 -0700 (PDT)
+        bh=/+7TppqGvsREnHGgpRvwQAWJkzsnrqFs/bVySJ4eKvc=;
+        b=cj9JU/K5BfMVT9kutgB4IRgTWUU227JIR5L02Y/naDZLR7RP2YdkxYAWOnVwgCgnFm
+         FkZOc8Z1yqGCnBZCwBqpGllj6lXjg1TPAlAVhalchtYJ+lOJRtYYuigSeddFQBUkxM5h
+         w/yii0tCKzTMLebC22G7YLa6Ch7IcyQxLszzhPExNOdjTHe3GB4OlSllb5KdhDNCpG+S
+         CepkH1n+Fb0Hx2yZ174UphWTl0TdW2JSBpIg/ZDWGyhUWKP2wUPgxcq6ot1yWt49/P+l
+         B3HTKXMen7pTqNTXvJ/Fs+W1l0p+uLWbQnb9i97Fu3Rhn6KjqWv5HV8Ldb4QdpeyPE25
+         UJug==
+X-Forwarded-Encrypted: i=1; AJvYcCU3V7IPhvMAtvssTM+3oCkSYM/Loc1qGvib7xWxJVcxqTkZFVoGASgAm5u6aDOhOmP3rgC/PMUqzD5J45KN@vger.kernel.org, AJvYcCWZaNwTlFNjhPW5U8LXEAdy6hRmCAzsVrjXA7Tuy3aFyeak/qb0kDJ+qsBv0Gb2gLjfszRlqLUPgetVnHJyiW8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUhim/MLTg9pOU+qgQBSMObvyjHWiSPJ57guhGI70AUppfS4H0
+	Kx4QCoCgEnH3BQM65wCTybVSGXD92qKFdm7wolQobxije1DlhKdoV1hE
+X-Gm-Gg: ASbGncvxfQonSLJC6NnWGRtE104D3AVwY2CuS1nAJzokCqwtrn9eDqwG6zyQH3nhnxK
+	eLvfyRSjhlobkx8X1fjL33t6DrdDhObBU1+2E+7X3W6cDdIS2HUQ6DOik1Z8OJUhwWBVr3L6YZm
+	Ss4Cno2peEcNUv5m7rnpIBNP/txbIz13V87zMS0YdUCJBHLyNI1apeK/Iz0uaHil0UxfdzlmyXV
+	Bu/1B45tbKYATGSz+E/ZpOe7E5dNjO5yKWUkAUWY/NyCX71J61dIAAhY36nEcNn62xNwFtarq3C
+	dXDVmcRJnYMX1ByPuQUH5OpmARYwENyqaZn64ykjZvHS3RobNfuRio6FUo31VHNZpMn9WHo4ybb
+	+sKqGbjTtS4n0r/eCm1wiAhgRmw==
+X-Google-Smtp-Source: AGHT+IGqUISVjmPgXM99AwpxbOm641DaKJLZqy13bL0ayC1pZCSk+2PVf6A2nDpFeUlJ05jmxgsFwg==
+X-Received: by 2002:a17:903:41c6:b0:236:7050:7464 with SMTP id d9443c01a7336-237d9a68349mr52343675ad.11.1750611486844;
+        Sun, 22 Jun 2025 09:58:06 -0700 (PDT)
+Received: from sumedh-ThinkStation-P348.domain.name ([2401:4900:8813:976e:582e:2d00:8d9a:ec1c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83ce860sm63981975ad.65.2025.06.22.09.58.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Jun 2025 09:58:06 -0700 (PDT)
+From: "Sumedh W. Jambekar" <linuxsumedh@gmail.com>
+To: marcel@holtmann.org,
+	luiz.dentz@gmail.com,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: "Sumedh W. Jambekar" <linuxsumedh@gmail.com>
+Subject: [PATCH] Bluetooth btusb.c: Add pr_info() for logging.
+Date: Sun, 22 Jun 2025 22:27:09 +0530
+Message-ID: <20250622165753.65461-1-linuxsumedh@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1750585239.git.christophe.leroy@csgroup.eu> <f4b2a32853b5daba7aeac9e9b96ec1ab88981589.1750585239.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <f4b2a32853b5daba7aeac9e9b96ec1ab88981589.1750585239.git.christophe.leroy@csgroup.eu>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 22 Jun 2025 09:57:20 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj4P6p1kBVW7aJbWAOGJZkB7fXFmwaXLieBRhjmvnWgvQ@mail.gmail.com>
-X-Gm-Features: AX0GCFts7S7trAg95_9iRhGDGkpXCnUtzlq1LLaD_2GFvkl-rWcgRNFXTCHwODg
-Message-ID: <CAHk-=wj4P6p1kBVW7aJbWAOGJZkB7fXFmwaXLieBRhjmvnWgvQ@mail.gmail.com>
-Subject: Re: [PATCH 2/5] uaccess: Add speculation barrier to copy_from_user_iter()
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Andre Almeida <andrealmeid@igalia.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Laight <david.laight.linux@gmail.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Sun, 22 Jun 2025 at 02:52, Christophe Leroy
-<christophe.leroy@csgroup.eu> wrote:
->
-> The results of "access_ok()" can be mis-speculated.
+In this commit, the pr_info() call is added in the
+probe function for logging purposes. This is done
+as part of the assignment in the LFD103 course.
 
-Hmm. This code is critical. I think it should be converted to use that
-masked address thing if we have to add it here.
+Signed-off-by: Sumedh W. Jambekar <linuxsumedh@gmail.com>
+---
+ drivers/bluetooth/btusb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-And at some point this access_ok() didn't even exist, because we check
-the addresses at iter creation time. So this one might be a "belt and
-suspenders" check, rather than something critical.
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 9ab661d2d1e6..5ecb9a61a33b 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -3858,6 +3858,7 @@ static int btusb_probe(struct usb_interface *intf,
+ 	unsigned ifnum_base;
+ 	int i, err, priv_size;
+ 
++    pr_info("SWJ changed the btusb driver in the Linux Kernel\n");
+ 	BT_DBG("intf %p id %p", intf, id);
+ 
+ 	if ((id->driver_info & BTUSB_IFNUM_2) &&
+-- 
+2.43.0
 
-(Although I also suspect that when we added ITER_UBUF we might have
-created cases where those user addresses aren't checked at iter
-creation time any more).
-
-             Linus
