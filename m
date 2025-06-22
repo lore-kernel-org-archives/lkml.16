@@ -1,100 +1,118 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB12F35977
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 05:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960C9376;
+	Sun, 22 Jun 2025 05:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750569831; cv=none; b=TUYEAG8WKAwDgc+jdrUXKHyqSpB034CRRfb6RzyvIKsFBALvlp4/ZzNf6lpEeVT5KIXke69BQJT+cpYgWFUc0xIMChtaZSISN+3i1C3NyfL/hQZSQqD5YfyAC67FiLzzEfg4Ugjr8exx7CAqiuQtr00XW0ldR6xwuvISOJDpOt8=
+	t=1750571293; cv=none; b=UnOIWuoZ/+DNwjNSI4PFR7a+EVZqHHkqdQY5tVvmf/jeUaIGSyi8QDKV2NYY6EghAsw9nXvjhx60RFFE45tIXpf4o7bndrhd4vXAL9JJesQyWaCxcSFcuVFgknGMj0Ay4KXqxm/EMrMswsruOzuOgZWG+1jclM2Uzjx0G6tQmT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750569831; c=relaxed/simple;
-	bh=UKFZiSMi/Xp/r0IR9bfV0zxY8iABN2FCJtVKYOPiEeM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c5pc3KaEk4939nEVmZAXHSLPosR6YpduAeMRAsKO++cVRc4zWjE6xxD5Jgxax2iywaxh+oOZ6w7BLYO9r4JETXH9QLE1nw/z2DhQwjr/bCzFMCXDYuLnOHMPfW0QAgX3PI9w+btcAxpZhpZ1mFyXOMcD7txYS91tCNa50JL5WR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eKWZD8uF; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750571293; c=relaxed/simple;
+	bh=a69uwtI66wsiieA3J3wYEWpnqi5UTVCHTSPGW2T4h7c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Orq6DLsTHpKeVOdtquJaOjnjRruBkV1fssBERt2U+kfyXy2rGzfKm+QWfw66NB/iBfC8tgTDCAIpgkPsdLNhSW8m6WT4p1Lpfg3bAlgFzcx9Yk7SV+5KPFp+GKMR7jQFiMjWeIfN7WB4L4B6gxeTyFeFeOYBpqArKLoVM4lOsnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gmk17hs6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKWZD8uF"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32b7cf56cacso29701231fa.1
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 22:23:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750569828; x=1751174628; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UKFZiSMi/Xp/r0IR9bfV0zxY8iABN2FCJtVKYOPiEeM=;
-        b=eKWZD8uFgyyCvvkLwbq+EaUvvoB/tW4aBNzb7BUB4saTU/m4r8WAAfRALusIUATn4B
-         SUJGo0bMXh9rHArAUwlNIvy0r/ZW+3v+Pb+K4I/4Q/40dk/8U2le/f38lwiSMOwH23ZW
-         35kJVfmVpnV+2yUgrkgF91uEKxeWTYrwK1GLnQzC5I6D4mpeIqT5++VM5m5F0poinY26
-         W+x8hUvsqAdd9br323lH7BaeJBiiu5+UWIekmWrvI2BAm0mwXtJGI5N/ckBC2tMYSZ3X
-         uT4CuKvL4qbaZEBz8ZJg2yFskqYAeBga1lBN1ZWKkRDpDN6f6NZBY9z9kh7E3PiQw2U/
-         DDxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750569828; x=1751174628;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UKFZiSMi/Xp/r0IR9bfV0zxY8iABN2FCJtVKYOPiEeM=;
-        b=bTpUIKvUXWURwPxbem39s8WaZhFLRl5mqV7C2M4kajy6b99kT7ugVL/0NIcKWpb1z2
-         5N3HQ19Ose30FkHkpl44YmygiT0uWKC7ieafEjbXdZ94BCb7ZhZeFI9BgxFtMO5ewxHc
-         5buUCMRcKmJY4Oz0ER0VguI7BL3TxfQ0j1mLIlCYkoq0RiBCzpE5hNuAzFuHnd0Jms6N
-         DomTOYWGFXUy8067qw7itNBouV5Ts9PFMzqTO1dy98TGJ9tQsOuiwqojS9BGuFNJ5Fj8
-         8VC6fq9uvBJH5uyFrw9SV3763AAeekNriABmhsrXJbqDC4h5WdS4FKKQG7WOFqwaJg1U
-         PASw==
-X-Forwarded-Encrypted: i=1; AJvYcCXzCiiENHivUzKyuVUuHPfeusr2R08hEnef4o9MuDw4MKcUZBaHvQss2jwhkwLrsGN7acTiS0XCdwbdgzY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywdfv+CI5Yznjr8BBDHYXQVIU4mvGWAZG6KVY4Pl+E9FcqVlcm7
-	ebyps5hYWmkOezE/YZjfk9jEOOPNGKiNliCxpI+8DZF6G5qnjpCnFW0qGOHInFEe+PnjYmB4ejs
-	jCeLI/tID88T1JmDf3vGdIRttlrFCRCPrSgu5DpXo+Mqo
-X-Gm-Gg: ASbGnctvcuo2GjdzWgfpJeUNa6L/1m4jmd6WXPYaL13Bw331Y/qR8Zq31aEGl9fMcpT
-	S6/wvgq1mlnw8RdESIHoxpkqY0FQOOp8SETJW22m1p9oreEZc8dfBZY/EMMXqhEtn9xYTxmaavV
-	ZSnOGhFi40d67y9qPIkhKDWOVziyWVt6B3hh6gNhdfBdw=
-X-Google-Smtp-Source: AGHT+IFlNGgsBixKS3mKO5j/Eq7MML/JgNnTzG1FkNkAI+F75gXPFV8jm6c5uEM5B+mtAJN52naT1XuVJtIHWxtu3O0=
-X-Received: by 2002:a2e:ae11:0:b0:32b:755e:6cd7 with SMTP id
- 38308e7fff4ca-32b99460e60mr23683911fa.32.1750569827823; Sat, 21 Jun 2025
- 22:23:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gmk17hs6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08459C4CEE3;
+	Sun, 22 Jun 2025 05:48:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750571293;
+	bh=a69uwtI66wsiieA3J3wYEWpnqi5UTVCHTSPGW2T4h7c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gmk17hs6EFc7VLdcxnGWZ96itzl1DNtTyTvZESPe05eoTR96D5ZsPOzrueszBCfdz
+	 AV3fEaij27z+N65C1CLU819qH/jRiK9Zkrb+q22/GZ9uwYXktyDayAzEgV2ZUqsTT7
+	 Pg7Olnw050hmD6LYp1KnHYdgVBcfNPY5oxmA/QQKqDKsz/lTHHt013d/ym7p2CNpwn
+	 MF4vsFAnR+t3/ZH0u+Z8UVjp7E2vK70jeRddyndwSqT/Rif5YlCX7gg139BFsaHySI
+	 KHvSfgSVp3Hpt2WgizVvdBaFgJ8b+6pB6amh6ri2926IBEHx3v8bfUMdwisN4x1arT
+	 Q6T+kBlD7j4eA==
+Date: Sun, 22 Jun 2025 07:48:09 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>
+Subject: Re: [PATCH v2 00/15] Some improvements and fixes for the doc build
+ system
+Message-ID: <20250622074809.09fca392@foz.lan>
+In-Reply-To: <87frfsdfgc.fsf@trenco.lwn.net>
+References: <cover.1750535171.git.mchehab+huawei@kernel.org>
+	<87frfsdfgc.fsf@trenco.lwn.net>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241018151112.3533820-1-arnd@kernel.org> <ZxidW3lvA5Pqu71m@infradead.org>
- <CANpmjNNK_viqTuPxywfvZSZSdWGRsb5-u1-oR=RZYTh7YKk8cQ@mail.gmail.com>
- <Zxiev9UaoUlI1xs9@infradead.org> <CANpmjNPvBnov-EFk1PNO4GEOF7XLG7S1bYYjg9i4Ej=ZzaA6ag@mail.gmail.com>
- <ZxigQIF59s3_h5PS@infradead.org> <20241107142938.c38ce0a63add88af49216b2f@linux-foundation.org>
-In-Reply-To: <20241107142938.c38ce0a63add88af49216b2f@linux-foundation.org>
-From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Date: Sun, 22 Jun 2025 10:23:30 +0500
-X-Gm-Features: AX0GCFsU--xDO8SgX9TQ1fKOImZgHs-YoJz4cTViVoIKGVIutBqdxU3ja_tQtdI
-Message-ID: <CACzwLxjW+y=r1b0RiLB-qCEzSuoA4K1V80=Qyxhnhm0GX7-Svg@mail.gmail.com>
-Subject: Re: [PATCH] mm: export copy_to_kernel_nofault
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Marco Elver <elver@google.com>, Arnd Bergmann <arnd@kernel.org>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Nov 8, 2024 at 3:29=E2=80=AFAM Andrew Morton <akpm@linux-foundation=
-.org> wrote:
->
-> On Wed, 23 Oct 2024 00:05:36 -0700 Christoph Hellwig <hch@infradead.org> =
-wrote:
->
-> > On Wed, Oct 23, 2024 at 09:02:23AM +0200, Marco Elver wrote:
-> > > Another alternative is to just #ifndef MODULE the offending test case=
-,
-> > > so it's only available if built-in. No need to just make the whole
-> > > test built-in only. I know there are users of this particular test
-> > > that rely on it being a module.
+Em Sat, 21 Jun 2025 14:09:39 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
+
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+> 
+> > Hi Jon,
 > >
-> > That sounds good to me.
->
-> We still don't have patch which does this, so this series is stalled.
->
-> Sabyrzhan, could you please consider this?
+> > This series contain patches I made while working at the parser-yaml.
+> > They aren't directly related to it. Instead, they address some issues
+> > at the build system and provide test tools for building docs.  
+> 
+> So as you saw I'd applied the previous set - but I've undone that.
+> Something in the first patch (the conf.py changes) breaks the dependency
+> detection so that every build turns into a full build.  Just run
+> "make htmldocs" twice in a row to see what happens.  That somehow needs
+> to be fixed...
 
-I've just posted a follow-up that removes the exported symbol.
-See Message-Id: <20250622051906.67374-1-snovitoll@gmail.com>
-Sorry for taking so long.
+Tricky. When I originally wrote it, on the top of 8.x, there is no need
+to add a connect event. For older versions, this is a need.
+
+I ended adding a 'builder-inited', but this is too late. Changing the
+event to 'config-inited' address it.
+
+I'll fold the patch below at patch 01/15.
+
+Regards,
+Mauro
+
+diff --git a/Documentation/conf.py b/Documentation/conf.py
+index 4ba4ee45e599..91ce2b1c33cc 100644
+--- a/Documentation/conf.py
++++ b/Documentation/conf.py
+@@ -41,7 +41,7 @@ dyn_exclude_patterns = ['output']
+ # Properly handle include/exclude patterns
+ # ----------------------------------------
+ 
+-def update_patterns(app):
++def update_patterns(app, config):
+ 
+     """
+     On Sphinx, all directories are relative to what it is passed as
+@@ -65,7 +65,7 @@ def update_patterns(app):
+             if rel_path.startswith("../"):
+                 continue
+ 
+-            app.config.include_patterns.append(rel_path)
++            config.include_patterns.append(rel_path)
+ 
+     # setup exclude_patterns dynamically
+     for p in dyn_exclude_patterns:
+@@ -75,7 +75,7 @@ def update_patterns(app):
+         if rel_path.startswith("../"):
+             continue
+ 
+-        app.config.exclude_patterns.append(rel_path)
++        config.exclude_patterns.append(rel_path)
+ 
+ # helper
+ # ------
+@@ -574,4 +574,4 @@ kerneldoc_srctree = '..'
+ loadConfig(globals())
+ 
+ def setup(app):
+-	app.connect('builder-inited', update_patterns)
++    app.connect('config-inited', update_patterns)
+
+
+Thanks,
+Mauro
