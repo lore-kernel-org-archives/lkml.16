@@ -1,91 +1,120 @@
-Received: from kylie.crudebyte.com (kylie.crudebyte.com [5.189.157.229])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B423D1F875A;
-	Sun, 22 Jun 2025 21:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.189.157.229
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32415C2FA
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 22:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750629549; cv=none; b=pruHQVVYcEny6phdtMGbjVv+frJgQEFTuO8g9csO79IUQziyMz5hlpCGjVIhIArLPy1UIyT1Ifkb8VtuwIxwClWSzIkzIQ/DjGcf29h3Rd/dYhTvxZh8vU7SZWRh0Z5HsfRiFkYOlroQxLiZHRJ+zHPyVJ4DltjoAwDd7q9t9+g=
+	t=1750629770; cv=none; b=d6YNPH9vuEOML7zsHaRKlvw3Yi8k1nwSG+WzFkANq0mhGS9HnxW4eQc508B2oE0206Yr0Y9/KtMSMstlmvypFYMprhx2q5teCEmzA/rGAZSURx2JhSOAlPTuu6ex2/JVjDGEL1U8Q/ni/+SeUUQG/YrW6vzYyeqR5YYyTGUaAak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750629549; c=relaxed/simple;
-	bh=2OABZ5Aau9KbgR1Zm+cB9UU2hHSzuwXcK9yvNTrNohU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jPcFPqrIC7z//KJwDBhZ70QdgVXWqRniHwv+mdbdr42UixAXSLt12fCRi+qV2st+zj5KR7j0VnJv3TSMk/WXVQh6iE+0vTb3HC01y2EzXZbKZnL1Uw2ZRn4NZ5/qJXeNJHzw4w/xCnSjBEbKq7fcYcQ38tT/RBWss5by6vyJ8Zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com; spf=pass smtp.mailfrom=crudebyte.com; dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b=mJYQMNfa; arc=none smtp.client-ip=5.189.157.229
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crudebyte.com
+	s=arc-20240116; t=1750629770; c=relaxed/simple;
+	bh=RdeSytjFriCiVDqBfoNbrlxAhjFgOopRBXO/wo/M1mo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IJwgEGPZxBUko/GIQfESOtOga1cPewaTqvh44RfiAcX+LfcDcpOs1uaHDiGvb/3HTldJjNRi5JLpb67ghiCJ4LHPJQfFaFX0/adkzHrfs5zv7drKeyjms65+O7RQCvekB7Fpj5HlsVu12FDZJbO4bDFOSxH98Yno1bGyFS/YkQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com; spf=pass smtp.mailfrom=mandelbit.com; dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b=Yujk1BfB; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mandelbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b="mJYQMNfa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=crudebyte.com; s=kylie; h=Content-Type:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Content-ID:Content-Description;
-	bh=pKwgu71A+gqWy3XaAtAsQgfZgUfP6EO1C/JNbWXZpdQ=; b=mJYQMNfazdYdrhU6fsqcc9pJkr
-	ZMTjB3bZrpa4YZuawBirr5X73xMo3cJy4Raz1AAm/SsDWDxRLPBW75g12fA3Eivbgez+AOuEFudxD
-	HFz1zaIXPSBXXu4JQIb1UcrWmSXR7SVayg8MpLoKQGeyCknhWJChf6zZWesbjee8emHW3LPtCJC7B
-	lWklikeu+O6o4z/I6Fnza534h+xPMQYicGF8Uh4Mtx3JbbBLqzMEvUAFbnwOEj6u8d93Vbl6yyxtB
-	yM3bf6M9JJzrD8KoPpF5YchEtGqoDu1i1K2rn/WjtifgfyG8DK/9TUsgV+rNcK8klosf3PNQruNEP
-	qK3pm7uFp6WK2pGTVDx7NjwUbqfyYNjoEoi/3mf0kJY0cIb25+9y8YAxV7sl9XqlSunqdJewTA9Bi
-	YMA54MYUJJe/SohLUOKv5ZG/Ormy/sApm/mizPUzyqgBAyDA3RPLXOe5NZz1mjMJP1wkML7YYP2Hq
-	EmoGn2eoXveWWydSdzjd6zDfZI7J2rAMd765bQ9znOnqlWXJUrkOzuQBxnp89cLbG/IE5gOq13sO2
-	WUYijHXfyGAEdtpfbyiy6Ps5X1aRFr5YuAYqCCtlL6BPodCGZwXzC4WmU0FwfTGSU5gefy8Yl85QB
-	S2F2XQ4oXLLSKypN9whWapn+fM7Hes2Zl7cnSqcMc=;
-From: Christian Schoenebeck <linux_oss@crudebyte.com>
-To: asmadeus@codewreck.org
-Cc: Kees Cook <kees@kernel.org>,
- Dominique Martinet via B4 Relay <devnull+asmadeus.codewreck.org@kernel.org>,
- Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Michael Grzeschik <m.grzeschik@pengutronix.de>, stable@vger.kernel.org,
- Yuhao Jiang <danisjiang@gmail.com>, security@kernel.org,
- v9fs@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] net/9p: Fix buffer overflow in USB transport layer
-Date: Sun, 22 Jun 2025 23:20:21 +0200
-Message-ID: <2332540.nosMkMiWtC@silver>
-In-Reply-To: <aFhqAergj6LowmyE@codewreck.org>
-References:
- <20250622-9p-usb_overflow-v3-1-ab172691b946@codewreck.org>
- <659844BA-48EF-47E1-8D66-D4CA98359BBF@kernel.org>
- <aFhqAergj6LowmyE@codewreck.org>
+	dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b="Yujk1BfB"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450d668c2a1so27626875e9.0
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 15:02:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mandelbit.com; s=google; t=1750629767; x=1751234567; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bt+OHlPcCexBjO5A/XepCZN5Wsx0OmQnDmQwiH7XPK4=;
+        b=Yujk1BfBXh1Hx4egKv1XE6NncR75xuF0DbXQQna4aq2FI6/VIGIm57JlKf7T5r3u0u
+         qjur+7hteEcJDKkM7Kj/oQW/z9UvjZfVKGDKESuPsQBLCikN97im5P+eYZsSxkNSoNTU
+         qaNJQGe68V+9eyqYqqBP8vVBT1bl3NA/lFq47pYSAxRRJ5jTWcBg5pBYjMYT4qMysPiO
+         s+IP2g0s3pcBgqnLe5cCy0FPfZ0dhtPlFUFa9nhGHUMiWdFGjSJ9JITSw+qn8YBYMUCv
+         j7SeU4gfpJw0soCKbVLdfm7BS18phyhZ33+hYc2sTqy4fVXGHragJp7/p9iHN/OHCtzg
+         IzjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750629767; x=1751234567;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Bt+OHlPcCexBjO5A/XepCZN5Wsx0OmQnDmQwiH7XPK4=;
+        b=FdH/Snrdn0gedQacIg9Gdwe+VY4Bo+jK4c1hheR5gNdyzSRiRg7h4DeXFW8UeEiLVd
+         g+mZSfkYVrH2YN/ABATUuEBhmf2NCsdezz5tumoF1fwcpjejIg4uFrdvlU6a3JfXkQnY
+         7FTzsnkx2o2LiCC72hHQ7SMxT5+plzZUtHnJcJP2fYr3DJUFohuB1j7I22tgjK0m4t0w
+         DN9fY6vaZc183Fll7PMcilJDGPvcPNASPoCK7nVYb5/sX6WkPPOxSY2dN27IZr4JIdJr
+         TBw7zSUhvb+9tqLoai3UOUxTq9ieVZ6cSBN2VeSpHmuqoj+edJw55EpA708O+BnQZRGz
+         9Gyw==
+X-Forwarded-Encrypted: i=1; AJvYcCWH+rc1TXnYMcIaszwR24172cyE5tX0whyz1tLwYK0QCFRwDSVUO/RIr3VyXx2ecLjooJQ4bd6bhQNWPJw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLixZQHc+nMPgCrr5SybMMZLe7KqW8OCDHNgT5DTfzFld1JYux
+	m8GVsEBWFBa/V3FdE39b2/CEkmCe79GagdxJcPi8ZSdZlkCIt5d60p+mHhpidP831+o4OEhD69K
+	U5kM6
+X-Gm-Gg: ASbGncsuM8UjITtlUr5ydDqvR6bC1An/kQYQX8w8u/AFORnTfve+wlsrCO/XuDuG7GS
+	y0F3uSHzBIxR7AtYz6YlPHAoBdgqtRZRNb+cx4pMENy5mkOfKli3cmuINF/ZtwsSPRgXNgya9aw
+	Ky9sVZJgG4gcDSup3UZ5rakQT49nGN+KOX6qIJPevJWKjZ3W3QCttNjAismcm30WcRs3wd7+G1q
+	2F4/3vxxyq/38y/Wa6RZ9rLynqPZUDQJIDRBS2eHj+u2PZER1DO8GSqSErnuXicoURNkzk2lUea
+	CmJFsQNavCnzbnU0+FmSHefOs2P01vQodFObF2WCIr3YpuTIZz/rtKDDrX+bgfVd/w5trdVlDvI
+	0n+f+i/i4VIw=
+X-Google-Smtp-Source: AGHT+IG0a+UKdfnjGI/Td/xknJ1CyetEZyT4JlqjGWXzeF8pdWoW25Vrb2Ox6m/940MfdEHPG+11yw==
+X-Received: by 2002:a05:600c:8b85:b0:450:cabc:a6c6 with SMTP id 5b1f17b1804b1-45365e6dec5mr96663895e9.15.1750629766977;
+        Sun, 22 Jun 2025 15:02:46 -0700 (PDT)
+Received: from inifinity.homelan.mandelbit.com ([2001:67c:2fbc:1:c4de:19cc:e05:213f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535e98b4bbsm122759295e9.15.2025.06.22.15.02.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Jun 2025 15:02:46 -0700 (PDT)
+From: Antonio Quartulli <antonio@mandelbit.com>
+To: linux-gpio@vger.kernel.org
+Cc: linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	linux-kernel@vger.kernel.org,
+	Antonio Quartulli <antonio@mandelbit.com>
+Subject: [PATCH] gpiolib-sysfs: fix use-after-free in error path
+Date: Mon, 23 Jun 2025 00:02:21 +0200
+Message-ID: <20250622220221.28025-1-antonio@mandelbit.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 
-On Sunday, June 22, 2025 10:39:29 PM CEST asmadeus@codewreck.org wrote:
-[...]
-> (... And this made me realize commit 60ece0833b6c ("net/9p: allocate
-> appropriate reduced message buffers") likely broke everything for
-> 9p/rdma 3 years ago, as rdma is swapping buffers around...
-> I guess it doesn't have (m)any users...)
+When invoking device_create_with_groups() its return
+value is stored in `data->cdev_base`.
+However, in case of faiure, `data` is first
+freed and then derefernced in order to return
+`data->cdev_base`.
 
-That patch contains an RDMA exception:
+Fix the use-after-free by extracting the error
+code before free'ing `data`.
 
-@@ -645,9 +664,18 @@ p9_client_rpc(struct p9_client *c, int8_t type, const char *fmt, ...)
-        int sigpending, err;
-        unsigned long flags;
-        struct p9_req_t *req;
-+       /* Passing zero for tsize/rsize to p9_client_prepare_req() tells it to
-+        * auto determine an appropriate (small) request/response size
-+        * according to actual message data being sent. Currently RDMA
-+        * transport is excluded from this response message size optimization,
-+        * as it would not cope with it, due to its pooled response buffers
-+        * (using an optimized request size for RDMA as well though).
-+        */
-+       const uint tsize = 0;
-+       const uint rsize = c->trans_mod->pooled_rbuffers ? c->msize : 0;
+This issue was reported by Coverity Scan.
+
+Addresses-Coverity-ID: 1644512 ("Memory - illegal accesses  (USE_AFTER_FREE)")
+Signed-off-by: Antonio Quartulli <antonio@mandelbit.com>
+---
+ drivers/gpio/gpiolib-sysfs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+index 956411fc467a..c4c21e25c682 100644
+--- a/drivers/gpio/gpiolib-sysfs.c
++++ b/drivers/gpio/gpiolib-sysfs.c
+@@ -741,6 +741,7 @@ int gpiochip_sysfs_register(struct gpio_device *gdev)
+ 	struct gpiodev_data *data;
+ 	struct gpio_chip *chip;
+ 	struct device *parent;
++	int err;
  
-        va_start(ap, fmt);
--       req = p9_client_prepare_req(c, type, c->msize, c->msize, fmt, ap);
-+       req = p9_client_prepare_req(c, type, tsize, rsize, fmt, ap);
-        va_end(ap);
-        if (IS_ERR(req))
-                return req;
-
-/Christian
-
+ 	/*
+ 	 * Many systems add gpio chips for SOC support very early,
+@@ -781,8 +782,9 @@ int gpiochip_sysfs_register(struct gpio_device *gdev)
+ 						    GPIOCHIP_NAME "%d",
+ 						    chip->base);
+ 	if (IS_ERR(data->cdev_base)) {
++		err = PTR_ERR(data->cdev_base);
+ 		kfree(data);
+-		return PTR_ERR(data->cdev_base);
++		return err;
+ 	}
+ 
+ 	return 0;
+-- 
+2.49.0
 
