@@ -1,90 +1,139 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188BA8F5B
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 16:01:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B5EEED7
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 16:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750608106; cv=none; b=jZmZDv40q5zHCmJRolnClsBMXwxGadHVN82xzndvZqfCbnr181yG29mEmQlrS+l9C3ycada7SpDkG3ickaNogGLLIf6b6aOuwaOfbhL/E7c+yLV2qAJJ+pBOsqwN9p5JDnYkjIHrnyJTqeznIQDjLzSgtHBGApG7ce7BObcKfCI=
+	t=1750608388; cv=none; b=Rf2QdBwDpNfcj0QFdcZlYZUVRnKAyMCIiwInaten5fYvrwPsaXSdvGhAgALO4PZZhUVeMWjJXROJhW/eh2XgWo6+vPb6ZZZFHfoS9UL+CpRkeGW/IlUtQi0frKun/NY0dCGknmcZHHaACA7tWMVguCJdaYAd971IC9wi7Rz7wu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750608106; c=relaxed/simple;
-	bh=YUgjSlLHrJUWwJMenC27/5IrTMiMrJHmIgWw3A5CqNw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i7BTGQPeiqbu9vfOWjmln1Ism7QEJg9Ndd8okAgj2c2QgK+biy9OI1g3Ze8v2VKe3M1GSdz4heXPspR8o/mCf7MjQ5TpmlcpJdP533GiNuodVsFtUhRBakBmIAu+skT9P3l1W78Fz26jbLqHyZbA0UYcCD4tLwCVr4CV5HtKb4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=gTNvZpdv; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="gTNvZpdv"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 793AA40E016E;
-	Sun, 22 Jun 2025 16:01:39 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id l99tVGjY6oa4; Sun, 22 Jun 2025 16:01:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1750608095; bh=mH44uo+saicsAJwgLJXjKrLnll6pCjuFieM/I9w7U2E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gTNvZpdvcZNIYB/62hfQHa5IClQ8akc0M6X/qhziE60OWbdqPMdutPg3gQB6olpZu
-	 6I5vy4DV/DkFIU5BLOYXDcLYtU6KzFVxu9SvgsV0FXQiTWRib8TCrMSb1MmTyLdy63
-	 YFovRVaRoeM0ExPhPQNT3/UdpcBF9IPmJpHxdQf5UWQpRXX6H3K3zPjnl5wFUmTpg5
-	 Nzo4cjvGy40Q09oNldTq1sA1jfdqpM/BJF2sosm346o5ADBJ4kj4Pfr77CiGVkVzF0
-	 su2jnu1u2bRiN8n5w93YbhxpxLcwBz3qIbmTwphDT44SoUWEg229+zuTJTmdTmZzoB
-	 OrGvmTBJTBoroPu/w5z+I/4UOsvdGlO9BOYsP+VM1zlQI8Uwf9MEynCOFoPLNjmiGs
-	 payzqg5jmkVL83P5U8HLczW0h/aPgjJ7JylODOrR597kBmCTwG1q9ow7e6jEifbrxB
-	 +9ehgIOhXh5RlCz88kJ7dGatmJstCgOWESdskFPbITe7JJv7WDbmfb1DXABsCRPCBd
-	 7ZXRjRCzRWEmG58t+iQqtl28k3zuSZKYw5hp7rOei0C0+TjrGa4q8+etthQ6qSAb49
-	 sH5CfbN3AQ002xMqBver7FKqaHrcnY2uhoyhurb4l1UFWjssq17XwQjw0hmYtesuO2
-	 6sjPqBOxf36VwVzUnIKVf2zo=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AF48840E015D;
-	Sun, 22 Jun 2025 16:01:28 +0000 (UTC)
-Date: Sun, 22 Jun 2025 18:01:22 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: x86@kernel.org, David Kaplan <david.kaplan@amd.com>,
-	linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Nikolay Borisov <nik.borisov@suse.com>
-Subject: Re: [PATCH v4 0/7] Retbleed fixes
-Message-ID: <20250622160122.GDaFgo0tAwyUpIfiGS@fat_crate.local>
-References: <20250611-eibrs-fix-v4-0-5ff86cac6c61@linux.intel.com>
+	s=arc-20240116; t=1750608388; c=relaxed/simple;
+	bh=QtqSdw0XeDim7ssYq1U3SyRQBEDFpF9U8ijzIYdCBO4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=b6VLrSxtSH2tVVBwkWA7AzptbZaSaa4NVnbdCaTh1hc3JY5MvxQ8Ikg4Gx3AgPB2N/Jb3Oxo9Gwfav2xq7q585IORrSDGdxiKPrgLT0APByUqCGdY0AX9wYJI/KDDVc7UDmcivmDuzxE7U94S6NfQi5MvjaEONJn4Bd+gvsu/tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ddd01c6f9bso29333955ab.1
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 09:06:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750608386; x=1751213186;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0V151CDHfoWBQ8MiOSvoJ2kdjMySgSwqw2rZQCfy+Os=;
+        b=kcJ2JLoZ7ugSDQIgthWhzjU1Z3q2EiCiRuNNS5YyPSpr39dTqMeJqJg38cdxVEwa6z
+         JDj9EVEtJ0rLiQy8+PDT/GAB5q7P1LeE7qfGAobpWnh3cv85c17DpJmuvApIaWfcPlN8
+         zDWBxgGXKlgVFVl3+KQez2WkLZauSzGACO1FMOdcGrvOThANEV/+PAUkU0GMYIOcHx7a
+         ZB2jv301ZzHKszqaLMNMpQ1ziVYbpCj7IESVghXUCaYm9qGr5871bOEkr1pPkO8UGs8b
+         TxDjhC2Y+AUbtV5ZNF+SKVE/krFrXWLiesvnzymESt0NFVK3xOjlx7SSfHU8hgfLKR1t
+         FzTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWrTZG0vQMp4Wkv/wD9wpvBUUu2DdiSjbTmxMxkevx/M0Ez+WissU+hZ0quNOIhpx7skCfCIBG1KPvjWeQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywj4KechS/K491nQ9elYgO/28OvDWUBJhO+l+4xImwZdU5E8ejB
+	Iuf1vU6kIHtE1v0H79CkJ3ZBXm71PUvy1I9mkhOHolNoN6ezyt2aIVXN3v/uJDRLtS0GZFc+oJe
+	HwDgHX3PNXlvTHyEXTq6UQ95uN0IUoHSBp0TLx2tHxIo45Ai+RXyUQYg7tjE=
+X-Google-Smtp-Source: AGHT+IHs+we2xp73wL8GThscj4fHO6euYfpGxjmtLjfzEoE7KVFc8tnjHX8BFArNqG1cV/qvHtst2iUxMfMeRRN4C9k/sMfAB03u
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250611-eibrs-fix-v4-0-5ff86cac6c61@linux.intel.com>
+X-Received: by 2002:a05:6e02:318c:b0:3dd:f02d:2d26 with SMTP id
+ e9e14a558f8ab-3de39538520mr93082125ab.2.1750608385975; Sun, 22 Jun 2025
+ 09:06:25 -0700 (PDT)
+Date: Sun, 22 Jun 2025 09:06:25 -0700
+In-Reply-To: <67f94057.050a0220.2c5fcf.0001.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68582a01.050a0220.bba34.0008.GAE@google.com>
+Subject: Re: [syzbot] [ext4?] kernel BUG in ext4_ext_insert_extent (2)
+From: syzbot <syzbot+ad86dcdffd6785f56e03@syzkaller.appspotmail.com>
+To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 11, 2025 at 10:28:44AM -0700, Pawan Gupta wrote:
-> Pawan Gupta (7):
->       x86/retbleed: Avoid AUTO after the select step
->       x86/retbleed: Simplify the =stuff checks
->       x86/bugs: Avoid warning when overriding return thunk
->       x86/its: Use switch/case to apply mitigation
->       x86/retbleed: Introduce cdt_possible()
->       x86/its: Remove =stuff dependency on retbleed
->       x86/its: Allow stuffing in eIBRS+retpoline mode also
+syzbot has found a reproducer for the following issue on:
 
-Note that the subject prefixes are "x86/bugs:" not the mitigations themselves.
+HEAD commit:    739a6c93cc75 Merge tag 'nfsd-6.16-1' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15a19b0c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d11f52d3049c3790
+dashboard link: https://syzkaller.appspot.com/bug?extid=ad86dcdffd6785f56e03
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14af2182580000
 
-https://kernel.org/doc/html/latest/process/maintainer-tip.html#patch-subject
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/f5a65b9fc0ed/disk-739a6c93.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3f1b70f2f048/vmlinux-739a6c93.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/a8ab27807c85/bzImage-739a6c93.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/376364fe7b8f/mount_2.gz
+  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=10af2182580000)
 
-I've fixed them up.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ad86dcdffd6785f56e03@syzkaller.appspotmail.com
 
-Otherwise looks ok to me, lemme put them through the test.
+------------[ cut here ]------------
+kernel BUG at fs/ext4/extents.c:2153!
+Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+CPU: 1 UID: 0 PID: 6732 Comm: syz.4.53 Not tainted 6.16.0-rc2-syzkaller-00318-g739a6c93cc75 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:ext4_ext_insert_extent+0x4ab7/0x4af0 fs/ext4/extents.c:2153
+Code: 89 d9 80 e1 07 fe c1 38 c1 0f 8c a6 e7 ff ff 48 89 df e8 2c 8b b6 ff e9 99 e7 ff ff e8 62 0d 53 ff 90 0f 0b e8 5a 0d 53 ff 90 <0f> 0b e8 52 0d 53 ff 90 0f 0b 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c
+RSP: 0018:ffffc9000455ec60 EFLAGS: 00010293
+RAX: ffffffff826d4f26 RBX: 0000000000000023 RCX: ffff888026e93c00
+RDX: 0000000000000000 RSI: 0000000000000023 RDI: 0000000000000023
+RBP: ffffc9000455ee10 R08: ffff8880609943a7 R09: 1ffff1100c132874
+R10: dffffc0000000000 R11: ffffed100c132875 R12: 0000000000000023
+R13: dffffc0000000000 R14: ffff88806bfde448 R15: ffff888027bf3d00
+FS:  00007fe4a5ed66c0(0000) GS:ffff888125d51000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000003000 CR3: 0000000070c0d000 CR4: 0000000000350ef0
+Call Trace:
+ <TASK>
+ ext4_ext_map_blocks+0x1792/0x6ac0 fs/ext4/extents.c:4404
+ ext4_map_create_blocks fs/ext4/inode.c:609 [inline]
+ ext4_map_blocks+0x931/0x18d0 fs/ext4/inode.c:813
+ _ext4_get_block+0x200/0x4c0 fs/ext4/inode.c:892
+ ext4_get_block_unwritten+0x2e/0x100 fs/ext4/inode.c:925
+ ext4_block_write_begin+0x6f8/0x14b0 fs/ext4/inode.c:1178
+ ext4_write_begin+0xa4f/0x1680 fs/ext4/ext4_jbd2.h:-1
+ ext4_da_write_begin+0x449/0xd20 fs/ext4/inode.c:3057
+ generic_perform_write+0x2c7/0x910 mm/filemap.c:4112
+ ext4_buffered_write_iter+0xce/0x3a0 fs/ext4/file.c:299
+ ext4_file_write_iter+0x298/0x1bc0 fs/ext4/file.c:-1
+ do_iter_readv_writev+0x56e/0x7f0 fs/read_write.c:-1
+ vfs_writev+0x31a/0x960 fs/read_write.c:1057
+ do_pwritev fs/read_write.c:1153 [inline]
+ __do_sys_pwritev2 fs/read_write.c:1211 [inline]
+ __se_sys_pwritev2+0x179/0x290 fs/read_write.c:1202
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fe4a4f8e929
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fe4a5ed6038 EFLAGS: 00000246 ORIG_RAX: 0000000000000148
+RAX: ffffffffffffffda RBX: 00007fe4a51b5fa0 RCX: 00007fe4a4f8e929
+RDX: 0000000000000001 RSI: 0000200000000100 RDI: 0000000000000004
+RBP: 00007fe4a5010b39 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000005412 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fe4a51b5fa0 R15: 00007fffc4eaed48
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:ext4_ext_insert_extent+0x4ab7/0x4af0 fs/ext4/extents.c:2153
+Code: 89 d9 80 e1 07 fe c1 38 c1 0f 8c a6 e7 ff ff 48 89 df e8 2c 8b b6 ff e9 99 e7 ff ff e8 62 0d 53 ff 90 0f 0b e8 5a 0d 53 ff 90 <0f> 0b e8 52 0d 53 ff 90 0f 0b 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c
+RSP: 0018:ffffc9000455ec60 EFLAGS: 00010293
+RAX: ffffffff826d4f26 RBX: 0000000000000023 RCX: ffff888026e93c00
+RDX: 0000000000000000 RSI: 0000000000000023 RDI: 0000000000000023
+RBP: ffffc9000455ee10 R08: ffff8880609943a7 R09: 1ffff1100c132874
+R10: dffffc0000000000 R11: ffffed100c132875 R12: 0000000000000023
+R13: dffffc0000000000 R14: ffff88806bfde448 R15: ffff888027bf3d00
+FS:  00007fe4a5ed66c0(0000) GS:ffff888125d51000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005610a8772950 CR3: 0000000070c0d000 CR4: 0000000000350ef0
 
--- 
-Regards/Gruss,
-    Boris.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
