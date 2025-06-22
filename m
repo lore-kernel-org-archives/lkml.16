@@ -1,147 +1,126 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6496F21FF2B;
-	Sun, 22 Jun 2025 22:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14DA1EDA14
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 22:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750632843; cv=none; b=VdwVkkPsSPrw1Bh9/MAoOii5rdgw3nDGkUKtlYZUNgnkmxjCDIMp/xwuJ6MPqFKzE03g5cOAokKDo6wUThkjdNPr4NhGm27q2bwPRd4paMZk4SVW16WR5DW0/Jgyi23Lg3V50Ki3nm8VMCGL6rNvfVjT77X94fkND2COv+8fT+Q=
+	t=1750632908; cv=none; b=iUyAnKyxm6O/Sbq3Z5rSsUnX3GkOU9z8h4uBGaLPZZdQpLmOJfvFME81rUmKMYS5F1TVZa2ESb+cP5Tn8I2jqfagWg60g5zY4nxkJ4Y2BZtrRCp0QxdNRBnSpaSM/aLe9J7eSi/VAXKGeWbWRYBJJNT9lOSdybS+AxU1BeQVE2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750632843; c=relaxed/simple;
-	bh=hlLjSiaAjh4zgfYoZ9ODBnlaRlhA2rghxB6sV5obPJU=;
+	s=arc-20240116; t=1750632908; c=relaxed/simple;
+	bh=xK2CLVq3Is4VPm+l3tHtvyv14lsDh0lQ40rUx7lkgd8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r1HzKOcoh2ELAFU7+pNqfaZoV3lIUWI2WJ4O2cvt1Kwsh0UPUKjHHqyzYTHkhsRcacoRnR6mhXpWGbWWBT2r79jmKn1IHmrf//t9LA/sJtJL0My6pn2hmCXG2I0oZZWHm9/Ptbe5oJ4YtqKWWtDwJ53g590R7bbRTscXQynT4qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QF5ERoki; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=oRHQEJE9j4qO+Jw/xRfM6rYHo87ZQvE6IOxOHrJnArxPj82mEXaNVI/Tc7P62Wfl0Vu68RqIoZDv6WeBESwIvGVtG2XfQJTiN5f+4hWkUfvuQ3zdotEJ07HzxrgdbwWgAgYhhDXNIqdS3CHLpktJDdmz1d/OCQenhoQ6+/J/CT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OB+nOCpf; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QF5ERoki"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-32b5226e6beso33529101fa.2;
-        Sun, 22 Jun 2025 15:54:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OB+nOCpf"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4a5ac8fae12so482881cf.0
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 15:55:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750632839; x=1751237639; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750632905; x=1751237705; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1zioWgQ/6QqBmvlZqll7x8yhP3nFEYFEO+9Y/YkZw7g=;
-        b=QF5ERoki4RrhU7+LnRkY95B9n/a822bpRmS4y2WoGo5Iht+Arp5T37yPbkqKpHFBob
-         YZQ6xj02AkV/nxkh/9yGX3R/rC3xrgtkQ46mNOWNOwzqmKzQ2YR+0spzJObZs/DM/1fc
-         7+rBDkBVLZSiC9KAJhA+yFTwKMhH59qaJhFpLXX82FyYp6gptEqg3IYSYOHgQmaUKmz2
-         aV8AwdUAAW+cCSjATLzkChJBeYGQeY810Kx0+gtuAxi5B1MndiGlFpbiKAva9yAkks20
-         ZQjzzxliZq5i6T4wLBX7V4dNXJlVgCKkMmc7Cg2ihpJLvINkOyQXP4jQCQoxbkLmEXCt
-         wT+g==
+        bh=1LodTZgviwQCColrSYTFMFWGsNsxbA8ukT1ulcMQya0=;
+        b=OB+nOCpf8JCFA2xuK5Ob7op1D1htvURE/UG+qguK3siYzvo71tkjxuk5KiSiOoY9lj
+         L3/a8CfmP3LQXXqvbKUHm6DgaXos70FL6VENEKi8UHcJcdh3doPaOJ1EWgo43mqB6HFf
+         X/fk0wL+AN2r0bHGOCqnOW8l9B3qdd88H0A48w9lgwUwN9fTCyGNMHN1bwfN1Cye+ja5
+         WmN5Or0FCacT/XQq6ZHO/N+vGtMJfd5lOAKSoURcJ7BGL1g5bbmTXRhN9DrGY1ZFHl+y
+         NPdM+iEGJ58nuOeS4Z531stCZPq6MFRdWoPAJze3Y0cpn1YbeUzWCCShtPBUpfiUyNyK
+         qrlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750632839; x=1751237639;
+        d=1e100.net; s=20230601; t=1750632905; x=1751237705;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1zioWgQ/6QqBmvlZqll7x8yhP3nFEYFEO+9Y/YkZw7g=;
-        b=dTdzxuC07tO0UuWZDz6WoWtwlvIRNNkt8nIf9BKAp1Txg+wncNWZBmYruI+va3pL6W
-         P3OG1YjTDS6V7HwOUfiaphPnHar2BGkCbWNPePDKfOPEOGYVjflFCL+8q2ftKejjcus7
-         X69qMhDsXu3YBVkU9sgjnt1K1mLoViC+isRJbOKNf2zhYsRGvymilFLxNgtCWCYBH/dU
-         nrRvNJ+W9pfjCI4GiPeVjEKdZZ7srp7ySLFG7VbpBRtZGnb6xYD1KIbMt14f3l5V7Rej
-         6FiZtkMXesZwyX+eFr3XOd/SKfz4Q5qYw0ATaHkmxpGHNGfdn2ys4GVYn/vXcn+E2ZnR
-         kNkw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWOqKG8ELuYsLyDqamMtWnaDP8jWYl4sTDHpJVETYHrQtvmcpLKlI1nAnYvhFJl2K+M6O9m0EycQYZcGHZv5g=@vger.kernel.org, AJvYcCXnJtkFBf7ApIrd/leiZBvMzX7aEah8oXUJXz+ie0dJlD4YAS9EMINuKjZEwWy5m38G5nmsybwH4XnKEUU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj2VZzVCAX1tcLaBDrQC0fBhPv8FjWsnfMSiwmeG5v0kW3G4Yz
-	agw4TNlv7Uvwx4v3WwrQCcQLxTCG8KlqRnxB6vDFx1RWLqSjSbcmfVKC8pj8/mEXIjnXpeshOF9
-	vroCKRGdf+VJ/saC7mbPiIuQnDouA9f4=
-X-Gm-Gg: ASbGnctSayCpN+DoQT5LB+8ODY/33tmly4bD9DX2NY9EV/7nzlPjwsoSXT/fX8JfPh3
-	DNRrs2BZ4vRUrJM8J2AS648nQrsiN0dte/H20eOnA1u+DjCxfGgKChUsfladKIb8O9WOxjlSGq9
-	9rWWvPi0WwSY2DafecbrFp098Pj/XLeKioKnTQ+m0/DXP6lmuJFUzterqN0hAxBBIKACeweRkDS
-	QYqdA==
-X-Google-Smtp-Source: AGHT+IE1XSPaupY13kKGqETrXLaUqAXYtPoQGp1IE8gbDCr5d9sqyof9SC3wLGxN+L4/VQV18IUnP7nkHiuw5wWam10=
-X-Received: by 2002:a05:651c:198a:b0:32b:4773:7aaf with SMTP id
- 38308e7fff4ca-32b99060470mr28715571fa.35.1750632839209; Sun, 22 Jun 2025
- 15:53:59 -0700 (PDT)
+        bh=1LodTZgviwQCColrSYTFMFWGsNsxbA8ukT1ulcMQya0=;
+        b=fZdYf8QkKeBDZJ6qXl1XytBPs7GE4t+1iZo0aVAw3mAMokZOaqPsCSWynbRCRjBXfE
+         IsuPSkVXmUJQy/RoeJEuhqAxVbMWphEO6opOGSjC/RiXfMSY2976dcn3FNJA/I0/LRqW
+         s+6TzHqdhN9I1i9rzp1uXl22iGoElTWa3ttu1QzkoOm0GOqzvVe3W25Nscz/dVusN6AE
+         VFIwb7i9yr1ao6F8xPz6/HgzrE0KAt5J8jmMMiGdzshRLkg8yMeEL826VNG2oOFbIc1u
+         Coi/1R7TgDyUyzH6D6XmHzHkvX6xX8Zlmyojm/ZUWHiIueNJxAo4oq2Hr8eUlqwYwyZH
+         +nOA==
+X-Forwarded-Encrypted: i=1; AJvYcCXwop+S5ClvL9DWiiuAG4mdy8L39cmyQI7HzupaYEgHii8xiLio+Gdvptpc3sJ68W631Mn9AIWxvFezOTo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyG9/72IFirlnRYCivjAujLVq7MmESMahTbt0qM323ZcO3gCm2P
+	aJ/MV4vJqUZyQdtUhHm7cXhv++CZPLLxzYq8BFhHiCRPi+G4PY/s54rFIhBoAidW52FYaWte1Zq
+	SCCcq5HgrJo9t/5FfxoPic217Ec8jqTwj9cKdwZ0+
+X-Gm-Gg: ASbGnct9W2dzd2exAF74X4sXWppVkTnDtpamqQR7j9XnJVRQrHTofTcIfb1Q0dVLUlX
+	78wpTFuVgDBl8oxa+hoqJzFXcHYpBTVlZvsORNKefaaNIMkRjTGWmj3va2aSrYgZpUf91Z1cqnc
+	06yP2r9QkNKotZUIThVmDL+q4v6Y2q3UCo9Q+k250Ksw==
+X-Google-Smtp-Source: AGHT+IEh4r++muE0+54bkQVWcCNPb8S2goe0sFIf2ptzwdq+dpVtJrPCLne9En9R/gCpFIw1bD2APr8sOa15VBLmZ/w=
+X-Received: by 2002:a05:622a:8303:b0:4a6:907e:61ca with SMTP id
+ d75a77b69052e-4a7852db6a2mr4639641cf.12.1750632905152; Sun, 22 Jun 2025
+ 15:55:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250621230231.100181-1-contact@antoniohickey.com>
- <20250621230231.100181-2-contact@antoniohickey.com> <CAJ-ks9n1SqM_1xAstHQpp8Z7-2JSTkp9zUn8kwZA7OAAqWxQ6Q@mail.gmail.com>
- <20250622222023.29071-1-contact@antoniohickey.com>
-In-Reply-To: <20250622222023.29071-1-contact@antoniohickey.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sun, 22 Jun 2025 18:53:22 -0400
-X-Gm-Features: AX0GCFtshQcTqZxSJUcBd57yBLwW4feJgKhi0C4-UMJsmMD-CfHgkm54hLq-ftE
-Message-ID: <CAJ-ks9kDTjw7ukrErWgS06HRQ7d-gAsqzzgAnQC92pi2xLFdBQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] rust: kernel: create `overflow_assert!` macro
-To: Antonio Hickey <contact@antoniohickey.com>
-Cc: a.hindborg@kernel.org, alex.gaynor@gmail.com, aliceryhl@google.com, 
-	bjorn3_gh@protonmail.com, boqun.feng@gmail.com, dakr@kernel.org, 
-	danielstonecote@gmail.com, gary@garyguo.net, linux-kernel@vger.kernel.org, 
-	lossin@kernel.org, ojeda@kernel.org, rust-for-linux@vger.kernel.org, 
-	tmgross@umich.edu
+References: <202506181351.bba867dd-lkp@intel.com> <aFQaY4Bxle8-GT6O@harry>
+ <aFQnEj0UASzl2Lxa@hyeyoo> <aFUgJgrc_eIHRy5-@pc636>
+In-Reply-To: <aFUgJgrc_eIHRy5-@pc636>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Sun, 22 Jun 2025 15:54:51 -0700
+X-Gm-Features: Ac12FXxeU_n5ynTLFvoQ9shhqQWVGywECVI_A3zkfAgBf_JvjzTobm693NEF1_8
+Message-ID: <CAJuCfpHRVq+T8v-7J0kJ=mnbSJYX2kjG_8spgZFdfe4Tzbcs4g@mail.gmail.com>
+Subject: Re: Kernel crash due to alloc_tag_top_users() being called when !mem_profiling_support?
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: Harry Yoo <harry.yoo@oracle.com>, kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, 
+	lkp@intel.com, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
+	Adrian Huang <ahuang12@lenovo.com>, Christop Hellwig <hch@infradead.org>, 
+	Mateusz Guzik <mjguzik@gmail.com>, linux-mm@kvack.org, 
+	Kent Overstreet <kent.overstreet@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 22, 2025 at 6:20=E2=80=AFPM Antonio Hickey
-<contact@antoniohickey.com> wrote:
+On Fri, Jun 20, 2025 at 1:47=E2=80=AFAM Uladzislau Rezki <urezki@gmail.com>=
+ wrote:
 >
-> On Sun 22 Jun 13:48, Tamir Duberstein wrote:
-> > On Sat, Jun 21, 2025 at 7:06=E2=80=AFPM Antonio Hickey
-> > <contact@antoniohickey.com> wrote:
-> > > +//! Overflow assert.
+> On Fri, Jun 20, 2025 at 12:04:50AM +0900, Harry Yoo wrote:
+> > On Thu, Jun 19, 2025 at 11:10:43PM +0900, Harry Yoo wrote:
+> > > On Wed, Jun 18, 2025 at 02:25:37PM +0800, kernel test robot wrote:
+> > > >
+> > > > Hello,
+> > > >
+> > > > for this change, we reported
+> > > > "[linux-next:master] [lib/test_vmalloc.c]  7fc85b92db: Mem-Info"
+> > > > in
+> > > > https://lore.kernel.org/all/202505071555.e757f1e0-lkp@intel.com/
+> > > >
+> > > > at that time, we made some tests with x86_64 config which runs well=
+.
+> > > >
+> > > > now we noticed the commit is in mainline now.
+> > >
+> > > (Re-sending due to not Ccing people and the list...)
+> > >
+> > > Hi, I'm facing the same error on my testing environment.
 > >
-> > s/assert/assertion/
+> > I should have clarified that the reason the kernel failed to allocate
+> > memory on my machine was due to running out of memory, not because of t=
+he
+> > vmalloc test module.
 > >
-> > AFAIK the standard library always uses assertion where a noun is
-> > needed, and assert where a verb is needed.
+> > But based on the fact that the test case (align_shift_alloc_test) is
+> > expected to fail, the issue here is not memory allocation failure
+> > itself, but rather that the kernel crashes when the allocation fails.
 > >
+> It looks someone tries to test the CONFIG_TEST_VMALLOC=3Dy as built-in
+> approach test-cases. Yes, it will trigger a lot of warnings as some
+> use cases are supposed to be failed. This will trigger a lot of kernel
+> warnings which can be considered by test-robot or people as problem.
 >
-> Reasonable, I'll fix this verbage in my next version.
->
-> > > +/// Verifies at runtime that an expression is within an expected bou=
-nd.
-> > > +///
-> > > +/// This macro is only active when `CONFIG_RUST_OVERFLOW_CHECKS` is =
-enabled.
-> > > +///
-> > > +/// # Examples
-> > > +///
-> > > +/// ```
-> > > +/// overflow_assert!(3 <=3D 10);
-> > > +/// overflow_assert!(5 <=3D 5);
-> > > +///
-> > > +/// const X: u8 =3D 5;
-> > > +/// overflow_assert!(X + 3 < 10);
-> > > +///
-> > > +/// const fn f(x: i32) -> i32 {
-> > > +///     x + 1
-> > > +/// }
-> > > +/// overflow_assert!(f(40) < 42);
-> > > +/// ```
-> > > +#[macro_export]
-> > > +macro_rules! overflow_assert {
-> > > +    ($cond:expr) =3D> {
-> > > +        if cfg!(CONFIG_RUST_OVERFLOW_CHECKS) {
-> > > +            ::core::assert!(
-> > > +                $cond,
-> > > +                concat!("overflow assertion failed: ", stringify!($c=
-ond))
-> >
-> > Can we still allow the caller to pass additional arguments to the
-> > macro, so that the overflowing value can be emitted? Alternatively if
-> > the expectation is that this macro is always used with a comparison
-> > operator perhaps we could have `overflow_assert_lt` and
-> > `overflow_assert_le` which provide panic messages containing the
-> > operand values?
-> >
->
-> Me and Miguel discussed the `overflow_assert_le` and other variants in
-> my previous v2 patch set[1]. We decided it would be best to just start
-> with a more flexable general expression based variant of the macro for
-> now, and consider other variants later.
->
-> I agree we should expand this into more specific variants, so it would
-> document the intent of the assertions even more clearly.
->
-> [1] Link to Miguel's comment on a `overflow_assert_le` variant:
-> https://lore.kernel.org/all/CANiq72mvu54B=3DU+YCUmbFctj_wXgF5zjeE-BB-vHVn=
-AP+3mPcQ@mail.gmail.com/
+> In this case i can exclude those use cases or even not run at all unless
+> boot-parameters properly sets if built-in.
 
-Ack, thanks for that. Still, I think the "any expression" version
-should allow the caller to supply a custom message.
+Sorry, I'm catching up on my email backlog. IIUC
+https://lore.kernel.org/all/20250620195305.1115151-1-harry.yoo@oracle.com/
+addresses this issue. Is my understanding correct?
+
+>
+> --
+> Uladzislau Rezki
