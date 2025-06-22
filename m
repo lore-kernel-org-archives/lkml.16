@@ -1,169 +1,236 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04B81DE2BC;
-	Sun, 22 Jun 2025 13:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1A6757EA;
+	Sun, 22 Jun 2025 14:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750600766; cv=none; b=DssIO4111wjY18gMm1tTC+bnXb188hbDgqsm4Cj4ZKw9RV2YfiuCHH+ZDfEC7bKUiFqRuJlfov9vUBnHB160HwQ1oR1H/htHlt3me8ok3ItowIKj5ckcIah+k7kgRuBpBsrpWTjAl61Ky0f7aCDNrQyiiWIm6EcUYxrp2nRMyZc=
+	t=1750601337; cv=none; b=LHSOy7XjV1xXZkHJ+OtbMPklUXQR6YJHS/4dd4yHnzVzpUSnzo/zMG1MGt6SnQhYJFXMzH+414ixZQONHPACHG7tZWiMXeOGdq8jl80ADu5hcI4GhDSgumVZpE/Q5DFuEcvDiy2tboC6TZv+boLQNksNjAWRyAqpYcGcHwB6294=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750600766; c=relaxed/simple;
-	bh=UxKMEiEskUPW9t0F65Rgb1ZCmJRY9zGpr+eirXMl1cs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GHznBIa02laRc0fsgcpRLH+QGt2z99XQxkBU8UwfLRjP9vU0YzEX8Kl9MqYmsqBxs0SmZlJN8jFszKvP/JXsHe6GqE5AvsaWJ+Upu8VLexgaOa3d2aauQe4aoW+R8lMr1geAWylV3y29g0BfJDkhEfedjlhb0rWrpgSIkXtrDO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mG26n6uD; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750601337; c=relaxed/simple;
+	bh=R04QMDq24/57NKiGgo54rF7dGhM/KDMlU/6BuWJA/aM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WZAKloyWx6AzxrcxMcEBJP3qd2G1jeMqK/t5BXmdg6aGbQEZUijYPgYZ7s0t1ywKL0Dq4Ipfam7n/iUOfmSyzX7ALVzoyhVeo+IkJSibb9mqtE+TBADxUxo99qWyylflS1blWBh6+ffWOy4rc/sWMGeDc/Unaro2kP74Dz937yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHMHnoRa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mG26n6uD"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-748e378ba4fso4175278b3a.1;
-        Sun, 22 Jun 2025 06:59:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750600763; x=1751205563; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9CctixpwR27qpFLNeLtbKOjrAbCl9MvTJF19ZD0qLuo=;
-        b=mG26n6uDIefgFhQCzqHwSJIPHG03MFnHtZO+RBXvxzeBC/TO6SPt5fbvk+dbHScFcA
-         +LNyK9eQDd+ukqnbDQxh/Pb/kTSg353ZhIi51kMmxpOMiuKjgepppOmpR6sllU8mcN04
-         wG6/ceJa6FPtTKpodcLRiQ7vGJDiS1OAzgSbufrgJOCg4k37I98yf8PJFUxDf2xLVGFr
-         hecgFVfmj68tQttkGMQ6AvSsAEYe4ngg2+P6sfgjaG0rkcwutBVDfgNI4gujP5+az0gT
-         VZYFtwIbhlBxrnYH/qEFxmWFGWHppD0wtc/0wAawxgKhd3VBQJOKSvV75p2Y3u3Tf6x1
-         E+8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750600763; x=1751205563;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9CctixpwR27qpFLNeLtbKOjrAbCl9MvTJF19ZD0qLuo=;
-        b=wUq3LEBBNFDjzU+UbWWyl+YjbQm6O7qrLMjYH0SlBWY8humalGCiyS6x6IwFoH9T+4
-         fix1b6VtqQnEidcnGroRVfSiAfsF7rr19oyv0tYhbmbIcm2Cnvcxt2EPbs5OKq7fa3/Q
-         xLtLEMlHnpISC7OwtYjanQ/ERaGTCVcAf4huxAI8E7s/u5ILzyOf0+W5xdC7TRjB3XIV
-         0jh5ZyIUujCv1rxrvKIAwfQ8UQo7IA/EC4y4ELcmrPo2SKWHDTP416GH1biw3RC8q2sx
-         LjSCgDmKglcb7g5xkdhvGLyiNSfP1VXl24+Ebfq/zHfbmo5rQr6T3qD/7RPzTJpSlvga
-         9r8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUXr1IsVonBto5mvpifAA3l/vmNJfEd4qZV1awkpGSN0KXoQb57bQSglPI13nGRow63Bvc=@vger.kernel.org, AJvYcCUqEcLCf2Pnvz+XHz6X79JLbATnuICDbLf2/EukmMEDPyC8dZRKyGPOslX1pDm0a3FeKoDSVzXFOxmji1Fv@vger.kernel.org, AJvYcCV8jmILucFSJwfChJsFs12vqK9BG0mV16Skd3g4f9QbeQcRU6SfUXPJJOUy66Ttg5Rbt8aWrdrQE5dm83kn@vger.kernel.org, AJvYcCX+7aSFhA9IfqHp6PCLqayjsdtpHvnLzMQOr5nrVuiSDaVUs31c91gUqabadzLndQwISbVXvL23@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy73Tqz8VG8W8vQG1LW+pt3glE2n86eG4wZBIC8aRo41nIoyYeZ
-	iP+va2WUWuSJneagi7dHpF5/VGE+iotWufO3flpesU1CJ1R0GykUE9NP
-X-Gm-Gg: ASbGncs4tyH6G08+hxOCShtBpV4aklg5jUYi0TNXlFqIoBH2VEW8iXE/P6HAcDqZnct
-	fYneWeSunWF9avYVvafNqwMubJJNSi7mNfBfULkOgAkWTdcaIxO3UbBCmesGrAm6C6IvxSnTW6w
-	rK5JKbC5NLgj3uFRUp3hvI3ACDoLT6/ChZWms9NP4x9i/z2PM689YAL1uf2SUnwTeTjoAqaXh3r
-	JCXw6i1rX+P1WmTs4AGTTUOrUa4jQkbfU6FQopZo4XBVjMtSMmim8DBJemiFrUrgizuvzsV9euR
-	axmk7y4CAsZ114Naf/XH74ocBqWYhLHfICEauaBqfVX5dcwsxGrmRWB8Rdfv/HpRHnRcPIUij16
-	vAFWSLEVM
-X-Google-Smtp-Source: AGHT+IGGPVZOhGf33+4x/8I48rOosb9DE+Jlj5P0FJFQOP/wdva4gvlvzXjTkAkxs7+rDh5CXvmoLQ==
-X-Received: by 2002:a05:6a20:9187:b0:21f:5598:4c2c with SMTP id adf61e73a8af0-22026d8d928mr13077235637.13.1750600762962;
-        Sun, 22 Jun 2025 06:59:22 -0700 (PDT)
-Received: from devant.antgroup-inc.local ([47.89.83.0])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a46b497sm6004931b3a.6.2025.06.22.06.59.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 06:59:22 -0700 (PDT)
-From: Xuewei Niu <niuxuewei97@gmail.com>
-X-Google-Original-From: Xuewei Niu <niuxuewei.nxw@antgroup.com>
-To: sgarzare@redhat.com
-Cc: davem@davemloft.net,
-	decui@microsoft.com,
-	fupan.lfp@antgroup.com,
-	haiyangz@microsoft.com,
-	jasowang@redhat.com,
-	kvm@vger.kernel.org,
-	kys@microsoft.com,
-	leonardi@redhat.com,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mst@redhat.com,
-	netdev@vger.kernel.org,
-	niuxuewei.nxw@antgroup.com,
-	niuxuewei97@gmail.com,
-	pabeni@redhat.com,
-	stefanha@redhat.com,
-	virtualization@lists.linux.dev,
-	wei.liu@kernel.org,
-	xuanzhuo@linux.alibaba.com
-Subject: Re: [PATCH net-next v3 1/3] vsock: Add support for SIOCINQ ioctl
-Date: Sun, 22 Jun 2025 21:59:10 +0800
-Message-Id: <20250622135910.1555285-1-niuxuewei.nxw@antgroup.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <y465uw5phymt3gbgdxsxlopeyhcbbherjri6b6etl64qhsc4ud@vc2c45mo5zxw>
-References: <y465uw5phymt3gbgdxsxlopeyhcbbherjri6b6etl64qhsc4ud@vc2c45mo5zxw>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHMHnoRa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1547C4CEE3;
+	Sun, 22 Jun 2025 14:08:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750601336;
+	bh=R04QMDq24/57NKiGgo54rF7dGhM/KDMlU/6BuWJA/aM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XHMHnoRaOgQhX76Qe4hRwvuSmM8kZ5dykzw9TdSagcH5XpJYtHx0JtEIJsPG++xWe
+	 Wg6q8wfhzFEEiMoU6KGUr5E7aU+hkd2wf4uDebyzQRKo0fbRU0/JSBG9v8HtKdxKZt
+	 2OdMA2a6CL5/mNEccVmPcDSsbQp+/iOeuKCQNTUxnrTQtxB6ny1e/TU37K9x5GPmZe
+	 t3JjwH9f78SfBR1WjBCbPt2wS8VEqDzAjcP+IGU9Qg1uqTiA74HfrysKU/hHL26oJ+
+	 fOQ+hYOuY5NRnMUQBq3XWThzt4a72MhFMTe6ipnLv/JV2LZB0yjgW+bEytRXUM0b25
+	 65udz60aGGLWA==
+Date: Sun, 22 Jun 2025 15:08:45 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Ana-Maria
+ Cusco <ana-maria.cusco@analog.com>, <lars@metafoo.de>,
+ <Michael.Hennerich@analog.com>, <dlechner@baylibre.com>,
+ <nuno.sa@analog.com>, <andy@kernel.org>, <robh@kernel.org>,
+ <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <linus.walleij@linaro.org>,
+ <brgl@bgdev.pl>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
+ <marcelo.schmitt1@gmail.com>
+Subject: Re: [PATCH v6 02/12] iio: adc: Add basic support for AD4170
+Message-ID: <20250622150845.1558da7e@jic23-huawei>
+In-Reply-To: <51a3055eb4a5c643cc4ced749f452d4e9b64ecf8.1750258776.git.marcelo.schmitt@analog.com>
+References: <cover.1750258776.git.marcelo.schmitt@analog.com>
+	<51a3055eb4a5c643cc4ced749f452d4e9b64ecf8.1750258776.git.marcelo.schmitt@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> ACCin hyper-v maintainers and list since I have a question about hyperv 
-> transport.
-> 
-> On Tue, Jun 17, 2025 at 12:53:44PM +0800, Xuewei Niu wrote:
-> >Add support for SIOCINQ ioctl, indicating the length of bytes unread in the
-> >socket. The value is obtained from `vsock_stream_has_data()`.
-> >
-> >Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
-> >---
-> > net/vmw_vsock/af_vsock.c | 22 ++++++++++++++++++++++
-> > 1 file changed, 22 insertions(+)
-> >
-> >diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-> >index 2e7a3034e965..bae6b89bb5fb 100644
-> >--- a/net/vmw_vsock/af_vsock.c
-> >+++ b/net/vmw_vsock/af_vsock.c
-> >@@ -1389,6 +1389,28 @@ static int vsock_do_ioctl(struct socket *sock, unsigned int cmd,
-> > 	vsk = vsock_sk(sk);
-> >
-> > 	switch (cmd) {
-> >+	case SIOCINQ: {
-> >+		ssize_t n_bytes;
-> >+
-> >+		if (!vsk->transport) {
-> >+			ret = -EOPNOTSUPP;
-> >+			break;
-> >+		}
-> >+
-> >+		if (sock_type_connectible(sk->sk_type) &&
-> >+		    sk->sk_state == TCP_LISTEN) {
-> >+			ret = -EINVAL;
-> >+			break;
-> >+		}
-> >+
-> >+		n_bytes = vsock_stream_has_data(vsk);
-> 
-> Now looks better to me, I just checked transports: vmci and virtio/vhost 
-> returns what we want, but for hyperv we have:
-> 
-> 	static s64 hvs_stream_has_data(struct vsock_sock *vsk)
-> 	{
-> 		struct hvsock *hvs = vsk->trans;
-> 		s64 ret;
-> 
-> 		if (hvs->recv_data_len > 0)
-> 			return 1;
-> 
-> @Hyper-v maintainers: do you know why we don't return `recv_data_len`?
-> Do you think we can do that to support this new feature?
+On Wed, 18 Jun 2025 14:35:38 -0300
+Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
 
-Hi Hyper-v maintainers, could you please take a look at this?
-
-Hi Stefano, if no response, can I fix this issue in the next version?
-
-Thanks,
-Xuewei
- 
-> Thanks,
-> Stefano
+> From: Ana-Maria Cusco <ana-maria.cusco@analog.com>
 > 
-> >+		if (n_bytes < 0) {
-> >+			ret = n_bytes;
-> >+			break;
-> >+		}
-> >+		ret = put_user(n_bytes, arg);
-> >+		break;
-> >+	}
-> > 	case SIOCOUTQ: {
-> > 		ssize_t n_bytes;
-> >
-> >-- 
-> >2.34.1
-> >
+> The AD4170 is a multichannel, low noise, 24-bit precision sigma-delta
+> analog to digital converter. The AD4170 design offers a flexible data
+> acquisition solution with crosspoint multiplexed analog inputs,
+> configurable ADC voltage reference inputs, ultra-low noise integrated PGA,
+> digital filtering, wide range of configurable output data rates, internal
+> oscillator and temperature sensor, four GPIOs, and integrated features for
+> interfacing with load cell weigh scales, RTD, and thermocouple sensors.
+> 
+> Add basic support for the AD4170 ADC with the following features:
+> - Single-shot read.
+> - Analog front end PGA configuration.
+> - Differential and pseudo-differential input configuration.
+> 
+> Signed-off-by: Ana-Maria Cusco <ana-maria.cusco@analog.com>
+> Co-developed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+
+One comment directing you back to some stuff that came in after you'd
+posted this but was in the v5 thread.  The other is a random musing on
+whether this should just use spi_write_then_read() to simplify things
+at the cost of a few extra data copies.  For that I'm not that fussed
+so it is entirely up to you.
+
+Jonathan
+
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index 6516ccb4d63b..d99c35ff9a1c 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -12,6 +12,7 @@ obj-$(CONFIG_AD4000) += ad4000.o
+>  obj-$(CONFIG_AD4030) += ad4030.o
+>  obj-$(CONFIG_AD4080) += ad4080.o
+>  obj-$(CONFIG_AD4130) += ad4130.o
+> +obj-$(CONFIG_AD4170) += ad4170.o
+>  obj-$(CONFIG_AD4695) += ad4695.o
+>  obj-$(CONFIG_AD4851) += ad4851.o
+>  obj-$(CONFIG_AD7091R) += ad7091r-base.o
+> diff --git a/drivers/iio/adc/ad4170.c b/drivers/iio/adc/ad4170.c
+> new file mode 100644
+> index 000000000000..58716ad6e7fc
+> --- /dev/null
+> +++ b/drivers/iio/adc/ad4170.c
+
+
+> +static int ad4170_reg_write(void *context, unsigned int reg, unsigned int val)
+> +{
+> +	struct ad4170_state *st = context;
+> +	unsigned int size;
+> +	int ret;
+> +
+> +	ret = ad4170_get_reg_size(st, reg, &size);
+> +	if (ret)
+> +		return ret;
+> +
+> +	put_unaligned_be16(reg, st->tx_buf);
+> +	switch (size) {
+> +	case 3:
+> +		put_unaligned_be24(val, &st->tx_buf[AD4170_SPI_INST_PHASE_LEN]);
+> +		break;
+> +	case 2:
+> +		put_unaligned_be16(val, &st->tx_buf[AD4170_SPI_INST_PHASE_LEN]);
+> +		break;
+> +	case 1:
+> +		st->tx_buf[AD4170_SPI_INST_PHASE_LEN] = val;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return spi_write(st->spi, st->tx_buf, AD4170_SPI_INST_PHASE_LEN + size);
+
+If we did use the below suggestion and switch the read path to spi_write_then_read()
+we could do the same here (with zero size write). 
+
+Perhaps neither is a change worth doing though.  Up to you.
+
+
+> +}
+> +
+> +static int ad4170_reg_read(void *context, unsigned int reg, unsigned int *val)
+> +{
+> +	struct ad4170_state *st = context;
+> +	struct spi_transfer t[] = {
+> +		{
+> +			.tx_buf = st->tx_buf,
+> +			.len = AD4170_SPI_INST_PHASE_LEN,
+> +		},
+> +		{
+> +			.rx_buf = st->rx_buf,
+> +		},
+
+I wonder....  Would we better off just using spi_write_then_read() here
+given they are all fairly small register sizes.  The big advantage
+is we can skip messing around with dma safe buffers as spi_write_then_read
+always bounces the data through some buffers the SPI core creates for this
+purpose.
+
+> +	};
+> +	unsigned int size;
+> +	int ret;
+> +
+> +	ret = ad4170_get_reg_size(st, reg, &size);
+> +	if (ret)
+> +		return ret;
+> +
+> +	put_unaligned_be16(AD4170_REG_READ_MASK | reg, st->tx_buf);
+> +	t[1].len = size;
+> +
+> +	ret = spi_sync_transfer(st->spi, t, ARRAY_SIZE(t));
+> +	if (ret)
+> +		return ret;
+> +
+> +	switch (size) {
+> +	case 3:
+> +		*val = get_unaligned_be24(st->rx_buf);
+> +		return 0;
+> +	case 2:
+> +		*val = get_unaligned_be16(st->rx_buf);
+> +		return 0;
+> +	case 1:
+> +		*val = st->rx_buf[0];
+> +		return 0;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+
+
+
+> +static int ad4170_parse_adc_channel_type(struct device *dev,
+> +					 struct fwnode_handle *child,
+> +					 struct iio_chan_spec *chan)
+> +{
+> +	const char *propname, *propname2;
+> +	int ret, ret2;
+> +	u32 pins[2];
+> +
+> +	/* Parse pseudo-differential channel configuration */
+> +	propname = "single-channel";
+> +	propname2 = "common-mode-channel";
+> +	ret = fwnode_property_read_u32(child, propname, &pins[0]);
+> +	ret2 = fwnode_property_read_u32(child, propname2, &pins[1]);
+> +	if (!ret && ret2)
+> +		return dev_err_probe(dev, ret,
+ret isn't appropriate to use here as it's 0 so you'll report success.
+> +				     "When %s is defined, %s must be defined too\n",
+> +				     propname, propname2);
+> +
+> +	if (!ret && !ret2) {
+
+See feedback following from Dan's email in v5 thread that came in just after you'd
+posted this.
+
+Andy was keen that we do this differently and I think his suggestion makes sense.
+
+> +		chan->differential = false;
+> +		chan->channel = pins[0];
+> +		chan->channel2 = pins[1];
+> +		return 0;
+> +	}
+> +	/* Failed to parse pseudo-diff chan props so try diff chan */
+> +
+> +	/* Parse differential channel configuration */
+> +	propname2 = "diff-channels";
+> +	ret = fwnode_property_read_u32_array(child, propname2, pins,
+> +					     ARRAY_SIZE(pins));
+> +	if (!ret) {
+> +		chan->differential = true;
+> +		chan->channel = pins[0];
+> +		chan->channel2 = pins[1];
+> +		return 0;
+> +	}
+> +	return dev_err_probe(dev, ret, "Channel must define one of %s or %s.\n",
+> +			     propname, propname2);
+> +}
+
+
