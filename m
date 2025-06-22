@@ -1,156 +1,138 @@
-Received: from panther.cherry.relay.mailchannels.net (panther.cherry.relay.mailchannels.net [23.83.223.141])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7601E485;
-	Sun, 22 Jun 2025 18:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100FF1E485;
+	Sun, 22 Jun 2025 18:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750616819; cv=pass; b=hLjGFZX7SXmmn6pEu1qBwKhQpzTamKwY5M0m+Q7Jo2lNSX3OSB/2QMHIwbgMwnSS75z0RftzfA1Nbc6picZkUC+D6ErEZVthWxAlU1nQwuUijl1gIFFQBmGPiK78hHlTjDKui0raTH+rF98peFQQNC6w3EK25ZdlA+eIpDGptCc=
+	t=1750616920; cv=pass; b=JwyBGBzmb3yJ24iNGK1Q55FDR2gjnKqvI6eyebPqFOQk4aE2Ctycwwwj6oL42B+divu2uhHcnwRfSpaeNNEOGg5Zkm7tXX9LkJZdoueNvoEAjgRqPcaSiN8m0Y3nUgnawmGh+UBw3c/Xr94sleUF1MOE7HAlUkOBL5rZGIrijtE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750616819; c=relaxed/simple;
-	bh=Qa2TloQybQQfBMHL/md68YrvWj606JET01tnBUBBtLU=;
-	h=From:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc:Date; b=bQCJN+bb9oxxS7QljDp4XpZEnV28L5yp9UZ22wKwuSKpg5ISi2eJGKd0C0N7Coabq3N4T8JgKYZJCiHWR/njFLYp/uwG1OIMh6t3lLMjUTzGEqfSarCcSbc/K7ZNwmvY0kjxohV42c0bgdP0gofCpHrhvKz7HohQ6weEVrPh2Ss=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com; spf=pass smtp.mailfrom=smankusors.com; dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b=NKLU18YQ; arc=pass smtp.client-ip=23.83.223.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smankusors.com
+	s=arc-20240116; t=1750616920; c=relaxed/simple;
+	bh=IVAVlita6boleZEKUhomUXcQJqFjKltBqVXiNpA5MZs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HcQWlZEkS3gj/KBgjWOMVf+zfzil0wIslNIWTgujnOdsH1A0/43Umdow7bfl34rYiWzvouU2rttg3r4Rb22CYAaHjzBjnFN7Fc5jr52D/12Es/vFZH4jE+e4h3nDK6VDqRSj9Y8caOatpUKoBb6BMwseqacZ/y+SUTnT7oEt3fY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=EdsCG3DA; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b="NKLU18YQ"
-X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 060ED845776;
-	Sun, 22 Jun 2025 18:26:51 +0000 (UTC)
-Received: from fr-int-smtpout7.hostinger.io (trex-green-0.trex.outbound.svc.cluster.local [100.108.88.219])
-	(Authenticated sender: hostingeremail)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 01E53845790;
-	Sun, 22 Jun 2025 18:26:48 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1750616810; a=rsa-sha256;
-	cv=none;
-	b=h8GFnMx+Zgtd4q0G54rocllNeh+n9MvA8nkXiThDxv4+ydpzx86m3ZNpEQhtTFeS6TfRtj
-	8pu+r9yvH/SpW512a0+ajIv/6GuoY5exh1yU2NZiujHL5zb4iAJtXhs5mqm0Ip9mJNpo54
-	bFwnZ67NCvhEDvcBWoG/ZQMVKVYrfi9Zcrg9uQiH3DZddekiGaEdEoiuHVOWWy/7wgUNAy
-	GOqOf0hqVU8h13Qb4gBJP77RDIp8V1JKMJGpe7upRxrWHvY1L40Gmvfs5JwvStsR0GXOZ+
-	5W8xe++J8C4tovdUp/VkYQXxex+O+wpEy2k2jsgraJA9l5k+G4Gbfs7Zbx8yzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1750616810;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=guP/zBtP1vNwG7seMSXtY5a0H4wpmEXu7K56UvsSjGU=;
-	b=FJc+hhU5J301+3C7vzCKHZSme+v8Upc8eEgINSIMsZcNih6kuCm6gEKfwXd4vhxNo9si3W
-	+JDaO1OsMTieLrFsM2FVZ4Hxe2Gd8W7Pm8bXsQ3pGLbupJrPJ7FFPj2VEAW4PptB0V8XCQ
-	zP0il6Tk50ABhQINdRBy2z0fHR380hSmE/E2mlFPLhav2S4a1kr0aYPk7HBmtLcgGky5cg
-	e6vIuryQcvfZHrL2D+bQDEQkVWwi0xBsofJJlcQ63N9wjbNFxuJW6FKGUkZuw8XJ7v2Mmb
-	p59PIfH2xybN1xvdcibajCsw6cSLsLAKEHddXSW4LxBH7F7mynyiYZvLsBC40w==
-ARC-Authentication-Results: i=1;
-	rspamd-6597f9cdc7-tj99m;
-	auth=pass smtp.auth=hostingeremail smtp.mailfrom=linux@smankusors.com
-X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: hostingeremail|x-authuser|linux@smankusors.com
-X-MailChannels-Auth-Id: hostingeremail
-X-Celery-Supply: 02810db92af57a62_1750616810846_91599388
-X-MC-Loop-Signature: 1750616810846:2239689500
-X-MC-Ingress-Time: 1750616810846
-Received: from fr-int-smtpout7.hostinger.io (fr-int-smtpout7.hostinger.io
- [89.116.146.203])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.108.88.219 (trex/7.0.3);
-	Sun, 22 Jun 2025 18:26:50 +0000
-Received: from [172.17.0.2] (unknown [36.79.123.39])
-	(Authenticated sender: linux@smankusors.com)
-	by smtp.hostinger.com (smtp.hostinger.com) with ESMTPSA id 4bQKRm4wH3zKLLHc;
-	Sun, 22 Jun 2025 18:26:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smankusors.com;
-	s=hostingermail-a; t=1750616806;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=guP/zBtP1vNwG7seMSXtY5a0H4wpmEXu7K56UvsSjGU=;
-	b=NKLU18YQk75jFqmaFT7Zon07El45dARH1i90DJ172iPekel3pj8T/oTNVcCEMZ/kwD2iCU
-	LjX5lV4asdXceaAuF0SsxS1o5JSh6rOU1K96N2bJCeMA8yeZ2nfUIlkLRM9htOCeLfIY6B
-	M7Fm3Y/Bnx339ZpxCS7CF8oTCxkhZ8nPSNJYUTaIG1bpCF3CPLtEvkhCuAzgBq59t5ebXT
-	XjPeHn1y1Ky2cp9eBY1lh7liqStXyoKRmVhVNesWXOkP2W4lDmPbaNbkSH+kQJUFB+MehS
-	gcjTneDgE0nsLgrPn9lJJEThLba1wNxqSrYc2XTyC/2zeSPJSDmsmNEdfDlQ0g==
-From: Antony Kurniawan Soemardi <linux@smankusors.com>
-Subject: [PATCH v2 3/5] ARM: dts: qcom: msm8960: disable gsbi1 and gsbi5
- nodes in msm8960 dtsi
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="EdsCG3DA"
+ARC-Seal: i=1; a=rsa-sha256; t=1750616909; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=W4rLbKE6ieDPddQO9QcLPMRmN1h5QWdVYfim2QjTPQVU2qgRJ4hL9cE+4C+HEfkrSjWUtdHMpxiZPvUkl+z+M3tc4YqWKc+5DnstLUtH9wh5tfEgUvCsI8etlHWMGV8bLICtED1EuR3Lep/z6HtNckmHBb3PUZiBVucyIFPzTt0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750616909; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=V04dt+KAyB6LqxTY9VwDx+bR62B93/B5qtEy0zoMOGo=; 
+	b=mk1bkPTWnLA1/QKQNIJ7YT74wcaSUyKZhYgy/skqWIarxwn57DfodbswkroGbRdEjoxGmG6EUSDqfGZzJgAhSuaSZOmCUK6OGPTDyz47fNJOTogziBhoa/p2GEyfbHCn21LVqnldXgqlW7wBxtAEOsduQt04M+fNJDTCrLpyDg0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750616909;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=V04dt+KAyB6LqxTY9VwDx+bR62B93/B5qtEy0zoMOGo=;
+	b=EdsCG3DAtTxa8aNaJTTCbtmAXd3vO+SEqJyjeP5km21qh2OQTn/t+nTIrM6Yj+iJ
+	JSat40NrBeHD+7+UALqM6js9r++be7SVKXEOECeAcsI8bV6iaihCEt92iC+gXgbH0od
+	buDJJikdN3oz2t09CPDx7wO+MZ06lK6Zf/VJetLw=
+Received: by mx.zohomail.com with SMTPS id 1750616907711893.5961968072164;
+	Sun, 22 Jun 2025 11:28:27 -0700 (PDT)
+Received: by venus (Postfix, from userid 1000)
+	id 12774180957; Sun, 22 Jun 2025 20:28:23 +0200 (CEST)
+Date: Sun, 22 Jun 2025 20:28:22 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Casey Connolly <casey.connolly@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 06/11] power: supply: qcom_smbx: respect battery
+ charge-term-current-microamp
+Message-ID: <6vcr6kvd5ryh3fj4j27hkl7742f4ooy4sns77pcudgox3glqyc@dz4on64p4tif>
+References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
+ <20250619-smb2-smb5-support-v1-6-ac5dec51b6e1@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-msm8960-sdcard-v2-3-340a5e8f7df0@smankusors.com>
-References: <20250623-msm8960-sdcard-v2-0-340a5e8f7df0@smankusors.com>
-In-Reply-To: <20250623-msm8960-sdcard-v2-0-340a5e8f7df0@smankusors.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Antony Kurniawan Soemardi <linux@smankusors.com>, 
- Max Shevchenko <wctrl@proton.me>, Rudraksha Gupta <guptarud@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750616795; l=1510;
- i=linux@smankusors.com; s=20250609; h=from:subject:message-id;
- bh=Qa2TloQybQQfBMHL/md68YrvWj606JET01tnBUBBtLU=;
- b=bESHLXO9JgtAIKUCgJLe3vpLFVhU4TUHdYnRgUoJm77cOAqyYkbMGkh8pIlV6rQ59eHSQhqGX
- 5WmL8y1kegLCOkyCU6AWui45LsIhpbn6cAgHd26iWGxOv1ImuccFoyP
-X-Developer-Key: i=linux@smankusors.com; a=ed25519;
- pk=65wTy06fJl2/h/EJwjr704YG+yjHFhZObJBWzzK+N00=
-Date: Sun, 22 Jun 2025 18:26:44 +0000 (UTC)
-X-CM-Envelope: MS4xfEQZ8komricnluPPkg9eCwgyIoppsWsKVU36E49C7TpmhXPWhctIE1faMexVNTAI5FsNRHavC8W6wj42QkPj6FG91hSL3jHEdzugmSWd+3gYqanwXhKI v6hE/N6QxzaBHjiodfy0LD33P9SDLZ50YOPVldCZjtKFXyocLMkwkWnoPp6aI3GZwyUQys8qv4P+tKHlit4U7gKOyeosV0PQMQiEhaWFdxfunaU9Laimz7Ok 2MDInrc9ZxdGWIf+roIwHvyi9d9k6eGPMC1SDKYSWknpfnrVdKnfxW8hRAbkaggFaAuVqmp9NDn4kYpde3wa5v9DlTGtjH3xD0kq0UtxXcjUVydeCHCFXzoT diN6elkzab2QJe0ziPliVuR6YLIpOBf7ddbgBTMF0i9dHbFatYkO5L30IKlYU9qQucFqS1/UXBxXizvP9cUkMOe3dm57NtgEBzX+oTxOauRW3g183++zXXAt WtEJ8Pde0Ro1fKbAD+COFmEt2gKJ2ZPtQDXcWFHIMw4wT9DN4GacWObwJyM=
-X-CM-Analysis: v=2.4 cv=Vv1xAP2n c=1 sm=1 tr=0 ts=68584ae6 a=vFgqIyFt8cetXi1S0ACNwg==:117 a=vFgqIyFt8cetXi1S0ACNwg==:17 a=IkcTkHD0fZMA:10 a=wxLWbCv9AAAA:8 a=DTDndxlCylVmyPESURwA:9 a=QEXdDO2ut3YA:10 a=QJY96suAAestDpCc5Gi9:22
-X-AuthUser: linux@smankusors.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="uim6l7as6sa5ckne"
+Content-Disposition: inline
+In-Reply-To: <20250619-smb2-smb5-support-v1-6-ac5dec51b6e1@linaro.org>
+X-Zoho-Virus-Status: 1
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.4.3/250.601.42
+X-ZohoMailClient: External
 
-Not all devices use gsbi1 and gsbi5, so these nodes should be disabled
-in the SoC dtsi, following the existing pattern used for gsbi3. The
-upstream samsung-expressatt and msm8960-cdp devices already have status
-"okay" for these nodes, so this change should not break existing
-functionality.
 
-This eliminates the following error messages when gsbi nodes are not
-configured in the board's device tree:
-[    1.109723] gsbi 16000000.gsbi: missing mode configuration
-[    1.109797] gsbi 16000000.gsbi: probe with driver gsbi failed with error -22
+--uim6l7as6sa5ckne
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 06/11] power: supply: qcom_smbx: respect battery
+ charge-term-current-microamp
+MIME-Version: 1.0
 
-(Note: Xperia SP doesn't use gsbi5)
+Hi,
 
-Signed-off-by: Antony Kurniawan Soemardi <linux@smankusors.com>
----
- arch/arm/boot/dts/qcom/qcom-msm8960.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+On Thu, Jun 19, 2025 at 04:55:14PM +0200, Casey Connolly wrote:
+> Respect the max current limit set on the battery node, one some devices
+> this is set conservatively to avoid overheating since they only have a
+> single charger IC (instead of two in parallel).
+>=20
+> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
+> ---
+>  drivers/power/supply/qcom_smbx.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/power/supply/qcom_smbx.c b/drivers/power/supply/qcom=
+_smbx.c
+> index fc2a8e20435639a9da4d966c43271beaeb57a03f..7fc232fa7260a7422ac12a486=
+86cd7d396edd9a4 100644
+> --- a/drivers/power/supply/qcom_smbx.c
+> +++ b/drivers/power/supply/qcom_smbx.c
+> @@ -583,9 +583,9 @@ static void smb_status_change_work(struct work_struct=
+ *work)
+>  	case POWER_SUPPLY_USB_TYPE_CDP:
+>  		current_ua =3D CDP_CURRENT_UA;
+>  		break;
+>  	case POWER_SUPPLY_USB_TYPE_DCP:
+> -		current_ua =3D DCP_CURRENT_UA;
+> +		current_ua =3D chip->batt_info->constant_charge_current_max_ua;
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
-index 588ac6c7a51a667202550432bee14fa14f3f74e7..4916e0d1f528a9320b66fb5bce3928beaa203e5e 100644
---- a/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
-@@ -322,6 +322,8 @@ gsbi5: gsbi@16400000 {
- 
- 			syscon-tcsr = <&tcsr>;
- 
-+			status = "disabled";
-+
- 			gsbi5_serial: serial@16440000 {
- 				compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
- 				reg = <0x16440000 0x1000>,
-@@ -445,6 +447,8 @@ gsbi1: gsbi@16000000 {
- 			#size-cells = <1>;
- 			ranges;
- 
-+			status = "disabled";
-+
- 			gsbi1_spi: spi@16080000 {
- 				compatible = "qcom,spi-qup-v1.1.1";
- 				#address-cells = <1>;
+"constant_charge_current_max_ua" is current information for the
+battery. But current_ua is written to chip->base + USBIN_CURRENT_LIMIT_CFG,
+which sounds like it would be current limit on the USB side?
 
--- 
-2.34.1
+Assuming the charger is using a buck converter to get from USB
+voltage to battery voltage (very likely) the currents are
+different.
 
+Greetings,
+
+-- Sebastian
+
+--uim6l7as6sa5ckne
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhYS0MACgkQ2O7X88g7
++poJ5RAAlJm8M2KbvbPK0Jp7ixlFsjOIdtNmwg6exfKP4ntZZXiT+z2yxRwOmjcs
+U76XIhZZ52RWIo07i1RW3p8kAHJBYct3vHllSIFEsLO2BuKiQ0ck/dTxPdnFe78F
+P4w8sPDcUAbYCqYAKpNgyBrvOV5mXRZjrcjsY09EM0WcbODK3zREQHTTxrLDHbmG
+UrZiAjLR0CxE4LgChgYD3ttY6vZaQn/HI37qT7F8tUHdsJXC/x7Ts+T3qLpW+RMB
+NOBZWV0jWuCrdDKD+uc5gRxriVh2qSDzbPgo+kq48aM5LLB5JYcB2DsdOofNaSad
+vLIeOsfrRzUFF+OdfzpH8crt4XgutGA3kVYX7tJBkSPceoLc96yS+0wTJ0m2JGGe
+Wuz5EvBrZv4t1MqrFUuS79QRN+xN0fi8jJhjqxIER9z6Jo7MUfTFH9+qW7bt32Uf
+kWokCxvjH3KCqSQCLfBwEQ3enpn88g/2TM1WH5PV//KNx/XJF3xOOa40DFgm0/F4
+dF+3emuIFKo5cmA/bC2nA7O+FTZvIJHNj5XfNiRKne9Sd7Y3lCbzkP0m/FL7hIlj
+hVi7cEdewCC/IHJErzLgpJCF7Y5mmkgg3lQm5EixhZT4TduSWa8KAUEPEZxI+qal
+JCPOGzNaLLnFy5Lj2NkwgP+CKMpIZWZutXoOd7IwDEuVqS1Ysf8=
+=vj9o
+-----END PGP SIGNATURE-----
+
+--uim6l7as6sa5ckne--
