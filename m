@@ -1,102 +1,121 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5398F6C;
-	Sun, 22 Jun 2025 11:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CEF7494;
+	Sun, 22 Jun 2025 11:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750591969; cv=none; b=awOoK5vU8yua6PR+evA9mwe++Io43YBSg9S6kuAci9kH66+q5C7szLv2pvVhtkjFTLUuxsU5+nXThWpTGrFzS9LjTPyNR6cIYWrqmfYxgVL6XeftbWcUJwrZpP+6uFBVa6WBd8GTkxuNZnGpk8O8P5y8zXN/bK7rTH1J0NlG8qc=
+	t=1750592281; cv=none; b=bQhanTLT6SnJ8RujiwpNTx8TltSkX9n+7aekDp9HjN7G6fBkR2eUkGd8Ft1V4lZBpJwqaYnfwV7FyJIzs0/uhtAB7vSZ/yxdrXcykxugzC/CvW2Weekex7nHPqcl1czP2/RbIyXXG95sxLqix83r8/75fGHZKjYGfGspnmbHpKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750591969; c=relaxed/simple;
-	bh=IJiv3hE1wDMzwaAq3JfeL4/9M01bCH9YX87/pK7mNnU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Bjl2skvNwiSzca/JEWg6IGLJtf/ZgvCjeH14ehBN23wtKmjqiNRIeNi4g8Uguuo3boJ+QjSJXuReJzgMRO2h5dqA/Pu2umWysicC+1drahFqsqq0WjwjBlFO7Jd37+nQyuyrL5A48DH066h0nKNGE/UQgt3kgKSNSgvUu0Np0kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OUeTKK1w; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750592281; c=relaxed/simple;
+	bh=EVhJHT4BylZuiCv4RkBjMQoFT1U+kck/kqVZcxToo4o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lvddCEKJC5jTjcrOYW+3MGp0YPOBoIQZSjJbjNvif1y1kbbifrbHPrh194dzLUgPw/afahJ1Pc3vpnF1n0ZrSE/fR602mfEzuDZXfroNQmBwWUvQsnkntPAk5t78OH6fqR1RBJ6oRF4SL0gnyIVI+G0McVymWLG8qWuVeAvu2Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FZmWfT0C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OUeTKK1w"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-236470b2dceso33607135ad.0;
-        Sun, 22 Jun 2025 04:32:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750591967; x=1751196767; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JxlHCW5J5W//sSxxNrD+r8cZizDDAra8GMTsBk/cjyY=;
-        b=OUeTKK1wYEPKsGN2aZdbxJQXtXXYZfGkw75d4Xr8EFRBf/zae5kuRYQn9hW1rUVvXD
-         rLHuyUssm4xLblOf00/5NNRhgcTxfyTfNG2W1YkccXuslor1H8tqwBB/gZto5T49kFbm
-         Hf0pjnets7FVrLXODCLW3tJz2KTKouVFdkr9JaRU+EgDvgLK0jwJoIYBWhBLXBJyAWSC
-         nmvdF0avuMe9ivzgITkmhEIu2KPxXSYsBPY8yHgBw1NTJ4MEPkTU30+nIYPrgpIvsQ48
-         WSNTelrGKq4GzTG4RlZgfcWsLuOlgtp/eUqDY3WidrZY8PPRh1f39Z29KXU6dpx50lWP
-         6Ccg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750591967; x=1751196767;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JxlHCW5J5W//sSxxNrD+r8cZizDDAra8GMTsBk/cjyY=;
-        b=qyw+u+9fQsunrD6pgsAUDmgVLamJ4q5Jgpl41YXpHuwapoxy2b3gAGzhqXh3jwHTw/
-         kPKRgOhLP7O++P+xIX87GFbQwGlk796qsZO/Rs65o90UcQi1fmHpI991fj5RYhDhHX6X
-         fPUWpdD0qQfW8xSYf+nKzzVkr9WUnsHAKlHOWibkcaaUrKumpRaVYy4QixCIfA/nzURG
-         Q9A5r0WLxcuQkR7WpzEQO6CNW4jW0Wm/nWyEqGfnlXLnzNkpjAR/0Ecyxgk6L9LD2Syx
-         N5ONZb70rOJrYYDClCwOGrjLx9YyMJUzuryC8i5kpIaA6v10HLsx4jJvk02dWtmTGFz1
-         ZlKw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXbNTqvAulW5NADsgbOyXrk3zfSvUBTZaqGtLSu2jEtBes0cL3SmelYvf/jhVCf+wTffaTJbllqj/VWTzD@vger.kernel.org, AJvYcCVxF0MD1wwpXkVJx7IJHjmV+ZP7msZfKxVHWAw4fc2K1Nga8W+p2anQFReEyc2VsEMndjR8RWOWh+ICzw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrhqeGRuUdSUK1jZQs+2S0p50F6wyFH0DojMdK++4QtSgYGcvc
-	5LSh5cOPGKndgJPIbYpPjoCDvweF7l61wG+2n8eOm3oXFSSo5Rp+YNvi
-X-Gm-Gg: ASbGncvNreVfmzKubmU8UTBgXsCQbg9yv8MKLKhGAZg2FsW95+hJfjfb+v+FCBGqoPT
-	NUZFyw3CdVrPgX5Mmtiv+N8KcvLtEm2qImmVnxS4X290XeGLPpt60aRyg1shOKuaMxu0anD1Dlp
-	TL8oung1N5uMjS7EW0jbOdAbJennZrhOxbxCL52OhD7xFdQfLwQbz66FYMsn9z+Gy3IV6BDZNhv
-	gSXaGzeLkJbY/Hyk1wvaZU2oQD1g9EZ4/cH5dT4AwJJhCMKC+FTy8TdykSjqsgF/roiK+cPiS8L
-	jwKIB9eTw7q8cqR0MSm6Yifr1W1mYxYHZ49RjXpMLjMreN/Av0IUHR9gNFAgulKyMnAC6HF5flg
-	Wf06aPyE8dg==
-X-Google-Smtp-Source: AGHT+IHHFbj/kq9EPq21LTyPgUqm27w+L1j9eV2b86yHj5xiuvp6tZ/8OE0FT2bcCqrou9weIAS9jg==
-X-Received: by 2002:a17:902:f68b:b0:236:6f5f:cab4 with SMTP id d9443c01a7336-237d9875dffmr152612645ad.5.1750591967141;
-        Sun, 22 Jun 2025 04:32:47 -0700 (PDT)
-Received: from danascape.tail34aafc.ts.net ([2402:e280:218d:2e5:cdf6:1ef3:8163:b6ad])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83c0b61sm59506555ad.54.2025.06.22.04.32.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 04:32:46 -0700 (PDT)
-From: Saalim Quadri <danascape@gmail.com>
-To: lains@riseup.net
-Cc: jikos@kernel.org,
-	bentiss@kernel.org,
-	gregkh@linuxfoundation.org,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC] Writing a Driver for Xinmeng M71 Keyboard (Battery Status Support)
-Date: Sun, 22 Jun 2025 17:02:42 +0530
-Message-Id: <20250622113242.183562-1-danascape@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FZmWfT0C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC768C4CEE3;
+	Sun, 22 Jun 2025 11:37:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750592280;
+	bh=EVhJHT4BylZuiCv4RkBjMQoFT1U+kck/kqVZcxToo4o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FZmWfT0Ca9vRcd4BZesfyAfklg8czTZO78M4DSImpOR/ylw7Mr7TXbzDcDe/bhOOG
+	 jB4qcEmKY1WmkH3kE4qtxWGjP3EcIfeh3S70TG+BTc0pN2trECdwksfpcqxxAs1/Y/
+	 zkK+fhbGW4eJ9yRf2zG7pH/a3vvN5LW1IvyovUhBG+mQn+W5sg1mBmZeqxUsrctc4U
+	 KQjtneOiLMaTMDJQ7/woWVh3gAtmPDmFZVv/7lw+5YkNgg8gu0ZJLa7NMHYjrZpuiT
+	 rjlzZTHbhy0UT/Ww3C2jblZLryFpYV/Bqe+eXezJoGb8ddffFycSjbp7beFqBwIst7
+	 XidB66JHfWzpA==
+Date: Sun, 22 Jun 2025 12:37:52 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+ corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
+ Michael.Hennerich@analog.com, bagasdotme@gmail.com,
+ linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 7/8] iio: accel: adxl313: add AC coupled
+ activity/inactivity events
+Message-ID: <20250622123752.1834fbe2@jic23-huawei>
+In-Reply-To: <20250615222258.117771-8-l.rubusch@gmail.com>
+References: <20250615222258.117771-1-l.rubusch@gmail.com>
+	<20250615222258.117771-8-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello everyone,
+On Sun, 15 Jun 2025 22:22:57 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-I'm currently working with a Xinmeng M71 wireless keyboard, which is recognized by the kernel as a hid-generic device and functions well.
+> Introduce AC-coupled activity and inactivity as MAG_ADAPTIVE events.
+> This adds a new set of threshold and duration configuration options,
+> ensures proper handling of event disabling, and extends the use of the
+> link bit to support complementary event configurations.
+> 
+> For example, either ACTIVITY or ACTIVITY_AC can be enabled, but only the
+> most recently set configuration will remain active. Disabling ACTIVITY
+> will have no effect if ACTIVITY_AC is currently enabled, as the event
+> types must match (i.e., ACTIVITY_AC must be explicitly disabled). When
+> either INACTIVITY or INACTIVITY_AC is enabled alongside an activity
+> event, the link bit is set.
+> 
+> With the link bit and auto-sleep enabled, activity and inactivity events
+> represent changes in the sensor's power-saving state and are only
+> triggered upon actual state transitions. Since AC coupling uses separate
+> bits for activity and inactivity, each can be configured independently.
+> For instance, ACTIVITY can be linked with INACTIVITY_AC.
+> 
+> If one of the linked events is disabled, the link bit is cleared. In
+> that case, the remaining event will no longer reflect a state transition
+> but will instead trigger based on periodic inactivity or whenever the
+> activity threshold is exceeded.
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
 
-I'd like to extend its support in Linux by writing a driver that can expose its battery status to userspace,
-I used hidtools to record descriptors of the keyboards, I discharged my keyboard over the week and charged it and recorded the responses from it,
-like when it started charging/discharging, I saw hex values change reporting me the percentage of the charge
+One small suggestion below.
 
-E: 000002.772731 20 13 0a 01 00 04 05 63 01 00 00 00 00 00 00 00 00 00 00 00 8b
-# ReportID: 19 /Array ['0a', '01', '0xff020002', '04', '05', '63', '11', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '9b'] 
-E: 000005.642942 20 13 0a 01 00 04 05 63 11 00 00 00 00 00 00 00 00 00 00 00 9b
-# ReportID: 19 /Array ['0a', '01', '0xff020002', '04', '05', '64', '11', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '0xff020002', '9c'] 
-E: 000005.860767 20 13 0a 01 00 04 05 64 11 00 00 00 00 00 00 00 00 00 00 00 9c
+>  
+>  static int adxl313_set_act_inact_linkbit(struct adxl313_data *data, bool en)
+>  {
+> -	int act_en, inact_en;
+> +	int act_en, inact_en, act_ac_en, inact_ac_en;
+>  
+>  	act_en = adxl313_is_act_inact_en(data, ADXL313_ACTIVITY);
+>  	if (act_en < 0)
+>  		return act_en;
+>  
+> +	act_ac_en = adxl313_is_act_inact_en(data, ADXL313_ACTIVITY_AC);
+> +	if (act_ac_en < 0)
+> +		return act_ac_en;
+> +
+> +	act_en = act_en || act_ac_en;
 
-I would appreciate guidance on, how can I continue this, I am familiar with Linux Kernel and writing drivers, but would like to ask some pointers regarding the same.
-I saw a reference that logitech HID driver uses it, but it looked quite complex to me.
+All ends up a little confusing as act_en changes meaning as it is built
+up.  Maybe better to just have act_dc_en in earlier patch then so
+the boolean complexity all in one place?...
 
-I'm comfortable writing kernel C code but relatively new to the HID subsystem. Any documentation pointers, example patches, or suggestions to get started would be highly appreciated.
+> +
+>  	inact_en = adxl313_is_act_inact_en(data, ADXL313_INACTIVITY);
+>  	if (inact_en < 0)
+>  		return inact_en;
+>  
+> +	inact_ac_en = adxl313_is_act_inact_en(data, ADXL313_INACTIVITY_AC);
+> +	if (inact_ac_en < 0)
+> +		return inact_ac_en;
+> +
+> +	inact_en = inact_en || inact_ac_en;
+> +
+>  	en = en && act_en && inact_en;
 
-Looking forward to your responses.
+	en = en && (act_dc_en || act_ac_en) && (inact_dc_en || inact_ac_en);
 
-Thank you very much,
+>  
+>  	return regmap_assign_bits(data->regmap, ADXL313_REG_POWER_CTL,
 
-Sincerely,
-Saalim Quadri
+
