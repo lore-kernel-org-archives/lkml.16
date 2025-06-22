@@ -1,125 +1,103 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFCC6136;
-	Sun, 22 Jun 2025 23:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6C735977;
+	Sun, 22 Jun 2025 23:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750633507; cv=none; b=Og/8CMn8LGrLaHDj/CpzMZtp420ubMMlktoX+Y4P5Do9uKu3sRlZi50jhoHc5qf497MVmxClySaT9RHI6UWQlKbSNyZO72bXwhZqIRGY7b3gcbD6jPNjkcH4uvExPkd18h1Zq2mHF6541+rq/fhh+X7ur+Yyw9LEmaWhQPlgHHQ=
+	t=1750633553; cv=none; b=Wi75Ie2BsoV1K3jkiu2f/6HplA1WRshoJr3hZexvEvjWLiy9RnB8TntWhGQaul3YwqpoY2lY1y0VyMbSMp4zI44GREmV9aHLkoNwh930HWhY8ItIIwvZoNiuSCgFvizWrEsb4TewrnzGvK0sEmzgtaSxzGKyX+wX7u3/3j0u72Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750633507; c=relaxed/simple;
-	bh=5HaHmqv+P4SRKqzXBjXeuA0vZp8q7hXULmBQXltKzVU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ociipFWH4Ow+7Kbved/J/vNUsEIbxZV1Eb7d1MOXnBjEh+YhNVsCwtjKneazzhE7/FjFRcWAi/hjs0fpgjGt3Ti8akykDEIrQt2Uz9v/L3zJagMaTTMaNFsy5qNSFu1FctpVokCuftEmF6bP0ILFOth840+am0u0XJAlRBEiGRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MKKH9x45; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750633553; c=relaxed/simple;
+	bh=PseveSieBkz6aK3pTCE1wpNXkrVYYBVptg5kuZ6+eEU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D6YKlfsTvTqjO97bN1kZ6RZMr6dyzY/P89bjMjcWoiquYiscWA6UC5k2U1n68kcCrK4irwoB/kDd3lvCSqbgcJEmrPw7CkiIaK/1g7ap4avU/1VFZN6ZGzGt/87TZjUXixjUOdXY9GZpDxCc6iFFQA/xq3PAuLmEopEwTvCNsNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I0YFAydG; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKKH9x45"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7490acf57b9so1734767b3a.2;
-        Sun, 22 Jun 2025 16:05:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750633506; x=1751238306; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+8WiigqwKQpH8MPpBrzVD32bylw5zlv3hORq0Em6I+o=;
-        b=MKKH9x45x22YqlySoGEGOY2dHsRhN6aD52VQasMWOnuhsfpgWQRASlvBZGmQ3sXu7K
-         t26qdDFgeD2/FMF7YX35CFuQaK/JJG6uRS07FwPp9fnsCe1J147c8dxvViHmFY4Re2Lj
-         YSDvxoj29o0iRpZWh/1sMeA7TE7ByDCMpeBg8ygTfhLmhuXjstE4SIzHO4sOnwKN6wYi
-         +MXy+HcBgeUjPPlMaMnVp+5BVj2nB6TDLthAfQHtkMcSZZyBUw1t4plPDUprpWuoSFJq
-         5ysnXkLRXIrvYvdkFgHjuBZFifGeMCzGo5XQxizRUKe0TBapwhuhlKg7/1d60EaqXKEx
-         xfog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750633506; x=1751238306;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+8WiigqwKQpH8MPpBrzVD32bylw5zlv3hORq0Em6I+o=;
-        b=f7jvMabOkVnKtbzef20j4HNK3Zw5F59dbqIVHYcRpPWvkJK8M9ocvmZI2EDk+wYtmM
-         eqv1PQ1kPQ4AnqTCQkclTJNL//y7SC2nJKkhYpcYXQgxNu7RCEQ/tysEYIFg0g9T7+G5
-         H1vSJq1sWM6yy9l+ZnQK5BsHkY7z1r0RJZgTnoweLhq0j/P/YWhhvUvrIvrUBf0dWIcZ
-         9U5yHK6S6Ncuj2BIj9vToVEZYbq3/0+/2Fh227JaYH1T9pTybfrqw0beswmFrZNSzGwa
-         KmFdetiXbXLx5T0/YcB+4pbtKvm+EHIJDZPc9RK5+sr6EHVScGMqaIheHlhdaPF1LRNT
-         FCpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWH4ZitsuiCvB4fB4fY6rLrsKKMpKkglzZfbdPjh0PkM4vbS2MlWORL1BuvuaXkNTjJ+wZQAVuEpgURLSI=@vger.kernel.org, AJvYcCWmiUjF0cliA0JaKbm9oTFnT9nxFe0YDkVlK9kroj1e7Ly0ZZUAq5V6Z5bfjQ2LM1DYCLTdWlQb@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCyly8kc/PIkSi5wcgGXyh3rdjPhCgT2j69wW/PHUZj5r9bTH/
-	VcwUIbLKxMIzcT7HDeOnBtPr9W+jQmqKagG9DOF+0PgiiRFScNGDSSdQ
-X-Gm-Gg: ASbGnctgOwzzYkA79tirVQ+2xyqCaJyDMucy7paesQD8PMOLfKxs/FdZoH4LA/f5cTV
-	GdF8ZBRfvQN9mEo3mEaRlqvSAGvs6DqlMBsX+9rfFIYLmV/Gbwr22/YmY5e2W+LX2fzFT/QzXF8
-	BrdLYUcAcVk0gbX9z6KA6kzAGYcDT7P0XrN4sna0SaogkVi8iSM3pZQ8MatTc3b7U10QxS5swfi
-	ka4KtZxpn1U3oN0iLknBUgtHjUzntxWBBuJiONOb1B29XttXtuOpUjOqfbachplWMSLY6RQTBUO
-	F552zgwwV39WMnHosJCKb3gRs96o9XuXkCldUmMPMT37O7xy9D6HZ0JXic36IWH9kA==
-X-Google-Smtp-Source: AGHT+IHUcLsFTnc4IKgX2LAMTM4wZvSfI8akkpBXsSxMVdgI357MCO6JAckwHvL6TwGWY3Y7ZGrKdw==
-X-Received: by 2002:a05:6a00:1804:b0:73c:b86:b47f with SMTP id d2e1a72fcca58-7490d6636a8mr16373023b3a.4.1750633505645;
-        Sun, 22 Jun 2025 16:05:05 -0700 (PDT)
-Received: from io.local ([159.196.197.79])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a46b569sm6656212b3a.20.2025.06.22.16.05.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 16:05:05 -0700 (PDT)
-From: Jamie Bainbridge <jamie.bainbridge@gmail.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Brett Creeley <brett.creeley@amd.com>,
-	Ivan Vecera <ivecera@redhat.com>,
-	Michal Schmidt <mschmidt@redhat.com>
-Cc: Jamie Bainbridge <jamie.bainbridge@gmail.com>,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net] i40e: Match VF MAC deletion behaviour with OOT driver
-Date: Mon, 23 Jun 2025 09:04:41 +1000
-Message-Id: <39898c5f9a1d6172aa346ad96a831a899a58ec54.1750633468.git.jamie.bainbridge@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I0YFAydG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750633552; x=1782169552;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PseveSieBkz6aK3pTCE1wpNXkrVYYBVptg5kuZ6+eEU=;
+  b=I0YFAydGOVCAYUl825p/0UdWUGtRc+Dr8bu1cu7DiOeRgZ2P2ECyPBfI
+   e3Uhk6zp4nSGSrBbkILP11XL8Zutf7ytMpnExZhtVkZefifYql6F44v3r
+   SjZC9KwcbC8wfxyKz35yCyWdrhjgiPnjye+Nn0FwGMlXWNNrj6FDz9uaq
+   f7YZX6I6Fe8tUesVJMd4NGgFQFIp7cEeuIcLU7EjpbCummXzvFPXKZrLD
+   ya70GEbXtqb5DIWcX7li2SfeToiGetf5GB7+vTRX88ZF0z3txX3LwqjtW
+   NRNjCNq9m32yWEknFJdYc+8gPJs91ySX1o3llZCe3hmGvlUlSGhkynDWM
+   A==;
+X-CSE-ConnectionGUID: YKGn7i6ETVWF5jIc+em+lQ==
+X-CSE-MsgGUID: k+ZA7U2ETXmwXKqOszE/6g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="56496755"
+X-IronPort-AV: E=Sophos;i="6.16,257,1744095600"; 
+   d="scan'208";a="56496755"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 16:05:51 -0700
+X-CSE-ConnectionGUID: L2Sd27kZS5C0EmD94BmUIg==
+X-CSE-MsgGUID: fa9dnmWJTvqs+4ig8zOW8A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,257,1744095600"; 
+   d="scan'208";a="150909124"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 22 Jun 2025 16:05:49 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uTTkw-000NZG-1h;
+	Sun, 22 Jun 2025 23:05:46 +0000
+Date: Mon, 23 Jun 2025 07:05:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Christian Marangi <ansuelsmth@gmail.com>
+Subject: Re: [PATCH v14] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <202506230615.9m8ZE43C-lkp@intel.com>
+References: <20250616201532.29047-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250616201532.29047-1-ansuelsmth@gmail.com>
 
-When the PF is processing an AQ message to delete a VF's MACs from the
-MAC filter, the Linux kernel driver checks if the PF set the MAC and if
-the VF is trusted. However, the out-of-tree driver has intentionally
-removed the check for VF trust with OOT driver version 2.26.8.
+Hi Christian,
 
-This results in an undesirable behaviour difference between the OOT
-driver and the Linux driver, where if a trusted VF with a PF-set MAC
-sets itself down (which sends an AQ message to delete the VF's MAC
-filters) then the VF MAC is erased from the interface with the Linux
-kernel driver but not with the OOT driver.
+kernel test robot noticed the following build errors:
 
-This results in the VF losing its PF-set MAC which should not happen.
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.16-rc3 next-20250620]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Change the Linux kernel driver and comment to match the OOT behaviour.
+url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/pwm-airoha-Add-support-for-EN7581-SoC/20250617-042042
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250616201532.29047-1-ansuelsmth%40gmail.com
+patch subject: [PATCH v14] pwm: airoha: Add support for EN7581 SoC
+config: m68k-randconfig-r072-20250623 (https://download.01.org/0day-ci/archive/20250623/202506230615.9m8ZE43C-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 13.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250623/202506230615.9m8ZE43C-lkp@intel.com/reproduce)
 
-Fixes: ea2a1cfc3b201 ("i40e: Fix VF MAC filter removal")
-Signed-off-by: Jamie Bainbridge <jamie.bainbridge@gmail.com>
----
- drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506230615.9m8ZE43C-lkp@intel.com/
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-index 88e6bef69342c2e65d8d5b2d7df5ac2cc32ee3d9..45ccbb1cdda0a33527852096ee9759fc19db3a5d 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-@@ -3137,10 +3137,10 @@ static int i40e_vc_del_mac_addr_msg(struct i40e_vf *vf, u8 *msg)
- 		const u8 *addr = al->list[i].addr;
- 
- 		/* Allow to delete VF primary MAC only if it was not set
--		 * administratively by PF or if VF is trusted.
-+		 * administratively by PF.
- 		 */
- 		if (ether_addr_equal(addr, vf->default_lan_addr.addr)) {
--			if (i40e_can_vf_change_mac(vf))
-+			if (!vf->pf_set_mac)
- 				was_unimac_deleted = true;
- 			else
- 				continue;
+All errors (new ones prefixed by >>):
+
+   m68k-linux-ld: drivers/pwm/pwm-airoha.o: in function `airoha_pwm_apply':
+>> pwm-airoha.c:(.text+0x8f8): undefined reference to `__umoddi3'
+
 -- 
-2.39.5
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
