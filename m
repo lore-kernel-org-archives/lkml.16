@@ -1,181 +1,148 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899501CAB3;
-	Sun, 22 Jun 2025 13:41:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C741DE3D9;
+	Sun, 22 Jun 2025 13:42:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750599675; cv=none; b=tzJF4lhjSH6ipjP8Z4HGjo8NBzZfaYReECOCT7J+AEqormUMDRfASlhZiUm/e8RKENiTNQqwpQvnnxsE8KGPpNJDDdzTGoW5gMM6JbJ3y/gnAPA6I6+Qkl9NoovcMqb1YsQGSVvCT4Y12I9iZnnLni1v099XnpZ4JXTjdHqruA8=
+	t=1750599768; cv=none; b=KjXrCJUY9v0HoL5Y4GfETO6c/7ptP/o8YkHQQoRj6ikLnA7YVD7KmVlxKBMUtTetXcSUItl8jXtkKws0lfsPJt1GnxZykFDM9OHW0CT25uWx5akwi/4yHHQQHTDOL8j6+NlWzNP6woPPIO94PCb8OiDGmND3asWzJgwirDUcERo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750599675; c=relaxed/simple;
-	bh=H8B0Bm7S0ihb8Igkgk3H3hpxhA279MOHTv/twPaqI8U=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hA5Gs1p3cwINjJkrysXE1Vku+74/qw5CVot9riuvLuIaWCWFauRwXONZlDogz03CZcxb+/DKgmiBxctaLYPh7y3aMW+ZsEo6cvPvAzvWCC1LP6/tufmra2P3Pbvyj7n3g6XIHLLm2Y5pTWTRKfALlSQyQSNX/oia7XCQmIIt204=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AmcEdds0; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750599768; c=relaxed/simple;
+	bh=Tv9mUPVVn7wQLIbUJ6oRa4Si03XNjcQob/mp6dyG+Ac=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qrtM4+yS8E/e1jLoqIgtsCoZrx+RhCAUbs2weSXsd0AZoujuXJ846QRtEMcvhOwDPQj+I/UdTpXXwUR4rTRVngB2PVWa5cPN0Jg8FU5fqszBFZFMHE9JDPpJpRqsq13iORWT7X8PVBebpaw1GguH5IbmOFDQ29UqplH7ntrEjNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XAabTcoh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AmcEdds0"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55M7H9KS019900;
-	Sun, 22 Jun 2025 13:40:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	2JlfH29hZDylzSICiUbOaeWEvc0XKRrUMii7SvyAoVo=; b=AmcEdds0C74CeRhg
-	yE4MRvC0wLllpcia7qDfBaQM5VIrrskiO+jyGn+0NssS3shtpI14LouH3rYSAzO8
-	KqyFWR7mcSJYwveOVcKL1hAhz4DNvmA9GLrkaceIspT3PtSXm1fvDXaYolRA+5jg
-	yEYIr5feVqBjnP0QxPmrWHIyJQTzuhz4YgaX71CUoMaOwkbXO7Ae0GV61ABcC+R1
-	Wc779BBXSCteMM4erLDw6tJqp6DkPjGIEi3SpYwZRU7HEGAlJXXoyLfFsJvW43vc
-	mmml9b9qwj+TgcE5Ce3HEvyqZ0iiGIyR/gdjEqD/NHbkOBZ9J/pd7eAP4zrOuPPo
-	o3SgAA==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47dp64hymr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 13:40:55 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55MDetqZ016248
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 13:40:55 GMT
-Received: from hu-lxu5-sha.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Sun, 22 Jun 2025 06:40:51 -0700
-From: Ling Xu <quic_lxu5@quicinc.com>
-To: <srini@kernel.org>, <amahesh@qti.qualcomm.com>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>
-CC: <quic_kuiw@quicinc.com>, <ekansh.gupta@oss.qualcomm.com>,
-        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        Ling Xu
-	<quic_lxu5@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: [PATCH v3 2/3] arm64: dts: qcom: sa8775p: add GDSP fastrpc-compute-cb nodes
-Date: Sun, 22 Jun 2025 19:08:19 +0530
-Message-ID: <20250622133820.18369-3-quic_lxu5@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250622133820.18369-1-quic_lxu5@quicinc.com>
-References: <20250622133820.18369-1-quic_lxu5@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XAabTcoh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9508BC4CEE3;
+	Sun, 22 Jun 2025 13:42:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750599767;
+	bh=Tv9mUPVVn7wQLIbUJ6oRa4Si03XNjcQob/mp6dyG+Ac=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XAabTcoh1vT1auSju+Pvv9KuHnnwaONSYzlckp5tnYftYZWUc3gOVZ6kg3vTu5t41
+	 jRP53C+9A+mz9B6V64IsPVxDkZ2tEj4D99VmiU6bLPPGKmrpleLGVaXWd6IJz7cUuY
+	 +/REKvMW0WFWg07AVzCT29VnoTQFVeVoaq0yDSzm+v/5eJ5rFeg/+dF2eTGDTuef6p
+	 P/X4jIAnyxDiaDtbL4eF4kn6Ap0obN4qMrw7jwqh7t8I+er+EclyW/2l95FJXWMtb/
+	 O+i7EdZzFzAFsnC8ZtMwdMwlRRjdF68zZlHuj99wthAQUsVjdPKqMpdqXCsf14/8tX
+	 cl7CKj5Cw8WLQ==
+Date: Sun, 22 Jun 2025 14:42:40 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gustavo Silva <gustavograzs@gmail.com>
+Cc: Alex Lanzano <lanzano.alex@gmail.com>, David Lechner
+ <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
+ Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Lothar Rubusch <l.rubusch@gmail.com>
+Subject: Re: [PATCH v3 3/3] iio: imu: bmi270: add support for motion events
+Message-ID: <20250622144240.02845c0a@jic23-huawei>
+In-Reply-To: <20250616-bmi270-events-v3-3-16e37588604f@gmail.com>
+References: <20250616-bmi270-events-v3-0-16e37588604f@gmail.com>
+	<20250616-bmi270-events-v3-3-16e37588604f@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: LBz4utCEl71awSxpo8gmqY9z73n-skGN
-X-Authority-Analysis: v=2.4 cv=dPOmmPZb c=1 sm=1 tr=0 ts=685807e7 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8
- a=CfRyy-KmkZQ3OiQjKWoA:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: LBz4utCEl71awSxpo8gmqY9z73n-skGN
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDA4NSBTYWx0ZWRfXw4KLhGupgpI0
- NRDmqbuHE9SRoez+mdsVHJGC1RpGHJI0wRIxUno8gt6RLRK4XJsEhQNK7AeLC4MIFWsxxQLJ2qy
- Vdip+pUFcHW8CdkV8Xuwc3L9JLYkI/XM+qRNpO1YbDM3Rng16WBtnIHPJKQb/422edeA76V+4aK
- AcCZWcdMwAEKMPnMxv2fyb9BXep35yjEgzbcOXHVVf3yGo0cEBzSbauaiawF5ubXxIxGEh+Lij5
- OOlirt8AcMdGkp7qTT60gJKReIRnEqyPILND+BFAoMdpRN0r8QU4E5Tpi0yeCu64ai31sLNYsEg
- HmkGofn3tXIYeila0mirc5lVljp0TSEeLVTRbf0P3nCQ76wGJBxUve7ovnDnIKFs1cKo+UpNc7l
- P6mGSb8kU1V8NhI+mYVnjvnI4yfO/MNX0Lh9BD2P8jiINk9fHa7/H16ZT4Z0NB5UhLk+0rJJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-22_04,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 adultscore=0 phishscore=0 priorityscore=1501 mlxscore=0
- clxscore=1015 spamscore=0 impostorscore=0 malwarescore=0 mlxlogscore=830
- bulkscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506220085
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add GDSP0 and GDSP1 fastrpc compute-cb nodes for sa8775p SoC.
+On Mon, 16 Jun 2025 20:53:11 -0300
+Gustavo Silva <gustavograzs@gmail.com> wrote:
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Signed-off-by: Ling Xu <quic_lxu5@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sa8775p.dtsi | 57 +++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+> Any-motion event can be enabled on a per-axis basis and triggers a
+> combined event when motion is detected on any axis.
+> 
+> No-motion event is triggered if the rate of change on all axes falls
+> below a specified threshold for a configurable duration. A fake channel
+> is used to report this event.
+> 
+> Threshold and duration can be configured from userspace.
+> 
+> Signed-off-by: Gustavo Silva <gustavograzs@gmail.com>
 
-diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-index 45f536633f64..f69fb1d05a0d 100644
---- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-@@ -5605,6 +5605,34 @@ IPCC_MPROC_SIGNAL_GLINK_QMP
- 
- 				label = "gpdsp0";
- 				qcom,remote-pid = <17>;
-+
-+				fastrpc {
-+					compatible = "qcom,fastrpc";
-+					qcom,glink-channels = "fastrpcglink-apps-dsp";
-+					label = "gdsp0";
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					compute-cb@1 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <1>;
-+						iommus = <&apps_smmu 0x38a1 0x0>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@2 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <2>;
-+						iommus = <&apps_smmu 0x38a2 0x0>;
-+						dma-coherent;
-+					};
-+					compute-cb@3 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <3>;
-+						iommus = <&apps_smmu 0x38a3 0x0>;
-+						dma-coherent;
-+					};
-+				};
- 			};
- 		};
- 
-@@ -5648,6 +5676,35 @@ IPCC_MPROC_SIGNAL_GLINK_QMP
- 
- 				label = "gpdsp1";
- 				qcom,remote-pid = <18>;
-+
-+				fastrpc {
-+					compatible = "qcom,fastrpc";
-+					qcom,glink-channels = "fastrpcglink-apps-dsp";
-+					label = "gdsp1";
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					compute-cb@1 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <1>;
-+						iommus = <&apps_smmu 0x38c1 0x0>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@2 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <2>;
-+						iommus = <&apps_smmu 0x38c2 0x0>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@3 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <3>;
-+						iommus = <&apps_smmu 0x38c3 0x0>;
-+						dma-coherent;
-+					};
-+				};
- 			};
- 		};
- 
--- 
-2.34.1
+Hi Gustavo,
+
+Main question in here is about the scaling of the motion threshold.
+It seems to be based on units of g.  We use m/s^2 for IIO acceleration channels
+and also the expectation is that threshold events match scaling of the main channels
+(_scale applies to them).  Hence here we will need to do something a little
+fiddly to maintain the threshold scale if the main channel scaling changes.
+
+I'd missed this on earlier reviews but came to see that we have rubbish documentation
+on this aspect when looking at some other changes recently.
+
+I need to find time to both fix up the ABI docs and write a lot more explanatory
+text around events. Sadly neither is appropriate activity for a sleepy Sunday afternoon!
+
+Jonathan
+
+
+> @@ -114,6 +134,10 @@
+>  #define BMI270_STEP_COUNTER_FACTOR			20
+>  #define BMI270_STEP_COUNTER_MAX				20460
+>  
+> +#define BMI270_INT_MICRO_TO_RAW(val, val2, scale) ((val) * (scale) + \
+> +						  ((val2) * (scale)) / MEGA)
+> +#define BMI270_RAW_TO_MICRO(raw, scale) ((((raw) % (scale)) * MEGA) / scale)
+
+I'm struggling a bit with what this is doing.  Perhaps a comment?
+
+
+
+
+> @@ -827,6 +977,20 @@ static int bmi270_read_avail(struct iio_dev *indio_dev,
+>  	}
+>  }
+>  
+> +static IIO_CONST_ATTR(in_accel_value_available, "[0.0 0.00049 1.0]");
+This aligns with below.  Scaling definitely shouldn't be in g and is likely more
+complex because of the relationship expected with the overall channels scaling
+controls.
+
+> @@ -848,21 +1016,58 @@ static int bmi270_read_event_config(struct iio_dev *indio_dev,
+>  				    enum iio_event_direction dir)
+>  {
+
+
+> +	switch (info) {
+> +	case IIO_EV_INFO_VALUE:
+> +		ret = bmi270_read_feature_reg(data, reg, &regval);
+> +		if (ret)
+> +			return ret;
+> +
+> +		raw = FIELD_GET(BMI270_FEAT_MOTION_THRESHOLD_MSK, regval);
+> +		*val = raw / BMI270_MOTION_THRES_SCALE;
+> +		*val2 = BMI270_RAW_TO_MICRO(raw, BMI270_MOTION_THRES_SCALE);
+
+Why this particular scaling? Is effectively just dividing 1g / number of
+values and hence providing a scaling to g?
+
+Full scale is described as being 1G.
+As this device is providing _RAW data for the relevant channels I'd
+expect this to be scaled to match that. That will be a little fiddly here as
+this is apparently always 0-1g whereas the scaling of the channel varies.
+Thus irritatingly we'd need to adjust the scaling of this so it remains
+consistent as the full scale changes.
+
+The events ABI documentation is rather weak / wrong on this as it refers to
+both _input_ and _raw_ thresholds whereas the true ABI just has one with
+the scaling always being to match _raw if that is present. So _threshold * _scale
+should be in the standards base units of m/s^2.
+
+
+> +		return IIO_VAL_INT_PLUS_MICRO;
+> +	case IIO_EV_INFO_PERIOD:
+> +		ret = bmi270_read_feature_reg(data, reg, &regval);
+> +		if (ret)
+> +			return ret;
+> +
+> +		raw = FIELD_GET(BMI270_FEAT_MOTION_DURATION_MSK, regval);
+> +		*val = raw / BMI270_MOTION_DURAT_SCALE;
+> +		*val2 = BMI270_RAW_TO_MICRO(raw, BMI270_MOTION_DURAT_SCALE);
+> +		return IIO_VAL_INT_PLUS_MICRO;
+> +	default:
+> +		return -EINVAL;
+> +	}
 
