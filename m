@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE1E372;
-	Sun, 22 Jun 2025 09:43:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3F179F2;
+	Sun, 22 Jun 2025 09:48:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750585400; cv=none; b=u3HwHpXdVZ23OXbTFj9K1AtZ4N+lolrbzbBzGWJO5NB8JjOG173K7ladRTDepoj0Jrq9P3SiUP3H1/DxG7DMoQxZTibtiH7uvNDV4dmz3LzGmLvs6BSnGRX8T0A1zWtV8wvDoMg9iKz2IV5E5TQTtN0P1iF2yLG0m0DgDk4delA=
+	t=1750585706; cv=none; b=OgbhbaOrbnDdTfNbx3w2+uM2dYqS70ALI+BZ9YRtsG2nGJb5l+12sT+qEN8KI8qDkB1HcKFB8VwBaTjH6sgPm+PS1LgHCrWVW7nh6kffGc++hz/XEwAOAo5Y0v72StW/CZYKhWbr2VAf90uJJccnSLhyaRZjyXcf78UxOK3n+Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750585400; c=relaxed/simple;
-	bh=e1iTg55YXGYZf/uvlSW1Nxdb1Xs0RNsU3Mekj6cFODU=;
+	s=arc-20240116; t=1750585706; c=relaxed/simple;
+	bh=4vdRfcPbRQB5zMf1V/AuGgKvWFlvsrisrBycdGuo6YE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Up28UNx3le4oxlOnuFuP9PqYyGThUW5TUKRDXNUuHKE1WV9Y9yFpUXf4K/NtIZlk1hoo+QyxgY0gXZStJ87oMx7rNpihwNi7LyUXMlqu3+2QKulL53yYHWY4JTQlmNZn4EnJLx8Kyi8WGXtZjULRGiQ+0VWEEijnv39A+BhZctQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CSf1wYRn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=uB4yQWxLspmwJl7yoOkY5z8ZkYcy5GRyfuLbY+ro5QPXp3jJSgRGQs9okhno0r5f2K0LJsUxhnAieCsAUYZOBjcSKSQslOxbeFr4HEiOXyjukL/mlOXznoyOn50wgqFQHHsx+HKuHMlQhbMq75Hi2d7YJmOlFNNWgf5miPNujW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OnaFMLJQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CSf1wYRn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60EFDC4CEE3;
-	Sun, 22 Jun 2025 09:43:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OnaFMLJQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82436C4CEE3;
+	Sun, 22 Jun 2025 09:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750585397;
-	bh=e1iTg55YXGYZf/uvlSW1Nxdb1Xs0RNsU3Mekj6cFODU=;
+	s=k20201202; t=1750585706;
+	bh=4vdRfcPbRQB5zMf1V/AuGgKvWFlvsrisrBycdGuo6YE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CSf1wYRnx6mhnlUz/ZS0L086OYQTAsug3WeLL8oprIsrJWpznpYTOJbYEReD8p4nb
-	 RVDvFBFNnhx/O+e8DxwpdZZDDSjpJxe3TQbTfYCyKwanYyoAc8lNuxg1GOqk696f+7
-	 6I/NwAGswkku/MZ+h4aYXp5+gE6lVBr2WLlwpqBFSuK4fXcXNk7layHpXsFHVL7ewz
-	 nBWsO2hZbO24pqQr4XiS8U1GXBrzMQap11RpoYr46IwSKT5P9PcgKl2KfdgVbR+9JP
-	 lQb3ddRSO05mMe8a69nCAjky5nj1hGZNYPBF5OzdUM32DyQkbniLk/fW58edMW6vHt
-	 4TbLgMIrv4q5Q==
-Message-ID: <011093f8-85a1-4c3c-b3fa-7be9e6df8a25@kernel.org>
-Date: Sun, 22 Jun 2025 11:43:11 +0200
+	b=OnaFMLJQi1s1v1Fc+j8+UrUFjfSejiXGaXH/z/S9pcorncNKJBheiUlVnCkEEFVMA
+	 TR1IY5E+3h97LNA/cABkfMZzfz0ByvbSO3+KZsZD85LdHcLpQgl3qme++E+LISj6vj
+	 OgJ5xoo4VMO03nZoG5LXaCfIkMU3MdA7e0qk8UZExZDMEj8HfEQLBqH5sVQdkyZyoM
+	 a7nL7NHLDvRsD/eQyo8KefPfUG4zCJLHjnDg66wNSaOKj2HDzGHMftIcfVpGSu03Lt
+	 dz9dmkqOQ3bReXLMAm0XbP3ZnIyTVErpf+IazeQ5dDNcuvM73azCfRGQBqLnFFAKQe
+	 Etu+57/945Y5g==
+Message-ID: <bba062a3-f96c-456b-8e9e-fdeb0dc2d28d@kernel.org>
+Date: Sun, 22 Jun 2025 11:48:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,22 +35,24 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/10] ASoC: dt-bindings: mediatek,mt8196-afe: add
- support for MT8196 audio AFE controller
-To: "Darren.Ye" <darren.ye@mediatek.com>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250620094140.11093-1-darren.ye@mediatek.com>
- <20250620094140.11093-9-darren.ye@mediatek.com>
+Subject: Re: [PATCH V3 2/4] dt-bindings: mmc: controller: Add
+ max-sd-hs-frequency property
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Sarthak Garg <quic_sartgarg@quicinc.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ quic_cang@quicinc.com, quic_nguyenb@quicinc.com, quic_rampraka@quicinc.com,
+ quic_pragalla@quicinc.com, quic_sayalil@quicinc.com,
+ quic_nitirawa@quicinc.com, quic_bhaskarv@quicinc.com, kernel@oss.qualcomm.com
+References: <20250618072818.1667097-1-quic_sartgarg@quicinc.com>
+ <20250618072818.1667097-3-quic_sartgarg@quicinc.com>
+ <6040afd9-a2a8-49f0-85e9-95257b938156@kernel.org>
+ <9627ed6f-2bb8-40b0-b647-5f659d87f2f9@oss.qualcomm.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -96,30 +98,58 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250620094140.11093-9-darren.ye@mediatek.com>
+In-Reply-To: <9627ed6f-2bb8-40b0-b647-5f659d87f2f9@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 20/06/2025 11:40, Darren.Ye wrote:
-> From: Darren Ye <darren.ye@mediatek.com>
+On 21/06/2025 12:20, Konrad Dybcio wrote:
+> On 6/18/25 9:43 AM, Krzysztof Kozlowski wrote:
+>> On 18/06/2025 09:28, Sarthak Garg wrote:
+>>> Introduce a new optional device tree property `max-sd-hs-frequency` to
+>>> limit the maximum frequency (in Hz) used for SD cards operating in
+>>> High-Speed (HS) mode.
+>>>
+>>> This property is useful for platforms with vendor-specific hardware
+>>> constraints, such as the presence of a level shifter that cannot
+>>> reliably support the default 50 MHz HS frequency. It allows the host
+>>> driver to cap the HS mode frequency accordingly.
+>>>
+>>> Signed-off-by: Sarthak Garg <quic_sartgarg@quicinc.com>
+>>> ---
+>>>  .../devicetree/bindings/mmc/mmc-controller-common.yaml | 10 ++++++++++
+>>>  1 file changed, 10 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller-common.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller-common.yaml
+>>> index 9a7235439759..1976f5f8c401 100644
+>>> --- a/Documentation/devicetree/bindings/mmc/mmc-controller-common.yaml
+>>> +++ b/Documentation/devicetree/bindings/mmc/mmc-controller-common.yaml
+>>> @@ -93,6 +93,16 @@ properties:
+>>>      minimum: 400000
+>>>      maximum: 384000000
+>>>  
+>>> +  max-sd-hs-frequency:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +    description: |
+>>> +      Maximum frequency (in Hz) to be used for SD cards operating in
+>>> +      High-Speed (HS) mode. This is useful for platforms with vendor-specific
+>>> +      limitations, such as the presence of a level shifter that cannot support
+>>> +      the default 50 MHz HS frequency or other.
+>>> +    minimum: 400000
+>>> +    maximum: 50000000
+>>
+>> This might be fine, but your DTS suggests clearly this is SoC compatible
+>> deducible, which I already said at v1.
 > 
-> This patch adds initial support for the audio AFE(Audio Front End) controller
+> I don't understand why you're rejecting a common solution to a problem
+> that surely exists outside this one specific chip from one specific
+> vendor, which may be caused by a multitude of design choices, including
+> erratic board (not SoC) electrical design
 
-Why this was changed to undesired 'This patch' (see submitting patches)?
-I think you are circling back to previous versions, reintroducing issues
-fixed in between.
+No one brought any arguments so far that common solution is needed. The
+only argument provided - sm8550 - is showing this is soc design.
 
-> on the mediatek MT8196 platform.
-> 
-> Signed-off-by: Darren Ye <darren.ye@mediatek.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-
-Subject: I asked to drop document, because the rest was correct and you
-totally rewritten it to unnecessary too long subject.
-
-Well, at least the rest you implemented, but I just don't get why, when
-asked to change something you change several things to less desired style.
+I don't reject common solution. I provided review at v1 to which no one
+responded, no one argued, no one provided other arguments.
 
 Best regards,
 Krzysztof
