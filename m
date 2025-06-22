@@ -1,141 +1,112 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91ECC19342F
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 10:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2FE19342F
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 10:12:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750587116; cv=none; b=ouGPxiSXJYA/0EskeQTr54XeiWoaSErF+UVLFC+opDRCnuiVJZCL9D1ehFv8FYwfve/G+1icFN4xrN3HVgQmk8LjxoQwGaZOVPtMUd4YYgbT2Vv4YZm3GrrXGEAMW/f3npwpOIzWCL19t0qPnewigNNm+rnvil9MZnayHR7MOU8=
+	t=1750587123; cv=none; b=AJf1smYJzCpQckE7jIuQwGKmvqD1Kjgr0SfCk0snY+NSihh0Juew5I2tDAtZD9lFY6QZJg+RSRQSVKUIgXqMUFHlNj5aq4mQS909FZsTKwI+ncwf6cAaPOLvHIRRWfTJP5GDFV/i2E+0+or7xLD9NghcacTv49hrUMbwJZPEn1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750587116; c=relaxed/simple;
-	bh=jp4Pc36CSzzbXk6//MSHa6/dTKprXrPi4ybd/MOxNs8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=L7WBnvcg35Sx3TbCCru2qmO4eJ4yX/s13m1OA69ArJNYKqUBy1Xc76yU3O5QoFtQe8e3ILuUFrFyU4QNKiT8zNjUPFt9XeYNrrIFn7AckMZeggvi0CKffw0mFo1GuKYji0v+R4Wjuppl8p6uLcTaBuaX+yf1JQuqZy3CMbsOsJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=NNWP7lmz; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1750587123; c=relaxed/simple;
+	bh=U8KbW8H1OPS3k6Kxz+b5VWjIpb6jrU+NjTsn2OmpZ9Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qlTfQAa/euyaY/F9a7cCHcex3sB0klsAID8Ls1Ojk+9U8EXekdkFxU/NQwxyBZNR+LJmCkZafj0CcjjAyyt/DZUSSjWNCnoWOICdBAG65FKqc4WpZKiLmAgL+prSoY6A9xsiFFfI8TlwAu2zo026IUqooQNV2LHz+qFQv0YGtUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=T+ig0bEd; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="NNWP7lmz"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55M73GhH024701;
-	Sun, 22 Jun 2025 06:11:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=DKIM; bh=HmyiwALc0RdYP7RT1cFme6Z39pm
-	6ZOABZng/wTl/QrU=; b=NNWP7lmzUFqtKr1BGBLyBDWx9ikpYcHoteqeVxLa/EB
-	kC/ld//1Qy1dkLdTd/CxnaUVCVgsvzB0OJHBckxJaf2ZXiinkZm8/5mulPqVs3pq
-	6b1XyCX2sV3W6OTDS7R5wv/oDKHpTcYnPcVKvdtENl7qEClWZNFyDvAyvPtgw+yN
-	iDQUnZ3t9TrHE8h//4/4fLhv2MGQyV1THbNqGoGCdv71qsHrc9WWSND/D9Vj0NKA
-	NxzNsTmcgviP94LcJH/+OsC9DTR/GOLTfyANdiycEomc2wCQk5qeRKEXamekrtjl
-	P7YAkR9olWX0SNLZFMA5AN9Wb1fC413IaKYyRNeQRIw==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 47ed3qgdmd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 06:11:46 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 55MABjKp001647
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sun, 22 Jun 2025 06:11:45 -0400
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Sun, 22 Jun 2025 06:11:45 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Sun, 22 Jun 2025 06:11:45 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
- Transport; Sun, 22 Jun 2025 06:11:45 -0400
-Received: from HYB-DlYm71t3hSl.ad.analog.com (HYB-DlYm71t3hSl.ad.analog.com [10.32.14.29])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 55MABXwc012869;
-	Sun, 22 Jun 2025 06:11:37 -0400
-From: Jorge Marques <jorge.marques@analog.com>
-Date: Sun, 22 Jun 2025 12:11:07 +0200
-Subject: [PATCH] i3c: master: Initialize ret in i3c_i2c_notifier_call()
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="T+ig0bEd"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-23602481460so27934515ad.0
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 03:12:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1750587120; x=1751191920; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mhd7Psksfo9MLj/RnU9tn25T95OkdzIn/rvFvguRfxI=;
+        b=T+ig0bEdY6Tbzg3DaGYcQetGJ5zfsIj/anjO7ZoM8Yb/tLb1+C3Hc8IniRmxK1uxBT
+         A3f4YU5G/mu3E+Fc7dFurgHCqyWAM8QRck9Y+IapCLeujyHqu4O8y3CLDRW8tEIxV6Im
+         2ra6xdqDICnJxcnnQGezEVLWZPEJuXQIIamlmt60wtnxOLXuSaUmw6PbquZHY2OtMpnr
+         svFXa6r5OkWcTZQTZQa80ZzwXKuyn8BSarOeDDyCx3erXGMzAGYuXSXgU+ew/O96E4GH
+         BjtTWOAAdHF7dN/0ZmIMLhvGAfiKVgLsOZBCwcT6iEuFQ51RzQGGXt0TJfzWvaCumcAo
+         MGYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750587120; x=1751191920;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mhd7Psksfo9MLj/RnU9tn25T95OkdzIn/rvFvguRfxI=;
+        b=fTFI+pYznZXCArbnWCnX2XmhoP6hJy997Hu3KlhWfQXYg91xS3g3Rf2rsKHYwnu5BT
+         IxsxO6Q1nmgpY2Ojt7w6diAYwBBULfEAf4WS1Y7ckEElUiiXr4NF24Tl1GEsc9bIs6Ev
+         //BN0XPUfnfHH1kEbUc6wlDVz3mWUJ1N9OW+3oXg+bGs09FGmFkcFTkVDg9ZZH0+f7Kg
+         0EyulYvLR9pKoZ6qO5i0HpXxnSKsYPwwUbY7ePrQS4dcAv9dhY2BvrGV42uWJ3A99fBq
+         SH8DW8XghB8GwCVSjKdnxwO1Skxj9fKw0KbMnS4LQPXwLtddeduuqwWlOowF7YBz3eLg
+         njOw==
+X-Forwarded-Encrypted: i=1; AJvYcCW6qbydjLnUR6W7qSiiAsI2A3osFG4tZVp/gFX4itJ1MCJBSYkz8PvTUdSDKdcW2OOFel4cX8jzZjdZsR4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywjovk9BAYslIr3zfbIqEWOJMMofDQ7NCQ1KYaI1piqOyLfsVrO
+	tkKorrcJmzMVDoC/YAo2BmRCRu1kmummXtTuKHAhTYjUwDZqhCkew1ZSN0MrD89wWkM6s7BB9oo
+	e9bDiGfi1e0VuypB7v13PlEVcumetQu4kTzG+NtoR6A==
+X-Gm-Gg: ASbGncvcigrd5w8jmm4scKxLhxIdWSdAl7dHmr55zS9SuOOJvaWQDKa0+GVdZnnBAr/
+	SQFyfgxqVdK2Zp3xv4YR3CvROuCvmV+Ub3bWTR4b+fLo+L9Y6MrUIXUh2nQKlHQtO0z7U4f6pP2
+	TVSMSvid0K0Nj1xuezQ74Dx5f9A9QfN6EFdQWTTs1QAw70CejXaaKi9Wus
+X-Google-Smtp-Source: AGHT+IGsWzTP6/gbvQ/CA0ejRIYXVE3ACO/w0NVroX/xY0eGzRwP6PYHlp4erxCJ+zZG6ZfDl+/adXC35SQaJWcaE8g=
+X-Received: by 2002:a17:902:c405:b0:235:e8da:8d6 with SMTP id
+ d9443c01a7336-237d97c3b5bmr151787145ad.2.1750587120557; Sun, 22 Jun 2025
+ 03:12:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250622-i3c-master-ret-uninitialized-v1-1-aabb5625c932@analog.com>
-X-B4-Tracking: v=1; b=H4sIALrWV2gC/x3MQQrCMBAF0KuUWTvQTGmsXkW6CM2oHzTKJBVp6
- N0NLt/mVcpq0EznrpLpBxmv1OAOHS33kG7KiM0kvYy9F2EMCz9DLmpsWnhNSCgID2wa2XnxY5z
- CdHQnasXb9Irvv7/M+/4Dnue0S24AAAA=
-X-Change-ID: 20250622-i3c-master-ret-uninitialized-16265d8a8719
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Frank Li
-	<Frank.Li@nxp.com>
-CC: <linux-i3c@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        "Jorge
- Marques" <jorge.marques@analog.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750587066; l=1178;
- i=jorge.marques@analog.com; s=20250303; h=from:subject:message-id;
- bh=jp4Pc36CSzzbXk6//MSHa6/dTKprXrPi4ybd/MOxNs8=;
- b=EWFuffKP2SgBONBC/1+34P/8TeIH1cTd9XrcGP6BRucKlus/qcH+2WqQHOhfGt2UKAdBiaX9S
- MI3t9BigKTRC4TV/YQCNmyiFgLYV1IN/X+eMMLAOrQkNnd3EvfasftP
-X-Developer-Key: i=jorge.marques@analog.com; a=ed25519;
- pk=NUR1IZZMH0Da3QbJ2tBSznSPVfRpuoWdhBzKGSpAdbg=
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=HZYUTjE8 c=1 sm=1 tr=0 ts=6857d6e2 cx=c_pps
- a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=gAnH3GRIAAAA:8 a=DsFxo23woeNpobuw7SsA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: BzeJCCSOoZQnRUJYl4w3ElJy4EZX4lhE
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDA2MSBTYWx0ZWRfX56W7FFsZgIM8
- P8KptipaSDUwci68GFNtte7NS6mnGRGS1AP+gijqBYIh00HecAWhewZccaWuXvoTpnWt9xg8MYr
- KZYM5Pnrq/edYtsjdD40jM8OY3DuremXbfFNcMGicRKhp4nhKQ0eQHd2iqF/HrhvO+W1BF45nHv
- LI3AdqtuV+iMzO6mrEwt9wZsErwHpSkgQak2HUPHt34tiqVCcgZU30sYsygZ17bQdiF7eyt6x8k
- /4/Be/NdOpwkxghbbLU6XXu9PeEDee2RTAvfJwtjSXAsnFaqzNo1ftFXHoC11Keg5sHgA9BXviw
- VhwgepaXY+mZLtlYLXSNSrgy0GLHeMBBioZENCqD0cPceAiBCZLt67WoTOORSuPtxoyP0uxCv0e
- /tcVAiuuS2ZAb0oYILRw9yPryiYf1ULfc337shbsIo/13tgfjvpU+5LDiCNfq2+Gj7NV4G9Q
-X-Proofpoint-ORIG-GUID: BzeJCCSOoZQnRUJYl4w3ElJy4EZX4lhE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-22_03,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 priorityscore=1501
- mlxscore=0 impostorscore=0 adultscore=0 clxscore=1015 suspectscore=0
- phishscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506220061
+References: <20250620091720.85633-1-luxu.kernel@bytedance.com> <DARCHDIZG7IP.2VTEVNMVX8R1E@ventanamicro.com>
+In-Reply-To: <DARCHDIZG7IP.2VTEVNMVX8R1E@ventanamicro.com>
+From: Xu Lu <luxu.kernel@bytedance.com>
+Date: Sun, 22 Jun 2025 18:11:49 +0800
+X-Gm-Features: AX0GCFsb818yKyl7dINvhKYBkJJnEFckaB0ZfIHP1lNH7P09XFDmloWPadWx7s8
+Message-ID: <CAPYmKFvcnDJWXAUEX8oY6seQrgwKiZjDqrJ_R2rJ4kWq7RQUSg@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] RISC-V: KVM: Delegate illegal instruction fault
+To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Cc: anup@brainfault.org, atish.patra@linux.dev, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, kvm@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, 
+	linux-riscv <linux-riscv-bounces@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Set ret to -EINVAL if i3c_i2c_notifier_call() receives an invalid
-action, resolving uninitialized warning.
+Hi Radim,
 
-Signed-off-by: Jorge Marques <jorge.marques@analog.com>
----
-If a invalid action was passed to i3c_i2c_notifier_call(), uninitialized
-would be returned. Add a default option in the switch case to set it as
--EINVAL; I didn't set at the variable definition for readability
-purpose. The warning was caught by smatch.
----
- drivers/i3c/master.c | 2 ++
- 1 file changed, 2 insertions(+)
+On Fri, Jun 20, 2025 at 8:04=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcma=
+r@ventanamicro.com> wrote:
+>
+> 2025-06-20T17:17:20+08:00, Xu Lu <luxu.kernel@bytedance.com>:
+> > Delegate illegal instruction fault to VS mode in default to avoid such
+> > exceptions being trapped to HS and redirected back to VS.
+> >
+> > Signed-off-by: Xu Lu <luxu.kernel@bytedance.com>
+> > ---
+> > diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm=
+/kvm_host.h
+> > @@ -48,6 +48,7 @@
+> > +                                      BIT(EXC_INST_ILLEGAL)    | \
+>
+> You should also remove the dead code in kvm_riscv_vcpu_exit.
 
-diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-index fd81871609d95bc082bd401681e7e132ea74f8a7..68b8ea9174b984a6c89b389c4b3a9669239def70 100644
---- a/drivers/i3c/master.c
-+++ b/drivers/i3c/master.c
-@@ -2467,6 +2467,8 @@ static int i3c_i2c_notifier_call(struct notifier_block *nb, unsigned long action
- 	case BUS_NOTIFY_DEL_DEVICE:
- 		ret = i3c_master_i2c_detach(adap, client);
- 		break;
-+	default:
-+		ret = -EINVAL;
- 	}
- 	i3c_bus_maintenance_unlock(&master->bus);
- 
+I only want to delegate it by default. And KVM may still want to
+delegate different exceptions for different VMs like what it does for
+EXC_BREAKPOINT. So maybe it is better to reserve these codes?
 
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250622-i3c-master-ret-uninitialized-16265d8a8719
+>
+> And why not delegate the others as well?
+> (EXC_LOAD_MISALIGNED, EXC_STORE_MISALIGNED, EXC_LOAD_ACCESS,
+>  EXC_STORE_ACCESS, and EXC_INST_ACCESS.)
 
-Best regards,
--- 
-Jorge Marques <jorge.marques@analog.com>
+Thanks for the reminder. I will have a test and resend the patch if it work=
+s.
 
+>
+> Thanks.
 
+Best Regards,
+Xu Lu
