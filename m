@@ -1,66 +1,66 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D393C8F66;
-	Sun, 22 Jun 2025 00:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0687B1805A;
+	Sun, 22 Jun 2025 00:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750550692; cv=none; b=EY4r86Qu0/ujQZsABvbWmEPX49CtHardfCMOeCOOEo/MKcpX+ZhW/0zITBLUH2VuZdeyAJx6HL43D5fPwLcXEN2Q0MK5g5rrZKtRaVPzcEfaF3/+wZobD5EQr65k6YAJOJVo5+NgUtM9hZgwFHotoHsbioZj0FfPw8VP/OD6tO8=
+	t=1750550698; cv=none; b=hGClOfvfqvVJdEOWll4U4vNmcSobA/97CPqOq6Pa2WxhkNCf2/B0VwqHxOF8ZNKiSnABvLCFCT+AU+g3SZXtWlgY2Nd2HdVphsecKoLmKxJnOOeNDLcZfrojop+6QZn/g+DZZYmu26F+F3NnKqmFTrvsH8kF9Lrw3VeKZeReDzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750550692; c=relaxed/simple;
-	bh=EOxhodjuHtiKmkEMUox8ZZUATb824HNGZIyEw2W8pzw=;
+	s=arc-20240116; t=1750550698; c=relaxed/simple;
+	bh=liILi0h70NtnHMaTrnZq1JtW1kl+WBBQwRBtx4jqqqU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qVOA3ek5Fltk3EVtqx+K//aOKfuL9Y+X1P91icvu4eStjQ9YA603Saa969vo4GuCVA/RoQzBKCQv81sY9RVCABxHStzNPJzZbmCXuI/W8W21hajLys8ursLUDsrBqZKBLw0lTyqDNum+/JGm105xeF1rKD/63zHaW0jz9geriE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O0EYaq22; arc=none smtp.client-ip=209.85.210.171
+	 In-Reply-To:To:Cc; b=tv5eDfkQnznU2Z1TEABHgE7I9LZQvV7ra3TeABve6v7izGsKCfYsYdRF8KqwVdJoCixQRSYLyBjfEQ9H4JcRkKCwEL89MyJ+rE8HrbKhQxMn/h8/V3eKGfONyuCPnm90FZaD8/nEE0YDJt9CT5PLUxXcl4NIRcA9OQtv9gp6JIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mfSj/f0j; arc=none smtp.client-ip=209.85.210.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O0EYaq22"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7490cb9a892so1132777b3a.0;
-        Sat, 21 Jun 2025 17:04:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mfSj/f0j"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-749248d06faso640728b3a.2;
+        Sat, 21 Jun 2025 17:04:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750550689; x=1751155489; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750550696; x=1751155496; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=psczNds0l29gY7n5y91wpugrv6OcsGiddH5j1nMGU+s=;
-        b=O0EYaq22LjBaM5jShGs7g8hzU9fMehVmHyzsrobTHg0SSEOWhoCRWbyl25ZmXbom7S
-         94SRRe7t52g06IXzkqTXx7SujNxw9lYbpPPaKTAujo+I5HSnZY9zwhcvEY2N9sVg5VvQ
-         7X26MH8XNeq1t29Fa90ACDmmJ5rT6Q3bfyEOuIxY5rkkyD5rhKqgx8cEPb4qINR8IeQP
-         LMI4AwQiwjWDm7skhmBBwIWGid5Duwdz20P3yONUVAVSN9Ua80Su6rz/tNdkA+ZIbcd1
-         SHDAuNMyD0V3oJ5IDxcEpKzqJuT2RCMA+MFlW2rvxOejgRJfoFdYlB375Bfw1iWjrPF5
-         Uytg==
+        bh=K2/KSwnwApNBj2qg4eJFgFllM2G5u9JrEk978fuXLkk=;
+        b=mfSj/f0jH2ee+cKSv62gUDjDnL39Lg4WIVjaRgnj9TwC4ogAFnvtMD1eplzliImJgN
+         uMyZ7cidgJ/tvoBPJdT1DCx0qY/VG1Tn8EG9UW6X8KHQbJMYcCYxwwiF9X2wpm3C2mau
+         jztU51TgOGU2qJm3UYXMt2ZapCjzdvB44mgxpazyyOZNhvHJIKdsH+SgVfFheWXe1C/S
+         I63AlM7p6DTTTRSgMCtIApKKVDtKdVleYTFtN//R1WYt6ASmAZ5MLN0KFRwjbOO9ZRGS
+         IOmVgBqRuEHbbp00aoCbc4XT+TQs9ofssdH/mkAs3Zxt+HTRYHs6y/o3mFMKudMF2oBH
+         wfWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750550689; x=1751155489;
+        d=1e100.net; s=20230601; t=1750550696; x=1751155496;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=psczNds0l29gY7n5y91wpugrv6OcsGiddH5j1nMGU+s=;
-        b=MHOP369SdSRaxluVjVbM6XUQhZH5ZpQP3xlPkXCW67OzZGIgG5/G2qHYnPZmCUfh3P
-         OiJnONzbjIm3aqN9j7SAUTN0cnfeRC2mvBS3ed2TY2h3xDwsd3HhFnutd9+hk5sVf11L
-         2+Sj2zK9foSTT0I0wUtaiIq51criHrG4lnXdA/+h+ofxWyW4J0VppDlJXn9OEAdZ7b9Y
-         g1QXYPZx15DCd235luaqeU1axoPKnMNjpXF/W+BKb41/EJQmstTwol2u1QcruFfylVU8
-         208mCB2PJcV4blTL//kQEADh61YPKpFhR+ujZc2xHllc3TgiAF0ttP1IKv/wekS07SHS
-         dYcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVOxXoGvzfjYIneh143sjhuCCuGFVt+HY8lrBgjWpuUfNHL7qLQELgC2m+QyIQpnTYjR8MG2VAc/kPuTQw=@vger.kernel.org, AJvYcCX5pild7ztkXAa5CHxjLbtmpvD8EN/r3Mu/KoPHPeA9ai68wCOi4bgpXfjWJ4Q3QRjiyR2d4pNCUrqxCOQS5g1yeaOetg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxby4VVZvHIwerrCOE5ujh68jopZvJn57oNlCwEoEdOeaH+/BJ0
-	OTdkAwpuf+BZrM08WxYYnYle8FHht47v+AP13caDBPbeajWaRRK9+p9Q
-X-Gm-Gg: ASbGncv4Gw7nXv/5YmT/SN2m5GPX7VWgkuswL2KwhYrdhtVu8H7JBnWeCXMYMZ4tENQ
-	WI72IaLO/qtpHiEtvJeiv6HPP9ZXoyQsBiq08N8mLEXnDj2zqE3nh1GM7pNp2D9qomPqGIyVXDF
-	YERLxr46KSjL3MfZUr9efWNd9G5Diq+SS+jYOPRF8UQdFA4MlbZYrHgBZUSOF/LhIivhoJwHKw8
-	gt904Tw7BiV5uECJF2sak/uo5bqXToJdDK5b/Xlz9+iPQOACtBpP4V4RRDiL7AOs9X6wKjHqrJJ
-	Hu4uFlnJk2GnjvLsjlj6KP8EXyA25pcZOKbRRkJJcoIjMFN9qcuVxoaW1qPCLRMXrDk7hkHn
-X-Google-Smtp-Source: AGHT+IFgY8b+tLodyVNMMY4yEqu97Wmh/mYwBaQshN9u0rBDFGNjph4J4RIyqywlU0B3qvY93Yyyww==
-X-Received: by 2002:a05:6a00:3d14:b0:740:9a4b:fb2a with SMTP id d2e1a72fcca58-7490daae7abmr10623053b3a.20.1750550689009;
-        Sat, 21 Jun 2025 17:04:49 -0700 (PDT)
+        bh=K2/KSwnwApNBj2qg4eJFgFllM2G5u9JrEk978fuXLkk=;
+        b=PmErEfzrliJ/3nYl5WG9GcVabsveFuv/C7N42QVxeB43Egaq2dJKyOHqF0SUZnln/q
+         EDmFck+ynUw9bEf+mglvcgJ4bHckyNhbjqQ3/hxhgzTb1aMtQnL+nFTVUJ34oSk6VCX8
+         8VoXz0wzyImISVT5ib6YcaWk11b1wAuwIGFQwYoU2plfwHNIXWavy1IY4ljhMzTSOciY
+         bI720MTI8BlMDiSczlbCTy5CEOCuXQWvkBEDjajQ+Kvq8I3AXKkQ/CNHL2aR7cUVqg8I
+         aKP7U/RfumblCplLF4zvTiG4IayObNUKfo4T1FCbJj4ao6S04TK2X9tfSmGacsmDDDlO
+         shBA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5x7SnUrJMkN9VXJkl/VE8A5NUfrfbkQfXVnyyQqsyMSoHFTsxFe8ZKuAw95mzIBKb2vkguCIM9zJopcSH15vB57urew==@vger.kernel.org, AJvYcCXD3zEyBUxexPm0+7ymvq6m5VyK+JLRu8Zcxu1qGewB8Q+rlvrOz0kzLryIx2Sga8rxgXq1eHW2wien7CE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwztbXj9jBkSZiRpanEaTEzDqPL0IqzsA7qFm4B39AqPFtyY0ch
+	vClNFZ3cohDmPs55LdWo4rsEj62nar+nYEr/0HVqgBalKiW36oAJBD9c
+X-Gm-Gg: ASbGncufTNwRZV4j820tH/b24AO7XjRBHu6XK0LXBt6nlyCPnSemv36z/zpjCY8P7he
+	zq+65pkWg9l4e0S9n1G7cr5ZIvRtj2V3PcsHErUNreiwcRiEg7vUx0VgZ6tEYvcF/qTwwm0NTb2
+	KYM8iH7vfhv0a9szZG5etvIrW1YgiQWyORJRLUAXNSuLAZ+Fcol1dr/9iH/W0I010RRCJ0ZHs5v
+	90Mm15oscYK99eH8rCqVZGJDKJhtW/5YV0Wi5G3s5KM9UW8mPEpi2lrb75ibJYPr8EnbJ1APMfX
+	sBObHqcIrtwOmyJndhg6KViu2jnLmxa1w5iXxvg6kVDRWghKPuF6p3iA+T1UnXd5sz4dZIOO
+X-Google-Smtp-Source: AGHT+IFtsZ9q2T86H6D8O76MCN+rXPQrc/Zj8zCoI46Ni7R7B0emU5wUSs5UuHY91MEwdstztE4NPw==
+X-Received: by 2002:a05:6a00:1704:b0:748:f1ba:9aff with SMTP id d2e1a72fcca58-7490d478954mr8722457b3a.5.1750550696235;
+        Sat, 21 Jun 2025 17:04:56 -0700 (PDT)
 Received: from [192.168.1.26] ([181.88.247.122])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a626326sm4941424b3a.75.2025.06.21.17.04.45
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a626326sm4941424b3a.75.2025.06.21.17.04.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Jun 2025 17:04:48 -0700 (PDT)
+        Sat, 21 Jun 2025 17:04:55 -0700 (PDT)
 From: Kurt Borja <kuurtb@gmail.com>
-Date: Sat, 21 Jun 2025 21:04:05 -0300
-Subject: [PATCH v3 2/6] platform/x86: firmware_attributes_class: Add high
- level API for the attributes interface
+Date: Sat, 21 Jun 2025 21:04:07 -0300
+Subject: [PATCH v3 4/6] platform/x86: samsung-galaxybook: Transition new
+ firmware_attributes API
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250621-fw-attrs-api-v3-2-3dd55e463396@gmail.com>
+Message-Id: <20250621-fw-attrs-api-v3-4-3dd55e463396@gmail.com>
 References: <20250621-fw-attrs-api-v3-0-3dd55e463396@gmail.com>
 In-Reply-To: <20250621-fw-attrs-api-v3-0-3dd55e463396@gmail.com>
 To: Hans de Goede <hdegoede@redhat.com>, 
@@ -84,882 +84,344 @@ Cc: Antheas Kapenekakis <lkml@antheas.dev>,
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Dell.Client.Kernel@dell.com, Kurt Borja <kuurtb@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=28533; i=kuurtb@gmail.com;
- h=from:subject:message-id; bh=EOxhodjuHtiKmkEMUox8ZZUATb824HNGZIyEw2W8pzw=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDBnhHlNdTJ6rBjCXqnA5XY337i9q23f8WHJKjclb86S1R
- mqv/uZ3lLIwiHExyIopsrQnLPr2KCrvrd+B0Pswc1iZQIYwcHEKwEQyhBkZ3j/Yp7P+zMRJTvND
- BHmckp8+DExL8fCx+7zEZfL3MxGS0owMs2zt5hpenbczTt94wvHK6G1BX9cGqW108lgnp1375OM
- dVgA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10903; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=liILi0h70NtnHMaTrnZq1JtW1kl+WBBQwRBtx4jqqqU=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDBnhHlN7msoM1ife1p29p+Rp3eNHHjcqhE/L5AcyH6hvP
+ RfPJjWjo5SFQYyLQVZMkaU9YdG3R1F5b/0OhN6HmcPKBDKEgYtTACaSn8bIMP2l8+OTFyJKrn1d
+ Jlugd69wSe3bCzy2i55wp1vc2Vmq/JXhD5fryvmy5i2P2RM/z7sfWMPGFd4+efLh/G5rx+jLz/z
+ NmQE=
 X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
  fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
-Add high level API to aid in the creation of attribute groups attached
-to the `attrs_kobj` (per ABI specification).
+Transition to new firmware_attributes API.
 
-This new API lets users configure each group, either statically or
-dynamically through a (per type) data struct and then create this group
-through the generic fwat_create_group() macro.
+Defining firmware_attributes groups statically through
+DEFINE_FWAT_ENUM_GROUP() incurs in a minor ABI change. In particular the
+display_name_language_code attribute is no longer created. Fortunately,
+this doesn't break user-space compatibility, because this attribute is
+not required, neither by the ABI specification nor by user-space tools.
 
 Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
- drivers/platform/x86/firmware_attributes_class.c | 453 ++++++++++++++++++++++-
- drivers/platform/x86/firmware_attributes_class.h | 333 +++++++++++++++++
- 2 files changed, 785 insertions(+), 1 deletion(-)
+ drivers/platform/x86/samsung-galaxybook.c | 244 ++++++++----------------------
+ 1 file changed, 61 insertions(+), 183 deletions(-)
 
-diff --git a/drivers/platform/x86/firmware_attributes_class.c b/drivers/platform/x86/firmware_attributes_class.c
-index 27edb48636c8a91125b0a335411ebafd9818630c..034f9254240b048f58c97c18062db03f771f8139 100644
---- a/drivers/platform/x86/firmware_attributes_class.c
-+++ b/drivers/platform/x86/firmware_attributes_class.c
-@@ -9,13 +9,88 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/types.h>
-+#include <linux/string_choices.h>
- #include "firmware_attributes_class.h"
+diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
+index 9a5a7b956a9f6a2738470e83ce93f4cccf4bf3b4..d1db2a3f716aafc5a314f2bdc57f7c958a9ae346 100644
+--- a/drivers/platform/x86/samsung-galaxybook.c
++++ b/drivers/platform/x86/samsung-galaxybook.c
+@@ -36,8 +36,6 @@ struct samsung_galaxybook {
+ 	struct platform_device *platform;
+ 	struct acpi_device *acpi;
  
-+#define to_fwat_bool_data(_c) \
-+	container_of_const(_c, struct fwat_bool_data, group)
-+#define to_fwat_enum_data(_c) \
-+	container_of_const(_c, struct fwat_enum_data, group)
-+#define to_fwat_int_data(_c) \
-+	container_of_const(_c, struct fwat_int_data, group)
-+#define to_fwat_str_data(_c) \
-+	container_of_const(_c, struct fwat_str_data, group)
-+
-+struct fwat_group {
-+	struct attribute_group group;
-+	struct list_head node;
-+};
-+
-+struct fwat_group_config {
-+	int type;
-+	unsigned int total_attrs;
-+	const char * const *attr_labels;
-+	ssize_t (*show)(struct device *dev, const struct fwat_attribute *attr,
-+			char *buf);
-+	ssize_t (*store)(struct device *dev, const struct fwat_attribute *attr,
-+			 const char *buf, size_t count);
-+};
-+
-+struct fwat_attribute_ext {
-+	struct fwat_attribute fattr;
-+	const struct fwat_group_data *data;
-+	unsigned int type;
-+};
-+
-+#define to_fwat_attribute_ext(_f) \
-+	container_of_const(_f, struct fwat_attribute_ext, fattr)
-+
-+#define fwat_attribute_ext_init(_name, _mode, _show, _store, _idx, _type, _config) \
-+	((struct fwat_attribute_ext){				\
-+		.fattr = __ATTR(_name, _mode, _show, _store),	\
-+		.config = _config,				\
-+		.idx = _idx,					\
-+		.type = _type,					\
-+	 })
-+
- const struct class firmware_attributes_class = {
- 	.name = "firmware-attributes",
+-	struct device *fw_attrs_dev;
+-	struct kset *fw_attrs_kset;
+ 	/* block in case firmware attributes are updated in multiple threads */
+ 	struct mutex fw_attr_lock;
+ 
+@@ -60,36 +58,6 @@ struct samsung_galaxybook {
+ 	u8 profile_performance_modes[PLATFORM_PROFILE_LAST];
  };
- EXPORT_SYMBOL_GPL(firmware_attributes_class);
  
-+static const char * const fwat_type_labels[] = {
-+	[FWAT_GROUP_BOOLEAN]				= "boolean",
-+	[FWAT_GROUP_ENUMERATION]			= "enumeration",
-+	[FWAT_GROUP_INTEGER]				= "integer",
-+	[FWAT_GROUP_STRING]				= "string",
+-enum galaxybook_fw_attr_id {
+-	GB_ATTR_POWER_ON_LID_OPEN,
+-	GB_ATTR_USB_CHARGING,
+-	GB_ATTR_BLOCK_RECORDING,
+-};
+-
+-static const char * const galaxybook_fw_attr_name[] = {
+-	[GB_ATTR_POWER_ON_LID_OPEN] = "power_on_lid_open",
+-	[GB_ATTR_USB_CHARGING]      = "usb_charging",
+-	[GB_ATTR_BLOCK_RECORDING]   = "block_recording",
+-};
+-
+-static const char * const galaxybook_fw_attr_desc[] = {
+-	[GB_ATTR_POWER_ON_LID_OPEN] = "Power On Lid Open",
+-	[GB_ATTR_USB_CHARGING]      = "USB Charging",
+-	[GB_ATTR_BLOCK_RECORDING]   = "Block Recording",
+-};
+-
+-#define GB_ATTR_LANGUAGE_CODE "en_US.UTF-8"
+-
+-struct galaxybook_fw_attr {
+-	struct samsung_galaxybook *galaxybook;
+-	enum galaxybook_fw_attr_id fw_attr_id;
+-	struct attribute_group attr_group;
+-	struct kobj_attribute display_name;
+-	struct kobj_attribute current_value;
+-	int (*get_value)(struct samsung_galaxybook *galaxybook, bool *value);
+-	int (*set_value)(struct samsung_galaxybook *galaxybook, const bool value);
+-};
+-
+ struct sawb {
+ 	u16 safn;
+ 	u16 sasb;
+@@ -908,193 +876,106 @@ static int galaxybook_block_recording_init(struct samsung_galaxybook *galaxybook
+ 
+ /* Firmware Attributes setup */
+ 
+-static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
++static const char * const galaxybook_possible_vals[] = {
++	[false] = "0", [true] = "1", NULL
 +};
 +
-+static const char * const fwat_bool_labels[] = {
-+	[fwat_bool_current_value]			= "current_value",
-+	[fwat_bool_default_value]			= "default_value",
-+};
-+
-+static const char * const fwat_enum_labels[] = {
-+	[fwat_enum_current_value]			= "current_value",
-+	[fwat_enum_default_value]			= "default_value",
-+	[fwat_enum_possible_values]			= "possible_values",
-+};
-+
-+static const char * const fwat_int_labels[] = {
-+	[fwat_int_current_value]			= "current_value",
-+	[fwat_int_default_value]			= "default_value",
-+	[fwat_int_min_value]				= "min_value",
-+	[fwat_int_max_value]				= "max_value",
-+	[fwat_int_scalar_increment]			= "scalar_increment",
-+};
-+
-+static const char * const fwat_str_labels[] = {
-+	[fwat_str_current_value]			= "current_value",
-+	[fwat_str_default_value]			= "default_value",
-+	[fwat_str_min_length]				= "min_length",
-+	[fwat_str_max_length]				= "max_length",
-+};
-+
- static ssize_t fwat_attrs_kobj_show(struct kobject *kobj, struct attribute *attr,
- 				    char *buf)
++static int power_on_lid_open_read(struct device *dev, long id, int *val_idx)
  {
-@@ -57,6 +132,379 @@ static const struct kobj_type fwat_attrs_ktype = {
- 	.release	= fwat_attrs_kobj_release,
- };
+-	return sysfs_emit(buf, "enumeration\n");
+-}
+-
+-static struct kobj_attribute fw_attr_type = __ATTR_RO(type);
+-
+-static ssize_t default_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+-{
+-	return sysfs_emit(buf, "0\n");
+-}
+-
+-static struct kobj_attribute fw_attr_default_value = __ATTR_RO(default_value);
+-
+-static ssize_t possible_values_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+-{
+-	return sysfs_emit(buf, "0;1\n");
+-}
+-
+-static struct kobj_attribute fw_attr_possible_values = __ATTR_RO(possible_values);
+-
+-static ssize_t display_name_language_code_show(struct kobject *kobj, struct kobj_attribute *attr,
+-					       char *buf)
+-{
+-	return sysfs_emit(buf, "%s\n", GB_ATTR_LANGUAGE_CODE);
+-}
+-
+-static struct kobj_attribute fw_attr_display_name_language_code =
+-	__ATTR_RO(display_name_language_code);
+-
+-static ssize_t display_name_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+-{
+-	struct galaxybook_fw_attr *fw_attr =
+-		container_of(attr, struct galaxybook_fw_attr, display_name);
+-
+-	return sysfs_emit(buf, "%s\n", galaxybook_fw_attr_desc[fw_attr->fw_attr_id]);
+-}
+-
+-static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+-{
+-	struct galaxybook_fw_attr *fw_attr =
+-		container_of(attr, struct galaxybook_fw_attr, current_value);
+-	bool value;
++	struct samsung_galaxybook *galaxybook = dev_get_drvdata(dev);
++	bool val;
+ 	int err;
  
-+static ssize_t fwat_type_show(struct device *dev, const struct fwat_attribute *attr,
-+			      char *buf)
-+{
-+	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
+-	err = fw_attr->get_value(fw_attr->galaxybook, &value);
++	err = power_on_lid_open_acpi_get(galaxybook, &val);
+ 	if (err)
+ 		return err;
+ 
+-	return sysfs_emit(buf, "%u\n", value);
++	*val_idx = val;
 +
-+	return sysfs_emit(buf, "%s\n", fwat_type_labels[ext->type]);
++	return 0;
+ }
+ 
+-static ssize_t current_value_store(struct kobject *kobj, struct kobj_attribute *attr,
+-				   const char *buf, size_t count)
++static int power_on_lid_open_write(struct device *dev, long id, int val_idx)
+ {
+-	struct galaxybook_fw_attr *fw_attr =
+-		container_of(attr, struct galaxybook_fw_attr, current_value);
+-	struct samsung_galaxybook *galaxybook = fw_attr->galaxybook;
+-	bool value;
++	struct samsung_galaxybook *galaxybook = dev_get_drvdata(dev);
++
++	return power_on_lid_open_acpi_set(galaxybook, val_idx ? true : false);
 +}
 +
-+static ssize_t
-+fwat_display_name_show(struct device *dev, const struct fwat_attribute *attr,
-+		       char *buf)
++DEFINE_FWAT_ENUM_GROUP(power_on_lid_open, "Power On Lid Open", galaxybook_possible_vals,
++		       false, 0644, FWAT_ENUM_ALL_ATTRS);
++
++static int usb_charging_read(struct device *dev, long id, int *val_idx)
 +{
-+	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
-+	const struct fwat_group_data *data = ext->data;
-+
-+	if (!data->display_name)
-+		return -EOPNOTSUPP;
-+
-+	return sysfs_emit(buf, "%s\n", data->display_name);
-+}
-+
-+static ssize_t
-+fwat_language_code_show(struct device *dev, const struct fwat_attribute *attr,
-+			char *buf)
-+{
-+	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
-+	const struct fwat_group_data *data = ext->data;
-+
-+	if (!data->language_code)
-+		return -EOPNOTSUPP;
-+
-+	return sysfs_emit(buf, "%s\n", data->language_code);
-+}
-+
-+static ssize_t
-+boolean_group_show(struct device *dev, const struct fwat_attribute *attr,
-+		   char *buf)
-+{
-+	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
-+	const struct fwat_bool_data *data = to_fwat_bool_data(ext->data);
++	struct samsung_galaxybook *galaxybook = dev_get_drvdata(dev);
 +	bool val;
-+	int ret;
-+
-+	switch (ext->type) {
-+	case fwat_bool_current_value:
-+		ret = data->read(dev, data->group.id, &val);
-+		if (ret < 0)
-+			return ret;
-+		break;
-+	case fwat_bool_default_value:
-+		val = data->default_val;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return sysfs_emit(buf, "%s\n", str_yes_no(val));
-+}
-+
-+static ssize_t
-+enumeration_group_show(struct device *dev, const struct fwat_attribute *attr,
-+		       char *buf)
-+{
-+	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
-+	const struct fwat_enum_data *data = to_fwat_enum_data(ext->data);
-+	int val_idx, sz = 0;
-+	int ret;
-+
-+	switch (ext->type) {
-+	case fwat_enum_current_value:
-+		ret = data->read(dev, data->group.id, &val_idx);
-+		if (ret < 0)
-+			return ret;
-+		break;
-+	case fwat_enum_default_value:
-+		val_idx = data->default_idx;
-+		break;
-+	case fwat_enum_possible_values:
-+		sz += sysfs_emit_at(buf, sz, "%s", data->possible_vals[0]);
-+		for (unsigned int i = 1; data->possible_vals[i]; i++)
-+			sz += sysfs_emit_at(buf, sz, ";%s", data->possible_vals[i]);
-+		sz += sysfs_emit_at(buf, sz, "\n");
-+		return sz;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return sysfs_emit(buf, "%s\n", data->possible_vals[val_idx]);
-+}
-+
-+static ssize_t
-+integer_group_show(struct device *dev, const struct fwat_attribute *attr,
-+		   char *buf)
-+{
-+	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
-+	const struct fwat_int_data *data = to_fwat_int_data(ext->data);
-+	long val;
-+	int ret;
-+
-+	switch (ext->type) {
-+	case fwat_int_current_value:
-+		ret = data->read(dev, data->group.id, &val);
-+		if (ret < 0)
-+			return ret;
-+		break;
-+	case fwat_int_default_value:
-+		val = data->default_val;
-+		break;
-+	case fwat_int_min_value:
-+		val = data->min_val;
-+		break;
-+	case fwat_int_max_value:
-+		val = data->max_val;
-+		break;
-+	case fwat_int_scalar_increment:
-+		val = data->increment;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return sysfs_emit(buf, "%ld\n", val);
-+}
-+
-+static ssize_t
-+string_group_show(struct device *dev, const struct fwat_attribute *attr,
-+		  char *buf)
-+{
-+	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
-+	const struct fwat_str_data *data = to_fwat_str_data(ext->data);
-+	const char *val;
-+	long len;
-+	int ret;
-+
-+	switch (ext->type) {
-+	case fwat_str_current_value:
-+		ret = data->read(dev, data->group.id, &val);
-+		if (ret < 0)
-+			return ret;
-+		break;
-+	case fwat_str_default_value:
-+		val = data->default_val;
-+		break;
-+	case fwat_str_min_length:
-+		len = data->min_len;
-+		return sysfs_emit(buf, "%ld\n", len);
-+	case fwat_str_max_length:
-+		len = data->max_len;
-+		return sysfs_emit(buf, "%ld\n", len);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return sysfs_emit(buf, "%s\n", val);
-+}
-+
-+static ssize_t
-+boolean_group_store(struct device *dev, const struct fwat_attribute *attr,
-+		    const char *buf, size_t count)
-+{
-+	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
-+	const struct fwat_bool_data *data = to_fwat_bool_data(ext->data);
-+	bool val;
-+	int ret;
-+
-+	ret = kstrtobool(buf, &val);
-+	if (ret)
-+		return ret;
-+
-+	ret = data->write(dev, data->group.id, val);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static ssize_t
-+enumeration_group_store(struct device *dev, const struct fwat_attribute *attr,
-+			const char *buf, size_t count)
-+{
-+	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
-+	const struct fwat_enum_data *data = to_fwat_enum_data(ext->data);
-+	int val_idx;
-+	int ret;
-+
-+	val_idx = __sysfs_match_string(data->possible_vals, -1, buf);
-+	if (val_idx < 0)
-+		return val_idx;
-+
-+	ret = data->write(dev, data->group.id, val_idx);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static ssize_t
-+integer_group_store(struct device *dev, const struct fwat_attribute *attr,
-+		    const char *buf, size_t count)
-+{
-+	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
-+	const struct fwat_int_data *data = to_fwat_int_data(ext->data);
-+	long val;
-+	int ret;
-+
-+	ret = kstrtol(buf, 0, &val);
-+	if (ret)
-+		return ret;
-+
-+	ret = data->write(dev, data->group.id, val);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static ssize_t
-+string_group_store(struct device *dev, const struct fwat_attribute *attr,
-+		   const char *buf, size_t count)
-+{
-+	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
-+	const struct fwat_str_data *data = to_fwat_str_data(ext->data);
-+	int ret;
-+
-+	ret = data->write(dev, data->group.id, buf);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static int fwat_add_group(struct fwat_device *fadev, const struct fwat_group_data *data,
-+			  const struct fwat_group_config *config)
-+{
-+	struct fwat_attribute_ext *fattrs;
-+	struct fwat_group *group;
-+	struct attribute **attrs;
-+	unsigned int bit, i = 0;
-+	size_t nattrs;
-+	int ret;
-+
-+	nattrs = bitmap_weight(&data->fattrs, config->total_attrs);
-+	if (data->display_name)
-+		nattrs++;
-+	if (data->language_code)
-+		nattrs++;
-+
-+	attrs = devm_kcalloc(fadev->dev, sizeof(*attrs), nattrs + 2, GFP_KERNEL);
-+	if (!attrs)
-+		return -ENOMEM;
-+	fattrs = devm_kcalloc(fadev->dev, sizeof(*fattrs), nattrs + 1, GFP_KERNEL);
-+	if (!fattrs)
-+		return -ENOMEM;
-+
-+	fattrs[i].fattr.attr.name = "type";
-+	fattrs[i].fattr.attr.mode = 0444;
-+	fattrs[i].fattr.show = fwat_type_show;
-+	fattrs[i].data = data;
-+	fattrs[i].type = config->type;
-+	attrs[i] = &fattrs[i].fattr.attr;
-+	i++;
-+
-+	if (data->display_name) {
-+		fattrs[i].fattr.attr.name = "display_name";
-+		fattrs[i].fattr.attr.mode = 0444;
-+		fattrs[i].fattr.show = fwat_display_name_show;
-+		fattrs[i].data = data;
-+		fattrs[i].type = config->type;
-+		attrs[i] = &fattrs[i].fattr.attr;
-+		i++;
-+	}
-+
-+	if (data->language_code) {
-+		fattrs[i].fattr.attr.name = "display_name_language_code";
-+		fattrs[i].fattr.attr.mode = 0444;
-+		fattrs[i].fattr.show = fwat_language_code_show;
-+		fattrs[i].data = data;
-+		fattrs[i].type = config->type;
-+		attrs[i] = &fattrs[i].fattr.attr;
-+		i++;
-+	}
-+
-+	for_each_set_bit(bit, &data->fattrs, config->total_attrs) {
-+		fattrs[i].fattr.attr.name = config->attr_labels[bit];
-+		/* current_value is always at bit 0 and uses data->mode */
-+		fattrs[i].fattr.attr.mode = bit ? 0444 : data->mode;
-+		fattrs[i].fattr.show = config->show;
-+		fattrs[i].fattr.store = config->store;
-+		fattrs[i].data = data;
-+		fattrs[i].type = bit;
-+		attrs[i] = &fattrs[i].fattr.attr;
-+		i++;
-+	}
-+
-+	group = devm_kzalloc(fadev->dev, sizeof(*group), GFP_KERNEL);
-+	if (!group)
-+		return -ENOMEM;
-+	group->group.name = data->name;
-+	group->group.attrs = attrs;
-+	ret = sysfs_create_group(&fadev->attrs_kobj, &group->group);
-+	if (ret)
-+		return ret;
-+	list_add(&group->node, &fadev->auto_groups);
-+
-+	kobject_uevent(&fadev->attrs_kobj, KOBJ_CHANGE);
-+
+ 	int err;
+ 
+-	if (!count)
+-		return -EINVAL;
+-
+-	err = kstrtobool(buf, &value);
++	err = usb_charging_acpi_get(galaxybook, &val);
+ 	if (err)
+ 		return err;
+ 
+-	guard(mutex)(&galaxybook->fw_attr_lock);
++	*val_idx = val;
+ 
+-	err = fw_attr->set_value(galaxybook, value);
 +	return 0;
 +}
 +
-+static void fwat_remove_auto_groups(struct fwat_device *fadev)
++static int usb_charging_write(struct device *dev, long id, int val_idx)
 +{
-+	struct fwat_group *pos;
++	struct samsung_galaxybook *galaxybook = dev_get_drvdata(dev);
 +
-+	list_for_each_entry(pos, &fadev->auto_groups, node)
-+		sysfs_remove_group(&fadev->attrs_kobj, &pos->group);
++	return usb_charging_acpi_set(galaxybook, val_idx ? true : false);
 +}
 +
-+int fwat_create_bool_group(struct fwat_device *fadev, const struct fwat_bool_data *data)
++DEFINE_FWAT_ENUM_GROUP(usb_charging, "USB Charging", galaxybook_possible_vals,
++		       false, 0644, FWAT_ENUM_ALL_ATTRS);
++
++static int block_recording_read(struct device *dev, long id, int *val_idx)
 +{
-+	struct fwat_group_config config = {
-+		.type = FWAT_GROUP_BOOLEAN,
-+		.total_attrs = fwat_bool_attrs_last,
-+		.attr_labels = fwat_bool_labels,
-+		.show = boolean_group_show,
-+		.store = boolean_group_store,
-+	};
++	struct samsung_galaxybook *galaxybook = dev_get_drvdata(dev);
++	bool val;
++	int err;
 +
-+	return fwat_add_group(fadev, &data->group, &config);
-+}
-+EXPORT_SYMBOL_GPL(fwat_create_bool_group);
-+
-+int fwat_create_enum_group(struct fwat_device *fadev, const struct fwat_enum_data *data)
-+{
-+	struct fwat_group_config config = {
-+		.type = FWAT_GROUP_ENUMERATION,
-+		.total_attrs = fwat_enum_attrs_last,
-+		.attr_labels = fwat_enum_labels,
-+		.show = enumeration_group_show,
-+		.store = enumeration_group_store,
-+	};
-+
-+	return fwat_add_group(fadev, &data->group, &config);
-+}
-+EXPORT_SYMBOL_GPL(fwat_create_enum_group);
-+
-+int fwat_create_int_group(struct fwat_device *fadev, const struct fwat_int_data *data)
-+{
-+	struct fwat_group_config config = {
-+		.type = FWAT_GROUP_INTEGER,
-+		.total_attrs = fwat_int_attrs_last,
-+		.attr_labels = fwat_int_labels,
-+		.show = integer_group_show,
-+		.store = integer_group_store,
-+	};
-+
-+	return fwat_add_group(fadev, &data->group, &config);
-+}
-+EXPORT_SYMBOL_GPL(fwat_create_int_group);
-+
-+int fwat_create_str_group(struct fwat_device *fadev, const struct fwat_str_data *data)
-+{
-+	struct fwat_group_config config = {
-+		.type = FWAT_GROUP_STRING,
-+		.total_attrs = fwat_str_attrs_last,
-+		.attr_labels = fwat_str_labels,
-+		.show = string_group_show,
-+		.store = string_group_store,
-+	};
-+
-+	return fwat_add_group(fadev, &data->group, &config);
-+}
-+EXPORT_SYMBOL_GPL(fwat_create_str_group);
-+
- /**
-  * fwat_device_register - Create and register a firmware-attributes class
-  *			  device
-@@ -102,6 +550,7 @@ fwat_device_register(struct device *parent, const char *name, void *data,
++	err = block_recording_acpi_get(galaxybook, &val);
+ 	if (err)
+ 		return err;
  
- 	fadev->dev = dev;
- 	fadev->groups = groups;
-+	INIT_LIST_HEAD(&fadev->auto_groups);
+-	return count;
++	*val_idx = val;
++
++	return 0;
+ }
  
- 	kobject_uevent(&fadev->attrs_kobj, KOBJ_ADD);
- 
-@@ -120,11 +569,13 @@ EXPORT_SYMBOL_GPL(fwat_device_register);
- 
- void fwat_device_unregister(struct fwat_device *fadev)
+-#define NUM_FW_ATTR_ENUM_ATTRS  6
+-
+-static int galaxybook_fw_attr_init(struct samsung_galaxybook *galaxybook,
+-				   const enum galaxybook_fw_attr_id fw_attr_id,
+-				   int (*get_value)(struct samsung_galaxybook *galaxybook,
+-						    bool *value),
+-				   int (*set_value)(struct samsung_galaxybook *galaxybook,
+-						    const bool value))
++static int block_recording_write(struct device *dev, long id, int val_idx)
  {
--	struct device *dev = fadev->dev;
-+	struct device *dev;
+-	struct galaxybook_fw_attr *fw_attr;
+-	struct attribute **attrs;
  
- 	if (!fadev)
- 		return;
+-	fw_attr = devm_kzalloc(&galaxybook->platform->dev, sizeof(*fw_attr), GFP_KERNEL);
+-	if (!fw_attr)
+-		return -ENOMEM;
++	struct samsung_galaxybook *galaxybook = dev_get_drvdata(dev);
  
-+	dev = fadev->dev;
-+	fwat_remove_auto_groups(fadev);
- 	device_remove_groups(dev, fadev->groups);
- 	kobject_del(&fadev->attrs_kobj);
- 	kobject_put(&fadev->attrs_kobj);
-diff --git a/drivers/platform/x86/firmware_attributes_class.h b/drivers/platform/x86/firmware_attributes_class.h
-index ad94bf91e5af30a2b8feb9abf224ee6f0d17600a..6b089e61cfb74c4bf1d196d374bc6c271b14f211 100644
---- a/drivers/platform/x86/firmware_attributes_class.h
-+++ b/drivers/platform/x86/firmware_attributes_class.h
-@@ -10,6 +10,7 @@
- #include <linux/device/class.h>
- #include <linux/kobject.h>
- #include <linux/sysfs.h>
-+#include <linux/list.h>
+-	attrs = devm_kcalloc(&galaxybook->platform->dev, NUM_FW_ATTR_ENUM_ATTRS + 1,
+-			     sizeof(*attrs), GFP_KERNEL);
+-	if (!attrs)
+-		return -ENOMEM;
+-
+-	attrs[0] = &fw_attr_type.attr;
+-	attrs[1] = &fw_attr_default_value.attr;
+-	attrs[2] = &fw_attr_possible_values.attr;
+-	attrs[3] = &fw_attr_display_name_language_code.attr;
+-
+-	sysfs_attr_init(&fw_attr->display_name.attr);
+-	fw_attr->display_name.attr.name = "display_name";
+-	fw_attr->display_name.attr.mode = 0444;
+-	fw_attr->display_name.show = display_name_show;
+-	attrs[4] = &fw_attr->display_name.attr;
+-
+-	sysfs_attr_init(&fw_attr->current_value.attr);
+-	fw_attr->current_value.attr.name = "current_value";
+-	fw_attr->current_value.attr.mode = 0644;
+-	fw_attr->current_value.show = current_value_show;
+-	fw_attr->current_value.store = current_value_store;
+-	attrs[5] = &fw_attr->current_value.attr;
+-
+-	attrs[6] = NULL;
+-
+-	fw_attr->galaxybook = galaxybook;
+-	fw_attr->fw_attr_id = fw_attr_id;
+-	fw_attr->attr_group.name = galaxybook_fw_attr_name[fw_attr_id];
+-	fw_attr->attr_group.attrs = attrs;
+-	fw_attr->get_value = get_value;
+-	fw_attr->set_value = set_value;
+-
+-	return sysfs_create_group(&galaxybook->fw_attrs_kset->kobj, &fw_attr->attr_group);
++	return block_recording_acpi_set(galaxybook, val_idx ? true : false);
+ }
  
- extern const struct class firmware_attributes_class;
+-static void galaxybook_kset_unregister(void *data)
+-{
+-	struct kset *kset = data;
+-
+-	kset_unregister(kset);
+-}
+-
+-static void galaxybook_fw_attrs_dev_unregister(void *data)
+-{
+-	struct device *fw_attrs_dev = data;
+-
+-	device_unregister(fw_attrs_dev);
+-}
++DEFINE_FWAT_ENUM_GROUP(block_recording, "Block Recording", galaxybook_possible_vals,
++		       false, 0644, FWAT_ENUM_ALL_ATTRS);
  
-@@ -23,6 +24,7 @@ struct fwat_device {
- 	struct device *dev;
- 	struct kobject attrs_kobj;
- 	const struct attribute_group **groups;
-+	struct list_head auto_groups;
- };
+ static int galaxybook_fw_attrs_init(struct samsung_galaxybook *galaxybook)
+ {
++	struct fwat_device *fdev;
+ 	bool value;
+ 	int err;
  
- #define to_fwat_device(_k)	container_of_const(_k, struct fwat_device, attrs_kobj)
-@@ -43,6 +45,337 @@ struct fwat_attribute {
+-	err = devm_mutex_init(&galaxybook->platform->dev, &galaxybook->fw_attr_lock);
+-	if (err)
+-		return err;
+-
+-	galaxybook->fw_attrs_dev = device_create(&firmware_attributes_class, NULL, MKDEV(0, 0),
+-						 NULL, "%s", DRIVER_NAME);
+-	if (IS_ERR(galaxybook->fw_attrs_dev))
+-		return PTR_ERR(galaxybook->fw_attrs_dev);
+-
+-	err = devm_add_action_or_reset(&galaxybook->platform->dev,
+-				       galaxybook_fw_attrs_dev_unregister,
+-				       galaxybook->fw_attrs_dev);
+-	if (err)
+-		return err;
+-
+-	galaxybook->fw_attrs_kset = kset_create_and_add("attributes", NULL,
+-							&galaxybook->fw_attrs_dev->kobj);
+-	if (!galaxybook->fw_attrs_kset)
+-		return -ENOMEM;
+-	err = devm_add_action_or_reset(&galaxybook->platform->dev,
+-				       galaxybook_kset_unregister, galaxybook->fw_attrs_kset);
+-	if (err)
+-		return err;
++	fdev = devm_fwat_device_register(&galaxybook->platform->dev, DRIVER_NAME, galaxybook, NULL);
++	if (IS_ERR(fdev))
++		return PTR_ERR(fdev);
  
- #define to_fwat_attribute(_a) container_of_const(_a, struct fwat_attribute, attr)
+ 	err = power_on_lid_open_acpi_get(galaxybook, &value);
+ 	if (!err) {
+-		err = galaxybook_fw_attr_init(galaxybook,
+-					      GB_ATTR_POWER_ON_LID_OPEN,
+-					      &power_on_lid_open_acpi_get,
+-					      &power_on_lid_open_acpi_set);
++		err = fwat_create_group(fdev, &power_on_lid_open_group_data);
+ 		if (err)
+ 			return err;
+ 	}
  
-+enum fwat_group_type {
-+	FWAT_GROUP_BOOLEAN,
-+	FWAT_GROUP_ENUMERATION,
-+	FWAT_GROUP_INTEGER,
-+	FWAT_GROUP_STRING,
-+};
-+
-+enum fwat_bool_attrs {
-+	fwat_bool_current_value,
-+	fwat_bool_default_value,
-+	fwat_bool_attrs_last
-+};
-+
-+#define FWAT_BOOL_CURRENT_VALUE			BIT(fwat_bool_current_value)
-+#define FWAT_BOOL_DEFAULT_VALUE			BIT(fwat_bool_default_value)
-+#define FWAT_BOOL_ALL_ATTRS			GENMASK(fwat_bool_attrs_last, 0)
-+
-+enum fwat_enum_attrs {
-+	fwat_enum_current_value,
-+	fwat_enum_default_value,
-+	fwat_enum_possible_values,
-+	fwat_enum_attrs_last
-+};
-+
-+#define FWAT_ENUM_CURRENT_VALUE			BIT(fwat_enum_current_value)
-+#define FWAT_ENUM_DEFAULT_VALUE			BIT(fwat_enum_default_value)
-+#define FWAT_ENUM_POSSIBLE_VALUES		BIT(fwat_enum_possible_values)
-+#define FWAT_ENUM_ALL_ATTRS			GENMASK(fwat_enum_attrs_last, 0)
-+
-+enum fwat_int_attrs {
-+	fwat_int_current_value,
-+	fwat_int_default_value,
-+	fwat_int_min_value,
-+	fwat_int_max_value,
-+	fwat_int_scalar_increment,
-+	fwat_int_attrs_last
-+};
-+
-+#define FWAT_INT_CURRENT_VALUE			BIT(fwat_int_current_value)
-+#define FWAT_INT_DEFAULT_VALUE			BIT(fwat_int_default_value)
-+#define FWAT_INT_MIN_VALUE			BIT(fwat_int_min_value)
-+#define FWAT_INT_MAX_VALUE			BIT(fwat_int_max_value)
-+#define FWAT_INT_SCALAR_INCREMENT		BIT(fwat_int_scalar_increment)
-+#define FWAT_INT_ALL_ATTRS			GENMASK(fwat_int_attrs_last, 0)
-+
-+enum fwat_str_attrs {
-+	fwat_str_current_value,
-+	fwat_str_default_value,
-+	fwat_str_min_length,
-+	fwat_str_max_length,
-+	fwat_str_attrs_last
-+};
-+
-+#define FWAT_STR_CURRENT_VALUE			BIT(fwat_str_current_value)
-+#define FWAT_STR_DEFAULT_VALUE			BIT(fwat_str_default_value)
-+#define FWAT_STR_MIN_LENGTH			BIT(fwat_str_min_length)
-+#define FWAT_STR_MAX_LENGTH			BIT(fwat_str_max_length)
-+#define FWAT_STR_ALL_ATTRS			GENMASK(fwat_str_attrs_last, 0)
-+
-+static_assert(fwat_bool_current_value == 0);
-+static_assert(fwat_enum_current_value == 0);
-+static_assert(fwat_int_current_value == 0);
-+static_assert(fwat_str_current_value == 0);
-+
-+/**
-+ * struct fwat_group_data - Data struct common between group types
-+ * @idx: Group ID defined by the user.
-+ * @name: Name of the group.
-+ * @display_name: Name showed in the display_name attribute. (Optional)
-+ * @language_code: Language code showed in the display_name_language_code
-+ *                 attribute. (Optional)
-+ * @fattrs: Bitmap of selected attributes for this group type.
-+ * @mode: Mode for the current_value attribute. All other attributes will have
-+ *        0444 permissions.
-+ *
-+ * NOTE: This struct is not meant to be defined directly. It is supposed to be
-+ * embedded and defined as part of fwat_[type]_data structs.
-+ */
-+struct fwat_group_data {
-+	long id;
-+	const char *name;
-+	const char *display_name;
-+	const char *language_code;
-+	unsigned long fattrs;
-+	umode_t mode;
-+};
-+
-+/**
-+ * struct fwat_bool_data - Data struct for the boolean group type
-+ * @default_val: Default value.
-+ * @read: Read callback for the current_value attribute.
-+ * @write: Write callback for the current_value attribute.
-+ * @group: Group data.
-+ */
-+struct fwat_bool_data {
-+	bool default_val;
-+	int (*read)(struct device *dev, long id, bool *val);
-+	int (*write)(struct device *dev, long id, bool val);
-+	struct fwat_group_data group;
-+};
-+
-+/**
-+ * struct fwat_enum_data - Data struct for the enumeration group type
-+ * @default_idx: Index of the default value in the @possible_vals array.
-+ * @possible_vals: Array of possible value strings for this group type.
-+ * @read: Read callback for the current_value attribute.
-+ * @write: Write callback for the current_value attribute.
-+ * @group: Group data.
-+ *
-+ * NOTE: The `val_idx` argument in the @write callback is guaranteed to be a
-+ *       valid (within bounds) index. However, the user is in charge of writing
-+ *       valid indexes to the `*val_idx` argument of the @read callback.
-+ *       Failing to do so may result in an OOB access.
-+ */
-+struct fwat_enum_data {
-+	int default_idx;
-+	const char * const *possible_vals;
-+	int (*read)(struct device *dev, long id, int *val_idx);
-+	int (*write)(struct device *dev, long id, int val_idx);
-+	struct fwat_group_data group;
-+};
-+
-+/**
-+ * struct fwat_int_data - Data struct for the integer group type
-+ * @default_val: Default value.
-+ * @min_val: Minimum value.
-+ * @max_val: Maximum value.
-+ * @increment: Scalar increment for this value.
-+ * @read: Read callback for the current_value attribute.
-+ * @write: Write callback for the current_value attribute.
-+ * @group: Group data.
-+ *
-+ * NOTE: The @min_val, @max_val, @increment constraints are merely informative.
-+ *       These values are not enforced in any of the callbacks.
-+ */
-+struct fwat_int_data {
-+	long default_val;
-+	long min_val;
-+	long max_val;
-+	long increment;
-+	int (*read)(struct device *dev, long id, long *val);
-+	int (*write)(struct device *dev, long id, long val);
-+	struct fwat_group_data group;
-+};
-+
-+/**
-+ * struct fwat_str_data - Data struct for the string group type
-+ * @default_val: Default value.
-+ * @min_len: Minimum string length.
-+ * @max_len: Maximum string length.
-+ * @read: Read callback for the current_value attribute.
-+ * @write: Write callback for the current_value attribute.
-+ * @group: Group data.
-+ *
-+ * NOTE: The @min_len, @max_len constraints are merely informative. These
-+ *       values are not enforced in any of the callbacks.
-+ */
-+struct fwat_str_data {
-+	const char *default_val;
-+	long min_len;
-+	long max_len;
-+	int (*read)(struct device *dev, long id, const char **val);
-+	int (*write)(struct device *dev, long id, const char *val);
-+	struct fwat_group_data group;
-+};
-+
-+#define __FWAT_GROUP(_name, _disp_name, _mode, _fattrs) \
-+	{ .name = __stringify(_name), .display_name = _disp_name, .mode = _mode, .fattrs = _fattrs }
-+
-+/**
-+ * DEFINE_FWAT_BOOL_GROUP - Convenience macro to quickly define an static
-+ *                          struct fwat_bool_data instance
-+ * @_name: Name of the group.
-+ * @_disp_name: Name showed in the display_name attribute. (Optional)
-+ * @_def_val: Default value.
-+ * @_mode: Mode for the current_value attribute. All other attributes will have
-+ *         0444 permissions.
-+ * @_fattrs: Bitmap of selected attributes for this group type.
-+ *
-+ * `read` and `write` callbacks are required to be already defined as
-+ * `_name##_read` and `_name##_write` respectively.
-+ */
-+#define DEFINE_FWAT_BOOL_GROUP(_name, _disp_name, _def_val, _mode, _fattrs) \
-+	static const struct fwat_bool_data _name##_group_data = {	\
-+		.read = _name##_read,					\
-+		.write = _name##_write,					\
-+		.default_val = _def_val,				\
-+		.group = __FWAT_GROUP(_name, _disp_name, _mode, _fattrs), \
-+	}
-+
-+/**
-+ * DEFINE_FWAT_ENUM_GROUP - Convenience macro to quickly define an static
-+ *                          struct fwat_enum_data instance
-+ * @_name: Name of the group.
-+ * @_disp_name: Name showed in the display_name attribute. (Optional)
-+ * @_def_idx: Index of the default value in the @_poss_vals array.
-+ * @_poss_vals: Array of possible value strings for this group type.
-+ * @_mode: Mode for the current_value attribute. All other attributes will have
-+ *         0444 permissions.
-+ * @_fattrs: Bitmap of selected attributes for this group type.
-+ *
-+ * `read` and `write` callbacks are required to be already defined as
-+ * `_name##_read` and `_name##_write` respectively.
-+ *
-+ * NOTE: The `val_idx` argument in the `write` callback is guaranteed to be a
-+ *       valid (within bounds) index. However, the user is in charge of writing
-+ *       valid indexes to the `*val_idx` argument of the `read` callback.
-+ *       Failing to do so may result in an OOB access.
-+ */
-+#define DEFINE_FWAT_ENUM_GROUP(_name, _disp_name, _poss_vals, _def_idx, _mode, _fattrs) \
-+	static const struct fwat_enum_data _name##_group_data = {	\
-+		.read = _name##_read,					\
-+		.write = _name##_write,					\
-+		.default_idx = _def_idx,				\
-+		.possible_vals = _poss_vals,				\
-+		.group = __FWAT_GROUP(_name, _disp_name, _mode, _fattrs), \
-+	}
-+
-+/**
-+ * DEFINE_FWAT_INT_GROUP - Convenience macro to quickly define an static
-+ *                         struct fwat_int_data instance
-+ * @_name: Name of the group.
-+ * @_disp_name: Name showed in the display_name attribute. (Optional)
-+ * @_def_val: Default value.
-+ * @_min: Minimum value.
-+ * @_max: Maximum value.
-+ * @_inc: Scalar increment for this value.
-+ * @_mode: Mode for the current_value attribute. All other attributes will have
-+ *         0444 permissions.
-+ * @_fattrs: Bitmap of selected attributes for this group type.
-+ *
-+ * `read` and `write` callbacks are required to be already defined as
-+ * `_name##_read` and `_name##_write` respectively.
-+ *
-+ * NOTE: The @_min, @_max, @_inc constraints are merely informative. These
-+ *       values are not enforced in any of the callbacks.
-+ */
-+#define DEFINE_FWAT_INT_GROUP(_name, _disp_name, _def_val, _min, _max, _inc, _mode, _fattrs) \
-+	static const struct fwat_int_data _name##_group_data = {	\
-+		.read = _name##_read,					\
-+		.write = _name##_write,					\
-+		.default_val = _def_val,				\
-+		.min_val = _min,					\
-+		.max_val = _max,					\
-+		.increment = _inc,					\
-+		.group = __FWAT_GROUP(_name, _disp_name, _mode, _fattrs), \
-+	}
-+
-+/**
-+ * DEFINE_FWAT_STR_GROUP - Convenience macro to quickly define an static
-+ *                         struct fwat_str_data instance
-+ * @_name: Name of the group.
-+ * @_disp_name: Name showed in the display_name attribute. (Optional)
-+ * @_def_val: Default value.
-+ * @_min: Minimum string length.
-+ * @_max: Maximum string length.
-+ * @_mode: Mode for the current_value attribute. All other attributes will have
-+ *         0444 permissions.
-+ * @_fattrs: Bitmap of selected attributes for this group type.
-+ *
-+ * `read` and `write` callbacks are required to be already defined as
-+ * `_name##_read` and `_name##_write` respectively.
-+ *
-+ * NOTE: The @_min, @_max constraints are merely informative. These values are
-+ *       not enforced in any of the callbacks.
-+ */
-+#define DEFINE_FWAT_STR_GROUP(_name, _disp_name, _def_val, _min, _max, _mode, _fattrs) \
-+	static const struct fwat_str_data _name##_group_data = {	\
-+		.read = _name##_read,					\
-+		.write = _name##_write,					\
-+		.default_val = _def_val,				\
-+		.min_len = _min,					\
-+		.max_len = _max,					\
-+		.group = __FWAT_GROUP(_name, _disp_name, _mode, _fattrs), \
-+	}
-+
-+int fwat_create_bool_group(struct fwat_device *fadev,
-+			   const struct fwat_bool_data *data);
-+int fwat_create_enum_group(struct fwat_device *fadev,
-+			   const struct fwat_enum_data *data);
-+int fwat_create_int_group(struct fwat_device *fadev,
-+			  const struct fwat_int_data *data);
-+int fwat_create_str_group(struct fwat_device *fadev,
-+			  const struct fwat_str_data *data);
-+
-+/**
-+ * fwat_create_group - Convenience generic macro to create a group
-+ * @_dev: fwat_device
-+ * @_data: One of fwat_{bool,enum,int,str}_data instance
-+ *
-+ * This macro (and associated functions) creates a sysfs group under the
-+ * 'attributes' directory, which is located in the class device root directory.
-+ *
-+ * See Documentation/ABI/testing/sysfs-class-firmware-attributes for details.
-+ *
-+ * The @_data associated with this group may be created either statically,
-+ * through DEFINE_FWAT_*_GROUP macros or dynamically, in which case the user
-+ * would have allocate and fill the struct manually. The dynamic approach should
-+ * be preferred when group constraints and/or visibility is decided dynamically.
-+ *
-+ * Example:
-+ *
-+ * static int stat_read(...){...};
-+ * static int stat_write(...){...};
-+ *
-+ * DEFINE_FWAT_(BOOL|ENUM|INT|STR)_GROUP(stat, ...);
-+ *
-+ * static int create_groups(struct fwat_device *fadev)
-+ * {
-+ *	struct fwat_enum_data *dyn_group_data;
-+ *	int ret;
-+ *	...
-+ *	dyn_group_data = kzalloc(...);
-+ *	// Fill the data
-+ *	...
-+ *	fwat_create_group(fadev, &stat_group_data);
-+ *	fwat_create_group(fadev, &dyn_group_data);
-+ *	fwat_create_group(...);
-+ *	...
-+ * }
-+ *
-+ * Return: 0 on success, -errno on failure
-+ */
-+#define fwat_create_group(_dev, _data) \
-+	_Generic((_data),							\
-+		 const struct fwat_bool_data * : fwat_create_bool_group,	\
-+		 const struct fwat_enum_data * : fwat_create_enum_group,	\
-+		 const struct fwat_int_data * : fwat_create_int_group,		\
-+		 const struct fwat_str_data * : fwat_create_str_group)		\
-+		(_dev, _data)
-+
- struct fwat_device * __must_check
- fwat_device_register(struct device *parent, const char *name, void *data,
- 		     const struct attribute_group **groups);
+ 	err = usb_charging_acpi_get(galaxybook, &value);
+ 	if (!err) {
+-		err = galaxybook_fw_attr_init(galaxybook,
+-					      GB_ATTR_USB_CHARGING,
+-					      &usb_charging_acpi_get,
+-					      &usb_charging_acpi_set);
++		err = fwat_create_group(fdev, &usb_charging_group_data);
+ 		if (err)
+ 			return err;
+ 	}
+@@ -1107,10 +988,7 @@ static int galaxybook_fw_attrs_init(struct samsung_galaxybook *galaxybook)
+ 
+ 	galaxybook->has_block_recording = true;
+ 
+-	return galaxybook_fw_attr_init(galaxybook,
+-				       GB_ATTR_BLOCK_RECORDING,
+-				       &block_recording_acpi_get,
+-				       &block_recording_acpi_set);
++	return fwat_create_group(fdev, &block_recording_group_data);
+ }
+ 
+ /*
 
 -- 
 2.50.0
