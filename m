@@ -1,178 +1,187 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A84FC0A;
-	Sun, 22 Jun 2025 11:10:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF344CE08;
+	Sun, 22 Jun 2025 11:13:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750590637; cv=none; b=VdNgopvEd2Tk/bw+W8pOwPcsj+LPPwDTlCn6bVb+GwZ2DZ57ZkJtx+7z1hiffc/3/uaA7PYwOBuiFH4zEQf5zlL8VvphshMrMKh7N2Op1YE3/2N/NkZgbGenqp9uH9y3zvsGm7V+ewPmysVObhAMLQ651biz3FuC/tpen+2GpQg=
+	t=1750590782; cv=none; b=VAfWYAu39g1uZFGC1jfPuUiZEzP0aLnRpSFXtEq6OHXUuYOTz5liq/owvUdnmZ8PSlNJF8ioYtBieinj/1MG827ZwflWlc1JH8iR5S9dBhe1Q2sAIP732D7BMFBpPrytDJPWgrzt65CvNw6hi9kGDpbXmnXqIP8TdknwfIPGwRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750590637; c=relaxed/simple;
-	bh=SquEoMF4Ojm91fEhjojZdEJetJ1zLr5YjCcUnaPIAHs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t5q4D3ONPo+cy2YJem12kpTWoAJiIFYi+fgO5+tdwz6lcxYUGpVE99PVhDXsleUGB4vlWLNUFXt2SoQBIaFQEDEbTZyY+xaI9fjaVGIff9DOpn1nNgKHR+3tiFzAFlMZNehyA6ZZJc/ZctY5tYHQE6lmtz6FywLgM7wtZT5r9kE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M1VXxJXW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750590782; c=relaxed/simple;
+	bh=oCDcnN/hefMHFnZyBuF0bfWG/SYOOScbET2P5zMrTo0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Li52jvKvbFUkf5W+WjATPNj0uybZLEJyBSBRTtTxQZTe186jHyh65sjiAXcbzvhnSL7Rt55lpPdH3lDNQi1fdQzDWAnN9DsTd2gP/vcruOd+GN67Mnh/0VE42m6GJFIHVgvw6JujWwiNLskBn65sRIG46T7bis6GXCxYIS+fSLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GRj3IvF1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M1VXxJXW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92C17C4CEE3;
-	Sun, 22 Jun 2025 11:10:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GRj3IvF1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 308F1C4CEED;
+	Sun, 22 Jun 2025 11:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750590634;
-	bh=SquEoMF4Ojm91fEhjojZdEJetJ1zLr5YjCcUnaPIAHs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M1VXxJXWSSBzEIPtqVvf/hnqEgwCycIjmcxBEkg5X9IMdcf2wRjbtDg4/yeiXroI5
-	 o/SC/iUfxuSrtSVYE5xpCjjwDpLo0AJ6Lt2Z0XnYBSE353H6IsmYM8JIB3THRnA8Jw
-	 RDUQAm7sWFmh42e3/q8OBewyDiu1TJaEa1wfHgJ1L/HFw1Hpgz2/5mW1+dNOw01R0n
-	 t9jfWOEHmAEn+E3rgOQhLudKl7nNBvkJZr6SHK+6latWMkC7jXRbGGpYiDAotho+Wt
-	 ZVng5qgR9VwOKkXOgOCN/rSEE0Xk+93+8oSuA0UvqBhwPnAIIFwpy47JBTMt+8Vamm
-	 pf4CJaCxun2jQ==
-Date: Sun, 22 Jun 2025 13:10:31 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Frank Wunderlich <linux@fw-web.de>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, 
-	Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
-	Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
-	Vladimir Oltean <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Frank Wunderlich <frank-w@public-files.de>, 
-	Jia-Wei Chang <jia-wei.chang@mediatek.com>, Johnson Wang <johnson.wang@mediatek.com>, 
-	=?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>, Landen Chao <Landen.Chao@mediatek.com>, 
-	DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>, 
-	Daniel Golle <daniel@makrotopia.org>, Lorenzo Bianconi <lorenzo@kernel.org>, 
-	Felix Fietkau <nbd@nbd.name>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v5 01/13] dt-bindings: net: mediatek,net: update for
- mt7988
-Message-ID: <jnrlk7lwob2qel453wy2igaravxt4lqgkzfl4hctybwk7qvmwm@pciwvmzkxatd>
-References: <20250620083555.6886-1-linux@fw-web.de>
- <20250620083555.6886-2-linux@fw-web.de>
+	s=k20201202; t=1750590782;
+	bh=oCDcnN/hefMHFnZyBuF0bfWG/SYOOScbET2P5zMrTo0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GRj3IvF1TNNT5tBiE4yQQQ7UuL3/QAvTfROxY7tPzGGsMlQEuOlelgXzLdqK9SfPc
+	 17M9EJyM2egPZdOT/OdL+YFwfNMh16jt2RCVlPXjqTWsl3vR2G7dOQjkSOOTavLt1X
+	 hf7HWyuwC3fI3JtsZV2mpv5KiPiA8I6/9UZec6Yfp6zyQGjjWEGHx5m3mcu+/YIJ2H
+	 PpQZgGXIzzJhM5p3Pty65wEXTRI2Qd3d0KFulCpFs4tsu75s9q7oaOA4cMtZOuHI/H
+	 W8ZXnWgG0Nq0InP5bhEJO/8QS59aLnk5mbCJcnH1qqMlNdoH3EGxp7GOJ6qnKDoGUf
+	 K9QfHxV02t1bw==
+Date: Sun, 22 Jun 2025 12:12:52 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+ corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
+ Michael.Hennerich@analog.com, bagasdotme@gmail.com,
+ linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/8] iio: accel: adxl313: make use of regmap cache
+Message-ID: <20250622121252.56c80b35@jic23-huawei>
+In-Reply-To: <20250615222258.117771-2-l.rubusch@gmail.com>
+References: <20250615222258.117771-1-l.rubusch@gmail.com>
+	<20250615222258.117771-2-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250620083555.6886-2-linux@fw-web.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 20, 2025 at 10:35:32AM +0200, Frank Wunderlich wrote:
-> From: Frank Wunderlich <frank-w@public-files.de>
-> 
-> Update binding for mt7988 which has 3 gmac and 2 reg items.
+On Sun, 15 Jun 2025 22:22:51 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-Why?
+> Setup regmap cache to cache register configuration, reducing bus traffic
+> for repeated accesses to non volatile registers.
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+Applied but there was some fuzz. That makes me wonder what
+is different between our trees.
 
-> 
-> MT7988 has 4 FE IRQs (currently only 2 are used) and the 4 IRQs for
-> use with RSS/LRO later.
-> 
-> Add interrupt-names to make them accessible by name.
-> 
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Maybe it will become clear later in the patch set.
+
+Thanks
+
+Jonathan
+
 > ---
-> v5:
-> - fix v4 logmessage and change description a bit describing how i get
->   the irq count.
-> - update binding for 8 irqs with different names (rx,tx => fe0..fe3)
->   including the 2 reserved irqs which can be used later
-> - change rx-ringX to pdmaX to be closer to hardware documentation
+>  drivers/iio/accel/adxl313.h      |  3 +++
+>  drivers/iio/accel/adxl313_core.c | 18 ++++++++++++++++++
+>  drivers/iio/accel/adxl313_i2c.c  |  6 ++++++
+>  drivers/iio/accel/adxl313_spi.c  |  6 ++++++
+>  4 files changed, 33 insertions(+)
 > 
-> v4:
-> - increase max interrupts to 6 because of adding RSS/LRO interrupts (4)
->   and dropping 2 reserved irqs (0+3) around rx+tx
-> - dropped Robs RB due to this change
-> - allow interrupt names
-> - add interrupt-names without reserved IRQs on mt7988
->   this requires mtk driver patch:
->   https://patchwork.kernel.org/project/netdevbpf/patch/20250616080738.117993-2-linux@fw-web.de/
-> 
-> v2:
-> - change reg to list of items
-> ---
->  .../devicetree/bindings/net/mediatek,net.yaml | 30 ++++++++++++++++---
->  1 file changed, 26 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/mediatek,net.yaml b/Documentation/devicetree/bindings/net/mediatek,net.yaml
-> index 9e02fd80af83..9465b40683ad 100644
-> --- a/Documentation/devicetree/bindings/net/mediatek,net.yaml
-> +++ b/Documentation/devicetree/bindings/net/mediatek,net.yaml
-> @@ -28,7 +28,10 @@ properties:
->        - ralink,rt5350-eth
+> diff --git a/drivers/iio/accel/adxl313.h b/drivers/iio/accel/adxl313.h
+> index 72f624af4686..2bc86ac8ffd4 100644
+> --- a/drivers/iio/accel/adxl313.h
+> +++ b/drivers/iio/accel/adxl313.h
+> @@ -22,6 +22,7 @@
+>  #define ADXL313_REG_BW_RATE		0x2C
+>  #define ADXL313_REG_POWER_CTL		0x2D
+>  #define ADXL313_REG_INT_MAP		0x2F
+> +#define ADXL313_REG_INT_SOURCE		0x30
+>  #define ADXL313_REG_DATA_FORMAT		0x31
+>  #define ADXL313_REG_DATA_AXIS(index)	(0x32 + ((index) * 2))
+>  #define ADXL313_REG_FIFO_CTL		0x38
+> @@ -54,6 +55,8 @@ extern const struct regmap_access_table adxl312_writable_regs_table;
+>  extern const struct regmap_access_table adxl313_writable_regs_table;
+>  extern const struct regmap_access_table adxl314_writable_regs_table;
 >  
->    reg:
-> -    maxItems: 1
-> +    items:
-> +      - description: Register for accessing the MACs.
-> +      - description: SoC internal SRAM used for DMA operations.
-
-SRAM like mmio-sram?
-
-> +    minItems: 1
->  
->    clocks:
->      minItems: 2
-> @@ -40,7 +43,11 @@ properties:
->  
->    interrupts:
->      minItems: 1
-> -    maxItems: 4
-> +    maxItems: 8
+> +bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg);
 > +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 8
-
-So now all variants get unspecified names? You need to define it. Or
-just drop.
-
+>  enum adxl313_device_type {
+>  	ADXL312,
+>  	ADXL313,
+> diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adxl313_core.c
+> index 2f26da5857d4..39f16f97bb4a 100644
+> --- a/drivers/iio/accel/adxl313_core.c
+> +++ b/drivers/iio/accel/adxl313_core.c
+> @@ -46,6 +46,24 @@ const struct regmap_access_table adxl314_readable_regs_table = {
+>  };
+>  EXPORT_SYMBOL_NS_GPL(adxl314_readable_regs_table, IIO_ADXL313);
 >  
->    power-domains:
->      maxItems: 1
-> @@ -348,7 +355,19 @@ allOf:
->      then:
->        properties:
->          interrupts:
-> -          minItems: 4
-> +          minItems: 2
-
-Why? Didn't you say it has 4?
-
-
+> +bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg)
+> +{
+> +	switch (reg) {
+> +	case ADXL313_REG_DATA_AXIS(0):
+> +	case ADXL313_REG_DATA_AXIS(1):
+> +	case ADXL313_REG_DATA_AXIS(2):
+> +	case ADXL313_REG_DATA_AXIS(3):
+> +	case ADXL313_REG_DATA_AXIS(4):
+> +	case ADXL313_REG_DATA_AXIS(5):
+> +	case ADXL313_REG_FIFO_STATUS:
+> +	case ADXL313_REG_INT_SOURCE:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +EXPORT_SYMBOL_NS_GPL(adxl313_is_volatile_reg, "IIO_ADXL313");
 > +
-> +        interrupt-names:
-> +          minItems: 2
-> +          items:
-> +            - const: fe0
-> +            - const: fe1
-> +            - const: fe2
-> +            - const: fe3
-> +            - const: pdma0
-> +            - const: pdma1
-> +            - const: pdma2
-> +            - const: pdma3
+>  static int adxl312_check_id(struct device *dev,
+>  			    struct adxl313_data *data)
+>  {
+> diff --git a/drivers/iio/accel/adxl313_i2c.c b/drivers/iio/accel/adxl313_i2c.c
+> index a4cf0cf2c5aa..e8636e8ab14f 100644
+> --- a/drivers/iio/accel/adxl313_i2c.c
+> +++ b/drivers/iio/accel/adxl313_i2c.c
+> @@ -21,6 +21,8 @@ static const struct regmap_config adxl31x_i2c_regmap_config[] = {
+>  		.rd_table	= &adxl312_readable_regs_table,
+>  		.wr_table	= &adxl312_writable_regs_table,
+>  		.max_register	= 0x39,
+> +		.volatile_reg	= adxl313_is_volatile_reg,
+> +		.cache_type	= REGCACHE_MAPLE,
+>  	},
+>  	[ADXL313] = {
+>  		.reg_bits	= 8,
+> @@ -28,6 +30,8 @@ static const struct regmap_config adxl31x_i2c_regmap_config[] = {
+>  		.rd_table	= &adxl313_readable_regs_table,
+>  		.wr_table	= &adxl313_writable_regs_table,
+>  		.max_register	= 0x39,
+> +		.volatile_reg	= adxl313_is_volatile_reg,
+> +		.cache_type	= REGCACHE_MAPLE,
+>  	},
+>  	[ADXL314] = {
+>  		.reg_bits	= 8,
+> @@ -35,6 +39,8 @@ static const struct regmap_config adxl31x_i2c_regmap_config[] = {
+>  		.rd_table	= &adxl314_readable_regs_table,
+>  		.wr_table	= &adxl314_writable_regs_table,
+>  		.max_register	= 0x39,
+> +		.volatile_reg	= adxl313_is_volatile_reg,
+> +		.cache_type	= REGCACHE_MAPLE,
+>  	},
+>  };
 >  
->          clocks:
->            minItems: 24
-> @@ -381,8 +400,11 @@ allOf:
->              - const: xgp2
->              - const: xgp3
+> diff --git a/drivers/iio/accel/adxl313_spi.c b/drivers/iio/accel/adxl313_spi.c
+> index 9a16b40bff34..68e323e81aeb 100644
+> --- a/drivers/iio/accel/adxl313_spi.c
+> +++ b/drivers/iio/accel/adxl313_spi.c
+> @@ -24,6 +24,8 @@ static const struct regmap_config adxl31x_spi_regmap_config[] = {
+>  		.max_register	= 0x39,
+>  		/* Setting bits 7 and 6 enables multiple-byte read */
+>  		.read_flag_mask	= BIT(7) | BIT(6),
+> +		.volatile_reg	= adxl313_is_volatile_reg,
+> +		.cache_type	= REGCACHE_MAPLE,
+>  	},
+>  	[ADXL313] = {
+>  		.reg_bits	= 8,
+> @@ -33,6 +35,8 @@ static const struct regmap_config adxl31x_spi_regmap_config[] = {
+>  		.max_register	= 0x39,
+>  		/* Setting bits 7 and 6 enables multiple-byte read */
+>  		.read_flag_mask	= BIT(7) | BIT(6),
+> +		.volatile_reg	= adxl313_is_volatile_reg,
+> +		.cache_type	= REGCACHE_MAPLE,
+>  	},
+>  	[ADXL314] = {
+>  		.reg_bits	= 8,
+> @@ -42,6 +46,8 @@ static const struct regmap_config adxl31x_spi_regmap_config[] = {
+>  		.max_register	= 0x39,
+>  		/* Setting bits 7 and 6 enables multiple-byte read */
+>  		.read_flag_mask	= BIT(7) | BIT(6),
+> +		.volatile_reg	= adxl313_is_volatile_reg,
+> +		.cache_type	= REGCACHE_MAPLE,
+>  	},
+>  };
 >  
-> +        reg:
-> +          minItems: 2
-
-
-And all else? Why they got 2 reg and 8 interrupts now? All variants are
-now affected/changed. We have been here: you need to write specific
-bindings.
-
-https://elixir.bootlin.com/linux/v6.11-rc6/source/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml#L127
-
-https://elixir.bootlin.com/linux/v6.11-rc6/source/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml#L39
-
-Best regards,
-Krzysztof
 
