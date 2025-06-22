@@ -1,94 +1,85 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF22F14A60C
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 19:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A272AD04;
+	Sun, 22 Jun 2025 19:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750620259; cv=none; b=ON0t4wqhlIxA3bGwcmMsBn8+2ZzsR0uzSoV81yG/SrTl70hgXrNB2rtONS83v83J4D5IVHUJ1zqbko9iP0lqIiCnuLOw7cvW0xjqO6cNYPTZrlwJBCsUNXWozofewrrz8jhgqGBewBeNOg5RV9ivBl9/r9AkgzyYzI/1o/K0TfI=
+	t=1750621172; cv=none; b=eteHKeoEWZza1QKgYmPPmo2p1kn1euKOmIxrC6/w1ak2+9Yog+sehjoWLwss8YVL85OJRrK/eS8oTOpMC6JjfWZTQdCHBOeaJs6MUbS3/OtpGcVDtAcxsL8UYIpTwjVlMpoYyCpQFcJgItcD7Vc6IanQETzw4HgOkxxNs8hWs1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750620259; c=relaxed/simple;
-	bh=aFEOGwXZo/AwrY6Y2o0qz0Ly30CX2ZmBavksQY0KkfA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dWnzUQjTMIpVXq8b8CPQZrLQXaDgqd3BKx0yg+SjmQZzhxgeFIJfPU6s1oIKD5jSUd7l5dKXsKZHwuaQOv8zoC3jFZ1FlLoUq+bmu5H1J0PY6+L2NmkbOYhVSvrPt5iHB2TuhIwD206LWr/0m9CyzdB8hMoILwZe5nPltzSUC10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PINn/ZXA; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750621172; c=relaxed/simple;
+	bh=6B2mJNnldTxxbfO15czbGzLC76lbIyUbKE9PZ4W8o+s=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=hnbcq6mq/s1NnUFxF9z2+TippfR/rl4yRk+J9yDjOxMItZno/91UCydAjeRn6BKtGUXP0IZPhST9xqN7Ro5umUN7/pg09mEYyYZNbtIYRU7cO8QGww33N0EsDPOZ6PuHCRwvd/i5/VXio3ia4FbmlrfIfSIWwvqACpB3FtSyf9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=NMauDljP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PINn/ZXA"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-adeaa4f3d07so712995966b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 12:24:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750620256; x=1751225056; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IbjF/h91o8sYLkOV/LaCb7h1OWB7p+JRyaYdcedZZEg=;
-        b=PINn/ZXASV6NRr9eUbnV9su3fYt84qChXDvb6c2qib//pX7/ujeHVIe63Y5bMt7rcP
-         4B63u0K9fmLktGy4K4voyOnjVRlLpv9ivloks1MdqO2ru3rOMg3MTfHWika8Yw3G5WG+
-         8pL4YNLQfRky8aOZy9KpwzJYpzSZDlZznUzWEgmm0b8bvgB/SmNBPyu8XODrg1b315sr
-         xGrVokMG6LA8We6r+VVeXWtnLfKX0f18YTS1olN58rvqUijO7wF8XBhcw0ikM8A41EPg
-         gDKvsUuPeVWPA3M6GUy8QluPeRb4X9BE7nyZh3f02p+8dl6exNMqt01d82VL5ESgCUl1
-         LO4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750620256; x=1751225056;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IbjF/h91o8sYLkOV/LaCb7h1OWB7p+JRyaYdcedZZEg=;
-        b=jgoS5ZvQWVpbRXS3/OwoyxntJllrb6u2wSWlq3h3d9wvLKuIWbE9ygSDXE4z01i5AP
-         lb+nBKDCSlD3JqSr/K9N/e0ZS5Bpv4me2tUff2P+kmmxWIp5fUjbNkJ0MeHPOSNpMiJm
-         Un11KbsBX7Wd3EYpiatLXqPYlrGJ/0j/olGawYC5uSW5wwEfEWf+PQGAf6wSNpUR5cjC
-         ynOOdohwq+Nc8soSRbWO2Ca7dKyu91qjl6ddAHo/gQ316XsSZpnWXf98f3CgIJ8UqwLy
-         4Xj0pLPa+nRz0kRNrp5CLgpTP5gpO6stTHT2NG8gW1DMD7K+c+eXx6ABK3TM1wS4XY98
-         fiYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUseSN4OnTpziKM1gE9LJkF3BgUfGgxkwzouw5yShScmTwf211IUfjD+THl9hakH1TOIsuorSTaS+rV150=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwB0BahTcsqqGBmCjo3SbfAtPfO1Q24I4WLFM6taIlawkdWBE6/
-	xpT3uwiWS97mpSFiNtHJ/NQkVlzIBmnPbTae2Np/eFJwWHRbaWbFQZmyVscZaVWaEFc=
-X-Gm-Gg: ASbGncvSDHLLiv8swLzApeGgvmtQu5XKkCX/egiMgiWJZ2y6lwO9yGWljRkyA2VdL5s
-	1b2nx6JyvwL0SD4DQOQH6TnMsw1znWzatgEMqohhA/iOsPZY1cjizPkhsr1c1yoULHiZq7l4tjH
-	FkvDVw+No0MgAx+QOlbE7xTJtbv8saguQmxrXiyng9nj/6PsxhFGXzIWRo9okJsReOrB+eVM95l
-	EkMeWnwFg2MI+KluEZXqzubmvmhgVF43rrPCkpv4NEAk0+JsoObJsK78Oy+5SRNsbkoPB3wFogS
-	gEg3kJO1mLlU/PbBsgiB6FiKPApO6jfhi5L7jtUAJmRfHp4TJaxF/78jh9E=
-X-Google-Smtp-Source: AGHT+IHnoYTbMPh1mNJsjdl28NGezTFEyAyfF+x9j3rQX5TVC51X/4ITVYOLyUMfiFovN1yLap6AKQ==
-X-Received: by 2002:a17:906:9f8a:b0:adb:43d0:aedb with SMTP id a640c23a62f3a-ae057fa74c6mr937853066b.61.1750620256156;
-        Sun, 22 Jun 2025 12:24:16 -0700 (PDT)
-Received: from linaro.org ([82.79.186.23])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053e8218bsm577845166b.4.2025.06.22.12.24.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 12:24:15 -0700 (PDT)
-Date: Sun, 22 Jun 2025 22:24:13 +0300
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Nitin Rawat <quic_nitirawa@quicinc.com>
-Cc: vkoul@kernel.org, kishon@kernel.org, manivannan.sadhasivam@linaro.org,
-	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
-	bvanassche@acm.org, andersson@kernel.org, neil.armstrong@linaro.org,
-	konrad.dybcio@oss.qualcomm.com, dmitry.baryshkov@oss.qualcomm.com,
-	quic_rdwivedi@quicinc.com, quic_cang@quicinc.com,
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH V6 02/10] scsi: ufs: qcom: add a new phy calibrate API
- call
-Message-ID: <aFhYXfBMRMluXgdv@linaro.org>
-References: <20250526153821.7918-1-quic_nitirawa@quicinc.com>
- <20250526153821.7918-3-quic_nitirawa@quicinc.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="NMauDljP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC27CC4CEE3;
+	Sun, 22 Jun 2025 19:39:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1750621172;
+	bh=6B2mJNnldTxxbfO15czbGzLC76lbIyUbKE9PZ4W8o+s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NMauDljPDLEI4fpcPBqY2UPgIIbNDeVttAGYIqwiUwHhHSXHYldSUheeFWNNWhMj7
+	 ZV+FlxXiFdLyJb1wCCPEsmP6zjwhf/ZfcIw/AIRPihkVD+39Z8Bwo+6UvZTy2lPNdI
+	 kGqFBbMZErbWxdKxZjTGGzQFlaDUFZ+cKI8k8uE4=
+Date: Sun, 22 Jun 2025 12:39:31 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, "Liam R . Howlett"
+ <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn
+ <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, David Hildenbrand
+ <david@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou
+ <chengming.zhou@linux.dev>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, Stefan Roesch
+ <shr@devkernel.io>
+Subject: Re: [PATCH v3 3/4] mm: prevent KSM from breaking VMA merging for
+ new VMAs
+Message-Id: <20250622123931.30b1739642be8ec1e9ca04e2@linux-foundation.org>
+In-Reply-To: <5861f8f6-cf5a-4d82-a062-139fb3f9cddb@lucifer.local>
+References: <cover.1748537921.git.lorenzo.stoakes@oracle.com>
+	<3ba660af716d87a18ca5b4e635f2101edeb56340.1748537921.git.lorenzo.stoakes@oracle.com>
+	<5861f8f6-cf5a-4d82-a062-139fb3f9cddb@lucifer.local>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250526153821.7918-3-quic_nitirawa@quicinc.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 25-05-26 21:08:13, Nitin Rawat wrote:
-> Introduce a new phy calibrate API call in the UFS Qualcomm driver to
-> separate phy calibration from phy power-on. This change is a precursor
-> to the successive commits in this series, which requires these two
-> operations to be distinct.
+On Fri, 20 Jun 2025 13:48:09 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+
+> Hi Andrew,
 > 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+> Sending a fix-patch for this commit due to a reported syzbot issue which
+> highlighted a bug in the implementation.
+> 
+> I discuss the syzbot report at [0].
+> 
+> [0]: https://lore.kernel.org/all/a55beb72-4288-4356-9642-76ab35a2a07c@lucifer.local/
+> 
+> There's a very minor conflict around the map->vm_flags vs. map->flags change,
+> easily resolvable, but if you need a respin let me know.
 
-Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+I actually saw 4 conflicts, fixed various things up and...
+
+> @@ -2487,6 +2496,11 @@ static int __mmap_new_vma(struct mmap_state *map, struct vm_area_struct **vmap)
+>  	if (error)
+>  		goto free_iter_vma;
+> 
+> +	if (!map->check_ksm_early) {
+> +		update_ksm_flags(map);
+> +		vm_flags_init(vma, map->vm_flags);
+> +	}
+> +
+
+Guessing map->flags was intended here, I made that change then unmade
+it in the later mm-update-core-kernel-code-to-use-vm_flags_t-consistently.patch.
+
+I'll do a full rebuild at a couple of bisection points, please check
+that all landed OK.
+
