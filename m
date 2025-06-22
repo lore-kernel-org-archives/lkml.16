@@ -1,104 +1,73 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6729D17BD9;
-	Sun, 22 Jun 2025 07:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B674917BD9
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 07:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750577413; cv=none; b=f0tW1u73wG9ENxWHVQak6u6R0gH1X52sFVFpxcXscKkDRIzH2hIBYiN+iGIu1oM5tuG5HYAnTy/yLJ9iTAw4Dj5BCiC6ZL5NZ1gG/YpzclhktNKk47rvxHKC1lyS82Wykn0Vn1ftLzwyFF0KEwbSub5FDCfFx2hjORnQP1VT0t8=
+	t=1750577526; cv=none; b=NTsKdY0sXpoChxCK279evzm58q393IEGcg9ZqZk3gijg++brpq+z1jr9Z5YVJUseTDwQpBKjeITn3mOMRLHPxy0Fm5U0TsHizrVPkY4NPPraWMBey4q8iQhnjzmI13Z7dXzCoIvyCLFm4t6Z66whq6GDU5ReUY7ltJ5sA9LstrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750577413; c=relaxed/simple;
-	bh=AA+X8Jca0Y1XgOz2omclf0o3lWNO3s2sp1OjFcok7Hg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uu7GZrpX9hppIqSjHj0eEN2WX6ACdnMolH7WRZTdH44pfi8KTCo4uZ/NIUOhM48Afkb8I6A2KCVYvlXZmaLfhcN1xgmhYiNhaBP6AYqO7ZM/DIoluWJkKbZ7g6j1r/OOdlPeyXIICcGLBzNoVbTtl2Gq97V3gFY8wVaISkehqAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=HvBXXZJ8; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HvBXXZJ8"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55M5UfD2003589;
-	Sun, 22 Jun 2025 07:29:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2025-04-25; bh=PiyUR
-	CDgwowtJKwZVUMY/7yXYqSzxSEKQ0WqP0Wb89M=; b=HvBXXZJ8A34LFnKazA8vy
-	oeiX1RYwv/V8pAFiaxLoEBASphIcTKMfCNkEe++DqQejCfaTn5bxyVOsR8i+9vVg
-	MJ5VCo/6cXTFWnQuO9zygQOVevFrK0KWp3Wr5FGPnIE7EH/0WytwQAgwJ9WlaL3+
-	0CfoKcM0WwUIW89Kwove/lWHlKBSuzVDafDUS/Henl+nj3uXrTrr2jFw/BwVWwkY
-	rP1i4ZhcF6A335tHorxwNiAs1WghBBugYoSujuBSRtbt+df8DXg5nV9tuu5y1Zrr
-	8ulSAJCXQF1lwnSjt0mjMji2oTD5/7nn06CfN+35+qDQT2pQoQyHhXYSoJxnR2fu
-	A==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47e1t98gf4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 22 Jun 2025 07:29:53 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55M2oAcS008642;
-	Sun, 22 Jun 2025 07:29:52 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47dk6e6pkc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 22 Jun 2025 07:29:52 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55M7THrk031282;
-	Sun, 22 Jun 2025 07:29:52 GMT
-Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 47dk6e6pjk-2;
-	Sun, 22 Jun 2025 07:29:52 +0000
-From: Alok Tiwari <alok.a.tiwari@oracle.com>
-To: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, davthompson@nvidia.com,
-        michaelsh@nvidia.com, vadimp@nvidia.com,
-        platform-driver-x86@vger.kernel.org
-Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] platform/mellanox: nvsw-sn2201: Fix bus number in adapter error message
-Date: Sun, 22 Jun 2025 00:29:12 -0700
-Message-ID: <20250622072921.4111552-2-alok.a.tiwari@oracle.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250622072921.4111552-1-alok.a.tiwari@oracle.com>
-References: <20250622072921.4111552-1-alok.a.tiwari@oracle.com>
+	s=arc-20240116; t=1750577526; c=relaxed/simple;
+	bh=fvfo0MD641xhg043m53e50LDOf5/b2NmB8ts0wnKkTs=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=gSQ9CxabHXB8Pm1kJZNNRWNeaLlH+EIjYcUKkVZuz67sDhxqL3t7m63fM2FJDifxpOgjJqxcI319Sro9SF1Q9uy7BnABhaL5255Kt/uafFkgIsrBLsPJ2vGTgF7Bs/uT3VnmxB4r6KqV73dfqZzza1CYrZMTZ/+1q8BGDQK/QEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ddb4dcebfaso88126335ab.1
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 00:32:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750577524; x=1751182324;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jUEyU4FSGsLqIApM4+r+RvW45q/2dgR1QY4OPk/ZxjY=;
+        b=G/BJDs5/MsWGSYvR6HKGiF14BETAnDMW0GHJ/Shyv6zpUGiei8fc/6zymSvyN0ItLm
+         eBc/D9arn6UbdzksjI4sfp3lcK0YKFvLNVq2eRq3Ya4bNoUn/d4tV4m1vMK54w9p2E9g
+         bMxJgp1XyRhjWAInXRilWu92PM17IlcCZ1a/OQPh4W0N/9kqCi/EV252i9wh/gBtI3vu
+         V9RGSZ7eesyRNU/80E4PGWWIiKEq6j7yd/XhdTAz90UvQjqkjEuguHbAegxVtlzUGa0h
+         jc9h6g4gk+avIjiREnRwq8xmvDy2EMQajbdf6FfCESVNFqIHKkMH0iiknx2g0i5cxIMu
+         yIMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4V21ZYQFVYV/+FiepU7aD3pCnXdRbQtryawE2rQJBa6w4JPzohlKTC/WwrtsseRiEsvvHaXWv+E990Ws=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwqjoS+cF82YxCXu2vaeI4obAvTcshBA8/q9+EA4AKZcHQk+9F
+	0EB0n3MsF84hUhcdXhpXPxBsVZ/S2wMTjnpoKYx24NlIzaszQyzKEL5fXAmldywTv+hFsVD5jpj
+	NBisIhjHUFIkFcV7vupGGQxbx/K0dbYltNGlmX88JQ8Bg1Oy6434dktcqur8=
+X-Google-Smtp-Source: AGHT+IHXW0AxKt81rteF80EeXXDQ6aB0zUN+i4HPSWdy4GKXkqsaLR2T3FKrXSV40AJYezlYx8Y3+2I9/87WrpOzP6aQifshh36U
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-22_02,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxscore=0
- adultscore=0 malwarescore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506220043
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDA0MyBTYWx0ZWRfXwx+ggWxd0Hr4 hskox+xuZmCcSZEYdwnHt1FnJImMQT4tdA2qz9sCv5Ii8aErXAV2ufGgm6QAzVl0TKPDYeFrPV0 0K6DhpdXkUJ/Bw+4idX4NCGRbC5WnrE+yNjIw0mZPlxnLb3HNKuFboqlA/g3RgsqzaZnyeAEzfg
- +XvVlZw2CrcGZHjH5GaKm0aoiJVzVuYExnAz+GjxTXHsrrS9hTeeaOyTzyi+1X5WZNpRYoUWYyE 4xAvfvyraTNFpRh2mYPujk9wVzs55ZZy4eCCjvX7WllRL6C9g6H8Ix2V0LApiMefKDTM+v7z6cx 9KoFB1L0Cm3M+f1+yPfgLv6iJacZ2EIy4jQzJNgsZOGDjK+i3Hr/WEhIl7vKH05E1iUvrsjDA5/
- w+4NVopafyC9Q9CPx5fLHIEyORqiPgM8x9dVhaztYBqp/3H3KTI0DFv/P08t34/atadkxFq9
-X-Authority-Analysis: v=2.4 cv=fpjcZE4f c=1 sm=1 tr=0 ts=6857b0f1 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=860j-12YmC-qVKlw99IA:9 cc=ntf awl=host:13207
-X-Proofpoint-GUID: HHIjoaPzctR3ARWOFwqUa4IIMUrwaiX8
-X-Proofpoint-ORIG-GUID: HHIjoaPzctR3ARWOFwqUa4IIMUrwaiX8
+X-Received: by 2002:a05:6e02:230a:b0:3dd:b7ea:c3d9 with SMTP id
+ e9e14a558f8ab-3de38c3c178mr86000935ab.7.1750577523810; Sun, 22 Jun 2025
+ 00:32:03 -0700 (PDT)
+Date: Sun, 22 Jun 2025 00:32:03 -0700
+In-Reply-To: <20250622062844.1505-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6857b173.a70a0220.62859.0003.GAE@google.com>
+Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
+ (3)
+From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-change error log to use correct bus number from main_mux_devs
-instead of cpld_devs.
+Hello,
 
-Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
----
- drivers/platform/mellanox/nvsw-sn2201.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-diff --git a/drivers/platform/mellanox/nvsw-sn2201.c b/drivers/platform/mellanox/nvsw-sn2201.c
-index db31c8bf22553..51504113c17ea 100644
---- a/drivers/platform/mellanox/nvsw-sn2201.c
-+++ b/drivers/platform/mellanox/nvsw-sn2201.c
-@@ -1181,7 +1181,7 @@ static int nvsw_sn2201_i2c_completion_notify(void *handle, int id)
- 	if (!nvsw_sn2201->main_mux_devs->adapter) {
- 		err = -ENODEV;
- 		dev_err(nvsw_sn2201->dev, "Failed to get adapter for bus %d\n",
--			nvsw_sn2201->cpld_devs->nr);
-+			nvsw_sn2201->main_mux_devs->nr);
- 		goto i2c_get_adapter_main_fail;
- 	}
- 
--- 
-2.46.0
+Reported-by: syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com
+Tested-by: syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com
 
+Tested on:
+
+commit:         739a6c93 Merge tag 'nfsd-6.16-1' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10762182580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=db26f33438d76de9
+dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1756b30c580000
+
+Note: testing is done by a robot and is best-effort only.
