@@ -1,126 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A88155C97
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 19:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980441F3B9E
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 19:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750619344; cv=none; b=hRlOEMduLtE6PGBy6CpDD0QpxHpL3VuWoAH43cdAiTGZ4xqRrLPMsNUNwIvOqmjdMcUPgjwy+sUy86ZlvEjeBfls/uXpyl/hMqFHFy0E5rA2w5RLorI/y8VDucIjHJjYPFJTLgeN58PvlqXnbxpbGfHE97UuCljsAg7upkbA4nQ=
+	t=1750619376; cv=none; b=B/Gycgok3PDd5DKE9FPKQNC/7vYu626VFbFMsqG1Xz9IIcUhuoczRXbZZjfenx/YMWmPt3B4yHAG8Uj0/h6znjjLOoU3TrkIE7+QbzaHR/soa7vkAyhWLF65HMH53fRhH7DpLVAk1k1JbG2d0f4n49zYR+94dZOCKE28bWPn90U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750619344; c=relaxed/simple;
-	bh=5uq9U95xetAEdfYaxJoX7pftJ4HxoJ8sSXX494DjvuQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=D8FUZgZ/Cx/jvJ/F0jtteHVfiC+Kw+cK6rHIM/sKLANwR43kERlOgyim+iHvv2FGxuZe5mdB43gQOiySRHbeL28VZDrRak11KAOPWQRz7l/Y1Wft4nEh6JCAmh6omIfnJMcxV9s0iqFKhEdJjaR1Io6NH8gd8SQ0h7NhXkIO2A0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AOZWAFw2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750619376; c=relaxed/simple;
+	bh=sUG1g5y009+hlcy6q+fqDM2WQihyuJLzcTutQ8A27q4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PfC3bTRTJtAQmb0gjZGZReZNFxVE96lsXiYdqpDmb19fe2zF55+qwU/LnNr00Ypq4ww0jtujMs8YdnAtxLqxNG5yOTvUAlZxkXBnTVTTuivfJ2HJeeAnH4MVqRSVSQCc82qpmUB6arAHVUr5GOHdmjayF4PZRT8cVGjM1LYLA9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LlzPwYHo; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AOZWAFw2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 605A9C4CEE3;
-	Sun, 22 Jun 2025 19:09:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750619344;
-	bh=5uq9U95xetAEdfYaxJoX7pftJ4HxoJ8sSXX494DjvuQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=AOZWAFw2G6nw//KwBElILCC717XC2H1Zc5M2VkGzloauCOeuG/qWoqmUHzk6JTe7d
-	 8vo2mpdIio5AF5Cq7zj8dXbfWVk6ThhiYO6VW9gYHFSxHrm1PcGqnGK55cWY250rXc
-	 dJVEJwqgZacqgvBqeQfyOLapn0Oegd9htjezBFXg9/+T2Fn4RjWzJ1p2OlNxeEO9Hd
-	 vAEOkWO8dpURmuOP60VT3+n2Cdbi9AqFaQivz8+60H2UyBGTIrj64YpsdErqY6gTXV
-	 eptmOApQzuLOg/nrRL6uWDArZ73lSilwMgZ+s0WWy9rEvfJkNH59C4LFp+ifMfxTye
-	 XPXDPlh6kuK0Q==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,  Pratyush Yadav
- <pratyush@kernel.org>,  Cheng Ming Lin <chengminglin@mxic.com.tw>,  Cheng
- Ming Lin <linchengming884@gmail.com>,  mwalle@kernel.org,
-  miquel.raynal@bootlin.com,  richard@nod.at,  vigneshr@ti.com,
-  linux-mtd@lists.infradead.org,  linux-kernel@vger.kernel.org,
-  alvinzhou@mxic.com.tw,  leoyu@mxic.com.tw, Linus Torvalds
- <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 1/3] mtd: spi-nor: macronix: Drop the redundant flash
- info fields
-In-Reply-To: <ff485da8-1a02-40a9-9286-94459e52b26c@roeck-us.net>
-References: <20250407075400.1113177-1-linchengming884@gmail.com>
-	<20250407075400.1113177-2-linchengming884@gmail.com>
-	<d98f6eee-d5f7-43b7-bbc8-d6e7e274723a@roeck-us.net>
-	<mafs05xh6pf7s.fsf@kernel.org>
-	<da58fc81-3c99-4951-85bc-e3c139283b5a@roeck-us.net>
-	<a2a0c40e-69d7-4408-add2-88616c92b0ca@roeck-us.net>
-	<aa2a4480-9b78-4ed9-8f9d-b18a87eb01e9@linaro.org>
-	<ff485da8-1a02-40a9-9286-94459e52b26c@roeck-us.net>
-Date: Sun, 22 Jun 2025 21:09:01 +0200
-Message-ID: <mafs01prbvbjm.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LlzPwYHo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750619375; x=1782155375;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=sUG1g5y009+hlcy6q+fqDM2WQihyuJLzcTutQ8A27q4=;
+  b=LlzPwYHo7SBd91/2gaYRiynJEp3mWEnUHTLOTedZBNXWDjhFoy7FsgkL
+   GoVjFDomBgQFzPL7TvEuq/mNJ6zQbHrXw3xtFfS3U6mBqKdL8TK+tbDGQ
+   QbErje3exzypTOVoc9ck/t8FJFbE0J9o4ivvPlco+e4xJcmQg+TAgRZvj
+   stUNJoEC0s2Dusjx0Uhr91w4i5AcCUZsYK3Q9T3owFKiWvFMyRL0A1xM6
+   1OBmVX3NIgBGR8X1zfDhRGCMkqKRAOVc0cAOdoP6aVdApShqrCgnuy493
+   +Ygc62VqvenWdCjiElhHzyFRLwPS9h9wtaMlXbFbWTjNUrQW9amI8nXxc
+   w==;
+X-CSE-ConnectionGUID: t+1TjOY/Sju8WHJSG9gZ5g==
+X-CSE-MsgGUID: IOK+gxNPR/+rxR6VUQUrlQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="64257537"
+X-IronPort-AV: E=Sophos;i="6.16,257,1744095600"; 
+   d="scan'208";a="64257537"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 12:09:35 -0700
+X-CSE-ConnectionGUID: xoACvhAwSguaIkGtPhFf6w==
+X-CSE-MsgGUID: txG0/ZMaTT+XfePD1hC39g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,257,1744095600"; 
+   d="scan'208";a="152072696"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 22 Jun 2025 12:09:29 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uTQ4F-000NTi-1l;
+	Sun, 22 Jun 2025 19:09:27 +0000
+Date: Mon, 23 Jun 2025 03:09:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Peter Xu <peterx@redhat.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Nikita Kalyazin <kalyazin@amazon.com>,
+	peterx@redhat.com, Hugh Dickins <hughd@google.com>,
+	Oscar Salvador <osalvador@suse.de>, Michal Hocko <mhocko@suse.com>,
+	David Hildenbrand <david@redhat.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	Ujwal Kundur <ujwal.kundur@gmail.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	James Houghton <jthoughton@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Axel Rasmussen <axelrasmussen@google.com>
+Subject: Re: [PATCH 4/4] mm: Apply vm_uffd_ops API to core mm
+Message-ID: <202506230216.JVgQj2Si-lkp@intel.com>
+References: <20250620190342.1780170-5-peterx@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620190342.1780170-5-peterx@redhat.com>
 
-Hi Guenter,
+Hi Peter,
 
-On Tue, Jun 10 2025, Guenter Roeck wrote:
+kernel test robot noticed the following build warnings:
 
-> On 6/9/25 23:46, Tudor Ambarus wrote:
->> On 6/10/25 1:14 AM, Guenter Roeck wrote:
->>> On 6/8/25 18:13, Guenter Roeck wrote:
->>>> On 6/8/25 05:53, Pratyush Yadav wrote:
->>>>> On Sat, Jun 07 2025, Guenter Roeck wrote:
-[...]
->>>>>> With this patch in place, some of my qemu tests no longer recognize the
->>>>>> flash chips (MX25L25635E/F). Do you have a suggestion on how to handle
->>>>>> this other than avoiding Macronix flash chips when working with qemu ?
->>>>>
->>>>> Could you share some logs? Does the flash fail to detect, or does the
->>>>> SFDP-based probing fail? Since this is qemu, it would be even better if
->>>>> you can share a setup/reproduction guide. I have been meaning to set up
->>>>> qemu for SPI NOR testing for some time now, but never got around to
->>>>> figuring it out.
->>>>>
->>>>
->>>> I suspect that the SFDP data for the affected flashes is incorrect in
->>>> qemu.
->>>> Since this is very likely a qemu problem, I'll just configure
->>>> different flash
->>>> chips when running affected tests.
->>>>
-[...]
->
-> Some debugging shows two problems with qemu: The returned SFPD data for one
-> of the flashes is wrong and does not reflect the data qemu is supposed
-> to provide, and qemu does not provide SFPD data for all flashes.
->
-> I don't know if the bad data is due to a bad Linux driver (unlikely), a bug
-> in qemu's SPI emulation code, or a bug in qemu's flash emulation code.
-> Unfortunately I don't really have time to track this down further.
+[auto build test WARNING on next-20250620]
+[cannot apply to akpm-mm/mm-everything linus/master v6.16-rc2 v6.16-rc1 v6.15 v6.16-rc2]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I used the command you posted in [0] and tried to reproduce the bug, but
-for me the flash probes just fine:
+url:    https://github.com/intel-lab-lkp/linux/commits/Peter-Xu/mm-Introduce-vm_uffd_ops-API/20250621-030557
+base:   next-20250620
+patch link:    https://lore.kernel.org/r/20250620190342.1780170-5-peterx%40redhat.com
+patch subject: [PATCH 4/4] mm: Apply vm_uffd_ops API to core mm
+config: i386-randconfig-061-20250622 (https://download.01.org/0day-ci/archive/20250623/202506230216.JVgQj2Si-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250623/202506230216.JVgQj2Si-lkp@intel.com/reproduce)
 
-    root@romulus:/sys/bus/spi/devices/spi0.0/spi-nor# cat manufacturer 
-    macronix
-    root@romulus:/sys/bus/spi/devices/spi0.0/spi-nor# cat jedec_id 
-    c22019
-    root@romulus:/sys/bus/spi/devices/spi0.0/spi-nor# uname -a
-    Linux romulus 6.16.0-rc2-00308-gf7301f856d35-dirty #5 SMP Sat Jun 21 19:29:15 CEST 2025 armv6l GNU/Linux
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506230216.JVgQj2Si-lkp@intel.com/
 
-The rootfs is also mounted on a mtdblock device backed by this flash,
-and everything appears to work fine.
+sparse warnings: (new ones prefixed by >>)
+   mm/shmem.c: note: in included file (through include/linux/shmem_fs.h):
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+--
+   mm/hugetlb.c:669:12: sparse: sparse: context imbalance in 'allocate_file_region_entries' - wrong count at exit
+   mm/hugetlb.c:740:13: sparse: sparse: context imbalance in 'region_add' - wrong count at exit
+   mm/hugetlb.c:807:13: sparse: sparse: context imbalance in 'region_chg' - wrong count at exit
+   mm/hugetlb.c:5798:20: sparse: sparse: context imbalance in 'move_huge_pte' - different lock contexts for basic block
+   mm/hugetlb.c: note: in included file:
+   include/linux/mm.h:1391:22: sparse: sparse: context imbalance in 'hugetlb_wp' - unexpected unlock
+   mm/hugetlb.c: note: in included file (through include/linux/hugetlb.h, include/linux/migrate.h):
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+--
+   mm/userfaultfd.c:270:9: sparse: sparse: context imbalance in 'mfill_atomic_install_pte' - different lock contexts for basic block
+   mm/userfaultfd.c:412:9: sparse: sparse: context imbalance in 'mfill_atomic_pte_zeropage' - different lock contexts for basic block
+   mm/userfaultfd.c:498:9: sparse: sparse: context imbalance in 'mfill_atomic_pte_poison' - different lock contexts for basic block
+   mm/userfaultfd.c: note: in included file:
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+>> include/linux/userfaultfd_k.h:90:17: sparse: sparse: cast from restricted uffd_flags_t
+   mm/userfaultfd.c: note: in included file (through include/linux/rbtree.h, include/linux/mm_types.h, include/linux/mmzone.h, ...):
+   include/linux/rcupdate.h:871:25: sparse: sparse: context imbalance in 'move_pages_pte' - unexpected unlock
 
-Which version of qemu are you using? I can see that SFDP data for
-mx25l25635e was added to qemu in commit dc907a667c ("m25p80: Add the
-mx25l25635e SFPD table"), which was released in v7.2.0. Older versions
-of qemu might run into trouble with this flash if SFDP data is not
-available.
+vim +90 include/linux/userfaultfd_k.h
 
-FWIW, my qemu version:
-
-    $ qemu-system-arm --version
-    QEMU emulator version 10.0.0
-    Copyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers
-
-[0] https://lore.kernel.org/linux-mtd/da58fc81-3c99-4951-85bc-e3c139283b5a@roeck-us.net/
+    87	
+    88	static inline enum mfill_atomic_mode uffd_flags_get_mode(uffd_flags_t flags)
+    89	{
+  > 90		return (enum mfill_atomic_mode)(flags & MFILL_ATOMIC_MODE_MASK);
+    91	}
+    92	
 
 -- 
-Regards,
-Pratyush Yadav
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
