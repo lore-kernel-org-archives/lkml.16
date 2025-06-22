@@ -1,52 +1,66 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C4A19006B
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 12:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A49B72636;
+	Sun, 22 Jun 2025 12:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750595881; cv=none; b=q8kpUNmAl9aKg5gVDpYw51UxtudXeA/Mz2t/W5ta0wAuwyNvJCAEolBaj/gYsjqywDu8kdlS//lx74YA7fdmWXnbDt7w9kMgVoItcRnH9yAcX47P5snJw/LRtKdPZ6jQ++H1LVWDUPtjm8xpxKEl1mfpHkLbwnQ12T3PAZ6yR54=
+	t=1750595989; cv=none; b=ie1NhH84vfUMqkY6LjWe4GcJ/MvzNE+xoLNJYx07egXmG0ZrLbGUiBb2+NZ8wf2lv0yv9Cvn15d8Zf62d4ySPs9+ZRiVRat1/Aj5nVmh/TlYeYO0xdG8Rn6xRjwUBH/B8Sw9w9L2S30UHGio/5AQTWj57qcv3JqdTvzjdXTd6gU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750595881; c=relaxed/simple;
-	bh=r2TLNHjXaxZ9qUZ1DaLfD5bMfQRPRiHSifyWV5+2nV8=;
+	s=arc-20240116; t=1750595989; c=relaxed/simple;
+	bh=+tGeE4TYJbzGe6jjsVcsSnRnbjEOtu2V64nnqedjAmE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rPYpf8YwzrgtBXcGKdaR3ingq0D2JxPShZkrAVkUBReZxJEtZ9D6ar0JJz69ghaVGHIkw+UABssjz/8L6mQTSs/PkXqhw+ND49/oG0RVbcmLBplmfBiCOsJtd8lJYHShY7ZGfoknDJn24AssRShiWJzrUBr+cstvzHHRQMRZjm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hryIEMqT; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=g3zMK9rThVNP8p33Vb7mYk6TFaXN+Zm3FDaJQ2xU8yzTTRuvfPqKBl81CvFkiXEILaRn8+p2yjsmb/gT8yfE5dzxYi6Po9L+YouyoyhKFCXXhqD6ytnkzE0Y9npvIoyCcSNPvxiy/G9696fz7BykIKwoQ6evSaf8aO67YZUHgN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nrkzJc+W; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hryIEMqT"
-Date: Sun, 22 Jun 2025 05:37:37 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750595866;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G39kGGdgOel5ks2KWoZBvfJhe96q0aex/pRGhaP2C9A=;
-	b=hryIEMqT69op4L3cD0N+MNzE3Zcl3j93X5eviPv4N/kD4wosCzZHFO4+k+yidbkKl1X2Ml
-	dRmyMpTYrBM4k1BgLFLAfx+/A/U2efpcJ4JpnChuBkpWs8OpuN7BkD8BSEfx2gMFLk8dCk
-	npfA2UPVzonkTcQe9i5LKkkIrpK1Yzs=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Sascha Bischoff <Sascha.Bischoff@arm.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, nd <nd@arm.com>,
-	Joey Gouly <Joey.Gouly@arm.com>,
-	Suzuki Poulose <Suzuki.Poulose@arm.com>,
-	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	Timothy Hayes <Timothy.Hayes@arm.com>
-Subject: Re: [PATCH 4/5] KVM: arm64: gic-v5: Support GICv3 compat
-Message-ID: <aFf5EYvF3NVr9MKm@linux.dev>
-References: <20250620160741.3513940-1-sascha.bischoff@arm.com>
- <20250620160741.3513940-5-sascha.bischoff@arm.com>
- <aFXClKQRG3KNAD2y@linux.dev>
- <87a560ezpa.wl-maz@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nrkzJc+W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750595986; x=1782131986;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+tGeE4TYJbzGe6jjsVcsSnRnbjEOtu2V64nnqedjAmE=;
+  b=nrkzJc+WxS/+cUSbfich7onzhT0xC2NR90Rkb9SIa+e5K1KLccamnNDp
+   I20+L62qTeG5sKx7loYmjyo0jDw8QM44NszzGHaa8RcdrpCVC6eILB4mo
+   t45+aSToyOsvZilCyFd/UFN0ISSqdLxUIsUQOs5WNCMGhruyKhapFxIoh
+   3qCFCaWmkbnupraJXZvdbEm6yBoRvDziiarwptolOQv+K+5Y+5fF/z1h/
+   O2sY40o0NZRwLsPHmGHuBGB0FfNn+CDpe/j0d5RG9C4yj1WLNb5rdK7e5
+   4y8V/ec1NcvnEajQVjIrClMkZclhRLjfn+0GxWlvFZNlJ4ItDa5IryKNg
+   g==;
+X-CSE-ConnectionGUID: KFFe6dtvSrSJhb0GOdhQuw==
+X-CSE-MsgGUID: NIw7sxRnQhelTAaLcfcvKA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="52952455"
+X-IronPort-AV: E=Sophos;i="6.16,256,1744095600"; 
+   d="scan'208";a="52952455"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 05:39:45 -0700
+X-CSE-ConnectionGUID: 7jOf0LiDSGuYL0Bb0yoIUA==
+X-CSE-MsgGUID: g/0aXbFsRLKPkVKeS/u9lg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,256,1744095600"; 
+   d="scan'208";a="182371961"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 22 Jun 2025 05:39:42 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uTJz1-000NGw-2y;
+	Sun, 22 Jun 2025 12:39:39 +0000
+Date: Sun, 22 Jun 2025 20:39:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Vikas Gupta <vikas.gupta@broadcom.com>, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	andrew+netdev@lunn.ch, horms@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, michael.chan@broadcom.com,
+	pavan.chebbi@broadcom.com, vsrama-krishna.nemani@broadcom.com,
+	Vikas Gupta <vikas.gupta@broadcom.com>,
+	Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
+	Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
+Subject: Re: [net-next, 09/10] bng_en: Initialize default configuration
+Message-ID: <202506222025.zd9UxyF7-lkp@intel.com>
+References: <20250618144743.843815-10-vikas.gupta@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,80 +69,84 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87a560ezpa.wl-maz@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250618144743.843815-10-vikas.gupta@broadcom.com>
 
-On Sun, Jun 22, 2025 at 01:19:13PM +0100, Marc Zyngier wrote:
-> On Fri, 20 Jun 2025 21:20:36 +0100,
-> Oliver Upton <oliver.upton@linux.dev> wrote:
-> > 
-> > Hi Sascha,
-> > 
-> > Thank you for posting this. Very excited to see the GICv5 enablement get
-> > started.
-> > 
-> > On Fri, Jun 20, 2025 at 04:07:51PM +0000, Sascha Bischoff wrote:
-> > > Add support for GICv3 compat mode (FEAT_GCIE_LEGACY) which allows a
-> > > GICv5 host to run GICv3-based VMs. This change enables the
-> > > VHE/nVHE/hVHE/protected modes, but does not support nested
-> > > virtualization.
-> > 
-> > Can't we just load the shadow state into the compat VGICv3? I'm worried
-> > this has sharp edges on the UAPI side as well as users wanting to
-> > migrate VMs to new hardware.
-> >
-> > The guest hypervisor should only see GICv3-only or GICv5-only, we can
-> > pretend FEAT_GCIE_LEGACY never existed :)
-> 
-> That's exactly what this does. And the only reason NV isn't supported
-> yet is the current BET0 spec makes ICC_SRE_EL2 UNDEF at EL1 with NV,
-> which breaks NV in a spectacular way.
+Hi Vikas,
 
-Gee, I wonder how... :)
+kernel test robot noticed the following build warnings:
 
-> This will be addressed in a future revision of the architecture, and
-> no HW will actually be built with this defect. As such, there is no
-> UAPI to break.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.16-rc2 next-20250620]
+[cannot apply to horms-ipvs/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-That's fine by me. TBH, when I left this comment I hadn't fully read the
-patch yet and was more curious about the intent.
+url:    https://github.com/intel-lab-lkp/linux/commits/Vikas-Gupta/bng_en-Add-PCI-interface/20250618-173130
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250618144743.843815-10-vikas.gupta%40broadcom.com
+patch subject: [net-next, 09/10] bng_en: Initialize default configuration
+config: parisc-randconfig-r073-20250619 (https://download.01.org/0day-ci/archive/20250622/202506222025.zd9UxyF7-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 8.5.0
 
-> > > +void __vgic_v3_compat_mode_disable(void)
-> > > +{
-> > > +	sysreg_clear_set_s(SYS_ICH_VCTLR_EL2, ICH_VCTLR_EL2_V3, 0);
-> > > +	isb();
-> > > +}
-> > > +
-> > 
-> > It isn't clear to me what these ISBs are synchonizing against. AFAICT,
-> > the whole compat thing is always visible and we can restore the rest of
-> > the VGICv3 context before guaranteeing the enable bit has been observed.
-> 
-> No, some registers have a behaviour that is dependent on the status of
-> the V3 bit (ICH_VMCR_EL2 being one), so that synchronisation is
-> absolutely needed before accessing this register.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506222025.zd9UxyF7-lkp@intel.com/
 
-Yeah, I had followed up on this after reading the spec, modal registers
-are great. Putting all the constituent registers together in the common
-load/put helpers will clear that up.
+New smatch warnings:
+drivers/net/ethernet/broadcom/bnge/bnge_resc.c:533 bnge_net_init_dflt_rings() warn: always true condition '(rc != -19) => (0-u16max != (-19))'
 
-> The disabling is probably the wrong way around though, and I'd expect
-> the clearing of V3 to have an ISB *before* the write to the sysreg,
-> 
-> > Can we consolidate this into a single hyp call along with
-> > __vgic_v3_*_vmcr_aprs()?
-> 
-> I agree that we should be able to move this to be driven by
-> load/put entirely.
-> 
-> But we first need to fix the whole WFI sequencing first, because this
-> is a bit of a train wreck at the moment (entering the WFI emulation
-> results in *two* "put" sequences on the vgic, and exiting WFI results
-> in two loads).
+Old smatch warnings:
+drivers/net/ethernet/broadcom/bnge/bnge_resc.c:372 bnge_alloc_irqs() warn: unsigned 'irqs_demand' is never less than zero.
+drivers/net/ethernet/broadcom/bnge/bnge_resc.c:542 bnge_net_init_dflt_rings() warn: always true condition '(rc != -19) => (0-u16max != (-19))'
 
-You're talking about the case where halt polling fails and we do a
-put/load on the whole vCPU to schedule right? i.e. in addition to the
-explicit put on the vgic for faithful emulation.
+vim +533 drivers/net/ethernet/broadcom/bnge/bnge_resc.c
 
-Thanks,
-Oliver
+   511	
+   512	static int bnge_net_init_dflt_rings(struct bnge_dev *bd, bool sh)
+   513	{
+   514		u16 dflt_rings, max_rx_rings, max_tx_rings, rc;
+   515	
+   516		if (sh)
+   517			bd->flags |= BNGE_EN_SHARED_CHNL;
+   518	
+   519		dflt_rings = netif_get_num_default_rss_queues();
+   520	
+   521		rc = bnge_get_dflt_rings(bd, &max_rx_rings, &max_tx_rings, sh);
+   522		if (rc)
+   523			return rc;
+   524		bd->rx_nr_rings = min_t(u16, dflt_rings, max_rx_rings);
+   525		bd->tx_nr_rings_per_tc = min_t(u16, dflt_rings, max_tx_rings);
+   526		if (sh)
+   527			bnge_trim_dflt_sh_rings(bd);
+   528		else
+   529			bd->nq_nr_rings = bd->tx_nr_rings_per_tc + bd->rx_nr_rings;
+   530		bd->tx_nr_rings = bd->tx_nr_rings_per_tc;
+   531	
+   532		rc = bnge_reserve_rings(bd);
+ > 533		if (rc && rc != -ENODEV)
+   534			dev_warn(bd->dev, "Unable to reserve tx rings\n");
+   535		bd->tx_nr_rings_per_tc = bd->tx_nr_rings;
+   536		if (sh)
+   537			bnge_trim_dflt_sh_rings(bd);
+   538	
+   539		/* Rings may have been reduced, re-reserve them again */
+   540		if (bnge_need_reserve_rings(bd)) {
+   541			rc = bnge_reserve_rings(bd);
+   542			if (rc && rc != -ENODEV)
+   543				dev_warn(bd->dev, "Fewer rings reservation failed\n");
+   544			bd->tx_nr_rings_per_tc = bd->tx_nr_rings;
+   545		}
+   546		if (rc) {
+   547			bd->tx_nr_rings = 0;
+   548			bd->rx_nr_rings = 0;
+   549		}
+   550	
+   551		return rc;
+   552	}
+   553	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
