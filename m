@@ -1,115 +1,163 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C3D1E50E;
-	Sun, 22 Jun 2025 13:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719301DE3AC;
+	Sun, 22 Jun 2025 13:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750599529; cv=none; b=LvjK3FLFDXChAsYRPv0Rd2P1R3ue+aThAlrKyocuvzoLifz95mxwaY/fUilRjOzRbXCAMrx5G1DtbOo8aaBt4ov66GGLbBPtu98NnKmSNmHPuGC1uOZRKOcFr+RyeW2q3lCEkj4+37OX5BEeFTPcw/f+KmkGQLXrra9uFDWxQ4I=
+	t=1750599603; cv=none; b=ZIH0BedIvOduo2stExyWO5sYV3QY9l1KtjJXcLQbpWm2bfb0sO6C06KFIf5Q6VJf4OSPSJWyLODm4mas5Qd89RsnW5kDCcVtCF8bue+OoLXFrzoP6QPf7vtyJ1N3nNzjq3UvZV+FkAr5AJWWELHIoFckk1ykWiECyeVuLcQeekY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750599529; c=relaxed/simple;
-	bh=BtWMb2gdu88yVyrCx16lPUq/kf7X/LCpwFDgFb3SdOE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BiKIiuPATXXUP6jutuhfc8Jy74uRm0dc1p4hU0v+9Rg4tZ0qyE+iFC62alvi7fPqJALMg3Q7pAaMBEfitmC6B4zdLnxXENyHldca1Rq9GK+7WiCg8xqtWd510RdBAlXOFrdiSOkZeaMC8B4z4gIUPrtD0CWBNPz8tHgSjFRDIyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pkltTDe3; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750599603; c=relaxed/simple;
+	bh=diw1gDUh3SnWwKE6aIZJAx5qoa+BAbsc1mkKUgL3k5Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=spWAbyxMyzH3qjaoUdN90+qnGFFQYCV06hWy9/B7U9OVvPNf7h4WhS6ZC1YZXhbn1P+5mqqVwH7hcFp1CZuwW0gY9D2IqNR2QNEcnFiBFZqivLvus0zx1H6B3c4GEdJantZRmslBP5qh+fp/cF7LnzFsts+x1LF1K+GiKZ8CaAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZmWPqyh1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pkltTDe3"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55M5TXCf009849;
-	Sun, 22 Jun 2025 13:38:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=bCbTyKNkXtYcXkx/TJ3uwl
-	I70UfFZLRjaXHwsQSyVXo=; b=pkltTDe3oPlo26QWjNR6MpCnyyOsxLlpC29Z4X
-	W0+OTjTS/gkxqI+O09Q3eMjQpIBt4G7dejpUAhNrBI2W3pSLgsd55ap4+DddAKTs
-	UeKY/cQQ6/4hGMf2f3vUjnl/X8ZSl1FIGO0SvFoG22NPP9TIYxHnCNy0245UDJj9
-	zxHzZ02uv2dnQXFR2Szgt1+B1m/h14pzY7aesJc2BsCzcM1LlxM8rQf2FBFwTHEU
-	9uXEfsqZcNfkLRZlgqdHRddSNGbGz5caR4dIurZEKia+e6fve4WE5zWGF/l2ee56
-	Pk/cIEwAFzU/xVUm+1lsEqLkg3pahc+RdpokzYKTEOZ84z9g==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47eah7rh97-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 13:38:41 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55MDceGL009504
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 13:38:40 GMT
-Received: from hu-lxu5-sha.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Sun, 22 Jun 2025 06:38:37 -0700
-From: Ling Xu <quic_lxu5@quicinc.com>
-To: <srini@kernel.org>, <amahesh@qti.qualcomm.com>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>
-CC: <quic_kuiw@quicinc.com>, <ekansh.gupta@oss.qualcomm.com>,
-        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        Ling Xu
-	<quic_lxu5@quicinc.com>
-Subject: [PATCH v3 0/3] Add support for gdsp remoteproc on sa8775p
-Date: Sun, 22 Jun 2025 19:08:17 +0530
-Message-ID: <20250622133820.18369-1-quic_lxu5@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZmWPqyh1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 09640C4CEE3;
+	Sun, 22 Jun 2025 13:40:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750599603;
+	bh=diw1gDUh3SnWwKE6aIZJAx5qoa+BAbsc1mkKUgL3k5Q=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=ZmWPqyh1qqtDzx7vmqYTPoj/Hnb3q8qPCAhMzq7skUMzPUymnBwuGJvUQyhG/jpLX
+	 8/zyog1YlYrS741gKGZg6UYxoVlnT47mRN7sF+kBY5+O3WaphQyq+04hmf8ero4lFS
+	 AjLZhAemnJ57vRhKbiwu2FEGzSKixlH4hL3pBjOrHshCjjhZx7ius/ZtnKY6vxTqkq
+	 kWy5Mr+FlPfbw1XE3WTGWFZICmQFQMV04umI9DoNKd1YGZzqTrlDVK6pUQpcOBCJVZ
+	 F+H1deEeBzjGRo/XsmGr1nLz1jW/udBrEibWTcBfpfEvQpeN2D47bDIttyxvKaDTm/
+	 hJNIocq0MHUvg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32DAC77B7F;
+	Sun, 22 Jun 2025 13:40:02 +0000 (UTC)
+From: Dominique Martinet via B4 Relay <devnull+asmadeus.codewreck.org@kernel.org>
+Date: Sun, 22 Jun 2025 22:39:56 +0900
+Subject: [PATCH v3] net/9p: Fix buffer overflow in USB transport layer
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: JJJn2_CuFBQbh1GRY4hOUxxtqxYMOUYK
-X-Authority-Analysis: v=2.4 cv=PpWTbxM3 c=1 sm=1 tr=0 ts=68580761 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
- a=s0CkNgkO2cT-0G377o4A:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDA4NSBTYWx0ZWRfXzjpwWl418nCR
- qABThAnymkkBgpJ3taDzluHjyzXe19hK7h5VCqOcFPpXru+YJkNvT4DelrTTQPsEu5szKOJRzIq
- C38uESsOt1SehucdZPz/Szv1xTeDbI4a7SqhkaFJKaLdvZqtWclXMFfnaKcYNCnhJMbjBOOh/sk
- Pcweliy4G8Os16YcX0sZtxTAf6rArt+fs5To6GIgCzhnbl6fcPuLHGvL4mDo04sAW5tNY0vwaVu
- xZZFsn90JVuTIjFm+d46Sid2JmM7hBd6NYMgdtWLOwOfraR04A1QoZ8HxnqXBEfDdGIXaNONU14
- XHkmTQXoW02uXspcIgqbz0hHDP+6Tco0KWzyGeNY57IyVE9x0kozH1InGRKlz68m7fWfc06GFPF
- 54c0f1ZsEc07sEkdNOXP7LMFFPHryisDQid2f1XMgIBK4oEz5VJTIip8ozzzicUJzDG9MsOJ
-X-Proofpoint-GUID: JJJn2_CuFBQbh1GRY4hOUxxtqxYMOUYK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-22_04,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=716 clxscore=1011 adultscore=0 mlxscore=0 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0 spamscore=0
- bulkscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506220085
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250622-9p-usb_overflow-v3-1-ab172691b946@codewreck.org>
+X-B4-Tracking: v=1; b=H4sIAKsHWGgC/22OzQ6CMBAGX8X0bEl/oAZPvIchppQFVoGSVouG8
+ O4W4sGDx9lk5tuFeHAInpwPC3EQ0KMdI8jjgZhOjy1QrCMTwUTGlGA0n+jTV1cbwDW9nanIqsZ
+ kkFfQSBKtyUGDr714KSN36B/WvfeBwLfrt8UVlyKTeaJkKlPKaa1H9DeMo0U7aOwTYweyJYL40
+ f68EES0mVBGcZabk+aFsTXMDsw9sa4l5bquH0JV0cjpAAAA
+X-Change-ID: 20250620-9p-usb_overflow-25bfc5e9bef3
+To: Eric Van Hensbergen <ericvh@kernel.org>, 
+ Latchesar Ionkov <lucho@ionkov.net>, 
+ Christian Schoenebeck <linux_oss@crudebyte.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Michael Grzeschik <m.grzeschik@pengutronix.de>
+Cc: stable@vger.kernel.org, Yuhao Jiang <danisjiang@gmail.com>, 
+ security@kernel.org, v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Dominique Martinet <asmadeus@codewreck.org>
+X-Mailer: b4 0.15-dev-7be4f
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3088;
+ i=asmadeus@codewreck.org; h=from:subject:message-id;
+ bh=uRA+tj1CGV3hDEWLR7ul9klUmiXd1el2FvT0X0zpwug=;
+ b=owEBbQKS/ZANAwAKAatOm+xqmOZwAcsmYgBoWAexM97EqqDps4uLE21H9hDjaDGpdSirjktFo
+ j7iGJVVIYmJAjMEAAEKAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCaFgHsQAKCRCrTpvsapjm
+ cEMWD/44v6jhy3s94nL9wsfiMpO26Of4JpPM+LjflzPMLbWWJAVoQnS7qsy/Kb7napyi4cki2X/
+ jPPBfmt11kd5SWWGD1V07N/EMB1E2RwLAdWIroP+QUmOC1xjJ+zy+z3MUIp6fVFQX8NMWnKprLD
+ XJdy8jSwcLjJDP51zZvqXttcYffvn5f/ph9fIeMNBUbpJ7aqYldW9afXD43//fpcy0qCR8Q1PrQ
+ AhUlIZGuuzGcxTJhmsDietbjMz6uXDwyghu6N2G2X0oo5C6jT3HjAJ7B1kaUTUHNB7DKT0dX0yq
+ OT962DE2EQTUaPOAH+n6HescgdUK7pktU6EKzdiUwSQCakTN7LophVtJiBbSILAvo9QdBCHHq0u
+ N3/tD3evkVq2Y/hSSkUy9T5xuHv+IufLlhX0R0sQUKeAtzel53p+TeEIkp9aW/D6cLd/NZS6LjD
+ ZWZao9VlbAoy7KRVFyiqDQ9MfMM8P65j0vVVBwGnwlFgQTwwyikmaIkYZQDkH0hCmuls98byVlB
+ M/sIcbUGpbpVhS6R+Kdc+amkjT+uUpj2d7T0GdsmsQnr6XAZOy2JP9xHMX0UWu2kAqvyatDA6SB
+ m0rrjgfsOpiSZJ3NUXL/o4l/S5Jf7eqP70mGqeoLNyq3dQd0zfGRovnTxumXni1CHPs0HwakhM0
+ WHRuZ6CViWFMsPg==
+X-Developer-Key: i=asmadeus@codewreck.org; a=openpgp;
+ fpr=B894379F662089525B3FB1B9333F1F391BBBB00A
+X-Endpoint-Received: by B4 Relay for asmadeus@codewreck.org/default with
+ auth_id=435
+X-Original-From: Dominique Martinet <asmadeus@codewreck.org>
+Reply-To: asmadeus@codewreck.org
 
-The fastrpc driver has support for 5 types of remoteprocs. There are
-some products which support GDSP remoteprocs. GDSPs are General
-Purpose DSPs where tasks can be offloaded. Add changes to support GDSP
-remoteprocs and also add GDSP fastrpc nodes.
-Patch [v2]: https://lore.kernel.org/linux-arm-msm/20250320091446.3647918-1-quic_lxu5@quicinc.com/
+From: Dominique Martinet <asmadeus@codewreck.org>
+
+A buffer overflow vulnerability exists in the USB 9pfs transport layer
+where inconsistent size validation between packet header parsing and
+actual data copying allows a malicious USB host to overflow heap buffers.
+
+The issue occurs because:
+- usb9pfs_rx_header() validates only the declared size in packet header
+- usb9pfs_rx_complete() uses req->actual (actual received bytes) for
+memcpy
+
+This allows an attacker to craft packets with small declared size
+(bypassing validation) but large actual payload (triggering overflow
+in memcpy).
+
+Add validation in usb9pfs_rx_complete() to ensure req->actual does not
+exceed the buffer capacity before copying data.
+
+Reported-by: Yuhao Jiang <danisjiang@gmail.com>
+Closes: https://lkml.kernel.org/r/20250616132539.63434-1-danisjiang@gmail.com
+Fixes: a3be076dc174 ("net/9p/usbg: Add new usb gadget function transport")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+---
+(still not actually tested, can't get dummy_hcd/gt to create a device
+listed by p9_fwd.py/useable in qemu, I give up..)
 
 Changes in v3:
-  - Restrict domain IDs to represent a domain.
+- fix typo s/req_sizel/req_size/ -- sorry for that, module wasn't
+  built...
+- Link to v2: https://lore.kernel.org/r/20250620-9p-usb_overflow-v2-1-026c6109c7a1@codewreck.org
+
 Changes in v2:
-  - Add GPDSP labels in dt-bindings.
+- run through p9_client_cb() on error
+- Link to v1: https://lore.kernel.org/r/20250616132539.63434-1-danisjiang@gmail.com
+---
+ net/9p/trans_usbg.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-Ling Xu (3):
-  dt-bindings: misc: qcom,fastrpc: Add GDSP label
-  arm64: dts: qcom: sa8775p: add GDSP fastrpc-compute-cb nodes
-  misc: fastrpc: add support for gdsp remoteproc
+diff --git a/net/9p/trans_usbg.c b/net/9p/trans_usbg.c
+index 6b694f117aef296a66419fed5252305e7a1d0936..468f7e8f0277b9ae5f1bb3c94c649fca97d28857 100644
+--- a/net/9p/trans_usbg.c
++++ b/net/9p/trans_usbg.c
+@@ -231,6 +231,8 @@ static void usb9pfs_rx_complete(struct usb_ep *ep, struct usb_request *req)
+ 	struct f_usb9pfs *usb9pfs = ep->driver_data;
+ 	struct usb_composite_dev *cdev = usb9pfs->function.config->cdev;
+ 	struct p9_req_t *p9_rx_req;
++	unsigned int req_size = req->actual;
++	int status = REQ_STATUS_RCVD;
+ 
+ 	if (req->status) {
+ 		dev_err(&cdev->gadget->dev, "%s usb9pfs complete --> %d, %d/%d\n",
+@@ -242,11 +244,19 @@ static void usb9pfs_rx_complete(struct usb_ep *ep, struct usb_request *req)
+ 	if (!p9_rx_req)
+ 		return;
+ 
+-	memcpy(p9_rx_req->rc.sdata, req->buf, req->actual);
++	if (req_size > p9_rx_req->rc.capacity) {
++		dev_err(&cdev->gadget->dev,
++			"%s received data size %u exceeds buffer capacity %zu\n",
++			ep->name, req_size, p9_rx_req->rc.capacity);
++		req_size = 0;
++		status = REQ_STATUS_ERROR;
++	}
+ 
+-	p9_rx_req->rc.size = req->actual;
++	memcpy(p9_rx_req->rc.sdata, req->buf, req_size);
+ 
+-	p9_client_cb(usb9pfs->client, p9_rx_req, REQ_STATUS_RCVD);
++	p9_rx_req->rc.size = req_size;
++
++	p9_client_cb(usb9pfs->client, p9_rx_req, status);
+ 	p9_req_put(usb9pfs->client, p9_rx_req);
+ 
+ 	complete(&usb9pfs->received);
 
- .../bindings/misc/qcom,fastrpc.yaml           |  2 +
- arch/arm64/boot/dts/qcom/sa8775p.dtsi         | 57 +++++++++++++++++++
- drivers/misc/fastrpc.c                        | 57 ++++++++-----------
- include/uapi/misc/fastrpc.h                   | 11 +++-
- 4 files changed, 92 insertions(+), 35 deletions(-)
+---
+base-commit: 74b4cc9b8780bfe8a3992c9ac0033bf22ac01f19
+change-id: 20250620-9p-usb_overflow-25bfc5e9bef3
 
+Best regards,
 -- 
-2.34.1
+Dominique Martinet <asmadeus@codewreck.org>
+
 
