@@ -1,183 +1,132 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D981A4F12;
-	Sun, 22 Jun 2025 12:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750594976; cv=none; b=Z2hwCA6VAZny6YArwsmWfPAH6rgyOHDiTgd7SjJi+6H/5AYV58i/K7hwogAqZyO1EXWtePjyzHc169WpnlRuRiqCiVhqqrW8di9P5Evvq+B1W8iSxf8jakNY1X8ZVpP0FjtBYAlQsLhK3rI+ITwYlTBgZ0wkI3quh0HSyZiInxw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750594976; c=relaxed/simple;
-	bh=KRjNzQ29EUr2lI75KF0mqNTaqwg++wgc+dsId2HE21g=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=sogA8floDTpAsnQWubLQxC2kbQNi3vtme3zE7hqLQ38pL0lMp3Rvzi9suLSKD7iDTDn9PadqDMkFckulVG66Wab0evan/Y6V+6I1mQlmCCTmaRIGCY5gECpDxOZjTOq1Otjn3yIRI4t0dhTs97thDxgXbcCTQ/eNmatBnOIXAPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=f469nGfo; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830283B280;
+	Sun, 22 Jun 2025 12:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750595000; cv=pass; b=fh+ra8vKv0G4KHo2Zit0NbYtkqsKg5fWLt/JggZCZhco4iAjOJ+iFoOeQtZiwTLee3tlJE04NYzis7q1FlXegGjA5SN45Ovw/AeBxwftAi4SqN6lsZU4w9x8SpNTPojqcfQqLR7nZEzgbtED7yoFyhBVyx/3GKbIm63Q0yQZLp0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750595000; c=relaxed/simple;
+	bh=AMSOAWWVOFJvEDzxiAwPh2T23dWsgFRifbT3d9tqSzc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SaFy6iLa6Ztw7MaHR99CUYXderc7d1KWe5qRSMkAaRzCotYWSPDz6WGl0ckHfWwNCF4GCbCiNs7LqOXhqOsd5n4XABRowQxWfpZNyzgE6lR5ekzOGkbMB5JzSiwHFujOaVqgRommWJOKMmqUi3Z1hB04r7A+5pZsSHMmrlZMCxA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=ZevDwm0a; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="f469nGfo"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55M9U1KN001347;
-	Sun, 22 Jun 2025 12:22:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=cQeOCv
-	EZJftYIWriW4YD8qUFLKSLRcM+bzupOIftamU=; b=f469nGfoUK6zRFeCKnECAQ
-	2frMspi3yUyiZ1iTcVPr4OvtRZOurFwfDsNS5Ve3311/0VzaUpUgrzr8BPVwyCln
-	/prtz51AHRYA5AIfLg6nBRzkwoK4qEOPoyUs9sVK6KVzW1+n+ifbLHzbZ4pKFR7V
-	BJGeuTmn8wEKSAkMTamXkifMXFdFOgSeatR9mUL5fdV4Q0fPHPhkQUqxJ7AuDfGh
-	G2KlBHXJxxpcrQnhbo96fy1BurYcxs9TZ8xP6aEITpvvl9KhxbDR9Ch4cKriYv+v
-	TzPavutV2dkMceF6Zi7W473+9rhXobfvjYYv20AJUa+OUeeWFPAt08iWvh5vjkGA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dmf2mjy0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 12:22:45 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55MCMiWn002080;
-	Sun, 22 Jun 2025 12:22:44 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dmf2mjxu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 12:22:44 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55M8HsgC003994;
-	Sun, 22 Jun 2025 12:22:43 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e99k9gxe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 12:22:43 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55MCMhX612321336
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 22 Jun 2025 12:22:43 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 354845804B;
-	Sun, 22 Jun 2025 12:22:43 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 33EC258059;
-	Sun, 22 Jun 2025 12:22:42 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.92.25])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 22 Jun 2025 12:22:42 +0000 (GMT)
-Message-ID: <47dbda783e5919a8137e3781472fe7ae94ee1c73.camel@linux.ibm.com>
-Subject: Re: [PATCH v4 1/2] firmware: arm_ffa: Change initcall level of
- ffa_init() to rootfs_initcall
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Yeoreum Yun <yeoreum.yun@arm.com>, jarkko@kernel.org, sudeep.holla@arm.com,
-        peterhuewe@gmx.de, jgg@ziepe.ca, stuart.yoder@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-In-Reply-To: <20250618102302.2379029-2-yeoreum.yun@arm.com>
-References: <20250618102302.2379029-1-yeoreum.yun@arm.com>
-	 <20250618102302.2379029-2-yeoreum.yun@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 22 Jun 2025 08:22:41 -0400
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="ZevDwm0a"
+ARC-Seal: i=1; a=rsa-sha256; t=1750594971; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=SX/V7OGFpGXcrF9vBbSLVZx7WjDemyvuBoU3piZ4RwxxF33LYBLd8wckUSjYHZQK+iTrUSDT7cMYat1Cvj14mDAmd4dLSHuncIEb87NMQPN+4iTMxcbP6bz3CJOpBaLBde5kESdHUu0czWzlvq7Zykf7pQTVC7fkb/IPhMlo5Ko=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750594971; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=uSiG/3gBEYd1VHCUlyJol4GjDktqY17ZQKmr4r2esEU=; 
+	b=lY72QQB1HIkkB+iHy+rPokaI9RBcIft+Svk29rTtWFxvccPChAvSL3emlv+zvidtFBvBwB18UsxST6xWnGi4/jqpUJrXapRNiX753hpq0eLrskk0hlVCnUUmUxIyTTYaO/Qwh+RuxOCW0kW+2s8uHdcS1Bb0FIwwouRaYiBVv5M=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750594971;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=uSiG/3gBEYd1VHCUlyJol4GjDktqY17ZQKmr4r2esEU=;
+	b=ZevDwm0akhhOorhHDYOInARgaw2Phc4DXfPcBlFQZbwXyL4AN0d8HhjqKz0y29Xm
+	AGvHZatK0koT1HbcV5rDlrBtXFD+HmoYL7kmagLt0txc0SSyErPBUjRLhXMjIfHq3Ds
+	EPuDL18MC+cCSJPvy9kq7bGHOI6WorYG6zwYAbBo=
+Received: by mx.zohomail.com with SMTPS id 1750594968815854.4851211512889;
+	Sun, 22 Jun 2025 05:22:48 -0700 (PDT)
+Message-ID: <50a01a17-4afc-415d-b5c8-9a84e3bdf191@zohomail.com>
+Date: Sun, 22 Jun 2025 20:22:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=M5FNKzws c=1 sm=1 tr=0 ts=6857f595 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=7CQSdrXTAAAA:8 a=VnNF1IyMAAAA:8 a=DDGuNG6xrOoNSW4XS2IA:9 a=QEXdDO2ut3YA:10
- a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDA3NiBTYWx0ZWRfX/vOuTE67BXDo idPqzdNkfcnMbLwb4vXYRhxryNp1Y4UPsaXdLQPyV1Qe8LJn471ge+7uBRvx0ZsJ4oy31JZTEfe YyHSwE3RjycjStnfIDWc/sSffqN0KrjOoc5rfCEIMMzVoAYW4hxqMdaCqUIl0nc72IvChl1yyhv
- gAje4CL5mo1YIur7sHb/KJP/A/BkG13d0wS192cJ3vTUuk9+TGJKKGXaOW9RYC8b8tI9SUqs3c9 SzQ83rNnTZuAwYa0UGlTZrSyME50LN8gU+GC4dTCDQ/xvaBlglJBsKU/nPMbHMkF38VWPmfuy1e yWKZRSQVouhXUVXAujW1VJaNs2Ok8Pot5+KCIhKL24y3u6Y5iJ4gqDkYTPzmHQh+CgdJ0haR/Zk
- INsoVoXbO/P4lgEW1hKtNa5ukxTSYdfZL6JRZx34ZDavd4XMshuAVLws/i8pWuNcSJd1Y1w7
-X-Proofpoint-GUID: VWP3MNWq71S8Z8s0TWtHd95NamqWgdZX
-X-Proofpoint-ORIG-GUID: OzPov1yOrvGApJkFDG_m7XqcFoHhFzOs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-22_04,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 malwarescore=0 impostorscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 spamscore=0 clxscore=1011 adultscore=0
- mlxscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506220076
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/memdev: automate cleanup with __free()
+To: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Cc: rrichter@amd.com, peterz@infradead.org, skhan@linuxfoundation.org,
+ linux-kernel-mentees@lists.linux.dev, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250622120958.475765-1-pranav.tyagi03@gmail.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20250622120958.475765-1-pranav.tyagi03@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: rr0801122797eaaf48ae49aa6da0c583de0000df12df7d2ad8da596ba8ec4e3a1be439638fbf2a1741c432f0:zu08011227a7ae67b27c69a00ec2136e3d000095794a72c15f733e2cfc4d4b1d3b203fa59acd848be5fb9c99:rf0801122d8ee8aa98ca620e132b75e91200004593d96275e5b9b74a185107a4616c8d67d80e2bdfd413a7446c77e2d3b3fe:ZohoMail
+X-ZohoMailClient: External
 
-On Wed, 2025-06-18 at 11:23 +0100, Yeoreum Yun wrote:
-> The Linux IMA (Integrity Measurement Architecture) subsystem used for sec=
-ure
-> boot, file integrity, or remote attestation cannot be a loadable module
-> for few reasons listed below:
->=20
->  o Boot-Time Integrity: IMA=E2=80=99s main role is to measure and apprais=
-e files
->    before they are used. This includes measuring critical system files du=
-ring
->    early boot (e.g., init, init scripts, login binaries). If IMA were a m=
-odule,
->    it would be loaded too late to cover those.
->=20
->  o TPM Dependency: IMA integrates tightly with the TPM to record measurem=
-ents
->    into PCRs. The TPM must be initialized early (ideally before init_ima(=
-)),
->    which aligns with IMA being built-in.
->=20
->  o Security Model: IMA is part of a Trusted Computing Base (TCB). Making =
-it a
->    module would weaken the security model, as a potentially compromised s=
-ystem
->    could delay or tamper with its initialization.
->=20
-> IMA must be built-in to ensure it starts measuring from the earliest poss=
-ible
-> point in boot which inturn implies TPM must be initialised and ready to u=
-se
-> before IMA.
->=20
-> To enable integration of tpm_event_log with the IMA subsystem, the TPM dr=
-ivers
-> (tpm_crb and tpm_crb_ffa) also needs to be built-in. However with FF-A dr=
-iver
-> also being initialised at device initcall level, it can lead to an
-> initialization order issue where:
->  - crb_acpi_driver_init() may run before tpm_crb_ffa_driver()_init and ff=
-a_init()
->  - As a result, probing the TPM device via CRB over FFA is deferred
->  - ima_init() (called as a late initcall) runs before deferred probe comp=
-letes,
->    IMA fails to find the TPM and logs the below error:
->=20
->    |  ima: No TPM chip found, activating TPM-bypass!
->=20
-> Eventually it fails to generate boot_aggregate with PCR values.
->=20
-> Because of the above stated dependency, the ffa driver needs to initialis=
-ed
-> before tpm_crb_ffa module to ensure IMA finds the TPM successfully when
-> present.
->=20
-> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
-
-Thank you for the well written patch description.
-
+On 6/22/2025 8:09 PM, Pranav Tyagi wrote:
+> Use the scope based resource management (defined in linux/cleanup.h) to
+> automate the lifetime control of struct cxl_mbox_transfer_fw. This
+> eliminates explicit kfree() calls and makes the code more robust and
+> maintainable in presence of early returns.
+>
+> Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
 > ---
->  drivers/firmware/arm_ffa/driver.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/firmware/arm_ffa/driver.c b/drivers/firmware/arm_ffa=
-/driver.c
-> index fe55613a8ea9..1a690b8186df 100644
-> --- a/drivers/firmware/arm_ffa/driver.c
-> +++ b/drivers/firmware/arm_ffa/driver.c
-> @@ -2058,7 +2058,7 @@ static int __init ffa_init(void)
->  	kfree(drv_info);
->  	return ret;
->  }
-> -module_init(ffa_init);
-> +rootfs_initcall(ffa_init);
-
-LGTM as the driver is always builtin.
-
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-
-> =20
->  static void __exit ffa_exit(void)
+>  drivers/cxl/core/memdev.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index f88a13adf7fa..be73a6099cb6 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/idr.h>
+>  #include <linux/pci.h>
+> +#include <linux/cleanup.h>
+>  #include <cxlmem.h>
+>  #include "trace.h"
+>  #include "core.h"
+> @@ -802,11 +803,11 @@ static int cxl_mem_activate_fw(struct cxl_memdev_state *mds, int slot)
+>  static int cxl_mem_abort_fw_xfer(struct cxl_memdev_state *mds)
 >  {
+>  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+> -	struct cxl_mbox_transfer_fw *transfer;
+>  	struct cxl_mbox_cmd mbox_cmd;
+>  	int rc;
+>  
+> -	transfer = kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
+> +	struct cxl_mbox_transfer_fw *transfer __free(kfree) =
+> +		kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
+>  	if (!transfer)
+>  		return -ENOMEM;
+>  
+> @@ -822,7 +823,6 @@ static int cxl_mem_abort_fw_xfer(struct cxl_memdev_state *mds)
+>  	transfer->action = CXL_FW_TRANSFER_ACTION_ABORT;
+>  
+>  	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+> -	kfree(transfer);
+>  	return rc;
+the rc can be removed with your change, can be "return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd)".
+>  }
+>  
+> @@ -880,7 +880,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
+>  	struct cxl_dev_state *cxlds = &mds->cxlds;
+>  	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
+>  	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> -	struct cxl_mbox_transfer_fw *transfer;
+> +	struct cxl_mbox_transfer_fw *transfer __free(kfree);
+>  	struct cxl_mbox_cmd mbox_cmd;
+>  	u32 cur_size, remaining;
+>  	size_t size_in;
+> @@ -970,7 +970,6 @@ static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
+>  	rc = FW_UPLOAD_ERR_NONE;
+>  
+>  out_free:
+> -	kfree(transfer);
+>  	return rc;
+>  }
+>  
+
+I believe all "goto out_free" in the function are not needed with your change.
+
+
+Ming
 
