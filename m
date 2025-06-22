@@ -1,155 +1,108 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2152AD04;
-	Sun, 22 Jun 2025 16:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B94EC2
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 16:57:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750611164; cv=none; b=NviYKWoJcsbbHJXoY7z1Ct+UsYp1x6NZMXfWdg2Sl43JKgCmjdzwxvcT3c8iGblxa8dcBYvaQePHBGr0GHQMiiseYH7Jk5M5/CqQwXbmXRAUWjXv8RWM+A7TUt9wTt8ZusFHnkxztZ9OznoValErp0LTG68F1ug1FFcJCzWts+E=
+	t=1750611462; cv=none; b=DlY2aofJffy7Dm6c2r4BhOpb5p5CU1He/x/k9sYPV78bZz9Hoz7lIXJVQ4UUQpvb4B5OfhuAwajhYR98WMO3Wj11Wn4vxKfV+fXdzG8fyPrBamW+PvCH4sANTo/LxwSilNoBcjHJevAxeQ0kDFu9Io2sWxnIjiuGnXIS+0sQVrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750611164; c=relaxed/simple;
-	bh=duB4ouV7PVG3cmWJ1QYjkuKk7v4eXinULHvNC0uLzDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JYLX4Ugmks2PKgfqtLl+P7LzypXgnIMTj1eysYCGUCZvcgFpzg2flMKGkKIj7qgFvVxIx+eNblTqrmt3Kra+HSVOv5K31/Oyemy6rSJLbIPZ+TCJEDHP6iXpa9Ap9qhhtRlPLWShS/hp2BAy3atyhPl2+yK5IFFQ9JD4PvGA/5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MIeV2T6P; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750611462; c=relaxed/simple;
+	bh=1zZuv+eB2qla/l9yYAzq0vGiZJhKLWAqb60fO58Zdrw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Sq7lFfBJaNUNwLNF8YoELYMZBLItP5uJ0/5Pivd2zmZJvNfC48KzQZe6nOKn2PQXqQgZEtkXjbzP1auOZ12EHrQ+8TgJA1I/gSZrN3ZkDlFVuFhBpwCLqdsUK+kzwwrnmwma5dlfIIIAbwqorj7jWzEsKPoGH4R7R718YFKrtDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UGd/swRH; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MIeV2T6P"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a6cd1a6fecso2908578f8f.3;
-        Sun, 22 Jun 2025 09:52:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UGd/swRH"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-607c2b96b29so5869202a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 09:57:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750611161; x=1751215961; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FngSn3FLzaGg6vnTK1EcbPv7loXCwwNpO2CdpOQR/gM=;
-        b=MIeV2T6PFCZg27RMbSd4rKsRq5j32NhDVgK88hcktWZF++Aldc1kNhKAohBtsW9Nmu
-         WLZY0oTQN20dmsaEVQYzVZ/1OU9xZtQxMt5Cbin83/O6M8K45T3Wz6o3nYgvRzSvYqmi
-         pgjvUAZXHRr1vgpzYC1gDLX1Nv+7VF6NLgrq/9fwByaJM4U/fTIw881ju27Eng3HWUA6
-         bfe8yca+UzP8NjcpCa+wln24EmNDqBp6TqIdsJaPeQIxI536/4b5CivTZMidbGptuqBo
-         T40YUENwqfnsLU3Mg6hIDvw7uUzvcUKWmJWA24sFqyctOuAar4ecQznsFgnz/b7UdN/5
-         UrkA==
+        d=linux-foundation.org; s=google; t=1750611458; x=1751216258; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kH6SnANQ47m1wSFT64o9y3OjbbEmJRBS7PRTptJ1lvQ=;
+        b=UGd/swRHHEY7t85CVU4pc1uQAJzqTmXBm1XrVSWycA2Z74edZHxNFZ9u0EDJxVXwIT
+         YzfuTSEnqMhwkSH+Suu0iq6jwn068rAf7FgCpYSt0WMjFIDBDCuv7xkREgW4eHBVDAUq
+         tu72ZmSJZHOQXNorcSuz3u2eMa4QiKQb3L/yU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750611161; x=1751215961;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FngSn3FLzaGg6vnTK1EcbPv7loXCwwNpO2CdpOQR/gM=;
-        b=CwSDbM6fCFminz4LIXAXQeOjhBiuJDyopOH9SXUEyn/fe90X3KRph67+E1BSe0097A
-         xutNHV88+m3Wly/uksKP8AElzYlFbwCEDX4aXICelnHYsMO23th72PLEfVHZH6SlC01W
-         xdDTBcwHL61u5wOe+fMWCtJI8Fr/5Ofp056oRLZNgrW/BvhV73OzDCxOS2XfPEnZoLYP
-         /xfFC6+sZ4oGy/MBQFp31aU7RjpJhK0YK1/bcLtes8o9MHJb39prZDpTiY6WDA1H4l+I
-         Qvk2RF5Q2juaSNyb8ZwD01ATD5S5/IEiYokL1u8ytWywOln8yTi/wPx09bTNd3UxsrCk
-         L+zA==
-X-Forwarded-Encrypted: i=1; AJvYcCURX0U0p3lT7jBLssiRJ8FT5jD3nCDdwX2lbHtCGO+iKLMQVhdrRUg4iI7YuuAe+18V2GmyWNXPiKoCA90n@vger.kernel.org, AJvYcCUpKgTi1VVaFtj1GFNUwcBptXPTob+l4O2RvTAvdxlTzJmPaI4MQ7Gz3jv8gXBujeT1DVtZrjZsfc38eJFF@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtfLt5udfG8e8PD6Mj5SiYPauKcTagHsfx3fjoyWWDfheM3xOX
-	6ZLGfC4N5iPUZOwM9cmGjUtA7CUIxjiBa8dZbZGPrpN/6d5fj0V6bb/D
-X-Gm-Gg: ASbGncuKrP8ZrkKUvC0USs3URWGK2XHlKHK1wfp0FAGF8uGBIZa9m5mZ4UVVJTToq1u
-	fTh1CBjSZK4pzpgja1D/JwqZXQRs7uBSHw4c44BXAoCp0/cZiupZA1NLJO98Qj4aOTdZTLRZ9yl
-	609LDFFW7ZVemTgCLcH+F/nrQECusR8/3Z/tAG8cTUXSZwlbGirZ9j+OaUXpkeHzD2qbWIBSmbG
-	Y6e+TQ6IktbMxrDR43x+e6FeJy4kcddry0wf0KxirPnU8BzwjkmYC49/sA33FH8X2gIVNrF+fmN
-	NkUk5QsPdLJ8DanIvHlw77VbFReA3UnTVlrNlNLbjUS9fTmxhcTz7aiBPZu3+lw6oE/jx0GFJEY
-	KajaGbcxO5TsQApTub9gjo55t
-X-Google-Smtp-Source: AGHT+IGYZ2I7yF8X3Gjleg6T1l+ayP9shmcGOvVNUsuDSBZtK92zgW1wfdx37nTuwhWT/HBaaKSFPg==
-X-Received: by 2002:a5d:64ce:0:b0:3a4:f513:7f03 with SMTP id ffacd0b85a97d-3a6d1303b0fmr7534708f8f.44.1750611160377;
-        Sun, 22 Jun 2025 09:52:40 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646d7d8fsm83430075e9.15.2025.06.22.09.52.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 09:52:40 -0700 (PDT)
-Date: Sun, 22 Jun 2025 17:52:38 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
- <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan
- <maddy@linux.ibm.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
- Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
- <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, Davidlohr Bueso
- <dave@stgolabs.net>, "Andre Almeida" <andrealmeid@igalia.com>, Andrew
- Morton <akpm@linux-foundation.org>, Dave Hansen
- <dave.hansen@linux.intel.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org
-Subject: Re: [PATCH 2/5] uaccess: Add speculation barrier to
- copy_from_user_iter()
-Message-ID: <20250622175238.642d02bf@pumpkin>
-In-Reply-To: <f4b2a32853b5daba7aeac9e9b96ec1ab88981589.1750585239.git.christophe.leroy@csgroup.eu>
-References: <cover.1750585239.git.christophe.leroy@csgroup.eu>
-	<f4b2a32853b5daba7aeac9e9b96ec1ab88981589.1750585239.git.christophe.leroy@csgroup.eu>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        d=1e100.net; s=20230601; t=1750611458; x=1751216258;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kH6SnANQ47m1wSFT64o9y3OjbbEmJRBS7PRTptJ1lvQ=;
+        b=FU9gedIcMGVJU+t4pvJUBa75Jm2+rd14CAsIZpvpI7Vvkbw+1kU190kwizzcDysZ05
+         ro/Oh0kpLz2vqv23LVBdgRJN5LYr9+GHc+JStNn/dv4Qb7PnNJUJHGPUuXSs6BzqkJeD
+         h5WaQrP6y5geKV/dm/7KLvQh+RmGZpt4YhSnbE9W5nmOVG0r2hYR+q3X+73iYxhFUEZ9
+         5qoiFwNQbT+bnPOBLl/wmQk9DnBNDVIfa1LGtSKZZuSeVle7ZWJpdoM/o5Eoq/8zBlKa
+         16rC7xHQZAwGubUcAOo68ZCgOYxi107N0J8r+WjhkF5mCrM28rQgPiBea/WaQKddOs0c
+         HvZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWhE3bSQam1pT8SUjmfaag/zgid88Ff5+3XSudZppdJxQlOKTi5mnZa0yaHQZTZmDPCYZO5x+FISG71IIQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkTyXg3S9BzbjGaw/SpakvcPv9Va2/lwfD9pPlAkG6JQtF8Y5g
+	+gN7lYPLOG2Y26IuWgjavLkUJ6WBQ6g57R4FlqrKUsXn763hEu/hkr12THpwVrryOfdSzqhjMnS
+	zfEP8
+X-Gm-Gg: ASbGncvWbw07wftnVTH5lrnwtpClhiygQ/jdsKc241ih460j9v9C85nfaX+K39ZDvNf
+	+KucDCrqDZRuk3v1Ezol1X0rn4D8BRKkFPU49BZ7s4XrtEbvildNbFGlrfA6xEyS6kWrRod25f9
+	YLMtzssiZ7rCCc0HHHerDiAf5NEPuOB2KFe3Gb6OdfA2ghCjYskTiu6MPcs7aHc8f3Xz5KtZt6u
+	BA6LyXeLA9yw1Tl9vaM7qqQVLYtuRNUxbANMTYSzcNGo6PEwWIpDCjjdfGg/2sFFNgn1M6DB/ki
+	fdbXRF3sqReMdFcQ0SVOFbTiC7xNKHtsqB6+fygUVORZ+rsYdszv6xMeZcxmto1lx78PU3LKYVX
+	aQ9dQtTCfj9aEw2rHYQ+okoJsLyXLFTwXhwbY
+X-Google-Smtp-Source: AGHT+IG9/uqv1p+Z2f2kYs1fHuco52bdVwkStB0cF5AVN6utVvQ/6Kl0F37YNG22pcCI/ePy0/u51w==
+X-Received: by 2002:a05:6402:35c5:b0:607:27bb:7bf with SMTP id 4fb4d7f45d1cf-60a1cf3413emr9264020a12.32.1750611458030;
+        Sun, 22 Jun 2025 09:57:38 -0700 (PDT)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60a18504e16sm4888227a12.6.2025.06.22.09.57.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Jun 2025 09:57:36 -0700 (PDT)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-60702d77c60so6642813a12.3
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 09:57:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUmanUAXdif1pzIwYrq9VmEGTmR43eP/ILhP2ejfGgpfOSNX9BKnaVDyaAMj1FGDO4/O1ytXgDXi4Svf/s=@vger.kernel.org
+X-Received: by 2002:a05:6402:1e90:b0:608:3571:6942 with SMTP id
+ 4fb4d7f45d1cf-60a1cca9d65mr7384121a12.1.1750611456313; Sun, 22 Jun 2025
+ 09:57:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <cover.1750585239.git.christophe.leroy@csgroup.eu> <f4b2a32853b5daba7aeac9e9b96ec1ab88981589.1750585239.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <f4b2a32853b5daba7aeac9e9b96ec1ab88981589.1750585239.git.christophe.leroy@csgroup.eu>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 22 Jun 2025 09:57:20 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj4P6p1kBVW7aJbWAOGJZkB7fXFmwaXLieBRhjmvnWgvQ@mail.gmail.com>
+X-Gm-Features: AX0GCFts7S7trAg95_9iRhGDGkpXCnUtzlq1LLaD_2GFvkl-rWcgRNFXTCHwODg
+Message-ID: <CAHk-=wj4P6p1kBVW7aJbWAOGJZkB7fXFmwaXLieBRhjmvnWgvQ@mail.gmail.com>
+Subject: Re: [PATCH 2/5] uaccess: Add speculation barrier to copy_from_user_iter()
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Andre Almeida <andrealmeid@igalia.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Laight <david.laight.linux@gmail.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, 22 Jun 2025 11:52:40 +0200
-Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
+On Sun, 22 Jun 2025 at 02:52, Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
+>
+> The results of "access_ok()" can be mis-speculated.
 
-> The results of "access_ok()" can be mis-speculated.  The result is that
-> you can end speculatively:
-> 
-> 	if (access_ok(from, size))
-> 		// Right here
-> 
-> For the same reason as done in copy_from_user() by
-> commit 74e19ef0ff80 ("uaccess: Add speculation barrier to
-> copy_from_user()"), add a speculation barrier to copy_from_user_iter().
+Hmm. This code is critical. I think it should be converted to use that
+masked address thing if we have to add it here.
 
-I'm sure I sent a patch to change this code to used the 'masked' functions.
-Probably ought to be done at the same time.
-Would have been early feb, about the time I suggested:
+And at some point this access_ok() didn't even exist, because we check
+the addresses at iter creation time. So this one might be a "belt and
+suspenders" check, rather than something critical.
 
-+#ifdef masked_user_access_begin
-+#define masked_user_read_access_begin(from, size) \
-+	((*(from) = masked_user_access_begin(*(from))), 1)
-+#define masked_user_write_access_begin(from, size) \
-+	((*(from) = masked_user_access_begin(*(from))), 1)
-+#else
-+#define masked_user_read_access_begin(from, size) \
-+	user_read_access_begin(*(from), size)
-+#define masked_user_write_access_begin(from, size) \
-+	user_write_access_begin(*(from), size)
-+#endif
+(Although I also suspect that when we added ITER_UBUF we might have
+created cases where those user addresses aren't checked at iter
+creation time any more).
 
-allowing:
--		if (!user_read_access_begin(from, sizeof(*from)))
-+		if (!masked_user_read_access_begin(&from, sizeof(*from)))
-
-	David
-
-
-> 
-> See commit 74e19ef0ff80 ("uaccess: Add speculation barrier to
-> copy_from_user()") for more details.
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
->  lib/iov_iter.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-> index f9193f952f49..ebf524a37907 100644
-> --- a/lib/iov_iter.c
-> +++ b/lib/iov_iter.c
-> @@ -50,6 +50,13 @@ size_t copy_from_user_iter(void __user *iter_from, size_t progress,
->  	if (should_fail_usercopy())
->  		return len;
->  	if (access_ok(iter_from, len)) {
-> +		/*
-> +		 * Ensure that bad access_ok() speculation will not
-> +		 * lead to nasty side effects *after* the copy is
-> +		 * finished:
-> +		 */
-> +		barrier_nospec();
-> +
->  		to += progress;
->  		instrument_copy_from_user_before(to, iter_from, len);
->  		res = raw_copy_from_user(to, iter_from, len);
-
+             Linus
