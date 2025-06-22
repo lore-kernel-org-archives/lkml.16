@@ -1,120 +1,99 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32415C2FA
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 22:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF3A28EA;
+	Sun, 22 Jun 2025 22:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750629770; cv=none; b=d6YNPH9vuEOML7zsHaRKlvw3Yi8k1nwSG+WzFkANq0mhGS9HnxW4eQc508B2oE0206Yr0Y9/KtMSMstlmvypFYMprhx2q5teCEmzA/rGAZSURx2JhSOAlPTuu6ex2/JVjDGEL1U8Q/ni/+SeUUQG/YrW6vzYyeqR5YYyTGUaAak=
+	t=1750630588; cv=none; b=cW+r/YBNqFlEa4GI52fZOgJIHSs2SJyhTraJzxFw3MxOf+lzXB7ZjcGwHt6TW6kjUJzLix6ZGmAzufUMSlx98g7QD8cY7G86eUArxqfq2LTeAQPOZt5Hpn5ZNvh8n7dKLRHmA6syxUrDPZPT5LZeJZz1x3DX+MvYbskhCOb0Zec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750629770; c=relaxed/simple;
-	bh=RdeSytjFriCiVDqBfoNbrlxAhjFgOopRBXO/wo/M1mo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IJwgEGPZxBUko/GIQfESOtOga1cPewaTqvh44RfiAcX+LfcDcpOs1uaHDiGvb/3HTldJjNRi5JLpb67ghiCJ4LHPJQfFaFX0/adkzHrfs5zv7drKeyjms65+O7RQCvekB7Fpj5HlsVu12FDZJbO4bDFOSxH98Yno1bGyFS/YkQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com; spf=pass smtp.mailfrom=mandelbit.com; dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b=Yujk1BfB; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mandelbit.com
+	s=arc-20240116; t=1750630588; c=relaxed/simple;
+	bh=tLByNlqUAJAlwrRiurqr1Tlca7v3+MRaflGdBfGFrh4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=kyRb8nnsfkV6FZuKbU8vwyWuWS/indVAvljQeJhjgMm1PV2j/qWThaFenVgqzVS6U/zocgQ0ZgLwkFLxk2w4az4pvcBjjGgKgAqeGgyM3D9tT7ymjrQ7QfnHu4HRKtABPOKlYzJLls2r9vwaMSMBCXBHMF/PSDgzT9ENdvsykrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UnkMEMVn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b="Yujk1BfB"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450d668c2a1so27626875e9.0
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 15:02:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mandelbit.com; s=google; t=1750629767; x=1751234567; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bt+OHlPcCexBjO5A/XepCZN5Wsx0OmQnDmQwiH7XPK4=;
-        b=Yujk1BfBXh1Hx4egKv1XE6NncR75xuF0DbXQQna4aq2FI6/VIGIm57JlKf7T5r3u0u
-         qjur+7hteEcJDKkM7Kj/oQW/z9UvjZfVKGDKESuPsQBLCikN97im5P+eYZsSxkNSoNTU
-         qaNJQGe68V+9eyqYqqBP8vVBT1bl3NA/lFq47pYSAxRRJ5jTWcBg5pBYjMYT4qMysPiO
-         s+IP2g0s3pcBgqnLe5cCy0FPfZ0dhtPlFUFa9nhGHUMiWdFGjSJ9JITSw+qn8YBYMUCv
-         j7SeU4gfpJw0soCKbVLdfm7BS18phyhZ33+hYc2sTqy4fVXGHragJp7/p9iHN/OHCtzg
-         IzjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750629767; x=1751234567;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Bt+OHlPcCexBjO5A/XepCZN5Wsx0OmQnDmQwiH7XPK4=;
-        b=FdH/Snrdn0gedQacIg9Gdwe+VY4Bo+jK4c1hheR5gNdyzSRiRg7h4DeXFW8UeEiLVd
-         g+mZSfkYVrH2YN/ABATUuEBhmf2NCsdezz5tumoF1fwcpjejIg4uFrdvlU6a3JfXkQnY
-         7FTzsnkx2o2LiCC72hHQ7SMxT5+plzZUtHnJcJP2fYr3DJUFohuB1j7I22tgjK0m4t0w
-         DN9fY6vaZc183Fll7PMcilJDGPvcPNASPoCK7nVYb5/sX6WkPPOxSY2dN27IZr4JIdJr
-         TBw7zSUhvb+9tqLoai3UOUxTq9ieVZ6cSBN2VeSpHmuqoj+edJw55EpA708O+BnQZRGz
-         9Gyw==
-X-Forwarded-Encrypted: i=1; AJvYcCWH+rc1TXnYMcIaszwR24172cyE5tX0whyz1tLwYK0QCFRwDSVUO/RIr3VyXx2ecLjooJQ4bd6bhQNWPJw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLixZQHc+nMPgCrr5SybMMZLe7KqW8OCDHNgT5DTfzFld1JYux
-	m8GVsEBWFBa/V3FdE39b2/CEkmCe79GagdxJcPi8ZSdZlkCIt5d60p+mHhpidP831+o4OEhD69K
-	U5kM6
-X-Gm-Gg: ASbGncsuM8UjITtlUr5ydDqvR6bC1An/kQYQX8w8u/AFORnTfve+wlsrCO/XuDuG7GS
-	y0F3uSHzBIxR7AtYz6YlPHAoBdgqtRZRNb+cx4pMENy5mkOfKli3cmuINF/ZtwsSPRgXNgya9aw
-	Ky9sVZJgG4gcDSup3UZ5rakQT49nGN+KOX6qIJPevJWKjZ3W3QCttNjAismcm30WcRs3wd7+G1q
-	2F4/3vxxyq/38y/Wa6RZ9rLynqPZUDQJIDRBS2eHj+u2PZER1DO8GSqSErnuXicoURNkzk2lUea
-	CmJFsQNavCnzbnU0+FmSHefOs2P01vQodFObF2WCIr3YpuTIZz/rtKDDrX+bgfVd/w5trdVlDvI
-	0n+f+i/i4VIw=
-X-Google-Smtp-Source: AGHT+IG0a+UKdfnjGI/Td/xknJ1CyetEZyT4JlqjGWXzeF8pdWoW25Vrb2Ox6m/940MfdEHPG+11yw==
-X-Received: by 2002:a05:600c:8b85:b0:450:cabc:a6c6 with SMTP id 5b1f17b1804b1-45365e6dec5mr96663895e9.15.1750629766977;
-        Sun, 22 Jun 2025 15:02:46 -0700 (PDT)
-Received: from inifinity.homelan.mandelbit.com ([2001:67c:2fbc:1:c4de:19cc:e05:213f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535e98b4bbsm122759295e9.15.2025.06.22.15.02.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 15:02:46 -0700 (PDT)
-From: Antonio Quartulli <antonio@mandelbit.com>
-To: linux-gpio@vger.kernel.org
-Cc: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	linux-kernel@vger.kernel.org,
-	Antonio Quartulli <antonio@mandelbit.com>
-Subject: [PATCH] gpiolib-sysfs: fix use-after-free in error path
-Date: Mon, 23 Jun 2025 00:02:21 +0200
-Message-ID: <20250622220221.28025-1-antonio@mandelbit.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UnkMEMVn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38383C4CEE3;
+	Sun, 22 Jun 2025 22:16:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1750630588;
+	bh=tLByNlqUAJAlwrRiurqr1Tlca7v3+MRaflGdBfGFrh4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UnkMEMVnPEVFZ/TxLkdkQxWUL8j100frOJstemv+j6qBeTRD2ky7OBir7vvHPnDxU
+	 ymtWmkFNLPhS+5J1oheVqlqb2kITNwDebPJCYbA4HxBEXkTU7RxEQh56IlEPOJv9I4
+	 EVWc61+GmVWxZEQpnxD95rkcfhnT2nbXjczFwLXE=
+Date: Sun, 22 Jun 2025 15:16:25 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Shivank Garg <shivankg@amd.com>
+Cc: Matthew Wilcox <willy@infradead.org>, seanjc@google.com,
+ david@redhat.com, vbabka@suse.cz, shuah@kernel.org, pbonzini@redhat.com,
+ brauner@kernel.org, viro@zeniv.linux.org.uk, ackerleytng@google.com,
+ paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, pvorel@suse.cz,
+ bfoster@redhat.com, tabba@google.com, vannapurve@google.com,
+ chao.gao@intel.com, bharata@amd.com, nikunj@amd.com, michael.day@amd.com,
+ yan.y.zhao@intel.com, Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com,
+ michael.roth@amd.com, aik@amd.com, jgg@nvidia.com, kalyazin@amazon.com,
+ peterx@redhat.com, jack@suse.cz, rppt@kernel.org, hch@infradead.org,
+ cgzones@googlemail.com, ira.weiny@intel.com, rientjes@google.com,
+ roypat@amazon.co.uk, ziy@nvidia.com, matthew.brost@intel.com,
+ joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+ gourry@gourry.net, kent.overstreet@linux.dev, ying.huang@linux.alibaba.com,
+ apopple@nvidia.com, chao.p.peng@intel.com, amit@infradead.org,
+ ddutile@redhat.com, dan.j.williams@intel.com, ashish.kalra@amd.com,
+ gshan@redhat.com, jgowans@amazon.com, pankaj.gupta@amd.com,
+ papaluri@amd.com, yuzhao@google.com, suzuki.poulose@arm.com,
+ quic_eberman@quicinc.com, aneeshkumar.kizhakeveetil@arm.com,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-coco@lists.linux.dev
+Subject: Re: [PATCH 2/2] filemap: Add __filemap_get_folio_mpol()
+Message-Id: <20250622151625.fb5d23362c2c3d1af22878d2@linux-foundation.org>
+In-Reply-To: <d1d7feed-c450-4b88-ab73-a673f4029433@amd.com>
+References: <20250618112935.7629-4-shivankg@amd.com>
+	<20250620143502.3055777-2-willy@infradead.org>
+	<aFWR-2WAQ283SZvg@casper.infradead.org>
+	<20250622114322.c6c35800e01e4cc4007a0f89@linux-foundation.org>
+	<d1d7feed-c450-4b88-ab73-a673f4029433@amd.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-When invoking device_create_with_groups() its return
-value is stored in `data->cdev_base`.
-However, in case of faiure, `data` is first
-freed and then derefernced in order to return
-`data->cdev_base`.
+On Mon, 23 Jun 2025 00:32:05 +0530 Shivank Garg <shivankg@amd.com> wrote:
 
-Fix the use-after-free by extracting the error
-code before free'ing `data`.
+> > -EXPORT_SYMBOL(__filemap_get_folio);
+> > +EXPORT_SYMBOL(__filemap_get_folio_mpol);
+> >  
+> >  static inline struct folio *find_get_entry(struct xa_state *xas, pgoff_t max,
+> >  		xa_mark_t mark)
+> > _
+> > 
+> 
+> Hi Andrew,
+> 
+> Thank you for addressing this.
+> 
+> If you don’t mind me asking,
+> I was curious why we used EXPORT_SYMBOL instead of EXPORT_SYMBOL_GPL here.
+> I had previously received feedback recommending the use of EXPORT_SYMBOL_GPL
+> to better align with the kernel’s licensing philosophy, which made sense to me.
 
-This issue was reported by Coverity Scan.
+Making this _GPL would effectively switch __filemap_get_folio() from
+non-GPL to GPL.  Leaving it at non-GPL is less disruptive and Matthew's
+patch did not have the intention of changing licensing.
 
-Addresses-Coverity-ID: 1644512 ("Memory - illegal accesses  (USE_AFTER_FREE)")
-Signed-off-by: Antonio Quartulli <antonio@mandelbit.com>
----
- drivers/gpio/gpiolib-sysfs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Also,
 
-diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index 956411fc467a..c4c21e25c682 100644
---- a/drivers/gpio/gpiolib-sysfs.c
-+++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -741,6 +741,7 @@ int gpiochip_sysfs_register(struct gpio_device *gdev)
- 	struct gpiodev_data *data;
- 	struct gpio_chip *chip;
- 	struct device *parent;
-+	int err;
- 
- 	/*
- 	 * Many systems add gpio chips for SOC support very early,
-@@ -781,8 +782,9 @@ int gpiochip_sysfs_register(struct gpio_device *gdev)
- 						    GPIOCHIP_NAME "%d",
- 						    chip->base);
- 	if (IS_ERR(data->cdev_base)) {
-+		err = PTR_ERR(data->cdev_base);
- 		kfree(data);
--		return PTR_ERR(data->cdev_base);
-+		return err;
- 	}
- 
- 	return 0;
--- 
-2.49.0
+hp2:/usr/src/25> grep "EXPORT_SYMBOL(" mm/filemap.c|wc -l
+48
+hp2:/usr/src/25> grep "EXPORT_SYMBOL_GPL(" mm/filemap.c|wc -l 
+9
+
 
