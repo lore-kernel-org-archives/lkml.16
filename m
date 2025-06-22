@@ -1,153 +1,226 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA05179F5
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 13:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A69EED7;
+	Sun, 22 Jun 2025 13:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750597248; cv=none; b=n0QUosFCclvKDyUV3uXKwpyplifsK7lHhfGOxrPkxm7uDhGVqms7Eejzb45CpZRBXSKXSJ3SfMSgNfUrxfZZy9EqMJjRUZPzofMRTI/9kxbBxx5EiGH90uKTw1CiOk/GBnm8IeeRhdCZAdjKfIzTCBJPkt9oqxfDoSUWGKvRp6E=
+	t=1750597285; cv=none; b=WGYwASU9yDzOFMmuqjibDVC4IZSEZ+FjTrv+9ScEw4s3/hB9HLuaMBgvEIiJ4NB3MPrrDBZD3QeRadPfR/T+93XC1GHap09I7LhOnDQ9UcD1tpOhjVHzpgrhu+z1nI1NXqXYirzSvOa3sqBWNhhG8f9huoTNVOunwMbl08R9Zzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750597248; c=relaxed/simple;
-	bh=b60IejSY9VzyzZuiVKUNn9qomKiBbwiGgQmUG1XE0hU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sKHiE2b0V5YLUuBlUW9TqIF0Chg56qiPeAcwb0NMl9W/BNkrqE0kxPjAcFaAuxOchJyB3of6wzkkJ6H6jaORzUup0z+fasyLj+rLhHhUC+IGwdEus0p1FqDwPynOCmFHdJAAV7iKQ4LHRLjvxsHYFJXSGZqs2w9xRlRjcVVcmL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=STILWeMx; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750597285; c=relaxed/simple;
+	bh=qLkw/Q/EM8Dh1Jv3fjeRRfrI8ZV5UvvY6GtQl0d2ph8=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BvNm8hikkaG1VCWdFwlwJOCNehRwV2u+w/qQutjkjhx/ksq/4yoF2a1l4RRe+Wlwb8l9gxznM5NgoyyIPy4CXgSkNliSf2jEYpFp3Dzy+zx+5TFz6CqG5jt4zBFz9lzlqLDH3tfcrv3ANWkT8uGxZUhyXPeSi46ExXr8Nbh8t1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=svhYhSBY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STILWeMx"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-453647147c6so22407195e9.2
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 06:00:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750597245; x=1751202045; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fdJCP3IGjFjNpzPk6xWCR4zsn18tfTf8CrLc1ojCZko=;
-        b=STILWeMxHw7PWJybBbPoa2qdvZkHeo/1O43OcZ8jePyM+k0Abfz9HN5mTZaSXfWOWk
-         Ht2a43XoQfR0QpuYGA+5EU0Q9Dn7CkRpcaMEaK5muURBqC678xXeVJplcU7a1NSdTTUs
-         LD6J5KVKdVssyl35z1gpesBkej3RJUzlfu4f8/J0ONdM/+hqRneYE4afqh6TMBhmLVJF
-         TeCE8Yl6N11/lrt+hh/iykhP5m7rHWuwyqXxskCCl0PqRfjldWGlSQ1C+wXlVsnKWoxP
-         D5gZ9EEpmm8kNGHtuFLedgCSgEJBFG8jr8k6x4IyoeP0Hr4JupIU4Hj4uWTT4wcaxEB0
-         rRxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750597245; x=1751202045;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fdJCP3IGjFjNpzPk6xWCR4zsn18tfTf8CrLc1ojCZko=;
-        b=CYxHJZXEYRylwcjyyk1Ar82ktGRv1lRQdCm3u+QnDcrCFd7JEXI3lgmPbeDcG4TwBw
-         Z3WeQ0P7ja8OYq8syGMjINSAtGi+JNpRXCNZqCrOXC2eUhYi9sYrHFiRjbk+I/q8bZJh
-         Gdb889rhhwauhu5NP4+6xq/5mjhsA+yZn/dVlDQtYtZVP0FWfaQPUr9UyQwBv6T0ygTZ
-         pEab6h47ueuWhVelQA8EL1f2izICsdlOcs07J3caIF0LZCjUA/62bXxThjWV9Dmu0tZ0
-         1nb1zB+ICqD2gCsgIJu0kop9WsTMaJJ2MMbhfVPVCYGCC90YbdO6wRVCYi75SEWbQNtA
-         OcUA==
-X-Forwarded-Encrypted: i=1; AJvYcCWrUFw9FbUM7OQ8/PxeGanxpiF+lkvmTucuHV9lV+Aa3/hMEJItQ7mWe/GHDiHJpZQqunxzCHQBDOTgIPI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx189u5UksXV5TwLz6u4hzpxRUktaIpO/iXazp8vrLjx+UkXuF1
-	FZcuw/PlfnIfIl7Pnwmlfknq1m8j7oBsdzsQ+Tzs3MPU61HIpOj7XDg/wMv8HFhn7bWwJjNzZE+
-	1af/IsioNaEY16RmuO8wPljpKCdPQk8I=
-X-Gm-Gg: ASbGncv7pZ5qH4tCd3ehI9vI5+VYwq59gUsokiqNka4dr6g5zSxVbTWeHvMyipNTlrx
-	TctBm/d1ZlcM3vqnUd1vzmfQjI7CvfqIYiTQk9GAiTUKqhLH3YHYokCObv75SAHgJpHXBZdHJ6k
-	QK+ByIW4Vu4hewmg7BdSE9z+ksgkC9ldI4hASY50ctucHRNA==
-X-Google-Smtp-Source: AGHT+IFzr9f6rWciNyiuAYrcxK+S2hQKO/PfnHre1skviLIkEB9KWSWr2OaKz+9b64I+WBPNt7mrTErmt4hd1Gnn+hY=
-X-Received: by 2002:a05:600c:c4aa:b0:453:a95:f07d with SMTP id
- 5b1f17b1804b1-453654cb7b3mr107100065e9.10.1750597244951; Sun, 22 Jun 2025
- 06:00:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="svhYhSBY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA79FC4CEE3;
+	Sun, 22 Jun 2025 13:01:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750597284;
+	bh=qLkw/Q/EM8Dh1Jv3fjeRRfrI8ZV5UvvY6GtQl0d2ph8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=svhYhSBYlgsO6WqFP4DG4Ibuoyfs7mZ3VZaQyyfK3cYXuQ0TQD35EJCeO/Mpshh2H
+	 xI3l7iAcoH8Bf8iRZBWccJ5GrzMaRZJILNtjGG8VtbXhy54gQylP0dOS2Jk2MuACPE
+	 FSjdjYJOaGghCEmOzMtN6Ft7E+xIzfIbS/VSO6KdArui1yqYKZMzQcvBPftqt1JGaj
+	 DOfGCNspTpHwq9QYr0pbpKOvajO6/24wPJroJuPcoDb/YwD3OlYCt3/QBw3mlKH/ye
+	 MaVsl12q7zVD78TW1ZmNS7u/jjPQwfMbEKC8MgP4Q/mIIzN1y1u6/H+ij3K4dPwhFC
+	 XvKYae1nDy1yw==
+Received: from [213.123.58.114] (helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uTKK2-008y5h-Af;
+	Sun, 22 Jun 2025 14:01:22 +0100
+Date: Sun, 22 Jun 2025 14:01:21 +0100
+Message-ID: <878qlkexr2.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: perlarsen@google.com
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/6] KVM: arm64: Use SMCCC 1.2 in host FF-A handler
+In-Reply-To: <20250619-virtio-msg-ffa-v5-3-412c98558807@google.com>
+References: <20250619-virtio-msg-ffa-v5-0-412c98558807@google.com>
+	<20250619-virtio-msg-ffa-v5-3-412c98558807@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250622051906.67374-1-snovitoll@gmail.com>
-In-Reply-To: <20250622051906.67374-1-snovitoll@gmail.com>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Sun, 22 Jun 2025 15:00:33 +0200
-X-Gm-Features: Ac12FXwDCMDtes9nEuHZSX21IEb-3roo_RAemSxrzaRE-NRx5fyXMcdS_EvWEQc
-Message-ID: <CA+fCnZeb4eKAf18U7YQEUvS1GVJdC1+gn3PSAS2b4_hnkf8xaw@mail.gmail.com>
-Subject: Re: [PATCH] mm: unexport globally copy_to_kernel_nofault
-To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Cc: ryabinin.a.a@gmail.com, hch@infradead.org, elver@google.com, arnd@arndb.de, 
-	glider@google.com, dvyukov@google.com, vincenzo.frascino@arm.com, 
-	akpm@linux-foundation.org, david@redhat.com, kasan-dev@googlegroups.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 213.123.58.114
+X-SA-Exim-Rcpt-To: perlarsen@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, sudeep.holla@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Sun, Jun 22, 2025 at 7:19=E2=80=AFAM Sabyrzhan Tasbolatov
-<snovitoll@gmail.com> wrote:
->
-> `copy_to_kernel_nofault()` is an internal helper which should not be
-> visible to loadable modules =E2=80=93 exporting it would give exploit cod=
-e a
-> cheap oracle to probe kernel addresses.  Instead, keep the helper
-> un-exported and compile the kunit case that exercises it only when
-> `mm/kasan/kasan_test.o` is linked into vmlinux.
->
-> Fixes: ca79a00bb9a8 ("kasan: migrate copy_user_test to kunit")
-> Suggested-by: Christoph Hellwig <hch@infradead.org>
-> Suggested-by: Marco Elver <elver@google.com>
-> Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+On Thu, 19 Jun 2025 10:02:56 +0100,
+Per Larsen via B4 Relay <devnull+perlarsen.google.com@kernel.org> wrote:
+> 
+> From: Per Larsen <perlarsen@google.com>
+> 
+> SMCCC 1.1 and prior allows four registers to be sent back as a result
+> of an FF-A interface. SMCCC 1.2 increases the number of results that can
+> (and often must) be sent back to 8 and 16 for 32-bit and 64-bit SMC/HVCs
+> respectively.
+> 
+> FF-A 1.0 references SMCCC 1.2 (reference [4] on page xi) and FF-A 1.2
+> explicitly requires SMCCC 1.2 so it should be safe to use this version
+> unconditionally. Moreover, it is simpler to implement FF-A features
+> without having to worry about compatibility with SMCCC 1.1 and older.
+> 
+> Add SMCCC 1.2 helper routines and use this version unconditionally.
+
+Well, the previous patch already mandates that, so I wonder why you
+have two patches tackling the same thing.
+
+> 
+> Signed-off-by: Per Larsen <perlarsen@google.com>
 > ---
->  mm/kasan/kasan_test_c.c | 4 ++++
->  mm/maccess.c            | 1 -
->  2 files changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/kasan/kasan_test_c.c b/mm/kasan/kasan_test_c.c
-> index 5f922dd38ffa..094ecd27b707 100644
-> --- a/mm/kasan/kasan_test_c.c
-> +++ b/mm/kasan/kasan_test_c.c
-> @@ -1977,6 +1977,7 @@ static void rust_uaf(struct kunit *test)
->         KUNIT_EXPECT_KASAN_FAIL(test, kasan_test_rust_uaf());
->  }
->
-> +#ifndef MODULE
-
-Would be great to have a comment here explaining the ifndef.
-
->  static void copy_to_kernel_nofault_oob(struct kunit *test)
+>  arch/arm64/kvm/hyp/nvhe/ffa.c | 297 ++++++++++++++++++++++++------------------
+>  1 file changed, 173 insertions(+), 124 deletions(-)
+> 
+> diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> index 51bbe8f9c94584e9001ee769cbfd608d930ff723..23b75b9f0bcc62724f0d0d185ac2ed2526375da4 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/ffa.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> @@ -71,36 +71,55 @@ static u32 hyp_ffa_version;
+>  static bool has_version_negotiated;
+>  static hyp_spinlock_t version_lock;
+>  
+> -static void ffa_to_smccc_error(struct arm_smccc_res *res, u64 ffa_errno)
+> +static void ffa_to_smccc_1_2_error(struct arm_smccc_1_2_regs *regs, u64 ffa_errno)
 >  {
->         char *ptr;
-> @@ -2011,6 +2012,7 @@ static void copy_to_kernel_nofault_oob(struct kunit=
- *test)
->
->         kfree(ptr);
+> -	*res = (struct arm_smccc_res) {
+> +	*regs = (struct arm_smccc_1_2_regs) {
+>  		.a0	= FFA_ERROR,
+>  		.a2	= ffa_errno,
+>  	};
 >  }
-> +#endif /* !MODULE */
->
->  static void copy_user_test_oob(struct kunit *test)
+>  
+> -static void ffa_to_smccc_res_prop(struct arm_smccc_res *res, int ret, u64 prop)
+> +static void ffa_to_smccc_regs_prop(struct arm_smccc_1_2_regs *regs, int ret,
+> +				   u64 prop)
 >  {
-> @@ -2131,7 +2133,9 @@ static struct kunit_case kasan_kunit_test_cases[] =
-=3D {
->         KUNIT_CASE(match_all_not_assigned),
->         KUNIT_CASE(match_all_ptr_tag),
->         KUNIT_CASE(match_all_mem_tag),
-> +#ifndef MODULE
->         KUNIT_CASE(copy_to_kernel_nofault_oob),
-> +#endif
->         KUNIT_CASE(rust_uaf),
->         KUNIT_CASE(copy_user_test_oob),
->         {}
-> diff --git a/mm/maccess.c b/mm/maccess.c
-> index 831b4dd7296c..486559d68858 100644
-> --- a/mm/maccess.c
-> +++ b/mm/maccess.c
-> @@ -82,7 +82,6 @@ long copy_to_kernel_nofault(void *dst, const void *src,=
- size_t size)
->         pagefault_enable();
->         return -EFAULT;
+>  	if (ret == FFA_RET_SUCCESS) {
+> -		*res = (struct arm_smccc_res) { .a0 = FFA_SUCCESS,
+> -						.a2 = prop };
+> +		*regs = (struct arm_smccc_1_2_regs) { .a0 = FFA_SUCCESS,
+> +						      .a2 = prop };
+>  	} else {
+> -		ffa_to_smccc_error(res, ret);
+> +		ffa_to_smccc_1_2_error(regs, ret);
+>  	}
 >  }
-> -EXPORT_SYMBOL_GPL(copy_to_kernel_nofault);
->
->  long strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr, lon=
-g count)
+>  
+> -static void ffa_to_smccc_res(struct arm_smccc_res *res, int ret)
+> +static void ffa_to_smccc_regs(struct arm_smccc_1_2_regs *regs, int ret)
 >  {
-> --
-> 2.34.1
->
+> -	ffa_to_smccc_res_prop(res, ret, 0);
+> +	ffa_to_smccc_regs_prop(regs, ret, 0);
+>  }
+>  
+>  static void ffa_set_retval(struct kvm_cpu_context *ctxt,
+> -			   struct arm_smccc_res *res)
+> +			   struct arm_smccc_1_2_regs *regs)
+>  {
+> -	cpu_reg(ctxt, 0) = res->a0;
+> -	cpu_reg(ctxt, 1) = res->a1;
+> -	cpu_reg(ctxt, 2) = res->a2;
+> -	cpu_reg(ctxt, 3) = res->a3;
+> +	cpu_reg(ctxt, 0) = regs->a0;
+> +	cpu_reg(ctxt, 1) = regs->a1;
+> +	cpu_reg(ctxt, 2) = regs->a2;
+> +	cpu_reg(ctxt, 3) = regs->a3;
+> +	cpu_reg(ctxt, 4) = regs->a4;
+> +	cpu_reg(ctxt, 5) = regs->a5;
+> +	cpu_reg(ctxt, 6) = regs->a6;
+> +	cpu_reg(ctxt, 7) = regs->a7;
+> +
 
-Other than that:
+But my main problem with this patch is this sort of pointless
+churn. Changing "res" to "regs" just for the sake of it is completely
+pointless, and makes everything harder to read.
 
-Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
+Please do yourself (and everybody else) a favour by keeping the
+variable name the same.
 
-Thank you!
+> +	/* DEN0028C 2.6: SMC32/HVC32 call from aarch64 must preserve x8-x30 */
+> +	if (ARM_SMCCC_IS_64(regs->a0)) {
+
+This is the *return value*, right? Not the function number. How can
+you tell about the 64-bitness of the function number based on that?
+
+> +		cpu_reg(ctxt, 8) = regs->a8;
+> +		cpu_reg(ctxt, 9) = regs->a9;
+> +		cpu_reg(ctxt, 10) = regs->a10;
+> +		cpu_reg(ctxt, 11) = regs->a11;
+> +		cpu_reg(ctxt, 12) = regs->a12;
+> +		cpu_reg(ctxt, 13) = regs->a13;
+> +		cpu_reg(ctxt, 14) = regs->a14;
+> +		cpu_reg(ctxt, 15) = regs->a15;
+> +		cpu_reg(ctxt, 16) = regs->a16;
+> +		cpu_reg(ctxt, 17) = regs->a17;
+> +	}
+>  }
+>  
+>  static bool is_ffa_call(u64 func_id)
+> @@ -113,82 +132,104 @@ static bool is_ffa_call(u64 func_id)
+>  
+>  static int ffa_map_hyp_buffers(u64 ffa_page_count)
+>  {
+> -	struct arm_smccc_res res;
+> +	struct arm_smccc_1_2_regs regs;
+>  
+> -	arm_smccc_1_1_smc(FFA_FN64_RXTX_MAP,
+> -			  hyp_virt_to_phys(hyp_buffers.tx),
+> -			  hyp_virt_to_phys(hyp_buffers.rx),
+> -			  ffa_page_count,
+> -			  0, 0, 0, 0,
+> -			  &res);
+> +	regs = (struct arm_smccc_1_2_regs) {
+> +		.a0 = FFA_FN64_RXTX_MAP,
+> +		.a1 = hyp_virt_to_phys(hyp_buffers.tx),
+> +		.a2 = hyp_virt_to_phys(hyp_buffers.rx),
+> +		.a3 = ffa_page_count,
+> +	};
+> +	arm_smccc_1_2_smc(&regs, &regs);
+
+To expand on my previous comment about this res/regs repainting, I'd
+rather see something like:
+
+	struct arm_smccc_1_2_regs res;
+
+	arm_smccc_1_2_smc(&(struct arm_smccc_1_2_regs){
+			 .a0 = FFA_FN64_RXTX_MAP,
+			 .a1 = hyp_virt_to_phys(hyp_buffers.tx),
+ 	 		 .a2 = hyp_virt_to_phys(hyp_buffers.rx),
+			 .a3 = ffa_page_count,
+	}, &res);
+
+
+> +	if (regs.a0 != FFA_SUCCESS)
+> +		return regs.a2;
+>  
+> -	return res.a0 == FFA_SUCCESS ? FFA_RET_SUCCESS : res.a2;
+> +	return regs.a0 == FFA_SUCCESS ? FFA_RET_SUCCESS : regs.a2;
+
+Why are you writing the same thing twice?
+
+I stopped reading here.
+
+	M.
+
+-- 
+Jazz isn't dead. It just smells funny.
