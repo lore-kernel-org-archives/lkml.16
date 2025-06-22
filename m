@@ -1,73 +1,148 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B674917BD9
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 07:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509EA1F16B
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 07:33:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750577526; cv=none; b=NTsKdY0sXpoChxCK279evzm58q393IEGcg9ZqZk3gijg++brpq+z1jr9Z5YVJUseTDwQpBKjeITn3mOMRLHPxy0Fm5U0TsHizrVPkY4NPPraWMBey4q8iQhnjzmI13Z7dXzCoIvyCLFm4t6Z66whq6GDU5ReUY7ltJ5sA9LstrQ=
+	t=1750577618; cv=none; b=ZT2QY/xCeFV7tTG9G/MRJ4Dmii5WIjdc/Trdh3yaVxrXVfTuZA+ms/Ou+Yzroo0Foqq/bPJrzbdnkoroZB6vvoXS9kF7EtDK1rOd6jXifm/QObL+4FL/LLudnegsBbJBjQCwHntzHhOOB2MQWhR4UBu+bgLT/S1N+i6ecHhtpkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750577526; c=relaxed/simple;
-	bh=fvfo0MD641xhg043m53e50LDOf5/b2NmB8ts0wnKkTs=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=gSQ9CxabHXB8Pm1kJZNNRWNeaLlH+EIjYcUKkVZuz67sDhxqL3t7m63fM2FJDifxpOgjJqxcI319Sro9SF1Q9uy7BnABhaL5255Kt/uafFkgIsrBLsPJ2vGTgF7Bs/uT3VnmxB4r6KqV73dfqZzza1CYrZMTZ/+1q8BGDQK/QEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ddb4dcebfaso88126335ab.1
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 00:32:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750577524; x=1751182324;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jUEyU4FSGsLqIApM4+r+RvW45q/2dgR1QY4OPk/ZxjY=;
-        b=G/BJDs5/MsWGSYvR6HKGiF14BETAnDMW0GHJ/Shyv6zpUGiei8fc/6zymSvyN0ItLm
-         eBc/D9arn6UbdzksjI4sfp3lcK0YKFvLNVq2eRq3Ya4bNoUn/d4tV4m1vMK54w9p2E9g
-         bMxJgp1XyRhjWAInXRilWu92PM17IlcCZ1a/OQPh4W0N/9kqCi/EV252i9wh/gBtI3vu
-         V9RGSZ7eesyRNU/80E4PGWWIiKEq6j7yd/XhdTAz90UvQjqkjEuguHbAegxVtlzUGa0h
-         jc9h6g4gk+avIjiREnRwq8xmvDy2EMQajbdf6FfCESVNFqIHKkMH0iiknx2g0i5cxIMu
-         yIMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4V21ZYQFVYV/+FiepU7aD3pCnXdRbQtryawE2rQJBa6w4JPzohlKTC/WwrtsseRiEsvvHaXWv+E990Ws=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwqjoS+cF82YxCXu2vaeI4obAvTcshBA8/q9+EA4AKZcHQk+9F
-	0EB0n3MsF84hUhcdXhpXPxBsVZ/S2wMTjnpoKYx24NlIzaszQyzKEL5fXAmldywTv+hFsVD5jpj
-	NBisIhjHUFIkFcV7vupGGQxbx/K0dbYltNGlmX88JQ8Bg1Oy6434dktcqur8=
-X-Google-Smtp-Source: AGHT+IHXW0AxKt81rteF80EeXXDQ6aB0zUN+i4HPSWdy4GKXkqsaLR2T3FKrXSV40AJYezlYx8Y3+2I9/87WrpOzP6aQifshh36U
+	s=arc-20240116; t=1750577618; c=relaxed/simple;
+	bh=ttk4p5ZNsuNzgopje2fCSLrP+J3UO2Rb5/z/LyPrpvo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Yvj93ealH01LpLRx03/1jxhLUPsVXuO8kxZXRZ5t4DE/oMTGJhUTVKpXUCCmZ/q0A50PNtwo/yV1vmA3Bih8DTkIixyQLqKwn/gybeLzQ4F0sVSe55EQFlujYxUE3eDWTc/F4BZcyR7eyds+c2Ey9B5i9dyq6+4Y0+j+u5JYGoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OSbBJ8vR; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OSbBJ8vR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750577615;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Y5pdd4ctwYcaaGQFvw2NaWDN5HrejVg7fXPGMyHvQQI=;
+	b=OSbBJ8vRk7gemONZ6YKrTGiJLQdnwe9ZFt//eUpDiwDXlevkJGV93NVxCCIeKT4j2GHA1Z
+	ERb6aTvvPDEn9oCgnYhy14F8o9Ft1IqAsqYgXDiunPiTNqetGtaKrlTOF4qj/TctzadJjL
+	+a+nW3IBJO5+aJ/68PyFsZ0ZvuO5XRU=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-132-rVPQqZIKNtGHlybOXmZHsg-1; Sun,
+ 22 Jun 2025 03:33:31 -0400
+X-MC-Unique: rVPQqZIKNtGHlybOXmZHsg-1
+X-Mimecast-MFC-AGG-ID: rVPQqZIKNtGHlybOXmZHsg_1750577610
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 65957180034E;
+	Sun, 22 Jun 2025 07:33:30 +0000 (UTC)
+Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 90E11180045C;
+	Sun, 22 Jun 2025 07:33:29 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [GIT PULL] KVM fixes for Linux 6.16-rc3
+Date: Sun, 22 Jun 2025 03:33:28 -0400
+Message-ID: <20250622073328.201148-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:230a:b0:3dd:b7ea:c3d9 with SMTP id
- e9e14a558f8ab-3de38c3c178mr86000935ab.7.1750577523810; Sun, 22 Jun 2025
- 00:32:03 -0700 (PDT)
-Date: Sun, 22 Jun 2025 00:32:03 -0700
-In-Reply-To: <20250622062844.1505-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6857b173.a70a0220.62859.0003.GAE@google.com>
-Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
- (3)
-From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Hello,
+Linus,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+The following changes since commit e04c78d86a9699d136910cfc0bdcf01087e3267e:
 
-Reported-by: syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com
-Tested-by: syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com
+  Linux 6.16-rc2 (2025-06-15 13:49:41 -0700)
 
-Tested on:
+are available in the Git repository at:
 
-commit:         739a6c93 Merge tag 'nfsd-6.16-1' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10762182580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=db26f33438d76de9
-dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1756b30c580000
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
-Note: testing is done by a robot and is best-effort only.
+for you to fetch changes up to 25e8b1dd4883e6c251c3db5b347f3c8ae4ade921:
+
+  KVM: TDX: Exit to userspace for GetTdVmCallInfo (2025-06-20 13:55:47 -0400)
+
+----------------------------------------------------------------
+ARM:
+
+- Fix another set of FP/SIMD/SVE bugs affecting NV, and plugging some
+  missing synchronisation
+
+- A small fix for the irqbypass hook fixes, tightening the check and
+  ensuring that we only deal with MSI for both the old and the new
+  route entry
+
+- Rework the way the shadow LRs are addressed in a nesting
+  configuration, plugging an embarrassing bug as well as simplifying
+  the whole process
+
+- Add yet another fix for the dreaded arch_timer_edge_cases selftest
+
+RISC-V:
+
+- Fix the size parameter check in SBI SFENCE calls
+
+- Don't treat SBI HFENCE calls as NOPs
+
+x86 TDX:
+
+- Complete API for handling complex TDVMCALLs in userspace.  This was
+  delayed because the spec lacked a way for userspace to deny supporting
+  these calls; the new exit code is now approved.
+
+----------------------------------------------------------------
+Anup Patel (2):
+      RISC-V: KVM: Fix the size parameter check in SBI SFENCE calls
+      RISC-V: KVM: Don't treat SBI HFENCE calls as NOPs
+
+Binbin Wu (3):
+      KVM: TDX: Add new TDVMCALL status code for unsupported subfuncs
+      KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
+      KVM: TDX: Exit to userspace for GetTdVmCallInfo
+
+Marc Zyngier (1):
+      KVM: arm64: nv: Fix tracking of shadow list registers
+
+Mark Rutland (7):
+      KVM: arm64: VHE: Synchronize restore of host debug registers
+      KVM: arm64: VHE: Synchronize CPTR trap deactivation
+      KVM: arm64: Reorganise CPTR trap manipulation
+      KVM: arm64: Remove ad-hoc CPTR manipulation from fpsimd_sve_sync()
+      KVM: arm64: Remove ad-hoc CPTR manipulation from kvm_hyp_handle_fpsimd()
+      KVM: arm64: Remove cpacr_clear_set()
+      KVM: arm64: VHE: Centralize ISBs when returning to host
+
+Paolo Bonzini (2):
+      Merge tag 'kvmarm-fixes-6.16-3' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD
+      Merge tag 'kvm-riscv-fixes-6.16-1' of https://github.com/kvm-riscv/linux into HEAD
+
+Sean Christopherson (1):
+      KVM: arm64: Explicitly treat routing entry type changes as changes
+
+Zenghui Yu (1):
+      KVM: arm64: selftests: Close the GIC FD in arch_timer_edge_cases
+
+ Documentation/virt/kvm/api.rst                     |  59 ++++++++-
+ arch/arm64/include/asm/kvm_emulate.h               |  62 ---------
+ arch/arm64/include/asm/kvm_host.h                  |   6 +-
+ arch/arm64/kvm/arm.c                               |   3 +-
+ arch/arm64/kvm/hyp/include/hyp/switch.h            | 147 +++++++++++++++++++--
+ arch/arm64/kvm/hyp/nvhe/hyp-main.c                 |   5 +-
+ arch/arm64/kvm/hyp/nvhe/switch.c                   |  59 ---------
+ arch/arm64/kvm/hyp/vhe/switch.c                    | 107 ++-------------
+ arch/arm64/kvm/vgic/vgic-v3-nested.c               |  81 ++++++------
+ arch/riscv/kvm/vcpu_sbi_replace.c                  |   8 +-
+ arch/x86/include/asm/shared/tdx.h                  |   1 +
+ arch/x86/kvm/vmx/tdx.c                             |  83 +++++++++++-
+ include/uapi/linux/kvm.h                           |  22 +++
+ .../selftests/kvm/arm64/arch_timer_edge_cases.c    |  16 ++-
+ 14 files changed, 376 insertions(+), 283 deletions(-)
+
