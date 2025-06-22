@@ -1,148 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C741DE3D9;
-	Sun, 22 Jun 2025 13:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E011DE3D9;
+	Sun, 22 Jun 2025 13:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750599768; cv=none; b=KjXrCJUY9v0HoL5Y4GfETO6c/7ptP/o8YkHQQoRj6ikLnA7YVD7KmVlxKBMUtTetXcSUItl8jXtkKws0lfsPJt1GnxZykFDM9OHW0CT25uWx5akwi/4yHHQQHTDOL8j6+NlWzNP6woPPIO94PCb8OiDGmND3asWzJgwirDUcERo=
+	t=1750599788; cv=none; b=aQICsTaeIuYxen3c+iI/ZKwrMzo/u5/Amr/SWwo7hVolqocee/MlxvaRcJdRyMr+P88LYdWB9/Tbbu8Xiluwujvd35wTJtRH7FzkUqumIhNS6wleLpkf/8mj/RXNw0+sQbGn1SaGdbG17iaLq/KAtCSQh/39C6FIBoePY4ts5fA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750599768; c=relaxed/simple;
-	bh=Tv9mUPVVn7wQLIbUJ6oRa4Si03XNjcQob/mp6dyG+Ac=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qrtM4+yS8E/e1jLoqIgtsCoZrx+RhCAUbs2weSXsd0AZoujuXJ846QRtEMcvhOwDPQj+I/UdTpXXwUR4rTRVngB2PVWa5cPN0Jg8FU5fqszBFZFMHE9JDPpJpRqsq13iORWT7X8PVBebpaw1GguH5IbmOFDQ29UqplH7ntrEjNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XAabTcoh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750599788; c=relaxed/simple;
+	bh=Mi7EbXJYwTfH182hrH2FJtHRM03mQEHRNxZoyWO337U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bSCAdJzT+FnlvZBPKnpvh6e/gmZHwLEN2zbNTssM2HjV5EzgUmRL6JvenBlQtz57eiSzkBlCzeizLdRGxIh3aE73Z3hsZuv4NjikbEL/ZguA5k2wDWsl0dwAawCNnVtQFBeJ/mDQNUJYpA13XlKt+rcGSn+0M7Qq2kGFt309BCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BoIS3GA1; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XAabTcoh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9508BC4CEE3;
-	Sun, 22 Jun 2025 13:42:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750599767;
-	bh=Tv9mUPVVn7wQLIbUJ6oRa4Si03XNjcQob/mp6dyG+Ac=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XAabTcoh1vT1auSju+Pvv9KuHnnwaONSYzlckp5tnYftYZWUc3gOVZ6kg3vTu5t41
-	 jRP53C+9A+mz9B6V64IsPVxDkZ2tEj4D99VmiU6bLPPGKmrpleLGVaXWd6IJz7cUuY
-	 +/REKvMW0WFWg07AVzCT29VnoTQFVeVoaq0yDSzm+v/5eJ5rFeg/+dF2eTGDTuef6p
-	 P/X4jIAnyxDiaDtbL4eF4kn6Ap0obN4qMrw7jwqh7t8I+er+EclyW/2l95FJXWMtb/
-	 O+i7EdZzFzAFsnC8ZtMwdMwlRRjdF68zZlHuj99wthAQUsVjdPKqMpdqXCsf14/8tX
-	 cl7CKj5Cw8WLQ==
-Date: Sun, 22 Jun 2025 14:42:40 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Gustavo Silva <gustavograzs@gmail.com>
-Cc: Alex Lanzano <lanzano.alex@gmail.com>, David Lechner
- <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
- Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, Lothar Rubusch <l.rubusch@gmail.com>
-Subject: Re: [PATCH v3 3/3] iio: imu: bmi270: add support for motion events
-Message-ID: <20250622144240.02845c0a@jic23-huawei>
-In-Reply-To: <20250616-bmi270-events-v3-3-16e37588604f@gmail.com>
-References: <20250616-bmi270-events-v3-0-16e37588604f@gmail.com>
-	<20250616-bmi270-events-v3-3-16e37588604f@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BoIS3GA1"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6077dea37easo6338765a12.3;
+        Sun, 22 Jun 2025 06:43:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750599785; x=1751204585; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WZj5o7l4DsZDoAa+GaV62W37tm18RdoNakKUCj7Ro8M=;
+        b=BoIS3GA1Vl+zS+UjNK90pT3HmQBQ8eI+uTl/OhYrj4gbUs/gBNeB115hDBDvnmUCMf
+         TvDX+hadVgJeB416CHRNLYP/Qq/PihBEu3plR/UaWdLYOi0w1UapVEsLP4tOW89nOK8I
+         CCQlUojNcns4Yy8DvgxLXt+0PVoprYR6IwgE7m82ZeHLnq7dLp69/AdQIiQ00mac3Gdv
+         jkQ5uZMj14FDJYOgkgDdKf6w2bntwqNFHksrNSwl9X3wPrfxmHG1mVEDzFLtzLf4y74Q
+         2viKatfmCHjyJ0qKNYNLnfiCsRZpfvpuNmTa7dXE2zsgVZCibRyuelYlvgVXpbAUmqXJ
+         yC9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750599785; x=1751204585;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WZj5o7l4DsZDoAa+GaV62W37tm18RdoNakKUCj7Ro8M=;
+        b=qHVgGmPAzdJJf5l4HPWSag44tmrEN2jYDeNyLSw1rUeXga4jZton6oRyKeq4eslbmA
+         UaKHVMktTjJ1r5l9Dlzi4tHtJNoh7sLSbO6oAD2NjzAdt8updcngIX2oL60nTST13IiQ
+         57f2nQstTPTY/sHo7/JtJZHt6zzobt2imcDb1rSB51Dx+j5ybgQsZx2usN5rJd9+rRHr
+         bRGMj6v1rkqZr5QfNB70xietg/UOjLhUC0HEVxSkbsKbrqlLv1BXHradoGgZBL8WqZyo
+         QguklqsiOw6tW0RnN+Ald5rnhMo7k+qE8DNv5xlx/EXSgzguQBkg003hjv1/KJZiEoZb
+         DIvg==
+X-Forwarded-Encrypted: i=1; AJvYcCVElmE4q45nfuBb5x/6Tyx5gD6FLbREVOeVeRgMKu1huAOdiRD6ZPkUIJaa5F6lRyjxN5e9PKkjbW/1@vger.kernel.org, AJvYcCWY02IHTwaTd0dEjkv9IjPZdeW4/+8LlpRfucNRlQBYqbhDcNb8nt2rO3yLa22Y70lIDvIeubEkHpPPXecoRw==@vger.kernel.org, AJvYcCWYpyKpORRHHnSXP9d7f8nSXKEIXpnhQfumXDKZ4GZID/vDNB8IjThh9sqfuwcr1hDqKx2d8S8K+7yelWup@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzx3ziO9hsjsj7CuLbGjbRqhk03L6Zifs+HajDwG44BnWbajLgm
+	OvkZNG1FkgrYj9i7+0T59O8sZTuDMnf+KmcC0WiGCTyud/jujbU5c6Y=
+X-Gm-Gg: ASbGncv3/9dmbsMOqSD98EaX1wqM4UUVBVukmbfuscw2rXgjvZoJkuv4zQEHsNplODM
+	fCqiQetXPIe/usHBR5157MyWTj2CPyhKEoscNpmUcWWGNrOfZtw6mz9LXrvisgoyWdVtpo78UKF
+	jxu/GcWQNjNJvt7VPOaC8w9QEAFIuEmDCwehnjGfc72oqoebArz/PbBGXnD3cJezhyDzy6QoF2s
+	4Bjykq2wEM8IG+UtGekaEZn/H6/RFIBdGMrfVVjV8RvoPYyNyZIt3VDcsUPBw4unRUPp9hyFbFk
+	9WvcRdYZIx4UgPYO75Yk2S8LgLe5ixDazUlje0G7qlR7VeXbfJP6ZZDb5nx3vRpM1yFWMxblU86
+	FhAM=
+X-Google-Smtp-Source: AGHT+IEgfGyHvmCU634nEZQA9Y91tsbXZK1bPtGknigRwAMNLAh6lnz3IVeeuN4PtLNR45cQzJO4SA==
+X-Received: by 2002:a05:6402:5207:b0:601:31e6:698d with SMTP id 4fb4d7f45d1cf-60a1d18e136mr6698120a12.23.1750599784894;
+        Sun, 22 Jun 2025 06:43:04 -0700 (PDT)
+Received: from alex-x1.localdomain ([84.226.118.249])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60a18cb9e5dsm4654457a12.53.2025.06.22.06.43.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Jun 2025 06:43:04 -0700 (PDT)
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Subject: [PATCH v1 0/2] Asus Zenbook A14 improvements
+Date: Sun, 22 Jun 2025 15:39:59 +0200
+Message-ID: <20250622134301.10403-1-alex.vinarskis@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 16 Jun 2025 20:53:11 -0300
-Gustavo Silva <gustavograzs@gmail.com> wrote:
+First round of improvements for Asus Zenbook A14 which has just landed
+to linux-next.
 
-> Any-motion event can be enabled on a per-axis basis and triggers a
-> combined event when motion is detected on any axis.
-> 
-> No-motion event is triggered if the rate of change on all axes falls
-> below a specified threshold for a configurable duration. A fake channel
-> is used to report this event.
-> 
-> Threshold and duration can be configured from userspace.
-> 
-> Signed-off-by: Gustavo Silva <gustavograzs@gmail.com>
+* First patch updates DTs from v5 to v7 that was mailed earlier. Fixes
+  GPU enable and mistake in firmware path for Purwa/X1P
+* Second patch adds audio support. Audioreach topology and Alsa UCM
+  configs were already merged [1],[2].
 
-Hi Gustavo,
+[1] https://github.com/linux-msm/audioreach-topology/commit/952d16b16c4ee23578c001c97a31540c61315a0c
+[2] https://github.com/alsa-project/alsa-ucm-conf/commit/87a48b90213106f6e310dd611590e6a608ae6596
 
-Main question in here is about the scaling of the motion threshold.
-It seems to be based on units of g.  We use m/s^2 for IIO acceleration channels
-and also the expectation is that threshold events match scaling of the main channels
-(_scale applies to them).  Hence here we will need to do something a little
-fiddly to maintain the threshold scale if the main channel scaling changes.
+Aleksandrs Vinarskis (2):
+  arm64: dts: qcom: x1-asus-zenbook: fixup GPU nodes
+  arm64: dts: qcom: x1-asus-zenbook: support sound
 
-I'd missed this on earlier reviews but came to see that we have rubbish documentation
-on this aspect when looking at some other changes recently.
+ .../boot/dts/qcom/x1-asus-zenbook-a14.dtsi    | 198 +++++++++++++++++-
+ .../dts/qcom/x1e80100-asus-zenbook-a14.dts    |   4 +
+ .../dts/qcom/x1p42100-asus-zenbook-a14.dts    |   6 +-
+ 3 files changed, 203 insertions(+), 5 deletions(-)
 
-I need to find time to both fix up the ABI docs and write a lot more explanatory
-text around events. Sadly neither is appropriate activity for a sleepy Sunday afternoon!
-
-Jonathan
-
-
-> @@ -114,6 +134,10 @@
->  #define BMI270_STEP_COUNTER_FACTOR			20
->  #define BMI270_STEP_COUNTER_MAX				20460
->  
-> +#define BMI270_INT_MICRO_TO_RAW(val, val2, scale) ((val) * (scale) + \
-> +						  ((val2) * (scale)) / MEGA)
-> +#define BMI270_RAW_TO_MICRO(raw, scale) ((((raw) % (scale)) * MEGA) / scale)
-
-I'm struggling a bit with what this is doing.  Perhaps a comment?
-
-
-
-
-> @@ -827,6 +977,20 @@ static int bmi270_read_avail(struct iio_dev *indio_dev,
->  	}
->  }
->  
-> +static IIO_CONST_ATTR(in_accel_value_available, "[0.0 0.00049 1.0]");
-This aligns with below.  Scaling definitely shouldn't be in g and is likely more
-complex because of the relationship expected with the overall channels scaling
-controls.
-
-> @@ -848,21 +1016,58 @@ static int bmi270_read_event_config(struct iio_dev *indio_dev,
->  				    enum iio_event_direction dir)
->  {
-
-
-> +	switch (info) {
-> +	case IIO_EV_INFO_VALUE:
-> +		ret = bmi270_read_feature_reg(data, reg, &regval);
-> +		if (ret)
-> +			return ret;
-> +
-> +		raw = FIELD_GET(BMI270_FEAT_MOTION_THRESHOLD_MSK, regval);
-> +		*val = raw / BMI270_MOTION_THRES_SCALE;
-> +		*val2 = BMI270_RAW_TO_MICRO(raw, BMI270_MOTION_THRES_SCALE);
-
-Why this particular scaling? Is effectively just dividing 1g / number of
-values and hence providing a scaling to g?
-
-Full scale is described as being 1G.
-As this device is providing _RAW data for the relevant channels I'd
-expect this to be scaled to match that. That will be a little fiddly here as
-this is apparently always 0-1g whereas the scaling of the channel varies.
-Thus irritatingly we'd need to adjust the scaling of this so it remains
-consistent as the full scale changes.
-
-The events ABI documentation is rather weak / wrong on this as it refers to
-both _input_ and _raw_ thresholds whereas the true ABI just has one with
-the scaling always being to match _raw if that is present. So _threshold * _scale
-should be in the standards base units of m/s^2.
-
-
-> +		return IIO_VAL_INT_PLUS_MICRO;
-> +	case IIO_EV_INFO_PERIOD:
-> +		ret = bmi270_read_feature_reg(data, reg, &regval);
-> +		if (ret)
-> +			return ret;
-> +
-> +		raw = FIELD_GET(BMI270_FEAT_MOTION_DURATION_MSK, regval);
-> +		*val = raw / BMI270_MOTION_DURAT_SCALE;
-> +		*val2 = BMI270_RAW_TO_MICRO(raw, BMI270_MOTION_DURAT_SCALE);
-> +		return IIO_VAL_INT_PLUS_MICRO;
-> +	default:
-> +		return -EINVAL;
-> +	}
+-- 
+2.45.2
 
