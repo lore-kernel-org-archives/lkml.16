@@ -1,173 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F7D1684AC;
-	Sun, 22 Jun 2025 09:40:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE1E372;
+	Sun, 22 Jun 2025 09:43:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750585223; cv=none; b=eRULDiMPACG3vUyktWADueCznKugAB//LmudIMAy0myq08S9rhtuo9QW29WUarZmSxnL8SU9O1QRm5KGUm3jBW7c4gO/wqe/b6dB4TeVW5XE4ut65qAP6+roUbMLxjtKnH5f7BG6RM6QcMmYAIh0iurS+JUqY37NmpvSw/3C9yA=
+	t=1750585400; cv=none; b=u3HwHpXdVZ23OXbTFj9K1AtZ4N+lolrbzbBzGWJO5NB8JjOG173K7ladRTDepoj0Jrq9P3SiUP3H1/DxG7DMoQxZTibtiH7uvNDV4dmz3LzGmLvs6BSnGRX8T0A1zWtV8wvDoMg9iKz2IV5E5TQTtN0P1iF2yLG0m0DgDk4delA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750585223; c=relaxed/simple;
-	bh=2PvGyhBNJOYYKz82MkvYSvuhzzQS3gt4dm7Pv4qlSRI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kz+Lw2E9cYkLvHS8yxLMLEBcrUya4a/J1S+fKXISx47r4JXIqmGG+ifDZc7Gzk0YfpYpYe1j6DBP8nWbjXR1cz59NVKXywwfBRa39+2z8r8DCAtT7hcbvgm7urNFSPZFF47Xh4SyOmx3itC77nylzlx0CtRVe4FfoFJuTsEBMC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fKELVF+4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750585400; c=relaxed/simple;
+	bh=e1iTg55YXGYZf/uvlSW1Nxdb1Xs0RNsU3Mekj6cFODU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Up28UNx3le4oxlOnuFuP9PqYyGThUW5TUKRDXNUuHKE1WV9Y9yFpUXf4K/NtIZlk1hoo+QyxgY0gXZStJ87oMx7rNpihwNi7LyUXMlqu3+2QKulL53yYHWY4JTQlmNZn4EnJLx8Kyi8WGXtZjULRGiQ+0VWEEijnv39A+BhZctQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CSf1wYRn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fKELVF+4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A24C4CEE3;
-	Sun, 22 Jun 2025 09:40:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CSf1wYRn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60EFDC4CEE3;
+	Sun, 22 Jun 2025 09:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750585222;
-	bh=2PvGyhBNJOYYKz82MkvYSvuhzzQS3gt4dm7Pv4qlSRI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=fKELVF+4zfEd9G7cAQIXffYaT/RZwTypLG0lVIqxGUooEwm+/TYM+o8ZDOIb1to0F
-	 IkPpr0nSg0BI+Q3+c9MgLfqz95MFH9HYOQSOUmoZc35sS5duTJCLVfc4wB12ZS7zXT
-	 Nvdghk9sAOzwgl9A4Upq68wR5OcHkg3jgeVZqvGFXQ4yCnHxFx4U7mD/IBqY6M+LZu
-	 6DPsTWn4yGn3xfLOG4LiEOhbpcWI7iSjX5edPeT2mnv3AHFAEQLd7kYY3mNNkmcYJO
-	 7+5Nm9tYEQlTIB4tgU7pTGklWV+QgURC+Q8XBwF5f83RtHTQ/oODjvseaRPz48LkUM
-	 GCdyNQDkx/J5A==
-Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uTHBS-00000000qhs-0vKv;
-	Sun, 22 Jun 2025 11:40:18 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	Akira Yokosawa <akiyks@gmail.com>,
-	Kees Cook <mchehab+huawei@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: sphinx: add missing SPDX tags
-Date: Sun, 22 Jun 2025 11:39:53 +0200
-Message-ID: <1a62226c5fe524eb87bdb80b33bc7ec880a68880.1750585188.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	s=k20201202; t=1750585397;
+	bh=e1iTg55YXGYZf/uvlSW1Nxdb1Xs0RNsU3Mekj6cFODU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CSf1wYRnx6mhnlUz/ZS0L086OYQTAsug3WeLL8oprIsrJWpznpYTOJbYEReD8p4nb
+	 RVDvFBFNnhx/O+e8DxwpdZZDDSjpJxe3TQbTfYCyKwanYyoAc8lNuxg1GOqk696f+7
+	 6I/NwAGswkku/MZ+h4aYXp5+gE6lVBr2WLlwpqBFSuK4fXcXNk7layHpXsFHVL7ewz
+	 nBWsO2hZbO24pqQr4XiS8U1GXBrzMQap11RpoYr46IwSKT5P9PcgKl2KfdgVbR+9JP
+	 lQb3ddRSO05mMe8a69nCAjky5nj1hGZNYPBF5OzdUM32DyQkbniLk/fW58edMW6vHt
+	 4TbLgMIrv4q5Q==
+Message-ID: <011093f8-85a1-4c3c-b3fa-7be9e6df8a25@kernel.org>
+Date: Sun, 22 Jun 2025 11:43:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 08/10] ASoC: dt-bindings: mediatek,mt8196-afe: add
+ support for MT8196 audio AFE controller
+To: "Darren.Ye" <darren.ye@mediatek.com>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250620094140.11093-1-darren.ye@mediatek.com>
+ <20250620094140.11093-9-darren.ye@mediatek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250620094140.11093-9-darren.ye@mediatek.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Content-Transfer-Encoding: 7bit
 
-Several Sphinx extensions and tools are missing SPDX tags.
-Add them.
+On 20/06/2025 11:40, Darren.Ye wrote:
+> From: Darren Ye <darren.ye@mediatek.com>
+> 
+> This patch adds initial support for the audio AFE(Audio Front End) controller
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/sphinx/cdomain.py           | 1 +
- Documentation/sphinx/kernel_include.py    | 1 +
- Documentation/sphinx/kerneldoc.py         | 1 +
- Documentation/sphinx/kfigure.py           | 1 +
- Documentation/sphinx/load_config.py       | 1 +
- Documentation/sphinx/min_requirements.txt | 1 +
- Documentation/sphinx/parse-headers.pl     | 5 ++++-
- Documentation/sphinx/requirements.txt     | 1 +
- Documentation/sphinx/rstFlatTable.py      | 1 +
- 9 files changed, 12 insertions(+), 1 deletion(-)
+Why this was changed to undesired 'This patch' (see submitting patches)?
+I think you are circling back to previous versions, reintroducing issues
+fixed in between.
 
-diff --git a/Documentation/sphinx/cdomain.py b/Documentation/sphinx/cdomain.py
-index e8ea80d4324c..3dc285dc70f5 100644
---- a/Documentation/sphinx/cdomain.py
-+++ b/Documentation/sphinx/cdomain.py
-@@ -1,4 +1,5 @@
- # -*- coding: utf-8; mode: python -*-
-+# SPDX-License-Identifier: GPL-2.0
- # pylint: disable=W0141,C0113,C0103,C0325
- """
-     cdomain
-diff --git a/Documentation/sphinx/kernel_include.py b/Documentation/sphinx/kernel_include.py
-index 8db176045bc5..1e566e87ebcd 100755
---- a/Documentation/sphinx/kernel_include.py
-+++ b/Documentation/sphinx/kernel_include.py
-@@ -1,5 +1,6 @@
- #!/usr/bin/env python3
- # -*- coding: utf-8; mode: python -*-
-+# SPDX-License-Identifier: GPL-2.0
- # pylint: disable=R0903, C0330, R0914, R0912, E0401
- 
- """
-diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
-index b818d4c77924..51a2793dc8e2 100644
---- a/Documentation/sphinx/kerneldoc.py
-+++ b/Documentation/sphinx/kerneldoc.py
-@@ -1,4 +1,5 @@
- # coding=utf-8
-+# SPDX-License-Identifier: MIT
- #
- # Copyright © 2016 Intel Corporation
- #
-diff --git a/Documentation/sphinx/kfigure.py b/Documentation/sphinx/kfigure.py
-index f1a7f13c9c60..ad495c0da270 100644
---- a/Documentation/sphinx/kfigure.py
-+++ b/Documentation/sphinx/kfigure.py
-@@ -1,4 +1,5 @@
- # -*- coding: utf-8; mode: python -*-
-+# SPDX-License-Identifier: GPL-2.0
- # pylint: disable=C0103, R0903, R0912, R0915
- """
-     scalable figure and image handling
-diff --git a/Documentation/sphinx/load_config.py b/Documentation/sphinx/load_config.py
-index ec50e1ee5223..1afb0c97f06b 100644
---- a/Documentation/sphinx/load_config.py
-+++ b/Documentation/sphinx/load_config.py
-@@ -1,4 +1,5 @@
- # -*- coding: utf-8; mode: python -*-
-+# SPDX-License-Identifier: GPL-2.0
- # pylint: disable=R0903, C0330, R0914, R0912, E0401
- 
- import os
-diff --git a/Documentation/sphinx/min_requirements.txt b/Documentation/sphinx/min_requirements.txt
-index 52d9f27010e8..96b5e0bfa3d7 100644
---- a/Documentation/sphinx/min_requirements.txt
-+++ b/Documentation/sphinx/min_requirements.txt
-@@ -1,3 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0
- alabaster >=0.7,<0.8
- docutils>=0.15,<0.18
- jinja2>=2.3,<3.1
-diff --git a/Documentation/sphinx/parse-headers.pl b/Documentation/sphinx/parse-headers.pl
-index b063f2f1cfb2..7b1458544e2e 100755
---- a/Documentation/sphinx/parse-headers.pl
-+++ b/Documentation/sphinx/parse-headers.pl
-@@ -1,4 +1,7 @@
- #!/usr/bin/env perl
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2016 by Mauro Carvalho Chehab <mchehab@kernel.org>.
-+
- use strict;
- use Text::Tabs;
- use Getopt::Long;
-@@ -391,7 +394,7 @@ Report bugs to Mauro Carvalho Chehab <mchehab@kernel.org>
- 
- =head1 COPYRIGHT
- 
--Copyright (c) 2016 by Mauro Carvalho Chehab <mchehab+samsung@kernel.org>.
-+Copyright (c) 2016 by Mauro Carvalho Chehab <mchehab@kernel.org>.
- 
- License GPLv2: GNU GPL version 2 <https://gnu.org/licenses/gpl.html>.
- 
-diff --git a/Documentation/sphinx/requirements.txt b/Documentation/sphinx/requirements.txt
-index 5017f307c8a4..76b4255061d0 100644
---- a/Documentation/sphinx/requirements.txt
-+++ b/Documentation/sphinx/requirements.txt
-@@ -1,3 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0
- alabaster
- Sphinx
- pyyaml
-diff --git a/Documentation/sphinx/rstFlatTable.py b/Documentation/sphinx/rstFlatTable.py
-index 180fbb50c337..3d19569e5728 100755
---- a/Documentation/sphinx/rstFlatTable.py
-+++ b/Documentation/sphinx/rstFlatTable.py
-@@ -1,5 +1,6 @@
- #!/usr/bin/env python3
- # -*- coding: utf-8; mode: python -*-
-+# SPDX-License-Identifier: GPL-2.0
- # pylint: disable=C0330, R0903, R0912
- 
- """
--- 
-2.49.0
+> on the mediatek MT8196 platform.
+> 
+> Signed-off-by: Darren Ye <darren.ye@mediatek.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
+
+Subject: I asked to drop document, because the rest was correct and you
+totally rewritten it to unnecessary too long subject.
+
+Well, at least the rest you implemented, but I just don't get why, when
+asked to change something you change several things to less desired style.
+
+Best regards,
+Krzysztof
