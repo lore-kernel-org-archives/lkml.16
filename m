@@ -1,170 +1,78 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A458DDD3;
-	Sun, 22 Jun 2025 16:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA882AE8E;
+	Sun, 22 Jun 2025 16:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750610160; cv=none; b=U1QgBU0VDwvHvAxPRJ3S6f7DdNKbAe0VA6MfGUDTPxQ6hC5LhXLqLl7iFGZ70IiltWMRqW2HvBYt+A3P2evB758dk3o/+5x7oZ/cQxVA1GBLS6b/dyPapPE0we+LGh0+ReJvLcd4vMxpEDAlZc2ayqwfMNwKw98Percjk5xX7UE=
+	t=1750610379; cv=none; b=Gh/8EFrOh7fDy429kWIqJ0ZKKzniAIB72l1iUgzaJDu0ZMl6WH+wLTiBliQMolJ8DUZHW+xVSelDOCc7UYLsusgLEkz4uYQ+XBjbLJEVic6efNSbVw0ynZFHFF/jiQy4JyW04yMrMrNcRd9CkyLBc8Ti1rXru8S+874Ekc+GA3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750610160; c=relaxed/simple;
-	bh=0MNHobrzR1isQrVx2j3psQxijYtWVnqO9jfxuSncCj0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PBPfdDwLtd1LKJ2TZu1gUxWyQIoFRAD8M8nRaucKNpz+L2/pcP0CxGtNTQkCArJ1ZsjzT4HXA9PdgVwKMgcr0auRs1TUVvIHIebqGdd0EiHv6vM06zGb0/TndKsCKjSe6G4qkKGIw3jDn8UdVaVj9fqFUm01pZifZoSjM4ylyD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AvCdFS2c; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750610379; c=relaxed/simple;
+	bh=Yv/mApgcCWydCfdP4MhYzR45djsXJkpQGZFnebaZxdc=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=tX6pAI9aVY7sxLm58q9yiHCa8EhcpLulpcEqsdqfzoLEAq0EBeLsFNW+t5nnoB+PZ9B2ciaO9giwkgXMCjugq2thdC2y5AJZzNaE7CIUNh2DV77VokOdEngudp0q3Dcd69WiplTLzE3z578NyekGo8I5usWPThJMR4ONNfVV73s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WtX+iamq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AvCdFS2c"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-451dbe494d6so39219935e9.1;
-        Sun, 22 Jun 2025 09:35:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750610156; x=1751214956; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k1oa4nNQ6OD1xXNiA0TVTj0NDdNUr9/eQINchl8HXO8=;
-        b=AvCdFS2cg1eaVkJUKo+s6tq3Dt7jY6LtnbsXkWiux/mBrPZZWmm44Fo7TlKhQore3b
-         p+kLkLQgwcWebeJVTT21WR+/LKG8PCDftxHVAr9a8fiSgqZXKZGL/id9kL68hn1vAQKm
-         nO8yHLXEawhi62MZRZDlKLsS1fxCeElHvjHIvpK8dZOCJXz6G1RSty+BphpLFHCoT8Uo
-         HqtT4BLQF33bOIyLeN/aemfMd3omblXlUCpUKixKLAZaEbjHw3vGkhimQCA0r3VIigal
-         p470YxnwWE4k+lQy6UnKezbamUdFECs4Vd7l0rSoiryylT4fRSHJqHXk+nagFDANx55Y
-         /Rbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750610156; x=1751214956;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k1oa4nNQ6OD1xXNiA0TVTj0NDdNUr9/eQINchl8HXO8=;
-        b=rULqjZrbEIocf5j/xBhEHtrdZUAC/09syvpXEJCYZTodaWjTFpbRY5TC2naYm9IjAP
-         xGUMKrD1ovu9/v27CoROc0lbaG6gHtU/4DzkwcMTv9C6a6km7472uLOKPX83WAyPj4kl
-         HivsouqtxSPkVyFAOINjl8+AqVx9EVduJ9ZotoFuOUVRjPKf9C96CnHy6BshyfBCXgoo
-         7x93oU7txzQYhRGhsZt0vpWUw+Qmj9xsixQ9w+apDoEGRTG4qzt3lYxjjaZww3wagZ9L
-         6kMW5izInXyR1rLZepwO+NUIqH2q/O2rF4GO0gHFVh5g0i/0p/J7kDV98628OcU/R8fH
-         X26w==
-X-Forwarded-Encrypted: i=1; AJvYcCVZwp/CqCf3qiQnGiy2MI5hi4euLjAzsQFLLRWQl6oUR2qLPdtkkCvY71Mctk1H+LX807QAjquQFnkxMfFi@vger.kernel.org, AJvYcCWbd/QgL7zN4mGK5QOhMMSwINokm6kN5yu4ULZTzHB5I648uVXeaw5RXzxoekCcRDcAY/Q9aXk9vBkLecP4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/mS9hHnqsgq+gsrOTYrE/++YfGBhR6t2+juBv0yNhEzWmrq+W
-	jWGK2zj0uugWZCX1TySY9TUXGyjIpciZaMVrOf1XhrWI6G2AD0N3hQWX
-X-Gm-Gg: ASbGncvkjVpCaHZyawKyrMMGoSqhNlLbnoLn+UR+iUqPHGJLSDtls03dLt8tvUrmGPK
-	cxRwXpok2v1NeQroV2dn4cmzpQUhGKJ7gvI1R6vOh1aowQ0JrRl00aI2VeyvlRhhxc8VyjBfAUZ
-	5SAndkdu1DwLnvd1jaIxDaJ0W/apvZBj2qRluftpb7j4IU4SApB2+aZ4wwmcD6UkTQ8V5FOBUow
-	BQL1kf4OQ3aCOM2+ZengSlo5TJ5/Z4gkGl63jRY1Hv9ROiBst/LICqoDMV1NVshCloPD7Lyn1i+
-	03yHFqw1KY63KGQRDz/nL+FmMX9oroTMPB72UArD4Cd0SAdRBdefat7EFr3wrzW8ziE8XraVvlW
-	BbhUHxCcpHg0HVIyyojHOtdTQ
-X-Google-Smtp-Source: AGHT+IGIT3mcJ0gknkqPxwnQDk3KNRNpW3ykVb1rF9fBn2/P8z4fr9bdSWKQ+VnywD6VovL+QSHlYw==
-X-Received: by 2002:a05:600c:b86:b0:441:b076:fce8 with SMTP id 5b1f17b1804b1-453659c0bb9mr104566595e9.14.1750610156286;
-        Sun, 22 Jun 2025 09:35:56 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f186dbsm7175528f8f.26.2025.06.22.09.35.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 09:35:56 -0700 (PDT)
-Date: Sun, 22 Jun 2025 17:35:54 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
- <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan
- <maddy@linux.ibm.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
- Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
- <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, Davidlohr Bueso
- <dave@stgolabs.net>, "Andre Almeida" <andrealmeid@igalia.com>, Andrew
- Morton <akpm@linux-foundation.org>, Dave Hansen
- <dave.hansen@linux.intel.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org
-Subject: Re: [PATCH 1/5] uaccess: Add masked_user_{read/write}_access_begin
-Message-ID: <20250622173554.7f016f96@pumpkin>
-In-Reply-To: <6fddae0cf0da15a6521bb847b63324b7a2a067b1.1750585239.git.christophe.leroy@csgroup.eu>
-References: <cover.1750585239.git.christophe.leroy@csgroup.eu>
-	<6fddae0cf0da15a6521bb847b63324b7a2a067b1.1750585239.git.christophe.leroy@csgroup.eu>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WtX+iamq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91D4CC4CEF0;
+	Sun, 22 Jun 2025 16:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750610378;
+	bh=Yv/mApgcCWydCfdP4MhYzR45djsXJkpQGZFnebaZxdc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=WtX+iamqBwDTniwNUoT8VSTRjQ9UyQ3aDlkobvB8rRr/3j4kvbug3cRuZ4iajM0Rb
+	 tehto8QZo2cUo/Nfve6obcude81hldowLdZm6aQoQclNXYw5zlOOyfpwDE0TSSZsie
+	 2r56XD7MH9dJGkPW/Jsh1JnFQoBzmWMgTMwKvNcJdKzSr7lh0bT/xVNBHX25JdkZIj
+	 BMe3cQIqYoeW0vYs9ZtbRoo4YplvWV6TLxLI1JuDINIgfhTlAp8aRTL84Io4b/5sye
+	 QWNGI/KVgsPa5h+Ceu922qLlpnLs7ii6Xqe+XSGctz2X3yAehPCu9tWQtniFBtvjg6
+	 5rKODgqnh2xsA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33B9239FEB77;
+	Sun, 22 Jun 2025 16:40:07 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next,
+ v2] selftest: add selftest for anycast notifications
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175061040601.2101917.2619105539091495642.git-patchwork-notify@kernel.org>
+Date: Sun, 22 Jun 2025 16:40:06 +0000
+References: <20250619035116.3761921-1-yuyanghuang@google.com>
+In-Reply-To: <20250619035116.3761921-1-yuyanghuang@google.com>
+To: Yuyang Huang <yuyanghuang@google.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, shuah@kernel.org,
+ netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, maze@google.com, lorenzo@google.com
 
-On Sun, 22 Jun 2025 11:52:39 +0200
-Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
+Hello:
 
-> Allthough masked_user_access_begin() seems to only be used when reading
-> data from user at the moment, introduce masked_user_read_access_begin()
-> and masked_user_write_access_begin() in order to match
-> user_read_access_begin() and user_write_access_begin().
+This patch was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
+
+On Thu, 19 Jun 2025 12:51:16 +0900 you wrote:
+> This commit adds a new kernel selftest to verify RTNLGRP_IPV6_ACADDR
+> notifications. The test works by adding/removing a dummy interface,
+> enabling packet forwarding, and then confirming that user space can
+> correctly receive anycast notifications.
 > 
-> Have them default to masked_user_access_begin() when they are
-> not defined.
+> The test relies on the iproute2 version to be 6.13+.
 > 
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
->  fs/select.c             | 2 +-
->  include/linux/uaccess.h | 8 ++++++++
->  kernel/futex/futex.h    | 4 ++--
->  lib/strncpy_from_user.c | 2 +-
->  lib/strnlen_user.c      | 2 +-
->  5 files changed, 13 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/select.c b/fs/select.c
-> index 9fb650d03d52..d8547bedf5eb 100644
-> --- a/fs/select.c
-> +++ b/fs/select.c
-> @@ -777,7 +777,7 @@ static inline int get_sigset_argpack(struct sigset_argpack *to,
->  	// the path is hot enough for overhead of copy_from_user() to matter
->  	if (from) {
->  		if (can_do_masked_user_access())
-> -			from = masked_user_access_begin(from);
-> +			from = masked_user_read_access_begin(from);
->  		else if (!user_read_access_begin(from, sizeof(*from)))
->  			return -EFAULT;
->  		unsafe_get_user(to->p, &from->p, Efault);
-> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-> index 7c06f4795670..682a0cd2fe51 100644
-> --- a/include/linux/uaccess.h
-> +++ b/include/linux/uaccess.h
-> @@ -41,6 +41,14 @@
+> [...]
 
->  #ifdef masked_user_access_begin
->   #define can_do_masked_user_access() 1
->  #else
->   #define can_do_masked_user_access() 0
->   #define masked_user_access_begin(src) NULL
->   #define mask_user_address(src) (src)
->  #endif
->  
-> +#ifndef masked_user_write_access_begin
-> +#define masked_user_write_access_begin masked_user_access_begin
-> +#endif
-> +#ifndef masked_user_read_access_begin
-> +#define masked_user_read_access_begin masked_user_access_begin
-> +#endif
+Here is the summary with links:
+  - [net-next,v2] selftest: add selftest for anycast notifications
+    https://git.kernel.org/netdev/net-next/c/14966a8df77e
 
-I think that needs merging with the bit above.
-Perhaps generating something like:
-
-#ifdef masked_user_access_begin
-#define masked_user_read_access_begin masked_user_access_begin
-#define masked_user_write_access_begin masked_user_access_begin
-#endif
-
-#ifdef masked_user_read_access_begin
-  #define can_do_masked_user_access() 1
-#else
-  #define can_do_masked_user_access() 0
-  #define masked_user_read_access_begin(src) NULL
-  #define masked_user_write_access_begin(src) NULL
-  #define mask_user_address(src) (src)
-#endif
-
-Otherwise you'll have to #define masked_user_access_begin even though
-it is never used.
-
-Two more patches could change x86-64 to define both and then remove
-the 'then unused' first check - but that has to be for later.
-
-	David
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
