@@ -1,199 +1,147 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009211A23AD
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 22:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6496F21FF2B;
+	Sun, 22 Jun 2025 22:54:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750632658; cv=none; b=aG8A0ODVboAD3R1zb88yUAreJNV33pT+64Xd4kUe3sRlpMYSeg+w3jVwwAJEbPa6qhfwSqolmrnhy7KtrSr5YwZJYd0qZ7w+9RlpUmfixAHrLSnxY22YRSdZVp+TTPLcF42TVrfslzAsTV8frEUagqR5IzejtUcDt1NnD9JGp/8=
+	t=1750632843; cv=none; b=VdwVkkPsSPrw1Bh9/MAoOii5rdgw3nDGkUKtlYZUNgnkmxjCDIMp/xwuJ6MPqFKzE03g5cOAokKDo6wUThkjdNPr4NhGm27q2bwPRd4paMZk4SVW16WR5DW0/Jgyi23Lg3V50Ki3nm8VMCGL6rNvfVjT77X94fkND2COv+8fT+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750632658; c=relaxed/simple;
-	bh=glegXgBvIj6/nhiB8cR6JlIJ8F8DQw8vk2YdK4Y46Qs=;
+	s=arc-20240116; t=1750632843; c=relaxed/simple;
+	bh=hlLjSiaAjh4zgfYoZ9ODBnlaRlhA2rghxB6sV5obPJU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ry0fUT+MGCgAPRwP8Nd5PrBUC+Z9Bf3AdQpajywQuV+ToReILiOdBJEWHWgR983srL9DRlA9cmgkmeddRjKMiwz0N8GOZiaRmGVvxJrYMKImkqH5Lg/YgRCuzYuuyRnEYu/vSkdCAL8hFqYBM78P8y+4LYGHq8diIBf+tzWvPq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nQRMbE2n; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=r1HzKOcoh2ELAFU7+pNqfaZoV3lIUWI2WJ4O2cvt1Kwsh0UPUKjHHqyzYTHkhsRcacoRnR6mhXpWGbWWBT2r79jmKn1IHmrf//t9LA/sJtJL0My6pn2hmCXG2I0oZZWHm9/Ptbe5oJ4YtqKWWtDwJ53g590R7bbRTscXQynT4qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QF5ERoki; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nQRMbE2n"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4a58197794eso240001cf.1
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 15:50:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QF5ERoki"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-32b5226e6beso33529101fa.2;
+        Sun, 22 Jun 2025 15:54:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750632656; x=1751237456; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750632839; x=1751237639; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FCkkmse9j7jIkQr/HtdtMMiFnJZl5VTksMugObu1Hv8=;
-        b=nQRMbE2nD9iPqCbQVkkGHFBSfvnlilZAblaGcji0OuzmWEaOBYZqAUb0B53RuOWKmQ
-         ihmCOL3XTwhkRAiFVgvPNiV9iVW+cYBZ22KSDOevZCCeOM61MBJK4ujFjGKveEb80862
-         4k+A/G2e/prpIlR3RDR88Cl3gf0oExdV8s/U23OHn6MAV8Ftup28snAR7B2p71l7VghM
-         U9WvH9UpcIblPgR2Q9QAY/VWB2/OUZL0LfC1/8oILw00r/RcU47QHWx5z00FbKfXntpw
-         rlCzVOe2q61Ph4LyeZqri2Nadm/GegzK19coKR1A/hneEa/pZ6LzWQjDURnfcjXQLkZ4
-         SkBQ==
+        bh=1zioWgQ/6QqBmvlZqll7x8yhP3nFEYFEO+9Y/YkZw7g=;
+        b=QF5ERoki4RrhU7+LnRkY95B9n/a822bpRmS4y2WoGo5Iht+Arp5T37yPbkqKpHFBob
+         YZQ6xj02AkV/nxkh/9yGX3R/rC3xrgtkQ46mNOWNOwzqmKzQ2YR+0spzJObZs/DM/1fc
+         7+rBDkBVLZSiC9KAJhA+yFTwKMhH59qaJhFpLXX82FyYp6gptEqg3IYSYOHgQmaUKmz2
+         aV8AwdUAAW+cCSjATLzkChJBeYGQeY810Kx0+gtuAxi5B1MndiGlFpbiKAva9yAkks20
+         ZQjzzxliZq5i6T4wLBX7V4dNXJlVgCKkMmc7Cg2ihpJLvINkOyQXP4jQCQoxbkLmEXCt
+         wT+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750632656; x=1751237456;
+        d=1e100.net; s=20230601; t=1750632839; x=1751237639;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FCkkmse9j7jIkQr/HtdtMMiFnJZl5VTksMugObu1Hv8=;
-        b=tx3mBavSX0kxf4d0dtt1PbUi3K+NisaRfRy+xeNzT2FewO2G+mCOZfOW7kNA+LE6mW
-         jxFc2r98NPOb1bdTvl+V/cgfB5SZGnJVOPFPLbfoB2AXd9P7p4cm+HpJ104jydKzPfCK
-         DAnNhL/usChYPGNFy/2XXtkgPejSPSb9spAwR4H97n7/7Efiu3t62rixuIJ9EJ3yM9Na
-         RWt0qCVxFCGNmAay50N5GfZbICw6Y/QZO+7DEkAin3eJENYwMNVO6lx0hU1PbTLf/esp
-         wDEnEDg5jGizFLGrs9Zz4fsfF8nKnoZTWlVtpDNVC+6KqZsNjuTfGz+L+8onu4mpUvr2
-         Ay/g==
-X-Forwarded-Encrypted: i=1; AJvYcCWP4htVBpywb5HwIulSeqTzOkBrKSvsiiPZsT+08xe5LJc4KuMzt5q5FyFkRF2mZpYfLobpH8LK7+iB3Ec=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxzgh7ZOvnEyqDEPH3QIBQTRCNkFW/QWDyfA7SuYohz87H7+5ZV
-	NwIGFjE4NPDqWNA5JeIbcD6E2PcBXKuAmj1ZvUEgSMqkaWFZmyb+eUfv64KPOFMj4x+1pNn4svo
-	pHdg5wfGLZ0hirqQCVpeNj5aa4US7c9W1GvktzBKy
-X-Gm-Gg: ASbGnctXViIXGIE7qc+ekg7F5gWbpbz+d2n4I9BT5L1P6mRCh8/qsTGtuak/+EBN2Yx
-	rlv75mFBoCXPIJs3ubTd4gHH3pZDB9rKIsvDLCFd9XkW9RCkEIqFCNG18/jEAlaYhniV/APu13Y
-	QUwNkDMHW7s1GeH7tayNQuogyqh8qUW0dPkY9/7B5h/Q==
-X-Google-Smtp-Source: AGHT+IHVv0cByUMuTtv+78NCbFEK8nCvWjD02fb+bjcGOT1F2fltAhal6PAAqK/gJ767TYT0EG9fKYVyt5sjERXqch8=
-X-Received: by 2002:a05:622a:1b0b:b0:479:1958:d81a with SMTP id
- d75a77b69052e-4a7852db91amr5530501cf.6.1750632655398; Sun, 22 Jun 2025
- 15:50:55 -0700 (PDT)
+        bh=1zioWgQ/6QqBmvlZqll7x8yhP3nFEYFEO+9Y/YkZw7g=;
+        b=dTdzxuC07tO0UuWZDz6WoWtwlvIRNNkt8nIf9BKAp1Txg+wncNWZBmYruI+va3pL6W
+         P3OG1YjTDS6V7HwOUfiaphPnHar2BGkCbWNPePDKfOPEOGYVjflFCL+8q2ftKejjcus7
+         X69qMhDsXu3YBVkU9sgjnt1K1mLoViC+isRJbOKNf2zhYsRGvymilFLxNgtCWCYBH/dU
+         nrRvNJ+W9pfjCI4GiPeVjEKdZZ7srp7ySLFG7VbpBRtZGnb6xYD1KIbMt14f3l5V7Rej
+         6FiZtkMXesZwyX+eFr3XOd/SKfz4Q5qYw0ATaHkmxpGHNGfdn2ys4GVYn/vXcn+E2ZnR
+         kNkw==
+X-Forwarded-Encrypted: i=1; AJvYcCWWOqKG8ELuYsLyDqamMtWnaDP8jWYl4sTDHpJVETYHrQtvmcpLKlI1nAnYvhFJl2K+M6O9m0EycQYZcGHZv5g=@vger.kernel.org, AJvYcCXnJtkFBf7ApIrd/leiZBvMzX7aEah8oXUJXz+ie0dJlD4YAS9EMINuKjZEwWy5m38G5nmsybwH4XnKEUU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj2VZzVCAX1tcLaBDrQC0fBhPv8FjWsnfMSiwmeG5v0kW3G4Yz
+	agw4TNlv7Uvwx4v3WwrQCcQLxTCG8KlqRnxB6vDFx1RWLqSjSbcmfVKC8pj8/mEXIjnXpeshOF9
+	vroCKRGdf+VJ/saC7mbPiIuQnDouA9f4=
+X-Gm-Gg: ASbGnctSayCpN+DoQT5LB+8ODY/33tmly4bD9DX2NY9EV/7nzlPjwsoSXT/fX8JfPh3
+	DNRrs2BZ4vRUrJM8J2AS648nQrsiN0dte/H20eOnA1u+DjCxfGgKChUsfladKIb8O9WOxjlSGq9
+	9rWWvPi0WwSY2DafecbrFp098Pj/XLeKioKnTQ+m0/DXP6lmuJFUzterqN0hAxBBIKACeweRkDS
+	QYqdA==
+X-Google-Smtp-Source: AGHT+IE1XSPaupY13kKGqETrXLaUqAXYtPoQGp1IE8gbDCr5d9sqyof9SC3wLGxN+L4/VQV18IUnP7nkHiuw5wWam10=
+X-Received: by 2002:a05:651c:198a:b0:32b:4773:7aaf with SMTP id
+ 38308e7fff4ca-32b99060470mr28715571fa.35.1750632839209; Sun, 22 Jun 2025
+ 15:53:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202506181351.bba867dd-lkp@intel.com> <20250620100258.595495-1-00107082@163.com>
-In-Reply-To: <20250620100258.595495-1-00107082@163.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Sun, 22 Jun 2025 15:50:44 -0700
-X-Gm-Features: Ac12FXyniPz2R1npjK7ZfMtWGYaO4vFnkCBjbTvEwI2RPxVobAu7_RLwcpb6AtA
-Message-ID: <CAJuCfpFLKR7CqAHG+QjHt4wCLgWmP7dD+f5D8Jx6gHUoXSe1AA@mail.gmail.com>
-Subject: Re: CONFIG_TEST_VMALLOC=y conflict/race with alloc_tag_init
-To: David Wang <00107082@163.com>
-Cc: oliver.sang@intel.com, urezki@gmail.com, ahuang12@lenovo.com, 
-	akpm@linux-foundation.org, bhe@redhat.com, hch@infradead.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lkp@intel.com, 
-	mjguzik@gmail.com, oe-lkp@lists.linux.dev, harry.yoo@oracle.com, 
-	kent.overstreet@linux.dev
+References: <20250621230231.100181-1-contact@antoniohickey.com>
+ <20250621230231.100181-2-contact@antoniohickey.com> <CAJ-ks9n1SqM_1xAstHQpp8Z7-2JSTkp9zUn8kwZA7OAAqWxQ6Q@mail.gmail.com>
+ <20250622222023.29071-1-contact@antoniohickey.com>
+In-Reply-To: <20250622222023.29071-1-contact@antoniohickey.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sun, 22 Jun 2025 18:53:22 -0400
+X-Gm-Features: AX0GCFtshQcTqZxSJUcBd57yBLwW4feJgKhi0C4-UMJsmMD-CfHgkm54hLq-ftE
+Message-ID: <CAJ-ks9kDTjw7ukrErWgS06HRQ7d-gAsqzzgAnQC92pi2xLFdBQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] rust: kernel: create `overflow_assert!` macro
+To: Antonio Hickey <contact@antoniohickey.com>
+Cc: a.hindborg@kernel.org, alex.gaynor@gmail.com, aliceryhl@google.com, 
+	bjorn3_gh@protonmail.com, boqun.feng@gmail.com, dakr@kernel.org, 
+	danielstonecote@gmail.com, gary@garyguo.net, linux-kernel@vger.kernel.org, 
+	lossin@kernel.org, ojeda@kernel.org, rust-for-linux@vger.kernel.org, 
+	tmgross@umich.edu
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 20, 2025 at 3:03=E2=80=AFAM David Wang <00107082@163.com> wrote=
-:
+On Sun, Jun 22, 2025 at 6:20=E2=80=AFPM Antonio Hickey
+<contact@antoniohickey.com> wrote:
 >
-> On Wed, Jun 18, 2025 at 02:25:37PM +0800, kernel test robot wrote:
+> On Sun 22 Jun 13:48, Tamir Duberstein wrote:
+> > On Sat, Jun 21, 2025 at 7:06=E2=80=AFPM Antonio Hickey
+> > <contact@antoniohickey.com> wrote:
+> > > +//! Overflow assert.
 > >
-> > Hello,
+> > s/assert/assertion/
 > >
-> > for this change, we reported
-> > "[linux-next:master] [lib/test_vmalloc.c]  7fc85b92db: Mem-Info"
-> > in
-> > https://lore.kernel.org/all/202505071555.e757f1e0-lkp@intel.com/
-> >
-> > at that time, we made some tests with x86_64 config which runs well.
-> >
-> > now we noticed the commit is in mainline now.
->
-> > the config still has expected diff with parent:
-> >
-> > --- /pkg/linux/x86_64-randconfig-161-20250614/gcc-12/7a73348e5d4715b556=
-5a53f21c01ea7b54e46cbd/.config   2025-06-17 14:40:29.481052101 +0800
-> > +++ /pkg/linux/x86_64-randconfig-161-20250614/gcc-12/2d76e79315e403aab5=
-95d4c8830b7a46c19f0f3b/.config   2025-06-17 14:41:18.448543738 +0800
-> > @@ -7551,7 +7551,7 @@ CONFIG_TEST_IDA=3Dm
-> >  CONFIG_TEST_MISC_MINOR=3Dm
-> >  # CONFIG_TEST_LKM is not set
-> >  CONFIG_TEST_BITOPS=3Dm
-> > -CONFIG_TEST_VMALLOC=3Dm
-> > +CONFIG_TEST_VMALLOC=3Dy
-> >  # CONFIG_TEST_BPF is not set
-> >  CONFIG_FIND_BIT_BENCHMARK=3Dm
-> >  # CONFIG_TEST_FIRMWARE is not set
-> >
-> >
-> > then we noticed similar random issue with x86_64 randconfig this time.
-> >
-> > 7a73348e5d4715b5 2d76e79315e403aab595d4c8830
-> > ---------------- ---------------------------
-> >        fail:runs  %reproduction    fail:runs
-> >            |             |             |
-> >            :199         34%          67:200   dmesg.KASAN:null-ptr-dere=
-f_in_range[#-#]
-> >            :199         34%          67:200   dmesg.Kernel_panic-not_sy=
-ncing:Fatal_exception
-> >            :199         34%          67:200   dmesg.Mem-Info
-> >            :199         34%          67:200   dmesg.Oops:general_protec=
-tion_fault,probably_for_non-canonical_address#:#[##]SMP_KASAN
-> >            :199         34%          67:200   dmesg.RIP:down_read_trylo=
-ck
-> >
-> > we don't have enough knowledge to understand the relationship between c=
-ode
-> > change and the random issues. just report what we obsverved in our test=
-s FYI.
+> > AFAIK the standard library always uses assertion where a noun is
+> > needed, and assert where a verb is needed.
 > >
 >
-> I think this is caused by a race between vmalloc_test_init and alloc_tag_=
-init.
+> Reasonable, I'll fix this verbage in my next version.
 >
-> vmalloc_test actually depends on alloc_tag via alloc_tag_top_users, becau=
-se when
-> memory allocation fails show_mem() would invoke alloc_tag_top_users.
+> > > +/// Verifies at runtime that an expression is within an expected bou=
+nd.
+> > > +///
+> > > +/// This macro is only active when `CONFIG_RUST_OVERFLOW_CHECKS` is =
+enabled.
+> > > +///
+> > > +/// # Examples
+> > > +///
+> > > +/// ```
+> > > +/// overflow_assert!(3 <=3D 10);
+> > > +/// overflow_assert!(5 <=3D 5);
+> > > +///
+> > > +/// const X: u8 =3D 5;
+> > > +/// overflow_assert!(X + 3 < 10);
+> > > +///
+> > > +/// const fn f(x: i32) -> i32 {
+> > > +///     x + 1
+> > > +/// }
+> > > +/// overflow_assert!(f(40) < 42);
+> > > +/// ```
+> > > +#[macro_export]
+> > > +macro_rules! overflow_assert {
+> > > +    ($cond:expr) =3D> {
+> > > +        if cfg!(CONFIG_RUST_OVERFLOW_CHECKS) {
+> > > +            ::core::assert!(
+> > > +                $cond,
+> > > +                concat!("overflow assertion failed: ", stringify!($c=
+ond))
+> >
+> > Can we still allow the caller to pass additional arguments to the
+> > macro, so that the overflowing value can be emitted? Alternatively if
+> > the expectation is that this macro is always used with a comparison
+> > operator perhaps we could have `overflow_assert_lt` and
+> > `overflow_assert_le` which provide panic messages containing the
+> > operand values?
+> >
 >
-> With following configuration:
+> Me and Miguel discussed the `overflow_assert_le` and other variants in
+> my previous v2 patch set[1]. We decided it would be best to just start
+> with a more flexable general expression based variant of the macro for
+> now, and consider other variants later.
 >
-> CONFIG_TEST_VMALLOC=3Dy
-> CONFIG_MEM_ALLOC_PROFILING=3Dy
-> CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=3Dy
-> CONFIG_MEM_ALLOC_PROFILING_DEBUG=3Dy
+> I agree we should expand this into more specific variants, so it would
+> document the intent of the assertions even more clearly.
 >
-> If vmalloc_test_init starts before alloc_tag_init, show_mem() would cause
-> a NULL deference because alloc_tag_cttype was not init yet.
->
-> I add some debug to confirm this theory
-> diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
-> index d48b80f3f007..9b8e7501010f 100644
-> --- a/lib/alloc_tag.c
-> +++ b/lib/alloc_tag.c
-> @@ -133,6 +133,8 @@ size_t alloc_tag_top_users(struct codetag_bytes *tags=
-, size_t count, bool can_sl
->         struct codetag *ct;
->         struct codetag_bytes n;
->         unsigned int i, nr =3D 0;
-> +       pr_info("memory profiling alloc top %d: %llx\n", mem_profiling_su=
-pport, (long long)alloc_tag_cttype);
-> +       return 0;
->
->         if (can_sleep)
->                 codetag_lock_module_list(alloc_tag_cttype, true);
-> @@ -831,6 +833,7 @@ static int __init alloc_tag_init(void)
->                 shutdown_mem_profiling(true);
->                 return PTR_ERR(alloc_tag_cttype);
->         }
-> +       pr_info("memory profiling ready %d: %llx\n", mem_profiling_suppor=
-t, (long long)alloc_tag_cttype);
->
->         return 0;
->  }
->
-> When bootup the kernel, the log shows:
->
-> $ sudo dmesg -T | grep profiling
-> [Fri Jun 20 17:29:35 2025] memory profiling alloc top 1: 0  <--- alloc_ta=
-g_cttype =3D=3D NULL
-> [Fri Jun 20 17:30:24 2025] memory profiling ready 1: ffff9b1641aa06c0
->
->
-> vmalloc_test_init should happened after alloc_tag_init if CONFIG_TEST_VMA=
-LLOC=3Dy,
-> or mem_show() should check whether alloc_tag is done initialized when cal=
-ling
-> alloc_tag_top_users
+> [1] Link to Miguel's comment on a `overflow_assert_le` variant:
+> https://lore.kernel.org/all/CANiq72mvu54B=3DU+YCUmbFctj_wXgF5zjeE-BB-vHVn=
+AP+3mPcQ@mail.gmail.com/
 
-Thanks for reporting!
-So, IIUC https://lore.kernel.org/all/20250620195305.1115151-1-harry.yoo@ora=
-cle.com/
-will address this issue as well. Is that correct?
-
->
->
->
-> David
->
+Ack, thanks for that. Still, I think the "any expression" version
+should allow the caller to supply a custom message.
