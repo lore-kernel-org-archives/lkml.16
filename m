@@ -1,174 +1,168 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C2B3C0C;
-	Sun, 22 Jun 2025 17:49:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9B73C0C;
+	Sun, 22 Jun 2025 17:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750614549; cv=none; b=NV+0M968SkJkbOlEYq+vzN1N2YISHuYSMQYiUzVfLGLBYtMqrO+V9iIdKRW7yWjP3nhyyLBp7nnSt188zH3JlGNQ85Ng4ZWKe6LHcB29n4Ch4mPHY3UM+v3+k0FU/5pai3HwxQNKP5mITSObFSy4+SXAB+yBYL65AHmJYLcDLb8=
+	t=1750614744; cv=none; b=PVhKEoZx9aNAKZR7lINmwuq7t5NJ8w2OT0EgT/ke7ANFY+pz2dv5UP0WLxWkHQ8XcjLSYacmZqbN1OPyGPpAIHdlquiOWam8tIDFligqzXVGbq4OiQbrgqo4qG8h1WbJAMsCQ/BDYBKmEfSiwO1TSmBKcSVgSriRFi//ltJAeds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750614549; c=relaxed/simple;
-	bh=MiIhk1lJ/smOXSAgzqsoAlrky2zGHGKkSRt+I1InojQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LGVcO43sYgzGEalDuC8zq5qDJCAxtqtHHjKss1vivGZEyYMisg5P2OnUuUARIM2QMLn9qapdsUzkllwLeJ5k/OkRooZ4ISPaCQRVozFCKbjoa+yuluKQJW93nEwMkJ09UPBxHl0+0sCMKnRvJ5jBGKJ45JgYQnEYqEU5dOO8ZZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JcIxSGXc; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750614744; c=relaxed/simple;
+	bh=2ySbfvowmGyVdShZeOrCyc7ENx6FiVyD4Zyff7UgliI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RITLl0aSHL4abbkPtB7+eGO7b1K+GItVE83nDxadmwaeHK/uKVjSFOalQKFm4iUtNXPiNarFJ6fPMqq5IkbCyDgXK/CMU2sYxyYpvHT1ejIvXpQQx+8q/YUbg3grdTo8Uy+YMIYWpL8KVHV6udeihABZQ3Lz8t7NFh6L2GXWRk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Hu55d6Pk; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcIxSGXc"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32b78b5aa39so36861091fa.1;
-        Sun, 22 Jun 2025 10:49:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750614546; x=1751219346; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HzmeehA5lQTLgvc8ARVJ5h/x37pM5IS3JJEp3oVKKu0=;
-        b=JcIxSGXcLjBq/soZtaSoi0T2A8ZczyvS52xx92wacGrVp/eJj4wmq7l7UhlaSSbnR3
-         F/3Ykc3EnMqkkQOFHt5/2axaRontVgfh0S2tGOUulXuWcjgKb7OnWG/Njw/HqITmToTu
-         oTuW9oVkQUT3BnY+llbqY3AUPVRZTPdb7MEGy7DBf7oj5i5QxjSN7RBQuoBnpFJkzbNG
-         dNsU8XZ4JiTcTUgm2mjp2LiQ21ILJAgNyRVh9uN6/QzkPY/E2fJUzGKObKPsl2fHs3jF
-         iXs7T/2JFFtWOiGOaWp1LXCTADvAYu47HPgeqhTy6MAY+jH0yowNoqPVo2JtGswQiov9
-         M0WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750614546; x=1751219346;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HzmeehA5lQTLgvc8ARVJ5h/x37pM5IS3JJEp3oVKKu0=;
-        b=BvLcCdJ4E12cUZTwWsXIDEq3gc42vWHnxwve+wlHcTN5SpWhAt+UfBu99lBg9CEs5P
-         yzFvgrbmM4m+GQ5PrYKJZfhbaH0EPyS3vmdjaASuznUEq2L5EgnvcLSx+pR8axbG+mQF
-         qLeXVkfQ02+WdzxbA2KCJOba/hu07U0piqB8PYXN1MBBNNtwkaSw/sZa0Pdd48sGqSEG
-         GCF+g17xXkstqGb+o0d0Rr/OKJw2wU54FKZmedI4+KbeLQa0R3vUBtwvN2Zl7xp3wiMX
-         iceELvU0tDFu3ya9XZX9W//ZQzlxEuK0yACu8TdjK66cGLRP3rGnF4ssW9LXPetcANcP
-         HGYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVYdY85EUIzLRnkn3FSJeCw1rc1aL2Aa2Cw0GiUgGhZzTmYYx7sT+XOykTvcmeM6+GS7Zavvua6awgNFuGDItY=@vger.kernel.org, AJvYcCXfpmchwBcQAsj6HwqkAX8mItmjuyXh6eY8mLxEkjA3dE/thc6WhMs8VhJ3ABh3xw1IwvbfHtC/O3K+unI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwanEjy1W+NjJ+wQhm3D5VviTt1cmKA3yfQZ5knFdUprMgGCRv4
-	7azRVLN8fofXvfzTURl1TsOlAHdGR/nB/yGphlHYAtFqZyIO5DYwecUuFk5GUsl8FRk7a8zMTyH
-	bG8r1L2qjmZ4HetGEYug69BxQ04eIXz4=
-X-Gm-Gg: ASbGncs+w1SQL5DVvWvTWUH5YVfPlOhMYt50pDSF+Ge84OsH8y1ge92WW2V29r8e4B5
-	lktc1bXjVBh+sNEyNwPBCiutOr6wjTJ97lmV4f4KgIFb+UReEGUIcVwRTfKP99jJc2RdBu4xmNm
-	OZ9GMjUVan1Uc3/VRPE+3hfmxu6W4YU6hoT1e2YLIORdwQ1G7QYO42ZnlqCfYyPRJB4oDMk19JI
-	CeRaA==
-X-Google-Smtp-Source: AGHT+IHpjqokKopjJ1dwq1zxhH9Du1Zqu9pTdxoLYJjNWOAKtFTH4NcN4QMKRJsrOyQAx30ElNPnwFbJvkUhuh3lP94=
-X-Received: by 2002:a2e:aa8a:0:b0:32a:7315:fff3 with SMTP id
- 38308e7fff4ca-32b9900369cmr22180941fa.35.1750614545782; Sun, 22 Jun 2025
- 10:49:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Hu55d6Pk"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55MCEp9T005772;
+	Sun, 22 Jun 2025 17:51:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=bEXHaYmDWX15yhX9P8pzH4iO6nQh8BF0Gm4
+	umihiL14=; b=Hu55d6Pkp0vtQlnIcJMG8RGcalx3/j8Fs/kCxThZpef7h5lzn5J
+	2UjbOaXMQoz8KbKerMfgGGYWX3C7q6U5dzb9z5WOCCeFsXpO0i6/SZL0Xi7qXNwF
+	7scfbICcmTnjrmom8eCKp8fCEuz+E1p5mlw1ejpJyK+e+2uvDOT+Qszqr0YlMT61
+	ZiHsr9o+soN5i2fRpeDQMIEGfA8VwbCkqiFVaHE7DvsU/myZ2JirCwWELceUZtVn
+	V1uGfqA4KG6CZmB+iKqdfQqOOC5MEY0m618Q95v3wDFP4VFpppuZAZMUKqeW1qcf
+	wuIbxv570aYoQHuGkp5Zw6FHNglqdE7TDNA==
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47eccdgn4e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 22 Jun 2025 17:51:53 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 55MHpoXs024348;
+	Sun, 22 Jun 2025 17:51:50 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 47dntkjh95-1;
+	Sun, 22 Jun 2025 17:51:50 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55MHpoYi024342;
+	Sun, 22 Jun 2025 17:51:50 GMT
+Received: from hu-maiyas-hyd.qualcomm.com (hu-nitirawa-hyd.qualcomm.com [10.213.109.152])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 55MHpofs024341;
+	Sun, 22 Jun 2025 17:51:50 +0000
+Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 2342877)
+	id 8BB0361C6BD; Sun, 22 Jun 2025 23:21:49 +0530 (+0530)
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+To: mani@kernel.org, James.Bottomley@HansenPartnership.com,
+        martin.petersen@oracle.com, bvanassche@acm.org, andersson@kernel.org,
+        neil.armstrong@linaro.org, konrad.dybcio@oss.qualcomm.com,
+        dmitry.baryshkov@oss.qualcomm.com, quic_cang@quicinc.com,
+        vkoul@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Nitin Rawat <quic_nitirawa@quicinc.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Aishwarya <aishwarya.tcv@arm.com>,
+        Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
+Subject: [PATCH V2] scsi: ufs: qcom : Fix NULL pointer dereference in ufs_qcom_setup_clocks
+Date: Sun, 22 Jun 2025 23:21:48 +0530
+Message-ID: <20250622175148.15978-1-quic_nitirawa@quicinc.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250621230231.100181-1-contact@antoniohickey.com> <20250621230231.100181-2-contact@antoniohickey.com>
-In-Reply-To: <20250621230231.100181-2-contact@antoniohickey.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sun, 22 Jun 2025 13:48:28 -0400
-X-Gm-Features: AX0GCFsP1GIMaN_JBwqL0o78W67f7wAGFiQX-ds5CYK7fjg8szB3P2bOJwZbsnQ
-Message-ID: <CAJ-ks9n1SqM_1xAstHQpp8Z7-2JSTkp9zUn8kwZA7OAAqWxQ6Q@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] rust: kernel: create `overflow_assert!` macro
-To: Antonio Hickey <contact@antoniohickey.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Daniel Cote <danielstonecote@gmail.com>, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=LOVmQIW9 c=1 sm=1 tr=0 ts=685842ba cx=c_pps
+ a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=7CQSdrXTAAAA:8 a=pGLkceISAAAA:8
+ a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=GEESCAkq0iLmtVC71CkA:9
+ a=a-qgeE7W1pNrGK8U0ZQC:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: tPpPFcLpflMB3ALJ2oJZC2CagTNh9zJo
+X-Proofpoint-ORIG-GUID: tPpPFcLpflMB3ALJ2oJZC2CagTNh9zJo
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDExMyBTYWx0ZWRfX5Y3033DbUPko
+ sITrigtoRzSzRHTTt3T5aQwFkYWH9fb0Qq+IX3Vee5124yET0mjnOreEg+6RbdW4VnXExkW5aHp
+ t7S/nucioHdexnu1kM/dFti/rhA/m4b7NbeD4G9xbgKbfe1Oo5D0yfthQANXqaXFPj8ksCZ8uJn
+ QdOSyEl95kvhEuzVXgWI8+/amwa0hFJ+VwGj0iqublb6Gs5mIe/nnC0Blqc9ltzvQoxLzFZrBWQ
+ ZZwTaeFPYpFlIdYi+ijyVSgFlMiCfFiH6b/80OI2v08sijRNpRkfN1CcM8I2CvDI1TTSPr7hD4+
+ n6k97Wyj5cq6WvGeyN/X7FAtyZPnZFrt9Q8KjmE1zqnNSziGo3geVp3P550ijs1J9diCqA2sxT/
+ 3mlePPQbvYatrkWpr5AST8608NDejceyhcoS/fq561R5uCdUPGINfCBo18qPShWON/FEAxz4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-22_06,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 bulkscore=0 adultscore=0 mlxlogscore=999 phishscore=0
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 spamscore=0
+ suspectscore=0 malwarescore=0 mlxscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506220113
 
-On Sat, Jun 21, 2025 at 7:06=E2=80=AFPM Antonio Hickey
-<contact@antoniohickey.com> wrote:
->
-> This commit creates a macro for overflow assertions. The use of this
-> macro will avoid local `#ifdef`s by encapsulating the conditional
-> behavior (like `#[cfg(CONFIG_RUST_OVERFLOW_CHECKS)]`) to the macro.
->
-> In addition this macro allows us to document the intent of the assertion
-> more clearly.
->
-> Co-developed-by: Daniel Cote <danielstonecote@gmail.com>
-> Signed-off-by: Daniel Cote <danielstonecote@gmail.com>
-> Signed-off-by: Antonio Hickey <contact@antoniohickey.com>
-> Link: https://github.com/Rust-for-Linux/linux/issues/1159
-> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
-> ---
->  rust/kernel/lib.rs             |  1 +
->  rust/kernel/overflow_assert.rs | 33 +++++++++++++++++++++++++++++++++
->  2 files changed, 34 insertions(+)
->  create mode 100644 rust/kernel/overflow_assert.rs
->
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index 6b4774b2b1c3..e395adb6b293 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -92,6 +92,7 @@
->  pub mod of;
->  #[cfg(CONFIG_PM_OPP)]
->  pub mod opp;
-> +pub mod overflow_assert;
->  pub mod page;
->  #[cfg(CONFIG_PCI)]
->  pub mod pci;
-> diff --git a/rust/kernel/overflow_assert.rs b/rust/kernel/overflow_assert=
-.rs
-> new file mode 100644
-> index 000000000000..cc5f60611ba2
-> --- /dev/null
-> +++ b/rust/kernel/overflow_assert.rs
-> @@ -0,0 +1,33 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Overflow assert.
+Fix a NULL pointer dereference in ufs_qcom_setup_clocks due to an
+uninitialized 'host' variable. The variable 'phy' is now assigned
+after confirming 'host' is not NULL.
 
-s/assert/assertion/
+Call Stack:
 
-AFAIK the standard library always uses assertion where a noun is
-needed, and assert where a verb is needed.
+Unable to handle kernel NULL pointer dereference at
+virtual address 0000000000000000
 
-> +
-> +/// Verifies at runtime that an expression is within an expected bound.
-> +///
-> +/// This macro is only active when `CONFIG_RUST_OVERFLOW_CHECKS` is enab=
-led.
-> +///
-> +/// # Examples
-> +///
-> +/// ```
-> +/// overflow_assert!(3 <=3D 10);
-> +/// overflow_assert!(5 <=3D 5);
-> +///
-> +/// const X: u8 =3D 5;
-> +/// overflow_assert!(X + 3 < 10);
-> +///
-> +/// const fn f(x: i32) -> i32 {
-> +///     x + 1
-> +/// }
-> +/// overflow_assert!(f(40) < 42);
-> +/// ```
-> +#[macro_export]
-> +macro_rules! overflow_assert {
-> +    ($cond:expr) =3D> {
-> +        if cfg!(CONFIG_RUST_OVERFLOW_CHECKS) {
-> +            ::core::assert!(
-> +                $cond,
-> +                concat!("overflow assertion failed: ", stringify!($cond)=
-)
+ufs_qcom_setup_clocks+0x28/0x148 ufs_qcom (P)
+ufshcd_setup_clocks (drivers/ufs/core/ufshcd-priv.h:142)
+ufshcd_init (drivers/ufs/core/ufshcd.c:9468)
+ufshcd_pltfrm_init (drivers/ufs/host/ufshcd-pltfrm.c:504)
+ufs_qcom_probe+0x28/0x68 ufs_qcom
+platform_probe (drivers/base/platform.c:1404)
+really_probe (drivers/base/dd.c:579 drivers/base/dd.c:657)
+__driver_probe_device (drivers/base/dd.c:799)
+driver_probe_device (drivers/base/dd.c:829)
+__driver_attach (drivers/base/dd.c:1216)
+bus_for_each_dev (drivers/base/bus.c:370)
+driver_attach (drivers/base/dd.c:1234)
+bus_add_driver (drivers/base/bus.c:678)
+driver_register (drivers/base/driver.c:249)
+__platform_driver_register (drivers/base/platform.c:868)
+ufs_qcom_pltform_init+0x28/0xff8 ufs_qcom
+do_one_initcall (init/main.c:1274)
+do_init_module (kernel/module/main.c:3041)
+load_module (kernel/module/main.c:3511)
+init_module_from_file (kernel/module/main.c:3704)
+__arm64_sys_finit_module (kernel/module/main.c:3715.
 
-Can we still allow the caller to pass additional arguments to the
-macro, so that the overflowing value can be emitted? Alternatively if
-the expectation is that this macro is always used with a comparison
-operator perhaps we could have `overflow_assert_lt` and
-`overflow_assert_le` which provide panic messages containing the
-operand values?
+Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+Fixes: 77d2fa54a945 ("scsi: ufs: qcom : Refactor phy_power_on/off calls")
+Tested-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> # sc8180x-primus
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Reported-by: Aishwarya <aishwarya.tcv@arm.com>
+Closes: https://lore.kernel.org/lkml/20250620214408.11028-1-aishwarya.tcv@arm.com/
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Closes: https://lore.kernel.org/linux-scsi/CA+G9fYuFQ2dBvYm1iB6rbwT=4b1c8e4NJ3yxqFPGZGUKH3GmMA@mail.gmail.com/T/#t
+Co-developed-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
+Signed-off-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
+Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+---
+ drivers/ufs/host/ufs-qcom.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> +            );
-> +        }
-> +    };
-> +}
-> --
-> 2.50.0
->
->
->
+diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+index ba4b2880279c..318dca7fe3d7 100644
+--- a/drivers/ufs/host/ufs-qcom.c
++++ b/drivers/ufs/host/ufs-qcom.c
+@@ -1124,7 +1124,7 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
+ 				 enum ufs_notify_change_status status)
+ {
+ 	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+-	struct phy *phy = host->generic_phy;
++	struct phy *phy;
+ 	int err;
+
+ 	/*
+@@ -1135,6 +1135,8 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
+ 	if (!host)
+ 		return 0;
+
++	phy = host->generic_phy;
++
+ 	switch (status) {
+ 	case PRE_CHANGE:
+ 		if (on) {
+--
+2.48.1
+
