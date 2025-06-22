@@ -1,97 +1,206 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0143B1DDA1B;
-	Sun, 22 Jun 2025 20:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707731E0DEA;
+	Sun, 22 Jun 2025 20:38:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750624719; cv=none; b=JU4FlC/l0JUTnB5DK0r/CX1id65/f1MOShN4efvL/61sBKD3KLFVxCqx5X4qBiG82G/Z3jBVD4o5GDP9lsE3uFgHMU10IeSucfaZSdDGeCkci1k0y+P6Nhf86AebfJCtarAE47ASpUG3NBaUwHeYOG5MFVuMyB7bknFuCC4hqbE=
+	t=1750624720; cv=none; b=m5roqYA6gS8W56FuNKDS5k3d7xF9oxWmskiBgcG2SwZTPcGVCf0eJtqKySWjK2RZmKbkRMX5RFEoH/KZOp7OrG9eTdfQnklpPQNr13EMvZAmrd17IHlLr9Tc34ZOcvupVI2ueDNt6oaHqvbxfptr7Py5NoLIIR78kvui8ZQIikw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750624719; c=relaxed/simple;
-	bh=WmcUJz5Yg3hFpCBfEpBPaXUjMp4R+nRl8xFq2ZIllkk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VTuBoXqqcIEdjhVos/h3DJ/PaUW0siM2wvyyydsBZrRj7jyRV9HYmjrHJoXc3dJZa/Ppfahw/jDgpbKmP4vAXBJOUcXM58IrulW9+p8eerPxQ8q2w3hpyDSNbIq1kRLrwvG3/Hyg78AK1Abr3nGAh9uqH/utJ07MJdOu8GUc+/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HxEPUp43; arc=none smtp.client-ip=209.85.218.48
+	s=arc-20240116; t=1750624720; c=relaxed/simple;
+	bh=FsM9pggermSvNQPAiZXur5A/W3HYmPYGCh5koS2k+cA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zf3hI2fLcymTr3PgCJOOsHQajbA1xbS9Q86v5yF5j25we0d5lFm1HEVVkBneYEJsEzjmkfxxwU96F/SRP5OieBvGw31slGD8mIHtQPNg7J1Y7pFHRfwZL0Gqd199eDNSbr4QYFgVwDYoxGV5VqVkxLUhC5WB5Oi8moK/zRm6ZAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YFMghYCb; arc=none smtp.client-ip=209.85.222.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HxEPUp43"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad1b94382b8so666791266b.0;
-        Sun, 22 Jun 2025 13:38:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFMghYCb"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7d094ef02e5so369791585a.1;
+        Sun, 22 Jun 2025 13:38:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750624716; x=1751229516; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pLvpeoBKGxEwHK+9A/jrmaTsC1Syd7TxhtlcyFyT5Po=;
-        b=HxEPUp43cNXWY73GAY2pc+NruUTP2y8Q9nn9H3bsHA3cImC1LTLE24RvuHWuSMRy4X
-         sOfibP6z711F5V496pghFG/FRrnes5P7p/yN22bH+SVs+NLcX0sGAfVUUXNTmaviK/rn
-         JaJEcMUn0TBR1SSfgwQ0vYFPiIOJuhvIz+6LDMR+kGw691IWRP4Xq6o3x0EPWWmJ80bt
-         O3F5dLMsIFg0T5HSaHU4/TqfGHikrRX9qOkk4vjerW91D1QSwRaJfk4PSir0V5qy83wy
-         MOm4IXpcw+0JjThh8sWX5AHsPRAhCw8bqWpEmA25XXX0bTXVlyRyoL4FhB6132JTh4k2
-         2NuQ==
+        d=gmail.com; s=20230601; t=1750624717; x=1751229517; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vldq3wxBKVz1slyoTUjG7bsKsHFPjugjSfGiRDEW8yk=;
+        b=YFMghYCbFQ+fcSpIoJmarAVXMdRBUCEk21HyblDnwlx0bYveH1yJ1pYJQ5CK3TDYXO
+         jVmbL1QKrof8wg+UaQCfb1bWTq3wxIovX8NVLenMHoVViGl/okAKLhBtYTEapEKVE70G
+         Rp+hWDRfj7Srj9BLUgrplLQ2gFLD4Jc4kCkGFESwkzvdwN0EGL/KVRshfKU6d+q0z56A
+         0vhy+rV3SG0iTju4KbGVoPhoqla/DmiJV6LpjCsftlo21Plxqr92j+WZ0odVkVeWCGt0
+         c6LjsZuO6E9B/uKAdi0f+LipSaUEog9M2yirSBl2uXTxSnzaDkum27UazNvmOVfF/Gnm
+         dANA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750624716; x=1751229516;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pLvpeoBKGxEwHK+9A/jrmaTsC1Syd7TxhtlcyFyT5Po=;
-        b=S/AKNRALfQQJfshZFJ/Fq8r2keac1Ejs0VNEkyNLPXX3vaXdy+uUEi4Hv+WFoZWpza
-         c5AdyZhdqtjC3xkZ9LaQldIoJSRV9FC9STH4aRLqt6KBRdi8uYj6p1+pbomu9IYdBNHv
-         Jg1WJBDLaJ5+9hfsV/iYGdW1/+BM+LzsacFgWO2QXol5PtQ3iqQrYG6EN46puod0aa+s
-         eu4JjcJPzP5wxKvE+ulnANZQ+hEE6EdxgKRq/1HP6kzplZfGu3YhaRpY3pr8ucxmwjLd
-         aTEG7d1iTB3YPNuBJ0JlmBisuG/3k0YMKkJ4/zni1VhZI3UU6xs2qJwSBJ4G7ARvPVZf
-         tyoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0qZa5YyGtYTH6EDkoX1JxvNfllow3SmLMYQD7rDJ2PCV9PRxnnuMpcykW3UIHe6igrNgQZWQefJz2mXU=@vger.kernel.org, AJvYcCXrJxHX+pacb4+tiPmyUEhVz9+XwbFLq5a89cGBSjQ5TZPhgkn/7J+nikVZfILBAxneCcQQutB2FQll8II=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzumfhqFW6RWzAgcEQs+JQ9QVcs2/BGHCKSSXcSoKCHuJkqgg+W
-	ixfgoY3lCEYhIicvozXOt9NgrrP656B4ie0POexyh+i3zAiGHIDtEIC+MY/XbWs6ZL6kzeyecQl
-	lbBTNqNFujVvozFYZmvfG4dyaTxDaJOE=
-X-Gm-Gg: ASbGnctuKGufEYooY070JsgWkbOWToh7ShiI6ZDMPqCK+PCUeNa5brICeJe0VGZQqkj
-	S4dAm97MWmyS4OX3P9uO0zO4bIsTnB5e0Hrv7Ycqc2mX+K2fovUyLQ5VsgUusY+Og8yCmvSpgyO
-	nFZ/bYsaZbNEkRHnfywPyW4b7sCdWlKf13INC2Jcli1kK4tFF5qSO5Ag==
-X-Google-Smtp-Source: AGHT+IE/HoTMfDM7iHL1WEJQzvJZNfhHGo6JhKrsBNXN7rKIGFaxNc8ayyuH0V3IDNIADtg2RI783/alPVmgjMgX8UE=
-X-Received: by 2002:a17:906:6a26:b0:ad5:3055:a025 with SMTP id
- a640c23a62f3a-ae05793836bmr899848566b.6.1750624716133; Sun, 22 Jun 2025
- 13:38:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750624717; x=1751229517;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vldq3wxBKVz1slyoTUjG7bsKsHFPjugjSfGiRDEW8yk=;
+        b=wZJtcMu+pdVh9sgHV1ZZs1j5ENMQYomeBvmUQ1wW2UsEmKB7lV1XYTPo6znLz+uZt8
+         yvT11X2qdHC+ewvrOp8Fv/pJI6XZy3N8XGW+dmWt9YJmrNHMhBU7AyYPPG71kQ2mU6IR
+         YwSRPCo7Bv6l7+G7nCwTX91lqE6qZa1+SkA5jPdN90AYdq2ntXqfZFp5rrX+0gqciARP
+         hb1rLI+2uUcr3QiPwY2KjD9vXttMWxtb93OYpO7azWxKeI4c44m2p3dRCVdGkBsnfG2X
+         APXsvy0gex919JqLLWPbflzG8ICvuc0YMMVou06ezTE9Ps3bvY+rBVAANjK55lYGmFnF
+         On7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW9aF7MO5z6/6MlBdsVl54NIAUq4UfU+PulTS79FyyQEFrHHOQK4mGFHkxZ5Nvh8giz3mdS/ygPZJgl+/r/@vger.kernel.org, AJvYcCXvJ8BSQifsvn2Ts1NbCvRX8kHaLudvb094aMyFOps7E314NyrWBtI7ER6FaM3Mm7RYRRwkxpdKAWrgtAWNIFk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRCSO6PWXtSkoF2h+HdELB9FsQpR8Wp478g1YApIRilWnZo5lz
+	MsFa0zq2mYbUk2haPM9IrZlZvKEe42lu0Vue3T0ujMI0GAATCWv4WaYi
+X-Gm-Gg: ASbGnctOx/1SFB/J+HsqXmXSyFOfmdmjH469IcfdiiTtb5kNjyq7ogF2CWSDU+hiMFe
+	sjvnYmPQ/fuRBlWG1DEValHcVoon89gAUKy3LHpZwef3n4MgpUvew35Zf9M+n10qELb3zTY32bH
+	sMOSdySWPwAYFnr3t6XdKYf1/dgh0pOst/qGyLGiJH9Y9HFMtqjDMeznAuMm6npAWvmBQg/gyR6
+	Q45spcsM8R4VRTfWLhs//XK9AyS3EU1UFrIqpQhuCar8JquVZWkPkZ5WXXV/3YErZ/yAMTs9i8v
+	XJzUyA/aWrVNhUIdRYZDfvtf7Jv92Y9SQ9lVfxmu1DYdfrPAtrM3P2TU9edEvN398xD5Lp2LUFM
+	4MvmkLnXyZgBb3bil4UJRcyir+lg0
+X-Google-Smtp-Source: AGHT+IGf2xdhN2hJXlXhg+b+LtU16QsWc8owUzTcVQ7v+4pWQIPT1GW7q7GpCZh0d4w8DSMFLa7nRQ==
+X-Received: by 2002:a05:620a:24d4:b0:7d3:d8c8:1e32 with SMTP id af79cd13be357-7d3fbf74499mr1409978685a.3.1750624717212;
+        Sun, 22 Jun 2025 13:38:37 -0700 (PDT)
+Received: from fyre-x-redhat96-client-2.fyre.ibm.com ([129.41.87.1])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a779e5d257sm32384341cf.45.2025.06.22.13.38.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Jun 2025 13:38:36 -0700 (PDT)
+From: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+To: peterhuewe@gmx.de,
+	jarkko@kernel.org
+Cc: jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+Subject: [PATCH v3] tpm: Replace scnprintf() with sysfs_emit() and sysfs_emit_at() in sysfs show functions
+Date: Sun, 22 Jun 2025 13:38:28 -0700
+Message-ID: <20250622203828.193163-1-chelsyratnawat2001@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250622065340.184048-1-abdelrahmanfekry375@gmail.com>
-In-Reply-To: <20250622065340.184048-1-abdelrahmanfekry375@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sun, 22 Jun 2025 23:37:59 +0300
-X-Gm-Features: AX0GCFuPJ3qLOkF8NL8wgvWgUOpxetYnW9jsPJWLIWP89I8avEKk2QlvIPatJTw
-Message-ID: <CAHp75VcKQGvcgv+72=9CY9yvvmzTDUaiP8xZZzQCyd553_tqYw@mail.gmail.com>
-Subject: Re: [PATCH v2] staging: media: atomisp: Replace scnprintf with
- sysfs_emit in bo_show
-To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-Cc: andy@kernel.org, hansg@kernel.org, mchehab@kernel.org, 
-	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-staging@lists.linux.dev, skhan@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 22, 2025 at 9:54=E2=80=AFAM Abdelrahman Fekry
-<abdelrahmanfekry375@gmail.com> wrote:
->
-> Convert buffer output to use sysfs_emit/sysfs_emit_at API for safer
-> PAGE_SIZE handling and standardized sysfs output.
+Replace calls to scnprintf() with sysfs_emit() and sysfs_emit_at() in
+sysfs show functions. These helpers are preferred in sysfs callbacks
+because they automatically handle buffer sizing (PAGE_SIZE) and
+improve safety and readability.
 
-...
+Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+---
+Changes in v3
+- Replace char *str with int len in show_ppi_operations() 
+- Update sysfs_emit_at() usage to use len as the offset
+- Fix alignment
 
-> +       /* Changing to sysfs_emit changes the behaviour if failed*/
+ drivers/char/tpm/tpm_ppi.c | 48 ++++++++++++++++++--------------------
+ 1 file changed, 23 insertions(+), 25 deletions(-)
 
-This comment, besides missing the space, is useless here. You need to
-use the comment block for the proposed change.
+diff --git a/drivers/char/tpm/tpm_ppi.c b/drivers/char/tpm/tpm_ppi.c
+index bc7b1b4501b3..50f64d9b53c8 100644
+--- a/drivers/char/tpm/tpm_ppi.c
++++ b/drivers/char/tpm/tpm_ppi.c
+@@ -52,7 +52,7 @@ static ssize_t tpm_show_ppi_version(struct device *dev,
+ {
+ 	struct tpm_chip *chip = to_tpm_chip(dev);
+ 
+-	return scnprintf(buf, PAGE_SIZE, "%s\n", chip->ppi_version);
++	return sysfs_emit(buf, "%s\n", chip->ppi_version);
+ }
+ 
+ static ssize_t tpm_show_ppi_request(struct device *dev,
+@@ -87,12 +87,10 @@ static ssize_t tpm_show_ppi_request(struct device *dev,
+ 		else {
+ 			req = obj->package.elements[1].integer.value;
+ 			if (tpm_ppi_req_has_parameter(req))
+-				size = scnprintf(buf, PAGE_SIZE,
+-				    "%llu %llu\n", req,
++				size = sysfs_emit(buf, "%llu %llu\n", req,
+ 				    obj->package.elements[2].integer.value);
+ 			else
+-				size = scnprintf(buf, PAGE_SIZE,
+-						"%llu\n", req);
++				size = sysfs_emit(buf, "%llu\n", req);
+ 		}
+ 	} else if (obj->package.count == 2 &&
+ 	    obj->package.elements[0].type == ACPI_TYPE_INTEGER &&
+@@ -100,7 +98,7 @@ static ssize_t tpm_show_ppi_request(struct device *dev,
+ 		if (obj->package.elements[0].integer.value)
+ 			size = -EFAULT;
+ 		else
+-			size = scnprintf(buf, PAGE_SIZE, "%llu\n",
++			size = sysfs_emit(buf, "%llu\n",
+ 				 obj->package.elements[1].integer.value);
+ 	}
+ 
+@@ -211,10 +209,10 @@ static ssize_t tpm_show_ppi_transition_action(struct device *dev,
+ 	}
+ 
+ 	if (ret < ARRAY_SIZE(info) - 1)
+-		status = scnprintf(buf, PAGE_SIZE, "%d: %s\n", ret, info[ret]);
++		status = sysfs_emit(buf, "%d: %s\n", ret, info[ret]);
+ 	else
+-		status = scnprintf(buf, PAGE_SIZE, "%d: %s\n", ret,
+-				   info[ARRAY_SIZE(info)-1]);
++		status = sysfs_emit(buf, "%d: %s\n", ret,
++				    info[ARRAY_SIZE(info)-1]);
+ 	return status;
+ }
+ 
+@@ -255,23 +253,23 @@ static ssize_t tpm_show_ppi_response(struct device *dev,
+ 	res = ret_obj[2].integer.value;
+ 	if (req) {
+ 		if (res == 0)
+-			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
+-					   "0: Success");
++			status = sysfs_emit(buf, "%llu %s\n", req,
++					    "0: Success");
+ 		else if (res == 0xFFFFFFF0)
+-			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
+-					   "0xFFFFFFF0: User Abort");
++			status = sysfs_emit(buf, "%llu %s\n", req,
++					    "0xFFFFFFF0: User Abort");
+ 		else if (res == 0xFFFFFFF1)
+-			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
+-					   "0xFFFFFFF1: BIOS Failure");
++			status = sysfs_emit(buf, "%llu %s\n", req,
++					    "0xFFFFFFF1: BIOS Failure");
+ 		else if (res >= 1 && res <= 0x00000FFF)
+-			status = scnprintf(buf, PAGE_SIZE, "%llu %llu: %s\n",
+-					   req, res, "Corresponding TPM error");
++			status = sysfs_emit(buf, "%llu %llu: %s\n",
++					    req, res, "Corresponding TPM error");
+ 		else
+-			status = scnprintf(buf, PAGE_SIZE, "%llu %llu: %s\n",
+-					   req, res, "Error");
++			status = sysfs_emit(buf, "%llu %llu: %s\n",
++					    req, res, "Error");
+ 	} else {
+-		status = scnprintf(buf, PAGE_SIZE, "%llu: %s\n",
+-				   req, "No Recent Request");
++		status = sysfs_emit(buf, "%llu: %s\n",
++				    req, "No Recent Request");
+ 	}
+ 
+ cleanup:
+@@ -284,7 +282,7 @@ static ssize_t show_ppi_operations(acpi_handle dev_handle, char *buf, u32 start,
+ {
+ 	int i;
+ 	u32 ret;
+-	char *str = buf;
++	int len = 0;
+ 	union acpi_object *obj, tmp;
+ 	union acpi_object argv = ACPI_INIT_DSM_ARGV4(1, &tmp);
+ 
+@@ -314,11 +312,11 @@ static ssize_t show_ppi_operations(acpi_handle dev_handle, char *buf, u32 start,
+ 		}
+ 
+ 		if (ret > 0 && ret < ARRAY_SIZE(info))
+-			str += scnprintf(str, PAGE_SIZE, "%d %d: %s\n",
+-					 i, ret, info[ret]);
++			len += sysfs_emit_at(buf, len, "%d %d: %s\n",
++					     i, ret, info[ret]);
+ 	}
+ 
+-	return str - buf;
++	return len;
+ }
+ 
+ static ssize_t tpm_show_ppi_tcg_operations(struct device *dev,
+-- 
+2.47.1
 
-> +       offset +=3D sysfs_emit(buf, "type pgnr\n");
-
-
---=20
-With Best Regards,
-Andy Shevchenko
