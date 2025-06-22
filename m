@@ -1,118 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960C9376;
-	Sun, 22 Jun 2025 05:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01A52F42;
+	Sun, 22 Jun 2025 05:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750571293; cv=none; b=UnOIWuoZ/+DNwjNSI4PFR7a+EVZqHHkqdQY5tVvmf/jeUaIGSyi8QDKV2NYY6EghAsw9nXvjhx60RFFE45tIXpf4o7bndrhd4vXAL9JJesQyWaCxcSFcuVFgknGMj0Ay4KXqxm/EMrMswsruOzuOgZWG+1jclM2Uzjx0G6tQmT4=
+	t=1750571868; cv=none; b=KFJalgjRs3ZXdQhmiUbwVtofKKBiLfnFgrPvgSbIgJ83rTAzb3s0FIYYwCwJsWbEDh+uvqnJE957cKcAYex2AElXx2lJsURvilhsaYHS3G4xbHl1R+B+uUHQGKhzzafc4BZT6MR2SCJ8p8LAcaWEDN8mEx5pFpe76h/gU8geXUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750571293; c=relaxed/simple;
-	bh=a69uwtI66wsiieA3J3wYEWpnqi5UTVCHTSPGW2T4h7c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Orq6DLsTHpKeVOdtquJaOjnjRruBkV1fssBERt2U+kfyXy2rGzfKm+QWfw66NB/iBfC8tgTDCAIpgkPsdLNhSW8m6WT4p1Lpfg3bAlgFzcx9Yk7SV+5KPFp+GKMR7jQFiMjWeIfN7WB4L4B6gxeTyFeFeOYBpqArKLoVM4lOsnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gmk17hs6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750571868; c=relaxed/simple;
+	bh=l9l87sZf62pg5/dTBE6/y8SuF5Z7ql7BaMW5Ex2MJLc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lgZmUmpRFJc9lHJlRlS5AsVVYpXdBwVU68iIfm77vPKl7BaLzM3GRjL6uGp0L+v9RMDbUFtQaB92v5suLAZz4bD2aT25sP//DdyYy1um8tkdjP3/fy9r1F+x3hPNQQ7cMtyrQ74iu5U1BRS3GV4kSZeJdhdjDy51AZxqQTYe4qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cUl4CRuq; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gmk17hs6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08459C4CEE3;
-	Sun, 22 Jun 2025 05:48:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750571293;
-	bh=a69uwtI66wsiieA3J3wYEWpnqi5UTVCHTSPGW2T4h7c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gmk17hs6EFc7VLdcxnGWZ96itzl1DNtTyTvZESPe05eoTR96D5ZsPOzrueszBCfdz
-	 AV3fEaij27z+N65C1CLU819qH/jRiK9Zkrb+q22/GZ9uwYXktyDayAzEgV2ZUqsTT7
-	 Pg7Olnw050hmD6LYp1KnHYdgVBcfNPY5oxmA/QQKqDKsz/lTHHt013d/ym7p2CNpwn
-	 MF4vsFAnR+t3/ZH0u+Z8UVjp7E2vK70jeRddyndwSqT/Rif5YlCX7gg139BFsaHySI
-	 KHvSfgSVp3Hpt2WgizVvdBaFgJ8b+6pB6amh6ri2926IBEHx3v8bfUMdwisN4x1arT
-	 Q6T+kBlD7j4eA==
-Date: Sun, 22 Jun 2025 07:48:09 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
- linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>
-Subject: Re: [PATCH v2 00/15] Some improvements and fixes for the doc build
- system
-Message-ID: <20250622074809.09fca392@foz.lan>
-In-Reply-To: <87frfsdfgc.fsf@trenco.lwn.net>
-References: <cover.1750535171.git.mchehab+huawei@kernel.org>
-	<87frfsdfgc.fsf@trenco.lwn.net>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cUl4CRuq"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-236470b2dceso32568735ad.0;
+        Sat, 21 Jun 2025 22:57:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750571866; x=1751176666; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m8TXebLUoEWcZMAmOu6HQ6oFbM2pQE/lBu07ZCSxO04=;
+        b=cUl4CRuq2Mc5OUe2fHC4kiO3xVqbbH+jpMcYh6HelGX8GuSNeIUxmLRJpWxdLiSO29
+         rfNwBGIDQFu9pqQSIuFzkowoJLkJ4fgi+Ink27Sg+t7/G2IbP0RrXrjVsr8I62q5lTQo
+         aEVmcNpaoAzQ0GNvvaZRLhnRrnjBPRhggEDEPPAUx/3N5ZZyOcXySZWnbbWXTTVA10YE
+         ipZDSc2z5T2Qrs2qyKXCW3Yjidi/gCXgwmMqERqtGXbCYrp+MuoZ68y5cy0TLkXqsCBk
+         5PkkBvnU9U9e3JO+u+59+NJn6RQtQBRWUXX7L9MzjAnTQXFsZ7E34a5lorDJ+Adkvld+
+         a9og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750571866; x=1751176666;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m8TXebLUoEWcZMAmOu6HQ6oFbM2pQE/lBu07ZCSxO04=;
+        b=kMuQUEqilO1eEiscakwNCyVaILpqdYN98F02S0kmieAiWix1SSCg3AterZubpFhE9s
+         P3l75pkw9LVX/498gCo4eUsNJ4qg7myDn7hgF8uUlBC3sAEkDeuXoacTpQLn4k420+3O
+         xJ6ZmAvBTQ9qB5GgUXPPGV2KO7EnIPyWK6Zz55x8pxnkodk7ko1xA/+xTE4fk8IVIwKv
+         VpbHdOUpqYYyUm+neogdaWgtXM1t3XMOj5kR53XpGNcmxlXJSHIAG3/+P+7KIDEU0rpn
+         /DksDZdNoj905ej4RBeIYlk9P8YNye+sLVcFjnUzT393+45lPp0CIFdRP1EzA/PaBYVw
+         cxlw==
+X-Forwarded-Encrypted: i=1; AJvYcCW5N6g2cjZAZKhynoumH/DGY2rVhiAfgtA4uThTzjRUh9XpQJoyukRZZRXGywaZJnLBhHg/L2lzB2dxFQw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyolm82u1Czdx1wTVnnj8e+VIujFbnkBzKt6SdpyjdZtG1/lJTg
+	kDtOF4KZKolOR4nVdl7vgBBDuQaD7DyT2MdTIq57L/5awYQfGABzZt+b
+X-Gm-Gg: ASbGncurpUpy7tzMXAFoua45d6mzc06TOLzP/mrIHsBfR7U2v7eHCZaO5jlrBdWDKh3
+	0IZ/vZpnCbBpLwSRPkcpHHwcBekLMF0NfbhQBTQTCxD/GTN07AoHRZVhMwGuMD7ZcF2g+67gZWj
+	fR0yK4yd6PHpVzSMBZbIKpPT+gRgbanR7EqHNTRnbKm5ndL2ZCYnCL95hjYZ388RX1w4MM0hq3Z
+	pdtKyhPnRbLRB09pHwMbCwClV6Y6ErhWOafci8GfN6bOM+EuZdoiSrAFWz0XhPT+BdesKz1bErl
+	xSUOg7+PI33fPFAQS/zMooL0XbEvqLGMFEzNZ5VB2wFwUhng8BlODdI7PjRz0jEq
+X-Google-Smtp-Source: AGHT+IF9vTLfiEh5f47Ro879/ivmDlzccHfFh57S+898X95YcqRleEO1lmO8SRBlY0GQYVrDLn9GCQ==
+X-Received: by 2002:a17:902:d483:b0:235:7c6:ebdb with SMTP id d9443c01a7336-237d987aa64mr151858455ad.10.1750571865839;
+        Sat, 21 Jun 2025 22:57:45 -0700 (PDT)
+Received: from n.. ([2401:4900:1c0f:2858:1595:9335:9300:7c1c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d868f878sm54683605ad.184.2025.06.21.22.57.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Jun 2025 22:57:45 -0700 (PDT)
+From: mrigendrachaubey <mrigendra.chaubey@gmail.com>
+To: James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com
+Cc: linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mrigendrachaubey <mrigendra.chaubey@gmail.com>
+Subject: [PATCH v2] scsi: scsi_devinfo: remove redundant 'found'
+Date: Sun, 22 Jun 2025 11:27:09 +0530
+Message-Id: <20250622055709.7893-1-mrigendra.chaubey@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Em Sat, 21 Jun 2025 14:09:39 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+Remove the unnecessary 'found' flag in scsi_devinfo_lookup_by_key().
+The loop can return the matching entry directly when found, and fall
+through to return ERR_PTR(-EINVAL) otherwise.
 
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
-> 
-> > Hi Jon,
-> >
-> > This series contain patches I made while working at the parser-yaml.
-> > They aren't directly related to it. Instead, they address some issues
-> > at the build system and provide test tools for building docs.  
-> 
-> So as you saw I'd applied the previous set - but I've undone that.
-> Something in the first patch (the conf.py changes) breaks the dependency
-> detection so that every build turns into a full build.  Just run
-> "make htmldocs" twice in a row to see what happens.  That somehow needs
-> to be fixed...
+Signed-off-by: mrigendrachaubey <mrigendra.chaubey@gmail.com>
+---
+ drivers/scsi/scsi_devinfo.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-Tricky. When I originally wrote it, on the top of 8.x, there is no need
-to add a connect event. For older versions, this is a need.
-
-I ended adding a 'builder-inited', but this is too late. Changing the
-event to 'config-inited' address it.
-
-I'll fold the patch below at patch 01/15.
-
-Regards,
-Mauro
-
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index 4ba4ee45e599..91ce2b1c33cc 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -41,7 +41,7 @@ dyn_exclude_patterns = ['output']
- # Properly handle include/exclude patterns
- # ----------------------------------------
+diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
+index a348df895dca..e364829b6079 100644
+--- a/drivers/scsi/scsi_devinfo.c
++++ b/drivers/scsi/scsi_devinfo.c
+@@ -269,17 +269,12 @@ static struct {
+ static struct scsi_dev_info_list_table *scsi_devinfo_lookup_by_key(int key)
+ {
+ 	struct scsi_dev_info_list_table *devinfo_table;
+-	int found = 0;
  
--def update_patterns(app):
-+def update_patterns(app, config):
+ 	list_for_each_entry(devinfo_table, &scsi_dev_info_list, node)
+-		if (devinfo_table->key == key) {
+-			found = 1;
+-			break;
+-		}
+-	if (!found)
+-		return ERR_PTR(-EINVAL);
++		if (devinfo_table->key == key)
++			return devinfo_table;
  
-     """
-     On Sphinx, all directories are relative to what it is passed as
-@@ -65,7 +65,7 @@ def update_patterns(app):
-             if rel_path.startswith("../"):
-                 continue
+-	return devinfo_table;
++	return ERR_PTR(-EINVAL);
+ }
  
--            app.config.include_patterns.append(rel_path)
-+            config.include_patterns.append(rel_path)
- 
-     # setup exclude_patterns dynamically
-     for p in dyn_exclude_patterns:
-@@ -75,7 +75,7 @@ def update_patterns(app):
-         if rel_path.startswith("../"):
-             continue
- 
--        app.config.exclude_patterns.append(rel_path)
-+        config.exclude_patterns.append(rel_path)
- 
- # helper
- # ------
-@@ -574,4 +574,4 @@ kerneldoc_srctree = '..'
- loadConfig(globals())
- 
- def setup(app):
--	app.connect('builder-inited', update_patterns)
-+    app.connect('config-inited', update_patterns)
+ /*
+-- 
+2.34.1
 
-
-Thanks,
-Mauro
