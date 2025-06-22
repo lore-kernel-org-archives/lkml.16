@@ -1,82 +1,58 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA88148827;
-	Sun, 22 Jun 2025 13:34:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C3D1E50E;
+	Sun, 22 Jun 2025 13:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750599245; cv=none; b=BNu6gT2XzsyWDrxtRF1zDZOdFl81LcL+qLjUYi1d9zZ+96wPCctUQANelJLOafyNnMxc///ovmr0PbhsDT22KSfgboB42l08DkVzA23SAt+Z6EJzCSy+0Oc7e1v6U18vmSbtLVkqQYlEzuRz9DXeSrFE/PwO/0KBqP7y2xC/JKs=
+	t=1750599529; cv=none; b=LvjK3FLFDXChAsYRPv0Rd2P1R3ue+aThAlrKyocuvzoLifz95mxwaY/fUilRjOzRbXCAMrx5G1DtbOo8aaBt4ov66GGLbBPtu98NnKmSNmHPuGC1uOZRKOcFr+RyeW2q3lCEkj4+37OX5BEeFTPcw/f+KmkGQLXrra9uFDWxQ4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750599245; c=relaxed/simple;
-	bh=HHQx6XI8PUXoRsrgzuEZOZPBz8v2UtREYWVc/h1FARI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VAc+h5L3p0vaOZdZxOQEn01vsb8q48arNvkewmw4G7Qy3/FBFOzS1Egu+Zq5LxD2yy2KVXoGnPSY3kdH6mJ32sma/5vHfNqIiVdeHufJB1o2tT9/5CQPIfbwls+lTRdS8BgYskXO0NK87rhajpmmH0Dc6eKm09PkYG9XN0EEkJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ngF4o8PB; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750599529; c=relaxed/simple;
+	bh=BtWMb2gdu88yVyrCx16lPUq/kf7X/LCpwFDgFb3SdOE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BiKIiuPATXXUP6jutuhfc8Jy74uRm0dc1p4hU0v+9Rg4tZ0qyE+iFC62alvi7fPqJALMg3Q7pAaMBEfitmC6B4zdLnxXENyHldca1Rq9GK+7WiCg8xqtWd510RdBAlXOFrdiSOkZeaMC8B4z4gIUPrtD0CWBNPz8tHgSjFRDIyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pkltTDe3; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ngF4o8PB"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b31f0ef5f7aso1542037a12.3;
-        Sun, 22 Jun 2025 06:34:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750599243; x=1751204043; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HHQx6XI8PUXoRsrgzuEZOZPBz8v2UtREYWVc/h1FARI=;
-        b=ngF4o8PBjxwGGf1rrONnbNyOUAINN/gz093/criIfOWtcKe//g7bRwv9ITYTYpmvSN
-         kFFMTb4aRjI3R/dCE9rvjc371BtVShmyHgz287rERNh+xfKIQaH24aC8PQcknUaaKIOC
-         Lt9qL9pKznhy/AbdErWSUCdUe2fLECbVAiH+CZkfFtNAHxtdd09RqhjiYpVxGoI1UNoZ
-         ENY1kxm/vG2Ze1wE9SY5tewp0vq+2H1s0MXsMCVcTRN1qSAFtAyJMBYyErKGmEdF2pYk
-         amK8JfV3vz+8NUOrRmLvC5mfK99eqTf/JXITUlqkdJrn6ELGD8BxMu09ppz84iSb2AXk
-         zZKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750599243; x=1751204043;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HHQx6XI8PUXoRsrgzuEZOZPBz8v2UtREYWVc/h1FARI=;
-        b=I2A8i+6v17vyvkHXUnVNdAs0sCtLTGqGA2VZvDrmw/HjQs7Bij/vhCwvTPs3mPP4vf
-         RcNgDzPX6kUzogoTTrVC0wnR181pwe7bHGEqfS5SFdNgW8L+lUwUF5l+vWOSGUZheiek
-         oe+bqNyFdA7alZPH5vFubQE1VVkYNg8KWv3GPeLDUnUoQ9eXQHHTbsmm0WdKCng9MxI/
-         2zor0rtRaC3vlbc+hA4zFVlT2afloRTZvm9mcL4/TxgQdsbp2UJGTf4qL4/rB6/Fh1gX
-         T+g22Nct6jWeQBPI5EuAKu7hG2e1dA2f/MhJVGAUeyqS+eZjsDrY7ln4f3Kct+bT9WJJ
-         KQTg==
-X-Forwarded-Encrypted: i=1; AJvYcCXQfFmjI2yN+jCCsw46f6IKLRz32n+hocJFxk73lZcckrWIDXb7RlgHHMTw+jwMB0EjqaCXLOBSchE=@vger.kernel.org, AJvYcCXYAjixbDwb1oyWKKgQvyMpZ+WpNrruj90fB3FJHy/EoGguBa6sEkD+bgU+dpM4mmsuLsxUncbq4uM+qyQf@vger.kernel.org
-X-Gm-Message-State: AOJu0YzK9+kyShmyPRcRrrRZprOSlRed6qAcBmzaLOAqS4VhiHcijB4a
-	FqcaPcYJE5mQq8j90aadXZOIvHVvCw1tKlLNltoOc7BXRaKSkP3TF3dI
-X-Gm-Gg: ASbGnct6cGbnLMVfGDXsSCcqJAbVV12veOaz1Kap/oAoEPjOLpVPuDIOrXx1Rh9UtaJ
-	Bptclnaw+YjxBJhtqKVh0Guk0nCedO5B3260+5WkWenlBMvLVheYtAi992t6AtXegvDbSW2CO+/
-	LvVYX7XNOZ5C9q7QfkToqV/dLCrSZoLjj1UakaBk2n5J9GRN22NQcxOMK4RyXCTnmSH3pwKfs+6
-	0JBSnUcjaZPmu4lVPArdRkmfMlwfpq0NSMSHkxMd0AzndUdqQ8OWba6nS+/vk/gmmN067Wc1Dbt
-	P3cGDH04K3RWvjXEf2eeuWsWYx0AqR5gYv6EgXSd1uy7dBW1XPL2KsGwHBPFbwO+jMf6mHla1AF
-	9eK17ucF7a+8VKnmzprRyLhzUvK3GgtsUD6ZzhImuDRLJ2A==
-X-Google-Smtp-Source: AGHT+IFtAu0RSGb7WSIq+yHKoxKrfiIRV33NQjJdCmh9pXaXj5Ql2KmPIxcQP2ykmdpQ1rt5T3fWdw==
-X-Received: by 2002:a17:903:32ca:b0:235:ea29:28e9 with SMTP id d9443c01a7336-237d9a74a4fmr166500735ad.38.1750599243069;
-        Sun, 22 Jun 2025 06:34:03 -0700 (PDT)
-Received: from localhost.localdomain (36-231-187-194.dynamic-ip.hinet.net. [36.231.187.194])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159df71bbbsm6475665a91.9.2025.06.22.06.34.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 06:34:02 -0700 (PDT)
-From: Nick Huang <sef1548@gmail.com>
-To: sef1548@gmail.com
-Cc: akpm@linux-foundation.org,
-	alexs@kernel.org,
-	corbet@lwn.net,
-	david@redhat.com,
-	dzm91@hust.edu.cn,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	si.yanteng@linux.dev,
-	vishal.moola@gmail.com,
-	wangkefeng.wang@huawei.com
-Subject: [PATCH v2] mm/balloon_compaction: update Chinese docs for movable_ops
-Date: Sun, 22 Jun 2025 21:33:08 +0800
-Message-ID: <20250622133308.13413-1-sef1548@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250622004249.9083-1-sef1548@gmail.com>
-References: <20250622004249.9083-1-sef1548@gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pkltTDe3"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55M5TXCf009849;
+	Sun, 22 Jun 2025 13:38:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=bCbTyKNkXtYcXkx/TJ3uwl
+	I70UfFZLRjaXHwsQSyVXo=; b=pkltTDe3oPlo26QWjNR6MpCnyyOsxLlpC29Z4X
+	W0+OTjTS/gkxqI+O09Q3eMjQpIBt4G7dejpUAhNrBI2W3pSLgsd55ap4+DddAKTs
+	UeKY/cQQ6/4hGMf2f3vUjnl/X8ZSl1FIGO0SvFoG22NPP9TIYxHnCNy0245UDJj9
+	zxHzZ02uv2dnQXFR2Szgt1+B1m/h14pzY7aesJc2BsCzcM1LlxM8rQf2FBFwTHEU
+	9uXEfsqZcNfkLRZlgqdHRddSNGbGz5caR4dIurZEKia+e6fve4WE5zWGF/l2ee56
+	Pk/cIEwAFzU/xVUm+1lsEqLkg3pahc+RdpokzYKTEOZ84z9g==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47eah7rh97-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 22 Jun 2025 13:38:41 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55MDceGL009504
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 22 Jun 2025 13:38:40 GMT
+Received: from hu-lxu5-sha.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Sun, 22 Jun 2025 06:38:37 -0700
+From: Ling Xu <quic_lxu5@quicinc.com>
+To: <srini@kernel.org>, <amahesh@qti.qualcomm.com>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <arnd@arndb.de>,
+        <gregkh@linuxfoundation.org>
+CC: <quic_kuiw@quicinc.com>, <ekansh.gupta@oss.qualcomm.com>,
+        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        Ling Xu
+	<quic_lxu5@quicinc.com>
+Subject: [PATCH v3 0/3] Add support for gdsp remoteproc on sa8775p
+Date: Sun, 22 Jun 2025 19:08:17 +0530
+Message-ID: <20250622133820.18369-1-quic_lxu5@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,11 +60,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: JJJn2_CuFBQbh1GRY4hOUxxtqxYMOUYK
+X-Authority-Analysis: v=2.4 cv=PpWTbxM3 c=1 sm=1 tr=0 ts=68580761 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
+ a=s0CkNgkO2cT-0G377o4A:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDA4NSBTYWx0ZWRfXzjpwWl418nCR
+ qABThAnymkkBgpJ3taDzluHjyzXe19hK7h5VCqOcFPpXru+YJkNvT4DelrTTQPsEu5szKOJRzIq
+ C38uESsOt1SehucdZPz/Szv1xTeDbI4a7SqhkaFJKaLdvZqtWclXMFfnaKcYNCnhJMbjBOOh/sk
+ Pcweliy4G8Os16YcX0sZtxTAf6rArt+fs5To6GIgCzhnbl6fcPuLHGvL4mDo04sAW5tNY0vwaVu
+ xZZFsn90JVuTIjFm+d46Sid2JmM7hBd6NYMgdtWLOwOfraR04A1QoZ8HxnqXBEfDdGIXaNONU14
+ XHkmTQXoW02uXspcIgqbz0hHDP+6Tco0KWzyGeNY57IyVE9x0kozH1InGRKlz68m7fWfc06GFPF
+ 54c0f1ZsEc07sEkdNOXP7LMFFPHryisDQid2f1XMgIBK4oEz5VJTIip8ozzzicUJzDG9MsOJ
+X-Proofpoint-GUID: JJJn2_CuFBQbh1GRY4hOUxxtqxYMOUYK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-22_04,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=716 clxscore=1011 adultscore=0 mlxscore=0 priorityscore=1501
+ impostorscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0 spamscore=0
+ bulkscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506220085
 
-This patch is identical to v1, with the only change being the addition
-of a missing Signed-off-by line.
+The fastrpc driver has support for 5 types of remoteprocs. There are
+some products which support GDSP remoteprocs. GDSPs are General
+Purpose DSPs where tasks can be offloaded. Add changes to support GDSP
+remoteprocs and also add GDSP fastrpc nodes.
+Patch [v2]: https://lore.kernel.org/linux-arm-msm/20250320091446.3647918-1-quic_lxu5@quicinc.com/
 
-Sorry for the oversight in the previous submission.
+Changes in v3:
+  - Restrict domain IDs to represent a domain.
+Changes in v2:
+  - Add GPDSP labels in dt-bindings.
 
-Signed-off-by: Nick Huang <sef1548@gmail.com>
+Ling Xu (3):
+  dt-bindings: misc: qcom,fastrpc: Add GDSP label
+  arm64: dts: qcom: sa8775p: add GDSP fastrpc-compute-cb nodes
+  misc: fastrpc: add support for gdsp remoteproc
+
+ .../bindings/misc/qcom,fastrpc.yaml           |  2 +
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi         | 57 +++++++++++++++++++
+ drivers/misc/fastrpc.c                        | 57 ++++++++-----------
+ include/uapi/misc/fastrpc.h                   | 11 +++-
+ 4 files changed, 92 insertions(+), 35 deletions(-)
+
+-- 
+2.34.1
 
