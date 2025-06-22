@@ -1,81 +1,126 @@
-Received: from smtp153-162.sina.com.cn (smtp153-162.sina.com.cn [61.135.153.162])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF8510F9
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 04:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.135.153.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436D21459F6
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 05:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750567621; cv=none; b=fSTFIvvfGP3BAmmfC06o0agLtWNRgYo4o/TYO2jjNjQUdfEE5y1453VhfPXwy6iQjLB3cqsHjcn/vYAC2Fwo0a8cjiOXM6bnJWelrS0Han0VzdA/Hw34BOvne64KdmQY8TZcFzHQQkk6NGpUXytI+g6in47mlNQTGiHKUFDdANM=
+	t=1750569544; cv=none; b=HpOs4AoNKpplsMRMMvNcNI5/X9BmrU8HaIfKmXUXyHL3Q85NlDIwZcAUNsuHdfG03LJLKrUOTRWDiuxG6F5ky5Bbfo3iB3Byiufqs7Ezks4C7RIE4IjP+SuhQn8xUQqLZVReQWx0QqJiYvSGfNuNQ05oXWl2B0pX4gAsWiHO8KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750567621; c=relaxed/simple;
-	bh=XTcJ5zzxRNVm3acSexYtBmCiC7vU0kAO1Z0fLH8KI2o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XZ58f41Ml4YmaTdmcqKTIxIvKYm8iWPgr+qFf9doKKdtPiNSxjCklfnSZfa0RmQq5+vGd7Gdz3199yfbdagJo7hMbOCIe/MCGEfu+ZRPEFp+e9vw17BgNElUIBtndjt3OiDb1Aq9SUlYh9xg0w21DP5m9SDfdmnqBFiHywlgAYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=61.135.153.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
-	by sina.com (10.54.253.31) with ESMTP
-	id 68578AB20000346C; Sun, 22 Jun 2025 12:46:43 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 056826816234
-X-SMAIL-UIID: FDA67900939140799F1B065A97DCCAC2-20250622-124644-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl (3)
-Date: Sun, 22 Jun 2025 12:46:31 +0800
-Message-ID: <20250622044632.1474-1-hdanton@sina.com>
-In-Reply-To: <6854a3e6.a00a0220.137b3.0022.GAE@google.com>
-References: 
+	s=arc-20240116; t=1750569544; c=relaxed/simple;
+	bh=U4AiRsbPPCAHbz/XLAd6rrTpFIr7TntUer09KzM2vlc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=dGRHY0Yrt1Gk88GHMQ6K+iErZPfIWutUWWjKyGa4OqQ8D4mOSpFLv+DmvjHthumEHnOaL9Ua3Nkdus3YWE/2EdbsFg7kn2CpSM5QJ61y0q30Au2oVdw/y3f4tOPKubtXu7fLv3CGjYTvVPycl6bkNXnKx0p7W+lryltQpNd/6aA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3de0dc57859so30672105ab.2
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 22:19:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750569542; x=1751174342;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xpv2ROL0LWyoxEugpot2FMMru148+1TNHtu5oP9SL0w=;
+        b=uXWhsHMz7ML1Gb+R1fDbdsFLbbH3eDNOq3omASOhhttjt742XQZs7Xh9bMi9PypCLv
+         0QikJIECNlNHSRsVOL053flCDXvqjbodaU3xKL2p2t42Sfdbax0fyQKXtuelrFM5TWDy
+         U8G94QOhO/7e/U1jS6mXF2oc27o1TGp8Kkxt9RQ26PC6pzXHuhRgdDG94NyT1KjSBB+B
+         irXZHSjw3z8EuCceEfxzcIfGCCCx4kXrbuycrtlmzV9dN2Ue2tzDnAa+pqZAJY7+ACJQ
+         jpKhaBw7Rtgpvtb+LYtLPfkQPAY2PSxZ/j1+wayw7APA8j7yQEXWXU2SOI1bds8XbAIU
+         ZU5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWBQbBd9gcs6WivrfBGmKZtZe7hA2ufAe3Iqzf2pTZ+7v7CruBnJ24DP4Xa/JnzQptNpwrei7XdraaZji4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyi8woulvWSts3HXaeq0MWxHxI0YBCPzijQbrhv0wZl0UDmaz5P
+	4VjK2Ka6G1yGWZnxzKz/kqpsz2BE1u1sTJyZEUVwb+uCzrkpYDZ1mq+OZVAPNbKjZjmUgA6CrnX
+	U5pNjYYrC4Ef7clqUGoBF+2+XpB0TdiNIJxAr8RfJ+4CDslIBx/AwT0YGCqk=
+X-Google-Smtp-Source: AGHT+IFd0dAJuj69QITmP1AaUqSU20aHJEyvElVUMyOXCo3cNAiYPZD/BrdFzsR8O/Xc6fZQFNYTT2zK3TIF0qVETV+huV6xTuE6
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:178e:b0:3dd:b4f4:2bcc with SMTP id
+ e9e14a558f8ab-3de38c986b2mr74603765ab.13.1750569542396; Sat, 21 Jun 2025
+ 22:19:02 -0700 (PDT)
+Date: Sat, 21 Jun 2025 22:19:02 -0700
+In-Reply-To: <20250622044632.1474-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68579246.a70a0220.62859.0001.GAE@google.com>
+Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
+ (3)
+From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 19 Jun 2025 16:57:26 -0700
-> syzbot found the following issue on:
-> 
-> HEAD commit:    08215f5486ec Merge tag 'kbuild-fixes-v6.16' of git://git.k..
-> git tree:       upstream
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=13f7fd70580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=61539536677af51c
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
-> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17f7fd70580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1485690c580000
+Hello,
 
-#syz test
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
 
---- x/drivers/misc/vmw_vmci/vmci_context.c
-+++ y/drivers/misc/vmw_vmci/vmci_context.c
-@@ -535,6 +535,7 @@ int vmci_ctx_dequeue_datagram(struct vmc
- 			 (u32) *max_size);
- 		return VMCI_ERROR_NO_MEM;
- 	}
-+	*max_size = dq_entry->dg_size;
- 
- 	list_del(list_item);
- 	context->pending_datagrams--;
---- x/drivers/misc/vmw_vmci/vmci_host.c
-+++ y/drivers/misc/vmw_vmci/vmci_host.c
-@@ -435,7 +435,7 @@ static int vmci_host_do_receive_datagram
- 
- 	if (recv_info.result >= VMCI_SUCCESS) {
- 		void __user *ubuf = (void __user *)(uintptr_t)recv_info.addr;
--		retval = copy_to_user(ubuf, dg, VMCI_DG_SIZE(dg));
-+		retval = copy_to_user(ubuf, dg, size);
- 		kfree(dg);
- 		if (retval != 0)
- 			return -EFAULT;
---
+=====================================================
+BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+BUG: KMSAN: kernel-infoleak in _inline_copy_to_user include/linux/uaccess.h:196 [inline]
+BUG: KMSAN: kernel-infoleak in _copy_to_user+0xcc/0x120 lib/usercopy.c:26
+ instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+ _inline_copy_to_user include/linux/uaccess.h:196 [inline]
+ _copy_to_user+0xcc/0x120 lib/usercopy.c:26
+ copy_to_user include/linux/uaccess.h:225 [inline]
+ vmci_host_do_receive_datagram drivers/misc/vmw_vmci/vmci_host.c:438 [inline]
+ vmci_host_unlocked_ioctl+0x1e74/0x51f0 drivers/misc/vmw_vmci/vmci_host.c:932
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0x239/0x400 fs/ioctl.c:893
+ __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
+ x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Uninit was stored to memory at:
+ kmemdup_noprof+0xb0/0x100 mm/util.c:139
+ kmemdup_noprof include/linux/fortify-string.h:765 [inline]
+ dg_dispatch_as_host drivers/misc/vmw_vmci/vmci_datagram.c:272 [inline]
+ vmci_datagram_dispatch+0x4eb/0x1560 drivers/misc/vmw_vmci/vmci_datagram.c:340
+ ctx_fire_notification drivers/misc/vmw_vmci/vmci_context.c:257 [inline]
+ ctx_free_ctx drivers/misc/vmw_vmci/vmci_context.c:435 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ vmci_ctx_put+0x88e/0x15d0 drivers/misc/vmw_vmci/vmci_context.c:497
+ vmci_ctx_destroy+0x15d/0x250 drivers/misc/vmw_vmci/vmci_context.c:195
+ vmci_host_do_init_context drivers/misc/vmw_vmci/vmci_host.c:341 [inline]
+ vmci_host_unlocked_ioctl+0x4579/0x51f0 drivers/misc/vmw_vmci/vmci_host.c:928
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0x239/0x400 fs/ioctl.c:893
+ __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
+ x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Local variable ev.i.i created at:
+ ctx_fire_notification drivers/misc/vmw_vmci/vmci_context.c:248 [inline]
+ ctx_free_ctx drivers/misc/vmw_vmci/vmci_context.c:435 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ vmci_ctx_put+0x76b/0x15d0 drivers/misc/vmw_vmci/vmci_context.c:497
+ vmci_ctx_destroy+0x15d/0x250 drivers/misc/vmw_vmci/vmci_context.c:195
+
+Bytes 28-31 of 40 are uninitialized
+Memory access of size 40 starts at ffff8880470d5780
+Data copied to user address 000000000000a4bf
+
+CPU: 1 UID: 0 PID: 6789 Comm: syz.0.16 Not tainted 6.16.0-rc2-syzkaller-00318-g739a6c93cc75-dirty #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+=====================================================
+
+
+Tested on:
+
+commit:         739a6c93 Merge tag 'nfsd-6.16-1' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1392b30c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=db26f33438d76de9
+dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=167c2182580000
+
