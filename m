@@ -1,101 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A138914A62B;
-	Sun, 22 Jun 2025 18:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A6514A62B;
+	Sun, 22 Jun 2025 18:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750617805; cv=none; b=cPnaxWuVGxyhxNtoBRMEI7b/Qzle8Wk9FbbZyJ4uDqGwzY4DzPDcS3WjwgUeWnl4f0251+fZnD7LNJ8F+x+DPPNObDJEM8a4dLhdW6xPjCPM/erGlPUy6TIkbkAOKqOsFtIqqqAwVHKOn9RGRc9M+3P77I+TZxvH7vkMjMQIThQ=
+	t=1750617852; cv=none; b=kv79bsvSOe8qDSg5lB/kL3UT2OYEvf9ZDj9EtU2jtAg4906trQtTXkqzJwDNFWfRTUwrgYp9T4W2s6UaZymRpK9NAkee/8bm+Y/ltSmtJe5mMrn6N4Q6xVWa5TdPXc0ljoWaiX9ZzNr/hYGtk3h+gFx0yojbLH4F5/AtyylTRbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750617805; c=relaxed/simple;
-	bh=3H2wKWU2193WXNtIUhATRt/ZTw4+1SQggiDA+AaWVjI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=E7XzzzCdO5K5VAiFzqIUfNADvLUyxudW5lLWnY43METlr6gfWwixpas0NiStI/tLQf5+F5Jc5lJwD42yqiBNJI9NwrZUMtoDwr5CwGm5O5jXALS2Oiny9gNjwlf7CVb2ndja652Ymmj2lMU61L7JDAv1+QVP8BkeybN3rO9Mumw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=XHPUHLQg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750617852; c=relaxed/simple;
+	bh=jQPMbjL3fFFGkQL8I+x5O/PvFKVwP7m5RVQT4xh0ld8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=bo19sU00zMcgX/iggUNkTFoz/OYla4draN+qDBHEx0JrWGrM65VS1K5ASqkXXz/nEYjEGqqkgypGjJZnZUdGUxHK/ipO68CfQkQhmR0KxssHOGDpzOj4+Xm0Ro9SF2S4JxWrZeN0ZCWcd3D/VW/2GxmnPju5OLuXApaqvgh0w2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=FAWSSrtr; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="XHPUHLQg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D189C4CEE3;
-	Sun, 22 Jun 2025 18:43:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1750617805;
-	bh=3H2wKWU2193WXNtIUhATRt/ZTw4+1SQggiDA+AaWVjI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XHPUHLQglzrHpK2ZS8imdC6/smERAODfvRVpH2JeWdzBL/q/n5IqHb2TQkI29zi1K
-	 6oTx1a73gchf1/xMbFySG6/bhXW+GAtxWzT92/UQIr9+80WcSclzzzznwEJHOhgdE7
-	 /RQmsUSfX9zDx/b250gr43W8i8T4klKuUDPcoL2k=
-Date: Sun, 22 Jun 2025 11:43:22 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Shivank Garg <shivankg@amd.com>, seanjc@google.com, david@redhat.com,
- vbabka@suse.cz, shuah@kernel.org, pbonzini@redhat.com, brauner@kernel.org,
- viro@zeniv.linux.org.uk, ackerleytng@google.com, paul@paul-moore.com,
- jmorris@namei.org, serge@hallyn.com, pvorel@suse.cz, bfoster@redhat.com,
- tabba@google.com, vannapurve@google.com, chao.gao@intel.com,
- bharata@amd.com, nikunj@amd.com, michael.day@amd.com, yan.y.zhao@intel.com,
- Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com, michael.roth@amd.com,
- aik@amd.com, jgg@nvidia.com, kalyazin@amazon.com, peterx@redhat.com,
- jack@suse.cz, rppt@kernel.org, hch@infradead.org, cgzones@googlemail.com,
- ira.weiny@intel.com, rientjes@google.com, roypat@amazon.co.uk,
- ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
- rakie.kim@sk.com, byungchul@sk.com, gourry@gourry.net,
- kent.overstreet@linux.dev, ying.huang@linux.alibaba.com,
- apopple@nvidia.com, chao.p.peng@intel.com, amit@infradead.org,
- ddutile@redhat.com, dan.j.williams@intel.com, ashish.kalra@amd.com,
- gshan@redhat.com, jgowans@amazon.com, pankaj.gupta@amd.com,
- papaluri@amd.com, yuzhao@google.com, suzuki.poulose@arm.com,
- quic_eberman@quicinc.com, aneeshkumar.kizhakeveetil@arm.com,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-coco@lists.linux.dev
-Subject: Re: [PATCH 2/2] filemap: Add __filemap_get_folio_mpol()
-Message-Id: <20250622114322.c6c35800e01e4cc4007a0f89@linux-foundation.org>
-In-Reply-To: <aFWR-2WAQ283SZvg@casper.infradead.org>
-References: <20250618112935.7629-4-shivankg@amd.com>
-	<20250620143502.3055777-2-willy@infradead.org>
-	<aFWR-2WAQ283SZvg@casper.infradead.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="FAWSSrtr"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 27EFE41AD8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1750617849; bh=xCaxUsriRbQpVDTX0sL0HK9i8FWV8424VECT54piz+4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=FAWSSrtrwgcAl0g9Vx65LWJaiJAOoACdTinV4E2tivSqXzpUZUQr8bHqk/UPFicok
+	 2235P+zBbi3u70iJ6KvOhC6j0KXF8ff2rOs9zJD4l6lrgzb8PwZC1ZGnRbTnjjGBwK
+	 hx5l2zKQZA+133b33FXoPEh+OhNdq4Mtpf90CjrOkgcWoP7jkd2RTfTjWnQou6JLEy
+	 4vpF4pZVY8D02qhUAe3irln+/pLh1toxQh/1OI+ZbHzQWmK6RHfBoxalXCddvSfIxp
+	 cDvIYk4N/VAOwy1BrfnmQf4OIcp7LRqQiw8eBFfOrj17cwx27WbSmxhwl+A8eVb2ON
+	 NmFKGJZNIeoOA==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9:67c:16ff:fe81:5f9b])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 27EFE41AD8;
+	Sun, 22 Jun 2025 18:44:09 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>
+Subject: Re: [PATCH 0/6] Some improvements for the doc build system
+In-Reply-To: <20250622060015.76a0b29a@foz.lan>
+References: <cover.1750406900.git.mchehab+huawei@kernel.org>
+ <87ldpkdgv6.fsf@trenco.lwn.net> <20250622060015.76a0b29a@foz.lan>
+Date: Sun, 22 Jun 2025 12:44:08 -0600
+Message-ID: <874iw7boqv.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Fri, 20 Jun 2025 17:53:15 +0100 Matthew Wilcox <willy@infradead.org> wrote:
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-> On Fri, Jun 20, 2025 at 03:34:47PM +0100, Matthew Wilcox (Oracle) wrote:
-> > +struct folio *__filemap_get_folio_mpol(struct address_space *mapping,
-> > +		pgoff_t index, fgf_t fgp_flags, gfp_t gfp,
-> > +		struct mempolicy *policy)
-> >  {
-> >  	struct folio *folio;
-> >  
-> > @@ -1982,7 +1984,7 @@ struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
-> >  			err = -ENOMEM;
-> >  			if (order > min_order)
-> >  				alloc_gfp |= __GFP_NORETRY | __GFP_NOWARN;
-> > -			folio = filemap_alloc_folio(alloc_gfp, order, NULL);
-> > +			folio = filemap_alloc_folio(alloc_gfp, order, policy);
-> >  			if (!folio)
-> >  				continue;
-> 
-> This is missing the EXPORT_SYMBOL_GPL() change
+> Em Sat, 21 Jun 2025 13:39:09 -0600
+> Jonathan Corbet <corbet@lwn.net> escreveu:
+>
+>> OK, I've applied it, but ... someday, I think the test_doc_build tool
+>> should be properly documented and put somewhere under tools/testing.
+>
+> I added a better documentation for the tool at the v2.
+>
+> With regards to move to tools, I'm not certain about it as I can see
+> advantages and disadvantages. 
+>
+> Creating a new directory to have just one tool on it seems overkill
+> to me. Also, it is easier to type "scripts/..." than 
+> "tools/testing/build/..." :-)
+>
+> There is another aspect: while doing conf.py and Documentation/Makefile
+> cleanup, I noticed that there are still lots of hacks inside them,
+> that are there from the early days when we adopted Sphinx. Perhaps
+> it could make sense to move part of the logic there to this new
+> build tool, which could, for instance, replace the logic inside
+> scripts/sphinx-pre-install and get rid of some magic at the Makefile
+> like the one which handles SPHINXDIRS.
+>
+> So, at least for now, I would prefer to keep it under scripts.
 
-I added this:
+I pretty strongly disagree ... scripts/ is a dumping ground, nobody
+really knows what all that stuff there is, nobody is responsible for it.
+Something under tools/ would be more evident as to its purpose and
+maintainership.  We could maybe just do tools/docs/ and move things like
+sphinx-pre-install there as well...
 
---- a/mm/filemap.c~filemap-add-__filemap_get_folio_mpol-fix
-+++ a/mm/filemap.c
-@@ -2032,7 +2032,7 @@ no_page:
- 		folio_clear_dropbehind(folio);
- 	return folio;
- }
--EXPORT_SYMBOL(__filemap_get_folio);
-+EXPORT_SYMBOL(__filemap_get_folio_mpol);
- 
- static inline struct folio *find_get_entry(struct xa_state *xas, pgoff_t max,
- 		xa_mark_t mark)
-_
+Anyway, I won't try to hold up this work based on that, but now you know
+how I feel...:)
 
+jon
