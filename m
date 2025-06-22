@@ -1,150 +1,110 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3184A1DE4E3;
-	Sun, 22 Jun 2025 12:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99EEA1DED42;
+	Sun, 22 Jun 2025 12:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750594214; cv=none; b=KaPxSCwnB0Z3rfBKucX4KmOorRqpoQzZaHB6fCquGpF4N2x4VieILo4mGXdsdH86KLjhYYTWqBy317jNOv5p/8mkPm5GPOISunTU+Hm34SDH11/EvAUcUp5zxarp+0AckOKz9CqohQ6HpAgnzeBLJQOHyvSVdZR/U3wO9pCi1Yg=
+	t=1750594322; cv=none; b=Y74WzOfedacQq+LZmUwvldTXjq1ed4OCJtXAx+5JnyzwTP80GtyLmHGU09EIO5K3nxDLKvHrDmJTe22Twf+g1At5WkcAHGg0WKKAFCtImcEfoMxlKD6xZD23c02Kg2SOWzqzk6+dsQ5uffAKPpYXGw+Wze6ssJrIjQhu0kzzNos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750594214; c=relaxed/simple;
-	bh=GPJghAiVi7VOk63edVJqM24DcZ/CIPgZ1+4yLmkPb4A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NCqos7qczZicQ1IHz9QLgHK+QhdXNEoLKH2UUkkCJHvJeIilPI1JX/KqCH7gWK310IPOtwUdxixWk2DVPe0tOjkVTgi8Y5vl45zKLs+AlbbE3liDKmteV2fF+NGbvpGNZOh/Nzp0MgqcqguTXEgAdpoglmlVizMWfEhe4axwSow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dAAvbHFk; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1750594322; c=relaxed/simple;
+	bh=BmFjEVcWLQuD6PoCBoUpHZ1sPPiBqau1jUV0apQtZPI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hV92t3n7hwib7ORaUcHyhrLZW3JIJ8VMrvzMLqMG7FJ+w70CVXe/QMRI1BAOcvd/FKTnFTdGPJ7/oP0YDf5bVTmcC7FyQvlZS+FgZojindR2mbeipZdNzQVRqLE+6rjRTftVaRjvTkmnuAssHBHJwBaF8PVjOvObGz7t6jr8J+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eQ0C55eK; arc=none smtp.client-ip=209.85.219.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dAAvbHFk"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-236192f8770so22326555ad.0;
-        Sun, 22 Jun 2025 05:10:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQ0C55eK"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e825fe1c8cfso352388276.2;
+        Sun, 22 Jun 2025 05:11:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750594212; x=1751199012; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vGN8wUzqZT1QG27/qcAPHinagutLgUrz9NBWB07ySsQ=;
-        b=dAAvbHFkVVxhUIg1AtDITO5hD+Mvd+gYytcYMm1yXJ7NJJM9l6qNOIMRrBhbtPYZI7
-         H2QXFa57EE0sbZG5oU3+EBtNtZs0wPAtzGuLHBEuSWCi/lL0fuKsAG6aXduvWCAdpPjL
-         DhhntIdkp6Q1KanO4a/bD5kDmzog3WGySCTOS785bZpETjivvLAnkPLinbCbwZu+7TVT
-         P9nHjB06P48XHkRzlvvQXp9mvVnOZ9WpaMfCR0CeBiv+JzgN+bfCbH6H346+qA++yQS5
-         TPnStUdH+bwljvsRm0LaIcITEuM3hrb21gnFM2QAE7TFvihf5wrZ7AO9qGe9aVYSe4KH
-         7Ipg==
+        d=gmail.com; s=20230601; t=1750594318; x=1751199118; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BmFjEVcWLQuD6PoCBoUpHZ1sPPiBqau1jUV0apQtZPI=;
+        b=eQ0C55eKgFePVzB+BJt1obx7+oExjtbcfo1izzPr53ooi6unygYK2hVvMAbEEWF7gm
+         TnOh04ZWe3R4lXJV/BqlkwYFZHwihi0qn3L8O4XSZttOZ2izcAH5lEB3qEtaCF2TDWMX
+         4Rj0W+GCHiPpvtLy1evWlaz4cYn83IdwaMVSKh54aMuF9kROH48IdwKvQUyM7ZrDXOzY
+         DD9kWg/7vzTPM/lbisiIbKZw6Yi7SFeFlfK3tZpbSpZ0d28HIrTnEnkzDWJ9+lKAJI3q
+         Hgsn2LVpvNNx+LFJPRHyFaAsgFBMPMnjCy2vb+c2gDqGdkHk2XLl18I0eYLXqK/rFrcx
+         rmfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750594212; x=1751199012;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vGN8wUzqZT1QG27/qcAPHinagutLgUrz9NBWB07ySsQ=;
-        b=UtAJkCVJYtNTijs3q5q/2D5VfMCxt1CKT1Nbgm7dHduJAFY6RVjdG6/R+jj2CW9bs+
-         HHaxUe/rLFrint9vXBDuvpTbh+W9VsDPwTl3mqV1+862yXFi4n8SX8P5tugrZ5eiQdNM
-         jZt5yFX1i4WI37VtCeiN7if5i9CyXCYyKIhTBjvjJygUtevXuVR1kLhok1ZkobJFhyPG
-         l7z9kKEGnDweZkYqxtaCyNLI9bhYASHGVqqytjVfLmYGHfzNVgiTLfNfXHs7KvdVEzDo
-         mqcUcSJr6wG18rTqwRcvhDPxsu872N0cZ0YYy4EFXtA8PxDzWAIXZsvX15PkpZSwq9CI
-         SN9w==
-X-Forwarded-Encrypted: i=1; AJvYcCW+0vPeuMC6XrOuReFdIZMG1bBf29nJ8uAc490s7ClDheQ95Ptl07Jg9a9dD+bQuSBS/rstU+ByXEbdFizi@vger.kernel.org, AJvYcCWukHkaP1MMTKepDNTEuBm8YpwixCh+7GPIbmapgHOPQ2FqssezarDMtMytuYnqAuumVIpV9lP1I0g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVijrRzbf/zz5QdzBvJra5Xyw64YzeYpGGCNNx52xCALmxKoUp
-	6v2cZVgcCPYH5NMFTxDQT3CN9z4Gpa0HvtCmPxO2iGgbsZgWvQtZjbvP
-X-Gm-Gg: ASbGncsn16bT68oRwQWZLSEdun05i2xjpMdJWY4I2TiO+EIkmk0rH1N44M9YI6Ww7yj
-	YHUVQdicb8hJdTE0KwwbRlaDK6vD76rVtDcBVxLzfByC3m5pplK1uDsKyN21pzt4NEhaAmE9etX
-	YMudobZnvTBx+nMGAHM4f/I7k4AQ30NuZaY9j7S3IiAVklGafMzcOcMLFcAl19LscEbTgw4Gatm
-	DFI9xGh9JapgB0k3Oah1S8BS2hEVH7oGLx/+VWEiESTHBGbSWK3w5R+BoQ03udf0XA1G5DLZlmB
-	oO5UJgJDyPYM196Ru/QrnDeGoB/U15jXInb/qFapxAFiq6hVGUeob0IYw7NZbCrA89A3J2JSSjm
-	gTRLHC0b9Vw==
-X-Google-Smtp-Source: AGHT+IGvdawMvIJY2ifIVY5mQKrQfzDv/WHMHmDJxnhRFUaxlfdkEFCX9tHKTzTnj0IwvQ5q9m5ElA==
-X-Received: by 2002:a17:902:e54e:b0:215:6c5f:d142 with SMTP id d9443c01a7336-237db0d5a62mr114971305ad.20.1750594212310;
-        Sun, 22 Jun 2025 05:10:12 -0700 (PDT)
-Received: from localhost.localdomain ([2401:4900:a059:4a3d:406c:f7fc:472d:e49b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86f381bsm60677085ad.220.2025.06.22.05.10.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 05:10:11 -0700 (PDT)
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ming.li@zohomail.com,
-	rrichter@amd.com,
-	peterz@infradead.org,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Pranav Tyagi <pranav.tyagi03@gmail.com>
-Subject: [PATCH] cxl/memdev: automate cleanup with __free()
-Date: Sun, 22 Jun 2025 17:39:58 +0530
-Message-ID: <20250622120958.475765-1-pranav.tyagi03@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1750594318; x=1751199118;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BmFjEVcWLQuD6PoCBoUpHZ1sPPiBqau1jUV0apQtZPI=;
+        b=fUsMgIpdIudFbx+MsD+6gOjGt8Gje9B2wBKe1Hd4IlPUaWcmcDASQ7Px5i9JZUIBjt
+         qgiJMhrdDgNhwG3RsjbuRx5jddrvPYAckbu62n45dgQFggXDnFVZOMoFIZNeTwjnhdQm
+         PyDar14pejUlidhfXRkk+OkwmoCaq+j8okz2y5ULifTQt/iaCT7WPZgBsEK1Xmb0kNP2
+         R//iLBCCVljJ1OrAouUm+5FwVxbmWf8UybzBWXENmNVshtfMBGFmQErbNS5MYBtKzKFu
+         RHLem/1rpI/hfHNXa3epJP1+Xbalob1twrdY6zG72+hS3VwVPkNE5cUMgIuELvxn6b/x
+         bJ8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUtqwW8T6r7YAgb0TfcJZ+cZxH6ATWWAOPe2cHhzN4ndBMJwy6ZeAS8NXV8B0dVIbr8BjBC7cpo9MI=@vger.kernel.org, AJvYcCXj+Cs17lCD+V1ZcxHvkRf6WOoRf2yUTlSLlEf26FCN/A/llxE8ikwndRHbhbgPJh+H1AHbKI5P9Lkhmlpj@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsNF0wACZdMdVdzhOOy6Y4jamNLtOOrBHkX+d7HLX3eeSzSBv1
+	W4cQ+vzQWsONuGSBUCXuh8ZqN78JVMhsIMKHEqs63Yp9Wbnow/BiJ0F0CwAN0tt4ercbeFoXESY
+	4d3FuEm1DB5a+6ZgLtpGuLoZ/Zc6MGqs=
+X-Gm-Gg: ASbGncuLKiLdUf170BhFgmoLcUcFXFjOFICmpaunLxbkbJhAq5oBXWFXgrkY7SKFAzG
+	+vvh5xuJu7yUDdf4KrDGBn1P0YKgVX+3XwugGUvgS4ftWETFCjEcBs2H6ut1KBVOC89bNDJcNkq
+	EE1QlSkaZ6xrYols36zVYBpBPGR9Fuw/4VwYNrw3HA3K4=
+X-Google-Smtp-Source: AGHT+IFWH99gytw3P0zfVMJSXeN2Xdpbij9NHTw4tzYgIF0t13l3Q0lEtDYPXcr1RxaI1CKWYxMSuGj1kZBZHFKgfEI=
+X-Received: by 2002:a05:690c:a0a8:10b0:712:c14a:a363 with SMTP id
+ 00721157ae682-712c5fecc20mr43144177b3.0.1750594318310; Sun, 22 Jun 2025
+ 05:11:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250616-bmi270-events-v3-0-16e37588604f@gmail.com>
+ <20250616-bmi270-events-v3-1-16e37588604f@gmail.com> <20250622124426.60c71eb1@jic23-huawei>
+In-Reply-To: <20250622124426.60c71eb1@jic23-huawei>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Sun, 22 Jun 2025 14:11:22 +0200
+X-Gm-Features: AX0GCFsgVqhZSLBf3GcWt0M6HO7PdBsLs5aATyGsnL7UHwFWBxVHWIW6wjEdkBI
+Message-ID: <CAFXKEHYDSZbuKpu7_Kj52paqdZFw_iFK8YCX+LxMHv7PNCu3sQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] iio: imu: bmi270: add channel for step counter
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Gustavo Silva <gustavograzs@gmail.com>, Alex Lanzano <lanzano.alex@gmail.com>, 
+	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use the scope based resource management (defined in linux/cleanup.h) to
-automate the lifetime control of struct cxl_mbox_transfer_fw. This
-eliminates explicit kfree() calls and makes the code more robust and
-maintainable in presence of early returns.
+Hi Jonathan, thank you so much, but.. actually, I still prepared
+actually still another v6. I was about to send it in today (just
+finished tests). Might be still some bugfixes, and I guess if any
+possible, I'd prefer v6 patches over v5.
 
-Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
----
- drivers/cxl/core/memdev.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+Let me know, or I send it in anyway and you might consider v6? BTW
+adxl345 also should follow later today. Already prepared, but going
+over the tests..
 
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index f88a13adf7fa..be73a6099cb6 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -7,6 +7,7 @@
- #include <linux/slab.h>
- #include <linux/idr.h>
- #include <linux/pci.h>
-+#include <linux/cleanup.h>
- #include <cxlmem.h>
- #include "trace.h"
- #include "core.h"
-@@ -802,11 +803,11 @@ static int cxl_mem_activate_fw(struct cxl_memdev_state *mds, int slot)
- static int cxl_mem_abort_fw_xfer(struct cxl_memdev_state *mds)
- {
- 	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
--	struct cxl_mbox_transfer_fw *transfer;
- 	struct cxl_mbox_cmd mbox_cmd;
- 	int rc;
- 
--	transfer = kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
-+	struct cxl_mbox_transfer_fw *transfer __free(kfree) =
-+		kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
- 	if (!transfer)
- 		return -ENOMEM;
- 
-@@ -822,7 +823,6 @@ static int cxl_mem_abort_fw_xfer(struct cxl_memdev_state *mds)
- 	transfer->action = CXL_FW_TRANSFER_ACTION_ABORT;
- 
- 	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
--	kfree(transfer);
- 	return rc;
- }
- 
-@@ -880,7 +880,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
- 	struct cxl_dev_state *cxlds = &mds->cxlds;
- 	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
- 	struct cxl_memdev *cxlmd = cxlds->cxlmd;
--	struct cxl_mbox_transfer_fw *transfer;
-+	struct cxl_mbox_transfer_fw *transfer __free(kfree);
- 	struct cxl_mbox_cmd mbox_cmd;
- 	u32 cur_size, remaining;
- 	size_t size_in;
-@@ -970,7 +970,6 @@ static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
- 	rc = FW_UPLOAD_ERR_NONE;
- 
- out_free:
--	kfree(transfer);
- 	return rc;
- }
- 
--- 
-2.49.0
+Best,
+L
 
+On Sun, Jun 22, 2025 at 1:44=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
+ wrote:
+>
+> On Mon, 16 Jun 2025 20:53:09 -0300
+> Gustavo Silva <gustavograzs@gmail.com> wrote:
+>
+> > Add a channel for enabling/disabling the step counter, reading the
+> > number of steps and resetting the counter.
+> >
+> > Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> > Signed-off-by: Gustavo Silva <gustavograzs@gmail.com>
+>
+> Hi.
+>
+> Given this is ready to go and independent of later patches:
+> Applied to the togreg branch of iio.git and pushed out as testing
+> for 0-day to take a poke at it and see what we missed.
+>
+> Thanks,
+>
+> Jonathan
+>
