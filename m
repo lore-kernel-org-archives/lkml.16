@@ -1,115 +1,76 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E17717736;
-	Sun, 22 Jun 2025 23:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37CEB130E58;
+	Sun, 22 Jun 2025 23:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750634804; cv=none; b=ZxOMiKVEo5eMvxYgEweYRHCeMUge4PvpuMDdiIPHg0oYb6DXv3XuEnnZwJL0DSqoqoZZZrVydcwxiV7QGV2hUaFKvQc9QBRO6Sdpn3cMPCmI+HI8hncmH4G/6hPObNzDDaFbs6AJY5k/hyZaIB7OpW8Bgl1UQ9XR3LBV9kW+VMY=
+	t=1750634958; cv=none; b=KjCAztOlKVl2yitqEKfskEWRp2JZ2kZbIsAWX7C+5qgBcd8/4Nt8ROzUvRG+yabq8uYw9qCQhb4giPdhJTSQfMoZ0WWGLIyGW5WKnePUxc3ZUTK6JqbujhnNx3YxEJowXiE821ALC3aYNkOhMPgxxw4zmGEiWldlVm+m4IXPxCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750634804; c=relaxed/simple;
-	bh=+C/1OoUdQovXCcu8YHTk5NOO89dN6H6ZssVeodNdwiQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L7x36V3SF537O/2HfGGM+ALl832aOPy9kietJtr+5eim44b4vOMnNPnzOLhT1Qcq/yLdnfia+Pf66CTUqvl+LAOdwnM0MY0O5oDLk3eho3qcbnp/kwPYaVqKfuBuFs6z8IOwHqRhy7olHpbouqojPkzvL0Nwk4LEvOEUqePZ2J0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=gY9R4tMA; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1750634958; c=relaxed/simple;
+	bh=utef2ijBgl6MqBj1W8ynsNdT601dtQuJ6jqVXcsMwrs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VaR/AfaTJ2V1v5a2q1zAS5v6MS8xmT/tqaXvlLK+7WE+a35krC1Iqhiw61IP3h/8xjhSTq7j1GzYOZnnG94nLvJDXcwGNOjNaoRzQZDjut56IKQjWvG95zxnpnx/tCY9YxaQ+9wb7WkJ5XPNWiyS9R1zWW6Lo9NLQz4mH+wyJHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=TOq4+f1G; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="gY9R4tMA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=+MYU5dVQMEQs21wqqs0XDYcIHqDOwARR3XjJDngflls=; b=gY9R4tMAbn8hkEhV
-	rMhWxgumn9YTt3fK1DBsTq4mCS2x+yrY8f3DQIYdPd9YqSlk2iytI+sQmSn+PtbhCHwGJZzAkbixS
-	64FFtNSoTCYl0TodyfJe6Wi4DcmcHp77JuEWGrBTvUOd77KM+/85mdTj/xRlTmaZbl4n5h8SywIAr
-	OMQWb+/DOKkNYgHh6J+rir78puzHSZhASVW4r6ALGoj8KURBwwWZpDHgBMkAPT82L2j9OXtJ7pFQo
-	xiYt6bEbVJCfdiw92xFBDHU3sVlH4D1K14Pn3dLSUjbv84G0LStejXXy6CrRhSP0z/vjkAEcoQ8TD
-	leCTf2vvKLL8cCRkhg==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1uTU59-00B9N6-04;
-	Sun, 22 Jun 2025 23:26:39 +0000
-From: linux@treblig.org
-To: linux-wireless@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] wifi: wlcore: Remove unused wl12xx_cmd_start_fwlog
-Date: Mon, 23 Jun 2025 00:26:38 +0100
-Message-ID: <20250622232638.166283-1-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="TOq4+f1G"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=BLTDFCMmA7PLyZaXCasScMe0cVZwvQg8HDFH/FOFRrE=; b=TOq4+f1GoiaGpUp1U99sLa/zOR
+	TcKyezF5U+jjoYY1NmInatBn+wi0L4xIDSWTBB9ewWggxT5q0ZjtDcVN9POjFtYg4bE8UHY/wKL2X
+	mKftjuDin4tNkar7xo7p0oGGxzjLD077AM/FoeKqSyWpvSHw+DLAHA9x6rM1vmTzh+dSNVfhSOOU0
+	8C1ilOfgiaclBzc6SgJnQlVFVmQgIScE1nTb+ggMl/QzMbLykvSQIHl6Yi6JD5WroTNcm0mJUwgX9
+	Qruep7z+8rulQLIlAH3kvQYDjXoNNZ1lf10mCbZD5zt6CtYqZh8TCWPMNTUFWl4852Oxtduo0wquL
+	52B2X7MA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uTU7d-00000001Iud-1qx4;
+	Sun, 22 Jun 2025 23:29:13 +0000
+Date: Mon, 23 Jun 2025 00:29:13 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the vfs tree with the vfs-fixes tree
+Message-ID: <20250622232913.GZ1880847@ZenIV>
+References: <20250623091250.2a3a399b@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623091250.2a3a399b@canb.auug.org.au>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Mon, Jun 23, 2025 at 09:12:50AM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the vfs tree got a conflict in:
+> 
+>   Documentation/filesystems/porting.rst
+> 
+> between commit:
+> 
+>   2e7072350656 ("replace collect_mounts()/drop_collected_mounts() with safer variant")
+> 
+> from the vfs-fixes tree and commits:
+> 
+>   05fb0e666495 ("new helper: set_default_d_op()")
+>   691fb82ca6cc ("make d_set_d_op() static")
+> 
+> from the vfs tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
-wl12xx_cmd_start_fwlog() was added in 2011 by
-commit 95dac04f8813 ("wl12xx: Support routing FW logs to the host")
-but has remained unused.
-
-Remove it.
-
-(I can see the 'stop' is used, and the 'config' is used, so I assume
-the 'start' isn't normally needed).
-
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- drivers/net/wireless/ti/wlcore/cmd.c | 26 --------------------------
- drivers/net/wireless/ti/wlcore/cmd.h |  1 -
- 2 files changed, 27 deletions(-)
-
-diff --git a/drivers/net/wireless/ti/wlcore/cmd.c b/drivers/net/wireless/ti/wlcore/cmd.c
-index cd8ad0fe59cc..fa3a3f71dd15 100644
---- a/drivers/net/wireless/ti/wlcore/cmd.c
-+++ b/drivers/net/wireless/ti/wlcore/cmd.c
-@@ -1804,32 +1804,6 @@ int wl12xx_cmd_config_fwlog(struct wl1271 *wl)
- 	return ret;
- }
- 
--int wl12xx_cmd_start_fwlog(struct wl1271 *wl)
--{
--	struct wl12xx_cmd_start_fwlog *cmd;
--	int ret = 0;
--
--	wl1271_debug(DEBUG_CMD, "cmd start firmware logger");
--
--	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
--	if (!cmd) {
--		ret = -ENOMEM;
--		goto out;
--	}
--
--	ret = wl1271_cmd_send(wl, CMD_START_FWLOGGER, cmd, sizeof(*cmd), 0);
--	if (ret < 0) {
--		wl1271_error("failed to send start firmware logger command");
--		goto out_free;
--	}
--
--out_free:
--	kfree(cmd);
--
--out:
--	return ret;
--}
--
- int wl12xx_cmd_stop_fwlog(struct wl1271 *wl)
- {
- 	struct wl12xx_cmd_stop_fwlog *cmd;
-diff --git a/drivers/net/wireless/ti/wlcore/cmd.h b/drivers/net/wireless/ti/wlcore/cmd.h
-index 4c2f2608ef3b..d16afb35f9ee 100644
---- a/drivers/net/wireless/ti/wlcore/cmd.h
-+++ b/drivers/net/wireless/ti/wlcore/cmd.h
-@@ -81,7 +81,6 @@ int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl);
- int wlcore_cmd_generic_cfg(struct wl1271 *wl, struct wl12xx_vif *wlvif,
- 			   u8 feature, u8 enable, u8 value);
- int wl12xx_cmd_config_fwlog(struct wl1271 *wl);
--int wl12xx_cmd_start_fwlog(struct wl1271 *wl);
- int wl12xx_cmd_stop_fwlog(struct wl1271 *wl);
- int wl12xx_cmd_channel_switch(struct wl1271 *wl,
- 			      struct wl12xx_vif *wlvif,
--- 
-2.49.0
-
+Sorry - should've folded that into #for-next.
