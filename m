@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23C818FC91;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E648018DB26;
 	Sun, 22 Jun 2025 06:02:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750572172; cv=none; b=Wc3SsWVjDGalomAp3XX/a0WTBGvzvQ0SWDH0SRPIwGnXb8Q+WUBO6CWNXRZixXBoCaqHWMnRSkELMTK6639jFhI+8kDrnaTehQLXZWFBBe0mCW1Zmg7d+Znrn6lECAr/Rir0NJmxNF5Tnctm60ZowyAeK18xmoVFKLDrRHrVBgg=
+	t=1750572172; cv=none; b=M/67gYjzVFcf9Y1gtK0jJAjHip/fyYKRwX75+YQ0dqjfciss53O9IfbJ/ewfp70PgWeQcwq7fTjtancY1mw5P1YBsFErR1vfmTDWKZCjS78OSM6PIRircTpC/kpizN03LrF71EB0d7pC1JBkt7qL9Hwn30B0ytc7meAMvji9K2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750572172; c=relaxed/simple;
-	bh=Md1fJUprA8k5FhxpqjtZ0V+UUyFkBLNA2WvebeFh5mE=;
+	bh=t6WKKzUZ3jaz/IWeMR8qJbIf2p6B9ADIoUTLRFgr0u0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pjyrwV2mow2qiAycbhB/ZZnYxeiOYhb+PJl5zcgYlMWZTAg29Q+PzewwvPd7tm/zA1CWcSATPcBOxI0JAjHJpaM0F9hJ30ikxvbRH7WzNnHtMta1uSMaJz8EURHB7SnVjIH2+QHpRvz4mwCBSuZX6BN/2vESOOUq1BSZ/Pfg56c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mQArGjLa; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bCcXZqvwLOQJ/lmw9/kuzXLO0ewfYreDvUN11JEY/8SODiEfmM3lJYY7GBnTQz0HL9WvPBF5/zELO0YommEtSOEfP3w25/LXGRYLMrjzdHE7ymWgJ9UeAdwCV7IN5zm03vnPmkXgJA4AakPQpyRQ88JYUq0zOuJ9ruB53KvNBbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zv+tUMK4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mQArGjLa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D315C4AF0D;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zv+tUMK4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DF52C4CEEA;
 	Sun, 22 Jun 2025 06:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750572171;
-	bh=Md1fJUprA8k5FhxpqjtZ0V+UUyFkBLNA2WvebeFh5mE=;
+	bh=t6WKKzUZ3jaz/IWeMR8qJbIf2p6B9ADIoUTLRFgr0u0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mQArGjLaaejKQ7qkesr4qR8Ntss0yynvV7KNysq22XhBGiaUrW8GUnps+QHkQ05hU
-	 /8LyM0iRdS/9RT1lFY3ERLbn56CZga5AmkkeBlEhqXZcvMesY7mOEJYgDX1cRICTKS
-	 Ii//iMqcYP1OvIWbqREDZG1I+xM2sAoG5mFHmrrljlBBSqW/tz7wAxtdBK4Sxi44qi
-	 Fy3Q113CqWiH4/i4XpMZkjjPBV4g1OvRC1wd2TU9fFT99u3naLzeqaLC1GJA8KkR8s
-	 dS4EZNFMfFVxCxOh6VOXbvcFhMgr6qKImCf8rGW/dmn7zu6uFKJZumggw0dIS33XUZ
-	 5tA/k7v9VVdww==
+	b=Zv+tUMK4MaP82Jddp8MV7KWBwi2R8LFoL7Byadjyty8Ns5Q1qVoVGrq2CLXwynLrx
+	 0vD/jiGYisidp1O8IFo8oUQOgzaBP0DrVFwoSrNde27cxcN3MOJb9hG6gZFV1FrQsX
+	 Q9r7QuzX7kzy11mEzEFqyVb7AciU6j+RFkf8pvlTFLIzLuVEC9VCjyPndNYuiRi9tg
+	 J3b8KvfPFzQIevY8cukdHhv0Cu3pACF2NIjL7DDB7Iz+JRV5kPFsdIDc7+O4WkR93+
+	 FEnRDG27G2PPv5wpVrDVDvRV+DPQXzyrmOfhmv/aG7C9Z26Yh7pLmPPMZZLOGqfLeo
+	 mqZrmRriudGKg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uTDmz-00000000o2y-2rAM;
+	id 1uTDmz-00000000o2K-1h1B;
 	Sun, 22 Jun 2025 08:02:49 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -37,9 +37,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Akira Yokosawa" <akiyks@gmail.com>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 15/15] docs: conf.py: Check Sphinx and docutils version
-Date: Sun, 22 Jun 2025 08:02:44 +0200
-Message-ID: <972673b0a5bf5537d47780d6f8e70ae45456e751.1750571906.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 05/15] scripts: test_doc_build.py: better control its output
+Date: Sun, 22 Jun 2025 08:02:34 +0200
+Message-ID: <76c3a64a87a7493ae607d5c7784b3b829affcaf0.1750571906.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750571906.git.mchehab+huawei@kernel.org>
 References: <cover.1750571906.git.mchehab+huawei@kernel.org>
@@ -52,132 +52,209 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-As reported by Akira, there were incompatibility issues with
-Sphinx and docutils with docutils 0.19. There's already
-a fix for it, but, as there are incompatibility issues with
-different versions, better to add a check to verify if the
-combination is supported/tested.
-
-After check Sphinx release notes, it seems that the
-version compatibility is given by:
-
-        =======  ============   ============
-        Sphinx   Min Docutils   Max Docutils
-        Version  Version        Version
-        -------  ------------   ------------
-        3.4.3    >= 0.12.0      < 0.18.0
-        4.0.0    >= 0.12.0      < 0.19.0
-        6.0.0    >= 0.18.0      < 0.20.0
-        7.0.0    >= 0.18.1      < 0.21.0
-        7.2.0    >= 0.18.1      < 0.20.0
-        7.4.0    >= 0.18.1      < 0.21.0
-        8.0.0    >= 0.20.0      < 0.22.0
-        8.2.3    >= 0.20.0      < 0.22.0
-        =======  ============   ============
-
-For now, add a logic inside conf.py to check the above
-compatibility list, emitting warnings if the docutils
-version doesn't match it.
-
-This way, when we discover incompatibility issues, we
-can easily adjust the table.
+Now that asyncio is supported, allow userspace to adjust
+verbosity level and direct the script output to a file.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/conf.py | 70 +++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 67 insertions(+), 3 deletions(-)
+ scripts/test_doc_build.py | 78 +++++++++++++++++++++++++--------------
+ 1 file changed, 51 insertions(+), 27 deletions(-)
 
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index 700516238d3f..df99a4d96b58 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -9,7 +9,11 @@ import os
- import shutil
- import sys
+diff --git a/scripts/test_doc_build.py b/scripts/test_doc_build.py
+index 94f2f2d8c3b7..5b9eb2c0bf01 100755
+--- a/scripts/test_doc_build.py
++++ b/scripts/test_doc_build.py
+@@ -2,7 +2,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Copyright(c) 2025: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+ #
+-# pylint: disable=R0903,R0913,R0914,R0917
++# pylint: disable=R0903,R0912,R0913,R0914,R0917,C0301
  
-+import docutils
- import sphinx
-+from sphinx.util import logging
-+
-+logger = logging.getLogger(__name__)
+ """
+ Install minimal supported requirements for different Sphinx versions
+@@ -104,9 +104,22 @@ SPHINX_REQUIREMENTS = {
+ class AsyncCommands:
+     """Excecute command synchronously"""
  
- # If extensions (or modules to document with autodoc) are in another directory,
- # add these directories to sys.path here. If the directory is relative to the
-@@ -21,11 +25,71 @@ from load_config import loadConfig               # pylint: disable=C0413,E0401
- # Minimal supported version
- needs_sphinx = "3.4.3"
+-    stdout = None
+-    stderr = None
+-    output = None
++    def __init__(self, fp=None):
++
++        self.stdout = None
++        self.stderr = None
++        self.output = None
++        self.fp = fp
++
++    def log(self, out, verbose, is_info=True):
++        if verbose:
++            if is_info:
++                print(out.rstrip("\n"))
++            else:
++                print(out.rstrip("\n"), file=sys.stderr)
++
++        if self.fp:
++            self.fp.write(out.rstrip("\n") + "\n")
  
--# Get Sphinx version
--major, minor, patch = sphinx.version_info[:3]          # pylint: disable=I1101
-+# Get Sphinx and docutils versions
-+sphinx_ver = sphinx.version_info[:3]          # pylint: disable=I1101
-+docutils_ver = docutils.__version_info__[:3]
-+
-+sphinx_ver_str = ".".join([str(x) for x in sphinx_ver])
-+docutils_ver_str = ".".join([str(x) for x in docutils_ver])
-+
-+# Docutils min/max versions.
-+# The dockutils version check logic is done with:
-+#     ver >= min and ver < max
-+SPHINX_DOCUTILS_VERS = {
-+    (3, 4, 3): {
-+        "min": (0, 12, 0),
-+        "max": (0, 18, 0)
-+    },
-+    (4, 0, 0): {
-+        "min": (0, 12, 0),
-+        "max": (0, 19, 0)
-+    },
-+    (6, 0, 0): {
-+        "min": (0, 18, 0),
-+        "max": (0, 20, 0)
-+    },
-+    (7, 0, 0): {
-+        "min": (0, 18, 1),
-+        "max": (0, 21, 0)
-+    },
-+    (7, 2, 0): {
-+        "min": (0, 18, 1),
-+        "max": (0, 20, 0)
-+    },
-+    (7, 4, 0): {
-+        "min": (0, 18, 1),
-+        "max": (0, 21, 0)
-+    },
-+    (8, 0, 0): {
-+        "min": (0, 20, 0),
-+        "max": (0, 22, 0)
-+    },
-+    (8, 2, 3): {
-+        "min": (0, 20, 0),
-+        "max": (0, 22, 0)
-+    },
-+}
-+
-+du_min = None
-+du_max = None
-+for sp_ver, doc_vers in SPHINX_DOCUTILS_VERS.items():
-+    if sp_ver > sphinx_ver:
-+        break
-+
-+    du_min = doc_vers.get("min")
-+    du_max = doc_vers.get("max")
-+
-+if sphinx_ver > sorted(SPHINX_DOCUTILS_VERS.keys())[-1]:
-+    logger.warning(f"Sphinx version {sphinx_ver_str} is too new and not tested. Doc generation may fail")
-+elif not du_min or not du_max:
-+    logger.warning(f"Sphinx version {sphinx_ver_str} is not tested. Doc generation may fail")
-+elif docutils_ver < du_min:
-+    logger.warning(f"Docutils {docutils_ver_str} is too old for Sphinx {sphinx_ver_str}. Doc generation may fail")
-+elif docutils_ver >= du_max:
-+    logger.warning(f"Docutils {docutils_ver_str} could be too new for Sphinx {sphinx_ver_str}. Doc generation may fail")
+     async def _read(self, stream, verbose, is_info):
+         """Ancillary routine to capture while displaying"""
+@@ -115,16 +128,10 @@ class AsyncCommands:
+             line = await stream.readline()
+             if line:
+                 out = line.decode("utf-8", errors="backslashreplace")
+-                self.output += out
++                self.log(out, verbose, is_info)
+                 if is_info:
+-                    if verbose:
+-                        print(out.rstrip("\n"))
+-
+                     self.stdout += out
+                 else:
+-                    if verbose:
+-                        print(out.rstrip("\n"), file=sys.stderr)
+-
+                     self.stderr += out
+             else:
+                 break
+@@ -140,10 +147,8 @@ class AsyncCommands:
  
- # Include_patterns were added on Sphinx 5.1
--if (major < 5) or (major == 5 and minor < 1):
-+if sphinx_ver < (5, 1, 0):
-     has_include_patterns = False
- else:
-     has_include_patterns = True
+         self.stdout = ""
+         self.stderr = ""
+-        self.output = ""
+ 
+-        if verbose:
+-            print("$ ", " ".join(cmd))
++        self.log("$ " + " ".join(cmd), verbose)
+ 
+         proc = await asyncio.create_subprocess_exec(cmd[0],
+                                                     *cmd[1:],
+@@ -167,7 +172,7 @@ class AsyncCommands:
+ 
+         if capture_output:
+             if proc.returncode > 0:
+-                print("Error {proc.returncode}", file=sys.stderr)
++                self.log(f"Error {proc.returncode}", verbose=True, is_info=False)
+                 return ""
+ 
+             return self.output
+@@ -192,10 +197,11 @@ class SphinxVenv:
+         self.built_time = {}
+         self.first_run = True
+ 
+-    async def _handle_version(self, args, cur_ver, cur_requirements, python_bin):
++    async def _handle_version(self, args, fp,
++                              cur_ver, cur_requirements, python_bin):
+         """Handle a single Sphinx version"""
+ 
+-        cmd = AsyncCommands()
++        cmd = AsyncCommands(fp)
+ 
+         ver = ".".join(map(str, cur_ver))
+ 
+@@ -210,10 +216,11 @@ class SphinxVenv:
+         venv_dir = f"Sphinx_{ver}"
+         req_file = f"requirements_{ver}.txt"
+ 
+-        print(f"\nSphinx {ver} with {python_bin}")
++        cmd.log(f"\nSphinx {ver} with {python_bin}", verbose=True)
+ 
+         # Create venv
+-        await cmd.run([python_bin, "-m", "venv", venv_dir], check=True)
++        await cmd.run([python_bin, "-m", "venv", venv_dir],
++                      verbose=args.verbose, check=True)
+         pip = os.path.join(venv_dir, "bin/pip")
+ 
+         # Create install list
+@@ -223,7 +230,7 @@ class SphinxVenv:
+ 
+         reqs.append(f"Sphinx=={ver}")
+ 
+-        await cmd.run([pip, "install"] + reqs, check=True, verbose=True)
++        await cmd.run([pip, "install"] + reqs, check=True, verbose=args.verbose)
+ 
+         # Freeze environment
+         result = await cmd.run([pip, "freeze"], verbose=False, check=True)
+@@ -248,10 +255,11 @@ class SphinxVenv:
+             await cmd.run(["make", "cleandocs"], env=env, check=True)
+             make = ["make"] + args.make_args + ["htmldocs"]
+ 
+-            print(f". {bin_dir}/activate")
+-            print(" ".join(make))
+-            print("deactivate")
+-            await cmd.run(make, env=env, check=True)
++            if args.verbose:
++                print(f". {bin_dir}/activate")
++            await cmd.run(make, env=env, check=True, verbose=True)
++            if args.verbose:
++                print("deactivate")
+ 
+             end_time = time.time()
+             elapsed_time = end_time - start_time
+@@ -264,7 +272,7 @@ class SphinxVenv:
+ 
+             self.built_time[ver] = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+ 
+-            print(f"Finished doc build for Sphinx {ver}. Elapsed time: {self.built_time[ver]}")
++            cmd.log(f"Finished doc build for Sphinx {ver}. Elapsed time: {self.built_time[ver]}", verbose=True)
+ 
+     async def run(self, args):
+         """
+@@ -272,6 +280,15 @@ class SphinxVenv:
+         on a loop.
+         """
+ 
++        if args.log:
++            fp = open(args.log, "w", encoding="utf-8")
++            if not args.verbose:
++                args.verbose = False
++        else:
++            fp = None
++            if not args.verbose:
++                args.verbose = True
++
+         cur_requirements = {}
+         python_bin = MINIMAL_PYTHON_VERSION
+ 
+@@ -290,7 +307,7 @@ class SphinxVenv:
+                 if cur_ver > args.max_version:
+                     break
+ 
+-            await self._handle_version(args, cur_ver, cur_requirements,
++            await self._handle_version(args, fp, cur_ver, cur_requirements,
+                                        python_bin)
+ 
+         if args.make:
+@@ -299,6 +316,8 @@ class SphinxVenv:
+             for ver, elapsed_time in sorted(self.built_time.items()):
+                 print(f"\tSphinx {ver} elapsed time: {elapsed_time}")
+ 
++        if fp:
++            fp.close()
+ 
+ def parse_version(ver_str):
+     """Convert a version string into a tuple."""
+@@ -311,7 +330,7 @@ async def main():
+ 
+     parser = argparse.ArgumentParser(description="Build docs for different sphinx_versions.")
+ 
+-    parser.add_argument('-v', '--version', help='Sphinx single version',
++    parser.add_argument('-V', '--version', help='Sphinx single version',
+                         type=parse_version)
+     parser.add_argument('--min-version', "--min", help='Sphinx minimal version',
+                         type=parse_version)
+@@ -328,6 +347,11 @@ async def main():
+     parser.add_argument('-i', '--wait-input',
+                         help='Wait for an enter before going to the next version',
+                         action='store_true')
++    parser.add_argument('-v', '--verbose',
++                        help='Verbose all commands',
++                        action='store_true')
++    parser.add_argument('-l', '--log',
++                        help='Log command output on a file')
+ 
+     args = parser.parse_args()
+ 
 -- 
 2.49.0
 
