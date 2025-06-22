@@ -1,35 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA882AE8E;
-	Sun, 22 Jun 2025 16:39:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC5C2AE8E;
+	Sun, 22 Jun 2025 16:41:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750610379; cv=none; b=Gh/8EFrOh7fDy429kWIqJ0ZKKzniAIB72l1iUgzaJDu0ZMl6WH+wLTiBliQMolJ8DUZHW+xVSelDOCc7UYLsusgLEkz4uYQ+XBjbLJEVic6efNSbVw0ynZFHFF/jiQy4JyW04yMrMrNcRd9CkyLBc8Ti1rXru8S+874Ekc+GA3U=
+	t=1750610481; cv=none; b=c1pRjM4VwZ66+z2LCku8D/sSEOSMJ31HjWhqSK5vfDLmva2yKtnDd3DgDPiow3m957DcLNccmcWF4n4ENfU4/KikRHbSWlAG/rIn8b/06/CH5JIfCXbm+d99oHwIkvf71dRMkWqfMNUu1cgmx42pP9ZimS90g6PCWrLDqjiE5xE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750610379; c=relaxed/simple;
-	bh=Yv/mApgcCWydCfdP4MhYzR45djsXJkpQGZFnebaZxdc=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=tX6pAI9aVY7sxLm58q9yiHCa8EhcpLulpcEqsdqfzoLEAq0EBeLsFNW+t5nnoB+PZ9B2ciaO9giwkgXMCjugq2thdC2y5AJZzNaE7CIUNh2DV77VokOdEngudp0q3Dcd69WiplTLzE3z578NyekGo8I5usWPThJMR4ONNfVV73s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WtX+iamq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750610481; c=relaxed/simple;
+	bh=Sgk0d5UKWtMUGyHkYfKjDvC58QxrXe0Ysc8tLDM9kNk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YcKrVRXs3o5HtLYr9b5shPCAvsIYp/bubzWV/JVym3NnMvS5hUyH1B5xmM7KTh5IEZiO7+W8MLdCK+L3mJeOTJn5Y1VDM7GFM3r9ktcLVBvgDGZjNBktjPUCvTzoFvvOKxBrAAkYMvSsAElC01P6e+5TMkFbWIcbvnMsbFqY98s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6fpjUXF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WtX+iamq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91D4CC4CEF0;
-	Sun, 22 Jun 2025 16:39:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6fpjUXF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8DA1C4CEE3;
+	Sun, 22 Jun 2025 16:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750610378;
-	bh=Yv/mApgcCWydCfdP4MhYzR45djsXJkpQGZFnebaZxdc=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=WtX+iamqBwDTniwNUoT8VSTRjQ9UyQ3aDlkobvB8rRr/3j4kvbug3cRuZ4iajM0Rb
-	 tehto8QZo2cUo/Nfve6obcude81hldowLdZm6aQoQclNXYw5zlOOyfpwDE0TSSZsie
-	 2r56XD7MH9dJGkPW/Jsh1JnFQoBzmWMgTMwKvNcJdKzSr7lh0bT/xVNBHX25JdkZIj
-	 BMe3cQIqYoeW0vYs9ZtbRoo4YplvWV6TLxLI1JuDINIgfhTlAp8aRTL84Io4b/5sye
-	 QWNGI/KVgsPa5h+Ceu922qLlpnLs7ii6Xqe+XSGctz2X3yAehPCu9tWQtniFBtvjg6
-	 5rKODgqnh2xsA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33B9239FEB77;
-	Sun, 22 Jun 2025 16:40:07 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1750610480;
+	bh=Sgk0d5UKWtMUGyHkYfKjDvC58QxrXe0Ysc8tLDM9kNk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Q6fpjUXF8ahre6g4+HpKmuCJPqNsAJCRLLVyF+JjG8LfLJiv6Qnx5TTLrbcqj2o/y
+	 6Ek+yhN0CH4c7QlCVfwYmi5s9Z1eg4yTqvgH427uxCs+Rwkhwu9WtwoF3lPWPsPf0z
+	 6ANnef5q6qKoJwubx5pxPZoM7n4zlRwU2JeAEprk/JGUVni3wauo2urGmte+FNNEKb
+	 6GAW+d7RETiokX4R5b5CUHJfrwOaY8NMeyzrqrKkDuvAV3pQpErIp7rJBvbLFbFlcx
+	 D0HYGc9P7rHJqJrsOtJxKzwiBV2PS0tGHH+8FO6/llnZf0lKCiOL6dqkbB4/LyLjmd
+	 14J0Qizymhgkg==
+From: Danilo Krummrich <dakr@kernel.org>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	lossin@kernel.org,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	david.m.ertman@intel.com,
+	ira.weiny@intel.com,
+	leon@kernel.org,
+	kwilczynski@kernel.org,
+	bhelgaas@google.com
+Cc: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH v2 0/4] Improvements for Devres
+Date: Sun, 22 Jun 2025 18:40:37 +0200
+Message-ID: <20250622164050.20358-1-dakr@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,42 +57,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next,
- v2] selftest: add selftest for anycast notifications
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175061040601.2101917.2619105539091495642.git-patchwork-notify@kernel.org>
-Date: Sun, 22 Jun 2025 16:40:06 +0000
-References: <20250619035116.3761921-1-yuyanghuang@google.com>
-In-Reply-To: <20250619035116.3761921-1-yuyanghuang@google.com>
-To: Yuyang Huang <yuyanghuang@google.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, horms@kernel.org, shuah@kernel.org,
- netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, maze@google.com, lorenzo@google.com
 
-Hello:
+This patch series provides some optimizations for Devres:
 
-This patch was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
+  1) Provide a more lightweight replacement for Devres::new_foreign_owned().
 
-On Thu, 19 Jun 2025 12:51:16 +0900 you wrote:
-> This commit adds a new kernel selftest to verify RTNLGRP_IPV6_ACADDR
-> notifications. The test works by adding/removing a dummy interface,
-> enabling packet forwarding, and then confirming that user space can
-> correctly receive anycast notifications.
-> 
-> The test relies on the iproute2 version to be 6.13+.
-> 
-> [...]
+  2) Get rid of Devres' inner Arc and instead consume and provide an
+     impl PinInit instead.
 
-Here is the summary with links:
-  - [net-next,v2] selftest: add selftest for anycast notifications
-    https://git.kernel.org/netdev/net-next/c/14966a8df77e
+     Additionally, having the resulting explicit synchronization in
+     Devres::drop() prevents potential subtle undesired side effects of the
+     devres callback dropping the final Arc reference asynchronously within
+     the devres callback.
 
-You are awesome, thank you!
+  3) An optimization for when we never need to access the resource or release
+     it manually.
+
+Thanks to Alice and Benno for some great offline discussions on this topic.
+
+This patch series depends on the Opaque patch in [1] and the pin-init patch in
+[2], which Benno will provide a signed tag for. A branch containing the patches
+can be found in [3].
+
+[1] https://lore.kernel.org/lkml/20250610-b4-rust_miscdevice_registrationdata-v6-1-b03f5dfce998@gmail.com/
+[2] https://lore.kernel.org/rust-for-linux/20250529081027.297648-2-lossin@kernel.org/
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=rust/devres
+
+Changes in v2:
+  - Revocable:
+    - remove Error: From<E> bound
+  - devres::register:
+    - rename devres::register_foreign_boxed() to just devres::register()
+    - move T: 'static bound to the function rather than the impl block
+  - Devres:
+    - Fix aliasing issue by using an Opaque<Inner>; should be
+      UnsafePinned<Inner> once available.
+    - Add doc-comments for a couple of private fields.
+    - Link Revocable on 'revoke' in Devres::new().
+  - devres::register_release():
+    - expand documentation of Release
+    - rename devres::register_foreign_release() for devres::register_release()
+
+Danilo Krummrich (4):
+  rust: revocable: support fallible PinInit types
+  rust: devres: replace Devres::new_foreign_owned()
+  rust: devres: get rid of Devres' inner Arc
+  rust: devres: implement register_release()
+
+ drivers/gpu/nova-core/driver.rs |   7 +-
+ drivers/gpu/nova-core/gpu.rs    |   6 +-
+ rust/helpers/device.c           |   7 +
+ rust/kernel/cpufreq.rs          |  11 +-
+ rust/kernel/devres.rs           | 362 +++++++++++++++++++++++---------
+ rust/kernel/drm/driver.rs       |  14 +-
+ rust/kernel/pci.rs              |  20 +-
+ rust/kernel/revocable.rs        |   6 +-
+ samples/rust/rust_driver_pci.rs |  19 +-
+ 9 files changed, 318 insertions(+), 134 deletions(-)
+
+
+base-commit: 946d082536c43ed7d394aaba927f3d85eccfc03a
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.49.0
 
