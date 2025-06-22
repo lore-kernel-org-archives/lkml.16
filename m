@@ -1,159 +1,238 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30CF1DE4E3;
-	Sun, 22 Jun 2025 12:13:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BD481E;
+	Sun, 22 Jun 2025 12:19:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750594407; cv=none; b=bp8Gl2aDd+UTVvz/SYSgQZ7p/3iS4W/H8TeaDh9E9KLQmfkSIZQYzkFr5mYlTSZIgGiQL5E3M/XzA7SFmFnjrWeVFKFNjQ3HyDggfsrEx/BpFYjMexa0059ClxjHCjsi6tmgpaUO7tzrGInw+4Jt+RseN3hC7LQnbPi3WG9Dk4o=
+	t=1750594758; cv=none; b=A/IzpK4cCYf7UAr1m+5+etxCEo9KYHNe1BkWYSNXupSjoCX5gnAky96DsfC/PvfTvfLR526pt9Cua48FA59YBKXrglH0lOpjJZlnwQkr1tD7G2DD3ONRWZEfyhckWCdrP7YTLr2ACTgVFHGCz/75beFlBzPn47j9gA3SqMgeP4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750594407; c=relaxed/simple;
-	bh=P9DyqpH3WjbrPFVDdJCcU1NRpdBVUBWYSl4bYGLYPUY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S0IOKntXcKVjARBduA6leo9o4G8dRjlE6fUXxLbHKdpT/3gaScXGKDNM4+iqQfyxP8Apv6di6zcwHoswAneYIL9falMPcd+rgRAjAi92U9Dwt8g6UpnvZaNr5thULbKA+cxBBIkOYU9AdW48peCJ7D0SuB5N8MsueeltjJQ22XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pvPG5Jwe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750594758; c=relaxed/simple;
+	bh=i/+4q+ps+2ON5ZvTxo7NwhX8KcLqLmTVZsBvXPkV188=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Fr65GFuGHBlUgdjpI2CdQfX4MNl2+/H8ZGHNNasD64k/MOV+7W1UEwLhP3+5VpabLuwaT03FCAXja93enl88cUKRlpCTjUYgM1xbGAJX7GksllAR4vVt0VMeEjaySEXscuVOSGzYWXB4JGqLLQ0qZ2MutQceHDyhG9eNCkjRiKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JlFxlw1D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pvPG5Jwe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFC41C4CEE3;
-	Sun, 22 Jun 2025 12:13:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JlFxlw1D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CDCEC4CEE3;
+	Sun, 22 Jun 2025 12:19:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750594406;
-	bh=P9DyqpH3WjbrPFVDdJCcU1NRpdBVUBWYSl4bYGLYPUY=;
+	s=k20201202; t=1750594756;
+	bh=i/+4q+ps+2ON5ZvTxo7NwhX8KcLqLmTVZsBvXPkV188=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pvPG5JwewF3CQsTU4kZ8QF7btO8Q/9s/vZePhrmQpvlscWnoE3YI/cYZ8KsvdF/eT
-	 vUQShfUmBEBTySqODtW9u5QM0dRAgh2D7NJcTpVS4o+9/Ntm6WGKAPHopThxXxZzdT
-	 FIphEatiqVq2jma8GvuMOcJZGXSAt38GeSmvggFlVmAZKLV3XT7VElbcyffW7ok/yq
-	 VTsEe1SKGwwPxo0Vo8OIhCnoclI82E/HJhJ0bqgNQgaSZxQA34VitMva4io6DiWHTG
-	 A/T9qTMVumV4z41ZQzeUgZdmoLBQJn8FLYaivMMxmXxk+G99TB7A+LLQOQjRL5mUJN
-	 QYXdYsjccwn0A==
-Date: Sun, 22 Jun 2025 14:13:19 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux
- Documentation <linux-doc@vger.kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Federico Vaga
- <federico.vaga@vaga.pv.it>, Akira Yokosawa <akiyks@gmail.com>, Carlos
- Bilbao <carlos.bilbao@kernel.org>, Avadhut Naik <avadhut.naik@amd.com>,
- Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, Dongliang
- Mu <dzm91@hust.edu.cn>, Thomas Gleixner <tglx@linutronix.de>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Stanislav Fomichev
- <sdf@google.com>, David Vernet <void@manifault.com>, Miguel Ojeda
- <ojeda@kernel.org>, James Seo <james@equiv.tech>, Daniel Vetter
- <daniel.vetter@ffwll.ch>
-Subject: Re: [PATCH RFC] Documentation: typography refresh
-Message-ID: <20250622141311.389abf16@foz.lan>
-In-Reply-To: <20250619042318.17325-2-bagasdotme@gmail.com>
-References: <20250619042318.17325-2-bagasdotme@gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	b=JlFxlw1DQHE5od6lTucH/vBois+LfVVElISjoGePhXtFkTFVlBRhCibiDG3N13KXk
+	 J9liLVTEtNHLMY8aV/gksxDrThlUO1YdzDZULk466Q2GlrDx7F6jm+3qs3lRAYIYTl
+	 dIKmmytUEGznE8pjPhSrveLCywUf8H6fhskhPbImBmr3xEE8DYkOuikLNSewqAr52R
+	 pBqRZXgjAW+8HOksko2dnyEkrIAVvMC90j8gM86lQgyJEai5KsgMTDrFnbxXd8ezUv
+	 lu44PW1vbZvTmPRZjCSPxfwg7kofFncSoDP25a7oXfBciprE92uQZ/gqjeKl7ZRntL
+	 XHI+t73lPLr7w==
+Received: from [213.123.58.114] (helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uTJfG-008xmc-4O;
+	Sun, 22 Jun 2025 13:19:14 +0100
+Date: Sun, 22 Jun 2025 13:19:13 +0100
+Message-ID: <87a560ezpa.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: Sascha Bischoff <Sascha.Bischoff@arm.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	nd <nd@arm.com>,
+	Joey Gouly <Joey.Gouly@arm.com>,
+	Suzuki Poulose <Suzuki.Poulose@arm.com>,
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	Timothy Hayes <Timothy.Hayes@arm.com>
+Subject: Re: [PATCH 4/5] KVM: arm64: gic-v5: Support GICv3 compat
+In-Reply-To: <aFXClKQRG3KNAD2y@linux.dev>
+References: <20250620160741.3513940-1-sascha.bischoff@arm.com>
+	<20250620160741.3513940-5-sascha.bischoff@arm.com>
+	<aFXClKQRG3KNAD2y@linux.dev>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 213.123.58.114
+X-SA-Exim-Rcpt-To: oliver.upton@linux.dev, Sascha.Bischoff@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, nd@arm.com, Joey.Gouly@arm.com, Suzuki.Poulose@arm.com, yuzenghui@huawei.com, will@kernel.org, tglx@linutronix.de, lpieralisi@kernel.org, Timothy.Hayes@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Em Thu, 19 Jun 2025 11:23:19 +0700
-Bagas Sanjaya <bagasdotme@gmail.com> escreveu:
-
-> At present, kernel documentation uses system serif font for body text.
-> Some people, however, objected to it and instead prefer that the
-> typography choice must be legible, consistent, and accessible (after
-> all, the audience ranges developers peeking into kernel internals to
-> ordinary users that skimmed through Documentation/admin-guide/).
+On Fri, 20 Jun 2025 21:20:36 +0100,
+Oliver Upton <oliver.upton@linux.dev> wrote:
 > 
-> To tackle the problem, follow Wikimedia's typography refresh [1].
-> For the font choices, instead of using web fonts as in previous
-> attempt [2], use:
+> Hi Sascha,
 > 
->   * Linux Libertine, Georgia, Times for serif (used in h1 and h2
->     headings)
->   * system font for sans-serif and monospace
+> Thank you for posting this. Very excited to see the GICv5 enablement get
+> started.
 > 
-> This allows for more readability and consistency without sacrificing
-> page load times and bandwidth, as the font choices is most likely
-> already available on many platforms.
+> On Fri, Jun 20, 2025 at 04:07:51PM +0000, Sascha Bischoff wrote:
+> > Add support for GICv3 compat mode (FEAT_GCIE_LEGACY) which allows a
+> > GICv5 host to run GICv3-based VMs. This change enables the
+> > VHE/nVHE/hVHE/protected modes, but does not support nested
+> > virtualization.
 > 
-> The reason why serif fonts is used for headings in complement to sans
-> serif in text body is to break up visual monotony of docs page by
-> creating contrast between headings (as entry point to docs information)
-> and text body, which is important considering that kernel docs are
-> quite lengthy with many sections.
+> Can't we just load the shadow state into the compat VGICv3? I'm worried
+> this has sharp edges on the UAPI side as well as users wanting to
+> migrate VMs to new hardware.
+>
+> The guest hypervisor should only see GICv3-only or GICv5-only, we can
+> pretend FEAT_GCIE_LEGACY never existed :)
+
+That's exactly what this does. And the only reason NV isn't supported
+yet is the current BET0 spec makes ICC_SRE_EL2 UNDEF at EL1 with NV,
+which breaks NV in a spectacular way.
+
+This will be addressed in a future revision of the architecture, and
+no HW will actually be built with this defect. As such, there is no
+UAPI to break.
+
 > 
-> For body text (excluding sidebar), it is set to #252525 on top
-> of #FFFFFF background as they have contrast ratio 15.3:1, which
-> is rated as AAA according to WCAG 2.0 section 1.4.6. Having slightly
-> off-black foreground text on white background can reduce eye strain
-> and juxtaposition on dyslexic readers.
+> > Co-authored-by: Timothy Hayes <timothy.hayes@arm.com>
+> > Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+> > Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
+> > ---
+> >  arch/arm64/include/asm/kvm_asm.h   |  2 ++
+> >  arch/arm64/include/asm/kvm_hyp.h   |  2 ++
+> >  arch/arm64/kvm/Makefile            |  3 +-
+> >  arch/arm64/kvm/hyp/nvhe/hyp-main.c | 12 +++++++
+> >  arch/arm64/kvm/hyp/vgic-v3-sr.c    | 51 +++++++++++++++++++++++++-----
+> >  arch/arm64/kvm/sys_regs.c          | 10 +++++-
+> >  arch/arm64/kvm/vgic/vgic-init.c    |  6 ++--
+> >  arch/arm64/kvm/vgic/vgic-v3.c      |  6 ++++
+> >  arch/arm64/kvm/vgic/vgic-v5.c      | 14 ++++++++
+> >  arch/arm64/kvm/vgic/vgic.h         |  2 ++
+> >  include/kvm/arm_vgic.h             |  9 +++++-
+> >  11 files changed, 104 insertions(+), 13 deletions(-)
+> >  create mode 100644 arch/arm64/kvm/vgic/vgic-v5.c
+> > 
+> > diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
+> > index bec227f9500a..ad1ef0460fd6 100644
+> > --- a/arch/arm64/include/asm/kvm_asm.h
+> > +++ b/arch/arm64/include/asm/kvm_asm.h
+> > @@ -81,6 +81,8 @@ enum __kvm_host_smccc_func {
+> >  	__KVM_HOST_SMCCC_FUNC___kvm_timer_set_cntvoff,
+> >  	__KVM_HOST_SMCCC_FUNC___vgic_v3_save_vmcr_aprs,
+> >  	__KVM_HOST_SMCCC_FUNC___vgic_v3_restore_vmcr_aprs,
+> > +	__KVM_HOST_SMCCC_FUNC___vgic_v3_compat_mode_enable,
+> > +	__KVM_HOST_SMCCC_FUNC___vgic_v3_compat_mode_disable,
+> >  	__KVM_HOST_SMCCC_FUNC___pkvm_init_vm,
+> >  	__KVM_HOST_SMCCC_FUNC___pkvm_init_vcpu,
+> >  	__KVM_HOST_SMCCC_FUNC___pkvm_teardown_vm,
+> > diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
+> > index e6be1f5d0967..9c8adc5186ec 100644
+> > --- a/arch/arm64/include/asm/kvm_hyp.h
+> > +++ b/arch/arm64/include/asm/kvm_hyp.h
+> > @@ -85,6 +85,8 @@ void __vgic_v3_deactivate_traps(struct vgic_v3_cpu_if *cpu_if);
+> >  void __vgic_v3_save_vmcr_aprs(struct vgic_v3_cpu_if *cpu_if);
+> >  void __vgic_v3_restore_vmcr_aprs(struct vgic_v3_cpu_if *cpu_if);
+> >  int __vgic_v3_perform_cpuif_access(struct kvm_vcpu *vcpu);
+> > +void __vgic_v3_compat_mode_enable(void);
+> > +void __vgic_v3_compat_mode_disable(void);
+> >  
+> >  #ifdef __KVM_NVHE_HYPERVISOR__
+> >  void __timer_enable_traps(struct kvm_vcpu *vcpu);
+> > diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
+> > index 7c329e01c557..3ebc0570345c 100644
+> > --- a/arch/arm64/kvm/Makefile
+> > +++ b/arch/arm64/kvm/Makefile
+> > @@ -23,7 +23,8 @@ kvm-y += arm.o mmu.o mmio.o psci.o hypercalls.o pvtime.o \
+> >  	 vgic/vgic-v3.o vgic/vgic-v4.o \
+> >  	 vgic/vgic-mmio.o vgic/vgic-mmio-v2.o \
+> >  	 vgic/vgic-mmio-v3.o vgic/vgic-kvm-device.o \
+> > -	 vgic/vgic-its.o vgic/vgic-debug.o vgic/vgic-v3-nested.o
+> > +	 vgic/vgic-its.o vgic/vgic-debug.o vgic/vgic-v3-nested.o \
+> > +	 vgic/vgic-v5.o
+> >  
+> >  kvm-$(CONFIG_HW_PERF_EVENTS)  += pmu-emul.o pmu.o
+> >  kvm-$(CONFIG_ARM64_PTR_AUTH)  += pauth.o
+> > diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> > index e9198e56e784..61af55df60a9 100644
+> > --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> > +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> > @@ -475,6 +475,16 @@ static void handle___vgic_v3_restore_vmcr_aprs(struct kvm_cpu_context *host_ctxt
+> >  	__vgic_v3_restore_vmcr_aprs(kern_hyp_va(cpu_if));
+> >  }
+> >  
+> > +static void handle___vgic_v3_compat_mode_enable(struct kvm_cpu_context *host_ctxt)
+> > +{
+> > +	__vgic_v3_compat_mode_enable();
+> > +}
+> > +
+> > +static void handle___vgic_v3_compat_mode_disable(struct kvm_cpu_context *host_ctxt)
+> > +{
+> > +	__vgic_v3_compat_mode_disable();
+> > +}
+> > +
+> >  static void handle___pkvm_init(struct kvm_cpu_context *host_ctxt)
+> >  {
+> >  	DECLARE_REG(phys_addr_t, phys, host_ctxt, 1);
+> > @@ -603,6 +613,8 @@ static const hcall_t host_hcall[] = {
+> >  	HANDLE_FUNC(__kvm_timer_set_cntvoff),
+> >  	HANDLE_FUNC(__vgic_v3_save_vmcr_aprs),
+> >  	HANDLE_FUNC(__vgic_v3_restore_vmcr_aprs),
+> > +	HANDLE_FUNC(__vgic_v3_compat_mode_enable),
+> > +	HANDLE_FUNC(__vgic_v3_compat_mode_disable),
+> >  	HANDLE_FUNC(__pkvm_init_vm),
+> >  	HANDLE_FUNC(__pkvm_init_vcpu),
+> >  	HANDLE_FUNC(__pkvm_teardown_vm),
+> > diff --git a/arch/arm64/kvm/hyp/vgic-v3-sr.c b/arch/arm64/kvm/hyp/vgic-v3-sr.c
+> > index f162b0df5cae..b03b5f012226 100644
+> > --- a/arch/arm64/kvm/hyp/vgic-v3-sr.c
+> > +++ b/arch/arm64/kvm/hyp/vgic-v3-sr.c
+> > @@ -257,6 +257,18 @@ void __vgic_v3_restore_state(struct vgic_v3_cpu_if *cpu_if)
+> >  	}
+> >  }
+> >  
+> > +void __vgic_v3_compat_mode_enable(void)
+> > +{
+> > +	sysreg_clear_set_s(SYS_ICH_VCTLR_EL2, 0, ICH_VCTLR_EL2_V3);
+> > +	isb();
+> > +}
+> > +
+> > +void __vgic_v3_compat_mode_disable(void)
+> > +{
+> > +	sysreg_clear_set_s(SYS_ICH_VCTLR_EL2, ICH_VCTLR_EL2_V3, 0);
+> > +	isb();
+> > +}
+> > +
 > 
-> This refresh only applies to default Alabaster theme.
-> 
-> [1]: https://www.mediawiki.org/wiki/Typography_refresh
-> [2]: https://lore.kernel.org/linux-doc/20231102123225.32768-1-bagasdotme@gmail.com/
-> 
-> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
-> ---
->  Documentation/conf.py                      |  5 +-
->  Documentation/sphinx-static/typography.css | 62 ++++++++++++++++++++++
->  2 files changed, 66 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/sphinx-static/typography.css
-> 
-> diff --git a/Documentation/conf.py b/Documentation/conf.py
-> index 12de52a2b17e78..f5713cd70cc17c 100644
-> --- a/Documentation/conf.py
-> +++ b/Documentation/conf.py
-> @@ -310,9 +310,12 @@ if  html_theme == 'alabaster':
->          'sidebar_width': '15em',
->          'fixed_sidebar': 'true',
->          'font_size': 'inherit',
-> -        'font_family': 'serif',
->      }
->  
-> +    html_css_files  = [
-> +        'typography.css',
-> +    ]
-> +
->  sys.stderr.write("Using %s theme\n" % html_theme)
+> It isn't clear to me what these ISBs are synchonizing against. AFAICT,
+> the whole compat thing is always visible and we can restore the rest of
+> the VGICv3 context before guaranteeing the enable bit has been observed.
 
-I liked this part: having fonts inside a css. However the code is broken,
-as there are already several parts of conf.py which alrease sets
-html_css_files on different ways, depending on two make vars. From
-make help:
+No, some registers have a behaviour that is dependent on the status of
+the V3 bit (ICH_VMCR_EL2 being one), so that synchronisation is
+absolutely needed before accessing this register.
 
-	make DOCS_THEME={sphinx-theme} selects a different Sphinx theme.
-	make DOCS_CSS={a .css file} adds a DOCS_CSS override file for html/epub output.
+The disabling is probably the wrong way around though, and I'd expect
+the clearing of V3 to have an ISB *before* the write to the sysreg,
 
-The code on conf.py in question is:
+> Can we consolidate this into a single hyp call along with
+> __vgic_v3_*_vmcr_aprs()?
 
-	if html_theme in ["sphinx_rtd_theme", "sphinx_rtd_dark_mode"]:
-		...
-	        html_css_files = [
-	            "theme_overrides.css",
-	        ]
-		...
-		if html_theme == "sphinx_rtd_theme":
-	            # Add color-specific RTD normal mode
-            html_css_files.append("theme_rtd_colors.css")
-	...
-	if "DOCS_CSS" in os.environ:
-	    css = os.environ["DOCS_CSS"].split(" ")
+I agree that we should be able to move this to be driven by
+load/put entirely.
 
-	    for l in css:
-	        html_css_files.append(l)
-
-You can't just replace html_css_files without considering the above,
-specially since one could be doing DOCS_CSS="some_other_typography.css".
-
-IMO, the code should be instead:
-
-	if html_theme == "alabaster":
-	    if not html_css_files:
-	        html_css_files  = [ "typography.css" ]
-
-E.g. only use it if:
-- the theme is the default one;
-- the Kernel docs will be built without DOCS_CSS.
+But we first need to fix the whole WFI sequencing first, because this
+is a bit of a train wreck at the moment (entering the WFI emulation
+results in *two* "put" sequences on the vgic, and exiting WFI results
+in two loads).
 
 Thanks,
-Mauro
+
+	M.
+
+-- 
+Jazz isn't dead. It just smells funny.
