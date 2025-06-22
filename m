@@ -1,169 +1,222 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F167D1E50E;
-	Sun, 22 Jun 2025 12:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09005BA34;
+	Sun, 22 Jun 2025 12:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750596654; cv=none; b=HAw6qq+B6kHr7481+HAlM1hAQ7fnTMMObnXpgh5Wi4ruvp5Hm+/+2zh9XtwzPSJbSF2e9ENnFBjkRZPpwMjMK1I9UlZiWgX3jfB6Mk0f+vOWi4AimIGIm9kGSuf0jv8CfampHMOzkstgqQsWK5kb7SjVLCpsYCrUtLA3/a+hqPc=
+	t=1750597131; cv=none; b=Tejul+trGmkw2jZv+PhjBZWRkF8yHu5GMvtUMB2rLthnwYUiIO+3rh7t22X8zMPmgD2A57RVKcKwIPhdwlaPxA8rtQxgE0X4Xglfx4fdwUX+OGSet4hfu4BsrGjjW0Eh/Jpt5REP8nOtTTrTDyYmzPSshYtiCaVJPtq3olVipkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750596654; c=relaxed/simple;
-	bh=LP62ThN8+dqGtMsgMUB7WR3DT2vghClJKe04swbOiLo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=azCRHT02ctzrnLPC7uBEDhGBF7Mag6UFVdUt1J813h4Tly/szNZZs/OA9xC3IifWGhZt8cCKFQ/bjTn7c7ablyxALeeOO/P1Z8637lDy5NDAuiJHrMgI196ZtS2zpdV7MSoANXi3YWjUJYpz8ETm1+DYQhx7dpYMggIGg6UulQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XufU49SF; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750597131; c=relaxed/simple;
+	bh=HqNms1bRkXnM2krBDVuunrgP1o3ALeek4T92TsKQ6A4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ekL3oJXBNyNf/og3JE27aqsbpPCR0csgI7MteuiI/Pd1puKEITXiMXb2rgNBB/5W4kgh6G3KPhq2AxKYnJsUnOZ8UpiDMTX7tRnT7/G25Wc5PHsPGHrc7BXbmbw99w8Vd0K82ZhNqGMtiPLrtfA6pFbiBFewdGdlazzSM/SunuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sMOvgrws; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XufU49SF"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32b2f5d91c8so25250451fa.0;
-        Sun, 22 Jun 2025 05:50:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750596651; x=1751201451; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eFFYOfuMXwg0F/A7AmhvhfJNkmAtB4Mz1/92bvCyRBk=;
-        b=XufU49SFP38mmWyP8jZURqeMz+3DUlh0GH8j0z0I+//XQoJRCQ6jPZ9Epsn+TzuXWS
-         +Vhb9NxLyrYsQGVVkcfp2l8uc8hdvZuBaCoTw89Gdg7cP7RqBieBzgA9N4beSZqeFddk
-         juh7UGIUfYjkcRcZIjg/zM8QjYGlQbbCUzsoCtZg0QF1Ztz/bH0Fx6mxlu/TF0bpejdh
-         /hoGWZCI+S6dKcTbgyHwbHTsVN5lXtFt8c4obqfyqnOvjzWBoiO67nXx6lcEvdPNO3TA
-         y04+hvwiW5JKt7SX3cxi2sOuc/z55Km2tjE0DbhhKky55Pv0FMpwIXwNAnKHUiD5zuN9
-         OfiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750596651; x=1751201451;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eFFYOfuMXwg0F/A7AmhvhfJNkmAtB4Mz1/92bvCyRBk=;
-        b=UvV0VfBGdGT9U7MiKcdK4x7L8rZNVhWAJaSd4JerlgwToTTNNnajNsrhsSW3jt2cuo
-         mOqRZD+4HmUt3Cj6+j83Q9Hibl+FItPmBq2jRFyMswR3Y+7cO71ZgB7ZltDSPiv7z6+5
-         6RTsK4GQFVlC9pgI/XiZ3lNjII/YWsvu3Ncew36QSJkCojvOmsRRo7vDFMPhnTUHEg8r
-         sunP48q/EEjyOwjNVAmHGUs8jqBKoDir7FoH2/9N95280GXxquCyYfwcmmk2AxhPGMwD
-         2zH5rTEKvN63jQ0LTgtPPFwbHD/qHjimwle+yFPS25kxn2bHv33Jzb+ofm5S08w29904
-         Yxuw==
-X-Forwarded-Encrypted: i=1; AJvYcCVY0zELO3Ps/+4sS8gbeOeNQGZvpIHmKrAt3SNdSVl47jbBpS0MHJZT5Y0NPG/8PH8GttS6e7Qx0sE=@vger.kernel.org, AJvYcCWCE84OY7wPXxJ/9zUnReC9X6/wQgP8VnWTqYYHPtQRuGoLtOcmQ9L+CGYJVUeeYKx6d0PPDw+ekeIfWPDJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf6dmxMrEtkHg+fj6iWBNPL4w0ogZVWA7YlvOJCCSXmPjflSY6
-	hB65OKF8y8+YedW7ESIu1Pmm9GII2r0IeokJBuil865h9sEXqGUr1XsjYAZ9pGwA/xe8GPOT9wA
-	3kcby18nQb7H5vNGEXiPt7L1rpNnYfwERgo5Mwd4=
-X-Gm-Gg: ASbGncscnQdmtE/unblFglWqd5pkeHY0d8X9evYQgOpwOvgN9F7Z+lUmKt2Y88Caycy
-	O/QUvUpOr0PTccnEb+YA8W7C4RUWKmnx6E66NRo3CTbrRBah06iwa5GDCls5MX8nHpLg02KCftw
-	Rw+j6OEC7aTTEnN6wrZtr4jH0wO7rBm4K7I5uBby5Q1NllUuQ7HR3OwU/DmBC0BQdCR3eJABmaX
-	xsb/g==
-X-Google-Smtp-Source: AGHT+IFwf0HPUHHBU01IMCEE71dmUV3d1MMeHEiXJeaMpofTIgfboDAXU4JwM8HiZ4bm1qwIXt1fgafzUGdqkcB2cAU=
-X-Received: by 2002:a05:651c:4188:b0:32b:7614:5724 with SMTP id
- 38308e7fff4ca-32b98e6657fmr18284801fa.5.1750596650813; Sun, 22 Jun 2025
- 05:50:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sMOvgrws"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E58CFC4CEE3;
+	Sun, 22 Jun 2025 12:58:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750597130;
+	bh=HqNms1bRkXnM2krBDVuunrgP1o3ALeek4T92TsKQ6A4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=sMOvgrwsVphIwHzs98bhZVY32GdsLvKEwvhQxaSQ9OLE8RNpKyLsY/Z1JjLnpcy+G
+	 2rzyzCXV42hdXyn1ZPT5jJgM+Mz4q9TRLSvwcq7tMOPsYcBna4qNV6UNiGbSkr7lR4
+	 +nqylULGWJsEA6F4zgIYKpMzk67M5rWjzNUkNwkab/iKSkn0lmwCyuK7zB1ZXfICeE
+	 QGw0R/fTiW5kz3E28nRPK/eb43GuNU+bo/i1JaFRWdrJLhU1H3cjeGjTRthhqBWqmn
+	 DNya15uGisdBt7TYDi7f/aHYFW6aa7IVEbidexpnPJikY8wWg85UEjTwsB4JSrRBA6
+	 +uo3X8NktGEnw==
+From: Gary Guo <gary@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	Lyude Paul <lyude@redhat.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>
+Cc: rust-for-linux@vger.kernel.org,
+	Fiona Behrens <me@kloenk.dev>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/5] rust: implement `kernel::sync::Refcount`
+Date: Sun, 22 Jun 2025 13:57:27 +0100
+Message-ID: <20250622125802.3224264-2-gary@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250622125802.3224264-1-gary@kernel.org>
+References: <20250622125802.3224264-1-gary@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250622120958.475765-1-pranav.tyagi03@gmail.com> <50a01a17-4afc-415d-b5c8-9a84e3bdf191@zohomail.com>
-In-Reply-To: <50a01a17-4afc-415d-b5c8-9a84e3bdf191@zohomail.com>
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Date: Sun, 22 Jun 2025 18:20:39 +0530
-X-Gm-Features: Ac12FXwCBi5-E051VA0FIrOZrmrDAPgUljbzWVvxT9GN5qnb5YEmFQa0Fg00NR8
-Message-ID: <CAH4c4jLYSXsWE8aDV0Cue0y0xMoYKbfN_Tkoj8SuAreDidG1dw@mail.gmail.com>
-Subject: Re: [PATCH] cxl/memdev: automate cleanup with __free()
-To: Li Ming <ming.li@zohomail.com>
-Cc: rrichter@amd.com, peterz@infradead.org, skhan@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linux.dev, dave@stgolabs.net, 
-	jonathan.cameron@huawei.com, dave.jiang@intel.com, alison.schofield@intel.com, 
-	vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com, 
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 22, 2025 at 5:53=E2=80=AFPM Li Ming <ming.li@zohomail.com> wrot=
-e:
->
-> On 6/22/2025 8:09 PM, Pranav Tyagi wrote:
-> > Use the scope based resource management (defined in linux/cleanup.h) to
-> > automate the lifetime control of struct cxl_mbox_transfer_fw. This
-> > eliminates explicit kfree() calls and makes the code more robust and
-> > maintainable in presence of early returns.
-> >
-> > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
-> > ---
-> >  drivers/cxl/core/memdev.c | 9 ++++-----
-> >  1 file changed, 4 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> > index f88a13adf7fa..be73a6099cb6 100644
-> > --- a/drivers/cxl/core/memdev.c
-> > +++ b/drivers/cxl/core/memdev.c
-> > @@ -7,6 +7,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/idr.h>
-> >  #include <linux/pci.h>
-> > +#include <linux/cleanup.h>
-> >  #include <cxlmem.h>
-> >  #include "trace.h"
-> >  #include "core.h"
-> > @@ -802,11 +803,11 @@ static int cxl_mem_activate_fw(struct cxl_memdev_=
-state *mds, int slot)
-> >  static int cxl_mem_abort_fw_xfer(struct cxl_memdev_state *mds)
-> >  {
-> >       struct cxl_mailbox *cxl_mbox =3D &mds->cxlds.cxl_mbox;
-> > -     struct cxl_mbox_transfer_fw *transfer;
-> >       struct cxl_mbox_cmd mbox_cmd;
-> >       int rc;
-> >
-> > -     transfer =3D kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
-> > +     struct cxl_mbox_transfer_fw *transfer __free(kfree) =3D
-> > +             kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
-> >       if (!transfer)
-> >               return -ENOMEM;
-> >
-> > @@ -822,7 +823,6 @@ static int cxl_mem_abort_fw_xfer(struct cxl_memdev_=
-state *mds)
-> >       transfer->action =3D CXL_FW_TRANSFER_ACTION_ABORT;
-> >
-> >       rc =3D cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-> > -     kfree(transfer);
-> >       return rc;
-> the rc can be removed with your change, can be "return cxl_internal_send_=
-cmd(cxl_mbox, &mbox_cmd)".
-> >  }
-> >
-> > @@ -880,7 +880,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_up=
-load *fwl, const u8 *data,
-> >       struct cxl_dev_state *cxlds =3D &mds->cxlds;
-> >       struct cxl_mailbox *cxl_mbox =3D &cxlds->cxl_mbox;
-> >       struct cxl_memdev *cxlmd =3D cxlds->cxlmd;
-> > -     struct cxl_mbox_transfer_fw *transfer;
-> > +     struct cxl_mbox_transfer_fw *transfer __free(kfree);
-> >       struct cxl_mbox_cmd mbox_cmd;
-> >       u32 cur_size, remaining;
-> >       size_t size_in;
-> > @@ -970,7 +970,6 @@ static enum fw_upload_err cxl_fw_write(struct fw_up=
-load *fwl, const u8 *data,
-> >       rc =3D FW_UPLOAD_ERR_NONE;
-> >
-> >  out_free:
-> > -     kfree(transfer);
-> >       return rc;
-> >  }
-> >
->
-> I believe all "goto out_free" in the function are not needed with your ch=
-ange.
->
->
-> Ming
->
+From: Gary Guo <gary@garyguo.net>
 
-Hi,
+This is a wrapping layer of `include/linux/refcount.h`. Currently the
+kernel refcount has already been used in `Arc`, however it calls into
+FFI directly.
 
-Thanks for the feedback.
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+Reviewed-by: Fiona Behrens <me@kloenk.dev>
+Signed-off-by: Gary Guo <gary@garyguo.net>
+---
+ rust/helpers/refcount.c      | 10 +++++
+ rust/kernel/sync.rs          |  2 +
+ rust/kernel/sync/refcount.rs | 86 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 98 insertions(+)
+ create mode 100644 rust/kernel/sync/refcount.rs
 
-You're absolutely right - with __free() handling cleanup, the
-explicit rc variable and the goto out_free blocks can now be
-eliminated.
+diff --git a/rust/helpers/refcount.c b/rust/helpers/refcount.c
+index d6adbd2e45a1..d175898ad7b8 100644
+--- a/rust/helpers/refcount.c
++++ b/rust/helpers/refcount.c
+@@ -7,11 +7,21 @@ refcount_t rust_helper_REFCOUNT_INIT(int n)
+ 	return (refcount_t)REFCOUNT_INIT(n);
+ }
+ 
++void rust_helper_refcount_set(refcount_t *r, int n)
++{
++	refcount_set(r, n);
++}
++
+ void rust_helper_refcount_inc(refcount_t *r)
+ {
+ 	refcount_inc(r);
+ }
+ 
++void rust_helper_refcount_dec(refcount_t *r)
++{
++	refcount_dec(r);
++}
++
+ bool rust_helper_refcount_dec_and_test(refcount_t *r)
+ {
+ 	return refcount_dec_and_test(r);
+diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
+index 36a719015583..09e81a1c2966 100644
+--- a/rust/kernel/sync.rs
++++ b/rust/kernel/sync.rs
+@@ -15,6 +15,7 @@
+ mod locked_by;
+ pub mod poll;
+ pub mod rcu;
++mod refcount;
+ 
+ pub use arc::{Arc, ArcBorrow, UniqueArc};
+ pub use condvar::{new_condvar, CondVar, CondVarTimeoutResult};
+@@ -22,6 +23,7 @@
+ pub use lock::mutex::{new_mutex, Mutex, MutexGuard};
+ pub use lock::spinlock::{new_spinlock, SpinLock, SpinLockGuard};
+ pub use locked_by::LockedBy;
++pub use refcount::Refcount;
+ 
+ /// Represents a lockdep class. It's a wrapper around C's `lock_class_key`.
+ #[repr(transparent)]
+diff --git a/rust/kernel/sync/refcount.rs b/rust/kernel/sync/refcount.rs
+new file mode 100644
+index 000000000000..a0fc22f6d645
+--- /dev/null
++++ b/rust/kernel/sync/refcount.rs
+@@ -0,0 +1,86 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Atomic reference counting.
++//!
++//! C header: [`include/linux/refcount.h`](srctree/include/linux/refcount.h)
++
++use crate::types::Opaque;
++
++/// Atomic reference counter.
++///
++/// This type is conceptually an atomic integer, but provides saturation semantics compared to
++/// normal atomic integers. Values in the negative range when viewed as a signed integer are
++/// saturation (bad) values. For details about the saturation semantics, please refer to top of
++/// [`include/linux/refcount.h`](srctree/include/linux/refcount.h).
++///
++/// Wraps the kernel's C `refcount_t`.
++#[repr(transparent)]
++pub struct Refcount(Opaque<bindings::refcount_t>);
++
++impl Refcount {
++    /// Construct a new [`Refcount`] from an initial value.
++    #[inline]
++    pub fn new(value: i32) -> Self {
++        // SAFETY: There are no safety requirements for this FFI call.
++        Self(Opaque::new(unsafe { bindings::REFCOUNT_INIT(value) }))
++    }
++
++    #[inline]
++    fn as_ptr(&self) -> *mut bindings::refcount_t {
++        self.0.get()
++    }
++
++    /// Set a refcount's value.
++    #[inline]
++    pub fn set(&self, value: i32) {
++        // SAFETY: `self.as_ptr()` is valid.
++        unsafe { bindings::refcount_set(self.as_ptr(), value) }
++    }
++
++    /// Increment a refcount.
++    ///
++    /// It will saturate if overflows and `WARN`. It will also `WARN` if the refcount is 0, as this
++    /// represents a possible use-after-free condition.
++    ///
++    /// Provides no memory ordering, it is assumed that caller already has a reference on the
++    /// object.
++    #[inline]
++    pub fn inc(&self) {
++        // SAFETY: self is valid.
++        unsafe { bindings::refcount_inc(self.as_ptr()) }
++    }
++
++    /// Decrement a refcount.
++    ///
++    /// It will `WARN` on underflow and fail to decrement when saturated.
++    ///
++    /// Provides release memory ordering, such that prior loads and stores are done
++    /// before.
++    #[inline]
++    pub fn dec(&self) {
++        // SAFETY: `self.as_ptr()` is valid.
++        unsafe { bindings::refcount_dec(self.as_ptr()) }
++    }
++
++    /// Decrement a refcount and test if it is 0.
++    ///
++    /// It will `WARN` on underflow and fail to decrement when saturated.
++    ///
++    /// Provides release memory ordering, such that prior loads and stores are done
++    /// before, and provides an acquire ordering on success such that memory deallocation
++    /// must come after.
++    ///
++    /// Returns true if the resulting refcount is 0, false otherwise.
++    #[inline]
++    #[must_use = "use `dec` instead if you do not need to test if it is 0"]
++    pub fn dec_and_test(&self) -> bool {
++        // SAFETY: `self.as_ptr()` is valid.
++        unsafe { bindings::refcount_dec_and_test(self.as_ptr()) }
++    }
++}
++
++// SAFETY: `refcount_t` is thread-safe.
++unsafe impl Send for Refcount {}
++
++// SAFETY: `refcount_t` is thread-safe.
++unsafe impl Sync for Refcount {}
+-- 
+2.49.0
 
-I'll send a v2 shortly incorporating these cleanups.
-
-Regards
-Pranav Tyagi
