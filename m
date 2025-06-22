@@ -1,163 +1,267 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719301DE3AC;
-	Sun, 22 Jun 2025 13:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4F71D516A;
+	Sun, 22 Jun 2025 13:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750599603; cv=none; b=ZIH0BedIvOduo2stExyWO5sYV3QY9l1KtjJXcLQbpWm2bfb0sO6C06KFIf5Q6VJf4OSPSJWyLODm4mas5Qd89RsnW5kDCcVtCF8bue+OoLXFrzoP6QPf7vtyJ1N3nNzjq3UvZV+FkAr5AJWWELHIoFckk1ykWiECyeVuLcQeekY=
+	t=1750599669; cv=none; b=YvQD9z+f+Cf1MlXnc4qGj1raD9ROyt2tlwcgkdYwCJI9L2G784vDq1j849evBpN43GaBRRuetG18/AbT6oPzWE0Od6H2rRrARqf7TqfirX2HVaHjI0m4Z8wVoGusNe6ikVnd1N68T2a1iqefgA0FEPTtysuwJximIL9mkOyuTCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750599603; c=relaxed/simple;
-	bh=diw1gDUh3SnWwKE6aIZJAx5qoa+BAbsc1mkKUgL3k5Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=spWAbyxMyzH3qjaoUdN90+qnGFFQYCV06hWy9/B7U9OVvPNf7h4WhS6ZC1YZXhbn1P+5mqqVwH7hcFp1CZuwW0gY9D2IqNR2QNEcnFiBFZqivLvus0zx1H6B3c4GEdJantZRmslBP5qh+fp/cF7LnzFsts+x1LF1K+GiKZ8CaAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZmWPqyh1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750599669; c=relaxed/simple;
+	bh=409aeblqXYUb+RvSL9eQ1PFZrz61/X4RZLcDMPi51vM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XgYxttk89JcBW2O+/6es6z+yJV4VxSUC6Bur65cRgVCLUBzGpE/EFqPflg54lx9+5pnkrUIdJVoxdLnl/7gfLX1fhMBYly/fsaqw2PSuxfiMuAFQW3Arn34DONIZ25rx4SoY/mzmda82zftjlnmP7XxJcj1swI/pRAbGhQrqXNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Vard2IVJ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZmWPqyh1"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 09640C4CEE3;
-	Sun, 22 Jun 2025 13:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750599603;
-	bh=diw1gDUh3SnWwKE6aIZJAx5qoa+BAbsc1mkKUgL3k5Q=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=ZmWPqyh1qqtDzx7vmqYTPoj/Hnb3q8qPCAhMzq7skUMzPUymnBwuGJvUQyhG/jpLX
-	 8/zyog1YlYrS741gKGZg6UYxoVlnT47mRN7sF+kBY5+O3WaphQyq+04hmf8ero4lFS
-	 AjLZhAemnJ57vRhKbiwu2FEGzSKixlH4hL3pBjOrHshCjjhZx7ius/ZtnKY6vxTqkq
-	 kWy5Mr+FlPfbw1XE3WTGWFZICmQFQMV04umI9DoNKd1YGZzqTrlDVK6pUQpcOBCJVZ
-	 F+H1deEeBzjGRo/XsmGr1nLz1jW/udBrEibWTcBfpfEvQpeN2D47bDIttyxvKaDTm/
-	 hJNIocq0MHUvg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F32DAC77B7F;
-	Sun, 22 Jun 2025 13:40:02 +0000 (UTC)
-From: Dominique Martinet via B4 Relay <devnull+asmadeus.codewreck.org@kernel.org>
-Date: Sun, 22 Jun 2025 22:39:56 +0900
-Subject: [PATCH v3] net/9p: Fix buffer overflow in USB transport layer
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Vard2IVJ"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55MAZKmb026783;
+	Sun, 22 Jun 2025 13:41:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	QVPcesTHipTdGKpkbL8rnQ0tTkSObsJN0xNEHqVU/2w=; b=Vard2IVJMYqskkJX
+	5XbTxVkgk7lwQxGrmrs0b0L5VMSL3+VovIsr4AGbnsxTy6mprne3wBUyo+nTJr6t
+	J5OyMoMSSNiSyihDOHN9slHToQlT+AnGVvuqZh9+0tJFaiuuscTyUHNAtR/q/GbS
+	RcEu4XfWIm2Tli56vBXtWChJMmWG1TrjpOfx0BDpT4D+xorWmJA4i6pSDLKOKS6S
+	v9vimzjjctM7a9niivMQWbrfcOUkfvgFoxWdPGsL90th+oRBtt++I8sdf3WVRlsH
+	azOJQ/Nx62fxcJ9dRyI5x2KlvMWfjBxFaM+HQYGmxgLikZcOH1+blzPa4+nYvuYx
+	IFviBQ==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47eg70r5c8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 22 Jun 2025 13:41:00 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55MDexGa024450
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 22 Jun 2025 13:40:59 GMT
+Received: from hu-lxu5-sha.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Sun, 22 Jun 2025 06:40:56 -0700
+From: Ling Xu <quic_lxu5@quicinc.com>
+To: <srini@kernel.org>, <amahesh@qti.qualcomm.com>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <arnd@arndb.de>,
+        <gregkh@linuxfoundation.org>
+CC: <quic_kuiw@quicinc.com>, <ekansh.gupta@oss.qualcomm.com>,
+        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        Ling Xu
+	<quic_lxu5@quicinc.com>
+Subject: [PATCH v3 3/3] misc: fastrpc: add support for gdsp remoteproc
+Date: Sun, 22 Jun 2025 19:08:20 +0530
+Message-ID: <20250622133820.18369-4-quic_lxu5@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250622133820.18369-1-quic_lxu5@quicinc.com>
+References: <20250622133820.18369-1-quic_lxu5@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250622-9p-usb_overflow-v3-1-ab172691b946@codewreck.org>
-X-B4-Tracking: v=1; b=H4sIAKsHWGgC/22OzQ6CMBAGX8X0bEl/oAZPvIchppQFVoGSVouG8
- O4W4sGDx9lk5tuFeHAInpwPC3EQ0KMdI8jjgZhOjy1QrCMTwUTGlGA0n+jTV1cbwDW9nanIqsZ
- kkFfQSBKtyUGDr714KSN36B/WvfeBwLfrt8UVlyKTeaJkKlPKaa1H9DeMo0U7aOwTYweyJYL40
- f68EES0mVBGcZabk+aFsTXMDsw9sa4l5bquH0JV0cjpAAAA
-X-Change-ID: 20250620-9p-usb_overflow-25bfc5e9bef3
-To: Eric Van Hensbergen <ericvh@kernel.org>, 
- Latchesar Ionkov <lucho@ionkov.net>, 
- Christian Schoenebeck <linux_oss@crudebyte.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Michael Grzeschik <m.grzeschik@pengutronix.de>
-Cc: stable@vger.kernel.org, Yuhao Jiang <danisjiang@gmail.com>, 
- security@kernel.org, v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Dominique Martinet <asmadeus@codewreck.org>
-X-Mailer: b4 0.15-dev-7be4f
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3088;
- i=asmadeus@codewreck.org; h=from:subject:message-id;
- bh=uRA+tj1CGV3hDEWLR7ul9klUmiXd1el2FvT0X0zpwug=;
- b=owEBbQKS/ZANAwAKAatOm+xqmOZwAcsmYgBoWAexM97EqqDps4uLE21H9hDjaDGpdSirjktFo
- j7iGJVVIYmJAjMEAAEKAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCaFgHsQAKCRCrTpvsapjm
- cEMWD/44v6jhy3s94nL9wsfiMpO26Of4JpPM+LjflzPMLbWWJAVoQnS7qsy/Kb7napyi4cki2X/
- jPPBfmt11kd5SWWGD1V07N/EMB1E2RwLAdWIroP+QUmOC1xjJ+zy+z3MUIp6fVFQX8NMWnKprLD
- XJdy8jSwcLjJDP51zZvqXttcYffvn5f/ph9fIeMNBUbpJ7aqYldW9afXD43//fpcy0qCR8Q1PrQ
- AhUlIZGuuzGcxTJhmsDietbjMz6uXDwyghu6N2G2X0oo5C6jT3HjAJ7B1kaUTUHNB7DKT0dX0yq
- OT962DE2EQTUaPOAH+n6HescgdUK7pktU6EKzdiUwSQCakTN7LophVtJiBbSILAvo9QdBCHHq0u
- N3/tD3evkVq2Y/hSSkUy9T5xuHv+IufLlhX0R0sQUKeAtzel53p+TeEIkp9aW/D6cLd/NZS6LjD
- ZWZao9VlbAoy7KRVFyiqDQ9MfMM8P65j0vVVBwGnwlFgQTwwyikmaIkYZQDkH0hCmuls98byVlB
- M/sIcbUGpbpVhS6R+Kdc+amkjT+uUpj2d7T0GdsmsQnr6XAZOy2JP9xHMX0UWu2kAqvyatDA6SB
- m0rrjgfsOpiSZJ3NUXL/o4l/S5Jf7eqP70mGqeoLNyq3dQd0zfGRovnTxumXni1CHPs0HwakhM0
- WHRuZ6CViWFMsPg==
-X-Developer-Key: i=asmadeus@codewreck.org; a=openpgp;
- fpr=B894379F662089525B3FB1B9333F1F391BBBB00A
-X-Endpoint-Received: by B4 Relay for asmadeus@codewreck.org/default with
- auth_id=435
-X-Original-From: Dominique Martinet <asmadeus@codewreck.org>
-Reply-To: asmadeus@codewreck.org
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: X2w0ghu33Z_GnLPgg0I8pjVBIkZzZlfn
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDA4NSBTYWx0ZWRfX/gAcLJdeFm2k
+ +BNmHXhq7DS927Wplyc0OgrEgUYt8SXrW+0Z1Dow9HlOzwXbreHGm1UB+G9YfCFJ4HaoyU07SsX
+ vEfW73FjJxjpd/OFyJjXAcO/tdklex7b/2PmAlv+eWZsQ5hf4Z2GXY/BzOVgCYfECjleH0mRXvq
+ SGQ8JzDLZqtv6VuJq5m8LZXEKlDWRHlYYndvTF725m1yBSdZu+hv0/4g9dRuFqJuitq7xseqRu0
+ 0didcEP8JvL9ao83WUiLgIpujBqv7FcTM8kirxAAtBiPwN7D7OqYR0lAB7nI3B+qVOHA1RAHTfL
+ l6j3bjDxDytdj37CXJ/u68oN3I5QiXzlxAWbDOMDT4kFy+L/M2lWTyzBycnZdmz7GneSYewtedD
+ TC2meRk8/BdlRED9unqPgGzhAGdj+yGAw9nkwJNgUWQBz/nYLBK7FxfOMGYGEl85z0rnovn/
+X-Proofpoint-GUID: X2w0ghu33Z_GnLPgg0I8pjVBIkZzZlfn
+X-Authority-Analysis: v=2.4 cv=ccHSrmDM c=1 sm=1 tr=0 ts=685807ec cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=c6LfSGLPLEd2mbsvFOMA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-22_04,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0 clxscore=1015
+ priorityscore=1501 spamscore=0 mlxlogscore=999 bulkscore=0 adultscore=0
+ mlxscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506220085
 
-From: Dominique Martinet <asmadeus@codewreck.org>
+The fastrpc driver has support for 5 types of remoteprocs. There are
+some products which support GDSP remoteprocs. Add changes to support
+GDSP remoteprocs.
 
-A buffer overflow vulnerability exists in the USB 9pfs transport layer
-where inconsistent size validation between packet header parsing and
-actual data copying allows a malicious USB host to overflow heap buffers.
-
-The issue occurs because:
-- usb9pfs_rx_header() validates only the declared size in packet header
-- usb9pfs_rx_complete() uses req->actual (actual received bytes) for
-memcpy
-
-This allows an attacker to craft packets with small declared size
-(bypassing validation) but large actual payload (triggering overflow
-in memcpy).
-
-Add validation in usb9pfs_rx_complete() to ensure req->actual does not
-exceed the buffer capacity before copying data.
-
-Reported-by: Yuhao Jiang <danisjiang@gmail.com>
-Closes: https://lkml.kernel.org/r/20250616132539.63434-1-danisjiang@gmail.com
-Fixes: a3be076dc174 ("net/9p/usbg: Add new usb gadget function transport")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+Signed-off-by: Ling Xu <quic_lxu5@quicinc.com>
 ---
-(still not actually tested, can't get dummy_hcd/gt to create a device
-listed by p9_fwd.py/useable in qemu, I give up..)
+ drivers/misc/fastrpc.c      | 57 ++++++++++++++++---------------------
+ include/uapi/misc/fastrpc.h | 11 +++++--
+ 2 files changed, 33 insertions(+), 35 deletions(-)
 
-Changes in v3:
-- fix typo s/req_sizel/req_size/ -- sorry for that, module wasn't
-  built...
-- Link to v2: https://lore.kernel.org/r/20250620-9p-usb_overflow-v2-1-026c6109c7a1@codewreck.org
-
-Changes in v2:
-- run through p9_client_cb() on error
-- Link to v1: https://lore.kernel.org/r/20250616132539.63434-1-danisjiang@gmail.com
----
- net/9p/trans_usbg.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
-
-diff --git a/net/9p/trans_usbg.c b/net/9p/trans_usbg.c
-index 6b694f117aef296a66419fed5252305e7a1d0936..468f7e8f0277b9ae5f1bb3c94c649fca97d28857 100644
---- a/net/9p/trans_usbg.c
-+++ b/net/9p/trans_usbg.c
-@@ -231,6 +231,8 @@ static void usb9pfs_rx_complete(struct usb_ep *ep, struct usb_request *req)
- 	struct f_usb9pfs *usb9pfs = ep->driver_data;
- 	struct usb_composite_dev *cdev = usb9pfs->function.config->cdev;
- 	struct p9_req_t *p9_rx_req;
-+	unsigned int req_size = req->actual;
-+	int status = REQ_STATUS_RCVD;
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index 378923594f02..cd3063bc64f2 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -23,12 +23,6 @@
+ #include <uapi/misc/fastrpc.h>
+ #include <linux/of_reserved_mem.h>
  
- 	if (req->status) {
- 		dev_err(&cdev->gadget->dev, "%s usb9pfs complete --> %d, %d/%d\n",
-@@ -242,11 +244,19 @@ static void usb9pfs_rx_complete(struct usb_ep *ep, struct usb_request *req)
- 	if (!p9_rx_req)
- 		return;
+-#define ADSP_DOMAIN_ID (0)
+-#define MDSP_DOMAIN_ID (1)
+-#define SDSP_DOMAIN_ID (2)
+-#define CDSP_DOMAIN_ID (3)
+-#define CDSP1_DOMAIN_ID (4)
+-#define FASTRPC_DEV_MAX		5 /* adsp, mdsp, slpi, cdsp, cdsp1 */
+ #define FASTRPC_MAX_SESSIONS	14
+ #define FASTRPC_MAX_VMIDS	16
+ #define FASTRPC_ALIGN		128
+@@ -106,8 +100,6 @@
  
--	memcpy(p9_rx_req->rc.sdata, req->buf, req->actual);
-+	if (req_size > p9_rx_req->rc.capacity) {
-+		dev_err(&cdev->gadget->dev,
-+			"%s received data size %u exceeds buffer capacity %zu\n",
-+			ep->name, req_size, p9_rx_req->rc.capacity);
-+		req_size = 0;
-+		status = REQ_STATUS_ERROR;
-+	}
+ #define miscdev_to_fdevice(d) container_of(d, struct fastrpc_device, miscdev)
  
--	p9_rx_req->rc.size = req->actual;
-+	memcpy(p9_rx_req->rc.sdata, req->buf, req_size);
+-static const char *domains[FASTRPC_DEV_MAX] = { "adsp", "mdsp",
+-						"sdsp", "cdsp", "cdsp1" };
+ struct fastrpc_phy_page {
+ 	u64 addr;		/* physical address */
+ 	u64 size;		/* size of contiguous region */
+@@ -1723,7 +1715,6 @@ static int fastrpc_get_info_from_kernel(struct fastrpc_ioctl_capability *cap,
+ 	uint32_t attribute_id = cap->attribute_id;
+ 	uint32_t *dsp_attributes;
+ 	unsigned long flags;
+-	uint32_t domain = cap->domain;
+ 	int err;
  
--	p9_client_cb(usb9pfs->client, p9_rx_req, REQ_STATUS_RCVD);
-+	p9_rx_req->rc.size = req_size;
+ 	spin_lock_irqsave(&cctx->lock, flags);
+@@ -1741,7 +1732,7 @@ static int fastrpc_get_info_from_kernel(struct fastrpc_ioctl_capability *cap,
+ 	err = fastrpc_get_info_from_dsp(fl, dsp_attributes, FASTRPC_MAX_DSP_ATTRIBUTES);
+ 	if (err == DSP_UNSUPPORTED_API) {
+ 		dev_info(&cctx->rpdev->dev,
+-			 "Warning: DSP capabilities not supported on domain: %d\n", domain);
++			 "Warning: DSP capabilities not supported\n");
+ 		kfree(dsp_attributes);
+ 		return -EOPNOTSUPP;
+ 	} else if (err) {
+@@ -1769,17 +1760,6 @@ static int fastrpc_get_dsp_info(struct fastrpc_user *fl, char __user *argp)
+ 		return  -EFAULT;
+ 
+ 	cap.capability = 0;
+-	if (cap.domain >= FASTRPC_DEV_MAX) {
+-		dev_err(&fl->cctx->rpdev->dev, "Error: Invalid domain id:%d, err:%d\n",
+-			cap.domain, err);
+-		return -ECHRNG;
+-	}
+-
+-	/* Fastrpc Capablities does not support modem domain */
+-	if (cap.domain == MDSP_DOMAIN_ID) {
+-		dev_err(&fl->cctx->rpdev->dev, "Error: modem not supported %d\n", err);
+-		return -ECHRNG;
+-	}
+ 
+ 	if (cap.attribute_id >= FASTRPC_MAX_DSP_ATTRIBUTES) {
+ 		dev_err(&fl->cctx->rpdev->dev, "Error: invalid attribute: %d, err: %d\n",
+@@ -2255,6 +2235,22 @@ static int fastrpc_device_register(struct device *dev, struct fastrpc_channel_ct
+ 	return err;
+ }
+ 
++static int fastrpc_get_domain_id(const char *domain)
++{
++	if (strncmp(domain, "adsp", 4) == 0)
++		return ADSP_DOMAIN_ID;
++	else if (strncmp(domain, "cdsp", 4) == 0)
++		return CDSP_DOMAIN_ID;
++	else if (strncmp(domain, "mdsp", 4) == 0)
++		return MDSP_DOMAIN_ID;
++	else if (strncmp(domain, "sdsp", 4) == 0)
++		return SDSP_DOMAIN_ID;
++	else if (strncmp(domain, "gdsp", 4) == 0)
++		return GDSP_DOMAIN_ID;
 +
-+	p9_client_cb(usb9pfs->client, p9_rx_req, status);
- 	p9_req_put(usb9pfs->client, p9_rx_req);
++	return -EINVAL;
++}
++
+ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+ {
+ 	struct device *rdev = &rpdev->dev;
+@@ -2272,15 +2268,10 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+ 		return err;
+ 	}
  
- 	complete(&usb9pfs->received);
-
----
-base-commit: 74b4cc9b8780bfe8a3992c9ac0033bf22ac01f19
-change-id: 20250620-9p-usb_overflow-25bfc5e9bef3
-
-Best regards,
+-	for (i = 0; i < FASTRPC_DEV_MAX; i++) {
+-		if (!strcmp(domains[i], domain)) {
+-			domain_id = i;
+-			break;
+-		}
+-	}
++	domain_id = fastrpc_get_domain_id(domain);
+ 
+ 	if (domain_id < 0) {
+-		dev_info(rdev, "FastRPC Invalid Domain ID %d\n", domain_id);
++		dev_info(rdev, "FastRPC Domain %s not supported\n", domain);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -2330,21 +2321,21 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+ 	case ADSP_DOMAIN_ID:
+ 	case MDSP_DOMAIN_ID:
+ 	case SDSP_DOMAIN_ID:
+-		/* Unsigned PD offloading is only supported on CDSP and CDSP1 */
++		/* Unsigned PD offloading is only supported on CDSP and GDSP */
+ 		data->unsigned_support = false;
+-		err = fastrpc_device_register(rdev, data, secure_dsp, domains[domain_id]);
++		err = fastrpc_device_register(rdev, data, secure_dsp, domain);
+ 		if (err)
+ 			goto err_free_data;
+ 		break;
+ 	case CDSP_DOMAIN_ID:
+-	case CDSP1_DOMAIN_ID:
++	case GDSP_DOMAIN_ID:
+ 		data->unsigned_support = true;
+ 		/* Create both device nodes so that we can allow both Signed and Unsigned PD */
+-		err = fastrpc_device_register(rdev, data, true, domains[domain_id]);
++		err = fastrpc_device_register(rdev, data, true, domain);
+ 		if (err)
+ 			goto err_free_data;
+ 
+-		err = fastrpc_device_register(rdev, data, false, domains[domain_id]);
++		err = fastrpc_device_register(rdev, data, false, domain);
+ 		if (err)
+ 			goto err_deregister_fdev;
+ 		break;
+diff --git a/include/uapi/misc/fastrpc.h b/include/uapi/misc/fastrpc.h
+index f33d914d8f46..ebef9ddcd184 100644
+--- a/include/uapi/misc/fastrpc.h
++++ b/include/uapi/misc/fastrpc.h
+@@ -18,6 +18,14 @@
+ #define FASTRPC_IOCTL_MEM_UNMAP		_IOWR('R', 11, struct fastrpc_mem_unmap)
+ #define FASTRPC_IOCTL_GET_DSP_INFO	_IOWR('R', 13, struct fastrpc_ioctl_capability)
+ 
++#define ADSP_DOMAIN_ID (0)
++#define MDSP_DOMAIN_ID (1)
++#define SDSP_DOMAIN_ID (2)
++#define CDSP_DOMAIN_ID (3)
++#define GDSP_DOMAIN_ID (4)
++
++#define FASTRPC_DOMAIN_MAX    4
++
+ /**
+  * enum fastrpc_map_flags - control flags for mapping memory on DSP user process
+  * @FASTRPC_MAP_STATIC: Map memory pages with RW- permission and CACHE WRITEBACK.
+@@ -134,10 +142,9 @@ struct fastrpc_mem_unmap {
+ };
+ 
+ struct fastrpc_ioctl_capability {
+-	__u32 domain;
+ 	__u32 attribute_id;
+ 	__u32 capability;   /* dsp capability */
+-	__u32 reserved[4];
++	__u32 reserved[5];
+ };
+ 
+ #endif /* __QCOM_FASTRPC_H__ */
 -- 
-Dominique Martinet <asmadeus@codewreck.org>
-
+2.34.1
 
