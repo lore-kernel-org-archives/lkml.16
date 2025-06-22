@@ -1,99 +1,107 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D308A13635E
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 08:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EBB36124
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 08:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750581009; cv=none; b=OpKhDcMoJIuG6JDoQGzW848QB+vWrB6t/9K/MoaQw4lsEvJ1oqB9Dr+eC/0wRtdKFo6vjw1zO5Olo307ydysHiH5SAPU3pcBWxCmFvNuBwaqVAiZKXI7aiXT0FHdFyU1YsFnTXiwXN4fe3kNm7OsXgiYUg8irrmIS5HdHEO9Lvk=
+	t=1750581081; cv=none; b=GTpVgvmGeprHX+DsXFCE2j/LXIHbOeSHPajOcmgox2DEI+ukRodwoRlhqpZB0vur2LVo+O/a5dzhWg1GhRbM2W39w/gcfVjl6tJmIyvPaiHeiAMac6yFKvJm7IwOR//9ByK2iGoqVQeU7Q4xXLcSbbLDdU7IIv4v2DpiCdP4n30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750581009; c=relaxed/simple;
-	bh=30Bof9SMj8rzwo80Esa2+ETn32On9XCRmAhjabgKWXY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d5BB7D2j7G4dDV2mkWiUan7hQofmzLH6JKfNUZV/pPdtd0PvmSwHX9gtfjLcdBPknoQlZUnl2vfVg3oENpRCc56y9hO71bhiWfYEyXWShqdCn47XZNXXVSxTLi/RIg6QXoAiQeyt8Vb2aLv/PgGJPcfod4k3jQWNvTFEtQiYjAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cjydGwdU; arc=none smtp.client-ip=209.85.214.174
+	s=arc-20240116; t=1750581081; c=relaxed/simple;
+	bh=EU8TGzBywjtlF5+Y85zUPRkRo3SFXeaZMlSCvkIqnm0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KCy1XsIIBkwHvGLx3huOPKG9XquYGEUdaybMLNoEjaQN1250Yo6xUS6CCi3Kt78jnPqwEXN4A6TSA5jYFrF1JHhKv/a4qTBCwCehR/AzIyQk5DSh/JAdRlUOZxN5CFogZIQDrE3+GYrDl+8Slm2MLei/CWRnM+F/JSvyRY1q2as=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UXeckWk8; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cjydGwdU"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-235e1d710d8so44058115ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 01:30:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UXeckWk8"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-450cfb79177so15943805e9.0
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 01:31:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750581007; x=1751185807; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ba4y9rSMpoG3drHbVgM/Q62fZ7iIVMVCegaFnhMECpQ=;
-        b=cjydGwdUKTaH6vK1XRe25AY/2WMJsoC8zNBP3fdx4iwlHeA/EHLXC3BmdWBP6k9cDA
-         N70Z65YVsTe2fBqCowmB4YvLDQX6tv7zf9AAJXx1i4EzarC1k2KnLPYfWqNn3xGMH1JB
-         CMy+an2lkf59FXBdHrPwF+n1CwoLxV9P1OVDaYQy5hqHdoVNi0/ZrXVfSKGXDiNFZROo
-         DMAa/VJZ2oMbsjLP27FRd5PyijjBTamxTqNtmjVVQCX+0wZ+j8FKBYuiEGS2iQXJXUym
-         g5jHQPsI6yKkYL3q9PKIMot3xqCoad7R3F3DNnpYwBfl/XEoHxmCPIVGaY3PatOGU/0m
-         FIYQ==
+        d=gmail.com; s=20230601; t=1750581077; x=1751185877; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PPldOG1Bzc8WL3Z0YGlfMcNARm20zqpGMY+YUO0H/Kc=;
+        b=UXeckWk8HjTY4lncsfDZjG5ylaYbnJzM4Gg2XEOxn6xT2XCfeskWxzCVBfpPAvL3j5
+         gorb1fWe0IcDMF2OPW0tQ+JKORkkE9DKgegvj8NeXPrSAF81YeHbvfReCEo+DiYUKlCc
+         XiLnvIat+9oVugtCSF1agSpuRjQEBj3lZ+fxde0byjXB/yxrJ7d9A23Nae8NAo7AL8Ng
+         sx018ne2NnXQh/P7UZhJMLVBUT1Zb/slksnMwI5ULXJa+fHtWoHrcjdV32dNTim7H8Bc
+         vtERCANRp+VxyJUiFQibucp6wqyhldOH3i5w3E+PzFMZGN0s4R1uy6NzZtwuS2cX8af5
+         D9qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750581007; x=1751185807;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ba4y9rSMpoG3drHbVgM/Q62fZ7iIVMVCegaFnhMECpQ=;
-        b=QG9KZ+eo3jDaGE/288/cSbkAF4LJoh0e2qGELzsZ7zztjCw+jfBuFADDsY+7r0lHi6
-         u5wLpCwMdSPYcL6bHrPmFfy5OsDs4Utypu0VRQdumETJuqd3ZQqDXIqiGWzrszWvQQlM
-         fcYutrvDW1veMooA5bz5u+x0yHnpwuRMJKmlkkOFs90I365JDeRawqjgD5xEkkRlIYEj
-         NW1/E9Qw+pculCrpaqxPCO9klYUUDeMEKIasexrJybnDOMzQdF1NE7vIaYCqbIR79Eku
-         m01rIYdI+hfhc/pq4F/GdBd1pwsqdu8T4JPHQ8kohswL2snRN015KUvA0zlAcvL3ciSv
-         5tZA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZarxn0222NrM4ol9gQAeBzjjw9nL5uUjocm7EJGYgP2iALaku2+xo0pCziWmiFKeleOgQ9OkUgaDQWZk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoCkIKvdvXHjqnsl0CAM1dJnhVk5puraEFNwt+AIdVTw+EmOVx
-	4BKqZw5WQ6CY2bKf/NNPE0OsFf9gz1SaUJ+a/RfooRzXDdnsjJiPbcyXHT48FyJh
-X-Gm-Gg: ASbGncueDqVJ6CjDoDDdEmmiXI3nk443feTdHZRam8BnGGEhblw15aQ0EpUYyookuAi
-	HZ6rRCL+r73pzwVlWKhiY0H35wnVwVIJI3iLgI/BdUJuY4F63E+baNrZ+CwfZcRiLQM71cmWekq
-	vfNrR9bNh4A/0hRlGWu6nHa/HHOnaXiW0B0g+0dfkZmVQd/fUoMXmB3aftdksKOWEpT6XWvF4uF
-	K/O3tfxOWMzvfI5j9WEp/GdB0NHFo/rItu9JFVxEXAMdnNYg5e4iaBrR22Os+4akSxOHxxh02Iy
-	dIH8kdEGRfcRSgAp4aLoKbIB1vEIiY/Q7shZ8SbwyDXZb/zJ1c1WBhDgV+fkVYlp
-X-Google-Smtp-Source: AGHT+IHCOpphmNin6Qqhtmga/k7CEZiwYLnGk9Mf4C1xbYCMX71ZPFGmqeVUra6+85ZXY5SOGNhzQg==
-X-Received: by 2002:a17:902:d50a:b0:236:748f:541f with SMTP id d9443c01a7336-237d9891ca5mr140646365ad.33.1750581006806;
-        Sun, 22 Jun 2025 01:30:06 -0700 (PDT)
-Received: from pop-os.. ([2401:4900:1c94:78d8:20aa:360b:188f:5bbe])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86f7cb1sm56520595ad.222.2025.06.22.01.30.04
+        d=1e100.net; s=20230601; t=1750581077; x=1751185877;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PPldOG1Bzc8WL3Z0YGlfMcNARm20zqpGMY+YUO0H/Kc=;
+        b=q2uhV/JrMdiKj91b5zXtPPsrai9eHsopwWKIlsciwbkXTz4macc+/GCDdhoFx7aw47
+         tbFmfhIrAps7ux+5SaGbvcYrb9FhQRQalFRNGljzu2M1xx0a09UoMud1pTy12wYDkO3T
+         4B8XxQGe68rWV95uvPkLFv0x73OMA1i0Y5vLUkNzEmlSBE+Oenu+HF+eDgjikJaPQvQ9
+         Qb4DRE+ddtJzngCk+JiT02wve4ChgvWdieSwOtE7kXWsaMBWsZLak/6qy9VcTRhwYbb7
+         xYsLuAValJFEX77QJDbbpmHywP+4jhXuqFh+EJk35z3ap+s/kTlWqtjXbKvv6BC9PLtC
+         P0PA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0TTvP1wwl8xcolk0sMMVH7sGpZ42PRDgUuyxUfMnERHKhK67SowLlyLof44OdzWLSLrMhuHkCvjfEp1k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzbD1MoBqPiTDx/aw0sAvFD0oPIZc8wa0WTGBJa4WTzaYYbFCC
+	lY0AtyQWExV6HSsZJ1fG997/x5v93tmRRFFv2GdifZZpZi4ZJnMgOxT2
+X-Gm-Gg: ASbGncs18Fd+pb6QOhRzDPSAA4RlbTWnpPNLUKae6GgxnbnQB2M4h9FNlcPNQTU3K1U
+	iq2FI3Xn5CmxXq4KI6G6DPdZmqh8IUxtpznhf/b2hQx8cJ31/nfeDP2mpzAvQ341vQkOKP9YL8p
+	t7uEpo546/eNFaKJ1XMwt1igkJto0/jRke+vgsL3WgQad4pSHZWCsjNMTGEGx5bFtbyHkkuvEta
+	liiKPpZvuQfqvaaElLYcz76goVs63sf5aDXkv6XC6hfDrlH6jINvINiXbFFzhri4hkhzodXTNtI
+	/6SvuqJMu6J+v/kB3VgJ5zFylgi2Mfi3iuZ+lIopdnRBAFtS57DH0njNua+SIo717KbzcPKUKlC
+	zDG01tbP0Snc=
+X-Google-Smtp-Source: AGHT+IHQs5acA6zjKZ8lH0avLduGPS64M3j/5dlm9zJID3GUEhZp54uYM9dXMxOIUg1lXOc1KSWdTQ==
+X-Received: by 2002:a5d:5e88:0:b0:3a4:f63b:4bfc with SMTP id ffacd0b85a97d-3a6d12d909bmr7896433f8f.34.1750581076851;
+        Sun, 22 Jun 2025 01:31:16 -0700 (PDT)
+Received: from HYB-DlYm71t3hSl.ad.analog.com ([2001:a61:12d0:5a01:b4d7:fc8d:4cb4:dd35])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d1187e5fsm6471224f8f.70.2025.06.22.01.31.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 01:30:06 -0700 (PDT)
-From: Abhinav Ananthu <abhinav.ogl@gmail.com>
-To: jens.wiklander@linaro.org
-Cc: sumit.garg@kernel.org,
-	op-tee@lists.trustedfirmware.org,
-	linux-kernel@vger.kernel.org,
-	Abhinav Ananthu <abhinav.ogl@gmail.com>
-Subject: [PATCH]  treewide: Replace scnprintf with sysfs_emit in
-Date: Sun, 22 Jun 2025 13:59:11 +0530
-Message-Id: <20250622082910.13897-1-abhinav.ogl@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Sun, 22 Jun 2025 01:31:16 -0700 (PDT)
+Date: Sun, 22 Jun 2025 10:31:14 +0200
+From: Jorge Marques <gastmaier@gmail.com>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Jorge Marques <jorge.marques@analog.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Frank Li <Frank.Li@nxp.com>, 
+	=?utf-8?Q?Przemys=C5=82aw?= Gaj <pgaj@cadence.com>, linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] i3c: master: Add inline i3c_master_readsl and
+ i3c_master_writesl
+Message-ID: <ngtav2drgruaqyuwhhwdlsaex3c7fz5hbex47nzflabcwst2ln@6bmr73eqfzri>
+References: <20250620-i3c-writesl-readsl-v1-0-e0aa1c014dff@analog.com>
+ <20250620-i3c-writesl-readsl-v1-1-e0aa1c014dff@analog.com>
+ <aFXPXTUSvgj-a2zC@shikoro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFXPXTUSvgj-a2zC@shikoro>
 
-Use sysfs_emit() to format sysfs output instead of scnprintf() as recommended
-by the kernel documentation.
+On Fri, Jun 20, 2025 at 11:15:09PM +0200, Wolfram Sang wrote:
+> On Fri, Jun 20, 2025 at 06:54:59PM +0200, Jorge Marques wrote:
+> > The i3c abstraction excepts u8 buffers, but some controllers have a bus
+> > width of 32-bits and don't support flagging valid bytes, so it is
+> > required to read/write long words and to use memcpy on the remainder of
+> > the number of bytes by 32-bits to not write/read outside the buffer
+> > bounds.
+> > 
+> > Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+> 
+> Suggested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> 
+> > + * i3c_master_writesl- Write bytes to long memory region from byte array
+> 
+Hi Wolfram,
+> Frank proposed the name 'i3c_writel_fifo' which I like a tad better.
+> Opinions?
+>
+I don't oppose the change and I'll rename, as well moving the method to
+internals.h
 
-Signed-off-by: Abhinav Ananthu <abhinav.ogl@gmail.com>
----
- drivers/tee/optee/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  i3c_master_writesl -> i3c_writel_fifo
+  i3c_master_readsl -> i3c_readl_fifo
 
-diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
-index c75fddc83576..ce44e3498d37 100644
---- a/drivers/tee/optee/core.c
-+++ b/drivers/tee/optee/core.c
-@@ -72,7 +72,7 @@ static ssize_t rpmb_routing_model_show(struct device *dev,
- 	else
- 		s = "user";
- 
--	return scnprintf(buf, PAGE_SIZE, "%s\n", s);
-+	return sysfs_emit(buf, "%s\n", s);
- }
- static DEVICE_ATTR_RO(rpmb_routing_model);
- 
--- 
-2.34.1
-
+Best Regards,
+Jorge
