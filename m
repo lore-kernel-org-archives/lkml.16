@@ -1,226 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A69EED7;
-	Sun, 22 Jun 2025 13:01:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A518F1F94A;
+	Sun, 22 Jun 2025 13:10:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750597285; cv=none; b=WGYwASU9yDzOFMmuqjibDVC4IZSEZ+FjTrv+9ScEw4s3/hB9HLuaMBgvEIiJ4NB3MPrrDBZD3QeRadPfR/T+93XC1GHap09I7LhOnDQ9UcD1tpOhjVHzpgrhu+z1nI1NXqXYirzSvOa3sqBWNhhG8f9huoTNVOunwMbl08R9Zzg=
+	t=1750597821; cv=none; b=KGLsadvSmUSkyFOA7KLY6wOTStklPmz9GbJWpUX13oCjLifmU7mWEMOJEmLDC6SzxzXPIBrFPD/GGRc5/q0xzoKLZK1G7zrMNpPv4Oe5TG1TNQHVHzUo1nYf6tljDCWec1VmVpzuaT9vFFUR2wi/G/iZa1JCzhrjLOA+SHIe4D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750597285; c=relaxed/simple;
-	bh=qLkw/Q/EM8Dh1Jv3fjeRRfrI8ZV5UvvY6GtQl0d2ph8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BvNm8hikkaG1VCWdFwlwJOCNehRwV2u+w/qQutjkjhx/ksq/4yoF2a1l4RRe+Wlwb8l9gxznM5NgoyyIPy4CXgSkNliSf2jEYpFp3Dzy+zx+5TFz6CqG5jt4zBFz9lzlqLDH3tfcrv3ANWkT8uGxZUhyXPeSi46ExXr8Nbh8t1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=svhYhSBY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750597821; c=relaxed/simple;
+	bh=JfnT3FIl6Aun7WZNynKmrF9iAWSarWXs78zZvbCJAGA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qEUe2CwMUhRVTHf5xKq4ROBOS3Sx2yhhPgLE2Sl8ReFjC1RyQ6iuz4yOKhAE0Hv2DReSwbP0UKx6HcSa0i++lvDt7Qbi9pMDPdYqs3qzLKTWt4td3tl5uCFuFeQHmRP72a1NBgso/orSFq3B1iN0DLPqhPPxEqiwc2+seGD698k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Nq59hv2X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="svhYhSBY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA79FC4CEE3;
-	Sun, 22 Jun 2025 13:01:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750597284;
-	bh=qLkw/Q/EM8Dh1Jv3fjeRRfrI8ZV5UvvY6GtQl0d2ph8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=svhYhSBYlgsO6WqFP4DG4Ibuoyfs7mZ3VZaQyyfK3cYXuQ0TQD35EJCeO/Mpshh2H
-	 xI3l7iAcoH8Bf8iRZBWccJ5GrzMaRZJILNtjGG8VtbXhy54gQylP0dOS2Jk2MuACPE
-	 FSjdjYJOaGghCEmOzMtN6Ft7E+xIzfIbS/VSO6KdArui1yqYKZMzQcvBPftqt1JGaj
-	 DOfGCNspTpHwq9QYr0pbpKOvajO6/24wPJroJuPcoDb/YwD3OlYCt3/QBw3mlKH/ye
-	 MaVsl12q7zVD78TW1ZmNS7u/jjPQwfMbEKC8MgP4Q/mIIzN1y1u6/H+ij3K4dPwhFC
-	 XvKYae1nDy1yw==
-Received: from [213.123.58.114] (helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uTKK2-008y5h-Af;
-	Sun, 22 Jun 2025 14:01:22 +0100
-Date: Sun, 22 Jun 2025 14:01:21 +0100
-Message-ID: <878qlkexr2.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: perlarsen@google.com
-Cc: Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/6] KVM: arm64: Use SMCCC 1.2 in host FF-A handler
-In-Reply-To: <20250619-virtio-msg-ffa-v5-3-412c98558807@google.com>
-References: <20250619-virtio-msg-ffa-v5-0-412c98558807@google.com>
-	<20250619-virtio-msg-ffa-v5-3-412c98558807@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Nq59hv2X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7396C4CEE3;
+	Sun, 22 Jun 2025 13:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750597820;
+	bh=JfnT3FIl6Aun7WZNynKmrF9iAWSarWXs78zZvbCJAGA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Nq59hv2XFXIF6Fh3npN5Sza8gbnyhkwaHEtLzajgv5QA9nws+1Sr5nq5jQ6w8Votk
+	 kk7h40AcGofGFfGgv/ykDGl8m6ijKDSNPsPckXrN22utcjbJwIaPveL33xNfEif/3j
+	 qKZ8wawQmDegwA1YM5rGAityTQqzVThk+ZRSlnLQ=
+Date: Sun, 22 Jun 2025 15:10:16 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Sasha Levin <sashal@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org,
+	ziyao@disroot.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH for 6.1/6.6] platform/loongarch: laptop: Fix build error
+ due to backport
+Message-ID: <2025062206-roundish-thumb-a20e@gregkh>
+References: <20250622110148.3108758-1-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 213.123.58.114
-X-SA-Exim-Rcpt-To: perlarsen@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, sudeep.holla@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250622110148.3108758-1-chenhuacai@loongson.cn>
 
-On Thu, 19 Jun 2025 10:02:56 +0100,
-Per Larsen via B4 Relay <devnull+perlarsen.google.com@kernel.org> wrote:
+On Sun, Jun 22, 2025 at 07:01:48PM +0800, Huacai Chen wrote:
+> In 6.1/6.6 there is no BACKLIGHT_POWER_ON definition so a build error
+> occurs due to recently backport:
 > 
-> From: Per Larsen <perlarsen@google.com>
+>   CC      drivers/platform/loongarch/loongson-laptop.o
+> drivers/platform/loongarch/loongson-laptop.c: In function 'laptop_backlight_register':
+> drivers/platform/loongarch/loongson-laptop.c:428:23: error: 'BACKLIGHT_POWER_ON' undeclared (first use in this function)
+>   428 |         props.power = BACKLIGHT_POWER_ON;
+>       |                       ^~~~~~~~~~~~~~~~~~
 > 
-> SMCCC 1.1 and prior allows four registers to be sent back as a result
-> of an FF-A interface. SMCCC 1.2 increases the number of results that can
-> (and often must) be sent back to 8 and 16 for 32-bit and 64-bit SMC/HVCs
-> respectively.
+> Use FB_BLANK_UNBLANK instead which has the same meaning.
 > 
-> FF-A 1.0 references SMCCC 1.2 (reference [4] on page xi) and FF-A 1.2
-> explicitly requires SMCCC 1.2 so it should be safe to use this version
-> unconditionally. Moreover, it is simpler to implement FF-A features
-> without having to worry about compatibility with SMCCC 1.1 and older.
-> 
-> Add SMCCC 1.2 helper routines and use this version unconditionally.
-
-Well, the previous patch already mandates that, so I wonder why you
-have two patches tackling the same thing.
-
-> 
-> Signed-off-by: Per Larsen <perlarsen@google.com>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 > ---
->  arch/arm64/kvm/hyp/nvhe/ffa.c | 297 ++++++++++++++++++++++++------------------
->  1 file changed, 173 insertions(+), 124 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
-> index 51bbe8f9c94584e9001ee769cbfd608d930ff723..23b75b9f0bcc62724f0d0d185ac2ed2526375da4 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/ffa.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
-> @@ -71,36 +71,55 @@ static u32 hyp_ffa_version;
->  static bool has_version_negotiated;
->  static hyp_spinlock_t version_lock;
->  
-> -static void ffa_to_smccc_error(struct arm_smccc_res *res, u64 ffa_errno)
-> +static void ffa_to_smccc_1_2_error(struct arm_smccc_1_2_regs *regs, u64 ffa_errno)
->  {
-> -	*res = (struct arm_smccc_res) {
-> +	*regs = (struct arm_smccc_1_2_regs) {
->  		.a0	= FFA_ERROR,
->  		.a2	= ffa_errno,
->  	};
->  }
->  
-> -static void ffa_to_smccc_res_prop(struct arm_smccc_res *res, int ret, u64 prop)
-> +static void ffa_to_smccc_regs_prop(struct arm_smccc_1_2_regs *regs, int ret,
-> +				   u64 prop)
->  {
->  	if (ret == FFA_RET_SUCCESS) {
-> -		*res = (struct arm_smccc_res) { .a0 = FFA_SUCCESS,
-> -						.a2 = prop };
-> +		*regs = (struct arm_smccc_1_2_regs) { .a0 = FFA_SUCCESS,
-> +						      .a2 = prop };
->  	} else {
-> -		ffa_to_smccc_error(res, ret);
-> +		ffa_to_smccc_1_2_error(regs, ret);
->  	}
->  }
->  
-> -static void ffa_to_smccc_res(struct arm_smccc_res *res, int ret)
-> +static void ffa_to_smccc_regs(struct arm_smccc_1_2_regs *regs, int ret)
->  {
-> -	ffa_to_smccc_res_prop(res, ret, 0);
-> +	ffa_to_smccc_regs_prop(regs, ret, 0);
->  }
->  
->  static void ffa_set_retval(struct kvm_cpu_context *ctxt,
-> -			   struct arm_smccc_res *res)
-> +			   struct arm_smccc_1_2_regs *regs)
->  {
-> -	cpu_reg(ctxt, 0) = res->a0;
-> -	cpu_reg(ctxt, 1) = res->a1;
-> -	cpu_reg(ctxt, 2) = res->a2;
-> -	cpu_reg(ctxt, 3) = res->a3;
-> +	cpu_reg(ctxt, 0) = regs->a0;
-> +	cpu_reg(ctxt, 1) = regs->a1;
-> +	cpu_reg(ctxt, 2) = regs->a2;
-> +	cpu_reg(ctxt, 3) = regs->a3;
-> +	cpu_reg(ctxt, 4) = regs->a4;
-> +	cpu_reg(ctxt, 5) = regs->a5;
-> +	cpu_reg(ctxt, 6) = regs->a6;
-> +	cpu_reg(ctxt, 7) = regs->a7;
-> +
+>  drivers/platform/loongarch/loongson-laptop.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-But my main problem with this patch is this sort of pointless
-churn. Changing "res" to "regs" just for the sake of it is completely
-pointless, and makes everything harder to read.
+What commit id is this fixing?
 
-Please do yourself (and everybody else) a favour by keeping the
-variable name the same.
+thanks,
 
-> +	/* DEN0028C 2.6: SMC32/HVC32 call from aarch64 must preserve x8-x30 */
-> +	if (ARM_SMCCC_IS_64(regs->a0)) {
-
-This is the *return value*, right? Not the function number. How can
-you tell about the 64-bitness of the function number based on that?
-
-> +		cpu_reg(ctxt, 8) = regs->a8;
-> +		cpu_reg(ctxt, 9) = regs->a9;
-> +		cpu_reg(ctxt, 10) = regs->a10;
-> +		cpu_reg(ctxt, 11) = regs->a11;
-> +		cpu_reg(ctxt, 12) = regs->a12;
-> +		cpu_reg(ctxt, 13) = regs->a13;
-> +		cpu_reg(ctxt, 14) = regs->a14;
-> +		cpu_reg(ctxt, 15) = regs->a15;
-> +		cpu_reg(ctxt, 16) = regs->a16;
-> +		cpu_reg(ctxt, 17) = regs->a17;
-> +	}
->  }
->  
->  static bool is_ffa_call(u64 func_id)
-> @@ -113,82 +132,104 @@ static bool is_ffa_call(u64 func_id)
->  
->  static int ffa_map_hyp_buffers(u64 ffa_page_count)
->  {
-> -	struct arm_smccc_res res;
-> +	struct arm_smccc_1_2_regs regs;
->  
-> -	arm_smccc_1_1_smc(FFA_FN64_RXTX_MAP,
-> -			  hyp_virt_to_phys(hyp_buffers.tx),
-> -			  hyp_virt_to_phys(hyp_buffers.rx),
-> -			  ffa_page_count,
-> -			  0, 0, 0, 0,
-> -			  &res);
-> +	regs = (struct arm_smccc_1_2_regs) {
-> +		.a0 = FFA_FN64_RXTX_MAP,
-> +		.a1 = hyp_virt_to_phys(hyp_buffers.tx),
-> +		.a2 = hyp_virt_to_phys(hyp_buffers.rx),
-> +		.a3 = ffa_page_count,
-> +	};
-> +	arm_smccc_1_2_smc(&regs, &regs);
-
-To expand on my previous comment about this res/regs repainting, I'd
-rather see something like:
-
-	struct arm_smccc_1_2_regs res;
-
-	arm_smccc_1_2_smc(&(struct arm_smccc_1_2_regs){
-			 .a0 = FFA_FN64_RXTX_MAP,
-			 .a1 = hyp_virt_to_phys(hyp_buffers.tx),
- 	 		 .a2 = hyp_virt_to_phys(hyp_buffers.rx),
-			 .a3 = ffa_page_count,
-	}, &res);
-
-
-> +	if (regs.a0 != FFA_SUCCESS)
-> +		return regs.a2;
->  
-> -	return res.a0 == FFA_SUCCESS ? FFA_RET_SUCCESS : res.a2;
-> +	return regs.a0 == FFA_SUCCESS ? FFA_RET_SUCCESS : regs.a2;
-
-Why are you writing the same thing twice?
-
-I stopped reading here.
-
-	M.
-
--- 
-Jazz isn't dead. It just smells funny.
+greg k-h
