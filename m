@@ -1,159 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5185F3C0C;
-	Sun, 22 Jun 2025 17:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DC386342
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 18:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750614803; cv=none; b=Of6g7V07stJDCpTp+PYFCcC2fuSBTtpL5l1O1to90h+m2IZucRuN81RSCi3wkoe3lD2QWc1ww4ziRawMAB1hl9TbIAprNvcLRgzMMhcrGVODztuvNkgbkkiGcf9QwfCJzZ35x+iTuQM0Avv6akIiM/tzhCqICntE/h/NDQjJBuk=
+	t=1750615270; cv=none; b=oND30wpVWpFlnyX8nyXUTPrYt2FgrEwHc9i63pAbTjbkouaVCcReOR9q3itA1afoiPM0iUkZ2Dv7E3JtIj+lTzhb2gddT7ocSwy3JKt+0ythmymJ58pe13Yg7IRSdnvEfHBQM4uO692ke7Ni4rNCwKmj42OVpv72pgD1az3rqWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750614803; c=relaxed/simple;
-	bh=NEqfhCbHA77ivX87O3SQQe/0s1ft+C0ZxROAW6GszLY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=igxQ2e8KoW1ERcwvdpgCh38XPr2qh7Y0In+DvwGSuCT9/JQWGvGlU7C7F42aPPFPWmBqYZ8Iy6jysADIoOGCQRov/pqKymPUqzltN50pgxbKkIPM7OFTv+UvIH8RlvlCi44R3u8eEQuqkj8Nr5oz4plZRmjRlFA6kGWmHtUgiBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WdJEUMFk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750615270; c=relaxed/simple;
+	bh=J9W5678xdEPVkrFGIESTOy49fS98LSwSbpQugn1ibXA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mHpiAb3Nv7tC+jP+eGz7t0SOPQDul3t0NoqxvI2ayLDep+ThG+YWEkm/1QxD8dE/twNLrkK6tKklUwu+Gl1lXXUOLBavPrVY8prYBfLuHWc293E50rnpXWGiIGLN6x3pjd4s1C9ZSnmDEXcn79EzcbaNVQhtA0RQtvobsCKTvs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=M6YPThtA; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WdJEUMFk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B24A8C4CEE3;
-	Sun, 22 Jun 2025 17:53:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750614802;
-	bh=NEqfhCbHA77ivX87O3SQQe/0s1ft+C0ZxROAW6GszLY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WdJEUMFklOf00eIO/dcuyUvKFnZ0Yy5VMv77/X9JmcKeUytRx+bstS9oF+YEyHjVQ
-	 fYVgcU0hv3p4xWR3Ep1AXe+xKyy2bSfRA3kGai0e1VKq/9+4bLaXDcCOuKmAe8fO6v
-	 AFtn64KoShaDBh+IO7wAQdb0y9HHTxKUKnXPnM5w0NUzLT2VJuWpYwibE+LZdOG7a7
-	 JKsO/mkWgZ8CBlDyHadALLqnTGt7JtlUhZ+isPxtlIhljme5DhJTVw4v1q5btRAqL/
-	 PidMbBhZtY/6omI7mVSnujCm2z+4NmnS0//tad8clvkKpI2awX1ZwIfU/Y0Npkk7Pj
-	 cbH3ydvDo0oOw==
-Date: Sun, 22 Jun 2025 19:53:18 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Akira Yokosawa <akiyks@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, Linux
- Doc Mailing List <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v3 15/15] docs: conf.py: Check Sphinx and docutils
- version
-Message-ID: <20250622195318.1a2a3728@foz.lan>
-In-Reply-To: <c05dd5dc-1e30-4a2c-80dc-70e8b62cc681@gmail.com>
-References: <cover.1750571906.git.mchehab+huawei@kernel.org>
-	<972673b0a5bf5537d47780d6f8e70ae45456e751.1750571906.git.mchehab+huawei@kernel.org>
-	<c05dd5dc-1e30-4a2c-80dc-70e8b62cc681@gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="M6YPThtA"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ade5ca8bc69so597537466b.0
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 11:01:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1750615266; x=1751220066; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xh5CufBu5Z6q/CIQPXB1zoIxJvSFHFQ8GCjbcL7K+Tg=;
+        b=M6YPThtAsEQluNG6R/hnUTpip3DB3lbyfid13GOdmRc/vgIPJJ3lRTrzB3jTNPUadL
+         ZrdbEWCs/Hg8Dth4BSgX7+WbOjcF9jj4rZaxcKvf3/qbaxlA1noe5gpmJ6o+j7CBhcPy
+         ruLy+1vKtQzDpcseKz+HydejjudFjfCgdahJ4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750615266; x=1751220066;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Xh5CufBu5Z6q/CIQPXB1zoIxJvSFHFQ8GCjbcL7K+Tg=;
+        b=Qw+K/HdVPcimrZ0sKIaSnQk0ECCLQklstRD+wD9Z57o0ZxVaFvDx89zO5VyEW4XxBi
+         6fV+asUi7mLOtaX8SqTItnMWToll76qthcnqrQF4RDORNUwWC6RT/Qq8vGmbNL2MYI40
+         3TJMLgGkvxrMyuEzird90gRaUjAz8ljAwcojL67NP1+gCEJS+xs23wOHQbm98w78jn8A
+         McYAX/xLu+x/yLpbSl/p58dxBZz+hbHEgH0MbdWCaAKKNVg/hChTrniqox+KrgpPyApb
+         yLO31bB8+zFatkAAE3SEt+XPYE+sTYAXlfsv1oSAFLz5TZkrmm5pLk2btCT0XczkrWtX
+         AK6A==
+X-Forwarded-Encrypted: i=1; AJvYcCWg9oL5gA0WOiqT4AHyivJzTvgtNtEGPahy9JX0a6xSZJ4DDcjJEufX/PfWuJyWEczZjPIYUeuR0/tPpfk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHODe9XSbIqCAvlFzkdO11/ziqjCQn/aLcBYOYvtLFqpXPDbkF
+	EoahD42b5Eon0Idb5sp/HJ0QuNJdwTYRJC4CFuS7Nl4Jg10gqcpaUQk7RGn84KFeMzCjzuS/1zu
+	vgbjJswA=
+X-Gm-Gg: ASbGnct+0Q+cXwCjZE9hoTRGTquIRVz2rmrXjUs351sAS5s5oR7tc4P7qTz2tSKyU6Q
+	B7gsrV5As7xyfpd2k6tQb9CQqcTqy2JH4Wb8QZeYGupuV8ODicPJ4zdn+WeL2jZHub0Ud13YbWp
+	GzZ6+NSfQQrjbserp14lDplKMlNajZEHbboCAODK0m9FAKhqhwhOPAVnqe77dhWXPVGB6Jt+cTR
+	rU22pIMqO2ziuWA0b8ngoExCZYA+ubCp24OUMgq3hTsMIsKcmSJRKQazYeYxM2jgE24P1rRqxDE
+	ZfpWmcyHTdnn2oEtJxQ99lVwIbmNqJF/Dr8mimb8LdqYCDE9CxPUCBAkRuM1+hJW/i9V4Tpghp6
+	7b4Mkhv8V2JGEJ4m7JEHyHuQ0N1Zh31A2e0th
+X-Google-Smtp-Source: AGHT+IEX4+3kJuASYht5rSLJQIipy7gRdOdDydZD5aq6f4b/YA4RNZMPhxM1lS25fx1u4xhH/rSnOQ==
+X-Received: by 2002:a17:906:9fc6:b0:ade:9b52:4cc0 with SMTP id a640c23a62f3a-ae057973159mr839642466b.26.1750615265961;
+        Sun, 22 Jun 2025 11:01:05 -0700 (PDT)
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com. [209.85.208.49])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053edc0c8sm575124166b.64.2025.06.22.11.01.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Jun 2025 11:01:05 -0700 (PDT)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-607c2b96b29so5917540a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 11:01:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX/8ZyAOa56xDNlmVc/xATTUSLLWl+cQ3bpt5l3hxbMiio1xg4QNZd35TG6qR8ZE9AaJ8XXAvYNmvgWXJ4=@vger.kernel.org
+X-Received: by 2002:a05:6402:27cf:b0:609:aa85:8d6f with SMTP id
+ 4fb4d7f45d1cf-60a1ccb4e04mr8893295a12.11.1750615265058; Sun, 22 Jun 2025
+ 11:01:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <aFgDHBHwY5ElWILx@shikoro>
+In-Reply-To: <aFgDHBHwY5ElWILx@shikoro>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 22 Jun 2025 11:00:48 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjCznJeOUSHcR5BszEUVv5BW6heO6jMX38MHXNaL3kbmQ@mail.gmail.com>
+X-Gm-Features: AX0GCFvnn992nxigULNiH1gK6JAY71aQgYXmY-5YsNMdcvTo7T5WTIQaQFNAVDg
+Message-ID: <CAHk-=wjCznJeOUSHcR5BszEUVv5BW6heO6jMX38MHXNaL3kbmQ@mail.gmail.com>
+Subject: Re: [PULL REQUEST] i2c-for-6.16-rc3
+To: Wolfram Sang <wsa@kernel.org>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Akira,
-
-Em Sun, 22 Jun 2025 20:19:52 +0900
-Akira Yokosawa <akiyks@gmail.com> escreveu:
-
-> On Sun, 22 Jun 2025 08:02:44 +0200, Mauro Carvalho Chehab wrote:
-> > As reported by Akira, there were incompatibility issues with
-> > Sphinx and docutils with docutils 0.19. There's already
-> > a fix for it, but, as there are incompatibility issues with
-> > different versions, better to add a check to verify if the
-> > combination is supported/tested.
-> >   
-> 
-> I've been skeptical of adding such checks in conf.py.
-> 
-> What happened the other day was that Jon used a deprecated (and rarely
-> used) method of docutils which failed to work properly only in
-> docutils 0.19 (there is no mention of related issues in its and 
-> nearby release notes).
-
-True, but the same also happened with me at the parser_yaml code.
-
-> 
-> Your integration of parser_yaml extension will raise the minimum
-> version of docutils to 0.17.1. 
+On Sun, 22 Jun 2025 at 06:20, Wolfram Sang <wsa@kernel.org> wrote:
 >
-> I think all you will need is just
-> to check:
-> 
->     docutils < 0.17.1
-> , and to make a warning regardless of Sphinx versions.
+> - subsystem: convert drivers to use recent callbacks of struct i2c_algorithm
+>   A typical after-rc1 cleanup, which I couldn't send in time for rc2
 
-That's not the best solution. 
+Honestly, this is just *annoying*.
 
-See, Docutils 0.17 was released in Jun, 2021. and 0.17.1 on
-October, 2021. If we look at the Sphinx releases, we have:
+It's made extra annoying by the fact that you also did some random
+whitespace changes while at it, and almost half the lines modified are
+just completely irrelevant indentation changes.
 
-======  ===================
-Sphinx  Release Date
-------  -------------------
-4.1.0	June 10, 2021
-4.1.1	July 25, 2021
-4.1.2	August 1, 2021
-4.1.3	August 15, 2021
-4.2.0	September 28, 2021
-======  ===================
+Looking at the stats, your pull is:
 
-As Sphinx policy is to not even fix bugs when a new release
-happens, it means that, at the best, the minimal version made to be
-compatible with 0.17 is 4.1.x, and the minimal compatible with
-0.17.1 is 4.2.x.
+ 45 files changed, 125 insertions(+), 103 deletions(-)
 
-So, if we want not to raise the minimal version to 4.2.x (*), the right 
-fix is this (I'll be sending at the upcoming YAML patch series I'll be
-sending next week):
+but ignoring the whitespace changes it drops to
 
-diff --git a/Documentation/sphinx/parser_yaml.py b/Documentation/sphinx/parser_yaml.py
-index 8288e2ff7c7c..1602b31f448e 100755
---- a/Documentation/sphinx/parser_yaml.py
-+++ b/Documentation/sphinx/parser_yaml.py
-@@ -77,6 +77,10 @@ class YamlParser(Parser):
- 
-                 result.append(line, document.current_source, lineoffset)
- 
-+            # Fix backward compatibility with docutils < 0.17.1
-+            if "tab_width" not in vars(document.settings):
-+                document.settings.tab_width = 8
-+
-             rst_parser = RSTParser()
-             rst_parser.parse('\n'.join(result), document)
+ 45 files changed, 84 insertions(+), 62 deletions(-)
 
-What happens is that Sphinx is a shell case built on the top of
-docutils: the actual ReST parser is inside docutils. 
+all of which just makes it really really hard to see that it's just a
+trivial conversion.
 
-(*) the exact patch where 0.17.1 support was added/tested on
-    Sphinx needs to be checked
+I've pulled this, but I was really close to just unpulling it because
+it was such a messy thing and badly done.
 
-Now, there is another alternative: raise the bar, increasing minimal
-versions for Python and Sphinx. Yet, I would do it only once per year.
+If you do conversions after the merge window, make them DAMN OBVIOUS.
+Make them minimal, make them automated, and DO NOT DO OTHER RANDOM
+CRAP AROUND THEM.
 
-> That said, these dependencies should be recognized and taken care of by
-> pip/PyPI (or whatever distro package management system), and already met;
-> unless you have done something strange/dangerous and screwed up your Sphinx
-> installation.
->
-> My limited imagination prevents me from coming up with any plausible
-> scenario where these checks at every sphinx-build invocation can be helpful.
-> 
-
-Heh, playing with scripts/test_doc_build.py, pip allowed to create
-several environments that are valid for the package management software
-but either:
-
-- cause sphinx-build to crash even before returning Sphinx version;
-- crash in the middle of the compilation.
-
-As I said, Sphinx is a shell on the top of docutils. Some of the code
-there seem to depend on subtile behaviors, like the one with
-the tab_width affecting parser_yaml.py on certain Sphinx/docutils
-combinations or the one fixed by Jon with regards to setup a class
-for the broken references.
-
-The idea of this patch is to warn the one building the docs
-that he might be navigating turbulent waters when it is unknown
-if the combination is supported. It also better defines the
-scope of backward compatibility we want to provide.
-
-Thanks,
-Mauro
+          Linus
