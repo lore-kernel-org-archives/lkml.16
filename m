@@ -1,208 +1,215 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EEE376;
-	Sun, 22 Jun 2025 07:26:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B1D13B58C
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 07:28:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750577198; cv=none; b=atOK5Lf8hlX/sKh4jPmXLq/DsdIjOxgMmk5eo+2IcVbuIqxgauu4aPgpSNgU/Ff6E53zDU0JFPmettpTzreZt3HUj0PyioVs5ONNhseex9FJwGyvehplX1VdxJZ3MBuEcuBEuu94VuUbVPyitG9jViSLRsnbeHqpVOZSwBP8u2E=
+	t=1750577293; cv=none; b=MalMVOIRN+XDZK3W+g0AMSbEHKww4sjwX2+PKnWGqYpJxe3jMNeE4pmS/mkaOHCS4u350jUvxmfSaidy+EunVClc3LfYOkkgCKu/F+bDPIIy8EXocUX6hLnGQBuEZ65vlDz2FFohHb73yTvObEwkkSptElhs1dLVs4i/+bXdmus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750577198; c=relaxed/simple;
-	bh=KJd8/9pB4BBLfTmsmqhD1838pzERSEA7W+NIgN4qq7A=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=WCKtMgmw1wUOWRKKm4PkeJ+I0gFgjFebkbWyRnClRCRyhJg6xKgR136rflgxrGyz+Kq1sfCGlVXhN7uWpJNyot/yUuaiZiVEkoXOei9WNFsnkV5rD/wdSDk63jp1Aw4E0l74CqfM3gwXNj3wwY7XvNkD3dDhUTHVUq7sAPH74SQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZPLoazpJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750577293; c=relaxed/simple;
+	bh=ZZ2XvIKaZc+qHuHN/cwtEjIrE44seOhCx+4+J1dO8A0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QnlpT98jxCGCyB7mdyqfrAemdbGJQ9EBRE78WncQXjxO37D9TNrwjuS6g+u8qPqzPM05cg0zP6a14wcbs/QH+pL1zzRTyIskm6QKhzbCqcOHGYxPXHRu+BlhRfjpWgaTLeCDuRWF4PTNf7E726ejZCi5AWkxR1HQr7xfhm2qOnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dDIcZ4SF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZPLoazpJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3419EC4CEE3;
-	Sun, 22 Jun 2025 07:26:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dDIcZ4SF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A27CC4CEE3;
+	Sun, 22 Jun 2025 07:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750577197;
-	bh=KJd8/9pB4BBLfTmsmqhD1838pzERSEA7W+NIgN4qq7A=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=ZPLoazpJuDwkYelJ6IfkVyObObGMZNkPGhHxRefgnwWZvaYPn1oXY/774U5npfASl
-	 kh6REOLJt7dkiH0mhwuRsZkGz81SxgmP2fVTK8LdD0bgdC6pypBSUkf0Yqxdcumwz+
-	 89TWbpnpLlsSFeUKI+xbo3KiJFRS/lurW4QDDRf4EO6PsVyI6evfyq4laI/bqe/SNm
-	 AtXr+reP75ZgzM7JQ32bSn2e7xLxJMjaKpLzcrcXmpbWEw+IyLL/uEHHOKgoK6zYU0
-	 xVMsr4WaQREWokknz2a0tYyYN/GesPbQ5hrAdPq3e5Ctel04yUez5aGfxhFpxwkQEA
-	 emyYmeyTGxt9A==
+	s=k20201202; t=1750577293;
+	bh=ZZ2XvIKaZc+qHuHN/cwtEjIrE44seOhCx+4+J1dO8A0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dDIcZ4SFurenyXdrjh4EbhutJVTqpVHg32N3U4WBEIc0CaHcRtNS7tEN80nD8nUM+
+	 iwfLM7W9KJX09tue4HZdoUJyaPjLM29CulNmr9zeRxt8884jD7z8TdVaooA95KDJum
+	 VXxKHHYVjyP7TXFHYQcV3kDkMUH7HoZtbvUtQn7U4p59CCCcGuqomgO6O32id7LDOV
+	 Rc27LHD+iAt4jI7SpDyRC1MZfj5fvdn8zaD0kJZNyV9kzfN2EBER2zMjFjf/5RmSwF
+	 5qSsj8EnuQtbY0TDwFpBavMZpy6Jb7a/v4LVCjoMqM7GdS/VtzJ9kQ6X04aipb4HkJ
+	 l2zMK4nDPAwpw==
+Date: Sun, 22 Jun 2025 10:28:04 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Nikita Kalyazin <kalyazin@amazon.com>,
+	Hugh Dickins <hughd@google.com>, Oscar Salvador <osalvador@suse.de>,
+	Michal Hocko <mhocko@suse.com>,
+	David Hildenbrand <david@redhat.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	Ujwal Kundur <ujwal.kundur@gmail.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	James Houghton <jthoughton@google.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Axel Rasmussen <axelrasmussen@google.com>
+Subject: Re: [PATCH 1/4] mm: Introduce vm_uffd_ops API
+Message-ID: <aFewhN5AF2d7vJFq@kernel.org>
+References: <20250620190342.1780170-1-peterx@redhat.com>
+ <20250620190342.1780170-2-peterx@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 22 Jun 2025 09:26:33 +0200
-Message-Id: <DASVTOJU2OE8.GU1NH3MZ3SX@kernel.org>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/4] rust: devres: implement register_foreign_release()
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
- <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <benno.lossin@proton.me>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
- <tmgross@umich.edu>
-X-Mailer: aerc 0.20.1
-References: <20250612145145.12143-1-dakr@kernel.org>
- <20250612145145.12143-5-dakr@kernel.org>
-In-Reply-To: <20250612145145.12143-5-dakr@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620190342.1780170-2-peterx@redhat.com>
 
-On Thu Jun 12, 2025 at 4:51 PM CEST, Danilo Krummrich wrote:
-> register_foreign_release() is useful when a device resource has
-> associated data, but does not require the capability of accessing it or
-> manually releasing it.
->
-> If we would want to be able to access the device resource and release the
-> device resource manually before the device is unbound, but still keep
-> access to the associated data, we could implement it as follows.
->
-> 	struct Registration<T> {
-> 	   inner: Devres<RegistrationInner>,
-> 	   data: T,
-> 	}
->
-> However, if we never need to access the resource or release it manually,
-> register_foreign_release() is great optimization for the above, since it
-> does not require the synchronization of the Devres type.
->
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+Hi Peter,
+
+On Fri, Jun 20, 2025 at 03:03:39PM -0400, Peter Xu wrote:
+> Introduce a generic userfaultfd API for vm_operations_struct, so that one
+> vma, especially when as a module, can support userfaults without modifying
+> the core files.  More importantly, when the module can be compiled out of
+> the kernel.
+> 
+> So, instead of having core mm referencing modules that may not ever exist,
+> we need to have modules opt-in on core mm hooks instead.
+> 
+> After this API applied, if a module wants to support userfaultfd, the
+> module should only need to touch its own file and properly define
+> vm_uffd_ops, instead of changing anything in core mm.
+> 
+> Note that such API will not work for anonymous. Core mm will process
+> anonymous memory separately for userfault operations like before.
+> 
+> This patch only introduces the API alone so that we can start to move
+> existing users over but without breaking them.
+> 
+> Currently the uffd_copy() API is almost designed to be the simplistic with
+> minimum mm changes to move over to the API.
+> 
+> Signed-off-by: Peter Xu <peterx@redhat.com>
 > ---
->  rust/kernel/devres.rs | 80 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 80 insertions(+)
-
-Idea & implementation look good, I'm just a little unsatisfied with the
-names & docs...
-
-> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-> index 4ee9037f4ad4..495dca6240fc 100644
-> --- a/rust/kernel/devres.rs
-> +++ b/rust/kernel/devres.rs
-> @@ -16,6 +16,7 @@
->      sync::{rcu, Completion},
->      types::{ARef, ForeignOwnable},
+>  include/linux/mm.h            | 71 +++++++++++++++++++++++++++++++++++
+>  include/linux/userfaultfd_k.h | 12 ------
+>  2 files changed, 71 insertions(+), 12 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 98a606908307..8dfd83f01d3d 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -576,6 +576,70 @@ struct vm_fault {
+>  					 */
 >  };
-> +use core::ops::Deref;
-> =20
->  /// This abstraction is meant to be used by subsystems to containerize [=
-`Device`] bound resources to
->  /// manage their lifetime.
-> @@ -303,3 +304,82 @@ pub fn register_foreign_boxed<T, E>(
-> =20
->      register_foreign(dev, data)
->  }
+>  
+> +#ifdef CONFIG_USERFAULTFD
+> +/* A combined operation mode + behavior flags. */
+> +typedef unsigned int __bitwise uffd_flags_t;
 > +
-> +/// To be implemented by an object passed to [`register_foreign_release`=
-].
-
-    /// [`Devres`]-releaseable resource.
-    ///
-    /// Register an object implementing this trait with [`register_foreign_=
-release`]. It's `release`
-    /// function will be called once the device unbinds.
-
-> +pub trait Release {
-> +    /// Called once the [`Device`] given to [`register_foreign_release`]=
- is unbound.
-> +    fn release(&self);
-
-Would it make sense to also supply the `Device` that this is attached
-to? In case you have one object in multiple `register_foreign_release`
-calls with different devices, or is that something that doesn't happen?
-
-> +}
+> +enum mfill_atomic_mode {
+> +	MFILL_ATOMIC_COPY,
+> +	MFILL_ATOMIC_ZEROPAGE,
+> +	MFILL_ATOMIC_CONTINUE,
+> +	MFILL_ATOMIC_POISON,
+> +	NR_MFILL_ATOMIC_MODES,
+> +};
 > +
-> +impl<T: Release> Release for crate::sync::ArcBorrow<'_, T> {
-> +    fn release(&self) {
-> +        self.deref().release();
-> +    }
-> +}
+> +/* VMA userfaultfd operations */
+> +typedef struct {
+> +	/**
+> +	 * @uffd_features: features supported in bitmask.
+> +	 *
+> +	 * When the ops is defined, the driver must set non-zero features
+> +	 * to be a subset (or all) of: VM_UFFD_MISSING|WP|MINOR.
+> +	 */
+> +	unsigned long uffd_features;
+> +	/**
+> +	 * @uffd_ioctls: ioctls supported in bitmask.
+> +	 *
+> +	 * Userfaultfd ioctls supported by the module.  Below will always
+> +	 * be supported by default whenever a module provides vm_uffd_ops:
+> +	 *
+> +	 *   _UFFDIO_API, _UFFDIO_REGISTER, _UFFDIO_UNREGISTER, _UFFDIO_WAKE
+> +	 *
+> +	 * The module needs to provide all the rest optionally supported
+> +	 * ioctls.  For example, when VM_UFFD_MISSING was supported,
+> +	 * _UFFDIO_COPY must be supported as ioctl, while _UFFDIO_ZEROPAGE
+> +	 * is optional.
+> +	 */
+> +	unsigned long uffd_ioctls;
+> +	/**
+> +	 * uffd_get_folio: Handler to resolve UFFDIO_CONTINUE request.
+> +	 *
+> +	 * @inode: the inode for folio lookup
+> +	 * @pgoff: the pgoff of the folio
+> +	 * @folio: returned folio pointer
+> +	 *
+> +	 * Return: zero if succeeded, negative for errors.
+> +	 */
+> +	int (*uffd_get_folio)(struct inode *inode, pgoff_t pgoff,
+> +			      struct folio **folio);
+> +	/**
+> +	 * uffd_copy: Handler to resolve UFFDIO_COPY|ZEROPAGE request.
+> +	 *
+> +	 * @dst_pmd: target pmd to resolve page fault
+> +	 * @dst_vma: target vma
+> +	 * @dst_addr: target virtual address
+> +	 * @src_addr: source address to copy from
+> +	 * @flags: userfaultfd request flags
+> +	 * @foliop: previously allocated folio
+> +	 *
+> +	 * Return: zero if succeeded, negative for errors.
+> +	 */
+> +	int (*uffd_copy)(pmd_t *dst_pmd, struct vm_area_struct *dst_vma,
+> +			 unsigned long dst_addr, unsigned long src_addr,
+> +			 uffd_flags_t flags, struct folio **foliop);
+> +} vm_uffd_ops;
+> +#endif
+
+Can't we define vm_uffd_ops in userfaultfd_k.h?
+
+A forward declaration in mm.h should suffice and modules that want to use
+uffd can include userfaultfd_k.h.
+
 > +
-> +impl<T: Release> Release for Pin<&'_ T> {
-> +    fn release(&self) {
-> +        self.deref().release();
-> +    }
-> +}
+>  /*
+>   * These are the virtual MM functions - opening of an area, closing and
+>   * unmapping it (needed to keep files on disk up-to-date etc), pointer
+> @@ -653,6 +717,13 @@ struct vm_operations_struct {
+>  	 */
+>  	struct page *(*find_special_page)(struct vm_area_struct *vma,
+>  					  unsigned long addr);
+> +#ifdef CONFIG_USERFAULTFD
+> +	/*
+> +	 * Userfaultfd related ops.  Modules need to define this to support
+> +	 * userfaultfd.
+> +	 */
+> +	const vm_uffd_ops *userfaultfd_ops;
+> +#endif
+>  };
+>  
+>  #ifdef CONFIG_NUMA_BALANCING
+> diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
+> index ccad58602846..e79c724b3b95 100644
+> --- a/include/linux/userfaultfd_k.h
+> +++ b/include/linux/userfaultfd_k.h
+> @@ -80,18 +80,6 @@ struct userfaultfd_ctx {
+>  
+>  extern vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason);
+>  
+> -/* A combined operation mode + behavior flags. */
+> -typedef unsigned int __bitwise uffd_flags_t;
+> -
+> -/* Mutually exclusive modes of operation. */
+> -enum mfill_atomic_mode {
+> -	MFILL_ATOMIC_COPY,
+> -	MFILL_ATOMIC_ZEROPAGE,
+> -	MFILL_ATOMIC_CONTINUE,
+> -	MFILL_ATOMIC_POISON,
+> -	NR_MFILL_ATOMIC_MODES,
+> -};
+> -
+>  #define MFILL_ATOMIC_MODE_BITS (const_ilog2(NR_MFILL_ATOMIC_MODES - 1) + 1)
+>  #define MFILL_ATOMIC_BIT(nr) BIT(MFILL_ATOMIC_MODE_BITS + (nr))
+>  #define MFILL_ATOMIC_FLAG(nr) ((__force uffd_flags_t) MFILL_ATOMIC_BIT(nr))
+> -- 
+> 2.49.0
+> 
 
-We should also implement it for `&T`, since that is `Box`'s `Borrowed`.
-
-> +
-> +/// Consume the `data`, [`Release::release`] and [`Drop::drop`] `data` o=
-nce `dev` is unbound.
-> +///
-> +/// # Examples
-> +///
-> +/// ```no_run
-> +/// use kernel::{device::{Bound, Device}, devres, devres::Release, sync:=
-:Arc};
-> +///
-> +/// struct Registration<T> {
-
-Maybe add some explanation above/below this example. It looks like a new
-bus registration?
-
----
-Cheers,
-Benno
-
-> +///     data: T,
-> +/// }
-> +///
-> +/// impl<T> Registration<T> {
-> +///     fn new(data: T) -> Result<Arc<Self>> {
-> +///         // register (e.g. class device, IRQ, etc.)
-> +///
-> +///         Ok(Arc::new(Self { data }, GFP_KERNEL)?)
-> +///     }
-> +/// }
-> +///
-> +/// impl<T> Release for Registration<T> {
-> +///     fn release(&self) {
-> +///        // unregister
-> +///     }
-> +/// }
-> +///
-> +/// fn from_bound_context(dev: &Device<Bound>) -> Result {
-> +///     let reg =3D Registration::new(0x42)?;
-> +///
-> +///     devres::register_foreign_release(dev, reg.clone())
-> +/// }
-> +/// ```
-> +pub fn register_foreign_release<P>(dev: &Device<Bound>, data: P) -> Resu=
-lt
-> +where
-> +    P: ForeignOwnable,
-> +    for<'a> P::Borrowed<'a>: Release,
-> +{
-> +    let ptr =3D data.into_foreign();
-> +
-> +    #[allow(clippy::missing_safety_doc)]
-> +    unsafe extern "C" fn callback<P>(ptr: *mut kernel::ffi::c_void)
-> +    where
-> +        P: ForeignOwnable,
-> +        for<'a> P::Borrowed<'a>: Release,
-> +    {
-> +        // SAFETY: `ptr` is the pointer to the `ForeignOwnable` leaked a=
-bove and hence valid.
-> +        unsafe { P::borrow(ptr.cast()) }.release();
-> +
-> +        // SAFETY: `ptr` is the pointer to the `ForeignOwnable` leaked a=
-bove and hence valid.
-> +        let _ =3D unsafe { P::from_foreign(ptr.cast()) };
-> +    }
-> +
-> +    // SAFETY:
-> +    // - `dev.as_raw()` is a pointer to a valid and bound device.
-> +    // - `ptr` is a valid pointer the `ForeignOwnable` devres takes owne=
-rship of.
-> +    to_result(unsafe {
-> +        // `devm_add_action_or_reset()` also calls `callback` on failure=
-, such that the
-> +        // `ForeignOwnable` is released eventually.
-> +        bindings::devm_add_action_or_reset(dev.as_raw(), Some(callback::=
-<P>), ptr.cast())
-> +    })
-> +}
-
+-- 
+Sincerely yours,
+Mike.
