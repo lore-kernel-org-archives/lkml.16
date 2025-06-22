@@ -1,287 +1,1395 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F94963A9;
-	Sun, 22 Jun 2025 08:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750582745; cv=fail; b=iC0iFESogHElyPfsa2jCDFCMBmF9IVjHHHokUgg8CwVEszZsdcrUbRa0sb4JbrPaDyqCKHzYk1M4Z3fSIUMo+2we1oBVSVLIT3LXOtofFREZzbzmlRhDMgOp0OxWmyGGBc2dRpgZ3M8kjBs6/UlXwV7/8enztCH4n/KNoJPSiUU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750582745; c=relaxed/simple;
-	bh=nE7YVWuq4Y7K0LQY7pip+g9gFwD8Oqz6lfSNKUAFh8c=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=XIykrEi/lOz2m+oD65FuDwje4u1S4WdN0qifRzobEJ7IhsouJHSZD20H0D/WmPmlbmCX3EjT/s8CY6P3EglP0uw/KvIbgKx1AxBChwi9GlbpUSHLtrPd7a73wW2Ue3M5FoxcIICaviOu873dnnF6iJScRGya9PyF4ndABlmR9ag=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ZlMq1JxZ; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=JLQ2IJHc; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1D8158DD4;
+	Sun, 22 Jun 2025 09:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750583138; cv=none; b=ETShqGE3Ec83jUFRdVoZ38X/AGPDK5QxIl6bAT/kurgjD7r1u0OpU0a2PbQWYjlxTQ2OnrRpKTyHDkrATx4BLv3izUxAGnPcUixCiSFe55/YAKC1D7Uz7fpYtmlXINDqZyBlo9V2l+a+VEIHxRNxgc4lrcgt69ytFqentbhqYSg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750583138; c=relaxed/simple;
+	bh=S5k2G0ZlVmG/UkqXMDvY4xtB/HP1D4pN7LrU7OPA/NQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ijze35Jz7KYE5nY+r4rrWKcCcbYUOIkH49f8x50hQYgEKTVU6v/J0d/kIJboxQlw2FmiTg2VzSRHvB1Q7Sg7z5k2IkJaOd0mHbrTzIQNxlk3PLBkCnmvvuDl1jOoVq7gs2gzGawEEB7zu3njFjizkUCvau+/AKA/N7qDAPp2HDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RMnR+NIg; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZlMq1JxZ";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="JLQ2IJHc"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55M4t251021397;
-	Sun, 22 Jun 2025 08:58:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=lI6JkJdH1UIz/F7eVfJl8sSEzbaai517O5Rhm3m5hos=; b=
-	ZlMq1JxZfW6RXML0rFsYch30BqwJ5NdeEXv9KKZ6zk16MrZBdBTxr2YxsF4v2VRD
-	kiiZmbEgB1+SBanwVwRGi/2xkmAq7YA63S05Ge2psr7YYtuF2SIiN1LMX78cRsQy
-	OveXYDPhI8Y8R3STWQ/c1Cw4BFMD1/QRVnFa79kPl8dqoMINCdx1dQHGxzfrF/I+
-	A28fRHjM+yOAQ9mJjAswIkjyEsGe3aszFXSD5EiPOrPDw5p0KZ9VDeqJIcPvmAvc
-	XpBF6p9ZYo5/Q2FSWOuWq9TPX+7tGkzlGmE/zfeYBg2NtqoQb2E0U+O0V8tnxKsO
-	aVzV3bbN7uGrfk4VlDBrow==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47ds8y0yp8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 22 Jun 2025 08:58:20 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55M7C0hk025284;
-	Sun, 22 Jun 2025 08:58:19 GMT
-Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04on2048.outbound.protection.outlook.com [40.107.100.48])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47dk6886t9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 22 Jun 2025 08:58:19 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gfKvLNPkcPUpLrXLAG0MH3UA5ntomdkcPZbtb+oR54Yb7edHlx9r0HqPv9vVyTJzXt+YF5KcWGH8BRFmUOv3yelvCTekbaG+uFgQVfQL3XYqxG3NWR2BqQ48RxfbxKOH/rJ7Cjih9nithN7pQ5p6GAVc5aeUYzW0xABN4tZsMgt13VyGGHj2V9PY4OHXd9cET8wK2fuKSudcAeAYJr7rcU8w3gAsS9WfRg7s/y5xY3keBhiiSEQnW6oxKIUWoWS5Rcs43nWJ0OFjvr9oI1X58wcZZcRjgE6KtnqVlK5x7I3Zh+vL7yzw+C6J2v7Zx8y3wnBrLK/Q3k1zcqPT+yJYrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lI6JkJdH1UIz/F7eVfJl8sSEzbaai517O5Rhm3m5hos=;
- b=LvAD9MsUUbr3FALVvTqvCUpLtydiTdYmfgCM/QnGgBOVFWXnuEBYg4x+l9W7cgRVffa3CWHQQFGdSP4S2S3tnRobZ+OCl2f/HM8DO4Fn13KssL9wDOYU2/SDEtmRX1OsJsCAk8MD21/Vo/Tc9ICzDi4DuatzjSibVimp49uTNQshHLf3hETljSu+K18uijDwQITiv30xV/u/Lj96V38Dvl/1oserqM4OOo48gx53KyoGkW0zyEH/2amntnUIc84/k6gVQx+5iv+aPzvi8EL3qGxjVz/QjARMMBIcN9lYdJCT0le5DSfHF01zsEe0Iub8Ykq5X89o56AQ0w8/IQFTyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMnR+NIg"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a4e57d018cso486448f8f.1;
+        Sun, 22 Jun 2025 02:05:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lI6JkJdH1UIz/F7eVfJl8sSEzbaai517O5Rhm3m5hos=;
- b=JLQ2IJHcOVyWK5K1ly6FK0dQN4p7Lcdo24gaaNFqqDUBOkptZMSPyn8+bXabqNHbzmLnfJdQNGgWfYJOfUh+X8uy3g71q32ORYshJCWXosGZqbs9oQcCo32Emdf7yjWclNvxPP3VIuRmnrSNMN91tCg4sTtTUi1QoNS68V4p8pw=
-Received: from PH0PR10MB5433.namprd10.prod.outlook.com (2603:10b6:510:e0::9)
- by DS0PR10MB6055.namprd10.prod.outlook.com (2603:10b6:8:cc::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.26; Sun, 22 Jun
- 2025 08:58:16 +0000
-Received: from PH0PR10MB5433.namprd10.prod.outlook.com
- ([fe80::47be:ad6e:e3be:ba80]) by PH0PR10MB5433.namprd10.prod.outlook.com
- ([fe80::47be:ad6e:e3be:ba80%7]) with mapi id 15.20.8857.022; Sun, 22 Jun 2025
- 08:58:16 +0000
-Message-ID: <75f99fce-affa-4acc-afeb-2a9f70a6d907@oracle.com>
-Date: Sun, 22 Jun 2025 10:58:08 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] Documentation: typography refresh
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Documentation <linux-doc@vger.kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Carlos Bilbao <carlos.bilbao@kernel.org>,
-        Avadhut Naik
- <avadhut.naik@amd.com>, Alex Shi <alexs@kernel.org>,
-        Yanteng Si <si.yanteng@linux.dev>, Dongliang Mu <dzm91@hust.edu.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stanislav Fomichev <sdf@google.com>, David Vernet <void@manifault.com>,
-        Miguel Ojeda <ojeda@kernel.org>, James Seo <james@equiv.tech>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-References: <20250619042318.17325-2-bagasdotme@gmail.com>
-Content-Language: en-US
-From: Vegard Nossum <vegard.nossum@oracle.com>
-Autocrypt: addr=vegard.nossum@oracle.com; keydata=
- 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 8A==
-In-Reply-To: <20250619042318.17325-2-bagasdotme@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PA7P264CA0275.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:102:373::11) To PH0PR10MB5433.namprd10.prod.outlook.com
- (2603:10b6:510:e0::9)
+        d=gmail.com; s=20230601; t=1750583133; x=1751187933; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FBbEIMmluufOlRjDPrZA8bvK69JEShHHmaoQ9jEjd8c=;
+        b=RMnR+NIg5k75+Fb5y04uud09amMgR3kzJhBQAJtydrdWSgr9WTzR4Xgy+YQ0HoqfDB
+         jPf3OyrLm8Utrj7z/eZiR2SbuHZwxetjhAgB8A3uIO0TKvMatVF81VqBtOx7sjXt0W8Q
+         NFfaRRCjkEVEVxLTEqj3IAH8cdtzBW7nyIjQyJwhplh058eNq13vTjfWRvkYsAOf/I2J
+         2yS8HoP7w6DrESEzrMyMTV15FMXH/KPPk1Wx6scuPnQYZZx6uP20YoprVJbyjpYh7urH
+         q9I7i5uZmZxiXP1lwZQ5S+cJ+QJjOQ04WdXh7qW95N0jTYN6L/DqLpHYVF4IGl8K0ZR1
+         hfqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750583133; x=1751187933;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FBbEIMmluufOlRjDPrZA8bvK69JEShHHmaoQ9jEjd8c=;
+        b=VK6VMhm0fruoIWz+bj3jBqKa1i0pAF0o3KGeNfwhJteMPojHXgd2XJM6WT3oehyYi4
+         6ggPg7NjX3AnTw2NUHJv0NOK5oWNOQsjEhG6YwB1yCgS0KYsRkHDKP1vSCSoP11shVod
+         CKc5mxBdv36OnWtmNkcCkM+O7KY+rCXnEA7FYmYqrQDp8qFewiVNpGFhNjFP/dRZc7lL
+         mVN3v7IkhBJZ6Vp7sMlgsoFAAKRW2IPg0Mqi2e814ITzGEcBGRwOakZvJf8ecFjZKmjs
+         Le3aR88IjROoLdgLH1XqsWSsENwueTPEDm/CY2GRZU8O6+pgZp+UlT+ni+Ws8Ay8CaAh
+         ufRg==
+X-Forwarded-Encrypted: i=1; AJvYcCU3fTWFcF7BHMisPaBso+FdMZW2ZyvjQq66UiE00A2p+KchLDo4ggVFlHZP9iqp8WPcoOFN82z0D2FPCno=@vger.kernel.org, AJvYcCUU4bHYWSt9Hzj3w1tpx9Zq38QFpYV6/CUtCBS5OSqS/ysU7GNk4GXVJuBSbcfaCLULrc3Z3Z/D@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNFknYEz1ZOnTWqxEX8WhQU7V1vKf7sm+D0zT6GdVXpdHlVIY1
+	rdriGg5+fNFC046GQ07BnfoyMeteinN+hJxLDtlRk6yIJqgyspOxcrlx
+X-Gm-Gg: ASbGncuX0sCxweezko9cedkWoky8VgusEZ0346CygCwuGTs3njIAWgx5mry8f2ohMIK
+	32mLpV8mFrnpkStqm8BtWAw3L9YwAEwRqJ/jw6aKPM69owHpNjWD2nHGdyqzsgeH26SCNELoElO
+	nfD8IKuXHQzKFs6GApl8In3WFvpx1oT5eU4t3kbhxEwAtyCOrJf00/rSupsauEK4KsG/7ZnxzKV
+	V9siyEI7DHNLDOdMRQSqMrf+VtdgmQpPcdWlaOvKTljZGCN6DsuAjmRNwYBnMKIbwerSMwjSp52
+	uT+TGxpHOD/gJKwGI2/7d2ydnutxYJSVhhUqU67YAyYVHf8bb4a6TEyWxq5NjLcNm8R5+5yyTRk
+	yXCw0HesZsbh82Yq9TlI4Blbg
+X-Google-Smtp-Source: AGHT+IH/vxp2gKQuSsTSg62kNqGQcDx9OcYxMcGwRSuHAK9BRd462S48L+rgzH2pcfKic9agxJNW1g==
+X-Received: by 2002:a05:600c:620e:b0:453:59b5:25cc with SMTP id 5b1f17b1804b1-453659c431fmr29659195e9.7.1750583132329;
+        Sun, 22 Jun 2025 02:05:32 -0700 (PDT)
+Received: from localhost.localdomain ([156.208.241.250])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646dc761sm73839805e9.17.2025.06.22.02.05.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Jun 2025 02:05:31 -0700 (PDT)
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+To: corbet@lwn.net,
+	davem@davemloft.net,
+	edumazet@google.com,
+	horms@kernel.org,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	skhan@linuxfoundation.com,
+	jacob.e.keller@intel.com,
+	alok.a.tiwari@oracle.com,
+	bagasdotme@gmail.com,
+	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Subject: [PATCH net-next v5] docs: net: sysctl documentation cleanup
+Date: Sun, 22 Jun 2025 12:05:12 +0300
+Message-Id: <20250622090512.190461-1-abdelrahmanfekry375@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB5433:EE_|DS0PR10MB6055:EE_
-X-MS-Office365-Filtering-Correlation-Id: 44eca7e1-62ea-4033-31c5-08ddb16aed00
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WVZnVVJIYmlZRzRzdGg4bjNudk1yTllFUDlTTWM4aHZHRENHOWxtQkIrTVBo?=
- =?utf-8?B?N3R0by94VUpvbGZLMXlzdUlNNXJrVm95czA0bVZ6Z2VsL09rTkRnRkJ6bFBi?=
- =?utf-8?B?R25jdnJtV1BmRE1NR1NObXVlMUxnZ3VyN3l4Ti8wQk9wRzBMc0FQUjdScGtn?=
- =?utf-8?B?b0xlNkw3N3JXWklTV2Y0NXppOFZJU056NkRIdEdXK2RZTTJ1Q2xlMmVsai9I?=
- =?utf-8?B?aGpWbzJlYWw4UGZIUUxtQWI3N1d3anZDMFMxNXJmL3JSV1pBTldoZnpqU2Qw?=
- =?utf-8?B?aENaMTNHK1pBNmpJOUlaVkxwTmtoSjFtV0hrcjl2NDlDWDF0U0JkN2JZZzJS?=
- =?utf-8?B?YmtjblV1Sm9Dd3czQUlVWDRUTHQ3STNBQ1dPYnoxTDNVU2c4NnpZT3ZWMGVV?=
- =?utf-8?B?emQvaHV4MWg3VTJYV1MyWDlKVWtxaTh4Sk9Cc29YaDdJcDFTS1owY3ZpOG1G?=
- =?utf-8?B?UWdrcWR5YkppSmVGaTU0aXpoVGRpK1crSW5Od2ZHWjVMLzZmeWVienFVZnF3?=
- =?utf-8?B?dk5vL0tOczd4UUpNdFllYjRROTRvK09rNXU5bzV1RlF1SXJ6WXlBSC94Wm41?=
- =?utf-8?B?TmVTRnRqK0swQVVKWU9zK3Bhc3IvQlBsSXhmS3dqVG5TaGd0dUJKSTdwU21W?=
- =?utf-8?B?SG51a0s5OE4ramV4eFVPM3pQY3J0UjZHMUc0ZGZEWUM2U1FIQTR0blhKZFYr?=
- =?utf-8?B?TzVZUnhwZ29SamszMmVETUM4Qmk4RmYzODB6WHF6S210K1F2bUU0OWpzeXFJ?=
- =?utf-8?B?ZnpTTjFyRjVrelhhZHZ2SWV6RGc2WWMzaG1WV3Nrc2NoSkRkZkJmRXVveEU1?=
- =?utf-8?B?K2JiOWduUTFkbUV4V1kzZE8vSVBZYSt3RVNaL0Q5OHlSNm52VHhLdUZPdHlu?=
- =?utf-8?B?VTN4THhTQ0Z3ajFkLzBvSkhEek9mejhaOWY5RXRwb3FBU2VFM0RKYTJkQWhP?=
- =?utf-8?B?T25Cd1p5US9lRXVSc29Wbjc4STNKN09HYzFsck15Z0dCOWJMMTViRk1OZDYr?=
- =?utf-8?B?WmpHQnNlOWdHblIvRUZkakVsbVQxRUVhYzdMY1VDSEJwWThob0IzRXEzbTVP?=
- =?utf-8?B?MmJOM2xtSFIweHBWL2N4dnpUSlJmU2RmMTRtN25EM0Z4cEc2cEE0bG1YU2JW?=
- =?utf-8?B?clh1VWVuR2VteXlwK0FJMG00SXE1MkN0dHB6dGpOZGM4bU5iNHVseTF1U0FZ?=
- =?utf-8?B?b0dvVEhxemg0Rnplc0F6YmxkNGhYL3NMK2NqakE5WENXVWZyVjBHeFdoS1dp?=
- =?utf-8?B?aHU3U1pYSlNFTUxUc3htUnJVZTlydk4wTkZ2Tm1ab0YzK0xpWXVmcU1YaFRx?=
- =?utf-8?B?d0ZtZ1ZnT0VJL0ZyMXpZaHZ2WmdxalJCRHBlTTAwOXdwTStxYk00bGQrODNS?=
- =?utf-8?B?NTNtcDJFUjdEUHZmSGt6N24zczZwK3FXVCtzNHVCUlEwT2I2aWd3SXMrVEJS?=
- =?utf-8?B?VDRvR3FwNitJK2FmMVZNSlRmYkl0c2IxSit4c1FjUmtEVEFEUmFnNlE4L01a?=
- =?utf-8?B?U1dEYVAzaUhnQm1JTS9pcVVDUWpEK1gxK09GZEVCMFhmTlB0T0c0YkdUVnJl?=
- =?utf-8?B?Y0ZaQ0kxaWYzV3o5c0lXUEJLK1d4aVpuOXFHVGZHTHlVQVNoMFpYMDFkak9Q?=
- =?utf-8?B?ai92bmJYRDVEVk4xR3J6M2FyMDJyNE9OTmtDako5MlUvUEJNRmRzZmpNS1Fu?=
- =?utf-8?B?a1l6ZElGOWZVZmFpM1l3REVrSEZaTGlyZUlqOEhSYXZsd0NvTzRhc3lNOU1y?=
- =?utf-8?B?dExJREhvMDdNWW1QOVowbXBEdEVic0s1MVdOSjdiTTA5TnJ0Q2Zub2VOYUJJ?=
- =?utf-8?B?K2xPMVVYenNHVnJvcXZNUkpYa1RSWW8wM1R6Y1pJdmVYRGYzY3lpWW1SdFAy?=
- =?utf-8?B?YytwcDhPcHhlelR6RFF6aVFMS3p0OXh3VFBHeUlXYm1YckFPSUFKTVBxeDFz?=
- =?utf-8?Q?LNl4pXunL6U=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5433.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZHFvUFY1SFBVUzBmdHM1d3JmMmJCbWxjY1dyNC9Jak9DQk92cjdGVHlLaUZG?=
- =?utf-8?B?VWQ4aFR0S3BSdHRSVWc5VnhWWDNsS2oyenFJVnpmUXZVUVpxOW9tTkJpdE1L?=
- =?utf-8?B?SVROaldESlhnMnBIeC9VOWdNZzdrSm9pQjQrRVhnNDJDN2hHYmpVcGg0ckR2?=
- =?utf-8?B?NGJKOXd6VkQzMVZOU1dMSmpIRDBBRitTQTUyMHBlMHFjZEZ6dmw0TmY3QmtU?=
- =?utf-8?B?RFJWbFJjNWo2SjhhUUlXcllQTTdDNGNlM01udDdRVUxkUnVHbDVsWHc2ZjFL?=
- =?utf-8?B?TzYyM3V5VThDVjFTR1I3N1RVOWlUczhHTTFJdUxyYytnZnZUK0x2VXdudTJk?=
- =?utf-8?B?VXN2MlRhOWhCbTE5MHhrN0J6bG52c2o0ZHFOcUJ3eXpPYWxidGNGTUVzSkht?=
- =?utf-8?B?LzVsQ29MVk93aXRINE5MSzRLNXEzODRvNURxOWt2S2dSek9KRnZPNFJRQ2JJ?=
- =?utf-8?B?ZmlRRWtlQkFqRTJtOUdGLzZramtzU09BRXJIbWllamxzZlZoaE5mNXEzcFM5?=
- =?utf-8?B?Nnl5Y1hhSy9WcDRZU1ZCdlYxYnFicFF4VlhzYTBPK0Jrc05QamVtWUhkTzJI?=
- =?utf-8?B?Q0FaZERRQWxVR1orRXRPL0g0dTBlV1VoVm9oaG5CT0JGeWFOVUdLVVBreHJW?=
- =?utf-8?B?bmxGRVcrQ1NqNU9mOTYxNDQya0tXaEZJaHFXVi9vYTlaeDk1MCt6Z2dSOFdP?=
- =?utf-8?B?bHkyMnU2dm1WUkVDekt2bGtkZmdTMVFZcTE4Mjk4S2VUM3NWMm1BcGhBVDNQ?=
- =?utf-8?B?cTJKNkhoMVp3Y0VzbWFqMFJtYUdyaTJjSUNPMUN2alB1M3VHTTJzN0c3V251?=
- =?utf-8?B?dmY3VGViWURTS1RpeURpV09YUHBBZmFNMXc2b0g5NGxZeDN3RXl6TzYyd3l5?=
- =?utf-8?B?S2RXUnZZTDZqV2dSQUtxZndQNjdTZzRNcDBxUlkxRitaUWd2ejV4aFlDMS9r?=
- =?utf-8?B?bjM5ekhrcURUYSs0ejZzWVU5cU5RSmVtRXdrWk1xamFJT1JiSi9IWnBEVHNM?=
- =?utf-8?B?bUlSd2JTT05Udmd1UGFkZXVpc3VhWm8wWWN2ODNlcHorRnBkNzZvbFp2VHdC?=
- =?utf-8?B?ODlDRUFPQVJ2QlYrL1h1N2FBRUhieUQyeVNtUGFyZVF4Z0dBM3lIVTZDQjdN?=
- =?utf-8?B?THNyeG9Zc1dEMkxERlFiMTFJVG5UR2czMGZnMDVic0syNDJIL2RNSHk3QVFV?=
- =?utf-8?B?d0k4SVVzMGx2UmZyMWJqQ2JLQ3ltaTR2Sm1lNzlEVng3ZDNERTl0L1RBTXk3?=
- =?utf-8?B?UnRkZmw3U3pva3oyVVMzcmJ0VjUyRmVvcnRqT3hlZzB0WjFvNHJqc1Y5ZEpL?=
- =?utf-8?B?RTc5QnBRbkY3T1hHOW1Jcmlsd21BTFltM2w1MDlxY3pMNDUrWlpZQUthVEFh?=
- =?utf-8?B?TFkwUlQ0OVF5YW9VOGx3YW5wTk93b1BMZ3cwc0V6Q2FGSWh6aGp1VHo4L2pu?=
- =?utf-8?B?TUN0K3k1RFRGSy9IT1N4Zy8weHJhM1JiUHNDUlZqZVNhRzZnQWcvNEpPelYw?=
- =?utf-8?B?Y09tOVlJNjlmQUYzZDJWaFRJb0tTVndERWJBSmNJaWphem95ZUtOK1AxZ1Vu?=
- =?utf-8?B?bDBrUEZKOEJ0ZXh0Yy9jUDFoMEU1c1M1Z2FjN2RKRWo4dTRNRDlVM3NzM1VW?=
- =?utf-8?B?bDR3UmkwSjl5NnA4dC9jRUo2S3RjZXhwU3dVdHg4RGRSaThWNmpDK2ZaSlkv?=
- =?utf-8?B?RjhxaFNQK0ZiY0NpVXRwOXVaeEU1OXo1eWVOUkUvNHdVdHZjbE1EZjZUODBY?=
- =?utf-8?B?blZHK1NQYXhwcjNpNDZVT25zbzJvZDFYa2NXY1F0cW5YNFNYQ05DaG1jdGtM?=
- =?utf-8?B?YVZJR1FLblJXbjFpa1hLTlM1Um5nUzBaOGhMdkNGd0labUxEK0tUbWNaWjRS?=
- =?utf-8?B?WE9SYTh3ZnM2VmNhYTlWcGd4a3RBelowTTl5NEdnSkxEdGlDUzFSeURsdFIw?=
- =?utf-8?B?NDY5Y2RrVW9ialVsMmxTWFM4Tjk0ZkFIMUNDbEpWZHAxMk5kazIrNmIxSjhC?=
- =?utf-8?B?cHNmMDUrdzE1dkxSZ0lVT1lZTmlCa3djZFZjdEpvUm9FWHhPUjdwUndaRXJL?=
- =?utf-8?B?SXA1YWNxS2JlZVh4UCtwdXZHVGZHcWFwSGhmenRiT0xxTEhOdERqYi9WOVhn?=
- =?utf-8?B?Zy8zZVprUXVqSGgwRVhnV2xDS0lQSzVVRFhXdFp3UENGWXZ3U2FjdEkvL1hO?=
- =?utf-8?B?TVE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	rGfzh1gIe/ZxbAlPzYuOt++YvG1xCTuCa/0P/168VR/oAiqJkgM55jgWfch1yD+csH0lRN8D5o7pL2dvc2O2G8Hm57UvFRNgps8KbJI1nlxucqGV89twqZYXSwH4SRNdGZz+aZwYzIFHQY1VQ3wf81YsLbwlYtBW50pYUkWToe6NpDBvVjqlyPKzyq47HB9mCqd22MhGWcam2plMZmp1OTsryIQxpJlOJwlRzKyqu2brSy38BbX6vrZpADZ9BxSO8oWwK8F3LSU53s7hDphOcNPvjITjijoTtDMUv8fvMM0DCZ2EHMuQY4KOJn/QCJf/Priby2WqeMPLoM/dAqSzlx864cKaIZe0idZfjKoUJFQSZkPjDtmQBpyL4qStmOMKxaaJSJM8Jm7h1KU8VDcTQuXlfO+j6b1HY0aW4ipWYw2U5LCvraLAhdE3V10lI5td3D96jd17sKFm8mrf8YZRi6gzhsCTRQph4R6eYVYCP9uQZo7k00Zl3GztOtFtz0w7VG9GW/2D84Hbni60FSEA38l3FtN674gggrpUPdUQgiGPLCdad8sWhGDRXp47/h/i/FMNg2dupDXhGi/eivVe/itdRt5OnM33Ym28T2SSMmc=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 44eca7e1-62ea-4033-31c5-08ddb16aed00
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5433.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2025 08:58:16.4063
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: N+DeftPWQh+esjr2HckXiBpKZhIeLRTQptDRUChhBL2DUJpbn919t2YFddTQ4nYrRTVN+HbStwvq2jBWYkuPoGRJYNzG32kOTlEtQHJLoFo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB6055
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-22_03,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
- bulkscore=0 adultscore=0 phishscore=0 spamscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2506220053
-X-Proofpoint-ORIG-GUID: hht_hyl3_qIDPCcYBi13-w4TNGbNn-7s
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDA1MyBTYWx0ZWRfXzedQWiiYxKrn pbuXAq9uee848c6S8Ll6wwuP2cMFW4bp7UaiGkd7rNKD9nbf0mGTRC1GAMDDeBNqrr8LZC3fh+u WAmF7t4XxMGd6vunFzWv3N6GDwBNMz0bGlIP8oq5qelXMU3pQjriCZMAWtmANzjMgEOiM49fiSd
- NJ5Z38hxzQZXw7UjG5aDKxn8q79OIraRooQyfuO9447sXn6bFvpbGKG/fjykvT4tKmIB7Zr+OiK ozsJBthALdEk35SlWDK15zJnyoLfmJPzUKoYDHtejyInZDLi35a2P30K5kUKqeBx8u5fiyDTi7X gYTGJ+nGcqizEgO7Sl1jp+EsvNsc0rkkEs1vYsZKJz2DApg+OVfCG2Zw7+V6YVK4Kr9fWW5v1ZH
- UhO1rqZ5TLDLT+Zo4ndxFerG7lzgjEWM5L40H6N7x1VAU7KPUkqIwAzmgQwmbE0rxxugLhia
-X-Proofpoint-GUID: hht_hyl3_qIDPCcYBi13-w4TNGbNn-7s
-X-Authority-Analysis: v=2.4 cv=PqSTbxM3 c=1 sm=1 tr=0 ts=6857c5ac cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=w8nDmgz-34BnD_96SnsA:9 a=QEXdDO2ut3YA:10
+Content-Transfer-Encoding: 8bit
 
+Also addresses formatting inconsistencies in touched parameters.
 
-On 19/06/2025 06:23, Bagas Sanjaya wrote:
-> At present, kernel documentation uses system serif font for body text.
-> Some people, however, objected to it and instead prefer that the
-> typography choice must be legible, consistent, and accessible (after
-> all, the audience ranges developers peeking into kernel internals to
-> ordinary users that skimmed through Documentation/admin-guide/).
-> 
-> To tackle the problem, follow Wikimedia's typography refresh [1].
-> For the font choices, instead of using web fonts as in previous
-> attempt [2], use:
-> 
->    * Linux Libertine, Georgia, Times for serif (used in h1 and h2
->      headings)
->    * system font for sans-serif and monospace
-> 
-> This allows for more readability and consistency without sacrificing
-> page load times and bandwidth, as the font choices is most likely
-> already available on many platforms.
+Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+---
+v5:
+- Fixes indentation problem.
 
-Hi,
+v4: https://lore.kernel.org/all/20250622062724.180130-1-abdelrahmanfekry375@gmail.com/
+- Fixes blank line error that causes lists to be rendered as normal text.
+- Standarize more booleans.
 
-Could you share (links to) screenshots of the new look?
+v3: https://lore.kernel.org/all/20250620215542.153440-1-abdelrahmanfekry375@gmail.com/
+- Uses imperative mood in patch description
+- Make sure patch applies by rebasing to net-next first
+- Added Possible values for more booleans
+- Used enabled/disabled instead of set/unset
+- Standarized formatting of touched booleans
 
-I know external links are ephemeral by nature and we prefer to have
-stuff archived, but I think it would really help everybody to be able to
-see what you see after applying the patches without having to build it
-ourselves.
+v2: https://lore.kernel.org/all/20250614225324.82810-2-abdelrahmanfekry375@gmail.com/
+- Deleted space before colon for consistency
+- Standardized more boolean representation (0/1 with enabled/disabled)
 
-Thanks.
+v1: https://lore.kernel.org/all/20250612162954.55843-2-abdelrahmanfekry375@gmail.com/
+- Fixed typo in cipso_rbm_struct_valid
+- Added missing default value declarations
+- Standardized boolean representation (0/1 with enabled/disabled)
+ Documentation/networking/ip-sysctl.rst | 674 +++++++++++++++++++------
+ 1 file changed, 521 insertions(+), 153 deletions(-)
 
+diff --git a/Documentation/networking/ip-sysctl.rst b/Documentation/networking/ip-sysctl.rst
+index 466bc3f5186e..c47c506c0e17 100644
+--- a/Documentation/networking/ip-sysctl.rst
++++ b/Documentation/networking/ip-sysctl.rst
+@@ -8,15 +8,19 @@ IP Sysctl
+ ==============================
+ 
+ ip_forward - BOOLEAN
+-	- 0 - disabled (default)
+-	- not 0 - enabled
+-
+ 	Forward Packets between interfaces.
+ 
+ 	This variable is special, its change resets all configuration
+ 	parameters to their default state (RFC1122 for hosts, RFC1812
+ 	for routers)
+ 
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
++
+ ip_default_ttl - INTEGER
+ 	Default value of TTL field (Time To Live) for outgoing (but not
+ 	forwarded) IP packets. Should be between 1 and 255 inclusive.
+@@ -62,20 +66,25 @@ ip_forward_use_pmtu - BOOLEAN
+ 	kernel honoring this information. This is normally not the
+ 	case.
+ 
+-	Default: 0 (disabled)
+-
+ 	Possible values:
+ 
+-	- 0 - disabled
+-	- 1 - enabled
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ fwmark_reflect - BOOLEAN
+ 	Controls the fwmark of kernel-generated IPv4 reply packets that are not
+ 	associated with a socket for example, TCP RSTs or ICMP echo replies).
+-	If unset, these packets have a fwmark of zero. If set, they have the
++	If disabled, these packets have a fwmark of zero. If enabled, they have the
+ 	fwmark of the packet they are replying to.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ fib_multipath_use_neigh - BOOLEAN
+ 	Use status of existing neighbor entry when determining nexthop for
+@@ -83,12 +92,12 @@ fib_multipath_use_neigh - BOOLEAN
+ 	packets could be directed to a failed nexthop. Only valid for kernels
+ 	built with CONFIG_IP_ROUTE_MULTIPATH enabled.
+ 
+-	Default: 0 (disabled)
+-
+ 	Possible values:
+ 
+-	- 0 - disabled
+-	- 1 - enabled
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ fib_multipath_hash_policy - INTEGER
+ 	Controls which hash policy to use for multipath routes. Only valid
+@@ -368,7 +377,12 @@ tcp_autocorking - BOOLEAN
+ 	queue. Applications can still use TCP_CORK for optimal behavior
+ 	when they know how/when to uncork their sockets.
+ 
+-	Default : 1
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 1 (enabled)
+ 
+ tcp_available_congestion_control - STRING
+ 	Shows the available congestion control choices that are registered.
+@@ -408,6 +422,13 @@ tcp_congestion_control - STRING
+ tcp_dsack - BOOLEAN
+ 	Allows TCP to send "duplicate" SACKs.
+ 
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 1 (enabled)
++
+ tcp_early_retrans - INTEGER
+ 	Tail loss probe (TLP) converts RTOs occurring due to tail
+ 	losses into fast recovery (draft-ietf-tcpm-rack). Note that
+@@ -447,7 +468,12 @@ tcp_ecn_fallback - BOOLEAN
+ 	knob. The value	is not used, if tcp_ecn or per route (or congestion
+ 	control) ECN settings are disabled.
+ 
+-	Default: 1 (fallback enabled)
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 1 (enabled)
+ 
+ tcp_fack - BOOLEAN
+ 	This is a legacy option, it has no effect anymore.
+@@ -474,7 +500,7 @@ tcp_frto - INTEGER
+ 	By default it's enabled with a non-zero value. 0 disables F-RTO.
+ 
+ tcp_fwmark_accept - BOOLEAN
+-	If set, incoming connections to listening sockets that do not have a
++	If enabled, incoming connections to listening sockets that do not have a
+ 	socket mark will set the mark of the accepting socket to the fwmark of
+ 	the incoming SYN packet. This will cause all packets on that connection
+ 	(starting from the first SYNACK) to be sent with that fwmark. The
+@@ -482,7 +508,12 @@ tcp_fwmark_accept - BOOLEAN
+ 	have a fwmark set via setsockopt(SOL_SOCKET, SO_MARK, ...) are
+ 	unaffected.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ tcp_invalid_ratelimit - INTEGER
+ 	Limit the maximal rate for sending duplicate acknowledgments
+@@ -528,6 +559,11 @@ tcp_l3mdev_accept - BOOLEAN
+ 	which the packets originated. Only valid when the kernel was
+ 	compiled with CONFIG_NET_L3_MASTER_DEV.
+ 
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
+ 	Default: 0 (disabled)
+ 
+ tcp_low_latency - BOOLEAN
+@@ -593,10 +629,16 @@ tcp_min_rtt_wlen - INTEGER
+ 	Default: 300
+ 
+ tcp_moderate_rcvbuf - BOOLEAN
+-	If set, TCP performs receive buffer auto-tuning, attempting to
++	If enabled, TCP performs receive buffer auto-tuning, attempting to
+ 	automatically size the buffer (no greater than tcp_rmem[2]) to
+-	match the size required by the path for full throughput.  Enabled by
+-	default.
++	match the size required by the path for full throughput.
++
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ tcp_mtu_probing - INTEGER
+ 	Controls TCP Packetization-Layer Path MTU Discovery.  Takes three
+@@ -621,13 +663,26 @@ tcp_no_metrics_save - BOOLEAN
+ 	when the connection closes, so that connections established in the
+ 	near future can use these to set initial conditions.  Usually, this
+ 	increases overall performance, but may sometimes cause performance
+-	degradation.  If set, TCP will not cache metrics on closing
++	degradation.  If enabled, TCP will not cache metrics on closing
+ 	connections.
+ 
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
++
+ tcp_no_ssthresh_metrics_save - BOOLEAN
+ 	Controls whether TCP saves ssthresh metrics in the route cache.
++	If enabled, ssthresh metrics are disabled.
++
++	Possible values:
+ 
+-	Default is 1, which disables ssthresh metrics.
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 1 (enabled)
+ 
+ tcp_orphan_retries - INTEGER
+ 	This value influences the timeout of a locally closed TCP connection,
+@@ -666,6 +721,11 @@ tcp_reflect_tos - BOOLEAN
+ 
+ 	This options affects both IPv4 and IPv6.
+ 
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
+ 	Default: 0 (disabled)
+ 
+ tcp_reordering - INTEGER
+@@ -687,6 +747,13 @@ tcp_retrans_collapse - BOOLEAN
+ 	On retransmit try to send bigger packets to work around bugs in
+ 	certain TCP stacks.
+ 
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 1 (enabled)
++
+ tcp_retries1 - INTEGER
+ 	This value influences the time, after which TCP decides, that
+ 	something is wrong due to unacknowledged RTO retransmissions,
+@@ -714,11 +781,16 @@ tcp_retries2 - INTEGER
+ 	which corresponds to a value of at least 8.
+ 
+ tcp_rfc1337 - BOOLEAN
+-	If set, the TCP stack behaves conforming to RFC1337. If unset,
++	If enabled, the TCP stack behaves conforming to RFC1337. If unset,
+ 	we are not conforming to RFC, but prevent TCP TIME_WAIT
+ 	assassination.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ tcp_rmem - vector of 3 INTEGERs: min, default, max
+ 	min: Minimal size of receive buffer used by TCP sockets.
+@@ -742,6 +814,13 @@ tcp_rmem - vector of 3 INTEGERs: min, default, max
+ tcp_sack - BOOLEAN
+ 	Enable select acknowledgments (SACKS).
+ 
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 1 (enabled)
++
+ tcp_comp_sack_delay_ns - LONG INTEGER
+ 	TCP tries to reduce number of SACK sent, using a timer
+ 	based on 5% of SRTT, capped by this sysctl, in nano seconds.
+@@ -764,26 +843,41 @@ tcp_comp_sack_nr - INTEGER
+ 	Default : 44
+ 
+ tcp_backlog_ack_defer - BOOLEAN
+-	If set, user thread processing socket backlog tries sending
++	If enabled, user thread processing socket backlog tries sending
+ 	one ACK for the whole queue. This helps to avoid potential
+ 	long latencies at end of a TCP socket syscall.
+ 
+-	Default : true
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 1 (enabled)
+ 
+ tcp_slow_start_after_idle - BOOLEAN
+-	If set, provide RFC2861 behavior and time out the congestion
++	If enabled, provide RFC2861 behavior and time out the congestion
+ 	window after an idle period.  An idle period is defined at
+ 	the current RTO.  If unset, the congestion window will not
+ 	be timed out after an idle period.
+ 
+-	Default: 1
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 1 (enabled)
+ 
+ tcp_stdurg - BOOLEAN
+ 	Use the Host requirements interpretation of the TCP urgent pointer field.
+-	Most hosts use the older BSD interpretation, so if you turn this on
++	Most hosts use the older BSD interpretation, so if enabled,
+ 	Linux might not communicate correctly with them.
+ 
+-	Default: FALSE
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ tcp_synack_retries - INTEGER
+ 	Number of times SYNACKs for a passive TCP connection attempt will
+@@ -840,7 +934,12 @@ tcp_migrate_req - BOOLEAN
+ 	migration by returning SK_DROP in the type of eBPF program, or
+ 	disable this option.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ tcp_fastopen - INTEGER
+ 	Enable TCP Fast Open (RFC7413) to send and accept data in the opening
+@@ -1021,6 +1120,13 @@ tcp_tw_reuse_delay - UNSIGNED INTEGER
+ tcp_window_scaling - BOOLEAN
+ 	Enable window scaling as defined in RFC1323.
+ 
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 1 (enabled)
++
+ tcp_shrink_window - BOOLEAN
+ 	This changes how the TCP receive window is calculated.
+ 
+@@ -1028,13 +1134,15 @@ tcp_shrink_window - BOOLEAN
+ 	window can be offered, and that TCP implementations MUST ensure
+ 	that they handle a shrinking window, as specified in RFC 1122.
+ 
+-	- 0 - Disabled.	The window is never shrunk.
+-	- 1 - Enabled.	The window is shrunk when necessary to remain within
+-			the memory limit set by autotuning (sk_rcvbuf).
+-			This only occurs if a non-zero receive window
+-			scaling factor is also in effect.
++	Possible values:
+ 
+-	Default: 0
++	- 0 (disabled) - The window is never shrunk.
++	- 1 (enabled)  - The window is shrunk when necessary to remain within
++	  the memory limit set by autotuning (sk_rcvbuf).
++	  This only occurs if a non-zero receive window
++	  scaling factor is also in effect.
++
++	Default: 0 (disabled)
+ 
+ tcp_wmem - vector of 3 INTEGERs: min, default, max
+ 	min: Amount of memory reserved for send buffers for TCP sockets.
+@@ -1071,16 +1179,21 @@ tcp_notsent_lowat - UNSIGNED INTEGER
+ 	Default: UINT_MAX (0xFFFFFFFF)
+ 
+ tcp_workaround_signed_windows - BOOLEAN
+-	If set, assume no receipt of a window scaling option means the
++	If enabled, assume no receipt of a window scaling option means the
+ 	remote TCP is broken and treats the window as a signed quantity.
+-	If unset, assume the remote TCP is not broken even if we do
++	If disabled, assume the remote TCP is not broken even if we do
+ 	not receive a window scaling option from them.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ tcp_thin_linear_timeouts - BOOLEAN
+ 	Enable dynamic triggering of linear timeouts for thin streams.
+-	If set, a check is performed upon retransmission by timeout to
++	If enabled, a check is performed upon retransmission by timeout to
+ 	determine if the stream is thin (less than 4 packets in flight).
+ 	As long as the stream is found to be thin, up to 6 linear
+ 	timeouts may be performed before exponential backoff mode is
+@@ -1089,7 +1202,12 @@ tcp_thin_linear_timeouts - BOOLEAN
+ 	For more information on thin streams, see
+ 	Documentation/networking/tcp-thin.rst
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ tcp_limit_output_bytes - INTEGER
+ 	Controls TCP Small Queue limit per tcp socket.
+@@ -1141,7 +1259,7 @@ tcp_child_ehash_entries - INTEGER
+ 	Default: 0
+ 
+ tcp_plb_enabled - BOOLEAN
+-	If set and the underlying congestion control (e.g. DCTCP) supports
++	If enabled and the underlying congestion control (e.g. DCTCP) supports
+ 	and enables PLB feature, TCP PLB (Protective Load Balancing) is
+ 	enabled. PLB is described in the following paper:
+ 	https://doi.org/10.1145/3544216.3544226. Based on PLB parameters,
+@@ -1157,12 +1275,17 @@ tcp_plb_enabled - BOOLEAN
+ 	by switches to determine next hop. In either case, further host
+ 	and switch side changes will be needed.
+ 
+-	When set, PLB assumes that congestion signal (e.g. ECN) is made
++	If enabled, PLB assumes that congestion signal (e.g. ECN) is made
+ 	available and used by congestion control module to estimate a
+ 	congestion measure (e.g. ce_ratio). PLB needs a congestion measure to
+ 	make repathing decisions.
+ 
+-	Default: FALSE
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ tcp_plb_idle_rehash_rounds - INTEGER
+ 	Number of consecutive congested rounds (RTT) seen after which
+@@ -1262,6 +1385,11 @@ udp_l3mdev_accept - BOOLEAN
+ 	originated. Only valid when the kernel was compiled with
+ 	CONFIG_NET_L3_MASTER_DEV.
+ 
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
+ 	Default: 0 (disabled)
+ 
+ udp_mem - vector of 3 INTEGERs: min, pressure, max
+@@ -1322,19 +1450,29 @@ raw_l3mdev_accept - BOOLEAN
+ 	originated. Only valid when the kernel was compiled with
+ 	CONFIG_NET_L3_MASTER_DEV.
+ 
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
+ 	Default: 1 (enabled)
+ 
+ CIPSOv4 Variables
+ =================
+ 
+ cipso_cache_enable - BOOLEAN
+-	If set, enable additions to and lookups from the CIPSO label mapping
+-	cache.  If unset, additions are ignored and lookups always result in a
++	If enabled, enable additions to and lookups from the CIPSO label mapping
++	cache.  If disabled, additions are ignored and lookups always result in a
+ 	miss.  However, regardless of the setting the cache is still
+ 	invalidated when required when means you can safely toggle this on and
+ 	off and the cache will always be "safe".
+ 
+-	Default: 1
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 1 (enabled)
+ 
+ cipso_cache_bucket_size - INTEGER
+ 	The CIPSO label cache consists of a fixed size hash table with each
+@@ -1352,17 +1490,27 @@ cipso_rbm_optfmt - BOOLEAN
+ 	This means that when set the CIPSO tag will be padded with empty
+ 	categories in order to make the packet data 32-bit aligned.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+-cipso_rbm_structvalid - BOOLEAN
+-	If set, do a very strict check of the CIPSO option when
+-	ip_options_compile() is called.  If unset, relax the checks done during
++cipso_rbm_strictvalid - BOOLEAN
++	If enabled, do a very strict check of the CIPSO option when
++	ip_options_compile() is called.  If disabled, relax the checks done during
+ 	ip_options_compile().  Either way is "safe" as errors are caught else
+ 	where in the CIPSO processing code but setting this to 0 (False) should
+ 	result in less work (i.e. it should be faster) but could cause problems
+ 	with other implementations that require strict checking.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ IP Variables
+ ============
+@@ -1419,10 +1567,15 @@ ip_unprivileged_port_start - INTEGER
+ 	Default: 1024
+ 
+ ip_nonlocal_bind - BOOLEAN
+-	If set, allows processes to bind() to non-local IP addresses,
++	If enabled, allows processes to bind() to non-local IP addresses,
+ 	which can be quite useful - but may break some applications.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ ip_autobind_reuse - BOOLEAN
+ 	By default, bind() does not select the ports automatically even if
+@@ -1431,7 +1584,13 @@ ip_autobind_reuse - BOOLEAN
+ 	when you use bind()+connect(), but may break some applications.
+ 	The preferred solution is to use IP_BIND_ADDRESS_NO_PORT and this
+ 	option should only be set by experts.
+-	Default: 0
++
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ ip_dynaddr - INTEGER
+ 	If set non-zero, enables support for dynamic addresses.
+@@ -1449,7 +1608,12 @@ ip_early_demux - BOOLEAN
+ 	It may add an additional cost for pure routing workloads that
+ 	reduces overall throughput, in such case you should disable it.
+ 
+-	Default: 1
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 1 (enabled)
+ 
+ ping_group_range - 2 INTEGERS
+ 	Restrict ICMP_PROTO datagram sockets to users in the group range.
+@@ -1461,31 +1625,56 @@ ping_group_range - 2 INTEGERS
+ tcp_early_demux - BOOLEAN
+ 	Enable early demux for established TCP sockets.
+ 
+-	Default: 1
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 1 (enabled)
+ 
+ udp_early_demux - BOOLEAN
+ 	Enable early demux for connected UDP sockets. Disable this if
+ 	your system could experience more unconnected load.
+ 
+-	Default: 1
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 1 (enabled)
+ 
+ icmp_echo_ignore_all - BOOLEAN
+-	If set non-zero, then the kernel will ignore all ICMP ECHO
++	If enabled, then the kernel will ignore all ICMP ECHO
+ 	requests sent to it.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ icmp_echo_enable_probe - BOOLEAN
+-        If set to one, then the kernel will respond to RFC 8335 PROBE
++        If enabled, then the kernel will respond to RFC 8335 PROBE
+         requests sent to it.
+ 
+-        Default: 0
++        Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ icmp_echo_ignore_broadcasts - BOOLEAN
+-	If set non-zero, then the kernel will ignore all ICMP ECHO and
++	If enabled, then the kernel will ignore all ICMP ECHO and
+ 	TIMESTAMP requests sent to it via broadcast/multicast.
+ 
+-	Default: 1
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ icmp_ratelimit - INTEGER
+ 	Limit the maximal rates for sending ICMP packets whose type matches
+@@ -1542,17 +1731,22 @@ icmp_ratemask - INTEGER
+ icmp_ignore_bogus_error_responses - BOOLEAN
+ 	Some routers violate RFC1122 by sending bogus responses to broadcast
+ 	frames.  Such violations are normally logged via a kernel warning.
+-	If this is set to TRUE, the kernel will not give such warnings, which
++	If enabled, the kernel will not give such warnings, which
+ 	will avoid log file clutter.
+ 
+-	Default: 1
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 1 (enabled)
+ 
+ icmp_errors_use_inbound_ifaddr - BOOLEAN
+ 
+-	If zero, icmp error messages are sent with the primary address of
++	If disabled, icmp error messages are sent with the primary address of
+ 	the exiting interface.
+ 
+-	If non-zero, the message will be sent with the primary address of
++	If enabled, the message will be sent with the primary address of
+ 	the interface that received the packet that caused the icmp error.
+ 	This is the behaviour many network administrators will expect from
+ 	a router. And it can make debugging complicated network layouts
+@@ -1562,7 +1756,12 @@ icmp_errors_use_inbound_ifaddr - BOOLEAN
+ 	then the primary address of the first non-loopback interface that
+ 	has one will be used regardless of this setting.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ igmp_max_memberships - INTEGER
+ 	Change the maximum number of multicast groups we can subscribe to.
+@@ -1912,8 +2111,12 @@ arp_evict_nocarrier - BOOLEAN
+ 	between access points on the same network. In most cases this should
+ 	remain as the default (1).
+ 
+-	- 1 - (default): Clear the ARP cache on NOCARRIER events
+-	- 0 - Do not clear ARP cache on NOCARRIER events
++	Possible values:
++
++	- 0 (disabled) - Do not clear ARP cache on NOCARRIER events
++	- 1 (enabled)  - Clear the ARP cache on NOCARRIER events
++
++	Default: 1 (enabled)
+ 
+ mcast_solicit - INTEGER
+ 	The maximum number of multicast probes in INCOMPLETE state,
+@@ -1936,9 +2139,23 @@ mcast_resolicit - INTEGER
+ disable_policy - BOOLEAN
+ 	Disable IPSEC policy (SPD) for this interface
+ 
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
++
+ disable_xfrm - BOOLEAN
+ 	Disable IPSEC encryption on this interface, whatever the policy
+ 
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
++
+ igmpv2_unsolicited_report_interval - INTEGER
+ 	The interval in milliseconds in which the next unsolicited
+ 	IGMPv1 or IGMPv2 report retransmit will take place.
+@@ -1954,11 +2171,25 @@ igmpv3_unsolicited_report_interval - INTEGER
+ ignore_routes_with_linkdown - BOOLEAN
+         Ignore routes whose link is down when performing a FIB lookup.
+ 
++        Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
++
+ promote_secondaries - BOOLEAN
+ 	When a primary IP address is removed from this interface
+ 	promote a corresponding secondary IP address instead of
+ 	removing all the corresponding secondary IP addresses.
+ 
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
++
+ drop_unicast_in_l2_multicast - BOOLEAN
+ 	Drop any unicast IP packets that are received in link-layer
+ 	multicast (or broadcast) frames.
+@@ -1966,14 +2197,24 @@ drop_unicast_in_l2_multicast - BOOLEAN
+ 	This behavior (for multicast) is actually a SHOULD in RFC
+ 	1122, but is disabled by default for compatibility reasons.
+ 
+-	Default: off (0)
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ drop_gratuitous_arp - BOOLEAN
+ 	Drop all gratuitous ARP frames, for example if there's a known
+ 	good ARP proxy on the network and such frames need not be used
+ 	(or in the case of 802.11, must not be used to prevent attacks.)
+ 
+-	Default: off (0)
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ 
+ tag - INTEGER
+@@ -2017,20 +2258,24 @@ bindv6only - BOOLEAN
+ 	which restricts use of the IPv6 socket to IPv6 communication
+ 	only.
+ 
+-		- TRUE: disable IPv4-mapped address feature
+-		- FALSE: enable IPv4-mapped address feature
++	Possible values:
+ 
+-	Default: FALSE (as specified in RFC3493)
++	- 0 (disabled) - enable IPv4-mapped address feature
++	- 1 (enabled)  - disable IPv4-mapped address feature
++
++	Default: 0 (disabled)
+ 
+ flowlabel_consistency - BOOLEAN
+ 	Protect the consistency (and unicity) of flow label.
+ 	You have to disable it to use IPV6_FL_F_REFLECT flag on the
+ 	flow label manager.
+ 
+-	- TRUE: enabled
+-	- FALSE: disabled
++	Possible values:
+ 
+-	Default: TRUE
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 1 (enabled)
+ 
+ auto_flowlabels - INTEGER
+ 	Automatically generate flow labels based on a flow hash of the
+@@ -2056,10 +2301,13 @@ flowlabel_state_ranges - BOOLEAN
+ 	reserved for the IPv6 flow manager facility, 0x80000-0xFFFFF
+ 	is reserved for stateless flow labels as described in RFC6437.
+ 
+-	- TRUE: enabled
+-	- FALSE: disabled
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 1 (enabled)
+ 
+-	Default: true
+ 
+ flowlabel_reflect - INTEGER
+ 	Control flow label reflection. Needed for Path MTU
+@@ -2127,10 +2375,13 @@ anycast_src_echo_reply - BOOLEAN
+ 	Controls the use of anycast addresses as source addresses for ICMPv6
+ 	echo reply
+ 
+-	- TRUE:  enabled
+-	- FALSE: disabled
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+-	Default: FALSE
+ 
+ idgen_delay - INTEGER
+ 	Controls the delay in seconds after which time to retry
+@@ -2187,7 +2438,12 @@ skip_notify_on_dev_down - BOOLEAN
+ 	to true skips the message, making IPv4 and IPv6 on par in relying
+ 	on userspace caches to track link events and evict routes.
+ 
+-	Default: false (generate message)
++	Possible values:
++
++	- 0 (disabled) - generate the message
++	- 1 (enabled)  - skip generating the message
++
++	Default: 0 (disabled)
+ 
+ nexthop_compat_mode - BOOLEAN
+ 	New nexthop API provides a means for managing nexthops independent of
+@@ -2294,13 +2550,26 @@ conf/all/forwarding - BOOLEAN
+ proxy_ndp - BOOLEAN
+ 	Do proxy ndp.
+ 
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
++
++
+ fwmark_reflect - BOOLEAN
+ 	Controls the fwmark of kernel-generated IPv6 reply packets that are not
+ 	associated with a socket for example, TCP RSTs or ICMPv6 echo replies).
+-	If unset, these packets have a fwmark of zero. If set, they have the
++	If disabled, these packets have a fwmark of zero. If enabled, they have the
+ 	fwmark of the packet they are replying to.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ ``conf/interface/*``:
+ 	Change special settings per interface.
+@@ -2391,9 +2660,11 @@ ra_honor_pio_life - BOOLEAN
+ 	lifetime of an address matching a prefix sent in a Router
+ 	Advertisement Prefix Information Option.
+ 
+-	- If enabled, the PIO valid lifetime will always be honored.
+-	- If disabled, RFC4862 section 5.5.3e is used to determine
++	Possible values:
++
++	- 0 (disabled) - RFC4862 section 5.5.3e is used to determine
+ 	  the valid lifetime of the address.
++	- 1 (enabled)  - the PIO valid lifetime will always be honored.
+ 
+ 	Default: 0 (disabled)
+ 
+@@ -2405,8 +2676,10 @@ ra_honor_pio_pflag - BOOLEAN
+ 	P-flag suppresses any effects of the A-flag within the same
+ 	PIO. For a given PIO, P=1 and A=1 is treated as A=0.
+ 
+-	- If disabled, the P-flag is ignored.
+-	- If enabled, the P-flag will disable SLAAC autoconfiguration
++	Possible values:
++
++	- 0 (disabled) - the P-flag is ignored.
++	- 1 (enabled)  - the P-flag will disable SLAAC autoconfiguration
+ 	  for the given Prefix Information Option.
+ 
+ 	Default: 0 (disabled)
+@@ -2528,10 +2801,15 @@ mtu - INTEGER
+ 	Default: 1280 (IPv6 required minimum)
+ 
+ ip_nonlocal_bind - BOOLEAN
+-	If set, allows processes to bind() to non-local IPv6 addresses,
++	If enabled, allows processes to bind() to non-local IPv6 addresses,
+ 	which can be quite useful - but may break some applications.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ router_probe_interval - INTEGER
+ 	Minimum interval (in seconds) between Router Probing described
+@@ -2561,7 +2839,12 @@ use_oif_addrs_only - BOOLEAN
+ 	routed via this interface are restricted to the set of addresses
+ 	configured on this interface (vis. RFC 6724, section 4).
+ 
+-	Default: false
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ use_tempaddr - INTEGER
+ 	Preference for Privacy Extensions (RFC3041).
+@@ -2686,10 +2969,14 @@ force_tllao - BOOLEAN
+ ndisc_notify - BOOLEAN
+ 	Define mode for notification of address and device changes.
+ 
+-	* 0 - (default): do nothing
+-	* 1 - Generate unsolicited neighbour advertisements when device is brought
++	Possible values:
++
++	- 0 (disabled) - do nothing
++	- 1 (enabled)  - Generate unsolicited neighbour advertisements when device is brought
+ 	  up or hardware address changes.
+ 
++	Default: 0 (disabled)
++
+ ndisc_tclass - INTEGER
+ 	The IPv6 Traffic Class to use by default when sending IPv6 Neighbor
+ 	Discovery (Router Solicitation, Router Advertisement, Neighbor
+@@ -2706,8 +2993,12 @@ ndisc_evict_nocarrier - BOOLEAN
+ 	not be cleared when roaming between access points on the same network.
+ 	In most cases this should remain as the default (1).
+ 
+-	- 1 - (default): Clear neighbor discover cache on NOCARRIER events.
+-	- 0 - Do not clear neighbor discovery cache on NOCARRIER events.
++	Possible values:
++
++	- 0 (disabled) - Do not clear neighbor discovery cache on NOCARRIER events.
++	- 1 (enabled)  - Clear neighbor discover cache on NOCARRIER events.
++
++	Default: 1 (enabled)
+ 
+ mldv1_unsolicited_report_interval - INTEGER
+ 	The interval in milliseconds in which the next unsolicited
+@@ -2736,25 +3027,34 @@ suppress_frag_ndisc - INTEGER
+ optimistic_dad - BOOLEAN
+ 	Whether to perform Optimistic Duplicate Address Detection (RFC 4429).
+ 
+-	* 0: disabled (default)
+-	* 1: enabled
+-
+ 	Optimistic Duplicate Address Detection for the interface will be enabled
+ 	if at least one of conf/{all,interface}/optimistic_dad is set to 1,
+ 	it will be disabled otherwise.
+ 
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
++
++
+ use_optimistic - BOOLEAN
+ 	If enabled, do not classify optimistic addresses as deprecated during
+ 	source address selection.  Preferred addresses will still be chosen
+ 	before optimistic addresses, subject to other ranking in the source
+ 	address selection algorithm.
+ 
+-	* 0: disabled (default)
+-	* 1: enabled
+-
+ 	This will be enabled if at least one of
+ 	conf/{all,interface}/use_optimistic is set to 1, disabled otherwise.
+ 
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
++
+ stable_secret - IPv6 address
+ 	This IPv6 address will be used as a secret to generate IPv6
+ 	addresses for link-local addresses and autoconfigured
+@@ -2785,14 +3085,24 @@ drop_unicast_in_l2_multicast - BOOLEAN
+ 	Drop any unicast IPv6 packets that are received in link-layer
+ 	multicast (or broadcast) frames.
+ 
+-	By default this is turned off.
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ drop_unsolicited_na - BOOLEAN
+ 	Drop all unsolicited neighbor advertisements, for example if there's
+ 	a known good NA proxy on the network and such frames need not be used
+ 	(or in the case of 802.11, must not be used to prevent attacks.)
+ 
+-	By default this is turned off.
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled).
+ 
+ accept_untracked_na - INTEGER
+ 	Define behavior for accepting neighbor advertisements from devices that
+@@ -2833,7 +3143,12 @@ enhanced_dad - BOOLEAN
+ 	The nonce option will be sent on an interface unless both of
+ 	conf/{all,interface}/enhanced_dad are set to FALSE.
+ 
+-	Default: TRUE
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 1 (enabled)
+ 
+ ``icmp/*``:
+ ===========
+@@ -2862,29 +3177,49 @@ ratemask - list of comma separated ranges
+ 	Default: 0-1,3-127 (rate limit ICMPv6 errors except Packet Too Big)
+ 
+ echo_ignore_all - BOOLEAN
+-	If set non-zero, then the kernel will ignore all ICMP ECHO
++	If enabled, then the kernel will ignore all ICMP ECHO
+ 	requests sent to it over the IPv6 protocol.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ echo_ignore_multicast - BOOLEAN
+-	If set non-zero, then the kernel will ignore all ICMP ECHO
++	If enabled, then the kernel will ignore all ICMP ECHO
+ 	requests sent to it over the IPv6 protocol via multicast.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ echo_ignore_anycast - BOOLEAN
+-	If set non-zero, then the kernel will ignore all ICMP ECHO
++	If enabled, then the kernel will ignore all ICMP ECHO
+ 	requests sent to it over the IPv6 protocol destined to anycast address.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ error_anycast_as_unicast - BOOLEAN
+-	If set to 1, then the kernel will respond with ICMP Errors
++	If enabled, then the kernel will respond with ICMP Errors
+ 	resulting from requests sent to it over the IPv6 protocol destined
+ 	to anycast address essentially treating anycast as unicast.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
++	Default: 0 (disabled)
+ 
+ xfrm6_gc_thresh - INTEGER
+ 	(Obsolete since linux-4.14)
+@@ -2902,34 +3237,49 @@ YOSHIFUJI Hideaki / USAGI Project <yoshfuji@linux-ipv6.org>
+ =================================
+ 
+ bridge-nf-call-arptables - BOOLEAN
+-	- 1 : pass bridged ARP traffic to arptables' FORWARD chain.
+-	- 0 : disable this.
+ 
+-	Default: 1
++	Possible values:
++
++	- 0 (disabled) - disable this.
++	- 1 (enabled)  - pass bridged ARP traffic to arptables' FORWARD chain.
++
++	Default: 1 (enabled)
+ 
+ bridge-nf-call-iptables - BOOLEAN
+-	- 1 : pass bridged IPv4 traffic to iptables' chains.
+-	- 0 : disable this.
+ 
+-	Default: 1
++	Possible values:
++
++	- 0 (disabled) - disable this.
++	- 1 (enabled)  - pass bridged IPv4 traffic to iptables' chains.
++
++	Default: 1 (enabled)
+ 
+ bridge-nf-call-ip6tables - BOOLEAN
+-	- 1 : pass bridged IPv6 traffic to ip6tables' chains.
+-	- 0 : disable this.
+ 
+-	Default: 1
++	Possible values:
++
++	- 0 (disabled) - disable this.
++	- 1 (enabled)  - pass bridged IPv6 traffic to ip6tables' chains.
++
++	Default: 1 (enabled)
+ 
+ bridge-nf-filter-vlan-tagged - BOOLEAN
+-	- 1 : pass bridged vlan-tagged ARP/IP/IPv6 traffic to {arp,ip,ip6}tables.
+-	- 0 : disable this.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled) - disable this.
++	- 1 (enabled)  - pass bridged vlan-tagged ARP/IP/IPv6 traffic to {arp,ip,ip6}tables
++
++	Default: 0 (disabled)
+ 
+ bridge-nf-filter-pppoe-tagged - BOOLEAN
+-	- 1 : pass bridged pppoe-tagged IP/IPv6 traffic to {ip,ip6}tables.
+-	- 0 : disable this.
+ 
+-	Default: 0
++	Possible values:
++
++	- 0 (disabled) - disable this.
++	- 1 (enabled)  - pass bridged pppoe-tagged IP/IPv6 traffic to {ip,ip6}tables.
++
++	Default: 0 (disabled)
+ 
+ bridge-nf-pass-vlan-input-dev - BOOLEAN
+ 	- 1: if bridge-nf-filter-vlan-tagged is enabled, try to find a vlan
+@@ -2952,11 +3302,12 @@ addip_enable - BOOLEAN
+ 	the ability to dynamically add and remove new addresses for the SCTP
+ 	associations.
+ 
+-	1: Enable extension.
++	Possible values:
+ 
+-	0: Disable extension.
++	- 0 (disabled) - disable extension.
++	- 1 (enabled)  - enable extension
+ 
+-	Default: 0
++	Default: 0 (disabled)
+ 
+ pf_enable - INTEGER
+ 	Enable or disable pf (pf is short for potentially failed) state. A value
+@@ -3025,19 +3376,23 @@ auth_enable - BOOLEAN
+ 	required for secure operation of Dynamic Address Reconfiguration
+ 	(ADD-IP) extension.
+ 
+-	- 1: Enable this extension.
+-	- 0: Disable this extension.
++	Possible values:
+ 
+-	Default: 0
++	- 0 (disabled) - disable extension.
++	- 1 (enabled)  - enable extension
++
++	Default: 0 (disabled)
+ 
+ prsctp_enable - BOOLEAN
+ 	Enable or disable the Partial Reliability extension (RFC3758) which
+ 	is used to notify peers that a given DATA should no longer be expected.
+ 
+-	- 1: Enable extension
+-	- 0: Disable
++	Possible values:
+ 
+-	Default: 1
++	- 0 (disabled) - disable extension.
++	- 1 (enabled)  - enable extension
++
++	Default: 1 (enabled)
+ 
+ max_burst - INTEGER
+ 	The limit of the number of new packets that can be initially sent.  It
+@@ -3137,10 +3492,12 @@ cookie_preserve_enable - BOOLEAN
+ 	Enable or disable the ability to extend the lifetime of the SCTP cookie
+ 	that is used during the establishment phase of SCTP association
+ 
+-	- 1: Enable cookie lifetime extension.
+-	- 0: Disable
++	Possible values:
++
++	- 0 (disabled) - disable.
++	- 1 (enabled)  - enable cookie lifetime extension.
+ 
+-	Default: 1
++	Default: 1 (enabled)
+ 
+ cookie_hmac_alg - STRING
+ 	Select the hmac algorithm used when generating the cookie value sent by
+@@ -3274,10 +3631,12 @@ reconf_enable - BOOLEAN
+         a stream, and it includes the Parameters of "Outgoing/Incoming SSN
+         Reset", "SSN/TSN Reset" and "Add Outgoing/Incoming Streams".
+ 
+-	- 1: Enable extension.
+-	- 0: Disable extension.
++	Possible values:
+ 
+-	Default: 0
++	- 0 (disabled) - Disable extension.
++	- 1 (enabled) - Enable extension.
++
++	Default: 0 (disabled)
+ 
+ intl_enable - BOOLEAN
+         Enable or disable extension of User Message Interleaving functionality
+@@ -3288,10 +3647,12 @@ intl_enable - BOOLEAN
+         to 1 and also needs to set socket options SCTP_FRAGMENT_INTERLEAVE to 2
+         and SCTP_INTERLEAVING_SUPPORTED to 1.
+ 
+-	- 1: Enable extension.
+-	- 0: Disable extension.
++	Possible values:
+ 
+-	Default: 0
++	- 0 (disabled) - Disable extension.
++	- 1 (enabled) - Enable extension.
++
++	Default: 0 (disabled)
+ 
+ ecn_enable - BOOLEAN
+         Control use of Explicit Congestion Notification (ECN) by SCTP.
+@@ -3300,10 +3661,12 @@ ecn_enable - BOOLEAN
+         due to congestion by allowing supporting routers to signal congestion
+         before having to drop packets.
+ 
+-        1: Enable ecn.
+-        0: Disable ecn.
++        Possible values:
+ 
+-        Default: 1
++	- 0 (disabled) - Disable ecn.
++	- 1 (enabled) - Enable ecn.
++
++	Default: 1 (enabled)
+ 
+ l3mdev_accept - BOOLEAN
+ 	Enabling this option allows a "global" bound socket to work
+@@ -3312,6 +3675,11 @@ l3mdev_accept - BOOLEAN
+ 	originated. Only valid when the kernel was compiled with
+ 	CONFIG_NET_L3_MASTER_DEV.
+ 
++	Possible values:
++
++	- 0 (disabled)
++	- 1 (enabled)
++
+ 	Default: 1 (enabled)
+ 
+ 
+-- 
+2.25.1
 
-Vegard
