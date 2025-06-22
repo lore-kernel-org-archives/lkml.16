@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BBD9481C4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAAF67261F;
 	Sun, 22 Jun 2025 06:02:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750572171; cv=none; b=lYvtcgXC6v8WOv5X2gNxnQwcWReH5juF1vUffRSO9yN5ZzI9NQrqJIpj/YhxhIfEGXXJT+AtYQzhu6cZqcc9vk/I5xXrMEv/nwP6z/MnYw9Cbz9B+20qf7g7+UNxmEFPwFR1127/dgrJXU2pgP+j8kglznsuz8okPqU8g9SBMhE=
+	t=1750572171; cv=none; b=Zx+/WuVRYbVQFxbMi5D51za03p4FmqDe6wAwA0m9mUSDwKSLNBanm/wNt+2odOKw9u7HGOKXCz1wBbhW5Ztr3QzhNW4WF0+5nkrGJ/K3m/jlIfaIqAOFaHQ9PPC5ujBH8mo87iXdC+mNSFSvU6NVoMJru4bqEhv7Zr5cJoCKs9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750572171; c=relaxed/simple;
-	bh=9sv3o8O8M0IyOR5wJkoSEusaPecRlQcEL5SoMo0iJ7A=;
+	bh=XYACLriiJLRgjgNmojKmyTGCkYgpJcwpU+eU2NamY1k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VvoEAZ0eSQNLEbdLj8BRlGRysfyOr+Xga4JwAjR1ViGlBXD3/ng5TMrY0oi2TlobGPOdRcn2Dsusrvupp4jyRJ+wwG5kW2/COfBlPsfyJcT0mWrmizEVyEN+XW1FgzIoqn5gWtCDaGI9Dz23GPhxzm5TpdjVTdcWHuQbli9PKOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PWYycLpX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SxXPBrdGWO3Ab/CkUlA05V/ScczGgJ4oNfkOaf9FnF0jcgqnCMGwKv9CjUrs5s9PI23LQwzovyBruW+8Sy+H7KgQPxAHD11Gw0ODQKt5Hj3P+iCvfrx0limWGm4w42N7hLbrIs+gjyeJhPHQHVkllfwWSfDPdJZFElPNt3pSySQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vNbuyRdh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PWYycLpX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 342C6C4CEF4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vNbuyRdh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 401C0C4CEF7;
 	Sun, 22 Jun 2025 06:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750572171;
-	bh=9sv3o8O8M0IyOR5wJkoSEusaPecRlQcEL5SoMo0iJ7A=;
+	bh=XYACLriiJLRgjgNmojKmyTGCkYgpJcwpU+eU2NamY1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PWYycLpXYVVCTDduwZsyo6x2f0ct9XJvpZPJuxOXnz5mHcdFh2qg7Mtx8ciW2BL8Y
-	 A+zQomcwmCJ/PFwyq1sKxvIacIC+HOYuPCySm8s9qwtvyZ7UG0aHt2XcItUv8XK8DE
-	 XOzdHBsukwyEpulHUWobmn85v4mj74CUDvqtKJUHoknAvzX/CybAh/gpHIGqzA5Et5
-	 blkjoW0L84a8AZXVh27FY/H25wqaAL+qiYFprcWT5opgNGDAtuawvXS0Ghi/zFgIN2
-	 zmXQ2p2SgRb5cHykuYIyywTGMlzmKihGzWDCb5GYnueWfU9ZkHzDt9nqTPf4DnJ8bd
-	 0FDKZyFH216kw==
+	b=vNbuyRdhoLRNLBa2ogwke77FpfYi10NMj4WYonoZs8xLPZzs28inpwVkjzcY2I3Uh
+	 26Do9uye9/jKoLcMGTlFcfhRN66tVlXtcau20oDz1tge6B2zIJw9N8dk4yI40SHzbs
+	 qGHdnRGdgyCccnst7bybKFGFybijwOCwqufRf5aeeCLHP/YFKPENRTNieGLoNFRvD3
+	 5XZ3ke1Hra2uxo44CEAhhYac81pV6KFo1xXw3EmWOJW7LOk4utnAFWKg6o3JRjwoyA
+	 f6DUTB3MLXQGgjQETF7fCDNzwASBnUtaRibxi66eohkULdIWgFhrqT98g1uFpVhy9W
+	 5cow6zXUFyxfQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uTDmz-00000000o28-1LnW;
+	id 1uTDmz-00000000o2O-1oQ0;
 	Sun, 22 Jun 2025 08:02:49 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -36,12 +36,10 @@ To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Akira Yokosawa" <akiyks@gmail.com>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Breno Leitao <leitao@debian.org>,
-	Donald Hunter <donald.hunter@gmail.com>
-Subject: [PATCH v3 02/15] docs: Makefile: disable check rules on make cleandocs
-Date: Sun, 22 Jun 2025 08:02:31 +0200
-Message-ID: <8386afcee494c9e81d051c83235150104e3a2949.1750571906.git.mchehab+huawei@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 06/15] scripts: test_doc_build.py: better adjust to python version
+Date: Sun, 22 Jun 2025 08:02:35 +0200
+Message-ID: <32cb41c543293bbbab5fcb15f8a0aefac040e3a9.1750571906.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750571906.git.mchehab+huawei@kernel.org>
 References: <cover.1750571906.git.mchehab+huawei@kernel.org>
@@ -54,36 +52,63 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-It doesn't make sense to check for missing ABI and documents
-when cleaning the tree.
+Very old versions of Sphinx require older versions of python.
+The original script assumes that a python3.9 exec exists,
+but this may not be the case.
+
+Relax python requirements.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Reviewed-by: Breno Leitao <leitao@debian.org>
-Reviewed-by: Donald Hunter <donald.hunter@gmail.com>
 ---
- Documentation/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
+ scripts/test_doc_build.py | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/Makefile b/Documentation/Makefile
-index d30d66ddf1ad..b98477df5ddf 100644
---- a/Documentation/Makefile
-+++ b/Documentation/Makefile
-@@ -5,6 +5,7 @@
- # for cleaning
- subdir- := devicetree/bindings
+diff --git a/scripts/test_doc_build.py b/scripts/test_doc_build.py
+index 5b9eb2c0bf01..129c2862065c 100755
+--- a/scripts/test_doc_build.py
++++ b/scripts/test_doc_build.py
+@@ -12,15 +12,28 @@ and optionally test the build.
+ import argparse
+ import asyncio
+ import os.path
++import shutil
+ import sys
+ import time
+ import subprocess
  
-+ifneq ($(MAKECMDGOALS),cleandocs)
- # Check for broken documentation file references
- ifeq ($(CONFIG_WARN_MISSING_DOCUMENTS),y)
- $(shell $(srctree)/scripts/documentation-file-ref-check --warn)
-@@ -14,6 +15,7 @@ endif
- ifeq ($(CONFIG_WARN_ABI_ERRORS),y)
- $(shell $(srctree)/scripts/get_abi.py --dir $(srctree)/Documentation/ABI validate)
- endif
-+endif
+-# Minimal python version supported by the building system
+-MINIMAL_PYTHON_VERSION = "python3.9"
++# Minimal python version supported by the building system.
  
- # You can set these variables from the command line.
- SPHINXBUILD   = sphinx-build
+-# Starting from 8.0.2, Python 3.9 becomes too old
+-PYTHON_VER_CHANGES = {(8, 0, 2): "python3"}
++PYTHON = os.path.basename(sys.executable)
++
++min_python_bin = None
++
++for i in range(9, 13):
++    p = f"python3.{i}"
++    if shutil.which(p):
++        min_python_bin = p
++        break
++
++if not min_python_bin:
++    min_python_bin = PYTHON
++
++# Starting from 8.0, Python 3.9 is not supported anymore.
++PYTHON_VER_CHANGES = {(8, 0, 2): PYTHON}
+ 
+ # Sphinx versions to be installed and their incremental requirements
+ SPHINX_REQUIREMENTS = {
+@@ -290,7 +303,7 @@ class SphinxVenv:
+                 args.verbose = True
+ 
+         cur_requirements = {}
+-        python_bin = MINIMAL_PYTHON_VERSION
++        python_bin = min_python_bin
+ 
+         for cur_ver, new_reqs in SPHINX_REQUIREMENTS.items():
+             cur_requirements.update(new_reqs)
 -- 
 2.49.0
 
