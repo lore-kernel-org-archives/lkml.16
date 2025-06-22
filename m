@@ -1,46 +1,46 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4F71D516A;
-	Sun, 22 Jun 2025 13:41:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47B11CAB3;
+	Sun, 22 Jun 2025 13:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750599669; cv=none; b=YvQD9z+f+Cf1MlXnc4qGj1raD9ROyt2tlwcgkdYwCJI9L2G784vDq1j849evBpN43GaBRRuetG18/AbT6oPzWE0Od6H2rRrARqf7TqfirX2HVaHjI0m4Z8wVoGusNe6ikVnd1N68T2a1iqefgA0FEPTtysuwJximIL9mkOyuTCE=
+	t=1750599670; cv=none; b=Vgp1dffB1VyfgqzorBPxos/GqFE9wM6mHVrggFSPCBlIBADaSmmG139JmoqY+6DombXOPgtSVxK9ZisPXuYd/Zi8FxFIWIPBt/DDMt0htlLi0kfmhcodvYHpzPQCkDyQ46Pw5ersdVa1qcDowBfBVPgJyyPnZYY2TPCsqZWZ84Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750599669; c=relaxed/simple;
-	bh=409aeblqXYUb+RvSL9eQ1PFZrz61/X4RZLcDMPi51vM=;
+	s=arc-20240116; t=1750599670; c=relaxed/simple;
+	bh=O7/ez2o2qDWbcy8Jh4F5NSEIwwmPt1FcyxGH9Y9TGlo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XgYxttk89JcBW2O+/6es6z+yJV4VxSUC6Bur65cRgVCLUBzGpE/EFqPflg54lx9+5pnkrUIdJVoxdLnl/7gfLX1fhMBYly/fsaqw2PSuxfiMuAFQW3Arn34DONIZ25rx4SoY/mzmda82zftjlnmP7XxJcj1swI/pRAbGhQrqXNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Vard2IVJ; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=Q87gTiUARFjG+lYUQV0Ue7vJfmy/8aVrBU8BRH3AtFN/yoMH1t3VGRbx7ndXSMnEG9J5wfYQIHh9M/zH9rBY8+krQNWNf3uHsB0MvwVFaykpBO36/EAEzt4XcOp8ppgXPmPnsh5ztju/ALH2A1C7pobUJGNl5mbOmYH/BLoOOd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NYWC5rcz; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Vard2IVJ"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55MAZKmb026783;
-	Sun, 22 Jun 2025 13:41:01 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NYWC5rcz"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55M8kJeb029245;
+	Sun, 22 Jun 2025 13:40:51 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	QVPcesTHipTdGKpkbL8rnQ0tTkSObsJN0xNEHqVU/2w=; b=Vard2IVJMYqskkJX
-	5XbTxVkgk7lwQxGrmrs0b0L5VMSL3+VovIsr4AGbnsxTy6mprne3wBUyo+nTJr6t
-	J5OyMoMSSNiSyihDOHN9slHToQlT+AnGVvuqZh9+0tJFaiuuscTyUHNAtR/q/GbS
-	RcEu4XfWIm2Tli56vBXtWChJMmWG1TrjpOfx0BDpT4D+xorWmJA4i6pSDLKOKS6S
-	v9vimzjjctM7a9niivMQWbrfcOUkfvgFoxWdPGsL90th+oRBtt++I8sdf3WVRlsH
-	azOJQ/Nx62fxcJ9dRyI5x2KlvMWfjBxFaM+HQYGmxgLikZcOH1+blzPa4+nYvuYx
-	IFviBQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47eg70r5c8-1
+	lQnHw0H3V+R4slZhE/pwB4PzpL5RqMlwlF0P1XlfEJc=; b=NYWC5rcziIN2WAw4
+	DDBkrCiB6XLzTMARPEneu9wM3wYACzfKkgcn/nZIzu7GTcNQj6yuAd0/fgJJYQB4
+	HfGC2ATkdMUGcAx1GOYiX2WDLFjnZKd7Y2EkD8DuXbOcce8RYVCtOGjStOhNgbG7
+	WctcSyBKf/jznLU4rieK1D8ESRuyeQroV5wi4RnWH/0lyUY0BFWGCsixC+DO1m9s
+	8vY+prK9y7yboufhqQCWqpV6/CVYOOoHG9ReKYhdzZY/MgHiVQc3PkMSt86C2ywy
+	B1HmjugokzfPSgPMlz+8j889BKPC/0A6mxZpCtj3FTCbSLEgPRGKwk9z+qIwvXgG
+	XdWphw==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47e3xggww7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 13:41:00 +0000 (GMT)
+	Sun, 22 Jun 2025 13:40:51 +0000 (GMT)
 Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55MDexGa024450
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55MDeowS010481
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 22 Jun 2025 13:40:59 GMT
+	Sun, 22 Jun 2025 13:40:51 GMT
 Received: from hu-lxu5-sha.qualcomm.com (10.80.80.8) by
  nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Sun, 22 Jun 2025 06:40:56 -0700
+ 15.2.1544.9; Sun, 22 Jun 2025 06:40:47 -0700
 From: Ling Xu <quic_lxu5@quicinc.com>
 To: <srini@kernel.org>, <amahesh@qti.qualcomm.com>, <robh@kernel.org>,
         <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <andersson@kernel.org>,
@@ -51,9 +51,9 @@ CC: <quic_kuiw@quicinc.com>, <ekansh.gupta@oss.qualcomm.com>,
         <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
         Ling Xu
 	<quic_lxu5@quicinc.com>
-Subject: [PATCH v3 3/3] misc: fastrpc: add support for gdsp remoteproc
-Date: Sun, 22 Jun 2025 19:08:20 +0530
-Message-ID: <20250622133820.18369-4-quic_lxu5@quicinc.com>
+Subject: [PATCH v3 1/3] dt-bindings: misc: qcom,fastrpc: Add GDSP label
+Date: Sun, 22 Jun 2025 19:08:18 +0530
+Message-ID: <20250622133820.18369-2-quic_lxu5@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250622133820.18369-1-quic_lxu5@quicinc.com>
 References: <20250622133820.18369-1-quic_lxu5@quicinc.com>
@@ -69,199 +69,49 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01c.na.qualcomm.com (10.45.79.139)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: X2w0ghu33Z_GnLPgg0I8pjVBIkZzZlfn
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDA4NSBTYWx0ZWRfX/gAcLJdeFm2k
- +BNmHXhq7DS927Wplyc0OgrEgUYt8SXrW+0Z1Dow9HlOzwXbreHGm1UB+G9YfCFJ4HaoyU07SsX
- vEfW73FjJxjpd/OFyJjXAcO/tdklex7b/2PmAlv+eWZsQ5hf4Z2GXY/BzOVgCYfECjleH0mRXvq
- SGQ8JzDLZqtv6VuJq5m8LZXEKlDWRHlYYndvTF725m1yBSdZu+hv0/4g9dRuFqJuitq7xseqRu0
- 0didcEP8JvL9ao83WUiLgIpujBqv7FcTM8kirxAAtBiPwN7D7OqYR0lAB7nI3B+qVOHA1RAHTfL
- l6j3bjDxDytdj37CXJ/u68oN3I5QiXzlxAWbDOMDT4kFy+L/M2lWTyzBycnZdmz7GneSYewtedD
- TC2meRk8/BdlRED9unqPgGzhAGdj+yGAw9nkwJNgUWQBz/nYLBK7FxfOMGYGEl85z0rnovn/
-X-Proofpoint-GUID: X2w0ghu33Z_GnLPgg0I8pjVBIkZzZlfn
-X-Authority-Analysis: v=2.4 cv=ccHSrmDM c=1 sm=1 tr=0 ts=685807ec cx=c_pps
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDA4NSBTYWx0ZWRfX8fxo46NUdb59
+ uTBRQW9lcmxfZabNg5/Y/t7wbN7Y1kUUOJLqjlZcYARDtXZMfBN+8mwBx8CjTy+xPj94PiFM5zS
+ oLcdpgNMsIYch5vSN8VhSfm6oPkOGNXIoaJckLtnc7zWNdk1fR8MGTS1QUlMgC5DWx9G/VdWGlK
+ aVlamleY7HRa35yRl/ZfOjF2z/VcsBgW2BvEXEDE6wgkairYGQFHKBHgrdkpMnftuwIU4yIoH6i
+ B/JVp5c0KtPD7DGTDdGvLv43H1uDPv4jezMKeGalH33xA3ZcsHYUryJbN5Mikvv9HomSNGG49KV
+ /ESjscn/c9AjfdmTI8+8w7Y32Fn2tclpML/o79y1Iw2wHgzwbjKSq3VZHjPZXpRJoGcLYPysIFh
+ 0FK88NO9r/YJzyDUuK9n7ay1zrbww9NOe6ZeovI7iG+ecp9TDoE+3STPlXd53tvgUSAe0lY6
+X-Authority-Analysis: v=2.4 cv=e8UGSbp/ c=1 sm=1 tr=0 ts=685807e3 cx=c_pps
  a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=c6LfSGLPLEd2mbsvFOMA:9
+ a=GEpy-HfZoHoA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=GRIQVaEDZ677QwRh498A:9
  a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: g5WljSr0m5M_G_rMufNPgaOvsUWGFGw6
+X-Proofpoint-GUID: g5WljSr0m5M_G_rMufNPgaOvsUWGFGw6
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-22_04,2025-06-20_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0 clxscore=1015
- priorityscore=1501 spamscore=0 mlxlogscore=999 bulkscore=0 adultscore=0
- mlxscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506220085
+ bulkscore=0 impostorscore=0 malwarescore=0 phishscore=0 suspectscore=0
+ spamscore=0 clxscore=1011 lowpriorityscore=0 mlxscore=0 adultscore=0
+ mlxlogscore=999 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506220085
 
-The fastrpc driver has support for 5 types of remoteprocs. There are
-some products which support GDSP remoteprocs. Add changes to support
-GDSP remoteprocs.
+Add "gdsp" as the new supported label for GDSP fastrpc domain.
 
 Signed-off-by: Ling Xu <quic_lxu5@quicinc.com>
 ---
- drivers/misc/fastrpc.c      | 57 ++++++++++++++++---------------------
- include/uapi/misc/fastrpc.h | 11 +++++--
- 2 files changed, 33 insertions(+), 35 deletions(-)
+ Documentation/devicetree/bindings/misc/qcom,fastrpc.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index 378923594f02..cd3063bc64f2 100644
---- a/drivers/misc/fastrpc.c
-+++ b/drivers/misc/fastrpc.c
-@@ -23,12 +23,6 @@
- #include <uapi/misc/fastrpc.h>
- #include <linux/of_reserved_mem.h>
+diff --git a/Documentation/devicetree/bindings/misc/qcom,fastrpc.yaml b/Documentation/devicetree/bindings/misc/qcom,fastrpc.yaml
+index 0840a3d92513..3f6199fc9ae6 100644
+--- a/Documentation/devicetree/bindings/misc/qcom,fastrpc.yaml
++++ b/Documentation/devicetree/bindings/misc/qcom,fastrpc.yaml
+@@ -27,6 +27,8 @@ properties:
+       - sdsp
+       - cdsp
+       - cdsp1
++      - gdsp0
++      - gdsp1
  
--#define ADSP_DOMAIN_ID (0)
--#define MDSP_DOMAIN_ID (1)
--#define SDSP_DOMAIN_ID (2)
--#define CDSP_DOMAIN_ID (3)
--#define CDSP1_DOMAIN_ID (4)
--#define FASTRPC_DEV_MAX		5 /* adsp, mdsp, slpi, cdsp, cdsp1 */
- #define FASTRPC_MAX_SESSIONS	14
- #define FASTRPC_MAX_VMIDS	16
- #define FASTRPC_ALIGN		128
-@@ -106,8 +100,6 @@
- 
- #define miscdev_to_fdevice(d) container_of(d, struct fastrpc_device, miscdev)
- 
--static const char *domains[FASTRPC_DEV_MAX] = { "adsp", "mdsp",
--						"sdsp", "cdsp", "cdsp1" };
- struct fastrpc_phy_page {
- 	u64 addr;		/* physical address */
- 	u64 size;		/* size of contiguous region */
-@@ -1723,7 +1715,6 @@ static int fastrpc_get_info_from_kernel(struct fastrpc_ioctl_capability *cap,
- 	uint32_t attribute_id = cap->attribute_id;
- 	uint32_t *dsp_attributes;
- 	unsigned long flags;
--	uint32_t domain = cap->domain;
- 	int err;
- 
- 	spin_lock_irqsave(&cctx->lock, flags);
-@@ -1741,7 +1732,7 @@ static int fastrpc_get_info_from_kernel(struct fastrpc_ioctl_capability *cap,
- 	err = fastrpc_get_info_from_dsp(fl, dsp_attributes, FASTRPC_MAX_DSP_ATTRIBUTES);
- 	if (err == DSP_UNSUPPORTED_API) {
- 		dev_info(&cctx->rpdev->dev,
--			 "Warning: DSP capabilities not supported on domain: %d\n", domain);
-+			 "Warning: DSP capabilities not supported\n");
- 		kfree(dsp_attributes);
- 		return -EOPNOTSUPP;
- 	} else if (err) {
-@@ -1769,17 +1760,6 @@ static int fastrpc_get_dsp_info(struct fastrpc_user *fl, char __user *argp)
- 		return  -EFAULT;
- 
- 	cap.capability = 0;
--	if (cap.domain >= FASTRPC_DEV_MAX) {
--		dev_err(&fl->cctx->rpdev->dev, "Error: Invalid domain id:%d, err:%d\n",
--			cap.domain, err);
--		return -ECHRNG;
--	}
--
--	/* Fastrpc Capablities does not support modem domain */
--	if (cap.domain == MDSP_DOMAIN_ID) {
--		dev_err(&fl->cctx->rpdev->dev, "Error: modem not supported %d\n", err);
--		return -ECHRNG;
--	}
- 
- 	if (cap.attribute_id >= FASTRPC_MAX_DSP_ATTRIBUTES) {
- 		dev_err(&fl->cctx->rpdev->dev, "Error: invalid attribute: %d, err: %d\n",
-@@ -2255,6 +2235,22 @@ static int fastrpc_device_register(struct device *dev, struct fastrpc_channel_ct
- 	return err;
- }
- 
-+static int fastrpc_get_domain_id(const char *domain)
-+{
-+	if (strncmp(domain, "adsp", 4) == 0)
-+		return ADSP_DOMAIN_ID;
-+	else if (strncmp(domain, "cdsp", 4) == 0)
-+		return CDSP_DOMAIN_ID;
-+	else if (strncmp(domain, "mdsp", 4) == 0)
-+		return MDSP_DOMAIN_ID;
-+	else if (strncmp(domain, "sdsp", 4) == 0)
-+		return SDSP_DOMAIN_ID;
-+	else if (strncmp(domain, "gdsp", 4) == 0)
-+		return GDSP_DOMAIN_ID;
-+
-+	return -EINVAL;
-+}
-+
- static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
- {
- 	struct device *rdev = &rpdev->dev;
-@@ -2272,15 +2268,10 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
- 		return err;
- 	}
- 
--	for (i = 0; i < FASTRPC_DEV_MAX; i++) {
--		if (!strcmp(domains[i], domain)) {
--			domain_id = i;
--			break;
--		}
--	}
-+	domain_id = fastrpc_get_domain_id(domain);
- 
- 	if (domain_id < 0) {
--		dev_info(rdev, "FastRPC Invalid Domain ID %d\n", domain_id);
-+		dev_info(rdev, "FastRPC Domain %s not supported\n", domain);
- 		return -EINVAL;
- 	}
- 
-@@ -2330,21 +2321,21 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
- 	case ADSP_DOMAIN_ID:
- 	case MDSP_DOMAIN_ID:
- 	case SDSP_DOMAIN_ID:
--		/* Unsigned PD offloading is only supported on CDSP and CDSP1 */
-+		/* Unsigned PD offloading is only supported on CDSP and GDSP */
- 		data->unsigned_support = false;
--		err = fastrpc_device_register(rdev, data, secure_dsp, domains[domain_id]);
-+		err = fastrpc_device_register(rdev, data, secure_dsp, domain);
- 		if (err)
- 			goto err_free_data;
- 		break;
- 	case CDSP_DOMAIN_ID:
--	case CDSP1_DOMAIN_ID:
-+	case GDSP_DOMAIN_ID:
- 		data->unsigned_support = true;
- 		/* Create both device nodes so that we can allow both Signed and Unsigned PD */
--		err = fastrpc_device_register(rdev, data, true, domains[domain_id]);
-+		err = fastrpc_device_register(rdev, data, true, domain);
- 		if (err)
- 			goto err_free_data;
- 
--		err = fastrpc_device_register(rdev, data, false, domains[domain_id]);
-+		err = fastrpc_device_register(rdev, data, false, domain);
- 		if (err)
- 			goto err_deregister_fdev;
- 		break;
-diff --git a/include/uapi/misc/fastrpc.h b/include/uapi/misc/fastrpc.h
-index f33d914d8f46..ebef9ddcd184 100644
---- a/include/uapi/misc/fastrpc.h
-+++ b/include/uapi/misc/fastrpc.h
-@@ -18,6 +18,14 @@
- #define FASTRPC_IOCTL_MEM_UNMAP		_IOWR('R', 11, struct fastrpc_mem_unmap)
- #define FASTRPC_IOCTL_GET_DSP_INFO	_IOWR('R', 13, struct fastrpc_ioctl_capability)
- 
-+#define ADSP_DOMAIN_ID (0)
-+#define MDSP_DOMAIN_ID (1)
-+#define SDSP_DOMAIN_ID (2)
-+#define CDSP_DOMAIN_ID (3)
-+#define GDSP_DOMAIN_ID (4)
-+
-+#define FASTRPC_DOMAIN_MAX    4
-+
- /**
-  * enum fastrpc_map_flags - control flags for mapping memory on DSP user process
-  * @FASTRPC_MAP_STATIC: Map memory pages with RW- permission and CACHE WRITEBACK.
-@@ -134,10 +142,9 @@ struct fastrpc_mem_unmap {
- };
- 
- struct fastrpc_ioctl_capability {
--	__u32 domain;
- 	__u32 attribute_id;
- 	__u32 capability;   /* dsp capability */
--	__u32 reserved[4];
-+	__u32 reserved[5];
- };
- 
- #endif /* __QCOM_FASTRPC_H__ */
+   memory-region:
+     maxItems: 1
 -- 
 2.34.1
 
