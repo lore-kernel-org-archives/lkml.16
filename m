@@ -1,200 +1,158 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491D6DDBC;
-	Sun, 22 Jun 2025 00:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750553093; cv=none; b=Ghiag5dGHwS8C3zsbzaLJvCnGVF+I7yy+7UPkjhoUWmrbDRghF6gz2RN3QqyQlC14BBrKifADRWKYk+pXUqkuqdt2G3VMuZKZxc1/wqFJBlThNVQhwWTecWcBTyru1/+F5V/QMIAfssyybkxYF4OkdWfY5Kau7E2eWZ6zMUW4jM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750553093; c=relaxed/simple;
-	bh=kCrs+ZCrFs4Pzq9Km0+OaUBaSfs8ILusAWrORG6OB9U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bCp88woo8Bc5CegWlmBZzNhXvxvxVx8rob5WRrA7Jla0hNsCmSQ6H2mk2TmMvmXds1m6WqRmn8Wi/Hjy0KRBZ0sk9GeD8846N/vFk31rQH/epdIjwNnDlB6EodAin/eQmryY8wXU7KuGO/2yTC73uMJoaVwUkH1dyTzg0Du/eAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m9MClDa6; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9041EA29;
+	Sun, 22 Jun 2025 00:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750553472; cv=pass; b=Znewi+cj4aYxSHtVOK/+N42UWr/PdQwwkUFVk0vA/gsGK6Bv6kPjG/hzs9QPeD9kxrjWwjGs7pmvU9VaDtIyCu7JP64wIQh788KlQSHZPyld7CL2T/rxCkIfoRQPwYgbdoW91TuybzAHTwMKheR4eGdUpJurA3N9yPXqQS9QOP0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750553472; c=relaxed/simple;
+	bh=eP4cyAVzJysY20FB2yPSJBaBtIXAbyQKZqa8mZ2WuN0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aZxo78xHbe3HcOlXf1g//14HWZGxUPEFmAwymhsRp+raY4YdLK095JsRNGRlog2wqWdBpM+th2wKfQSnYysTnkpEa3tQ3TRftefzb8rJvH5c3Ebg7EwGbs5AtopJWeLvUxMR/3xeWeQOowJYUfBZ6YOfj4ZutEWGRgThvR8ar40=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=f+3EfA9y; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m9MClDa6"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b26df8f44e6so3542835a12.2;
-        Sat, 21 Jun 2025 17:44:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750553091; x=1751157891; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9seqvFVjHSHj8qBAizqEN5td7cNupZ5qJ9c3mcC8dzI=;
-        b=m9MClDa6aPLvLI41dCW9hOjO8UQ5lk0XcSyaLb/KcqkMk/PJ4JFkCTUh7HqG3xm4kw
-         g2y2jzigjthaV0ZAMNhsCfjBInO3e58lF2PHqkxOp5SPSn3TItbcFLxaUZFWngq8ZZ+n
-         PVAT+OkmMjm26zVkV4Z76dg1blzzRyuM66lOIq4vc3776zHiHopxnzXlWBarKveBH5nu
-         9SUAHqmXMVrDRA3KvNMdBwsOG2CtQnfR4cS+Vg9c4/CmnYomsBUv44tkVqyos6pdY64h
-         rfSKwIZ7VQTN9UlvtALpauUKvn7DzzVvIQZJDU8Oeba/l1Cr+xyNCuhWuquRY5Rf3wOh
-         etZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750553091; x=1751157891;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9seqvFVjHSHj8qBAizqEN5td7cNupZ5qJ9c3mcC8dzI=;
-        b=WObdgTIcLVQDtjg9iL0HrwjkoVjhpr5d7xxCymMW5RKlvPoi2EbhVaFJcbIUvb2MRv
-         FiEEVxge5vTZj9BM6Q7h8VYKzCcKnKu2r7FiNSNtSsVBSXwuFkfJSm2JVEs2Irl8YJAL
-         sOPjDWIPk/K/yHVZSc178R3HEyi9r587Li+p0Br6u5pXHSMHzOiBCKk4MR1Y+nh3St6n
-         YLjDEuSxArwOUAYnFeDbJCSo7hASrn5aPndTZ1VdEtCc5JwNej6rDpf4kjr+4dXxCRUM
-         G3S5e3/Tb8RZsj6Wmpv3+K+/f8SwVGU2SkZ7qk8znUT/VI1Fpxb3fkdTinTiJxapwafX
-         uV3w==
-X-Forwarded-Encrypted: i=1; AJvYcCW4Kcf+JR03tLXD+aPNkp/1G8i3esA/Zuk5wC8JmBkR9Mv5GCGZ95FZASk1+mUaTY67AYqi70rzf8A=@vger.kernel.org, AJvYcCWZuQOzWYPMKG1Bjfqhm2VNBn31RAqc+1dF3YqB/H3fxRQBtkBK/m1OF3LZSUEnMmInYsrBgoTxbR5BboQ6@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQDn2pTRg9kn0F9G/H7c35HU6BGilMmqViFIPY25uyqqDBF0Qb
-	yVGCO4Rje44n134ITLvBOdEqZEPKsyu2IgKIpBZjrxztKFS2xEqKHtlI
-X-Gm-Gg: ASbGncuxKG0mZXNWuVzse1iv0Hx+oz1y0FVQd7Etxh/47j5q7qo7vIixhBzwhGutoVa
-	Zu5rAvU0IIZ/MpcgL9Lj069BzIQAH7Ni0f/tHE2sJYIL10Z8llFTGeTEEKGkcejZa4zdJXJlkJx
-	UsO+joft+42z2CKaKyfN26afZyh4P4VedcxO+w0dtjlFOvxdmeHnWSF5VUL+Jtk9hZF6oEBZyD5
-	REFzH93SZPXVfCyhEZVUJQiS5oIo+01gbW60ZUzAzZ0BjaVtSbOKoKrgFrMd1VnAnfVaGhm2k82
-	vEw4NkbqHqnyiVUd9RDRbVX1WVdKlutbZWmvp+okqWWikJDQL4PYEZokAfPMYdDw5vO6PTfL1uW
-	Mn9Sw2Q8ZByhUFkVWCOOTuQY6rgbwbv4YnGQM2LlKqvlhVQ==
-X-Google-Smtp-Source: AGHT+IEIDOfIsZ9YDpsivWP+Szc2Gqabf0O6jEy+YJN7YNlJ3K+YooA00VbkYe+2gMs5AGVF0/sPwQ==
-X-Received: by 2002:a17:90b:1642:b0:313:5d2f:5505 with SMTP id 98e67ed59e1d1-3159d8c143bmr14134416a91.16.1750553091209;
-        Sat, 21 Jun 2025 17:44:51 -0700 (PDT)
-Received: from localhost.localdomain (36-231-187-194.dynamic-ip.hinet.net. [36.231.187.194])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f118ea01sm4658390a12.5.2025.06.21.17.44.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Jun 2025 17:44:50 -0700 (PDT)
-From: Nick Huang <sef1548@gmail.com>
-To: alexs@kernel.org
-Cc: si.yanteng@linux.dev,
-	dzm91@hust.edu.cn,
-	corbet@lwn.net,
-	akpm@linux-foundation.org,
-	wangkefeng.wang@huawei.com,
-	vishal.moola@gmail.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	david@redhat.com,
-	linux-mm@kvack.org,
-	Nick Huang <sef1548@gmail.com>
-Subject: [PATCH] mm/balloon_compaction: update Chinese docs for movable_ops
-Date: Sun, 22 Jun 2025 08:42:47 +0800
-Message-ID: <20250622004249.9083-1-sef1548@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="f+3EfA9y"
+ARC-Seal: i=1; a=rsa-sha256; t=1750553434; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=nTaZPuxdEjw5EDw3tPF6Qy0HTEagp2m1aPmSyKRU2f+HJ4+u4ZC9f9ngF5plydcBC9kimI5uBnGvZW1ulzgKNnL3OTVtWFNbwWu5fIcuR2q571R50jIQsJVnfwvJRyo5awpB1R0KUQNeWe6IQABQCXGhl2E48HfHk3DK3Co/Mhg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750553434; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=urvg2EBUVSXLilCyfEaHeQbpskk5FRYN4N/flVkvV78=; 
+	b=VMwG6vR1GWzzfCk+Cx29KkHCudiWzscFawcybcqqs6bzMGajtS1tj+BohE9OpogqjM4tnDrOnbkVmS/ssCvr4wn2nMO8ofiGtwuwVAOEyibWApOl3/OTLFoA8RT2+Bsy0iBJbPPGD0KhjBYciUTt84Qr4RPzxpaw6YzPak7nVfI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750553434;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=urvg2EBUVSXLilCyfEaHeQbpskk5FRYN4N/flVkvV78=;
+	b=f+3EfA9yIO3WRuPNshg8xFVyn5cJqqTmm+HuH6SYP2wxA8YbGSB9NVhIfxv1Srqu
+	g78eV9eGHUVlWk5ocPdAIe4R9O5qpDtklKq5fy+NKC4huRj++YXYgvw4q8DYOmHA2Vg
+	BsJH1d6xAxvoJ1mU3nqshGz+Ejf3jcaht79PvMpI=
+Received: by mx.zohomail.com with SMTPS id 1750553431554582.0728404463048;
+	Sat, 21 Jun 2025 17:50:31 -0700 (PDT)
+Received: by venus (Postfix, from userid 1000)
+	id 15EE4180692; Sun, 22 Jun 2025 02:50:26 +0200 (CEST)
+Date: Sun, 22 Jun 2025 02:50:26 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Sven Peter <sven@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Linus Walleij <linus.walleij@linaro.org>, Janne Grunau <j@jannau.net>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, Hector Martin <marcan@marcan.st>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v7 05/10] mfd: Add Apple Silicon System Management
+ Controller
+Message-ID: <pqjz6jyfsoaf5matffwsly7ba6xwbw5fsumokmpow6eox7vjdx@fbuxkcjjyh6n>
+References: <20250610-smc-6-15-v7-0-556cafd771d3@kernel.org>
+ <20250610-smc-6-15-v7-5-556cafd771d3@kernel.org>
+ <20250619114958.GJ587864@google.com>
+ <f30406ae-90ed-4f81-9519-e6ae2dcc9e03@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xcojizk7w6niahmw"
+Content-Disposition: inline
+In-Reply-To: <f30406ae-90ed-4f81-9519-e6ae2dcc9e03@kernel.org>
+X-Zoho-Virus-Status: 1
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.4.3/250.540.22
+X-ZohoMailClient: External
 
-Remove Non-LRU Page Migration and Add Movable_ops Page Migration
 
-Reference: https://lore.kernel.org/all/20250618174014.1168640-28-david@redhat.com/
----
- .../translations/zh_CN/mm/page_migration.rst  | 88 +++----------------
- 1 file changed, 10 insertions(+), 78 deletions(-)
+--xcojizk7w6niahmw
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v7 05/10] mfd: Add Apple Silicon System Management
+ Controller
+MIME-Version: 1.0
 
-diff --git a/Documentation/translations/zh_CN/mm/page_migration.rst b/Documentation/translations/zh_CN/mm/page_migration.rst
-index 8c8461c6cb9f..e4f03228dbd9 100644
---- a/Documentation/translations/zh_CN/mm/page_migration.rst
-+++ b/Documentation/translations/zh_CN/mm/page_migration.rst
-@@ -114,91 +114,23 @@ migrate_pages()对它的页面列表进行了多次处理。如果当时对一
- 
- 18. 新的页面被移到LRU中，可以被交换器等再次扫描。
- 
--非LRU页面迁移
-+movable_ops 页面迁移
- =============
- 
--尽管迁移最初的目的是为了减少NUMA的内存访问延迟，但压缩也使用迁移来创建高阶页面。
-+选定的特定类型且非 folio 的页面（例如 memory balloon 或 zsmalloc 分配的页面）可以借助 movable_ops 迁移框架实现页面迁移。
- 
--目前实现的问题是，它被设计为只迁移*LRU*页。然而，有一些潜在的非LRU页面可以在驱动中
--被迁移，例如，zsmalloc，virtio-balloon页面。
-+struct movable_operations 提供了与页面类型相关的回调函数，用于隔离、迁移以及将页面放回。
- 
--对于virtio-balloon页面，迁移代码路径的某些部分已经被钩住，并添加了virtio-balloon
--的特定函数来拦截迁移逻辑。这对一个驱动来说太特殊了，所以其他想让自己的页面可移动的驱
--动就必须在迁移路径中添加自己的特定钩子。
-+一旦页面被标记为具有 movable_ops，在页面被释放回 buddy 系统之前，不应更改其状态。这包括不得更改或清除页面类型，也不得更改或清除 PG_movable_ops 页面标志。
- 
--为了克服这个问题，VM支持非LRU页面迁移，它为非LRU可移动页面提供了通用函数，而在迁移
--路径中没有特定的驱动程序钩子。
-+目前，任意驱动程序尚无法直接使用此框架，因为使用该机制需满足以下条件：
- 
--如果一个驱动程序想让它的页面可移动，它应该定义三个函数，这些函数是
--struct address_space_operations的函数指针。
-+(a) 页面类型；
-+(b) 在 page_has_movable_ops() 中根据页面类型标示这些页面可能具有 movable_ops；
-+(c) 在 page_has_movable_ops() 中根据页面类型返回对应的 movable_ops；
-+(d) 不得将 PG_movable_ops 和 PG_movable_ops_isolated 页面标志用于其他用途。
- 
--1. ``bool (*isolate_page) (struct page *page, isolate_mode_t mode);``
--
--   VM对驱动的isolate_page()函数的期望是，如果驱动成功隔离了该页，则返回*true*。
--   返回true后，VM会将该页标记为PG_isolated，这样多个CPU的并发隔离就会跳过该
--   页进行隔离。如果驱动程序不能隔离该页，它应该返回*false*。
--
--   一旦页面被成功隔离，VM就会使用page.lru字段，因此驱动程序不应期望保留这些字段的值。
--
--2. ``int (*migratepage) (struct address_space *mapping,``
--|	``struct page *newpage, struct page *oldpage, enum migrate_mode);``
--
--   隔离后，虚拟机用隔离的页面调用驱动的migratepage()。migratepage()的功能是将旧页
--   的内容移动到新页，并设置struct page newpage的字段。请记住，如果你成功迁移了旧页
--   并返回MIGRATEPAGE_SUCCESS，你应该通过page_lock下的__ClearPageMovable()向虚
--   拟机表明旧页不再可移动。如果驱动暂时不能迁移该页，驱动可以返回-EAGAIN。在-EAGAIN
--   时，VM会在短时间内重试页面迁移，因为VM将-EAGAIN理解为 "临时迁移失败"。在返回除
--   -EAGAIN以外的任何错误时，VM将放弃页面迁移而不重试。
--
--   在migratepage()函数中，驱动程序不应该接触page.lru字段。
--
--3. ``void (*putback_page)(struct page *);``
--
--   如果在隔离页上迁移失败，VM应该将隔离页返回给驱动，因此VM用隔离页调用驱动的
--   putback_page()。在这个函数中，驱动应该把隔离页放回自己的数据结构中。
--
--非LRU可移动页标志
--
--   有两个页面标志用于支持非LRU可移动页面。
--
--   * PG_movable
--
--     驱动应该使用下面的函数来使页面在page_lock下可移动。::
--
--	void __SetPageMovable(struct page *page, struct address_space *mapping)
--
--     它需要address_space的参数来注册将被VM调用的migration family函数。确切地说，
--     PG_movable不是struct page的一个真正的标志。相反，VM复用了page->mapping的低
--     位来表示它::
--
--	#define PAGE_MAPPING_MOVABLE 0x2
--	page->mapping = page->mapping | PAGE_MAPPING_MOVABLE;
--
--     所以驱动不应该直接访问page->mapping。相反，驱动应该使用page_mapping()，它可
--     以在页面锁下屏蔽掉page->mapping的低2位，从而获得正确的struct address_space。
--
--     对于非LRU可移动页面的测试，VM支持__PageMovable()函数。然而，它并不能保证识别
--     非LRU可移动页面，因为page->mapping字段与struct page中的其他变量是统一的。如
--     果驱动程序在被虚拟机隔离后释放了页面，尽管page->mapping设置了PAGE_MAPPING_MOVABLE，
--     但它并没有一个稳定的值（看看__ClearPageMovable）。但是__PageMovable()在页
--     面被隔离后，无论页面是LRU还是非LRU可移动的，调用它开销都很低，因为LRU页面在
--     page->mapping中不可能有PAGE_MAPPING_MOVABLE设置。在用pfn扫描中的lock_page()
--     进行更大开销的检查来选择受害者之前，它也很适合只是瞥一眼来测试非LRU可移动的页面。
--
--     为了保证非LRU的可移动页面，VM提供了PageMovable()函数。与__PageMovable()不
--     同，PageMovable()在lock_page()下验证page->mapping和
--     mapping->a_ops->isolate_page。lock_page()可以防止突然破坏page->mapping。
--
--     使用__SetPageMovable()的驱动应该在释放页面之前通过page_lock()下的
--     __ClearMovablePage()清除该标志。
--
--   * PG_isolated
--
--     为了防止几个CPU同时进行隔离，VM在lock_page()下将隔离的页面标记为PG_isolated。
--     因此，如果一个CPU遇到PG_isolated非LRU可移动页面，它可以跳过它。驱动程序不需要
--     操作这个标志，因为VM会自动设置/清除它。请记住，如果驱动程序看到PG_isolated页，
--     这意味着该页已经被VM隔离，所以它不应该碰page.lru字段。PG_isolated标志与
--     PG_reclaim标志是同义的，所以驱动程序不应该为自己的目的使用PG_isolated。
-+例如: Balloon 驱动程序可以通过核心内核提供的 balloon-compaction 框架使用该机制。
- 
- 监测迁移
- ========
--- 
-2.48.1
+Hi,
 
+On Sat, Jun 21, 2025 at 05:51:33PM +0200, Sven Peter wrote:
+> On 19.06.25 13:49, Lee Jones wrote:
+> > On Tue, 10 Jun 2025, Sven Peter wrote:
+> >=20
+> > > The System Management Controller (SMC) on Apple Silicon machines is a
+> > > piece of hardware that exposes various functionalities such as
+> > > temperature sensors, voltage/power meters, shutdown/reboot handling,
+> > > GPIOs and more.
+> > >=20
+> > > Communication happens via a shared mailbox using the RTKit protocol
+> > > which is also used for other co-processors. The SMC protocol then all=
+ows
+> > > reading and writing many different keys which implement the various
+> > > features. The MFD core device handles this protocol and exposes it
+> > > to the sub-devices.
+> > >=20
+> > > Some of the sub-devices are potentially also useful on pre-M1 Apple
+> > > machines and support for SMCs on these machines can be added at a lat=
+er
+> > > time.
+> > >=20
+> > > Co-developed-by: Hector Martin <marcan@marcan.st>
+> > > Signed-off-by: Hector Martin <marcan@marcan.st>
+> > > Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> > > Reviewed-by: Neal Gompa <neal@gompa.dev>
+> > > Signed-off-by: Sven Peter <sven@kernel.org>
+> > > ---
+> > >   MAINTAINERS                |   2 +
+> > >   drivers/mfd/Kconfig        |  18 ++
+> > >   drivers/mfd/Makefile       |   1 +
+> > >   drivers/mfd/macsmc.c       | 498 ++++++++++++++++++++++++++++++++++=
++++++++++++
+> > >   include/linux/mfd/macsmc.h | 279 +++++++++++++++++++++++++
+> > >   5 files changed, 798 insertions(+)
+> >=20
+> > This is ready.  Let me know when you have all of the other driver/* Ack=
+s.
+> >=20
+>=20
+> They've all been reviewed by the respective maintainers.
+>=20
+> I assume you want to take this all through the mfd tree and we'll need ac=
+ks
+> from Sebastian for power/reset and either Linus or Bartosz for gpio then.
+>=20
+> The one line change inside drivers/soc/apple would usually go through my
+> tree and I'm fine with taking that through mfd instead.
+
+I'm fine with the power/reset driver going through mfd once the
+recent probe discussion has been solved.
+
+-- Sebastian
+
+--xcojizk7w6niahmw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhXU1EACgkQ2O7X88g7
++pp5mBAAqeYtgkz3ot6SuhXbvwuOhMII4zpE8jhfW1y9qUm85/HabSF/PRrM8fTX
+mrOmos/ImxU32f83/mPZshVf0+mESLu/t8jEcfWUZp9OCDWwIP22zJ0BScizgWpg
+d6vfEd4K8zdCjpEwNTmghrqahi7gGfapSzfpOGoZ7yLnGSp19rWdfG8CvQ4BI6b6
+EIy+2XySeO6V2n+fGt/78Td4+LVQ8k6gm6B/9/grN5WP2OBC2KwTSAsmieBXXpCD
+GBT911zqqYpJ3wfaSndyeztq1sOfKH6feAYTbCKjlz2frvOG5A+0A2nRLD4UXvCW
+JQmbyzwj7d03GFgqOIa95RyYZL2C0H3gdw1ZV+KO5OCGKIHWcrbRGsUnU0gzSyQj
+sRP6gLNKPNXeIgcvTBVNAiuy+NA/UUTzovImxl47hAO1jfbqjMc4rGYZVGwqYevJ
+szl41k3EmNjCU+Wb7Wm3xoQLb7xhjPBd4CbZBBnxJ9Zq6aRSTgyHPV6Q09/X7npU
+SJG9k/V+dqhpRWtSyhJVsQ326oWDeNatp5iSKU+ZCaLN3QI+7ouH0pAi/MPlpeoq
+UuK9iVt2lITPAvuHZ07XKQUHjxa/5tir3DpJJP2WAVPQM/n7ejypyXh/SHolX8G8
+M5BUD7E9puP4hgXS8ETreeIi0UlYz/STD6ck27xMFk8yVIyyyik=
+=Yc2m
+-----END PGP SIGNATURE-----
+
+--xcojizk7w6niahmw--
