@@ -1,113 +1,103 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DC386342
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 18:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FCE3C3C;
+	Sun, 22 Jun 2025 18:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750615270; cv=none; b=oND30wpVWpFlnyX8nyXUTPrYt2FgrEwHc9i63pAbTjbkouaVCcReOR9q3itA1afoiPM0iUkZ2Dv7E3JtIj+lTzhb2gddT7ocSwy3JKt+0ythmymJ58pe13Yg7IRSdnvEfHBQM4uO692ke7Ni4rNCwKmj42OVpv72pgD1az3rqWw=
+	t=1750615503; cv=none; b=BifAN2vxj1kRBGgjmDVRwnwfmneOM9GDi+ygzcEl3w3PPC8C2bvY4/iB/YqPIEi9l5RnPI4g6RNK075foyHG0OGGGtyZO+AQtv515MjJPnwhRdmAoNQVdyLqIar+lw89kwehjpfCD/tIwSNj5T6p70nNcfHpx8T/TZK0jHuZ9nM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750615270; c=relaxed/simple;
-	bh=J9W5678xdEPVkrFGIESTOy49fS98LSwSbpQugn1ibXA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mHpiAb3Nv7tC+jP+eGz7t0SOPQDul3t0NoqxvI2ayLDep+ThG+YWEkm/1QxD8dE/twNLrkK6tKklUwu+Gl1lXXUOLBavPrVY8prYBfLuHWc293E50rnpXWGiIGLN6x3pjd4s1C9ZSnmDEXcn79EzcbaNVQhtA0RQtvobsCKTvs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=M6YPThtA; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1750615503; c=relaxed/simple;
+	bh=w8foV68d39JwQr8G+r/PaGRrwf7ZXjBuJQRRkwRncms=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IXr4Zw1wgJAX0Te2gxT4K67+VAMQ8hRomMdxFZWcxvWX8eJiKCtwIiBXGjikcq7JIQAqprFzoMQ877RAvhkx7nXbT3UYfLBbFhtrziqWV0YO+Yr7Z5oOr0WfJteirrcw9iEi8QitKXogI6e7Fc5BP2FeenKO0uV2fs/8gzxmYdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=LgjkSwdF; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="M6YPThtA"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ade5ca8bc69so597537466b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 11:01:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1750615266; x=1751220066; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xh5CufBu5Z6q/CIQPXB1zoIxJvSFHFQ8GCjbcL7K+Tg=;
-        b=M6YPThtAsEQluNG6R/hnUTpip3DB3lbyfid13GOdmRc/vgIPJJ3lRTrzB3jTNPUadL
-         ZrdbEWCs/Hg8Dth4BSgX7+WbOjcF9jj4rZaxcKvf3/qbaxlA1noe5gpmJ6o+j7CBhcPy
-         ruLy+1vKtQzDpcseKz+HydejjudFjfCgdahJ4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750615266; x=1751220066;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Xh5CufBu5Z6q/CIQPXB1zoIxJvSFHFQ8GCjbcL7K+Tg=;
-        b=Qw+K/HdVPcimrZ0sKIaSnQk0ECCLQklstRD+wD9Z57o0ZxVaFvDx89zO5VyEW4XxBi
-         6fV+asUi7mLOtaX8SqTItnMWToll76qthcnqrQF4RDORNUwWC6RT/Qq8vGmbNL2MYI40
-         3TJMLgGkvxrMyuEzird90gRaUjAz8ljAwcojL67NP1+gCEJS+xs23wOHQbm98w78jn8A
-         McYAX/xLu+x/yLpbSl/p58dxBZz+hbHEgH0MbdWCaAKKNVg/hChTrniqox+KrgpPyApb
-         yLO31bB8+zFatkAAE3SEt+XPYE+sTYAXlfsv1oSAFLz5TZkrmm5pLk2btCT0XczkrWtX
-         AK6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWg9oL5gA0WOiqT4AHyivJzTvgtNtEGPahy9JX0a6xSZJ4DDcjJEufX/PfWuJyWEczZjPIYUeuR0/tPpfk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHODe9XSbIqCAvlFzkdO11/ziqjCQn/aLcBYOYvtLFqpXPDbkF
-	EoahD42b5Eon0Idb5sp/HJ0QuNJdwTYRJC4CFuS7Nl4Jg10gqcpaUQk7RGn84KFeMzCjzuS/1zu
-	vgbjJswA=
-X-Gm-Gg: ASbGnct+0Q+cXwCjZE9hoTRGTquIRVz2rmrXjUs351sAS5s5oR7tc4P7qTz2tSKyU6Q
-	B7gsrV5As7xyfpd2k6tQb9CQqcTqy2JH4Wb8QZeYGupuV8ODicPJ4zdn+WeL2jZHub0Ud13YbWp
-	GzZ6+NSfQQrjbserp14lDplKMlNajZEHbboCAODK0m9FAKhqhwhOPAVnqe77dhWXPVGB6Jt+cTR
-	rU22pIMqO2ziuWA0b8ngoExCZYA+ubCp24OUMgq3hTsMIsKcmSJRKQazYeYxM2jgE24P1rRqxDE
-	ZfpWmcyHTdnn2oEtJxQ99lVwIbmNqJF/Dr8mimb8LdqYCDE9CxPUCBAkRuM1+hJW/i9V4Tpghp6
-	7b4Mkhv8V2JGEJ4m7JEHyHuQ0N1Zh31A2e0th
-X-Google-Smtp-Source: AGHT+IEX4+3kJuASYht5rSLJQIipy7gRdOdDydZD5aq6f4b/YA4RNZMPhxM1lS25fx1u4xhH/rSnOQ==
-X-Received: by 2002:a17:906:9fc6:b0:ade:9b52:4cc0 with SMTP id a640c23a62f3a-ae057973159mr839642466b.26.1750615265961;
-        Sun, 22 Jun 2025 11:01:05 -0700 (PDT)
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com. [209.85.208.49])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053edc0c8sm575124166b.64.2025.06.22.11.01.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Jun 2025 11:01:05 -0700 (PDT)
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-607c2b96b29so5917540a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 11:01:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX/8ZyAOa56xDNlmVc/xATTUSLLWl+cQ3bpt5l3hxbMiio1xg4QNZd35TG6qR8ZE9AaJ8XXAvYNmvgWXJ4=@vger.kernel.org
-X-Received: by 2002:a05:6402:27cf:b0:609:aa85:8d6f with SMTP id
- 4fb4d7f45d1cf-60a1ccb4e04mr8893295a12.11.1750615265058; Sun, 22 Jun 2025
- 11:01:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LgjkSwdF"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55MFOsmY012084;
+	Sun, 22 Jun 2025 18:04:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=2ZadFmUpgwRwCkvnChkIoUOWgsfQT
+	tHLA1DRXKQ/D1I=; b=LgjkSwdFpnuyut+cLviGogaOJXEodYmiPtQGgYndEItrK
+	O76AHi9vyskAjOcZHdYYEDbRDu+/Ctnhofoqajp00Qmysk6u2zeT3L29XSpGeFic
+	n6dCQ8U4z+Qnzi8DK99rzLHkuN4TpdiHBpnt+w5muSAD581I7n161m2X3ZOReHz1
+	hD4KiUXptAkw3ohAhuC8Y1gz+Fjjmsdu7uqwviEuXQL7wI6J6LMno57uHgsZgpwV
+	tX1/kLqUD8BIeL7xORQn2fE5KPtAFvuwDB0UT1/OrscWjUfNIparaG2X6WBsvaie
+	9KA2lTxsbvzDCErwP1chdeVeO2A3pGnIJC8yDuadA==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47ds87s9v0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 22 Jun 2025 18:04:53 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55MCHR1g005018;
+	Sun, 22 Jun 2025 18:04:52 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47ehq1kx3v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 22 Jun 2025 18:04:52 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55MI4q8O039284;
+	Sun, 22 Jun 2025 18:04:52 GMT
+Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 47ehq1kx3m-1;
+	Sun, 22 Jun 2025 18:04:51 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: conor.dooley@microchip.com, daire.mcnamara@microchip.com,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: microchip: mpfs: Fix incorrect MSSPLL ID in error message
+Date: Sun, 22 Jun 2025 11:03:49 -0700
+Message-ID: <20250622180352.4151679-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aFgDHBHwY5ElWILx@shikoro>
-In-Reply-To: <aFgDHBHwY5ElWILx@shikoro>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 22 Jun 2025 11:00:48 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjCznJeOUSHcR5BszEUVv5BW6heO6jMX38MHXNaL3kbmQ@mail.gmail.com>
-X-Gm-Features: AX0GCFvnn992nxigULNiH1gK6JAY71aQgYXmY-5YsNMdcvTo7T5WTIQaQFNAVDg
-Message-ID: <CAHk-=wjCznJeOUSHcR5BszEUVv5BW6heO6jMX38MHXNaL3kbmQ@mail.gmail.com>
-Subject: Re: [PULL REQUEST] i2c-for-6.16-rc3
-To: Wolfram Sang <wsa@kernel.org>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-22_06,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999
+ spamscore=0 malwarescore=0 suspectscore=0 mlxscore=0 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506220115
+X-Authority-Analysis: v=2.4 cv=a8gw9VSF c=1 sm=1 tr=0 ts=685845c5 cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=toDgYEdFdHzvqbp0uI0A:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDExNSBTYWx0ZWRfX6PGt+odVXGr2 XfLf9nAOge5rjjx1uBXZogG92CFvN0ScQ2yNRBc0+5wLVkBsdnn1VMLr7i6YUmtLvd2mLagm4l3 glST64u+VBtu8UcLDUiCar6w6yWs1U4ypWKFAWxiG5mzEhQdqm01TjgD94If819sDIBpT1lWawg
+ DUyA7XM60JDMUQVsFzRs1xlpPWVkcevT1qRTW4wEACG93Giq+GsGvM6JRoOoxYIVe9EXnPGe/e0 NGcqisiFedSOGNYDX4R8zGncjRsQ690RZi4Sd8TC1hFZOy6e3sy/Fc/xJXhnhYd3j1oETEz5Wtw kCb+H4Bws6FmnERIObvCeQb1o2Dju7n/TFV2wAjqZSm2igsGa/RSaIc1CgXm2vFD/Gl1Jzy3iRo
+ U0OAZFdG7IfBMjQyj5Y7Nw7qOZtRF2RN1ZJ+yrg7e36SxkvrJUtYzmwXjUImr/28XV7LG1nn
+X-Proofpoint-GUID: iVe1w60Qm8PEt_UYtpad-pB6n6NaiNST
+X-Proofpoint-ORIG-GUID: iVe1w60Qm8PEt_UYtpad-pB6n6NaiNST
 
-On Sun, 22 Jun 2025 at 06:20, Wolfram Sang <wsa@kernel.org> wrote:
->
-> - subsystem: convert drivers to use recent callbacks of struct i2c_algorithm
->   A typical after-rc1 cleanup, which I couldn't send in time for rc2
+The error message in mpfs_clk_register_mssplls() incorrectly
+printed a constant CLK_MSSPLL_INTERNAL instead of the actual
+PLL ID that failed to register.
 
-Honestly, this is just *annoying*.
+Update it to msspll_hw->id for accurate diagnostics
 
-It's made extra annoying by the fact that you also did some random
-whitespace changes while at it, and almost half the lines modified are
-just completely irrelevant indentation changes.
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+ drivers/clk/microchip/clk-mpfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Looking at the stats, your pull is:
+diff --git a/drivers/clk/microchip/clk-mpfs.c b/drivers/clk/microchip/clk-mpfs.c
+index c22632a7439c5..d12b7120f16ff 100644
+--- a/drivers/clk/microchip/clk-mpfs.c
++++ b/drivers/clk/microchip/clk-mpfs.c
+@@ -160,7 +160,7 @@ static int mpfs_clk_register_mssplls(struct device *dev, struct mpfs_msspll_hw_c
+ 		ret = devm_clk_hw_register(dev, &msspll_hw->hw);
+ 		if (ret)
+ 			return dev_err_probe(dev, ret, "failed to register msspll id: %d\n",
+-					     CLK_MSSPLL_INTERNAL);
++					     msspll_hw->id);
+ 
+ 		data->hw_data.hws[msspll_hw->id] = &msspll_hw->hw;
+ 	}
+-- 
+2.46.0
 
- 45 files changed, 125 insertions(+), 103 deletions(-)
-
-but ignoring the whitespace changes it drops to
-
- 45 files changed, 84 insertions(+), 62 deletions(-)
-
-all of which just makes it really really hard to see that it's just a
-trivial conversion.
-
-I've pulled this, but I was really close to just unpulling it because
-it was such a messy thing and badly done.
-
-If you do conversions after the merge window, make them DAMN OBVIOUS.
-Make them minimal, make them automated, and DO NOT DO OTHER RANDOM
-CRAP AROUND THEM.
-
-          Linus
