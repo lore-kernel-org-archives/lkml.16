@@ -1,156 +1,170 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE321DACB1
-	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 11:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B97FC0A;
+	Sun, 22 Jun 2025 11:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750590832; cv=none; b=nYiCR8uwPfi6fbQe6IPquN0V3hjJ7OAPVojgOR/BoBKZ+N3cwWvcV3EiFeusbMJsM4yxvEsqAVvpaLqexvue5GH1QFkMlCIptwXiCSPBsTaBt2rRnJj/RLQgy/SyNVNV9zq5gmaT8G2U8Yu3HoFlATne+QBFKfAN73MjrGtWVy8=
+	t=1750591197; cv=none; b=J0TX8AjmhPEXoRGFeip+h98w72lUmno1nfBUIEJYZw5Ss10MELDaolJ3xJKzgZ56Z5ANLKWrKImds8xcjTybqCn6y9zaDsqeWh/jomOiXWID/y62VwqF5Tda/F9IkyYk7MpuZJgQBjylPVQegUfDzjzbX+XEzkks8NCe5ZKtAdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750590832; c=relaxed/simple;
-	bh=OttfpWvRHtVLmW84FaMi9+g8U21TmEvH9AqsrpyfgM0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZF4S95A6o5OaY2yYXyfB5IfXJ/R08pS3gm4w9BWB6JpOLFj9gLm/CQ23vjdp+BhGlkizjB0vIh4uVnkw/QsUfDXSywQ0wrByfQo106reaEva2BKdXpONiEw/MqkKYSEM+Sp9h9j6FRrezd/TUXxlVKnTLd+qFylpwfKy2cy8y9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hycEYoqH; arc=none smtp.client-ip=209.85.221.41
+	s=arc-20240116; t=1750591197; c=relaxed/simple;
+	bh=m9g1hEg7UesRWLFBTzOOv2jhJbj3tfZzWpfaplVj644=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WidYoWewWRIQT7dwUr8ETLolQnGwLuFeTb/ar9DJNfEo8MVLNBnlQUIVvfLyRk84/JZH6SKSXt4D01MABSmuOxzLVFFRfQx0MgdOsOgIznGw4fmzUCPIIaxwZadlhyV0aU1OEpEO+ROdGJZ9wXINOQhPMk4XPywARuwtxA7enH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aNrKypYX; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hycEYoqH"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so2050224f8f.0
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 04:13:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNrKypYX"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-23636167b30so29891575ad.1;
+        Sun, 22 Jun 2025 04:19:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750590829; x=1751195629; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MY722r7fjqtwDH04kCsFQsJl/eGG6zaBtiY49RCnDQs=;
-        b=hycEYoqHDDWNK2AgXUEaEgBxLHgXLCwlHl6MptlnIFVDeReAyochR0TXznyglJYg6n
-         96NRN8V/WF3pqcziieV33/zxPzsi2ZED2LaEunJcUNXQar/0mAzRhhA1nZq0T5mMjnqe
-         fjqLl1Z0eFZKN8xJIcDixBzKKRmx/ZHEfdwAYfuncgZbC7xzmSR7mBOJ2jFRIcyjPm4S
-         ke018XPf5Qo+6RVbcYMO3B5k9vmNwXlc/4CGptdpXETP4AZifk+41XRNRNFHZ7/Lhtym
-         tIG5O2E21jfKg6jVlisqXvJb7SeI8HDGQa9l95Hqrrb7sy7ACALvj+ByyvnlIBMtiNs1
-         P9pw==
+        d=gmail.com; s=20230601; t=1750591195; x=1751195995; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Zj1dgADfdFV6IRKbspb8SDrNU3AE5RAH75YEHGM61go=;
+        b=aNrKypYXYhSJEKmUHxtScZjLMysSJg79KvS3qHHOIMF/KS5mkQLS8id9dI85h99QGR
+         4spn+TioBmoRJ6qYzGAt866a+IW45++Og1CvD1utQ9RNWeB1JG6WON1fKkbyu6Scv0so
+         xL0pyfmo1qzpCyOkgCvZm8aP4emfw8lRHOT2X66rYSkg13zEC92L1cbdfMHh86M/zo+G
+         ocBq/kiQ3KCOjEWpg3hVYMLN//9x8npkMBMGmGoh+N6+wL00asWmZgsW+b49XVMzKfqM
+         p5FEBPn5EdFnu2U4Sy1A4VRtytWPz7O9S4ZKkmYsLoEbEBPHo9jfMzOto6Mc7GeJQt9x
+         /ATg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750590829; x=1751195629;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MY722r7fjqtwDH04kCsFQsJl/eGG6zaBtiY49RCnDQs=;
-        b=l7/VisZkwy92LamKq8XfcHBEzepDWxJ/SOSQHCjCUKcJjUKKOSXHjBro9dibrWuqqk
-         z5qKfZKSANPA2nuKtC6TeKyR5b0r5XQZRDIYV0pMquLFw/P9ikvC06/di6DLr0QbgRjt
-         +EqleUopUd81Fs/o9uK68N5FdJw9V55xyNsiVkYO0Gp8RLf/uByTCW1jchzmRqG/tuBL
-         ys8fFiwOb6yV0lHdWrd9hr8TXYkoxoMN2U9RG54F/cMH9IpUg/hDVpp+6AQGcpdLyyvh
-         A9qOaqotYGWvFHJMeHdP6yyeKyXxl1gX7so7matY6YMjlK6BoMkHHVzuJLSmZspsWuos
-         MCXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVWRAW+hys0kFADVP9EtpAKZ/a7JzQTdDAiy5tl401uNJODtIq29jZU4xWjR0BjpheS40Y8t1sSd71RxGg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzk5diw8Z3cJyk+FEfqhN5YrH2OXVH04xAHczx8wBMzs4J1XN6+
-	Nz6eXrrb2deF+1EvS4VPsAPcGP7b2jHakIbtMj1lxGoZI1Y4xuYt7FuV
-X-Gm-Gg: ASbGncsFRr0jo9fHu8zPL1yb0YERDDRJLcWMjazBQH82zZqJcZws89lr8efLS5acddZ
-	Of9nhHXP4p8rBOgE9A2nlN0lG8iJF+x5V///L4rV6wNYYCrPzHIr8VXDk/2Z/i1h7rVydBMffYz
-	z+7botwjD8j+fh/1V2jGj4gMDHNWHlmZkMCPHQCWI4aKqXMLcG59aKWUfPWefNWl9rESQwagaqU
-	ks5eDXDvfbpmbGIIniS9O+ONsnEWzxRwJ0ulP1HwY0XZWLqJsG12Xfy3rVUft/wWPqpsaN+P/La
-	oBvICJHv2dXyBucLNQYLiKFETNz3ZrN3brfbsgbJ+6zZYKActvLlU3ngsCI1Yo9dKU5xV0KcofU
-	W/gBAlPjVTxoZgmMvo56tZLGohDONcASjr3gDdpYF
-X-Google-Smtp-Source: AGHT+IG3zrYphVYrlGBAXA2y7n8eF2Xc/nmKRF7gU5JOUQ44PRhFzXNNRprLlU5eqnSCppCm70ausQ==
-X-Received: by 2002:a05:6000:200d:b0:3a4:e231:8632 with SMTP id ffacd0b85a97d-3a6d278b163mr6831282f8f.12.1750590828483;
-        Sun, 22 Jun 2025 04:13:48 -0700 (PDT)
-Received: from localhost (tor-exit-96.digitalcourage.de. [185.220.101.96])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a6d1187e5fsm6760648f8f.70.2025.06.22.04.13.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 04:13:47 -0700 (PDT)
-Date: Sun, 22 Jun 2025 14:13:39 +0300
-From: Ahmed Salem <x0rw3ll@gmail.com>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: airlied@redhat.com, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [RFC PATCH] amd64-agp: do not bind to pci driver if probing fails
-Message-ID: <vzbw4vskuqsiyha4tmjgoybaet667oed2czai4evvxbzewzofb@v6xb2p2m6qmf>
-References: <c5kqcudzrcafm24nr5ixgalhxdkxl3uoueerjlp6tbksj3hzy7@klytjugpkvdm>
- <aFZ_YJH30f1WDneD@wunner.de>
- <7rv3j2it6wbv4gu7jgsews3niste5y52h67scwwjpblhy2royh@hqfmpbjzdj77>
- <aFcGSaxeaDphIhUU@wunner.de>
+        d=1e100.net; s=20230601; t=1750591195; x=1751195995;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zj1dgADfdFV6IRKbspb8SDrNU3AE5RAH75YEHGM61go=;
+        b=p0LFOAse+5ONYWSGY8BL+uPHVMnjTKURcHELpqvjUo5N1ilPz7ZcnqLWCPWxH0XzyW
+         /YoMkM7+EO5HFeDf270u+8ujrdxsjYWZpuG9kIL5oupygcCCOmR0934bZzM28CVznm9q
+         A2IZkzEPj6G/LSxzdbw4ClZ5SkdVgcrK5iD3lgrmPMFALqiNXrzlELqjupfraCWIBXcI
+         6XtoIadglgVuG5/rV1Pr5JpiLynhisLZ2vrwdvH8dLy5X+V2VVuaznwJg/QRRi1Eaf0q
+         7cAm5VP1aiCGAX3jQHD3lJ7ACvPEQTMABL5DGwMPsKgm4HeKIr1q0rAEK5c+hcsA1ZJ5
+         sAbA==
+X-Forwarded-Encrypted: i=1; AJvYcCXBjav1SNaoJiKO+1UDwhNukmMW3TuPRzeFbyqF0S/cFwSc8XJA+17hrbsc14/HVBJVaYCq8QjBGAY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsY/Nt8pkyU9JmgHqw+B6T30u0PO9OwE4sRxaE0CSerzM7qqeT
+	fVerfXl7xnV5ObDL96KZFs/+mEgNOuVqmK+PWvdsEkT0IDu7EaYMpP2mQHPD+g==
+X-Gm-Gg: ASbGncvQ0auV0WYvFmNPxtPyTS+Sy9ncxKQyuWdkay4eRigN05dhfo3EgvGywrGOdO4
+	W/bCFSXqsDYUX8hWQHb5AtQOQf1vHv0tDG3YOv4Tq1HheaTNI2Phj9a+3fCrpk6k5lioNbSACgp
+	eWKZLCKY4B+SHRiiJu2hgQxwuAd0S4bu669ZSqQvQwArjKGiIHXurLslE+4AWYM34IyvveE1lAb
+	6fFe/dZIST3VtyTIf0yP0feBpMKSdp7nUQaGqZzOX7KvqE/a80k0aV1FJMOslGt6mPsOmleg7Uf
+	b+Q8je53ECVAun6pzE5+CW9srz6m84Jo195msibqDLw5mSzswapAdEJ6/wx+PWYqBoW5xpCPSY9
+	4RlSyiGFK6sZMOzs73K0XMyyx9cEggaO1
+X-Google-Smtp-Source: AGHT+IG4qplK/uHPatkUiBNBtAUaw7oWxBWvWVYJmakmZ41+fNiJTE8EhuZ2gtMhwzhnAyWYgPSiUw==
+X-Received: by 2002:a17:902:f64a:b0:234:c8f6:1b05 with SMTP id d9443c01a7336-237d9a798b2mr120189935ad.52.1750591195411;
+        Sun, 22 Jun 2025 04:19:55 -0700 (PDT)
+Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8393227sm59753755ad.24.2025.06.22.04.19.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Jun 2025 04:19:55 -0700 (PDT)
+Message-ID: <c05dd5dc-1e30-4a2c-80dc-70e8b62cc681@gmail.com>
+Date: Sun, 22 Jun 2025 20:19:52 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFcGSaxeaDphIhUU@wunner.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 15/15] docs: conf.py: Check Sphinx and docutils version
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>
+Cc: linux-kernel@vger.kernel.org,
+ Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+ Akira Yokosawa <akiyks@gmail.com>
+References: <cover.1750571906.git.mchehab+huawei@kernel.org>
+ <972673b0a5bf5537d47780d6f8e70ae45456e751.1750571906.git.mchehab+huawei@kernel.org>
+Content-Language: en-US
+From: Akira Yokosawa <akiyks@gmail.com>
+In-Reply-To: <972673b0a5bf5537d47780d6f8e70ae45456e751.1750571906.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 25/06/21 09:21PM, Lukas Wunner wrote:
-> On Sat, Jun 21, 2025 at 07:15:31PM +0300, Ahmed Salem wrote:
-> > On 25/06/21 11:46AM, Lukas Wunner wrote:
-> > > On Sat, Jun 21, 2025 at 04:55:52AM +0300, Ahmed Salem wrote:
-> > > > --- a/drivers/char/agp/amd64-agp.c
-> > > > +++ b/drivers/char/agp/amd64-agp.c
-> > > > @@ -768,10 +768,15 @@ int __init agp_amd64_init(void)
-> > > >  
-> > > >  		/* Look for any AGP bridge */
-> > > >  		agp_amd64_pci_driver.id_table = agp_amd64_pci_promisc_table;
-> > > > -		err = driver_attach(&agp_amd64_pci_driver.driver);
-> > > > -		if (err == 0 && agp_bridges_found == 0) {
-> > > > +		if ((int *)agp_amd64_pci_driver.probe != 0) {
-> > > >  			pci_unregister_driver(&agp_amd64_pci_driver);
-> > > >  			err = -ENODEV;
-> > > > +		} else {
-> > > > +			err = driver_attach(&agp_amd64_pci_driver.driver);
-> > > > +			if (err == 0 && agp_bridges_found == 0) {
-> > > > +				pci_unregister_driver(&agp_amd64_pci_driver);
-> > > > +				err = -ENODEV;
-> > > > +			}
-> > > 
-> > > Is the "probe" member in agp_amd64_pci_driver overwritten with a
-> > > zero pointer anywhere?  I don't see that it is, so it seems the
-> > > else-branch is never entered.
-> > 
-> > That is a great question. I thought since pci_register_driver calls the
-> > probe function, it would return with or without a zero, saving that
-> > value in the .probe member.
-> 
-> You'd have to add parentheses and parameters, i.e.
-> 
->   agp_amd64_pci_driver.probe(...)
-> 
-> to invoke the probe hook directly.  However, that wouldn't be an
-> acceptable approach, one needs to go through the API of the
-> driver core and not do things behind the driver core's back.
+On Sun, 22 Jun 2025 08:02:44 +0200, Mauro Carvalho Chehab wrote:
+> As reported by Akira, there were incompatibility issues with
+> Sphinx and docutils with docutils 0.19. There's already
+> a fix for it, but, as there are incompatibility issues with
+> different versions, better to add a check to verify if the
+> combination is supported/tested.
 > 
 
-Noted!
+I've been skeptical of adding such checks in conf.py.
 
+What happened the other day was that Jon used a deprecated (and rarely
+used) method of docutils which failed to work properly only in
+docutils 0.19 (there is no mention of related issues in its and 
+nearby release notes).
+
+Your integration of parser_yaml extension will raise the minimum
+version of docutils to 0.17.1.  I think all you will need is just
+to check:
+
+    docutils < 0.17.1
+
+, and to make a warning regardless of Sphinx versions.
+
+> After check Sphinx release notes, it seems that the
+> version compatibility is given by:
 > 
-> > > I had already prepared a fix for this, but waited for 0-day to
-> > > crunch through it.  I've just submitted it, so that's what I had
-> > > in mind:
-> > > 
-> > > https://lore.kernel.org/r/f8ff40f35a9a5836d1371f60e85c09c5735e3c5e.1750497201.git.lukas@wunner.de/
-> > 
-> > That one I've seen even prior to catching this one, and this is
-> > originally what I had in mind based on what commit 6fd024893911
-> > ("amd64-agp: Probe unknown AGP devices the right way") removed (i.e.
-> > !pci_find_capability) when you suggested checking for caps beforehand,
-> > but I figured "why make other calls when .probe already does it right
-> > off the bat?"
-> 
-> Right, it is somewhat silly, but this driver is for 20+ year old hardware
-> which is likely no longer in heavy use, the driver itself isn't actively
-> maintained anymore and might be dropped in a few years, so this approach
-> seemed like the least ugly and most acceptable option.
-> 
-> The real crime was to probe *any* PCI device and even make that the
-> default.  I think vfio_pci is probably the only other driver that
-> probes *any* PCI device and it does that only if requested by user
-> space I believe.  We'd risk regressing users if we changed the
-> "probe everything by default" behavior, so that's not a good option.
+>         =======  ============   ============
+>         Sphinx   Min Docutils   Max Docutils
+>         Version  Version        Version
+>         -------  ------------   ------------
+>         3.4.3    >= 0.12.0      < 0.18.0
+>         4.0.0    >= 0.12.0      < 0.19.0
+>         6.0.0    >= 0.18.0      < 0.20.0
+>         7.0.0    >= 0.18.1      < 0.21.0
+>         7.2.0    >= 0.18.1      < 0.20.0
+>         7.4.0    >= 0.18.1      < 0.21.0
+>         8.0.0    >= 0.20.0      < 0.22.0
+>         8.2.3    >= 0.20.0      < 0.22.0
+>         =======  ============   ============
 > 
 
-Gotcha..That clarifies a whole lot, thank you so much!
+<nitpick>
 
---
-Best regards,
-Ahmed Salem <x0rw3ll@gmail.com>
+So this is what I see in the changelog (not looked into < 6.0.0):
 
-> Thanks,
+         ================= ====================
+          Sphinx version     docutils version
+          (since)              min       max
+         ----------------- ------------ -------
+         6.0.0             >= 0.18      < 0.20
+         6.2.0             >= 0.18.1    < 0.20
+	 7.0.1             >= 0.18.1    < 0.21
+         7.3.0             >= 0.18.1    < 0.22
+	 7.4.0             >= 0.20      < 0.22
+	 (up to 8.2.3)
+         ================= ====================
+
+This Looks quite different from yours ...
+
+</nitpick>
+
+That said, these dependencies should be recognized and taken care of by
+pip/PyPI (or whatever distro package management system), and already met;
+unless you have done something strange/dangerous and screwed up your Sphinx
+installation.
+
+My limited imagination prevents me from coming up with any plausible
+scenario where these checks at every sphinx-build invocation can be helpful.
+
+> For now, add a logic inside conf.py to check the above
+> compatibility list, emitting warnings if the docutils
+> version doesn't match it.
 > 
-> Lukas
+> This way, when we discover incompatibility issues, we
+> can easily adjust the table.
+
+Does not sound convincing enough to me.  Sorry.
+
+        Thanks, Akira
+
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  Documentation/conf.py | 70 +++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 67 insertions(+), 3 deletions(-)
+[...]
+
