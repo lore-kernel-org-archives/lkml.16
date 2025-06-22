@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3F179F2;
-	Sun, 22 Jun 2025 09:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE0179F2;
+	Sun, 22 Jun 2025 09:49:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750585706; cv=none; b=OgbhbaOrbnDdTfNbx3w2+uM2dYqS70ALI+BZ9YRtsG2nGJb5l+12sT+qEN8KI8qDkB1HcKFB8VwBaTjH6sgPm+PS1LgHCrWVW7nh6kffGc++hz/XEwAOAo5Y0v72StW/CZYKhWbr2VAf90uJJccnSLhyaRZjyXcf78UxOK3n+Tc=
+	t=1750585790; cv=none; b=pLPc2/nHb7bydY5aGWM2wYgv6gtWki6lZNN+bnGyjO8/C8Rrx0sXClk/wZb0QOY9C3RRY/i6cXwRPgKf9clbfvVkOHAyJFztpBlmpt8OsZwZp/shF2ihofX6alSKjBl99rCPbsF4wskpo/hG0oea59DRRotRGLmYclMUdPp+bgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750585706; c=relaxed/simple;
-	bh=4vdRfcPbRQB5zMf1V/AuGgKvWFlvsrisrBycdGuo6YE=;
+	s=arc-20240116; t=1750585790; c=relaxed/simple;
+	bh=iwltcif6vICScgREcP+h+g1nFFViLlwsSAlyON+V8C0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uB4yQWxLspmwJl7yoOkY5z8ZkYcy5GRyfuLbY+ro5QPXp3jJSgRGQs9okhno0r5f2K0LJsUxhnAieCsAUYZOBjcSKSQslOxbeFr4HEiOXyjukL/mlOXznoyOn50wgqFQHHsx+HKuHMlQhbMq75Hi2d7YJmOlFNNWgf5miPNujW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OnaFMLJQ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=IsjXYnqGCDqSCI7gSiUL0Gu6BdkpNFZs8GK7Z8oFCF1VxQeIEvNjRgJ+vASdrLHQGtj7JIXzC6DFAUCQrayJntKiPY415GbLjuEMzld1F1rLmleANzBHJ6U7ZFdF0tMXJTQtJJA/wbOyG6ipoBYy7tRBq1ae2Rbd0DUOZmyho8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZC5htukG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OnaFMLJQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82436C4CEE3;
-	Sun, 22 Jun 2025 09:48:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZC5htukG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F19FC4CEE3;
+	Sun, 22 Jun 2025 09:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750585706;
-	bh=4vdRfcPbRQB5zMf1V/AuGgKvWFlvsrisrBycdGuo6YE=;
+	s=k20201202; t=1750585789;
+	bh=iwltcif6vICScgREcP+h+g1nFFViLlwsSAlyON+V8C0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OnaFMLJQi1s1v1Fc+j8+UrUFjfSejiXGaXH/z/S9pcorncNKJBheiUlVnCkEEFVMA
-	 TR1IY5E+3h97LNA/cABkfMZzfz0ByvbSO3+KZsZD85LdHcLpQgl3qme++E+LISj6vj
-	 OgJ5xoo4VMO03nZoG5LXaCfIkMU3MdA7e0qk8UZExZDMEj8HfEQLBqH5sVQdkyZyoM
-	 a7nL7NHLDvRsD/eQyo8KefPfUG4zCJLHjnDg66wNSaOKj2HDzGHMftIcfVpGSu03Lt
-	 dz9dmkqOQ3bReXLMAm0XbP3ZnIyTVErpf+IazeQ5dDNcuvM73azCfRGQBqLnFFAKQe
-	 Etu+57/945Y5g==
-Message-ID: <bba062a3-f96c-456b-8e9e-fdeb0dc2d28d@kernel.org>
-Date: Sun, 22 Jun 2025 11:48:19 +0200
+	b=ZC5htukG+JujMTd/Oouril8iRlgg7NBrGcD84+g6QR7kh87GrsZG6LMmgoiCQzJPX
+	 ir60lA5pI4pl3uTWjDJOOayp9QmgA2amNdlzrnFh3fxJfiSpU4wFMIT8a14VfSLXlI
+	 NI3l6OSgGBze94S1jfT15CddeajuXfda+WpelDz01XCFsFAp72KaZgjR8Zno2ZE4cX
+	 Vpb7TnUQNM47F0RymTq9zdSN0FdoNCF7jRAi1giLW4Qy1xfFK9gQf9YzDPkJg42j5+
+	 2cngnJtoqq8fyCaIbsSob8f0Sxjt0uHRWfAtuwV8GeOJ5ZbKmUuurhHNxgHE6iPGn4
+	 sy8siG8TeeWpQ==
+Message-ID: <5163d9d8-d106-47f3-a0f9-0eaa01f15498@kernel.org>
+Date: Sun, 22 Jun 2025 11:49:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,24 +35,25 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 2/4] dt-bindings: mmc: controller: Add
- max-sd-hs-frequency property
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Sarthak Garg <quic_sartgarg@quicinc.com>,
- Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+Subject: Re: [PATCH v2 4/6] arm64: dts: axiado: Add initial support for AX3000
+ SoC and eval board
+To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- quic_cang@quicinc.com, quic_nguyenb@quicinc.com, quic_rampraka@quicinc.com,
- quic_pragalla@quicinc.com, quic_sayalil@quicinc.com,
- quic_nitirawa@quicinc.com, quic_bhaskarv@quicinc.com, kernel@oss.qualcomm.com
-References: <20250618072818.1667097-1-quic_sartgarg@quicinc.com>
- <20250618072818.1667097-3-quic_sartgarg@quicinc.com>
- <6040afd9-a2a8-49f0-85e9-95257b938156@kernel.org>
- <9627ed6f-2bb8-40b0-b647-5f659d87f2f9@oss.qualcomm.com>
+ <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+ "soc@lists.linux.dev" <soc@lists.linux.dev>
+References: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-0-341502d38618@axiado.com>
+ <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-4-341502d38618@axiado.com>
+ <6ef92d1a-39cc-409f-8ebe-d28ad2006988@kernel.org>
+ <bfcde082-270f-4152-b474-7828beab7cb9@axiado.com>
+ <9012cc61-b499-4213-9753-54cf4d24c822@kernel.org>
+ <bdc4408c-6fe4-48cd-bb40-3a17aed79cb6@axiado.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -98,58 +99,38 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <9627ed6f-2bb8-40b0-b647-5f659d87f2f9@oss.qualcomm.com>
+In-Reply-To: <bdc4408c-6fe4-48cd-bb40-3a17aed79cb6@axiado.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 21/06/2025 12:20, Konrad Dybcio wrote:
-> On 6/18/25 9:43 AM, Krzysztof Kozlowski wrote:
->> On 18/06/2025 09:28, Sarthak Garg wrote:
->>> Introduce a new optional device tree property `max-sd-hs-frequency` to
->>> limit the maximum frequency (in Hz) used for SD cards operating in
->>> High-Speed (HS) mode.
->>>
->>> This property is useful for platforms with vendor-specific hardware
->>> constraints, such as the presence of a level shifter that cannot
->>> reliably support the default 50 MHz HS frequency. It allows the host
->>> driver to cap the HS mode frequency accordingly.
->>>
->>> Signed-off-by: Sarthak Garg <quic_sartgarg@quicinc.com>
->>> ---
->>>  .../devicetree/bindings/mmc/mmc-controller-common.yaml | 10 ++++++++++
->>>  1 file changed, 10 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller-common.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller-common.yaml
->>> index 9a7235439759..1976f5f8c401 100644
->>> --- a/Documentation/devicetree/bindings/mmc/mmc-controller-common.yaml
->>> +++ b/Documentation/devicetree/bindings/mmc/mmc-controller-common.yaml
->>> @@ -93,6 +93,16 @@ properties:
->>>      minimum: 400000
->>>      maximum: 384000000
->>>  
->>> +  max-sd-hs-frequency:
->>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> +    description: |
->>> +      Maximum frequency (in Hz) to be used for SD cards operating in
->>> +      High-Speed (HS) mode. This is useful for platforms with vendor-specific
->>> +      limitations, such as the presence of a level shifter that cannot support
->>> +      the default 50 MHz HS frequency or other.
->>> +    minimum: 400000
->>> +    maximum: 50000000
->>
->> This might be fine, but your DTS suggests clearly this is SoC compatible
->> deducible, which I already said at v1.
+On 20/06/2025 23:18, Harshit Shah wrote:
+> On 6/19/2025 11:08 PM, Krzysztof Kozlowski wrote:
+>>>>> +
+>>>>> +             spi_clk: spi_clk {
+>>>>> +                     compatible = "fixed-clock";
+>>>>> +                     #clock-cells = <0>;
+>>>>> +                     clock-frequency = <25000000>;
+>>>>> +             };
+>>>>> +
+>>>>> +             apb_pclk: apb_pclk {
+>>>> No underscores in node names, but all these look incorrect - don't you
+>>>> have clock controller?
+>>> Noted, we will remove the "_" from the nodes. We do have clock
+>>> controller however that is being accessed by other CPU before Linux will
+>>> come-up.
+>> What does it mean? Is the clock controller not available at all for
+>> Linux or any other OS?
 > 
-> I don't understand why you're rejecting a common solution to a problem
-> that surely exists outside this one specific chip from one specific
-> vendor, which may be caused by a multitude of design choices, including
-> erratic board (not SoC) electrical design
+> Apologies for the confusion. Yes, clock controller is available however 
+> it is only accessible by another CPU which boots up before Linux comes up.
+> 
+> This another CPU is setting up the various output clocks (& PLLs) before 
+> the Linux comes up.
+> 
+> So, that's the reason haven not added the clock controller in this DTS 
+> but only will add fixed clocks.
 
-No one brought any arguments so far that common solution is needed. The
-only argument provided - sm8550 - is showing this is soc design.
-
-I don't reject common solution. I provided review at v1 to which no one
-responded, no one argued, no one provided other arguments.
+And what happens if that other part decides to change frequencies?
 
 Best regards,
 Krzysztof
