@@ -1,187 +1,211 @@
-Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020105.outbound.protection.outlook.com [52.101.196.105])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B7612B73;
-	Sun, 22 Jun 2025 02:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.196.105
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750560525; cv=fail; b=hjriwwmzG83o8/fkHUUHYDfINAuUxSxdbiFC2/ksLPa7xW6aT897uLkcirKG7L7HNIXrCpApwTZblm1u1dQXkawBMCjjMrr1LB99Fh5W/5n4mKrPKzu8FUw8JfWBBBUKopErCaePataYmMWfX+fEiUsMhO/b/Qmh2VzRNFUTTJQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750560525; c=relaxed/simple;
-	bh=17E7GKteyjzK40xDt86rc67ui34z/V1XWa/wLBsz3c4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mbft9B9g2LgkuoqIjfUHaoCGOrssPj4eWlMwtefvKgRetox0DS1GDc1Za8sjGRbQ6HM6ruoMG2VV56ZWSJMrYM4NaLFo6mfipgIo2Msp7gTnhs6OYpPtaaOHYNCwDyNZiBCxd0M+nkOtGI2VhLfLJdV6cILF5nci2yTBVjrZShg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.196.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pWA5lNUbkGqZiv6spH8DTBJovaRczR5ao9OEErVADbYD9TjCrbyi6rCTUVp6HX2LiM0eERezNW5VFnArKeTS5f7jDSDwoR1WB/qCeSQAByo7pXbrymFr3aktuTngwwAxvWGn86Cn7Q7vEqxfGYUCJFbR1RExL97bzQG8ai4W4KPUzZ+SQ9UxOAbs+oKRkwVGhqa151Ghto+2p31Magd7ELarAeuPVYWgtXVyOGB1YrEy4r7Z/WpAXQSCwJOt+yd2LBEICOFXhippKQcB2cDbN9WQuKSWGa6hdkC0y1gikvA78twH7EfdMUYuspcMQheup4nc3/P0Srp0DeH7oloq4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vAXwVkC/iji0ZiLviqVHsWKfLmhjbt99YB74Jgq2Ne4=;
- b=VfC2vk3MJ/NBtXO5AA23s8v7j8K4DTMvHNzPXCGaCVm6IOOM/fEtffhGZH5D1+x8IuL2cAhl/peQvThaJ+qGx/yKVqqXjVMmwV2o6l2Jj5tpsijKfz12C3bjhRY582s/mzyLK1cNt1dvvd0RGf4ksR0PSnM+A+YFAdzKq9c4U60kV7IXo5LrvZX4pX2l6R1ROIBy1D5KPfRwKSbGTZkYTv1SmE6EV6UTDO73wMCrhiwtvKssgq7xE7nT7KqKdlGwmOKxaI8Ielx/0TJUpNmf8367DwDRgwXLDVRbI/zlMPsdwfSgEY5U1wjwjoqTnuC1MO553fueYQGF7RXGQ3SHJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:70::10)
- by LO6P123MB7014.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:343::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.26; Sun, 22 Jun
- 2025 02:48:39 +0000
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::5352:7866:8b0f:21f6]) by CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::5352:7866:8b0f:21f6%6]) with mapi id 15.20.8857.026; Sun, 22 Jun 2025
- 02:48:38 +0000
-Date: Sat, 21 Jun 2025 22:48:34 -0400
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: arnaldo.melo@gmail.com, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] perf probe: Extend the quiet option
-Message-ID: <eltfh7yi5ccwdcxewcqgu56plrpr2uvlq6r3elzsswmp67i2x2@j3absnlmj6r2>
-References: <20250504104351.1549583-1-atomlin@atomlin.com>
- <aEe7ojjNf-3k_OzU@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aEe7ojjNf-3k_OzU@google.com>
-X-ClientProxiedBy: BLAPR03CA0104.namprd03.prod.outlook.com
- (2603:10b6:208:32a::19) To CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:70::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FBF3FE5;
+	Sun, 22 Jun 2025 03:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750561296; cv=none; b=OzcvCLnBiMAtcXsxYfUGNHWKYkrKvu9hSjpazfZplgUExoU/vZhD2LFDwNaW1Fz/P64nIHqleDrxsu2PyalqNdjrUpaawSDjO6QSc4zoRXHHQmK0+wo6DW0AmzvPaGLwQRLoB6MVFDOwWPREUIoplVU75WjCzI90K2YDu+HYrZk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750561296; c=relaxed/simple;
+	bh=/LOJW+y3by8ifZ9R75mBE18L9mKFy0HH1bTgtEvxX1o=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=T63mUX7Mu+yRI4uljUs827nWo5JWTyNl57Hphsz8G2qqkAOGKEvCqhHseGvDaaHrAPgwv1qyQh9HVfQKNJFLNC7VWr6aJohHd6B78OGcWu9jd+yHcWA22EutMcO5OnSgUjmMXrAbvBcOT6Bs3zECm05SdB/r5ZnB3sgYVHt5Gv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QSeXsTX0; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSeXsTX0"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-7fd581c2bf4so2283774a12.3;
+        Sat, 21 Jun 2025 20:01:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750561294; x=1751166094; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=g4SPoVDkvyDDZXb9CozPQBHXoiOdUpCp+REvtOJc3XU=;
+        b=QSeXsTX0XxfdUcP7R7feNg6tvmshPFMOdRbiuyP5AxrEMIksBk5F7X7wbN/CxQ8XqW
+         hv6bHmo1KgGuMdPcwUUmHAOMSOWPdHrW8Ue7kgx76fxO+GImyQUXTbxRR3psmMrTL9FP
+         qLTjVNuY76N7V8iuJJlqK+44wo7CcJAWPxI0783ATUnuwcPZdiaXIu/VfaOLffURShVH
+         263Gbqt8cWTpObperhCJH5/uD9OKjCD01gMuM1PhhS+S/npEbHTqHhamptQhmmzFGZQm
+         NlbokPZ2XLCtnhcwIWnai3KGlglThojufisNAd0bJj/oeZxvZjG4MdmixMaQkbBQMKET
+         M62g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750561294; x=1751166094;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=g4SPoVDkvyDDZXb9CozPQBHXoiOdUpCp+REvtOJc3XU=;
+        b=uj9odaCIfjxXBlVpauoiNlyWxFCy+quq6YHMyGrct3e9WzwrIZvd1H7W1mEnGBCyOD
+         nYZwkyayCR62ifM+BAdBm38Hf/v2f+UMGFq7Ks45XWGD/4/CRjkuvPgNnNsFbJG4FNHh
+         HDJV9bRlAumo5PElSLUMCKYHwtNfGDQEVTYOq0saSckarFbAcPIav7Mz2ocnBxhYe3zu
+         ciyyIkI44P3Xn1MUYA9XRa0xJa4hSDShSAE7JT/X8nE8uLUv4ipYMkO8THgnWaH8NjjG
+         m2BxQ+2ikL63K5HAlwQBl3rCTZeQ29kaq9KuCgFB7+aSyRvWrwFnsKar4PTRNMURcZgR
+         Q8Ng==
+X-Forwarded-Encrypted: i=1; AJvYcCU6Zr2O5HRxNu8/uTWC9I5f42YJ3NzWrRf/NS6m4EHpjgIvu53vBTSbCJW6OOD92TUZA8lYsC/I52saKafIhE7Y4eBnEw==@vger.kernel.org, AJvYcCV8QBqzNFsMLvcBOb8DytZbYLaa/YJsP0kP4j/bvt83XIj6UOwWOypJbbLyMQm7WyOG96+OPmerKvHlqtU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzSb7spQzBiqjIrntKcOLWe4lsmB2LPyOTAXbd7y2aqcU8X5Cs
+	lEGOKf+XuR9D0FJ4q5sGa9H2NDsEQ5g0MzhOnl4rPmJ5SQvWlfganCQE
+X-Gm-Gg: ASbGncua/QUD2yP3kTmy79YcJONOJMOhZU5U9TAAL4mshk5MwHsVwZ8HkJyHiCZEPr+
+	De6sKTYY+DWpacv9kbtXRZRkp3/JTqy96ENhBXOrF1L3FErFuR+DAJoF4bTVMymRb1nSTGgMlSB
+	g67sVFm4tZQSgYK54OlJ0ZwV3Xs+YdExgoxqKwRAH4ZH2NOReQmcZmuQzdIiDfO5bHTZsup1T8F
+	QjG7gqgg0Qw3aPgJ+ZSgxH1NP4JCcsQfTdINPpQ0AVJAmvjtLENaVlAIsaH99AnWYD+MkAAWPvL
+	lC2AHcc2U6FRw3Lf+DBaKiMIicRNt8AiBlBanBbj8HY8pBIikGl8Kio+E8+Vq0USZr6+o7ko7tJ
+	Ek0Cmqvt4SMAAF1PPlFUT7cLzeFZenGDo4LXf8YaGOrNqSg==
+X-Google-Smtp-Source: AGHT+IEZ2kPjIT42YUtylGd3G8KnY+90c1WLC5p77KvrkYvDOokebRUAH3cP/Aj1DY3RuQpgibGOqQ==
+X-Received: by 2002:a17:90b:57e7:b0:311:ffe8:20e9 with SMTP id 98e67ed59e1d1-3159d8c5337mr14393938a91.17.1750561293791;
+        Sat, 21 Jun 2025 20:01:33 -0700 (PDT)
+Received: from [127.0.0.1] (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159df71d33sm4892560a91.8.2025.06.21.20.01.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Jun 2025 20:01:33 -0700 (PDT)
+Date: Sat, 21 Jun 2025 20:01:33 -0700
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: Kurt Borja <kuurtb@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
+ =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ =?ISO-8859-1?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>,
+ Joshua Grisham <josh@joshuagrisham.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>,
+ Mario Limonciello <mario.limonciello@amd.com>
+CC: Antheas Kapenekakis <lkml@antheas.dev>, Prasanth Ksr <prasanth.ksr@dell.com>,
+ Jorge Lopez <jorge.lopez2@hp.com>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v3_0/6=5D_platform/x86=3A_firmwar?=
+ =?US-ASCII?Q?e=5Fattributes=5Fclass=3A_Add_a_high_level_API?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <20250621-fw-attrs-api-v3-0-3dd55e463396@gmail.com>
+References: <20250621-fw-attrs-api-v3-0-3dd55e463396@gmail.com>
+Message-ID: <DA17A4BC-938D-45BC-848E-BD8FB43597BB@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB3523:EE_|LO6P123MB7014:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2460d0d8-d883-4f0b-b476-08ddb1374a05
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?am03aHBSMFYvbzdMQ0lweStMazI1Vk9yMmpYOUdERGdvcmN3Nk41SEFCbFpS?=
- =?utf-8?B?YlJicDhVaWswaUk5RVRwS0tLNEd4MmtxYmpMTlpueDBhS2p0dDR5dkN4MElY?=
- =?utf-8?B?WEVhNXFndzhxNjJZNHV2SGlNdWUwenpoeE1CK2pYcXhCdkFNTE1VYlpUb2RN?=
- =?utf-8?B?cTJsT2dyOEJVek9JYi9La3lsSHZodDZPSHM0amxuK2orVlNLRE1qakZxaloz?=
- =?utf-8?B?YnY5TnFQL1N1cFZKMmNEa3BnbEs1Yzc2T3BkOTZkRkozY1VyMWloblJGTDk5?=
- =?utf-8?B?MUpkZU5nN0R1eVorWk1QYkFjR1ptL0hHNnhHK1lJb1hmVlpPeFYzMDlNWHdv?=
- =?utf-8?B?eW1qVWVSRXZ3UmNMeEh4MUJsYlZNZ2xSUU05RDZOQjJjdU9nZkxUN2t0bUxP?=
- =?utf-8?B?ZDNCMUFxTGdUYjZiQytnRHFZYTVZeFRiSDhvbmZ5ajlKeUJxVXg2YjQ1aWVU?=
- =?utf-8?B?elBSS1FHYXQ2U1daSUgzZmxBM2ZnRE9lYmNva1hxTDFlRUZTd2Q5M2R6Zkd6?=
- =?utf-8?B?b3I0Zlk4NjBDdWcwbmhiMFBzNFd4bW9aVmRCYU5wZ2hZekxFTkMyTmpwOHVW?=
- =?utf-8?B?cng3cFpad0pOL2t0bHVlUDMvSFJrclZZdzQ4VE01bHJpWFJWOGpySzZSajdK?=
- =?utf-8?B?TXdlMzZpeWJrbnJYM0t3Z2x3Zk5Tc05pTCtweWFHUi9NTExrR3FsSE8yaDhM?=
- =?utf-8?B?ZlZWcXMvcEpveTNGN28vSmpFT2FGVEM1dVEza25Kb0liajhFdFcra3VWTEYr?=
- =?utf-8?B?QXNyT0FydHArSllHNHpCa3hCMytyQXB0SllRcXFBdlhJcTY1RXFhcThkbXJF?=
- =?utf-8?B?ZmFNUlBIMzF4cEtPWEtzNjVqZStCeXYwMTdVY2VubG8zQitHUlFwUlRvVW5t?=
- =?utf-8?B?OENNeHZaQXp0NnpTdkp0cE5ZdkdRYSsvS3QxWE5GSTQ3ZTRUNXJ2ekYxM1ow?=
- =?utf-8?B?Z1VKTmV6dkxKZElXbzZ2OEU3R2NyYWFTTkZ1eEp2UVdpN2M3VERxd0Z3WGps?=
- =?utf-8?B?V1BtQkRNc3BRNm1MZGYxZm9TVmpVT0NTak5BR1ZNenJ5Y1haS2ZtS2p1ZHlh?=
- =?utf-8?B?c1VjQTNhRDllUVNtY01NckM2QzJkYjZuVU9Na05GOThzeTFtMitlSmVYTzJ0?=
- =?utf-8?B?ekQ1YVpGaUhZeEc3YTFLTWdhczVtWU5RMy9LMThxQnRhb0ZsZk1kb3pDZ3NG?=
- =?utf-8?B?cTlxWld5b3d1enlUdnNNdHg0Mm12aDFaOFR3YkZRamllbDlvK0F5VEkvaTlQ?=
- =?utf-8?B?ZXJFREp3RVJjMmZvc1JOdWh1SkU0T3lWekxGenkrRytmVmFoRUhra3RneWlr?=
- =?utf-8?B?SUwzZjhHNkhqSjRxY1NHcVlJdEtWNGllZW52SzdoMXBZT3J6QU5mdUNQYnRy?=
- =?utf-8?B?ZThwZDNXcTJwdXgzTEtxbU16ME9FbC94eDhXQmxlUVhGV2p1ekNPWmk0R09n?=
- =?utf-8?B?c0d0bjBRMzVPdyszcnM3QUh6VVZOVlhWektNUFBaRllrZnBraHlQTlFNNFpT?=
- =?utf-8?B?WjFDQ3lOZ1pHbWtLeXFzY045bEt1R1JHamgxcUp1Qi9KUkVHT3AwUkRQTVpX?=
- =?utf-8?B?aXF0TWMvdDA2dS9Vc05SZnpUak1ha0kyblRsOURPUUhBcFpEaWVQelJtUnRN?=
- =?utf-8?B?djUvMFlXVXRHWFhKMlI5K2UrbU9MclJqT0o1M2JEZVRON3dPVmpiTHdZLzVh?=
- =?utf-8?B?RFdhQUNqV3ZiQVViZkV4Z2wrajZiY1pFZVpVUjI4ZERuckthamt1Z2dUUHVx?=
- =?utf-8?B?K29IQ2FyTHRiazg0L1NJVjd2bXp6dmdKNHF4aXhEbjU0Rmt5OVY3WVYrbEsr?=
- =?utf-8?B?bGtsdjdvR1VCWGN4UGZETTBOZmtXaWlodUZqR29adzBiWmJXR1FuZWNCY2k3?=
- =?utf-8?B?MU90R0FnL0FmeS9hUkRJdHgwd1B6LzNOZWhOSm53RGRFdEJpZU9kVE85RHdq?=
- =?utf-8?Q?fHCDiJQOYio=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YmQ2d2t6SFg5K0FzdHBoRVppaUlvaFhicFIyQXZiSEpidld3N0svZFBYZkR1?=
- =?utf-8?B?cDlVVFVCYWlWa21SR1RGcWY3bm4ydTJqUm15TVZMN2JkbGJJTDY0SUc4Yy9n?=
- =?utf-8?B?RFpqT3JVTmoxQ1NtUzJNRFFqaXNGU3hiUmZieFlTMW0zK2FlcW5uZjlpanpt?=
- =?utf-8?B?OWt6Q0M3b05CMEY1dEp2bjMvZ2JXdUdSZmQwMjd3OUR4TC83K0VSZ3l2SE93?=
- =?utf-8?B?QTE2MFlEcEc3Szh1WWoyaUdHTnVIbm5pZXdOMGl3cFV1TFRyWHN0dERmSHhu?=
- =?utf-8?B?Tjg2Y2FDQ3Iyc1BzUzhvZmFqYVlVVDdMT05aYWR3N2F4emVnT1NGVW1LeWgw?=
- =?utf-8?B?RXVJdVVlcDBxYVYrSCtYRFRWdnZ0QlZhcXZIUGtHSStRVXgzMW0rRk1CUzJJ?=
- =?utf-8?B?WEtndmhmYnlDWjd0emxUKzFERWxQOEY1TXpENXJTaW9WQzlIZ3VLSlg0MVJL?=
- =?utf-8?B?QkZIbEk5dEZhVjQ0V042c29jUkpaMFh5QlEvRS9iZVZCd3lZZDhSUXpsdWR2?=
- =?utf-8?B?Z1ZOQ2lQMXI3RC9vdWdMUHRkUG1LQTJBSm9tLzJGQ0VHaFhISXJZRm1ZZmRF?=
- =?utf-8?B?YndHVGVYWElkMDJrdEY5OXdwdmRSV29XWUxSaGJCQ2NpWWRZVUNVTTZtZjZ2?=
- =?utf-8?B?dkRFWXV5bUVRTFdoNktIcEpOdHBGRkhFcWN0SW1NS0d0ZWpLRHJLaDZrWFo5?=
- =?utf-8?B?VXNoZEg0aFVsR2FLRjNmTXNsOTkzd2ZvRXhQcnp3VENIZjdqQk1TUmRqL1lQ?=
- =?utf-8?B?UDJMRTBwWVFiQm4xdk11QWpFME5NNFJRUU5Cd0NqNnpsSzRoSXBSK0lyc1Yz?=
- =?utf-8?B?NS9VRG82S2Q4bUwyeGtSN2NWaHdMNlRKMk4wNzQ1L2JOR2IwYWJwOFY3c2ZM?=
- =?utf-8?B?WHFld2w1eFg3ejFtbHNUblplcS85U1NOeW1meis1cjRMaHdzWjFvdlZlZ203?=
- =?utf-8?B?aVd0YmdCa0tZQjhlQnE0Nzh1ZUJuemVWcmdrV1Q4MmRJdW9TMzdsb3lpVk1L?=
- =?utf-8?B?OWlrYllPalIvTnZoWXM0Yk5XaC93VVFCenZoY2NvNXIwNkxQWUJneEtuLzN1?=
- =?utf-8?B?UUs0UGQyYThtcjhCYTRCQ0FhVWR2MjZacjZLSnlvRnVUeWd4MEVadUhTUURN?=
- =?utf-8?B?U1BrSXhVY0VvMXNpUjZaZEgvK1VXZHdCQ0lXTUhaT0NVV1JTYlA0UElCeHFY?=
- =?utf-8?B?bXJzTXZ4VW9pTStDMXlzMC9uc2FndWp2cXJUaE1tSFUzY3lobDk4d0t6WUVG?=
- =?utf-8?B?Q0I2ck5McHhMeCs4NURPZHlESDJQc2hIb05PSVZiLysrcWtSNlJvVXE2RkxB?=
- =?utf-8?B?SzJ2V292aW5PeTVjNEF4RWVyd0Q2VlN4RGxBbk5RYk1Wd1JBMUVkSiszL2I2?=
- =?utf-8?B?ZTRPbE5KY2YzQUpZMS9RYmkxNG8xRml5UGcvMjBtVVkrL1NzMWhNMFRRU3U2?=
- =?utf-8?B?Y2pZYjdCR0JBWE9lZHBxNW11QktNZ0hMQ3orL01mSXpKeXNtSzhBSmRaUlFv?=
- =?utf-8?B?Sk9zV1BMSEVaSHpBMFBOMERUZUJZRkhGbHMwaGxJNytXNnIvNnJTbThxTEg4?=
- =?utf-8?B?ZnF6VXBpZFFReXlSN2FUTlVHQS9jT0lMZDhHNEs2Q1dGYlI3SDNnZHNxYVJ1?=
- =?utf-8?B?VmY2N0ZVSlRydVd1R2VzZWxkQ25xbTZmYXgreW9DNVN0d1FEV1RHcHRMVkcr?=
- =?utf-8?B?cXhRMW1ETVZzWUI5SmUvNEVLZFNBL1VocG9Wd1RxbXNDSzJpT1NWbnJ0dkZF?=
- =?utf-8?B?eGJ6TjN6VCthZnhCQVloMEJwRjQ0RzVWYVZ5YjIxZDA3elJMRHFQSER3OFlU?=
- =?utf-8?B?c244cTI5SjNuN2Z1cXVNRUxyY25OcG16ZnFvbDdJSldHK3haeWtlUms2NE0x?=
- =?utf-8?B?M3I4VmVBZ0hzdVh0VjNwTmFib2FhQWhuYVNaMFczRWNyVVhZalVDeno0YnJu?=
- =?utf-8?B?VzhjVTR3ZktiZFZvUVNVQnlyaDY2VnJORkUvMndqNXZQRUZ3YUtCc0pyVVRR?=
- =?utf-8?B?SXZoVzZ2TVAxOGtqNi9IUFViaGFjRHZPSUd1cjRjTUVITGltL3VRZ2FoWFBV?=
- =?utf-8?B?UHZiTlpBRmI3ZWFpVEk5TktQRXVVNFJlVnR0OFBaTktHS01GRmw2dzVZU0Jx?=
- =?utf-8?Q?xQxgZcVH49Bj9BHQNKJHHtXC7?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2460d0d8-d883-4f0b-b476-08ddb1374a05
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2025 02:48:38.2839
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wuw+A5J2FHE8r4H/2aAzJ9uSPVS6EX3uSV0W8f7AgCHUBZgkJ5TM3ro31PruQY7Xn7EZfNEPGPa8pGBrK10wzQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO6P123MB7014
-
-On Mon, Jun 09, 2025 at 09:59:14PM -0700, Namhyung Kim wrote:
-> Hello,
-
-Hi Namhyung,
-
-> Sorry for the long delay.
-
-No problem.
-
-> On Sun, May 04, 2025 at 11:43:51AM +0100, Aaron Tomlin wrote:
-> > To provide a consistent and complete quiet mode, this patch expands the
-> > scope of the [-q|--quiet] option to suppress all informational messages,
-> > including those indicating successful event creation, in addition to the
-> > currently suppressed warnings and messages. For example:
-> > 
-> >     ❯ sudo ./perf probe --quiet --add proc_sys_open
-> >     ❯ echo $?
-> >     0
-> 
-> I don't think this change is needed.  I also see no messages before this
-> change.
-
-Fair enough.
-
-> Indeed, using -q/--quiet option makes verbose to be -1 which disables
-> any pr_info() messages.
-
-Understood.
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
-Regards,
 
--- 
-Aaron Tomlin
+On June 21, 2025 5:04:03 PM PDT, Kurt Borja <kuurtb@gmail=2Ecom> wrote:
+>Hi all,
+>
+>I apologize for taking so long=2E I've been a bit busy these last few
+>weeks=2E
+>
+>After my discussion with Joshua on v2, I realized the API I made was not
+>ergonomic at all and it didn't exactly respond to driver needs=2E In this
+>version I tried a completely different approach and IMO it's much much
+>better now=2E
+>
+>First of all I adopted standard sysfs terminology for everything=2E A
+>"firmware attribute" is just an attribute_group under the attributes/
+>directory so everything related to this concept is just called "group"
+>now=2E Everything refered as properties in the previous patch are now jus=
+t
+>plain "attributes"=2E
+>
+>This new API revolves around the `fwat_{bool,enum,int,str}_data`
+>structs=2E These hold all the metadata a "firmware_attribute" of that
+>given type needs=2E
+>
+>These structs also hold `read` and `write` callbacks for the
+>current_value attribute, because obviously that value is always dynamic=
+=2E
+>However the rest of attributes (default_value, display_name, min, max,
+>etc) are constant=2E
+
+Hi Kurt,
+
+In the lenovo-wmi drivers the min/max for multiple attributes are actually=
+ dynamic based on if power is AC connected or on battery=2E Looking at patc=
+h 2 I might be able to do some pointer manipulation with the attribute's "d=
+ata" member for those events to make this work, but it would be a lot easie=
+r if there was a simple way for me to call my own functions here instead=2E=
+ Perhaps a function pointer could be used to override the default method he=
+re?=20
+
+Cheers,=20
+Derek
+
+>In the simple case this metadata structs can be defined statically with
+>DEFINE_FWAT_{BOOL,ENUM,INT,STR}_GROUP() macros=2E However most users of
+>this class obtain this values dynamically so you can also define this
+>structs dynamically=2E
+>
+>In the end all groups (static and dynamic) will be created using
+>fwat_create_group() after registering the class device=2E
+>
+>Let me know what you think, your feedback is very appreciated :)
+>
+>I do have one question for anyone interested=2E Should constraints over
+>the current_value (such as min, max, increment, etc=2E) be enforced at th=
+e
+>show/store level? i=2Ee=2E before values reach read/write callbacks=2E
+>
+>Signed-off-by: Kurt Borja <kuurtb@gmail=2Ecom>
+>---
+>Changes in v3:
+>
+>[Patch 1]
+>- Fixed UAF in fwat_device_unregister()=2E Device was unregistered after
+>  freeing fadev=2E
+>
+>[Patch 2]
+>- Patch 2 was completely replaced=2E A new approach for the API is taken,
+>  based on Joshua's suggestions=2E
+>
+>- Link to v2: https://lore=2Ekernel=2Eorg/r/20250517-fw-attrs-api-v2-0-fa=
+1ab045a01c@gmail=2Ecom
+>
+>Changes in v2:
+>
+>[Patch 1]
+> - Include kdev_t=2Eh header
+>
+>[Patch 2]
+> - Use one line comments in fwat_create_attrs()
+> - Check propagate errors in fwat_create_attrs()
+> - Add `mode` to fwat_attr_config and related macros to let users
+>   configure the `current_value` attribute mode
+> - Use defined structs in fwat_attr_ops instead of anonymous ones
+> - Move fwat_attr_type from config to ops
+>
+>[Patch 5]
+> - Just transition to new API without chaing ABI
+>
+>- Link to v1: https://lore=2Ekernel=2Eorg/r/20250509-fw-attrs-api-v1-0-25=
+8afed65bfa@gmail=2Ecom
+>
+>---
+>Kurt Borja (5):
+>      platform/x86: firmware_attributes_class: Add high level API for the=
+ attributes interface
+>      platform/x86: firmware_attributes_class: Move header to include dir=
+ectory
+>      platform/x86: samsung-galaxybook: Transition new firmware_attribute=
+s API
+>      Documentation: ABI: Update sysfs-class-firmware-attributes document=
+ation
+>      MAINTAINERS: Add FIRMWARE ATTRIBUTES CLASS entry
+>
+>Thomas Wei=C3=9Fschuh (1):
+>      platform/x86: firmware_attributes_class: Add device initialization =
+methods
+>
+> =2E=2E=2E/ABI/testing/sysfs-class-firmware-attributes    |   1 +
+> MAINTAINERS                                        |   8 +
+> drivers/platform/x86/dell/dell-wmi-sysman/sysman=2Ec |   2 +-
+> drivers/platform/x86/firmware_attributes_class=2Ec   | 615 +++++++++++++=
++++++++-
+> drivers/platform/x86/firmware_attributes_class=2Eh   |  12 -
+> drivers/platform/x86/hp/hp-bioscfg/bioscfg=2Ec       |   2 +-
+> drivers/platform/x86/lenovo/think-lmi=2Ec            |   2 +-
+> drivers/platform/x86/samsung-galaxybook=2Ec          | 246 +++------
+> include/linux/firmware_attributes_class=2Eh          | 389 +++++++++++++
+> 9 files changed, 1077 insertions(+), 200 deletions(-)
+>---
+>base-commit: 73f0f2b52c5ea67b3140b23f58d8079d158839c8
+>change-id: 20250326-fw-attrs-api-0eea7c0225b6
+
+- Derek
