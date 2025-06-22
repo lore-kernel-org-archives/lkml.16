@@ -1,188 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E5E1F5423;
-	Sun, 22 Jun 2025 16:41:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2152AD04;
+	Sun, 22 Jun 2025 16:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750610499; cv=none; b=qg4nz11V77/kHG0e4kQm4+M+TRoRk2GPW9/7PfRevrHQa/J+IeEqsyweUghNB91uvSw5EkXPJn5EeKXZd15GtbM/en0k21MiJeBu9lPhsqzEZUTpOjKA1UJTahMRDaGbaU8TnQhBzu7URpA0Zjh8zi7OR2N2IxPnz9UyYbluJ+Q=
+	t=1750611164; cv=none; b=NviYKWoJcsbbHJXoY7z1Ct+UsYp1x6NZMXfWdg2Sl43JKgCmjdzwxvcT3c8iGblxa8dcBYvaQePHBGr0GHQMiiseYH7Jk5M5/CqQwXbmXRAUWjXv8RWM+A7TUt9wTt8ZusFHnkxztZ9OznoValErp0LTG68F1ug1FFcJCzWts+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750610499; c=relaxed/simple;
-	bh=YeMl5gWrowwdhB4vjOFO00ruw6lOsJ7HM1stb5uHsKY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DyYDiriZRl8ACkNK6py8ll93QdIKoYUTTla/p+jRjWKhHW6uvGCLsSCJquEmUmRxD7DTX6Ca+QT2qF3qMXU0cZFIAN6zR3jCzLdegi1p5ucp8y/vhIEhLqw0IEEHMoLbf5k2vUN/1Htw3BMn8KHT28bibzjFaCySny2MVr2t0SA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TQTGAJX5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750611164; c=relaxed/simple;
+	bh=duB4ouV7PVG3cmWJ1QYjkuKk7v4eXinULHvNC0uLzDU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JYLX4Ugmks2PKgfqtLl+P7LzypXgnIMTj1eysYCGUCZvcgFpzg2flMKGkKIj7qgFvVxIx+eNblTqrmt3Kra+HSVOv5K31/Oyemy6rSJLbIPZ+TCJEDHP6iXpa9Ap9qhhtRlPLWShS/hp2BAy3atyhPl2+yK5IFFQ9JD4PvGA/5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MIeV2T6P; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TQTGAJX5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3A6CC4CEF0;
-	Sun, 22 Jun 2025 16:41:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750610498;
-	bh=YeMl5gWrowwdhB4vjOFO00ruw6lOsJ7HM1stb5uHsKY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TQTGAJX51ezU2zY2Qj80DiA+W8Q7M4kzfv6oGbedC2oF/PVo+NhKsyr/+oIDwfBEj
-	 TaaPPtTheYE9ynzm+UPq9d0mzgTvk1KjrDqOtyVoKypLiaiclpWN4ucrMdmvJaUjgK
-	 XRE0vEWJevAseB4suVSHxaWYFce7/NSh6UXbeK82rKQ3fO/rocVOrIluP+ic+JReKa
-	 wU/cxojOARs4QmaMC00SmD69x2lnNqf/2JI423gOgrjO211cJopZ4grJ/uwSeGPP8z
-	 /V9FZKfT3CMRwbVD5KjC4mW5n1E+DERY0zqXM07MlY1KJRHzHHCy9W8HZonf9yll6Y
-	 i37qDKnLJuXJg==
-From: Danilo Krummrich <dakr@kernel.org>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	lossin@kernel.org,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	david.m.ertman@intel.com,
-	ira.weiny@intel.com,
-	leon@kernel.org,
-	kwilczynski@kernel.org,
-	bhelgaas@google.com
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v2 4/4] rust: devres: implement register_release()
-Date: Sun, 22 Jun 2025 18:40:41 +0200
-Message-ID: <20250622164050.20358-5-dakr@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250622164050.20358-1-dakr@kernel.org>
-References: <20250622164050.20358-1-dakr@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MIeV2T6P"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a6cd1a6fecso2908578f8f.3;
+        Sun, 22 Jun 2025 09:52:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750611161; x=1751215961; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FngSn3FLzaGg6vnTK1EcbPv7loXCwwNpO2CdpOQR/gM=;
+        b=MIeV2T6PFCZg27RMbSd4rKsRq5j32NhDVgK88hcktWZF++Aldc1kNhKAohBtsW9Nmu
+         WLZY0oTQN20dmsaEVQYzVZ/1OU9xZtQxMt5Cbin83/O6M8K45T3Wz6o3nYgvRzSvYqmi
+         pgjvUAZXHRr1vgpzYC1gDLX1Nv+7VF6NLgrq/9fwByaJM4U/fTIw881ju27Eng3HWUA6
+         bfe8yca+UzP8NjcpCa+wln24EmNDqBp6TqIdsJaPeQIxI536/4b5CivTZMidbGptuqBo
+         T40YUENwqfnsLU3Mg6hIDvw7uUzvcUKWmJWA24sFqyctOuAar4ecQznsFgnz/b7UdN/5
+         UrkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750611161; x=1751215961;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FngSn3FLzaGg6vnTK1EcbPv7loXCwwNpO2CdpOQR/gM=;
+        b=CwSDbM6fCFminz4LIXAXQeOjhBiuJDyopOH9SXUEyn/fe90X3KRph67+E1BSe0097A
+         xutNHV88+m3Wly/uksKP8AElzYlFbwCEDX4aXICelnHYsMO23th72PLEfVHZH6SlC01W
+         xdDTBcwHL61u5wOe+fMWCtJI8Fr/5Ofp056oRLZNgrW/BvhV73OzDCxOS2XfPEnZoLYP
+         /xfFC6+sZ4oGy/MBQFp31aU7RjpJhK0YK1/bcLtes8o9MHJb39prZDpTiY6WDA1H4l+I
+         Qvk2RF5Q2juaSNyb8ZwD01ATD5S5/IEiYokL1u8ytWywOln8yTi/wPx09bTNd3UxsrCk
+         L+zA==
+X-Forwarded-Encrypted: i=1; AJvYcCURX0U0p3lT7jBLssiRJ8FT5jD3nCDdwX2lbHtCGO+iKLMQVhdrRUg4iI7YuuAe+18V2GmyWNXPiKoCA90n@vger.kernel.org, AJvYcCUpKgTi1VVaFtj1GFNUwcBptXPTob+l4O2RvTAvdxlTzJmPaI4MQ7Gz3jv8gXBujeT1DVtZrjZsfc38eJFF@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtfLt5udfG8e8PD6Mj5SiYPauKcTagHsfx3fjoyWWDfheM3xOX
+	6ZLGfC4N5iPUZOwM9cmGjUtA7CUIxjiBa8dZbZGPrpN/6d5fj0V6bb/D
+X-Gm-Gg: ASbGncuKrP8ZrkKUvC0USs3URWGK2XHlKHK1wfp0FAGF8uGBIZa9m5mZ4UVVJTToq1u
+	fTh1CBjSZK4pzpgja1D/JwqZXQRs7uBSHw4c44BXAoCp0/cZiupZA1NLJO98Qj4aOTdZTLRZ9yl
+	609LDFFW7ZVemTgCLcH+F/nrQECusR8/3Z/tAG8cTUXSZwlbGirZ9j+OaUXpkeHzD2qbWIBSmbG
+	Y6e+TQ6IktbMxrDR43x+e6FeJy4kcddry0wf0KxirPnU8BzwjkmYC49/sA33FH8X2gIVNrF+fmN
+	NkUk5QsPdLJ8DanIvHlw77VbFReA3UnTVlrNlNLbjUS9fTmxhcTz7aiBPZu3+lw6oE/jx0GFJEY
+	KajaGbcxO5TsQApTub9gjo55t
+X-Google-Smtp-Source: AGHT+IGYZ2I7yF8X3Gjleg6T1l+ayP9shmcGOvVNUsuDSBZtK92zgW1wfdx37nTuwhWT/HBaaKSFPg==
+X-Received: by 2002:a5d:64ce:0:b0:3a4:f513:7f03 with SMTP id ffacd0b85a97d-3a6d1303b0fmr7534708f8f.44.1750611160377;
+        Sun, 22 Jun 2025 09:52:40 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646d7d8fsm83430075e9.15.2025.06.22.09.52.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Jun 2025 09:52:40 -0700 (PDT)
+Date: Sun, 22 Jun 2025 17:52:38 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
+ <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan
+ <maddy@linux.ibm.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
+ Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
+ <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, Davidlohr Bueso
+ <dave@stgolabs.net>, "Andre Almeida" <andrealmeid@igalia.com>, Andrew
+ Morton <akpm@linux-foundation.org>, Dave Hansen
+ <dave.hansen@linux.intel.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org
+Subject: Re: [PATCH 2/5] uaccess: Add speculation barrier to
+ copy_from_user_iter()
+Message-ID: <20250622175238.642d02bf@pumpkin>
+In-Reply-To: <f4b2a32853b5daba7aeac9e9b96ec1ab88981589.1750585239.git.christophe.leroy@csgroup.eu>
+References: <cover.1750585239.git.christophe.leroy@csgroup.eu>
+	<f4b2a32853b5daba7aeac9e9b96ec1ab88981589.1750585239.git.christophe.leroy@csgroup.eu>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-register_release() is useful when a device resource has associated data,
-but does not require the capability of accessing it or manually releasing
-it.
+On Sun, 22 Jun 2025 11:52:40 +0200
+Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
 
-If we would want to be able to access the device resource and release the
-device resource manually before the device is unbound, but still keep
-access to the associated data, we could implement it as follows.
+> The results of "access_ok()" can be mis-speculated.  The result is that
+> you can end speculatively:
+> 
+> 	if (access_ok(from, size))
+> 		// Right here
+> 
+> For the same reason as done in copy_from_user() by
+> commit 74e19ef0ff80 ("uaccess: Add speculation barrier to
+> copy_from_user()"), add a speculation barrier to copy_from_user_iter().
 
-	struct Registration<T> {
-	   inner: Devres<RegistrationInner>,
-	   data: T,
-	}
+I'm sure I sent a patch to change this code to used the 'masked' functions.
+Probably ought to be done at the same time.
+Would have been early feb, about the time I suggested:
 
-However, if we never need to access the resource or release it manually,
-register_release() is great optimization for the above, since it does not
-require the synchronization of the Devres type.
++#ifdef masked_user_access_begin
++#define masked_user_read_access_begin(from, size) \
++	((*(from) = masked_user_access_begin(*(from))), 1)
++#define masked_user_write_access_begin(from, size) \
++	((*(from) = masked_user_access_begin(*(from))), 1)
++#else
++#define masked_user_read_access_begin(from, size) \
++	user_read_access_begin(*(from), size)
++#define masked_user_write_access_begin(from, size) \
++	user_write_access_begin(*(from), size)
++#endif
 
-Suggested-by: Alice Ryhl <aliceryhl@google.com>
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
----
- rust/kernel/devres.rs | 84 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
+allowing:
+-		if (!user_read_access_begin(from, sizeof(*from)))
++		if (!masked_user_read_access_begin(&from, sizeof(*from)))
 
-diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-index 15a0a94e992b..4b61e94d34a0 100644
---- a/rust/kernel/devres.rs
-+++ b/rust/kernel/devres.rs
-@@ -16,6 +16,7 @@
-     sync::{rcu, Completion},
-     types::{ARef, ForeignOwnable, Opaque},
- };
-+use core::ops::Deref;
- 
- use pin_init::Wrapper;
- 
-@@ -345,3 +346,86 @@ pub fn register<T, E>(dev: &Device<Bound>, data: impl PinInit<T, E>, flags: Flag
- 
-     register_foreign(dev, data)
- }
-+
-+/// [`Devres`]-releaseable resource.
-+///
-+/// Register an object implementing this trait with [`register_release`]. Its `release`
-+/// function will be called once the device is being unbound.
-+pub trait Release {
-+    /// Called once the [`Device`] given to [`register_release`] is unbound.
-+    fn release(&self);
-+}
-+
-+impl<T: Release> Release for crate::sync::ArcBorrow<'_, T> {
-+    fn release(&self) {
-+        self.deref().release();
-+    }
-+}
-+
-+impl<T: Release> Release for Pin<&'_ T> {
-+    fn release(&self) {
-+        self.deref().release();
-+    }
-+}
-+
-+/// Consume the `data`, [`Release::release`] and [`Drop::drop`] `data` once `dev` is unbound.
-+///
-+/// # Examples
-+///
-+/// ```no_run
-+/// use kernel::{device::{Bound, Device}, devres, devres::Release, sync::Arc};
-+///
-+/// /// Registration of e.g. a class device, IRQ, etc.
-+/// struct Registration<T> {
-+///     data: T,
-+/// }
-+///
-+/// impl<T> Registration<T> {
-+///     fn new(data: T) -> Result<Arc<Self>> {
-+///         // register
-+///
-+///         Ok(Arc::new(Self { data }, GFP_KERNEL)?)
-+///     }
-+/// }
-+///
-+/// impl<T> Release for Registration<T> {
-+///     fn release(&self) {
-+///        // unregister
-+///     }
-+/// }
-+///
-+/// fn from_bound_context(dev: &Device<Bound>) -> Result {
-+///     let reg = Registration::new(0x42)?;
-+///
-+///     devres::register_release(dev, reg.clone())
-+/// }
-+/// ```
-+pub fn register_release<P>(dev: &Device<Bound>, data: P) -> Result
-+where
-+    P: ForeignOwnable,
-+    for<'a> P::Borrowed<'a>: Release,
-+{
-+    let ptr = data.into_foreign();
-+
-+    #[allow(clippy::missing_safety_doc)]
-+    unsafe extern "C" fn callback<P>(ptr: *mut kernel::ffi::c_void)
-+    where
-+        P: ForeignOwnable,
-+        for<'a> P::Borrowed<'a>: Release,
-+    {
-+        // SAFETY: `ptr` is the pointer to the `ForeignOwnable` leaked above and hence valid.
-+        unsafe { P::borrow(ptr.cast()) }.release();
-+
-+        // SAFETY: `ptr` is the pointer to the `ForeignOwnable` leaked above and hence valid.
-+        let _ = unsafe { P::from_foreign(ptr.cast()) };
-+    }
-+
-+    // SAFETY:
-+    // - `dev.as_raw()` is a pointer to a valid and bound device.
-+    // - `ptr` is a valid pointer the `ForeignOwnable` devres takes ownership of.
-+    to_result(unsafe {
-+        // `devm_add_action_or_reset()` also calls `callback` on failure, such that the
-+        // `ForeignOwnable` is released eventually.
-+        bindings::devm_add_action_or_reset(dev.as_raw(), Some(callback::<P>), ptr.cast())
-+    })
-+}
--- 
-2.49.0
+	David
+
+
+> 
+> See commit 74e19ef0ff80 ("uaccess: Add speculation barrier to
+> copy_from_user()") for more details.
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> ---
+>  lib/iov_iter.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+> index f9193f952f49..ebf524a37907 100644
+> --- a/lib/iov_iter.c
+> +++ b/lib/iov_iter.c
+> @@ -50,6 +50,13 @@ size_t copy_from_user_iter(void __user *iter_from, size_t progress,
+>  	if (should_fail_usercopy())
+>  		return len;
+>  	if (access_ok(iter_from, len)) {
+> +		/*
+> +		 * Ensure that bad access_ok() speculation will not
+> +		 * lead to nasty side effects *after* the copy is
+> +		 * finished:
+> +		 */
+> +		barrier_nospec();
+> +
+>  		to += progress;
+>  		instrument_copy_from_user_before(to, iter_from, len);
+>  		res = raw_copy_from_user(to, iter_from, len);
 
