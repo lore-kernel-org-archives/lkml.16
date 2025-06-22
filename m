@@ -1,61 +1,63 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99AA1D5CED;
-	Sun, 22 Jun 2025 12:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A8D1E1DE0;
+	Sun, 22 Jun 2025 12:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750595385; cv=none; b=erB2ND6suFaOlp+g34kfLqxv3A92wsDUYz6d39cT5qk/ImSaE6OXR3uz1S2nkgarXCQEwteu2OvNj1WYR3zT1QqgntaAGXr640o7ftXUHsBOLm2crY6waeND50LVCEQDiWZux3ayY2elmsN2zclvQqS0JB9iuux/YH9tTw5p/Bk=
+	t=1750595388; cv=none; b=kCyzNbHjocMyqQlDvQEo1uMKFtfc4dZxHj5Fw3sPZhbsMMwKGA9j3+Y/M2JbTqgPQOY+rgIRgpq7LyNTFH7ownZYQqf+tBLzwrTyQP8qrqxAQ8ilg/NIBgcVhsM/e6ivM2mvnQt+wicow7M8XF7l9/HRMVt88Z90Ti6gEPKso1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750595385; c=relaxed/simple;
-	bh=O22e0I+KqmR2wuxwAZjnNfk/NrC/KI65TYxMZgHFPXQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=K+J3D4D/vuEgm5dcgehYtf8gzJfCnhmPxoZSHiMkbBxsBV1lLnkN5A4n7MjeIFQpZ6T/BZe2UNQMye6LeS228ottdle3ZZAeCclGs4syvvji65uNPLbWkCqcW9eIC2ksaSSiVYlPfvVNc3ZiPAhYvdC9A/Sj/3j9bmsrRihSe84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RaZGbM8o; arc=none smtp.client-ip=209.85.208.53
+	s=arc-20240116; t=1750595388; c=relaxed/simple;
+	bh=U47VxSsT923AMCM7sAWX1CRj1lPxVzxqNUmpR3XRpgE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iZNHPD5boo9wnvQMqNU24bpsZbUcodNfkaW0+Pff5ss4+R6NIw4YJJlLmFwUAcqNEpfefgcFEhG5kTC+RKl43V33UbZim8qJwOARVcEYTQIAb8Wsfb1I+icNQ/L0Yvrcr+AXqxFaZLO6uPM0RrNy7FgBVZhDRbMWcU5/GWoEZL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iKMZktcn; arc=none smtp.client-ip=209.85.218.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RaZGbM8o"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-60bbfe9e864so32538a12.1;
-        Sun, 22 Jun 2025 05:29:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKMZktcn"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-adb37582eb5so39280766b.0;
+        Sun, 22 Jun 2025 05:29:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750595381; x=1751200181; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PzVc4ZpcUw7jfE1X+GxxwIF1e2i7Mcig36GXVPCosW4=;
-        b=RaZGbM8oV1WQ/l/QqEZxpTRDey0mdzFCo+Jxvan6/9XMfTEGENUTAfgaZ6nOFWNMX2
-         X9Ew/pNWJXAGSpOzStPeS0gYTLpDn+DrKETkiLamh+c1zLx9ik1+n5u1OdeK+SxdPqhZ
-         4Eu02koAuk3k38jdd93/yw/VYenOoK0T7QIDhpQgFp08A+SXmRlduA3m8osfQtdfAY+q
-         p40LuwgwIi/yGLRy1L9s2Pv4CzLuK3DBFisJb7LWlgl1D/j1lcK1KSey8GlivqwCroe8
-         seY1YaDh6ynuqW2fQI7mc3gR7Wc9pLLjj3C2Mof1gbo47F16g6Vo7TMvYcvzbxKRHzWs
-         lEhQ==
+        d=gmail.com; s=20230601; t=1750595385; x=1751200185; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qaFDIDY1vn8Zxx88K1R/ijRn1BJi8LoNJ4IVyRpgY6Y=;
+        b=iKMZktcnBGoAPlbdvPKQiRbJycx6bdrZaWt1bdYNeBjBc30ZUT6h8J3AU34lxzDtEj
+         o4TVSp68fHWG9oHQ0cyMPhLLtJPnywovdi00zxyTZxAyZUy5ambAVbL08nn17Vt1G+9m
+         7j8hKUpe1rFW4Te1Dvav/O/fSMbtWvUJEK1tuqNwfd66vs0mlf/d4vIjMlxtyH4ux4Cb
+         Aw4dCOfwmKDFN2LQ3acPiOgekULFM4UwttaqkxbuuwOryNq3ZA7wZEsvXrO1Wp+9Wila
+         qGEOxDUumt0qrhcP8yA/thVJkbQ7I437OZJ7iFg8LAltzF8bznrcaTBCvM39AeMfq4DK
+         lrNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750595381; x=1751200181;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PzVc4ZpcUw7jfE1X+GxxwIF1e2i7Mcig36GXVPCosW4=;
-        b=scnsw7o5HHNr8MZom+PKITSw/NYhrnBhx2qmeFJN+8Kmd/DLSYVcOMYC/bnVtUD3sK
-         mNV8aM6ceyhoY/Kf3vJY2RHZneCdpj/EIi5hVkoyldUwfnnvdmB7/VFmQG4+XTxbwAJ1
-         A65NIFJ74AvpTrPNQrtsS7djo9CfCnzrHD3WILhPNjkYCUcJHg7+Wl4Nl+OHIYQj8bVc
-         UCO2rZDZH9KVvv+bqqORqGUD5iSpHVFAQRQwqghS/hLU/pW9I/R64h5WxhhnAYtpcewe
-         kHYdLSjeK5HzqnPjQWpdi89BGoLNC6V7CDMN/KW4QBOE8FANMXWmHrCGotdZjb46PBo5
-         D8aw==
-X-Forwarded-Encrypted: i=1; AJvYcCUEYad8A6I9hp/5+pFawV6x3BMSqjntmf64pa9Z9ipyyUhlpW+Q2FLV3AQJXTKmwEehbeuR0IHMLccuKiHE@vger.kernel.org, AJvYcCUtImUy9DKKP2fteUEuB5s8Gg0YSY/uV5vW/58cDj4HnFvAiYBEC09oESIoQNhV3Ia6j9MKzEieafs=@vger.kernel.org, AJvYcCXCqwT9oTUv/Vn6G3QtVrL9LS1hwVcCBaZEHTv9HQeEbZ7RVd2GD8UBjM0k2vH/3NZK+hCOkO3IQ+Wu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5gfcmxDWzs7F06ARc1QuV3DDNNA4ToihsboaG42IXLMIyXvhB
-	5X041PQ428zZvnotmFRkdUVbZeRdDrGDiL3NTqyKNQTCIzUQvk/JRZ9W
-X-Gm-Gg: ASbGncugYbZOh338bZ7c/mP4EB1PD4dnmGDbua2JzrbxLQUGW+ow33StSmJxYjxMAC1
-	YRytMK72UGfw0QJC2jDj6cy6ikIdGaiB9QUd8TLrfvSBR3LrCInFYrLzVIcdRTUs3hIA/JDMTOr
-	x8K5hSeH21PnNyBnQj6OJ3iYy0EpJfek61VU/YhgE4D2xkLiWbMo0GcYi0aYTcUNXON6kCMcZcR
-	wfpwtthlU8dyu4id6OQcZUFs+GKECk5yvmRwkyHmTUXtTmmfBM+GDRNKQfSCESuYb8WJH97E7il
-	0e11DLhUCQgTEUoBLVyn96AjEhOl2FoCQvATxmr/44EX2EpoPn7ur0lyGf882Xm74yWhDKIKTlr
-	NTxT0I9laMU8qbP/bqgevLINZ7mmLe1CAUiAoXGovss8=
-X-Google-Smtp-Source: AGHT+IF0vTdgcThvJJqdnhWEAMv/9xhAJaf1tt1XP8Yek0ZX//wi2b4gVmRyQiJxSK8NG1YUxkMB4A==
-X-Received: by 2002:a17:907:c24:b0:adb:1331:a508 with SMTP id a640c23a62f3a-ae0578fbb18mr300662666b.5.1750595380864;
-        Sun, 22 Jun 2025 05:29:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750595385; x=1751200185;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qaFDIDY1vn8Zxx88K1R/ijRn1BJi8LoNJ4IVyRpgY6Y=;
+        b=YDH3+0+OrYCM7JZZfetWJoBJ0xCqGSCB8vmYhQjLFGnImUZHG7ZuR8JfWMsbhan9gl
+         Tnoj0Xkkdi0dZWLyaqoPT/4CxxL+B5bEh8bMCghC8PVqWFSRI+zMHXJpTUDPcNz40LTc
+         6pgWmNfK0p5H108srCZObpk51x9zw9spqiQP6yNUNKLBTzqPlPjXwVAFI6wQjgySX4I9
+         qQYHn7nZNhdsCc0+HEhfZFw7SzMz6s3kXto+hmg2wv73+F0XiBXO4c5SLR8WKL+3Rzuj
+         5SXzaeS0BV5/cjB4UlCvypu3cKDyrBOao65rNley6657X91naTG3v7468Wz8D37elpfV
+         TbIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSp8/zSLJb6SswdMdAD4zs695snf+p1BQ5mIWVmbdsOSOJCx+EIrwZKWrCCRg/flckskAhQ0O+8CJG@vger.kernel.org, AJvYcCWZIVJ3KZcvxk14EN0aYO5+3Yp7bKmcf3Yv3JwW/0fVmHQ7mR2Z5klYiITXGaz6TkCNVP7XTY8Z/3M=@vger.kernel.org, AJvYcCXkjxSwFBpDfJDpaqerXjb/JzDS5ShOIbDpyGX/IuFcmRSDg//SzHv1deTXhYPczaEfy4EIVmEULcG/Scdx@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcdvYjTu1WSICUfBMWn70xIjHhA9h0DSZ/6jWnAu+Lrm03TqwI
+	xD5RfoIrTK5Xl7zbs/ciUlpWZNryppjn9JiLLDDGmTVhmAxI9cKhpHs20VsKkQ==
+X-Gm-Gg: ASbGncsvz+ZqculqzQMhv4FffdgRTPmDMJTa88ZyLqEL/vN2Auk29PQKYe5UMOUBeV1
+	HARJQ5DiKoiAhKG0cypP8XLePSPU2lbgk1KKm0qRhj+qFL+0guSQUCAx+p2n4F2/WA9PMPZepat
+	uuM23xkOXDstUz8vRHaVqt9sJ1AUw2Tv10XSVzy539LokSn8iz0e2blGtS/8j+DJ1ncP7Udd3YM
+	fnKmY6ObsPP624uWYBcsDVSzlgvwJn3VgtN0uFCY7lTrqxwXuztjW1pkjlj7oseY0U8indGZHgl
+	eXlDADS7FIQ/s2S9sEw5/ECie41HYtg7ldcAt29XJnyxR6OujG88bkAZze0OsMqdDm8WaSbIxxZ
+	davceWlPeMWpwGmOrJwARDdya190OE6p2
+X-Google-Smtp-Source: AGHT+IHkyu6JH3YqXYF5ZwF1VgxH+2GYUH2BR2lHFXR45/+JYN5F3YO/iiLS8aSKGJevD+pVZVFMlA==
+X-Received: by 2002:a17:907:6e8f:b0:adb:2d38:4479 with SMTP id a640c23a62f3a-ae057a50183mr279130566b.10.1750595384245;
+        Sun, 22 Jun 2025 05:29:44 -0700 (PDT)
 Received: from localhost.localdomain (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053edc0e9sm533917566b.54.2025.06.22.05.29.39
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053edc0e9sm533917566b.54.2025.06.22.05.29.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 05:29:40 -0700 (PDT)
+        Sun, 22 Jun 2025 05:29:43 -0700 (PDT)
 From: Lothar Rubusch <l.rubusch@gmail.com>
 To: jic23@kernel.org,
 	dlechner@baylibre.com,
@@ -70,162 +72,434 @@ Cc: l.rubusch@gmail.com,
 	linux-iio@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 0/8] iio: accel: adxl313: add power-save on activity/inactivity
-Date: Sun, 22 Jun 2025 12:29:29 +0000
-Message-Id: <20250622122937.156930-1-l.rubusch@gmail.com>
+Subject: [PATCH v6 3/8] iio: accel: adxl313: add buffered FIFO watermark with interrupt handling
+Date: Sun, 22 Jun 2025 12:29:32 +0000
+Message-Id: <20250622122937.156930-4-l.rubusch@gmail.com>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250622122937.156930-1-l.rubusch@gmail.com>
+References: <20250622122937.156930-1-l.rubusch@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The patch set covers the following topics:
-- add debug register and regmap cache
-- prepare iio channel scan_type and scan_index
-- prepare interrupt handling
-- implement fifo with watermark
-- add activity/inactivity together with auto-sleep with link bit
-- add ac coupled activity/inactivity, integrate with auto-sleep and link bit
-- documentation
+Cover the following tasks:
+- Add scan_mask and scan_index to the IIO channel configuration. The
+scan_index sets up buffer usage. According to the datasheet, the ADXL313
+uses a 13-bit wide data field in full-resolution mode. Set the
+signedness, number of storage bits, and endianness accordingly.
 
-Sorry for the fuzz: when I was about to rebase for submitting I
-noticed Jonathan actually already applied parts of this. I'd recommend
-to consider v6 rather over v5.
+- Parse the devicetree for an optional interrupt line and configure the
+interrupt mapping based on its presence. If no interrupt line is
+specified, keep the FIFO in bypass mode as currently implemented.
 
-Since activity and inactivity here are implemented covering all axis, I
-assumed x&y&z and x|y|z, respectively. Thus the driver uses a fake
-channel for activity/inactiviy. AC-coupling is similar to other Analog Device
-accelerometers, so MAG_ADAPTIVE events are chosen. Combinations are
-documented and functionality tested and verified working.
+- Set up the interrupt handler. Add register access to detect and
+evaluate interrupts. Implement functions to clear status registers and
+reset the FIFO.
+
+- Implement FIFO watermark configuration and handling. Allow the
+watermark level to be set, evaluate the corresponding interrupt, read
+the FIFO contents, and push the data to the IIO channel.
 
 Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
 ---
-v5 -> v6:
-- `adxl313_core_probe()`: change conditional logic for evaluation of
-  `int_line`
-- `adxl313_core_probe()`: add helper function `_get_int_type()` to simplify
-  logic
-- `adxl313_is_act_inact_en()`: remove blank line; make variable `axis_en` a
-  bool
-- `adxl313_is_act_inact_ac()`: removal of ',' in comment
-- `adxl313_set_act_inact_linkbit()`: regroup logic expressions
-- `adxl313_set_act_inact_en()`: change comment style, and rephrase
-- `adxl313_read/write_mag_config()`, `adxl313_read/write_mag_value()` and
-  `_adxl313_read/write_mag_value()`: avoid nested switch/case statements,
-  add helper functions from start and populate them incrementallay
-- `adxl313_set_act_inact_ac()`: move AC-coupling code into a separate
-  helper
-- [PATCH v5 1/8], [PATCH v5 2/8], [PATCH v5 6/8] and [PATCH v5 8/8]: set
-  "Reviewed-by:.."
+ drivers/iio/accel/adxl313.h      |  22 +++
+ drivers/iio/accel/adxl313_core.c | 264 ++++++++++++++++++++++++++++++-
+ 2 files changed, 280 insertions(+), 6 deletions(-)
 
-v4 -> v5:
-- [v4 01/11]: applied - debug register                                          
-- [v4 03/11]: applied w/ changed commit message - regmap cache                  
-- refrase all commit messages                                                   
-- merge patches [v4 02/11] [v4 05/11] and [v4 06/11]                            
-- add ADXL313_REG_INT_SOURCE to the initial regmap cache definition             
-- `adxl313_set_watermark()`: replace plain hex numbers by defined bit masks     
-- `adxl313_set_watermark()`: replace `regmap_update_bits()` by
-  `regmap_set_bits()`
-- `adxl313_get_samples()`: remove initialization of variable `samples`          
-- `adxl313_buffer_postenable()`: add comment on turning off measurment          
-- `adxl313_push_event()`: move WATERMARK separate out, focus on pushing events  
-- `adxl313_irq_handler()`: add comment on draining the FIFO                     
-- `adxl313_push_event()`: remove missleading comment on return statement        
-- `adxl313_is_act_inact_en()`: If it's false, it will be false anyway -
-  simplified now
-- change order in multiplication with unit: `val * MICRO` which is read
-  more naturally
-- `adxl313_is_act_inact_en()`: remove check for ADXL313_ACTIVITY in the
-  activity patch
-- `adxl313_write_event_value()`: remove the general turning off measurement mode
-- `adxl313_set_inact_time_s()`: replace plain number 255 by U8_MAX              
-- `adxl313_read/write_event_config()`: encapsulate duplicate code into
-  `adxl313_read/write_mag_config()`
-- `adxl313_read/write_event_value()`: encapsulate duplicate code into
-  `adxl313_read/write_mag_value()`
-- `adxl313_is_act_inact_en()`: apply switch/case rather than if/else for
-  readability; factor out variable `coupling`; convert all remaining `_en`
-  variables there to bool, such that a negative error is evaluated from a
-  `ret`, and     logic operates with `_en` variables
-- `adxl313_set_act_inact_en()`: major rework due to issues discovered by
-  automated testing (also affects related functions)
-- fix kernel-doc issues 
-
-v3 -> v4:
-- squash patches [v3 02/12 + 03/12]: buffer usage into the patch that adds buffered support
-- squash patches [v3 07/12 + 08/12]: interrupt handler with watermark implementation
-- add patch: (in)activity / AC coupled as `MAG_ADAPTIVE` event
-- `ADXL313_MEASUREMENT_MODE`: adjust commit message on removal of define and adding measurement enable function
-- remove irq variable from driver data struct, make it a local variable
-- `adxl313_core_probe()`: flip logic to condition `int_line != ADXL313_INT_NONE`
-- `adxl313_core_probe()`: change mapping interrupts from 0xff to an explicit local mask
-- `adxl313_core_probe()`: add comment on FIFO bypass mode
-- reduce odd selection of headers to add [`adxl313_core.c`]
-- `adxl313_set_fifo()`: this function was turning measurement off/on before changing `fifo_mode`,
-   called in postenable and predisable this firstly excluded setting of interrupts, and secondly
-   still configured watermark where unnecessary, this function was thus removed (covers unhandled
-   return value, and refactoring of function parameters)
-- `adxl313_fifo_transfer()`: simplify computation of `sizeof(i*count/2)`
-- `adxl313_irq_handler()`: make call of `adxl313_reset_fifo()` conditional to OVERRUN one patch earlier
-- includes: rework adding included headers
-- activity: change to work with or'd axis and related changes to the fake channel and arrays
-- `adxl313_set_act_inact_en()`: generally turn off measurement when adjusting config
-  activity/inactivity related config registers, turn measurement on after
-- doc: adjust code block highlighting and remove links
-
-v2 -> v3:
-- verify keeping trailing comma when it's multi-line assignment [v1 02/12]
-- `adxl313_set_fifo()`: verify have two on one line to make it easier to read [v1 07/12]
-- `adxl313_fifo_transfer()`: verify removal of useless initialization of ret [v1 07/12]
-- `adxl313_fifo_transfer()`: verify usage of array_size() from overflow.h [v1 07/12]
-- `adxl313_fifo_transfer()`: verify return 0 here [v1 07/12]
-- `adxl313_irq_handler()`: verify "Why do we need the label?" / moving the call under the conditional [v1 07/12]
-- verify reorganization of half condition for Activity [v1 09/12] and Inactivity [v1 10/12]
-- verify usage of MICRO instead of 1000000
-- `adxl313_is_act_inact_en()`: restructure according to return logic value, or negative error
-- `adxl313_set_act_inact_en()`: restructure function, use regmap_assign_bits()
-- `adxl313_set_act_inact_en()`: verify makeing it a logical split [v1 11/12]
-- `adxl313_fifo_transfer()`: change iterator variable type from int to unsigned int [v2 07/12]
-- `adxl313_fifo_reset()`: add comment on why reset status registers does not do error check ("At least comment...") [v2 07/12]
-- `adxl313_fifo_push()`: change iterator variable from int to unsigned int [v2 08/12]
-- `adxl313_fifo_push()`: remove duplicate check for samples being <0 [v2 08/12]
-- apply `regmap_assign_bits()` in several places to replace regmap_update_bits() depending on bools
-- `adxl313_set_watermark()`: rename mask variable to make it more comprehensive
-- removal of duplicate blanks in various places (sry, my keyboard died) [v1 07/12]
-
-v1 -> v2:
-- usage of units.h
-- simplify approach for return values
----
-
-Lothar Rubusch (8):
-  iio: accel: adxl313: make use of regmap cache
-  iio: accel: adxl313: add function to enable measurement
-  iio: accel: adxl313: add buffered FIFO watermark with interrupt
-    handling
-  iio: accel: adxl313: add activity sensing
-  iio: accel: adxl313: add inactivity sensing
-  iio: accel: adxl313: implement power-save on inactivity
-  iio: accel: adxl313: add AC coupled activity/inactivity events
-  docs: iio: add ADXL313 accelerometer
-
- Documentation/iio/adxl313.rst    | 289 ++++++++++
- Documentation/iio/index.rst      |   1 +
- drivers/iio/accel/adxl313.h      |  33 +-
- drivers/iio/accel/adxl313_core.c | 937 ++++++++++++++++++++++++++++++-
- drivers/iio/accel/adxl313_i2c.c  |   6 +
- drivers/iio/accel/adxl313_spi.c  |   6 +
- 6 files changed, 1261 insertions(+), 11 deletions(-)
- create mode 100644 Documentation/iio/adxl313.rst
-
-
-base-commit: d1584d12ec8c35534172882c1713947110564e4c
-prerequisite-patch-id: 263cdbf28524f1edc96717db1461d7a4be2319c2
+diff --git a/drivers/iio/accel/adxl313.h b/drivers/iio/accel/adxl313.h
+index 6958a00f5e8f..4f4a9fd39f6d 100644
+--- a/drivers/iio/accel/adxl313.h
++++ b/drivers/iio/accel/adxl313.h
+@@ -21,6 +21,7 @@
+ #define ADXL313_REG_ACT_INACT_CTL	0x27
+ #define ADXL313_REG_BW_RATE		0x2C
+ #define ADXL313_REG_POWER_CTL		0x2D
++#define ADXL313_REG_INT_ENABLE		0x2E
+ #define ADXL313_REG_INT_MAP		0x2F
+ #define ADXL313_REG_INT_SOURCE		0x30
+ #define ADXL313_REG_DATA_FORMAT		0x31
+@@ -46,6 +47,25 @@
+ #define ADXL313_SPI_3WIRE		BIT(6)
+ #define ADXL313_I2C_DISABLE		BIT(6)
+ 
++#define ADXL313_INT_OVERRUN		BIT(0)
++#define ADXL313_INT_WATERMARK		BIT(1)
++#define ADXL313_INT_INACTIVITY		BIT(3)
++#define ADXL313_INT_ACTIVITY		BIT(4)
++#define ADXL313_INT_DREADY		BIT(7)
++
++/* FIFO entries: how many values are stored in the FIFO */
++#define ADXL313_REG_FIFO_STATUS_ENTRIES_MSK	GENMASK(5, 0)
++/* FIFO samples: number of samples needed for watermark (FIFO mode) */
++#define ADXL313_REG_FIFO_CTL_SAMPLES_MSK	GENMASK(4, 0)
++#define ADXL313_REG_FIFO_CTL_MODE_MSK		GENMASK(7, 6)
++
++#define ADXL313_FIFO_BYPASS			0
++#define ADXL313_FIFO_STREAM			2
++
++#define ADXL313_FIFO_SIZE			32
++
++#define ADXL313_NUM_AXIS			3
++
+ extern const struct regmap_access_table adxl312_readable_regs_table;
+ extern const struct regmap_access_table adxl313_readable_regs_table;
+ extern const struct regmap_access_table adxl314_readable_regs_table;
+@@ -66,7 +86,9 @@ struct adxl313_data {
+ 	struct regmap	*regmap;
+ 	const struct adxl313_chip_info *chip_info;
+ 	struct mutex	lock; /* lock to protect transf_buf */
++	u8 watermark;
+ 	__le16		transf_buf __aligned(IIO_DMA_MINALIGN);
++	__le16		fifo_buf[ADXL313_NUM_AXIS * ADXL313_FIFO_SIZE + 1];
+ };
+ 
+ struct adxl313_chip_info {
+diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adxl313_core.c
+index 99a7f3755031..ac4cc16399fc 100644
+--- a/drivers/iio/accel/adxl313_core.c
++++ b/drivers/iio/accel/adxl313_core.c
+@@ -8,11 +8,23 @@
+  */
+ 
+ #include <linux/bitfield.h>
++#include <linux/interrupt.h>
+ #include <linux/module.h>
++#include <linux/overflow.h>
++#include <linux/property.h>
+ #include <linux/regmap.h>
+ 
++#include <linux/iio/buffer.h>
++#include <linux/iio/kfifo_buf.h>
++
+ #include "adxl313.h"
+ 
++#define ADXL313_INT_NONE			U8_MAX
++#define ADXL313_INT1				1
++#define ADXL313_INT2				2
++
++#define ADXL313_REG_XYZ_BASE			ADXL313_REG_DATA_AXIS(0)
++
+ static const struct regmap_range adxl312_readable_reg_range[] = {
+ 	regmap_reg_range(ADXL313_REG_DEVID0, ADXL313_REG_DEVID0),
+ 	regmap_reg_range(ADXL313_REG_OFS_AXIS(0), ADXL313_REG_OFS_AXIS(2)),
+@@ -195,9 +207,10 @@ static const int adxl313_odr_freqs[][2] = {
+ 	[9] = { 3200, 0 },
+ };
+ 
+-#define ADXL313_ACCEL_CHANNEL(index, axis) {				\
++#define ADXL313_ACCEL_CHANNEL(index, reg, axis) {			\
+ 	.type = IIO_ACCEL,						\
+-	.address = index,						\
++	.scan_index = (index),						\
++	.address = (reg),						\
+ 	.modified = 1,							\
+ 	.channel2 = IIO_MOD_##axis,					\
+ 	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |			\
+@@ -207,14 +220,26 @@ static const int adxl313_odr_freqs[][2] = {
+ 	.info_mask_shared_by_type_available =				\
+ 		BIT(IIO_CHAN_INFO_SAMP_FREQ),				\
+ 	.scan_type = {							\
++		.sign = 's',						\
+ 		.realbits = 13,						\
++		.storagebits = 16,					\
++		.endianness = IIO_BE,					\
+ 	},								\
+ }
+ 
++enum adxl313_chans {
++	chan_x, chan_y, chan_z,
++};
++
+ static const struct iio_chan_spec adxl313_channels[] = {
+-	ADXL313_ACCEL_CHANNEL(0, X),
+-	ADXL313_ACCEL_CHANNEL(1, Y),
+-	ADXL313_ACCEL_CHANNEL(2, Z),
++	ADXL313_ACCEL_CHANNEL(0, chan_x, X),
++	ADXL313_ACCEL_CHANNEL(1, chan_y, Y),
++	ADXL313_ACCEL_CHANNEL(2, chan_z, Z),
++};
++
++static const unsigned long adxl313_scan_masks[] = {
++	BIT(chan_x) | BIT(chan_y) | BIT(chan_z),
++	0
+ };
+ 
+ static int adxl313_set_odr(struct adxl313_data *data,
+@@ -345,6 +370,173 @@ static int adxl313_write_raw(struct iio_dev *indio_dev,
+ 	}
+ }
+ 
++static int adxl313_set_watermark(struct iio_dev *indio_dev, unsigned int value)
++{
++	struct adxl313_data *data = iio_priv(indio_dev);
++	int ret;
++
++	value = min(value, ADXL313_FIFO_SIZE - 1);
++
++	ret = adxl313_set_measure_en(data, false);
++	if (ret)
++		return ret;
++
++	ret = regmap_update_bits(data->regmap, ADXL313_REG_FIFO_CTL,
++				 ADXL313_REG_FIFO_CTL_MODE_MSK, value);
++	if (ret)
++		return ret;
++
++	data->watermark = value;
++
++	ret = regmap_set_bits(data->regmap, ADXL313_REG_INT_ENABLE,
++			      ADXL313_INT_WATERMARK);
++	if (ret)
++		return ret;
++
++	return adxl313_set_measure_en(data, true);
++}
++
++static int adxl313_get_samples(struct adxl313_data *data)
++{
++	unsigned int regval;
++	int ret;
++
++	ret = regmap_read(data->regmap, ADXL313_REG_FIFO_STATUS, &regval);
++	if (ret)
++		return ret;
++
++	return FIELD_GET(ADXL313_REG_FIFO_STATUS_ENTRIES_MSK, regval);
++}
++
++static int adxl313_fifo_transfer(struct adxl313_data *data, int samples)
++{
++	unsigned int i;
++	int ret;
++
++	for (i = 0; i < samples; i++) {
++		ret = regmap_bulk_read(data->regmap, ADXL313_REG_XYZ_BASE,
++				       data->fifo_buf + (i * ADXL313_NUM_AXIS),
++				       sizeof(data->fifo_buf[0]) * ADXL313_NUM_AXIS);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++/**
++ * adxl313_fifo_reset() - Reset the FIFO and interrupt status registers.
++ * @data: The device data.
++ *
++ * Reset the FIFO status registers. Reading out status registers clears the
++ * FIFO and interrupt configuration. Thus do not evaluate regmap return values.
++ * Ignore particular read register content. Register content is not processed
++ * any further. Therefore the function returns void.
++ */
++static void adxl313_fifo_reset(struct adxl313_data *data)
++{
++	unsigned int regval;
++	int samples;
++
++	adxl313_set_measure_en(data, false);
++
++	samples = adxl313_get_samples(data);
++	if (samples > 0)
++		adxl313_fifo_transfer(data, samples);
++
++	regmap_read(data->regmap, ADXL313_REG_INT_SOURCE, &regval);
++
++	adxl313_set_measure_en(data, true);
++}
++
++static int adxl313_buffer_postenable(struct iio_dev *indio_dev)
++{
++	struct adxl313_data *data = iio_priv(indio_dev);
++	int ret;
++
++	/* Set FIFO modes with measurement turned off, according to datasheet */
++	ret = adxl313_set_measure_en(data, false);
++	if (ret)
++		return ret;
++
++	ret = regmap_write(data->regmap, ADXL313_REG_FIFO_CTL,
++			   FIELD_PREP(ADXL313_REG_FIFO_CTL_SAMPLES_MSK,	data->watermark) |
++			   FIELD_PREP(ADXL313_REG_FIFO_CTL_MODE_MSK, ADXL313_FIFO_STREAM));
++	if (ret)
++		return ret;
++
++	return adxl313_set_measure_en(data, true);
++}
++
++static int adxl313_buffer_predisable(struct iio_dev *indio_dev)
++{
++	struct adxl313_data *data = iio_priv(indio_dev);
++	int ret;
++
++	ret = adxl313_set_measure_en(data, false);
++	if (ret)
++		return ret;
++
++	ret = regmap_write(data->regmap, ADXL313_REG_FIFO_CTL,
++			   FIELD_PREP(ADXL313_REG_FIFO_CTL_MODE_MSK, ADXL313_FIFO_BYPASS));
++
++	ret = regmap_write(data->regmap, ADXL313_REG_INT_ENABLE, 0);
++	if (ret)
++		return ret;
++
++	return adxl313_set_measure_en(data, true);
++}
++
++static const struct iio_buffer_setup_ops adxl313_buffer_ops = {
++	.postenable = adxl313_buffer_postenable,
++	.predisable = adxl313_buffer_predisable,
++};
++
++static int adxl313_fifo_push(struct iio_dev *indio_dev, int samples)
++{
++	struct adxl313_data *data = iio_priv(indio_dev);
++	unsigned int i;
++	int ret;
++
++	ret = adxl313_fifo_transfer(data, samples);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < ADXL313_NUM_AXIS * samples; i += ADXL313_NUM_AXIS)
++		iio_push_to_buffers(indio_dev, &data->fifo_buf[i]);
++
++	return 0;
++}
++
++static irqreturn_t adxl313_irq_handler(int irq, void *p)
++{
++	struct iio_dev *indio_dev = p;
++	struct adxl313_data *data = iio_priv(indio_dev);
++	int samples, int_stat;
++
++	if (regmap_read(data->regmap, ADXL313_REG_INT_SOURCE, &int_stat))
++		return IRQ_NONE;
++
++	if (FIELD_GET(ADXL313_INT_WATERMARK, int_stat)) {
++		samples = adxl313_get_samples(data);
++		if (samples < 0)
++			goto err;
++
++		if (adxl313_fifo_push(indio_dev, samples))
++			goto err;
++	}
++
++	if (FIELD_GET(ADXL313_INT_OVERRUN, int_stat))
++		goto err;
++
++	return IRQ_HANDLED;
++
++err:
++	adxl313_fifo_reset(data);
++
++	return IRQ_HANDLED;
++}
++
+ static int adxl313_reg_access(struct iio_dev *indio_dev, unsigned int reg,
+ 			      unsigned int writeval, unsigned int *readval)
+ {
+@@ -359,6 +551,7 @@ static const struct iio_info adxl313_info = {
+ 	.read_raw	= adxl313_read_raw,
+ 	.write_raw	= adxl313_write_raw,
+ 	.read_avail	= adxl313_read_freq_avail,
++	.hwfifo_set_watermark = adxl313_set_watermark,
+ 	.debugfs_reg_access = &adxl313_reg_access,
+ };
+ 
+@@ -407,6 +600,19 @@ static int adxl313_setup(struct device *dev, struct adxl313_data *data,
+ 	return adxl313_set_measure_en(data, true);
+ }
+ 
++static unsigned int _get_int_type(struct device *dev, int *irq)
++{
++	*irq = fwnode_irq_get_byname(dev_fwnode(dev), "INT1");
++	if (*irq > 0)
++		return ADXL313_INT1;
++
++	*irq = fwnode_irq_get_byname(dev_fwnode(dev), "INT2");
++	if (*irq > 0)
++		return ADXL313_INT2;
++
++	return ADXL313_INT_NONE;
++}
++
+ /**
+  * adxl313_core_probe() - probe and setup for adxl313 accelerometer
+  * @dev:	Driver model representation of the device
+@@ -424,7 +630,9 @@ int adxl313_core_probe(struct device *dev,
+ {
+ 	struct adxl313_data *data;
+ 	struct iio_dev *indio_dev;
+-	int ret;
++	u8 int_line;
++	u8 int_map_msk;
++	int irq, ret;
+ 
+ 	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+ 	if (!indio_dev)
+@@ -441,6 +649,7 @@ int adxl313_core_probe(struct device *dev,
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 	indio_dev->channels = adxl313_channels;
+ 	indio_dev->num_channels = ARRAY_SIZE(adxl313_channels);
++	indio_dev->available_scan_masks = adxl313_scan_masks;
+ 
+ 	ret = adxl313_setup(dev, data, setup);
+ 	if (ret) {
+@@ -448,6 +657,49 @@ int adxl313_core_probe(struct device *dev,
+ 		return ret;
+ 	}
+ 
++	int_line = _get_int_type(dev, &irq);
++	if (int_line == ADXL313_INT_NONE) {
++		/*
++		 * FIFO_BYPASSED mode
++		 *
++		 * When no interrupt lines are specified, the driver falls back
++		 * to use the sensor in FIFO_BYPASS mode. This means turning off
++		 * internal FIFO and interrupt generation (since there is no
++		 * line specified). Unmaskable interrupts such as overrun or
++		 * data ready won't interfere. Even that a FIFO_STREAM mode w/o
++		 * connected interrupt line might allow for obtaining raw
++		 * measurements, a fallback to disable interrupts when no
++		 * interrupt lines are connected seems to be the cleaner
++		 * solution.
++		 */
++		ret = regmap_write(data->regmap, ADXL313_REG_FIFO_CTL,
++				   FIELD_PREP(ADXL313_REG_FIFO_CTL_MODE_MSK,
++					      ADXL313_FIFO_BYPASS));
++		if (ret)
++			return ret;
++	} else {
++		/* FIFO_STREAM mode */
++		int_map_msk = ADXL313_INT_DREADY | ADXL313_INT_ACTIVITY |
++			ADXL313_INT_INACTIVITY | ADXL313_INT_WATERMARK |
++			ADXL313_INT_OVERRUN;
++		ret = regmap_assign_bits(data->regmap, ADXL313_REG_INT_MAP,
++					 int_map_msk, int_line == ADXL313_INT2);
++		if (ret)
++			return ret;
++
++		ret = devm_iio_kfifo_buffer_setup(dev, indio_dev,
++						  &adxl313_buffer_ops);
++		if (ret)
++			return ret;
++
++		ret = devm_request_threaded_irq(dev, irq, NULL,
++						&adxl313_irq_handler,
++						IRQF_SHARED | IRQF_ONESHOT,
++						indio_dev->name, indio_dev);
++		if (ret)
++			return ret;
++	}
++
+ 	return devm_iio_device_register(dev, indio_dev);
+ }
+ EXPORT_SYMBOL_NS_GPL(adxl313_core_probe, IIO_ADXL313);
 -- 
 2.39.5
 
