@@ -1,168 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369E835977;
-	Sun, 22 Jun 2025 05:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB12F35977
+	for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 05:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750569733; cv=none; b=DEm/lk5/YI1TP9wecbjg+cPTV24EitR4cL47hy3WDEMe9mQ8aSOd8W9dlgIooH4cQneYcBdF4pK/G830aN/kYK+roAxAO9a+HPIqtqW5gqacv1cdRmic4dNF/ar3TQF5RHKR+a4ru26vMD7Z+vL2sthi5lPTeRzqmct2KRgUX+0=
+	t=1750569831; cv=none; b=TUYEAG8WKAwDgc+jdrUXKHyqSpB034CRRfb6RzyvIKsFBALvlp4/ZzNf6lpEeVT5KIXke69BQJT+cpYgWFUc0xIMChtaZSISN+3i1C3NyfL/hQZSQqD5YfyAC67FiLzzEfg4Ugjr8exx7CAqiuQtr00XW0ldR6xwuvISOJDpOt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750569733; c=relaxed/simple;
-	bh=UBLrFt7v6rwi8efRCPk1D6EtbCWUH8sLO9gY/AVK1Eg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iOLpFE/c+TNGV35XMX2qavJCGaFvIN9ki8KiVRxG+Nf3BGRbLv6AaKZjPvvgeAoizPeji7yiu6p13edpoNzvsCL+ZbwNtWlwPjh8sHm7u6EKoejEbZiVw1H0ligHIhXntNH+bDvt9fJwLzhlEUxsg3z/A3QXxB+7TK2CYd8+X9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B9xjJ8yS; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750569831; c=relaxed/simple;
+	bh=UKFZiSMi/Xp/r0IR9bfV0zxY8iABN2FCJtVKYOPiEeM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c5pc3KaEk4939nEVmZAXHSLPosR6YpduAeMRAsKO++cVRc4zWjE6xxD5Jgxax2iywaxh+oOZ6w7BLYO9r4JETXH9QLE1nw/z2DhQwjr/bCzFMCXDYuLnOHMPfW0QAgX3PI9w+btcAxpZhpZ1mFyXOMcD7txYS91tCNa50JL5WR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eKWZD8uF; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B9xjJ8yS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750569731; x=1782105731;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UBLrFt7v6rwi8efRCPk1D6EtbCWUH8sLO9gY/AVK1Eg=;
-  b=B9xjJ8ySofsWBj7DHQC7G8ILGwdweoyusHcZcjelKWcOoxWIEeLVBAkw
-   cYeX3naPZRHpQNlbHyN30cY6oKbDFwO1OoRkebMeWd8D7WSEoatSi23Ts
-   si5e1CICbI3lXZjF2y3rtaNtu6VgD/RKGusbwYijpaK7vXI6VVQyS6euI
-   Ck03oNnUMljceqvjuGR4WN+EFHx83kwzhcsxbnu0f63F5f7wr3skJdnFu
-   KOnuaiHJYVG0x/i8gSyiHveyN7TUSVkIOSx7ekEp8HGe0L3xc656cDKNu
-   803+3fjQJ2bdi6J/1tYKwukt7sbtT262Tz3Qv8J3OHJeDvee9Mi3iydrK
-   g==;
-X-CSE-ConnectionGUID: EOOXUidtTfOFgm1+MPQMaA==
-X-CSE-MsgGUID: +ejr6KS4Qt6MSgOGVBRYxQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11470"; a="56594005"
-X-IronPort-AV: E=Sophos;i="6.16,255,1744095600"; 
-   d="scan'208";a="56594005"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2025 22:22:10 -0700
-X-CSE-ConnectionGUID: h6O+MLvKRnKLdddP+O4p0g==
-X-CSE-MsgGUID: uZbDNinNQZ641LBmvKwqeQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,255,1744095600"; 
-   d="scan'208";a="155291212"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 21 Jun 2025 22:22:07 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uTD9Z-000N4Y-0s;
-	Sun, 22 Jun 2025 05:22:05 +0000
-Date: Sun, 22 Jun 2025 13:21:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vikas Gupta <vikas.gupta@broadcom.com>, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	andrew+netdev@lunn.ch, horms@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, michael.chan@broadcom.com,
-	pavan.chebbi@broadcom.com, vsrama-krishna.nemani@broadcom.com,
-	Vikas Gupta <vikas.gupta@broadcom.com>,
-	Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
-	Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
-Subject: Re: [net-next, 08/10] bng_en: Add irq allocation support
-Message-ID: <202506221311.dmMiJyFp-lkp@intel.com>
-References: <20250618144743.843815-9-vikas.gupta@broadcom.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKWZD8uF"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32b7cf56cacso29701231fa.1
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 22:23:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750569828; x=1751174628; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UKFZiSMi/Xp/r0IR9bfV0zxY8iABN2FCJtVKYOPiEeM=;
+        b=eKWZD8uFgyyCvvkLwbq+EaUvvoB/tW4aBNzb7BUB4saTU/m4r8WAAfRALusIUATn4B
+         SUJGo0bMXh9rHArAUwlNIvy0r/ZW+3v+Pb+K4I/4Q/40dk/8U2le/f38lwiSMOwH23ZW
+         35kJVfmVpnV+2yUgrkgF91uEKxeWTYrwK1GLnQzC5I6D4mpeIqT5++VM5m5F0poinY26
+         W+x8hUvsqAdd9br323lH7BaeJBiiu5+UWIekmWrvI2BAm0mwXtJGI5N/ckBC2tMYSZ3X
+         uT4CuKvL4qbaZEBz8ZJg2yFskqYAeBga1lBN1ZWKkRDpDN6f6NZBY9z9kh7E3PiQw2U/
+         DDxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750569828; x=1751174628;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UKFZiSMi/Xp/r0IR9bfV0zxY8iABN2FCJtVKYOPiEeM=;
+        b=bTpUIKvUXWURwPxbem39s8WaZhFLRl5mqV7C2M4kajy6b99kT7ugVL/0NIcKWpb1z2
+         5N3HQ19Ose30FkHkpl44YmygiT0uWKC7ieafEjbXdZ94BCb7ZhZeFI9BgxFtMO5ewxHc
+         5buUCMRcKmJY4Oz0ER0VguI7BL3TxfQ0j1mLIlCYkoq0RiBCzpE5hNuAzFuHnd0Jms6N
+         DomTOYWGFXUy8067qw7itNBouV5Ts9PFMzqTO1dy98TGJ9tQsOuiwqojS9BGuFNJ5Fj8
+         8VC6fq9uvBJH5uyFrw9SV3763AAeekNriABmhsrXJbqDC4h5WdS4FKKQG7WOFqwaJg1U
+         PASw==
+X-Forwarded-Encrypted: i=1; AJvYcCXzCiiENHivUzKyuVUuHPfeusr2R08hEnef4o9MuDw4MKcUZBaHvQss2jwhkwLrsGN7acTiS0XCdwbdgzY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywdfv+CI5Yznjr8BBDHYXQVIU4mvGWAZG6KVY4Pl+E9FcqVlcm7
+	ebyps5hYWmkOezE/YZjfk9jEOOPNGKiNliCxpI+8DZF6G5qnjpCnFW0qGOHInFEe+PnjYmB4ejs
+	jCeLI/tID88T1JmDf3vGdIRttlrFCRCPrSgu5DpXo+Mqo
+X-Gm-Gg: ASbGnctvcuo2GjdzWgfpJeUNa6L/1m4jmd6WXPYaL13Bw331Y/qR8Zq31aEGl9fMcpT
+	S6/wvgq1mlnw8RdESIHoxpkqY0FQOOp8SETJW22m1p9oreEZc8dfBZY/EMMXqhEtn9xYTxmaavV
+	ZSnOGhFi40d67y9qPIkhKDWOVziyWVt6B3hh6gNhdfBdw=
+X-Google-Smtp-Source: AGHT+IFlNGgsBixKS3mKO5j/Eq7MML/JgNnTzG1FkNkAI+F75gXPFV8jm6c5uEM5B+mtAJN52naT1XuVJtIHWxtu3O0=
+X-Received: by 2002:a2e:ae11:0:b0:32b:755e:6cd7 with SMTP id
+ 38308e7fff4ca-32b99460e60mr23683911fa.32.1750569827823; Sat, 21 Jun 2025
+ 22:23:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618144743.843815-9-vikas.gupta@broadcom.com>
+References: <20241018151112.3533820-1-arnd@kernel.org> <ZxidW3lvA5Pqu71m@infradead.org>
+ <CANpmjNNK_viqTuPxywfvZSZSdWGRsb5-u1-oR=RZYTh7YKk8cQ@mail.gmail.com>
+ <Zxiev9UaoUlI1xs9@infradead.org> <CANpmjNPvBnov-EFk1PNO4GEOF7XLG7S1bYYjg9i4Ej=ZzaA6ag@mail.gmail.com>
+ <ZxigQIF59s3_h5PS@infradead.org> <20241107142938.c38ce0a63add88af49216b2f@linux-foundation.org>
+In-Reply-To: <20241107142938.c38ce0a63add88af49216b2f@linux-foundation.org>
+From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+Date: Sun, 22 Jun 2025 10:23:30 +0500
+X-Gm-Features: AX0GCFsU--xDO8SgX9TQ1fKOImZgHs-YoJz4cTViVoIKGVIutBqdxU3ja_tQtdI
+Message-ID: <CACzwLxjW+y=r1b0RiLB-qCEzSuoA4K1V80=Qyxhnhm0GX7-Svg@mail.gmail.com>
+Subject: Re: [PATCH] mm: export copy_to_kernel_nofault
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Marco Elver <elver@google.com>, Arnd Bergmann <arnd@kernel.org>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Vikas,
+On Fri, Nov 8, 2024 at 3:29=E2=80=AFAM Andrew Morton <akpm@linux-foundation=
+.org> wrote:
+>
+> On Wed, 23 Oct 2024 00:05:36 -0700 Christoph Hellwig <hch@infradead.org> =
+wrote:
+>
+> > On Wed, Oct 23, 2024 at 09:02:23AM +0200, Marco Elver wrote:
+> > > Another alternative is to just #ifndef MODULE the offending test case=
+,
+> > > so it's only available if built-in. No need to just make the whole
+> > > test built-in only. I know there are users of this particular test
+> > > that rely on it being a module.
+> >
+> > That sounds good to me.
+>
+> We still don't have patch which does this, so this series is stalled.
+>
+> Sabyrzhan, could you please consider this?
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.16-rc2 next-20250620]
-[cannot apply to horms-ipvs/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Vikas-Gupta/bng_en-Add-PCI-interface/20250618-173130
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250618144743.843815-9-vikas.gupta%40broadcom.com
-patch subject: [net-next, 08/10] bng_en: Add irq allocation support
-config: parisc-randconfig-r073-20250619 (https://download.01.org/0day-ci/archive/20250622/202506221311.dmMiJyFp-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 8.5.0
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506221311.dmMiJyFp-lkp@intel.com/
-
-smatch warnings:
-drivers/net/ethernet/broadcom/bnge/bnge_resc.c:347 bnge_alloc_irqs() warn: unsigned 'irqs_demand' is never less than zero.
-
-vim +/irqs_demand +347 drivers/net/ethernet/broadcom/bnge/bnge_resc.c
-
-   329	
-   330	int bnge_alloc_irqs(struct bnge_dev *bd)
-   331	{
-   332		u16 aux_msix, tx_cp, num_entries;
-   333		u16 irqs_demand, max, min = 1;
-   334		int i, rc = 0;
-   335	
-   336		irqs_demand = bnge_nqs_demand(bd);
-   337		max = bnge_get_max_func_irqs(bd);
-   338		if (irqs_demand > max)
-   339			irqs_demand = max;
-   340	
-   341		if (!(bd->flags & BNGE_EN_SHARED_CHNL))
-   342			min = 2;
-   343	
-   344		irqs_demand = pci_alloc_irq_vectors(bd->pdev, min, irqs_demand,
-   345						    PCI_IRQ_MSIX);
-   346		aux_msix = bnge_aux_get_msix(bd);
- > 347		if (irqs_demand < 0 || irqs_demand < aux_msix) {
-   348			rc = -ENODEV;
-   349			goto err_free_irqs;
-   350		}
-   351	
-   352		num_entries = irqs_demand;
-   353		if (pci_msix_can_alloc_dyn(bd->pdev))
-   354			num_entries = max;
-   355		bd->irq_tbl = kcalloc(num_entries, sizeof(*bd->irq_tbl), GFP_KERNEL);
-   356		if (!bd->irq_tbl) {
-   357			rc = -ENOMEM;
-   358			goto err_free_irqs;
-   359		}
-   360	
-   361		for (i = 0; i < irqs_demand; i++)
-   362			bd->irq_tbl[i].vector = pci_irq_vector(bd->pdev, i);
-   363	
-   364		bd->irqs_acquired = irqs_demand;
-   365		/* Reduce rings based upon num of vectors allocated.
-   366		 * We dont need to consider NQs as they have been calculated
-   367		 * and must be more than irqs_demand.
-   368		 */
-   369		rc = bnge_adjust_rings(bd, &bd->rx_nr_rings,
-   370				       &bd->tx_nr_rings,
-   371				       irqs_demand - aux_msix, min == 1);
-   372		if (rc)
-   373			goto err_free_irqs;
-   374	
-   375		tx_cp = bnge_num_tx_to_cp(bd, bd->tx_nr_rings);
-   376		bd->nq_nr_rings = (min == 1) ?
-   377			max_t(u16, tx_cp, bd->rx_nr_rings) :
-   378			tx_cp + bd->rx_nr_rings;
-   379	
-   380		/* Readjust tx_nr_rings_per_tc */
-   381		if (!bd->num_tc)
-   382			bd->tx_nr_rings_per_tc = bd->tx_nr_rings;
-   383	
-   384		return 0;
-   385	
-   386	err_free_irqs:
-   387		dev_err(bd->dev, "Failed to allocate IRQs err = %d\n", rc);
-   388		bnge_free_irqs(bd);
-   389		return rc;
-   390	}
-   391	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I've just posted a follow-up that removes the exported symbol.
+See Message-Id: <20250622051906.67374-1-snovitoll@gmail.com>
+Sorry for taking so long.
