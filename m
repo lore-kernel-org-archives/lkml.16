@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45361DAC92;
-	Sun, 22 Jun 2025 11:46:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9295D1DAC92;
+	Sun, 22 Jun 2025 11:46:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750592781; cv=none; b=TNwqKnj0WE5u2nzJ+ongk88R0l6qkNJUIS3+XQ5btgOpo8O8gTlFfiVnlg7E92xRZwmZiZRjNMUM3M7ZN907VzwtpNkcTVxyzyhWvgjOOKMjxUvQrBNp33gev4VpeFBmYzoazIdKokE6EMbKUAGeTKXUxV9KG6jtj9tkumkIqFo=
+	t=1750592799; cv=none; b=U7MVdMW+R9lD5ioIz2Th1BAALra3pFAqFLaJvbUh4c5WJqovH3+CY4uU0H+zE+RnBHrK94IJYKJmS1Pg1s5XMfyRim6Dqq6hJydtQEVOXdRa7KFtDXjXeuNepcR3tnmGXdHzCFG2PCe5AuQ0tUrxXY9oAZ/vGMKd7i2YLCHDOMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750592781; c=relaxed/simple;
-	bh=Wc1qutNuQd7KPD2md75WNoiJ9w0pQyDi6rihBPlLFwI=;
+	s=arc-20240116; t=1750592799; c=relaxed/simple;
+	bh=+07UWUF6RiQR/h2fs2FgH8dAa/6207v6+e/KEDKdLm8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qbyqHPfqLI795dWslXReA35t6rPd4/IE8GdDqBZZJnWFNJyYkYXGweXOw2Iq7rARfmWTOEMxI3GP/glGL6b5LOitlwU8EulI6ifC468VjGYi9IYdIuqV0Zdg03NVftJ1Jv8sg6QKwh4f2BLQxQWxlODjpcz9ebn7B1Q7EJ9bF00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B6+Nw9MX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=RP3sPPh97+KMTGFjw5L0eqPYHWngcJiof/1pRonLyXs/neXH0vu2q/GsOUwERitt1jNdSgdEjjhEIjgb/dKHvVtkGqX5DCkNVi7AZ2TJSnAh3AQNWVsBVW1xNGZee0QZxZ36UoS89j931cjcEMlx7wkNnhLA+jYEgLU78zBp6+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rMBWWPjS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B6+Nw9MX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 608CAC4CEE3;
-	Sun, 22 Jun 2025 11:46:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rMBWWPjS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ED19C4CEE3;
+	Sun, 22 Jun 2025 11:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750592781;
-	bh=Wc1qutNuQd7KPD2md75WNoiJ9w0pQyDi6rihBPlLFwI=;
+	s=k20201202; t=1750592797;
+	bh=+07UWUF6RiQR/h2fs2FgH8dAa/6207v6+e/KEDKdLm8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=B6+Nw9MXue634SFTKrqldSJWlR1+aDKiCmWP9px3jGQ2xyzjLDUdSgBTpUTToNcVe
-	 GSsjxd+cq7U0YWeVO8Xc1Tf0JSmbBSiyxX7NNnNdd4SJ2N8iwdNFPMsCWZhAxbQv6G
-	 gSfu64M4sSJ7Gwo6QGMAMx4GJg5PamfJr9ClOT7FITHhjvcL3ZkyzdS9Na4NpY7lCi
-	 avdspCIEWdR6pIY6ZjL50S6mYO4H8hfj4OYDhxhnY3dw+jFQy5Goahzsxtu6z7XH1D
-	 14t1/Vnd1763cwta8XRAH1+FmtZyCmHj+AfgBbWOaV1cjRkxu97g74LLNNTs5vzH9b
-	 lpiWHkOtGBy0A==
-Date: Sun, 22 Jun 2025 13:46:17 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Akira Yokosawa
- <akiyks@gmail.com>
-Subject: Re: [PATCH 1/9] docs: kdoc: Make body_with_blank_line parsing more
- flexible
-Message-ID: <20250622134617.06038722@foz.lan>
-In-Reply-To: <20250621203512.223189-2-corbet@lwn.net>
-References: <20250621203512.223189-1-corbet@lwn.net>
-	<20250621203512.223189-2-corbet@lwn.net>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	b=rMBWWPjSxiVonHn+JtFv9Z/sfI0xD9Ms1TcJHVxJtAJ08gD4jsOyr6kVPUoJ0UlB7
+	 4Bhg/GD9lf1NsQwjEAyd/gPLZUz2gUn/U+FfOcMQ/m9vNG9T0ybY9ef26vWfr/u+Ns
+	 FFZIRiUkFjr3fFybRSeMhvnCrXFVjXAmsDEg6py1DNBSohksOsNrUsSnHVOX/w2T5+
+	 w+oE76Hsj2zVRbIpco+O7iVZBhNRQ5j8cFPLfs6EFzZ82raU38eLZEhkCynArQXInN
+	 zsdFE+Qz4zY20Qb2KZR4TrVWTiCRSP04xGOWAuHxOx/RHk+7hdf3AeRnrksrTkZldV
+	 lANzbsKWc/Lvg==
+Date: Sun, 22 Jun 2025 12:46:30 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gustavo Silva <gustavograzs@gmail.com>
+Cc: Alex Lanzano <lanzano.alex@gmail.com>, David Lechner
+ <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
+ Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Lothar Rubusch <l.rubusch@gmail.com>
+Subject: Re: [PATCH v3 2/3] iio: imu: bmi270: add step counter watermark
+ event
+Message-ID: <20250622124630.052fd593@jic23-huawei>
+In-Reply-To: <20250616-bmi270-events-v3-2-16e37588604f@gmail.com>
+References: <20250616-bmi270-events-v3-0-16e37588604f@gmail.com>
+	<20250616-bmi270-events-v3-2-16e37588604f@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,48 +49,17 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Em Sat, 21 Jun 2025 14:35:04 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+On Mon, 16 Jun 2025 20:53:10 -0300
+Gustavo Silva <gustavograzs@gmail.com> wrote:
 
-> The regex in the BODY_WITH_BLANK_LINE case was looking for lines starting
-> with " * ", where exactly one space was allowed before the following text.
-> There are many kerneldoc comments where the authors have put multiple
-> spaces instead, leading to mis-formatting of the documentation.
-> Specifically, in this case, the description portion is associated with the
-> last of the parameters.
+> Add support for generating events when the step counter reaches the
+> configurable watermark.
 > 
-> Allow multiple spaces in this context.
-> 
-> See, for example, synchronize_hardirq() and how its documentation is
-> formatted before and after the change.
-> 
-> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
-> ---
->  scripts/lib/kdoc/kdoc_parser.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
-> index 42b2e0936b72..c46e1b6a7d4b 100644
-> --- a/scripts/lib/kdoc/kdoc_parser.py
-> +++ b/scripts/lib/kdoc/kdoc_parser.py
-> @@ -1309,7 +1309,7 @@ class KernelDoc:
->          """
->  
->          if self.state == state.BODY_WITH_BLANK_LINE:
-> -            r = KernRe(r"\s*\*\s?\S")
-> +            r = KernRe(r"\s*\*\s*\S")
->              if r.match(line):
->                  self.dump_section()
->                  self.entry.section = SECTION_DEFAULT
-
-I was a little bit afraid that this might be causing regressions,
-but after checking the output, it looks ok. 
-
-So:
-
-Acked-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Tested-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> Signed-off-by: Gustavo Silva <gustavograzs@gmail.com>
+Applied to the togreg branch of iio.git and pushed out as testing for 0-day
+to see what we missed.
 
 Thanks,
-Mauro
+
+Jonathan
