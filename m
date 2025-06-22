@@ -1,110 +1,159 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99EEA1DED42;
-	Sun, 22 Jun 2025 12:11:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30CF1DE4E3;
+	Sun, 22 Jun 2025 12:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750594322; cv=none; b=Y74WzOfedacQq+LZmUwvldTXjq1ed4OCJtXAx+5JnyzwTP80GtyLmHGU09EIO5K3nxDLKvHrDmJTe22Twf+g1At5WkcAHGg0WKKAFCtImcEfoMxlKD6xZD23c02Kg2SOWzqzk6+dsQ5uffAKPpYXGw+Wze6ssJrIjQhu0kzzNos=
+	t=1750594407; cv=none; b=bp8Gl2aDd+UTVvz/SYSgQZ7p/3iS4W/H8TeaDh9E9KLQmfkSIZQYzkFr5mYlTSZIgGiQL5E3M/XzA7SFmFnjrWeVFKFNjQ3HyDggfsrEx/BpFYjMexa0059ClxjHCjsi6tmgpaUO7tzrGInw+4Jt+RseN3hC7LQnbPi3WG9Dk4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750594322; c=relaxed/simple;
-	bh=BmFjEVcWLQuD6PoCBoUpHZ1sPPiBqau1jUV0apQtZPI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hV92t3n7hwib7ORaUcHyhrLZW3JIJ8VMrvzMLqMG7FJ+w70CVXe/QMRI1BAOcvd/FKTnFTdGPJ7/oP0YDf5bVTmcC7FyQvlZS+FgZojindR2mbeipZdNzQVRqLE+6rjRTftVaRjvTkmnuAssHBHJwBaF8PVjOvObGz7t6jr8J+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eQ0C55eK; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750594407; c=relaxed/simple;
+	bh=P9DyqpH3WjbrPFVDdJCcU1NRpdBVUBWYSl4bYGLYPUY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=S0IOKntXcKVjARBduA6leo9o4G8dRjlE6fUXxLbHKdpT/3gaScXGKDNM4+iqQfyxP8Apv6di6zcwHoswAneYIL9falMPcd+rgRAjAi92U9Dwt8g6UpnvZaNr5thULbKA+cxBBIkOYU9AdW48peCJ7D0SuB5N8MsueeltjJQ22XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pvPG5Jwe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQ0C55eK"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e825fe1c8cfso352388276.2;
-        Sun, 22 Jun 2025 05:11:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750594318; x=1751199118; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BmFjEVcWLQuD6PoCBoUpHZ1sPPiBqau1jUV0apQtZPI=;
-        b=eQ0C55eKgFePVzB+BJt1obx7+oExjtbcfo1izzPr53ooi6unygYK2hVvMAbEEWF7gm
-         TnOh04ZWe3R4lXJV/BqlkwYFZHwihi0qn3L8O4XSZttOZ2izcAH5lEB3qEtaCF2TDWMX
-         4Rj0W+GCHiPpvtLy1evWlaz4cYn83IdwaMVSKh54aMuF9kROH48IdwKvQUyM7ZrDXOzY
-         DD9kWg/7vzTPM/lbisiIbKZw6Yi7SFeFlfK3tZpbSpZ0d28HIrTnEnkzDWJ9+lKAJI3q
-         Hgsn2LVpvNNx+LFJPRHyFaAsgFBMPMnjCy2vb+c2gDqGdkHk2XLl18I0eYLXqK/rFrcx
-         rmfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750594318; x=1751199118;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BmFjEVcWLQuD6PoCBoUpHZ1sPPiBqau1jUV0apQtZPI=;
-        b=fUsMgIpdIudFbx+MsD+6gOjGt8Gje9B2wBKe1Hd4IlPUaWcmcDASQ7Px5i9JZUIBjt
-         qgiJMhrdDgNhwG3RsjbuRx5jddrvPYAckbu62n45dgQFggXDnFVZOMoFIZNeTwjnhdQm
-         PyDar14pejUlidhfXRkk+OkwmoCaq+j8okz2y5ULifTQt/iaCT7WPZgBsEK1Xmb0kNP2
-         R//iLBCCVljJ1OrAouUm+5FwVxbmWf8UybzBWXENmNVshtfMBGFmQErbNS5MYBtKzKFu
-         RHLem/1rpI/hfHNXa3epJP1+Xbalob1twrdY6zG72+hS3VwVPkNE5cUMgIuELvxn6b/x
-         bJ8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUtqwW8T6r7YAgb0TfcJZ+cZxH6ATWWAOPe2cHhzN4ndBMJwy6ZeAS8NXV8B0dVIbr8BjBC7cpo9MI=@vger.kernel.org, AJvYcCXj+Cs17lCD+V1ZcxHvkRf6WOoRf2yUTlSLlEf26FCN/A/llxE8ikwndRHbhbgPJh+H1AHbKI5P9Lkhmlpj@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsNF0wACZdMdVdzhOOy6Y4jamNLtOOrBHkX+d7HLX3eeSzSBv1
-	W4cQ+vzQWsONuGSBUCXuh8ZqN78JVMhsIMKHEqs63Yp9Wbnow/BiJ0F0CwAN0tt4ercbeFoXESY
-	4d3FuEm1DB5a+6ZgLtpGuLoZ/Zc6MGqs=
-X-Gm-Gg: ASbGncuLKiLdUf170BhFgmoLcUcFXFjOFICmpaunLxbkbJhAq5oBXWFXgrkY7SKFAzG
-	+vvh5xuJu7yUDdf4KrDGBn1P0YKgVX+3XwugGUvgS4ftWETFCjEcBs2H6ut1KBVOC89bNDJcNkq
-	EE1QlSkaZ6xrYols36zVYBpBPGR9Fuw/4VwYNrw3HA3K4=
-X-Google-Smtp-Source: AGHT+IFWH99gytw3P0zfVMJSXeN2Xdpbij9NHTw4tzYgIF0t13l3Q0lEtDYPXcr1RxaI1CKWYxMSuGj1kZBZHFKgfEI=
-X-Received: by 2002:a05:690c:a0a8:10b0:712:c14a:a363 with SMTP id
- 00721157ae682-712c5fecc20mr43144177b3.0.1750594318310; Sun, 22 Jun 2025
- 05:11:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pvPG5Jwe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFC41C4CEE3;
+	Sun, 22 Jun 2025 12:13:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750594406;
+	bh=P9DyqpH3WjbrPFVDdJCcU1NRpdBVUBWYSl4bYGLYPUY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pvPG5JwewF3CQsTU4kZ8QF7btO8Q/9s/vZePhrmQpvlscWnoE3YI/cYZ8KsvdF/eT
+	 vUQShfUmBEBTySqODtW9u5QM0dRAgh2D7NJcTpVS4o+9/Ntm6WGKAPHopThxXxZzdT
+	 FIphEatiqVq2jma8GvuMOcJZGXSAt38GeSmvggFlVmAZKLV3XT7VElbcyffW7ok/yq
+	 VTsEe1SKGwwPxo0Vo8OIhCnoclI82E/HJhJ0bqgNQgaSZxQA34VitMva4io6DiWHTG
+	 A/T9qTMVumV4z41ZQzeUgZdmoLBQJn8FLYaivMMxmXxk+G99TB7A+LLQOQjRL5mUJN
+	 QYXdYsjccwn0A==
+Date: Sun, 22 Jun 2025 14:13:19 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux
+ Documentation <linux-doc@vger.kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Federico Vaga
+ <federico.vaga@vaga.pv.it>, Akira Yokosawa <akiyks@gmail.com>, Carlos
+ Bilbao <carlos.bilbao@kernel.org>, Avadhut Naik <avadhut.naik@amd.com>,
+ Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, Dongliang
+ Mu <dzm91@hust.edu.cn>, Thomas Gleixner <tglx@linutronix.de>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Stanislav Fomichev
+ <sdf@google.com>, David Vernet <void@manifault.com>, Miguel Ojeda
+ <ojeda@kernel.org>, James Seo <james@equiv.tech>, Daniel Vetter
+ <daniel.vetter@ffwll.ch>
+Subject: Re: [PATCH RFC] Documentation: typography refresh
+Message-ID: <20250622141311.389abf16@foz.lan>
+In-Reply-To: <20250619042318.17325-2-bagasdotme@gmail.com>
+References: <20250619042318.17325-2-bagasdotme@gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616-bmi270-events-v3-0-16e37588604f@gmail.com>
- <20250616-bmi270-events-v3-1-16e37588604f@gmail.com> <20250622124426.60c71eb1@jic23-huawei>
-In-Reply-To: <20250622124426.60c71eb1@jic23-huawei>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Sun, 22 Jun 2025 14:11:22 +0200
-X-Gm-Features: AX0GCFsgVqhZSLBf3GcWt0M6HO7PdBsLs5aATyGsnL7UHwFWBxVHWIW6wjEdkBI
-Message-ID: <CAFXKEHYDSZbuKpu7_Kj52paqdZFw_iFK8YCX+LxMHv7PNCu3sQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] iio: imu: bmi270: add channel for step counter
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Gustavo Silva <gustavograzs@gmail.com>, Alex Lanzano <lanzano.alex@gmail.com>, 
-	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Jonathan, thank you so much, but.. actually, I still prepared
-actually still another v6. I was about to send it in today (just
-finished tests). Might be still some bugfixes, and I guess if any
-possible, I'd prefer v6 patches over v5.
+Em Thu, 19 Jun 2025 11:23:19 +0700
+Bagas Sanjaya <bagasdotme@gmail.com> escreveu:
 
-Let me know, or I send it in anyway and you might consider v6? BTW
-adxl345 also should follow later today. Already prepared, but going
-over the tests..
+> At present, kernel documentation uses system serif font for body text.
+> Some people, however, objected to it and instead prefer that the
+> typography choice must be legible, consistent, and accessible (after
+> all, the audience ranges developers peeking into kernel internals to
+> ordinary users that skimmed through Documentation/admin-guide/).
+> 
+> To tackle the problem, follow Wikimedia's typography refresh [1].
+> For the font choices, instead of using web fonts as in previous
+> attempt [2], use:
+> 
+>   * Linux Libertine, Georgia, Times for serif (used in h1 and h2
+>     headings)
+>   * system font for sans-serif and monospace
+> 
+> This allows for more readability and consistency without sacrificing
+> page load times and bandwidth, as the font choices is most likely
+> already available on many platforms.
+> 
+> The reason why serif fonts is used for headings in complement to sans
+> serif in text body is to break up visual monotony of docs page by
+> creating contrast between headings (as entry point to docs information)
+> and text body, which is important considering that kernel docs are
+> quite lengthy with many sections.
+> 
+> For body text (excluding sidebar), it is set to #252525 on top
+> of #FFFFFF background as they have contrast ratio 15.3:1, which
+> is rated as AAA according to WCAG 2.0 section 1.4.6. Having slightly
+> off-black foreground text on white background can reduce eye strain
+> and juxtaposition on dyslexic readers.
+> 
+> This refresh only applies to default Alabaster theme.
+> 
+> [1]: https://www.mediawiki.org/wiki/Typography_refresh
+> [2]: https://lore.kernel.org/linux-doc/20231102123225.32768-1-bagasdotme@gmail.com/
+> 
+> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+> ---
+>  Documentation/conf.py                      |  5 +-
+>  Documentation/sphinx-static/typography.css | 62 ++++++++++++++++++++++
+>  2 files changed, 66 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/sphinx-static/typography.css
+> 
+> diff --git a/Documentation/conf.py b/Documentation/conf.py
+> index 12de52a2b17e78..f5713cd70cc17c 100644
+> --- a/Documentation/conf.py
+> +++ b/Documentation/conf.py
+> @@ -310,9 +310,12 @@ if  html_theme == 'alabaster':
+>          'sidebar_width': '15em',
+>          'fixed_sidebar': 'true',
+>          'font_size': 'inherit',
+> -        'font_family': 'serif',
+>      }
+>  
+> +    html_css_files  = [
+> +        'typography.css',
+> +    ]
+> +
+>  sys.stderr.write("Using %s theme\n" % html_theme)
 
-Best,
-L
+I liked this part: having fonts inside a css. However the code is broken,
+as there are already several parts of conf.py which alrease sets
+html_css_files on different ways, depending on two make vars. From
+make help:
 
-On Sun, Jun 22, 2025 at 1:44=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
- wrote:
->
-> On Mon, 16 Jun 2025 20:53:09 -0300
-> Gustavo Silva <gustavograzs@gmail.com> wrote:
->
-> > Add a channel for enabling/disabling the step counter, reading the
-> > number of steps and resetting the counter.
-> >
-> > Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> > Signed-off-by: Gustavo Silva <gustavograzs@gmail.com>
->
-> Hi.
->
-> Given this is ready to go and independent of later patches:
-> Applied to the togreg branch of iio.git and pushed out as testing
-> for 0-day to take a poke at it and see what we missed.
->
-> Thanks,
->
-> Jonathan
->
+	make DOCS_THEME={sphinx-theme} selects a different Sphinx theme.
+	make DOCS_CSS={a .css file} adds a DOCS_CSS override file for html/epub output.
+
+The code on conf.py in question is:
+
+	if html_theme in ["sphinx_rtd_theme", "sphinx_rtd_dark_mode"]:
+		...
+	        html_css_files = [
+	            "theme_overrides.css",
+	        ]
+		...
+		if html_theme == "sphinx_rtd_theme":
+	            # Add color-specific RTD normal mode
+            html_css_files.append("theme_rtd_colors.css")
+	...
+	if "DOCS_CSS" in os.environ:
+	    css = os.environ["DOCS_CSS"].split(" ")
+
+	    for l in css:
+	        html_css_files.append(l)
+
+You can't just replace html_css_files without considering the above,
+specially since one could be doing DOCS_CSS="some_other_typography.css".
+
+IMO, the code should be instead:
+
+	if html_theme == "alabaster":
+	    if not html_css_files:
+	        html_css_files  = [ "typography.css" ]
+
+E.g. only use it if:
+- the theme is the default one;
+- the Kernel docs will be built without DOCS_CSS.
+
+Thanks,
+Mauro
