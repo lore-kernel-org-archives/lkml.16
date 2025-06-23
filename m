@@ -1,131 +1,189 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA6D1D2F42
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 06:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FD01A5B92
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 06:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750659736; cv=none; b=lSn/7xMHErx+k0f9A4K+t/dBdpPGcrFuIGa+Mkx+UcsqMhNDWUPkCQJDuIogtE6DTVMq0qZijdqqdikVeA0qFPr0d1d1I/GbK4AOgsBtJSxknyLvVIXzp3ypjl6QhdbVmosX6/56NrRXQM8bgD2DR1OugeQom2FiQQ+EIcFYfyE=
+	t=1750659745; cv=none; b=tcHpJ9wA9A7R6446Mw1EZYqH+HkMaH0VnnIiSQRjMYAnLV9kGSBWcxJc7SqvSmakpgoazt092PFUulJRKQ5/1/UiMa97Jospu8FB+WYLsqmd8HTonxNgwS5jrDViBCiCk3MMeroR0VXwT7Pq421jR0oIOvF4Cnb92ujflcpm9L0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750659736; c=relaxed/simple;
-	bh=0GviJ4C43LDU6PSrh2071vRUi2rtBfBORn6lykbuEsE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TvFnMGl+dAca73KiAspENyWGpvH2TqK0T19ZbzUC025P7vnvxXKs/TUUmPBExaZCSsFZDR3ZzYjKSAIcp1kY3OMC5fsxYt/jvJa4cwEK1hxZDiLkYHusnYfn3/lcm/MHHkP9zo+DqQ3e+0Q/U959mytcm/CMAttyCFIN7B8DuyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u+oJqfox; arc=none smtp.client-ip=209.85.216.52
+	s=arc-20240116; t=1750659745; c=relaxed/simple;
+	bh=Hv+uNbgjOo7eV3KR018ipqdg3Kk/pVRRN2UVv0jVAOs=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ZrCaJXfPW/eKBTUxn/0geFWPUAftrXb9Ki5draJzKvBW0nANrhENlrCwPH6kEAIkxVsgyd80lOI2U+DhJcZrX0w4Lqphh/Qu6kM7RmEha/9dBGeYEts0bwl0uGQW4mS+0e5/jxqwcTlJspXkLpd9bH97+7+HaLKhOXMBc8uracM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QIkBIE5I; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u+oJqfox"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3135f3511bcso3942081a91.0
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 23:22:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QIkBIE5I"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so21609215e9.2
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 23:22:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750659733; x=1751264533; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZjaVo7z5thcmzA/Idtk2W4NhEJVEWcJtCaNKpGwgS2c=;
-        b=u+oJqfoxE1BDc1eJwUUis1/T12Yqa9kCGnmN2ISJ6NGL4Y90YTjNpLcrHWi2vC7sRN
-         V7k7BJyQhMSUMtHnH7VwPrTi0ApD257hQSBDPWlbwRnnmV8VWzNUqcZH8U11ZKU+pE6D
-         hW1qhi+Kr7GNBRRFQi35gamyh6WI7ysOV4gxCoI2xvX0CiY24IsIjPSklaXOQyTBaDYC
-         knHRmrkvJebx7VBrgNq6a2PDzN/2Bx/t52idVdQU1St5ukmK1HArRMG54H3zBrnzHQV4
-         QECnIgveaWKpT8qVfotGB5w3LBcIoVxWX+EHnrjCPB5r7gRk42Uw1BMb7mGARpZN5WKx
-         mqAA==
+        d=linaro.org; s=google; t=1750659742; x=1751264542; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lyQvdfJ846qR1SUglJS5KsTw/IlW4Yo1/aMNlY4Q96I=;
+        b=QIkBIE5IxSgE3bLhDqNu7KWEtyG+iZurwAZdnWMmOEQ/MBcORZNLKsea7sH4fAPm5g
+         gGztFrUnWpPZvHdVglwCsPmVFcDBtpQyzCwYVytgiv7DDMIGxlqBTjrlFgR5xU2jKHfe
+         02yiNYdN/rbwVEhyMhDlbhiortu/dboYnJJw7i7DnqDHM3xuze9dLPM9r08Z0CFZxp9j
+         KzJkCo6o2BkKutnKyj66s4q+KRyW2XXi8iozOYg1ZarYkH7Iw7p3a361Y12vhLPbctyX
+         mlusgC9QWZF8RbdQRJSWE7TbQoR1jzfZcf6vVoGBo11mffSl2NiMT/eGG8hRrAt0bJ+N
+         gZWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750659733; x=1751264533;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZjaVo7z5thcmzA/Idtk2W4NhEJVEWcJtCaNKpGwgS2c=;
-        b=EK9xxcxlgycyrZ3Zx4MIpJKA7TFtlVrjvLE+iiJMw7Dvaed9HBMgBhuRlTet/wfxfe
-         vfDf+wYMgKZXaw0N2b0WkbTLY8oV8U52jjEBox7jRvhX+psSwSjBJHOMOxBtlxxaUJvC
-         8HGNnJb2S6UNgt6d05D4tj+p3izE3dHM9GGBfoKfPQF7NmDEH7SATcA6Yvs+05bm4CGc
-         1t2SjTynsDDX2Rl6joTltXoMMkHXVEA901y7Sbs4mF0MKVnRJgCV5QNpwTOKFl9xJ4VM
-         pHHm8a/8SKtcMm61JEu7MWXCXR1J0Gdnesh6sLWyURj1HakwR02xOwPOGhLvdJ0uwsHJ
-         zsZg==
-X-Forwarded-Encrypted: i=1; AJvYcCVpHQqY3oWcC42SajN/ZtFp+lDqiqpiD9TcY31z+dhvnmuwefmQ1vd+k7rkaHJ8zVFwlrR+J1dCnwJR3KI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQDADR1Hwv45L80kQnYLcbItrPUgAJFueKQMcp4wztZo1NGkMD
-	D+rJq/kXiO2q7d69Woy2T7UvWuebdmqZ+LCFMaSKJ4S2t5tVx7ZQrgNO+7Hjr4hbCH8=
-X-Gm-Gg: ASbGnctnQ0n8A20AWWHVXvN40eANtzJcp14/YTUIfam/QxIQZivJ3w1lvUvyXMMvIfN
-	zbjUx41ZUwJQH7s4mY0hqGCESO8nJCqESzyxpxspW5ncXHv3bIpLayf7bOZWZKM9RmgCV/92l0O
-	Gg0BZ0nhD6rDgvR7ghhZy7AS+Z/P+meXuCEia4C+1TW9HU6g8d99sCfHJZ2XgkKEHHZoihbHyeC
-	vnKZUFAfXtJmtc5psFAcF9JZqbVWTtzvr2CME7MDYJGHrXOes/2Kc88NcT//kvt4upN3lbLfce0
-	fflUvTTLa7It5u9EpWOoGz9ZTozIdQQypghdZJ5U4+yKeb+1Rt4CXrUBSbfubxc=
-X-Google-Smtp-Source: AGHT+IHTC8DDc643Bby1AguMJbpjpU8RoaZSO7asfpNMZjv5HFpnG7zervZfVFZEkHAcEV/Plpb2eg==
-X-Received: by 2002:a17:90b:1fcc:b0:311:b0ec:135b with SMTP id 98e67ed59e1d1-3159d8d6282mr19886141a91.24.1750659733212;
-        Sun, 22 Jun 2025 23:22:13 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d860a3c9sm75875175ad.95.2025.06.22.23.22.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 23:22:12 -0700 (PDT)
-Date: Mon, 23 Jun 2025 11:52:10 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Michal Rostecki <vadorovsky@protonmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Jens Axboe <axboe@kernel.dk>, Benno Lossin <lossin@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
-	Breno Leitao <leitao@debian.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	llvm@lists.linux.dev, linux-pci@vger.kernel.org,
-	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v12 4/5] rust: replace `kernel::c_str!` with C-Strings
-Message-ID: <20250623062210.she33z5hfouu5jgj@vireshk-i7>
-References: <20250619-cstr-core-v12-0-80c9c7b45900@gmail.com>
- <20250619-cstr-core-v12-4-80c9c7b45900@gmail.com>
+        d=1e100.net; s=20230601; t=1750659742; x=1751264542;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lyQvdfJ846qR1SUglJS5KsTw/IlW4Yo1/aMNlY4Q96I=;
+        b=XCfEh9lflocUyJKTXEFk256Dn6TrQSe0fcx6YuzlNkmNIMOAvavRTgyVtZxhGwCnjp
+         YggGqLsa3OrwQ0i7O+mAknYxueQastHieGar4A28im9P25AW/u9Gy2m1D2wCHxF2+Dop
+         v2Zygn/DvvvLAz0/VBoirGO08vNvt/dKGna21ETCBJVe7hvampK9+5qHgwt8yCTBgkm8
+         uDQ8IBGPCg365/Au0PvpMatReVKrdlyegIQ3Pjv7ZzjWmM7g0WE90JZyj+WR0a6Wbjx+
+         /0/j0RWBS+5MYil0rc9lLmOCqHROzde+spb6dBv9fRIqw4Ve++ZNp36TZWlq65F8EP8a
+         HDww==
+X-Forwarded-Encrypted: i=1; AJvYcCX4YUDZcuD7I+yWHLNul4+nU5uyEYQhMYLKjl5I6Gv71ynX2iCaMrdWNGuYvQTv5pVGtuXYhVx9WjndBHQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJm5ozYJD1nEez/s5GiwnXxPYS3vry1TDHrVzemr/w6TWnewZW
+	wF1zov8X8/sQwHzsY80FPupW+d5dZEl+RYlWzkZYAzdUIiRMfJT/muP5GBdTe+guIucEO8TM0d0
+	dxtL/7BI=
+X-Gm-Gg: ASbGnctOYHrxOEd6xNi4+wmmhlFepEm7/0qG3pBmOq5rgam0lKOsdqc9VH1kC/wNA//
+	NRRDkRSiZDP9GEr49NulpYo4nJWIyMj9I3vJRyS0JP3nfF1yGIHLO7dzPbLbHRRnsY//urPj7Eb
+	9UtLhB+e2I8QMEzQwzz9JrXit8Nw4O2Y6doOYudpak9to+EkYh4F6A9f4iVEg12399OhGPb4Yc4
+	kpcXAe57dqbfhUcoyp7x8H38sfgyT9bWMjsVy1rmzF5O7/hLRJf7jUVSVHSuIXqeZFrbBNH/qwM
+	s6cSG7ZyeV/RTsFf0Ex/bCHv55GXGZMaQ6irws37fPJpD6gjGstrsx8v7rMf90ifUFauBJcyK0i
+	AcU7Jih3ReRi9QCAb/S3fzi4f7018+UP0nq36APM=
+X-Google-Smtp-Source: AGHT+IFTuXg86DMd1xpRihwnfgo5N1mfVAlsKSlVqBLFNgG7lzWkNnjG9NMqs3v7GpKHw3IwjarK1Q==
+X-Received: by 2002:a05:600c:4686:b0:441:ac58:ead5 with SMTP id 5b1f17b1804b1-453659f7a7emr94107005e9.31.1750659742030;
+        Sun, 22 Jun 2025 23:22:22 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:8c08:7c51:bbb1:5a2d? ([2a01:e0a:3d9:2080:8c08:7c51:bbb1:5a2d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d117c5f2sm8789930f8f.55.2025.06.22.23.22.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Jun 2025 23:22:21 -0700 (PDT)
+Message-ID: <bbbf2633-69cd-44c8-a94a-a36445121126@linaro.org>
+Date: Mon, 23 Jun 2025 08:22:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619-cstr-core-v12-4-80c9c7b45900@gmail.com>
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH V2] scsi: ufs: qcom : Fix NULL pointer dereference in
+ ufs_qcom_setup_clocks
+To: Nitin Rawat <quic_nitirawa@quicinc.com>, mani@kernel.org,
+ James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
+ bvanassche@acm.org, andersson@kernel.org, konrad.dybcio@oss.qualcomm.com,
+ dmitry.baryshkov@oss.qualcomm.com, quic_cang@quicinc.com, vkoul@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-scsi@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
+ Aishwarya <aishwarya.tcv@arm.com>,
+ Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
+References: <20250622175148.15978-1-quic_nitirawa@quicinc.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250622175148.15978-1-quic_nitirawa@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 19-06-25, 11:06, Tamir Duberstein wrote:
->  drivers/cpufreq/rcpufreq_dt.rs        |  5 ++---
->  rust/kernel/clk.rs                    |  6 ++----
->  rust/kernel/cpufreq.rs                |  3 +--
+On 22/06/2025 19:51, Nitin Rawat wrote:
+> Fix a NULL pointer dereference in ufs_qcom_setup_clocks due to an
+> uninitialized 'host' variable. The variable 'phy' is now assigned
+> after confirming 'host' is not NULL.
+> 
+> Call Stack:
+> 
+> Unable to handle kernel NULL pointer dereference at
+> virtual address 0000000000000000
+> 
+> ufs_qcom_setup_clocks+0x28/0x148 ufs_qcom (P)
+> ufshcd_setup_clocks (drivers/ufs/core/ufshcd-priv.h:142)
+> ufshcd_init (drivers/ufs/core/ufshcd.c:9468)
+> ufshcd_pltfrm_init (drivers/ufs/host/ufshcd-pltfrm.c:504)
+> ufs_qcom_probe+0x28/0x68 ufs_qcom
+> platform_probe (drivers/base/platform.c:1404)
+> really_probe (drivers/base/dd.c:579 drivers/base/dd.c:657)
+> __driver_probe_device (drivers/base/dd.c:799)
+> driver_probe_device (drivers/base/dd.c:829)
+> __driver_attach (drivers/base/dd.c:1216)
+> bus_for_each_dev (drivers/base/bus.c:370)
+> driver_attach (drivers/base/dd.c:1234)
+> bus_add_driver (drivers/base/bus.c:678)
+> driver_register (drivers/base/driver.c:249)
+> __platform_driver_register (drivers/base/platform.c:868)
+> ufs_qcom_pltform_init+0x28/0xff8 ufs_qcom
+> do_one_initcall (init/main.c:1274)
+> do_init_module (kernel/module/main.c:3041)
+> load_module (kernel/module/main.c:3511)
+> init_module_from_file (kernel/module/main.c:3704)
+> __arm64_sys_finit_module (kernel/module/main.c:3715.
+> 
+> Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+> Fixes: 77d2fa54a945 ("scsi: ufs: qcom : Refactor phy_power_on/off calls")
+> Tested-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> # sc8180x-primus
+> Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Reported-by: Aishwarya <aishwarya.tcv@arm.com>
+> Closes: https://lore.kernel.org/lkml/20250620214408.11028-1-aishwarya.tcv@arm.com/
+> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Closes: https://lore.kernel.org/linux-scsi/CA+G9fYuFQ2dBvYm1iB6rbwT=4b1c8e4NJ3yxqFPGZGUKH3GmMA@mail.gmail.com/T/#t
+> Co-developed-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
+> Signed-off-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
+> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+> ---
+>   drivers/ufs/host/ufs-qcom.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+> index ba4b2880279c..318dca7fe3d7 100644
+> --- a/drivers/ufs/host/ufs-qcom.c
+> +++ b/drivers/ufs/host/ufs-qcom.c
+> @@ -1124,7 +1124,7 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
+>   				 enum ufs_notify_change_status status)
+>   {
+>   	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> -	struct phy *phy = host->generic_phy;
+> +	struct phy *phy;
+>   	int err;
+> 
+>   	/*
+> @@ -1135,6 +1135,8 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
+>   	if (!host)
+>   		return 0;
+> 
+> +	phy = host->generic_phy;
+> +
+>   	switch (status) {
+>   	case PRE_CHANGE:
+>   		if (on) {
+> --
+> 2.48.1
+> 
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-
--- 
-viresh
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
