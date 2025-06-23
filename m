@@ -1,176 +1,303 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE0C248867
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27CE1B808;
+	Mon, 23 Jun 2025 11:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750679178; cv=none; b=iZEzJ/tsSYNVHCiMWfpQpFscKwYdjoOmqQRPxYSj50XNsToqoWQ8jOQWhEhEVRY7cbHSwWR9F5NQX7HrEPq+KtR5pk7HXsLF2X+LPUsNDLy57dzbM/1yyvPoq/oErrNfZqzXplmZYSmAe7lLLgQ6y+Uk9+cw1p8KrIdXp3QwJ+w=
+	t=1750679242; cv=none; b=gFsHZbo87gpYDeOqiLihE0mRBiVGTXEvNrJyrQ+gnJa5Mzqqw4n4Olx5ojFF8DwSNhU8xR6KtVm4d5Y/I7Gocpf+JFVZh7odGg5IQtlzbD+7iXodpJrDdVC/wNkRMxTE90Jzt9ILK33FqgtOavjBVNE/OBR6+inqG0imp6m9R20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750679178; c=relaxed/simple;
-	bh=KVCn3pmMJ5yCE9/Zk+aqhDjnGhs1KKfsE2Frela8LbQ=;
+	s=arc-20240116; t=1750679242; c=relaxed/simple;
+	bh=oHIQGmhVZk1bws7ooyBVG45/Q0gIQsMf18p3cWsR55Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rc3IA/dC9DHSDWhtPuxu1PklepUetc3WoGQgJ7+4De1a1i0USG0Mk2enu+2m5bpjkzYsL/SPNj9BShtg2arXfIZyWKvu5+zfxPgUbt7qy+Vks9ACmidW9A7YSS7ay5z6zdGfjZZwYpy9/uKU+FZT7FRClw3zmtnmTHsbgPtM/sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=RGCfOQeJ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=YaW3yg9M; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=RGCfOQeJ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=YaW3yg9M; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sl9JllWsHUkbXKEKCS6wietsHBjByi3ldQ8GxlfGO01YpFlKJ8aks6xrB8HVlGlhk/3Ye3QG5GOn5f+LJ8WPenOrRnYmBR/woLVY3v08DT0+vf0VSclxeTzUn+c4cRtwzR/Raiqwwnc22oxP14Qa0/5daXnpqgOlcayvsF69nPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=bnO4gPuN; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="RGCfOQeJ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="YaW3yg9M";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="RGCfOQeJ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="YaW3yg9M"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9A4D91F457;
-	Mon, 23 Jun 2025 11:46:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750679169; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=85n04soQnTCspGUaqCxhy29BgIf3j4nlIk46T5YAzUY=;
-	b=RGCfOQeJLcVCKlFWzY+AutjvAGUSCzMHSsj2mDWzbWFGuAQUK8Z9lqIDNxllMbX2iwMXmO
-	r0miBWkH81zwzfSaJv03zEz8MWROtaYAmZeZl19ya6bM1oWPqIf5QSzG6Ov0t5uht/5mxU
-	Mrs7X8TYW0qK9U2RWJueh4e57l0FRCk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750679169;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=85n04soQnTCspGUaqCxhy29BgIf3j4nlIk46T5YAzUY=;
-	b=YaW3yg9MuMH/odDJ2AOLcTGXzwtGwQ9tacQ/LyfLJ1OVSHcwQhg2BfFD+YDaR1EHtmgfdF
-	O4y47yPQWsoxh0Cg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750679169; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=85n04soQnTCspGUaqCxhy29BgIf3j4nlIk46T5YAzUY=;
-	b=RGCfOQeJLcVCKlFWzY+AutjvAGUSCzMHSsj2mDWzbWFGuAQUK8Z9lqIDNxllMbX2iwMXmO
-	r0miBWkH81zwzfSaJv03zEz8MWROtaYAmZeZl19ya6bM1oWPqIf5QSzG6Ov0t5uht/5mxU
-	Mrs7X8TYW0qK9U2RWJueh4e57l0FRCk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750679169;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=85n04soQnTCspGUaqCxhy29BgIf3j4nlIk46T5YAzUY=;
-	b=YaW3yg9MuMH/odDJ2AOLcTGXzwtGwQ9tacQ/LyfLJ1OVSHcwQhg2BfFD+YDaR1EHtmgfdF
-	O4y47yPQWsoxh0Cg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 62D3813A27;
-	Mon, 23 Jun 2025 11:46:09 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id O55gFoE+WWgRNQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 23 Jun 2025 11:46:09 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 0D650A29FA; Mon, 23 Jun 2025 09:38:53 +0200 (CEST)
-Date: Mon, 23 Jun 2025 09:38:53 +0200
-From: Jan Kara <jack@suse.cz>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu, 
-	adilger.kernel@dilger.ca, ojaswin@linux.ibm.com, yi.zhang@huawei.com, libaokun1@huawei.com, 
-	yukuai3@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH v2 2/6] ext4: fix stale data if it bail out of the
- extents mapping loop
-Message-ID: <cqhltjvxmmbv4fafoc6gb4lisd63osqw44njmxjvmpgqzkqn3g@ncworvfx7iys>
-References: <20250611111625.1668035-1-yi.zhang@huaweicloud.com>
- <20250611111625.1668035-3-yi.zhang@huaweicloud.com>
- <m5drn6xauyaksmui7b3vpua24ttgmjnwsi3sgavpelxlcwivsw@6bpmobqvpw7f>
- <14966764-5bbc-48a9-9d56-841255cfe3c6@huaweicloud.com>
- <ygdwliycwt52ngkl2o4lia3hzyug3zzvc2hdacbdi3lvbzne7l@l7ub66fvqym6>
- <49596299-8cd5-4b43-ba32-cf2b404236a7@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bnO4gPuN"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id B07C2198D;
+	Mon, 23 Jun 2025 13:47:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750679221;
+	bh=oHIQGmhVZk1bws7ooyBVG45/Q0gIQsMf18p3cWsR55Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bnO4gPuNBRCiyLmakXSRcFDiwdhL4FGmCD3/CF2YxwUjHyDOFd/uaOn5dYBqvaFTk
+	 bzzZyvDeqxO0ftEUIKTgViC3lylvEzfyf+XTjhROhYB+inUyHKlSjJaZaIWRtIYTZy
+	 OdjH/PzrwzCKQ3lHlwC11awVPI0dYDESYbEHllww=
+Date: Mon, 23 Jun 2025 14:46:58 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Ricardo Ribalda Delgado <ribalda@kernel.org>
+Cc: =?utf-8?B?QW5kcsOp?= Apitzsch <git@apitzsch.eu>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	Ricardo Ribalda <ribalda@chromium.org>
+Subject: Re: [PATCH RESEND v4 3/5] media: i2c: imx214: Make use of CCS PLL
+ calculator
+Message-ID: <20250623114658.GB32376@pendragon.ideasonboard.com>
+References: <20250621-imx214_ccs_pll-v4-0-12178e5eb989@apitzsch.eu>
+ <20250621-imx214_ccs_pll-v4-3-12178e5eb989@apitzsch.eu>
+ <20250621181751.GA9125@pendragon.ideasonboard.com>
+ <ed0b8fe3a20111477cafb1de7b399afb99caaa0c.camel@apitzsch.eu>
+ <20250622171320.GA826@pendragon.ideasonboard.com>
+ <CAPybu_2WF=t4jnwsrTSCiSZ4T7Sck4-fCoub33=P_6KvdZ5ePg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <49596299-8cd5-4b43-ba32-cf2b404236a7@huaweicloud.com>
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPybu_2WF=t4jnwsrTSCiSZ4T7Sck4-fCoub33=P_6KvdZ5ePg@mail.gmail.com>
 
-On Sat 21-06-25 12:42:11, Zhang Yi wrote:
-> On 2025/6/20 23:21, Jan Kara wrote:
-> > I suspect you thought that the failure to extend transaction in the middle
-> > of order 0 folio should not happen because you reserve credits for full
-> > page worth of writeback? But those credits could be exhaused by the time we
-> > get to mapping third folio because mpage_map_one_extent() only ensures
-> > there are credits for mapping one extent.
+Hi Ricardo,
+
+On Mon, Jun 23, 2025 at 11:31:17AM +0200, Ricardo Ribalda Delgado wrote:
+> On Sun, Jun 22, 2025 at 7:13 PM Laurent Pinchart wrote:
+> > On Sun, Jun 22, 2025 at 05:34:56PM +0200, André Apitzsch wrote:
+> > > Am Samstag, dem 21.06.2025 um 21:17 +0300 schrieb Laurent Pinchart:
+> > > > On Sat, Jun 21, 2025 at 11:37:27AM +0200, André Apitzsch via B4 Relay wrote:
+> > > > > From: André Apitzsch <git@apitzsch.eu>
+> > > > >
+> > > > > Calculate PLL parameters based on clock frequency and link
+> > > > > frequency.
+> > > > >
+> > > > > Acked-by: Ricardo Ribalda <ribalda@chromium.org>
+> > > > > Signed-off-by: André Apitzsch <git@apitzsch.eu>
+> > > > > ---
+> > > > >  drivers/media/i2c/Kconfig  |   1 +
+> > > > >  drivers/media/i2c/imx214.c | 213 ++++++++++++++++++++++++++++++++++++---------
+> > > > >  2 files changed, 175 insertions(+), 39 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> > > > > index
+> > > > > e68202954a8fd4711d108cf295d5771246fbc406..08db8abeea218080b0bf5bfe6
+> > > > > cf82f1c0b100c4a 100644
+> > > > > --- a/drivers/media/i2c/Kconfig
+> > > > > +++ b/drivers/media/i2c/Kconfig
+> > > > > [..]
+> > > > > @@ -1224,42 +1336,52 @@ static int imx214_parse_fwnode(struct
+> > > > > device *dev)
+> > > > >   if (!endpoint)
+> > > > >   return dev_err_probe(dev, -EINVAL, "endpoint node not found\n");
+> > > > >
+> > > > > - ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, &bus_cfg);
+> > > > > + bus_cfg->bus_type = V4L2_MBUS_CSI2_DPHY;
+> > > > > + ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, bus_cfg);
+> > > > > + fwnode_handle_put(endpoint);
+> > > >
+> > > > ... drop this. Up to you.
+> > > >
+> > > > >   if (ret) {
+> > > > >   dev_err_probe(dev, ret, "parsing endpoint node failed\n");
+> > > > > - goto done;
+> > > > > + goto error;
+> > > >
+> > > > You can return ret here.
+> > > >
+> > > > >   }
+> > > > >
+> > > > >   /* Check the number of MIPI CSI2 data lanes */
+> > > > > - if (bus_cfg.bus.mipi_csi2.num_data_lanes != 4) {
+> > > > > + if (bus_cfg->bus.mipi_csi2.num_data_lanes != 4) {
+> > > > >   ret = dev_err_probe(dev, -EINVAL,
+> > > > >       "only 4 data lanes are currently supported\n");
+> > > > > - goto done;
+> > > > > + goto error;
+> > > > >   }
+> > > > >
+> > > > > - if (bus_cfg.nr_of_link_frequencies != 1)
+> > > > > + if (bus_cfg->nr_of_link_frequencies != 1)
+> > > > >   dev_warn(dev, "Only one link-frequency supported, please review
+> > > > > your DT. Continuing anyway\n");
+> > > >
+> > > > Now that the driver can calculate PLL parameters dynamically, it
+> > > > would be nice to lift this restriction and make the link frequency
+> > > > control writable, in a separate patch on top of this series.
+> > >
+> > > Maybe this could be postponed, as I don't have any use for it at the
+> > > moment and I don't want to further delay this series.
+> >
+> > When I said "on top", I didn't mean in a new version of this series. We
+> > can merge this first, and then lift this restriction. I don't have an
+> > imx214-based device so I can't do it myself and test it :-/
+> >
+> > > > > - for (i = 0; i < bus_cfg.nr_of_link_frequencies; i++) {
+> > > > > - if (bus_cfg.link_frequencies[i] == IMX214_DEFAULT_LINK_FREQ)
+> > > > > + for (i = 0; i < bus_cfg->nr_of_link_frequencies; i++) {
+> > > > > + u64 freq = bus_cfg->link_frequencies[i];
+> > > > > + struct ccs_pll pll;
+> > > > > +
+> > > > > + if (!imx214_pll_calculate(imx214, &pll, freq))
+> > > > >   break;
+> > > > > - if (bus_cfg.link_frequencies[i] ==
+> > > > > -     IMX214_DEFAULT_LINK_FREQ_LEGACY) {
+> > > > > + if (freq == IMX214_DEFAULT_LINK_FREQ_LEGACY) {
+> > > > >   dev_warn(dev,
+> > > > >   "link-frequencies %d not supported, please review your DT.
+> > > > > Continuing anyway\n",
+> > > > >   IMX214_DEFAULT_LINK_FREQ);
+> > > > > + freq = IMX214_DEFAULT_LINK_FREQ;
+> > > > > + if (imx214_pll_calculate(imx214, &pll, freq))
+> > > > > + continue;
+> > > > > + bus_cfg->link_frequencies[i] = freq;
+> > > > >   break;
+> > > > >   }
+> > > >
+> > > > How about separating the IMX214_DEFAULT_LINK_FREQ_LEGACY check from
+> > > > the PLL calculation ? Something like
+> > > >
+> > > >  u64 freq = bus_cfg->link_frequencies[i];
+> > > >  struct ccs_pll pll;
+> > > >
+> > > >  if (freq == IMX214_DEFAULT_LINK_FREQ_LEGACY) {
+> > > >  dev_warn(dev,
+> > > >  "link-frequencies %d not supported, please review your DT.
+> > > > Continuing anyway\n",
+> > > >  IMX214_DEFAULT_LINK_FREQ);
+> > > >  freq = IMX214_DEFAULT_LINK_FREQ;
+> > > >  bus_cfg->link_frequencies[i] = freq;
+> > > >  }
+> > >
+> > > With PLL calculation, 480000000 (=IMX214_DEFAULT_LINK_FREQ_LEGACY)
+> > > might be a valid link frequency explicitly set by the user. I'm not
+> > > sure whether it is a good idea to overwrite the link frequency, before
+> > > trying the PLL calculation. That's why I would keep the code the way it
+> > > is.
+> >
+> > The current code accepts both IMX214_DEFAULT_LINK_FREQ (600 MHz) and
+> > IMX214_DEFAULT_LINK_FREQ_LEGACY (400 MHz), and programs the PLL with (as
+> > far as I understand) a 600 MHz clock frequency in either case. To avoid
+> > a change in behaviour, I think overriding the 400 MHz frequency with 600
+> > MHz in this patch would be best. We could then drop that in a later
+> > patch, possibly by patching the clock frequency in a platform-specific
+> > driver instead of the imx214 driver.
+> >
+> > > >  if (!imx214_pll_calculate(imx214, &pll, freq))
+> > > >  break;
+> > > >
+> > > > It will then become easier to drop this legacy support from the
+> > > > driver. What platform(s) are know to specify an incorrect link
+> > > > frequency ?
+> > >
+> > > I don't know.
+> >
+> > Ricardo, do you have any information about this ?
 > 
-> Ooops, you are right. Sorry, it was my mistake.
+> This was for a development platform for Qualcomm, think of a pizero
+> like, but with a Snapdragon device.
 > 
-> > 
-> > And I think reserving credits for just one extent is fine even from the
-> > beginning (as I wrote in my comment to patch 4). We just need to handle
-> > this partial case 
+> There was a Qtechnology product based on that platform. I asked them
+> if they could provide me a device for testing, but it has been
+> discontinued and  replaced with something better.
 > 
-> Yeah.
-> 
-> > which should be possible by just leaving
-> > mpd->first_page untouched and leave unlocking to
-> > mpage_release_unused_pages(). 
-> 
-> I was going to use this solution, but it breaks the semantics of the
-> mpage_release_unused_pages() and trigger BUG_ON(folio_test_writeback(folio))
-> in this function. I don't want to drop this BUG_ON since I think it's
-> somewhat useful.
+> We can start to deprecate the clock quirk if you want.
 
-Oh, right. Well, we could modify the BUG_ON to:
+That would be great. Thanks for the confirmation.
 
-	/*
-	 * first_page folio can be under writeback if we need to restart
-         * transaction to map more
-	 */
-	BUG_ON((invalidate || folio->inode > mpd->first_page) && folio_test_writeback(folio));
+By deprecate, do you mean first printing a message for a few kernel
+releases, or can we just drop it in the next version of this patch ?
 
-> > But I can be missing some effects, the writeback code is really complex...
-> 
-> Indeed, I was confused by this code for a long time. Thank you a lot for
-> patiently correcting my mistakes in my patch.
+> > > > >   }
+> > > > >
+> > > > > - if (i == bus_cfg.nr_of_link_frequencies)
+> > > > > + if (i == bus_cfg->nr_of_link_frequencies)
+> > > > >   ret = dev_err_probe(dev, -EINVAL,
+> > > > > -     "link-frequencies %d not supported, please review your DT\n",
+> > > > > -     IMX214_DEFAULT_LINK_FREQ);
+> > > > > +     "link-frequencies %lld not supported, please review your
+> > > > > DT\n",
+> > > > > +     bus_cfg->nr_of_link_frequencies ?
+> > > > > +     bus_cfg->link_frequencies[0] : 0);
+> > > > >
+> > > > > -done:
+> > > > > - v4l2_fwnode_endpoint_free(&bus_cfg);
+> > > > > - fwnode_handle_put(endpoint);
+> > > > > + return 0;
+> > > > > +
+> > > > > +error:
+> > > > > + v4l2_fwnode_endpoint_free(&imx214->bus_cfg);
+> > > > >   return ret;
+> > > > >  }
+> > > > >
+> > > > > @@ -1299,7 +1421,7 @@ static int imx214_probe(struct i2c_client
+> > > > > *client)
+> > > > >   return dev_err_probe(dev, PTR_ERR(imx214->regmap),
+> > > > >        "failed to initialize CCI\n");
+> > > > >
+> > > > > - ret = imx214_parse_fwnode(dev);
+> > > > > + ret = imx214_parse_fwnode(dev, imx214);
+> > > > >   if (ret)
+> > > > >   return ret;
+> > > > >
+> > > > > @@ -1310,7 +1432,9 @@ static int imx214_probe(struct i2c_client
+> > > > > *client)
+> > > > >   * Enable power initially, to avoid warnings
+> > > > >   * from clk_disable on power_off
+> > > > >   */
+> > > > > - imx214_power_on(imx214->dev);
+> > > > > + ret = imx214_power_on(imx214->dev);
+> > > > > + if (ret < 0)
+> > > > > + goto error_fwnode;
+> > > >
+> > > > This change seems to belong to a separate patch.
+> > > >
+> > > > >
+> > > > >   ret = imx214_identify_module(imx214);
+> > > > >   if (ret)
+> > > > > @@ -1341,6 +1465,12 @@ static int imx214_probe(struct i2c_client
+> > > > > *client)
+> > > > >   pm_runtime_set_active(imx214->dev);
+> > > > >   pm_runtime_enable(imx214->dev);
+> > > > >
+> > > > > + ret = imx214_pll_update(imx214);
+> > > > > + if (ret < 0) {
+> > > > > + dev_err_probe(dev, ret, "failed to update PLL\n");
+> > > > > + goto error_subdev_cleanup;
+> > > > > + }
+> > > >
+> > > > I would move this to imx214_ctrls_init().
+> > > >
+> > > > > +
+> > > > >   ret = v4l2_async_register_subdev_sensor(&imx214->sd);
+> > > > >   if (ret < 0) {
+> > > > >   dev_err_probe(dev, ret,
+> > > > > @@ -1366,6 +1496,9 @@ static int imx214_probe(struct i2c_client
+> > > > > *client)
+> > > > >  error_power_off:
+> > > > >   imx214_power_off(imx214->dev);
+> > > > >
+> > > > > +error_fwnode:
+> > > > > + v4l2_fwnode_endpoint_free(&imx214->bus_cfg);
+> > > > > +
+> > > > >   return ret;
+> > > > >  }
+> > > > >
+> > > > > @@ -1378,6 +1511,8 @@ static void imx214_remove(struct i2c_client
+> > > > > *client)
+> > > > >   v4l2_subdev_cleanup(sd);
+> > > > >   media_entity_cleanup(&imx214->sd.entity);
+> > > > >   v4l2_ctrl_handler_free(&imx214->ctrls);
+> > > > > + v4l2_fwnode_endpoint_free(&imx214->bus_cfg);
+> > > > > +
+> > > > >   pm_runtime_disable(&client->dev);
+> > > > >   if (!pm_runtime_status_suspended(&client->dev)) {
+> > > > >   imx214_power_off(imx214->dev);
 
-Thank you for taking time to properly fix these issues :)
-
-> > BTW long-term the code may be easier to follow if we replace
-> > mpd->first_page and mpd->next_page with logical block based or byte based
-> > indexing. Now when we have large order folios, page is not that important
-> > concept for writeback anymore.
-> 
-> I suppose we should do this conversion now.
-
-Yes or this... I guess it would be more obvious what's going on this way.
-
-								Honza
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Regards,
+
+Laurent Pinchart
