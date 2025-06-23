@@ -1,156 +1,118 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F7F41A08AF
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 04:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA01187FEC
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 04:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750653661; cv=none; b=X2UfPVaBjCr/8a44Zggt+j5d59geM9JJEJbLnKyPVR6Ry4DiW5TAmwsb+lHjE1WtfttV/NNda/Jf5uEMEeAXixUnujOcNzqZMOLr1Jx0HP+qOLKlx4AJp183GRE3/O7ImgNOIdukwFOPhg0N2F1E254NX32cbCBlDWPiOqR355Q=
+	t=1750653820; cv=none; b=gyzdMzYxEz9pXV3f/aGc7We3/SnKy8jwZQohP6W3zoqV7u2Nu5Xg8eIxKWl5k/vsH7/dO7TK0OuafyuktsdviWZ1opGAJMyb2IeCynhXvrNGvoMVlQhy+DYaV89E55jgyqdvS5YdHcM7xIWrB3kpUuRMMw60WWK4mfnsUR2X06Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750653661; c=relaxed/simple;
-	bh=GOkLV9AicYw3lNtVLdK7/kQufd9IeYEobM6mh4TDV/8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=G0crzPHsV6IBAcgiPHknYxnGfkKZC/n7Fm+VZDKoqEVXQkLA8ecOV1JyB60zgv1JqkSK/EKY2pU508LvfnGXGXiQP3Bq4b9qCwY7OU3OY9zclCYnHNQq+CyLkwcVJCI33iUkDxncAegbLAH8iq3kJ8ptkiSHynEVezlujsRiJlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=VoI1wMS1 reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750653820; c=relaxed/simple;
+	bh=p5vFcaBD5E4yUu/iTgNP5jGaDtcOF+2KeVWs6plg9XE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qqtnCMsJDyLE3S0VXlnZWTuqbQksLQ1+XGOM2taVZ6pa1K0nouFD2H1TlNJ8yVdfT6zxQTd39iFz5f2DBwoJgbK2vTPQAI00JCz2DfXFnKT9XYY6CpixxCcD573DTAnAuzKKcq6LDNX2uuT07bxKVJOpWUk4OsYH8jIsftUY2/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LEGBbcMm; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="VoI1wMS1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=xj4GeCgBM5tPVtIGF37DgI83aQYFIknfRMsftuZapC0=; b=V
-	oI1wMS1V5a7h3NCCqlQJqsc9/0DMUFPUOgxXCf6zllL6r9Kn07uql1mQBO6NSfPj
-	buKxJyEb7w7Q63aDfefakp4BpfrJa/vJ6zFxuEbGqHGPjCmOjHSUmltJo8FYBghz
-	0yW+22tkH4YBYBHu/2col0XFBYEqIxjL3xiDV6falY=
-Received: from 00107082$163.com ( [111.35.191.131] ) by
- ajax-webmail-wmsvr-40-133 (Coremail) ; Mon, 23 Jun 2025 12:39:33 +0800
- (CST)
-Date: Mon, 23 Jun 2025 12:39:33 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Suren Baghdasaryan" <surenb@google.com>
-Cc: oliver.sang@intel.com, urezki@gmail.com, ahuang12@lenovo.com,
-	akpm@linux-foundation.org, bhe@redhat.com, hch@infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lkp@intel.com,
-	mjguzik@gmail.com, oe-lkp@lists.linux.dev, harry.yoo@oracle.com,
-	kent.overstreet@linux.dev
-Subject: Re: CONFIG_TEST_VMALLOC=y conflict/race with alloc_tag_init
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <190052a4.36d4.1979ac95438.Coremail.00107082@163.com>
-References: <202506181351.bba867dd-lkp@intel.com>
- <20250620100258.595495-1-00107082@163.com>
- <CAJuCfpFLKR7CqAHG+QjHt4wCLgWmP7dD+f5D8Jx6gHUoXSe1AA@mail.gmail.com>
- <375419f4.2ba1.1979aad313a.Coremail.00107082@163.com>
- <190052a4.36d4.1979ac95438.Coremail.00107082@163.com>
-X-NTES-SC: AL_Qu2eAvqevE0s5SacYekZnEYQheY4XMKyuPkg1YJXOp80mSXy+iYnZ25qPV7/9PmhFD2moQmnSjRn68FjTbJCXInUOIxMmf3JnQHP/20+l0zX
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LEGBbcMm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750653817;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P+e2knuY2j3bw/+jd0n23xFsChWwCX8ee+4KjbCpHoI=;
+	b=LEGBbcMmOWjxk7J0oqqtRkmiuo2QMIuMkkk0rjWDTDd6ibfwMUqLVXFjHHR3m5SZOKXl/R
+	kcnLMyBS4uhK/UselCLGxzZHuw2Y7sECwoyOt44JlGOpztMQxfORYffih8vPfvbo9X9/Mq
+	zldQTxlUJA+HCynf05yLbsfRR7siT74=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-672-otgY_REVNT-CBB08-vj4SA-1; Mon,
+ 23 Jun 2025 00:43:32 -0400
+X-MC-Unique: otgY_REVNT-CBB08-vj4SA-1
+X-Mimecast-MFC-AGG-ID: otgY_REVNT-CBB08-vj4SA_1750653811
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 60B1F1800368;
+	Mon, 23 Jun 2025 04:43:31 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.88])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D82821803AF2;
+	Mon, 23 Jun 2025 04:43:27 +0000 (UTC)
+Date: Mon, 23 Jun 2025 12:43:22 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: syzbot <syzbot+2e9e529ac0b319316453@syzkaller.appspotmail.com>
+Cc: axboe@kernel.dk, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [block?] possible deadlock in __del_gendisk
+Message-ID: <aFjbavzLAFO0Q7n1@fedora>
+References: <6834671a.a70a0220.253bc2.0098.GAE@google.com>
+ <68352d9b.a70a0220.253bc2.009e.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <42114c84.46d0.1979b159a13.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:hSgvCgCHfbeG2lho+TYiAA--.7271W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBEgF1qmhYtSo62gAIsL
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <68352d9b.a70a0220.253bc2.009e.GAE@google.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-CkF0IDIwMjUtMDYtMjMgMTE6MTY6MTUsICJEYXZpZCBXYW5nIiA8MDAxMDcwODJAMTYzLmNvbT4g
-d3JvdGU6Cj4KPkF0IDIwMjUtMDYtMjMgMTA6NDU6MzEsICJEYXZpZCBXYW5nIiA8MDAxMDcwODJA
-MTYzLmNvbT4gd3JvdGU6Cj4+Cj4+QXQgMjAyNS0wNi0yMyAwNjo1MDo0NCwgIlN1cmVuIEJhZ2hk
-YXNhcnlhbiIgPHN1cmVuYkBnb29nbGUuY29tPiB3cm90ZToKPj4+T24gRnJpLCBKdW4gMjAsIDIw
-MjUgYXQgMzowM+KAr0FNIERhdmlkIFdhbmcgPDAwMTA3MDgyQDE2My5jb20+IHdyb3RlOgo+Pj4+
-Cj4+Pj4gT24gV2VkLCBKdW4gMTgsIDIwMjUgYXQgMDI6MjU6MzdQTSArMDgwMCwga2VybmVsIHRl
-c3Qgcm9ib3Qgd3JvdGU6Cj4+Pj4gPgo+Pj4+ID4gSGVsbG8sCj4+Pj4gPgo+Pj4+ID4gZm9yIHRo
-aXMgY2hhbmdlLCB3ZSByZXBvcnRlZAo+Pj4+ID4gIltsaW51eC1uZXh0Om1hc3Rlcl0gW2xpYi90
-ZXN0X3ZtYWxsb2MuY10gIDdmYzg1YjkyZGI6IE1lbS1JbmZvIgo+Pj4+ID4gaW4KPj4+PiA+IGh0
-dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC8yMDI1MDUwNzE1NTUuZTc1N2YxZTAtbGtwQGludGVs
-LmNvbS8KPj4+PiA+Cj4+Pj4gPiBhdCB0aGF0IHRpbWUsIHdlIG1hZGUgc29tZSB0ZXN0cyB3aXRo
-IHg4Nl82NCBjb25maWcgd2hpY2ggcnVucyB3ZWxsLgo+Pj4+ID4KPj4+PiA+IG5vdyB3ZSBub3Rp
-Y2VkIHRoZSBjb21taXQgaXMgaW4gbWFpbmxpbmUgbm93Lgo+Pj4+Cj4+Pj4gPiB0aGUgY29uZmln
-IHN0aWxsIGhhcyBleHBlY3RlZCBkaWZmIHdpdGggcGFyZW50Ogo+Pj4+ID4KPj4+PiA+IC0tLSAv
-cGtnL2xpbnV4L3g4Nl82NC1yYW5kY29uZmlnLTE2MS0yMDI1MDYxNC9nY2MtMTIvN2E3MzM0OGU1
-ZDQ3MTViNTU2NWE1M2YyMWMwMWVhN2I1NGU0NmNiZC8uY29uZmlnICAgMjAyNS0wNi0xNyAxNDo0
-MDoyOS40ODEwNTIxMDEgKzA4MDAKPj4+PiA+ICsrKyAvcGtnL2xpbnV4L3g4Nl82NC1yYW5kY29u
-ZmlnLTE2MS0yMDI1MDYxNC9nY2MtMTIvMmQ3NmU3OTMxNWU0MDNhYWI1OTVkNGM4ODMwYjdhNDZj
-MTlmMGYzYi8uY29uZmlnICAgMjAyNS0wNi0xNyAxNDo0MToxOC40NDg1NDM3MzggKzA4MDAKPj4+
-PiA+IEBAIC03NTUxLDcgKzc1NTEsNyBAQCBDT05GSUdfVEVTVF9JREE9bQo+Pj4+ID4gIENPTkZJ
-R19URVNUX01JU0NfTUlOT1I9bQo+Pj4+ID4gICMgQ09ORklHX1RFU1RfTEtNIGlzIG5vdCBzZXQK
-Pj4+PiA+ICBDT05GSUdfVEVTVF9CSVRPUFM9bQo+Pj4+ID4gLUNPTkZJR19URVNUX1ZNQUxMT0M9
-bQo+Pj4+ID4gK0NPTkZJR19URVNUX1ZNQUxMT0M9eQo+Pj4+ID4gICMgQ09ORklHX1RFU1RfQlBG
-IGlzIG5vdCBzZXQKPj4+PiA+ICBDT05GSUdfRklORF9CSVRfQkVOQ0hNQVJLPW0KPj4+PiA+ICAj
-IENPTkZJR19URVNUX0ZJUk1XQVJFIGlzIG5vdCBzZXQKPj4+PiA+Cj4+Pj4gPgo+Pj4+ID4gdGhl
-biB3ZSBub3RpY2VkIHNpbWlsYXIgcmFuZG9tIGlzc3VlIHdpdGggeDg2XzY0IHJhbmRjb25maWcg
-dGhpcyB0aW1lLgo+Pj4+ID4KPj4+PiA+IDdhNzMzNDhlNWQ0NzE1YjUgMmQ3NmU3OTMxNWU0MDNh
-YWI1OTVkNGM4ODMwCj4+Pj4gPiAtLS0tLS0tLS0tLS0tLS0tIC0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLQo+Pj4+ID4gICAgICAgIGZhaWw6cnVucyAgJXJlcHJvZHVjdGlvbiAgICBmYWlsOnJ1
-bnMKPj4+PiA+ICAgICAgICAgICAgfCAgICAgICAgICAgICB8ICAgICAgICAgICAgIHwKPj4+PiA+
-ICAgICAgICAgICAgOjE5OSAgICAgICAgIDM0JSAgICAgICAgICA2NzoyMDAgICBkbWVzZy5LQVNB
-TjpudWxsLXB0ci1kZXJlZl9pbl9yYW5nZVsjLSNdCj4+Pj4gPiAgICAgICAgICAgIDoxOTkgICAg
-ICAgICAzNCUgICAgICAgICAgNjc6MjAwICAgZG1lc2cuS2VybmVsX3BhbmljLW5vdF9zeW5jaW5n
-OkZhdGFsX2V4Y2VwdGlvbgo+Pj4+ID4gICAgICAgICAgICA6MTk5ICAgICAgICAgMzQlICAgICAg
-ICAgIDY3OjIwMCAgIGRtZXNnLk1lbS1JbmZvCj4+Pj4gPiAgICAgICAgICAgIDoxOTkgICAgICAg
-ICAzNCUgICAgICAgICAgNjc6MjAwICAgZG1lc2cuT29wczpnZW5lcmFsX3Byb3RlY3Rpb25fZmF1
-bHQscHJvYmFibHlfZm9yX25vbi1jYW5vbmljYWxfYWRkcmVzcyM6I1sjI11TTVBfS0FTQU4KPj4+
-PiA+ICAgICAgICAgICAgOjE5OSAgICAgICAgIDM0JSAgICAgICAgICA2NzoyMDAgICBkbWVzZy5S
-SVA6ZG93bl9yZWFkX3RyeWxvY2sKPj4+PiA+Cj4+Pj4gPiB3ZSBkb24ndCBoYXZlIGVub3VnaCBr
-bm93bGVkZ2UgdG8gdW5kZXJzdGFuZCB0aGUgcmVsYXRpb25zaGlwIGJldHdlZW4gY29kZQo+Pj4+
-ID4gY2hhbmdlIGFuZCB0aGUgcmFuZG9tIGlzc3Vlcy4ganVzdCByZXBvcnQgd2hhdCB3ZSBvYnN2
-ZXJ2ZWQgaW4gb3VyIHRlc3RzIEZZSS4KPj4+PiA+Cj4+Pj4KPj4+PiBJIHRoaW5rIHRoaXMgaXMg
-Y2F1c2VkIGJ5IGEgcmFjZSBiZXR3ZWVuIHZtYWxsb2NfdGVzdF9pbml0IGFuZCBhbGxvY190YWdf
-aW5pdC4KPj4+Pgo+Pj4+IHZtYWxsb2NfdGVzdCBhY3R1YWxseSBkZXBlbmRzIG9uIGFsbG9jX3Rh
-ZyB2aWEgYWxsb2NfdGFnX3RvcF91c2VycywgYmVjYXVzZSB3aGVuCj4+Pj4gbWVtb3J5IGFsbG9j
-YXRpb24gZmFpbHMgc2hvd19tZW0oKSB3b3VsZCBpbnZva2UgYWxsb2NfdGFnX3RvcF91c2Vycy4K
-Pj4+Pgo+Pj4+IFdpdGggZm9sbG93aW5nIGNvbmZpZ3VyYXRpb246Cj4+Pj4KPj4+PiBDT05GSUdf
-VEVTVF9WTUFMTE9DPXkKPj4+PiBDT05GSUdfTUVNX0FMTE9DX1BST0ZJTElORz15Cj4+Pj4gQ09O
-RklHX01FTV9BTExPQ19QUk9GSUxJTkdfRU5BQkxFRF9CWV9ERUZBVUxUPXkKPj4+PiBDT05GSUdf
-TUVNX0FMTE9DX1BST0ZJTElOR19ERUJVRz15Cj4+Pj4KPj4+PiBJZiB2bWFsbG9jX3Rlc3RfaW5p
-dCBzdGFydHMgYmVmb3JlIGFsbG9jX3RhZ19pbml0LCBzaG93X21lbSgpIHdvdWxkIGNhdXNlCj4+
-Pj4gYSBOVUxMIGRlZmVyZW5jZSBiZWNhdXNlIGFsbG9jX3RhZ19jdHR5cGUgd2FzIG5vdCBpbml0
-IHlldC4KPj4+Pgo+Pj4+IEkgYWRkIHNvbWUgZGVidWcgdG8gY29uZmlybSB0aGlzIHRoZW9yeQo+
-Pj4+IGRpZmYgLS1naXQgYS9saWIvYWxsb2NfdGFnLmMgYi9saWIvYWxsb2NfdGFnLmMKPj4+PiBp
-bmRleCBkNDhiODBmM2YwMDcuLjliOGU3NTAxMDEwZiAxMDA2NDQKPj4+PiAtLS0gYS9saWIvYWxs
-b2NfdGFnLmMKPj4+PiArKysgYi9saWIvYWxsb2NfdGFnLmMKPj4+PiBAQCAtMTMzLDYgKzEzMyw4
-IEBAIHNpemVfdCBhbGxvY190YWdfdG9wX3VzZXJzKHN0cnVjdCBjb2RldGFnX2J5dGVzICp0YWdz
-LCBzaXplX3QgY291bnQsIGJvb2wgY2FuX3NsCj4+Pj4gICAgICAgICBzdHJ1Y3QgY29kZXRhZyAq
-Y3Q7Cj4+Pj4gICAgICAgICBzdHJ1Y3QgY29kZXRhZ19ieXRlcyBuOwo+Pj4+ICAgICAgICAgdW5z
-aWduZWQgaW50IGksIG5yID0gMDsKPj4+PiArICAgICAgIHByX2luZm8oIm1lbW9yeSBwcm9maWxp
-bmcgYWxsb2MgdG9wICVkOiAlbGx4XG4iLCBtZW1fcHJvZmlsaW5nX3N1cHBvcnQsIChsb25nIGxv
-bmcpYWxsb2NfdGFnX2N0dHlwZSk7Cj4+Pj4gKyAgICAgICByZXR1cm4gMDsKPj4+Pgo+Pj4+ICAg
-ICAgICAgaWYgKGNhbl9zbGVlcCkKPj4+PiAgICAgICAgICAgICAgICAgY29kZXRhZ19sb2NrX21v
-ZHVsZV9saXN0KGFsbG9jX3RhZ19jdHR5cGUsIHRydWUpOwo+Pj4+IEBAIC04MzEsNiArODMzLDcg
-QEAgc3RhdGljIGludCBfX2luaXQgYWxsb2NfdGFnX2luaXQodm9pZCkKPj4+PiAgICAgICAgICAg
-ICAgICAgc2h1dGRvd25fbWVtX3Byb2ZpbGluZyh0cnVlKTsKPj4+PiAgICAgICAgICAgICAgICAg
-cmV0dXJuIFBUUl9FUlIoYWxsb2NfdGFnX2N0dHlwZSk7Cj4+Pj4gICAgICAgICB9Cj4+Pj4gKyAg
-ICAgICBwcl9pbmZvKCJtZW1vcnkgcHJvZmlsaW5nIHJlYWR5ICVkOiAlbGx4XG4iLCBtZW1fcHJv
-ZmlsaW5nX3N1cHBvcnQsIChsb25nIGxvbmcpYWxsb2NfdGFnX2N0dHlwZSk7Cj4+Pj4KPj4+PiAg
-ICAgICAgIHJldHVybiAwOwo+Pj4+ICB9Cj4+Pj4KPj4+PiBXaGVuIGJvb3R1cCB0aGUga2VybmVs
-LCB0aGUgbG9nIHNob3dzOgo+Pj4+Cj4+Pj4gJCBzdWRvIGRtZXNnIC1UIHwgZ3JlcCBwcm9maWxp
-bmcKPj4+PiBbRnJpIEp1biAyMCAxNzoyOTozNSAyMDI1XSBtZW1vcnkgcHJvZmlsaW5nIGFsbG9j
-IHRvcCAxOiAwICA8LS0tIGFsbG9jX3RhZ19jdHR5cGUgPT0gTlVMTAo+Pj4+IFtGcmkgSnVuIDIw
-IDE3OjMwOjI0IDIwMjVdIG1lbW9yeSBwcm9maWxpbmcgcmVhZHkgMTogZmZmZjliMTY0MWFhMDZj
-MAo+Pj4+Cj4+Pj4KPj4+PiB2bWFsbG9jX3Rlc3RfaW5pdCBzaG91bGQgaGFwcGVuZWQgYWZ0ZXIg
-YWxsb2NfdGFnX2luaXQgaWYgQ09ORklHX1RFU1RfVk1BTExPQz15LAo+Pj4+IG9yIG1lbV9zaG93
-KCkgc2hvdWxkIGNoZWNrIHdoZXRoZXIgYWxsb2NfdGFnIGlzIGRvbmUgaW5pdGlhbGl6ZWQgd2hl
-biBjYWxsaW5nCj4+Pj4gYWxsb2NfdGFnX3RvcF91c2Vycwo+Pj4KPj4+VGhhbmtzIGZvciByZXBv
-cnRpbmchCj4+PlNvLCBJSVVDIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC8yMDI1MDYyMDE5
-NTMwNS4xMTE1MTUxLTEtaGFycnkueW9vQG9yYWNsZS5jb20vCj4+PndpbGwgYWRkcmVzcyB0aGlz
-IGlzc3VlIGFzIHdlbGwuIElzIHRoYXQgY29ycmVjdD8KPj4KPj5ZZXMsIHRoZSBwYW5pYyBjYW4g
-YmUgZml4IGJ5IHRoYXQgcGF0Y2guCj4+Cj4+SSBzdGlsbCBmZWVsIGl0IGJldHRlciB0byBkZWxh
-eSB2bWFsbG9jX3Rlc3RfaW5pdCwgbWFrZSBpdCBoYXBwZW4gYWZ0ZXIgYWxsb2NfdGFnX2luaXQu
-Cj4+T3IsIG1heWJlIHdlIGNhbiBwcm9tb3RlIGFsbG9jX3RhZ19pbml0IHRvIHNvbWUgZWFybHkg
-aW5pdD8gSSByZW1lbWJlciByZXBvcnRpbmcgc29tZSBhbGxvY2F0aW9uCj4+bm90IHJlZ2lzdGVy
-ZWQgYnkgbWVtb3J5IHByb2ZpbGluZyBkdXJpbmcgYm9vdCwgIAo+Pmh0dHBzOi8vbG9yZS5rZXJu
-ZWwub3JnL2FsbC8yMTNmZjdkMi43YzZjLjE5NDVlYjBjMmZmLkNvcmVtYWlsLjAwMTA3MDgyQDE2
-My5jb20vCj4+Cj4+SSB3aWxsIG1ha2Ugc29tZSB0ZXN0cywgYW5kIHVwZGF0ZSBsYXRlcgo+Cj5U
-aGUgbWVtb3J5IGFsbG9jYXRpb25zIGluIHNjaGVkX2luaXRfZG9tYWlucyBoYXBwZW5lZCBxdWl0
-ZSBlYXJseSwgbWF5YmUgaXQgaXMgY29yZV9pbml0Y2FsbCwgd2hpbGUKPiBhbGxvY190YWdfaW5p
-dCBuZWVkcyByb290ZnMsIGl0IG5lZWRzIHRvIGJlIGFmdGVyIHJvb3Rmc19pbml0Y2FsbCwgc28g
-bm8gcmVhc29uYWJsZSBwbGFjZSB0byBwcm9tb3RlLi4uLi4uLgo+QnV0IEkgdGhpbmsgdGhpcyBl
-eHBsYWluIHdoeSBzb21lIGFsbG9jYXRpb24gY291bnRlciBtaXNzZWQgZHVyaW5nIGJvb3Q6IHRo
-ZSBhbGxvY2F0aW9uIGhhcHBlbmVkIGJlZm9yZSBhbGxvY190YWdfaW5pdAoKLi4uLi4gU29ycnks
-IEkgdGhpbmsgSSB3YXMgd3JvbmcuLi4uLiBUaGUgY291bnRlcnMgZG9lcyBub3QgbmVlZCBhbGxv
-Y190YWdfaW5pdC4uLgoKc29ycnkgZm9yIGJvdGhlcmluZywgcGxlYXNlIGlnbm9yZSBteSBtdW1i
-byBqdW1iby4KCkRhdmlkCgo+Cj4KPlRoYW5rcwo+RGF2aWQKPgo+Pgo+Pgo+PkRhdmlkCj4+Cj4+
-Cj4+Pgo+Pj4+Cj4+Pj4KPj4+Pgo+Pj4+IERhdmlkCj4+Pj4K
+On Mon, May 26, 2025 at 08:12:27PM -0700, syzbot wrote:
+> syzbot has found a reproducer for the following issue on:
+> 
+> HEAD commit:    ddddf9d64f73 Merge tag 'perf-core-2025-05-25' of git://git..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=12f87882580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=fd18a1001092f95b
+> dashboard link: https://syzkaller.appspot.com/bug?extid=2e9e529ac0b319316453
+> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11825df4580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17fb7ad4580000
+> 
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-ddddf9d6.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/bc551d1d4e46/vmlinux-ddddf9d6.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/d26a6de23b0e/bzImage-ddddf9d6.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+2e9e529ac0b319316453@syzkaller.appspotmail.com
+> 
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> 6.15.0-syzkaller-01599-gddddf9d64f73 #0 Not tainted
+> ------------------------------------------------------
+> kworker/u4:9/1091 is trying to acquire lock:
+> ffff888011362358 (&disk->open_mutex){+.+.}-{4:4}, at: __del_gendisk+0x129/0x9e0 block/genhd.c:706
+> 
+> but task is already holding lock:
+> ffff88801bb55188 (&set->update_nr_hwq_lock){++++}-{4:4}, at: del_gendisk+0xe0/0x160 block/genhd.c:818
+> 
+> which lock already depends on the new lock.
+> 
+
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 7bdc7eb808ea..aa249719fa7f 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -1473,7 +1473,12 @@ static int nbd_start_device(struct nbd_device *nbd)
+ 		return -EINVAL;
+ 	}
+ 
+-	blk_mq_update_nr_hw_queues(&nbd->tag_set, config->num_connections);
++	mutex_unlock(&nbd->config_lock);
++	blk_mq_update_nr_hw_queues(&nbd->tag_set, num_connections);
++	mutex_lock(&nbd->config_lock);
++	if (config->num_connections != num_connections)
++		return -EINVAL;
++
+ 	nbd->pid = task_pid_nr(current);
+ 
+ 	nbd_parse_flags(nbd);
+
+Thanks,
+Ming
+
