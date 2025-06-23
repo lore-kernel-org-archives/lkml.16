@@ -1,88 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CB3242D68
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90ED242D68;
+	Mon, 23 Jun 2025 18:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750703740; cv=none; b=HgdlYyQ9jDjz6bKzqmjriwXOhwuM155FRglQxZRKZr1A0psomWYYV8F8IxmmzZI2icVZin5JwM3aChPl+ygBBeaiFhu6KTN81C3wwYHEFEbsogSIJV/GJLOz/sK8NReFOjovi+Ig6wCQv1HMRAjnZQ8C+g6qQ4Py56aZvUz9PTI=
+	t=1750703822; cv=none; b=D1jH60rex2RpekMnWIvTAqhRt3Pd76uf3xskmPXZKLs7QkPgSM9uxoGDw6A+ImjIAOjx5sLaPZ6KEH/RhAKMHaruDfAHhCuQ4adchl656kUX082BE3+XDwKdQIoj1CRrnwRm7is75qrzIpk8BMGG92NbrjoeljbKWIezvGWK1wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750703740; c=relaxed/simple;
-	bh=6HqUYKBGfGtCh6ZElY/M+HpK1HeIWOQe6DOiuz1YGYg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q+RQBVQbhLxRmfnvwY/fxwD+nwMCzmACN4ip11RcO4hJEUVqQ9N1PFZ2j6bcn/PAE2EXHhhiNTC9q9ttBoPCYjaY1/UOCC5kdiGo0NR4U+I+FWSDVyKY1wWte6eTO0esdPJE7UiByMT3pkLrnQMnei+IMV1f/Emkbc3Q5Rk0gVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jlcd+Pvx; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750703822; c=relaxed/simple;
+	bh=p1JnzbMj9qvo2T71XFSTCX9c6KzObdJcXfLfpLwDNfE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TgxnfyyPQ3YuqDoz7764tzMJFMRYhKHMo2L/UpuCMt2rhN8Oux95B/qwsaQUynEjvgZjpugwTQxKeNVhZxg0vg07JweEWaGgbt0abh7N1l2u+QCa1p8XjtQtrWWv8sn3NCqKGxpMYtVSXcgnJpmzpww/rcEEbisIviwJOG3kjfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=go75nq8+; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jlcd+Pvx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750703739; x=1782239739;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6HqUYKBGfGtCh6ZElY/M+HpK1HeIWOQe6DOiuz1YGYg=;
-  b=Jlcd+Pvx+ausk0UVmrHpys9wWdYdH8aApasXmodLiO3/WTcSpqPf/tHQ
-   pu1NovLobymC5TXwZFNQOLe/zSul7NCPYERY9YJhYX7kYhxkOoicDdni6
-   SejGH8DXry9jzPE53Uqgfq07k/a9rFCCWeXcMne1JHJ7Mb9kxI3uQw+is
-   DBX2K2kR6bXgx7lWVhfXDcTcUEpRpiC30vYjMe+UkMe9E1O1qPu/8I5gn
-   B/OzveQNUuctIsoV/opzhWCxGS87op+W8R+o7QCmWWSCwiuTPPw7e9PT2
-   U18LtqnRjuh4rEneFPefhFhxWuQIFGeYmvdywlhVqIw2iw0pFQM7ozdod
-   g==;
-X-CSE-ConnectionGUID: HjQFaGtRQIyEUM/Eoj5XNQ==
-X-CSE-MsgGUID: QyBuoqrCRHSk+ovK9ZdONg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52641333"
-X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
-   d="scan'208";a="52641333"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 11:35:37 -0700
-X-CSE-ConnectionGUID: APxCS4UnQ4qJtnVinkdVlw==
-X-CSE-MsgGUID: EsyulhYcRFiiL40UJEEI0A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
-   d="scan'208";a="151446134"
-Received: from guptapa-dev.ostc.intel.com (HELO desk) ([10.54.69.136])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 11:35:36 -0700
-Date: Mon, 23 Jun 2025 11:35:31 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, David Kaplan <david.kaplan@amd.com>, 
-	linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Nikolay Borisov <nik.borisov@suse.com>
-Subject: Re: [PATCH v4 0/7] Retbleed fixes
-Message-ID: <n65yrom6bgghmdwhuk2gszpltnznx47xftjsbovlo4bufow2en@ux4uuizje6ye>
-References: <20250611-eibrs-fix-v4-0-5ff86cac6c61@linux.intel.com>
- <20250622160122.GDaFgo0tAwyUpIfiGS@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="go75nq8+"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a503d9ef59so3098647f8f.3;
+        Mon, 23 Jun 2025 11:37:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1750703819; x=1751308619; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V2QVEwAUEUpg/DctJJXdhkEzwh3keBNJPXvALEQFRCo=;
+        b=go75nq8+0BtpMdx4rS0I3M4lw9kRU1aQzprcL7Co3UmJHWFPl0C2dH9D11/7kIuSbl
+         q6XAZ3t2DiPzswlEzLspteC++uceJRtbCGKsUkkmWerTIvPevExVbHaGHtVzAZXS/4xr
+         pimsy8Mmxf1Z23FvhptNCY7BqQDL3O9MnjDdtPuiXuQ76uHDxh2zLy94m17tZY1rTXhE
+         b+fcu53esVaW9uk9irbuXrtbIYY2a16WeSaJuGxLavk+rBfdV4r4kWzJc49Gj06faH/y
+         XsXLtuNZNeNfesn/VfnspHNzxY5rk5Qaejo4gxeGuWLrkCEmuK+SkDJhADDxRoX/m+g0
+         id0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750703819; x=1751308619;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V2QVEwAUEUpg/DctJJXdhkEzwh3keBNJPXvALEQFRCo=;
+        b=JDHGf69rvUuv30VYLdhefFhsOAeMROX36mHWXMh3lo78a1pUhcXr5De2xBEyssgMR3
+         ntwoBxNu3PNzAlS4b5sNIQjuNVEG68IeZ7aO7yYBUPeQEaU+cfW9TRk7A0PXKBvzbgSS
+         GwWPaDPhrK8Zb6UAceRIN7r4VuH+F8zBcv05BDaIV2YtX++r9FFNq73V4LY5J/0I3d3X
+         owsQxE/Nwsmitd+eqDSbK6eq6t9JTaEd4AhsXlL4diRHDvBr0DlaQbctKuquBkRG7ZPc
+         9mxdCXq6E+jZEkseBfNLPA5QPIGqxbttkv3umBtQJ22mZhaBZm4PyOWWAKAqWrdH4PEw
+         /qvg==
+X-Forwarded-Encrypted: i=1; AJvYcCUUBNzb0XWvlNpgQbZKU0/Z2xNBI6BZdimoNcRgFW6yj0YPBBHE8ic3duLgB/ekY574vZIKW2Yi52EUWCs=@vger.kernel.org, AJvYcCVanbuXFdtpR7AAOlldaK7xeG09zmum/MPbErVOtrioKf3BGNj2PZwHZVktsnyfykjx6vqvslc0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9rW30nUALWYyiXy+SCVXqhLeh1mryKU8pOVjOKuIdQhkQZX/G
+	RiOTk99Tqw0ZJaDoM+Z2SVyFsF5A2eZTiTkZE8gnaufJ2Kub4ZdoaME=
+X-Gm-Gg: ASbGncvnUtKQdHkk0l8KfdJuk0tx3FvOv2gaEds8c9LcdDxCGPUAQ9alN8CvQj2XmWr
+	z7eiVlfdzKMA8cTzTnw5hGcmNsrzMpzeHFZWdc1gOFpx5Cb3Hc4K897G3QqtREm6B+p1O8xAl5B
+	yyUiAVjRTWQLNcmLGIi7M3uJ1dixZLaC3RCj5bIA4G9husTRKCCE9xTyu5ieSv3BeKHwbmZHRrj
+	4D6yu0JwqKZkDiRH33Iofa116wyKYFRvJVcmYVbZ/1u3jaQdQ1PRSj9w78ec2xMWzLh/pEmfC6Y
+	Z15v8RoWnd1U/dWNuJnAMTKegczBMcawxrL1UmtKwAaKlZSAVXeCWlMgap0GVGS63c9QHESsSrA
+	PcYe5AmdDSyVGwNTCdu4Uf5znPDf0/T9tkt4DIgLzzBHFuLiNAs8=
+X-Google-Smtp-Source: AGHT+IERhtKyxwid8CVkClCk2R48go9/o5PMynbVEIQLznd3rozQuFuUsZ8RW8sAARaqnOMP4lEq3w==
+X-Received: by 2002:a05:6000:2a8a:b0:3a6:e6c3:6d95 with SMTP id ffacd0b85a97d-3a6e6c36e16mr689550f8f.41.1750703818752;
+        Mon, 23 Jun 2025 11:36:58 -0700 (PDT)
+Received: from [192.168.1.3] (p5b2ac778.dip0.t-ipconnect.de. [91.42.199.120])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535eac8edbsm152221325e9.24.2025.06.23.11.36.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 11:36:58 -0700 (PDT)
+Message-ID: <bf8af6cc-ec02-4560-89be-b8fcf4455aa1@googlemail.com>
+Date: Mon, 23 Jun 2025 20:36:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250622160122.GDaFgo0tAwyUpIfiGS@fat_crate.local>
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.6 000/290] 6.6.95-rc1 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250623130626.910356556@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250623130626.910356556@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 22, 2025 at 06:01:22PM +0200, Borislav Petkov wrote:
-> On Wed, Jun 11, 2025 at 10:28:44AM -0700, Pawan Gupta wrote:
-> > Pawan Gupta (7):
-> >       x86/retbleed: Avoid AUTO after the select step
-> >       x86/retbleed: Simplify the =stuff checks
-> >       x86/bugs: Avoid warning when overriding return thunk
-> >       x86/its: Use switch/case to apply mitigation
-> >       x86/retbleed: Introduce cdt_possible()
-> >       x86/its: Remove =stuff dependency on retbleed
-> >       x86/its: Allow stuffing in eIBRS+retpoline mode also
-> 
-> Note that the subject prefixes are "x86/bugs:" not the mitigations themselves.
-> 
-> https://kernel.org/doc/html/latest/process/maintainer-tip.html#patch-subject
+Am 23.06.2025 um 15:04 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.6.95 release.
+> There are 290 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Ok.
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-Do you think also appending the vulnerability name like "x86/bugs/retbleed"
-would be useful for someone filtering commits based on vulnerability?
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-> I've fixed them up.
 
-Thanks.
+Beste Grüße,
+Peter Schneider
+
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
+
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
