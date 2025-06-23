@@ -1,38 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55231519BC;
-	Mon, 23 Jun 2025 10:30:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD52720298D;
+	Mon, 23 Jun 2025 10:30:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750674634; cv=none; b=YlV+DGawVbu1MKAdtu06GEriSOgY+hzPnzcQbJrG7GwJf7CICFmEeKj/l7YFZSaQZ1x3V8jfFhptw9pQbohgMs+0LgNMm3BZq2pLsutF86rH5P9HFZNbv4Uj81f7TEQ1kXtOZ5lmHPDA40yBL7SG5uzTGpwSqSonUbU2AMkSrYo=
+	t=1750674637; cv=none; b=QxhOgfj/xPHezdNju8IIhsZ2wVbC9j2Em3dZDb7jQ9T0cu+tKwNhJv892MuBM6I3khfcC1SR6+/e0oalX8OqiMcRtUKmNf3XydFu2H64IUn+8THdbeEcGQ+vtzkMFagkiBVEzQojH8xtoHw67m0nHxzLpqINd8FjxqTfdid0Pqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750674634; c=relaxed/simple;
-	bh=HY3hx8TjLRafybj9HhnIIPoxLJ5Qree4c2MTO+3U5YA=;
+	s=arc-20240116; t=1750674637; c=relaxed/simple;
+	bh=89lBI/O3EQXrPrcZMgnt468Ulxe9REXZhCDPIpFRIBQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PRTphkomeUA6clvFDYdB9dzqBk3K+3hhVXuHuUS0oSqtOb8R8bEe5vOtBkJiQZ/GRKeGgcpZMwS+dFG0wEBo6T8Jm+itAMEwYzuMEtoOUwAtKbikhQzNHwNMpHnxN5wraT48YDVkPQtsiI+AwP+PqlbvUY/SDRPXocP65w6bAow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=kCUCo9l1; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=jKnxb/XV5O5ZjlcD77t2xnYANEddg9g3NrD8hWou6GhbzJHHOr8N55iGzhA8A4HNAQ4bo6SXgL5/M8hLx+5Gy8Us77H7hh/GvNK544a09ASVeVo09cn05pNL5S9L6/w3i7AYRpf8mkwKUePILoTSVAobDIX/ZsyXHHEezJnhY5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=LUgljFYs; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="kCUCo9l1"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="LUgljFYs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750674631;
-	bh=HY3hx8TjLRafybj9HhnIIPoxLJ5Qree4c2MTO+3U5YA=;
+	s=mail; t=1750674634;
+	bh=89lBI/O3EQXrPrcZMgnt468Ulxe9REXZhCDPIpFRIBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kCUCo9l1xa/wHioASU7j9+B2pmNoj37DOvIKFbmrC/bcjFN2iBGKLXzyNE5tPt+Bz
-	 oHEHp131pf5ndcDxPBO+VfYYyzzC30qk2OoPNZqKlxR1QNiu+GUtFf1MLNiFhQf4gq
-	 qBHIa3VKcaHp1T9ncnOrn95/veZMzdrg5BySyqTVyK99puVsNTqy7S3kRdnceDmhlj
-	 opXEzA44FvYWAfzOfLRUFOYHz2RqSGVZMKkWr+lE5dZwOpNU5YLRp7X6UJGqLKLHop
-	 zqcjGsvQEKtAJhpAqOwZ9Lv2VJZxZWoJJ0rUbANkZcl/tqsbpKt06mBOCczKANF2Bp
-	 HQi6GXSkfK8ug==
+	b=LUgljFYsUgi3oY6gi5NG9/r31xVgs933+xUlgvtDfb8l00aDXTnsUrc5rWo/tUVLN
+	 AjefVdEmWTSoGPOeBRB9YMcrZlYehwDJEkOCe1Cho4gKOdEfqLR0KGpp1yyK1NDoDH
+	 duOmUwcJJCdM6p83GW9DZWaLsSV3jR573fzKpzgD+UGNv+E66Du4uM8cLxTt88xvLm
+	 Ow7wfP68jhBdVZXTNYnisgPlhOMdzwB/VutUDLw8ro49uRoyktFFZlvCRR/tbV5YIG
+	 f4NwxYY3fkpQuMEghpVAEhy6ZcVPatP8UfFvVzZKW82UHOVk3kJlaYZXUHkC+Lnw9/
+	 LQLz5XLRl28ew==
 Received: from laura.lan (unknown [IPv6:2001:b07:646b:e2:e046:b666:1d47:e832])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: laura.nao)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 56FAC17E156E;
-	Mon, 23 Jun 2025 12:30:30 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id EA02017E0FDB;
+	Mon, 23 Jun 2025 12:30:32 +0200 (CEST)
 From: Laura Nao <laura.nao@collabora.com>
 To: mturquette@baylibre.com,
 	sboyd@kernel.org,
@@ -53,9 +53,9 @@ Cc: guangjie.song@mediatek.com,
 	netdev@vger.kernel.org,
 	kernel@collabora.com,
 	Laura Nao <laura.nao@collabora.com>
-Subject: [PATCH 04/30] clk: mediatek: clk-mtk: Introduce mtk_clk_get_hwv_regmap()
-Date: Mon, 23 Jun 2025 12:29:14 +0200
-Message-Id: <20250623102940.214269-5-laura.nao@collabora.com>
+Subject: [PATCH 06/30] clk: mediatek: clk-gate: Refactor mtk_clk_register_gate to use mtk_gate struct
+Date: Mon, 23 Jun 2025 12:29:16 +0200
+Message-Id: <20250623102940.214269-7-laura.nao@collabora.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250623102940.214269-1-laura.nao@collabora.com>
 References: <20250623102940.214269-1-laura.nao@collabora.com>
@@ -65,56 +65,81 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On MT8196, some clock controllers use a separate regmap for hardware
-voting via set/clear/status registers. Add mtk_clk_get_hwv_regmap() to
-retrieve this optional regmap, avoiding duplicated lookup code in 
-mtk_clk_register_muxes() and mtk_clk_register_gate().
+MT8196 uses a HW voter for gate enable/disable control, with
+set/clr/sta registers located in a separate regmap. Refactor
+mtk_clk_register_gate() to take a struct mtk_gate instead of individual
+parameters, avoiding the need to add three extra arguments to support
+HW voter register offsets.
 
 Signed-off-by: Laura Nao <laura.nao@collabora.com>
 ---
- drivers/clk/mediatek/clk-mtk.c | 16 ++++++++++++++++
- drivers/clk/mediatek/clk-mtk.h |  1 +
- 2 files changed, 17 insertions(+)
+ drivers/clk/mediatek/clk-gate.c | 35 ++++++++++++---------------------
+ 1 file changed, 13 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/clk/mediatek/clk-mtk.c b/drivers/clk/mediatek/clk-mtk.c
-index ba1d1c495bc2..19cd27941747 100644
---- a/drivers/clk/mediatek/clk-mtk.c
-+++ b/drivers/clk/mediatek/clk-mtk.c
-@@ -685,4 +685,20 @@ void mtk_clk_simple_remove(struct platform_device *pdev)
- }
- EXPORT_SYMBOL_GPL(mtk_clk_simple_remove);
+diff --git a/drivers/clk/mediatek/clk-gate.c b/drivers/clk/mediatek/clk-gate.c
+index 67d9e741c5e7..0375ccad4be3 100644
+--- a/drivers/clk/mediatek/clk-gate.c
++++ b/drivers/clk/mediatek/clk-gate.c
+@@ -152,12 +152,9 @@ const struct clk_ops mtk_clk_gate_ops_no_setclr_inv = {
+ };
+ EXPORT_SYMBOL_GPL(mtk_clk_gate_ops_no_setclr_inv);
  
-+struct regmap *mtk_clk_get_hwv_regmap(struct device_node *node)
-+{
-+	struct device_node *hwv_node;
-+	struct regmap *regmap_hwv;
-+
-+	hwv_node = of_parse_phandle(node, "mediatek,hardware-voter", 0);
-+	if (!hwv_node)
-+		return NULL;
-+
-+	regmap_hwv = device_node_to_regmap(hwv_node);
-+	of_node_put(hwv_node);
-+
-+	return regmap_hwv;
-+}
-+EXPORT_SYMBOL_GPL(mtk_clk_get_hwv_regmap);
-+
- MODULE_LICENSE("GPL");
-diff --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek/clk-mtk.h
-index 136a4bc6dbe6..8ed2c9208b1f 100644
---- a/drivers/clk/mediatek/clk-mtk.h
-+++ b/drivers/clk/mediatek/clk-mtk.h
-@@ -247,5 +247,6 @@ int mtk_clk_pdev_probe(struct platform_device *pdev);
- void mtk_clk_pdev_remove(struct platform_device *pdev);
- int mtk_clk_simple_probe(struct platform_device *pdev);
- void mtk_clk_simple_remove(struct platform_device *pdev);
-+struct regmap *mtk_clk_get_hwv_regmap(struct device_node *node);
+-static struct clk_hw *mtk_clk_register_gate(struct device *dev, const char *name,
+-					 const char *parent_name,
+-					 struct regmap *regmap, int set_ofs,
+-					 int clr_ofs, int sta_ofs, u8 bit,
+-					 const struct clk_ops *ops,
+-					 unsigned long flags)
++static struct clk_hw *mtk_clk_register_gate(struct device *dev,
++						const struct mtk_gate *gate,
++						struct regmap *regmap)
+ {
+ 	struct mtk_clk_gate *cg;
+ 	int ret;
+@@ -167,17 +164,17 @@ static struct clk_hw *mtk_clk_register_gate(struct device *dev, const char *name
+ 	if (!cg)
+ 		return ERR_PTR(-ENOMEM);
  
- #endif /* __DRV_CLK_MTK_H */
+-	init.name = name;
+-	init.flags = flags | CLK_SET_RATE_PARENT;
+-	init.parent_names = parent_name ? &parent_name : NULL;
+-	init.num_parents = parent_name ? 1 : 0;
+-	init.ops = ops;
++	init.name = gate->name;
++	init.flags = gate->flags | CLK_SET_RATE_PARENT;
++	init.parent_names = gate->parent_name ? &gate->parent_name : NULL;
++	init.num_parents = gate->parent_name ? 1 : 0;
++	init.ops = gate->ops;
+ 
+ 	cg->regmap = regmap;
+-	cg->set_ofs = set_ofs;
+-	cg->clr_ofs = clr_ofs;
+-	cg->sta_ofs = sta_ofs;
+-	cg->bit = bit;
++	cg->set_ofs = gate->regs->set_ofs;
++	cg->clr_ofs = gate->regs->clr_ofs;
++	cg->sta_ofs = gate->regs->sta_ofs;
++	cg->bit = gate->shift;
+ 
+ 	cg->hw.init = &init;
+ 
+@@ -228,13 +225,7 @@ int mtk_clk_register_gates(struct device *dev, struct device_node *node,
+ 			continue;
+ 		}
+ 
+-		hw = mtk_clk_register_gate(dev, gate->name, gate->parent_name,
+-					    regmap,
+-					    gate->regs->set_ofs,
+-					    gate->regs->clr_ofs,
+-					    gate->regs->sta_ofs,
+-					    gate->shift, gate->ops,
+-					    gate->flags);
++		hw = mtk_clk_register_gate(dev, gate, regmap);
+ 
+ 		if (IS_ERR(hw)) {
+ 			pr_err("Failed to register clk %s: %pe\n", gate->name,
 -- 
 2.39.5
 
