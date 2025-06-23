@@ -1,66 +1,73 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1E6B676;
-	Mon, 23 Jun 2025 22:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4878AC2E0
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 22:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750716751; cv=none; b=YVn7tY3iv/0HpsxwBzpwqJNGFYJdPHjcVmtjmdMHy4w9mo71x3oXQd1+TAx7F6UgBTj13gMMEDKRW2yXyA+TAOle0Y6itSlYG8Yev6BnahwzuLpr2plIJ9xt1cIi+OiBaMp3wu3QgXd5FhopkTrc2Dv/nmg7gwSfmdTpn3W6vcU=
+	t=1750716752; cv=none; b=oap+zMFS+6JXmOhyNBvMl1u/I8X9qCwN+St+WoF0pCdjTIeG94A93B6pBD+y0Wx9ygQ45YwduFknffZzQEyJSMCefiLXmohKTIUSV8gPvZjIkiakXVEiqCtlyZ2QB+klsEhzgTqHxDBKL/frc8t/db7yX+bix6gHvenV3wa+QRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750716751; c=relaxed/simple;
-	bh=vX8V9d5czqB7qJFtk/cKvJmbgNp7qUz5USbg6t/IFEg=;
+	s=arc-20240116; t=1750716752; c=relaxed/simple;
+	bh=oXHPOR7TLuVJiF4AJ1mPKl17xpepxUuTb87IIvlShAg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sfev0LOdsLP+0vrC8/qogAfbzOKpqTyDGdwBLlek7koyyvsLDcdEzhgxQZiKt4SFckPaqVadNi/4sU7IDVzf02L8O6cGbpfcrK88S9BOjQXt4jz6d+avMtBOr1fab30EQTooc0cxvbbA7Ht51gnIHl+ruLZfgTD0NLMOxrZ3ChE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S0OwI887; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=ICRqlfXHy4k8rDM82Onc+6bXmy7zh+ODYy/zCJvtX8B3tQqOd+jIcrB+bPRpxZvxHn9iyd24c8hj9YczLTLcuX8mwyc7+zI51+q1MJey5rNkaWms6BvYp1n5GGdV7i4M4LQg/DXZjwdUnB9RiiZdXKM0KXFNHOFwtHCsGCLDlwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Mj9cOBzy; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0OwI887"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-73c17c770a7so5317386b3a.2;
-        Mon, 23 Jun 2025 15:12:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750716749; x=1751321549; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=rNNk9iay4TFsaR3oROHDPyt7j9eK6fHVYAQhw0ci6+U=;
-        b=S0OwI887Mi+S73obchApej0WKlYKy1cXfi3ZGs6Rp/DZdsMgoKdrI37kKZF+qOqpJV
-         fxWq8iAo+hgcW2jmrFlAcUnJkpDg62DncFfRQTroykN1E4Zx0gVF+ZlhK6VAH5QCIIKq
-         qawwoRu6EAdkyUJ4xyTnarZLNyUqoq03Ysl/Kz01lGANv2KkpnWABHnh5RJ+sKVHCLZv
-         DJUHoj1UgqOy/GHeL1sSgI+P6MpoHGxHZn4g8UBtX50ZpORbsSAn/4NSpOm/ebnpMmMf
-         7JqmpcRjQDc3eCi6+c10ZDpSwo5coS+VKpuq8CEwoY8K5Gzn62O/evOJnefo+DQchHuz
-         CdKQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Mj9cOBzy"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NHuKEJ025855
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 22:12:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	lg9kP05buSmu9VAI3g+rOYfzC3a3xuABElAlMyKM+8Q=; b=Mj9cOBzyXlMx7w8I
+	ndTERVXglPq09GszZZa54iNttLwY2cFab5mLBJAzDkOmNLrGUN8Knz0U7Pa9RKV3
+	2GNJgFpeVJjXTqzclyYHH7Kus4Wh830nKVPglYDCA7SkHPO3SI9+uxKL7lv+AO54
+	GEJEDAxWx8pkErm8QCnZ/sKtKxj9bPHKz7mj1MBtK5+J1InR1JY4vRcqFOveotuv
+	tRyaKszm8mUOqHVAKXrcyQZkOJEB9XiSpJU7qiTRQCfAbsFALg7Mzp4xc+rx6gUW
+	fDAWzvXf2uImKflF+6tqu6OrCsQvmhMNxah2fUfKXSWh4XIEpEZKfBhED7t4++Hk
+	YG9ZyA==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47emcmkq91-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 22:12:30 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d40d2308a4so296622985a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:12:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1750716749; x=1751321549;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rNNk9iay4TFsaR3oROHDPyt7j9eK6fHVYAQhw0ci6+U=;
-        b=pslJlvTMaBuEkbm3+IiWChrrh6nPpWwWMA3gfbkURnjINTX2iuyOlXRuBKkt+Jy42x
-         iTQ1PtoVBMYxZDNxvouONHT62NVs3ptzfwf2woUbMKf4928eGXLhybEaMgKCKYaCjrPQ
-         dBEoIG31G/mY3oPb18PK6a0m+kcuRzNQj6zunS+QDeEiUAhbx4ibiMD8k0UjV5NiC+fT
-         /5FPtWyI+9BsD0rPGwZegVtfh5aqNeQ8FyM2++fizjBcVGN0LuLhxIoPgqPaAqM3OgXP
-         nrG8zEiGPH1vI3JhToHOtkg2nAdLHaBh1DrhCGrnfL51rqQ1/egmUgdcl+27FzN1A86h
-         MPmg==
-X-Forwarded-Encrypted: i=1; AJvYcCVyVCSsJRcuZ7k8tmVm8D0krCX2/hh6yQAq0YSyZihRUtGJn8E1FT/4l3zSSn1ZrVflwQH4Fw0i/N3eAaU=@vger.kernel.org, AJvYcCWOQoYnY1CL8D2b5TgmneDuUc+9D8MqaWsNuuEYNtyo7gDmTEygevvTWf8OK4qE7jwjkPHqmDq0@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPYatFGP49hRSIN0AA1BxD0uQipqRK2ZNgA+eq19gyNFBNBE96
-	A84iemitXVvSHLaqmuV0Mg+sw6WXtrMWcXRAq4R/LEliLnJdIJVJYjfPFhV3SgME
-X-Gm-Gg: ASbGncsDaU8d06BszgAnm/mGNj3H/z/EOMJsixN1fRCANIX/JdzOAKxHk/Bhn6unLRS
-	7FQnFb84RJikAzvhGF5SSxVlHZr1ZhIMlUnW2Qs1uYH/SZBQKbYS2n/h3XjET7LqiGNH66usJgb
-	wQBc4uyU5VArk7GIsIQySmH2KFI9lidd3jbDmZjy9ErN8erKxiPfZ5KAXm5VK963Y55Bh4m2I9E
-	juxNl9lWQRcR0fdkYHVlS1xLM3LEX9jmFRo4l1grQo4qBCVE9gVuIqMcmP47S3x2NhZWd0TPGkx
-	/GjMmSD//X1BwT+x609GaWKm5VouSGYcVSFq7BOJ5LAopDBTWW2xEL9HTMhiKAvGbeQSmsodVLg
-	Rp+4N8Q94zMTu9BiGN0BvfDAl
-X-Google-Smtp-Source: AGHT+IFkA9rLLTXE/wzSDCD/eX9kG0gVoLWTteo6t/0lF66T7wkylkPLNX8ySW5Xjw4muC09909y/A==
-X-Received: by 2002:a05:6a00:4fc2:b0:736:35d4:f03f with SMTP id d2e1a72fcca58-7490d52ca7cmr21366005b3a.6.1750716749472;
-        Mon, 23 Jun 2025 15:12:29 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f118e851sm7376633a12.4.2025.06.23.15.12.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lg9kP05buSmu9VAI3g+rOYfzC3a3xuABElAlMyKM+8Q=;
+        b=GjlSTOOjf1x8tufxamUttO0bAqpcmchMiMwGkXGryD8h4qBWwrtp7JKk/bKf/TO+T1
+         nLSBZ3FJcNFirE+P3uvD7tbbV4Jz36Qxpsgf6qg0a/G7SuI4jRwkwFcyHTkV/J+o7x92
+         7YiAOcJGgovqEuQTbGYQzU/uIXc9FpaAqBaSsU8/wyU9BLQoI/vlolL6EQlKWkj3dWtu
+         Z4wBorIMlQO5XUBm9tH4V0sADmThMhu8BdGr6JabcPRIKZQCIMqj5aIwCtVInca7z6EC
+         vh23ndyuGCurrQkZpceDMAd2RbY58asp7cICTjdhyDKaaYDgJWKr57dDCQE3ErFehQvg
+         D0Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCWqdOCoC7OMXDEIrcIWn+1XbcXsIXpeitjtXc18NbPRAUeKulTlcBreADZgLorTiTF4XHCTL5Apoyc5+cQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBAPafUMMM6xxZkWlX1+VRlmtv4CKu4NfGtQEu+y+3dbWddZfY
+	AOqtoBQuJVR3yUOTSrUUWo+VrHyXgFyAu8jyDQTFAQvLK4dMNAw7pH+mwDnAmJvMiDt5Nh7SXUB
+	0/sVE6Ht2ofZZeKTQhNRblcHB3aNTVeEqrysMto1zO8zZR91/5EoyqS8jJy3nzfPqwis=
+X-Gm-Gg: ASbGnctYAjUtz5bLz5HfJIle1hewVfg4HzYCwBru++0qQ9lA0HUalcnsuUd5sR2RhEf
+	9zvMcdUPG5B966JKX20m6DjA8DU6LJcO0UVMfyBaL8cKE//BolPk3mHZWVZKaHY3eWr/tbtZ6UV
+	amTVu3cwlWt/ibvJgkxveIBHjy38zPcad315Z052tzcC+G8Y8+7XSwA6pw4yq71Axe8hkotBcTe
+	9If+UO8iTrdyE4PJRI89+8mMR9LZVpYIdwD7ffPlPvELgxwrdUwmobfBC8Z+PkImTvFUew4imMA
+	aQTsSVZZF/KkgNakS6xBmpA8xWAoii8IbyU/YdU+tbXq576bsPvE5gEbQ4d3kufk62HKvomeeas
+	=
+X-Received: by 2002:a05:620a:4720:b0:7c5:9788:1762 with SMTP id af79cd13be357-7d3f9938cfbmr2031239785a.45.1750716748701;
         Mon, 23 Jun 2025 15:12:28 -0700 (PDT)
-Message-ID: <2a1bcdf7-a6e9-4035-b85f-123c76e4ca7b@gmail.com>
-Date: Mon, 23 Jun 2025 15:12:25 -0700
+X-Google-Smtp-Source: AGHT+IG3fWlse6jUFEkXEfv8g/TYyqD1B6IL/3srb6MgVSJ90D+r/uAFrwOBMHUObcgRjBtB9QiUcA==
+X-Received: by 2002:a05:620a:4720:b0:7c5:9788:1762 with SMTP id af79cd13be357-7d3f9938cfbmr2031235585a.45.1750716748280;
+        Mon, 23 Jun 2025 15:12:28 -0700 (PDT)
+Received: from [10.132.167.252] (37-33-208-94.bb.dnainternet.fi. [37.33.208.94])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553e41d806dsm1579546e87.241.2025.06.23.15.12.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 15:12:27 -0700 (PDT)
+Message-ID: <d48a235d-aad8-4978-b4c4-ed0b3fce14b1@oss.qualcomm.com>
+Date: Tue, 24 Jun 2025 01:12:25 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,76 +75,65 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 000/508] 6.1.142-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250623130645.255320792@linuxfoundation.org>
+Subject: Re: [PATCH RESEND] drm/bridge-connector: Fix bridge in
+ drm_connector_hdmi_audio_init()
+To: Chaoyi Chen <kernel@airkyi.com>, Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Chaoyi Chen <chaoyi.chen@rock-chips.com>
+References: <20250620011616.118-1-kernel@airkyi.com>
 Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250623130645.255320792@linuxfoundation.org>
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+In-Reply-To: <20250620011616.118-1-kernel@airkyi.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: lG_m-UEDJ8OckZojy75CsKNfkuMBc6cb
+X-Proofpoint-ORIG-GUID: lG_m-UEDJ8OckZojy75CsKNfkuMBc6cb
+X-Authority-Analysis: v=2.4 cv=J+eq7BnS c=1 sm=1 tr=0 ts=6859d14e cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=D+sM+DASzikqaCSeXxPSkA==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=s8YR1HE3AAAA:8 a=EUspDBNiAAAA:8
+ a=sDl0zNJMTKjEBXQ_4tMA:9 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
+ a=jGH_LyMDp9YhSvY-UuyI:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDE1MSBTYWx0ZWRfX5edK0oRMtdvv
+ qmQSuRj7okV+GzuqpYtOUDI9ha5mp0csFBz8y+hxtMdue/dtY3QmzMapw3WOmwjwiEWwjGNaU0t
+ arhohaFrjtNf0mN4vfG5StsF7sw1Vd8M7tDA2XarjndtBqKvJU6tFx9Esb6Nj0dl+6s/5COE8WZ
+ r6suCE8yJ2ncRq/YctFw+XGtzOaBEayKcHARktXcY5ypYafIOWjzQtxAV6ssI4BVytZbB78gQD2
+ 6LXUTHNWUkyko7cRcRirgXGZcbKAAgKgrYcG8KbAR7m6/370tSLQ3xOat0MK5vOL4IIVSEzLPCO
+ rSKXTfNOyCSRtqg+DoP3trX3vZvUTtjr4rQXMxEAQRcLWP1RsNpP3xDWIEg6x8Mh/mPd29iialG
+ goi1dIQcAPMWlanBSsOWOCpmLxbp+nHh5XlTUyjY8eLF/mYUb0BeMZrUMqmNJBy0LIejLM7H
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-23_07,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 mlxlogscore=999 adultscore=0 impostorscore=0 clxscore=1015
+ spamscore=0 malwarescore=0 phishscore=0 priorityscore=1501 suspectscore=0
+ mlxscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506230151
 
-On 6/23/25 06:00, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.142 release.
-> There are 508 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 20/06/2025 04:16, Chaoyi Chen wrote:
+> From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
 > 
-> Responses should be made by Wed, 25 Jun 2025 13:05:52 +0000.
-> Anything received after that time might be too late.
+> The bridge used in drm_connector_hdmi_audio_init() does not correctly
+> point to the required audio bridge, which lead to incorrect audio
+> configuration input.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.142-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> Fixes: 231adeda9f67 ("drm/bridge-connector: hook DisplayPort audio support")
+> Signed-off-by: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+> ---
+>   drivers/gpu/drm/display/drm_bridge_connector.c | 7 +++++--
+>   1 file changed, 5 insertions(+), 2 deletions(-)
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-Florian
+With best wishes
+Dmitry
