@@ -1,140 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF826277029;
-	Mon, 23 Jun 2025 16:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088AE26D4D9
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750697406; cv=none; b=oAJ5cMGcbSMBlsb/72m6CXpo+gJKd6m9JBCG5kjgpzDZviYC0PPRRcEiguKwX23rRCzfORfwR7wCqjNlN+c0iALN4KUrnO5v9+Rg8XYJNAEiNSIJYKr3Vrx1lcmvKELwiy+6tjnR3r7REbtAC1VTrGe0lsPSu3AzVksHSH16gmM=
+	t=1750697442; cv=none; b=iqT9Nse3K+7cF9SiWWx77S7pw8e/5wYifPLd1gjMEUZr5O2Q1Gb6LZGFSkVgC5+AdY6GmWq0uFQq4jdbh6V/tx3cVoLd96cIh039U9f9N6Iq9EvV/sWV2swH+yioJANZlFgalR8FMVMiVpwnS82tpkR2uDJ8TjZMmZZmAvO9oZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750697406; c=relaxed/simple;
-	bh=ixzNiYvSohABEP65EJQJpxD1tvXomrgSMaFRGU3G4rE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G++isjDGC+viRIMOJQyY6CdDAYTBuIl835axVH5x5fl9c33dm0cpYbvjUs+YG8tSRJyLHWp7RR0u/jXs9K5+ntEw1be0Y8Lc5RGe2v4VwDR4S3zKMqnq5C9X9flAVNBQSOJxhdjIEQr4dYIv/2kwIhmsjWMLRe7pMla4Mrec+P8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CSkFswit; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750697442; c=relaxed/simple;
+	bh=ZkbTHFqp4OOayCxB+8smrXfMGunG4i7REp6CpRVicc4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Unb+dOdW0OKJBTqGK/nEnE+ndKGD+yrSbeu5281mQvvKHYRX0VknCnYnZ/FuYwtfljxxDpx2fRQXk3S4JkyvXnXPBkbifcb+tG/RRYc52sU5lqZshclo40HFN8BL7Ir/apvzOorW8jtvdND0LFNG1iIEGTuNgPE/a8GZINHsIfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ku8Iyg+I; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CSkFswit"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36BE3C4CEEA;
-	Mon, 23 Jun 2025 16:50:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750697406;
-	bh=ixzNiYvSohABEP65EJQJpxD1tvXomrgSMaFRGU3G4rE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CSkFswit9LNxWkHNZYRaVCPYGDIC4iLRpVVVwTIJo/1jVx/Kh4FPassaWhLJBLYbF
-	 fMk8Wn0unQumPpjSqdYdOBBiJYVoAzvZdfWRQqv9EjSAx5Upbid6JWDW56KZu73foU
-	 ha24bwGZLbCq/KhjnMM7ag4/nfxS7L3H+6HVaql+v4EmAaGfPg0Hv+AXqMKCiDJIUT
-	 2v9c6ShuwW+DG63DNnh/ZRSCUtLTexj7M/9bT0Un+fx0T/EFxiZ3cdnZbCv3IsIDZd
-	 X/8726K3K7T4d5IZpkXfG76TZ5RaKy+6zHWp3M0rnPCbVPFJ9ynTaoVYEB+rpNLZhR
-	 LEaO5vymAty/A==
-From: SeongJae Park <sj@kernel.org>
-To: Joshua Hahn <joshua.hahnjy@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Bijan Tabatabai <bijan311@gmail.com>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	david@redhat.com,
-	ziy@nvidia.com,
-	matthew.brost@intel.com,
-	rakie.kim@sk.com,
-	byungchul@sk.com,
-	gourry@gourry.net,
-	ying.huang@linux.alibaba.com,
-	apopple@nvidia.com,
-	bijantabatab@micron.com,
-	venkataravis@micron.com,
-	emirakhur@micron.com,
-	ajayjoshi@micron.com,
-	vtavarespetr@micron.com
-Subject: Re: [RFC PATCH v2 2/2] mm/damon/paddr: Allow multiple migrate targets
-Date: Mon, 23 Jun 2025 09:50:04 -0700
-Message-Id: <20250623165004.43394-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250623140808.2479244-1-joshua.hahnjy@gmail.com>
-References: 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ku8Iyg+I"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ae0a0cd709bso99475966b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:50:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750697439; x=1751302239; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZkbTHFqp4OOayCxB+8smrXfMGunG4i7REp6CpRVicc4=;
+        b=ku8Iyg+IcqdnO5AQqsV1QVdDD+nhidS5zt3y7DiMgm9nlECwOoGtlivScykeyd++76
+         WIQX5ONWYb1b6yPVf0Wpb1QMFaVqv6MKW8jGtgq18ogaTyOV5r142a72HwO9V4S1a3ff
+         Mwo9s/tajqHkl4ZranYx2KdCx41VVLLUJNi5kz9IHnh8PXXZNVafMNU1L5ZCGGhIWqJ/
+         4xlsFzpUJwL0gNOXFAInz38T8uW/SnGEfnbNy0U57mgnGYQaMOc4T0camYg1VNbabCmb
+         T8sX6HQKYd8sqY//D3IBvmuSlSj1QHQRLxiCPC9wHsBXCSHqmnJbjn677XU1kcRx2IEg
+         drrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750697439; x=1751302239;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZkbTHFqp4OOayCxB+8smrXfMGunG4i7REp6CpRVicc4=;
+        b=qJVYL8M16oz93bgPJYgYFR1rA+hztJp/xpaw6Kwd9SPZ0XwWrxxVifx9ySAYFHsN7Z
+         oW/nmJLfVkTvKvQyU5fJg0nK4atqaMBD7so1v0DfSdvWFOI8Ft0dzLRg5LrqnqNLG2fP
+         LXBcKMSGAMFII5yG0svgmEmGBc5vr0linmMP3/ii0z8ytLStm0fGHq2Uj/+HlihFEgz7
+         90OasXrZTJIa+OUtr4G/neueBp8uiowSdbx9p570P3pkM8hBO+8DUjsfH1/4gZ7E3zxS
+         SUWnfDuFLBwmSiI2KBS98giT5ffOhcWuX0WfhF66o5GdNl0lLIdp8nfzVMeus+r5hBCd
+         xbJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUF55uHR0zLJu5byGzrlbjvndEKCrx8hOC5R0ilTFtqgLrIjuxfyMdVN8ESxXP75anzqMCYqAp0R9ZkzbY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYOghTBTYbMFsmw2DwdRcSoTTLLId9heFa6j9wybjgdMDgKWoS
+	zR2EIHXQWIwWClYvDPNLzueEAQZEn3pACDwI0ZZ1YVoBzDad/7W41unc
+X-Gm-Gg: ASbGncstP9J1cT/0YYpS4qGUEL28gF3wU5qkWC9s9Z4Bndk3ze/cnJt5ADZDbhlu1Sd
+	zDZxshMb7qxXKmUZyQHQ+h84+XU6vYbeZt+dc5z7Sa6rx2dQorayMLQQaatsO/9X3GpHGHEQKTx
+	aqNl8cCM3SMC6GrVPk54zRA/TeFPC9L/5cjIQ+PBJZXIoPsUiyGOojFvR8HemDy659CNkn0/f+i
+	vhPXnGREyx6BlbWyVYSil4YY/oTpSk0W30LdhK4XiquTDRne9FPlHMJcLfHivULZLvaDg6SI0sP
+	CIoYyEm2JKWTtqUfmgb7aI6olVaJF9WHB6C97FJ74ss1Y2Za1QxjGZpxeUay3Yney/Lp8PquCv8
+	u344n99CjVcV+gZr/FS/yVLLoOu3SzbQJm9RUsjYNLi1tgKU8qjcGpIbjhphpGg==
+X-Google-Smtp-Source: AGHT+IFjhAA6UeQ6iJtINER/INOY7ygvNNOjwHW/YCzhUOAkeneTAX3+lEeXKstulP3ywyDPHp9tkw==
+X-Received: by 2002:a17:907:2585:b0:ad5:431d:fb32 with SMTP id a640c23a62f3a-ae0a740dd8fmr16761166b.14.1750697438854;
+        Mon, 23 Jun 2025 09:50:38 -0700 (PDT)
+Received: from ernest.hoecke-nb (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch. [83.173.201.248])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60a18d01902sm6357004a12.79.2025.06.23.09.50.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 09:50:38 -0700 (PDT)
+Date: Mon, 23 Jun 2025 18:50:37 +0200
+From: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
+To: Jayesh Choudhary <j-choudhary@ti.com>
+Cc: dianders@chromium.org, andrzej.hajda@intel.com, 
+	neil.armstrong@linaro.org, rfoss@kernel.org, Laurent.pinchart@ideasonboard.com, 
+	dri-devel@lists.freedesktop.org, tomi.valkeinen@ideasonboard.com, max.krummenacher@toradex.com, 
+	jonas@kwiboo.se, jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com, 
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
+	kieran.bingham+renesas@ideasonboard.com, linux-kernel@vger.kernel.org, max.oss.09@gmail.com, 
+	devarsht@ti.com, geert@linux-m68k.org
+Subject: Re: [PATCH v5] drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort
+ connector type
+Message-ID: <cypbfwbsimknqtuzutprhpst2ugeih2f5c2qf35vtwc5qx5uzl@y6rsjwtlw7ca>
+References: <20250616093240.499094-1-j-choudhary@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250616093240.499094-1-j-choudhary@ti.com>
 
-On Mon, 23 Jun 2025 07:08:07 -0700 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
+Hi Jayesh,
 
-> On Sat, 21 Jun 2025 11:11:27 -0700 SeongJae Park <sj@kernel.org> wrote:
-> 
-> > On Sat, 21 Jun 2025 11:02:15 -0700 SeongJae Park <sj@kernel.org> wrote:
-> > 
-> > [...]
-> > > I'd hence suggest to implement and use a simple weights handling mechanism
-> > > here.  It could be roud-robin way, like weighted interleaving, or probabilistic
-> > > way, using damon_rand().
-> > > 
-> > > The round-robin way may be simpler in my opinion.  For example,
-> 
-> [...snip...]
->  
-> > Actually, probabilistic way may be not that complicated.  Maybe we could to
-> > below here.
-> 
-> [...snip...]
-> 
-> > But damon_rand() might be more expensive than the roud-robin way, and arguably
-> > roud-robin way is what usrs who familiar with weighted interleaving may easily
-> > expect and even prefer?  I have no preferrence here.
-> 
-> Hi SJ,
-> 
-> If you have no preference here, I would like to add some thoughts : -)
-> 
-[...]
-> I think that code complexity aside, round-robin may be the better choice for
-> a few reasons. Like you mentioned, I think it is what users might be used to,
-> if they are coming from weighted interleave code. Also, I think a round-robin
-> way will prevent worst-case scenarios where we get a long stretch of allocations
-> on the "wrong" node (but maybe this isn't a big deal, since it is so unlikely).
-> 
-> Finaly -- If we run workloads with mempolicy wet to weighted interleave
-> *and* with the weights already set, then pages will be allocated in a
-> round-robin fashion. I think it may be best to try and minimize migration costs
-> by trying to keep these weights in-sync. That is, if we have a 2:1 ratio,
-> we will have the following allocation:
-> 
-> node0 | oo oo oo oo oo oo oo ...
-> node1 |   o  o  o  o  o  o   ...
-> 
-> Using a probabilistic migration, it might change the pattern:
-> 
-> node0 |   oooo oo o ooo oo ...
-> node1 | oo    o  o o   o   ...
-> 
-> That is, the ratio might be preserved, but we may be doing unnecessary
-> migrations, since a probabilistic allocation isn't aware of any underlying
-> patterns. With a round-robin allocation, we have a 1/total_weight chance that
-> there will be no additional migrations, depending on where the round-robin
-> begins. I also want to note that weighted interleave auto-tuning is written
-> to minimize total_weight.
-> 
-> I'm wondering what you think about this. Perhaps there is a way to know where
-> the "beginning" of round-robin should begin, so that we try to keep the
-> allocation & migration pattern as in-sync as possible? I have a suspicion
-> that I am way over-thinking this, and none of this really has a tangible
-> impact on performance as well ;)
+Thanks a lot for all your work on this patch. I tested this version on a
+board with the broken HPD signal and can confirm that eDP works as
+expected anyways.
 
-The theory makes sense to me.  I also not very sure how much visible difference
-it will make on large scale real workloads, though.  Since at least the theory
-makes sense and we show no risk, I think taking the round-robin appraoch would
-be a saner action, unless we find other opinions or test results.
+Tested-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
 
-> 
-> Thank you as always SJ, have a great day!!
+Kind regards,
+Ernest
 
-Thank you, you too!
-
-
-Thanks,
-SJ
-
-[...]
