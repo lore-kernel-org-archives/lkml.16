@@ -1,272 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387D21CAA96;
-	Mon, 23 Jun 2025 12:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2443F24EA80
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:12:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750680741; cv=none; b=WIdrE+UgojR9T2fpDutK2lCSSeHBbYU9lewSpsN0jAR/cMIll2OIlppK/mOfHzR3nRLFYOBSj4u6dmQZoU7x4qgexAxiF/FmTkoGVnrC2CPU58/I1RfV7CH/5SEZ7OZb19i9ILRD4M0DoJUechlzvED7zLMqVqztxPTlZgJV6DA=
+	t=1750680764; cv=none; b=exWRFZt3Gvo261RM1gYLfaQCk49nkzLLYOCJbHh2We976JDyvxDJSzF1xQjhJ16VX6nvJtHV1+4P54ELlJQvfI9jBhOjsosyYMPKaJ+odWsaG2nozkzyADIFkVtvbiKwLOKQ1CGHbppWJuORsq5WMfRoKL968s63FXslydJ3bUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750680741; c=relaxed/simple;
-	bh=loOUJIQr+qUEW6o9ZxGsrjaE4988YPr7iwZh3UArESo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LY11FDB5MEXDoZXbsU0PgEvmCNiStKM21T1kvIJSkuJwrN1aixoUTLxDClAN8korExARnDDVVvcKlcisBBRe+wquPOIQjKUqdM9z1XSrx8b/7Hh8VywFYxxxRICowbOjJ1uSG3BFFIIZDH7vt9wtsJSTc+nAcvU9rBmAzkDKxRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XBOkkLeu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750680764; c=relaxed/simple;
+	bh=f+PlxvlYNV73EmEGSpMuoIOzazgAgDQRPjz34OV9/Zg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HzBHWbOJY+drURjED/2vmvur/oqmvUnD7F45+GCyGH121UpRhQQy3V/EUB8OwcxzC2T471qgEYsQU8Oh29Yy8ASngn6Wmsf/sb7p7pRm5w+cgAWGKZ93vsJ5xDFvBH97LlJ5tMr3+zi6xyftWVnNRHJ1I0+nbHuQgh0xj2v5pQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Cwfwesk8; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XBOkkLeu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6020DC4CEEA;
-	Mon, 23 Jun 2025 12:12:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750680740;
-	bh=loOUJIQr+qUEW6o9ZxGsrjaE4988YPr7iwZh3UArESo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XBOkkLeu5kmfliNt9G/hdS1pmLkw614one20LVvyu1XHTcO5DZ9Kmg7OLmON5K0fG
-	 1QhwZglMpkvnEaudY4Whgk9Zivh8iUetQhyAirAvQXH9/mdryiVI0UtyAQgJ+PC526
-	 M5doIi/1rjGJ3WNu9DgCCE8ZEdk3+UnPjNwb5nuZmGBkXvlRssweoJTiATNX5fQ2Ms
-	 T4e+AcASfagtUmcDIJHpVEqyO/C6u4kPkRpeZ6KURKqKYJSvrIV70NcoiqJdvmL6kI
-	 IIIIOgefj8TTaXBCcKOfQN3KvwMZE6x56rGwJ0LfmAaBCqJ7xpH40Dck84wy3tfMgg
-	 t95vFUAuE5MOQ==
-Message-ID: <ef64816f-0ba2-4a12-bef8-aa10e44793e1@kernel.org>
-Date: Mon, 23 Jun 2025 14:12:14 +0200
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Cwfwesk8"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2360ff7ac1bso27355015ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 05:12:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1750680762; x=1751285562; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eHyOQjUXQ/n7o6SDLI9e+lRQsNueNKsItK2jIA0gB9c=;
+        b=Cwfwesk8mv4t1j5XCd3uAZavQoAy0tPVCrZkTk15k6GialZ3riFxEChFl15O3h+VP3
+         CN7NOyWfb6h2Uf915hdu0RIkWDyHekYXargoEw3zjyMS63uriZU/SV/c5oJbSIP3i6Mt
+         yPNXLmMsSj+SS1HkHIqmxZYggoLY8EMbeLlUEd/VPIih8hvbPfOiNakyG5+b0Wwe7tR8
+         BgDkML5kPMns1boSTJgzocR1+38Fwu49+FAp9DRLdOMBPoxiv7IltMQth9chbBwpR/v6
+         tmDAw6zSbWlnQMsffvExrnmcgsxV+ghwZScfeMmmDv3pDyAL9yGFfEC7o9gwaDxfVeC4
+         Ktdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750680762; x=1751285562;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eHyOQjUXQ/n7o6SDLI9e+lRQsNueNKsItK2jIA0gB9c=;
+        b=fF6JNurlEp/FtYAnwZhFstV1mhHTw8OKLX+NARMectWL19HCXieAEjTLYN6vfNB2Lh
+         n6w2/lsLy3wsIrgx1lQKn1RSXaSh7FS0Er03xnpGigimaRoOsxCirjlCPr5eVTxj+mrA
+         ooUtmfDb/9tw8ndDEX+B/KY9gKZDCo2hqad3um+/0BQpq7cONy6fxD9DBWvYNpRvrKHq
+         pNJSd1mLcVvfAdwU3IbVnLnOIWCf3A/ursWDQXFHIsxev1eCFQ6qL9g6pOJe/K+f78KP
+         WpdTjKvfh8aQInRTBLYjzqfL6TmIPpjNFPNWivD275CwgRgN3w+XaxmS5xf3Hrw+4uOk
+         Ddcw==
+X-Forwarded-Encrypted: i=1; AJvYcCVs8mViC/18DWaSDLA9i55pEcxOdSLrwGaTRmmN+ltjOCXmRZ8nW6zWB9iyfjx7fs+k5bFKCgzVvCVLQNs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9S/Jn0yPi86H9E8mxS/A9XNMwRQ8aW4rcwjpvSQSPafs6StOh
+	bhVh+i/ycQ2CUo4XSYnlQwmkQZTTh/awPSHw0agX0uoYfYjNhne9msSxJEck/k3s8YgBGVJoch/
+	x8+P4QyW+YMt7K/lMrjhVvOXzFjOVjb1m8h3kpuMAiw==
+X-Gm-Gg: ASbGnct45FkKaIPhULZMb1IJl7ToL2aVaeODdR7HTdlgCphemWO+/WB52zA+EQDjeeQ
+	2t5Fp3Z0O6eWHOAeBQ7FZbUUJRsGxETdQBPwmX+YVnobKLFmFsKOgOAgYUu1gsMbxsEGk131HVG
+	7hOBm30YeymRUETLgeqETHPFmBIfh1UvMSUnVbGraJuyDfEPz5MbK5gADLrtXUQsUKAGk=
+X-Google-Smtp-Source: AGHT+IG6HZ/8Fi0eQ+rXE+47WUzLt+zmbjPe+C1XDxRfNdt32Ri4/qwaBYXVXZGqFfIan5V1AhcN8nK7xhtxwnbINxY=
+X-Received: by 2002:a17:90b:2dd0:b0:311:9c1f:8522 with SMTP id
+ 98e67ed59e1d1-3159d6466bfmr19690671a91.10.1750680762455; Mon, 23 Jun 2025
+ 05:12:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/30] dt-bindings: clock: mediatek: Describe MT8196
- peripheral clock controllers
-To: Laura Nao <laura.nao@collabora.com>, mturquette@baylibre.com,
- sboyd@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
- p.zabel@pengutronix.de, richardcochran@gmail.com
-Cc: guangjie.song@mediatek.com, wenst@chromium.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
- kernel@collabora.com
-References: <20250623102940.214269-1-laura.nao@collabora.com>
- <20250623102940.214269-10-laura.nao@collabora.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250623102940.214269-10-laura.nao@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250620091720.85633-1-luxu.kernel@bytedance.com>
+ <DARCHDIZG7IP.2VTEVNMVX8R1E@ventanamicro.com> <1d9ad2a8-6ab5-4f5e-b514-4a902392e074@rivosinc.com>
+In-Reply-To: <1d9ad2a8-6ab5-4f5e-b514-4a902392e074@rivosinc.com>
+From: Xu Lu <luxu.kernel@bytedance.com>
+Date: Mon, 23 Jun 2025 20:12:31 +0800
+X-Gm-Features: AX0GCFtYKxGqlHuJJ47JAXMxUFhLXnT6cZnnppHiAtMF1rC-04ON37kUhYiGk7I
+Message-ID: <CAPYmKFs7tmMg4VQX=5YFhSzDGxodiBxv+v1SoqwTHvE1Khsr_A@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] RISC-V: KVM: Delegate illegal instruction fault
+To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+Cc: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>, 
+	anup@brainfault.org, atish.patra@linux.dev, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, kvm@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, 
+	linux-riscv <linux-riscv-bounces@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 23/06/2025 12:29, Laura Nao wrote:
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - mediatek,mt8196-adsp
-> +          - mediatek,mt8196-imp-iic-wrap-c
-> +          - mediatek,mt8196-imp-iic-wrap-e
-> +          - mediatek,mt8196-imp-iic-wrap-n
-> +          - mediatek,mt8196-imp-iic-wrap-w
-> +          - mediatek,mt8196-mdpsys0
-> +          - mediatek,mt8196-mdpsys1
-> +          - mediatek,mt8196-pericfg-ao
-> +          - mediatek,mt8196-pextp0cfg-ao
-> +          - mediatek,mt8196-pextp1cfg-ao
-> +          - mediatek,mt8196-ufscfg-ao
-> +          - mediatek,mt8196-vencsys
-> +          - mediatek,mt8196-vencsys-c1
-> +          - mediatek,mt8196-vencsys-c2
-> +          - mediatek,mt8196-vdecsys
-> +          - mediatek,mt8196-vdecsys-soc
-> +      - const: syscon
+Hi Cl=C3=A9ment,
 
-Why everything is syscon?
+On Mon, Jun 23, 2025 at 4:05=E2=80=AFPM Cl=C3=A9ment L=C3=A9ger <cleger@riv=
+osinc.com> wrote:
+>
+>
+>
+> On 20/06/2025 14:04, Radim Kr=C4=8Dm=C3=A1=C5=99 wrote:
+> > 2025-06-20T17:17:20+08:00, Xu Lu <luxu.kernel@bytedance.com>:
+> >> Delegate illegal instruction fault to VS mode in default to avoid such
+> >> exceptions being trapped to HS and redirected back to VS.
+> >>
+> >> Signed-off-by: Xu Lu <luxu.kernel@bytedance.com>
+> >> ---
+> >> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/as=
+m/kvm_host.h
+> >> @@ -48,6 +48,7 @@
+> >> +                                     BIT(EXC_INST_ILLEGAL)    | \
+> >
+> > You should also remove the dead code in kvm_riscv_vcpu_exit.
+> >
+> > And why not delegate the others as well?
+> > (EXC_LOAD_MISALIGNED, EXC_STORE_MISALIGNED, EXC_LOAD_ACCESS,
+> >  EXC_STORE_ACCESS, and EXC_INST_ACCESS.)
+>
+> Currently, OpenSBI does not delegate misaligned exception by default and
+> handles misaligned access by itself, this is (partially) why we added
+> the FWFT SBI extension to request such delegation. Since some supervisor
+> software expect that default, they do not have code to handle misaligned
+> accesses emulation. So they should not be delegated by default.
 
+It doesn't matter whether these exceptions are delegated in medeleg.
+KVM in HS-mode does not handle illegal instruction or misaligned
+access and only redirects them back to VS-mode. Delegating such
+exceptions in hedeleg helps save CPU usage even when they are not
+delegated in medeleg: opensbi will check whether these exceptions are
+delegated to VS-mode and redirect them to VS-mode if possible. There
+seems to be no conflicts with SSE implementation. Please correct me if
+I missed anything.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  '#reset-cells':
-> +    const: 1
-> +
-> +  mediatek,hardware-voter:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: A phandle of the hw voter node
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#clock-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pericfg_ao: clock-controller@16640000 {
-> +        compatible = "mediatek,mt8196-pericfg-ao", "syscon";
-> +        reg = <0x16640000 0x1000>;
-> +        mediatek,hardware-voter = <&scp_hwv>;
-> +        #clock-cells = <1>;
-> +    };
-> +  - |
-> +    pextp0cfg_ao: clock-controller@169b0000 {
-> +        compatible = "mediatek,mt8196-pextp0cfg-ao", "syscon";
-> +        reg = <0x169b0000 0x1000>;
-> +        #clock-cells = <1>;
-> +        #reset-cells = <1>;
-> +    };
-> diff --git a/Documentation/devicetree/bindings/clock/mediatek,mt8196-sys-clock.yaml b/Documentation/devicetree/bindings/clock/mediatek,mt8196-sys-clock.yaml
-> new file mode 100644
-> index 000000000000..363ebe87c525
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/mediatek,mt8196-sys-clock.yaml
-> @@ -0,0 +1,76 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/mediatek,mt8196-sys-clock.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek System Clock Controller for MT8196
-> +
-> +maintainers:
-> +  - Guangjie Song <guangjie.song@mediatek.com>
-> +  - Laura Nao <laura.nao@collabora.com>
-> +
-> +description: |
-> +  The clock architecture in MediaTek SoCs is structured like below:
-> +  PLLs -->
-> +          dividers -->
-> +                      muxes
-> +                           -->
-> +                              clock gate
-> +
-> +  The apmixedsys, apmixedsys_gp2, vlpckgen, armpll, ccipll, mfgpll and ptppll
-> +  provide most of the PLLs which are generated from the SoC's 26MHZ crystal oscillator.
-> +  The topckgen, topckgen_gp2 and vlpckgen provide dividers and muxes which
-> +  provide the clock source to other IP blocks.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - mediatek,mt8196-apmixedsys
-> +          - mediatek,mt8196-armpll-b-pll-ctrl
-> +          - mediatek,mt8196-armpll-bl-pll-ctrl
-> +          - mediatek,mt8196-armpll-ll-pll-ctrl
-> +          - mediatek,mt8196-apmixedsys-gp2
-> +          - mediatek,mt8196-ccipll-pll-ctrl
-> +          - mediatek,mt8196-mfgpll-pll-ctrl
-> +          - mediatek,mt8196-mfgpll-sc0-pll-ctrl
-> +          - mediatek,mt8196-mfgpll-sc1-pll-ctrl
-> +          - mediatek,mt8196-ptppll-pll-ctrl
-> +          - mediatek,mt8196-topckgen
-> +          - mediatek,mt8196-topckgen-gp2
-> +          - mediatek,mt8196-vlpckgen
-> +      - const: syscon
+Best Regards,
+Xu Lu
 
-Why everything is syscon?
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  mediatek,hardware-voter:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: A phandle of the hw voter node
-
-Do not copy property name to description, but say something useful - for
-what? And why this cannot be or is not a proper interconnect?
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#clock-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    apmixedsys_clk: syscon@10000800 {
-> +        compatible = "mediatek,mt8196-apmixedsys", "syscon";
-> +        reg = <0x10000800 0x1000>;
-> +        #clock-cells = <1>;
-> +    };
-> +  - |
-> +    topckgen: syscon@10000000 {
-> +        compatible = "mediatek,mt8196-topckgen", "syscon";
-> +        reg = <0x10000000 0x800>;
-> +        mediatek,hardware-voter = <&scp_hwv>;
-> +        #clock-cells = <1>;
-> +    };
-> +
-
-
-
-> +#define CLK_OVL1_DLO9					56
-> +#define CLK_OVL1_DLO10					57
-> +#define CLK_OVL1_DLO11					58
-> +#define CLK_OVL1_DLO12					59
-> +#define CLK_OVL1_OVLSYS_RELAY0				60
-> +#define CLK_OVL1_OVL_INLINEROT0				61
-> +#define CLK_OVL1_SMI					62
-> +
-> +
-> +/* VDEC_SOC_GCON_BASE */
-> +#define CLK_VDE1_LARB1_CKEN				0
-> +#define CLK_VDE1_LAT_CKEN				3
-
-IDs increment by 1, not 3.
-
-
-
-Best regards,
-Krzysztof
+>
+> Thanks,
+>
+> Cl=C3=A9ment
+>
+> >
+> > Thanks.
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+>
