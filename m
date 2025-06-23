@@ -1,107 +1,87 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC6B25B69D
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49BB2494FE;
+	Mon, 23 Jun 2025 12:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750680089; cv=none; b=Zi8OIBasCJBnMPmGuXW7wELE9o9hx2G4/Q0Lh1FF2qETSXHR/Z1jR5Bg+2/EEzbR1CRR+IqLWOdmbwGO5FZOcyciniXnlSIRaU4yEPXwyokDLfyhakDY5hbgpjLVd5EMvBWt7/zft0LXcDP34cVIvqaxXBkuIhc3zkRA+6uA6Rw=
+	t=1750680096; cv=none; b=kBrx/yUz90gPq2il191XpvooMp0SdZtCmfFsKSRy+c3DcRlMiSlA7ui3CnjPMp/zGe5NrySXFOlsLXGlCMBNCgtaR07B68VG646fda7koh5NjUFKhYMz/sXZzNdPW1rXS2dIXKQf/9FDJNndFStYQ/HMROGAKMQJPT8OpdhxN9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750680089; c=relaxed/simple;
-	bh=BKnx4RIjek7E/rOPu3UOodiyY/m4uTgXkFgE5y0mRIA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=ZFBdKCY2YTRf3OIO71CT9LMnz0PQq/FHBajbe8Ioq/93ezmy3tZGHdW5ZGhqSDd6X5dbyZ8C51l1biAcsuDvBOXIqSt8evHjntTy/QZdqfqtTYGfTZ6f8riM1sn6Rt4DVY0mkjuMzIYQQt480qjMrn6PrxuAiSpb9FOf9YrPAPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=J3KThsGO; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750680096; c=relaxed/simple;
+	bh=idTHQ9r0uHXKoBT2gS5ef4ZVLvkWzlt1nNUSitiLNnA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LSbWNMAeWjbEyKVhc9vQxXTWi8t2Ak59TA16v+HbNw5fawCxV95pLocK86ZQymUw0YRlSxRqsEj/4+Xk8JS8ozHebFndKiaquMm17fyvgeXK4qhlIef2sVKSPMoKoeQ8FaKWMZkMrvKsvkp9TrK+6E10B2lB+JbocVN0Q3rfUks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=WV76i7Qs; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="J3KThsGO"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250623120124euoutp02acb9d5636a52126f16ba6aafcf6ffc52~LqkL7tj260180501805euoutp02N
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:01:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250623120124euoutp02acb9d5636a52126f16ba6aafcf6ffc52~LqkL7tj260180501805euoutp02N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750680084;
-	bh=QmswFbqzDq4XOvS740eYk+68L2oNBkefGQTaJgQK+NY=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=J3KThsGOubEgfg0IwfVOeEA0quwMGx4pOLWaqXWJysp0fJTqskxNJWJ5sIhvynS+I
-	 QKhL+ARVFJFgTl6yg8dSnhSN78CVSoAUvvNLEsPFxm/G3AWi66CtR5/ui3XMpmZc0o
-	 sfBOoArXI1Cn8047YyJrRVU1IirsQxU/jVhdUnXg=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250623120124eucas1p2441d1be7176d61d849aea1bd1b892b8e~LqkLj4zVB1744517445eucas1p2Y;
-	Mon, 23 Jun 2025 12:01:24 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250623120123eusmtip20dfa1daf0bd30559e6dac8b8c2bf818b~LqkKytaR50067700677eusmtip21;
-	Mon, 23 Jun 2025 12:01:23 +0000 (GMT)
-Message-ID: <ed07e57d-00e0-44b3-b53e-b5295aee8561@samsung.com>
-Date: Mon, 23 Jun 2025 14:01:23 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="WV76i7Qs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750680093;
+	bh=idTHQ9r0uHXKoBT2gS5ef4ZVLvkWzlt1nNUSitiLNnA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WV76i7QsO9pCUj/sfcs8ZgX4CDIigFMX+qv5Rjay0gUKpAhWXaFjdewtd3TUAxUXS
+	 0aPWN3WjlgXOvQZ/wod7fVCPLGZN2sGbOTt8UN701lbtKIf7gRiEwoe1jNWAP/NI6q
+	 iGchEboXxjlMbm8O6O6xpoE8iQ3oYNKh9pTe4/Tl8DcLW/LkIBWj8UFZ7c3DNOXvWh
+	 H/H5JL+4uwkrc7pEdKv18CHQ6o6WdV0ZN6UC7koOddRAkHgNyWdUxE+QtP8Zf8n9Er
+	 XWmAmv1rzZWcOIpHwUbNjnQpo1onm1nOuZ6U6QpJFGNBNa/jmo2lKchFkvM9eGwFAy
+	 uD3QG5GVi+ZmA==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 92D2D17E090E;
+	Mon, 23 Jun 2025 14:01:32 +0200 (CEST)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: jassisinghbrar@gmail.com
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	kernel@collabora.com
+Subject: [PATCH v1 0/2] mailbox: Add MediaTek TinySYS Mailbox
+Date: Mon, 23 Jun 2025 14:01:25 +0200
+Message-ID: <20250623120127.109237-1-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH v4 1/4] dma-mapping: benchmark: Add padding to
- ensure uABI remained consistent
-To: Barry Song <21cnbao@gmail.com>, Jonathan Cameron
-	<Jonathan.Cameron@huawei.com>
-Cc: Qinxin Xia <xiaqinxin@huawei.com>, robin.murphy@arm.com,
-	yangyicong@huawei.com, hch@lst.de, iommu@lists.linux.dev,
-	prime.zeng@huawei.com, fanghao11@huawei.com, linux-kernel@vger.kernel.org,
-	linuxarm@huawei.com
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <CAGsJ_4wOB+cmGzuzzacwJGeUYgGLuKg94wuWC+mA-_=r0TVuhQ@mail.gmail.com>
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250623120124eucas1p2441d1be7176d61d849aea1bd1b892b8e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250616104053eucas1p1017f1af71a338aed4cbdf61930f79e0c
-X-EPHeader: CA
-X-CMS-RootMailID: 20250616104053eucas1p1017f1af71a338aed4cbdf61930f79e0c
-References: <20250614143454.2927363-1-xiaqinxin@huawei.com>
-	<20250614143454.2927363-2-xiaqinxin@huawei.com>
-	<20250616105318.00001132@huawei.com>
-	<CGME20250616104053eucas1p1017f1af71a338aed4cbdf61930f79e0c@eucas1p1.samsung.com>
-	<CAGsJ_4wOB+cmGzuzzacwJGeUYgGLuKg94wuWC+mA-_=r0TVuhQ@mail.gmail.com>
 
-On 16.06.2025 12:40, Barry Song wrote:
-> On Mon, Jun 16, 2025 at 9:53 PM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
->> On Sat, 14 Jun 2025 22:34:51 +0800
->> Qinxin Xia <xiaqinxin@huawei.com> wrote:
->>> The padding field in the structure was previously reserved to
->>> maintain a stable interface for potential new fields, ensuring
->>> compatibility with user-space shared data structures.
->>> However,it was accidentally removed by tiantao in a prior commit,
->>> which may lead to incompatibility between user space and the kernel.
->>>
->>> This patch reinstates the padding to restore the original structure
->>> layout and preserve compatibility.
->>>
->>> Fixes: 8ddde07a3d28 ("dma-mapping: benchmark: extract a common header file for map_benchmark definition")
->>> Cc: stable@vger.kernel.org
->>> Acked-by: Barry Song <baohua@kernel.org>
->>> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
->> FWIW I checked the patch above indeed accidentally dropped the padding and the structure
->> is copied to userspace so this fix is correct.  Given it's not in a uapi header this
->> only really affects the selftest I think this is mostly a case of there possibly being
->> out of tree tools with a local copy of this structure definition.
-> Somehow, I feel we have placed
-> tools/testing/selftests/dma/dma_map_benchmark.c in the wrong location.
-> As a selftest, it should have a mechanism to check kernel dependencies,
-> start properly and automatically, and report pass or fail.
->
-> dma_map_benchmark.c seems more like a tool that belongs in tools/dma,
-> rather than a test.
+This series adds support for the MediaTek TinySYS Mailbox, used for
+message passing on ARM SCMI and for both the standard 0x10 SCMI and
+the MediaTek TinySYS SCMI protocol.
 
-Indeed imho it would be better to move it out of selftests directory.
+This mailbox is similar to the standard MHU Mailbox, but with some
+critical differences that are MediaTek-specific; for more information,
+check the description for the commits in this series.
 
-Best regards
+This mailbox is found in the new MT8196 Chromebook SoC and in the
+MT6991 Dimensity 9400 SoC, other than slightly older chips like
+MT6898 Dimensity 9300, the MT6985 Dimensity 9200 and similar.
+
+Support for all of the mentioned SoCs is present in this series.
+
+AngeloGioacchino Del Regno (2):
+  dt-bindings: mailbox: Add MediaTek TinySYS MHU mailbox
+  mailbox: Add MediaTek TinySYS MHU-like Mailbox
+
+ .../mediatek,mt6985-tinysys-mhu-mbox.yaml     |  52 +++++
+ drivers/mailbox/Kconfig                       |   9 +
+ drivers/mailbox/Makefile                      |   2 +
+ drivers/mailbox/mtk-tinysys-mailbox.c         | 196 ++++++++++++++++++
+ 4 files changed, 259 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/mediatek,mt6985-tinysys-mhu-mbox.yaml
+ create mode 100644 drivers/mailbox/mtk-tinysys-mailbox.c
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+2.49.0
 
