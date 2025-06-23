@@ -1,221 +1,155 @@
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3645A219E0
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 21:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25325219E0
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 21:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750712614; cv=none; b=IBto2LTeceL7LT1aTS5ZaHcS1fWMaYplhAiR4JolEpbWJx8VxCj1Yl8U8FBc+0XvgcEJRc+76KgjbazVg4c2QynE6ByGGG44JY7APw4STDN4fc6LWPorZWkBEHRpdkMoq8BhCGY7BM52TWyr7LOzf2om9TVlbWJCT18sv2PLUIk=
+	t=1750712759; cv=none; b=V1HhitFBZa+/GFHZR2hGEBr5l2vpEDq2NWbmjwIUuXuj72dtvq+xxGGoJI12DxQz6LLfd+Rs5AQ/kkAiGxnlbAOecFvWRLoSNfCS/RvaKqMlo7pX3oAd04Q2LvtN9ja30Q+gxpVvmlH1LXv3uyFU5QoPYBsAp7wy+AlHRvkuD5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750712614; c=relaxed/simple;
-	bh=qD/5fpltwi6CQhE4d+QAwzwB+oI1n5lWT7vYOJxetns=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=EwDdhG8KrUsv4HGYa7PRQjGzEYuH3zDhzawNSBEEGR1e6XJ9NrmIvrLcqQjD3LDBoEaPZji2yG4JHX5nOsLTzi6Cv5mz0QzssL2GTuEgUpfNWTxKkGgGasi+CudpJjdmV8w0EAt3lA5y5D+9g5W1EfClca37RVggcCg8jDcH/ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b=j/xaq6Ko; arc=none smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+	s=arc-20240116; t=1750712759; c=relaxed/simple;
+	bh=QJJddcvfb4kRHAKMSa/fFV0iFteug7n2v+ZY6h+PamU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=INOen7rOYUJrJnn8elFjy9zRD5GBH1rhMNERWAdxVZsO/2o90JwLiKacN/FVAqcfa9Ebw05JZfto3o5gb0j6sp0K+27+v7PVoBvvpjTbHkIwgHqE2dG0OHYXTNDqdDn6Dy32bx21dptLfI8UUPQJ5yKF8nehSQ4JrVSw61HjZFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tudyQ3mJ; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="j/xaq6Ko"
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NKCBBr008218
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:03:32 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=facebook; bh=VqRePG2wZ9PVe0RngXgpc/S
-	8eiBKJ0SeAsNlBmXPwQ4=; b=j/xaq6KosX/nfD65O9N5RWo117zAFkn99KZ5zs5
-	z/wKWqwYKKmN0v4KzCIDKHskkij/rAlp2udTg384e7JNPGb0ym7qRAgA9+hcUqSu
-	p9iEbwKFoh0weQYR5nFJjbIujODNzKefYBcjsHsKtEL2f3ZEjnwDl5VEKmFR/LnK
-	wrac=
-Received: from maileast.thefacebook.com ([163.114.135.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 47dtf0pafb-3
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:03:32 -0700 (PDT)
-Received: from twshared45213.02.ash8.facebook.com (2620:10d:c0a8:1c::11) by
- mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1748.24; Mon, 23 Jun 2025 21:02:52 +0000
-Received: by devgpu004.nha5.facebook.com (Postfix, from userid 199522)
-	id 1B5BE115CA8; Mon, 23 Jun 2025 14:02:39 -0700 (PDT)
-From: Alex Mastro <amastro@fb.com>
-Date: Mon, 23 Jun 2025 14:02:38 -0700
-Subject: [PATCH] vfio/pci: print vfio-device name to fdinfo
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tudyQ3mJ"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-313b6625cf1so3292981a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:05:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750712757; x=1751317557; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=pHX9CXX2jp+sc88nWffGW5R0z0vn6Lx1vW0giPA6MfM=;
+        b=tudyQ3mJLPhvsewTacLYoZly8DLPPbFYP0Qdext5ZuA04IswIA1Q6EfXhu3HaoiPbg
+         7Nw7WrZrGDuZBbs6cSNwfNEcB3XNQtPoatMYo0eSyJV3Z0CHD1YBLmfhk1oC32rkcdyD
+         HhmNuDLyHc+wooSrrDqEkW9JfRsLem3aGVTIiqA5wrLmb2o7btZWydVy/17CBxWnYnor
+         TvkEwc9WcYOshzgVC2xGhQ4NKd+RYJ3SY3mv9zPDN54xTM9qTMwgDnGZm1g59ov6xNM7
+         ZUMZkO4zcTFEYMN3f1EqdMDubip3qqc7GD5Uj1PyTSsbs2CcGG5vcdbWawnhlB0CZr2X
+         Fm/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750712757; x=1751317557;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pHX9CXX2jp+sc88nWffGW5R0z0vn6Lx1vW0giPA6MfM=;
+        b=nJ1HJE5C+FrSTuenThJo2c3A64YGUUU/FWLyS1sEZngflcKZhZKUDWF5gZeZKrNgzD
+         PM1gvSd4PViiVdGDwwTREOeTYUo13Rv4FkI2sBjqqKOwYd6U93Ew+fHBq/+jALeVJjl9
+         d+uI2+yQV+gz86vqGbh2i1xYPry06YmoKM25TFfwepjZ+8mpD2NEOuwE4a0kkzYNGgz8
+         XYC1ubQYQ7tkGnPBqYLqMrbkm0ZtvUiFQF+lZ+L8ZtbPnjSr7GSCIyNYBqmmtuD1NdXK
+         rGtvAOMyZvUOS8+diBOL4WLxxWDsyIwY2FrJbS4jOZMyx8RtkbBKZ+gM3Pcfq4/AM9A9
+         Roqw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/XbsCTmgxlaXS4uImaDkPEieA9HHTdOrzJhFbq/wYoAmIvSVVZd/VI6KH0R9TD0UGQx7w0z1/e/PrdrY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfZk3rJylLHc5UT6FrXs/nNt0FzS5cfaKZ+wRjTTAhMmRW4Bam
+	t73nFX0O/gvw0x0bSG13T4KdlAp4ujENM/dUELaP3z8Z3Bx8hUZGkqIl+OH9C1ea/aETR79+kDi
+	b+ivlqt5sf0oW20KSf8nyeS8YZYzSE5jXhHb4Wh6XiQ==
+X-Gm-Gg: ASbGncuiGOobfVz95+ot+IcanhVb9FAj0+vjiUps+kuVTGIRrdBH1xoPUChFQmbPo+Y
+	qOyTXkt1tIdz6SyjjkynG0L19wTwzSNBO+2XewVTkanoDn3uP1Adrj1EJn1VtPBDgzRQhauxQSm
+	1RZ4IcAtn/lyEwrXMdQL2gTFXbE7SvE1uAVCTfO9k2RBfdqdCRgMpFXJR5q4dsGMr+sciA8MYw5
+	tTh
+X-Google-Smtp-Source: AGHT+IGluWyWYchA0SWpbfOmsSY/NlAvWI3AwaiTmC73117pQczqsC1IpuBOq5vhAW9oC3+ZWrshJwcLG3IOLcWQkbE=
+X-Received: by 2002:a17:90b:5586:b0:312:e73e:cded with SMTP id
+ 98e67ed59e1d1-315ccd7261emr1387255a91.16.1750712757357; Mon, 23 Jun 2025
+ 14:05:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250623-vfio-fdinfo-v1-1-c9cec65a2922@fb.com>
-X-B4-Tracking: v=1; b=H4sIAO3AWWgC/x3MQQqAIBBA0avIrBPUUqmrRAvJsWajoSCBePek5
- Vv836BgJiywsQYZKxVKcUBODM7bxQs5+WFQQmlh1MxroMSDpxgSt8ai1U4uq3EwiidjoPe/7Uf
- vH7TMoNRdAAAA
-To: Alex Williamson <alex.williamson@redhat.com>
-CC: <peterx@redhat.com>, <kbusch@kernel.org>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Alex Mastro
-	<amastro@fb.com>
-X-Mailer: b4 0.13.0
-X-FB-Internal: Safe
-X-Authority-Analysis: v=2.4 cv=RvnFLDmK c=1 sm=1 tr=0 ts=6859c124 cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=NEAV23lmAAAA:8 a=FOH2dFAWAAAA:8 a=_mezBqhOHE8Xc2ruhwAA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDE0MSBTYWx0ZWRfX5FpANe6+2sT5 qSBq2IwuedA+nvDpYVFDYKXfeVIw3Ennq5J+mydiCnQpiOvBlz7lvP7q8C5zKvWnci27V6f8Mpc G4mDTveWywbDRm3NNk7dAzaP9Avo/ZmZ1HUa5mYZIi0iKhP7aRD6x2wXA07F4JE6dOkNKPEfxGQ
- pY746yFNEZwAE1tWoCVDKd0g3+z4FsJeVytq3MzKl58bbvQ5DjBNf163vTfe+C2G/0AOHAm1Kmv 0zRsTF02ftCcOaGtB1OCKy3rXc8g0zR9JLuWCG3fsSs2osjQLDpbScta3YKkyGne0sQ/ekbty28 066mO1qE7j0skuvHsw9wbMfzHi+RNDih2rn+7nRQ6dsAkYaAdoEEBh9fw0LBBYUPUVstWqFypAO
- ZB6KcBQNnIca1sa1LHP4gasMj0WYgfJvaJcN3wd/KooqxsnSTb5ZBvzm1pArOct/vNjWFruR
-X-Proofpoint-GUID: tq_4pQ2qNjbDI0klP9X0-sL3HE72cXU_
-X-Proofpoint-ORIG-GUID: tq_4pQ2qNjbDI0klP9X0-sL3HE72cXU_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-23_07,2025-06-23_07,2025-03-28_01
+References: <20250617152451.485330293@linuxfoundation.org>
+In-Reply-To: <20250617152451.485330293@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 24 Jun 2025 02:35:45 +0530
+X-Gm-Features: Ac12FXwPGqqVTvOIk9rFpxKVJdoOnBMvXrD0aOMgF5kEpGyYgKGtnJCwPlmxBRU
+Message-ID: <CA+G9fYtUjjrzghRQVUJ5ct9zNK2ROcRVOizpT-ZyjzZGRSUz1Q@mail.gmail.com>
+Subject: Re: [PATCH 6.15 000/780] 6.15.3-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Print the PCI device name to a vfio device's fdinfo. This enables tools
-to query which device is associated with a given vfio device fd. It's
-inspired by eventfd's printing of "eventfd-id" (fs/eventfd.c), which
-lsof uses to format the NAME column (e.g. "[eventfd:7278]").
+On Tue, 17 Jun 2025 at 20:58, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.15.3 release.
+> There are 780 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 19 Jun 2025 15:22:30 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.15.3-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.15.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-This results in output like below:
+Regressions on s390 allmodconfig builds with gcc-13 and clang-20 failed on
+the Linux stable-rc 6.15.4-rc1.
 
-$ cat /proc/"$process_using_vfio"/fdinfo/"$vfio_device_fd" | grep vfio
-vfio-device-name: 0000:c6:00.0
+Regressions found on s390
+* s390, build
+  - clang-20-allmodconfig
+  - gcc-13-allmodconfig
 
-Signed-off-by: Alex Mastro <amastro@fb.com>
----
-Hello, this is my first patch submission to vfio, and linux. We would
-like our tools to be able to query the PCI device name for a given
-vfio-device fd by inspecting a process's open file descriptors. It is
-inspired by eventfd's id printing, which is nicely formatted by lsof in
-the NAME column.
+Regression Analysis:
+ - New regression? Yes
+ - Reproducibility? Yes
 
-I am not sure to what extent this should be generalized, so I opted
-to put as little policy as possible into vfio_main.c, and have each
-vfio_device_fops implement what it means to show_fdinfo. The only
-implementer is vfio_pci_ops in this change.
+Build regression: stable-rc 6.15.4-rc1 s390 allmodconfig
+sdhci-esdhc-imx.c 'sdhc_esdhc_tuning_restore' defined but not used
 
-Alternatively, if we wanted to normalize show_fdinfo formatting, this
-could instead hoist the print formatting up into vfio_main.c, and call
-an optional vfio_device_ops->instance_name() to get the name. I opted
-not to do this here due to unfamiliarity with other vfio drivers, but am
-open to changing it.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-I noticed that other vfio_device_fops are guarded by checks on
-vfio_device_file.access_granted. From what I can tell, that shouldn't
-be required here, since a vfio pci device is guaranteed to be
-able to print its name (due to existence of vfio_device.pdev) after
-vfio_device_ops.init() construction.
+## Build errors
+drivers/mmc/host/sdhci-esdhc-imx.c:1608:13: error:
+'sdhc_esdhc_tuning_restore' defined but not used
+[-Werror=unused-function]
+ 1608 | static void sdhc_esdhc_tuning_restore(struct sdhci_host *host)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/mmc/host/sdhci-esdhc-imx.c:1586:13: error:
+'sdhc_esdhc_tuning_save' defined but not used
+[-Werror=unused-function]
+ 1586 | static void sdhc_esdhc_tuning_save(struct sdhci_host *host)
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
 
-This change rooted on the for-linus branch of linux-vfio [1].
+## Source
+* Kernel version: 6.15.4-rc1
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+* Git sha: de19bfa00d6f93fdcd38a5c088466e093af981f2
+* Git describe: v6.15.3-593-gde19bfa00d6f
+* Project details:
+https://regressions.linaro.org/lkft/linux-stable-rc-linux-6.15.y/v6.15.3-593-gde19bfa00d6f/
+* Architectures: s390
+* Toolchains: gcc-13, clang-20
+* Kconfigs: allmodconfig
 
-[1] https://github.com/awilliam/linux-vfio
----
- drivers/vfio/pci/vfio_pci.c | 14 ++++++++++++++
- drivers/vfio/vfio_main.c    | 15 +++++++++++++++
- include/linux/vfio.h        |  2 ++
- 3 files changed, 31 insertions(+)
+## Build s390
+* Build log: https://qa-reports.linaro.org/api/testruns/28840725/log_file/
+* Build details:
+https://regressions.linaro.org/lkft/linux-stable-rc-linux-6.15.y/v6.15.3-593-gde19bfa00d6f/build/gcc-13-allmodconfig/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2yuYQdocMC494e6F9GTIAK16EAg/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2yuYQdocMC494e6F9GTIAK16EAg/config
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 5ba39f7623bb..b682766127ab 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -21,6 +21,7 @@
- #include <linux/mutex.h>
- #include <linux/notifier.h>
- #include <linux/pm_runtime.h>
-+#include <linux/seq_file.h>
- #include <linux/slab.h>
- #include <linux/types.h>
- #include <linux/uaccess.h>
-@@ -125,6 +126,16 @@ static int vfio_pci_open_device(struct vfio_device *core_vdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PROC_FS
-+static void vfio_pci_core_show_fdinfo(struct vfio_device *core_vdev, struct seq_file *m)
-+{
-+	struct vfio_pci_core_device *vdev =
-+		container_of(core_vdev, struct vfio_pci_core_device, vdev);
-+
-+	seq_printf(m, "vfio-device-name: %s\n", pci_name(vdev->pdev));
-+}
-+#endif
-+
- static const struct vfio_device_ops vfio_pci_ops = {
- 	.name		= "vfio-pci",
- 	.init		= vfio_pci_core_init_dev,
-@@ -138,6 +149,9 @@ static const struct vfio_device_ops vfio_pci_ops = {
- 	.mmap		= vfio_pci_core_mmap,
- 	.request	= vfio_pci_core_request,
- 	.match		= vfio_pci_core_match,
-+#ifdef CONFIG_PROC_FS
-+	.show_fdinfo	= vfio_pci_core_show_fdinfo,
-+#endif
- 	.bind_iommufd	= vfio_iommufd_physical_bind,
- 	.unbind_iommufd	= vfio_iommufd_physical_unbind,
- 	.attach_ioas	= vfio_iommufd_physical_attach_ioas,
-diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
-index 1fd261efc582..e02504247da8 100644
---- a/drivers/vfio/vfio_main.c
-+++ b/drivers/vfio/vfio_main.c
-@@ -28,6 +28,7 @@
- #include <linux/pseudo_fs.h>
- #include <linux/rwsem.h>
- #include <linux/sched.h>
-+#include <linux/seq_file.h>
- #include <linux/slab.h>
- #include <linux/stat.h>
- #include <linux/string.h>
-@@ -1354,6 +1355,17 @@ static int vfio_device_fops_mmap(struct file *filep, struct vm_area_struct *vma)
- 	return device->ops->mmap(device, vma);
- }
- 
-+#ifdef CONFIG_PROC_FS
-+static void vfio_device_show_fdinfo(struct seq_file *m, struct file *filep)
-+{
-+	struct vfio_device_file *df = filep->private_data;
-+	struct vfio_device *device = df->device;
-+
-+	if (device->ops->show_fdinfo)
-+		device->ops->show_fdinfo(device, m);
-+}
-+#endif
-+
- const struct file_operations vfio_device_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= vfio_device_fops_cdev_open,
-@@ -1363,6 +1375,9 @@ const struct file_operations vfio_device_fops = {
- 	.unlocked_ioctl	= vfio_device_fops_unl_ioctl,
- 	.compat_ioctl	= compat_ptr_ioctl,
- 	.mmap		= vfio_device_fops_mmap,
-+#ifdef CONFIG_PROC_FS
-+	.show_fdinfo	= vfio_device_show_fdinfo,
-+#endif
- };
- 
- static struct vfio_device *vfio_device_from_file(struct file *file)
-diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-index 707b00772ce1..54076045a44f 100644
---- a/include/linux/vfio.h
-+++ b/include/linux/vfio.h
-@@ -16,6 +16,7 @@
- #include <linux/cdev.h>
- #include <uapi/linux/vfio.h>
- #include <linux/iova_bitmap.h>
-+#include <linux/seq_file.h>
- 
- struct kvm;
- struct iommufd_ctx;
-@@ -135,6 +136,7 @@ struct vfio_device_ops {
- 	void	(*dma_unmap)(struct vfio_device *vdev, u64 iova, u64 length);
- 	int	(*device_feature)(struct vfio_device *device, u32 flags,
- 				  void __user *arg, size_t argsz);
-+	void	(*show_fdinfo)(struct vfio_device *device, struct seq_file *m);
- };
- 
- #if IS_ENABLED(CONFIG_IOMMUFD)
+## Steps to reproduce
+  - tuxmake --runtime podman --target-arch s390 --toolchain gcc-13
+--kconfig allmodconfig
 
----
-base-commit: c1d9dac0db168198b6f63f460665256dedad9b6e
-change-id: 20250623-vfio-fdinfo-767e75a1496a
-
-Best regards,
--- 
-Alex Mastro <amastro@fb.com>
-
+--
+Linaro LKFT
+https://lkft.linaro.org
