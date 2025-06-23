@@ -1,143 +1,100 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B1C2192EC;
-	Mon, 23 Jun 2025 22:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11FF3223DF0
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 22:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750717278; cv=none; b=YaF3tXFvW+TyMBT6D19Rs93maWLqUKkqnL5Q8phYmD02HCTj/76uJfPWGSRkJh3boXn14EQmVIvNytkh3rxLE26MFqJ9ES9Wdppg1lNnD+hbK9W+0xRrjGJzALWTePasOfm1HYALBmU5oq8ZOI8yNxTcVHkeFRXdRuUhJKVu3IY=
+	t=1750717519; cv=none; b=ObW5IkBkIt5P0fbd22kughCy1b9R1yvw6VzKlBLsbzhBmE1EmVLmyFcEt3D8fbc4hTHrBb8c9E49lKUPY+P9iwXL8hwp7RJ3jSbWLRnh33qEWmQcchKMhU8na+rn6d7KvbtP6kMFoeFVdZF0FqtEu64hg46h/cJdesBhGooHaJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750717278; c=relaxed/simple;
-	bh=yIlAvRsgijXTH3oVxeZJ0I9VIfkkLUzhzk6JrA+Phs4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eUiv3zZdwd+R4d1W3NSpgbDH3z91GBs0ZfGEWOfeO0iDqK22vTzUK4eyLRcswvPF/mZLkIDNx+5kjiDx5h+yEHcc1ql1UBFw2CuxaFzdM+NDrzlwXv+sQQOFKiMx8t6YfiSs6Izl6coPOyUsJCFzBr/kk+2y/KzX6eV2Z5BLQcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jxge1LYl; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750717519; c=relaxed/simple;
+	bh=iSqfQdhhNrFUcXqgyYNd2M03410UI/DXw37Kxcdnpw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cAah8tfVM4bQSD4hQ9CtWDoKCnb0ukHRA+ZwJSKiM39z6RbG9seaotYYduelGpI6p+YU4J1ImTA4JwqJPdEJgK24lv80e5lYj7MWk+jjY4gzo5f0JWPbpADMh7fjoe5sxkYA9duq2yD2aDC1CMmKtZ3dknOQpQ998LmSO+iBJLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IrXt+LlS; arc=none smtp.client-ip=209.85.167.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jxge1LYl"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2363497cc4dso42749645ad.1;
-        Mon, 23 Jun 2025 15:21:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IrXt+LlS"
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-40ab5bd9088so3125968b6e.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:25:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750717276; x=1751322076; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=XiS6dENs8Ta5fbquyxweL8AOiocCYE0d6u4W3pkICBc=;
-        b=Jxge1LYlphwpeOU867fT9UVp80TzkB/5kdJvkTN7pakn2YDf+8H8LDsqrxf+ke8RZN
-         Fvon/QwFvPldSwVPqbl8FfswxNYfZ5FtBtZAIgIbS3l5fZs6mZptB5Sc3/F1nVlBq2Ku
-         NEJB28VKtISChEsN3ns/8Jh6pnFFLpMcn33/r5M8AE+uiTvfuwm3KtMS7/xL1qkcMykJ
-         wiZrD1QEK5I12ue3agJlf+5VJdYINQIN8mmbIO0Dw8ZwjHrp6UifZcHh0No8375XPqSb
-         elyEI7wgfY0l9gYsgItTmfuc7sJGrFnDbz2F37cQhrIi0ulYqniLpDyV3iZP/YDiutu1
-         sqBw==
+        d=linaro.org; s=google; t=1750717517; x=1751322317; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YurwFid4CmPM1zECZ7NAIyg8xcw24kM7tKeHyFwlZDY=;
+        b=IrXt+LlSxmPKwAhyJk5C6CjfpEX9I6oWgVeVt12x4fJ36lCI4p5sGh4hUQHsup7KXV
+         tH2XQFM46tjozQK9A4RX8SD/4OLMu+CKdHZzd7VVMSM/fmNV/gjaWbKfXy2sFKWNwqYZ
+         is5dI88r1mZLmemKAZZxHYDP07YcUWoU+Y6n+EeJczj5PmW3/v6+eooju0jstqXqj+Vb
+         xUslRJ2MxDA6D2WNJQY/tWNaE9r9h/mxCTGjOxxtOn2i0hHg63FdnxLXA9DQ3c15Sfh1
+         Y7OSTN+aZq00mjtbfZ7lVqxxF8PvQz4nApZtTdqVOTpOQepa3vk2qXlOcMtj/QQ4wWxC
+         W+xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750717276; x=1751322076;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1750717517; x=1751322317;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XiS6dENs8Ta5fbquyxweL8AOiocCYE0d6u4W3pkICBc=;
-        b=Kw1/T4LjF9rlx5CoWDFOCRUBxMa6QS+B1mhkUmYh0Bazw8Z+iMEepWXDGOgu8zII5f
-         rSKOjMS+KqdMglZwnCnDMwSmXt/4bwYXIFidI/+QQfE6oONNsSAJ4aK+7f9hA8gvWQXs
-         /gksLc3jiSEHl8lBi6z3MAetP6BA5cxFtSB1V1sQTi58EWZVP0PTEU1onpRku+r4RFru
-         msn5EFOFZ+yIhLHSwcaemQCjT0QIcHbq/091x0KDl0PiHJriPSPVorstplZSGvlQwXQQ
-         aSQMk+IyDX1bM0JXq3HpC9isUHm2p69M9e9qBd13AWVwIo3459g+dcQclP3SJFvkxhB6
-         K42g==
-X-Forwarded-Encrypted: i=1; AJvYcCUvLOfgzYytQQ75SCiYrf9Bbgwg/za73Vhqrp+HWqv1sxJu00r++md6TVtYjN8bacq1VtMgrnulz/CEDF4=@vger.kernel.org, AJvYcCXICEFVoJsueODqQ7qpQ0GCVYJw69iioOyKMJOoac+Vax5vor0fKmMbZnV9jFu8YrHSRObl2DAz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/IiZpx9kDAEr23KnUIwy+t7BfTDmPd0B8v01MpKBVMLJ0YADs
-	A1PxC7Ox1SSiXLfSP2Yf1eVwQrSoXPd4s/nw8Y/rpo5M5ZRwTK75L12p
-X-Gm-Gg: ASbGncvPD/9VWeLrANlxzN8uSEb3ibl+lNGDVK80+lM0zqxEcI6w5ZCcBnfHHIrlD9Z
-	uD03AnSs2E1EC2+pSsC3V7N0BZZxQBRMw+E+MqZ5YCwy3q74+OcjsAomakGL9ARVHEZXDm4+HVU
-	VTg7XUoWFttpOpzwZhkSHvX1VATDhL9+1Qrg55xf0FOCG8tdfzgvnBUPdwl0q0XdyldkOI6gFYw
-	6h6DSrRpTxiJqJVPSqyhYmXVyCLVZ1bgaXM4D8LMRh7gp00imPWNvK3FejTcwZsjyUocAZB3l72
-	5va0qi4wB6S1njz/T9dESeYuKIsN2nR4x/MhCPGeIF6iqKcG+wBgqXQZj9VRX37DHKMwKrIcrHS
-	+BT+6s/dbjYFq5w+CirxtVJku
-X-Google-Smtp-Source: AGHT+IGr2AcmdyY2sfeGodl5CTvBNL0fJLMbZp0mo00ae2s6ff+c4zwxl6fyTs+rSOHIraRfHmozMw==
-X-Received: by 2002:a17:902:ce0b:b0:236:6f7b:bf33 with SMTP id d9443c01a7336-237d99984e3mr269189725ad.24.1750717276533;
-        Mon, 23 Jun 2025 15:21:16 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86633cesm90570795ad.154.2025.06.23.15.21.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 15:21:15 -0700 (PDT)
-Message-ID: <2161be3b-1223-40bb-93fd-5cf3a2f86f89@gmail.com>
-Date: Mon, 23 Jun 2025 15:21:13 -0700
+        bh=YurwFid4CmPM1zECZ7NAIyg8xcw24kM7tKeHyFwlZDY=;
+        b=sY/FP37QL6LUN9OWmbzKoUeFVXg9U/cjZpg/t8Bsry5oNSEbFnhedx2GLOIA5ndRkO
+         5uM0uAN7Xx/SemeQI99ZZtCFl9Qi0q792/wKaqlHFWsCssFt1+VA9/1MguSSTTaiect5
+         4/BEZboZgJ0NWITQTozTVTLBcPceGFe7gbAMJogaVZrU1g2T3GSvc1n010UvYqYHfgjF
+         kV4Setbks5k9WrHL5ANJoYwJw93WeuRLBabYFIc//qB/1y9oaGcoTYLDxKh5/7ejuBjy
+         vwzZzQfu0Lboy8ShOtAm8ZZ1ARrApDCW7eoYXj3Hj5ynkRF0Rt0Nduqyrjq30/tQEWPd
+         t2bw==
+X-Forwarded-Encrypted: i=1; AJvYcCXxcXlcna8a9RT9NS8ks4UpkHEeLJ+fQThFQdCK3hkqKV5o2eW4Xds942v+t+T+x/JHGF+E4TU8qE2JS9Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSVxkQQGCZWNn3RK0gzS1fmj2+nOc0zY9ZXL+WwfVoP6F648WB
+	cPUX4t03NNHVLCqPDWC7hJS9vA0ONlBVRy9sVHTCQPZ/7YQ6Lnl4cAnPMyS+8yCfWos=
+X-Gm-Gg: ASbGncvQ8NOvW8G5KLTOqQ72aK2pWlBSzhqFNfgn1WEzCC5kIrTu6g9yR1dMZZswR5j
+	23VmgiBQ4E6ffF65DGSe41tJDz/Ux7zRh/yGLPyblE08U4HIrIWt5RdP9j+gcLrPjmYEflbqbyB
+	z2Q2T1zAW7mrhiFQ3WUaeU83GWQy4doF7wcvvOi87MzQFOEhDsRJSwpiONxLizNPPN8+r7z84fH
+	gMVlSSqDkju3/cXEQiB2JsLbXK5UlGUsBf4EMyLyd6quiemj7hziill6UgNMvmrrvEEEZRoH1Nl
+	emGB2QXzNhSyv+bCBha7BzknwDfuao2sueTH6CO36MheBIwUabK4H76/vHXU9sCs+mZ+jQ==
+X-Google-Smtp-Source: AGHT+IE91XZYWlprKGhHxRhe/CzOGIt6hPjcFJioO4ZNtu61oT2yO1/raktvIuwHoxAPy2DMwidNoA==
+X-Received: by 2002:a05:6808:2008:b0:40a:54f8:2cac with SMTP id 5614622812f47-40ac6fe3646mr10872876b6e.37.1750717517244;
+        Mon, 23 Jun 2025 15:25:17 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:8c3f:8b5f:5c74:76a9])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40ac6d3b353sm1557857b6e.46.2025.06.23.15.25.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 15:25:16 -0700 (PDT)
+Date: Tue, 24 Jun 2025 01:25:14 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Dave Penkler <dpenkler@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Michael Rubin <matchstick@neverthere.org>,
+	linux-staging@lists.linux.dev, kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] staging: gpib: fix unset padding field copy back
+ to userspace
+Message-ID: <cc005697-1911-485f-9c50-30442558851c@suswa.mountain>
+References: <20250623220958.280424-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/290] 6.6.95-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250623130626.910356556@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
- xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
- X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
- AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
- ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
- SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
- nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
- qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz80nRmxvcmlhbiBG
- YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+wmYEExECACYCGyMGCwkIBwMCBBUCCAME
- FgIDAQIeAQIXgAUCZ7gLLgUJMbXO7gAKCRBhV5kVtWN2DlsbAJ9zUK0VNvlLPOclJV3YM5HQ
- LkaemACgkF/tnkq2cL6CVpOk3NexhMLw2xzOw00ESM+4EhAQAL/o09boR9D3Vk1Tt7+gpYr3
- WQ6hgYVON905q2ndEoA2J0dQxJNRw3snabHDDzQBAcqOvdi7YidfBVdKi0wxHhSuRBfuOppu
- pdXkb7zxuPQuSveCLqqZWRQ+Cc2QgF7SBqgznbe6Ngout5qXY5Dcagk9LqFNGhJQzUGHAsIs
- hap1f0B1PoUyUNeEInV98D8Xd/edM3mhO9nRpUXRK9Bvt4iEZUXGuVtZLT52nK6Wv2EZ1TiT
- OiqZlf1P+vxYLBx9eKmabPdm3yjalhY8yr1S1vL0gSA/C6W1o/TowdieF1rWN/MYHlkpyj9c
- Rpc281gAO0AP3V1G00YzBEdYyi0gaJbCEQnq8Vz1vDXFxHzyhgGz7umBsVKmYwZgA8DrrB0M
- oaP35wuGR3RJcaG30AnJpEDkBYHznI2apxdcuTPOHZyEilIRrBGzDwGtAhldzlBoBwE3Z3MY
- 31TOpACu1ZpNOMysZ6xiE35pWkwc0KYm4hJA5GFfmWSN6DniimW3pmdDIiw4Ifcx8b3mFrRO
- BbDIW13E51j9RjbO/nAaK9ndZ5LRO1B/8Fwat7bLzmsCiEXOJY7NNpIEpkoNoEUfCcZwmLrU
- +eOTPzaF6drw6ayewEi5yzPg3TAT6FV3oBsNg3xlwU0gPK3v6gYPX5w9+ovPZ1/qqNfOrbsE
- FRuiSVsZQ5s3AAMFD/9XjlnnVDh9GX/r/6hjmr4U9tEsM+VQXaVXqZuHKaSmojOLUCP/YVQo
- 7IiYaNssCS4FCPe4yrL4FJJfJAsbeyDykMN7wAnBcOkbZ9BPJPNCbqU6dowLOiy8AuTYQ48m
- vIyQ4Ijnb6GTrtxIUDQeOBNuQC/gyyx3nbL/lVlHbxr4tb6YkhkO6shjXhQh7nQb33FjGO4P
- WU11Nr9i/qoV8QCo12MQEo244RRA6VMud06y/E449rWZFSTwGqb0FS0seTcYNvxt8PB2izX+
- HZA8SL54j479ubxhfuoTu5nXdtFYFj5Lj5x34LKPx7MpgAmj0H7SDhpFWF2FzcC1bjiW9mjW
- HaKaX23Awt97AqQZXegbfkJwX2Y53ufq8Np3e1542lh3/mpiGSilCsaTahEGrHK+lIusl6mz
- Joil+u3k01ofvJMK0ZdzGUZ/aPMZ16LofjFA+MNxWrZFrkYmiGdv+LG45zSlZyIvzSiG2lKy
- kuVag+IijCIom78P9jRtB1q1Q5lwZp2TLAJlz92DmFwBg1hyFzwDADjZ2nrDxKUiybXIgZp9
- aU2d++ptEGCVJOfEW4qpWCCLPbOT7XBr+g/4H3qWbs3j/cDDq7LuVYIe+wchy/iXEJaQVeTC
- y5arMQorqTFWlEOgRA8OP47L9knl9i4xuR0euV6DChDrguup2aJVU8JPBBgRAgAPAhsMBQJn
- uAtCBQkxtc7uAAoJEGFXmRW1Y3YOJHUAoLuIJDcJtl7ZksBQa+n2T7T5zXoZAJ9EnFa2JZh7
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250623130626.910356556@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623220958.280424-1-colin.i.king@gmail.com>
 
-On 6/23/25 06:04, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.95 release.
-> There are 290 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Mon, Jun 23, 2025 at 11:09:58PM +0100, Colin Ian King wrote:
+> The introduction of a padding field in the gpib_board_info_ioctl is
+> showing up as initialized data on the stack frame being copyied back
+> to userspace in function board_info_ioctl. The simplest fix is to
+> initialize the entire struct to zero to ensure all unassigned padding
+> fields are zero'd before being copied back to userspace.
 > 
-> Responses should be made by Wed, 25 Jun 2025 13:05:53 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.95-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> Fixes: b8394732ff0c ("staging: gpib: Add bit and byte padding to ioctl structs")
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+The fix is good, but the bug has been there since the driver was
+introduced, it's only just now that the static checkers have started
+catching it.  Oddly/sadly Smatch doesn't catch this one.  I'll have to
+investigate.
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+Fixes: 9dde4559e939 ("staging: gpib: Add GPIB common core driver")
+
+regards,
+dan carpenter
