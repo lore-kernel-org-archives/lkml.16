@@ -1,62 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B2425EF82
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC29A3D3B8;
+	Mon, 23 Jun 2025 18:08:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750702066; cv=none; b=ir3r3WruWTb6JXIKdDxegmjw8I7m1jV+ZSGCXvKAsMHS2tYAZmGqt4UqVeQrjXFWymT6WHHdc+UforcR3VmVDyuhuc1k2Jtm28twTMJ77zN7eLLhVBWGyMkZTAe26xjKDdTKE1d/Ybz3Ubkl2Mk4DlkXBkFh+3+VWdbVzQfSMU8=
+	t=1750702089; cv=none; b=l0fi/dFUSBdmseofqgPWDE5cobIHl+rACfT9eHe5p7Kden2ofqfvBuc3iKdEmp+GHBV2psObbEDaYIIC34xyFzm7pP3t1nJV7CbLejhMHMVP8IOk1n91HHtWc2rQdO4giazmwwWBC/C4WX3LJ+5mYGpP2WZtZuY7LeF4pbQbLGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750702066; c=relaxed/simple;
-	bh=vH13dxUiypkPKx3lr4bU8O8t/dbtw8dCsUwWHqi8MXE=;
+	s=arc-20240116; t=1750702089; c=relaxed/simple;
+	bh=Gw540lB0qabRIZFGSF4pGyXdG9OF01rsvzlqXNqrokc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n21h+eDDtZ2/2jl8d3Z0wF+KW+LEaTgBl0aA6BzIxBG97RjN/Wq7cfQWxFziF7W2B7ydW2KykI8bavTh5QrLasFv/N2xEizBzfwe1vU5OlwIZ7Qq/zEupeJiukR+j+OhsyEGBRE7GBHtgAtqIe+Ie+YIB75Fjvo4lMTxguuu048=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mbKo89SG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=lQ2HfRp8ZYvSShY/jE+nQ2bqj7qU4i2D9vwntbxRcwCOizaYd3jpExa5SuMK8YuvyhfW8Q99xXuZ1OOaVsGTI0qXLtuOAxZYPVNXsNW2kndu/4ZYSmXBO3vESHtEkYVZfIojpzn+KBk1LvciqYuMFOk/JWAPVKWj7GMxE7FA/dQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=sbYZ9CCi; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mbKo89SG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFBEBC4CEEA;
-	Mon, 23 Jun 2025 18:07:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750702066;
-	bh=vH13dxUiypkPKx3lr4bU8O8t/dbtw8dCsUwWHqi8MXE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mbKo89SGI1L0Rwsi/cyusmWco0En0pD7v80d5tsxWqWMl6FWvSNpv5MerBjhjRG9D
-	 8KtmnrAV7SX7vUox5F1kQgYjzSRGh/0a+ES/+WjyEnrO3nZPzvTrzLECny4kkLIj3h
-	 xlBg/eI5ezKX0Cwzl6z3Nl6JQl35Hv9ta1nL/pfoyjhd2Uz2uGEcwoE1fQA3iWV2QI
-	 mwHuuaIIYkPjYcxMEx+LASLu1c4azNoYtr7MosvXr+DhA0mc1P9+fJv1VGTlOlZwKo
-	 Lm/8ZJMsr/4Ut6a6JpuvwcOYlOyfvZsAYaRFLt8tgyhkowsfM/2uguy4Om/x1SoKp0
-	 DGt/R64GjVd9g==
-Date: Mon, 23 Jun 2025 08:07:45 -1000
-From: Tejun Heo <tj@kernel.org>
-To: linux@treblig.org
-Cc: jiangshanlai@gmail.com, ebiggers@google.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] workqueue: Remove unused work_on_cpu_safe
-Message-ID: <aFmX8VOdwcF3E1ZG@slm.duckdns.org>
-References: <20250623003049.349200-1-linux@treblig.org>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="sbYZ9CCi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=yCA/0vxCehhKCbkvvXTKnnxxPDifpNSysmytY+aC5N4=; b=sb
+	YZ9CCiRGyd2ufC69Xq2kqmGPegvuDSEIRdhVkJ9yrxhSKXqgG6RYUyRH/Wt0Z25krp+oDKUpqkDgP
+	s3kePd9IFH4NQfPNnUWtvq90qG3kZe3o005KuQRtEGKDs9loxw7c3MOsi0G6DS7uzP1HdeMbb2X52
+	8muWPSW7x8FZNDU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uTlaK-00GiYi-Az; Mon, 23 Jun 2025 20:08:00 +0200
+Date: Mon, 23 Jun 2025 20:08:00 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Kamil =?iso-8859-1?Q?Hor=E1k?= - 2N <kamilh@axis.com>
+Cc: florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+	hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	robh@kernel.org
+Subject: Re: [PATCH net-next v2 2/3] net: phy: bcm5481x: Implement MII-Lite
+ mode
+Message-ID: <846f7b15-250f-4e76-99b3-f208768aab32@lunn.ch>
+References: <20250623151048.2391730-1-kamilh@axis.com>
+ <20250623151048.2391730-2-kamilh@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250623003049.349200-1-linux@treblig.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250623151048.2391730-2-kamilh@axis.com>
 
-On Mon, Jun 23, 2025 at 01:30:49AM +0100, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Mon, Jun 23, 2025 at 05:10:46PM +0200, Kamil Horák - 2N wrote:
+> From: Kamil Horák (2N) <kamilh@axis.com>
 > 
-> The last use of the work_on_cpu_safe() macro was removed recently by
-> commit 9cda46babdfe ("crypto: n2 - remove Niagara2 SPU driver")
-> 
-> Remove it, and the work_on_cpu_safe_key() function it calls.
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> The Broadcom bcm54810 and bcm54811 PHYs are capable to operate in
+> simplified MII mode, without TXER, RXER, CRS and COL signals as defined
+> for the MII. While the PHY can be strapped for MII mode, the selection
+> between MII and MII-Lite must be done by software.
+> The MII-Lite mode can be used with some Ethernet controllers, usually
+> those used in automotive applications. The absence of COL signal
+> makes half-duplex link modes impossible but does not interfere with
+> BroadR-Reach link modes on Broadcom PHYs, because they are full-duplex
+> only. The MII-Lite mode can be also used on an Ethernet controller with
+> full MII interface by just leaving the input signals (RXER, CRS, COL)
+> inactive.
 
-Applied to wq/for-6.17.
+So everybody seems to be a general agreement this needs more thought.
 
-Thanks.
+How does a MAC know its RXER, CRS, COL inputs are inactive? Are you
+expecting boards use pull up resistors? Or is the MAC driver expected
+to poke around in the PHY node and find this lite property? That would
+not be accepted. A phy-mode make would this clear, but it does require
+every MAC which could be connected to this PHY needs to also accept
+this PHY mode. Which comes back to, are pull-ups enough, so the MAC
+has no idea it is connected to a -lite PHY?
 
--- 
-tejun
+	Andrew
