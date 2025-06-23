@@ -1,129 +1,71 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A781B4242;
-	Mon, 23 Jun 2025 17:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72AD022F77F;
+	Mon, 23 Jun 2025 17:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750701511; cv=none; b=a9G0de3u3LSCfJdPVSh2dlEaIz9Mf2cbANP/eI2AEEU80RaUWy07/EjFvh2GCMi0G84WZo995+yCNqmVkI8C3+FkXgyxJ/+5sUoeoTWDZP+k1IKUMyFT1aIJBOWvIFTlgGCRYz2yKPyDnMUxLk/t5rCr99F3IlaRqa790uTZcAE=
+	t=1750701596; cv=none; b=QkdtZrZZT9Z3g8ZdpiZt4Bfcf+nAOK4qEOrLHjBnxMNoZD4fCCYwNmx2FXaqW8KLTl9PWtekWrMYFBMDELtFiRni15QXYgPjBFg4GWDGQInLIRWvyHMsyuaVkzKKFTn72r6wDppQgtiwNqULWrkK3qIcolXcqCq8pLxsZMicss4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750701511; c=relaxed/simple;
-	bh=0oyJae6pjjJ7/j+FfrzrjTRR9oFJ/floYiWB5RY6DTo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sBQCEljeSwuy50/Gg6Sdil0X47QKxZjXUhMxsGxc8TG04LqcXjQgKwTrskJafgNeYHIwx+41c+Yy8GPJU517trDQHBDvgeSI3JeaTPuuKL2aIggok8NmTN8r3ISgEQn2LDJFj8z65HBVbKZVGfUySkDJTSKfmQinC+7D/RZYq4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mlXQF5u+; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750701596; c=relaxed/simple;
+	bh=K0mHJOlQlG9yt7f6lU81M46kiooSYMEJTNVD2Qvh1zU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NyAVp1au7RnKtD0+rX/rWq8Lg/PKEvYk4WYhEr7xf8oKcgwQklOQKuQ3LatQsxUm9PhQe/q5edMd8HMHcyAwkRriMgAp/uNvqEhMan9ptxPoahw79KvD/2VfZLdnnecFaahxTPS7a4kW96uu2Cp3KwU6DPFwp5oBiOIr/wV+j4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DN7stiM4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlXQF5u+"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-553b60de463so4787991e87.3;
-        Mon, 23 Jun 2025 10:58:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750701508; x=1751306308; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QtJGbIs6LvfGRPvm/XlRtdTtqOrMi3Ddyem3mMgcu1g=;
-        b=mlXQF5u+S5QQM3h6dFSc6mFlzY1iutT2Db7dhyS5dZNflM/g3VCpGEItZnTpfxlZIp
-         tm6s93E5EthWatwGAkrKr7EBuTBcAhSVLkxeGFkpurjhDSNRaQc9jVjmlATzTlK2wFlY
-         WF3KmRjKTAu1wttXWH3wqsXqKPYSfRHlg4GTeTcab5Xxd02ZYS5IzRuZyo13gvLIAIeE
-         IC3lU6EqiKQ+p3rgPuTcXxUwvmmsF6q+WCXpMZzsOW5LXG2JoHqFtiZY69CICAWqBdxr
-         8MhORgDVmV6TJawE9l5mKs/Qy/4u406y5rVTc8FbKWYHlxvRQRvhq5Gb5X3eip8UuWY/
-         FYaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750701508; x=1751306308;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QtJGbIs6LvfGRPvm/XlRtdTtqOrMi3Ddyem3mMgcu1g=;
-        b=YnCcpcuyRxedgLf91hvCP9/x8QRuW0FL2kTxSrf9wHzDUspwaEHsD1P2sHq0lgCOw6
-         4JNzfi2EnEhFjHCqHWJY1LwnBRwi/1SG44F+R/65SOFpXnZqwzGwS1xZutE9Oopfc6Uk
-         MHN1AcUJuIMYsBAx+Lvh57hpk6j5l8HdbvKgFAIf8AhseyjHWffp+clbO080MS6A+4id
-         QbfKP1ks0QqzVi3TS/ZDLYaUf6VZS3QxNQp0ZSdQv2Q5H9MC9ALKxnxAx58QV51K9Kw7
-         SgG2mAd2Dq8HqvEvldFjO8VPPY64dEUxWLV1A5wzpJqavemLWX1pFcHAcZcjQ5+5y9Ch
-         p75Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUESlhYKkzFtWI316zEy+PYlpg0zwAJU5LmwhBe5fMGpkykvBD3H4pYimQEZvORp8cdiwGaru0pwP6ieixD@vger.kernel.org, AJvYcCUVxWFZrxc84pZ5Ay4A6p5ntUjTByoFNwRC46DFuz9sP/MQ+4tO8lH5zIWd6om5o6aotbUWhykYR38=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyodLqtgUhy/LJE0hiExkWdkt02z1wyZJBTjk6CZlER2jfHF4m
-	cKiqv3gAISqmwXame3VNvg8vQtVCbLytjgKz3/g1wx4y97eph8I8J8yWl0B5GqKCsk/aitMy0s4
-	OpKmWb+J1E7Q6hfG6mcrQmaaEZ6LnIDHz1ac=
-X-Gm-Gg: ASbGncth3vUXljhOUyKE/O7rOUEdzwH43vrtpfNtP7kYElgeQptG4EaDE2b4P3ncxOo
-	Igl7HOVpEF+5vt3j6vU7TpDtmwgbK8+QYXMUlHiQINHbLE6oD6nSxiz/23KVUsAp1FlnSAPfLSn
-	Z2tJovPfEOI6BqqwnzcDaCBMm7mhYCn7mfIHuCrmoufH9BZHJlULdLmK2t8Q==
-X-Google-Smtp-Source: AGHT+IEChVSVBHgLMXfgLZq3c+t76wK5AFf+S3ocYX9HTNt0r7MB9AG0BUcLLb0rSgbuiD1933a/f7obl+jTfUzMjlY=
-X-Received: by 2002:a05:6512:1396:b0:553:659c:53fa with SMTP id
- 2adb3069b0e04-553e3b9a33emr3949838e87.5.1750701507556; Mon, 23 Jun 2025
- 10:58:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DN7stiM4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA533C4CEEA;
+	Mon, 23 Jun 2025 17:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750701595;
+	bh=K0mHJOlQlG9yt7f6lU81M46kiooSYMEJTNVD2Qvh1zU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DN7stiM43vCCxWcthoQVOYUWGMoSnFGlUp8V3bImSr7UozuoLwGVelALc/977XUYp
+	 cx++WF/vNR5m7dE34CFFSuOOiqEV67yevGYOD6eY5B9xcLOcouxKg7qzZS3hrhjEow
+	 CI2B9X2/OX1Aknk7vcF0iD6WMwCvW/0btCJqYT73rEKjQmcDHk0sM1eKxW+tivyJbK
+	 NvjPcTm26dqBNUGR48hwWjzOM1FgeTWiABPJ4Li2tTp4V/S4EQy/QSUcKH5Bf5z45I
+	 y9ejVfG/+cvWncN+Agl9sWYOKSN1HXOEwpkL3D88axogp1WmY/1/8s51kpLqb7P5Z5
+	 hcU8L35NIkZcA==
+Date: Mon, 23 Jun 2025 07:59:54 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Henry Huang <henry.hj@antgroup.com>
+Cc: changwoo@igalia.com, arighi@nvidia.com, void@manifault.com,
+	=?utf-8?B?6LCI6Ym06ZSL?= <henry.tjf@antgroup.com>,
+	"Yan Yan(cailing)" <yanyan.yan@antgroup.com>,
+	linux-kernel@vger.kernel.org, sched-ext@lists.linux.dev
+Subject: Re: [PATCH v3] sched_ext: Implement SCX_OPS_TRACK_MIGRATION
+Message-ID: <aFmWGi8n1ndB1K_M@slm.duckdns.org>
+References: <20250623063033.76808-1-henry.hj@antgroup.com>
+ <20250623063033.76808-2-henry.hj@antgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2D63735B-FA76-428E-8F68-8EBCAEA0985E@zytor.com> <20250623161741.623-1-khaliidcaliy@gmail.com>
-In-Reply-To: <20250623161741.623-1-khaliidcaliy@gmail.com>
-From: Brian Gerst <brgerst@gmail.com>
-Date: Mon, 23 Jun 2025 13:58:15 -0400
-X-Gm-Features: AX0GCFv72i-bOmyN49cFldCw0YnHCOXhqhg4Uv_TqUrUC1HJqaanGgEQxzuBBcU
-Message-ID: <CAMzpN2j+nz60C7irRvXF4Ni94Wj9mcLGoPe6BF7Y6FPbeV2xqg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] Recieve boot_param from RDI Instead of RSI
-To: Khalid Ali <khaliidcaliy@gmail.com>
-Cc: hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, ubizjak@gmail.com, x86@kernel.org, 
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623063033.76808-2-henry.hj@antgroup.com>
 
-On Mon, Jun 23, 2025 at 12:27=E2=80=AFPM Khalid Ali <khaliidcaliy@gmail.com=
-> wrote:
->
-> > On June 23, 2025 1:15:23 AM PDT, Khalid Ali <khaliidcaliy@gmail.com> wr=
-ote:
-> > >From: Khalid Ali <khaliidcaliy@gmail.com>
-> > >
-> > >Adjust the kernel entry point to recieve arguments from RDI instead of
-> > >RSI.
-> > >
-> > >Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
-> > >---
-> > > arch/x86/kernel/head_64.S | 4 ++--
-> > > 1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > >diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-> > >index dfb5390e5c9a..d24fea15b6a6 100644
-> > >--- a/arch/x86/kernel/head_64.S
-> > >+++ b/arch/x86/kernel/head_64.S
-> > >@@ -43,7 +43,7 @@ SYM_CODE_START_NOALIGN(startup_64)
-> > >        * for us.  These identity mapped page tables map all of the
-> > >        * kernel pages and possibly all of memory.
-> > >        *
-> > >-       * %RSI holds the physical address of the boot_params structure
-> > >+       * %RDI holds the physical address of the boot_params structure
-> > >        * provided by the bootloader. Preserve it in %R15 so C functio=
-n calls
-> > >        * will not clobber it.
-> > >        *
-> > >@@ -56,7 +56,7 @@ SYM_CODE_START_NOALIGN(startup_64)
-> > >        * compiled to run at we first fixup the physical addresses in =
-our page
-> > >        * tables and then reload them.
-> > >        */
-> > >-      mov     %rsi, %r15
-> > >+      mov     %rdi, %r15
-> > >
-> > >       /* Set up the stack for verify_cpu() */
-> > >       leaq    __top_init_kernel_stack(%rip), %rsp
->
-> > This is an ABI.
-> >
-> > Nacked-by: H. Peter Anvin <hpa@zytor.com>
->
-> Peter, thanks for the response but if i ask you:
-> What is specific reason that this patch is wrong?
-> Why used RSI instead of RDI at the first place?
+Hello,
 
-It is defined in Documentation/arch/x86/boot.rst
+On Mon, Jun 23, 2025 at 02:30:33PM +0800, Henry Huang wrote:
+> For some BPF-schedulers, they should do something when
+> task is doing migration, such as updating per-cpu map.
+> If SCX_OPS_TRACK_MIGRATION is set, runnable/quiescent
+> would be called whether task is doing migration or not.
 
-IIRC some hypervisors can boot the uncompressed image directly.
+It's rather odd to invoke runnable/quiescent on these transitions as the
+runnable state isn't actually changing and the events end up triggering for
+all the migration operations that SCX does internally.
 
+In the head message (BTW, if it's just a single patch, it'd be better to
+include all the context in the patch description), you said that this is
+needed to udpate percpu data structures when tasks migrate. Wouldn't you be
+able to do that by tracking whether the current CPU is different from the
+previous one from ops.running()?
 
-Brian Gerst
+Thanks.
+
+-- 
+tejun
