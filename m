@@ -1,228 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C18611E;
-	Mon, 23 Jun 2025 08:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993901A8F60
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750666931; cv=none; b=dZlO17XB51TnzCUaG2bOsrBr/n+SGSkeD6MOrqmjSNLkeu4uCqSeOfJR6hv09JWOVAvPTRNIOC0hSmnvKHdq4Ow6xm1DxhGzrPvfJbtUPQkQWH6if7JT7/OViqyIPdwLZb8EKSC5xKpqLnBfLxybY3kSHchqaUlhfNEFBNdkQ6w=
+	t=1750667003; cv=none; b=OiqGAhTX6NuwtAqEcog+DWhoI0XUgyCNR7l+d05X0CfPp/LQAIZW5uphy6OmKEwPQEmCGgDGW/Z/wBSPg7NZBjximVkUFzI1TxzwZsmqLDkcdyUz143a6frt/cAiuCHwqrD1E3ewdnX5JhRmKq5LOJ4NmQ01LSj+uDGV3j+ULsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750666931; c=relaxed/simple;
-	bh=Ubg3uBrGtm9rhbpYvMjR4OcVkcz/J41Ya6OIKHFIasE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SHue4dWT7ZUvOdoMNK/3NEsLWjvj7ChL7tIcmBDrxjiT05vQVRboiUMU+RUgllT8vrhFu/swObqiKj2sVlgERX4TWihZdMWcxXkYtjacuuF++daxWHrY08D9afWyVyob/PkIwOtrA6y1RdGD7OmOkZnPIzvTZcC6k23zowiUKqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YAHh93B+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750667003; c=relaxed/simple;
+	bh=zFqOr7aypHQwZqL3LEpcklbve06QiGNwRDJNLk+st5g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=gS8EHZHWxqR4rQKZFzODByLJwSzB9L6QpIhKU0qGqFrsWdktb+ixfqIJPOZr99gBExSiu9lZBhoBDVYa3ejEgosVKlODKWgrHmfcPM6nrlcoQoMthJpOxiTWLENtrwmih41s5wNaG/q74HbjWefR/l4T+dFuIvRJ20hjOsrn7dQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ac5AeUxp; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YAHh93B+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB620C4CEED;
-	Mon, 23 Jun 2025 08:22:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750666931;
-	bh=Ubg3uBrGtm9rhbpYvMjR4OcVkcz/J41Ya6OIKHFIasE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YAHh93B+WYP6jDttJqicgaAEHaEb+WtN47TBmFJ/i2eIB+IZJCNZL/rDnvyu3fR+v
-	 GAmzB1mTTqdOxkTnMJYzkPxanC2IOhQKALOaLJjE1heCS1C7TfyE8HJAMhXmzQD1hr
-	 hnackkS5YdsVoggWr89831fOoeoH8nJft8Fkk/8fgvCJ5zsaoYskRCumzcidka7Br/
-	 aZ0+XowQ5S7gOptRfqum0nybP2bQ3gEYoLeiN2dqgN5W7NZO0b6JQMEGj1jjA7pX9Y
-	 IabA29z1Dse6Pzjm5z2O+R+W/XHygxmmRbgSxx8/bIuMi3S5PDTtR+EEU7Ej8813Hn
-	 Y5v+mm5UaplKA==
-Date: Mon, 23 Jun 2025 16:22:01 +0800
-From: "Peter Chen (CIX)" <peter.chen@kernel.org>
-To: Pawel Laszczak <pawell@cadence.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v3] usb: cdnsp: Fix issue with CV Bad Descriptor test
-Message-ID: <20250623082201.GA53043@nchen-desktop>
-References: <20250620074306.2278838-1-pawell@cadence.com>
- <PH7PR07MB95382CCD50549DABAEFD6156DD7CA@PH7PR07MB9538.namprd07.prod.outlook.com>
- <20250621003643.GA41153@nchen-desktop>
- <PH7PR07MB953862997AC245FB4ADEE60FDD79A@PH7PR07MB9538.namprd07.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ac5AeUxp"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250623081738euoutp0254a6017ea2fb539016d2b4c167fb7260~Lngz7hMiU0085800858euoutp02i
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:17:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250623081738euoutp0254a6017ea2fb539016d2b4c167fb7260~Lngz7hMiU0085800858euoutp02i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750666658;
+	bh=luih2Qz/UMZ7UffUnmmhtm7LsPOMkm5qz+Oj9g8WGgY=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=ac5AeUxpahWu90BTdcQapKbM9aqN2n+swpFoyZNux/AMIjF1AoxaMEu6TC+F6O00G
+	 CbxTpQZx0/KGn24mBo75GFfhnJyXQpHwqTYXvdPIp1/fnN37faT4e/cFAaJl3GpaWy
+	 iPWHF/N4W8h/wcDf/tQOa6QvN+MDrwEIuSD2NECo=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250623081738eucas1p125d25f5119cb753f78f01734b92487d6~LngzPqk8C1864418644eucas1p15;
+	Mon, 23 Jun 2025 08:17:38 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250623081736eusmtip220e776f7d400c05e225edcce1c52eacc~LngyLH4rO2642326423eusmtip20;
+	Mon, 23 Jun 2025 08:17:36 +0000 (GMT)
+Message-ID: <12eed587-a8f3-4a67-8808-5e32617ded93@samsung.com>
+Date: Mon, 23 Jun 2025 10:17:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH7PR07MB953862997AC245FB4ADEE60FDD79A@PH7PR07MB9538.namprd07.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/8] Add TH1520 GPU support with power sequencing
+To: Drew Fustini <drew@pdp7.com>
+Cc: Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, Matt Coster
+	<matt.coster@imgtec.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>, Marek
+	Szyprowski <m.szyprowski@samsung.com>, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org, Krzysztof
+	Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <aFNrRtbWzeRa7GmQ@x1>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20250623081738eucas1p125d25f5119cb753f78f01734b92487d6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250618102225eucas1p129b1172bf54521c1eb0f718cb31af468
+X-EPHeader: CA
+X-CMS-RootMailID: 20250618102225eucas1p129b1172bf54521c1eb0f718cb31af468
+References: <CGME20250618102225eucas1p129b1172bf54521c1eb0f718cb31af468@eucas1p1.samsung.com>
+	<20250618-apr_14_for_sending-v5-0-27ed33ea5c6f@samsung.com>
+	<aFNrRtbWzeRa7GmQ@x1>
 
-On 25-06-23 05:51:08, Pawel Laszczak wrote:
-> >On 25-06-20 08:23:12, Pawel Laszczak wrote:
-> >> The SSP2 controller has extra endpoint state preserve bit (ESP) which
-> >> setting causes that endpoint state will be preserved during Halt
-> >> Endpoint command. It is used only for EP0.
-> >> Without this bit the Command Verifier "TD 9.10 Bad Descriptor Test"
-> >> failed.
-> >> Setting this bit doesn't have any impact for SSP controller.
-> >>
-> >> Fixes: 3d82904559f4 ("usb: cdnsp: cdns3 Add main part of Cadence
-> >> USBSSP DRD Driver")
-> >> cc: stable@vger.kernel.org
-> >> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-> >> ---
-> >> Changelog:
-> >> v3:
-> >> - removed else {}
-> >>
-> >> v2:
-> >> - removed some typos
-> >> - added pep variable initialization
-> >> - updated TRB_ESP description
-> >>
-> >>  drivers/usb/cdns3/cdnsp-debug.h  |  5 +++--
-> >>  drivers/usb/cdns3/cdnsp-ep0.c    | 18 +++++++++++++++---
-> >>  drivers/usb/cdns3/cdnsp-gadget.h |  6 ++++++
-> >>  drivers/usb/cdns3/cdnsp-ring.c   |  3 ++-
-> >>  4 files changed, 26 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/drivers/usb/cdns3/cdnsp-debug.h
-> >> b/drivers/usb/cdns3/cdnsp-debug.h index cd138acdcce1..86860686d836
-> >> 100644
-> >> --- a/drivers/usb/cdns3/cdnsp-debug.h
-> >> +++ b/drivers/usb/cdns3/cdnsp-debug.h
-> >> @@ -327,12 +327,13 @@ static inline const char *cdnsp_decode_trb(char
-> >*str, size_t size, u32 field0,
-> >>  	case TRB_RESET_EP:
-> >>  	case TRB_HALT_ENDPOINT:
-> >>  		ret = scnprintf(str, size,
-> >> -				"%s: ep%d%s(%d) ctx %08x%08x slot %ld flags
-> >%c",
-> >> +				"%s: ep%d%s(%d) ctx %08x%08x slot %ld flags
-> >%c %c",
-> >>  				cdnsp_trb_type_string(type),
-> >>  				ep_num, ep_id % 2 ? "out" : "in",
-> >>  				TRB_TO_EP_INDEX(field3), field1, field0,
-> >>  				TRB_TO_SLOT_ID(field3),
-> >> -				field3 & TRB_CYCLE ? 'C' : 'c');
-> >> +				field3 & TRB_CYCLE ? 'C' : 'c',
-> >> +				field3 & TRB_ESP ? 'P' : 'p');
-> >>  		break;
-> >>  	case TRB_STOP_RING:
-> >>  		ret = scnprintf(str, size,
-> >> diff --git a/drivers/usb/cdns3/cdnsp-ep0.c
-> >> b/drivers/usb/cdns3/cdnsp-ep0.c index f317d3c84781..5cd9b898ce97
-> >> 100644
-> >> --- a/drivers/usb/cdns3/cdnsp-ep0.c
-> >> +++ b/drivers/usb/cdns3/cdnsp-ep0.c
-> >> @@ -414,6 +414,7 @@ static int cdnsp_ep0_std_request(struct
-> >> cdnsp_device *pdev,  void cdnsp_setup_analyze(struct cdnsp_device
-> >> *pdev)  {
-> >>  	struct usb_ctrlrequest *ctrl = &pdev->setup;
-> >> +	struct cdnsp_ep *pep;
-> >>  	int ret = -EINVAL;
-> >>  	u16 len;
-> >>
-> >> @@ -427,10 +428,21 @@ void cdnsp_setup_analyze(struct cdnsp_device
-> >*pdev)
-> >>  		goto out;
-> >>  	}
-> >>
-> >> +	pep = &pdev->eps[0];
-> >> +
-> >>  	/* Restore the ep0 to Stopped/Running state. */
-> >> -	if (pdev->eps[0].ep_state & EP_HALTED) {
-> >> -		trace_cdnsp_ep0_halted("Restore to normal state");
-> >> -		cdnsp_halt_endpoint(pdev, &pdev->eps[0], 0);
-> >> +	if (pep->ep_state & EP_HALTED) {
-> >> +		if (GET_EP_CTX_STATE(pep->out_ctx) == EP_STATE_HALTED)
-> >> +			cdnsp_halt_endpoint(pdev, pep, 0);
 
-You mean above is only called for SSP? And below two lines needs to
-be executed no matter cdnsp_halt_endpoint(pdev, pep, 0) is called?
-	
-pep->ep_state &= ~EP_HALTED;
-pep->ep_state |= EP_STOPPED;
 
-If it is the case, I am okay with this patch.
-
-Peter
-
-> >> +
-> >> +		/*
-> >> +		 * Halt Endpoint Command for SSP2 for ep0 preserve current
-> >> +		 * endpoint state and driver has to synchronize the
-> >> +		 * software endpoint state with endpoint output context
-> >> +		 * state.
-> >> +		 */
-> >> +		pep->ep_state &= ~EP_HALTED;
-> >> +		pep->ep_state |= EP_STOPPED;
-> >
-> >You do not reset endpoint by calling clear_halt, could we change ep_state
-> >directly?
+On 6/19/25 03:43, Drew Fustini wrote:
+> On Wed, Jun 18, 2025 at 12:22:06PM +0200, Michal Wilczynski wrote:
+>> This patch series introduces support for the Imagination IMG BXM-4-64
+>> GPU found on the T-HEAD TH1520 SoC. A key aspect of this support is
+>> managing the GPU's complex power-up and power-down sequence, which
+>> involves multiple clocks and resets.
+>>
+>> The TH1520 GPU requires a specific sequence to be followed for its
+>> clocks and resets to ensure correct operation. Initial discussions and
+>> an earlier version of this series explored managing this via the generic
+>> power domain (genpd) framework. However, following further discussions
+>> with kernel maintainers [1], the approach has been reworked to utilize
+>> the dedicated power sequencing (pwrseq) framework.
+>>
+>> This revised series now employs a new pwrseq provider driver
+>> (pwrseq-thead-gpu.c) specifically for the TH1520 GPU. This driver
+>> encapsulates the SoC specific power sequence details. The Imagination
+>> GPU driver (pvr_device.c) is updated to act as a consumer of this power
+>> sequencer, requesting the "gpu-power" target. The sequencer driver,
+>> during its match phase with the GPU device, acquires the necessary clock
+>> and reset handles from the GPU device node to perform the full sequence.
+>>
+>> This approach aligns with the goal of abstracting SoC specific power
+>> management details away from generic device drivers and leverages the
+>> pwrseq framework as recommended.
+>>
+>> The series is structured as follows:
+>>
+>> Patch 1: Introduces the pwrseq-thead-gpu auxiliary driver to manage the
+>>          GPU's power-on/off sequence.
+>> Patch 2: Adds device tree bindings for the gpu-clkgen reset to the
+>>          existing thead,th1520-aon binding.
+>> Patch 3: Extends the pm-domains driver to detect the gpu-clkgen reset
+>>          and spawn the pwrseq-thead-gpu auxiliary driver.
+>> Patch 4: Updates the Imagination DRM driver to utilize the pwrseq
+>>          framework for TH1520 GPU power management.
+>> Patch 5: Adds the thead,th1520-gpu compatible string to the PowerVR GPU
+>>          device tree bindings.
+>> Patch 6: Adds the gpu-clkgen reset property to the aon node in the
+>>          TH1520 device tree source.
+>> Patch 7: Adds the device tree node for the IMG BXM-4-64 GPU and its
+>>          required fixed-clock.
+>> Patch 8: Enables compilation of the Imagination PowerVR driver on the
+>>          RISC-V architecture.
+>>
+>> This patchset finishes the work started in bigger series [2] by adding
+>> all remaining GPU power sequencing piece. After this patchset the GPU
+>> probes correctly.
 > 
-> It's only "software" endpoint state and this code is related only with ep0.
-> For SSP2 the state in pep->out_ctx - "hardware" endpoint state in this
-> place will be in EP_STATE_STOPPED but "software" pep->ep_state
-> will be EP_HALTED. 
-> Driver only synchronizes pep->ep_state with this included in pep->out_ctx.
+> The powevr probe complains:
 > 
-> For SSP the state in pep->out_ctx - "hardware" endpoint state in this please
-> will be in EP_STATE_HALTED, and "software" pep->ep_state will be
-> EP_HALTED. For SSP driver will call cdnsp_halt_endpoint in which
-> it changes the "hardware" and  "software" endpoint state
-> to EP_STOPPED/EP_STATE_STOPPED.
+> [    1.060383] powervr ffef400000.gpu: Direct firmware load for powervr/rogue_36.52.104.182_v1.fw failed with error -2
 > 
-> So for SSP the extra code:
-> 		pep->ep_state &= ~EP_HALTED;
-> 		pep->ep_state |= EP_STOPPED;
-> will not change anything
-> 
-> Pawel
-> 
-> >
-> >Peter
-> >>  	}
-> >>
-> >>  	/*
-> >> diff --git a/drivers/usb/cdns3/cdnsp-gadget.h
-> >> b/drivers/usb/cdns3/cdnsp-gadget.h
-> >> index 2afa3e558f85..a91cca509db0 100644
-> >> --- a/drivers/usb/cdns3/cdnsp-gadget.h
-> >> +++ b/drivers/usb/cdns3/cdnsp-gadget.h
-> >> @@ -987,6 +987,12 @@ enum cdnsp_setup_dev {
-> >>  #define STREAM_ID_FOR_TRB(p)		((((p)) << 16) & GENMASK(31,
-> >16))
-> >>  #define SCT_FOR_TRB(p)			(((p) << 1) & 0x7)
-> >>
-> >> +/*
-> >> + * Halt Endpoint Command TRB field.
-> >> + * The ESP bit only exists in the SSP2 controller.
-> >> + */
-> >> +#define TRB_ESP				BIT(9)
-> >> +
-> >>  /* Link TRB specific fields. */
-> >>  #define TRB_TC				BIT(1)
-> >>
-> >> diff --git a/drivers/usb/cdns3/cdnsp-ring.c
-> >> b/drivers/usb/cdns3/cdnsp-ring.c index fd06cb85c4ea..d397d28efc6e
-> >> 100644
-> >> --- a/drivers/usb/cdns3/cdnsp-ring.c
-> >> +++ b/drivers/usb/cdns3/cdnsp-ring.c
-> >> @@ -2483,7 +2483,8 @@ void cdnsp_queue_halt_endpoint(struct
-> >> cdnsp_device *pdev, unsigned int ep_index)  {
-> >>  	cdnsp_queue_command(pdev, 0, 0, 0, TRB_TYPE(TRB_HALT_ENDPOINT)
-> >|
-> >>  			    SLOT_ID_FOR_TRB(pdev->slot_id) |
-> >> -			    EP_ID_FOR_TRB(ep_index));
-> >> +			    EP_ID_FOR_TRB(ep_index) |
-> >> +			    (!ep_index ? TRB_ESP : 0));
-> >>  }
-> >>
-> >>  void cdnsp_force_header_wakeup(struct cdnsp_device *pdev, int
-> >> intf_num)
-> >> --
-> >> 2.43.0
-> >>
-> >
-> >--
-> >
-> >Best regards,
-> >Peter
+> Where is the correct place to get the firmware?
 
--- 
+Hi,
+
+Apologies for the late reply, it was a long weekend in Poland and I was
+away without access to e-mail.
+
+This is the Imagination repository that hosts the firmware [1].
+Admittedly I'm not using the newest firmware blobs available, as per
+discussion here [2] I downloaded mine last year so haven't tested the
+new ones yet.
+
+For my own testing, I  embed the firmware directly into the kernel to
+avoid issues with the initramfs. If you're compiling your own kernel,
+you can do this with the following configuration options:
+
+CONFIG_EXTRA_FIRMWARE="powervr/rogue_36.52.104.182_v1.fw"
+CONFIG_EXTRA_FIRMWARE_DIR="/home/local_user"
+
+[1] - https://gitlab.freedesktop.org/imagination/linux-firmware/-/tree/powervr/powervr?ref_type=heads
+[2] - https://gitlab.freedesktop.org/imagination/linux-firmware/-/issues/2#note_2642740
+
+> 
+> Thanks,
+> Drew
+> 
 
 Best regards,
-Peter
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
