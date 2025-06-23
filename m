@@ -1,101 +1,75 @@
-Received: from mail-m19731118.qiye.163.com (mail-m19731118.qiye.163.com [220.197.31.118])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AAFB4A1A;
-	Mon, 23 Jun 2025 01:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541164C7F
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750641061; cv=none; b=JCaHf+cZXYGS+YDBICkcOpYDHNDNHXYoJX33NISxUMGRpcy3jWgwU1WyBon5BNtWHZ48BZkKs3mwMcG/pR++zuYn23a05fqUTcgfUrllg70dj+kYzQVDLTNt5U9oQMFwVt71hB9ei451Bq7+wKC6zcrvR+pboFy2J/tbrHmHk3w=
+	t=1750641124; cv=none; b=NT+qfMNBwB+crVf3znpjFdp64bD0/PRZtClP97dtqCgSLCH+ikWukETVUOgxLAnpjbf6q2Hic+2+QoKv7YiobBiUjUIBKtuzrsY+rIh2B5P9t4zuRJ8fdiYotWfRnrfJHo0hK+xkO6vX7rUSvAcaneP0uX+ZmInVIcmIgBZU2HI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750641061; c=relaxed/simple;
-	bh=rwqqDu0KtBplQp8EOinHmccqzODA49z/gqlStx52Hzw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WR9lNbMpRkfqjVR4yEDu2faqt4uVMhtgVv6qXT7WXAAt9kU/kJRK0lDs6Xqn8PBYOooDr0REjADJUE5PNWc61+VJGHcQLB4KjvsNeP0FdlDCogjoqYzwUj/Z1I6oAWgP5UqYgOUxlGOuhYvWTExQMJqa09Uxi5cN37weIeEdT/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=HcUQYdC1; arc=none smtp.client-ip=220.197.31.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="HcUQYdC1"
-Received: from xxm-vm.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 1988856fd;
-	Mon, 23 Jun 2025 09:05:38 +0800 (GMT+08:00)
-From: Simon Xue <xxm@rock-chips.com>
-To: joro@8bytes.org,
-	will@kernel.org,
-	heiko@sntech.de
-Cc: robin.murphy@arm.com,
-	iommu@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Simon Xue <xxm@rock-chips.com>
-Subject: [PATCH v2] iommu/rockchip: prevent iommus dead loop when two masters share one IOMMU
-Date: Mon, 23 Jun 2025 09:05:32 +0800
-Message-Id: <20250623010532.584409-1-xxm@rock-chips.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250620073945.572523-1-xxm@rock-chips.com>
-References: <20250620073945.572523-1-xxm@rock-chips.com>
+	s=arc-20240116; t=1750641124; c=relaxed/simple;
+	bh=fsWRZU5pf5z8uYUewMpFhrgI0i5m6viw8lXsaI7KVW0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=IjkCBFjq/Hs5MP1VMzSfSbXAHZl7flNIq1JgKuMsx9oIcElIEQ0AWPmD6z4QPh/IT+Fw9PAUz7xy9tXQw4PMZrsap6di0pbJ+7GwBwCRq5xVulbgMDxDZSo4IcH8plGlpdp+ERL2Blm7/syZaaRMS5da60uO8BkCXA1oNaFKNxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-86d07944f29so673966739f.0
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 18:12:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750641122; x=1751245922;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hB1qLRr0lfQzkkvkr2ChQlwMXTY1B7wcKeYfhbrbcCU=;
+        b=L/MIZTE6ZGLtko2SYgfJ8UzVNeO7nN5UMuwhzRL39Ci6NdRW/Ne3NM3eg6d4kTwahe
+         mua28ZFF6rb/PAPGddEuxTEerkNcuVJ5hqxWncgLLwav3HQd19s60N+dL1HaW3NWe6ne
+         4hlc5YX4TEu/ww2FHSU0Sm6gtyPJuuP4lq1mMTizuxH79/m9TwZBefoQbW1Dd5yDytCx
+         XNJqDyU4UX2qx64yKL0Dn4LYBzmxoiyxi6kBbwuYNic5QCwr0dIXq+AoaN61qfrAU+Vj
+         yJ3mF4thqD45TdzWhxwBILx3OboEu2rx5WfAxjlyMAo6kHDq/oGo5FV4dqq5r6aCWi+O
+         xf9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXWfwDYoKZqhiz+TOVn4BVk4LlQskpxFPCncrrJWAMqBA2VomIh2y3RNN9nBN6hXYm1SswjeZJt/9Twrgc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydhevosZrY5PwItGOlBwGh4gd9LZT74qZIBhEgzwrxeBdEEhkU
+	xZio8+V07B1do6d1cy4E+SBq7fkftA9B5XqwrYudWwH//XXLczOkmrXNSXC/pv8HJE8rvxDE9lt
+	j7pawAoQst51+AyztecRFkC+sLZkKDYEbbLgrbOvtrNxNI+uDf0e6WXvOKyQ=
+X-Google-Smtp-Source: AGHT+IGcFGUShXy8AwQ53b5N5UGyXN11GO6CMjK4kK159bwd6+orYcGrBcGHb3nl+7pWxqwz64PcssYAb73WhKk0U7icHJmq08W9
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGR9KHlZLTkNPSE4ZTExPHktWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a979a51c11e03ackunmb9b4d7f71b74391
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nj46Agw5NjEwSy45CB0hHgki
-	Ey0aCRdVSlVKTE5LTU9LTEhCQ0lJVTMWGhIXVQMDFjsJFBgQVhgTEgsIVRgUFkVZV1kSC1lBWU5D
-	VUlJVUxVSkpPWVdZCAFZQUlKTkg3Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=HcUQYdC1n/fdfPwVzWQh5u9nT6IAJItWvktXDa+TMc5smGT+z3y3P+xgxIedR+wOHJy4zDL+gnyEikwHSvyT3oerFWtW+N7XEHoZG/IGDlWMN1id+/67ObSAEIbLcgToHcdUhKq8fLnWSgbgfKEtLNvq8Cry/gPy1kS8SZSimg0=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=j/L7z1+3IqwV7z6y8V8VJRap9OXNheZ0n7phc+aB5uM=;
-	h=date:mime-version:subject:message-id:from;
+X-Received: by 2002:a05:6e02:1a2e:b0:3dd:cba4:bfec with SMTP id
+ e9e14a558f8ab-3de38c1c00cmr122541535ab.1.1750641122457; Sun, 22 Jun 2025
+ 18:12:02 -0700 (PDT)
+Date: Sun, 22 Jun 2025 18:12:02 -0700
+In-Reply-To: <68209eb7.050a0220.f2294.0035.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6858a9e2.a00a0220.23ad68.0004.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] KASAN: use-after-free Read in bch2_checksum
+From: syzbot <syzbot+7d5c34b9ec9fe139fc0c@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-When two masters share an IOMMU, calling ops->of_xlate during
-the second master's driver init may overwrite iommu->domain set
-by the first. This causes the check if (iommu->domain == domain)
-in rk_iommu_attach_device() to fail, resulting in the same
-iommu->node being added twice to &rk_domain->iommus, which can
-lead to an infinite loop in subsequent &rk_domain->iommus operations.
+syzbot suspects this issue was fixed by commit:
 
-Fixes: 25c2325575cc ("iommu/rockchip: Add missing set_platform_dma_ops callback")
+commit cd3cdb1ef706a1ac725194d81858d58375739b25
+Author: Kent Overstreet <kent.overstreet@linux.dev>
+Date:   Tue Apr 22 13:14:19 2025 +0000
 
-Signed-off-by: Simon Xue <xxm@rock-chips.com>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+    bcachefs: Single err message for btree node reads
 
-v2:
-   No functional changes.
----
- drivers/iommu/rockchip-iommu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=127d5b0c580000
+start commit:   d76bb1ebb558 Merge tag 'erofs-for-6.15-rc6-fixes' of git:/..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b9683d529ec1b880
+dashboard link: https://syzkaller.appspot.com/bug?extid=7d5c34b9ec9fe139fc0c
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=123544d4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11870768580000
 
-diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
-index 22f74ba33a0e..e6bb3c784017 100644
---- a/drivers/iommu/rockchip-iommu.c
-+++ b/drivers/iommu/rockchip-iommu.c
-@@ -1157,7 +1157,6 @@ static int rk_iommu_of_xlate(struct device *dev,
- 		return -ENOMEM;
- 
- 	data->iommu = platform_get_drvdata(iommu_dev);
--	data->iommu->domain = &rk_identity_domain;
- 	dev_iommu_priv_set(dev, data);
- 
- 	platform_device_put(iommu_dev);
-@@ -1195,6 +1194,8 @@ static int rk_iommu_probe(struct platform_device *pdev)
- 	if (!iommu)
- 		return -ENOMEM;
- 
-+	iommu->domain = &rk_identity_domain;
-+
- 	platform_set_drvdata(pdev, iommu);
- 	iommu->dev = dev;
- 	iommu->num_mmu = 0;
--- 
-2.34.1
+If the result looks correct, please mark the issue as fixed by replying with:
 
+#syz fix: bcachefs: Single err message for btree node reads
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
