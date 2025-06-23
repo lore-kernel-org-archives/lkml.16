@@ -1,87 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EEAA1EF394;
-	Mon, 23 Jun 2025 10:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D77DC238C27;
+	Mon, 23 Jun 2025 10:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750674021; cv=none; b=Qc9F45WoE0Bqj/9COJTZ++So1Rr0XIxG1eQfleHJ2p2KCLqnvZxL8B/j8ZvIDn4ddJXkPibOA51s5iBQtvmujvSCoxGzebUT2IpJeeGmnEY+3KjhyES9MyZJY8KeKyaAMvkFdi6ZgIuG1d1Xj1u5N5elXz3DlkU52ql5t5zGm2A=
+	t=1750674038; cv=none; b=H/VjfC4HODWrEydKgMCpdwgbNMNSCYoWJay1zrahpwxJ+J9m7OAKp4kqzfBddoZYR/ALZ6MxUTcVBojl9gNyuopsUYl/iv5Piqb1jNTsj92WiPUOaX07Pu7HLOHGB8+pRh58J+pLw4Mc0jnBXBTeL+mEuWmD+YIoa8Do9G6CTj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750674021; c=relaxed/simple;
-	bh=prOAbia71XOTgGudPMVx0Rcz5wZJl6YGFxom8jlzCYo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ClU2nUzgE+zw0gwKaPWEpyhZk+0nJ01d9iHqZRQ8CLbG56QDu2US0sE2mzBkI5dtg8i2HYsuqwkHLtkfbXqI09eF9tVBYFtg43PUh1LqwkYRPhSkxqXQVAgMUPEez7JHA1gOcF5VbKuy+R/zjcyevOOaFVk5GobQxU0/ydkuuOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JuF9oBa6; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JuF9oBa6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4340C4CEEA;
-	Mon, 23 Jun 2025 10:20:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750674020;
-	bh=prOAbia71XOTgGudPMVx0Rcz5wZJl6YGFxom8jlzCYo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=JuF9oBa6Afwk1Duy/cL3d0w+NKUqCONwa9cmTcb4bxwcTLpyL1l5DsXDYhsaeQgfo
-	 CEiJhAXmJKPUSdkuJjOpWy6XY77QFnfFmopKfez8+Oehhl+KDqtWvepZCe+bYIcvk6
-	 iKg41Bn/lHUZL80f/I62hJk/r4ionxua2injEN2obw3qsMmpbRAeVSyK0iSd3eTmos
-	 sCNlkFzQ1IdYRSj8RImEs0RxR27ojin+HJPccABzre83TZzo8JllsXaLpqe5sR9Drg
-	 Z0oGNcXM+WtFEs419ayMYf48IyRP7ZT0f7sJsS27MNOAafLdA+2F1236AdzdYm5QtP
-	 nEqfLKxqtbajQ==
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-60eefb805a4so419147eaf.2;
-        Mon, 23 Jun 2025 03:20:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU0SnzvBIZUPS/1gDPWcEq+L/3uTvXE+IVAmX3X/MMRR1InezlvdwkQSuVjX+P5WODHmcVaI8O45v+INp5+@vger.kernel.org, AJvYcCUe+uYpXr03JX0P68zkCjM+xtJ39aRVUgQK9b1L+hzNKhlnT5HJ+RyCzTk4Gxv2MQOFxN2sudM811Xg@vger.kernel.org, AJvYcCVX+BRNzugRySOwe2iret7Pli5BZL2o1nLq4h+WRYb46TTzBZphSamPBoIeMhdliX01r5nvRQIYcs/r@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5w4RAPhvzBoki6MwLAb58hLUz2eoVRc5EK+SkKERWRVfLXh2o
-	oraNmtqbGPwOUW+sQJuWz/EWysdDxTvFEUlKemeTv0ImX4seG4iV/3GHI0HrTVUpMQMCHPtZ1dQ
-	UrEwc7jUMfCySJPLRq2ZPW4souQMwkVQ=
-X-Google-Smtp-Source: AGHT+IEri0Ei3Dwzz6H8TNwA8rGJX2q5j17F8+tFzd6CGT1JN8YEpn3ieZGNEirgnOf1LEjld67SQ5gYMP0WkKFEbCU=
-X-Received: by 2002:a05:6820:308e:b0:610:dff3:425a with SMTP id
- 006d021491bc7-6115babab7dmr8233773eaf.4.1750674019869; Mon, 23 Jun 2025
- 03:20:19 -0700 (PDT)
+	s=arc-20240116; t=1750674038; c=relaxed/simple;
+	bh=p8PQUdRYWUOPl4Z/9qK7If5y4/ivYQHU9/Nwzq6Obcg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P2F62AfA4KYWR//0NsHgvvFK1Y1pdrjL94e9zgn3ZotLnITqItE8JPJ0paYMmimXqROmbmv7W6AoVps+dOgR0kYJr/pb79bCRtylBavBFgAD1yN7yD5786TZwFTcVO4kCeMHJxtF23tl0tdZRdyZih9Xyhw38zRZmb3M75waYU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4bQk294JMVz9skH;
+	Mon, 23 Jun 2025 11:54:25 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 2L25sduycuWc; Mon, 23 Jun 2025 11:54:25 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4bQk293bFcz9sgs;
+	Mon, 23 Jun 2025 11:54:25 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 743568B764;
+	Mon, 23 Jun 2025 11:54:25 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id a4DFXxeF3oKN; Mon, 23 Jun 2025 11:54:25 +0200 (CEST)
+Received: from [10.25.207.146] (unknown [10.25.207.146])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 1FD2B8B763;
+	Mon, 23 Jun 2025 11:54:25 +0200 (CEST)
+Message-ID: <c6eece57-8767-4435-beda-c9f399e3fa80@csgroup.eu>
+Date: Mon, 23 Jun 2025 11:54:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618121358.503781-1-apatel@ventanamicro.com>
- <20250618121358.503781-14-apatel@ventanamicro.com> <aFkZj2QCU2LfTI30@smile.fi.intel.com>
-In-Reply-To: <aFkZj2QCU2LfTI30@smile.fi.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 23 Jun 2025 12:20:03 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0j9gQE-=HQnzdfATuoYUm8xwKfhm8tR6tUCEZBQ4F9qNQ@mail.gmail.com>
-X-Gm-Features: AX0GCFtTCu8RzoqPycmcUo_v8Lu1ClT5rvTpT_yMP45KXqQPNHoS6bspZg_HntU
-Message-ID: <CAJZ5v0j9gQE-=HQnzdfATuoYUm8xwKfhm8tR6tUCEZBQ4F9qNQ@mail.gmail.com>
-Subject: Re: [PATCH v6 13/23] ACPI: property: Refactor acpi_fwnode_get_reference_args()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Anup Patel <apatel@ventanamicro.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
-	Atish Patra <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] soc: use new GPIO line value setter callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Qiang Zhao <qiang.zhao@nxp.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Magnus Damm <magnus.damm@gmail.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250610-gpiochip-set-rv-soc-v1-0-1a0c36c9deed@linaro.org>
+ <CAMRc=McVV=VBw0DRiz-4tTjh7ZtRLWg=N_LQ2-7O1sKyW30rxw@mail.gmail.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <CAMRc=McVV=VBw0DRiz-4tTjh7ZtRLWg=N_LQ2-7O1sKyW30rxw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 23, 2025 at 11:08=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Jun 18, 2025 at 05:43:48PM +0530, Anup Patel wrote:
-> >
-> > Currently acpi_fwnode_get_reference_args() calls the public function
-> > __acpi_node_get_property_reference() which ignores the nargs_prop
-> > parameter. To fix this, make __acpi_node_get_property_reference() to
-> > call the static acpi_fwnode_get_reference() so that callers of
-> > fwnode_get_reference_args() can still pass a valid property name to
-> > fetch the number of arguments.
->
-> Looks okay to me, but I think it's better to have more eyes here (Mika,
-> Rafael?).
+Hi,
 
-It would help if this were CCed to linux-acpi, but yeah.
+
+Le 23/06/2025 à 09:33, Bartosz Golaszewski a écrit :
+> On Tue, Jun 10, 2025 at 2:38 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>
+>> Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+>> values") added new line setter callbacks to struct gpio_chip. They allow
+>> to indicate failures to callers. We're in the process of converting all
+>> GPIO controllers to using them before removing the old ones. This series
+>> converts all GPIO chips implemented under drivers/soc/.
+>>
+>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>> ---
+>> Bartosz Golaszewski (2):
+>>        soc: fsl: qe: use new GPIO line value setter callbacks
+>>        soc: renesas: pwc-rzv2m: use new GPIO line value setter callbacks
+>>
+>>   drivers/soc/fsl/qe/gpio.c       | 6 ++++--
+>>   drivers/soc/renesas/pwc-rzv2m.c | 8 +++++---
+>>   2 files changed, 9 insertions(+), 5 deletions(-)
+>> ---
+>> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+>> change-id: 20250523-gpiochip-set-rv-soc-14e1d9414f70
+>>
+>> Best regards,
+>> --
+>> Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>
+> 
+> I see Geert queued patch 2/2, who would take patch 1/2?
+
+
+It is in my pipe for v6.17 but if someone else wants to take it I can 
+Ack it instead.
+
+Christophe
