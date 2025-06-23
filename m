@@ -1,156 +1,320 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7462063FD
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6D81DF75A;
+	Mon, 23 Jun 2025 08:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750668264; cv=none; b=fwK6qnDXJElpz5bTkHrUZcwMnDVnTJp9k9LzH8zyStzraVCEQtk1gVX+6oIskGCP0hgccJJqO8t8rmCpCd2BdOnYbBrAmv+HGd8vvKqwJ5D42ggUG0wCBj9buGKLSgO3ay4/07S95aql9bVFbZr//A8sGVsZk7EQ8ZlVxSJg5TI=
+	t=1750668300; cv=none; b=MVCCnedo9TtnporUXKZAA/DjPtQ1l7Y1I4bWIt8SnNNgjGtiiipW/qcyF0IJTmtqDql51hP1xPQwGzN6ISSlGLQ2C6T2L7HkiEpi4HZhe4ta8UJLZ2D8FawzdoScsFTHeJ+CABaJXE9g6heum+YOkZ4TFkWzVZmz4wVay8Bs4Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750668264; c=relaxed/simple;
-	bh=gI1ErGb0vQdrPAGEAUZHDjNpr3h9UEqh+5lgNTiM3h8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=S1wqqFvZBCHwBaCUzTiQj8+M0513eC4NawiJWcn4bRndyLWYxPBMkDGdlnw6SlFllKvUZ0f46oLKp/qSWYjyoQo26nF3BOpusqdhP8UdRVUPmw5JMTqZ1VA/fWePqEK4uTCtMbkWzdCF/hnxxoRl3kwLBRcXr2LhfWucKoWpIVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=innosonix.de; spf=pass smtp.mailfrom=innosonix.de; dkim=pass (2048-bit key) header.d=innosonix.de header.i=@innosonix.de header.b=OYPxXfra; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=innosonix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=innosonix.de
+	s=arc-20240116; t=1750668300; c=relaxed/simple;
+	bh=T+ZvFATpMVmo9JrjrJ0psl5XSDccDVqxEVtTuUwWGYI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=diTywZBxvYm+2XYN7UJeOZfq7d3dv1KuJfcwqX1QTT3OZ7MeAsC5z1lhRVQRx5behlR8JHz/B6OLS4Z0FvZ/LpLy/5AScTJdw4dberrgusUkBmgwgTQ6C+OIOsOlV3JNt2XfK9H4+ds1nsH0cqAEmVLHOMwMwxj28q3NpeNyHew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qSeSVtBe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=innosonix.de header.i=@innosonix.de header.b="OYPxXfra"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a4e62619afso487654f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:44:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=innosonix.de; s=google; t=1750668261; x=1751273061; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/wEOD3FOK1XNyQ/YyTEnECjOhDUHmpEcYDOM9V4Bw4Y=;
-        b=OYPxXfrap46d1cCt/vHigFJxgJuK+9Owg3rKD8NbsoFxhiOYNl6d7eSjFP7KYVSBEK
-         +X7pmvJhHAnZB4N4CvMhwuVLSTx4xXVbeK7XSg1LRGcFNHoAuhVAd5ExtbryNPUCq8Yd
-         HsKqIv0NiXu6SIKv5pWeReHbhUFOANcgWYq5BrYQKSTko3GXhFDjb2vbTR3kVuQwqghC
-         CVsvboPotuLIdVqVfg6dhYx2b5a3oGNGap8yGxOetzzy5lb3oxbxbok1Kw6Hs0z0CwVk
-         dDn7TOfDdL2oVDJB8kjcav7e4J4KW9yC/I/5lzwl3UEWbG4d6jXSTsXfNbJ/uqLbUzn/
-         1BTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750668261; x=1751273061;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/wEOD3FOK1XNyQ/YyTEnECjOhDUHmpEcYDOM9V4Bw4Y=;
-        b=WGbCM4fBNlau8QPCJd2RCFPy26Iqcosh4MM5PGS6RYmEQua5ms2AmaoZzY4JSNfrfD
-         W/kx87Kku5pdbIY+4d+K5dB2gjm2C+u6Hqwio6spHBP6FNgfugQ9vad0bIhINAGzHwVl
-         vPNB+oTC26pdX2wpd8XMRGD51LoZ944Udlwet8HCtStBqlAG7WboZdqhRVulDek+8Iz+
-         wCUVcJX39tEaSk+UzDAmJsJf/G7VF2vXUbGX5pOwOhn8+Sy4VwYn5aVwaZoseb8084KP
-         mwVpeejYjCtvEgI8AAtUpIft8Ynb+8ABFU8iztrkMkoec6GpKQS7Zjx6SPOjxFHFQKln
-         Pgow==
-X-Forwarded-Encrypted: i=1; AJvYcCXR8/1n4+i8MqWv9/wmvQveJ4XaqPESDh8MLCz6DUCDR3YyGuWrkjzdUxoe2cLRdE5MddZG5kPxpEFVgLk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1xw8t9Psd9ziPpA/zaRkEhjc5udTPgQjytzNXsynSA5U5Dn6Z
-	El+YV9g9Ar54fxa2yViQ1sEyc5Bw3x6csNeapO1EU4uIz+nv4gv7Eh945qPDHLgNIsEEMFcpG7E
-	36XZPB+cQfK9I+ydi2hyNw7i93rgububKEyGgyecZ6o/C/FGSC19IassUCFc=
-X-Gm-Gg: ASbGncsFKNvPYP5//pivM4Y5YrxTBA4ZUBITf/7lk8dKG5lowe7eJQEdGVEVUbFc+eY
-	pVvzj8OQ/1ytJbUUTpLu/yPHHZQju9CUtm1iavpx3ikRfg6ilmxm1jKXgve3P06KZqsigXleBoy
-	/gJDCC6EnooMm/rcwcFJY7YE/sZKNZylYjGp0hxNm8OEfPY6PRa2WpfmEXiJgnVIJf6zynhlDtM
-	Qx9T3zNxg44D0LHf5JkTRvtVckpqs/+VLV383FeCEzOHGBgih5ZJPBTQCVvNDXkPq7Q+Zww82C+
-	VVV5zK0Jyi5x8Nap1JCgIfpao5Kfvr3bbe6P9JtGIpQKDv/wUROt5wAhYnT+NXHH73JxVXmjCNQ
-	qbfjA7smpayOJLhMLpqCO1w==
-X-Google-Smtp-Source: AGHT+IEWhvT9kJ4u3LtaSyEodBMjwnY5987G/5eQkLBt7VVzz2bNjSEBbmFEI7Y+I6ci+DYcirb26g==
-X-Received: by 2002:a05:6000:220e:b0:3a5:1306:3c30 with SMTP id ffacd0b85a97d-3a6d112f3a6mr3539913f8f.0.1750668260596;
-        Mon, 23 Jun 2025 01:44:20 -0700 (PDT)
-Received: from steffen-linux.. (p57b79c3d.dip0.t-ipconnect.de. [87.183.156.61])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f1057esm8987316f8f.10.2025.06.23.01.44.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 01:44:19 -0700 (PDT)
-From: =?UTF-8?q?Steffen=20B=C3=A4tz?= <steffen@innosonix.de>
-To: 
-Cc: =?UTF-8?q?Steffen=20B=C3=A4tz?= <steffen@innosonix.de>,
-	stable@vger.kernel.org,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] nvmem: imx-ocotp: fix MAC address byte length
-Date: Mon, 23 Jun 2025 10:43:45 +0200
-Message-ID: <20250623084351.1734037-1-steffen@innosonix.de>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qSeSVtBe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFA2CC4CEED;
+	Mon, 23 Jun 2025 08:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750668299;
+	bh=T+ZvFATpMVmo9JrjrJ0psl5XSDccDVqxEVtTuUwWGYI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qSeSVtBe24oPA3fxyQOIEjU6APWTd0ILLyIKNoUPlgMC/+0TiNHEq3l3qE3rN+kw6
+	 hXGrKsSt8/wXQNmnNBULq5BmlBb7gqK8KaaJRkfaIG8DlApgOhMO8NIEeYVehCdwM/
+	 eDvCQwA5LefVr1p1ZlFqdla9/blsb+eQQPZwTeuINQmlw2Gkc9FdYvfjvuEra0JcLO
+	 d2ycrAcDI8W0CQSz7WIui8aaKVg02RFR9uxGiYnOEqqjJn3+AQWk80ekdlX/xRUNT+
+	 VvAWhbkaExKX1N5xk2b2sQjKBu5BJNvNKn+dyo1lOdsAhRD5ogrCThLnEQNmWaGQIC
+	 QZ41rtsNkZIPw==
+Date: Mon, 23 Jun 2025 10:44:57 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+	William Breathitt Gray <wbg@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.com>, 
+	Kever Yang <kever.yang@rock-chips.com>, Yury Norov <yury.norov@gmail.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Leon Romanovsky <leon@kernel.org>, Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-iio@vger.kernel.org, kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>, 
+	Detlev Casanova <detlev.casanova@collabora.com>
+Subject: Re: [PATCH v2 5/7] pwm: Add rockchip PWMv4 driver
+Message-ID: <o5xaoorrqb6a3jwwpdcsowrqbo7owrjzwj4r3laytusms6txdi@ku4bvbynkwh7>
+References: <20250602-rk3576-pwm-v2-0-a6434b0ce60c@collabora.com>
+ <20250602-rk3576-pwm-v2-5-a6434b0ce60c@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-The commit "13bcd440f2ff nvmem: core: verify cell's raw_len" caused an
-extension of the "mac-address" cell from 6 to 8 bytes due to word_size
-of 4 bytes.
-
-Thus, the required byte swap for the mac-address of the full buffer length,
-caused an trucation of the read mac-address.
-From the original address 70:B3:D5:14:E9:0E to 00:00:70:B3:D5:14
-
-After swapping only the first 6 bytes, the mac-address is correctly passed
-to the upper layers.
-
-Fixes: 13bcd440f2ff ("nvmem: core: verify cell's raw_len")
-Cc: stable@vger.kernel.org
-Signed-off-by: Steffen B=C3=A4tz <steffen@innosonix.de>
----
-v2:
-- Add Cc: stable@vger.kernel.org as requested by Greg KH's patch bot
- drivers/nvmem/imx-ocotp-ele.c | 2 ++
- drivers/nvmem/imx-ocotp.c     | 2 ++
- 2 files changed, 4 insertions(+)
-
-diff --git a/drivers/nvmem/imx-ocotp-ele.c b/drivers/nvmem/imx-ocotp-ele.c
-index ca6dd71d8a2e..3af7968f5a34 100644
---- a/drivers/nvmem/imx-ocotp-ele.c
-+++ b/drivers/nvmem/imx-ocotp-ele.c
-@@ -119,6 +119,8 @@ static int imx_ocotp_cell_pp(void *context, const char =
-*id, int index,
-=20
- 	/* Deal with some post processing of nvmem cell data */
- 	if (id && !strcmp(id, "mac-address"))
-+		if (bytes > 6)
-+			bytes =3D 6;
- 		for (i =3D 0; i < bytes / 2; i++)
- 			swap(buf[i], buf[bytes - i - 1]);
-=20
-diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-index 79dd4fda0329..63e9974d9618 100644
---- a/drivers/nvmem/imx-ocotp.c
-+++ b/drivers/nvmem/imx-ocotp.c
-@@ -228,6 +228,8 @@ static int imx_ocotp_cell_pp(void *context, const char =
-*id, int index,
-=20
- 	/* Deal with some post processing of nvmem cell data */
- 	if (id && !strcmp(id, "mac-address"))
-+		if (bytes > 6)
-+			bytes =3D 6;
- 		for (i =3D 0; i < bytes / 2; i++)
- 			swap(buf[i], buf[bytes - i - 1]);
-=20
---=20
-2.43.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4g26suiz7oblktsa"
+Content-Disposition: inline
+In-Reply-To: <20250602-rk3576-pwm-v2-5-a6434b0ce60c@collabora.com>
 
 
---=20
+--4g26suiz7oblktsa
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v2 5/7] pwm: Add rockchip PWMv4 driver
+MIME-Version: 1.0
 
+Hello Nicolas,
 
-*innosonix GmbH*
-Hauptstr. 35
-96482 Ahorn
-central: +49 9561 7459980
-www.innosonix.de <http://www.innosonix.de>
+On Mon, Jun 02, 2025 at 06:19:16PM +0200, Nicolas Frattaroli wrote:
+> +/**
+> + * rockchip_pwm_v4_round_params - convert PWM parameters to hardware
+> + * @rate: PWM clock rate to do the calculations at
+> + * @duty: PWM duty cycle in nanoseconds
+> + * @period: PWM period in nanoseconds
+> + * @offset: PWM offset in nanoseconds
+> + * @out_duty: pointer to where the rounded duty value should be stored
+> + * @out_period: pointer to where the rounded period value should be stored
+> + * @out_offset: pointer to where the rounded offset value should be stored
+> + *
+> + * Convert nanosecond-based duty/period/offset parameters to the PWM hardware's
+> + * native rounded representation in number of cycles at clock rate @rate. Should
+> + * any of the input parameters be out of range for the hardware, the
+> + * corresponding output parameter is the maximum permissible value for said
+> + * parameter with considerations to the others.
+> + */
+> +static void rockchip_pwm_v4_round_params(unsigned long rate, u64 duty,
+> +					u64 period, u64 offset, u32 *out_duty,
+> +					u32 *out_period, u32 *out_offset)
+> +{
+> +	int ret;
+> +
+> +	ret = rockchip_pwm_v4_round_single(rate, period, out_period);
+> +	if (ret)
+> +		*out_period = U32_MAX;
 
-innosonix GmbH
-Gesch=C3=A4ftsf=C3=BChrer:=20
-Markus B=C3=A4tz, Steffen B=C3=A4tz
-USt.-IdNr / VAT-Nr.: DE266020313
-EORI-Nr.:=20
-DE240121536680271
-HRB 5192 Coburg
-WEEE-Reg.-Nr. DE88021242
+It's strange to let rockchip_pwm_v4_round_single return failure just to
+reset it to U32_MAX here then. I'd make rockchip_pwm_v4_round_single do:
+
+	tmp = mul_u64_u64_div_u64(rate, in_val, NSEC_PER_SEC);
+	if (tmp > U32_MAX)
+		return U32_MAX
+	return tmp;
+
+and then just do
+
+	*out_period = rockchip_pwm_v4_round_single(rate, period);
+	*out_duty = rockchip_pwm_v4_round_single(rate, duty)
+	...
+
+> +
+> +	ret = rockchip_pwm_v4_round_single(rate, duty, out_duty);
+> +	if (ret || *out_duty > *out_period)
+> +		*out_duty = *out_period;
+
+You can assume that .round_wf_tohw() is called only with duty <= period.
+
+> +	ret = rockchip_pwm_v4_round_single(rate, offset, out_offset);
+> +	if (ret || *out_offset > (*out_period - *out_duty))
+> +		*out_offset = *out_period - *out_duty;
+
+Is this a hardware limitation? In general
+
+	.period_length_ns = 1000
+	.duty_length_ns = 600
+	.duty_offset_ns = 600
+
+is a valid waveform.
+
+> +}
+> +
+> +static int rockchip_pwm_v4_round_wf_tohw(struct pwm_chip *chip,
+> +					 struct pwm_device *pwm,
+> +					 const struct pwm_waveform *wf,
+> +					 void *_wfhw)
+> +{
+> +	struct rockchip_pwm_v4 *pc = to_rockchip_pwm_v4(chip);
+> +	struct rockchip_pwm_v4_wf *wfhw = _wfhw;
+> +	unsigned long rate;
+> +	int ret;
+> +
+> +	/* We do not want chosen_clk to change out from under us here */
+> +	ret = mfpwm_acquire(pc->pwmf);
+> +	if (ret)
+> +		return ret;
+> +
+> +	rate = clk_get_rate(pc->pwmf->core);
+> +
+> +	rockchip_pwm_v4_round_params(rate, wf->duty_length_ns,
+> +				     wf->period_length_ns, wf->duty_offset_ns,
+> +				     &wfhw->duty, &wfhw->period, &wfhw->offset);
+> +
+> +	if (wf->period_length_ns > 0)
+> +		wfhw->enable = PWMV4_EN_BOTH_MASK;
+> +	else
+> +		wfhw->enable = 0;
+> +
+> +	dev_dbg(&chip->dev, "tohw: duty = %u, period = %u, offset = %u, rate %lu\n",
+> +		wfhw->duty, wfhw->period, wfhw->offset, rate);
+
+This is more helpful if the input parameters (i.e. wf) is also emitted.
+
+> +	mfpwm_release(pc->pwmf);
+> +	return 0;
+> +}
+> +
+> +static int rockchip_pwm_v4_round_wf_fromhw(struct pwm_chip *chip,
+> +					   struct pwm_device *pwm,
+> +					   const void *_wfhw,
+> +					   struct pwm_waveform *wf)
+> +{
+> +	struct rockchip_pwm_v4 *pc = to_rockchip_pwm_v4(chip);
+> +	const struct rockchip_pwm_v4_wf *wfhw = _wfhw;
+> +	unsigned long rate;
+> +	int ret = 0;
+> +
+> +	/* We do not want chosen_clk to change out from under us here */
+> +	ret = mfpwm_acquire(pc->pwmf);
+> +	if (ret)
+> +		return ret;
+
+Hmm, there is little gain here. Correct me if I'm wrong, but you prevent
+a rate change only until mfpwm_release() is called, so the assertion
+ends before the caller can use the calculated parameters anyhow. So
+maybe drop the acquire/release pair?
+
+> +	rate = clk_get_rate(pc->pwmf->core);
+> +
+> +	if (rockchip_pwm_v4_is_enabled(wfhw->enable)) {
+> +		if (!rate) {
+> +			ret = -EINVAL;
+> +			goto out_mfpwm_release;
+> +		}
+> +		wf->period_length_ns = mul_u64_u64_div_u64(wfhw->period, NSEC_PER_SEC, rate);
+
+(u64)wfhw->period * NSEC_PER_SEC cannot overflow, so a plain
+multiplication and then a division is cheaper here.
+
+> +		wf->duty_length_ns = mul_u64_u64_div_u64(wfhw->duty, NSEC_PER_SEC, rate);
+> +		wf->duty_offset_ns = mul_u64_u64_div_u64(wfhw->offset, NSEC_PER_SEC, rate);
+> +	} else {
+> +		wf->period_length_ns = 0;
+> +		wf->duty_length_ns = 0;
+> +		wf->duty_offset_ns = 0;
+> +	}
+> +
+> +	dev_dbg(&chip->dev, "fromhw: duty = %llu, period = %llu, offset = %llu, rate = %lu\n",
+> +		wf->duty_length_ns, wf->period_length_ns, wf->duty_offset_ns, rate);
+
+As above, please include wfhw in the output.
+
+> +out_mfpwm_release:
+> +	mfpwm_release(pc->pwmf);
+> +	return ret;
+> +}
+> +
+> [...]
+> +static int rockchip_pwm_v4_probe(struct platform_device *pdev)
+> +{
+> +	struct rockchip_mfpwm_func *pwmf = dev_get_platdata(&pdev->dev);
+> +	struct rockchip_pwm_v4 *pc;
+> +	struct pwm_chip *chip;
+> +	struct device *dev = &pdev->dev;
+> +	int ret;
+> +
+> +	chip = devm_pwmchip_alloc(dev, 1, sizeof(*pc));
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +
+> +	pc = to_rockchip_pwm_v4(chip);
+> +	pc->pwmf = pwmf;
+> +
+> +	ret = mfpwm_acquire(pwmf);
+> +	if (ret == -EBUSY)
+> +		dev_warn(dev, "pwm hardware already in use, can't check initial state\n");
+> +	else if (ret < 0)
+> +		return dev_err_probe(dev, ret, "couldn't acquire mfpwm in probe\n");
+> +
+> +	if (!rockchip_pwm_v4_on_and_continuous(pc))
+> +		mfpwm_release(pwmf);
+> +	else {
+> +		dev_dbg(dev, "pwm was already on at probe time\n");
+> +		ret = clk_enable(pwmf->core);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret, "enabling pwm clock failed\n");
+> +		ret = clk_rate_exclusive_get(pc->pwmf->core);
+> +		if (ret) {
+> +			clk_disable(pwmf->core);
+> +			return dev_err_probe(dev, ret, "protecting pwm clock failed\n");
+> +		}
+> +	}
+> +
+> +	platform_set_drvdata(pdev, chip);
+> +
+> +	chip->ops = &rockchip_pwm_v4_ops;
+> +
+> +	ret = pwmchip_add(chip);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
+
+I like error messages starting with a capital letter.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void rockchip_pwm_v4_remove(struct platform_device *pdev)
+> +{
+> +	struct pwm_chip *chip = platform_get_drvdata(pdev);
+> +	struct rockchip_pwm_v4 *pc = to_rockchip_pwm_v4(chip);
+> +
+> +	mfpwm_remove_func(pc->pwmf);
+
+What does this function do? It is not used in .probe()'s error path?!
+
+> +	pwmchip_remove(chip);
+
+Wrong order (I think). If mfpwm_remove_func() affects operation,
+pwmchip_remove() must be called first.
+
+> +}
+> +
+> +static const struct platform_device_id rockchip_pwm_v4_ids[] = {
+> +	{ .name = "pwm-rockchip-v4", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(platform, rockchip_pwm_v4_ids);
+> +
+> +static struct platform_driver rockchip_pwm_v4_driver = {
+> +	.probe = rockchip_pwm_v4_probe,
+> +	.remove = rockchip_pwm_v4_remove,
+> +	.driver = {
+> +		.name = "pwm-rockchip-v4",
+> +	},
+> +	.id_table = rockchip_pwm_v4_ids,
+> +};
+> +module_platform_driver(rockchip_pwm_v4_driver);
+> +
+> +MODULE_AUTHOR("Nicolas Frattaroli <nicolas.frattaroli@collabora.com>");
+> +MODULE_DESCRIPTION("Rockchip PWMv4 Driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_IMPORT_NS("ROCKCHIP_MFPWM");
+
+Best regards
+Uwe
+
+--4g26suiz7oblktsa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhZFAYACgkQj4D7WH0S
+/k5t6ggAjmDJYKJYUEg5lEGucA+QTWdT0UbHkO7qf1jcahM1hd34ZOp7tYXkD9wC
+m28YV1gus2tgEIqldCRmqO0y5hJhniDfOJ92BRihB50Bkg1m6hox9P4iqMRPSJnd
+uDnmATiNVdY7Et8MPEe9Y9YDACD2CKfv/DSvUxkp3la1rhIglcTMHfPDFRMnSynw
+WUgyHKQ1hLEokOyBXvXY3wlDZCTpUZQpW5eSVW6p+h+Qj/liLp7CWNbW5myK/H49
+GYN3F/oEPrF+TMASFJkOfQb4Cs+MgPWOhTZfjj693TbWuFxc1p6seTByPZN8h3gg
+8B0jF2BSQvP4BiSbf9asZfRRNTd3DQ==
+=4kAc
+-----END PGP SIGNATURE-----
+
+--4g26suiz7oblktsa--
