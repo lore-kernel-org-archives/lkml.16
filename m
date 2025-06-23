@@ -1,59 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E32A223DCE
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 21:45:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3D619049B
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 21:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750715129; cv=none; b=I/r6W3JdMIQ1MARSBnaiLL8/b0pONTsaILxgQuC7FxBU4amf6tbyKV/9FUZlcP5rIIXv+JfB+nCYjmeo8oEq3CEvRGWoQ4r7Faev2lOJM/xTtmvd1yrII+a8bBIm6pw4jUB5b8TDc8AsGjToZH8ikPA+p5jB4V7njikn6CxBogg=
+	t=1750715324; cv=none; b=rXf6Pbu8XARQG0v+MG0n4NncqO4KwcRb0YLIeLioIt2DYi3iXQsPnPwFTGMjKtgRDV4CkTIG1F0nrHlxqPrXaSntIff83X2RfT1qOjWsDjeiW+gua4EHYfN5vXUwiyV6d7wyiARfZ6LvJSXZVIvVstWySzX9sH/nP/8f3dAZyUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750715129; c=relaxed/simple;
-	bh=18Au9ytDbTibIjuzR4zOqs5nyomtzAl1JtHW6kDieqo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=XOrwxT1KF4pIh2UCP53DfJ7S92JfD/Ckz1Muz1UIkQW3RxdHf8W2/H7mXvQe8t54uU9CK483SvHKkT3OUDpkwHM8/iOJhxkMRonPJsfla4A5GprZDOdyWl5OByFr/rHmV6UkEOqGzLpU63INhIVYgpjip2aqrU6RpxhYWR4UX8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=u2GywUPD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750715324; c=relaxed/simple;
+	bh=4bYjjF2yI77Na1nfsIj+g4X8U6tLp5T8SWhZcd9HNQM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uJK0ru+k6Wb0r75OUxFRUUarzOcsouG1MpkfLUSRi8S6bnGMH+JzmWzIjxAHyiY6dKZFz6Ee75wT0uiN/OGH76+ermiwqFVPzVnU6utg09koX7fNsAtuoHSoZ9UC4ycnre+tZnu9DFlDQ+yuuLgePLtAoDJQvj1MBXB0mcD/wCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=C87dIOdB; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="u2GywUPD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13F12C4CEED;
-	Mon, 23 Jun 2025 21:45:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1750715129;
-	bh=18Au9ytDbTibIjuzR4zOqs5nyomtzAl1JtHW6kDieqo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=u2GywUPDfzXBr8Aait3ggZAvH5UlvPQc0B1F+44f2xxStPUycjvZachm6Yz6/qnMW
-	 1ThmhialQFv94I5jxq4OvSWb3UjEfxhxxKO4twMUTSaDbHzznSXRgcQEFiWdKXT3bV
-	 v5S9DAtOHY8rA9MMn/HvWEVpqW+0MAQRp1FcwGJo=
-Date: Mon, 23 Jun 2025 14:45:28 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Davidlohr Bueso <dave@stgolabs.net>
-Cc: mhocko@kernel.org, hannes@cmpxchg.org, roman.gushchin@linux.dev,
- shakeel.butt@linux.dev, yosryahmed@google.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] mm/memcg: make memory.reclaim interface generic
-Message-Id: <20250623144528.19721543236d8a0165df4cad@linux-foundation.org>
-In-Reply-To: <20250623185851.830632-3-dave@stgolabs.net>
-References: <20250623185851.830632-1-dave@stgolabs.net>
-	<20250623185851.830632-3-dave@stgolabs.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="C87dIOdB"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32b43846e8cso38708101fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:48:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750715321; x=1751320121; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lnU+QVcxCYxEYL6PbzPZLje0addWyJna8P/l/C/lVg0=;
+        b=C87dIOdBKEHiRR4ASB6zeIVNydIg4vXXMHRB2eSnxdu6Xmg1YM/ZB/XV/UH+dnKX8y
+         Fa+b0QGkAGRh+BY03nBCQroT2iyjAqOBatlfLU4iPmVgRCxFa/9urbBVLAATmI7pYCVy
+         ArFGjm94IyXezHc0arYfoG1Gjzg4bKRyE06HKJs6zOg+4HDa0QY8Q8QpKaiUOk9EvkWE
+         6JcQVmglXz8LjQTt34uShPjORshpZIgvpnOomAPhtvLG5aapyx+Mf7SBNwAWNNSCSiJv
+         t337DfPivHq8AUIHLn9UaItSg7/ad9v8Xjm+8zR+vF2CnOkKYia72VUSzCfjHk/trSOH
+         h2EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750715321; x=1751320121;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lnU+QVcxCYxEYL6PbzPZLje0addWyJna8P/l/C/lVg0=;
+        b=Uyp16CzDjok+P6mPI/3z4z6xFol0YMoNhInj7Rzu91di9JAt7ZrTgMUh+fAZeET1DI
+         2mY3T0qMMaBYCs+zVSmp+Fr7JSpqAPxM1mkMWhY5B25NcswHfTo04PqGhvWWfAI7ecID
+         NSTx+I0YgJhpecuEJEPDN3mwzJoU7kRTeLqfNTrw/RsgphRiS+ISEPHGiZgVIuvFhGh4
+         3kXnu4VVYnTD8+Ohq/bGF+4cZPF5attOUDqirE6/UxNbNNP7ee0JcA9MfrZWKYdHSRZp
+         Dw7lM3rXyq2AWdUHrFMduhDr5lXsa1yb9kpFkl96SyVZQ0LoPTk9OHPTpA6Vei6VQMpe
+         GusQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVCXl9jUOxjT66QXYys+MhCuwwLVRknCofFssnatfgQ3Or/nOUQZFySyamDr9UzEjCdJ9xZ3uo4ILGlHIg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwCwK3fX5rQegqE/WBWEzJPa1UUAk2gk+tde4kOFGscAjq9KFz
+	N7Go+6/H0ZxOL6e3iurmIJ9CGF35KsP7hEYix0x7MwopSZ1LuE7FIvRrB0XlyIeEyJhXzB5+Nge
+	+Kxw2NwGfUkVbl7T3qQZBWD45bUFU0Wq7FgF5GCiMR5zxXgpzrdgleLA=
+X-Gm-Gg: ASbGnctzlhzyWjmxJpXut4thCbE655jLnyJXvSuLim6/yoneAQ9z2Dj5SWb/yyBg+aO
+	Z9ZL6cFIjNyr/c5CkLQkq49d7yKG9dxdgt9CvQm+TB0RrYlsXKeUeD9776RTlJAWp67MAicOjrF
+	Xnt7ED2uyYTaA8wv8rS531I7WICDi3311QtsPp2m+fbZDI
+X-Google-Smtp-Source: AGHT+IFEqza0DpEdoJWsbOSXs+4vZVjClIQT5f7IxRB12yNjDJQmhlzB577QjPcTEosoLth3err0U0r4QBcPWJHQ7Rk=
+X-Received: by 2002:a05:651c:1a0c:b0:32a:8c12:babf with SMTP id
+ 38308e7fff4ca-32b9918b02fmr47960381fa.2.1750715320985; Mon, 23 Jun 2025
+ 14:48:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250620-iio-adc-ad7173-add-spi-offload-support-v1-0-0766f6297430@baylibre.com>
+ <20250620-iio-adc-ad7173-add-spi-offload-support-v1-2-0766f6297430@baylibre.com>
+ <aFj5eEvn2uw_HSl0@smile.fi.intel.com>
+In-Reply-To: <aFj5eEvn2uw_HSl0@smile.fi.intel.com>
+From: David Lechner <dlechner@baylibre.com>
+Date: Mon, 23 Jun 2025 15:48:30 -0600
+X-Gm-Features: AX0GCFtsL-oycWVZVWTYTg3bjp_VLHo3OYdhTaf-OnhrFfyHZtM-ORpccSVZDA0
+Message-ID: <CAMknhBHuJY=8rxgJsMhvRNxZskmPhEZc1jJMQnHzQHFFoucWRA@mail.gmail.com>
+Subject: Re: [PATCH 2/9] iio: adc: ad_sigma_delta: use u8 instead of uint8_t
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Mark Brown <broonie@kernel.org>, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-spi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 23 Jun 2025 11:58:49 -0700 Davidlohr Bueso <dave@stgolabs.net> wrote:
+On Mon, Jun 23, 2025 at 12:51=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Fri, Jun 20, 2025 at 05:20:08PM -0500, David Lechner wrote:
+> > Replace uint8_t with u8 in the ad_sigma_delta driver.
+> >
+> > Technically, uint8_t comes from the C standard library, while u8 is a
+> > Linux kernel type. Since we don't use the C standard library in the
+> > kernel, we should use the kernel types instead.
+>
+> ...
+>
+> >       unsigned int reset_length =3D sigma_delta->info->num_resetclks;
+> > -     uint8_t *buf;
+> > +     u8 *buf;
+> >       unsigned int size;
+> >       int ret;
+>
+> Wondering if in the cases like this we may make it to be reversed xmas tr=
+ee.
 
-> This adds a general call for both parsing as well as the
-> common reclaim semantics. memcg is still the only user and
-> no change in semantics.
-> 
-> +int user_proactive_reclaim(char *buf,
-> +			   struct mem_cgroup *memcg, pg_data_t *pgdat);
+Fine with me as long as Jonathan doesn't mind the noise since it looks
+like I will be doing a v2 anyway.
 
-Feeling nitty, is this a good name for it?  It's hard to imagine what a
-function called "user_proactive_reclaim" actually does.
-
-That it isn't documented isn't helpful either!
+>
+>         unsigned int reset_length =3D sigma_delta->info->num_resetclks;
+>         unsigned int size;
+>         u8 *buf;
+>         int ret;
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
