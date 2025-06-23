@@ -1,93 +1,126 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from siberian.tulip.relay.mailchannels.net (siberian.tulip.relay.mailchannels.net [23.83.218.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12EC1DDA31
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 19:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750705573; cv=none; b=X33HUaNExP97UNsOUXJ+t0ew5GVuRMmzoAnmWM2JlZPHDQf49v0aMNXYY69OQHN048Maf7HVxxgcFBE1eOmNvEGctZxkzpCpBxhgmt8ezts90XxOGSozXct93lPJE9DH3LcZiUmWuBqBpPznxbqdyxWJ+IEwvpSNWDWWfsoGnqk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750705573; c=relaxed/simple;
-	bh=3bOfK9tvYoyS32c76foHmKh4Nx/kpDESMgccvA7X4rg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BPg5R6DfvNMt/M+4LwE4+2woyp1qEUaEHZr8gCTcOaY3jXXVEehJXcgqUCM9w9UdR9QpHVWxb2XwjP8ltfkbGOK89dSW/A+RAHmBF7H9k1vabyvLZa/YvVP7IbLOnIBnFn/cbaxvjOmUiX5y7PbuScbGZGWlom1v5PIdXv6HAHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=AfAAY9FH; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BF51684A4
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 19:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=23.83.218.246
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750705616; cv=fail; b=HvhJtdIhg5FtaIaSLQFzrxZ6jK6iJk9ZERNA7ZonFeuiTOslB9280jJetCi3NvXrxfxCE+/y61g+mEYjFNsKxhrZzw4MYaTmfknUjK6zsayjtkUdIRW6dSVu1guReNSQlokU9tiiR2HfFM+Mt+14cAeetr6YsIZ+ktQ5a9z7NCc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750705616; c=relaxed/simple;
+	bh=NqL+/tPydRN1T77ryDmxqIgIo9J0G9vNfGyONvs1JH0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HNQMg4YzxACqadREw6L+e83PfVGd/GCymCg1PmbgHsCYmbRjTiG+1U37vuSXiRd3atp1PhkuPlvQbDuFSlaKaNlDj9Kx61HZvUx/uRYM7VDd/HJvUK1OREdij9Fh6+/cacJE5s7LCJUcstvoZHwSM6nHUNYw94BSewtr8C5suaY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=ZBz5PwGr; arc=fail smtp.client-ip=23.83.218.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="AfAAY9FH"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6fae04a3795so51029336d6.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:06:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1750705570; x=1751310370; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lxtXCdFFskodxZfUDn7ahA5cQvmoiafw7SnR22JSkSM=;
-        b=AfAAY9FHurDivq5Cad65CDqFtiRwquhbrHAzRrBfgj3bNl/U6HFQQnq0NYgsaKG2kO
-         PgmNKBmIEbY7zfu0y5/eodDKKjnoDRVyZgARvJLu3TeKgR6sAyqw9uy6B7k6Xzq72Pli
-         L15RWu2QxrIH8DBffmPYJ8/bjIIO5YXdFQjFnUAdFooPfSaMs4MIx6K0TkL9tLX4mwmw
-         OKVThrglRo9MiM2Ss0IDZGzX4pjNPqSoccUUQTHW+PX571W0cxzf0trrEPUhe94Qv0f2
-         AWcVbXojOJ/vq/S7uLNWrsMXQVI1+p8hr43SnppZSTpifk1ttrIwZTnN7L4Sw3aVLI12
-         cMvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750705570; x=1751310370;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lxtXCdFFskodxZfUDn7ahA5cQvmoiafw7SnR22JSkSM=;
-        b=h70/i1HRgNjl8ZwAgL5XdNi/AvBmlRPG2QiA4rcls6nb2rEZ2PjFdwmQmEzcxTLdeT
-         hUKen/JDrn58nAAoacsrU0C1utwdMPXVy8j0MMIOWgyNl0EYs3tajQldOMoO7apApS2V
-         shtpFXDkop8YkpaysjL3U3AWzq3YO2vuOiH9SQvO/UHCakyuYS8zwYEOyD4JtyM7nuYa
-         PkhFUodjwO7X6rfnIHmLiGGQge5aDKb4NdOfdke9Qq45zgbwjWragjQA297WpabKC6Ua
-         Qd+Lg2+sme60+7JiXuFtxZDH3hs3iycCg2Saq2qlt0pb5dOdeNbfopHfuGY/gT3baAdP
-         dHoA==
-X-Forwarded-Encrypted: i=1; AJvYcCVM2TqWwK1M6iTeAZluE90f2fUWa0aWmsxBlitXELiAuy2SUpOYHudmyryqTh8PRyJRzjYD3NkYMJ/n7j8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yweq+N7tJys6lyFOGfsjxsbzY4HIeLoi2sT1xdJ76chBKFaBctw
-	jcVnqcxI0PGxJAyuVIE+5cl2JhZiOxahzG0jlBIEdzeWw57aCF895LGj18TghVAZH7sWZvh12mo
-	1WjUd
-X-Gm-Gg: ASbGncs4vebiwkZomaFcXPyl2hSYi/+807k+mILLvQ64ftRBuSp6RTLSYGXt253GYrl
-	3lcxCgbdQM215fJ7xjPXsWGSoApp4eUW3rYjoZ7tXUueQpuZlgjhl1XObQQ16pc+tl4wVA1dEol
-	gyC6hFqXAXCsigN0aRNTLab2X9VMEkznMZASvY/HjgL77nZRuyW/CMZW9Jipk+mBhSqzp5ddu+J
-	QWeQ/izSiH8lq6i7uhqWhfTqTQsqQ4M7knGDQ19dSBSuSK8PoyhH176O84aPaKnVBKmi6FopscG
-	dt1OiCIRNIFrJoIUS8lqLSFZO1eXznJPRXuEMEy3FOFJTg9xEdvXYjlEISzHavIBGWwK
-X-Google-Smtp-Source: AGHT+IHKfvbJCKgRw95/hYlzipmhgWo0bFzDAVi72dVhWbrFTXEA6+zicJGy7m3eDM/cdLV9FpbUog==
-X-Received: by 2002:a05:6214:540c:b0:6fb:4e46:7f3a with SMTP id 6a1803df08f44-6fd0a4d68f5mr258869806d6.16.1750705569727;
-        Mon, 23 Jun 2025 12:06:09 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:400::5:e19e])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd24877949sm22887026d6.88.2025.06.23.12.06.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 12:06:09 -0700 (PDT)
-Date: Mon, 23 Jun 2025 14:06:07 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Bijan Tabatabai <bijan311@gmail.com>
-Cc: damon@lists.linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	sj@kernel.org, akpm@linux-foundation.org, david@redhat.com,
-	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
-	apopple@nvidia.com, bijantabatab@micron.com,
-	venkataravis@micron.com, emirakhur@micron.com, ajayjoshi@micron.com,
-	vtavarespetr@micron.com
-Subject: Re: [RFC PATCH v2 1/2] mm/mempolicy: Expose get_il_weight() to MM
-Message-ID: <aFmln7KNVhE9-NIy@gourry-fedora-PF4VCD3F>
-References: <20250620180458.5041-1-bijan311@gmail.com>
- <20250620180458.5041-2-bijan311@gmail.com>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="ZBz5PwGr"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 2298518481C;
+	Mon, 23 Jun 2025 18:59:42 +0000 (UTC)
+Received: from pdx1-sub0-mail-a316.dreamhost.com (trex-green-5.trex.outbound.svc.cluster.local [100.127.221.92])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id A2E06183477;
+	Mon, 23 Jun 2025 18:59:41 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1750705181; a=rsa-sha256;
+	cv=none;
+	b=igQk+sXvXEfZRbXO1GiaG9ikIY6T9SSzzLUY371IJTma3E94nVeJ4nPNAAQKMZfvqoOrzr
+	ndyjvPDftrK0jRASEVDtBEcDbh5AB+9Nq2plgbbtbuhYLwDubRuR8Zr3blmCdWTkTfzuRt
+	YalOPNC4fgEb9JXkbZ+WUDB65RcNVVXZKh2QPTx8+oHEIoTHz75Bu6ttCbbaRpj9aoAdcJ
+	3SCMtlsVYNM19sJCGKeYzu/pi2QmbBolBClMaOsP+SU+8YtiByBxhyi4ZrHy5YDa5/6ocM
+	Pve+U4qkwWDNiZ/WdQTbArcEONaiAf/zy4a9McNzeF/3CnIcYQ/PA9vMt85TdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1750705181;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=iTH9wFB+JBQU6K1w6gktcARkoNkO27ZyKXW1O6cBS8E=;
+	b=Rp0Q4FsYBT427MW5ZH2unCjByT1QYaPtbQWKwRXEcqigEP8ExHEYJK8rWWmUjemrXp+rNf
+	oIfaRdQb7HmUyiHs/1GY8jqCL+fm9dWqWK1TKTR/bRwp3XZ7OUT3cnLCnX66Oi5hkIR9zT
+	wwol7sRdW8HBuVxBqSMrSNFwQFq5Q/XSPx+66amF0+DvB52oxPJk0RUUaaHTi6r4WeYUhX
+	mjXAIAj5L1n9nJCRGD1l76dHbu3eqnwoLFTdAc4OH+OY1aImWeOAitQQBYhiPoZmuMy0nh
+	1cOwILStbQ+IE4qDd2bpF/PQf/0NDuBWHMNYnfQLDC5wxLyxGpb/4t3ZE8HhGw==
+ARC-Authentication-Results: i=1;
+	rspamd-679c59f89-c9qk5;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Abaft-Thoughtful: 4736bec122005e1a_1750705181964_3687824332
+X-MC-Loop-Signature: 1750705181964:3039902206
+X-MC-Ingress-Time: 1750705181964
+Received: from pdx1-sub0-mail-a316.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.127.221.92 (trex/7.0.3);
+	Mon, 23 Jun 2025 18:59:41 +0000
+Received: from offworld.lan (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a316.dreamhost.com (Postfix) with ESMTPSA id 4bQy7J6twXz8Q;
+	Mon, 23 Jun 2025 11:59:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1750705181;
+	bh=vjCLe0lDun0WCvPOxIVngwkUbkxkTJhCtkS4Pw7qan0=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=ZBz5PwGro/e3FMWoYszE2Lu6gU9Mc3aLCGFcZpHKPyWnjfqzPeEzp4eHzVTl75Ee+
+	 WZ4W0iqVrU8cX0j+e3r21olSnlijJDGDlj2IJ44D6DvofN7kJFHjjkuu+Yusnw1c2M
+	 LWKeVNDn2YwhwJsXvqVXTz+jb9sHOH5eUOy6WAc76/mNcXCpMVmG2931O2VWs2citu
+	 z3tBa3p7fQOYWmwge4CyNOdEpnc6+QjvIEP2nQA/T/NTfC9WQqcdVhnGw2SxW/FzLf
+	 Xx4yK1Pli3iz6pItYpkE3Ygtsxiac4xU+G+4trkcs5Ar1nhKTdWfrTPNEDRjmEzeUk
+	 /mRqagIGdak9g==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: akpm@linux-foundation.org
+Cc: mhocko@kernel.org,
+	hannes@cmpxchg.org,
+	roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev,
+	yosryahmed@google.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	dave@stgolabs.net
+Subject: [PATCH 1/4] mm/vmscan: respect psi_memstall region in node reclaim
+Date: Mon, 23 Jun 2025 11:58:48 -0700
+Message-Id: <20250623185851.830632-2-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250623185851.830632-1-dave@stgolabs.net>
+References: <20250623185851.830632-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620180458.5041-2-bijan311@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 20, 2025 at 01:04:57PM -0500, Bijan Tabatabai wrote:
-> From: Bijan Tabatabai <bijantabatab@micron.com>
-> 
-> This patch exposes get_il_weight() in mm/internal.h. This patch is to
-> allow other parts of the MM subsystem, such as DAMON, to make page
-> placement decisions based on the global interleave weights.
-> 
-> Signed-off-by: Bijan Tabatabai <bijantabatab@micron.com>
+... rather benign but keep proper ending order.
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ mm/vmscan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index a93a1ba9009e..c13c01eb0b42 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -7653,8 +7653,8 @@ static int __node_reclaim(struct pglist_data *pgdat, gfp_t gfp_mask, unsigned in
+ 	set_task_reclaim_state(p, NULL);
+ 	memalloc_noreclaim_restore(noreclaim_flag);
+ 	fs_reclaim_release(sc.gfp_mask);
+-	psi_memstall_leave(&pflags);
+ 	delayacct_freepages_end();
++	psi_memstall_leave(&pflags);
+ 
+ 	trace_mm_vmscan_node_reclaim_end(sc.nr_reclaimed);
+ 
+-- 
+2.39.5
+
