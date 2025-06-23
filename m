@@ -1,104 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62E125EFB7;
-	Mon, 23 Jun 2025 15:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183CB289E1C
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750692607; cv=none; b=Dv+hFMhPN8Dfe+DAQJc0EhRXVkdoJ8MfaR/zJ8+oMex2A/G82Pew5X+ugNOmh8ORAqCJVJdD5HNjKV1Fg+i+3ip3bZBNzYPuIz/eJk6uTSmuMEhj9imv9ZyGAZZqViSymbAV0PohhcHZ84wTkKlmnEDB9BNoH/Ky3xeOv87ctSc=
+	t=1750692611; cv=none; b=XHKYxx19+LY2hbOCTsMV/sUUJs5rL/u+QgiVIizfzQR2ZUXN4U7+O0vAUAGQ5KhAP8DUjtcXl+3NitClAc6XL560VnbOP3EVgssPoujbd9JFHmekeCsQBgK9JcuccdKsOdDZ4scu6DQzruwI1y5qMKaLBp0mgQ0hCX4bbL47uvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750692607; c=relaxed/simple;
-	bh=Eb1qtumKaPEcaprn5jJjJ+Tu3cZ38rObUv31uO8b3Ok=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TnG9XA9/5qIi3SzYm/5XLfoBJq+2qsLFUT+tq5G93Q111vMKksGSxJNu4vtf1TpeyrwDQbcVSRE8/vQaVuT16RX8LtG9QHYtx4Eu4S8bUnhP+XdQCnCv59RQ5cyJ6iDcf3eGH2rUg4HxjP/5I9UyPouDYoAZVDPpi6hNW6/aUlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eKkmCXui; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750692611; c=relaxed/simple;
+	bh=L/cfSGnSX28XY4cLKESl0PHduhleGIW8TtQJ6a7uSMg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=N1ZbX6oSqcqjL9zgavD02hMUuHHYHmjkUk7HopoV6cZaViVVHIVWh25nwGKW1Q2HWCzW68GzVjlSKAVytj62QMtOjd+DXck5rK5OeShIZ6AnvFbONzJtoZHXLkY8KqjainvXBPMfVgN4AYIt5OW0Y8lzfZuv7hIYcRhHBSQPU1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gnu2gg9K; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eKkmCXui"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85BD7C4CEF1;
-	Mon, 23 Jun 2025 15:30:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750692607;
-	bh=Eb1qtumKaPEcaprn5jJjJ+Tu3cZ38rObUv31uO8b3Ok=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=eKkmCXui95ztxd1SFL0sm2EgauUr2k01BfySwHyNlqVckwYQNCEl5fk9cPbvaFIIA
-	 NpFAVgO2S6eye+y9OYV/B3z9II8/JfeSJdCorYE4HmzbHdX1dbQNEMG6MKMduccQqn
-	 fuTMwKIz5batspjIe1HPEc4bfrOqGjtaMakMPMGAfp/4/GxKCNZigm3IMjHuw8I1iL
-	 ssaRa3kHQxUTijjqwhbVvPIVRN0RijIijaY2Z0wWhH5AgP1xSeY38872+RMJPIBcLw
-	 n5hjrO/x50udDoasuUyA3+srHjjuSgODxerwyuE4EP+mUVJsSCJn9MVbSVAM3X5xBz
-	 qqnYtMbnV077Q==
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-61169c35f2aso350359eaf.2;
-        Mon, 23 Jun 2025 08:30:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWwZQmdMXlnsOgAEnhQVE1CQA+QSL5IMT7+5DqVmk9NNTbG+3/6HQ3OzQJEKpSmtYs3qvCwAxF9Hdz3dCU=@vger.kernel.org, AJvYcCXqAb5wBHxfK8mFlqmTZ9xylkXr43pJGKoDttzDPAtDvkc/Me9LCPMzKfk3M25zJY+MtCj+SOwwCB8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcgpiSs/xvmF0J2fH8kOPYmjnQYJc5Ip6MX6ykbzFwCyewuWh3
-	Go5V7k1xd62cqBeHHIPGO5G+SHiuJ919nv+LMqvEFI9KKE9ubpD/zz7nNSRyj3Jj1wc2aom4Y/L
-	+4x1pDLZiW8Ii8JePqiNOYIv5JGtpYew=
-X-Google-Smtp-Source: AGHT+IFFL7m7Qo7NPdpY3eP9SKj0mBjebXyUNx9s83DBB9Vomv5GfTKEsxNpU2NwYwJHstACx5mOWEEb7+MCnmOZj1g=
-X-Received: by 2002:a05:6820:4c15:b0:611:436e:6125 with SMTP id
- 006d021491bc7-6115ba9f7e0mr8042011eaf.8.1750692606854; Mon, 23 Jun 2025
- 08:30:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gnu2gg9K"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-234f1acc707so39431095ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:30:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750692608; x=1751297408; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KdWZjBOZrnoU5S/xxe3p4LyXR96yMFXC81nKL3+yk3w=;
+        b=Gnu2gg9K5VjoJqa4XV+g1WVNR4O5UeHDp7z0gkgKanaOuUXvXyMpDpbz07hty8YCPt
+         AzT7R69Com6vzX9utR74L5eogxBnheU5Y9/xe7P8Gi9FDuSOhY73N33yk6E4DeNtbz7j
+         +1b/66QBtJS2oci/Air/YkcxlEk64OVSh6ohapZVd5Qrm13FMfOFC6L5PhAweIkUdJ2g
+         4O2Kg2Ft23Y77nlc6AY4Fnt9yGMV8c7c+7r/mZasMz0hVzK2CNlSm2IOyS+OILIswN9B
+         SIh8uI6ADHz3/19Q2+oWxpcs99XtlH6bU09IgNdmgFqBxnmc2eAH5UV4/mQqC/a0FDie
+         3pUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750692608; x=1751297408;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KdWZjBOZrnoU5S/xxe3p4LyXR96yMFXC81nKL3+yk3w=;
+        b=Xf33ghpK1FHvq629VMazqEAvaq2G5RpA3vEbWmU73xhMUbirdE4UQGQtkGSiHJgrZr
+         SFadUX8f8GIoyc6awiNRgMbK8wK29yB3BQwpJlP0snLf2qMYvc9BJeQhEuYPHXNQFE5E
+         LngyiXYOYHL5N+hz7Q7C59EcvVX9D2Njg0SM/cNVn9eVH9COJK70R6gTwj/eKlnVReGe
+         2cX6Ee+IUtAAGbcZP4P8Kcp0ctEaiFCUhvt8SAIQU41Yh0M/jxlLvwk7EL8ZYuCSYQB0
+         qjdtF7WDF52KdGJrzfmIJ52qYmre+m0S9VBBW8KgtCrhH91vAA2YUHLcrR3Qm7120BC8
+         8epg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZPc8vL97eSiJ9vVbkgzK65GjOiEfHsMamELY1uI0vGomn23Ly9idc4FXa7aHeNoYhscpB5cDaQ9s91Ps=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxk0RIGhsDdijPqhIK1UXMsRorYdQLi+6ee+mrJha1ok7B3fH+o
+	bkSR9K0zbabZkNJL8Ugy2LAuCu/vcul+yp5n6E6pHQsQfiuTcxaM8jWbAt2wo+o3f2ueVKNVTkb
+	+4FEimw==
+X-Google-Smtp-Source: AGHT+IEMdoRNFqlp7zHt8uHjKfPleNVgWrvxFNisVXQLf3SXuV2EWfHq7AYIrMPraED+yf8roaT/XGVYptg=
+X-Received: from plhw5.prod.google.com ([2002:a17:903:2f45:b0:234:a456:85ba])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:da8c:b0:236:6e4f:d439
+ with SMTP id d9443c01a7336-237d9965716mr203757385ad.23.1750692608274; Mon, 23
+ Jun 2025 08:30:08 -0700 (PDT)
+Date: Mon, 23 Jun 2025 08:30:07 -0700
+In-Reply-To: <jskiyda3defofthrtniugcdbcoftx4o5yvgt47koswq64qf7d7@2pzrr5v5yssy>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250623133402.3120230-1-zhenglifeng1@huawei.com> <20250623133402.3120230-3-zhenglifeng1@huawei.com>
-In-Reply-To: <20250623133402.3120230-3-zhenglifeng1@huawei.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 23 Jun 2025 17:29:54 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jHjyPMwB5dt9qv01nXAN5z+Kbztb_Mho0Py0cUqZO+sg@mail.gmail.com>
-X-Gm-Features: AX0GCFs3M8uu4RFZdHQZjRnse-TgnYFhUcRUEm3KknvfChvm7S8JMOFkCQmPTh8
-Message-ID: <CAJZ5v0jHjyPMwB5dt9qv01nXAN5z+Kbztb_Mho0Py0cUqZO+sg@mail.gmail.com>
-Subject: Re: [PATCH 2/7] cpufreq: Init policy->rwsem before it may be possibly used
-To: Lifeng Zheng <zhenglifeng1@huawei.com>
-Cc: rafael@kernel.org, viresh.kumar@linaro.org, ionela.voinescu@arm.com, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linuxarm@huawei.com, 
-	jonathan.cameron@huawei.com, zhanjie9@hisilicon.com, lihuisong@huawei.com, 
-	yubowen8@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250611224604.313496-2-seanjc@google.com> <20250611224604.313496-20-seanjc@google.com>
+ <jskiyda3defofthrtniugcdbcoftx4o5yvgt47koswq64qf7d7@2pzrr5v5yssy>
+Message-ID: <aFly_5c0aqTOGEem@google.com>
+Subject: Re: [PATCH v3 18/62] KVM: SVM: Disable (x2)AVIC IPI virtualization if
+ CPU has erratum #1235
+From: Sean Christopherson <seanjc@google.com>
+To: Naveen N Rao <naveen@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
+	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Sairaj Kodilkar <sarunkod@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
+	Francesco Lavra <francescolavra.fl@gmail.com>, David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Jun 23, 2025 at 3:34=E2=80=AFPM Lifeng Zheng <zhenglifeng1@huawei.c=
-om> wrote:
->
-> In cpufreq_policy_put_kobj(), policy->rwsem is used. But in
-> cpufreq_policy_alloc(), if freq_qos_add_notifier() returns an error, erro=
-r
-> path via err_kobj_remove or err_min_qos_notifier will be reached and
-> cpufreq_policy_put_kobj() will be called before policy->rwsem is
-> initialized. Thus, the calling of init_rwsem() should be moved to where
-> before these two error paths can be reached.
+On Mon, Jun 23, 2025, Naveen N Rao wrote:
+> On Wed, Jun 11, 2025 at 03:45:21PM -0700, Sean Christopherson wrote:
+> > diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+> > index 48c737e1200a..bf8b59556373 100644
+> > --- a/arch/x86/kvm/svm/avic.c
+> > +++ b/arch/x86/kvm/svm/avic.c
+> > @@ -1187,6 +1187,14 @@ bool avic_hardware_setup(void)
+> >  	if (x2avic_enabled)
+> >  		pr_info("x2AVIC enabled\n");
+> >  
+> > +	/*
+> > +	 * Disable IPI virtualization for AMD Family 17h CPUs (Zen1 and Zen2)
+> > +	 * due to erratum 1235, which results in missed GA log events and thus
+> 							^^^^^^^^^^^^^
+> Not sure I understand the reference to GA log events here -- those are 
+> only for device interrupts and not IPIs.
 
-Since this is a fix, any chance to add a Fixes: tag here?
+Doh, you're absolutely right.  I'll fix to this when applying:
 
-> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
-> ---
->  drivers/cpufreq/cpufreq.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 1bc665b5bba8..efc1f4ac85cb 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -1284,6 +1284,8 @@ static struct cpufreq_policy *cpufreq_policy_alloc(=
-unsigned int cpu)
->                 goto err_free_real_cpus;
->         }
->
-> +       init_rwsem(&policy->rwsem);
-> +
->         freq_constraints_init(&policy->constraints);
->
->         policy->nb_min.notifier_call =3D cpufreq_notifier_min;
-> @@ -1306,7 +1308,6 @@ static struct cpufreq_policy *cpufreq_policy_alloc(=
-unsigned int cpu)
->         }
->
->         INIT_LIST_HEAD(&policy->policy_list);
-> -       init_rwsem(&policy->rwsem);
->         spin_lock_init(&policy->transition_lock);
->         init_waitqueue_head(&policy->transition_wait);
->         INIT_WORK(&policy->update, handle_update);
-> --
-> 2.33.0
->
+	/*
+	 * Disable IPI virtualization for AMD Family 17h CPUs (Zen1 and Zen2)
+	 * due to erratum 1235, which results in missed VM-Exits on the sender
+	 * and thus missed wake events for blocking vCPUs due to the CPU
+	 * failing to see a software update to clear IsRunning.
+	 */
