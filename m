@@ -1,139 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F471D6DA9
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4FF211F;
+	Mon, 23 Jun 2025 08:18:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750666680; cv=none; b=ayC6AvVuOipZQhnsXVQONISTAMGeZNztBzD+pHeEwC25mENRRJ4IDCfnVZCd/SifLapk/hBjag/6rCGi8mBgxXNe8mCB7LKl/R9pOrebK9dUiHfSX9oWJAkkY6gdI5MaLHgzeoy8ti/UrtTSbihUd8LSe0pz9veVIym/Xlocok4=
+	t=1750666732; cv=none; b=Y7BDjN8GBf9sZhVgOk5KtM5LflRxhp6hG+otYyPLk2ENVWM+1sDHKdXmx8hioWTyQgDzs/RW3Jf7RyQqCPl8b26oDdfFDrG+zJqC5qIvapbULNKIu18cjlZPJgoGniSKmYl451xoz0HjTyKVkkZbQ5mEQfN4pFoNG9gpmU9gipg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750666680; c=relaxed/simple;
-	bh=taXP7WDD8/lU11UK+rOL7KaY9hZzQVVsVxIvQvyqAuk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DoctbgzMvxJckYgjRalJjREm6nPvFr3UrhBPkIf/erKrvaGPA16LHMkWNxpzB+9y2S9YKdbnzhRRLqv6VliyzBT6UeOR/eM6MN78rjPmT2j9/sjFH3yXR7ZCpa5pqPTxHsyiZWmGhxB9PTTT3cu0GTmQ54+/oEZKzidTnAb2euM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gFrhyEAW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750666732; c=relaxed/simple;
+	bh=lCK854TgRqv39ZVQ7Izhf1FWljjyyVyW8qjFDJ2regY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qbjOG/OwE4x7hE3rIYUI3c15lTIQN5atPUFB/Su+wf6SKfDh7eUrWcZwj3+m4Cs+IaDcWO2NKcUnYFEnq8cDJvwowVyKy5AQut8uksVFK6M6yh6K7eWH/FDXi/WTmtT9NsONeWQZiHA06TH3GwVXhXEbBrGda45c7tXgId/oris=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RDfO1x/A; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gFrhyEAW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750666677;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=N2optOidOvuh7QFbVIaP7zX4TDef2ae6cy4KvRW9fls=;
-	b=gFrhyEAWqyufkSFsDNZE3lBj5LG2IscfCKCR/PaVuT5LFOpA9E9T7yImDRkQt9KWtkKbS8
-	Cx20MiSMUuV/VX1Fj0nRGgzJYno7dyTkSBjEj/9Ccnys7zMtrdmxk+9s2y66AoUb5aZrWQ
-	mqy/aAjTnP8myHtZ9DF4hWiCz6dfetQ=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-56-FcDRAz7qMa-2M1IgUPrdcA-1; Mon, 23 Jun 2025 04:17:55 -0400
-X-MC-Unique: FcDRAz7qMa-2M1IgUPrdcA-1
-X-Mimecast-MFC-AGG-ID: FcDRAz7qMa-2M1IgUPrdcA_1750666675
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-60724177a1fso3539814a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:17:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RDfO1x/A"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad8a8da2376so609596066b.3;
+        Mon, 23 Jun 2025 01:18:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750666729; x=1751271529; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gwx8N1prAjZlb2ymIsmsbUe/fl2ghoNiNQjIjRYyjWA=;
+        b=RDfO1x/AEljEzhgDjHWFG9lPS2VhewfdT+Y69CQ+blJqxCKO9Sfg1xD5mDeutY1uzJ
+         asu1EpriX3x4PRt+AQOyE4OAPl4CEn/Lmf2/BNT6AEwlB4CqR5XpU6nLAr25bvd0Yfsl
+         ZA+vxFh/2xlLj/YeWAQLsWIxnzClrAbHLQbTs8qsshLik7YTk1i8e3/1K/vl3imp6SpA
+         1uk24m9NtgOVVLbBQ5Y2hWcdUmtliurkr+YXl1QVTc6rN5ptDWZjGMII9k8S1H3pCYJ8
+         nZTjnfNMSTK642QEkXv4nnqz/YaE0Xod+n04t+mkzPO5yCYfxyWpjzwpUtqPllh/2Asj
+         yVBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750666674; x=1751271474;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N2optOidOvuh7QFbVIaP7zX4TDef2ae6cy4KvRW9fls=;
-        b=hbuCmXP+OqIlxbXlucDUMA1lXmN0DHZqWTW7i9rZLBaDzAOMlDUssa1zddN4paN0XH
-         8DV71fdUe0bSmI+uJoIfp76XF2RrHdisTwYtTWoCqIkHhHFNUUgTTS6TF16ozDPcnFNj
-         ThXOkg2UlCmZ772KyCea6IdfRP/pGjA3+tss6vuuRcQgz0VwRMXBR7n3Yg+SNqCaB/Ks
-         hvqi/nL3B7+EayE6YN9j08SSN/sQtZEg/7JLLzu+gU9njPLuuehGhvhSUfd8o6vc7gCH
-         97XbisQ6iW9mdSXvTAe/2ilPhr0HYNI9/J4edkxPt1Qmfs1QDsbPYa6s/Q2zXCaxpDvu
-         LCcw==
-X-Forwarded-Encrypted: i=1; AJvYcCUqGF+DwAzf5n/yto7WHTsV/1bgBj35CFmiWIbPrZLqNRNqmX3REIdNuUhaWyhBuqjWk7vPDzNU8pE41bU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZnr/HndymMNP8eD1Lhf9DV9UDXAWrRkGaRo1YOl8kIDa9NhQA
-	6Qtf2NnaHAsyyJo3YPijODcJrkMQ5x5zYXfaHlH3ZN4snoX4r8lWUG823tQWP8eV54K9eZB5ROa
-	p/iSBFNvdviUjXqsnzX4NfDF9Pi37GLT+hmxajUv21NErsXm7fkVROf2vJtkcmxTAQw==
-X-Gm-Gg: ASbGncvczI+rGNaC7g2WuPW3jCVlJLYT/Jsp/NSEv1upig3/CyNfOGkNur9FKNHLH/w
-	LmOXiipY1Q8y1gjXdyMePk6fnypI74P9M1MAQvftp3lSzRKhszCTEdwjBIz/3pseHg3ngRkKFQT
-	iccdYx8mkyRjd1LCR9mWJa4+K0jZ5IyOuljAPs9mjF/NbNhj4v6NfUs0GtL6wg3TYO/GT0yWM1/
-	DE/YJ+0C3pBHQyIQ+z1s2xA8Ce67W2W84dUHG5YiqoDcmJpLzuOVexj4vhI7xvKpx/qPdXkptgP
-	yFSPMQndtz0TOUtS0b2xktoB8A==
-X-Received: by 2002:a05:6402:44cb:b0:60b:8603:2ff8 with SMTP id 4fb4d7f45d1cf-60b86033002mr6272829a12.15.1750666674667;
-        Mon, 23 Jun 2025 01:17:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGNNF8jZCqYgheFCScBSFPj8i52Q5VHppO0D3a8RZj2iDP7EeavHZjc6mZHpik98x9jOB3QBQ==
-X-Received: by 2002:a05:6402:44cb:b0:60b:8603:2ff8 with SMTP id 4fb4d7f45d1cf-60b86033002mr6272816a12.15.1750666674268;
-        Mon, 23 Jun 2025 01:17:54 -0700 (PDT)
-Received: from [10.40.98.122] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60a18514500sm5761336a12.5.2025.06.23.01.17.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 01:17:53 -0700 (PDT)
-Message-ID: <bc831f09-08d2-41d6-b552-ede43f8f2be2@redhat.com>
-Date: Mon, 23 Jun 2025 10:17:52 +0200
+        d=1e100.net; s=20230601; t=1750666729; x=1751271529;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Gwx8N1prAjZlb2ymIsmsbUe/fl2ghoNiNQjIjRYyjWA=;
+        b=s+5bLJ5pphjNeN4kVehMlkMtysopwhMS4AUn4rxe9MVjUOCwtPI5BDVHD0OF8Luh2F
+         t2BoNFOYfML/N0tAtQJvD/A2QhDSUUxhDSWcNOFraYSA/bz2gKNjE3VTz2PCUcty1WBl
+         2lSvJe2IthXTgc3dwp7EKpNVodqWs3aSt8vyF7y951PSNSx9Re5HhDXsDheIzl/6ozq6
+         E2DJdiEGG76diNjKQOF646I2q7NJ6X1X3vRqETX11AOiS7Rt4w3ON3iYJSBRyaHsav2p
+         OlbeZXMJ0zpEymXS0NDtPUNb2h3atSvsZ6rMtn5/XlOfW/sWvOmZtqHBuqbP1dKvnvvl
+         g2dw==
+X-Forwarded-Encrypted: i=1; AJvYcCUb8xAQrCiA3Scu7ItspCPnNfu4jP1r5PpdnulQd9DCSUCyV/NhzLbdk7r7wMtQQ7zD/sGQjqEQfEQ=@vger.kernel.org, AJvYcCVX61tr6qJ4853OVHE4GA329hWT0mLNUbpfPySV7kMXl4FeNJSDXVnqbs6S9diXfngq1MpA5G5KHZXuxFYd@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9DBqtlFYtAPTmylAi8hsNMVNTVZPgp+1rOHA2QrDdr86pxr1s
+	w9XID5CxcP00A/Azb2yrb/mJy+PccO43kjvKSP4hgT8xeYnPRcs3UIYo
+X-Gm-Gg: ASbGncuA86QxuU9O1LmJniJNOZrQxYlG2hQhPyR9FlEoIuzALmQcUb33vCS3LhO5iNb
+	w/snRD1Q9I1TBTs7gszTBDm8jK1CJPbAKVXWNgU5wp0MR4BhZT9iw6lnK5DqAy6aHhm84TZAfm1
+	SyIN/wzJEqERvFLNH4WCVKyUzZ2WtbUGEtcy6bRSwn2x2BeumZwQG276XC85iasCiuPlGD2t7DI
+	mJFKF+YzA/k395LihyqFrAZ1dA1UAeK/Xeip6uUlTP+khHNyuCJ1JdIb0kquIHRW2rSa1cmRqdE
+	Vd92RfkioqFPHfpklCQhcVyiu3oPJDxl3mGu08t9zOlwLBfyOZX4uIxTZ4+pDDSkQP54qLBSPzx
+	0
+X-Google-Smtp-Source: AGHT+IGnko2iUfz77f98BBimqLt0TFCYQBHgyYvKFbjRTMvtzWLPW4CMLACqj3r7KnSwqczuloUYVw==
+X-Received: by 2002:a17:907:3f8b:b0:ad8:a515:767f with SMTP id a640c23a62f3a-ae057ca667amr995584766b.51.1750666728427;
+        Mon, 23 Jun 2025 01:18:48 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.24])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053e7f2cesm680467166b.10.2025.06.23.01.18.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 01:18:48 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	ubizjak@gmail.com
+Cc: x86@kernel.org,
+	hpa@zytor.com,
+	linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Khalid Ali <khaliidcaliy@gmail.com>
+Subject: [PATCH v1 1/3] x86/boot: Recieve boot_param from RDI Instead of RSI
+Date: Mon, 23 Jun 2025 08:17:50 +0000
+Message-ID: <20250623081803.1340-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] Add interconnent support for simpledrm/simplefb
-To: Luca Weiss <luca.weiss@fairphone.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Javier Martinez Canillas <javierm@redhat.com>, Helge Deller <deller@gmx.de>
-Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Khalid Ali <khaliidcaliy@gmail.com>
 
-On 23-Jun-25 08:44, Luca Weiss wrote:
-> Some devices might require keeping an interconnect path alive so that
-> the framebuffer continues working. Add support for that by setting the
-> bandwidth requirements appropriately for all provided interconnect
-> paths.
-> 
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
-> ---
-> Changes in v2:
-> - Sort the headers before adding the new interconnect header, in
->   separate commits.
-> - Use the correct #if guards for new interconnect code
-> - Pick up tags
-> - Link to v1: https://lore.kernel.org/r/20250620-simple-drm-fb-icc-v1-0-d92142e8f74f@fairphone.com
+Adjust the kernel entry point to recieve arguments from RDI instead of
+RSI.
 
-Thanks, the entire series looks good to me:
+Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
+---
+ arch/x86/kernel/head_64.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Reviewed-by: Hans de Goede <hansg@kernel.org>
-
-for the series.
-
-Regards,
-
-Hans
-
-
-> 
-> ---
-> Luca Weiss (5):
->       dt-bindings: display: simple-framebuffer: Add interconnects property
->       drm/sysfb: simpledrm: Sort headers correctly
->       drm/sysfb: simpledrm: Add support for interconnect paths
->       fbdev/simplefb: Sort headers correctly
->       fbdev/simplefb: Add support for interconnect paths
-> 
->  .../bindings/display/simple-framebuffer.yaml       |  3 +
->  drivers/gpu/drm/sysfb/simpledrm.c                  | 85 ++++++++++++++++++++-
->  drivers/video/fbdev/simplefb.c                     | 89 +++++++++++++++++++++-
->  3 files changed, 173 insertions(+), 4 deletions(-)
-> ---
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> change-id: 20250617-simple-drm-fb-icc-89461c559913
-> 
-> Best regards,
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index dfb5390e5c9a..d24fea15b6a6 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -43,7 +43,7 @@ SYM_CODE_START_NOALIGN(startup_64)
+ 	 * for us.  These identity mapped page tables map all of the
+ 	 * kernel pages and possibly all of memory.
+ 	 *
+-	 * %RSI holds the physical address of the boot_params structure
++	 * %RDI holds the physical address of the boot_params structure
+ 	 * provided by the bootloader. Preserve it in %R15 so C function calls
+ 	 * will not clobber it.
+ 	 *
+@@ -56,7 +56,7 @@ SYM_CODE_START_NOALIGN(startup_64)
+ 	 * compiled to run at we first fixup the physical addresses in our page
+ 	 * tables and then reload them.
+ 	 */
+-	mov	%rsi, %r15
++	mov	%rdi, %r15
+ 
+ 	/* Set up the stack for verify_cpu() */
+ 	leaq	__top_init_kernel_stack(%rip), %rsp
+-- 
+2.49.0
 
