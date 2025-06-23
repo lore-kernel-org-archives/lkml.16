@@ -1,232 +1,72 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7574822F16C;
-	Mon, 23 Jun 2025 08:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E937922DA0A
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750667725; cv=none; b=hb/vR4O2kOdYRysvdXSmzWEZXY/BkT7jq0OdUYVADVeC4dFnbYBOozjlWEzGY81+5afjy+7A9OVAkwczliaOrNRwCRlR6TZyLZccOiKLtHvRjSXvmbxqzZ7Ia2tQ/AbzthPJKp85JjIeiFipuYJjdVbpVMUZhWwL4lVErF6gnXs=
+	t=1750667764; cv=none; b=Tk5wa3ZVasCOC+vzkbaV30qAs6HzF1YASm48gw3a0TqzpbrPkLuswU18OC2ENmFSPYBVtooghGC8CdUxYgVzpSxrEKerqmawMxg2j2ctTDTKTo408gFoGLtgy7iWvJa9AGGCq6SvgPtSnzw9EHPLnEb3kgqFkn4Qw7k3tWO2GPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750667725; c=relaxed/simple;
-	bh=47EqE7bU1EPZXo/pjpY2FIwSnKhw6fXy7NDRDFk7+i8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KzMunMy6wQt/nTCS50Vq7412yhzCDYrgzwXrAvPm+uCRhHmu2JDj4tclwuq8v0uz5i6kKqBI9+MXUfLsfgmDHHLM3ot+4sjN/xdNIV6/Bts9yGX98TSv9fsRDwqSKAl7IsfNiulyFsSrFqxMgttVWzxWtCQVSWLZbflNQ5yVpcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=cDPA0C7F; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="cDPA0C7F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750667721;
-	bh=47EqE7bU1EPZXo/pjpY2FIwSnKhw6fXy7NDRDFk7+i8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cDPA0C7Fwu1zSbSbKN6+YeyJ4ftsnw094NVThPnQOfnjq0UHZHC6wSM/Xl+jk7uct
-	 upVXYPCwrYn4q/AlcmHCYvJPHZs9QgIMvjnq1hXuXUStPv5Ot0OMw+RrGWQixzP6m1
-	 UvRv6+iiT5rCMw7RiDDLiIxqBOPDV/CbW28cLAUNzK5+iZr1KtzPRWHQgdB1T0iF1s
-	 5IiUEiE2v1JVo21plMvLDw5KIHgpG/+wNjuXe9H2hS9cFmM+kdd/KSKhxg9IE4/dEz
-	 wPodhUPTHknLwzQcWPuHXBfoqIfagzS2nPp/L/N23jxpc6sTkzmi6EJxGAtDLttVMF
-	 pmi48CZbLnNPA==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id C25AF17E159C;
-	Mon, 23 Jun 2025 10:35:20 +0200 (CEST)
-Message-ID: <94fd71e6-0f09-42d0-94ef-1ff111daac9f@collabora.com>
-Date: Mon, 23 Jun 2025 10:35:20 +0200
+	s=arc-20240116; t=1750667764; c=relaxed/simple;
+	bh=uDUMgzEBp5JV3JZQ+f9mdHo7Wo//lw43FkAxNI1p1to=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=rAz9aVo2D2Wgr4NJPxOi1NDludSydioHkFeGg2qaSf1MX8WLKl503mtyCN8gMRwmwQWyUSn7UVqCNExfKGUM4R3PbLlxH0Zn++LvYIpRINzhmawFY9OLthJc6SBRD5gyr8E4V+r2Z1IooUQ4rfU36SMWHQQt8PV6oT0ZaoGw4gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddc0a6d4bdso45688595ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:36:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750667762; x=1751272562;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vflh0wMpfs9YIwAtX7H9KdsrcvCKuFQ3cK3z1R6CAv4=;
+        b=vPCdlKsi/DlI+HKoZYYSpm+x/eJeZWap+XtOBxgoFqkJ8aqqkwD2bQSIjfx2Lb/evb
+         ae/2H4J7eOzPJlE7J3pfhGM1jXOyCGmvO3+6Dn2J8eacTVXU8GSNPCou4jGkQ6sxJPXP
+         suKpOLZNNRQaNWktLD/mF9l0ZAoY/ldjPPdhPSUrUgKI7tbjjDdI8zPrFy8RW4oB/BMT
+         AZGEr+3F3vN56InqRm6eUZIMzW5rthWDJvAk7sQZ4o/R2aq0R7V0FfRT3aumQzuah1BT
+         Por68l5MRkjBRrJQHtndrCu/hUDhKETEbGlfKtuEiuvzjPngwye4Ov20iILpkg142yZP
+         41rg==
+X-Gm-Message-State: AOJu0YxWQUchQf9wJClySb8sKl6gkDXFkfYeBzcK3ssR26MfwDzrhaWM
+	fFAGcFZ3o32POimPeOUg1dZnn1iq8H06Avo+nG6RMVBN/Rcr+9pbGrvqjTMMPSuG83cEN0Qk9Ve
+	hbrqwOCpHVYJjzl08JlN0OHPwxgyGHXjp7Mx6AmkuJLIvBFNB4SZAuuZ1fsA=
+X-Google-Smtp-Source: AGHT+IFdlB7lPmWeJwCRxZZTOlngrs2RuNSP2aQtGuEvTiX3l25+/vt3mowsV38KLRvWRKdH+6aKTNB0JqXPGIxlt2LntVnY/u/9
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/11] ARM: dts: mediatek: add basic support for MT6572
- SoC
-To: wctrl@proton.me, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
- <linux@roeck-us.net>, Sean Wang <sean.wang@mediatek.com>,
- Russell King <linux@armlinux.org.uk>
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org
-References: <20250620-mt6572-v1-0-e2d47820f042@proton.me>
- <20250620-mt6572-v1-9-e2d47820f042@proton.me>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250620-mt6572-v1-9-e2d47820f042@proton.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:c241:0:b0:3dd:dd39:324c with SMTP id
+ e9e14a558f8ab-3de38c35458mr116735775ab.9.1750667762128; Mon, 23 Jun 2025
+ 01:36:02 -0700 (PDT)
+Date: Mon, 23 Jun 2025 01:36:02 -0700
+In-Reply-To: <20250623080347.3056823-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685911f2.050a0220.d71a0.0004.GAE@google.com>
+Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
+ (3)
+From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Il 20/06/25 17:40, Max Shevchenko via B4 Relay ha scritto:
-> From: Max Shevchenko <wctrl@proton.me>
-> 
-> Add basic support for the MediaTek MT6572 SoC.
-> 
-> Signed-off-by: Max Shevchenko <wctrl@proton.me>
-> ---
->   arch/arm/boot/dts/mediatek/mt6572.dtsi | 105 +++++++++++++++++++++++++++++++++
->   1 file changed, 105 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/mediatek/mt6572.dtsi b/arch/arm/boot/dts/mediatek/mt6572.dtsi
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..dd12231ca745be7455e99391abd2d708f2f1a8a9
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mediatek/mt6572.dtsi
-> @@ -0,0 +1,105 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2025 Max Shevchenko <wctrl@proton.me>
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	compatible = "mediatek,mt6572";
-> +	interrupt-parent = <&sysirq>;
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		enable-method = "mediatek,mt6589-smp";
-> +
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0x0>;
-> +		};
-> +		cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0x1>;
-> +		};
-> +	};
-> +
-> +	system_clk: dummy13m {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <13000000>;
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	rtc_clk: dummy32k {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <32000>;
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	uart_clk: dummy26m {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <26000000>;
-> +		#clock-cells = <0>;
-> +	};
-> +
+Hello,
 
-Anything that has an MMIO address shall be child of "soc".
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-soc {
-	watchdog@....
+Reported-by: syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com
+Tested-by: syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com
 
-	timer@....
+Tested on:
 
-	etc.
-};
+commit:         86731a2a Linux 6.16-rc3
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10eff370580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=595d344ff0b23ac5
+dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=11a46182580000
 
-> +	watchdog: watchdog@10007000 {
-> +		compatible = "mediatek,mt6572-wdt",
-> +			     "mediatek,mt6589-wdt";
-
-those fit in one line:
-
-compatible = "mediatek,mt6572-wdt", "mediatek,mt6589-wdt";
-
-> +		reg = <0x10007000 0x100>;
-> +		interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_LOW>;
-> +		timeout-sec = <15>;
-> +		#reset-cells = <1>;
-> +	};
-> +
-> +	timer: timer@10008000 {
-> +		compatible = "mediatek,mt6572-timer",
-> +			     "mediatek,mt6577-timer";
-
-same
-
-> +		reg = <0x10008000 0x80>;
-> +		interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&system_clk>, <&rtc_clk>;
-> +		clock-names = "system-clk", "rtc-clk";
-> +	};
-> +
-> +	sysirq: interrupt-controller@10200100 {
-> +		compatible = "mediatek,mt6572-sysirq",
-> +			     "mediatek,mt6577-sysirq";
-
-same; and reg goes after compatible.
-
-> +		interrupt-controller;
-> +		#interrupt-cells = <3>;
-> +		interrupt-parent = <&gic>;
-
-are you sure that interrupt-parent is gic?
-
-> +		reg = <0x10200100 0x1c>;
-> +	};
-> +
-> +	gic: interrupt-controller@10211000 {
-> +		compatible = "arm,cortex-a7-gic";
-
-reg here.
-
-
-> +		interrupt-controller;
-> +		#interrupt-cells = <3>;
-> +		interrupt-parent = <&gic>;
-
-are you sure that the interrupt parent isn't sysirq here? :-)
-
-> +		reg = <0x10211000 0x1000>,
-> +		      <0x10212000 0x2000>,
-> +		      <0x10214000 0x2000>,
-> +		      <0x10216000 0x2000>;
-> +	};
-> +
-> +	uart0: serial@11005000 {
-> +		compatible = "mediatek,mt6572-uart",
-> +			     "mediatek,mt6577-uart";
-
-fits in one line
-
-> +		reg = <0x11005000 0x400>;
-> +		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&uart_clk>;
-
-clock-names = .....
-
-> +		status = "disabled";
-> +	};
-> +
-> +	uart1: serial@11006000 {
-> +		compatible = "mediatek,mt6572-uart",
-
-...again.
-
-> +			     "mediatek,mt6577-uart";
-> +		reg = <0x11006000 0x400>;
-> +		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&uart_clk>;
-> +		status = "disabled";
-> +	};
-> +};
-> 
-
-Cheers,
-Angelo
+Note: testing is done by a robot and is best-effort only.
