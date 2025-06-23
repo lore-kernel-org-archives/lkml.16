@@ -1,174 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD332853E3;
-	Mon, 23 Jun 2025 15:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D9C2417F2;
+	Mon, 23 Jun 2025 15:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750691683; cv=none; b=lKSeraqktOsbLivvDxCwVcoP5z50Q/8imv6izGc9ma2iycsuyuKL5mAOTgqOqrWX2qmx4po5fCWjx+SMI5SAcFdWdI6xy8IkI5bixyXsZo0yr0zCD9+U2Hyk1jIb3zLnxx5TL3W3a8Y+4Tpd/7KYOamZZ/Ty2H0FF5pZviL/xbc=
+	t=1750691683; cv=none; b=avYAQGcj+GL4S6OzjSF06z2I4HplH4OzRvQqMN/v1TOqGHXTV/0WD2qiWyRzBF+MDi2dUsi1coygZFLjdsdj7YRY+oOp7rQTOaDXzkEhYf0BuR+tnmVsJwB1zftNXbVzeM/FvWiwm8tCYfJsszCzs4T2fHisGIfkoPDa9o4BHVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750691683; c=relaxed/simple;
-	bh=bNo4u1rasC/6lBuKSnTXnbSkB3draWhrAu0LbyFSuls=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=QidVDOGN2CK2WpOpzWauIm6fxauDGlsAoJjrHOCnCtyInlX8cQ20WzhK4Q7f38KagGvQVaNHdXXs7DNxiHocV+GBwvSzWih+HWd7+FkghnOTt0RFDGzb/q079WJnl9ISBYzBMbUZc+o9Xx4HwK4k0qQhPGL9EOfZN7HqwBY9m0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CqSQS/ja; arc=none smtp.client-ip=10.30.226.201
+	bh=H4OXV6xVIEzOfTYcR2qXyIESfMeFmsULCzausGED3rA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F12qqs7BHRG4SseCPwSCtH8DbjmT1C0ORcp4Z61fxEA+obgAAZR560MPUyV62eJ3nbsF7RFmWsvY+RVPBbf4yWHeKIx/4HkmCyTqHwB5eZaXyXrYgnRFqZIKEnZh1ix5DS2Lf+IwioJ00QoUpsEqEHaykH5Q6lXAmJFtG0Sqb/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ngGdxyJL; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CqSQS/ja"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C62EC4CEF0;
-	Mon, 23 Jun 2025 15:14:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750691682;
-	bh=bNo4u1rasC/6lBuKSnTXnbSkB3draWhrAu0LbyFSuls=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=CqSQS/jajiRZQBCwp7ZAuejlTZxBQXyDkZlKW8YldcUOuFYRl52KTHqh2QNDinSBG
-	 4WEjNMxOf5JivIekNJPBLm7smt12WO7PfxFGmZ5bYtJId8XY7CXCw4L98qQSSb3/kN
-	 Uw5pML5L1wgpCeXX0IykE1evSm5DHG6udmrOryMgiLs0p+HlAn0F3cAvsQIa2Ceg3S
-	 nRA4eY116Mr2rmIw6tzc1K1Hnz/IEl/CWJgMUU1D+cVlp1h8ZzSoQAFSwLvSaPtnJm
-	 jrDF1XJ8UQcSOpwfe7Ciz0xM3ADtaS+MoJq+4hOzOMdXqN4F4IBDa4D0JHzkhQymRV
-	 eyKIfUT/9aT3g==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ngGdxyJL"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b31fc7c27abso2722289a12.3;
+        Mon, 23 Jun 2025 08:14:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750691681; x=1751296481; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fJl0bofvsCNb/IhdYpO8yEuEs+fLAbcokn6DAhbWI2Y=;
+        b=ngGdxyJLkZdUk5uQrnMHjpVXUVzIlzIGAb/XOJ07ztICxzHbcCzW3gt/9V1M20zadL
+         kyB6pW9lKwVt8fW07PN1PiyeL6CGrJtdUBT+nUwKTMYh9T5MNihky9ocAzi7OfUhnzhQ
+         Do+g9x8tEJTHMMZ2PDaKcfaq4pq47bIn2MsP2dcuTxmsW+ME/elBLua2KYhSEN48gzUk
+         wWvlYt8hGyqEfChknvu/J5X1I/yL6OjBX5JCcyMzFJRvwdXjreORotydfwwlIrhhZh+K
+         W/Cp67pMsJmEosHBFv1TJqVhjq+hwJEgv15Hm9YheDeLbAlRA/O2VgSdQAWsBTphE8PC
+         CVKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750691681; x=1751296481;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fJl0bofvsCNb/IhdYpO8yEuEs+fLAbcokn6DAhbWI2Y=;
+        b=PbMn8IjdYXuyvzs6veRqhuwbNVNaMfvSlhYsiLcN8IoZLEWTMURovjdZfMBBjI8y45
+         BBBMPI2S6O42o2yn9GTVyNP7L8QgmnvBcWL9ePh/5YLsUX8SmTqwMbVYaGT8VgC4drdH
+         SlJY1JiW+drxfWPtPL0/ueoWJtqDm52cx/XhyZg0xbxGJjZMyz1La+KFsTikvuv3e6OZ
+         AuItNZvog3o15cH+WpmdB1tAdSMr+ebTvfYpUwTYUWrDb5sZ/67pvRYfAvYEklFdr0oQ
+         9ytbzaulmXBPOIcbs2jph9WzIBNe7FKkTtVTSIYrVZ18EJXfWYmupzzTKpXE+crHyONk
+         FiWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVE8LjyfgOB/fdVb+kETn8RejbXYehf9rL7Z68zh9o4wv49TgWNV+8+6/PWWwVYs1iBZOKsNfoX7x3+SkUlyw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsEnSrDhurqON5YUYyFxRLj+h96GMztl4Y8V0dPHjUh7cZBA+A
+	VXyTK/UfMN6S03EzWzPDpF1uJw0TSIZR7ia0ghDUBttNsxqnNDxNo8ZE
+X-Gm-Gg: ASbGncusyPwZPQlFgbKJ2I719gOijvVUX2lHaPSeoux7tx+Lh+wpbsPMUrfpdMi0d1F
+	aUj2rUlKGZhnc+6W9siQ+n6TXhMsBxCs8SFi7bm7n4NB89MYmgk12fsevRvQhfp+N3N1Qvhj8xV
+	4ll49Ld1B3uUNjyndYwtrH0ysJmQB96kJ9bHL0RMH0ZbrwegRXfDn6+7/35XyB/bmWqxn+KmNkh
+	DFcmdc1jUGMVTc491S/6zDFJAmqCrl7OCT9ufJ07sdE6VDs0zkFSvr+7QooafDNQdx0BMv4PNzs
+	qIMGIYUITNKmTdEFPWqM14a65RMqzb/faUDbrRL2qQrTB6vVFWS28zm1eAv/sLBH0aLFIQVxm3U
+	WBK0zklE=
+X-Google-Smtp-Source: AGHT+IGKsva6kVgzg4Cok11z5b+GUl9qeuWFMNPVQGJXb1rtZHDejue9tGLjW0VLzgTh0jN+h79VWQ==
+X-Received: by 2002:a17:90b:3d50:b0:311:a314:c2cf with SMTP id 98e67ed59e1d1-3159d8f7de2mr17582857a91.30.1750691681066;
+        Mon, 23 Jun 2025 08:14:41 -0700 (PDT)
+Received: from localhost.localdomain ([112.149.32.52])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159df71cd6sm8338512a91.4.2025.06.23.08.14.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 08:14:40 -0700 (PDT)
+From: Jesung Yang <y.j3ms.n@gmail.com>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org,
+	Jesung Yang <y.j3ms.n@gmail.com>
+Subject: [PATCH 0/4] rust: add `FromPrimitive` support
+Date: Mon, 23 Jun 2025 15:14:26 +0000
+Message-Id: <cover.1750689857.git.y.j3ms.n@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 23 Jun 2025 17:14:37 +0200
-Message-Id: <DAU0ELV91E2Q.35FZOII18W44J@kernel.org>
-Cc: =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
- <ojeda@kernel.org>, <alex.gaynor@gmail.com>, <gary@garyguo.net>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
- <dakr@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
- <will@kernel.org>, <longman@redhat.com>, <felipe_life@live.com>,
- <daniel@sedlak.dev>, <bjorn3_gh@protonmail.com>
-Subject: Re: [PATCH v5 2/3] implement ww_mutex abstraction for the Rust tree
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Boqun Feng" <boqun.feng@gmail.com>
-X-Mailer: aerc 0.20.1
-References: <20250621184454.8354-1-work@onurozkan.dev>
- <20250621184454.8354-3-work@onurozkan.dev>
- <DASY7BECFRCT.332X5ZHZMV2W@kernel.org> <aFlQ7K_mYYbrG8Cl@Mac.home>
- <DATYHYJVPL3L.3NLMH7PPHYU9@kernel.org> <aFlpFQ4ivKw81d-y@Mac.home>
-In-Reply-To: <aFlpFQ4ivKw81d-y@Mac.home>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon Jun 23, 2025 at 4:47 PM CEST, Boqun Feng wrote:
-> On Mon, Jun 23, 2025 at 03:44:58PM +0200, Benno Lossin wrote:
->> I didn't have a concrete API in mind, but after having read the
->> abstractions more, would this make sense?
->>=20
->>     let ctx: &WwAcquireCtx =3D ...;
->>     let m1: &WwMutex<T> =3D ...;
->>     let m2: &WwMutex<Foo> =3D ...;
->>=20
->>     let (t, foo, foo2) =3D ctx
->>         .begin()
->>         .lock(m1)
->>         .lock(m2)
->>         .lock_with(|(t, foo)| &*foo.other)
->>         .finish();
->>=20
->
-> Cute!
->
-> However, each `.lock()` will need to be polymorphic over a tuple of
-> locks that are already held, right? Otherwise I don't see how
-> `.lock_with()` knows it's already held two locks. That sounds like a
-> challenge for implementation.
+This patch series introduces a new `FromPrimitive` trait along with its
+corresponding derive macro.
 
-I think it's doable if we have=20
+A few enhancements were made to the custom `quote!` macro to write the
+derive macro. These include support for additional punctuation tokens
+and a fix for an unused variable warning when quoting simple forms.
+Detailed information about these enhancements is provided in the
+relevant patches.
 
-    impl WwActiveCtx {
-        fn begin(&self) -> WwActiveCtx<'_, ()>;
-    }
+While cleaning up the implementations, I came across an alternative
+form of the `FromPrimitive` trait that might better suit the current
+use case. Since types that implement this trait may often rely on just
+one `from_*` method, the following design could be a simpler fit:
 
-    struct WwActiveCtx<'a, Locks> {
-        locks: Locks,
-        _ctx: PhantomData<&'a WwAcquireCtx>,
-    }
+    trait FromPrimitive: Sized {
+        type Primitive;
 
-    impl<'a, Locks> WwActiveCtx<'a, Locks>
-    where
-        Locks: Tuple
-    {
-        fn lock<'b, T>(
-            self,
-            lock: &'b WwMutex<T>,
-        ) -> WwActiveCtx<'a, Locks::Append<WwMutexGuard<'b, T>>>;
-
-        fn lock_with<'b, T>(
-            self,
-            get_lock: impl FnOnce(&Locks) -> &'b WwMutex<T>,
-        ) -> WwActiveCtx<'a, Locks::Append<WwMutexGuard<'b, T>>>;
-        // I'm not 100% sure that the lifetimes will work out...
-
-        fn finish(self) -> Locks;
-    }
-
-    trait Tuple {
-        type Append<T>;
-
-        fn append<T>(self, value: T) -> Self::Append<T>;
-    }
-
-    impl Tuple for () {
-        type Append<T> =3D (T,);
-
-        fn append<T>(self, value: T) -> Self::Append<T> {
-            (value,)
+        fn from_bool(b: bool) -> Option<Self>
+        where
+            <Self as FromPrimitive>::Primitive: From<bool>,
+        {
+            Self::from_primitive(b.into())
         }
-    }
-   =20
-    impl<T1> Tuple for (T1,) {
-        type Append<T> =3D (T1, T);
 
-        fn append<T>(self, value: T) -> Self::Append<T> {
-            (self.0, value,)
-        }
+        fn from_primitive(n: Self::Primitive) -> Option<Self>;
     }
 
-    impl<T1, T2> Tuple for (T1, T2) {
-        type Append<T> =3D (T1, T2, T);
+This is just a thought and not something I feel strongly about, but I
+wanted to share it in case others find the idea useful. Feedback or
+suggestions are very welcome.
 
-        fn append<T>(self, value: T) -> Self::Append<T> {
-            (self.0, self.1, value,)
-        }
-    }
+The original discussion of FromPrimitive can be found on Zulip [1].
 
-    /* these can easily be generated by a macro */
+[1] https://rust-for-linux.zulipchat.com/#narrow/channel/288089/topic/x/near/524427350
 
-> We also need to take into consideration that the user want to drop any
-> lock in the sequence? E.g. the user acquires a, b and c, and then drop
-> b, and then acquires d. Which I think is possible for ww_mutex.
+Jesung Yang (4):
+  rust: introduce `FromPrimitive` trait
+  rust: macros: extend custom `quote!` macro
+  rust: macros: prefix variable `span` with underscore
+  rust: macros: add derive macro for `FromPrimitive`
 
-Hmm what about adding this to the above idea?:
+ rust/kernel/convert.rs | 154 +++++++++++++++++++++++++++++
+ rust/kernel/lib.rs     |   1 +
+ rust/macros/convert.rs | 217 +++++++++++++++++++++++++++++++++++++++++
+ rust/macros/lib.rs     |  71 ++++++++++++++
+ rust/macros/quote.rs   |  46 ++++++++-
+ 5 files changed, 487 insertions(+), 2 deletions(-)
+ create mode 100644 rust/kernel/convert.rs
+ create mode 100644 rust/macros/convert.rs
 
-    impl<'a, Locks> WwActiveCtx<'a, Locks>
-    where
-        Locks: Tuple
-    {
-        fn custom<L2>(self, action: impl FnOnce(Locks) -> L2) -> WwActiveCt=
-x<'a, L2>;
-    }
 
-Then you can do:
+base-commit: dc35ddcf97e99b18559d0855071030e664aae44d
+-- 
+2.39.5
 
-    let (a, c, d) =3D ctx.begin()
-        .lock(a)
-        .lock(b)
-        .lock(c)
-        .custom(|(a, _, c)| (a, c))
-        .lock(d)
-        .finish();
-
->>     let _: &mut T =3D t;
->>     let _: &mut Foo =3D foo;
->>     let _: &mut Foo =3D foo2;
-
-Ah these will actually be `WwMutexGuard<'_, ...>`, but that should be
-expected.
-
----
-Cheers,
-Benno
