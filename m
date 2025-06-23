@@ -1,96 +1,79 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50A06EB79;
-	Mon, 23 Jun 2025 14:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D30253F12;
+	Mon, 23 Jun 2025 14:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750687271; cv=none; b=kdQJPHiNnsy7S1y0d72z81RNWM9cQrINT33faQ+JpM+z2jmGEuLl52en7HxNCBa8bPJ4dXzaeO284fBIdOmDt70R9s6MUVWPfXkScZq/3uAQ05QLqv1B2hBwimt5aD2ZNC6Ye/NWDM3mnCz7kLyNhthbEdUkr+quc36wDXLpJy4=
+	t=1750687275; cv=none; b=XF5mioSW/hPml0xnvFRvVU5uYM1rf+RV5IOQpheEK62smQvKQQglqiUWUA8TBZgPsjaF8soiBjDVPDIhxGMT9XwNv8MooEeM+oBsYxTYqab7xt+8993uIAMIOxY1CJ1qixsKKXet8Ibk3bDgstByr/DGAetM+6I4jS4aC5qgIig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750687271; c=relaxed/simple;
-	bh=Eio71w/pYJ//+HPI/HFvrWn6wFXbMzWKf+fC/EVlazI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oSIdstz/tHkMDAbHfxbfQEetvitA2dM9rX2oadC2CaykRVxuudsvKnqIMvb8dPoHCGlh0Kux4MAwYKMtH/WlU7SMZiOSO109Q3CCcp2mkI3RtUNXWF0galV6HjOOk8DSo7aFuV7DMYsPKLs0WTVdVfYLF6cYWmzl6ppWTX7Xb30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lyy7E898; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750687275; c=relaxed/simple;
+	bh=8tAe+A72NPC0t11fqKX0Tq5ZNoJLrKQNS54t9kfjHag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nfw3o4qA27FxnaYCyVM6umI/YI7tkdwrWj15M2qhqKndu/oCzzGwaejvpNByum0p5rH3kOEpo3HA0dPUVj5FwpPq3THtcgPAL0dm9pyT0R6ZrMD8ogHFRxsCmPspTQp6YrzCJtBckXPfmh0PTzdOFRthpKdTmq6UtJvB2Vnvwa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=sd1gUbVN; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lyy7E898"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-553dceb342fso3450255e87.0;
-        Mon, 23 Jun 2025 07:01:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750687268; x=1751292068; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Eio71w/pYJ//+HPI/HFvrWn6wFXbMzWKf+fC/EVlazI=;
-        b=lyy7E898qrSpZg0SnZTPADmkhYdf/Nrek8mUh3bgr8+GIBGrIRvkKJWKA5889NwqQJ
-         +Oyfl9S6g+92HAe2a9QBW8TCe9M577yM9zrV02dUAxtw/UPmv8tnx2ExZlMNPw/XhLAu
-         UIu9UPYcUyeY1GYU/uV9AdzeGN/zkgOBy0emg3y0JAOPiFTUf7gYgPOw3+LpH1Dp1Vk8
-         o3IiuAEnB5XmqAImbKY/mvOsR1qdMHZTctU5sovh/dxPHTwYWzTopYMcLOSIsbdfXb4J
-         tvmn1qDWyszdD+pvboJ0lp7x46Iw0kwJ4GoJoL2gwDhuz/5c6Z5OPUs8bbPdvADcv0N4
-         pCyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750687268; x=1751292068;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Eio71w/pYJ//+HPI/HFvrWn6wFXbMzWKf+fC/EVlazI=;
-        b=RP1o8lqyop/WL1ahHg2RHgIcG0LNPK5bVqb/hj5ntq0y8A2Et1YjvAtvMxNNqpflfn
-         ydHK7h5GoxsNm8ljzw7ZiZBDNwb73OUeZoPu9KJPluf6CmDQ1KTOWvEeeS5eY/dK8eek
-         EYRO+i5U2gUGp/gEkO+MECA/UrXgZ9iBOB+r25vuByBuRHHVN/hPnIHBFlQ8EoxajaTL
-         A8sXKjO2rdv6DSewgSeOLQQcTwplwXE7fhGvxJeozjXRWiwQC89tG7nDsDwjs4j3uQxD
-         ogMo1pfInVIfJL959boX78+9vcPhmjdNLAKXR8AZfMCUOjmvKowg7ZfJaHq8jUeDvAHD
-         7Cww==
-X-Forwarded-Encrypted: i=1; AJvYcCUNcOkhzz8f/t3/JDVUie8FKF5u8BpQ5vaHdEyGEugSStbp4LqNdWpIAEkUya8/Gaj5snkXTWUHO1+CSyyk@vger.kernel.org, AJvYcCWn5TdHC5yeJ2hclu6EFUqSBJk4e3Iu0Yq2dBSQ3Vqi2dFP2vaTmBLn27ZuxwZi1SD3Tyc/nGF8iXwi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzv2/08zdAZAcg2H76N5ZgSov0rspkEVFWB2PVoUQvCbiuNnpjZ
-	fnZNYSUS86xs3TeEPtdLAdJX5L1o+mIWnb/+p7tYQsdcXXfoVI+SNCVknBAAOR1BXvDT4vgmrp8
-	mA9WuX9RoNTvFKWIWTvxpkrswKFzzYjo=
-X-Gm-Gg: ASbGncv5PpBe1rYnek4uLH1xqLmYJlTOEJF0cHqekjDrow4vmN/VMWua2G79KwUWYej
-	Upc3Txu7xsxDpMJPOWQYJuX47QoJ41bO84bzZBXDLeEfiXNTO9hohZPE8/7GCegYgdmHhSGoC2L
-	2UKp9g4QG7WMh84GYUYJCG4rdje6hrMqCnOxEq7OOfB25g+CliCGwUK/4U3g1VMmrasYzmjalAJ
-	m0=
-X-Google-Smtp-Source: AGHT+IGR9uZU02Z1imHj7MAxQiJrfcrFgQl4Iwi1qMx4X/39RI/yLTLvi2E9TpExz966iw2AnrUaGavuIu6muZwN6T8=
-X-Received: by 2002:a05:6512:3ca6:b0:553:24f4:872a with SMTP id
- 2adb3069b0e04-553e3bf9f18mr3657639e87.40.1750687266759; Mon, 23 Jun 2025
- 07:01:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sd1gUbVN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=UmzzfFRbv8AKrXWg42xJyMquVYU8RD5shIkkp8OhLAc=; b=sd1gUbVN/g9qIotYXNTwJKCyVk
+	SSbd0kMv7BFDgdf81y8OdtMOMKwn1Q8FDsk1r1rQFHacQWpt/4CwJtTJ7uCEYxhMGhBIcwS6FsX5z
+	12kU6mYOROvl27Cd4ofQexIAodZKnxq5dP267SKr0s/s3743St9DRn3fB3SHB8a71LJ5SckyPUND7
+	1POQs//daeeIu1mbmz739T1Yfk16+5zjsCnZKH2DzY8ajow6ppUpCHQJWr5y+QpLNh6B/yM8eJ15l
+	oIBuh2m6g6ttTRyetbUxahs1b6+a5W2aYzliksWa6SX30DMg1HMNwH9ZDkZmOKKZ5sRqNe0T+y2hC
+	WuVm7hMA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uThjQ-00000002xl2-1IxF;
+	Mon, 23 Jun 2025 14:01:08 +0000
+Date: Mon, 23 Jun 2025 07:01:08 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Mike Rapoport <rppt@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+	Shivank Garg <shivankg@amd.com>, david@redhat.com,
+	akpm@linux-foundation.org, paul@paul-moore.com,
+	viro@zeniv.linux.org.uk, willy@infradead.org, pbonzini@redhat.com,
+	tabba@google.com, afranji@google.com, ackerleytng@google.com,
+	jack@suse.cz, hch@infradead.org, cgzones@googlemail.com,
+	ira.weiny@intel.com, roypat@amazon.co.uk,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+Subject: Re: [PATCH] fs: export anon_inode_make_secure_inode() and fix
+ secretmem LSM bypass
+Message-ID: <aFleJN_fE-RbSoFD@infradead.org>
+References: <20250619073136.506022-2-shivankg@amd.com>
+ <da5316a7-eee3-4c96-83dd-78ae9f3e0117@suse.cz>
+ <20250619-fixpunkt-querfeldein-53eb22d0135f@brauner>
+ <aFPuAi8tPcmsbTF4@kernel.org>
+ <20250619-ablichten-korpulent-0efe2ddd0ee6@brauner>
+ <aFQATWEX2h4LaQZb@kernel.org>
+ <aFV3-sYCxyVIkdy6@google.com>
+ <20250623-warmwasser-giftig-ff656fce89ad@brauner>
+ <aFleB1PztbWy3GZM@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620122353.150700-1-goran.radni@gmail.com>
- <20250620122353.150700-4-goran.radni@gmail.com> <aFVz48C3d+HHVHvv@lizhi-Precision-Tower-5810>
- <00cf9c47-e101-4335-b918-f0b3a3c71de9@gmail.com>
-In-Reply-To: <00cf9c47-e101-4335-b918-f0b3a3c71de9@gmail.com>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Mon, 23 Jun 2025 11:00:55 -0300
-X-Gm-Features: AX0GCFty6Y9honVX8KF-AR5BMA9uPsSpLblXjl7-3v4sjeMadYrJm6ZLkkE2tuQ
-Message-ID: <CAOMZO5B39pBzWuXBoo5=eqQzZLxS3zBxCJw_GBYmABKT_cdQww@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] arm64: dts: imx8mp: Add initial support for
- Ultratronik imx8mp-ultra-mach-sbc board
-To: Goran Radenovic <goran.radni@gmail.com>
-Cc: Frank Li <Frank.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	=?UTF-8?B?QsO2cmdlIFN0csO8bXBmZWw=?= <boerge.struempfel@gmail.com>, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFleB1PztbWy3GZM@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Mon, Jun 23, 2025 at 10:17=E2=80=AFAM Goran Radenovic <goran.radni@gmail=
-.com> wrote:
+On Mon, Jun 23, 2025 at 07:00:39AM -0700, Christoph Hellwig wrote:
+> On Mon, Jun 23, 2025 at 12:16:27PM +0200, Christian Brauner wrote:
+> > I'm more than happy to switch a bunch of our exports so that we only
+> > allow them for specific modules. But for that we also need
+> > EXPOR_SYMBOL_FOR_MODULES() so we can switch our non-gpl versions.
+> 
+> Huh?  Any export for a specific in-tree module (or set thereof) is
+> by definition internals and an _GPL export if perfectly fine and
+> expected.
 
-> I was using git send-email, and I did not notice any problems with
-> dry-run. I have 3 patches and a cover letter. All were marked correctly
-> v3 0/3 - v3 3/3.
-> Everything looks fine here:
-> https://lore.kernel.org/all/20250620122353.150700-1-goran.radni@gmail.com=
-/
-> Or am I missing something completely?
-
-I only received the patch 3/3 in my Inbox.
-
-It seems you missed copying everyone on the three patches.
+.. the only thing we should do is to drop the pointless _GPL in the
+name entirely.
