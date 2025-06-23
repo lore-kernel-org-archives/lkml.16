@@ -1,73 +1,67 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1365A20B7E1
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F352417F8
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750681882; cv=none; b=HBweXiQAsmt2ej2hhK2VouhdxDyIaWkDyIqPhfACaRuLVs19El5OxwqxMVV1ZB7JCEGGWfNsyz0bNU5FUcn38E4Zc9FlNJ8ogV6mxEkk0nnyBZtJouZxrJhDhhyZaUi7VLX2Twh2FwI9Y1j01tNnZibjDAcM1mOssgSQs5+0GhI=
+	t=1750681883; cv=none; b=UVvCp9XVz57CZkl6Tk0DZ77zI83+En4QprRFIBkBvnV6zLZBgRjWO9In+ByjQrwjtLLT/G54fBtS87qO72732I0OSeHjM13VKhN/suLKmsO6pe1CdU+6Nqn8dZlHkXKZs+AshJi5M/c6t4bz4jA/pLNVH2cVrn/uqXLmchRq1xE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750681882; c=relaxed/simple;
-	bh=2zFRKZQk6Qcx7V0TRS6RA0Y4R3e2uFWEfPn5Z1JUZPY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E9QT6mBvrdNi8d/RA91cvIdfirCZcpCSDYN5LJH850cSl9cjFAa4jAaW8jjdIEQZkVseCTCkauS5gGEW2bn61Q5W5XVYYyl2KG9DUxpPyQQ3AAOXk4cOOiwb5N6HOeFLrHmcH85Q8HW79J9lqBTiVbDwNeMtt4LySjGbLhFU4W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=eyrH0Bjl; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750681883; c=relaxed/simple;
+	bh=ND5F3RDhEWd8TAnZEx6zV7rgCBZhQ1SX09oMmDbWDDg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=PkWsthk8qHDB44zZbSsv7MVGgF2BO+1WuCK4oMpyi5Y76JIGcSwUktD+io7+k7vQzAWVx9nWJNGzDWu0gDKUCuWPvLCHdI6czUPRSfzBsakmJuyBELJ4nFs2R9ji+S/PdxkrII2td6xAFD1p4x+eqTwFp+ULQqMX1qk6oYcg/4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O8cM5Vu6; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="eyrH0Bjl"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NBkf5R031468
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:31:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	E6864q4XX7Y1lJBXPh3P8WERZFM3Mm8/80MbfQ9oBQg=; b=eyrH0BjllGGw+pTX
-	IwjyydI/FasyKcbyFAyphISewm08UJdHWnCeutuTtHfe2hFJSCCzqbmDKjWsEK3C
-	lc+9wAgN6tMP1oEia6Zxma8aZzJf482/xdsp0Rs9VZEH26hh5Fo6Bt4xOXp6nmPV
-	HWeuO2+M9H4/juE/wz3+nTPGdBGsxvBIJYXuJcBcXoqmEke3ofiBpUn50A8RyaKn
-	CkTHAgPST7KAg4eMort3gfWDFZMkhPhQ+LBBwCAMy7ocVcU59L3P7OTaXWrgknEh
-	DqP0RgCcIVMFqzSNid8/lQ2dkRdF3tWPS3E8ZiuZTkrp+cgzVKOSgMbgfrG7BWgi
-	L+B4+Q==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ey7k1d12-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:31:19 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d09a3b806aso105728285a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 05:31:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O8cM5Vu6"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a536ecbf6fso2290047f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 05:31:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750681880; x=1751286680; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qoE9tAaWc9b9sN9LvIzsMZa1+Hj5pdYfOB30Om4GhJw=;
+        b=O8cM5Vu6HB/UXLWfDvGwZtvIpqGiLVg7HHPdJPX5MYFZzc206K9yCLhZRmreenBAEd
+         IXbTkZyz64hU9dkv6UN2RP3jrflyf9nlexnjSFGbV+fCmC3MrmPitxyk4QIvKNRDMHW7
+         VwHNsG+6ApzOzDLJHSPjXOZ6ZDIoFugI5RcdaGoI6j2rsI9rs7jCX7whrIq++Z3kfcWs
+         cxLkSTXhdZwuLI/vcFdRQ+R3D01AP6ia6FzGptidm8wtklFw0UItqKgK+BG9jlXfMibI
+         RJ9A3UBqGKzdTcl5pjW1vfB96oTvpVxoWggWgv+X065Obi++aFXWmAuCaPoCQJpM49NC
+         50OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750681879; x=1751286679;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E6864q4XX7Y1lJBXPh3P8WERZFM3Mm8/80MbfQ9oBQg=;
-        b=t1tLRk/dxSKEbqt2YHbRpi33QzZ8lqYxvamzmvbjIqatWaoIr7cCRS3Nqlsij2R6BF
-         Cb6VRCTi1zHtOORFOtvXXjU31MHAittCRCpbxzZoPVnEzkZGNfu1kpai+y9XSFVSooFG
-         w8op/P2XQPaIPtfFmDuJToG3xAoP9LqGzxE21AIZ63mn0Mw89PYJ7IdmMQ7Z5OLOwkyu
-         CzZ/+wGk67fBtLUCt39NVp6tNelpzWUKXan9lqq4m/xmUAPI+eUygJ0K7qpN4E68eiMD
-         b+X5R/Oym/64+LkDOGQZx2fTOwjkzBsAymlxWxr5Y2hZZK0+rf/zTtPg1b39K+j/CRMe
-         g2pw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1ca1ey8jPymHTyjl+KohvJvwCUtBvocw1OOmto2sCwq96QacElIpteHF2GfS7wZbAAZEW+acRReZTbIA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0UjBnxMR5K9SN4s6XB9F+KuE9dE5+h4ZwSHKXKfLbz0/WAViY
-	juiCCvvLNFP9NmY8/lgcoYP9IjzC2NJEJIGbzJWBW9UQdmx5gigbVt1BAZjLmfL3NFHOuhvhL/c
-	ty3g3L7SkxrkVjKXlyHLM/qiHrsiHbZ+nbVzobaGopbkO6nt7vyi8B87h3Fk0m4k/unU=
-X-Gm-Gg: ASbGnctIDtKVvP2Qkbdtgul1OEyYbhygVcH4+G2xv2Shr0mPQiyphP63b2NwX2aoeaT
-	TzUH2TjVWEvWpxSAvdrsoIWAPOIxKgg6CEphES6wQMpFX5LUrmpUC65IyG77YWsFZdjMPEwNnLw
-	EumeuFPOS2dkIC6sqKnj74PnsnancjkofEIMPYmPlyZwAZi4rjdLONiRYmbNBUGkesvddYlQUln
-	fdcUiCemyiURXW+M9Cgjm64kPBqOWMn19FkVpkT1pTEYONSPr3SCekRGvlJ6FLmvv0F9Kg0x0Z5
-	X+jbCJdtQoEX3LDHYtM6jIRlhv0gi1XqB50s4Ltb/8ZpfkU4isxa5YOo5m4NAN6SEP6QL+kFIGN
-	rHxo=
-X-Received: by 2002:a05:620a:4547:b0:7ca:d396:1460 with SMTP id af79cd13be357-7d3f9946b37mr700481985a.14.1750681878925;
-        Mon, 23 Jun 2025 05:31:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGSojH4qUqF5DcRgr/YMoel0AnNXPXaqZPjr++zZf5nj/R/1BTdf8HbieLdvXtY32sDyj5h6w==
-X-Received: by 2002:a05:620a:4547:b0:7ca:d396:1460 with SMTP id af79cd13be357-7d3f9946b37mr700477085a.14.1750681877944;
-        Mon, 23 Jun 2025 05:31:17 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053ecbda9sm698877366b.48.2025.06.23.05.31.15
+        d=1e100.net; s=20230601; t=1750681880; x=1751286680;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qoE9tAaWc9b9sN9LvIzsMZa1+Hj5pdYfOB30Om4GhJw=;
+        b=qJA3tyvT7k3OHzU4NSYp3t7jwNdnLgv+Bl/sp3pVM9Sr/r8/R3bYgXe+L9x5j7Dlmb
+         WN+Nzh1M0IBtgi/08cCB8z4136j3VM4AK8fD4ln11T4VSK5M+7xZm2TPF5gsrCxXB8Kz
+         E8P/E4zYDtJQ48ha9odAQssYC3uHduSR3GPpMCxmC/bmyClryTcZNhkqMBePnRpyQS0C
+         xk4MsCKNOXIhAy/LqH4cmmfr/R+EmQOBG0e0vOc9WQp9KF7Og2hlqpqqEfjpX8VnK7TD
+         8RPgluYjS+C2ZCF0MiZ9s+7xqKvIktUw6ZPYUamv7oMQ/qo0sVaQOrUKE1Rg2+5yjCQg
+         U/2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXDJB76T0RX7iijVTHIUQMI9Pptq3wkcsGis182fnzXXv2/JCtP6KmZVYWAYpfMoVwmO8ZaVbIqwij7W1I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvSWEhAlYTgcRQd0S59TRz0KcoII5W1bq/LyqQzh3ZufhXCXX9
+	qZvhbQttq0U90pP6cAMx4vjYBSygFXcqCCRo4ipCupif3Z0AU7VFwPDwuusasw1hEnM=
+X-Gm-Gg: ASbGnctdtAJtQDZKrsAKSb7h7owqIaTjyLvTwVatxqZYXNI6Y1V5JA+DMsl8JC0+M4z
+	ywuVFXGAIvxuQZCSkHwWeYdAqGEbuDJ/eUUDhh8gv3K9y9dXKwtavEWahhP/VA0k5KUoaWLtLkH
+	zWk+mWiUQH8fHD0Z98NtT3JYarWWuT1Pgjsy7OtAB4Cpj1pUV+MG4nCIFC8iBFRNu+SzVymg9WI
+	XlOKEVVNFjlSf94A61wEAoP8lnphNZVbQukw81YEgU7GnidO9irdAwWrw9A9bARt76H5luEjqjA
+	nyMfOAx3zY7RcyAKu3xm29BT3SOsF3Pw11oIH/5olxmJ8Sg6txNUDsa5QYekseOlLvWgIgfN9qg
+	fyZ7D8EjhXMKyXbXHhugId5ZPQuOZypXuCI0Fxqw=
+X-Google-Smtp-Source: AGHT+IGrnHR5HjuNNGYN2h4NQHfR9oLkgLDNygJjRDuk6P9puAV/nK1lNVJbr/+wKFuw9QwtD+0/Zg==
+X-Received: by 2002:a05:6000:3ca:b0:3a4:fa6a:9189 with SMTP id ffacd0b85a97d-3a6d1322bb1mr10321158f8f.31.1750681880283;
+        Mon, 23 Jun 2025 05:31:20 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:8c08:7c51:bbb1:5a2d? ([2a01:e0a:3d9:2080:8c08:7c51:bbb1:5a2d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f18207sm9432462f8f.30.2025.06.23.05.31.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 05:31:17 -0700 (PDT)
-Message-ID: <fd73a142-3b22-407f-8e6d-00f4e1e1c8eb@oss.qualcomm.com>
-Date: Mon, 23 Jun 2025 14:31:14 +0200
+        Mon, 23 Jun 2025 05:31:19 -0700 (PDT)
+Message-ID: <0c99fe5c-f908-4d78-acb3-d6bc128c9f26@linaro.org>
+Date: Mon, 23 Jun 2025 14:31:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,99 +69,88 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 2/4] dt-bindings: mmc: controller: Add
- max-sd-hs-frequency property
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Sarthak Garg <quic_sartgarg@quicinc.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        quic_cang@quicinc.com, quic_nguyenb@quicinc.com,
-        quic_rampraka@quicinc.com, quic_pragalla@quicinc.com,
-        quic_sayalil@quicinc.com, quic_nitirawa@quicinc.com,
-        quic_bhaskarv@quicinc.com, kernel@oss.qualcomm.com
-References: <20250618072818.1667097-1-quic_sartgarg@quicinc.com>
- <20250618072818.1667097-3-quic_sartgarg@quicinc.com>
- <6040afd9-a2a8-49f0-85e9-95257b938156@kernel.org>
- <9627ed6f-2bb8-40b0-b647-5f659d87f2f9@oss.qualcomm.com>
- <bba062a3-f96c-456b-8e9e-fdeb0dc2d28d@kernel.org>
- <5bdae07b-a7b1-49be-b843-1704981bc63b@oss.qualcomm.com>
- <ffc62906-c3bb-4968-8f7c-fa7ae5028ad5@kernel.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <ffc62906-c3bb-4968-8f7c-fa7ae5028ad5@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH] drm/bridge: aux-hpd-bridge: fix assignment of the of_node
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Dmitry Baryshkov <lumag@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250608-fix-aud-hpd-bridge-v1-1-4641a6f8e381@oss.qualcomm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250608-fix-aud-hpd-bridge-v1-1-4641a6f8e381@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=YoEPR5YX c=1 sm=1 tr=0 ts=68594917 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=jqoZUo8hMgpNG5C4G1UA:9
- a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-ORIG-GUID: uJRMhldcgL5vSpWHcMrn1uVDsMa_nVhA
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA3NSBTYWx0ZWRfXzm8X92QZ354L
- rqswQrnIvmugxFEtLThzinQwz1jdzaqjpZepnQkrh1ny6fga4baoJ0NCp9wgf/X8xzySQvciFRL
- 7ArUAwFuH7focczSkUUDqiC3nrkHpppXUH3rsJDtIhBfU+HYXb0AUeOnPAT7XLyiKVJO1kjYCeA
- HGJ21ice2sugmueSKL7WbMF18qBXMWCKSKYakvXceZov63f4cZOD8OIHrL7rZVQmuEyEpboYZZ0
- sD6cHlhQ4rS5tO5Z9EmgM0LIaO813Ic1QOqiRpltMTb+pQDgEK9OjGgPyRIPXFjMGwu+PDToSGR
- Fc/Htq9UaBc4SgA2MTycbvPgUNUA2q0mJipXtCA57FRNoEOmGl2U7mzWM0fKOSAPY2oVOUUI/+i
- YXywrUb8ts62gu1rgr5Kk6o+Qh5MG7CeDzSH6P9nQ5T9eM/4YyASRs1wkbv1wfEpwHgnpBCa
-X-Proofpoint-GUID: uJRMhldcgL5vSpWHcMrn1uVDsMa_nVhA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-23_03,2025-06-23_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 mlxscore=0 adultscore=0 suspectscore=0
- malwarescore=0 mlxlogscore=999 spamscore=0 bulkscore=0 lowpriorityscore=0
- impostorscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506230075
 
-On 6/23/25 2:16 PM, Krzysztof Kozlowski wrote:
-> On 23/06/2025 14:08, Konrad Dybcio wrote:
->>>>>
->>>>> This might be fine, but your DTS suggests clearly this is SoC compatible
->>>>> deducible, which I already said at v1.
->>>>
->>>> I don't understand why you're rejecting a common solution to a problem
->>>> that surely exists outside this one specific chip from one specific
->>>> vendor, which may be caused by a multitude of design choices, including
->>>> erratic board (not SoC) electrical design
->>>
->>> No one brought any arguments so far that common solution is needed. The
->>> only argument provided - sm8550 - is showing this is soc design.
->>>
->>> I don't reject common solution. I provided review at v1 to which no one
->>> responded, no one argued, no one provided other arguments.
->>
->> Okay, so the specific problem that causes this observable limitation
->> exists on SM8550 and at least one more platform which is not upstream
->> today. It can be caused by various electrical issues, in our specific
->> case by something internal to the SoC (but external factors may apply
->> too)
->>
->> Looking at the docs, a number of platforms have various limitations
->> with regards to frequency at specific speed-modes, some of which seem
->> to be handled implicitly by rounding in the clock framework's
->> round/set_rate().
->>
->> I can very easily imagine there are either boards or platforms in the
->> wild, where the speed must be limited for various reasons, maybe some
->> of them currently don't advertise it (like sm8550 on next/master) to
->> hide that
+On 08/06/2025 17:52, Dmitry Baryshkov wrote:
+> Perform fix similar to the one in the commit 85e444a68126 ("drm/bridge:
+> Fix assignment of the of_node of the parent to aux bridge").
 > 
-> But there are no such now. The only argument (fact) provided in this
-> patchset is: this is issue specific to SM8550 SoC, not the board. See
-> last patch. Therefore this is compatible-deducible and this makes
-> property without any upstream user.
+> The assignment of the of_node to the aux HPD bridge needs to mark the
+> of_node as reused, otherwise driver core will attempt to bind resources
+> like pinctrl, which is going to fail as corresponding pins are already
+> marked as used by the parent device.
+> Fix that by using the device_set_of_node_from_dev() helper instead of
+> assigning it directly.
+> 
+> Fixes: e560518a6c2e ("drm/bridge: implement generic DP HPD bridge")
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
+>   drivers/gpu/drm/bridge/aux-hpd-bridge.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/aux-hpd-bridge.c b/drivers/gpu/drm/bridge/aux-hpd-bridge.c
+> index b3f588b71a7d7ad5c2ee7b07c39079bc5ba34cee..af6f79793407f400b57f945fc958d613155417ea 100644
+> --- a/drivers/gpu/drm/bridge/aux-hpd-bridge.c
+> +++ b/drivers/gpu/drm/bridge/aux-hpd-bridge.c
+> @@ -64,10 +64,11 @@ struct auxiliary_device *devm_drm_dp_hpd_bridge_alloc(struct device *parent, str
+>   	adev->id = ret;
+>   	adev->name = "dp_hpd_bridge";
+>   	adev->dev.parent = parent;
+> -	adev->dev.of_node = of_node_get(parent->of_node);
+>   	adev->dev.release = drm_aux_hpd_bridge_release;
+>   	adev->dev.platform_data = of_node_get(np);
+>   
+> +	device_set_of_node_from_dev(&adev->dev, parent);
+> +
+>   	ret = auxiliary_device_init(adev);
+>   	if (ret) {
+>   		of_node_put(adev->dev.platform_data);
+> 
+> ---
+> base-commit: 4f27f06ec12190c7c62c722e99ab6243dea81a94
+> change-id: 20250608-fix-aud-hpd-bridge-97ec55341c4c
+> 
+> Best regards,
 
-When one appears, we will have to carry code to repeat what the property
-does, based on a specific compatible.. And all OS implementations will
-have to do the same, instead of parsing the explicit information
-
-Konrad
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
