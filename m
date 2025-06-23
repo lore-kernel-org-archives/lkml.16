@@ -1,171 +1,116 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A84E1F4CB3;
-	Mon, 23 Jun 2025 08:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B566B22DA0A;
+	Mon, 23 Jun 2025 08:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750667934; cv=none; b=YEvrAnXE960fZvuI1YyB3JQnhpR48Q3JGiTUWkeWr+73pmEEk2xogoAvu7J9Vd7SzIBwoxX7eOCTj0sTDyz3isI/8ye54+kUu7QX79GYXVr2vAWGmO/3ZR3IoWIuMfdJI1lNGpmKP+BzzkZmh27S4XwuBfqe4oDD0xmpwBCVKbU=
+	t=1750667970; cv=none; b=M3isASTDJcryUfRWSId96u6frU3n4pv8iy1LL5ATWGO4PcctJe2v35n635c5PpLPLVhFK2u/qZJGrNprkzm9f9vh1jJXzIslsxZsxGv/Arx0SgRigufPWYL5UauQF3FeAAowH+vzvLORvCiPTG1rM/IYXU6iFfR3/sAqAxO8iR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750667934; c=relaxed/simple;
-	bh=KPTfA+lD82RyS97lfltBlDwFaXpnQXlrck43kgnV2pA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hBw5bdH51gdi73bL6/4JTHSGZPk1OMbafu0R+FpYqqpcFk0ryGANpKp8HopbJ8YVeTBIM8BGiDq1I8p92K4InWm9vezetzpWaqHk9OLb+ThAFnD5UQdu++VxNUkPsgG564hvYlqKlRDx85Kv8EmWuSyqortOW3n/+LtaAgIH4JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PAaIMywU; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750667970; c=relaxed/simple;
+	bh=kADDkteBuGM/y2AxSFcVG2v8UU9U983QSXwQqpAJ9dk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FHxHLYpWPTMf/AbtsrIaEFOhbB79ZwD2d/2w8myUJbqDT13hip98beaXdmbLJR+w5TD9zphXhmSoR8vZj+gQvNi8dz6zi7x39jmKpmB4SbjvEjq3arDWU6xLrxTMJqw0lpLDOMJkmAa8XZbTij9V6YmdXA1NLLQn0SSDIex2ms4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OMEQzFlX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PAaIMywU"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7406c6dd2b1so2917514b3a.0;
-        Mon, 23 Jun 2025 01:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750667933; x=1751272733; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PyVVTWaZgryZ9TMNe9jpkxLwz3WmJyduY+dRovtnePo=;
-        b=PAaIMywUzuPrJF8Z0XrCE+DZjPfsvL8Lua1lekfife5QOQc8aasFaGPuFXxrHf2k/R
-         g1rd1uT8FQcyfIY185zYI+uheBFOCCh05c2hBIqbMJRPFAQz8AA20rmoRe6F1QEkLpqn
-         lFJg1R4ZVCa36TWAgvguTuAsXCMXIrSBUGDluwYrn6gSYcuDkJavIUUelH08hT7KQILR
-         nzYrcxE51zETRYUsixruSkP6nlzFcGNHPa21LKfcYv5tTzPavN8L4/YXX3+mjhCATGfx
-         mNXDTFE76uF4K+B2e4fhjDzfv5CWPxuLNx1sr7utBUMe3SHdBDPVngbY7k4QjPOPl60E
-         UcKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750667933; x=1751272733;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PyVVTWaZgryZ9TMNe9jpkxLwz3WmJyduY+dRovtnePo=;
-        b=K8jOKfOx6hZ8OC2FDjg8tDsbHCgwr1mUyoButzJtsE1c+UFEiix6u5OTiVKP4QecEG
-         GOKc2p9Azm3Sq2HdrrUpxUrk83kjSbOjlNMdLDDOMxQ9BDoE2SJWNqvWQFWbn/FGjIgi
-         19hRzVMT8Wk5FRUFFfWYxRUEW3/7gETzhywS0wLt2KzWMFqlpPfshOcN/VuDj4TYzhFW
-         t8YcvlabJzqmLAnkRzbgQnHUmXc6PPPn4KtVKlwiiES19+8A4kJdR1vYvAjw4cPfjhYb
-         unCoJ9jykrqxzK+f9f1lPzBFMAXbWOvc1tL9D/KBMaxznuuL4S09EP1grsuU9lDvDApL
-         LgaA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1HaGaCQHCyoBF7cnDK+MXu/bClpO42rUjtKoh7STA/1b2SjYuekHJeuFyyxB1Gpwwl8X1BzZygmp9UOc3@vger.kernel.org, AJvYcCVzTg9h+lL45cDv60M0leUpjngJAx5+S/EkCaKyzEV3U71AA04K+wEhN/wKzogs5RQoGSE/3gVFY34=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf5e8/vMwi64tdx7sOHbJoZOB8Ecdg6X91FkbTYu+C7q2ZcIZD
-	jcg8nZLBMjTqGJ11EWg178fUh2laneZkf9hyLfN6/arwOPUM7RLRO5EU
-X-Gm-Gg: ASbGncv8zin2hjWKkqqPtc/DeYAwWPb0Gw9JTU/xnXwv3t2KTaeFWHZMZzRH4Cj+va7
-	8CwvlqTtbcHHMyoHrn8feLDlXaFwr5fvrX4sFxQHq3cu5db6gZ1UKnWPkbtadBgyNDxePGDITyL
-	vRbMKCHh+9uxq9EwzOWPyTg08GlgcRAnG/Out50hFsdIDXYdsr8HLq1+tJNTEWF2smdh0fbUFd7
-	7RhnylRLYApyIXIxBZrFNjOv1UCBv91cYGXg32H8+l59MHMu6dwBbcf7XguOqTgz+hGxKsypzOF
-	dxWf9QgSz6dWPL7AdnuA7PzhuIqcvm36FXMRBH7jrFRkJEnAi7WK2TGuQxqhHP2U84x36ur9kD6
-	FeQoGayE=
-X-Google-Smtp-Source: AGHT+IGUeFiCv00KVBMrpOmKRu6YCsOh3f2syfhlZ6O0RFPGj97gwW+e+gn6L9Eq8La3deVTY0MrQA==
-X-Received: by 2002:a05:6a21:6d91:b0:1ee:ab52:b8cc with SMTP id adf61e73a8af0-2202934b9e0mr18197566637.21.1750667932543;
-        Mon, 23 Jun 2025 01:38:52 -0700 (PDT)
-Received: from manjaro.domain.name ([2401:4900:1c66:8091:47dd:9377:3ab1:4e4c])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f1258b55sm6209442a12.61.2025.06.23.01.38.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 01:38:52 -0700 (PDT)
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ming.li@zohomail.com,
-	rrichter@amd.com,
-	peterz@infradead.org,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Pranav Tyagi <pranav.tyagi03@gmail.com>
-Subject: [PATCH v2] cxl/memdev: automate cleanup with __free()
-Date: Mon, 23 Jun 2025 14:08:41 +0530
-Message-ID: <20250623083841.364002-1-pranav.tyagi03@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OMEQzFlX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22671C4CEED;
+	Mon, 23 Jun 2025 08:39:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750667970;
+	bh=kADDkteBuGM/y2AxSFcVG2v8UU9U983QSXwQqpAJ9dk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OMEQzFlXShBwB9aVIoQvovqUNGjE9YjuKpjU40tU7GPQ+tUU9KhaaNWdw60cS7asu
+	 gk9p/Q8qBJufR3ymu2+A9sCIUF2EXa9mQLYs7M/CIUjwtW9ixOhRKm7wV19VJxgzx1
+	 FVBC2ZpHydMgEB/EY2zRbLrJaqksN1qY1SSMTfFj0qhjfBtGRVyRKDrbK1eKhwKkQC
+	 CQuD1zV4gxQijdWKniuajab+gdv7DCLSwideFEOMVvuO6dF8VzQWL9Yflm4rxFig+f
+	 FQWiumOo0e9Qml/aAxTyB7MiwjnlALVwFz0OfFWxf5he242ZvdcM6DQT8PuuvYse15
+	 gHtgA+s5c7sUw==
+Message-ID: <8122072a-eaa1-45d2-85c0-35e5cf5fe9f4@kernel.org>
+Date: Mon, 23 Jun 2025 10:39:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/5] media: venus: Add QCM2290 support with AR50_LITE
+ core
+To: Jorge Ramirez <jorge.ramirez@oss.qualcomm.com>
+Cc: quic_vgarodia@quicinc.com, quic_dikshita@quicinc.com,
+ bryan.odonoghue@linaro.org, mchehab@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org,
+ konradybcio@kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250613140402.3619465-1-jorge.ramirez@oss.qualcomm.com>
+ <20250623074940.3445115-1-jorge.ramirez@oss.qualcomm.com>
+ <8c8bccd6-9a46-4ebf-aeaf-01f52570c0be@kernel.org> <aFkLVOkYZMHqEMrh@trex>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <aFkLVOkYZMHqEMrh@trex>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Use the scope based resource management (defined in linux/cleanup.h) to
-automate the lifetime control of struct cxl_mbox_transfer_fw. This
-eliminates explicit kfree() calls and makes the code more robust and
-maintainable in presence of early returns.
+On 23/06/2025 10:07, Jorge Ramirez wrote:
+> On 23/06/25 09:55:25, Krzysztof Kozlowski wrote:
+>> On 23/06/2025 09:49, Jorge Ramirez-Ortiz wrote:
+>>> Changes since v2:
+>>> - Removed IS_HFI/IS_VPU macros
+>>> - checkpatch.pl --strict fixes:
+>>>   - convert macro to static inline to avoid argument reuse side effect
+>>>
+>> Do not attach (thread) your patchsets to some other threads (unrelated
+>> or older versions). This buries them deep in the mailbox and might
+>> interfere with applying entire sets.
+> 
+> ah interesting, I was reading somewhere that sets should be threaded.
+> sure will stop doing that (found it super annoying as well)
+https://elixir.bootlin.com/linux/v6.15/source/Documentation/process/submitting-patches.rst#L831
 
-Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
----
- drivers/cxl/core/memdev.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index f88a13adf7fa..38f4449f9740 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -7,6 +7,7 @@
- #include <linux/slab.h>
- #include <linux/idr.h>
- #include <linux/pci.h>
-+#include <linux/cleanup.h>
- #include <cxlmem.h>
- #include "trace.h"
- #include "core.h"
-@@ -802,11 +803,10 @@ static int cxl_mem_activate_fw(struct cxl_memdev_state *mds, int slot)
- static int cxl_mem_abort_fw_xfer(struct cxl_memdev_state *mds)
- {
- 	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
--	struct cxl_mbox_transfer_fw *transfer;
- 	struct cxl_mbox_cmd mbox_cmd;
--	int rc;
--
--	transfer = kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
-+	
-+	struct cxl_mbox_transfer_fw *transfer __free(kfree) =
-+		kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
- 	if (!transfer)
- 		return -ENOMEM;
- 
-@@ -821,9 +821,7 @@ static int cxl_mem_abort_fw_xfer(struct cxl_memdev_state *mds)
- 
- 	transfer->action = CXL_FW_TRANSFER_ACTION_ABORT;
- 
--	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
--	kfree(transfer);
--	return rc;
-+	return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- }
- 
- static void cxl_fw_cleanup(struct fw_upload *fwl)
-@@ -880,7 +878,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
- 	struct cxl_dev_state *cxlds = &mds->cxlds;
- 	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
- 	struct cxl_memdev *cxlmd = cxlds->cxlmd;
--	struct cxl_mbox_transfer_fw *transfer;
-+	struct cxl_mbox_transfer_fw *transfer __free(kfree);
- 	struct cxl_mbox_cmd mbox_cmd;
- 	u32 cur_size, remaining;
- 	size_t size_in;
-@@ -949,7 +947,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
- 	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc < 0) {
- 		rc = FW_UPLOAD_ERR_RW_ERROR;
--		goto out_free;
-+		return rc;
- 	}
- 
- 	*written = cur_size;
-@@ -963,14 +961,11 @@ static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
- 			dev_err(&cxlmd->dev, "Error activating firmware: %d\n",
- 				rc);
- 			rc = FW_UPLOAD_ERR_HW_ERROR;
--			goto out_free;
-+			return rc;
- 		}
- 	}
- 
- 	rc = FW_UPLOAD_ERR_NONE;
--
--out_free:
--	kfree(transfer);
- 	return rc;
- }
- 
--- 
-2.49.0
-
+Best regards,
+Krzysztof
