@@ -1,111 +1,112 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54821EFF9F
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 07:25:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDCE155CBD
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 07:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750663554; cv=none; b=jkqXTSUFushz6ARF1sMJANOWA6egEZlCPHMjht6tHfn5oTNSQEGLEGyG0J3KyKjmC8dKwUMKNZkzvPbIqp3NLymqrGkvbXs1fKd/tOmkdjlXCzX/7UxTZF9/amwwxoqCOqWWeSHhGjDFZBfLhh/OIogpARcBE0XtiAssQicRujg=
+	t=1750663588; cv=none; b=PAVF9bCQ5yZu3lxkMltnBYTcZAgPWFM7MTb9xZiVTCtyCR62e0LJmHFj3VL3pkwHxnWft165uZklfD2MzaBpHuAvfCv4ZdnJI8b9+I765f6sv3esENVzrs8XFzbHUa5/CrDO65E9BFIIfVogcy3d5Dj+YUbRQ7byP69fyJGy8cU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750663554; c=relaxed/simple;
-	bh=3AddItu1zzQverrxwemN/SoM/ygSF09VLTmoR3TYgVE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FEBZuSIN/WsKWWJUQjkZJa2VKPfoRjH/hFN48qQYtOOaXovGUdJ0MDUOACcrgCDas38QN3zY5M3PXX5qrCC5TTpQSSADcMONcBR1aDVcf9WtsddZVRMxBOX2M6b9Zn7W+1eBTVFzW4UUwryJcSdMLk/uhDNrDlWIWGPsbDgQKyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4P6tWDa5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xISzTlwP; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750663588; c=relaxed/simple;
+	bh=zD1ykV9kZECgcfxM+3m0cJjb31keH4zDxEnCdj41wFo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tdZB5T78flewHfC7Gwhi9yAYD+OL7+E4Ldl451zoKBYbz98Bbqe4ytTuoysae5d368PPS1Lueq/vEVKtbk5BS+ksKBb2JFxpaVfr+m8brg4MyFSw3ASgp8kwYrsWUBp68vvNVEjPSXmTs8uL7BkpepA2tm2/AIg6YxkAbjs+uFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R+18yoJh; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4P6tWDa5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xISzTlwP"
-Date: Mon, 23 Jun 2025 09:25:49 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750663550;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MEEedbKgnJXSwwOET8K6ArKbZhySAVPv7rRy/P6v38I=;
-	b=4P6tWDa5iqxcS8J79zDiW4xQQhGBGFRetF41Y3n8Tz6T7cpAT4fbSYM7MpCh+XeOXwSjXm
-	6ouIC3118X2ODK9+maLG2RiaNkV9CTNZ8DHB/2FuRorA13wnpBkq2YzAFFV3C/saVESmWz
-	7KaNP9tR/zS/lGJdpWGf+Ikidsmuyl1PzBMPy7QiOvyaEbnRgyWJm3aIzeH+MCeLYCf3Hx
-	ZI8hJS/AEagyYTe1gtldNEr6IN0w25aktWWw0mDoFnpF5DmJd3wEutkR6Iono64qQJYxN0
-	e4O7l7sDsy9f79WC4yHcpwsE/OEtxHIt19VpNstAOcYKaVEIYlanHp613BwfZQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750663550;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MEEedbKgnJXSwwOET8K6ArKbZhySAVPv7rRy/P6v38I=;
-	b=xISzTlwP+QjoLV/MUD6z7R498BBYOZ84lByRmZpBlBH0Y1YvpZa4wXt9cp8WB2BWh6yD7D
-	Ch6x2d0fCQPUeBCg==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Alexandre Ghiti <alex@ghiti.fr>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Andy Lutomirski <luto@kernel.org>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v3 3/3] vdso: Reject absolute relocations during build
-Message-ID: <20250623080736-6f8f2389-4575-4508-8214-faeb10b4b241@linutronix.de>
-References: <20250611-vdso-absolute-reloc-v3-0-47897d73784b@linutronix.de>
- <20250611-vdso-absolute-reloc-v3-3-47897d73784b@linutronix.de>
- <7ddda233-99f7-468b-842d-8469f0a86e77@ghiti.fr>
- <20250612155635-ecade4e1-0235-464a-bcb3-293f7452510a@linutronix.de>
- <87cyaxp0df.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R+18yoJh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750663586; x=1782199586;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=zD1ykV9kZECgcfxM+3m0cJjb31keH4zDxEnCdj41wFo=;
+  b=R+18yoJhLcpeDqE6/uFYQMVGGO7GAembBJnDi0bl1qDmrZ9IRcWUckCf
+   06tB86TPruyq7V3sXfHHzDlvWH4UywZ1MXKZ+jUfG5rRJTx+JZiTtU8VZ
+   nzmEUboC81kIkbQJW4fS7K3vfnklktlj2FHrKeMMVqT26ZeZHVYOlCVUA
+   xQV20qlWUXZXgy6qnyEL3yhlAPE+MxUvIMhOrFuQhvIFQtPzJp7fH4WJz
+   kd3PEpPZAIBAjgLATDudCASmKfHmvcKhLKI3ZoGh5pLGPuUWh1Y7WfwNP
+   mpnQY2qzYebvTF8Sd15g0YD9bnfJYqHGr51zgLKBPlXZ2b1RyuOL1CYNo
+   g==;
+X-CSE-ConnectionGUID: 6yM+UBUxTUO8cSLoI4BwNQ==
+X-CSE-MsgGUID: A9yO2pxHTpOq+/mfIRc+Jw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="64289170"
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="64289170"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 00:26:26 -0700
+X-CSE-ConnectionGUID: 4Za27yxCTE2kmJ8hkBwUsw==
+X-CSE-MsgGUID: cIX5nXMDTqKAKXsbwAIp2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="151662633"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP; 23 Jun 2025 00:26:23 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 2B60E38C; Mon, 23 Jun 2025 10:26:21 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	=?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>
+Subject: [PATCH v1 1/1] x86/defconfigs: Explicitly unset CONFIG_64BIT in i386_defconfig
+Date: Mon, 23 Jun 2025 10:25:36 +0300
+Message-ID: <20250623072536.3425344-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <87cyaxp0df.ffs@tglx>
 
-On Sat, Jun 21, 2025 at 05:42:20PM +0200, Thomas Gleixner wrote:
-> On Thu, Jun 12 2025 at 16:21, Thomas Weißschuh wrote:
-> > On Thu, Jun 12, 2025 at 10:31:20AM +0200, Alexandre Ghiti wrote:
-> > We could introduce per-architecture configuration. Essentially reverting parts
-> > of commit aff69273af61 ("vdso: Improve cmd_vdso_check to check all dynamic relocations").
-> > The final logic for the intermediary objects still needs to be more complicated
-> > than for the final .so as those contain relocations in the debug information.
-> >
-> > Or we could add a C hostprog for validation.
-> > That would be much more flexible than the inline shell command.
-> > It would then also be easier to use an allow-list than the brittle deny-list.
-> >
-> > Or we don't do anything, relying on the selftests to detect miscompilations.
-> 
-> That's a bad idea :)
+From: Daniel DÃ­az <daniel.diaz@linaro.org>
 
-Fully agreed :-)
+A recent refresh of the defconfigs got rid of the following
+(unset) config:
 
-> > I'll run this by tglx. If somebody else has any opinions, I'm all ears.
-> 
-> This is all a mess because the relocation type numbers and their R_*
-> names are not uniform accross architectures. Neither are the valid
-> relocation types which are suitable for VDSO.
+  # CONFIG_64BIT is not set
 
-Ack.
+Innocuous as it seems, when the config file is saved again the
+behavior is changed so that CONFIG_64BIT=y.
 
-> I don't think you can reasonably cover all of it with readelf and
-> grep. I did some unrelated relocation analysis some time ago and I just
-> modified the python script (yes, I hate to use libelf) to show case how
-> insane this gets. This is just as much as I needed to analyse files
-> compiled with some random cross gcc I had handy. But you surely get the
-> idea.
+Currently,
 
-Yes I get the idea. This is more or less exactly what I meant above with:
-"Or we could add a C hostprog for validation."
-More specifically my plan then is to write a C application that uses
-<linux/elf.h> to do what your Python script does.
-There should be no need to mess with libelf.
+  $ make i386_defconfig
+  $ grep CONFIG_64BIT .config
+  CONFIG_64BIT=y
 
-<snip>
+whereas previously (and with this patch):
 
+  $ make i386_defconfig
+  $ grep CONFIG_64BIT .config
+  # CONFIG_64BIT is not set
 
-Thomas
+Fixes: 0e11f689ec03 ("x86/kconfig/32: Refresh defconfig")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ arch/x86/configs/i386_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/configs/i386_defconfig b/arch/x86/configs/i386_defconfig
+index bd182325ebb4..9fc5c2eb58af 100644
+--- a/arch/x86/configs/i386_defconfig
++++ b/arch/x86/configs/i386_defconfig
+@@ -28,6 +28,7 @@ CONFIG_BLK_DEV_INITRD=y
+ CONFIG_KALLSYMS_ALL=y
+ CONFIG_PROFILING=y
+ CONFIG_KEXEC=y
++# CONFIG_64BIT is not set
+ CONFIG_SMP=y
+ CONFIG_HYPERVISOR_GUEST=y
+ CONFIG_PARAVIRT=y
+-- 
+2.47.2
+
