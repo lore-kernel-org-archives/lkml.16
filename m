@@ -1,214 +1,289 @@
-Received: from caracal.cherry.relay.mailchannels.net (caracal.cherry.relay.mailchannels.net [23.83.223.30])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA971DB124
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 20:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D101D19049B;
+	Mon, 23 Jun 2025 20:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750709876; cv=pass; b=g/YdgjdlGD4jA9yoNRstGUZp8O3LBLLJWUU2LFeenLa/ikduWWoLIvtTtGnYlggYFrPzmSgh/wg9FR3aSy36VopBMbiZ1FtkA1t1FdSiiSHIo4+PLgKabkYxijE/h9l3Pa1add4k2eXJesroGIbm/m2/D+A/Wt9RmhYVIq1Cv0k=
+	t=1750709899; cv=pass; b=PQKm2kU1EH1D/Ffr5uah7N9y0Ebrew7UJmP/+q+bPCijayxfnwQTw3Acq8yn0zfabwt1ixHRX5J0fx8oUiVUqg7kbziy2HNvw4Habc8ln5Xy1wxG6iOVOx9waRsF8jkxWCRbwvSpXSSs33iiRl6z/fEFTqU1E6h6Y34HvKjmyJs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750709876; c=relaxed/simple;
-	bh=qlw6fgKOEIXeglQ12zCV02oyL2y4C7wFSNWSIplEuEw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Xx5h8pUK2qsXy4IvOEdn7RBl/voYb5N5XMTqFxBqBDQYfChujCqXBu2MxB3C3Kd5gUszMBypUmaDkjvsxxpnwF5b1KZ7yArA4SK4M+mO1D9/FGktY/RFzItCKNtRBZcEIPY52KDnDamUD8S5OTp1k8qEFzXZWHXCD3X5UV/KFHw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=Me/bveJo; arc=pass smtp.client-ip=23.83.223.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1750709899; c=relaxed/simple;
+	bh=3hlJLa0kfG7gE+lr+wJ30LnboKlt5YahPW/GPKq7lfI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dQIU3MCX1Kpb4iVqKccth2oss9v4mMRNW/Xb9hEEVx30u/V2XtZsC1znr2DrP87FUxXXSPlRBjPTEh/ZWJDoRgZ5X5FQaznuIrrdGHs8BFKXXvTXB2aS/0fODSwfqMdS6NldfIplddo2Ou5G4ssXir1UrU9TiNCOrHjzcKb2FPg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=OZWsOFn9; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="Me/bveJo"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 70E30833B3;
-	Mon, 23 Jun 2025 18:59:43 +0000 (UTC)
-Received: from pdx1-sub0-mail-a316.dreamhost.com (trex-green-3.trex.outbound.svc.cluster.local [100.100.194.78])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id F0CFC833E3;
-	Mon, 23 Jun 2025 18:59:42 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1750705183; a=rsa-sha256;
-	cv=none;
-	b=5kRoyssmMVTN+FX0ImFLGCv17WGLyTsD8/OkC217I19K8NLh9E3md00t9HnXqna1j3vyO5
-	4Ev3VV0NPyNRoECg60WN5aWOeLHFs2dXCyk21S0ALKQxWmHXCwvndI/PWUQfWSAi6la/xt
-	i0d75Fxa0neUdwEDniaSkOKkcIWCK9W7s/BvOIrGuPO6EZjzeVoyke+huQ1qabidnzEkds
-	rP3emoZ2FHgzGpbkYPxEFlbIdWMMAnRbfG6QslScjZs7+WM6KXB6Xp7SXr8s/r2nEArfvn
-	gE8zAjvKW90y7lhNF80cnZHpRjPe55SxbQzLeNtF6nl4oAa81dVfq5cY3uGyLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1750705183;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=atn3MyssMEAyeXRQAFQ3w0KwULPaLm0qUrW2VBs1mzI=;
-	b=M+KrAkanVdREDcrHVXwE71Dafoq1gWKoPwZDS6ycD2aUL3zcq7afltE5dtvi1CXEIBQyjQ
-	lKbVrxYmMrf9ph0x96wZGV+WV0j4Mc42xd767En/y4CysaYEqMU/6h50bAzN1VVuH2kCKz
-	Hr7EjQ/fDL2RtxzcVnd0HyeO21ddQu0jhloCgPQcngoLObSmWRNELNCTWh5t36VVjRVp71
-	VUaBcBPyRXUgwsiw36/F278Mp7+ye3GXM85+Lh84enZrgMBM4nnvMzk9WRzC2ipd742fMQ
-	H6eB0JAPRqP/tRVYgxVy2r9ur9hKNCfvR/oONaySfidenWPRyXVNLwnLpnqu0A==
-ARC-Authentication-Results: i=1;
-	rspamd-679c59f89-b62kv;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Bad
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Keen-Tank: 55a5cdcd7075d2e1_1750705183310_827885278
-X-MC-Loop-Signature: 1750705183310:3004467330
-X-MC-Ingress-Time: 1750705183310
-Received: from pdx1-sub0-mail-a316.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.100.194.78 (trex/7.0.3);
-	Mon, 23 Jun 2025 18:59:43 +0000
-Received: from offworld.lan (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a316.dreamhost.com (Postfix) with ESMTPSA id 4bQy7L2GRwz8Q;
-	Mon, 23 Jun 2025 11:59:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1750705182;
-	bh=atn3MyssMEAyeXRQAFQ3w0KwULPaLm0qUrW2VBs1mzI=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=Me/bveJoe7+IrySu90leEOMhSt70NIHqvCPOtHmkPOTYl7ogxwMty/DQByDzYH6GH
-	 0a0hzYUm9KbWJvdUrAXb8SrA5l/+UaOnM54oA0M4iCTaIZpI2vNl5bKCjPCG6zhzeM
-	 0TXZhKeG1+yekfD5X0pOviA8RwFp9iIKyzjhTC/BEgsjqB+fgg+kbt9DaVOxB+M4UN
-	 rkqwrC7l5m5eqz5NTAdv7emOrklob0L7dNr46Rzx4ExH5BOnIy4oxnALFAgp0ttUeX
-	 q4AVyzdN/4fEJQVHmgy9kX+1dxMQc51WXQFDxVXUIKUO+1xveGdN+SOJOZ2CPB6LlS
-	 pI0IdLkm98FJw==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: akpm@linux-foundation.org
-Cc: mhocko@kernel.org,
-	hannes@cmpxchg.org,
-	roman.gushchin@linux.dev,
-	shakeel.butt@linux.dev,
-	yosryahmed@google.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	dave@stgolabs.net
-Subject: [PATCH 3/4] mm/vmscan: make __node_reclaim() more generic
-Date: Mon, 23 Jun 2025 11:58:50 -0700
-Message-Id: <20250623185851.830632-4-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250623185851.830632-1-dave@stgolabs.net>
-References: <20250623185851.830632-1-dave@stgolabs.net>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="OZWsOFn9"
+ARC-Seal: i=1; a=rsa-sha256; t=1750709878; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=DSVi3hHf9UD3xgyX2a5yQv9eb3p6iFnk5dD2T1VvOM9dtWVlBbAKNUtZqzUgpjlm1GMqkGlEKC+nSvYd3SGMc1H4dz8O3npST08GPQpvWjtwpzWcNJbXLzncvLeL3cEjK6VLyyQi9X2vOH2N3OTEMoAn0G1qGiZVsV5kaiHTDZU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750709878; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=WqLTbHpOLfN/8P0kYn2TCUukVUVe+wOiSE7+iFMQKxM=; 
+	b=CtyiyMdibD7cXVHC0ZC1HAYt3K7GEiDutkJfv762tlkn4Yp+ZBPgcffhvZH2FstQwJI69JH2L1WGGBU5fZ+LDwKusdD3WWzS8FPmyWzP04h5my8GASyrVPJD7n0T5AhX0O6FvBhs9J/r3Lm+kKmqZWb0ozKryKK/PWJmEb3GznM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750709878;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
+	bh=WqLTbHpOLfN/8P0kYn2TCUukVUVe+wOiSE7+iFMQKxM=;
+	b=OZWsOFn9iGTptTo0K3O8TaWjhYB0gumrKf7yJTj0fkiljv31kkkJLqyNkYRrWJqX
+	hxDlv8KZKA0SHkWmdJSth4+uTXViMTgA5imq/5kXgKNl4ScZOK/lfb3R+P1RAaI2hpD
+	L5CnwyitdabD4lDSPdYMHWLIuuam5vmiGanYUsFo=
+Received: by mx.zohomail.com with SMTPS id 1750709876006799.3496765035169;
+	Mon, 23 Jun 2025 13:17:56 -0700 (PDT)
+From: Daniel Almeida <daniel.almeida@collabora.com>
+Date: Mon, 23 Jun 2025 17:17:33 -0300
+Subject: [PATCH v7] rust: kernel: add support for bits/genmask macros
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250623-topic-panthor-rs-genmask-v7-1-9f986951e7b5@collabora.com>
+X-B4-Tracking: v=1; b=H4sIAFy2WWgC/33PTWrDMBAF4KsEraui0Z/drnqPksVoLMWiiWUkY
+ xqC7145EFKK6+UbmO/xbqz4HH1h74cby36OJaahhublwKjH4eR57GpmUkgNQio+pTESH3GY+pR
+ 5LvzkhwuWLx7QkWlU8EErVt/H7EP8vtOfx5r7WKaUr/emWa7XB6r/R2fJgbdGqoYgCPL4Qel8R
+ pcyvlK6sBWe1QMzAiTsYKpihpTrggTywmxh+okpaHcwXTFlhNCB0CJtYuYXJu0OZirmAlrQQoL
+ uNmfaJ2ZB7GB2nSkCAr614Aj+Ysuy/ABNsT61+AEAAA==
+X-Change-ID: 20241023-topic-panthor-rs-genmask-fabc573fef43
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ Alexandre Courbot <acourbot@nvidia.com>, Benno Lossin <lossin@kernel.org>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ Daniel Almeida <daniel.almeida@collabora.com>
+X-Mailer: b4 0.14.2
+X-ZohoMailClient: External
 
-As this will be called from non page allocator paths for
-proactive reclaim, allow users to pass the sc and nr of
-pages, and adjust the return value as well. No change in
-semantics.
+In light of bindgen being unable to generate bindings for macros, and
+owing to the widespread use of these macros in drivers, manually define
+the bit and genmask C macros in Rust.
 
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+The *_checked version of the functions provide runtime checking while
+the const version performs compile-time assertions on the arguments via
+the build_assert!() macro.
+
+Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
 ---
- mm/vmscan.c | 48 +++++++++++++++++++++++++-----------------------
- 1 file changed, 25 insertions(+), 23 deletions(-)
+Changes in v7:
+- Rebase on top of latest rust-next
+- Use RangeInclusive
+- Fix formatting
+- Fix checks of start/end to account for RangeInclusive
+- Use the paste macro to simplify the implementation
+- Get rid of the _unbounded versions (they were not const fns anyway, so
+  users can just write it themselves)
+- Change the examples to account for RangeInclusive
+- Link to v6: https://lore.kernel.org/r/20250610-topic-panthor-rs-genmask-v6-1-50fa1a981bc1@collabora.com
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 63ddec550c3b..cdd9cb97fb79 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -7618,36 +7618,26 @@ static unsigned long node_pagecache_reclaimable(struct pglist_data *pgdat)
- /*
-  * Try to free up some pages from this node through reclaim.
-  */
--static int __node_reclaim(struct pglist_data *pgdat, gfp_t gfp_mask, unsigned int order)
-+static unsigned long __node_reclaim(struct pglist_data *pgdat, gfp_t gfp_mask,
-+				    unsigned long nr_pages,
-+				    struct scan_control *sc)
- {
--	/* Minimum pages needed in order to stay on node */
--	const unsigned long nr_pages = 1 << order;
- 	struct task_struct *p = current;
- 	unsigned int noreclaim_flag;
--	struct scan_control sc = {
--		.nr_to_reclaim = max(nr_pages, SWAP_CLUSTER_MAX),
--		.gfp_mask = current_gfp_context(gfp_mask),
--		.order = order,
--		.priority = NODE_RECLAIM_PRIORITY,
--		.may_writepage = !!(node_reclaim_mode & RECLAIM_WRITE),
--		.may_unmap = !!(node_reclaim_mode & RECLAIM_UNMAP),
--		.may_swap = 1,
--		.reclaim_idx = gfp_zone(gfp_mask),
--	};
- 	unsigned long pflags;
- 
--	trace_mm_vmscan_node_reclaim_begin(pgdat->node_id, order,
--					   sc.gfp_mask);
-+	trace_mm_vmscan_node_reclaim_begin(pgdat->node_id, sc->order,
-+					   sc->gfp_mask);
- 
- 	cond_resched();
- 	psi_memstall_enter(&pflags);
- 	delayacct_freepages_start();
--	fs_reclaim_acquire(sc.gfp_mask);
-+	fs_reclaim_acquire(sc->gfp_mask);
- 	/*
- 	 * We need to be able to allocate from the reserves for RECLAIM_UNMAP
- 	 */
- 	noreclaim_flag = memalloc_noreclaim_save();
--	set_task_reclaim_state(p, &sc.reclaim_state);
-+	set_task_reclaim_state(p, &sc->reclaim_state);
- 
- 	if (node_pagecache_reclaimable(pgdat) > pgdat->min_unmapped_pages ||
- 	    node_page_state_pages(pgdat, NR_SLAB_RECLAIMABLE_B) > pgdat->min_slab_pages) {
-@@ -7656,24 +7646,36 @@ static int __node_reclaim(struct pglist_data *pgdat, gfp_t gfp_mask, unsigned in
- 		 * priorities until we have enough memory freed.
- 		 */
- 		do {
--			shrink_node(pgdat, &sc);
--		} while (sc.nr_reclaimed < nr_pages && --sc.priority >= 0);
-+			shrink_node(pgdat, sc);
-+		} while (sc->nr_reclaimed < nr_pages && --sc->priority >= 0);
- 	}
- 
- 	set_task_reclaim_state(p, NULL);
- 	memalloc_noreclaim_restore(noreclaim_flag);
--	fs_reclaim_release(sc.gfp_mask);
-+	fs_reclaim_release(sc->gfp_mask);
- 	delayacct_freepages_end();
- 	psi_memstall_leave(&pflags);
- 
--	trace_mm_vmscan_node_reclaim_end(sc.nr_reclaimed);
-+	trace_mm_vmscan_node_reclaim_end(sc->nr_reclaimed);
- 
--	return sc.nr_reclaimed >= nr_pages;
-+	return sc->nr_reclaimed;
- }
- 
- int node_reclaim(struct pglist_data *pgdat, gfp_t gfp_mask, unsigned int order)
- {
- 	int ret;
-+	/* Minimum pages needed in order to stay on node */
-+	const unsigned long nr_pages = 1 << order;
-+	struct scan_control sc = {
-+		.nr_to_reclaim = max(nr_pages, SWAP_CLUSTER_MAX),
-+		.gfp_mask = current_gfp_context(gfp_mask),
-+		.order = order,
-+		.priority = NODE_RECLAIM_PRIORITY,
-+		.may_writepage = !!(node_reclaim_mode & RECLAIM_WRITE),
-+		.may_unmap = !!(node_reclaim_mode & RECLAIM_UNMAP),
-+		.may_swap = 1,
-+		.reclaim_idx = gfp_zone(gfp_mask),
-+	};
- 
- 	/*
- 	 * Node reclaim reclaims unmapped file backed pages and
-@@ -7708,7 +7710,7 @@ int node_reclaim(struct pglist_data *pgdat, gfp_t gfp_mask, unsigned int order)
- 	if (test_and_set_bit_lock(PGDAT_RECLAIM_LOCKED, &pgdat->flags))
- 		return NODE_RECLAIM_NOSCAN;
- 
--	ret = __node_reclaim(pgdat, gfp_mask, order);
-+	ret = __node_reclaim(pgdat, gfp_mask, nr_pages, &sc) >= nr_pages;
- 	clear_bit_unlock(PGDAT_RECLAIM_LOCKED, &pgdat->flags);
- 
- 	if (ret)
+Changes in v6:
+Thanks, Alex {
+  - Added _checked and _unbounded versions of the functions
+  - Implemented the functions through a macro
+  - Changed the genmask logic to prevent over/underflow (hopefully)
+  - Genmask now takes a range instead of "h" and "l" arguments
+  - Made all functions #[inline]
+  - +cc Alex directly
+  - Removed all panics
+}
+- Link to v5: https://lore.kernel.org/r/20250326-topic-panthor-rs-genmask-v5-1-bfa6140214da@collabora.com
+
+Changes in v5:
+- Added versions for u16 and u8 in order to reduce the amount of casts
+  for callers. This came up after discussing the issue with Alexandre
+  Courbot in light of his "register" abstractions.
+- Link to v4: https://lore.kernel.org/r/20250318-topic-panthor-rs-genmask-v4-1-35004fca6ac5@collabora.com
+
+Changes in v4:
+- Split bits into bits_u32 and bits_u64
+- Added r-b's
+- Rebased on top of rust-next
+- Link to v3: https://lore.kernel.org/r/20250121-topic-panthor-rs-genmask-v3-1-5c3bdf21ce05@collabora.com
+
+Changes in v3:
+- Changed from declarative macro to const fn
+- Added separate versions for u32 and u64
+- Link to v2: https://lore.kernel.org/r/20241024-topic-panthor-rs-genmask-v2-1-85237c1f0cea@collabora.com
+
+Changes in v2:
+
+- Added ticks around `BIT`, and `h >=l` (Thanks, Benno).
+- Decided to keep the arguments as `expr`, as I see no issues with that
+- Added a proper example, with an assert_eq!() (Thanks, Benno)
+- Fixed the condition h <= l, which should be h >= l.
+- Checked that the assert for the condition above is described in the
+  docs.
+---
+ rust/kernel/bits.rs | 133 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs  |   1 +
+ 2 files changed, 134 insertions(+)
+
+diff --git a/rust/kernel/bits.rs b/rust/kernel/bits.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..8db122b5db9565b76c14fc33e33058f9dac7bd75
+--- /dev/null
++++ b/rust/kernel/bits.rs
+@@ -0,0 +1,133 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Bit manipulation macros.
++//!
++//! C header: [`include/linux/bits.h`](srctree/include/linux/bits.h)
++
++use crate::prelude::*;
++use core::ops::RangeInclusive;
++use macros::paste;
++
++macro_rules! impl_bit_fn {
++    (
++        $ty:ty
++    ) => {
++        paste! {
++            /// Computes `1 << n` if `n` is in bounds, i.e.: if `n` is smaller than
++            /// the maximum number of bits supported by the type.
++            ///
++            /// Returns [`None`] otherwise.
++            #[inline]
++            pub fn [<checked_bit_ $ty>](n: u32) -> Option<$ty> {
++                (1 as $ty).checked_shl(n)
++            }
++
++            /// Computes `1 << n` by performing a compile-time assertion that `n` is
++            /// in bounds.
++            ///
++            /// This version is the default and should be used if `n` is known at
++            /// compile time.
++            #[inline]
++            pub const fn [<bit_ $ty>](n: u32) -> $ty {
++                build_assert!(n < <$ty>::BITS);
++                (1 as $ty) << n
++            }
++        }
++    };
++}
++
++impl_bit_fn!(u64);
++impl_bit_fn!(u32);
++impl_bit_fn!(u16);
++impl_bit_fn!(u8);
++
++macro_rules! impl_genmask_fn {
++    (
++        $ty:ty,
++        $(#[$genmask_ex:meta])*
++    ) => {
++        paste! {
++            /// Creates a compile-time contiguous bitmask for the given range by
++            /// validating the range at runtime.
++            ///
++            /// Returns [`None`] if the range is invalid, i.e.: if the start is
++            /// greater than or equal to the end.
++            #[inline]
++            pub fn [<genmask_checked_ $ty>](range: RangeInclusive<u32>) -> Option<$ty> {
++                let start = *range.start();
++                let end = *range.end();
++
++                if start >= end || end >= <$ty>::BITS {
++                    return None;
++                }
++
++                let high = [<checked_bit_ $ty>](end)?;
++                let low = [<checked_bit_ $ty>](start)?;
++                Some((high | (high - 1)) & !(low - 1))
++            }
++
++            /// Creates a compile-time contiguous bitmask for the given range by
++            /// performing a compile-time assertion that the range is valid.
++            ///
++            /// This version is the default and should be used if the range is known
++            /// at compile time.
++            $(#[$genmask_ex])*
++            #[inline]
++            pub const fn [<genmask_ $ty>](range: RangeInclusive<u32>) -> $ty {
++                let start = *range.start();
++                let end = *range.end();
++
++                build_assert!(start < end);
++                build_assert!(end < <$ty>::BITS);
++
++                let high = [<bit_ $ty>](end);
++                let low = [<bit_ $ty>](start);
++                (high | (high - 1)) & !(low - 1)
++            }
++        }
++    };
++}
++
++impl_genmask_fn!(
++    u64,
++    /// # Examples
++    ///
++    /// ```
++    /// # use kernel::bits::genmask_u64;
++    /// let mask = genmask_u64(21..=39);
++    /// assert_eq!(mask, 0x000000ffffe00000);
++    /// ```
++);
++
++impl_genmask_fn!(
++    u32,
++    /// # Examples
++    ///
++    /// ```
++    /// # use kernel::bits::genmask_u32;
++    /// let mask = genmask_u32(0..=9);
++    /// assert_eq!(mask, 0x000003ff);
++    /// ```
++);
++
++impl_genmask_fn!(
++    u16,
++    /// # Examples
++    ///
++    /// ```
++    /// # use kernel::bits::genmask_u16;
++    /// let mask = genmask_u16(0..=9);
++    /// assert_eq!(mask, 0x000003ff);
++    /// ```
++);
++
++impl_genmask_fn!(
++    u8,
++    /// # Examples
++    ///
++    /// ```
++    /// # use kernel::bits::genmask_u8;
++    /// let mask = genmask_u8(0..=7);
++    /// assert_eq!(mask, 0x000000ff);
++    /// ```
++);
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index 6b4774b2b1c37f4da1866e993be6230bc6715841..1bb294de8cb000120a0d04f61d6f7262fbc9f600 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -54,6 +54,7 @@
+ pub mod alloc;
+ #[cfg(CONFIG_AUXILIARY_BUS)]
+ pub mod auxiliary;
++pub mod bits;
+ #[cfg(CONFIG_BLOCK)]
+ pub mod block;
+ #[doc(hidden)]
+
+---
+base-commit: dc35ddcf97e99b18559d0855071030e664aae44d
+change-id: 20241023-topic-panthor-rs-genmask-fabc573fef43
+
+Best regards,
 -- 
-2.39.5
+Daniel Almeida <daniel.almeida@collabora.com>
 
