@@ -1,98 +1,93 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF961DDA31;
-	Mon, 23 Jun 2025 19:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12EC1DDA31
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 19:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750705499; cv=none; b=eiXIkt3GV+fqVz/vpBbUd4uRdfQfWSsHIHZbY3kRnl0jXcglndY/6vLzQ02AznoqKO76m4elaw+Q5pTbs50iUhY3OJISnMn9zO+WksZx65ReXXUm9JDtsRH/LdqojsMbLtUht7CQACU6pKAJs4bDD0N2fPrg1qc+WAZ3nxA2M7k=
+	t=1750705573; cv=none; b=X33HUaNExP97UNsOUXJ+t0ew5GVuRMmzoAnmWM2JlZPHDQf49v0aMNXYY69OQHN048Maf7HVxxgcFBE1eOmNvEGctZxkzpCpBxhgmt8ezts90XxOGSozXct93lPJE9DH3LcZiUmWuBqBpPznxbqdyxWJ+IEwvpSNWDWWfsoGnqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750705499; c=relaxed/simple;
-	bh=TR8ISfADIgMboKyCwl25EEKSp/wq6BbTsD/oRX+z1C8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KSoEMe5fsXWFSuuHxq1O8xD7WHqV09r5mlSCE7nCcEKF3R/J0sXISk1O9ITcMuof5yBkA6PJrZtptxuYzTIHg15Q1I90b7nyAfiHq6hIsSX+gz7QvlqKrPBE0cBRm1vuA10TpIZPojWQiSOUq/szBIjY7A1Y0aSjYyE3obl9xp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Wq8P8oSO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bJ3uGDEs; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750705573; c=relaxed/simple;
+	bh=3bOfK9tvYoyS32c76foHmKh4Nx/kpDESMgccvA7X4rg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BPg5R6DfvNMt/M+4LwE4+2woyp1qEUaEHZr8gCTcOaY3jXXVEehJXcgqUCM9w9UdR9QpHVWxb2XwjP8ltfkbGOK89dSW/A+RAHmBF7H9k1vabyvLZa/YvVP7IbLOnIBnFn/cbaxvjOmUiX5y7PbuScbGZGWlom1v5PIdXv6HAHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=AfAAY9FH; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Wq8P8oSO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bJ3uGDEs"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750705495;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X6DcYddt5wym2Xskxe6KfcsdaZsVhnmiyQICeoOHbM8=;
-	b=Wq8P8oSOSnrEFmyK5tBA94+ro+F6vK1BDqjUoE2cyXQ7+BV/JEjWO58VVuAZ1TfKjH+64f
-	WqMXCGXHSNX07tPREailSfueUDYo2DFKi5TrXV1mokTpLI+TnIybDSvX3Zg6RMMhvqPfaC
-	9X0mPgCp0A74LFynqgJE9znnOlfXksasKZfK4BOi5Higm6dCMf7kj3KvYJrxjsfeDueYAV
-	LSs8H2jtQYcdk9VPUaDlP3cm5DT6EgWEq0xhz0uHXSzszsZx+JgilzK4NQ6XP5RqlsPMH1
-	DpyBg6RJKWxlRJUD32Rz6uK5YHRWPKhJFvOBNZlTL/ggRfmRqEMCh0ikudVXsw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750705495;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X6DcYddt5wym2Xskxe6KfcsdaZsVhnmiyQICeoOHbM8=;
-	b=bJ3uGDEsaB26JP9V7UX1Jlx1g4wZEoUxaRVea7vzQCcQzJlekZks5lMZkgtZUr16gahBgA
-	SNi+iyrrJuUoCwBQ==
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Sascha Bischoff <sascha.bischoff@arm.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, Timothy Hayes
- <timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, "Liam R.
- Howlett" <Liam.Howlett@oracle.com>, Peter Maydell
- <peter.maydell@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jiri
- Slaby <jirislaby@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 24/27] irqchip/gic-v5: Add GICv5 ITS support
-In-Reply-To: <aFkd0cigSKOSqUQI@lpieralisi>
-References: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
- <20250618-gicv5-host-v5-24-d9e622ac5539@kernel.org> <87y0tmp6gn.ffs@tglx>
- <aFkd0cigSKOSqUQI@lpieralisi>
-Date: Mon, 23 Jun 2025 21:04:54 +0200
-Message-ID: <87ms9ynusp.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="AfAAY9FH"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6fae04a3795so51029336d6.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:06:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1750705570; x=1751310370; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lxtXCdFFskodxZfUDn7ahA5cQvmoiafw7SnR22JSkSM=;
+        b=AfAAY9FHurDivq5Cad65CDqFtiRwquhbrHAzRrBfgj3bNl/U6HFQQnq0NYgsaKG2kO
+         PgmNKBmIEbY7zfu0y5/eodDKKjnoDRVyZgARvJLu3TeKgR6sAyqw9uy6B7k6Xzq72Pli
+         L15RWu2QxrIH8DBffmPYJ8/bjIIO5YXdFQjFnUAdFooPfSaMs4MIx6K0TkL9tLX4mwmw
+         OKVThrglRo9MiM2Ss0IDZGzX4pjNPqSoccUUQTHW+PX571W0cxzf0trrEPUhe94Qv0f2
+         AWcVbXojOJ/vq/S7uLNWrsMXQVI1+p8hr43SnppZSTpifk1ttrIwZTnN7L4Sw3aVLI12
+         cMvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750705570; x=1751310370;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lxtXCdFFskodxZfUDn7ahA5cQvmoiafw7SnR22JSkSM=;
+        b=h70/i1HRgNjl8ZwAgL5XdNi/AvBmlRPG2QiA4rcls6nb2rEZ2PjFdwmQmEzcxTLdeT
+         hUKen/JDrn58nAAoacsrU0C1utwdMPXVy8j0MMIOWgyNl0EYs3tajQldOMoO7apApS2V
+         shtpFXDkop8YkpaysjL3U3AWzq3YO2vuOiH9SQvO/UHCakyuYS8zwYEOyD4JtyM7nuYa
+         PkhFUodjwO7X6rfnIHmLiGGQge5aDKb4NdOfdke9Qq45zgbwjWragjQA297WpabKC6Ua
+         Qd+Lg2+sme60+7JiXuFtxZDH3hs3iycCg2Saq2qlt0pb5dOdeNbfopHfuGY/gT3baAdP
+         dHoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVM2TqWwK1M6iTeAZluE90f2fUWa0aWmsxBlitXELiAuy2SUpOYHudmyryqTh8PRyJRzjYD3NkYMJ/n7j8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yweq+N7tJys6lyFOGfsjxsbzY4HIeLoi2sT1xdJ76chBKFaBctw
+	jcVnqcxI0PGxJAyuVIE+5cl2JhZiOxahzG0jlBIEdzeWw57aCF895LGj18TghVAZH7sWZvh12mo
+	1WjUd
+X-Gm-Gg: ASbGncs4vebiwkZomaFcXPyl2hSYi/+807k+mILLvQ64ftRBuSp6RTLSYGXt253GYrl
+	3lcxCgbdQM215fJ7xjPXsWGSoApp4eUW3rYjoZ7tXUueQpuZlgjhl1XObQQ16pc+tl4wVA1dEol
+	gyC6hFqXAXCsigN0aRNTLab2X9VMEkznMZASvY/HjgL77nZRuyW/CMZW9Jipk+mBhSqzp5ddu+J
+	QWeQ/izSiH8lq6i7uhqWhfTqTQsqQ4M7knGDQ19dSBSuSK8PoyhH176O84aPaKnVBKmi6FopscG
+	dt1OiCIRNIFrJoIUS8lqLSFZO1eXznJPRXuEMEy3FOFJTg9xEdvXYjlEISzHavIBGWwK
+X-Google-Smtp-Source: AGHT+IHKfvbJCKgRw95/hYlzipmhgWo0bFzDAVi72dVhWbrFTXEA6+zicJGy7m3eDM/cdLV9FpbUog==
+X-Received: by 2002:a05:6214:540c:b0:6fb:4e46:7f3a with SMTP id 6a1803df08f44-6fd0a4d68f5mr258869806d6.16.1750705569727;
+        Mon, 23 Jun 2025 12:06:09 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:400::5:e19e])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd24877949sm22887026d6.88.2025.06.23.12.06.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 12:06:09 -0700 (PDT)
+Date: Mon, 23 Jun 2025 14:06:07 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Bijan Tabatabai <bijan311@gmail.com>
+Cc: damon@lists.linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	sj@kernel.org, akpm@linux-foundation.org, david@redhat.com,
+	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
+	apopple@nvidia.com, bijantabatab@micron.com,
+	venkataravis@micron.com, emirakhur@micron.com, ajayjoshi@micron.com,
+	vtavarespetr@micron.com
+Subject: Re: [RFC PATCH v2 1/2] mm/mempolicy: Expose get_il_weight() to MM
+Message-ID: <aFmln7KNVhE9-NIy@gourry-fedora-PF4VCD3F>
+References: <20250620180458.5041-1-bijan311@gmail.com>
+ <20250620180458.5041-2-bijan311@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620180458.5041-2-bijan311@gmail.com>
 
-On Mon, Jun 23 2025 at 11:26, Lorenzo Pieralisi wrote:
-> On Fri, Jun 20, 2025 at 09:18:32PM +0200, Thomas Gleixner wrote:
->> Just add a MSI flag and set it in parent_ops::required_flags and extend
->
-> I added that but it does not work (not if we use d->flags as below), it works
-> if I add it as an
->
-> IRQ_DOMAIN_FLAG_*
->
-> and set it in irq_domain_info in the msi_create_parent_irq_domain()
-> call in the GICv5 ITS driver when creating the domain.
->
->> the lib with
->> 
->>         struct fwnode_handle *fwh;
->> 
->>         fwh = d->flags & MAGIC ? fwnode_get_parent(fwspec->fwnode) : fwspec->fwnode;
->
-> Here we are using the domain flags and I think that's what we want.
->
-> If I go with parent_ops flag, I believe here we need to use the parent
-> msi_domain_info::flags - I don't think that's what we want.
->
-> It is a property of the IRQ domain so I think that adding an
->
-> IRQ_DOMAIN_FLAG_FWNODE_PARENT
->
-> is the best option.
->
-> Please let me know.
+On Fri, Jun 20, 2025 at 01:04:57PM -0500, Bijan Tabatabai wrote:
+> From: Bijan Tabatabai <bijantabatab@micron.com>
+> 
+> This patch exposes get_il_weight() in mm/internal.h. This patch is to
+> allow other parts of the MM subsystem, such as DAMON, to make page
+> placement decisions based on the global interleave weights.
+> 
+> Signed-off-by: Bijan Tabatabai <bijantabatab@micron.com>
 
-Obviously. Doh :)
+Reviewed-by: Gregory Price <gourry@gourry.net>
