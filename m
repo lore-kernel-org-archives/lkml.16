@@ -1,157 +1,135 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64A952F88;
-	Mon, 23 Jun 2025 08:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD88F1FE470
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750665935; cv=none; b=q2GlslfkYv3BY9Jy+uCMrK1VCzHpx7waUEEOdc0Yh1hlsSWefZnwF0NFTN6piQ90/QmZ4lSLochualE22Fls62iRIyV2B7jG9pB1l0xpyi3D0dvbpjqc8zS7h3U+K5bV0TzrDTzIlmllZkXDy8aWs7HsV37bwLRlyueXv/wsLwY=
+	t=1750666037; cv=none; b=tACIZERVk9VlN0TWG6QJO9I92wqzWIZSfZxKHtMw36fI3AoRfd/P68jl/j7QqAanzlsJ4Dr+kjHEoJ1Oq486YWuDtGGp2sCfMt0cZEiGxQdR8A38cGeROBKymOya0hv1E2y3BqeATBYxTvvC8dRbhobHaFU08M5bu+l4LbSnoYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750665935; c=relaxed/simple;
-	bh=NPasebUaAcEImAJDpuMO6PZ8PRDkik1d/ZK9eOZPx6o=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:Cc:
-	 In-Reply-To:Content-Type; b=becDANpBcKlUN9QKtAzeS5xdyltOvV6Fl6v493vfEJPKnW6KdWSbnZwCG8o6b2Yws/3mMtl3NMF9Zil8hIb1SierEbNEnsjvGf+xTslfDRGgYDuFgEMBszCYKQ2LgpyrTufaRtWejWj+2u/7KGl9zQMXdK+5zIJiouUeZeoS6OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=pwY4oUm0; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1750666037; c=relaxed/simple;
+	bh=dhmcYeHsQsigeZcrHk+M4JmzBnlMYZpMRTtb2dRaBIo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WJKfg65LAJH74WGA6w6urtqx23YyyFI9XCFjh5QhNorg8hjLexIQyyPc0J1HMxviA33OM4x6yvDRR+366mC4pnBNlCueZPJD3emuCNN5zr34BGN24LWpJYzuoTiYACDXhrMvSNVTCePCqQMfznKfQtihdSzQr/6+/LxeogqQ3Hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RcY2WHNS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="pwY4oUm0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1750665924; x=1751270724; i=markus.elfring@web.de;
-	bh=0CeWndhcNIl5hI2uPV3nNRmJbfN7h9Zt3nquQBuC0Ks=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 References:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=pwY4oUm0X8NLIU2rLJHYOoeWIpzQNf5qCqhTTVP+/0t+SwnpoGtMiQS+cjGJG3yl
-	 9KYRljd48Y9R3tmcF5zDL7m/5Za2HgbU2CsF7lkxpveecz2Li7LPtnFvi0qCJ51Tj
-	 oz7BCFvEmJuF4IFJHmz+lledSN5tJhNccU/nQGx3TVfVR6xeBlPZFR4N0v7VEyOGw
-	 HSB3GGBSryU/H0Gm4fjEjBreuTlPvKFBzLtbbl+I1ljcqaK/MdUPbcPeadICNzP6W
-	 Q1KXSHMJA9cuK/OlV1b/gml0aSHLZqaftG2JlPNtPeyRHHN/Hy0Q3T/8JadmbBSYB
-	 J3r+OMzPQUd9TYpALg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.92.229]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MyNwk-1ufvs81wrc-016rg7; Mon, 23
- Jun 2025 10:05:24 +0200
-Message-ID: <481faa1d-7171-4657-8dc0-c37b153e6eaa@web.de>
-Date: Mon, 23 Jun 2025 10:05:15 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RcY2WHNS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750666034;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dhmcYeHsQsigeZcrHk+M4JmzBnlMYZpMRTtb2dRaBIo=;
+	b=RcY2WHNSiDo2HhsIMDVKPuNauhTHbM7AfvkR9kZSo1acGTzV7E1vYVK4plGfaIjYx7FjUA
+	Oze7uAKV5iSAHbw245SjNI01o3V4J2xUiHB3Zcf8ufXatk4zWlSkhufhkiiLDDzZ3q3TmI
+	wr1k709bcP8Wp2V9t3p6MumAa4tJemw=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-362-xxd_uZXnMcmxvvvaEHlGYw-1; Mon, 23 Jun 2025 04:07:12 -0400
+X-MC-Unique: xxd_uZXnMcmxvvvaEHlGYw-1
+X-Mimecast-MFC-AGG-ID: xxd_uZXnMcmxvvvaEHlGYw_1750666032
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-313d6d671ffso3726229a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:07:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750666032; x=1751270832;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dhmcYeHsQsigeZcrHk+M4JmzBnlMYZpMRTtb2dRaBIo=;
+        b=cRiEgctmBu1LA+qXAYUdszrmrhe8YyuOnvnLfnrUmaHC+6rM+LYCrR08BiDSzIV26J
+         XKbibMxT+F8rb8Ibz+1nbTxMP/k1X3u95d4nPGi1IxNXtVj259n12t1EkGiDDA7L+Qyt
+         EuPUjXiWuFoRqDlepc48rgFxjOvKlLBDDIqUE1cvqkBsyMe//rEcEoslpHNdr3buQ7xo
+         9owP0nC2bFMFibTrQPiaxbBcuwnQtJ94JzVMJK0tytDTzQnoa2zR1U+NOY1XwqBAD23m
+         2IOPcirv4il2kJsmwsAysT3Or4f0tqypWV4x036YOgKypOux46jAU/oK41iUl9jSP/Pf
+         neQA==
+X-Forwarded-Encrypted: i=1; AJvYcCWggRDBfj2ZqGvBFMm+gxiG5JH9ncNzA1ASUzctvpDcJs+nLwydehtDZj4AJ+BWEq9Ku0SL1geTDHKZhvo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV2c9tjquUofKrX+vJApt5pmzQ+/bCdsnQNDP89NPQ9zcdTTfz
+	mLJ9k+a/3pYovDOz58Kh8nkBRzcJzmfaIiR0fXL0nOe7YN4wza4flgiPUj0J6ArJyhpR7EmEO30
+	1kofL5Um19o2v10g+LiU8clMzHYGbQVuSiDd187Grn/6J5HoMnURlqgu335YeDRH9tr2HA9uIyM
+	xca52rCogtq1K/zMYpAPTLRqX8eFmb4GUl38EnsuXr
+X-Gm-Gg: ASbGncsgDm5ZOAhP0vnDWkGSUL/ppMxH1ZTfF1tQBA4O8CCLSDu9korwqVz9aXZYvt9
+	j4Z4g58tMbENMXzSpTa1qp9RfOyHVMinztC/Tr08vE/8b3pq2DgecZp9AUfMgs56miI9X4DUmQE
+	wOJm1z
+X-Received: by 2002:a17:90b:5444:b0:30e:9349:2da2 with SMTP id 98e67ed59e1d1-3159d628b59mr18126481a91.4.1750666031643;
+        Mon, 23 Jun 2025 01:07:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHVQTOppEHtAfsayyJvo34GLVedX6rLC/x06Rbxlu1q0T6P50V9CQroeozuTXZMW8lnTkCwwxrOBTsZCaXXqkM=
+X-Received: by 2002:a17:90b:5444:b0:30e:9349:2da2 with SMTP id
+ 98e67ed59e1d1-3159d628b59mr18126445a91.4.1750666031289; Mon, 23 Jun 2025
+ 01:07:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Passing code replacements by APIs (for SmPL)?
-From: Markus Elfring <Markus.Elfring@web.de>
-To: cocci@inria.fr, kernel-janitors@vger.kernel.org
-References: <2dc257b4-d310-47dd-90ea-9b081727be2a@web.de>
-Content-Language: en-GB, de-DE
-Cc: LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <2dc257b4-d310-47dd-90ea-9b081727be2a@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:MilD3xF2BpV/G3Yl0V/B62GKXM0vi87bwwAPv1k71aM7uonjTxf
- PhxboLO9VVpPUpcnZqXhJYsAgvJdnDeh1acHJpa/x/ivXWPw7S+rDhi9Eqkrj8dY/6KCM2d
- lvjBKEuQzUK+GEnxp6HcjWivJetfPN85vbnIkTkMbuYFJUmdDu+4MthYi3OAfFuEHiBlIXF
- I2NpZ9guKyRzxxUOYgwsw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:fvz84xA5Omc=;U5cZQXExZgzxEV8r85OjEiAl5V8
- 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
- glpj8URqhziWtOBq8rHVNGSZIN+lPTl2RI/ofg==
+References: <20250530-rss-v12-0-95d8b348de91@daynix.com> <20250530-rss-v12-1-95d8b348de91@daynix.com>
+ <CACGkMEufffSj1GQMqwf598__-JgNtXRpyvsLtjSbr3angLmJXg@mail.gmail.com>
+ <95cb2640-570d-4f51-8775-af5248c6bc5a@daynix.com> <CACGkMEu6fZaErFEu7_UFsykXRL7Z+CwmkcxmvJHC+eN_j0pQvg@mail.gmail.com>
+ <4eaa7aaa-f677-4a31-bcc2-badcb5e2b9f6@daynix.com> <CACGkMEu3QH+VdHqQEePYz_z+_bNYswpA-KNxzz0edEOSSkJtWw@mail.gmail.com>
+ <75ef190e-49fc-48aa-abf2-579ea31e4d15@daynix.com> <CACGkMEu2n-O0UtVEmcPkELcg9gpML=m5W=qYPjeEjp3ba73Eiw@mail.gmail.com>
+ <760e9154-3440-464f-9b82-5a0c66f482ee@daynix.com> <CACGkMEtCr65RFB0jeprX3iQ3ke997AWF0FGH6JW_zuJOLqS5uw@mail.gmail.com>
+ <CAOEp5OcybMttzRam+RKQHv4KA-zLnxGrL+UApc5KrAG+op9LKg@mail.gmail.com>
+In-Reply-To: <CAOEp5OcybMttzRam+RKQHv4KA-zLnxGrL+UApc5KrAG+op9LKg@mail.gmail.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Mon, 23 Jun 2025 16:07:00 +0800
+X-Gm-Features: AX0GCFtKGLSh9bwOyNMqm1wsTSYXIq66dXiloWDLmA7vjP1FAzXUnFKbCzTNLUI
+Message-ID: <CACGkMEsfxXtHce2HeYwYxmhB0e5cOjn17qM6zFEt75bQhbtrDw@mail.gmail.com>
+Subject: Re: [PATCH net-next v12 01/10] virtio_net: Add functions for hashing
+To: Yuri Benditovich <yuri.benditovich@daynix.com>
+Cc: Akihiko Odaki <akihiko.odaki@daynix.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, kvm@vger.kernel.org, 
+	virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org, 
+	Andrew Melnychenko <andrew@daynix.com>, Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com, 
+	Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Desirable source code adjustments can also be generated into SmPL script variants.
+On Mon, Jun 23, 2025 at 1:40=E2=80=AFAM Yuri Benditovich
+<yuri.benditovich@daynix.com> wrote:
+>
+> > Yuri, can you help to clarify this?
+>
+> I see here several questions:
+> 1. Whether it is ok for the device not to indicate support for XXX_EX has=
+h type?
+> - I think, yes (strictly speaking, it was better to test that before
+> submitting the patches )
+> 2. Is it possible that the guest will enable some XXX_EX hash type if
+> the device does not indicate that it is supported?
+> - No (I think this is part of the spec)
 
-Will any more software users get further development ideas from an SmPL script
-like the following?
+There's another question, is the device allowed to fallback to
+VIRTIO_NET_HASH_TYPE_IPv6 if it fails to parse extensions?
 
+> 3. What to do if we migrate between systems with different
+> capabilities of hash support/reporting/whatever
+> - IMO, at this moment such case should be excluded and only mechanism
+> we have for that is the compatible machine version
+> - in some future the change of device capabilities can be communicated
+> to the driver and _probably_ the driver might be able to communicate
+> the change of device capabilities to the OS
 
-// See also:
-// https://elixir.bootlin.com/linux/v6.16-rc2/source/include/uapi/linux/usb/ch9.h#L472-L678
-@initialize:python@
-@@
-import sys
-x = {}
+Are you suggesting implementing all hash types? Note that Akihiko
+raises the issue that in the actual implementation there should be a
+limitation of the maximum number of options. If such a limitation is
+different between src and dst, the difference could be noticed by the
+guest.
 
-def store_data(action, input, code):
-    """Add information to an internal data structure."""
-    x[code] = (action, input)
+> 4. Does it make sense to have fine configuration of hash types mask
+> via command-line?
+> - IMO, no. This would require the user to have too much knowledge
+> about RSS internals
+>
+> Please let me know if I missed something.
+>
 
-@find@
-expression e;
-identifier action, input;
-type input_type, return_type != void;
-@@
- static inline return_type action(input_type input)
- {
- return e;
- }
+Thanks
 
-@script:python collection@
-action << find.action;
-input << find.input;
-code << find.e;
-@@
-store_data(action, input, code)
-
-@finalize:python@
-@@
-if x:
-   sys.stdout.write("@replacements@\nconst struct usb_endpoint_descriptor *epd;\n@@\n(\n")
-   sys.stdout.write("|\n".join("-{}\n+{}({})\n".format(key, value[0], value[1])
-                    for key, value in x.items()))
-   sys.stdout.write(")\n")
-else:
-   sys.stderr.write("No result for this analysis!\n")
-
-
-
-Would you become interested to convert contents from any header (or source) files
-into more advanced transformation approaches?
-
-Regards,
-Markus
