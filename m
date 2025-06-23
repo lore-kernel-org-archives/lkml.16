@@ -1,292 +1,184 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B1B4A2D;
-	Mon, 23 Jun 2025 17:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111B24A2D
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 17:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750698678; cv=none; b=RKXB1+TvB6QcnWe+QlcSWlR7CSHJpNlTOPwitVQ7rHyNA7/dx4ljaT71xkqKqSJWtIQwy697+RRgey3GLKt0AboUkUfhCpvAxFbMUIhnYpcXrZQdZs7hQZW6ppSc2BIl8Ru0mNSjjiwoBN136In0Epj1azSHaVyqheaOLmxhswc=
+	t=1750698788; cv=none; b=oAO53aIez4hizch0CfLoY0+PcsmucOvseg9+Bw6++XMwfU9J8p9g/Prkc1LeJGZYELYatVJY6Zrr37ZjLZ/D0IQFCQ93dhtG3zlUpJ/yUp62/1PDQB/S0PpEeGNXEQ1Qs45zsxHeD095ME5xiNpwuGBAk5HMcHmF3tjsD8npTI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750698678; c=relaxed/simple;
-	bh=cvbQWHe6A7sEweHLhhymq/nWw/NsmUARNPNdAg3ypCY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i5wi6NVxhHBh46L1ntRhpmeD1+FHRDapZPkWsktwiSYtlX4v3CKZRzcSZjS2M0ZL4nAyT7+u7Tzo+o3eOKMzjgA1EVbXuH+VTAAv/iexqcuCmh1UAnRQIW5sOFhxY/AMgTXwefiBc51rKHceYoZoujKCc2ujulRqBTWLG0ufxZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FxtR1m+c; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750698788; c=relaxed/simple;
+	bh=wv9r1Nau37bZDlcKTni8vX3dpCtckh8QUn8ksWrvjzc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=C2G6DVXi5EtDhuvd8qAGHS5ikvkAw64aUgPHK1bpgF5+pycWeZtT2aQuLsD1+JlBm2NgMZQBj4bpndKIpXGhpD9HzqAQpgPRlKTQvFexlOmc17mfb/vKEtWS9LaC2t1tqtB1rBgt+THqR87B3zFboH7JC1i7T4mM81EnSToDKZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=innosonix.de; spf=pass smtp.mailfrom=innosonix.de; dkim=pass (2048-bit key) header.d=innosonix.de header.i=@innosonix.de header.b=XlbTvCNW; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=innosonix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=innosonix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FxtR1m+c"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4a43972dcd7so55378771cf.3;
-        Mon, 23 Jun 2025 10:11:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=innosonix.de header.i=@innosonix.de header.b="XlbTvCNW"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a4eb4dfd8eso630979f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:13:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750698675; x=1751303475; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jjiN2duDIoatADckXDg71LfnYdFHxDnQWcx0OYPZFTs=;
-        b=FxtR1m+cHnAMk+QiOLoHRhJEHuIaC/oeyyCZEx/WebdvXh6xaBa96pOYvcJ53bld4s
-         qB8ot2DB2IyZfYKZ1qFSOplp9iM6nC186oTLhmjOePPYIFF9Vri3hBMrRkyfwo9oDbzE
-         yavMv25A7GtUQqWVVAWZ5g5nfWfqnyN65sv7FCnuqlTMwn9K0B19Oa7TGbGwvg/VcrzT
-         L6jqpsb6NTZMwrl+DzPtgdoNjrwzogtKcKoOx5mQw3+B1c+rLQ+RbSHOXa98wCUaW8IJ
-         GrvXXaamgszlzF11gcFadl2eZsacRLSjxLKUF0IjiFXgAsxeG4WokTKFbQvl69jdvl1e
-         KwgQ==
+        d=innosonix.de; s=google; t=1750698783; x=1751303583; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fFVerlv1rup6mF5IH5Ew1KKnD+3iU06ke4X3UNXN3IU=;
+        b=XlbTvCNWP9sxrhEyqZdkwkzBAJ5IfMr2HDAC6vLqUiJhCOq6/ggza35dZU8AadHb1M
+         O25xSG6UoxE8uHXQhQgPje7q3AyKGrM/F8gZeR3fHIciwXctD7d1xXL3HJGSDTImaxEM
+         tJ5Hu1T3mGkeAdvxeUQn3os3VaP402tNrHtBPnz8VpA5ebMlmt+aaCwXvGXrHTvFT1hq
+         tQ4wT5bLImPntWE4LTAcVbRZlcGeAC6on6kPEFigEhWpgVHUwtn8CSMYqYM3wg2N1qgz
+         Di/V8qzu4CJsHllODDOayJAzzccR8Zr+Cj7ulL842b8L1kmMYvJR1Af3wlitTSl1rC7g
+         NoYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750698675; x=1751303475;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jjiN2duDIoatADckXDg71LfnYdFHxDnQWcx0OYPZFTs=;
-        b=vh+fZxUwPaOeB8sK+seVAym+lDiqRQ9Ir4oY7lXhUbcZORda02630uaha0TrcDAQzK
-         TQOISYoHkXJmqNNjmP2FueCcX8uZF/BoaCtlERcqOaeE5t8CEIfyMiZpyluzhLdXEA6Q
-         LKLPYvOLmuaWCYami+hgYSsuXpqBQVgmujW39LX0l2tyO9mSBD/DR+udnSEuMiQexerj
-         6rJICByx9kPB+NivrCNDbViGBzfSP10S9a7wakx4pHFO/8DEpkddx5fUohd6cbpVFFSi
-         VG3YcbOJIKbkP7IEG6eAHOVUTJPWZNVGcd7+Jrx8rWQ8a9FaiV7psbK6ci24IGbFoLxF
-         KyJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4sFdqNBW/ycxD3wCA3qWe3Nlww9D6L6/hbNYlvTMVjIx+RVzuK/o9pNsoZM/OWG4XAeiFVi4ggBH1vYs=@vger.kernel.org, AJvYcCXGBIL6eY80WDa0edmA6uYvGsV/J7BNTC5jOf6QIqTUOANis2IGMwNh/38W2PsDhM3MJjhzvSFudgx1KoAwuEE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyr66cnBog9JP1pHfhdXZ+4jMQuDEwG0mixhj6m6CAR+/WMv6Df
-	ltePbLGU/0ouZCDFAMBAKqb0hJKYp/ZWyUnGtsXvVhYPUMqU3xiTgupS
-X-Gm-Gg: ASbGncvZxUD9WWrnkiITVCiJfx6LM3EgtSiHSvUnG1oABffLTBAVMCg3XsM2N2v8RVO
-	ngOS/PqUvavxzTf/oZwUmjJcPDPrhJxo58+V7Q3NlcBCJJfqPLFamZ5qz/G7RFGl6Y9UpLaZXZ2
-	Yo1OQlMkZWClHPcOBeWu8J+UPh2E6bvRiraQw6wPPI5+K/Zk6GQXV6hVv1nxSjm+sNYeGKejBqn
-	N9h1ZJA+kPn9R91GzlW3Y3H+HziZiCIxj9eqqkT6uaC3fqIwLYRtMAR4qecRBiyJepQJwTYJpfD
-	lRAD/m9JDwjgapWSaHBRRGzUTs+1vZ4iNt/rg4APTqZVDxydiZ0GLi8GAbmVVtCr2pTtejsvpxn
-	LNx6e3kKzHfgihQzPzl+MOltLA6u/LSqqxb4onunySLxDvTKymWcq
-X-Google-Smtp-Source: AGHT+IF58ry0uAJhfksmJjPTy1j/2Vf/3WRbEa7P02vjo4MlhXaKwJYDBJeuv+kZYxPXTxkw/qD76g==
-X-Received: by 2002:a05:622a:400d:b0:4a5:aa42:49f3 with SMTP id d75a77b69052e-4a77a1c9d57mr264210731cf.20.1750698675299;
-        Mon, 23 Jun 2025 10:11:15 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a779e79f0dsm40380181cf.61.2025.06.23.10.11.14
+        d=1e100.net; s=20230601; t=1750698783; x=1751303583;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fFVerlv1rup6mF5IH5Ew1KKnD+3iU06ke4X3UNXN3IU=;
+        b=iqX61k1ApOurpHuA0fvu/wyZJcX3DBkvxWC75IEVKtizacliuyJpV4I0k9huy2H7HE
+         pRZ/OZBQ9wayW4/EhRGHG+1QKWIurV3j3iAECYNsbFwvalYmvjSN1JIc+8NX98P+qIfN
+         tchD8e8WMfff0cgmTY4Xnxc53nZZWwTMtIHP2oHFucsihG+ujRjBty2DYTpjHa+3x8M9
+         SjPkaRRgS2PSo2VcFz9NIPvBBAxxiH9Q6P5jQqVEZjDb3flpV33NbWpqID1PXq+hUPrn
+         cac2LiN55nr4qgzWCL3HQj7SzhUXh1jYrt2tOToaxetVsBSWJkO2qlMNQCfRuLkSksrS
+         lWEg==
+X-Forwarded-Encrypted: i=1; AJvYcCUHYOSOpMBNt5BtKHO8LDtjHuMMWdcwc3KY6hgdWWYLgTquRsaWDAr4cy9IRJbZJFimB92Pk9x5pr+zexo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4zXS+NW+tmioqTq+9GW09SAb49x3fNTm6U2dlRiEOI5Dt9hY0
+	seD9PQJd0RS9PfG23u+NuW0jXFAcHmi/vTA6eMwnO2lKxtCh/rzMaKknEr+aXY8aPMpVvCyaO3U
+	4aom9BEzEHrofY57r2uitHPMNa/bOHGo+bdUgT54sS+9p1RxvmwICIR9LZP4=
+X-Gm-Gg: ASbGncteWECp3wTKSEbORa+zg9hBNdFnWtqYO4xMrkMhohKv00JrX7Y3JdAY5TpE149
+	AKB00MkTH2o3JCkTVR10AGaES1cD3Ncp3zg0PadNsLPaQwP25agxLNl7eCPL3jMWpl1GbI69zao
+	ZLvBNtefDSk5/zIudUompdwFYhBU/Jha1K+J60efz//SrXCTs5h2DXNMFetwXvXOcnrN4upjI/i
+	Ylad2WGgybhxHH4P6BiY7wh5ROCHWBzzIHXVxrVCHNVbeLl6wJ9CvEEQJWjkFVouNwNLRVXEQDz
+	14VPDq6aqFa4gmoPYLOV1I8rDv5rzuPmXaIz4JODtf+L51sIflMPpVKcs6gSOAKf/dA=
+X-Google-Smtp-Source: AGHT+IErer93kOXokwq6+DGSfC4ugUszBo78NJco3EFwM9G1wiRi3El8E+vg0RKm5OXQE67tFwgtNQ==
+X-Received: by 2002:a05:600c:5494:b0:453:590b:d392 with SMTP id 5b1f17b1804b1-453657bf79cmr45941935e9.2.1750698783204;
+        Mon, 23 Jun 2025 10:13:03 -0700 (PDT)
+Received: from steffen-linux.. ([24.134.20.169])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646cb57fsm118001245e9.1.2025.06.23.10.13.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 10:11:14 -0700 (PDT)
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 1A7F2120006A;
-	Mon, 23 Jun 2025 13:11:14 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Mon, 23 Jun 2025 13:11:14 -0400
-X-ME-Sender: <xms:sYpZaF2am0H8M9JhfLMA36ZLn_RyRM-OEviVN7CtPEzRX8S62gylqg>
-    <xme:sYpZaMFjovciA7_an6AZCk8YJZk8_OglSiaFk4gb7wFk9XYjMilQshpe8fkj98Yw0
-    fiRIor0dzbtaV9aPQ>
-X-ME-Received: <xmr:sYpZaF43EKFZMJVoKUVHlCInLB1C0dhg15DE9PUZF8QpS1ebtYTQ0q2ZQQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddujeehlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfh
-    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
-    hrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudffiedv
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqh
-    hunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddu
-    jeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvg
-    drnhgrmhgvpdhnsggprhgtphhtthhopedvfedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtoheplhhoshhsihhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifohhrkhesoh
-    hnuhhrohiikhgrnhdruggvvhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhg
-    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehruhhsthdqfhhorhdqlhhinhhugi
-    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpd
-    hrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtoheprgdrhhhi
-    nhgusghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhhitggvrhihhhhlse
-    hgohhoghhlvgdrtghomh
-X-ME-Proxy: <xmx:sopZaC1zMfm1SuNsNSQ18amI0vXKCmGyVaGLPLOr6ZgLffljzjIXpA>
-    <xmx:sopZaIE8SPfQ9fA-ND901zBbEx2YXlbLDuWZolLLiAIwiqc0cwpnfw>
-    <xmx:sopZaD9F8FUxbrrz0UH1wIMJEIHKt4aLNy3VKeZLa3KvY_GQkuQXsQ>
-    <xmx:sopZaFmnNWC8touEIPVFFboI6xhkDlckHF4Q7I7Nclat3lJGCx4GGg>
-    <xmx:sopZaMED76cxqgp1cqMCijH7GFVbmWKEnc1_JGZDLDziiIx2OR_QlmT8>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 23 Jun 2025 13:11:13 -0400 (EDT)
-Date: Mon, 23 Jun 2025 10:11:12 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Onur =?iso-8859-1?Q?=D6zkan?= <work@onurozkan.dev>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	dakr@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	will@kernel.org, longman@redhat.com, felipe_life@live.com,
-	daniel@sedlak.dev, bjorn3_gh@protonmail.com, simona@ffwll.ch,
-	airlied@gmail.com, dri-devel@lists.freedesktop.org,
-	lyude@redhat.com
-Subject: Re: [PATCH v5 2/3] implement ww_mutex abstraction for the Rust tree
-Message-ID: <aFmKsE_nJkaVMv0T@tardis.local>
-References: <20250621184454.8354-1-work@onurozkan.dev>
- <20250621184454.8354-3-work@onurozkan.dev>
- <DASY7BECFRCT.332X5ZHZMV2W@kernel.org>
- <aFlQ7K_mYYbrG8Cl@Mac.home>
- <DATYHYJVPL3L.3NLMH7PPHYU9@kernel.org>
- <aFlpFQ4ivKw81d-y@Mac.home>
- <DAU0ELV91E2Q.35FZOII18W44J@kernel.org>
+        Mon, 23 Jun 2025 10:13:02 -0700 (PDT)
+From: =?UTF-8?q?Steffen=20B=C3=A4tz?= <steffen@innosonix.de>
+To: 
+Cc: =?UTF-8?q?Steffen=20B=C3=A4tz?= <steffen@innosonix.de>,
+	stable@vger.kernel.org,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] nvmem: imx-ocotp: fix MAC address byte length
+Date: Mon, 23 Jun 2025 19:09:55 +0200
+Message-ID: <20250623171003.1875027-1-steffen@innosonix.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DAU0ELV91E2Q.35FZOII18W44J@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 23, 2025 at 05:14:37PM +0200, Benno Lossin wrote:
-> On Mon Jun 23, 2025 at 4:47 PM CEST, Boqun Feng wrote:
-> > On Mon, Jun 23, 2025 at 03:44:58PM +0200, Benno Lossin wrote:
-> >> I didn't have a concrete API in mind, but after having read the
-> >> abstractions more, would this make sense?
-> >> 
-> >>     let ctx: &WwAcquireCtx = ...;
-> >>     let m1: &WwMutex<T> = ...;
-> >>     let m2: &WwMutex<Foo> = ...;
-> >> 
-> >>     let (t, foo, foo2) = ctx
-> >>         .begin()
-> >>         .lock(m1)
-> >>         .lock(m2)
-> >>         .lock_with(|(t, foo)| &*foo.other)
-> >>         .finish();
-> >> 
-> >
-> > Cute!
-> >
-> > However, each `.lock()` will need to be polymorphic over a tuple of
-> > locks that are already held, right? Otherwise I don't see how
-> > `.lock_with()` knows it's already held two locks. That sounds like a
-> > challenge for implementation.
-> 
-> I think it's doable if we have 
-> 
->     impl WwActiveCtx {
+The commit "13bcd440f2ff nvmem: core: verify cell's raw_len" caused an
+extension of the "mac-address" cell from 6 to 8 bytes due to word_size
+of 4 bytes.
 
-I think you mean *WwAcquireCtx*
+Thus, the required byte swap for the mac-address of the full buffer length,
+caused an trucation of the read mac-address.
+From the original address 70:B3:D5:14:E9:0E to 00:00:70:B3:D5:14
 
->         fn begin(&self) -> WwActiveCtx<'_, ()>;
->     }
-> 
->     struct WwActiveCtx<'a, Locks> {
->         locks: Locks,
+After swapping only the first 6 bytes, the mac-address is correctly passed
+to the upper layers.
 
-This probably need to to be Result<Locks>, because we may detect
--DEADLOCK in the middle.
+Fixes: 13bcd440f2ff ("nvmem: core: verify cell's raw_len")
+Cc: stable@vger.kernel.org
+Signed-off-by: Steffen B=C3=A4tz <steffen@innosonix.de>
+---
+v3:
+- replace magic number 6 with ETH_ALEN
+- Fix misleading indentation and properly group 'mac-address' statements
+v2:
+- Add Cc: stable@vger.kernel.org as requested by Greg KH's patch bot
+ drivers/nvmem/imx-ocotp-ele.c | 6 +++++-
+ drivers/nvmem/imx-ocotp.c     | 6 +++++-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-    let (a, c, d) = ctx.begin()
-        .lock(a)
-        .lock(b) // <- `b` may be locked by someone else. So we should
-                 // drop `a` and switch `locks` to an `Err(_)`.
-        .lock(c) // <- this should be a no-op if `locks` is an `Err(_)`.
-        .finish();
+diff --git a/drivers/nvmem/imx-ocotp-ele.c b/drivers/nvmem/imx-ocotp-ele.c
+index ca6dd71d8a2e..9ef01c91dfa6 100644
+--- a/drivers/nvmem/imx-ocotp-ele.c
++++ b/drivers/nvmem/imx-ocotp-ele.c
+@@ -12,6 +12,7 @@
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
++#include <linux/if_ether.h>	/* ETH_ALEN */
+=20
+ enum fuse_type {
+ 	FUSE_FSB =3D BIT(0),
+@@ -118,9 +119,12 @@ static int imx_ocotp_cell_pp(void *context, const char=
+ *id, int index,
+ 	int i;
+=20
+ 	/* Deal with some post processing of nvmem cell data */
+-	if (id && !strcmp(id, "mac-address"))
++	if (id && !strcmp(id, "mac-address")) {
++		if (bytes > ETH_ALEN)
++			bytes =3D ETH_ALEN;
+ 		for (i =3D 0; i < bytes / 2; i++)
+ 			swap(buf[i], buf[bytes - i - 1]);
++	}
+=20
+ 	return 0;
+ }
+diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
+index 79dd4fda0329..1343cafc37cc 100644
+--- a/drivers/nvmem/imx-ocotp.c
++++ b/drivers/nvmem/imx-ocotp.c
+@@ -23,6 +23,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/delay.h>
++#include <linux/if_ether.h>	/* ETH_ALEN */
+=20
+ #define IMX_OCOTP_OFFSET_B0W0		0x400 /* Offset from base address of the
+ 					       * OTP Bank0 Word0
+@@ -227,9 +228,12 @@ static int imx_ocotp_cell_pp(void *context, const char=
+ *id, int index,
+ 	int i;
+=20
+ 	/* Deal with some post processing of nvmem cell data */
+-	if (id && !strcmp(id, "mac-address"))
++	if (id && !strcmp(id, "mac-address")) {
++		if (bytes > ETH_ALEN)
++			bytes =3D ETH_ALEN;
+ 		for (i =3D 0; i < bytes / 2; i++)
+ 			swap(buf[i], buf[bytes - i - 1]);
++	}
+=20
+ 	return 0;
+ }
+--=20
+2.43.0
 
->         _ctx: PhantomData<&'a WwAcquireCtx>,
 
-We can still take a reference to WwAcquireCtx here I think.
+--=20
 
->     }
-> 
->     impl<'a, Locks> WwActiveCtx<'a, Locks>
->     where
->         Locks: Tuple
->     {
->         fn lock<'b, T>(
->             self,
->             lock: &'b WwMutex<T>,
->         ) -> WwActiveCtx<'a, Locks::Append<WwMutexGuard<'b, T>>>;
-> 
->         fn lock_with<'b, T>(
->             self,
->             get_lock: impl FnOnce(&Locks) -> &'b WwMutex<T>,
->         ) -> WwActiveCtx<'a, Locks::Append<WwMutexGuard<'b, T>>>;
->         // I'm not 100% sure that the lifetimes will work out...
 
-I think we can make the following work?
+*innosonix GmbH*
+Hauptstr. 35
+96482 Ahorn
+central: +49 9561 7459980
+www.innosonix.de <http://www.innosonix.de>
 
-    impl<'a, Locks> WwActiveCtx<'a, Locks>
-    where
-        Locks: Tuple
-    {
-        fn lock_with<T>(
-	    self,
-	    get_lock: impl FnOnce(&Locks) -> &WmMutex<T>,
-	) -> WwActiveCtx<'a, Locks::Append<WmMutexGuard<'a, T>>
-    }
-
-because with a `WwActiveCtx<'a, Locks>`, we can get a `&'a Locks`, which
-will give us a `&'a WmMutex<T>`, and should be able to give us a
-`WmMutexGuard<'a, T>`.
-
-> 
->         fn finish(self) -> Locks;
->     }
-> 
->     trait Tuple {
->         type Append<T>;
-> 
->         fn append<T>(self, value: T) -> Self::Append<T>;
->     }
-> 
-
-`Tuple` is good enough for its own, if you could remember, we have some
-ideas about using things like this to consolidate multiple `RcuOld` so
-that we can do one `synchronize_rcu()` for `RcuOld`s.
-
->     impl Tuple for () {
->         type Append<T> = (T,);
-> 
->         fn append<T>(self, value: T) -> Self::Append<T> {
->             (value,)
->         }
->     }
->     
->     impl<T1> Tuple for (T1,) {
->         type Append<T> = (T1, T);
-> 
->         fn append<T>(self, value: T) -> Self::Append<T> {
->             (self.0, value,)
->         }
->     }
-> 
->     impl<T1, T2> Tuple for (T1, T2) {
->         type Append<T> = (T1, T2, T);
-> 
->         fn append<T>(self, value: T) -> Self::Append<T> {
->             (self.0, self.1, value,)
->         }
->     }
-> 
->     /* these can easily be generated by a macro */
-> 
-> > We also need to take into consideration that the user want to drop any
-> > lock in the sequence? E.g. the user acquires a, b and c, and then drop
-> > b, and then acquires d. Which I think is possible for ww_mutex.
-> 
-> Hmm what about adding this to the above idea?:
-> 
->     impl<'a, Locks> WwActiveCtx<'a, Locks>
->     where
->         Locks: Tuple
->     {
->         fn custom<L2>(self, action: impl FnOnce(Locks) -> L2) -> WwActiveCtx<'a, L2>;
->     }
-> 
-> Then you can do:
-> 
->     let (a, c, d) = ctx.begin()
->         .lock(a)
->         .lock(b)
->         .lock(c)
->         .custom(|(a, _, c)| (a, c))
->         .lock(d)
->         .finish();
-> 
-
-Seems reasonable. But we still need to present this to the end user to
-see how much they like it. For ww_mutex I think the major user is DRM,
-so add them into Cc list.
-
-Regards,
-Boqun
-
-> >>     let _: &mut T = t;
-> >>     let _: &mut Foo = foo;
-> >>     let _: &mut Foo = foo2;
-> 
-> Ah these will actually be `WwMutexGuard<'_, ...>`, but that should be
-> expected.
-> 
-> ---
-> Cheers,
-> Benno
+innosonix GmbH
+Gesch=C3=A4ftsf=C3=BChrer:=20
+Markus B=C3=A4tz, Steffen B=C3=A4tz
+USt.-IdNr / VAT-Nr.: DE266020313
+EORI-Nr.:=20
+DE240121536680271
+HRB 5192 Coburg
+WEEE-Reg.-Nr. DE88021242
