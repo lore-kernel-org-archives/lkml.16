@@ -1,89 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D57635971;
-	Mon, 23 Jun 2025 09:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C76C35971
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750671915; cv=none; b=PJn27a5xAEeJsbySuSBKsdrd939Kirq9d0i7vR7XD9rYq9N0AXb7PMtSU53UooLZu1HaKdkLP3KagxtJOSOzI3ZX/j4A3dy7qeUwSYAdsvyHAAYdIS4f1y62b2sgHLQFDk4qucdK78WzrdVeabEAThAYTOBr33b50Vj+wtkoqhE=
+	t=1750671944; cv=none; b=asoS5z2qq9evh54Ks8QcfuiVEPPy2OX0RwY31RjxZVLAgq5gEVHrEr+FP4iaM1yjPNKbTQP/Mg+DDgaz17OZlk8o7gkxWD34VH4XEtnRlu1xWHYZjY4zkGQZqeq0imaDlqtC70cEXXytl3dC3K9qIaiy4n/hm88K+qQJ29LCqzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750671915; c=relaxed/simple;
-	bh=kXiOfxa3J3JmlR3MEGfPhywgkFNNHsfSFLr3+LMaIiU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bp4tebuYEVYLsQ0zLqpEGPBd1T27pgxmS1L7ii9Eow8v4qOT05X709pg5+TXCtcy/8mmlIXqtd8Fkbfkv1tO8dKRrvxar2MLMVFyUq8dMhFYfiNYDOeYTfk4U2HiKVAGC9sAKpUtDRlk8GXp7RIVrz4VQP2o/3cWh7HQoWqATNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=noHCv6rM; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="noHCv6rM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750671914; x=1782207914;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kXiOfxa3J3JmlR3MEGfPhywgkFNNHsfSFLr3+LMaIiU=;
-  b=noHCv6rMsnBTLZ3wGMlIqWjfBht2GVRt4rdq98kp4yfjmK6rYbwqwrA5
-   q7Rv+v2f4/fI8Azbx+zH4mD6E3+ihKMYj6gaIR2w5G76bocDTP7oumsYF
-   f0QqfvMH+x7EbQFtp9TXjh+rMUyn95vvuxsyl5gle4Fst+HmGZN8EsJi4
-   1QYWODUlS+2PYgeVazqHHqImbXiGkK0l1NvK9JHPOocypHAfxMG5gqyDG
-   UV6lvwHuvaMgzhBXwqBL/FoQU3ae89Aiv5LF+NzIgbIqjKmY/6G5pkk2j
-   fENjqciRpUSdmvJBpz+gyOwhnDIfogGYu8tulXA39bHmqVX3t7HYn96wa
-   A==;
-X-CSE-ConnectionGUID: tB7B93k5Rvmj2bZoqoTk9w==
-X-CSE-MsgGUID: GqzaoOqTRoms4ZdHhiBBig==
-X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="78284126"
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="78284126"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 02:45:13 -0700
-X-CSE-ConnectionGUID: xNIn+CZ8Q8mY+SbwyUDZMg==
-X-CSE-MsgGUID: S0AtyyNsTnGjFVtWqTtqtw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="151324443"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 02:45:10 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uTdje-000000097r1-3Mrc;
-	Mon, 23 Jun 2025 12:45:06 +0300
-Date: Mon, 23 Jun 2025 12:45:06 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
-	corbet@lwn.net, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	eraretuya@gmail.com
-Subject: Re: [PATCH v10 0/7] iio: accel: adxl345: add interrupt based sensor
- events
-Message-ID: <aFkiIl4ZAdpRTZe4@smile.fi.intel.com>
-References: <20250622155010.164451-1-l.rubusch@gmail.com>
+	s=arc-20240116; t=1750671944; c=relaxed/simple;
+	bh=KFZ+4C5YHyhRh/XgnamYvmNjTMo3NYNz2vqcQ8XCDEw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=LVXYGlvu6Fa0pLiiYphb2QcdDdu3nNUd1iFXcZDG0YF3TSG2uQyBUUSf76XKPxpMArdC9tRxEey0wULoEMhbc+h5XBgdhSG1akhkSuYsN+ZmSCbA+J0xFozXtsDgU26DEgNrNqIyjf+9e3rzbzlQqMGr8bbijljTlLFxzunkuss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ddafe52d04so130272955ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 02:45:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750671942; x=1751276742;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=34KEVoEVfs7fWKIIiOP4cY3zx5yLJ7DVEX9AlDqPzmU=;
+        b=Mc+TWeJUvejcHNG3CMuPaMob+z06o2u6/bZoWH8qNYBNtyWCWFObexJSc1JV1NstfX
+         x9qBkaoz9ZXRBIKoOvshFnLYt1oXAbADdvST9u5qf6Cg96e/avkpuMIa3UZ37VrQ+99p
+         A67mzKPtx3HK8CNsZn4lXBYJrB65BIIN259M034fz60Ne+wL5sJ4GlB0aZOnuft5NPqr
+         XLgRJdhrqOMttwZvjvyv7NOXxJf7fyYLXkpHzFwP2UE8WvDCd+vGTiKBLyqxMIP91Kue
+         jVyPKc+Y/+mgDCfXSpJUEfnfbZEj4190c7LgjlKvYWglHPCu6IvCq9yE2gJNcZiwEmDg
+         tQjA==
+X-Gm-Message-State: AOJu0YyEl9u4Vopdfr6hNziSqg4PKUpPC0TUm0Pel9CXVDU/QdbtLcOz
+	Vzw7H86VkfiF3rM68AXlIsb7Y4fLPKB0DTty675NluhEjF+k7Az/NYWCPMVFmFubC2+6/j3zKCm
+	Pq89JZEfIqObfqdYLGB/G8Fa/z5Ct4JZHc2RaaGlfhI+7Bmnmw3HcWq1bS1s=
+X-Google-Smtp-Source: AGHT+IEVUoWkP7tctNAznv9vpmmXwZjedhB5+UOdpEZ0kSsCwfDsX7fL5/S0qMxL1XD25Z62RznaFMTMtv1m3wvw9kPPYtFObNGO
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250622155010.164451-1-l.rubusch@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Received: by 2002:a05:6e02:2285:b0:3dd:d6c2:51fb with SMTP id
+ e9e14a558f8ab-3de38cbf668mr117477145ab.10.1750671942323; Mon, 23 Jun 2025
+ 02:45:42 -0700 (PDT)
+Date: Mon, 23 Jun 2025 02:45:42 -0700
+In-Reply-To: <6854a3e6.a00a0220.137b3.0022.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68592246.a00a0220.2e5631.001a.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in
+ vmci_host_unlocked_ioctl (3)
+From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Jun 22, 2025 at 03:50:03PM +0000, Lothar Rubusch wrote:
-> Add several interrupt based sensor detection events:
-> - refactoring and fixes
-> - activity/inactivity linked and auto-sleep
-> - AC-coupled activity/inactivity
-> - Extend inactivity for inactivity under 1s (using free-fall register)
-> - documentation
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-Thanks for a new version, looks much better with new helpers.
-I still have a few nit-picks, though.
+***
 
--- 
-With Best Regards,
-Andy Shevchenko
+Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl (3)
+Author: lizhi.xu@windriver.com
 
+#syz test
 
+diff --git a/drivers/misc/vmw_vmci/vmci_host.c b/drivers/misc/vmw_vmci/vmci_host.c
+index b64944367ac5..fd41bad0a73d 100644
+--- a/drivers/misc/vmw_vmci/vmci_host.c
++++ b/drivers/misc/vmw_vmci/vmci_host.c
+@@ -293,6 +293,8 @@ static int vmci_host_get_version(struct vmci_host_dev *vmci_host_dev,
+ #define vmci_ioctl_err(fmt, ...)	\
+ 	pr_devel("%s: " fmt, ioctl_name, ##__VA_ARGS__)
+ 
++static DEFINE_MUTEX(init_rec_mutex);
++
+ static int vmci_host_do_init_context(struct vmci_host_dev *vmci_host_dev,
+ 				     const char *ioctl_name,
+ 				     void __user *uptr)
+@@ -306,6 +308,7 @@ static int vmci_host_do_init_context(struct vmci_host_dev *vmci_host_dev,
+ 		return -EFAULT;
+ 	}
+ 
++	mutex_lock(&init_rec_mutex);
+ 	mutex_lock(&vmci_host_dev->lock);
+ 
+ 	if (vmci_host_dev->ct_type != VMCIOBJ_NOT_SET) {
+@@ -354,6 +357,7 @@ static int vmci_host_do_init_context(struct vmci_host_dev *vmci_host_dev,
+ 
+ out:
+ 	mutex_unlock(&vmci_host_dev->lock);
++	mutex_unlock(&init_rec_mutex);
+ 	return retval;
+ }
+ 
+@@ -426,8 +430,11 @@ static int vmci_host_do_receive_datagram(struct vmci_host_dev *vmci_host_dev,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (copy_from_user(&recv_info, uptr, sizeof(recv_info)))
+-		return -EFAULT;
++	mutex_lock(&init_rec_mutex);
++	if (copy_from_user(&recv_info, uptr, sizeof(recv_info))) {
++		retval = -EFAULT;
++		goto out;
++	}
+ 
+ 	size = recv_info.len;
+ 	recv_info.result = vmci_ctx_dequeue_datagram(vmci_host_dev->context,
+@@ -437,11 +444,17 @@ static int vmci_host_do_receive_datagram(struct vmci_host_dev *vmci_host_dev,
+ 		void __user *ubuf = (void __user *)(uintptr_t)recv_info.addr;
+ 		retval = copy_to_user(ubuf, dg, VMCI_DG_SIZE(dg));
+ 		kfree(dg);
+-		if (retval != 0)
+-			return -EFAULT;
++		if (retval != 0) {
++			retval = -EFAULT;
++			goto out;
++		}
+ 	}
+ 
+-	return copy_to_user(uptr, &recv_info, sizeof(recv_info)) ? -EFAULT : 0;
++	retval = copy_to_user(uptr, &recv_info, sizeof(recv_info)) ? -EFAULT : 0;
++
++out:
++	mutex_unlock(&init_rec_mutex);
++	return retval;
+ }
+ 
+ static int vmci_host_do_alloc_queuepair(struct vmci_host_dev *vmci_host_dev,
