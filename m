@@ -1,241 +1,114 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E63233701
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF472367B0
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750675842; cv=none; b=ICj8RWX9Byc9rDKtTN9TE3Gds7LCQ9id/qGW+Pwk29+lT3WeGJkyN+MVXlEfJquV/KQo0XXNRZaEUtW0/zIlpcVDWDHbddKlnqwjt/AYfw0Nr2gYxSi5fzEg927JViHKPEjTCUR8a5wGfbUYeb04x2De9jO/avSlaKW62nSsa64=
+	t=1750675873; cv=none; b=C+clK4MDe1Meo71HNuEf41ptsbjCPUtnpUA4OIOfLwNQtbHqaaHmEqQSNvSJq47oQSl1CoiWdjWMYfm46NME54dTUr6WJ0LVP+NlwAIUwABgq9T6nsUcVxDYShncKtsIeqPbCW5rX39MxA9KWyr/4qDU2JkrfzcxkTU8h4HnrF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750675842; c=relaxed/simple;
-	bh=rk3IUXQZtzpNgDHc4TWz8qsml0b4el8IWm2S5mzHUtg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=MKgXd2ZHzecoACWGwzv7i2zDxa/o5iCmciwpNrp2upL7bOhMto4tZzfXx32sDRklN3lo8fwewToMDJ8jT4WTP2SvElq9gOxRZXH4EWqI811x3sricg2fFUDO1EtTg0oySdmDZseyoPIa19xemLYeZZ1OBBfHL8Hb3pCVSzZlo5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=hTz1h2yI; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1750675873; c=relaxed/simple;
+	bh=UWME3XWaA3mYNTAF4jzXFx44J7v0qfaW41Ag+aZwT7k=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=SwcQ7wquWIykSxGQUY/O0qA7CFtgpMUtTdhe+1d7dWkXR3SPYt+Gmo3WWsC5yeMTGKDALV/3F4onnsIqU9P6wuO8yLOpcazGVMTe80JFE8uPh2fmbWlV8bIow4cLXpBt5sOvoVTgLiF/D2NO6/IyE2PkLG7+A1K3rVtagGbx1sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QodC+Ulq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="hTz1h2yI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1750675841; x=1782211841;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:to:cc;
-  bh=rk3IUXQZtzpNgDHc4TWz8qsml0b4el8IWm2S5mzHUtg=;
-  b=hTz1h2yIhN2SwkME+BwW05g2vGeZCX8/KqXMJkibFqTyyFsP+wEbzFpJ
-   GwapiSJMpYyMG6dVON6PKH/3taXO4OtTr7I9TLdydckZkzI43qJiqlsEr
-   Y7wU0UZbFYzyNbVONp43ylLpm+4W1bg2DfaRZlDFByfFGkhSCJR37qIak
-   GVnFjFqNNfmivX4kbaWLhz5xHFXC5yOiWdX5gSj8ax9iXaZKB69DJz/XI
-   Qwm4aljjmRa3crW47KopsbGOuspssrr55sQRRsuPqJOyZUZS+33qfwIwx
-   ueTcu8UAU/XkfsHVWpI9RHfmzkHaW1k0djtZCoOjwQsvkDXFD/n2Zk+Zc
-   A==;
-X-CSE-ConnectionGUID: 6bSZM/9OSRy4OCnNpkPakQ==
-X-CSE-MsgGUID: Tgjy0TvIRPGqMZ48FubJyg==
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="43105617"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Jun 2025 03:50:34 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 23 Jun 2025 03:50:29 -0700
-Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Mon, 23 Jun 2025 03:50:23 -0700
-From: Dharma Balasubiramani <dharma.b@microchip.com>
-Date: Mon, 23 Jun 2025 16:20:20 +0530
-Subject: [PATCH v2] drm/bridge: microchip-lvds: fix bus format mismatch
- with VESA displays
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QodC+Ulq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750675870;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QsYyfB+Z7vJsNRi6uhzXLbhNGPzqKCN+qJj9FfeE5iA=;
+	b=QodC+UlqbygJowEgAbcdHVqxyO25btDTAzU1GGNyrx1izyN/dZwA/mf4SOKzIX05vCokkD
+	ku6XXDk/+DPhOmYUkCZ+Xl7m1dtJPYLMRJScFrgfLSr4LZ/TL3yIJgB4hBUxD6OVUqojlL
+	Evjs6zm0a05xVWZcXkOHciXgxYYhDGo=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-665-CFX2wP3BN9qpbl-vblsOvA-1; Mon,
+ 23 Jun 2025 06:51:07 -0400
+X-MC-Unique: CFX2wP3BN9qpbl-vblsOvA-1
+X-Mimecast-MFC-AGG-ID: CFX2wP3BN9qpbl-vblsOvA_1750675865
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E38E21809C82;
+	Mon, 23 Jun 2025 10:51:04 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.81])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0D4A430001A1;
+	Mon, 23 Jun 2025 10:50:59 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <2135907.1747061490@warthog.procyon.org.uk>
+References: <2135907.1747061490@warthog.procyon.org.uk> <1069540.1746202908@warthog.procyon.org.uk> <165f5d5b-34f2-40de-b0ec-8c1ca36babe8@lunn.ch> <0aa1b4a2-47b2-40a4-ae14-ce2dd457a1f7@lunn.ch> <1015189.1746187621@warthog.procyon.org.uk> <1021352.1746193306@warthog.procyon.org.uk>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: dhowells@redhat.com, Andrew Lunn <andrew@lunn.ch>,
+    Eric Dumazet <edumazet@google.com>,
+    "David S. Miller" <davem@davemloft.net>,
+    Jakub Kicinski <kuba@kernel.org>,
+    David Hildenbrand <david@redhat.com>,
+    John Hubbard <jhubbard@nvidia.com>,
+    Mina Almasry <almasrymina@google.com>, willy@infradead.org,
+    Christian Brauner <brauner@kernel.org>,
+    Al Viro <viro@zeniv.linux.org.uk>, netdev@vger.kernel.org,
+    linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: How to handle P2P DMA with only {physaddr,len} in bio_vec?
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250623-microchip-lvds-v2-1-8ecbabc6abc4@microchip.com>
-X-B4-Tracking: v=1; b=H4sIAGsxWWgC/3WMzQ7CIBCEX6XZsxiWSH889T1MDwirbGJLA4ZoG
- t5d7MGbmdM3mfk2SBSZEpybDSJlThyWCurQgPVmuZNgVxmUVFq22IuZbQzW8yoe2SVx7VCjG1o
- 5nAzU0xrpxq9deJkqe07PEN+7P+O3/avKKGrIkDbWdaZX429wtGGGqZTyARMRUnewAAAA
-To: Manikandan Muralidharan <manikandan.m@microchip.com>, Andrzej Hajda
-	<andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
-	"Robert Foss" <rfoss@kernel.org>, Laurent Pinchart
-	<Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, "Jernej
- Skrabec" <jernej.skrabec@gmail.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-	"Sandeep Sheriker M" <sandeep.sheriker@microchip.com>, Dharma Balasubiramani
-	<dharma.b@microchip.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750675822; l=5514;
- i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
- bh=ERy9vkRv7sHUQQmIkZ0cGBnXyaHHcDyCGdJs2X5F8fM=;
- b=4vUlMxxV3nHZ8s98H7ds6voTow3QFAke4gVDuv5SfegGyEHrzY6jfkPNKdnGAJHNEehNMSiPG
- NvBJA9kJLOVBiX2Yl0L1gto5vHX75OEYAEvDM5tqYg/u7fxCvy1AxK5
-X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
- pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1098394.1750675858.1@warthog.procyon.org.uk>
+Date: Mon, 23 Jun 2025 11:50:58 +0100
+Message-ID: <1098395.1750675858@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-From: Sandeep Sheriker M <sandeep.sheriker@microchip.com>
+Hi Christoph,
 
-The LVDS controller was hardcoded to JEIDA mapping, which leads to
-distorted output on panels expecting VESA mapping.
+Looking at the DMA address mapping infrastructure, it makes use of the page
+struct to access the physical address (which obviously shouldn't be a problem)
+and to find out if the page is involved in P2P DMA.
 
-Update the driver to dynamically select the appropriate mapping and
-pixel size based on the panel's advertised media bus format. This
-ensures compatibility with both JEIDA and VESA displays.
+dma_direct_map_page() calls is_pci_p2pdma_page():
 
-Modernize the bridge ops to use atomic_enable/disable, and retrieve
-the bus format from the connector via the atomic bridge state.
+	static inline bool is_pci_p2pdma_page(const struct page *page)
+	{
+		return IS_ENABLED(CONFIG_PCI_P2PDMA) &&
+			is_zone_device_page(page) &&
+			page_pgmap(page)->type == MEMORY_DEVICE_PCI_P2PDMA;
+	}
 
-Signed-off-by: Sandeep Sheriker M <sandeep.sheriker@microchip.com>
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
----
-Note: Tested the changes on newvision 10.1 VESA display.
+What's the best way to manage this without having to go back to the page
+struct for every DMA mapping we want to make?  Do we need to have
+iov_extract_user_pages() note this in the bio_vec?
 
-Changes in v2:
-- Switch to atomic bridge functions
-- Drop custom connector creation
-- Use drm_atomic_get_new_connector_for_encoder()
-- Link to v1: https://lore.kernel.org/r/20250618-microchip-lvds-v1-1-1eae5acd7a82@microchip.com
----
- drivers/gpu/drm/bridge/microchip-lvds.c | 64 +++++++++++++++++++++++++++------
- 1 file changed, 54 insertions(+), 10 deletions(-)
+	struct bio_vec {
+		physaddr_t	bv_base_addr;	/* 64-bits */
+		size_t		bv_len:56;	/* Maybe just u32 */
+		bool		p2pdma:1;	/* Region is involved in P2P */
+		unsigned int	spare:7;
+	};
 
-diff --git a/drivers/gpu/drm/bridge/microchip-lvds.c b/drivers/gpu/drm/bridge/microchip-lvds.c
-index 9f4ff82bc6b4..b71478aa36e9 100644
---- a/drivers/gpu/drm/bridge/microchip-lvds.c
-+++ b/drivers/gpu/drm/bridge/microchip-lvds.c
-@@ -11,6 +11,7 @@
- #include <linux/component.h>
- #include <linux/delay.h>
- #include <linux/jiffies.h>
-+#include <linux/media-bus-format.h>
- #include <linux/mfd/syscon.h>
- #include <linux/of_graph.h>
- #include <linux/pinctrl/devinfo.h>
-@@ -41,9 +42,11 @@
- 
- /* Bitfields in LVDSC_CFGR (Configuration Register) */
- #define LVDSC_CFGR_PIXSIZE_24BITS	0
-+#define LVDSC_CFGR_PIXSIZE_18BITS	1
- #define LVDSC_CFGR_DEN_POL_HIGH		0
- #define LVDSC_CFGR_DC_UNBALANCED	0
- #define LVDSC_CFGR_MAPPING_JEIDA	BIT(6)
-+#define LVDSC_CFGR_MAPPING_VESA		0
- 
- /*Bitfields in LVDSC_SR */
- #define LVDSC_SR_CS	BIT(0)
-@@ -76,9 +79,10 @@ static inline void lvds_writel(struct mchp_lvds *lvds, u32 offset, u32 val)
- 	writel_relaxed(val, lvds->regs + offset);
- }
- 
--static void lvds_serialiser_on(struct mchp_lvds *lvds)
-+static void lvds_serialiser_on(struct mchp_lvds *lvds, u32 bus_format)
- {
- 	unsigned long timeout = jiffies + msecs_to_jiffies(LVDS_POLL_TIMEOUT_MS);
-+	u8 map, pix_size;
- 
- 	/* The LVDSC registers can only be written if WPEN is cleared */
- 	lvds_writel(lvds, LVDSC_WPMR, (LVDSC_WPMR_WPKEY_PSSWD &
-@@ -93,11 +97,24 @@ static void lvds_serialiser_on(struct mchp_lvds *lvds)
- 		usleep_range(1000, 2000);
- 	}
- 
-+	switch (bus_format) {
-+	case MEDIA_BUS_FMT_RGB666_1X7X3_SPWG:
-+		map = LVDSC_CFGR_MAPPING_JEIDA;
-+		pix_size = LVDSC_CFGR_PIXSIZE_18BITS;
-+		break;
-+	case MEDIA_BUS_FMT_RGB888_1X7X4_SPWG:
-+		map = LVDSC_CFGR_MAPPING_VESA;
-+		pix_size = LVDSC_CFGR_PIXSIZE_24BITS;
-+		break;
-+	default:
-+		map = LVDSC_CFGR_MAPPING_JEIDA;
-+		pix_size = LVDSC_CFGR_PIXSIZE_24BITS;
-+		break;
-+	}
-+
- 	/* Configure the LVDSC */
--	lvds_writel(lvds, LVDSC_CFGR, (LVDSC_CFGR_MAPPING_JEIDA |
--				LVDSC_CFGR_DC_UNBALANCED |
--				LVDSC_CFGR_DEN_POL_HIGH |
--				LVDSC_CFGR_PIXSIZE_24BITS));
-+	lvds_writel(lvds, LVDSC_CFGR, (map | LVDSC_CFGR_DC_UNBALANCED |
-+		    LVDSC_CFGR_DEN_POL_HIGH | pix_size));
- 
- 	/* Enable the LVDS serializer */
- 	lvds_writel(lvds, LVDSC_CR, LVDSC_CR_SER_EN);
-@@ -113,7 +130,8 @@ static int mchp_lvds_attach(struct drm_bridge *bridge,
- 				 bridge, flags);
- }
- 
--static void mchp_lvds_enable(struct drm_bridge *bridge)
-+static void mchp_lvds_atomic_pre_enable(struct drm_bridge *bridge,
-+					struct drm_atomic_state *state)
- {
- 	struct mchp_lvds *lvds = bridge_to_lvds(bridge);
- 	int ret;
-@@ -129,11 +147,35 @@ static void mchp_lvds_enable(struct drm_bridge *bridge)
- 		dev_err(lvds->dev, "failed to get pm runtime: %d\n", ret);
- 		return;
- 	}
-+}
-+
-+static void mchp_lvds_atomic_enable(struct drm_bridge *bridge,
-+				    struct drm_atomic_state *state)
-+{
-+	struct mchp_lvds *lvds = bridge_to_lvds(bridge);
-+	struct drm_connector *connector;
-+
-+	/* default to jeida-24 */
-+	u32 bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA;
-+
-+	connector = drm_atomic_get_new_connector_for_encoder(state, bridge->encoder);
-+	if (connector && connector->display_info.num_bus_formats)
-+		bus_format = connector->display_info.bus_formats[0];
-+
-+	lvds_serialiser_on(lvds, bus_format);
-+}
-+
-+static void mchp_lvds_atomic_disable(struct drm_bridge *bridge,
-+				     struct drm_atomic_state *state)
-+{
-+	struct mchp_lvds *lvds = bridge_to_lvds(bridge);
- 
--	lvds_serialiser_on(lvds);
-+	/* Turn off the serialiser */
-+	lvds_writel(lvds, LVDSC_CR, 0);
- }
- 
--static void mchp_lvds_disable(struct drm_bridge *bridge)
-+static void mchp_lvds_atomic_post_disable(struct drm_bridge *bridge,
-+					  struct drm_atomic_state *state)
- {
- 	struct mchp_lvds *lvds = bridge_to_lvds(bridge);
- 
-@@ -143,8 +185,10 @@ static void mchp_lvds_disable(struct drm_bridge *bridge)
- 
- static const struct drm_bridge_funcs mchp_lvds_bridge_funcs = {
- 	.attach = mchp_lvds_attach,
--	.enable = mchp_lvds_enable,
--	.disable = mchp_lvds_disable,
-+	.atomic_pre_enable = mchp_lvds_atomic_pre_enable,
-+	.atomic_enable = mchp_lvds_atomic_enable,
-+	.atomic_disable = mchp_lvds_atomic_disable,
-+	.atomic_post_disable = mchp_lvds_atomic_post_disable,
- };
- 
- static int mchp_lvds_probe(struct platform_device *pdev)
+I'm guessing that only folio-type pages can be involved in this:
 
----
-base-commit: 4325743c7e209ae7845293679a4de94b969f2bef
-change-id: 20250618-microchip-lvds-b7151d96094a
+	static inline struct dev_pagemap *page_pgmap(const struct page *page)
+	{
+		VM_WARN_ON_ONCE_PAGE(!is_zone_device_page(page), page);
+		return page_folio(page)->pgmap;
+	}
 
-Best regards,
--- 
-Dharma Balasubiramani <dharma.b@microchip.com>
+as only struct folio has a pointer to dev_pagemap?  And I assume this is going
+to get removed from struct page itself at some point soonish.
+
+David
 
