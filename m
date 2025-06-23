@@ -1,154 +1,181 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3CE2BFC9B;
-	Mon, 23 Jun 2025 16:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750694877; cv=pass; b=LTcUAYU/W+0++Ey4I7PPxEqs6J+GP35oFVlqKf+UQZOvewiJRkgZEnpsBSoID8Up+hdel7kb0oF7VAPGPGuxWHr8WJrN/YC84yQZEejFBYQjePdLO9ggvd7RuaSyOWMFFmRq4RBttI/McWnhUZyKD/tqcQlOIchG9Qn6ij8SxXg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750694877; c=relaxed/simple;
-	bh=ISbVZMNCve/f49qkrZhvEsUoOKFEGZgqjK+XJNEMKnQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aHWn1SXH88Tk6nQDpV0UPHx3PaKE1AuSqrFRnQWzEXHBircZAMeeyLu8XfyfX5q9iWUNIMzStFOsHI1WCZHf4fGBPMtvSkqPv2d7XotqwKIveaLLObBDAIEYkJYOz91l0TeVhAcJv9HV5TZcxoKtCdZuAcl0x5Ufu2nLlEaIYhk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=Bkdfab8L; arc=pass smtp.client-ip=136.143.188.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747C22C08B1;
+	Mon, 23 Jun 2025 16:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750694878; cv=none; b=E/C/zPt2cx9wdL8MnOleT3d/AxB2aWhV/x7PC56dek8mdDWfp9UUcF7xOMPD3ZcavCDCadzmzLBFpKWC76hLkMOGYGB5V4NiZaPBLGVZbmwzcS6V2vSAVfKjzS+3WC26rcAh2/1VgXoIWx2Msb0mVKgfJC2hTMSgm/IiXH94dWI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750694878; c=relaxed/simple;
+	bh=zt/DaCss2i5ulknRW3sJNkFnzwFerUvIICmaqy3KydU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oD2yMUxXMaAKxQhl4XqeDjzFUPF4LH/wRhbaCyvIruA4XIeV6dV66j9DIkIKyBQhaaBbUWTT8Pnki2WH8GMAuNvj2rQdSdMRdAmKwS42LD9TrUyywEaCF/lkciIagS/PEiuRZlb8TeYLGTwYYwtwOQoQazt8EsaJXfElPjRA2o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=gvKMbe3b; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="Bkdfab8L"
-ARC-Seal: i=1; a=rsa-sha256; t=1750694816; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=nLrO5oQeF65RNK+YOmn5Pt8mfbVivHcu5CLMl7sUgLMKyzGEZyY0JpYE68XdGcVRZyBZGq6c+0HWCvPfHmSvBMou4BR+xhw4GZ3ylk662LQWxIU4pXT4xjg6dGYEhiXqwS3AVEN56jfETB/z8BBVBZ3lgtrxkTHhWIi32LzYgGk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750694816; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Qhjp8jVplNYCiKKq7znetwOB1awnMxI4TCcb8mGA9aY=; 
-	b=YxsSBvVVgc0SDA/3g+v8slJEZcUJZnN81NO81dHnfuwox7gDklhSeoHUn172Tj70RyHkAATsEa0t2lB5YDzyjP69ul676NoTpJOKjR8GppfpJJADbebGhOZ/3e93XNL0jd53nELp3u1aMMDVwToDd6ELyP3LBG/MmtyKxdBNh28=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750694816;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=Qhjp8jVplNYCiKKq7znetwOB1awnMxI4TCcb8mGA9aY=;
-	b=Bkdfab8Lxq8HYeWCEuafXa3iN7d7R2E/BxpJGUPGYSUT/9KP0Ex4Xks4tIpn5G2M
-	/IZS0hHtOiYVrcbb7csqzZn7KtMmVuqKh6mPOrPjmucYhaIpXzFgCf2gCX42I5vdJss
-	DwRGEflJQKvRYrxAwGdYNFx/U83jgFjGswXihCDg=
-Received: by mx.zohomail.com with SMTPS id 1750694815522294.98488541831125;
-	Mon, 23 Jun 2025 09:06:55 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Mon, 23 Jun 2025 18:05:33 +0200
-Subject: [PATCH v2 05/20] drm/rockchip: lvds: switch to FIELD_PREP_WM16
- macro
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="gvKMbe3b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750694874;
+	bh=zt/DaCss2i5ulknRW3sJNkFnzwFerUvIICmaqy3KydU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gvKMbe3b4XE3UscHhE6pkbYBUhJlem382157apB5Hu7W52ybOAb4wdwyvJPSCtS5R
+	 KV1SJCmsRmtga1KWke6xeJCvC1NXXw6Ve4j1y++g1CnqVsBg4bnsKvShEEcfKQUuSu
+	 NTvjvaP/Bn2eg29kdKMeRRYG+YRLZkF0cCjvWCdJ8bpFZ6IznZlqNVm5Evtq5FGeX3
+	 zNHbKZue9Nj0hAsw+afPUrOWAnqRSkz+WipJBf/pbtjJzYkPzH+KUDaSvSnMxd8fYB
+	 zOlElfRbwAcjnXfXoyPVmyFr8z+PRHKQg+ckeyH3hD2w/pvRUplGSe24waD42StvZ4
+	 zLvfMt3E+ODYA==
+Received: from trenzalore.hitronhub.home (unknown [23.233.251.139])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: detlev)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 70AEB17E1580;
+	Mon, 23 Jun 2025 18:07:51 +0200 (CEST)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Alexey Charkov <alchark@gmail.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Jianfeng Liu <liujianfeng1994@gmail.com>,
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Ricardo Ribalda <ribalda@chromium.org>,
+	Hans de Goede <hansg@kernel.org>,
+	Yunke Cao <yunkec@google.com>,
+	linux-media@vger.kernel.org,
+	kernel@collabora.com
+Subject: [PATCH 3/8] arm64: dts: rockchip: Add the vdpu381 Video Decoders on RK3588
+Date: Mon, 23 Jun 2025 12:07:17 -0400
+Message-ID: <20250623160722.55938-4-detlev.casanova@collabora.com>
+X-Mailer: git-send-email 2.50.0
+In-Reply-To: <20250623160722.55938-1-detlev.casanova@collabora.com>
+References: <20250623160722.55938-1-detlev.casanova@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-byeword-update-v2-5-cf1fc08a2e1f@collabora.com>
-References: <20250623-byeword-update-v2-0-cf1fc08a2e1f@collabora.com>
-In-Reply-To: <20250623-byeword-update-v2-0-cf1fc08a2e1f@collabora.com>
-To: Yury Norov <yury.norov@gmail.com>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- Jaehoon Chung <jh80.chung@samsung.com>, 
- Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
- Shreeya Patel <shreeya.patel@collabora.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
- Nicolas Frattaroli <frattaroli.nicolas@gmail.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Shawn Lin <shawn.lin@rock-chips.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
- MyungJoo Ham <myungjoo.ham@samsung.com>, 
- Kyungmin Park <kyungmin.park@samsung.com>, Qin Jian <qinjian@cqplus1.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, 
- linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org, 
- linux-sound@vger.kernel.org, netdev@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
-drivers that use constant masks.
+Add the vdpu381 Video Decoders to the rk3588-base devicetree.
 
-Remove rockchip_lvds.h's own HIWORD_UPDATE macro, and replace all
-instances of it with hw_bitfield.h's FIELD_PREP_WM16 macro, which gives
-us more error checking.
+The RK3588 based SoCs all embed 2 vdpu381 decoders.
+This also adds the dedicated IOMMU controllers.
 
-For the slightly-less-trivial case of the 2-bit width instance, the
-results were checked during development to match all possible input
-values (0 to 3, inclusive).
-
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
 ---
- drivers/gpu/drm/rockchip/rockchip_lvds.h | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3588-base.dtsi | 74 +++++++++++++++++++
+ 1 file changed, 74 insertions(+)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.h b/drivers/gpu/drm/rockchip/rockchip_lvds.h
-index ca83d7b6bea733588849d3ff379cf8540405462b..2d92447d819bed18adc99f84664c93c639c86a19 100644
---- a/drivers/gpu/drm/rockchip/rockchip_lvds.h
-+++ b/drivers/gpu/drm/rockchip/rockchip_lvds.h
-@@ -9,6 +9,9 @@
- #ifndef _ROCKCHIP_LVDS_
- #define _ROCKCHIP_LVDS_
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+index 70f03e68ba550..c1eaff86d5b73 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+@@ -1252,6 +1252,70 @@ vepu121_3_mmu: iommu@fdbac800 {
+ 		#iommu-cells = <0>;
+ 	};
  
-+#include <linux/bits.h>
-+#include <linux/hw_bitfield.h>
++	vdec0: video-codec@fdc38000 {
++		compatible = "rockchip,rk3588-vdec";
++		reg = <0x0 0xfdc38100 0x0 0x500>,
++		      <0x0 0xfdc38000 0x0 0x100>,
++		      <0x0 0xfdc38600 0x0 0x100>;
++		reg-names = "function", "link", "cache";
++		interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru ACLK_RKVDEC0>, <&cru HCLK_RKVDEC0>, <&cru CLK_RKVDEC0_CA>,
++			 <&cru CLK_RKVDEC0_CORE>, <&cru CLK_RKVDEC0_HEVC_CA>;
++		clock-names = "axi", "ahb", "cabac", "core", "hevc_cabac";
++		assigned-clocks = <&cru ACLK_RKVDEC0>, <&cru CLK_RKVDEC0_CORE>,
++				  <&cru CLK_RKVDEC0_CA>, <&cru CLK_RKVDEC0_HEVC_CA>;
++		assigned-clock-rates = <800000000>, <600000000>,
++				       <600000000>, <1000000000>;
++		iommus = <&vdec0_mmu>;
++		power-domains = <&power RK3588_PD_RKVDEC0>;
++		resets = <&cru SRST_A_RKVDEC0>, <&cru SRST_H_RKVDEC0>, <&cru SRST_RKVDEC0_CA>,
++			 <&cru SRST_RKVDEC0_CORE>, <&cru SRST_RKVDEC0_HEVC_CA>;
++		reset-names = "axi", "ahb", "cabac", "core", "hevc_cabac";
++		sram = <&vdec0_sram>;
++	};
 +
- #define RK3288_LVDS_CH0_REG0			0x00
- #define RK3288_LVDS_CH0_REG0_LVDS_EN		BIT(7)
- #define RK3288_LVDS_CH0_REG0_TTL_EN		BIT(6)
-@@ -106,18 +109,16 @@
- #define LVDS_VESA_18				2
- #define LVDS_JEIDA_18				3
++	vdec0_mmu: iommu@fdc38700 {
++		compatible = "rockchip,rk3588-iommu", "rockchip,rk3568-iommu";
++		reg = <0x0 0xfdc38700 0x0 0x40>, <0x0 0xfdc38740 0x0 0x40>;
++		interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru ACLK_RKVDEC0>, <&cru HCLK_RKVDEC0>;
++		clock-names = "aclk", "iface";
++		power-domains = <&power RK3588_PD_RKVDEC0>;
++		#iommu-cells = <0>;
++	};
++
++	vdec1: video-codec@fdc40000 {
++		compatible = "rockchip,rk3588-vdec";
++		reg = <0x0 0xfdc40100 0x0 0x500>,
++		      <0x0 0xfdc40000 0x0 0x100>,
++		      <0x0 0xfdc40600 0x0 0x100>;
++		reg-names = "function", "link", "cache";
++		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru ACLK_RKVDEC1>, <&cru HCLK_RKVDEC1>, <&cru CLK_RKVDEC1_CA>,
++			 <&cru CLK_RKVDEC1_CORE>, <&cru CLK_RKVDEC1_HEVC_CA>;
++		clock-names = "axi", "ahb", "cabac", "core", "hevc_cabac";
++		assigned-clocks = <&cru ACLK_RKVDEC1>, <&cru CLK_RKVDEC1_CORE>,
++				  <&cru CLK_RKVDEC1_CA>, <&cru CLK_RKVDEC1_HEVC_CA>;
++		assigned-clock-rates = <800000000>, <600000000>,
++				       <600000000>, <1000000000>;
++		iommus = <&vdec1_mmu>;
++		power-domains = <&power RK3588_PD_RKVDEC1>;
++		resets = <&cru SRST_A_RKVDEC1>, <&cru SRST_H_RKVDEC1>, <&cru SRST_RKVDEC1_CA>,
++			 <&cru SRST_RKVDEC1_CORE>, <&cru SRST_RKVDEC1_HEVC_CA>;
++		reset-names = "axi", "ahb", "cabac", "core", "hevc_cabac";
++		sram = <&vdec1_sram>;
++	};
++
++	vdec1_mmu: iommu@fdc40700 {
++		compatible = "rockchip,rk3588-iommu", "rockchip,rk3568-iommu";
++		reg = <0x0 0xfdc40700 0x0 0x40>, <0x0 0xfdc40740 0x0 0x40>;
++		interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru ACLK_RKVDEC1>, <&cru HCLK_RKVDEC1>;
++		clock-names = "aclk", "iface";
++		power-domains = <&power RK3588_PD_RKVDEC1>;
++		#iommu-cells = <0>;
++	};
++
+ 	av1d: video-codec@fdc70000 {
+ 		compatible = "rockchip,rk3588-av1-vpu";
+ 		reg = <0x0 0xfdc70000 0x0 0x800>;
+@@ -3093,6 +3157,16 @@ system_sram2: sram@ff001000 {
+ 		ranges = <0x0 0x0 0xff001000 0xef000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
++
++		vdec0_sram: codec-sram@0 {
++			reg = <0x0 0x78000>;
++			pool;
++		};
++
++		vdec1_sram: codec-sram@78000 {
++			reg = <0x78000 0x77000>;
++			pool;
++		};
+ 	};
  
--#define HIWORD_UPDATE(v, h, l)  ((GENMASK(h, l) << 16) | ((v) << (l)))
--
- #define PX30_LVDS_GRF_PD_VO_CON0		0x434
--#define   PX30_LVDS_TIE_CLKS(val)		HIWORD_UPDATE(val,  8,  8)
--#define   PX30_LVDS_INVERT_CLKS(val)		HIWORD_UPDATE(val,  9,  9)
--#define   PX30_LVDS_INVERT_DCLK(val)		HIWORD_UPDATE(val,  5,  5)
-+#define   PX30_LVDS_TIE_CLKS(val)		FIELD_PREP_WM16(BIT(8), (val))
-+#define   PX30_LVDS_INVERT_CLKS(val)		FIELD_PREP_WM16(BIT(9), (val))
-+#define   PX30_LVDS_INVERT_DCLK(val)		FIELD_PREP_WM16(BIT(5), (val))
- 
- #define PX30_LVDS_GRF_PD_VO_CON1		0x438
--#define   PX30_LVDS_FORMAT(val)			HIWORD_UPDATE(val, 14, 13)
--#define   PX30_LVDS_MODE_EN(val)		HIWORD_UPDATE(val, 12, 12)
--#define   PX30_LVDS_MSBSEL(val)			HIWORD_UPDATE(val, 11, 11)
--#define   PX30_LVDS_P2S_EN(val)			HIWORD_UPDATE(val,  6,  6)
--#define   PX30_LVDS_VOP_SEL(val)		HIWORD_UPDATE(val,  1,  1)
-+#define   PX30_LVDS_FORMAT(val)			FIELD_PREP_WM16(GENMASK(14, 13), (val))
-+#define   PX30_LVDS_MODE_EN(val)		FIELD_PREP_WM16(BIT(12), (val))
-+#define   PX30_LVDS_MSBSEL(val)			FIELD_PREP_WM16(BIT(11), (val))
-+#define   PX30_LVDS_P2S_EN(val)			FIELD_PREP_WM16(BIT(6), (val))
-+#define   PX30_LVDS_VOP_SEL(val)		FIELD_PREP_WM16(BIT(1), (val))
- 
- #endif /* _ROCKCHIP_LVDS_ */
-
+ 	pinctrl: pinctrl {
 -- 
 2.50.0
 
