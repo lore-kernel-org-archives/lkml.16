@@ -1,98 +1,237 @@
-Received: from mail-yw1-f225.google.com (mail-yw1-f225.google.com [209.85.128.225])
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE89246BCF
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0192BD030
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750704747; cv=none; b=d2YFcjyajs/ifCFnSQRRbxNbCEclBtjxnXG2JLS82c3M1kHxB9Y8Mb6UILPsvyIsOtgukyM5UVol9l9TYOER7XyMSkh1qmf7zE91Qyddn9Ugy9pKDL6MKiFWTQC0FMQMlJp9Nrjva6kLQ/m4kPzBpta0CnlQ3y1nIL6sKQtK4lk=
+	t=1750704804; cv=none; b=l4zunocYWJtCQjQ1K0x+3SWzmBZRs5qJ4KAKcv2N3wBYJxyoxcX1855K7ME7DCHpcJJ/2RYzOk2jttqvv4LkzXVaAqa3dO6LedCYEoNi0H3Buxzsk0JNngJ3wDZk6tU4Ty+r8quKKCUEQF8vm8v6F4l9yBv6oj+7e2Q1qY4H23I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750704747; c=relaxed/simple;
-	bh=gv1G9Z96EFrbQZ1cbL33lVjm9HQLDsqF7DO+CEeipwE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WmigyjyMmdIYgDICFlg2epNljoLSb2eeEb3vTQ5hhtPj4nvthKwX5gu1ogdv9Ul5UWo6qRWJYkBVkftO5lGnnv7kpgWi2cyj14tYqXNbdYWbJjL7g9boUFhYdxewStm0mre/KdSgsKAb4IupLxMjvDWD7cJryP8OYVjIzOhU+Uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=IPGSpriB; arc=none smtp.client-ip=209.85.128.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1750704804; c=relaxed/simple;
+	bh=nMJQo4OpjNZh+tTS7oPgvQNI+OMhplRpVepoL8H0W2U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dD+hLwxHJqZv8NOrb1duYTTecXx9i3IrJeduunorz+0iW1YeV9Z7axVRMmoQg1b6guG61XS38698MTS/3wTIfB8eUFCB47x8xGYqX/Hd3KwfJE2qelXEf1/5Ch1jCkVyJGgdoE5Nw8Sb1/+snBSalGxv4vDK0ihUwF8Q7J+K3t8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=I9QFtqqH; arc=none smtp.client-ip=209.85.221.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="IPGSpriB"
-Received: by mail-yw1-f225.google.com with SMTP id 00721157ae682-70e5d953c0bso49037817b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:52:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="I9QFtqqH"
+Received: by mail-wr1-f65.google.com with SMTP id ffacd0b85a97d-3a52874d593so4462036f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:53:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1750704744; x=1751309544; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sSdtfcO6yct73s8jNNwzmEbNNWfSJFlnXgpHHlfXObs=;
-        b=IPGSpriB6GCWEeVCrU+cwSjFwPgBoPb9vO/iCH2hVghOb7ChU0aEtjjCppYr00MngO
-         bxHBcg1tf2wzShARuh7r1nZLRYi29pdrHgKq2vvIGcPmejywWw8rScADIlPByuVHU51S
-         qDMAUsvZBpBszK1WLcm2eVZIsIHTXqHbE1c4pMRSApZjK5xlC3hnOP7AoPkcKPwT8GiD
-         K+hYQwDhc0l6yo+n7no77tOkh3k6okWU1AiPQHH4jQ+JEaJ4s5C4/cSpuuag1pvshnP4
-         JVHe1/se8G6qOrRNNpjiJhq3t9i4SI27LGCR/z3yhDejpgJ0hB1Q9MfXK5hgm7kxwZMh
-         NErA==
+        d=suse.com; s=google; t=1750704801; x=1751309601; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=kP3LfikwJoT5jZxTfYQ53BJecw5PNc+P0zrWLzEkXCM=;
+        b=I9QFtqqHylp3gwbIoB+PqXh8IxMHCxdP8IIZjjZHka1JHBTEi7xAZ8PQC3Z6IH7wDZ
+         GcW6m/ZmiBUcBHQA7T5y8FF6bJ+sxvCJ3Zxt7bWdYMWkl/ynFuVffPfR4jCXKM2Tq8ww
+         7UsZ/8Zo9BODvIONY+ZPLUemswroeTfRVDHe8rCsT5WIqMZDbO2IGokSynFcmnV1HhAF
+         D+GcaBhlAUttSZXpcyJ5dij9PtZtSlroCSWWEBvN5ZCdEvlidIxJTiCBBXD6zPmvEqrs
+         s0xmE9//w6gNQlCN31YDaDcxs5pDfNle2NMvYmcHwhRIWbDHHVL4THMGuXfBoJ2k9hA8
+         53Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750704744; x=1751309544;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sSdtfcO6yct73s8jNNwzmEbNNWfSJFlnXgpHHlfXObs=;
-        b=LtiKiprgv2Zkd7m0LoVmMGwsZrVa2JDWlSHckhpLPlNe0TEN2NFc7kZ+0cYUKDxNEs
-         gbTFNhBr1xHacejnSGLHsec6nZ3yVjQtyK/YxoE38ZiOJPJBoZ8pJB5Ke970WVoSEBfl
-         XLvEG+IdEJZj8oKIDG/HY5wx0/xRIUwYRdtTxZepVnMj30+cqGYU4gSPd3UULuZRLkKt
-         fu80fQrc4MFNefq2Iq9CafyVwXu28zucKFdPcc/NsP0s3yLwKPQR82OvwLv22AUgEtP4
-         PqNRqWXIoxQ0Nx2maKa+zITdiF2KUA7ZrunwGaq/3wjF5JKRpqB1vkXfH0UY9F6S465Y
-         7Huw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+qLRxztPOc5+I8FO3JWRn/rcNRwidwam3sD9+zSTE2x0JzhpbFUKc98O0QTUA+MeyYFXgt3gssjHHnrA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRznVeHvD2IpohAcGdDBjTbmwJMfMjqimliRdSv7BRA2Xb+LAQ
-	znEUUUig6nWUo8CjN/7fmdIfe9OQC/nRyZsXXGnxfUseW0BGPf4D5G5y334Q5k5wgmfcZKUiaXj
-	ODhqkc/qMAjD0mNTdelnwwABdzhnJVQcntnBGIfcdAfDvm2ASU/97
-X-Gm-Gg: ASbGncsdBOtoPw1jfk78Q+3gAeiRS9ks5mUWwv5H3ERtXOe87LoHhZkHOep+/WE25rI
-	BxlgvioYHk8N67v/F9qZDhECqycBFtEPV3TtFHRUfbVKHnwqFbBqNN1u5DkpzLd43gEpdTgrB5m
-	plC4HeXgHphQB92sgXCicrguNqGr/gn4Vpk77VGFsJMD88u/XBrJDymHqTMtZGNfBWKZNC3d2A1
-	gldJw8uLrMsmEwdQ2YRYgCzFi/+FqI+yC1mhcpEl8kHsnlVc/8qLeCy+aQ9QX/tTWK7sVnMp7qb
-	rpsuBL+++/wc8ybwQqklwhW0PtbU6pjUIzsFXjs0Iw==
-X-Google-Smtp-Source: AGHT+IGDE6E8898w1M/iljDhBprZ95zKNBS1+iC+DsKwuQBLxDeFFN8qYAWUvZfADpnnp5LjhZ+kFacbcEyY
-X-Received: by 2002:a05:690c:6086:b0:711:6419:5ce1 with SMTP id 00721157ae682-712c67610bdmr211314147b3.31.1750704743909;
-        Mon, 23 Jun 2025 11:52:23 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-712c4a38e96sm1589957b3.22.2025.06.23.11.52.23
+        d=1e100.net; s=20230601; t=1750704801; x=1751309601;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kP3LfikwJoT5jZxTfYQ53BJecw5PNc+P0zrWLzEkXCM=;
+        b=KOV7spkGgBZlsh+xpA14IvMLJ+EJfl0BRHRYGO/65DtBi5NcsBgKKLr15iBF5ZIMII
+         DEzFl4QyrIQYSKiFZseiar99jPx8f/J8nX6+jFuN6eBa88qU1eItM2sllFdHMPMeBq96
+         J2JrZjOokBHO4zdyv4sHVYenuKwLQ1Pmw/XM6fCO8VPVC6cd4l09b0uDl+yryu/3r40R
+         ylC6xinuwLP3jN9l6CWcZnyPNNdqiAgEIRFNAyAWtIh+u4Rte4cEsioYLCHVpbPGfv5J
+         ypJlLBcG4Gio9g8rEfq4P+QNph1/XaPDLetGTdZgpgpS3OtG1YLIK15qxx+OwKbaK4Ai
+         PNcA==
+X-Forwarded-Encrypted: i=1; AJvYcCVRBefEU595RdrYqmxvC8vupiaNT+qPkhhvi3ABlhiiOGRSafv7rGSS4Y1Fdl997rvjSllpaaM7mG7r7TE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2g7Zrr/BIyhjkGLnq0h9L6Q13BndaRYxgGG+5L9a6vzzdRPsA
+	6ZlGwsZGPjrwlRSd9Bj0Ff3M7s7YKlVp5TjAK09c5NTEhDG4b0tP+jEO153mj4WNk14=
+X-Gm-Gg: ASbGncus/goOwFQGHkiDoL61LQH9CUNrM11lkjYGTS+qbisq2fdPXH8APlA5yyl9DIE
+	Juo16gCE+vRGcMuc/05t2ZH2N2VODzccOOUCo06kiEb9MOb3BaJJPu9J8a4qRDgwatkwBbeBWh7
+	OZYaeLGMane8AGmNMXfpksPLWt/WIVZCY4XxVcbGIrtTwG/jlMl4NyYAkfsl9RKbomutR08fQiQ
+	AOPeuSfNxpH6TW3O6ThZbTGo2r/8+WeGLcjEhYcWpebnUfauLPkFaattRhqK5ddatenN2ZiRTlz
+	5BkS57dg3Z9ZHp5csNm3z2W0FwIGBK1u3Tax6qkH5pCxW+/y8cs8E3uy2Z+B2y1XJ9vvCPLokep
+	rcRRysFHtts37P1qisHsHrqSb
+X-Google-Smtp-Source: AGHT+IHl7WUsTHsArXNJ7BBLS48xIuonfKG5DP3IbYFgDHwpfpJdrP3CunJHC4qeSAikuH/t9ORELQ==
+X-Received: by 2002:a05:6000:1a8e:b0:3a4:eeb5:21cb with SMTP id ffacd0b85a97d-3a6d12e5b71mr11313647f8f.26.1750704800592;
+        Mon, 23 Jun 2025 11:53:20 -0700 (PDT)
+Received: from ?IPv6:2804:5078:805:6b00:58f2:fc97:371f:2? ([2804:5078:805:6b00:58f2:fc97:371f:2])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f126a2aesm8483866a12.67.2025.06.23.11.53.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 11:52:23 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id D817A34014A;
-	Mon, 23 Jun 2025 12:52:22 -0600 (MDT)
-Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id C93D1E40278; Mon, 23 Jun 2025 12:52:22 -0600 (MDT)
-Date: Mon, 23 Jun 2025 12:52:22 -0600
-From: Uday Shankar <ushankar@purestorage.com>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ublk: fix narrowing warnings in UAPI header
-Message-ID: <aFmiZpTDrJ5GSGty@dev-ushankar.dev.purestorage.com>
-References: <20250621162842.337452-1-csander@purestorage.com>
+        Mon, 23 Jun 2025 11:53:19 -0700 (PDT)
+Message-ID: <d4f7a4dd5bedf288d2011fc9817716b8af2ec032.camel@suse.com>
+Subject: Re: [PATCH 2/7] printk: Use consoles_suspended flag when
+ suspending/resuming all consoles
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, John Ogness	
+ <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>,
+  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+ <jirislaby@kernel.org>, Jason Wessel	 <jason.wessel@windriver.com>, Daniel
+ Thompson <danielt@kernel.org>, Douglas Anderson <dianders@chromium.org>,
+ Richard Weinberger <richard@nod.at>, Anton Ivanov	
+ <anton.ivanov@cambridgegreys.com>, Johannes Berg
+ <johannes@sipsolutions.net>, 	linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, 	kgdb-bugreport@lists.sourceforge.net,
+ linux-um@lists.infradead.org
+Date: Mon, 23 Jun 2025 15:53:14 -0300
+In-Reply-To: <aExBo-8cVOy6GegR@pathway.suse.cz>
+References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
+	 <20250606-printk-cleanup-part2-v1-2-f427c743dda0@suse.com>
+	 <aExBo-8cVOy6GegR@pathway.suse.cz>
+Autocrypt: addr=mpdesouza@suse.com; prefer-encrypt=mutual;
+ keydata=mDMEZ/0YqhYJKwYBBAHaRw8BAQdA4JZz0FED+JD5eKlhkNyjDrp6lAGmgR3LPTduPYGPT
+ Km0Kk1hcmNvcyBQYXVsbyBkZSBTb3V6YSA8bXBkZXNvdXphQHN1c2UuY29tPoiTBBMWCgA7FiEE2g
+ gC66iLbhUsCBoBemssEuRpLLUFAmf9GKoCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ QemssEuRpLLWGxwD/S1I0bjp462FlKb81DikrOfWbeJ0FOJP44eRzmn20HmEBALBZIMrfIH2dJ5eM
+ GO8seNG8sYiP6JfRjl7Hyqca6YsE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250621162842.337452-1-csander@purestorage.com>
 
-On Sat, Jun 21, 2025 at 10:28:41AM -0600, Caleb Sander Mateos wrote:
-> When a C++ file compiled with -Wc++11-narrowing includes the UAPI header
-> linux/ublk_cmd.h, ublk_sqe_addr_to_auto_buf_reg()'s assignments of u64
-> values to u8, u16, and u32 fields result in compiler warnings. Add
-> explicit casts to the intended types to avoid these warnings. Drop the
-> unnecessary bitmasks.
-> 
-> Reported-by: Uday Shankar <ushankar@purestorage.com>
-> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-> Fixes: 99c1e4eb6a3f ("ublk: register buffer to local io_uring with provided buf index via UBLK_F_AUTO_BUF_REG")
+On Fri, 2025-06-13 at 17:20 +0200, Petr Mladek wrote:
+> On Fri 2025-06-06 23:53:44, Marcos Paulo de Souza wrote:
+>=20
+>=20
+> Variant C:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> Remove even @flags parameter from console_is_usable() and read both
+> values there directly.
+>=20
+> Many callers read @flags only because they call console_is_usable().
+> The change would simplify the code.
+>=20
+> But there are few exceptions:
+>=20
+> =C2=A0 1. __nbcon_atomic_flush_pending(), console_flush_all(),
+> =C2=A0=C2=A0=C2=A0=C2=A0 and legacy_kthread_should_wakeup() pass @flags t=
+o
+> =C2=A0=C2=A0=C2=A0=C2=A0 console_is_usable() and also check CON_NBCON fla=
+g.
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0 But CON_NBCON flag is special. It is statically =
+initialized
+> =C2=A0=C2=A0=C2=A0=C2=A0 and never set/cleared at runtime. It can be chec=
+ked without
+> =C2=A0=C2=A0=C2=A0=C2=A0 READ_ONCE(). Well, we still might want to be sur=
+e that
+> =C2=A0=C2=A0=C2=A0=C2=A0 the struct console can't disappear.
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0 IMHO, this can be solved by a helper function:
+>=20
+> 	/**
+> 	 * console_srcu_is_nbcon - Locklessly check whether the
+> console is nbcon
+> 	 * @con:	struct console pointer of console to check
+> 	 *
+> 	 * Requires console_srcu_read_lock to be held, which implies
+> that @con might
+> 	 * be a registered console. The purpose of holding
+> console_srcu_read_lock is
+> 	 * to guarantee that no exit/cleanup routines will run if
+> the console
+> 	 * is currently undergoing unregistration.
+> 	 *
+> 	 * If the caller is holding the console_list_lock or it is
+> _certain_ that
+> 	 * @con is not and will not become registered, the caller
+> may read
+> 	 * @con->flags directly instead.
+> 	 *
+> 	 * Context: Any context.
+> 	 * Return: True when CON_NBCON flag is set.
+> 	 */
+> 	static inline bool console_is_nbcon(const struct console
+> *con)
+> 	{
+> 		WARN_ON_ONCE(!console_srcu_read_lock_is_held());
+>=20
+> 		/*
+> 		 * The CON_NBCON flag is statically initialized and
+> is never
+> 		 * set or cleared at runtime.
+> 		return data_race(con->flags & CON_NBCON);
+> 	}
+>=20
+>=20
+> =C2=A0=C2=A0 2. Another exception is __pr_flush() where console_is_usable=
+() is
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 called twice with @use_atomic set "true" a=
+nd "false".
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 We would want to read "con->flags" only on=
+ce here. A solution
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 would be to add a parameter to check both =
+con->write_atomic
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 and con->write_thread in a single call.
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 But it might actually be enough to check i=
+s with the "false"
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value because "con->write_thread()" is man=
+datory for nbcon
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 consoles. And legacy consoles do not disti=
+nguish atomic mode.
+>=20
 
-Looks good: https://godbolt.org/z/qovrerdhd
+I like this idea. Also, thanks a lot for explaining why the current
+version won't work.
 
-Reviewed-by: Uday Shankar <ushankar@purestorage.com>
+I also liked John's proposal to use a a bitmask on console_is_usable,
+but I'll think a little on it once I restart working on it this week.
+
+>=20
+> My opinion:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> I personally prefer the variant C because:
+>=20
+> =C2=A0 + Removes one parameter from console_is_usable().
+>=20
+> =C2=A0 + The lockless synchronization of both global and per-console
+> =C2=A0=C2=A0=C2=A0 flags is hidden in console_is_usable().
+>=20
+> =C2=A0 + The global console_suspended flag will be stored in global
+> =C2=A0=C2=A0=C2=A0 variable (in compare with variant D).
+>=20
+> What do you think, please?
+
+Much better, I'll adapt the code as you suggested.
+
+>=20
+> Best Regards,
+> Petr
+>=20
+>=20
+> PS: The commit message and the cover letter should better explain
+> =C2=A0=C2=A0=C2=A0 the background of this change.
+>=20
+> =C2=A0=C2=A0=C2=A0 It would be great if the cover letter described the bi=
+gger
+> =C2=A0=C2=A0=C2=A0 picture, especially the history of the console_suspend=
+ed,
+> =C2=A0=C2=A0=C2=A0 CON_SUSPENDED, and CON_ENABLED flags. It might use inf=
+o
+> =C2=A0=C2=A0=C2=A0 from
+> =C2=A0=C2=A0=C2=A0 https://lore.kernel.org/lkml/ZyoNZfLT6tlVAWjO@pathway.=
+suse.cz/
+> =C2=A0=C2=A0=C2=A0 and maybe even this link.
+>=20
+> =C2=A0=C2=A0=C2=A0 Also this commit message should mention that it partly=
+ reverts
+> =C2=A0=C2=A0=C2=A0 the commit 9e70a5e109a4a233678 ("printk: Add per-conso=
+le
+> =C2=A0=C2=A0=C2=A0 suspended state"). But it is not simple revert because
+> =C2=A0=C2=A0=C2=A0 we need to preserve the synchronization using
+> =C2=A0=C2=A0=C2=A0 the console_list_lock for writing and SRCU for reading=
+.
+
+I agree, such a context would even help the reviewers that would spend
+some time reading the code and thinking themselves that some code is
+being readded for some reason.
 
