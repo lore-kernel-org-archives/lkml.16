@@ -1,95 +1,301 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3DD248191;
-	Mon, 23 Jun 2025 13:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A13524E019;
+	Mon, 23 Jun 2025 13:26:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750685172; cv=none; b=WxB6x7rcQiWeCozLuesKT6LUmiKaQaZiYV1nPXMAxiV4Kg1esc4NQvv5c0xB98RpugRy1FneL8fcijPZz5I8rNnqhaDMEWFWrwdAefDGYrjd+3mZ9ClBF2XxYRNBZhy5tVfup6Gko1lQo9s0kjy9fOU63lZ5HDF4UDkBZRpjlNQ=
+	t=1750685180; cv=none; b=e7WdHBWQrNRzOHNrzgXKln8s+PW47MafS9jHn2QKSRyj1203w+2gJzD+eqTJkHHFwPdXrA6jvcE7cVfL6CRvnZn3cp26NTLh8nPqAOO2bLHXyZv5hHHKhyTRNKF9sxFZ3vPdppohLtFpZgox9rGu9ZW6wjNcCbfajY3ANY1nesw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750685172; c=relaxed/simple;
-	bh=cpmV6b+GhiiDRqvRjUyDnp4tw6x/y7Th+CAWM/jTP8w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KotG/OWlxhpgood89odaEnK9PesWjPrPFEiVMO79/OXYJpJ25bd6a1yAKmMmaVcFMeVK1ERhTa+fIRGtq4BFZp9N9ExSXXy4WpqoMoQl3nDEY/CwNdJNNUfbGIJDJKf9fMmz/DgGsR+irrOpQTyxdgl/HbR0bjNoRTbFgPBsmTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=rO6nA/SF; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1750685180; c=relaxed/simple;
+	bh=01ZS0geC59JuQg97iYsCYJJHGdkRPCrZsfjU9r0fFs4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k7v4o7HH15RbN7eFdq8O7CBnF1NiIOXpVPHjeLbGm/6Uc7yZ90HHSJt6EmiI3mnxtugyjfIZh8vH49rR1asyIFdPRzIBP5aNH1U7hesfV9lSyITid8dBoztXoM2UKmqlMM1T/kwrVzhKk4jG0OTN/Jwas/qkZZe6EO9ErXDdMIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QwDUdUGd; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="rO6nA/SF"
-Received: from francesco-nb.corp.toradex.com (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch [83.173.201.248])
-	by mail11.truemail.it (Postfix) with ESMTPA id 84BC71FC30;
-	Mon, 23 Jun 2025 15:26:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1750685166;
-	bh=u+uFiP/cQeKkOTD6fc5wQMcjMGmy3Mcby1TgFOYHp5E=; h=From:To:Subject;
-	b=rO6nA/SFi386mqqis4g2A7h4UbC+DOwyyYEhBIcZUrQOvduPGB9q1ake9SCkiUGjA
-	 3bQ24qb0BVQvS+6SSdF3N6W/rEn4QIOqiBdqJuXqgRtKlT5JX0myKtimX81ukmm4JW
-	 LNiyRuPf2m8P0hSKfxEtV2SzX5GNcbDmmgAZVy+L+uymG0eVrIMipRzt0Z9HhwtVHL
-	 ev1m1+6TfyAY5aECOULVChITLLIDtPPt5EwXpqp7lf1hFktPiJNdyB8zNojZU7G1cO
-	 UKN/qF7vYSaHJoXlmmPYh1H450pJizr0Ytha2iNgRxV790/uKAVXY53Kn+EeKNHTK5
-	 IK2gCsyu13BQQ==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v1] arm64: dts: freescale: imx8mm-verdin: Keep LDO5 always on
-Date: Mon, 23 Jun 2025 15:25:45 +0200
-Message-Id: <20250623132545.111619-1-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QwDUdUGd"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4a58c2430edso45701121cf.1;
+        Mon, 23 Jun 2025 06:26:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750685176; x=1751289976; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=3eOpyFVJG9l5oUXrAK/DF72wqTy5+U/0d5OHsjl5CoM=;
+        b=QwDUdUGd7QsT8KjLHp/b5GZB504AbONqVZa9RL98F7FaRg/j8HN6y2NpyBmUTu4HLe
+         ztskqTyggPK6oVX1FSaHL6HnsSczA1TaW03/pNvv9d0pouc0IfdiSSRH2u1QiYRQZiL8
+         pyM6ZcdlGeuxyDAJNsE68wyJ9pHdrGWQ7aWL1Eca7bd6QMY8mVNKpGgdRGVbd5xBRapJ
+         dBqZP0IQcMOjCRWUYq2GsydQM57S/Wq10t5NWUUUksQr35uLFAfIso6s6TDN3A0ytoka
+         SDfM1YTL4tsp8FjGQas1/6zk5akKk8xfGPwdGsc3PUaxpsObs+SHoaqMfmr9+n7eN1aI
+         +CRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750685176; x=1751289976;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3eOpyFVJG9l5oUXrAK/DF72wqTy5+U/0d5OHsjl5CoM=;
+        b=JNKznFdywjB+FHZdqKd6Y9X4mpPSHaBKJWU03bXUgBDuh1tVOw7be23SFVPNUW1DRb
+         vngCG4ePi3ZeNYOnacOUpvfZ0wZMQWj7yjXV4spFeS2a2raCgQtcJSxZyfb/ecNaJcl1
+         OWkiG1mlApuGjxzJLOxf18JYf4WKPH93Yfzs/9HNryPLEljI+YCP4LtfVc5iQKmY7/Ce
+         0Cn0SibYQKUcmiNlaFJNoTU0YRaF+WsUEyaGfILYzPlA4NRiXT+zjnB1avtAlpWaik+H
+         3dsImL5SQUS9PP001bgqt1hLtX2tyjzOgYQtXTGSeJz/PBfvgIOA1Z6qUIR7ZjeVhrwI
+         D0Qw==
+X-Forwarded-Encrypted: i=1; AJvYcCWhf+cVD4Y2bFEneFG6RyP/w8kA1W0aNeYOjoRyV8x3cfEJ/6yBZbNzhFHUtw+W+FZs8hKsjge2tDKEdysp4Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxU0iIkdCTI0L3LSlMBZ1Py8A6ezMXnW2SBNYRk0anNxJznBzrt
+	kP4fXpjmfdVVX97SHTSKmVt4MmulesOk0eOYe0xZCktTKz7xFKBNpIAznZfN9Q==
+X-Gm-Gg: ASbGncsl5jRQ4jKNA/D710ULR40MkxEhPzNRS0eOVTI79AK2VBTOiRZmSqbY9ksAFOl
+	vMuELlV9imOn4ItJWi4igr/HAaxqnoaLtRq3BmQgGEXg1XOMwHYEaFNLYd6xeRwVBllaVnmAbRa
+	w49N1OUs9VtVP90ftNAd/mfUnIVjo8PCoGrgf9TwNnvNOJMMUDcpoQ4tUMTBBGhOVi04HeJ/IOA
+	0FFV7bZUevN4KRGEls27bFvCKxYKNVvWrkcxhjHauDk3Y0Fs6wnB03M8GO2zDrsxK3Hg8qi12ei
+	XPHm7UYHZj2OwQqVp2T8L8FrSjEUz80DTe0kVHlDsteGmMaCtK2P5PW+X0XZ28JSU5aKHUn1/xG
+	DT+9JJjwM8uJe06Vi8+nRE+V8eboH6f/RxwSEqRHcp+ym9KFP2zk1
+X-Google-Smtp-Source: AGHT+IFXyn4krfA3+xu92n9peLo2YgUxIlQqv3LhvAerXtwNIL5NbgiUEziK5dqmkj2SfOf22+zayg==
+X-Received: by 2002:a05:622a:489a:b0:4a6:f00f:6618 with SMTP id d75a77b69052e-4a77c2ddf4fmr177575571cf.10.1750685176331;
+        Mon, 23 Jun 2025 06:26:16 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a779e5d304sm38147001cf.39.2025.06.23.06.26.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 06:26:15 -0700 (PDT)
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 7280F1200043;
+	Mon, 23 Jun 2025 09:26:15 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Mon, 23 Jun 2025 09:26:15 -0400
+X-ME-Sender: <xms:91VZaPIHX6Z14vTVHPxFKfcjg_2WIRBwgsTXTSi2Yuw_Jk_9y_5BsA>
+    <xme:91VZaDLqp67oq6PhBQJd7SpWmK1QC4ipxe5WoEiGRFV0np1EI1K6zBw3VASNylBxs
+    jb0XY_C4lQx7Agl9w>
+X-ME-Received: <xmr:91VZaHv7X3No4HoWWgOwDR5GL2lHN_vfuy26oJNdKMlF3L4ek1YVYVxRsA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddujedugecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecunecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertd
+    dttddunecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhm
+    rghilhdrtghomheqnecuggftrfgrthhtvghrnhepkeefjefgueeitdeuhfduheffledvhe
+    evffethedtudfhffejieffveeuieduheffnecuffhomhgrihhnpehkvghrnhgvlhdrohhr
+    ghdpmhhuthgvgidruggrthgrpdhmuhhtvgigrdgrshenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhp
+    vghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrd
+    hfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthht
+    ohepudelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeifohhrkhesohhnuhhroh
+    iikhgrnhdruggvvhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhk
+    vghrnhgvlhdrohhrghdprhgtphhtthhopehruhhsthdqfhhorhdqlhhinhhugiesvhhgvg
+    hrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpth
+    htohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtoheplhhoshhsihhnsehk
+    vghrnhgvlhdrohhrghdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhm
+X-ME-Proxy: <xmx:91VZaIYBFiC1dOYWmkQ4R_AIavL-zXAvbWkUUbNbNFDabaUU-BREow>
+    <xmx:91VZaGbOiEbYKGVTQqte_26AM6EUaAP7UW4SSt7YHw0Er38XYziutA>
+    <xmx:91VZaMAhnizNuTI8WAyDIOqTzWSzb5p59Nl5VwcPfAVUWKmVeubo0A>
+    <xmx:91VZaEZwRCE5cg2K8rZGsgUpvZG78pa5tqgI-OtMIdDtDSO7UhtWZQ>
+    <xmx:91VZaKp-O-SkXk1HP7tOhOe1_EW85IZWOFSZ1AirPmI7KH_gbgJsywen>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 23 Jun 2025 09:26:14 -0400 (EDT)
+Date: Mon, 23 Jun 2025 06:26:14 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Onur =?iso-8859-1?Q?=D6zkan?= <work@onurozkan.dev>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
+	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, dakr@kernel.org, peterz@infradead.org,
+	mingo@redhat.com, will@kernel.org, longman@redhat.com,
+	felipe_life@live.com, daniel@sedlak.dev, bjorn3_gh@protonmail.com
+Subject: Re: [PATCH v5 2/3] implement ww_mutex abstraction for the Rust tree
+Message-ID: <aFlV9ky2RKrYnrJX@Mac.home>
+References: <20250621184454.8354-1-work@onurozkan.dev>
+ <20250621184454.8354-3-work@onurozkan.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250621184454.8354-3-work@onurozkan.dev>
 
-From: Francesco Dolcini <francesco.dolcini@toradex.com>
+On Sat, Jun 21, 2025 at 09:44:53PM +0300, Onur Özkan wrote:
+[...]
+> +#[pin_data(PinnedDrop)]
+> +pub struct WwAcquireCtx<'a> {
+> +    #[pin]
+> +    inner: Opaque<bindings::ww_acquire_ctx>,
+> +    _p: PhantomData<&'a WwClass>,
+> +}
+> +
+> +// SAFETY: Used in controlled ways during lock acquisition. No race risk.
+> +unsafe impl Sync for WwAcquireCtx<'_> {}
+> +// SAFETY: Doesn't rely on thread-local state. Safe to move between threads.
+> +unsafe impl Send for WwAcquireCtx<'_> {}
+> +
 
-LDO5 regulator is used to power the i.MX8MM NVCC_SD2 I/O supply, that is
-used for the SD2 card interface and also for some GPIOs.
+I don't think `WwAcquireCtx` is `Send`, if you look at C code when
+LOCKDEP is enabled, `ww_acquire_init()` calls a few `mutex_acquire()`
+and expects `ww_acquire_fini()` to call the corresponding
+`mutex_release()`, and these two have to be on the same task. Also I
+don't think there is a need for sending `WwAcquireCtx` to another
+thread.
 
-When the SD card interface is not enabled the regulator subsystem could
-turn off this supply, since it is not used anywhere else, however this
-will also remove the power to some other GPIOs, for example one I/O that
-is used to power the ethernet phy, leading to a non working ethernet
-interface.
+Besides, the `Sync` of `WwAcquireCtx` also doesn't make sense, I would
+drop it if there is no real usage for now.
 
-[   31.820515] On-module +V3.3_1.8_SD (LDO5): disabling
-[   31.821761] PMIC_USDHC_VSELECT: disabling
-[   32.764949] fec 30be0000.ethernet end0: Link is Down
+> +impl<'ctx> WwAcquireCtx<'ctx> {
+> +    /// Initializes `Self` with calling C side `ww_acquire_init` inside.
+> +    pub fn new<'class: 'ctx>(ww_class: &'class WwClass) -> impl PinInit<Self> {
+> +        let raw_ptr = ww_class.inner.get();
+> +        pin_init!(WwAcquireCtx {
+> +            inner <- Opaque::ffi_init(|slot: *mut bindings::ww_acquire_ctx| {
+> +                // SAFETY: The caller guarantees that `ww_class` remains valid.
+> +                unsafe { bindings::ww_acquire_init(slot, raw_ptr) }
+> +            }),
+> +            _p: PhantomData
+> +        })
+> +    }
+> +
+> +    /// Marks the end of the acquire phase with C side `ww_acquire_done`.
+> +    ///
+> +    /// After calling this function, no more mutexes can be acquired with this context.
+> +    pub fn done(self: Pin<&mut Self>) {
+> +        // SAFETY: The context is pinned and valid.
+> +        unsafe { bindings::ww_acquire_done(self.inner.get()) };
+> +    }
+> +
+> +    /// Returns a raw pointer to the inner `ww_acquire_ctx`.
+> +    fn as_ptr(&self) -> *mut bindings::ww_acquire_ctx {
+> +        self.inner.get()
+> +    }
+> +}
+> +
+> +#[pinned_drop]
+> +impl PinnedDrop for WwAcquireCtx<'_> {
+> +    fn drop(self: Pin<&mut Self>) {
+> +        // SAFETY: The context is being dropped and is pinned.
+> +        unsafe { bindings::ww_acquire_fini(self.inner.get()) };
+> +    }
+> +}
+> +
+[...]
+> +#[pin_data]
+> +pub struct WwMutex<'a, T: ?Sized> {
+> +    _p: PhantomData<&'a WwClass>,
+> +    #[pin]
+> +    mutex: Opaque<bindings::ww_mutex>,
+> +    data: UnsafeCell<T>,
+> +}
+> +
+> +// SAFETY: [`WwMutex`] can be shared between threads.
+> +unsafe impl<T: ?Sized + Send> Send for WwMutex<'_, T> {}
+> +// SAFETY: [`WwMutex`] can be safely accessed from multiple threads concurrently.
+> +unsafe impl<T: ?Sized + Sync> Sync for WwMutex<'_, T> {}
 
-Fix this keeping the LDO5 supply always on.
+I believe this requires `T` being `Send` as well, because if `&WwMutex`
+is shared between threads, that means any thread can access `&mut T`
+when the lock acquired.
 
-Cc: stable@vger.kernel.org
-Fixes: 6a57f224f734 ("arm64: dts: freescale: add initial support for verdin imx8m mini")
-Fixes: f5aab0438ef1 ("regulator: pca9450: Fix enable register for LDO5")
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
- arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+> +
+> +impl<'ww_class, T> WwMutex<'ww_class, T> {
+> +    /// Creates `Self` with calling `ww_mutex_init` inside.
+> +    pub fn new(t: T, ww_class: &'ww_class WwClass) -> impl PinInit<Self> {
+> +        let raw_ptr = ww_class.inner.get();
+> +        pin_init!(WwMutex {
+> +            mutex <- Opaque::ffi_init(|slot: *mut bindings::ww_mutex| {
+> +                // SAFETY: The caller guarantees that `ww_class` remains valid.
+> +                unsafe { bindings::ww_mutex_init(slot, raw_ptr) }
+> +            }),
+> +            data: UnsafeCell::new(t),
+> +            _p: PhantomData,
+> +        })
+> +    }
+> +}
+> +
+[...]
+> +    /// Checks if the mutex is currently locked.
+> +    pub fn is_locked(&self) -> bool {
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
-index d29710772569..1594ce9182a5 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
-@@ -464,6 +464,7 @@ reg_vdd_phy: LDO4 {
- 			};
- 
- 			reg_nvcc_sd: LDO5 {
-+				regulator-always-on;
- 				regulator-max-microvolt = <3300000>;
- 				regulator-min-microvolt = <1800000>;
- 				regulator-name = "On-module +V3.3_1.8_SD (LDO5)";
--- 
-2.39.5
+Did I miss a reply from you regarding:
 
+	https://lore.kernel.org/rust-for-linux/aFReIdlPPg4MmaYX@tardis.local/
+
+no public is_lock() please. Do an assert_is_locked() instead. We need to
+avoid users from abusing this.
+
+> +        // SAFETY: The mutex is pinned and valid.
+> +        unsafe { bindings::ww_mutex_is_locked(self.mutex.get()) }
+> +    }
+> +
+> +    /// Returns a raw pointer to the inner mutex.
+> +    fn as_ptr(&self) -> *mut bindings::ww_mutex {
+> +        self.mutex.get()
+> +    }
+> +}
+> +
+> +/// A guard that provides exclusive access to the data protected
+> +/// by a [`WwMutex`].
+> +///
+> +/// # Invariants
+> +///
+> +/// The guard holds an exclusive lock on the associated [`WwMutex`]. The lock is held
+> +/// for the entire lifetime of this guard and is automatically released when the
+> +/// guard is dropped.
+> +#[must_use = "the lock unlocks immediately when the guard is unused"]
+> +pub struct WwMutexGuard<'a, T: ?Sized> {
+> +    mutex: &'a WwMutex<'a, T>,
+> +    _not_send: NotThreadSafe,
+> +}
+> +
+> +// SAFETY: [`WwMutexGuard`] can be transferred across thread boundaries if the data can.
+> +unsafe impl<T: ?Sized + Send> Send for WwMutexGuard<'_, T> {}
+
+Nope, ww_mutex is still a mutex, you cannot acquire the lock in one task
+and release the lock on another task.
+
+> +
+> +// SAFETY: [`WwMutexGuard`] can be shared between threads if the data can.
+> +unsafe impl<T: ?Sized + Send + Sync> Sync for WwMutexGuard<'_, T> {}
+
+You don't need the `Send` here? A `&WwMutexGuard` doesn't provide the
+access to `&mut T`, so being `Sync` suffices.
+
+Regards,
+Boqun
+
+> +
+> +impl<'a, T: ?Sized> WwMutexGuard<'a, T> {
+> +    /// Creates a new guard for a locked mutex.
+> +    fn new(mutex: &'a WwMutex<'a, T>) -> Self {
+> +        Self {
+> +            mutex,
+> +            _not_send: NotThreadSafe,
+> +        }
+> +    }
+> +}
+> +
+> +impl<T: ?Sized> core::ops::Deref for WwMutexGuard<'_, T> {
+> +    type Target = T;
+> +
+> +    fn deref(&self) -> &Self::Target {
+> +        // SAFETY: We hold the lock, so we have exclusive access.
+> +        unsafe { &*self.mutex.data.get() }
+> +    }
+> +}
+> +
+> +impl<T: ?Sized> core::ops::DerefMut for WwMutexGuard<'_, T> {
+> +    fn deref_mut(&mut self) -> &mut Self::Target {
+> +        // SAFETY: We hold the lock, so we have exclusive access.
+> +        unsafe { &mut *self.mutex.data.get() }
+> +    }
+> +}
+> +
+> +impl<T: ?Sized> Drop for WwMutexGuard<'_, T> {
+> +    fn drop(&mut self) {
+> +        // SAFETY: We hold the lock and are about to release it.
+> +        unsafe { bindings::ww_mutex_unlock(self.mutex.as_ptr()) };
+> +    }
+> +}
+> -- 
+> 2.49.0
+> 
