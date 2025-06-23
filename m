@@ -1,116 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7F01A3168
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:21:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA5119F40F;
+	Mon, 23 Jun 2025 09:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750670472; cv=none; b=iXMwrl6s5GhPLFIqwNjCUC9jk+hWRNqvtyuqkNRefkOda++/MMABVdzcExp6KDlOThyu4fG2FRZ3fdTerrztm41ABZkIM2TD6iYwo+NWZQ70MH1xVfrXVtBqd3dh6rugsXOib8XjlnJ7ID27RoKuAteWWxJtlOzcnjzgVuyAyg8=
+	t=1750670472; cv=none; b=gr36ckNd5q6+JTCow9vwA7B7s6D/MV9sGbaXGPNxDIqeGIYowZ/aq8/OSUAIO5N8VN81KLG+Ug1EzFbFmQGk3kv9Z++TH8e5FEEWA5+MkYP80yOyy5zk+pYcEFZFSk4FTEMPyo8Fos+jY7xsnakNekcaJJPakAbq8Qqz2+hDve8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750670472; c=relaxed/simple;
-	bh=WHuMrT4VV4Bu1Jl7ZtS7maj/zCPsiEJExK/Xuq5G/B4=;
+	bh=xB38TcCLu3+82uTnlKr9eJXWn6quvpnALLWg8EhWsvE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jiOo0j1a6j91w0GSg5E/LMw81zBNEQTAsM/YCRwjvGCcse+m61CNNe9B+LwpexT/xKD4nryJ7iea/6zhRtdHriZoQG1aeazD2vQ+oYV1Cp4mmQ64oqT3aumPgraDGiebQq+oofevoR90bE3kIyPrAjPHiC9MNXv1KJ1K1qXy84A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WPhft0/e; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=TTSDYZtzcEGtEQNnJm7zGYHJewHaGDF7tQGwydbbNXxCGEHFd59P7ysZiJIukJ+tAJE0TITEsVUVsZtrlPzhD7BKgRs//HnZoCjQ8Mf67R9lrqSRFlxirTd/rcXXl83OlJAHZp8qzPU3m+gZDqjTfMC7aPjb/DcvUDUulaWLtCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=ZJYwCt/1; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WPhft0/e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750670470; x=1782206470;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=WHuMrT4VV4Bu1Jl7ZtS7maj/zCPsiEJExK/Xuq5G/B4=;
-  b=WPhft0/eXQ7q4pXRYCsFsS3P36vfqoAZ0MxXwOajxgf71rxu/WgBp1Le
-   aVJ+VGv2xT/egRhEs2avMx6iTNP9DEU2/XGLoWOCrE7DDrEqb4KyPndzJ
-   e9l6YUHOXUlU0l3cped84mt7/uPXsdyN+Zdwfq2pSkKfmUExoc5IWaAvC
-   UavjoyGe7iNBMiO9/IFQnnB5zfQO70N0b2Jvn1Qgh0boA9/fs5I2R+io5
-   pfN9M8pLJ3AG+wAJz8ywjOxWrUYj74adeNsS5mjPRhOFlMds3g111dsqr
-   iERy0fiDzsZiMtFWA0+PQIo77BUgAkXE3+1zFGbqwtrQZM1N60FfjDlBp
-   w==;
-X-CSE-ConnectionGUID: eyKgD6ZsRfG83hXETxocgQ==
-X-CSE-MsgGUID: DAv+p/d6Q+ehNsko+flAqw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="52839482"
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="52839482"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 02:21:10 -0700
-X-CSE-ConnectionGUID: zj72m9qZRfG6/tslyOohHw==
-X-CSE-MsgGUID: 2Y3bHLmbSB+kGoHi9UbV4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="152218840"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 02:21:07 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uTdMO-000000097WG-0pHz;
-	Mon, 23 Jun 2025 12:21:04 +0300
-Date: Mon, 23 Jun 2025 12:21:03 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
-Subject: Re: [PATCH v1 1/1] x86/defconfigs: Explicitly unset CONFIG_64BIT in
- i386_defconfig
-Message-ID: <aFkcf6it0bW36jdw@smile.fi.intel.com>
-References: <20250623072536.3425344-1-andriy.shevchenko@linux.intel.com>
- <20250623090642.GAaFkZIq__HR0FJE-0@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="ZJYwCt/1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=rrj7xmeWsaYEs+b59Xu6ZhIhwnsn9oGNVVzm3qZFXi0=; b=ZJYwCt/1YSfPxxVhxjKWB5BxOO
+	ZAY7XWLF8weWu3UurufpNuaixzvetK4o0XWh7va0R8iMcPAZSyOlxqfJCZdOAT62qt+mAQunHTizW
+	y/+D7kFK7guYgtJB4AfxwGRyNtDEAV376su7sXi8gt2L4aGMLuRCEdWC13p+1irpsPaB1bONFJjXq
+	Lkm1hKS+drGd7lZvgsM4zmcaSHMhBqnb+OybTs/MA/TN7MO40Pjs0r0nd9wNISca9IKNH8gaGGxw2
+	BhHijgJARQmkI+aVisswgpr6ozSdO9P/eRKZ5O427pnL4rOumoxAGlRpnreoAgAsoxawYN72LZCcx
+	lRkbnyVA==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uTd6d-000FYl-1G;
+	Mon, 23 Jun 2025 17:20:44 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 23 Jun 2025 17:20:43 +0800
+Date: Mon, 23 Jun 2025 17:20:43 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: linux@treblig.org
+Cc: arei.gonglei@huawei.com, mst@redhat.com, jasowang@redhat.com,
+	xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
+	davem@davemloft.net, virtualization@lists.linux.dev,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] virtio-crypto: Remove unused virtcrypto functions
+Message-ID: <aFkcawtiloUrjm3I@gondor.apana.org.au>
+References: <20250614000505.596563-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250623090642.GAaFkZIq__HR0FJE-0@fat_crate.local>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20250614000505.596563-1-linux@treblig.org>
 
-On Mon, Jun 23, 2025 at 11:06:42AM +0200, Borislav Petkov wrote:
-> On Mon, Jun 23, 2025 at 10:25:36AM +0300, Andy Shevchenko wrote:
-> > From: Daniel Díaz <daniel.diaz@linaro.org>
-> > 
-> > A recent refresh of the defconfigs got rid of the following
-> > (unset) config:
-> > 
-> >   # CONFIG_64BIT is not set
-> > 
-> > Innocuous as it seems, when the config file is saved again the
-> > behavior is changed so that CONFIG_64BIT=y.
-> > 
-> > Currently,
-> > 
-> >   $ make i386_defconfig
-> >   $ grep CONFIG_64BIT .config
-> >   CONFIG_64BIT=y
-> > 
-> > whereas previously (and with this patch):
-> > 
-> >   $ make i386_defconfig
-> >   $ grep CONFIG_64BIT .config
-> >   # CONFIG_64BIT is not set
-> > 
-> > Fixes: 0e11f689ec03 ("x86/kconfig/32: Refresh defconfig")
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Sat, Jun 14, 2025 at 01:05:05AM +0100, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> virtcrypto_devmgr_get_first() and virtcrypto_dev_in_use() were added in
+> 2016 by
+> commit dbaf0624ffa5 ("crypto: add virtio-crypto driver")
+> 
+> but have remained unused.
+> 
+> Remove them.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> ---
+>  drivers/crypto/virtio/virtio_crypto_common.h |  2 --
+>  drivers/crypto/virtio/virtio_crypto_mgr.c    | 36 --------------------
+>  2 files changed, 38 deletions(-)
 
-> No SOB by Daniel?
-
-Ah, this is just a cherry-pick (with fixing conflicts, updated Fixes
-and removed the last paragraph) of 5y.o. 76366050eb1b ("x86/defconfigs:
-Explicitly unset CONFIG_64BIT in i386_defconfig"), it should be standalone
-patch. I borrowed the commit message.  So, whatever you prefer: I can send
-it again as the original one, one of x86 maintainers can do themselves
-the cherry-picking / conflict resolution, or I can resend it as mine.
-
+Patch applied.  Thanks.
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
