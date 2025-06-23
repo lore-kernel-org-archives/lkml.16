@@ -1,124 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F292A1AA;
-	Mon, 23 Jun 2025 09:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612A622DA0C;
+	Mon, 23 Jun 2025 09:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750672074; cv=none; b=sQWHkl9v7IT+Y+dR+39Al8vtPlec3yRsgYQvAj3f6S+dRh2g+2v5DcVR0yJtkbUnSdTiCj75jBbS1AoPOQdD980HSZuQBd9nJ0nqTG8fjAsGTWEBLbjZKrKGT9sSWNL4vPKvRWJ5xMFvXPMpkFSNWWaV97gtZ+2BRRj4FskZ5N4=
+	t=1750672102; cv=none; b=tG3pys7Wt5ujxS2j7//SUjH+KNtRo4a9ldBz5l06cYZLxHFvVr0N90ytM4Wpv0wH3LrFx3i4lmI1dMRLG8J180ekToqaULXyDC9A01feUlYv2xGKvO7UfK1XTZB5hVVkFrtPxo9sZQ1K1V6t3KZ5q03K1yDQQYAzfJLtZqUm7nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750672074; c=relaxed/simple;
-	bh=M3wDsMVnMxBIbp4y9+JARPWxPf7DiKPaxlrwuAYYhwA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=EYjdgj4AJG+GGmB/7c+zLfY0exBVfHp5++YP/b+sOiHOnqS5/Gf1eWDchuy6a/idlRneUWtVQgP+k7FPhSxiUlwBvPkffzPob6dTXKL9wFR2bpJWkVjiweB2/Htvc/edrnFXFuIRkSDxFtvsKAhum2FwV6MVHnC9J3qaavaM5xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kx05u67J; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kx05u67J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58121C4CEEA;
-	Mon, 23 Jun 2025 09:47:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750672074;
-	bh=M3wDsMVnMxBIbp4y9+JARPWxPf7DiKPaxlrwuAYYhwA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Kx05u67J4F1GId/vsrq7rWKFpNiVGyI1JPp1Ht+PYbIAwnv++MQHoHwUz08gtWw/1
-	 quwpo80CiM9ZJRLn3IsHrU1JLrkSAqziq23Ns3XbuswrR/daGQFAB1FZGwmrsdEtWa
-	 3pYMQ85laE6M65/1Z7f11+oAqOiAkyGjAoKh7qD+FdnMMLBJS6YNQvmXUi2ThN4eFJ
-	 jHJRLlb8NJ79v1ezaiU9teqmgTiN6o1/KzE8z3WW5RmhGd3rsXsM2ARWXQKLGciFXO
-	 H9zdPQBsbbUX/qNc+lNt+kXABf3ZUazVDOcat6nQFy/eU+wbwHnZ0xveKPAdcJHthj
-	 nYdVlZsef8uWA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Alice
- Ryhl" <aliceryhl@google.com>,  "Masahiro Yamada" <masahiroy@kernel.org>,
-  "Nathan Chancellor" <nathan@kernel.org>,  "Luis Chamberlain"
- <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,  "Nicolas
- Schier" <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
-  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
-  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
- <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
- KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
-  "Daniel Almeida" <daniel.almeida@collabora.com>,
-  <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
-In-Reply-To: <DARCZYNPIJVZ.3JJSZ6PSAEMEC@kernel.org> (Benno Lossin's message
-	of "Fri, 20 Jun 2025 14:28:44 +0200")
-References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
-	<20250612-module-params-v3-v13-2-bc219cd1a3f8@kernel.org>
-	<COU2bqJOzCHRf6g4rwFpu2NY3wLY0G0AmNjRaU9aGEqu1HaPZ5X4KzfDT_CEB3Okh5BV50sJS10sKhmtHut8ew==@protonmail.internalid>
-	<DAQJCUE1C2JE.204A8IS7LBIVZ@kernel.org> <87ikkq648o.fsf@kernel.org>
-	<smOfUo2mEmQu-lykKKMiNOUWq2ze6p_CoEEpgGE0dtAnoJDGEpvQMkP1q-n13MiUxLK1xAiM-4QLsivPrG57sg==@protonmail.internalid>
-	<DARCZYNPIJVZ.3JJSZ6PSAEMEC@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Mon, 23 Jun 2025 11:47:43 +0200
-Message-ID: <871pra6b7k.fsf@kernel.org>
+	s=arc-20240116; t=1750672102; c=relaxed/simple;
+	bh=CxIboCksDcTzApmteruO0n3a8XWrSEfoEtGyzoxxwew=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fz3I1tnvC7DOLTBmD3hcdfW8r5Y9m+4Fgsr++czWs0I0hnRG3r9CiPQN8u1FhzhZue64S5Gkt+wk1aVxrPobyM7NdcdEEsqa+zB+JZzL9ssyUmOfm8PvC2EZGt+nD0CA3X2YosNtmlNkHcq33lXyWX6RoSX0OJOo+BEPnoX2egY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQjnQ5p01z6L5jB;
+	Mon, 23 Jun 2025 17:43:22 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 877431402EA;
+	Mon, 23 Jun 2025 17:48:18 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
+ 2025 11:48:17 +0200
+Date: Mon, 23 Jun 2025 10:48:16 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Neeraj Kumar <s.neeraj@samsung.com>
+CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>,
+	<anisa.su@samsung.com>, <vishak.g@samsung.com>, <krish.reddy@samsung.com>,
+	<arun.george@samsung.com>, <alok.rathore@samsung.com>,
+	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<gost.dev@samsung.com>, <cpgs@samsung.com>
+Subject: Re: [RFC PATCH 18/20] cxl/pmem: Add support of cxl lsa 2.1 support
+ in cxl pmem
+Message-ID: <20250623104816.00005075@huawei.com>
+In-Reply-To: <592959754.121750165383213.JavaMail.epsvc@epcpadp2new>
+References: <20250617123944.78345-1-s.neeraj@samsung.com>
+	<CGME20250617124058epcas5p2324bd3b1bf95d47f553d90fdc727e50d@epcas5p2.samsung.com>
+	<592959754.121750165383213.JavaMail.epsvc@epcpadp2new>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-"Benno Lossin" <lossin@kernel.org> writes:
+On Tue, 17 Jun 2025 18:09:42 +0530
+Neeraj Kumar <s.neeraj@samsung.com> wrote:
 
-> On Fri Jun 20, 2025 at 1:29 PM CEST, Andreas Hindborg wrote:
->> "Benno Lossin" <lossin@kernel.org> writes:
->>> On Thu Jun 12, 2025 at 3:40 PM CEST, Andreas Hindborg wrote:
->>>> +/// A wrapper for kernel parameters.
->>>> +///
->>>> +/// This type is instantiated by the [`module!`] macro when module parameters are
->>>> +/// defined. You should never need to instantiate this type directly.
->>>> +///
->>>> +/// Note: This type is `pub` because it is used by module crates to access
->>>> +/// parameter values.
->>>> +#[repr(transparent)]
->>>> +pub struct ModuleParamAccess<T> {
->>>> +    data: core::cell::UnsafeCell<T>,
->>>> +}
->>>> +
->>>> +// SAFETY: We only create shared references to the contents of this container,
->>>> +// so if `T` is `Sync`, so is `ModuleParamAccess`.
->>>> +unsafe impl<T: Sync> Sync for ModuleParamAccess<T> {}
->>>> +
->>>> +impl<T> ModuleParamAccess<T> {
->>>> +    #[doc(hidden)]
->>>> +    pub const fn new(value: T) -> Self {
->>>> +        Self {
->>>> +            data: core::cell::UnsafeCell::new(value),
->>>> +        }
->>>> +    }
->>>> +
->>>> +    /// Get a shared reference to the parameter value.
->>>> +    // Note: When sysfs access to parameters are enabled, we have to pass in a
->>>> +    // held lock guard here.
->>>> +    pub fn get(&self) -> &T {
->>>> +        // SAFETY: As we only support read only parameters with no sysfs
->>>> +        // exposure, the kernel will not touch the parameter data after module
->>>> +        // initialization.
->>>
->>> This should be a type invariant. But I'm having difficulty defining one
->>> that's actually correct: after parsing the parameter, this is written
->>> to, but when is that actually?
->>
->> For built-in modules it is during kernel initialization. For loadable
->> modules, it during module load. No code from the module will execute
->> before parameters are set.
->
-> Gotcha and there never ever will be custom code that is executed
-> before/during parameter setting (so code aside from code in `kernel`)?
+> Add support of cxl lsa 2.1 using NDD_CXL_LABEL flag. It also creates cxl
+> region based on region information parsed from LSA.
+> 
+> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+> ---
+>  drivers/cxl/pmem.c | 59 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+> 
+> diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+> index ffcebb8d382f..2733d79b32d5 100644
+> --- a/drivers/cxl/pmem.c
+> +++ b/drivers/cxl/pmem.c
+> @@ -58,6 +58,63 @@ static const struct attribute_group *cxl_dimm_attribute_groups[] = {
+>  	NULL
+>  };
+>  
+> +static int match_ep_decoder(struct device *dev, void *data)
+> +{
+> +	struct cxl_decoder *cxld = to_cxl_decoder(dev);
+> +
+> +	if (!cxld->region)
+> +		return 1;
+> +	else
+> +		return 0;
+> +}
+> +
+> +static struct cxl_decoder *cxl_find_free_decoder(struct cxl_port *port)
+> +{
+> +	struct device *dev;
+> +
+> +	dev = device_find_child(&port->dev, NULL, match_ep_decoder);
+> +	if (!dev)
+> +		return NULL;
+> +
+> +	return to_cxl_decoder(dev);
+> +}
+> +
+> +static int create_pmem_region(struct nvdimm *nvdimm)
+> +{
+> +	struct cxl_nvdimm *cxl_nvd;
+> +	struct cxl_memdev *cxlmd;
+> +	struct cxl_nvdimm_bridge *cxl_nvb;
+> +	struct cxl_pmem_region_params *params;
+> +	struct cxl_root_decoder *cxlrd;
+> +	struct cxl_decoder *cxld;
+> +	struct cxl_region *cxlr;
+> +
+> +	if (!nvdimm)
+> +		return -ENOTTY;
 
-Not with the parameter parsers we provide now. In the case of custom
-parsing code, I suppose there is nothing preventing the parsing code
-from spinning up a thread that could do stuff while more parameters are
-initialized by the kernel.
+As with other checks like this, it is useful to add a comment on when you can
+call this function with a null parameter.
 
+> +
+> +	if (!nvdimm_has_cxl_region(nvdimm))
+> +		return 0;
+> +
+> +	cxl_nvd = nvdimm_provider_data(nvdimm);
+> +	params = nvdimm_get_cxl_region_param(nvdimm);
+> +	cxlmd = cxl_nvd->cxlmd;
+> +	cxl_nvb = cxlmd->cxl_nvb;
+> +	cxlrd = cxlmd->cxlrd;
+> +
+> +	/* FIXME: Limitation: Region creation only when interleave way == 1 */
+> +	if (params->nlabel == 1) {
+> +		cxld = cxl_find_free_decoder(cxlmd->endpoint);
+> +		cxlr = cxl_create_pmem_region(cxlrd, cxld, params,
+> +				atomic_read(&cxlrd->region_id));
+> +		if (IS_ERR(cxlr))
+> +			dev_dbg(&cxlmd->dev, "Region Creation failed\n");
+> +	} else {
+> +		dev_dbg(&cxlmd->dev, "Region Creation is not supported with iw > 1\n");
+> +	}
 
-Best regards,
-Andreas Hindborg
+Flip logic to check for unhandled case first and also return an error if this happens
+rather than silently carrying on. dev_info() is appropriate here.
 
+> +
+> +	return 0;
+> +}
+> +
+>  static int cxl_nvdimm_probe(struct device *dev)
+>  {
+>  	struct cxl_nvdimm *cxl_nvd = to_cxl_nvdimm(dev);
+> @@ -74,6 +131,7 @@ static int cxl_nvdimm_probe(struct device *dev)
+>  		return rc;
+>  
+>  	set_bit(NDD_LABELING, &flags);
+> +	set_bit(NDD_CXL_LABEL, &flags);
+>  	set_bit(NDD_REGISTER_SYNC, &flags);
+>  	set_bit(ND_CMD_GET_CONFIG_SIZE, &cmd_mask);
+>  	set_bit(ND_CMD_GET_CONFIG_DATA, &cmd_mask);
+> @@ -86,6 +144,7 @@ static int cxl_nvdimm_probe(struct device *dev)
+>  		return -ENOMEM;
+>  
+>  	dev_set_drvdata(dev, nvdimm);
+> +	create_pmem_region(nvdimm);
+>  	return devm_add_action_or_reset(dev, unregister_nvdimm, nvdimm);
+>  }
+>  
 
