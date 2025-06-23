@@ -1,396 +1,420 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E1A1E519;
-	Mon, 23 Jun 2025 03:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3048F1DDD1;
+	Mon, 23 Jun 2025 03:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750648771; cv=none; b=SpgJWsfCVagE8Uh32//1ppIx5pofx7b90SdJXkd2k1rKRfo4zChvJO15KEnAZIlCD5c8Txi9Q5XIek8TiEuPwHCRUbcdAXdH3oAbxI/1fbwrjd9Fs3EJcjk4wQKBw/9L6kuSSX0HhyGZ6tqkTm5y60I7E2IBNatmcY1n9sC0lC4=
+	t=1750648928; cv=none; b=T1Lz+1AAjEgB4XYDIgk1O2BkhckWmefLhtE5INh8vHr9KdO3+3ZIzrbysexGW+8gqKHJxVGaXoMnNkLMbi165QBQBNpffsmSJ/n+X+nA6Rm+QfuqvOjgt4bulGuZTXmxNXvnI2n3QLGunqr+PtU/OGKAHwAYXbASJdJVRmYl55Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750648771; c=relaxed/simple;
-	bh=C3td4kSep2NMQJPcVJFuXKN5tO0e3P9zhipi8JTK370=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=SsVIzmc3tZhnovUtvQe2T6/uLLpbu/fKCfNE2vrGUVpHO+hnqXWp5NslV+7yRbCCOzlSxFEA/M14NkW/KPxsNPM8usr4rqWzhrdpwyUYcuvDPJEgdl5atpUnifisU11TMElStwJ5UqIuUFwc4uDWdo1xAFAKJGc9AaovhfXf7Uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4bQY9k6249zPswL;
-	Mon, 23 Jun 2025 11:15:22 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9510114027D;
-	Mon, 23 Jun 2025 11:19:19 +0800 (CST)
-Received: from [10.67.120.192] (10.67.120.192) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 23 Jun 2025 11:19:18 +0800
-Message-ID: <cb286135-466f-40b2-aaa5-a2b336d3a87c@huawei.com>
-Date: Mon, 23 Jun 2025 11:19:18 +0800
+	s=arc-20240116; t=1750648928; c=relaxed/simple;
+	bh=j2iJcTiZUaEUB5sl7gy21yauGcr03XBtSGB6HEGHjow=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=bJMmb+MUA7rSlpjO7yfJ0yuhFI2MN7NjdxWFpGiKjRutfniZrbDTuC6yKZROcojXaIxavpOTHiHzS63Ve8ZxyTvdyCtWLVC3SCllL+PwQULmnMy+VOQ/ugTRhBj/GwAHCL39Ou/SOwYz63w6HyLiQ9s4VGQ/oXD0mYHAWKYYNmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-4c-6858c85511ea
+Date: Mon, 23 Jun 2025 12:21:52 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: linux-kernel@vger.kernel.org, clm@fb.com, josef@toxicpanda.com,
+	dsterba@suse.com, linux-btrfs@vger.kernel.org
+Cc: kernel_team@skhynix.com, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, yeoreum.yun@arm.com,
+	yunseong.kim@ericsson.com, gwan-gyeong.mun@intel.com,
+	harry.yoo@oracle.com, ysk@kzalloc.com
+Subject: [RFC] DEPT report on around btrfs, unlink, and truncate
+Message-ID: <20250623032152.GB70156@system.software.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <shaojijie@huawei.com>, Jian Shen <shenjian15@huawei.com>, Salil Mehta
-	<salil.mehta@huawei.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S .
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
- Abeni <pabeni@redhat.com>, Nathan Chancellor <nathan@kernel.org>, Nick
- Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling
-	<morbo@google.com>, Justin Stitt <justinstitt@google.com>, Hao Lan
-	<lanhao@huawei.com>, Guangwei Zhang <zhangwangwei6@huawei.com>, Netdev
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<llvm@lists.linux.dev>
-Subject: Re: [PATCH] hns3: work around stack size warning
-To: Jakub Kicinski <kuba@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-References: <20250610092113.2639248-1-arnd@kernel.org>
- <41f14b66-f301-45cb-bdfd-0192afe588ec@huawei.com>
- <a029763b-6a5c-48ed-b135-daf1d359ac24@app.fastmail.com>
- <34d9d8f7-384e-4447-90e2-7c6694ecbb05@huawei.com>
- <20250612083309.7402a42e@kernel.org>
- <02b6bd18-6178-420b-90ab-54308c7504f7@huawei.com>
-From: Jijie Shao <shaojijie@huawei.com>
-In-Reply-To: <02b6bd18-6178-420b-90ab-54308c7504f7@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemk100013.china.huawei.com (7.202.194.61)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrALMWRmVeSWpSXmKPExsXC9ZZnkW7oiYgMg9ajqhZz1q9hs5jUP4Pd
+	4sKPRiaLi6//MFncX/aMxeLPQ0OLS49XsFtc3jWHzeJR31t2i7lfDC2+rF7FZrH27zVGBx6P
+	NfPWMHr8+nqVzWNi8zt2j8V7XjJ5LPz9gtnjxIzfLB4fn95i8Vi/5SqLx4TNG1k9Pm+SC+CK
+	4rJJSc3JLEst0rdL4MpYdvQte8GPiYwVK3rmsjYwXi7tYuTkkBAwkXi+fjsbjL255z4TiM0i
+	oCrx/dcesDibgLrEjRs/mUFsEYFiiVPnj7F0MXJxMAucZZS4vuIyWIOwgIPE6qvNjCA2r4CF
+	xJyuTihbUOLkzCcsIDazgJbEjX8vgeo5gGxpieX/OEDCogLKEge2HWcCmSkhcJtN4uHFH4wQ
+	B0lKHFxxg2UCI98sJKNmIRk1C2HUAkbmVYxCmXlluYmZOSZ6GZV5mRV6yfm5mxiB8bCs9k/0
+	DsZPF4IPMQpwMCrx8CbwRGQIsSaWFVfmHmKU4GBWEuE95BSWIcSbklhZlVqUH19UmpNafIhR
+	moNFSZzX6Ft5ipBAemJJanZqakFqEUyWiYNTqoGxatWP04pyYau8Tl7M6HbR9FvOdrPzefJC
+	idyp5gfEeH8FTpryQFpgh2fR9cbv3V++TMxQvT/jzd9qaUNb9ncP7V9Ur5ufvuyfP6vAqdMb
+	g2aKPW/c4nGL40pek9lKmZk+n4XrBYx7Z3TkmEp838vw3GqvdN7lsF0dNa2/IpQzX367xmau
+	pvtDiaU4I9FQi7moOBEA6OLECIMCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOLMWRmVeSWpSXmKPExsXC5WfdrBt6IiLD4MFDCYs569ewWUzqn8Fu
+	ceFHI5PFxdd/mCzuL3vGYvHnoaHF4bknWS0uPV7BbnF51xw2i0d9b9kt5n4xtPiyehWbxdq/
+	1xgdeD3WzFvD6PHr61U2j4nN79g9Fu95yeSx8PcLZo8TM36zeHx8eovFY/GLD0we67dcZfGY
+	sHkjq8fnTXIB3FFcNimpOZllqUX6dglcGcuOvmUv+DGRsWJFz1zWBsbLpV2MnBwSAiYSm3vu
+	M4HYLAKqEt9/7WEDsdkE1CVu3PjJDGKLCBRLnDp/jKWLkYuDWeAso8T1FZfBGoQFHCRWX21m
+	BLF5BSwk5nR1QtmCEidnPmEBsZkFtCRu/HsJVM8BZEtLLP/HARIWFVCWOLDtONMERu5ZSDpm
+	IemYhdCxgJF5FaNIZl5ZbmJmjqlecXZGZV5mhV5yfu4mRmBwL6v9M3EH45fL7ocYBTgYlXh4
+	V3hHZAixJpYVV+YeYpTgYFYS4T3kFJYhxJuSWFmVWpQfX1Sak1p8iFGag0VJnNcrPDVBSCA9
+	sSQ1OzW1ILUIJsvEwSnVwDjjgD7b9+eKAp8lpq2w8Z8/f+/L3sWC+vkyLyfx9MbWxAo8KLPj
+	eldSWGeg/Dm68ua0uwJ7Nf2NW+Xe3SmssE+yEe35M++U7dJPN/e1Rc7nUm9eznirRI8vC+iT
+	1zufzp0TtSIgSTraim0OR0Hj9Z1sSrwuJvzLj4mfOMU86WPoQxnrkotblFiKMxINtZiLihMB
+	ug2D22oCAAA=
+X-CFilter-Loop: Reflected
 
+Hi folks,
 
-on 2025/6/13 13:59, Jijie Shao wrote:
->
-> on 2025/6/12 23:33, Jakub Kicinski wrote:
->> On Thu, 12 Jun 2025 21:09:40 +0800 Jijie Shao wrote:
->>> seq_file is good. But the change is quite big.
->>> I need to discuss it internally, and it may not be completed so 
->>> quickly.
->>> I will also need consider the maintainer's suggestion.
->> Please work on the seq_file conversion, given that the merge window
->> just closed you have around 6 weeks to get it done, so hopefully plenty
->> of time.
->
-> Ok
->
-> I will try to send patch as soon as possible to complete this conversion
->
->
-> Thanks
-> Jijie Shao
->
->
+Thanks to Yunseong, we got two DEPT reports in btrfs.  It doesn't mean
+it's obvious deadlocks, but after digging into the reports, I'm
+wondering if it could happen by any chance.
 
-*Hi Jakub, Arnd We have changed the impleament as your suggestion. Would 
-you please help check it ? If it's OK, we will rewrite the rest parts of 
-our debugfs code. Thanks! *
+1) The first scenario that I'm concerning is:
 
-==========
+  context A		  context B
 
- From c62568f3e91eb5725211fde8e63d44f68452b4e3 Mon Sep 17 00:00:00 2001
-From: Jian Shen <shenjian15@huawei.com>
-Date: Thu, 19 Jun 2025 16:21:17 +0800
-Subject: [PATCH  net-next] net: hns3: clean up the build warning in debugfs by
-  use seq file
+			  do_truncate()
+			    ...
+			      btrfs_do_readpage() // with folio lock held
+  do_unlinkat()
+    ...
+      push_leaf_right()
+	btrfs_tree_lock_nested()
+	  down_write_nested(&eb->lock) // hold
+			        btrfs_get_extent()
+			          btrfs_lookup_file_extent()
+			            btrfs_search_slot()
+			              down_read_nested(&eb->lock) // stuck
+	  __push_leaf_right()
+	    ...
+	      folio_lock() // stuck
 
-Arnd reported that there are two build warning for on-stasck
-buffer oversize[1]. As Arnd's suggestion, using seq file way
-to avoid the stack buffer or kmalloc buffer allocating.
+2) The second scenario that I'm concerning is:
 
-Reported-by: Arnd Bergmann <arnd@kernel.org>
-Closes: https://lore.kernel.org/all/20250610092113.2639248-1-arnd@kernel.org/
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+  context A		  context B
+
+			  do_truncate()
+			    ...
+			      btrfs_do_readpage() // with folio lock held
+  do_unlinkat()
+    ...
+      btrfs_truncate_inode_items()
+	btrfs_lock_root_node()
+	  down_write_nested(&eb->lock) // hold
+	btrfs_del_items()
+	  push_leaf_right()
+	    __push_leaf_right()
+			        btrfs_get_extent()
+			          btrfs_lookup_file_extent()
+			            btrfs_search_slot()
+			              btrfs_read_lock_root_node()
+			                down_read_nested(&eb->lock) // stuck
+	      ...
+	        folio_lock() //stuck
+
+Am I missing something?
+
+FYI, the followings are the DEPT reports we got.
+
+	Byungchul
+
 ---
-  drivers/net/ethernet/hisilicon/hns3/hnae3.h   |   3 +
-  .../ethernet/hisilicon/hns3/hns3_debugfs.c    | 160 ++++++++----------
-  .../net/ethernet/hisilicon/hns3/hns3_enet.c   |   2 +
-  3 files changed, 79 insertions(+), 86 deletions(-)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index 8dc7d6fae224..58a63d2eb69b 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -434,8 +434,11 @@ struct hnae3_ae_dev {
-      u32 dev_version;
-      DECLARE_BITMAP(caps, HNAE3_DEV_CAPS_MAX_NUM);
-      void *priv;
-+    struct hnae3_handle *handle;
-  };
-  
-+typedef int (*read_func)(struct seq_file *s, void *data);
-+
-  /* This struct defines the operation on the handle.
-   *
-   * init_ae_dev(): (mandatory)
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-index 4e5d8bc39a1b..458a2944ee3c 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-@@ -3,6 +3,7 @@
-  
-  #include <linux/debugfs.h>
-  #include <linux/device.h>
-+#include <linux/seq_file.h>
-  #include <linux/string_choices.h>
-  
-  #include "hnae3.h"
-@@ -41,6 +42,7 @@ static struct hns3_dbg_dentry_info hns3_dbg_dentry[] = {
-  
-  static int hns3_dbg_bd_file_init(struct hnae3_handle *handle, u32 cmd);
-  static int hns3_dbg_common_file_init(struct hnae3_handle *handle, u32 cmd);
-+static int hns3_dbg_common_init_t1(struct hnae3_handle *handle, u32 cmd);
-  
-  static struct hns3_dbg_cmd_info hns3_dbg_cmd[] = {
-      {
-@@ -300,7 +302,7 @@ static struct hns3_dbg_cmd_info hns3_dbg_cmd[] = {
-          .cmd = HNAE3_DBG_CMD_TX_QUEUE_INFO,
-          .dentry = HNS3_DBG_DENTRY_QUEUE,
-          .buf_len = HNS3_DBG_READ_LEN_1MB,
--        .init = hns3_dbg_common_file_init,
-+        .init = hns3_dbg_common_init_t1,
-      },
-      {
-          .name = "fd_tcam",
-@@ -580,44 +582,29 @@ static const struct hns3_dbg_item tx_spare_info_items[] = {
-      { "DMA", 17 },
-  };
-  
--static void hns3_dbg_tx_spare_info(struct hns3_enet_ring *ring, char *buf,
--                   int len, u32 ring_num, int *pos)
-+static void hns3_dbg_tx_spare_info(struct hns3_enet_ring *ring,
-+                   struct seq_file *s, u32 ring_num)
-  {
--    char data_str[ARRAY_SIZE(tx_spare_info_items)][HNS3_DBG_DATA_STR_LEN];
-      struct hns3_tx_spare *tx_spare = ring->tx_spare;
--    char *result[ARRAY_SIZE(tx_spare_info_items)];
--    char content[HNS3_DBG_INFO_LEN];
--    u32 i, j;
-+    u32 i;
-  
-      if (!tx_spare) {
--        *pos += scnprintf(buf + *pos, len - *pos,
--                  "tx spare buffer is not enabled\n");
-+        seq_puts(s, "tx spare buffer is not enabled\n");
-          return;
-      }
-  
--    for (i = 0; i < ARRAY_SIZE(tx_spare_info_items); i++)
--        result[i] = &data_str[i][0];
--
--    *pos += scnprintf(buf + *pos, len - *pos, "tx spare buffer info\n");
--    hns3_dbg_fill_content(content, sizeof(content), tx_spare_info_items,
--                  NULL, ARRAY_SIZE(tx_spare_info_items));
--    *pos += scnprintf(buf + *pos, len - *pos, "%s", content);
-+    seq_puts(s, "tx spare buffer info\n");
-  
--    for (i = 0; i < ring_num; i++) {
--        j = 0;
--        sprintf(result[j++], "%u", i);
--        sprintf(result[j++], "%u", ring->tx_copybreak);
--        sprintf(result[j++], "%u", tx_spare->len);
--        sprintf(result[j++], "%u", tx_spare->next_to_use);
--        sprintf(result[j++], "%u", tx_spare->next_to_clean);
--        sprintf(result[j++], "%u", tx_spare->last_to_clean);
--        sprintf(result[j++], "%pad", &tx_spare->dma);
--        hns3_dbg_fill_content(content, sizeof(content),
--                      tx_spare_info_items,
--                      (const char **)result,
--                      ARRAY_SIZE(tx_spare_info_items));
--        *pos += scnprintf(buf + *pos, len - *pos, "%s", content);
--    }
-+    for (i = 0; i < ARRAY_SIZE(tx_spare_info_items); i++)
-+        seq_printf(s, "%s%*s", tx_spare_info_items[i].name,
-+               tx_spare_info_items[i].interval, " ");
-+    seq_puts(s, "\n");
-+
-+    for (i = 0; i < ring_num; i++)
-+        seq_printf(s, "%-4u%6s%-5u%6s%-8u%2s%-5u%2s%-5u%2s%-5u%2s%pad\n",
-+               i, " ", ring->tx_copybreak, " ", tx_spare->len, " ",
-+               tx_spare->next_to_use, " ", tx_spare->next_to_clean,
-+               " ", tx_spare->last_to_clean, " ", &tx_spare->dma);
-  }
-  
-  static const struct hns3_dbg_item rx_queue_info_items[] = {
-@@ -739,62 +726,52 @@ static const struct hns3_dbg_item tx_queue_info_items[] = {
-  };
-  
-  static void hns3_dump_tx_queue_info(struct hns3_enet_ring *ring,
--                    struct hnae3_ae_dev *ae_dev, char **result,
--                    u32 index)
-+                    struct hnae3_ae_dev *ae_dev,
-+                    struct seq_file *s, u32 index)
-  {
-+    void __iomem *base = ring->tqp->io_base;
-      u32 base_add_l, base_add_h;
--    u32 j = 0;
--
--    sprintf(result[j++], "%u", index);
--    sprintf(result[j++], "%u", readl_relaxed(ring->tqp->io_base +
--        HNS3_RING_TX_RING_BD_NUM_REG));
--
--    sprintf(result[j++], "%u", readl_relaxed(ring->tqp->io_base +
--        HNS3_RING_TX_RING_TC_REG));
--
--    sprintf(result[j++], "%u", readl_relaxed(ring->tqp->io_base +
--        HNS3_RING_TX_RING_TAIL_REG));
--
--    sprintf(result[j++], "%u", readl_relaxed(ring->tqp->io_base +
--        HNS3_RING_TX_RING_HEAD_REG));
--
--    sprintf(result[j++], "%u", readl_relaxed(ring->tqp->io_base +
--        HNS3_RING_TX_RING_FBDNUM_REG));
--
--    sprintf(result[j++], "%u", readl_relaxed(ring->tqp->io_base +
--        HNS3_RING_TX_RING_OFFSET_REG));
--
--    sprintf(result[j++], "%u", readl_relaxed(ring->tqp->io_base +
--        HNS3_RING_TX_RING_PKTNUM_RECORD_REG));
-  
--    sprintf(result[j++], "%s",
--        str_on_off(readl_relaxed(ring->tqp->io_base +
--                     HNS3_RING_EN_REG)));
-+    seq_printf(s, "%-4u%6s", index, " ");
-+    seq_printf(s, "%-5u%3s",
-+           readl_relaxed(base + HNS3_RING_TX_RING_BD_NUM_REG), " ");
-+    seq_printf(s, "%u%3s",
-+           readl_relaxed(base + HNS3_RING_TX_RING_TC_REG), " ");
-+    seq_printf(s, "%-4u%2s",
-+           readl_relaxed(base + HNS3_RING_TX_RING_TAIL_REG), " ");
-+    seq_printf(s, "%-4u%2s",
-+           readl_relaxed(base + HNS3_RING_TX_RING_HEAD_REG), " ");
-+    seq_printf(s, "%-4u%4s",
-+           readl_relaxed(base + HNS3_RING_TX_RING_FBDNUM_REG), " ");
-+    seq_printf(s, "%-4u%4s",
-+           readl_relaxed(base + HNS3_RING_TX_RING_OFFSET_REG), " ");
-+    seq_printf(s, "%-9u%2s",
-+           readl_relaxed(base + HNS3_RING_TX_RING_PKTNUM_RECORD_REG),
-+           " ");
-+    seq_printf(s, "%-3s%6s",
-+           str_on_off(readl_relaxed(base + HNS3_RING_EN_REG)), " ");
-  
-      if (hnae3_ae_dev_tqp_txrx_indep_supported(ae_dev))
--        sprintf(result[j++], "%s",
--            str_on_off(readl_relaxed(ring->tqp->io_base +
--                         HNS3_RING_TX_EN_REG)));
-+        seq_printf(s, "%-3s%9s",
-+               str_on_off(readl_relaxed(base +
-+                            HNS3_RING_TX_EN_REG)),
-+               " ");
-      else
--        sprintf(result[j++], "%s", "NA");
-+        seq_printf(s, "%-3s%9s", "NA", " ");
-  
-      base_add_h = readl_relaxed(ring->tqp->io_base +
-                      HNS3_RING_TX_RING_BASEADDR_H_REG);
-      base_add_l = readl_relaxed(ring->tqp->io_base +
-                      HNS3_RING_TX_RING_BASEADDR_L_REG);
--    sprintf(result[j++], "0x%08x%08x", base_add_h, base_add_l);
-+    seq_printf(s, "0x%08x%08x\n", base_add_h, base_add_l);
-  }
-  
--static int hns3_dbg_tx_queue_info(struct hnae3_handle *h,
--                  char *buf, int len)
-+static int hns3_dbg_tx_queue_info(struct seq_file *s, void *data)
-  {
--    char data_str[ARRAY_SIZE(tx_queue_info_items)][HNS3_DBG_DATA_STR_LEN];
--    struct hnae3_ae_dev *ae_dev = pci_get_drvdata(h->pdev);
--    char *result[ARRAY_SIZE(tx_queue_info_items)];
-+    struct hnae3_ae_dev *ae_dev = dev_get_drvdata(s->private);
-+    struct hnae3_handle *h = ae_dev->handle;
-      struct hns3_nic_priv *priv = h->priv;
--    char content[HNS3_DBG_INFO_LEN];
-      struct hns3_enet_ring *ring;
--    int pos = 0;
-      u32 i;
-  
-      if (!priv->ring) {
-@@ -803,11 +780,10 @@ static int hns3_dbg_tx_queue_info(struct hnae3_handle *h,
-      }
-  
-      for (i = 0; i < ARRAY_SIZE(tx_queue_info_items); i++)
--        result[i] = &data_str[i][0];
-+        seq_printf(s, "%s%*s", tx_queue_info_items[i].name,
-+               tx_queue_info_items[i].interval, " ");
-  
--    hns3_dbg_fill_content(content, sizeof(content), tx_queue_info_items,
--                  NULL, ARRAY_SIZE(tx_queue_info_items));
--    pos += scnprintf(buf + pos, len - pos, "%s", content);
-+    seq_puts(s, "\n");
-  
-      for (i = 0; i < h->kinfo.num_tqps; i++) {
-          /* Each cycle needs to determine whether the instance is reset,
-@@ -819,15 +795,10 @@ static int hns3_dbg_tx_queue_info(struct hnae3_handle *h,
-              return -EPERM;
-  
-          ring = &priv->ring[i];
--        hns3_dump_tx_queue_info(ring, ae_dev, result, i);
--        hns3_dbg_fill_content(content, sizeof(content),
--                      tx_queue_info_items,
--                      (const char **)result,
--                      ARRAY_SIZE(tx_queue_info_items));
--        pos += scnprintf(buf + pos, len - pos, "%s", content);
-+        hns3_dump_tx_queue_info(ring, ae_dev, s, i);
-      }
-  
--    hns3_dbg_tx_spare_info(ring, buf, len, h->kinfo.num_tqps, &pos);
-+    hns3_dbg_tx_spare_info(ring, s, h->kinfo.num_tqps);
-  
-      return 0;
-  }
-@@ -1222,10 +1193,6 @@ static const struct hns3_dbg_func hns3_dbg_cmd_func[] = {
-          .cmd = HNAE3_DBG_CMD_RX_QUEUE_INFO,
-          .dbg_dump = hns3_dbg_rx_queue_info,
-      },
--    {
--        .cmd = HNAE3_DBG_CMD_TX_QUEUE_INFO,
--        .dbg_dump = hns3_dbg_tx_queue_info,
--    },
-      {
-          .cmd = HNAE3_DBG_CMD_PAGE_POOL_INFO,
-          .dbg_dump = hns3_dbg_page_pool_info,
-@@ -1362,6 +1329,27 @@ hns3_dbg_common_file_init(struct hnae3_handle *handle, u32 cmd)
-      return 0;
-  }
-  
-+static int hns3_dbg_common_init_t1(struct hnae3_handle *handle, u32 cmd)
-+{
-+    struct device *dev = &handle->pdev->dev;
-+    struct dentry *entry_dir;
-+    read_func func = NULL;
-+
-+    switch (hns3_dbg_cmd[cmd].cmd) {
-+    case HNAE3_DBG_CMD_TX_QUEUE_INFO:
-+        func = hns3_dbg_tx_queue_info;
-+        break;
-+    default:
-+        return -EINVAL;
-+    }
-+
-+    entry_dir = hns3_dbg_dentry[hns3_dbg_cmd[cmd].dentry].dentry;
-+    debugfs_create_devm_seqfile(dev, hns3_dbg_cmd[cmd].name, entry_dir,
-+                    func);
-+
-+    return 0;
-+}
-+
-  int hns3_dbg_init(struct hnae3_handle *handle)
-  {
-      struct hnae3_ae_dev *ae_dev = pci_get_drvdata(handle->pdev);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 5c8c62ea6ac0..f01c7e45e674 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -5299,6 +5299,8 @@ static int hns3_client_init(struct hnae3_handle *handle)
-      struct net_device *netdev;
-      int ret;
-  
-+    ae_dev->handle = handle;
-+
-      handle->ae_algo->ops->get_tqps_and_rss_info(handle, &alloc_tqps,
-                              &max_rss_size);
-      netdev = alloc_etherdev_mq(sizeof(struct hns3_nic_priv), alloc_tqps);
--- 
-2.33.0
-
-
-
+ [  304.343395][ T7488] ===================================================
+ [  304.343446][ T7488] DEPT: Circular dependency has been detected.
+ [  304.343462][ T7488] 6.15.0-rc6-00043-ga83a69ec7f9f #5 Not tainted
+ [  304.343477][ T7488] ---------------------------------------------------
+ [  304.343488][ T7488] summary
+ [  304.343498][ T7488] ---------------------------------------------------
+ [  304.343509][ T7488] *** DEADLOCK ***
+ [  304.343509][ T7488]
+ [  304.343520][ T7488] context A
+ [  304.343531][ T7488]    [S] lock(btrfs-tree-00:0)
+ [  304.343545][ T7488]    [W] dept_page_wait_on_bit(pg_locked_map:0)
+ [  304.343559][ T7488]    [E] unlock(btrfs-tree-00:0)
+ [  304.343572][ T7488]
+ [  304.343581][ T7488] context B
+ [  304.343591][ T7488]    [S] (unknown)(pg_locked_map:0)
+ [  304.343603][ T7488]    [W] lock(btrfs-tree-00:0)
+ [  304.343616][ T7488]    [E] dept_page_clear_bit(pg_locked_map:0)
+ [  304.343629][ T7488]
+ [  304.343637][ T7488] [S]: start of the event context
+ [  304.343647][ T7488] [W]: the wait blocked
+ [  304.343656][ T7488] [E]: the event not reachable
+ [  304.343666][ T7488] ---------------------------------------------------
+ [  304.343676][ T7488] context A's detail
+ [  304.343686][ T7488] ---------------------------------------------------
+ [  304.343696][ T7488] context A
+ [  304.343706][ T7488]    [S] lock(btrfs-tree-00:0)
+ [  304.343718][ T7488]    [W] dept_page_wait_on_bit(pg_locked_map:0)
+ [  304.343731][ T7488]    [E] unlock(btrfs-tree-00:0)
+ [  304.343744][ T7488]
+ [  304.343753][ T7488] [S] lock(btrfs-tree-00:0):
+ [  304.343764][ T7488] [<ffff8000824f41d8>] btrfs_tree_lock_nested+0x38/0x324
+ [  304.343796][ T7488] stacktrace:
+ [  304.343805][ T7488]       down_write_nested+0xe4/0x21c
+ [  304.343826][ T7488]       btrfs_tree_lock_nested+0x38/0x324
+ [  304.343865][ T7488]       push_leaf_right+0x23c/0x628
+ [  304.343896][ T7488]       btrfs_del_items+0x974/0xaec
+ [  304.343916][ T7488]       btrfs_truncate_inode_items+0x1c5c/0x2b00
+ [  304.343938][ T7488]       btrfs_evict_inode+0xa4c/0xd38
+ [  304.343968][ T7488]       evict+0x340/0x7b0
+ [  304.343993][ T7488]       iput+0x4ec/0x840
+ [  304.344011][ T7488]       do_unlinkat+0x444/0x59c
+ [  304.344038][ T7488]       __arm64_sys_unlinkat+0x11c/0x260
+ [  304.344057][ T7488]       invoke_syscall+0x88/0x2e0
+ [  304.344084][ T7488]       el0_svc_common.constprop.0+0xe8/0x2e0
+ [  304.344104][ T7488]       do_el0_svc+0x44/0x60
+ [  304.344123][ T7488]       el0_svc+0x50/0x188
+ [  304.344151][ T7488]       el0t_64_sync_handler+0x10c/0x140
+ [  304.344172][ T7488]       el0t_64_sync+0x198/0x19c
+ [  304.344189][ T7488]
+ [  304.344198][ T7488] [W] dept_page_wait_on_bit(pg_locked_map:0):
+ [  304.344211][ T7488] [<ffff8000823b1d20>] __push_leaf_right+0x8f0/0xc70
+ [  304.344232][ T7488] stacktrace:
+ [  304.344241][ T7488]       __push_leaf_right+0x8f0/0xc70
+ [  304.344260][ T7488]       push_leaf_right+0x408/0x628
+ [  304.344278][ T7488]       btrfs_del_items+0x974/0xaec
+ [  304.344297][ T7488]       btrfs_truncate_inode_items+0x1c5c/0x2b00
+ [  304.344314][ T7488]       btrfs_evict_inode+0xa4c/0xd38
+ [  304.344335][ T7488]       evict+0x340/0x7b0
+ [  304.344352][ T7488]       iput+0x4ec/0x840
+ [  304.344369][ T7488]       do_unlinkat+0x444/0x59c
+ [  304.344388][ T7488]       __arm64_sys_unlinkat+0x11c/0x260
+ [  304.344407][ T7488]       invoke_syscall+0x88/0x2e0
+ [  304.344425][ T7488]       el0_svc_common.constprop.0+0xe8/0x2e0
+ [  304.344445][ T7488]       do_el0_svc+0x44/0x60
+ [  304.344463][ T7488]       el0_svc+0x50/0x188
+ [  304.344482][ T7488]       el0t_64_sync_handler+0x10c/0x140
+ [  304.344503][ T7488]       el0t_64_sync+0x198/0x19c
+ [  304.344518][ T7488]
+ [  304.344527][ T7488] [E] unlock(btrfs-tree-00:0):
+ [  304.344539][ T7488] (N/A)
+ [  304.344549][ T7488] ---------------------------------------------------
+ [  304.344559][ T7488] context B's detail
+ [  304.344568][ T7488] ---------------------------------------------------
+ [  304.344578][ T7488] context B
+ [  304.344588][ T7488]    [S] (unknown)(pg_locked_map:0)
+ [  304.344600][ T7488]    [W] lock(btrfs-tree-00:0)
+ [  304.344613][ T7488]    [E] dept_page_clear_bit(pg_locked_map:0)
+ [  304.344625][ T7488]
+ [  304.344634][ T7488] [S] (unknown)(pg_locked_map:0):
+ [  304.344646][ T7488] (N/A)
+ [  304.344655][ T7488]
+ [  304.344663][ T7488] [W] lock(btrfs-tree-00:0):
+ [  304.344675][ T7488] [<ffff8000824f3b48>] btrfs_tree_read_lock_nested+0x38/0x330
+ [  304.344694][ T7488] stacktrace:
+ [  304.344703][ T7488]       down_read_nested+0xc8/0x368
+ [  304.344720][ T7488]       btrfs_tree_read_lock_nested+0x38/0x330
+ [  304.344737][ T7488]       btrfs_search_slot+0x1204/0x2dc8
+ [  304.344756][ T7488]       btrfs_lookup_file_extent+0xe0/0x128
+ [  304.344773][ T7488]       btrfs_get_extent+0x2cc/0x1e24
+ [  304.344789][ T7488]       btrfs_do_readpage+0x628/0x1258
+ [  304.344810][ T7488]       btrfs_read_folio+0x310/0x450
+ [  304.344828][ T7488]       btrfs_truncate_block+0x2c0/0xb24
+ [  304.344854][ T7488]       btrfs_cont_expand+0x11c/0xba8
+ [  304.344870][ T7488]       btrfs_setattr+0x8d8/0x10f4
+ [  304.344885][ T7488]       notify_change+0x900/0xfbc
+ [  304.344906][ T7488]       do_truncate+0x154/0x210
+ [  304.344937][ T7488]       vfs_truncate+0x55c/0x66c
+ [  304.344957][ T7488]       __arm64_sys_truncate+0x16c/0x1e4
+ [  304.344978][ T7488]       invoke_syscall+0x88/0x2e0
+ [  304.344997][ T7488]       el0_svc_common.constprop.0+0xe8/0x2e0
+ [  304.345017][ T7488]
+ [  304.345025][ T7488] [E] dept_page_clear_bit(pg_locked_map:0):
+ [  304.345037][ T7488] [<ffff80008249c284>] end_folio_read+0x3e4/0x590
+ [  304.345056][ T7488] stacktrace:
+ [  304.345065][ T7488]       folio_unlock+0x8c/0x160
+ [  304.345099][ T7488]       end_folio_read+0x3e4/0x590
+ [  304.345116][ T7488]       btrfs_do_readpage+0x830/0x1258
+ [  304.345132][ T7488]       btrfs_read_folio+0x310/0x450
+ [  304.345149][ T7488]       btrfs_truncate_block+0x2c0/0xb24
+ [  304.345164][ T7488]       btrfs_cont_expand+0x11c/0xba8
+ [  304.345179][ T7488]       btrfs_setattr+0x8d8/0x10f4
+ [  304.345194][ T7488]       notify_change+0x900/0xfbc
+ [  304.345213][ T7488]       do_truncate+0x154/0x210
+ [  304.345232][ T7488]       vfs_truncate+0x55c/0x66c
+ [  304.345252][ T7488]       __arm64_sys_truncate+0x16c/0x1e4
+ [  304.345272][ T7488]       invoke_syscall+0x88/0x2e0
+ [  304.345291][ T7488]       el0_svc_common.constprop.0+0xe8/0x2e0
+ [  304.345310][ T7488]       do_el0_svc+0x44/0x60
+ [  304.345328][ T7488]       el0_svc+0x50/0x188
+ [  304.345347][ T7488]       el0t_64_sync_handler+0x10c/0x140
+ [  304.345369][ T7488] ---------------------------------------------------
+ [  304.345379][ T7488] information that might be helpful
+ [  304.345388][ T7488] ---------------------------------------------------
+ [  304.345402][ T7488] CPU: 1 UID: 0 PID: 7488 Comm: syz-executor Not tainted 6.15.0-rc6-00043-ga83a69ec7f9f #5 PREEMPT
+ [  304.345416][ T7488] Hardware name: QEMU KVM Virtual Machine, BIOS 2025.02-8 05/13/2025
+ [  304.345422][ T7488] Call trace:
+ [  304.345426][ T7488]  show_stack+0x34/0x80 (C)
+ [  304.345452][ T7488]  dump_stack_lvl+0x104/0x180
+ [  304.345476][ T7488]  dump_stack+0x20/0x2c
+ [  304.345490][ T7488]  cb_check_dl+0x1080/0x10ec
+ [  304.345504][ T7488]  bfs+0x4d8/0x630
+ [  304.345514][ T7488]  add_dep+0x1cc/0x364
+ [  304.345526][ T7488]  __dept_wait+0x60c/0x16e0
+ [  304.345537][ T7488]  dept_wait+0x168/0x1a8
+ [  304.345548][ T7488]  btrfs_clear_buffer_dirty+0x420/0x820
+ [  304.345561][ T7488]  __push_leaf_right+0x8f0/0xc70
+ [  304.345575][ T7488]  push_leaf_right+0x408/0x628
+ [  304.345589][ T7488]  btrfs_del_items+0x974/0xaec
+ [  304.345603][ T7488]  btrfs_truncate_inode_items+0x1c5c/0x2b00
+ [  304.345616][ T7488]  btrfs_evict_inode+0xa4c/0xd38
+ [  304.345632][ T7488]  evict+0x340/0x7b0
+ [  304.345644][ T7488]  iput+0x4ec/0x840
+ [  304.345657][ T7488]  do_unlinkat+0x444/0x59c
+ [  304.345671][ T7488]  __arm64_sys_unlinkat+0x11c/0x260
+ [  304.345685][ T7488]  invoke_syscall+0x88/0x2e0
+ [  304.345698][ T7488]  el0_svc_common.constprop.0+0xe8/0x2e0
+ [  304.345713][ T7488]  do_el0_svc+0x44/0x60
+ [  304.345726][ T7488]  el0_svc+0x50/0x188
+ [  304.345741][ T7488]  el0t_64_sync_handler+0x10c/0x140
+ [  304.345756][ T7488]  el0t_64_sync+0x198/0x19c
+ [  304.345857][ T7488] ===================================================
+ [  304.345995][ T7488] DEPT: Circular dependency has been detected.
+ [  304.346006][ T7488] 6.15.0-rc6-00043-ga83a69ec7f9f #5 Not tainted
+ [  304.346019][ T7488] ---------------------------------------------------
+ [  304.346029][ T7488] summary
+ [  304.346038][ T7488] ---------------------------------------------------
+ [  304.346049][ T7488] *** DEADLOCK ***
+ [  304.346049][ T7488]
+ [  304.346058][ T7488] context A
+ [  304.346069][ T7488]    [S] lock(btrfs-tree-01:0)
+ [  304.346082][ T7488]    [W] dept_page_wait_on_bit(pg_locked_map:0)
+ [  304.346095][ T7488]    [E] unlock(btrfs-tree-01:0)
+ [  304.346108][ T7488]
+ [  304.346117][ T7488] context B
+ [  304.346126][ T7488]    [S] (unknown)(pg_locked_map:0)
+ [  304.346139][ T7488]    [W] lock(btrfs-tree-01:0)
+ [  304.346151][ T7488]    [E] dept_page_clear_bit(pg_locked_map:0)
+ [  304.346164][ T7488]
+ [  304.346173][ T7488] [S]: start of the event context
+ [  304.346183][ T7488] [W]: the wait blocked
+ [  304.346192][ T7488] [E]: the event not reachable
+ [  304.346201][ T7488] ---------------------------------------------------
+ [  304.346211][ T7488] context A's detail
+ [  304.346221][ T7488] ---------------------------------------------------
+ [  304.346231][ T7488] context A
+ [  304.346240][ T7488]    [S] lock(btrfs-tree-01:0)
+ [  304.346253][ T7488]    [W] dept_page_wait_on_bit(pg_locked_map:0)
+ [  304.346266][ T7488]    [E] unlock(btrfs-tree-01:0)
+ [  304.346278][ T7488]
+ [  304.346287][ T7488] [S] lock(btrfs-tree-01:0):
+ [  304.346299][ T7488] [<ffff8000824f41d8>] btrfs_tree_lock_nested+0x38/0x324
+ [  304.346321][ T7488] stacktrace:
+ [  304.346330][ T7488]       down_write_nested+0xe4/0x21c
+ [  304.346347][ T7488]       btrfs_tree_lock_nested+0x38/0x324
+ [  304.346363][ T7488]       btrfs_lock_root_node+0x70/0xac
+ [  304.346379][ T7488]       btrfs_search_slot+0x3f8/0x2dc8
+ [  304.346399][ T7488]       btrfs_truncate_inode_items+0x2ec/0x2b00
+ [  304.346417][ T7488]       btrfs_evict_inode+0xa4c/0xd38
+ [  304.346438][ T7488]       evict+0x340/0x7b0
+ [  304.346456][ T7488]       iput+0x4ec/0x840
+ [  304.346473][ T7488]       do_unlinkat+0x444/0x59c
+ [  304.346492][ T7488]       __arm64_sys_unlinkat+0x11c/0x260
+ [  304.346511][ T7488]       invoke_syscall+0x88/0x2e0
+ [  304.346530][ T7488]       el0_svc_common.constprop.0+0xe8/0x2e0
+ [  304.346550][ T7488]       do_el0_svc+0x44/0x60
+ [  304.346568][ T7488]       el0_svc+0x50/0x188
+ [  304.346588][ T7488]       el0t_64_sync_handler+0x10c/0x140
+ [  304.346608][ T7488]       el0t_64_sync+0x198/0x19c
+ [  304.346623][ T7488]
+ [  304.346632][ T7488] [W] dept_page_wait_on_bit(pg_locked_map:0):
+ [  304.346644][ T7488] [<ffff8000823b1d20>] __push_leaf_right+0x8f0/0xc70
+ [  304.346665][ T7488] stacktrace:
+ [  304.346674][ T7488]       __push_leaf_right+0x8f0/0xc70
+ [  304.346692][ T7488]       push_leaf_right+0x408/0x628
+ [  304.346711][ T7488]       btrfs_del_items+0x974/0xaec
+ [  304.346729][ T7488]       btrfs_truncate_inode_items+0x1c5c/0x2b00
+ [  304.346747][ T7488]       btrfs_evict_inode+0xa4c/0xd38
+ [  304.346767][ T7488]       evict+0x340/0x7b0
+ [  304.346785][ T7488]       iput+0x4ec/0x840
+ [  304.346802][ T7488]       do_unlinkat+0x444/0x59c
+ [  304.346820][ T7488]       __arm64_sys_unlinkat+0x11c/0x260
+ [  304.346850][ T7488]       invoke_syscall+0x88/0x2e0
+ [  304.346871][ T7488]       el0_svc_common.constprop.0+0xe8/0x2e0
+ [  304.346891][ T7488]       do_el0_svc+0x44/0x60
+ [  304.346909][ T7488]       el0_svc+0x50/0x188
+ [  304.346928][ T7488]       el0t_64_sync_handler+0x10c/0x140
+ [  304.346949][ T7488]       el0t_64_sync+0x198/0x19c
+ [  304.346963][ T7488]
+ [  304.346972][ T7488] [E] unlock(btrfs-tree-01:0):
+ [  304.346984][ T7488] (N/A)
+ [  304.346994][ T7488] ---------------------------------------------------
+ [  304.347004][ T7488] context B's detail
+ [  304.347013][ T7488] ---------------------------------------------------
+ [  304.347023][ T7488] context B
+ [  304.347033][ T7488]    [S] (unknown)(pg_locked_map:0)
+ [  304.347046][ T7488]    [W] lock(btrfs-tree-01:0)
+ [  304.347058][ T7488]    [E] dept_page_clear_bit(pg_locked_map:0)
+ [  304.347071][ T7488]
+ [  304.347080][ T7488] [S] (unknown)(pg_locked_map:0):
+ [  304.347092][ T7488] (N/A)
+ [  304.347101][ T7488]
+ [  304.347109][ T7488] [W] lock(btrfs-tree-01:0):
+ [  304.347121][ T7488] [<ffff8000824f3b48>] btrfs_tree_read_lock_nested+0x38/0x330
+ [  304.347140][ T7488] stacktrace:
+ [  304.347149][ T7488]       down_read_nested+0xc8/0x368
+ [  304.347165][ T7488]       btrfs_tree_read_lock_nested+0x38/0x330
+ [  304.347181][ T7488]       btrfs_read_lock_root_node+0x70/0xb4
+ [  304.347198][ T7488]       btrfs_search_slot+0x34c/0x2dc8
+ [  304.347217][ T7488]       btrfs_lookup_file_extent+0xe0/0x128
+ [  304.347233][ T7488]       btrfs_get_extent+0x2cc/0x1e24
+ [  304.347248][ T7488]       btrfs_do_readpage+0x628/0x1258
+ [  304.347270][ T7488]       btrfs_read_folio+0x310/0x450
+ [  304.347287][ T7488]       btrfs_truncate_block+0x2c0/0xb24
+ [  304.347302][ T7488]       btrfs_cont_expand+0x11c/0xba8
+ [  304.347317][ T7488]       btrfs_setattr+0x8d8/0x10f4
+ [  304.347332][ T7488]       notify_change+0x900/0xfbc
+ [  304.347352][ T7488]       do_truncate+0x154/0x210
+ [  304.347374][ T7488]       vfs_truncate+0x55c/0x66c
+ [  304.347394][ T7488]       __arm64_sys_truncate+0x16c/0x1e4
+ [  304.347414][ T7488]       invoke_syscall+0x88/0x2e0
+ [  304.347433][ T7488]
+ [  304.347441][ T7488] [E] dept_page_clear_bit(pg_locked_map:0):
+ [  304.347453][ T7488] [<ffff80008249c284>] end_folio_read+0x3e4/0x590
+ [  304.347471][ T7488] stacktrace:
+ [  304.347480][ T7488]       folio_unlock+0x8c/0x160
+ [  304.347504][ T7488]       end_folio_read+0x3e4/0x590
+ [  304.347520][ T7488]       btrfs_do_readpage+0x830/0x1258
+ [  304.347536][ T7488]       btrfs_read_folio+0x310/0x450
+ [  304.347553][ T7488]       btrfs_truncate_block+0x2c0/0xb24
+ [  304.347568][ T7488]       btrfs_cont_expand+0x11c/0xba8
+ [  304.347583][ T7488]       btrfs_setattr+0x8d8/0x10f4
+ [  304.347598][ T7488]       notify_change+0x900/0xfbc
+ [  304.347617][ T7488]       do_truncate+0x154/0x210
+ [  304.347636][ T7488]       vfs_truncate+0x55c/0x66c
+ [  304.347656][ T7488]       __arm64_sys_truncate+0x16c/0x1e4
+ [  304.347676][ T7488]       invoke_syscall+0x88/0x2e0
+ [  304.347695][ T7488]       el0_svc_common.constprop.0+0xe8/0x2e0
+ [  304.347714][ T7488]       do_el0_svc+0x44/0x60
+ [  304.347732][ T7488]       el0_svc+0x50/0x188
+ [  304.347751][ T7488]       el0t_64_sync_handler+0x10c/0x140
+ [  304.347772][ T7488] ---------------------------------------------------
+ [  304.347782][ T7488] information that might be helpful
+ [  304.347791][ T7488] ---------------------------------------------------
+ [  304.347803][ T7488] CPU: 1 UID: 0 PID: 7488 Comm: syz-executor Not tainted 6.15.0-rc6-00043-ga83a69ec7f9f #5 PREEMPT
+ [  304.347815][ T7488] Hardware name: QEMU KVM Virtual Machine, BIOS 2025.02-8 05/13/2025
+ [  304.347821][ T7488] Call trace:
+ [  304.347825][ T7488]  show_stack+0x34/0x80 (C)
+ [  304.347852][ T7488]  dump_stack_lvl+0x104/0x180
+ [  304.347870][ T7488]  dump_stack+0x20/0x2c
+ [  304.347884][ T7488]  cb_check_dl+0x1080/0x10ec
+ [  304.347897][ T7488]  bfs+0x4d8/0x630
+ [  304.347906][ T7488]  add_dep+0x1cc/0x364
+ [  304.347917][ T7488]  __dept_wait+0x60c/0x16e0
+ [  304.347928][ T7488]  dept_wait+0x168/0x1a8
+ [  304.347940][ T7488]  btrfs_clear_buffer_dirty+0x420/0x820
+ [  304.347952][ T7488]  __push_leaf_right+0x8f0/0xc70
+ [  304.347967][ T7488]  push_leaf_right+0x408/0x628
+ [  304.347980][ T7488]  btrfs_del_items+0x974/0xaec
+ [  304.347994][ T7488]  btrfs_truncate_inode_items+0x1c5c/0x2b00
+ [  304.348007][ T7488]  btrfs_evict_inode+0xa4c/0xd38
+ [  304.348023][ T7488]  evict+0x340/0x7b0
+ [  304.348036][ T7488]  iput+0x4ec/0x840
+ [  304.348048][ T7488]  do_unlinkat+0x444/0x59c
+ [  304.348062][ T7488]  __arm64_sys_unlinkat+0x11c/0x260
+ [  304.348076][ T7488]  invoke_syscall+0x88/0x2e0
+ [  304.348090][ T7488]  el0_svc_common.constprop.0+0xe8/0x2e0
+ [  304.348105][ T7488]  do_el0_svc+0x44/0x60
+ [  304.348118][ T7488]  el0_svc+0x50/0x188
+ [  304.348132][ T7488]  el0t_64_sync_handler+0x10c/0x140
+ [  304.348148][ T7488]  el0t_64_sync+0x198/0x19c
+ [  304.386144][ T8054] BTRFS info (device loop0): first mount of filesystem 3a492a15-ac49-4ce6-945e-cef7a687c6c9
+ [  304.389687][ T8054] BTRFS info (device loop0): using crc32c (crc32c-arm64) checksum algorithm
+ [  304.389788][ T8054] BTRFS info (device loop0): using free-space-tree
+ [  304.701202][ T7488] BTRFS info (device loop3): last unmount of filesystem 3a492a15-ac49-4ce6-945e-cef7a687c6c9
