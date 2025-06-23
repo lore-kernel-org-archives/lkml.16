@@ -1,101 +1,95 @@
-Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A79D2BD03C;
-	Mon, 23 Jun 2025 16:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC8324BD0C;
+	Mon, 23 Jun 2025 16:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750695408; cv=none; b=YX3QaztNQNkJV+MK6D4xHBqNFtgJ2w4s1UzcAYXuLxoUrdeHkZ033t7yjt5bfCb0nG8IMg79yScW+1k+iXvj+1Kj03OtzUToWx4H+Xf2dBbK8AZ4lOpNTu+z6BOp2h75bgerpTb5iaF2/HpHallJ8zjLz5qDBn7HXGNCaka7UJk=
+	t=1750695408; cv=none; b=UfPiPC/LIbLOpziTqucZQYAuSj1tD+zaByfYpeShkCNaYqFNb5kd2xEYAPQfbioh0y9N5ED2QqSXEKt0Ajn1ukwis337KHdhfRgtkhkGgJ7rYt1NObE3dQkT3WHrJw1IYkeemIpx8M8L3//bIYWQ2DR9QJSDE1LmCNIVe/zbwcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750695408; c=relaxed/simple;
-	bh=jQ4xlqhFn0ZfFN9Q4Ia5pnIE8D84XwipZ3o6gw4E4A0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kBwbQywHSV1zLQCTl34yuZCw1j1WkwbDUShXLqbBgM1YiY6SsKRt1tzJO5pzNZAq0N8G5d3kd9KpUeBuuuPTjMk9+769H7Vw2HDfc6REtcpjZOJH6UBvdHNouXiXSTrmO8UqVEMKpwBnZmMm/Hda8oJD10gWZUuVeFlqe2kRAgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=101.71.155.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
-Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-1-entmail-virt204.gy.ntes [27.18.107.46])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 19a4befb5;
-	Tue, 24 Jun 2025 00:11:26 +0800 (GMT+08:00)
-From: Ze Huang <huangze@whut.edu.cn>
-Date: Tue, 24 Jun 2025 00:11:14 +0800
-Subject: [PATCH 2/2] pinctrl: canaan: k230: Fix order of DT parse and
- pinctrl register
+	bh=Ur0XOriXT1WlSZ1k17YMUC/sCAmjE++EAq3Cer6GQKI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SQzRvZOsNQpuoWaEi9foI7HWW4A6Xsl6Ez85WDe8YBvyf4QvJrlMobfZM7aS/AQ6qzFpLxlKczuf2NpIPv14+SgGwswP4nRMR3Xi2EAMg93Tcoz6MqrXXGy+biPH4WuKxDPhJsKMVcF72uNyVarVWxY4/punCwXi1lri3wSmdqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Ok289bH4; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Ok289bH4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1750695407; x=1782231407;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Ur0XOriXT1WlSZ1k17YMUC/sCAmjE++EAq3Cer6GQKI=;
+  b=Ok289bH4Itw6AdHHfh18UBRJ/nhOL4CY/1loDg9Kf3CsAziBw36z6qRr
+   Q6Z+YwbOTvoVSHjhNheCmD6N2Dyx6BlxxYQKL4Zo3yXw/d2Wr2HX0ck3R
+   nt/Lf8+Rp6q8108nv8GAVK3BTLRzgAuoMxJ5gK2c0ZE89B3B7VPgkT0PZ
+   6AIGNpIbAGKCK4z4mNNuWddYSsBWGE0rn/cwEUE/4M2h00om2NFs8vf69
+   XjtWRx7ug5LHxa2eE6lSkmUuR7x4l4AzDkq5hy0tFwtcOolPLPyqOwfdG
+   gSdShPQSVHEMSDqx7raHsdm0hnxgwROH7J2xJe9y0d1yCZC2hhayTxER9
+   Q==;
+X-CSE-ConnectionGUID: YKKdZQvISxa431DUkbBFkA==
+X-CSE-MsgGUID: EAlSJYjtTEK2VZ7v+xC1Ag==
+X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
+   d="scan'208";a="43120166"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Jun 2025 09:16:46 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Mon, 23 Jun 2025 09:16:37 -0700
+Received: from [10.10.179.162] (10.10.85.11) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Mon, 23 Jun 2025 09:16:37 -0700
+Message-ID: <0aa6c9a4-4a65-4b55-a180-92c795499384@microchip.com>
+Date: Mon, 23 Jun 2025 09:16:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] Expose REFCLK for RMII and enable RMII
+To: Andrew Lunn <andrew@lunn.ch>
+CC: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
+	<claudiu.beznea@tuxon.dev>, <netdev@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <cover.1750346271.git.Ryan.Wanner@microchip.com>
+ <4b1f601d-7a65-4252-8f04-62b5a952c001@lunn.ch>
+From: Ryan Wanner <ryan.wanner@microchip.com>
+Content-Language: en-US
+In-Reply-To: <4b1f601d-7a65-4252-8f04-62b5a952c001@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250624-k230-return-check-v1-2-6b4fc5ba0c41@whut.edu.cn>
-References: <20250624-k230-return-check-v1-0-6b4fc5ba0c41@whut.edu.cn>
-In-Reply-To: <20250624-k230-return-check-v1-0-6b4fc5ba0c41@whut.edu.cn>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Ze Huang <18771902331@163.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ze Huang <huangze@whut.edu.cn>, Yao Zi <ziyao@disroot.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750695080; l=1474;
- i=huangze@whut.edu.cn; s=20250325; h=from:subject:message-id;
- bh=jQ4xlqhFn0ZfFN9Q4Ia5pnIE8D84XwipZ3o6gw4E4A0=;
- b=BW1xbdBcCeD5Ugnf74Fpk3TlQf9LeMPCirXZrokIrdcxVtCpIQPuI38jU2pfVWCVvYQvexL9R
- pTPyVkKl+cDDl7U7cGDYoKbaJG2DhGhQ7ylQ5UkFX4ruRoAhQAVyj1K
-X-Developer-Key: i=huangze@whut.edu.cn; a=ed25519;
- pk=C3zfn/kH6oMJickaXBa8dxTZO68EBiD93F+tAenboRA=
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZTEodVkJNQxlDH0NMHU0aSFYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJTFVKQ1VKS0xVT01ZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTEpVSktLVUpCS0
-	tZBg++
-X-HM-Tid: 0a979d8f087203a1kunm95855067303c24
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Myo6Dio*STExLCIcTU4yTjER
-	GFEaFBxVSlVKTE5LTUJOS0NCSkpPVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
-	TFVKQ1VKS0xVT01ZV1kIAVlBSU1LSDcG
 
-Move DT parse before pinctrl register. This ensures that device tree
-parsing is done before calling devm_pinctrl_register() to prevent using
-uninitialized pin resources.
+On 6/21/25 00:24, Andrew Lunn wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> On Thu, Jun 19, 2025 at 10:04:12AM -0700, Ryan.Wanner@microchip.com wrote:
+>> From: Ryan Wanner <Ryan.Wanner@microchip.com>
+>>
+>> This set allows the REFCLK property to be exposed as a dt-property to
+>> properly reflect the correct RMII layout. RMII can take an external or
+>> internal provided REFCLK, since this is not SoC dependent but board
+>> dependent this must be exposed as a DT property for the macb driver.
+> 
+> What board is going to use this? Do you have a patch for a .dts file?
 
-Fixes: 545887eab6f6 ("pinctrl: canaan: Add support for k230 SoC")
-Reported-by: Yao Zi <ziyao@disroot.org>
-Signed-off-by: Ze Huang <huangze@whut.edu.cn>
----
- drivers/pinctrl/pinctrl-k230.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Our SAMA7D65_curiosity board has a connector that allows us to change
+ethernet phys. Since some of the phys we have provide their own REFCLK
+while others do not, this property needs to be added so we are able to
+use all of these.
 
-diff --git a/drivers/pinctrl/pinctrl-k230.c b/drivers/pinctrl/pinctrl-k230.c
-index 4976308e62372c744738dd8372e73b2494e38e0b..d716f23d837f7a70993a75346561ef0b1e07c3eb 100644
---- a/drivers/pinctrl/pinctrl-k230.c
-+++ b/drivers/pinctrl/pinctrl-k230.c
-@@ -590,6 +590,7 @@ static int k230_pinctrl_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct k230_pinctrl *info;
- 	struct pinctrl_desc *pctl;
-+	int ret;
- 
- 	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
- 	if (!info)
-@@ -615,13 +616,15 @@ static int k230_pinctrl_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(info->regmap_base),
- 				     "failed to init regmap\n");
- 
-+	ret = k230_pinctrl_parse_dt(pdev, info);
-+	if (ret)
-+		return ret;
-+
- 	info->pctl_dev = devm_pinctrl_register(dev, pctl, info);
- 	if (IS_ERR(info->pctl_dev))
- 		return dev_err_probe(dev, PTR_ERR(info->pctl_dev),
- 				     "devm_pinctrl_register failed\n");
- 
--	k230_pinctrl_parse_dt(pdev, info);
--
- 	return 0;
- }
- 
+I do not have an exact .dts patch for this since our default is MPU
+provides the REFCLK, this property will be used with dt-overlays that
+match each phy that is connected.
 
--- 
-2.50.0
+Ryan
+> 
+>         Andrew
 
