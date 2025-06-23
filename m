@@ -1,134 +1,98 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF08E1C8FB5
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BC71C8FB5
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750678785; cv=none; b=miuED8urwcHFzSjgS2Q/vBnmTBTYZPCCeKmOAonBoxWPsTLrFTJRW0K1HZEObnFt9inEG1w8YW9r9moit+g6FN98L9JjkP+W2CW+8snlp/BTMwFQGSwUtI5oOllPpUOZEySivNWU7Re0g0v+pMhU9rGMbh5kXJ9XIny4Vio+7Ig=
+	t=1750678828; cv=none; b=s6qE8UpVcqdjrAwvQFvLiVYPszJ8AEpg2bqONBtEMgT6ci3GMgbL0gUkt1eKlY9oQkzl4ZrmqQ82s/xWeRkIr2EJ1v5Ez0+WW5o8ClDcFY/PhMPWcB/DmxyA1O/m7QbMHIIbsI2+BX1JgDtRfbXSQ4WxgIj0UAAf+hrqGe3yEN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750678785; c=relaxed/simple;
-	bh=WLxkC7V19D77AzPdWZubB6l8aqMizd+u3nLpk+F8nkc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LM52YYqPfFXg3wPVpbc2Xbgrq8U9mLrWVRYLDcLfxOMoOQiVjePBr0XLG8Dg2eKbsFSAgNeAYHX8K36EKVW3diw7ihJY66mU5NXN8fStdTAb6Ua/w7hsEblGdvTgaDtSVL4x111BCfpYYGQIs8oNEm6QZ5VljFPaJmCigm0P4CI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=akXXosn5; arc=none smtp.client-ip=209.85.221.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1750678828; c=relaxed/simple;
+	bh=O0Hll9tqf5vaAp4T+XgLpGTIeySeDTEEOqSUBPSGiTA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jV17x5YCxpmb/o8un8qwrHCQknEmJ4dOZD4OZOluesuIYirt/Lg4R/hnJehN6xKz34fPP4+QRmYbwotcpzPYZaGOtVi/PHp2lE7VuWalfAJzAciQn7xEKCNbY06L7i0GiyM0a/MCm9XVJbdPIro0BtqrW8YMcGNjTKyOI4e3UtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mZqs+6kd; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="akXXosn5"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3a4eec544c6so2025672f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 04:39:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750678782; x=1751283582; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jBTUKpx0ZNKYHazA3t/A7/vG1k1Wn2pxBHruJSDnkA0=;
-        b=akXXosn5JeWGX1uWfbF59wVWWkNdaoc1dSFu/HSATKRwPT3yXzan4jljbJ2Y0Mvb37
-         6sTUBwjBHxW6wqt7KUz/4XazOtA65+N1879Mv4Nh/WEssXji0XvGKnJ8/GwadjwBO1HX
-         onzTNLlqM4mRKeye2bT1e3shC5jCWOMRD0oLdWUKnpAjpX60AfL6ILNxGwBEyeMSQgKs
-         MhBNK6cKpx/8UdJZW/K/1n5Q/FrfsDUVqBQlAoy0vaBRNj1nDva36/NgN+zkpBLDRU0G
-         WuR43EPf60KBN0fZFISoauCF/EKLrbuIoQ3rzzTmAwNKBQRn1JOGihifeTLeH1LwGEPt
-         SMpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750678782; x=1751283582;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jBTUKpx0ZNKYHazA3t/A7/vG1k1Wn2pxBHruJSDnkA0=;
-        b=vACLuE5QawjlGjj+X3NaCmTZagrrexj1Y4UEVJYPXZuJEPjKxwgNgUxfOG7cfiTOZW
-         5i5LEGCofER091w9kY9szx9N9cSzlhHqE93UVHSof1YTW2Jcjs99yeD1rAk6lcYuw4pN
-         uhfso1IyO4jRglS9Ko/3/fdMX2hN94hhHrrn++WHwF43X7W8MxDcb/mKmwvClqaB+AMj
-         fyZFWc+rtAJHPzq7JSGDI2/pMhUN7LUDu9GAfgM+AOfS8EDdIQyYLwZrci4cAa8hKtm+
-         UPHvlxdjSnNDsIUfRpukzgSOkbKTW4/SrFL2OkVXMDl+BiMSUKVFR6m5dUUu/JWq/ymG
-         umNA==
-X-Forwarded-Encrypted: i=1; AJvYcCW4dOUF10vKrirfevoyccVXa1mY5Wmp+EWvV7zSO32IbZ7oUd5sI4PTqR5Ol+quN6GckTqZ1dIZUb9EYRA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvmsfsYI8qH2QX71+LI847BnN+Eis4/ulmmd+SqEXhOCG9qULy
-	gpZjnxlgAwOHxQPB91hmYvruj9o55aBnUqYwrJSJpBdgHy43th6Lvn8QWmD5l1H1Fq4rI2MGDMl
-	7LPikKG2RBup4wvrqzQ==
-X-Google-Smtp-Source: AGHT+IHOfkmOn/iFDpfwri/R3bnIweVDsVpN6vKnfwZl34PHvpa36cU93NoZdwYN5nFotAGyPMw/l9yziseyIAA=
-X-Received: from wmbji4.prod.google.com ([2002:a05:600c:a344:b0:451:4d6b:5b7e])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:1ac8:b0:3a4:ee40:715c with SMTP id ffacd0b85a97d-3a6d130168fmr11662811f8f.14.1750678782136;
- Mon, 23 Jun 2025 04:39:42 -0700 (PDT)
-Date: Mon, 23 Jun 2025 11:39:39 +0000
-In-Reply-To: <20250611-correct-type-cast-v1-1-06c1cf970727@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mZqs+6kd"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750678811;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hV5L1hYeLUOf0/Dp7H1uSGfizIrCDJW4pwW2IEWJmOY=;
+	b=mZqs+6kd3I64GHE4ROfNpS6p7C5hSWDwlz9+vQJelsL4NsSQYrpYeOig0U8Ntmna+QjYv8
+	Q8zZWEn7T4r5E7jFRL3U9glUpS9/4V1WTHi836YTxsAO990Ov0X2pkyiSCG184Qz84JXjx
+	MFKI+dMzqu/H//D/eGs4rZ3+lBWCnuk=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ALSA: mixer_oss: Remove deprecated strcpy() function calls
+Date: Mon, 23 Jun 2025 13:38:54 +0200
+Message-ID: <20250623113855.37031-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250611-correct-type-cast-v1-1-06c1cf970727@gmail.com>
-Message-ID: <aFk8-_TNeV51v2OA@google.com>
-Subject: Re: [PATCH] rust: cast to the proper type
-From: Alice Ryhl <aliceryhl@google.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>, Trevor Gross <tmgross@umich.edu>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Jun 11, 2025 at 06:28:47AM -0400, Tamir Duberstein wrote:
-> Use the ffi type rather than the resolved underlying type.
-> 
-> Fixes: f20fd5449ada ("rust: core abstractions for network PHY drivers")
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+Remove the deprecated strcpy() function calls and assign the strings
+directly to a 'char *' instead.
 
-Please use unqualified imports.
+Use 'if/else if' instead of two separate if statements.
 
->  rust/kernel/net/phy.rs | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
-> index 32ea43ece646..905e6534c083 100644
-> --- a/rust/kernel/net/phy.rs
-> +++ b/rust/kernel/net/phy.rs
-> @@ -163,17 +163,17 @@ pub fn set_speed(&mut self, speed: u32) {
->          let phydev = self.0.get();
->          // SAFETY: The struct invariant ensures that we may access
->          // this field without additional synchronization.
-> -        unsafe { (*phydev).speed = speed as i32 };
-> +        unsafe { (*phydev).speed = speed as crate::ffi::c_int };
+No functional changes intended.
 
-unsafe { (*phydev).speed = speed as c_int };
+Link: https://github.com/KSPP/linux/issues/88
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+Changes in v2:
+- Assign the strings directly as suggested by Al and Takashi
+- Use if/else if instead of if/if
+- Link to v1: https://lore.kernel.org/lkml/20250618223631.1244-2-thorsten.blum@linux.dev/
+---
+ sound/core/oss/mixer_oss.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
->      }
->  
->      /// Sets duplex mode.
->      pub fn set_duplex(&mut self, mode: DuplexMode) {
->          let phydev = self.0.get();
->          let v = match mode {
-> -            DuplexMode::Full => bindings::DUPLEX_FULL as i32,
-> -            DuplexMode::Half => bindings::DUPLEX_HALF as i32,
-> -            DuplexMode::Unknown => bindings::DUPLEX_UNKNOWN as i32,
-> -        };
-> +            DuplexMode::Full => bindings::DUPLEX_FULL,
-> +            DuplexMode::Half => bindings::DUPLEX_HALF,
-> +            DuplexMode::Unknown => bindings::DUPLEX_UNKNOWN,
-> +        } as crate::ffi::c_int;
+diff --git a/sound/core/oss/mixer_oss.c b/sound/core/oss/mixer_oss.c
+index 05fc8911479c..e839a4bb93f8 100644
+--- a/sound/core/oss/mixer_oss.c
++++ b/sound/core/oss/mixer_oss.c
+@@ -991,7 +991,7 @@ static int snd_mixer_oss_build_input(struct snd_mixer_oss *mixer,
+ 	struct slot *pslot;
+ 	struct snd_kcontrol *kctl;
+ 	struct snd_mixer_oss_slot *rslot;
+-	char str[64];	
++	const char *str;
+ 	
+ 	/* check if already assigned */
+ 	if (mixer->slots[ptr->oss_id].get_volume && ! replace_old)
+@@ -1014,11 +1014,11 @@ static int snd_mixer_oss_build_input(struct snd_mixer_oss *mixer,
+ 			
+ 		if (kctl->info(kctl, uinfo))
+ 			return 0;
+-		strcpy(str, ptr->name);
++		str = ptr->name;
+ 		if (!strcmp(str, "Master"))
+-			strcpy(str, "Mix");
+-		if (!strcmp(str, "Master Mono"))
+-			strcpy(str, "Mix Mono");
++			str = "Mix";
++		else if (!strcmp(str, "Master Mono"))
++			str = "Mix Mono";
+ 		slot.capture_item = 0;
+ 		if (!strcmp(uinfo->value.enumerated.name, str)) {
+ 			slot.present |= SNDRV_MIXER_OSS_PRESENT_CAPTURE;
+-- 
+2.49.0
 
-I would keep the imports on each line.
-
-let v = match mode {
-    DuplexMode::Full => bindings::DUPLEX_FULL as c_int,
-    DuplexMode::Half => bindings::DUPLEX_HALF as c_int,
-    DuplexMode::Unknown => bindings::DUPLEX_UNKNOWN as c_int,
-};
-
-Alice
-
->          // SAFETY: The struct invariant ensures that we may access
->          // this field without additional synchronization.
->          unsafe { (*phydev).duplex = v };
-> 
-> ---
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> change-id: 20250611-correct-type-cast-1de8876ddfc1
-> 
-> Best regards,
-> --  
-> Tamir Duberstein <tamird@gmail.com>
-> 
