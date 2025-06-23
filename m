@@ -1,140 +1,83 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3607C24468A;
-	Mon, 23 Jun 2025 10:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A21E247281
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750675341; cv=none; b=NcPsjO1KwcGcMkmDxU2Mn7UGZ3UWQYs5VL7zfQPSzoKn/97N6mWWlXUkzwF7yLekW45E3B1k2fY5dHK8IG9VWpneLJiflJw9AA49JKqDiuqE/2ZR4nZq7vW9BLVjLMPc/3B5LqRAevA0sW64HaFcnqUrF14LVTOh77ZvxyXaOzo=
+	t=1750675361; cv=none; b=H4V/ZLa17z9zKJaxOTD7xKVgwdZzXNDfLLcdGVgI7GcJmr0loPPFvM4ma9G9j6MOZErz/bOIbkK4lhvGvhSCzGFg6ze1mToncWYB84kVZZpjVYOW/dlvB+gPdJGVM9z8XlXLl191YVdcuHXDgiwkO8EPaBYrb2Qp+WgkTlDzI3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750675341; c=relaxed/simple;
-	bh=l931bTX5MDMkwV6ZzTaGAigtZpZ8cMxO2lXHTUUf198=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rrTYbqjn8fjujjDqWtLUsBqZEBs8q/Juj3C+qpsX9lKzoTuliu6Gq70PrzlvQbVZG71wxz2ZHS1fansHdzJv01VJv9x9W9yODnEwxbGM1M1Kss1JY2VbHpX7v2dAvBHFSqcurEKwrnYW/BfuzQYMBMd0gYAQUzpIORh6gFjhtG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C3R9Dd9S; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750675361; c=relaxed/simple;
+	bh=X+4PY+mlIT+8LF2h33m9QTgP+dyMn1EKzki/Qbj2tkM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q3jU/z+d0zAeYh1CpMRzRduPCHNPy/k77uTdJnxIxdebNQhlDT3DzXAATXhnFBGMTphs2sL50zttVE9Q/6LllRIRCyYvf+mHmejY/WMxb8sDRYsTDBw368S+XBbwMiNmMn68dQ3y3xZ2EucaZ67idQmTgRg0M7MBZRUcrmq9KHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=o1rNmTQf; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3R9Dd9S"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad89c32a7b5so652406866b.2;
-        Mon, 23 Jun 2025 03:42:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750675337; x=1751280137; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7Yw6imxd4BTDTWrkr9aN2QlmFrVCvg38lQ/oem6/zBU=;
-        b=C3R9Dd9S1iFYWKRJ577v3wxWopK2h+mwxqGU0NWxLlhLSVkzm0mS+3eE9Vq8GPULmL
-         MVO5tu9RUe4IU4wcoRg+ayut5PopPQhOezUUmNIhZE0HwnjTspOxMKs3v2u2+dTx0f4v
-         LVYv4ohW7L126OFDJZjXtU1UhklFmkcl/VCEw8asNfHKKf70/M+vfVjr2xird1P7yFKG
-         5O7ZkI4obnvUb2ziE3wNEITFi1pUSJbm+wHN+x1WL8mrcSi3eQ4bBWVWJpGMLQ6ZA1DB
-         yf2PCEX1Zo3naYmejzFqfecuPiQv5ASXP9djBC/Bs+MikJt+rDoaukoOH1Tj4p6GUfBH
-         rIlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750675337; x=1751280137;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Yw6imxd4BTDTWrkr9aN2QlmFrVCvg38lQ/oem6/zBU=;
-        b=tD2u8ngwR7moyU+GkJ+W8ZhfzHFbdPzvgdO9UjTj7QnrqGO26BSBPLNO+nnQDm8vWZ
-         fuwvFsVBZiItvgzehkw0e1s9lAH4GntGceYQ5Oyfo3lR9kRSQUX32LhO7yxXe14WNeTX
-         182hLpFeNxI1i3TSVDoGJ4AN7nj3KSUwC/VQYLVouuumdBG3YxsShIMLUdD1l3+vELMz
-         6lvi325cPjoZaNrVig6NeG7LrMf8DxJ35tmm+y27VbhBh6W2RA5EcYeVkNCNnW3RvrRv
-         Ly1gVwI49CUH0M9mm771yS4o/fLNKjqtS2dXd5xOp7cZBBWfh7WAVUSmZm1lLEb8/xng
-         hnPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV6CmKln5lma4tJNCqQx6ad0GdQQEQZdY/AYPCmMGay46VCOCpbPYlfZZa8iS5WWrQZ/NcU3fyGq//KJe3H@vger.kernel.org, AJvYcCVKTZ1/HOogqqWrOzbs8U8Fe+M1eaaul/LaCR71lhpwGodUNDggPFJGRhaAjmX+uJlzC1VjITEtje0YoMs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yye7pGylcKyQMCCD09jOHg6SyrH3XQ4rw0Me9Hx2AAWPrUqz3MH
-	NHF8dtC25ul9IP8hAFzvzNUkYUr3Ef9rVrhu+sUkrtCCQB/5YVRz0nWC
-X-Gm-Gg: ASbGncsbCOEOu9CBRWTfpG4nA/rHnwsgi/Uu1VxVV8uYqE/n0f0JFECczMjVQTee9kT
-	mpsiYg5DKezc11NryI/lW9e434YyJ/zBiNMWTCsysxG2SduvF3ZkVMeA/4Y8UpAprQ807+y+Nq6
-	WoIFk/haz6Q4/NC0HTV+L6vqVFCsaG+hYAsAiH5yz/3hoSYlRzk42FWsQWxY03/y58x7rrczwy0
-	JsGELfP+u+zoTzVKfBjomVSeE+8Vlpt1gzZB0AgWQuJwOSrVbMOFbatuJ0+O2bcWWXOVxu4pOiX
-	V8fPMItEOfo9h+lJWKH2TFDUepvpyHPmYHXc45sN389c/HbuXXk69hFDn2W0mdk3+rhpetfKaU4
-	vse0clyRaFrOm1PCZEAwK5VIWLUgd1ehc07eVUGTZ57CW6To=
-X-Google-Smtp-Source: AGHT+IEfNTyPHjwPJEzLQfQoS55yQsLH7CzoYZynUgBsxDONAr3ULxD/B75b39rL0u4RhOVhHN1eXA==
-X-Received: by 2002:a17:906:6a1a:b0:ad2:1cd6:aacf with SMTP id a640c23a62f3a-ae057c0d793mr1084866966b.47.1750675337254;
-        Mon, 23 Jun 2025 03:42:17 -0700 (PDT)
-Received: from ?IPV6:2a02:2f0e:c51b:8900:a03f:12cb:72f7:9069? ([2a02:2f0e:c51b:8900:a03f:12cb:72f7:9069])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0541b6894sm687693066b.111.2025.06.23.03.42.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 03:42:16 -0700 (PDT)
-Message-ID: <0b963009-85fe-473a-a65b-6b427bee98c5@gmail.com>
-Date: Mon, 23 Jun 2025 13:42:15 +0300
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o1rNmTQf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=lZ37O6/bQCcZ7ot8ha/3x+lwsEoCbg1QueQkHmcxcBI=; b=o1rNmTQfj07yA6nHYtMZtl612K
+	jO/8V5JBIJiw1Iz9YmyNq791nep2aF0qs34gT6Tcp3FWXSoMm8EB8feuGhxkGukIxuQTf/CTj/b0+
+	yA2g3ZXTH52nhGX1evs92cfDkFaJs0TQNwgJNmmMsSpgKBxenR2cySLizKJXXC3GBNeAi0LPOpUdf
+	530sS4B+JVOoSQFLN1Wy58MDeZKgBCNSi7UcKtHqNPm8rSmQ27FtEPos2OrcPQR0N4+yLjyXUIJex
+	sbEqdQjjVkZhjgBnkOFkNk7SFN00+4RvLA+/WojFZzT9BcDNrz5gkyW1lv60hGyfOZuWeyp3MisJ+
+	DLlUsQ+Q==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uTedH-00000005Blx-2Pey;
+	Mon, 23 Jun 2025 10:42:35 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 313E3307E51; Mon, 23 Jun 2025 12:42:34 +0200 (CEST)
+Date: Mon, 23 Jun 2025 12:42:34 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>,
+	Ingo Molnar <mingo@redhat.com>, Waiman Long <longman@redhat.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: Improving mutex_init() optimisation for !lockdep
+Message-ID: <20250623104234.GQ1613200@noisy.programming.kicks-ass.net>
+References: <20250623092832.nmgJY7V5@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] crypto: sun8i-ce: Fix `dma_unmap_sg()` nents value
-To: Thomas Fourier <fourier.thomas@gmail.com>
-Cc: Corentin Labbe <clabbe.montjoie@gmail.com>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, Andre Przywara
- <andre.przywara@arm.com>, linux-crypto@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250623091009.65436-2-fourier.thomas@gmail.com>
-Content-Language: en-US
-From: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-In-Reply-To: <20250623091009.65436-2-fourier.thomas@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623092832.nmgJY7V5@linutronix.de>
 
-Hi Thomas,
-
-On 6/23/25 12:10 PM, Thomas Fourier wrote:
-> The `dma_unmap_sg()` functions should be called with the same nents as the
-> `dma_map_sg()`, not the value the map function returned.
+On Mon, Jun 23, 2025 at 11:28:32AM +0200, Sebastian Andrzej Siewior wrote:
+> Hi,
 > 
-
-This should already be fixed by:
-https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git/commit/?id=b6cd3cfb5afe49952f8f6be947aeeca9ba0faebb
-
-The sg nents are saved to request context during prepare() and then used
-in unprepare().
-
-Thanks,
-Ovidiu
-
-> Fixes: 0605fa0f7826 ("crypto: sun8i-ce - split into prepare/run/unprepare")
-> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
-> ---
->  drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+> while looking at the assembly of something else I stumbled upon
+> code that originated from mutex_int() on a !LOCKDEP kernel.
+> We have this macro:
 > 
-> diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-> index f9cf00d690e2..ce9d071f5693 100644
-> --- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-> +++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-> @@ -326,8 +326,8 @@ static void sun8i_ce_cipher_unprepare(struct crypto_engine *engine,
->  	struct sun8i_ce_flow *chan;
->  	struct ce_task *cet;
->  	unsigned int ivsize, offset;
-> -	int nr_sgs = rctx->nr_sgs;
-> -	int nr_sgd = rctx->nr_sgd;
-> +	int ns = sg_nents_for_len(areq->src, areq->cryptlen);
-> +	int nd = sg_nents_for_len(areq->dst, areq->cryptlen);
->  	int flow;
->  
->  	flow = rctx->flow;
-> @@ -336,11 +336,11 @@ static void sun8i_ce_cipher_unprepare(struct crypto_engine *engine,
->  	ivsize = crypto_skcipher_ivsize(tfm);
->  
->  	if (areq->src == areq->dst) {
-> -		dma_unmap_sg(ce->dev, areq->src, nr_sgs, DMA_BIDIRECTIONAL);
-> +		dma_unmap_sg(ce->dev, areq->src, ns, DMA_BIDIRECTIONAL);
->  	} else {
-> -		if (nr_sgs > 0)
-> -			dma_unmap_sg(ce->dev, areq->src, nr_sgs, DMA_TO_DEVICE);
-> -		dma_unmap_sg(ce->dev, areq->dst, nr_sgd, DMA_FROM_DEVICE);
-> +		if (rctx->nr_sgs > 0)
-> +			dma_unmap_sg(ce->dev, areq->src, ns, DMA_TO_DEVICE);
-> +		dma_unmap_sg(ce->dev, areq->dst, nd, DMA_FROM_DEVICE);
->  	}
->  
->  	if (areq->iv && ivsize > 0) {
+> | #define mutex_init(mutex)                                               \
+> | do {                                                                    \
+> |         static struct lock_class_key __key;                             \
+> |                                                                         \
+> |         __mutex_init((mutex), #mutex, &__key);                          \
+> | } while (0)
+> 
+> and the compiler computed an offset for __key and an offset and storage
+> for #mutex. These two arguments aren't used by __mutex_init() but the
+> compiler can't know that.
+> If I remove these two arguments on a x86-64 defconfig, I see:
+> 
+> |    text     data     bss      dec     hex filename
+> | 29753523 8033942 1306232 39093697 25485c1 vmlinux.before
+> | 29748880 8021654 1306168 39076702 254435e vmlinux.after
+> |     4643   12288      64    16995  0x4263 diff in bytes
+> 
+> That is 4KiB in text and 12KiB in data. I don't know why we lost 64
+> bytes in BSS.
+> 
+> Any objections in redoing this to save some bytes?
 
+Nope, easy win :-)
