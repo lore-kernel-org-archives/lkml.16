@@ -1,33 +1,40 @@
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFAC2D3231
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329A0235C1E
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750702284; cv=none; b=oe1dCIKqmATIElpgS/yfKSHKWsCucmmOK8IgPBF0LRWxGS/0vvEhprVvXNF7xd1QTR0ipFhObk9hOSgk73ginXihWoFlSbMBI4Ay9GbQPIPsGDBMQiAidmH/paH/Eqm9WyimKUiFtWss1XvIKAcpGwPqsnbCnVggZz1DRCTX/fg=
+	t=1750702310; cv=none; b=g+OtUzOy9gJpOEzLWvBd22Jjd1dKTiTuEN0I93jKv0FVo0TdY0VBljByiRoKY6TyZTzAwjqEJjMfprQpjctLGU3+5DdcfrANLW/a+K4lw5JKYL/i6wmMPfjKwLAn5GAnp9I8KPjslg0tv7sNxORcWdpfqe3GBC2XLPby9bjN0Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750702284; c=relaxed/simple;
-	bh=rlcBDtIMoGT3V5ey9ZFYpWVUAE/L0LnaqLbwIYm3Sys=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VqfeCGJrSxcWHoxRtLx6hBsn689bOB7hM7rq5jYOlXJFl3aqq4qTT/CQc2Yt3sVW9xx3H4t3Lx3ySzBQZpgZvjeliouNj12digd3WhlbAwkyv1ftkynpa69x0OjzunzLa/AN+thvy/Vi+MrJd5d+s+D3tr70v7mqKjO9WSUj9E4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
-	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-	id 72cc51cd-505d-11f0-a9aa-005056bdfda7;
-	Mon, 23 Jun 2025 21:11:13 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 23 Jun 2025 21:11:13 +0300
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Cc: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH 1/5] serial: 8250: extract serial8250_init_mctrl()
-Message-ID: <aFmYwcO9tJ4byxjz@surfacebook.localdomain>
-References: <20250623074606.456532-1-jirislaby@kernel.org>
- <20250623074606.456532-2-jirislaby@kernel.org>
+	s=arc-20240116; t=1750702310; c=relaxed/simple;
+	bh=mqOrhv4eHtbPCt66sOwSPU/q3/s7NTaQ/qzlbcmRDN4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N4J6oSCd3GMyXxmTwDcnXfIzPEGC/Yax2QfSU2JipyEFdyrRYyt4UWUcu5AQn/YeQ+AiFgz9w/2DvN11Fkn4IPOyZNh1cr6Xw2Fo10qPfCKvXL8vSts4SdKHyKuakl7ji6HbXpWPISLd/kWTw8QJ91mVzc7zGHmWAxYJTWPw704=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ES3c73xB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ES3c73xB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64917C4CEED;
+	Mon, 23 Jun 2025 18:11:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750702309;
+	bh=mqOrhv4eHtbPCt66sOwSPU/q3/s7NTaQ/qzlbcmRDN4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ES3c73xBrGGGepYLPoo/hDGnr/AhfBIpmxRggag5yIw9WzNTJPqin/TTHrxzJ4Sfz
+	 u+nBiwxHrLFjspn4iCZj02/+D5Juln7PfW17LfmoZYGpUDlZZRLry85TEnu5JJY7q8
+	 7bg5z12FU7tSN9w6vPpJOfkCnZffLC59Mw6kwu6w7Icw+9g0UdMZIOKnRwsPbVsDht
+	 xMCBlHK/ARVV6m9wQ46sXn4w7LwSxeqooiMc1P6wWfdKkuRTXd++mS4eZoV9Te3vIR
+	 gdhZP0hgezf30sT+LDlyenBGIZkp+hQhBCSZSxUBW46BYnOr2coTEVsY5T63rCzUwk
+	 AIbJgMmUrA2HA==
+Date: Mon, 23 Jun 2025 08:11:48 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Ke Ma <makebit1999@gmail.com>
+Cc: linux-kernel@vger.kernel.org, arighi@nvidia.com, void@manifault.com,
+	changwoo@igalia.com
+Subject: Re: [PATCH] kernel/sched/ext.c: fix typo "occured" -> "occurred" in
+ comments
+Message-ID: <aFmY5PWo2kELBVha@slm.duckdns.org>
+References: <20250619211128.2193-1-makebit1999@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,54 +43,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250623074606.456532-2-jirislaby@kernel.org>
+In-Reply-To: <20250619211128.2193-1-makebit1999@gmail.com>
 
-Mon, Jun 23, 2025 at 09:46:02AM +0200, Jiri Slaby (SUSE) kirjoitti:
-> After commit 795158691cc0 ("serial: 8250: extract
-> serial8250_initialize()"), split serial8250_initialize() even more --
-> the mctrl part of this code can be separated into
-> serial8250_init_mctrl() -- done now.
+On Thu, Jun 19, 2025 at 11:11:28PM +0200, Ke Ma wrote:
+> Fixes a minor spelling mistake in two comment lines
+> 
+> Signed-off-by: Ke Ma <makebit1999@gmail.com>
 
-...
+Applied to sched_ext/for-6.17.
 
-> +static void serial8250_init_mctrl(struct uart_port *port)
-> +{
-> +	struct uart_8250_port *up = up_to_u8250p(port);
-> +
-> +	if (up->port.flags & UPF_FOURPORT) {
-> +		if (!up->port.irq)
-> +			up->port.mctrl |= TIOCM_OUT1;
-
-I am not sure I understand why it was changed from using port directly to
-up->port.
-
-> +	} else
-> +		/*
-> +		 * Most PC uarts need OUT2 raised to enable interrupts.
-> +		 */
-> +		if (port->irq)
-> +			up->port.mctrl |= TIOCM_OUT2;
-
-Having {} in this branch is also better.
-
-> +	serial8250_set_mctrl(port, port->mctrl);
-> +}
-
-...
-
-I specifically left below to point out the original code.
-
-> -	if (port->flags & UPF_FOURPORT) {
-> -		if (!port->irq)
-> -			port->mctrl |= TIOCM_OUT1;
-> -	} else {
-> -		/* Most PC uarts need OUT2 raised to enable interrupts. */
-> -		if (port->irq)
-> -			port->mctrl |= TIOCM_OUT2;
-> -	}
+Thanks.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+tejun
