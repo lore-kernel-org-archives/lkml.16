@@ -1,150 +1,84 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A9F1EDA0F;
-	Mon, 23 Jun 2025 21:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750714081; cv=pass; b=BySnnxceE8mSGpmcBwNVAqB0vcUML2zibdo3w6N/OdM9EkhWKABjgfKO/Mt+h1KxwtxrEJBkq7GvmcTyELGxMoIKCc+wZ6eo/JiG5ZgP+ntf0/zpBoK7qQzvqvH8pe2YXt0pxx5impYmTgm7eRAGL0j6YYohdB15d/nJwwKzY3E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750714081; c=relaxed/simple;
-	bh=eavMjGPTqGzQIzHZGIMxTJh0ITJeBmp6lze0L+JQxEI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ji6E2RzJoEHvZNFywguAYfzzr12Huewc9tGePhyZIUa8K0tlBaaxLVha1kamGFZKC4zvWaxGcph65sb8FkJeQ2GHfELRxz9Dg25G2pClSDmcGxcY8GgyVt+EjkV6pFm+fDgOjxtYvP3sCNO3jgkD/ZgMXJPJFlo8YaaHIB3HekM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=aJUjdr9F; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9BD1E5B71
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 21:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750714201; cv=none; b=rPkAQpXVBPa1inp2JWevxS5U2r7AZf5gsoMfnlhDHxLkClwyf7Z6OwIpy9tPkv0ITbrS8/owuwH2xgYKAFR7tMrtgX/2CNZQIUAGzZe7HjaUr39FFmTS7NbhiriIZKVXVIkHyYjmq+wkNPLY2Mxylsqp73+6Z1w6tzV7P01CC3w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750714201; c=relaxed/simple;
+	bh=rTZYvC/xL9ghntoLU+QaEzxRwek3vw/h3bcaAFYUV7Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=HkjKWzjw8sWQYaydyN1R0tYVDvYTe91Mo4J02f17tzzH+qBntnnBO/1DX3bL2IkOGrSGCvPxjyROHx4sKUtUgEgV/Lvsy5Y1ipVxB6IzYxC2CJNL5Atz4adV47mzZXvK1fImjScBkBdt2iCtHHUxlIX2AdetTJdzH4LedSTvIZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=FjxZHnO8; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="aJUjdr9F"
-ARC-Seal: i=1; a=rsa-sha256; t=1750714068; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=XZpR3d1yairrFpFm75ilCvkZ9UWhISocwuL+bJOfTKJNoFefmgMSIOi8AloAe21brwretNmhCfPG7FlsNEzMC7/STAiDdmxLl3UyyN156am6UbJ+3CuDIPq5/ShOBQTl1pIgXjlthz3cnrR3ISYDv6uhwEQuLOUEs8HFPz7ARbQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750714068; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=XcgGMhxGkYvwiMgM2QxzC87EaD/VMquOZCNHTL2GpbM=; 
-	b=dqCAYzmsq2WN4V7n1TOLIk+Ff2kMjnQEU6u8WSP3e0oeWBX1RfeKiB+98mQBNB5JT8evgwyG8HlXG1/nJ3UndPXvgKRikMDGKxrFXZTlNY2ZKce+FhUHujz1SqFEFVU+490Oii7Y7Sx7y6+PuJwul1WCPW931ZawiLjxoXC3+a4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750714068;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=XcgGMhxGkYvwiMgM2QxzC87EaD/VMquOZCNHTL2GpbM=;
-	b=aJUjdr9FJOq5V7jsORSj9prz5oBq+9gu6IbI9mrqcbHgnuL6NVrpn8V+b8ff3Xd4
-	IHubsjCwDf/QTggnfC0T0rTxTnfU29Y1+8b5jA6pv/YNNOZGRDeCwnvehyPHdlSGpK1
-	G0u6AfKaxVkLjSpqDc2xsjD45zmlf9c9Qloy34+w=
-Received: by mx.zohomail.com with SMTPS id 1750714067400350.06194474162146;
-	Mon, 23 Jun 2025 14:27:47 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id B67E0180AAB; Mon, 23 Jun 2025 23:27:42 +0200 (CEST)
-Date: Mon, 23 Jun 2025 23:27:42 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: amitsd@google.com
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Badhri Jagan Sridharan <badhri@google.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@kernel.org>, Kyle Tso <kyletso@google.com>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] usb: typec: tcpm: Add support for Battery Status
- response message
-Message-ID: <iqsj5w5pqcbjof3vqohhzptdp5xj7bir6digzqes775at2tpj2@r7kzy4j2fqmw>
-References: <20250507-batt_ops-v2-0-8d06130bffe6@google.com>
- <20250507-batt_ops-v2-3-8d06130bffe6@google.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="FjxZHnO8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1750714198;
+	bh=rTZYvC/xL9ghntoLU+QaEzxRwek3vw/h3bcaAFYUV7Q=;
+	h=From:Date:Subject:To:Cc:From;
+	b=FjxZHnO8CB8hNJq19u9QGe6kgO3XGp0tAWcLcOikfkOFg24UeDB9Ipz50RcRy3fL8
+	 yHkZEOrYx3zvH7fWFSm0gsVCaJyOSSoZUMcnwkgK+csq7KWY/nOFg4ooEQtnKvPL0j
+	 yW7ifjBD1DbNGtuCgb1tYPEkd1eDAx+Z6OCHVbko=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Mon, 23 Jun 2025 23:29:34 +0200
+Subject: [PATCH] tools/nolibc: hide headers_check command by default
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="s27v4sw3pnebflzu"
-Content-Disposition: inline
-In-Reply-To: <20250507-batt_ops-v2-3-8d06130bffe6@google.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.3/250.696.82
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250623-nolibc-headers-silent-v1-1-f568facf014c@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIAD3HWWgC/x3MSwqEQAxF0a1IxgY0fih7K+Kg1KcGpGwqTSOIe
+ 7dweAb3XmSICqNPdlHEX02PkFDmGU2bDytY52SSQpqilYrDses48QY/Ixqb7gg/dg714ptOXCm
+ U2m/Eouf77Yf7fgCRw8FHZwAAAA==
+X-Change-ID: 20250623-nolibc-headers-silent-88e4fa592812
+To: Willy Tarreau <w@1wt.eu>
+Cc: linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750714197; l=1263;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=rTZYvC/xL9ghntoLU+QaEzxRwek3vw/h3bcaAFYUV7Q=;
+ b=wwqoBIjJDpCL4jkH10n+KqMOWs0LcCDp4ng0l8mSPoaMzX6z33rKFiLcUUw+UpnJXYiJHP08Z
+ lEnT84PUexUA6FlMZCFUoAe+nyZZtifN+sTefZwjLc5NgYf8Lv48DRX
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
+If V=1 is not specified the executed commands should not be printed.
 
---s27v4sw3pnebflzu
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 3/5] usb: typec: tcpm: Add support for Battery Status
- response message
-MIME-Version: 1.0
+Hide the commands by default.
 
-Hi,
+Fixes: a6a054c8ad32 ("tools/nolibc: add target to check header usability")
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ tools/include/nolibc/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Wed, May 07, 2025 at 06:00:24PM -0700, Amit Sunil Dhamne via B4 Relay wr=
-ote:
-> From: Amit Sunil Dhamne <amitsd@google.com>
->=20
-> Add support for responding to Get_Battery_Status (extended) request with
-> a Battery_Status (data) msg. The requester shall request the status of
-> an individual battery by providing an index in Get_Battery_Status. In
-> case of failure to identify battery, the responder shall reply with an
-> appropriate message indicating so.
->=20
-> Battery status support is only provided for fixed batteries indexed from
-> 0 - 3.
->=20
-> Support for Battery_Status message is required for sinks that contain
-> battery as specified in USB PD Rev3.1 v1.8
-> ("Applicability of Data Messages" section).
->=20
-> Signed-off-by: Amit Sunil Dhamne <amitsd@google.com>
-> Reviewed-by: Badhri Jagan Sridharan <badhri@google.com>
-> Reviewed-by: Kyle Tso <kyletso@google.com>
-> ---
+diff --git a/tools/include/nolibc/Makefile b/tools/include/nolibc/Makefile
+index 4bace7737b2ade388e138474c10f027a71e21816..f2f2924626d37ac7cf14f94ec248414fa509dc70 100644
+--- a/tools/include/nolibc/Makefile
++++ b/tools/include/nolibc/Makefile
+@@ -112,7 +112,7 @@ headers_standalone: headers
+ CLANG_CROSS_FLAGS := $(subst --target=s390-linux,--target=systemz-linux,$(CLANG_CROSS_FLAGS))
+ 
+ headers_check: headers_standalone
+-	for header in $(filter-out crt.h std.h,$(all_files)); do \
++	$(Q)for header in $(filter-out crt.h std.h,$(all_files)); do \
+ 		$(CC) $(CLANG_CROSS_FLAGS) -Wall -Werror -nostdinc -fsyntax-only -x c /dev/null \
+ 			-I$(or $(objtree),$(srctree))/usr/include -include $$header -include $$header || exit 1; \
+ 	done
 
-(partial review)
+---
+base-commit: eb135311083100b6590a7545618cd9760d896a86
+change-id: 20250623-nolibc-headers-silent-88e4fa592812
 
-> +static int tcpm_pd_send_batt_status(struct tcpm_port *port)
-> +{
-> +	struct pd_message msg;
-> +	struct power_supply *batt;
-> +	u32 bsdo;
-> +	u32 batt_id =3D port->batt_request;
-> +	union power_supply_propval val;
-> +	int ret;
-> +	bool batt_present =3D false;
-> +	u8 charging_status =3D BSDO_BATTERY_INFO_RSVD;
-> +	u16 present_charge =3D BATTERY_PROPERTY_UNKNOWN;
-> +
-> +	memset(&msg, 0, sizeof(msg));
-> +	if (batt_id < MAX_NUM_FIXED_BATT && port->fixed_batt[batt_id]) {
-> +		batt_present =3D true;
+Best regards,
+-- 
+Thomas Weißschuh <linux@weissschuh.net>
 
-power_supply_get_property(batt, POWER_SUPPLY_PROP_PRESENT, &batt_present);
-
-> ...
-
-Greetings,
-
--- Sebastian
-
---s27v4sw3pnebflzu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhZxs4ACgkQ2O7X88g7
-+prX8w//eXySjzU8zhY0Cdhr5c9eK9R0aV6ZD93z73P6hZpIJ7St7LBheCKjROBn
-aFZKJAWzSmDRv60tlLIskVE7NQCtTVZ6V31mBhDh7B46WhFRMrIjfdKs4Y1GrbXq
-opP91qZj0y5xddpr2oZUOOOFs8pvurJHrKKWz0m82PRTdh3pAJnZVBcHakYqUdQv
-zCplY3iJcyseZytMqWa6GnZks1TMwHAhwcH4KaqpMsPgZ88sNuljWl84nARCZM+K
-9lBqOylCnHI8MwQ4IYKjyrKIaIXXI+GY9EuLeK08LVDPDH+OiA1JK0BvSAoW6P3l
-+/I9Kkr9cZWMv4huBz61T+QDlhbWvGikkGvIhJ6wSYrROmiMBhg9X0OQKrwNXOIR
-FdJiEmLy91OTI24CHFXSoffcD08oXoeS/1fVEFr1RF2AITKaRZylTAmHd5qMuF/9
-zaeTjc1ytT2t9ktHKQ8Ju3Z1B+X+xtMjm407eceS1OyFKhbdBvlAQnw63Ms18W2T
-eRGkT7TGpbEepdu8saDFr7E4TSAWHKdJr9+8sGKswcNBRDSUsnSHk7IvQShlbqcN
-bwfLwmuZVnPx0xfYyNgXeWlZdl0SW12xSGxvwIuEBp2+aPD3IscwLeAtq1tCBcLQ
-Is6j4ojjiExdqvzHI3a1fP+3bOidcrnlAu7Vn/69/LcGW5pq6Nw=
-=qeSd
------END PGP SIGNATURE-----
-
---s27v4sw3pnebflzu--
