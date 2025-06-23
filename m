@@ -1,43 +1,72 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F2746447;
-	Mon, 23 Jun 2025 14:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750687431; cv=pass; b=qZFXGFaQu6PyQTulHtbzdOw7zE4yAOn/HVoWC9faJFVsWa/uGPE5CJwIMdq7K9dKNLrU6DB9/lvs1RWaMC/hk2bC4f1+9MbhQ8+KVAxQ3OThE7MbVeQbmqFivkqV2rFsz+BzoxD81C/WH7vZzFbbJELfJzIyMaMZLCYJ0ZiV84o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750687431; c=relaxed/simple;
-	bh=1eYFEGIxi3FENHjk73ckQftA6AqFmtgWr1HFLrRDCYE=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8ED376C61
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750687450; cv=none; b=SJtUIozL24G4yKllonI5VrxwzTsT2CJozTGMws6eOW/d5RvO1eyUvE34hRu4vWeo7TvUdmc6Adp+dxEtK0tF73FNKeqK4nMwn7yBKoLp7kdX3rZWkuUdf25J0M8ZpgptwsA/syxQ4Gy/4M/EjeeNjWfCFigasZCqPsuY4VG4Nt8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750687450; c=relaxed/simple;
+	bh=X4Hd5ZWrXPSq1/1WLrzOgIiIZXd5j48jrptWBaZiW1k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZqLjIPKKnATWK0uMAbu/rUUTgQnktibhMJ5xIUKP7pTwPSfMvn0P7U7FUbMROxZfFDQVATapWvyXYeBJDgcKvJ6tco4omF9Oscohb2Kj8Kw/AJonmKLKo+/h3IZd/J0b0mSxh25B2sN67do3thNGUyEsNqqW2FQdeNjmRJW8y7k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b=jVII6JAN; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 In-Reply-To:Content-Type; b=NfUMM1jTw+AVazC9VVab328uU8CogwUYIvlNL4HkOnUgEMfWmobdZd9qhbtI/NOUkK2XFtFeg70MAxh4meVSiS+InZrjiUv0YIWInx+L8dyVR6CYjXLXOzu1bCdYYYpkFGe4k6ZurR94q2oMUqS9egH1u20kaD+9UDiFmjAr8a0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RPAKZYjO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b="jVII6JAN"
-ARC-Seal: i=1; a=rsa-sha256; t=1750687398; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=IrHnhQTrKYO0A/KKitKHEsB3k7n78I710vXzyb83hQ3HSPu8tjD2frA5FVahWfB8/LalO4j79j50rCPQbNFoj0QnoLeBWHjJhROkHx4SHNJaaiZG7aabMtDQTU7J1o6tghJsHLFPnYV6Uw6wH9Rrm+iaim8W/VDn9O5A/jsz8ig=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750687398; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=tH69hzErNEHwY3DSpnc141pu/Uk6mJ1ByRr7g0Vegmg=; 
-	b=e0cBTUaaXx8R5lYgFOH6oAsnSuN93rKdU4Es3D9gzktN1t7W3TbBmrWngUEcUmBbzgExvoEMUYvCWFoz1zpNpu4a5GM8nNdnNbCyiUN0uXaIVotMs55t1NQIFNs/dIdbPGt31niqzdWj1fdt1oo3orXwg4Y+DEqq+oVbmabOWqY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=benjamin.gaignard@collabora.com;
-	dmarc=pass header.from=<benjamin.gaignard@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750687398;
-	s=zohomail; d=collabora.com; i=benjamin.gaignard@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=tH69hzErNEHwY3DSpnc141pu/Uk6mJ1ByRr7g0Vegmg=;
-	b=jVII6JANezBOBgD0TzyYvjQsIphSqaJcANY5PJTMDDnAdnl/E2Ge+xm2/ZgNdoa3
-	h4ylbtsqN7GdqVKR16IJRSMxiF+PxR00DimOKYweknMaabMe/AeuDsn8q8gw/ozbpof
-	PLJ8x18Y0Psqqg6OQAE35Y6BXhJSd3L3CVqgR1/Q=
-Received: by mx.zohomail.com with SMTPS id 1750687397015674.8206858168603;
-	Mon, 23 Jun 2025 07:03:17 -0700 (PDT)
-Message-ID: <4d5a82da-fbaf-42c1-8b89-557c47032c46@collabora.com>
-Date: Mon, 23 Jun 2025 16:03:12 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RPAKZYjO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750687447;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=KrBCINyJrvJ9eCzCevXV0ad1ST03SBH5k2o0Hivm01s=;
+	b=RPAKZYjOLx/Vh4WZCsoHzhCpYOsRjJvuJ89NtXxIPVJMRS8rL1jjIiTGLBZP8Fqm5zCg5X
+	SrwEUrHI2BNqocTzqx1OLLtzW+DTUBgShOrV9p/zMydlKsjkqLepzsR7VCoJRH09NPvAmA
+	ezbU9yvUQDbHU0DgqCdT3jz6fF1CDtw=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-359-eZS87SkZOWy-p6FKAUP9PQ-1; Mon, 23 Jun 2025 10:04:06 -0400
+X-MC-Unique: eZS87SkZOWy-p6FKAUP9PQ-1
+X-Mimecast-MFC-AGG-ID: eZS87SkZOWy-p6FKAUP9PQ_1750687445
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-450d64026baso26125435e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 07:04:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750687445; x=1751292245;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KrBCINyJrvJ9eCzCevXV0ad1ST03SBH5k2o0Hivm01s=;
+        b=PZSxyww4Q67PSoucPpuVA/+3a6JI3GDUSlHxxQttJhBWbJl25CEh5gVXERPSTo28ib
+         nn9y4VI3z0CA8CX4dOIK4GfK/IlrcHKM38Q56HTcNC2ILvH5/Wmr+wkc3FPxR60kIKiZ
+         GsWGYeFvy3E8RjSh/aTBI1Su+Dh0VZSJb7zKqUrjEjOzNL8YEPiDhqhMPWacbuNFksUz
+         caeu35Nj2BMK70+0RtszThdFIeH9tmae7ITzeQTGkGHi1G8GgcPKg6cjtEI7AwXGE4fY
+         VYq+tXuGBTjCVnrCQSX0j3Ln6HAAbmV7Rm4p2e39kBC9Su2orgP67Tol92nGfeSikaGP
+         Vxkg==
+X-Gm-Message-State: AOJu0YyMXrF8huAuykfYpSbaOc84t61v2kjEo/y1umIUN7yHuLQJ89n7
+	jKX6Ga73oOj9us0syP0l/KRB+aDKlR3u/Arc1EFf7ptXFfP+6TGR7zF7kgfKTvihgA72LY4DzgI
+	fNMPpF1NVrsPvSWfmLg4HvY+AvY8gzgwAoIlfHpSkb1VYMdA2wymE1yIjo+14901N/w==
+X-Gm-Gg: ASbGnctrbLZLDXl8h4PDTD7zJrTJpCmVJAlCNaIEjtUjGuttXLCWI9cXSfXM8tAMlM1
+	FyuiqB3AsczH+hvtj6c4Ba+t3NCWQbjKGZe0gn/7khBp0iwPZ2vWe8EIukZY98iGmHk7zgWoIcl
+	y3eZv8rlHtTo6gmyzPaIvagVoMRbYp+un0jAL6l9SU5Y947UQlObXkH8YsQ/obPiqPC94n/NgjT
+	SwrCOjxH5PnmkTE9KtsrLsB+ufiXDLTkFceyVgaoIdd+GGbZnwSUXtuGXjw9K8ESFql9wnCsMZS
+	mp3DdGvKR4sM4T9PfjXdev1TF5k7TS2p6ZiB3L3ZVglVi+Bkio2FajoTGJjOF1L1oiSdo56LpH1
+	XxzOLqvV2XfNOvfPAdI2mkMxsx1HQ7vrDHEvmNrgKeynfi0Rc/g==
+X-Received: by 2002:a05:600c:4ec6:b0:43d:94:2d1e with SMTP id 5b1f17b1804b1-453659c5990mr113650955e9.13.1750687444787;
+        Mon, 23 Jun 2025 07:04:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE95nNZ86PnFHeg7VNuUAm+n3H3UxcLPVNTcJDICuroThLIfwHolxnqvCNMi52XcHJ4LMneaQ==
+X-Received: by 2002:a05:600c:4ec6:b0:43d:94:2d1e with SMTP id 5b1f17b1804b1-453659c5990mr113650125e9.13.1750687444093;
+        Mon, 23 Jun 2025 07:04:04 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159? (p200300d82f4efd008e13e3b590c81159.dip0.t-ipconnect.de. [2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453755e7d1dsm29688075e9.10.2025.06.23.07.04.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 07:04:03 -0700 (PDT)
+Message-ID: <c88c29d2-d887-4c5a-8b4e-0cf30e71d596@redhat.com>
+Date: Mon, 23 Jun 2025 16:04:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,1276 +74,127 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/5] iommu: Add verisilicon IOMMU driver
-To: Robin Murphy <robin.murphy@arm.com>, joro@8bytes.org, will@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
- nicolas.dufresne@collabora.com, jgg@ziepe.ca
-Cc: iommu@lists.linux.dev, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, kernel@collabora.com
-References: <20250619131232.69208-1-benjamin.gaignard@collabora.com>
- <20250619131232.69208-4-benjamin.gaignard@collabora.com>
- <43276c9a-5434-467c-abb2-dd2806ab81d0@arm.com>
+Subject: Re: [PATCH RFC 01/14] mm/memory: drop highest_memmap_pfn sanity check
+ in vm_normal_page()
+To: Oscar Salvador <osalvador@suse.de>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, nvdimm@lists.linux.dev,
+ Andrew Morton <akpm@linux-foundation.org>, Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ Dan Williams <dan.j.williams@intel.com>, Alistair Popple
+ <apopple@nvidia.com>, Matthew Wilcox <willy@infradead.org>,
+ Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Barry Song <baohua@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>
+References: <20250617154345.2494405-1-david@redhat.com>
+ <20250617154345.2494405-2-david@redhat.com>
+ <aFVZCvOpIpBGAf9w@localhost.localdomain>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-In-Reply-To: <43276c9a-5434-467c-abb2-dd2806ab81d0@arm.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aFVZCvOpIpBGAf9w@localhost.localdomain>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-
-Le 20/06/2025 à 21:37, Robin Murphy a écrit :
-> On 19/06/2025 2:12 pm, Benjamin Gaignard wrote:
->> The Verisilicon IOMMU hardware block can be found in combination
->> with Verisilicon hardware video codecs (encoders or decoders) on
->> different SoCs.
->> Enable it will allow us to use non contiguous memory allocators
->> for Verisilicon video codecs.
+On 20.06.25 14:50, Oscar Salvador wrote:
+> On Tue, Jun 17, 2025 at 05:43:32PM +0200, David Hildenbrand wrote:
+>> In 2009, we converted a VM_BUG_ON(!pfn_valid(pfn)) to the current
+>> highest_memmap_pfn sanity check in commit 22b31eec63e5 ("badpage:
+>> vm_normal_page use print_bad_pte"), because highest_memmap_pfn was
+>> readily available.
 >>
->> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
->> ---
->> changes in version 3:
->> - Change compatible to "rockchip,rk3588-iommu-1.2"
->> - Create an identity domain for the driver
->> - Fix double flush issue
->> - Rework attach/detach logic
->> - Simplify xlate function
->> - Discover iommu device like done in ARM driver
->> - Remove ARM_DMA_USE_IOMMU from Kconfig
+>> Nowadays, this is the last remaining highest_memmap_pfn user, and this
+>> sanity check is not really triggering ... frequently.
 >>
->>   drivers/iommu/Kconfig     |  11 +
->>   drivers/iommu/Makefile    |   1 +
->>   drivers/iommu/vsi-iommu.c | 874 ++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 886 insertions(+)
->>   create mode 100644 drivers/iommu/vsi-iommu.c
+>> Let's convert it to VM_WARN_ON_ONCE(!pfn_valid(pfn)), so we can
+>> simplify and get rid of highest_memmap_pfn. Checking for
+>> pfn_to_online_page() might be even better, but it would not handle
+>> ZONE_DEVICE properly.
 >>
->> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
->> index 0a33d995d15d..3e95d1db737b 100644
->> --- a/drivers/iommu/Kconfig
->> +++ b/drivers/iommu/Kconfig
->> @@ -383,4 +383,15 @@ config SPRD_IOMMU
->>           Say Y here if you want to use the multimedia devices listed 
->> above.
->>   +config VSI_IOMMU
->> +    tristate "Verisilicon IOMMU Support"
->> +    depends on ARM64
->
-> "(ARCH_ROCKCHIP && ARM64) || COMPILE_TEST", probably. Otherwise you 
-> might risk annoying Geert :)
->
->> +    select IOMMU_API
->> +    help
->> +      Support for IOMMUs used by Verisilicon sub-systems like video
->> +      decoders or encoder hardware blocks.
->> +
->> +      Say Y here if you want to use this IOMMU in front of these
->> +      hardware blocks.
->> +
->>   endif # IOMMU_SUPPORT
->> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
->> index 355294fa9033..68aeff31af8b 100644
->> --- a/drivers/iommu/Makefile
->> +++ b/drivers/iommu/Makefile
->> @@ -34,3 +34,4 @@ obj-$(CONFIG_IOMMU_SVA) += iommu-sva.o
->>   obj-$(CONFIG_IOMMU_IOPF) += io-pgfault.o
->>   obj-$(CONFIG_SPRD_IOMMU) += sprd-iommu.o
->>   obj-$(CONFIG_APPLE_DART) += apple-dart.o
->> +obj-$(CONFIG_VSI_IOMMU) += vsi-iommu.o
->> diff --git a/drivers/iommu/vsi-iommu.c b/drivers/iommu/vsi-iommu.c
->> new file mode 100644
->> index 000000000000..89e63a6a60c1
->> --- /dev/null
->> +++ b/drivers/iommu/vsi-iommu.c
->> @@ -0,0 +1,874 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/* Copyright (C) 2025 Collabora Ltd.
->> + *
->> + * IOMMU API for Verisilicon
->> + *
->> + * Module Authors:    Yandong Lin <yandong.lin@rock-chips.com>
->> + *            Simon Xue <xxm@rock-chips.com>
->> + *            Benjamin Gaignard <benjamin.gaignard@collabora.com>
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/compiler.h>
->> +#include <linux/delay.h>
->> +#include <linux/device.h>
->> +#include <linux/dma-mapping.h>
->> +#include <linux/dma-map-ops.h>
->
-> This shouldn't be here, it's a device driver not a DMA API 
-> implementation.
->
->> +#include <linux/errno.h>
->> +#include <linux/init.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/io.h>
->> +#include <linux/iommu.h>
->> +#include <linux/iopoll.h>
->> +#include <linux/list.h>
->> +#include <linux/mm.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_iommu.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pm_runtime.h>
->> +#include <linux/slab.h>
->> +#include <linux/spinlock.h>
->> +
->> +#include "iommu-pages.h"
->> +
->> +struct vsi_iommu {
->> +    struct device *dev;
->> +    void __iomem **bases;
->> +    int num_mmu;
->
-> What are these for, given the binding specifies a single "reg"?
->
-> If you do anticipate supporting multiple MMUs per client device, I 
-> would still strongly consider following the exynos-iommu approach of 
-> linking distinct instances together internally - the "single instance 
-> with multiple interfaces" model is a bit of a bodge, and has the big 
-> weakness that you tend to end up forever having to evolve the 
-> "clocks", "interrupts" etc. bindings in weird and arbitrary ways for 
-> different integrations. Especially if this is a 3rd-party IP that's 
-> liable to be used by multiple different SoC vendors.
+>> Do the same in vm_normal_page_pmd(), where we don't even report a
+>> problem at all ...
+>>
+>> What might be better in the future is having a runtime option like
+>> page-table-check to enable such checks dynamically on-demand. Something
+>> for the future.
+>>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+> 
 
-No, I do not plan to support multiple MMUs per client device.
-I will simplify it and use only void __iomem *regs instead.
+Hi Oscar,
 
->
->> +    int num_irq;
->> +    struct clk_bulk_data *clocks;
->> +    int num_clocks;
->> +    struct iommu_device iommu;
->> +    struct list_head node; /* entry in vsi_iommu_domain.iommus */
->> +    struct iommu_domain *domain; /* domain to which iommu is 
->> attached */
->> +};
->> +
->> +struct vsi_iommu_domain {
->> +    struct device *dma_dev;
->> +    struct list_head iommus;
->> +    u32 *dt; /* page directory table */
->> +    dma_addr_t dt_dma;
->> +    spinlock_t iommus_lock; /* lock for iommus list */
->> +    spinlock_t dt_lock; /* lock for modifying page directory table */
->> +    struct iommu_domain domain;
->> +    /* for vsi iommu */
->
-> Wait, so who is the rest of this driver-private structure for, if not 
-> also for this driver? :/
+> I'm confused, I'm missing something here.
+> Before this change we would return NULL if e.g: pfn > highest_memmap_pfn, but
+> now we just print the warning and call pfn_to_page() anyway.
+> AFAIK, pfn_to_page() doesn't return NULL?
 
-I will remove this useless comment.
+You're missing that vm_normal_page_pmd() was created as a copy from 
+vm_normal_page() [history of the sanity check above], but as we don't 
+have (and shouldn't have ...) print_bad_pmd(), we made the code look 
+like this would be something that can just happen.
 
->
->> +    u64 *pta; /* page directory table */
->> +    dma_addr_t pta_dma;
->> +};
->> +
->> +static struct iommu_domain vsi_identity_domain;
->> +
->> +#define NUM_DT_ENTRIES    1024
->> +#define NUM_PT_ENTRIES    1024
->> +#define PT_SIZE        (NUM_PT_ENTRIES * sizeof(u32))
->> +
->> +#define SPAGE_SIZE    BIT(12)
->> +
->> +/* vsi iommu regs address */
->> +#define VSI_MMU_CONFIG1_BASE            0x1ac
->> +#define VSI_MMU_AHB_EXCEPTION_BASE        0x380
->> +#define VSI_MMU_AHB_CONTROL_BASE        0x388
->> +#define VSI_MMU_AHB_TBL_ARRAY_BASE_L_BASE    0x38C
->> +
->> +/* MMU register offsets */
->> +#define VSI_MMU_FLUSH_BASE        0x184
->> +#define VSI_MMU_BIT_FLUSH        BIT(4)
->> +
->> +#define VSI_MMU_PAGE_FAULT_ADDR        0x380
->> +#define VSI_MMU_STATUS_BASE        0x384    /* IRQ status */
->> +
->> +#define VSI_MMU_BIT_ENABLE        BIT(0)
->> +
->> +#define VSI_MMU_OUT_OF_BOUND        BIT(28)
->> +/* Irq mask */
->> +#define VSI_MMU_IRQ_MASK        0x7
->> +
->> +#define VSI_DTE_PT_ADDRESS_MASK        0xffffffc0
->
-> I'm curious what those lowest 6 bits are for - does it really only 
-> require 64-byte alignment for pagetables, or can it actually 
-> accommodate a folded >32-bit address similar to the PTE level?
+"
+Do the same in vm_normal_page_pmd(), where we don't even report a
+problem at all ...
+"
 
-I do not have these info because the hardware isn't documented.
-The only hints are in the original driver here:
-https://github.com/rockchip-linux/kernel/blob/develop-6.1/drivers/iommu/rockchip-iommu-av1d.c
-If someone from rockchip or verisilicon read this thread, you are welcome
-to comment it and provide us more info :-)
+So we made something that should never happen a runtime sanity check 
+without ever reporting a problem ...
 
->
->> +#define VSI_DTE_PT_VALID        BIT(0)
->> +
->> +#define VSI_PAGE_DESC_LO_MASK        0xfffff000
->> +#define VSI_PAGE_DESC_HI_MASK        GENMASK_ULL(39, 32)
->> +#define VSI_PAGE_DESC_HI_SHIFT        (32 - 4)
->> +
->> +static inline phys_addr_t vsi_dte_pt_address(u32 dte)
->> +{
->> +    return (phys_addr_t)dte & VSI_DTE_PT_ADDRESS_MASK;
->> +}
->> +
->> +static inline u32 vsi_mk_dte(u32 dte)
->> +{
->> +    return (phys_addr_t)dte | VSI_DTE_PT_VALID;
->> +}
->> +
->> +#define VSI_PTE_PAGE_ADDRESS_MASK    0xfffffff0
->> +#define VSI_PTE_PAGE_WRITABLE        BIT(2)
->
-> Any idea if there are other useful permission bits?
+-- 
+Cheers,
 
-No (same reason than above)
+David / dhildenb
 
->
->> +#define VSI_PTE_PAGE_VALID        BIT(0)
->> +
->> +static inline phys_addr_t vsi_pte_page_address(u32 pte)
->> +{
->> +    u64 pte_vsi = pte;
->> +
->> +    pte_vsi = ((pte_vsi & VSI_PAGE_DESC_HI_MASK) << 
->> VSI_PAGE_DESC_HI_SHIFT) |
->
-> "(pte_vsi & VSI_PAGE_DESC_HI_MASK)" will by definition be 0.
-
-I will remove it.
-
->
->> +          (pte_vsi & VSI_PAGE_DESC_LO_MASK);
->> +
->> +    return (phys_addr_t)pte_vsi;
->> +}
->> +
->> +static u32 vsi_mk_pte(phys_addr_t page, int prot)
->> +{
->> +    u32 flags = 0;
->> +
->> +    flags |= (prot & IOMMU_WRITE) ? VSI_PTE_PAGE_WRITABLE : 0;
->> +    page = (page & VSI_PAGE_DESC_LO_MASK) |
->> +           ((page & VSI_PAGE_DESC_HI_MASK) >> VSI_PAGE_DESC_HI_SHIFT);
->> +    page &= VSI_PTE_PAGE_ADDRESS_MASK;
->
-> If VSI_PAGE_DESC_LO_MASK and VSI_PAGE_DESC_HI_MASK are correct to 
-> start with then VSI_PTE_PAGE_ADDRESS_MASK serves no purpose.
-
-You are right I will remove it.
-
->
->> +    return page | flags | VSI_PTE_PAGE_VALID;
->> +}
->> +
->> +#define VSI_DTE_PT_VALID    BIT(0)
->> +
->> +static inline bool vsi_dte_is_pt_valid(u32 dte)
->> +{
->> +    return dte & VSI_DTE_PT_VALID;
->> +}
->> +
->> +static inline bool vsi_pte_is_page_valid(u32 pte)
->> +{
->> +    return pte & VSI_PTE_PAGE_VALID;
->> +}
->> +
->> +static u32 vsi_mk_pte_invalid(u32 pte)
->> +{
->> +    return pte & ~VSI_PTE_PAGE_VALID;
->> +}
->> +
->> +#define VSI_MASTER_TLB_MASK    GENMASK_ULL(31, 10)
->
-> I note that this ends up being associated with the 
-> VSI_MMU_AHB_TBL_ARRAY_BASE_L_BASE register - is the "TLB"/"TBL" 
-> difference a typo one way or the other, or definitely intentional?
->
-> (For all I know maybe it really could be a table of translation 
-> lookaside bufers?)
-
-It is typo.
-
->
->> +/* mode 0 : 4k */
->> +#define VSI_PTA_4K_MODE    0
->> +
->> +static u64 vsi_mk_pta(dma_addr_t dt_dma)
->> +{
->> +    u64 val = (dt_dma & VSI_MASTER_TLB_MASK) | VSI_PTA_4K_MODE;
->> +
->> +    return val;
->> +}
->> +
->> +static struct vsi_iommu_domain *to_vsi_domain(struct iommu_domain *dom)
->> +{
->> +    return container_of(dom, struct vsi_iommu_domain, domain);
->> +}
->> +
->> +static void vsi_iommu_disable(struct vsi_iommu *iommu)
->> +{
->> +    int i;
->> +
->> +    /* Ignore error while disabling, just keep going */
->
-> FWIW I thought that comment was wrong at first, because we're clearly 
-> not disabling the clocks...
-
-The way it has been design in the original driver is to much complex.
-I will come back to something more simple:
-- enable/disable the clock in pm_runtime callbacks
-- call pm_runtime_resume_and_get(), pm_runtime_mark_last_busy() and pm_runtime_put_autosuspend() when needed.
-
->
->> + WARN_ON(clk_bulk_enable(iommu->num_clocks, iommu->clocks));
->> +    for (i = 0; i < iommu->num_mmu; i++)
->> +        writel(0, iommu->bases[i] + VSI_MMU_AHB_CONTROL_BASE);
->
-> However, even if the IOMMU itself is going away, is it really safe to 
-> ignore an error if it means we could risk hanging on an unclocked 
-> register access here?
->
->> + clk_bulk_disable(iommu->num_clocks, iommu->clocks);
->> +}
->> +
->> +static int vsi_iommu_enable(struct vsi_iommu *iommu)
->> +{
->> +    struct iommu_domain *domain = iommu->domain;
->> +    struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
->> +    int ret, i;
->> +
->> +    ret = clk_bulk_enable(iommu->num_clocks, iommu->clocks);
->> +    if (ret)
->> +        return ret;
->> +
->> +    for (i = 0; i < iommu->num_mmu; i++) {
->> +        u32 val = readl(iommu->bases[i] + VSI_MMU_AHB_CONTROL_BASE);
->> +
->> +        if (!(val & VSI_MMU_BIT_ENABLE)) {
->
-> If the hardware happens to be enabled already, can you be sure it's 
-> enabled *with the expected configuration*?
-
-I will remove this check.
-
->
->> + writel(vsi_domain->pta_dma,
->> +                   iommu->bases[i] + 
->> VSI_MMU_AHB_TBL_ARRAY_BASE_L_BASE);
->> +            writel(VSI_MMU_OUT_OF_BOUND, iommu->bases[i] + 
->> VSI_MMU_CONFIG1_BASE);
->> +            writel(VSI_MMU_BIT_ENABLE, iommu->bases[i] + 
->> VSI_MMU_AHB_EXCEPTION_BASE);
->> +            writel(VSI_MMU_BIT_ENABLE, iommu->bases[i] + 
->> VSI_MMU_AHB_CONTROL_BASE);
->> +        }
->> +    }
->> +    clk_bulk_disable(iommu->num_clocks, iommu->clocks);
->> +
->> +    return ret;
->> +}
->> +
->> +static inline void vsi_table_flush(struct vsi_iommu_domain 
->> *vsi_domain, dma_addr_t dma,
->> +                   unsigned int count)
->> +{
->> +    size_t size = count * sizeof(u32); /* count of u32 entry */
->> +
->> +    dma_sync_single_for_device(vsi_domain->dma_dev, dma, size, 
->> DMA_TO_DEVICE);
->> +}
->> +
->> +#define VSI_IOVA_DTE_MASK    0xffc00000
->> +#define VSI_IOVA_DTE_SHIFT    22
->> +#define VSI_IOVA_PTE_MASK    0x003ff000
->> +#define VSI_IOVA_PTE_SHIFT    12
->> +#define VSI_IOVA_PAGE_MASK    0x00000fff
->> +#define VSI_IOVA_PAGE_SHIFT    0
->> +
->> +static u32 vsi_iova_dte_index(dma_addr_t iova)
->> +{
->> +    return (u32)(iova & VSI_IOVA_DTE_MASK) >> VSI_IOVA_DTE_SHIFT;
->
-> Are these u32 casts really necessary? At worst, why not just make the 
-> "iova" argument u32 to begin with?
-
-I will do that.
-
->
->> +}
->> +
->> +static u32 vsi_iova_pte_index(dma_addr_t iova)
->> +{
->> +    return (u32)(iova & VSI_IOVA_PTE_MASK) >> VSI_IOVA_PTE_SHIFT;
->> +}
->> +
->> +static u32 vsi_iova_page_offset(dma_addr_t iova)
->> +{
->> +    return (u32)(iova & VSI_IOVA_PAGE_MASK) >> VSI_IOVA_PAGE_SHIFT;
->> +}
->> +
->> +static u32 vsi_iommu_read(void __iomem *base, u32 offset)
->> +{
->> +    return readl(base + offset);
->> +}
->> +
->> +static void vsi_iommu_write(void __iomem *base, u32 offset, u32 value)
->> +{
->> +    writel(value, base + offset);
->> +}
->
-> Ditch these read/write wrappers, they're used all of once, and they're 
-> still longer than just writing out the straightforward readl/writel 
-> directly. Abstracting a structure member dereference is one thing, but 
-> abstracting a single addition is entirely unnecessary.
-
-Sure
-
->
->> +static void vsi_iommu_flush_tlb_all(struct iommu_domain *domain)
->> +{
->> +    struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
->> +    struct list_head *pos;
->> +    unsigned long flags;
->> +    int i;
->> +
->> +    spin_lock_irqsave(&vsi_domain->iommus_lock, flags);
->> +    list_for_each(pos, &vsi_domain->iommus) {
->> +        struct vsi_iommu *iommu;
->> +        int ret;
->> +
->> +        iommu = list_entry(pos, struct vsi_iommu, node);
->> +        ret = pm_runtime_get_if_in_use(iommu->dev);
->> +        if (WARN_ON_ONCE(ret < 0))
->> +            continue;
->> +        if (ret) {
->> +            WARN_ON(clk_bulk_enable(iommu->num_clocks, iommu->clocks));
->
-> Again, would it really be OK to go ahead and access a potentially 
-> unclocked register?
->
-> TBH I'd drop all this busywork with the clocks altogether, and just 
-> enable/disable them in the runtime PM callbacks. I can't imagine the 
-> IOMMU would actually work very well with its core clock stopped anyway 
-> - presumably you're only getting away with it in this case because the 
-> clocks are shared with the codec so that's keeping them enabled while 
-> there is traffic for the IOMMU to translate. If someone really really 
-> really wants to gate the interface clock between register accesses on 
-> some other platform where it would have an effect, they can always 
-> come back and add that later.
->
->> +            for (i = 0; i < iommu->num_mmu; i++) {
->> +                writel(VSI_MMU_BIT_FLUSH,
->> +                       iommu->bases[i] + VSI_MMU_FLUSH_BASE);
->> +                writel(0, iommu->bases[i] + VSI_MMU_FLUSH_BASE);
->
-> That's curious - you set the bit, then explicitly clear it again 
-> imemdiately, but don't have to wait for any kind of completion status?
->
->> +            }
->> +            clk_bulk_disable(iommu->num_clocks, iommu->clocks);
->> +            pm_runtime_put(iommu->dev);
->> +        }
->> +    }
->> +    spin_unlock_irqrestore(&vsi_domain->iommus_lock, flags);
->> +}
->> +
->> +static irqreturn_t vsi_iommu_irq(int irq, void *dev_id)
->> +{
->> +    struct vsi_iommu *iommu = dev_id;
->> +    u32 int_status;
->> +    dma_addr_t iova;
->> +    irqreturn_t ret = IRQ_NONE;
->> +    int i, err;
->> +
->> +    err = pm_runtime_get_if_in_use(iommu->dev);
->> +    if (!err || WARN_ON_ONCE(err < 0))
->> +        return ret;
->> +
->> +    if (WARN_ON(clk_bulk_enable(iommu->num_clocks, iommu->clocks)))
->> +        goto out;
->> +
->> +    for (i = 0; i < iommu->num_mmu; i++) {
->> +        int_status = vsi_iommu_read(iommu->bases[i], 
->> VSI_MMU_STATUS_BASE);
->> +        if (int_status & VSI_MMU_IRQ_MASK) {
->> +            dev_err(iommu->dev, "unexpected int_status=%08x\n", 
->> int_status);
->> +            iova = vsi_iommu_read(iommu->bases[i], 
->> VSI_MMU_PAGE_FAULT_ADDR);
->> +
->> +            if (iommu->domain)
->
-> The current domain should never be NULL. You should default to either 
-> a blocking or bypass domain (depending on the hardware behaiour), and 
-> initialise that before you ever even request the IRQ.
-
-Jason also report this, I will fix that in v4
-
->
->> + report_iommu_fault(iommu->domain, iommu->dev, iova, int_status);
->> +            else
->> +                dev_err(iommu->dev,
->> +                    "Page fault while iommu not attached to 
->> domain?\n");
->> +        }
->> +        vsi_iommu_write(iommu->bases[i], VSI_MMU_STATUS_BASE, 0);
->> +        ret = IRQ_HANDLED;
->> +    }
->> +
->> +    clk_bulk_disable(iommu->num_clocks, iommu->clocks);
->> +
->> +out:
->> +    pm_runtime_put(iommu->dev);
->> +    return ret;
->> +}
->> +
->> +static struct vsi_iommu *vsi_iommu_get_from_dev(struct device *dev)
->> +{
->> +    struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
->> +    struct device *iommu_dev = 
->> bus_find_device_by_fwnode(&platform_bus_type,
->> +                                 fwspec->iommu_fwnode);
->> +
->> +    put_device(iommu_dev);
->> +
->> +    return iommu_dev ? dev_get_drvdata(iommu_dev) : NULL;
->> +}
->> +
->> +static struct iommu_domain *vsi_iommu_domain_alloc_paging(struct 
->> device *dev)
->> +{
->> +    struct vsi_iommu *iommu = vsi_iommu_get_from_dev(dev);
->
-> Use dev_iommu_priv_get() - we get here via a dev_iommu_ops() lookup, 
-> so dev is already guaranteed to be one of your clients.
-
-ok
-
->
->> +    struct vsi_iommu_domain *vsi_domain;
->> +
->> +    vsi_domain = kzalloc(sizeof(*vsi_domain), GFP_KERNEL);
->> +    if (!vsi_domain)
->> +        return NULL;
->> +
->> +    vsi_domain->dma_dev = iommu->dev;
->> +    iommu->domain = &vsi_identity_domain;
->
-> Nope, that should only happen when the domain is actually attached.
-
-I will remove it in v4.
-
->
->> +    /*
->> +     * iommu use a 2 level pagetable.
->> +     * Each level1 (dt) and level2 (pt) table has 1024 4-byte entries.
->> +     * Allocate one 4 KiB page for each table.
->> +     */
->> +    vsi_domain->dt = iommu_alloc_pages_sz(GFP_KERNEL | GFP_DMA32,
->> +                          SPAGE_SIZE);
->> +    if (!vsi_domain->dt)
->> +        goto err_free_domain;
->> +
->> +    vsi_domain->dt_dma = dma_map_single(vsi_domain->dma_dev, 
->> vsi_domain->dt,
->> +                        SPAGE_SIZE, DMA_TO_DEVICE);
->> +    if (dma_mapping_error(vsi_domain->dma_dev, vsi_domain->dt_dma)) {
->> +        dev_err(vsi_domain->dma_dev, "DMA map error for DT\n");
->> +        goto err_free_dt;
->> +    }
->> +
->> +    vsi_domain->pta = iommu_alloc_pages_sz(GFP_KERNEL | GFP_DMA32,
->> +                           SPAGE_SIZE);
->> +    if (!vsi_domain->pta)
->> +        goto err_unmap_dt;
->> +
->> +    vsi_domain->pta[0] = vsi_mk_pta(vsi_domain->dt_dma);
->> +    vsi_domain->pta_dma = dma_map_single(vsi_domain->dma_dev, 
->> vsi_domain->pta,
->> +                         SPAGE_SIZE, DMA_TO_DEVICE);
->> +    if (dma_mapping_error(vsi_domain->dma_dev, vsi_domain->pta_dma)) {
->> +        dev_err(vsi_domain->dma_dev, "DMA map error for PTA\n");
->> +        goto err_free_pta;
->> +    }
->
-> I'm especially curious what this "pta" really is - is the comment 
-> above just wrong, and you've actually got a 3-level pagetable 
-> supporting somewhere between 33 and 42 bits of VA? If not, then the 
-> additional level of indirection would very much seem to imply some 
-> kind of mechanism for accommodating multiple pagetables at once, and 
-> in that case, is it like a PASID table where the client device gets to 
-> choose which entry to use, or a StreamID table to disambiguate 
-> multiple client devices? (Where in the latter case it should most 
-> likely belong to the IOMMU rather than the domain, and you probably 
-> want nonzero #iommu-cells in the DT binding for the client IDs).
->
->> + spin_lock_init(&vsi_domain->iommus_lock);
->> +    spin_lock_init(&vsi_domain->dt_lock);
->> +    INIT_LIST_HEAD(&vsi_domain->iommus);
->> +
->> +    vsi_domain->domain.geometry.aperture_start = 0;
->> +    vsi_domain->domain.geometry.aperture_end   = DMA_BIT_MASK(32);
->> +    vsi_domain->domain.geometry.force_aperture = true;
->> +    vsi_domain->domain.pgsize_bitmap = SZ_4K;
->> +
->> +    return &vsi_domain->domain;
->> +
->> +err_free_pta:
->> +    iommu_free_pages(vsi_domain->pta);
->> +err_unmap_dt:
->> +    dma_unmap_single(vsi_domain->dma_dev, vsi_domain->dt_dma,
->> +             SPAGE_SIZE, DMA_TO_DEVICE);
->> +err_free_dt:
->> +    iommu_free_pages(vsi_domain->dt);
->> +err_free_domain:
->> +    kfree(vsi_domain);
->> +
->> +    return NULL;
->> +}
->> +
->> +static phys_addr_t vsi_iommu_iova_to_phys(struct iommu_domain *domain,
->> +                      dma_addr_t iova)
->> +{
->> +    struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
->> +    unsigned long flags;
->> +    phys_addr_t pt_phys, phys = 0;
->> +    u32 dte, pte;
->> +    u32 *page_table;
->> +
->> +    spin_lock_irqsave(&vsi_domain->dt_lock, flags);
->> +
->> +    dte = vsi_domain->dt[vsi_iova_dte_index(iova)];
->> +    if (!vsi_dte_is_pt_valid(dte))
->> +        goto out;
->> +
->> +    pt_phys = vsi_dte_pt_address(dte);
->> +    page_table = (u32 *)phys_to_virt(pt_phys);
->> +    pte = page_table[vsi_iova_pte_index(iova)];
->> +    if (!vsi_pte_is_page_valid(pte))
->> +        goto out;
->> +
->> +    phys = vsi_pte_page_address(pte) + vsi_iova_page_offset(iova);
->> +out:
->> +    spin_unlock_irqrestore(&vsi_domain->dt_lock, flags);
->> +
->> +    return phys;
->> +}
->> +
->> +static u32 *vsi_dte_get_page_table(struct vsi_iommu_domain 
->> *vsi_domain, dma_addr_t iova)
->> +{
->> +    u32 *page_table, *dte_addr;
->> +    u32 dte_index, dte;
->> +    phys_addr_t pt_phys;
->> +    dma_addr_t pt_dma;
->> +
->> +    assert_spin_locked(&vsi_domain->dt_lock);
->> +
->> +    dte_index = vsi_iova_dte_index(iova);
->> +    dte_addr = &vsi_domain->dt[dte_index];
->> +    dte = *dte_addr;
->> +    if (vsi_dte_is_pt_valid(dte))
->> +        goto done;
->> +
->> +    page_table = (u32 *)iommu_alloc_pages_sz(GFP_ATOMIC | GFP_DMA32, 
->> SPAGE_SIZE);
->> +    if (!page_table)
->> +        return ERR_PTR(-ENOMEM);
->> +
->> +    dte = vsi_mk_dte(virt_to_phys(page_table));
->
-> No no no no no. You're already generating pt_dma the correct way just 
-> below, use it! By all means *check* what dma_map_single() returns to 
-> make sure you're not getting any unexpected 
-> translation/bounce-buffering if you want to be able to rely on using 
-> phys_to_virt() as a shortcut later, but never blindly assume that 
-> virt_to_phys() is appropriate for DMA (for instance, what if 
-> CONFIG_ZONE_DMA32 isn't enabled so page_table ended up at a >32-bit 
-> address?)
-
-Thanks, I will change that.
-
->
->> +    *dte_addr = dte;
->> +
->> +    pt_dma = dma_map_single(vsi_domain->dma_dev, page_table, 
->> SPAGE_SIZE, DMA_TO_DEVICE);
->> +    if (dma_mapping_error(vsi_domain->dma_dev, pt_dma)) {
->> +        dev_err(vsi_domain->dma_dev, "DMA mapping error while 
->> allocating page table\n");
->> +        iommu_free_pages(page_table);
->> +        return ERR_PTR(-ENOMEM);
->> +    }
->> +
->> +    vsi_table_flush(vsi_domain,
->> +            vsi_domain->dt_dma + dte_index * sizeof(u32), 1);
->
-> The oreder seems a bit jumbled up here as well - it would be safest to 
-> get everything done with page_table itself first, *then* worry about 
-> updating the DTE to point to it.
->
->> +done:
->> +    pt_phys = vsi_dte_pt_address(dte);
->> +    return (u32 *)phys_to_virt(pt_phys);
->> +}
->> +
->> +static size_t vsi_iommu_unmap_iova(struct vsi_iommu_domain *vsi_domain,
->> +                   u32 *pte_addr, dma_addr_t pte_dma,
->> +                   size_t size)
->> +{
->> +    unsigned int pte_count;
->> +    unsigned int pte_total = size / SPAGE_SIZE;
->> +
->> +    assert_spin_locked(&vsi_domain->dt_lock);
->> +
->> +    for (pte_count = 0; pte_count < pte_total; pte_count++) {
->> +        u32 pte = pte_addr[pte_count];
->
-> What prevents this running off the end of the pagetable page? AFAICS 
-> you're not capping "size" to DTE boundaries in the main callback either.
-
-I will limit it by using NUM_PT_ENTRIES.
-
->
->> +
->> +        if (!vsi_pte_is_page_valid(pte))
->> +            break;
->> +
->> +        pte_addr[pte_count] = vsi_mk_pte_invalid(pte);
->> +    }
->> +
->> +    vsi_table_flush(vsi_domain, pte_dma, pte_count);
->> +
->> +    return pte_count * SPAGE_SIZE;
->> +}
->> +
->> +static int vsi_iommu_map_iova(struct vsi_iommu_domain *vsi_domain, 
->> u32 *pte_addr,
->> +                  dma_addr_t pte_dma, dma_addr_t iova,
->> +                  phys_addr_t paddr, size_t size, int prot)
->> +{
->> +    unsigned int pte_count;
->> +    unsigned int pte_total = size / SPAGE_SIZE;
->> +
->> +    assert_spin_locked(&vsi_domain->dt_lock);
->> +
->> +    for (pte_count = 0; pte_count < pte_total; pte_count++) {
->> +        u32 pte = pte_addr[pte_count];
->> +
->> +        if (vsi_pte_is_page_valid(pte))
->> +            goto unwind;
->> +
->> +        pte_addr[pte_count] = vsi_mk_pte(paddr, prot);
->> +
->> +        paddr += SPAGE_SIZE;
->> +    }
->> +
->> +    vsi_table_flush(vsi_domain, pte_dma, pte_total);
->> +
->> +    return 0;
->> +unwind:
->> +    /* Unmap the range of iovas that we just mapped */
->> +    vsi_iommu_unmap_iova(vsi_domain, pte_addr, pte_dma,
->> +                 pte_count * SPAGE_SIZE);
->
-> If you failed to map anything, return an error; otherwise, just return 
-> however much you did map successfully. The IOMMU core will take care 
-> of the rest.
-ok
->
->> +
->> +    return -EADDRINUSE;
->> +}
->> +
->> +static size_t vsi_iommu_unmap(struct iommu_domain *domain, unsigned 
->> long _iova,
->> +                  size_t size, size_t count, struct 
->> iommu_iotlb_gather *gather)
->> +{
->> +    struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
->> +    unsigned long flags;
->> +    dma_addr_t pte_dma, iova = (dma_addr_t)_iova;
->> +    phys_addr_t pt_phys;
->> +    u32 dte;
->> +    u32 *pte_addr;
->> +    size_t unmap_size;
->> +
->> +    spin_lock_irqsave(&vsi_domain->dt_lock, flags);
->> +
->> +    dte = vsi_domain->dt[vsi_iova_dte_index(iova)];
->> +    /* Just return 0 if iova is unmapped */
->> +    if (!vsi_dte_is_pt_valid(dte)) {
->> +        spin_unlock_irqrestore(&vsi_domain->dt_lock, flags);
->> +        return 0;
->> +    }
->> +
->> +    pt_phys = vsi_dte_pt_address(dte);
->> +    pte_addr = (u32 *)phys_to_virt(pt_phys) + vsi_iova_pte_index(iova);
->> +    pte_dma = pt_phys + vsi_iova_pte_index(iova) * sizeof(u32);
->> +    unmap_size = vsi_iommu_unmap_iova(vsi_domain, pte_addr, pte_dma, 
->> size);
->> +
->> +    spin_unlock_irqrestore(&vsi_domain->dt_lock, flags);
->> +
->> +    return unmap_size;
->> +}
->> +
->> +static int vsi_iommu_map(struct iommu_domain *domain, unsigned long 
->> _iova,
->> +             phys_addr_t paddr, size_t size, size_t count,
->> +             int prot, gfp_t gfp, size_t *mapped)
->> +{
->> +    struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
->> +    unsigned long flags;
->> +    dma_addr_t pte_dma, iova = (dma_addr_t)_iova;
->> +    u32 *page_table, *pte_addr;
->> +    u32 dte, pte_index;
->> +    int ret;
->> +
->> +    /*
->> +     * IOMMU drivers are not supposed to lock the page table, 
->> however this
->> +     * driver does not safely handle the cache flushing or table
->> +     * installation across concurrent threads so locking is used as 
->> a simple
->> +     * solution.
->> +     */
->
-> No need for that comment - it's perfectly fine for IOMMU drivers to 
-> serialise pagetable accesses if they want to. Of course if they're the 
-> kind of IOMMU that will find itself in a big server system with 
-> hundreds on CPUs mapping and unmapping tens of thousands of network 
-> packets per second in parallel, then for sure it's inadvisable from a 
-> performance perspective, but for a little embedded IOMMU that's only 
-> going to be handling relatively long-lived media buffers there is 
-> absolutely nothing wrong with simple and straightforward. In fact if 
-> you had tried to do clever lock-free stuff here, I would definitely be 
-> asking "do you really need this?" :)
->
->> + spin_lock_irqsave(&vsi_domain->dt_lock, flags);
->> +
->> +    page_table = vsi_dte_get_page_table(vsi_domain, iova);
->> +    if (IS_ERR(page_table)) {
->> +        spin_unlock_irqrestore(&vsi_domain->dt_lock, flags);
->> +        return PTR_ERR(page_table);
->> +    }
->> +
->> +    dte = vsi_domain->dt[vsi_iova_dte_index(iova)];
->> +    pte_index = vsi_iova_pte_index(iova);
->> +    pte_addr = &page_table[pte_index];
->> +    pte_dma = vsi_dte_pt_address(dte) + pte_index * sizeof(u32);
->> +    ret = vsi_iommu_map_iova(vsi_domain, pte_addr, pte_dma, iova,
->> +                 paddr, size, prot);
->> +
->> +    spin_unlock_irqrestore(&vsi_domain->dt_lock, flags);
->> +    if (!ret)
->> +        *mapped = size;
->> +
->> +    return ret;
->> +}
->> +
->> +static int vsi_iommu_identity_attach(struct iommu_domain *domain,
->> +                     struct device *dev)
->> +{
->> +    struct vsi_iommu *iommu = dev_iommu_priv_get(dev);
->> +    struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
->> +    unsigned long flags;
->> +    int ret;
->> +
->> +    if (WARN_ON(!iommu))
->> +        return -ENODEV;
->
-> That can never happen. The domain is already validated against the 
-> device ops in __iommu_attach_group().
->
->> +
->> +    if (iommu->domain == domain)
->> +        return 0;
->> +
->> +    iommu->domain = domain;
->> +
->> +    spin_lock_irqsave(&vsi_domain->iommus_lock, flags);
->
-> Erm, what lock? vsi_identity_domain is a plain struct iommu_domain, so 
-> this vsi_domain pointer has container_of()ed out into other adjacent 
-> static data... :O
-
-I will simplify the lock schema and use one declared inside vsi_iommu structure.
-
->
->> +    list_del_init(&iommu->node);
->> +    spin_unlock_irqrestore(&vsi_domain->iommus_lock, flags);
->> +
->> +    ret = pm_runtime_get_if_in_use(iommu->dev);
->> +    WARN_ON_ONCE(ret < 0);
->> +    if (ret > 0) {
->> +        vsi_iommu_disable(iommu);
->> +        pm_runtime_put(iommu->dev);
->> +    }
->> +
->> +    return 0;
->> +}
->> +
->> +static struct iommu_domain_ops vsi_identity_ops = {
->
-> Const.
->
->> +    .attach_dev = vsi_iommu_identity_attach,
->> +};
->> +
->> +static struct iommu_domain vsi_identity_domain = {
->> +    .type = IOMMU_DOMAIN_IDENTITY,
->> +    .ops = &vsi_identity_ops,
->> +};
->> +
->> +static int vsi_iommu_attach_device(struct iommu_domain *domain,
->> +                   struct device *dev)
->> +{
->> +    struct vsi_iommu *iommu = dev_iommu_priv_get(dev);
->> +    struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
->> +    unsigned long flags;
->> +    int ret;
->> +
->> +    if (WARN_ON(!iommu))
->> +        return -ENODEV;
->
-> Similarly impossible.
->
->> +
->> +    /* iommu already attached */
->> +    if (iommu->domain == domain)
->> +        return 0;
->> +
->> +    ret = vsi_iommu_identity_attach(&vsi_identity_domain, dev);
->> +    if (ret)
->> +        return ret;
->> +
->> +    iommu->domain = domain;
->> +
->> +    spin_lock_irqsave(&vsi_domain->iommus_lock, flags);
->> +    list_add_tail(&iommu->node, &vsi_domain->iommus);
->> +    spin_unlock_irqrestore(&vsi_domain->iommus_lock, flags);
->> +
->> +    ret = pm_runtime_get_if_in_use(iommu->dev);
->> +    if (!ret || WARN_ON_ONCE(ret < 0))
->> +        return 0;
->> +
->> +    ret = vsi_iommu_enable(iommu);
->> +    if (ret)
->> + WARN_ON(vsi_iommu_identity_attach(&vsi_identity_domain, dev));
->> +
->> +    pm_runtime_put(iommu->dev);
->> +
->> +    return ret;
->> +}
->> +
->> +static void vsi_iommu_domain_free(struct iommu_domain *domain)
->> +{
->> +    struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
->> +    int i;
->> +
->> +    WARN_ON(!list_empty(&vsi_domain->iommus));
->> +
->> +    for (i = 0; i < NUM_DT_ENTRIES; i++) {
->> +        u32 dte = vsi_domain->dt[i];
->> +
->> +        if (vsi_dte_is_pt_valid(dte)) {
->> +            phys_addr_t pt_phys = vsi_dte_pt_address(dte);
->> +            u32 *page_table = phys_to_virt(pt_phys);
->> +
->> +            dma_unmap_single(vsi_domain->dma_dev, pt_phys,
->> +                     SPAGE_SIZE, DMA_TO_DEVICE);
->> +            iommu_free_pages(page_table);
->> +        }
->> +    }
->> +
->> +    dma_unmap_single(vsi_domain->dma_dev, vsi_domain->dt_dma,
->> +             SPAGE_SIZE, DMA_TO_DEVICE);
->> +    iommu_free_pages(vsi_domain->dt);
->> +
->> +    dma_unmap_single(vsi_domain->dma_dev, vsi_domain->pta_dma,
->> +             SPAGE_SIZE, DMA_TO_DEVICE);
->> +    iommu_free_pages(vsi_domain->pta);
->> +
->> +    kfree(vsi_domain);
->> +}
->> +
->> +static struct iommu_device *vsi_iommu_probe_device(struct device *dev)
->> +{
->> +    struct vsi_iommu *iommu = vsi_iommu_get_from_dev(dev);
->> +    struct device_link *link;
->> +
->> +    if (WARN_ON(!iommu))
->> +        return ERR_PTR(-ENODEV);
->
-> Either don't have this check at all (since it's redundant if you're 
-> using fwspecs and of_xlate), or don't make it a WARN_ON (if you want 
-> the impression of supporting non-fwspec usage where probe_device is 
-> the one op where the core *does* give you "is this your client 
-> device?" calls).
->
->> +    link = device_link_add(dev, iommu->dev,
->> +                   DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME);
->> +    if (!link)
->> +        dev_err(dev, "Unable to link %s\n", dev_name(iommu->dev));
->> +
->> +    dev_iommu_priv_set(dev, iommu);
->> +    return &iommu->iommu;
->> +}
->> +
->> +static void vsi_iommu_release_device(struct device *dev)
->> +{
->> +    struct vsi_iommu *iommu = dev_iommu_priv_get(dev);
->> +
->> +    device_link_remove(dev, iommu->dev);
->> +}
->> +
->> +static int vsi_iommu_of_xlate(struct device *dev,
->> +                  const struct of_phandle_args *args)
->> +{
->> +    return iommu_fwspec_add_ids(dev, args->args, 1);
->
-> What are you adding here? Per the DT binding there are no IDs, so 
-> args->args_count will be 0 and args->args will be most likely be 
-> uninitialised stack.
-
-I will remove this function.
-
->
->> +}
->> +
->> +static struct iommu_ops vsi_iommu_ops = {
->
-> Const.
->
->> +    .identity_domain = &vsi_identity_domain,
->> +    .domain_alloc_paging = vsi_iommu_domain_alloc_paging,
->> +    .probe_device = vsi_iommu_probe_device,
->> +    .release_device = vsi_iommu_release_device,
->> +    .device_group = generic_single_device_group,
->> +    .of_xlate = vsi_iommu_of_xlate,
->> +    .default_domain_ops = &(const struct iommu_domain_ops) {
->> +        .attach_dev        = vsi_iommu_attach_device,
->> +        .map_pages        = vsi_iommu_map,
->> +        .unmap_pages        = vsi_iommu_unmap,
->> +        .flush_iotlb_all    = vsi_iommu_flush_tlb_all,
->> +        .iova_to_phys        = vsi_iommu_iova_to_phys,
->> +        .free            = vsi_iommu_domain_free,
->> +    }
->> +};
->> +
->> +static const struct of_device_id vsi_iommu_dt_ids[] = {
->> +    {
->> +        .compatible = "verisilicon,iommu",
->> +    },
->> +    {
->> +        .compatible = "rockchip,rk3588-iommu-1.2",
->
-> You can drop this - if the driver doesn't have any SoC-specific 
-> behaviour then we only need to match the generic compatible here. As 
-> long as the SoC-specific compatibles are in the binding, and thus in 
-> deployed DTBs, we can start making use of them in future as and when 
-> we have a reason to.
-
-DT maintainers have asked to for it so I will keep it but renamed to be DT compliant.
-
->
->> +    },
->> +    { /* sentinel */ }
->> +};
->> +
->> +static int vsi_iommu_probe(struct platform_device *pdev)
->> +{
->> +    struct device *dev = &pdev->dev;
->> +    struct vsi_iommu *iommu;
->> +    struct resource *res;
->> +    int num_res = pdev->num_resources;
->> +    int err, i;
->> +
->> +    iommu = devm_kzalloc(dev, sizeof(*iommu), GFP_KERNEL);
->> +    if (!iommu)
->> +        return -ENOMEM;
->> +
->> +    iommu->dev = dev;
->> +    iommu->num_mmu = 0;
->> +
->> +    iommu->bases = devm_kcalloc(dev, num_res, sizeof(*iommu->bases),
->> +                    GFP_KERNEL);
->> +    if (!iommu->bases)
->> +        return -ENOMEM;
->> +
->> +    for (i = 0; i < num_res; i++) {
->> +        res = platform_get_resource(pdev, IORESOURCE_MEM, i);
->> +        if (!res)
->> +            continue;
->> +        iommu->bases[i] = devm_ioremap_resource(&pdev->dev, res);
->
-> Consider devm_platform_ioremap_resource().
->
->> +        if (IS_ERR(iommu->bases[i]))
->> +            continue;
->> +        iommu->num_mmu++;
->> +    }
->> +    if (iommu->num_mmu == 0)
->> +        return PTR_ERR(iommu->bases[0]);
->> +
->> +    iommu->num_irq = platform_irq_count(pdev);
->> +    if (iommu->num_irq < 0)
->> +        return iommu->num_irq;
->> +
->> +    err = devm_clk_bulk_get_all(dev, &iommu->clocks);
->> +    if (err >= 0)
->> +        iommu->num_clocks = err;
->> +    else if (err == -ENOENT)
->> +        iommu->num_clocks = 0;
->> +    else
->> +        return err;
->> +
->> +    err = clk_bulk_prepare(iommu->num_clocks, iommu->clocks);
->> +    if (err)
->> +        return err;
->
-> I wonder if devm_clk_bulk_get_all_enabled() might help here, but if 
-> you do want to do any subsequent management then quite possibly it 
-> just shifts the complexity to making sure they're reenabled in all the 
-> paths where they can be released again :/
-
-I will rework the probe function to take care of your remarks.
-
->
->> +
->> +    for (i = 0; i < iommu->num_irq; i++) {
->> +        int irq = platform_get_irq(pdev, i);
->
-> As with num_mmu, according to your binding num_irq must be exactly 1. 
-> Do you really need the pretence of supporting more or fewer?
->
->> +
->> +        if (irq < 0)
->> +            return irq;
->> +
->> +        err = devm_request_irq(iommu->dev, irq, vsi_iommu_irq,
->> +                       IRQF_SHARED, dev_name(dev), iommu);
->> +        if (err)
->> +            goto err_unprepare_clocks;
->> +    }
->> +
->> +    dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
->> +    platform_set_drvdata(pdev, iommu);
->> +
->> +    pm_runtime_enable(dev);
->> +
->> +    err = iommu_device_sysfs_add(&iommu->iommu, dev, NULL, 
->> dev_name(dev));
->> +    if (err)
->> +        goto err_runtime_disable;
->> +
->> +    err = iommu_device_register(&iommu->iommu, &vsi_iommu_ops, dev);
->> +    if (err)
->> +        goto err_remove_sysfs;
->> +
->> +    return 0;
->> +
->> +err_remove_sysfs:
->> +    iommu_device_sysfs_remove(&iommu->iommu);
->> +err_runtime_disable:
->> +    pm_runtime_disable(dev);
->> +err_unprepare_clocks:
->> +    clk_bulk_unprepare(iommu->num_clocks, iommu->clocks);
->> +    return err;
->> +}
->> +
->> +static void vsi_iommu_shutdown(struct platform_device *pdev)
->> +{
->> +    struct vsi_iommu *iommu = platform_get_drvdata(pdev);
->> +    int i;
->> +
->> +    for (i = 0; i < iommu->num_irq; i++) {
->> +        int irq = platform_get_irq(pdev, i);
->> +
->> +        devm_free_irq(iommu->dev, irq, iommu);
->
-> Most devm_free calls are suspect in general, and this one is certainly 
-> no exception. Even if it justifiable to suppress IRQs during shutdown, 
-> can you not simply disable interrupt generation at the IOMMU end, or 
-> at worst just do a disable_irq()? In the shutdown path we really don't 
-> want to be doing any more work than absolutely necessary.
-
-Sure
-
->
->> +    }
->> +
->> +    pm_runtime_force_suspend(&pdev->dev);
->> +}
->> +
->> +static int __maybe_unused vsi_iommu_suspend(struct device *dev)
->> +{
->> +    struct vsi_iommu *iommu = dev_get_drvdata(dev);
->> +
->> +    if (iommu->domain == &vsi_identity_domain)
->> +        return 0;
->> +
->> +    vsi_iommu_disable(iommu);
->
-> This seems simlarly dubious - if suspend doesn't need to explicitly 
-> save any additional context for a subsequent resume then it shouldn't 
-> really do anything, certainly not change the state of IOMMU 
-> translation. At best that's a waste of time, at worst it risks 
-> unexpected faults or memory corruption (if a nominally-suspended 
-> client device is actually still running).
->
->> +    return 0;
->> +}
->> +
->> +static int __maybe_unused vsi_iommu_resume(struct device *dev)
->> +{
->> +    struct vsi_iommu *iommu = dev_get_drvdata(dev);
->> +
->> +    if (iommu->domain == &vsi_identity_domain)
->> +        return 0;
->> +
->> +    return vsi_iommu_enable(iommu);
->> +}
->> +
->> +static const struct dev_pm_ops vsi_iommu_pm_ops = {
->> +    SET_RUNTIME_PM_OPS(vsi_iommu_suspend, vsi_iommu_resume, NULL)
->> +    SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
->> +                pm_runtime_force_resume)
->> +};
->
-> Consider DEFINE_RUNTIME_DEV_PM_OPS().
->
->> +static struct platform_driver rockchip_vsi_iommu_driver = {
->> +    .probe = vsi_iommu_probe,
->> +    .shutdown = vsi_iommu_shutdown,
->> +    .driver = {
->> +           .name = "vsi_iommu",
->> +           .of_match_table = vsi_iommu_dt_ids,
->> +           .pm = &vsi_iommu_pm_ops,
->> +           .suppress_bind_attrs = true,
->> +    },
->> +};
->> +builtin_platform_driver(rockchip_vsi_iommu_driver);
->
-> I guess that does technically work out when this is built as a module, 
-> as the device_initcall() gets redefined to module_init() and the lack 
-> of module_exit() just prevents removal (which in practice would be 
-> prevented by held references anyway)... But it still looks a bit odd.
-
-I will try to fix that in the next version.
-Thanks for your comments.
-
-Benjamin
-
->
-> Thanks,
-> Robin.
