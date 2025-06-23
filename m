@@ -1,118 +1,349 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D28C1FBEBD;
-	Mon, 23 Jun 2025 09:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77031FBEBD;
+	Mon, 23 Jun 2025 09:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750671761; cv=none; b=lXv6anJvmTqL+Gjeq4wJf3ELHFoIi7EDes5lyxcajSEnwplo4TSpoPDRf7swUQk2WRX71Dm3NCqKhLENKL7KF0Dfw7BXJf6UVeSP+oq95sK5laMLwpkSaGKCG92ZkkApmvwzFLQKXZYAKv7/RQpXCn71EjNylic++Mm8yft1/a4=
+	t=1750671790; cv=none; b=sRhTHOJtqZl/llnUc941i7hLY/+bpmzODwcqlwR5Ko70cBDVznXtUlshRU57nvH9vOYggM2HM4YaBBxRa18YoHD2GS5ILIxWhFuVAY6kC4aEF/6wvdOwws2hIWikTfeC7GGwH01QYMRlxiu4bggDh8uYsXmXFjfbjXugXBbKwBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750671761; c=relaxed/simple;
-	bh=CLokeqalV++KeXWuo7z4YXVqDJENPsLQkL3BLjlU7ZU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kAlIDM4r+g+ISwo2jY63/IDF9mQDCL2nekJuB1W96HwdMV2qI8jkOzw4hcEJncyyYnbA/8BqxWy2UomdH62JsUfGiQZEvMstkpoaXlEGrRUbRj1s4RyM9EAddfVCGpV8YEQnKCFplqy1io+tP6TT5lQbWUGXyxzEeIWPnf4dJjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from [192.168.33.186] (unknown [210.73.43.2])
-	by APP-01 (Coremail) with SMTP id qwCowAC3Kdh8IVloO6CpCA--.44794S2;
-	Mon, 23 Jun 2025 17:42:21 +0800 (CST)
-Message-ID: <8c9b26f3-e782-437c-9930-2996fc625542@iscas.ac.cn>
-Date: Mon, 23 Jun 2025 17:42:20 +0800
+	s=arc-20240116; t=1750671790; c=relaxed/simple;
+	bh=kMlmjHwx3oiFn5F7q3Vxcu7mVmKsw4P94pgJNSLCTaQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mzd3vno+aPrDIo1lXfsvJ7KH8YZ3kSHHl4HSGcHrqzTPm/rOdy8pYOhq02AWGcSZ8q0pAF/dUbahJ3MunYmgOUh2sRWVjTYSaCpmTqbBcYMk8d20ggVnZBsrbaa6jQPQqVxUMnPd66uhX+kSziKbI4BScooQJrTB1jG+up1aeYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQjgP0698z6L5dQ;
+	Mon, 23 Jun 2025 17:38:09 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id B89FE140446;
+	Mon, 23 Jun 2025 17:43:04 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
+ 2025 11:43:03 +0200
+Date: Mon, 23 Jun 2025 10:43:02 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Neeraj Kumar <s.neeraj@samsung.com>
+CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>,
+	<anisa.su@samsung.com>, <vishak.g@samsung.com>, <krish.reddy@samsung.com>,
+	<arun.george@samsung.com>, <alok.rathore@samsung.com>,
+	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<gost.dev@samsung.com>, <cpgs@samsung.com>
+Subject: Re: [RFC PATCH 14/20] cxl/region: Add cxl pmem region creation
+ routine for region persistency
+Message-ID: <20250623104302.00004405@huawei.com>
+In-Reply-To: <1691538257.61750165382463.JavaMail.epsvc@epcpadp2new>
+References: <20250617123944.78345-1-s.neeraj@samsung.com>
+	<CGME20250617124046epcas5p16a45d2afe3b41ca08994a5cca09bfb68@epcas5p1.samsung.com>
+	<1691538257.61750165382463.JavaMail.epsvc@epcpadp2new>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] riscv: dts: spacemit: Add DMA translation buses for
- K1
-To: Guodong Xu <guodong@riscstar.com>, Yixun Lan <dlan@gentoo.org>
-Cc: Alex Elder <elder@ieee.org>, Ze Huang <huangze@whut.edu.cn>,
- spacemit@lists.linux.dev, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, devicetree@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250617-k1-dma-buses-rfc-wip-v1-1-c8ec192fbf58@iscas.ac.cn>
- <5cc644f8-7394-48f2-b62b-1e7cd5ce27d3@ieee.org>
- <9e5e54a9-ef90-4a87-b082-d6eb9c7468c5@iscas.ac.cn>
- <20250620105619-GYA165049@gentoo>
- <CAH1PCMZibCc-P7JQf4WyhkKuT607bWppKfKQ-7eo7-PyNGDAOg@mail.gmail.com>
- <20250620145751-GYB165049@gentoo> <20250623070147-GYA193822@gentoo>
- <CAH1PCMaCjM1xH9UMmOAPn62T-qicWVCZ4Lbej2XYgKZUJ+zy8g@mail.gmail.com>
-Content-Language: en-US
-From: Vivian Wang <wangruikang@iscas.ac.cn>
-In-Reply-To: <CAH1PCMaCjM1xH9UMmOAPn62T-qicWVCZ4Lbej2XYgKZUJ+zy8g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qwCowAC3Kdh8IVloO6CpCA--.44794S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZFWrJry3uFyDtFykGF1DGFg_yoW8uryUpF
-	WrJa45tFykJry5Cr1Svr4jyF40qry8urZ8XFZ8KryxuFZ0gr18XFW8tw4j9F93urn5Cr42
-	vw1jqasxua45AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvlb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
-	8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8Jr0_Cr
-	1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xK
-	xwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
-	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
-	1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
-	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
-	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
-	DU0xZFpf9x07beFxUUUUUU=
-X-CM-SenderInfo: pzdqw2pxlnt03j6l2u1dvotugofq/
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Hi Guodong and Yixun,
+On Tue, 17 Jun 2025 18:09:38 +0530
+Neeraj Kumar <s.neeraj@samsung.com> wrote:
 
->>>>> <snip>
->>>>>
->>>>>> By the way, I don't think I will be making an RFC v2 of this. I think we
->>>>>> should get everything sorted under this one thread.
->>>>>>
->>>>> Instead, from a SoC tree maintainer's perspective (whom taking care of
->>>>> merging all the dts files), I'd rather perfer an independent or
->>>>> separated patch for this given every party reached consesus, so we could
->>>>> get this patch merged first and early, instead of getting them distributed all
->>>>> over in different series, IMO, separated patches brings more dedependencies
->>>>> if more than two series require one bus and result in more merge conflicts..
->>>>> Besides, introducing new busses result in re-arrangement of previous nodes,
->>>>> those like uart, i2c (even they have no DMA feature implemented currently)..
->>>>>
->>>> Hi Yixun,
->>>>
->>>> So, here is my proposed plan: I will submit two patches. The first
->>>> patch will introduce the dma-bus node and move the relevant (uart0, uart2
->>>> ..uart9) device nodes under it. The second patch will then add the pdma0
->>>> node itself. Please let me know if you have a different approach in mind.
->>>>
->>> ..
->>>> Maybe you want to see an independent patchset with just the first patch? This
->>>> way it can be merged early without waiting for the pdma0 series.
->>>> Let me know. Thanks.
->>> yes, I prefer this way, this will also help other drivers - usb/emac,
->>> since they all wait for those bus nodes..
->>>
->>> please submit following two parts a) introduce bus b) move relevant nodes.
->>> notice, I don't mind who (you or Vivian) doing the job, but keep in
->>> mind don't duplicate the work..
->>>
->> to make it clear, I'd like to see all relevant *bus nodes added in one
->> independent series, not only dma-bus, even some nodes currently not used.
->> the goal here is "do it once, and do it well"
->>
->> in fact, I'd expect Vivian(or Guodong, whoever) to send a new version
->> of this patch without RFC prefix..
->>
-> I'm ok if Vivian can do that.
-> Thanks.
+> Added exported cxl_create_pmem_region routine to create cxl pmem region
 
-I will post v1 of this series soon.
+For function names always add () after and drop 'function/routine' etc.
+Ends up shorter and easier to read.
 
-Thanks,
-Vivian "dramforever" Wang
+> from LSA parsed cxl region information.
+> Inspirition for the function is taken from ndctl device attribute
+> (_store) call. It allocates cxlr and fills information parsed from LSA
+> and calls device_add(&cxlr->dev) to initiates further region creation
+> porbes
+Spell check.
+
+> 
+> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+> ---
+>  drivers/cxl/core/port.c   |   6 ++
+>  drivers/cxl/core/region.c | 208 ++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h         |  11 ++
+>  3 files changed, 225 insertions(+)
+> 
+
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index b98b1ccffd1c..8990e3c3474d 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -2522,6 +2522,214 @@ static ssize_t create_ram_region_show(struct device *dev,
+>  	return __create_region_show(to_cxl_root_decoder(dev), buf);
+>  }
+>  
+> +static ssize_t update_region_size(struct cxl_region *cxlr, u64 val)
+> +{
+> +	int rc;
+> +
+> +	rc = down_write_killable(&cxl_region_rwsem);
+ACQUIRE() as mentioned below.
+
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (val)
+> +		rc = alloc_hpa(cxlr, val);
+> +	else
+> +		rc = free_hpa(cxlr);
+> +	up_write(&cxl_region_rwsem);
+> +
+> +	if (rc)
+> +		return rc;
+
+	return rc;
+
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t update_region_dpa_size(struct cxl_region *cxlr,
+> +		struct cxl_decoder *cxld,
+> +		unsigned long long size)
+> +{
+> +	int rc;
+> +	struct cxl_endpoint_decoder *cxled =
+> +		to_cxl_endpoint_decoder(&cxld->dev);
+> +
+> +	if (!IS_ALIGNED(size, SZ_256M))
+> +		return -EINVAL;
+> +
+> +	rc = cxl_dpa_free(cxled);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (size == 0)
+> +		return 0;
+> +
+> +	rc = cxl_dpa_alloc(cxled, size);
+return cxl_dpa_alloc()
+
+Unless something more is getting added here in later patches in which case
+you can ignore this comment.
+
+> +	if (rc)
+> +		return rc;
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t update_region_dpa_mode(struct cxl_region *cxlr,
+> +		struct cxl_decoder *cxld)
+> +{
+> +	int rc;
+> +	struct cxl_endpoint_decoder *cxled =
+> +		to_cxl_endpoint_decoder(&cxld->dev);
+Maybe don't bother with local variable and just put this
+below as the parameter.
+> +
+> +	rc = cxl_dpa_set_mode(cxled, CXL_DECODER_PMEM);
+
+return cxl_dpa_set_mode()
+
+> +	if (rc)
+> +		return rc;
+> +
+> +	return 0;
+> +}
+> +
+> +static size_t attach_region_target(struct cxl_region *cxlr,
+> +		struct cxl_decoder *cxld, int pos)
+> +{
+> +	int rc;
+> +	struct cxl_endpoint_decoder *cxled =
+> +		to_cxl_endpoint_decoder(&cxld->dev);
+> +
+> +	rc = attach_target(cxlr, cxled, pos, TASK_INTERRUPTIBLE);
+> +
+No blank line here
+> +	if (rc < 0)
+Can it ever be > 0 ?
+If not, return attach_target() should be fine.
+> +		return rc;
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t commit_region(struct cxl_region *cxlr)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	ssize_t rc;
+> +
+> +	rc = down_write_killable(&cxl_region_rwsem);
+
+Maybe look at Dan's new ACQUIRE() series. The last patch in there
+is targeting code similar to this.
+
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* Already in the requested state? */
+> +	if (p->state >= CXL_CONFIG_COMMIT)
+> +		goto out;
+> +
+> +	/* Not ready to commit? */
+> +	if (p->state < CXL_CONFIG_ACTIVE) {
+> +		rc = -ENXIO;
+> +		goto out;
+> +	}
+> +
+> +	/*
+> +	 * Invalidate caches before region setup to drop any speculative
+> +	 * consumption of this address space
+> +	 */
+> +	rc = cxl_region_invalidate_memregion(cxlr);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = cxl_region_decode_commit(cxlr);
+> +	if (rc == 0)
+With AQUIRE() stuff you can just  do
+	if (rc)
+		return rc;
+
+here
+
+> +		p->state = CXL_CONFIG_COMMIT;
+> +out:
+> +	up_write(&cxl_region_rwsem);
+> +	if (rc)
+> +		return rc;
+> +	return 0;
+> +}
+> +
+> +static struct cxl_region *
+> +devm_cxl_pmem_add_region(struct cxl_root_decoder *cxlrd,
+> +		struct cxl_decoder *cxld,
+> +		struct cxl_pmem_region_params *params, int id,
+> +		enum cxl_decoder_mode mode, enum cxl_decoder_type type)
+> +{
+> +	struct cxl_port *port;
+> +	struct cxl_region *cxlr;
+> +	struct cxl_region_params *p;
+> +	struct device *dev;
+> +	int rc;
+> +
+> +	if (!cxlrd)
+> +		return ERR_PTR(-EINVAL);
+
+For a check like this, add a comment on why it might be NULL.
+If it can't be, then drop the check.
+
+> +
+> +	port = to_cxl_port(cxlrd->cxlsd.cxld.dev.parent);
+
+Maybe add a comment on which port this actually is.  These long indirections
+can make that hard to figure out!
+
+> +
+> +	cxlr = cxl_region_alloc(cxlrd, id);
+> +	if (IS_ERR(cxlr))
+> +		return cxlr;
+> +	cxlr->mode = mode;
+> +	cxlr->type = type;
+> +
+> +	dev = &cxlr->dev;
+> +	rc = dev_set_name(dev, "region%d", id);
+> +	if (rc)
+> +		goto err;
+> +
+> +	p = &cxlr->params;
+> +	p->uuid = params->uuid;
+> +	p->interleave_ways = params->nlabel;
+> +	p->interleave_granularity = params->ig;
+> +
+> +	/* Update region size */
+> +	if (update_region_size(cxlr, params->rawsize))
+> +		goto err;
+> +
+> +	/* Flush cxl wq */
+
+Much more useful to say 'why' you are flushing it.  It's obvious
+from the code that you are.
+
+> +	cxl_wq_flush();
+> +
+> +	/* Clear DPA Size */
+
+I'd look at all these comments and where they are obvious, drop the comment
+and let the code speak for itself.
+
+> +	if (update_region_dpa_size(cxlr, cxld, 0))
+> +		goto err;
+> +
+> +	/* Update DPA mode */
+> +	if (update_region_dpa_mode(cxlr, cxld))
+> +		goto err;
+> +
+> +	/* Update DPA Size */
+> +	if (update_region_dpa_size(cxlr, cxld, params->rawsize))
+> +		goto err;
+> +
+> +	/* Attach region targets */
+It's attaching just one by the look of it.  I'd just drop the comment.
+
+> +	if (attach_region_target(cxlr, cxld, params->position))
+> +		goto err;
+> +
+> +	/* Commit Region */
+> +	if (commit_region(cxlr))
+> +		goto err;
+> +
+> +	rc = device_add(dev);
+> +	if (rc)
+> +		goto err;
+> +
+> +	rc = devm_add_action_or_reset(port->uport_dev, unregister_region, cxlr);
+> +	if (rc)
+> +		return ERR_PTR(rc);
+> +
+> +	dev_dbg(port->uport_dev, "%s: created %s\n",
+> +		dev_name(&cxlrd->cxlsd.cxld.dev), dev_name(dev));
+> +	return cxlr;
+> +
+> +err:
+> +	put_device(dev);
+> +	return ERR_PTR(rc);
+> +}
+> +
+> +struct cxl_region *cxl_create_pmem_region(struct cxl_root_decoder *cxlrd,
+> +		struct cxl_decoder *cxld,
+> +		struct cxl_pmem_region_params *params, int id)
+> +{
+> +	int rc;
+> +
+> +	rc = memregion_alloc(GFP_KERNEL);
+> +	if (rc < 0)
+> +		return ERR_PTR(rc);
+> +
+> +	if (atomic_cmpxchg(&cxlrd->region_id, id, rc) != id) {
+> +		memregion_free(rc);
+> +		return ERR_PTR(-EBUSY);
+> +	}
+I'm a little surprised not to see cleanup of the memregion via
+devm somewhere here.
+> +
+> +	return devm_cxl_pmem_add_region(cxlrd, cxld, params, id,
+> +			CXL_DECODER_PMEM, CXL_DECODER_HOSTONLYMEM);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_create_pmem_region, "CXL");
+> +
+>  static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
+>  					  enum cxl_decoder_mode mode, int id)
+>  {
+
 
