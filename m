@@ -1,94 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91BD248F5A;
-	Mon, 23 Jun 2025 13:55:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F811957FF;
+	Mon, 23 Jun 2025 13:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750686912; cv=none; b=SBHA5b22bznPg8D/oso+TQRDczqS1GNB+BKGdUCDbFWgB8dJkfjKzdZppQ3Xu/nKGdKQWcGdBhfCeW7a65hriflYln6xqgMW8feIpESyw6UhCAcmjYGvgoJg0BbuMjaes3xUBBSXNfQwjV7VSmaSMmeunpe3LW8NXOJDYhT1xfU=
+	t=1750686944; cv=none; b=NLDEul7fagYw2fzrk+rYh4DV8+Pr+KUDIa5U1I3uylaCUlMVkk+kIL3uw8plbIbgIAKBr2REE7lJ6Uz29Hx/94U85o8kKaHsyT/tBkJayTX/iUPywD4mR0Nz2f5SPxUkCT5H40PmgLhxoU30WTdfcq15F4Lq8TkIA54nVr24Lqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750686912; c=relaxed/simple;
-	bh=jLWJrmtgJQZJVJKqAox7BA1rst37kkty3zeUjLnbPQY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IyBfCkMfbEo1FPzxj0CV0VpU6HibIHSk70TKLGF/B99uq9bTDRE0V2K8I2Q9xww6mQLGSi/XLrFmrMtF14edOtk37QH+VHEdah7l7Gyv9/chEEUPN3TjEn4dI7Bnc9hKMdpwKMKuoOdYUEUBEPOsmv3Oi0WHESt1zsK3gQAyzbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GDjV/Efc; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750686944; c=relaxed/simple;
+	bh=/Ag7v6ZQya0VRiBpyA8Kql7m+wSMLKuyVmJ/dONXjk0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=Rz3saIYFB+ZYLq+0tk+dNR3btC2jdPe+0Bk9eIfbOK+JxPWq5K01/Dht3JM3+uVevQlujkLBJkQcEGdwwpwVvYa5+IFjc7d1oBdJr4TxsDEP0EQYQxKg13QoUEDxtWGmpxmVspZevnaamWWin3mqNc9UEdpGmegw9gpbTHAzdtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a7FxlE2m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GDjV/Efc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750686911; x=1782222911;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=jLWJrmtgJQZJVJKqAox7BA1rst37kkty3zeUjLnbPQY=;
-  b=GDjV/Efceg5tiPMTAH1kChzm/gtguCbEhcSlCsBJGqCVkd2qOiqSbn1f
-   VztxJzRXRN0XqjJt+xhJyiWwV1r/t321ryguoTOKw0u3voBr2uveFBsHS
-   9sDi9dYPiFTL6ll00FJkOfP3eh1kYJqK7maL0+ik2AfzgIJr3evwloo7s
-   wgpKhjogsk6SE+AJ2FsRxtogrXumcGZtKXHWUVwoc5OgcgRmwcYrM00cK
-   dENgvNT6zckwra6QDar8B5dcjguXWrw77A7WRrmBlmbaHUyBEptZRL7kQ
-   raGLtRh3YnzbatuboVuwY5INPzCWAlOrvkSoEJTm5RrHF97f6CcN9QVgv
-   g==;
-X-CSE-ConnectionGUID: eaZc9i7ITpq8fVTfTUYEhQ==
-X-CSE-MsgGUID: veAbORtSR96GrQSllZrpBQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="64326489"
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="64326489"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 06:55:10 -0700
-X-CSE-ConnectionGUID: Kum29rmQTeCauBg3e0FQ0w==
-X-CSE-MsgGUID: miDSXAgITfqad7c96MLUUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="152287874"
-Received: from abityuts-desk.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.8])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 06:55:06 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 3C08511FC36;
-	Mon, 23 Jun 2025 16:55:03 +0300 (EEST)
-Date: Mon, 23 Jun 2025 13:55:03 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Ricardo Ribalda Delgado <ribalda@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	Ricardo Ribalda <ribalda@chromium.org>
-Subject: Re: [PATCH RESEND v4 3/5] media: i2c: imx214: Make use of CCS PLL
- calculator
-Message-ID: <aFlctybsb-HM8Vzr@kekkonen.localdomain>
-References: <20250621-imx214_ccs_pll-v4-0-12178e5eb989@apitzsch.eu>
- <20250621-imx214_ccs_pll-v4-3-12178e5eb989@apitzsch.eu>
- <20250621181751.GA9125@pendragon.ideasonboard.com>
- <ed0b8fe3a20111477cafb1de7b399afb99caaa0c.camel@apitzsch.eu>
- <20250622171320.GA826@pendragon.ideasonboard.com>
- <CAPybu_2WF=t4jnwsrTSCiSZ4T7Sck4-fCoub33=P_6KvdZ5ePg@mail.gmail.com>
- <20250623114658.GB32376@pendragon.ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a7FxlE2m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6BEDC4CEEA;
+	Mon, 23 Jun 2025 13:55:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750686943;
+	bh=/Ag7v6ZQya0VRiBpyA8Kql7m+wSMLKuyVmJ/dONXjk0=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=a7FxlE2m6dWEXl7rt1U2aYfWkWlTwLI8NBLXC2n7o0SJ+xDRD4qW8s45fryqENIE7
+	 l1Ja7J4V5t5yI25UFpZvujNYCN49P/h/xRUgLW6/gY0p7D9d6+b8CeV/JEEAOGd+Cw
+	 HwTNuuTLNOlztLTUqeYxnDOfdDwkjjIdk4F+689dFI52lJ1bPKv79DstmE1P1QT1eS
+	 vvhhtVrdgQYph8EASW3Rkmk/LiDICnYpk5P+TOWY8t661kV7tGhvKjhRJtzr7OSI9J
+	 Paqp8TdJmnFYrZJAHrBem8KY7SmzLtww+o8W6F9f9ZUWciQuKogif9JYza+AhlC6rs
+	 kzV4/msZzJGmw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250623114658.GB32376@pendragon.ideasonboard.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 23 Jun 2025 15:55:36 +0200
+Message-Id: <DATYQ3ZIFGZO.1CLIKLTTO2YM3@kernel.org>
+Cc: "Andreas Hindborg" <a.hindborg@kernel.org>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Masahiro Yamada" <masahiroy@kernel.org>, "Nathan
+ Chancellor" <nathan@kernel.org>, "Luis Chamberlain" <mcgrof@kernel.org>,
+ "Danilo Krummrich" <dakr@kernel.org>, "Nicolas Schier"
+ <nicolas.schier@linux.dev>, "Trevor Gross" <tmgross@umich.edu>, "Adam
+ Bratschi-Kaye" <ark.email@gmail.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>, "Petr
+ Pavlu" <petr.pavlu@suse.com>, "Sami Tolvanen" <samitolvanen@google.com>,
+ "Daniel Gomez" <da.gomez@samsung.com>, "Simona Vetter"
+ <simona.vetter@ffwll.ch>, "Greg KH" <gregkh@linuxfoundation.org>, "Fiona
+ Behrens" <me@kloenk.dev>, "Daniel Almeida" <daniel.almeida@collabora.com>,
+ <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
+ <20250612-module-params-v3-v13-2-bc219cd1a3f8@kernel.org>
+ <COU2bqJOzCHRf6g4rwFpu2NY3wLY0G0AmNjRaU9aGEqu1HaPZ5X4KzfDT_CEB3Okh5BV50sJS10sKhmtHut8ew==@protonmail.internalid> <DAQJCUE1C2JE.204A8IS7LBIVZ@kernel.org> <87ikkq648o.fsf@kernel.org> <smOfUo2mEmQu-lykKKMiNOUWq2ze6p_CoEEpgGE0dtAnoJDGEpvQMkP1q-n13MiUxLK1xAiM-4QLsivPrG57sg==@protonmail.internalid> <DARCZYNPIJVZ.3JJSZ6PSAEMEC@kernel.org> <877c126bce.fsf@kernel.org> <DATW0XWNN45X.1L2WMZ41JJ5O8@kernel.org> <CANiq72nV3QzpRZTyDTv7Qx-c83jeayUY3nnvhpbtOYXf47EgJA@mail.gmail.com>
+In-Reply-To: <CANiq72nV3QzpRZTyDTv7Qx-c83jeayUY3nnvhpbtOYXf47EgJA@mail.gmail.com>
 
-André: the set is already in my tree but Laurent had further comments. Can
-you post patch(es) on top of the set to address them?
+On Mon Jun 23, 2025 at 2:37 PM CEST, Miguel Ojeda wrote:
+> On Mon, Jun 23, 2025 at 1:48=E2=80=AFPM Benno Lossin <lossin@kernel.org> =
+wrote:
+>>
+>> Another way would be to use a `Once`-like type (does that exist on the C
+>> side?) so a type that can be initialized once and then never changes.
+>
+> There are `DO_ONCE{,_SLEEPABLE,_LITE}`.
 
--- 
-Regards,
+Thanks for the pointer, it is pretty much exactly what the `Once` type
+in Rust is.
 
-Sakari Ailus
+It's not exactly what I'm thinking of in this case, but since it is
+implemented with static key, maybe we can do something similar with a
+static key? So switch the return value of the `ModuleParamAccess::read`
+function depending on weather the module parameters have been written
+and while they haven't just return a dummy value and WARN.
+
+Thoughts @Andreas?
+
+---
+Cheers,
+Benno
