@@ -1,184 +1,159 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D46323A9BD
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B6014D2A0
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:52:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750668680; cv=none; b=mkf/2XCYqaRfR5H7+Il7Ipn43x06COWjvlxA2efvQ5StKIZnFu8yVteYOQYMSobfXJrNqF1ytMKw1p2HyBFPz1S9ucBpvg7YgE0vRF2xqQH3yaTH5QVNu29oBRGp5ipkC8PKvL0rEpXhKdfXYMuu2YirZ9+iZFx4kijCuRbX90U=
+	t=1750668751; cv=none; b=izJ8wIb10HOEZs6memtLJbuUztk6pnxD34BKtfpNF74g5jCHAI6xEovw2aucPteXQeFP5PIeRtvLkYaxXKsf6j8Rk3MqhnhP+1QTS6Fs2uUVXUgcOkAkrrADz9oImsQ8nQlEBjNJ12LpWegX6dRiXhtjuiatoAvm03gsY6SJLqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750668680; c=relaxed/simple;
-	bh=HXv3ywqM7Aj12ZBMV6/lmyFntJo5E+cB5OfRef713dA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AyYSFSj6di5n/SvHM8yPp+bNTbn0mFie+dC76TE9J49C7PQ6cfCSwireXTssaoB7cmJc6j1LLQ/ODNe4jgIM8pyqHwX1SEHbBdpPYjUAJo0NGKuW5LdTyf7oZDtbot72SrBsrcYf/mYq6dyVvUUANF/Hco4LivZf/EdPy5y1cZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=dnQvm03S; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1750668751; c=relaxed/simple;
+	bh=KJWqLNgr44ov9Nt7XTqCfTOgZQdq9+3m7oNS56IZMvw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MP82Az43HR+XPdGWqLbLI0x50qOWwvn6Y2up4FSK/QIIDUeQov9gXKOqN/C/U4sbqI44oKgd9UQoPchbeJeVCG7eyQ6Zv+1BazUPIvqpdTbKCAn2tmTK5MPRHq7S0ZVOaCgKWKKzgKdfhK0oh+NyOzpY3tdS1RCn9VeaYR0drkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0JZhcAFq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=g+UGvVKT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0JZhcAFq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=g+UGvVKT; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="dnQvm03S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750668674;
-	bh=HXv3ywqM7Aj12ZBMV6/lmyFntJo5E+cB5OfRef713dA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dnQvm03SmRwfQLzuXKDbQK294lOcDH2bypPfCvGuZTYqt5mMbYYqOygWs+zwtxZkL
-	 T+VM1x/JMqk16jJmJl53RGBWZ0oE3Ug1JEwoyN12uVNYJqORYlFqtQ7iGcAp+aKN2q
-	 InVzxbAXjb3uLIBw2f+l0wl/Gh5JAvNdrZ8vcJ8bqG/bEuFY2ewWAAsdvg7kZj6vz4
-	 RWWrSvEq+YKTAawymhMDvHvHN/uSV8rRojnwvjKlfc/UCuH1M+pNBQfTuzFlZ2Ci7H
-	 UxvDLL5TXsrjuQDbEofE/prHPeDdMace168S3wuYsTlKG7PrAJoOBifdtxI7fXmNTh
-	 pThLEFKtln54w==
-Received: from debian.. (unknown [171.76.82.69])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0JZhcAFq";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="g+UGvVKT";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0JZhcAFq";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="g+UGvVKT"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: vignesh)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8E67F17E1560;
-	Mon, 23 Jun 2025 10:51:11 +0200 (CEST)
-From: Vignesh Raman <vignesh.raman@collabora.com>
-To: dri-devel@lists.freedesktop.org
-Cc: daniels@collabora.com,
-	daniel@fooishbar.org,
-	helen.fornazier@gmail.com,
-	airlied@gmail.com,
-	simona.vetter@ffwll.ch,
-	robdclark@gmail.com,
-	robin.clark@oss.qualcomm.com,
-	guilherme.gallo@collabora.com,
-	sergi.blanch.torne@collabora.com,
-	valentine.burley@collabora.com,
-	lumag@kernel.org,
-	dmitry.baryshkov@oss.qualcomm.com,
-	quic_abhinavk@quicinc.com,
-	mripard@kernel.org,
-	maarten.lankhorst@linux.intel.com,
-	tzimmermann@suse.de,
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CF84921186;
+	Mon, 23 Jun 2025 08:52:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750668747; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ql9UrgN1OmhzZPKRccJHFCfyhskGVGW3Gx/UQr7M9j8=;
+	b=0JZhcAFqaO1ExD5isKVwmiqYfCULuUnI8E0ez5QyMp+Rm2b1FKPswwiYlMyxZ1SVkABxcR
+	kWQo1nojLLOjtw5I76szmgKutCDDz+CYcS3/wvlvOjJLkaZ/PK2zKHKYrP1AbO1cNsX4Kl
+	X70WO0OvWjZhjv7atswZmzFGd6jVo08=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750668747;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ql9UrgN1OmhzZPKRccJHFCfyhskGVGW3Gx/UQr7M9j8=;
+	b=g+UGvVKTK5lGIQ5YZOeaxFbVgMSYjYSMLPIvWrXgzuNkW3GGqL0AzIccfWMskEc5sS8OMU
+	h/4MJQkuEFvfBnAA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750668747; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ql9UrgN1OmhzZPKRccJHFCfyhskGVGW3Gx/UQr7M9j8=;
+	b=0JZhcAFqaO1ExD5isKVwmiqYfCULuUnI8E0ez5QyMp+Rm2b1FKPswwiYlMyxZ1SVkABxcR
+	kWQo1nojLLOjtw5I76szmgKutCDDz+CYcS3/wvlvOjJLkaZ/PK2zKHKYrP1AbO1cNsX4Kl
+	X70WO0OvWjZhjv7atswZmzFGd6jVo08=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750668747;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ql9UrgN1OmhzZPKRccJHFCfyhskGVGW3Gx/UQr7M9j8=;
+	b=g+UGvVKTK5lGIQ5YZOeaxFbVgMSYjYSMLPIvWrXgzuNkW3GGqL0AzIccfWMskEc5sS8OMU
+	h/4MJQkuEFvfBnAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 93B7E13485;
+	Mon, 23 Jun 2025 08:52:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id IL+uIcsVWWjYewAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 23 Jun 2025 08:52:27 +0000
+Date: Mon, 23 Jun 2025 10:52:27 +0200
+Message-ID: <87y0tin8l0.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: phasta@kernel.org,
+	Philipp Stanner <phasta@mailbox.org>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Alok Tiwari <alok.a.tiwari@oracle.com>,
+	perex@perex.cz,
+	tiwai@suse.com,
+	andriy.shevchenko@linux.intel.com,
+	linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] drm/ci: Add jobs to run KUnit tests
-Date: Mon, 23 Jun 2025 14:20:28 +0530
-Message-ID: <20250623085033.39680-3-vignesh.raman@collabora.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250623085033.39680-1-vignesh.raman@collabora.com>
-References: <20250623085033.39680-1-vignesh.raman@collabora.com>
+Subject: Re: [PATCH] ALSA: intel8x0: Fix incorrect codec index usage in mixer for ICH4
+In-Reply-To: <3c6c7fb03375bc4532c3a6af65d78226cb5b9281.camel@mailbox.org>
+References: <20250621185233.4081094-1-alok.a.tiwari@oracle.com>
+	<87msa0w2f2.wl-tiwai@suse.de>
+	<3c6c7fb03375bc4532c3a6af65d78226cb5b9281.camel@mailbox.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.30
 
-Add jobs to run KUnit tests using tools/testing/kunit/kunit.py tool.
+On Mon, 23 Jun 2025 10:02:30 +0200,
+Philipp Stanner wrote:
+> 
+> On Sun, 2025-06-22 at 11:28 +0200, Takashi Iwai wrote:
+> > On Sat, 21 Jun 2025 20:52:24 +0200,
+> > Alok Tiwari wrote:
+> > > 
+> > > code mistakenly used a hardcoded index (codec[1]) instead of
+> > > iterating, over the codec array using the loop variable i.
+> > > Use codec[i] instead of codec[1] to match the loop iteration.
+> > > 
+> > > Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+> > 
+> > Applied now.  Thanks.
+> 
+> Shouldn't that have been a bug fix with
+> 
+> Fixes:
+> and
+> Cc: stable
+> 
+> ?
 
-Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
-Acked-by: Helen Koike <helen.fornazier@gmail.com>
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
----
+This change likely won't influence on the existing devices, and the
+issue has been present from the very beginning of the driver code,
+hence no regression.
 
-v4:
-  - The minimum supported version of LLVM for building x86 kernels is 15.0.0
-    (See https://lore.kernel.org/all/20250220-x86-bump-min-llvm-for-stackp-v1-1-ecb3c906e790@kernel.org/).
-    Use the mesa-ci containers, where LLVM_VERSION is defined at the container
-    level and is currently set to 19. Use this llvm version for compilation.
-  
-v3:
-  - Add KUnit tests to the kunit stage.
+The stuff in question is about the hardware of over 20 years ago, and
+there has been no bug reports about this.  After all, all devices were
+with at most two codecs, and this patch is for 3rd and 4th codecs.
 
-v2:
-  - Use LLVM/Clang instead of GCC to avoid architecture-specific
-    toolchains for cross-compiling.
 
----
- drivers/gpu/drm/ci/gitlab-ci.yml |  2 ++
- drivers/gpu/drm/ci/kunit.sh      | 16 ++++++++++++++
- drivers/gpu/drm/ci/kunit.yml     | 37 ++++++++++++++++++++++++++++++++
- 3 files changed, 55 insertions(+)
- create mode 100755 drivers/gpu/drm/ci/kunit.sh
- create mode 100644 drivers/gpu/drm/ci/kunit.yml
+thanks,
 
-diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/gitlab-ci.yml
-index 1dddda3d24c8..6f9b7beddcb3 100644
---- a/drivers/gpu/drm/ci/gitlab-ci.yml
-+++ b/drivers/gpu/drm/ci/gitlab-ci.yml
-@@ -111,6 +111,7 @@ include:
-   - drivers/gpu/drm/ci/build.yml
-   - drivers/gpu/drm/ci/test.yml
-   - drivers/gpu/drm/ci/check-devicetrees.yml
-+  - drivers/gpu/drm/ci/kunit.yml
-   - 'https://gitlab.freedesktop.org/gfx-ci/lab-status/-/raw/main/lab-status.yml'
- 
- 
-@@ -122,6 +123,7 @@ stages:
-   - build-for-tests
-   - build-only
-   - static-checks
-+  - kunit
-   - code-validation
-   - amdgpu
-   - i915
-diff --git a/drivers/gpu/drm/ci/kunit.sh b/drivers/gpu/drm/ci/kunit.sh
-new file mode 100755
-index 000000000000..7a1052fd3f17
---- /dev/null
-+++ b/drivers/gpu/drm/ci/kunit.sh
-@@ -0,0 +1,16 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: MIT
-+
-+set -euxo pipefail
-+
-+: "${KERNEL_ARCH:?ERROR: KERNEL_ARCH must be set}"
-+: "${LLVM_VERSION:?ERROR: LLVM_VERSION must be set}"
-+
-+./drivers/gpu/drm/ci/setup-llvm-links.sh
-+
-+export PATH="/usr/bin:$PATH"
-+
-+./tools/testing/kunit/kunit.py run \
-+  --arch "${KERNEL_ARCH}" \
-+  --make_options LLVM=1 \
-+  --kunitconfig=drivers/gpu/drm/tests
-diff --git a/drivers/gpu/drm/ci/kunit.yml b/drivers/gpu/drm/ci/kunit.yml
-new file mode 100644
-index 000000000000..0d5b2c4433d2
---- /dev/null
-+++ b/drivers/gpu/drm/ci/kunit.yml
-@@ -0,0 +1,37 @@
-+.kunit-packages: &kunit-packages
-+  - apt-get update -qq
-+  # Minimum supported version of LLVM for building x86 kernels is 15.0.0.
-+  # In mesa-ci containers, LLVM_VERSION is defined as a container-level property and is currently set to 19.
-+  - apt-get install -y --no-install-recommends clang-${LLVM_VERSION} lld-${LLVM_VERSION} llvm-${LLVM_VERSION}
-+
-+.kunit-base:
-+  stage: kunit
-+  timeout: "30m"
-+  variables:
-+    GIT_DEPTH: 1
-+  script:
-+    - drivers/gpu/drm/ci/kunit.sh
-+
-+kunit:arm32:
-+  extends:
-+    - .build:arm32
-+    - .kunit-base
-+  before_script:
-+    - *kunit-packages
-+    - apt-get install -y --no-install-recommends qemu-system-arm
-+
-+kunit:arm64:
-+  extends:
-+    - .build:arm64
-+    - .kunit-base
-+  before_script:
-+    - *kunit-packages
-+    - apt-get install -y --no-install-recommends qemu-system-aarch64
-+
-+kunit:x86_64:
-+  extends:
-+    - .build:x86_64
-+    - .kunit-base
-+  before_script:
-+    - *kunit-packages
-+    - apt-get install -y --no-install-recommends qemu-system-x86
--- 
-2.47.2
-
+Takashi
