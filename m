@@ -1,247 +1,237 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4657723BCE3
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750695886; cv=none; b=UJu3WJOa+0UoK8yrvkVuVEEnbRBQ21qqVIPn4nQUWs98wpgjIrKKjb36M82PxuK1OKb1MkfcOdF2mux3SApjaeiF24waOFERvESma+shYSNRvws3WvpyuObDSu82F6XBWrGGmBvciMTczn4KfAckjfpv6Gqcm3tsjHfDGhACkIU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750695886; c=relaxed/simple;
-	bh=SE0KtjHhXn2herdLMGNKI2XffmCWl8HYOU2TyxZYhlU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=UHJJzQATjR7zT5srvMPO+8PPbURPd02NqM2qS3j18yGTWU7kYrE9VJgxkG2U1tZf+t7imadfSaoIfb8q+LYEgGvP6/XLFZZO9MUPguHYWhk5mdkhf0EaSk2ZuOj7ca6OdYDqLb42FPHaTR0gZmuO3QpRqyDHH7rjaRaeiygSy18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hUMsVuK4; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C6AF4F1;
+	Mon, 23 Jun 2025 16:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750695938; cv=fail; b=IJyoat7eaxpy+MZ7RZVuh1KTqIK8PLLod2pelhQplLghMUhG1k1TzV/2dP1FDbIrHK8VqVq1sjOqeMx8CM9VpsFmJdI2WFkobDhl8Z5cU/1az/wwoY6FuO4r4ZqC3Peh0MZkESRcBkkJm3+0mHOj1SYC7ar7WYh+BntfFrJxp78=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750695938; c=relaxed/simple;
+	bh=41UIpM++tM83/JxOcaXJdq6ayy0+7XnHr5l6NSakQU0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=paGzv0ZFvcnvB+ui3BB/3vR9V0ThyumgoW1WU4/zLpV4ak4d9GyUz0PFoQOva/TLm3+Nkh9Tg4m6AiDn8S+xq384XF6CJ3r28aSox4356ujQmsYZ/uYGhg8MDLAJJ8qL+E03OqHo7IveF0goJKuv7o6fI+xMnj3/V+gdwzCRB/Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jrR+sVcn; arc=fail smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hUMsVuK4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jrR+sVcn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750695884; x=1782231884;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=SE0KtjHhXn2herdLMGNKI2XffmCWl8HYOU2TyxZYhlU=;
-  b=hUMsVuK4YFpfLq5iH1xraj2zlHWfQnIpctOhX6lNfB29iN7QcNa45nSq
-   OI7jmN5J9JDxp5MRUPETeB6YZUPJKwi+zRoeGMbReDd2MXxODzHQl8uLu
-   EUH1aboF9IpLthUcY7zjAAUH1ue1IgG/qlDtoI1JIX7dyjmi7+vNXfafC
-   Io75jTPpbc6qless/DzS3C9gFJGlp7cHKFiwfE+Jt4SywP3ER8xB3Fc4y
-   rdxOehDn5uSdkQonhmSLFYW8oS+uCbRtiy+iwoQZGQzNuw7nOidiHhEBR
-   0O34mVMkPsFhX8/TVg688LvCNwshKwJtgA1fVqHKKIpeQhO52+DNoFh+v
-   A==;
-X-CSE-ConnectionGUID: QW8uhT2GSSConYKLHx4crQ==
-X-CSE-MsgGUID: wMzyBjzMSES6c5N0KpR30g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52782813"
+  t=1750695936; x=1782231936;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=41UIpM++tM83/JxOcaXJdq6ayy0+7XnHr5l6NSakQU0=;
+  b=jrR+sVcnI+jmRcKhRs7qb4H9Z0nOPxyvhC56XNfgBW457GUYrApUCR4H
+   PFOF4ZSM1ODeYtSFd/gpIaTpESgdJd32HmYpbmW60I+5lVobJfaWBvuHj
+   n0fNRoZnpcJ+QJ9uZr4537Cxh1G5ya13ektccCaHfAjsz0SbH36c50Oqb
+   uZAz78KnexZiAN1GD4tBLZhHiS18DZHLSdOL58PQR4SqqvgvCekiXyu1z
+   r4nEtnm5HwcMEZKcmu/nGtOBSnUNWfsrosfiBOrQ5siIhGsQf81s2aU/K
+   +LtZ8eysYCWm8vc8z2ps7sNSEJe0beYvmIi/JhxP6vKBsqWjyiD8Rc3qo
+   g==;
+X-CSE-ConnectionGUID: K7dGfSVzToO1mv31ALmKPA==
+X-CSE-MsgGUID: TKGr+Up+QYCrJI6+Q5BIvg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52138784"
 X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
-   d="scan'208";a="52782813"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 09:24:44 -0700
-X-CSE-ConnectionGUID: 3AoDh/1UQIiImftMkLXUMg==
-X-CSE-MsgGUID: xnzkbZfRQwSTOLWs6lirxQ==
+   d="scan'208";a="52138784"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 09:25:31 -0700
+X-CSE-ConnectionGUID: +7OcvpZ2Qz+kTZAmGaUgIQ==
+X-CSE-MsgGUID: o1wF/0GWSAGZ29ZkSUjo0g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
-   d="scan'208";a="151948477"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 23 Jun 2025 09:24:42 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uTjyJ-000P66-2G;
-	Mon, 23 Jun 2025 16:24:39 +0000
-Date: Tue, 24 Jun 2025 00:23:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sven Schnelle <svens@linux.ibm.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>
-Subject: arch/s390/kvm/kvm-s390.c:5016:5: warning: stack frame size (1152)
- exceeds limit (1024) in 'kvm_arch_vcpu_ioctl_run'
-Message-ID: <202506240041.AuLxoIKn-lkp@intel.com>
+   d="scan'208";a="152341391"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 09:25:29 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 23 Jun 2025 09:25:28 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Mon, 23 Jun 2025 09:25:28 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (40.107.102.89)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 23 Jun 2025 09:25:26 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=E3CpeqQ4A+W8yhg9bE3jxdkY8GjDB57855hamYAJ08GL1LtohSk7ANkuQrUz9Nu8FZZcoBbn4xg7nFydoYjHpTlfQIhFgwdur//fTo/Fi8T2XOwIC5c495Fp0gZ+8yDoffwvRtvVOQ7VnZj9xJcbus2K5NublG2ohRfBtr0IapICnlrx6o6F3WiKk/x+LdI4we9Xm1PyziBkfHOBoNRunzXqGVd2WP/rpoz/yO/7/zk4khJaLLOK/EfSSIN55WiGNSmW2ggKggs0G1a0lZPfXhs2ItfVe+mrFLrYnV2kBLW9u/xIQQwz1Nme2NDBo7E2H5ma4icvRS+uuaEg0KXp7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=41UIpM++tM83/JxOcaXJdq6ayy0+7XnHr5l6NSakQU0=;
+ b=K5+pq7N7XFa4Z+WN6VVfbjomt1X/Vfbde2KkdLKgikMD8U6CZSOAoKgzlKj3vItdoBX2NKqCoguHyfngZE13e7ZED9CW/SCzQjGaGF85kms/+3W83Wehw7gRNlDtjeQFTdQinyaZ9CzV6uu3ESd3I3nqjwHRZfq/SNzeRVJd6fNEluKPeLi7Y/z/+HjA7hJrRxvOG8XrdaaeGfobezjARiAHcJZKaMV68xsySGzU5UflBmbzsWqfl2HQelQ0e0TwMvPi+HkHS1anX9z404Z+4qSFYVw5tz5VvLQeHf5/jH5StT+pRU923mrgV+c4fWfHvdnJzzD34L9qrMBU3NtF7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com (2603:10b6:a03:48a::9)
+ by CY5PR11MB6485.namprd11.prod.outlook.com (2603:10b6:930:33::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.27; Mon, 23 Jun
+ 2025 16:25:24 +0000
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::acfd:b7e:b73b:9361]) by SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::acfd:b7e:b73b:9361%5]) with mapi id 15.20.8857.026; Mon, 23 Jun 2025
+ 16:25:23 +0000
+From: "Luck, Tony" <tony.luck@intel.com>
+To: "Hansen, Dave" <dave.hansen@intel.com>, "Mehta, Sohil"
+	<sohil.mehta@intel.com>, "Kirill A. Shutemov"
+	<kirill.shutemov@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>
+CC: Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@kernel.org>, "Pawan
+ Gupta" <pawan.kumar.gupta@linux.intel.com>, Daniel Sneddon
+	<daniel.sneddon@linux.intel.com>, "Huang, Kai" <kai.huang@intel.com>,
+	Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, Alexei Starovoitov
+	<ast@kernel.org>, Hou Tao <houtao1@huawei.com>, Juergen Gross
+	<jgross@suse.com>, Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook
+	<kees@kernel.org>, Eric Biggers <ebiggers@google.com>, Jason Gunthorpe
+	<jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>,
+	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>,
+	Changbin Du <changbin.du@huawei.com>, Huang Shijie
+	<shijie@os.amperecomputing.com>, Geert Uytterhoeven
+	<geert+renesas@glider.be>, Namhyung Kim <namhyung@kernel.org>, "Arnaldo
+ Carvalho de Melo" <acme@redhat.com>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-efi@vger.kernel.org"
+	<linux-efi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, "Yian
+ Chen" <yian.chen@intel.com>, Andy Lutomirski <luto@kernel.org>, "Thomas
+ Gleixner" <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "Borislav
+ Petkov" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel
+	<ardb@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf
+	<jpoimboe@kernel.org>, Xiongwei Song <xiongwei.song@windriver.com>, "Li,
+ Xin3" <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>, "Brijesh
+ Singh" <brijesh.singh@amd.com>, Michael Roth <michael.roth@amd.com>, "Alexey
+ Kardashevskiy" <aik@amd.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>
+Subject: RE: [PATCHv6 01/16] x86/cpu: Enumerate the LASS feature bits
+Thread-Topic: [PATCHv6 01/16] x86/cpu: Enumerate the LASS feature bits
+Thread-Index: AQHb4erCSBDI66dtY0W/I0p+M+8Xt7QMWp4AgAACu4CABJQ7QA==
+Date: Mon, 23 Jun 2025 16:25:23 +0000
+Message-ID: <SJ1PR11MB6083AE2EF85FB5D2FE39D4F0FC79A@SJ1PR11MB6083.namprd11.prod.outlook.com>
+References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
+ <20250620135325.3300848-2-kirill.shutemov@linux.intel.com>
+ <248e272c-79ec-4c11-a3a8-dff1de2147c0@intel.com>
+ <adaf2d81-75b5-4f02-99ea-03ea0f1a5a96@intel.com>
+In-Reply-To: <adaf2d81-75b5-4f02-99ea-03ea0f1a5a96@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ1PR11MB6083:EE_|CY5PR11MB6485:EE_
+x-ms-office365-filtering-correlation-id: 561228f3-f2a3-4b01-577f-08ddb2728e37
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?aHhJUDZwS3dSKzc2Q1l1ZUxreDJDck9nTFdxYTlRM3FUVzAyU1ZHU1V3TENa?=
+ =?utf-8?B?Uk5GS3ROU0ozRnJiUlhlK3BkU2RjU2hWV3FZSWVzbGRQWXRrRzZRd0NDeVpt?=
+ =?utf-8?B?SjRNZTNNT28zcTBPRW1td2JJSEdITWFLbVoxTDd6UStHQzJha3hSRXZsOVlT?=
+ =?utf-8?B?bStyby9UWkdsLzVGenNOMEp1L0h5UVNFL0VZTUVZaFZGVC9nNndxTzZwTzdM?=
+ =?utf-8?B?WDUyeEltN1FlQW1lb0gvMytFTGhQeElXS1o2L1l2VjNxWnFMS2ZEMUFKRXN5?=
+ =?utf-8?B?QTIvQlNtZEJPSEV4ZUlBK3AyR1c1NHRNVnplR3N6dldQS0lVK1VpdEdIN3J6?=
+ =?utf-8?B?OHZtRStqbFZ5QiswQjNFV2FDT25CYVIwTEZVVkdkK3FyemJCRzhEQ0hsNE95?=
+ =?utf-8?B?dEV1UU9NclltajFhNTNkbWRmRFdKalZQOXhwYmVHTzViRlRzQ3lwRk0xd2Vs?=
+ =?utf-8?B?MGNWUHpxTjl5c0dyKytXMXRkR1dpRnpFRFRvaFhqbnJuYWJxWTBrUERLRGhh?=
+ =?utf-8?B?eWxQdlpYajF2UXdES3pTWjRNdFlBODFwVVdVOVJKelk5ZFFiUnRQaVpjVUUw?=
+ =?utf-8?B?MTBVd3JucmFmdlR3MjMxcFhaN0FSNC9TcExxcmNrUDcvem5SS1FLMStiT1FQ?=
+ =?utf-8?B?ZzF5ZUk5QStIYnJBcW90Mjl4eXNxVUd0NlluWFFxZnVKVVNkSEtVdWRxd1p0?=
+ =?utf-8?B?MDN6ZGhsUHpYVW40SG4vY2hKVSt6OFArVm00bVJuQW5jWFpEOWZMbFA5YmlH?=
+ =?utf-8?B?RHpPbXBZeUFXc0tzUmJyN0g2Q2lrOTJKcVBCSVRwdmxiSEUzUWlQUGZ4cE9q?=
+ =?utf-8?B?MVRDUkk0OHBsYmpuN2JEYjFYb050UldJZXhYMy8wWGU4cFhsVjdmZ2xMempn?=
+ =?utf-8?B?a09LZ0t6QmdkQndqVVRrMjIraWZxUm1tcitiNmhVMnZFTVBqVUdwSTNaRUQv?=
+ =?utf-8?B?NmNPR0NRSGlmRWZXTHh6TVBhUSs3d0xHcFJieDN5M2ZzLzA2RGY4Mm5jNVlp?=
+ =?utf-8?B?UzhBU3M0cWRsK29JNTVrdGJ6UlJOWEtHdnpzaTBhdmMzWFlLRUUzUlVkZkxV?=
+ =?utf-8?B?bzErZ09tZFNPWHNiUjNjd3ZlSEVMNk9EVlFjamd1RnVxbElvK3NCa2xXWnBI?=
+ =?utf-8?B?bnB4eXdBOG1qd01QK1RHSFJpTnV4RmhKcndqdUcwRHpScHZGdU1XZnljUUNv?=
+ =?utf-8?B?cForOVJacTB3cmplTzBjN3hqd1FRUnd6cEpTcGZlblZXamowUUtWM0pYd0Fv?=
+ =?utf-8?B?bHpxb0VlSGduNUNybjBaVm9YMGZvY2xYM0xjMU1IUGZONXJaMloyNUxBRGlF?=
+ =?utf-8?B?QkZ3NmY0K3lqdE8yV1BWRGNRaDRxWjJ3eGdkZmlKaURob3FZa0E0MTlpckRl?=
+ =?utf-8?B?cld6T3BlT2R6KzROZFk4bncwZHNpMVA4K0h3RW9rc2MzZkdVMnI2VUdaWVdU?=
+ =?utf-8?B?OFB6UzFjQUdJNXppYkVtZ0ZjNXpRVzlidngvb2pPeWFvaitKTWIzaTB5T2FC?=
+ =?utf-8?B?bXE2K0VLMFZjaVZaQncrSURscVdwUGo5cTU2RFRONzdJQ1ZHQWdDeWxIeE1m?=
+ =?utf-8?B?Zll5Mk8yVFpkTHEwYWZ4d3lYL0cwdTJDOHFBUDBsL0wrWVd2Y1ptY0ZmN0hm?=
+ =?utf-8?B?bE9odzRWVGwrR1A2eGhHM20vY2lBZk1BTGQra2F2U2llRm9ZUVU4THNrWkdW?=
+ =?utf-8?B?T0RKZFpPdHk3OURFQTBCK1UyZ2tuMzYvM1l2WlY2blpwK1p0T1dXc08xRTBx?=
+ =?utf-8?B?eFNNRERXN2ZHQ2lLS0tPZ2l3UmxxbWdPcUpqVUNUOUJOQ1FRdjNnUXJmUWFX?=
+ =?utf-8?B?QmwrK0xMSmFZZElFLzlSSW1hZnJ1eUc2bXZXUGxtb2RjY052eEJGZkVjZ3ZE?=
+ =?utf-8?B?RGpGMTdTVnNkdUZVUGw2YWUxbXJXQmlEdTNHWUNmS29MWnZwL2c3T05jaEYy?=
+ =?utf-8?B?MXRxaFpHQ3VLNExSbTRaVitJRDRtT3htQmIzeUtJbmxNS011QmNpQ3ozZG1G?=
+ =?utf-8?B?dXRZeW95aHN3PT0=?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6083.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?N0NQeTh1ajllbGkvYXF4Y0dMMzJrblpSL0l3bml2ZG8zSkppRENxbkQrclhK?=
+ =?utf-8?B?SzhPaVUvemE1SXoxVGh2eEJCajZSdmp5T3V6S3hWNS9pZWw3WXM5M0VHQ0VU?=
+ =?utf-8?B?bC90ZWJNd0FBczc0c1c4d3VTUXVrRDh1ZmkxeEpEYjFJZmh3UzZBQ0loN0NY?=
+ =?utf-8?B?bGtQT0ppZHZQY1JtWWNyVGdzOEdqa2k5Qjl4bzMzTUZiNkhQQllQTzI1eG05?=
+ =?utf-8?B?bGF3eVM3VmlRVy8zZkZzK0xrVXQ1RU1MOE50alFFSzk1RTc0ZE9sNVp6bmVF?=
+ =?utf-8?B?djlwbnVIS1JkSTBraFdyRE4wbTJTQ3BWN2NlcDk3bFJoTXV1ZlNIRWVjOXVV?=
+ =?utf-8?B?Z25ZNnZHcGVqWi8zbUZocDFPYnp3c0RYenJVZ0JWQkJYZ0JQT1JPTlNwSDNi?=
+ =?utf-8?B?OExURXphekhhNG9JNVYrWHhVTE1EQ3gzNWNXcVFyQ3ZRRTZwcTRBb2gzYUJk?=
+ =?utf-8?B?aDFUR1VwWUdUNFpGWWlPYXZLc0ZkUHFFT3NzSGJ6REl4SkE0aWx3aHByeFRD?=
+ =?utf-8?B?ZTkwdkFTblVLdVFWK3RsVjVmQnVKc2tEdzVpL2lxOUVSeFZHVk5xZWY4bjY2?=
+ =?utf-8?B?TVEwTFVhUmkrU3BuNUFwWmI1bG5ncXBzdTJleHhqK05aMnE4OXBXVWdvMjh5?=
+ =?utf-8?B?dlViU2paWU5ZU3VJdmRVeVE4QXRtRkllaVB6bXVvdmROWFV2NXE3UVdnb29z?=
+ =?utf-8?B?Y2lHN3E5ajZXRGNCdG5WN2d6UVNCZHNsVEo2MHZTL3N1L3BDZGhBdjkrTUlT?=
+ =?utf-8?B?WTMwc083WUNvRXplVVZmTGFONlFNdGtGTldMUEFYa2NEVTM4eDRPWXhMdEF4?=
+ =?utf-8?B?K1dSL1NzbXp6K0c3YjgyeTlTZlVtMmc0LzF3djd6L05DMllReko5YXdsMjFs?=
+ =?utf-8?B?UzJPb3Nia1FFQ1N1QXlacmR6VkkyeXpJMHF1d05maThUdFNBQTAwVEpLbzRo?=
+ =?utf-8?B?K1JFVlBINlREeWRJbk5KZWV5MWpIQW1JTCt1UnpXemV3V2srNHNoQlhDNm1s?=
+ =?utf-8?B?a3JDTEZ4eXlyNnFPaDVIWTQ1dWd4TWdxYTBGM1lwMUNqVkFsTjhLYmJnK1dH?=
+ =?utf-8?B?N2ZNbW5vbllCcS9oY3dBR0lCdlNiUlU4blMxdTFsWDJ3UU9WWitHajBJcWow?=
+ =?utf-8?B?MWUyb0xlbng0LzdkVmVJSExwM2dVZE44dGFEYnp5VnJndkJqU2xDRjdTc0R4?=
+ =?utf-8?B?VE1WY21jZlVhZy8yaTJvYkd6S0tPK0Q0MlQ3Q0dwRVpEcU41bE95ci9RUC82?=
+ =?utf-8?B?a253bTdicjRZYkp2dXhiYk9WK2p3S2xZZmY4M0JpQktqUHJRZ1dQZFBlSGJB?=
+ =?utf-8?B?ajZtc1R3WGFxbnVBaHNyNXluNUExcXR1RW13dElINUFBcVRQcDY2ZG9kYStk?=
+ =?utf-8?B?L2VVWDJac0RCQVR5cTlNa3FySGp3VUJYMVFTaWJYZFV4dmxNcVhQRDlVeUdT?=
+ =?utf-8?B?Rm9IeGN2MFhFTE9LUjBIUWQ4eDlaMUxUcEFIM2NQQytEM2M3cmMrOGtkUnFP?=
+ =?utf-8?B?T04yWngveXYyaXBYQU5Qb3l6aHhxRXN0VUxrSUkwQVYrQVdHUGgyRjd4L25p?=
+ =?utf-8?B?c3g5Ni95WDJzYUdmWVNFeWpEV2Vib3VkdFFOaEYxeEdMMG5QcXZGY1gzSW9G?=
+ =?utf-8?B?KzI1TXV0SmpFRU5mZVpNcVVVcDRtbHBYdTBxZUdZZldqeis3U3dxRVZPa1F0?=
+ =?utf-8?B?YkFId1llWHhYRURFL3IvVWc0andlSHRJUHZOaGVwa0ZuTDQ5ZG9ob1dodElY?=
+ =?utf-8?B?Ym9ZNktyU05yZW9BbHhnK0U2WEFLOGovOFcrOWNxMXF6QmxxREJBSHlGVnJS?=
+ =?utf-8?B?TkhyUElhZ0dMSnBLNitGUHliTWNWMDlkYVVTaXhjclp3eHFvYTQ1Z0IveFJv?=
+ =?utf-8?B?bGFtUUhrd0l0UFpIdE5qbFZsNmdWdVNwV1JsNUU0ak84Z2kvSTZaSUVkV1Ra?=
+ =?utf-8?B?YlIySDVWeGE2d3ByTGVWZXBZNjIvNWhjeFRnMzFrR0k1OWRhNjA5VVN5V0pm?=
+ =?utf-8?B?U0dPZkNlMFVOZGxhS3VicExzNm9DVkJIcWttOEZzcHkyVVZiOHJLS0pRcXk2?=
+ =?utf-8?B?VGN1SmNXUGdUSkNUTnFDQWwweFNDVktFTjk0elA2ZjdGRnA5TTFkaUo1azg3?=
+ =?utf-8?Q?1WHh3kifihOqCqlU6rhK+T5uz?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6083.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 561228f3-f2a3-4b01-577f-08ddb2728e37
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jun 2025 16:25:23.8173
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3ug7/id1vMz0FQvuLvmD86d/K7FpAmnPmsi2ePMLnt4SsURZ+YjySmWWwwtoFETZFhBnoR5rqRuTDB/djLoN6g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6485
+X-OriginatorOrg: intel.com
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   86731a2a651e58953fc949573895f2fa6d456841
-commit: 5ade5be4edf855245955108860d2016af3065a37 s390: Add infrastructure to patch lowcore accesses
-date:   11 months ago
-config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250624/202506240041.AuLxoIKn-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506240041.AuLxoIKn-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506240041.AuLxoIKn-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from arch/s390/kvm/kvm-s390.c:22:
-   In file included from include/linux/kvm_host.h:19:
-   In file included from include/linux/msi.h:24:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     548 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
-     102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
-         |                                                      ^
-   In file included from arch/s390/kvm/kvm-s390.c:22:
-   In file included from include/linux/kvm_host.h:19:
-   In file included from include/linux/msi.h:24:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
-     115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
-         |                                                      ^
-   In file included from arch/s390/kvm/kvm-s390.c:22:
-   In file included from include/linux/kvm_host.h:19:
-   In file included from include/linux/msi.h:24:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     585 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:693:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     693 |         readsb(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:701:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     701 |         readsw(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:709:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     709 |         readsl(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:718:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     718 |         writesb(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:727:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     727 |         writesw(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:736:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     736 |         writesl(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
->> arch/s390/kvm/kvm-s390.c:5016:5: warning: stack frame size (1152) exceeds limit (1024) in 'kvm_arch_vcpu_ioctl_run' [-Wframe-larger-than]
-    5016 | int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
-         |     ^
-   13 warnings generated.
-
-
-vim +/kvm_arch_vcpu_ioctl_run +5016 arch/s390/kvm/kvm-s390.c
-
-b028ee3edd54d3 David Hildenbrand     2014-07-17  5015  
-1b94f6f81007b4 Tianjia Zhang         2020-04-16 @5016  int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
-b0c632db637d68 Heiko Carstens        2008-03-25  5017  {
-1b94f6f81007b4 Tianjia Zhang         2020-04-16  5018  	struct kvm_run *kvm_run = vcpu->run;
-066c40918bb495 Heiko Carstens        2024-02-03  5019  	DECLARE_KERNEL_FPU_ONSTACK32(fpu);
-8f2abe6a1e525e Christian Borntraeger 2008-03-25  5020  	int rc;
-b0c632db637d68 Heiko Carstens        2008-03-25  5021  
-0460eb35b443f7 Janosch Frank         2022-05-17  5022  	/*
-0460eb35b443f7 Janosch Frank         2022-05-17  5023  	 * Running a VM while dumping always has the potential to
-0460eb35b443f7 Janosch Frank         2022-05-17  5024  	 * produce inconsistent dump data. But for PV vcpus a SIE
-0460eb35b443f7 Janosch Frank         2022-05-17  5025  	 * entry while dumping could also lead to a fatal validity
-0460eb35b443f7 Janosch Frank         2022-05-17  5026  	 * intercept which we absolutely want to avoid.
-0460eb35b443f7 Janosch Frank         2022-05-17  5027  	 */
-0460eb35b443f7 Janosch Frank         2022-05-17  5028  	if (vcpu->kvm->arch.pv.dumping)
-0460eb35b443f7 Janosch Frank         2022-05-17  5029  		return -EINVAL;
-0460eb35b443f7 Janosch Frank         2022-05-17  5030  
-a6816314af5749 David Matlack         2024-05-03  5031  	if (!vcpu->wants_to_run)
-460df4c1fc7c00 Paolo Bonzini         2017-02-08  5032  		return -EINTR;
-460df4c1fc7c00 Paolo Bonzini         2017-02-08  5033  
-200824f55eef40 Thomas Huth           2019-09-04  5034  	if (kvm_run->kvm_valid_regs & ~KVM_SYNC_S390_VALID_FIELDS ||
-200824f55eef40 Thomas Huth           2019-09-04  5035  	    kvm_run->kvm_dirty_regs & ~KVM_SYNC_S390_VALID_FIELDS)
-200824f55eef40 Thomas Huth           2019-09-04  5036  		return -EINVAL;
-200824f55eef40 Thomas Huth           2019-09-04  5037  
-accb757d798c9b Christoffer Dall      2017-12-04  5038  	vcpu_load(vcpu);
-accb757d798c9b Christoffer Dall      2017-12-04  5039  
-27291e2165b6de David Hildenbrand     2014-01-23  5040  	if (guestdbg_exit_pending(vcpu)) {
-27291e2165b6de David Hildenbrand     2014-01-23  5041  		kvm_s390_prepare_debug_exit(vcpu);
-accb757d798c9b Christoffer Dall      2017-12-04  5042  		rc = 0;
-accb757d798c9b Christoffer Dall      2017-12-04  5043  		goto out;
-27291e2165b6de David Hildenbrand     2014-01-23  5044  	}
-27291e2165b6de David Hildenbrand     2014-01-23  5045  
-20b7035c66bacc Jan H. Schönherr      2017-11-24  5046  	kvm_sigset_activate(vcpu);
-b0c632db637d68 Heiko Carstens        2008-03-25  5047  
-fe28c7868f68b8 Janosch Frank         2019-05-15  5048  	/*
-fe28c7868f68b8 Janosch Frank         2019-05-15  5049  	 * no need to check the return value of vcpu_start as it can only have
-fe28c7868f68b8 Janosch Frank         2019-05-15  5050  	 * an error for protvirt, but protvirt means user cpu state
-fe28c7868f68b8 Janosch Frank         2019-05-15  5051  	 */
-6352e4d2dd9a34 David Hildenbrand     2014-04-10  5052  	if (!kvm_s390_user_cpu_state_ctrl(vcpu->kvm)) {
-6852d7b69b4949 David Hildenbrand     2014-03-14  5053  		kvm_s390_vcpu_start(vcpu);
-6352e4d2dd9a34 David Hildenbrand     2014-04-10  5054  	} else if (is_vcpu_stopped(vcpu)) {
-ea2cdd27dce66d David Hildenbrand     2015-05-20  5055  		pr_err_ratelimited("can't run stopped vcpu %d\n",
-6352e4d2dd9a34 David Hildenbrand     2014-04-10  5056  				   vcpu->vcpu_id);
-accb757d798c9b Christoffer Dall      2017-12-04  5057  		rc = -EINVAL;
-accb757d798c9b Christoffer Dall      2017-12-04  5058  		goto out;
-6352e4d2dd9a34 David Hildenbrand     2014-04-10  5059  	}
-b0c632db637d68 Heiko Carstens        2008-03-25  5060  
-ed3a0a011a9c33 Heiko Carstens        2024-02-03  5061  	kernel_fpu_begin(&fpu, KERNEL_FPC | KERNEL_VXR);
-2f0a83bece1e75 Tianjia Zhang         2020-06-23  5062  	sync_regs(vcpu);
-db0758b2970981 David Hildenbrand     2016-02-15  5063  	enable_cpu_timer_accounting(vcpu);
-d7b0b5eb3000c6 Carsten Otte          2009-11-19  5064  
-dab4079d5b5ac4 Heiko Carstens        2009-06-12  5065  	might_fault();
-e168bf8de33e16 Carsten Otte          2012-01-04  5066  	rc = __vcpu_run(vcpu);
-9ace903d171db7 Christian Ehrhardt    2009-05-20  5067  
-b1d16c495d9e6f Christian Ehrhardt    2009-05-20  5068  	if (signal_pending(current) && !rc) {
-b1d16c495d9e6f Christian Ehrhardt    2009-05-20  5069  		kvm_run->exit_reason = KVM_EXIT_INTR;
-8f2abe6a1e525e Christian Borntraeger 2008-03-25  5070  		rc = -EINTR;
-b1d16c495d9e6f Christian Ehrhardt    2009-05-20  5071  	}
-8f2abe6a1e525e Christian Borntraeger 2008-03-25  5072  
-27291e2165b6de David Hildenbrand     2014-01-23  5073  	if (guestdbg_exit_pending(vcpu) && !rc)  {
-27291e2165b6de David Hildenbrand     2014-01-23  5074  		kvm_s390_prepare_debug_exit(vcpu);
-27291e2165b6de David Hildenbrand     2014-01-23  5075  		rc = 0;
-27291e2165b6de David Hildenbrand     2014-01-23  5076  	}
-27291e2165b6de David Hildenbrand     2014-01-23  5077  
-8f2abe6a1e525e Christian Borntraeger 2008-03-25  5078  	if (rc == -EREMOTE) {
-71f116bfedfdd6 David Hildenbrand     2015-10-19  5079  		/* userspace support is needed, kvm_run has been prepared */
-8f2abe6a1e525e Christian Borntraeger 2008-03-25  5080  		rc = 0;
-8f2abe6a1e525e Christian Borntraeger 2008-03-25  5081  	}
-8f2abe6a1e525e Christian Borntraeger 2008-03-25  5082  
-db0758b2970981 David Hildenbrand     2016-02-15  5083  	disable_cpu_timer_accounting(vcpu);
-2f0a83bece1e75 Tianjia Zhang         2020-06-23  5084  	store_regs(vcpu);
-ed3a0a011a9c33 Heiko Carstens        2024-02-03  5085  	kernel_fpu_end(&fpu, KERNEL_FPC | KERNEL_VXR);
-d7b0b5eb3000c6 Carsten Otte          2009-11-19  5086  
-20b7035c66bacc Jan H. Schönherr      2017-11-24  5087  	kvm_sigset_deactivate(vcpu);
-b0c632db637d68 Heiko Carstens        2008-03-25  5088  
-b0c632db637d68 Heiko Carstens        2008-03-25  5089  	vcpu->stat.exit_userspace++;
-accb757d798c9b Christoffer Dall      2017-12-04  5090  out:
-accb757d798c9b Christoffer Dall      2017-12-04  5091  	vcpu_put(vcpu);
-7e8e6ab48d7814 Heiko Carstens        2008-04-04  5092  	return rc;
-b0c632db637d68 Heiko Carstens        2008-03-25  5093  }
-b0c632db637d68 Heiko Carstens        2008-03-25  5094  
-
-:::::: The code at line 5016 was first introduced by commit
-:::::: 1b94f6f81007b4afaea3480ec018bc9236148961 KVM: Remove redundant argument to kvm_arch_vcpu_ioctl_run
-
-:::::: TO: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-:::::: CC: Paolo Bonzini <pbonzini@redhat.com>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+PiA+IGZ1bmN0aW9ucy4gQnV0LCB0aGUgZGlmZmVyZW5jZSBpbiB1c2FnZSBiZXR3ZWVuIGJvdGgg
+b2YgdGhlbSBzZWVtcyB2ZXJ5DQo+ID4gc3VidGxlLiBDb3VsZCB0aGlzIGJlIGVhc2lseSBtaXN1
+c2VkPw0KPg0KPiBMb2dpY2FsbHkgdGhlcmUgYXJlIHR3byBjb21wbGV0ZWx5IGRpZmZlcmVudCB0
+aGluZ3M6DQo+DQo+ICAgICAgIDEuIFRvdWNoaW5nIHVzZXJzcGFjZQ0KPiAgICAgICAyLiBUb3Vj
+aGluZyB0aGUgbG93ZXIgaGFsZiBvZiB0aGUgYWRkcmVzcyBzcGFjZQ0KPg0KPiBJZiBpdCdzIG9u
+bHkgdXNlcnNwYWNlIGluIHRoZSBsb3dlciBoYWxmIG9mIHRoZSBhZGRyZXNzIHNwYWNlLCB0aGVu
+DQo+IHRoZXJlJ3Mgbm8gY29udHJvdmVyc3kuIEJ1dCB0aGUgcHJvYmxlbSBvYnZpb3VzbHkgb2Nj
+dXJzIHdoZW4geW91IHdhbnQNCj4gdG8gdG91Y2gga2VybmVsIG1hcHBpbmdzIGluIHRoZSBsb3dl
+ciBoYWxmIG9mIHRoZSBhZGRyZXNzIHNwYWNlLg0KDQpXaHkgZG9lcyB0aGUga2VybmVsIGNyZWF0
+ZSB0aGUgbWFwcGluZ3MgdG8gcG9rZSBrZXJuZWwgdGV4dA0KZm9yIEFMVEVSTkFUSVZFIHBhdGNo
+aW5nIGluIHRoZSBsb3dlciBoYWxmIG9mIHRoZSBhZGRyZXNzIHNwYWNlPw0KDQpJbnN0ZWFkIG9m
+IHNwZWNpYWwgIndlIHJlYWxseSB0byB3YW50IHRvIGFjY2VzcyB0aGUgbG93ZXIgYWRkcmVzc2Vz
+Ig0KY29kZSwgd291bGRuJ3QgaXQgYmUgZWFzaWVyIHRvIG1hcCB0aGUgInBva2UiIHZpcnR1YWwg
+YWRkcmVzc2VzIGluIG5vcm1hbA0Ka2VybmVsIHVwcGVyLWhhbGYgc3BhY2U/DQoNCi1Ub255DQo=
