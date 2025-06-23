@@ -1,122 +1,221 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC561DA4E;
-	Mon, 23 Jun 2025 15:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6DF17A318;
+	Mon, 23 Jun 2025 15:03:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750690992; cv=none; b=LF4MN6J9TTICgysFMpRarM9BSJDEgKWzz+OmzTPSb8tb4UC5eqwLiOPSUpwPnhdsjpNNq0gAwlE1RdPDgOShmiAsvtDN4FQWN0JmFnqba2KCCju4CXsdA0zobFCcCYYAd03Rb4g+GlgsVMiKgmmSbMWp24wen6BMmk4zZhtMD+M=
+	t=1750691009; cv=none; b=bafG76Bmx6/xnH1e9COQDbwCsiIK1shlklTX0hLMCn49AiUJfQreRVS9wYraEqdeG0iC/mrhdao/C81RC2BOIsHorocZRx5BjYZTIY9w9neXvly+brF07Mj3wBfves5fCKHBfrW5JDBX7k7eNQGKFShn0wICWufA0k4tw+2aQL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750690992; c=relaxed/simple;
-	bh=ptw+OLnbhQoou1tvc49UIB1GAA1R3x8wTb0I0R87Zd8=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=VXRQGIem5xILsFyQsrYoOG8TZz9mqLtyUJBXi/H4CzCutoZ5y9VP0kyDIR+gPmTJ0BPB8oguv1fqxdkFcgeqXymE9ssTNWqUPmWAigz2fljPqaLFa4C3yJRVOXmdabHjjr4lb7ZVUWX6DH4exHq9cXfQ9XGFd29diaELf3GupLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UPeo3YNj; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750691009; c=relaxed/simple;
+	bh=QeiW61XUZ8wPwSSHrFB2CHPW35aGsUNu+KPSB46J24M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OCUZbqW0O5zt+1UBFe9iDhAfudjyu1AkFZOf5hlc6ODLBxKyXDbXpUFOeI0NrvOuDZQY2YWJyQnq4UwyM4wPjpkZ8I7b6f7HknNsivULLv8PR6DkNcIoB0cbNOSFIYUxIhW3KwM+fl89LNXUDs/JTyavyzJJXbYjhj+JJj4/eVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Nu6QCp8y; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UPeo3YNj"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-607cf70b00aso7768001a12.2;
-        Mon, 23 Jun 2025 08:03:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750690989; x=1751295789; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DXl0cMLudBpdlj8wR8LOIlD5+oXM7nXzkbSpaXpGmEw=;
-        b=UPeo3YNjgYrE9nbCs7ea7uq+LGq88S0LWFTtgkSE8cz/eMZXjr3wldwN9B94w90WMg
-         ulMIWzyptZ1O+KcS02JN990OrjwhItAnnjGD7wPYUvEfG3Mt5fTNQRnwi0AovcBohcH/
-         DjLPY3CDBsYRTZcm9KMN4ph7KDsfpOyw876Ewtukzyk587dAvAApoNccFHnt7ocM6PRA
-         S1mJrPEHaf2+RrTv32R5DsXmH5RspSoDgP3aNlND/BQ07euTpO+t3QEoUlSBtzmsvQZG
-         D9Upz/TktBB5JIgzCNJAdNhb1e8+HHPRpcXmzJTU21auwbeMb0Sd/G3DLSe6E9q8vrYv
-         HA1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750690989; x=1751295789;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DXl0cMLudBpdlj8wR8LOIlD5+oXM7nXzkbSpaXpGmEw=;
-        b=v54s5yotBWim3ZvIOVwxzBJ+1+VwJlDhLQT8r6yhVO/hluR9MjmWZATPKRzybIxzvs
-         kRgjHohzq/jr+4bHY2afrd8xnIpp0/tif8ZAkQyg2xFu1kZv/yr68iWNWVNe8HtWsivm
-         XDyIBljVud1niJjmELKDFD3Rgb9VRyhmkYYTV0VgFJMoA3HoFge2Y1wZR67ZbvO7kX+1
-         4JqEONquYhm4C0ef+L0GY23Ww+Mo1LOMiGBaVY5qBo/pw2mVlj7TPfRinQxri02/Sehb
-         KsqzKSFIPoKqCB5ThPr4QW06pHEQFoXkPI3CbPhR48Esi4I86hp4QSa6vlReek8H175o
-         Y+SA==
-X-Forwarded-Encrypted: i=1; AJvYcCV5huojR8U89g7ejRseIShncM0GbtB2YrzqU0ao8YJ4xotbsadh8LKwAlcVtHFE0w9jbCG4eCK6bGLX@vger.kernel.org, AJvYcCXIYJpZjYNAQ3k5FaSQ0p4h1rYC2vV06higysiSp90OHUgqU4IAsADhaSJebA/GCQXl4C3T+14VAkWj8j6s@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOTZtfSA2zGT3S1/Vi1UpZtR00vG13iocCFDw2SbLEJT2eWrMn
-	6+KIRoQbcgIw3ats9/HMP8CFFIiMOc9INiZNCqJWf/aDEe/tldVNBkIc
-X-Gm-Gg: ASbGncvnryddrAYxEQbG/aAbplkqJ71zBtMW8ZAj/BnvkDJO3+E0s1P75+RDiKwAqHY
-	S0LZkk4vp6OCgzLaViMdKhmKdOtkU7e5uif0urF3Jj6CVjL1iAIeMj7VRepGm+2/Pg+Bkp8baxp
-	7t4DpdgdcUwF1MANndCgZ866DPoG2uVa84lP4OJRT96kAjY9OOjyci8OdO+158eDv9cki8sqUTw
-	wlgo+KNFvMtprdKvL/ZX2k+NxgDSSiM0JGfCr4bmxFR6OV5PAjCCipB9jZrKm6vlqIbBcgoDhAx
-	I2dsj+/SqFzlRpZu6TZ1CYgwlf78rgo2w6yH08Ee07+PlLxXa1QUlY2hHtuR6LWVgzePPfgIoYA
-	KzdbuBMcwrA==
-X-Google-Smtp-Source: AGHT+IGgziI+e+vJ+MXDsuPrI0s48ZwgitoKIP9UnUUKH8556Bz5CkOWTC/xSH8NNs/2JksNufd3YQ==
-X-Received: by 2002:a05:6402:34d2:b0:607:f42f:d5eb with SMTP id 4fb4d7f45d1cf-60a1cd1af9amr12209304a12.7.1750690988966;
-        Mon, 23 Jun 2025 08:03:08 -0700 (PDT)
-Received: from smtpclient.apple ([89.66.237.154])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60a18ce62f9sm6107984a12.68.2025.06.23.08.03.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Jun 2025 08:03:08 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Nu6QCp8y"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NAXGFF012023;
+	Mon, 23 Jun 2025 17:03:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	+4Z6/tJa/UFNSN1pd77M3FYDzdgkVF+SixPAfedgsPY=; b=Nu6QCp8ytKHhSXKA
+	QL5YZ8y8711G6aSBEZyto43QPpTPyx+hWUCox4qJzIbducnaI0nxBMq3KpnvYlKT
+	WrmOYkT3BDOx/68i8YhPBfX97yfqlnOgBnXrbgo/tDClwz0hMj6YBKxnkfNbN6X3
+	Dx61mJ+Uj0AT2Wh+QCz23oaHxPEHb7lmpdNGxbdFfQyCnRcGAy17DlsgVN+SqLH9
+	OydUyEnwZTSc+doNJAd+xQzPeMk4YnO4xfzOr8f6ut8gkiuyFo4KwQg5Vo7tFBYc
+	Oc0zfIxreugZ/MBmOEet/60dUCbp+m8Hf6vMJhqN0D4pKwQiND5vMgqTpuLAdLlk
+	14lVdQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dkmjg0su-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 23 Jun 2025 17:03:07 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5E55540046;
+	Mon, 23 Jun 2025 17:01:50 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6C67EB4D1DE;
+	Mon, 23 Jun 2025 17:00:04 +0200 (CEST)
+Received: from [10.252.18.29] (10.252.18.29) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 23 Jun
+ 2025 17:00:03 +0200
+Message-ID: <cd7cac7f-e78f-4457-9e42-6290632d9c1c@foss.st.com>
+Date: Mon, 23 Jun 2025 17:00:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH 1/4] arm64: dts: rockchip: list all CPU supplies on ArmSoM
- Sige5
-From: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-In-Reply-To: <CABjd4Yz4NbqzZH4Qsed3ias56gcga9K6CmYA+BLDBxtbG915Ag@mail.gmail.com>
-Date: Mon, 23 Jun 2025 17:02:56 +0200
-Cc: Heiko Stuebner <heiko@sntech.de>,
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- XiaoDong Huang <derrick.huang@rock-chips.com>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- Jonas Karlman <jonas@kwiboo.se>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <36711B65-DD45-4539-BD9C-0382936FD0A3@gmail.com>
-References: <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
- <3286000.Y6S9NjorxK@phil>
- <CABjd4YyaNF1zosFFi6hEsZanPDxoaa1h4Dpd6uTPRwA3BZn0=w@mail.gmail.com>
- <5897576.DvuYhMxLoT@phil>
- <CABjd4Yy8WeXKmmxh2-TjjF5-ABy-NzzJsWpt1KvSjJqTHh0Xwg@mail.gmail.com>
- <CABjd4Yz4NbqzZH4Qsed3ias56gcga9K6CmYA+BLDBxtbG915Ag@mail.gmail.com>
-To: Alexey Charkov <alchark@gmail.com>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/13] dt-bindings: perf: stm32: introduce DDRPERFM
+ dt-bindings
+To: Krzysztof Kozlowski <krzk@kernel.org>, Will Deacon <will@kernel.org>,
+        Mark
+ Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Gatien Chevallier
+	<gatien.chevallier@foss.st.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Gabriel Fernandez
+	<gabriel.fernandez@foss.st.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>
+References: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
+ <20250623-ddrperfm-upstream-v1-5-7dffff168090@foss.st.com>
+ <868b20f0-c1ff-4cd7-91bc-e73069aafa95@kernel.org>
+Content-Language: en-US
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <868b20f0-c1ff-4cd7-91bc-e73069aafa95@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-23_04,2025-06-23_06,2025-03-28_01
 
+On 6/23/25 11:48, Krzysztof Kozlowski wrote:
+> On 23/06/2025 11:27, Clément Le Goffic wrote:
+>> DDRPERFM is the DDR Performance Monitor embedded in STM32MPU SoC.
+>> It allows to monitor DDR events that come from the DDR Controller
+>> such as read or write events.
+>>
+> 
+> A nit, subject: drop second/last, redundant "bindings". The
+> "dt-bindings" prefix is already stating that these are bindings.
+> See also:
+> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+Oops, you're right thank you
 
+>> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+>> ---
+>>   .../devicetree/bindings/perf/st,stm32-ddr-pmu.yaml | 93 ++++++++++++++++++++++
+>>   1 file changed, 93 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml b/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml
+>> new file mode 100644
+>> index 000000000000..35d34782865b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml
+>> @@ -0,0 +1,93 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/perf/st,stm32-ddr-pmu.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +maintainers:
+>> +  - Clément Le Goffic <clement.legoffic@foss.st.com>
+>> +
+>> +title: STMicroelectronics STM32 DDR Performance Monitor (DDRPERFM)
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - st,stm32mp131-ddr-pmu
+>> +      - st,stm32mp151-ddr-pmu
+> 
+> These are compatible, aren't they?
 
-> Wiadomo=C5=9B=C4=87 napisana przez Alexey Charkov <alchark@gmail.com> =
-w dniu 23 cze 2025, o godz. 15:58:
->=20
-> On Mon, Jun 23, 2025 at 1:19=E2=80=AFPM Alexey Charkov =
-<alchark@gmail.com> wrote:
->>=20
->>=20
->=20
-> Okay, I've bisected this.
->=20
-> TLDR: Linux and u-boot seem to have nothing to do with it, opensource
-> TF-A doesn't work, binary BL31 starting with v1.09 do not work. BL31
-> v1.08 and earlier work fine.
+Yes they are
 
+>> +      - st,stm32mp251-ddr-pmu
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    description: Reference clock for the DDR Performance Monitor
+> 
+> Drop description, obvious.
 
-just fyi:=20
-to confirm: replacing only bl31 to 1.08 makes all good
-with perf gov. clocks staying on 2200/2300
-clock estimations are predictable, constant and estimating constantly =
-2400
-ux is =E2=80=9Elike=E2=80=9D on 3588
+Ok
 
-Alexey: many thx for finding root cause component!
- =20
-  =20=
+> 
+>> +    maxItems: 1
+>> +
+>> +  resets:
+>> +    description: Reset control for the DDR Performance Monitor
+> 
+> Drop description, obvious.
+
+Ok
+
+> 
+> 
+>> +    maxItems: 1
+>> +
+>> +  access-controllers:
+>> +    minItems: 1
+>> +    maxItems: 2
+>> +
+>> +  st,dram-type:
+>> +    description: |
+>> +      This property is used to specify the type of DRAM memory connected to the
+>> +      associated memory controller. It is required for the DDR Performance Monitor
+>> +      to correctly interpret the performance data.
+>> +      0 = LPDDR4,
+>> +      1 = LPDDR3,
+>> +      2 = DDR4,
+>> +      3 = DDR3
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+> 
+> No, use standard JEDEC memory bindings (memory controllers) if you need
+> to describe the memory, otherwise you duplicate that binding and
+> duplicate the memory information.
+
+Ok didn't know about it, I'll take a look
+
+Best regard,
+Clément
+
+>> +    enum: [0, 1, 2, 3]
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +
+>> +allOf:
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - st,stm32mp131-ddr-pmu
+>> +              - st,stm32mp151-ddr-pmu
+>> +    then:
+>> +      required:
+>> +        - clocks
+>> +        - resets
+>> +
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            const: st,stm32mp251-ddr-pmu
+>> +    then:
+>> +      required:
+>> +        - access-controllers
+>> +        - st,dram-type
+>> +
+>> +additionalProperties: false
+> Best regards,
+> Krzysztof
+
