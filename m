@@ -1,125 +1,117 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE81C2FA;
-	Mon, 23 Jun 2025 03:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355CD2907;
+	Mon, 23 Jun 2025 03:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750650122; cv=none; b=TVuAcx8XjVX0nWbM6iW9LG8TJ/TaqFbmGDYpl1qsANs/5pzO/NuBKnadeL8HikPl5OMCEspsXLbiZIL8vUt9W/0Cv1i4MDFNBlWWG9+twoMmKrJGXkePRj418x9jI/DqMWgRMZdCW90ciFOCl0PTbX3wlY5JIQXFAQ/yvlz5KBI=
+	t=1750650360; cv=none; b=kBuGOlknb42O2qt3cdhsDQ0r9UoSvcLVLCjs9tmXo0eYDmtX1FNL7hTwLmjzcmPzQp/O8xGvEo1tXcAducwOnekQ+q+jQbh+mLvFynCShZ2zRuda/sDhyEbvstPojTxyfW9+0iqFOBm7Ddyw4MTVp3RJQosC+7/Bo3O+CxEQA+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750650122; c=relaxed/simple;
-	bh=C7lWDwFmY+a5+xdP1TSLeEsk1cMxy1H7IRtYpyastBY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jd4IFaeuPq0KIJCpdFWBK5b0tTMxKdDHdRx6vBskbhIW8clOX7dZUzOAXMMAvyHEzNIeLH5sF21qYSNEEfEJGH4R3DpEgirDv6Bn6Di7zm/jux2WsqR7m6PjkHlFoLorwTfC59En2zoAYw/Fgr28ZFrFp859krT5FFgL9fuMctU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RlOdw5h6; arc=none smtp.client-ip=209.85.210.181
+	s=arc-20240116; t=1750650360; c=relaxed/simple;
+	bh=G5Uc5D02m76z4ScjY7e+hO5tY6bfNFOQgKMduFLxKEY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W+TYX6SWb3vdtlWC9IhLlxcSoPheOwittEF3Gx9X3pRYwKugIXSAbooyIMbgADtfdZ1IN1/2u/k83a+eDxA3p6NtQo5AtXfwK309KPdQQntPzPujg5ZiDof+3/J00s4INTY5ucJrAOW/eW53YVySyi7SzCnyCVKwZMDhCfUtZUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Otv4NTSs; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RlOdw5h6"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-748e81d37a7so2200125b3a.1;
-        Sun, 22 Jun 2025 20:42:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Otv4NTSs"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2366e5e4dbaso29475555ad.1;
+        Sun, 22 Jun 2025 20:45:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750650120; x=1751254920; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=C7lWDwFmY+a5+xdP1TSLeEsk1cMxy1H7IRtYpyastBY=;
-        b=RlOdw5h6BiALmUFnLjUhLBas+1tk57RqXfgflzUei2KNVTHGfV1RzaJcaekC+ghMhV
-         XgPEW2tHrg6wF+5Pw30VvTHWWtKUyeUMetur1+gefmYrtpJwuPZXhjmd/VE1s9eRdC9P
-         1aw89ClZCOIBI5HoJqXXWaWslfwpEiAK+F8+MoUJfO4ZDrfZvTO650zUb5uieIwqudhU
-         Aa9wLNuEAseqLPKa7tPL2pGtDdfcKcoMityVhH2LobIFRMWclrev1TtafqJ9geZW+3AV
-         7UHJbjktAsjKAHXQUCHTotzELgT9Y1LyVOQQtSImP8Y1e4irUoex4CPCK5D1Kx2DQNyU
-         TWPw==
+        d=gmail.com; s=20230601; t=1750650358; x=1751255158; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=46czZ5RTorkh2CcgjyXvPjRLRUA/PdHb71pPU7kVdIg=;
+        b=Otv4NTSshc31T4o4xGSUsuSqy6ThHQhqyBG5hiACBJ/epOleqz8SIskbSBOZhDDzes
+         SoQCwbGBP7tCc3Ksp0nebRQUoFxkVul20UFKGO+URWd+o8j3D3yVqWkmLltgfCLU4Gq+
+         ZvZYE3xigoCekTYr1M5CDCPa6+uW1T0Kcir5HyNWv4xtn22mGmfZk4gcSqoElC7ltH1Z
+         5Po/bdNnscPWS1iCOVc6rmD9UBTAR03c8tP1clfZA5MJI+BMkgrBKnqXueHU+K5Xxkef
+         Ih8PQvC2CGvv3svdRmUyg7QvXO4vB8GXGEWiwXGvOzBp2WMHintS6j8+DL6FKK1Ytttx
+         cG0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750650120; x=1751254920;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C7lWDwFmY+a5+xdP1TSLeEsk1cMxy1H7IRtYpyastBY=;
-        b=bYXvAjDBen++fXVNhLmS630cTIL9RPlHbrWV4390mvlySH2u252xSM8R0JgypgH4n9
-         Ra/o7zXYqB6muL+kUUZHNWH0xd0sL41UUHlYRkqYEPa/BxaR0pwfMMRDeYq5WnBAapmi
-         aNnE0B4qbrl3ruhJVdkQwIa7i0fUvORrzAnV02MGHt/pRKYtcNnm0kbKHDs9GZTPzwTt
-         TC+BnPfP3NnktCz8jOCPUFJRanjCpguu5Xn+JDdU4lsBnmYFyn4K4a8v/gH1R2py6cxX
-         OtjrlmWnj0gv/p7rk/Izv3UQwWtedLtCz/gsy5VfxbKm7np6vyPuFBO4kE9+xmJzZ11S
-         ubLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXB8ud3wWp+VJTdnrbIK8FH3QkrlltxGC7z112yOy0NYJ75cIc42IQBZHpjuqVLwCM+xjmnIcq+0ZlU1oi1@vger.kernel.org, AJvYcCXTGtf0lobTLU3ui+dsOh3XHFrLxpxqTFC1PYKQv74zIkhYtQYO3WnESlpQuPtugBCNTEztK+8ypeQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZwnllePLa66N8z6i1je6IfzIAKksVN+tB3V/BNBoPYDxzHkla
-	1cEoqLNFHxKCRDRetmdexLNcOA6zW+jgpOZscD331DUO8MYiKEym/3Bu
-X-Gm-Gg: ASbGncuZWr5FLKoDoC2T6pKRx9v03f3fKT4W/cdg2Ui01PXi1yFd4iNFsD5ZVTwrtHq
-	fXSmEezDKbswMrEKgy9gkpar+dMpG5l/fvirQz2zNgMjfcN0MuHn23ViHRqJbV4iafcOch8fpEe
-	astBCsh5iuwq43z7hElG/wRwGHXCY+riRnk0BcCNG990kbLuCLHHRyf2iqEHihL6M2Lbsumg6BI
-	3nOcT6KWeIGEdXmVBn/8Qo+YhzKk4vnA7tCTvDWWBv78LdHVSPx4GXheGwn5/3nk3BNpAqk69x7
-	qk2h+I6c9rPzM+QdWHPveBScd45BIhXjLR+FrnUwthQykBingQNSBHS/NlcZSA==
-X-Google-Smtp-Source: AGHT+IGZFbK9gWDiOql80uktuYJl/SQ7zdnIWXbjE5cvVr7gGf4Yeuemid5KEXrIuQUaPSHEO4DAQg==
-X-Received: by 2002:a05:6a00:13a6:b0:746:2591:e531 with SMTP id d2e1a72fcca58-7490da49974mr15506667b3a.12.1750650119919;
-        Sun, 22 Jun 2025 20:41:59 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a6b3aa5sm7165350b3a.166.2025.06.22.20.41.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 20:41:58 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 313764141E9E; Mon, 23 Jun 2025 10:41:56 +0700 (WIB)
-Date: Mon, 23 Jun 2025 10:41:55 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Vegard Nossum <vegard.nossum@oracle.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Documentation <linux-doc@vger.kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Federico Vaga <federico.vaga@vaga.pv.it>,
-	Akira Yokosawa <akiyks@gmail.com>,
-	Carlos Bilbao <carlos.bilbao@kernel.org>,
-	Avadhut Naik <avadhut.naik@amd.com>, Alex Shi <alexs@kernel.org>,
-	Yanteng Si <si.yanteng@linux.dev>, Dongliang Mu <dzm91@hust.edu.cn>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	David Vernet <void@manifault.com>, Miguel Ojeda <ojeda@kernel.org>,
-	James Seo <james@equiv.tech>,
-	Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: Re: [PATCH RFC] Documentation: typography refresh
-Message-ID: <aFjNA1TkBiHXNKPD@archie.me>
-References: <20250619042318.17325-2-bagasdotme@gmail.com>
- <75f99fce-affa-4acc-afeb-2a9f70a6d907@oracle.com>
+        d=1e100.net; s=20230601; t=1750650358; x=1751255158;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=46czZ5RTorkh2CcgjyXvPjRLRUA/PdHb71pPU7kVdIg=;
+        b=U8K4fVo8FspoRUufT5amHE6dcQJv+jcbEMWELylJ3gvRg0IQ0vGRepN/Vyw3oiXnle
+         4kXDy/NQFO2POeDlRbhqzYeMIdBIQBMBz76hrVoRTeusXa+yUmo5SpHUHPgqxCd6vw+4
+         bryi4YAHhrrhPlwkmyYT5Hu/1V+u+ArhBSIhVGmzUkEqCk9R5ssdNaZBt5XGpXeQS+jo
+         b4mF5ezzd6lD3yk2bN3/2anQGN4JqAEWP9WbJYrxLCQ8qQ1Gj5E3p5rj1wdXgUQFGZaO
+         jv5SeYVLaRvfXlxcRWkkL8uBFAwc1PZa04fxqOzDr1WtZKKUBFtQms4ldcI3MwO1niPw
+         uNhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUrRlfHOUsxN9O8nXKixVyqXHJv3Byrif1D8DYUfEJEUQxEfhcvaA2WUIRUcSPrF4BrzIr4740Ug7SXgHg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmG+SEhkDCVW/mbaW8qfwRw2b5ATn8m0xv+gaO+YKiUNjLyMH7
+	CBhcMuDdkSvAbDSjtD/+SYJqFyWZHMKzUmJck6Bi1rfwzSkD5cWbtNyq
+X-Gm-Gg: ASbGncuAhL3o2klMUeYz+Z2DfibbtvcVQhzDvu88C11wW3gpNFza/W8ypXsXN+OuIhH
+	y8+Wib1XQUF8mEzR+f5g3Id2cxhscgwM/mffXpFAmhvvUhxgf57ZJhvBeT6prLlN1gsNnEdwfx1
+	d7O/WCSnRuifjdeJWhT181SOuG+8wJeHgyL1PGi2U1PYJCTD1y5wVfLFFOmq5hfZIsJU1iy2zkz
+	TIc9+ZeprKSOS7sZX2vn+cm79u/0pOpWJAmR5wSoLXi9ioEpRC7tsBFiQaKOIUzwxE8hD88GXWP
+	6+/hLo/Wai2CCLfNOmXUPnlpf3X1boEfcCgQ3PDX0ziL
+X-Google-Smtp-Source: AGHT+IGDZUf9WAoOlziNtYa2tatWnL25kiOuHa+V3kHYAJ6nw7Y6HGb319q2Ags8nZVZ35i0HZvl8A==
+X-Received: by 2002:a17:902:d50a:b0:215:b1e3:c051 with SMTP id d9443c01a7336-237dafecd35mr150827205ad.11.1750650358292;
+        Sun, 22 Jun 2025 20:45:58 -0700 (PDT)
+Received: from [127.0.0.1] ([2604:a840:3::1028])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8393292sm71356235ad.13.2025.06.22.20.45.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Jun 2025 20:45:58 -0700 (PDT)
+Message-ID: <0b9376b8-6132-4b48-a5bd-75eacd121561@gmail.com>
+Date: Mon, 23 Jun 2025 11:45:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="XoplodwdSplvyu4T"
-Content-Disposition: inline
-In-Reply-To: <75f99fce-affa-4acc-afeb-2a9f70a6d907@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] md/raid1: change r1conf->r1bio_pool to a pointer type
+Content-Language: en-US
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: linux-raid@vger.kernel.org, Song Liu <song@kernel.org>,
+ linux-kernel@vger.kernel.org, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250618114120.130584-1-wangjinchao600@gmail.com>
+ <35358897-5009-4843-8234-136bd5756e0b@gmail.com>
+ <dd532c80-2597-deff-4a3e-3d8ce88cbc19@huaweicloud.com>
+From: Wang Jinchao <wangjinchao600@gmail.com>
+In-Reply-To: <dd532c80-2597-deff-4a3e-3d8ce88cbc19@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
---XoplodwdSplvyu4T
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Jun 22, 2025 at 10:58:08AM +0200, Vegard Nossum wrote:
+On 6/23/25 11:26, Yu Kuai wrote:
 > Hi,
->=20
-> Could you share (links to) screenshots of the new look?
+> 
+> 在 2025/06/23 11:18, Wang Jinchao 写道:
+>> Comparing mempool_create_kmalloc_pool() and mempool_create(), the 
+>> former requires the pool element size as a parameter, while the latter 
+>> uses r1bio_pool_alloc() to allocate new elements, with the size 
+>> calculated based on poolinfo->raid_disks.
+>> The key point is poolinfo, which is used for both r1bio_pool and 
+>> r1buf_pool.
+>> If we change from mempool_create() to mempool_create_kmalloc_pool(), 
+>> we would need to introduce a new concept, such as r1bio_pool_size, and 
+>> store it somewhere. In this case, the original conf->poolinfo would 
+>> lose its meaning and become just r1buf_poolinfo.
+>> So I think keeping poolinfo is a better fit for the pool in RAID1.
+>>
+> 
+> I said multiple times it's a fixed size and won't change, you don't need
+> to store it. Not sure if you get this. :(
+> 
+> conf->r1bio_pool = mempool_create_kmalloc_pool(NR_RAID_BIOS,
+>              offsetof(struct r1bio, bios[mddev->raid_disks *2]);
+> 
+> Thanks,
+> Kuai
+> 
 
-These are in a tracker issue on my fork [1].
+This time I got it.
+I used to think it was a pointer, but now I realize it’s actually a 
+pointer cast from a fixed value.
+I can change it to use mempool_create_kmalloc_pool now.
+I will also reconsider your three previous suggestions.
+Thanks for your patience.
 
-Thanks.
-
-[1]: https://github.com/bagasme/linux/issues/1
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---XoplodwdSplvyu4T
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaFjM/gAKCRD2uYlJVVFO
-oz40AP9NrwCAcJ8xZ78/eHf09TGXNaxryqm7K/wl+IiNlgiRxwD/ZTDZH5jHST9j
-NXOkjlI5TWU6XAYEWtx/bnQi5U9BcgI=
-=5ZCs
------END PGP SIGNATURE-----
-
---XoplodwdSplvyu4T--
+---
+Jinchao
