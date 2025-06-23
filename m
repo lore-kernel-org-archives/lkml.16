@@ -1,197 +1,127 @@
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 283B620E005;
-	Mon, 23 Jun 2025 08:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD2820E005;
+	Mon, 23 Jun 2025 08:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750666206; cv=none; b=BPREDsTH0PrlAHrHgyaGys1eDN0m3qmL2bK6yW7dcO3uGuPlWoe2r5aIIPiGv9YeeoIUcsr6E32C68NR3sLQ95Mic+DnNO5O95Is88qVLppaIFaShnQc2dPDlOVHpF0dJ4zBDYAovcQ1lkEEpuKGYlyGvJCg8Jj5MY3apFln6QU=
+	t=1750666213; cv=none; b=QvxNO+vyfvJ+i5gax1TLAldYlDEKfj0f8Orma/wfggHzOM4ybc9gSnTjqMVvyCymOFAFWBnvRI+pEumwhpLt41KGM/Zcrunh6d1PCJFOBO9IlEUWjIxqR6chosadT9OFaLyD5JsTgjf24KfBHbJ0dMbcQ0VZHwCLftaO85x8gIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750666206; c=relaxed/simple;
-	bh=LHjaOxQCCmOqCb0BNa1AEbs2pvRMQ7V7oDWIHuI2aYQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nVZrIx3XsHr5WetrDvu1LhcUJMbDRNXjNup8A3uindje19wXDn2b3r88Wx7/iiLiSkmLOiuN4tPhgyvCodWEBnjmd1f9/UH7Ult8/oNnEW9EGAeHEWZ0Z+o0LyAZPrf6RhXdxUyl3tGddwUBh17dzaTBTmHWoSJWtsYX6UPIOTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: pDikAHcWRF+Tj0fp5tqWNw==
-X-CSE-MsgGUID: FLrClAvMQmefBEod9XJgmA==
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 23 Jun 2025 17:04:55 +0900
-Received: from ubuntu.adwin.renesas.com (unknown [10.226.93.157])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 1603E400F744;
-	Mon, 23 Jun 2025 17:04:50 +0900 (JST)
-From: John Madieu <john.madieu.xa@bp.renesas.com>
-To: geert+renesas@glider.be,
-	magnus.damm@gmail.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	richardcochran@gmail.com
-Cc: linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	netdev@vger.kernel.org,
-	biju.das.jz@bp.renesas.com,
-	John Madieu <john.madieu.xa@bp.renesas.com>
-Subject: [PATCH v3 3/3] arm64: dts: renesas: rzg3e-smarc-som: Enable eth{0-1} (GBETH) interfaces
-Date: Mon, 23 Jun 2025 10:04:05 +0200
-Message-ID: <20250623080405.355083-4-john.madieu.xa@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250623080405.355083-1-john.madieu.xa@bp.renesas.com>
-References: <20250623080405.355083-1-john.madieu.xa@bp.renesas.com>
+	s=arc-20240116; t=1750666213; c=relaxed/simple;
+	bh=9UFfyxd2/b0B8guWxRhS4jzpop1VBAtfJC/n8ZrMlz0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NrtcQIWvqgCxvEwzMscU1w33uGBG/9LwMIRMMOf8nkaCu0lKFECuLaZrmDV8TE0f/7aOGS7/B25SMcs8O7CFHKbzcjbTfztkqsUZ94HB7myqGVBca4WCC9GPnsI1fnTV3DSEL7Vc7D0HSY1Dx+BeLyxRsHROqTSto129n7P01e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FPyizjS+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FPyizjS+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3567C4CEF6;
+	Mon, 23 Jun 2025 08:10:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750666212;
+	bh=9UFfyxd2/b0B8guWxRhS4jzpop1VBAtfJC/n8ZrMlz0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=FPyizjS+kcmIUJdWgcX2yl5zU254/yT6y9fjJUzpsifXgAnOShDwKyuJa4Js7vi6W
+	 zazBcrc0dYF8VXhdBegmcqBrmW1sl2Nf5iN3Bt7q3b09z5Hc4I/fsUApQDMUEtyvgR
+	 qYZh/NvbVWnUkXlGpie58LgqMjIp5PK/aylLBDdOXl+GRF9Io3SHZUlg4exAjSJE1y
+	 WGQ2Lcmy5+iEuBtlqRQP2yX5Jxwkx84cyHIo/ueCHQzIzaAqdw6KZjo2WwKsY3JnOa
+	 RAMl+h2/8oJbez+mhgDxWQaHL8xNwejWoG/c5NKrt0bkO2HoxXIiGwJizb4iWRPcy6
+	 oEfBdbY9XjECQ==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-606b6dbe316so7437069a12.3;
+        Mon, 23 Jun 2025 01:10:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUBAIp/pkrxelHGqrawKzqEdG6xX1r2ehxVsvBiRvyX5znf+AoRre5Povtps7JT/Rn/D55OFBfG@vger.kernel.org, AJvYcCVsFl+ZS/Xsx5kGEEXiNAUveWPcHvlnOuS7WS5AE+drJhQd4VIzeTSM2tJK1l01hXfer+fdPnyCaCo8i5k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9XiUBfK+Mv+nRjP1DVWlhS1vnmqrqw9ksY9CJnYXQYKq+GPOR
+	sgz4J//5lSLw6JDS8Sf4MLvtgkyJJjx1VzuOdBhW/w5NQ1PJnJ5aY3ugkGJsqq/Y7chQxMDE4Jv
+	FSZ9Cqx6BHJn0YWodsxUvCUUIpg+ZKRs=
+X-Google-Smtp-Source: AGHT+IHVdXyQlxhUp2FRWU2idWY08CpHAI24CMuWlAmuGlq5qpodHyK+J3UrpjCva/pQR3fAFOc/BUmGTDLPAKsXno4=
+X-Received: by 2002:a05:6402:84c:b0:609:d20b:1af5 with SMTP id
+ 4fb4d7f45d1cf-60a1cd1a81amr10778001a12.2.1750666209246; Mon, 23 Jun 2025
+ 01:10:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250622110148.3108758-1-chenhuacai@loongson.cn>
+ <2025062206-roundish-thumb-a20e@gregkh> <CAAhV-H4S=z5O0+pq-x9X4-VjYsJQVxib+V-35g50WeaivryHLA@mail.gmail.com>
+ <2025062349-proximity-trapeze-24c6@gregkh> <CAAhV-H7r-X-t0_i-x=oy2Gin4-ZMhSVwXtcaygZdJ1_J-zD3dg@mail.gmail.com>
+ <2025062339-till-sloping-58b2@gregkh>
+In-Reply-To: <2025062339-till-sloping-58b2@gregkh>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 23 Jun 2025 16:09:56 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4Ntk0mdXGrvLPvwKmW2ROgyH7gnaSjYFgpDzg-d-hSfQ@mail.gmail.com>
+X-Gm-Features: Ac12FXzYxecj6L72SAnsBRFC2YxdneMCN2Ajasq-9wTeF6WqfrpvimZYH9Axjt0
+Message-ID: <CAAhV-H4Ntk0mdXGrvLPvwKmW2ROgyH7gnaSjYFgpDzg-d-hSfQ@mail.gmail.com>
+Subject: Re: [PATCH for 6.1/6.6] platform/loongarch: laptop: Fix build error
+ due to backport
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Sasha Levin <sashal@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org, ziyao@disroot.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Enable the Gigabit Ethernet Interfaces (GBETH) populated on the RZ/G3E SMARC EVK
+On Mon, Jun 23, 2025 at 4:03=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Jun 23, 2025 at 02:36:18PM +0800, Huacai Chen wrote:
+> > On Mon, Jun 23, 2025 at 2:28=E2=80=AFPM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Sun, Jun 22, 2025 at 09:11:44PM +0800, Huacai Chen wrote:
+> > > > On Sun, Jun 22, 2025 at 9:10=E2=80=AFPM Greg Kroah-Hartman
+> > > > <gregkh@linuxfoundation.org> wrote:
+> > > > >
+> > > > > On Sun, Jun 22, 2025 at 07:01:48PM +0800, Huacai Chen wrote:
+> > > > > > In 6.1/6.6 there is no BACKLIGHT_POWER_ON definition so a build=
+ error
+> > > > > > occurs due to recently backport:
+> > > > > >
+> > > > > >   CC      drivers/platform/loongarch/loongson-laptop.o
+> > > > > > drivers/platform/loongarch/loongson-laptop.c: In function 'lapt=
+op_backlight_register':
+> > > > > > drivers/platform/loongarch/loongson-laptop.c:428:23: error: 'BA=
+CKLIGHT_POWER_ON' undeclared (first use in this function)
+> > > > > >   428 |         props.power =3D BACKLIGHT_POWER_ON;
+> > > > > >       |                       ^~~~~~~~~~~~~~~~~~
+> > > > > >
+> > > > > > Use FB_BLANK_UNBLANK instead which has the same meaning.
+> > > > > >
+> > > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > > > ---
+> > > > > >  drivers/platform/loongarch/loongson-laptop.c | 2 +-
+> > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > >
+> > > > > What commit id is this fixing?
+> > > >
+> > > > commit 53c762b47f726e4079a1f06f684bce2fc0d56fba upstream.
+> > >
+> > > Great, can you resend this with a proper Fixes: tag so I don't have t=
+o
+> > > manually add it myself?
+> > Upstream kernel doesn't need to be fixed, and for 6.1/6.6, the commits
+> > need to be fixed are in linux-stable-rc.git[1][2] rather than
+> > linux-stable.git now.
+> >
+> > I don't know your policy about stable branch maintenance, one of the
+> > alternatives is modify [1][2] directly. And if you prefer me to resend
+> > this patch, I think the commit id is not the upstream id, but the ids
+> > in [1][2]?
+> >
+> > [1]https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git/commit/?h=3Dqueue/6.1&id=3Df78d337c63e738ebd556bf67472b2b5c5d8e9a1c
+> > [2]https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git/commit/?h=3Dqueue/6.6&id=3D797cbc5bc7e7a9cd349b5c54c6128a4077b9a8c6
+>
+> What we should do is just drop those patches from the 6.1.y and 6.6.y
+> queues, I'll go do that now, and wait for you to submit a working
+> version of this patch for those branches, so that we do not have any
+> build breakages anywhere.
+>
+> Can you submit the updated patches for that now?
+OK, will do.
 
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-Tested-by: Biju Das <biju.das.jz@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
----
-
-Changes:
-
-v2:
-No changes but resending without dt-bindings patch
-
-v3:
-Updates mdio separately, based on phandles instead of node redefinition
-
- .../boot/dts/renesas/rzg3e-smarc-som.dtsi     | 98 +++++++++++++++++++
- 1 file changed, 98 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi b/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
-index f99a09d04ddd..2281ec05c1f5 100644
---- a/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
-+++ b/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
-@@ -26,6 +26,8 @@ / {
- 	compatible = "renesas,rzg3e-smarcm", "renesas,r9a09g047e57", "renesas,r9a09g047";
- 
- 	aliases {
-+		ethernet0 = &eth0;
-+		ethernet1 = &eth1;
- 		i2c2 = &i2c2;
- 		mmc0 = &sdhi0;
- 		mmc2 = &sdhi2;
-@@ -77,6 +79,24 @@ &audio_extal_clk {
- 	clock-frequency = <48000000>;
- };
- 
-+&eth0 {
-+	phy-handle = <&phy0>;
-+	phy-mode = "rgmii-id";
-+
-+	pinctrl-0 = <&eth0_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&eth1 {
-+	phy-handle = <&phy1>;
-+	phy-mode = "rgmii-id";
-+
-+	pinctrl-0 = <&eth1_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
- &gpu {
- 	status = "okay";
- 	mali-supply = <&reg_vdd0p8v_others>;
-@@ -102,7 +122,85 @@ raa215300: pmic@12 {
- 	};
- };
- 
-+&mdio0 {
-+	phy0: ethernet-phy@7 {
-+		compatible = "ethernet-phy-id0022.1640",
-+			     "ethernet-phy-ieee802.3-c22";
-+		reg = <7>;
-+		interrupts-extended = <&icu 3 IRQ_TYPE_LEVEL_LOW>;
-+		rxc-skew-psec = <1400>;
-+		txc-skew-psec = <1400>;
-+		rxdv-skew-psec = <0>;
-+		txdv-skew-psec = <0>;
-+		rxd0-skew-psec = <0>;
-+		rxd1-skew-psec = <0>;
-+		rxd2-skew-psec = <0>;
-+		rxd3-skew-psec = <0>;
-+		txd0-skew-psec = <0>;
-+		txd1-skew-psec = <0>;
-+		txd2-skew-psec = <0>;
-+		txd3-skew-psec = <0>;
-+	};
-+};
-+
-+&mdio1 {
-+	phy1: ethernet-phy@7 {
-+		compatible = "ethernet-phy-id0022.1640",
-+			     "ethernet-phy-ieee802.3-c22";
-+		reg = <7>;
-+		interrupts-extended = <&icu 16 IRQ_TYPE_LEVEL_LOW>;
-+		rxc-skew-psec = <1400>;
-+		txc-skew-psec = <1400>;
-+		rxdv-skew-psec = <0>;
-+		txdv-skew-psec = <0>;
-+		rxd0-skew-psec = <0>;
-+		rxd1-skew-psec = <0>;
-+		rxd2-skew-psec = <0>;
-+		rxd3-skew-psec = <0>;
-+		txd0-skew-psec = <0>;
-+		txd1-skew-psec = <0>;
-+		txd2-skew-psec = <0>;
-+		txd3-skew-psec = <0>;
-+	};
-+};
-+
- &pinctrl {
-+	eth0_pins: eth0 {
-+		pinmux = <RZG3E_PORT_PINMUX(A, 1, 1)>, /* MDC */
-+			 <RZG3E_PORT_PINMUX(A, 0, 1)>, /* MDIO */
-+			 <RZG3E_PORT_PINMUX(C, 2, 15)>, /* PHY_INTR (IRQ2) */
-+			 <RZG3E_PORT_PINMUX(C, 1, 1)>, /* RXD3 */
-+			 <RZG3E_PORT_PINMUX(C, 0, 1)>, /* RXD2 */
-+			 <RZG3E_PORT_PINMUX(B, 7, 1)>, /* RXD1 */
-+			 <RZG3E_PORT_PINMUX(B, 6, 1)>, /* RXD0 */
-+			 <RZG3E_PORT_PINMUX(B, 0, 1)>, /* RXC */
-+			 <RZG3E_PORT_PINMUX(A, 2, 1)>, /* RX_CTL */
-+			 <RZG3E_PORT_PINMUX(B, 5, 1)>, /* TXD3 */
-+			 <RZG3E_PORT_PINMUX(B, 4, 1)>, /* TXD2 */
-+			 <RZG3E_PORT_PINMUX(B, 3, 1)>, /* TXD1 */
-+			 <RZG3E_PORT_PINMUX(B, 2, 1)>, /* TXD0 */
-+			 <RZG3E_PORT_PINMUX(B, 1, 1)>, /* TXC */
-+			 <RZG3E_PORT_PINMUX(A, 3, 1)>; /* TX_CTL */
-+	};
-+
-+	eth1_pins: eth1 {
-+		pinmux = <RZG3E_PORT_PINMUX(D, 1, 1)>, /* MDC */
-+			 <RZG3E_PORT_PINMUX(D, 0, 1)>, /* MDIO */
-+			 <RZG3E_PORT_PINMUX(F, 2, 15)>, /* PHY_INTR (IRQ15) */
-+			 <RZG3E_PORT_PINMUX(F, 1, 1)>, /* RXD3 */
-+			 <RZG3E_PORT_PINMUX(F, 0, 1)>, /* RXD2 */
-+			 <RZG3E_PORT_PINMUX(E, 7, 1)>, /* RXD1 */
-+			 <RZG3E_PORT_PINMUX(E, 6, 1)>, /* RXD0 */
-+			 <RZG3E_PORT_PINMUX(E, 0, 1)>, /* RXC */
-+			 <RZG3E_PORT_PINMUX(D, 2, 1)>, /* RX_CTL */
-+			 <RZG3E_PORT_PINMUX(E, 5, 1)>, /* TXD3 */
-+			 <RZG3E_PORT_PINMUX(E, 4, 1)>, /* TXD2 */
-+			 <RZG3E_PORT_PINMUX(E, 3, 1)>, /* TXD1 */
-+			 <RZG3E_PORT_PINMUX(E, 2, 1)>, /* TXD0 */
-+			 <RZG3E_PORT_PINMUX(E, 1, 1)>, /* TXC */
-+			 <RZG3E_PORT_PINMUX(D, 3, 1)>; /* TX_CTL */
-+	};
-+
- 	i2c2_pins: i2c {
- 		pinmux = <RZG3E_PORT_PINMUX(3, 4, 1)>, /* SCL2 */
- 			 <RZG3E_PORT_PINMUX(3, 5, 1)>; /* SDA2 */
--- 
-2.25.1
-
+>
+> thanks,
+>
+> greg k-h
