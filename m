@@ -1,135 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23B2139D;
-	Mon, 23 Jun 2025 18:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750703501; cv=none; b=qNA71Qc94WG4QeoLoAapO6J+hqfq1y4jDGDK445HUgMQoCi4b0RDEVRX4u7k3GKWcp3562cP3SkP+PlXCyJ/1vBICYyUpNsXl45KOCKidZm1xB5vQiVQjJt+KdG4xmrNfC+7a1cdd7v5PJsThNAEpA7wXuYPw1AQD05+qFicrHo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750703501; c=relaxed/simple;
-	bh=pIAKt0mo2QJg6RZ/HaTWayaYZm/T1dbYJzk9s50QWK8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pqzDYE/bcc8mRQM5uR97HYANNdVnSlSRRtn90Lnybxjt0WY0csSN7hi/V06by+aR+NU0WjZJEp+h6VcFD9gUp7xkW6Zdexb92LD/ZOWeMDoEK3Az9oqPwCYhcLuNvE+7gBLpRXIOP6whptTfSyvFw9iiDyvtUy4wdzXLtip7bRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P5v695LA; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12999139D;
+	Mon, 23 Jun 2025 18:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750703560; cv=pass; b=fsY7ByTsbraFzvmfyY1c91HHE8/1jf47oBRqNHntmUabp4cFfAtAG/nrkxrteEeo32hfZvDNEhmSON4I4IuYmIZiv2tSkwIjNCrDLrn8KWJ6W7i91U20A7BLVIAlpRkwuOTkm9xmrafqJdqIbQwuFqmhlq4+/ufUvriEEHn65Tg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750703560; c=relaxed/simple;
+	bh=MyBbYI83wZlDQG4L/ii7WX0/ddv/V4PuAwMhE1Xcyek=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=d2h4C1UAim46/GPMFXYE8V/MW4uu570OOOZpCUB0Szjg9AvjdaJgvOjnl2YXLRG+G5viqrJ1VnAiS34svU82bec72v/yT+JWD0XeSxkx4JBEVmhbou6EuLql2qAA98GR8i4VvN9E+fafE2E3FpeQJelqj5aOR27+cxsclxW/EOI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=D4eiB8km; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P5v695LA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E4AEC4CEEA;
-	Mon, 23 Jun 2025 18:31:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750703501;
-	bh=pIAKt0mo2QJg6RZ/HaTWayaYZm/T1dbYJzk9s50QWK8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=P5v695LAJHKKfLs9TIMbUstzth6jW7LKjgRplbbGuC5nMLc1K/1VYAwsyalAYYClr
-	 yl0efTcz9DWHXPswgiZrIfrB1EGhVnW28394ph+tLx19BVkPoO4BJKqTifOJ2Y9o5c
-	 YcBUkCD92lJw6kAdB0fBU2e2s5JaBXMD7+W5WFxPvZpeE+9U/uoaUCbsVWMtESK5NT
-	 h3lAvS80TvMWiLsvTmgo86uoEA6wkNVYnL3XrQ37wygTOJGD+pZ4FT4Ba/ZpKmrt5W
-	 1LGuW09ZeMNqs/txwjQE0gIXi8/gkQ1Xv40xH3DzmAqRvgmJTfNly0H+KnL1vV3aOu
-	 knmx6krb9XRtA==
-Message-ID: <7852d6ac-95f0-41ec-8365-d23a2b16b208@kernel.org>
-Date: Mon, 23 Jun 2025 20:31:38 +0200
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="D4eiB8km"
+ARC-Seal: i=1; a=rsa-sha256; t=1750703537; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ElSgkYf1DFAFqFiABm+MeEoLmVlwkjst0k7ID9Y9X4biQtq1bQy/abqE7tk+y109XAquZeFu/bOelg8Q+jnhv0KnEZekgg7KlnqjMQBA+gdoqSoNmcL+5KZrGyVXghfDH1rxzgPTeV+88rhdR4bCaad+cNu00EODBHizdn2SaaM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750703537; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=MyBbYI83wZlDQG4L/ii7WX0/ddv/V4PuAwMhE1Xcyek=; 
+	b=BEruOpgYEF7XGdiAwskfXzcrmc6txZdBkEoVUP2Eai2oDSmVjPhBbfNKP75PGRjJ6QvCcnnE63v0JhrsFJSVU+MntvzgXjgJXgeZ/K9/3tF2YcEgyynOHfEpNnpl85C3EuTilU2jmvRv1WZt1lVbAXd8ozVPGSn686Jqz2Uba8A=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750703537;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=MyBbYI83wZlDQG4L/ii7WX0/ddv/V4PuAwMhE1Xcyek=;
+	b=D4eiB8kmQqDobAXRCRgvleympivXTYAZBLhukz30yYDGtTHOKo9j/89TtJtWvSmI
+	cc/tMfEvsWk/lEknXUoh26R6d3Y9VOWAXlnHkvqtEUK7XioRguF6VWCiTQqYS+IDS3v
+	xkrQ/+ZJppGH/FRhuwFxYDzPVhqfNOggkVpVgzOg=
+Received: by mx.zohomail.com with SMTPS id 1750703535862791.2797506732994;
+	Mon, 23 Jun 2025 11:32:15 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] staging: media: atomisp: Replace scnprintf with
- sysfs_emit in bo_show
-To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>, andy@kernel.org,
- mchehab@kernel.org, sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-staging@lists.linux.dev, skhan@linuxfoundation.org,
- linux-kernel-mentees@lists.linux.dev
-References: <20250621062944.168386-1-abdelrahmanfekry375@gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250621062944.168386-1-abdelrahmanfekry375@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v4] rust: regulator: add a bare minimum regulator
+ abstraction
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <DAN57NVEBNIF.270U4DKHZC13P@nvidia.com>
+Date: Mon, 23 Jun 2025 15:32:00 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <79BAA514-E57D-4F0E-B297-F178184E36C9@collabora.com>
+References: <20250609-topics-tyr-regulator-v4-1-b4fdcf1385a7@collabora.com>
+ <DAN57NVEBNIF.270U4DKHZC13P@nvidia.com>
+To: Alexandre Courbot <acourbot@nvidia.com>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
+X-ZohoMailClient: External
 
-Hi,
+Hi Alex,
 
-On 21-Jun-25 8:29 AM, Abdelrahman Fekry wrote:
-> Convert buffer output to use sysfs_emit/sysfs_emit_at API for safer
-> PAGE_SIZE handling and standardized sysfs output.
-> 
-> Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-> ---
->  drivers/staging/media/atomisp/pci/hmm/hmm.c | 24 ++++++---------------
->  1 file changed, 7 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/staging/media/atomisp/pci/hmm/hmm.c b/drivers/staging/media/atomisp/pci/hmm/hmm.c
-> index 84102c3aaf97..cae1fccd06af 100644
-> --- a/drivers/staging/media/atomisp/pci/hmm/hmm.c
-> +++ b/drivers/staging/media/atomisp/pci/hmm/hmm.c
-> @@ -37,51 +37,41 @@ static const char hmm_bo_type_string[] = "pv";
->  static ssize_t bo_show(struct device *dev, struct device_attribute *attr,
->  		       char *buf, struct list_head *bo_list, bool active)
->  {
+>> +
+>> +/// A voltage in microvolts.
+>> +///
+>> +/// The explicit type is used to avoid confusion with other =
+multiples of the
+>> +/// volt, which can be desastrous.
+>> +#[repr(transparent)]
+>> +#[derive(Copy, Clone, PartialEq, Eq)]
+>> +pub struct Microvolt(pub i32);
+>=20
+> This type actually contains a voltage, but is named after the unit it
+> stores. A bit like if `Duration` was named `Nanoseconds`. How about =
+just
+> naming it `Voltage` and give it `from_microvolts` and `as_microvolts`
+> methods? We might not need to use other units, but at least it doesn't
+> close that option.
 
-<snip>
+I think that not accepting anything other than microvolts is by design, =
+and
+that changing this to `Voltage` would defeat the purpose, which is to =
+make it
+crystal clear that the unit is microvolts.
 
-As Andy already mentioned you really should try to first better understand
-the code before changing it.
+Also, the places where this type is used take microvolts, so I don't see =
+why we
+should add this indirection, which would require a convertion back and =
+forth
+from volt.
 
-In this case this code is used for 2 custom sysfs attributes called
-"active_bo" and "free_bo".
+By the way, I went ahead and sent a new version [0] without this change.
 
-sysfs attributes are custom userspace API and we really want to remove
-all custom userspace APIs from this driver before moving it out of
-drivers/staging
+=E2=80=94 Daniel
 
-Instead everything should be done through existing standard kernels
-API, mostly the standard v4l2 API.
-
-Note this is already mentioned in drivers/staging/media/atomisp/TODO
-although these specific sysfs attributes are not named:
-
-"""
-TODO
-====
-
-1. Items which MUST be fixed before the driver can be moved out of staging:
-
-* Remove/disable private IOCTLs
-
-* Remove/disable custom v4l2-ctrls
-
-* Remove custom sysfs files created by atomisp_drvfs.c
-"""
-
-In this case the "active_bo" and "free_bo" sysfs attributes seem
-to be there for debugging purposes only and they can simply be removed.
-
-So instead of replacing scnprintf you should write a new patch
-removing everything starting at:
-
-<--- start removing code here --->
-/*
- * p: private
- * v: vmalloc
-
-...
-
-static struct attribute_group atomisp_attribute_group[] = {
-        {.attrs = sysfs_attrs_ctrl },
-};
-<--- end removing code here --->
-
-and then also remove the sysfs_create_group() and
-sysfs_remove_group() calls.
-
-After writing that patch maybe you can also take a look at tackling
-the "Remove custom sysfs files created by atomisp_drvfs.c" TODO
-list item?
-
-Regards,
-
-Hans
-
-
-
+[0] =
+https://lore.kernel.org/rust-for-linux/20250623-topics-tyr-regulator-v5-0-=
+99069658cb54@collabora.com/T/#t
 
 
