@@ -1,37 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888D31531C1;
-	Mon, 23 Jun 2025 12:00:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DDD91FBEBD;
+	Mon, 23 Jun 2025 12:00:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750680026; cv=none; b=sU5yF0krwV/vA274I8NLduRKTFSsoLdhJOBAVwQ6KIT0SwczLX8aUxjIb/B0wu6u+EcIlcOVVdYDRFQTEVw2pmq4N15AsDxgV39RTyosBUvKmNR0DuQAgMZ/Sy0qq5q1Qa0Lgi6CDr8eJVk6g20k23ixGr+INPEJIGBW1ZEdJxI=
+	t=1750680027; cv=none; b=rROl5Vcc80ORMMOfseiNeWL4zewfwmX32gx7ojlMhTLitWM35BceaAa2Zt3GPQTv5w7JmOfCHUcr1PnanWWI/1VUeifEFBDVnhldwQ2La5RIeFQ2I9NoaF2gEdLOOqEruHEghTeETnSLRvRdtLe6dHu1V32FMc80Kwtq94rdoag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750680026; c=relaxed/simple;
-	bh=tV8ORaIQbQLMSY8zkLMfrpms34GMlXjixrFwRo6YJy0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZDGiyAGWNWLqVS5vVpHlFeYM7GzwMTDlrAWYL1mzBWjUEhgjvjAibtT3zW8kclPUnsBAmcQpN6byZTPRHwEC5C1OmO27KuHiyYhyRE9a0vyfZp3sgTZPWwTOFXiB1TcAWJbEAnhQGqKSgJsYSmdir56TQTLaYK911L/MfsDrUpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=k3HVXr6+; arc=none smtp.client-ip=148.251.105.195
+	s=arc-20240116; t=1750680027; c=relaxed/simple;
+	bh=KQDMK2HRMwF1uUdXsBchy166izNLsZ/Y2d5yxmXnG8Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Lk81GfsmV3a93SiimViSdy0q6bP30WPnsDFcHiG8YlcqiAVXTCDpPuYNpUP4pHGJXF0hhD0OueEW1dI7Ku5uZkwM42HZdsbQz1Lm1AT45pvrN7dRQVfgpWgV3RwcePhOL5wmQubOdsGrMQtU16iJ6zrHnlMdBB0AvxEMRSLl5vY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=D2KpUOSC; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="k3HVXr6+"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="D2KpUOSC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750680022;
-	bh=tV8ORaIQbQLMSY8zkLMfrpms34GMlXjixrFwRo6YJy0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=k3HVXr6+R+bc3cfY7iW8UOHT9TSS8Vlud6/ZIcCmlV6xnYcJHYeDFHI/V4ErPX5Qv
-	 RkTbBul6wzC8wYZe/6z9tddgzYyfdzWMW9GO1RjJgfsrqQilqJwKFYpaZbtr01ZpIh
-	 EhgKrh+5FGjVBdaevhaG+5phpNGK1Mmcnm5y7n2cW7J2WqlsFDEpRFqxdPhd2uZmk8
-	 f0aS6ZrODg5OdK+hF9jgCpbY0Hn6jpy0nbk9sRN09U3lMKbVsORfK21Rm4BUslC+1E
-	 QGhEji+CfdF8BD6KuMa1BLlWcP792Q63wu5UA1QNpNksTiaqoFpjpI4/IdWDLwGD8F
-	 xu7xhY31NhxrA==
+	s=mail; t=1750680023;
+	bh=KQDMK2HRMwF1uUdXsBchy166izNLsZ/Y2d5yxmXnG8Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=D2KpUOSCTyW7qIdAYKyGZ7OAW3CMMs82cCzftjyXvlGS8wgbiJsLH2Kk0gyIfWPyg
+	 8U5rCZrzML7LlWkmL6UuzkbjGkaxdKA6TucRpQwV09pcbcB3Itqgzi4u4xCGd9m8En
+	 RJ6vufg2RsVzNpEe9jgUwCMj6yuNJDSu7S4xkIEvz9PdjXJYG4ya4TViSZLQM5u5KM
+	 1i0DYkXhOBt+a/NVAwCndrdhjXf+o73rjkXQLC68BX4hBAQU/D1FIlrMAfzpaw1vvF
+	 gL+zk7gobNU4NyuO9IK5uSNSSL/rIyH2uMYD7oPTwHvqJ/ptZe7B0KgArZCs3PBh0D
+	 TXLiFf0BX7+/w==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id F3A0517E0202;
-	Mon, 23 Jun 2025 14:00:21 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id CA6D217E0342;
+	Mon, 23 Jun 2025 14:00:22 +0200 (CEST)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: broonie@kernel.org
 Cc: lgirdwood@gmail.com,
@@ -45,10 +46,12 @@ Cc: lgirdwood@gmail.com,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org,
 	kernel@collabora.com
-Subject: [PATCH v1 0/6] regulator: Add support for MediaTek MT6316/6363/6373 PMICs
-Date: Mon, 23 Jun 2025 14:00:10 +0200
-Message-ID: <20250623120016.108732-1-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v1 1/6] dt-bindings: regulator: Document MediaTek MT6316 PMIC Regulators
+Date: Mon, 23 Jun 2025 14:00:11 +0200
+Message-ID: <20250623120016.108732-2-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250623120016.108732-1-angelogioacchino.delregno@collabora.com>
+References: <20250623120016.108732-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,39 +60,106 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series adds support for three new MediaTek PMICs: MT6316, MT6363
-and MT6373 and their variants - used in board designs featuring the
-MediaTek MT8196 Chromebook SoC, or the MT6991 Dimensity 9400 Smartphone
-SoC.
+Add bindings for the regulators found in the MediaTek MT6316 PMIC,
+usually found in board designs using the MT6991 Dimensity 9400 and
+on MT8196 Kompanio SoC for Chromebooks.
 
-AngeloGioacchino Del Regno (6):
-  dt-bindings: regulator: Document MediaTek MT6316 PMIC Regulators
-  regulator: Add support for MediaTek MT6316 SPMI PMIC Regulators
-  dt-bindings: regulator: Document MediaTek MT6363 PMIC Regulators
-  regulator: Add support for MediaTek MT6363 SPMI PMIC Regulators
-  dt-bindings: regulator: Document MediaTek MT6373 PMIC Regulators
-  regulator: Add support for MediaTek MT6373 SPMI PMIC Regulators
+This chip is fully controlled by SPMI and has multiple variants
+providing different phase configurations.
 
- .../regulator/mediatek,mt6316-regulator.yaml  |   81 ++
- .../regulator/mediatek,mt6363-regulator.yaml  |  123 ++
- .../regulator/mediatek,mt6373-regulator.yaml  |  119 ++
- drivers/regulator/Kconfig                     |   27 +
- drivers/regulator/Makefile                    |    3 +
- drivers/regulator/mt6316-regulator.c          |  343 ++++++
- drivers/regulator/mt6363-regulator.c          | 1060 +++++++++++++++++
- drivers/regulator/mt6373-regulator.c          |  729 ++++++++++++
- include/linux/regulator/mt6363-regulator.h    |  326 +++++
- include/linux/regulator/mt6373-regulator.h    |  154 +++
- 10 files changed, 2965 insertions(+)
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ .../regulator/mediatek,mt6316-regulator.yaml  | 81 +++++++++++++++++++
+ 1 file changed, 81 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/regulator/mediatek,mt6316-regulator.yaml
- create mode 100644 Documentation/devicetree/bindings/regulator/mediatek,mt6363-regulator.yaml
- create mode 100644 Documentation/devicetree/bindings/regulator/mediatek,mt6373-regulator.yaml
- create mode 100644 drivers/regulator/mt6316-regulator.c
- create mode 100644 drivers/regulator/mt6363-regulator.c
- create mode 100644 drivers/regulator/mt6373-regulator.c
- create mode 100644 include/linux/regulator/mt6363-regulator.h
- create mode 100644 include/linux/regulator/mt6373-regulator.h
 
+diff --git a/Documentation/devicetree/bindings/regulator/mediatek,mt6316-regulator.yaml b/Documentation/devicetree/bindings/regulator/mediatek,mt6316-regulator.yaml
+new file mode 100644
+index 000000000000..019c3c36997c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/mediatek,mt6316-regulator.yaml
+@@ -0,0 +1,81 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/mediatek,mt6316-regulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MediaTek MT6316 SPMI PMIC Regulators
++
++maintainers:
++  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
++
++description: |
++  The MediaTek MT6316 PMIC is fully controlled by SPMI interface; it features
++  four step-down DC/DC (buck) converters and has multiple variants, providing
++  different phase configurations. In particular:
++  MT6316BP/VP:    2+2 Phase (buck 1+2, buck 3+4)
++  MT6316CP/HP/KP: 3+1 Phase (buck 1+2+4, buck 3)
++  MT6316DP/TP:    4+0 Phase (buck 1+2+3+4)
++
++properties:
++  compatible:
++    enum:
++      - mediatek,mt6316b-regulator
++      - mediatek,mt6316c-regulator
++      - mediatek,mt6316d-regulator
++
++  vbuck1234:
++    type: object
++    $ref: regulator.yaml#
++    unevaluatedProperties: false
++
++additionalProperties: false
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          const: mediatek,mt6316b-regulator
++    then:
++      patternProperties:
++        "^vbuck(12|34)$":
++          type: object
++          $ref: regulator.yaml#
++          unevaluatedProperties: false
++
++  - if:
++      properties:
++        compatible:
++          const: mediatek,mt6316c-regulator
++    then:
++      patternProperties:
++        "^vbuck(124|3)$":
++          type: object
++          $ref: regulator.yaml#
++          unevaluatedProperties: false
++
++  - if:
++      properties:
++        compatible:
++          const: mediatek,mt6316d-regulator
++    then:
++      properties:
++        vbuck1234: true
++    else:
++      properties:
++        vbuck1234: false
++
++examples:
++  - |
++    pmic {
++      regulators {
++        compatible = "mediatek,mt6316d-regulator";
++
++        vbuck1234 {
++          regulator-min-microvolt = <400000>;
++          regulator-max-microvolt = <1277500>;
++          regulator-always-on;
++        };
++      };
++    };
++...
 -- 
 2.49.0
 
