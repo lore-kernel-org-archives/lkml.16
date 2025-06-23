@@ -1,248 +1,156 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2062.outbound.protection.outlook.com [40.107.93.62])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5228BA2E;
-	Mon, 23 Jun 2025 05:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750656766; cv=fail; b=VE4WK+gk+gaRa0yviJrPiWWsABnWMJDs3VM2LSEDoZbJvAZwoFRauHDsq4zzF8fc4Ql2ehv6CbvmU5zXQ22ozCSwWydSGS1tAEbcYlxIXN4dqO8U6QAFI7BKmS6FO2uGMm9n+Nsrqr0+6O/rSgdkrfty+iYKTgDvjXQ8qiTaRwg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750656766; c=relaxed/simple;
-	bh=6RXmmHmtm8ZGvKQtDCTN9zGur91KQUzYVA9+3zbARXQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=MDrK8weANR7NRe79i1rVkeV8Zbussh3n41hP90Feiks3SSpswc2fg+nyIcyVwUaw/Ji+UJY4mDrmO7Go3eRqcUpQx0+bhT1anFFuA9iyvDyWEp1Qc0J3gv/7lNTJk8WT5sOG+nLNP1oO+RDndhpb7OmqCxv8Zp7Fr8/Oa/h9RlU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jO/BBkl9; arc=fail smtp.client-ip=40.107.93.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E159187FEC;
+	Mon, 23 Jun 2025 05:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750657077; cv=none; b=JPlTaXW3hx67wPXF5svOlOgVUb5J6fqwxChRcjjdZyFcKVX4FzrZQgu5bvD0JVooWXbrXfuqXB7Zt4Z/AhBuaRK/lEuSKVts9GnrAlKBC66YQXy67dO+hnMRr/cNNpj/WpLnNdaq2k+yu10Gr/+liJSPROFWJGbBbTzRQgpUMo4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750657077; c=relaxed/simple;
+	bh=rlSoxoAb+dSvX/UHadu8a6CrCVndmdn2Iz4o47Robtw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PTtCzXvm1f279lIf7UqM6SDndZZKh2CPDfaNGoFukhfT04vA47b5vje18hWyLexsQwWZ6GPi3q6pkH3HHg1EBfYKSBugTfTFMFzlrN3VUATVeEFAh3Sk0WyMNjAfctLsW4GB/UkMP/gBaGjUJ+hZ7WoBws0mMs2nngt83Kk54uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=EFraUf9G; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jO/BBkl9"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IrS9F/palSfrCA7NymqY6vTF3rbn4iuH15pcBiXtCPPKteuPPpANlfczN+PnUSKGoYNJNpOEpAFFS+xlz+pk9jwrxuMfj5RibqIvz0Z+qAunj5Ci51G9xqNawjY0Hb1tyyqiEvxkNm2NdYEb4Sgg0BJgEcUDCDpa3h9plrG43bxkgf2zsCo36VaQyYrbVlippS8eHMmUHDEL8X90lUtyl7kc0fhtQvFJnBi8gRnaeeBIdyEMJ+WI+lODxhbg1YZf2uHxNgkDF9lGAqIRqeKBOEJsqBmiFZhofnkxx3pxIOEUMpvP2XzZjpQLqxIf9DwCsBFrgQXkZ32e3XQ0sa9upg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mWz3Tm7gqNGmXhZGN/HkQcvxu2N/bCCDPxnCx6Ijn1E=;
- b=Pgkda/CZAaaQEX/MXywCYWZBHmei1jcZn+TLdCiOtGmxP31Ot2uFC585ynXLImU1KIOhBIDoEBD+zamRFhEcMGFkc/VW1MwbxHN3ICME0P/rbZVl5C1tS+K36ioPKhILUi3WicevTZv66goINpPsFZs9oXWJea2YuJ2NWaTUNO7zFNiWsFypbDSZJHrIbASVUZ3HezQFdFRf1InXJu5ITF+qqy668/WBx4Ak2qOKxG/Vd3dWiJMzz8anBPZoWyIvs6OBnMdA6PEWfMXW9iS+n5hnMEW8Howhfvi/RucIGkUh9XI9M7sh+2nYXwlYzIx2uml3HM0xRdbVgv3yQICadQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mWz3Tm7gqNGmXhZGN/HkQcvxu2N/bCCDPxnCx6Ijn1E=;
- b=jO/BBkl9je2PRpHmfSKUt9RjH8mMOWgBV8cjlDh+liiCauOISzchI6HmbQ5SiwlbCD/kPqcwIxasBJH/L+ok901l0EIvWavJW4N0SylmWSJTwMqvptoOZIXXsRCbIf4Fh+ljFbXO6K0n5mLLl69fFDQZHUIAkxygnbDxi3SowJY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
- (2603:10b6:a0f:fc02::9aa) by DS7PR12MB6336.namprd12.prod.outlook.com
- (2603:10b6:8:93::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.22; Mon, 23 Jun
- 2025 05:32:38 +0000
-Received: from SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
- ([fe80::40bb:ae48:4c30:c3bf]) by SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
- ([fe80::40bb:ae48:4c30:c3bf%8]) with mapi id 15.20.8722.031; Mon, 23 Jun 2025
- 05:32:37 +0000
-Message-ID: <49404594-880d-4f48-a855-1066b295009d@amd.com>
-Date: Mon, 23 Jun 2025 11:02:26 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fs: export anon_inode_make_secure_inode() and fix
- secretmem LSM bypass
-To: Sean Christopherson <seanjc@google.com>, Mike Rapoport <rppt@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
- david@redhat.com, akpm@linux-foundation.org, paul@paul-moore.com,
- viro@zeniv.linux.org.uk, willy@infradead.org, pbonzini@redhat.com,
- tabba@google.com, afranji@google.com, ackerleytng@google.com, jack@suse.cz,
- hch@infradead.org, cgzones@googlemail.com, ira.weiny@intel.com,
- roypat@amazon.co.uk, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-References: <20250619073136.506022-2-shivankg@amd.com>
- <da5316a7-eee3-4c96-83dd-78ae9f3e0117@suse.cz>
- <20250619-fixpunkt-querfeldein-53eb22d0135f@brauner>
- <aFPuAi8tPcmsbTF4@kernel.org>
- <20250619-ablichten-korpulent-0efe2ddd0ee6@brauner>
- <aFQATWEX2h4LaQZb@kernel.org> <aFV3-sYCxyVIkdy6@google.com>
-Content-Language: en-US
-From: Shivank Garg <shivankg@amd.com>
-In-Reply-To: <aFV3-sYCxyVIkdy6@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0243.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:21a::6) To SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
- (2603:10b6:a0f:fc02::9aa)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EFraUf9G"
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55N5bY4k1446930;
+	Mon, 23 Jun 2025 00:37:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750657054;
+	bh=qb7YpkKt3JsNXzN7A2llRFdIsHNuqY5n0pmTVqZbUNA=;
+	h=From:To:Subject:Date;
+	b=EFraUf9G7Ce22LXfaqSGeFTJidpApab6DvMymeYFQ7jZ512/OsgGdkAUDwTCEdkZr
+	 hF+8gkc7EoeFjhUEUeN0vLPB/Gu5TqhRWDhdiL7e+FkWz9Pbbcfo2Btz7mZt97iFqZ
+	 hZ6w//3wswUXFdwLByZnbtcP530VDYD0bUKDFJE0=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55N5bYdm466083
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Mon, 23 Jun 2025 00:37:34 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Mon, 23
+ Jun 2025 00:37:34 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Mon, 23 Jun 2025 00:37:33 -0500
+Received: from uda0498651.dhcp.ti.com (uda0498651.dhcp.ti.com [172.24.227.7])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55N5bSqP3428603;
+	Mon, 23 Jun 2025 00:37:29 -0500
+From: Sai Sree Kartheek Adivi <s-adivi@ti.com>
+To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Santosh
+ Shilimkar <ssantosh@kernel.org>,
+        Sai Sree Kartheek Adivi <s-adivi@ti.com>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <praneeth@ti.com>,
+        <vigneshr@ti.com>, <u-kumar1@ti.com>, <a-chavda@ti.com>,
+        <p-mantena@ti.com>
+Subject: [PATCH v3 00/17] dmaengine: ti: Add support for BCDMA v2 and PKTDMA v2
+Date: Mon, 23 Jun 2025 11:06:59 +0530
+Message-ID: <20250623053716.1493974-1-s-adivi@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PPFF6E64BC2C:EE_|DS7PR12MB6336:EE_
-X-MS-Office365-Filtering-Correlation-Id: dc33c665-627d-4938-45cf-08ddb2175d2c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YmEzZklJbmMvNFpZdjFTN25EZGhEa280ZkVha2o4Nnc0cWd1b2lqeFUxYkpO?=
- =?utf-8?B?aTlnUnRCMlJxd1NnRW10Zm1vd1dURnJlcGcxZzdFTmcyQW9DZi85TXJjZ240?=
- =?utf-8?B?cWI3OWFmakdvMGQrNU5wRHVmSmJlSVJqdVIrTjRia2xGbU9rYlE3amFqWUhK?=
- =?utf-8?B?MURCRTErY1dmQ0pkYkhlcXdUa2c5enViSmdKQlVlWW5RbUI2MmVvS1Z2SFVJ?=
- =?utf-8?B?N1hkeDYxd0ZHMlhRMnYrRVZ0RjFUWnRMclBZVnhUSjJXYW84eEJGVHNaSHdH?=
- =?utf-8?B?VVpNdTRUb1ZOclJQZWhmb2RmV0pralBTUzN1bUFhZHBIM1JmdStkcWJaN0h3?=
- =?utf-8?B?b1gySGh1UUZramVMWnM2cXNpU2R0Y1BBMWdFTnZWNWxLUVVIZTZ0cDJuZ1Ju?=
- =?utf-8?B?d2ZHc2R3M09IR1N4YjRoNlIyaC8rek15NGYyeDdIVnJBS0FZMytzZCt0ai9k?=
- =?utf-8?B?dGJtN3ZBS2lzTDNsais1MmdhWnNDc1J5aEpaMzVSUlZCNHZzUWk5SE5RL0pY?=
- =?utf-8?B?RmZGeDZWQkZnaUJxVmh4aFZqK21jdm44cUtCQ0oyNkczaDNPc2VBVGZabktJ?=
- =?utf-8?B?NFU4QitRbEgzbUlIc01La0owcU03bTJEMlNnTFF3b1hoWHMza1o0RzBTSmNQ?=
- =?utf-8?B?SDdneHoxZHliODVqZ1hYUVBnOGN5bGtnVENMQ2N0L2ludUlSQ28wQ2IrNmFX?=
- =?utf-8?B?RjZuTkl4UGpXSTgvWkRZRVpPcEZkdnpUdzNOYTJOaGVVTG1sb0szaWJFVkpj?=
- =?utf-8?B?NHlnZ3BzZXRySDJEakhyMHRJeEVIUmxnV2tBY2tWMlliMGl3aHVwdWVlMjU4?=
- =?utf-8?B?Q0ZLKzFmbTYvUllKQTkwOXNzQit6TmNReGZjd2piY0FtRjBHaUkxZ1UycnQv?=
- =?utf-8?B?L3hKaTRRand0NUlybk4yUDNuOXh0TzFGcEUvSG5lanpIRlBESHRUaDNQazRp?=
- =?utf-8?B?bnJzUFVyaEpWYXNlYnBCVGlRbmtsVXo4dyt1SE10MEh3SG82SzJRWHZaZ1Js?=
- =?utf-8?B?NTFuMFBuR2NIU2pGa0lWa2J5WWxIN0VmZ2I0UkxzRFhoVWVDOVZ5azhGRURT?=
- =?utf-8?B?ZGRrTW9rZ212Q1lhVEZBaHdIUG5uTXM4cjRRcHZVYm1OaGZXcXhRSjI1dFRB?=
- =?utf-8?B?TkdHU1FZMUlvWndSeHRNRlMvcHErRnJ4ZFd2Z0g1T2J3cW04ODU0dEthZCtv?=
- =?utf-8?B?dDNKaElLckFaYkdudGo5d0JEcDNreG1TK2kvN0E5RlZ2TkhLMysrWGFobHhB?=
- =?utf-8?B?Zi9lZ29FSVRPM2FHb3hFY0dnQUxQVGhwamI3eVRwR1NxcithV0FVc2hMbFdB?=
- =?utf-8?B?SmNYanRXaXNjb3VYaExLNDh2OVIrN0hhSEM5UVY1RHdaeitpMUNJV3lzODkw?=
- =?utf-8?B?ZkREOWhvSFBJa1FNdzlLTU1peHNSNE5OTEhTYjQyMGs1QkVLbkQ4YmgwZFVF?=
- =?utf-8?B?WCtPQVJ3VVgxWXpXblFsRWJQUkpHdkJqVllVSTdsWVJCSkpKUWNORjZSd2Iz?=
- =?utf-8?B?TXNjZ0xOMGFmK1pUM1R2VWZ1YUczZFdjU21NcWh2cExweGNHeElESEVpOXQ4?=
- =?utf-8?B?UzZZcHp1NnhEbEE4dFQ3dTVveHN0b2h1NGVjeVpCZzdZODkxRS94aUl5RFNx?=
- =?utf-8?B?Z3d3OElSNTlyS3AySHJXaEh2NUM0Vk5vdzRHa1JVY2xRSkVqd3g3ZWZVWllm?=
- =?utf-8?B?OVJxaU9iUktjSEo2SEw1N05WVGFtc1o2VUpqajR4TTlLL0tDMTlLTW52M012?=
- =?utf-8?B?WXFHSTFrbWNwSktlNEZaNFkwaS9YVXIrbDdkTEtjNkkrcDVXNGNrTldlbHRo?=
- =?utf-8?B?ckdaTXBFbHNVWDQwc2hZMFhTUnBlaUdtUlhWcUUwSDNtRGMxYXI2Z0ZwZkJD?=
- =?utf-8?B?L0xveG1KSDhZd3pxM2VDMTlSL1lmMloyT1pJZUJMKzVQYTVHam9QcHdyODJp?=
- =?utf-8?Q?QYbh4rLaDs0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ5PPFF6E64BC2C.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eVUwQ2V1KzRtbHdoQlJrMHdFdkpjS1hWNDQ0MTcwRTJkdHplOXRMT245Z1lm?=
- =?utf-8?B?bFZRMUxYajdFdUZHL0MrSzBpNDdZKytad09NY3p1VHVtaUhnRHUxckhmaGpN?=
- =?utf-8?B?ZGp5YUNOaW0yd1ZIQnE3cGtockRCR0VFR1RxN2pzSllSSlBtWGhWb0NMSzJv?=
- =?utf-8?B?c1FTZ21YMkgrVzFoZUNkcmd5bTA5Y1l5T001MnVtV2Q0TDYwc3EwRWRLRzgz?=
- =?utf-8?B?cFFqV2NOL1QwVmozSkxhc0ZTMXd0NjJXRmt1cjhEcll0TDZmWkZ3MzlERkhC?=
- =?utf-8?B?d3ZVb2ZxT2d4VlQxaVhpMlZkTTltSnQvbkRNZ21CK3J4TFltTnV2WjV0SVFN?=
- =?utf-8?B?MGpnbGg1WkVxbHZ3THBPcVU2N0lzdlRMdkk3RDNIQ21oTUk5cXpQMnVScVJW?=
- =?utf-8?B?ZFowNU9CQXhodGY4MUM0VVFvQk5PTC8wVUJtaXRkdkk2a0xXVGgzb0VjRmVv?=
- =?utf-8?B?OGJWeWsrc3g1eTJRSmxwS25uTnZUNmVseEh1K3NVaGp3RktUSEo3TGtnbDBx?=
- =?utf-8?B?UWJzVTgxUjZhajBGaHZWZWVqZHd0R0RVS3pnZ1BIMlF2ZHl1cmN6UWEzUlZp?=
- =?utf-8?B?akNuKzRsTkQ4MHRhY2RKNkYzdUY1WVpJS0ZMK3lNR3AxNmppd1grc1ZUS1A3?=
- =?utf-8?B?Q0s1ZWtFNGh1RmNmVFlHc3Q2azBQR2FkN3lTeUlqbVdHZGJqeStDbUpVVG5i?=
- =?utf-8?B?Q2VZMi9ydlZNL2FZL0VJQktTNjEyY2tQdkdXUC9XTjZFZVVXZFhuT0MrOVRv?=
- =?utf-8?B?ZGUybkx3ZXlIWXhQcmYvbmVqanVIaHNCRWN4UjBWalIzY01HZkQxTVVHcEdL?=
- =?utf-8?B?OHAybDIzZnU3WUdlV3NYQzFZUmxIRzhGdENkM1YzRjJrVFNaUXp5QmREc0NT?=
- =?utf-8?B?dHMzbHNWenptM3plWkE4UTB2UXJvZ0tHY2ZIOU5rSTBrYU55bUZ4dnJ2clNG?=
- =?utf-8?B?VzRRSDJvdFByQk5rbkJQeXZJWXRhN2tPMnVqSFMwUDZ3V21oS1EwRFRBV2NC?=
- =?utf-8?B?aWQ4a2N6eDZxMERzVW9xeTEySkJoVEw2Y0UxUWx4ODhhL1lkY2EwQnJIbFhN?=
- =?utf-8?B?QXFKSE16Mm82WFJ6c2paNUpIQXlCVm9LVVppL0ZOZEhUWXVsWkFBSmI0aUU1?=
- =?utf-8?B?empwWmlJUGZJZTYxWlFkTDdwSElybzlhcTBvYkJ3K3Q3OFZZZmlTYzBPTW50?=
- =?utf-8?B?S2VaTXpZZVorSzEzOFBjUTVRY0UrRk5zTytEdVBkcHBnanhrNi90L2QrTmxS?=
- =?utf-8?B?cnRKNmZJbHdQak52MWZ5WTN2MmVNUThLaDk1SDFJeWwwU3lWT3lrTEMyMUhC?=
- =?utf-8?B?UGMzOE1UU1pzMmNuN0xVVE5RSVQvdnJINnhXUllwaGkzb01uVy9DdnFJV1Rm?=
- =?utf-8?B?M0FYL2luY2VKclN4WnkvM2IvUW5BQ3ZWdk9URmhYR0l1dnZNcTRtRG9UYUhm?=
- =?utf-8?B?UWk3VkVqT1AwRFVKbXpCY3lOV3NOcWF5a2JVWEVoakZhM2tNTkkzUEI3UEFH?=
- =?utf-8?B?aEo0M2tKZVk4SGNtaVZxQ3JuaVlobjc1ZDA2eVNLQTJWN0NPTSsyV09KSEU0?=
- =?utf-8?B?VUxQdWJNbGV3OXQ3TjZTbzJTZ09PZzNjOFZqZHA3Q0tmekZDVUROVVVDT3Fy?=
- =?utf-8?B?ZGhPeC9HZDdxVzRFbWgxUFVWVDgyeHFEV1lUZzBrL29ndUxGK1lMdEFVMFF1?=
- =?utf-8?B?QkQ5Nzk0Wlc5UVlYREhWaVBFbEZnYW9vNXFLR25YRzJSZEl5ZXg1YmZsZ1V2?=
- =?utf-8?B?ZXRDbzJVQ0k5M0JlL3pDcWRvMW1wVkxvU3RnbzhDUjhwellIZlBsSmRPajY5?=
- =?utf-8?B?SWk5Y1k0dmIzUk1zd21SbzBrVlhVSFdtOElBbDFwZE5GRnZHVmlJcHZzZmxz?=
- =?utf-8?B?Y2I5cmJMRFZSNkpBUFBZYXl6OXEvRjg0d3Q0Z0J3MjU2N3RYMC9UaUVzZXRI?=
- =?utf-8?B?YmtTZ3FyeGVrYlFZNzVjWDVjRk81ZERrd3ltbzlNdjBOcW1PRk5xZE4weWJK?=
- =?utf-8?B?aDRybWROam9aeDUzRFVycVljR05TeFBvWE9GdGNTYnllWjRwSnc3eFZpT1F1?=
- =?utf-8?B?bWlIM3dxY2kvRDU0djRBak9GdlhWU0JNcjBJZWlFZ1U0cXVrZzVwVnhKQktv?=
- =?utf-8?Q?L4dvfY0VZCszb4Dzfhm4kNKIz?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc33c665-627d-4938-45cf-08ddb2175d2c
-X-MS-Exchange-CrossTenant-AuthSource: SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 05:32:37.7338
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: t5mlB28exQY423Gl6iHlKnQoYF1Jxt77/Xa7zKIQHj+Vetup/18gEc1NbmTk5wcUY8sBqymlbjDGxK6I3XFcMw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6336
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+
+This series adds support for the BCDMA_V2 and PKTDMA_V2 which is
+introduced in AM62L.
+
+The key differences between the existing DMA and DMA V2 are:
+- Absence of TISCI: Instead of configuring via TISCI calls, direct
+  register writes are required.
+- Autopair: There is no longer a need for PSIL pair and instead AUTOPAIR
+  bit needs to set in the RT_CTL register.
+- Static channel mapping: Each channel is mapped to a single peripheral.
+- Direct IRQs: There is no INT-A and interrupt lines from DMA are
+  directly connected to GIC.
+- Remote side configuration handled by DMA. So no need to write to PEER
+  registers to START / STOP / PAUSE / TEARDOWN.
+
+Changes from v1 to v2:
+- Split refactoring of k3-udma driver into multiple commits
+- Fix bcdma v2 and pktdma v2 dt-binding examples
+- Fix compatibles in k3-udma-v2.c
+- move udma_is_desc_really_done to k3-udma-common.c as the difference
+  between k3-udma and k3-udma-v2 implementation is minor.
+- remove udma_ prefix to function pointers in udma_dev
+- reorder the commits to first refactor the existing code completely and
+  then introduce k3-udma-v2 related commits.
+- remove redundant includes in k3-udma-common.c
+- remove ti_sci_ dependency for k3_ringacc in Kconfig
+- refactor setup_resources functions to remove ti_sci_ code from common
+  logic.
+link to v1:
+https://lore.kernel.org/linux-arm-kernel/20250428072032.946008-1-s-adivi@ti.com
+
+Changes from v2 to v3:
+- Fix checkpatch errors & spellings.
+link to v2:
+https://lore.kernel.org/linux-arm-kernel/20250612071521.3116831-1-s-adivi@ti.com
+
+Sai Sree Kartheek Adivi (17):
+  dmaengine: ti: k3-udma: move macros to header file
+  dmaengine: ti: k3-udma: move structs and enums to header file
+  dmaengine: ti: k3-udma: move static inline helper functions to header
+    file
+  dmaengine: ti: k3-udma: move descriptor management to k3-udma-common.c
+  dmaengine: ti: k3-udma: move ring management functions to
+    k3-udma-common.c
+  dmaengine: ti: k3-udma: Add variant-specific function pointers to
+    udma_dev
+  dmaengine: ti: k3-udma: move udma utility functions to
+    k3-udma-common.c
+  dmaengine: ti: k3-udma: move resource management functions to
+    k3-udma-common.c
+  dmaengine: ti: k3-udma: refactor resource setup functions
+  dmaengine: ti: k3-udma: move inclusion of k3-udma-private.c to
+    k3-udma-common.c
+  drivers: soc: ti: k3-ringacc: handle absence of tisci
+  dt-bindings: dma: ti: Add K3 BCDMA V2
+  dt-bindings: dma: ti: Add K3 PKTDMA V2
+  dmaengine: ti: k3-psil-am62l: Add AM62Lx PSIL and PDMA data
+  dmaengine: ti: k3-udma-v2: New driver for K3 BCDMA_V2
+  dmaengine: ti: k3-udma-v2: Add support for PKTDMA V2
+  dmaengine: ti: k3-udma-v2: Update glue layer to support PKTDMA V2
+
+ .../bindings/dma/ti/k3-bcdma-v2.yaml          |   94 +
+ .../bindings/dma/ti/k3-pktdma-v2.yaml         |   72 +
+ drivers/dma/ti/Kconfig                        |   14 +-
+ drivers/dma/ti/Makefile                       |    6 +-
+ drivers/dma/ti/k3-psil-am62l.c                |  132 +
+ drivers/dma/ti/k3-psil-priv.h                 |    1 +
+ drivers/dma/ti/k3-psil.c                      |    1 +
+ drivers/dma/ti/k3-udma-common.c               | 2555 ++++++++++++++
+ drivers/dma/ti/k3-udma-glue.c                 |   91 +-
+ drivers/dma/ti/k3-udma-private.c              |   48 +-
+ drivers/dma/ti/k3-udma-v2.c                   | 1476 ++++++++
+ drivers/dma/ti/k3-udma.c                      | 3090 +----------------
+ drivers/dma/ti/k3-udma.h                      |  581 ++++
+ drivers/soc/ti/Kconfig                        |    1 -
+ drivers/soc/ti/k3-ringacc.c                   |  184 +-
+ include/linux/soc/ti/k3-ringacc.h             |   20 +
+ 16 files changed, 5328 insertions(+), 3038 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-bcdma-v2.yaml
+ create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-pktdma-v2.yaml
+ create mode 100644 drivers/dma/ti/k3-psil-am62l.c
+ create mode 100644 drivers/dma/ti/k3-udma-common.c
+ create mode 100644 drivers/dma/ti/k3-udma-v2.c
 
 
+base-commit: 4325743c7e209ae7845293679a4de94b969f2bef
+-- 
+2.34.1
 
-On 6/20/2025 8:32 PM, Sean Christopherson wrote:
-> On Thu, Jun 19, 2025, Mike Rapoport wrote:
->> On Thu, Jun 19, 2025 at 02:06:17PM +0200, Christian Brauner wrote:
->>> On Thu, Jun 19, 2025 at 02:01:22PM +0300, Mike Rapoport wrote:
->>>> On Thu, Jun 19, 2025 at 12:38:25PM +0200, Christian Brauner wrote:
->>>>> On Thu, Jun 19, 2025 at 11:13:49AM +0200, Vlastimil Babka wrote:
->>>>>> On 6/19/25 09:31, Shivank Garg wrote:
->>>>>>> Export anon_inode_make_secure_inode() to allow KVM guest_memfd to create
->>>>>>> anonymous inodes with proper security context. This replaces the current
->>>>>>> pattern of calling alloc_anon_inode() followed by
->>>>>>> inode_init_security_anon() for creating security context manually.
->>>>>>>
->>>>>>> This change also fixes a security regression in secretmem where the
->>>>>>> S_PRIVATE flag was not cleared after alloc_anon_inode(), causing
->>>>>>> LSM/SELinux checks to be bypassed for secretmem file descriptors.
->>>>>>>
->>>>>>> As guest_memfd currently resides in the KVM module, we need to export this
->>>>>>
->>>>>> Could we use the new EXPORT_SYMBOL_GPL_FOR_MODULES() thingy to make this
->>>>>> explicit for KVM?
->>>>>
->>>>> Oh? Enlighten me about that, if you have a second, please. 
->>>>
->>>> From Documentation/core-api/symbol-namespaces.rst:
->>>>
->>>> The macro takes a comma separated list of module names, allowing only those
->>>> modules to access this symbol. Simple tail-globs are supported.
->>>>
->>>> For example::
->>>>
->>>>   EXPORT_SYMBOL_GPL_FOR_MODULES(preempt_notifier_inc, "kvm,kvm-*")
->>>>
->>>> will limit usage of this symbol to modules whoes name matches the given
->>>> patterns.
->>>
->>> Is that still mostly advisory and can still be easily circumenvented?
-> 
-> Yes and no.  For out-of-tree modules, it's mostly advisory.  Though I can imagine
-> if someone tries to report a bug because their module is masquerading as e.g. kvm,
-> then they will be told to go away (in far less polite words :-D).
-> 
-> For in-tree modules, the restriction is much more enforceable.  Renaming a module
-> to circumvent a restricted export will raise major red flags, and getting "proper"
-> access to a symbol would require an ack from the relevant maintainers.  E.g. for
-> many KVM-induced exports, it's not that other module writers are trying to misbehave,
-> there simply aren't any guardrails to deter them from using a "dangerous" export.
->  
-> The other big benefit I see is documentation, e.g. both for readers/developers to
-> understand the intent, and for auditing purposes (I would be shocked if there
-> aren't exports that were KVM-induced, but that are no longer necessary).
-> 
-> And we can utilize the framework to do additional hardening.  E.g. for exports
-> that exist solely for KVM, I plan on adding wrappers so that the symbols are
-> exproted if and only if KVM is enabled in the kernel .config[*].  Again, that's
-> far from perfect, e.g. AFAIK every distro enables KVM, but it should help keep
-> everyone honest.
-> 
-> [*] https://lore.kernel.org/all/ZzJOoFFPjrzYzKir@google.com 
-> 
->> The commit message says
->>
->>    will limit the use of said function to kvm.ko, any other module trying
->>    to use this symbol will refure to load (and get modpost build
->>    failures).
-> 
-> To Christian's point, the restrictions are trivial to circumvent by out-of-tree
-> modules.  E.g. to get access to the above, simply name your module kvm-lol.ko or
-> whatever.
-
-Thanks for the info.
-
-I have posted the revised patch with EXPORT_SYMBOL_GPL_FOR_MODULES:
-https://lore.kernel.org/linux-mm/20250620070328.803704-3-shivankg@amd.com
-
-Please review when you have a chance.
-
-Thanks,
-Shivank
