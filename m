@@ -1,191 +1,206 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5173127816A
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4178835977
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750692821; cv=none; b=mma9WbAXhmJT9uU4kWYeqz7Np8oMrrNx7hXHkdnbXGz/NMUrnMGYtueI85EeUAePUTZNcaIf6Zh0it2Z31D+SwrnjF9aF+hzhXBi8a+N+OqHNKaIxITJlyuHFKYtv7vK0d/ZFybUzewtc61cQ253+ODNPTn1140PacRzL5dO2CE=
+	t=1750692933; cv=none; b=pYi3gr0/rAj7sqIell3OdWh1kp5+pOYpyIrBLLLme4WrQ/JRvCDw5qcvJdwLlRHAofHCisOi1CuYizlI1bvhFvXGEsNUvWObQYYElvZl04OlXCJjhoB7Yg06TPm8aykWoPKsPX75SjVeZCJjCkGjcKBaYLiFD0OaVLTDjSYs86U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750692821; c=relaxed/simple;
-	bh=Cs4TW3G3cAT+ctqnTd2L1pJS6wYi331CkCRlXiauZaU=;
+	s=arc-20240116; t=1750692933; c=relaxed/simple;
+	bh=EiHCWYnfA84Lwth0NtKhy0RZNL31ktggDzUPPkngdho=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eWYJhWMj3TgmEHcFI4mU6nyI1/SSHyKDErIjjSofYm7mITkdR6OJXmQvqcHIL08MvrdXK85JWuQM4sd+jbyja9LzUvRaqyKQGHkJwakWZb9SOAmMkU+nw/+wNYXtjKC2uJs0yNjWKv3p+g/8WamaS4RrDfuInoNs0rzxg1Hilz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZEj462My; arc=none smtp.client-ip=209.85.215.176
+	 To:Cc:Content-Type; b=TrgKto4KJ85r8VghKCkD9Dc9jtlg5h6K99KcOAPc+g8Oxom6aTACZobniPAGYrYTFX9FqCRNyPoEck0C712cFokgF+qrePq9ygkk4by+Jn7TJ0y9giZrxTqtGvMD73ytmItaC4ie875cHcRn8oflqBMqytLHMV5rg4uWqMqOTMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YCO4QwhV; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZEj462My"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b26fabda6d9so807256a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:33:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YCO4QwhV"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a54700a463so2394792f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:35:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750692819; x=1751297619; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750692929; x=1751297729; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YHe+LGqfBJmGCRbTD2/3y+0WOmtHelhe1lvAXSQQkuY=;
-        b=ZEj462MypQIoYGPtF8IDTuD67Lnn2kOlIjfDQBcFOQbe8rLXJr5Rbz4X6e6qQZunVm
-         lZSoYp6H81wL/Smp/MSNFVY+9yJa7s67o8iz8kx51WnEFNG4kPjFtwOmQj/8yL5JpLi8
-         42Uo1v4nuMFB69ubHCCK6W63bYq4w8DlZOW8jquVv1fMOqZN16CP7ucKoCSApBiBVDYt
-         6P9GQ8GL11FN537KiNZXizYl/7fpNXjgeriZkJfBu0vBnNZurW4LjO/LbVNEJIF7UqoB
-         LGMsoCMvazooL7QtYVy7KVKhH1Ryn6on77OouWKykJVQYtT+UFA8yjpfCCnLlElqUYk2
-         H5hA==
+        bh=huYAT/t42g1dmZnYVcoeWH1YVJvzhdKSFl3csVwzj80=;
+        b=YCO4QwhVDJA665Vzhl3ImTDRPx3DwAPMb7v5VgdmJ/2AJNPrHUKf8fHSvv5k4B6jx1
+         +6taT6m3soKGNTwt4nM999cJ15ZMZw+/nmGqj1EPkuzhbeP6KCndUOJz2NXswLmC42uO
+         8noYXaktdTJeWCRu9nLlYb6rAaiiwNeOHWhez4vKOg2Fa/Oeb/QOtyVt/2ftLRO9N3+D
+         C5CPlIhd6jpSActsyekWc7TOfQDkY7i4gtzhruOtX+GYI+qoOlBWLKytZFpJjx3ZAuUt
+         oLEm5oLoScA1O3jK/PKGh5xfZa0ZXRxc4t0mZAMo6xsmuoIGj8z4+np1VRc/8SpRB9n4
+         IR5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750692819; x=1751297619;
+        d=1e100.net; s=20230601; t=1750692929; x=1751297729;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YHe+LGqfBJmGCRbTD2/3y+0WOmtHelhe1lvAXSQQkuY=;
-        b=p5u2wfjMBi1SUTN/rib+DNVu4yCJ9h2rk6HHdUfzmvy8i1Le3f3HsPVmzDeT7rkaIy
-         vsoCBOQwdo6WBnZcz6DgKNTSB+Ga8yNW/UzSoaOEe9jYvW7Oxpw4Lhd66lYVs8SlQq21
-         I0CYwqOXDDhXDf9Ns7/gKur3c/mZ9VdGhPQ8QB7XgR92yw/Oqx5otyx1gqy1q5oIfiUv
-         Bl+H3sE8UGtUjNnghou1eKoUkaxNqa15Dkblhs9OBvWXSDv7nuVPd4vKcqfxYvTQN93K
-         RBbTBVbwmD6V1f8cPMkuzGT0iP+XKeKQ0wttAQqv19sOUT7+Y3+CQpiTPUboDbd6hNOx
-         3DPw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBoAmG7YJBPBpC422WETvaFVuSw4yhvHcOa86e9jYmXaykaU3ulLCRGr3eyj5A55u3qZFEGi86Hf4fgRs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDhC4eJ5xmCxMLnKCSYR6RuPBSt7hok9trtmnf7pCh7HnN/6xc
-	5Sq/PATDDQqJjZeJFJ/f257CjoOUAe5qF8VDswNMMib+FnFzgjltxPJiqMH2RBCgwHE1QIGz7ag
-	yE26kUVQg9iat2Ayl+6uq2KupdEwmLyk=
-X-Gm-Gg: ASbGnctBWoZC48uLsoBb7SJwRLRcL1159OApOYTo/C8NDwB/A9SI/iAiiO03KzJ8iKh
-	MDY8RKzgM+IO6i3tNSWORNVDUi/VaEcdA9MdJqTtwtxS+6+MhPLiAW4lRtZL5DmQ/qV3C2ZGXqH
-	ouOdwHGlvEr2SZdX+ihnLYVoy4kQIpz55ihZg9cZwpFkjr
-X-Google-Smtp-Source: AGHT+IFy0hIPZQpb0KxFYps+8s4d6wkHkBYpK00Mn64GDE10ibBhlQWhIkFHec5/EC3NK0BdahywMOMIcsBKZBpxlQ0=
-X-Received: by 2002:a17:902:e542:b0:234:ba37:87a3 with SMTP id
- d9443c01a7336-237d97217edmr82924635ad.3.1750692819391; Mon, 23 Jun 2025
- 08:33:39 -0700 (PDT)
+        bh=huYAT/t42g1dmZnYVcoeWH1YVJvzhdKSFl3csVwzj80=;
+        b=GooV3eUDEWJtkChjd2eKbfsbfzjyOEYfXc4BWO+iFnFEZa/Gk/ks5LqNz9jppCKJlK
+         oh9eVr88F87GEAtRwJxjQkjX1irR0idt2bgd8zMyAhwwkZRFQPEpSIM7Dwe141ynKrtG
+         Fp1ebfUiphtMyrWE71bvdW0Bh2hKLLpSwoQ/Ldtqx1+AWz29Bro1NRpHm8ccz+FwMHSL
+         JZgNNqSLR2JiZ4hmJ0xNwupR0sveh5eE49gZf+IXyHJ6t8/xC4YIhlbY2QeGxZY3DQZe
+         bDUu4Du2vsQludpsoFIp8vJwGC6kDoMTrJmIJS6ia1vBY55Ugpr7J5/ITvkWjTbVohDO
+         g7lg==
+X-Gm-Message-State: AOJu0Yx6qMVYAVrhWWNlIJT29ttp8GWxlBmoDUbbROai9d1/tjcBp8WE
+	gERsxOOtLTValV9zAi0H3fqBQ7+eCi7U+kXvH6K1BlLblaA3oHrKJUQjiqAsWj7C0ShKaK2t7VW
+	kVhucn7Io8umGCzaV5Mf0IUnKCRErL3JJ0g==
+X-Gm-Gg: ASbGncu5GReGc0WKY2SKVt8rZF9QnKmtt/iU9qOS9ZDREr5gLEcQ83oHK2huJPo08N/
+	ktKKvnXZmJGfYtXrQFJEdQiLov8GBZ83qOTePv7KmryoUBIqjJjkrB48dQjA/MOPc9yLH08Q5rg
+	MhOlM9BUtOnIIKf1fHb67SfddpuYlwBzWHIi01VSxZiQ==
+X-Google-Smtp-Source: AGHT+IFnvY7JUfzEqgX6SMRWf5s6qit7gZXlsaTeTlGUWdJGFASdJH6pfWWpMC2Ui77oa2i2tmlUHC4sNiT2Iumv1Ls=
+X-Received: by 2002:a05:6000:2883:b0:3a6:d93e:526d with SMTP id
+ ffacd0b85a97d-3a6d93e54c8mr6283861f8f.10.1750692929258; Mon, 23 Jun 2025
+ 08:35:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619125507.54384-1-kode54@gmail.com> <DARA1U86AS72.QOIEVZWCFPYC@kode54.net>
- <DATUOZZD8316.2INSL3KL5RA80@kode54.net> <DATV4CAOHVGV.1UJ803EX21II6@gmail.com>
- <DATYCMWH1X28.NE3M8KJ3SPV9@kode54.net>
-In-Reply-To: <DATYCMWH1X28.NE3M8KJ3SPV9@kode54.net>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 23 Jun 2025 11:33:27 -0400
-X-Gm-Features: AX0GCFvJMwuOZFcfYlSDPJgah_-90nqioNXt5ljbjpEChyXLvCYPb2q60UyxujM
-Message-ID: <CADnq5_OjUp+YpXSdvWrYN+6ofFfyES9Jvwkswf3JmTTMGL=MVQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] drm/amdgpu: Enable async flip for cursor planes
-To: Christopher Snowhill <chris@kode54.net>, "Wentland, Harry" <Harry.Wentland@amd.com>, 
-	"Leo (Sunpeng) Li" <Sunpeng.Li@amd.com>
-Cc: Christopher Snowhill <kode54@gmail.com>, amd-gfx@lists.freedesktop.org, 
-	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
+References: <CAMb39_mAWfeuyDjHR4Ej9fH=PXdH0qUda50R=iqGKVzN1mcHPQ@mail.gmail.com>
+ <48ff3e59-db6f-4870-8f0b-3c49dd4d865e@kernel.org> <CAMb39_nRz-9NemdsASTG_34Lm_6a1uw4qLwkqBdn7FnMmN3O7w@mail.gmail.com>
+ <CAMb39_=0tUsn9u=KB72nT5MUhhdpujsOR1_+yhQTSXbijOM0MQ@mail.gmail.com>
+ <d20cbb64-1eef-4ce5-a2fa-fce9044a50bb@kernel.org> <CAMb39_nh5_DJpv0zEKauMRd1DpW8obpu228gpMVTaE7j3WPikA@mail.gmail.com>
+ <9c40cd6a-b34b-468b-b5c4-6a2cbb7dcdef@kernel.org>
+In-Reply-To: <9c40cd6a-b34b-468b-b5c4-6a2cbb7dcdef@kernel.org>
+From: Walt Holman <waltholman09@gmail.com>
+Date: Mon, 23 Jun 2025 10:35:17 -0500
+X-Gm-Features: Ac12FXxTsrtD-ZYmskmomh3F_QbWpvnVgiKxwvu2DpIjdWepKKapiMCmTDdnhGs
+Message-ID: <CAMb39_mpfdjxAH7jp0s7aedi_CsUOOVSR6x=8NG1ehRwWeQ30w@mail.gmail.com>
+Subject: Re: AMDGPU - Regression: Black screen due to commit 16dc8bc27c2aa3c93905d3e885e27f1e3535f09a
+To: Mario Limonciello <superm1@kernel.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, mario.limonciello@amd.com, 
+	alexander.deucher@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-+ Harry, Leo
-
-On Mon, Jun 23, 2025 at 9:38=E2=80=AFAM Christopher Snowhill <chris@kode54.=
-net> wrote:
+On Mon, Jun 23, 2025 at 9:51=E2=80=AFAM Mario Limonciello <superm1@kernel.o=
+rg> wrote:
 >
-> On Mon Jun 23, 2025 at 4:06 AM PDT, Christopher Snowhill wrote:
-> > On Mon Jun 23, 2025 at 3:46 AM PDT, Christopher Snowhill wrote:
-> >> On Fri Jun 20, 2025 at 3:10 AM PDT, Christopher Snowhill wrote:
-> >>> Here's another alternative change, which may be more thorough. It doe=
-s
-> >>> seem to fix the issue, at least. The issue does indeed appear to be
-> >>> no-op plane changes sent to the cursor plane.
-> >>>
-> >>> If anyone wants to propose style changes, and suggest a proper commit
-> >>> message, if this is indeed a welcome fix for the problem, please let =
-me
-> >>> know.
-> >>>
-> >>> diff --git a/drivers/gpu/drm/drm_atomic_uapi.c b/drivers/gpu/drm/drm_=
-atomic_uapi.c
-> >>> index c2726af6698e..b741939698e8 100644
-> >>> --- a/drivers/gpu/drm/drm_atomic_uapi.c
-> >>> +++ b/drivers/gpu/drm/drm_atomic_uapi.c
-> >>> @@ -1087,17 +1087,22 @@ int drm_atomic_set_property(struct drm_atomic=
-_state *state,
-> >>>                     }
-> >>>
-> >>>                     /* ask the driver if this non-primary plane is su=
-pported */
-> >>> -                   if (plane->type !=3D DRM_PLANE_TYPE_PRIMARY) {
-> >>> -                           ret =3D -EINVAL;
-> >>> +                   else if (plane->type !=3D DRM_PLANE_TYPE_PRIMARY)=
- {
-> >>> +                           ret =3D drm_atomic_plane_get_property(pla=
-ne, plane_state,
-> >>> +                                                               prop,=
- &old_val);
-> >>> +
-> >>> +                           if (ret || old_val !=3D prop_value) {
-> >>> +                                   ret =3D -EINVAL;
-> >>>
-> >>> -                           if (plane_funcs && plane_funcs->atomic_as=
-ync_check)
-> >>> -                                   ret =3D plane_funcs->atomic_async=
-_check(plane, state, true);
-> >>> +                                   if (plane_funcs && plane_funcs->a=
-tomic_async_check)
-> >>> +                                           ret =3D plane_funcs->atom=
-ic_async_check(plane, state, true);
-> >>>
-> >>> -                           if (ret) {
-> >>> -                                   drm_dbg_atomic(prop->dev,
-> >>> -                                                  "[PLANE:%d:%s] doe=
-s not support async flips\n",
-> >>> -                                                  obj->id, plane->na=
-me);
-> >>> -                                   break;
-> >>> +                                   if (ret) {
-> >>> +                                           drm_dbg_atomic(prop->dev,
-> >>> +                                                          "[PLANE:%d=
-:%s] does not support async flips\n",
-> >>> +                                                          obj->id, p=
-lane->name);
-> >>> +                                           break;
-> >>> +                                   }
-> >>>                             }
-> >>>                     }
-> >>>             }
+> On 6/21/25 2:32 PM, Walt Holman wrote:
+> > On Sat, Jun 21, 2025 at 2:12=E2=80=AFPM Mario Limonciello <superm1@kern=
+el.org> wrote:
 > >>
-> >> Upon further testing and reflection, I have come to the conclusion tha=
-t
-> >> this is indeed best handled by a kernel fix, rather than breaking user
-> >> space.
 > >>
-> >> I attempted to work around this in wlroots, adjusting 0.18, 0.19, and
-> >> 0.20 git with similar patches. First I attempted to stash all the
-> >> written properties for the atomic code, storing an initial value of al=
-l
-> >> 0xFE so it was always likely to write the first time, and only setting=
+> >>
+> >> On 6/21/25 11:07 AM, Walt Holman wrote:
+> >>> On Sat, Jun 21, 2025 at 11:03=E2=80=AFAM Walt Holman <waltholman09@gm=
+ail.com> wrote:
+> >>>>
+> >>>> On Sat, Jun 21, 2025 at 10:52=E2=80=AFAM Mario Limonciello <superm1@=
+kernel.org> wrote:
+> >>>>>
+> >>>>>
+> >>>>>
+> >>>>> On 6/21/25 10:18 AM, Walt Holman wrote:
+> >>>>>> Hello,
+> >>>>>>
+> >>>>>> With the latest drm fixes this week on 6.16-rc2, I am experiencing=
  a
-> >> property if it changed from the last commit.
+> >>>>>> black screen instead of the sddm greeter and the GPU appears to be
+> >>>>>> locked up. I can ssh into the laptop and reboot it, but that's abo=
+ut
+> >>>>>> it. I have bisected the commit to commit id:
+> >>>>>> 16dc8bc27c2aa3c93905d3e885e27f1e3535f09a and upon reverting the
+> >>>>>> commit, the system works as normal. The hardware is an Asus Rog
+> >>>>>> Zephyrus G16 with AMD Ryzen AI 9 HX 370 w/ Radeon 890M video. I'm =
+able
+> >>>>>> to test patches etc.. if need be.
+> >>>>>
+> >>>>> Hi there,
+> >>>>>
+> >>>>> By chance do you have an OLED panel?  If so can you please try the =
+patch
+> >>>>> attached to this bug?
+> >>>>>
+> >>>>> https://gitlab.freedesktop.org/drm/amd/-/issues/4338
+> >>>>>
+> >>>>> Thanks,
+> >>>>>
+> >>>>>>
+> >>>>>> 16dc8bc27c2aa3c93905d3e885e27f1e3535f09a is the first bad commit
+> >>>>>> commit 16dc8bc27c2aa3c93905d3e885e27f1e3535f09a (HEAD)
+> >>>>>> Author: Mario Limonciello <mario.limonciello@amd.com>
+> >>>>>> Date:   Thu May 29 09:46:32 2025 -0500
+> >>>>>>
+> >>>>>>        drm/amd/display: Export full brightness range to userspace
+> >>>>>>
+> >>>>>>        [WHY]
+> >>>>>>        Userspace currently is offered a range from 0-0xFF but the =
+PWM is
+> >>>>>>        programmed from 0-0xFFFF.  This can be limiting to some sof=
+tware
+> >>>>>>        that wants to apply greater granularity.
+> >>>>>>
+> >>>>>>        [HOW]
+> >>>>>>        Convert internally to firmware values only when mapping cus=
+tom
+> >>>>>>        brightness curves because these are in 0-0xFF range. Advert=
+ise full
+> >>>>>>        PWM range to userspace.
+> >>>>>>
+> >>>>>>        Cc: Mario Limonciello <mario.limonciello@amd.com>
+> >>>>>>        Cc: Alex Deucher <alexander.deucher@amd.com>
+> >>>>>>        Reviewed-by: Roman Li <roman.li@amd.com>
+> >>>>>>        Signed-off-by: Mario Limonciello <mario.limonciello@amd.com=
+>
+> >>>>>>        Signed-off-by: Alex Hung <alex.hung@amd.com>
+> >>>>>>        Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+> >>>>>>        Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> >>>>>>        (cherry picked from commit 8dbd72cb790058ce52279af38a43c2b3=
+02fdd3e5)
+> >>>>>>        Cc: stable@vger.kernel.org
+> >>>>>>
+> >>>>>>     drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 41
+> >>>>>> +++++++++++++++++++++++++++--------------
+> >>>>>>     1 file changed, 27 insertions(+), 14 deletions(-)
+> >>>>>>
+> >>>>>
+> >>>>
+> >>>> Yes, I do have an OLED panel and that patch does make it visible
+> >>>> again. It is still very dark, but visible.
+> >>>>
+> >>>> -Walt
+> >>>
+> >>> Upon rebooting again, the display was much brighter and is fine. Just
+> >>> the first boot after that was dark.
+> >>>
+> >>> -Walt
 > >>
-> >> This resulted in whole commits breaking for one or both framebuffers
-> >> until I ctrl-alt-fx switched to a tty and back again, and this would
-> >> work again temporarily.
+> >> Thanks, this makes sense.  I suspect that because 0 means "off" for yo=
+ur
+> >> panel that the patch you bisected to exposed running at 0 (or near
+> >> enough to 0) that it caused this behavior.
 > >>
-> >> So I went back to the drawing board and only withheld seemingly
-> >> duplicate plane properties. This "worked", until I attempted to play a
-> >> game, and then it started glitching spectacularly, and not updating at
-> >> all if the game was doing direct scanout and vrr.
+> >> That patch you tested will be upstreamed in a future promotion, and I
+> >> think we can take it in a -fixes PR later in the 6.16 fixes cycle.
 > >>
-> >> Clearly this is wrong.
+> >> But there is one more thing I would like to confirm - on your system c=
+an
+> >> you run with drm.debug=3D0x106 on the kernel command line and share me=
+ the
+> >> output from this debug print?
 > >>
-> >> The wlroots library queues up properties for each commit. On every
-> >> commit where the cursor is disabled, it queues up both fb_id=3D0 and
-> >> crtc_id=3D0. Every commit. Is this wrong? Should it only be queueing u=
-p
-> >> the disablement properties once? It also queues up the full plane and
-> >> hotspot properties when enabled, even if the cursor doesn't change
-> >> position or appearance.
+> >> https://github.com/torvalds/linux/blob/v6.16-rc2/drivers/gpu/drm/amd/d=
+isplay/amdgpu_dm/amdgpu_dm.c#L4933
+> >>
+> >>
+> >>
+> > Hopefully, this is what you need. I grepped dmesg for drm and threw it
+> > into this file attached. Let me know if you need anything else.
 > >
-> > Probably should have CC'd the drm misc maintainers when I started pokin=
-g
-> > drm misc instead of amdgpu. Pity there isn't a list for that...
+> > -Walt
 >
-> I am a dumbass, I didn't notice get_maintainer.pl. Added more people,
-> and the correct list. Not sure if I should remove amd-gfx, since this
-> affects them, somewhat...
+> Thanks I see another problem.  Can you add this patch?
 >
-> However, the intention of this thread was to seek commentary on the
-> situation as it is.
+> https://lore.kernel.org/amd-gfx/20250623144821.745908-1-mario.limonciello=
+@amd.com/T/#u
+>
+> Thanks,
+
+Got it added. Can't say that I notice a big difference, however, the
+login screen may have been a tad brighter. But it's obviously more
+correct now. Thanks,
+
+-Walt
