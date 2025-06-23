@@ -1,128 +1,113 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621B0230BFB;
-	Mon, 23 Jun 2025 09:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540D92A1C9;
+	Mon, 23 Jun 2025 09:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750669870; cv=none; b=B258clcwxfuaAanw+Kto0jFoOZTaSvAdgQQRYehWdNW/TodfbDtEY6twXt3zJznJavCODHaBG2DQ38mMV+lF/3OhqLjm3pxXfMRx6Nq2sRZlxhkNCJBBkFFNjn5U6xeSa/3oDfSZUbNZCiUQnb8/NwqTB4/nVFbup80gnt281Qw=
+	t=1750669973; cv=none; b=c2ZKtCWw6u8MLOQnG8QaWf/7LJgjAHfNJAUMNvbZv7uWaAjQMv1mbuHvBsMNYPps/O+PkOlID4ce/PpDcTaLpXMml9j7Xwz0skUPG6m/NMMxjYCddVrE2VRXlzyYfLJlxEmY4s2WEL1NDbyO8KipcM6UHp9B8KffeZOELB9vU6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750669870; c=relaxed/simple;
-	bh=jgDGs6S8aBeEsYJh3stb90SoB64xktcDYB4e9GaxcnA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PPnbaig+RukTqxLYpUeSLDBIJWkmbL1lASyQGjHNKrE4bQZJNX4Te+sSOqwcAg2hVl0MJps5Zkrg3n9/LIAFqYHcSWfQtp5OZ0tnauL46pqb21TkK2Xmi0wkAcb2NQDVzzqgdJIg2ZzR2J12ttt7PKOIXTDcVgZPPrHQ9lJK22I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VPJiVphB; arc=none smtp.client-ip=209.85.128.42
+	s=arc-20240116; t=1750669973; c=relaxed/simple;
+	bh=oaHTIrFsTJslwFK2Oe2h8dhFDmaNXxpX29yDLq6jl6g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=itx+U0sWWloWujsxOx70K4pscbeA8WJD+ajcqyWaSc1YDCZ+nzuCDuFSR0CdFsg/53Ok9Lhji+2ctzzmOIrR7b/eEnPEWV7eeoN1r8rsjnOJ1SouJhZrCaVjR61q61E/VFzTt3m0tKxGoVyZAX4ans/b4I8Dt/vERXQ3RKRZnMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iGkxnIFn; arc=none smtp.client-ip=209.85.128.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VPJiVphB"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-45306976410so1101615e9.3;
-        Mon, 23 Jun 2025 02:11:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iGkxnIFn"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-710e344bbf9so37249247b3.2;
+        Mon, 23 Jun 2025 02:12:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750669867; x=1751274667; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gz8t2oZkkwfZO8pX28gYQB4KOa728jeU/jhzTTj6UZc=;
-        b=VPJiVphBewlnR0xYbCOAeTl9zCUO3DuySWECRKIUqhZ62uKm4T0FWDjFUoonP/jD7L
-         82tEmvn/M1Qlu5fToAo3DlNuHxglWk/SQpFojYDo/5Fmg5LzV+a355rqhQ9bKjDganKo
-         t5tdfbfdgitsNTCzEgqBQg8B3gR7pRP6FxHOYVSF2nhFjarX1qJwdsR+Lf9pQUzVgxU4
-         OFKZtAyfm+5m55E6rYIGnHXipLdPO0ggZpC/alUX6UbhWvVENZESw3S5X2P1B9LRxe6h
-         mDlUjmzXUxmj82eWg7ScYJ5Ra4ilG6M8cpr4KVuXXefRMtuGJZ8uBFg/ROESjDHyuNz8
-         G1Wg==
+        d=gmail.com; s=20230601; t=1750669971; x=1751274771; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oaHTIrFsTJslwFK2Oe2h8dhFDmaNXxpX29yDLq6jl6g=;
+        b=iGkxnIFnV3knc6Xm4bayHZSqoygI3z3SOCY1o1ITtL4MZ/9ANCxRLal9Am/4jA4Cub
+         ihniCemmO+L7BfLBEFjHC+oYgQe3ulab3+kCi7T+YkAt5BrzJNDVrGhv9CpNhM1kvXsj
+         2KXU5z6YnmtPcLmprJKAdN2P1cwP+UB8bERkxKpd2XQLsUZzhv0rxhjfcyCmGaqUdkR1
+         8SjqdHUnC/I9c0U+HQbK220G7TuNtLXPWqDW8a29rHr4RrWnB7lPGSUaSJ092RiINRgz
+         LnokasIBH/K2naaYhTwLTxVPoRNBSevJfutZM9UJe7Fza3quM1gOyzseU/aClCOLVbqx
+         F1SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750669867; x=1751274667;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Gz8t2oZkkwfZO8pX28gYQB4KOa728jeU/jhzTTj6UZc=;
-        b=T69WchcJgR/6fvHBTi6ckHR4jVbhCZ0tMkxc52wzUMEFXvKHQ5TAZmCEx/R2fMFB6V
-         2iJKHPtUMQ+R32hcEox4MF0LEvNoLRl3uBO0yXJN+QJn54fELQR5YkKzGrOlONOJmkG6
-         oD2y9DnHcBPcub45guZGSAhOsAjKdYWexBX1o/iRH22b+78r2jZjDzotJr0Xw+KmlGGt
-         /Wzep2nsEkIfIg/ZjAcsPYtZDDLI7f7GP8OAk7bslKYFYW5fHdCBvdHNZxtGgiwsQhXt
-         xZTu4PqfkP6hnaMK/XRv/i6pmv4mFcFrnPTJ+5iTpMDBpjVl+HOUQlIm+mlixdKvT4W8
-         SirQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVwx9Sp4+NLT1uLKA3pYHTUYCPgw0/fZ7C8PG98/7oTYNmT/Rvnc6T6AeQlmK2TUfOwmkKKsckSibZLfQuo@vger.kernel.org, AJvYcCXg+6ZJrLIHl8t4Px5Zr3O/T0zVhc3cEZNBkGvgFKoHAECPtmGDVJKtrroDjnwpI9Rrf/WDpEh+ksabgXU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZFah9Zq7/dKVLv9DA/75RpP38/edNkgMQEQqItD6vAnB/Bp4D
-	CXp0g56Qom9gFTOUJ8LSgq62tHJO13XyWpBJcsxb2u/plJ2piNMr7diN
-X-Gm-Gg: ASbGncvMZ5oZDrxXO7kW8EnjGnae1lsOx9UXMcuzfMEjxLo8RnwnE+9nJNq0B5sVWkw
-	hOIiHvz3os5XleyygzQ3cYB7Mgy8PVSU9vIemuqPf24/CL5zSTb/6MS920eu0Wrzt5ZmYfeHH5K
-	USYzaOdaDTHxsknARcHNo/XUXDZQxghgRJNLeBmfILHMo6Xz3NrF+PjZiXPiBmRErQM2/65NZjU
-	oVn0E/XO7sr10mIXK5+vG1O1XJzU84rezfjQ+s53S8FhQEfoIRbID5oqOnal91WB0OGM/R+HW30
-	5Y8Wx6XlZNPnDzSFwoQX9lYVW54BBkF4WpGILXBlshJGXiBEhaE+KdEXKOOdLHuND4K1l28LODD
-	D9pSQxQcv2zowTOMQ2zucx8UqOA==
-X-Google-Smtp-Source: AGHT+IGDWWZaT403xBnNIukKkNikvHSsmJYoL9MI3srvKJv2z/ou2KLsn00R7ev+p8rY646+IShMCw==
-X-Received: by 2002:a05:600c:4685:b0:442:e608:12a6 with SMTP id 5b1f17b1804b1-453653d3d5cmr41354345e9.1.1750669866408;
-        Mon, 23 Jun 2025 02:11:06 -0700 (PDT)
-Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:9a26:612f:7b52:ee76])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4536466596asm107683615e9.0.2025.06.23.02.11.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 02:11:06 -0700 (PDT)
-From: Thomas Fourier <fourier.thomas@gmail.com>
-To: 
-Cc: Thomas Fourier <fourier.thomas@gmail.com>,
-	Corentin Labbe <clabbe.montjoie@gmail.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Ovidiu Panait <ovidiu.panait.oss@gmail.com>,
-	Andre Przywara <andre.przywara@arm.com>,
-	linux-crypto@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: sun8i-ce: Fix `dma_unmap_sg()` nents value
-Date: Mon, 23 Jun 2025 11:10:06 +0200
-Message-ID: <20250623091009.65436-2-fourier.thomas@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1750669971; x=1751274771;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oaHTIrFsTJslwFK2Oe2h8dhFDmaNXxpX29yDLq6jl6g=;
+        b=qZo8OQ6Z1JlYmynBDNe1AjfMHisFwMbIYERieAOCWPsPba+U6TUV6191avRnPEQDwd
+         5cxum4aCQOyY7yVBiOSHwiVpijCllRGKR179LcRBKDud80OwnlcLggarCJO//79MC5sV
+         y1466N3b8nJCc3rjOp/QmHFJ+leCwDHgnTdoSX3y27l1NzWGgE9vbmQwPdz3TdGtVJVI
+         YH3lBkmnqtlvdnGCNkJzceZfn72yI6g64mYTLzzpHsOGuGAEGkx88vlHeTsByk/2wMw4
+         skH5lcVt0d00HqxwBWd7EZeeJ4wIBpQUzOJa89u1hh7AdPhZf7tlMFhLCO5eW+1PagGd
+         t/1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUH5akgxTWqOA5ORSFLMwmME4g5pQlU5OybLgGsNjN9LzGB2ZZFcs064XNOsN4zrUTJuaRaQv88kXe+nM9K@vger.kernel.org, AJvYcCVsONIcwVvZknOprHF1/zQCA85eF6FedwtQABtGvU9iIDg9yHd8MpuVJI9azdYYP9gVLqYq4ZoFpbg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqD/SXw5Awe/Ki55otdn1BiJFq5YaI2De/i38w/R4R8F+UG/QC
+	7cbpuqQH2PmW4BRbEiRL1yQ9BY3gd6lSuiFVy0IM4ujmb9RlvtStxeuqMrwvREe9r5o+W0Ve3/+
+	tExGQ8VyFxjyswWR0qrcAR8n+7FwUpHQ=
+X-Gm-Gg: ASbGncv5pWAUhme6QZb8ynB+Vhr5ZXpOeJAZCSetwLQF0Uea5szG/r5MZD2kIusLz01
+	szWkC76dm4xFWOaD07ZKG2IS1/HveV63ChMNrjvV3KawG422e49za+viEGQDnvi0FSILsnRuaBN
+	r9thwa8Ql8F1kc37C7OTn3wFqzXd8aNknl7hERBdQTR8Gbzw==
+X-Google-Smtp-Source: AGHT+IFmhY/vt9oNQjuh/xCp9QjF4OjLx+Y1VFbCyRG/NTpSueTo81/o/aDOJLbSztmxX2uuEP6Xgv/Qqyl8CVF3UDI=
+X-Received: by 2002:a05:690c:350f:b0:70e:7882:ea91 with SMTP id
+ 00721157ae682-712c6776185mr165203447b3.35.1750669971187; Mon, 23 Jun 2025
+ 02:12:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250622004249.9083-1-sef1548@gmail.com> <b16a1df5-0b81-4600-bd68-2d261d2a3780@redhat.com>
+ <CABZAGRGvf9Ge5EvMgFP3FUHt2QOpq6xXe9nB4=it9zb+V1DNwg@mail.gmail.com>
+In-Reply-To: <CABZAGRGvf9Ge5EvMgFP3FUHt2QOpq6xXe9nB4=it9zb+V1DNwg@mail.gmail.com>
+From: Dongliang Mu <mudongliangabcd@gmail.com>
+Date: Mon, 23 Jun 2025 17:12:24 +0800
+X-Gm-Features: AX0GCFv88oBmJMR5_Gb7Q4je7M7rRRwaULhgqxt57MvO_TTowEz2vo07wpjVA-8
+Message-ID: <CAD-N9QV5r4YyO6qbL477x0sJar2=WTdHH=x58P9Qatff_HC3Nw@mail.gmail.com>
+Subject: Re: [PATCH] mm/balloon_compaction: update Chinese docs for movable_ops
+To: Nick Huang <sef1548@gmail.com>
+Cc: David Hildenbrand <david@redhat.com>, alexs@kernel.org, si.yanteng@linux.dev, 
+	dzm91@hust.edu.cn, corbet@lwn.net, akpm@linux-foundation.org, 
+	wangkefeng.wang@huawei.com, vishal.moola@gmail.com, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The `dma_unmap_sg()` functions should be called with the same nents as the
-`dma_map_sg()`, not the value the map function returned.
+On Mon, Jun 23, 2025 at 4:51=E2=80=AFPM Nick Huang <sef1548@gmail.com> wrot=
+e:
+>
+> David Hildenbrand <david@redhat.com> =E6=96=BC 2025=E5=B9=B46=E6=9C=8823=
+=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=884:08=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> >
+> > On 22.06.25 02:42, Nick Huang wrote:
+> > > Remove Non-LRU Page Migration and Add Movable_ops Page Migration
+> > >
+> >
+> > I'm afraid most people you CC on Chinese doc updates will not be able t=
+o
+> > help in any reasonable way.
+> >
+> > --
+> > Cheers,
+> >
+> > David / dhildenb
+>
+> How can I fix these things?
 
-Fixes: 0605fa0f7826 ("crypto: sun8i-ce - split into prepare/run/unprepare")
-Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
----
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+From my understanding, you can follow this how-to.rst[1] and submit
+your patches.
 
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-index f9cf00d690e2..ce9d071f5693 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-@@ -326,8 +326,8 @@ static void sun8i_ce_cipher_unprepare(struct crypto_engine *engine,
- 	struct sun8i_ce_flow *chan;
- 	struct ce_task *cet;
- 	unsigned int ivsize, offset;
--	int nr_sgs = rctx->nr_sgs;
--	int nr_sgd = rctx->nr_sgd;
-+	int ns = sg_nents_for_len(areq->src, areq->cryptlen);
-+	int nd = sg_nents_for_len(areq->dst, areq->cryptlen);
- 	int flow;
- 
- 	flow = rctx->flow;
-@@ -336,11 +336,11 @@ static void sun8i_ce_cipher_unprepare(struct crypto_engine *engine,
- 	ivsize = crypto_skcipher_ivsize(tfm);
- 
- 	if (areq->src == areq->dst) {
--		dma_unmap_sg(ce->dev, areq->src, nr_sgs, DMA_BIDIRECTIONAL);
-+		dma_unmap_sg(ce->dev, areq->src, ns, DMA_BIDIRECTIONAL);
- 	} else {
--		if (nr_sgs > 0)
--			dma_unmap_sg(ce->dev, areq->src, nr_sgs, DMA_TO_DEVICE);
--		dma_unmap_sg(ce->dev, areq->dst, nr_sgd, DMA_FROM_DEVICE);
-+		if (rctx->nr_sgs > 0)
-+			dma_unmap_sg(ce->dev, areq->src, ns, DMA_TO_DEVICE);
-+		dma_unmap_sg(ce->dev, areq->dst, nd, DMA_FROM_DEVICE);
- 	}
- 
- 	if (areq->iv && ivsize > 0) {
--- 
-2.43.0
+This is more friendly for reviewers and maintainers.
 
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/Documentation/translations/zh_CN/how-to.rst
+
+>
+>
+> --
+> Regards,
+> Nick Huang
+>
