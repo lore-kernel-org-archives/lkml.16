@@ -1,162 +1,174 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E8024169B;
-	Mon, 23 Jun 2025 15:14:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD332853E3;
+	Mon, 23 Jun 2025 15:14:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750691682; cv=none; b=EDC1kz8YAHsUEmGfY97wo4TMxYSuCHxXDWx68GVCktKk7ILSRrTRi5aTUv2NVhMEtj4409qEC8p2jegZPwRpW9dflbm7Jglb+tgLfHysKmXhEH/3lx+FcqzZA+S0udVzzUYWciQNtFUxwZSRZaqCGHI8rjjB3Nc4hk+DyC1KCyw=
+	t=1750691683; cv=none; b=lKSeraqktOsbLivvDxCwVcoP5z50Q/8imv6izGc9ma2iycsuyuKL5mAOTgqOqrWX2qmx4po5fCWjx+SMI5SAcFdWdI6xy8IkI5bixyXsZo0yr0zCD9+U2Hyk1jIb3zLnxx5TL3W3a8Y+4Tpd/7KYOamZZ/Ty2H0FF5pZviL/xbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750691682; c=relaxed/simple;
-	bh=XSDrVBVnhyxYp1JMKvQx3EG0b0XeZk8MBikoZoNvSPA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gTt5US/p+FpBDBl5nTTkrAobqpG3uNMKJUEOyigjsSyRlVHa5iMda7eTIGtL0glqRn8VeICOxvjihT6DmmWz+Op1Mk3AFaFUFxYOvDBoJHLqqbgGAr7AIQWWHrY78csfa8xfifd/y2R5px5pZYJClQa3idZdx55/evQ3cFTqkus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OmCoXbQf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750691683; c=relaxed/simple;
+	bh=bNo4u1rasC/6lBuKSnTXnbSkB3draWhrAu0LbyFSuls=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=QidVDOGN2CK2WpOpzWauIm6fxauDGlsAoJjrHOCnCtyInlX8cQ20WzhK4Q7f38KagGvQVaNHdXXs7DNxiHocV+GBwvSzWih+HWd7+FkghnOTt0RFDGzb/q079WJnl9ISBYzBMbUZc+o9Xx4HwK4k0qQhPGL9EOfZN7HqwBY9m0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CqSQS/ja; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OmCoXbQf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2742EC4CEEA;
-	Mon, 23 Jun 2025 15:14:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CqSQS/ja"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C62EC4CEF0;
+	Mon, 23 Jun 2025 15:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750691681;
-	bh=XSDrVBVnhyxYp1JMKvQx3EG0b0XeZk8MBikoZoNvSPA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OmCoXbQf/tjUIpINpxj6vwdUqDZybUpwjdWVlsS76SySfStDAGZ61o1ANRZoqQjPG
-	 8PB+6z/OaL3uYgFT3hzwwpRGKnIvCLqf1FLbvHBugmzjEoSWyBnDNLNnVnK18oEqQo
-	 NJPa/wbKeZsV6TTtEDYn2s+KrdSCTmNs6ejzDIQC/vtygeq6/S4gez8uy6/kyvlHLD
-	 SGGhZr2G7/86WqxshFSb/HYHgENdhplZMRLtlRMIQDJfa5WqDGYugWqqCT0YdUJ2l4
-	 ap8E3G7oamo2KDrBMaPSTGXdgJWyPgcjLr6F3YDdKQW8I82pgl//a8FozORPIpQJlA
-	 rEGxf3sYaX2sA==
-Date: Mon, 23 Jun 2025 17:14:35 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Sascha Bischoff <Sascha.Bischoff@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, nd <nd@arm.com>,
-	"maz@kernel.org" <maz@kernel.org>,
-	"oliver.upton@linux.dev" <oliver.upton@linux.dev>,
-	Joey Gouly <Joey.Gouly@arm.com>,
-	Suzuki Poulose <Suzuki.Poulose@arm.com>,
-	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	Timothy Hayes <Timothy.Hayes@arm.com>
-Subject: Re: [PATCH 2/5] irqchip/gic-v5: Populate struct gic_kvm_info
-Message-ID: <aFlvW2FNCyCi3h3Y@lpieralisi>
-References: <20250620160741.3513940-1-sascha.bischoff@arm.com>
- <20250620160741.3513940-3-sascha.bischoff@arm.com>
+	s=k20201202; t=1750691682;
+	bh=bNo4u1rasC/6lBuKSnTXnbSkB3draWhrAu0LbyFSuls=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=CqSQS/jajiRZQBCwp7ZAuejlTZxBQXyDkZlKW8YldcUOuFYRl52KTHqh2QNDinSBG
+	 4WEjNMxOf5JivIekNJPBLm7smt12WO7PfxFGmZ5bYtJId8XY7CXCw4L98qQSSb3/kN
+	 Uw5pML5L1wgpCeXX0IykE1evSm5DHG6udmrOryMgiLs0p+HlAn0F3cAvsQIa2Ceg3S
+	 nRA4eY116Mr2rmIw6tzc1K1Hnz/IEl/CWJgMUU1D+cVlp1h8ZzSoQAFSwLvSaPtnJm
+	 jrDF1XJ8UQcSOpwfe7Ciz0xM3ADtaS+MoJq+4hOzOMdXqN4F4IBDa4D0JHzkhQymRV
+	 eyKIfUT/9aT3g==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620160741.3513940-3-sascha.bischoff@arm.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 23 Jun 2025 17:14:37 +0200
+Message-Id: <DAU0ELV91E2Q.35FZOII18W44J@kernel.org>
+Cc: =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>,
+ <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <ojeda@kernel.org>, <alex.gaynor@gmail.com>, <gary@garyguo.net>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <dakr@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+ <will@kernel.org>, <longman@redhat.com>, <felipe_life@live.com>,
+ <daniel@sedlak.dev>, <bjorn3_gh@protonmail.com>
+Subject: Re: [PATCH v5 2/3] implement ww_mutex abstraction for the Rust tree
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <20250621184454.8354-1-work@onurozkan.dev>
+ <20250621184454.8354-3-work@onurozkan.dev>
+ <DASY7BECFRCT.332X5ZHZMV2W@kernel.org> <aFlQ7K_mYYbrG8Cl@Mac.home>
+ <DATYHYJVPL3L.3NLMH7PPHYU9@kernel.org> <aFlpFQ4ivKw81d-y@Mac.home>
+In-Reply-To: <aFlpFQ4ivKw81d-y@Mac.home>
 
-On Fri, Jun 20, 2025 at 04:07:51PM +0000, Sascha Bischoff wrote:
-> Populate the gic_kvm_info struct based on support for
-> FEAT_GCIE_LEGACY.  The struct is used by KVM to probe for a compatible
-> GIC.
-> 
-> Co-authored-by: Timothy Hayes <timothy.hayes@arm.com>
-> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
-> Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
-> ---
->  drivers/irqchip/irq-gic-v5.c          | 34 +++++++++++++++++++++++++++
->  include/linux/irqchip/arm-vgic-info.h |  4 ++++
->  2 files changed, 38 insertions(+)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-> index 28853d51a2ea..6aecd2343fee 100644
-> --- a/drivers/irqchip/irq-gic-v5.c
-> +++ b/drivers/irqchip/irq-gic-v5.c
-> @@ -13,6 +13,7 @@
->  
->  #include <linux/irqchip.h>
->  #include <linux/irqchip/arm-gic-v5.h>
-> +#include <linux/irqchip/arm-vgic-info.h>
->  
->  #include <asm/cpufeature.h>
->  #include <asm/exception.h>
-> @@ -1049,6 +1050,37 @@ static void gicv5_set_cpuif_idbits(void)
->  	}
->  }
->  
-> +#ifdef CONFIG_KVM
-> +static struct gic_kvm_info gic_v5_kvm_info __initdata;
-> +
-> +static bool gicv5_cpuif_has_gcie_legacy(void)
+On Mon Jun 23, 2025 at 4:47 PM CEST, Boqun Feng wrote:
+> On Mon, Jun 23, 2025 at 03:44:58PM +0200, Benno Lossin wrote:
+>> I didn't have a concrete API in mind, but after having read the
+>> abstractions more, would this make sense?
+>>=20
+>>     let ctx: &WwAcquireCtx =3D ...;
+>>     let m1: &WwMutex<T> =3D ...;
+>>     let m2: &WwMutex<Foo> =3D ...;
+>>=20
+>>     let (t, foo, foo2) =3D ctx
+>>         .begin()
+>>         .lock(m1)
+>>         .lock(m2)
+>>         .lock_with(|(t, foo)| &*foo.other)
+>>         .finish();
+>>=20
+>
+> Cute!
+>
+> However, each `.lock()` will need to be polymorphic over a tuple of
+> locks that are already held, right? Otherwise I don't see how
+> `.lock_with()` knows it's already held two locks. That sounds like a
+> challenge for implementation.
 
-__init ?
+I think it's doable if we have=20
 
-> +{
-> +	u64 idr0 = read_sysreg_s(SYS_ICC_IDR0_EL1);
-> +
-> +	return !!FIELD_GET(ICC_IDR0_EL1_GCIE_LEGACY, idr0);
-> +}
-> +
-> +static void __init gic_of_setup_kvm_info(struct device_node *node)
-> +{
-> +	gic_v5_kvm_info.type = GIC_V5;
-> +	gic_v5_kvm_info.has_gcie_v3_compat = gicv5_cpuif_has_gcie_legacy();
-> +
-> +	/* GIC Virtual CPU interface maintenance interrupt */
-> +	gic_v5_kvm_info.no_maint_irq_mask = false;
-> +	gic_v5_kvm_info.maint_irq = irq_of_parse_and_map(node, 0);
-> +	if (!gic_v5_kvm_info.maint_irq) {
-> +		pr_warn("cannot find GICv5 virtual CPU interface maintenance interrupt\n");
-> +		return;
-> +	}
-> +
-> +	vgic_set_kvm_info(&gic_v5_kvm_info);
-> +}
-> +#else
-> +static void __init gic_of_setup_kvm_info(struct device_node *node)
+    impl WwActiveCtx {
+        fn begin(&self) -> WwActiveCtx<'_, ()>;
+    }
 
-static inline
+    struct WwActiveCtx<'a, Locks> {
+        locks: Locks,
+        _ctx: PhantomData<&'a WwAcquireCtx>,
+    }
 
-Thanks,
-Lorenzo
+    impl<'a, Locks> WwActiveCtx<'a, Locks>
+    where
+        Locks: Tuple
+    {
+        fn lock<'b, T>(
+            self,
+            lock: &'b WwMutex<T>,
+        ) -> WwActiveCtx<'a, Locks::Append<WwMutexGuard<'b, T>>>;
 
-> +{
-> +}
-> +#endif // CONFIG_KVM
-> +
->  static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
->  {
->  	int ret = gicv5_irs_of_probe(node);
-> @@ -1081,6 +1113,8 @@ static int __init gicv5_of_init(struct device_node *node, struct device_node *pa
->  
->  	gicv5_irs_its_probe();
->  
-> +	gic_of_setup_kvm_info(node);
-> +
->  	return 0;
->  out_int:
->  	gicv5_cpu_disable_interrupts();
-> diff --git a/include/linux/irqchip/arm-vgic-info.h b/include/linux/irqchip/arm-vgic-info.h
-> index a75b2c7de69d..ca1713fac6e3 100644
-> --- a/include/linux/irqchip/arm-vgic-info.h
-> +++ b/include/linux/irqchip/arm-vgic-info.h
-> @@ -15,6 +15,8 @@ enum gic_type {
->  	GIC_V2,
->  	/* Full GICv3, optionally with v2 compat */
->  	GIC_V3,
-> +	/* Full GICv5, optionally with v3 compat */
-> +	GIC_V5,
->  };
->  
->  struct gic_kvm_info {
-> @@ -34,6 +36,8 @@ struct gic_kvm_info {
->  	bool		has_v4_1;
->  	/* Deactivation impared, subpar stuff */
->  	bool		no_hw_deactivation;
-> +	/* v3 compat support (GICv5 hosts, only) */
-> +	bool		has_gcie_v3_compat;
->  };
->  
->  #ifdef CONFIG_KVM
-> -- 
-> 2.34.1
+        fn lock_with<'b, T>(
+            self,
+            get_lock: impl FnOnce(&Locks) -> &'b WwMutex<T>,
+        ) -> WwActiveCtx<'a, Locks::Append<WwMutexGuard<'b, T>>>;
+        // I'm not 100% sure that the lifetimes will work out...
+
+        fn finish(self) -> Locks;
+    }
+
+    trait Tuple {
+        type Append<T>;
+
+        fn append<T>(self, value: T) -> Self::Append<T>;
+    }
+
+    impl Tuple for () {
+        type Append<T> =3D (T,);
+
+        fn append<T>(self, value: T) -> Self::Append<T> {
+            (value,)
+        }
+    }
+   =20
+    impl<T1> Tuple for (T1,) {
+        type Append<T> =3D (T1, T);
+
+        fn append<T>(self, value: T) -> Self::Append<T> {
+            (self.0, value,)
+        }
+    }
+
+    impl<T1, T2> Tuple for (T1, T2) {
+        type Append<T> =3D (T1, T2, T);
+
+        fn append<T>(self, value: T) -> Self::Append<T> {
+            (self.0, self.1, value,)
+        }
+    }
+
+    /* these can easily be generated by a macro */
+
+> We also need to take into consideration that the user want to drop any
+> lock in the sequence? E.g. the user acquires a, b and c, and then drop
+> b, and then acquires d. Which I think is possible for ww_mutex.
+
+Hmm what about adding this to the above idea?:
+
+    impl<'a, Locks> WwActiveCtx<'a, Locks>
+    where
+        Locks: Tuple
+    {
+        fn custom<L2>(self, action: impl FnOnce(Locks) -> L2) -> WwActiveCt=
+x<'a, L2>;
+    }
+
+Then you can do:
+
+    let (a, c, d) =3D ctx.begin()
+        .lock(a)
+        .lock(b)
+        .lock(c)
+        .custom(|(a, _, c)| (a, c))
+        .lock(d)
+        .finish();
+
+>>     let _: &mut T =3D t;
+>>     let _: &mut Foo =3D foo;
+>>     let _: &mut Foo =3D foo2;
+
+Ah these will actually be `WwMutexGuard<'_, ...>`, but that should be
+expected.
+
+---
+Cheers,
+Benno
