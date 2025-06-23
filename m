@@ -1,47 +1,48 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333AE21765E;
-	Mon, 23 Jun 2025 08:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3363214801
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750666491; cv=none; b=N2dyYkFJbhLen/zC7dhxgGiok2fwXe3/8JngSWzpqLsw3Z/4OD9fpbnu4Ev4/UgLwxFJ5/2fNLb66xxIGdRfqdv4TEloxUrwVcE+EqtSXi1qDJvmsa6aWHf1PiH0xUz+kCpkBIY4a74BLblR4YEQxQei/O978zeda1DdvOCUDHs=
+	t=1750666494; cv=none; b=T7aZcYsFy/yZMFvll8P15uAo6lckbh/h2QvyaVxi/EEy/TKmzIUMbXN+AX3SOOXcIdpsR9+rSuXb91kM6W2NbK2JMFv0w8c7u0GDp0/SqrnJ4+8szSm9ty538RMPNo6ViQ9Io3JwM6oSKVh4ElJSKiXKLzGe+GAlIC50Yl95hIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750666491; c=relaxed/simple;
-	bh=XEtoYmWydJuCgXNXIh5lvdCDhRvv5CZlmsc2mQLRbyE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=F0A2jB9UuJ0UtVs5jhEx9ojWhSel0qViRKPm4ec9jc0VFVzCQw/EzxuYmTQDm75CrIG18gRbVWow7SiUUPbUhhH9b8AkSzZCTr2+35JkbvCiRkK6ukd1BQK2r8ijAxIERu+rW7HwgdoeLrC4jveayP8lrnibDfbOrze0m1N9c/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iTh/+ahL; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750666494; c=relaxed/simple;
+	bh=RnHJ1MVLHB7pgSW+RoCUFJ8A5A/Jj6f9f/rMAV5nwOk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=P0+rW1R6ZeFioAS2IV6HW6AJGHzAtZhBzToVBbe6cuGEhoZNxPC4b90aXlwZ9gO/pmJooMJemf5ZOkhhUdsS/1SdOsQ1v4kGxt61ldZIWr5PxpbDNsqhEED3NaUC6m1+xpGpxhWyDwWU/VlzmbvE203F1+c2Dju1tosQKtBb0ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YeCLmTkJ; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iTh/+ahL"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55N1EcrW023814;
-	Mon, 23 Jun 2025 08:14:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=c72lr0pk7H+QEl9TML4Go+
-	1Hw2lpQACpD+ixGNWkpxM=; b=iTh/+ahL5mvD2hv8X/HH0rSnugaiXwR7IhZSpf
-	5AbpewpS1bCP17PHjaEexewWN2alk9XgswPIP8u9OghetUfhNFpk8uEmbkXiBf//
-	ByXDzwd5RlS9Wb1i95fB6WqhjVViOCF2LzEOxoPxc8EQtOtYNXhEL/9+ycKJHM53
-	xj/qh5DnHihze/RhBODlZ7N6nhHTsrE8B/ex7nDKpa9FguC/rkMEE8fL1Iq0eeZl
-	UZQuVpHen5T1XH3S1RD9QvSDX85Vz04C3wwUIBVgyguBSDEnLt6EHDwHRtMCjgAY
-	SaYex1Ac9D+g9T5WYauf7D/lgj+/Rgaq8UoHqCVDc+ImFmsg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47eud092f3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Jun 2025 08:14:47 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55N8EkAT018175
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Jun 2025 08:14:46 GMT
-Received: from hu-skakitap-hyd.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Mon, 23 Jun 2025 01:14:42 -0700
-From: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-Date: Mon, 23 Jun 2025 13:44:32 +0530
-Subject: [PATCH] arm64: dts: qcom: sc8180x: Add video clock controller node
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YeCLmTkJ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 41C5B43424;
+	Mon, 23 Jun 2025 08:14:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750666485;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zEkVeHe6fV8P3rJb5CgRudPEfC2hTGoF5KMLEQlsPbA=;
+	b=YeCLmTkJ008L+TWFSC+F/JUG6ntqtAaKrgWOEqg3cAYdtnVr5hYxexOHJp0y+4ykW5NEDC
+	44S9Aes2No7rqgB/IskaRWrvr99768ss7eqln69qp90+8Ga+ELyyDp7OpVF3QPmRn4O67V
+	giVpvTOjiuxoPsJiviVcSQc0DfqnLgXtdP9GeKkVgXt8sgbzuH67IlH9oV1BuJv2rURYEl
+	M0p5WmIHrcoXpO8ZuxfVVuNfTqghD/DHEWIUABj3+TAZEFDld6BxRFWXA1AJ9LZ1bbWWVI
+	+vGNXHivPJKnok9bdEd2p9vIml+DF/ZV7UcsNfM4LbBBMij6eeD3sym9KiUGzQ==
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: thomas.petazzoni@bootlin.com, dri-devel@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, Mark Yacoub <markyacoub@google.com>
+In-Reply-To: <20250429-drm-fix-writeback-cleanup-v2-1-548ff3a4e284@bootlin.com>
+References: <20250429-drm-fix-writeback-cleanup-v2-1-548ff3a4e284@bootlin.com>
+Subject: Re: [PATCH v2] drm: writeback: Fix drm_writeback_connector_cleanup
+ signature
+Message-Id: <175066648416.11752.3954585801446289594.b4-ty@bootlin.com>
+Date: Mon, 23 Jun 2025 10:14:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,104 +51,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250623-sc8180x-videocc-dt-v1-1-9d210c140600@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAOgMWWgC/x3MQQqAIBBA0avErBtQK5OuEi1iHGs2FhoRhHdPW
- r7F/y9kTsIZpuaFxLdkOWKFbhugfY0bo/hqMMoMypoOMznt1IO3eD6I0F/YM3WkRquD81DDM3G
- Q55/OSykfURCdImQAAAA=
-X-Change-ID: 20250623-sc8180x-videocc-dt-4ec3c0761f8d
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        "Jagadeesh
- Kona" <quic_jkona@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Satya Priya
- Kakitapalli" <quic_skakitap@quicinc.com>
 X-Mailer: b4 0.14.2
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: iUGxGQdRsYLgfERUYwTz7t7mPNy07cJ2
-X-Proofpoint-ORIG-GUID: iUGxGQdRsYLgfERUYwTz7t7mPNy07cJ2
-X-Authority-Analysis: v=2.4 cv=eco9f6EH c=1 sm=1 tr=0 ts=68590cf7 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=VdR9ytC32kPbH48ryfQA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA0OCBTYWx0ZWRfX+AKTUSRrEaZf
- 5Ccm8L70cZ87WDMl8JTKi6aGcwGqo3kyp6kJZPCPpu64Wq4RgdN6DeuhKJ1VB6Mtyj4qJIVcK4B
- 14j74WbrVMWrk8uRo8TZMqSh3zO12SRavzCcHmKmDkR5TYRicC/g8E136hFkxNobGTX9NZ+s4Ht
- NCMFILHsD4a+3RDWUdFHSVqPfaiPBUssWu86cF8uOnYFZl2InNvEAdCc3xL4VqpDyw4lfTN71Ka
- DTnL44mhRwExTQL0yDJqFN0JJYDIMXsLk4Vji6x0jBdAz4Ke9pqXC9H7Jb7TN15RNDEErTzCs84
- cKu2h9FQMVW9VnXHEhJwKVVl/uk41FDIj7l2EApMEqfH1IIb0vnvtgnEfozKsSYKic3LGrE5LDZ
- cKbC5cMX9uzamD8WzMGq4Up7SR01omWyddaCR7EiZmw9xpvMh+ve0P5G5+y76tf2hLC2g2vB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-23_02,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 suspectscore=0 adultscore=0 clxscore=1015 mlxlogscore=852
- priorityscore=1501 phishscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0
- malwarescore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506230048
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdduieehudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvegjfhfukfffgggtgffosehtjeertdertdejnecuhfhrohhmpefnohhuihhsucevhhgruhhvvghtuceolhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjeehieelvdekieegledutdeljedvhfelfeelffffiedttedvledttddttdfgleetnecukfhppedujeeirdduheelrddvtddurdehieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedujeeirdduheelrddvtddurdehiedphhgvlhhopefjohhsthdqtddtfedrlhgrnhdpmhgrihhlfhhrohhmpehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtohepmhgrrghrt
+ hgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghrkhihrggtohhusgesghhoohhglhgvrdgtohhmpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvg
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-Add device node for video clock controller on Qualcomm
-SC8180X platform.
 
-Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
----
-Add device node for video clock controller on Qualcomm
-SC8180X platform.
----
- arch/arm64/boot/dts/qcom/sc8180x.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+On Tue, 29 Apr 2025 10:36:23 +0200, Louis Chauvet wrote:
+> The drm_writeback_connector_cleanup have the signature:
+> 
+>      static void drm_writeback_connector_cleanup(
+> 		struct drm_device *dev,
+> 		struct drm_writeback_connector *wb_connector)
+> 
+> But it is stored and used as a drmres_release_t
+> 
+> [...]
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8180x.dtsi b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
-index b74ce3175d209b569e634073662307964158b340..4590c2ff68a9885d8047d728bbf2dea0236d5b8f 100644
---- a/arch/arm64/boot/dts/qcom/sc8180x.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
-@@ -10,6 +10,7 @@
- #include <dt-bindings/clock/qcom,gpucc-sm8150.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/clock/qcom,sc8180x-camcc.h>
-+#include <dt-bindings/clock/qcom,videocc-sm8150.h>
- #include <dt-bindings/interconnect/qcom,icc.h>
- #include <dt-bindings/interconnect/qcom,osm-l3.h>
- #include <dt-bindings/interconnect/qcom,sc8180x.h>
-@@ -2943,6 +2944,19 @@ usb_sec_dwc3_ss: endpoint {
- 			};
- 		};
- 
-+		videocc: clock-controller@ab00000 {
-+			compatible = "qcom,sm8150-videocc";
-+			reg = <0 0x0ab00000 0 0x10000>;
-+			clocks = <&gcc GCC_VIDEO_AHB_CLK>,
-+				 <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "iface", "bi_tcxo";
-+			power-domains = <&rpmhpd SC8180X_MMCX>;
-+			required-opps = <&rpmhpd_opp_low_svs>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+		};
-+
- 		camcc: clock-controller@ad00000 {
- 			compatible = "qcom,sc8180x-camcc";
- 			reg = <0 0x0ad00000 0 0x20000>;
+Applied, thanks!
 
----
-base-commit: 5d4809e25903ab8e74034c1f23c787fd26d52934
-change-id: 20250623-sc8180x-videocc-dt-4ec3c0761f8d
+[1/1] drm: writeback: Fix drm_writeback_connector_cleanup signature
+      commit: fb721b2c35b1829b8ecf62e3adb41cf30260316a
 
 Best regards,
 -- 
-Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+Louis Chauvet <louis.chauvet@bootlin.com>
 
