@@ -1,66 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69FEF1EB1AA;
-	Mon, 23 Jun 2025 06:51:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DA71F03C9;
+	Mon, 23 Jun 2025 06:51:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750661485; cv=none; b=XO5zzz509HDbSxQ17dfOxH32Sj9ztjfPrfdWrEZIj7W2kft6VCzEgD34zWFBqs4Xh9QZhYMWUa6q6v8pwETthSivvxKiENozqRKkT81jD8rzj57ulQ5PSkv9k3iu4QrfACnRAFV7wjGSxh6TWBy7wvEBAhA9bIZU9n06Yf0N0DE=
+	t=1750661504; cv=none; b=DRRQEyls0opiaQeP9tFmC6mM55/NOYw9cqOhzhhV/b4raT7LKoVxxGQOCNo7jPLouPxN+4om/rSmUKD38QEuuy7rlw9VxI6Uu+jmU/ZRYWs9sKm5FEc4KBqqDgp7+eGEgFftaIDtONENfLOB246YzEwF4VAi4ytBEJ1CI92WZyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750661485; c=relaxed/simple;
-	bh=3rEMRYah93mGUefKqSUQRKBAf5nYYuCEhyzSDEkvYBg=;
+	s=arc-20240116; t=1750661504; c=relaxed/simple;
+	bh=ZuaLAdKRfPAdGUHn3NKcVTxk2HUa+m9Hw4T4abrb8EQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n4xcj83JB6CrY2as4H6JzkGdg1J42/NosDj1hFJuCsR/Wh7hjc9frIEhqcgplVojiYnfmWIHmLt3aE7YRFGD+w2mG7GuD+KsS8w70espQvVU9hcgfq6fd67Z/Nt7mTGcVHsq12wkeBFQU+it+kbcW41a2kLGEmz528F251eZ2rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vHyvQ1Y7; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Da4SnbvtXmAk+sN+Pj5OIt7krT31gn2evuQ5qlfQXGkgqWalokBt8Fjkfsdmv+bodCT6PlCg0UsKPbuKWsfDKgHXDBgWOo4EW39ea0ZiWw4LvwApWqTntF7ajgUXVsOhSOnyEhobzrcLhrO5Z4Te8v0iReLx/SC2U01LjbZ+m9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RAJB5ud7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vHyvQ1Y7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24F2AC4CEED;
-	Mon, 23 Jun 2025 06:51:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RAJB5ud7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E22FC4CEED;
+	Mon, 23 Jun 2025 06:51:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750661484;
-	bh=3rEMRYah93mGUefKqSUQRKBAf5nYYuCEhyzSDEkvYBg=;
+	s=k20201202; t=1750661504;
+	bh=ZuaLAdKRfPAdGUHn3NKcVTxk2HUa+m9Hw4T4abrb8EQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vHyvQ1Y7KMyEOE2C/oVSj0RiDPxiLweJnqnJNLW4V1I9dYpHhG2EnK6Ot180aHplb
-	 yaGDnVOnYnkWlCl2j60Zd4rWLsUP9r/zZcTkushy8qODpa2OxpzbwT0eer5TKD10Sb
-	 IVNF63pSQrBcBcCT1+hIO5kgnsOzRXr9o+mi2iV0MSHqoaRaLbs1nKUC/qLrwZKx9g
-	 swseds+OAHAeFojuqglBPLa/4DbXatWSw6c52BqJCxUS/TNDyza0BLfUiFUMoRMUfP
-	 cbcf/AYUFqhuhHc2VJEqdF+ISDjnx48c5zpyDYzY2D4iXJT92jLiBz9wb66IZErq7Z
-	 Au3IL0u8YewYw==
-Date: Mon, 23 Jun 2025 08:51:22 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Goran =?utf-8?B?UmHEkWVub3ZpxIc=?= <goran.radni@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] dt-bindings: arm: imx8mp: Add Ultratronik
- Ultra-MACH SBC
-Message-ID: <nsbpnxfbypj3nmivzj25wfuq774jf3sd2o3iekf3jwlojnhde7@2v2wkqmdmyee>
-References: <20250620122353.150700-1-goran.radni@gmail.com>
- <20250620122353.150700-3-goran.radni@gmail.com>
+	b=RAJB5ud7df4WHSt3qvvbiMgFs0bU1TsVomAUHTFrZBdRfDtDx2EnPDaWEOu7nONZa
+	 3o1z8AOoPn83Wz4sC6+m9IKd+jWakluYHuiQZKu7puKbRaK/kdXdEQ0dCbSD0TeS1F
+	 qJwGHJ+vhngq6rMp/K823ekkNr3sj3dhJqz30veTxqEku8VGqpM+bN/E9MursykNbQ
+	 CV4KalKsfVQRntrN/eLY5KFze+MWqTiSAHu5G2+fy7qbYu8UGKYRBKd+5041HdO+St
+	 +eizmKWYrJN2X/tDNElbR4Dqy+M+T0joPRk4tGI3+Oe1IZhjVhKPhSYC15o+4qQt+c
+	 kw8/3TvteTbuQ==
+Date: Mon, 23 Jun 2025 06:51:41 +0000
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Naoya Tezuka <naoyatezuka@chromium.org>
+Cc: Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] pstore/ram: Validate ECC parameters against
+ Reed-Solomon constraint
+Message-ID: <aFj5faLZXnKKtyxA@google.com>
+References: <20250623062827.133373-1-naoyatezuka@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250620122353.150700-3-goran.radni@gmail.com>
+In-Reply-To: <20250623062827.133373-1-naoyatezuka@chromium.org>
 
-On Fri, Jun 20, 2025 at 02:23:50PM +0200, Goran Ra=C4=91enovi=C4=87 wrote:
-> Document the Ultratronik Ultra-MACH SBC, based on the NXP i.MX8MP SoC.
->=20
-> This board is manufactured by Ultratronik GmbH and uses the compatible
-> string "ux,imx8mp-ultra-mach-sbc".
->=20
-> Signed-off-by: Goran Ra=C4=91enovi=C4=87 <goran.radni@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
+On Mon, Jun 23, 2025 at 03:28:27PM +0900, Naoya Tezuka wrote:
+> The Reed-Solomon library enforces the constraint `n <= 2^m - 1` via a
+> BUG_ON() [1], where `n` is `block_size + ecc_size` and `m` is `symsize`
+> for the pstore RAM backend. A driver providing invalid parameters can
+> trigger this, leading to a kernel panic. For more details on the theory
+> behind, see [2].
+> 
+> This issue was discovered during developing chromeos_pstore driver.
+> Link: https://lore.kernel.org/lkml/20250610050458.4014083-1-naoyatezuka@chromium.org/
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+I'd prefer to unify it by using a [3] or at least move the tag to the end of
+commit message.
 
-Best regards,
-Krzysztof
+> Add a check to validate this constraint before initializing Reed-Solomon
+> codec. On failure, return -EINVAL to prevent the panic.
+> 
+> [1] https://elixir.bootlin.com/linux/v6.15/source/lib/reed_solomon/decode_rs.c#L43
+> [2] https://www.cs.cmu.edu/~guyb/realworld/reedsolomon/reed_solomon_codes.html
+> 
+> Signed-off-by: Naoya Tezuka <naoyatezuka@chromium.org>
 
+It should preserve my R-b tag as v2 doesn't change too much. Anyway,
+Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
