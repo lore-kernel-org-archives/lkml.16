@@ -1,173 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020CB29C32C
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 17:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E271B4242
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 17:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750698123; cv=none; b=mgViApBIW8F16uTXM0wKxfThNJWQqwOQCk1CSOHGxs8xrh+PY/m9BIbjCyroTD2+RW1soav9rPI/dYgpK7+YnI+jnECnfhavIx+WrBLlPu9owuneWDo8TT25Xd8JIBNiHPai9g1qu57VUhSP1hOIYBQzhkRl4bVOet+yz6j1GW0=
+	t=1750698172; cv=none; b=JZ7jdgeGkPOLl7qYqVkBBDXCwjoPWbjukkGzyt/KW3neuT2/IIRhFdicWJKfg/CmY7px02LvzdUKW4GerLJxkfKqMdTciwkepbXdHkQZnfWG7jl9iro+SYxIAK4UpgdZFsEgPwVPPIUWuzeSZYqbIc7tdKwm70PQBcdldv7UOIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750698123; c=relaxed/simple;
-	bh=taqM6M2yCTAkigZXwCzc8+OLPoroFfNThxW7WCtpr+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G5m5/LRNliCSMQvHmmoZBhUrQmF310aVomKC2las8eUXR8q3l+0NXMx2dr9n3sepL7IJw+f6Jqsv1y0iGhqacQDDNLkB9DJA/FoLUsonM1759dcrSisAIxXBv3WT4EBcySHiih+6SFa8oTrSgfp4mXecn94k4YsQCu8i/LNJmBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=awlvsOOx; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750698172; c=relaxed/simple;
+	bh=MhMfGlmeM4C5z3L/kbBx76/f30XBbi13AwE8phWRKp8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PvZATTS3sadBa5sd2ga9S7HITnPYW+PLkS7R49jaV2/qtHbJJ2Yomr4NCqVu1WKCrWGegjk9R84RkCg85afgPXQQ239IK1oaWv+prhLfDOd7oruklQHxCzNsRuO8fO4fZbfljm2vgTMb1hErWwymWIpljceQ+pXXoLqtZHu4F2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omnibond.com; spf=pass smtp.mailfrom=omnibond.com; dkim=pass (2048-bit key) header.d=omnibond-com.20230601.gappssmtp.com header.i=@omnibond-com.20230601.gappssmtp.com header.b=f0b7szUu; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omnibond.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omnibond.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="awlvsOOx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750698120;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jq5JtTNSTi3UbB2t2zf1v906mYuPWMRbjCVCINzsyvo=;
-	b=awlvsOOxrswfeet6OkNH1cd8KlJrN5amsr1/EM6//haKobUJTg3awi+3vd+ayRd5AhKBsF
-	M6NLuwAAcN8OyhsPwDOKvI0yTY1a4XyrNH0CQtsoxI+r2LQ94CmscYjkO4tcSJUE1E93qb
-	xiTjKFmI5HebRnILryiMTlfrf6maaP8=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-690-QY4FUpeRPK-J17016oSH2Q-1; Mon, 23 Jun 2025 13:01:56 -0400
-X-MC-Unique: QY4FUpeRPK-J17016oSH2Q-1
-X-Mimecast-MFC-AGG-ID: QY4FUpeRPK-J17016oSH2Q_1750698115
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a6df0c67a6so1103762f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:01:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750698115; x=1751302915;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=omnibond-com.20230601.gappssmtp.com header.i=@omnibond-com.20230601.gappssmtp.com header.b="f0b7szUu"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-311ef4fb43dso3446219a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:02:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=omnibond-com.20230601.gappssmtp.com; s=20230601; t=1750698170; x=1751302970; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Jq5JtTNSTi3UbB2t2zf1v906mYuPWMRbjCVCINzsyvo=;
-        b=khaM6ATZ3EDdwqlvxw1tkU8yKAnH3e9sWiK92Xo31u41ELv1uUc2eDncG+SybEXpBs
-         xnVZc1RmwSQqmvziJj0emsY6jHp5XE+ug+3OhLq06c0+t4vMTvmYXNXZo1bkL/ipjENt
-         FfE++tdxIkyhEKXvJbdp7kMt666kCsGOFyDQ+CHAiGqITsY+KJkaWhLNKF4b+8IFY63p
-         7/C4L6EcGRut6w+sZfn0OtFk71ng+NPgQ0Mq+J7gzv6B3jlixCEbziJOGqQpNoBSK3YI
-         EVjpqW2hVBfuHWU7Ar6UDDBmoLDr0rXoWOM5v8wPX0h5uvvCRSPuYDB5HBz+C9HKOU6Z
-         bYbA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9dX+pR7QE9zwN+KO1kAt1E4lq3r8wkPvmemxoqznU9F86Wy+sDXuerMFoBKxdbYKvgS3i1xGQ1qJGslM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCkcEso4KeO9UIvx6mPpMXIgMRR816ivhlrTrOh6K9yXFoDhPF
-	oWW7Oom2VUaft8/0T1qbN0p+RHMmlj5BIiKblqZR3VBNoz74AwJFWmFCLd9j5asXmeGOzgn0wC+
-	IBSOrJZFgRycnHSfrI0WoIngKRpZve8fBG0X1MB5MvLS+elsmeFJ5/ePGD8B8fXrqNA==
-X-Gm-Gg: ASbGncuGB9lv5RYM7utazUfK9NAA1p/ElrsGi4wWzT1UAWBn9XoWg28oH3q1+sfy4sS
-	AEI0thxm52d+xEyo9uWqhabSrrzjByiRQxft9LP/rIEL4Hq5HUGTAz3CrChTPU5YxQM857AL5tJ
-	fjsbtOe/EB6xe6RU3FM6tBsw2l0mcAlU//M5zKer+Qro/GPuXnUmUtZ9piUrIzpsW2pi9mxCol4
-	87EVL2rjosd4mZS1n2r8DCbYkFqN44YWUPAPAtUUIyvLSEoZENCXT5Ai3Joxmuw/Jr6KoK0pruX
-	JAfJyDjvdGKqN+1X/5WtjeaDgXA=
-X-Received: by 2002:a05:6000:288d:b0:3a5:8905:2dd9 with SMTP id ffacd0b85a97d-3a6d1331316mr11150046f8f.51.1750698114868;
-        Mon, 23 Jun 2025 10:01:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFgLc1G5fHA+5OCdohy+RX20t3SZJ3zi/U76KcD2RoeCTL1jtFDfjcLkndhINDFJCXPqEyFPQ==
-X-Received: by 2002:a05:6000:288d:b0:3a5:8905:2dd9 with SMTP id ffacd0b85a97d-3a6d1331316mr11149981f8f.51.1750698114073;
-        Mon, 23 Jun 2025 10:01:54 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.144.60])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f10411sm9667235f8f.1.2025.06.23.10.01.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 10:01:53 -0700 (PDT)
-Date: Mon, 23 Jun 2025 19:01:44 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Xuewei Niu <niuxuewei97@gmail.com>
-Cc: davem@davemloft.net, decui@microsoft.com, fupan.lfp@antgroup.com, 
-	haiyangz@microsoft.com, jasowang@redhat.com, kvm@vger.kernel.org, kys@microsoft.com, 
-	leonardi@redhat.com, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	mst@redhat.com, netdev@vger.kernel.org, niuxuewei.nxw@antgroup.com, 
-	pabeni@redhat.com, stefanha@redhat.com, virtualization@lists.linux.dev, 
-	wei.liu@kernel.org, xuanzhuo@linux.alibaba.com
-Subject: Re: [PATCH net-next v3 1/3] vsock: Add support for SIOCINQ ioctl
-Message-ID: <opt6smgzc7evwrme7mulwyqute6enx2hq2vjfjksroz2gzzeir@sy6be73mwnsu>
-References: <y465uw5phymt3gbgdxsxlopeyhcbbherjri6b6etl64qhsc4ud@vc2c45mo5zxw>
- <20250622135910.1555285-1-niuxuewei.nxw@antgroup.com>
+        bh=MhMfGlmeM4C5z3L/kbBx76/f30XBbi13AwE8phWRKp8=;
+        b=f0b7szUukz/zcLud/WoF9zUc7jq9YHwWgfGYJys5bi7RPsBqTjCOYLUPwjy3FgyjsK
+         JO+RO5eWDszGI74OSKeNUaT4mFjlWbCqrmkZCzxZdfJ0MaFiwaXjFyJFWMPqwhXHZums
+         WXB6IHGKpZhV3IdnNnaynXdC/2h84SahTJIUWQywxZEtp25JRuV7cSp6nlTMSzEEzRg9
+         M7R+QVXscqmw9c3w200VLjKBcQTaQpQyYE9NdOuI+Xz92nuw88DBZw5CPkcnitbW4YWq
+         2WPycnM8CYecB7tmtgfaMLZQLNnTnaIMg76NoZzpOxzwIPYUcUwPGPjbqW0sajBmy9wD
+         DJkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750698170; x=1751302970;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MhMfGlmeM4C5z3L/kbBx76/f30XBbi13AwE8phWRKp8=;
+        b=T29EROtoxzFM1NBvU+vBfzxV0mRkfoo6W/6wvm1zkF3ri6FoAGE5T7HmJJCP4XwmpY
+         tEuIjmLd1fMQTntY8HJiEdIG+QzAFdcsy7DtEi9q6cUvqh2KKpMeGjP+H3b7pCrpJaq9
+         OaLmdbhhlg14+JjFwOxrSXylj3D7ReS2ZxGjkGqm5hp97ir8u569NBGQKwGzqEAXP11+
+         9Zjy9wXxk6Uo2OrHMTq+3wyFo+pDXQTc2TZP99IKLiAoi9pxFEa5kpZR4BqRKxcH8irq
+         Pz8W5Fk2H507nZWHUYBoQIG9AMIdFyZgxU34CAQM2hiAPf4pCugcrlwWnHMMzfvjNyV+
+         5VJw==
+X-Forwarded-Encrypted: i=1; AJvYcCX1bhvIK5Qtk+gk36VBHUroVPxNp/cZeQ1poWkgDLMfV1wP9ei9kPKJY5uvN9GePFMCmCR61Uo7T4/F6Fs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+GnUvIyj1HVTnM8CC11iw680y+a4XIFbLRkw/C9wv6A2zf83w
+	SEW36ijbsGF2/hbwn75ZM76nZzJE5YTpVcoOdsrbj0SJT7ItMURM6jb5EqIjPBIdNItCwfKWgW6
+	FaMOHeYGuqvNQOue0LT1F1dHtNlEVbMWF5P3bGAu6
+X-Gm-Gg: ASbGnctwNwbmXmBOO224SjkUrz93qhYO+x5SETgxKZsc6dxSOqCE096rVTQALQ6W63j
+	N2e8OuOTY3/qoRO6vacxUMsKcdUziculBRGqX8H3oXZ9bBqdZ6DDU1LNQu3KZumMWnElG5bxmVh
+	HWGhtt/V+YW8p6DczE1OgXPQ3SVSM864wrvtyZSw1b75MaURJrOu0ArrA=
+X-Google-Smtp-Source: AGHT+IHBUhmZyoZ2ZPKvz6pdpo2lOZcsTUG0V9m5Av3tGsK3wA1iQ6MlrsQOgQpjnluNSPr5QeZvuKJclzIuyQKHVno=
+X-Received: by 2002:a17:90b:2f0d:b0:311:9c9a:58c5 with SMTP id
+ 98e67ed59e1d1-3159d643c15mr24825115a91.12.1750698169856; Mon, 23 Jun 2025
+ 10:02:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250622135910.1555285-1-niuxuewei.nxw@antgroup.com>
+References: <20250608163559.36401-1-a.jahangirzad@gmail.com>
+ <CADf5TKvyKvaP3eZUR81ND6JQUfVqUEroCrXp=joZ8GHdu2EBbA@mail.gmail.com>
+ <20250622184815.GW1880847@ZenIV> <CADf5TKvorgeCJ=6u6=jhxetUhDx3SCnUBe+cpbUQu5gADqRRCg@mail.gmail.com>
+In-Reply-To: <CADf5TKvorgeCJ=6u6=jhxetUhDx3SCnUBe+cpbUQu5gADqRRCg@mail.gmail.com>
+From: Mike Marshall <hubcap@omnibond.com>
+Date: Mon, 23 Jun 2025 13:02:38 -0400
+X-Gm-Features: AX0GCFtkqpzhmG4Q49Iqw-ox40GRzXvAovLgprfA4QlL9qfM2t5DZn7sHmIPDQk
+Message-ID: <CAOg9mSQGNOrA0p4q+9Q_tLCMtBnCuEc5d+TYXdV+7XT4pqOQNg@mail.gmail.com>
+Subject: Re: [PATCH] fs/orangefs: use snprintf() instead of sprintf()
+To: Amir Mohammad Jahangirzad <a.jahangirzad@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, martin@omnibond.com, devel@lists.orangefs.org, 
+	linux-kernel@vger.kernel.org, Mike Marshall <hubcap@omnibond.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 22, 2025 at 09:59:10PM +0800, Xuewei Niu wrote:
->> ACCin hyper-v maintainers and list since I have a question about hyperv
->> transport.
->>
->> On Tue, Jun 17, 2025 at 12:53:44PM +0800, Xuewei Niu wrote:
->> >Add support for SIOCINQ ioctl, indicating the length of bytes unread in the
->> >socket. The value is obtained from `vsock_stream_has_data()`.
->> >
->> >Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
->> >---
->> > net/vmw_vsock/af_vsock.c | 22 ++++++++++++++++++++++
->> > 1 file changed, 22 insertions(+)
->> >
->> >diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->> >index 2e7a3034e965..bae6b89bb5fb 100644
->> >--- a/net/vmw_vsock/af_vsock.c
->> >+++ b/net/vmw_vsock/af_vsock.c
->> >@@ -1389,6 +1389,28 @@ static int vsock_do_ioctl(struct socket *sock, unsigned int cmd,
->> > 	vsk = vsock_sk(sk);
->> >
->> > 	switch (cmd) {
->> >+	case SIOCINQ: {
->> >+		ssize_t n_bytes;
->> >+
->> >+		if (!vsk->transport) {
->> >+			ret = -EOPNOTSUPP;
->> >+			break;
->> >+		}
->> >+
->> >+		if (sock_type_connectible(sk->sk_type) &&
->> >+		    sk->sk_state == TCP_LISTEN) {
->> >+			ret = -EINVAL;
->> >+			break;
->> >+		}
->> >+
->> >+		n_bytes = vsock_stream_has_data(vsk);
->>
->> Now looks better to me, I just checked transports: vmci and virtio/vhost
->> returns what we want, but for hyperv we have:
->>
->> 	static s64 hvs_stream_has_data(struct vsock_sock *vsk)
->> 	{
->> 		struct hvsock *hvs = vsk->trans;
->> 		s64 ret;
->>
->> 		if (hvs->recv_data_len > 0)
->> 			return 1;
->>
->> @Hyper-v maintainers: do you know why we don't return `recv_data_len`?
->> Do you think we can do that to support this new feature?
+Hi Y'all...
+
+I was about to add Amir's patch on top of 6.16-rc3 and run it through
+xfstests, when I saw Al's comment.
+
+Al patched a similar bit of code in orangefs-debugfs.c without
+removing sprintf:
+
+45063097 - "don't open-code file_inode()"
+
+When I look at orangefs_debug_read as it is now, I might be trusting
+file->private_data's length too much and Amir's patch might risk sending
+a bad sprintf_ret to simple_read_from_buffer. Al, could you be
+more explicit?
+
+-Mike
+
+On Sun, Jun 22, 2025 at 4:10=E2=80=AFPM Amir Mohammad Jahangirzad
+<a.jahangirzad@gmail.com> wrote:
 >
->Hi Hyper-v maintainers, could you please take a look at this?
+> On Sun, Jun 22, 2025 at 10:18=E2=80=AFPM Al Viro <viro@zeniv.linux.org.uk=
+> wrote:
+> >
+> > On Sun, Jun 22, 2025 at 10:09:58PM +0330, Amir Mohammad Jahangirzad wro=
+te:
+> >
+> > > > Replace sprintf() with snprintf() for copying the debug string
+> > > > into a temporary buffer, using ORANGEFS_MAX_DEBUG_STRING_LEN as
+> > > > the maximum size to ensure safe formatting and prevent memory
+> > > > corruption in edge cases.
+> >
+> > Out of curiosity - have you actually looked at the format used there?
 >
->Hi Stefano, if no response, can I fix this issue in the next version?
-
-Yep, but let's wait a little bit more.
-
-In that case, please do it in a separate patch (same series is fine) 
-that we can easily revert/fix if they will find issues later.
-
-Thanks,
-Stefano
-
->
->Thanks,
->Xuewei
->
->> Thanks,
->> Stefano
->>
->> >+		if (n_bytes < 0) {
->> >+			ret = n_bytes;
->> >+			break;
->> >+		}
->> >+		ret = put_user(n_bytes, arg);
->> >+		break;
->> >+	}
->> > 	case SIOCOUTQ: {
->> > 		ssize_t n_bytes;
->> >
->> >--
->> >2.34.1
->> >
->
-
+> No, I just found this through static analysis. Is there any issue with it=
+?
