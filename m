@@ -1,64 +1,73 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD79526D4FC
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:58:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E8623ABAD
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750690696; cv=none; b=rk0xcCq8oY/un3e9UuzhjitorHw4KKjn4PHa/dFhiRW2EYbvtSl4ELMXGv/T7vnUkkIZeaPLL8qfi/pZaCf0+DQWDh0A1/cTJ2929/efun87gaa5TEOfWbQvK1zGdZCe+FflkKKXBn5f0/SuH3fCZJnBySmfGWnAlFIIz65y2CI=
+	t=1750690734; cv=none; b=qQQTZr8xDpv3L0i3JuRLQOCOMr93mDSMZ4yhh7/mZpyZkeIEcEf+buIuGgV9/71R007uLf86YtAZ7Cv/YC1pzLksi0OBZmGNsKV9e0zAO+O0/ZXTULzkekfcjWDOEfi3T1nD57HvF86u8b46IYYcjzvqqJHKu79WUKk3Q9zUmPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750690696; c=relaxed/simple;
-	bh=kzpB/oTMZD+YxEDYXaetf/sCSy199yXiANp2zlXAnmo=;
+	s=arc-20240116; t=1750690734; c=relaxed/simple;
+	bh=I0vLvxNhNB4FaaXsZwnwZHctYtZVxZ/sEkUln7niZwk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eaWCTIsuis0Xp17Uc6iYYgcH3CvrMk48X1q7NhE0lwyfUQrLPMRdyZktAOWW5u2sCksfd7WtWIzreLl1L4QdSwaHWLp2uzEBj8sTsLDdRGD1L3DN2qePFBv/CX8tLEPGqXC8JkTqxKxLMFB57LxX9JlHTXBRbMo1wwQCZGztvYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=rTT2f75t; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	 In-Reply-To:Content-Type; b=URbIZDRWPt+bkq9qypqBc13kJRifmttbpi6mnpkOLKBRbNNbz2impsiWLmLWor3v3vXoeyPQC3RXVAZa3tZsIsS/kFTT68dUjfZzUnk4rUSBxaKTYyDcsviactPKiZDSNYz00FiLAhheSgTHuC4BhTtWjrlFS18e6fYcJFtY16w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FGe3990/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="rTT2f75t"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-23526264386so46962435ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 07:58:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1750690692; x=1751295492; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=00yFHLwjKSmyTnldm5//Ve8YQJQIpSkCGJjKg7cs2a0=;
-        b=rTT2f75tufZHb3LLzHORLJjbtnoIVGvWL4uTcvmHtp4kheGVGGe6N0RtO0IGD0y7yz
-         hGaTfd058CIBPwF7pW6blwmEdVY/BzqtxgKIVekrkjJBMcybZQuE265x3lMw3RBEQkUb
-         OCg4izrxTQtRU5+jinuy2X+iP1lJ7m0Llij5dDmCRZJEXDeP4xNpOaamiB3wa+4dbpqG
-         taXq3O+C4kwgY723cXqHQZfhvA3SU8n6VpOzMn73RRdJFagjlJx7loCy1dO3a7NxgjLV
-         K3JYL+o+8/AOADbPOR3ALNt4dVnPbW+EDEjMXkvHoXkFdlin+vbiRoft+PBpdd7k0z45
-         dkfw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FGe3990/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750690731;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=2fxkqf4Mvr7CSFJ3WG+x2K7csO1QpeDPNxQNGZa8XgY=;
+	b=FGe3990/KsSeCodlHswxavBxvaLt83Oto+nynw+Weudveguko5fL/FCtlgw6ucfWmTs4CK
+	ERP02h38xTrgLVp6M0H915CVsrahAIVZ2CkEbHMzONRvTeLVC/kPk0N1bxCzkJEjKeIqRN
+	hq4+wpSiDqTbBKQDTLdKHH4gHZYawXs=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-15-xk-n2uPDNCqNAh5EUvyiiA-1; Mon, 23 Jun 2025 10:58:50 -0400
+X-MC-Unique: xk-n2uPDNCqNAh5EUvyiiA-1
+X-Mimecast-MFC-AGG-ID: xk-n2uPDNCqNAh5EUvyiiA_1750690729
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450d6768d4dso29239455e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 07:58:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750690692; x=1751295492;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=00yFHLwjKSmyTnldm5//Ve8YQJQIpSkCGJjKg7cs2a0=;
-        b=FB0f0emRG5Yp3zEMHwiBhY8RPd60S5Mvyk7el32U7jNOcDtWnvN7p/4qifenabVOeU
-         UCAzhneMyChscGrSsssrNVsoxfbNnbbBDvmna+D/enDmLh68cYao43w8tCfHmiXCz334
-         s7pFC3WW5AdW1SBheNsCxCedJsDGhYp+Q6KFGMUNocszRUCaBhh9gOctu35neN+6PLKN
-         uSCealfNlxMx5PaWSi4bEOo4Ms/nMldSympw6f7P+0PD+BywpnjXLbw9DISSLcAvACH8
-         Ywj0IPkN7GbaPrVsZqmwEkW7ErapfFmydXwna47gc3pDrhoEadc7NLsL+bZ9Lp6uhUnL
-         0Etg==
-X-Forwarded-Encrypted: i=1; AJvYcCUobhaUvrSD87TxJ8kqWKXH1tPl1+yoZxxbyd1vCgaP9U/aDeY1Penl4oFZg6QoV91LfAJrE6s3jZc0+Y4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzhumc3xkX+uxp3E2JqnXUOIr5VlkqT7i2BAMz8LF6QjdKQ+kRa
-	5s1oRGoMhTJM2Gelkn1/Z/zRxHhD3Rc+7wcoI2Y6xIjzRxR7qZt3L0wZwSbPqXVw+ok=
-X-Gm-Gg: ASbGncua9oIoSRdodG4R0+Bq7979peArcr8W1mgLapJquFypMuTcvKIXhpeQcrD0VEk
-	qlu10r7aghWWBOdprCoZRI2mxMYabgT79saUMh9wDKjx24cunw9hVZH+OhL9ymbahxJEXGBPelN
-	zLxAA2mqtZo8dz0FoIzFHke+BWt4M5LBS/LjBMQpOLd2OCib5tEJfCOSZrol5gQL603lLtiO6CQ
-	YntplCSfvvbiwlvaWduVhJArBH+kt+BfG3ncrTNFs0eTjS03YPk6N9dB0Pbx+pYwnTmJfLhPuD2
-	DT3bj38SYCzlMYtYWTO42sbBDO3cf0ZboCVDBm9RCkaYiA0PQHrQpYjGjHDMm+lL3A5i
-X-Google-Smtp-Source: AGHT+IFGJyaGlJ9kXniwK2TToGvQCZVPPliQLaHQMpaenA5QkeVuVo0fNAgLTHhZ/5bpw7VBsHsoHA==
-X-Received: by 2002:a17:902:c94e:b0:235:f18f:2924 with SMTP id d9443c01a7336-237d97cf9e2mr186776515ad.15.1750690691712;
-        Mon, 23 Jun 2025 07:58:11 -0700 (PDT)
-Received: from [172.20.0.228] ([12.48.65.201])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d860a387sm85254815ad.115.2025.06.23.07.58.10
+        d=1e100.net; s=20230601; t=1750690729; x=1751295529;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2fxkqf4Mvr7CSFJ3WG+x2K7csO1QpeDPNxQNGZa8XgY=;
+        b=a1lrKdpxHpvX0Zwb4rF2qbnNd2JNRckJuBfUOVku9NGGIlX9Dq067ZXwbFyvjgzAwn
+         viqc6NbHMRWA9h5yE7k1nd/nfmod33SUu7cIlPnUEL1lUmYXw00dt5NUBIme3FyOzsvw
+         QpN/EPx/H8094l65WnAOU+f9F4hQyIi5HRxDJNZvlZ/VjkVle0D3iX3IAmx2ikPaPzI4
+         toY4rutlwIGCapUKFHwh7ZApYxNXkCCrwo9e0gz5oW+Fr8HRrAEgd89RRsOMWVd2IQrY
+         bXq5NNyogS3WYK9wC4yGozoERw6wU2z3XN3lewLHOvU3J1LS7XZO5XgMzDH29/ZQJllo
+         3lqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVg+IvjgiOZqs3P6pCNExVtMgeHwSB/6tLBoPLXXHlnaAt0MNbYXeDh2LKeySRW56trODduLZXyfugNeiM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpH1tcn4wlWghWLc6J3EJ0iw7vVnWDbv7q2DJdmGahAHUGPqg3
+	/HgvG/GKp2PibEdz9xW/Pg5MGjOXusom+0yA0+aEMB0Pzv5jIonGqVHaoHWRsFer6eKvdY07VcJ
+	J2vcITOkvZM0rfOirGzlhXKqQkQN7ultcl3cSkRcyMArHWfCr2G7JNrrcmaJ8dIL1GQ==
+X-Gm-Gg: ASbGncuC5yIGL5NhkOVbc3vHpkgo3gV9kBR+AHdGBxeERBRe18vuT143sA9kyP0lChe
+	Z2E7jA4bdRnZ/fcSoFOmAgsk/Mjccy5dbWHY2vOOxQSTFn2BnaNvDAertf63pmqPz/yo5on85eT
+	7LPUk5JNz/d8xU2e3wBGZP4KetuwwhhY9P5LZjVPwL/9RE0MYQM8nLJ0erl4OlpOcQGNkri92o0
+	XygK5GQNlxvUCO0EfazXtT0w0nRXFsx6yYbfvgZzvP24Djj80m6zp3ZgXTDtx870uArGzU8NHfU
+	ntrVtNggaWGobiikJaCkwkNVhx9PpANzE2R0jUe/Ys78ZLf+uodzSyZRw2cowtmciooVzyJKI+Z
+	oB7klQr4OO/0XlZnPT942zL6dbkAKmqiP2RU2V9h/JV3ZfX/Akw==
+X-Received: by 2002:a05:600c:3b83:b0:43c:f513:9591 with SMTP id 5b1f17b1804b1-453659ca16cmr131187395e9.14.1750690728835;
+        Mon, 23 Jun 2025 07:58:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFtIybu0ONExVt+k2ulZMylHRwnO9hazFruWs7MB2pWYLqNa2thHFPG//NOW6TTZxku9Gf+yg==
+X-Received: by 2002:a05:600c:3b83:b0:43c:f513:9591 with SMTP id 5b1f17b1804b1-453659ca16cmr131186835e9.14.1750690728381;
+        Mon, 23 Jun 2025 07:58:48 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159? (p200300d82f4efd008e13e3b590c81159.dip0.t-ipconnect.de. [2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535eada7adsm149082415e9.35.2025.06.23.07.58.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 07:58:10 -0700 (PDT)
-Message-ID: <014a3820-8082-43a6-8bb2-70859cabdbc0@kernel.dk>
-Date: Mon, 23 Jun 2025 08:58:09 -0600
+        Mon, 23 Jun 2025 07:58:47 -0700 (PDT)
+Message-ID: <a8d40a05-db4c-400f-839b-3c6159a1feab@redhat.com>
+Date: Mon, 23 Jun 2025 16:58:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,221 +75,194 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [mm?] kernel BUG in sanity_check_pinned_pages
-To: David Hildenbrand <david@redhat.com>,
- Alexander Potapenko <glider@google.com>
-Cc: syzbot <syzbot+1d335893772467199ab6@syzkaller.appspotmail.com>,
- akpm@linux-foundation.org, catalin.marinas@arm.com, jgg@ziepe.ca,
- jhubbard@nvidia.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- peterx@redhat.com, syzkaller-bugs@googlegroups.com,
- Pavel Begunkov <asml.silence@gmail.com>
-References: <6857299a.a00a0220.137b3.0085.GAE@google.com>
- <b5aa34ed-d7d4-4445-b8bb-6187b4100682@redhat.com>
- <CAG_fn=WBBwkZZZzBMp0SO3=POgKzNaJGkU_YJKcAKRVQdEYPqw@mail.gmail.com>
- <56862a1d-71c0-4f07-9c1a-9d70069b4d9e@redhat.com>
- <b79acb4e-8a50-4d72-9aaa-0ec5dba25678@redhat.com>
-From: Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH net-next v6 9/9] page_pool: access ->pp_magic through
+ struct netmem_desc in page_pool_page_is_pp()
+To: Zi Yan <ziy@nvidia.com>, Byungchul Park <byungchul@sk.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com,
+ kuba@kernel.org, almasrymina@google.com, ilias.apalodimas@linaro.org,
+ harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
+ davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+ asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
+ edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, leon@kernel.org,
+ ast@kernel.org, daniel@iogearbox.net, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, horms@kernel.org, linux-rdma@vger.kernel.org,
+ bpf@vger.kernel.org, vishal.moola@gmail.com, hannes@cmpxchg.org,
+ jackmanb@google.com
+References: <20250620041224.46646-1-byungchul@sk.com>
+ <20250620041224.46646-10-byungchul@sk.com>
+ <ce5b4b18-9934-41e3-af04-c34653b4b5fa@redhat.com>
+ <20250623101622.GB3199@system.software.com>
+ <460ACE40-9E99-42B8-90F0-2B18D2D8C72C@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-In-Reply-To: <b79acb4e-8a50-4d72-9aaa-0ec5dba25678@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <460ACE40-9E99-42B8-90F0-2B18D2D8C72C@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 6/23/25 6:22 AM, David Hildenbrand wrote:
-> On 23.06.25 12:10, David Hildenbrand wrote:
->> On 23.06.25 11:53, Alexander Potapenko wrote:
->>> On Mon, Jun 23, 2025 at 11:29?AM 'David Hildenbrand' via
->>> syzkaller-bugs <syzkaller-bugs@googlegroups.com> wrote:
+On 23.06.25 13:13, Zi Yan wrote:
+> On 23 Jun 2025, at 6:16, Byungchul Park wrote:
+> 
+>> On Mon, Jun 23, 2025 at 11:16:43AM +0200, David Hildenbrand wrote:
+>>> On 20.06.25 06:12, Byungchul Park wrote:
+>>>> To simplify struct page, the effort to separate its own descriptor from
+>>>> struct page is required and the work for page pool is on going.
 >>>>
->>>> On 21.06.25 23:52, syzbot wrote:
->>>>> syzbot has found a reproducer for the following issue on:
->>>>>
->>>>> HEAD commit:    9aa9b43d689e Merge branch 'for-next/core' into for-kernelci
->>>>> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
->>>>> console output: https://syzkaller.appspot.com/x/log.txt?x=1525330c580000
->>>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=27f179c74d5c35cd
->>>>> dashboard link: https://syzkaller.appspot.com/bug?extid=1d335893772467199ab6
->>>>> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
->>>>> userspace arch: arm64
->>>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16d73370580000
->>>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=160ef30c580000
+>>>> To achieve that, all the code should avoid directly accessing page pool
+>>>> members of struct page.
 >>>>
->>>> There is not that much magic in there, I'm afraid.
+>>>> Access ->pp_magic through struct netmem_desc instead of directly
+>>>> accessing it through struct page in page_pool_page_is_pp().  Plus, move
+>>>> page_pool_page_is_pp() from mm.h to netmem.h to use struct netmem_desc
+>>>> without header dependency issue.
 >>>>
->>>> fork() is only used to spin up guests, but before the memory region of
->>>> interest is actually allocated, IIUC. No threading code that races.
+>>>> Signed-off-by: Byungchul Park <byungchul@sk.com>
+>>>> Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
+>>>> Reviewed-by: Mina Almasry <almasrymina@google.com>
+>>>> Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+>>>> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+>>>> Acked-by: Harry Yoo <harry.yoo@oracle.com>
+>>>> ---
+>>>>    include/linux/mm.h   | 12 ------------
+>>>>    include/net/netmem.h | 14 ++++++++++++++
+>>>>    mm/page_alloc.c      |  1 +
+>>>>    3 files changed, 15 insertions(+), 12 deletions(-)
 >>>>
->>>> IIUC, it triggers fairly fast on aarch64. I've left it running for a
->>>> while on x86_64 without any luck.
+>>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>>>> index 0ef2ba0c667a..0b7f7f998085 100644
+>>>> --- a/include/linux/mm.h
+>>>> +++ b/include/linux/mm.h
+>>>> @@ -4172,16 +4172,4 @@ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
+>>>>     */
+>>>>    #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
 >>>>
->>>> So maybe this is really some aarch64-special stuff (pointer tagging?).
+>>>> -#ifdef CONFIG_PAGE_POOL
+>>>> -static inline bool page_pool_page_is_pp(struct page *page)
+>>>> -{
+>>>> -     return (page->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
+>>>> -}
+>>>> -#else
+>>>> -static inline bool page_pool_page_is_pp(struct page *page)
+>>>> -{
+>>>> -     return false;
+>>>> -}
+>>>> -#endif
+>>>> -
+>>>>    #endif /* _LINUX_MM_H */
+>>>> diff --git a/include/net/netmem.h b/include/net/netmem.h
+>>>> index d49ed49d250b..3d1b1dfc9ba5 100644
+>>>> --- a/include/net/netmem.h
+>>>> +++ b/include/net/netmem.h
+>>>> @@ -56,6 +56,20 @@ NETMEM_DESC_ASSERT_OFFSET(pp_ref_count, pp_ref_count);
+>>>>     */
+>>>>    static_assert(sizeof(struct netmem_desc) <= offsetof(struct page, _refcount));
 >>>>
->>>> In particular, there is something very weird in the reproducer:
->>>>
->>>>      syscall(__NR_madvise, /*addr=*/0x20a93000ul, /*len=*/0x4000ul,
->>>>              /*advice=MADV_HUGEPAGE|0x800000000*/ 0x80000000eul);
->>>>
->>>> advise is supposed to be a 32bit int. What does the magical
->>>> "0x800000000" do?
+>>>> +#ifdef CONFIG_PAGE_POOL
+>>>> +static inline bool page_pool_page_is_pp(struct page *page)
+>>>> +{
+>>>> +     struct netmem_desc *desc = (struct netmem_desc *)page;
+>>>> +
+>>>> +     return (desc->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
+>>>> +}
+>>>> +#else
+>>>> +static inline bool page_pool_page_is_pp(struct page *page)
+>>>> +{
+>>>> +     return false;
+>>>> +}
+>>>> +#endif
 >>>
->>> I am pretty sure this is a red herring.
->>> Syzkaller sometimes mutates integer flags, even if the result makes no
->>> sense - because sometimes it can trigger interesting bugs.
->>> This `advice` argument will be discarded by is_valid_madvise(),
->>> resulting in -EINVAL.
+>>> I wonder how helpful this cleanup is long-term.
+>>>
+>>> page_pool_page_is_pp() is only called from mm/page_alloc.c, right?
 >>
->> I thought the same, but likely the upper bits are discarded, and we end
->> up with __NR_madvise succeeding.
+>> Yes.
 >>
->> The kernel config has
+>>> There, we want to make sure that no pagepool page is ever returned to
+>>> the buddy.
+>>>
+>>> How reasonable is this sanity check to have long-term? Wouldn't we be
+>>> able to check that on some higher-level freeing path?
+>>>
+>>> The reason I am commenting is that once we decouple "struct page" from
+>>> "struct netmem_desc", we'd have to lookup here the corresponding "struct
+>>> netmem_desc".
+>>>
+>>> ... but at that point here (when we free the actual pages), the "struct
+>>> netmem_desc" would likely already have been freed separately (remember:
+>>> it will be dynamically allocated).
+>>>
+>>> With that in mind:
+>>>
+>>> 1) Is there a higher level "struct netmem_desc" freeing path where we
+>>> could check that instead, so we don't have to cast from pages to
+>>> netmem_desc at all.
 >>
->>     CONFIG_TRANSPARENT_HUGEPAGE_MADVISE=y
+>> I also thought it's too paranoiac.  However, I thought it's other issue
+>> than this work.  That's why I left the API as is for now, it can be gone
+>> once we get convinced the check is unnecessary in deep buddy.  Wrong?
 >>
->> So without MADV_HUGEPAGE, we wouldn't get a THP in the first place.
+>>> 2) How valuable are these sanity checks deep in the buddy?
 >>
->> So likely this is really just like dropping the "0x800000000"
->>
->> Anyhow, I managed to reproduce in the VM using the provided rootfs on
->> aarch64. It triggers immediately, so no races involved.
->>
->> Running the reproducer on a Fedora 42 debug-kernel in the hypervisor
->> does not trigger.
+>> That was also what I felt weird on.
 > 
-> Simplified reproducer that does not depend on a race with the
-> child process.
+> It seems very useful when I asked last time[1]:
 > 
-> As expected previously, we have PAE cleared on the head page,
-> because it is/was COW-shared with a child process.
-> 
-> We are registering more than one consecutive tail pages of that
-> THP through iouring, GUP-pinning them. These pages are not
-> COW-shared and, therefore, do not have PAE set.
-> 
-> #define _GNU_SOURCE
-> #include <stdio.h>
-> #include <string.h>
-> #include <stdlib.h>
-> #include <sys/ioctl.h>
-> #include <sys/mman.h>
-> #include <sys/syscall.h>
-> #include <sys/types.h>
-> #include <liburing.h>
-> 
-> int main(void)
-> {
->         struct io_uring_params params = {
->                 .wq_fd = -1,
->         };
->         struct iovec iovec;
->         const size_t pagesize = getpagesize();
->         size_t size = 2048 * pagesize;
->         char *addr;
->         int fd;
-> 
->         /* We need a THP-aligned area. */
->         addr = mmap((char *)0x20000000u, size, PROT_WRITE|PROT_READ,
->                     MAP_FIXED|MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
->         if (addr == MAP_FAILED) {
->                 perror("MAP_FIXED failed\n");
->                 return 1;
->         }
-> 
->         if (madvise(addr, size, MADV_HUGEPAGE)) {
->                 perror("MADV_HUGEPAGE failed\n");
->                 return 1;
->         }
-> 
->         /* Populate a THP. */
->         memset(addr, 0, size);
-> 
->         /* COW-share only the first page ... */
->         if (madvise(addr + pagesize, size - pagesize, MADV_DONTFORK)) {
->                 perror("MADV_DONTFORK failed\n");
->                 return 1;
->         }
-> 
->         /* ... using fork(). This will clear PAE on the head page. */
->         if (fork() == 0)
->                 exit(0);
-> 
->         /* Setup iouring */
->         fd = syscall(__NR_io_uring_setup, 1024, &params);
->         if (fd < 0) {
->                 perror("__NR_io_uring_setup failed\n");
->                 return 1;
->         }
-> 
->         /* Register (GUP-pin) two consecutive tail pages. */
->         iovec.iov_base = addr + pagesize;
->         iovec.iov_len = 2 * pagesize;
->         syscall(__NR_io_uring_register, fd, IORING_REGISTER_BUFFERS, &iovec, 1);
->         return 0;
-> }
-> 
-> [  108.070381][   T14] kernel BUG at mm/gup.c:71!
-> [  108.070502][   T14] Internal error: Oops - BUG: 00000000f2000800 [#1]  SMP
-> [  108.117202][   T14] Modules linked in:
-> [  108.119105][   T14] CPU: 1 UID: 0 PID: 14 Comm: kworker/u32:1 Not tainted 6.16.0-rc2-syzkaller-g9aa9b43d689e #0 PREEMPT
-> [  108.123672][   T14] Hardware name: QEMU KVM Virtual Machine, BIOS edk2-20250221-8.fc42 02/21/2025
-> [  108.127458][   T14] Workqueue: iou_exit io_ring_exit_work
-> [  108.129812][   T14] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [  108.133091][   T14] pc : sanity_check_pinned_pages+0x7cc/0x7d0
-> [  108.135566][   T14] lr : sanity_check_pinned_pages+0x7cc/0x7d0
-> [  108.138025][   T14] sp : ffff800097ac7640
-> [  108.139859][   T14] x29: ffff800097ac7660 x28: dfff800000000000 x27: 1fffffbff80d3000
-> [  108.143185][   T14] x26: 01ffc0000002007c x25: 01ffc0000002007c x24: fffffdffc0698000
-> [  108.146599][   T14] x23: fffffdffc0698000 x22: ffff800097ac76e0 x21: 01ffc0000002007c
-> [  108.150025][   T14] x20: 0000000000000000 x19: ffff800097ac76e0 x18: 00000000ffffffff
-> [  108.153449][   T14] x17: 703e2d6f696c6f66 x16: ffff80008ae33808 x15: ffff700011ed61d4
-> [  108.156892][   T14] x14: 1ffff00011ed61d4 x13: 0000000000000004 x12: ffffffffffffffff
-> [  108.160267][   T14] x11: ffff700011ed61d4 x10: 0000000000ff0100 x9 : f6672ecf4f89d700
-> [  108.163782][   T14] x8 : f6672ecf4f89d700 x7 : 0000000000000001 x6 : 0000000000000001
-> [  108.167180][   T14] x5 : ffff800097ac6d58 x4 : ffff80008f727060 x3 : ffff80008054c348
-> [  108.170807][   T14] x2 : 0000000000000000 x1 : 0000000100000000 x0 : 0000000000000061
-> [  108.174205][   T14] Call trace:
-> [  108.175649][   T14]  sanity_check_pinned_pages+0x7cc/0x7d0 (P)
-> [  108.178138][   T14]  unpin_user_page+0x80/0x10c
-> [  108.180189][   T14]  io_release_ubuf+0x84/0xf8
-> [  108.182196][   T14]  io_free_rsrc_node+0x250/0x57c
-> [  108.184345][   T14]  io_rsrc_data_free+0x148/0x298
-> [  108.186493][   T14]  io_sqe_buffers_unregister+0x84/0xa0
-> [  108.188991][   T14]  io_ring_ctx_free+0x48/0x480
-> [  108.191057][   T14]  io_ring_exit_work+0x764/0x7d8
-> [  108.193207][   T14]  process_one_work+0x7e8/0x155c
-> [  108.195431][   T14]  worker_thread+0x958/0xed8
-> [  108.197561][   T14]  kthread+0x5fc/0x75c
-> [  108.199362][   T14]  ret_from_fork+0x10/0x20
-> 
-> 
-> When only pinning a single tail page (iovec.iov_len = pagesize), it works as expected.
-> 
-> So, if we pinned two tail pages but end up calling io_release_ubuf()->unpin_user_page()
-> on the head page, meaning that "imu->bvec[i].bv_page" points at the wrong folio page
-> (IOW, one we never pinned).
-> 
-> So it's related to the io_coalesce_buffer() machinery.
-> 
-> And in fact, in there, we have this weird logic:
-> 
-> /* Store head pages only*/
-> new_array = kvmalloc_array(nr_folios, sizeof(struct page *), GFP_KERNEL);
-> ...
-> 
-> 
-> Essentially discarding the subpage information when coalescing tail pages.
-> 
-> 
-> I am afraid the whole io_check_coalesce_buffer + io_coalesce_buffer() logic might be
-> flawed (we can -- in theory -- coalesc different folio page ranges in
-> a GUP result?).
-> 
-> @Jens, not sure if this only triggers a warning when unpinning or if we actually mess up
-> imu->bvec[i].bv_page, to end up pointing at (reading/writing) pages we didn't even pin in the first
-> place.
-> 
-> Can you look into that, as you are more familiar with the logic?
+> |> We have actually used this at Cloudflare to catch some page_pool bugs.
 
-Leaving this all quoted and adding Pavel, who wrote that code. I'm
-currently away, so can't look into this right now.
+My question is rather, whether there is some higher-level freeing path 
+for netmem_desc where we could check that instead (IOW, earlier).
+
+Or is it really arbitrary put_page() (IOW, we assume that many possible 
+references can be held)?
 
 -- 
-Jens Axboe
+Cheers,
+
+David / dhildenb
+
