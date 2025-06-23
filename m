@@ -1,50 +1,66 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC8324BD0C;
-	Mon, 23 Jun 2025 16:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E952989BF
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750695408; cv=none; b=UfPiPC/LIbLOpziTqucZQYAuSj1tD+zaByfYpeShkCNaYqFNb5kd2xEYAPQfbioh0y9N5ED2QqSXEKt0Ajn1ukwis337KHdhfRgtkhkGgJ7rYt1NObE3dQkT3WHrJw1IYkeemIpx8M8L3//bIYWQ2DR9QJSDE1LmCNIVe/zbwcw=
+	t=1750695495; cv=none; b=s+1JMIrBpChdVfd2sUbptwDafWKTpmieHfiYNXyIl4e+nZ6CNgypOfN6IgYc+wGt3WvYuQIihhV9eQv6snw49mKU8K8jCAxozPfBCFSiHPFLrJR8arHWHrE/zDjpURsrHj2GS55LEzbTmL3RAhC/PiGdXICNZweuZE9QUprocQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750695408; c=relaxed/simple;
-	bh=Ur0XOriXT1WlSZ1k17YMUC/sCAmjE++EAq3Cer6GQKI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SQzRvZOsNQpuoWaEi9foI7HWW4A6Xsl6Ez85WDe8YBvyf4QvJrlMobfZM7aS/AQ6qzFpLxlKczuf2NpIPv14+SgGwswP4nRMR3Xi2EAMg93Tcoz6MqrXXGy+biPH4WuKxDPhJsKMVcF72uNyVarVWxY4/punCwXi1lri3wSmdqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Ok289bH4; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1750695495; c=relaxed/simple;
+	bh=xOMzG1FX23M3d31kPYpV8HaBnyVBn7S3wyyV5oXXlCc=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=k93/u7aaYyMDLq9aZQdCS8Ji7VZbwlS2cmTyucdYcLEaUHvosonyfGOL84CVlyony3nzR9BnNU7rcr3tqjeRWiWgNWgyt0IamcVfDhtpI3zkL8FAL7lns0z/XBKijMw0ZD+e32zaoyGqhQpyd3MLMoVJNYkT6U7hCwAEvAHOToU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info; spf=pass smtp.mailfrom=jacekk.info; dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b=ngdv2pGr; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jacekk.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Ok289bH4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1750695407; x=1782231407;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Ur0XOriXT1WlSZ1k17YMUC/sCAmjE++EAq3Cer6GQKI=;
-  b=Ok289bH4Itw6AdHHfh18UBRJ/nhOL4CY/1loDg9Kf3CsAziBw36z6qRr
-   Q6Z+YwbOTvoVSHjhNheCmD6N2Dyx6BlxxYQKL4Zo3yXw/d2Wr2HX0ck3R
-   nt/Lf8+Rp6q8108nv8GAVK3BTLRzgAuoMxJ5gK2c0ZE89B3B7VPgkT0PZ
-   6AIGNpIbAGKCK4z4mNNuWddYSsBWGE0rn/cwEUE/4M2h00om2NFs8vf69
-   XjtWRx7ug5LHxa2eE6lSkmUuR7x4l4AzDkq5hy0tFwtcOolPLPyqOwfdG
-   gSdShPQSVHEMSDqx7raHsdm0hnxgwROH7J2xJe9y0d1yCZC2hhayTxER9
-   Q==;
-X-CSE-ConnectionGUID: YKKdZQvISxa431DUkbBFkA==
-X-CSE-MsgGUID: EAlSJYjtTEK2VZ7v+xC1Ag==
-X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
-   d="scan'208";a="43120166"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Jun 2025 09:16:46 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 23 Jun 2025 09:16:37 -0700
-Received: from [10.10.179.162] (10.10.85.11) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Mon, 23 Jun 2025 09:16:37 -0700
-Message-ID: <0aa6c9a4-4a65-4b55-a180-92c795499384@microchip.com>
-Date: Mon, 23 Jun 2025 09:16:37 -0700
+	dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b="ngdv2pGr"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-adb2e9fd208so901967466b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:18:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jacekk.info; s=g2024; t=1750695492; x=1751300292; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=08GIWol905Tz9t1Y5KR/Px/0Bj/EghmvZQXSpfLZ3xo=;
+        b=ngdv2pGrB8cTttQJIM6zP5bclIG3e+4z/WrmyJaL8sOru4Byd31dZYi6WJV5iiECSE
+         10ffemdd55gvB2Db8lk10NtSKNUz6KoKgXAi6ugjpjRlyKgFJao+Y0qnrZqZ0nXnOJLu
+         YX/Edm5+C4hwP1V20M/KE+E+Jm0UKHqa3D4hnWT6zaMIMECo1kJT8InHsTFRheK8ZvGN
+         gYKcWIY4lCWbAKKS4DY3KjpjwT7C4s6En/1aGg4bJkxh5QpjCR1yc4m8cx/QU4JtjeTs
+         umm8rIgAPOVzp06UBBBONjOb67cgu5W1ani1oN7oRfBfbYTYnV9Rx9vTbf7ujHTmQYVT
+         sVlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750695492; x=1751300292;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=08GIWol905Tz9t1Y5KR/Px/0Bj/EghmvZQXSpfLZ3xo=;
+        b=uLRm0Ro0YglritJJ+kb8F8MH3Y/hCc9AMIE7o09SizkKht3a73c2un0f5YSUT8wdgj
+         ApKJvoRIlYpxZWQ4zniuAn+DGqx2tMdaUGZQx9kbrV6htZZSASR7pS6fBEpfvHaWip2B
+         aBNyxzr1+iWzDAVUqXyeYwc6iuxAUSIAXHHBvEMhu4EH0H/0HwJMVfvXN8sGgNn7Wl4A
+         +PVQbY+SwJgfcBRN1SRwXtzRJLiDzpk3UNECQjF6w7BKE82rV9pS7zcqbjn8yY6ECtX8
+         fnKv2Mba7i6d1JjdnnVUZVC7sPvMXFX0gaKehWSe42wFpTuV6wu8w2GKizwbreHfAlmZ
+         VPHg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxc3RZIlfqBcIJiRZmOlTxENyJZL92Z5+ynQh7QjB8fFwAwVV9rBZMr56ETDNpIOkHkKPK0zYAcmjTZYA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxl7Ntig1JE+gneyaBTNScC3V86hRZSOnn5fTwJ1BQV5qyxyjMr
+	NGZUq39yscF1UVTENH5Qyi1BIp0ZiulzSrjSXyHQ0+Q6muR9fmiE68RS2GxfzMy75w==
+X-Gm-Gg: ASbGnct9My8NTZEU2KwFrcxCZKzJ9SlT9l/E749ZEH7Jxr45O9YWZ24zq46GiJ9fAr/
+	+u2VHnFLSj0ZqPpJvNiOWV/UhaCJz70J7CC4lpPYIaNFN0f3grpatoSlBG55TaZL+m9WlSYRb2i
+	cjr8RducqpiT3ied5+6WP4S1OfdcVr/Ex3M3RnDZ7LHwNughFNJWW4XNMsXQuEbEBtfE11HzCge
+	VLU4VTh39e69AwMrGOUI8SfWciN3f6K5aM3kjrsjVCtl0kocHDDO4a6EI5XH1Gg7euTDLsaL2gM
+	JjhiWAcctUtgKbTDSQEmBa3gvtb65BPWvRFE64cCMNo0eJKhJWxcVL+Ztvz3frjo
+X-Google-Smtp-Source: AGHT+IGKSt1ZPvM2yYVioJCPzIyELNHZzrEHQ6g9+s79wuGsECQkKe80vWV6dvdNE+yByyUw8mwsHg==
+X-Received: by 2002:a17:907:7250:b0:ad8:8e56:3c5c with SMTP id a640c23a62f3a-ae0578f3e81mr1200596566b.11.1750695491746;
+        Mon, 23 Jun 2025 09:18:11 -0700 (PDT)
+Received: from [192.168.0.114] ([91.196.212.106])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054209ad2sm741886666b.148.2025.06.23.09.18.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 09:18:11 -0700 (PDT)
+From: Jacek Kowalski <jacek@jacekk.info>
+X-Google-Original-From: Jacek Kowalski <Jacek@jacekk.info>
+Message-ID: <8538df94-8ce3-422d-a360-dd917c7e153a@jacekk.info>
+Date: Mon, 23 Jun 2025 18:18:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,44 +68,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Expose REFCLK for RMII and enable RMII
-To: Andrew Lunn <andrew@lunn.ch>
-CC: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-	<claudiu.beznea@tuxon.dev>, <netdev@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <cover.1750346271.git.Ryan.Wanner@microchip.com>
- <4b1f601d-7a65-4252-8f04-62b5a952c001@lunn.ch>
-From: Ryan Wanner <ryan.wanner@microchip.com>
+Subject: Re: [PATCH v2 2/2] e1000e: ignore factory-default checksum value on
+ TGP platform
+To: Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Vlad URSU <vlad@ursu.me>
+Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <fe064a2c-31d6-4671-ba30-198d121782d0@jacekk.info>
+ <b7856437-2c74-4e01-affa-3bbc57ce6c51@jacekk.info>
 Content-Language: en-US
-In-Reply-To: <4b1f601d-7a65-4252-8f04-62b5a952c001@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b7856437-2c74-4e01-affa-3bbc57ce6c51@jacekk.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/21/25 00:24, Andrew Lunn wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> On Thu, Jun 19, 2025 at 10:04:12AM -0700, Ryan.Wanner@microchip.com wrote:
->> From: Ryan Wanner <Ryan.Wanner@microchip.com>
->>
->> This set allows the REFCLK property to be exposed as a dt-property to
->> properly reflect the correct RMII layout. RMII can take an external or
->> internal provided REFCLK, since this is not SoC dependent but board
->> dependent this must be exposed as a DT property for the macb driver.
-> 
-> What board is going to use this? Do you have a patch for a .dts file?
+Vlad,
 
-Our SAMA7D65_curiosity board has a connector that allows us to change
-ethernet phys. Since some of the phys we have provide their own REFCLK
-while others do not, this property needs to be added so we are able to
-use all of these.
+could you verify that the following patch works for you?
 
-I do not have an exact .dts patch for this since our default is MPU
-provides the REFCLK, this property will be used with dt-overlays that
-match each phy that is connected.
+> diff --git a/drivers/net/ethernet/intel/e1000e/defines.h b/drivers/net/ethernet/intel/e1000e/defines.h
+> index 8294a7c4f122..01696eb8dace 100644
+> --- a/drivers/net/ethernet/intel/e1000e/defines.h
+> +++ b/drivers/net/ethernet/intel/e1000e/defines.h
+> @@ -637,6 +637,7 @@
+>  
+>  /* For checksumming, the sum of all words in the NVM should equal 0xBABA. */
+>  #define NVM_SUM                    0xBABA
+> +#define NVM_SUM_FACTORY_DEFAULT    0xFFFF
+>  
+>  /* PBA (printed board assembly) number words */
+>  #define NVM_PBA_OFFSET_0           8
+> diff --git a/drivers/net/ethernet/intel/e1000e/nvm.c b/drivers/net/ethernet/intel/e1000e/nvm.c
+> index e609f4df86f4..37cbf9236d84 100644
+> --- a/drivers/net/ethernet/intel/e1000e/nvm.c
+> +++ b/drivers/net/ethernet/intel/e1000e/nvm.c
+> @@ -558,6 +558,11 @@ s32 e1000e_validate_nvm_checksum_generic(struct e1000_hw *hw)
+>  		checksum += nvm_data;
+>  	}
+>  
+> +	if (hw->mac.type == e1000_pch_tgp && checksum == (u16)NVM_SUM_FACTORY_DEFAULT) {
+> +		e_dbg("Factory-default NVM Checksum on TGP platform - ignoring\n");
+> +		return 0;
+> +	}
+> +
+>  	if (checksum != (u16)NVM_SUM) {
+>  		e_dbg("NVM Checksum Invalid\n");
+>  		return -E1000_ERR_NVM;
 
-Ryan
-> 
->         Andrew
-
+-- 
+Best regards,
+  Jacek Kowalski
