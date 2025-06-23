@@ -1,140 +1,144 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F5A2367A6
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CEC17996;
+	Mon, 23 Jun 2025 09:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750670772; cv=none; b=C+alZ8+T0UWO3JbTBJ/YfX+oF9/O/kiNmyoE0tRDaVS24ZELaXC0JfG4EhRFvP8jqIwSsExLzfHaPnxZnLhQwIuEZgJ+cRAVnS4RCccXBn/73o5WsO/TUYW/8RoExr6Ny06RibgS2g7p3kOKDh5RU6+uEBepXc5TLVQ/ipQk+U8=
+	t=1750670809; cv=none; b=MwG30LZz3PINL0lgKCQU5V0/D+ri+I7k0Zqyu3pkztQwZL3FnjkbVESXMnBtoJpjPUDe2IqorpH6e8thPNdiicqNY6JmiqOgeZuzy5jikQSLGoX8Z+Ej8pxH+X80bq57iH0qgPnpTJ3ii6PmdzRnJqEboGvueqYZ3kKl5dECN0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750670772; c=relaxed/simple;
-	bh=/mSzpNRlNFtyqvYxA/DRD7Gt3GU9kv5v21Eo6mNvjvM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=t7g9c6mvk3+vt+pcH4fQN/nLOgLTuQnElQ2cl2CXcUcPmZLvI0h3PBgkSj/QwO4e0k0Bxwz+D/NSrI+B/U2iVnRZTu/qyHUqigWtW2ULJzDOIFWzp4mTOvt/1JzIls3p1ECamvCcVOtuy9PxaC3NV4zN1oZQdxl1qnRPqKYTwYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gprocida.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JgUAmWUQ; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gprocida.bounces.google.com
+	s=arc-20240116; t=1750670809; c=relaxed/simple;
+	bh=WefXIWazEPskl9B0X1xFtEXjeBSL+nY1ELytivVzN98=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DJ+zAqC8CzetOTfF5KGBYyfESC4rRcXZ51gL++SDH1B6VCFBpBwP1HIFz+OEX8KrSzVOfbJtIwffBgQhKcZTjB4Dy6LaisJwDljjmNRHkIz8z5TDCRdM1sWGXdaH6OaPbjUv83c/A0gpba5fxgFq8cATm9TSYlVOYN3QP2/WRFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qw+aUfQS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JgUAmWUQ"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-450d50eacafso23276775e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 02:26:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750670769; x=1751275569; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Pa2ZDWEMmyq3FnjO/079PycJx+3r729iLJomR78p2yI=;
-        b=JgUAmWUQ3bB+QSfOHzpK/WALnO5ddPJFMD/HdvfG4oJ7LnhzKBhsSi4peZ7YR9Ocae
-         exlyObgpkUMTlA+wuI4BMviGrU0keUz6rwAnkUNy6z44PlU6dRq17+SGTLZFfe4bQnbI
-         aObTyO0giApqVnXvZVWJwtxyCQaoQFVYsM0Xm2oIzVA/XLJsdUq/QkpklYdKy98MILdR
-         1XzCRVuzYV54RIEgl1N8zBe+5gSqINZnucOTBxKZ97JzI923achMKrQsAguzsPERTzU7
-         gts3u04WBWuhQX+jyNyYcy/H1z938QypidnEPXx8FMTVLQ1M6brwXj54EwemZhJrI00+
-         tChQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750670769; x=1751275569;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Pa2ZDWEMmyq3FnjO/079PycJx+3r729iLJomR78p2yI=;
-        b=UyiRlquNvS/TUQL082jHPtCbYFU/JTmoJgiNM+YpDIAqS/ZONl9eg9JY6b4PoNHdxz
-         P6ZyGAYMVnnO8IpWIq9HNxVytOahn4b1ssqth/Wm953cKQy3iSqPwpdtqelaKkViDqFR
-         zEIOWwpjAUKTklIeqLgnBNHoRPx47kQ7zjIxl69uj6WVIOI1jhFjb0BUII6N4japEr+A
-         QeYCreaB/+Vh3WHG7donLGc5o+EzT6Vr8jKYo69mNHoiXrNF7+PGqyeZxWpHDpPBjWE3
-         SWIJuNITL+Hl80+xepm/fup0abUUFkkG/ztHOQ34kfjjFgKM5TUiTVe0TTPdMnIRgaVf
-         GDSw==
-X-Forwarded-Encrypted: i=1; AJvYcCUzCCK5eK4QWcp0aDa5CIEAp4dUhFcdzJWrH6G1LtlmuqZrZeOLGel/GZ4js+6KdWVkh2xlmxCDZPoi04U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytF1pf68DEGVXVLlrOfO3Zb2EBqA1BKhmDQEmR07PPkNjZsVKs
-	cD2IaR2DyyUoeSKQ9IDxu9yFNuCIWja32RYCErOjegcRY2az8M5AekOAqLH/5+aVwnW8jKJxXVf
-	s5tpIxRRiIUnrzg==
-X-Google-Smtp-Source: AGHT+IHE7/ErI0nHyXwFIqSpDJmkjX2TMJFOBhBRQLErcWtRRel7p7wYqamomiKZmCXLM6/DNtN3nQ3WZ3R3MA==
-X-Received: from wmtk6.prod.google.com ([2002:a05:600c:c4a6:b0:452:f960:4dfc])
- (user=gprocida job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:5490:b0:44b:eb56:1d45 with SMTP id 5b1f17b1804b1-453655c30e4mr127947675e9.15.1750670769334;
- Mon, 23 Jun 2025 02:26:09 -0700 (PDT)
-Date: Mon, 23 Jun 2025 10:21:47 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qw+aUfQS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A007EC4CEEA;
+	Mon, 23 Jun 2025 09:26:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750670808;
+	bh=WefXIWazEPskl9B0X1xFtEXjeBSL+nY1ELytivVzN98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qw+aUfQSuKHEk4enVIrEz606dRtP6XgNppP2YO4INXtXX0fpKl7h4u8sf/OIVdZnD
+	 NV0a4MPutrCtYNNsfopZKOvqLp1uChhTnXU/ifibAjQcX5+vHM+wZYC5u2QZdbBUbG
+	 hqLK7QSB1BRJ/asx988F/PfQIVQ/RY4GUmm1JFsgN4/Mo8DqYKJQw5At6VHOYn0S0c
+	 /UfP5gASQorEsfU+ZD4hXDXpdiSjND8/UoejeEyZYy69Ux4hUolfJth5AbnALTSJow
+	 usdestU/sQ5azXOngEas1a3myuz4c299HGo5Yyo31BePXHs+oevsQhp/8PUPfwE+Tz
+	 /Jbrjo0uFvWOw==
+Date: Mon, 23 Jun 2025 11:26:41 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 24/27] irqchip/gic-v5: Add GICv5 ITS support
+Message-ID: <aFkd0cigSKOSqUQI@lpieralisi>
+References: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
+ <20250618-gicv5-host-v5-24-d9e622ac5539@kernel.org>
+ <87y0tmp6gn.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
-Message-ID: <20250623092350.3261118-2-gprocida@google.com>
-Subject: [PATCH] gendwarfksyms: make -T symtypes output be in name order
-From: Giuliano Procida <gprocida@google.com>
-To: Sami Tolvanen <samitolvanen@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Giuliano Procida <gprocida@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87y0tmp6gn.ffs@tglx>
 
-When writing symtypes information, we iterate through the entire hash
-table containing type expansions. The key order varies unpredictably
-as new entries are added, making it harder to compare symtypes between
-builds.
+On Fri, Jun 20, 2025 at 09:18:32PM +0200, Thomas Gleixner wrote:
 
-Resolve this by sorting the type expansions by name before output.
+[...]
 
-Signed-off-by: Giuliano Procida <gprocida@google.com>
----
- scripts/gendwarfksyms/types.c | 29 ++++++++++++++++++++++++++---
- 1 file changed, 26 insertions(+), 3 deletions(-)
+> > + * Taken from msi_lib_irq_domain_select(). The only difference is that
+> > + * we have to match the fwspec->fwnode parent against the domain->fwnode
+> > + * in that in GICv5 the ITS domain is represented by the ITS fwnode but
+> > + * the MSI controller (ie the ITS frames) are ITS child nodes.
+> > + */
+> > +static int gicv5_its_irq_domain_select(struct irq_domain *d, struct irq_fwspec *fwspec,
+> > +				       enum irq_domain_bus_token bus_token)
+> > +{
+> > +	const struct msi_parent_ops *ops = d->msi_parent_ops;
+> > +	u32 busmask = BIT(bus_token);
+> > +
+> > +	if (!ops)
+> > +		return 0;
+> > +
+> > +	if (fwnode_get_parent(fwspec->fwnode) != d->fwnode ||
+> > +	    fwspec->param_count != 0)
+> > +		return 0;
+> 
+> Just add a MSI flag and set it in parent_ops::required_flags and extend
 
-diff --git a/scripts/gendwarfksyms/types.c b/scripts/gendwarfksyms/types.c
-index 7bd459ea6c59..51c1471e8684 100644
---- a/scripts/gendwarfksyms/types.c
-+++ b/scripts/gendwarfksyms/types.c
-@@ -6,6 +6,8 @@
- #define _GNU_SOURCE
- #include <inttypes.h>
- #include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
- #include <zlib.h>
- 
- #include "gendwarfksyms.h"
-@@ -179,20 +181,41 @@ static int type_map_get(const char *name, struct type_expansion **res)
- 	return -1;
- }
- 
-+static int cmp_expansion_name(const void *p1, const void *p2)
-+{
-+	struct type_expansion *const *e1 = p1;
-+	struct type_expansion *const *e2 = p2;
-+
-+	return strcmp((*e1)->name, (*e2)->name);
-+}
-+
- static void type_map_write(FILE *file)
- {
- 	struct type_expansion *e;
- 	struct hlist_node *tmp;
-+	struct type_expansion **es;
-+	size_t count = 0;
-+	size_t i = 0;
- 
- 	if (!file)
- 		return;
- 
--	hash_for_each_safe(type_map, e, tmp, hash) {
--		checkp(fputs(e->name, file));
-+	hash_for_each_safe(type_map, e, tmp, hash)
-+		++count;
-+	es = xmalloc(count * sizeof(struct type_expansion *));
-+	hash_for_each_safe(type_map, e, tmp, hash)
-+		es[i++] = e;
-+
-+	qsort(es, count, sizeof(struct type_expansion *), cmp_expansion_name);
-+
-+	for (i = 0; i < count; ++i) {
-+		checkp(fputs(es[i]->name, file));
- 		checkp(fputs(" ", file));
--		type_list_write(&e->expanded, file);
-+		type_list_write(&es[i]->expanded, file);
- 		checkp(fputs("\n", file));
- 	}
-+
-+	free(es);
- }
- 
- static void type_map_free(void)
--- 
-2.50.0.rc2.761.g2dc52ea45b-goog
+I added that but it does not work (not if we use d->flags as below), it works
+if I add it as an
 
+IRQ_DOMAIN_FLAG_*
+
+and set it in irq_domain_info in the msi_create_parent_irq_domain()
+call in the GICv5 ITS driver when creating the domain.
+
+> the lib with
+> 
+>         struct fwnode_handle *fwh;
+> 
+>         fwh = d->flags & MAGIC ? fwnode_get_parent(fwspec->fwnode) : fwspec->fwnode;
+
+Here we are using the domain flags and I think that's what we want.
+
+If I go with parent_ops flag, I believe here we need to use the parent
+msi_domain_info::flags - I don't think that's what we want.
+
+It is a property of the IRQ domain so I think that adding an
+
+IRQ_DOMAIN_FLAG_FWNODE_PARENT
+
+is the best option.
+
+Please let me know.
+
+Thanks,
+Lorenzo
+
+> 
+> No?
+> 
+> > diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
+> > index c2e7ba7e38f7..4a0990f46358 100644
+> > --- a/drivers/irqchip/irq-gic-v5.c
+> > +++ b/drivers/irqchip/irq-gic-v5.c
+> > @@ -57,12 +57,12 @@ static void release_lpi(u32 lpi)
+> >  	ida_free(&lpi_ida, lpi);
+> >  }
+> >  
+> > -static int gicv5_alloc_lpi(void)
+> > +int gicv5_alloc_lpi(void)
+> >  {
+> >  	return alloc_lpi();
+> >  }
+> >  
+> > -static void gicv5_free_lpi(u32 lpi)
+> > +void gicv5_free_lpi(u32 lpi)
+> >  {
+> >  	release_lpi(lpi);
+> >  }
+> 
+> Just make them global right away when you implement them. No point for
+> this kind of churn.
+> 
+> Thanks,
+> 
+>         tglx
