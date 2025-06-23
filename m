@@ -1,74 +1,77 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E709D38FA6
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BEB7299AA3;
+	Mon, 23 Jun 2025 16:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750696060; cv=none; b=rSLY1wQq+QDT0JhOsC6rtY0GkpjOmia/ff0PozAQniBLLiM0NQTxnnQajDWANDXlcMJZrs1+nJMsrozjLxBnXlS2+k2sQlycBw/TV85Qh29NNpjtcJ+XDakcPkcd9FM7bv3K6Fbuuaj2NZgaLlmj9W3qYrIz/2ZsUBCMbn4CRm4=
+	t=1750696068; cv=none; b=rFgHcm7/TgVmiyc/dPO7nOE8x5d+XX67nwHLTGiUra6HJWRShWSfXkdeTJmB/1U01ewnaEdrZD9wpwoDueOEtGdAsh2mAQcRT103xLqx07i6EueJKc4+QnnLhTnuTnlvUPOpHXB8Mpk134bCBj4tVZurCpJrRbVH/SNDz7zuHS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750696060; c=relaxed/simple;
-	bh=hD3LyqvxdBAtqNmbN/95yEx4xeHpEc15pz/zmNqvauQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FZlMEOTVQxBAfBnd0BqIt7YP6LWR4PiAiq6glHVHpRNsjrg2fFygJa0m6owOO8UGBRm5WqpO2xBlS3IGa/v7xkyLi/G2XF5f9aQg0CwaHeKyfLBU+Xq5RuZz5C03vSWZp4rQVVpta9Z9MOYT6XF67aPXOULPK2TjoYciKJkAUwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=BMDUGZBv; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="BMDUGZBv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=xzXbWrMtLibjxXl6ZHVE1BIYoBsX6ZyJwnpRKBya/uw=; b=BMDUGZBv5e8qNHRyRquZHQqWcs
-	MLVicx2fiWQ5ryy+pBP4E+aHpOPjaMQdeOvQdK/Aj/2dW9xnkLJTxoNZMhLoAPHgeao8gxqarsrw1
-	NZIHKlJl5cWJb1Dw0H5cN7gxYjoI6pN10zz9muHah+g0YjqsorlyiuKYu3TS220CHhHOG+zIatXf0
-	vDt9aULQeGooK58u7Gqo9R9ayC1HTmR48ywMLhYnKD0ZbdplHDn85/zpdqPDcyopY98mfYvKhsQHZ
-	L4LhiypFDnjIREMq0t8Z5AdRjxd96XDvYzX2rgx3qo01Nn5Ieb4i0wnGg+yc3UGGhZHcjuynlNHiX
-	IwZh59mw==;
-Received: from [191.204.192.64] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uTk10-007Zub-IX; Mon, 23 Jun 2025 18:27:26 +0200
-Message-ID: <ca0dab04-7ccc-43e6-b5f3-7a739c867bc0@igalia.com>
-Date: Mon, 23 Jun 2025 13:27:22 -0300
+	s=arc-20240116; t=1750696068; c=relaxed/simple;
+	bh=e7AG1sO9g6P8AweAZMbNsLUjluCD0jinneNYAB/ud4U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PJQaLlawW3FBGKIn5v00JooRFqVW5BQVrNXOxXffvvzyK9YrR9Ji2UoeJsnAKg4Lx/ez+JMWxDNPnSyRsmdXXZDHShHap0Wn47oeVG0WLVjZhfWH+opojr7vXDOnZHoDdeVJhGytc9p/CKLZitdAbOGPtOpkeyNg+k0eGaD3UbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6BAA6113E;
+	Mon, 23 Jun 2025 09:27:23 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B3C2E3F66E;
+	Mon, 23 Jun 2025 09:27:39 -0700 (PDT)
+Date: Mon, 23 Jun 2025 17:27:36 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Peng Fan <peng.fan@oss.nxp.com>
+Cc: Dhruva Gole <d-gole@ti.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	<arm-scmi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	Sudeep Holla <sudeep.holla@arm.com>, <linux-kernel@vger.kernel.org>,
+	Ranjani Vaidyanathan <ranjani.vaidyanathan@nxp.com>,
+	Chuck Cannon <chuck.cannon@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 2/2] firmware: arm_scmi: power_control: Set
+ SCMI_SYSPOWER_IDLE in pm resume
+Message-ID: <20250623-organic-foamy-tamarin-fefa30@sudeepholla>
+References: <20250620-scmi-pm-v1-0-c2f02cae5122@nxp.com>
+ <20250620-scmi-pm-v1-2-c2f02cae5122@nxp.com>
+ <20250623125750.kzwndmcf5yo3siao@lcpd911>
+ <20250623142957.GA10415@nxa18884-linux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] futex: Initialize futex_phash_new during fork().
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- linux-kernel@vger.kernel.org
-Cc: Calvin Owens <calvin@wbinvd.org>, Darren Hart <dvhart@infradead.org>,
- Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
-References: <20250623083408.jTiJiC6_@linutronix.de>
-Content-Language: en-US
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-In-Reply-To: <20250623083408.jTiJiC6_@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623142957.GA10415@nxa18884-linux>
 
-Em 23/06/2025 05:34, Sebastian Andrzej Siewior escreveu:
-> During a hash resize operation the new private hash is stored in
-> mm_struct::futex_phash_new if the current hash can not be immediately
-> replaced.
+On Mon, Jun 23, 2025 at 10:29:57PM +0800, Peng Fan wrote:
 > 
-> The new hash must not be copied during fork() into the new task. Doing
-> so will lead to a double-free of the memory by the two tasks.
+> One more example is
+> Linux suspended, other agent send reboot linux message, Linux should
+> wakeup and reboot itself.
 > 
-> Initialize the mm_struct::futex_phash_new during fork().
+> Same to suspend
+> Linux suspended, other agent send suspend Linux message, Linux wakeup
+> and suspend again.
 > 
-> Reported-by: Calvin Owens <calvin@wbinvd.org>
-> Closes: https://lore.kernel.org/all/aFBQ8CBKmRzEqIfS@mozart.vkv.me/
-> Tested-by: Calvin Owens <calvin@wbinvd.org>
-> Fixes: bd54df5ea7cad ("futex: Allow to resize the private local hash")
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Reviewed-by: André Almeida <andrealmeid@igalia.com>
+These are very valid requirements and if this is not supported or not
+working as expected, it is a BUG in the current implementation.
 
+As lots of details were discussed in private unfortunately, I suggest you
+to repost the patch with all the additional information discussed there
+for the benefits of all the people following this list or this thread in
+particular. It is unfair to not provide full context on the list.
+
+Just to summarise my understanding here at very high level, the issue
+exists as the second notification by an agent to the Linux to suspend
+the system wakes up the system from suspend state. Since the interrupts
+are enabled before the thaw_processes() (which eventually continues the
+execution of scmi_suspend_work_func() to set the state to SCMI_SYSPOWER_IDLE,
+the scmi_userspace_notifier() is executed much before and ends up ignoring
+the request as the state is still not set to SCMI_SYSPOWER_IDLE. There is
+a race which your patch is addressing.
+
+-- 
+Regards,
+Sudeep
