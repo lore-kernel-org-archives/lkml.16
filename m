@@ -1,96 +1,98 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B0524679C
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 19:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9765F19C554;
+	Mon, 23 Jun 2025 19:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750707521; cv=none; b=DvqU7Y66TyDTkfgdMwaRu3cZX42gH3BUdprLFBgu5e6AIRZmbrF3B+E89J3gwmF0+gQqUImE65Zadug1894HX3e5q3J4YXVy6xTP89Wmg/ZXHiVYcFhE8qsWMLCywTC9YGmCsE9RF4/0KukauWX+T+kb+8R3C59uLKvFVjIqcIs=
+	t=1750707645; cv=none; b=jPJeD1xEQUKbTQeIqMfMvfAB4nJ+kuAiZlF/r9Uk2Kge82aqnKUgwHcTzj7QzL46jI7qkzDFL3PCB8geGolUoJkKEUDWAygllaPtbdhZqG15wbYT5OjKCMcYpHZiJN9xprCgFUrvO7N4ro5BMdXpw0r3S98r3BjFmI+6QTgNhBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750707521; c=relaxed/simple;
-	bh=SUcO28iflARfNEkJ1ohNxfXTZlHppMemTQUfxW2VsWA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cGflDKLNya3z5SoqBNT6cc8wfky8OfBlBdDChJSaibdKzdfNQ/nymZ74XKZOG2h4/vveAYUD5++CMyI09SBIodMeyUPUz9bDqAumms3Tcx7hyolX7TK0B5+EIKGqDuZZQGJPWUUZ0oS7kta3QnGjS5nqbTRRkQS3X9qSx1tfJK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=UKrNLTBK; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="UKrNLTBK"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4a43d2d5569so60904571cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:38:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1750707519; x=1751312319; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OsDFFNadcPKAi2oIob212fTkg2LjML9Ql3EAFUmRUHU=;
-        b=UKrNLTBKpKaBUnh67CB1fjxxDLLpBBJlH4ElR3+LebtbPOMtxAbxqW26OWB+e8SP2L
-         KVPA79/UvnxJA3fZbbSpnRubrOl8CNTMFKiSMwYErojpdX7zkAehNdYqX1IHR2qqPATG
-         RlHJiwR761EFYXGQeWKYmSeJRqjcAOmhCEHXjNOgNZ5Qf5uYZxWsg4FODA2L7825WcOJ
-         Ly64cwO9fd1+/gqx4mSqg37XmJBuwiY85PdfkqGdsQ1IJ4YG4S0zNRCipCSGdtIwOhfw
-         7PY09QP2KZI+hI8ebYuo5IAmL2vwWP+p84ULiykV/nibuLmzSBotCriXKBk8Y8UWEwh5
-         meLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750707519; x=1751312319;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OsDFFNadcPKAi2oIob212fTkg2LjML9Ql3EAFUmRUHU=;
-        b=tnZAOzr8zXpPE+SIh4uJ/S4IW/Dj9806F1A/giYPC58+5XWIH/vUYqPmtmbP1gxImn
-         H315o4peiOHySg/kdBgPnhuCOSe8NsOtQBO+REuRqQ+hEeZc6Qwmpw/PMke5gv3Y7v9K
-         MUjkGutXil77dt6CEbrzX7IpGxWRpBgO/K5n91/jX8Zq7Yag+hVAYLImp9JRXzRoJSMl
-         uekG/yUcfVBKq5b2NKOYJztCFFNEG6521cdEe77RCwRvxn+6/gP0lZnmGxHrulstOb76
-         b/cWG3a31rEonzXRphLW2oQDTkqcL6+pU4OdGsv6BVnCD3mN3oJtZJ7uSv1CfssURPKr
-         QyvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVjglHgdGJQIMjTighO7lld4Kkijsdehil+iAjuATz0sFIWq+rUVA5klZSvZNkY5D5HBePP9j/7aDgKrT4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUKWa7/+7ND78njNsY5nUeoOu0DACmEFBkV9YyzzEjFM7iyI1Y
-	/RTSKrnaPmpjaQztQ7Er+89e0KcBFgraokC26BrBHb6EJG1eI0VYmWGxwD84/1WKFkI=
-X-Gm-Gg: ASbGncvKJQY7B9BuSXxNBOlMSFzrChxmH5Ol+d1E5JpQh5SSSDjlA2eLv2vfi34DQ1l
-	PmUX9YCj+elv7Wy5ad1h8HZWO3h5z1dOtHAihkvORSJ6/NCqz25439B7i78RWpLbtkWqm2er1SK
-	dAp0T7Mt9OBcaU8IVgXlOMT6AMJRLe3kZTPRUVUkc05cJyUdSakH+g0vh/iLqDfk2GzIWrqcfN4
-	dxJcUtOdwe5ycCVV1L5Sa5UaUcxntHECMfgYqJy0XRiGOoRb0o4+Z5WQARn6M1/hPeUYFuYjDh2
-	xyiatoKnIhU4pyWaMwFJk1KZGK6hUFyNFnUR1Tz2P9Cw1f306FB8weJJAA==
-X-Google-Smtp-Source: AGHT+IGEe4owoKuwDVOewVa/4Edect3j8Yf80FLCWoMblOwP+OBaPb93AZugTiBwPwwRicj7AyEi8w==
-X-Received: by 2002:a05:622a:13cf:b0:4a5:8387:8b9f with SMTP id d75a77b69052e-4a77a24bc82mr181710941cf.15.1750707519236;
-        Mon, 23 Jun 2025 12:38:39 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:400::5:e19e])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a779e956bcsm41726641cf.74.2025.06.23.12.38.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 12:38:38 -0700 (PDT)
-Date: Mon, 23 Jun 2025 14:38:36 -0500
-From: Gregory Price <gourry@gourry.net>
-To: David Hildenbrand <david@redhat.com>
-Cc: Bijan Tabatabai <bijan311@gmail.com>, damon@lists.linux.dev,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, sj@kernel.org,
-	akpm@linux-foundation.org, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, apopple@nvidia.com,
-	bijantabatab@micron.com, venkataravis@micron.com,
-	emirakhur@micron.com, ajayjoshi@micron.com, vtavarespetr@micron.com
-Subject: Re: [RFC PATCH v2 1/2] mm/mempolicy: Expose get_il_weight() to MM
-Message-ID: <aFmtPIAYnp4oeAZ1@gourry-fedora-PF4VCD3F>
-References: <20250620180458.5041-1-bijan311@gmail.com>
- <20250620180458.5041-2-bijan311@gmail.com>
- <0067568e-a604-46d3-96fd-41b62968a90e@redhat.com>
+	s=arc-20240116; t=1750707645; c=relaxed/simple;
+	bh=oeVpu5QnQ6dzADH8jDwya/HzQz1GbvZCFygSNBb/pdc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=PNSfi45b9/gFkd3GjJiawHICv17k2RIcB7AvKoAtUOFaOBiRX7HuYy/DPIqFS55PKsgAlyfqHGguqjoMdn2cS/EiZiEreVPLvCp79P4NoY8tcNJaCiybZcruFzx906W7WjB+0AK4v3/t/kGMqV7Zp16P6bfuIIf+jDb8SEJPpTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=101.71.155.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
+Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-1-entmail-virt204.gy.ntes [27.18.107.46])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 19a4befb4;
+	Tue, 24 Jun 2025 00:11:23 +0800 (GMT+08:00)
+From: Ze Huang <huangze@whut.edu.cn>
+Date: Tue, 24 Jun 2025 00:11:13 +0800
+Subject: [PATCH 1/2] pinctrl: canaan: k230: add NULL check in DT parse
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0067568e-a604-46d3-96fd-41b62968a90e@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250624-k230-return-check-v1-1-6b4fc5ba0c41@whut.edu.cn>
+References: <20250624-k230-return-check-v1-0-6b4fc5ba0c41@whut.edu.cn>
+In-Reply-To: <20250624-k230-return-check-v1-0-6b4fc5ba0c41@whut.edu.cn>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Ze Huang <18771902331@163.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Ze Huang <huangze@whut.edu.cn>, Yao Zi <ziyao@disroot.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750695080; l=1429;
+ i=huangze@whut.edu.cn; s=20250325; h=from:subject:message-id;
+ bh=oeVpu5QnQ6dzADH8jDwya/HzQz1GbvZCFygSNBb/pdc=;
+ b=08O/OJqdhaptAZ8XPC9n41X9RUWWU9Fh8iHKgm7F4Qnc13ZXjUaSiy3wtcUfSlAafuPFJNgbo
+ X42nDIwQZHLDjrU7DXAfzUtPZrSv+1sHvXbgEa8zvjK2qvdjbIb+EUm
+X-Developer-Key: i=huangze@whut.edu.cn; a=ed25519;
+ pk=C3zfn/kH6oMJickaXBa8dxTZO68EBiD93F+tAenboRA=
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCHUNPVk4YTk4ZTUNNS0lMHlYeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJTFVKQ1VKS0xVT01ZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTEpVSktLVUpCS0
+	tZBg++
+X-HM-Tid: 0a979d8efcb603a1kunm95855067303bfd
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6N1E6Exw6IjE1EiICCE8DTj03
+	Gi4KFEtVSlVKTE5LTUJOS0NOQk5OVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
+	TFVKQ1VKS0xVT01ZV1kIAVlBSU5PSzcG
 
-On Mon, Jun 23, 2025 at 09:14:34PM +0200, David Hildenbrand wrote:
-> > +u8 get_il_weight(int node)
-> 
-> The function name is shockingly confusing when used outside this file. Do we
-> have some namespace to at least highlight what this is about?
-> 
-> node_interleave_weight() might be a lot clearer?
-> 
+Add a NULL check for the return value of of_get_property() when
+retrieving the "pinmux" property in the group parser. This avoids
+a potential NULL pointer dereference if the property is missing
+from the device tree node.
 
-this is fair and my fault as I didn't consider whether it'd ever be used
-outside mempolicy.  So i agree it should be renamed or wrapped.
+Also fix a typo ("sintenel") in the device ID match table comment,
+correcting it to "sentinel".
 
-~Gregory
+Fixes: 545887eab6f6 ("pinctrl: canaan: Add support for k230 SoC")
+Reported-by: Yao Zi <ziyao@disroot.org>
+Signed-off-by: Ze Huang <huangze@whut.edu.cn>
+---
+ drivers/pinctrl/pinctrl-k230.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/pinctrl-k230.c b/drivers/pinctrl/pinctrl-k230.c
+index a9b4627b46b01237801103df566b9391f8be21b8..4976308e62372c744738dd8372e73b2494e38e0b 100644
+--- a/drivers/pinctrl/pinctrl-k230.c
++++ b/drivers/pinctrl/pinctrl-k230.c
+@@ -477,6 +477,10 @@ static int k230_pinctrl_parse_groups(struct device_node *np,
+ 	grp->name = np->name;
+ 
+ 	list = of_get_property(np, "pinmux", &size);
++	if (!list) {
++		dev_err(dev, "failed to get pinmux property\n");
++		return -EINVAL;
++	}
+ 	size /= sizeof(*list);
+ 
+ 	grp->num_pins = size;
+@@ -623,7 +627,7 @@ static int k230_pinctrl_probe(struct platform_device *pdev)
+ 
+ static const struct of_device_id k230_dt_ids[] = {
+ 	{ .compatible = "canaan,k230-pinctrl", },
+-	{ /* sintenel */ }
++	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, k230_dt_ids);
+ 
+
+-- 
+2.50.0
+
