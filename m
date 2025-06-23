@@ -1,234 +1,127 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150FC1B4242
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 17:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AF218B0F
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 17:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750701284; cv=none; b=f4mPIawiyF0fWUT+qJpOjgpAiVHpZnJXdAw4/ZFf8DcYhXhk0lfk0S7frYpU+CeWHr3TKLQjay+LlC8MjeakpEaVfycP6jrhsnLCNUulZQ4LF2Vh+cyvXhoAeT4LNwFna9bdT3HMbNdNpb42yTBGWUg6s/rgpvYzTio7TibVpxY=
+	t=1750701306; cv=none; b=OQq0hVIFL754fiJgV/Dp9xdRi1av+F1i8K69NS0eBSa/hfrkAuAJ3eSIb2tZmGQMgZaux4QU4KdHsWIBeO/ELaetdmu11XMPm83JSY6qTtbpliT1Suj2KH/4psHKQNVmppyqRKK2+sfrBvUpnNIv//yE+WhpFnO8o+OQNREAUNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750701284; c=relaxed/simple;
-	bh=DEXDEnhLmgNiAoFLhqKzOxsWcB0nFiuBsvFefHaGqOg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rb9uVCXH5Ezq3iS3IDHqVemew6jp/i964BvVbXbTUSU8g2dhMrcBOhJEFbGQSDn6ly8l/TkJ6xV2UO/evhazCKP8emhUZAPjIrJw8s1JoFR4xqcoxmmzYvhyy6tfvyuzUI3Sik9RJtXKSu1mmedit1Jn/fom7MlC7gv8Gqw9Xzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=JUGbZZON; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+	s=arc-20240116; t=1750701306; c=relaxed/simple;
+	bh=twrqk+qkWL3cHhNYE9GtIhNIIT5hxN7lykR9LMDXkZk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a2BW/9fZhnf1PYT+0VKGiwIIMNZ+mi7Z6U3Qa+3y/Q7n7Fp16PRjZ6Nkr/cE5kg7XMUIjuzf/QFhdoDeWs8PjN0udQHadjpgxQlwLQjTdUt2RpG/PC0KYKOMN6RH1ujE8Ry/FGjY00lVNhBGfbLALHVzJRH/WZLLlF6LRwPXLM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UGQ4Un/N; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="JUGbZZON"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e740a09eae0so4157396276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:54:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1750701282; x=1751306082; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2umrYHd0J3tqzw0yG5M5k9L2TulLqh3KukmLpWDNa1I=;
-        b=JUGbZZON4dUMFGdEw5dxKSIrAsOg0HicxOj0/8kKohn3dw1tWGHmdaMs7YoMFxcebQ
-         /PCxbb2OifLUxQBDbGT1hm3/kuy6/WXnLSu267d7Xgs1HmGNw7OSTPzh3DpwKZv6dhkg
-         CzI/zGmIuZBvJhp2Sjf36+9X8A0knCqGI+Sy3Sz2blpULIey8Ruk9csf2czPWXiZ6r5m
-         L288E9HfgXrmiKUpJDXFCFFKMn5DAe2MPt3tFUt8VjZ4KVOsC272vQlJA5jmuJD54B+R
-         5IvJezB6+hQCnUjUgDTsfZ6BbDK8fuiQRdLKwPyafTUTxmmiN8hcWxWw69ZkWOmai/S+
-         SGqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750701282; x=1751306082;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2umrYHd0J3tqzw0yG5M5k9L2TulLqh3KukmLpWDNa1I=;
-        b=wj+F3PkpjoOVD1YE1MxD0Yde3JjMitv7W35F0vqWLBHKX+ZFfUY01xVSgUe8RA/Ib7
-         C6hmIJj1D5zDdqjNu4lrg3O6U8PE+i7rH+UTy/n4BLqy7QNdKdhEokL+Rv2UimF00u/V
-         lTObFxrKqi3G/pFpjqlL/NgDcm71/Pvjrv/R7nedagVjSQ0lkj0qX0J2hBkHu4OV26sS
-         FiyASIGcMtwu4bOyGRLdCiH/G4SO6139VKwKrwoVjvwdLKuiW2ppVKYPacMC+CbOdB6g
-         DRk1O6wxddLhV84zBGnkZ+IZydRORSvD81iUwBpO+4gH8nlbxBh3zPlgfyf2irOnMNuW
-         Epsw==
-X-Forwarded-Encrypted: i=1; AJvYcCVRiVLsP/yiV71Bkc4+Q8Rdnd6WkQbs+N3lgeVquO56AaXwXtoB8OB9ELQR5XRRaa2guYb32QcI8FJy35I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRqkavvdH+evKl87HyrE4O3sGSCcxbstihGQU56RarhwyMEVcd
-	Wg2m82awGcKT6yUQvbcAmJGn5cziu+QIOdSMd2NOmBKbgh9Fu5LTHugdFTSHh/8UG5s+3EdewHk
-	aYYLc5Ckza73mmpbV4OxUfOJukhQ/fOCbCZExq814rg==
-X-Gm-Gg: ASbGncug3UZZ37GE2y0uleXvW12uknIjc09uGqBKkKbOBG4geX9LnwzInO6+aZgLRR+
-	P1bGJIqn8jlGlpSjHnyweTfBQ+gsBZheKm4UM3PIvkZCvC3AEk6tUNrZPIa+d52rBH7xlBFaDyr
-	pVvkTcz/j9hpOFtCfW5zNiqYXcsmuczzJ1N45jWsH/WsxOcbZ6Sim+ZykiPawWIwsJkRWpTLqC6
-	zY=
-X-Google-Smtp-Source: AGHT+IGfoKcrgWxXbXinchiD0boKI8XS21vm7EaD/9/fAZ8SN+qxvOdYfr3tfI2hM/Ouf1leep1F62DdDBljcNdq3YM=
-X-Received: by 2002:a05:6902:2b85:b0:e81:b2a2:c633 with SMTP id
- 3f1490d57ef6-e842bcf7d10mr16162769276.32.1750701281840; Mon, 23 Jun 2025
- 10:54:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UGQ4Un/N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750701305; x=1782237305;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=twrqk+qkWL3cHhNYE9GtIhNIIT5hxN7lykR9LMDXkZk=;
+  b=UGQ4Un/NiZOp/yIMIKvqZCEq0FU09T8LDc0Qdyel6I1keTT7jiPsljZj
+   FSmAkDhKo5bG1F/Pf2cS2k2DaFdm8oDqeRLGi0BBY2IdyfwX21QIxqGmP
+   M88gDn03JvJq8pSToo2pfpCs0eMxx+yWrW4pzI2CesNNGFhDzfK53SEw/
+   acVSlt/f9WHc1rd/WTMxLNI9amCIB5+52xP9QlMk/6nY91FR/28lzA6Lm
+   OjXLo44h3GJgItn+PYw8Y1joguyCozRf+CnkqBQCiLQegT62FGB2xXbNY
+   bHOO9mVMsQAYZjGZNg7JzD+cviF1LaXFDxFarxCFQQSugfwiHMhz1fEuh
+   w==;
+X-CSE-ConnectionGUID: 3wFYMKycRZqP1/jAj7tOiw==
+X-CSE-MsgGUID: PuRQvGyWRTWyJgJS19b8Yw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52035711"
+X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
+   d="scan'208";a="52035711"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 10:55:04 -0700
+X-CSE-ConnectionGUID: a6pf9P8gS9e6pFXMSA5f3Q==
+X-CSE-MsgGUID: Fk285mXRRni2Wmven+W9CA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
+   d="scan'208";a="151440586"
+Received: from tjmaciei-mobl5.ger.corp.intel.com (HELO [10.125.108.165]) ([10.125.108.165])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 10:55:04 -0700
+Message-ID: <23ac331b-1492-480c-9207-21d631b07caf@intel.com>
+Date: Mon, 23 Jun 2025 10:55:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423-media-rpi-hevc-dec-v3-0-8fd3fad1d6fb@raspberrypi.com>
- <20250423-media-rpi-hevc-dec-v3-3-8fd3fad1d6fb@raspberrypi.com>
- <20250425-inescapable-beagle-of-bliss-8ae3ff@kuoka> <CAPY8ntCWzp9cRKwLg44G20jG17q2KhavZa_8qpodhGUGS2Bc7Q@mail.gmail.com>
- <e00ec6f8-479e-46c4-9c99-7de4c9fa1c27@kernel.org>
-In-Reply-To: <e00ec6f8-479e-46c4-9c99-7de4c9fa1c27@kernel.org>
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Mon, 23 Jun 2025 18:54:23 +0100
-X-Gm-Features: AX0GCFsJmnJSIgh3LKawkx-7MO5eDaDetGX5z3Whb404Zemw7AoPyaf6laHApe8
-Message-ID: <CAPY8ntCkgnwhA_OuDY3zMMrptFmLqTm_mLdmdLeO5txyFuG1Jw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] media: dt-bindings: media: Add binding for the
- Raspberry Pi HEVC decoder
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, John Cox <john.cox@raspberrypi.com>, 
-	Dom Cobley <dom@raspberrypi.com>, review list <kernel-list@raspberrypi.com>, 
-	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, John Cox <jc@kynesim.co.uk>, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/mm: Inline mm_mangle_tif_spec_bits() and
+ l1d_flush_evaluate()
+To: Khalid Ali <khaliidcaliy@gmail.com>, dave.hansen@linux.intel.com,
+ luto@kernel.org, peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de
+Cc: x86@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org
+References: <20250623174355.9421-1-khaliidcaliy@gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250623174355.9421-1-khaliidcaliy@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thanks Krzysztof
+On 6/23/25 10:43, Khalid Ali wrote:
+> These two functions are called from performance critical path like context
+> switch.
+> 
+> So make sure the compiler optimizes out by inlining. This won't result
+> increase of size because these functions only have one call site.
 
-Sorry for the delay in replying - other priorities.
+Khalid,
 
-On Mon, 28 Apr 2025 at 18:57, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On 28/04/2025 12:03, Dave Stevenson wrote:
-> > Hi Krzysztof
-> >
-> > On Fri, 25 Apr 2025 at 08:53, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >>
-> >> On Wed, Apr 23, 2025 at 06:20:20PM GMT, Dave Stevenson wrote:
-> >>> Adds a binding for the HEVC decoder found on th +maintainers:
-> >>> +  - John Cox <john.cox@raspberrypi.com>
-> >>> +  - Dom Cobley <dom@raspberrypi.com>
-> >>> +  - Dave Stevenson <dave.stevenson@raspberrypi.com>
-> >>
-> >>> +  - Raspberry Pi internal review list <kernel-list@raspberrypi.com>
-> >>
-> >> Drop, no mailing lists in bindings maintainers. These must be people.
-> >
-> > Ack
-> >
-> >>> +
-> >>> +description:
-> >>> +  The Raspberry Pi HEVC decoder is a hardware video decode accelerator block
-> >>> +  found in the BCM2711 and BCM2712 processors used on Raspberry Pi 4 and 5
-> >>> +  boards respectively.
-> >>> +
-> >>> +properties:
-> >>> +  compatible:
-> >>> +    items:
-> >>> +      - enum:
-> >>> +          - brcm,bcm2711-hevc-dec
-> >>> +          - brcm,bcm2712-hevc-dec
-> >>> +      - const: raspberrypi,hevc-dec
-> >>
-> >> Not what Rob asked. You should use specific SoC compatible as fallback.
-> >
-> > In which case I don't understand what Rob was asking for.
-> > I asked for clarification in [1], but got no reply. Sending a new
-> > version has at least got an answer, but I'm none the wiser.
-> >
-> > Staring at this trying to work out your meaning, you want the generic
-> > first, and SoC specific second? ie
-> > +  compatible:
-> > +    items:
-> > +      - const: raspberrypi,hevc-dec
->
-> Drop
->
-> > +      - enum:
->
-> That's enum, not fallback.
->
-> > +          - brcm,bcm2711-hevc-dec
-> > +          - brcm,bcm2712-hevc-dec
-> >
-> >> You referred to file "raspberrypi,pisbe.yaml" before, but there is no
-> >> such file in the next.
-> >
-> > Typo.
-> > https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/media/raspberrypi%2Cpispbe.yaml
-> > Reviewed by Rob only just over a year ago [2]
->
-> There were some discussions and reasons with explanations.
-> Feel free to use same arguments and accurately describe the hardware, so
-> we won't be needing to ask usual questions.
+The compiler is currently given the latitude to choose an inlining
+strategy for these functions. Generally, I'd assume that it's doing
+something sane unless there's a specific compiler making suboptimal
+decisions.
 
-Sorry if the previous descriptions hadn't been clear. All the same
-points as for raspberrypi,pispbe.yaml apply here, which is why I'd
-tried to link to it originally.
-
-Describe the hardware:
-Raspberry Pi designed and are the sole owners of the IP for this HEVC
-decoder block. This is *not* Broadcom IP.
-
-That design was given to Broadcom as Verilog to wire into the
-bus/interrupt/clock fabric of BCM2711, and to manufacture it via TSMC
-on a 28nm process node.
-
-A few years later the same design was given to Broadcom to wire into
-BCM2712, and to manufacture it on a 16nm process node.
-
-As it is Raspberry Pi owned IP it can be used in other places than
-Broadcom SoCs.
-Broadcom does not have a licence to use the IP in any other of their chips.
-
-It is the same situation as for raspberrypi,pispbe.yaml except the
-block already exists in 2 chips rather than just the 1. There also
-isn't a version register in the hardware that is different between
-those chips (an oversight noted for future chips).
-It could be compared to a Synopsis or Cadence IP block dropped into an
-SoC. The vendor prefix happens to be raspberrypi instead of snps or
-cdns.
-
-Is there any part that needs to be further clarified?
-
-> Anyway, we asked for fallback, so you need items, just like every SoC
-> compatible (see also example schema).
->
->
-> >
-> >> Before you reply that there is a binding using different rules: well,
-> >> there is always poor code. Above two comments are repeated, especially
-> >> this about specific compatible - all the time, so these are not new
-> >> rules. These are given in reviews since some years.
-> >
-> > My Google-foo is totally failing with the only directly relevant
-> > mention of "fallback compatible" I find is [3], which just says to use
-> > them.
-> >
-> > You're effectively saying I can't take anything in the kernel tree as
-> > being a valid example as it could be poor code, and a layman such as
-> > myself has no way of telling.
->
-> No, I am saying that argument "I saw someone doing this, so I am allowed
-> to do the same" is not correct. There are good and bad examples. For
-> example in my talks I mentioned good examples. The list of good examples
-> was not accepted to the kernel so well... I just use as an example any
-> recent Qcom binding using specific compatibles.
->
-> > Could you please point me at documentation and examples I can rely on,
-> > or educate me with what is wanted in this situation to avoid me having
-> > to guess?
-> >
-> > A further mailing list search has brought up [4] which is a thread
-> > with yourself from 2 years ago which looks to be a very similar
-> > situation. Other than missing the const on the SoC strings (although
-> > that isn't in the merged version of cnm,wave521c.yaml), and two SoC
-> > specific strings, I'm not seeing an obvious difference between there
-> > and here either.
->
-> How is the [4] relevant? That's IP block from other vendor.
-
-It was another example of an IP block belonging to vendor A being
-added into an SoC from vendor B, same as the situation here. Raspberry
-Pi != Broadcom.
-
-Thanks
-  Dave
-
-> https://www.kernel.org/doc/html/latest/devicetree/bindings/writing-bindings.html#properties
->
-> https://elixir.bootlin.com/linux/v6.3-rc6/source/Documentation/devicetree/bindings/sound/nvidia,tegra210-ope.yaml#L31
->
-> Best regards,
-> Krzysztof
+Do you have some evidence that compilers are doing the wrong thing?
+Perhaps some generated code that looks wrong to you or some evidence
+that the proposed change improves performance?
