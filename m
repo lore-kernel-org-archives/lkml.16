@@ -1,133 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A0C14D2A0;
-	Mon, 23 Jun 2025 08:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A3922F74B
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750668621; cv=none; b=amI2hz5h2qepeMYxYIHm8g5Gwj5Y5p7oo7ouurBNGJMj4fIwDEsiyiC9FB5A3cTT3QaZKdaN/xU3n8Mh19qZaE2fQS1CTg28AsdngjRFvnMEzar3iQA1CqFFFYxxPz2uVKwBiZnd/EWQybo7eyMIJVxOmM/3uIqL7ueXo+XEu00=
+	t=1750668645; cv=none; b=bBwYrazwqWvKYTDwthhp65i86E/9WrKgw86Rtkd18AxApH/RKPsllNDoFYuygNeCmAO4Rkh1vmUaTER+gSztwLrV+eN+mINvfAGjuSYVwAKMNzUt5/2rcK0suPYEiJFhwE7MHDDpriFbFfaD3wOHGQnymb7LGfC4YDRRvisGE1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750668621; c=relaxed/simple;
-	bh=jrawT35wmhyz3NLgVIcmL35vMqmLA5Yl2YnxxrpMy/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=brafasYk21KPvc+Bl2zyZInPjgGuKZAvGnGBbYE8xnCuPPDK+LHXBZ8suwqfENpIL3LcgJL/fG58cxe7P7YnSggoUE0BLRQY9L+dMhDO7zr9Wb9gMMSx8D7dmpIaYxcVMrGhrSan/Ow2t/oILLXOVg6a+FP0GEmIgOkGpnq0txE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iPA/bL2e; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iPA/bL2e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750668621; x=1782204621;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jrawT35wmhyz3NLgVIcmL35vMqmLA5Yl2YnxxrpMy/I=;
-  b=iPA/bL2eeVYKrTeegYxom4paT2gkbmXLnMwDsr1DviFCTZSwmYTTzkDV
-   uBxu2uhHZGx/9LO0ZwysxU6+01l2uEj7zFpdVNmoXj3hOGZiqZ6/iBEWn
-   qsn2HEaxvBg8wNm2z6+Ok7/M+Ci7g2Cr3HZcxlNicNivTw+lLmED74wG8
-   49rVp8T/KnmX9H2Wp12+dN7Iy73FhY4ScFcxdZ+gR5tO8NfBsXtbmc8dC
-   U8Tqud1VZOjNYeDebPjWu9RBrPu22cPOb0ovUsqLpj+TlTnw6gA1sBvT7
-   EiPAuzcADaVyzniuKjnogWf2Zuu8D1ldWhkIfBOHyoPo2NtUwUKTdNfKF
-   w==;
-X-CSE-ConnectionGUID: AkJlYKrpTaqygxNliF5Hbg==
-X-CSE-MsgGUID: s/uVrWQjS0GndbglYhm9lA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="75398344"
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="75398344"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 01:50:20 -0700
-X-CSE-ConnectionGUID: +8bXJz6LSx2prqvi2Q9vlA==
-X-CSE-MsgGUID: fQBw2f/FTBCnoy7g9ZEzxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="152213190"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 01:50:14 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uTcsT-0000000977T-3KBo;
-	Mon, 23 Jun 2025 11:50:09 +0300
-Date: Mon, 23 Jun 2025 11:50:09 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 06/23] mailbox: Add RISC-V SBI message proxy (MPXY)
- based mailbox driver
-Message-ID: <aFkVQTSCSkvBhzgC@smile.fi.intel.com>
-References: <20250618121358.503781-1-apatel@ventanamicro.com>
- <20250618121358.503781-7-apatel@ventanamicro.com>
+	s=arc-20240116; t=1750668645; c=relaxed/simple;
+	bh=4YaijbhSu8B0AGBXcXAD2zOe37QdUotg4qUZE4CIqyo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=jdDSilTWVtq0C8Ej51MxgL6eru1dvLH9pk6hB4QwXsCMbGvlRy/bejIkp2kFk4Vtk27TIG4hULHG6ZXN9Y06ya2eAsjATt27Blim+iWPwYUkOHbsdK2RVHSMN6PDvgeytCpQ+yJWWHv8BghFvo6JfxmcnzEC3976uTnM5GQuXko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddd03db24dso35332835ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:50:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750668643; x=1751273443;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=34ldYHHob+9En/WL6nat24QJCBcVNGF+83H/uFKv9oM=;
+        b=GEpdw9reakADPq1aCTmv8TmdIyCi/5z7C8OqiomtPd8x1Es8byAmGAWZXF6I5cEUA7
+         /BIGeaMq8rxO+e666Dzopa3Rp2+u5qN2PAnEc7ZVTFf11lFY+N1Ak0HU+0rZfSqxjk8b
+         rdTnEhttYxW3rDwV+adfV4fciNfjZQNN3iotQabX8EGbzDqD8f7nld+oh+cZqBs8Hhba
+         uujdVuN/cLPD52xcAOCZdS76k47ByXMF4sOUk6HX2p4lpm+ToVYazzc8YCZSJ5BempIB
+         KwO4NuquLIB9TyJgskgL2ew9JFwzXq8/+f9UltPO3jBRd5Sa0U+jsbPW3BiXntl3Cw9v
+         nIKA==
+X-Gm-Message-State: AOJu0YwPoLDOVf5Rnn0Uazi+WrYi6YwmmPJ9mCBTdpsmNtX3Br1yU+0b
+	bDoIYPtmn8fPbMtw6tIexObD5rgoPqpJyYTJ7cby1r4HkgTrplyadtGVlnOa8EdJ5fl7V0/gBDq
+	im9BnhYXVOhKL97VxiEFJBQkrUzK+S8Wyvian4uf5yNYQIT4u+Ypjg7yPsLc=
+X-Google-Smtp-Source: AGHT+IHBZon5hMxFnLrwoIptmH1v3GN6tu9FG2k8qVP4HgdwUbebTjlxHcEY2mnaSfu3E4NR0m46o5qiL8cQZAwP/xu2wq0cP1B4
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618121358.503781-7-apatel@ventanamicro.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Received: by 2002:a05:6e02:3499:b0:3de:119f:5261 with SMTP id
+ e9e14a558f8ab-3de38c1c019mr170616185ab.3.1750668642801; Mon, 23 Jun 2025
+ 01:50:42 -0700 (PDT)
+Date: Mon, 23 Jun 2025 01:50:42 -0700
+In-Reply-To: <6854a3e6.a00a0220.137b3.0022.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68591562.050a0220.d71a0.0005.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in
+ vmci_host_unlocked_ioctl (3)
+From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 18, 2025 at 05:43:41PM +0530, Anup Patel wrote:
-> Add a mailbox controller driver for the new SBI message proxy extension
-> which is part of the SBI v3.0 specification.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-...
+***
 
-> +static void mpxy_mbox_remove(struct platform_device *pdev)
-> +{
-> +	struct mpxy_mbox *mbox = platform_get_drvdata(pdev);
+Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl (3)
+Author: lizhi.xu@windriver.com
 
-> +	if (mbox->msi_count)
+#syz test
 
-I'm still not convinced we need this check _here_.
-Can it be rather a separate patch to add it inside
-the below call?
-
-> +		platform_device_msi_free_irqs_all(mbox->dev);
-> +}
-
-...
-
-> +static const struct of_device_id mpxy_mbox_of_match[] = {
-> +	{.compatible = "riscv,sbi-mpxy-mbox", },
-
-Missing space and unneeded inner comma.
-
-> +	{}
-> +};
-
-...
-
-> --- a/include/linux/byteorder/generic.h
-> +++ b/include/linux/byteorder/generic.h
-
-This is good change, but deserves to be in a separate patch.
-I will Ack/Review it as soon as it appears to be so.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+diff --git a/drivers/misc/vmw_vmci/vmci_host.c b/drivers/misc/vmw_vmci/vmci_host.c
+index b64944367ac5..30c60a00d3ae 100644
+--- a/drivers/misc/vmw_vmci/vmci_host.c
++++ b/drivers/misc/vmw_vmci/vmci_host.c
+@@ -426,8 +426,12 @@ static int vmci_host_do_receive_datagram(struct vmci_host_dev *vmci_host_dev,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (copy_from_user(&recv_info, uptr, sizeof(recv_info)))
+-		return -EFAULT;
++	mutex_lock(&vmci_host_dev->lock);
++
++	if (copy_from_user(&recv_info, uptr, sizeof(recv_info))) {
++		retval = -EFAULT;
++		goto out;
++	}
+ 
+ 	size = recv_info.len;
+ 	recv_info.result = vmci_ctx_dequeue_datagram(vmci_host_dev->context,
+@@ -437,11 +441,17 @@ static int vmci_host_do_receive_datagram(struct vmci_host_dev *vmci_host_dev,
+ 		void __user *ubuf = (void __user *)(uintptr_t)recv_info.addr;
+ 		retval = copy_to_user(ubuf, dg, VMCI_DG_SIZE(dg));
+ 		kfree(dg);
+-		if (retval != 0)
+-			return -EFAULT;
++		if (retval != 0) {
++			retval = -EFAULT;
++			goto out;
++		}
+ 	}
+ 
+-	return copy_to_user(uptr, &recv_info, sizeof(recv_info)) ? -EFAULT : 0;
++	retval = copy_to_user(uptr, &recv_info, sizeof(recv_info)) ? -EFAULT : 0;
++
++out:
++	mutex_unlock(&vmci_host_dev->lock);
++	return retval;
+ }
+ 
+ static int vmci_host_do_alloc_queuepair(struct vmci_host_dev *vmci_host_dev,
