@@ -1,80 +1,31 @@
-Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991CC24A06D
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C492F24;
+	Mon, 23 Jun 2025 13:40:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750685885; cv=none; b=ZjtFokpZoHTK1fYEtVMD3XEDDA/srjm0zmHWmAQuwzDimhka9EqZERBvA1dlz8BD1kDxfK/9Ke5u+eTS0M11RbqpihD3B1CN8yuPBBNxAwmWbbdHHYgl7xju5YhkZJlvRGvMxzk+M9hIAHta+zM/gaDlsQN5xn2gZ9rcyg71vUs=
+	t=1750686011; cv=none; b=CN0NPFWI+FtS/k6zAjECHclq5v5bQkCjaud3LfytRlgob5RMzGHniPC/qHcDusBzCoxl4qdKhVjGYV5iO068tLGEcU4YtTb2TZIlnpSe4a6oZz/sX+Gk6gEPHeF7HbHQpKRddB8QOKNtr+I8E1FyMmCybJKLEesaQB2chQLSUwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750685885; c=relaxed/simple;
-	bh=UJmBa528380Nw15K/J5whesU757y5XP7M9iYu48VQgk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=KGHp8wmXGHH8TTDU2KlejHxlgKRG569U1UboAmi5Is6UTuQkpjTdbgHIVW58pWp627vuHIh9sGbIJEFl1Jc8auqhizynquuFlGgRK6EL1MtjSAKNcql4WPYx5OT6o8h0hq+QwcQBQ3aFkng0WLYr4T005aUVX1piAItjjlMmJsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net; spf=pass smtp.mailfrom=kode54.net; dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b=DuuONj0B; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hrCRETXJ; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kode54.net
+	s=arc-20240116; t=1750686011; c=relaxed/simple;
+	bh=qnHvdmVdYs0nnag2h7hKE4fgRHvgo6WvZD5OV+POaY4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=DoXnYY78M8ONvTY6fHp0tvEVEN+bvv5/LTAeDp3x9EFBE0dzxrv2JU8yBs4HHdpRJiohpdiaHpevi9n0ibFvm5Bs6fD1b15t9FfIKFMB7ixXxk1uNC7cIulaZb2qpuiP2S7778OFLXzL0frE0l0YrqXtyUYkTom1M5ozLA2T+jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=js8sLov/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b="DuuONj0B";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hrCRETXJ"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id A5DF01140149;
-	Mon, 23 Jun 2025 09:38:02 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Mon, 23 Jun 2025 09:38:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kode54.net; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1750685882;
-	 x=1750772282; bh=XpttN5YtY4FHtv18lG5NubUylo/SyAsV2hjhDiGab2A=; b=
-	DuuONj0B3Br30/klyNNSGbPBsDvQ7XQHysdLv9+gq6nTgVNXdv9ARO8724JYd1dH
-	H0RjRb8mnSHFCgJiMJaO82jwbccEJYROPn/TnGmTTJtXSRF85SaBxOlU+C/hIHSG
-	NetJWLCDYJtxYAj2w/5rlx0DCa0bbMhxk5GFTfPjwMdZwAe1SS7Y2hmV+xy3+Mzj
-	iDTj7D/YlFnIlhW8H1ipvDIn8YfTE36W66sD7SW4KFAucpDC2Kj2XrRAkxXCEecF
-	nEUOSF+bUaE+0DWv43Ra+fv6YV7QSgnenYe5QSDfcTgiBOI45w07i7B5ZAQti7ZB
-	Dkj2c88zogmp+pLhiJXJPw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1750685882; x=
-	1750772282; bh=XpttN5YtY4FHtv18lG5NubUylo/SyAsV2hjhDiGab2A=; b=h
-	rCRETXJMnpYy0Wli41JZPZhAIvM6NRnoDyUGYAflG2k4AHvr/Nle8OAq0BI/80vv
-	VGLzBysn0HSskYcRu83Ge8nR99d9iEscxzE8v2kvKStbWZQeN+4TIv/fTIh2Cse3
-	dHSFkaUBU45tQWEp6xAefANHqeu5ZDR1M3BYB5jG8QpT7BJ3+Obw1TqEmfpWIKsH
-	Jm50crdWxr8S7d+bluMzW7cnRMsxodcfXs90iOSCfvk0vwm46rpEfXarYYt5iujz
-	DJJMyCoMO82Ku0VZrl+3JUmuRU0CTcD+MJkUAhLeXiV5qKwqGEFLEbLXdnc0EVNs
-	bPkCjveNz93kZU6WVyduA==
-X-ME-Sender: <xms:ulhZaIPtod_0aO7d8rmItbTbhcS0P_XGIwjSiRVfKXf2g8VJLoqu4Q>
-    <xme:ulhZaO_uD4r7LpfKKcO0QULpdA63K41RAYTeVx5p9ocl8AXSrm-wNeBdFDVMk7qCG
-    ArmOr2en8R6wMiPYd0>
-X-ME-Received: <xmr:ulhZaPTNJ5e17glp9buA8sfIxCyEKP36x-P8neUEXUNxiitwMSm9icYDBz7It76r_nAG0B8cMB0kDWcA4J3sz0vtz4yJSLU4oA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddujeduiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpegggfgtfffkvefuhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdevhhhrihhs
-    thhophhhvghrucfunhhofihhihhllhdfuceotghhrhhisheskhhouggvheegrdhnvghtqe
-    enucggtffrrghtthgvrhhnpeeileetudejffegjeegfffhhffhkeefjefgtddujeehheev
-    leevjeejffekieekveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpegthhhrihhssehkohguvgehgedrnhgvthdpnhgspghrtghpthhtohepuddu
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehkohguvgehgeesghhmrghilhdrtg
-    homhdprhgtphhtthhopegrmhguqdhgfhigsehlihhsthhsrdhfrhgvvgguvghskhhtohhp
-    rdhorhhgpdhrtghpthhtoheprghlvgigrghnuggvrhdruggvuhgthhgvrhesrghmugdrtg
-    homhdprhgtphhtthhopegthhhrihhsthhirghnrdhkohgvnhhighesrghmugdrtghomhdp
-    rhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvg
-    hlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlh
-    hivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepughrihdquggvvhgvlheslhhishht
-    shdrfhhrvggvuggvshhkthhophdrohhrgh
-X-ME-Proxy: <xmx:ulhZaAtVz9i9OKJur1d6qayizOMr0sT97GpsKznJTinc1gdSg-irpQ>
-    <xmx:ulhZaAfcFsNXa7HAs3Wt_XZV4BNZR2CbJj51r2EUiSWfAAVZDgfZ0w>
-    <xmx:ulhZaE2VxAM-KVfTypKo677QiRHhqQE3PHAA_l9_uDZvWPk5xlh0AQ>
-    <xmx:ulhZaE9RcBQ_jnkfsxWr7QMuM_zBz8sn98w2p4-oL_0oXODuQfF50Q>
-    <xmx:ulhZaN_22_eJgaMfvFabT3xOpjR0vslFf7BM2Q6-7HNJDzZ8GoRnV7bx>
-Feedback-ID: i9ec6488d:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 23 Jun 2025 09:38:01 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="js8sLov/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 331F4C4CEF2;
+	Mon, 23 Jun 2025 13:40:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750686010;
+	bh=qnHvdmVdYs0nnag2h7hKE4fgRHvgo6WvZD5OV+POaY4=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=js8sLov/BP9FlRMoc4tY1e0WWeYcmDQVuJVLydSzGnZ7Lh5QqJq7uW4PF33enURpr
+	 qF3rg+hAfIEOZyROfJZEPFJu6vfhosqtjLEVu43zDztrBkz2IYZ1y1VOcG599M0iPS
+	 wYbhN1XD0ssP3vHD1SLHyH6PNkb7bSKIMm7SuUzwggwvy5LORILxK+gO2ANYjqvupe
+	 FznZvPXFMR4eQ9sq6G5aqxgnhe2qa70ga6cRVau4w5ndcZw2lDSl+ksx/A9t+Na3A4
+	 wAoM6RgkP87XK6LCC5z/vPRwZ/gl9DC2r37Rpy6Y8PKw6FRujgpKwQ38v1DUWadIVT
+	 3eukMSIDrkHQQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,109 +34,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 23 Jun 2025 06:38:01 -0700
-Message-Id: <DATYCMWH1X28.NE3M8KJ3SPV9@kode54.net>
-Cc: "Alex Deucher" <alexander.deucher@amd.com>,
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, "Maarten
- Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
- <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>, "David
- Airlie" <airlied@gmail.com>, "David Airlie" <airlied@gmail.com>,
- <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] drm/amdgpu: Enable async flip for cursor planes
-From: "Christopher Snowhill" <chris@kode54.net>
-To: "Christopher Snowhill" <kode54@gmail.com>,
- <amd-gfx@lists.freedesktop.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250619125507.54384-1-kode54@gmail.com>
- <DARA1U86AS72.QOIEVZWCFPYC@kode54.net>
- <DATUOZZD8316.2INSL3KL5RA80@kode54.net>
- <DATV4CAOHVGV.1UJ803EX21II6@gmail.com>
-In-Reply-To: <DATV4CAOHVGV.1UJ803EX21II6@gmail.com>
+Date: Mon, 23 Jun 2025 15:40:05 +0200
+Message-Id: <DATYE858ERJP.9B9NY8NPMOM2@kernel.org>
+Subject: Re: [PATCH v2 4/4] rust: devres: implement register_release()
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>
+Cc: <gregkh@linuxfoundation.org>, <rafael@kernel.org>, <ojeda@kernel.org>,
+ <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
+ <bjorn3_gh@protonmail.com>, <a.hindborg@kernel.org>, <tmgross@umich.edu>,
+ <david.m.ertman@intel.com>, <ira.weiny@intel.com>, <leon@kernel.org>,
+ <kwilczynski@kernel.org>, <bhelgaas@google.com>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250622164050.20358-1-dakr@kernel.org>
+ <20250622164050.20358-5-dakr@kernel.org> <aFlCCsvXCSJeYaFQ@google.com>
+ <aFlN7W5rMRcmE300@cassiopeiae>
+In-Reply-To: <aFlN7W5rMRcmE300@cassiopeiae>
 
-On Mon Jun 23, 2025 at 4:06 AM PDT, Christopher Snowhill wrote:
-> On Mon Jun 23, 2025 at 3:46 AM PDT, Christopher Snowhill wrote:
->> On Fri Jun 20, 2025 at 3:10 AM PDT, Christopher Snowhill wrote:
->>> Here's another alternative change, which may be more thorough. It does
->>> seem to fix the issue, at least. The issue does indeed appear to be
->>> no-op plane changes sent to the cursor plane.
->>>
->>> If anyone wants to propose style changes, and suggest a proper commit
->>> message, if this is indeed a welcome fix for the problem, please let me
->>> know.
->>>
->>> diff --git a/drivers/gpu/drm/drm_atomic_uapi.c b/drivers/gpu/drm/drm_at=
-omic_uapi.c
->>> index c2726af6698e..b741939698e8 100644
->>> --- a/drivers/gpu/drm/drm_atomic_uapi.c
->>> +++ b/drivers/gpu/drm/drm_atomic_uapi.c
->>> @@ -1087,17 +1087,22 @@ int drm_atomic_set_property(struct drm_atomic_s=
-tate *state,
->>>  			}
->>>
->>>  			/* ask the driver if this non-primary plane is supported */
->>> -			if (plane->type !=3D DRM_PLANE_TYPE_PRIMARY) {
->>> -				ret =3D -EINVAL;
->>> +			else if (plane->type !=3D DRM_PLANE_TYPE_PRIMARY) {
->>> +				ret =3D drm_atomic_plane_get_property(plane, plane_state,
->>> +								    prop, &old_val);
->>> +
->>> +				if (ret || old_val !=3D prop_value) {
->>> +					ret =3D -EINVAL;
->>>
->>> -				if (plane_funcs && plane_funcs->atomic_async_check)
->>> -					ret =3D plane_funcs->atomic_async_check(plane, state, true);
->>> +					if (plane_funcs && plane_funcs->atomic_async_check)
->>> +						ret =3D plane_funcs->atomic_async_check(plane, state, true);
->>>
->>> -				if (ret) {
->>> -					drm_dbg_atomic(prop->dev,
->>> -						       "[PLANE:%d:%s] does not support async flips\n",
->>> -						       obj->id, plane->name);
->>> -					break;
->>> +					if (ret) {
->>> +						drm_dbg_atomic(prop->dev,
->>> +							       "[PLANE:%d:%s] does not support async flips\n",
->>> +							       obj->id, plane->name);
->>> +						break;
->>> +					}
->>>  				}
->>>  			}
->>>  		}
->>
->> Upon further testing and reflection, I have come to the conclusion that
->> this is indeed best handled by a kernel fix, rather than breaking user
->> space.
->>
->> I attempted to work around this in wlroots, adjusting 0.18, 0.19, and
->> 0.20 git with similar patches. First I attempted to stash all the
->> written properties for the atomic code, storing an initial value of all
->> 0xFE so it was always likely to write the first time, and only setting a
->> property if it changed from the last commit.
->>
->> This resulted in whole commits breaking for one or both framebuffers
->> until I ctrl-alt-fx switched to a tty and back again, and this would
->> work again temporarily.
->>
->> So I went back to the drawing board and only withheld seemingly
->> duplicate plane properties. This "worked", until I attempted to play a
->> game, and then it started glitching spectacularly, and not updating at
->> all if the game was doing direct scanout and vrr.
->>
->> Clearly this is wrong.
->>
->> The wlroots library queues up properties for each commit. On every
->> commit where the cursor is disabled, it queues up both fb_id=3D0 and
->> crtc_id=3D0. Every commit. Is this wrong? Should it only be queueing up
->> the disablement properties once? It also queues up the full plane and
->> hotspot properties when enabled, even if the cursor doesn't change
->> position or appearance.
+On Mon Jun 23, 2025 at 2:51 PM CEST, Danilo Krummrich wrote:
+> On Mon, Jun 23, 2025 at 12:01:14PM +0000, Alice Ryhl wrote:
+>> On Sun, Jun 22, 2025 at 06:40:41PM +0200, Danilo Krummrich wrote:
+>> > +pub fn register_release<P>(dev: &Device<Bound>, data: P) -> Result
+>> > +where
+>> > +    P: ForeignOwnable,
+>> > +    for<'a> P::Borrowed<'a>: Release,
+>>=20
+>> I think we need where P: ForeignOwnable + 'static too.
+>>=20
+>> otherwise I can pass something with a reference that expires before the
+>> device is unbound and access it in the devm callback as a UAF.
 >
-> Probably should have CC'd the drm misc maintainers when I started poking
-> drm misc instead of amdgpu. Pity there isn't a list for that...
+> I can't really come up with an example for such a case, mind providing on=
+e? :)
 
-I am a dumbass, I didn't notice get_maintainer.pl. Added more people,
-and the correct list. Not sure if I should remove amd-gfx, since this
-affects them, somewhat...
+    {
+        let local =3D MyLocalData { /* ... */ };
+        let data =3D Arc::new(Data { r: &local });
+        devres::register_release(dev, data)?;
+    }
+    // devres still holds onto `data`, but that points at `MyLocalData`
+    // which is on the stack and freed here...
 
-However, the intention of this thread was to seek commentary on the
-situation as it is.
+---
+Cheers,
+Benno
