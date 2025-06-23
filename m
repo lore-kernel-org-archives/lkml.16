@@ -1,129 +1,170 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9F9A945
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB550A945
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750696424; cv=none; b=Sr60T3pWMA4UkjOOOmFKUfZcaRupUIlbl3gabsTZqFxRcglZmfsKZRpRLS2iBjBtj42JwjNvQz3lCJ4yPhSpkdtDDC/Cjslfu0WwEgvexZymMESqxiM6Ad2VpVloQJa/Le7sma8K26uJaCptng0+MdrFC2Cw/codlP7IuPnhFcM=
+	t=1750696486; cv=none; b=LwUmx8Coog7kgbLM6r6cImbxQOjC8e3qrLXqOUNP9qrSMfa4QOnm+xqlI8zrD7hpDDL/crzYqu1UeJPrlHT6ccQx5VDaltOyRxPgM53+/fh+Tbs47a0l02bzMbiLYg5EYSxGSonZAm2jVNMUq+3KBisocCr9UNJZSIV0X74BZEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750696424; c=relaxed/simple;
-	bh=bUrESiPRUdiT3aZBD/7m90ntrZOEQs+uNbXB0hfmyLE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sAUjyqyjNspdyErAeB5qOAzEbJ1hTGl093tuI2CJT4qH3UAe38NsTQnG1TOSZJZ2sXq/bvYO4D48ZVgsaXNb65HdHEhoVxk2k/gyWODwS7uJtpMH9J2NPnkvJQ2RggaZgUY9fJAgwtwf7wLkfiSj+fJo74GYzxDrVQ022CCYYD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PZutgFjj; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750696486; c=relaxed/simple;
+	bh=+qIiCgtBWa+1iq23dwO1R9zMl+4efB4et4THR8FKOq8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=kpz15i4u16qexJSHgSXYzyTr1SA9FtKInrsJjdFYZcCq7AaZk9xwP+DqjvpkgVI529uc9O5N7V0NYxzSc8aEn7IPLPN5ApZAaUC7fCYBzQkUXKT1YRa08zo614MAMJ6OwXYqe6+i/dAtx2xyOApcbyGiCN3TXX6Xp8EFH59LXWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XhgrwvqK; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PZutgFjj"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-60179d8e65fso7836999a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:33:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750696421; x=1751301221; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XXbXOUYB6IBOkueWjAb33r4P7mb75EnqewGXePwUiUc=;
-        b=PZutgFjjE1wzaRvF4ETc7QoGsoTEEUDKTVkzYNkXkoYszUGKlGsHGUSRk0enpvArNS
-         lTBA5d1Lu3ZQzGDN40009BUpWDw6RkspNHAGO6JqtGIm18QjpVY+3TtjQNNvkgVphkSG
-         H7jDfH0fdHjyXxjwmBa+N14Ox3L3AiNgJtP7sYxJ4qNdTmAXRuGIb7/S64sQNPzergW/
-         Yfftagh5OSoY8a3EdnW5XBg9uu6wVZ7W3hD78jqK0iHYkiypuEKEvVN38u9uJqkiUe6/
-         2uoTIFnPBTDwdaYuYC7XLc3qbw5mEbrVHDS35AOxNiIdsuSW9N2593UYBiXv8630J4Ai
-         WB7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750696421; x=1751301221;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XXbXOUYB6IBOkueWjAb33r4P7mb75EnqewGXePwUiUc=;
-        b=KaM7cvni6BxYtM/DL1XKCvnAAxTV0peG4zlTyxR0DpM0hCFNUFZMBHHvm1pGjKIf9A
-         k328aDcM808fsjugwppsJmAekkaQLbjyxcgIt0dRAF0fPWJaFGjTY94ZEPOgd7SP+hGo
-         6jM5b3aXJZv4ib1efugUiwIjCKkatyIaY3t6gcdKlkSbmrVNeYS6hJuC991tXi9HzbeD
-         BIq5XMjRHKqiPMO0rjSIRjDJoePUp2ur54BWn5QdefxuuYDD7Xek0FGvy7hWOghWVROd
-         vb2qV/AyuiCbxPYfLVIC1M1PKBHX1LUj7ziM2CDuLsqxjwfDtH7vobywRefIJE2svdRU
-         Q9Ww==
-X-Forwarded-Encrypted: i=1; AJvYcCVVreXUXiPILAfPo18QBAz4MV33MbKtO7cZJ8za5hHw5a/0vGvBxtlu5LNINwiWnXEWMceyHUZPbRN9hhs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqwFioGRFCO368csuwxgzM5g8y88V3vvDVMXVUeAJp8TAdr+aM
-	v8dIN4mqThZqZtglWbTugL0emKa209NjCcnNGVH3ZbqDVZxwWWV4JsvAeZGdSaX2LnE=
-X-Gm-Gg: ASbGncsoxDTMvuyLsKBRR94VAt9LbRjTb87oaIvMpocb2od4+XJjovwu4ENy/zU8Dxj
-	nG+00yZjvULsLVOqkvJc/6cmQsft9ui7wycuLWCaaQH+a5BVsqN7sh9ENZ0obkBtD1mZnl5dnVd
-	aegwtjl2M1o38335trBscA8Q7qgZK2AGzIMM3XyZLCPNMsbZNEeILmGffaL8qyxHum0zSWwFW5O
-	e7vjZAOoRtv4RJ6DfFcw7rw9utvcs6LcvgOgmu5Lbzwyoe38VUXwjJb/qBtDb60aIHY+cqJ8mRJ
-	4ZqJ9TT9wglSZgVn7jaw/k/naZ4I+kDAL5CMGvJEu920iWmaOzMtBLOWGtxEs4Xqlfyza73a6BI
-	lzA09rThF5Q==
-X-Google-Smtp-Source: AGHT+IExPgFei+2P+PVJukxiS3aE9U+PHRfpSN5B4qb4zFW+/87BEDL9btqRL9zzd7hz7A0oT7z89A==
-X-Received: by 2002:a17:906:2c1b:b0:ad5:23e3:48b6 with SMTP id a640c23a62f3a-ae057bd6e23mr1051197566b.45.1750696421104;
-        Mon, 23 Jun 2025 09:33:41 -0700 (PDT)
-Received: from [192.168.1.159] ([213.240.182.16])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054209349sm734281666b.152.2025.06.23.09.33.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 09:33:40 -0700 (PDT)
-Message-ID: <613f2812-3c60-41fe-bdd3-fbe8ea7eeb69@linaro.org>
-Date: Mon, 23 Jun 2025 18:33:39 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XhgrwvqK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750696485; x=1782232485;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=+qIiCgtBWa+1iq23dwO1R9zMl+4efB4et4THR8FKOq8=;
+  b=XhgrwvqKveT8ieswZAz/E3rcb0U2F6fy3+WIISSAgAd/As0/kUQLefgN
+   7sYLS9HSX2Apon2E0DSP5nqtwJO2bPDt91RCMoUIIbQmO7mnDRbrFI86H
+   5c0C08vExWeBT5DiHJyMhhkQOzW9R+dwfUK20P5MXGXzDLNFPMpC1gf8p
+   56Y3/yRdqyFgE83HCHUaC4GZwEoMFzhQk3XooBi5AmJHt3/4ElpO4S5PF
+   Lw3Q8Sr7UrfZ4OVdkcYIRGPu4b6m/xGga7JEq204DfG8RMetbpIMIug5u
+   K3jEARzJGCMk7fmzF3tL5CckSqCS4jlm65U5ra/sUKeA/4edWVSeahysp
+   A==;
+X-CSE-ConnectionGUID: fWR0eZVHQn+aPgO2NnBKMw==
+X-CSE-MsgGUID: UNqb56pLR4idshsveIp7PA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52139960"
+X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
+   d="scan'208";a="52139960"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 09:34:44 -0700
+X-CSE-ConnectionGUID: 84yHfsV9S/uiVxbZg6MLzw==
+X-CSE-MsgGUID: 2FhlRV81T3CRGP6E/A5DSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
+   d="scan'208";a="152343340"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 23 Jun 2025 09:34:43 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uTk80-000P6i-24;
+	Mon, 23 Jun 2025 16:34:40 +0000
+Date: Tue, 24 Jun 2025 00:34:33 +0800
+From: kernel test robot <lkp@intel.com>
+To: Junxian Huang <huangjunxian6@hisilicon.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Leon Romanovsky <leon@kernel.org>
+Subject: drivers/infiniband/hw/hns/hns_roce_hw_v2.c:5359:1: warning: the
+ frame size of 1088 bytes is larger than 1024 bytes
+Message-ID: <202506240032.CSgIyFct-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/11] power: supply: qcom_smbx: program aicl rerun time
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- linux-hardening@vger.kernel.org
-References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
- <20250619-smb2-smb5-support-v1-11-ac5dec51b6e1@linaro.org>
- <2d3ff07d-1cd8-4eb6-8b3b-2d0d6f64445f@oss.qualcomm.com>
-Content-Language: en-US
-From: Casey Connolly <casey.connolly@linaro.org>
-In-Reply-To: <2d3ff07d-1cd8-4eb6-8b3b-2d0d6f64445f@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Junxian,
+
+First bad commit (maybe != root cause):
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   86731a2a651e58953fc949573895f2fa6d456841
+commit: 8977b561216c7e693d61c6442657e33f134bfeb5 RDMA/hns: Clean up the legacy CONFIG_INFINIBAND_HNS
+date:   6 months ago
+config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20250624/202506240032.CSgIyFct-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506240032.CSgIyFct-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506240032.CSgIyFct-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/infiniband/hw/hns/hns_roce_hw_v2.c: In function 'hns_roce_v2_modify_qp':
+>> drivers/infiniband/hw/hns/hns_roce_hw_v2.c:5359:1: warning: the frame size of 1088 bytes is larger than 1024 bytes [-Wframe-larger-than=]
+    5359 | }
+         | ^
 
 
+vim +5359 drivers/infiniband/hw/hns/hns_roce_hw_v2.c
 
-On 6/20/25 19:00, Konrad Dybcio wrote:
-> On 6/19/25 4:55 PM, Casey Connolly wrote:
->> We don't know what the bootloader programmed here, but we want to have a
->> consistent value. Program the automatic input current limit detection to
->> re-run every 3 seconds. This seems to be necessary at least for smb5.
->>
->> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
->> ---
->>   drivers/power/supply/qcom_smbx.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/drivers/power/supply/qcom_smbx.c b/drivers/power/supply/qcom_smbx.c
->> index d902f3f43548191d3d0310ce90e699918ed0f16f..b723dba5b86daefb238ee6aae19b1b7e5236fce3 100644
->> --- a/drivers/power/supply/qcom_smbx.c
->> +++ b/drivers/power/supply/qcom_smbx.c
->> @@ -1091,8 +1091,14 @@ static int smb_probe(struct platform_device *pdev)
->>   	if (rc < 0)
->>   		return dev_err_probe(chip->dev, rc,
->>   				     "Couldn't write fast charge current cfg");
->>   
->> +	rc = regmap_write_bits(chip->regmap, chip->base + AICL_RERUN_TIME_CFG,
->> +			       AICL_RERUN_TIME_MASK, AIC_RERUN_TIME_3_SECS);
-> 
-> FWIW a random downstream clone I have sets 0x01 which is claimed to
-> mean "every 12s" instead
+f0cb411aad23af Lang Cheng      2021-06-21  5293  
+606bf89e98efb1 Lijun Ou        2019-07-08  5294  static int hns_roce_v2_modify_qp(struct ib_qp *ibqp,
+606bf89e98efb1 Lijun Ou        2019-07-08  5295  				 const struct ib_qp_attr *attr,
+606bf89e98efb1 Lijun Ou        2019-07-08  5296  				 int attr_mask, enum ib_qp_state cur_state,
+2bb185c68bf4c1 Luoyouming      2022-12-24  5297  				 enum ib_qp_state new_state, struct ib_udata *udata)
+606bf89e98efb1 Lijun Ou        2019-07-08  5298  {
+606bf89e98efb1 Lijun Ou        2019-07-08  5299  	struct hns_roce_dev *hr_dev = to_hr_dev(ibqp->device);
+606bf89e98efb1 Lijun Ou        2019-07-08  5300  	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
+4b42d05d0b2ca5 Lang Cheng      2019-08-08  5301  	struct hns_roce_v2_qp_context ctx[2];
+4b42d05d0b2ca5 Lang Cheng      2019-08-08  5302  	struct hns_roce_v2_qp_context *context = ctx;
+4b42d05d0b2ca5 Lang Cheng      2019-08-08  5303  	struct hns_roce_v2_qp_context *qpc_mask = ctx + 1;
+ae1c61489c7fa0 Lijun Ou        2020-03-20  5304  	struct ib_device *ibdev = &hr_dev->ib_dev;
+b5c229dc1585ad Lang Cheng      2019-08-08  5305  	int ret;
+606bf89e98efb1 Lijun Ou        2019-07-08  5306  
+26e990badde40b Jason Gunthorpe 2020-10-03  5307  	if (attr_mask & ~IB_QP_ATTR_STANDARD_BITS)
+26e990badde40b Jason Gunthorpe 2020-10-03  5308  		return -EOPNOTSUPP;
+26e990badde40b Jason Gunthorpe 2020-10-03  5309  
+606bf89e98efb1 Lijun Ou        2019-07-08  5310  	/*
+606bf89e98efb1 Lijun Ou        2019-07-08  5311  	 * In v2 engine, software pass context and context mask to hardware
+606bf89e98efb1 Lijun Ou        2019-07-08  5312  	 * when modifying qp. If software need modify some fields in context,
+606bf89e98efb1 Lijun Ou        2019-07-08  5313  	 * we should set all bits of the relevant fields in context mask to
+606bf89e98efb1 Lijun Ou        2019-07-08  5314  	 * 0 at the same time, else set them to 0x1.
+606bf89e98efb1 Lijun Ou        2019-07-08  5315  	 */
+98912ee82a0c22 Wenpeng Liang   2020-09-16  5316  	memset(context, 0, hr_dev->caps.qpc_sz);
+98912ee82a0c22 Wenpeng Liang   2020-09-16  5317  	memset(qpc_mask, 0xff, hr_dev->caps.qpc_sz);
+98912ee82a0c22 Wenpeng Liang   2020-09-16  5318  
+606bf89e98efb1 Lijun Ou        2019-07-08  5319  	ret = hns_roce_v2_set_abs_fields(ibqp, attr, attr_mask, cur_state,
+2bb185c68bf4c1 Luoyouming      2022-12-24  5320  					 new_state, context, qpc_mask, udata);
+606bf89e98efb1 Lijun Ou        2019-07-08  5321  	if (ret)
+606bf89e98efb1 Lijun Ou        2019-07-08  5322  		goto out;
+606bf89e98efb1 Lijun Ou        2019-07-08  5323  
+606bf89e98efb1 Lijun Ou        2019-07-08  5324  	/* When QP state is err, SQ and RQ WQE should be flushed */
+f0cb411aad23af Lang Cheng      2021-06-21  5325  	if (new_state == IB_QPS_ERR)
+f0cb411aad23af Lang Cheng      2021-06-21  5326  		v2_set_flushed_fields(ibqp, context, qpc_mask);
+606bf89e98efb1 Lijun Ou        2019-07-08  5327  
+606bf89e98efb1 Lijun Ou        2019-07-08  5328  	/* Configure the optional fields */
+606bf89e98efb1 Lijun Ou        2019-07-08  5329  	ret = hns_roce_v2_set_opt_fields(ibqp, attr, attr_mask, context,
+606bf89e98efb1 Lijun Ou        2019-07-08  5330  					 qpc_mask);
+606bf89e98efb1 Lijun Ou        2019-07-08  5331  	if (ret)
+606bf89e98efb1 Lijun Ou        2019-07-08  5332  		goto out;
+606bf89e98efb1 Lijun Ou        2019-07-08  5333  
+f0cb411aad23af Lang Cheng      2021-06-21  5334  	hr_reg_write_bool(context, QPC_INV_CREDIT,
+f0cb411aad23af Lang Cheng      2021-06-21  5335  			  to_hr_qp_type(hr_qp->ibqp.qp_type) == SERV_TYPE_XRC ||
+f0cb411aad23af Lang Cheng      2021-06-21  5336  			  ibqp->srq);
+f0cb411aad23af Lang Cheng      2021-06-21  5337  	hr_reg_clear(qpc_mask, QPC_INV_CREDIT);
+c7bcb13442e1bd Lijun Ou        2018-11-24  5338  
+926a01dc000d76 Wei Hu(Xavier   2017-08-30  5339) 	/* Every status migrate must change state */
+f0cb411aad23af Lang Cheng      2021-06-21  5340  	hr_reg_write(context, QPC_QP_ST, new_state);
+f0cb411aad23af Lang Cheng      2021-06-21  5341  	hr_reg_clear(qpc_mask, QPC_QP_ST);
+926a01dc000d76 Wei Hu(Xavier   2017-08-30  5342) 
+926a01dc000d76 Wei Hu(Xavier   2017-08-30  5343) 	/* SW pass context to HW */
+98912ee82a0c22 Wenpeng Liang   2020-09-16  5344  	ret = hns_roce_v2_qp_modify(hr_dev, context, qpc_mask, hr_qp);
+926a01dc000d76 Wei Hu(Xavier   2017-08-30  5345) 	if (ret) {
+323275ac2ff15b wenglianfa      2024-10-24  5346  		ibdev_err_ratelimited(ibdev, "failed to modify QP, ret = %d.\n", ret);
+926a01dc000d76 Wei Hu(Xavier   2017-08-30  5347) 		goto out;
+926a01dc000d76 Wei Hu(Xavier   2017-08-30  5348) 	}
+926a01dc000d76 Wei Hu(Xavier   2017-08-30  5349) 
+926a01dc000d76 Wei Hu(Xavier   2017-08-30  5350) 	hr_qp->state = new_state;
+926a01dc000d76 Wei Hu(Xavier   2017-08-30  5351) 
+606bf89e98efb1 Lijun Ou        2019-07-08  5352  	hns_roce_v2_record_opt_fields(ibqp, attr, attr_mask);
+926a01dc000d76 Wei Hu(Xavier   2017-08-30  5353) 
+32548870d438ab Wenpeng Liang   2021-03-04  5354  	if (new_state == IB_QPS_RESET && !ibqp->uobject)
+32548870d438ab Wenpeng Liang   2021-03-04  5355  		clear_qp(hr_qp);
+926a01dc000d76 Wei Hu(Xavier   2017-08-30  5356) 
+926a01dc000d76 Wei Hu(Xavier   2017-08-30  5357) out:
+926a01dc000d76 Wei Hu(Xavier   2017-08-30  5358) 	return ret;
+926a01dc000d76 Wei Hu(Xavier   2017-08-30 @5359) }
+926a01dc000d76 Wei Hu(Xavier   2017-08-30  5360) 
 
-hmm I saw that too, I think more documentation would be needed to 
-understand this properly (I'm not exactly clear on what this actually 
-means, when the AICL would re-run, etc).
+:::::: The code at line 5359 was first introduced by commit
+:::::: 926a01dc000d76df3f5b110dddcebfb517b8f57b RDMA/hns: Add QP operations support for hip08 SoC
 
-I have reports that this works ok, so I'd just leave it unless we have 
-info to suggest otherwise.
+:::::: TO: Wei Hu(Xavier) <xavier.huwei@huawei.com>
+:::::: CC: Doug Ledford <dledford@redhat.com>
 
-> 
-> Konrad
 -- 
-Casey (she/they)
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
