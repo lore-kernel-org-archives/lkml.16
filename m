@@ -1,125 +1,201 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91DC1D2F42;
-	Mon, 23 Jun 2025 06:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094671DE2A8
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 06:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750659682; cv=none; b=rrDxvGiEu12xgnV4Jz4MtOx7MY1bsDhZmobCUDidaYrnl2Psq9P3u15EoJEvc+RuztLVrUM8+ZtYTA6hTEKFgM0ULJtUXxcNYsYet+ivAy2kkQlwAuZVQrawN0sLl9/+fhI+vSRrWXnFn8CmisOMzpGktUfPJJMZZn1LBVF6EFs=
+	t=1750659694; cv=none; b=SgAd2Gi9FCi/3EVbg+lHbE6R13xHNczpH/gqTY+DXFZimf0Mt8CPw6AciwBwwh9JJgruTbR0Tgi/W8fsPXQh/ijFIZ9GG6avYHDlRSHTlPUEg+BVFwR9tuIFx3XhWQCmF895J9sKFkchrLwMpg5S3a/y52BW5GDo/eYpZRGFjvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750659682; c=relaxed/simple;
-	bh=+bwLU6ymdrAg/EKWtfqIW8dc231VI/HkxW+vEMW+RpE=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=k+r5Q2DgSwskY+9SyAdWTWTSEJNbZMsCAo5auAMCqWrI0J1BhnMIFB4Yk91zYd0+OJ3iCL4z1NNYkpAHYBt4jq/vDMaoj1XvkVkLFxgWFP5nK+Nuh4qQBrokZ19HSFFxuJLaz17v6gl3PQ3KsTUHAAXzkqbZGrkAqs40ZM9kXWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4bQdFW3RYPz1d1WK;
-	Mon, 23 Jun 2025 14:18:55 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3928D14074D;
-	Mon, 23 Jun 2025 14:21:13 +0800 (CST)
-Received: from [10.67.120.192] (10.67.120.192) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 23 Jun 2025 14:21:12 +0800
-Message-ID: <791a8e4e-8bcf-4638-8bd7-d9e8785a9320@huawei.com>
-Date: Mon, 23 Jun 2025 14:21:11 +0800
+	s=arc-20240116; t=1750659694; c=relaxed/simple;
+	bh=S+lNeumD5H26uvwBaO1T9jxSaUHSIdHOJ7k2YDYX5ko=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=imeGLXlkREepWU50m35QrFq+ae0xSu1OfHsKdNri/Cc2Q3Bg8BIR0zOQiGfuW37l5WaXn38TRmpFk9aaI8eUIb+/rtRASfA5nMMg1Aii1y0fQEN75xe1fhj2PaXkEAASC6mvoIaOVRSO0q6j7tvTD8mPqULCt+M4cC6J9u4FO58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Oi1fKtdQ; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Oi1fKtdQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750659689;
+	bh=S+lNeumD5H26uvwBaO1T9jxSaUHSIdHOJ7k2YDYX5ko=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Oi1fKtdQPGMEkUueIz6ysRvX8eHqYDjvTnWVx7KWdb0ZvZZFn8J20VTXlIwQD7HzW
+	 aMo0dCM1vDxoijZBKkLgJh/Qg6IyhZN15f7BfVsTO+PuRSGQ0jurF9PPWL8eU/Boom
+	 mWXGEAB8bjagDEbd5mTPCHFxrAj6gRRCDISSFQtUVaNNeiGRgIWCbHvj+XbVmuLAp2
+	 9qOAHRptO6K3RRKTYHbvH5ba+H925sWAuLzg7r8VhVKZQAy6MHpk4xA+9Z9xlRbF9c
+	 1lxVoINs9CgNkBbjX3QGAHH+wgSg6o6cuSF9o27e1t5axiPqxOUwGr8eTa4SIp15V6
+	 ZMlnoY6tuCe/A==
+Received: from fedora (unknown [IPv6:2a01:e0a:2c:6930:16f1:973:959b:9b0c])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 96F0417E0EC0;
+	Mon, 23 Jun 2025 08:21:28 +0200 (CEST)
+Date: Mon, 23 Jun 2025 08:21:22 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Chia-I Wu <olvaffe@gmail.com>
+Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] panthor: save panthor_file in panthor_group
+Message-ID: <20250623082122.62f69579@fedora>
+In-Reply-To: <20250620235053.164614-3-olvaffe@gmail.com>
+References: <20250620235053.164614-1-olvaffe@gmail.com>
+	<20250620235053.164614-3-olvaffe@gmail.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <shaojijie@huawei.com>, Jian Shen <shenjian15@huawei.com>, Salil Mehta
-	<salil.mehta@huawei.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S .
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
- Abeni <pabeni@redhat.com>, Nathan Chancellor <nathan@kernel.org>, Nick
- Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling
-	<morbo@google.com>, Justin Stitt <justinstitt@google.com>, Hao Lan
-	<lanhao@huawei.com>, Guangwei Zhang <zhangwangwei6@huawei.com>, Netdev
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<llvm@lists.linux.dev>
-Subject: Re: [PATCH] hns3: work around stack size warning
-To: Arnd Bergmann <arnd@arndb.de>, Jakub Kicinski <kuba@kernel.org>
-References: <20250610092113.2639248-1-arnd@kernel.org>
- <41f14b66-f301-45cb-bdfd-0192afe588ec@huawei.com>
- <a029763b-6a5c-48ed-b135-daf1d359ac24@app.fastmail.com>
- <34d9d8f7-384e-4447-90e2-7c6694ecbb05@huawei.com>
- <20250612083309.7402a42e@kernel.org>
- <02b6bd18-6178-420b-90ab-54308c7504f7@huawei.com>
- <cb286135-466f-40b2-aaa5-a2b336d3a87c@huawei.com>
- <13cf4327-f04f-455e-9a3a-1c74b22f42d0@app.fastmail.com>
-From: Jijie Shao <shaojijie@huawei.com>
-In-Reply-To: <13cf4327-f04f-455e-9a3a-1c74b22f42d0@app.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemk100013.china.huawei.com (7.202.194.61)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Fri, 20 Jun 2025 16:50:51 -0700
+Chia-I Wu <olvaffe@gmail.com> wrote:
 
-on 2025/6/23 13:56, Arnd Bergmann wrote:
-> On Mon, Jun 23, 2025, at 05:19, Jijie Shao wrote:
->>> on 2025/6/12 23:33, Jakub Kicinski wrote:
->>>
->> *Hi Jakub, Arnd We have changed the impleament as your suggestion. Would
->> you please help check it ? If it's OK, we will rewrite the rest parts of
->> our debugfs code. Thanks! *
-> The conversion to seq_file looks good to me, this does address the
-> stack usage problems I was observing.
-> Thanks for cleaning this up!
->
->> -    sprintf(result[j++], "%u", index);
->> -    sprintf(result[j++], "%u", readl_relaxed(ring->tqp->io_base +
->> -        HNS3_RING_TX_RING_BD_NUM_REG));
->> +    seq_printf(s, "%-4u%6s", index, " ");
->> +    seq_printf(s, "%-5u%3s",
->> +           readl_relaxed(base + HNS3_RING_TX_RING_BD_NUM_REG), " ");
-> I'm not sure I understand the format string changes here, I did
-> not think they were necessary.
->
-> Are you doing this to keep the output the same as before, or are
-> you reformatting the contents for readability?
+> We would like to access panthor_file from panthor_group on gpu errors.
+> Because panthour_group can outlive drm_file, add refcount to
+> panthor_file to ensure its lifetime.
 
-yeah, just to keep the output the same as before
+I'm not a huge fan of refcounting panthor_file because people tend to
+put resource they expect to be released when the last handle goes away,
+and if we don't refcount these sub-resources they might live longer
+than they are meant to. Also not a huge fan of the circular referencing
+that exists between file and groups after this change.
 
+How about we move the process info to a sub-object that's refcounted
+and let both panthor_file and panthor_group take a ref on this object
+instead?
 
->
->> +static int hns3_dbg_common_init_t1(struct hnae3_handle *handle, u32
->> cmd)
->> +{
->> +    struct device *dev = &handle->pdev->dev;
->> +    struct dentry *entry_dir;
->> +    read_func func = NULL;
->> +
->> +    switch (hns3_dbg_cmd[cmd].cmd) {
->> +    case HNAE3_DBG_CMD_TX_QUEUE_INFO:
->> +        func = hns3_dbg_tx_queue_info;
->> +        break;
->> +    default:
->> +        return -EINVAL;
->> +    }
->> +
->> +    entry_dir = hns3_dbg_dentry[hns3_dbg_cmd[cmd].dentry].dentry;
->> +    debugfs_create_devm_seqfile(dev, hns3_dbg_cmd[cmd].name, entry_dir,
->> +                    func);
->> +
->> +    return 0;
-> This will work fine as well, but I think you can do slightly better
-> by having your own file_operations with a read function based
-> on single_open() and your current hns3_dbg_read_cmd().
->
-> I don't think you gain anything from using debugfs_create_devm_seqfile()
-> since you use debugfs_remove_recursive() for cleaning it up anyway.
->
->       Arnd
-
-Using debugfs_create_devm_seqfile() is just to simplify the code.
-We only need to focus on the implementation of .read() function.
-
-Thanks
-Jijie Shao
-
+> 
+> Signed-off-by: Chia-I Wu <olvaffe@gmail.com>
+> ---
+>  drivers/gpu/drm/panthor/panthor_device.h | 16 ++++++++++++++++
+>  drivers/gpu/drm/panthor/panthor_drv.c    | 15 ++++++++++++++-
+>  drivers/gpu/drm/panthor/panthor_mmu.c    |  1 +
+>  drivers/gpu/drm/panthor/panthor_sched.c  |  6 ++++++
+>  4 files changed, 37 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/panthor/panthor_device.h b/drivers/gpu/drm/panthor/panthor_device.h
+> index 4fc7cf2aeed57..75ae6fd3a5128 100644
+> --- a/drivers/gpu/drm/panthor/panthor_device.h
+> +++ b/drivers/gpu/drm/panthor/panthor_device.h
+> @@ -256,8 +256,24 @@ struct panthor_file {
+>  
+>  	/** @stats: cycle and timestamp measures for job execution. */
+>  	struct panthor_gpu_usage stats;
+> +
+> +	/** @refcount: ref count of this file */
+> +	struct kref refcount;
+>  };
+>  
+> +static inline struct panthor_file *panthor_file_get(struct panthor_file *pfile)
+> +{
+> +	kref_get(&pfile->refcount);
+> +	return pfile;
+> +}
+> +
+> +void panthor_file_release(struct kref *kref);
+> +
+> +static inline void panthor_file_put(struct panthor_file *pfile)
+> +{
+> +	kref_put(&pfile->refcount, panthor_file_release);
+> +}
+> +
+>  int panthor_device_init(struct panthor_device *ptdev);
+>  void panthor_device_unplug(struct panthor_device *ptdev);
+>  
+> diff --git a/drivers/gpu/drm/panthor/panthor_drv.c b/drivers/gpu/drm/panthor/panthor_drv.c
+> index 775a66c394544..aea9609684b77 100644
+> --- a/drivers/gpu/drm/panthor/panthor_drv.c
+> +++ b/drivers/gpu/drm/panthor/panthor_drv.c
+> @@ -1393,6 +1393,16 @@ static int panthor_ioctl_set_user_mmio_offset(struct drm_device *ddev,
+>  	return 0;
+>  }
+>  
+> +void panthor_file_release(struct kref *kref)
+> +{
+> +	struct panthor_file *pfile =
+> +		container_of(kref, struct panthor_file, refcount);
+> +
+> +	WARN_ON(pfile->vms || pfile->groups);
+> +
+> +	kfree(pfile);
+> +}
+> +
+>  static int
+>  panthor_open(struct drm_device *ddev, struct drm_file *file)
+>  {
+> @@ -1426,6 +1436,8 @@ panthor_open(struct drm_device *ddev, struct drm_file *file)
+>  	if (ret)
+>  		goto err_destroy_vm_pool;
+>  
+> +	kref_init(&pfile->refcount);
+> +
+>  	file->driver_priv = pfile;
+>  	return 0;
+>  
+> @@ -1442,10 +1454,11 @@ panthor_postclose(struct drm_device *ddev, struct drm_file *file)
+>  {
+>  	struct panthor_file *pfile = file->driver_priv;
+>  
+> +	/* destroy vm and group handles now to avoid circular references */
+>  	panthor_group_pool_destroy(pfile);
+>  	panthor_vm_pool_destroy(pfile);
+>  
+> -	kfree(pfile);
+> +	panthor_file_put(pfile);
+>  }
+>  
+>  static const struct drm_ioctl_desc panthor_drm_driver_ioctls[] = {
+> diff --git a/drivers/gpu/drm/panthor/panthor_mmu.c b/drivers/gpu/drm/panthor/panthor_mmu.c
+> index b39ea6acc6a96..ccbcfe11420ac 100644
+> --- a/drivers/gpu/drm/panthor/panthor_mmu.c
+> +++ b/drivers/gpu/drm/panthor/panthor_mmu.c
+> @@ -1604,6 +1604,7 @@ void panthor_vm_pool_destroy(struct panthor_file *pfile)
+>  
+>  	xa_destroy(&pfile->vms->xa);
+>  	kfree(pfile->vms);
+> +	pfile->vms = NULL;
+>  }
+>  
+>  /**
+> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
+> index a2248f692a030..485072904cd7d 100644
+> --- a/drivers/gpu/drm/panthor/panthor_sched.c
+> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
+> @@ -535,6 +535,9 @@ struct panthor_group {
+>  	/** @ptdev: Device. */
+>  	struct panthor_device *ptdev;
+>  
+> +	/** @pfile: File this group is created from. */
+> +	struct panthor_file *pfile;
+> +
+>  	/** @vm: VM bound to the group. */
+>  	struct panthor_vm *vm;
+>  
+> @@ -919,6 +922,7 @@ static void group_release_work(struct work_struct *work)
+>  	panthor_kernel_bo_destroy(group->syncobjs);
+>  
+>  	panthor_vm_put(group->vm);
+> +	panthor_file_put(group->pfile);
+>  	kfree(group);
+>  }
+>  
+> @@ -3467,6 +3471,8 @@ int panthor_group_create(struct panthor_file *pfile,
+>  	INIT_WORK(&group->tiler_oom_work, group_tiler_oom_work);
+>  	INIT_WORK(&group->release_work, group_release_work);
+>  
+> +	group->pfile = panthor_file_get(pfile);
+> +
+>  	group->vm = panthor_vm_pool_get_vm(pfile->vms, group_args->vm_id);
+>  	if (!group->vm) {
+>  		ret = -EINVAL;
 
