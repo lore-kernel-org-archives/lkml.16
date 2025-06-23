@@ -1,206 +1,116 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4178835977
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F1726D4E5;
+	Mon, 23 Jun 2025 15:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750692933; cv=none; b=pYi3gr0/rAj7sqIell3OdWh1kp5+pOYpyIrBLLLme4WrQ/JRvCDw5qcvJdwLlRHAofHCisOi1CuYizlI1bvhFvXGEsNUvWObQYYElvZl04OlXCJjhoB7Yg06TPm8aykWoPKsPX75SjVeZCJjCkGjcKBaYLiFD0OaVLTDjSYs86U=
+	t=1750692936; cv=none; b=kvxKt3W4vBsSIAhJec7UBLcHRAHkuRFJQDBjxa0eswu2OzP679cDUDIuAjgmQcajX3pb9upxFOGViww+GdhTiDIv1gNr8MRuIn9bHoUegAnwCopXZbbtX0OgeHGOD3jp2s7icNZwl4arc7Kx5sd/e6UCbqsBCh4mf+I2aZRjy9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750692933; c=relaxed/simple;
-	bh=EiHCWYnfA84Lwth0NtKhy0RZNL31ktggDzUPPkngdho=;
+	s=arc-20240116; t=1750692936; c=relaxed/simple;
+	bh=myI9JGxkwnLWg5XpI+ttHaw7kFElG+eXHPzNOROEDek=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TrgKto4KJ85r8VghKCkD9Dc9jtlg5h6K99KcOAPc+g8Oxom6aTACZobniPAGYrYTFX9FqCRNyPoEck0C712cFokgF+qrePq9ygkk4by+Jn7TJ0y9giZrxTqtGvMD73ytmItaC4ie875cHcRn8oflqBMqytLHMV5rg4uWqMqOTMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YCO4QwhV; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=JCff5lP2Ggo6jLb4/LEd9izX4wo9Uf2342gtoLGT+e6sXNw7HsXgcn+JaYhzPTNE4pNRlmfSH/+gq9gvC8SLDhF28GbjldXEV3Vi6zJhVTsGeCViKl3YsdXN/nY6FBmVwLOt6YcNfPUj/bDrlEes/KyhqTj0ewMHe8kadZmYU9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BqaEEl5q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YCO4QwhV"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a54700a463so2394792f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:35:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750692929; x=1751297729; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=huYAT/t42g1dmZnYVcoeWH1YVJvzhdKSFl3csVwzj80=;
-        b=YCO4QwhVDJA665Vzhl3ImTDRPx3DwAPMb7v5VgdmJ/2AJNPrHUKf8fHSvv5k4B6jx1
-         +6taT6m3soKGNTwt4nM999cJ15ZMZw+/nmGqj1EPkuzhbeP6KCndUOJz2NXswLmC42uO
-         8noYXaktdTJeWCRu9nLlYb6rAaiiwNeOHWhez4vKOg2Fa/Oeb/QOtyVt/2ftLRO9N3+D
-         C5CPlIhd6jpSActsyekWc7TOfQDkY7i4gtzhruOtX+GYI+qoOlBWLKytZFpJjx3ZAuUt
-         oLEm5oLoScA1O3jK/PKGh5xfZa0ZXRxc4t0mZAMo6xsmuoIGj8z4+np1VRc/8SpRB9n4
-         IR5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750692929; x=1751297729;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=huYAT/t42g1dmZnYVcoeWH1YVJvzhdKSFl3csVwzj80=;
-        b=GooV3eUDEWJtkChjd2eKbfsbfzjyOEYfXc4BWO+iFnFEZa/Gk/ks5LqNz9jppCKJlK
-         oh9eVr88F87GEAtRwJxjQkjX1irR0idt2bgd8zMyAhwwkZRFQPEpSIM7Dwe141ynKrtG
-         Fp1ebfUiphtMyrWE71bvdW0Bh2hKLLpSwoQ/Ldtqx1+AWz29Bro1NRpHm8ccz+FwMHSL
-         JZgNNqSLR2JiZ4hmJ0xNwupR0sveh5eE49gZf+IXyHJ6t8/xC4YIhlbY2QeGxZY3DQZe
-         bDUu4Du2vsQludpsoFIp8vJwGC6kDoMTrJmIJS6ia1vBY55Ugpr7J5/ITvkWjTbVohDO
-         g7lg==
-X-Gm-Message-State: AOJu0Yx6qMVYAVrhWWNlIJT29ttp8GWxlBmoDUbbROai9d1/tjcBp8WE
-	gERsxOOtLTValV9zAi0H3fqBQ7+eCi7U+kXvH6K1BlLblaA3oHrKJUQjiqAsWj7C0ShKaK2t7VW
-	kVhucn7Io8umGCzaV5Mf0IUnKCRErL3JJ0g==
-X-Gm-Gg: ASbGncu5GReGc0WKY2SKVt8rZF9QnKmtt/iU9qOS9ZDREr5gLEcQ83oHK2huJPo08N/
-	ktKKvnXZmJGfYtXrQFJEdQiLov8GBZ83qOTePv7KmryoUBIqjJjkrB48dQjA/MOPc9yLH08Q5rg
-	MhOlM9BUtOnIIKf1fHb67SfddpuYlwBzWHIi01VSxZiQ==
-X-Google-Smtp-Source: AGHT+IFnvY7JUfzEqgX6SMRWf5s6qit7gZXlsaTeTlGUWdJGFASdJH6pfWWpMC2Ui77oa2i2tmlUHC4sNiT2Iumv1Ls=
-X-Received: by 2002:a05:6000:2883:b0:3a6:d93e:526d with SMTP id
- ffacd0b85a97d-3a6d93e54c8mr6283861f8f.10.1750692929258; Mon, 23 Jun 2025
- 08:35:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BqaEEl5q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B1BEC4CEEA;
+	Mon, 23 Jun 2025 15:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750692936;
+	bh=myI9JGxkwnLWg5XpI+ttHaw7kFElG+eXHPzNOROEDek=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=BqaEEl5qPjSIXkS+eULS1mwdfWQ9Zg3VOAoQgBbop1curxqErpjaUVlSaXCy/vt7E
+	 8VLzM5vkni+Tw80KUE7q7xCN1fhszeGChKBqO/6mi003vRIuQO1QmQamWLSqPKdEA3
+	 NJLs4rgBwVQEtMtstWegA6JlwXQV2opp32MKLW+2eoNPr3zR+ldha1dBrrVc0limsP
+	 DibnSQH2rx66F3r8FY9/SLriFuPwgwr/fwNyodViQWyOWLmyGdZJo0cmVDcecIxIfA
+	 /ZaNNG/CUftl0mv+p8FgBzcpNjT4YG5IM3V3kagO6F8iDaw2OQerN3gkjFKRoQlvxe
+	 csU3HlSg9NE1g==
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-40aa391ce1aso981039b6e.2;
+        Mon, 23 Jun 2025 08:35:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVE3/9xq+gA4LyexiRTaAqzI+6uSEnD9mrE3sGzc19lTnc5ApV2dl1feWhL0opaTAVA7kV9SH+l8V8aoec=@vger.kernel.org, AJvYcCXulMb/FquLH276HBaTmfivjUS2kDASM6vn7P5LWcOFBZFLiEvYXmYxb1pAo1eol1+jS57D7zXZJis=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwR4bMwDZEByT8UmlkvtI5+kXuISsZZHhzpEyHjUvAYgd9H6tPe
+	DMMpd1EXmm/pAY4BoLGMcGmOqnChZlMBmAoh0fJYLpHAjsD7xLY0lEy96I9QZdsE6hyMSaOerqg
+	U1BK3bcAECf9q1uMHsUdC4PvJkQDzUf0=
+X-Google-Smtp-Source: AGHT+IGCY55dEZ+EurAs1KUcKmjSaacHpI+q78BU9Xm6LdDSuXAGo6Eiz6Li3+bt+Z0r06nSeI5gpRngwZc+meRehU8=
+X-Received: by 2002:a05:6808:1512:b0:407:9d24:af06 with SMTP id
+ 5614622812f47-40ac6f6db0bmr9972532b6e.33.1750692935330; Mon, 23 Jun 2025
+ 08:35:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMb39_mAWfeuyDjHR4Ej9fH=PXdH0qUda50R=iqGKVzN1mcHPQ@mail.gmail.com>
- <48ff3e59-db6f-4870-8f0b-3c49dd4d865e@kernel.org> <CAMb39_nRz-9NemdsASTG_34Lm_6a1uw4qLwkqBdn7FnMmN3O7w@mail.gmail.com>
- <CAMb39_=0tUsn9u=KB72nT5MUhhdpujsOR1_+yhQTSXbijOM0MQ@mail.gmail.com>
- <d20cbb64-1eef-4ce5-a2fa-fce9044a50bb@kernel.org> <CAMb39_nh5_DJpv0zEKauMRd1DpW8obpu228gpMVTaE7j3WPikA@mail.gmail.com>
- <9c40cd6a-b34b-468b-b5c4-6a2cbb7dcdef@kernel.org>
-In-Reply-To: <9c40cd6a-b34b-468b-b5c4-6a2cbb7dcdef@kernel.org>
-From: Walt Holman <waltholman09@gmail.com>
-Date: Mon, 23 Jun 2025 10:35:17 -0500
-X-Gm-Features: Ac12FXxTsrtD-ZYmskmomh3F_QbWpvnVgiKxwvu2DpIjdWepKKapiMCmTDdnhGs
-Message-ID: <CAMb39_mpfdjxAH7jp0s7aedi_CsUOOVSR6x=8NG1ehRwWeQ30w@mail.gmail.com>
-Subject: Re: AMDGPU - Regression: Black screen due to commit 16dc8bc27c2aa3c93905d3e885e27f1e3535f09a
-To: Mario Limonciello <superm1@kernel.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, mario.limonciello@amd.com, 
-	alexander.deucher@amd.com
+References: <20250623133402.3120230-1-zhenglifeng1@huawei.com> <20250623133402.3120230-6-zhenglifeng1@huawei.com>
+In-Reply-To: <20250623133402.3120230-6-zhenglifeng1@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 23 Jun 2025 17:35:24 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jz9Bc82AnpcuGLyiu4zC4J6CzHVj7YRmaqhz71S4NEYg@mail.gmail.com>
+X-Gm-Features: AX0GCFuE1g6UkSCXAnRPJyJHLehsKyEzNsYzhE62PqAbiAST5usw32-FimrLyBY
+Message-ID: <CAJZ5v0jz9Bc82AnpcuGLyiu4zC4J6CzHVj7YRmaqhz71S4NEYg@mail.gmail.com>
+Subject: Re: [PATCH 5/7] cpufreq: Move the check of cpufreq_driver->get into cpufreq_verify_current_freq()
+To: Lifeng Zheng <zhenglifeng1@huawei.com>
+Cc: rafael@kernel.org, viresh.kumar@linaro.org, ionela.voinescu@arm.com, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linuxarm@huawei.com, 
+	jonathan.cameron@huawei.com, zhanjie9@hisilicon.com, lihuisong@huawei.com, 
+	yubowen8@huawei.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 23, 2025 at 9:51=E2=80=AFAM Mario Limonciello <superm1@kernel.o=
-rg> wrote:
+On Mon, Jun 23, 2025 at 3:34=E2=80=AFPM Lifeng Zheng <zhenglifeng1@huawei.c=
+om> wrote:
 >
-> On 6/21/25 2:32 PM, Walt Holman wrote:
-> > On Sat, Jun 21, 2025 at 2:12=E2=80=AFPM Mario Limonciello <superm1@kern=
-el.org> wrote:
-> >>
-> >>
-> >>
-> >> On 6/21/25 11:07 AM, Walt Holman wrote:
-> >>> On Sat, Jun 21, 2025 at 11:03=E2=80=AFAM Walt Holman <waltholman09@gm=
-ail.com> wrote:
-> >>>>
-> >>>> On Sat, Jun 21, 2025 at 10:52=E2=80=AFAM Mario Limonciello <superm1@=
-kernel.org> wrote:
-> >>>>>
-> >>>>>
-> >>>>>
-> >>>>> On 6/21/25 10:18 AM, Walt Holman wrote:
-> >>>>>> Hello,
-> >>>>>>
-> >>>>>> With the latest drm fixes this week on 6.16-rc2, I am experiencing=
- a
-> >>>>>> black screen instead of the sddm greeter and the GPU appears to be
-> >>>>>> locked up. I can ssh into the laptop and reboot it, but that's abo=
-ut
-> >>>>>> it. I have bisected the commit to commit id:
-> >>>>>> 16dc8bc27c2aa3c93905d3e885e27f1e3535f09a and upon reverting the
-> >>>>>> commit, the system works as normal. The hardware is an Asus Rog
-> >>>>>> Zephyrus G16 with AMD Ryzen AI 9 HX 370 w/ Radeon 890M video. I'm =
-able
-> >>>>>> to test patches etc.. if need be.
-> >>>>>
-> >>>>> Hi there,
-> >>>>>
-> >>>>> By chance do you have an OLED panel?  If so can you please try the =
-patch
-> >>>>> attached to this bug?
-> >>>>>
-> >>>>> https://gitlab.freedesktop.org/drm/amd/-/issues/4338
-> >>>>>
-> >>>>> Thanks,
-> >>>>>
-> >>>>>>
-> >>>>>> 16dc8bc27c2aa3c93905d3e885e27f1e3535f09a is the first bad commit
-> >>>>>> commit 16dc8bc27c2aa3c93905d3e885e27f1e3535f09a (HEAD)
-> >>>>>> Author: Mario Limonciello <mario.limonciello@amd.com>
-> >>>>>> Date:   Thu May 29 09:46:32 2025 -0500
-> >>>>>>
-> >>>>>>        drm/amd/display: Export full brightness range to userspace
-> >>>>>>
-> >>>>>>        [WHY]
-> >>>>>>        Userspace currently is offered a range from 0-0xFF but the =
-PWM is
-> >>>>>>        programmed from 0-0xFFFF.  This can be limiting to some sof=
-tware
-> >>>>>>        that wants to apply greater granularity.
-> >>>>>>
-> >>>>>>        [HOW]
-> >>>>>>        Convert internally to firmware values only when mapping cus=
-tom
-> >>>>>>        brightness curves because these are in 0-0xFF range. Advert=
-ise full
-> >>>>>>        PWM range to userspace.
-> >>>>>>
-> >>>>>>        Cc: Mario Limonciello <mario.limonciello@amd.com>
-> >>>>>>        Cc: Alex Deucher <alexander.deucher@amd.com>
-> >>>>>>        Reviewed-by: Roman Li <roman.li@amd.com>
-> >>>>>>        Signed-off-by: Mario Limonciello <mario.limonciello@amd.com=
+> Move the check of cpufreq_driver->get into cpufreq_verify_current_freq() =
+in
+> case of calling it without check.
 >
-> >>>>>>        Signed-off-by: Alex Hung <alex.hung@amd.com>
-> >>>>>>        Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-> >>>>>>        Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> >>>>>>        (cherry picked from commit 8dbd72cb790058ce52279af38a43c2b3=
-02fdd3e5)
-> >>>>>>        Cc: stable@vger.kernel.org
-> >>>>>>
-> >>>>>>     drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 41
-> >>>>>> +++++++++++++++++++++++++++--------------
-> >>>>>>     1 file changed, 27 insertions(+), 14 deletions(-)
-> >>>>>>
-> >>>>>
-> >>>>
-> >>>> Yes, I do have an OLED panel and that patch does make it visible
-> >>>> again. It is still very dark, but visible.
-> >>>>
-> >>>> -Walt
-> >>>
-> >>> Upon rebooting again, the display was much brighter and is fine. Just
-> >>> the first boot after that was dark.
-> >>>
-> >>> -Walt
-> >>
-> >> Thanks, this makes sense.  I suspect that because 0 means "off" for yo=
-ur
-> >> panel that the patch you bisected to exposed running at 0 (or near
-> >> enough to 0) that it caused this behavior.
-> >>
-> >> That patch you tested will be upstreamed in a future promotion, and I
-> >> think we can take it in a -fixes PR later in the 6.16 fixes cycle.
-> >>
-> >> But there is one more thing I would like to confirm - on your system c=
-an
-> >> you run with drm.debug=3D0x106 on the kernel command line and share me=
- the
-> >> output from this debug print?
-> >>
-> >> https://github.com/torvalds/linux/blob/v6.16-rc2/drivers/gpu/drm/amd/d=
-isplay/amdgpu_dm/amdgpu_dm.c#L4933
-> >>
-> >>
-> >>
-> > Hopefully, this is what you need. I grepped dmesg for drm and threw it
-> > into this file attached. Let me know if you need anything else.
-> >
-> > -Walt
+> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
+> ---
+>  drivers/cpufreq/cpufreq.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
 >
-> Thanks I see another problem.  Can you add this patch?
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index c4891bf5dc84..9b2578b905a5 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -1800,6 +1800,9 @@ static unsigned int cpufreq_verify_current_freq(str=
+uct cpufreq_policy *policy, b
+>  {
+>         unsigned int new_freq;
 >
-> https://lore.kernel.org/amd-gfx/20250623144821.745908-1-mario.limonciello=
-@amd.com/T/#u
->
-> Thanks,
+> +       if (!cpufreq_driver->get)
+> +               return 0;
+> +
 
-Got it added. Can't say that I notice a big difference, however, the
-login screen may have been a tad brighter. But it's obviously more
-correct now. Thanks,
+This will duplicate the check in cpufreq_policy_refresh(), won't it?
 
--Walt
+>         new_freq =3D cpufreq_driver->get(policy->cpu);
+>         if (!new_freq)
+>                 return 0;
+> @@ -1922,10 +1925,7 @@ unsigned int cpufreq_get(unsigned int cpu)
+>
+>         guard(cpufreq_policy_read)(policy);
+>
+> -       if (cpufreq_driver->get)
+> -               return __cpufreq_get(policy);
+> -
+> -       return 0;
+> +       return __cpufreq_get(policy);
+>  }
+>  EXPORT_SYMBOL(cpufreq_get);
+>
+> @@ -2479,8 +2479,7 @@ int cpufreq_start_governor(struct cpufreq_policy *p=
+olicy)
+>
+>         pr_debug("%s: for CPU %u\n", __func__, policy->cpu);
+>
+> -       if (cpufreq_driver->get)
+> -               cpufreq_verify_current_freq(policy, false);
+> +       cpufreq_verify_current_freq(policy, false);
+>
+>         if (policy->governor->start) {
+>                 ret =3D policy->governor->start(policy);
+> --
+> 2.33.0
+>
