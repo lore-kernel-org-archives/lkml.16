@@ -1,151 +1,99 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5601531C1;
-	Mon, 23 Jun 2025 09:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BFB23815B
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750672192; cv=none; b=dRxg10is4yJCCakg7To1yjdWd0xXUnDkRIwzhzyMryNnPamLQQkeZh7PVleKDUTXEVr4ivBml/E3XywGUghTuY5JdJ1Yp1rq7Ub+Ldr04GS3wvud8feC4u+XWU1xWflqK1qpuTs9TUK3e0Q2dPfDdkJJh12mckqVKw9hBKiBuvg=
+	t=1750672195; cv=none; b=X48C0Sb90Z5KmGVc3k1eJ7PvNsAXsBiEC0AzUFmjuixjqPOp5UuTKheaFKLZ5+Baj/nbik8pehqPvWHuNoc8ApnMeAJN/6EOxCSLXO6Y0eYc0CLpVJ7vzg6UGrK8VkzYcNY7GQFdHfLCSWYVkEok3rAyWj/HiQVDN3yvh8XYNBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750672192; c=relaxed/simple;
-	bh=AZGaJNprgITn+xmP//waVMDmWqRhQDQh/GejgpeV7UE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s43/8qaVvtJKruTNMnXonBeVoMRol3uTJMm9YFiRfkolyJ84sKf6P40PJVRd1sQfY/rLbDIm1HIsdhJ6zaT/1djdvJaUNNsOwmKgLFYOCLfzLw6toph4Tw+ZalmpKAQ31pojr8kpOX7+kBLF2fh1xhaYgSXOkrjzVrlnvERMthc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=C3rNVk6/; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1750672195; c=relaxed/simple;
+	bh=tYYN68KIhKpUm94dvkFIqNu0JEd7ylMdObP13UaACv0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=V4cKNh7FA/2QfvoZgu0S+/mh++vxvOP3cAdkj+pPHtqoXy6wUrOewXVCkPo13H22Y3Coe6XOrVyFzLMcweiojUqT8ClAIEc0fKGFdaUeKFFlArJITz0Esi7p/mQJX+HeVDhSuxNqRwcdgY5W6EMtFDEk03sZWdR5AL7FIO24SnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SDIOLCFH; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="C3rNVk6/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=+5Oe+/qsP9gfaCq5yCuWO510xxb4CYOCrtgkQfYUfqw=; b=C3rNVk6/YTgOx18uOwfA/6Kv0u
-	aT5jAbMK8fISo1i2ZDI8wtkeuEumGISm2CSaGra/PnZe+QXa8tPOOmCr81d+flSTSM8HI0iz636eM
-	Ia1ifm8MCjueTiSq+qkMMy0+C0LY67xLbyYiZgl+XPJ9De4eGjmY48XhvYohx2Fu3l4vKOynwXK5p
-	AX+TzQnynxRdFmt6x2zxwaUu3eqxgCtcnYtOwWeZ07IjCnnv4Le+91SiKqzzIJTmv9lmq6cM2zsLG
-	y6cAEr5zvlXqp1BUhOuWBM5CmDhd7Vftxr98Q3KoSLCOF+tAtDcNqPF7bPjKKyQupixBLU+lnyzYY
-	tHgPAjvw==;
-Received: from [185.15.108.45] (helo=phil.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uTdnr-0007yN-8k; Mon, 23 Jun 2025 11:49:27 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Quentin Schulz <quentin.schulz@cherry.de>,
- Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>,
- Lukasz Czechowski <lukasz.czechowski@thaumatec.com>,
- Dragan Simic <dsimic@manjaro.org>, Diederik de Haas <didi.debian@cknow.org>,
- Farouk Bouabid <farouk.bouabid@cherry.de>, Johan Jonker <jbx6244@gmail.com>,
- Jakob Unterwurzacher <jakobunt@gmail.com>
-Cc: stable@vger.kernel.org, Heiko Stuebner <heiko.stuebner@cherry.de>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: rockchip: use cs-gpios for spi1 on ringneck
-Date: Mon, 23 Jun 2025 11:49:26 +0200
-Message-ID: <1925003.tdWV9SEqCh@phil>
-In-Reply-To: <20250620113549.2900285-1-jakob.unterwurzacher@cherry.de>
-References: <20250620113549.2900285-1-jakob.unterwurzacher@cherry.de>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SDIOLCFH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750672192;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I3UBDVi5sXjr+Xruv6MaOfSJ09qNph1kaTFIkhQo8sc=;
+	b=SDIOLCFHCE+JJe8wesnAfdnRWxftWtazuswW+KuMLn7bOLGxIybBaspTjRB2o/BI6EWi0A
+	UCUq91FlFsv/4AnFcohea+H1v+LD5xCtQNY5if5LRTv+FWfl+p4S2GiNLnwGDJlXB0EYQr
+	ztDT3jtlTPe8God1nH8Z0l2FSiETlGY=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-100-wPkyuED1OGSDkcQVVfsOFQ-1; Mon,
+ 23 Jun 2025 05:49:46 -0400
+X-MC-Unique: wPkyuED1OGSDkcQVVfsOFQ-1
+X-Mimecast-MFC-AGG-ID: wPkyuED1OGSDkcQVVfsOFQ_1750672184
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9E2D21955F06;
+	Mon, 23 Jun 2025 09:49:43 +0000 (UTC)
+Received: from [10.22.80.93] (unknown [10.22.80.93])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4F36718046C7;
+	Mon, 23 Jun 2025 09:49:34 +0000 (UTC)
+Date: Mon, 23 Jun 2025 11:49:31 +0200 (CEST)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: John Garry <john.g.garry@oracle.com>
+cc: agk@redhat.com, snitzer@kernel.org, song@kernel.org, yukuai3@huawei.com, 
+    hch@lst.de, nilay@linux.ibm.com, axboe@kernel.dk, dm-devel@lists.linux.dev, 
+    linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, 
+    linux-block@vger.kernel.org, ojaswin@linux.ibm.com, 
+    martin.petersen@oracle.com
+Subject: Re: [PATCH v2 4/5] dm-stripe: limit chunk_sectors to the stripe
+ size
+In-Reply-To: <20250618083737.4084373-5-john.g.garry@oracle.com>
+Message-ID: <0ba540a3-9434-c02a-f2ea-fa5ce13325e3@redhat.com>
+References: <20250618083737.4084373-1-john.g.garry@oracle.com> <20250618083737.4084373-5-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Hi Jakob,
 
-Am Freitag, 20. Juni 2025, 13:35:46 Mitteleurop=C3=A4ische Sommerzeit schri=
-eb Jakob Unterwurzacher:
-> From: Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>
->=20
-> Hardware CS has a very slow rise time of about 6us,
-> causing transmission errors when CS does not reach
-> high between transaction.
->=20
-> It looks like it's not driven actively when transitioning
-> from low to high but switched to input, so only the CPU
-> pull-up pulls it high, slowly. Transitions from high to low
-> are fast. On the oscilloscope, CS looks like an irregular sawtooth
-> pattern like this:
->                          _____
->               ^         /     |
->       ^      /|        /      |
->      /|     / |       /       |
->     / |    /  |      /        |
-> ___/  |___/   |_____/         |___
->=20
-> With cs-gpios we have a CS rise time of about 20ns, as it should be,
-> and CS looks rectangular.
->=20
-> This fixes the data errors when running a flashcp loop against a
-> m25p40 spi flash.
->=20
-> With the Rockchip 6.1 kernel we see the same slow rise time, but
-> for some reason CS is always high for long enough to reach a solid
-> high.
->=20
-> The RK3399 and RK3588 SoCs use the same SPI driver, so we also
-> checked our "Puma" (RK3399) and "Tiger" (RK3588) boards.
-> They do not have this problem. Hardware CS rise time is good.
->=20
-> Fixes: c484cf93f61b ("arm64: dts: rockchip: add PX30-=C2=B5Q7 (Ringneck) =
-SoM with Haikou baseboard")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
-> Signed-off-by: Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>
+
+On Wed, 18 Jun 2025, John Garry wrote:
+
+> Same as done for raid0, set chunk_sectors limit to appropriately set the
+> atomic write size limit.
+> 
+> Setting chunk_sectors limit in this way overrides the stacked limit
+> already calculated based on the bottom device limits. This is ok, as
+> when any bios are sent to the bottom devices, the block layer will still
+> respect the bottom device chunk_sectors.
+> 
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
 > ---
->  .../boot/dts/rockchip/px30-ringneck.dtsi      | 22 +++++++++++++++++++
->  1 file changed, 22 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi b/arch/arm64=
-/boot/dts/rockchip/px30-ringneck.dtsi
-> index ab232e5c7ad6..dcc62dd9b894 100644
-> --- a/arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi
-> @@ -379,6 +379,18 @@ pmic_int: pmic-int {
->  				<0 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>;
->  		};
->  	};
-> +
-> +	spi1 {
-> +		spi1_csn0_gpio: spi1-csn0-gpio {
-> +			rockchip,pins =3D
-> +				<3 RK_PB1 RK_FUNC_GPIO &pcfg_pull_up_4ma>;
-> +		};
-> +
-> +		spi1_csn1_gpio: spi1-csn1-gpio {
+>  drivers/md/dm-stripe.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/md/dm-stripe.c b/drivers/md/dm-stripe.c
+> index a7dc04bd55e5..5bbbdf8fc1bd 100644
+> --- a/drivers/md/dm-stripe.c
+> +++ b/drivers/md/dm-stripe.c
+> @@ -458,6 +458,7 @@ static void stripe_io_hints(struct dm_target *ti,
+>  	struct stripe_c *sc = ti->private;
+>  	unsigned int chunk_size = sc->chunk_size << SECTOR_SHIFT;
+>  
+> +	limits->chunk_sectors = sc->chunk_size;
+>  	limits->io_min = chunk_size;
+>  	limits->io_opt = chunk_size * sc->stripes;
+>  }
+> -- 
+> 2.31.1
 
-naming the node -gpio trigger the bot, I guess a better name would
-be something with -pin at the end instead.
-
-> +&spi1 {
-> +	/*
-> +	 * Hardware CS has a very slow rise time of about 6us,
-> +	 * causing transmission errors.
-> +	 * With cs-gpios we have a rise time of about 20ns.
-> +	 */
-> +	cs-gpios =3D <&gpio3 RK_PB1 GPIO_ACTIVE_LOW>, <&gpio3 RK_PB2 GPIO_ACTIV=
-E_LOW>;
-
-please also provide a
-	pinctrl-names =3D "default"
-here.
-It feels more futur proof when overriding the pinctrl-0 entry
-to also state we only expect that one.
-
-> +	pinctrl-0 =3D <&spi1_clk &spi1_csn0_gpio &spi1_csn1_gpio &spi1_miso &sp=
-i1_mosi>;
-> +};
-> +
->  &tsadc {
->  	status =3D "okay";
->  };
->=20
-
-
-
+Reviewed-by: Mikulas Patocka <mpatocka@redhat.com>
 
