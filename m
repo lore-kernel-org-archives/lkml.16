@@ -1,99 +1,114 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6460E24500A;
-	Mon, 23 Jun 2025 12:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1740F23BF9F;
+	Mon, 23 Jun 2025 12:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750680339; cv=none; b=UxKCIOcLdo++HOcuRXDNIwSJhFj+DMabsD86VOpfZHVWpzdIcpfXzw951CuH4EHD3za0mEIKuk8YHqWsmSyz0BTkBuqeVPTkirjiXNTWIu1lk9BQriHYcBYqQPH/nrD4e4z1r7/QGxs3juzqhRDGyZvjrlckr7HxutyECV5SJQE=
+	t=1750680396; cv=none; b=Jf3yyz4nHXjjk5SvnWfI+DWN/kgQldO5m906/hTHs4pKK/UtYF4C7638mROeZe0tqi4T9MoNjppKSzR0M+WvlQSQna1Fx8b8My98oFblpRUfm0uENV5yTdIM7pAKkec5VKknSuaGveSxlOrOidJHehR+K1+UFgCZuaGhDiLatJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750680339; c=relaxed/simple;
-	bh=C4nD934od7cf67JreIH2S5Gge4424XKMw3Bdg1FoFmA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DLMwcjNaNH6TcVwXYAVSvU1zYC/uQr7O5aF88sX3/SEBhdcxLiv4dpANSyhAtAS7V6XFWLD858wr/aXySEo0GtQJcK+qYSG3p001grkeNxQE1aMY8VJ0+wIWcG4QTs9xkmy//SgFmf2hZIaarHy+OssmLq3G52Pq7/m2OfeyBjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AEC8C113E;
-	Mon, 23 Jun 2025 05:05:17 -0700 (PDT)
-Received: from [10.57.29.116] (unknown [10.57.29.116])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 374713F58B;
-	Mon, 23 Jun 2025 05:05:33 -0700 (PDT)
-Message-ID: <61011213-8916-4634-997a-f9c5fd06460a@arm.com>
-Date: Mon, 23 Jun 2025 13:05:31 +0100
+	s=arc-20240116; t=1750680396; c=relaxed/simple;
+	bh=tIZ8TwG4xTnOoPl1NIbbops/txuAvWrt9dcWfFv2Um0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GK3WP7acpDdsK/BZJ30RwFrHOWSPC9bkZsMoH9ykXSyL+Rm8LypfHtOqC2rb5quqVvv1gDr6T6I9eUEI7vFxu29k8gXj29jwOrm2TlUwhpNqVlHQ4UkCrYIb2B6nPL42/guuTUMLi3dp6y+DOXFOe1Dwd89DTZDf0wvZR2UZWX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=CUBxK4fB; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="CUBxK4fB"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 4CF11D77;
+	Mon, 23 Jun 2025 14:06:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750680376;
+	bh=tIZ8TwG4xTnOoPl1NIbbops/txuAvWrt9dcWfFv2Um0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CUBxK4fBvoKIphifs0ykjVic5ryHph3gEcvEUdCTHufWhVu4S6QkIoaD/pJ3WXGMH
+	 lnIrMl2jVGPfdisrnM9EzEMqkY8dCVAs0AfJYHxukyU2asSa4rDY9ZV5Bl8vdqMf/x
+	 y+xtjsbtygTe8zJpCOqHTQp3RMyNRTV+KIDckVnQ=
+Date: Mon, 23 Jun 2025 15:06:13 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Hao Yao <hao.yao@intel.com>,
+	Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
+	hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org,
+	dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
+	jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com,
+	king.li@amd.com, dantony@amd.com, vengutta@amd.com,
+	dongcheng.yan@intel.com, jason.z.chen@intel.com, jimmy.su@intel.com
+Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
+Message-ID: <20250623120613.GB19319@pendragon.ideasonboard.com>
+References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
+ <6a49eb11-d434-4315-8ee9-0f8aa7347de2@intel.com>
+ <aEygCdk-zEqRwfoF@kekkonen.localdomain>
+ <20250614225257.GO10542@pendragon.ideasonboard.com>
+ <aFk6K4mYtq24MnNj@valkosipuli.retiisi.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/5] iommu: Add verisilicon IOMMU driver
-To: Lucas Stach <l.stach@pengutronix.de>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>, joro@8bytes.org,
- will@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- heiko@sntech.de, nicolas.dufresne@collabora.com, jgg@ziepe.ca
-Cc: iommu@lists.linux.dev, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, kernel@collabora.com
-References: <20250619131232.69208-1-benjamin.gaignard@collabora.com>
- <20250619131232.69208-4-benjamin.gaignard@collabora.com>
- <43276c9a-5434-467c-abb2-dd2806ab81d0@arm.com>
- <c7dd8ac53170cafab5489f98d3da13f65cd67a1a.camel@pengutronix.de>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <c7dd8ac53170cafab5489f98d3da13f65cd67a1a.camel@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aFk6K4mYtq24MnNj@valkosipuli.retiisi.eu>
 
-On 2025-06-20 9:45 pm, Lucas Stach wrote:
-> Am Freitag, dem 20.06.2025 um 20:37 +0100 schrieb Robin Murphy:
->> On 19/06/2025 2:12 pm, Benjamin Gaignard wrote:
->>> The Verisilicon IOMMU hardware block can be found in combination
->>> with Verisilicon hardware video codecs (encoders or decoders) on
->>> different SoCs.
->>> Enable it will allow us to use non contiguous memory allocators
->>> for Verisilicon video codecs.
->>>
->>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
->>> ---
->>
-> [...]
->> I'm especially curious what this "pta" really is - is the comment above
->> just wrong, and you've actually got a 3-level pagetable supporting
->> somewhere between 33 and 42 bits of VA? If not, then the additional
->> level of indirection would very much seem to imply some kind of
->> mechanism for accommodating multiple pagetables at once, and in that
->> case, is it like a PASID table where the client device gets to choose
->> which entry to use, or a StreamID table to disambiguate multiple client
->> devices? (Where in the latter case it should most likely belong to the
->> IOMMU rather than the domain, and you probably want nonzero #iommu-cells
->> in the DT binding for the client IDs).
->>
-> PTA is short for page table array and it's another level of indirection
-> to select the page tables to be used for the specific translation. On
-> the Vivante GPU, where this MMU IP originated, the GPU can select the
-> index into this array to be used for a specific command stream to
-> implement GPU client isolation, so it's much like a PASID table.
+On Mon, Jun 23, 2025 at 11:27:39AM +0000, Sakari Ailus wrote:
+> On Sun, Jun 15, 2025 at 01:52:57AM +0300, Laurent Pinchart wrote:
+> > > > > +#define OV05C10_REF_CLK			(24 * HZ_PER_MHZ)
+> > > > 
+> > > > Seems your module use 24 MHz clock input. The Dell's modules always use
+> > > > 19.2MHz, which means your the PLL settings will not work on Dell's.
+> > > 
+> > > This is ok as further work. Please send a patch. :-)
+> > 
+> > The patch should calculate PLL configuration dynamically, perhaps using
+> > the ccs-pll calculator if applicable.
+> 
+> As much as I do like your suggestion, I don't think it's really feasible to
+> often do this for Omnivision sensors (most others largely do just work
+> without much hassle wrt. PLL, as long as a PLL calculator exists). This
+> sensor's PLL tree is different from CCS and badly documented, as expected.
 
-Thanks for the clarification!
+How much do we know about the PLL structure ?
 
-(Although, similarly to panfrost, does this mean we should at least 
-break out an io-pgtable implementation to share between the two drivers 
-rather than duplicate code between here and etnaviv_iommu?)
+> > > > Seems there are already several camera sensors using page-based registers.
+> > > > Is it a good idea to add page support in CCI interface?
+> > > 
+> > > Sounds like a good idea as such but I'm not sure how common this really is,
+> > > I think I've seen a few Omnivision sensors doing this. If implemented, I
+> > > think it would be nice if the page could be encoded in the register address
+> > > which V4L2 CCI would store and switch page if needed only. This would
+> > > require serialising accesses, too. There's some room in CCI register raw
+> > > value space so this could be done without even changing that, say, with
+> > > 8-bit page and 8-bit register address.
+> > 
+> > Ack. I've worked on a driver for the AP1302 external ISP, which also
+> > uses pages registers. The full address space spans 32 bits though, but
+> > fortunately the driver doesn't need to access anything above 0x00ffffff.
+> 
+> 0xffffff?
 
-> I have no idea if and how the integration with the video codecs can
-> select the PTA index.
+Yes.
 
-Yeah, that's really the thing - it may smell like a PASID table for the 
-GPU use-case, but AFAICS that still wouldn't necessarily rule it out 
-from turning up in some codec block with, say, all the decode 
-functionality hard-wired to index 0 and encode to index 1, then all of a 
-sudden we start needing different driver behaviour and potentially a 
-different DT binding. I guess the door is still open to support 
-"#iommu-cells = 1" to specify explicit PTA indices without breaking the 
-implicit "#iommu-cells = 0" behaviour, so I don't think we're painting 
-ourselves into a corner at this point, it's more just something to be 
-wary of for the future.
+> The current CCI register addresses are limited to 16 bits. To
+> support that, we'd need to use u64 most likely.
 
-Thanks,
-Robin.
+I handled it in the ap1302 driver, by using bits 31:24 of address to
+store a 8 bits page value. It's a hack as the CCI helper currently only
+allocates 4 bits of the address to driver-specific purpose.
+
+> For 16-bit register
+> addresses and 8-bit values which probably are the most common, that starts
+> to appear a bit wasteful.
+
+It is wasteful, I don't want to turn the register address to a 64-bit
+value.
+
+-- 
+Regards,
+
+Laurent Pinchart
