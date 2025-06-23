@@ -1,190 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896461E1DFE;
-	Mon, 23 Jun 2025 19:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0855629A327
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 19:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750706868; cv=none; b=Y3uY/cRq79//+cfbD39Y0twHxNsjzdBE9z4DLP9HxsBorncRczX/xe8DrWSR9oR+MObgGVynRWLsKktGGF+DM6YKpI7QxJ8QxQFQ9IrBd9daBz8+9GhW7zii6AYF33ZFKKa8XvDWvmEuUXvjIfrZTd2ORHe/hHN+ZehwaIOSL0E=
+	t=1750706922; cv=none; b=Dff5oS08LkCaV1ORTDomh6TfxqDz+THQn1MbPGDlLA4u1C6zdDahrk3VkBsCvZegXd+1EGEptjv9BO4HQxdWSD0GLW5Sf2UwgG+18xlNwfh2t2zSIh0Q8DgEcVeGx0EM6PKxi0EG2r1KZ9S/IdufELoCt6thA0CfU3wZ5PW2Jnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750706868; c=relaxed/simple;
-	bh=6bacQ/7kwZh1TXvsDqlvaDV9Gh52RxpWHPFij2atGIg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=abP7+8IpszoUkw+pFxHri+QhckDmhThhAdU7wsDA90yJfEorc/U/uLbxu2fOfN9JWxvro09XMFB5MgyqOH2UMLmWzH02pU1D3ikS/kismmBOXOwaq8H5GvzaG7KHa4EYfwxzBR8LqkvSY2AhKCGgdZhvGTTnD9l704Uchs7XCp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mr4w0W6x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750706922; c=relaxed/simple;
+	bh=WRJhD+11S9GGLV+fipKxjCq+9EZNj/yOwmCQ0iZsxkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ertZKnrFfJ096bqM7POZqFrmuiggYZmSY6pvBWY4ZUtW3BiMZXk1FDHDySAe6g45PzxdXxqTIDpEC9+l4shwo0KXEqriqob/Rvgi/+aciSyLTDxu8QmNbGFB2JnT0iogayxEsuqJfbBwdB2G8doVVRYtERKsG1iaUxLq9GjBegw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=sV64ubD8; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mr4w0W6x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDBD0C4CEEA;
-	Mon, 23 Jun 2025 19:27:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750706868;
-	bh=6bacQ/7kwZh1TXvsDqlvaDV9Gh52RxpWHPFij2atGIg=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=mr4w0W6xzFpKRv4+CcW9AbbxoNWff/jeWxk+DBTTGMh5Tbvq6iG38eK2A5wC+50l+
-	 bQeL1niehWw/aTwRY7/pnOdv+iQ/CInrm2sfn3/N7HGbaQOg+0U7s+K44xcPy9hTTp
-	 No8CTqCNqdQP7mEL/iHhxg6WZoe77OXQEvnIWI+z4Q5DJBpNcLp7bKDd8EKw6jSNwz
-	 wREitik3RPa/8z9abDN1E/TS5L5ja/soFXqkG4GRkRZ0aFzMepvHf0gw9pc5EvXrYp
-	 7ZLZFUzIeoyGGD7gOtULZepZ53gcYdhWBdwDCN0mQC1zp4kJqWh29l7aq/wANW9reV
-	 R+Ast1R4DguMQ==
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="sV64ubD8"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6fabe9446a0so47140686d6.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:28:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1750706920; x=1751311720; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MEleCZhv9arZ2pHi+mURkLxlUm45MBsyjbMIJWAnz4A=;
+        b=sV64ubD8duIyd8psR2/yfHBqX9rDTf7WvLjYP6jucOKGAzH8Cy+oEm9w3AHZL3rO7w
+         kv6tOHJ3Tb8yJs5lPmAdZX6oqXR+uPEADGyISoEKNBEsXbtKVG1y8d8il4AcvVdFxact
+         q3YUamUdZJCs5lwZkjmtSALQH1bnW4unB2SIrvqDCXnlbMcScQ4x4ZyjE8H3XicRbg9j
+         oCqhajEIkkvmk9U8A8deTHTXwc4Mzzo3BhkJhJDSUMaRXHhaTBPSbikG9VLevIWH+inI
+         SkV/SR2OGyEZ2PY1ivZwQLgjW4cvWQprZMPyxVJZt2J5Nw1TmZGojQy6On8LlvFoE+tM
+         SMJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750706920; x=1751311720;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MEleCZhv9arZ2pHi+mURkLxlUm45MBsyjbMIJWAnz4A=;
+        b=uz+MEIO8JQT2ppqdzFfvNSE+IRWK/9ApzwBDuC/aiPr4jyyb2a+6XBDFHFzmJdO1SW
+         s0Z46AFnwFZXUWuA4KBkffIr48aabt27lmjMRuSe2dWf5AzI+mE5Nr8VTwxrGWb4Q8Hk
+         k5//JKWgPT1vZFlyjhGUxvSKMNTlgaEzT4SKV7taWtkrkuS5Vh+Z4+T9AEDv0U2yGkDQ
+         68+lmPR1jpkPCj8Zr8roSw88gfH/5R4DI2WZrPcgKSpwWdcCA88xlzfhCDxRbhY8k5rA
+         gM/ENy+x8KTyfpbB8HO6mvO1xqclekzOwWqViHbvHX5gpPEFlNgC6iPcDjR6b/aTSRU6
+         TPdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXI79kZDvCrWQkYua2E3e85V5ix4X3qbIs8b9t88I4lYZy7LRbenioclUCaD3ZAFzXHQLwbWlGKIwXw334=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7VABh0zahiyqe/S+2Cl60eKOPDZOr906kgS9DwpjCI+u32ra6
+	0IuOvgiCiu+I8HjjPdJ5NViDdaa3NONVXoHLjK/4eJEz2ftllJyMvEHs4bH3r2hOQqQ=
+X-Gm-Gg: ASbGncvWFhlFiT9Cfo6Nr+PWvioseS6Isbc39kPwEm0wKYhV+MGj3JGysohVAecLadK
+	XnhT4+PLrRN5Y2Nl7admTeFJbJ2z4YHvVWgI5ltunon6n1pmy3wkB8BIHg+kKXQWPmMOguZPe24
+	5zoBbN1Wqxp6ehEbokK6S0oj/BPMVHCsz/GUIUziVXEYcPzEcb6gFzm87w7r0y1dAD8MQZzfdDS
+	LdjkQK7UCZoMmmoVND2r01XG4B6goy0ENpVE7OVBm29p1/SGIs2O3MT2SL2Sr//JhSbSB/35fD4
+	gFnZVXO1u17r1I9qrZQWxo5DxPI1Mhx4aJqA4Ua77yAf25fhSsU0NufAlw==
+X-Google-Smtp-Source: AGHT+IFddekhlV21epL8woHsqfJs9UDhRue34bYoGICu7apONYW2ZhncpK6K5u+JV8Xd/GANARdn3Q==
+X-Received: by 2002:a05:6214:500c:b0:6fa:ba15:e8a with SMTP id 6a1803df08f44-6fd0a468685mr246211096d6.8.1750706919931;
+        Mon, 23 Jun 2025 12:28:39 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:400::5:e19e])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd094330fcsm48301596d6.31.2025.06.23.12.28.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 12:28:39 -0700 (PDT)
+Date: Mon, 23 Jun 2025 14:28:37 -0500
+From: Gregory Price <gourry@gourry.net>
+To: SeongJae Park <sj@kernel.org>
+Cc: Bijan Tabatabai <bijan311@gmail.com>, damon@lists.linux.dev,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org, david@redhat.com, ziy@nvidia.com,
+	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com,
+	byungchul@sk.com, ying.huang@linux.alibaba.com, apopple@nvidia.com,
+	bijantabatab@micron.com, venkataravis@micron.com,
+	emirakhur@micron.com, ajayjoshi@micron.com, vtavarespetr@micron.com
+Subject: Re: [RFC PATCH v2 0/2] mm/damon/paddr: Allow interleaving in
+ migrate_{hot,cold} actions
+Message-ID: <aFmq5Y1zKov9__zh@gourry-fedora-PF4VCD3F>
+References: <20250620180458.5041-1-bijan311@gmail.com>
+ <20250620202155.98021-1-sj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 23 Jun 2025 21:27:43 +0200
-Message-Id: <DAU5SDZWTB21.2S8F08BVX1ZE1@kernel.org>
-Cc: "Alice Ryhl" <aliceryhl@google.com>, "Danilo Krummrich"
- <dakr@kernel.org>, "Daniel Almeida" <daniel.almeida@collabora.com>, "Miguel
- Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Gary
- Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Trevor Gross" <tmgross@umich.edu>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Thomas Gleixner" <tglx@linutronix.de>, "Bjorn Helgaas"
- <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C2=B4nski?=
- <kwilczynski@kernel.org>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v4 3/6] rust: irq: add support for non-threaded IRQs and
- handlers
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Boqun Feng" <boqun.feng@gmail.com>
-X-Mailer: aerc 0.20.1
-References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com> <20250608-topics-tyr-request_irq-v4-3-81cb81fb8073@collabora.com> <aEbJt0YSc3-60OBY@pollux> <CAH5fLghDbrgO2PiKyKZ87UrtouG25xWhVP_YmcgO0fFcnvZRkQ@mail.gmail.com> <DAU0NHTHTDG4.2HNEABNAI8GHZ@kernel.org> <aFmPZMLGngAE_IHJ@tardis.local> <DAU5QLRJBYMS.2OQ83W31ETX07@kernel.org>
-In-Reply-To: <DAU5QLRJBYMS.2OQ83W31ETX07@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620202155.98021-1-sj@kernel.org>
 
-On Mon Jun 23, 2025 at 9:25 PM CEST, Benno Lossin wrote:
-> On Mon Jun 23, 2025 at 7:31 PM CEST, Boqun Feng wrote:
->> On Mon, Jun 23, 2025 at 05:26:14PM +0200, Benno Lossin wrote:
->>> On Mon Jun 23, 2025 at 5:10 PM CEST, Alice Ryhl wrote:
->>> > On Mon, Jun 9, 2025 at 12:47=E2=80=AFPM Danilo Krummrich <dakr@kernel=
-.org> wrote:
->>> >> On Sun, Jun 08, 2025 at 07:51:08PM -0300, Daniel Almeida wrote:
->>> >> > +        dev: &'a Device<Bound>,
->>> >> > +        irq: u32,
->>> >> > +        flags: Flags,
->>> >> > +        name: &'static CStr,
->>> >> > +        handler: T,
->>> >> > +    ) -> impl PinInit<Self, Error> + 'a {
->>> >> > +        let closure =3D move |slot: *mut Self| {
->>> >> > +            // SAFETY: The slot passed to pin initializer is vali=
-d for writing.
->>> >> > +            unsafe {
->>> >> > +                slot.write(Self {
->>> >> > +                    inner: Devres::new(
->>> >> > +                        dev,
->>> >> > +                        RegistrationInner {
->>> >> > +                            irq,
->>> >> > +                            cookie: slot.cast(),
->>> >> > +                        },
->>> >> > +                        GFP_KERNEL,
->>> >> > +                    )?,
->>> >> > +                    handler,
->>> >> > +                    _pin: PhantomPinned,
->>> >> > +                })
->>> >> > +            };
->>> >> > +
->>> >> > +            // SAFETY:
->>> >> > +            // - The callbacks are valid for use with request_irq=
-.
->>> >> > +            // - If this succeeds, the slot is guaranteed to be v=
-alid until the
->>> >> > +            // destructor of Self runs, which will deregister the=
- callbacks
->>> >> > +            // before the memory location becomes invalid.
->>> >> > +            let res =3D to_result(unsafe {
->>> >> > +                bindings::request_irq(
->>> >> > +                    irq,
->>> >> > +                    Some(handle_irq_callback::<T>),
->>> >> > +                    flags.into_inner() as usize,
->>> >> > +                    name.as_char_ptr(),
->>> >> > +                    slot.cast(),
->>> >> > +                )
->>> >> > +            });
->>> >> > +
->>> >> > +            if res.is_err() {
->>> >> > +                // SAFETY: We are returning an error, so we can d=
-estroy the slot.
->>> >> > +                unsafe { core::ptr::drop_in_place(&raw mut (*slot=
-).handler) };
->>> >> > +            }
->>> >> > +
->>> >> > +            res
->>> >> > +        };
->>> >> > +
->>> >> > +        // SAFETY:
->>> >> > +        // - if this returns Ok, then every field of `slot` is fu=
-lly
->>> >> > +        // initialized.
->>> >> > +        // - if this returns an error, then the slot does not nee=
-d to remain
->>> >> > +        // valid.
->>> >> > +        unsafe { pin_init_from_closure(closure) }
->>> >>
->>> >> Can't we use try_pin_init!() instead, move request_irq() into the in=
-itializer of
->>> >> RegistrationInner and initialize inner last?
->>> >
->>> > We need a pointer to the entire struct when calling
->>> > bindings::request_irq. I'm not sure this allows you to easily get one=
-?
->>> > I don't think using container_of! here is worth it.
->>>=20
->>> There is the `&this in` syntax (`this` is of type `NonNull<Self>`):
->>>=20
->>>     try_pin_init!(&this in Self {
->>>         inner: Devres::new(
->>>             dev,
->>>             RegistrationInner {
->>>                 irq,
->>>                 cookie: this.as_ptr().cast(),
->>>             },
->>>             GFP_KERNEL,
->>>         )?,
->>>         handler,
->>>         _pin: {
->>>             to_result(unsafe {
->>>                 bindings::request_irq(
->>>                     irq,
->>>                     Some(handle_irq_callback::<T>),
->>>                     flags.into_inner() as usize,
->>>                     name.as_char_ptr(),
->>>                     slot.as_ptr().cast(),
->>
->> this is "this" instead of "slot", right?
->>
->>>                 )
->>>             })?;
->>>             PhantomPinned
->>>         },
->>>     })
->>>=20
->>> Last time around, I also asked this question and you replied with that
->>> we need to abort the initializer when `request_irq` returns false and
->>> avoid running `Self::drop` (thus we can't do it using `pin_chain`).
->>>=20
->>> I asked what we could do instead and you mentioned the `_: {}`
->>> initializers and those would indeed solve it, but we can abuse the
->>> `_pin` field for that :)
->>>=20
->>
->> Hmm.. but if request_irq() fails, aren't we going to call `drop` on
->> `inner`, which drops the `Devres` which will eventually call
->> `RegistrationInner::drop()`? And that's a `free_irq()` without
->> `request_irq()` succeeded.
->
-> That is indeed correct :(
->
-> But hold on, we aren't allowed to forget the `Devres`, it's a pinned
-> type and thus the pin guarantee is that it must be dropped before the
-> underlying memory is freed. So the current version is unsound.
+On Fri, Jun 20, 2025 at 01:21:55PM -0700, SeongJae Park wrote:
+> Hi Bijan,
+> 
+> On Fri, 20 Jun 2025 13:04:56 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
+> 
+> [...]
+> > This patch set adds the mechanism for dynamically changing how application
+> > data is interleaved across nodes while leaving the policy of what the
+> > interleave weights should be to userspace. It does this by modifying the
+> > migrate_{hot,cold} DAMOS actions to allow passing in a list of migration
+> > targets to their target_nid parameter. When this is done, the
+> > migrate_{hot,cold} actions will migrate pages between the specified nodes
+> > using the global interleave weights found at
+> > /sys/kernel/mm/mempolicy/weighted_interleave/node<N>. This functionality
+> > can be used to dynamically adjust how pages are interleaved by changing the
+> > global weights. When only a single migration target is passed to
+> > target_nid, the migrate_{hot,cold} actions will act the same as before.
+> 
+> This means users are required to manipulate two interfaces.  DAMON sysfs for
+> target nodes, and weighted_interleave sysfs for weights.  I don't think this
+> coupling is very ideal.
+> 
 
-Ah oops, already had the devres improvements in mind, this version uses
-the non-pinned devres, which when not dropped will leak an `Arc` in the
-`DevresInner`... Which also isn't desired.
+Just tossing this out there - weighted interleave sysfs entries *should*
+be automatic, and the preferred weights shouldn't really ever change
+over time.  Even if they did, if it's the result of devices coming and
+going - the updates should also be automatic.
 
----
-Cheers,
-Benno
+So, in practice, a usually probably only has to twiddle DAMON.
+
+I don't have a strong opinion on whether DAMON should leverage the
+mempolicy interface, but I think the way it is designed now is
+acceptable.
+
+~Gregory
