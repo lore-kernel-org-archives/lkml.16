@@ -1,245 +1,175 @@
-Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id D224C1A8412;
-	Mon, 23 Jun 2025 12:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A49C23ED56;
+	Mon, 23 Jun 2025 12:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750683195; cv=none; b=LqT2OBAOiNQoVYBoxGPandtlWCLpqiPp+H156oSrYX6bEKG2DaCFEh5li088kHOERIZut0YsLBvPXne6WjDByiKpbrSjvj5sUtEbk58VeZj+bwfdqKiQ7bGe5nYSNoMEYdktsYdE+V/kK90U0sCdkvxh8+H5vGQs4EmBHRrB/9c=
+	t=1750683197; cv=none; b=luEwPvDd8bjKM5/U36H+xqJqEUsic7K7M/FvXIJ3+5fpDGIQDxSHqX3VzEsOLYj49R3FV+YeOHgLpwin1vgYFl10OTgjft8DnzA1ErYDI63YzWMbgb3QWARFS4IqiZEDr1N1S9nmTmIBnoQmGh5OkB6gdPyLH7CUzghIFu9IvxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750683195; c=relaxed/simple;
-	bh=0g50SqWc5g3rJvoZPAxV4yQCt2rJxE4bYMCSo9EOwwA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gkEOJvLeB+Zrfpr02/cN6OtpOK2RHns/DzSaSGfIKF38swlUj+ELBPgaKvfhPO+WZfMJ+CXDNP/dQtYlWa6n0W8uSCghQ2mk/9cVQnAIjVa+JPKCreAfZ4+lpk90634qHJoX+inIPlPZB6kDRBJLOiApf+fIebKPYd+ic8tAWos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from longsh.shanghai.nfschina.local (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 81B0F60307155;
-	Mon, 23 Jun 2025 20:52:59 +0800 (CST)
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From: Su Hui <suhui@nfschina.com>
-To: trondmy@kernel.org,
-	anna@kernel.org
-Cc: Su Hui <suhui@nfschina.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH] NFS: Using guard() to simplify lock/unlock code
-Date: Mon, 23 Jun 2025 20:52:53 +0800
-Message-Id: <20250623125253.3797131-1-suhui@nfschina.com>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1750683197; c=relaxed/simple;
+	bh=8se5YPln/DXgqu+xjzAPHvxG2uWSb27S0x9TuNNRnhA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VoqjTjAh7U5uCTMeTYPoZQs70VhJqnO5MzBODQJFkdE8cYLMo979evBd7HziUY9Iow1gxfs6d7jLIyac2qccOk0Bae6qBYajgF8kLAPjUdn0uq6BtfK4cjCmww9mRAe5irbn9NbLI9mKl66b2cgfcoJFbQJgkfkdqiLTYml1TF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E3B8E44418;
+	Mon, 23 Jun 2025 12:53:06 +0000 (UTC)
+Message-ID: <eb8f5a3b-edee-4525-be69-7a4ad55168a2@ghiti.fr>
+Date: Mon, 23 Jun 2025 14:53:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/7] riscv: helper to parse hart index
+To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Anup Patel <anup@brainfault.org>, Chen Wang <unicorn_wang@outlook.com>,
+ Inochi Amaoto <inochiama@gmail.com>, Sunil V L <sunilvl@ventanamicro.com>,
+ "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+ Ryo Takakura <takakura@valinux.co.jp>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-riscv@lists.infradead.org, sophgo@lists.linux.dev
+References: <20250609134749.1453835-1-vladimir.kondratiev@mobileye.com>
+ <20250609134749.1453835-2-vladimir.kondratiev@mobileye.com>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250609134749.1453835-2-vladimir.kondratiev@mobileye.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddujedtjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepieffvdeiveeuhfegvddvuefhveejhfffudffhfdufeeuudegtdfguddthfetledvnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmedvieeijeemvgejvgdtmeehudeltdemfhgvtdehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmedvieeijeemvgejvgdtmeehudeltdemfhgvtdehpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmedvieeijeemvgejvgdtmeehudeltdemfhgvtdehngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedukedprhgtphhtthhopehvlhgrughimhhirhdrkhhonhgurhgrthhivghvsehmohgsihhlvgihvgdrtghomhdprhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdpr
+ hgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegrohhusegvvggtshdrsggvrhhkvghlvgihrdgvughu
+X-GND-Sasl: alex@ghiti.fr
 
-Using guard() to replace *unlock* label. guard() is better than goto
-unlock patterns and is more clear. No functional changes.
+Hi Vladimir,
 
-Signed-off-by: Su Hui <suhui@nfschina.com>
----
- fs/nfs/callback_proc.c | 169 ++++++++++++++++++++---------------------
- 1 file changed, 82 insertions(+), 87 deletions(-)
+On 6/9/25 15:47, Vladimir Kondratiev wrote:
+> RISC-V APLIC specification defines "hart index" in [1]
+> And similar definitions found for ACLINT in [2]
+>
+> Quote from [1]:
+>
+> Within a given interrupt domain, each of the domain’s harts has a unique
+> index number in the range 0 to 2^14 − 1 (= 16,383). The index number a
+> domain associates with a hart may or may not have any relationship to the
+> unique hart identifier (“hart ID”) that the RISC-V Privileged
+> Architecture assigns to the hart. Two different interrupt domains may
+> employ entirely different index numbers for the same set of harts.
+>
+> Further, [1] says in "4.5 Memory-mapped control region for an
+> interrupt domain":
+>
+> The array of IDC structures may include some for potential hart index
+> numbers that are not actual hart index numbers in the domain.
+> For example, the first IDC structure is always for hart index 0, but 0 is
+> not necessarily a valid index number for any hart in the domain.
+>
+> Support arbitrary hart indices specified in an optional property
+> "riscv,hart-indexes" which is specified as an array of u32 elements, one
+> per interrupt target, listing hart indexes in the same order as in
+> "interrupts-extended". If this property is not specified, fallback to use
+> logical hart indices within the domain.
+>
+> If property not exist, fall back to logical hart indexes
 
-diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
-index 8397c43358bd..ae7635f88f35 100644
---- a/fs/nfs/callback_proc.c
-+++ b/fs/nfs/callback_proc.c
-@@ -264,47 +264,43 @@ static u32 initiate_file_draining(struct nfs_client *clp,
- 
- 	pnfs_layoutcommit_inode(ino, false);
- 
-+	scoped_guard(spinlock, &ino->i_lock) {
-+		lo = NFS_I(ino)->layout;
-+		if (!lo)
-+			goto out;
-+		pnfs_get_layout_hdr(lo);
-+		rv = pnfs_check_callback_stateid(lo, &args->cbl_stateid, cps);
-+		if (rv != NFS_OK)
-+			break;
- 
--	spin_lock(&ino->i_lock);
--	lo = NFS_I(ino)->layout;
--	if (!lo) {
--		spin_unlock(&ino->i_lock);
--		goto out;
--	}
--	pnfs_get_layout_hdr(lo);
--	rv = pnfs_check_callback_stateid(lo, &args->cbl_stateid, cps);
--	if (rv != NFS_OK)
--		goto unlock;
--
--	/*
--	 * Enforce RFC5661 Section 12.5.5.2.1.5 (Bulk Recall and Return)
--	 */
--	if (test_bit(NFS_LAYOUT_BULK_RECALL, &lo->plh_flags)) {
--		rv = NFS4ERR_DELAY;
--		goto unlock;
--	}
--
--	pnfs_set_layout_stateid(lo, &args->cbl_stateid, NULL, true);
--	switch (pnfs_mark_matching_lsegs_return(lo, &free_me_list,
--				&args->cbl_range,
--				be32_to_cpu(args->cbl_stateid.seqid))) {
--	case 0:
--	case -EBUSY:
--		/* There are layout segments that need to be returned */
--		rv = NFS4_OK;
--		break;
--	case -ENOENT:
--		set_bit(NFS_LAYOUT_DRAIN, &lo->plh_flags);
--		/* Embrace your forgetfulness! */
--		rv = NFS4ERR_NOMATCHING_LAYOUT;
-+		/*
-+		 * Enforce RFC5661 Section 12.5.5.2.1.5 (Bulk Recall and Return)
-+		 */
-+		if (test_bit(NFS_LAYOUT_BULK_RECALL, &lo->plh_flags)) {
-+			rv = NFS4ERR_DELAY;
-+			break;
-+		}
- 
--		if (NFS_SERVER(ino)->pnfs_curr_ld->return_range) {
--			NFS_SERVER(ino)->pnfs_curr_ld->return_range(lo,
--				&args->cbl_range);
-+		pnfs_set_layout_stateid(lo, &args->cbl_stateid, NULL, true);
-+		switch (pnfs_mark_matching_lsegs_return(lo, &free_me_list,
-+					&args->cbl_range,
-+					be32_to_cpu(args->cbl_stateid.seqid))) {
-+		case 0:
-+		case -EBUSY:
-+			/* There are layout segments that need to be returned */
-+			rv = NFS4_OK;
-+			break;
-+		case -ENOENT:
-+			set_bit(NFS_LAYOUT_DRAIN, &lo->plh_flags);
-+			/* Embrace your forgetfulness! */
-+			rv = NFS4ERR_NOMATCHING_LAYOUT;
-+
-+			if (NFS_SERVER(ino)->pnfs_curr_ld->return_range) {
-+				NFS_SERVER(ino)->pnfs_curr_ld->return_range(lo,
-+					&args->cbl_range);
-+			}
- 		}
- 	}
--unlock:
--	spin_unlock(&ino->i_lock);
- 	pnfs_free_lseg_list(&free_me_list);
- 	/* Free all lsegs that are attached to commit buckets */
- 	nfs_commit_inode(ino, 0);
-@@ -524,62 +520,61 @@ __be32 nfs4_callback_sequence(void *argp, void *resp,
- 	res->csr_sequenceid = args->csa_sequenceid;
- 	res->csr_slotid = args->csa_slotid;
- 
--	spin_lock(&tbl->slot_tbl_lock);
--	/* state manager is resetting the session */
--	if (test_bit(NFS4_SLOT_TBL_DRAINING, &tbl->slot_tbl_state)) {
--		status = htonl(NFS4ERR_DELAY);
--		/* Return NFS4ERR_BADSESSION if we're draining the session
--		 * in order to reset it.
--		 */
--		if (test_bit(NFS4CLNT_SESSION_RESET, &clp->cl_state))
--			status = htonl(NFS4ERR_BADSESSION);
--		goto out_unlock;
--	}
-+	scoped_guard(spinlock, &tbl->slot_tbl_lock) {
-+		/* state manager is resetting the session */
-+		if (test_bit(NFS4_SLOT_TBL_DRAINING, &tbl->slot_tbl_state)) {
-+			status = htonl(NFS4ERR_DELAY);
-+			/* Return NFS4ERR_BADSESSION if we're draining the session
-+			 * in order to reset it.
-+			 */
-+			if (test_bit(NFS4CLNT_SESSION_RESET, &clp->cl_state))
-+				status = htonl(NFS4ERR_BADSESSION);
-+			break;
-+		}
- 
--	status = htonl(NFS4ERR_BADSLOT);
--	slot = nfs4_lookup_slot(tbl, args->csa_slotid);
--	if (IS_ERR(slot))
--		goto out_unlock;
-+		status = htonl(NFS4ERR_BADSLOT);
-+		slot = nfs4_lookup_slot(tbl, args->csa_slotid);
-+		if (IS_ERR(slot))
-+			break;
- 
--	res->csr_highestslotid = tbl->server_highest_slotid;
--	res->csr_target_highestslotid = tbl->target_highest_slotid;
-+		res->csr_highestslotid = tbl->server_highest_slotid;
-+		res->csr_target_highestslotid = tbl->target_highest_slotid;
- 
--	status = validate_seqid(tbl, slot, args);
--	if (status)
--		goto out_unlock;
--	if (!nfs4_try_to_lock_slot(tbl, slot)) {
--		status = htonl(NFS4ERR_DELAY);
--		goto out_unlock;
--	}
--	cps->slot = slot;
-+		status = validate_seqid(tbl, slot, args);
-+		if (status)
-+			break;
-+		if (!nfs4_try_to_lock_slot(tbl, slot)) {
-+			status = htonl(NFS4ERR_DELAY);
-+			break;
-+		}
-+		cps->slot = slot;
- 
--	/* The ca_maxresponsesize_cached is 0 with no DRC */
--	if (args->csa_cachethis != 0) {
--		status = htonl(NFS4ERR_REP_TOO_BIG_TO_CACHE);
--		goto out_unlock;
--	}
-+		/* The ca_maxresponsesize_cached is 0 with no DRC */
-+		if (args->csa_cachethis != 0) {
-+			status = htonl(NFS4ERR_REP_TOO_BIG_TO_CACHE);
-+			break;
-+		}
- 
--	/*
--	 * Check for pending referring calls.  If a match is found, a
--	 * related callback was received before the response to the original
--	 * call.
--	 */
--	ret = referring_call_exists(clp, args->csa_nrclists, args->csa_rclists,
--				    &tbl->slot_tbl_lock);
--	if (ret < 0) {
--		status = htonl(NFS4ERR_DELAY);
--		goto out_unlock;
--	}
--	cps->referring_calls = ret;
-+		/*
-+		 * Check for pending referring calls.  If a match is found, a
-+		 * related callback was received before the response to the original
-+		 * call.
-+		 */
-+		ret = referring_call_exists(clp, args->csa_nrclists, args->csa_rclists,
-+					    &tbl->slot_tbl_lock);
-+		if (ret < 0) {
-+			status = htonl(NFS4ERR_DELAY);
-+			break;
-+		}
-+		cps->referring_calls = ret;
- 
--	/*
--	 * RFC5661 20.9.3
--	 * If CB_SEQUENCE returns an error, then the state of the slot
--	 * (sequence ID, cached reply) MUST NOT change.
--	 */
--	slot->seq_nr = args->csa_sequenceid;
--out_unlock:
--	spin_unlock(&tbl->slot_tbl_lock);
-+		/*
-+		 * RFC5661 20.9.3
-+		 * If CB_SEQUENCE returns an error, then the state of the slot
-+		 * (sequence ID, cached reply) MUST NOT change.
-+		 */
-+		slot->seq_nr = args->csa_sequenceid;
-+	}
- 
- out:
- 	cps->clp = clp; /* put in nfs4_callback_compound */
--- 
-2.30.2
+
+does not
+
+
+>
+> Link: https://github.com/riscv/riscv-aia [1]
+> Link: https://github.com/riscvarchive/riscv-aclint [2]
+> Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+> ---
+>   arch/riscv/include/asm/irq.h |  2 ++
+>   arch/riscv/kernel/irq.c      | 34 ++++++++++++++++++++++++++++++++++
+>   2 files changed, 36 insertions(+)
+>
+> diff --git a/arch/riscv/include/asm/irq.h b/arch/riscv/include/asm/irq.h
+> index 7b038f3b7cb0..59c975f750c9 100644
+> --- a/arch/riscv/include/asm/irq.h
+> +++ b/arch/riscv/include/asm/irq.h
+> @@ -22,6 +22,8 @@ void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu);
+>   void riscv_set_intc_hwnode_fn(struct fwnode_handle *(*fn)(void));
+>   
+>   struct fwnode_handle *riscv_get_intc_hwnode(void);
+> +int riscv_get_hart_index(struct fwnode_handle *fwnode, u32 logical_index,
+> +			 u32 *hart_index);
+>   
+>   #ifdef CONFIG_ACPI
+>   
+> diff --git a/arch/riscv/kernel/irq.c b/arch/riscv/kernel/irq.c
+> index 9ceda02507ca..efdf505bb776 100644
+> --- a/arch/riscv/kernel/irq.c
+> +++ b/arch/riscv/kernel/irq.c
+> @@ -32,6 +32,40 @@ struct fwnode_handle *riscv_get_intc_hwnode(void)
+>   }
+>   EXPORT_SYMBOL_GPL(riscv_get_intc_hwnode);
+>   
+> +/**
+> + * riscv_get_hart_index() - get hart index for interrupt delivery
+> + * @fwnode: interrupt controller node
+> + * @logical_index: index within the "interrupts-extended" property
+> + * @hart_index: filled with the hart index to use
+> + *
+> + * Risc-V uses term "hart index" for its interrupt controllers, for the
+
+
+s/Risc-V/RISC-V
+
+
+> + * purpose of the interrupt routing to destination harts.
+> + * It may be arbitrary numbers assigned to each destination hart in context
+> + * of the particular interrupt domain.
+> + *
+> + * These numbers encoded in the optional property "riscv,hart-indexes"
+> + * that should contain hart index for each interrupt destination in the same
+> + * order as in the "interrupts-extended" property. If this property
+> + * not exist, it assumed equal to the logical index, i.e. index within the
+> + * "interrupts-extended" property.
+> + *
+> + * Return: error code
+
+
+This does not add a lot of value, maybe something like that "Return: 0 
+on success, a negative error code otherwise"?
+
+
+> + */
+> +int riscv_get_hart_index(struct fwnode_handle *fwnode, u32 logical_index,
+> +			 u32 *hart_index)
+> +{
+> +	static const char *prop_hart_index = "riscv,hart-indexes";
+> +	struct device_node *np = to_of_node(fwnode);
+> +
+> +	if (!np || !of_property_present(np, prop_hart_index)) {
+> +		*hart_index = logical_index;
+> +		return 0;
+> +	}
+> +
+> +	return of_property_read_u32_index(np, prop_hart_index,
+> +					  logical_index, hart_index);
+> +}
+> +
+>   #ifdef CONFIG_IRQ_STACKS
+>   #include <asm/irq_stack.h>
+>   
+
+
+With those nits above fixed, you can add:
+
+Acked-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Thanks,
+
+Alex
 
