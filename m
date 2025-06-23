@@ -1,73 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CC781741
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98307DA7F
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750687907; cv=none; b=Ymu0Fr+MYcPGTnprPhMStqN2yVgs3Bd8l0BMBeZy0NNrrWiEkGADtmLCgTv4ZI/r9HmQ0rNnppwNQEq7ekjbwZECnAKWex8w3Phm3QoAp0TiGOBvlAQr0REflbI7p4A+rhoxax3EPc22dulMOJtmanPnJVWrY98xemjlSdStrF8=
+	t=1750687925; cv=none; b=JJkwZwnwBoAVj4hm/X1STZErYSQuoYC9DnHHFFbLqCYxf4MJaSed9L4M4TdffcDZJdCgTh7HI63B7DjfRyEuCJHSpG4U3lmnw0NzcVQnWoci4l/SBECg7UQh22CBP2ocgnQj6FC8nR2vvETFv1aoMqhACX6mjo3ukEkZuXq01fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750687907; c=relaxed/simple;
-	bh=FUHhvZYlcxOYq5E/TzuPfl7j5HuWqYgHE1JV3vDizd4=;
+	s=arc-20240116; t=1750687925; c=relaxed/simple;
+	bh=sAJGL/AFF0QyWNLpODxJUNG0qnCygtD/QajB6OeKDTI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KDG602KQYD9ZssL2mqSPGNfOyv6haohEXHOqpa8oK08KLL5GrzaNBoMGdX6dN7tYvm24ZdPHTBDPpnYbr75rvB5yaxCZb2fKXXHfeknuYcYVmFVYXmOxcbVJYle9muutt1frdkKYmZ5LEXkAqHHd+m7OkSoSxNCt9jA6lJ+1nIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iop9Pg9x; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=iuKAU3ieV1Eog2AtVIkrvWbRvAwdT7txCQwLFIgdLJR4oFyI4T+vi0FRUxlpOB0S98fYWzqsc4sQT3HvskSfKoTb3/Hf8iat3VV8BFWerIxflCe2RTybgf/5Y5WKbi65Yq9gUipbKcww0CPAuVtLp16sf1xEBCSWcXhOXGVl9/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kr0iazZv; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iop9Pg9x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750687902;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=FbVXkEgSWz83fuzVuKQUZWBWROsTc3StR21eD4GqRw0=;
-	b=iop9Pg9xecKEnuWesRm0pbHfpN8Detinep8kimxit02tZPSJwDERs58CtYRipdRDUCgmo0
-	t3/qGvdEYDsTWY3vtkzgQqwub8LAm3icM5wcoT14QEO6CP6wFFYTF1JFqckt0PT0AIndCI
-	Z0dMXWCq6Bmvm7jHaIvneHBMh/btH1U=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-64-yVE9uwifMT-FceXr46Ghlw-1; Mon, 23 Jun 2025 10:11:41 -0400
-X-MC-Unique: yVE9uwifMT-FceXr46Ghlw-1
-X-Mimecast-MFC-AGG-ID: yVE9uwifMT-FceXr46Ghlw_1750687900
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a50049f8eeso1927839f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 07:11:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kr0iazZv"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a507e88b0aso3596533f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 07:12:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750687922; x=1751292722; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=04zirTBW4ONaae9PYnnFEhRuzM6dzMMflL0XU/SMCpw=;
+        b=kr0iazZvcf2+sgH1Om2HhASA+yqPhpXC3yfK35BGSxpEfW8PpRfNuyUIUbG/0jWcBE
+         5lik1eYJGmlNA4GczWbEiLmlSb0APKm7iVcquu0R0xBVF+rejTpnZTp5yOvMdnq3u/tj
+         Bs2knCvSvrAsq65GHNCaICRV1EH2H8DH85m5EZSqirMVW8PvozFnO40yMF4SSUDiKh31
+         6aGhZVjWCHcbdvGCcGTC2s1SOB8vT+rfmLuVdoUtZzaisVEVUdfZtbPByqYTNs/nWiuG
+         S/7ec9nhA4CkdDULJ3vQ58oEXrfKAWrutD3UFnrdMgfQvtp6KGtzyoYGwGO1VXojo0td
+         RHvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750687900; x=1751292700;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FbVXkEgSWz83fuzVuKQUZWBWROsTc3StR21eD4GqRw0=;
-        b=Zu5okLXpI6m56hUfq3cw7Ip0ikv7JarUylxF4uSKPklCdeoKWBj94KrXpneExcCgTT
-         lA6WQ4I2h789gkU++YNbTt4eA9vwh+jTJjdRxvLmCCI/mkXapM14+v9gH38fv9rY3vUm
-         0OS7td7TeqotyS+HDhKrKvW3EUuFwB2dzqsez6Oqbgya/m1ZmRugSIftTW06xKylFSlZ
-         t9NMP4j4JBAYGUOBB0dkm7swQiuFwuXKSC4RTHhkHLAYk1XZbMYLaMZwSZPlXiTIuj2n
-         EvMrYWriSHi4v2Eptsfky2dulPxrqi/UmjQ5a2Lqc20WxV8blTDDSp7N13+NmtJEgwsj
-         R/sg==
-X-Forwarded-Encrypted: i=1; AJvYcCXqK7yniguegjo9AzQRIkdk7iJFUfJT0IbHk4jfHj2IIebVao+T9XPmjaDjsXCY/2AUJ4oU66qN3mYLTmo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDDBqD0opDv1gT8brsFtyiSAf5H75EJ8ImVEMKzNOyN6nDyB8+
-	xu4L8TtTmHomSG1tJitLzbPxsNbDWTp16EkGya1zxf3+NehFzyCOJBvlqJeI5YxjqBZjppWk/wB
-	gUYGKjzvLYOFYYY2AEbrTMJ1uPYUIkEBysGONMFAcV8fxGyuGt41ZmLPp65JDQ7SjTQ==
-X-Gm-Gg: ASbGncu1pjfOuAI69qy39H4Abziv4Pn/OTs0PIRXeJBFGs6AYl/339gKHmaxSZ2KOQD
-	UeKOJyOK4s8egffBIQ04Y6hlS8mE+jxybOXAaienfMAtvJkFBkpBqEi7RxgYek+5vmfJ8E+RZjt
-	DmYdNNIfzAhMSzZBkiU0XlflENwIogX04SA4z3J89WCQPb1cBs5+A7Bmrnpb6cbgUKGE+VjXDbm
-	au5P+cnvVqdKIc49ZQ89USGXwtKaIwH4A2FUv5VGQNoh6D5fIoM/JGYxN9+0oGNlDapU9WjH/Xu
-	6Saad17oh1N9MZTy2UZJFZzWNlgMII1RoVOp+VXTMRKs5YHZuEudimy1kS00PlnREU5h+iPo5bm
-	R6gYMaAzxyjh2R62vQs7LO49Kb28/wDMkAyBrnAg0+qRYk350EQ==
-X-Received: by 2002:a05:6000:387:b0:3a5:2848:2e78 with SMTP id ffacd0b85a97d-3a6d12d90cbmr11415642f8f.28.1750687900409;
-        Mon, 23 Jun 2025 07:11:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFHxOZgUriWqUY6K7qQW6qASUaWvvjJp1eJPWgudBsc01edWF0+wpYwOAJlpv3z/PVsleITSA==
-X-Received: by 2002:a05:6000:387:b0:3a5:2848:2e78 with SMTP id ffacd0b85a97d-3a6d12d90cbmr11415601f8f.28.1750687899935;
-        Mon, 23 Jun 2025 07:11:39 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159? (p200300d82f4efd008e13e3b590c81159.dip0.t-ipconnect.de. [2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f1054bsm9455563f8f.9.2025.06.23.07.11.38
+        d=1e100.net; s=20230601; t=1750687922; x=1751292722;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=04zirTBW4ONaae9PYnnFEhRuzM6dzMMflL0XU/SMCpw=;
+        b=DI9TU49KMx1QPvmzIepTbOVtkqh78tDy39wj0AfA7mIl59uSSECioRi6lsEOzekqhL
+         xjPaLvijVO7D2DrDygWgMVdvGJ0Robcrf/03tAvrLMzTsnkzoZeh6SMIrhuDP1rjn53n
+         NlhXI+qa7plV8XN8QnzgTcNjqAI5PXh9L320nnjuMdWoesHQLl6PezA8vyHXIfCg/YKw
+         YXr7SyZ8eThUc4ZofgcgEG3QjiPULBCgArh0iD62R+DlKWxlzmasEG3A8Z0nFnum7koU
+         sPRfEEXGRrfBDxcBPc0QHZoicl0XLJpzoQp4fcgscC9EDFeVwqswMkMe5A3mBOkunWZr
+         +o2w==
+X-Forwarded-Encrypted: i=1; AJvYcCW04t4u4CJSUnOXcl432DYmhSOXwKxRKcdxKjGbzTl1DXChbblLUqcGqhCmHOazIcpreGwljO9gmR40Amg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIv1x02hcDogCJcxOhlwJguEwefr1+WUKhNo6zZ6UIn1D0pD4i
+	Xqbi7IFyTg+2OfaUiyF1dpbbBbfCemuZxXP737xY9gmNtAmfxNGhQqnGE5tck/sT55w=
+X-Gm-Gg: ASbGncvKgbnCzPyXRx0rc4khoWwwiSW3zLFwpv9KRZR0t5DUR+TiHDb6s1uVsoPZESz
+	ZKMbnY1M0pYWGoVOlErByvbW/AEp8cao3v3Qz6DIoj3hfRecGEZiFFA6/RNJAhqzI9tVZ8n3Zzw
+	xPPZ+u7m/xXkbWd8c+4jPoAR2iX/2RGUHi3fW5JiPD/QEKsmaHpDqLzQ6niONP626ropv/45u9T
+	6CJGoXnWaqHrvNd+KVNe4Tax6PlBbHw1vvlCmig30ETgJHD8yNmyP+OkvZMCx4nYVp8NEO3MFZD
+	/1F07YzPIlXcI8Y/cA/sUXJlLFBz2JMPwU4lmy8zGsV/cE4gvQXxrM3yG2GX0yj6uog=
+X-Google-Smtp-Source: AGHT+IEhFlx8KN+2GKnsD98crsVUfyaoX0mNgBuFWPQFhXzUxCR/Zb/phFY++YIze2FMTwcJnIQdhA==
+X-Received: by 2002:a05:6000:4109:b0:3a4:f892:de7f with SMTP id ffacd0b85a97d-3a6d13071e8mr9361649f8f.36.1750687922230;
+        Mon, 23 Jun 2025 07:12:02 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d1188804sm9526600f8f.79.2025.06.23.07.12.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 07:11:39 -0700 (PDT)
-Message-ID: <35b03911-74c3-4626-aaa8-4c331c086f8f@redhat.com>
-Date: Mon, 23 Jun 2025 16:11:38 +0200
+        Mon, 23 Jun 2025 07:12:01 -0700 (PDT)
+Message-ID: <e8c28a7e-bc08-4c50-96ca-afe62cfcf9fd@linaro.org>
+Date: Mon, 23 Jun 2025 15:12:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,168 +66,73 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/5] mm,hugetlb: Sort out folio locking in the faulting
- path
-To: Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Muchun Song <muchun.song@linux.dev>, Peter Xu <peterx@redhat.com>,
- Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250620123014.29748-1-osalvador@suse.de>
- <20250620123014.29748-3-osalvador@suse.de>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v1] perf test: Replace grep perl regexp with awk
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: wy.shih90@gmail.com, Ian Rogers <irogers@google.com>,
+ peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, tmricht@linux.ibm.com,
+ leo.yan@arm.com, atrajeev@linux.vnet.ibm.com,
+ linux-perf-users@vger.kernel.org,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250620174034.819894-1-ctshao@google.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250620123014.29748-3-osalvador@suse.de>
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250620174034.819894-1-ctshao@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 20.06.25 14:30, Oscar Salvador wrote:
-> Recent conversations showed that there was a misunderstanding about why we
-> were locking the folio prior to call in hugetlb_wp().
-> In fact, as soon as we have the folio mapped into the pagetables, we no longer
-> need to hold it locked, because we know that no concurrent truncation could have
-> happened.
-> There is only one case where the folio needs to be locked, and that is when we
-> are handling an anonymous folio, because hugetlb_wp() will check whether it can
-> re-use it exclusively for the process that is faulting it in.
+
+
+On 20/06/2025 6:40 pm, Chun-Tse Shao wrote:
+> perl is not universal on all machines and should be replaced with awk,
+> which is much more common.
 > 
-> So, pass the folio locked to hugetlb_wp() when that is the case.
+> Before:
+>    $ perf test "probe libc's inet_pton & backtrace it with ping" -v
+>    --- start ---
+>    test child forked, pid 145431
+>    grep: Perl matching not supported in a --disable-perl-regexp build
 > 
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+>    FAIL: could not add event
+>    ---- end(-1) ----
+>    121: probe libc's inet_pton & backtrace it with ping                 : FAILED!
+> After:
+>    $ perf test "probe libc's inet_pton & backtrace it with ping" -v
+>    121: probe libc's inet_pton & backtrace it with ping                 : Ok
+> 
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
 > ---
->   mm/hugetlb.c | 43 +++++++++++++++++++++++++++++++++----------
->   1 file changed, 33 insertions(+), 10 deletions(-)
+>   tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 175edafeec67..1a5f713c1e4c 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -6437,6 +6437,7 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
->   	pte_t new_pte;
->   	bool new_folio, new_pagecache_folio = false;
->   	u32 hash = hugetlb_fault_mutex_hash(mapping, vmf->pgoff);
-> +	bool folio_locked = true;
->   
->   	/*
->   	 * Currently, we are forced to kill the process in the event the
-> @@ -6602,6 +6603,11 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
->   
->   	hugetlb_count_add(pages_per_huge_page(h), mm);
->   	if ((vmf->flags & FAULT_FLAG_WRITE) && !(vma->vm_flags & VM_SHARED)) {
-> +		/* No need to lock file folios. See comment in hugetlb_fault() */
-> +		if (!anon_rmap) {
-> +			folio_locked = false;
-> +			folio_unlock(folio);
-> +		}
->   		/* Optimization, do the COW without a second fault */
->   		ret = hugetlb_wp(vmf);
->   	}
-> @@ -6616,7 +6622,8 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
->   	if (new_folio)
->   		folio_set_hugetlb_migratable(folio);
->   
-> -	folio_unlock(folio);
-> +	if (folio_locked)
-> +		folio_unlock(folio);
->   out:
->   	hugetlb_vma_unlock_read(vma);
->   
-> @@ -6636,7 +6643,8 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
->   	if (new_folio && !new_pagecache_folio)
->   		restore_reserve_on_error(h, vma, vmf->address, folio);
->   
-> -	folio_unlock(folio);
-> +	if (folio_locked)
-> +		folio_unlock(folio);
->   	folio_put(folio);
->   	goto out;
->   }
-> @@ -6670,7 +6678,7 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
->   {
->   	vm_fault_t ret;
->   	u32 hash;
-> -	struct folio *folio;
-> +	struct folio *folio = NULL;
->   	struct hstate *h = hstate_vma(vma);
->   	struct address_space *mapping;
->   	struct vm_fault vmf = {
-> @@ -6687,6 +6695,7 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
->   		 * be hard to debug if called functions make assumptions
->   		 */
->   	};
-> +	bool folio_locked = false;
->   
->   	/*
->   	 * Serialize hugepage allocation and instantiation, so that we don't
-> @@ -6801,13 +6810,24 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
->   		/* Fallthrough to CoW */
->   	}
->   
-> -	/* hugetlb_wp() requires page locks of pte_page(vmf.orig_pte) */
-> -	folio = page_folio(pte_page(vmf.orig_pte));
-> -	folio_lock(folio);
-> -	folio_get(folio);
-> -
->   	if (flags & (FAULT_FLAG_WRITE|FAULT_FLAG_UNSHARE)) {
->   		if (!huge_pte_write(vmf.orig_pte)) {
-> +			/*
-> +			 * Anonymous folios need to be lock since hugetlb_wp()
-> +			 * checks whether we can re-use the folio exclusively
-> +			 * for us in case we are the only user of it.
-> +			 */
+> diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+> index c4bab5b5cc59..aaa5ee06ae18 100755
+> --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+> +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+> @@ -23,7 +23,8 @@ event_pattern='probe_libc:inet_pton(\_[[:digit:]]+)?'
+>   add_libc_inet_pton_event() {
+> 
+>   	event_name=$(perf probe -f -x $libc -a inet_pton 2>&1 | tail -n +2 | head -n -5 | \
+> -			grep -P -o "$event_pattern(?=[[:space:]]\(on inet_pton in $libc\))")
+> +			awk -v ep="$event_pattern" -v l="$libc" '$0 ~ ep && $0 ~ \
+> +			("\\(on inet_pton in " l "\\)") {print $1}')
+> 
+>   	if [ $? -ne 0 ] || [ -z "$event_name" ] ; then
+>   		printf "FAIL: could not add event\n"
+> --
+> 2.50.0.rc2.701.gf1e915cc24-goog
+> 
 
-Should we move that comment to hugetlb_wp() instead? And if we are 
-already doing this PTL unlock dance now, why not do it in hugetlb_wp() 
-instead so we can simplify this code?
+Minor nit: the underscore in event_pattern (not shown in the diff) never 
+needed to be escaped.
 
--- 
-Cheers,
+But now we're using awk it gives a warning so we should remove it in 
+case anyone is searching through the output:
 
-David / dhildenb
+   awk: warning: escape sequence `\_' treated as plain `_'
+
+Reviewed-by: James Clark <james.clark@linaro.org>
 
