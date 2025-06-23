@@ -1,130 +1,197 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B81B2D238A;
-	Mon, 23 Jun 2025 16:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750694896; cv=pass; b=J1iaaW0Gw+2z5FktKPfPZMD+PQOQUs78tjdB0ao8dNckuWL0aHTDkkC9Gl91uAgjmco9a4aAIpbYnfsAvMgnMStmyQYtQ9zT2Niw2O1ffqOWH+Ki3gn1Bg+Dq72OZ1cO8ami8PR81wsO7L3ZNFviZ+sW/tEeUKJ9OQejg7XJpSA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572242D238B;
+	Mon, 23 Jun 2025 16:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750694896; cv=none; b=kyZBIUCShx+7Q0OSDQXJ9iLFSf/FE4CzPH93f3Pm0xtUoDXdMCoBd//v0R5F/N91mZbMp2ivbS5K9US/8gcVP8OgaDB5fjJbXcKqHRn5StGNcDT0dxNCSRPg2NdZ3LffkgxU0pgI7SIuMdoUExOqEuXonrwWDSeAgqTz3tXiRZA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750694896; c=relaxed/simple;
-	bh=QnxR+sK44HALhLWSBvHY6Bv+Hrit1SCdQvPFy31Lxo0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oAojWQeHBtjdMVftBvxowkv8ZKB5SkM4vxiNVEvqkBAlfl0FzcdgHRa1eEBFXwGzPajjRFKbwC1Dxf3ABQtHKZpVuHpnILvUORwSIJICrDmNi59S8TbhT7t2Tun3tTLLR4iozLirMs0spZqYsulpNLzukxtGmYMxh1lOWCU/3LY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=T/FuRxcx; arc=pass smtp.client-ip=136.143.188.12
+	bh=L4p5mXi7DFDYHCSaTVxJNafGXSHDm+zZmxqXO3mMrMY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tMaoMw47aS61mFb7tIQV3EeXfS8cdccvs9csO51rnoHg+flc0j+N16r52olC6jxq/YahdnQZuDm1HjWkxJQNm3a8laxI5IOw9KUQCKxrIWAvcUIupCtsDm12IR9XwfCHKXBnQnJT14pSuIyPTHClXor2OT1PoeVHSvPEpInWvFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=qskRex4K; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="T/FuRxcx"
-ARC-Seal: i=1; a=rsa-sha256; t=1750694830; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=loJS8W16Z02Cu6fnl3R0RD/dzALHZA4dxEuncXhZBhvJq+Jx+BmHws/0REPfKX6GvS4LKDBm7U9SJeuncg1yecSHB6bUmPwvLcTlHfgJ7WQOBNKrVSQmnOy9rDdeK7bU9w7jemn1HmKbQQ7D38Iqsg5zagMhdRK25qio1G5lbaA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750694830; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=w4UQ2aQQRHizQgGHJB0otQTEkx720VSWFSPI0QYEkHo=; 
-	b=KMgkETM5XpmyKyeC+bjMzixubiqqS3C4M2/RFA7n9o/7X1aCHBqjGYraQIEW3poim8VAG+87A3sTTq0UMbMKGJ8xjFfq0N1cGev4yBvpiQ67nqKlTj/dpQ6FpUSD8lcey7gFreEyCbDplRq0Gz49mlyOypgocHUxw+lTdppw0l0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750694830;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=w4UQ2aQQRHizQgGHJB0otQTEkx720VSWFSPI0QYEkHo=;
-	b=T/FuRxcxjlZFOyVf/dMNjf1pk3VdNoieHWVKfSh/vHXALTivmf7DAokMhbIo6Qew
-	xmPVO3Z9Gah27lnlBQENxc0HMiMOaLxBjsFxcnMgC3mdSQALF6e/+JHKRCXi9BbWDxn
-	4tVNFdjpbA3BQj9d37nR7MgJb72RbTL23VKUgDyU=
-Received: by mx.zohomail.com with SMTPS id 1750694828635697.2662783904857;
-	Mon, 23 Jun 2025 09:07:08 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Mon, 23 Jun 2025 18:05:34 +0200
-Subject: [PATCH v2 06/20] phy: rockchip-emmc: switch to FIELD_PREP_WM16
- macro
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qskRex4K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750694892;
+	bh=L4p5mXi7DFDYHCSaTVxJNafGXSHDm+zZmxqXO3mMrMY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qskRex4KS5ZZJaJwLsSUyUFsAf1k4QKIQF0MgHltmvgQxKp9+2+d//S4QHw/Q3Uea
+	 fH5rR/de88nZaQ4f5gJfPxOY3WCUTR9TxeZDGtVPKyjxe3mUlsYP53rSeANhyNHMWx
+	 sJjhLlyEn/tOFLFlOzmxpx78ZmDnGHMi3+1Sv+IcPFAsmr5JQfU9A35hwRsdSVKcFd
+	 WPPfDCSNgLWT4agyfvYPfgK/3OyKn/93e+8BFS16TXhP5jA+YBuJ5i8YUB0gBIkOTQ
+	 W8M5WjDI32QzMLnNbwu27TMdzQMSXAh+NWDYDEeUA5iA8oF0YvcR03GFtucqa01Hpz
+	 c40gtzlbT85jw==
+Received: from trenzalore.hitronhub.home (unknown [23.233.251.139])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: detlev)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8969617E37C2;
+	Mon, 23 Jun 2025 18:08:09 +0200 (CEST)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Alexey Charkov <alchark@gmail.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Jianfeng Liu <liujianfeng1994@gmail.com>,
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Ricardo Ribalda <ribalda@chromium.org>,
+	Hans de Goede <hansg@kernel.org>,
+	Yunke Cao <yunkec@google.com>,
+	linux-media@vger.kernel.org,
+	kernel@collabora.com
+Subject: [PATCH 8/8] media: rkvdec: Unstage the driver
+Date: Mon, 23 Jun 2025 12:07:22 -0400
+Message-ID: <20250623160722.55938-9-detlev.casanova@collabora.com>
+X-Mailer: git-send-email 2.50.0
+In-Reply-To: <20250623160722.55938-1-detlev.casanova@collabora.com>
+References: <20250623160722.55938-1-detlev.casanova@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-byeword-update-v2-6-cf1fc08a2e1f@collabora.com>
-References: <20250623-byeword-update-v2-0-cf1fc08a2e1f@collabora.com>
-In-Reply-To: <20250623-byeword-update-v2-0-cf1fc08a2e1f@collabora.com>
-To: Yury Norov <yury.norov@gmail.com>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- Jaehoon Chung <jh80.chung@samsung.com>, 
- Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
- Shreeya Patel <shreeya.patel@collabora.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
- Nicolas Frattaroli <frattaroli.nicolas@gmail.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Shawn Lin <shawn.lin@rock-chips.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
- MyungJoo Ham <myungjoo.ham@samsung.com>, 
- Kyungmin Park <kyungmin.park@samsung.com>, Qin Jian <qinjian@cqplus1.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, 
- linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org, 
- linux-sound@vger.kernel.org, netdev@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
-drivers that use constant masks.
+The TODO list for unstaging being empty, the driver can now be moved to the
+main media folder.
 
-Replace the implementation of the rockchip eMMC PHY driver's
-HIWORD_UPDATE macro with hw_bitfield.h's FIELD_PREP_WM16. This makes the
-change more easily reviewable.
+Also add myself as maintainer.
 
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
 ---
- drivers/phy/rockchip/phy-rockchip-emmc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ MAINTAINERS                                               | 8 ++++++++
+ drivers/media/platform/rockchip/Kconfig                   | 1 +
+ drivers/media/platform/rockchip/Makefile                  | 1 +
+ .../media => media/platform/rockchip}/rkvdec/Kconfig      | 0
+ .../media => media/platform/rockchip}/rkvdec/Makefile     | 0
+ .../platform/rockchip}/rkvdec/rkvdec-h264.c               | 0
+ .../platform/rockchip}/rkvdec/rkvdec-regs.h               | 0
+ .../media => media/platform/rockchip}/rkvdec/rkvdec-vp9.c | 0
+ .../media => media/platform/rockchip}/rkvdec/rkvdec.c     | 0
+ .../media => media/platform/rockchip}/rkvdec/rkvdec.h     | 0
+ drivers/staging/media/Kconfig                             | 2 --
+ drivers/staging/media/Makefile                            | 1 -
+ 12 files changed, 10 insertions(+), 3 deletions(-)
+ rename drivers/{staging/media => media/platform/rockchip}/rkvdec/Kconfig (100%)
+ rename drivers/{staging/media => media/platform/rockchip}/rkvdec/Makefile (100%)
+ rename drivers/{staging/media => media/platform/rockchip}/rkvdec/rkvdec-h264.c (100%)
+ rename drivers/{staging/media => media/platform/rockchip}/rkvdec/rkvdec-regs.h (100%)
+ rename drivers/{staging/media => media/platform/rockchip}/rkvdec/rkvdec-vp9.c (100%)
+ rename drivers/{staging/media => media/platform/rockchip}/rkvdec/rkvdec.c (100%)
+ rename drivers/{staging/media => media/platform/rockchip}/rkvdec/rkvdec.h (100%)
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-emmc.c b/drivers/phy/rockchip/phy-rockchip-emmc.c
-index 20023f6eb9944eaab505101d57e806476ecfac71..5187983c58e5e9bc56e65c208122a3be7be00427 100644
---- a/drivers/phy/rockchip/phy-rockchip-emmc.c
-+++ b/drivers/phy/rockchip/phy-rockchip-emmc.c
-@@ -8,6 +8,7 @@
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c3f7fbd0d67af..d05a153c21526 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -21466,6 +21466,14 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/media/rockchip-rga.yaml
+ F:	drivers/media/platform/rockchip/rga/
  
- #include <linux/clk.h>
- #include <linux/delay.h>
-+#include <linux/hw_bitfield.h>
- #include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/of.h>
-@@ -21,7 +22,7 @@
-  * only if BIT(x + 16) set to 1 the BIT(x) can be written.
-  */
- #define HIWORD_UPDATE(val, mask, shift) \
--		((val) << (shift) | (mask) << ((shift) + 16))
-+		(FIELD_PREP_WM16((mask) << (shift), (val)))
++ROCKCHIP RKVDEC VIDEO DECODER DRIVER
++M:	Detlev Casanova <detlev.casanova@collabora.com>
++L:	linux-media@vger.kernel.org
++L:	linux-rockchip@lists.infradead.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/media/rockchip,vdec.yaml
++F:	drivers/media/platform/rockchip/rkvdec/
++
+ ROCKCHIP RK3308 INTERNAL AUDIO CODEC
+ M:	Luca Ceresoli <luca.ceresoli@bootlin.com>
+ S:	Maintained
+diff --git a/drivers/media/platform/rockchip/Kconfig b/drivers/media/platform/rockchip/Kconfig
+index b41d3960c1b41..9bbeec4996aa2 100644
+--- a/drivers/media/platform/rockchip/Kconfig
++++ b/drivers/media/platform/rockchip/Kconfig
+@@ -4,3 +4,4 @@ comment "Rockchip media platform drivers"
  
- /* Register definition */
- #define GRF_EMMCPHY_CON0		0x0
-
+ source "drivers/media/platform/rockchip/rga/Kconfig"
+ source "drivers/media/platform/rockchip/rkisp1/Kconfig"
++source "drivers/media/platform/rockchip/rkvdec/Kconfig"
+diff --git a/drivers/media/platform/rockchip/Makefile b/drivers/media/platform/rockchip/Makefile
+index 4f782b876ac9b..286dc5c53f7e1 100644
+--- a/drivers/media/platform/rockchip/Makefile
++++ b/drivers/media/platform/rockchip/Makefile
+@@ -1,3 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ obj-y += rga/
+ obj-y += rkisp1/
++obj-y += rkvdec/
+diff --git a/drivers/staging/media/rkvdec/Kconfig b/drivers/media/platform/rockchip/rkvdec/Kconfig
+similarity index 100%
+rename from drivers/staging/media/rkvdec/Kconfig
+rename to drivers/media/platform/rockchip/rkvdec/Kconfig
+diff --git a/drivers/staging/media/rkvdec/Makefile b/drivers/media/platform/rockchip/rkvdec/Makefile
+similarity index 100%
+rename from drivers/staging/media/rkvdec/Makefile
+rename to drivers/media/platform/rockchip/rkvdec/Makefile
+diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/media/platform/rockchip/rkvdec/rkvdec-h264.c
+similarity index 100%
+rename from drivers/staging/media/rkvdec/rkvdec-h264.c
+rename to drivers/media/platform/rockchip/rkvdec/rkvdec-h264.c
+diff --git a/drivers/staging/media/rkvdec/rkvdec-regs.h b/drivers/media/platform/rockchip/rkvdec/rkvdec-regs.h
+similarity index 100%
+rename from drivers/staging/media/rkvdec/rkvdec-regs.h
+rename to drivers/media/platform/rockchip/rkvdec/rkvdec-regs.h
+diff --git a/drivers/staging/media/rkvdec/rkvdec-vp9.c b/drivers/media/platform/rockchip/rkvdec/rkvdec-vp9.c
+similarity index 100%
+rename from drivers/staging/media/rkvdec/rkvdec-vp9.c
+rename to drivers/media/platform/rockchip/rkvdec/rkvdec-vp9.c
+diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/media/platform/rockchip/rkvdec/rkvdec.c
+similarity index 100%
+rename from drivers/staging/media/rkvdec/rkvdec.c
+rename to drivers/media/platform/rockchip/rkvdec/rkvdec.c
+diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/media/platform/rockchip/rkvdec/rkvdec.h
+similarity index 100%
+rename from drivers/staging/media/rkvdec/rkvdec.h
+rename to drivers/media/platform/rockchip/rkvdec/rkvdec.h
+diff --git a/drivers/staging/media/Kconfig b/drivers/staging/media/Kconfig
+index b442148543995..b9d52a51841b5 100644
+--- a/drivers/staging/media/Kconfig
++++ b/drivers/staging/media/Kconfig
+@@ -32,8 +32,6 @@ source "drivers/staging/media/max96712/Kconfig"
+ 
+ source "drivers/staging/media/meson/vdec/Kconfig"
+ 
+-source "drivers/staging/media/rkvdec/Kconfig"
+-
+ source "drivers/staging/media/starfive/Kconfig"
+ 
+ source "drivers/staging/media/sunxi/Kconfig"
+diff --git a/drivers/staging/media/Makefile b/drivers/staging/media/Makefile
+index ad4e9619a9e07..102ca632ddf5c 100644
+--- a/drivers/staging/media/Makefile
++++ b/drivers/staging/media/Makefile
+@@ -4,7 +4,6 @@ obj-$(CONFIG_INTEL_ATOMISP)     += atomisp/
+ obj-$(CONFIG_VIDEO_IMX_MEDIA)	+= imx/
+ obj-$(CONFIG_VIDEO_MAX96712)	+= max96712/
+ obj-$(CONFIG_VIDEO_MESON_VDEC)	+= meson/vdec/
+-obj-$(CONFIG_VIDEO_ROCKCHIP_VDEC)	+= rkvdec/
+ obj-$(CONFIG_VIDEO_STARFIVE_CAMSS)	+= starfive/
+ obj-$(CONFIG_VIDEO_SUNXI)	+= sunxi/
+ obj-$(CONFIG_VIDEO_TEGRA)	+= tegra-video/
 -- 
 2.50.0
 
