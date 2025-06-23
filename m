@@ -1,77 +1,68 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C91545948;
-	Mon, 23 Jun 2025 06:50:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584CF45948;
+	Mon, 23 Jun 2025 06:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750661419; cv=none; b=QAxg/kzs2mZidgMGsPADpOhGn38kVmxpdpqFGS/feEeq8+7Ic+XF/cBXqEX6PzfTrukEdyZFrP7gInF61177Emu40C+S7P1b7FZ/gzCy0m1lBZB1hRb1oUuw3m/R2cEKpYvViSLN6GP4bwGwQ9+iLmjDBB+75SrU1uQirpcsxAQ=
+	t=1750661428; cv=none; b=Kc/Gbju/jROYO84a36gJ9YvMCTbr+sXMtL/Mp3/Ind72Eu1hx7bQcBjQrbZmLf5vk2QLIJKAjhPU2rZ97SegmB5RZZ7E7a4oUCAgQeRzSeKeJi7w7Tj2jo8jdZPhUe65SjENrpFFOOZmjpkkUqT6qW6zUaE7/8RYFMyYM5F/Me0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750661419; c=relaxed/simple;
-	bh=gUcXvmQE/4OGkPu+1pWmspRNi25l7Kd4ITJO6J0F8GA=;
+	s=arc-20240116; t=1750661428; c=relaxed/simple;
+	bh=UbcP0cmmfsC3C6N2WW8XNuMzgOKu5ngUqMV28HejEJk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p2DIq7u59DG/rwfvTVqwU2Uq6gh7bFqEuKT27QkeR6bMw7RhaylvEMvMuqv+sG+cOd3n0w7nQYrLMyRZ20tbPBp2nyU1vL8NoFptR14fpEk1QyMPrpRNRwXNJOM9yk393ljyhsi2Zv165AZeKvc0Kkre+rtgtFjV+vAKr/MlHyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GlK8D3GF; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=mK7EW264agStuP6sSyHhhJFAnJnXUJXE+E7NWuxIHckOc+rqPrt6XD4C1KcFbppL7hw4uedePxsMzzXLtG3HIzimyu94G8H1Y8mPXqHGPzFBCIi+D6/YzcbX80Xk8uTsWODUu/lh+ZRw9zMSrV2+DkLAOhRuA/k+2hLzFt/2hQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fRBcgby0; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GlK8D3GF"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-23649faf69fso37294875ad.0;
-        Sun, 22 Jun 2025 23:50:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750661417; x=1751266217; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6pa7zdu2J08RltO7Fc5iu0znoovQ/LLzNNFFw4lTRcE=;
-        b=GlK8D3GFcNXZDm9E3k4FYOSrVnN5AodXcozFb20PrZ7nfTMFRoVgkoD0pkWZKa/IzW
-         hig7tpryYAmj3dmPJj/Xq6UEYpD8qsFeCBot+a1BpvtYlQ5nyYQ2O0aPszQwFBK0JZaY
-         Czju5YNxN63Eac/lzwJB5CXe9NJvrwfGfWQ5ibhM9Zag30GjdGrqfqZD5FLLPZidLT12
-         hSi4hhkpqFm/sCpcoKlyOE6NiYzPBP+lH1Yakhx3KQInj2S2mGneWbGaIBoDewEMJW6g
-         crH0H09CNeyQyoH2tZ9Tv4MhWBbPZOE3CgZPQwMim+t/a9gehmAcJahsgZA7tRTuaB/1
-         uvQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750661417; x=1751266217;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6pa7zdu2J08RltO7Fc5iu0znoovQ/LLzNNFFw4lTRcE=;
-        b=n1otBr/lKcgM6jlQCN94mx265+Q3/zgGG6uRIfMVNvSsK1b/CcJsbPmSg3ggKPN6Xr
-         rjK6KO+7yxL7DzfJk+Edby0gE/BnqqGmNWbyxdvFIMz4rCEJmrW3dLA8ZMmjVDeEUZyO
-         zO2/ZGPWWn1GYtOlWbiQh+oOxosq4VKxucHOWcuDhgm9vfmQWkdChmMhBxpJ4H3FzP08
-         vmEuTWbGIYUuIAAkk6KdwLYGO61xu677wiC0gQkeroXULs+L61d/6uisYyidsrhfBOVE
-         mK3VDN3W18mhQUGpqjR67+zP8F60kbdb2X243mpxvzEUAnJxqA70xrRnUTv/snaZnKeO
-         hxFg==
-X-Forwarded-Encrypted: i=1; AJvYcCVzT0EICf6d1r6hzt3vDyCcTOyyPDEjNhR6A5WHOJ3zabpELdRPDKjDNzPMjKBQeaCqRUqcRXlOgaat@vger.kernel.org, AJvYcCWaNf9NBKDZVBEHlX/vG6NGf6EwOitpzQhe0eEjSWzOrU0Yl8md8STxbS8/hQASZyLJvEc/8oHH@vger.kernel.org, AJvYcCXo/b0FKcTBjK04A8CZxJd8YesM8c/okEU5Fud6xLy50pWY4hRSarmUJJf9ugGAqeUnSdJM6qMN+njbLV7P@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0pcj76bZ8nrNJPwvQtA2bExfWubf112ZTLenCiGnQCnQaKLoj
-	pJxbVfrC9yTj8cKOVYg183dZtDdZVVwL2oK1yjgYTqdstJ5+a1zwifo9
-X-Gm-Gg: ASbGncuzEruJsS82cxSd5+DXltY2ff+vW6DH4q0DSDTdA/h4dvwEghxuWVjbC9hDYKf
-	lVSs4fAZn3oU8O7Nj6W0EwudNjayXYTHz8vVlt7NCk/CRT2wCYmE+iskmyK2iHnnujuhKsDWUHo
-	49lcZCP+d+ghsuumFJLbGEelvtRxShk/x/wDjPZXtqlJVe4ceghzV5D35kvyNwsi2PIK8hFeCjM
-	ix2jeIRgEOCNOB9MSuWJEUoA5+CtCYmTjLTrOe5OgnuySDxWbO1jS4Apf12SXshWsxuFt9k9vK4
-	KS+L9IB39CwDeE9p+nxF8AdjeJzUblBd7eJEhV5zo1MWe9/+6Tu6kwAlHUxhgg==
-X-Google-Smtp-Source: AGHT+IHpm5rL2B+2lf3y7D/IeDkqmgR4hxP+AbO8ivmJka/IKdtwO1eRP/D1h74sTcLcDtCuBLdozA==
-X-Received: by 2002:a17:902:ce85:b0:234:aa98:7d41 with SMTP id d9443c01a7336-237d9ab0977mr168116245ad.42.1750661417171;
-        Sun, 22 Jun 2025 23:50:17 -0700 (PDT)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-237f7f87676sm17710635ad.122.2025.06.22.23.50.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 23:50:16 -0700 (PDT)
-Date: Mon, 23 Jun 2025 14:50:08 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Maud Spierings <maud_spierings@murena.io>, inochiama@gmail.com
-Cc: alex@ghiti.fr, alexander.sverdlin@gmail.com, andrew+netdev@lunn.ch, 
-	aou@eecs.berkeley.edu, conor+dt@kernel.org, conor.dooley@microchip.com, 
-	davem@davemloft.net, devicetree@vger.kernel.org, dlan@gentoo.org, edumazet@google.com, 
-	huangze@whut.edu.cn, krzk+dt@kernel.org, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, looong.bin@gmail.com, 
-	netdev@vger.kernel.org, pabeni@redhat.com, palmer@dabbelt.com, paul.walmsley@sifive.com, 
-	richardcochran@gmail.com, robh@kernel.org, sophgo@lists.linux.dev, 
-	thomas.bonnefille@bootlin.com, unicorn_wang@outlook.com, yu.yuan@sjtu.edu.cn
-Subject: Re: [PATCH net-next RFC v2 1/4] dt-bindings: net: Add support for
- Sophgo CV1800 dwmac
-Message-ID: <2rqpe3f54peuuslzu2mtbqt2ee7atoa6j6xiudxrway32vzmui@2apefxcrdhpi>
-References: <20250623003049.574821-2-inochiama@gmail.com>
- <4cb09d05-d1f2-4d34-b3f7-be523b900a9e@murena.io>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fRBcgby0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750661426; x=1782197426;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UbcP0cmmfsC3C6N2WW8XNuMzgOKu5ngUqMV28HejEJk=;
+  b=fRBcgby0VJ9kCNF4E7VF/S9gqoqnF37Fvi/gaNcl9akfW+C38dreBf6J
+   Rgw4ZXgdeX3E0futE6H/zZDCJEQ0ChVKi0+/KZ9vwQ1P7F/0h5232ke6A
+   /cNOga++I4Y10FTnF7uiWLnUt+0gC5WV1PwrOUoSf9sJwsz1G3W3L3rO9
+   k+pK9iKTTl0vTMyusa9JlVNyNJpGwIR3P4LKudmGVEFoCiBcAkUdA5lWu
+   obJAPxLdmsPN95FLqLzg2+dYL6jPN4Rx71YjravAnnyjRnm1sA4LPrltc
+   NvFCbO4pjKOdjhH+3Le+NKzbTMpNdF3PLVRQgHLjJ04+Agr/d31a3tOQ6
+   g==;
+X-CSE-ConnectionGUID: 6R1DUhXqRf6DQircYCGXwg==
+X-CSE-MsgGUID: jAoEyVr5TYe3tpVzpah2oA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="52991935"
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="52991935"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 23:50:25 -0700
+X-CSE-ConnectionGUID: +re5Y0YfToC1nTqiNs4yHw==
+X-CSE-MsgGUID: zZMCEPxSQBq65qOLm1B5ig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="150983125"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 23:50:22 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uTb0V-000000095Ss-25lZ;
+	Mon, 23 Jun 2025 09:50:19 +0300
+Date: Mon, 23 Jun 2025 09:50:19 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 1/9] iio: adc: ad_sigma_delta: sort includes
+Message-ID: <aFj5K2iBOt3cGPDv@smile.fi.intel.com>
+References: <20250620-iio-adc-ad7173-add-spi-offload-support-v1-0-0766f6297430@baylibre.com>
+ <20250620-iio-adc-ad7173-add-spi-offload-support-v1-1-0766f6297430@baylibre.com>
+ <20250622153733.44eca388@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,42 +71,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4cb09d05-d1f2-4d34-b3f7-be523b900a9e@murena.io>
+In-Reply-To: <20250622153733.44eca388@jic23-huawei>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Jun 23, 2025 at 08:40:35AM +0200, Maud Spierings wrote:
-> Inochi sent:> The GMAC IP on CV1800 series SoC is a standard Synopsys
-> > DesignWare MAC (version 3.70a).
-> > 
-> > Add necessary compatible string for this device.
-> > 
-> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> > ---
-> >  .../bindings/net/sophgo,cv1800b-dwmac.yaml    | 113 ++++++++++++++++++
-> >  1 file changed, 113 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/net/sophgo,cv1800b-dwmac.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/sophgo,cv1800b-dwmac.yaml b/Documentation/devicetree/bindings/net/sophgo,cv1800b-dwmac.yaml
-> > new file mode 100644
-> > index 000000000000..2821cca26487
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/sophgo,cv1800b-dwmac.yaml
-> > @@ -0,0 +1,113 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/net/sophgo,cv1800b-dwmac.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Sophgo SG2044 DWMAC glue layer
-> 
-> This looks like a copy paste error
-> 
-> kind regards,
-> Maud
-> 
+On Sun, Jun 22, 2025 at 03:37:33PM +0100, Jonathan Cameron wrote:
+> On Fri, 20 Jun 2025 17:20:07 -0500
+> David Lechner <dlechner@baylibre.com> wrote:
 
-Yeah, I will fix this in the next version.
+...
 
-Regards,
-Inochi
+> >  #include <linux/kernel.h>
+> Andy normally points this out (and may well do here) but in
+> general if we are tidying up headers we should try to drop includes
+> of kernel.h if favour of more specific headers.
+> 
+> Doesn't need to be in same patch as this one though!
+> 
+> This is trivial and correct as it stands and would want to be
+> done as a precursor to any actual changes anyway.
+
+Yeah, kernel.h in the (leaf) drivers is a red flag to me.
+But replacing it is out of scope of this patch and may be
+done separately. My only point that please do it rather
+sooner.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
