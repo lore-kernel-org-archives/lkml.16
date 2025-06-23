@@ -1,167 +1,161 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C456F1E492D
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5901F2BAD
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750676930; cv=none; b=CD6uxZgZYAbnnrOcI1nT0nur1OZu07WV7nF12FcrlbtPyv/xmFoD1HFqUTs2XTXtoi04x+dg/NQo4O6P44RwPHSDTvkqh72ol/5OOwTohlVtwiIaF8GZKeyEOzfMNOxAdsaLqIefetXdYcMNpvGRFXf+UfiKr0v9P33XMWlJ+Wg=
+	t=1750676983; cv=none; b=aMtbAdsQ4I+3DB93ElsCkyQK0E4sFs7hW4/qg4VfSnzuourb041sC34H0xSsY1ayIRBewbMgljkjQy5v0fgCCf/WcKfwDHzYrUKJLg2u6p+e2iKKT9511OR6CTHyGzoXFhCxrKNbYlOFsF+h547ObAdD1W7DzJgaurjmFRqgSn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750676930; c=relaxed/simple;
-	bh=kE52dXeQbpt6L7m5fVjW7rjPV6iVfrsvcaL3OPA1G/A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mXfSdxsTnIdtKrEBwspBBkPOZnkFW1isFBfFGFWxEcVos+sVI0gnD0MSRAztlIkDFi1C4yy/K4awdC7oY/TrdceZ8kCYZylwFEiEaLJd846+NP5A2zq2uf6cZVhmSl7a07yGwC+z0QA3ssKxsBkNuuuZVtCi5Xj/vzXJwnvTBY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=df3FTaFc; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750676983; c=relaxed/simple;
+	bh=byy6HnLzr4XvDPSgzzx70dttPtAqJtwCULtJrfZmBew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rebLpBJ/Y1DmIM0N37RBTthQOGiHJiD97FIXWcLTHSao5du15k5sTPvqLxKfg9GPUyN/XhkDn5uO0PHeOvHXQ7SIiYF7DVGr2u9pj7UbkzxSem+DU3vPgHDoowyo9S0MIoZFDk5eOs9IGa/tR5+tfWNIW2NwprCJFw4Qjh2Ui/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MkCSdvc7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=uay9gry2; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MkCSdvc7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=uay9gry2; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="df3FTaFc"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-52b2290e28eso1046331e0c.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 04:08:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750676927; x=1751281727; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VzozNzmf7Y1xzq4oghrQd3A9wnue0xiAAusPU/HA3J4=;
-        b=df3FTaFcq5nl7P4o5eDgtgpI8iF/EQF8LIiSXtF77s1QCm8BBZOGe55Ca14z4zopWu
-         Pe1wAGCUjTxrOGGyJs+EhWsBcdEHCkj8G1ROIgAwZiKsz77AAGrV+fJYzje8S/68Pduw
-         drme8/6HUKwbOnOKZ+Ndj9XUUAsehj7na08PuBjJKdhvmIc2lJlGIwcoyX3v2K+MHNRH
-         /D36DHqeG0OQs0jDroevPLUyQGKwHzoOuviyyrK0/7JtMsSkosUrr4KbDrMjDWx9iRdI
-         p02BDBFGNQf/aB0/zvSxPho9bflf44Y7afg3xHngwxp+dXJFcBn62Cbzd4svEIVAebAq
-         tqew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750676927; x=1751281727;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VzozNzmf7Y1xzq4oghrQd3A9wnue0xiAAusPU/HA3J4=;
-        b=Ay8pdD5Ut0rjFa/tERC+GDHZkopj/bl9vEMM3+pSnGW40rLQRk4TZKq263iaNMaJfu
-         FAA4Djqu2pOI8budU9PaYUc62SksAlALvBrBAuWPU6WiuUKQQd6QClfsJjPNXeqJm8WZ
-         UeDbbub6EyJ4Yh0fBYOnrILJVXD3yxPbN3qdv3sijcpj1wx7JMyw01p/GHRGw1hm/3aU
-         KcewXj8vq1ix9GEKooFBKTf6asQq3qmpQpuGd414WRl6QoZ9WoNoJBIqwhBLjtHseRkq
-         62HZUKnxdpC7P9byaxwSvhLaz6RL349xTrQD9agJxZOsm18sBbkC1trs1MNYBC5dMT4L
-         glmg==
-X-Forwarded-Encrypted: i=1; AJvYcCVzzt1DNnd3XnipX7t/ng8d9b2rOwJbYpLqj8VFxy6HRDw8EcqYe+Tr73EBZOhAtRZN9E4SUbzC4LCVQ/w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwO9agNt/UN5MVsjQg5N+eyPHb/XRBPKrby1RzHdp+ZHZIeRQb4
-	ktZRpBC5TyJjO24RxexOmuRioBOQtu3/VqI7VyplMmPPO8XtnFQTpWfD8wrjJdDZQL1wpAg+zPe
-	DEFBPSLX9/B7P7Z8ECgfi0Rh1KhCEetU=
-X-Gm-Gg: ASbGncuEl3ESgYPlTJXDoNoCR2uqq9SBfQKKCHSICMtjS6KCCiUj929R9Z9GeoFEXW3
-	OJijCCeztr+HuGEMlyWokMZUk1vrMHW6Mon6G+gEEfpK4HpoE7Eg9Yqonf+RA6RtjWZDTaLZvhe
-	UqBNKHJ7QX3Z2vdNhmhdvcZ/rD0JmSGcLR+zi3E87B6/E=
-X-Google-Smtp-Source: AGHT+IEUli3Qpg8n1WGNQ1rIyR8Ht70uu5sWM21vjDX/FAHUjqL71ew3oAV2vQS8r83W4sf/G2QjQ1OdWaR9rBabaAw=
-X-Received: by 2002:a05:6122:16a7:b0:531:3af8:b177 with SMTP id
- 71dfb90a1353d-531ad77ca02mr6537151e0c.11.1750676927494; Mon, 23 Jun 2025
- 04:08:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MkCSdvc7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="uay9gry2";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MkCSdvc7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="uay9gry2"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 3D1551F385;
+	Mon, 23 Jun 2025 11:09:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750676980; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9U/dY0NffF2ZhRrdLHT5QYYMdU9TDrPPd+rd5Jk1UWM=;
+	b=MkCSdvc7q15FJRiEvoEEZ2UGCiZb3KxDxpQ6euI6GwjVEbA1vGRzfyAsaLUTzUiPpXVLJc
+	qBXQfDHc+oN9ZvlWkC6i2kEdKI4ocX0Db+lCjjk3zrgjQh41o99t0FnOFMMlC3r38CgfnO
+	D3cq82do29o+D2IcQvXgdv5670jPIVY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750676980;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9U/dY0NffF2ZhRrdLHT5QYYMdU9TDrPPd+rd5Jk1UWM=;
+	b=uay9gry24POaaD+iZ24WM5IzdC+GWYiMzhXR5elcuQrXFuWrCiE12UncOaIUsUkoF2InjK
+	xX0PSHEdWvWXAOAg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=MkCSdvc7;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=uay9gry2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750676980; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9U/dY0NffF2ZhRrdLHT5QYYMdU9TDrPPd+rd5Jk1UWM=;
+	b=MkCSdvc7q15FJRiEvoEEZ2UGCiZb3KxDxpQ6euI6GwjVEbA1vGRzfyAsaLUTzUiPpXVLJc
+	qBXQfDHc+oN9ZvlWkC6i2kEdKI4ocX0Db+lCjjk3zrgjQh41o99t0FnOFMMlC3r38CgfnO
+	D3cq82do29o+D2IcQvXgdv5670jPIVY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750676980;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9U/dY0NffF2ZhRrdLHT5QYYMdU9TDrPPd+rd5Jk1UWM=;
+	b=uay9gry24POaaD+iZ24WM5IzdC+GWYiMzhXR5elcuQrXFuWrCiE12UncOaIUsUkoF2InjK
+	xX0PSHEdWvWXAOAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3023B13A27;
+	Mon, 23 Jun 2025 11:09:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /gy8C/Q1WWhlKgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 23 Jun 2025 11:09:40 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id C58B8A2A00; Mon, 23 Jun 2025 13:09:39 +0200 (CEST)
+Date: Mon, 23 Jun 2025 13:09:39 +0200
+From: Jan Kara <jack@suse.cz>
+To: Junxuan Liao <ljx@cs.wisc.edu>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH v2] docs/vfs: update references to i_mutex to i_rwsem
+Message-ID: <bi5e6qyg6htcmuocfahgvwxx2djxyeorhlc425y72pggmvw4hi@dzfheotxoz7j>
+References: <72223729-5471-474a-af3c-f366691fba82@cs.wisc.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1750666536.git.baolin.wang@linux.alibaba.com> <adb8d5032ecc7b6935e3197cafffe92cbc7581e6.1750666536.git.baolin.wang@linux.alibaba.com>
-In-Reply-To: <adb8d5032ecc7b6935e3197cafffe92cbc7581e6.1750666536.git.baolin.wang@linux.alibaba.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Mon, 23 Jun 2025 23:08:36 +1200
-X-Gm-Features: Ac12FXz_fXm01DVzp5yQUptWQUEuKVwpYnCA2BGOS39uCBBgTt8AZ8J_w_5irr0
-Message-ID: <CAGsJ_4x4=eJQx9Tyt93hBqx4Q5ORnVUyWO5ddX8f5MEYQGO+AQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] mm: huge_memory: disallow hugepages if the
- system-wide THP sysfs settings are disabled
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, david@redhat.com, 
-	ziy@nvidia.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, 
-	npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <72223729-5471-474a-af3c-f366691fba82@cs.wisc.edu>
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 3D1551F385
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:dkim,suse.cz:email];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_COUNT_THREE(0.00)[3];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Score: -4.01
+X-Spam-Level: 
 
-On Mon, Jun 23, 2025 at 8:28=E2=80=AFPM Baolin Wang
-<baolin.wang@linux.alibaba.com> wrote:
->
-> When invoking thp_vma_allowable_orders(), the TVA_ENFORCE_SYSFS flag is n=
-ot
-> specified, we will ignore the THP sysfs settings. Whilst it makes sense f=
-or the
-> callers who do not specify this flag, it creates a odd and surprising sit=
-uation
-> where a sysadmin specifying 'never' for all THP sizes still observing THP=
- pages
-> being allocated and used on the system.
->
-> The motivating case for this is MADV_COLLAPSE. The MADV_COLLAPSE will ign=
-ore
-> the system-wide Anon THP sysfs settings, which means that even though we =
-have
-> disabled the Anon THP configuration, MADV_COLLAPSE will still attempt to =
-collapse
-> into a Anon THP. This violates the rule we have agreed upon: never means =
-never.
->
+On Sun 22-06-25 23:01:32, Junxuan Liao wrote:
+> VFS has switched to i_rwsem for ten years now (9902af79c01a: parallel
+> lookups actual switch to rwsem), but the VFS documentation and comments
+> still has references to i_mutex.
+> 
+> Signed-off-by: Junxuan Liao <ljx@cs.wisc.edu>
 
-Should we update the man page for madv_collapse ?
-https://man7.org/linux/man-pages/man2/madvise.2.html
+One comment below. Christian, can you please fix it up? Otherwise feel free
+to add:
 
-              MADV_COLLAPSE is independent of any sysfs (see sysfs(5))
-              setting under /sys/kernel/mm/transparent_hugepage, both in
-              terms of determining THP eligibility, and allocation
-              semantics.  See Linux kernel source file
-              Documentation/admin-guide/mm/transhuge.rst for more
-              information.  MADV_COLLAPSE also ignores huge=3D tmpfs mount
-              when operating on tmpfs files.  Allocation for the new
-              hugepage may enter direct reclaim and/or compaction,
-              regardless of VMA flags (though VM_NOHUGEPAGE is still
-              respected).
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-So this effectively changes the uABI, right?
+> diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
+> index fd32a9a17bfb..dd9da7e04a99 100644
+> --- a/Documentation/filesystems/vfs.rst
+> +++ b/Documentation/filesystems/vfs.rst
+> @@ -758,8 +758,9 @@ process is more complicated and uses write_begin/write_end or
+>  dirty_folio to write data into the address_space, and
+>  writepages to writeback data to storage.
+>  
+> -Adding and removing pages to/from an address_space is protected by the
+> -inode's i_mutex.
+> +Removing pages from an address_space requires holding the inode's i_rwsem
+> +exclusively, while adding pages to the address_space requires holding the
+> +inode's i_mapping->invalidate_lock exclusively.
 
-> Currently, besides MADV_COLLAPSE not setting TVA_ENFORCE_SYSFS, there is =
-only
-> one other instance where TVA_ENFORCE_SYSFS is not set, which is in the
-> collapse_pte_mapped_thp() function, but I believe this is reasonable from=
- its
-> comments:
->
-> "
-> /*
->  * If we are here, we've succeeded in replacing all the native pages
->  * in the page cache with a single hugepage. If a mm were to fault-in
->  * this memory (mapped by a suitably aligned VMA), we'd get the hugepage
->  * and map it by a PMD, regardless of sysfs THP settings. As such, let's
->  * analogously elide sysfs THP settings here.
->  */
-> if (!thp_vma_allowable_order(vma, vma->vm_flags, 0, PMD_ORDER))
-> "
->
-> Another rule for madvise, referring to David's suggestion: =E2=80=9Callow=
-ing for
-> collapsing in a VM without VM_HUGEPAGE in the "madvise" mode would be fin=
-e".
->
-> To address this issue, the current strategy should be:
->
-> If no hugepage modes are enabled for the desired orders, nor can we enabl=
-e them
-> by inheriting from a 'global' enabled setting - then it must be the case =
-that
-> all desired orders either specify or inherit 'NEVER' - and we must abort.
->
-> Meanwhile, we should fix the khugepaged selftest for MADV_COLLAPSE by ena=
-bling
-> THP.
+I wasn't probably precise enough in my previous comment. This paragraph
+should be:
 
-It=E2=80=99s a bit odd that the old test case expects collapsing to succeed
-even when we=E2=80=99ve set it
-to =E2=80=98never=E2=80=99.
-Setting it to =E2=80=98always=E2=80=99 doesn=E2=80=99t seem to test anythin=
-g as a counterpart.
+Removing pages from an address_space requires holding the inode's i_rwsem
+exclusively and i_mapping->invalidate_lock exclusively. Adding pages to the
+address_space requires either holding inode's i_rwsem exclusively or
+i_mapping->invalidate_lock in shared mode.
 
-I assume the goal is to test that setting it to =E2=80=98never=E2=80=99 pre=
-vents collapsing?
-
->
-> Suggested-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> ---
-
-Thanks
-Barry
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
