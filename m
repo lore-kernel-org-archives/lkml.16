@@ -1,115 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A7B219A86;
-	Mon, 23 Jun 2025 11:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3A1188735
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750678972; cv=none; b=IpNIuk6TnkIv5b1Hk0+jyaVJMu+ysc1KaaqKgUJgpZtJ6czm7uneD3XnvfpFPAjetvhhEfYGHqcLEQDrfB38BMUMH4EfhfDr9w/dutAqmdGcUb5k/GDU8txfWwaxIILLSHTU6hbgLj0oXOhrXyfqllNbCumL9In3FNx4rJfA/WE=
+	t=1750679068; cv=none; b=Y2DcAdp4xj4Lis0cFDAzTrTBqfoV27kQTX7HW4cbr9jquFpStud9ZCjZHBrIFcKf2uxRceK3YQ5R7IzaKbPVJ5llQYwVJnOcoTrcfPFEuW4iBeg43M34rGrlkd/uEDMK1KQfT0Fblz155fzQh4Ei8WYZixI+3hM7W7yIrklw1jU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750678972; c=relaxed/simple;
-	bh=2m5CfZQaw2dv5R3Bx1BYdCmiNkSM8d2I9a7oqNpDaJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FbTP4YF6ZYZt0fjClHQyHa244UnULPiiqT4GISgFYXkxynPwAdroTL4toWMOpF+ausimBsaTlpPTowoGkElsnh4Ib59IKIoMItdeC+tIBGAf1oHe2LUmwuK1A2HBdS/OdZf1jYbklFKcg/hmQAzJBgU5J5ts2pCLATRD9s32Lo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vJQ3ID8q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750679068; c=relaxed/simple;
+	bh=4ZqoQKdDvBPRQXyCngBAlFvRk74fScCEs9u1xA/pSDI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f1goUKPp2aFbD5nN4vmx23wq1oGv5ahFJ2AalXyUyVajoiFScjyql6j0QFwC3FlP/2fWqzaZkjWkvl5zZuf2P+0em7iD947kXY2645HnABDdWhxG/xpC2KxIAMHuL0gXsnQgVlfZpImnOV9pp1j0Ga9vSmkND6qRHZMoqcPaDrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PxJJpEfT; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vJQ3ID8q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68E13C4CEEA;
-	Mon, 23 Jun 2025 11:42:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750678972;
-	bh=2m5CfZQaw2dv5R3Bx1BYdCmiNkSM8d2I9a7oqNpDaJg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vJQ3ID8qLCiFR8Pxde6rF2KJJUAOZVH8hsgrPoPWLp9XsVub8YquvV1sgl7Xc7+ep
-	 owTauxF/ndQDiCzVeTf2yjAcNYDE/pW79OdZKaH6JbutbKuWrCSeGIi/Joi25lDODC
-	 uBi3KqSVZav3oTXjLfjJadHCrwVa2fHUmhMBabGYPVDhK2i1vkp/9Tmg72GCOdjQn8
-	 1la1NsNuC4JyZ59DCFc9mXQT/RJHTgQrYRjZA5yhQMrCbFzuvCAbURgwj65ULx4ayz
-	 E2Pi5T2PJt/7QLTKK7VUDglj7VtKrzyylDa9NGdbCYpWq1IBICjrRHHdWc/z9tCqyJ
-	 8ZOHbkT/1SwBg==
-Date: Mon, 23 Jun 2025 05:42:50 -0600
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, 
-	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com, shawnguo@kernel.org, 
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>
-Subject: Re: [PATCH v3 1/2] PCI: imx6: Remove apps_reset toggle in
- _core_reset functions
-Message-ID: <kjsaipr2xq777dmiv2ac7qzrxw47nevc75j7ryma32vsnyr2le@mrwurn6rgnac>
-References: <20250616085742.2684742-1-hongxing.zhu@nxp.com>
- <20250616085742.2684742-2-hongxing.zhu@nxp.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PxJJpEfT"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4a440a72584so45037271cf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 04:44:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750679066; x=1751283866; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mrHTjhxlEVyzlxLPx8Yr8nFxLDqwxAF0xyp3qSY+qZQ=;
+        b=PxJJpEfTmjLyvhiOKFI5GTh+dOTi/378xb7t37Pk9AAUUFK8wtVBYPCfudYu+CP5jc
+         IQvtcFj+4+3CDqjUJskv8Xcth2KJ9abvvAeEih5RJaofDyZJaR38sOlcBlmgSbQ9rP8f
+         Ef1BnH/c+ilX3BObEuJpOT3f8nO+dPOfO8MZzfjHSkm42bc6tGive6vKLev7IOFpqINb
+         3p7tHB0V9CsOPca8+9r2IN+nZrwkbyNVzVPzNiEtIe0rea67x643f3MKeVt6OWOXMjzN
+         VTNg14BdPTEbkTFoghnyezdyUgEljOdKMk1xAPipj77UVfna3cjaxrI2nlI05psfPVMa
+         8oFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750679066; x=1751283866;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mrHTjhxlEVyzlxLPx8Yr8nFxLDqwxAF0xyp3qSY+qZQ=;
+        b=QwXfY3GNwLq4TLNza8PBkjc8Wm3ZoEoXqXpQUlB78zAU9B8wLNPE58c7zpIh8iGItg
+         7kpa0Vm2G5UeejHJR9F7bIyjG3qWHLVMfrXR3qGaUdh9OMkNXS4MLtQB0inORM8iR8zH
+         lgCaF/5z6Q1AFcaEE4jQKBpdXWDVyWv4GYLIXUT+4QVQ8UZXbOFDnk418YyDbUafDblr
+         3xcAbs10scI5Vv6kIRWRCRqRbDu9NQw1/AwNxNVxHn0mX8uMjxFdB4ZWA9OUvTKv7X0V
+         PPBMScqB1j17aIy2a80k/naZbNjm4KYWVamgJlgcUpfhar6s3AMldjo8mbD/VI6RPaqo
+         nYUw==
+X-Forwarded-Encrypted: i=1; AJvYcCW77f71NUvyf0IgKSW2y9IgBFojkObILhks/NDBn2qJ86At5wWm8/UquHVHJhwGI/2zgWv0CVERzoR8MCQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5RBSAXBmuvdhddMyJ9+fgGXzIgoM/9lQr37RY5EqgCbzPobXa
+	wN2DGiuQOeVtDjR9i8Rjq8a9Tw2NnSzqO4UP7+js1bSP8WO1AQ4B+x1ndfztd6zsJw/0dgqNBgN
+	Da29g+0PBkOBZ9+MWNcWBTmozrCf8gtHgWe2z3WKI
+X-Gm-Gg: ASbGnctsykEeQ16oW8phrEiaAJkn1PParp+2Ip8YB7uhQTE8aA06s/Aq0bbY6ermiaq
+	SAM8esRU1T7IkIlVlZVL1slS9KXgv2sZqACMuxTLf3mq9hqXYpAuYdLUfvYTDa0W/swdY0yBgZk
+	kUqXk8L0NFBCIRMt9FuPabE7V2sSigCwzVqukoekRsJEE=
+X-Google-Smtp-Source: AGHT+IHfB/vZlIK9/FvjHWffL16LexUgBodwMHiN20SOOnfFPs17HBBf8UZjdusDwWuVV6zghVMq4F6HwMqGXNnWlks=
+X-Received: by 2002:ac8:7f87:0:b0:4a4:4165:ed60 with SMTP id
+ d75a77b69052e-4a77a23a330mr188912371cf.3.1750679065927; Mon, 23 Jun 2025
+ 04:44:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250616085742.2684742-2-hongxing.zhu@nxp.com>
+References: <20250620125644.1045603-1-ptesarik@suse.com> <CANn89iLrJiqu1SdjKfkOPcSktvmAUWR2rJWkiPdvzQn+MMAOPg@mail.gmail.com>
+ <20250623093604.01b74726@mordecai.tesarici.cz>
+In-Reply-To: <20250623093604.01b74726@mordecai.tesarici.cz>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 23 Jun 2025 04:44:15 -0700
+X-Gm-Features: AX0GCFsucZXpCrOv00H7hp6ojejTsrZfYjmXvKm7wa1_ILtb3HSf82YKGy7NqRQ
+Message-ID: <CANn89iLKuzbEq=7A-TnB6jZypx0mObbLSNA=HmLjj5CBooBYPg@mail.gmail.com>
+Subject: Re: [PATCH net v2 0/2] tcp_metrics: fix hanlding of route options
+To: Petr Tesarik <ptesarik@suse.com>, Willem de Bruijn <willemb@google.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
+	Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
+	"open list:NETWORKING [TCP]" <netdev@vger.kernel.org>, David Ahern <dsahern@kernel.org>, 
+	Jakub Kicinski <kuba@kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 16, 2025 at 04:57:41PM +0800, Richard Zhu wrote:
-> apps_reset is LTSSM_EN on i.MX7, i.MX8MQ, i.MX8MM and i.MX8MP platforms.
-> Since the assertion/de-assertion of apps_reset(LTSSM_EN bit) had been
-> wrappered in imx_pcie_ltssm_enable() and imx_pcie_ltssm_disable();
-> 
+On Mon, Jun 23, 2025 at 12:36=E2=80=AFAM Petr Tesarik <ptesarik@suse.com> w=
+rote:
+>
+> On Fri, 20 Jun 2025 06:24:23 -0700
+> Eric Dumazet <edumazet@google.com> wrote:
+>
+> > On Fri, Jun 20, 2025 at 5:57=E2=80=AFAM Petr Tesarik <ptesarik@suse.com=
+> wrote:
+> > >
+> > > I ran into a couple of issues while trying to tweak TCP congestion
+> > > avoidance to analyze a potential performance regression. It turns out
+> > > that overriding the parameters with ip-route(8) does not work as
+> > > expected and appears to be buggy.
+> >
+> > Hi Petr
+> >
+> > Could you add packetdrill tests as well ?
+>
+> Glad to do that. But it will be my first time. ;-) Is there a tutorial?
+> I looked under Documentation/ and didn't see anything.
 
-What about other i.MX chipsets like 6Q and its cousins? Wouldn't this change
-affect them since they treat 'apps_reset' differently?
+I came up with the following test (currently working for IPv4 only).
+Neal, Willem, any idea on how to have this test done for upstream tree ?
 
-- Mani
+tools/testing/selftests/net/packetdrill/ksft_runner.sh does not have a
+way to make a test family dependent.
 
-> Remove apps_reset toggle in imx_pcie_assert_core_reset() and
-> imx_pcie_deassert_core_reset() functions. Use imx_pcie_ltssm_enable()
-> and imx_pcie_ltssm_disable() to configure apps_reset directly.
-> 
-> Fix fail to enumerate reliably PI7C9X2G608GP (hotplug) at i.MX8MM, which
-> reported By Tim.
-> 
-> Reported-by: Tim Harvey <tharvey@gateworks.com>
-> Closes: https://lore.kernel.org/all/CAJ+vNU3ohR2YKTwC4xoYrc1z-neDoH2TTZcMHDy+poj9=jSy+w@mail.gmail.com/
-> Fixes: ef61c7d8d032 ("PCI: imx6: Deassert apps_reset in imx_pcie_deassert_core_reset()")
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 9754cc6e09b9..f5f2ac638f4b 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -860,7 +860,6 @@ static int imx95_pcie_core_reset(struct imx_pcie *imx_pcie, bool assert)
->  static void imx_pcie_assert_core_reset(struct imx_pcie *imx_pcie)
->  {
->  	reset_control_assert(imx_pcie->pciephy_reset);
-> -	reset_control_assert(imx_pcie->apps_reset);
->  
->  	if (imx_pcie->drvdata->core_reset)
->  		imx_pcie->drvdata->core_reset(imx_pcie, true);
-> @@ -872,7 +871,6 @@ static void imx_pcie_assert_core_reset(struct imx_pcie *imx_pcie)
->  static int imx_pcie_deassert_core_reset(struct imx_pcie *imx_pcie)
->  {
->  	reset_control_deassert(imx_pcie->pciephy_reset);
-> -	reset_control_deassert(imx_pcie->apps_reset);
->  
->  	if (imx_pcie->drvdata->core_reset)
->  		imx_pcie->drvdata->core_reset(imx_pcie, false);
-> @@ -1247,6 +1245,9 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp)
->  		}
->  	}
->  
-> +	/* Make sure that PCIe LTSSM is cleared */
-> +	imx_pcie_ltssm_disable(dev);
-> +
->  	ret = imx_pcie_deassert_core_reset(imx_pcie);
->  	if (ret < 0) {
->  		dev_err(dev, "pcie deassert core reset failed: %d\n", ret);
-> -- 
-> 2.37.1
-> 
 
--- 
-மணிவண்ணன் சதாசிவம்
+diff --git a/tools/testing/selftests/net/packetdrill/tcp_cwnd5.pkt
+b/tools/testing/selftests/net/packetdrill/tcp_cwnd5.pkt
+new file mode 100644
+index 0000000000000000000000000000000000000000..e28b63b696d200ca447f613c300=
+03571c1ff1ae8
+--- /dev/null
++++ b/tools/testing/selftests/net/packetdrill/tcp_cwnd5.pkt
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: GPL-2.0
++// Test of RTAX_CWND routing attribute
++
++// Set up config.
++`./defaults.sh`
++
+++0 `ip ro change 192.0.2.1 via 192.168.0.1 dev tun0 cwnd lock 6`
++
++   +0 socket(..., SOCK_STREAM, IPPROTO_TCP) =3D 3
++   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) =3D 0
++   +0 bind(3, ..., ...) =3D 0
++   +0 listen(3, 1) =3D 0
++
++   +0 < S 0:0(0) win 32792 <mss 1000,sackOK,nop,nop,nop,wscale 7>
++   +0 > S. 0:0(0) ack 1 <mss 1460,nop,nop,sackOK,nop,wscale 8>
++  +.1 < . 1:1(0) ack 1 win 257
++   +0 accept(3, ..., ...) =3D 4
++
++   +0 %{ assert tcpi_snd_cwnd =3D=3D 6, tcpi_snd_cwnd }%
++
++   +0 write(4, ..., 20000) =3D 20000
++   +0 > P. 1:6001(6000) ack 1
++
++   +.1 < . 1:1(0) ack 6001 win 257
++
++   +0 %{ assert tcpi_snd_cwnd =3D=3D 6, tcpi_snd_cwnd }%
+
+
+
+>
+> > Given this could accidentally break user setups, maybe net-next would b=
+e safer.
+>
+> Yeah, you're right. Technically, it is a bugfix, but if it's been
+> broken for more than a decade without anyone complaining, it can't be
+> super-urgent.
+>
+> > Some of us disable tcp_metrics, because metrics used one minute (or
+> > few seconds) in the past are not very helpful, and source of
+> > confusion.
+> >
+> > (/proc/sys/net/ipv4/tcp_no_metrics_save set to 1)
+>
+> Yes, I know about that one. FWIW it didn't help at all in my case,
+> because then the value from the routing table was ALWAYS ignored...
+>
+> Petr T
