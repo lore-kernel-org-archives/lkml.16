@@ -1,128 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C95E1F3FE8;
-	Mon, 23 Jun 2025 07:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD6E1F181F;
+	Mon, 23 Jun 2025 07:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750663160; cv=none; b=rAR4S3zCQj9m0hhllkJTig3JKOGTiw9XpWR+ay1L2+Zisg17JnskBL+z3z6VHm/09atien83Y5yZMgFa9/BREgJsta6e26NtmnnCanI0RnLs19NmwZMyTf7LII1e1YGfWHNRHCiWVcGZK8P+lblNIDbR5qRgawjJiiz4C+jiT2w=
+	t=1750663181; cv=none; b=nG9RspKnTIif3HbGteaJ+O9wVZ+vLbk7rOgRzZ7D9U8FM/FW2n85j/nhhVu9qe/kJnzhd4f3q9nFzdGKrZLpEAXMb5lOlGOAW7hr9z1cMfazfTT7XwSyTwWuI210ixbgJwsqaJl3yUCHFLpLUq/A7o5ljPeC+g66/Jsx/XcPph0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750663160; c=relaxed/simple;
-	bh=avq5GSOpmlAjDpFvdLk3ekAvTWbX29Z9+MPrZVT0QmM=;
+	s=arc-20240116; t=1750663181; c=relaxed/simple;
+	bh=uMS6SxvwbTk6+f+beP1zqXrTKD6JiMADLyM/BP+h2xM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r8EFa/O2BsOsWt/JfU36HsDU6kWOBAssUZkbXcnwu2ecpvyKX1KnNBeaRrsYHgQz381Jif9ZtHCISWLQJ3fre6IsqG1808X9HfVm+Mz/mILlXhn/plwvwcphwg/DSSBqoLEtspCfvzQNctYkQHIzMDrFaUKGlMIDLwxVv9Fuc3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=L3CB5ov4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tqR7CUbwF7ncswbUgA6W06xTGla04qowWoj32K/F3Y//m7xNJ+75hbuVqm1KR6AyzdR9NU8yzhb6y2NDywPzRm6V0H1wpXlq3x7qZ5oQCjXxpXqb7PEsW+mOVlCBc48uAktUbGv8zHox2meUQPVjryoDA1RXR+9LJc/rwvA6klA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gidknS1Z; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="L3CB5ov4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 957F3C4CEED;
-	Mon, 23 Jun 2025 07:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750663159;
-	bh=avq5GSOpmlAjDpFvdLk3ekAvTWbX29Z9+MPrZVT0QmM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L3CB5ov49BFO3mcFgc1jfxdnpFJ8pU813wFSa11t6BFh8aj/LDIhjwUKpcO03X+dx
-	 Mngjod4kQru3gGTO4OuTcKx4TZDiBHEPa1WnaA+M1E44RnyrIs8U6XA0LXVmO4SGoI
-	 EQbdlbm95hIQ7WCMdqd3HkRdHOqnqbg3fYySh7NQ=
-Date: Mon, 23 Jun 2025 09:19:13 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Steffen =?iso-8859-1?Q?B=E4tz?= <steffen@innosonix.de>
-Cc: Srinivas Kandagatla <srini@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Dmitry Baryshkov <lumag@kernel.org>, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nvmem: imx-ocotp: fix MAC address byte length
-Message-ID: <2025062357-pulp-unlaced-cdd9@gregkh>
-References: <20250623070901.1733755-1-steffen@innosonix.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gidknS1Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750663180; x=1782199180;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uMS6SxvwbTk6+f+beP1zqXrTKD6JiMADLyM/BP+h2xM=;
+  b=gidknS1ZvMBuzT/R1GQr89lUIfBqfaDrS/Nc2r34KAUzfIJEZQ6vR6b9
+   qBeDXrYRi13Pg5jZU6Qkrm5hIoSMQIbol14UeEG+ugJqSMAPx9ysJEPXW
+   EyTik2XTn/uswLGVKy4j50g6PUdAzJyPiRdhfi1r/Da2DVs6tca5n5KJY
+   y3TPThnuDU/gkVlsLF8EJ3whubnvTzawAPefveQa5R7eqPj97NcqUDHgC
+   CCQjG0zcrjuMsaMpTx9E08qlJGA0yiKkuVD9Xeydpk9mnAWAjWrwJqCM1
+   mGjQjPkGcW7cvX5f6LXXQFpL9eNkP6CZ3Bm9AGRpJgi+5Too84BJ92dTR
+   g==;
+X-CSE-ConnectionGUID: Mr2J0DASQ7KghQIUPMrcsA==
+X-CSE-MsgGUID: xjulBmOKSq63f+LfdGtYEg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="52787883"
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="52787883"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 00:19:35 -0700
+X-CSE-ConnectionGUID: pN8HTRYxTIWnyaLlsaGdRA==
+X-CSE-MsgGUID: ckLOpPKRRK+VAXlpoHZV6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="182561505"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 00:19:31 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uTbSh-000000095qe-2GUI;
+	Mon, 23 Jun 2025 10:19:27 +0300
+Date: Mon, 23 Jun 2025 10:19:27 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Marek Vasut <marek.vasut@mailbox.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Marek Vasut <marek.vasut+bmc150@mailbox.org>,
+	Hans de Goede <hansg@kernel.org>, linux-iio@vger.kernel.org,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Julien Stephan <jstephan@baylibre.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Salvatore Bonaccorso <carnil@debian.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: accel: bmc150: Do not configure IRQ registers if no
+ IRQ connected
+Message-ID: <aFj__w2rf4UEJvhY@smile.fi.intel.com>
+References: <20250613124648.14141-1-marek.vasut+bmc150@mailbox.org>
+ <aEw_DcqpCpcsBGd0@smile.fi.intel.com>
+ <8605141c-b615-4e84-9574-81e24590df48@mailbox.org>
+ <aE_aL5dGKZeKBu50@smile.fi.intel.com>
+ <db14331e-193a-4915-990e-7657b5ca0c5b@mailbox.org>
+ <CAHp75VcZ6-WFyyERg7YVXNj3-uggwyNf2fF4mnbhiUZ6xNwYvg@mail.gmail.com>
+ <3e7daf0d-6472-4e53-86eb-e5c5c1fd3640@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250623070901.1733755-1-steffen@innosonix.de>
+In-Reply-To: <3e7daf0d-6472-4e53-86eb-e5c5c1fd3640@mailbox.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Jun 23, 2025 at 09:08:49AM +0200, Steffen Bätz wrote:
-> The commit "13bcd440f2ff nvmem: core: verify cell's raw_len" caused an
-> extension of the "mac-address" cell from 6 to 8 bytes due to word_size
-> of 4 bytes.
+On Sat, Jun 21, 2025 at 07:33:41PM +0200, Marek Vasut wrote:
+> On 6/16/25 1:09 PM, Andy Shevchenko wrote:
+
+> > > > You can try to monitor the /sys/kernel/debug/pinctrl/*/pins files for any
+> > > > changes that might happen on the sensor events. It might (help to) reveal
+> > > > the IRQ line.
+> > > Sooo ... if the IRQ line is not described in ACPI, it could still be
+> > > connected ? Hum, I'll try to shake the laptop next time I power it up.
+> > 
+> > Yes, it's possible, unfortunately due to the closed / per-product
+> > nature of the Windows drivers.
 > 
-> Thus, the required byte swap for the mac-address of the full buffer length,
-> caused an trucation of the read mac-address.
-> >From the original address 70:B3:D5:14:E9:0E to 00:00:70:B3:D5:14
-> 
-> After swapping only the first 6 bytes, the mac-address is correctly passed
-> to the upper layers.
-> 
-> Fixes: 13bcd440f2ff ("nvmem: core: verify cell's raw_len")
-> Signed-off-by: Steffen Bätz <steffen@innosonix.de>
-> ---
->  drivers/nvmem/imx-ocotp-ele.c | 2 ++
->  drivers/nvmem/imx-ocotp.c     | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/drivers/nvmem/imx-ocotp-ele.c b/drivers/nvmem/imx-ocotp-ele.c
-> index ca6dd71d8a2e..3af7968f5a34 100644
-> --- a/drivers/nvmem/imx-ocotp-ele.c
-> +++ b/drivers/nvmem/imx-ocotp-ele.c
-> @@ -119,6 +119,8 @@ static int imx_ocotp_cell_pp(void *context, const char *id, int index,
->  
->  	/* Deal with some post processing of nvmem cell data */
->  	if (id && !strcmp(id, "mac-address"))
-> +		if (bytes > 6)
-> +			bytes = 6;
->  		for (i = 0; i < bytes / 2; i++)
->  			swap(buf[i], buf[bytes - i - 1]);
->  
-> diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-> index 79dd4fda0329..63e9974d9618 100644
-> --- a/drivers/nvmem/imx-ocotp.c
-> +++ b/drivers/nvmem/imx-ocotp.c
-> @@ -228,6 +228,8 @@ static int imx_ocotp_cell_pp(void *context, const char *id, int index,
->  
->  	/* Deal with some post processing of nvmem cell data */
->  	if (id && !strcmp(id, "mac-address"))
-> +		if (bytes > 6)
-> +			bytes = 6;
->  		for (i = 0; i < bytes / 2; i++)
->  			swap(buf[i], buf[bytes - i - 1]);
->  
-> -- 
-> 2.43.0
-> 
-> 
-> -- 
+> This is the only pins I got out of this, and there doesn't seem to be
+> anything changing if I shake the machine:
 
-Hi,
+Yeah, it's kinda hard to catch in case it's an edge triggered interrupt.
+But for level shouldn't be that hard and it seems there is no luck so
+far. :-(
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+That said, the best workaround now is what Hans suggested.
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
 
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
