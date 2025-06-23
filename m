@@ -1,80 +1,73 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCDA6EB79
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B927F15B971
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750688003; cv=none; b=OLTuZhHj+KV78rhIyLMnPcTdy9SGUnKJthbtAT4XPS9XeUz0dKpEeYQVPAesLG3AOMUWIQ+kKhdAbT0a5b5Sq7et5qbG8fEfEo5OUUbQ3//+TsM+lOmaE+Wh+pqKmvzaA6ODlnKskbz21pCpBG8mqKnS+qlPUolLnNf9bzVjFtc=
+	t=1750688004; cv=none; b=GwOcscQM/mekDlaS72Wrq8K3n6IDqAEAnKTP7v5NmARI2u5z4OXobScv9cJf8p/WB8dk0gUmGRYkVXTbdXPBOaHrBQz4MPXNP5lLSUZPEjZ++KwFPOthS7yY+xU7ETQ/h4ZH8mhm/Jm3Xoutb3WYRfWRLb2u3rKLIooS1pWEf1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750688003; c=relaxed/simple;
-	bh=rA/0aYT079YZbJ1g0W4vBCo1CQuRC+BBMH0T2NmEhz8=;
+	s=arc-20240116; t=1750688004; c=relaxed/simple;
+	bh=0dWBiAm762LaCAj5UXUKGY/j7zgApYAIMKFx3CH0OoY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dk0T5h1TxYhx90GxWvVJqcqSr1sTNuv+E6q+yX7DNSAZM+Ik34TJ1dFeeUHUu3xZzLxhGQGyUN3RkzqafYiOXE2qP8ACSZP9ieoz2+NT7QUP0fVE7ByuWY7QPLwV6jb0zQtwyVzIIJUQFhcGMJ6iL32WjPKidVyYZ7gAhWWxnQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=U5ZqaRt2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rVexpCh/; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=U5ZqaRt2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rVexpCh/; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 In-Reply-To:Content-Type; b=CjNRCdQ+0BLfAbzDFWfn6sjSQNePT+eCR3HHFSQaRg0zw1+DW5mmypg1TkMIBRPmin8eHWOKWGA1h6v0Y+H08LVUofjWuUF5q5+/eueRob7VNx8KtZ7N7IE2lypKsGh2mNHSy1daeOFjXz4ec+pawHco5Dgbu7iixo9iobGIE+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LNwtsv/a; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="U5ZqaRt2";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rVexpCh/";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="U5ZqaRt2";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rVexpCh/"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 347F021179;
-	Mon, 23 Jun 2025 14:13:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750688000; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LNwtsv/a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750688001;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=lADc/8kE752BhxoOtNBA4BLJ16fQqPkxmPRbOD7u0sc=;
-	b=U5ZqaRt2aDokyJJ2YZQahJs3bQHTkXIYqXhfdR5mGYhHt9JYMNOgWZEmgXRRHRfpToNDwf
-	sHTQFpQdxMQK9flAUSvFHm20CCoM7fIoX9CeTCI7y8p3GkwtMmFgUB+Cel/XOFicoCM7BF
-	AZoZeOVGzecueNsF0oN050bwdGzH7LI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750688000;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=lADc/8kE752BhxoOtNBA4BLJ16fQqPkxmPRbOD7u0sc=;
-	b=rVexpCh/kQH0BW5jRIKacs1JBvPI1Ca52kZ9vhQAMqd41mhS3pga2UIlU6BTt52bFVA7Ej
-	IxHI/9H+wxf74RBA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750688000; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=lADc/8kE752BhxoOtNBA4BLJ16fQqPkxmPRbOD7u0sc=;
-	b=U5ZqaRt2aDokyJJ2YZQahJs3bQHTkXIYqXhfdR5mGYhHt9JYMNOgWZEmgXRRHRfpToNDwf
-	sHTQFpQdxMQK9flAUSvFHm20CCoM7fIoX9CeTCI7y8p3GkwtMmFgUB+Cel/XOFicoCM7BF
-	AZoZeOVGzecueNsF0oN050bwdGzH7LI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750688000;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=lADc/8kE752BhxoOtNBA4BLJ16fQqPkxmPRbOD7u0sc=;
-	b=rVexpCh/kQH0BW5jRIKacs1JBvPI1Ca52kZ9vhQAMqd41mhS3pga2UIlU6BTt52bFVA7Ej
-	IxHI/9H+wxf74RBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0F91313485;
-	Mon, 23 Jun 2025 14:13:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id f0d3AwBhWWhxYAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 23 Jun 2025 14:13:20 +0000
-Message-ID: <39f95eb9-c494-4967-8d4d-9768200637f4@suse.cz>
-Date: Mon, 23 Jun 2025 16:13:19 +0200
+	bh=Dcmfif/cyuIAAd71gi3Imj5PORuy7iF/abJiROicq34=;
+	b=LNwtsv/af75PT8VpB6I+bDwLOlE02WorLL0ycljVMFyuEaJ59ImU3PV4/TGqRJNpXmdqbX
+	aCbHIz9CAheHcHslX07Nhix1r6dLfuF6g0mtzmZ6eKVvyiRyCTOH51ZbQwPVTwYpTiNZ1d
+	6x1uuQg65hPwim+PKu8+xRjPc6bIHw8=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-103-u5RHBU9uNd2NHSnuy-OYXA-1; Mon, 23 Jun 2025 10:13:20 -0400
+X-MC-Unique: u5RHBU9uNd2NHSnuy-OYXA-1
+X-Mimecast-MFC-AGG-ID: u5RHBU9uNd2NHSnuy-OYXA_1750687999
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a54a8a0122so2174398f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 07:13:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750687999; x=1751292799;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Dcmfif/cyuIAAd71gi3Imj5PORuy7iF/abJiROicq34=;
+        b=i1zg3+7Tl73YiDdRVrDUc7AT54REYkrUN7qv8usq94xw9r3QsolEjlXchClMyjvfny
+         b4lvNDu0OaDP2tiMp4k13fYCJEEYsXbaQIZ9IkJlkxP5U/NVEXLXncTu3utY1qFzFTwY
+         ziXULVxsea5y/42z5h5gjEwHdvgO9oteEyhrLr8LxgG4a+48CIcyruKOkHPcKUpdhY9k
+         fd8wYbzM0wseJfB5WmUZpE4BJ+BG23UH0LbF7gvfAMsPi+iY+vMOPbbdLX8HFMGCJpcz
+         3TnM3FSJPia4ztUKJ8w4tfpQKQxj4Q3tL8kq0N8mge/eKxaLgQEPIpIsJK5623x1fBe/
+         SPkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWM03YueFlnL4X/wb9E5cp35rtI0vfVi7Wcao70Cik+RQhMqXZ7yEgE+H09L8jLuF3Mj1BF0t7qPXNDyGc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkEWLhCV6BRPRLgdupk4BuPPsrAhZBUqDZZt6k4/ZoQYdJF/X6
+	wapN0cyL3OVEQ2gqibzxP8KfhNRdlaZrcw0/b7si9OSppieAgUTYvkHds/HQNZMP6HWujcSnXWK
+	aX5y2B8/nZVaTNRBv0jptI6zZYhYLtfgphwaAUwrvuSd89d3xZGu0ga4KrKpE0RY5Eg==
+X-Gm-Gg: ASbGncssO4nxaho51kIv8EomWJwvKFnu0uQHdRc9NOtXCrSZglD6LGUxtYPHCWTOgZ/
+	ixjBg/251H/Tb21V1jgJMLpbLQrv9w2PD2L/b0VVKahJlyrOd22nPbetaKUtQQEX6fn1hmj9fwv
+	3btlCm6zSpupnCBgtkBXlYUsJThzSzVTYyoiPKkx6EAYnucGK1UUOMBIpQk91UKXhh1b2AfFy02
+	rkgIZhOsKZ+NJ51tlI3qL16xDI8eBqfPswOqOy2EPcsGWZUbQYdEqZwVaXXptqTmFmZuYCF7ggt
+	B/vppTAEyK8tghWz0gX3a5/eoKBIlnZRFcxXbPB4/nCZtqZ28yRaZFliYxb/11KXVvJJ2buAsvw
+	FXo0WQZ1Dm+1vn0FPYtrDLmK7CymjwqntTN9XQ9rIlTunoROOXg==
+X-Received: by 2002:a5d:64cd:0:b0:3a4:f90c:31e3 with SMTP id ffacd0b85a97d-3a6d12d7abdmr9907633f8f.31.1750687998915;
+        Mon, 23 Jun 2025 07:13:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFDUxnL3nJvmH4q+Xsnf1SS41C8BCtvEsE0B/HMLIC6UVS0ZbdeBSca4irkSqkOWPXMG44KTg==
+X-Received: by 2002:a5d:64cd:0:b0:3a4:f90c:31e3 with SMTP id ffacd0b85a97d-3a6d12d7abdmr9907613f8f.31.1750687998529;
+        Mon, 23 Jun 2025 07:13:18 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159? (p200300d82f4efd008e13e3b590c81159.dip0.t-ipconnect.de. [2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f18152sm9367133f8f.27.2025.06.23.07.13.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 07:13:18 -0700 (PDT)
+Message-ID: <7f8ac35d-89f0-41e7-acfb-bcf54991612e@redhat.com>
+Date: Mon, 23 Jun 2025 16:13:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,124 +75,94 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] fs: export anon_inode_make_secure_inode() and fix
- secretmem LSM bypass
+Subject: Re: [PATCH v2 3/5] mm,hugetlb: Rename anon_rmap to new_anon_folio and
+ make it boolean
+To: Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Muchun Song <muchun.song@linux.dev>, Peter Xu <peterx@redhat.com>,
+ Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250620123014.29748-1-osalvador@suse.de>
+ <20250620123014.29748-4-osalvador@suse.de>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-To: Shivank Garg <shivankg@amd.com>, David Hildenbrand <david@redhat.com>,
- akpm@linux-foundation.org, brauner@kernel.org, paul@paul-moore.com,
- rppt@kernel.org, viro@zeniv.linux.org.uk
-Cc: seanjc@google.com, willy@infradead.org, pbonzini@redhat.com,
- tabba@google.com, afranji@google.com, ackerleytng@google.com, jack@suse.cz,
- hch@infradead.org, cgzones@googlemail.com, ira.weiny@intel.com,
- roypat@amazon.co.uk, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-References: <20250620070328.803704-3-shivankg@amd.com>
- <f2a205a5-aca9-4788-88ff-bfb3283610c5@redhat.com>
- <3114d54f-ed7c-4c68-9d32-53ce04175556@amd.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <3114d54f-ed7c-4c68-9d32-53ce04175556@amd.com>
-Content-Type: text/plain; charset=UTF-8
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250620123014.29748-4-osalvador@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[googlemail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[google.com,infradead.org,redhat.com,suse.cz,googlemail.com,intel.com,amazon.co.uk,vger.kernel.org,kvack.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:email,imap1.dmz-prg2.suse.org:helo,suse.cz:mid]
-X-Spam-Level: 
 
-On 6/23/25 16:08, Shivank Garg wrote:
+On 20.06.25 14:30, Oscar Salvador wrote:
+> anon_rmap is used to determine whether the new allocated folio is anonymous.
+> Rename it to something more meaningul like new_anon_folio and make it boolean,
+> as we use it like that.
+> While we are at it, drop 'new_pagecache_folio' as 'new_anon_folio' is enough to
+> check whether we need to restore the consumed reservation.
 > 
-> 
-> On 6/23/2025 7:21 PM, David Hildenbrand wrote:
->> On 20.06.25 09:03, Shivank Garg wrote:
->>> Export anon_inode_make_secure_inode() to allow KVM guest_memfd to create
->>> anonymous inodes with proper security context. This replaces the current
->>> pattern of calling alloc_anon_inode() followed by
->>> inode_init_security_anon() for creating security context manually.
->>>
->>> This change also fixes a security regression in secretmem where the
->>> S_PRIVATE flag was not cleared after alloc_anon_inode(), causing
->>> LSM/SELinux checks to be bypassed for secretmem file descriptors.
->>>
->>> As guest_memfd currently resides in the KVM module, we need to export this
->>> symbol for use outside the core kernel. In the future, guest_memfd might be
->>> moved to core-mm, at which point the symbols no longer would have to be
->>> exported. When/if that happens is still unclear.
->>>
->>> Fixes: 2bfe15c52612 ("mm: create security context for memfd_secret inodes")
->>> Suggested-by: David Hildenbrand <david@redhat.com>
->>> Suggested-by: Mike Rapoport <rppt@kernel.org>
->>> Signed-off-by: Shivank Garg <shivankg@amd.com>
->> 
->> 
->> In general, LGTM, but I think the actual fix should be separated from exporting it for guest_memfd purposes?
->> 
->> Also makes backporting easier, when EXPORT_SYMBOL_GPL_FOR_MODULES does not exist yet ...
->> 
-> I agree. I did not think about backporting conflicts when sending the patch.
-> 
-> Christian, I can send it as 2 separate patches to make it easier?
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> ---
 
-The proper way is to send the fix without the export, and then add the
-export only when adding its user.
 
-> Thanks,
-> Shivank
+}
+> @@ -6640,7 +6638,8 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
+>   backout:
+>   	spin_unlock(vmf->ptl);
+>   backout_unlocked:
+> -	if (new_folio && !new_pagecache_folio)
+> +	/* We only need to restore reservations for private mappings */
+> +	if (new_folio && new_anon_folio)
+
+Could this be simplified to
+
+if (new_anon_folio) {
+
+...
+
+-- 
+Cheers,
+
+David / dhildenb
 
