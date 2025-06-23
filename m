@@ -1,298 +1,305 @@
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011052.outbound.protection.outlook.com [40.107.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C84236454;
-	Mon, 23 Jun 2025 09:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750671089; cv=fail; b=J/ot6VYOYvfFrDrMH30lfPxJpgbMUa9hQO2TfcPLE+rc6e3V/sjEq+nThMcr7zvvqGqpDKxeLsNuqtT82H9U5ws147CbslhUJkN+n1UOfb8EYzgvjFKgN8PWgt+pwK+5w91zQjk9Xhc5cvW3sO6sez0CbU+1UPnYcsTsoWwapKs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750671089; c=relaxed/simple;
-	bh=83eHsoEg5mGqRhzj6CYkLkxPXSgwbbOUOWW/ldB7L8Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rpzMzbjF26dnoUremOo+4t+xqeBaVvQX8T1ycNTI6Wa2rEBxNFuRFnm8rWVzaI7wXwysxxVX8xGkUFBZ31o487pyCz8teCLMApIq3ypMtJHOpBMKACGaN5h32eycRQV6u8+llEtKqwn3QHdKIkCCYo/JwoDkg9wz5rqBUfDykq4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Q3/zphYd; arc=fail smtp.client-ip=40.107.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E3A23C8A8;
+	Mon, 23 Jun 2025 09:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750671095; cv=none; b=pNWSsZKPV6NPX0iehKySVSrcSn78KYYvUaTtczmqdgSJI7hQjurt6ZQwXNaxeHEKLgWsVMJcB1kxfoXfTMTHYERQDk++Wpfg1JGjDVa6JOMq2O9MA4XllcrLMZBPyateF6j4y+kMD1k2vNGWyUz7HLLGZh5zUzhIPz9UE//AHfI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750671095; c=relaxed/simple;
+	bh=VsdfeJJ1hbGO21E4KqYifLzRCmMbubAPRj++2/0zit4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tD7gKDYw9ZCGVGODKtXj4GIBfyfg31xwplA2kSp8HaDeHUA1BADyltnkejRCqpB5I0Us8t0O6Uzv4m2tAVxk24eovvIvuz5iMzmgcHJ2CbdAfsdE/7pAfTGBSw9UqrGOKB9tIAd+TDcTyMokIzDt95lod7uw+hDQuPJ/+mRjpNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s1cju4yn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Q3/zphYd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u1Eud6x/hm9RUZuv3NQxS+U2fg7/h2yfZvXZT7sKTEgDVzeLdIAaF5tYtvqhmt9dQ3lvD0f6MVzqKd5WXw6q97gDE9mJaCUn99/ZV75LKJ7pjWZuqKYw3DC60DCEdeR/Rsr7w0y+KSqe74Quc2K0ERmPnFek6HTzUZ3xxHQFeobrv3ujOV/OmIXZj6nsnsx3gsvk9KlTTSEwC9ugcYA93iYldEVHX5Z5EsQH5YQFBf9YwG3upHpmInEc+8FYENvY1JObED1lwxJ5hIue3+N9BUzstBzBRMTpAHPAJ8ySpT0fcd2spAVnNZSZeIOEXTEJ53QoOiq5kYVRBQCjNeSs7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7QMLhMR5j22m+6jE0bbgBm8bpEu2kPoQZqNKg78Ao/k=;
- b=XYPul5LFihJh3JwCb6SXp8ESNTwSOXR9HOyfYcjytOba18guoEweLI343hSzsqqP855LZq2/Zg1iF4X1xvIS6JsQRRhGfynydFKFRjw9CJeH8XegzHGbTHEXXc/3lpY3N47cqTi57WWJGOKHXUS/XiGQsnWHxxt4dRWSd6QbD9FmmhAnNur/4Fo6r/SioGjZgaUdxRWCBTX9DwkMEmClGa1He/DGx3tZM/z/fSTDHmtPAnA8hnRX6ZGigIuBC5QzEu+PMdRXfY9gFp5osRI1rOPU95jBn/0gJioeX8uybBvpBGHXHwJn67ABHnOgEr+kARCbIpyq21buGrEvittKiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7QMLhMR5j22m+6jE0bbgBm8bpEu2kPoQZqNKg78Ao/k=;
- b=Q3/zphYdwE/UwALVCBUaygHUCH070V7ueqwABEQ8sFnFHz+YVGpPXCK3Qjrn5jr0ZR8Vqoa8+MfHTFdC+I6+1KLBZ+4eDO+MUbR4MA/19cpzIhP3CBhzFwnsiTxAVFRgWbgLjRTXN2TQICg6sJUUjw+8g/8zXgdcgU7ALP7GnsPf8H4BaTcCsj0XHP1WpFEmWkxUeLApudf2jeZi0EGN7RGvrnrqvz7tvQg3X7745/C3NsYpNFrB4KOGd15tjW939GQzEd9L2yEWfXhd1z8yCrKO8WZoIzhATrVjVN3P2hEmxshnLGgF8GWvxGJrAgAZAdAb4XNVEcnGte4jYuv6+A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS4PR04MB9692.eurprd04.prod.outlook.com (2603:10a6:20b:4fe::20)
- by OSKPR04MB11438.eurprd04.prod.outlook.com (2603:10a6:e10:9d::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Mon, 23 Jun
- 2025 09:31:25 +0000
-Received: from AS4PR04MB9692.eurprd04.prod.outlook.com
- ([fe80::a2bf:4199:6415:f299]) by AS4PR04MB9692.eurprd04.prod.outlook.com
- ([fe80::a2bf:4199:6415:f299%5]) with mapi id 15.20.8857.025; Mon, 23 Jun 2025
- 09:31:25 +0000
-From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-To: marcel@holtmann.org,
-	luiz.dentz@gmail.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	amitkumar.karwar@nxp.com,
-	neeraj.sanjaykale@nxp.com,
-	sherry.sun@nxp.com,
-	manjeet.gupta@nxp.com
-Subject: [PATCH v6 2/2] Bluetooth: btnxpuart: Add support for 4M baudrate
-Date: Mon, 23 Jun 2025 14:43:22 +0530
-Message-Id: <20250623091322.131502-2-neeraj.sanjaykale@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250623091322.131502-1-neeraj.sanjaykale@nxp.com>
-References: <20250623091322.131502-1-neeraj.sanjaykale@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR04CA0009.apcprd04.prod.outlook.com
- (2603:1096:4:197::8) To AS4PR04MB9692.eurprd04.prod.outlook.com
- (2603:10a6:20b:4fe::20)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s1cju4yn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C07CC4CEF2;
+	Mon, 23 Jun 2025 09:31:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750671095;
+	bh=VsdfeJJ1hbGO21E4KqYifLzRCmMbubAPRj++2/0zit4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=s1cju4ynEtfb27DxqAfIyPWw+QccoHZXy/cILRWXRC9BCUUTcYZth671pV6kVxzW3
+	 bZS+YtCZyyz1futjCyDE8xgu6wjRpKdIgapgHzGyhFEMEg1YT50DHS0tUoRD1Ibsll
+	 R+MnnGbwCK0JGc4yk8PVPCja+nHEskLMbz7eSmNWvf4o9UXKvoOVl7DBBh6XIIRJp1
+	 n59zpYwXG+SCItsUBO3LfqqZobHpaQzqIfq56gMI+9W10P9GuVO3AF5muMHfr3gU2y
+	 86n8lkhz0pqmBQdZDfL2DGLieSB8KPSipauN7EMGINil27ltzveq2tnprwnPXGDo+A
+	 t0yF8DokTlciA==
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5290be1aedcso2834848e0c.1;
+        Mon, 23 Jun 2025 02:31:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUShzGP1/S/RYbwfyx903qkLuD65goKa99Ua3mEB6g8+kE/fdTcNu7Zaaguyqqnqr9Mg4m0gCbo5gZ5MGk=@vger.kernel.org, AJvYcCUtmrqE+682qLx8qtkaZ2rTBQYX2HhT0y4MnnpLn8eq+zRvgJER6cYMuKPiRkHhRpxFKPi2sjdOmUbj9wok@vger.kernel.org, AJvYcCWNy+lvtnYN93X/F5bPATlznQaI6MwqpFgyuU/UkLAzgtT9b8wyaA+pPz6qA/EljxFX7ujDgidasrnvD8c=@vger.kernel.org, AJvYcCXshy+zEW1rbzQ9F9imrReta9KHPF7qujU3eqj4Rx8k12kaO1DKV52aPizzYtkhcoOzVbCAkZ7Lr4Ob@vger.kernel.org
+X-Gm-Message-State: AOJu0YyA/P8V5xiIcTBbDl7BOBQq7F+NjHQLaF+DAc3XqkxdlzprzrvY
+	uD7hWzW1lBQBQTYRLyHrQEDUYRDJn+Mk9rdKip0S/rAIwpzvKSMeiQN5dBo+++OQBWRCn7lzY2b
+	WUDX1QdY5zyhEKN+XWCluc9wDJZVXt2Y=
+X-Google-Smtp-Source: AGHT+IFz8HjnezG1zR147UloDiu7tc7NZbIaEkNDb0AV0ej/bEverhGUrGz1fw9s6NlbMHi5uUyf6V0APJORZMqK2bI=
+X-Received: by 2002:a05:6122:4882:b0:520:4806:a422 with SMTP id
+ 71dfb90a1353d-531aeb929d9mr5790320e0c.3.1750671094254; Mon, 23 Jun 2025
+ 02:31:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS4PR04MB9692:EE_|OSKPR04MB11438:EE_
-X-MS-Office365-Filtering-Correlation-Id: 55add80c-7374-4f1c-89e5-08ddb238b951
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?TzGR/D+7gBNFFxMptCUejAaSgTAbC7eyP+an7yqnne0mN9oKYkeQmN1yDGzr?=
- =?us-ascii?Q?RVpNnRLZCmx0tC1TTvFAONLHZDnOY9i3/xvZNR8tLqg799Tv1WxFTOLY4B5E?=
- =?us-ascii?Q?Lo0ibi/HUZLWhJdCZApuEvG8Ajh1DYPwJuew5FzRXizQv8LvlAffN++Qh/Xd?=
- =?us-ascii?Q?83aEkmdLpaxCcO0Lzj/ywEkVyA5dgSTv3Olj0/Ku+CrMpnlsfJDkM2FjJKHY?=
- =?us-ascii?Q?RhBXSwZ8OXT/OUwDfv4nx1D9mlc/Ct8Y1HcWsuLPFNBO+1IrGZ03XylBhxsY?=
- =?us-ascii?Q?cjvGpQqa0d23PJxyT2+Li1CBhiEeIfr6AEVkelZK3bo6vrROv9vunTf5UbU1?=
- =?us-ascii?Q?oGUBrb5q7eE5dkxnJfhW5dhdGxHvarVHUHKb3g+ABhc1LzyqtuoxTOBxKTrS?=
- =?us-ascii?Q?4VSk/AmTbvJCW3AdM3eNTj25Ru64FeZbx6Zz06sWl0vr/e0LGgTzclG97TJJ?=
- =?us-ascii?Q?Mckhkw2YDgRKgJS+EurNqjSVbpxC2TJ4XLfd8gSdhBVQtBvKf95ozlJNrMq3?=
- =?us-ascii?Q?cvNdmK4Bm7+pN00+uM1bkNHhMNgGlbZnWvLawF9vpPHgvV63unae4FaPxeYi?=
- =?us-ascii?Q?sabjqcnWGXcHyS3DTLoACmaIjs6m6iib1q5+Vpmh3KKBLneaozuAo7vTkvw4?=
- =?us-ascii?Q?2DJ4rP1K4nd8CD6+e+26Fq+sH8G6bzaY/LCr5+jpXMX6NWoJVuMowLB4gM1N?=
- =?us-ascii?Q?axHkqc/Q3gDFHj9Ji9k6nEYS7J7C+Mhm94Q+F0rAXmK0HeLCBpWZsQ450yZC?=
- =?us-ascii?Q?wcFxaE3Ik3k3AxzVGwX8wtS1643oJ7IHkSCLPAkoyYmvJ8ojuaiQA4nn3OVh?=
- =?us-ascii?Q?/tCK2PQl7FyL6rhw/Uzha7N14HSra9nL43/cUoENtikfdLzGCG76zHaZJVqW?=
- =?us-ascii?Q?Flz2tsszq4qyH03WopHaHHP725aI3pvcZtW+DmWQfohdoaaK+Kh6WaZ0MQyT?=
- =?us-ascii?Q?NlIjgP4TKR//Qn0R2LaITw+15x7RP0h8XdQwhw/zmdNTQldvMMom7inhVvjM?=
- =?us-ascii?Q?AuurODqKTJktjjm0kPKItA0/ilbDdDjZs4MpTYv6c793rJ9/X0rbwzHW+ic3?=
- =?us-ascii?Q?jOm+G9CsoWIuhze9QmLJDYcJUWJOreJKoLTnk3zBZ8qHrcYbDI85Se0P7TlF?=
- =?us-ascii?Q?rAipw6ldrbXFmR72ss6VL9ROO88qO4gM3+qwSCuj7TF+Sedv0+ID6ydBgC0F?=
- =?us-ascii?Q?QVdzHbe8fMJ8eJSvVf3DgoINw8Hb3f78vBuz3dRGkWlTlyX9c5XQAudugytD?=
- =?us-ascii?Q?WtGJwhzOOBJ8aW7S8wgQF6IDOjaBAXl5vBwAqcbLrYXbubfV5KX+k+E0pCYF?=
- =?us-ascii?Q?g5S7HKzejUL2dUQh31xc7UabvTf4AfmK2I9HIXwkkIruTn9TGZs4RyUNSufa?=
- =?us-ascii?Q?TykSYa9WPtOyGg1VaQKtDenGVuKbgjsPILsgLy8uMQCRHWCHvq+7SY0EW5+p?=
- =?us-ascii?Q?TqjHp3yTwbDBfWC/DNqx8/XKW5sUAwwAsPWrvP0nTXRq4+vpRstN3A=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9692.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?hoyTPSR6lQGkXvKN0gUQxoTkdaRV5KkTHkTZ0Vmg+mlDVi++0MjSrjOLRBt4?=
- =?us-ascii?Q?WdHwvJhnPtDrk1CyO4Qy+trXBxnTcj7R01Lfhu1GUOrFf+GyRSvzSaW8nrmu?=
- =?us-ascii?Q?r1bXMmheifbjcOBClVzRcapXp2rzQv+p4fLPUeJoeVNd3Y6M3fCKZVcvO3cf?=
- =?us-ascii?Q?sgLSx2ggMERMpNLiTrCwN3xyG1L0oaibPkKoiKJETLtRA2G1TEGIl4O6ZP6z?=
- =?us-ascii?Q?B5pU6qRryXzZll+iJgGxPQkLCeYCHhU0Hgso6IWgtHhz/K4k9nUjO0GJDE18?=
- =?us-ascii?Q?SbAhRVS7bDEcbS6EEctJDvZJhMuH44TkckNzXmVKPDfWn66Dryf9hOY91RDc?=
- =?us-ascii?Q?fZYm9sxMzKoXEj4DbHWQHwzvCHXi3j2qkChz71Gu67QuAD7X6+6iQe5LOpQO?=
- =?us-ascii?Q?WI9qA7f0bESficspjZYbRU8tjci7C4Qyi4iqBgtBv7QftNaa1oVvOwKUm4Ps?=
- =?us-ascii?Q?ckHczexoPpri/+tYjviNoVp1e1P09/vbuFw4tEvqnDffd6Da1RMCQ2+mx3c0?=
- =?us-ascii?Q?tDnvMFKR2qNuurRNJ3PxIQjvnBXMGAolI3tATjvQApuv6cLQpmSLeQ+yXVJ8?=
- =?us-ascii?Q?zSvoqVkj2geZcb5acn/sReIAnkuj3QUV0ky6U+zlP4/50RJ2NpixA3NE61YO?=
- =?us-ascii?Q?a9R78ZWpHQO3q6UF9QEX0mAZYVI3Sde85TQmiPUECQnUn7N4uN+L2TypA2n+?=
- =?us-ascii?Q?To/jYrRX8bhNMxFnkzhbmdvmnZoFS+KPeOIcwPRSYsBEDeXynd091zZfJVGw?=
- =?us-ascii?Q?iPcEfSkdE9FbEZ1sE7BwtAWz0g7TVD3M3tug8T+ejd3mYOFa1g6kM+iR4ygf?=
- =?us-ascii?Q?v++qBS6a7LnW3AeLSZtbWNtR0fM8VOVnYYwIAXLFCjivnc+HQh1BBhApZSMs?=
- =?us-ascii?Q?JZzO5hFkkFS9ZdlYcfB1w9TSA6oevA8GMRBndJp48kMVaGzGTwxVx8jL1JCO?=
- =?us-ascii?Q?NrVB7g8CRmkXjYQwzd6NeWDSxmQy+B05usT8Ug9qE5Nex11OqhOtygI3xfjL?=
- =?us-ascii?Q?ILytZKemNifpV9zPg+uFZFpaamj5BRTkMYOTmuvwlgjw5JAuvSmkTT9bPcdc?=
- =?us-ascii?Q?fshzOMJoHGtPKHNMq9n6UjFcNUtG57dOO5FvhSak74RptwbT57LttPjRtj08?=
- =?us-ascii?Q?WYOfanIbv7CQcE7jmyHxfVzbc07iu6e9MHPoO7tS32DbcCjIkgPlthZz25x5?=
- =?us-ascii?Q?fO5j3DM6i4lknKvyrGHmUJRPO1Ne4PrOxU52j+06DP5cThj74MIixQkN1Fs/?=
- =?us-ascii?Q?8xPN6FbqmokcHs0fdXFWKR06ONjHZaR4DyVnHnL2i2wzZMNIPRLVRXMWUMHC?=
- =?us-ascii?Q?8LRrv9FEb9g11n3UNmhfz26OuXtSCNPRb/P/HGblSPgZklgqexhIutF/dman?=
- =?us-ascii?Q?vRiZVaEilmS8hB/RmZ5RRvFUjpfuqDN5EPb3ko0edT2ac5wjoezlsLVPTQie?=
- =?us-ascii?Q?grIPf//V2uSWTzWlqiRHfODIFIXAvanKs219icYqRPtuJj18n3tfD7Z3Y/xe?=
- =?us-ascii?Q?fo8aRDqnRL9z79NsLQU5om73ucmFMdflTJbPiKFJb6WaIMEN8OL40utnrM9r?=
- =?us-ascii?Q?toujHbioTBAJU+Zds8O4FnpAkY93UpdtgiOFTl+w4jtMpFAMmkYKUR0mSABo?=
- =?us-ascii?Q?9A=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 55add80c-7374-4f1c-89e5-08ddb238b951
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9692.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 09:31:25.6679
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: W/6KJbmI4zrzI5Szo0s0ebdtXrLUmxZF3h1PDe3hBbq3r6ck0yNi7xRT7oQMNqPGWZhobho+kW4YAwn8YvFYu8t7MJZYsxTh5sh/VBcphrk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSKPR04MB11438
+References: <20250621-imx214_ccs_pll-v4-0-12178e5eb989@apitzsch.eu>
+ <20250621-imx214_ccs_pll-v4-3-12178e5eb989@apitzsch.eu> <20250621181751.GA9125@pendragon.ideasonboard.com>
+ <ed0b8fe3a20111477cafb1de7b399afb99caaa0c.camel@apitzsch.eu> <20250622171320.GA826@pendragon.ideasonboard.com>
+In-Reply-To: <20250622171320.GA826@pendragon.ideasonboard.com>
+From: Ricardo Ribalda Delgado <ribalda@kernel.org>
+Date: Mon, 23 Jun 2025 11:31:17 +0200
+X-Gmail-Original-Message-ID: <CAPybu_2WF=t4jnwsrTSCiSZ4T7Sck4-fCoub33=P_6KvdZ5ePg@mail.gmail.com>
+X-Gm-Features: Ac12FXxTrZtaPEPozn4yeGUBc3IN-yDzlj7J5zciRPbs1FoIczjQDRPa5pgF3Bk
+Message-ID: <CAPybu_2WF=t4jnwsrTSCiSZ4T7Sck4-fCoub33=P_6KvdZ5ePg@mail.gmail.com>
+Subject: Re: [PATCH RESEND v4 3/5] media: i2c: imx214: Make use of CCS PLL calculator
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, Ricardo Ribalda <ribalda@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This adds support for 4000000 as secondary baudrate.
+On Sun, Jun 22, 2025 at 7:13=E2=80=AFPM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Andr=C3=A9,
+>
+> On Sun, Jun 22, 2025 at 05:34:56PM +0200, Andr=C3=A9 Apitzsch wrote:
+> > Am Samstag, dem 21.06.2025 um 21:17 +0300 schrieb Laurent Pinchart:
+> > > On Sat, Jun 21, 2025 at 11:37:27AM +0200, Andr=C3=A9 Apitzsch via B4 =
+Relay wrote:
+> > > > From: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
+> > > >
+> > > > Calculate PLL parameters based on clock frequency and link
+> > > > frequency.
+> > > >
+> > > > Acked-by: Ricardo Ribalda <ribalda@chromium.org>
+> > > > Signed-off-by: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
+> > > > ---
+> > > >  drivers/media/i2c/Kconfig  |   1 +
+> > > >  drivers/media/i2c/imx214.c | 213 +++++++++++++++++++++++++++++++++=
++++---------
+> > > >  2 files changed, 175 insertions(+), 39 deletions(-)
+> > > >
+> > > > diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> > > > index
+> > > > e68202954a8fd4711d108cf295d5771246fbc406..08db8abeea218080b0bf5bfe6
+> > > > cf82f1c0b100c4a 100644
+> > > > --- a/drivers/media/i2c/Kconfig
+> > > > +++ b/drivers/media/i2c/Kconfig
+> > > > [..]
+> > > > @@ -1224,42 +1336,52 @@ static int imx214_parse_fwnode(struct
+> > > > device *dev)
+> > > >   if (!endpoint)
+> > > >   return dev_err_probe(dev, -EINVAL, "endpoint node not found\n");
+> > > >
+> > > > - ret =3D v4l2_fwnode_endpoint_alloc_parse(endpoint, &bus_cfg);
+> > > > + bus_cfg->bus_type =3D V4L2_MBUS_CSI2_DPHY;
+> > > > + ret =3D v4l2_fwnode_endpoint_alloc_parse(endpoint, bus_cfg);
+> > > > + fwnode_handle_put(endpoint);
+> > >
+> > > ... drop this. Up to you.
+> > >
+> > > >   if (ret) {
+> > > >   dev_err_probe(dev, ret, "parsing endpoint node failed\n");
+> > > > - goto done;
+> > > > + goto error;
+> > >
+> > > You can return ret here.
+> > >
+> > > >   }
+> > > >
+> > > >   /* Check the number of MIPI CSI2 data lanes */
+> > > > - if (bus_cfg.bus.mipi_csi2.num_data_lanes !=3D 4) {
+> > > > + if (bus_cfg->bus.mipi_csi2.num_data_lanes !=3D 4) {
+> > > >   ret =3D dev_err_probe(dev, -EINVAL,
+> > > >       "only 4 data lanes are currently supported\n");
+> > > > - goto done;
+> > > > + goto error;
+> > > >   }
+> > > >
+> > > > - if (bus_cfg.nr_of_link_frequencies !=3D 1)
+> > > > + if (bus_cfg->nr_of_link_frequencies !=3D 1)
+> > > >   dev_warn(dev, "Only one link-frequency supported, please review
+> > > > your DT. Continuing anyway\n");
+> > >
+> > > Now that the driver can calculate PLL parameters dynamically, it
+> > > would be nice to lift this restriction and make the link frequency
+> > > control writable, in a separate patch on top of this series.
+> >
+> > Maybe this could be postponed, as I don't have any use for it at the
+> > moment and I don't want to further delay this series.
+>
+> When I said "on top", I didn't mean in a new version of this series. We
+> can merge this first, and then lift this restriction. I don't have an
+> imx214-based device so I can't do it myself and test it :-/
+>
+> > > > - for (i =3D 0; i < bus_cfg.nr_of_link_frequencies; i++) {
+> > > > - if (bus_cfg.link_frequencies[i] =3D=3D IMX214_DEFAULT_LINK_FREQ)
+> > > > + for (i =3D 0; i < bus_cfg->nr_of_link_frequencies; i++) {
+> > > > + u64 freq =3D bus_cfg->link_frequencies[i];
+> > > > + struct ccs_pll pll;
+> > > > +
+> > > > + if (!imx214_pll_calculate(imx214, &pll, freq))
+> > > >   break;
+> > > > - if (bus_cfg.link_frequencies[i] =3D=3D
+> > > > -     IMX214_DEFAULT_LINK_FREQ_LEGACY) {
+> > > > + if (freq =3D=3D IMX214_DEFAULT_LINK_FREQ_LEGACY) {
+> > > >   dev_warn(dev,
+> > > >   "link-frequencies %d not supported, please review your DT.
+> > > > Continuing anyway\n",
+> > > >   IMX214_DEFAULT_LINK_FREQ);
+> > > > + freq =3D IMX214_DEFAULT_LINK_FREQ;
+> > > > + if (imx214_pll_calculate(imx214, &pll, freq))
+> > > > + continue;
+> > > > + bus_cfg->link_frequencies[i] =3D freq;
+> > > >   break;
+> > > >   }
+> > >
+> > > How about separating the IMX214_DEFAULT_LINK_FREQ_LEGACY check from
+> > > the PLL calculation ? Something like
+> > >
+> > >  u64 freq =3D bus_cfg->link_frequencies[i];
+> > >  struct ccs_pll pll;
+> > >
+> > >  if (freq =3D=3D IMX214_DEFAULT_LINK_FREQ_LEGACY) {
+> > >  dev_warn(dev,
+> > >  "link-frequencies %d not supported, please review your DT.
+> > > Continuing anyway\n",
+> > >  IMX214_DEFAULT_LINK_FREQ);
+> > >  freq =3D IMX214_DEFAULT_LINK_FREQ;
+> > >  bus_cfg->link_frequencies[i] =3D freq;
+> > >  }
+> >
+> > With PLL calculation, 480000000 (=3DIMX214_DEFAULT_LINK_FREQ_LEGACY)
+> > might be a valid link frequency explicitly set by the user. I'm not
+> > sure whether it is a good idea to overwrite the link frequency, before
+> > trying the PLL calculation. That's why I would keep the code the way it
+> > is.
+>
+> The current code accepts both IMX214_DEFAULT_LINK_FREQ (600 MHz) and
+> IMX214_DEFAULT_LINK_FREQ_LEGACY (400 MHz), and programs the PLL with (as
+> far as I understand) a 600 MHz clock frequency in either case. To avoid
+> a change in behaviour, I think overriding the 400 MHz frequency with 600
+> MHz in this patch would be best. We could then drop that in a later
+> patch, possibly by patching the clock frequency in a platform-specific
+> driver instead of the imx214 driver.
+>
+> > >  if (!imx214_pll_calculate(imx214, &pll, freq))
+> > >  break;
+> > >
+> > > It will then become easier to drop this legacy support from the
+> > > driver. What platform(s) are know to specify an incorrect link
+> > > frequency ?
+> >
+> > I don't know.
+>
+> Ricardo, do you have any information about this ?
 
-This value is selected from device tree property "max-speed"
-which is then used to download FW chunks, and as operational baudrate after
-HCI initialization is done.
 
-Earlier, the secondary baudrate was fixed to 3000000 in driver, but now
-with "max-speed" property, this secondary baudrate can be set to
-4000000.
+This was for a development platform for Qualcomm, think of a pizero
+like, but with a Snapdragon device.
 
-The secondary baudrate is set by the driver by sending a vendor command
-(3F 09) to the firmware, with secondary baudrate parameter, in
-nxp_post_init().
+There was a Qtechnology product based on that platform. I asked them
+if they could provide me a device for testing, but it has been
+discontinued and  replaced with something better.
 
-Any other value set for max-speed other than 3000000 or 4000000 will
-default to 3000000, which is supported by all legacy and new NXP chipsets.
+We can start to deprecate the clock quirk if you want.
 
-This feature is applicable for all new V3 bootloader chips and w8987 V1
-bootloader chip.
-
-This property does not apply for w8997 compatible device, since it
-downloads a helper.bin FW file that sets secondary baudrate as 3000000
-only.
-
-The switch to 4000000 baudrate is validated using a Saleae Logic Analyzer
-and imx8m-mini with AW693 M.2 module.
-
-Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
----
-v2: Change DT property to 'max-speed'. (Krzysztof)
-    Add support for 4M baudrate to w8987. Update commit message.
-    (Sherry)
-v3: Add check for 'max-speed' and set default to 3000000. (Sherry)
-    Add functional and testing details in commit message. (Paul)
-v4: Add error message for invalid max-speed. (Sherry)
-v5: No Change.
-v6: No Change.
----
- drivers/bluetooth/btnxpuart.c | 36 ++++++++++++++++++++++++++---------
- 1 file changed, 27 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
-index 6b13feed06df..c56b52bd8d98 100644
---- a/drivers/bluetooth/btnxpuart.c
-+++ b/drivers/bluetooth/btnxpuart.c
-@@ -73,7 +73,8 @@
- #define FW_AUTH_ENC		0xc0
- 
- #define HCI_NXP_PRI_BAUDRATE	115200
--#define HCI_NXP_SEC_BAUDRATE	3000000
-+#define HCI_NXP_SEC_BAUDRATE_3M	3000000
-+#define HCI_NXP_SEC_BAUDRATE_4M	4000000
- 
- #define MAX_FW_FILE_NAME_LEN    50
- 
-@@ -201,6 +202,7 @@ struct btnxpuart_dev {
- 	u32 new_baudrate;
- 	u32 current_baudrate;
- 	u32 fw_init_baudrate;
-+	u32 secondary_baudrate;
- 	enum bootloader_param_change timeout_changed;
- 	enum bootloader_param_change baudrate_changed;
- 	bool helper_downloaded;
-@@ -802,7 +804,10 @@ static bool nxp_fw_change_baudrate(struct hci_dev *hdev, u16 req_len)
- 		nxpdev->fw_v3_offset_correction += req_len;
- 	} else if (req_len == sizeof(uart_config)) {
- 		uart_config.clkdiv.address = __cpu_to_le32(clkdivaddr);
--		uart_config.clkdiv.value = __cpu_to_le32(0x00c00000);
-+		if (nxpdev->new_baudrate == HCI_NXP_SEC_BAUDRATE_4M)
-+			uart_config.clkdiv.value = __cpu_to_le32(0x01000000);
-+		else
-+			uart_config.clkdiv.value = __cpu_to_le32(0x00c00000);
- 		uart_config.uartdiv.address = __cpu_to_le32(uartdivaddr);
- 		uart_config.uartdiv.value = __cpu_to_le32(1);
- 		uart_config.mcr.address = __cpu_to_le32(uartmcraddr);
-@@ -966,12 +971,13 @@ static int nxp_recv_fw_req_v1(struct hci_dev *hdev, struct sk_buff *skb)
- 			goto free_skb;
- 		}
- 		if (nxpdev->baudrate_changed != changed) {
-+			nxpdev->new_baudrate = nxpdev->secondary_baudrate;
- 			if (nxp_fw_change_baudrate(hdev, len)) {
- 				nxpdev->baudrate_changed = changed;
- 				serdev_device_set_baudrate(nxpdev->serdev,
--							   HCI_NXP_SEC_BAUDRATE);
-+							   nxpdev->secondary_baudrate);
- 				serdev_device_set_flow_control(nxpdev->serdev, true);
--				nxpdev->current_baudrate = HCI_NXP_SEC_BAUDRATE;
-+				nxpdev->current_baudrate = nxpdev->secondary_baudrate;
- 			}
- 			goto free_skb;
- 		}
-@@ -992,7 +998,7 @@ static int nxp_recv_fw_req_v1(struct hci_dev *hdev, struct sk_buff *skb)
- 			nxpdev->helper_downloaded = true;
- 			serdev_device_wait_until_sent(nxpdev->serdev, 0);
- 			serdev_device_set_baudrate(nxpdev->serdev,
--						   HCI_NXP_SEC_BAUDRATE);
-+						   HCI_NXP_SEC_BAUDRATE_3M);
- 			serdev_device_set_flow_control(nxpdev->serdev, true);
- 		} else {
- 			clear_bit(BTNXPUART_FW_DOWNLOADING, &nxpdev->tx_state);
-@@ -1216,12 +1222,13 @@ static int nxp_recv_fw_req_v3(struct hci_dev *hdev, struct sk_buff *skb)
- 	}
- 
- 	if (nxpdev->baudrate_changed != changed) {
-+		nxpdev->new_baudrate = nxpdev->secondary_baudrate;
- 		if (nxp_fw_change_baudrate(hdev, len)) {
- 			nxpdev->baudrate_changed = cmd_sent;
- 			serdev_device_set_baudrate(nxpdev->serdev,
--						   HCI_NXP_SEC_BAUDRATE);
-+						   nxpdev->secondary_baudrate);
- 			serdev_device_set_flow_control(nxpdev->serdev, true);
--			nxpdev->current_baudrate = HCI_NXP_SEC_BAUDRATE;
-+			nxpdev->current_baudrate = nxpdev->secondary_baudrate;
- 		}
- 		goto free_skb;
- 	}
-@@ -1447,8 +1454,8 @@ static int nxp_post_init(struct hci_dev *hdev)
- 	struct btnxpuart_dev *nxpdev = hci_get_drvdata(hdev);
- 	struct ps_data *psdata = &nxpdev->psdata;
- 
--	if (nxpdev->current_baudrate != HCI_NXP_SEC_BAUDRATE) {
--		nxpdev->new_baudrate = HCI_NXP_SEC_BAUDRATE;
-+	if (nxpdev->current_baudrate != nxpdev->secondary_baudrate) {
-+		nxpdev->new_baudrate = nxpdev->secondary_baudrate;
- 		nxp_set_baudrate_cmd(hdev, NULL);
- 	}
- 	if (psdata->cur_h2c_wakeupmode != psdata->h2c_wakeupmode)
-@@ -1773,6 +1780,17 @@ static int nxp_serdev_probe(struct serdev_device *serdev)
- 	if (!nxpdev->fw_init_baudrate)
- 		nxpdev->fw_init_baudrate = FW_INIT_BAUDRATE;
- 
-+	device_property_read_u32(&nxpdev->serdev->dev, "max-speed",
-+				 &nxpdev->secondary_baudrate);
-+	if (!nxpdev->secondary_baudrate ||
-+	    (nxpdev->secondary_baudrate != HCI_NXP_SEC_BAUDRATE_3M &&
-+	     nxpdev->secondary_baudrate != HCI_NXP_SEC_BAUDRATE_4M)) {
-+		if (nxpdev->secondary_baudrate)
-+			dev_err(&serdev->dev,
-+				"Invalid max-speed. Using default 3000000.");
-+		nxpdev->secondary_baudrate = HCI_NXP_SEC_BAUDRATE_3M;
-+	}
-+
- 	set_bit(BTNXPUART_FW_DOWNLOADING, &nxpdev->tx_state);
- 
- 	crc8_populate_msb(crc8_table, POLYNOMIAL8);
--- 
-2.34.1
-
+>
+> > > >   }
+> > > >
+> > > > - if (i =3D=3D bus_cfg.nr_of_link_frequencies)
+> > > > + if (i =3D=3D bus_cfg->nr_of_link_frequencies)
+> > > >   ret =3D dev_err_probe(dev, -EINVAL,
+> > > > -     "link-frequencies %d not supported, please review your DT\n",
+> > > > -     IMX214_DEFAULT_LINK_FREQ);
+> > > > +     "link-frequencies %lld not supported, please review your
+> > > > DT\n",
+> > > > +     bus_cfg->nr_of_link_frequencies ?
+> > > > +     bus_cfg->link_frequencies[0] : 0);
+> > > >
+> > > > -done:
+> > > > - v4l2_fwnode_endpoint_free(&bus_cfg);
+> > > > - fwnode_handle_put(endpoint);
+> > > > + return 0;
+> > > > +
+> > > > +error:
+> > > > + v4l2_fwnode_endpoint_free(&imx214->bus_cfg);
+> > > >   return ret;
+> > > >  }
+> > > >
+> > > > @@ -1299,7 +1421,7 @@ static int imx214_probe(struct i2c_client
+> > > > *client)
+> > > >   return dev_err_probe(dev, PTR_ERR(imx214->regmap),
+> > > >        "failed to initialize CCI\n");
+> > > >
+> > > > - ret =3D imx214_parse_fwnode(dev);
+> > > > + ret =3D imx214_parse_fwnode(dev, imx214);
+> > > >   if (ret)
+> > > >   return ret;
+> > > >
+> > > > @@ -1310,7 +1432,9 @@ static int imx214_probe(struct i2c_client
+> > > > *client)
+> > > >   * Enable power initially, to avoid warnings
+> > > >   * from clk_disable on power_off
+> > > >   */
+> > > > - imx214_power_on(imx214->dev);
+> > > > + ret =3D imx214_power_on(imx214->dev);
+> > > > + if (ret < 0)
+> > > > + goto error_fwnode;
+> > >
+> > > This change seems to belong to a separate patch.
+> > >
+> > > >
+> > > >   ret =3D imx214_identify_module(imx214);
+> > > >   if (ret)
+> > > > @@ -1341,6 +1465,12 @@ static int imx214_probe(struct i2c_client
+> > > > *client)
+> > > >   pm_runtime_set_active(imx214->dev);
+> > > >   pm_runtime_enable(imx214->dev);
+> > > >
+> > > > + ret =3D imx214_pll_update(imx214);
+> > > > + if (ret < 0) {
+> > > > + dev_err_probe(dev, ret, "failed to update PLL\n");
+> > > > + goto error_subdev_cleanup;
+> > > > + }
+> > >
+> > > I would move this to imx214_ctrls_init().
+> > >
+> > > > +
+> > > >   ret =3D v4l2_async_register_subdev_sensor(&imx214->sd);
+> > > >   if (ret < 0) {
+> > > >   dev_err_probe(dev, ret,
+> > > > @@ -1366,6 +1496,9 @@ static int imx214_probe(struct i2c_client
+> > > > *client)
+> > > >  error_power_off:
+> > > >   imx214_power_off(imx214->dev);
+> > > >
+> > > > +error_fwnode:
+> > > > + v4l2_fwnode_endpoint_free(&imx214->bus_cfg);
+> > > > +
+> > > >   return ret;
+> > > >  }
+> > > >
+> > > > @@ -1378,6 +1511,8 @@ static void imx214_remove(struct i2c_client
+> > > > *client)
+> > > >   v4l2_subdev_cleanup(sd);
+> > > >   media_entity_cleanup(&imx214->sd.entity);
+> > > >   v4l2_ctrl_handler_free(&imx214->ctrls);
+> > > > + v4l2_fwnode_endpoint_free(&imx214->bus_cfg);
+> > > > +
+> > > >   pm_runtime_disable(&client->dev);
+> > > >   if (!pm_runtime_status_suspended(&client->dev)) {
+> > > >   imx214_power_off(imx214->dev);
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
