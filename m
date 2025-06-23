@@ -1,110 +1,124 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D5A1D54E9
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 06:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D451E5B90;
+	Mon, 23 Jun 2025 06:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750660785; cv=none; b=B0Z24mc+JGkOuGTqlepuHwFxPySL2s4t3z7vzT8iIWR1aP8UQgxKLZx4vsJRSnkhhPImAOaSWNx1K2vVhWznMu5ElAPWoau/Xa2Cl78YrqpWHuMRCWiQAQQAlkg2iftVKZCt2+SF43SJzXb8GJCJ+KiEcan91HhmHv4MrdfgfSY=
+	t=1750660803; cv=none; b=VxQK2DdYzlKqllOHkJCaOsVm1HZ6Q23nHXxmRZdOso08zcXpK15C36klrwp/DN8EytnMsNYj2ei9oR36Pmeoo0fNlbu/94locA9lApeNyO7sWVCf1IZilA4nJorJhJQeo8PmFyKVfgQfQeyor40RJvHsmNQJqar6mxvzMXJQmtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750660785; c=relaxed/simple;
-	bh=wL9QlNfmqKvYdKXFuwTltASqCbw0DTBRa21yy/QzTW0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mboWNpfNaMoP6ogJoSyfKFTdEMw5RUcMN8QmnqGw/liAmPGYq9RgZP0F3mxihqRWGBc2G5E6rVmDq8sEOUjce5bLSJm58UCLAb/8wmzlOA7zZP+tgrOVVUp2/naNUnbYD5AcJg2nRhV2EC4S+8LM0+YJ7eyDqcwv01tMNz14eLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=UP4KcKak; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1750660803; c=relaxed/simple;
+	bh=AkQsXjCKBE0FDDEmr6BLKHKqMfKtoslc3CQ/TntZLjM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jSrhaCIx+J6lYR+DMWRFUShBNmtjmMB/ctSHwA3wKNVqqNX7goi61tUyobTeHUHebEvZE1f2d74eGp0qw8zpTpRpR7snwV40p0ooohFPiqtgYwgPRprTcmVtVSjOsjf7sq9zGKALQI5VHllpMgxfD3z4DXo/9dGYVK0Y3859+7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lLtJ9a0M; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="UP4KcKak"
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 4EA563F1DD
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 06:30:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1750660232;
-	bh=vl643mA4T4uS099zf+eRPYilXKKuq+VZWfu4y9zT6vs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-	b=UP4KcKakaN8MAX0tI+5ZTyWe2CbnJx4JZwT7LK9lsP77JY/temK25LScH0oxwyyb0
-	 lMj9GEx6my4EtEPubtSdNeoFajtRSvJyw22ZJtVaBDIPeZvtrFkh916ofJlejHaJbP
-	 ho2eQtSgCcWZkNDcpBlzmoIdbFGuqjccrvondIcdS3ViEcaeRbXsGXNMkPZQM1DH7Q
-	 lJ0rI3luSYLw0tXIf9kjwTNZ9jx79B87b4efaQcYtxo3BBu/vmjyATCUtesnEb9Cev
-	 rcimZ3NjyIX268o3/wwKP60A+yYIeExGfjMfy09FtgV9+7bdgM6Vq645wbbiwg+6an
-	 TyU3uOVMJeWVQ==
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-313c3915345so5970772a91.3
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 23:30:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750660230; x=1751265030;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vl643mA4T4uS099zf+eRPYilXKKuq+VZWfu4y9zT6vs=;
-        b=giciYnUqmmmlrihJ22QtZvCn78Jyry73hKck6M1bpsBYX8+83S/40/rQq9Akfsw3WF
-         Wu8cGUrTro7GInh1sdz2TeJm6nmCRamPcVA+M3bCNolHquQ9RFfzJd+4EZgbUgqOIReD
-         CRBW3gYUMVJCuTczjVsia7Ms+zw2MHTdXL+lnXJaTiFHyXWLaFF7ifVcwKoBVs6Xy+r3
-         AdOaywyGT6bVaESIejG6pwm93eal/F/tKlDJBorcHnd5Bld6yN+4sua57DhiPHOp6mUq
-         fiXH0PfCcU83ERnV9HPdS4ZQXz53B+porpxXh1HjuGAwBgjYRbypEqvv3fP4qKnUmlWd
-         ryyA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDw1/t/Qs+u3Zo+GBWMRdid4W0zei+10tOBUHZ4fcBS6siAgIFIQOY0g8WtDmj1jzFTnCWAW5tbn9w7MM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmoSBDA1luhv4m7ruBVH3rFOZMixR3I7+ZYMb2Mjru0fHQno/X
-	vZgPMteUikod/j4HIUpPdtbWWnDw/RLYMQ6yFbvLxIKSWKKjViI7K5Wa3H7q6UvWEk5LD4idvtn
-	D7lTyv+vxSK+tnWGEnAlYs/Urq+0Ipod2FzBjWImcpmwl6QlDgBYAbK0ufTj0R2hygxTuubAsKq
-	FNshN4LobuRG3YoQ==
-X-Gm-Gg: ASbGnct/SGqpF7hZCGniPOESUavX2bV0J4Snmm78b3wW0snfUm257KqgZW7/j1yX3bw
-	8aS8Yu/dPp+ptCzT5RMiHbUC5xphm0jfFutwQB/hlpImAoo0quyHJEWtdh/GWp1vxPJTNmPTzOy
-	iaKhQmCRx4WvEMgd3sAJEViIIyOrOzl2TjJ8GJUVTk6oe1jWAM2/v+TjM5q2BJym8AHuWTSXfsL
-	dkmLYE4PJhLvHHChiDf2kmpVqeDEYu6PmAeFm4BVTjV/PlE2K/66qIszDBH4rv1Kuj5YNqrSaC3
-	j3CrLo+bQELBCYhgHHVkAmI2Y7piMeWOAcqKrHL0hyNhhFIavaEHFX2LHg==
-X-Received: by 2002:a17:90b:3f8c:b0:308:7270:d6ea with SMTP id 98e67ed59e1d1-3159d8df995mr15047856a91.30.1750660230555;
-        Sun, 22 Jun 2025 23:30:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE6WRmD3qhtaax+BPxwX+0NgQR8RYphmZjK/RnLysnchWXhF8kKwE8e2woEaFPwjDMBGMXOHg==
-X-Received: by 2002:a17:90b:3f8c:b0:308:7270:d6ea with SMTP id 98e67ed59e1d1-3159d8df995mr15047828a91.30.1750660230166;
-        Sun, 22 Jun 2025 23:30:30 -0700 (PDT)
-Received: from u-XPS-9320.. (61-216-9-67.hinet-ip.hinet.net. [61.216.9.67])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159e048346sm7907600a91.26.2025.06.22.23.30.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 23:30:29 -0700 (PDT)
-From: Chris Chiu <chris.chiu@canonical.com>
-To: tiwai@suse.com,
-	kailang@realtek.com
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chris Chiu <chris.chiu@canonical.com>
-Subject: [PATCH] ALSA: hda/realtek: fix mute/micmute LEDs for HP EliteBook 6 G1a
-Date: Mon, 23 Jun 2025 14:30:23 +0800
-Message-Id: <20250623063023.374920-1-chris.chiu@canonical.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lLtJ9a0M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750660802; x=1782196802;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=AkQsXjCKBE0FDDEmr6BLKHKqMfKtoslc3CQ/TntZLjM=;
+  b=lLtJ9a0MEi9Dh4GmsXcMPQl7l3SpB9RD0Gfe2e2la1kjykNAjZDpe541
+   nFda4sSWTPXFfSyiibHfRBvgLG3Kdh6pqufXgceasXbikyABgptd34vMP
+   eafSWf0r21kbXL1CzpQrJ5fsctyAxO23lJ2OQfn1GRqfebTFe7Vj+JF+8
+   mmUNFfAZOclph47RSHvxv+R/efBQ82DBgK7FfQZZI6mAWWWOZeTBgHiF7
+   dMFhG2jY4T87XGEKZ7u9lkDg4RUGYQ9GLLDbOa/s2CJn223fFxnzbf3ti
+   X6aK98oygqyPMwW7SQi4SrKThyTXrost6mJSEr7oCNw8gy1QOs/TJnXu9
+   g==;
+X-CSE-ConnectionGUID: 5pEVYpVESHq7OztEm5I9lQ==
+X-CSE-MsgGUID: BWLAIfykSU+obN33FZjohw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="70422079"
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="70422079"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 23:40:01 -0700
+X-CSE-ConnectionGUID: Ri1QsT2OQQW8b4ytEfKyjw==
+X-CSE-MsgGUID: gI6CSArtRD2oNNdTMqXLHQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="182378616"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 23:39:59 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uTaqR-000000095Kk-3mBi;
+	Mon, 23 Jun 2025 09:39:55 +0300
+Date: Mon, 23 Jun 2025 09:39:55 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>
+Subject: Re: [PATCH v1 1/1] iio: imu: inv_icm42600: Convert to uXX and sXX
+ integer types
+Message-ID: <aFj2u3Tv4o72Hqi8@smile.fi.intel.com>
+References: <20250616090423.575736-1-andriy.shevchenko@linux.intel.com>
+ <FR3P281MB1757C6A610D39EA737A19EFBCE70A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
+ <CAHp75Ve68H448v3Tgv930yoMYCCKVC3kefuP+Rermj7SaiP41g@mail.gmail.com>
+ <FR3P281MB175775DBE90C5469637F3C66CE73A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
+ <CAHp75Ve0aQLaRS1-J5WoCxUAfX+Y=s2oj4ZkVvUG1XysXopZxw@mail.gmail.com>
+ <20250621181339.0331ab8b@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250621181339.0331ab8b@jic23-huawei>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-HP EliteBook 6 G1a laptops use ALC236 codec and need the fixup
-ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF to make the mic/micmute LEDs
-work.
+On Sat, Jun 21, 2025 at 06:13:39PM +0100, Jonathan Cameron wrote:
+> On Tue, 17 Jun 2025 21:33:46 +0300
+> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > On Tue, Jun 17, 2025 at 5:43 PM Jean-Baptiste Maneyrol
+> > <Jean-Baptiste.Maneyrol@tdk.com> wrote:
+> > > >From: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > >Sent: Monday, June 16, 2025 16:33
 
-Signed-off-by: Chris Chiu <chris.chiu@canonical.com>
----
- sound/pci/hda/patch_realtek.c | 2 ++
- 1 file changed, 2 insertions(+)
+...
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 7aa2c461709e..d62bac7d10c7 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10923,7 +10923,9 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x8def, "HP EliteBook 660 G12", ALC236_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8df0, "HP EliteBook 630 G12", ALC236_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8df1, "HP EliteBook 630 G12", ALC236_FIXUP_HP_GPIO_LED),
-+	SND_PCI_QUIRK(0x103c, 0x8dfb, "HP EliteBook 6 G1a 14", ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF),
- 	SND_PCI_QUIRK(0x103c, 0x8dfc, "HP EliteBook 645 G12", ALC236_FIXUP_HP_GPIO_LED),
-+	SND_PCI_QUIRK(0x103c, 0x8dfd, "HP EliteBook 6 G1a 16", ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF),
- 	SND_PCI_QUIRK(0x103c, 0x8dfe, "HP EliteBook 665 G12", ALC236_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8e11, "HP Trekker", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x103c, 0x8e12, "HP Trekker", ALC287_FIXUP_CS35L41_I2C_2),
+> > > it is good for me if we can add Cc to stable.
+> > > I don't know if I need to add the Cc tag here or when a fixed patch will
+> > > require the rework. In doubt, here it is.
+> > >
+> > > Acked-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+> > > Cc: stable@vger.kernel.org  
+> > 
+> > It makes no sense here. This is a standalone change. It's not part of
+> > any "fixes" series. You need to attach this patch to your series as
+> > patch 1 and mark Cc stable all of the patches.
+> 
+> I think this is hypothetical at the moment as the only series outstanding
+> is the WOM one which isn't a fix.  So I don't think this patch will
+> ever end up carrying a stable tag.  However, first time we get a fix
+> that needs it, if Greg etc don't sort it out anyway (they often do!)
+> then a simple mail to stable@vger.kernel.org to tell them to pick this
+> and the fix will resolve it.
+> 
+> For now I'll queue this patch up and ask for a rebase on the WOM
+> series on top of it.
+> 
+> It crossed with David's series doing {} to replace explicit memsets
+> so needed a tiny bit of hand tweaking.
+> Pushed out as testing for 0-day to look at.
+
+Thanks, Jonathan!
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
