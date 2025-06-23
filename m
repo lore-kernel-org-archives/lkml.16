@@ -1,170 +1,245 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB550A945
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7CD26D4C3;
+	Mon, 23 Jun 2025 16:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750696486; cv=none; b=LwUmx8Coog7kgbLM6r6cImbxQOjC8e3qrLXqOUNP9qrSMfa4QOnm+xqlI8zrD7hpDDL/crzYqu1UeJPrlHT6ccQx5VDaltOyRxPgM53+/fh+Tbs47a0l02bzMbiLYg5EYSxGSonZAm2jVNMUq+3KBisocCr9UNJZSIV0X74BZEU=
+	t=1750696524; cv=none; b=YKys2+ddu9DB4tz90QOyolY59XHU67Fnq/e3unrmbiX0A3v/VpZVKJq9mmSPw61P1DofO6HsNuHzSkCdv7cRBPn2ZwfsZ9C1sD6FabTjtE3i1jmmvl5dQ2asF+1RvOeQ4elNCnLU9+EwdtSLaVXUlQTTjm0trQenM7iFJGUuU2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750696486; c=relaxed/simple;
-	bh=+qIiCgtBWa+1iq23dwO1R9zMl+4efB4et4THR8FKOq8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=kpz15i4u16qexJSHgSXYzyTr1SA9FtKInrsJjdFYZcCq7AaZk9xwP+DqjvpkgVI529uc9O5N7V0NYxzSc8aEn7IPLPN5ApZAaUC7fCYBzQkUXKT1YRa08zo614MAMJ6OwXYqe6+i/dAtx2xyOApcbyGiCN3TXX6Xp8EFH59LXWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XhgrwvqK; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750696524; c=relaxed/simple;
+	bh=Ve+SpKyRBls5/n1FP5Nes9FcvfturoeCFj7ZqH+eynQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mH4bdIe06tb81Z3nJexiJAmMSFHF3YhQ8/doED0pAXouwGfT0GXZHsNvxK5phuESkfNWjauOGdTGigdvxL/biuv6+egoz9qVlbA9vZVIEVWdrYkKObS13ZixsufveI8lkNoNfUb6fSVb8CLAXqWIFSRdYTk4Osdqu7BkJanCaIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ZqNao/kX; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XhgrwvqK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750696485; x=1782232485;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=+qIiCgtBWa+1iq23dwO1R9zMl+4efB4et4THR8FKOq8=;
-  b=XhgrwvqKveT8ieswZAz/E3rcb0U2F6fy3+WIISSAgAd/As0/kUQLefgN
-   7sYLS9HSX2Apon2E0DSP5nqtwJO2bPDt91RCMoUIIbQmO7mnDRbrFI86H
-   5c0C08vExWeBT5DiHJyMhhkQOzW9R+dwfUK20P5MXGXzDLNFPMpC1gf8p
-   56Y3/yRdqyFgE83HCHUaC4GZwEoMFzhQk3XooBi5AmJHt3/4ElpO4S5PF
-   Lw3Q8Sr7UrfZ4OVdkcYIRGPu4b6m/xGga7JEq204DfG8RMetbpIMIug5u
-   K3jEARzJGCMk7fmzF3tL5CckSqCS4jlm65U5ra/sUKeA/4edWVSeahysp
-   A==;
-X-CSE-ConnectionGUID: fWR0eZVHQn+aPgO2NnBKMw==
-X-CSE-MsgGUID: UNqb56pLR4idshsveIp7PA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52139960"
-X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
-   d="scan'208";a="52139960"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 09:34:44 -0700
-X-CSE-ConnectionGUID: 84yHfsV9S/uiVxbZg6MLzw==
-X-CSE-MsgGUID: 2FhlRV81T3CRGP6E/A5DSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
-   d="scan'208";a="152343340"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 23 Jun 2025 09:34:43 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uTk80-000P6i-24;
-	Mon, 23 Jun 2025 16:34:40 +0000
-Date: Tue, 24 Jun 2025 00:34:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Junxian Huang <huangjunxian6@hisilicon.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Leon Romanovsky <leon@kernel.org>
-Subject: drivers/infiniband/hw/hns/hns_roce_hw_v2.c:5359:1: warning: the
- frame size of 1088 bytes is larger than 1024 bytes
-Message-ID: <202506240032.CSgIyFct-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZqNao/kX"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55NGYaHH1005381
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 23 Jun 2025 09:34:36 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55NGYaHH1005381
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025062101; t=1750696477;
+	bh=pJ4n1VEcTP7nUT8MFJdFAr79IrfN7vjnPZUzVxTm0Gs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZqNao/kXH0QhsZEIKDxhQRs9nGqZsXOX3O1PQqTydeuF32axKfiWw/YcrZkrEjVt/
+	 tDapUNCaVI5Vfi2UuLtdj+C7sULRXA5EuQUpkiNjaNa80KSs6NAGviEkYlc08oi6HV
+	 jSLszTK4xHQf9+kWq2iPQU16ohCdkQv5+Usrm6h3oWNrgfv4EaegzXAJlBZqEduk94
+	 Ciw/9T5RAiWbwR3sa4w5Hk7KmxHXOwdmhTAmqVml/J24QD1eAl22MY02cPC7HoEOeu
+	 swhQoIhYcUrZxtWvkiXK4Z/+BTHjWmh39FzFhfJsVabhuZn0/+5x/dKBV1YGUIP2D4
+	 hgvB5sGMg5n/A==
+Message-ID: <b170c705-c2a8-44ac-a77d-0c3c73ebed0a@zytor.com>
+Date: Mon, 23 Jun 2025 09:34:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] x86/traps: Initialize DR6 by writing its
+ architectural reset value
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, stable@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        seanjc@google.com, pbonzini@redhat.com, peterz@infradead.org,
+        sohil.mehta@intel.com, brgerst@gmail.com, tony.luck@intel.com,
+        fenghuay@nvidia.com
+References: <20250620231504.2676902-1-xin@zytor.com>
+ <20250620231504.2676902-2-xin@zytor.com>
+ <4018038c-8c96-49e0-b6b7-f54e0f52a65f@linux.intel.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <4018038c-8c96-49e0-b6b7-f54e0f52a65f@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Junxian,
+On 6/22/2025 11:49 PM, Ethan Zhao wrote:
+> 
+> 在 2025/6/21 7:15, Xin Li (Intel) 写道:
+>> Initialize DR6 by writing its architectural reset value to avoid
+>> incorrectly zeroing DR6 to clear DR6.BLD at boot time, which leads
+>> to a false bus lock detected warning.
+>>
+>> The Intel SDM says:
+>>
+>>    1) Certain debug exceptions may clear bits 0-3 of DR6.
+>>
+>>    2) BLD induced #DB clears DR6.BLD and any other debug exception
+>>       doesn't modify DR6.BLD.
+>>
+>>    3) RTM induced #DB clears DR6.RTM and any other debug exception
+>>       sets DR6.RTM.
+>>
+>>    To avoid confusion in identifying debug exceptions, debug handlers
+>>    should set DR6.BLD and DR6.RTM, and clear other DR6 bits before
+>>    returning.
+>>
+>> The DR6 architectural reset value 0xFFFF0FF0, already defined as
+>> macro DR6_RESERVED, satisfies these requirements, so just use it to
+>> reinitialize DR6 whenever needed.
+>>
+>> Since clear_all_debug_regs() no longer zeros all debug registers,
+>> rename it to initialize_debug_regs() to better reflect its current
+>> behavior.
+>>
+>> Since debug_read_clear_dr6() no longer clears DR6, rename it to
+>> debug_read_reset_dr6() to better reflect its current behavior.
+>>
+>> Reported-by: Sohil Mehta <sohil.mehta@intel.com>
+>> Link: https://lore.kernel.org/lkml/06e68373-a92b-472e-8fd9- 
+>> ba548119770c@intel.com/
+>> Fixes: ebb1064e7c2e9 ("x86/traps: Handle #DB for bus lock")
+>> Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+>> Tested-by: Sohil Mehta <sohil.mehta@intel.com>
+>> Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+>> Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+>> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+>> Cc: stable@vger.kernel.org
+>> ---
+>>
+>> Changes in v3:
+>> *) Polish initialize_debug_regs() (PeterZ).
+>> *) Rewrite the comment for DR6_RESERVED definition (Sohil and Sean).
+>> *) Collect TB, RB, AB (PeterZ and Sohil).
+>>
+>> Changes in v2:
+>> *) Use debug register index 6 rather than DR_STATUS (PeterZ and Sean).
+>> *) Move this patch the first of the patch set to ease backporting.
+>> ---
+>>   arch/x86/include/uapi/asm/debugreg.h | 21 ++++++++++++++++-
+>>   arch/x86/kernel/cpu/common.c         | 24 ++++++++------------
+>>   arch/x86/kernel/traps.c              | 34 +++++++++++++++++-----------
+>>   3 files changed, 51 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/arch/x86/include/uapi/asm/debugreg.h b/arch/x86/include/ 
+>> uapi/asm/debugreg.h
+>> index 0007ba077c0c..41da492dfb01 100644
+>> --- a/arch/x86/include/uapi/asm/debugreg.h
+>> +++ b/arch/x86/include/uapi/asm/debugreg.h
+>> @@ -15,7 +15,26 @@
+>>      which debugging register was responsible for the trap.  The other 
+>> bits
+>>      are either reserved or not of interest to us. */
+>> -/* Define reserved bits in DR6 which are always set to 1 */
+>> +/*
+>> + * Define bits in DR6 which are set to 1 by default.
+>> + *
+>> + * This is also the DR6 architectural value following Power-up, Reset 
+>> or INIT.
+>> + *
+>> + * Note, with the introduction of Bus Lock Detection (BLD) and 
+>> Restricted
+>> + * Transactional Memory (RTM), the DR6 register has been modified:
+>> + *
+>> + * 1) BLD flag (bit 11) is no longer reserved to 1 if the CPU supports
+>> + *    Bus Lock Detection.  The assertion of a bus lock could clear it.
+>> + *
+>> + * 2) RTM flag (bit 16) is no longer reserved to 1 if the CPU supports
+>> + *    restricted transactional memory.  #DB occurred inside an RTM 
+>> region
+>> + *    could clear it.
+>> + *
+>> + * Apparently, DR6.BLD and DR6.RTM are active low bits.
+>> + *
+>> + * As a result, DR6_RESERVED is an incorrect name now, but it is kept 
+>> for
+>> + * compatibility.
+>> + */
+>>   #define DR6_RESERVED    (0xFFFF0FF0)
+>>   #define DR_TRAP0    (0x1)        /* db0 */
+>> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+>> index 8feb8fd2957a..0f6c280a94f0 100644
+>> --- a/arch/x86/kernel/cpu/common.c
+>> +++ b/arch/x86/kernel/cpu/common.c
+>> @@ -2243,20 +2243,16 @@ EXPORT_PER_CPU_SYMBOL(__stack_chk_guard);
+>>   #endif
+>>   #endif
+>> -/*
+>> - * Clear all 6 debug registers:
+>> - */
+>> -static void clear_all_debug_regs(void)
+>> +static void initialize_debug_regs(void)
+>>   {
+>> -    int i;
+>> -
+>> -    for (i = 0; i < 8; i++) {
+>> -        /* Ignore db4, db5 */
+>> -        if ((i == 4) || (i == 5))
+>> -            continue;
+>> -
+>> -        set_debugreg(0, i);
+>> -    }
+>> +    /* Control register first -- to make sure everything is disabled. */
+> 
+> In the Figure 19-1. Debug Registers of SDM section 19.2 DEBUG REGISTERS,
+> 
+> bit 10, 12, 14, 15 of DR7 are marked as gray (Reversed) and their value 
+> are filled as
+> 
+> 1, 0, 0,0 ; should we clear them all here ?  I didn't find any other 
+> description in the
+> 
+> SDM about the result if they are cleaned. of course, this patch doesn't 
+> change
+> 
+> the behaviour of original DR7 initialization code, no justification needed,
+> 
+> just out of curiosity.
 
-First bad commit (maybe != root cause):
+This patch is NOT intended to make any actual change to DR7
+initialization.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   86731a2a651e58953fc949573895f2fa6d456841
-commit: 8977b561216c7e693d61c6442657e33f134bfeb5 RDMA/hns: Clean up the legacy CONFIG_INFINIBAND_HNS
-date:   6 months ago
-config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20250624/202506240032.CSgIyFct-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506240032.CSgIyFct-lkp@intel.com/reproduce)
+Please take a look at the second patch of this patch set.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506240032.CSgIyFct-lkp@intel.com/
+Thanks!
+     Xin
 
-All warnings (new ones prefixed by >>):
-
-   drivers/infiniband/hw/hns/hns_roce_hw_v2.c: In function 'hns_roce_v2_modify_qp':
->> drivers/infiniband/hw/hns/hns_roce_hw_v2.c:5359:1: warning: the frame size of 1088 bytes is larger than 1024 bytes [-Wframe-larger-than=]
-    5359 | }
-         | ^
-
-
-vim +5359 drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-
-f0cb411aad23af Lang Cheng      2021-06-21  5293  
-606bf89e98efb1 Lijun Ou        2019-07-08  5294  static int hns_roce_v2_modify_qp(struct ib_qp *ibqp,
-606bf89e98efb1 Lijun Ou        2019-07-08  5295  				 const struct ib_qp_attr *attr,
-606bf89e98efb1 Lijun Ou        2019-07-08  5296  				 int attr_mask, enum ib_qp_state cur_state,
-2bb185c68bf4c1 Luoyouming      2022-12-24  5297  				 enum ib_qp_state new_state, struct ib_udata *udata)
-606bf89e98efb1 Lijun Ou        2019-07-08  5298  {
-606bf89e98efb1 Lijun Ou        2019-07-08  5299  	struct hns_roce_dev *hr_dev = to_hr_dev(ibqp->device);
-606bf89e98efb1 Lijun Ou        2019-07-08  5300  	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
-4b42d05d0b2ca5 Lang Cheng      2019-08-08  5301  	struct hns_roce_v2_qp_context ctx[2];
-4b42d05d0b2ca5 Lang Cheng      2019-08-08  5302  	struct hns_roce_v2_qp_context *context = ctx;
-4b42d05d0b2ca5 Lang Cheng      2019-08-08  5303  	struct hns_roce_v2_qp_context *qpc_mask = ctx + 1;
-ae1c61489c7fa0 Lijun Ou        2020-03-20  5304  	struct ib_device *ibdev = &hr_dev->ib_dev;
-b5c229dc1585ad Lang Cheng      2019-08-08  5305  	int ret;
-606bf89e98efb1 Lijun Ou        2019-07-08  5306  
-26e990badde40b Jason Gunthorpe 2020-10-03  5307  	if (attr_mask & ~IB_QP_ATTR_STANDARD_BITS)
-26e990badde40b Jason Gunthorpe 2020-10-03  5308  		return -EOPNOTSUPP;
-26e990badde40b Jason Gunthorpe 2020-10-03  5309  
-606bf89e98efb1 Lijun Ou        2019-07-08  5310  	/*
-606bf89e98efb1 Lijun Ou        2019-07-08  5311  	 * In v2 engine, software pass context and context mask to hardware
-606bf89e98efb1 Lijun Ou        2019-07-08  5312  	 * when modifying qp. If software need modify some fields in context,
-606bf89e98efb1 Lijun Ou        2019-07-08  5313  	 * we should set all bits of the relevant fields in context mask to
-606bf89e98efb1 Lijun Ou        2019-07-08  5314  	 * 0 at the same time, else set them to 0x1.
-606bf89e98efb1 Lijun Ou        2019-07-08  5315  	 */
-98912ee82a0c22 Wenpeng Liang   2020-09-16  5316  	memset(context, 0, hr_dev->caps.qpc_sz);
-98912ee82a0c22 Wenpeng Liang   2020-09-16  5317  	memset(qpc_mask, 0xff, hr_dev->caps.qpc_sz);
-98912ee82a0c22 Wenpeng Liang   2020-09-16  5318  
-606bf89e98efb1 Lijun Ou        2019-07-08  5319  	ret = hns_roce_v2_set_abs_fields(ibqp, attr, attr_mask, cur_state,
-2bb185c68bf4c1 Luoyouming      2022-12-24  5320  					 new_state, context, qpc_mask, udata);
-606bf89e98efb1 Lijun Ou        2019-07-08  5321  	if (ret)
-606bf89e98efb1 Lijun Ou        2019-07-08  5322  		goto out;
-606bf89e98efb1 Lijun Ou        2019-07-08  5323  
-606bf89e98efb1 Lijun Ou        2019-07-08  5324  	/* When QP state is err, SQ and RQ WQE should be flushed */
-f0cb411aad23af Lang Cheng      2021-06-21  5325  	if (new_state == IB_QPS_ERR)
-f0cb411aad23af Lang Cheng      2021-06-21  5326  		v2_set_flushed_fields(ibqp, context, qpc_mask);
-606bf89e98efb1 Lijun Ou        2019-07-08  5327  
-606bf89e98efb1 Lijun Ou        2019-07-08  5328  	/* Configure the optional fields */
-606bf89e98efb1 Lijun Ou        2019-07-08  5329  	ret = hns_roce_v2_set_opt_fields(ibqp, attr, attr_mask, context,
-606bf89e98efb1 Lijun Ou        2019-07-08  5330  					 qpc_mask);
-606bf89e98efb1 Lijun Ou        2019-07-08  5331  	if (ret)
-606bf89e98efb1 Lijun Ou        2019-07-08  5332  		goto out;
-606bf89e98efb1 Lijun Ou        2019-07-08  5333  
-f0cb411aad23af Lang Cheng      2021-06-21  5334  	hr_reg_write_bool(context, QPC_INV_CREDIT,
-f0cb411aad23af Lang Cheng      2021-06-21  5335  			  to_hr_qp_type(hr_qp->ibqp.qp_type) == SERV_TYPE_XRC ||
-f0cb411aad23af Lang Cheng      2021-06-21  5336  			  ibqp->srq);
-f0cb411aad23af Lang Cheng      2021-06-21  5337  	hr_reg_clear(qpc_mask, QPC_INV_CREDIT);
-c7bcb13442e1bd Lijun Ou        2018-11-24  5338  
-926a01dc000d76 Wei Hu(Xavier   2017-08-30  5339) 	/* Every status migrate must change state */
-f0cb411aad23af Lang Cheng      2021-06-21  5340  	hr_reg_write(context, QPC_QP_ST, new_state);
-f0cb411aad23af Lang Cheng      2021-06-21  5341  	hr_reg_clear(qpc_mask, QPC_QP_ST);
-926a01dc000d76 Wei Hu(Xavier   2017-08-30  5342) 
-926a01dc000d76 Wei Hu(Xavier   2017-08-30  5343) 	/* SW pass context to HW */
-98912ee82a0c22 Wenpeng Liang   2020-09-16  5344  	ret = hns_roce_v2_qp_modify(hr_dev, context, qpc_mask, hr_qp);
-926a01dc000d76 Wei Hu(Xavier   2017-08-30  5345) 	if (ret) {
-323275ac2ff15b wenglianfa      2024-10-24  5346  		ibdev_err_ratelimited(ibdev, "failed to modify QP, ret = %d.\n", ret);
-926a01dc000d76 Wei Hu(Xavier   2017-08-30  5347) 		goto out;
-926a01dc000d76 Wei Hu(Xavier   2017-08-30  5348) 	}
-926a01dc000d76 Wei Hu(Xavier   2017-08-30  5349) 
-926a01dc000d76 Wei Hu(Xavier   2017-08-30  5350) 	hr_qp->state = new_state;
-926a01dc000d76 Wei Hu(Xavier   2017-08-30  5351) 
-606bf89e98efb1 Lijun Ou        2019-07-08  5352  	hns_roce_v2_record_opt_fields(ibqp, attr, attr_mask);
-926a01dc000d76 Wei Hu(Xavier   2017-08-30  5353) 
-32548870d438ab Wenpeng Liang   2021-03-04  5354  	if (new_state == IB_QPS_RESET && !ibqp->uobject)
-32548870d438ab Wenpeng Liang   2021-03-04  5355  		clear_qp(hr_qp);
-926a01dc000d76 Wei Hu(Xavier   2017-08-30  5356) 
-926a01dc000d76 Wei Hu(Xavier   2017-08-30  5357) out:
-926a01dc000d76 Wei Hu(Xavier   2017-08-30  5358) 	return ret;
-926a01dc000d76 Wei Hu(Xavier   2017-08-30 @5359) }
-926a01dc000d76 Wei Hu(Xavier   2017-08-30  5360) 
-
-:::::: The code at line 5359 was first introduced by commit
-:::::: 926a01dc000d76df3f5b110dddcebfb517b8f57b RDMA/hns: Add QP operations support for hip08 SoC
-
-:::::: TO: Wei Hu(Xavier) <xavier.huwei@huawei.com>
-:::::: CC: Doug Ledford <dledford@redhat.com>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+>> +    set_debugreg(0, 7);
+>> +    set_debugreg(DR6_RESERVED, 6);
+>> +    /* dr5 and dr4 don't exist */
+>> +    set_debugreg(0, 3);
+>> +    set_debugreg(0, 2);
+>> +    set_debugreg(0, 1);
+>> +    set_debugreg(0, 0);
