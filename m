@@ -1,260 +1,188 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F3F2D323E
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750702321; cv=none; b=OVC3VUggzcOcV1iJ9ptvVK999N0r49+VBBwr9+ydL0foSYzBissNzote5NJOgNhN9aDfw9ISCr/dI+Ca/Dq9RCMCY/O6ZWfSGTBEIfY8gHlw6uicZg+TJSKTrH0jghdATtrjrzsd7+r5UYQCWvYtzNaSrHFD/CBKQuSp3nhxuao=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750702321; c=relaxed/simple;
-	bh=va0T8ulaBQpx4skDDCdaq0VuEfDt2Nf05jRRXs/fYRM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=pxeYMzNxFj7ZcVW7E2fB4OSMibBiyZZkmGjz3mtrn2nCgk1vbPdzHUH+k6QUm85x4MULyrqmEep1DIzZ7SsXKmEpHY/lq9mol6fORRIl9ONHm3Qsqx5zoOs6XBbXr0nPls0PeaIjNO/HpLVywAjV2a07TR6lUiCZzGHYOup/vYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FMaFAK8c; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042162BD010;
+	Mon, 23 Jun 2025 18:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750702347; cv=fail; b=ZVz3Evk1VZPwqVLv9xVWMzT9caazCNpugEn5yfDcdxnCwqH7vAQu85kXdxreJ4WesxJizARMAXLlMMbMnjqqMHr33wj9OmgCTG4mAbnPQF3m9Xyi/+V5H0gpZoHK4kceqF+xrp6ofNI6oVbE0z3R0lPoE7FICjV6gA7BsxYpnsY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750702347; c=relaxed/simple;
+	bh=VdWiF5VRF8wyWj2MZgJnmt9AKIXXU0xoEJj/W105EM8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=pi8cs936TrgihNasOsfUo0fYgUt5CBPSfN/gmhvPv9mdzmAi09p4bpfKODSnhT2r9iExpVRjZRoAASj2FuOKslm4BUyR8ml8jDzv8jlyeso+ejuxmkl6sXSvZ1h2iI7RW5aEfpnXyDKU/RoJSXvPCtLLBAqU8vrt7bNU/f7Db3U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TDbAVc7D; arc=fail smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FMaFAK8c"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TDbAVc7D"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750702318; x=1782238318;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=va0T8ulaBQpx4skDDCdaq0VuEfDt2Nf05jRRXs/fYRM=;
-  b=FMaFAK8cWatOoVvoLYyHVDA4dZ6KmPzZaA4DolVaG8DobrcbwvJ/aObZ
-   w3CTstdtTTemBuPj4DZ1qP3EBkkPsq5g+D+sVXzFOscmg/MD6jVepYFRu
-   4kMXqoBmqszkHC06QUiddjpYXvAS1Mjh83pq0sttoepjIBFw+RPHfWnFN
-   mzf0J/F7M1mZabCKlTj2C8RAeqSA3/UdQPN1Cy9TbMNLDU1MDaPRpiz3B
-   FQS2pTIMPlm0sOjCRe5cZEQlRAUKdWW69nYyH8ndI54IQG/yQsflVLnNr
-   nXVElVHLEnPY7t6tiqsTJ+1NoW6vTSDL10PctC3dy2s3QMNSeLicQfYsZ
-   A==;
-X-CSE-ConnectionGUID: Tlky1P/kRLexAWEM3CzjEw==
-X-CSE-MsgGUID: sjSKviPsSz6dJBm4Vgt3lQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52792481"
+  t=1750702346; x=1782238346;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=VdWiF5VRF8wyWj2MZgJnmt9AKIXXU0xoEJj/W105EM8=;
+  b=TDbAVc7DlSChzzj1/0byzQGqZaoil+Y1fU6H4hbr/HqoKXLyQ+1+GWKD
+   UX/pnzdLGdHnMuaeTMBnU+6xIcQ7SrOL+2HFEAigkGAy5mZ3B9m8khsa2
+   l50e/D6rQ3vjp8mIYkmrdOQ2asTOdi94UB9m+yUS8Fjz6Fpq2UdFQcXO8
+   dr4ZdIipWmXgmDoNHNx29epwT4N1AJ6fqXHpVUqk9xSzmIvEFwVAzJTjs
+   u9gZIzREiW1QZlzvVXkiCFSQd4gcGTgyPhCM8DtE9CumdWBYN6ogPQCOE
+   QG7N0vThiRSjWZESsKp4F4q27CDy95VqPOy+LL3bb4D1WYb1qFJ9NTxqG
+   g==;
+X-CSE-ConnectionGUID: 40XO7wglSwe706mJJM560A==
+X-CSE-MsgGUID: jEQSl8LPSXyn6FgWc+Po8g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="70348458"
 X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
-   d="scan'208";a="52792481"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 11:11:58 -0700
-X-CSE-ConnectionGUID: BNoo/FlWSBapBZMOSEaj4w==
-X-CSE-MsgGUID: ElLQ73gwTyeTkjDOyInlrA==
+   d="scan'208";a="70348458"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 11:12:25 -0700
+X-CSE-ConnectionGUID: adDYc+AJR2qhD7fdecrZgQ==
+X-CSE-MsgGUID: 356gXNXmQQGE+ZZM37hRfg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
-   d="scan'208";a="151092981"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 23 Jun 2025 11:11:56 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uTle6-000PCC-0I;
-	Mon, 23 Jun 2025 18:11:54 +0000
-Date: Tue, 24 Jun 2025 02:11:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Eric Biggers <ebiggers@google.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Herbert Xu <herbert@gondor.apana.org.au>
-Subject: crypto/testmgr.c:2994:1: warning: the frame size of 1032 bytes is
- larger than 1024 bytes
-Message-ID: <202506240244.cOarmYVt-lkp@intel.com>
+   d="scan'208";a="156043277"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 11:12:25 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 23 Jun 2025 11:12:25 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Mon, 23 Jun 2025 11:12:25 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (40.107.236.48)
+ by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 23 Jun 2025 11:12:24 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iOAYVnaZAxfjAcr0fSJKI2+YvsJ4Y0PhLZDcWWRBDKHeMk1tkUqmlxcrIpWkIowbh2TWx+JAzzSC2YjUPYoDvbQaO8q2vH58oDIAf8dIiuLJ7nWtFdajKMBNguOiVQGuojbjfoxIvP9yKXfB0TvXywyojHauU3dk55SYR1S5NBqARpS4U+dkrQA36765hDQ4FhLR48GwygfV+awX+Ci9yrobIH0C7SVrw+pd/cXsMZwup5z2IKmFYHBz4UIhQK/tA71GVfAAJKs8/RjgxaqluTjJNTjkAgK/DBwuW3UTkJU6xi+N+S6eKVQnlVWsOznIdPA/BjAiW3BX3nLj6jKG8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0ubAMWFXzTb81rgP9gRdozJJaNTrHHxeB8yPFCVNFVE=;
+ b=xDibxdW61C0cqVSACtjPdJYErvy7Srn257PZhYdHHAavTCV/N21ReGuY5cf+wOFo8Q/Qan56NaQmsw3m2FT+XI5nIW7efHDTIr2QxaRLdtXIP1J15tG7cV7UT+1a2TWhI37R9eJkAYVYO7BRfwtM3DjYmgfXLdfXNL+Q7cds+sXt12FjVI5Et+toRhiT/0IR+xEUy2Q0ijM+DIgbPSXVPmz2z167EofjUr2eBPYMiMLmhdrC5C0JBJvCxvt45ybw4zBhZuUSO8if9Fd0Wq7szoHDT3WEMhijt1gvHdT1mG6HEe+5baSs53jOK/CAnjz32Ny35doMwloMo97Sw14ZaQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
+ (2603:10b6:518:1::d3c) by MW6PR11MB8365.namprd11.prod.outlook.com
+ (2603:10b6:303:240::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Mon, 23 Jun
+ 2025 18:12:08 +0000
+Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
+ ([fe80::19ef:ed1c:d30:468f]) by PH3PPF9E162731D.namprd11.prod.outlook.com
+ ([fe80::19ef:ed1c:d30:468f%4]) with mapi id 15.20.8835.018; Mon, 23 Jun 2025
+ 18:12:08 +0000
+Date: Mon, 23 Jun 2025 13:13:27 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: Li Ming <ming.li@zohomail.com>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>, <shiju.jose@huawei.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Li Ming
+	<ming.li@zohomail.com>
+Subject: Re: [PATCH 1/1] cxl/edac: Fix using wrong repair type to check dram
+ event record
+Message-ID: <6859994711092_2b363e294f9@iweiny-mobl.notmuch>
+References: <20250620052924.138892-1-ming.li@zohomail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250620052924.138892-1-ming.li@zohomail.com>
+X-ClientProxiedBy: MW4PR03CA0173.namprd03.prod.outlook.com
+ (2603:10b6:303:8d::28) To PH3PPF9E162731D.namprd11.prod.outlook.com
+ (2603:10b6:518:1::d3c)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH3PPF9E162731D:EE_|MW6PR11MB8365:EE_
+X-MS-Office365-Filtering-Correlation-Id: b73ffa2f-0028-4c25-92cb-08ddb28177c0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?O5r1sEa5/MBhnmVUdWNG3w+j5XtV8ffP0TwEBY4TqxdMQ3dzT7mx78nAz/Sp?=
+ =?us-ascii?Q?oh7eOJucQCgW1OXQht/WBcHdjuDvVsR7ZHgG/nQAa8KesT5x56dDQG1rOrhk?=
+ =?us-ascii?Q?eWrxp/3AZtil4C377ouDKsC6yqYmQy0DaPTyBG5+2HXkNDLLnFjOb/0zoFsM?=
+ =?us-ascii?Q?JWITCx1h+xUFxejA+RgDJTteoURY6sdp+ARJHeq1AJgL++ZkWcrln/nRfQN+?=
+ =?us-ascii?Q?X/NnGhDjZLEFKrWwk7hKX79AiKyRsnhaVfj1iSLFwgSWjN4+i2YbbU78RKFc?=
+ =?us-ascii?Q?3+KElc5EDIthEeKcuyYd6MeHrzVfFJG18ivLxkwaQ3Phwvml9ePdTxJ9Di8G?=
+ =?us-ascii?Q?R/R2wd0CiDkohMr1v9wns7fNeWcon/ywC5uopvHmBKIoX3V38VtNBz7OaVRU?=
+ =?us-ascii?Q?CtwStF4MgHib9dxGntTNXo+yLYqU1WCvA02lUERdAEB6XBRzHPl6lRC1xMic?=
+ =?us-ascii?Q?bZ86Ea1tokZaTzeVkkL6FB+PnUpSkk/3zAgOqOKau6zSrLJxp2C8m6ZhSs8F?=
+ =?us-ascii?Q?tAXwx1tKaB4uGLvtiZOuO2duZY2cnvFW1D8RGa2SxyfCw/0NLVcVvqlPq1pf?=
+ =?us-ascii?Q?bDa/RyObkHDSvQGxInzkc4bQkgG13Ksg2DMCC4G6huELIFqa21ExbdAtWw1w?=
+ =?us-ascii?Q?BRr8SP5NA3oQtJIbR5LBxp0x+rsRhUzWparCSEY/gyMqziaIFsbZxvACOHZA?=
+ =?us-ascii?Q?fsEqo+Tnoi7hpS9jAOQfEOJdFiXtsCb3S7Kp0vp3O4iEBIbsjxXB865gfleC?=
+ =?us-ascii?Q?KfEphpraPhpbmoSlDZrwXU6YShlbieuSiuLXYsOG5+v21Noey+CgfsBkYgL6?=
+ =?us-ascii?Q?TpdR+MSHw6ybA7h/SnCRnRqCspjGmcBXogbd5iNme8s+0qXYs/jD5FGRdIpU?=
+ =?us-ascii?Q?0qzzTwIUdg/Er83eXrlGxTYaquUi7jdSRK2h3UTIJ5o7u4qOJZjUN3BcOnv1?=
+ =?us-ascii?Q?R9M1tirBJzqaySqei+gOklHJXH9XrNCNNwS8BMj0tmh7TTq5hVdOlehaRnXk?=
+ =?us-ascii?Q?IFO7qVPvx3S7sBsmhsPybUqwD1XF+t4iWtHtHD1FIt8XK+JVFmnu7SMQpoUv?=
+ =?us-ascii?Q?G9EfB6AiX2RfX822mF80reW69oRvA0yJsgCmgKP/fQDTsmcSTQAUy9PLGYVf?=
+ =?us-ascii?Q?gD7LQuBtl4TXiRNtRahZpY63pOIzsF1hWYcFP7ydbI6C/5NRaFYKOzWL7AON?=
+ =?us-ascii?Q?iaaW530N7am7XpRJq+EGKDnLc0i3YCxE7i5P3Es8DubtZfo40ORjFadKLXK7?=
+ =?us-ascii?Q?/B7AgejA4UoSpRLxNrd6qkVefyvzFdB94hGv9I7Ep+14lVwve/WaZOHvQRY1?=
+ =?us-ascii?Q?+fQAgJKGzxO3OG7hxTSV03pbhtnXVuqijp2tibbJsrDIIKUqpQjEeEr2s4b3?=
+ =?us-ascii?Q?OvG4GTBat1vfRvO68BfJOGDel4UjLIFa9XFwVHwH4N7ZF7l7Jb529aw3zxle?=
+ =?us-ascii?Q?2rpwDDMuNDo=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH3PPF9E162731D.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?jggpV0IAyK/uuapW8B3btIG0nlnN7rGlaIu1MwfINN4XL3IGRWp22S0BVf4+?=
+ =?us-ascii?Q?PSlSWK8nwVWantNxWyUsfKL2PynLr1pgWLStrveS0LMFZvgDZ3sefun9hwv9?=
+ =?us-ascii?Q?pZS5qmnI8KuPLlQ5ClYhpOZf6IABdmgWuOp5IUlLFfz41AfI0zz0lQ3qZym6?=
+ =?us-ascii?Q?kQ8Dn1rKOg6l62z4g5qFqmmUCzqumxNmmeBunBe5cMSDJEn5ZTiJtdxVLLHQ?=
+ =?us-ascii?Q?0RxeeWB/9gtIGTdDwrq794rY2P7iL+3diF9vOKrVu5gJilarJHnS11kW0xEM?=
+ =?us-ascii?Q?Eas5jG7XOidyNr+U2Uu7iOSmn9tANjrfoHd0XpzmAmhps+BF3zn/p7AMiBm3?=
+ =?us-ascii?Q?fyCuWQOBeuhdhqF+wUwaqgsVwt3oTYusONaMhyJcUjXMRpC41YDXEyyB57TX?=
+ =?us-ascii?Q?SkcffYJcO+HWVYwONIM1+mj7hjolZyZM9A8v4j2LzyC/+7EI7zXVYfAuB6fD?=
+ =?us-ascii?Q?RoSIs+WABMKjBG2a96y49GAZHFYLWqqlzOXovvfb/eGeImixJsK68acPEyxe?=
+ =?us-ascii?Q?iH9TEDGNi/wxno0daE1znbVkG6StISumgKGrktG9ojF5meZc+yBZleSGpxxe?=
+ =?us-ascii?Q?irvBMKaPqsaET7vw1OCvhogE/K1pfrbkJ2CMOlqPg7uzDe061YPx7Lvlb4j3?=
+ =?us-ascii?Q?RahUDa5KGE6h0W+SCEjTsPs13USqGjvm0VwPJU8Cl2bmxTx0YMHd2+tLLVHr?=
+ =?us-ascii?Q?e9Q5alZ3dDTnLz5Bi2qwgw1RIk7T00A+BJ4NQOp2++Brp+Hdv5rZfY2jrk6r?=
+ =?us-ascii?Q?NLIWggcp7gGgekuy24ifuSdpgaAc6Fw1gGFl7kRJI8PzeCufMxJbjXtvl06Y?=
+ =?us-ascii?Q?nzzD2dcUpc2E7s3zlDU/PKmoJmP7yzzPID4eV/eW6PAYfmnGDzoRVC0lKY0w?=
+ =?us-ascii?Q?LBDB3jL7PCHqpUdPPuGM157HoypKLdWiUFQyALGkTXKUG8KHR8HnK/eVKvlg?=
+ =?us-ascii?Q?TpXLNxlesvc5nDY2MmgAQRiYiUHD0XzJc2YDFml4pzAtfwD/4z1YcfBfq98R?=
+ =?us-ascii?Q?3SrcW3ahXz7p9qNy/TcrjB9ILLd0xV4/ZJv9L4RYEo5HOjMBowHOcoeYS/a1?=
+ =?us-ascii?Q?2TeBvY1lnXKd3Vh2Zy06Wabesg7BqTFt6GswrB6cym8rI/cGAQMiPl8xu/bn?=
+ =?us-ascii?Q?1nPEUcnxfxIiMRVTgeni5EbUglYdjGxlTYwgagkArOgupkiYGePN5JEYDPXI?=
+ =?us-ascii?Q?cjNJEvIp9Pzq/FGbY29Ibbape20FPRVBNdBQFzJTQod8Roba6JPOQ3J6spNd?=
+ =?us-ascii?Q?UWBcAv6N3VW0as6TeKyghOhmdzBtMlny8m7ASI3ourrNuWDIKbu4KyqRU9OM?=
+ =?us-ascii?Q?IXy+OJ/DzXOpa10U+Pa6ZYa12G+cYyWdgfDxEqKPhT5Nm7XVJXjO6gh1DGeX?=
+ =?us-ascii?Q?mYOCHv6v1UF8K8tSTdrHzF7jPZF/AK3jCsM3HhvUPn5Aw+Sd0JGWyFXGHfSt?=
+ =?us-ascii?Q?cWjuu1eVY/chrd1fqfccPJUH+GeIAedPQcY1BPAvqJFfYv9AbChoQs0bF4s/?=
+ =?us-ascii?Q?UPvylPbg/9uuaB8x84qMD/1rse4womINYTSbAVAyvioroulX915fyXYekOK3?=
+ =?us-ascii?Q?Rnq2SAztnysRKsPN+k2RU/mW4E11Ek03g6miofPu?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b73ffa2f-0028-4c25-92cb-08ddb28177c0
+X-MS-Exchange-CrossTenant-AuthSource: PH3PPF9E162731D.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 18:12:08.8348
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jtPZMVPZsXiaSHZhwCc+PpRMOXMNvn0Q3slchFCiicIBwLDk6nPwiA5f6ZMjuA/fmYqI26SjBcWUIollcNnjHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR11MB8365
+X-OriginatorOrg: intel.com
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   86731a2a651e58953fc949573895f2fa6d456841
-commit: 40b9969796bfa49ed1b0f7ddc254f48cb2ac6d2c crypto: testmgr - replace CRYPTO_MANAGER_DISABLE_TESTS with CRYPTO_SELFTESTS
-date:   6 weeks ago
-config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20250624/202506240244.cOarmYVt-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506240244.cOarmYVt-lkp@intel.com/reproduce)
+Li Ming wrote:
+> cxl_find_rec_dram() is used to find a DRAM event record based on the
+> inputted attributes. Different repair_type of the inputted attributes
+> will check the DRAM event record in different ways.
+> When EDAC driver is performing a memory rank sparing, it should use
+> CXL_RANK_SPARING rather than CXL_BANK_SPARING as repair_type for DRAM
+> event record checking.
+> 
+> Fixes: 588ca944c277 ("cxl/edac: Add CXL memory device memory sparing control feature")
+> Signed-off-by: Li Ming <ming.li@zohomail.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506240244.cOarmYVt-lkp@intel.com/
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-All warnings (new ones prefixed by >>):
-
-   crypto/testmgr.c: In function 'test_skcipher_vec_cfg':
->> crypto/testmgr.c:2994:1: warning: the frame size of 1032 bytes is larger than 1024 bytes [-Wframe-larger-than=]
-    2994 | }
-         | ^
-   crypto/testmgr.c: In function 'test_aead_vec_cfg':
-   crypto/testmgr.c:2240:1: warning: the frame size of 1144 bytes is larger than 1024 bytes [-Wframe-larger-than=]
-    2240 | }
-         | ^
-
-
-vim +2994 crypto/testmgr.c
-
-1aa4ecd95d8d67 Herbert Xu      2008-08-17  2838  
-6e5972fa4a0db6 Eric Biggers    2020-10-26  2839  static int test_skcipher_vec_cfg(int enc, const struct cipher_testvec *vec,
-951d13328a8a36 Eric Biggers    2019-04-11  2840  				 const char *vec_name,
-4e7babba30d820 Eric Biggers    2019-01-31  2841  				 const struct testvec_config *cfg,
-4e7babba30d820 Eric Biggers    2019-01-31  2842  				 struct skcipher_request *req,
-4e7babba30d820 Eric Biggers    2019-01-31  2843  				 struct cipher_test_sglists *tsgls)
-da7f033ddc9fde Herbert Xu      2008-07-31  2844  {
-4e7babba30d820 Eric Biggers    2019-01-31  2845  	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
-4e7babba30d820 Eric Biggers    2019-01-31  2846  	const unsigned int alignmask = crypto_skcipher_alignmask(tfm);
-4e7babba30d820 Eric Biggers    2019-01-31  2847  	const unsigned int ivsize = crypto_skcipher_ivsize(tfm);
-6e5972fa4a0db6 Eric Biggers    2020-10-26  2848  	const char *driver = crypto_skcipher_driver_name(tfm);
-4e7babba30d820 Eric Biggers    2019-01-31  2849  	const u32 req_flags = CRYPTO_TFM_REQ_MAY_BACKLOG | cfg->req_flags;
-4e7babba30d820 Eric Biggers    2019-01-31  2850  	const char *op = enc ? "encryption" : "decryption";
-4e7babba30d820 Eric Biggers    2019-01-31  2851  	DECLARE_CRYPTO_WAIT(wait);
-4e7babba30d820 Eric Biggers    2019-01-31  2852  	u8 _iv[3 * (MAX_ALGAPI_ALIGNMASK + 1) + MAX_IVLEN];
-4e7babba30d820 Eric Biggers    2019-01-31  2853  	u8 *iv = PTR_ALIGN(&_iv[0], 2 * (MAX_ALGAPI_ALIGNMASK + 1)) +
-4e7babba30d820 Eric Biggers    2019-01-31  2854  		 cfg->iv_offset +
-4e7babba30d820 Eric Biggers    2019-01-31  2855  		 (cfg->iv_offset_relative_to_alignmask ? alignmask : 0);
-4e7babba30d820 Eric Biggers    2019-01-31  2856  	struct kvec input;
-4e7babba30d820 Eric Biggers    2019-01-31  2857  	int err;
-08d6af8c160b6b Jussi Kivilinna 2012-09-21  2858  
-4e7babba30d820 Eric Biggers    2019-01-31  2859  	/* Set the key */
-4e7babba30d820 Eric Biggers    2019-01-31  2860  	if (vec->wk)
-4e7babba30d820 Eric Biggers    2019-01-31  2861  		crypto_skcipher_set_flags(tfm, CRYPTO_TFM_REQ_FORBID_WEAK_KEYS);
-da7f033ddc9fde Herbert Xu      2008-07-31  2862  	else
-4e7babba30d820 Eric Biggers    2019-01-31  2863  		crypto_skcipher_clear_flags(tfm,
-4e7babba30d820 Eric Biggers    2019-01-31  2864  					    CRYPTO_TFM_REQ_FORBID_WEAK_KEYS);
-fd8c37c72d60c7 Eric Biggers    2019-12-01  2865  	err = do_setkey(crypto_skcipher_setkey, tfm, vec->key, vec->klen,
-fd8c37c72d60c7 Eric Biggers    2019-12-01  2866  			cfg, alignmask);
-4e7babba30d820 Eric Biggers    2019-01-31  2867  	if (err) {
-5283a8ee9badf6 Eric Biggers    2019-04-11  2868  		if (err == vec->setkey_error)
-4e7babba30d820 Eric Biggers    2019-01-31  2869  			return 0;
-951d13328a8a36 Eric Biggers    2019-04-11  2870  		pr_err("alg: skcipher: %s setkey failed on test vector %s; expected_error=%d, actual_error=%d, flags=%#x\n",
-951d13328a8a36 Eric Biggers    2019-04-11  2871  		       driver, vec_name, vec->setkey_error, err,
-5283a8ee9badf6 Eric Biggers    2019-04-11  2872  		       crypto_skcipher_get_flags(tfm));
-4e7babba30d820 Eric Biggers    2019-01-31  2873  		return err;
-4e7babba30d820 Eric Biggers    2019-01-31  2874  	}
-5283a8ee9badf6 Eric Biggers    2019-04-11  2875  	if (vec->setkey_error) {
-951d13328a8a36 Eric Biggers    2019-04-11  2876  		pr_err("alg: skcipher: %s setkey unexpectedly succeeded on test vector %s; expected_error=%d\n",
-951d13328a8a36 Eric Biggers    2019-04-11  2877  		       driver, vec_name, vec->setkey_error);
-4e7babba30d820 Eric Biggers    2019-01-31  2878  		return -EINVAL;
-da7f033ddc9fde Herbert Xu      2008-07-31  2879  	}
-da7f033ddc9fde Herbert Xu      2008-07-31  2880  
-4e7babba30d820 Eric Biggers    2019-01-31  2881  	/* The IV must be copied to a buffer, as the algorithm may modify it */
-4e7babba30d820 Eric Biggers    2019-01-31  2882  	if (ivsize) {
-4e7babba30d820 Eric Biggers    2019-01-31  2883  		if (WARN_ON(ivsize > MAX_IVLEN))
-4e7babba30d820 Eric Biggers    2019-01-31  2884  			return -EINVAL;
-730f67d8b826d9 Eric Biggers    2024-12-27  2885  		if (vec->iv)
-4e7babba30d820 Eric Biggers    2019-01-31  2886  			memcpy(iv, vec->iv, ivsize);
-da7f033ddc9fde Herbert Xu      2008-07-31  2887  		else
-4e7babba30d820 Eric Biggers    2019-01-31  2888  			memset(iv, 0, ivsize);
-4e7babba30d820 Eric Biggers    2019-01-31  2889  	} else {
-4e7babba30d820 Eric Biggers    2019-01-31  2890  		iv = NULL;
-08d6af8c160b6b Jussi Kivilinna 2012-09-21  2891  	}
-da7f033ddc9fde Herbert Xu      2008-07-31  2892  
-4e7babba30d820 Eric Biggers    2019-01-31  2893  	/* Build the src/dst scatterlists */
-4e7babba30d820 Eric Biggers    2019-01-31  2894  	input.iov_base = enc ? (void *)vec->ptext : (void *)vec->ctext;
-4e7babba30d820 Eric Biggers    2019-01-31  2895  	input.iov_len = vec->len;
-4e7babba30d820 Eric Biggers    2019-01-31  2896  	err = build_cipher_test_sglists(tsgls, cfg, alignmask,
-4e7babba30d820 Eric Biggers    2019-01-31  2897  					vec->len, vec->len, &input, 1);
-4e7babba30d820 Eric Biggers    2019-01-31  2898  	if (err) {
-951d13328a8a36 Eric Biggers    2019-04-11  2899  		pr_err("alg: skcipher: %s %s: error preparing scatterlists for test vector %s, cfg=\"%s\"\n",
-951d13328a8a36 Eric Biggers    2019-04-11  2900  		       driver, op, vec_name, cfg->name);
-4e7babba30d820 Eric Biggers    2019-01-31  2901  		return err;
-da7f033ddc9fde Herbert Xu      2008-07-31  2902  	}
-da7f033ddc9fde Herbert Xu      2008-07-31  2903  
-4e7babba30d820 Eric Biggers    2019-01-31  2904  	/* Do the actual encryption or decryption */
-4e7babba30d820 Eric Biggers    2019-01-31  2905  	testmgr_poison(req->__ctx, crypto_skcipher_reqsize(tfm));
-4e7babba30d820 Eric Biggers    2019-01-31  2906  	skcipher_request_set_callback(req, req_flags, crypto_req_done, &wait);
-4e7babba30d820 Eric Biggers    2019-01-31  2907  	skcipher_request_set_crypt(req, tsgls->src.sgl_ptr, tsgls->dst.sgl_ptr,
-4e7babba30d820 Eric Biggers    2019-01-31  2908  				   vec->len, iv);
-6570737c7fa047 Eric Biggers    2019-03-12  2909  	if (cfg->nosimd)
-6570737c7fa047 Eric Biggers    2019-03-12  2910  		crypto_disable_simd_for_test();
-6570737c7fa047 Eric Biggers    2019-03-12  2911  	err = enc ? crypto_skcipher_encrypt(req) : crypto_skcipher_decrypt(req);
-6570737c7fa047 Eric Biggers    2019-03-12  2912  	if (cfg->nosimd)
-6570737c7fa047 Eric Biggers    2019-03-12  2913  		crypto_reenable_simd_for_test();
-6570737c7fa047 Eric Biggers    2019-03-12  2914  	err = crypto_wait_req(err, &wait);
-8a826a34a52eef Boris Brezillon 2015-06-16  2915  
-fa353c99174e83 Eric Biggers    2019-01-31  2916  	/* Check that the algorithm didn't overwrite things it shouldn't have */
-fa353c99174e83 Eric Biggers    2019-01-31  2917  	if (req->cryptlen != vec->len ||
-fa353c99174e83 Eric Biggers    2019-01-31  2918  	    req->iv != iv ||
-fa353c99174e83 Eric Biggers    2019-01-31  2919  	    req->src != tsgls->src.sgl_ptr ||
-fa353c99174e83 Eric Biggers    2019-01-31  2920  	    req->dst != tsgls->dst.sgl_ptr ||
-fa353c99174e83 Eric Biggers    2019-01-31  2921  	    crypto_skcipher_reqtfm(req) != tfm ||
-fa353c99174e83 Eric Biggers    2019-01-31  2922  	    req->base.complete != crypto_req_done ||
-fa353c99174e83 Eric Biggers    2019-01-31  2923  	    req->base.flags != req_flags ||
-fa353c99174e83 Eric Biggers    2019-01-31  2924  	    req->base.data != &wait) {
-951d13328a8a36 Eric Biggers    2019-04-11  2925  		pr_err("alg: skcipher: %s %s corrupted request struct on test vector %s, cfg=\"%s\"\n",
-951d13328a8a36 Eric Biggers    2019-04-11  2926  		       driver, op, vec_name, cfg->name);
-fa353c99174e83 Eric Biggers    2019-01-31  2927  		if (req->cryptlen != vec->len)
-fa353c99174e83 Eric Biggers    2019-01-31  2928  			pr_err("alg: skcipher: changed 'req->cryptlen'\n");
-fa353c99174e83 Eric Biggers    2019-01-31  2929  		if (req->iv != iv)
-fa353c99174e83 Eric Biggers    2019-01-31  2930  			pr_err("alg: skcipher: changed 'req->iv'\n");
-fa353c99174e83 Eric Biggers    2019-01-31  2931  		if (req->src != tsgls->src.sgl_ptr)
-fa353c99174e83 Eric Biggers    2019-01-31  2932  			pr_err("alg: skcipher: changed 'req->src'\n");
-fa353c99174e83 Eric Biggers    2019-01-31  2933  		if (req->dst != tsgls->dst.sgl_ptr)
-fa353c99174e83 Eric Biggers    2019-01-31  2934  			pr_err("alg: skcipher: changed 'req->dst'\n");
-fa353c99174e83 Eric Biggers    2019-01-31  2935  		if (crypto_skcipher_reqtfm(req) != tfm)
-fa353c99174e83 Eric Biggers    2019-01-31  2936  			pr_err("alg: skcipher: changed 'req->base.tfm'\n");
-fa353c99174e83 Eric Biggers    2019-01-31  2937  		if (req->base.complete != crypto_req_done)
-fa353c99174e83 Eric Biggers    2019-01-31  2938  			pr_err("alg: skcipher: changed 'req->base.complete'\n");
-fa353c99174e83 Eric Biggers    2019-01-31  2939  		if (req->base.flags != req_flags)
-fa353c99174e83 Eric Biggers    2019-01-31  2940  			pr_err("alg: skcipher: changed 'req->base.flags'\n");
-fa353c99174e83 Eric Biggers    2019-01-31  2941  		if (req->base.data != &wait)
-fa353c99174e83 Eric Biggers    2019-01-31  2942  			pr_err("alg: skcipher: changed 'req->base.data'\n");
-fa353c99174e83 Eric Biggers    2019-01-31  2943  		return -EINVAL;
-fa353c99174e83 Eric Biggers    2019-01-31  2944  	}
-fa353c99174e83 Eric Biggers    2019-01-31  2945  	if (is_test_sglist_corrupted(&tsgls->src)) {
-951d13328a8a36 Eric Biggers    2019-04-11  2946  		pr_err("alg: skcipher: %s %s corrupted src sgl on test vector %s, cfg=\"%s\"\n",
-951d13328a8a36 Eric Biggers    2019-04-11  2947  		       driver, op, vec_name, cfg->name);
-fa353c99174e83 Eric Biggers    2019-01-31  2948  		return -EINVAL;
-fa353c99174e83 Eric Biggers    2019-01-31  2949  	}
-fa353c99174e83 Eric Biggers    2019-01-31  2950  	if (tsgls->dst.sgl_ptr != tsgls->src.sgl &&
-fa353c99174e83 Eric Biggers    2019-01-31  2951  	    is_test_sglist_corrupted(&tsgls->dst)) {
-951d13328a8a36 Eric Biggers    2019-04-11  2952  		pr_err("alg: skcipher: %s %s corrupted dst sgl on test vector %s, cfg=\"%s\"\n",
-951d13328a8a36 Eric Biggers    2019-04-11  2953  		       driver, op, vec_name, cfg->name);
-fa353c99174e83 Eric Biggers    2019-01-31  2954  		return -EINVAL;
-fa353c99174e83 Eric Biggers    2019-01-31  2955  	}
-fa353c99174e83 Eric Biggers    2019-01-31  2956  
-5283a8ee9badf6 Eric Biggers    2019-04-11  2957  	/* Check for success or failure */
-5283a8ee9badf6 Eric Biggers    2019-04-11  2958  	if (err) {
-5283a8ee9badf6 Eric Biggers    2019-04-11  2959  		if (err == vec->crypt_error)
-5283a8ee9badf6 Eric Biggers    2019-04-11  2960  			return 0;
-951d13328a8a36 Eric Biggers    2019-04-11  2961  		pr_err("alg: skcipher: %s %s failed on test vector %s; expected_error=%d, actual_error=%d, cfg=\"%s\"\n",
-951d13328a8a36 Eric Biggers    2019-04-11  2962  		       driver, op, vec_name, vec->crypt_error, err, cfg->name);
-5283a8ee9badf6 Eric Biggers    2019-04-11  2963  		return err;
-5283a8ee9badf6 Eric Biggers    2019-04-11  2964  	}
-5283a8ee9badf6 Eric Biggers    2019-04-11  2965  	if (vec->crypt_error) {
-951d13328a8a36 Eric Biggers    2019-04-11  2966  		pr_err("alg: skcipher: %s %s unexpectedly succeeded on test vector %s; expected_error=%d, cfg=\"%s\"\n",
-951d13328a8a36 Eric Biggers    2019-04-11  2967  		       driver, op, vec_name, vec->crypt_error, cfg->name);
-5283a8ee9badf6 Eric Biggers    2019-04-11  2968  		return -EINVAL;
-5283a8ee9badf6 Eric Biggers    2019-04-11  2969  	}
-5283a8ee9badf6 Eric Biggers    2019-04-11  2970  
-4e7babba30d820 Eric Biggers    2019-01-31  2971  	/* Check for the correct output (ciphertext or plaintext) */
-4e7babba30d820 Eric Biggers    2019-01-31  2972  	err = verify_correct_output(&tsgls->dst, enc ? vec->ctext : vec->ptext,
-4e7babba30d820 Eric Biggers    2019-01-31  2973  				    vec->len, 0, true);
-4e7babba30d820 Eric Biggers    2019-01-31  2974  	if (err == -EOVERFLOW) {
-951d13328a8a36 Eric Biggers    2019-04-11  2975  		pr_err("alg: skcipher: %s %s overran dst buffer on test vector %s, cfg=\"%s\"\n",
-951d13328a8a36 Eric Biggers    2019-04-11  2976  		       driver, op, vec_name, cfg->name);
-4e7babba30d820 Eric Biggers    2019-01-31  2977  		return err;
-8a826a34a52eef Boris Brezillon 2015-06-16  2978  	}
-4e7babba30d820 Eric Biggers    2019-01-31  2979  	if (err) {
-951d13328a8a36 Eric Biggers    2019-04-11  2980  		pr_err("alg: skcipher: %s %s test failed (wrong result) on test vector %s, cfg=\"%s\"\n",
-951d13328a8a36 Eric Biggers    2019-04-11  2981  		       driver, op, vec_name, cfg->name);
-4e7babba30d820 Eric Biggers    2019-01-31  2982  		return err;
-da7f033ddc9fde Herbert Xu      2008-07-31  2983  	}
-da7f033ddc9fde Herbert Xu      2008-07-31  2984  
-4e7babba30d820 Eric Biggers    2019-01-31  2985  	/* If applicable, check that the algorithm generated the correct IV */
-8efd972ef96a3f Eric Biggers    2019-02-14  2986  	if (vec->iv_out && memcmp(iv, vec->iv_out, ivsize) != 0) {
-951d13328a8a36 Eric Biggers    2019-04-11  2987  		pr_err("alg: skcipher: %s %s test failed (wrong output IV) on test vector %s, cfg=\"%s\"\n",
-951d13328a8a36 Eric Biggers    2019-04-11  2988  		       driver, op, vec_name, cfg->name);
-4e7babba30d820 Eric Biggers    2019-01-31  2989  		hexdump(iv, ivsize);
-4e7babba30d820 Eric Biggers    2019-01-31  2990  		return -EINVAL;
-4e7babba30d820 Eric Biggers    2019-01-31  2991  	}
-da7f033ddc9fde Herbert Xu      2008-07-31  2992  
-4e7babba30d820 Eric Biggers    2019-01-31  2993  	return 0;
-4e7babba30d820 Eric Biggers    2019-01-31 @2994  }
-da7f033ddc9fde Herbert Xu      2008-07-31  2995  
-
-:::::: The code at line 2994 was first introduced by commit
-:::::: 4e7babba30d820c4195b1d58cf51dce3c22ecf2b crypto: testmgr - convert skcipher testing to use testvec_configs
-
-:::::: TO: Eric Biggers <ebiggers@google.com>
-:::::: CC: Herbert Xu <herbert@gondor.apana.org.au>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+[snip]
