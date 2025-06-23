@@ -1,73 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B19822DF86
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A8D239E97
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750675381; cv=none; b=q5ydR4OBl3ylm+O5/c0NIUTd+3d+tkbRdNjeffOrN0QySmrYx5lfen15g/IlnPHRlFYl1gm0gYykVXXNLZLUgMXvA263SOB1CKkohy2LeQP9G8ky2rVrC2wVWnoG0R2/gfrhyDd8flbPID7NTnio8Ajx1Ffu2+Q0DUQAJSGgghk=
+	t=1750675425; cv=none; b=KGjALcsjDwEX1TbKKNCVUMNBpT8y6lLFOvn0rkAtQDt9UPKBL+94vrzARoqUMSA0DUDjbUyePwZ1z7RaJRf7xWYP+/BEviv6Mka1J1OlkQqLCN8LFT23OWzNLAxN1Qb6USOtdGssP32kcdVV0Wpy1iuyUdl4njtmGC/o0oBx1+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750675381; c=relaxed/simple;
-	bh=OlZAXP14Dv0Zl/IHjji++X3q07BGRxGZC+h6X0X7Ips=;
+	s=arc-20240116; t=1750675425; c=relaxed/simple;
+	bh=wklbJ3x1v6boMcX3stFgarvRIlgVkJ0zAL5YoL51FRw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d2S8K92utRq+eVDSToZ5PBbVKmyxqJS/fiyCd29Mcw4Ld5L+7eyDD9D0ULnq5SFPL9/jX3D+nsuUPsS9cYIq4+x+UQMxIN6PyS/mpfcak7qNatVjW9ZZxG9vElG64G7e5Wydq0rCcU4CqFvFRpPnGp0gpxuQRhKSWWUAOlXt99w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hf6/Y30G; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=loDSzpwYwJ4O6f2SRqdcTgL8Tjy9X5RFjkuiJnN+No7yW4f06zPw2Uo9fEjJe4/dWG82qZMEIfZfjEyRdO4+wBNPB0zKzbDbk8VZV5HGg82EF8YdkhqcGPVMdtkmI8W/K3/ES1Jz9LTvpLLMPLoyJ0ivQlzNSQhe2CvOx4U5X2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MUS4PFbC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Q81jO2Ch; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CU/YVp2B; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RDKN760Z; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hf6/Y30G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750675378;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MUS4PFbC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Q81jO2Ch";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CU/YVp2B";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RDKN760Z"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B42B11F391;
+	Mon, 23 Jun 2025 10:43:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750675415; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=EyhN9DEsVHNjG6Hkwy+ab647Z7bmmNxvZvKCrwuLQjo=;
-	b=Hf6/Y30GDSAaW+Ednf1EArfLDOqwLxzfyka/g461ePdWFb4Evgh/bFc5Z8aMyU8r82k+yj
-	KVLURr2ypK31GxTw2jiUMOZ2HUiS8w7/KvEgjePHFPfX70hHfnqsRoCPNxE9i701s/1cLu
-	1RCm2tl7bNegW3UkyXy+e/VuG+Oad2k=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-157-RTPGH5nhMaSUTxto5ppOMw-1; Mon, 23 Jun 2025 06:42:57 -0400
-X-MC-Unique: RTPGH5nhMaSUTxto5ppOMw-1
-X-Mimecast-MFC-AGG-ID: RTPGH5nhMaSUTxto5ppOMw_1750675376
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4535ad64d30so32160785e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 03:42:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750675376; x=1751280176;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=EyhN9DEsVHNjG6Hkwy+ab647Z7bmmNxvZvKCrwuLQjo=;
-        b=wB31MybqgTPy7gSjbyYv5MFtrydRrbmmkyg46opZV5kHyElgAjCXUy/Ne07TTyfMSp
-         wWYjn6gys+/szwwe3bImmjAQiKdpKjih042zS2CzClSOJlsmVUyM+d4RnrwMAwIjC2x9
-         YU7y6HtsN4rjFI7rIJza8pWKoKck5M2JFp+mECizmU7mZOYKTEKdYMcXBlZ2PzJPTVp5
-         dHDr5QJAZuMkBe4QnZO9Xnsp7WyVp0hpt/ItgFm99kcqgM4mcCJLlueaNqU157Y1ssMJ
-         ZduPWZfh2aVnpQNRUqJMgyoZ0Z/rOTuNQZspP/2GqK9zUx3w0zHVJRhFtxQgwoVxkxVh
-         scpA==
-X-Forwarded-Encrypted: i=1; AJvYcCWKtkVoZARnOdBYp5VZ4RXjGVDQNQxGu/fGRBk53RJ00AFxuz8vNjgPdb6gDgoVgSDIzsvsOQ9TL4v43I8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxp0EINY2AIpai+jRYfpfnEcFP/dlaNyNXeuMDapNnJeQ9MESVM
-	Id+e7YRrfWUFgdVLTEgBF9rdZkt9E8UMjwvVLjCvgQsDSc68gNgPJ3P1gCArkr+o0+hPjxJ2ebB
-	RCU4+nmCedTCVMuzbaGyzW33cFi6+tTZPKjgj/b8NlAqF1bXaYgp6Ok4Gr3BnZLMEnQ==
-X-Gm-Gg: ASbGncuDCfn+s7Mhm/XVeg5ng6scIcPCESxryWvWfXNC3bPGqqfBHFayTJ1YznvY/lp
-	JjT0Czr90czqJ4w2L/JyNekq/vKZB/FFym49FTVqBRElR9NCWkSFlO7RdyHq5QFl5A7GypAO3KW
-	2MJNWokW/aYKcTGzKlpVykcuqWbdOddM7/Nv7QhQyXNPXE6CEFKBR/slLun2ylu1ag2iCn08zxW
-	fKubiPSefRfQZKOUnoOHjCGLNAWRKWxRQD//FBlle8xKzazqVzE1pMvuHiZelO9AXu59nMcQqBh
-	VssBqQSOhq6N3kx+wAiplCyOT5DrPBTy+7DvWZzI+NFqRSPTXl+byxMi/8xjcgPBwGAJGvDpHrH
-	1OR1R6NVK7nniGgSq5vrLeCqxeWjIqx+uW1qkxT9+ysNsQi3TCg==
-X-Received: by 2002:a05:600c:4f05:b0:442:e147:bea7 with SMTP id 5b1f17b1804b1-453659d4e59mr104632455e9.29.1750675375912;
-        Mon, 23 Jun 2025 03:42:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHVp4l3ubGdwDrXUOnj703CYW4osa1SswIz9bctk4z/HRlYpzl1dcKzi8W4vclU+XTijn44rA==
-X-Received: by 2002:a05:600c:4f05:b0:442:e147:bea7 with SMTP id 5b1f17b1804b1-453659d4e59mr104632215e9.29.1750675375489;
-        Mon, 23 Jun 2025 03:42:55 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159? (p200300d82f4efd008e13e3b590c81159.dip0.t-ipconnect.de. [2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535eac8e19sm139994395e9.21.2025.06.23.03.42.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 03:42:55 -0700 (PDT)
-Message-ID: <65788262-c3c9-4be0-8097-9232febd09c0@redhat.com>
-Date: Mon, 23 Jun 2025 12:42:53 +0200
+	bh=hJMVqToV4tLMkLNlQMBXD9bmFg9OFmFifeF6nVqlMz8=;
+	b=MUS4PFbCnKh2JnsMV39MeWdMf9ct43236K0lEaf/n5Z1N9Jxzb3IRHebIew+MN08I2VWdk
+	QFAP4RW3l5jnZQTRk8WE8F4esEoq9XZdWHwR5GR3MXIHPd/H+V6ljmweAYU4iU3ptEudib
+	nOMgqEACYQ2pE//itKRM6XdKbzIjyto=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750675415;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hJMVqToV4tLMkLNlQMBXD9bmFg9OFmFifeF6nVqlMz8=;
+	b=Q81jO2ChM5BTlp6YtSEtyCKHHggf+6f7stnAg/BAsuX3R38W0AWFrSCJXcdQiV+fC/eZMX
+	ZslKPqDSXBrTsPBg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="CU/YVp2B";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=RDKN760Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750675413; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hJMVqToV4tLMkLNlQMBXD9bmFg9OFmFifeF6nVqlMz8=;
+	b=CU/YVp2B11qXT+UYvPVDAPg0hrQtpiek/kRlqfiac7bEH8xrZO+YzLSMKC5sHS60Vc9c0J
+	0lWDZyzXPcr54+KN2v62pJi8vJ4/xqCS/NtjMfENaOnZTvkzeZP8/DS+KYsM08vDPSm/ZU
+	XLiXb8v8Wm2yJIcAR5Om0y6yhZvTGn8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750675413;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hJMVqToV4tLMkLNlQMBXD9bmFg9OFmFifeF6nVqlMz8=;
+	b=RDKN760ZF68yEirnNZvlvyYkW+lHbZwUm9KQhSSyc2qgHq6C1s6Se59X0HnpWIGJsMgn/i
+	6VgAbOFxopUWy2AA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1BE1A13485;
+	Mon, 23 Jun 2025 10:43:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id egqWBdUvWWgWIwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 23 Jun 2025 10:43:33 +0000
+Message-ID: <511b7382-d4b7-4d87-9695-f621c0a60b4e@suse.de>
+Date: Mon, 23 Jun 2025 12:43:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,102 +83,413 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/mm: Fix validate_addr helper
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org, shuah@kernel.org
-Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- anshuman.khandual@arm.com, ryan.roberts@arm.com, lorenzo.stoakes@oracle.com,
- donettom@linux.ibm.com
-References: <20250620111150.50344-1-dev.jain@arm.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v3 6/7] PCI/VGA: Move check for firmware default out of
+ VGA arbiter
+To: Mario Limonciello <superm1@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Lukas Wunner <lukas@wunner.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Woodhouse <dwmw2@infradead.org>,
+ Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+ "open list:SOUND" <linux-sound@vger.kernel.org>,
+ Daniel Dadap <ddadap@nvidia.com>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250620024943.3415685-1-superm1@kernel.org>
+ <20250620024943.3415685-7-superm1@kernel.org>
+ <704d2a80-79bb-4247-a2aa-25bd3eb9a7e5@suse.de>
+ <fa3bfed9-8a6f-4001-bd4a-d4d237b001d3@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250620111150.50344-1-dev.jain@arm.com>
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <fa3bfed9-8a6f-4001-bd4a-d4d237b001d3@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_DN_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_CC(0.00)[amd.com,gmail.com,ffwll.ch,wunner.de,linux.intel.com,kernel.org,infradead.org,8bytes.org,arm.com,redhat.com,perex.cz,suse.com,lists.freedesktop.org,vger.kernel.org,lists.linux.dev,nvidia.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:url,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:mid,suse.de:email]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: B42B11F391
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.51
 
-On 20.06.25 13:11, Dev Jain wrote:
-> validate_addr() function checks whether the address returned by mmap()
-> lies in the low or high VA space, according to whether a high addr hint
-> was passed or not. The fix commit mentioned below changed the code in
-> such a way that this function will always return failure when passed
-> high_addr == 1; addr will be >= HIGH_ADDR_MARK always, we will fall
-> down to "if (addr < HIGH_ADDR_MARK)" and return failure. Fix this.
-> 
-> Fixes: d1d86ce28d0f ("selftests/mm: virtual_address_range: conform to TAP format output")
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> ---
->   tools/testing/selftests/mm/virtual_address_range.c | 7 +++++--
->   1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/mm/virtual_address_range.c b/tools/testing/selftests/mm/virtual_address_range.c
-> index b380e102b22f..169dbd692bf5 100644
-> --- a/tools/testing/selftests/mm/virtual_address_range.c
-> +++ b/tools/testing/selftests/mm/virtual_address_range.c
-> @@ -77,8 +77,11 @@ static void validate_addr(char *ptr, int high_addr)
->   {
->   	unsigned long addr = (unsigned long) ptr;
->   
-> -	if (high_addr && addr < HIGH_ADDR_MARK)
-> -		ksft_exit_fail_msg("Bad address %lx\n", addr);
-> +	if (high_addr) {
-> +		if (addr < HIGH_ADDR_MARK)
-> +			ksft_exit_fail_msg("Bad address %lx\n", addr);
-> +		return;
-> +	}
->   
->   	if (addr > HIGH_ADDR_MARK)
->   		ksft_exit_fail_msg("Bad address %lx\n", addr);
+Hi
 
-LGTM, the logic corresponds to the way we would handle it pre d1d86ce28d0f
+Am 21.06.25 um 00:17 schrieb Mario Limonciello:
+> On 6/20/2025 3:45 AM, Thomas Zimmermann wrote:
+>> Hi
+>>
+>> Am 20.06.25 um 04:49 schrieb Mario Limonciello:
+>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>
+>>> The x86 specific check for whether a framebuffer belongs to a device
+>>> works for display devices as well as VGA devices.  Callers to
+>>> video_is_primary_device() can benefit from checking non-VGA display
+>>> devices.
+>>>
+>>> Move the x86 specific check into x86 specific code, and adjust VGA
+>>> arbiter to call that code as well. This allows fbcon to find the
+>>> right PCI device on systems that don't have VGA devices.
+>>>
+>>> Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
+>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>> ---
+>>>   arch/x86/video/video-common.c | 28 +++++++++++++++++++++++++++
+>>>   drivers/pci/vgaarb.c          | 36 
+>>> ++---------------------------------
+>>>   2 files changed, 30 insertions(+), 34 deletions(-)
+>>>
+>>> diff --git a/arch/x86/video/video-common.c b/arch/x86/video/video- 
+>>> common.c
+>>> index 81fc97a2a837a..718116e35e450 100644
+>>> --- a/arch/x86/video/video-common.c
+>>> +++ b/arch/x86/video/video-common.c
+>>> @@ -9,6 +9,7 @@
+>>>   #include <linux/module.h>
+>>>   #include <linux/pci.h>
+>>> +#include <linux/screen_info.h>
+>>>   #include <linux/vgaarb.h>
+>>>   #include <asm/video.h>
+>>> @@ -27,13 +28,40 @@ EXPORT_SYMBOL(pgprot_framebuffer);
+>>>   bool video_is_primary_device(struct device *dev)
+>>
+>> I'm not sure I understand this patch. video_is_primary_device() 
+>> already exists for 3 architectures, including x86. [1] Adding it here 
+>> should produce an error. (?)
+>
+> I wasn't adding a new implementation of it, I was augmenting the x86 
+> implementation.
 
-Acked-by: David Hildenbrand <david@redhat.com>
+Indeed. Apologies, I must have somehow misread the patch. So this is 
+essentially doing what I proposed.
+
+>
+> But I guess based on your below point it just needs to call 
+> screen_info_pci_dev().
+
+Yeah, the helper already does everything necessary.
+
+
+>>
+>> [1] https://elixir.bootlin.com/linux/v6.15.2/A/ident/ 
+>> video_is_primary_device
+>>
+>> The code on x86 is
+>>
+>> bool <https://elixir.bootlin.com/linux/v6.15.2/C/ident/ 
+>> bool>video_is_primary_device 
+>> <https://elixir.bootlin.com/linux/v6.15.2/ 
+>> C/ident/video_is_primary_device>(structdevice <https:// 
+>> elixir.bootlin.com/linux/v6.15.2/C/ident/device>*dev) { structpci_dev 
+>> <https://elixir.bootlin.com/linux/v6.15.2/C/ident/pci_dev>*pdev; if(! 
+>> dev_is_pci <https://elixir.bootlin.com/linux/v6.15.2/C/ident/ 
+>> dev_is_pci>(dev)) returnfalse 
+>> <https://elixir.bootlin.com/linux/v6.15.2/ C/ident/false>; 
+>> pdev=to_pci_dev <https://elixir.bootlin.com/linux/ 
+>> v6.15.2/C/ident/to_pci_dev>(dev); return(pdev==vga_default_device 
+>> <https://elixir.bootlin.com/linux/v6.15.2/C/ident/vga_default_device>()); 
+>> }
+>>
+>> I was thinking about extending it to test for additional properties, 
+>> like this
+>>
+>> bool <https://elixir.bootlin.com/linux/v6.15.2/C/ident/ 
+>> bool>video_is_primary_device 
+>> <https://elixir.bootlin.com/linux/v6.15.2/ 
+>> C/ident/video_is_primary_device>(structdevice <https:// 
+>> elixir.bootlin.com/linux/v6.15.2/C/ident/device>*dev) { structpci_dev 
+>> <https://elixir.bootlin.com/linux/v6.15.2/C/ident/pci_dev>*pdev; if(! 
+>> dev_is_pci <https://elixir.bootlin.com/linux/v6.15.2/C/ident/ 
+>> dev_is_pci>(dev)) returnfalse 
+>> <https://elixir.bootlin.com/linux/v6.15.2/ C/ident/false>; 
+>> pdev=to_pci_dev <https://elixir.bootlin.com/linux/ 
+>> v6.15.2/C/ident/to_pci_dev>(dev); if(pdev==vga_default_device 
+>> <https:// 
+>> elixir.bootlin.com/linux/v6.15.2/C/ident/vga_default_device>()) 
+>> return true for_each_pci_dev() { // test if display and could be 
+>> primary. } return false; // nothing found }
+>>
+>
+> The above looks like some bad copy / paste.  Could you clarify?
+
+Oh, well. I really messed up my reply. :D
+
+What I meant is what you already implemented, but with the existing helper:
+
+bool video_is_primary_device(dev)
+{
+     if (dev == vga_default_device())
+       return true
+
+     if (dev == screen_info_pci_device())
+       return true
+
+     return false
+}
+
+
+One thing to keep in minds is that video_is_primary_device() currently 
+returns false by default. IDK if that's a problem for user space, but 
+user space should at least pick a reasonable fallback in that case.
+
+Best regards
+Thomas
+
+
+>
+>>
+>> This would then be called from per-device sysfs code that export a 
+>> property similar to boot_vga (such as boot_display).
+>
+> Here's the other idea I had in mind.
+>
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 268c69daa4d57..8535950b4c0f3 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -30,6 +30,7 @@
+>  #include <linux/msi.h>
+>  #include <linux/of.h>
+>  #include <linux/aperture.h>
+> +#include <asm/video.h>
+>  #include "pci.h"
+>
+>  #ifndef ARCH_PCI_DEV_GROUPS
+> @@ -679,6 +680,13 @@ const struct attribute_group *pcibus_groups[] = {
+>         NULL,
+>  };
+>
+> +static ssize_t boot_console_show(struct device *dev, struct 
+> device_attribute *attr,
+> +                                char *buf)
+> +{
+> +       return sysfs_emit(buf, "%u\n", video_is_primary_device(dev));
+> +}
+> +static DEVICE_ATTR_RO(boot_console);
+> +
+>  static ssize_t boot_vga_show(struct device *dev, struct 
+> device_attribute *attr,
+>                              char *buf)
+>  {
+> @@ -1698,6 +1706,7 @@ late_initcall(pci_sysfs_init);
+>
+>  static struct attribute *pci_dev_dev_attrs[] = {
+>         &dev_attr_boot_vga.attr,
+> +       &dev_attr_boot_console.attr,
+>         NULL,
+>  };
+>
+> @@ -1710,6 +1719,9 @@ static umode_t pci_dev_attrs_are_visible(struct 
+> kobject *kobj,
+>         if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
+>                 return a->mode;
+>
+> +       if (a == &dev_attr_boot_console.attr && pci_is_display(pdev))
+> +               return a->mode;
+> +
+>         return 0;
+>  }
+>
+>
+>>
+>>
+>> The issue is currently just an x86 problem, but I can imagine 
+>> something similar happening on ARM. There we'd have to go through the 
+>> DT tree to figure out the primary device. That's a problem for a 
+>> later patch set, but we should keep this in mind.
+>
+> I think that the sysfs file idea above would work for any arch.
+>
+>>
+>>>   {
+>>> +    u64 base = screen_info.lfb_base;
+>>> +    u64 size = screen_info.lfb_size;
+>>>       struct pci_dev *pdev;
+>>> +    struct resource *r;
+>>> +    u64 limit;
+>>>       if (!dev_is_pci(dev))
+>>>           return false;
+>>>       pdev = to_pci_dev(dev);
+>>> +    if (!pci_is_display(pdev))
+>>> +        return false;
+>>> +
+>>> +    /* Select the device owning the boot framebuffer if there is 
+>>> one */
+>>> +    if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
+>>> +        base |= (u64)screen_info.ext_lfb_base << 32;
+>>> +
+>>> +    limit = base + size;
+>>> +
+>>> +    /* Does firmware framebuffer belong to us? */
+>>> +    pci_dev_for_each_resource(pdev, r) {
+>>> +        if (resource_type(r) != IORESOURCE_MEM)
+>>> +            continue;
+>>> +
+>>> +        if (!r->start || !r->end)
+>>> +            continue;
+>>> +
+>>> +        if (base < r->start || limit >= r->end)
+>>> +            continue;
+>>> +
+>>> +        return true;
+>>> +    }
+>>> +
+>>
+>> You can drop all this code and call screen_info_pci_dev() instead. I 
+>> simply never got to update vgaarb to use it.
+>
+> 👍
+>
+>>
+>> [2] https://elixir.bootlin.com/linux/v6.15.2/source/drivers/video/ 
+>> screen_info_pci.c#L109
+>>
+>>>       return (pdev == vga_default_device());
+>>>   }
+>>>   EXPORT_SYMBOL(video_is_primary_device);
+>>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+>>> index 78748e8d2dbae..15ab58c70b016 100644
+>>> --- a/drivers/pci/vgaarb.c
+>>> +++ b/drivers/pci/vgaarb.c
+>>> @@ -26,12 +26,12 @@
+>>>   #include <linux/poll.h>
+>>>   #include <linux/miscdevice.h>
+>>>   #include <linux/slab.h>
+>>> -#include <linux/screen_info.h>
+>>>   #include <linux/vt.h>
+>>>   #include <linux/console.h>
+>>>   #include <linux/acpi.h>
+>>>   #include <linux/uaccess.h>
+>>>   #include <linux/vgaarb.h>
+>>> +#include <asm/video.h>
+>>>   static void vga_arbiter_notify_clients(void);
+>>> @@ -554,38 +554,6 @@ void vga_put(struct pci_dev *pdev, unsigned int 
+>>> rsrc)
+>>>   }
+>>>   EXPORT_SYMBOL(vga_put);
+>>> -static bool vga_is_firmware_default(struct pci_dev *pdev)
+>>> -{
+>>> -#if defined(CONFIG_X86)
+>>> -    u64 base = screen_info.lfb_base;
+>>> -    u64 size = screen_info.lfb_size;
+>>> -    struct resource *r;
+>>> -    u64 limit;
+>>> -
+>>> -    /* Select the device owning the boot framebuffer if there is 
+>>> one */
+>>> -
+>>> -    if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
+>>> -        base |= (u64)screen_info.ext_lfb_base << 32;
+>>> -
+>>> -    limit = base + size;
+>>> -
+>>> -    /* Does firmware framebuffer belong to us? */
+>>> -    pci_dev_for_each_resource(pdev, r) {
+>>> -        if (resource_type(r) != IORESOURCE_MEM)
+>>> -            continue;
+>>> -
+>>> -        if (!r->start || !r->end)
+>>> -            continue;
+>>> -
+>>> -        if (base < r->start || limit >= r->end)
+>>> -            continue;
+>>> -
+>>> -        return true;
+>>> -    }
+>>> -#endif
+>>> -    return false;
+>>> -}
+>>> -
+>>>   static bool vga_arb_integrated_gpu(struct device *dev)
+>>>   {
+>>>   #if defined(CONFIG_ACPI)
+>>> @@ -623,7 +591,7 @@ static bool vga_is_boot_device(struct vga_device 
+>>> *vgadev)
+>>>       if (boot_vga && boot_vga->is_firmware_default)
+>>>           return false;
+>>> -    if (vga_is_firmware_default(pdev)) {
+>>> +    if (video_is_primary_device(&pdev->dev)) {
+>>
+>> Maybe not change this because you don't want to end up with non-VGA 
+>> devices here.
+>
+> 👍
+>
+>>
+>> Best regards
+>> Thomas
+>>
+>>>           vgadev->is_firmware_default = true;
+>>>           return true;
+>>>       }
+>>
+>
 
 -- 
-Cheers,
-
-David / dhildenb
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
