@@ -1,584 +1,192 @@
-Received: from server.couthit.com (server.couthit.com [162.240.164.96])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A1911CA9;
-	Mon, 23 Jun 2025 16:44:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.164.96
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5047A2882A9;
+	Mon, 23 Jun 2025 16:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750697060; cv=none; b=Y8LSBu6CBM+U/RBX4dNovubwH82lgks2a1svPNBd6J5vEX5+s6zZfIThh+WIlZzZGmzRPImqN+l7t0SDe17W4pCSGAw3505Pl01+J4d0cQRkrBR++ICpKRkdNvvQ+Q5B1Q1+gHXJVLEHWGeQCITfAEyCSti990vmNb+Z7mzlq3A=
+	t=1750697072; cv=none; b=IjWubmMkRBxr9KQnAYTlcgwPFR/V13g5hsVQ1yVThrekzWPXw1xn8typkkciwIFGJNOUcQPTg8JdtVYMpHQvCLX60xh0IYapXZH07hdmUE+pHt8Zn1KKLz4qP1tksrbxPXv8jj1oibaS0cSbIdoSKVL5B8YKQ1YBfp+0salmVAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750697060; c=relaxed/simple;
-	bh=Ul3DVQI1/LcwZSt5bqvxKrjD+m73f10GQkE7vOV4cAg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lrPZFqnQ/4mpHF5pLbiS41C6N8jlhG1xYB/rJWYC9gdO03NvZz1u1BMx8Pt0E8qSLgS9JrpM2l9lejXFhgaKPYQLq71sTm62clmJrIQuAjKcUua6e731xpEQnPs1NUoDJdUmGivmQ5wP4rgNpg04jLYLxcaH39pYaumVw7sXjbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=qB0VXJe+; arc=none smtp.client-ip=162.240.164.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=couthit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
+	s=arc-20240116; t=1750697072; c=relaxed/simple;
+	bh=Emiq1FV1ttr+CBNmWAmNnJ/s86V/e3girU5btU4QwPQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dchZGYft+s/lYOtHJep0UupoOvPLRLo1Pb2FTn3GeIQz2I6hPzKQu9vu8ZMcWUWdUvU56CZrz5FKWzDWJhoUDH4jy4QdIJdp1wan7XY1IZebbqaYKGDZNP4QTsbRS/nuwej3YnBSCUlqqmP7bKd17mDsj4pWA/3YvfvVDvuf0zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UzMl5v4n; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="qB0VXJe+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
-	; s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=7npKhcq1MPn629dD4R4aL1MSwy5RHxCarlCRNWQ1CoQ=; b=qB0VXJe+GNLg3VGSi7TWOQIstY
-	7Odr9xswuK4WuQQfrpgOqrI1K3pCRxLdSyXwQ4wKImJmpftHSrQPEFAsE78ILINuPa8cZbDU7Tz7z
-	o6NcBG4kIYGYTrgXsq0gV9shzya2AYEWuRs+7u5jhr6zAnI3/ImbSNvbvnoXWDG0EEQuPW5Bod8y5
-	rVFrpcTPqBMU4pyJWQh5VbV4ca3lD3dx5X8NeBu83P+VqE/iQ4MluYGo8v7OyA5vqjrx/UZIZ7SLS
-	MfGIVHCS1xHPq+N/mXSziGMKuXpiuQdcBlFhpTY01Um2vSEC8xiY7XyEJCTTrD/7WVMWVD/xZygOv
-	mL6mhdgw==;
-Received: from [122.175.9.182] (port=13719 helo=cypher.couthit.local)
-	by server.couthit.com with esmtpa (Exim 4.98.1)
-	(envelope-from <parvathi@couthit.com>)
-	id 1uTkHD-00000006VGn-28Mp;
-	Mon, 23 Jun 2025 12:44:12 -0400
-From: Parvathi Pudi <parvathi@couthit.com>
-To: danishanwar@ti.com,
-	rogerq@kernel.org,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	ssantosh@kernel.org,
-	richardcochran@gmail.com,
-	s.hauer@pengutronix.de,
-	m-karicheri2@ti.com,
-	glaroque@baylibre.com,
-	afd@ti.com,
-	saikrishnag@marvell.com,
-	m-malladi@ti.com,
-	jacob.e.keller@intel.com,
-	diogo.ivo@siemens.com,
-	javier.carrasco.cruz@gmail.com,
-	horms@kernel.org,
-	s-anna@ti.com,
-	basharath@couthit.com,
-	parvathi@couthit.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	pratheesh@ti.com,
-	prajith@ti.com,
-	vigneshr@ti.com,
-	praneeth@ti.com,
-	srk@ti.com,
-	rogerq@ti.com,
-	krishna@couthit.com,
-	pmohan@couthit.com,
-	mohan@couthit.com
-Subject: [PATCH net-next v9 11/11] net: ti: prueth: Adds PTP OC Support for AM335x and AM437x
-Date: Mon, 23 Jun 2025 22:12:36 +0530
-Message-Id: <20250623164236.255083-12-parvathi@couthit.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250623135949.254674-1-parvathi@couthit.com>
-References: <20250623135949.254674-1-parvathi@couthit.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UzMl5v4n"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Emiq1FV1ttr+CBNmWAmNnJ/s86V/e3girU5btU4QwPQ=; b=UzMl5v4nndQiWGcH2Bx6PJaF7I
+	VZvQxcSDg0o0f8vqZ046n310EJ51F93F5fdG1CizxKYWqSgtzQF/T/KrCBqIKnFdkZcqxBYXfhqon
+	AhHABBkMIijxRdTruKXXWjVbd9+aO0I9VCRfNT0WxuO/Sl44iNwo/ZuRbvf58pBdhh7V1oWLq1fW4
+	8oSy14zR6B754oZT4lYCNU8eduEdQIFifKL97YuS1ngVP39InKA3i7lmGW43RSD7IJP7mQw8F+WfB
+	EZI3leGwAbz2wGgDPF8hP9hPhBaViDDgTJfO1deu0cRuql/CiI6/mOheBqWVwoSWjC6fFypX5lbRD
+	yQD1Jy0g==;
+Received: from [54.239.6.189] (helo=edge-cache-144.e-fra50.amazon.com)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uTkHU-0000000425N-08Yt;
+	Mon, 23 Jun 2025 16:44:28 +0000
+Message-ID: <7cc618b80681e8e1402c73886505f6247c810db8.camel@infradead.org>
+Subject: Re: KVM: x86/xen: Allow 'out of range' event channel ports in IRQ
+ routing table.
+From: David Woodhouse <dwmw2@infradead.org>
+To: paul@xen.org, kvm@vger.kernel.org, Sean Christopherson
+ <seanjc@google.com>,  "Orlov, Ivan" <iorlov@amazon.co.uk>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner
+ <tglx@linutronix.de>,  Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,  x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Date: Mon, 23 Jun 2025 18:44:26 +0200
+In-Reply-To: <7fedbeac-300f-48a3-9860-e05b6d286cd1@xen.org>
+References: <e489252745ac4b53f1f7f50570b03fb416aa2065.camel@infradead.org>
+	 <7fedbeac-300f-48a3-9860-e05b6d286cd1@xen.org>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-CCM+5jMfWnH/MfFJSdvZ"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.couthit.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - couthit.com
-X-Get-Message-Sender-Via: server.couthit.com: authenticated_id: parvathi@couthit.com
-X-Authenticated-Sender: server.couthit.com: parvathi@couthit.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
-From: Roger Quadros <rogerq@ti.com>
 
-PRU-ICSS IEP module, which is capable of timestamping RX and
-TX packets at HW level, is used for time synchronization by PTP4L.
+--=-CCM+5jMfWnH/MfFJSdvZ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This change includes interaction between firmware/driver and user
-application (ptp4l) with required packet timestamps.
+On Mon, 2025-05-12 at 10:29 +0100, Paul Durrant wrote:
+> On 08/05/2025 21:30, David Woodhouse wrote:
+> > From: David Woodhouse <dwmw@amazon.co.uk>
+> >=20
+> > To avoid imposing an ordering constraint on userspace, allow 'invalid'
+> > event channel targets to be configured in the IRQ routing table.
+> >=20
+> > This is the same as accepting interrupts targeted at vCPUs which don't
+> > exist yet, which is already the case for both Xen event channels *and*
+> > for MSIs (which don't do any filtering of permitted APIC ID targets at
+> > all).
+> >=20
+> > If userspace actually *triggers* an IRQ with an invalid target, that
+> > will fail cleanly, as kvm_xen_set_evtchn_fast() also does the same rang=
+e
+> > check.
+> >=20
+> > If KVM enforced that the IRQ target must be valid at the time it is
+> > *configured*, that would force userspace to create all vCPUs and do
+> > various other parts of setup (in this case, setting the Xen long_mode)
+> > before restoring the IRQ table.
+> >=20
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+> > ---
+> > =C2=A0 arch/x86/kvm/xen.c | 14 ++++++++++++--
+> > =C2=A0 1 file changed, 12 insertions(+), 2 deletions(-)
+> >=20
+>=20
+> Reviewed-by: Paul Durrant <paul@xen.org>
 
-RX SOF timestamp comes along with packet and firmware will rise
-interrupt with TX SOF timestamp after pushing the packet on to the wire.
+Ping?
 
-IEP driver available in upstream linux as part of ICSSG assumes 64-bit
-timestamp value from firmware.
+--=-CCM+5jMfWnH/MfFJSdvZ
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
 
-Enhanced the IEP driver to support the legacy 32-bit timestamp
-conversion to 64-bit timestamp by using 2 fields as below:
-- 32-bit HW timestamp from SOF event in ns
-- Seconds value maintained in driver.
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDYyMzE2NDQy
+NlowLwYJKoZIhvcNAQkEMSIEIBNDJZ7gDIXmTLV02lza4A5hLTImq0RKKkYQf+nPzoUsMGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIA1m5LEXT0dZSO
+lqkfZYrBBo9ihAxWzG1hMN/6n4khRY4/pJmoCQHoZhW4CbLPPTa2IyUpSO6TzGWPtVk8V4wH4TF2
+RANncqmN7hanfwYfO6G7MyPoYVl0jUf5Zhkc4D/FJkWv8ij2hexLYA/5iuWzN/SItlQlLFW8HRXm
+jHQXh6VXVA+16iu9lX9+XRR3pkreyXPauzQNlGEZXAbhUwzc3C+1+Xv9mfD/ZgQkxQyV2mZwxAWR
+/tjAjm1030x+UA2DB5mDNOVPXgQwF8vY0kx6NjsDLSMBsWkbyMqU/rIrY++iao1KSWcOY4t2NMuH
++oJ5lAPoxalI63hPRdn8Oe3s1bxzZSOi7IWUPoorHVccYLRdfcc9cL3W54WhIL4Iki7+o05Bg/3Y
+q14TMVZ542BpfU56jLs8ET84zfTuymEvCj1hocKSzSP3UHdL8Df5u1+ItAoh93dazeHfgZtseIZ9
+gd9/2LFltY3teuduTPwIzVZAe8RUmXMA022mVkXw3h+/2e9J2R1ellC0aelYVfZI6zwGucrHOiTo
+RhRplVd7uCpDB4s9CLa6ie3Sen8rYFEYikMKH44auB/cWNiGeHHOfhcYZ9BTrdnj2Gmb3gz2z54k
+J3qzpD2bnzF2CCQcKYrWU4EXnOkL/QgczR648RqO4rEQgxskhmewiuxlm97M1fQAAAAAAAA=
 
-Currently ordinary clock (OC) configuration has been validated with
-Linux ptp4l.
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Andrew F. Davis <afd@ti.com>
-Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
-Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
----
- drivers/net/ethernet/ti/icssg/icss_iep.c     | 155 ++++++++++++++++++-
- drivers/net/ethernet/ti/icssg/icss_iep.h     |  12 ++
- drivers/net/ethernet/ti/icssm/icssm_prueth.c |  56 ++++++-
- drivers/net/ethernet/ti/icssm/icssm_prueth.h |  11 ++
- 4 files changed, 230 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/ti/icssg/icss_iep.c b/drivers/net/ethernet/ti/icssg/icss_iep.c
-index d0850722814e..85e27cc77a3b 100644
---- a/drivers/net/ethernet/ti/icssg/icss_iep.c
-+++ b/drivers/net/ethernet/ti/icssg/icss_iep.c
-@@ -14,12 +14,15 @@
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/timecounter.h>
-+#include <linux/clocksource.h>
- #include <linux/timekeeping.h>
- #include <linux/interrupt.h>
- #include <linux/of_irq.h>
- #include <linux/workqueue.h>
- 
- #include "icss_iep.h"
-+#include "../icssm/icssm_prueth_ptp.h"
- 
- #define IEP_MAX_DEF_INC		0xf
- #define IEP_MAX_COMPEN_INC		0xfff
-@@ -53,6 +56,14 @@
- #define IEP_CAP_CFG_CAPNR_1ST_EVENT_EN(n)	BIT(LATCH_INDEX(n))
- #define IEP_CAP_CFG_CAP_ASYNC_EN(n)		BIT(LATCH_INDEX(n) + 10)
- 
-+#define IEP_TC_DEFAULT_SHIFT         28
-+#define IEP_TC_INCR5_MULT            BIT(28)
-+
-+/* Polling period - how often iep_overflow_check() is called */
-+#define IEP_OVERFLOW_CHECK_PERIOD_MS   50
-+
-+#define TIMESYNC_SECONDS_COUNT_SIZE    6
-+
- /**
-  * icss_iep_get_count_hi() - Get the upper 32 bit IEP counter
-  * @iep: Pointer to structure representing IEP.
-@@ -87,6 +98,28 @@ int icss_iep_get_count_low(struct icss_iep *iep)
- }
- EXPORT_SYMBOL_GPL(icss_iep_get_count_low);
- 
-+static u64 icss_iep_get_count32(struct icss_iep *iep)
-+{
-+	void __iomem *sram = iep->sram;
-+	u64 v_sec = 0;
-+	u32 v_ns = 0;
-+	u64 v = 0;
-+
-+	v_ns = icss_iep_get_count_low(iep);
-+	memcpy_fromio(&v_sec, sram + TIMESYNC_SECONDS_COUNT_OFFSET,
-+		      TIMESYNC_SECONDS_COUNT_SIZE);
-+	v = (v_sec * NSEC_PER_SEC) + v_ns;
-+
-+	return v;
-+}
-+
-+static u64 icss_iep_cc_read(const struct cyclecounter *cc)
-+{
-+	struct icss_iep *iep = container_of(cc, struct icss_iep, cc);
-+
-+	return icss_iep_get_count32(iep);
-+}
-+
- /**
-  * icss_iep_get_ptp_clock_idx() - Get PTP clock index using IEP driver
-  * @iep: Pointer to structure representing IEP.
-@@ -280,6 +313,78 @@ static void icss_iep_set_slow_compensation_count(struct icss_iep *iep,
- 	regmap_write(iep->map, ICSS_IEP_SLOW_COMPEN_REG, compen_count);
- }
- 
-+/* PTP PHC operations */
-+static int icss_iep_ptp_adjfine_v1(struct ptp_clock_info *ptp, long scaled_ppm)
-+{
-+	struct icss_iep *iep = container_of(ptp, struct icss_iep, ptp_info);
-+	s32 ppb = scaled_ppm_to_ppb(scaled_ppm);
-+	struct timespec64 ts;
-+	int neg_adj = 0;
-+	u32 diff, mult;
-+	u64 adj;
-+
-+	mutex_lock(&iep->ptp_clk_mutex);
-+
-+	if (ppb < 0) {
-+		neg_adj = 1;
-+		ppb = -ppb;
-+	}
-+	mult = iep->cc_mult;
-+	adj = mult;
-+	adj *= ppb;
-+	diff = div_u64(adj, 1000000000ULL);
-+
-+	ts = ns_to_timespec64(timecounter_read(&iep->tc));
-+	pr_debug("iep ptp adjfine check at %lld.%09lu\n", ts.tv_sec,
-+		 ts.tv_nsec);
-+
-+	iep->cc.mult = neg_adj ? mult - diff : mult + diff;
-+
-+	mutex_unlock(&iep->ptp_clk_mutex);
-+
-+	return 0;
-+}
-+
-+static int icss_iep_ptp_adjtime_v1(struct ptp_clock_info *ptp, s64 delta)
-+{
-+	struct icss_iep *iep = container_of(ptp, struct icss_iep, ptp_info);
-+
-+	mutex_lock(&iep->ptp_clk_mutex);
-+	timecounter_adjtime(&iep->tc, delta);
-+	mutex_unlock(&iep->ptp_clk_mutex);
-+
-+	return 0;
-+}
-+
-+static int icss_iep_ptp_gettimeex_v1(struct ptp_clock_info *ptp,
-+				     struct timespec64 *ts,
-+				     struct ptp_system_timestamp *sts)
-+{
-+	struct icss_iep *iep = container_of(ptp, struct icss_iep, ptp_info);
-+	u64 ns;
-+
-+	mutex_lock(&iep->ptp_clk_mutex);
-+	ns = timecounter_read(&iep->tc);
-+	*ts = ns_to_timespec64(ns);
-+	mutex_unlock(&iep->ptp_clk_mutex);
-+
-+	return 0;
-+}
-+
-+static int icss_iep_ptp_settime_v1(struct ptp_clock_info *ptp,
-+				   const struct timespec64 *ts)
-+{
-+	struct icss_iep *iep = container_of(ptp, struct icss_iep, ptp_info);
-+	u64 ns;
-+
-+	mutex_lock(&iep->ptp_clk_mutex);
-+	ns = timespec64_to_ns(ts);
-+	timecounter_init(&iep->tc, &iep->cc, ns);
-+	mutex_unlock(&iep->ptp_clk_mutex);
-+
-+	return 0;
-+}
-+
- /* PTP PHC operations */
- static int icss_iep_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
- {
-@@ -669,6 +774,17 @@ static int icss_iep_ptp_enable(struct ptp_clock_info *ptp,
- 	return -EOPNOTSUPP;
- }
- 
-+static long icss_iep_overflow_check(struct ptp_clock_info *ptp)
-+{
-+	struct icss_iep *iep = container_of(ptp, struct icss_iep, ptp_info);
-+	unsigned long delay = iep->ovfl_check_period;
-+	struct timespec64 ts;
-+
-+	ts = ns_to_timespec64(timecounter_read(&iep->tc));
-+
-+	pr_debug("iep overflow check at %lld.%09lu\n", ts.tv_sec, ts.tv_nsec);
-+	return (long)delay;
-+}
- static struct ptp_clock_info icss_iep_ptp_info = {
- 	.owner		= THIS_MODULE,
- 	.name		= "ICSS IEP timer",
-@@ -680,6 +796,18 @@ static struct ptp_clock_info icss_iep_ptp_info = {
- 	.enable		= icss_iep_ptp_enable,
- };
- 
-+static struct ptp_clock_info icss_iep_ptp_info_v1 = {
-+	.owner		= THIS_MODULE,
-+	.name		= "ICSS IEP timer",
-+	.max_adj	= 10000000,
-+	.adjfine	= icss_iep_ptp_adjfine_v1,
-+	.adjtime	= icss_iep_ptp_adjtime_v1,
-+	.gettimex64	= icss_iep_ptp_gettimeex_v1,
-+	.settime64	= icss_iep_ptp_settime_v1,
-+	.enable		= icss_iep_ptp_enable,
-+	.do_aux_work	= icss_iep_overflow_check,
-+};
-+
- struct icss_iep *icss_iep_get_idx(struct device_node *np, int idx)
- {
- 	struct platform_device *pdev;
-@@ -701,6 +829,18 @@ struct icss_iep *icss_iep_get_idx(struct device_node *np, int idx)
- 	if (!iep)
- 		return ERR_PTR(-EPROBE_DEFER);
- 
-+	if (iep->plat_data->iep_rev == IEP_REV_V1_0) {
-+		iep->cc.shift = IEP_TC_DEFAULT_SHIFT;
-+		iep->cc.mult = IEP_TC_INCR5_MULT;
-+
-+		iep->cc.read = icss_iep_cc_read;
-+		iep->cc.mask = CLOCKSOURCE_MASK(64);
-+
-+		iep->ovfl_check_period =
-+			msecs_to_jiffies(IEP_OVERFLOW_CHECK_PERIOD_MS);
-+		iep->cc_mult = iep->cc.mult;
-+	}
-+
- 	device_lock(iep->dev);
- 	if (iep->client_np) {
- 		device_unlock(iep->dev);
-@@ -795,6 +935,10 @@ int icss_iep_init(struct icss_iep *iep, const struct icss_iep_clockops *clkops,
- 		icss_iep_enable(iep);
- 	icss_iep_settime(iep, ktime_get_real_ns());
- 
-+	if (iep->plat_data->iep_rev == IEP_REV_V1_0)
-+		timecounter_init(&iep->tc, &iep->cc,
-+				 ktime_to_ns(ktime_get_real()));
-+
- 	iep->ptp_clock = ptp_clock_register(&iep->ptp_info, iep->dev);
- 	if (IS_ERR(iep->ptp_clock)) {
- 		ret = PTR_ERR(iep->ptp_clock);
-@@ -802,6 +946,9 @@ int icss_iep_init(struct icss_iep *iep, const struct icss_iep_clockops *clkops,
- 		dev_err(iep->dev, "Failed to register ptp clk %d\n", ret);
- 	}
- 
-+	if (iep->plat_data->iep_rev == IEP_REV_V1_0)
-+		ptp_schedule_worker(iep->ptp_clock, iep->ovfl_check_period);
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(icss_iep_init);
-@@ -879,7 +1026,11 @@ static int icss_iep_probe(struct platform_device *pdev)
- 		return PTR_ERR(iep->map);
- 	}
- 
--	iep->ptp_info = icss_iep_ptp_info;
-+	if (iep->plat_data->iep_rev == IEP_REV_V1_0)
-+		iep->ptp_info = icss_iep_ptp_info_v1;
-+	else
-+		iep->ptp_info = icss_iep_ptp_info;
-+
- 	mutex_init(&iep->ptp_clk_mutex);
- 	dev_set_drvdata(dev, iep);
- 	icss_iep_disable(iep);
-@@ -1004,6 +1155,7 @@ static const struct icss_iep_plat_data am57xx_icss_iep_plat_data = {
- 		[ICSS_IEP_SYNC_START_REG] = 0x19c,
- 	},
- 	.config = &am654_icss_iep_regmap_config,
-+	.iep_rev = IEP_REV_V2_1,
- };
- 
- static bool am335x_icss_iep_valid_reg(struct device *dev, unsigned int reg)
-@@ -1057,6 +1209,7 @@ static const struct icss_iep_plat_data am335x_icss_iep_plat_data = {
- 		[ICSS_IEP_SYNC_START_REG] = 0x11C,
- 	},
- 	.config = &am335x_icss_iep_regmap_config,
-+	.iep_rev = IEP_REV_V1_0,
- };
- 
- static const struct of_device_id icss_iep_of_match[] = {
-diff --git a/drivers/net/ethernet/ti/icssg/icss_iep.h b/drivers/net/ethernet/ti/icssg/icss_iep.h
-index 0bdca0155abd..f72f1ea9f3c9 100644
---- a/drivers/net/ethernet/ti/icssg/icss_iep.h
-+++ b/drivers/net/ethernet/ti/icssg/icss_iep.h
-@@ -47,21 +47,29 @@ enum {
- 	ICSS_IEP_MAX_REGS,
- };
- 
-+enum iep_revision {
-+	IEP_REV_V1_0 = 0,
-+	IEP_REV_V2_1
-+};
-+
- /**
-  * struct icss_iep_plat_data - Plat data to handle SoC variants
-  * @config: Regmap configuration data
-  * @reg_offs: register offsets to capture offset differences across SoCs
-  * @flags: Flags to represent IEP properties
-+ * @iep_rev: IEP revision identifier.
-  */
- struct icss_iep_plat_data {
- 	const struct regmap_config *config;
- 	u32 reg_offs[ICSS_IEP_MAX_REGS];
- 	u32 flags;
-+	enum iep_revision iep_rev;
- };
- 
- struct icss_iep {
- 	struct device *dev;
- 	void __iomem *base;
-+	void __iomem *sram;
- 	const struct icss_iep_plat_data *plat_data;
- 	struct regmap *map;
- 	struct device_node *client_np;
-@@ -70,6 +78,10 @@ struct icss_iep {
- 	struct ptp_clock_info ptp_info;
- 	struct ptp_clock *ptp_clock;
- 	struct mutex ptp_clk_mutex;	/* PHC access serializer */
-+	u32 cc_mult; /* for the nominal frequency */
-+	struct cyclecounter cc;
-+	struct timecounter tc;
-+	unsigned long ovfl_check_period;
- 	u32 def_inc;
- 	s16 slow_cmp_inc;
- 	u32 slow_cmp_count;
-diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.c b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
-index 67ee4c72d3d6..7e90f9e71921 100644
---- a/drivers/net/ethernet/ti/icssm/icssm_prueth.c
-+++ b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
-@@ -39,6 +39,8 @@
- #define TX_START_DELAY		0x40
- #define TX_CLK_DELAY_100M	0x6
- 
-+#define TIMESYNC_SECONDS_BIT_MASK   0x0000ffffffffffff
-+
- static struct prueth_fw_offsets fw_offsets_v2_1;
- 
- static void icssm_prueth_set_fw_offsets(struct prueth *prueth)
-@@ -642,13 +644,49 @@ irqreturn_t icssm_prueth_ptp_tx_irq_handle(int irq, void *dev)
- 	return IRQ_HANDLED;
- }
- 
-+/**
-+ * icssm_iep_get_timestamp_cycles - IEP get timestamp
-+ * @iep: icss_iep structure
-+ * @mem: io memory address
-+ *
-+ * To convert the 10 byte timestamp from firmware
-+ * i.e., nanoseconds part from 32-bit IEP counter(4 bytes)
-+ * seconds part updated by firmware(rev FW_REV1_0) in SRAM
-+ * (6 bytes) into 64-bit timestamp in ns
-+ *
-+ * Return: 64-bit converted timestamp
-+ */
-+u64 icssm_iep_get_timestamp_cycles(struct icss_iep *iep,
-+				   void __iomem *mem)
-+{
-+	u64 cycles, cycles_sec = 0;
-+	u32 cycles_ns;
-+
-+	memcpy_fromio(&cycles_ns, mem, sizeof(cycles_ns));
-+	memcpy_fromio(&cycles_sec, mem + 4, sizeof(cycles_sec));
-+
-+	/*To get the 6 bytes seconds part*/
-+	cycles_sec = (cycles_sec & TIMESYNC_SECONDS_BIT_MASK);
-+	cycles = cycles_ns + (cycles_sec * NSEC_PER_SEC);
-+	cycles = timecounter_cyc2time(&iep->tc, cycles);
-+
-+	return cycles;
-+}
-+
- static u64 icssm_prueth_ptp_ts_get(struct prueth_emac *emac, u32 ts_offs)
- {
- 	void __iomem *sram = emac->prueth->mem[PRUETH_MEM_SHARED_RAM].va;
- 	u64 cycles;
- 
--	memcpy_fromio(&cycles, sram + ts_offs, sizeof(cycles));
--	memset_io(sram + ts_offs, 0, sizeof(cycles));
-+	if (emac->prueth->fw_data->fw_rev == FW_REV_V1_0) {
-+		cycles = icssm_iep_get_timestamp_cycles(emac->prueth->iep,
-+							sram + ts_offs);
-+		/* 4 bytes of timestamp + 6 bytes of seconds counter */
-+		memset_io(sram + ts_offs, 0, 10);
-+	} else {
-+		memcpy_fromio(&cycles, sram + ts_offs, sizeof(cycles));
-+		memset_io(sram + ts_offs, 0, sizeof(cycles));
-+	}
- 
- 	return cycles;
- }
-@@ -985,7 +1023,13 @@ int icssm_emac_rx_packet(struct prueth_emac *emac, u16 *bd_rd_ptr,
- 		    pkt_info->timestamp) {
- 			src_addr = (void *)PTR_ALIGN((uintptr_t)src_addr,
- 						     ICSS_BLOCK_SIZE);
--			memcpy(&ts, src_addr, sizeof(ts));
-+			if (emac->prueth->fw_data->fw_rev == FW_REV_V1_0) {
-+				ts = icssm_iep_get_timestamp_cycles
-+					(emac->prueth->iep,
-+					 (void __iomem *)src_addr);
-+			} else {
-+				memcpy(&ts, src_addr, sizeof(ts));
-+			}
- 			ssh = skb_hwtstamps(skb);
- 			memset(ssh, 0, sizeof(*ssh));
- 			ssh->hwtstamp = ns_to_ktime(ts);
-@@ -2189,6 +2233,9 @@ static int icssm_prueth_probe(struct platform_device *pdev)
- 		goto netdev_exit;
- 	}
- 
-+	if (prueth->fw_data->fw_rev == FW_REV_V1_0)
-+		prueth->iep->sram = prueth->mem[PRUETH_MEM_SHARED_RAM].va;
-+
- 	/* Make rx interrupt pacing optional so that users can use ECAP for
- 	 * other use cases if needed
- 	 */
-@@ -2396,6 +2443,7 @@ static struct prueth_private_data am335x_prueth_pdata = {
- 		.fw_name[PRUSS_ETHTYPE_EMAC] =
- 			"ti-pruss/am335x-pru1-prueth-fw.elf",
- 	},
-+	.fw_rev = FW_REV_V1_0,
- };
- 
- /* AM437x SoC-specific firmware data */
-@@ -2409,6 +2457,7 @@ static struct prueth_private_data am437x_prueth_pdata = {
- 		.fw_name[PRUSS_ETHTYPE_EMAC] =
- 			"ti-pruss/am437x-pru1-prueth-fw.elf",
- 	},
-+	.fw_rev = FW_REV_V1_0,
- };
- 
- /* AM57xx SoC-specific firmware data */
-@@ -2422,6 +2471,7 @@ static struct prueth_private_data am57xx_prueth_pdata = {
- 		.fw_name[PRUSS_ETHTYPE_EMAC] =
- 			"ti-pruss/am57xx-pru1-prueth-fw.elf",
- 	},
-+	.fw_rev = FW_REV_V2_1,
- };
- 
- static const struct of_device_id prueth_dt_match[] = {
-diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.h b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
-index 07c29c560cb9..c409b9a87bdc 100644
---- a/drivers/net/ethernet/ti/icssm/icssm_prueth.h
-+++ b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
-@@ -302,6 +302,12 @@ enum prueth_mem {
- 	PRUETH_MEM_MAX,
- };
- 
-+/* PRU firmware revision*/
-+enum fw_revision {
-+	FW_REV_V1_0 = 0,
-+	FW_REV_V2_1
-+};
-+
- /* Firmware offsets/size information */
- struct prueth_fw_offsets {
- 	u32 index_array_offset;
-@@ -336,12 +342,14 @@ enum pruss_device {
-  * struct prueth_private_data - PRU Ethernet private data
-  * @driver_data: PRU Ethernet device name
-  * @fw_pru: firmware names to be used for PRUSS ethernet usecases
-+ * @fw_rev: Firmware revision identifier
-  * @support_lre: boolean to indicate if lre is enabled
-  * @support_switch: boolean to indicate if switch is enabled
-  */
- struct prueth_private_data {
- 	enum pruss_device driver_data;
- 	const struct prueth_firmware fw_pru[PRUSS_NUM_PRUS];
-+	enum fw_revision fw_rev;
- 	bool support_lre;
- 	bool support_switch;
- };
-@@ -441,6 +449,9 @@ int icssm_emac_add_del_vid(struct prueth_emac *emac,
- irqreturn_t icssm_prueth_ptp_tx_irq_handle(int irq, void *dev);
- irqreturn_t icssm_prueth_ptp_tx_irq_work(int irq, void *dev);
- 
-+u64 icssm_iep_get_timestamp_cycles(struct icss_iep *iep,
-+				   void __iomem *mem);
-+
- void icssm_emac_mc_filter_bin_allow(struct prueth_emac *emac, u8 hash);
- void icssm_emac_mc_filter_bin_disallow(struct prueth_emac *emac, u8 hash);
- u8 icssm_emac_get_mc_hash(u8 *mac, u8 *mask);
--- 
-2.34.1
-
+--=-CCM+5jMfWnH/MfFJSdvZ--
