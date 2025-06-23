@@ -1,42 +1,64 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269A127A10D
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 17:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1081C84D2;
+	Mon, 23 Jun 2025 17:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750699261; cv=none; b=nQkIf5q/s9+ml6u5wVFjd8BVmgETd4FM3ullhNLxC4151oR4rr5i0VTN/KZMIP+TcMzItYOCEWOMLzZqgkrcoLtXbLFFO84NhV4w97Hyo03jA1U1wwytX47QTydl27MYNq4I1FN+Q8LLfWwdRXbjCeDxwQIHP6q7jE8689rerQs=
+	t=1750699349; cv=none; b=QLEdQHbeOmcSSwgdiV0llLUTqQXatmnaTweTBChOCrBuvEhRzEoROZRz596MECGbR/WLILovM9WQojLFGsZXAoGRB/41n0vU1bOSlnXbHKjZrOvJXokqWIZ9fYth9nlGjRgCCZZ2yyaTEnZ9Eu1iJuQozz3eeC58Z3MAw+TLH+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750699261; c=relaxed/simple;
-	bh=sQJa+e7+ycJ6FdZ0twBjpDvALO+VZg5VVi0szLpGLVA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=H3+uSW9dBdfq5IiEHXMzyQNNesYvD6+jXZrdxcg72pEvX0RBn3RZ4wuFEsY9f/vi9NcJfPnCMKPQRkPI4fOCxxWL5Iqj1mIj1y7AVZSlbTAR6nb4h+uBk/1TBL/sMIn72Z30CJ4ccXoWGOIUsbIMyiHZ/HPujoOx5BpqJ9APGu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=B9Joi7Kz; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750699349; c=relaxed/simple;
+	bh=jJnC3oKax7f/8XuZzqa3hqAba65AYPaIpYSbsZESE0k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jHc6LUC28+kBBZMM9WLHpv0jZRmq5XcGJamnba+MyxaOTUt9Ry9MVxi9Rz9u+4C5b8j/+i2hyXWXsM+nI4xGbjf3L1knH9Dj09wWlvCcEgk0hqeuMIkGW6wVC5ReK0HP4cwxLpdZ3CGd6wstojJZlllCm47lIstHMw8O/a/vaCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B7bJI63g; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="B9Joi7Kz"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250623172056euoutp02161cc1b2b2df0f2ed9e3967eab4572cb~Lu7Ku91VE0444204442euoutp02d
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 17:20:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250623172056euoutp02161cc1b2b2df0f2ed9e3967eab4572cb~Lu7Ku91VE0444204442euoutp02d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750699256;
-	bh=8lEUjCtED9a5kJctvyEu/cj7uPsV5HrpplbBsVN6N5c=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=B9Joi7KzcXhbXkt7ESn9LBW17c8hZBnCUZW0dCLSSAX85xn9L37lTqPliprzJep18
-	 E4QvZWgjOqmYiY/etAalqUSNMiCq71X+FbeQ43lHiegdy1Rlaa4exbV76xK8DsGDlf
-	 9gz/MTRkf35DVXHIZOPJwKX854xtkgSPjraX3OLE=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250623172055eucas1p18f485c150a28ebb6bc819962a527f652~Lu7KEXSux0826908269eucas1p1r;
-	Mon, 23 Jun 2025 17:20:55 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250623172054eusmtip2b03dc4b23ebdde5b132e7ca2374fdf75~Lu7JD55kE0081800818eusmtip2R;
-	Mon, 23 Jun 2025 17:20:54 +0000 (GMT)
-Message-ID: <f41cd747-eb57-4e17-a3b1-8b30e0c6e84c@samsung.com>
-Date: Mon, 23 Jun 2025 19:20:54 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B7bJI63g"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a548a73ff2so4161938f8f.0;
+        Mon, 23 Jun 2025 10:22:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750699346; x=1751304146; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=I1dFWO8xuumTz++9X/S3giqAnnD34xC8uxJzEdXlf3g=;
+        b=B7bJI63g/o0oVMQJjUhTTfTf09YMg8hLaM8oU8UmQ9XxTpCf7DS19/YWn3qROOZhDb
+         crkvY6Nsaz2uRJ4KO1RLJKGBiSw30dcXPXuVeXUGeE9p8rggwFtai0AX79drj8zRk2OV
+         +79cYNU1+6VSu+fh2nNEOjkXGjm3+3/lBiW44BshRj1TVO/DumQDtpkwGBtojtjpFIOZ
+         pooMC+bHCXg3HtcgugoD4gzENlE19kBNF0UGTjeesjLOqjPObGXWmvcR2mUhfmsZfCb/
+         W3cCCdjwPevNcTGVH7L0yyImFWRsEcipKciK5WdtUN4/TvO9KEBolNnivDZB+RtHeWIo
+         fB3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750699346; x=1751304146;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I1dFWO8xuumTz++9X/S3giqAnnD34xC8uxJzEdXlf3g=;
+        b=Aqxf1+F1JWKBBRYI6RnK06IsPICYJOWkpFAwUMAYRrF0T4c6QeUQVA+FOsCflx6k7K
+         1HS2zdjktKbkvCnm2IptRolpaTFEjRfiAZXX7lrCMvTClvucOFEt1a0qckhr0Gh19WCs
+         bvw9HQy/3kmoC4eXSnK2lktGikq5pwoRbaZNM11bfSKE4Fg2Fm0X1X5TgGQX9JC/tMq7
+         srHADnedAjfK+/VUBMXkuSaA4umwjVZHGgBrWRPRwGT1GzhzRXxF6rEJkBfodsmZhV/V
+         sR9fJKAJbzbzMhDhAH2t6C4Ta0rNjK2nK/t0FeLnHDKbwhQJBXSbXvGiHMwfaPI08XpR
+         iFcA==
+X-Forwarded-Encrypted: i=1; AJvYcCWK4+KYJtJLwlBVYse69IIfEOWE1URogk1ne0biw9eAjRCaz8gc5FYdguxA+Fk+eSOPdzEnjo+Mf4oeVok=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzunKHYTLeBFPPIHONfbW9CJouctjc6xSW3rk/JFWTApJMT9VA+
+	kjcJG4GbhWgsb6ubLxHVIl01XkgC68cw/B5nENnIJteDYihi6hPVW2L9
+X-Gm-Gg: ASbGncvQn+91ldZn2YCkH2jfkD3W4YbTnYrYnSCvviAxNDFj5J+EVDDCu4yKRckNhNS
+	y420T40S53kHmQORLIMjwe6Gic/I7KY8bY4C2TsZzL+w2A2UfAdXqwZlKjN2iKn+O8oo/O1EFAW
+	XBWYpO4HdO+unJ1+F31pbIuwHXiB1ANlIjmWl8EJHrv6Tfkts7rZ+eMswPP72BTVO2SVDyGqwlb
+	w7fCUSzFZLMpg6FYloNG8MbIA4R3FzfHwnH4hod1+MNufTmmMztR4r/Wjv8mcLhe2urUsmOajSa
+	lvY55hbzD4wAKVXB3KdzxtSNCT94ZwSAP8FxMThkN3qINuCtjSVXGsRZ4D5JwbHm0giGnQ==
+X-Google-Smtp-Source: AGHT+IEVywBUomgjS8sPQ/hW0owg/JrKv3kaTq6UiGdoH2tmO57p8pY3WLUjlagdvN1FcUpF+NXsEw==
+X-Received: by 2002:a05:6000:23c3:b0:3a5:8905:2dda with SMTP id ffacd0b85a97d-3a6d1303bd5mr8898449f8f.43.1750699345418;
+        Mon, 23 Jun 2025 10:22:25 -0700 (PDT)
+Received: from [192.168.0.50] ([79.119.240.16])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646cb672sm118259585e9.6.2025.06.23.10.22.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 10:22:24 -0700 (PDT)
+Message-ID: <ed0b9b6f-f480-40ec-b4d5-453c78bd8a5c@gmail.com>
+Date: Mon, 23 Jun 2025 20:22:22 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,100 +66,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/8] power: sequencing: Add T-HEAD TH1520 GPU power
- sequencer driver
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp Zabel
-	<p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, Matt Coster
-	<matt.coster@imgtec.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>, Marek
-	Szyprowski <m.szyprowski@samsung.com>, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [Bug report] rtw89: 8852b: IO_PAGE_FAULTs with beacon filter
+ feature enabled
+To: Bernie Huang <phhuang@realtek.com>, Ping-Ke Shih <pkshih@realtek.com>,
+ Fedor Pchelkin <boddah8794@gmail.com>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <uidltsdsuujrczrtzgerhh5cw2tztxktfen6yvztnc7gttzgvk@jccomj7f4gul>
+ <148ed65c53be4ef29246d372dd0fef8e@realtek.com>
+ <z54thedngt3wnhr5bfer3yg7id2c4uqgw2jjvyausv6p66ys4k@guqol77fpugz>
+ <dcf695a6621f43e38a20eb860194191a@realtek.com>
+ <7injzacfmvhrugcovyxkn4elnaxnzg27c26zmcqzrwhottyk7e@ap5ellaozcg4>
+ <419811cccd774d38b5a9c0bbcdf5dfbe@realtek.com>
+ <42783d9a032143bfb67ea969ee0b805d@realtek.com>
 Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <CAMRc=MfPLZ7oMVjLv+_GMoC8X+O=k+mMrQKxELho0=+Z7=HApQ@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250623172055eucas1p18f485c150a28ebb6bc819962a527f652
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250623114430eucas1p2a5bb2bbc0049186ff25e1b3e1a131ca2
-X-EPHeader: CA
-X-CMS-RootMailID: 20250623114430eucas1p2a5bb2bbc0049186ff25e1b3e1a131ca2
-References: <CGME20250623114430eucas1p2a5bb2bbc0049186ff25e1b3e1a131ca2@eucas1p2.samsung.com>
-	<20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
-	<20250623-apr_14_for_sending-v6-1-6583ce0f6c25@samsung.com>
-	<CAMRc=MfPLZ7oMVjLv+_GMoC8X+O=k+mMrQKxELho0=+Z7=HApQ@mail.gmail.com>
+From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+In-Reply-To: <42783d9a032143bfb67ea969ee0b805d@realtek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-
-On 6/23/25 16:32, Bartosz Golaszewski wrote:
-> On Mon, Jun 23, 2025 at 1:44 PM Michal Wilczynski
-> <m.wilczynski@samsung.com> wrote:
->>
->> Introduce the pwrseq-thead-gpu driver, a power sequencer provider for
->> the Imagination BXM-4-64 GPU on the T-HEAD TH1520 SoC. This driver
->> controls an auxiliary device instantiated by the AON power domain.
->>
->> The TH1520 GPU requires a specific sequence to correctly initialize and
->> power down its resources:
->>  - Enable GPU clocks (core and sys).
->>  - De-assert the GPU clock generator reset (clkgen_reset).
->>  - Introduce a short hardware-required delay.
->>  - De-assert the GPU core reset. The power-down sequence performs these
->>    steps in reverse.
->>
->> Implement this sequence via the pwrseq_power_on and pwrseq_power_off
->> callbacks.
->>
->> Crucially, the driver's match function is called when a consumer (the
->> Imagination GPU driver) requests the "gpu-power" target. During this
->> match, the sequencer uses clk_bulk_get() and
->> reset_control_get_exclusive() on the consumer's device to obtain handles
->> to the GPU's "core" and "sys" clocks, and the GPU core reset.  These,
->> along with clkgen_reset obtained from parent aon node, allow it to
->> perform the complete sequence.
->>
->> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
->> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
->> ---
+On 14/05/2025 06:29, Bernie Huang wrote:
+> -----Original Message-----
+> From: Ping-Ke Shih <pkshih@realtek.com> 
+> Sent: Thursday, May 8, 2025 8:59 AM
+> To: Fedor Pchelkin <boddah8794@gmail.com>
+> Cc: Bernie Huang <phhuang@realtek.com>; linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: RE: [Bug report] rtw89: 8852b: IO_PAGE_FAULTs with beacon filter feature enabled
 > 
-> [snip]
+> Fedor Pchelkin <boddah8794@gmail.com> wrote:
+>>> On Thu, 17. Apr 01:05, Ping-Ke Shih wrote:
+>>>> Fedor Pchelkin <boddah8794@gmail.com> wrote:
+>>>>>
+>>>>> On Wed, 16. Apr 00:49, Ping-Ke Shih wrote:
+>>>>>> As bisection, can I summarize as below table?
+>>>>>>
+>>>>>>     d56c261e52           firmware             IO_PAGE_FAULT
+>>>>>>    (CQM support)
+>>>>>>   ---------------      -----------          -----------------
+>>>>>>       o                 0.29.29.7                  yes
+>>>>>>       o                 0.29.29.5                  no
+>>>>>>       x                 0.29.29.7                  no
+>>>>>>       x                 0.29.29.5                  no
+>>>>>>
+>>>>>> If this table is correct, we will check the beacon filter feature in firmware.
+>>>>>>
+>>>>>
+>>>>> Yes, it correctly describes the situation. My suspicion currently 
+>>>>> falls on the beacon filter feature in firmware, too.
+>>>>
+>>>> Could you help to test when we have updated firmware?
+>>>>
+>>>
+>>> Hi,
+>>>
+>>> Were you able to reproduce or track down the problem?
 > 
->> +
->> +       /* Additionally verify consumer device has AON as power-domain */
->> +       if (pwr_spec.np != ctx->aon_node || pwr_spec.args[0] != TH1520_GPU_PD) {
->> +               of_node_put(pwr_spec.np);
->> +               return 0;
->> +       }
->> +
->> +       of_node_put(pwr_spec.np);
->> +
->> +       /* If a consumer is already bound, only allow a re-match from it */
->> +       if (ctx->consumer_node)
->> +               return ctx->consumer_node == dev->of_node;
->> +
+>> Yes, we have reproduced this problem, and we found sending firmware command during deep PS mode will raise IO_PAGE_FAULT. With below setting to disable deep PS > mode, the symptom can disappear.
 > 
-> That should be `!!(ctx->consumer_node == dev->of_node)` or preferably
-> `ctx->consumer_node == dev->of_node ? 1 : 0`. I can amend it when
-> applying if you have no objections. The rest looks good to me and I'd
-> like to pick it up into pwrseq/for-next in the next two days.
-
-Sure,
-Thanks !
-
+>>   rtw89_core.ko disable_ps_mode=y
 > 
-> Bart
+>> Now we are arranging CAT-C equipment to capture signals in PCIE bus to see what happens at that moment. 
 > 
-> [snip]
+>> One possible solution (workaround) is to avoid sending firmware commands during deep PS mode, before we found out the root cause. 
 > 
-
-Best regards,
--- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+> Hi Fedor,
+> 
+> Could you please check whether the attached firmware fixes this issue?
+> The firmware version should be 1.29.29.9.
+By the way, what does the first number mean? The previous version was
+0.29.29.8. I would expect only the last number to change for this bug fix.
