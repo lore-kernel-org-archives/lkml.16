@@ -1,119 +1,328 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C108219301;
-	Mon, 23 Jun 2025 22:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C61219301
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 22:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750718845; cv=none; b=rDAx3CA9H3/kUqqLXUoEfCa+PxuKP97i1vg5JDLQAqD0jc4l/IZ1vbKEWNSCByuC6A/G4vyIKnLxR1UGJMsziCkvjsLw82JLm/z0HYuLq9QgHcOyk/bCKRuHf2xR+dR6HNf0kXXQZ/+ia7pQWpF7IDLDdLDmVwSULiZWOhk+n9k=
+	t=1750718931; cv=none; b=CcEW/s4SNQBw8aMs/kiMs8fOk1DQR9SjPzsU2ajRmJIyMgoTFuppJvGpOdSLjw+1TMVEn4xzFJL0XOM4lSfbtvsFhLnj2PyY7Ll+REVjr4dhWtdr8HAooYtOE35SVZ6SK9o6SS0jvt7QWTFk7VK1TjKUb2a6mgnW5bhH0xMzu3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750718845; c=relaxed/simple;
-	bh=F0Eful+LsC18qHuUWUpPOReAr7tTH2VPyfj+njae52A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WanKwQ/Z10z2ddhln1ECLV5uHHjZMKFBPVBDSZoru7n3MzRle7iK20YTkW9saWbSur2olmZJ4moG2t4NQ9cNqyNdoSAKDTWp0he9U/YCG+rSIYTsbkx5AvHmImnAYZcJANz/aPNV7iayT7rolhvXx2Tqj2vzt0ZgkfDCAx+tHd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Q3XYhwpu; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1750718931; c=relaxed/simple;
+	bh=HVlnWOUhaJDHiqoV6Qi+fWYnBNCA0TmheUmhtVgM2LM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=OQdMPYcH/QD8u1byrA+9r465TedUjKJ5fv3uCPSJTTmVbNKpNxVfy4FF0GhTnypEDHfY0PtffQI2lTKGutfqxvkSuP/L+mEeYmsKrNV1Zn9aCAlogNn48I4TfEbOH8VR0i+Et1GtZZtKYZhkUylOmwAE0PS/Fy0dg1fxVAq51JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZS7ZlPVj; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Q3XYhwpu"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 6739FD77;
-	Tue, 24 Jun 2025 00:47:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750718824;
-	bh=F0Eful+LsC18qHuUWUpPOReAr7tTH2VPyfj+njae52A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q3XYhwpuqK0L+qXf1fWK9gwowy4XCVUHuCVlFzCmRdfy2X0UvLLwlc0AYCc8hKp2o
-	 bZNJ/0p65erJO9q7Rig5OR+oqdTlGtgAsmSzo0Jx0MDPpqmFAw5BxjjeIqwigHRFbe
-	 k/bvmAhvpIzZPtDbOS36WYcNcxOHOHVMIILyyMkM=
-Date: Tue, 24 Jun 2025 01:47:01 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kumar M <anil.mamidala@xilinx.com>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, "Guoniu.zhou" <guoniu.zhou@nxp.com>,
-	Stefan Hladnik <stefan.hladnik@gmail.com>,
-	Florian Rebaudo <frebaudo@witekio.com>
-Subject: Re: [PATCH v3 2/2] media: i2c: Add ON Semiconductor AP1302 ISP driver
-Message-ID: <20250623224701.GE15951@pendragon.ideasonboard.com>
-References: <20250623-ap1302-v3-0-c9ca5b791494@nxp.com>
- <20250623-ap1302-v3-2-c9ca5b791494@nxp.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZS7ZlPVj"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-748d96b974cso3751624b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:48:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750718929; x=1751323729; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5FQrnOzlI4rlzIlJ3je95VX2XtHLZtkxIG+j+YsSdSA=;
+        b=ZS7ZlPVjdVEFHZc3NvfiQREcr0T2uIzY98NzKNUEoyNwvPWuOgHmYq1fj5QFWmL3dt
+         meDh2EnIwKXVFWxwjRokrDELT4eTiv6ZFvGsMKsrd00WKw8IYFY8m7I3dm/BkDczvWaC
+         Bw69u8SwzBsRj/x7T+Dzo+atqsfFc/2HK6UaITeR9BP19/EN2fSS01mMUI67w3sOLqUS
+         zqzlHpx0RWs3APCtbb86s+1km4RRoeeRVxTDp3CIDHCcPlGAcH3J31v5i+tCYG2Oec1l
+         bPQoQ6fG+7M2SooZHB4cORBl1+0FOfoVOIGCCJTCJHpk01OK7hbW/OT45nHEB53Te0IJ
+         wHFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750718929; x=1751323729;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5FQrnOzlI4rlzIlJ3je95VX2XtHLZtkxIG+j+YsSdSA=;
+        b=DENb7ATTy14oI326Jxniv3emcg+rry6dij396j6tNbbcArVVXVKz+xdaJyBdVGlM/V
+         34UefEGvJ08sHO39QRkJJcnF8F9jvYK54fLcM14Tqozm6m6Wm0we86pwVaNCAwXI5ms+
+         PikQIZnTlBWm27AbYGO/vODj7M/93rplECzIMR1XaZfldsAu9xPTRUAgCggF74ZG+H+D
+         tH67C9/LJjnURNALuc1H5U/vgSv5mbNr7BdIUp5iKZWoQ2/N1YKk3+Q0Xc5GzXLvVAvI
+         XlKZ37dcVYiFK7G47ao99RF0xylNx5GuDz1nvQyQjhItMGqw5dpuilmAyvviVlK7JAzC
+         bWWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWsKanJ4kXT6gzNr1t3QR8ZIBHMPreool+UrZM3NjwyeJ6nC4/tMxmOOVLE8sYy32PQ6zaJzz16hy5l2s8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiI5KYJMGMNmsqgfffnDAP9WTFjoLToYekb8y1qSdZ3GEJynJy
+	RJTcmBNbLlZzlI4Hreow+1CruEG2EReBsdH9BlnXuaFwpQsgJxAgr6TMH12dkOZDscdtyAJ486x
+	gW00VpRzEdVcfwurLOVRKsta7IA==
+X-Google-Smtp-Source: AGHT+IFXcWLeuIKgfe/GpzK3L8MUHvaAHpiTHonP1boAS308TfryaPn9WMz6uCXNyx65KgwmMm9jHSqAQPckJNRbGw==
+X-Received: from pfrb8.prod.google.com ([2002:aa7:8ec8:0:b0:746:32ae:99d5])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:1990:b0:748:edf5:95de with SMTP id d2e1a72fcca58-7490d5d033amr16444878b3a.10.1750718929219;
+ Mon, 23 Jun 2025 15:48:49 -0700 (PDT)
+Date: Mon, 23 Jun 2025 15:48:48 -0700
+In-Reply-To: <draft-diqzh606mcz0.fsf@ackerleytng-ctop.c.googlers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250623-ap1302-v3-2-c9ca5b791494@nxp.com>
+Mime-Version: 1.0
+References: <aCVZIuBHx51o7Pbl@yzhao56-desk.sh.intel.com> <diqzfrgfp95d.fsf@ackerleytng-ctop.c.googlers.com>
+ <aEEEJbTzlncbRaRA@yzhao56-desk.sh.intel.com> <CAGtprH_Vj=KS0BmiX=P6nUTdYeAZhNEyjrRFXVK0sG=k4gbBMg@mail.gmail.com>
+ <aE/q9VKkmaCcuwpU@yzhao56-desk.sh.intel.com> <9169a530e769dea32164c8eee5edb12696646dfb.camel@intel.com>
+ <aFDHF51AjgtbG8Lz@yzhao56-desk.sh.intel.com> <6afbee726c4d8d95c0d093874fb37e6ce7fd752a.camel@intel.com>
+ <aFIGFesluhuh2xAS@yzhao56-desk.sh.intel.com> <0072a5c0cf289b3ba4d209c9c36f54728041e12d.camel@intel.com>
+ <aFkeBtuNBN1RrDAJ@yzhao56-desk.sh.intel.com> <draft-diqzh606mcz0.fsf@ackerleytng-ctop.c.googlers.com>
+Message-ID: <diqzy0tikran.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+From: Ackerley Tng <ackerleytng@google.com>
+To: Yan Zhao <yan.y.zhao@intel.com>, "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
+	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "Hansen, Dave" <dave.hansen@intel.com>, 
+	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
+	"vbabka@suse.cz" <vbabka@suse.cz>, "tabba@google.com" <tabba@google.com>, "Du, Fan" <fan.du@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
+	"Weiny, Ira" <ira.weiny@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	"michael.roth@amd.com" <michael.roth@amd.com>, "Peng, Chao P" <chao.p.peng@intel.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Annapurve, Vishal" <vannapurve@google.com>, 
+	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, 
+	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "pgonda@google.com" <pgonda@google.com>, 
+	"x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Frank,
+Ackerley Tng <ackerleytng@google.com> writes:
 
-Thank you for the patch.
+> Yan Zhao <yan.y.zhao@intel.com> writes:
+>
+>> On Wed, Jun 18, 2025 at 08:41:38AM +0800, Edgecombe, Rick P wrote:
+>>> On Wed, 2025-06-18 at 08:19 +0800, Yan Zhao wrote:
+>>> > > I don't think a potential bug in KVM is a good enough reason. If we are
+>>> > > concerned can we think about a warning instead?
+>>> > > 
+>>> > > We had talked enhancing kasan to know when a page is mapped into S-EPT in
+>>> > > the
+>>> > > past. So rather than design around potential bugs we could focus on having a
+>>> > > simpler implementation with the infrastructure to catch and fix the bugs.
+>>> > However, if failing to remove a guest private page would only cause memory
+>>> > leak,
+>>> > it's fine. 
+>>> > If TDX does not hold any refcount, guest_memfd has to know that which private
+>>> > page is still mapped. Otherwise, the page may be re-assigned to other kernel
+>>> > components while it may still be mapped in the S-EPT.
+>>> 
+>>> KASAN detects use-after-free's like that. However, the TDX module code is not
+>>> instrumented. It won't check against the KASAN state for it's accesses.
+>>> 
+>>> I had a brief chat about this with Dave and Kirill. A couple ideas were
+>>> discussed. One was to use page_ext to keep a flag that says the page is in-use
+>> Thanks!
+>>
+>> To use page_ext, should we introduce a new flag PAGE_EXT_FIRMWARE_IN_USE,
+>> similar to PAGE_EXT_YOUNG?
+>>
+>> Due to similar issues as those with normal page/folio flags (see the next
+>> comment for details), TDX needs to set PAGE_EXT_FIRMWARE_IN_USE on a
+>> page-by-page basis rather than folio-by-folio.
+>>
+>> Additionally, it seems reasonable for guest_memfd not to copy the
+>> PAGE_EXT_FIRMWARE_IN_USE flag when splitting a huge folio?
+>> (in __folio_split() --> split_folio_to_order(), PAGE_EXT_YOUNG and
+>> PAGE_EXT_IDLE are copied to the new folios though).
+>>
+>> Furthermore, page_ext uses extra memory. With CONFIG_64BIT, should we instead
+>> introduce a PG_firmware_in_use in page flags, similar to PG_young and PG_idle?
+>>
 
-On Mon, Jun 23, 2025 at 03:17:38PM -0400, Frank Li wrote:
-> From: Anil Kumar Mamidala <anil.mamidala@xilinx.com>
-> 
-> The AP1302 is a standalone ISP for ON Semiconductor sensors.
-> AP1302 ISP supports single and dual sensor inputs. The driver
-> code supports AR1335, AR0144 and AR0330 sensors with single and
-> dual mode by loading the corresponding firmware.
-> 
-> Signed-off-by: Anil Kumar Mamidala <anil.mamidala@xilinx.com>
-> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Stefan Hladnik <stefan.hladnik@gmail.com>
-> Signed-off-by: Florian Rebaudo <frebaudo@witekio.com>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> Change in v3:
-> - add extra empty line between difference register define
-> - add bits.h
-> - use GEN_MASK and align regiser bit define from 31 to 0.
-> - add ap1302_sensor_supply
-> - add enable gpio
-> - update firmware header format
+I think neither page flags nor page_ext will work for us, but see below.
 
-One of the main issues with this driver is that we need to standardize
-the header format. The standardized format will need to be approved by
-onsemi as we will need to provide not just a driver, but also a
-toolchain that will produce firmwares in the right format. Furthermore,
-some time ago the AP1302 firmware was extended with the ability to
-dynamically compute PLL parameters IIRC. This needs to be taken into
-account.
+>>> by the TDX module. There was also some discussion of using a normal page flag,
+>>> and that the reserved page flag might prevent some of the MM operations that
+>>> would be needed on guestmemfd pages. I didn't see the problem when I looked.
+>>> 
+>>> For the solution, basically the SEAMCALL wrappers set a flag when they hand a
+>>> page to the TDX module, and clear it when they successfully reclaim it via
+>>> tdh_mem_page_remove() or tdh_phymem_page_reclaim(). Then if the page makes it
+>>> back to the page allocator, a warning is generated.
+>> After some testing, to use a normal page flag, we may need to set it on a
+>> page-by-page basis rather than folio-by-folio. See "Scheme 1".
+>> And guest_memfd may need to selectively copy page flags when splitting huge
+>> folios. See "Scheme 2".
+>>
+>> Scheme 1: Set/unset page flag on folio-by-folio basis, i.e.
+>>         - set folio reserved at tdh_mem_page_aug(), tdh_mem_page_add(),
+>>         - unset folio reserved after a successful tdh_mem_page_remove() or
+>>           tdh_phymem_page_reclaim().
+>>
+>>         It has problem in following scenario:
+>>         1. tdh_mem_page_aug() adds a 2MB folio. It marks the folio as reserved
+>> 	   via "folio_set_reserved(page_folio(page))"
+>>
+>>         2. convert a 4KB page of the 2MB folio to shared.
+>>         2.1 tdh_mem_page_demote() is executed first.
+>>        
+>>         2.2 tdh_mem_page_remove() then removes the 4KB mapping.
+>>             "folio_clear_reserved(page_folio(page))" clears reserved flag for
+>>             the 2MB folio while the rest 511 pages are still mapped in the
+>>             S-EPT.
+>>
+>>         2.3. guest_memfd splits the 2MB folio into 512 4KB folios.
+>>
+>>
 
-I want to resuscitate this driver and get it merged. There's more work
-to do, in collaboration with onsemi, and I haven't had time to tackle
-it. If you want to propose a proper design for firmware handling I would
-be happy to participate in the discussion.
+Folio flags on their own won't work because they're not precise
+enough. A folio can be multiple 4K pages, and if a 4K page had failed to
+unmap, we want to be able to indicate which 4K page had the failure,
+instead of the entire folio. (But see below)
 
-> - update raw sensor supply delay time
-> - use gpiod_set_value_cansleep() insteand gpiod_set_value()
-> - update use latest v4l2 api
-> - use ctrl_to_sd() helper function
-> - add ap1302_g_volatile_ctrl()
-> - remove ap1302_get_fmt()
-> - use guard for mutex.
-> - use dev_err_probe
-> - use devm_add_action_or_reset to simple error handle at probe.
-> - use read_poll_timeout() simple dma idle polling.
-> 
-> previous upstream:
-> https://lore.kernel.org/linux-media/1631091372-16191-1-git-send-email-anil.mamidala@xilinx.com/
-> ---
->  MAINTAINERS                |    1 +
->  drivers/media/i2c/Kconfig  |    9 +
->  drivers/media/i2c/Makefile |    1 +
->  drivers/media/i2c/ap1302.c | 2838 ++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 2849 insertions(+)
+>> Scheme 2: Set/unset page flag on page-by-page basis, i.e.
+>>         - set page flag reserved at tdh_mem_page_aug(), tdh_mem_page_add(),
+>>         - unset page flag reserved after a successful tdh_mem_page_remove() or
+>>           tdh_phymem_page_reclaim().
+>>
+>>         It has problem in following scenario:
+>>         1. tdh_mem_page_aug() adds a 2MB folio. It marks pages as reserved by
+>>            invoking "SetPageReserved()" on each page.
+>>            As the folio->flags equals to page[0]->flags, folio->flags is also
+>> 	   with reserved set.
+>>
+>>         2. convert a 4KB page of the 2MB folio to shared. say, it's page[4].
+>>         2.1 tdh_mem_page_demote() is executed first.
+>>        
+>>         2.2 tdh_mem_page_remove() then removes the 4KB mapping.
+>>             "ClearPageReserved()" clears reserved flag of page[4] of the 2MB
+>>             folio.
+>>
+>>         2.3. guest_memfd splits the 2MB folio into 512 4KB folios.
+>>              In guestmem_hugetlb_split_folio(), "p->flags = folio->flags" marks
+>>              page[4]->flags as reserved again as page[0] is still reserved.
+>>
+>>             (see the code in https://lore.kernel.org/all/2ae41e0d80339da2b57011622ac2288fed65cd01.1747264138.git.ackerleytng@google.com/
+>>             for (i = 1; i < orig_nr_pages; ++i) {
+>>                 struct page *p = folio_page(folio, i);
+>>
+>>                 /* Copy flags from the first page to split pages. */
+>>                 p->flags = folio->flags;
+>>
+>>                 p->mapping = NULL;
+>>                 clear_compound_head(p);
+>>             }
+>>             )
+>>
 
-[snip]
+Per-page flags won't work because we want to retain HugeTLB Vmemmap
+Optimization (HVO), which allows subsequent (identical) struct pages to
+alias to each other. If we use a per-page flag, then HVO would break
+since struct pages would no longer be identical to each other.
 
--- 
-Regards,
+>> [...]
 
-Laurent Pinchart
+Let me try and summarize the current state of this discussion:
+
+Topic 1: Does TDX need to somehow indicate that it is using a page?
+
+This patch series uses refcounts to indicate that TDX is using a page,
+but that complicates private-to-shared conversions.
+
+During a private-to-shared conversion, guest_memfd assumes that
+guest_memfd is trusted to manage private memory. TDX and other users
+should trust guest_memfd to keep the memory around.
+
+Yan's position is that holding a refcount is in line with how IOMMU
+takes a refcount when a page is mapped into the IOMMU [1].
+
+Yan had another suggestion, which is to indicate using a page flag [2].
+
+I think we're in agreement that we don't want to have TDX hold a
+refcount while the page is mapped into the Secure EPTs, but taking a
+step back, do we really need to indicate (at all) that TDX is using a
+page?
+
+In [3] Yan said
+
+> If TDX does not hold any refcount, guest_memfd has to know that which
+> private
+> page is still mapped. Otherwise, the page may be re-assigned to other
+> kernel
+> components while it may still be mapped in the S-EPT.
+
+If the private page is mapped for regular VM use as private memory,
+guest_memfd is managing that, and the same page will not be re-assigned
+to any other kernel component. guest_memfd does hold refcounts in
+guest_memfd's filemap.
+
+If the private page is still mapped because there was an unmapping
+failure, we can discuss that separately under error handling in Topic 2.
+
+With this, can I confirm that we are in agreement that TDX does not need
+to indicate that it is using a page, and can trust guest_memfd to keep
+the page around for the VM?
+
+Topic 2: How to handle unmapping/splitting errors arising from TDX?
+
+Previously I was in favor of having unmap() return an error (Rick
+suggested doing a POC, and in a more recent email Rick asked for a
+diffstat), but Vishal and I talked about this and now I agree having
+unmapping return an error is not a good approach for these reasons.
+
+1. Unmapping takes a range, and within the range there could be more
+   than one unmapping error. I was previously thinking that unmap()
+   could return 0 for success and the failed PFN on error. Returning a
+   single PFN on error is okay-ish but if there are more errors it could
+   get complicated.
+
+   Another error return option could be to return the folio where the
+   unmapping/splitting issue happened, but that would not be
+   sufficiently precise, since a folio could be larger than 4K and we
+   want to track errors as precisely as we can to reduce memory loss due
+   to errors.
+
+2. What I think Yan has been trying to say: unmap() returning an error
+   is non-standard in the kernel.
+
+I think (1) is the dealbreaker here and there's no need to do the
+plumbing POC and diffstat.
+
+So I think we're all in support of indicating unmapping/splitting issues
+without returning anything from unmap(), and the discussed options are
+
+a. Refcounts: won't work - mostly discussed in this (sub-)thread
+   [3]. Using refcounts makes it impossible to distinguish between
+   transient refcounts and refcounts due to errors.
+
+b. Page flags: won't work with/can't benefit from HVO.
+
+Suggestions still in the running:
+
+c. Folio flags are not precise enough to indicate which page actually
+   had an error, but this could be sufficient if we're willing to just
+   waste the rest of the huge page on unmapping error.
+
+d. Folio flags with folio splitting on error. This means that on
+   unmapping/Secure EPT PTE splitting error, we have to split the
+   (larger than 4K) folio to 4K, and then set a flag on the split folio.
+
+   The issue I see with this is that splitting pages with HVO applied
+   means doing allocations, and in an error scenario there may not be
+   memory left to split the pages.
+
+e. Some other data structure in guest_memfd, say, a linked list, and a
+   function like kvm_gmem_add_error_pfn(struct page *page) that would
+   look up the guest_memfd inode from the page and add the page's pfn to
+   the linked list.
+
+   Everywhere in guest_memfd that does unmapping/splitting would then
+   check this linked list to see if the unmapping/splitting
+   succeeded.
+
+   Everywhere in guest_memfd that allocates pages will also check this
+   linked list to make sure the pages are functional.
+
+   When guest_memfd truncates, if the page being truncated is on the
+   list, retain the refcount on the page and leak that page.
+
+f. Combination of c and e, something similar to HugeTLB's
+   folio_set_hugetlb_hwpoison(), which sets a flag AND adds the pages in
+   trouble to a linked list on the folio.
+
+g. Like f, but basically treat an unmapping error as hardware poisoning.
+
+I'm kind of inclined towards g, to just treat unmapping errors as
+HWPOISON and buying into all the HWPOISON handling requirements. What do
+yall think? Can a TDX unmapping error be considered as memory poisoning?
+
+
+[1] https://lore.kernel.org/all/aE%2F1TgUvr0dcaJUg@yzhao56-desk.sh.intel.com/
+[2] https://lore.kernel.org/all/aFkeBtuNBN1RrDAJ@yzhao56-desk.sh.intel.com/
+[3] https://lore.kernel.org/all/aFIGFesluhuh2xAS@yzhao56-desk.sh.intel.com/
+[3] https://lore.kernel.org/all/aFJjZFFhrMWEPjQG@yzhao56-desk.sh.intel.com/
