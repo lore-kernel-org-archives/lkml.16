@@ -1,60 +1,60 @@
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F461E0DE8;
-	Mon, 23 Jun 2025 06:41:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3B31E520D;
+	Mon, 23 Jun 2025 06:41:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750660892; cv=none; b=X96FaFvONTmnTcc85QsXK/LqXSPHAPWVr9xAAU5tPzHV0Gmd4gjMRZ67LQPesJn/oqeFWhoCjzCy+12GiCIshqPBhXAC5MBcBiNo4NVcesW1yv7Ip+CSRqX7h7vwcz+YzgzX6mP1QISiTYZu/snQ9gr21uuCeGoPKmHoy24VfIE=
+	t=1750660893; cv=none; b=PpGfj2bvMxjIsXvjA3lpU2CFYrBMNPMdYZK4CC0PI8h0j30xCWDUrN9kvxzFuRwz2HuTPnk8Ujw7WwpV2ayUyE/pRgPzK61q9Y6Ro5vDzL8wc46peH5bvtLg721HAcxYPFoMp3uMkPCNMAdp+96Y68xTVBeUwzw31oVdwV2jjV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750660892; c=relaxed/simple;
-	bh=4dHbFjIOMcZ9BXMifHvs6v6a42mWLAyf99xloLz9V0g=;
+	s=arc-20240116; t=1750660893; c=relaxed/simple;
+	bh=Bh8zJoSzitJzgrrl2hvmxkah85zlAPrmB0CgiRoF9UM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Deng+xK1TZ4awy7hgoZBKmvbWp7fU2hgCIYMcEFslFd3/k5vnAVqtyW4Uy9/yRjIXN6+UVq8zSx9o4DXwzb9nYxoU74uPJoD8qjC/ByuRdB/grH90F6AvgRhca59WA5Mbvaqy2Ng90hTkihy1jIiVHlOIxIRgfM3el2decVJuzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=DTMs8oBy; arc=none smtp.client-ip=205.220.165.32
+	 MIME-Version; b=iHjvmXTR6nt55gx2gQpWC4LLinXyUQuTVieD4pj9WF/mP1FuinvUCLGthHfM47k5eNQ0sqfP1h2QoEeSGt+h/M4p092T0M33SqHsqhmgFrkwJxJ/ZdykSgMAFwp28H7WrIQ0uI2VaLeIiJsoyw1tijT2Kh+gCt239nUqVWgkdOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=F0jmll2U; arc=none smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DTMs8oBy"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55N0SmjP031872;
-	Mon, 23 Jun 2025 06:41:15 GMT
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="F0jmll2U"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55N0SfFZ017235;
+	Mon, 23 Jun 2025 06:41:13 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2025-04-25; bh=Lw+ns
-	0UN9yZ99ex9boFZck+974RGTawmptRua0eAHf4=; b=DTMs8oBy6a0aYDSLmfEQZ
-	YC56RiB64AunY+bfYoRpnc7iOR8IAfwtEWSrb5w76Ebi3EgYlczTu86WSG4bxChx
-	j9alnxkPu2fStb28eiVBpDUvZtRxAue6qTT9596RwlabS1pzyOCp3t37c32jkzba
-	5MzdTSSmPgoBevCY2Cs3H5ubB6A7SA17Wh4rk9XiAcieFDnYfwPFGdzaDVHH+PzM
-	jlykxMuNUB98U3aqc7d/9An6GzuJYh1glzlavZrzMhlPTioU66RWaNbQWKpw6aBN
-	U5En+ccRd8Fu+814J/L1doNH0rkA+9p3H/rVqsdqli7qbf0K3jHwSAOJMZcVVs5d
-	g==
+	:mime-version:references:subject:to; s=corp-2025-04-25; bh=YeAqG
+	FD/xlXxbKWQdmK2afim53mngK1HgVKCLss+cJE=; b=F0jmll2UlwZjKGWtK2e7Q
+	j0yuIPhG5FMD32loIVNYBbC6ozJ/OmiPCP9r4s3OIafIT7FtNwBbfcBY/QiHOKlY
+	Y8/Z3REKY3xTyzHPQbjAMRUKmnDoS9T3I7CIon5s5HEAS24NiSSnMTFm1p09qob9
+	U95nEIpawSCDUmO/lwkOrRIIrpRQ3wv5Cro6JQfwxe9PMpwxVAujvNeBuYkD7rhx
+	KtefKrRWsDbdfDxZL3R6i8vnHu6dof+tM3um50h//OUwfe0X06j0xhwEB+WoA2+p
+	OfUHmpmugFq58xw1iZE22Bntip6phqK4XgKs8cAs0pDyf0xmdno1e5LGVpSDGqNd
+	Q==
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47ds7ut0gt-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47ds8y20gk-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 23 Jun 2025 06:41:14 +0000 (GMT)
+	Mon, 23 Jun 2025 06:41:13 +0000 (GMT)
 Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55N4kvFa031316;
-	Mon, 23 Jun 2025 06:41:14 GMT
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55N4kieW028823;
+	Mon, 23 Jun 2025 06:41:12 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47ehpnfdvc-1
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47ehpnfduq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 23 Jun 2025 06:41:14 +0000
+	Mon, 23 Jun 2025 06:41:12 +0000
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55N6fAk0006422;
-	Mon, 23 Jun 2025 06:41:13 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55N6fAju006422;
+	Mon, 23 Jun 2025 06:41:12 GMT
 Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 47ehpnfdt5-5;
-	Mon, 23 Jun 2025 06:41:13 +0000
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 47ehpnfdt5-3;
+	Mon, 23 Jun 2025 06:41:12 +0000
 From: Alok Tiwari <alok.a.tiwari@oracle.com>
 To: linux-nvme@lists.infradead.org, kbusch@kernel.org, axboe@kernel.dk,
         hch@lst.de, sagi@grimberg.me, kch@nvidia.com, nilay@linux.ibm.com,
         corbet@lwn.net
 Cc: alok.a.tiwari@oracle.com, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] docs: nvme: fix grammar in nvme-pci-endpoint-target.rst
-Date: Sun, 22 Jun 2025 23:40:23 -0700
-Message-ID: <20250623064036.4187788-6-alok.a.tiwari@oracle.com>
+Subject: [PATCH 3/5] nvmet: Remove redundant assignment of error code in nvmet_ns_enable()
+Date: Sun, 22 Jun 2025 23:40:21 -0700
+Message-ID: <20250623064036.4187788-4-alok.a.tiwari@oracle.com>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20250623064036.4187788-2-alok.a.tiwari@oracle.com>
 References: <20250623064036.4187788-2-alok.a.tiwari@oracle.com>
@@ -72,84 +72,36 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamsc
  malwarescore=0 phishscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
  definitions=main-2506230038
-X-Proofpoint-GUID: TAHSc3s3o15Aj2ZNvBDLwSRHkKnuUNQ5
-X-Authority-Analysis: v=2.4 cv=CeII5Krl c=1 sm=1 tr=0 ts=6858f70a cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=VwQbUJbxAAAA:8 a=8xN46rftBpwEPShuBVEA:9 a=0bXxn9q0MV6snEgNplNhOjQmxlI=:19
-X-Proofpoint-ORIG-GUID: TAHSc3s3o15Aj2ZNvBDLwSRHkKnuUNQ5
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDAzOCBTYWx0ZWRfX5k9JVlx4Z3pY prgFut2o7uzyAD92M16HIhfDzuX479/LulCiGKqkZiZX/rsZwwYf/aA6+MvjnRlDy5P52gTDxcm HkvJrIGxsO4gmpe0tA/xLqjA1W69PNgJI4XpmYJn2c5Oxi+bW/VB1B8ALuhizrSzwAU0Oa5/Lz3
- XcXlLDGaD0gCA8RQcX764wyzo+2TPggMYhREPiwibeuYMzjQe39N3kvu+eDvvW4E4UzqPhgGoSt RqqJvKuSi5Mk0I8CafbRljfChOnICnovcALcoeU1OnwU+scJPnrZEwKvdMUQTNR6np7Vf96O7gY VyYDJ5TmpdMvWPnKWikiyCqOrU8arqIpP5UeXSbyHWj1xGqHuW9PSpdDxr+yBMEDF6CeQGQ4G3i
- DWrc66vQsTinC6gsB2ZwuTAE3m1bUBhrZghCU1wKwfadMP+GlngZxIk9vwxo2m93AZj8lOkO
+X-Proofpoint-ORIG-GUID: H2xUzxREbbDoLv2D2P7rMubS6q-x5DV_
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDAzOCBTYWx0ZWRfXz5dJ+iFtdUsQ SuZU4GAsiKOiLnzjVarCnsG3+dvxdUisoLQUxt+OjLdV+ol4VmXIPq6VaM2pbFufiUjIpxj+fg7 mpmGbD3X35NAjIwnURuUmjFGD/clEql5kBWKe/AkWXhV9f9NFPasdYSl3TpI9OJnp17cjoifnfA
+ TIsu3TAwJSvMfuv5VP0v4Rs1j13j5pH1G6XXl8hrk0ZxfvJyZrtva1AfqCKYpPwC/UnUuI6tl+y o9Li/Ed9a0BaAr6+dfTE/Bl/zGWZmuEHBI9opvgrP7GeXNNJzbiU7XPL1FBIU4xgaxknS07pfoJ 561FKGeuFs1ccTZoa7agLmUvXNQ5TlFLEfXt1M/SgwEx7q8E6ZBWDwKPRvPTOCdljr+h6iwm5Jj
+ 4FuxC2n68lrMPJPdQ+hlYnIA5PJd/tZJwTGQmVsOPMKRmva0wVFP5ShdACoaSF3zfNyJMInm
+X-Proofpoint-GUID: H2xUzxREbbDoLv2D2P7rMubS6q-x5DV_
+X-Authority-Analysis: v=2.4 cv=PqSTbxM3 c=1 sm=1 tr=0 ts=6858f709 cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=hQNXMjqaqMWDSZxnGksA:9
 
-Notable changes:
-Use "an NVMe" instead of "a NVMe" throughout the document
-Fix incorrect phrasing such as "will is discoverable" -> "is
-discoverable"
-Ensure consistent and proper article usage for clarity.
+removing the unnecessary ret = -EMFILE; assignment since it is
+immediately overwritten by the result of nvmet_bdev_ns_enable()
+The initial value(-EMFILE) is redundant because it has no effect
+on the code logic or outcome.
 
 Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 ---
- Documentation/nvme/nvme-pci-endpoint-target.rst | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/nvme/target/core.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/Documentation/nvme/nvme-pci-endpoint-target.rst b/Documentation/nvme/nvme-pci-endpoint-target.rst
-index b699595d1762b..48f3b7f685945 100644
---- a/Documentation/nvme/nvme-pci-endpoint-target.rst
-+++ b/Documentation/nvme/nvme-pci-endpoint-target.rst
-@@ -6,20 +6,20 @@ NVMe PCI Endpoint Function Target
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index 175c5b6d4dd58..884286f90688a 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -581,8 +581,6 @@ int nvmet_ns_enable(struct nvmet_ns *ns)
+ 	if (ns->enabled)
+ 		goto out_unlock;
  
- :Author: Damien Le Moal <dlemoal@kernel.org>
- 
--The NVMe PCI endpoint function target driver implements a NVMe PCIe controller
--using a NVMe fabrics target controller configured with the PCI transport type.
-+The NVMe PCI endpoint function target driver implements an NVMe PCIe controller
-+using an NVMe fabrics target controller configured with the PCI transport type.
- 
- Overview
- ========
- 
--The NVMe PCI endpoint function target driver allows exposing a NVMe target
-+The NVMe PCI endpoint function target driver allows exposing an NVMe target
- controller over a PCIe link, thus implementing an NVMe PCIe device similar to a
- regular M.2 SSD. The target controller is created in the same manner as when
- using NVMe over fabrics: the controller represents the interface to an NVMe
- subsystem using a port. The port transfer type must be configured to be
- "pci". The subsystem can be configured to have namespaces backed by regular
- files or block devices, or can use NVMe passthrough to expose to the PCI host an
--existing physical NVMe device or a NVMe fabrics host controller (e.g. a NVMe TCP
-+existing physical NVMe device or an NVMe fabrics host controller (e.g. a NVMe TCP
- host controller).
- 
- The NVMe PCI endpoint function target driver relies as much as possible on the
-@@ -181,10 +181,10 @@ Creating an NVMe endpoint device is a two step process. First, an NVMe target
- subsystem and port must be defined. Second, the NVMe PCI endpoint device must
- be setup and bound to the subsystem and port created.
- 
--Creating a NVMe Subsystem and Port
-+Creating an NVMe Subsystem and Port
- ----------------------------------
- 
--Details about how to configure a NVMe target subsystem and port are outside the
-+Details about how to configure an NVMe target subsystem and port are outside the
- scope of this document. The following only provides a simple example of a port
- and subsystem with a single namespace backed by a null_blk device.
- 
-@@ -234,7 +234,7 @@ Finally, create the target port and link it to the subsystem::
-         # ln -s /sys/kernel/config/nvmet/subsystems/nvmepf.0.nqn \
-                 /sys/kernel/config/nvmet/ports/1/subsystems/nvmepf.0.nqn
- 
--Creating a NVMe PCI Endpoint Device
-+Creating an NVMe PCI Endpoint Device
- -----------------------------------
- 
- With the NVMe target subsystem and port ready for use, the NVMe PCI endpoint
-@@ -303,7 +303,7 @@ device controller::
- 
-         nvmet_pci_epf nvmet_pci_epf.0: Enabling controller
- 
--On the host side, the NVMe PCI endpoint function target device will is
-+On the host side, the NVMe PCI endpoint function target device is
- discoverable as a PCI device, with the vendor ID and device ID as configured::
- 
-         # lspci -n
+-	ret = -EMFILE;
+-
+ 	ret = nvmet_bdev_ns_enable(ns);
+ 	if (ret == -ENOTBLK)
+ 		ret = nvmet_file_ns_enable(ns);
 -- 
 2.46.0
 
