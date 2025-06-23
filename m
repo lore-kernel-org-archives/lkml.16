@@ -1,137 +1,190 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688151C6FF3;
-	Mon, 23 Jun 2025 19:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896461E1DFE;
+	Mon, 23 Jun 2025 19:27:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750706834; cv=none; b=lFj4jpCfSTNPj0wae7A+P1EbMbw37WJBRPDsi5LaCBSoiEYNIyGJfNaqsYHYN0x2JkWpVkM9RYuy2oP2GS3gH+RaCg1/7UYbxcekExMQTYihwXGmYZVXNdZrAYw8btsLDgJE+Fmn/qwcrwKRCT868HgpjgItiEfmDkLF6QcvsTI=
+	t=1750706868; cv=none; b=Y3uY/cRq79//+cfbD39Y0twHxNsjzdBE9z4DLP9HxsBorncRczX/xe8DrWSR9oR+MObgGVynRWLsKktGGF+DM6YKpI7QxJ8QxQFQ9IrBd9daBz8+9GhW7zii6AYF33ZFKKa8XvDWvmEuUXvjIfrZTd2ORHe/hHN+ZehwaIOSL0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750706834; c=relaxed/simple;
-	bh=VajGqpSEAp5ELYK4M9sGUyxfmEefU94Khr0i25CbJ3w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hVrHJjCrTW3M5CkVDYcODokUnd/9pb08ROiGjn3+zBHAFWPZE53Uv16AjBtev3VH7NJMNzabZiwYKK0vbJ3GAW2dyP1B5FuDiSnv0melSjLYyT+PHzt4sFJlPOrlhGO8SIouebXt7fvZit8auGHtivK3Qi79eZbeORHOldHkLwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PivDLs6E; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750706868; c=relaxed/simple;
+	bh=6bacQ/7kwZh1TXvsDqlvaDV9Gh52RxpWHPFij2atGIg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=abP7+8IpszoUkw+pFxHri+QhckDmhThhAdU7wsDA90yJfEorc/U/uLbxu2fOfN9JWxvro09XMFB5MgyqOH2UMLmWzH02pU1D3ikS/kismmBOXOwaq8H5GvzaG7KHa4EYfwxzBR8LqkvSY2AhKCGgdZhvGTTnD9l704Uchs7XCp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mr4w0W6x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PivDLs6E"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-acbb85ce788so877982666b.3;
-        Mon, 23 Jun 2025 12:27:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750706831; x=1751311631; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=z0pQ8faF0LLlqRUSGGG645sRY5ONBRjSfmgC64O42P8=;
-        b=PivDLs6EDtFIQqUfQaA/nxDypvXyYRzxPCA9oO7tYixNU1tSWd2Oh4wgNyDmJuOdaH
-         hrBwWUvL2u+3TDNjUnjh6JWI5AaOX22p/AMV5n3RamxqNCXl5ylugOumc6j2A/3NPOzK
-         snvL97oERwn6E8BICmWQSAwqfL8D1MvmTFivfV2lpaX5SWf/8R2Y1KNBXL6uPc/tEaXn
-         jMwynIBMmsQWFM1i4VfeMUioo0lQXUZnurdoW5StJ1E/vxJH02EP6872EiF5d++nK+rh
-         B3UeT864Lon8Iy8DG2fA998vK8+LwHRSs2/POYQVixp4fEpWgymgT5gPFu+aM2i+FTHo
-         5CGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750706831; x=1751311631;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z0pQ8faF0LLlqRUSGGG645sRY5ONBRjSfmgC64O42P8=;
-        b=XJmBY7hfd8C3iIQF6KOU0aWY6nl/SIcBeE2O6myc03PKIN16JxpE1g+mEcLYT5vLJN
-         v6pLJqVao9mW351wcekMlgnZwiG6UbBCn+hjXgrgbsXQmtRka4unSuksgqPGXa6deoku
-         3h4Qhe/iBOcdHbFNvyg4N4ha3ud6RjAp3EkCzexcoxN8RlRIsVx8RIFvCFMqus0e6k4Q
-         h1HvWZc+49CWDmfMVSgAvuZj4KLNP5Ymg7p9qoV6PUpTb8EyWgRyhuu1K9ZNxkbjlxdD
-         deyIRSh1wYiRpynGrYBAPXQJ4QDnEg1y/+jYNrClnQ22ZjYl+IK8SRDEhJNDAPJytylp
-         tbnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3o44140jhz9FvWvFiRttyaZ6t6sH1YoQmUDXJj2SK2GUf3BV981plAPDnrJ5froG1DOMMe+6I@vger.kernel.org, AJvYcCU8HXa32s6eTBfGgOggCvqH4Z0qPKNWOZTJO9YNfBi+5qPd1a15Of+J46s1Y3BelmCUC9btI8Tbjf4tckb/@vger.kernel.org, AJvYcCVDIRhLevWqZybiHqaHQ8wG6SXdi++V/96tpauzbDMBHaIPR0haXfboyT36ZPFZ3PwK1Pk=@vger.kernel.org, AJvYcCWqMTU3pbOPg4myLcr4J8jUth6gmaX0ks+3vSpK/J5z1gefyaXf0ACVZ8Rs8AmV7IhtVBx3/Z+4E9qA0w==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3QOGt1NO+YGrcWSMiWGmwbsgysSH8pjTZFgSVgBu4iMDZ2DRD
-	MXgvOQUiHB1l8y+pMVc3DRMCZrHDnsiIcD3Z7g4HuV+CockI7rIcw5SCfd4SUBwS
-X-Gm-Gg: ASbGnctUslu1ri+6aAaFyy44RbJc/h9x6WQZTViAypx/Bnqdp9Q2w97frhGD755VYKb
-	eP980sFg8MCrBGuPH96EuUgtFzsiTlVYgzbBReHPauaX3DeBeQ1j+WC+bIgb8UpwqpDLQM5O9dz
-	rd3dYivezm7eIaEDo575me79DId65hlJqQW0cQU9uVwW16ple8jUKgH30YutZ+khZL8SoHNhCb2
-	X9gc6qswCWRkkUHEk8F5Sr/M0Z9Sn2bowfRT5GrBvBFmti70SbgtW+q4+85LsHs38oosDGpW1ok
-	B+aviuHWPSubp1coIKKCs3NEwr8ZQYVzQf6bV3H3XhWa/JhcToBYQCG1oSmfsaengfpOtWY=
-X-Google-Smtp-Source: AGHT+IEXXca94xNAO8z0yI/gJqozBF4gVbj1JqChwHR36kNEKHmNp94k2ZaYauElDPmDtIU5+I1vkA==
-X-Received: by 2002:a17:906:f593:b0:aca:c507:a4e8 with SMTP id a640c23a62f3a-ae0579c4416mr1256185566b.21.1750706830494;
-        Mon, 23 Jun 2025 12:27:10 -0700 (PDT)
-Received: from [192.168.8.100] ([148.252.128.65])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054080e28sm753471266b.73.2025.06.23.12.27.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 12:27:09 -0700 (PDT)
-Message-ID: <3b71cfa9-6c6f-48f7-8457-dac915438216@gmail.com>
-Date: Mon, 23 Jun 2025 20:28:31 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mr4w0W6x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDBD0C4CEEA;
+	Mon, 23 Jun 2025 19:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750706868;
+	bh=6bacQ/7kwZh1TXvsDqlvaDV9Gh52RxpWHPFij2atGIg=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=mr4w0W6xzFpKRv4+CcW9AbbxoNWff/jeWxk+DBTTGMh5Tbvq6iG38eK2A5wC+50l+
+	 bQeL1niehWw/aTwRY7/pnOdv+iQ/CInrm2sfn3/N7HGbaQOg+0U7s+K44xcPy9hTTp
+	 No8CTqCNqdQP7mEL/iHhxg6WZoe77OXQEvnIWI+z4Q5DJBpNcLp7bKDd8EKw6jSNwz
+	 wREitik3RPa/8z9abDN1E/TS5L5ja/soFXqkG4GRkRZ0aFzMepvHf0gw9pc5EvXrYp
+	 7ZLZFUzIeoyGGD7gOtULZepZ53gcYdhWBdwDCN0mQC1zp4kJqWh29l7aq/wANW9reV
+	 R+Ast1R4DguMQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v6 1/9] netmem: introduce struct netmem_desc
- mirroring struct page
-To: Mina Almasry <almasrymina@google.com>, Harry Yoo <harry.yoo@oracle.com>
-Cc: Byungchul Park <byungchul@sk.com>, David Hildenbrand <david@redhat.com>,
- willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org,
- ilias.apalodimas@linaro.org, hawk@kernel.org, akpm@linux-foundation.org,
- davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch,
- toke@redhat.com, tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
- saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org,
- linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com,
- hannes@cmpxchg.org, ziy@nvidia.com, jackmanb@google.com
-References: <20250620041224.46646-1-byungchul@sk.com>
- <20250620041224.46646-2-byungchul@sk.com>
- <8eaf52bf-4c3c-4007-afe5-a22da9f228f9@redhat.com>
- <20250623102821.GC3199@system.software.com> <aFlGCam4_FnkGQYT@hyeyoo>
- <CAHS8izMbtp0dN3+PZsivFD4Zg1DqaL5BJ4cw4jGjs=wCXAns3A@mail.gmail.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <CAHS8izMbtp0dN3+PZsivFD4Zg1DqaL5BJ4cw4jGjs=wCXAns3A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 23 Jun 2025 21:27:43 +0200
+Message-Id: <DAU5SDZWTB21.2S8F08BVX1ZE1@kernel.org>
+Cc: "Alice Ryhl" <aliceryhl@google.com>, "Danilo Krummrich"
+ <dakr@kernel.org>, "Daniel Almeida" <daniel.almeida@collabora.com>, "Miguel
+ Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Gary
+ Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Trevor Gross" <tmgross@umich.edu>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Bjorn Helgaas"
+ <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C2=B4nski?=
+ <kwilczynski@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v4 3/6] rust: irq: add support for non-threaded IRQs and
+ handlers
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com> <20250608-topics-tyr-request_irq-v4-3-81cb81fb8073@collabora.com> <aEbJt0YSc3-60OBY@pollux> <CAH5fLghDbrgO2PiKyKZ87UrtouG25xWhVP_YmcgO0fFcnvZRkQ@mail.gmail.com> <DAU0NHTHTDG4.2HNEABNAI8GHZ@kernel.org> <aFmPZMLGngAE_IHJ@tardis.local> <DAU5QLRJBYMS.2OQ83W31ETX07@kernel.org>
+In-Reply-To: <DAU5QLRJBYMS.2OQ83W31ETX07@kernel.org>
 
-On 6/23/25 20:09, Mina Almasry wrote:
-> On Mon, Jun 23, 2025 at 5:18 AM Harry Yoo <harry.yoo@oracle.com> wrote:
+On Mon Jun 23, 2025 at 9:25 PM CEST, Benno Lossin wrote:
+> On Mon Jun 23, 2025 at 7:31 PM CEST, Boqun Feng wrote:
+>> On Mon, Jun 23, 2025 at 05:26:14PM +0200, Benno Lossin wrote:
+>>> On Mon Jun 23, 2025 at 5:10 PM CEST, Alice Ryhl wrote:
+>>> > On Mon, Jun 9, 2025 at 12:47=E2=80=AFPM Danilo Krummrich <dakr@kernel=
+.org> wrote:
+>>> >> On Sun, Jun 08, 2025 at 07:51:08PM -0300, Daniel Almeida wrote:
+>>> >> > +        dev: &'a Device<Bound>,
+>>> >> > +        irq: u32,
+>>> >> > +        flags: Flags,
+>>> >> > +        name: &'static CStr,
+>>> >> > +        handler: T,
+>>> >> > +    ) -> impl PinInit<Self, Error> + 'a {
+>>> >> > +        let closure =3D move |slot: *mut Self| {
+>>> >> > +            // SAFETY: The slot passed to pin initializer is vali=
+d for writing.
+>>> >> > +            unsafe {
+>>> >> > +                slot.write(Self {
+>>> >> > +                    inner: Devres::new(
+>>> >> > +                        dev,
+>>> >> > +                        RegistrationInner {
+>>> >> > +                            irq,
+>>> >> > +                            cookie: slot.cast(),
+>>> >> > +                        },
+>>> >> > +                        GFP_KERNEL,
+>>> >> > +                    )?,
+>>> >> > +                    handler,
+>>> >> > +                    _pin: PhantomPinned,
+>>> >> > +                })
+>>> >> > +            };
+>>> >> > +
+>>> >> > +            // SAFETY:
+>>> >> > +            // - The callbacks are valid for use with request_irq=
+.
+>>> >> > +            // - If this succeeds, the slot is guaranteed to be v=
+alid until the
+>>> >> > +            // destructor of Self runs, which will deregister the=
+ callbacks
+>>> >> > +            // before the memory location becomes invalid.
+>>> >> > +            let res =3D to_result(unsafe {
+>>> >> > +                bindings::request_irq(
+>>> >> > +                    irq,
+>>> >> > +                    Some(handle_irq_callback::<T>),
+>>> >> > +                    flags.into_inner() as usize,
+>>> >> > +                    name.as_char_ptr(),
+>>> >> > +                    slot.cast(),
+>>> >> > +                )
+>>> >> > +            });
+>>> >> > +
+>>> >> > +            if res.is_err() {
+>>> >> > +                // SAFETY: We are returning an error, so we can d=
+estroy the slot.
+>>> >> > +                unsafe { core::ptr::drop_in_place(&raw mut (*slot=
+).handler) };
+>>> >> > +            }
+>>> >> > +
+>>> >> > +            res
+>>> >> > +        };
+>>> >> > +
+>>> >> > +        // SAFETY:
+>>> >> > +        // - if this returns Ok, then every field of `slot` is fu=
+lly
+>>> >> > +        // initialized.
+>>> >> > +        // - if this returns an error, then the slot does not nee=
+d to remain
+>>> >> > +        // valid.
+>>> >> > +        unsafe { pin_init_from_closure(closure) }
+>>> >>
+>>> >> Can't we use try_pin_init!() instead, move request_irq() into the in=
+itializer of
+>>> >> RegistrationInner and initialize inner last?
+>>> >
+>>> > We need a pointer to the entire struct when calling
+>>> > bindings::request_irq. I'm not sure this allows you to easily get one=
+?
+>>> > I don't think using container_of! here is worth it.
+>>>=20
+>>> There is the `&this in` syntax (`this` is of type `NonNull<Self>`):
+>>>=20
+>>>     try_pin_init!(&this in Self {
+>>>         inner: Devres::new(
+>>>             dev,
+>>>             RegistrationInner {
+>>>                 irq,
+>>>                 cookie: this.as_ptr().cast(),
+>>>             },
+>>>             GFP_KERNEL,
+>>>         )?,
+>>>         handler,
+>>>         _pin: {
+>>>             to_result(unsafe {
+>>>                 bindings::request_irq(
+>>>                     irq,
+>>>                     Some(handle_irq_callback::<T>),
+>>>                     flags.into_inner() as usize,
+>>>                     name.as_char_ptr(),
+>>>                     slot.as_ptr().cast(),
 >>
->> On Mon, Jun 23, 2025 at 07:28:21PM +0900, Byungchul Park wrote:
->>> On Mon, Jun 23, 2025 at 11:32:16AM +0200, David Hildenbrand wrote:
->>>> On 20.06.25 06:12, Byungchul Park wrote:
->>>>> To simplify struct page, the page pool members of struct page should be
->>>>> moved to other, allowing these members to be removed from struct page.
->>>>>
->>>>> Introduce a network memory descriptor to store the members, struct
->>>>> netmem_desc, and make it union'ed with the existing fields in struct
->>>>> net_iov, allowing to organize the fields of struct net_iov.
->>>>
->>>> It would be great adding some result from the previous discussions in
->>>> here, such as that the layout of "struct net_iov" can be changed because
->>>> it is not a "struct page" overlay, what the next steps based on this
->>>
->>> I think the network folks already know how to use and interpret their
->>> data struct, struct net_iov for sure.. but I will add the comment if it
->>> you think is needed.  Thanks for the comment.
+>> this is "this" instead of "slot", right?
 >>
->> I agree with David - it's not immediately obvious at first glance.
->> That was my feedback on the previous version as well :)
+>>>                 )
+>>>             })?;
+>>>             PhantomPinned
+>>>         },
+>>>     })
+>>>=20
+>>> Last time around, I also asked this question and you replied with that
+>>> we need to abort the initializer when `request_irq` returns false and
+>>> avoid running `Self::drop` (thus we can't do it using `pin_chain`).
+>>>=20
+>>> I asked what we could do instead and you mentioned the `_: {}`
+>>> initializers and those would indeed solve it, but we can abuse the
+>>> `_pin` field for that :)
+>>>=20
 >>
->> I think it'd be great to add that explanation, since this is where MM and
->> networking intersect.
->>
-> 
-> I think a lot of people are now saying the same thing: (1) lets keep
-> net_iov and page/netmem_desc separate, and (2) lets add comments
-> explaining their relation so this intersection between MM and
-> networking is not confused in the long term .
-> 
-> For #1, concretely I would recommend removing the union inside struct
-> net_iov? And also revert all the changes to net_iov for that matter.
+>> Hmm.. but if request_irq() fails, aren't we going to call `drop` on
+>> `inner`, which drops the `Devres` which will eventually call
+>> `RegistrationInner::drop()`? And that's a `free_irq()` without
+>> `request_irq()` succeeded.
+>
+> That is indeed correct :(
+>
+> But hold on, we aren't allowed to forget the `Devres`, it's a pinned
+> type and thus the pin guarantee is that it must be dropped before the
+> underlying memory is freed. So the current version is unsound.
 
-Without it the merge logistics will get more complicated than it
-should be because of conflicts with changes in the io_uring tree.
-It's a temporary solution, I'll convert once the series is merged
-and reaches io_uring.
+Ah oops, already had the devres improvements in mind, this version uses
+the non-pinned devres, which when not dropped will leak an `Arc` in the
+`DevresInner`... Which also isn't desired.
 
--- 
-Pavel Begunkov
-
+---
+Cheers,
+Benno
