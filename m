@@ -1,123 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23F0248F46;
-	Mon, 23 Jun 2025 12:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF52B246BAC;
+	Mon, 23 Jun 2025 12:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750683360; cv=none; b=joYffXTJvAoEoXot5e+E4eWoilS232+HRc113lvrhB1wBrXIO2vlOaQMkCPTdAOdDAkXqtCaTtcgXJZLBEJKHVdzGXkgvRXFaWx6mPCIzSZ7tO6ggxm19AULQnCHUkTnopr/Df0j91aLANMN094VxSm83kuXuiaMJIPNta9k1Rc=
+	t=1750683361; cv=none; b=NFSI+6W/X3yOJRA5hKejKGT2927c09nevk8KkiDlLC+0l+/mtZ4QvobHlkw5lJxF44VSI1TuCLdnW0CeTPfAnPx0zO7GE/UigfATdfVHMZXaR7sWYIC6jaNnNJR9zojyx+HeysxhVtmapGzHuifEFY19t853awtQbLRSQD5MC2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750683360; c=relaxed/simple;
-	bh=GBV2qWzAZqKcjRCN2BdJiqj86LQYUfioaIFvJYlsEh8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IgnR5eAm+GUJ3M02QMzG7XLznoi/sz91a5Z/1LI+oPSz2ZjlMSHEYF6hYUl5Ycju/hV/TbtmEf9EbrS2npZAbaSsElFAWSPD57Ov9tgIFz+tVTSgXWs0/Khalk9vnzpOTI3T1MX6OU8uc06jS2GvgZQhqeQmmOsA8X+Q/B/zDdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hnr1jsmg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750683361; c=relaxed/simple;
+	bh=V4Q+QmBN8f/u1avjxFazjPy4gpKWukS/z0vO/9apM/0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t7384Uzq1vUByV6/8bQry2wfcmB4tVU86myt/yCRYEvIocFrUJQGhQrWClvFshx+LZJ4tm6k6NSvlct2VzZRleRmn6RPwsXhZfYVGwUK+SyOJ4kOpkUwzXG98BXA5O6sSxpTDqfJTX8PIdd7gzM0P+iH1ZZ7dccGIBd23HULnec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=ZYFNfqii; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hnr1jsmg"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 52CA6C4CEF1;
-	Mon, 23 Jun 2025 12:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750683360;
-	bh=GBV2qWzAZqKcjRCN2BdJiqj86LQYUfioaIFvJYlsEh8=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=hnr1jsmgbmfKbpr1ln8zOT57q7qyKNKhQ53dpB4mC0dDaruTX46KSk/OnjJKbljS8
-	 5Odttl07Ttk+7mKwVqezX2VF5s7xBtQO8wd/T/8xlWb269mnrrcbsv6N0Pn8rNQ8RP
-	 sYCjxvgCq+Qi1t+PB4U8NxB+JHKv7o1mG4q0LwE3gAzsiFhRv5Jd/saCJ28HvU/R2E
-	 1ZaDcgoLZP/fRLoI47qL23cxUswauraISPdP3vNYwKVSQdiGXvr+ioXAr3iXysDZg3
-	 rAzRkucj/6fzBoKNpQ9wHL539O9SPJPRLCKoe9D5H7puHRXfa+CiNlzN//4I1i4Fuu
-	 mZHXfoOqlYKzA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F289C7EE2A;
-	Mon, 23 Jun 2025 12:56:00 +0000 (UTC)
-From: Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org>
-Subject: [PATCH v5 0/3] Add support for WoM (Wake-on-Motion) feature
-Date: Mon, 23 Jun 2025 14:55:51 +0200
-Message-Id: <20250623-losd-3-inv-icm42600-add-wom-support-v5-0-4b3b33e028fe@tdk.com>
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="ZYFNfqii"
+Received: from kreacher.localnet (unknown [5.63.189.50])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 4E41B66E251;
+	Mon, 23 Jun 2025 14:55:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1750683350;
+	bh=V4Q+QmBN8f/u1avjxFazjPy4gpKWukS/z0vO/9apM/0=;
+	h=From:Subject:Date;
+	b=ZYFNfqiihwniBQS/NP4CR2kJjxTAndH5aWuQNy1u0gYkFpKhoMNnMtOvWxz/MX1gn
+	 JDsIey/tTn8gUztai0pcS9jTfCzCocr4/NByvUROUMNHjVJIvPR+GxQuZNMXHRlTUZ
+	 csU47/kdDFyM/F2hTuuqInxd490095Z+/pmp1DoiawaUikb5ZL9OXOevjA6WYpQHeC
+	 KlgZMec/fHuAHvEGwLkybs94QgYtWtJ1dCXn1OQCYMxjOnPInSRZBblCCoE6wKUHmo
+	 LwSAedliNdBYUCMV0Tonlk58tx32ZuUQ9aOvLN2qYShxtwqtuXk6ICdylD9qbsq8EN
+	 MNErQUq5aT/Mg==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Chris Bainbridge <chris.bainbridge@gmail.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Saravana Kannan <saravanak@google.com>,
+ Sudeep Holla <sudeep.holla@arm.com>
+Subject:
+ [RFT][PATCH v4 2/2] PM: sleep: Make async suspend handle suppliers like
+ parents
+Date: Mon, 23 Jun 2025 14:55:05 +0200
+Message-ID: <3384525.44csPzL39Z@rjwysocki.net>
+In-Reply-To: <5011988.GXAFRqVoOG@rjwysocki.net>
+References: <5011988.GXAFRqVoOG@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANdOWWgC/5XNsVLEIBSF4VfZofY6lwskwcr3cLYIAVxGEzIQW
- Z2dvLtkm6hVLP9TfOfGskvBZfZ0urHkSsghTjXUw4kNl356dRBsbUZICokQ3mO2ICBMBcIwSmo
- QobcWrnGE/DHPMS2ADaF3XltDglVpTs6Hz/vLy7n2JeQlpq/7aeHb+j+/cEDQRovW667RSj4v9
- u1xiCPb9EK7KLk6JlIVrdPSeqPJtO63KH6K3TFRVLHteYe9RzL+jyh3seHimCg30SmvlCTkxu/
- iuq7frFYfIsoBAAA=
-X-Change-ID: 20250220-losd-3-inv-icm42600-add-wom-support-0620fef9db23
-To: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, David Lechner <dlechner@baylibre.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750683359; l=2368;
- i=jean-baptiste.maneyrol@tdk.com; s=20240923; h=from:subject:message-id;
- bh=GBV2qWzAZqKcjRCN2BdJiqj86LQYUfioaIFvJYlsEh8=;
- b=mTJkw36Z40Py6pxEwzAIWTCqZzU9opJo1o8b3zv1vdjo9+uw4TUv2tDEBjWxUOFbsGyk5P6fK
- SPJWKwmeFB6Aqxr/D/Rs3FLd3YRXyFmj8kDHFHeEuJaG2FSoiHseHrY
-X-Developer-Key: i=jean-baptiste.maneyrol@tdk.com; a=ed25519;
- pk=bRqF1WYk0hR3qrnAithOLXSD0LvSu8DUd+quKLxCicI=
-X-Endpoint-Received: by B4 Relay for
- jean-baptiste.maneyrol@tdk.com/20240923 with auth_id=218
-X-Original-From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-Reply-To: jean-baptiste.maneyrol@tdk.com
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 5.63.189.50
+X-CLIENT-HOSTNAME: 5.63.189.50
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: dmFkZTGbsflNZg5WlL1okd/rknFH3L9TOvw1i1+BFVQgEjWPACFv7scvKhz9Lxr8KFtFY1/6oLlmNLGKeOm6MiwNWEiDb2QqV30VfAg39R9JTe6j4le2ApJYOuj7glc2VGRiXJjVqORc7lqRIRGBoDDSMffnRX6Jo05mAodd6PSkis+iuUYcebzak/RQKaE9dZC9q5Joz9Z5qFETF/XfZ/sg1H3WtrMe+sDRi0dujNVP0mv8kRxi9pi5Avrg5/T2dhxFe8BzwTug8heoDwNIJ012V85iKjqq7snsgqEfidxfEif7MuFGW3WvnrhmGnKSJsgAZS38L9g4Roltro/4goJ5Gd/bTuAR2gStEFlbODicBv1Pz0GRpzGq3G3uZZSUv/ScqTcOP/jFu4mO+FKxS98t9kunPZsHQxV1yj5K28jo0WzezbuHQikvWfLgEQHPKq4K3xETU3iXp8nGsFSzH3jt9UG1Fdixq45nGTqemuek7dWOeBXLfaXFPSgkrn1UdL3rI9NnUcg+OBq2p+HdoLjH+5qRfHIoING9nT4Kg34tqyWkm5IlnV//aYVmB1wTJLmiXMjgLvhJXgRTDguVV3VR4m5/G2aDL9LZfrB/SABIOxhsm6i/7z3O2i8krNRUgzMgfZBN1kiOJEDdA5RkFHl2FRcxmYIyKF0k316GB5+UgrDUgg
+X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
 
-Similar to feature present in older chip, it compares the magnitude of
-the last 2 accel samples against a threshold and returns an interrupt
-even if the value is higher.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-WoM maps best to accel x|y|z ROC event. This series add system wakeup
-functionality if WoM is on and wakeup is enabled when system suspends.
+Avoid starting "async" suspend processing upfront for devices that have
+consumers and start "async" suspend processing for a device's suppliers
+right after suspending the device itself.
 
-This series also prepare the driver for supporting further APEX
-features like pedometer, tilt, ... It introduces an apex structure that
-will hold all APEX settings and track the enable state.
-
-Signed-off-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+Suggested-by: Saravana Kannan <saravanak@google.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
-Changes in v5:
-- Add preliminary patch to move DMA buffers at end of structure.
-- Check return code of devm_device_init_wakeup()
-- Rebase and rework series to use kernel types
-- Link to v4: https://lore.kernel.org/r/20250613-losd-3-inv-icm42600-add-wom-support-v4-0-7e5f554201bf@tdk.com
 
-Changes in v4:
-- Avoid mix of gotos and scoped_guard()
-- Invert conditionals for better code readability
-- Switch to use devm_device_init_wakeup()
-- Several code readabilities improvements
-- Link to v3: https://lore.kernel.org/r/20250418-losd-3-inv-icm42600-add-wom-support-v3-0-7a180af02bfe@tdk.com
-
-Changes in v3:
-- Rewrites following code review
-- Link to v2: https://lore.kernel.org/r/20250415-losd-3-inv-icm42600-add-wom-support-v2-0-de94dfb92b7e@tdk.com
-
-Changes in v2:
-- change struct order to avoir DMA overflow
-- separate wom enable/disable in 2 functions
-- delete mutex rework
-- Link to v1: https://lore.kernel.org/r/20250220-losd-3-inv-icm42600-add-wom-support-v1-0-9b937f986954@tdk.com
+v3 -> v4: Rebase and update the changelog.
 
 ---
-Jean-Baptiste Maneyrol (3):
-      iio: imu: inv_icm42600: move structure DMA buffers at the end
-      iio: imu: inv_icm42600: add WoM support
-      iio: imu: inv_icm42600: add wakeup functionality for Wake-on-Motion
+ drivers/base/power/main.c |   37 +++++++++++++++++++++++++++++++------
+ 1 file changed, 31 insertions(+), 6 deletions(-)
 
- drivers/iio/imu/inv_icm42600/inv_icm42600.h        |  56 +++-
- drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c  | 294 ++++++++++++++++++++-
- drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c |   2 +-
- drivers/iio/imu/inv_icm42600/inv_icm42600_core.c   |  97 ++++++-
- 4 files changed, 435 insertions(+), 14 deletions(-)
----
-base-commit: b57cb7c47e31244bef6612f271c5dc390f761e17
-change-id: 20250220-losd-3-inv-icm42600-add-wom-support-0620fef9db23
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -1257,10 +1257,15 @@
+ 		return false;
+ 	}
+ 
+-	return true;
++	/*
++	 * Since this function is required to run under dpm_list_mtx, the
++	 * list_empty() below will only return true if the device's list of
++	 * consumers is actually empty before calling it.
++	 */
++	return list_empty(&dev->links.consumers);
+ }
+ 
+-static void dpm_async_suspend_parent(struct device *dev, async_func_t func)
++static bool dpm_async_suspend_parent(struct device *dev, async_func_t func)
+ {
+ 	guard(mutex)(&dpm_list_mtx);
+ 
+@@ -1272,11 +1277,31 @@
+ 	 * deleted before it.
+ 	 */
+ 	if (!device_pm_initialized(dev))
+-		return;
++		return false;
+ 
+ 	/* Start processing the device's parent if it is "async". */
+ 	if (dev->parent)
+ 		dpm_async_with_cleanup(dev->parent, func);
++
++	return true;
++}
++
++static void dpm_async_suspend_superior(struct device *dev, async_func_t func)
++{
++	struct device_link *link;
++	int idx;
++
++	if (!dpm_async_suspend_parent(dev, func))
++		return;
++
++	idx = device_links_read_lock();
++
++	/* Start processing the device's "async" suppliers. */
++	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
++		if (READ_ONCE(link->status) != DL_STATE_DORMANT)
++			dpm_async_with_cleanup(link->supplier, func);
++
++	device_links_read_unlock(idx);
+ }
+ 
+ /**
+@@ -1400,7 +1425,7 @@
+ 	if (error || async_error)
+ 		return error;
+ 
+-	dpm_async_suspend_parent(dev, async_suspend_noirq);
++	dpm_async_suspend_superior(dev, async_suspend_noirq);
+ 
+ 	return 0;
+ }
+@@ -1596,7 +1621,7 @@
+ 	if (error || async_error)
+ 		return error;
+ 
+-	dpm_async_suspend_parent(dev, async_suspend_late);
++	dpm_async_suspend_superior(dev, async_suspend_late);
+ 
+ 	return 0;
+ }
+@@ -1887,7 +1912,7 @@
+ 	if (error || async_error)
+ 		return error;
+ 
+-	dpm_async_suspend_parent(dev, async_suspend);
++	dpm_async_suspend_superior(dev, async_suspend);
+ 
+ 	return 0;
+ }
 
-Best regards,
--- 
-Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
 
 
