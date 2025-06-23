@@ -1,162 +1,98 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0299926B2DB;
-	Mon, 23 Jun 2025 14:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1635C26B751;
+	Mon, 23 Jun 2025 14:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750689936; cv=none; b=aZ+OtT8F25yIMeJHKOfFvb/oYTMvSqZHfGvFDNAlPeAoWl0m6WYxs8uqw0mHw12Q2BwdhfrXJL5NMbodYIgkQ3c7G+I5ikgfbK85YGXDNDKpCwOspef1xSfhEGP5ij2eD7YtzkM2Kq2qKWsaxmDCvBHzBwzHl1MOtWAGYuhefkw=
+	t=1750689935; cv=none; b=Kv4l6tuV1mD0lyuCUVGZOykES6m05K8nck0vlUXFHE6je8lPtSgJnI64sIjpfC2BdSi60KIwykc9Ik7X/i00MA5LpEA2IYWSaWBdeRfLD5PuzOnVvVLyLeS7Xb5IvEcFB8i7nR74Dii0gsGzFSxEmIW9rqgPmvXW88fGp6uSLyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750689936; c=relaxed/simple;
-	bh=/sfQBvTH/yGMQ94U8EPTO0Y5HoLE1uO6aQH+B4AtwsU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iLytbK8kE/G3IjBmS9eEhrXyNnWVg6uWTVOGDy0+fjlA4UEwFuBz/h08ouXgopNt2umKram8k5A+2FOW3iSeyTK4Ly5MItlgYBVgRWLzo9WZrlDJiu04b1ReAX2/CpF1NDfVMFxGEvi1K2VEKkWVOSuKa1AlXPYDVuYxSnGEeEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F9E01756;
-	Mon, 23 Jun 2025 07:45:15 -0700 (PDT)
-Received: from [10.57.29.183] (unknown [10.57.29.183])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 77E763F66E;
-	Mon, 23 Jun 2025 07:45:29 -0700 (PDT)
-Message-ID: <8bff076f-0c82-49e3-8e63-15dfedde233e@arm.com>
-Date: Mon, 23 Jun 2025 15:45:23 +0100
+	s=arc-20240116; t=1750689935; c=relaxed/simple;
+	bh=BWNrsADcgYwZ2dvZXwG1N6G2J7mZGyjM3XJMSbDzw44=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VE0h+mKDeiwnlQRa84G6a3ObZneWyKAKWI+sMJT9o9I1xYlkr0S6vvp2/VkJSok4zvR/4GQvpQTRtudcVUN+BGIBor8WintgBMeOZCjhFxqpjpMERCMxDPVjw2POsHZkI5qwHkcgXSlNpU0lgKjNKjnbE6+r9qY5queSRGTp9xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OiQgFoRh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OiQgFoRh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ADDEC4CEF1;
+	Mon, 23 Jun 2025 14:45:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750689934;
+	bh=BWNrsADcgYwZ2dvZXwG1N6G2J7mZGyjM3XJMSbDzw44=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OiQgFoRhJD/skmkSCiSbp8PcIJRnlwIFpnOpPNgOFONDQF5xzCKMu3/YOgz5i2ML1
+	 CUvseUYm3azLa7D0nYVj2Hj7mYaZFzb5hDxSKrwE0akP0stAKxLyA9Tf02eDHUXX2H
+	 caXb1D4Z9YG410lVECHcoVEuNUJF0YeSfTiAKYuFmqexPTzTwHw36bKW/UHhak6RwQ
+	 4SysyGU2wnHcd8sQvX0M6UuzjgpbdecktL/s7PXLoQ+VxCJsqAdJSKmIJDBRsXV567
+	 z2Uald1ms+kpHEp8h+PcX+ZQnMK3vT5WibcOWuzLDcKj1E+pPMANMrUWoOnvOwOmwK
+	 c+XqQM6jvJMuA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uTiQL-000000006Qw-1WSI;
+	Mon, 23 Jun 2025 16:45:30 +0200
+Date: Mon, 23 Jun 2025 16:45:29 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] firmware: qcom: uefisecapp: add support for R/O
+ UEFI vars
+Message-ID: <aFloifxONXnQbVg6@hovoldconsulting.com>
+References: <20250621-more-qseecom-v2-0-6e8f635640c5@oss.qualcomm.com>
+ <20250621-more-qseecom-v2-2-6e8f635640c5@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 10/43] arm64: RME: RTT tear down
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
- Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
- <aneesh.kumar@kernel.org>, Emi Kisanuki <fj0570is@fujitsu.com>
-References: <20250611104844.245235-1-steven.price@arm.com>
- <20250611104844.245235-11-steven.price@arm.com>
- <b39ce0e3-5d44-4334-b739-2af07a24a668@arm.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <b39ce0e3-5d44-4334-b739-2af07a24a668@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250621-more-qseecom-v2-2-6e8f635640c5@oss.qualcomm.com>
 
-On 16/06/2025 11:41, Suzuki K Poulose wrote:
-> Hi Steven
+On Sat, Jun 21, 2025 at 10:56:11PM +0300, Dmitry Baryshkov wrote:
+> For some platforms (e.g. Lenovo Yoga C630) we don't yet know a way to
+> update variables in the permanent storage. However being able to read
+> the vars is still useful as it allows us to get e.g. RTC offset.
 > 
-> On 11/06/2025 11:48, Steven Price wrote:
->> The RMM owns the stage 2 page tables for a realm, and KVM must request
->> that the RMM creates/destroys entries as necessary. The physical pages
->> to store the page tables are delegated to the realm as required, and can
->> be undelegated when no longer used.
->>
->> Creating new RTTs is the easy part, tearing down is a little more
->> tricky. The result of realm_rtt_destroy() can be used to effectively
->> walk the tree and destroy the entries (undelegating pages that were
->> given to the realm).
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Reviewed-by: Gavin Shan <gshan@redhat.com>
+> Add a quirk for QSEECOM specifying that UEFI variables for this platform
+> should be registered in read-only mode.
 > 
-> A couple of minor nits below. Should have spotted earlier, apologies.
-> ...
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
+>  drivers/firmware/qcom/qcom_qseecom_uefisecapp.c | 18 +++++++++++++++++-
+>  include/linux/firmware/qcom/qcom_qseecom.h      |  2 ++
+>  2 files changed, 19 insertions(+), 1 deletion(-)
 > 
->> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
->> index 73261b39f556..0f89295fa59c 100644
->> --- a/arch/arm64/kvm/rme.c
->> +++ b/arch/arm64/kvm/rme.c
->> @@ -17,6 +17,22 @@ static unsigned long rmm_feat_reg0;
->>   #define RMM_PAGE_SHIFT        12
->>   #define RMM_PAGE_SIZE        BIT(RMM_PAGE_SHIFT)
->>   +#define RMM_RTT_BLOCK_LEVEL    2
->> +#define RMM_RTT_MAX_LEVEL    3
->> +
->> +/* See ARM64_HW_PGTABLE_LEVEL_SHIFT() */
->> +#define RMM_RTT_LEVEL_SHIFT(l)    \
->> +    ((RMM_PAGE_SHIFT - 3) * (4 - (l)) + 3)
->> +#define RMM_L2_BLOCK_SIZE    BIT(RMM_RTT_LEVEL_SHIFT(2))
->> +
->> +static inline unsigned long rme_rtt_level_mapsize(int level)
->> +{
->> +    if (WARN_ON(level > RMM_RTT_MAX_LEVEL))
->> +        return RMM_PAGE_SIZE;
->> +
->> +    return (1UL << RMM_RTT_LEVEL_SHIFT(level));
->> +}
->> +
->>   static bool rme_has_feature(unsigned long feature)
->>   {
->>       return !!u64_get_bits(rmm_feat_reg0, feature);
->> @@ -82,6 +98,126 @@ static int free_delegated_granule(phys_addr_t phys)
->>       return 0;
->>   }
->>   +static void free_rtt(phys_addr_t phys)
->> +{
->> +    if (free_delegated_granule(phys))
->> +        return;
->> +
->> +    kvm_account_pgtable_pages(phys_to_virt(phys), -1);
->> +}
->> +
->> +static int realm_rtt_destroy(struct realm *realm, unsigned long addr,
->> +                 int level, phys_addr_t *rtt_granule,
->> +                 unsigned long *next_addr)
->> +{
->> +    unsigned long out_rtt;
->> +    int ret;
->> +
->> +    ret = rmi_rtt_destroy(virt_to_phys(realm->rd), addr, level,
->> +                  &out_rtt, next_addr);
->> +
->> +    *rtt_granule = out_rtt;
->> +
->> +    return ret;
-> 
-> ultra minor nit: this could simply be :
-> 
->     return rmi_rtt_destroy(virt_to_phys(realm->rd), addr, level,
-> rtt_granule, next_addr);
-> 
+> diff --git a/drivers/firmware/qcom/qcom_qseecom_uefisecapp.c b/drivers/firmware/qcom/qcom_qseecom_uefisecapp.c
+> index 98a463e9774bf04f2deb0f7fa1318bd0d2edfa49..05f700dcb8cf3189f640237ff0e045564abb8264 100644
+> --- a/drivers/firmware/qcom/qcom_qseecom_uefisecapp.c
+> +++ b/drivers/firmware/qcom/qcom_qseecom_uefisecapp.c
+> @@ -792,6 +792,12 @@ static efi_status_t qcuefi_query_variable_info(u32 attr, u64 *storage_space, u64
+>  	return status;
+>  }
+>  
+> +static const struct efivar_operations qcom_efivars_ro_ops = {
+> +	.get_variable = qcuefi_get_variable,
+> +	.get_next_variable = qcuefi_get_next_variable,
+> +	.query_variable_info = qcuefi_query_variable_info,
+> +};
 
-Sadly it can't because of the types. We want to return a phys_addr_t for
-the granule to undelegate. But the rmi_xxx calls use 'unsigned long' for
-consistency. So this is actually a type conversion.
+It looks like the efivars implementation does not support read-only
+efivars and this will lead to NULL pointer dereferences whenever you try
+to write a variable.
 
-I did toy around with pushing the types up or down but it makes the code
-more ugly. Explicitly casting 'works' but is fragile because it bakes in
-that phys_addr_t is the same type as unsigned long.
+Also not sure how useful it is to only be able to read variables,
+including for the RTC where you'll end up with an RTC that's always
+slightly off due to drift (even if you can set it when booting into
+Windows or possibly from the UEFI setup).
 
-> ...
-> 
->> +
->> +static int realm_tear_down_rtt_range(struct realm *realm,
->> +                     unsigned long start, unsigned long end)
->> +{
-> 
-> minor nit: Is it worth adding a comment here, why we start from
-> start_level + 1 and downwards ? Something like:
-> 
->     /*
->      * Root level RTTs can only be destroyed after the RD is
->      * destroyed. So tear down everything below the root level.
->      */
+Don't you have any SDAM blocks in the PMICs that you can use instead for
+a proper functioning RTC on these machines?
 
-Ack
-
-> Similarly, we may be able to clarify a comment in kvm_free_stage2_pgd()
-
-Ack, I'll use the wording you suggested in your later email.
-
-Thanks,
-Steve
-
+Johan
