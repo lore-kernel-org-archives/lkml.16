@@ -1,106 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3CC22FDEA;
-	Mon, 23 Jun 2025 15:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447F6279DCA
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:13:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750691604; cv=none; b=LQU50N8HFwEKFfxvPNH5QN5ppLexakZtXYdEyeE+QrC1VJUWu727+q8i9yDzrKwxJcDKJ+r/2XHfyUvto3tKvgtTdwj0WlLMBpMR7ZevMzIC6poISauOn0U7vl2CptoUBUMTkIgvCxXERvlOOH44dkVAUNHMObDd4j1tCWvO9zc=
+	t=1750691629; cv=none; b=QtAypYDneFHmNfiwfgboLVru+2LbUrrIEsN06O8p6d8I/LM3VE71+WYnkn2SROQgy9xhqv5nUGt01O3N02iFc07fN50iRXMu/dbTRy6jBoe2UucFe6Dcb8CAX5T5r5I/7R4L6tjC5437QngX+lRtde2tDjtxDnG6VSBT2HIawbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750691604; c=relaxed/simple;
-	bh=m6+zeFbf7/Zy3uTO9XIn4MuWc9MoVBSP7ewq69H7+T0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tr5606/Rk7PEWDAZi/9aXL99DZ5OpJOxgViV50huHHqyo8W0qjKPiu9CNIxYXkHoQ6Gj38DXGIgpVu9tg9R1EO0VYHaJARdCrfNMEfy8X1QMLt4P+98y7dhKx5tnzQxMuUmdlq/m8Jp15Mxo3qDY3HH+WHECGQ7HQWm9YwZzypM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJ+vEFs0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750691629; c=relaxed/simple;
+	bh=67Wvvnk7IrWKdKcRZEoXjz8V7aJTgzoNCSVU0Cu58W8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s0kytrOgjmYxC3uQBF6WXLXLbzNzkQiK8ctZ+HB70o20gTvPs450CmMwKjMHwHU3A3SrYby4PjGRdXbFvGYv3ZrAvVr/JR5b9xKRUNi3nUY/vgNj2fuGpdWNP5UQpKMDi+AURfVl19XFx/mTKlkAqgPvee32RL3c+9o+G0x37so=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=G/Eutygf; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJ+vEFs0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7478DC4CEEA;
-	Mon, 23 Jun 2025 15:13:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750691603;
-	bh=m6+zeFbf7/Zy3uTO9XIn4MuWc9MoVBSP7ewq69H7+T0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kJ+vEFs0j00QDs92yVfX6WZxq8Qy6AkSlDniiIRy7hDGzBsxfw8YkiTQmE79xNngW
-	 NktYvcGFrn01CBzlG+o5XpzITzlCJbZa7rXC9rZnvnsb1HlJ7wb0FA0gIFu+VoOVij
-	 1ScSV9VMvzH53sW/+uHQb7NZ/OVplDPUdPPN0ZqjWYCM9mPWHXUkxytG30QIRR9DoA
-	 ZdA2qB/YsKL8Jkh/LR0EXoSA5YMjJJne7+Ak2hNUd9td/sb6wbKkIk5wE1ZnPWCemw
-	 pT3SLq8JOgYmXMETAWePn/OtdTh8oVKo2lmrrTGSC29BScI9pvIkdAftm0gXQJCxnm
-	 6jWCgZumgyPQg==
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-6118c1775dbso145049eaf.1;
-        Mon, 23 Jun 2025 08:13:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVGUYkWOa1X4maXy1QXZr8RxZfyGNPFFWUq9Sf05ZReN34KtMmzt2EtdIMlIsEVx0Yj22daahOyMt0=@vger.kernel.org, AJvYcCVjgZmPIsH7ZoaRFwyUYFDIoLP8NGTBtRIbqaXgoQ0kvkqLKY8zGzOg82Zc5GRrFRnjYJNLQaRi/AncQWQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyofp2J0MPvMFGeLvFt84QlxIJN8ePIkibFXGr4DyBsAEk43VND
-	wBH6kc77YssLbyhFVKc/FB69Iy+c+D0tj4LKzDzRjPo+rmAPdFZn2KUmJanoTqHmyXFGaAWeFgX
-	oUY9HvJxbzkO/tpiuP79sbVpNvY2J1Zs=
-X-Google-Smtp-Source: AGHT+IGpm04yVlsU1rtbWQdJ5UO5ztXKe7NWSoIPZJyX3DsiZk/jtE/bA2b81WS4/pOaLopOXfilysz0oBGyTKPU6MI=
-X-Received: by 2002:a05:6820:1b05:b0:611:5853:3ecb with SMTP id
- 006d021491bc7-6115b734ecfmr8708103eaf.0.1750691602814; Mon, 23 Jun 2025
- 08:13:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="G/Eutygf"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a6d77b43c9so1933606f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:13:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750691625; x=1751296425; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lOWz6yeiTc1RySB3Pgh2AEWSr7V30NJ9sX40nnSaN74=;
+        b=G/EutygfC8zeZ/QIWoc9wpRpd40mrF3tdDidgABfhwJB2ZVCzj84RS/9OLmVhOfWw1
+         Cv3ubQeSQ8O97Nh+XjfeZCSoYod+YY4lZ8p7cKKm5v6XY7EI5z4cmVgqRghuN8uzg+R5
+         O2hyvGMmB7IlSkzp8N/gJM4BaeeSB3TV2zAcRbzEg+Wi/dvb551QgXTwQJieHe1n50Xk
+         Q+MEjGlfKq6t6v9WiSIko/+6LofytXXtIe7fQoDZ7RJXAbIlgullfLZUggKuE2j8sl/h
+         fJIvMx+iHasc1CTrNf9rEEUmGf8vYbhUykXFpW3o5EnVDNqBWkeh8xjEfq0HZRMMU2Rw
+         gTGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750691625; x=1751296425;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lOWz6yeiTc1RySB3Pgh2AEWSr7V30NJ9sX40nnSaN74=;
+        b=vejsjBUevLzDuDB+6064zGebPweqDrkf+HOFa98bLNwqA3QCewl6hkLS91ZXDCeDfm
+         HxvW53gnrnU2n0otUEfwsW/fKJkUDNSQedg+zshM2wxkDtMfLDzEMY7j7aWohXvyOfb0
+         BXrd/kfLNVY17iZkq2lmx/P9jNxkyS5wQWAYpjnjzegjitWQz+YlKEhyZhUoSnyRgLrJ
+         zqYLZw03zbHOjJ4W6ifpg0fXYHG2NqplwQBBMg8+912pZ3Bol8TVHA/hzqNlNNCFH4EF
+         14mtNvF/QqhxcwGYSLZ+VzXPbRiRDq5fJL72fhJ7gXeCYevwlnoUMXDmRTY7wGteX78N
+         mknQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWVm7+hl3SogxyWOCRIFSR/iUTMga69srshMw2CdT+hFabTihT45rPjSDFyIxamxuH3pZIg8zVCkUJSGus=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEh6xMBBEHP/G4nqEAMSqwgh1EjMiRBL7rnb4TS6ZunsjhH+K7
+	/FbtkxwlBUy+PpBm2akQLV95YlukP6CixlR+gF+lcybOkpaD+OINVhXuPj1yTdjgiXs=
+X-Gm-Gg: ASbGncupRWnscm4meNQC4hqGResdooxWQ16er9fsJrbDdXPNPu+gQX6wPC5IaYkwpb7
+	RkC0CRc+meyds9ea2oxJ3MfuY0Ib4uoNeQCyYah5bpvOrKjbKvypMYJWnvzIXP/zRbXpgWFuBJJ
+	0B/rn0NN4tTzT7UY05OB1fPFbN006/pVSE0NcH3TtRNNVfDlJM3ipgbYx7rB3lvvCU4EFpYzh2M
+	ZyWzMysWiIzFcfeQxiJk8BfhuumLutXSD0X5Vv3NVkdHwvhSHySFFEUE+kNSaV1diWR0r4o6W6i
+	6gz1cLg+4klk2u7dEft+pNeQC5rtsInAPVHpdhotYXsN5CbNukgbu3dpBqqQYAjxUl9wwJogt+A
+	=
+X-Google-Smtp-Source: AGHT+IEiP0D8qVIyLWMar6gISPuxv7fyxagehM1R6zg28ZvmgE2BHBGvS42uR5iuUd5pUyo8L128yw==
+X-Received: by 2002:a05:6000:26c1:b0:3a4:fbaf:3f99 with SMTP id ffacd0b85a97d-3a6d12dd6e7mr11540132f8f.13.1750691625412;
+        Mon, 23 Jun 2025 08:13:45 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646fd816sm113897235e9.24.2025.06.23.08.13.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 08:13:45 -0700 (PDT)
+Date: Mon, 23 Jun 2025 17:13:43 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Lance Yang <lance.yang@linux.dev>
+Cc: Feng Tang <feng.tang@linux.alibaba.com>, paulmck@kernel.org,
+	john.ogness@linutronix.de,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH V2 5/5] panic: add note that panic_print interface is
+ deprecated
+Message-ID: <aFlvJ4WcLb03x2i7@pathway.suse.cz>
+References: <20250616010840.38258-1-feng.tang@linux.alibaba.com>
+ <20250616010840.38258-6-feng.tang@linux.alibaba.com>
+ <0088c3f5-d2a0-48c4-b69a-fb385c527b32@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623133402.3120230-1-zhenglifeng1@huawei.com> <20250623133402.3120230-7-zhenglifeng1@huawei.com>
-In-Reply-To: <20250623133402.3120230-7-zhenglifeng1@huawei.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 23 Jun 2025 17:13:11 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0huLAM5XaGr1MWOwL5V-p7KX-ea7FYGx70GPwyVHETnHg@mail.gmail.com>
-X-Gm-Features: AX0GCFsZ-nJyD3aKqSoDIy7nHLaVawW_CCC7pCQKRuRnoWPZrSQNKJcHar1AA4g
-Message-ID: <CAJZ5v0huLAM5XaGr1MWOwL5V-p7KX-ea7FYGx70GPwyVHETnHg@mail.gmail.com>
-Subject: Re: [PATCH 6/7] cpufreq: Refactor code about starting governor in cpufreq_set_policy()
-To: Lifeng Zheng <zhenglifeng1@huawei.com>
-Cc: rafael@kernel.org, viresh.kumar@linaro.org, ionela.voinescu@arm.com, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linuxarm@huawei.com, 
-	jonathan.cameron@huawei.com, zhanjie9@hisilicon.com, lihuisong@huawei.com, 
-	yubowen8@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0088c3f5-d2a0-48c4-b69a-fb385c527b32@linux.dev>
 
-On Mon, Jun 23, 2025 at 3:34=E2=80=AFPM Lifeng Zheng <zhenglifeng1@huawei.c=
-om> wrote:
->
-> Refactor code about starting governor without functional change in
-> cpufreq_set_policy() to make it more readable.
+On Mon 2025-06-16 09:45:16, Lance Yang wrote:
+> 
+> 
+> On 2025/6/16 09:08, Feng Tang wrote:
+> > Long term wise, the 'panic_sys_info' should be the only controlling
+> > interface, which can be referred by other modules.
+> > 
+> > Suggested-by: Petr Mladek <pmladek@suse.com>
+> > Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+> > ---
+> >   kernel/panic.c | 9 ++++++++-
+> >   1 file changed, 8 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/panic.c b/kernel/panic.c
+> > index ea238f7d4b54..e8a05fc6b733 100644
+> > --- a/kernel/panic.c
+> > +++ b/kernel/panic.c
+> > @@ -76,6 +76,13 @@ ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
+> >   EXPORT_SYMBOL(panic_notifier_list);
+> >   #ifdef CONFIG_SYSCTL
+> > +static int sysctl_panic_print_handler(const struct ctl_table *table, int write,
+> > +			   void *buffer, size_t *lenp, loff_t *ppos)
+> > +{
+> > +	printk_once("panic: 'panic_print' sysctl interface will be obsoleted by 'panic_sys_info' interface.\n");
+> 
+> Hmm... I would get scared for a second when I read messages prefixed with
+> "panic:"
+> from dmesg. That prefix should have a very specific meaning ;)
+> 
+> Well, we can just change the prefix to something more neutral:
+> 
+> printk_once("Kernel: 'panic_print' sysctl interface will be obsoleted by
+> 'panic_sys_info' interface.\n");
 
-Sorry, but I don't see the point.
+I agree that this looks better.
 
-> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
-> ---
->  drivers/cpufreq/cpufreq.c | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 9b2578b905a5..7b82ffb50283 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -2698,15 +2698,19 @@ static int cpufreq_set_policy(struct cpufreq_poli=
-cy *policy,
->         /* start new governor */
->         policy->governor =3D new_gov;
->         ret =3D cpufreq_init_governor(policy);
-> -       if (!ret) {
-> -               ret =3D cpufreq_start_governor(policy);
-> -               if (!ret) {
-> -                       pr_debug("governor change\n");
-> -                       return 0;
-> -               }
-> +       if (ret)
-> +               goto start_old_gov;
-> +
-> +       ret =3D cpufreq_start_governor(policy);
-> +       if (ret) {
->                 cpufreq_exit_governor(policy);
-> +               goto start_old_gov;
->         }
->
-> +       pr_debug("governor change\n");
-> +       return 0;
-> +
-> +start_old_gov:
->         /* new governor failed, so re-start old one */
->         pr_debug("starting governor %s failed\n", policy->governor->name)=
-;
->         if (old_gov) {
-> --
+That said, I am not a native speaker but I think the "will be
+obsoleted" is not correct. I would use "has been obsoleted" instead.
+
+Also the messages should use a particular loglevel, e.g. KERN_INFO.
+
+I would do:
+
+	pr_info_once("Kernel: 'panic_print' sysctl interface has been obsoleted by 'panic_sys_info' interface.\n");
+
+
+> 
+> > +	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
+> > +}
+> > +
+
+Best Regards,
+Petr
