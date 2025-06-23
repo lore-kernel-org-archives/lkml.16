@@ -1,190 +1,207 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114707482;
-	Mon, 23 Jun 2025 21:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750713700; cv=none; b=CfKBmO0J4V5BJ+zf1/KXfE8/E3O57CojcOAexyAKtPdgiI+37azPGB6AiP/CkbW5bMIWJTJ+/lMljHrTmftAIR18uw51+JKOR7RjI27qdUtHFSn6WwvMTFstOduYaNWZhSd5Xt7DFLVPUIsk6R1eqq0dP1cc17UmL43l7vX2H5M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750713700; c=relaxed/simple;
-	bh=GUmRyiBipwQB1znn4EM8MMcdJpwBom/ghiZxQ5pF6gA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PHenOoJDTO6lbgNsTDSblgMBwyGJFFXBx6IwPGzWSPCVu3cv/xPCpCADA6pFUMQ5XusAOo079Egv25Mc4P1Br6ifE/ZH9/o2OyJAScCwbARyI0J42xt7hzHUT8CQwbyul70mgZ+Dk9PC9cFzSQ8cdRaiiogPdU98ZIiiAkpxWyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CUe42R9S; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6C1221F0F;
+	Mon, 23 Jun 2025 21:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750713706; cv=pass; b=AI4ueNE8uzaYuZuCfi75pL5tws7/ywSwy5Zhvq72JmvU/Y2uxWRzsdlHxk4WCzeVIWdPjaa7TRunChVEV0mPlxLl5MgMteC9pHPs/V+6eCOtdpalT7Mi7u9NfZLA2fJGt69rgqnyAxiqNH90laSaTIM9kcgXAOU9bRiZGgITitY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750713706; c=relaxed/simple;
+	bh=KtakUjgv+UZf2zaxQpHTQu+8cOFck/+XtuwX2MXy47c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o5OuHF6AKvYuZJTKeQMxaazt/6k6GPk086ppss5ZtuBabF3eDdwkp+ATC4ayEP/HNP+L/TGAMWQ5jB32y1uxrkp7ca/m2Eqk6sqTTnoS8ejNOtril/9+5+8HwuvLuDcXiM0JUmNVQoZaf18YbYU+aad5h/urswhfXmqCD1Ith9I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=djTOojxP; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUe42R9S"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-7111f616c6bso4792957b3.1;
-        Mon, 23 Jun 2025 14:21:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750713698; x=1751318498; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5EhPVXv5KsxcXF90XtgQeQgh5a4/WNYm2viabusGVu4=;
-        b=CUe42R9SAQZSuHx3MmfMu+gQqYt4mLYoT8AUzp3x6Yq/6vm6LuTjwR88anoNpHjKU+
-         IMlGH8IqcqzVGzGD7E/rVmodGYNnBAB0oPEO7Gfkkj4gJzMFHHHhWYKW+BzzBB8J+qU4
-         KTtVJHTa9CrJWpM5xdCCUEFYGdKK7voz8s+uO+hLYW5T6MjxHlTi26XyQtUrVcUeGuCF
-         T2iI5bVm+WGRJXE2upC82a4twXonmKVnhKLT/p7FK2tq6WhAOaAEWW6b3b+UAaymxE3t
-         RQt11NqN3ursHFLJhvAQCC/I4H5q0a6DoPT+S9HsO7g0jBSdNl7uGTcrVoI4v81HDeWt
-         h5uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750713698; x=1751318498;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5EhPVXv5KsxcXF90XtgQeQgh5a4/WNYm2viabusGVu4=;
-        b=PdpBzN3j1QZBUOJqtMLRHoAPBZVN6f9/JhwOsprZEP+T+uv9kt3whQ05nDJYgBkEvw
-         ZEou6/XZAlBN8sOHDWJM+GM7ALna1QBHd68AJdCQ+ylRm6nP7eTlpnIdWS4JXEFTUkMU
-         11zjNhYXVN7vhhsjvaV3t9AWpMjW+QjICvxg6NPhvyl9/URjHbf78ysYC4Zww552b7wQ
-         BpzAE5cth/3y5iB6MOcrvOOp7H5FCxkAbAFaYJGkPOSrHFkG7dfTBD9emDVIuzoaKs5l
-         xvcwIKtD4bHyWgS3K1c5cNdPhLtYqcr/rs9dNxzQ7MzCcNMkmMHiis5+8O3tcjkbbvN9
-         FV/g==
-X-Forwarded-Encrypted: i=1; AJvYcCU9E5ZLcghRKZCfxVBdJktyW88YkECKXtgEkuRyJBaEQ11YJJSGZQBqrQDfnRcPdR32isXkkMJF0mU=@vger.kernel.org, AJvYcCVOGCyHhDIhWOl9afqszDdgB/xW+2RLGCjLPOF2L78V+WAb5wwG4HRLmJfnPb6rFvft0OSMiJg3mWpxqHvq@vger.kernel.org, AJvYcCWW5mUQB37tc/id4kl8HdNhmJunOdFxqztgTiadLEAfdpXyNzCu29/Rf6Jy+UcLRI1Q1sEa5UUVT388@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2LpZD6oKUqwrdCJwg2UJVk5CHuv4dXh9Ky0x29nmjBqxd2Pli
-	0MOUeckw31u0bM/zRCA1Ohv4HmxdXWwexxMU0u1wxuzXKX1kkfCMmwA0DOqdPZ/2Ng1AVAKQUUq
-	ZnoTQVcLaNi2dDMxu2fSfLHY9WeCYntsCJg==
-X-Gm-Gg: ASbGncuQi6L6/Y+UDTgOT3+uJCA7oxDDQ+qF/ElYQxrD6rFV3DPpGicXuSCTXIBrE8b
-	TV4gaZyrpn+wsS/l0TYgBA4eNARVgtg7MYXkCRgVcjx5l+W06QuIpgEagsNL1lLHpG6e8M1ktI6
-	qwHTLtVeTA12X/V/eO5d9tnV4mD5SpVvIGMDWeaS/QwXU=
-X-Google-Smtp-Source: AGHT+IES96Vhz9Z48D89qHM4JfJPRfuAbs2HBlR+RnR9BBxF8H5SHTIoOyQWADOKLTGV37ZEhEgZLOqoDW+0bkyaSY0=
-X-Received: by 2002:a05:690c:3588:b0:70e:2d3d:acdd with SMTP id
- 00721157ae682-712c6762396mr91474187b3.9.1750713697442; Mon, 23 Jun 2025
- 14:21:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="djTOojxP"
+ARC-Seal: i=1; a=rsa-sha256; t=1750713689; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=m/XM4rTD4QhoU7m/KHv0O/CbvojXCAGpoveJYiDyugG6jrPiy+ovLCuFL5xdIpbq8g1Ezw/SBpxdy12FllDjoEKYO+tbvpjgXA1UU767DRSKtWstXrSvNFWWmETC7RqkhDPsuN5BHEEX4utxIGznQS89puhFpXpCft4K5uBn2ks=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750713689; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ZfiWeBvfNnXnUysh0G/D5Vm9Y8TLgU9BFV02Xs7k2HE=; 
+	b=ZwD+qKKO1bwXT24zCaTJMJS84YZwzNRFij1DX28o5oHxiK8e/45SF/LUzjrQeda/cqvGdo7MnhbrQrm8KNmSnPdxDCGK9Q2hqUw+cW7Baqz5c5vNFxBrFh4JnbdsfS2E4JCp1vTCQidiOKWXkA4Yyea1cxN4fSH3OemfMv7LLtg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750713689;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=ZfiWeBvfNnXnUysh0G/D5Vm9Y8TLgU9BFV02Xs7k2HE=;
+	b=djTOojxPua9C2oq5c7PAFfYvDezovncq8tTlPMGXz9g15tH4l5DAyXu1xXpJsN1n
+	iA+ULtjIp2ndaFNHjogkiBq136100Y1jehHHnC8vXkyyrotY19GUZSoUlOuTZH2vtvC
+	DN1sdOSt81zXYPNIqPlEKZkWBXEO+1XwUvg+jGdw=
+Received: by mx.zohomail.com with SMTPS id 1750713688281148.819607680059;
+	Mon, 23 Jun 2025 14:21:28 -0700 (PDT)
+Received: by venus (Postfix, from userid 1000)
+	id 139A4180AAB; Mon, 23 Jun 2025 23:21:23 +0200 (CEST)
+Date: Mon, 23 Jun 2025 23:21:22 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: amitsd@google.com
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Badhri Jagan Sridharan <badhri@google.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@kernel.org>, Kyle Tso <kyletso@google.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] power: supply: core: add helper to get power
+ supply given a fwnode
+Message-ID: <djqmdlnsftquum3wayigqryzfy7xkn67uj4pfk3wugxl3lx3wr@y26ydci57iwi>
+References: <20250507-batt_ops-v2-0-8d06130bffe6@google.com>
+ <20250507-batt_ops-v2-2-8d06130bffe6@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250622155010.164451-1-l.rubusch@gmail.com> <20250622155010.164451-7-l.rubusch@gmail.com>
- <aFkpv0CUkateel8q@smile.fi.intel.com>
-In-Reply-To: <aFkpv0CUkateel8q@smile.fi.intel.com>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Mon, 23 Jun 2025 23:21:01 +0200
-X-Gm-Features: AX0GCFuEKxrfHsfLqaoz47e3jOBKcPhE3y9Y_EC3s5zhy9Z1SpYK8UTDeG4oh6U
-Message-ID: <CAFXKEHb9Fbd_UOF90EumEtns82VPhYBrLZ=JtmhVJ4pJsT=q-g@mail.gmail.com>
-Subject: Re: [PATCH v10 6/7] iio: accel: adxl345: extend inactivity time for
- less than 1s
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, 
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, eraretuya@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="kdcwqy7o5osxokcj"
+Content-Disposition: inline
+In-Reply-To: <20250507-batt_ops-v2-2-8d06130bffe6@google.com>
+X-Zoho-Virus-Status: 1
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.4.3/250.696.82
+X-ZohoMailClient: External
+
+
+--kdcwqy7o5osxokcj
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 2/5] power: supply: core: add helper to get power
+ supply given a fwnode
+MIME-Version: 1.0
 
-Hi Andy,
+Hi,
 
-This is a tricky one, I'll give some examples why (I think) the code
-is needed as is.
+On Wed, May 07, 2025 at 06:00:23PM -0700, Amit Sunil Dhamne via B4 Relay wr=
+ote:
+> From: Amit Sunil Dhamne <amitsd@google.com>
+>=20
+> Add a helper function power_supply_get_by_fwnode() to retrieve
+> power_supply given a valid fwnode reference.
+>=20
+> Signed-off-by: Amit Sunil Dhamne <amitsd@google.com>
+> ---
+>  drivers/power/supply/power_supply_core.c | 30 ++++++++++++++++++++++++++=
+++++
+>  include/linux/power_supply.h             |  3 +++
+>  2 files changed, 33 insertions(+)
+>=20
+> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/sup=
+ply/power_supply_core.c
+> index 76c340b38015af0a67a0d91305e6242a8646bf53..ef6ba22b837b0b9463f9a3065=
+425e2720f40b9eb 100644
+> --- a/drivers/power/supply/power_supply_core.c
+> +++ b/drivers/power/supply/power_supply_core.c
+> @@ -496,6 +496,36 @@ struct power_supply *power_supply_get_by_name(const =
+char *name)
+>  }
+>  EXPORT_SYMBOL_GPL(power_supply_get_by_name);
+> =20
+> +static int power_supply_match_device_by_fwnode(struct device *dev, const=
+ void *data)
+> +{
+> +	return dev->parent && dev_fwnode(dev->parent) =3D=3D data;
+> +}
 
+This already exists as power_supply_match_device_fwnode().
 
-On Mon, Jun 23, 2025 at 12:17=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
->
-> On Sun, Jun 22, 2025 at 03:50:09PM +0000, Lothar Rubusch wrote:
-> > Inactivity and free-fall events are essentially the same type of sensor
-> > events. Therefore, inactivity detection (normally set for periods betwe=
-en 1
-> > and 255 seconds) can be extended for shorter durations to support free-=
-fall
-> > detection.
-> >
-> > For periods shorter than 1 second, the driver automatically configures =
-the
-> > threshold and duration using the free-fall register. For periods longer
-> > than 1 second, it uses the inactivity threshold and duration using the
-> > inactivity registers.
-> >
-> > When using the free-fall register, the link bit is not set, which means
-> > auto-sleep cannot be enabled if activity detection is also active.
->
-> ...
->
-> > -static int adxl345_set_inact_time(struct adxl345_state *st, u32 val_s)
-> > +static int adxl345_set_inact_time(struct adxl345_state *st, u32 val_in=
-t,
-> > +                               u32 val_fract)
-> >  {
-> >       int max_boundary =3D U8_MAX;
-> >       int min_boundary =3D 10;
-> > -     unsigned int val =3D min(val_s, U8_MAX);
-> > +     unsigned int val;
->
-> You see, I even suggested splitting this assignment to begin with.
-> The change will be clearer with that done.
->
-> >       enum adxl345_odr odr;
-> >       unsigned int regval;
-> >       int ret;
-> >
-> > -     if (val =3D=3D 0) {
-> > +     if (val_int =3D=3D 0 && val_fract =3D=3D 0) {
+> +
+> +/**
+> + * power_supply_get_by_fwnode() - Search for power supply given a fwnode=
+ ref.
+> + * @fwnode: fwnode reference
+> + *
+> + * If power supply was found, it increases reference count for the inter=
+nal
+> + * power supply's device. The user should power_supply_put() after use.
+> + *
+> + * Return: Reference to power_supply node matching the fwnode on success=
+ or
+> + * NULL on failure.
+> + */
+> +struct power_supply *power_supply_get_by_fwnode(struct fwnode_handle *fw=
+node)
+> +{
+> +	struct power_supply *psy =3D NULL;
+> +	struct device *dev =3D class_find_device(&power_supply_class, NULL, fwn=
+ode,
+> +					       power_supply_match_device_by_fwnode);
+> +
+> +	if (dev) {
+> +		psy =3D dev_get_drvdata(dev);
+> +		atomic_inc(&psy->use_cnt);
+> +	}
+> +
+> +	return psy;
+> +}
+> +EXPORT_SYMBOL_GPL(power_supply_get_by_fwnode);
 
-The case for 0sec, 0.0 or setting "0" and fract will consequently be
-"0". 0 is an invalid input for this period and sensor, so it will
-default to an optimized period based on given ODR.
+And this is a 50% of power_supply_get_by_reference(), so the
+function should be updated to use power_supply_get_by_fwnode().
 
-> > +             /* Generated inactivity time based on ODR */
-> >               ret =3D regmap_read(st->regmap, ADXL345_REG_BW_RATE, &reg=
-val);
-> >               if (ret)
-> >                       return ret;
->
-> >               odr =3D FIELD_GET(ADXL345_BW_RATE_MSK, regval);
-> >               val =3D clamp(max_boundary - adxl345_odr_tbl[odr][0],
-> >                           min_boundary, max_boundary);
-> > +             st->inact_time_ms =3D MILLI * val;
-> > +
-> > +             /* Inactivity time in s */
-> > +             return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, v=
-al);
-> > +     } else if (val_int =3D=3D 0 && val_fract > 0) {
->
-> val_fract check is not needed here.
->
+Greetings,
 
-Case for e.g. 0.123, numbers under 1s. This goes into the free-fall registe=
-r.
+-- Sebastian
 
-> > +             /* time < 1s, free-fall */
-> > +
-> > +             /*
-> > +              * Datasheet max. value is 255 * 5000 us =3D 1.275000 sec=
-onds.
-> > +              *
-> > +              * Recommended values between 100ms and 350ms (0x14 to 0x=
-46)
-> > +              */
-> > +             st->inact_time_ms =3D DIV_ROUND_UP(val_fract, MILLI);
-> > +
-> > +             return regmap_write(st->regmap, ADXL345_REG_TIME_FF,
-> > +                                 DIV_ROUND_CLOSEST(val_fract, 5));
-> > +     } else if (val_int > 0) {
->
-> if now is redundant here, right?
->
+>  /**
+>   * power_supply_put() - Drop reference obtained with power_supply_get_by=
+_name
+>   * @psy: Reference to put
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index 6ed53b292162469d7b357734d5589bff18a201d0..a35b08bd368e9305554e1a608=
+dc8e526983cfa12 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -801,10 +801,13 @@ extern void power_supply_unreg_notifier(struct noti=
+fier_block *nb);
+>  #if IS_ENABLED(CONFIG_POWER_SUPPLY)
+>  extern struct power_supply *power_supply_get_by_name(const char *name);
+>  extern void power_supply_put(struct power_supply *psy);
+> +extern struct power_supply *power_supply_get_by_fwnode(struct fwnode_han=
+dle *fwnode);
+>  #else
+>  static inline void power_supply_put(struct power_supply *psy) {}
+>  static inline struct power_supply *power_supply_get_by_name(const char *=
+name)
+>  { return NULL; }
+> +static inline struct power_supply *power_supply_get_by_fwnode(struct fwn=
+ode_handle *fwnode)
+> +{ return NULL; }
+>  #endif
+>  #ifdef CONFIG_OF
+>  extern struct power_supply *power_supply_get_by_phandle(struct device_no=
+de *np,
+>=20
+> --=20
+> 2.49.0.987.g0cc8ee98dc-goog
+>=20
+>=20
 
-So, this will be 1s through 255s. Periods above 1sec. This goes into
-the inactivity register.
+--kdcwqy7o5osxokcj
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> > +             /* Time >=3D 1s, inactivity */
-> > +             st->inact_time_ms =3D MILLI * val_int;
-> > +
-> > +             return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, v=
-al_int);
-> >       }
-> >
-> > -     return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val);
-> > +     /* Do not support negative or wrong input. */
-> > +     return -EINVAL;
-> >  }
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhZxU4ACgkQ2O7X88g7
++ppp0w//bAvpD5lKXf4rI7iyQxFwENWWOhcb8530kiDRTCMw5KdjDEG6u8UvZyGy
+ScKNgaGNGvqy4su03assapnNnpOtb+N+CDm80bcgDYDNooRO9LX7S4eyB+I6wKp3
+BPj87u055U50RJ8RQmkvOq40rmJY2Ri8e5Grd1yRqHtt4uEaF5ev1Me7msnxr41v
+mnyMOE6s9Qv13a6u/TZlP+XDVoHeCwvg10w3XWZHYss/PfOgMSbPO/Zm3i7nF7QL
+yWBM0HrbQsNj0FRaGcTU8EiGKhzgejgveRuKsfLFhyExlyK1NhDfAK07UwRdfcBG
+FeliJKPdRpCNZyGMSPNuv1f48L9TIj6Vq7sWh4HNJkanMOYXgsgPgrXA63GShm+d
+XQRvAhqBNVG7Ym1iQrWA6YaS+6AQL7I+kvfp6HeYWx2v7xtveDkw2xkJ6tzTsQYr
+4QWZi5QFCxGCnOh+KYfhUyxNhai41kkaDXefBD5RaYdAEI572kNAJHGlyv4TAaFZ
+OkWNG/37vuP7/BN0J1AjXzplAkgIdXhLO6sEFBRdh4IHgNuZZZHEA111cv8D5yOU
+aKTwsLL3S8Pu1JFMuN/KoB7zaIfeRlRbGo6P5FNvKWg1mlq6cyrZkHjHnZUGag5q
+c0IgY+o69cn4LAOVmVL3vgLYNo1buOzYhxdis0G1z1pz//G1Hi4=
+=wVCb
+-----END PGP SIGNATURE-----
+
+--kdcwqy7o5osxokcj--
