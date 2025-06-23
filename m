@@ -1,123 +1,161 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E952989BF
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991E629B768
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750695495; cv=none; b=s+1JMIrBpChdVfd2sUbptwDafWKTpmieHfiYNXyIl4e+nZ6CNgypOfN6IgYc+wGt3WvYuQIihhV9eQv6snw49mKU8K8jCAxozPfBCFSiHPFLrJR8arHWHrE/zDjpURsrHj2GS55LEzbTmL3RAhC/PiGdXICNZweuZE9QUprocQs=
+	t=1750695512; cv=none; b=n/XdxKE5JpWxzkQUEjoEIVqn0UKI9JgFQcPHRu9xc1BTpCIDNxxK+pDOKEZ/46qVhBs6mbxISumr4Ea8WWO+ACjacOpdNBya8bAX6Vd6Zhix/5V0o7krTOpYBJnRs9QlrAAo686ZFwBlPEnnstQLP2ttPA8/B6TViHPaKBHxyAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750695495; c=relaxed/simple;
-	bh=xOMzG1FX23M3d31kPYpV8HaBnyVBn7S3wyyV5oXXlCc=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=k93/u7aaYyMDLq9aZQdCS8Ji7VZbwlS2cmTyucdYcLEaUHvosonyfGOL84CVlyony3nzR9BnNU7rcr3tqjeRWiWgNWgyt0IamcVfDhtpI3zkL8FAL7lns0z/XBKijMw0ZD+e32zaoyGqhQpyd3MLMoVJNYkT6U7hCwAEvAHOToU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info; spf=pass smtp.mailfrom=jacekk.info; dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b=ngdv2pGr; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jacekk.info
+	s=arc-20240116; t=1750695512; c=relaxed/simple;
+	bh=D4WLrHGnbg5kQBLxjiDdwVBzN+WA89TBg1nQYbaMm5w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ksly93Dl99DDvCzlkedl6emi/H5Pk6ZZjOM6u8JXAKSyQXdDhuHMYeYLO05CYafJkGJcWNeb7Dxdx23JYABjPcwJFA5Swpx4mdEJNgq9fzaz2ue/j8GRj2qfaeLJ/kbyB4H2nb7lwHdtxTPDQhsccVl01v+Y/oKnjFtJfNKMYrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lerfOSub; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b="ngdv2pGr"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-adb2e9fd208so901967466b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:18:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lerfOSub"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-70e75f30452so31301117b3.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:18:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jacekk.info; s=g2024; t=1750695492; x=1751300292; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=08GIWol905Tz9t1Y5KR/Px/0Bj/EghmvZQXSpfLZ3xo=;
-        b=ngdv2pGrB8cTttQJIM6zP5bclIG3e+4z/WrmyJaL8sOru4Byd31dZYi6WJV5iiECSE
-         10ffemdd55gvB2Db8lk10NtSKNUz6KoKgXAi6ugjpjRlyKgFJao+Y0qnrZqZ0nXnOJLu
-         YX/Edm5+C4hwP1V20M/KE+E+Jm0UKHqa3D4hnWT6zaMIMECo1kJT8InHsTFRheK8ZvGN
-         gYKcWIY4lCWbAKKS4DY3KjpjwT7C4s6En/1aGg4bJkxh5QpjCR1yc4m8cx/QU4JtjeTs
-         umm8rIgAPOVzp06UBBBONjOb67cgu5W1ani1oN7oRfBfbYTYnV9Rx9vTbf7ujHTmQYVT
-         sVlw==
+        d=gmail.com; s=20230601; t=1750695509; x=1751300309; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ueQ2+ddYRZVXMhlg0x6j6v5Cyj80tFqJK0UcyfKVqeo=;
+        b=lerfOSubnzZg7fGFZ5QLc94onSz10qxebXmaSOc/eOV7A0MIrVILU8fCYFwFieVwHX
+         SDZdPxWjh1K7r117f+vndlkAnOTHb0st4Ap1AX028svtwEXK939O2qCiGkDP78amTR5T
+         uwHzjWHSBgAqbcUPHYUeUxHEFdQO+FxIqFQRP/Rc0aHK9pvydgAojI8LO3q4RDlNH1Iq
+         lJccM6d4Y0qpDpxkMYJljfGbTOgthIHPxUbHOWIjXSbgX95quHlp4v/YZZ07L9Gcv8CH
+         zomttamvOFejZ8UKudm+KUTvBCa8rVFCPQBl12+9+cuB0zduzsrCL+2DrLtowJtXeScV
+         MeNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750695492; x=1751300292;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=08GIWol905Tz9t1Y5KR/Px/0Bj/EghmvZQXSpfLZ3xo=;
-        b=uLRm0Ro0YglritJJ+kb8F8MH3Y/hCc9AMIE7o09SizkKht3a73c2un0f5YSUT8wdgj
-         ApKJvoRIlYpxZWQ4zniuAn+DGqx2tMdaUGZQx9kbrV6htZZSASR7pS6fBEpfvHaWip2B
-         aBNyxzr1+iWzDAVUqXyeYwc6iuxAUSIAXHHBvEMhu4EH0H/0HwJMVfvXN8sGgNn7Wl4A
-         +PVQbY+SwJgfcBRN1SRwXtzRJLiDzpk3UNECQjF6w7BKE82rV9pS7zcqbjn8yY6ECtX8
-         fnKv2Mba7i6d1JjdnnVUZVC7sPvMXFX0gaKehWSe42wFpTuV6wu8w2GKizwbreHfAlmZ
-         VPHg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxc3RZIlfqBcIJiRZmOlTxENyJZL92Z5+ynQh7QjB8fFwAwVV9rBZMr56ETDNpIOkHkKPK0zYAcmjTZYA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxl7Ntig1JE+gneyaBTNScC3V86hRZSOnn5fTwJ1BQV5qyxyjMr
-	NGZUq39yscF1UVTENH5Qyi1BIp0ZiulzSrjSXyHQ0+Q6muR9fmiE68RS2GxfzMy75w==
-X-Gm-Gg: ASbGnct9My8NTZEU2KwFrcxCZKzJ9SlT9l/E749ZEH7Jxr45O9YWZ24zq46GiJ9fAr/
-	+u2VHnFLSj0ZqPpJvNiOWV/UhaCJz70J7CC4lpPYIaNFN0f3grpatoSlBG55TaZL+m9WlSYRb2i
-	cjr8RducqpiT3ied5+6WP4S1OfdcVr/Ex3M3RnDZ7LHwNughFNJWW4XNMsXQuEbEBtfE11HzCge
-	VLU4VTh39e69AwMrGOUI8SfWciN3f6K5aM3kjrsjVCtl0kocHDDO4a6EI5XH1Gg7euTDLsaL2gM
-	JjhiWAcctUtgKbTDSQEmBa3gvtb65BPWvRFE64cCMNo0eJKhJWxcVL+Ztvz3frjo
-X-Google-Smtp-Source: AGHT+IGKSt1ZPvM2yYVioJCPzIyELNHZzrEHQ6g9+s79wuGsECQkKe80vWV6dvdNE+yByyUw8mwsHg==
-X-Received: by 2002:a17:907:7250:b0:ad8:8e56:3c5c with SMTP id a640c23a62f3a-ae0578f3e81mr1200596566b.11.1750695491746;
-        Mon, 23 Jun 2025 09:18:11 -0700 (PDT)
-Received: from [192.168.0.114] ([91.196.212.106])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054209ad2sm741886666b.148.2025.06.23.09.18.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 09:18:11 -0700 (PDT)
-From: Jacek Kowalski <jacek@jacekk.info>
-X-Google-Original-From: Jacek Kowalski <Jacek@jacekk.info>
-Message-ID: <8538df94-8ce3-422d-a360-dd917c7e153a@jacekk.info>
-Date: Mon, 23 Jun 2025 18:18:10 +0200
+        d=1e100.net; s=20230601; t=1750695509; x=1751300309;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ueQ2+ddYRZVXMhlg0x6j6v5Cyj80tFqJK0UcyfKVqeo=;
+        b=EPOExArCxMRudd3cXQQ8v7hsB1yvwhC1kVl6CJyMZCFAY92+kGcU+AZWFKeEu+ccjL
+         J8oYz5uvYqqDWw3aDEA9WDZ8Sy5oq9X/3zOGZW7FiZO2dfahXleanaE9hvsl5re0T4TU
+         UuoSYdyxusPIw0fQfyjYIB0MIxo9pqxCXcO1DUKDSXAbrpAQ0vGyFG4ApDP90PX6k4hV
+         te1dHrB2BTa/Dq3Z81btepZ4/Hzs+FO3ocHVlsT/ry6C5DGhiC8eS8l15GYL0/Ixcw03
+         tYU2Q+YwiyD46pz/yeK/YYOc80sFxa5s6K1j1R0tgHsOxYmR3dugtfkYqjXMZB6NNkqK
+         xyAg==
+X-Gm-Message-State: AOJu0YzOwaxkop9Stu20QYxnjG0P8yiBk9lsgSbmryYJ4CZKfVytJKI6
+	HruRO4eX0+P/SHesJVZgE5yy5LO6P6Q6Az6/FlcsfzulSP+8+HVBqMqk
+X-Gm-Gg: ASbGncs3ImbgiqTXxdl1NJYzq3A1A/5d8ALqXON+XdkT6aEUeDwQS9f9uDlWoRjyBlo
+	UPHOn6BfqTz5gD92g8N35/bxn5uwddqZoE+aWd+8XiWmoRyzRlDyflwb8fbjEse/HaBjhLBCNMS
+	Pm0tTxbpHytXzdyFziYZxWPirwtXV0xR3gnnrld555FnOF8+T6ZCfplCGAeZklf3qmABGgTec4r
+	7+eKSOhz8TpCKELteCm6+8IOn8xt7hnXsC+9TEbmwLSY9hThZQMWNl7Nusq6oToyl+Ek5b5q1+w
+	wgJRgS5xDoQzeuPF/16mQx7Uu7JMTdVzJg4VAb+sPAOlqkn47yVr3A1HFczYTg60A5/fK55KUVn
+	JhgiB/zvXiNYkL2viYkifd3IewuQa3/4q
+X-Google-Smtp-Source: AGHT+IEtXTUpnDlA/7jvmi1OzCLNIUdT6JuNcqhGJ2TfN3D2syY9DgJVjqdHAJ+nZh5fXIcDrMxfYg==
+X-Received: by 2002:a05:690c:67c6:b0:710:ea78:8ff with SMTP id 00721157ae682-712c651757dmr189161687b3.23.1750695509428;
+        Mon, 23 Jun 2025 09:18:29 -0700 (PDT)
+Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-712c4b9725esm16298767b3.70.2025.06.23.09.18.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 09:18:28 -0700 (PDT)
+Date: Mon, 23 Jun 2025 12:18:28 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Cc: linux-kernel@vger.kernel.org,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Dave Martin <dave.martin@arm.com>, fenghuay@nvidia.com
+Subject: Re: [PATCH v2] cpumask: Remove unnecessary cpumask_nth_andnot()
+Message-ID: <aFl-VCOMa7N6AtmF@yury>
+References: <20250623074650.3534184-1-tan.shaopeng@jp.fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] e1000e: ignore factory-default checksum value on
- TGP platform
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Vlad URSU <vlad@ursu.me>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <fe064a2c-31d6-4671-ba30-198d121782d0@jacekk.info>
- <b7856437-2c74-4e01-affa-3bbc57ce6c51@jacekk.info>
-Content-Language: en-US
-In-Reply-To: <b7856437-2c74-4e01-affa-3bbc57ce6c51@jacekk.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623074650.3534184-1-tan.shaopeng@jp.fujitsu.com>
 
-Vlad,
+On Mon, Jun 23, 2025 at 04:46:45PM +0900, Shaopeng Tan wrote:
+> Commit 94f753143028("x86/resctrl: Optimize cpumask_any_housekeeping()")
+> switched the only user of cpumask_nth_andnot() to other cpumask
+> functions, but left the function cpumask_nth_andnot() unused.
+> This makes function find_nth_andnot_bit() unused as well. Delete them.
+> 
+> Signed-off-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 
-could you verify that the following patch works for you?
+Applied in bitmap-for-next. Thanks!
 
-> diff --git a/drivers/net/ethernet/intel/e1000e/defines.h b/drivers/net/ethernet/intel/e1000e/defines.h
-> index 8294a7c4f122..01696eb8dace 100644
-> --- a/drivers/net/ethernet/intel/e1000e/defines.h
-> +++ b/drivers/net/ethernet/intel/e1000e/defines.h
-> @@ -637,6 +637,7 @@
+> ---
+>  include/linux/cpumask.h | 16 ----------------
+>  include/linux/find.h    | 27 ---------------------------
+>  2 files changed, 43 deletions(-)
+> 
+> diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+> index 7ae80a7ca81e..498790f74fa8 100644
+> --- a/include/linux/cpumask.h
+> +++ b/include/linux/cpumask.h
+> @@ -546,22 +546,6 @@ unsigned int cpumask_nth_and(unsigned int cpu, const struct cpumask *srcp1,
+>  				small_cpumask_bits, cpumask_check(cpu));
+>  }
 >  
->  /* For checksumming, the sum of all words in the NVM should equal 0xBABA. */
->  #define NVM_SUM                    0xBABA
-> +#define NVM_SUM_FACTORY_DEFAULT    0xFFFF
+> -/**
+> - * cpumask_nth_andnot - get the Nth cpu set in 1st cpumask, and clear in 2nd.
+> - * @srcp1: the cpumask pointer
+> - * @srcp2: the cpumask pointer
+> - * @cpu: the Nth cpu to find, starting from 0
+> - *
+> - * Return: >= nr_cpu_ids if such cpu doesn't exist.
+> - */
+> -static __always_inline
+> -unsigned int cpumask_nth_andnot(unsigned int cpu, const struct cpumask *srcp1,
+> -							const struct cpumask *srcp2)
+> -{
+> -	return find_nth_andnot_bit(cpumask_bits(srcp1), cpumask_bits(srcp2),
+> -				small_cpumask_bits, cpumask_check(cpu));
+> -}
+> -
+>  /**
+>   * cpumask_nth_and_andnot - get the Nth cpu set in 1st and 2nd cpumask, and clear in 3rd.
+>   * @srcp1: the cpumask pointer
+> diff --git a/include/linux/find.h b/include/linux/find.h
+> index 5a2c267ea7f9..dc93fc35dcac 100644
+> --- a/include/linux/find.h
+> +++ b/include/linux/find.h
+> @@ -267,33 +267,6 @@ unsigned long find_nth_and_bit(const unsigned long *addr1, const unsigned long *
+>  	return __find_nth_and_bit(addr1, addr2, size, n);
+>  }
 >  
->  /* PBA (printed board assembly) number words */
->  #define NVM_PBA_OFFSET_0           8
-> diff --git a/drivers/net/ethernet/intel/e1000e/nvm.c b/drivers/net/ethernet/intel/e1000e/nvm.c
-> index e609f4df86f4..37cbf9236d84 100644
-> --- a/drivers/net/ethernet/intel/e1000e/nvm.c
-> +++ b/drivers/net/ethernet/intel/e1000e/nvm.c
-> @@ -558,6 +558,11 @@ s32 e1000e_validate_nvm_checksum_generic(struct e1000_hw *hw)
->  		checksum += nvm_data;
->  	}
->  
-> +	if (hw->mac.type == e1000_pch_tgp && checksum == (u16)NVM_SUM_FACTORY_DEFAULT) {
-> +		e_dbg("Factory-default NVM Checksum on TGP platform - ignoring\n");
-> +		return 0;
-> +	}
-> +
->  	if (checksum != (u16)NVM_SUM) {
->  		e_dbg("NVM Checksum Invalid\n");
->  		return -E1000_ERR_NVM;
-
--- 
-Best regards,
-  Jacek Kowalski
+> -/**
+> - * find_nth_andnot_bit - find N'th set bit in 2 memory regions,
+> - *			 flipping bits in 2nd region
+> - * @addr1: The 1st address to start the search at
+> - * @addr2: The 2nd address to start the search at
+> - * @size: The maximum number of bits to search
+> - * @n: The number of set bit, which position is needed, counting from 0
+> - *
+> - * Returns the bit number of the N'th set bit.
+> - * If no such, returns @size.
+> - */
+> -static __always_inline
+> -unsigned long find_nth_andnot_bit(const unsigned long *addr1, const unsigned long *addr2,
+> -				unsigned long size, unsigned long n)
+> -{
+> -	if (n >= size)
+> -		return size;
+> -
+> -	if (small_const_nbits(size)) {
+> -		unsigned long val =  *addr1 & (~*addr2) & GENMASK(size - 1, 0);
+> -
+> -		return val ? fns(val, n) : size;
+> -	}
+> -
+> -	return __find_nth_andnot_bit(addr1, addr2, size, n);
+> -}
+> -
+>  /**
+>   * find_nth_and_andnot_bit - find N'th set bit in 2 memory regions,
+>   *			     excluding those set in 3rd region
+> -- 
+> 2.43.5
