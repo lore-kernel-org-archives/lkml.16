@@ -1,201 +1,131 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094671DE2A8
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 06:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA6D1D2F42
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 06:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750659694; cv=none; b=SgAd2Gi9FCi/3EVbg+lHbE6R13xHNczpH/gqTY+DXFZimf0Mt8CPw6AciwBwwh9JJgruTbR0Tgi/W8fsPXQh/ijFIZ9GG6avYHDlRSHTlPUEg+BVFwR9tuIFx3XhWQCmF895J9sKFkchrLwMpg5S3a/y52BW5GDo/eYpZRGFjvE=
+	t=1750659736; cv=none; b=lSn/7xMHErx+k0f9A4K+t/dBdpPGcrFuIGa+Mkx+UcsqMhNDWUPkCQJDuIogtE6DTVMq0qZijdqqdikVeA0qFPr0d1d1I/GbK4AOgsBtJSxknyLvVIXzp3ypjl6QhdbVmosX6/56NrRXQM8bgD2DR1OugeQom2FiQQ+EIcFYfyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750659694; c=relaxed/simple;
-	bh=S+lNeumD5H26uvwBaO1T9jxSaUHSIdHOJ7k2YDYX5ko=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=imeGLXlkREepWU50m35QrFq+ae0xSu1OfHsKdNri/Cc2Q3Bg8BIR0zOQiGfuW37l5WaXn38TRmpFk9aaI8eUIb+/rtRASfA5nMMg1Aii1y0fQEN75xe1fhj2PaXkEAASC6mvoIaOVRSO0q6j7tvTD8mPqULCt+M4cC6J9u4FO58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Oi1fKtdQ; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1750659736; c=relaxed/simple;
+	bh=0GviJ4C43LDU6PSrh2071vRUi2rtBfBORn6lykbuEsE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TvFnMGl+dAca73KiAspENyWGpvH2TqK0T19ZbzUC025P7vnvxXKs/TUUmPBExaZCSsFZDR3ZzYjKSAIcp1kY3OMC5fsxYt/jvJa4cwEK1hxZDiLkYHusnYfn3/lcm/MHHkP9zo+DqQ3e+0Q/U959mytcm/CMAttyCFIN7B8DuyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u+oJqfox; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Oi1fKtdQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750659689;
-	bh=S+lNeumD5H26uvwBaO1T9jxSaUHSIdHOJ7k2YDYX5ko=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Oi1fKtdQPGMEkUueIz6ysRvX8eHqYDjvTnWVx7KWdb0ZvZZFn8J20VTXlIwQD7HzW
-	 aMo0dCM1vDxoijZBKkLgJh/Qg6IyhZN15f7BfVsTO+PuRSGQ0jurF9PPWL8eU/Boom
-	 mWXGEAB8bjagDEbd5mTPCHFxrAj6gRRCDISSFQtUVaNNeiGRgIWCbHvj+XbVmuLAp2
-	 9qOAHRptO6K3RRKTYHbvH5ba+H925sWAuLzg7r8VhVKZQAy6MHpk4xA+9Z9xlRbF9c
-	 1lxVoINs9CgNkBbjX3QGAHH+wgSg6o6cuSF9o27e1t5axiPqxOUwGr8eTa4SIp15V6
-	 ZMlnoY6tuCe/A==
-Received: from fedora (unknown [IPv6:2a01:e0a:2c:6930:16f1:973:959b:9b0c])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 96F0417E0EC0;
-	Mon, 23 Jun 2025 08:21:28 +0200 (CEST)
-Date: Mon, 23 Jun 2025 08:21:22 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Chia-I Wu <olvaffe@gmail.com>
-Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] panthor: save panthor_file in panthor_group
-Message-ID: <20250623082122.62f69579@fedora>
-In-Reply-To: <20250620235053.164614-3-olvaffe@gmail.com>
-References: <20250620235053.164614-1-olvaffe@gmail.com>
-	<20250620235053.164614-3-olvaffe@gmail.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u+oJqfox"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3135f3511bcso3942081a91.0
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 23:22:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750659733; x=1751264533; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZjaVo7z5thcmzA/Idtk2W4NhEJVEWcJtCaNKpGwgS2c=;
+        b=u+oJqfoxE1BDc1eJwUUis1/T12Yqa9kCGnmN2ISJ6NGL4Y90YTjNpLcrHWi2vC7sRN
+         V7k7BJyQhMSUMtHnH7VwPrTi0ApD257hQSBDPWlbwRnnmV8VWzNUqcZH8U11ZKU+pE6D
+         hW1qhi+Kr7GNBRRFQi35gamyh6WI7ysOV4gxCoI2xvX0CiY24IsIjPSklaXOQyTBaDYC
+         knHRmrkvJebx7VBrgNq6a2PDzN/2Bx/t52idVdQU1St5ukmK1HArRMG54H3zBrnzHQV4
+         QECnIgveaWKpT8qVfotGB5w3LBcIoVxWX+EHnrjCPB5r7gRk42Uw1BMb7mGARpZN5WKx
+         mqAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750659733; x=1751264533;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZjaVo7z5thcmzA/Idtk2W4NhEJVEWcJtCaNKpGwgS2c=;
+        b=EK9xxcxlgycyrZ3Zx4MIpJKA7TFtlVrjvLE+iiJMw7Dvaed9HBMgBhuRlTet/wfxfe
+         vfDf+wYMgKZXaw0N2b0WkbTLY8oV8U52jjEBox7jRvhX+psSwSjBJHOMOxBtlxxaUJvC
+         8HGNnJb2S6UNgt6d05D4tj+p3izE3dHM9GGBfoKfPQF7NmDEH7SATcA6Yvs+05bm4CGc
+         1t2SjTynsDDX2Rl6joTltXoMMkHXVEA901y7Sbs4mF0MKVnRJgCV5QNpwTOKFl9xJ4VM
+         pHHm8a/8SKtcMm61JEu7MWXCXR1J0Gdnesh6sLWyURj1HakwR02xOwPOGhLvdJ0uwsHJ
+         zsZg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpHQqY3oWcC42SajN/ZtFp+lDqiqpiD9TcY31z+dhvnmuwefmQ1vd+k7rkaHJ8zVFwlrR+J1dCnwJR3KI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQDADR1Hwv45L80kQnYLcbItrPUgAJFueKQMcp4wztZo1NGkMD
+	D+rJq/kXiO2q7d69Woy2T7UvWuebdmqZ+LCFMaSKJ4S2t5tVx7ZQrgNO+7Hjr4hbCH8=
+X-Gm-Gg: ASbGnctnQ0n8A20AWWHVXvN40eANtzJcp14/YTUIfam/QxIQZivJ3w1lvUvyXMMvIfN
+	zbjUx41ZUwJQH7s4mY0hqGCESO8nJCqESzyxpxspW5ncXHv3bIpLayf7bOZWZKM9RmgCV/92l0O
+	Gg0BZ0nhD6rDgvR7ghhZy7AS+Z/P+meXuCEia4C+1TW9HU6g8d99sCfHJZ2XgkKEHHZoihbHyeC
+	vnKZUFAfXtJmtc5psFAcF9JZqbVWTtzvr2CME7MDYJGHrXOes/2Kc88NcT//kvt4upN3lbLfce0
+	fflUvTTLa7It5u9EpWOoGz9ZTozIdQQypghdZJ5U4+yKeb+1Rt4CXrUBSbfubxc=
+X-Google-Smtp-Source: AGHT+IHTC8DDc643Bby1AguMJbpjpU8RoaZSO7asfpNMZjv5HFpnG7zervZfVFZEkHAcEV/Plpb2eg==
+X-Received: by 2002:a17:90b:1fcc:b0:311:b0ec:135b with SMTP id 98e67ed59e1d1-3159d8d6282mr19886141a91.24.1750659733212;
+        Sun, 22 Jun 2025 23:22:13 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d860a3c9sm75875175ad.95.2025.06.22.23.22.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Jun 2025 23:22:12 -0700 (PDT)
+Date: Mon, 23 Jun 2025 11:52:10 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Michal Rostecki <vadorovsky@protonmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Jens Axboe <axboe@kernel.dk>, Benno Lossin <lossin@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
+	Breno Leitao <leitao@debian.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	llvm@lists.linux.dev, linux-pci@vger.kernel.org,
+	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v12 4/5] rust: replace `kernel::c_str!` with C-Strings
+Message-ID: <20250623062210.she33z5hfouu5jgj@vireshk-i7>
+References: <20250619-cstr-core-v12-0-80c9c7b45900@gmail.com>
+ <20250619-cstr-core-v12-4-80c9c7b45900@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619-cstr-core-v12-4-80c9c7b45900@gmail.com>
 
-On Fri, 20 Jun 2025 16:50:51 -0700
-Chia-I Wu <olvaffe@gmail.com> wrote:
+On 19-06-25, 11:06, Tamir Duberstein wrote:
+>  drivers/cpufreq/rcpufreq_dt.rs        |  5 ++---
+>  rust/kernel/clk.rs                    |  6 ++----
+>  rust/kernel/cpufreq.rs                |  3 +--
 
-> We would like to access panthor_file from panthor_group on gpu errors.
-> Because panthour_group can outlive drm_file, add refcount to
-> panthor_file to ensure its lifetime.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-I'm not a huge fan of refcounting panthor_file because people tend to
-put resource they expect to be released when the last handle goes away,
-and if we don't refcount these sub-resources they might live longer
-than they are meant to. Also not a huge fan of the circular referencing
-that exists between file and groups after this change.
-
-How about we move the process info to a sub-object that's refcounted
-and let both panthor_file and panthor_group take a ref on this object
-instead?
-
-> 
-> Signed-off-by: Chia-I Wu <olvaffe@gmail.com>
-> ---
->  drivers/gpu/drm/panthor/panthor_device.h | 16 ++++++++++++++++
->  drivers/gpu/drm/panthor/panthor_drv.c    | 15 ++++++++++++++-
->  drivers/gpu/drm/panthor/panthor_mmu.c    |  1 +
->  drivers/gpu/drm/panthor/panthor_sched.c  |  6 ++++++
->  4 files changed, 37 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/panthor/panthor_device.h b/drivers/gpu/drm/panthor/panthor_device.h
-> index 4fc7cf2aeed57..75ae6fd3a5128 100644
-> --- a/drivers/gpu/drm/panthor/panthor_device.h
-> +++ b/drivers/gpu/drm/panthor/panthor_device.h
-> @@ -256,8 +256,24 @@ struct panthor_file {
->  
->  	/** @stats: cycle and timestamp measures for job execution. */
->  	struct panthor_gpu_usage stats;
-> +
-> +	/** @refcount: ref count of this file */
-> +	struct kref refcount;
->  };
->  
-> +static inline struct panthor_file *panthor_file_get(struct panthor_file *pfile)
-> +{
-> +	kref_get(&pfile->refcount);
-> +	return pfile;
-> +}
-> +
-> +void panthor_file_release(struct kref *kref);
-> +
-> +static inline void panthor_file_put(struct panthor_file *pfile)
-> +{
-> +	kref_put(&pfile->refcount, panthor_file_release);
-> +}
-> +
->  int panthor_device_init(struct panthor_device *ptdev);
->  void panthor_device_unplug(struct panthor_device *ptdev);
->  
-> diff --git a/drivers/gpu/drm/panthor/panthor_drv.c b/drivers/gpu/drm/panthor/panthor_drv.c
-> index 775a66c394544..aea9609684b77 100644
-> --- a/drivers/gpu/drm/panthor/panthor_drv.c
-> +++ b/drivers/gpu/drm/panthor/panthor_drv.c
-> @@ -1393,6 +1393,16 @@ static int panthor_ioctl_set_user_mmio_offset(struct drm_device *ddev,
->  	return 0;
->  }
->  
-> +void panthor_file_release(struct kref *kref)
-> +{
-> +	struct panthor_file *pfile =
-> +		container_of(kref, struct panthor_file, refcount);
-> +
-> +	WARN_ON(pfile->vms || pfile->groups);
-> +
-> +	kfree(pfile);
-> +}
-> +
->  static int
->  panthor_open(struct drm_device *ddev, struct drm_file *file)
->  {
-> @@ -1426,6 +1436,8 @@ panthor_open(struct drm_device *ddev, struct drm_file *file)
->  	if (ret)
->  		goto err_destroy_vm_pool;
->  
-> +	kref_init(&pfile->refcount);
-> +
->  	file->driver_priv = pfile;
->  	return 0;
->  
-> @@ -1442,10 +1454,11 @@ panthor_postclose(struct drm_device *ddev, struct drm_file *file)
->  {
->  	struct panthor_file *pfile = file->driver_priv;
->  
-> +	/* destroy vm and group handles now to avoid circular references */
->  	panthor_group_pool_destroy(pfile);
->  	panthor_vm_pool_destroy(pfile);
->  
-> -	kfree(pfile);
-> +	panthor_file_put(pfile);
->  }
->  
->  static const struct drm_ioctl_desc panthor_drm_driver_ioctls[] = {
-> diff --git a/drivers/gpu/drm/panthor/panthor_mmu.c b/drivers/gpu/drm/panthor/panthor_mmu.c
-> index b39ea6acc6a96..ccbcfe11420ac 100644
-> --- a/drivers/gpu/drm/panthor/panthor_mmu.c
-> +++ b/drivers/gpu/drm/panthor/panthor_mmu.c
-> @@ -1604,6 +1604,7 @@ void panthor_vm_pool_destroy(struct panthor_file *pfile)
->  
->  	xa_destroy(&pfile->vms->xa);
->  	kfree(pfile->vms);
-> +	pfile->vms = NULL;
->  }
->  
->  /**
-> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
-> index a2248f692a030..485072904cd7d 100644
-> --- a/drivers/gpu/drm/panthor/panthor_sched.c
-> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
-> @@ -535,6 +535,9 @@ struct panthor_group {
->  	/** @ptdev: Device. */
->  	struct panthor_device *ptdev;
->  
-> +	/** @pfile: File this group is created from. */
-> +	struct panthor_file *pfile;
-> +
->  	/** @vm: VM bound to the group. */
->  	struct panthor_vm *vm;
->  
-> @@ -919,6 +922,7 @@ static void group_release_work(struct work_struct *work)
->  	panthor_kernel_bo_destroy(group->syncobjs);
->  
->  	panthor_vm_put(group->vm);
-> +	panthor_file_put(group->pfile);
->  	kfree(group);
->  }
->  
-> @@ -3467,6 +3471,8 @@ int panthor_group_create(struct panthor_file *pfile,
->  	INIT_WORK(&group->tiler_oom_work, group_tiler_oom_work);
->  	INIT_WORK(&group->release_work, group_release_work);
->  
-> +	group->pfile = panthor_file_get(pfile);
-> +
->  	group->vm = panthor_vm_pool_get_vm(pfile->vms, group_args->vm_id);
->  	if (!group->vm) {
->  		ret = -EINVAL;
-
+-- 
+viresh
