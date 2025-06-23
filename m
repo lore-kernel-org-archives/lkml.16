@@ -1,145 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A451C84D2;
-	Mon, 23 Jun 2025 17:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8961C84D2
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 17:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750699162; cv=none; b=ae8RlpSlMcKJ/d4u+sGZBcCh0q5cs1P/4eAlGbQqyya7DUaj3FNjs4JF/OgEwCrDztmRjI9GDxLB68PCZjObITGchDBzT0Y5BUuDtjarfRTpSme6DzaK7Pf1W6PqnLpghDjL/aiB3pzoWp4YbKblATIiW5OH3t6xQpCj78XD1P4=
+	t=1750699242; cv=none; b=M83mqwcEpRGxZIX39auF3M6uNXdE/FNd46kayAdNabWQq8nGVMEkRvv8HraLB2EWdh/i5Bm49N3w/ftAX7ZULmFXx4eXENWv/VBSX38in0HWtfu/RzzkMFsvf+Hbklc9DYFN8Ekr4a/Bgok2N2ZL7tqfsWKqfnwH1AoT1MS/qiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750699162; c=relaxed/simple;
-	bh=chsg6qxkKFFdpB+SOietLh5gD1Uz4tT6FryWURP8s9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OoOxYkecDRtLAm1BMCcMcTPVBV00/Ctv+cOOAGIO2y2xH61nnUHK5kmoKRC1xa0hAhjdsNxJ2TcJ13F2Un4rQ7k11AekQ0H0d/9QhpQyW4gtUkn6l6r9K2dZGVjVhg6eqewnciheuwRbZ0CFEOeLH0XR6zH4zeW9IikpT0Mt3qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jY7BTott; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750699242; c=relaxed/simple;
+	bh=ol71yk5Hcmk0NhGEqwcSe1fTrTOdq3bwG64vkdTfS60=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=plDZdezMFft18o0DYpNd/xRx+DV7p0F7/Yk37Igu/Uhkk8Z94QuR1AhoXiuimVu1/i4cHXlr+EKt+BJNIPq8PS5B+WZDLmVMXJwAPMiIpg5xHudKC5UVH3zWqleoINaIJs8A4+FY9Xji23pAN7LkCk00FvUbC+7MM+b7WKI0Htk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A/Mlnk+m; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jY7BTott"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE54C4CEEA;
-	Mon, 23 Jun 2025 17:19:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750699161;
-	bh=chsg6qxkKFFdpB+SOietLh5gD1Uz4tT6FryWURP8s9k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jY7BTottz7L4L2kAucQnKwH+2lq8sxPkRngSzGRJTPfRgIrJ4jHICUKRZ+2b5wW3J
-	 3DqhYDrREhQkhvjDsIC2PHVw188+Gu6NGg66EJENyqq/JpOxPeIVYEqJA4n7AXUfBe
-	 YxZY9K0J/SR9h1OOccy3JD1WMclyID46f2YjQPu+thTZcidoNVoZKXwy1lomkKFKRn
-	 Z4Y3M7Ib20bkDkSIOGmH6o6Lrw32mVoJhDjfCMDkB9aCmD90SpWsauvTAgBcv17sZE
-	 5kbVKgpcR4aZM/XbWeK2mL0JsfpoDz27yFrA8FSkjtY9p/Fipmvx5Qml5UYrVxOyEr
-	 aL9mmnAMoWzRg==
-Date: Mon, 23 Jun 2025 10:19:20 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
- <horms@kernel.org>, kernel@pengutronix.de, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH net-next v4 0/4] net: selftest: improve test string
- formatting and checksum handling
-Message-ID: <20250623101920.69d5c731@kernel.org>
-In-Reply-To: <aFk-Za778Bk38Dxn@pengutronix.de>
-References: <20250515083100.2653102-1-o.rempel@pengutronix.de>
-	<20250516184510.2b84fab4@kernel.org>
-	<aFU9o5F4RG3QVygb@pengutronix.de>
-	<20250621064600.035b83b3@kernel.org>
-	<aFk-Za778Bk38Dxn@pengutronix.de>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A/Mlnk+m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750699239;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FUTCLfxa/GJlejCeDGSbw2C8zKhkZlTCU7NYv1Imp18=;
+	b=A/Mlnk+moDXGa/cAn+a02NnnjxUqhtp4k1tc4tofc/ENsafAvusOakAnNOJdqFE5HYHN8D
+	VneX+7GXWNqDl7GBYVSMUjg8PhvTHytilIBseFXnZ93Datjw2ZPe1d9xgUbIVOLE/EOjKm
+	FOdjw+7M3eMUs3sF29H1UcMIeH5nnyM=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-279-HvazVdnOMXyttGFPGOIYOw-1; Mon, 23 Jun 2025 13:20:38 -0400
+X-MC-Unique: HvazVdnOMXyttGFPGOIYOw-1
+X-Mimecast-MFC-AGG-ID: HvazVdnOMXyttGFPGOIYOw_1750699238
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4a44e608379so131764781cf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:20:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750699238; x=1751304038;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FUTCLfxa/GJlejCeDGSbw2C8zKhkZlTCU7NYv1Imp18=;
+        b=HyPMcN/pxLi6/PmWsgfKsB7HPI4NHIxs19C3uq3iMWJx3Hn7MZf25gUmIScwMZwRbs
+         OxK6wNLiZF9de2UO/4/u4EhCekshEwbaCBxdFsGxtsRke+eM87Ki1Hg4edu21VcgrbyG
+         pi6YLiJcuFLZ92um40JyZ4GzOX+I9liGDThfozjzLpkqlSpOfFahS8pGtSgS1Xmso5Hg
+         9Axqvs+mx15RUfcr1RK2kzQKhB5WdSWk0tFvSm6gHWWEreR87QTqpR7Ks2cpbbUmv0UT
+         8HcB1+KIdyJHCmavB0oRp9zbTUq3ctLcPQkKpIe72rrfTorGIAgk5TV5fb4SvPerZp4t
+         Ejng==
+X-Forwarded-Encrypted: i=1; AJvYcCUXE0DWGtzVN/1SaxpiZOeMwOpPX90shYwBzpRIb1fNQdHXGhFIFCRyey0/jgKHCGyzA48bQYkugxtkJ+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywrp+W4SNKy27Z+idXlqa55id4x+C7BQazam+cwEWxC0CAVdA7L
+	QHtajt9UbtjklIIwZR3eXOzy3y6E44N/MYT1RKY22QPjYnN+cw4jOGQ0zV9WomjBoYldR7/F0tJ
+	p9EyF5xdjheYQ4txux8Kj2GpFacb2OjDbTXUEJ5DRNg6MHTOie9bSZ9RpdnunuGEkqw==
+X-Gm-Gg: ASbGncvt4MkzAVk2W+TeEZ55gus0NPJrUQ6a8VQXBt2lT/jRyazEBx3T8UZR/cO3pt1
+	ZdfP5HTTPdr7KhHGzY20EalWx8hWIl8Oc7IZhBVq8UonB36LzuoKOpjlWrdA49biPRIfHXuGg5X
+	6beXmzHF3563GDtsYW8Lfe8m8Oc5g1SXX77C8AGp1NcxClL5RgFPDhM+Z76fxk4YjKhqtlfU5hn
+	n/dT083tp/E/+bFEApIfc2/5TpjKWqoqsC4AgKLQm0lK8AFaUTqtzKHwXyXT58sKMX/tOwDLSX7
+	h/FWcjihTbrcAQ==
+X-Received: by 2002:a05:622a:81:b0:4a4:2d36:51cc with SMTP id d75a77b69052e-4a77a24bc8dmr232678311cf.14.1750699237606;
+        Mon, 23 Jun 2025 10:20:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE4wi9tQAc/9yif3JCRlqRs0yHTLl1j19VTwOMdX0XNBBM+LuCzlVmiA8DDT3807WworT2SIg==
+X-Received: by 2002:a05:622a:81:b0:4a4:2d36:51cc with SMTP id d75a77b69052e-4a77a24bc8dmr232677781cf.14.1750699237252;
+        Mon, 23 Jun 2025 10:20:37 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a779e5d262sm40388491cf.50.2025.06.23.10.20.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 10:20:36 -0700 (PDT)
+Date: Mon, 23 Jun 2025 13:20:33 -0400
+From: Peter Xu <peterx@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Nikita Kalyazin <kalyazin@amazon.com>,
+	Hugh Dickins <hughd@google.com>, Oscar Salvador <osalvador@suse.de>,
+	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	Ujwal Kundur <ujwal.kundur@gmail.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	James Houghton <jthoughton@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Axel Rasmussen <axelrasmussen@google.com>
+Subject: Re: [PATCH 1/4] mm: Introduce vm_uffd_ops API
+Message-ID: <aFmM4XXTC6gEmdR-@x1.local>
+References: <20250620190342.1780170-1-peterx@redhat.com>
+ <20250620190342.1780170-2-peterx@redhat.com>
+ <1e6fcebf-f74e-46ad-912b-d7df13527aea@redhat.com>
+ <aFld0LpB429q9oCT@x1.local>
+ <0126fa5f-b5aa-4a17-80d6-d428105e45c7@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <0126fa5f-b5aa-4a17-80d6-d428105e45c7@redhat.com>
 
-On Mon, 23 Jun 2025 13:45:41 +0200 Oleksij Rempel wrote:
-> On Sat, Jun 21, 2025 at 06:46:00AM -0700, Jakub Kicinski wrote:
-> > On Fri, 20 Jun 2025 12:53:23 +0200 Oleksij Rempel wrote:
-> > > Let me first describe the setup where this issue was observed and my findings.
-> > > The problem occurs on a system utilizing a Microchip DSA driver with an STMMAC
-> > > Ethernet controller attached to the CPU port.
+On Mon, Jun 23, 2025 at 06:50:42PM +0200, David Hildenbrand wrote:
+> On 23.06.25 15:59, Peter Xu wrote:
+> > On Mon, Jun 23, 2025 at 10:25:33AM +0200, David Hildenbrand wrote:
+> > > On 20.06.25 21:03, Peter Xu wrote:
 > > > 
-> > > In the current selftest implementation, the TCP checksum validation fails,
-> > > while the UDP test passes. The existing code prepares the skb for hardware
-> > > checksum offload by setting skb->ip_summed = CHECKSUM_PARTIAL. For TCP, it sets
-> > > the thdr->check field to the complement of the pseudo-header checksum, and for
-> > > UDP, it uses udp4_hwcsum. If I understand it correct, this configuration tells
-> > > the kernel that the hardware should perform the checksum calculation.
-> > > 
-> > > However, during testing, I noticed that "rx-checksumming" is enabled by default
-> > > on the CPU port, and this leads to the TCP test failure.  Only after disabling
-> > > "rx-checksumming" on the CPU port did the selftest pass. This suggests that the
-> > > issue is specifically related to the hardware checksum offload mechanism in
-> > > this particular setup. The behavior indicates that something on the path
-> > > recalculated the checksum incorrectly.  
+> > > Hi Peter,
 > > 
-> > Interesting, that sounds like the smoking gun. When rx-checksumming 
-> > is enabled the packet still reaches the stack right?  
-> 
-> No. It looks like this packets are just silently dropped, before they was
-> seen by the stack. The only counter which confirms presence of this
-> frames is HW specific mmc_rx_tcp_err. But it will be increasing even if
-> rx-checksumming is disabled and packets are forwarded to the stack.
-
-If you happen to have the docs for the STMMAC instantiation in the SoC
-it'd be good to check if discarding frames with bad csum can be
-disabled. Various monitoring systems will expect the L4 checksum errors
-to appear in nstat, not some obscure ethtool -S counter.
-
-> > If so does the frame enter the stack with CHECKSUM_COMPLETE or
-> > UNNECESSARY?  
-> 
-> If rx-checksumming is enabled and packet has supported ethertype,
-> then CHECKSUM_UNNECESSARY will be set. Otherwise CHECKSUM_NONE.
-> 
-> > > When examining the loopbacked frames, I observed that the TCP checksum was
-> > > incorrect. Upon further investigation, the xmit helper in net/dsa/tag_ksz.c
-> > > includes the following:
-> > > 
-> > > if (skb->ip_summed == CHECKSUM_PARTIAL && skb_checksum_help(skb))
-> > >     return NULL;
-> > > 
-> > > I assume skb_checksum_help() is intended to calculate the proper checksum when
-> > > CHECKSUM_PARTIAL is set, indicating that the software should complete the
-> > > checksum before handing it to the hardware. My understanding is that the STMMAC
-> > > hardware then calculates the checksum for egress frames if CHECKSUM_PARTIAL is
-> > > used.  
+> > Hey David,
 > > 
-> > stmmac shouldn't touch the frame, note that skb_checksum_help() sets
-> > skb->ip_summed = CHECKSUM_NONE; so the skb should no longer be considered
-> > for csum offload.  
+> > > 
+> > > > Introduce a generic userfaultfd API for vm_operations_struct, so that one
+> > > > vma, especially when as a module, can support userfaults without modifying
+> > > 
+> > > The sentence is confusing ("vma ... as a module").
+> > > 
+> > > Did you mean something like ".. so that a vma that is backed by a
+> > > special-purpose in-memory filesystem like shmem or hugetlb can support
+> > > userfaultfd without modifying the uffd core; this is required when the
+> > > in-memory filesystem is built as a module."
+> > 
+> > I wanted to avoid mentioning of "in-memory file systems" here.
 > 
-> It looks like skb_checksum_help(), which is used in tag_ksz.c, generates
-> a TCP checksum without accounting for the IP pseudo-header. The
-> resulting checksum is then incorrect and is filtered out by the STMMAC
-> HW on ingress
-
-The pseudo-header csum is filled in net_test_get_skb(), where it calls
-tcp_v4_check(). But I think you're right, it's incorrect. Could you try:
-
-diff --git a/net/core/selftests.c b/net/core/selftests.c
-index 35f807ea9952..1166dd1ddb07 100644
---- a/net/core/selftests.c
-+++ b/net/core/selftests.c
-@@ -160,8 +160,10 @@ static struct sk_buff *net_test_get_skb(struct net_device *ndev,
-        skb->csum = 0;
-        skb->ip_summed = CHECKSUM_PARTIAL;
-        if (attr->tcp) {
--               thdr->check = ~tcp_v4_check(skb->len, ihdr->saddr,
--                                           ihdr->daddr, 0);
-+               int l4len;
-+
-+               l4len = skb->tail - skb_transport_header(skb);
-+               thdr->check = ~tcp_v4_check(l4len, ihdr->saddr, ihdr->daddr, 0);
-                skb->csum_start = skb_transport_header(skb) - skb->head;
-                skb->csum_offset = offsetof(struct tcphdr, check);
-        } else {
-
-Or some such?
-
-> If I generate the checksum manually by combining the result of
-> skb_checksum() with the csum_tcpudp_magic() function - I get a different
-> checksum from the skb_checksum_help() result, which is then not dropped
-> by STMMAC on ingress.
+> I thought one of the challenges of supporting guest_memfd on anything that
+> is not a special in-memory file system is also related to how the pagecache
+> handles readahead.
 > 
-> Should tag_ksz.c use a different helper function instead of
-> skb_checksum_help()?
+> So ...
+
+See uffd_disable_fault_around(). We should make sure no such happens into
+pgtables when some special type of file is suppoorted, if it ever happens,
+besides shmem.  IIUC readahead on page caches are fine for non-MISSING
+traps.  So a file can support MINOR, for example, but then it'll also need
+to make sure all those aspected are well considered.
+
+> 
+> > 
+> > How about an updated commit like this?
+> > 
+> >    Currently, most of the userfaultfd features are implemented directly in the
+> >    core mm.  It will invoke VMA specific functions whenever necessary.  So far
+> >    it is fine because it almost only interacts with shmem and hugetlbfs.
+> > 
+> >    This patch introduces a generic userfaultfd API for vm_operations_struct,
+> >    so that any type of file (including kernel modules that can be compiled
+> >    separately from the kernel core) can support userfaults without modifying
+> >    the core files.
+> 
+> .... is it really "any file" ? I doubt it, but you likely have a better idea
+> on how it all could just work with "any file".
+> 
+> > 
+> >    After this API applied, if a module wants to support userfaultfd, the
+> >    module should only need to touch its own file and properly define
+> >    vm_uffd_ops, instead of changing anything in core mm.
+> > 
+> >    ...
+> 
+> Talking about files and modules is still confusing I'm afraid. It's really a
+> special-purpose file (really, not any ordinary files on ordinary
+> filesystems), no?
+
+One major reason I wanted to avoid the term "in-memory" is that we already
+support most of the files on WP_ASYNC, so emphasizing on in-memory might be
+misleading, even though WP_ASYNC isn't much taken into the picture of the
+vm_uffd_ops being proposed.
+
+The other thing is, besides the original form of userfaultfd (which is the
+MISSING traps), almost all the rest (sync-wp, continue, poison, maybe even
+MOVE but that's still more special) should be at least logically doable on
+most of the files like WP_ASYNC.  When proposing this API, I wanted to make
+it as generic as possible when people reading about it.  Hope that makes
+sense.
+
+Thanks,
+
+-- 
+Peter Xu
+
