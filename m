@@ -1,245 +1,108 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9412BCF46;
-	Mon, 23 Jun 2025 17:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC34A2C15A7;
+	Mon, 23 Jun 2025 17:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750699882; cv=none; b=ZCbJUViuW8Q7yOyjaR9Xo+kvgifsADM2pXvI1rLp+7welOVb2T35GMfqGs820TRv7R9FbW6ks78Iyulqs1rnFjEHN4J4m8voNKNKIVACQkbY2sXEv6rXI2Arj2i+51AcRrYbmdsJCrS2xjHrz5nEE9Q86BtiE61Q8/K3Xr/JEMk=
+	t=1750699912; cv=none; b=rhDKMTWuhRnCbGwa/lPRw7mB4cu4u++E0+CvFxhouBkRhuDA/KgrZ8vHalRx39w0nJ4N9W3w6PSCBkxrdfbe5qNOua04CvpsOv3d8PXvcOtrHxpUxlASrTFfiNnENC409gEuzjZqse4OVdVtZ1rT/vUQueTGMIV3xb+v6fjD538=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750699882; c=relaxed/simple;
-	bh=oCgEQgO3bcbZLJtDxpHb9KgnCYnRxnZxSy2tdQTsiA0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uzEXS2m/mrhQvwoTTS0cORDwqCYO3ptHsMUwm1fJGFIMHcgdTqnufEn6h2VvFx/ppoGU3horUfpeRjIlDtg15hZme47/eIxh7KMhVSp1rd9c7V0erbhxEm6+eKX594YyLaTwXnu/kGG/NyR3GcAkLU6SU9fvSCOypn1XTcMDwck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iZamZ7Qm; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750699912; c=relaxed/simple;
+	bh=nWtDx19qO1yQn0z/BLKg3vt79Bfpsoue6Vz1+cHMPuY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FhKM91c44v9zVHmIY4wnqeTm5WJ7tOAAJKmmvIwD5rSpX38j5SicvBowY2XK5pC22Uujm+u0nb33hIOWxvPQPKwBuJDBN/oeoXgcdHT4hdVJFjcq2v7D4uRuk6NxLMyqNbJ5Aj1KPwaSjg3kmDtkF+mGbskynOimEZYN9F474lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=MLIA2Gzc; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iZamZ7Qm"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4a77ea7ed49so32065741cf.0;
-        Mon, 23 Jun 2025 10:31:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="MLIA2Gzc"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a50956e5d3so3523829f8f.1;
+        Mon, 23 Jun 2025 10:31:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750699879; x=1751304679; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=yoo2dyRfXG2vuwVABy0HQ543T76Aj+MJWYYINciZNTg=;
-        b=iZamZ7QmD7bupdG46DTD8tm79zBtZ3weq+VHFmcgzwLHAzkY1qtiDpPhTLuyL9Skbm
-         clli4Yr1ajOzRAZyK8xzn1o1vXnv7j9+GzkBZQsIgd4QTWLnNTjlDYpJAUPQOfINAfV5
-         FWBD2hTyT3qoqB/O6dMyk/KaKFcUQPHEfO9h7Pti8edtOU9nnKPxvGDVRVN2CQtkEkGb
-         UAdVMqDVrcInZkUqxomcT0C0xyMn65gV/mHHPH5kqSrAenVFqmrPyL5FXVs1Ofe2yFH6
-         2V7s+kPQwW0mrlHl0VoHljVV8haCEge3W3IX2Vl+i55JGAHkFwHxHGtAFuOUhiiWh6DZ
-         2FrQ==
+        d=googlemail.com; s=20230601; t=1750699909; x=1751304709; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=N+M8UQ5pVdsk3/Nz5oGllvjtaHtID4N9yBkzQVZz05g=;
+        b=MLIA2GzchS4awAyXcTSeRkOzcaLTFCMsacCk4xVxFKGEME/GK5ODbGjYnufeeMqfkX
+         i7QrgEPsW1gv0wJTHIyAp94yR7WURl9Wma0Ivtjqta5FIM7BtN7azhkMtrhpV1sM8qPo
+         K5b8dwaTUtpgbrmgJjsSFh4BbqBlxf0fDh2p9Om0IA4N3xCOZoFRRIFGC038brwE5mVH
+         Aml0hucTBVDhyPsgv0ID9h0IRb/VxABYXx+exmnwVXkHg1qlHCQA7d1QPj/XWqwJZb7u
+         hiZ53MXXV9dfdsQFg8Ozw+tnbw1y23UoiHABd7aB6YW8fUBPgLAikfRKe+iE53J2HQPF
+         Mlbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750699879; x=1751304679;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yoo2dyRfXG2vuwVABy0HQ543T76Aj+MJWYYINciZNTg=;
-        b=LkYcyDELv+QykgEFnGrRIqV+KwYFanB6+9Qqv3EAcOU5MrdeRZLMQrY15NpucOHXR0
-         T7qqXu5H0eefSoMVwaoGX2Zi10ZVQDeew2dkz9Fm9UQTi/0rfRLSHXeNHtZutyT5WHbp
-         f9om9031MtVMEX9FMhSrwHMHKQOhtRKE47NHtofNjugCCkYvfxVlqRcpp0Q0bkDMEfXB
-         l0uzJEOYdVeGOZRisYhF+7wE+lahv0Mcx8HxBY/X+MY/FPeDnb5qt/7rrqgUQLK4ociF
-         HU2Cn4r3c3XZGsn0HOVzjC/Sh2s3Shq0lVmFx9kt8iMEsPUPiMkGFEY7jsynkEc9f8B1
-         9iZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWO06gXAgZI+q5q1RtcA5tTHvfuXL/4iXb91u7/R4OsNJc/ZNeeuHougwpH9fBEM5kozmMA5J79CxWu@vger.kernel.org, AJvYcCWVQ6WLrSYO01V5Y0M+Kf1qvjwO+3LnY2CUNMCAokD6G1yWvB0FLYI110PdZUETYUZ/toE6kw9kRL98u3U=@vger.kernel.org, AJvYcCWaHc0Z45FSQ8q3v/sh3jtDYS2+wDfUb5tvx4XNoyL8YVbkYeG593NnnD/Z6F1ekTeKKzmM2Al3hvxkvLjoDYw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5FKe+XoAU0UAUq1TJeXeU9fD0B1yxTDa0OEpM9U2aNf0KI8an
-	Ni8YSH0u2hINLvJN4EwyhWKlkDzDlwDP4WyhMEQuCjxoDkMTK2I8qm8y
-X-Gm-Gg: ASbGncsaO8M+KHFXlR/OBDPq7W7wmsdCxeFuSLaJwsQejnzl4WsxRwLaN7p+aXH7D4h
-	4dm3fYHeMxIiwjGb7aWvC207xZyqHtpfSDTWMoJ6elUmcr2WcM3+QTW5QLe5FtP6tqwNRWvj/NB
-	J0jp4f5OjdLbcstSNIxlvpk9OKCJ4tXKYE48uQddmoVns8h90UghXH1WrSmEai/fl98L8ER33gw
-	kBBSN7IQ7XrP/K94mf11FPJ5C959XGlEGVxb5eVfuzjKULdDCd1qedgm3ryeUJo2K32SL5zmkZ1
-	CTBY3Q4G7v6nTtGu3BPdG1cFwIwAS2ngCEAEg43h38sZ4NJtQfavnfisaQQ1uWxMzghhIPiyTFZ
-	3W6x95xt8r0Lf0e+1gWKtiTwKGPna6AYzTdGLjgIi5i5BFFnIN+9A
-X-Google-Smtp-Source: AGHT+IFNGT1xrNrkdgAtBSao8CyCqQGzeTIxfGZcm+xmxRXTFInftj/9LxTUs3taku8jh9SVdAnkDA==
-X-Received: by 2002:ac8:5850:0:b0:4a7:896:f2d3 with SMTP id d75a77b69052e-4a7ae744471mr7151941cf.0.1750699878841;
-        Mon, 23 Jun 2025 10:31:18 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a779e8ab3esm40308741cf.63.2025.06.23.10.31.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 10:31:18 -0700 (PDT)
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id C9E81120006A;
-	Mon, 23 Jun 2025 13:31:17 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Mon, 23 Jun 2025 13:31:17 -0400
-X-ME-Sender: <xms:ZY9ZaFqOhEUDHMi17v6EIcStmyx7ECJCP1yPSX-xFz17NtV9cIklZw>
-    <xme:ZY9ZaHqUQ0APeVdQd8zi8TzPFFus05vpZBaoNlVbOPB0CClA1SMz1tFE-rnofKKmc
-    LpPm7wJhCMiIwDR4w>
-X-ME-Received: <xmr:ZY9ZaCMsBLiBXPKF5NRXkM11CNHCQr9-lWn0NHl58VsslafUGDATj4osbg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddujeeifecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
-    gvrhhnpeevgffhueevkedutefgveduuedujeefledthffgheegkeekiefgudekhffggeel
-    feenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
-    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
-    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
-    gvrdhnrghmvgdpnhgspghrtghpthhtohepudelpdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehlohhsshhinheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlihgtvg
-    hrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopegurghnihgvlhdrrghlmhgvihgurgestgholhhlrggsohhrrg
-    drtghomhdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgrrhihse
-    hgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhn
-    mhgrihhlrdgtohhmpdhrtghpthhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdroh
-    hrgh
-X-ME-Proxy: <xmx:ZY9ZaA6plWh-K0yA4iFJsMxg-qznpM8Yhb_m_c5tEOAK3CGu7-K2sQ>
-    <xmx:ZY9ZaE5TxzYpOyn_6AU1p5EwK6MULMpi7F972Z8lGwnW4Z8tkvwgfw>
-    <xmx:ZY9ZaIgohVh7fbAwpcjnHR_s3KYUwEKmreXuXv4vObIMQhxCNuFlIQ>
-    <xmx:ZY9ZaG4DGhPYeTF-ZDD4YcLekqlZpeql1V1xAwBjwuaOI7HxmuC3OQ>
-    <xmx:ZY9ZaLIWQRdZ8QuT1xaxYLRzqIoGmnCCmp4bYe5qahSyKfbqGGMVTLvN>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 23 Jun 2025 13:31:17 -0400 (EDT)
-Date: Mon, 23 Jun 2025 10:31:16 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?iso-8859-1?Q?Wilczy=B4nski?= <kwilczynski@kernel.org>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 3/6] rust: irq: add support for non-threaded IRQs and
- handlers
-Message-ID: <aFmPZMLGngAE_IHJ@tardis.local>
-References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
- <20250608-topics-tyr-request_irq-v4-3-81cb81fb8073@collabora.com>
- <aEbJt0YSc3-60OBY@pollux>
- <CAH5fLghDbrgO2PiKyKZ87UrtouG25xWhVP_YmcgO0fFcnvZRkQ@mail.gmail.com>
- <DAU0NHTHTDG4.2HNEABNAI8GHZ@kernel.org>
+        d=1e100.net; s=20230601; t=1750699909; x=1751304709;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=N+M8UQ5pVdsk3/Nz5oGllvjtaHtID4N9yBkzQVZz05g=;
+        b=r5fOKX3T8blOcSJJXZyFZ68LM0K7DbEd2cEwv9WFR9OEB5jgDfDfvcWdOcNWw3n1Wj
+         NmgkrOXBUk1WaIyyWBXY9hUgxcWZQQZoUzYCVbqYKXHYN4lrr3zmLlzIdsC9hS+aPMeK
+         k+rUwZ0jtp0DsyrM/IVXS9MdwXlvshar9wzYKlcGwZPfoGuzdOmeZcOPpTKEeRv2VQTZ
+         kMWxoMM/sBOeL93bVYCtQrFY9/4+7eKmbX7w0clnl5L4P61ETwlvwzFX2RWvNp3s2Ijc
+         MeyRIKfzmY9yhmsGrvJqvQDiTMKmLTD8Ah2ujhgy1hyxvO4HtTbUFnAiXMtjhNsG7/u6
+         VnEA==
+X-Forwarded-Encrypted: i=1; AJvYcCU4VUtOttfW468lOyWnFPWIWsNkwC9WIvN+/rOGjcr4QrE9Mo+s+m+5BA4uXCEOXGL0SjDy9D3I9qXj0dk=@vger.kernel.org, AJvYcCWskrL0AsV3HWtVSHiAF7MoiScK0x3FvhYYQ4O0zyUE5V8SAKI+hWUR0UPtzDdM6KWUJOCwq6/z@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxav+czYZyGjOv5aUkpI3xc9Ev0f2MKOWWPAcZp6Psf1c0lgtkX
+	zg40FbZY/hlbFtoCmAhV+CicqrxtUcZj247lYS2sRWUaM3scw9PoDmgEkUuj
+X-Gm-Gg: ASbGncsK/SrdqAsSz/EumopjD9rON7kQ94A7uOclJdxUNDuvZRM+gaN+VorV2Ip9mo3
+	sR26vXWGX7Q1LDAIN7r8A+q6jF4jdLiewnTqQ2/Vy6DXApTI/yAbI2/ohkh1FWGIlxQ2CaFZNb6
+	QFomIq+Ik3ESJOK2jcJH2R5X1Nmupw0/9z+Emx87ivDE5Lov5w7B0S3UdRN9aC5U59pHiFvlf/k
+	ABbI4ecw1Ago2kl3HqpKWRPmpclyKz4HnaiyZHz9Zb18VYLx6zLv205hJQLtYKTvGzT2KchbW0+
+	GrE00le+BIVxNy9ZJw2zb1ysdZqeXrT2CHZ5EyBO1pUNyJVMgGkB0kDngI92HAVnURm6VPdIMU9
+	uQUdwPWdjn6DnbAJBIbGK8bnQIgYiL95aQr1tEC92
+X-Google-Smtp-Source: AGHT+IEpwTqQzCdzAa+M03XSw+M3DXPs7MrWEPzz0q7cQJ9OstRIhzf9DfL4k5eJMC4QQfTYBvucVQ==
+X-Received: by 2002:adf:9c8c:0:b0:3a4:f7af:db9c with SMTP id ffacd0b85a97d-3a6d1318226mr10562515f8f.59.1750699908816;
+        Mon, 23 Jun 2025 10:31:48 -0700 (PDT)
+Received: from [192.168.1.3] (p5b2ac778.dip0.t-ipconnect.de. [91.42.199.120])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4536470371csm115405335e9.30.2025.06.23.10.31.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 10:31:47 -0700 (PDT)
+Message-ID: <94c90344-7611-4422-a77e-d28c9cb4df4a@googlemail.com>
+Date: Mon, 23 Jun 2025 19:31:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.1 000/508] 6.1.142-rc1 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250623130645.255320792@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250623130645.255320792@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <DAU0NHTHTDG4.2HNEABNAI8GHZ@kernel.org>
 
-On Mon, Jun 23, 2025 at 05:26:14PM +0200, Benno Lossin wrote:
-> On Mon Jun 23, 2025 at 5:10 PM CEST, Alice Ryhl wrote:
-> > On Mon, Jun 9, 2025 at 12:47 PM Danilo Krummrich <dakr@kernel.org> wrote:
-> >> On Sun, Jun 08, 2025 at 07:51:08PM -0300, Daniel Almeida wrote:
-> >> > +        dev: &'a Device<Bound>,
-> >> > +        irq: u32,
-> >> > +        flags: Flags,
-> >> > +        name: &'static CStr,
-> >> > +        handler: T,
-> >> > +    ) -> impl PinInit<Self, Error> + 'a {
-> >> > +        let closure = move |slot: *mut Self| {
-> >> > +            // SAFETY: The slot passed to pin initializer is valid for writing.
-> >> > +            unsafe {
-> >> > +                slot.write(Self {
-> >> > +                    inner: Devres::new(
-> >> > +                        dev,
-> >> > +                        RegistrationInner {
-> >> > +                            irq,
-> >> > +                            cookie: slot.cast(),
-> >> > +                        },
-> >> > +                        GFP_KERNEL,
-> >> > +                    )?,
-> >> > +                    handler,
-> >> > +                    _pin: PhantomPinned,
-> >> > +                })
-> >> > +            };
-> >> > +
-> >> > +            // SAFETY:
-> >> > +            // - The callbacks are valid for use with request_irq.
-> >> > +            // - If this succeeds, the slot is guaranteed to be valid until the
-> >> > +            // destructor of Self runs, which will deregister the callbacks
-> >> > +            // before the memory location becomes invalid.
-> >> > +            let res = to_result(unsafe {
-> >> > +                bindings::request_irq(
-> >> > +                    irq,
-> >> > +                    Some(handle_irq_callback::<T>),
-> >> > +                    flags.into_inner() as usize,
-> >> > +                    name.as_char_ptr(),
-> >> > +                    slot.cast(),
-> >> > +                )
-> >> > +            });
-> >> > +
-> >> > +            if res.is_err() {
-> >> > +                // SAFETY: We are returning an error, so we can destroy the slot.
-> >> > +                unsafe { core::ptr::drop_in_place(&raw mut (*slot).handler) };
-> >> > +            }
-> >> > +
-> >> > +            res
-> >> > +        };
-> >> > +
-> >> > +        // SAFETY:
-> >> > +        // - if this returns Ok, then every field of `slot` is fully
-> >> > +        // initialized.
-> >> > +        // - if this returns an error, then the slot does not need to remain
-> >> > +        // valid.
-> >> > +        unsafe { pin_init_from_closure(closure) }
-> >>
-> >> Can't we use try_pin_init!() instead, move request_irq() into the initializer of
-> >> RegistrationInner and initialize inner last?
-> >
-> > We need a pointer to the entire struct when calling
-> > bindings::request_irq. I'm not sure this allows you to easily get one?
-> > I don't think using container_of! here is worth it.
-> 
-> There is the `&this in` syntax (`this` is of type `NonNull<Self>`):
-> 
->     try_pin_init!(&this in Self {
->         inner: Devres::new(
->             dev,
->             RegistrationInner {
->                 irq,
->                 cookie: this.as_ptr().cast(),
->             },
->             GFP_KERNEL,
->         )?,
->         handler,
->         _pin: {
->             to_result(unsafe {
->                 bindings::request_irq(
->                     irq,
->                     Some(handle_irq_callback::<T>),
->                     flags.into_inner() as usize,
->                     name.as_char_ptr(),
->                     slot.as_ptr().cast(),
+Am 23.06.2025 um 15:00 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.1.142 release.
+> There are 508 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-this is "this" instead of "slot", right?
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
->                 )
->             })?;
->             PhantomPinned
->         },
->     })
-> 
-> Last time around, I also asked this question and you replied with that
-> we need to abort the initializer when `request_irq` returns false and
-> avoid running `Self::drop` (thus we can't do it using `pin_chain`).
-> 
-> I asked what we could do instead and you mentioned the `_: {}`
-> initializers and those would indeed solve it, but we can abuse the
-> `_pin` field for that :)
-> 
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-Hmm.. but if request_irq() fails, aren't we going to call `drop` on
-`inner`, which drops the `Devres` which will eventually call
-`RegistrationInner::drop()`? And that's a `free_irq()` without
-`request_irq()` succeeded.
 
-Regards,
-Boqun
+Beste Grüße,
+Peter Schneider
 
-> ---
-> Cheers,
-> Benno
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
+
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
