@@ -1,240 +1,228 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2073.outbound.protection.outlook.com [40.107.212.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810973FB31;
-	Mon, 23 Jun 2025 15:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750693601; cv=fail; b=MfowsViResW73G+XSSPtEnWDdzpfG0OaRMDfIrw5OmBk8U2tJ8C8DKxY66IjxvDvVQjEGuUGJp/mnmUBxVPs2GrWGrOyyMC0a6pKcX4RaijplZCi8jqIOjFk+hZjGEIY+5B8Cw+nc3C6OWHAYVJcUa1BLoC9VICjs7DaoTJiBaU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750693601; c=relaxed/simple;
-	bh=dxVrPHeu5U1WaW+StgFSAqONQr7UwL8rST1eTBz5wWo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=FIjJYXnTvNBLvLwJWLOpq4DzxoxpOb/zEdKXpzfL/6nqbVFQBrpDayrQuDFpC4x6vb8dDZQctFUiqCdWUdeoqzK1BkZlJ4+v9LnGRGuGot5AmjdzShi3CCUvD0W9lEq6YfGRFamRpfFDHyPgS20BUWaLDFqPEUvkA5hi9QhCuOw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vW5zFuGC; arc=fail smtp.client-ip=40.107.212.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9545B25EF82
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:47:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750693655; cv=none; b=FzQWsf/rUiD60+qEvXuPS1wnCOoqw/1DLLQUBL2xXOfh+4lvwrU35sv+mhWat3NYj5ICqWUw7JRICHRzaHqdQ7at0K5GiLT6CfuBkvqy4pUBGN+lJqs3z7jAlnA1f5u0trViIO7XhkuZweB4SM7yU4U35iI5ifluGmmK6O8qcd0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750693655; c=relaxed/simple;
+	bh=EKG14ZOQzaaYGD3X0xzYAfmF2d6RXXI1/3I7QMJPo/c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X6MAb3lR+oWzjV80YK1V9Gnt7epccjT1QvtefaPeuaeaRlRb2GCA4CPxjC7Jeua+eR5Wdiwgmsv9W+K2r+/z1AtxOyj4jaJ6z1mBMo3UpxbQVjfCHyGVeeIIM3G3xYNnk5iZnig3YpGTuXyD1tkidcguRtJtTZMh8pQXQWICH+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UG5DegPJ; arc=none smtp.client-ip=209.85.167.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vW5zFuGC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NOlnslBnKHeWKjNdf9VL99KTcbxjMpJ5Li4jf8Ohq0QEs0pjhLpv/v6t7IMxY60Zu45290x2+BBn/2M/DA5upipAGLf3qdJw6kU7V85qScrL/dX4oUCkPNowKpwcum9lN3rVxv5nj+iVdpn5pCwPiOTfCE033qGmgSKgX1DAGiTL4v/+cXjzPitGrk57Qj1yLSpQddFsbdRRHqzHTSK2pD70uYQjJx17biU0fKnCg9UL1VYoOps6Co63uI6e6slRc9PkHrmGiIGjThxi3FQkTYHEIB9Vl6WMlh+dhgkH+ZTlhvCggcpu27BUlAEywtKKQf8ScXuj8pltyLgYpOcDrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lsWObrc5Ubd9he6KtGqdwaejFhrpz8e45hxao/muxCk=;
- b=qqkyexIxp1VkbAfwzPJe0tMbLpZTJlR4Qctuy2U3BlNC4VJiXDc+Bh3eJOo72Fzyj2Q2rmyQPS4goeokJEmX/CURxLSPsbk9skC/Amk1WhVH43US4faeKlUB839P7a/VhR0p2XapAL6kF1/zXnOTOzta1ZaJ89o5khiEIrCTidvxDGfFVhIzz7FgPbvDTdlSSr++J2ZiFaVEZbPW7DD0TIK1ruQCCWUWCHPgWrSPADbtgfh325Iq9HQh5/ZUZUu3LGUdITdaZ6L3duQvawbymENzoJOLuq8rGY9lp9IvvK0fP7rXslFx1Tr6R6lMxGkePCobnvcHGPPHW2I2YOoG1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lsWObrc5Ubd9he6KtGqdwaejFhrpz8e45hxao/muxCk=;
- b=vW5zFuGCBXMw2NSxUfK+KjnD7xanzWDZxFNTnYQKlQwPgRmyeHLQWKB8uY3WsU7JlvAMyceZuYbp4vYITNvuAsngAv5GalChAxspRIO7yrCpba7F0RCCSCUwaBq2zvMrD8hlT0qWnW3j4XfP5nbuqZFSChECgh5vG3Y1UgGTdqc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH0PR12MB7982.namprd12.prod.outlook.com (2603:10b6:510:28d::5)
- by CH2PR12MB4262.namprd12.prod.outlook.com (2603:10b6:610:af::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Mon, 23 Jun
- 2025 15:46:36 +0000
-Received: from PH0PR12MB7982.namprd12.prod.outlook.com
- ([fe80::bfd5:ffcf:f153:636a]) by PH0PR12MB7982.namprd12.prod.outlook.com
- ([fe80::bfd5:ffcf:f153:636a%5]) with mapi id 15.20.8857.022; Mon, 23 Jun 2025
- 15:46:36 +0000
-Message-ID: <d4211026-9105-4f7b-8384-300c0a293233@amd.com>
-Date: Mon, 23 Jun 2025 08:46:28 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH iwl-next,v3 1/2] igc: Relocate RSS field definitions to
- igc_defines.h
-To: Song Yoong Siang <yoong.siang.song@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- Vinicius Costa Gomes <vinicius.gomes@intel.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Shinas Rasheed <srasheed@marvell.com>, Kevin Tian <kevin.tian@intel.com>,
- Brett Creeley <brett.creeley@amd.com>,
- Blanco Alcaine Hector <hector.blanco.alcaine@intel.com>,
- Joshua Hay <joshua.a.hay@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- Jacob Keller <jacob.e.keller@intel.com>, Kurt Kanzenbach
- <kurt@linutronix.de>, Marcin Szycik <marcin.szycik@linux.intel.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250620100251.2791202-1-yoong.siang.song@intel.com>
- <20250620100251.2791202-2-yoong.siang.song@intel.com>
-Content-Language: en-US
-From: Brett Creeley <bcreeley@amd.com>
-In-Reply-To: <20250620100251.2791202-2-yoong.siang.song@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQZPR01CA0046.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:86::25) To PH0PR12MB7982.namprd12.prod.outlook.com
- (2603:10b6:510:28d::5)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UG5DegPJ"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-404a5f4cdedso953468b6e.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:47:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750693651; x=1751298451; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=e19ex1p/1LBOnXetMuCg5KYZZ6yY9+nHnj0I40BuyDg=;
+        b=UG5DegPJVq+xw1Nc4wanJ/3/PRJ0GCy0+gIuLP0s5v9DhBYWtThZIPoOLukvJclAB+
+         MFTYd2YJOu8sSj7ib6bJ556pVMUeAyHTRQpEaUumGGfl65PspzMllXH40nrQiDUVa7uM
+         io5RuJ4EVaqGfoUqxNQPCDi5Zd9Ai7kFnA2WPn3GDwUKCY3bDVDSK0nJpcVU9Cbhfryo
+         L09+Y4/TAMf2sWITydkotyU9Ne2eGo2oy/8hbBu4K/qP93MerRdokkuuSomYVYdYNceN
+         y3OanasJ6FODGWbMip5KAYLrptivE+573UC3MeAVXqZ0BlU/eZ5H5JwMatYtflaXu8gH
+         XKmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750693651; x=1751298451;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e19ex1p/1LBOnXetMuCg5KYZZ6yY9+nHnj0I40BuyDg=;
+        b=kLI1C6NTC25C5+GzTg2Uq89yNLiJeMuDjpQq26ZJzXxss+r8m9t7DPKZlFO9w+1c6T
+         qbojmcHyUJK49oGALZewei9bGpToUo8t6b2TEv3O9L2H6KxVdXl+WD7WKR0tcETNI04l
+         Ry+wAweGmWWtpLa0yERzoJ6MOQaRfprQDej083rD0BNUvFWwmy9i/4F4/ROFsQwGH/WN
+         pfKwwMuDK9xa9KOZdR1m65ZneKy4lK1KftHVVlKzr//oxKfYbveX87bBoMkbdit8GFdi
+         bCQdPcDOuDFGqqiVfbCH9TX0u0oHqR+ooGhZalz7t+pC154Y3i9nKngaLLahcy6Cpdcz
+         FVMA==
+X-Forwarded-Encrypted: i=1; AJvYcCW9FrxRGcKfoJd2Lg0t6KQXz3Y9Zv9Kc4Ign6yXB7iHXJRi9cL4vQIWjbYOVhuxQxWgB6wQJY8aTdNO7wE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkLMoqbam/H7oqYhIqKRjSURPlDRYSZ2Lr5B98Yb+x4tPCoeLk
+	Zu8VUmh2I4hiHt9YtyOqIj+sLETH/Vm/+lsQABmx/ESzLF261/Xebnq8C2hbr7KFxeE=
+X-Gm-Gg: ASbGnctpgPlRTk0ZpFt4lrQ9tMz7ceMpH2m5NK5z8br26a5oV1mqS8raG7sCnnviU1B
+	xJum8nc5naACugu6b7eDwpqIeQ9jBxDzvhh4YWaUx2Sx04H2A5qVPGUvEpZPoz1K/6sWhK7Jvdh
+	PA/IAeBXt0yHeQjb113HFNu6+zqpoch1JCVYejsq+SQYPyjR96Djha6utSe+2U3YQNd/bRXYKA8
+	/EZO/Uuwk4Pt7je4VjXIHh5zwq4VsFbeifnRFO78zoUBG1GVmd09mk5a5XAWTXyAsL5n8ofUQVU
+	jztIsdlfgGb6YJlQaNkfwuioYLLdOLPIdhG4IrnuoAxCf3VvtWJNu4kdK7RDTigPrymKdQ==
+X-Google-Smtp-Source: AGHT+IEouOoMNRNSuGf/ZMWbMPa3V8T1EO2Pbz1snAOvKwdQBof5o9MTJimT5y50shcK8/7BDOdy9A==
+X-Received: by 2002:a05:6808:1717:b0:406:5a47:a081 with SMTP id 5614622812f47-40ac7053a9dmr10755047b6e.13.1750693651415;
+        Mon, 23 Jun 2025 08:47:31 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:8c3f:8b5f:5c74:76a9])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40ac6cf03a7sm1411227b6e.25.2025.06.23.08.47.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 08:47:30 -0700 (PDT)
+Date: Mon, 23 Jun 2025 18:47:28 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Su Hui <suhui@nfschina.com>
+Cc: chuck.lever@oracle.com, jlayton@kernel.org, neil@brown.name,
+	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com,
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] nfsd: Using guard() to simplify nfsd_cache_lookup()
+Message-ID: <148c69b4-4cf7-4112-97e8-6a5c23505638@suswa.mountain>
+References: <20250623122226.3720564-1-suhui@nfschina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR12MB7982:EE_|CH2PR12MB4262:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3b197182-c996-4b4c-700d-08ddb26d228f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|7416014|1800799024|921020|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WVBvNFdxOVNPSXErWEhRanlrMzJjazJYcjFUeVZoK0N5ZmtBSy9hVEl2a0VC?=
- =?utf-8?B?N0gyOVRidnVjZ0hCR1hPOFZzdkVYRDZpUExjWktvWXhpSGo0cFYra0ZwZFpz?=
- =?utf-8?B?VUNNZWdZK3M5WkY5REpza2o5N092RVVzbC9xK2FwTXBQeC8wRUV4NXViZWI5?=
- =?utf-8?B?N2hReGsreTRCWThtNlcxb3BZa0lhSlNhV1VEeWhBa01obVVwREgrbnVmV0M5?=
- =?utf-8?B?anlOUHlMU0ViK0JUOHBST09KTjgxTC96WkI2N1htZ3ZURnplcWxIWEtQNDNY?=
- =?utf-8?B?S24zenFobVM4Qm56R1ZXSitjbDcxNUU3ZXFnZVFkTUo3ajcwVVovNXBRV0du?=
- =?utf-8?B?ZXhzSDVSQnljUjFGeGtxSlExRTgyRlVrb2lMZTB2OHJoOVhoWEF3RXpHeG83?=
- =?utf-8?B?a1lvSjEzRTUwMU1GdGFPaXdIRnV1V2EyVVRDKzljazBtNnliTGliVkZqSUVL?=
- =?utf-8?B?QTRhQW1wbWZMQUh6eCtvSWxuN2F6NDEydjhIYUdWUVExeDVIY1NRVEhaSFFT?=
- =?utf-8?B?MGsvb3l0ODBhejdudk1VbG1jYmc4ZzJUbk1wcElTR0daSTZPQnNLYVk1dEQ1?=
- =?utf-8?B?UEV2cjZZRGwvS2hYYU5EUjNHYUpaNXpjeTJwZy9LSE15eHY0cXV5K2tiQmZm?=
- =?utf-8?B?MFNhWWNwNkpDK0NCWDZacURneXZINHZsTVpPU3p0NzhLdlJhVEhWeDJ3dVlS?=
- =?utf-8?B?cEJmUlh0bFFNbUw5dVpRcXlWdjZFZHg3aUE1aGJCS290RWU0MndrVWt0TnU4?=
- =?utf-8?B?Q1ZXSmNjbndVSjAxOFRTS05sUVV6K3djdGkybXZFeVh3U0hIWXRTSGxldEJv?=
- =?utf-8?B?em9NR3hvSjNqYllZLzFkODh5VWczOWRwSm9ZWXpvQlg1ay9PdXRPWUVBbzRi?=
- =?utf-8?B?YVZsWHd2bVNPbHNwMzFoc2IvK1pxVnp3M0pPcWlSUVdNa1YzeDRFK1gvaWdL?=
- =?utf-8?B?enA5MmVWUkh6Y2drd2U4MnMrVXlDek5raVRwVVNIZG9NTUhCTHdLNGFyNitm?=
- =?utf-8?B?UXRMVVVacDdDRzYzWjlKZmZWaEoxbUo1QzJhZjU0VzRES1pZS1ZHRWd3TDA5?=
- =?utf-8?B?WTdaNU5YK3BSVlZYZWR0TjRvYjZJV2VhREFWRUJQbXpkQWhTQ2pWTHJIUWd2?=
- =?utf-8?B?NXJyL3dPaERIemZoVStIdlFxS0lCVFZrV25ldDAzdC9ZUEZ6dEVxVVNEQVBr?=
- =?utf-8?B?UGgxNFVNeCtIaktacnhjd1FIZFg5K3dhWDZkYVBQWDRDMU1tYnFPMXE1Sng3?=
- =?utf-8?B?UU9zNzlLT2VtMDlNV0VvcXQvalo3T1VaeTJrQ2xtVExCQW5ENkVDYTFuS0xv?=
- =?utf-8?B?OUdqNjc3anB6bW5DSEJWcEZYNUt4UFUxY2swT2xnOGE1UXFxL2toaFI3OGJr?=
- =?utf-8?B?UHVXMFVmWHEzd2FGUm9uTUlydm91NnVRSHUvZkpoZWxTY3JxVk9PZnRhZ1ZP?=
- =?utf-8?B?eUo2WFRjeTJBdFdVWjdwUFc5TEViVk1Ba1pQMFJkck13SUFmb0xFdW4wQzRG?=
- =?utf-8?B?bEkrV0xFa2loelhmajgyOVRGcXUwQjRZay91WFhPYnV3SUNoZkMra05wRVBZ?=
- =?utf-8?B?UERMUUJBdmV4SDFhZkx4R0ZEendwZGlBMkFMTmlmZ0drY2o2bGt1eWhvMHJ1?=
- =?utf-8?B?dWFzOVduYmJBL1hSdTVnbUpJVTNLdXJFR3dWZGV5SXh0U3BwN1MwcVpkUS9a?=
- =?utf-8?B?WVRDbDNvQmdaNVZ2VjVpbVZNRVBJMHp6SlFXdGRsMjVONlBBeW1ycTJzUVhh?=
- =?utf-8?B?NHV5RDN3RFRnZFF5eFljMEhiTWRSbG5kRlRPQW16bk5kWnFnRmhNbFFQRG1K?=
- =?utf-8?B?cG1oREhJbXYybVYrcXNwZ2xNNWV5RWdFVGM2QXNKM0kwOWZEWGdDYm1sc1Fp?=
- =?utf-8?B?QUo0M1JzeHA1TE4vUDRVZjJLMkRCRnFpVWVtQWI2Mmd1Tjc3TGM0ZkF4V0FF?=
- =?utf-8?B?dWhrcS9xQUtGQm9uckUrUjdjbjVrNkFQM2tMQlVXMEhCRytLdG1xS1ZlWHRo?=
- =?utf-8?B?UkVIRHBzaSt3PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR12MB7982.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024)(921020)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YnBrVEpqaCtxSktHcW1yME9OaFR4dHRreXNwQy9NK1hwRnA5Nm9vLzA5OFZD?=
- =?utf-8?B?ODRMVENxWE5sVFphRjJWQUhlY0F2aHJwWmp3eTBNS1UxbUdsM1hyZ3dwZ2Ix?=
- =?utf-8?B?VEViZEVlTWJ6MXhSWm5zVEFpdlZUTXNsWmJINiszcnNXSkdhZFo0c1V4Wmpl?=
- =?utf-8?B?N2NuU2RzcUQrL0hmY0ppVXBBelI3TVNKbnRUK282QjJmL293T1IzOW9UZWJF?=
- =?utf-8?B?b2NtaGpOM2pCaFQyK2htRkphaVozaUV0MlgvbExMbVRoRlFkM2JrUlJJQkdt?=
- =?utf-8?B?dHI0S2NYYVVtVDRZcUgvNStvSlZ4WlRBS3lwNWR4cS8vbDJMNlAxb1dOUnkx?=
- =?utf-8?B?aU9YMmVjdmJHMVFkRTZKL3VZdmJHQzk2azZJWnhSRFBNbmhnVHRSUnJNbFhZ?=
- =?utf-8?B?dGtjZG1NOXFUSFJFUjNBL2hhWVRHdXNlbTRQOERmaTVZN1lvbmc5cElVbUl5?=
- =?utf-8?B?WGZzcDhwSS9VbVQrMUp6eTRjUFR6bk9UV1NxK3kzUzloQkhnOWdkWXpod0hJ?=
- =?utf-8?B?ZUlDZWxlb2dWZ2FjT3Z4SDZmU2F0Z3BvV0hPSUFnU25ILzhOa252U09aTWE5?=
- =?utf-8?B?UkpHL0JYRWNLMHVsVXZMaDB1TXRsRTJENmdoeEVTNFBGYVBTODFRQkNQdk5S?=
- =?utf-8?B?Z3ZZL1AwNjlDdDRhNGZFN1IxUy9ZQmhXVDRIMk45RjJ6MmoxUjZHSGw3WEox?=
- =?utf-8?B?WTJsVEZWdGVtbnZ3NkI5d1dvcXduVkpQcXBmWHFKN2RpRnhsR1cwWWNzWExx?=
- =?utf-8?B?dkdmUmJVSUxkVUszK09CTFpFT1phREhvWS9wb3BFSGdkRnBHZnlTajVxUUNz?=
- =?utf-8?B?aklpRHRMY25JS21qVEhRdWxMTFU4aFFLRmhYSSt6bnpuT0VmTDFyUVZUMnRq?=
- =?utf-8?B?dFpadU82MjVHVFptcGgrR1ZuSXg5WjZ2MFdrNllYZWJwNzdlNUtCVkdUVHdz?=
- =?utf-8?B?OE5FVDZIZ0dQY3R0bnpSbjVQZTJJNVRrbkFDZFdFNmhQQWMwZElBN25BdFJt?=
- =?utf-8?B?Y0xteEF2NFlvelJHQTEvUEsrWDNmNWM4aG13Znk0eDdmZGt0bUpFZzk2YVkz?=
- =?utf-8?B?R0VGS3BNZzlFcVlqaE96YUkvc0pMNjRZY2tNRjdKdmgyS3RoaWRuV0dOU1FM?=
- =?utf-8?B?NXpoTEZtMUEycklRRjlvb1dpUTh2dy9VcTRyVWozb1BjSnQwSkNYWFpUVkY1?=
- =?utf-8?B?VklTOWc3VmtBNlRaQ1RrNjI4VVV3aDFBL3ljZ0U2N0lDNDNrMCtZY1RUQTE0?=
- =?utf-8?B?cjVyQ1Vkem85UzE0cFZJcU12WHR5d2tYTkhTeHBwS1lPdjJpQVk3b2x1WGlH?=
- =?utf-8?B?WExkQnZHMW1LUWN5b3k0SEhZYzlXRWd5bXZyUnJWaVdhNEZMTnFibGxHZzBt?=
- =?utf-8?B?eDFSVVRUeUExVWM0TWtlTzlta1RwZ2plK0IyVDhuZ0VZNzBIdktNdytONlQx?=
- =?utf-8?B?UWpjLzNmUWgyWlUwNUJIdDE2QlJmaUVIclcvWC9lTE4reGJhWlhUaGZrZUFo?=
- =?utf-8?B?TzhPbmRsWS93N0VDS0VXMmhzZm5jc2hYT0NIU3V0MkVmeFNDNmU3ZDJmdGxN?=
- =?utf-8?B?aWE3RmxZR3VReXhNWjRMM1ZSMVJRNSs4WmZIUGcramQ1UDg5YmtxaVR5RVA5?=
- =?utf-8?B?cVZMZUowemlRMFloSzVZV3JTTFJTa29nYlNMNm4xRVBQZHdubklweTVsdFpH?=
- =?utf-8?B?YTY1RDJSWEd0YW9BNXBCVUs2WWIxNEFtMUxQc1VRQnJaUUFrdUFoTGU0R01Y?=
- =?utf-8?B?ckIvTUUrRXNnejNvMTl4ZFdrS1NJUDhsVmlwL3AwN0M0RkloeUJqQ2J5RUd2?=
- =?utf-8?B?aUhBc0s4OUpzaVVkR1pKa0NSL3ZUTm55WkRTOG5TaDV5MmgwV0VITXRBL1hW?=
- =?utf-8?B?NGRSSUkvdzMrWXIxOXlleWExbUN3N0tRM00wR25aNVNvOVlIQTlUdk84Y3Bw?=
- =?utf-8?B?cjNvV0UyOTRzT0NBMDRtSEhmdWhQVVBnOTh1anR3aVpIVDVKRWFwa1ZINm4x?=
- =?utf-8?B?cFR6ZUdaZ25WTGpnYlpUcVVnbVpUSnpGdHAyQzVsN0tHcHRzZHd2SFVBNHpF?=
- =?utf-8?B?Vy9SL0hxZ2o0WWEwaWpmY2o4Um5ENXNLcnlXZnd6ZDBCaVdSU25CZ0NZQnpu?=
- =?utf-8?Q?o1I2cctAgeD3s68Ma5rDwkwRi?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b197182-c996-4b4c-700d-08ddb26d228f
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR12MB7982.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 15:46:35.9833
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sjK2Ofb9inJMKtd77dMv3sl+HQr27eC0KraSkX51F5zbYOd7157miiiEAco7c87pUeYu/9Yqix6grJA1CRqYrQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4262
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623122226.3720564-1-suhui@nfschina.com>
 
-
-
-On 6/20/2025 3:02 AM, Song Yoong Siang wrote:
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+On Mon, Jun 23, 2025 at 08:22:27PM +0800, Su Hui wrote:
+> Using guard() to replace *unlock* label. guard() makes lock/unlock code
+> more clear. Change the order of the code to let all lock code in the
+> same scope. No functional changes.
 > 
-> 
-> Move the RSS field definitions related to IPv4 and IPv6 UDP from igc.h to
-> igc_defines.h to consolidate the RSS field definitions in a single header
-> file, improving code organization and maintainability.
-> 
-> This refactoring does not alter the functionality of the driver but
-> enhances the logical grouping of related constants
-> 
-> Reviewed-by: Kurt Kanzenbach <kurt@linutronix.de>
-> Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
+> Signed-off-by: Su Hui <suhui@nfschina.com>
 > ---
->   drivers/net/ethernet/intel/igc/igc.h         | 4 ----
->   drivers/net/ethernet/intel/igc/igc_defines.h | 3 +++
->   2 files changed, 3 insertions(+), 4 deletions(-)
-
-LGTM.
-
-Reviewed-by: Brett Creeley <brett.creeley@amd.com>
-
+>  fs/nfsd/nfscache.c | 99 ++++++++++++++++++++++------------------------
+>  1 file changed, 48 insertions(+), 51 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/intel/igc/igc.h b/drivers/net/ethernet/intel/igc/igc.h
-> index 1525ae25fd3e..0b35e593d5ee 100644
-> --- a/drivers/net/ethernet/intel/igc/igc.h
-> +++ b/drivers/net/ethernet/intel/igc/igc.h
-> @@ -406,10 +406,6 @@ extern char igc_driver_name[];
->   #define IGC_FLAG_RSS_FIELD_IPV4_UDP    BIT(6)
->   #define IGC_FLAG_RSS_FIELD_IPV6_UDP    BIT(7)
-> 
-> -#define IGC_MRQC_ENABLE_RSS_MQ         0x00000002
-> -#define IGC_MRQC_RSS_FIELD_IPV4_UDP    0x00400000
-> -#define IGC_MRQC_RSS_FIELD_IPV6_UDP    0x00800000
+> diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
+> index ba9d326b3de6..2d92adf3e6b0 100644
+> --- a/fs/nfsd/nfscache.c
+> +++ b/fs/nfsd/nfscache.c
+> @@ -489,7 +489,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigned int start,
+>  
+>  	if (type == RC_NOCACHE) {
+>  		nfsd_stats_rc_nocache_inc(nn);
+> -		goto out;
+> +		return rtn;
+>  	}
+>  
+>  	csum = nfsd_cache_csum(&rqstp->rq_arg, start, len);
+> @@ -500,64 +500,61 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigned int start,
+>  	 */
+>  	rp = nfsd_cacherep_alloc(rqstp, csum, nn);
+>  	if (!rp)
+> -		goto out;
+> +		return rtn;
+>  
+>  	b = nfsd_cache_bucket_find(rqstp->rq_xid, nn);
+> -	spin_lock(&b->cache_lock);
+> -	found = nfsd_cache_insert(b, rp, nn);
+> -	if (found != rp)
+> -		goto found_entry;
+> -	*cacherep = rp;
+> -	rp->c_state = RC_INPROG;
+> -	nfsd_prune_bucket_locked(nn, b, 3, &dispose);
+> -	spin_unlock(&b->cache_lock);
+> +	scoped_guard(spinlock, &b->cache_lock) {
+> +		found = nfsd_cache_insert(b, rp, nn);
+> +		if (found == rp) {
+> +			*cacherep = rp;
+> +			rp->c_state = RC_INPROG;
+> +			nfsd_prune_bucket_locked(nn, b, 3, &dispose);
+> +			goto out;
+
+It took me a while to figure out why we've added a goto here.  In the
+original code this "goto out;" was a "spin_unlock(&b->cache_lock);".
+The spin_unlock() is more readable because you can immediately see that
+it's trying to drop the lock where a "goto out;" is less obvious about
+the intention.
+
+I think this patch works fine, but I'm not sure it's an improvement.
+
+regards,
+dan carpenter
+
+> +		}
+> +		/* We found a matching entry which is either in progress or done. */
+> +		nfsd_reply_cache_free_locked(NULL, rp, nn);
+> +		nfsd_stats_rc_hits_inc(nn);
+> +		rtn = RC_DROPIT;
+> +		rp = found;
+> +
+> +		/* Request being processed */
+> +		if (rp->c_state == RC_INPROG)
+> +			goto out_trace;
+> +
+> +		/* From the hall of fame of impractical attacks:
+> +		 * Is this a user who tries to snoop on the cache?
+> +		 */
+> +		rtn = RC_DOIT;
+> +		if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
+> +			goto out_trace;
+>  
+> +		/* Compose RPC reply header */
+> +		switch (rp->c_type) {
+> +		case RC_NOCACHE:
+> +			break;
+> +		case RC_REPLSTAT:
+> +			xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
+> +			rtn = RC_REPLY;
+> +			break;
+> +		case RC_REPLBUFF:
+> +			if (!nfsd_cache_append(rqstp, &rp->c_replvec))
+> +				return rtn; /* should not happen */
+> +			rtn = RC_REPLY;
+> +			break;
+> +		default:
+> +			WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
+> +		}
+> +
+> +out_trace:
+> +		trace_nfsd_drc_found(nn, rqstp, rtn);
+> +		return rtn;
+> +	}
+> +out:
+>  	nfsd_cacherep_dispose(&dispose);
+>  
+>  	nfsd_stats_rc_misses_inc(nn);
+>  	atomic_inc(&nn->num_drc_entries);
+>  	nfsd_stats_drc_mem_usage_add(nn, sizeof(*rp));
+> -	goto out;
 > -
->   /* RX-desc Write-Back format RSS Type's */
->   enum igc_rss_type_num {
->          IGC_RSS_TYPE_NO_HASH            = 0,
-> diff --git a/drivers/net/ethernet/intel/igc/igc_defines.h b/drivers/net/ethernet/intel/igc/igc_defines.h
-> index 86b346687196..d80254f2a278 100644
-> --- a/drivers/net/ethernet/intel/igc/igc_defines.h
-> +++ b/drivers/net/ethernet/intel/igc/igc_defines.h
-> @@ -383,11 +383,14 @@
->   #define IGC_RXDEXT_STATERR_IPE         0x40000000
->   #define IGC_RXDEXT_STATERR_RXE         0x80000000
+> -found_entry:
+> -	/* We found a matching entry which is either in progress or done. */
+> -	nfsd_reply_cache_free_locked(NULL, rp, nn);
+> -	nfsd_stats_rc_hits_inc(nn);
+> -	rtn = RC_DROPIT;
+> -	rp = found;
+> -
+> -	/* Request being processed */
+> -	if (rp->c_state == RC_INPROG)
+> -		goto out_trace;
+> -
+> -	/* From the hall of fame of impractical attacks:
+> -	 * Is this a user who tries to snoop on the cache? */
+> -	rtn = RC_DOIT;
+> -	if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
+> -		goto out_trace;
+> -
+> -	/* Compose RPC reply header */
+> -	switch (rp->c_type) {
+> -	case RC_NOCACHE:
+> -		break;
+> -	case RC_REPLSTAT:
+> -		xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
+> -		rtn = RC_REPLY;
+> -		break;
+> -	case RC_REPLBUFF:
+> -		if (!nfsd_cache_append(rqstp, &rp->c_replvec))
+> -			goto out_unlock; /* should not happen */
+> -		rtn = RC_REPLY;
+> -		break;
+> -	default:
+> -		WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
+> -	}
+> -
+> -out_trace:
+> -	trace_nfsd_drc_found(nn, rqstp, rtn);
+> -out_unlock:
+> -	spin_unlock(&b->cache_lock);
+> -out:
+>  	return rtn;
+>  }
+>  
+> -- 
+> 2.30.2
 > 
-> +#define IGC_MRQC_ENABLE_RSS_MQ         0x00000002
->   #define IGC_MRQC_RSS_FIELD_IPV4_TCP    0x00010000
->   #define IGC_MRQC_RSS_FIELD_IPV4                0x00020000
->   #define IGC_MRQC_RSS_FIELD_IPV6_TCP_EX 0x00040000
->   #define IGC_MRQC_RSS_FIELD_IPV6                0x00100000
->   #define IGC_MRQC_RSS_FIELD_IPV6_TCP    0x00200000
-> +#define IGC_MRQC_RSS_FIELD_IPV4_UDP    0x00400000
-> +#define IGC_MRQC_RSS_FIELD_IPV6_UDP    0x00800000
-> 
->   /* Header split receive */
->   #define IGC_RFCTL_IPV6_EX_DIS  0x00010000
-> --
-> 2.34.1
-> 
-
