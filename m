@@ -1,227 +1,249 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE331C6FF3
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 19:22:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A285F1C5D7A
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 19:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750706532; cv=none; b=uf59fqIhWyq/LVsCsIB9eCml/K8z0DtRt8Y3pXWfTSCmgpqmGKE9VGBGlpjqgr3FYd0dcwedWrG7qMZ27WMvv8+ca7c4huMWoHht2fEcBnqL6M1LO+vf3gZRteG6Ls98ZoyJafkdFUqvdB+v+wCXcJGg25wcrIhOhELHe4jhvBw=
+	t=1750706559; cv=none; b=Ge6hDaG5/mJ6Al/wzpPTXm0S63/9wrTRyBKPXsk912QV3iawtAxW1Y5/7j45AWqf/tFcEFc3az1zTiIW9WbRtCWnvAJ3EMRq5BtRY2Gce/D4hDVKQ4J0U0XW7YoKs+juhaBaUJ6XyQu+5l6gz0y+WqTw03kIGQ0wIL1joViMHhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750706532; c=relaxed/simple;
-	bh=ZK3S0XPxcmYiS4vVibj9PCsaH7tpzJ/rlgCHRYNpd4U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NnHzSJ+phz6Z/qaLfi+CKIxPNSiBByryy8Qd1U/7UN+UrNT7UQRqM8EktXdwuRAa8ApuOmdV4dzGOcip65FbL2RwhVOgNuKaztC/pTSTe+XyUAVFDu33TkGfQNuc4Bvh6YFvrq+5/r3c7tJmrlLG78lnHwmzwpmeCzL0Ma9FtBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qiaz0dtn; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750706559; c=relaxed/simple;
+	bh=8sfjrM8xdtDx8xihK4hO86kfCv6rfj6jYTGptLagxzM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FVmtDWio3xGOPchgN36PTIwUZgHgsa1BJCRLCqvtJrTFvq5AII1hNtIACwNmAFgV+ADOdUmriGl0QNJ2kwhw3h31JFm/4dr7ymAqdW2Mrrk5LZVpWTDTI/Z7vqj32Q0JgjDzc+5FzyjU8KZ+QO850SLgWQsW0pUV244H1TjYTaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mqEumHpz; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qiaz0dtn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750706529;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=bQlmBkT7YPFLGN3jkndyeHxVU2LJMrxMkjzinTzeACw=;
-	b=Qiaz0dtnedw+Mrwqrb1vSYxg9WwO6ND4i41udqhF9DEkIHanzR6cXWFuCOeEZCFtUJzjRY
-	aSOeQ09hI39hgswoQZIumJuOOvLLdALgd2nCtog+SNj2ZYwF3q/6KkSdZn/qX6b604hM+q
-	r9e17si98wn3s6Yoj0IgoMa5SJNbXUA=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-294-4wY6JvvTMLi8wM-O5UeFRA-1; Mon, 23 Jun 2025 15:22:07 -0400
-X-MC-Unique: 4wY6JvvTMLi8wM-O5UeFRA-1
-X-Mimecast-MFC-AGG-ID: 4wY6JvvTMLi8wM-O5UeFRA_1750706526
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4fac7fa27so1723672f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:22:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mqEumHpz"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2fcbd76b61so5620003a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:22:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750706556; x=1751311356; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mH1izpCgKOdRs0luEnasPZfMbo2anYXefmEsOxYxfQI=;
+        b=mqEumHpzoOj+ZwQpYVeZ8ROSgG1vRLia39lxfC/b/SJ/9lppYGHzswONhL1lqZ6S6w
+         Zh/orO30V0YqdIZpV0mQXxQSfhVjxYA2bc11leQK+fpc4nSlhfHgMgFMOetkDmN9sj/d
+         wmP7oPZ6GECUp/Ft7w4DCai+drwYYElqwcC4ohTceiQtK0xGLLirG6yiwFXMBrP82WbQ
+         SYC381+gnxqn+FogChZ25KxcRTpNZiBha6CAswmFAKGX1vmi9cp+GK0Y0CuHtrs8Kot1
+         FYjcPzCfgkHUDLD6rJ/67EqycPrTnJ8wJEHV3B/lBUHsa9rPqfGTIjbowDVEfkQ/1WnQ
+         Y5lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750706526; x=1751311326;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bQlmBkT7YPFLGN3jkndyeHxVU2LJMrxMkjzinTzeACw=;
-        b=HOt1PdZoWrXRkK4H6PotQ0jl/zASkm0/jd9EPrjisrDEjUBqxJkCogTQqlY/UlqP08
-         QZCZjIhLTM1MIHGxQ6ALS9Rp/ie4pnqdTNtdDp+UjYPS3EOyvMLdgd6DergxbYqFiIUo
-         4XCVyDjF7wc0mqNN0h0x9srRPDnokiTerpr+LjVmnqeJntW+mz1lIAGaok9WCEWrQJac
-         OaZ0amjUq1OMu1jxTTJ3bc9iPs+kSmw9oYsMwYkvZ3+aVVg7giFxHbvkzixYaxg9QIb4
-         qu/kKw2m8TpSmN/nnTLblp+BQbueMvPWFZI2fEDfK5dKn5J4voDDyDPFBxgtQzRF6JWX
-         rOFQ==
-X-Gm-Message-State: AOJu0YyYVPBhtRxkx40666xKgXnFgFWyPUdYx0srFA5zoT5Rt2yIxtLs
-	c6WhzBS0LbfGSagz+8pmNMGeQp+oXRnr0Js5RmMedFo8IG18VI0OOA3u3x6jRGk49o42mRbjTgO
-	FrApI+XWazGWrJeeUOcemNMi0ssKPg1ASJAaeUQghVI7pVIZgC7FXl6FSsj/4DvWjlPjTx6tYLf
-	FL
-X-Gm-Gg: ASbGncujTeS7h9XUx1sCxpqZRAyaYmcxbDEU5SizvkV3AZqLKGxhqaprkyb21ZTqMx5
-	1aZ0fyCg8JQFkBh3Sp0nuncHzs8DiLsuEfMNmfAl96k4HpFSbTBZBwBVBKTJsv0Bn2AF8G6Vi65
-	wGpn62kAATfScU4R+lksRxAh6rjbJRuNnLQhXaUU5WrRDpderUJZ9uPVrmxdHknJGalDrzaMHqd
-	1PD+JmLxNonxW6yzIvUOyX6g+SREDWGn9Ui8W4/4YzcrRtZcOr8BWFWMMp1Wo8rZrlXC4CADR3t
-	1OpCZ4l3j/sFUUk6DgW6D7oZY4tAtk9YHtYyGTEE/GeURIdKe97T7OZ2+gAGgrOJBwfQqxQPJw2
-	YL/tkLMoK+LEWgJAn+GqDH0p32Ro8vc62psRSyhwFCQGQ6I3cNg==
-X-Received: by 2002:a05:6000:2890:b0:3a4:d4e5:498a with SMTP id ffacd0b85a97d-3a6d130d49cmr11494755f8f.42.1750706526335;
-        Mon, 23 Jun 2025 12:22:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF87md/e3MMQCR4P74foXjnNwaFCtfLKwq6x9gBQ7WUQ/oG8Mjxt52qiatY+Y1JHSf1QQrKdw==
-X-Received: by 2002:a05:6000:2890:b0:3a4:d4e5:498a with SMTP id ffacd0b85a97d-3a6d130d49cmr11494745f8f.42.1750706525946;
-        Mon, 23 Jun 2025 12:22:05 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159? (p200300d82f4efd008e13e3b590c81159.dip0.t-ipconnect.de. [2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f1d902sm9900905f8f.43.2025.06.23.12.22.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 12:22:05 -0700 (PDT)
-Message-ID: <4d35795f-df24-40eb-a1e8-2914b0f5d697@redhat.com>
-Date: Mon, 23 Jun 2025 21:22:03 +0200
+        d=1e100.net; s=20230601; t=1750706556; x=1751311356;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mH1izpCgKOdRs0luEnasPZfMbo2anYXefmEsOxYxfQI=;
+        b=HwBMfRUvzJ4QukDpRsQD21NROstGPQR49EwJuD0ynrfooig9k71tZoavs6xx2fti3n
+         Rojw6xqumk1DINkx8qshTXS4708i6KVtbu3uRhweEOqfznk+QUvFodvSUJev0SbMRbTp
+         xwHDizOAUzUkTZRaF10sPL8XO5RPhDyUpCNNlWSH7JVmxE9SHpc6RIynLKobdl5fg++k
+         VZAKr26vLuSa8c4C8EZ63m72OLBhP2OT1s5BwyMN3TRCk/JwTCToYiHj/DUk7PHwQhBf
+         6Iif3d7jMHkH4tcNDNCgihCTr5cyGFfjHEyhy0anjtZevLbSP1ZIAVvDBk0/T/syRiQW
+         0dgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+oWmDZqMgd7Utzg0YUUpAAEy/7kCIEOnN1G7/G/KbZBMq43Vd8T3JDX+jxz2S1f5oDZed92RMXu+YJBU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxh6fIKlVnjUVbT1b/U7+yA2iJ/ycMoQpTIPrMQrZuzNVlFbO4x
+	NgvTF1QxPMqNYwhqDxwXhT3+Y7ImCjWYVi068Q/WcuKnQoTamjRhfrIQ7HIv/oEj3tSr1nSwWIs
+	0U4yJnQ==
+X-Google-Smtp-Source: AGHT+IH7I9v6zHc4cbTrZUDYu8elviPUdSP6+QeYRx4dISPv8ZdbFyj5Ye/636EGB3YXaNdeSrOpFVWoN8I=
+X-Received: from pjboe18.prod.google.com ([2002:a17:90b:3952:b0:312:f88d:25f6])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2e87:b0:313:1769:eb49
+ with SMTP id 98e67ed59e1d1-3159d63cf11mr22012299a91.8.1750706555935; Mon, 23
+ Jun 2025 12:22:35 -0700 (PDT)
+Date: Mon, 23 Jun 2025 12:22:34 -0700
+In-Reply-To: <e255fa3ee192b136eeef7e9a63e8d1506d5e85a8.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 03/14] mm: compare pfns only if the entry is present
- when inserting pfns/pages
-To: Oscar Salvador <osalvador@suse.de>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, nvdimm@lists.linux.dev,
- Andrew Morton <akpm@linux-foundation.org>, Juergen Gross <jgross@suse.com>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- Dan Williams <dan.j.williams@intel.com>, Alistair Popple
- <apopple@nvidia.com>, Matthew Wilcox <willy@infradead.org>,
- Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
- Barry Song <baohua@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>
-References: <20250617154345.2494405-1-david@redhat.com>
- <20250617154345.2494405-4-david@redhat.com>
- <aFVhvYbRH2dtiFKY@localhost.localdomain>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aFVhvYbRH2dtiFKY@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250326193619.3714986-1-yosry.ahmed@linux.dev>
+ <20250326193619.3714986-13-yosry.ahmed@linux.dev> <e255fa3ee192b136eeef7e9a63e8d1506d5e85a8.camel@redhat.com>
+Message-ID: <aFmpeqtEbVmTl5N-@google.com>
+Subject: Re: [RFC PATCH 12/24] KVM: x86: hyper-v: Pass is_guest_mode to kvm_hv_vcpu_purge_flush_tlb()
+From: Sean Christopherson <seanjc@google.com>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Jim Mattson <jmattson@google.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Rik van Riel <riel@surriel.com>, Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On 20.06.25 15:27, Oscar Salvador wrote:
-> On Tue, Jun 17, 2025 at 05:43:34PM +0200, David Hildenbrand wrote:
->> Doing a pte_pfn() etc. of something that is not a present page table
->> entry is wrong. Let's check in all relevant cases where we want to
->> upgrade write permissions when inserting pfns/pages whether the entry
->> is actually present.
-> 
-> Maybe I would add that's because the pte can have other info like
-> marker, swp_entry etc.
-> 
->> It's not expected to have caused real harm in practice, so this is more a
->> cleanup than a fix for something that would likely trigger in some
->> weird circumstances.
->>
->> At some point, we should likely unify the two pte handling paths,
->> similar to how we did it for pmds/puds.
->>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
-> 
-> Reviewed-by: Oscar Salvador <osalvador@suse.de>
-> 
-> Should we scream if someone passes us a non-present entry?
-> 
+On Thu, Apr 03, 2025, Maxim Levitsky wrote:
+> On Wed, 2025-03-26 at 19:36 +0000, Yosry Ahmed wrote:
+> > Instead of calling is_guest_mode() inside kvm_hv_vcpu_purge_flush_tlb()
+> > pass the value from the caller. Future changes will pass different
+> > values than is_guest_mode(vcpu).
+> > 
+> > No functional change intended.
+> > 
+> > Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+> > ---
+> >  arch/x86/kvm/hyperv.h  | 8 +++++---
+> >  arch/x86/kvm/svm/svm.c | 2 +-
+> >  arch/x86/kvm/x86.c     | 2 +-
+> >  3 files changed, 7 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
+> > index 913bfc96959cb..be715deaeb003 100644
+> > --- a/arch/x86/kvm/hyperv.h
+> > +++ b/arch/x86/kvm/hyperv.h
+> > @@ -203,14 +203,15 @@ static inline struct kvm_vcpu_hv_tlb_flush_fifo *kvm_hv_get_tlb_flush_fifo(struc
+> >  	return &hv_vcpu->tlb_flush_fifo[i];
+> >  }
+> >  
+> > -static inline void kvm_hv_vcpu_purge_flush_tlb(struct kvm_vcpu *vcpu)
+> > +static inline void kvm_hv_vcpu_purge_flush_tlb(struct kvm_vcpu *vcpu,
+> > +					       bool is_guest_mode)
 
-Probably? Good point, let me think about that.
+NAK, passing around is_guest_mode is going to cause problems.  All it takes is
+one snippet of code that operates on the current vCPU state for KVM to end up
+with bugs.  It's unfortunate that kvm_hv_get_tlb_flush_fifo() takes in an
+@is_guest_mode param, but that's "necessary" due to the cross-vCPU nature of
+the usage.  For this case, there is no such requirement/restriction.
 
-> 
->> ---
->>   mm/huge_memory.c | 4 ++--
->>   mm/memory.c      | 4 ++--
->>   2 files changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->> index 8e0e3cfd9f223..e52360df87d15 100644
->> --- a/mm/huge_memory.c
->> +++ b/mm/huge_memory.c
->> @@ -1392,7 +1392,7 @@ static int insert_pmd(struct vm_area_struct *vma, unsigned long addr,
->>   		const unsigned long pfn = fop.is_folio ? folio_pfn(fop.folio) :
->>   					  fop.pfn;
->>   
->> -		if (write) {
->> +		if (write && pmd_present(*pmd)) {
->>   			if (pmd_pfn(*pmd) != pfn) {
->>   				WARN_ON_ONCE(!is_huge_zero_pmd(*pmd));
->>   				return -EEXIST;
->> @@ -1541,7 +1541,7 @@ static void insert_pud(struct vm_area_struct *vma, unsigned long addr,
->>   		const unsigned long pfn = fop.is_folio ? folio_pfn(fop.folio) :
->>   					  fop.pfn;
->>   
->> -		if (write) {
->> +		if (write && pud_present(*pud)) {
->>   			if (WARN_ON_ONCE(pud_pfn(*pud) != pfn))
->>   				return;
->>   			entry = pud_mkyoung(*pud);
->> diff --git a/mm/memory.c b/mm/memory.c
->> index a1b5575db52ac..9a1acd057ce59 100644
->> --- a/mm/memory.c
->> +++ b/mm/memory.c
->> @@ -2137,7 +2137,7 @@ static int insert_page_into_pte_locked(struct vm_area_struct *vma, pte_t *pte,
->>   	pte_t pteval = ptep_get(pte);
->>   
->>   	if (!pte_none(pteval)) {
->> -		if (!mkwrite)
->> +		if (!mkwrite || !pte_present(pteval))
->>   			return -EBUSY;
-> 
-> Why EBUSY? because it might transitory?
+I also think that being super explicit isn't a bad thing, even if it means we
+might end up with duplicate code.  I.e. having this
 
-I was confused myself about error handling, and why it differs for all 
-cases ... adding to me todo list to investigate that (clean it up ...) :)
+	vmcb_set_flush_asid(svm->vmcb01.ptr);
+	if (svm->nested.vmcb02.ptr)
+		vmcb_set_flush_asid(svm->nested.vmcb02.ptr);
 
--- 
-Cheers,
+in svm_flush_tlb_all() is a net positive IMO, because it explicitly reads "flush
+vmcb01's ASID, and vmcb02's ASID if vmcb02 is valid".  Whereas this
 
-David / dhildenb
+        svm_flush_tlb_asid(vcpu, false);
+        svm_flush_tlb_asid(vcpu, true);
 
+isn't anywhere near as explicit.  I can make a good guess as to what true/false
+are specifying, but many readers will need to go at least a layer or two deeper
+to understand what's going on.  More importantly, it's not at all clear in
+svm_flush_tlb_asid() that the vmcb can/should only be NULL in the is_guest_mode=true
+case.
+
+        if (vmcb)
+                vmcb_set_flush_asid(vmcb);
+
+And it's even actively dangerous, in that a bug where a vmcb is unexpectedly NULL
+could lead to a missed TLB flush.  I.e. we *want* a NULL pointer #GP in a case
+like this, so that the host yells loudly (even if it means panicking), versus
+silently doing nothing and potentially corrupting guest data.  In practice, I can't
+imagine such a bug ever being truly silent, e.g. KVM is all but guaranteed to
+consume the NULL vmcb sooner than later.  But I still don't like creating such a
+possibility.
+
+> >  {
+> >  	struct kvm_vcpu_hv_tlb_flush_fifo *tlb_flush_fifo;
+> >  
+> >  	if (!to_hv_vcpu(vcpu) || !kvm_check_request(KVM_REQ_HV_TLB_FLUSH, vcpu))
+
+Case in point, kvm_check_request() is destructive (the name sucks, but it is what
+it is), i.e. KVM_REQ_HV_TLB_FLUSH will be cleared, and so only the first of the
+calls to svm_flush_tlb_asid() and thus kvm_hv_vcpu_purge_flush_tlb() will actually
+do anything.  This particular bug is functionally benign (KVM will over-flush),
+but it's still a bug.
+
+Somewhat of a side topic, I think we should rename kvm_hv_vcpu_purge_flush_tlb()
+to something like kvm_hv_purge_tlb_flush_fifo().  I initially read the first one
+as "purge *and* flush TLBs", whereas the function is actually "purge the TLB
+flush FIFO".
+
+Completely untested, but I think we should shoot for something like this, over
+2 or 3 patches.
+
+---
+ arch/x86/kvm/hyperv.h     | 14 +++++++++++++-
+ arch/x86/kvm/svm/nested.c |  1 -
+ arch/x86/kvm/svm/svm.c    | 17 ++++++++---------
+ 3 files changed, 21 insertions(+), 11 deletions(-)
+
+diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
+index 913bfc96959c..f2c17459dd8b 100644
+--- a/arch/x86/kvm/hyperv.h
++++ b/arch/x86/kvm/hyperv.h
+@@ -203,7 +203,7 @@ static inline struct kvm_vcpu_hv_tlb_flush_fifo *kvm_hv_get_tlb_flush_fifo(struc
+ 	return &hv_vcpu->tlb_flush_fifo[i];
+ }
+ 
+-static inline void kvm_hv_vcpu_purge_flush_tlb(struct kvm_vcpu *vcpu)
++static inline void kvm_hv_purge_tlb_flush_fifo(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm_vcpu_hv_tlb_flush_fifo *tlb_flush_fifo;
+ 
+@@ -215,6 +215,18 @@ static inline void kvm_hv_vcpu_purge_flush_tlb(struct kvm_vcpu *vcpu)
+ 	kfifo_reset_out(&tlb_flush_fifo->entries);
+ }
+ 
++static inline void kvm_hv_purge_tlb_flush_fifo(struct kvm_vcpu *vcpu)
++{
++	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
++	int i;
++
++	if (!hv_vcpu || !kvm_check_request(KVM_REQ_HV_TLB_FLUSH, vcpu))
++		return;
++
++	for (i = 0; i < ARRAY_SIZE(hv_vcpu->tlb_flush_fifo); i++)
++		kfifo_reset_out(&hv_vcpu->tlb_flush_fifo[i]->entries);
++}
++
+ static inline bool guest_hv_cpuid_has_l2_tlb_flush(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index b6c27b34f8e5..7e9156f27a96 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -491,7 +491,6 @@ static void nested_svm_entry_tlb_flush(struct kvm_vcpu *vcpu)
+ 	 * TODO: optimize unconditional TLB flush/MMU sync.  A partial list of
+ 	 * things to fix before this can be conditional:
+ 	 *
+-	 *  - Flush TLBs for both L1 and L2 remote TLB flush
+ 	 *  - Honor L1's request to flush an ASID on nested VMRUN
+ 	 *  - Sync nested NPT MMU on VMRUN that flushes L2's ASID[*]
+ 	 *  - Don't crush a pending TLB flush in vmcb02 on nested VMRUN
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 371593c4b629..f7be29733c9d 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -4163,15 +4163,8 @@ static void svm_flush_tlb_asid(struct kvm_vcpu *vcpu)
+ 	 * A TLB flush for the current ASID flushes both "host" and "guest" TLB
+ 	 * entries, and thus is a superset of Hyper-V's fine grained flushing.
+ 	 */
+-	kvm_hv_vcpu_purge_flush_tlb(vcpu);
++	kvm_hv_purge_tlb_flush_fifo(vcpu);
+ 
+-	/*
+-	 * Flush only the current ASID even if the TLB flush was invoked via
+-	 * kvm_flush_remote_tlbs().  Although flushing remote TLBs requires all
+-	 * ASIDs to be flushed, KVM uses a single ASID for L1 and L2, and
+-	 * unconditionally does a TLB flush on both nested VM-Enter and nested
+-	 * VM-Exit (via kvm_mmu_reset_context()).
+-	 */
+ 	vmcb_set_flush_asid(svm->vmcb);
+ }
+ 
+@@ -4193,6 +4186,8 @@ static void svm_flush_tlb_current(struct kvm_vcpu *vcpu)
+ 
+ static void svm_flush_tlb_all(struct kvm_vcpu *vcpu)
+ {
++	struct vcpu_svm *svm = to_svm(vcpu);
++
+ 	/*
+ 	 * When running on Hyper-V with EnlightenedNptTlb enabled, remote TLB
+ 	 * flushes should be routed to hv_flush_remote_tlbs() without requesting
+@@ -4203,7 +4198,11 @@ static void svm_flush_tlb_all(struct kvm_vcpu *vcpu)
+ 	if (WARN_ON_ONCE(svm_hv_is_enlightened_tlb_enabled(vcpu)))
+ 		hv_flush_remote_tlbs(vcpu->kvm);
+ 
+-	svm_flush_tlb_asid(vcpu);
++	kvm_hv_vcpu_purge_flush_tlb_all(vcpu);
++
++	vmcb_set_flush_asid(svm->vmcb01.ptr);
++	if (svm->nested.vmcb02.ptr)
++		vmcb_set_flush_asid(svm->nested.vmcb02.ptr);
+ }
+ 
+ static void svm_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t gva)
+
+base-commit: ba550af5af66a83ad055519b2271f6a21f28cb1b
+--
