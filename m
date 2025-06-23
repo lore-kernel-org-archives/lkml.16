@@ -1,63 +1,63 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E652286D7F;
-	Mon, 23 Jun 2025 15:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0060728D8D5;
+	Mon, 23 Jun 2025 15:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750691687; cv=none; b=NxgmKJ/iBCyawx2Egb7vG3vDwSmjLOOaQXOLpircDCjln2l19InfGvljXFcTmCtdCh9DJocy3GPHWABUq0rFtn7+H5yAlBr1VNMlACyZElcpsXKdUUh6haBQ9K55gXMDP1XTCWyLhKYtFRe1yo/W/6AaiIWUnwqbxepT0KbUlIw=
+	t=1750691692; cv=none; b=W/1vpNq338Get9o+ZofuWyHAu6ot4g8/5aBl9u0bZXk2j5Uhl3lXMWGFnd7y3jH0Ysr6g29cDNwyLkNrTfi+bEHvyFjxbmlgp46+q4e1yaMVxk1TLSZVDSFpXtHvwag2OrdeLKW29KkPWJbFZ4XeaWllgcHxtwOI8WTzOefT29Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750691687; c=relaxed/simple;
-	bh=XATRCyZN9h3h1eCMdiJkmGZxqm8MxTsDWzC41eiSOpw=;
+	s=arc-20240116; t=1750691692; c=relaxed/simple;
+	bh=9HLDxDHCQ3M24YIM9qCCru7ri37BgrydlZsGUsGK7W8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LsAUZlYcAPWHRCLTVacmdHN8+EbHIzaUeQfs6+eMKWLxc3oKqKgcCR8ynH4qPlG/IaAWkgcmAFeXE3qRnXAzSpcO3TxoR5eGNmZvRUTIbB9LsuIG3QEtdTXcXfg9IDukLDbTxnbytW6/n+G6KCbkds4MxNrzTOhZrSBIUiPdZrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LzP6RUw8; arc=none smtp.client-ip=209.85.215.178
+	 MIME-Version; b=KWkS8/uo4Yh076G2KoBM7AZ+zK2q7/y+x1wZahs2bfqbodNbj334EGKZMgBz4aPm/p2i+OS/M+36LvDOkJYnhP7cVAAjJSMVVmY4ISZ7mG9186NJtC0JYKY7yF0oS7TjTJ4XAPlGj95AnQvDVXHsA71B4falUTSeYLN+F3VHWg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e2XLvP08; arc=none smtp.client-ip=209.85.215.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LzP6RUw8"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b31d592bbe8so2946027a12.2;
-        Mon, 23 Jun 2025 08:14:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e2XLvP08"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b3220c39cffso988241a12.0;
+        Mon, 23 Jun 2025 08:14:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750691685; x=1751296485; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750691690; x=1751296490; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4L+SLp5sEjKp/3F3270exGqS9NQW7oUMk/S+cCYt5Es=;
-        b=LzP6RUw8xN8lM8RLg/PWNKgpv1DGYSTcpItELeEQhssAKGXL4uiuSoWrKGVHHTgi06
-         H2lbuc9vJBFCjVYkSpkG5stgTocsh1FoQ77GIwUJfyjioZfvqyG76Sxu1ORoGwV8sKDd
-         VEzOwr6ZIxeax9eOQDN6J92oj/T70s0Vd0J9nqihsyRdUm95b45C0L/2/YL37O+MNT8p
-         gis+Iq1efdSeJicNo8vgIbya+3kIej9o1QkkqsHIi9nf3IBC2xWB4+nAnA8VNrFIVRyc
-         XAXk2JsYYuJQYd6WI2ga789jTIK0zi82G5G0fjKo2PsEF/0kCNNfmhDUYI+HOX6z9f0g
-         KIDg==
+        bh=WxVvDAMvkM375HX/zxtZMIQJuoJ7i7/DvaZjzOiyFTo=;
+        b=e2XLvP08j0nShTwdzm7Py4fwUGz6oZg4KmmxXCmpcH2uHDyG6aSHLEdS8yP7ztVKi+
+         anl/KOVZeNxlPD8VCu/IiFodxcKoNTnLWYlf6US1ZCRGoiUVRsW1fmTwTfzFo20jmRxI
+         HBs7EmlMbnRdB3cwrh99YRODqDn6/1+/PxbNiH+IikRfezLqFQMh1SBwjf/OqGRC0DsV
+         BUPcm98VKf+tqnRMHKNC28Ydwy01Pnh7z0eBnyUROp/hM3qdIL9q/VzYdoy0q3RKc0Hq
+         203p/9I0IjPV/5xg+HqG5b98USuIQbpKNXpeScQvZSmIdywSXOcZB7pR4FN4o0LfSqzi
+         Mxtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750691685; x=1751296485;
+        d=1e100.net; s=20230601; t=1750691690; x=1751296490;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4L+SLp5sEjKp/3F3270exGqS9NQW7oUMk/S+cCYt5Es=;
-        b=K990LMcRgs2YXvTSVRe5RSeh4Udp8thfu66yXcLJj4A4eWiPaWYJfpGr9V1lutK8x9
-         jgTtLM4BG+7VcOw6mcNsEYh9f3VXDnCCyFZQfngmgrkY6fssJ/rBcaRELC4qBsrkdjzI
-         ZXwGHG7J/ArLGG/be2G9Xhxu1qS3UEaVtu4jsRchzZCFhmClBoOWdZZHBdXIQmGRk2of
-         gYK+UXX30AKZGSsu7d3S0k/1U/93rrCbnnekLZoi+xkwFMJMtOgH7cd8EyFvC1Q6Ki5t
-         BEZq8eAujQ0l2w/UyJYXHBeq8TydukKh9waM11eq4n+3CYx9JANRcYOM9gPv9Dwf2i51
-         gMYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVfASESmFssd/2p2heclco8OIQ5z7lj+yivlr6ydVgbSspC3ckDju3vQlrxu8OUnE1lkD34neysxyhDTR09oQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8nxNrteKe1HZOisAHNaC/oetiug2X6Kl9uecPx80JDPdeRB10
-	RaaEMgsCgnUOxjzjLN4UDJG7p5YGNJkGrFpSYPH7Oh+g5s9GVm44i5mX
-X-Gm-Gg: ASbGncvPRrOhdo+Pbo4wLr4NYb9b219J/w5/rTJU56vOj1eWToXjbHKB4x7RAWgSrOy
-	PHtwXOhpj0+Y6qJmzYPc6RPQ2Hp+t3CxB1PaiQ5M4ukY+haUQ1u/Onf0GWtpK96+UXcvQ3zocWx
-	AbAZd4BFPkK4Ni5wIltPkJkUOJvSziaOyuYqHM92tQxFwRCIEv0b9pHKLSxwvQyEKu+x2PkP6qO
-	+QjUsOmjExJUJ6+0Tbgyce3qsY/1h7HYHgaBj/EPL2QrGXV48KiUCrIHaAhUSKeiz4r1hWLEr0N
-	QiBJMkfzfrj71/mm1Y9FpUtbk3YAW1+M+k8CrKyYK06nzixzFutGbY9+hWabrzeAZAcFohb1eo5
-	iHYaTdN0=
-X-Google-Smtp-Source: AGHT+IHjXjnNaJs4mpv+QbUUX8obW8sAmU/EZar1U85z03oyOBaK0Zh98OMIpjOXdxPItTkxI0ZxFA==
-X-Received: by 2002:a17:90b:4f46:b0:312:e49b:c972 with SMTP id 98e67ed59e1d1-3159d68a9cbmr18302917a91.15.1750691685273;
-        Mon, 23 Jun 2025 08:14:45 -0700 (PDT)
+        bh=WxVvDAMvkM375HX/zxtZMIQJuoJ7i7/DvaZjzOiyFTo=;
+        b=LshM3cH4S1mzrDk4RFKW5c7FHfJ6BocU5m3y6FFMxf6iIAYh6SaxmEZAKkBsqTZc3j
+         s9yHH9+yCGjOeTcuMWIkhlCUZuMUTULB5XKCtpBne7lTa3NYkRWw2bbxw2/akwuIxHgR
+         3rnuHHn08kw6OicsNMuaqVpbJIumQZ70qaJ60ZYaQAJS4URyfk2apVi1AysYSWaf9/7n
+         nQ1yYCpl4+0PvPhozHsYsREAstPaCy+PnZKioMw385ptDk4avqf39B7FfudQu3cGYAH/
+         rN/orrbKaySgU7Ie+c1TbY5l7m6pFOn/hzTrCRko1gj0Wl+n5mrB80795hUnriFOedeV
+         mq4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVOuCRhXxrMS+4Blqh84CX/Cth//umdMfuw/ObsnYJbHJ6l7Cpj8HT1nnmb1W/d20+fO3wznm6YnaSCEt12kw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YywKtrjLW3VB730839fs47aGX25H2WrGNeFNRFVhY+2s9mIs+UI
+	76M4SMiksz/DPb/S+jt5XURF8pFqLwml9W3psB8N0fmeATZgvGWbOXbv
+X-Gm-Gg: ASbGncupD0SpF3tLt/+7JhNm+/TfwK8CFkZZE80Ck4A+T7goZt1ZnkKJtArMysR3v3y
+	9vCCoLjRnctc7iWzQI6XePQGpUuCuLkkiLsWyZpnrQE1bhd3ESujAH739eXirWdhnauSyJFGSy5
+	R3jOgqI3hzAyBfGklklRDaowOKY/zpB7ypy5tlT763C/WzuOuMSmR5aFGaqS7a+4YSPv5UbpeRI
+	bfjjg5ixTrn9+TruIOAPHMEjEEwgLT8CdLme8MoflsVajbr6XC/EGaqDPKTgRAiVm1IoI1L+DKQ
+	vilvTQCsmDuS1MeJpMvfvl8Sa7Z+hY/bsTE78qW5fEZfnb4kZfT9hPDGXgHbJe2z1VotXjmCmIZ
+	AGnBFXOE=
+X-Google-Smtp-Source: AGHT+IHZ6b3VUpDC1c2zoZYui2q3WO6oIWeoRkRFN9suemWLWo9jP+W3JOYotkgd1zwMLlo2zWW6Rg==
+X-Received: by 2002:a17:90b:574d:b0:312:e731:5a66 with SMTP id 98e67ed59e1d1-3159d624244mr19128362a91.3.1750691689838;
+        Mon, 23 Jun 2025 08:14:49 -0700 (PDT)
 Received: from localhost.localdomain ([112.149.32.52])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159df71cd6sm8338512a91.4.2025.06.23.08.14.41
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159df71cd6sm8338512a91.4.2025.06.23.08.14.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 08:14:44 -0700 (PDT)
+        Mon, 23 Jun 2025 08:14:49 -0700 (PDT)
 From: Jesung Yang <y.j3ms.n@gmail.com>
 To: Miguel Ojeda <ojeda@kernel.org>,
 	Alex Gaynor <alex.gaynor@gmail.com>,
@@ -73,9 +73,9 @@ Cc: linux-kernel@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	nouveau@lists.freedesktop.org,
 	Jesung Yang <y.j3ms.n@gmail.com>
-Subject: [PATCH 1/4] rust: introduce `FromPrimitive` trait
-Date: Mon, 23 Jun 2025 15:14:27 +0000
-Message-Id: <702d21d34368b1dcd896343771b00a2303e9a312.1750689857.git.y.j3ms.n@gmail.com>
+Subject: [PATCH 2/4] rust: macros: extend custom `quote!` macro
+Date: Mon, 23 Jun 2025 15:14:28 +0000
+Message-Id: <f75b20619c4269edad12ad826caf83ceeed89dbb.1750689857.git.y.j3ms.n@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <cover.1750689857.git.y.j3ms.n@gmail.com>
 References: <cover.1750689857.git.y.j3ms.n@gmail.com>
@@ -87,194 +87,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce a new `FromPrimitive` trait under `kernel::convert` that
-enables fallible conversion from primitive types to user-defined
-types.
+Implement the `ToTokens` trait for `&T` where `T` implements `ToTokens`.
+This allows users to use the `quote!` macro with references directly,
+avoiding the need to clone values.
 
-This is useful when numeric values need to be interpreted as structured
-representations such as enums. These situations often arise when
-working with low-level data sources, for example when reading values
-from hardware registers.
+Implement the `ToTokens` trait for `proc_macro::Literal`. This enables
+the direct use of literals in the `quote!` macro, which is useful when
+emitting numeric constants.
+
+Extend the `quote_spanned!` macro to support additional punctuation
+tokens: `->`, `<`, `>`, and `==`. This symbols are commonly needed when
+dealing with functions, generic bounds, and equality comparisons.
 
 Signed-off-by: Jesung Yang <y.j3ms.n@gmail.com>
 ---
- rust/kernel/convert.rs | 154 +++++++++++++++++++++++++++++++++++++++++
- rust/kernel/lib.rs     |   1 +
- 2 files changed, 155 insertions(+)
- create mode 100644 rust/kernel/convert.rs
+ rust/macros/quote.rs | 42 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/rust/kernel/convert.rs b/rust/kernel/convert.rs
-new file mode 100644
-index 000000000000..fb01a0e1507a
---- /dev/null
-+++ b/rust/kernel/convert.rs
-@@ -0,0 +1,154 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Traits for type conversion.
-+
-+/// A trait for fallible conversions from primitive types.
-+///
-+/// [`FromPrimitive`] allows converting from various built-in primitive types
-+/// (such as integers and `bool`) into a user-defined type, typically an `enum`.
-+///
-+/// At least [`from_i64`] and [`from_u64`] should be implemented. All other methods
-+/// have default implementations that convert to `i64` or `u64` using fallible casts and
-+/// delegate to those two core methods.
-+///
-+/// Enums with wide representations such as `#[repr(i128)]` or `#[repr(u128)]` may lose
-+/// information through narrowing in the default implementations. In such cases, override
-+/// [`from_i128`] and [`from_u128`] explicitly.
-+///
-+/// This trait can be used with `#[derive]`.
-+/// See [`FromPrimitive`](../../macros/derive.FromPrimitive.html) derive macro for more
-+/// information.
-+///
-+/// [`from_i64`]: FromPrimitive::from_i64
-+/// [`from_i128`]: FromPrimitive::from_i128
-+/// [`from_u64`]: FromPrimitive::from_u64
-+/// [`from_u128`]: FromPrimitive::from_u128
-+///
-+/// # Examples
-+///
-+/// ```rust
-+/// use kernel::convert::FromPrimitive;
-+///
-+/// #[derive(PartialEq)]
-+/// enum Foo {
-+///     A,
-+///     B = 0x17,
-+///     C = -2,
-+/// }
-+///
-+/// impl FromPrimitive for Foo {
-+///     fn from_i64(n: i64) -> Option<Self> {
-+///         match n {
-+///             0 => Some(Self::A),
-+///             0x17 => Some(Self::B),
-+///             -2 => Some(Self::C),
-+///             _ => None,
-+///         }
-+///     }
-+///
-+///     fn from_u64(n: u64) -> Option<Self> {
-+///         i64::try_from(n).ok().and_then(Self::from_i64)
-+///     }
-+/// }
-+///
-+/// assert_eq!(Foo::from_u64(0), Some(Foo::A));
-+/// assert_eq!(Foo::from_u64(0x17), Some(Foo::B));
-+/// assert_eq!(Foo::from_i64(-2), Some(Foo::C));
-+/// assert_eq!(Foo::from_i64(-3), None);
-+/// ```
-+pub trait FromPrimitive: Sized {
-+    /// Attempts to convert a `bool` to `Self`. Returns `Some(Self)` if the input
-+    /// corresponds to a known value; otherwise, `None`.
-+    #[inline]
-+    fn from_bool(b: bool) -> Option<Self> {
-+        Self::from_u64(u64::from(b))
-+    }
-+
-+    /// Attempts to convert an `isize` to `Self`. Returns `Some(Self)` if the input
-+    /// corresponds to a known value; otherwise, `None`.
-+    #[inline]
-+    fn from_isize(n: isize) -> Option<Self> {
-+        i64::try_from(n).ok().and_then(Self::from_i64)
-+    }
-+
-+    /// Attempts to convert an `i8` to `Self`. Returns `Some(Self)` if the input
-+    /// corresponds to a known value; otherwise, `None`.
-+    #[inline]
-+    fn from_i8(n: i8) -> Option<Self> {
-+        Self::from_i64(i64::from(n))
-+    }
-+
-+    /// Attempts to convert an `i16` to `Self`. Returns `Some(Self)` if the input
-+    /// corresponds to a known value; otherwise, `None`.
-+    #[inline]
-+    fn from_i16(n: i16) -> Option<Self> {
-+        Self::from_i64(i64::from(n))
-+    }
-+
-+    /// Attempts to convert an `i32` to `Self`. Returns `Some(Self)` if the input
-+    /// corresponds to a known value; otherwise, `None`.
-+    #[inline]
-+    fn from_i32(n: i32) -> Option<Self> {
-+        Self::from_i64(i64::from(n))
-+    }
-+
-+    /// Attempts to convert an `i64` to `Self`. Returns `Some(Self)` if the input
-+    /// corresponds to a known value; otherwise, `None`.
-+    fn from_i64(n: i64) -> Option<Self>;
-+
-+    /// Attempts to convert an `i128` to `Self`. Returns `Some(Self)` if the input
-+    /// corresponds to a known value; otherwise, `None`.
-+    ///
-+    /// The default implementation delegates to [`from_i64`](FromPrimitive::from_i64)
-+    /// by downcasting from `i128` to `i64`, which may result in information loss.
-+    /// Consider overriding this method if `Self` can represent values outside the
-+    /// `i64` range.
-+    #[inline]
-+    fn from_i128(n: i128) -> Option<Self> {
-+        i64::try_from(n).ok().and_then(Self::from_i64)
-+    }
-+
-+    /// Attempts to convert a `usize` to `Self`. Returns `Some(Self)` if the input
-+    /// corresponds to a known value; otherwise, `None`.
-+    #[inline]
-+    fn from_usize(n: usize) -> Option<Self> {
-+        u64::try_from(n).ok().and_then(Self::from_u64)
-+    }
-+
-+    /// Attempts to convert a `u8` to `Self`. Returns `Some(Self)` if the input
-+    /// corresponds to a known value; otherwise, `None`.
-+    #[inline]
-+    fn from_u8(n: u8) -> Option<Self> {
-+        Self::from_u64(u64::from(n))
-+    }
-+
-+    /// Attempts to convert a `u16` to `Self`. Returns `Some(Self)` if the input
-+    /// corresponds to a known value; otherwise, `None`.
-+    #[inline]
-+    fn from_u16(n: u16) -> Option<Self> {
-+        Self::from_u64(u64::from(n))
-+    }
-+
-+    /// Attempts to convert a `u32` to `Self`. Returns `Some(Self)` if the input
-+    /// corresponds to a known value; otherwise, `None`.
-+    #[inline]
-+    fn from_u32(n: u32) -> Option<Self> {
-+        Self::from_u64(u64::from(n))
-+    }
-+
-+    /// Attempts to convert a `u64` to `Self`. Returns `Some(Self)` if the input
-+    /// corresponds to a known value; otherwise, `None`.
-+    fn from_u64(n: u64) -> Option<Self>;
-+
-+    /// Attempts to convert a `u128` to `Self`. Returns `Some(Self)` if the input
-+    /// corresponds to a known value; otherwise, `None`.
-+    ///
-+    /// The default implementation delegates to [`from_u64`](FromPrimitive::from_u64)
-+    /// by downcasting from `u128` to `u64`, which may result in information loss.
-+    /// Consider overriding this method if `Self` can represent values outside the
-+    /// `u64` range.
-+    #[inline]
-+    fn from_u128(n: u128) -> Option<Self> {
-+        u64::try_from(n).ok().and_then(Self::from_u64)
+diff --git a/rust/macros/quote.rs b/rust/macros/quote.rs
+index 92cacc4067c9..d05f60f55623 100644
+--- a/rust/macros/quote.rs
++++ b/rust/macros/quote.rs
+@@ -7,6 +7,12 @@ pub(crate) trait ToTokens {
+     fn to_tokens(&self, tokens: &mut TokenStream);
+ }
+ 
++impl<T: ToTokens> ToTokens for &T {
++    fn to_tokens(&self, tokens: &mut TokenStream) {
++        (*self).to_tokens(tokens);
 +    }
 +}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 6b4774b2b1c3..861c9340d9c2 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -61,6 +61,7 @@
- pub mod clk;
- #[cfg(CONFIG_CONFIGFS_FS)]
- pub mod configfs;
-+pub mod convert;
- pub mod cpu;
- #[cfg(CONFIG_CPU_FREQ)]
- pub mod cpufreq;
++
+ impl<T: ToTokens> ToTokens for Option<T> {
+     fn to_tokens(&self, tokens: &mut TokenStream) {
+         if let Some(v) = self {
+@@ -27,6 +33,12 @@ fn to_tokens(&self, tokens: &mut TokenStream) {
+     }
+ }
+ 
++impl ToTokens for proc_macro::Literal {
++    fn to_tokens(&self, tokens: &mut TokenStream) {
++        tokens.extend([TokenTree::from(self.clone())]);
++    }
++}
++
+ impl ToTokens for TokenTree {
+     fn to_tokens(&self, tokens: &mut TokenStream) {
+         tokens.extend([self.clone()]);
+@@ -144,6 +156,36 @@ macro_rules! quote_spanned {
+         ));
+         quote_spanned!(@proc $v $span $($tt)*);
+     };
++    (@proc $v:ident $span:ident -> $($tt:tt)*) => {
++        $v.push(::proc_macro::TokenTree::Punct(
++                ::proc_macro::Punct::new('-', ::proc_macro::Spacing::Joint)
++        ));
++        $v.push(::proc_macro::TokenTree::Punct(
++                ::proc_macro::Punct::new('>', ::proc_macro::Spacing::Alone)
++        ));
++        quote_spanned!(@proc $v $span $($tt)*);
++    };
++    (@proc $v:ident $span:ident < $($tt:tt)*) => {
++        $v.push(::proc_macro::TokenTree::Punct(
++                ::proc_macro::Punct::new('<', ::proc_macro::Spacing::Alone)
++        ));
++        quote_spanned!(@proc $v $span $($tt)*);
++    };
++    (@proc $v:ident $span:ident > $($tt:tt)*) => {
++        $v.push(::proc_macro::TokenTree::Punct(
++                ::proc_macro::Punct::new('>', ::proc_macro::Spacing::Alone)
++        ));
++        quote_spanned!(@proc $v $span $($tt)*);
++    };
++    (@proc $v:ident $span:ident == $($tt:tt)*) => {
++        $v.push(::proc_macro::TokenTree::Punct(
++                ::proc_macro::Punct::new('=', ::proc_macro::Spacing::Joint)
++        ));
++        $v.push(::proc_macro::TokenTree::Punct(
++                ::proc_macro::Punct::new('=', ::proc_macro::Spacing::Alone)
++        ));
++        quote_spanned!(@proc $v $span $($tt)*);
++    };
+     (@proc $v:ident $span:ident = $($tt:tt)*) => {
+         $v.push(::proc_macro::TokenTree::Punct(
+                 ::proc_macro::Punct::new('=', ::proc_macro::Spacing::Alone)
 -- 
 2.39.5
 
