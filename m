@@ -1,123 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E15423817F;
-	Mon, 23 Jun 2025 11:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA6A17F7
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750678189; cv=none; b=WKbtJlzrKqb6IZsaKcU75FDPIXzYTk9S3nbdv2oa5zxWBgjO7EGL186ylWeIXDVBr8W3Kg7y+ty2t/715G3ptLDIwxL9aeWkddLTnl6ww6qPHwW4Zk+HObZIT/JunmHIxEDncfZKKdyej4voTALA2+J36QruD/raklOn9Xmk7FE=
+	t=1750678189; cv=none; b=Cm71QntvapFnbwnvOTZDY3GBjsh84ZqHu2NvFWrF/QGSjldIAb9MVHkAFtBcpm4DRY+y/Z40cP4deoFGs7ea48BbH9IITkM3ypILM+o54Vxl2ZadMlrdy+am0P+3OJKVk6Jd8WO7N9bwEzIbgVsLaF26kYAgIiWeoMvq8Hfil9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750678189; c=relaxed/simple;
-	bh=w6AaO6fgK2fNbORRzUvx6Qa3WCSt0XSFElEO927wLeY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ESwvF4vgSMdZHVKseIkLoC9XMpcxbi5gHjWXHo7ZZ9xWnvdqx1k4JTOPxoDeuOlJpjWJ2+QYozRUmPBOUek7PFKoBjQ/5s7g6etmKGfnYCR2/U1tZKMNeRptY2Vlj//h2Tui2VskZOFpn24t3NA1dwY+x6zz9M6pLmp6Ws6ctA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rqSFoUy6; arc=none smtp.client-ip=10.30.226.201
+	bh=EuF8lurL6p/iA8TKALhZ4lhyb4SopomSm3LRQYZ/X1c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eVXKMG1hGeeP3X1XunBeCDIBVYK6lsSdu4sY+kRXAJ0M8RNCWVB98IckULBRy1sLGxF9sd8OeuoJ+XDfBMxDhLK69zTFkF8hzYcejv5p6ePJtV68t173vr5GdwYL/+mebhYlpOGvMnXe4MGfWjyrCJBZy3+aHo8qWa4kUPL8P7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=fwmfs+fX; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rqSFoUy6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EE97C4CEF7;
-	Mon, 23 Jun 2025 11:29:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750678188;
-	bh=w6AaO6fgK2fNbORRzUvx6Qa3WCSt0XSFElEO927wLeY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rqSFoUy60QVVLtbY4efKUq1P1PcXwr3lo6+JMXseUEvm9py7YL7hax6kFOSdZwdym
-	 pTpZJh8spMc7wsGJXNvqY21TZArnFf5DV4hBRq0OxOzUd6GwDcmYQdd4J1eKvLEtlD
-	 AJLG+YlZNMWC/1H2uMoN+rbrbbLrP7vqX5C67lAzhbSZB1GV9XWz00+6wGx6F6eWto
-	 L5XtZS/rW+goRAs5AX+JNetLMNKAYTyAjsJNR3mC5ZmjWGu+Kf7eoiL4Y8L0r0BrEu
-	 z9R8efYMX4mKAU89Yf/gBmIuL5DVZafBAb1zVfMSVph/EPQeOAufP4yXBkhCx1AyTS
-	 Pcn2e2Bnp0C2g==
-Date: Mon, 23 Jun 2025 05:29:46 -0600
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Geraldo Nascimento <geraldogabriel@gmail.com>
-Cc: linux-rockchip@lists.infradead.org, 
-	Hugh Cole-Baker <sigmaris@gmail.com>, Shawn Lin <shawn.lin@rock-chips.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v3 2/3] PCI: rockchip-host: Retry link training on
- failure without PERST#
-Message-ID: <zuiq3b2rsixymtjr3xzrb26clikvlja62wgj65umnse4kuk75c@x5qan73ispxe>
-References: <cover.1749582046.git.geraldogabriel@gmail.com>
- <b7c09279b4a7dbdba92543db9b9af169776bd90c.1749582046.git.geraldogabriel@gmail.com>
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="fwmfs+fX"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4a58e0b26c4so74961491cf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 04:29:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1750678186; x=1751282986; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CId97r6bxGhOkOsNTRpZGo7/FNNKpNsqY9QIA/bl+4Y=;
+        b=fwmfs+fXrDT5GeTfHuVXKHOlb7KfByS6ViIPpsw/93lUsjU3zRFO7hy7fNOCO6xT3L
+         U0kESQ2zpTSShEZTZslLLpKz3PL2NwVZ3kt8jRxaWbJHB9YIlNyp/D/ZCAB04vFp6f9s
+         tgG3c3GgkoJfCxeO/V93m8J2/PUWK3raCIWkt7BGiovvDQneGPE4BvSHT+ZZCD3Fibaf
+         mE3DgfNXk/pt/88r+RBjJ6oFiU1lna/UyXSKeWNhJCs2OGz1kUNTCQrx1sW0hfzN4JdU
+         G1uTsUtMQN30D9sUGfI5ynqLlMHKawWUJ70DBsUqL6bMlbM8ES0/6yoCfGUenJOsI3N8
+         VPpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750678186; x=1751282986;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CId97r6bxGhOkOsNTRpZGo7/FNNKpNsqY9QIA/bl+4Y=;
+        b=NJYCjOFe3tsvP4q7OwUytixY/N5tGUWKL1BJlLMgZZkbtyaBysYJ3eHxNgkWpFlHYD
+         q+75cgsNpJ8kqK7IXfcUXxmZhjK4lVuiDRRyAICVm9mCrEuxwaaA+m7Xo0oblXHGRPxQ
+         fDZHa5DjH4AW45ziFSsHWwgFfxx1P+Nm4ortDpEmVPHNyNw+555Sq2zRWBV1uTTh3P/1
+         wcjSom41g4MtEkYuTukO98xSPVSON32sixAd83oGliD05s370LTK75Isj8V6HNSPOrGo
+         AGiFbOzfvdkv0csUId17yczObhiaB9hTYgoMdoPFCiimiR1ecRxShasAuwgbK9wBtcxt
+         E5Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCW0OlGFysFFQAm03eKy/U14InjY4vcWjtWB9HAu56IjgqgA2zzo+v5BHfB3DYB58kH7Ms1a4mb10LOdJJ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT+OWTung+HCd/kj6L9p8oc6js6HuyYKCP7P/Kpjas6mbt0V/6
+	0Zg2vBGD7Oa1TEHe6d4YUf7ahAI6ZocKm6U5gmQ0qCylTcQLpBU0ENz/dOzQuksx4mAH3kuQ5o6
+	NIINdWiIqzZcfl0zu4e1+ZM1RlRfqKEZOOjjv4pyVCw==
+X-Gm-Gg: ASbGncupekjrdSrsqK4uk/fo8UeYGMpN24RfkPE75zIZ0Meh9PH3vYlvB3ruYzmHYHK
+	6d1V3R9NyUNMVXTDo+vYCgaAW0Hyid1oVhhJE6c6wRkuUWsZ20kM57K65t4sRvYLNE7xjZ1hno3
+	TVd2WTZy12GShTq7SSicjHbAoGCLwQgJzif9qRD8ye
+X-Google-Smtp-Source: AGHT+IGPqAUH/RPykVSVaglFJdihJdozlPbvSoTGsXcR0nXvouD9V9X1wSLeh0iQLT+SzQ72tUMBq5c1jJy1W6hZsnA=
+X-Received: by 2002:ac8:7f92:0:b0:4a4:2c46:26a2 with SMTP id
+ d75a77b69052e-4a77a23acd8mr156063601cf.10.1750678186510; Mon, 23 Jun 2025
+ 04:29:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b7c09279b4a7dbdba92543db9b9af169776bd90c.1749582046.git.geraldogabriel@gmail.com>
+References: <mafs0sekfts2i.fsf@kernel.org> <CA+CK2bA7eAB4PvF0RXtt2DJ+FQ4DVV3x1OZrVo4q3EvgowhvJg@mail.gmail.com>
+ <mafs0sek3n0x8.fsf@kernel.org> <20250617152357.GB1376515@ziepe.ca>
+ <CA+CK2bAtO7BA5iptRfA_oa=5sUz_t-0F3Lu8oae1STnijXrPPQ@mail.gmail.com>
+ <mafs05xgtw5wn.fsf@kernel.org> <CA+CK2bDWAPSmTdnD7vw4G00nPsM8R_Zefs_G+9zvSqTJqPb9Lg@mail.gmail.com>
+ <aFLr7RDKraQk8Gvt@kernel.org> <CA+CK2bAnCRu+k=Q78eA4kcAebxA9NgOorhwRqu-WxC913YBsBw@mail.gmail.com>
+ <CA+CK2bB3P1vX658ErkP4_-L6WZSOCcenEwUdX1qS=poDjs=i+A@mail.gmail.com> <aFkDBNpzcCNdqjm8@kernel.org>
+In-Reply-To: <aFkDBNpzcCNdqjm8@kernel.org>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Mon, 23 Jun 2025 07:29:09 -0400
+X-Gm-Features: AX0GCFsAwZj53l7luv9N2S4aDs-8Fu10IYCHZ0Vuqd0BsrZgbB9cxOtR2gLz2-Y
+Message-ID: <CA+CK2bCWqiQ1375oCZ9DCkjAHccWfhYxx4zHHBkY4tgh8G3arw@mail.gmail.com>
+Subject: Re: [RFC v2 05/16] luo: luo_core: integrate with KHO
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, jasonmiu@google.com, 
+	graf@amazon.com, changyuanl@google.com, dmatlack@google.com, 
+	rientjes@google.com, corbet@lwn.net, rdunlap@infradead.org, 
+	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, ojeda@kernel.org, 
+	aliceryhl@google.com, masahiroy@kernel.org, akpm@linux-foundation.org, 
+	tj@kernel.org, yoann.congal@smile.fr, mmaurer@google.com, 
+	roman.gushchin@linux.dev, chenridong@huawei.com, axboe@kernel.dk, 
+	mark.rutland@arm.com, jannh@google.com, vincent.guittot@linaro.org, 
+	hannes@cmpxchg.org, dan.j.williams@intel.com, david@redhat.com, 
+	joel.granados@kernel.org, rostedt@goodmis.org, anna.schumaker@oracle.com, 
+	song@kernel.org, zhangguopeng@kylinos.cn, linux@weissschuh.net, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
+	gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org, 
+	cw00.choi@samsung.com, myungjoo.ham@samsung.com, yesanishhere@gmail.com, 
+	Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com, 
+	aleksander.lobakin@intel.com, ira.weiny@intel.com, 
+	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
+	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
+	stuart.w.hayes@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 10, 2025 at 04:05:40PM -0300, Geraldo Nascimento wrote:
-> After almost 30 days of battling with RK3399 buggy PCIe on my Rock Pi
-> N10 through trial-and-error debugging, I finally got positive results
-> with enumeration on the PCI bus for both a Realtek 8111E NIC and a
-> Samsung PM981a SSD.
-> 
-> The NIC was connected to a M.2->PCIe x4 riser card and it would get
-> stuck on Polling.Compliance, without breaking electrical idle on the
-> Host RX side. The Samsung PM981a SSD is directly connected to M.2
-> connector and that SSD is known to be quirky (OEM... no support)
-> and non-functional on the RK3399 platform.
-> 
-> The Samsung SSD was even worse than the NIC - it would get stuck on
-> Detect.Active like a bricked card, even though it was fully functional
-> via USB adapter.
-> 
-> It seems both devices benefit from retrying Link Training if - big if
-> here - PERST# is not toggled during retry.
-> 
-> For retry to work, flow must be exactly as handled by present patch,
-> that is, we must cut power, disable the clocks, then re-enable
-> both clocks and power regulators and go through initialization
-> without touching PERST#. Then quirky devices are able to sucessfully
-> enumerate.
-> 
-
-This sounds weird. PERST# is just an indication to the device that the power and
-refclk are applied or going to be removed. The devices uses PERST# to prepare
-for the power removal during assert and start functioning after deassert.
-
-It looks like the PERST# polarity is inverted in your case. Could you please
-change the 'ep-gpios' polarity to GPIO_ACTIVE_LOW and see if it fixes the issue
-without this patch?
-
-If that didn't work, could you please drop the 'ep-gpios' property and check?
-
-> No functional change intended for already working devices.
-> 
-> Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
+On Mon, Jun 23, 2025 at 3:32=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
+te:
+>
+> On Wed, Jun 18, 2025 at 01:43:18PM -0400, Pasha Tatashin wrote:
+> > On Wed, Jun 18, 2025 at 1:00=E2=80=AFPM Pasha Tatashin
+> >
+> > So currently, KHO provides the following two types of  internal API:
+> >
+> > Preserve memory and metadata
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+> > kho_preserve_folio() / kho_preserve_phys()
+> > kho_unpreserve_folio() / kho_unpreserve_phys()
+> > kho_restore_folio()
+> >
+> > kho_add_subtree() kho_retrieve_subtree()
+> >
+> > State machine
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > register_kho_notifier() / unregister_kho_notifier()
+> >
+> > kho_finalize() / kho_abort()
+> >
+> > We should remove the "State machine", and only keep the "Preserve
+> > Memory" API functions. At the time these functions are called, KHO
+> > should do the magic of making sure that the memory gets preserved
+> > across the reboot.
+> >
+> > This way, reserve_mem_init() would call: kho_preserve_folio() and
+> > kho_add_subtree() during boot, and be done with it.
+>
+> I agree that there's no need in notifiers.
+>
+> I even have a half cooked patch for this on top of "kho: allow to drive k=
+ho
+> from within kernel"
+>
+> From 02716e4731480bde997a9c1676b7246aa8e358de Mon Sep 17 00:00:00 2001
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> Date: Sun, 22 Jun 2025 14:37:17 +0300
+> Subject: [PATCH] kho: drop notifiers
+>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 > ---
->  drivers/pci/controller/pcie-rockchip-host.c | 47 ++++++++++++++++++---
->  1 file changed, 40 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-> index 2a1071cd3241..67b3b379d277 100644
-> --- a/drivers/pci/controller/pcie-rockchip-host.c
-> +++ b/drivers/pci/controller/pcie-rockchip-host.c
-> @@ -338,11 +338,14 @@ static int rockchip_pcie_set_vpcie(struct rockchip_pcie *rockchip)
->  static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
->  {
->  	struct device *dev = rockchip->dev;
-> -	int err, i = MAX_LANE_NUM;
-> +	int err, i = MAX_LANE_NUM, is_reinit = 0;
->  	u32 status;
->  
-> -	gpiod_set_value_cansleep(rockchip->perst_gpio, 0);
-> +	if (!is_reinit) {
-> +		gpiod_set_value_cansleep(rockchip->perst_gpio, 0);
-> +	}
->  
-> +reinit:
+>  include/linux/kexec_handover.h   |  27 +-------
+>  kernel/kexec_handover.c          | 114 ++++++++++++++-----------------
+>  kernel/kexec_handover_debug.c    |   3 +-
+>  kernel/kexec_handover_internal.h |   3 +-
+>  mm/memblock.c                    |  56 +++------------
+>  5 files changed, 65 insertions(+), 138 deletions(-)
+>
+> diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handove=
+r.h
+> index f98565def593..ac9cb6eae71f 100644
+> --- a/include/linux/kexec_handover.h
+> +++ b/include/linux/kexec_handover.h
+> @@ -10,14 +10,7 @@ struct kho_scratch {
+>         phys_addr_t size;
+>  };
+>
+> -/* KHO Notifier index */
+> -enum kho_event {
+> -       KEXEC_KHO_FINALIZE =3D 0,
+> -       KEXEC_KHO_ABORT =3D 1,
+> -};
+> -
+>  struct folio;
+> -struct notifier_block;
+>
+>  #define DECLARE_KHOSER_PTR(name, type) \
+>         union {                        \
+> @@ -36,20 +29,15 @@ struct notifier_block;
+>                 (typeof((s).ptr))((s).phys ? phys_to_virt((s).phys) : NUL=
+L); \
+>         })
+>
+> -struct kho_serialization;
+> -
+>  #ifdef CONFIG_KEXEC_HANDOVER
+>  bool kho_is_enabled(void);
+>
+>  int kho_preserve_folio(struct folio *folio);
+>  int kho_preserve_phys(phys_addr_t phys, size_t size);
+>  struct folio *kho_restore_folio(phys_addr_t phys);
+> -int kho_add_subtree(struct kho_serialization *ser, const char *name, voi=
+d *fdt);
+> +int kho_add_subtree(const char *name, void *fdt);
 
-So this reinit part only skips the PERST# assert, but calls
-rockchip_pcie_init_port() which resets the Root Port including PHY. I don't
-think it is safe to do it if PERST# is wired.
+For completeness, we also need `void kho_remove_substree(const char
+*name);`, currently, all trees are removed during kho_abort(). Let's
+rebase and include this patch on top of the next version of LUO, that
+we are exchanging off list, and send it together later this week.
 
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Thanks,
+Pasha
