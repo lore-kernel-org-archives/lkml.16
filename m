@@ -1,75 +1,103 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541164C7F
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90B854C7F;
+	Mon, 23 Jun 2025 01:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750641124; cv=none; b=NT+qfMNBwB+crVf3znpjFdp64bD0/PRZtClP97dtqCgSLCH+ikWukETVUOgxLAnpjbf6q2Hic+2+QoKv7YiobBiUjUIBKtuzrsY+rIh2B5P9t4zuRJ8fdiYotWfRnrfJHo0hK+xkO6vX7rUSvAcaneP0uX+ZmInVIcmIgBZU2HI=
+	t=1750641276; cv=none; b=qVPsrU8i82UCZE4vInjrNmnTwvxqYFgyjS6Hh9c0cFrJVGbxU2JiaywpaEcm+TYabYKQTQt5b2/LLDk1OVYI1UrV8AWX9neOQk02wn4Lx+W03m0cX/qITJJpF6FydtjI6MDH6TglpCcyrA1dW4BtMYX1o/Gw9ePN4cDP8srl9i0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750641124; c=relaxed/simple;
-	bh=fsWRZU5pf5z8uYUewMpFhrgI0i5m6viw8lXsaI7KVW0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=IjkCBFjq/Hs5MP1VMzSfSbXAHZl7flNIq1JgKuMsx9oIcElIEQ0AWPmD6z4QPh/IT+Fw9PAUz7xy9tXQw4PMZrsap6di0pbJ+7GwBwCRq5xVulbgMDxDZSo4IcH8plGlpdp+ERL2Blm7/syZaaRMS5da60uO8BkCXA1oNaFKNxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-86d07944f29so673966739f.0
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 18:12:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750641122; x=1751245922;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hB1qLRr0lfQzkkvkr2ChQlwMXTY1B7wcKeYfhbrbcCU=;
-        b=L/MIZTE6ZGLtko2SYgfJ8UzVNeO7nN5UMuwhzRL39Ci6NdRW/Ne3NM3eg6d4kTwahe
-         mua28ZFF6rb/PAPGddEuxTEerkNcuVJ5hqxWncgLLwav3HQd19s60N+dL1HaW3NWe6ne
-         4hlc5YX4TEu/ww2FHSU0Sm6gtyPJuuP4lq1mMTizuxH79/m9TwZBefoQbW1Dd5yDytCx
-         XNJqDyU4UX2qx64yKL0Dn4LYBzmxoiyxi6kBbwuYNic5QCwr0dIXq+AoaN61qfrAU+Vj
-         yJ3mF4thqD45TdzWhxwBILx3OboEu2rx5WfAxjlyMAo6kHDq/oGo5FV4dqq5r6aCWi+O
-         xf9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXWfwDYoKZqhiz+TOVn4BVk4LlQskpxFPCncrrJWAMqBA2VomIh2y3RNN9nBN6hXYm1SswjeZJt/9Twrgc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydhevosZrY5PwItGOlBwGh4gd9LZT74qZIBhEgzwrxeBdEEhkU
-	xZio8+V07B1do6d1cy4E+SBq7fkftA9B5XqwrYudWwH//XXLczOkmrXNSXC/pv8HJE8rvxDE9lt
-	j7pawAoQst51+AyztecRFkC+sLZkKDYEbbLgrbOvtrNxNI+uDf0e6WXvOKyQ=
-X-Google-Smtp-Source: AGHT+IGcFGUShXy8AwQ53b5N5UGyXN11GO6CMjK4kK159bwd6+orYcGrBcGHb3nl+7pWxqwz64PcssYAb73WhKk0U7icHJmq08W9
+	s=arc-20240116; t=1750641276; c=relaxed/simple;
+	bh=7ULXjxBT15KMqSaHyqu0hXJQEiICOMQf/UAcK91OmgA=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=QdSGqlHDJf6wo17WEcXo7qfWdqVSPOvFB7LhV0mJY7jTlqUbc7OKj9acd3WoWtX2BBqO3VEzq6cdou8gzJ2fwg6Qnr6jvgoPkYPe7xID8qDI86rvFltmstvQctY88evhKGr4LuZDjAyP6XvuR+1IipBfizIZ9+SxUEyWsFRvy70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8DxjXJvqlho41gbAQ--.61527S3;
+	Mon, 23 Jun 2025 09:14:23 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by front1 (Coremail) with SMTP id qMiowMCxbsVkqlhoqo4mAQ--.54823S3;
+	Mon, 23 Jun 2025 09:14:15 +0800 (CST)
+Subject: Re: [PATCH v4 0/2] Loongarch irq-redirect supprot
+To: Thomas Gleixner <tglx@linutronix.de>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
+ jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+ gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Super User <root@localhost.localdomain>
+References: <20250610114252.21077-1-zhangtianyang@loongson.cn>
+ <87qzznivtp.ffs@tglx>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <10014657-8756-f31a-c3b4-f175b764346c@loongson.cn>
+Date: Mon, 23 Jun 2025 09:13:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a2e:b0:3dd:cba4:bfec with SMTP id
- e9e14a558f8ab-3de38c1c00cmr122541535ab.1.1750641122457; Sun, 22 Jun 2025
- 18:12:02 -0700 (PDT)
-Date: Sun, 22 Jun 2025 18:12:02 -0700
-In-Reply-To: <68209eb7.050a0220.f2294.0035.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6858a9e2.a00a0220.23ad68.0004.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] KASAN: use-after-free Read in bch2_checksum
-From: syzbot <syzbot+7d5c34b9ec9fe139fc0c@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87qzznivtp.ffs@tglx>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMCxbsVkqlhoqo4mAQ--.54823S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrKryrZr4fAFyxuryrWr4Dtrc_yoWDuFg_ur
+	1xtwn8AF1UZrWxZr4S9F43Grs7Za1xurWUtFWvq34jq34rJa4DCF4q9ryS9an8XF43Jrnx
+	Xr90vr15t3sF9osvyTuYvTs0mTUanT9S1TB71UUUUb7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbqkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1q6r43M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
+	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxG
+	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUtVW8ZwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jTq2NUUU
+	UU=
 
-syzbot suspects this issue was fixed by commit:
+Hi, Thomas
 
-commit cd3cdb1ef706a1ac725194d81858d58375739b25
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Tue Apr 22 13:14:19 2025 +0000
+ÔÚ 2025/6/13 ÏÂÎç10:02, Thomas Gleixner Ð´µÀ:
+> On Tue, Jun 10 2025 at 19:42, Tianyang Zhang wrote:
+>> From: Super User <root@localhost.localdomain>
+> That's a valid developer name :)
+Sorry , it's a realy stupid fault.....
+>
+>> This series of patches introduces support for interrupt-redirect
+>> controllers, and this hardware feature will be supported on 3C6000
+>> for the first time
+>>
+>> change log:
+>> 	v3->v4
+>> 	1.Provide reasonable comments on the modifications made to IRQ_SET_MASK_OK_DONE	
+> That's not really what I asked for:
+>
+>    "This change really wants to be seperate with a proper explanation and
+>     not burried inside of this pile of changes."
+>
+> Emphasis on _seperate_, which translates to:
+>
+>    "Put it into a seperate patch with a proper changelog explaining this
+>     modification and why it is correct."
+>
+> You still have burried this in the whole pile of unrelated changes.
+>
+> Thanks,
+>
+>          tglx
 
-    bcachefs: Single err message for btree node reads
+Okay, I thought it was just a dissatisfaction with the "inclusion" of 
+some changes. I will try to modify it here
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=127d5b0c580000
-start commit:   d76bb1ebb558 Merge tag 'erofs-for-6.15-rc6-fixes' of git:/..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b9683d529ec1b880
-dashboard link: https://syzkaller.appspot.com/bug?extid=7d5c34b9ec9fe139fc0c
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=123544d4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11870768580000
 
-If the result looks correct, please mark the issue as fixed by replying with:
+Tianyang
 
-#syz fix: bcachefs: Single err message for btree node reads
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
