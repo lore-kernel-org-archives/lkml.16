@@ -1,104 +1,90 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF38277028;
-	Mon, 23 Jun 2025 15:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2B0137923;
+	Mon, 23 Jun 2025 16:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750694364; cv=none; b=CCkRcFXjIAV2/s8x5MQaT8Tr0CMxz/lVMJRHObHrmh2FmkO4IeN3zkE6ej4I6PArtXX0PPuUNpTBE64l/R/Dc2NRU2YJj0tBwpeg49Fs/12qCIUcnnwFcMI22vXKv8QBsKc+XbDVOVdYPjWLkNPRxtEtkQoB9U7dBzOBvg3sSz8=
+	t=1750694420; cv=none; b=nCAJKRgX6S9wbkFC4N/o9GjXTOI+DVQ8TTAx2NHclx+NlpJJO/PT7EqaRBCi1DdzCh6s1p4AkRNGptJPJz0yQW7RqQxKnwz3KQ5pF/5TchrkUDWzv+ZdLCj4scUopnQQdkhjMWpb2usmotfz895/61so6bltYL9rHSTgIzSDNQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750694364; c=relaxed/simple;
-	bh=/rfl7gOGpO0g14cYMRJ7KQfJPeeEo1fzAajmHgRfcP4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MkX45T3I0Mdbl+dEdhWot/ls/kwUIgTeHjdUGn4lj38bGeZeAa6pMOCL/jry5Icz3J7PsN+VElGS5Bkg9CTeCc8UhGphIiQuRpj2Tfc4jPGX1YJ+bX4bp/z13wETBMIwhZbSNP3pRGK023QU46VCmRWxUtC6A0Y9u0WkATd/rEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=gJP4cXg9; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1750694420; c=relaxed/simple;
+	bh=RbdnKkPdChH9ud1EvbJKJWRbB02+2VVpJE72YYvelFY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=nFEiofxDN0UebI3sPi1csiMpzS54l4JOGD4lrsQ0EpYS2BS+ShCYgou/E0M146xAuP1par5nPOtQJGmp+AqdJZaLb5qcH/KFPVBmZiMLMSEXvjqXazGfZVstDUM+jBUI9h4eFTS9RZgJlD4gXkpuf+dj6iojhauV3VhEsTD+HhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=unXGBZPm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="gJP4cXg9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ivJftfXIlijyNb6aPqxEHL2vbAZ+7Nan5sa8DA4Nd4s=; b=gJP4cXg900T3X2PP4GO2+aWAyS
-	eo+T+0X1Oo3zr3UET8GybiWIdDBy/H5GwrGDRhyW7IOLilENX7aJCNnZ6QT4+XPSsgROObz6T5fai
-	52pLJ6BJ6BRSsLSlU0OjdgPhvWa5rp2p9kZMZYF1WrbSmCO07z2WO0F1zFa/R39r8UZK+ARzysPnV
-	c/afMbJWDuHuQDJ3nfuEAiBvqJZ80PrpOSk8gHIyfFHLcJ+K5qlCSFo9/MxLg726OBArGclzvOHdl
-	aqnrLDjXWVVTzd3hV08OI/n6FsnG5wb7+6uP5OzDy7QN5DLn3NmDAS4aq6I/X+ewruGynu+DJgj0L
-	5zhBr+Kw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36456)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uTjZi-0004O5-1x;
-	Mon, 23 Jun 2025 16:59:14 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uTjZh-0003Zx-0L;
-	Mon, 23 Jun 2025 16:59:13 +0100
-Date: Mon, 23 Jun 2025 16:59:12 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Kamil =?iso-8859-1?Q?Hor=E1k?= - 2N <kamilh@axis.com>
-Cc: florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	andrew@lunn.ch, hkallweit1@gmail.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	robh@kernel.org
-Subject: Re: [PATCH net-next v2 3/3] dt-bindings: ethernet-phy: add optional
- mii-lite-mode flag
-Message-ID: <aFl50MeMElkRbyzj@shell.armlinux.org.uk>
-References: <20250623151048.2391730-1-kamilh@axis.com>
- <20250623151048.2391730-4-kamilh@axis.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="unXGBZPm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84EACC4CEEA;
+	Mon, 23 Jun 2025 16:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750694419;
+	bh=RbdnKkPdChH9ud1EvbJKJWRbB02+2VVpJE72YYvelFY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=unXGBZPmhTFbshnjEYajp2YQWZGW4sm0YvdEj3VYhcxI35eptuB9j6JxVrNbxNxRT
+	 GFQo8ta/utIQQ6Z3UrT7ByG323qGgkdEBir61/NWNrcT9eYNoLY2DX9bEYd5JW2BZs
+	 ftBj0vPBt9S/uxan9HjMwG1yP6Xab4A3mvZV5UJ7uE5Tfe6Jv5p9VyJx6mX3sVbbow
+	 yP4I1XqLGNcpT09NsJQeoqbVpAtqz3/bwcVJpuMlTbK2s0pKKWVdYRAZUdDGr4xjA4
+	 PrL1h3AZ7bJYcOfBb73Pw6/m/VcvzK2aE3/Y17NlbGj+6/slWTmAEjPJrFb9yeEXn4
+	 iyW5xKFWj4Sow==
+From: Mark Brown <broonie@kernel.org>
+To: Srinivas Kandagatla <srini@kernel.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Wesley Cheng <quic_wcheng@quicinc.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Luca Weiss <luca.weiss@fairphone.com>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Matthew Croughan <matthew.croughan@nix.how>
+In-Reply-To: <20250617-snd-sm8250-dep-fix-v1-1-879af8906ec4@fairphone.com>
+References: <20250617-snd-sm8250-dep-fix-v1-1-879af8906ec4@fairphone.com>
+Subject: Re: [PATCH] ASoC: qcom: sm8250: Fix possibly undefined reference
+Message-Id: <175069441422.140181.5569883866488657965.b4-ty@kernel.org>
+Date: Mon, 23 Jun 2025 17:00:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250623151048.2391730-4-kamilh@axis.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-08c49
 
-On Mon, Jun 23, 2025 at 05:10:48PM +0200, Kamil Horák - 2N wrote:
-> From: Kamil Horák (2N) <kamilh@axis.com>
+On Tue, 17 Jun 2025 14:20:12 +0200, Luca Weiss wrote:
+> With CONFIG_SND_SOC_SM8250=y and CONFIG_SND_SOC_QCOM_OFFLOAD_UTILS=m
+> selected in kconfig, the build will fail due to trying to link against a
+> symbol only found in the module.
 > 
-> The Broadcom bcm54810 and bcm54811 PHYs support MII and MII-Lite
-> interface modes. The MII-Lite mode does not use TXR, RXER, CRS and COL
-> signals. However, the hardware strapping only selects MII mode,
-> distinction between MII and MII-Lite must be done by software.
+>   aarch64-linux-gnu-ld: sound/soc/qcom/sm8250.o: in function `sm8250_snd_exit':
+>   sound/soc/qcom/sm8250.c:52:(.text+0x210): undefined reference to `qcom_snd_usb_offload_jack_remove'
 > 
-> Add optional mii-lite-mode flag to switch the PHY to MII-Lite mode.
-> 
-> Signed-off-by: Kamil Horák (2N) <kamilh@axis.com>
-> ---
->  Documentation/devicetree/bindings/net/ethernet-phy.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> index 71e2cd32580f..edfd16044770 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> @@ -101,6 +101,14 @@ properties:
->        1BR-10 names. The PHY must be configured to operate in BroadR-Reach mode
->        by software.
->  
-> +  mii-lite-mode:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      If set, indicates the use of MII-Lite variant of MII, without the
-> +      functions of TXER, RXER, CRS and COL signals for Broadcom PHYs. These
-> +      PHYs can be strapped to use MII mode but the MII or MII-Lite selection
-> +      must be done by software.
+> [...]
 
-I'll put the same question here as I did on patch 2. Do we want this to
-be a separate property, or would it make more sense as a different
-phy-mode value?
+Applied to
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/1] ASoC: qcom: sm8250: Fix possibly undefined reference
+      commit: 999fb9d51f939ee23cbb9313ae558d29d6987804
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
