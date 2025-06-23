@@ -1,249 +1,125 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A52470838;
-	Mon, 23 Jun 2025 21:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035F81F582A
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 21:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750712842; cv=none; b=Zv8YR6faIvljTZj2K0YUzPVzBwlpvsOkl7fMeApR+P0mItbTsL6R0xHoR+1i71VeVZ/ZoOsRVnvJxOq3lf9x6EN9t69S9NTsspk4TsNsh8mD2vp4ZEu75zGtQ9vLbmP49hSCSd5vJEaKsGFp5CLvMqfmT8Kzc1vdeWTS+ndCKDI=
+	t=1750712875; cv=none; b=a1radprgaXFBTilddr7T4Fq8KZAAZJigrHI8M+RhxSvFT3JehiMdQJtQSAm21GD2ddy0btnmwe46Tadv+lDnTaoinwecOHamopAU3Fdb1bDZQSupZE0Cddr886EoIjaKsBLMFP8mQncbcb5ec09KjxURPzcbosyJ9oUHRV03kx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750712842; c=relaxed/simple;
-	bh=gj6Nh48Bqa/jpifwytP4nQvcgn7IakDE0lEsrujhtI4=;
+	s=arc-20240116; t=1750712875; c=relaxed/simple;
+	bh=QYSgA2r9Hoq/PyEKP+W5aS5hG/seCLS+yMuWGfPqxDI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nHUgJNhGsdDkG4sh0sBtUp1cPAvJ2ift2W/04J2rnzjJDL0/EwLk//5eXRnajMsh9n72rR8K4qt8rkKGB8tdSxo96X+fzxRvS9zXrRPZ3yN53jdcMXuZLLyI8lHwLmO/WB8MaM2WENHJhT+qiGEYymPIRi/mf38xmLVcKv4InTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=homv4ZlH; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=MiSmcK6B1CZjmXzRjwo32+UoQjGIpF6ZzL90byNLW4cx+K3N6uEl11PQSNWdUCZVDTKPAYNOSNMunzbu1p0gTNrrEo06x5iUKrVc0/gW4EOSIL5PtC1ReVGpwfKoERWQApOxnW675SWzUrQYQzHv5HF1PeXUB5hWLXv5l3S4XM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=st8Buq1X; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="homv4ZlH"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e7dc7245bcdso589808276.2;
-        Mon, 23 Jun 2025 14:07:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="st8Buq1X"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so53285ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:07:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750712840; x=1751317640; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750712873; x=1751317673; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WIktiIAK8TZ7Hzmpbbme4BqBHTRSvQoT3VFTLZchY+E=;
-        b=homv4ZlHSDX5KbYKoYPNIw+G/TFV0XihyeA8rHKz3hWH/Wd9sGgwulteT1X5zWTRrm
-         Ej3kx4VihFG5kF6arRxAwFfhYAAKPjKHcqWV0znr6vN9mVyP2OJwujzA3yC890u1+7kO
-         6/djr4d/LloqpAP5Uc99D7egXfyxnie7FrAzECj/aFg1h4PWoHD04iagZ2uBtKN30NQz
-         nOSPx1wcm4/NAiZsln4AUVTarBQIHy6wGsTsGk3DWYagZcE7z1w1Mygew5ztGpPxsoOa
-         PovG1ouifiiRSjd7bWQPZhVnYxbifJc7sixVI15nC99hBH4VXvrXsHCh4CkqUIztqjAr
-         6BTA==
+        bh=Z4cX0phktxLtIZp90+OwfwSNf6uSHnahTRACJDaKBFA=;
+        b=st8Buq1Xh6wu5Z1sLuJ4RrIdSnsppsQ3TgldF/7GlHufJ+8TbJM/NQRWdu3qFIq3mV
+         IiSHJLJa8ya5q1+Wp84qZ/Vhc1Mtfg9fcnrjmdwQUEM6s5H5lPlMETVxS/AHs2OY1WCv
+         MBwX3Bl5pqK5jPl3CJeBLB2HlXJ3BNbQ5JVQBfBT+8yf7RZBpOxX9lXzl0W+8LsUmN6c
+         bKhAkkDSyEUILr0W4rnc/R5Y9rHwaWm9V0mMVKBcT6xEechSJ37Gio7cTtk4P1MWGXQn
+         kDJWjKqyG2aaruN6Dp4Wv0e3V5WHikousykFg+z8jPbXi9SeJwO5p7X1uknTU6RWKLSk
+         B2dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750712840; x=1751317640;
+        d=1e100.net; s=20230601; t=1750712873; x=1751317673;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WIktiIAK8TZ7Hzmpbbme4BqBHTRSvQoT3VFTLZchY+E=;
-        b=nlnZt1hTH7JdARjMsDlBwZ+SUo0c94KM8iszhHRJTefRDtBtzSfgugoUr1p7YKppWQ
-         xj1z0aCMmlXCSW0L3PnTLQ22rzoKvWDwYe9vSsi1Mdp+oMBBdQk0MERxr8S7XYTEqbxm
-         pVB84O93Y1EY+RlldCwhgvpFqP9UHONP0D7D+9MoTFHBNuCdDD7fKOHlFtIRr8yUSMEk
-         C0y9d/en1vUPxWMsRVpX0PWXdQrDyoz2vwnthnZLDrgxpNt7WbRoj8mr4zf07TZhz+vu
-         zTPuSCBdEWS6EOwW3GHncFZG3FeD8wriUqhGeWTgVjiWwqWRIvG34bLs3xq90i5TJ/fW
-         PMOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVoamZ0EjKozIZRsX0MOT/GoOf1tn1Ln1smPD20BM88PbJyE8m/XbIgfaaFr/MQWTfvHvgMb9mctpZJ1Y7A@vger.kernel.org, AJvYcCWG7CO+zfKzOzUDeE8GCoFT81lov6RDiWMNyg4iXTUW48YcxfwZoBCPE7icpogs5WOsvpPwsMUThwo=@vger.kernel.org, AJvYcCWYfEeybcWYCdOaJEmKo7oJJu9wQ6+/2IEqNaOwtamqJJ39Vmf6ruKk/E6ym7hBPrruwkl2cjWCysn6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4VkyIqA3Az8YaiuWehoQFb5U7Y2CIk9+CSEbliutkNg3JxNM7
-	E8yFaksRL1CdttdFo8Hh6QICiP/R4DajAKkUDV0Wf+/SIj9JbU0VQX8QZLQxjpE/h35u6IBW+dD
-	eT8ORE9xupRzCiutL13xn57coCg2aqgs=
-X-Gm-Gg: ASbGnctnGE4jxcQIk/4+EvdgHVwhbzW0sRRaopOfun4Cl2CMe/wIH/xt1zq+N5gzggn
-	qGnAK2McMjpharnQKFMjmbmG57LtcSxkb8no4uaqXkiB21i1XKJJ258tavH756P76+NKSdP52EZ
-	v2TXsFKrnmCtbQU3/aAjoaxeFugcvTy33VUeHT68jVUFeMXd6ijJHovA==
-X-Google-Smtp-Source: AGHT+IGX1SLbO7YPV9P3rLFzrIK7XlJWzCsQmcYNF+HsqVHhXA+vDhsos3/+LIZKMZjMKjrOmdNKgPxRcwCSZ3xbWQw=
-X-Received: by 2002:a05:690c:931c:10b0:712:b566:bf7c with SMTP id
- 00721157ae682-712c6390298mr65387497b3.1.1750712839863; Mon, 23 Jun 2025
- 14:07:19 -0700 (PDT)
+        bh=Z4cX0phktxLtIZp90+OwfwSNf6uSHnahTRACJDaKBFA=;
+        b=YDFhDLsHURa6Da1hlq9660C43RXDy1XD8iGagwpykoFAfhQ89gyC0Dt9RvE/o2Et9P
+         5EWUkvHCgtUMhZjaA1zlZ0Nsn7RjNqBFcyPKELrsB3EWhPMCT/NSZnm824ZymkJHRQc/
+         V53EhAPRTT63XH9tSXpl+ccUErJnV679Cm7SC2FAnlnjqrE2VciZMfohmUzGMkFavkg3
+         4l3MS7+P/tWI/pqzYCw6A+69zUiMKDlkhU6VZpa/Sq3lgJ30J/DCzlQHYI0GmorZyUnD
+         cBzUFx86sWVeb3MnHWkkCp1wzUtrl9sKY7PlFWGOAfgd3N8u79SBhgexF/skfaD4jT13
+         oIiA==
+X-Forwarded-Encrypted: i=1; AJvYcCXCV6rTNftFndZbLikiWXsmjMMTzvyEadmaCWtXW5lENQrpo8XaXgwwhUGKvD3YtscGt+GPu33rnbWeG2Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywr5LUNa2utHOAOlTJ8FOe62jKu6BICwW91krhOMVjrE5x2mdiv
+	pVet1QGOqv7SJNpRIJcE8qZdj/4OI1QW8Mu83xmVJFDTkHEba3YWMnURHecICg0cgfmo/afZfcY
+	mgtNh3m+lekJvmlScxPMCt9wxhf1rlBL8Mn+Zga1o
+X-Gm-Gg: ASbGnctDanDtJtJk//hkOOq+PdUqGMweUYB+0FMa4aIuFvAzM2CjYsqHodvRV1hWt6W
+	A0Ll9Dwpy+VdZVcV0LP+Hxow1QWIP+0FIx3p7RlsGOnT5YIb3j30A+6LvPFGLUO/6s8EMfjLfbA
+	1Rh9FphMaEIWtsUL6rcFCvpLcrR5erFmM0/BBXRsfmfAaedsvE7GFDkgAFlVC3PBM7XGKVAgVG
+X-Google-Smtp-Source: AGHT+IFQo7whZ43umpkON7cWHCeG6OEupE+1dDqM8Rn4tGg8MZoRe7tVwq2DQ7onfuTeRsVjhMgAyWWGJyuOZG8BsFA=
+X-Received: by 2002:a05:6e02:3787:b0:3dc:a380:3ab3 with SMTP id
+ e9e14a558f8ab-3df29806c65mr614355ab.29.1750712872755; Mon, 23 Jun 2025
+ 14:07:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250622155010.164451-1-l.rubusch@gmail.com> <20250622155010.164451-5-l.rubusch@gmail.com>
- <aFkh-E1dG__p_G4m@smile.fi.intel.com>
-In-Reply-To: <aFkh-E1dG__p_G4m@smile.fi.intel.com>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Mon, 23 Jun 2025 23:06:44 +0200
-X-Gm-Features: AX0GCFusMTwtOEffoDsb82ZqKxDo1D_yxOOF9_FbLOqdgHVtQCU0vg0DRwtC8to
-Message-ID: <CAFXKEHan_7+BVshb12JZLH8CJtSPuwv=H_vC2kUWkS411wsqaA@mail.gmail.com>
-Subject: Re: [PATCH v10 4/7] iio: accel: adxl345: add inactivity feature
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, 
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, eraretuya@gmail.com
+References: <20250620212435.93846-1-acme@kernel.org> <20250620212435.93846-2-acme@kernel.org>
+In-Reply-To: <20250620212435.93846-2-acme@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 23 Jun 2025 14:07:41 -0700
+X-Gm-Features: AX0GCFuW5EtyEiOg10N9QdQ_vnwsKRM3tQ-FpqSv0D_UnLEn_f4f-NRtdNqss98
+Message-ID: <CAP-5=fWzHDsa18SjSJgdJsZ8myyA-JH6K7CjZQo8f8GfX7+rAw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf build: Suggest java-latest-openjdk-devel instead
+ of old 1.8.0 one
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 23, 2025 at 11:44=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
+On Fri, Jun 20, 2025 at 2:24=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> On Sun, Jun 22, 2025 at 03:50:07PM +0000, Lothar Rubusch wrote:
-> > Add support for the sensor=E2=80=99s inactivity feature in the driver. =
-When both
-> > activity and inactivity detection are enabled, the sensor sets a link b=
-it
-> > that ties the two functions together. This also enables auto-sleep mode=
-,
-> > allowing the sensor to automatically enter sleep state upon detecting
-> > inactivity.
-> >
-> > Inactivity detection relies on a configurable threshold and a specified
-> > time period. If sensor measurements remain below the threshold for the
-> > defined duration, the sensor transitions to the inactivity state.
-> >
-> > When an Output Data Rate (ODR) is set, the inactivity time period is
-> > automatically adjusted to a sensible default. Higher ODRs result in sho=
-rter
-> > inactivity timeouts, while lower ODRs allow longer durations-within
-> > reasonable upper and lower bounds. This is important because features l=
-ike
-> > auto-sleep operate effectively only between 12.5 Hz and 400 Hz. These
-> > defaults are applied when the sample rate is modified, but users can
-> > override them by explicitly setting a custom inactivity timeout.
-> >
-> > Similarly, configuring the g-range provides default threshold values fo=
-r
-> > both activity and inactivity detection. These are implicit defaults mea=
-nt
-> > to simplify configuration, but they can also be manually overridden as
-> > needed.
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >
-> ...
+> Just tidying up the suggestion to pick the latest and not some specific
+> version.
 >
-> > +static int adxl345_set_inact_time(struct adxl345_state *st, u32 val_s)
-> > +{
-> > +     int max_boundary =3D U8_MAX;
-> > +     int min_boundary =3D 10;
-> > +     unsigned int val =3D min(val_s, U8_MAX);
->
-> Wondering if it's possible to refer here to max_boundary?
-> In any case, split this assignment since it will be easier
-> to maintain.
->
-> > +     enum adxl345_odr odr;
-> > +     unsigned int regval;
-> > +     int ret;
->
->         val =3D min(val_s, max_boundary);
->
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: James Clark <james.clark@linaro.org>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Link: https://lore.kernel.org/r/
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Well, yes, that's what I had initially. Then min() needed unsigned
-int, where clamp() - down below - needed signed int. At the end of the
-day, I set up min() here, but later this will disappear. I was
-wondering, if it's actually needed anymore, when doing clamp() anyway.
+For patches 1 to 3:
 
-The story is a bit longer, since original version (I think I never
-submitted) I started with clamp(), ran into signed / unsigned and
-difference from max, that I skipped clamp() until when you complained
-about it: "use clamp()"
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-Long story short, I'll verify this in my tests, but probably I'll
-rather drop a call to min() here.
+Thanks,
+Ian
 
-> > +     if (val =3D=3D 0) {
-> > +             ret =3D regmap_read(st->regmap, ADXL345_REG_BW_RATE, &reg=
-val);
-> > +             if (ret)
-> > +                     return ret;
-> > +
-> > +             odr =3D FIELD_GET(ADXL345_BW_RATE_MSK, regval);
-> > +             val =3D clamp(max_boundary - adxl345_odr_tbl[odr][0],
-> > +                         min_boundary, max_boundary);
-> > +     }
-> > +
-> > +     return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val);
-> > +}
+> ---
+>  tools/perf/Makefile.config | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> ...
->
-> > +     case ADXL345_INACTIVITY:
-> > +             en =3D FIELD_GET(ADXL345_INACT_X_EN, axis_ctrl) |
-> > +                     FIELD_GET(ADXL345_INACT_Y_EN, axis_ctrl) |
-> > +                     FIELD_GET(ADXL345_INACT_Z_EN, axis_ctrl);
->
-> As I pointed out earlier. the indentation is supposed to be on the same c=
-olomn
-> for 'F' letters.
->
-
-Let me allow a stupid question, when you mean on the same column, the
-above is wrong? Can you give me an example here how to fix it?
-
-Best,
-L
-
-> > +             if (!en)
-> > +                     return false;
-> > +             break;
->
-> ...
->
-> > +                     ret =3D regmap_read(st->regmap,
-> > +                                       ADXL345_REG_TIME_INACT,
-> > +                                       &period);
->
-> There is plenty of room on the previous lines. Depending on the next
-> changes (which I believe unlikely touch this) it may be packed to two
-> lines with a logical split, like
->
->                         ret =3D regmap_read(st->regmap,
->                                           ADXL345_REG_TIME_INACT, &period=
-);
->
-> It again seems the byproduct of the too strict settings of the wrap limit=
- in
-> your editor.
->
-> ...
->
-> > +     case ADXL345_INACTIVITY:
-> > +             axis_ctrl =3D ADXL345_INACT_X_EN | ADXL345_INACT_Y_EN |
-> > +                             ADXL345_INACT_Z_EN;
->
-> Consider
->                 axis_ctrl =3D
->                         ADXL345_INACT_X_EN | ADXL345_INACT_Y_EN | ADXL345=
-_INACT_Z_EN;
->
-> (yes, I see that it's longer than 80, but it might worth doing it for the=
- sake of
->  consistency with the previous suggestion).
->
->
-> ...
->
-> >  static int adxl345_set_range(struct adxl345_state *st, enum adxl345_ra=
-nge range)
-> >  {
-> > -     return regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORMAT,
->
-> > +     int ret;
-> > +
-> > +     ret =3D regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORMAT,
-> >                                ADXL345_DATA_FORMAT_RANGE,
-> >                                FIELD_PREP(ADXL345_DATA_FORMAT_RANGE, ra=
-nge));
-> > +     if (ret)
-> > +             return ret;
->
-> If it's a code from the previous patch, it might make sense to introduce =
-ret
-> there.
->
-> >  }
->
-> ...
->
-> > +     case IIO_EV_INFO_PERIOD:
-> > +             ret =3D regmap_read(st->regmap,
-> > +                               ADXL345_REG_TIME_INACT,
-> > +                               &period);
->
-> Too short lines.
->
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index d1ea7bf449647eb2..afebd3b1e6cb9f58 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -1144,7 +1144,7 @@ ifndef NO_JVMTI
+>        endif
+>      endif # NO_JVMTI_CMLR
+>    else
+> -    $(warning No openjdk development package found, please install JDK p=
+ackage, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel)
+> +    $(warning No openjdk development package found, please install JDK p=
+ackage, e.g. openjdk-8-jdk, java-latest-openjdk-devel)
+>      NO_JVMTI :=3D 1
+>    endif
+>  endif
 > --
-> With Best Regards,
-> Andy Shevchenko
->
+> 2.49.0
 >
