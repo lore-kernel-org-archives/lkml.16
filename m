@@ -1,256 +1,151 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013057.outbound.protection.outlook.com [40.107.159.57])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59444C7F;
-	Mon, 23 Jun 2025 13:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750684787; cv=fail; b=WRSvfBP+IR8qGDJgwoN7GldYMkshl49DaNgdnedd4Kfs9iY8/4o1QdMdvHAkvso34Xbm/b1+9KyA6GOe9JlXzYng/goUJI10f0Rtt5zU41om3ZrL+B7zVI1XRdUcopUXoNJH5yix8Xt15FWZEYO0iwh4rjP/vc0+jYKlzpoKOgo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750684787; c=relaxed/simple;
-	bh=e3kd5E+aNoODx3tZdul4FgXbQhTAa6rckTtn8A2sRDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=eOuGa1tGKtzWn7TAq95xuK1w4PV1hn75Ryx387venpL43gmdgwB1XR2Ujg8fPITiMLeyL1rxMi2XKhOnCD+jiYRZ6rG0cgqWTSJZLtxKvoe30MYcoLtjhGz9vq4esUcWRUmgPR/d8QRoLRyUbCX5Qebs7TDMojrUU//mcmmjxXI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=xm5kIM4F; arc=fail smtp.client-ip=40.107.159.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7CD248895;
+	Mon, 23 Jun 2025 13:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750684794; cv=none; b=W5FOtt3fp6TdQ72ZylGUGJVUQOVjSOGC2kdZqnmEDSzwuvFyS1U//EFaD9im7JXdDkds2av7YLLJkWVR1i9iGPmjtE0mIcA5fTwzqtIwjrhop7dfDJSA/bsytBR8yEqJcz9nyuoYgCe1QSp28R3BfkTpXo4fiDXaOcm/UxediaY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750684794; c=relaxed/simple;
+	bh=WFr1mvAqWknTLQCXHSHPXHDsjQ1dBOGlTBZcHkDnwYQ=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=sQqWLH68qsWCSMmzkU8Ts0ZEwGZwsy2nL5FeYDlWgh7T+8HlLfNAyfWVzqMio1v1RYhgb/DUuRtvK1Sw9AyA+IKb1MsIcgpY8WHBXxu94SlZ52OzOgb3tApifM+S2WjOalc3Ovsx9GJOnx2JPEWB1Z4L1w7kEyh4B2W4hpqgsEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CZZWC2DM; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="xm5kIM4F"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jxSMnVsbcwvM10U5VCgYxG5iDyBrUZ0d6u0BZFkgcJHy7tCE8jAxhxCbSTyRCtYAIYq03ZjVG0eCCLikOH70T3y7ohhwj/X9gjARoJeBD9PzfA4BcRtps8aiDIt7KLVlaMWTwwOapqSzDOrMX5edfXLN6E6Y0DWm6gaDNt50FxsNyOCOjVG8+VWGZkvyrlAPjRd1Q/01Zia7dFIt5xacNypZ5Lh3gm5GcK+SQpEulbbWXtuoK08lCtptYtLVV38MiO8NFwBjGMS4V7wtgI873ZeMQvbfbrk7it/mFxLGwDdO1jZSiia2VsOHGT+eX1DWSoXoPX5AgPT6QSs+hCt/eg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2N3idTaNphnMlaxEjIl5CKoEY74MHWRk9Spj5X7S/PE=;
- b=sB0le/EmjaeonoX3yG9qLEMqPsyUR9LPYc0Q7M4sLykml8FUDQ3I5CytP4I7SzUxsW77wfJkPvx2Zv1zmEhpLp6RCnoF2nmKIW8Whctm5C9CZkaR0vC/2bPdzywfAW5R84GjBPaXyTHapJpRuhjwywo3lYc7Eplu88+eOu4+3rPxCn43ZCwDpPQxueTJG/YY4I62vQan8WBNqOLPQ3uh+wXEwDzkpYrNPLxyW4M/0eNJndF+oq5MFwWqSqtULN1EJ/gUfkcHB0C6blkNB5sFmfSg6KQ7Jyf01snjn+Byt9aZkHhNNaF3lhKTQjckBTiWj0fvtI+Cd6RNQq8l1/Yibg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2N3idTaNphnMlaxEjIl5CKoEY74MHWRk9Spj5X7S/PE=;
- b=xm5kIM4FjHcob5bUgaHcbPlA3KiOLcmit4MquNpF+p1VcdQ7VB3oQpz1EcjVgupoSyAV3L7zG3rIf/WYU8JLtFe5mKKnly46sJubtaXCO93Bt//T7yQucNjMAMRREv0RevF5Ao4jA9rR51i/M6PPDHO8XUI0Fj1I8uZiYtv0nR8ZxQpad/9ava292USWcp55tq8fGVuGmHi6Ju6d64uauvVb+UaDwvNfFa3kkYO4Ba4qKvgo8d9f1Fg9Bs/H733jsqxC6ii2IQeqHZODEcQhShimmFhL6mupWA5I1czhmF6pDs492jYGp1kq1eq1LSRr9LtXJ6v6cOiXHMymXw39+w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by AM8PR04MB7955.eurprd04.prod.outlook.com (2603:10a6:20b:249::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Mon, 23 Jun
- 2025 13:19:39 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%3]) with mapi id 15.20.8857.026; Mon, 23 Jun 2025
- 13:19:38 +0000
-Date: Mon, 23 Jun 2025 22:29:57 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Dhruva Gole <d-gole@ti.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Ranjani Vaidyanathan <ranjani.vaidyanathan@nxp.com>,
-	Chuck Cannon <chuck.cannon@nxp.com>, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 2/2] firmware: arm_scmi: power_control: Set
- SCMI_SYSPOWER_IDLE in pm resume
-Message-ID: <20250623142957.GA10415@nxa18884-linux>
-References: <20250620-scmi-pm-v1-0-c2f02cae5122@nxp.com>
- <20250620-scmi-pm-v1-2-c2f02cae5122@nxp.com>
- <20250623125750.kzwndmcf5yo3siao@lcpd911>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250623125750.kzwndmcf5yo3siao@lcpd911>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SI1PR02CA0035.apcprd02.prod.outlook.com
- (2603:1096:4:1f6::8) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CZZWC2DM"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NBliSL031297;
+	Mon, 23 Jun 2025 13:19:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	FgLrm/JXRlgdhk4Y0Tj9EAffwhDfvyBigTfDl8obe1Q=; b=CZZWC2DMQvTZJnaa
+	q/PSoNtQ1V08REd0Rjxqzi/QnNHYSYsjTXca2u1jGXxR/lz4hfOOyO8ozA/0hTPP
+	N1JiuYCl82n52c980w07eoA6bgO1bxuGCMeNB36NXncQj+ABR4aS9ZuAI5SVaabN
+	WogsxmJrXP3CKPvfkoWq7tPA/C/3iNXEsehSN+T5V4WJS//TWJ5RLBzjSRxc9gH8
+	NRz83AFL//+x10niX6FiuGrXYVfQRrId9eMcHyrlw8VkFrlndPt4FjTOhximDqH8
+	EjOvOc5ViEJEHi7LOBm33bJl0PzobzMgxFbaXZzTZAwlLhH2KOccLLLa6HonX0R8
+	P3H+uQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ey7k1hjg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 23 Jun 2025 13:19:40 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55NDJd5X008821
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 23 Jun 2025 13:19:39 GMT
+Received: from [10.253.38.60] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 23 Jun
+ 2025 06:19:32 -0700
+Message-ID: <cf9dd904-c24a-4ea3-9689-087efab99d95@quicinc.com>
+Date: Mon, 23 Jun 2025 21:19:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|AM8PR04MB7955:EE_
-X-MS-Office365-Filtering-Correlation-Id: e29ae0b2-c9df-4920-df8b-08ddb2589b11
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|52116014|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?2KoN46U7bGZyYZ7aqJadNdwacGM6Qzdvsn4MTT7F3G49P1MLnveNm9Li/ZFm?=
- =?us-ascii?Q?/ID1f1gn4dUHvFbtUM4vehCkzDFaoLa80BINzlwfPbYwq3YTIRuNuSmMvaY2?=
- =?us-ascii?Q?E3pyFm8leXeMFbm7E0rbpPAxx7nZKMpfl+0NyqTWZKUJ2ttx8e63ERYTMkRo?=
- =?us-ascii?Q?SElE1DBqwjQY9YTeECMOoC7knyyF2KqO4O5Bf9ZuECUajN+mLoD8t1xa2hpN?=
- =?us-ascii?Q?xSXcjr+xSRgj4zh0mPS+uC3cCpR2SQbX/3PgpXui0QKwpz314GR60To8Ncl+?=
- =?us-ascii?Q?iV2P0H9wlPl4wnJf49ltgoUyCk5ljfjqAd9uSvtGCLCgCd84NPQ5xKUGFk+d?=
- =?us-ascii?Q?VcM0cnoPt0z1TjqcX4r3Cg6sypnVV70ASPGEmgAZgsX+w37KgjXd0vd7lvxJ?=
- =?us-ascii?Q?bxNxVOStVlTbgUUs6BlbXDB4e8G6ZJ/03yNv3Yfh4xRGiRYHEvwppfm/s6QT?=
- =?us-ascii?Q?vUe4fJdoaI4FnyB9Qi/nqB/15W+w7Ns5EF5ZlX0MsxYa8Ysc3tbimnE1gg4B?=
- =?us-ascii?Q?OBiMdmcHrtnt1MF8FY/wfcffajWpHYkUgx3C7aZrnFf5O64a9qqpUXdj2Czz?=
- =?us-ascii?Q?6P9+SvHNs2pzbXvX4Ft5lLZ8N3lZNJfKrRV7Uv1J2nP0yd5QBBYFzi/KAVvv?=
- =?us-ascii?Q?d4MkHI1O6aFEmJ1oJ4cS8AkANnAEUcAZ279JTvsF1AKcG7/MX3txlkBGYD1M?=
- =?us-ascii?Q?nHXNhpwmyrxakasLJJ85Kmu20yBOUcYRvKbyXaqu37QvK4iQ3jKZ3JT2CrDK?=
- =?us-ascii?Q?iw0AG325YppGwsxc6xB4SHHKkzO3SOdYk1mXr0O/ozQfOwxb4AEIzpWJXNU4?=
- =?us-ascii?Q?0xO9ouJ90GK6JGIoUnB9EKJx4gd0FCk+qvQoj9mwJO3n2K892vECvq4KGveS?=
- =?us-ascii?Q?yvpEPc9ch9ELMvaA3HUn5WwtZ5/srok+CmfXMQsPkljNhwZaKdkXfi47yXAu?=
- =?us-ascii?Q?FXEsY1svMojvqMRC+B4YRBPkhFbl4RnBHixTNaVtbF7WwfCsGuOTRWdy9ZcS?=
- =?us-ascii?Q?tqs/buWWV1/7QDDbk7ijAb9dTOTEv7pgrQjDUuc+jAfCAZhZ+dY7HdDijOCf?=
- =?us-ascii?Q?HTD6L2fOrlzkLo0PLlKwHOLQ01Gm48D7yXhSobwuBDobK6NvnfEY91ZWrOTV?=
- =?us-ascii?Q?ksbA+VTC/H0EEP39BKuIZ3A17bkXbtnti8yqDFT9t6TE0cXwVZPYmCZ0ttvf?=
- =?us-ascii?Q?i3romzTOtVkm8gWiVGZ6744e9v0r8MnD1rD8xqAWoPsGn0eTbL8C5px37dSg?=
- =?us-ascii?Q?AR83Jd2h6YV15HFV+vRAYPT8u/fIfviNR+9XdnmWgo2AJXGJXxM4Lt1M62AX?=
- =?us-ascii?Q?gpmNrr1saW+ld+6oN/hmYtmUw8RX95SgCWh+xvSt+78vc/gH+ETZoterwaPA?=
- =?us-ascii?Q?xa/+TfUZxeuEmGldhdPsTMNZw3yWddXZRV1cGH9zE3r0Niw+oUqi+jt7ZVXy?=
- =?us-ascii?Q?a1Dw9x+mAl8rkZu+Q1FR0yoBuEtBI8rQg/1ksRO6KwRT9MygldMEDQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?0v/mRGv86Jfft8myPzW4cjUObj3uEr6EuGbNXeLMS92OR3hGRZ4bcdOn42uk?=
- =?us-ascii?Q?+gelPribg5NAfOLg2PDcAJ/imKb6JaAhoFbb/m6gChsNeFfW2hjADuJH1S4w?=
- =?us-ascii?Q?wSepScBOwZgoLbvzD0fntVznP828FOlKA9ND+TdFhKo61O+KLBBYluwc7OEj?=
- =?us-ascii?Q?/M9EGDf+iwZyu8BMU7R3YianLYPCKYZl6avkl523XSspXj83rXv70o1ycHw3?=
- =?us-ascii?Q?3khzT8+Jl+vz48C9tphCFwk7UqFtTS8qhtW+r+Qgwtupx6kHHIxZia7JjwNM?=
- =?us-ascii?Q?yWvX/EOV3AXM2KNoEOT4fEkGKiaBao00Vf0dIQpsZx1GfiQbOeHtAo82kyWf?=
- =?us-ascii?Q?ud3UAnB69SPGVnayc6NKwByd8YjheiPV+FbuTnhhtbZXLcqBRxHNY86KfYq3?=
- =?us-ascii?Q?vqITyhkczl08wGelqTkMlJeQJPq/Oz/wzVZzVc2HehipQK7x2xzpG1c18haB?=
- =?us-ascii?Q?elqi72TRbZpH6zQgpoS9yDRQav8A1Ta7oX9et/BRrqEiz2X3soVU0b6MbBXy?=
- =?us-ascii?Q?y1hGDxSo9/FDJx+ufvA5ypvl3OSVYFp3knghh1FuDWl0c28wujpldPLc7Z7y?=
- =?us-ascii?Q?KeR25G2T1cEwRmBtwuBQnnOmt0i01owMCeL1VMoXacv1GotHEh111mHVleSi?=
- =?us-ascii?Q?FToV5P/RmFEznD/z1A6plY3wwfTD9DyIRegkNzpVtmC8cwAdfCRrUiR6muq6?=
- =?us-ascii?Q?XEGEoaMgYsDvQ3dXRpI/19V/CqNfwYER+1+b158PwxRVsMTz0xE2iYuSkdI0?=
- =?us-ascii?Q?JFG65Ij0AYIAFL0/i9MC+oQMwYEdlaRXL5EgsyIbidMqSEGpu4+sdv0pufHb?=
- =?us-ascii?Q?tPwCD5+tw02lCozIYEwHGDBa/AcxwcHnoijOzVSKA7Gx/lywEbAyXWB577fz?=
- =?us-ascii?Q?ZjoKM2Gd9NZSmR8zFqntugllfuMuueC00kc8IqJaBvDn8aPB4/aCSqSfhR0J?=
- =?us-ascii?Q?04/bckueXf/YxY2EuPSANcyvgmBgotUKbXIe/FU7JN31f+mtb6GRoxDJOL1t?=
- =?us-ascii?Q?LtILpPU39Lr6MLc6NJRsEPC6JMtPke/KNHhaVHqR8xJbr/NQWVRmixkQkxG2?=
- =?us-ascii?Q?e1rt3fLDZdROycZ4k43ogV+cBNVIwRixahH8AE0CRJW8Ct6ptX+TQ523Inq5?=
- =?us-ascii?Q?wQwVA20LwUJ3Jn8Sx5gqoQKWGPWPvmQCRDElSEdvEAGQz5RlDGYIHEMS6AQe?=
- =?us-ascii?Q?iHqagKk+s77TRf+6U7BLAYHuGJJg/WxSQPtj6uFn8FR21VSLVmYA8GR+nrQd?=
- =?us-ascii?Q?VTpn+v5POXaEGjEQxKIZ6BmNc1yGk2w+cAj7LFql26I3HhoAdfEuvYsdB2rE?=
- =?us-ascii?Q?DZHUY6Is+sz5UXIlu32p3nRmh5BgTvB5OqyYfLH57KOYGkabE1TU02RBmGiW?=
- =?us-ascii?Q?2XbwCQnfBHaJ5X7V/rihlVdABUWxPxGMeneo7dfgEvRQwe42Vq/wovmS/GCc?=
- =?us-ascii?Q?lhGeexNCnuqtsC/RRaJfjX10RqGJ0nr+tHRtG16Asq7ALzHUOOBJDRauYqwB?=
- =?us-ascii?Q?6j5EhbDSTxr3TLbF6Sc40F0daGMlCWVqU579emAzJ0ioo3H43bnBektPtYD2?=
- =?us-ascii?Q?xooDJl9LHQwdxhJgo8VMXvTKwfTMCKOW9VF+NMhL?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e29ae0b2-c9df-4920-df8b-08ddb2589b11
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 13:19:38.7739
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QXXrA9P6bKI1rOfidpgY4Ga0mkKeWFgnccCyOzuRdl/n6ZjG81WD6Q+v+bZ7Fzz+PWF+fOhocJn+UTpbWaze5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7955
+User-Agent: Mozilla Thunderbird
+From: Luo Jie <quic_luoj@quicinc.com>
+Subject: Re: [PATCH 5/8] dt-bindings: clock: qcom: Add NSS clock controller
+ for IPQ5424 SoC
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Krzysztof Kozlowski
+	<krzk@kernel.org>,
+        Georgi Djakov <djakov@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        "Michael
+ Turquette" <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Anusha Rao
+	<quic_anusha@quicinc.com>,
+        "Richard Cochran" <richardcochran@gmail.com>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Catalin Marinas
+	<catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <quic_kkumarcs@quicinc.com>,
+        <quic_linchen@quicinc.com>, <quic_leiwei@quicinc.com>,
+        <quic_suruchia@quicinc.com>, <quic_pavir@quicinc.com>
+References: <20250617-qcom_ipq5424_nsscc-v1-0-4dc2d6b3cdfc@quicinc.com>
+ <20250617-qcom_ipq5424_nsscc-v1-5-4dc2d6b3cdfc@quicinc.com>
+ <b628b85b-75c4-4c85-b340-d26b1eb6d83e@kernel.org>
+ <512e3355-a110-4e7c-ab43-04f714950971@quicinc.com>
+ <78f0e4b5-19f6-45a0-b4dc-a1b519645567@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <78f0e4b5-19f6-45a0-b4dc-a1b519645567@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=YoEPR5YX c=1 sm=1 tr=0 ts=6859546c cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=FoU6f1ENpVpzdq5mMe4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: M54owwdi18GAqCN7_LHpIe6F1rX28ZbZ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA3OSBTYWx0ZWRfX+C7VxCurTRif
+ w0TRlVSeVJZEJ+Qek9ML8hifYpHSXHhAqXMUbW3JQV2VxyL9lImiR1nJArs6y6HTm7xDCf5pmWN
+ OQWOpPPebeRXVL0OwCPwQwPVFGvDAE+w9H1DCycp/WH6BC59hE8TQLnmLFqUuY3WIlIM6oZtVZ7
+ 6W1sXIae6l+jfLhKjKafStOVsYA3/EQWgKXqI1SuQd5QCs1N5HnhyGPWwDiwkTPrcnP4MyI/ITC
+ NZqBoMmlTM5Wb48krsf/s0t9nIuZFP3lEUmDQSQmMRlu6H9bHkw/EovD4VoJfQalspkCiwR3Otv
+ LFN23jXAsoDLeRaMZdPdhx3c7g/yUzE6i/NgG3Z+DLUDyl2L5Qgf8TaybKo05tV6TmD3JE2GFpm
+ Mz4PKarvYjKxpI4DbfQnIgIslwARgTRKmyTKSQdmdE1aoBtCQZ2rZp2lSrPSo8BYvOhMLTfm
+X-Proofpoint-GUID: M54owwdi18GAqCN7_LHpIe6F1rX28ZbZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-23_03,2025-06-23_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 priorityscore=1501 mlxscore=0 adultscore=0 suspectscore=0
+ malwarescore=0 mlxlogscore=999 spamscore=0 bulkscore=0 lowpriorityscore=0
+ impostorscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506230079
 
-On Mon, Jun 23, 2025 at 06:27:50PM +0530, Dhruva Gole wrote:
->On Jun 20, 2025 at 11:37:14 +0800, Peng Fan (OSS) wrote:
->> From: Peng Fan <peng.fan@nxp.com>
->> 
->> When two consecutive suspend message send to the Linux agent, Linux will
->> suspend and wake up. The exepcted behaviour should be suspend, wake up
->
->I am first trying to gather more context of the issue at hand here,
->Why and who is sending 2 consecutive suspend messages to Linux?
 
-Currently in my test, it is SCMI platform send two suspend messages.
-But in real cases, other high priviledge agents could send suspend messages
-to linux agent.
 
-One agent may wrongly send two suspend messages by user or the agent is hacked.
+On 6/21/2025 6:09 PM, Konrad Dybcio wrote:
+>>>>      compatible:
+>>>> -    const: qcom,ipq9574-nsscc
+>>>> +    enum:
+>>>> +      - qcom,ipq5424-nsscc
+>>>> +      - qcom,ipq9574-nsscc
+>>>>        clocks:
+>>>>        items:
+>>>>          - description: Board XO source
+>>>> -      - description: CMN_PLL NSS 1200MHz (Bias PLL cc) clock source
+>>>> -      - description: CMN_PLL PPE 353MHz (Bias PLL ubi nc) clock source
+>>>> +      - description: CMN_PLL NSS 1200 MHz or 300 MHZ (Bias PLL cc) clock source
+>>>> +      - description: CMN_PLL PPE 353 MHz  or 375 MHZ (Bias PLL ubi nc) clock source
+>>> This change means devices are different. Just ocme with your own schema.
+>> The NSS clock controller hardware block on the IPQ5424 SoC is identical
+>> in design to that of the IPQ9574 SoC. The main difference is in the
+>> clock rates for its two parent clocks sourced from the CMN PLL block.
+>>
+>> Given this, would it be acceptable to update the clock name and its
+>> description to use a more generic clock name, such as "nss" and "ppe"
+>> instead of the current "nss_1200" and "ppe_353"?
+> Because you used those clock_names in the existing ipq9574, you can't
+> change them now. You could introduce a separate set of clock_names
+> for the new ipq5424 though, but I think it could be useful to drop the
+> rate suffix for new additions
+> 
+> Konrad
 
->
->Just quoting the cover letter:
->
->> When testing on i.MX95, two consecutive suspend message send to the Linux
->> agent, Linux will suspend(by the 1st suspend message) and wake up(by the
->> 2nd suspend message).
->> 
->> The ARM SCMI spec does not allow for filtering of which messages an agent
->> wants to get on the system power protocol. To i.MX95, as we use mailbox
->> to receive message, and the mailbox supports wake up, so linux will also
->> get a repeated suspend message. This will cause Linux to wake (and should
->> then go back into suspend).
->
->When you say mailbox supports wake up you mean the mailbox IP in your
->SoC actually gets some sort of wake interrupt that triggers a wakeup?
+OK, Understand, I will add the new separate clock names "nss" and "ppe"
+for supporting IPQ5424 SoC and further SoCs with similar design.
+Thanks for confirmation.
 
-There is no dedicated wake interrupt  for mailbox.
-
-The interrupt is the doorbell for processing notification, and this
-interrupt could also wakeup Linux.
-
->Is this wakeup sent to the SM then to be processed further and trigger a
->linux wakeup?
-
-No. As above, the mailbox received a doorbell notification interrupt.
-
->
-><or> the mailbox directly wakes up linux, ie. triggers a resume flow but
->then you are saying it was an unintentional wakeup so you want to
->suspend linux again?
-
-Right.
-
-This just seems like the wakeup routing is
->incorrect and the system is going through a who resume and then suspend
->cycle without a good reason?
->
->Why and when in this flow is linux ending up with a duplicate suspend message is
->something I still don't follow.
-
-Other agents could send duplicated suspend messages, right?
-We could not expect other agents always behave correctly.
-
->
->Could you point us to any flow diagrams or software sequences that we
->could review?
-
-Not sure what kind diagram or sequences you wanna. It is just one agent
-wrongly send duplicate suspend message to Linux agent. And Linux agent
-should suspend again.
-
-One more example is
-Linux suspended, other agent send reboot linux message, Linux should
-wakeup and reboot itself.
-
-Same to suspend
-Linux suspended, other agent send suspend Linux message, Linux wakeup
-and suspend again.
-
-Regards,
-Peng
->
->> and suspend again.
->> 
->> The ARM SCMI spec does not allow for filtering of which messages an agent
->> wants to get on the system power protocol. To i.MX95, as we use mailbox
->> to receive message, and the mailbox supports wake up, so linux will also
->> get a repeated suspend message. This will cause Linux to wake (and should
->> then go back into suspend).
->> 
->> In current driver, the state is set back to SCMI_SYSPOWER_IDLE after
->> pm_suspend finish, however the workqueue could be scheduled after
->> thaw_kernel_threads. So the 2nd suspend will return early with
->> "Transition already in progress...ignore", and leave Linux in wakeup
->> state.
->> 
->> So set SCMI_SYSPOWER_IDLE in device resume phase before workqueue
->> is scheduled to make the 2nd suspend message could suspend Linux again.
->> 
->> Signed-off-by: Peng Fan <peng.fan@nxp.com>
->> ---
->>  drivers/firmware/arm_scmi/scmi_power_control.c | 24 +++++++++++++++++++-----
->>  1 file changed, 19 insertions(+), 5 deletions(-)
->> 
->[...]
->
->-- 
->Best regards,
->Dhruva Gole
->Texas Instruments Incorporated
