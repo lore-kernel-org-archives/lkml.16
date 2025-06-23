@@ -1,111 +1,275 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A9C1F4722;
-	Mon, 23 Jun 2025 20:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AAD2D4B57
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 20:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750711167; cv=none; b=uwmOfDVyBaBNGgDE98U9Oko0278w8Yma3wXg6dizEe1ME+VPhHn4W6wrf/O9/podgiBhydSaZfKlh3954I98wbSMx+GjoVBFrF7dFVxPYExB5MEHE2H/lXUm2Rq3Oh2w2Iycs9HJvG5guLk0ANhdtQHybLU8FADBD47qNHxiMzM=
+	t=1750711226; cv=none; b=HcpcHMM7cmbh0gzdEW+honCpKEFZGbHg6RyKvZ5YXX1q8SunByDULxvZb1q9J+mov9UOqL8MY5wTCfWnmNEZz7LiToOXYESIgM1Ez7B0WVetpIHf9xRsEu138b5ZuesqgPXYSEDI+9kEYSxK3oV3aKXUqmIhtcWI9yOqKtxF/mM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750711167; c=relaxed/simple;
-	bh=jOBHMkhfK17KwiJCLSBMVKuPedcRRXNEGl8b4o/dC1U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BaNqMOZL67a50A4TL/pG/oEzG9NOzFg9Ix/itQ5HX/dRLbRrAruDju5YUnnJBiolkk6y7krrs+/KgQ7EDFHP6i5EgiWmSob761cc8cmxnSTLPoL+aPh36TD/Y+4jcQ593Ll0q2B2Thpul+TCK3X7WMV2GhenScxgyyCsg0bingM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BGNYKeJA; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750711226; c=relaxed/simple;
+	bh=Zhuvl4KnS3oB7uKqYBHpHRfcybkMRxnNYJ+NQXkoFBs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AiU9O8hMF3+tNcZnVwkLYsSHxoq8urhl2AYgSY2XsSOv5dEi9TQke/DOqbr9EFHa+iUmVi4yFLT0565D4yjMmPRnb/PypRWbcO9oy7jBmvuCVuIJjwq+2ctfturLYFa7TwSjYyp8GIzG642mk8SR6qH0OdOyTUchpK4GnJJAN9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tSnvRcZf; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BGNYKeJA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=gu+6pmFreAAsWhh78QzgjCygCkuWla9oYWkSW6ad8RI=; b=BGNYKeJA9cA8ap+f6qIae/xbFg
-	YBSFQwwCvjPd66KdSHhyr3LYnSCAHXk7Z/oyfrD1H8dddkCNgnGEvMANOUtiiQD96rxafOHkHn+Hq
-	CBqkR+U8f9AB+Satn1EwagdcrLmOdk237bhXoD0ULQd30veMz+3jzz08PaY1Z/1PCg7wR8U8QY6w2
-	86zpIZPfZy/jN1jMXjNbbtN9++3bXnQdc3xjDFmmjnVaC8qklrM2EV1k0rVqrISiqWVwn2jqRutce
-	9MhLjMdeHsd+bltLRSWAGo7U4QDWjK/zFYxiORCu+IZpCnRlxq0pfnqlPiJ+GaIDqKvMAWctErQbH
-	j4Ol9uYg==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uTnwf-00000004Y38-1yap;
-	Mon, 23 Jun 2025 20:39:13 +0000
-Message-ID: <e2b0e9fc-c1dc-4f2e-9a6d-c92d25f28fed@infradead.org>
-Date: Mon, 23 Jun 2025 13:39:03 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tSnvRcZf"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-237f18108d2so45645ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:40:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750711224; x=1751316024; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HQPU1jwDqaIvFAqHZbhsvjmULs6RRSSTDERPy7mYC/w=;
+        b=tSnvRcZf1UYOSdfNDgYvjIr8QqP9/W8ScMdiHp4mjaWsd9PSSaiSEbL5pBk2zdhqPK
+         9LJCxrLbnrbx7+WoFWIVt+l3j2V6WKGy1yvCMK8MuJHC7oyIz8GT8qhGfVKTRYEjgznc
+         czAxGfl7RvQASP5GJeoaQItK7ZcaRLmAgMAc+OH+mp0LDbEGcP5lnnRzdVmHE40bXRyr
+         CMc524T79E+UYhB3Yd+WLgJDHn1dsbLrmQyrLsI0q3RiAj3yZ7rnRacRQoUvPS6RX4EV
+         kNOisVN3kCoRdVR/ylfPQUdCfnZQc6JCJHNzY1UJeCz4u9xtoEgsGN1AnEznIdXCGOaM
+         OCaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750711224; x=1751316024;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HQPU1jwDqaIvFAqHZbhsvjmULs6RRSSTDERPy7mYC/w=;
+        b=UBEHH+NcX7MFxPpsUqBqsc7/DrS33SItinogkrrEMGLCYokwKI4O/ZQvBGtj/iYWsa
+         IOqmCXhr+crUQwencChYT6UsyLYtoyhp0bhoqblBvtnokb44KK6LZD/BQ+ym8UjjF4Z1
+         Jq4YNHV9aQso/vRJPXVS5aqBCWGglCpyLJbMjSjqH7PUhOk7FG4INQD+smwOY7BkqquW
+         u6FqEdYWlv31D0JkgHwE79kxr96tIQRIASGH1yL4PvYFv8hnbmMJ8/qG4YIEXZcwKzPH
+         rQjwCoM16Z2oNJKE0vH5aJpW/bASB4Nma8wW7BNN0Ji/kteaMYImosKAx67Q7E024vUu
+         a6OA==
+X-Forwarded-Encrypted: i=1; AJvYcCWPB1NHpTiw0rd9CYLDWaGRrm+dQgMca0LwkrIXbruroohxwHkG+fLs/JyFspMhpwdIwMfJtT6GSYqg2gk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRyFGoAf7zi31i2sZitRtQh0LJrFKRo84793iP740P71HIHJ2H
+	PQiyGBTJ6GHS4PCrfADR4a0lRWAiSB8A7E8BhOxQ9+rnhdJzvlCSYqylPkZaY4cpkfBtTi2c/Y8
+	0jaAjHbpeOwMVYp+ZZSgLdfLZc0psiBD+onGk0y0s
+X-Gm-Gg: ASbGncsGIz7d8UwElf57YTmoaSrDEG2+LsrHAoXYpubA6g2pvksPoMpSyKEIhGIxrPT
+	5UkwZoa0SQrf4J9/WJLQ0zp8qEyVaAy8afDblVv9h0IwyikE/XuAGHafbF88Og1UTf8+8im3PAl
+	xlLbqUw2ZL1cazoPBafHlAZndXcP5b2ZD8r8N0aw1J155cpRsIBQ6Risl3gAIm5vgZbISZQJDN2
+	kb+peIpKrM=
+X-Google-Smtp-Source: AGHT+IFUHKxNUZ3MwYjq/wkDI3kUu/0SCAMOAElnU/6pCk2jEVzxFHLOd5NxdmYdVQHL1UJZyG8hqjuVYY6Eb3+e7tY=
+X-Received: by 2002:a17:903:1c1:b0:223:ff93:322f with SMTP id
+ d9443c01a7336-23802b63e09mr728085ad.2.1750711223886; Mon, 23 Jun 2025
+ 13:40:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] docs: nvme: fix grammar in
- nvme-pci-endpoint-target.rst
-To: Alok Tiwari <alok.a.tiwari@oracle.com>, linux-nvme@lists.infradead.org,
- kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
- kch@nvidia.com, nilay@linux.ibm.com, corbet@lwn.net
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250623064036.4187788-2-alok.a.tiwari@oracle.com>
- <20250623064036.4187788-6-alok.a.tiwari@oracle.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250623064036.4187788-6-alok.a.tiwari@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250611095158.19398-1-adrian.hunter@intel.com> <20250611095158.19398-2-adrian.hunter@intel.com>
+In-Reply-To: <20250611095158.19398-2-adrian.hunter@intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Mon, 23 Jun 2025 13:40:10 -0700
+X-Gm-Features: AX0GCFuPFZd1yMYIv9481hq8QdvlFhQ_xbq_lUsfcqcvZ9md8c33VovBY0efJaM
+Message-ID: <CAGtprH989TDzAyQntYjU8sTC3J_VNbNQg6dx_BzENNqXdRKs2A@mail.gmail.com>
+Subject: Re: [PATCH V4 1/1] KVM: TDX: Add sub-ioctl KVM_TDX_TERMINATE_VM
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, kvm@vger.kernel.org, 
+	rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com, 
+	kai.huang@intel.com, reinette.chatre@intel.com, xiaoyao.li@intel.com, 
+	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
+	isaku.yamahata@intel.com, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com, 
+	chao.gao@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On 6/22/25 11:40 PM, Alok Tiwari wrote:
-> Notable changes:
-> Use "an NVMe" instead of "a NVMe" throughout the document
-> Fix incorrect phrasing such as "will is discoverable" -> "is
-> discoverable"
-> Ensure consistent and proper article usage for clarity.
-> 
-> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+On Wed, Jun 11, 2025 at 2:52=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
+com> wrote:
+>
+> From: Sean Christopherson <seanjc@google.com>
+>
+> Add sub-ioctl KVM_TDX_TERMINATE_VM to release the HKID prior to shutdown,
+> which enables more efficient reclaim of private memory.
+>
+> Private memory is removed from MMU/TDP when guest_memfds are closed. If
+> the HKID has not been released, the TDX VM is still in RUNNABLE state,
+> so pages must be removed using "Dynamic Page Removal" procedure (refer
+> TDX Module Base spec) which involves a number of steps:
+>         Block further address translation
+>         Exit each VCPU
+>         Clear Secure EPT entry
+>         Flush/write-back/invalidate relevant caches
+>
+> However, when the HKID is released, the TDX VM moves to TD_TEARDOWN state
+> where all TDX VM pages are effectively unmapped, so pages can be reclaime=
+d
+> directly.
+>
+> Reclaiming TD Pages in TD_TEARDOWN State was seen to decrease the total
+> reclaim time.  For example:
+>
+>         VCPUs   Size (GB)       Before (secs)   After (secs)
+>          4       18               72             24
+>         32      107              517            134
+>         64      400             5539            467
+>
+> Link: https://lore.kernel.org/r/Z-V0qyTn2bXdrPF7@google.com
+> Link: https://lore.kernel.org/r/aAL4dT1pWG5dDDeo@google.com
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Co-developed-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 > ---
->  Documentation/nvme/nvme-pci-endpoint-target.rst | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/nvme/nvme-pci-endpoint-target.rst b/Documentation/nvme/nvme-pci-endpoint-target.rst
-> index b699595d1762b..48f3b7f685945 100644
-> --- a/Documentation/nvme/nvme-pci-endpoint-target.rst
-> +++ b/Documentation/nvme/nvme-pci-endpoint-target.rst
+>
+>
+> Changes in V4:
+>
+>         Drop TDX_FLUSHVP_NOT_DONE change.  It will be done separately.
+>         Use KVM_BUG_ON() instead of WARN_ON().
+>         Correct kvm_trylock_all_vcpus() return value.
+>
+> Changes in V3:
+>
+>         Remove KVM_BUG_ON() from tdx_mmu_release_hkid() because it would
+>         trigger on the error path from __tdx_td_init()
+>
+>         Put cpus_read_lock() handling back into tdx_mmu_release_hkid()
+>
+>         Handle KVM_TDX_TERMINATE_VM in the switch statement, i.e. let
+>         tdx_vm_ioctl() deal with kvm->lock
+>
+>
+>  Documentation/virt/kvm/x86/intel-tdx.rst | 16 +++++++++++
+>  arch/x86/include/uapi/asm/kvm.h          |  1 +
+>  arch/x86/kvm/vmx/tdx.c                   | 34 ++++++++++++++++++------
+>  3 files changed, 43 insertions(+), 8 deletions(-)
+>
+> diff --git a/Documentation/virt/kvm/x86/intel-tdx.rst b/Documentation/vir=
+t/kvm/x86/intel-tdx.rst
+> index de41d4c01e5c..e5d4d9cf4cf2 100644
+> --- a/Documentation/virt/kvm/x86/intel-tdx.rst
+> +++ b/Documentation/virt/kvm/x86/intel-tdx.rst
+> @@ -38,6 +38,7 @@ ioctl with TDX specific sub-ioctl() commands.
+>            KVM_TDX_INIT_MEM_REGION,
+>            KVM_TDX_FINALIZE_VM,
+>            KVM_TDX_GET_CPUID,
+> +          KVM_TDX_TERMINATE_VM,
+>
+>            KVM_TDX_CMD_NR_MAX,
+>    };
+> @@ -214,6 +215,21 @@ struct kvm_cpuid2.
+>           __u32 padding[3];
+>    };
+>
+> +KVM_TDX_TERMINATE_VM
+> +-------------------
+> +:Type: vm ioctl
+> +:Returns: 0 on success, <0 on error
+> +
+> +Release Host Key ID (HKID) to allow more efficient reclaim of private me=
+mory.
+> +After this, the TD is no longer in a runnable state.
+> +
+> +Using KVM_TDX_TERMINATE_VM is optional.
+> +
+> +- id: KVM_TDX_TERMINATE_VM
+> +- flags: must be 0
+> +- data: must be 0
+> +- hw_error: must be 0
+> +
+>  KVM TDX creation flow
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>  In addition to the standard KVM flow, new TDX ioctls need to be called. =
+ The
+> diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/=
+kvm.h
+> index 6f3499507c5e..697d396b2cc0 100644
+> --- a/arch/x86/include/uapi/asm/kvm.h
+> +++ b/arch/x86/include/uapi/asm/kvm.h
+> @@ -940,6 +940,7 @@ enum kvm_tdx_cmd_id {
+>         KVM_TDX_INIT_MEM_REGION,
+>         KVM_TDX_FINALIZE_VM,
+>         KVM_TDX_GET_CPUID,
+> +       KVM_TDX_TERMINATE_VM,
+>
+>         KVM_TDX_CMD_NR_MAX,
+>  };
+> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> index b952bc673271..457f91b95147 100644
+> --- a/arch/x86/kvm/vmx/tdx.c
+> +++ b/arch/x86/kvm/vmx/tdx.c
+> @@ -515,6 +515,7 @@ void tdx_mmu_release_hkid(struct kvm *kvm)
+>                 goto out;
+>         }
+>
+> +       write_lock(&kvm->mmu_lock);
+>         for_each_online_cpu(i) {
+>                 if (packages_allocated &&
+>                     cpumask_test_and_set_cpu(topology_physical_package_id=
+(i),
+> @@ -539,7 +540,7 @@ void tdx_mmu_release_hkid(struct kvm *kvm)
+>         } else {
+>                 tdx_hkid_free(kvm_tdx);
+>         }
+> -
+> +       write_unlock(&kvm->mmu_lock);
+>  out:
+>         mutex_unlock(&tdx_lock);
+>         cpus_read_unlock();
+> @@ -1789,13 +1790,13 @@ int tdx_sept_remove_private_spte(struct kvm *kvm,=
+ gfn_t gfn,
+>         struct page *page =3D pfn_to_page(pfn);
+>         int ret;
+>
+> -       /*
+> -        * HKID is released after all private pages have been removed, an=
+d set
+> -        * before any might be populated. Warn if zapping is attempted wh=
+en
+> -        * there can't be anything populated in the private EPT.
+> -        */
+> -       if (KVM_BUG_ON(!is_hkid_assigned(to_kvm_tdx(kvm)), kvm))
+> -               return -EINVAL;
+> +       if (!is_hkid_assigned(to_kvm_tdx(kvm))) {
+> +               KVM_BUG_ON(!kvm->vm_dead, kvm);
+> +               ret =3D tdx_reclaim_page(page);
+> +               if (!ret)
+> +                       tdx_unpin(kvm, page);
+> +               return ret;
+> +       }
+>
+>         ret =3D tdx_sept_zap_private_spte(kvm, gfn, level, page);
+>         if (ret <=3D 0)
+> @@ -2790,6 +2791,20 @@ static int tdx_td_finalize(struct kvm *kvm, struct=
+ kvm_tdx_cmd *cmd)
+>         return 0;
+>  }
+>
+> +static int tdx_terminate_vm(struct kvm *kvm)
+> +{
+> +       if (kvm_trylock_all_vcpus(kvm))
+> +               return -EBUSY;
+> +
+> +       kvm_vm_dead(kvm);
+> +
+> +       kvm_unlock_all_vcpus(kvm);
+> +
+> +       tdx_mmu_release_hkid(kvm);
+> +
+> +       return 0;
+> +}
+> +
+>  int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
+>  {
+>         struct kvm_tdx_cmd tdx_cmd;
+> @@ -2817,6 +2832,9 @@ int tdx_vm_ioctl(struct kvm *kvm, void __user *argp=
+)
+>         case KVM_TDX_FINALIZE_VM:
+>                 r =3D tdx_td_finalize(kvm, &tdx_cmd);
+>                 break;
+> +       case KVM_TDX_TERMINATE_VM:
+> +               r =3D tdx_terminate_vm(kvm);
+> +               break;
+>         default:
+>                 r =3D -EINVAL;
+>                 goto out;
+> --
+> 2.48.1
+>
+>
 
-[snip]
-
-> @@ -181,10 +181,10 @@ Creating an NVMe endpoint device is a two step process. First, an NVMe target
->  subsystem and port must be defined. Second, the NVMe PCI endpoint device must
->  be setup and bound to the subsystem and port created.
->  
-> -Creating a NVMe Subsystem and Port
-> +Creating an NVMe Subsystem and Port
->  ----------------------------------
-
-The underline needs to be extended one more character.
-
->  
-> -Details about how to configure a NVMe target subsystem and port are outside the
-> +Details about how to configure an NVMe target subsystem and port are outside the
->  scope of this document. The following only provides a simple example of a port
->  and subsystem with a single namespace backed by a null_blk device.
->  
-> @@ -234,7 +234,7 @@ Finally, create the target port and link it to the subsystem::
->          # ln -s /sys/kernel/config/nvmet/subsystems/nvmepf.0.nqn \
->                  /sys/kernel/config/nvmet/ports/1/subsystems/nvmepf.0.nqn
->  
-> -Creating a NVMe PCI Endpoint Device
-> +Creating an NVMe PCI Endpoint Device
->  -----------------------------------
-
-Same here.
-
->  
->  With the NVMe target subsystem and port ready for use, the NVMe PCI endpoint
-
-With those changes made, you can add:
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
--- 
-~Randy
+Acked-by: Vishal Annapurve <vannapurve@google.com>
+Tested-by: Vishal Annapurve <vannapurve@google.com>
