@@ -1,393 +1,112 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF99A248F6E
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5F2233D8E;
+	Mon, 23 Jun 2025 13:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750683881; cv=none; b=Br/vej/ztiEPtTjr+xEKbRGA/W1sn24GC03CRMc3tEOVzcL60PetxayN/+gu/yUween5++74xDiwU2UvzZmsdjjG3pgbGc7WKsjz4D+S3WGURogUIXQMZpoBOZCH5a5bst5DUJqTfwggycOZrtO6PjnbvGDB4qB7s4Cb8AwwJcE=
+	t=1750683889; cv=none; b=lGucXEbp8s2aoJ52RgZc/dryc914qpFqgDgbLKQ4F3jtFs3DcKdAPcW/hxEWVu2oAwFffWR0Dq60DV8pDGdDe+uguHrGVxL68sUGrBLug86ZQgjdreKzwqr4sgbNENA1AvwVn2wAExmiHu2MS3RO3G73KQe1HXRrfYUkmPWN9zE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750683881; c=relaxed/simple;
-	bh=/BlpWEmVkFfjpn/3mAzrX1kGPLkeZaYDQZ8QKhDor8I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QnjbqI+mjIfO/45ZgWUwsVFapzqDQMwiQKISP5UclxqRC65aUoFyPJxnYhjn+VquTUF1zEaoNtsII4rLm2YoOlcMX86sNcuCozUgEOr2RWYvlUxEHPsPx/a6AAtzDmdDkbI8BsVdeBMeXiIji0FP6/ob9FEwEYPKEmYow2ugmlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RvmEnRos; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750683889; c=relaxed/simple;
+	bh=IcVDVIEVnMniqE+f7HOSKFLJjcOETkHWFISnstNUUdw=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=lpMXaOfUk9sML6NDqb08lk9OEb4WWjBaO42CqP40ItKyPCy4ZzwTRzvqRxJqRJo/FAR0nDrHa1gxW98R1m7xREyHaU9S1XiARKaOkBbSq9DBj4ah/hA0fJUqtLdku0poEBDUj9+dqPIWao4h3eQXEFs5eUCI0jJismnyw947ZuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NY4+5QNk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SnHwC87F; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RvmEnRos"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NCUcMx003570
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:04:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=o0C9b2LLinN
-	LSKrjPoebgxL6KXSiK4LWiWFvZX7PqrY=; b=RvmEnRoso38CFAx1tElkPJ/4V4/
-	wqPVxn4+YCB3IyI8P3Ddl44UChJM8ZjwPc9W4VyH5ogGj6zRv+st1uQrr2WbnBpN
-	Dq3RBBsvRMqFa88rU6CvE0pCB7LIxKR9y8OWT0OISzqJhETZDt2EJ1aqLm1EPQ6l
-	aJh9bZMeD20REFmlwwT8kx5b5OzAb2eYoRVItd5RPXk7R9w733dbn2ORZhAakvsQ
-	cgUoupcyvqVU5c164BPqXdLtvOLLsOmxrllzj6bw1YKp1kfjLJRRMv5BRong6kFb
-	TBe6aWzG7jE9aOhihkhG6O7E1h9Ozjn+D91kOzaF7ymWZXBuWKvRbWRV41w==
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f70ar30q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:04:36 +0000 (GMT)
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-749332fb726so78497b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 06:04:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750683876; x=1751288676;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o0C9b2LLinNLSKrjPoebgxL6KXSiK4LWiWFvZX7PqrY=;
-        b=KnMHXiBy+rud6ImD3E5bhRZEZr45iOeeAOHPPz3k+g5XgE/qis4kntVQ8rTBecgeJz
-         4U+IuJF6SBdkZrd9WOYoVO7YsXjxZwHgM7+6rbMnph/TGbXWVzREguWfLO3iAj6LCOig
-         udi00o3EAOSHmiS6Zl78Czlw9qlLG7ZNIpZsxOchtFfYntWMDdDqaMr2bjf0GIAv325a
-         0gwURQlxDDhLYow0167cdWQ6O+fa3m+IE6OVDtXdU0Hxa7/xt4LCaKN9+W/A9AzmiJl2
-         XXy+WdXqFZl44UZf8bcb5nF7mvxIv12QkOMTCAC3I4MDrpqe00ZgcB9vhCXGeM/wQImj
-         Z/hA==
-X-Forwarded-Encrypted: i=1; AJvYcCWki9QbWTLVTxIXrCKBeHus+KgAazgX8YqeXCvp2SnL8+5XcHgRIBgsZS8r1H85jnMBWWRgD5hD1Jm3lYU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMNFSD14Py9ahQOgGW5Z6sP+mIKVFy9woN6z7+0hDv7y4tlHgo
-	6eI3Ebc7wLbK1mk79XJpc07r3F1ydhSGzXzU93BXl0LVLB9rE+FrXManiqClAH3kdzX1fV8LB2b
-	j5Gvcus0ovLU3gxNp8LhzxIi4UxM26pQw/ZfaKvCh4tlmby0V8jDcV0ruQDsLxkGFi8I=
-X-Gm-Gg: ASbGncvp22TB2zYRRjEZO9OUjjDpA563KpYjl5hEKPCLcQISG+eN2rA+YjogDTlX52n
-	jg9LHcsSwfKOuxebE5lVeltiuQXdgX+zsO65R6L3lUjPpguHBr+Plla/Jmpn1IdDJ6UrApYuO15
-	tqf8RBB5oXmVv8htUJT+VZlXQ/uA3ymj+ttAmC/0cLiw1INi1NjXQWAk/e6RDOXBwZtTWrVcUic
-	JcErfmdZ5iZrmJLGok7kTD0/NgvfYDVmioClh/ilDyE/wyR5bwAAaz2NaDzjvgfF1OWUKERwcCF
-	EW52xZLNLHVq1u9gkgQJ3hIJRWMSzRkLlpoSnsUcv84vkF3HEY2rPQ==
-X-Received: by 2002:a05:6a00:6708:b0:737:6589:81e5 with SMTP id d2e1a72fcca58-7490d4f9ad8mr5824634b3a.2.1750683875565;
-        Mon, 23 Jun 2025 06:04:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFYIj9dSQErqYoU6ZWGAMdNXXYCxJPw2Hvn3yIlOyufrRrJ0tUegl60KqZQDHnhMASeKtyHUw==
-X-Received: by 2002:a05:6a00:6708:b0:737:6589:81e5 with SMTP id d2e1a72fcca58-7490d4f9ad8mr5824618b3a.2.1750683875067;
-        Mon, 23 Jun 2025 06:04:35 -0700 (PDT)
-Received: from hu-uchheda-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a46b8b2sm8713437b3a.16.2025.06.23.06.04.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 06:04:34 -0700 (PDT)
-From: Umang Chheda <umang.chheda@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@oss.qualcomm.com,
-        umang.chheda@oss.qualcomm.com, Rakesh Kota <quic_kotarake@quicinc.com>,
-        Nirmesh Kumar Singh <quic_nkumarsi@quicinc.com>,
-        Swati Agarwal <quic_swatagar@quicinc.com>
-Subject: [PATCH 2/2] arm64: dts: qcom: Add support for QCS8275 IQ8 EVK
-Date: Mon, 23 Jun 2025 18:34:20 +0530
-Message-Id: <20250623130420.3981916-3-umang.chheda@oss.qualcomm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250623130420.3981916-1-umang.chheda@oss.qualcomm.com>
-References: <20250623130420.3981916-1-umang.chheda@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NY4+5QNk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SnHwC87F"
+Date: Mon, 23 Jun 2025 13:04:44 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750683885;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5UXqQvG4a6/F+TuYlrZefJQ7hcnrAo0Sa9rhsY95+u4=;
+	b=NY4+5QNkOUR7uw16mZ8bEOoOQ+jBihNlHN9shYGLb1VpNtSEsJprP7Mv2biUxVJnKukNxw
+	KLoRY+tbHYBZe21g67ZXmAhWGKPwe67rgxjEE3W0lVYXTu+aXZDHKZg8KkZ7Xukuxz+KPw
+	XaSMLX283pN3KNcIBlE6luuRAWPxDWt5HoCsVjXgEyw54bYFfN6K+Le8+qvPGmAvtlY8kD
+	lnLMwPwZI0Xey2WrAxVELIqDogEWTw8LtUNOtTFXA5TRiqBfuQl6E+9lr/IiJfzcdS9Ppw
+	cYaKbjOU/MgQpcyIzILFZPKHH6Cdi+ge4G0+lh0XxzrgC0jx3CU1rY3SGmggIA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750683885;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5UXqQvG4a6/F+TuYlrZefJQ7hcnrAo0Sa9rhsY95+u4=;
+	b=SnHwC87FUBT3sSM09s8qZSXH8wiMQ+f56FqHWfTANBeCpm2KdKREcukQHmOlzofk5oJESW
+	JlBgiw5DSRYcI8BA==
+From: "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: locking/urgent] futex: Initialize futex_phash_new during fork().
+Cc: Calvin Owens <calvin@wbinvd.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250623083408.jTiJiC6_@linutronix.de>
+References: <20250623083408.jTiJiC6_@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: Ttn8154aIt8aZXnf9meyMlfXAiG9LZm_
-X-Authority-Analysis: v=2.4 cv=c8arQQ9l c=1 sm=1 tr=0 ts=685950e4 cx=c_pps
- a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=EXN5aKvdb1NWPgACJsIA:9
- a=IoOABgeZipijB_acs4fv:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: Ttn8154aIt8aZXnf9meyMlfXAiG9LZm_
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA3OCBTYWx0ZWRfX1zvbjy61GUoZ
- mZtetmBZHHwEbqWEJ4ODiX1WivnC81T+7OQjPLNXJuNs/tjTC9Ad4/PdBU23aLf4ZTH2fNQF+xn
- lR2FFKkUcWzUvqcAj3RBKmS4ZHhMrJqPEF9ZwlNF1oUEkj/zay76xKsaMuEboTNMx2eA6cvEWfn
- 98ShgzJm6V2EnBrHTPincoGDIOazzRNkjHucMml2GIp5VVeIapk2VgwnlL//yVPCpXHvYS2TANI
- 19YoOUqx6iFbY7pVkKNncmLrtS9cVuYUILAVGGGBqMr02yfEOJmX6l4Ht3gsxMMD2qURFCjc+Id
- xbW0dK0S2c09QEXMgb+w4G+vZpcMQsUzZqyA7NW2gm2c83y/XbRqNzAKhUQIpvLDWtBwi6Um+Nb
- pDozLnbUODnmlPEDN5ErPfkEKCn4wDXAmYV5aGwJVlB83mn4uOggxmVsT+qzrcXZUlMsk3TN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-23_03,2025-06-23_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0 clxscore=1011
- mlxlogscore=999 phishscore=0 impostorscore=0 mlxscore=0 priorityscore=1501
- adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506230078
+Message-ID: <175068388403.406.13726507646292269621.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Add initial device tree support for IQ-8275-EVK board,
-based on Qualcomm's QCS8275 SOC.
+The following commit has been merged into the locking/urgent branch of tip:
 
-Implement basic features like DSPs, UFS and 'booting to shell'
-with uart console.
+Commit-ID:     a24cc6ce1933eade12aa2b9859de0fcd2dac2c06
+Gitweb:        https://git.kernel.org/tip/a24cc6ce1933eade12aa2b9859de0fcd2dac2c06
+Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate:    Mon, 23 Jun 2025 10:34:08 +02:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Mon, 23 Jun 2025 14:50:37 +02:00
 
-Co-developed-by: Rakesh Kota <quic_kotarake@quicinc.com>
-Signed-off-by: Rakesh Kota <quic_kotarake@quicinc.com>
-Co-developed-by: Nirmesh Kumar Singh <quic_nkumarsi@quicinc.com>
-Signed-off-by: Nirmesh Kumar Singh <quic_nkumarsi@quicinc.com>
-Co-developed-by: Swati Agarwal <quic_swatagar@quicinc.com>
-Signed-off-by: Swati Agarwal <quic_swatagar@quicinc.com>
-Signed-off-by: Umang Chheda <umang.chheda@oss.qualcomm.com>
+futex: Initialize futex_phash_new during fork().
+
+During a hash resize operation the new private hash is stored in
+mm_struct::futex_phash_new if the current hash can not be immediately
+replaced.
+
+The new hash must not be copied during fork() into the new task. Doing
+so will lead to a double-free of the memory by the two tasks.
+
+Initialize the mm_struct::futex_phash_new during fork().
+
+Closes: https://lore.kernel.org/all/aFBQ8CBKmRzEqIfS@mozart.vkv.me/
+Fixes: bd54df5ea7cad ("futex: Allow to resize the private local hash")
+Reported-by: Calvin Owens <calvin@wbinvd.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: Calvin Owens <calvin@wbinvd.org>
+Link: https://lkml.kernel.org/r/20250623083408.jTiJiC6_@linutronix.de
 ---
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../boot/dts/qcom/qcs8275-iq-8275-evk.dts     | 241 ++++++++++++++++++
- 2 files changed, 242 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/qcs8275-iq-8275-evk.dts
+ include/linux/futex.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 669b888b27a1..417d8c9be4e2 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -122,6 +122,7 @@ qcs6490-rb3gen2-industrial-mezzanine-dtbs := qcs6490-rb3gen2.dtb qcs6490-rb3gen2
+diff --git a/include/linux/futex.h b/include/linux/futex.h
+index 005b040..b371936 100644
+--- a/include/linux/futex.h
++++ b/include/linux/futex.h
+@@ -89,6 +89,7 @@ void futex_hash_free(struct mm_struct *mm);
+ static inline void futex_mm_init(struct mm_struct *mm)
+ {
+ 	RCU_INIT_POINTER(mm->futex_phash, NULL);
++	mm->futex_phash_new = NULL;
+ 	mutex_init(&mm->futex_hash_lock);
+ }
  
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2-industrial-mezzanine.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2-vision-mezzanine.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= qcs8275-iq-8275-evk.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs8300-ride.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs8550-aim300-aiot.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs9100-ride.dtb
-diff --git a/arch/arm64/boot/dts/qcom/qcs8275-iq-8275-evk.dts b/arch/arm64/boot/dts/qcom/qcs8275-iq-8275-evk.dts
-new file mode 100644
-index 000000000000..b17ddb3ef721
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/qcs8275-iq-8275-evk.dts
-@@ -0,0 +1,241 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-+
-+#include "qcs8300.dtsi"
-+
-+/ {
-+	model = "Qualcomm Technologies, Inc. IQ 8275 EVK";
-+	compatible = "qcom,qcs8275-iq-8275-evk", "qcom,qcs8275", "qcom,qcs8300";
-+
-+	aliases {
-+		serial0 = &uart7;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&apps_rsc {
-+	regulators-0 {
-+		compatible = "qcom,pmm8654au-rpmh-regulators";
-+		qcom,pmic-id = "a";
-+
-+		vreg_s4a: smps4 {
-+			regulator-name = "vreg_s4a";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s9a: smps9 {
-+			regulator-name = "vreg_s9a";
-+			regulator-min-microvolt = <1352000>;
-+			regulator-max-microvolt = <1352000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l3a: ldo3 {
-+			regulator-name = "vreg_l3a";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l4a: ldo4 {
-+			regulator-name = "vreg_l4a";
-+			regulator-min-microvolt = <880000>;
-+			regulator-max-microvolt = <912000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l5a: ldo5 {
-+			regulator-name = "vreg_l5a";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l6a: ldo6 {
-+			regulator-name = "vreg_l6a";
-+			regulator-min-microvolt = <880000>;
-+			regulator-max-microvolt = <912000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l7a: ldo7 {
-+			regulator-name = "vreg_l7a";
-+			regulator-min-microvolt = <880000>;
-+			regulator-max-microvolt = <912000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l8a: ldo8 {
-+			regulator-name = "vreg_l8a";
-+			regulator-min-microvolt = <2504000>;
-+			regulator-max-microvolt = <2960000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l9a: ldo9 {
-+			regulator-name = "vreg_l9a";
-+			regulator-min-microvolt = <2970000>;
-+			regulator-max-microvolt = <3072000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+
-+	regulators-1 {
-+		compatible = "qcom,pmm8654au-rpmh-regulators";
-+		qcom,pmic-id = "c";
-+
-+		vreg_s5c: smps5 {
-+			regulator-name = "vreg_s5c";
-+			regulator-min-microvolt = <1104000>;
-+			regulator-max-microvolt = <1104000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l1c: ldo1 {
-+			regulator-name = "vreg_l1c";
-+			regulator-min-microvolt = <300000>;
-+			regulator-max-microvolt = <500000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l2c: ldo2 {
-+			regulator-name = "vreg_l2c";
-+			regulator-min-microvolt = <900000>;
-+			regulator-max-microvolt = <904000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l4c: ldo4 {
-+			regulator-name = "vreg_l4c";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l6c: ldo6 {
-+			regulator-name = "vreg_l6c";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l7c: ldo7 {
-+			regulator-name = "vreg_l7c";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l8c: ldo8 {
-+			regulator-name = "vreg_l8c";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l9c: ldo9 {
-+			regulator-name = "vreg_l9c";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+};
-+
-+&qupv3_id_0 {
-+	status = "okay";
-+};
-+
-+&remoteproc_adsp {
-+	firmware-name = "qcom/qcs8300/adsp.mbn";
-+
-+	status = "okay";
-+};
-+
-+&remoteproc_cdsp {
-+	firmware-name = "qcom/qcs8300/cdsp0.mbn";
-+
-+	status = "okay";
-+};
-+
-+&remoteproc_gpdsp {
-+	firmware-name = "qcom/qcs8300/gpdsp0.mbn";
-+
-+	status = "okay";
-+};
-+
-+&uart7 {
-+	status = "okay";
-+};
-+
-+&ufs_mem_hc {
-+	reset-gpios = <&tlmm 133 GPIO_ACTIVE_LOW>;
-+	vcc-supply = <&vreg_l8a>;
-+	vcc-max-microamp = <1100000>;
-+	vccq-supply = <&vreg_l4c>;
-+	vccq-max-microamp = <1200000>;
-+
-+	status = "okay";
-+};
-+
-+&ufs_mem_phy {
-+	vdda-phy-supply = <&vreg_l4a>;
-+	vdda-pll-supply = <&vreg_l5a>;
-+
-+	status = "okay";
-+};
-+
--- 
-2.25.1
-
