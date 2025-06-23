@@ -1,177 +1,134 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [185.185.170.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF3F233D8E;
-	Mon, 23 Jun 2025 11:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750678047; cv=none; b=KXodj3Tg/yCFGSHMJIeomO+X1aS+afBweFJgEA/5z0d/Xns6ffi7cLUKVVLmXILU4tfcruOORY8p8TbjXIJoctNn/gxDNydGZPbwmc0qZMIunMsJbVg842OeSUP9KGc6UKhzHZ6jp1aHtzBpba2vhm9jnkR1hdlSu8JtekdmfKo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750678047; c=relaxed/simple;
-	bh=fvQmKS+q8anQOQNfof/RQ6Zx18n8YUESLQUFUXaG4vg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CmJNXsA3aATwklH3f7Fqk566WFCaB/Qd/IjqxiAVKSZ4hsKo57Uh23R/k7mnkFdDWovf6Vhw4aMoy7nvQqqsZv45DHPfd8suJiNYxKJnD6cSX3sIB7lr8ofkDV0q0U39y0vTvhZMOHG6ybFaUhJM6qE/9rLDNA5Fdz/BY6VxNqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bQm0455B6z10XL5;
-	Mon, 23 Jun 2025 19:22:44 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3107C180489;
-	Mon, 23 Jun 2025 19:27:21 +0800 (CST)
-Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 23 Jun 2025 19:27:20 +0800
-Received: from localhost.localdomain (10.175.104.82) by
- kwepemq200002.china.huawei.com (7.202.195.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 23 Jun 2025 19:27:20 +0800
-From: Dong Chenchen <dongchenchen2@huawei.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <horms@kernel.org>, <jiri@resnulli.us>,
-	<oscmaes92@gmail.com>, <linux@treblig.org>, <pedro.netdev@dondevamos.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>
-Subject: [PATCH net] net: vlan: fix VLAN 0 refcount imbalance of toggling filtering during runtime
-Date: Mon, 23 Jun 2025 19:30:08 +0800
-Message-ID: <20250623113008.695446-1-dongchenchen2@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3083221D9E;
+	Mon, 23 Jun 2025 11:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.185.170.37
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750678070; cv=pass; b=DatXYKJ57iNnfIS2PC/uhEaXZT3sVTrvaam0Mr12UrqIzJ5z+VI86nV294v7Nm8szU/17UBFZlJboey6WawO2YFo23UMOmScnduScgYrWexPkWD7Q2b7nBhaegnVD03xbnUDse9qZ9YtE9UPyDkh7Fc3BCl9kGsJ/WloHev4C84=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750678070; c=relaxed/simple;
+	bh=pfg5vRQioOluNyG1N0RB42NJFmxziBgtZYFyDan9tFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=thJAdaClk6EkYR+ldW6WTB0ocMnSJXdnxE04fLGl0n3FaB7vKyj70H2/RpYARm6oZf8FZkwYO28JCTpPLgyGPvSG9iLsMMO8k0ld1j9x6s+22Apx8/F2ey1I1VuxH0Ph+C7fMENn+I50TtwtWThWmYr5pyrQJTON3yiP2oS/ZxQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b=hxrih/9e; arc=pass smtp.client-ip=185.185.170.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b="hxrih/9e"
+Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-127c-61ff-fee2-b97e.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:127c:61ff:fee2:b97e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sailus)
+	by lahtoruutu.iki.fi (Postfix) with ESMTPSA id 4bQm5l6HSYz49Q09;
+	Mon, 23 Jun 2025 14:27:39 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
+	t=1750678060;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=h04LSD/eziTW/dAC0CP/1lAMle7TJGTrSi4OGVbgdos=;
+	b=hxrih/9eiXenztQTTOzjuOJ0l/fhfaKTrRcIfbgXD3rp3+kPQ51qbFJr6CIxf0ayLrw19D
+	ij3vPbT7cECG1Jn86RsOeCavtLhPTOchMKUnawsyeCCOoZLMQXdTtM2YwvUqsDNoPj9TdB
+	MFseM3IKNi3menWPWBo/Jfo2+16VSnV4/mAyahh70ghrP5ga2Bb34+b0JejplApAt5sDG6
+	qANe8XDF0fIzCfgaf6akeoLFb2wQECby9XC8wFt6IVQlY/xt/6Pr9iugusr1LJZ46QiWEm
+	zoTxL6VikE312s3U94ljSEzstjxsvxrc/dP/qp6ixQ8TCwA2Du1sji0ZBIHXZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
+	s=lahtoruutu; t=1750678060;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=h04LSD/eziTW/dAC0CP/1lAMle7TJGTrSi4OGVbgdos=;
+	b=DRhJCWm+QfhjW0IYAC98Gdxipi5rVuxUR5XNHL1YdC7LEbEV4xr/O5ZF+AEs79T3s+3z/u
+	TzceKpCqmoEVYxAMDQ+kzBheik2heWZhGdoo22XWhrgV+1NVf2dxyJnnu5G33pXJ+1Necq
+	GoJkAOT2oi0sVA7xIHkTwBinOD5MNDIgA7+LIqCyKmVprOa/2VoQiv7/M60WbCOk8dFHZS
+	f4l22EQEozEm69ysSxVOaqS4/vvUGt6rdgmJI5v4oRsTJ3axrMBRDI8+p2Zuzo78gONA71
+	9YAKVQXw3m87YueN1oIzRDzduvRsh/Oh4xoOFaNYMheyQICvlprg2Qnk9rnoUw==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
+ARC-Seal: i=1; s=lahtoruutu; d=iki.fi; t=1750678060; a=rsa-sha256;
+	cv=none;
+	b=A3yJqlwMgxOjLhtfFwTuSjtn6284/LDm/FaCUa0ZN308DdOLJzZ5DPHojjyzzgzNmn5sdL
+	YLyWNDQP6+4uDZThuFayCEfbLem3gD+0dR4rOZ6xb2qpinP7RrjAvO+kK21hoK+YBIpbvl
+	PfQHooe8rNvMRj9BqTv1xXKFNMT+HgDqf2p8ZBIobf6DDDsfCGDeFKaUagb34MRofaXti2
+	g2k0iPswE9/pVEMx0ogqhppyUA59+elZ7Z1xFKI4ROZwPjabd5DcSaHDVZxHS469U8gTk0
+	YDpKTJoOGb4+W7p9LL9phTQya4RYZqGcmH1v7snvucDXoBfkxQsPRisyMEWafA==
+Received: from valkosipuli.retiisi.eu (valkosipuli.local [192.168.4.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id 5C96A634C93;
+	Mon, 23 Jun 2025 14:27:39 +0300 (EEST)
+Date: Mon, 23 Jun 2025 11:27:39 +0000
+From: Sakari Ailus <sakari.ailus@iki.fi>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Hao Yao <hao.yao@intel.com>,
+	Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
+	hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org,
+	dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
+	jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com,
+	king.li@amd.com, dantony@amd.com, vengutta@amd.com,
+	dongcheng.yan@intel.com, jason.z.chen@intel.com, jimmy.su@intel.com
+Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
+Message-ID: <aFk6K4mYtq24MnNj@valkosipuli.retiisi.eu>
+References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
+ <6a49eb11-d434-4315-8ee9-0f8aa7347de2@intel.com>
+ <aEygCdk-zEqRwfoF@kekkonen.localdomain>
+ <20250614225257.GO10542@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- kwepemq200002.china.huawei.com (7.202.195.90)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250614225257.GO10542@pendragon.ideasonboard.com>
 
-8021q(vlan_device_event) will add VLAN 0 when enabling the device, and
-remove it on disabling it if NETIF_F_HW_VLAN_CTAG_FILTER set.
-However, if changing filter feature during netdev runtime,
-null-ptr-unref[1] or bug_on[2] will be triggered by unregister_vlan_dev()
-for refcount imbalance.
+Hi Laurent,
 
-[1]
-BUG: KASAN: null-ptr-deref in unregister_vlan_dev (net/8021q/vlan.h:90 net/8021q/vlan.c:110)
-Write of size 8 at addr 0000000000000000 by task ip/382
-CPU: 2 UID: 0 PID: 382 Comm: ip Not tainted 6.16.0-rc3 #60 PREEMPT(voluntary)
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
-Call Trace:
- <TASK>
-dump_stack_lvl (lib/dump_stack.c:123)
-kasan_report (mm/kasan/report.c:636)
-unregister_vlan_dev (net/8021q/vlan.h:90 net/8021q/vlan.c:110)
-rtnl_dellink (net/core/rtnetlink.c:3511 net/core/rtnetlink.c:3553)
-rtnetlink_rcv_msg (net/core/rtnetlink.c:6945)
-netlink_rcv_skb (net/netlink/af_netlink.c:2535)
-netlink_unicast (net/netlink/af_netlink.c:1314 net/netlink/af_netlink.c:1339)
-netlink_sendmsg (net/netlink/af_netlink.c:1883)
-____sys_sendmsg (net/socket.c:712 net/socket.c:727 net/socket.c:2566)
+On Sun, Jun 15, 2025 at 01:52:57AM +0300, Laurent Pinchart wrote:
+> > > > +#define OV05C10_REF_CLK			(24 * HZ_PER_MHZ)
+> > > 
+> > > Seems your module use 24 MHz clock input. The Dell's modules always use
+> > > 19.2MHz, which means your the PLL settings will not work on Dell's.
+> > 
+> > This is ok as further work. Please send a patch. :-)
+> 
+> The patch should calculate PLL configuration dynamically, perhaps using
+> the ccs-pll calculator if applicable.
 
-[2]
-kernel BUG at net/8021q/vlan.c:99!
-Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
-CPU: 0 UID: 0 PID: 382 Comm: ip Not tainted 6.16.0-rc3 #61 PREEMPT(voluntary)
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
-RIP: 0010:unregister_vlan_dev (net/8021q/vlan.c:99 (discriminator 1))
-RSP: 0018:ffff88810badf310 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffff88810da84000 RCX: ffffffffb47ceb9a
-RDX: dffffc0000000000 RSI: 0000000000000008 RDI: ffff88810e8b43c8
-RBP: 0000000000000000 R08: 0000000000000000 R09: fffffbfff6cefe80
-R10: ffffffffb677f407 R11: ffff88810badf3c0 R12: ffff88810e8b4000
-R13: 0000000000000000 R14: ffff88810642a5c0 R15: 000000000000017e
-FS:  00007f1ff68c20c0(0000) GS:ffff888163a24000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f1ff5dad240 CR3: 0000000107e56000 CR4: 00000000000006f0
-Call Trace:
- <TASK>
-rtnl_dellink (net/core/rtnetlink.c:3511 net/core/rtnetlink.c:3553)
-rtnetlink_rcv_msg (net/core/rtnetlink.c:6945)
-netlink_rcv_skb (net/netlink/af_netlink.c:2535)
-netlink_unicast (net/netlink/af_netlink.c:1314 net/netlink/af_netlink.c:1339)
-netlink_sendmsg (net/netlink/af_netlink.c:1883)
-____sys_sendmsg (net/socket.c:712 net/socket.c:727 net/socket.c:2566)
-___sys_sendmsg (net/socket.c:2622)
-__sys_sendmsg (net/socket.c:2652)
-do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_64.c:94)
+As much as I do like your suggestion, I don't think it's really feasible to
+often do this for Omnivision sensors (most others largely do just work
+without much hassle wrt. PLL, as long as a PLL calculator exists). This
+sensor's PLL tree is different from CCS and badly documented, as expected.
 
-Root cause is as below:
-step1: add vlan0 for real_dev, such as bond, team.
-register_vlan_dev
-    vlan_vid_add(real_dev,htons(ETH_P_8021Q),0) //refcnt=1
-step2: disable vlan filter feature and enable real_dev
-step3: change filter from 0 to 1
-vlan_device_event
-    vlan_filter_push_vids
-    	ndo_vlan_rx_add_vid //No refcnt added to real_dev vlan0
-step4: real_dev down
-vlan_device_event
-    vlan_vid_del(dev, htons(ETH_P_8021Q), 0); //refcnt=0
-        vlan_info_rcu_free //free vlan0
-step5: real_dev up
-vlan_device_event
-    vlan_vid_add(dev, htons(ETH_P_8021Q), 0);
-        vlan_info_alloc //alloc new empty vid0. refcnt=1
-step6: delete vlan0
-unregister_vlan_dev
-    BUG_ON(!vlan_info); //will trigger it if step5 was not executed
-    vlan_group_set_device
-        array = vg->vlan_devices_arrays
-	//null-ptr-ref will be triggered after step5
+> > > Seems there are already several camera sensors using page-based registers.
+> > > Is it a good idea to add page support in CCI interface?
+> > 
+> > Sounds like a good idea as such but I'm not sure how common this really is,
+> > I think I've seen a few Omnivision sensors doing this. If implemented, I
+> > think it would be nice if the page could be encoded in the register address
+> > which V4L2 CCI would store and switch page if needed only. This would
+> > require serialising accesses, too. There's some room in CCI register raw
+> > value space so this could be done without even changing that, say, with
+> > 8-bit page and 8-bit register address.
+> 
+> Ack. I've worked on a driver for the AP1302 external ISP, which also
+> uses pages registers. The full address space spans 32 bits though, but
+> fortunately the driver doesn't need to access anything above 0x00ffffff.
 
-E.g. the following sequence can reproduce null-ptr-ref
+0xffffff? The current CCI register addresses are limited to 16 bits. To
+support that, we'd need to use u64 most likely. For 16-bit register
+addresses and 8-bit values which probably are the most common, that starts
+to appear a bit wasteful.
 
-$ ip link add bond0 type bond mode 0
-$ ip link add link bond0 name vlan0 type vlan id 0 protocol 802.1q
-$ ethtool -K bond0 rx-vlan-filter off
-$ ifconfig bond0 up
-$ ethtool -K bond0 rx-vlan-filter on
-$ ifconfig bond0 down
-$ ifconfig bond0 up
-$ ip link del vlan0
-
-Fix it by correctly modifying vid0 refcnt of real_dev when changing
-the NETIF_F_HW_VLAN_CTAG_FILTER flag during runtime.
-
-Fixes: ad1afb003939 ("vlan_dev: VLAN 0 should be treated as "no vlan tag" (802.1p packet)")
-Reported-by: syzbot+a8b046e462915c65b10b@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=a8b046e462915c65b10b
-Signed-off-by: Dong Chenchen <dongchenchen2@huawei.com>
----
- net/8021q/vlan.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/net/8021q/vlan.c b/net/8021q/vlan.c
-index 06908e37c3d9..6e01ece0a95c 100644
---- a/net/8021q/vlan.c
-+++ b/net/8021q/vlan.c
-@@ -504,12 +504,21 @@ static int vlan_device_event(struct notifier_block *unused, unsigned long event,
- 		break;
- 
- 	case NETDEV_CVLAN_FILTER_PUSH_INFO:
-+		flgs = dev_get_flags(dev);
-+		if (flgs & IFF_UP) {
-+			pr_info("adding VLAN 0 to HW filter on device %s\n",
-+				dev->name);
-+			vlan_vid_add(dev, htons(ETH_P_8021Q), 0);
-+		}
- 		err = vlan_filter_push_vids(vlan_info, htons(ETH_P_8021Q));
- 		if (err)
- 			return notifier_from_errno(err);
- 		break;
- 
- 	case NETDEV_CVLAN_FILTER_DROP_INFO:
-+		flgs = dev_get_flags(dev);
-+		if (flgs & IFF_UP)
-+			vlan_vid_del(dev, htons(ETH_P_8021Q), 0);
- 		vlan_filter_drop_vids(vlan_info, htons(ETH_P_8021Q));
- 		break;
- 
 -- 
-2.25.1
+Regards,
 
+Sakari Ailus
