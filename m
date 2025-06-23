@@ -1,106 +1,83 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B3325F99B;
-	Mon, 23 Jun 2025 15:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E083C2874EC;
+	Mon, 23 Jun 2025 15:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750694191; cv=none; b=gfBfxDead/7b1NPvrTrsC2LO5CvcIVK3LI1vUEE5uVRFxLu+nHB674kLOkd8qK+nF+xa+0uHyFUZgH714pxnqhfDn9+jMPWC1Zmsnw0cyzE3QPglo9j9F1zFys4tMdIQDQOQzLmt7UDBMkdcOys6MMy176BM11AQZfp4So2Se5A=
+	t=1750694216; cv=none; b=u/LGxENEf65qhkfhn14IRYgRd+aVTRH6R7WOLvEbZrO0tF/dAQ7NcArVQVv85+P74pXq68CSrz+k+viFKq24Q3xdfwj1aiIE7aeH+Bk36UIUPQNEmN43ZlyCU+p/y9TcF345humQfDJLF5ridus14UGp2CdO5MxNJQ1AaX9Uk7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750694191; c=relaxed/simple;
-	bh=HLdwjx0VaTkw/NleBqU5pxtyJMC9TFdxwlMghBZW62o=;
+	s=arc-20240116; t=1750694216; c=relaxed/simple;
+	bh=1Nx8tTVaDfGB6Pm4/tKLuefdVSnxExj9qww15xiKZcQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FWC1T7l1OnWhebFax2/WeZwFYiA/49d9e8g+NK4Ts8XdNOnwvpaJhtCuHN5kC97CLdOHB6fijGip7lhLovtkQWPsV9cYxYNQesQ/giX/JGlynVbeaA24K2p8ZnVKCjRc6qL0pGRQIvLKdKLb263fsYdCh1bdVpPF5ZG/taDqjBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=a71SVngq; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=BVjNWYJiX03Wk4fWlnl12pzo9uDoxrk8C9GnpZoFdhDrq8pWri8K8OijEOEQn3ZN25+/Cw6uZ2WkSu5uJBXG7jgmHStXTnyS8Oj499uQn2GbckmlSPDkVq1k7rEN96AvO1RJRTVEwq/SV6hbiyLuuPVwrXSXxGvnqT4A+ic5AEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IIQrAv9U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="a71SVngq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Zfhcm9KlPIYDUkR3XlxjvUFC1kNzPKwSMU7Z/fKZocY=; b=a71SVngqApbDm+fv8PIk+j3lkW
-	i53ScPlnHM+UDC32YOCHBTGBm96BRMnj+mzn58OGnJT/GmIFCewp3S8IfrR666i9KQdzLlYh158xP
-	AAN9zzkpAf2JFbTNAOP/8w5OHHvLGfQo4DQpvEpsHPGFxgy5iS9EYhvfpGBnuE+PQg2ouK+xv8fEn
-	6/wE7xccEmj9lFLam1a9QXrS655FnlbMyLkI33Gd0z0VHinf5MeYbD8pZwTfAbk/fGHguA/jkkyQi
-	iwUbwy8k/FuKM8T8URWKdWrXDH9rpWrxC/u1Jss6+IrlePAclwtoUK+R7Z7PfY8hEKq9phKpgYR9U
-	FX/w8pAQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48284)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uTjWn-0004NI-0v;
-	Mon, 23 Jun 2025 16:56:13 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uTjWi-0003Zg-1y;
-	Mon, 23 Jun 2025 16:56:08 +0100
-Date: Mon, 23 Jun 2025 16:56:08 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Kamil =?iso-8859-1?Q?Hor=E1k?= - 2N <kamilh@axis.com>
-Cc: florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	andrew@lunn.ch, hkallweit1@gmail.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	robh@kernel.org
-Subject: Re: [PATCH net-next v2 1/3] net: phy: bcm54811: Fix the PHY
- initialization
-Message-ID: <aFl5GJqBDeoK4fTd@shell.armlinux.org.uk>
-References: <20250623151048.2391730-1-kamilh@axis.com>
- <20250623151048.2391730-3-kamilh@axis.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IIQrAv9U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF977C4CEEA;
+	Mon, 23 Jun 2025 15:56:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750694215;
+	bh=1Nx8tTVaDfGB6Pm4/tKLuefdVSnxExj9qww15xiKZcQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IIQrAv9UP9HZT53CKDXfj8W/QAph8XrtHU+xsVmcOMpg1hxVwcS33vhhmSWpoBYDP
+	 OhTCLzPLYNBG818iXii4xDfSdpmbJeUWQxX98Xoo1OFVCJeLTm34+N+4F2x5ZlTZyO
+	 xNJwIQAkEEAsxRXDXFL8vxzjK34GoDNL/G0xbfvPDHkDt95tVszXH0cofADHgFCnzz
+	 eD5HQsXZLPe7ID4Phpl/ebhehXBmpHU0EpF6KXM72tDhUil+aNM03XcXyxRS8KAp3O
+	 FR/wc2/58+yvG7tsh05PrPa8/7+rJK50AcbGgUGGUd1ysop91Kc/L2Q675PM86qWeA
+	 0RpRY4z84e3vQ==
+Date: Mon, 23 Jun 2025 16:56:51 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: E Shattow <e@freeshell.de>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Subject: Re: [PATCH v1 1/3] dt-bindings: memory-controllers: add StarFive
+ JH7110 SoC DMC
+Message-ID: <20250623-enamel-discourse-3d28517e01d4@spud>
+References: <20250606130253.1105273-1-e@freeshell.de>
+ <20250606130253.1105273-2-e@freeshell.de>
+ <79d84bc5-1b39-433d-afc3-b6ca84f274f0@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5Qxs9Dmd5BdP9ygB"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250623151048.2391730-3-kamilh@axis.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <79d84bc5-1b39-433d-afc3-b6ca84f274f0@kernel.org>
 
-On Mon, Jun 23, 2025 at 05:10:47PM +0200, Kamil Horák - 2N wrote:
->  	/* With BCM54811, BroadR-Reach implies no autoneg */
-> -	if (priv->brr_mode)
-> +	if (priv->brr_mode) {
->  		phydev->autoneg = 0;
 
-This, to me, looks extremely buggy. Setting phydev->autoneg to zero does
-not prevent userspace enabling autoneg later. It also doesn't report to
-userspace that autoneg is disabled. Not your problem, but a latent bug
-in this driver.
+--5Qxs9Dmd5BdP9ygB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +		/* Disable Long Distance Signaling, the BRR mode autoneg */
-> +		err = phy_modify(phydev, MII_BCM54XX_LRECR, LRECR_LDSEN, 0);
-> +		if (err < 0)
-> +			return err;
-> +	}
->  
-> -	return bcm5481x_set_brrmode(phydev, priv->brr_mode);
-> +	if (!phy_interface_is_rgmii(phydev) ||
-> +	    phydev->interface == PHY_INTERFACE_MODE_MII) {
+On Mon, Jun 23, 2025 at 08:45:04AM +0200, Krzysztof Kozlowski wrote:
+> On 06/06/2025 15:02, E Shattow wrote:
+> > Document bindings for the JH7110 SoC DMC as implemented in downstream
+> > U-Boot driver starfive_ddr.c
+>=20
+> Heh, I totally missed "downstream"... We do not add bindings for
+> downstream. We do not care about downstream, so I should not spend my
+> time on this.
+>=20
+> Do not send code for downstream.
 
-Not sure this condition actually reflects what you're trying to
-achieve, because if we're using PHY_INTERFACE_MODE_MII, then
-!phy_interface_is_rgmii(phydev) will be true because phydev->interface
-isn't one of the RGMII modes. So, I think this can be reduced to simply
+I think that's either an accident or poor wording, there's a user for
+this in mainline U-Boot.
 
-	if (!phy_interface_is_rgmii(phydev)) {
+--5Qxs9Dmd5BdP9ygB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +		/* Misc Control: GMII/MII Mode (not RGMII) */
-> +		err = bcm54xx_auxctl_write(phydev,
-> +					   MII_BCM54XX_AUXCTL_SHDWSEL_MISC,
-> +					   MII_BCM54XX_AUXCTL_SHDWSEL_MISC_RGMII_SKEW_EN |
-> +					   MII_BCM54XX_AUXCTL_SHDWSEL_MISC_RSVD
-> +		);
+-----BEGIN PGP SIGNATURE-----
 
-I don't think this addition is described in the commit message.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaFl5QwAKCRB4tDGHoIJi
+0vgEAQCzbZ9M4zBMrRABOtQpgL5FcDJGq7LODPdfsxgn4fgX7QEA0rrRewyTnlzb
+OHOKsfAruqdRzwaMVc7+M2Ejd9x9SQQ=
+=ily5
+-----END PGP SIGNATURE-----
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+--5Qxs9Dmd5BdP9ygB--
