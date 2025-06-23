@@ -1,141 +1,191 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD10826B747
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5173127816A
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750692820; cv=none; b=NQyThg8o4tEkLd2xAsd9DmTYrQl5hd4aq20W0NFMvvUkpw7MM6kL/PFHTOCcBoYHbBH0EdC+2zjjklZxRuPvtt9A2OpHHmHqXd4NDqXpDuZQVwy2YfuKSjSAKdTnOXJgx/9t/qQlTCDNgQ9u9AYuYcNHMmCGMctFzNjqGN0XuqY=
+	t=1750692821; cv=none; b=mma9WbAXhmJT9uU4kWYeqz7Np8oMrrNx7hXHkdnbXGz/NMUrnMGYtueI85EeUAePUTZNcaIf6Zh0it2Z31D+SwrnjF9aF+hzhXBi8a+N+OqHNKaIxITJlyuHFKYtv7vK0d/ZFybUzewtc61cQ253+ODNPTn1140PacRzL5dO2CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750692820; c=relaxed/simple;
-	bh=cgiHNz+KjIhdbW4tV9HGnqgWOZePX6Q9ItYQNVKO7/M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FGIlxR0O47SLzUPuj8Ri2ju6vOLr0ZlF+mUlDk5vz4NvfpjPhV5mx0sa7N5lCQGjSmJoGNcKuZSA0lj457r6Z4dY/Zmoz/awY2gmW9+KzxWHhixGEqslC/UcQlNOjEg161jOB6kaW+ZZfiXIoUXrnKGkTN/DV+/TzR1QebT1MUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZV3p5fy7; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750692821; c=relaxed/simple;
+	bh=Cs4TW3G3cAT+ctqnTd2L1pJS6wYi331CkCRlXiauZaU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eWYJhWMj3TgmEHcFI4mU6nyI1/SSHyKDErIjjSofYm7mITkdR6OJXmQvqcHIL08MvrdXK85JWuQM4sd+jbyja9LzUvRaqyKQGHkJwakWZb9SOAmMkU+nw/+wNYXtjKC2uJs0yNjWKv3p+g/8WamaS4RrDfuInoNs0rzxg1Hilz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZEj462My; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZV3p5fy7"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b31e0ead80eso2978033a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:33:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZEj462My"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b26fabda6d9so807256a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:33:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750692818; x=1751297618; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6/MseeK5NnyJTv2/RCMZEdsiDxqp0eqeEdU8cSmGnt4=;
-        b=ZV3p5fy7RUf11DVPCF8rXoVJupAHktrBoMEXp2+7IMLS4unhU3MZK5clQ/3YfjnvkB
-         R2JcrPFAY4p1osv4I2FFlb9topy8EbhMhTx2/vVt65/yMUXkm4gpJugcbqP7/8KAHEtp
-         KSU0/p55ctyXASJCXl7tdgYJJKVm8p433byw4vNfzfFtYAYr+1rakvf7DZYaPUyvIRTm
-         sjIT38Z96C4biZ+4UFf3MOnX55C6nMLxxF5/0b5pa7lDZBk3CtM5P8HLQwJNV5DZHtxQ
-         T7CiXNsV2/H3hZC591pM7/lo/abfVArDVG2dQ5auzpLCKIyYVGM2tXhKxAzavmg5y9KZ
-         3cKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750692818; x=1751297618;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1750692819; x=1751297619; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6/MseeK5NnyJTv2/RCMZEdsiDxqp0eqeEdU8cSmGnt4=;
-        b=lR/maYMzrZY+7u35BD1GNBpy7h0ASwN/sfAvUyz6MG4ZCs2Tmg769o3BKz4/vtxOHC
-         bZnH02lVXZ5Ml9Yt4Y/mW8oU6IefwowJTMd2/2p+yvnYqGMd+PXIOARBmRdzlQ307pfG
-         IG+sFKXc/d8ofxHZPUORBxOnMy3b/N3UsqZkr2Wfdm5MkgzOw3q+N88FZjoaUKLf8u4/
-         5Ee/GLTzuHjOMJR3I2YW0zxEQ3gafp02Ew1v5e4/0+sFMRdBcPnwd5f4t6D6XM/Wuzs8
-         o497eckv9iaAd1melxeolE/FQZGFqAjmf26cIm8Nqt9+xxnn31sg9KVOSzz7W6a51awI
-         h9tw==
-X-Forwarded-Encrypted: i=1; AJvYcCXGPGWndMWk3ck80i4vBFTPBSl1o94Y8O7RCcnqoAkQvCYFQd6tZpkcNQbsQo/GvaAqlDwySZbF9l1mb4A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7W+M8w7Zf2pcFD2s2Pcf60cDpTW/3N6HPNW5QXJKZScBqFGhN
-	vhTv3Xdn09HSmyixDB0HJWTVodMQ4Cr1EeTp1LNbv56VEgC2J9XgsQQ7iydIRwk+nViLmFqgu4x
-	9Ec9iaTQ=
-X-Gm-Gg: ASbGncsg33ytWwJ5tW/nwiVG9ecI3gbI8VTiEcbJf3NOzscszlbNCA28hH4UOWU/J4B
-	obaD/O0YD0IhV5QHBom9PpA7fPrOy0jMm6vK3vFL7Ryl0kWdAph0AhBc4jy1AGN36P2YC/cw4JD
-	wHcDj1NFf0AJv0UFIVYlk/jRsA0zEiP3r57gpWjEbEzKOvTQ4Rlh7wndLRBtouZKNeKLDz0Ersw
-	W6F12jjrExHIHNxoAnMqLPIT3AkOsiIDp2aTus9RoxV+EobUQwAeGy7zYuWlxjeIbldAj0oBRiy
-	XxiOJOeHjZxzYRxwQsdsc4yMIZimPntiyNbik+ar6sR98K6IEDEeJULwyqT0Z33wr5IoTHQEqPU
-	=
-X-Google-Smtp-Source: AGHT+IGlW6SZFB+CKVcOw4nVGRNYqt2n8jING6D9c1KvFeN0p4vGwymPPU85i6F1UgcMhHd0SQP01A==
-X-Received: by 2002:a05:6a20:748c:b0:218:5954:1293 with SMTP id adf61e73a8af0-22026de98cfmr23735448637.34.1750692816228;
-        Mon, 23 Jun 2025 08:33:36 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:d145:b99:ea4b:a65f])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f126a2aesm8159117a12.67.2025.06.23.08.33.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 08:33:35 -0700 (PDT)
-Date: Mon, 23 Jun 2025 09:33:33 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Tanmay Shah <tanmay.shah@amd.com>
-Cc: andersson@kernel.org, linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] remoteproc: xlnx: allow single core use in split mode
-Message-ID: <aFlzzSvUsstEQsKP@p14s>
-References: <20250618181933.1253033-1-tanmay.shah@amd.com>
+        bh=YHe+LGqfBJmGCRbTD2/3y+0WOmtHelhe1lvAXSQQkuY=;
+        b=ZEj462MypQIoYGPtF8IDTuD67Lnn2kOlIjfDQBcFOQbe8rLXJr5Rbz4X6e6qQZunVm
+         lZSoYp6H81wL/Smp/MSNFVY+9yJa7s67o8iz8kx51WnEFNG4kPjFtwOmQj/8yL5JpLi8
+         42Uo1v4nuMFB69ubHCCK6W63bYq4w8DlZOW8jquVv1fMOqZN16CP7ucKoCSApBiBVDYt
+         6P9GQ8GL11FN537KiNZXizYl/7fpNXjgeriZkJfBu0vBnNZurW4LjO/LbVNEJIF7UqoB
+         LGMsoCMvazooL7QtYVy7KVKhH1Ryn6on77OouWKykJVQYtT+UFA8yjpfCCnLlElqUYk2
+         H5hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750692819; x=1751297619;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YHe+LGqfBJmGCRbTD2/3y+0WOmtHelhe1lvAXSQQkuY=;
+        b=p5u2wfjMBi1SUTN/rib+DNVu4yCJ9h2rk6HHdUfzmvy8i1Le3f3HsPVmzDeT7rkaIy
+         vsoCBOQwdo6WBnZcz6DgKNTSB+Ga8yNW/UzSoaOEe9jYvW7Oxpw4Lhd66lYVs8SlQq21
+         I0CYwqOXDDhXDf9Ns7/gKur3c/mZ9VdGhPQ8QB7XgR92yw/Oqx5otyx1gqy1q5oIfiUv
+         Bl+H3sE8UGtUjNnghou1eKoUkaxNqa15Dkblhs9OBvWXSDv7nuVPd4vKcqfxYvTQN93K
+         RBbTBVbwmD6V1f8cPMkuzGT0iP+XKeKQ0wttAQqv19sOUT7+Y3+CQpiTPUboDbd6hNOx
+         3DPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUBoAmG7YJBPBpC422WETvaFVuSw4yhvHcOa86e9jYmXaykaU3ulLCRGr3eyj5A55u3qZFEGi86Hf4fgRs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDhC4eJ5xmCxMLnKCSYR6RuPBSt7hok9trtmnf7pCh7HnN/6xc
+	5Sq/PATDDQqJjZeJFJ/f257CjoOUAe5qF8VDswNMMib+FnFzgjltxPJiqMH2RBCgwHE1QIGz7ag
+	yE26kUVQg9iat2Ayl+6uq2KupdEwmLyk=
+X-Gm-Gg: ASbGnctBWoZC48uLsoBb7SJwRLRcL1159OApOYTo/C8NDwB/A9SI/iAiiO03KzJ8iKh
+	MDY8RKzgM+IO6i3tNSWORNVDUi/VaEcdA9MdJqTtwtxS+6+MhPLiAW4lRtZL5DmQ/qV3C2ZGXqH
+	ouOdwHGlvEr2SZdX+ihnLYVoy4kQIpz55ihZg9cZwpFkjr
+X-Google-Smtp-Source: AGHT+IFy0hIPZQpb0KxFYps+8s4d6wkHkBYpK00Mn64GDE10ibBhlQWhIkFHec5/EC3NK0BdahywMOMIcsBKZBpxlQ0=
+X-Received: by 2002:a17:902:e542:b0:234:ba37:87a3 with SMTP id
+ d9443c01a7336-237d97217edmr82924635ad.3.1750692819391; Mon, 23 Jun 2025
+ 08:33:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618181933.1253033-1-tanmay.shah@amd.com>
+References: <20250619125507.54384-1-kode54@gmail.com> <DARA1U86AS72.QOIEVZWCFPYC@kode54.net>
+ <DATUOZZD8316.2INSL3KL5RA80@kode54.net> <DATV4CAOHVGV.1UJ803EX21II6@gmail.com>
+ <DATYCMWH1X28.NE3M8KJ3SPV9@kode54.net>
+In-Reply-To: <DATYCMWH1X28.NE3M8KJ3SPV9@kode54.net>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Mon, 23 Jun 2025 11:33:27 -0400
+X-Gm-Features: AX0GCFvJMwuOZFcfYlSDPJgah_-90nqioNXt5ljbjpEChyXLvCYPb2q60UyxujM
+Message-ID: <CADnq5_OjUp+YpXSdvWrYN+6ofFfyES9Jvwkswf3JmTTMGL=MVQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] drm/amdgpu: Enable async flip for cursor planes
+To: Christopher Snowhill <chris@kode54.net>, "Wentland, Harry" <Harry.Wentland@amd.com>, 
+	"Leo (Sunpeng) Li" <Sunpeng.Li@amd.com>
+Cc: Christopher Snowhill <kode54@gmail.com>, amd-gfx@lists.freedesktop.org, 
+	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 11:19:33AM -0700, Tanmay Shah wrote:
-> When operating in split mode, it is a valid usecase to have
-> only one core enabled in the cluster. Remove exact core count
-> expecatation from the driver.
-> 
-> Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
-> ---
-> 
-> Changes in v3:
->   - Fix commit message
->   - Add details about split mode configuration in comment
-> 
-> Change in v2:
->   - limit core_count to max 2
-> 
->  drivers/remoteproc/xlnx_r5_remoteproc.c | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
++ Harry, Leo
 
-Merged.
-
-Thanks,
-Mathieu
-
-> 
-> diff --git a/drivers/remoteproc/xlnx_r5_remoteproc.c b/drivers/remoteproc/xlnx_r5_remoteproc.c
-> index 1af89782e116..5aa3fd1b0530 100644
-> --- a/drivers/remoteproc/xlnx_r5_remoteproc.c
-> +++ b/drivers/remoteproc/xlnx_r5_remoteproc.c
-> @@ -1329,19 +1329,23 @@ static int zynqmp_r5_cluster_init(struct zynqmp_r5_cluster *cluster)
->  
->  	/*
->  	 * Number of cores is decided by number of child nodes of
-> -	 * r5f subsystem node in dts. If Split mode is used in dts
-> -	 * 2 child nodes are expected.
-> +	 * r5f subsystem node in dts.
-> +	 * In split mode maximum two child nodes are expected.
-> +	 * However, only single core can be enabled too.
-> +	 * Driver can handle following configuration in split mode:
-> +	 * 1) core0 enabled, core1 disabled
-> +	 * 2) core0 disabled, core1 enabled
-> +	 * 3) core0 and core1 both are enabled.
-> +	 * For now, no more than two cores are expected per cluster
-> +	 * in split mode.
->  	 * In lockstep mode if two child nodes are available,
->  	 * only use first child node and consider it as core0
->  	 * and ignore core1 dt node.
->  	 */
->  	core_count = of_get_available_child_count(dev_node);
-> -	if (core_count == 0) {
-> +	if (core_count == 0 || core_count > 2) {
->  		dev_err(dev, "Invalid number of r5 cores %d", core_count);
->  		return -EINVAL;
-> -	} else if (cluster_mode == SPLIT_MODE && core_count != 2) {
-> -		dev_err(dev, "Invalid number of r5 cores for split mode\n");
-> -		return -EINVAL;
->  	} else if (cluster_mode == LOCKSTEP_MODE && core_count == 2) {
->  		dev_warn(dev, "Only r5 core0 will be used\n");
->  		core_count = 1;
-> 
-> base-commit: d293da1e4dbebb40560e4c6a417b29ce3393659a
-> -- 
-> 2.34.1
-> 
+On Mon, Jun 23, 2025 at 9:38=E2=80=AFAM Christopher Snowhill <chris@kode54.=
+net> wrote:
+>
+> On Mon Jun 23, 2025 at 4:06 AM PDT, Christopher Snowhill wrote:
+> > On Mon Jun 23, 2025 at 3:46 AM PDT, Christopher Snowhill wrote:
+> >> On Fri Jun 20, 2025 at 3:10 AM PDT, Christopher Snowhill wrote:
+> >>> Here's another alternative change, which may be more thorough. It doe=
+s
+> >>> seem to fix the issue, at least. The issue does indeed appear to be
+> >>> no-op plane changes sent to the cursor plane.
+> >>>
+> >>> If anyone wants to propose style changes, and suggest a proper commit
+> >>> message, if this is indeed a welcome fix for the problem, please let =
+me
+> >>> know.
+> >>>
+> >>> diff --git a/drivers/gpu/drm/drm_atomic_uapi.c b/drivers/gpu/drm/drm_=
+atomic_uapi.c
+> >>> index c2726af6698e..b741939698e8 100644
+> >>> --- a/drivers/gpu/drm/drm_atomic_uapi.c
+> >>> +++ b/drivers/gpu/drm/drm_atomic_uapi.c
+> >>> @@ -1087,17 +1087,22 @@ int drm_atomic_set_property(struct drm_atomic=
+_state *state,
+> >>>                     }
+> >>>
+> >>>                     /* ask the driver if this non-primary plane is su=
+pported */
+> >>> -                   if (plane->type !=3D DRM_PLANE_TYPE_PRIMARY) {
+> >>> -                           ret =3D -EINVAL;
+> >>> +                   else if (plane->type !=3D DRM_PLANE_TYPE_PRIMARY)=
+ {
+> >>> +                           ret =3D drm_atomic_plane_get_property(pla=
+ne, plane_state,
+> >>> +                                                               prop,=
+ &old_val);
+> >>> +
+> >>> +                           if (ret || old_val !=3D prop_value) {
+> >>> +                                   ret =3D -EINVAL;
+> >>>
+> >>> -                           if (plane_funcs && plane_funcs->atomic_as=
+ync_check)
+> >>> -                                   ret =3D plane_funcs->atomic_async=
+_check(plane, state, true);
+> >>> +                                   if (plane_funcs && plane_funcs->a=
+tomic_async_check)
+> >>> +                                           ret =3D plane_funcs->atom=
+ic_async_check(plane, state, true);
+> >>>
+> >>> -                           if (ret) {
+> >>> -                                   drm_dbg_atomic(prop->dev,
+> >>> -                                                  "[PLANE:%d:%s] doe=
+s not support async flips\n",
+> >>> -                                                  obj->id, plane->na=
+me);
+> >>> -                                   break;
+> >>> +                                   if (ret) {
+> >>> +                                           drm_dbg_atomic(prop->dev,
+> >>> +                                                          "[PLANE:%d=
+:%s] does not support async flips\n",
+> >>> +                                                          obj->id, p=
+lane->name);
+> >>> +                                           break;
+> >>> +                                   }
+> >>>                             }
+> >>>                     }
+> >>>             }
+> >>
+> >> Upon further testing and reflection, I have come to the conclusion tha=
+t
+> >> this is indeed best handled by a kernel fix, rather than breaking user
+> >> space.
+> >>
+> >> I attempted to work around this in wlroots, adjusting 0.18, 0.19, and
+> >> 0.20 git with similar patches. First I attempted to stash all the
+> >> written properties for the atomic code, storing an initial value of al=
+l
+> >> 0xFE so it was always likely to write the first time, and only setting=
+ a
+> >> property if it changed from the last commit.
+> >>
+> >> This resulted in whole commits breaking for one or both framebuffers
+> >> until I ctrl-alt-fx switched to a tty and back again, and this would
+> >> work again temporarily.
+> >>
+> >> So I went back to the drawing board and only withheld seemingly
+> >> duplicate plane properties. This "worked", until I attempted to play a
+> >> game, and then it started glitching spectacularly, and not updating at
+> >> all if the game was doing direct scanout and vrr.
+> >>
+> >> Clearly this is wrong.
+> >>
+> >> The wlroots library queues up properties for each commit. On every
+> >> commit where the cursor is disabled, it queues up both fb_id=3D0 and
+> >> crtc_id=3D0. Every commit. Is this wrong? Should it only be queueing u=
+p
+> >> the disablement properties once? It also queues up the full plane and
+> >> hotspot properties when enabled, even if the cursor doesn't change
+> >> position or appearance.
+> >
+> > Probably should have CC'd the drm misc maintainers when I started pokin=
+g
+> > drm misc instead of amdgpu. Pity there isn't a list for that...
+>
+> I am a dumbass, I didn't notice get_maintainer.pl. Added more people,
+> and the correct list. Not sure if I should remove amd-gfx, since this
+> affects them, somewhat...
+>
+> However, the intention of this thread was to seek commentary on the
+> situation as it is.
