@@ -1,190 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F0D2609E4;
-	Mon, 23 Jun 2025 15:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FEB276024
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:32:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750692779; cv=none; b=IIPRbnEzxax6fOyrT5C7w3WVc1aVEaLsARYcMdtEArWuot2IRnTWCs4NXguH3ef/MSbxCYQ9kd6bRhbbBD12nfTadGRl19FOxrlAJE/ZmCT5Xeu+aBi2kA24Cn0JJTJ82xPdO4Ra1vOa8Mb2iH17iB8t/dJ3OyVnBytNpSxZP+Q=
+	t=1750692781; cv=none; b=L+0QrdG2oQXst3baEJX2SVPP2sgtVDDwgLDQZZ9N301gKCMNINWXW1T2nccX/HVVtbXxCWRG9a5xAeL8DigCUGCMthmC3R4uaYqOi3lxE31zCK/NlWLYK/7wjWjm3Hcs0R0jhkEy5udM2iKYg8V6dKxPfMWYha9yAm98GD6zHCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750692779; c=relaxed/simple;
-	bh=PT3M4AOgi1OUY/m19yZDe+t1mwb9qhz6OLFhPtNLEW4=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To; b=kqjDtVo12TaivfKFD0/nLlgnmZ7OTSiubRx0LdQZAxZ+FbMGtZjtOJCOJJ/2BlVZOjE3Z0aDf22L2eE235vHH7ceUXGudvYxAYf1ZDSGQDBZ0bvgpKjHkFRhiz65S+u9weDS13fZe5Q8M1gSfypwN4H4KOMUke5MjNJgjv+pQWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LP7KxHAC; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750692781; c=relaxed/simple;
+	bh=K7nJQgtBbSh9bg4c43k2d/lR0pxtXBYTwkLYTeoGBZg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RudqsWldBeGc7fCtwogUSN6xwDK2wnLWh6t7CCYM5i0Earjyo4Z+iXV06AZr0b2DLPk3xBqNdBPYau2slqdztWpGRuiprCxszcypPHpUaQOe42dM+LlHSC7kRZyAgKGPqLBA2xS9DINw+V7FsYXaF895CYaFCBoClXLMz/1aNJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Sz/7GcPR; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LP7KxHAC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750692778; x=1782228778;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to;
-  bh=PT3M4AOgi1OUY/m19yZDe+t1mwb9qhz6OLFhPtNLEW4=;
-  b=LP7KxHACmNqXUT8fCSrh6/B1M2RXhO4O9uVKj/ds1ag/JynNw+FZZ40Q
-   HIQFLwGVSygqiSSKSa8D9JWEZSAdi31QTwpWMPaomjrqRYzb/w2qu6sOk
-   W4QcOqUPob7oKfPmKPV/BoPnL6yTmESwx8QDhIj9VIz6agZVRsHqzeBa/
-   AzXYpkVhdCw/5sATmRoCs10X9U98xdB5sQ646mBma/V1F0xP0MNvBSjuz
-   GaE48BN7YoIHD/9W+GmKE2SiCkRxopwk8dHGKATOq7GgQfLlYhmsYPMbO
-   iKplUvgnwnJgUqI1rfFFvnNT03b/DF+JxPOIIVLVJlwBDJKOzy7sdHBf/
-   A==;
-X-CSE-ConnectionGUID: SGvIeijnTbiSxkx8B4L0+Q==
-X-CSE-MsgGUID: 4aLEKPplTQyoNJGRkRW52Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="63600365"
-X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
-   d="scan'208";a="63600365"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 08:32:57 -0700
-X-CSE-ConnectionGUID: aKkphUs/TcKlNIVVR7DHsw==
-X-CSE-MsgGUID: xuYev3GQTVCWCNxvgvVRFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
-   d="scan'208";a="152145883"
-Received: from tjmaciei-mobl5.ger.corp.intel.com (HELO [10.125.108.165]) ([10.125.108.165])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 08:32:54 -0700
-Content-Type: multipart/mixed; boundary="------------GHRek0mmnbllhgkrO1Mnn6jW"
-Message-ID: <bd81a98b-f8d4-4304-ac55-d4151a1a77ab@intel.com>
-Date: Mon, 23 Jun 2025 08:32:53 -0700
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sz/7GcPR"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b31e076f714so3571949a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:32:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750692778; x=1751297578; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1KRVwjnf5Gu74AF6Zl0ciz1iQ0kZ7/1mY4qiKdYpBHw=;
+        b=Sz/7GcPRzGtRWzkw6jaJTglWqDbL3fett95gP0SRFVHbyZwdkqOIpE59YJP7pYPOQl
+         WMqoIrOpLYnvKy85aGOncZMDb+cQ7PG4niWqtG8ZOLi5TJpHaoh0iZXdBv1JDsIDeQwn
+         hV9KnSjS4N/4T9ME5WB44xEdt+PRvA86O8qBYHKmWTg3i6nPQWFVCeQtZGkfzVqNw/4V
+         YhcSKrOOguwi/DO/aZ58zB3T3sq57FCZ3pyb02sJvJgLBV9reQop9nhR3r2Bht/0vGfJ
+         qltMvcpUbin93ibHPG8EyjqO4b8nQElvO8jygX4he2fISU1xXRbOT3A3AzqNr7BbkRZs
+         F+rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750692778; x=1751297578;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1KRVwjnf5Gu74AF6Zl0ciz1iQ0kZ7/1mY4qiKdYpBHw=;
+        b=hyX7vVKVYXR3eCv6dUp8hnM+sQB1Z6eoF9Va6TsjUXHhYNm+bR4Ilf36k9LyuGfM7Z
+         N/otlzGrHnXQ1OtMzfBYV60pdbbZ9T/Q34zYEICTksCZePen6/L1dZBUS8JJL2e7QQVx
+         NETxVI6UDzK/ojXufWr2Vnd+Bd7gzRqnCOU2E9mMI8fP/mjmBqAGp804/rB22Vg9qJWR
+         i6MKEx0PxzTOXTfGB22Aa+ohUNEGH1Dt685kPKUlZ/TXaeMVHftSDk2FkhbNl053HZ+y
+         g2m5KZH89jleDWEYTy6S7qF+qGQMfqamL7jdaKUYVSbSc7FEl0kV4XBt2C3EjR+lAc4L
+         89pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxirvCt50XJqqiOfgXCEEVk4oZwqSUHKAbfAyqt+AL+Txc5vb4E+m/EO2yqU8inZl0Hzk02nb9CAVCiwQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTUnNCBCmKM9Rn1cP9Lgd75tFzlaef9jlZyCI6nOfIAV2/aYYh
+	HfkwDslmfdsv8GNw+rk9bQYciwUTfRpNPwsGxDhAcw97fRgyei4wrgVivoKvFzCOqR0=
+X-Gm-Gg: ASbGncvX3EVJ+gwOblko2DPuvxQ+sD2T1gc1DzTOY7sFoH7qTHBdNCIMW4uVinEdB6v
+	nAV/gY1LR5s2O2zkthRidA4XlJq4Iat2C4LzQo5l1Jc0Km0wcqEFlClxHnlhxWFaPIcZLSXTLYr
+	cMJtCnhDYgmAfATW/KMtE6bBBou7B0kautxSjQnuV2eraErwpEH7H23ZT9gNJPi5IbatBOSiv9S
+	OM70UdUXPlB06jH323XyK4OPH8AOuUZQQSIu/xxtesfIwJJNyovjE8ALt7HI0QaT3di9N9OQC/h
+	kI46XqkkXkd8fpOzaivrWAM2iyZknKU/OBeE3LRhQuJdUEl36rvMmYSKMM0GE0+w
+X-Google-Smtp-Source: AGHT+IGNVVPK2gkJtWTZs/pQbffW/A6+VZyFx1ATrRb4chkU190AUhzC35954VZWOOfCqbAJDEPO/A==
+X-Received: by 2002:a17:90b:2e04:b0:30c:4bac:1da1 with SMTP id 98e67ed59e1d1-3159f52d0fbmr19149295a91.17.1750692777852;
+        Mon, 23 Jun 2025 08:32:57 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:d145:b99:ea4b:a65f])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3158a226f6fsm11220540a91.6.2025.06.23.08.32.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 08:32:57 -0700 (PDT)
+Date: Mon, 23 Jun 2025 09:32:54 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Hiago De Franco <hiagofranco@gmail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@oss.nxp.com>, daniel.baluta@nxp.com,
+	iuliana.prodan@oss.nxp.com,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v5 0/3] remoteproc: imx_rproc: allow attaching to running
+ core kicked by the bootloader
+Message-ID: <aFlzpnT1yNGdWWkH@p14s>
+References: <20250617193450.183889-1-hiagofranco@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv6 07/16] x86/vsyscall: Reorganize the #PF emulation code
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>, acme@redhat.com, aik@amd.com,
- akpm@linux-foundation.org, alexander.shishkin@linux.intel.com,
- ardb@kernel.org, ast@kernel.org, bp@alien8.de, brijesh.singh@amd.com,
- changbin.du@huawei.com, christophe.leroy@csgroup.eu, corbet@lwn.net,
- daniel.sneddon@linux.intel.com, dave.hansen@linux.intel.com,
- ebiggers@google.com, geert+renesas@glider.be, houtao1@huawei.com,
- hpa@zytor.com, jgg@ziepe.ca, jgross@suse.com, jpoimboe@kernel.org,
- kai.huang@intel.com, kees@kernel.org, leitao@debian.org,
- linux-doc@vger.kernel.org, linux-efi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux@rasmusvillemoes.dk,
- luto@kernel.org, mcgrof@kernel.org, mhiramat@kernel.org,
- michael.roth@amd.com, mingo@kernel.org, mingo@redhat.com,
- namhyung@kernel.org, paulmck@kernel.org, pawan.kumar.gupta@linux.intel.com,
- peterz@infradead.org, rick.p.edgecombe@intel.com, rppt@kernel.org,
- sandipan.das@amd.com, shijie@os.amperecomputing.com, sohil.mehta@intel.com,
- tglx@linutronix.de, tj@kernel.org, tony.luck@intel.com,
- vegard.nossum@oracle.com, x86@kernel.org, xin3.li@intel.com,
- xiongwei.song@windriver.com, ytcoode@gmail.com
-References: <9d351d80-66fe-486f-bdb3-370859dc47cc@intel.com>
- <262c0fd2-ac66-4ce7-903f-4062f1fe1d6e@citrix.com>
- <b6f8a90d-4309-45c5-84cd-32e281d076fb@intel.com>
- <kthmv63jrvrr3shhzhhcib7qrjp7sjkah65kogbfphfr6wg6cb@z5zydz6ov7pv>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <kthmv63jrvrr3shhzhhcib7qrjp7sjkah65kogbfphfr6wg6cb@z5zydz6ov7pv>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617193450.183889-1-hiagofranco@gmail.com>
 
-This is a multi-part message in MIME format.
---------------GHRek0mmnbllhgkrO1Mnn6jW
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+On Tue, Jun 17, 2025 at 04:34:47PM -0300, Hiago De Franco wrote:
+> From: Hiago De Franco <hiago.franco@toradex.com>
+> 
+> This patch series depends on Ulf's patches that are currently under
+> review, "pmdomain: Add generic ->sync_state() support to genpd" [1].
+> Without them, this series is not going to work.
 
-On 6/23/25 05:41, Kirill A. Shutemov wrote:
-> So, IIUC, that's dependency of vsyscall PF on NX. Do we want to disable
-> vsyscall on boot if NX is not available?
+Please resend this patchset when [1] and the work in patch 1/3 have been merged.
 
-Well, vsyscall=none can break old userspace, so forcing it on old
-hardware doesn't seem like a great idea.
+Thanks,
+Mathieu
 
-But, either way, this doesn't really appear to be a LASS issue. This code:
-
->         if (!(error_code & X86_PF_INSTR)) {
->                 /* Failed vsyscall read */
->                 if (vsyscall_mode == EMULATE)
->                         return false;
-
-Is really asking the question:
-
-	Is this #PF from an instruction fetch in the vsyscall page?
-
-That _should_ be able to be done by comparing CR2 and regs->rip. In
-fact, that's done just below anyway:
-
-	WARN_ON_ONCE(address != regs->ip);
-
-So I think we can fix this up with something like the attached patch
-which just drives the if() from regs->rip and make the warning NX-only.
-
-But this code has been like this a long time and I'm 99% sure the x86
-selftests poke at all these cases. I'm curious what they do on those old
-P4's (or a 64-bit VM with NX turned off), but it's not super important
-either way.
---------------GHRek0mmnbllhgkrO1Mnn6jW
-Content-Type: text/x-patch; charset=UTF-8; name="vsyscall-nx.patch"
-Content-Disposition: attachment; filename="vsyscall-nx.patch"
-Content-Transfer-Encoding: base64
-
-ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2VudHJ5L3ZzeXNjYWxsL3ZzeXNjYWxsXzY0LmMgYi9h
-cmNoL3g4Ni9lbnRyeS92c3lzY2FsbC92c3lzY2FsbF82NC5jCmluZGV4IGM5MTAzYTZmYTA2
-ZS4uMGIwZTAyODM5OTRmIDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9lbnRyeS92c3lzY2FsbC92
-c3lzY2FsbF82NC5jCisrKyBiL2FyY2gveDg2L2VudHJ5L3ZzeXNjYWxsL3ZzeXNjYWxsXzY0
-LmMKQEAgLTEyNCw3ICsxMjQsOCBAQCBib29sIGVtdWxhdGVfdnN5c2NhbGwodW5zaWduZWQg
-bG9uZyBlcnJvcl9jb2RlLAogCWlmICgoZXJyb3JfY29kZSAmIChYODZfUEZfV1JJVEUgfCBY
-ODZfUEZfVVNFUikpICE9IFg4Nl9QRl9VU0VSKQogCQlyZXR1cm4gZmFsc2U7CiAKLQlpZiAo
-IShlcnJvcl9jb2RlICYgWDg2X1BGX0lOU1RSKSkgeworCS8qIEF2b2lkIGVtdWxhdGlvbiB1
-bmxlc3MgdXNlcnNwYWNlIHdhcyBleGVjdXRpbmcgZnJvbSB2c3lzY2FsbCBwYWdlOiAqLwor
-CWlmIChhZGRyZXNzICE9IHJlZ3MtPmlwKSB7CiAJCS8qIEZhaWxlZCB2c3lzY2FsbCByZWFk
-ICovCiAJCWlmICh2c3lzY2FsbF9tb2RlID09IEVNVUxBVEUpCiAJCQlyZXR1cm4gZmFsc2U7
-CkBAIC0xMzYsMTMgKzEzNywxNiBAQCBib29sIGVtdWxhdGVfdnN5c2NhbGwodW5zaWduZWQg
-bG9uZyBlcnJvcl9jb2RlLAogCQlyZXR1cm4gZmFsc2U7CiAJfQogCisKKwkvKiBYODZfUEZf
-SU5TVFIgaXMgb25seSBzZXQgd2hlbiBOWCBpcyBzdXBwb3J0ZWQ6ICovCisJaWYgKGNwdV9m
-ZWF0dXJlX2VuYWJsZWQoWDg2X0ZFQVRVUkVfTlgpKQorCQlXQVJOX09OX09OQ0UoIShlcnJv
-cl9jb2RlICYgWDg2X1BGX0lOU1RSKSk7CisKIAkvKgogCSAqIE5vIHBvaW50IGluIGNoZWNr
-aW5nIENTIC0tIHRoZSBvbmx5IHdheSB0byBnZXQgaGVyZSBpcyBhIHVzZXIgbW9kZQogCSAq
-IHRyYXAgdG8gYSBoaWdoIGFkZHJlc3MsIHdoaWNoIG1lYW5zIHRoYXQgd2UncmUgaW4gNjQt
-Yml0IHVzZXIgY29kZS4KIAkgKi8KIAotCVdBUk5fT05fT05DRShhZGRyZXNzICE9IHJlZ3Mt
-PmlwKTsKLQogCWlmICh2c3lzY2FsbF9tb2RlID09IE5PTkUpIHsKIAkJd2Fybl9iYWRfdnN5
-c2NhbGwoS0VSTl9JTkZPLCByZWdzLAogCQkJCSAgInZzeXNjYWxsIGF0dGVtcHRlZCB3aXRo
-IHZzeXNjYWxsPW5vbmUiKTsK
-
---------------GHRek0mmnbllhgkrO1Mnn6jW--
+> 
+> For the i.MX8X and i.MX8 family SoCs, currently when the remotecore is
+> started by the bootloader and the M core and A core are in the same
+> partition, the driver is not capable to detect the remote core and
+> report the correct state of it.
+> 
+> This patch series implement a new function, dev_pm_genpd_is_on(), which
+> returns the power status of a given power domain (M core power domains
+> IMX_SC_R_M4_0_PID0 and IMX_SC_R_M4_0_MU_1A in this case). If it is
+> already powered on, the driver will attach to it.
+> 
+> Finally, the imx_rproc_clk_enable() function was also changed to make it
+> return before dev_clk_get() is called, as it currently generates an SCU
+> fault reset if the remote core is already running and the kernel tries
+> to enable the clock again. These changes are a follow up from a v1 sent
+> to imx_rproc [2] and from a reported regression [3].
+> 
+> [1] https://lore.kernel.org/all/20250523134025.75130-1-ulf.hansson@linaro.org/
+> [2] https://lore.kernel.org/lkml/20250423155131.101473-1-hiagofranco@gmail.com/
+> [3] https://lore.kernel.org/lkml/20250404141713.ac2ntcsjsf7epdfa@hiago-nb/
+> 
+> v5:
+> - pm_runtime_get_sync() removed in favor of pm_runtime_resume_and_get(),
+>   checking the return value of it.
+> - Added pm_runtime_disable() and pm_runtime_put() to imx_rproc_remove().
+> - Fixed missing "()" in dev_pm_genpd_is_on description.
+> - Updated dev_pm_genpd_is_on() function description to be explicit the
+>   function reflects the current power status of the device and that this
+>   might change after the function returns, especially if the genpd is
+>   shared.
+> 
+> v4:
+> - https://lore.kernel.org/lkml/20250602131906.25751-1-hiagofranco@gmail.com/
+> 
+> v3:
+> - https://lore.kernel.org/all/20250519171514.61974-1-hiagofranco@gmail.com/
+> 
+> v2:
+> - https://lore.kernel.org/lkml/20250507160056.11876-1-hiagofranco@gmail.com/
+> 
+> v1:
+> - https://lore.kernel.org/lkml/20250505154849.64889-1-hiagofranco@gmail.com/
+> 
+> Hiago De Franco (3):
+>   pmdomain: core: introduce dev_pm_genpd_is_on()
+>   remoteproc: imx_rproc: skip clock enable when M-core is managed by the
+>     SCU
+>   remoteproc: imx_rproc: detect and attach to pre-booted remote cores
+> 
+>  drivers/pmdomain/core.c        | 33 +++++++++++++++++++++++++++
+>  drivers/remoteproc/imx_rproc.c | 41 ++++++++++++++++++++++++++++------
+>  include/linux/pm_domain.h      |  6 +++++
+>  3 files changed, 73 insertions(+), 7 deletions(-)
+> 
+> -- 
+> 2.39.5
+> 
