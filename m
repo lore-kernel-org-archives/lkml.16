@@ -1,84 +1,191 @@
-Received: from mail-43167.protonmail.ch (mail-43167.protonmail.ch [185.70.43.167])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE80026B2C4;
-	Mon, 23 Jun 2025 14:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.167
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FA015747D;
+	Mon, 23 Jun 2025 14:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750690204; cv=none; b=pFtVZTUjuYlO8zeahg6tlgTaPbLdltF3eWY2iMAupf05r+8nRIU9dcSs/EdZuKbr6qJQYW7LJvtqnPn5i1A3GSSnEv2YzkZ4msmwPa/2cWb9uEU+3EJySxemEdnCouaMbw9O7lYvd1YVoxbww6ic1GBSqOscMqq82517CXJWA98=
+	t=1750690228; cv=none; b=oKP8F4LhcPaSETGFaBgnES2QZ+pH/53Hc03BoG90arrDG0kxLvSFdHSJr2pgPAuLQweoFmtSvUBYyjNM7heU9GkjPD5rr0clfft1CCCevc9IjTihSAA0RY44pStt23fYVnw0t/k976e1Nkkc9gkrz697TOMFWkH2xtRpKQD9Ero=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750690204; c=relaxed/simple;
-	bh=TtNo+/+tyUtNoLQIqc1zZABemHwPcIubro1rF9vrPA0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fzSKg6KQ9Gg7YrLjwQfLaDOxysHAwkAysQw45qoWa2dienrs1am8aeyHmzZ2VwynJzZ9HFzUo8MB8vMA+DgBM4Em90JMM4oCTW2Juy+ywHlkw8wf1Cm/wRWVUeATgUWiTp/SezbO/0oXO80ZVmEzTyrhjqlyy2xjGpyX66WdvKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=gnTl0/vu; arc=none smtp.client-ip=185.70.43.167
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1750690228; c=relaxed/simple;
+	bh=ELZdQ3p4IyuL9UECA0T7zJ/0jD0+VGvARXmNsz4fH2Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mxFKUvwcnxq8yMk4El3PDBzNn0h/I22TB1KY4WWBPSZ6AamFNT748iYsWFMgNfBHWjn3jVCWufv+xU/A7gx7fo0yOyr0KAmhada24EFLN3udsxtBy1zxC8csj/mVrNPtK56HRB9GJbWK5e41K06+NxifSWEJ6/yANAwZaRVPMkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fYAtargz; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="gnTl0/vu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1750690199; x=1750949399;
-	bh=TtNo+/+tyUtNoLQIqc1zZABemHwPcIubro1rF9vrPA0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=gnTl0/vuX5ied98fmL550w4RNnLTcQa0gnffVWaw5w6b5LxzlZwdwsRvHaNHwD5t9
-	 THGF9aGY9nTkFjZcRd3AGYpxfQHYjUyq8wWE3zI7dJ3HWH/7CSqf50D/Sot25BPtFu
-	 PFjKkhr5BSmSeirndD359TWneLBGD7wjQcO6TIazIc/glW7rYIfTVUSaHD+XX58dlv
-	 IqsgLj/FmC7uJ8U+4DTnZWkjJe2WzIT5Dm+EfbxIPO+wLKyuib3RF9I8stu9o7BURv
-	 87JxXcc2gJU4Kl23hFbJ6Rdg7oD5PV/L1pKPon01YwRIpm/Zu/EYDMIuFNgel6U8TP
-	 jnI6lOc3HAMeg==
-Date: Mon, 23 Jun 2025 14:49:56 +0000
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-From: cristian_ci <cristian_ci@protonmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: msm8953: Add device tree for Billion Capture+
-Message-ID: <K0VOX_o4DQFENShBki5YS11cHp90jAhtOYFT62ycGgps8JLh6a_SyDqoXyVaPhMADabNwpGyn1px_sAgxeMCJFNSDjyagcqk6DrNh9AECE8=@protonmail.com>
-In-Reply-To: <92f1d1c1-e62d-4f77-b55d-110d8ad56a06@oss.qualcomm.com>
-References: <20250620-rimob-initial-devicetree-v1-0-8e667ea21f82@protonmail.com> <20250620-rimob-initial-devicetree-v1-3-8e667ea21f82@protonmail.com> <557166bd-cbe2-4a7b-bd6c-8daec1cecc3d@oss.qualcomm.com> <Fp48ghZvedurtk8ta0jccDkZvg7whZFgX0Ra7_AQuMwS12QxAxHqgcOMP_SbXsnLNme2LWWz6ZshoGFTQT6nVvfe-4B_v-2hkRxpgcb9bq0=@protonmail.com> <92f1d1c1-e62d-4f77-b55d-110d8ad56a06@oss.qualcomm.com>
-Feedback-ID: 27475468:user:proton
-X-Pm-Message-ID: 3f74078256d045281d640df567f4ce31f5b3efff
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fYAtargz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750690227; x=1782226227;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ELZdQ3p4IyuL9UECA0T7zJ/0jD0+VGvARXmNsz4fH2Q=;
+  b=fYAtargzYhimP0kixN9mbrP1eVZf0cuuCxR5X9IRUVOSZHkWOIWAqij9
+   BPlDWVnyqsF3XiUcARUwaLuutRk4XseooJJqaQm9Z9G/aNddB+idc8yCN
+   bNyN17j43E6hOZ78V3HLjkCCCB5QBGS45dyA5lw66Ky3Vug9sFoW0KWXC
+   gMPt+BvU3SOb6OnhAdkSpjzuI/iTiVWAtqxAvnOtyWKOS4i6oXnQV4Io+
+   av5T7QuDmbDmpJ5qLT9MES/BR7MAxBapObY3aFzIU0k48FbAKKG6vqmP+
+   hz2M09gEhdG8tcp71dEpEYMRT+Wq3Ncok5v3Eo3xBwSbQy9AiNKIELwUZ
+   Q==;
+X-CSE-ConnectionGUID: GRzBgquSQSu56T1J42mjfg==
+X-CSE-MsgGUID: DasDFtXlR2+KKt+8BzIJUA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52771115"
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="52771115"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 07:50:27 -0700
+X-CSE-ConnectionGUID: swOTA/5lQ72mLN31rBN6jg==
+X-CSE-MsgGUID: UBLkQ/tvSQaMPLtNvTVH5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="152139810"
+Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.108.178]) ([10.125.108.178])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 07:50:25 -0700
+Message-ID: <cc5e782a-a6a8-4152-9e4c-52dbd1d8cc05@intel.com>
+Date: Mon, 23 Jun 2025 07:50:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/8] cxl/decoder: Move decoder register programming to
+ a helper
+To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>
+References: <20250619050416.782871-1-dan.j.williams@intel.com>
+ <20250619050416.782871-4-dan.j.williams@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250619050416.782871-4-dan.j.williams@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Monday, June 23rd, 2025 at 12:11, Konrad Dybcio <konrad.dybcio@oss.qualc=
-omm.com> wrote:
 
-> On 6/21/25 9:31 PM, cristian_ci wrote:
->=20
-> > On Saturday, June 21st, 2025 at 12:17, Konrad Dybcio konrad.dybcio@oss.=
-qualcomm.com wrote:
-> >=20
-> > > > +
-> > > > +&sdhc_1 {
-> > > > + vmmc-supply =3D <&pm8953_l8>;
-> > > > + vqmmc-supply =3D <&pm8953_l5>;
-> > >=20
-> > > you should add regulator-allow-set-load to these vregs
-> >=20
-> > So, do you mean I should add 'regulator-allow-set-load' property to 'pm=
-8953_l5' and 'pm8953_l8' regulators? If so, should I do that for 'pm8953_l1=
-1' and 'pm8953_l12' regulators too (sdhc_2)?
->=20
->=20
-> Yes
->=20
 
-ACK, I'll do that in v2. BTW, since I've not such references in my downstre=
-am devicetree, IIUC what you mean, 'regulator-allow-set-load' property is n=
-ow required in mainline for regulators supplying sdhc_{1|2}.
+On 6/18/25 10:04 PM, Dan Williams wrote:
+> In preparation for converting to rw_semaphore_acquire semantics move the
+> contents of an open-coded {down,up}_read(&cxl_dpa_rwsem) section to a
+> helper function.
+> 
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Also considering I've transferred every value _as_is_ (except for max and m=
-in microvolt values =E2=80=8B=E2=80=8Bof one regulator - after the kernel l=
-og complained =E2=80=8Babout =E2=80=8Bthat) for regulators/rpm_requests fro=
-m downstream
-devicetree to mainline devicetree, since other msm8953 devicetrees seem to =
-share the same situation of 'rimob' (I'm referring to
-'potter', 'daisy', 'mido', 'tissot' and 'vince'), I wonder if it's not the =
-case to standardize all these devicetrees in the same way. Any thoughts?
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/cxl/core/hdm.c | 77 +++++++++++++++++++++++-------------------
+>  1 file changed, 42 insertions(+), 35 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index ab1007495f6b..81556d12e9b8 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -764,14 +764,53 @@ static int cxld_await_commit(void __iomem *hdm, int id)
+>  	return -ETIMEDOUT;
+>  }
+>  
+> +static void setup_hw_decoder(struct cxl_decoder *cxld, void __iomem *hdm)
+> +{
+> +	int id = cxld->id;
+> +	u64 base, size;
+> +	u32 ctrl;
+> +
+> +	/* common decoder settings */
+> +	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+> +	cxld_set_interleave(cxld, &ctrl);
+> +	cxld_set_type(cxld, &ctrl);
+> +	base = cxld->hpa_range.start;
+> +	size = range_len(&cxld->hpa_range);
+> +
+> +	writel(upper_32_bits(base), hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(id));
+> +	writel(lower_32_bits(base), hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(id));
+> +	writel(upper_32_bits(size), hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(id));
+> +	writel(lower_32_bits(size), hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(id));
+> +
+> +	if (is_switch_decoder(&cxld->dev)) {
+> +		struct cxl_switch_decoder *cxlsd =
+> +			to_cxl_switch_decoder(&cxld->dev);
+> +		void __iomem *tl_hi = hdm + CXL_HDM_DECODER0_TL_HIGH(id);
+> +		void __iomem *tl_lo = hdm + CXL_HDM_DECODER0_TL_LOW(id);
+> +		u64 targets;
+> +
+> +		cxlsd_set_targets(cxlsd, &targets);
+> +		writel(upper_32_bits(targets), tl_hi);
+> +		writel(lower_32_bits(targets), tl_lo);
+> +	} else {
+> +		struct cxl_endpoint_decoder *cxled =
+> +			to_cxl_endpoint_decoder(&cxld->dev);
+> +		void __iomem *sk_hi = hdm + CXL_HDM_DECODER0_SKIP_HIGH(id);
+> +		void __iomem *sk_lo = hdm + CXL_HDM_DECODER0_SKIP_LOW(id);
+> +
+> +		writel(upper_32_bits(cxled->skip), sk_hi);
+> +		writel(lower_32_bits(cxled->skip), sk_lo);
+> +	}
+> +
+> +	writel(ctrl, hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
+> +}
+> +
+>  static int cxl_decoder_commit(struct cxl_decoder *cxld)
+>  {
+>  	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
+>  	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
+>  	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
+>  	int id = cxld->id, rc;
+> -	u64 base, size;
+> -	u32 ctrl;
+>  
+>  	if (cxld->flags & CXL_DECODER_F_ENABLE)
+>  		return 0;
+> @@ -804,39 +843,7 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
+>  	}
+>  
+>  	down_read(&cxl_dpa_rwsem);
+> -	/* common decoder settings */
+> -	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+> -	cxld_set_interleave(cxld, &ctrl);
+> -	cxld_set_type(cxld, &ctrl);
+> -	base = cxld->hpa_range.start;
+> -	size = range_len(&cxld->hpa_range);
+> -
+> -	writel(upper_32_bits(base), hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(id));
+> -	writel(lower_32_bits(base), hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(id));
+> -	writel(upper_32_bits(size), hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(id));
+> -	writel(lower_32_bits(size), hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(id));
+> -
+> -	if (is_switch_decoder(&cxld->dev)) {
+> -		struct cxl_switch_decoder *cxlsd =
+> -			to_cxl_switch_decoder(&cxld->dev);
+> -		void __iomem *tl_hi = hdm + CXL_HDM_DECODER0_TL_HIGH(id);
+> -		void __iomem *tl_lo = hdm + CXL_HDM_DECODER0_TL_LOW(id);
+> -		u64 targets;
+> -
+> -		cxlsd_set_targets(cxlsd, &targets);
+> -		writel(upper_32_bits(targets), tl_hi);
+> -		writel(lower_32_bits(targets), tl_lo);
+> -	} else {
+> -		struct cxl_endpoint_decoder *cxled =
+> -			to_cxl_endpoint_decoder(&cxld->dev);
+> -		void __iomem *sk_hi = hdm + CXL_HDM_DECODER0_SKIP_HIGH(id);
+> -		void __iomem *sk_lo = hdm + CXL_HDM_DECODER0_SKIP_LOW(id);
+> -
+> -		writel(upper_32_bits(cxled->skip), sk_hi);
+> -		writel(lower_32_bits(cxled->skip), sk_lo);
+> -	}
+> -
+> -	writel(ctrl, hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
+> +	setup_hw_decoder(cxld, hdm);
+>  	up_read(&cxl_dpa_rwsem);
+>  
+>  	port->commit_end++;
+
