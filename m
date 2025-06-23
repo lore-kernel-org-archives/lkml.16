@@ -1,38 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC2D255F53;
-	Mon, 23 Jun 2025 12:00:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6C82561D9;
+	Mon, 23 Jun 2025 12:00:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750680055; cv=none; b=JVoka/xYvoG4tNG3FZ1OkkbNBLgvoeOER3pb9vHCwAidrSnq0lr99aTYt2Ke5QkMJPHYUJy3OZXVJ/Q3wH1HEKCXraljmH6vU+BVD7klIVWFt4/ufcGu976bHP5FWHP33fpo5RybN/84gGG+U5t/UD4kCzf7h4Zg1Jic1tv3jaE=
+	t=1750680057; cv=none; b=UkKJ8pZ78x1Pefuf0B9S9VpEDq49DwMh52RuwyHdUtH3wNeiMNRLL7rPJlWoeyiP9ai+eZ7K2pDbOOkxr6s70qA1k95MEeJ9UJoYe/WFDBxRyRBSKSoF6cWWUD84nY9s+KCOJoxD3kCKhic5I8fRmrrgcSoHWlDucGaFMl2MQTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750680055; c=relaxed/simple;
-	bh=7i4gj4FLic9Db/zKjHzbibMfS0LjHs3CHldwZgnqQRM=;
+	s=arc-20240116; t=1750680057; c=relaxed/simple;
+	bh=/qYS7j1Kjsx2bsMR5FO+759f8nIWeGhSxaDm1IPwegE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mXE4jKM2CY/bLX9ppinw42HeVcizwZvHd2gDOLbf05tes3GYFJo/54s2FI9Pi04JsQhQY2DDb9+3cZwYm56yUTpJRyV88eeQsFfzs5uyIVhDIM4zScWr8WmMsHQefO6cDX3vmLkqnVukYuwarSSoEJrO5U7qhxI8qQVE69WQLG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=eK1+ppPb; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=FAK2nPIfbNkmxLtmYC/nrLyFuhk7l9M3v0Jc2H/2FZx9X/U5y1Cb6OxKMrbjNdXkSLgdInXvMqX8vwbGxYOJ48SZosFMJPpKYzNdQwwIkIOCGFyJSmS3p/+9Mceja6qpRh/wk/WiVBqq4oV1ZyktsI3O0q+B5NSWcAlZ3CYrkr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=p/qIfElN; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="eK1+ppPb"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="p/qIfElN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750680052;
-	bh=7i4gj4FLic9Db/zKjHzbibMfS0LjHs3CHldwZgnqQRM=;
+	s=mail; t=1750680054;
+	bh=/qYS7j1Kjsx2bsMR5FO+759f8nIWeGhSxaDm1IPwegE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eK1+ppPb3x94K3iNJno2UtDG+eL+a33xnoHqwao4b0D/2aGSazdFf6I/ldqKfxrz5
-	 6cEBZReRY7QBLfaWzdYG3Y/ZbwO0PY11g6JU0qitLS/2WFzfom+QbuTIn7LrGTreHo
-	 47W73vPrAnnPuu4ZwkMHJ+Q+h83Vvz/Fb6DPIPeFC6Rj7a64K63yu3R+a08FVZQKfO
-	 s2l4K7KZIZDEJmQMEBd+pGpTGev+fK+ZOp55MedawQH9ixipZ7uaO9zJV4OUdr0JKm
-	 Ei/Wvj2aTHFeRED4Gye0zVy4gP7MCJ8jedtHfAESU34tvL+QydLiENcETqeRjWUcfZ
-	 WhPwJ6spgaOmg==
+	b=p/qIfElNqNCxByneAMRVW5sGcKmD3Kly9AN7VUhveOfi8j5yrI12ncftiBLskOUrU
+	 pNJo1q3TdlqLRbv+3pZrCZ43n7uC64IiMptqlF3+1/+Kp+VYjbxvy4TZZz2fCjgDC+
+	 FPWAxtmC7pH8fD6FCd7bKT2eE3wZVD9JmRKRiYt1fktuagtuu1GRSYgQsG+/JHWyMc
+	 /zBk7elPV3wVmj3eqyunEj+MtV2fJNc1UewloZ6re0U2NeJcOkTKByDUdw3jpZzBCW
+	 2zo2cP/g1auWWOb9fnoR6O7hu530BA0AtB/G9VXqRQu9iVqnDZ3zwb6mvxfKRshj1j
+	 6uCrjzCYy4NVw==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 97E1417E0EC0;
-	Mon, 23 Jun 2025 14:00:51 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 557D317E1560;
+	Mon, 23 Jun 2025 14:00:53 +0200 (CEST)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: sboyd@kernel.org
 Cc: robh@kernel.org,
@@ -46,9 +46,9 @@ Cc: robh@kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org,
 	kernel@collabora.com
-Subject: [PATCH v1 1/5] dt-bindings: spmi: Add MediaTek MT8196 SPMI 2 Arbiter/Controllers
-Date: Mon, 23 Jun 2025 14:00:43 +0200
-Message-ID: <20250623120047.108961-2-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v1 3/5] spmi: mtk-pmif: Keep spinlock until read is fully done
+Date: Mon, 23 Jun 2025 14:00:45 +0200
+Message-ID: <20250623120047.108961-4-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250623120047.108961-1-angelogioacchino.delregno@collabora.com>
 References: <20250623120047.108961-1-angelogioacchino.delregno@collabora.com>
@@ -60,161 +60,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Document the MT8196 SPMI 2.0 Controller with a new schema.
-This is a MIPI SPMI 2.0 compliant IP, composed of a main arbiter
-and two SPMI master controllers with Request Capable Slave (RCS)
-support.
+Move the spin unlocking to after reading the contents of the
+PMIF_SWINF_(x)_RDATA_31_0 register in pmif_spmi_read_cmd():
+since this is the only register that we can read to get the
+data from all of the arbitered busses, a concurrent request
+for reading (especially on a busy arbiter) will show a race
+condition and a unexpected or corrupted value may be read.
+
+Doing the entire read sequence while spin locked guarantees
+that concurrent access to the arbiter doesn't happen.
 
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- .../bindings/spmi/mediatek,mt8196-spmi.yaml   | 138 ++++++++++++++++++
- 1 file changed, 138 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spmi/mediatek,mt8196-spmi.yaml
+ drivers/spmi/spmi-mtk-pmif.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spmi/mediatek,mt8196-spmi.yaml b/Documentation/devicetree/bindings/spmi/mediatek,mt8196-spmi.yaml
-new file mode 100644
-index 000000000000..d7eb63e81a5c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spmi/mediatek,mt8196-spmi.yaml
-@@ -0,0 +1,138 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spmi/mediatek,mt8196-spmi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/spmi/spmi-mtk-pmif.c b/drivers/spmi/spmi-mtk-pmif.c
+index 68f458587c67..9f416b231ab8 100644
+--- a/drivers/spmi/spmi-mtk-pmif.c
++++ b/drivers/spmi/spmi-mtk-pmif.c
+@@ -22,7 +22,7 @@
+ #define PMIF_CMD_EXT_REG	2
+ #define PMIF_CMD_EXT_REG_LONG	3
+ 
+-#define PMIF_DELAY_US   10
++#define PMIF_DELAY_US   2
+ #define PMIF_TIMEOUT_US (10 * 1000)
+ 
+ #define PMIF_CHAN_OFFSET 0x5
+@@ -372,7 +372,6 @@ static int pmif_spmi_read_cmd(struct spmi_controller *ctrl, u8 opc, u8 sid,
+ 	/* Send the command. */
+ 	cmd = (opc << 30) | (sid << 24) | ((len - 1) << 16) | addr;
+ 	pmif_writel(arb, pbus, cmd, inf_reg->ch_send);
+-	raw_spin_unlock_irqrestore(&pbus->lock, flags);
+ 
+ 	/*
+ 	 * Wait for Software Interface FSM state to be WFVLDCLR,
+@@ -382,13 +381,16 @@ static int pmif_spmi_read_cmd(struct spmi_controller *ctrl, u8 opc, u8 sid,
+ 					data, GET_SWINF(data) == SWINF_WFVLDCLR,
+ 					PMIF_DELAY_US, PMIF_TIMEOUT_US);
+ 	if (ret < 0) {
++		raw_spin_unlock_irqrestore(&pbus->lock, flags);
+ 		dev_err(&ctrl->dev, "failed to wait for SWINF_WFVLDCLR\n");
+ 		return ret;
+ 	}
+ 
+ 	data = pmif_readl(arb, pbus, inf_reg->rdata);
+-	memcpy(buf, &data, len);
+ 	pmif_writel(arb, pbus, 1, inf_reg->ch_rdy);
++	raw_spin_unlock_irqrestore(&pbus->lock, flags);
 +
-+title: MediaTek MT8196 SPMI 2.0 Controller
-+
-+maintainers:
-+  - Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-+  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-+
-+description:
-+  The MediaTek MT8196 SoC features a SPMI version 2.0 compliant controller,
-+  with internal wrapping arbitration logic to allow for multiple on-chip
-+  devices to control up to two SPMI buses.
-+  The main arbiter also acts as an interrupt controller, arbitering also
-+  the interrupts coming from SPMI-connected devices into each of the nested
-+  interrupt controllers from any of the present SPMI buses.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - enum:
-+          - mediatek,mt8196-spmi
-+      - items:
-+          - enum:
-+              - mediatek,mt6991-spmi
-+          - const: mediatek,mt8196-spmi
-+
-+  ranges: true
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 1
-+
-+patternProperties:
-+  "^spmi@[a-f0-9]+$":
-+    type: object
-+    $ref: /schemas/spmi/spmi.yaml
-+    unevaluatedProperties: false
-+
-+    properties:
-+      reg:
-+        items:
-+          - description: controller interface registers
-+          - description: spmi master controller registers
-+
-+      reg-names:
-+        items:
-+          - const: pmif
-+          - const: spmimst
-+
-+      clocks:
-+        items:
-+          - description: controller interface system clock
-+          - description: controller interface timer clock
-+          - description: spmi controller master clock
-+
-+      clock-names:
-+        items:
-+          - const: pmif_sys_ck
-+          - const: pmif_tmr_ck
-+          - const: spmimst_clk_mux
-+
-+      interrupts:
-+        maxItems: 1
-+
-+      interrupt-names:
-+        const: rcs
-+
-+      interrupt-controller: true
-+
-+      "#interrupt-cells":
-+        const: 3
-+        description: |
-+          cell 1: slave ID for the requested interrupt (0-15)
-+          cell 2: the requested peripheral interrupt (0-7)
-+          cell 3: interrupt flags indicating level-sense information,
-+                  as defined in dt-bindings/interrupt-controller/irq.h
-+    required:
-+      - reg
-+      - reg-names
-+      - clocks
-+      - clock-names
-+      - interrupts
-+      - interrupt-names
-+      - interrupt-controller
-+      - "#interrupt-cells"
-+
-+required:
-+  - compatible
-+  - ranges
-+  - '#address-cells'
-+  - '#size-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    soc {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+
-+      spmi-arbiter@1c018000 {
-+        compatible = "mediatek,mt8196-spmi";
-+        ranges = <0 0 0x1c018000 0x4900>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+
-+        spmi@0 {
-+          reg = <0 0x900>, <0x4800 0x100>;
-+          reg-names = "pmif", "spmimst";
-+          interrupts-extended = <&pio 292 IRQ_TYPE_LEVEL_HIGH>;
-+          interrupt-names = "rcs";
-+         interrupt-controller;
-+          #interrupt-cells = <3>;
-+          clocks = <&pmif_sys>, <&pmif_tmr>, <&spmi_mst>;
-+          clock-names = "pmif_sys_ck", "pmif_tmr_ck", "spmimst_clk_mux";
-+        };
-+
-+        spmi@2000 {
-+          reg = <0x2000 0x900>, <0x4000 0x100>;
-+          reg-names = "pmif", "spmimst";
-+          interrupts-extended = <&pio 291 IRQ_TYPE_LEVEL_HIGH>;
-+          interrupt-names = "rcs";
-+          interrupt-controller;
-+          #interrupt-cells = <3>;
-+          clocks = <&pmif_sys>, <&pmif_tmr>, <&spmi_mst>;
-+          clock-names = "pmif_sys_ck", "pmif_tmr_ck", "spmimst_clk_mux";
-+        };
-+      };
-+    };
-+...
++	memcpy(buf, &data, len);
+ 
+ 	return 0;
+ }
 -- 
 2.49.0
 
