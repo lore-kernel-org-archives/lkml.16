@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807533D994;
-	Mon, 23 Jun 2025 15:46:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2A8277CBE;
+	Mon, 23 Jun 2025 15:46:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750693588; cv=none; b=k8u92AFMPZ42jsGu4SkHEhIifv7DSWSILzfIpI+whZBudArm4ZDn+lkYgTB8p0FU+vSRgmzn+uBFgt33Mox7c6I4YMrc9od6MdkeAryCRwfZHKBt09mS2mPWID/HM8mKaOlYlTJRE9l3uX6i/putxYXT9PviYczcRz2fH932d2A=
+	t=1750693589; cv=none; b=W+O+Fv13/w5aiGaQX8Yoe9HMweZ1tYF/QpHSAvymk0ezhsEcSuYM4eR3JkM3G1GSfT+wCdC7jpzdcHiHrx/q+LrZ1YIg6i6YkaBBNJqgheqEeGKSjzputA27pEurcovcqr5pBWWWxnNl812qcEwsYm9KP+68KPN9jS4KAErfr/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750693588; c=relaxed/simple;
-	bh=w/l6L6hU5FHxVqXs8auOKsE8vW000g2m20hcmDTlaS4=;
+	s=arc-20240116; t=1750693589; c=relaxed/simple;
+	bh=/4KsbPAse2gBLI2Ox0d7l/Q7GL1NPX4pE7wmy0udwmM=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=eDEz+7/FbVQZEV+Yd+79N0aUhaDyNtZyinu1Ru9gie8NsV5JZ2MGb5lmK+VFsReOvAdYcdvlsvcUMWY4VQIoXybjpxfOVA8PDeG0KaGcgBFBFXkcgcrKIFW4Y/YfQeI9AP4AvbeQY2kSDvc0HVSWLdkhqQlrp0ITxXoGMXtz2Pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TDYCh5y1; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=rQMcNe2tFHsph8eSkGpGp4n1evpoB6hk1Hyz4dLDRLLrZklF28PT9lKvp8Am+soELXBbPMsAZ5hN/OjsZl58gRwZAYkiUKM+b0WtJXl3McXVeMhoHQ8Q10Gu5UUeSt5PAsAqMQ8L6iovlgECTEXKL/Jnvjs/40vxBsF/MgHUUwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OoDInESZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TDYCh5y1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ED43C4CEEA;
-	Mon, 23 Jun 2025 15:46:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OoDInESZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DEC3C4CEEA;
+	Mon, 23 Jun 2025 15:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750693588;
-	bh=w/l6L6hU5FHxVqXs8auOKsE8vW000g2m20hcmDTlaS4=;
+	s=k20201202; t=1750693589;
+	bh=/4KsbPAse2gBLI2Ox0d7l/Q7GL1NPX4pE7wmy0udwmM=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=TDYCh5y1PNN/APVI70QJMhg3IPnPWxtnrNMNT3jyMDmhR29ZFj7kPz6El99a8Zk39
-	 FokW8n/W5AuT8gt1CDPoabH0V37G1+A2TAN89zwcj3SO46RCaQu/6g8TVLYP+M3VlM
-	 CZbI+Y5KoeOk6VAMmRlzP18A+rg/rfMEDZp7rZFF19c4zpK0AwRGrNgDShwqbMvSNX
-	 7HdsfKABsdhNrPTPnaurf1p0riOeMOsg8n5vSQQhWHDzJr21bJ91FmMjYAxqZt2Z6U
-	 /E4F46TuJgvLxkyCrt1ENlr/91n0qnZJuMeq/xUrrOzox0dlMqRY9T03EzqMYFDa2p
-	 sIDdc/kEAICCA==
-Date: Mon, 23 Jun 2025 10:46:27 -0500
+	b=OoDInESZM7/L1hXTMhbx8atsRBHWSfEFd1Dw4SgExj45OI08Pcq9nlx5nrdGmILVa
+	 /P9jp6U77156fXkSaWLPOCw7t9krm8wwiTEdoovKPnjGYFXsEOINXFWoSrpx6jdyJV
+	 RWzAGUW7uxtHm78z3XIfB813uNBs1oNIicOmhC2wuYaQ2oQYsy7chLhoIhtzY3/iaE
+	 kh7Plm+hU/rwt4rZwBHx/E4Ni7ec+B9y6sX7LZLLXmmvHsrTwzbauIzuF1gYU7rH68
+	 tkyNkJFKyjzoELun9nhA+kS0SlvZ9nZnrgqzL29idtY4o6tObjrfq2454eOntAohgY
+	 KgWYF43jcQPUA==
+Date: Mon, 23 Jun 2025 10:46:28 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,59 +36,57 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- linux-kernel@vger.kernel.org, Konrad Dybcio <konradybcio@kernel.org>, 
- kernel@oss.qualcomm.com, Conor Dooley <conor+dt@kernel.org>, 
- devicetree@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>
-To: Umang Chheda <umang.chheda@oss.qualcomm.com>
-In-Reply-To: <20250623130420.3981916-1-umang.chheda@oss.qualcomm.com>
-References: <20250623130420.3981916-1-umang.chheda@oss.qualcomm.com>
-Message-Id: <175069348269.3797007.5540625905808833666.robh@kernel.org>
-Subject: Re: [PATCH 0/2] Add support for IQ-8275-evk board
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, 
+ Tony Luck <tony.luck@intel.com>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+ Magnus Damm <magnus.damm@gmail.com>, linux-aspeed@lists.ozlabs.org, 
+ bruce.jy.hung@fii-foxconn.com, Leo Wang <leo.jt.wang@fii-foxconn.com>, 
+ Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
+ george.kw.lee@fii-foxconn.com, Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Leo Wang <leo.jt.wang@gmail.com>
+In-Reply-To: <20250623-add-support-for-meta-clemente-bmc-v3-0-c223ffcf46cf@fii-foxconn.com>
+References: <20250623-add-support-for-meta-clemente-bmc-v3-0-c223ffcf46cf@fii-foxconn.com>
+Message-Id: <175069348316.3797100.9893206518887905689.robh@kernel.org>
+Subject: Re: [PATCH v3 0/2] ARM: dts: Add support for Meta Clemente BMC
 
 
-On Mon, 23 Jun 2025 18:34:18 +0530, Umang Chheda wrote:
-> This series:
+On Mon, 23 Jun 2025 18:29:00 +0800, Leo Wang wrote:
+> This series adds initial support for the Meta Clemente BMC based on the ASPEED AST2600 SoC.
 > 
-> Add support for Qualcomm's IQ-8275-evk board using QCS8275 SOC.
+> Patch 1 documents the compatible string.
+> Patch 2 adds the device tree for the board.
 > 
-> QCS8275 is another SoC under IQ8 series of SoCs. Unlike QCS8300
-> which has safety features, it doesn't have safety features which
-> affects thermal management.
+> Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
+> ---
+> Changes in v3:
+> - Modify leakage sensor to reflect current design.
+> - Link to v2: https://lore.kernel.org/r/20250621-add-support-for-meta-clemente-bmc-v2-0-6c5ef059149c@fii-foxconn.com
 > 
-> IQ8 EVK board is a single board computer (SBC) that supports various
-> industrial applications, including factory automation, industrial
-> robots, drones, edge AI boxes, machine vision, autonomous mobile
-> robots (AMRs), and industrial gateways.
+> Changes in v2:
+> - Fix patch 1/2 subject line to match dt-bindings convention.
+> - Reorder device tree nodes in patch 2/2 to follow upstream DTS style.
+> - Link to v1: https://lore.kernel.org/r/20250618-add-support-for-meta-clemente-bmc-v1-0-e5ca669ee47b@fii-foxconn.com
 > 
-> Below are detailed informations on IQ-8275-evk HW:
-> ------------------------------------------------------
-> QCS8275 SOM is stacked on top of IQ-8275-evk board.
-> On top of IQ-8275-evk board additional mezzanine boards can be stacked
-> in future.
-> IQ-8275-evk is single board supporting these peripherals:
->   - Storage: 1 × 128 GB UFS, micro-SD card, EEPROMs for MACs,
->     eMMC on mezzanine card
->   - Audio/Video, Camera & Display ports
->   - Connectivity: RJ45 2.5GbE, WLAN/Bluetooth, CAN/CAN-FD
->   - PCIe ports
->   - USB & UART ports
+> ---
+> Leo Wang (2):
+>       dt-bindings: arm: aspeed: add Meta Clemente board
+>       ARM: dts: aspeed: clemente: add Meta Clemente BMC
 > 
-> Currently basic features like DSPs, UFS and 'boot to shell' via
-> uart console are enabled.
+>  .../devicetree/bindings/arm/aspeed/aspeed.yaml     |    1 +
+>  arch/arm/boot/dts/aspeed/Makefile                  |    1 +
+>  .../dts/aspeed/aspeed-bmc-facebook-clemente.dts    | 1254 ++++++++++++++++++++
+>  3 files changed, 1256 insertions(+)
+> ---
+> base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+> change-id: 20250618-add-support-for-meta-clemente-bmc-941a469bc523
 > 
-> Umang Chheda (2):
->   dt-bindings: arm: qcom: Add bindings for IQ8 EVK board
->   arm64: dts: qcom: Add support for QCS8275 IQ8 EVK
-> 
->  .../devicetree/bindings/arm/qcom.yaml         |   7 +
->  arch/arm64/boot/dts/qcom/Makefile             |   1 +
->  .../boot/dts/qcom/qcs8275-iq-8275-evk.dts     | 241 ++++++++++++++++++
->  3 files changed, 249 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/qcs8275-iq-8275-evk.dts
-> 
+> Best regards,
 > --
-> 2.25.1
+> Leo Wang <leo.jt.wang@fii-foxconn.com>
 > 
 > 
 > 
@@ -109,16 +107,62 @@ make sure dt-schema is up to date:
 
 
 This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: tags/v6.16-rc1-5-g700a4c3f95a3 (exact match)
+ Base: using specified base-commit 52da431bf03b5506203bca27fe14a97895c80faf
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250623130420.3981916-1-umang.chheda@oss.qualcomm.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/aspeed/' for 20250623-add-support-for-meta-clemente-bmc-v3-0-c223ffcf46cf@fii-foxconn.com:
 
-arch/arm64/boot/dts/qcom/msm8916-samsung-gt58.dtb: panel@0 (samsung,lsl080al03): 'port' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/display/panel/samsung,s6d7aa0.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: timer (arm,armv7-timer): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/timer/arm,arch_timer.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /sdram@1e6e0000: failed to match any schema with compatible: ['aspeed,ast2600-sdram-edac', 'syscon']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: bus@1e600000 (aspeed,ast2600-ahbc): compatible: ['aspeed,ast2600-ahbc', 'syscon'] is too long
+	from schema $id: http://devicetree.org/schemas/bus/aspeed,ast2600-ahbc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: syscon@1e6e2000 (aspeed,ast2600-scu): 'smp-memram@180' does not match any of the regexes: '^interrupt-controller@[0-9a-f]+$', '^p2a-control@[0-9a-f]+$', '^pinctrl(@[0-9a-f]+)?$', '^pinctrl-[0-9]+$', '^silicon-id@[0-9a-f]+$'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed,ast2x00-scu.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/syscon@1e6e2000/smp-memram@180: failed to match any schema with compatible: ['aspeed,ast2600-smpmem']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/display@1e6e6000: failed to match any schema with compatible: ['aspeed,ast2600-gfx', 'syscon']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@1e6e9000 (aspeed,ast2600-adc0): 'interrupts' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@1e6e9100 (aspeed,ast2600-adc1): 'interrupts' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: crypto@1e6fa000 (aspeed,ast2600-acry): 'aspeed,ahbc' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/crypto/aspeed,ast2600-acry.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/timer@1e782000: failed to match any schema with compatible: ['aspeed,ast2600-timer']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: lpc@1e789000 (aspeed,ast2600-lpc-v2): reg-io-width: 4 is not of type 'object'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed-lpc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: lpc@1e789000 (aspeed,ast2600-lpc-v2): lpc-snoop@80: 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed-lpc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@24 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@28 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@2c (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@114 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/lpc@1e789000/lhc@a0: failed to match any schema with compatible: ['aspeed,ast2600-lhc']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/lpc@1e789000/ibt@140: failed to match any schema with compatible: ['aspeed,ast2600-ibt-bmc']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: sdc@1e740000 (aspeed,ast2600-sd-controller): sdhci@1e740100:compatible: ['aspeed,ast2600-sdhci', 'sdhci'] is too long
+	from schema $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: sdc@1e740000 (aspeed,ast2600-sd-controller): sdhci@1e740200:compatible: ['aspeed,ast2600-sdhci', 'sdhci'] is too long
+	from schema $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/sdc@1e740000/sdhci@1e740100: failed to match any schema with compatible: ['aspeed,ast2600-sdhci', 'sdhci']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/sdc@1e740000/sdhci@1e740200: failed to match any schema with compatible: ['aspeed,ast2600-sdhci', 'sdhci']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@34 (maxim,max1363): '#address-cells', '#size-cells', 'channel@0', 'channel@1', 'channel@2', 'channel@3' do not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/maxim,max1363.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@35 (maxim,max1363): '#address-cells', '#size-cells', 'channel@0', 'channel@1', 'channel@2', 'channel@3' do not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/maxim,max1363.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: fsi@1e79b000 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
+	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/fsi@1e79b000: failed to match any schema with compatible: ['aspeed,ast2600-fsi-master', 'fsi-master']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: fsi@1e79b100 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
+	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/fsi@1e79b100: failed to match any schema with compatible: ['aspeed,ast2600-fsi-master', 'fsi-master']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/dma-controller@1e79e000: failed to match any schema with compatible: ['aspeed,ast2600-udma']
+arch/arm/boot/dts/aspeed/aspeed-bmc-ampere-mtmitchell.dtb: fsi@1e79b100 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
+	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
 
 
 
