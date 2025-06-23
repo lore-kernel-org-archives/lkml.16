@@ -1,129 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6516679F2;
-	Mon, 23 Jun 2025 08:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5415B22E406
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750669088; cv=none; b=tYtdVOsIMJkl7Fum95VO30/DI1hDmg21/kqRJWBPZCBsDSTEyvwZtZI26uXTY5ioBaSOI32f1OsV6yAcCwrt1go6VVaBdJknfQZWcuf5y7Gi0p5A1jCyzNRLIS/lHSVnPSYIIfQY0rhcvbX6aIsNZ5F5rNFus0HdTTnrKotl9qk=
+	t=1750669184; cv=none; b=ErKP6G2MfvD65T0I+Yjym6GHioNZH4VH2j0Q9J2ygmt8H+9PR+NnOfrhenJoJWD6yYhCkiqty2MmAIv1kGkkZFgpkeAYRNXSXt5ffR9Q2aZRbHfr/KSDfOB4Emj/KuNLI0obCues59KzVujaL9HSE649RyGiT0/o/eICfRkeljI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750669088; c=relaxed/simple;
-	bh=GKBcbdFXtelcJamN7yeYxZa6oeTkseBIbNXavrEE34M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mZSre6WUTzA1jc8Gdb3sa5HK8kETe+45Gn+8mclUm2xqB+895gNk+hCwRKxaBqmuAio4u1H/vAkIDYObxvi1vJlcbyc3SrBJqWYK6j50l+1tTlvnTd+Mk8f7uwH8x4K6wGkASLMDMNZgJAT1aLgXpY9gbxj4SCoZU4+my2vZMz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3diSoL0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750669184; c=relaxed/simple;
+	bh=wRP/aCDs40nHhMlzv2gTY7KFcnDo0DyL6kLx7rpwynM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=lhq8H4m3n6d/+Arx/YIBgk8lN6MPTuu0xPHJrRYqm5YrhC6BzzxcbA/PZjMimaVZsfF/ml5ZKUsNoxVJ0Dw8DIUGGj+BNDs4CDdmroxeShVbGSKqrxUlvcJmgQhJ1Vi3YbLYDPMEaUBDQeLt2JZDaRoZSfG7dt8fL78h9brGuoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rkqfBOcn; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3diSoL0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D800CC4CEEA;
-	Mon, 23 Jun 2025 08:58:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750669087;
-	bh=GKBcbdFXtelcJamN7yeYxZa6oeTkseBIbNXavrEE34M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g3diSoL03mA8/7AfLCg64ovP09oup6HXb7nuUmKai18/zBrUSiE0DSLb1sBBXJ/V3
-	 T3CkT3FNadp8o+kHx3JT3GZyxzMLvvMiG525fVSJxo7p0P84+FCzFfPoFi4rNwlIka
-	 Gn+7ZcD0NtXA0xKPG5sQetAJ/c43U+Am8tbkjctYCnr3h9tXOdNhoXCpg90nK6iPYr
-	 puM+4fr76nPPOPxxNPqGAhD3c4TE4esJK+s55fsJ4Ca5imQmc4ewZ6LwBmZiFutqsJ
-	 Jczbg36RnhP9SdGed7YHHl1oKHUrxm0vlwrKwo+gME1bNCUCEhOn4dBlPc8wHfAazI
-	 Va5T9gv+Cdokw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uTd05-0000000009p-2vHQ;
-	Mon, 23 Jun 2025 10:58:02 +0200
-Date: Mon, 23 Jun 2025 10:58:01 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Gabor Juhos <j4g8y7@gmail.com>
-Cc: Georgi Djakov <djakov@kernel.org>,
-	Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>
-Subject: Re: [PATCH v2] interconnect: avoid memory allocation when
- 'icc_bw_lock' is held
-Message-ID: <aFkXGUgM9R_MmcB0@hovoldconsulting.com>
-References: <20250618-icc-bw-lockdep-v2-1-3223da346765@gmail.com>
- <aFPhdWoZDOrdrbQz@hovoldconsulting.com>
- <90bfae80-f3d3-4c1e-9a5c-9f8205bf90b9@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rkqfBOcn"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7398d70abbfso5377378b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750669182; x=1751273982; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wRP/aCDs40nHhMlzv2gTY7KFcnDo0DyL6kLx7rpwynM=;
+        b=rkqfBOcn1OVibTHHBRk4UJsP25EXe/invcu7rxZx7S7btTjUPX9GDmgvOiZVNrFJId
+         ACanEvY/TzIaXDoDvH/H2XAAGQn7nPwjVZEM2QXkoSv9+5cmuV4ztjIEGnUCDTPjYprh
+         QADNQSFaD5AuYO0LQfwGzu8SqUQQF+mLWUDOhMeAvkQTpHkBWEqBN5l4qnR1bOHrHL/x
+         6Wb8UMB2CCUYD27+t2NgHX5Cear358GjylGLaSJwCRbNpY1xhqd+jSBjX66tdQhkQvi6
+         9RCrEhonxhpQjRRDMHn5539WamtwQD0LmvXLr9CnMYG+eIwVDQktFMw+PPGZp8SHibjj
+         kXDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750669182; x=1751273982;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wRP/aCDs40nHhMlzv2gTY7KFcnDo0DyL6kLx7rpwynM=;
+        b=sx3HmHXnADXs/SyhkKOFFeYQGDpzUJw1+dUTWkCV56F9XtmesLwOFdKTCgtD2uEr2f
+         RNZ8QOciHB12+tsWp9i2xRGjBJ6KZn7c/f3Nhk0WcUVcU9GHtduQ7Sm5ausebQy0MifH
+         ItudERXVi+fn/6kUDiMTZOXUkpoUuwMaIckPtXIu6MY6K8FIHllcGo75sG8RZtR/C4z9
+         wPmmEMVKIt3dRRG3EnZ6hH+6X03oSWXD+w7oY+F2hiqZKZCAQ8WyxValAuwV2pzIrP25
+         MKDNqIMABzYQ6+9AhmalHRMkDLTpym1PoOBW8DTzF0gTzLO9TbCeqWw03TfOapR5hrXM
+         iN9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVy8ftHYZqmSC2d/1UY4RtNA22X1+r6gg9iEm8BJQkSvdDsTCp42kF/JdHaZq16j0O76JS41f8ivJ2eeqs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMVXA5cFtKsl/a5/i5LMl+cm2VRQ7AZNp/7IxbNq4HBesrxu7e
+	Huy0QVC5FvjpUzEc+cH622a6e+yvjK/fedRSqkOHmoLwzPrvWb8KXo4yDbk5pQ4D5zicnTq0KQ=
+	=
+X-Google-Smtp-Source: AGHT+IHSqBi6RNwuo3i9qr9yOK2igf1DEewVo3nmAP50cRcffvMwA/8lbPs5pCiblxEr5TrUXkRvhDyc
+X-Received: from pfug10.prod.google.com ([2002:a05:6a00:78a:b0:746:fd4c:1fcf])
+ (user=keyz job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:9007:b0:1f5:87dc:a315
+ with SMTP id adf61e73a8af0-22026d8cd24mr17192033637.12.1750669182681; Mon, 23
+ Jun 2025 01:59:42 -0700 (PDT)
+Date: Mon, 23 Jun 2025 16:59:37 +0800
+In-Reply-To: <20250620101906.3762866-1-keyz@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <90bfae80-f3d3-4c1e-9a5c-9f8205bf90b9@gmail.com>
+Mime-Version: 1.0
+References: <20250620101906.3762866-1-keyz@google.com>
+X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
+Message-ID: <20250623085937.894003-1-keyz@google.com>
+Subject: Re: [BUG] CoreSight: WARN_ON in coresight_disclaim_device_unlocked
+ due to register reset on CPU power-cycle
+From: Keita Morisaki <keyz@google.com>
+To: suzuki.poulose@arm.com
+Cc: alexander.shishkin@linux.intel.com, coresight@lists.linaro.org, 
+	ericchancf@google.com, james.clark@linaro.org, keyz@google.com, 
+	leo.yan@arm.com, linux-kernel@vger.kernel.org, mike.leach@linaro.org, 
+	yimingtseng@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-[ +CC: Bjorn ]
+> We have the ETM driver performing the save/restore of ETM context during
+> a CPUidle. This is only done when the ETM/ETE is described to be loosing
+> context over PM operation. If this is not done (via DT), the driver
+> doesn't do anything. This could be problematic. Could you try adding:
+>
+> "arm,coresight-loses-context-with-cpu"
+>
+>
+> property to the ETE nodes and see if it makes a difference ?
 
-On Thu, Jun 19, 2025 at 03:03:50PM +0200, Gabor Juhos wrote:
-> 2025. 06. 19. 12:07 keltezéssel, Johan Hovold írta:
-> > On Wed, Jun 18, 2025 at 09:58:31PM +0200, Gabor Juhos wrote:
-> >> The 'icc_bw_lock' mutex is introduced in commit af42269c3523
-> >> ("interconnect: Fix locking for runpm vs reclaim") in order
-> >> to decouple serialization of bw aggregation from codepaths
-> >> that require memory allocation.
-> >>
-> >> However commit d30f83d278a9 ("interconnect: core: Add dynamic
-> >> id allocation support") added a devm_kasprintf() call into a
-> >> path protected by the 'icc_bw_lock' which causes this lockdep
-> >> warning (at least on the IPQ9574 platform):
-> >>
-> >>     ======================================================
-> >>     WARNING: possible circular locking dependency detected
-> >>     6.15.0-next-20250529 #0 Not tainted
-> > 
-> >> Move the memory allocation part of the code outside of the protected
-> >> path to eliminate the warning, and add a note about why it is moved
-> >> to there. Also add memory allocation failure handling, while we are
-> >> at it.
-> >>
-> >> Fixes: d30f83d278a9 ("interconnect: core: Add dynamic id allocation support")
-> >> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
-> >> ---
-> >> Changes in v2:
-> >>   - move memory allocation outside of icc_lock
-> >>   - issue a warning and return without modifying the node name in case of
-> >>     memory allocation failure, and adjust the commit description
-> >>   - remove offered tags from Johan and Bryan
-> >>     Note: since I was not sure that that the added WARN_ON() is a substantial
-> >>     change or not, I have removed the offered tags intentionally to be on the
-> >>     safe side
-> > 
-> > Bah, what a mess (thanks for dropping the tags).
-> > 
-> > This dynamic id feature looks like a very ad-hoc and badly designed
-> > interface.
-> > 
-> > icc_node_add() should not be allocating memory in the first place as it
-> > is not designed to ever fail (e.g. does not return errors).
-> > 
-> > Generating the name could have been done as part of of
-> > icc_node_create_dyn() or yet another helper for the caller could have
-> > been added for that. In any case, it should be done before calling
-> > icc_node_add().
-> > 
-> > Perhaps the best minimal fix of the regression is to move the allocation
-> > into the two users of this interface. They already handle both dynamic
-> > and non-dynamic node allocation explicitly.
-> 
-> Ok, I will change the patch. Just to be clear, do you mean the
-> qcom_icc_rpmh_probe() and qcom_osm_l3_probe() functions, right?
+I tried this in our environment, and this worked well. The "arm,coresight-loses-context-with-cpu" property was what we needed.
+Thank you so much again for the swift response with the useful information!
 
-Yes, indeed.
-
-Apparently this is how it was done in the first six iterations of the
-series adding this and then the author was asked to generalise the name
-generation. That can still be done as a follow up (by the Qualcomm
-folks) after fixing the immediate issues:
-
-	https://lore.kernel.org/all/lm6gvcrnd2pcphex4pugxie7m47qlvrgvsvuf75w4uumwoouew@qcuvxeb3u72s
-
-> > Then whoever cares about this code can come up with a common interface
-> > for allocating the name (e.g. move it into icc_node_create_dyn() or add
-> > a new icc_node_init() helper or similar).
-
-Johan
+Best,
+Keita
