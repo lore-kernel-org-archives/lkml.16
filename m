@@ -1,106 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDACA18B0F;
-	Mon, 23 Jun 2025 16:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E505266EE7;
+	Mon, 23 Jun 2025 16:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750696119; cv=none; b=JiMrINj1ALXiKH/oZhQyAdd+uehnLSIGbF8C9q3eXzYOvq2nZ16g/1hvuEHq45UikUXYOxvLCPQMLPxAfk6V7QZqC2Im8m8ME8Rl31WTfdnlDxlUz5l2tFQ2zqYd+XaOMdzCJsrmT9B5s8bvDdbv/WpTEUe1d3g2nMEaGQDi9C4=
+	t=1750696227; cv=none; b=H/j4Z6rQGcaLZmVUmoEze/U46YPNb+yaqf3GE+umeurvi41dy6XvIOYwklzCw8LAKuDCZkL6Tr2xLM8ibVrmL6Iez4UMk7ovsbEzs5iBJkLcjKWD4laVdx40eSGdBdEFwmC1XNUoPcjakJX70fGd1+jajfV+qVU92uqdNiPcW9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750696119; c=relaxed/simple;
-	bh=0DOa81pP5da1DTjn3C0B3bD4iRl1Cit+BMz4BDo8ti0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UADsCESVvpdaz8PAa8S/GLl+dYk57Ncbo6c5EGWq6JT+eT0NluCI4XE8xcR8eMZChoTfgiO8JGtuMg0SRhiL9OVuK6LntQGEkfQ1kiA6eg64rH+wsGWodlZZ5qSeQWTURIOX6FKI7xO8bsP3p6l9v5WqAWvxJ70v+wDbd3wyXgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CwHGrypA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750696227; c=relaxed/simple;
+	bh=7ECXGsFUva9QNGfgrOK7NVROKgyu9NjU4V8G0ctTWa0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uI4wpkcPPHdoxvQIL2BrqRc6txoPk4nd31+pOJVFfLv99VC2GSF05p8RNnqGE1n90rq83+9JkgXonk1MhEoQrLRbuCBvXyx8C+1WLp550VmmCfX2Tii934H7dWvCD74dNncdCd3V1Pw3HkxIQcLjboKo/K8YCFkPqLdCMb7WfVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mrk9geb2; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CwHGrypA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F1D0C4CEEA;
-	Mon, 23 Jun 2025 16:28:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750696118;
-	bh=0DOa81pP5da1DTjn3C0B3bD4iRl1Cit+BMz4BDo8ti0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CwHGrypAWG1lqX2ZDIE7+pB+AfcGvGJS8GlvA/tLf5pAwQXHdFe6KhEJsbp6RWBr3
-	 5ZWp+jYOesdnmc5KduMMYcbQDaAWgrCn/jwmgWkD7I9ixwnwf38wfi1hkTwGNk1DKJ
-	 Z2Rcx3PK5FaWBHiIGLRfBW83XDnX5CleV2v/MYpVueEOuD/nrHZ1R2ZdFrVJizuoeR
-	 6Zdk/O+GSdSrG143NEfHjT+Lfd29cwCIbJ0tnQ3ibMyliA4Kb7hCjDg4ROcD7Qozpf
-	 SWH1DwBe5BGgcwObDhgQ3VCm8wEnGB+VOnJiUf7OEAng0XOOAOn2sBwdLchbgCYqkz
-	 HOuBbOdo3BxAQ==
-Date: Mon, 23 Jun 2025 17:28:33 +0100
-From: Simon Horman <horms@kernel.org>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Clark Wang <xiaoning.wang@nxp.com>,
-	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: Re: [PATCH net-next 1/3] net: enetc: change the statistics of ring
- to unsigned long type
-Message-ID: <20250623162833.GD506049@horms.kernel.org>
-References: <20250620102140.2020008-1-wei.fang@nxp.com>
- <20250620102140.2020008-2-wei.fang@nxp.com>
- <20250621095245.GA71935@horms.kernel.org>
- <PAXPR04MB851070E3D67D390B7A4114F88879A@PAXPR04MB8510.eurprd04.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mrk9geb2"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a5123c1533so2224775f8f.2;
+        Mon, 23 Jun 2025 09:30:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750696221; x=1751301021; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/0pqYb3tUeSBl/lIRawvuaSAg/yO32TdfmjQOsmwU1A=;
+        b=Mrk9geb26I492jESlDKfvsncZneNekxMJs/PzaHa+KS+OX6WB2Q+Az8NuEyzxr7Uke
+         CLFzOGScWz60AATUFN/Z3dFUmHE/a5040uDo2X2w2FCYXLTs3oq2boFec4Go54ZkGh10
+         MIRK0x6u0+p1AlR7pN5VXjdcIENjnj8H7vkEz3ygTRiJtW/RU6v1Idwc5+zc/noTjc1Z
+         AG7pT6SmlKL/YK7uP+Tbe4rQEZiYbuqQ0qIaCDADyJZ8UVrpia2Oraz0b6xq038iQs+X
+         xa4r59pRolo0xeG+Fge3+pUtI6TzaAzbRUZdSCEJT4eew94GIqkOJwPfk6//5c1rHSY9
+         UL1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750696221; x=1751301021;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/0pqYb3tUeSBl/lIRawvuaSAg/yO32TdfmjQOsmwU1A=;
+        b=DZQlz6TfQdryRQUEF+71JwZI5iEI8LOI2psEEHowwvMtqR9etF0WkQlgnCoHLY7rsp
+         /d/838zybQiCUWUDNOzJTGbmHmovMDvArSHravU3bHyl+yuqQ7V/1BX4cAp/eTpEgVUF
+         p7Xi2XvjlWadLVo6uPQDk3g60P0yDKCWBpY9y9UJmm5/aE7t4Vy8n/OrGDEhzEGSJbNi
+         K5Tp6zRfiVt7tjD5/kK/i75rg61hZlTk54qtHyK3GItLdyuAoMlKQToR30aCYvytZTAg
+         OUw6JC+yNdD9lexheHv9od6Tj9EG9FohVcv3KFmVAsJhd3nvMwlA8kozuTnBMCG/GgeH
+         9ttQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3LydlZ7Dl5nprVPrBNevA5E9soFeyNatVeiyD+NJbLpvSGiDdVDImO8C6mnOUtX6bLSi3+07scjY=@vger.kernel.org, AJvYcCUTAlY1N/JJeqWiFz8d8Yd3ap/jPLe897i4iVbqwEtnnFG7iE16MpqRJUlHjygdNk76Kp6j39UmMk4ge9Ul@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjJFKSnry90RQ2s0y7a5iZ1KbuZ7nSL/3ftdb7pJDcXGrPqkqH
+	b9dHcxt3dGOATAA8wKTVPARA54FLKXGfM0z3h3qjtWa1XW2VhjV2+w6j
+X-Gm-Gg: ASbGncviM/vyvFoCxQkS+0LRdKRMxnjiJgRcu+ggx/GN6CGrAFym/J0M2NEMY+4vzPl
+	TwSaai4B30BlseV08zTfNFnYHcYX9oVW0JsRao+MjFDz0QNn5s4o+9Sp367K9LfUyGyydGn5TdD
+	N/YEdw+WN5Fg7vaMvcozf3oy6WXXp6KbjhinCClizg2JCsi88UgTKKFPOoizvBZMwJHPP7vY8YU
+	Hz58ytWUpZdOB9Gq18VRgRnoEPfgV76XJPUPlyK5CDeWrGBu7zcJIFc8hTet25veAV/eFg57sNX
+	SeDPQxKcT3SVnncVTEBDB00QBJu6Thjm0vROA4pPswPYtazCj8LZa9fG8AyphgNJiTAVGxEaDzO
+	u
+X-Google-Smtp-Source: AGHT+IH3+aFym5Y1PuEfzW1Qu45WJVQwDF74ldMdWRBk4mcrR7j5xDv/KzXcBPxdWgZvfinY+6Vyzw==
+X-Received: by 2002:a05:6000:25f2:b0:3a4:f024:6717 with SMTP id ffacd0b85a97d-3a6d12e652bmr10478510f8f.53.1750696221241;
+        Mon, 23 Jun 2025 09:30:21 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.24])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45364708297sm116967885e9.35.2025.06.23.09.30.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 09:30:20 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: brgerst@gmail.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	ubizjak@gmail.com
+Cc: x86@kernel.org,
+	hpa@zytor.com,
+	linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/3] x86/boot: Supply boot_param in rdi instead of rsi from startup_64()
+Date: Mon, 23 Jun 2025 16:29:34 +0000
+Message-ID: <20250623162935.681-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <CAMzpN2jBOW3PVJQLvua=knQNu_1mZ6RZYi8JvNenFd5t30UC1Q@mail.gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR04MB851070E3D67D390B7A4114F88879A@PAXPR04MB8510.eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 23, 2025 at 01:49:59AM +0000, Wei Fang wrote:
-> > >  struct enetc_ring_stats {
-> > > -	unsigned int packets;
-> > > -	unsigned int bytes;
-> > > -	unsigned int rx_alloc_errs;
-> > > -	unsigned int xdp_drops;
-> > > -	unsigned int xdp_tx;
-> > > -	unsigned int xdp_tx_drops;
-> > > -	unsigned int xdp_redirect;
-> > > -	unsigned int xdp_redirect_failures;
-> > > -	unsigned int recycles;
-> > > -	unsigned int recycle_failures;
-> > > -	unsigned int win_drop;
-> > > +	unsigned long packets;
-> > > +	unsigned long bytes;
-> > > +	unsigned long rx_alloc_errs;
-> > > +	unsigned long xdp_drops;
-> > > +	unsigned long xdp_tx;
-> > > +	unsigned long xdp_tx_drops;
-> > > +	unsigned long xdp_redirect;
-> > > +	unsigned long xdp_redirect_failures;
-> > > +	unsigned long recycles;
-> > > +	unsigned long recycle_failures;
-> > > +	unsigned long win_drop;
-> > >  };
-> > 
-> > Hi Wei fang,
-> > 
-> > If the desire is for an unsigned 64 bit integer, then I think either u64 or unsigned
-> > long long would be good choices.
-> > 
-> > unsigned long may be 64bit or 32bit depending on the platform.
-> 
-> The use of unsigned long is to keep it consistent with the statistical
-> value type in struct net_device_stats. Because some statistics in
-> net_device_stats come from enetc_ring_stats.
-> 
-> #define NET_DEV_STAT(FIELD)			\
-> 	union {					\
-> 		unsigned long FIELD;		\
-> 		atomic_long_t __##FIELD;	\
-> 	}
+> This was never intended to conform to the C ABI, why is it necessary
+> to change it?
 
-Thanks, I understand. But in this case I think the patch description could
-be reworded - unsigned int and unsigned long are the same thing on some
-systems, and on such systems there is no overflow advantage of one over the
-other.
+Technically speaking, you are right, however that doesn't mean we can put something where
+ever we like. We came from C code which is bootloader and we end up to C code, so we should 
+comply the ABI here too.
+
+> Also, you cannot break this up into three patches.  Every patch must
+> be fully functional so that git bisect will work.
+
+Thanks for the tip. I will do next time.
