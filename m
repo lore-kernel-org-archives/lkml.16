@@ -1,152 +1,240 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013024.outbound.protection.outlook.com [40.107.162.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A051DDD1;
-	Mon, 23 Jun 2025 03:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750647895; cv=none; b=BFlEyi4PjXnUm0sS1t5eUPNecTtEP03vOQl/CIKuHrZvnGYt7ZZHD2o5oopgcf1W2JccuGQJjtd5cqDKnqYbn81Eaah8MVt8DMDUirgWJ0UdLql2shkkJnbJDkTx1d66U2yGEJJ4cqQpFyIIj/NcNt0kcQvoO87sSdVc5Tt98eE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750647895; c=relaxed/simple;
-	bh=a648IPzo65DASVTu/mn0R4z0gLCIMWV2LgAjH1BnKUg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hjyyzjo2orI+neGiR23txGxoTVF/gPYRxRg60mmQzrSvu7SXQtAxAK0l4wOpNqBHTCywtAyk0c7ReekC6xDj4g0qYJYCz2bglrtTzoIorN5xNDUORroNFOIDVMg/dwAw6TzmzM8ha4YqI9UzcFHXp4JM8CuPtm3dxQFTMoaiZdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nKz+Mdq1; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C738F1DDD1
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 03:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.24
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750647911; cv=fail; b=mqCYpH0xQAWtEr6IUDV70qA5sAH6RFsgB8zH528lYSMr6A4FgICejcowPpGY2JuiTAKEmfS5hJNZTAYYWmIZBazxQlw48Dsfje6pxTvVwY/qNf/9kgqSBT3u9Fp77YcbaHTqe1wQD1SMj1bfjzYEruj/XA8HE6nYvd+eLrQoHwc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750647911; c=relaxed/simple;
+	bh=o6UQ0yC1YgwzpIRr+ly4rF0s+d5cg85bYPBh4YQZxaA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=SooXyGFPOM91fhojao+mPQGBUGEpYkKFlYf6DLgmh6EYr/1wiEf6HQV8SrAJ5IH5sRbLXyBm+ZIAeSQwyXDWGI3qU7/dIwp+CBat67cxjeYu3NPJbTjL4njb8zDz/lSVPRUjTF+JZv0JqvSWuhsJv0vhmwCSz5lErP3hZlwu3oo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Vz7ny5VQ; arc=fail smtp.client-ip=40.107.162.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nKz+Mdq1"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750647883; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=mcNkuNTmzIQu0HBmtmC8P6vqmaUZwx5CS6edDfV1nks=;
-	b=nKz+Mdq1XqmGBwQarPf/RmT0yi6yN3mQw8rZ60OSWMB2P6aHGv41Sr52nRBoFp57RLhi6wTPBwsUAgloKD7hbflmpysrJ1AfY0FbkVm7fpm5UqebBB6okiPmsuR8dELoE27P4EP9ZQDBKcW6NUIirR1uFE5/sMLUFRKyzQeiIcs=
-Received: from 30.246.181.6(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WeSBcWA_1750647880 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 23 Jun 2025 11:04:41 +0800
-Message-ID: <c0cbdd85-9702-40ab-bc97-b51b02b9fc89@linux.alibaba.com>
-Date: Mon, 23 Jun 2025 11:04:40 +0800
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Vz7ny5VQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uEYqZATZUFt7Dgceb+73x8kqw3bpvEkfkl4KwZOIC0jbWJJZ2D06W85pi1BZx3TdlLoP5N0QfeSSJmWgiK76DnOfwxyjQuVzcMf2REVllTYPLezxDh5yelF/Qd26hsCCsE5adP5gk9S5PbppA2+xFmyMuDy8IinmjFu++l/QSmuqc2x8YFu2LzZQIBYFzW4Bb7bqLZaQDVT1NHEoEkGFuhh9b/A75XKRxBB9ucilcWVODvLpAmxiHg1W+fj91s7qcAHbblOrbllCKnDXtvIaB9LRw0qAAIu8ulRFOHCMednTJ/wa0lf1BWkQKBJoN9mcKCDYQQOmoAcbbwUqN2oexA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BVh+bSJIsLThqu+qI3c7wVpGiY1j+ZbugVrPq+6/GRE=;
+ b=Abp/vHxA/af405szut3bSZGF1USP7zCrcKXhRfKPeI5T0N0rDYLakHu9Sw7cf/nWiWZE2sV5x1/VaG/9zI0vuqNnznEMcT5cJJ8GWviE2tHzgZhbA44/0qj4+JW9xNd3MYSyqhVLpICUGQID0JlsnG4ORyFw3ZRZGUuQaP6aFd2iU9z2kPAVlwiuRbjEkFWuqbPlvMMLoV9QrJAWYsuOMoydMs6hmx9G0PVvFl49RalSPvw7C0fhAMmMqwnemV59StLzicwkO4wVdZjt3xTNCDFrdL3uc+GeM8QbRUC27U5gzGH5dpWTM8U6NsyTI+lXtsMmvpQRuBUOlurWH5ziiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BVh+bSJIsLThqu+qI3c7wVpGiY1j+ZbugVrPq+6/GRE=;
+ b=Vz7ny5VQVc3+xRl4j2xY4en/zJsoYOZfcbNpeKYL22DupaNH15a8NZGusySVkCXuRZ2GhjWN4oGPq0B6904DhfSZvE56Cc/2DZNL1GBJ1nPaljwZ7stvPz8fmsx2P7yToI16StRj0rTDoBIGh1E3EledauRA5/Xo6HHYTL/aYCCqJ5RjVNTT8VI1B2FyhmjBWXVAa1HFf7sXZO7YsqLqeJFbi3MXf+OZ3q7nQt3cFFvufyi7dC46m/2U12CL8PFi+m31OUukR6o0Px2gJr1fDMQidhF5CL5GPCOtN5bK6ficnCfVXGpPepLqNXlY9el/Z3WlUSGLiJdZEja+yv5zOg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
+ by AM0PR04MB7044.eurprd04.prod.outlook.com (2603:10a6:208:191::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Mon, 23 Jun
+ 2025 03:05:07 +0000
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90%5]) with mapi id 15.20.8857.026; Mon, 23 Jun 2025
+ 03:05:07 +0000
+Message-ID: <6ed34611-d2fe-4c9c-8b00-0939ac407e07@nxp.com>
+Date: Mon, 23 Jun 2025 11:06:37 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 3/5] drm/mxsfb: put the bridge returned by
+ drm_bridge_chain_get_first_bridge()
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>
+Cc: Hui Pu <Hui.Pu@gehealthcare.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+References: <20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-v8-0-0321845fcafb@bootlin.com>
+ <20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-v8-3-0321845fcafb@bootlin.com>
+From: Liu Ying <victor.liu@nxp.com>
+Content-Language: en-US
+In-Reply-To: <20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-v8-3-0321845fcafb@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR02CA0013.apcprd02.prod.outlook.com
+ (2603:1096:3:17::25) To AM7PR04MB7046.eurprd04.prod.outlook.com
+ (2603:10a6:20b:113::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Lukas Wunner <lukas@wunner.de>, rostedt@goodmis.org
-Cc: rostedt@goodmis.org, linux-pci@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, helgaas@kernel.org, bhelgaas@google.com,
- tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
- davem@davemloft.net, anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
- peterz@infradead.org, tianruidong@linux.alibaba.com
-References: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
- <6b4d1351-805e-c8fc-3484-11c0ec466cf0@linux.intel.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <6b4d1351-805e-c8fc-3484-11c0ec466cf0@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|AM0PR04MB7044:EE_
+X-MS-Office365-Filtering-Correlation-Id: bfc9418f-8489-4585-d659-08ddb202c1e4
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?SWRYYWpsek9wQTl4Y2NucExSN1JaYVA1ejFVT0xxN1MvNFZVRERjekVBMlla?=
+ =?utf-8?B?djE4SE9IUktYNkN0Wkd4TlJNcWxDcndSdVRic1JETHdNRmRCcUs4RmtoTGVW?=
+ =?utf-8?B?aGlxcExVeWJxVkxyRENYRlFsMndmOVhzZXJMNFp2S3FTVjZkV0tGNjZqbi9K?=
+ =?utf-8?B?SjFnbEQwb1VDVzVJZ09tTGxEdXh6eENKN3R3QVN5MUxiWThNclVtVHI0cTA5?=
+ =?utf-8?B?bVBZdDBaSUV2anQvdXdrSjRCVzlTSEZEalloZFpBd2NtbVc1cHdRS1NGMDhv?=
+ =?utf-8?B?SjBTT3NNOG9WeFF4Y05oTlFIak10c094SjIwZDkzZk95dDlSUkJ6dVVaZTV4?=
+ =?utf-8?B?cDZ3RC9PN1NnU0xGNWZpd2hjcENlLzU4WWVTd09naFNUdUZlMzY4UGVWcnd2?=
+ =?utf-8?B?U0pkTG9tZmVJLytMVUxwZldkRjlDeU1yWnRsRjRtdllvWGtiTzBnbmhnSE9S?=
+ =?utf-8?B?Qks5VEZMeXBRcTlTWFk3MHFUck45Z0ZtZlVGZUVZRnAybGNpSC9VM0FhRTNu?=
+ =?utf-8?B?ZUhHU013VmZzeFVBVnVoUHVPTU1aamJXNlpMdGZNQW83bEJpYkw2aC9RTE02?=
+ =?utf-8?B?eXQ4djV3NEdRalA0dXRlYW1ieUxMckpQWTlOWmV2VUhVNTVPRHRyUjZHV2xq?=
+ =?utf-8?B?U0lRRWVJNjRXWEl0cXF4OFhDK2FmMXovYWFmMjJRbHBVQTRKNllhUWM3VVJX?=
+ =?utf-8?B?c09odno0amtyN2t1dDYxUUY0NFEzS3lkK1NWV2NveVA2OVVZL3JJbTZXNTc2?=
+ =?utf-8?B?eDFLUHpyTFlEWTArZS9NK01yZWsvQ2E0YkRTbndtZzhDaUFDUlMxd1YxZU1z?=
+ =?utf-8?B?RURuZVd0ZGR6WHd2KytWRmJmVTBmSkQ5RWdOeU9RTHJzMlFPUTIvQmNQL2JD?=
+ =?utf-8?B?Qlo3aTVnd2pUeVNrNGxaTGdYR0NZRXJaci9ub0JvWkZQbWlweGZyRDV6QXBw?=
+ =?utf-8?B?ZU5maUhjZHVNUnpjMld0OVVBUDVPbHdIQ2xSdVZGSFhKMHpSM0ZqeUZySFlR?=
+ =?utf-8?B?ZUwzY0FQVHhWUWszQlU5SGU0UldleGMxeEN5K1E2Ly9VZjNGZDBadkpSTlJj?=
+ =?utf-8?B?S1F5RVV5S281SVhRc29FOERtZjBIRk1ENUQ3SG5mYWEvczZtNTExd1owK3ds?=
+ =?utf-8?B?cm9HTlJ0cVMwQnZZT1M2Q2I4blBwdGJDYlM0dFI2M0lscWtmQ1RVQk5UZmtq?=
+ =?utf-8?B?WFl1ZGtyV0ZSRzE1MWZZblB4eERUSVllTWlmRXVoRERpby9ONTNqaW4zTFF3?=
+ =?utf-8?B?MUE5VmowRU5YVklyL3BnMjBrbzh4dHdITW5kb2s2Q2RDTWNyWStuU1ZUdndX?=
+ =?utf-8?B?N1pGNVRrV0tTaUFhQUoraXpETzU4cXpCT2FHK3c2cWR4U0Z2Z0Q2bXBhbFFu?=
+ =?utf-8?B?UjdOVDR2aDJvM0lVZjl2OUpYdG8yZ21MTDdmMUFpUlhJNnFDdUdURXZLZFdL?=
+ =?utf-8?B?ZG1ycU5lU3BVdlJHNTc1N1pyUVBFN21pdGdFaUhDTTd6VzZCOHljRG5NbEI4?=
+ =?utf-8?B?RHdtSWZqN3FhbzBnam9OWnpSVm5GVnJJaWRyMXVsZER0UVpJRXA3alVmN2R6?=
+ =?utf-8?B?Y3F4cGdSaWVKY1NQQk9nMWtMMTN0Z0VkTUpod0FEand1RXNkVlNJR1dzQ3Yx?=
+ =?utf-8?B?WTJ0SHlmbTNPWU1wY0VUb3NrbXhmZ3l4VzVkZFdCcTdDSFdEZ2treGJhQlRP?=
+ =?utf-8?B?UVdRT2E1V1A0TW9ZQktaUHU2VmkwUERZcnBlYlVPaExzQXgzelpjZmlkTWJm?=
+ =?utf-8?B?VSthT1EwMHNTZTF0MGxZQnoxVkwydlNGbFkzVnVmK3Q2cGd0S204TFFCVzhj?=
+ =?utf-8?B?bGtoWWdVR3NUTUZmMHJVazRGTFg5UHQvVGgybjBTYkFNZlNyVzFVeUM1WDlD?=
+ =?utf-8?B?WXJmUEhCaWF4QkxsRGl6NkpvcVlZZUhROVFIV2VaUC9xWm55cXlRQkZkWHVa?=
+ =?utf-8?B?SXpoWjJUYUg5NWdPZ3g1RmgzSE5yNS9sQmQ1Q3UvSWlYcjNoaHFqNmJxdFVK?=
+ =?utf-8?B?eGV5ZUtlRm5RPT0=?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?dEc3WlZhTWVTSzJCWEQ3K0kzVXQ0cEdDb2VieEpaRmozaVNRTEtQeldwQWdj?=
+ =?utf-8?B?M2Z5dkRod2U3R2hKeHpSOHR6aGl4Z0t0WjJCV3ZCKzd1M0htYm80akRDNm11?=
+ =?utf-8?B?bXNyY1Z6eitZSkFSS2wvNW52SElLOUswZVI3aitMQjFaNVdwTlRKUXgvZUhr?=
+ =?utf-8?B?ZXdKRWRKRjMvWTRKYlpvWm9oSldyR3ZuM0JBTEFNbUdkUDdrV01rZkhHOXFH?=
+ =?utf-8?B?WWZocVFKdk4zUFROTWJ1YVdUQUw3OU5RTjFzMzFnV3pibjdGRjNmbzl4Zzk3?=
+ =?utf-8?B?dFBsR1FhNTB5eTVxOFNjSzNUb2x2Wnp5b28zTWJQdnRKdzAyNGZhTUxzSHZY?=
+ =?utf-8?B?TUsrL0VFbHBaMjcvRHU5NndtQnFGOVEyUlYxM0dEbGZRQ0JpZW1FVE0xc05N?=
+ =?utf-8?B?ZHViK3JCTGpSelpIeGFCeWRTUVFOV0svemlFb1FibzNLOHNUdGo5UWI0dFk0?=
+ =?utf-8?B?WEYrblV0aTVVZjJ3WjJMNFlZcXk3aWJEc2hRNFNQMktiaVNRRmo4a25HLzJS?=
+ =?utf-8?B?UFpQUnRjeTFBQ3JZNE01ZEdKRHYvVU1mQTJ5L09jM1p6dDNtYkZBWkZMNG91?=
+ =?utf-8?B?SHVrelhEQm9VTFhMUlowZkFoVzVGQkljSmVlenkwUWdpeVRFWklXWmw0WVZF?=
+ =?utf-8?B?V1hLSG42dkFRZWR2U29rTVc4WmdoTnNtNEVmSVk0czIrRlZVL2tOTVErek0r?=
+ =?utf-8?B?cFlXb2hOSkZQZ0pZTWp5NXM3Rmx5Z3lQTEFjbmZiRXNPeWhCanYrVWRBdHhR?=
+ =?utf-8?B?aXNPdFNOU2wrQ1B3YnV3eGphMW4vKzlRNzR3RWtlREd4N285S1lQcXUzRzlp?=
+ =?utf-8?B?S1dGZGxZYlM1eHlTdEVuQlJiNitUZFJmSXVzS1lHOUpVRWlxdElaR0dWd1V2?=
+ =?utf-8?B?cnEvWkpQQW1tYWlpRHVRZTBTMG1BaGF2VURiazFnbFZBN3Z5clpTRy9Iajdi?=
+ =?utf-8?B?anN2NEZ5YkJmYW1hK2JPd3RRZjU4ckkwMjZOVE03YTZ6UmNjcjl5bTloUEpi?=
+ =?utf-8?B?SGdEc2cxV01EVHZuZXBxc3Z6cDhpbGt2TUp3NWM3VStZTFY4aWtCbkQydjlU?=
+ =?utf-8?B?WGU4VFlZejZDMktkTW5acnVWK3doR1ptTTluM21FWmpjSzJmODJMNkE4Yi91?=
+ =?utf-8?B?cUxYQU4wc2VPNXBCMXlPOXFhMHROdjk3YXUybTlOL2E4ZUI4Mmw4QkE5cjZZ?=
+ =?utf-8?B?dkZmWHlwRUhRRzRjaDlvSDkvYUVQWWprZEFXc2VjeFNvY1N4R3k4QXpKUHZK?=
+ =?utf-8?B?YXVzSDJGRTd2NUJiWGNETjY0cWNpUHdoRm9Na2NQbU5oMnlsY0JFTGh0cXQ2?=
+ =?utf-8?B?MkhXYWY2K0lUa1kzeHB4VXZscHJVbHdTSmN3bG5VV2pINkRleks4MVJVSW1U?=
+ =?utf-8?B?SkR1TU9rRk1tV1JGa0ZzZWhPQm9yMkZtMW85TGY5Yk5IcXpjYTAxbnNJWFdo?=
+ =?utf-8?B?MytROHYwTDdOQXFTZlI2NktGOFcwY2tCWFFQbzZKekF3NUh1TmVDOU1Jalli?=
+ =?utf-8?B?Tng0bS9nY2lqS0xieGk4dENZRTNTcFlyMldaTG1wdHY1WHZaZ3ErZlNTa2Fn?=
+ =?utf-8?B?a1pVajBrTHI4TzU4RHN5bk5Jc21PTGMyM1BURVYvNURzYUNXQ0FUNzFyVkdh?=
+ =?utf-8?B?ZVpvS3k4cG9menFjb2F4VEloWjVmNTNYNzlvNjM5ZE12OUVib0twclJtWU5W?=
+ =?utf-8?B?OHBDb2V0RTc5U2R0OU0rVTJ3NlJEZFVybGFrbUx3Q3BnVnRva1g2ZFpyaXlz?=
+ =?utf-8?B?WlZGejVLSEFZWm9KY2U3UzZoeUFMd3lLL3VmTFRaQkZUNml3R2tKYnF6Mk1o?=
+ =?utf-8?B?YjVaRTNMb3R1YitVaUdGWG9IQ21XT0VKMWVFcExtZm1pK2NKSnhWZUFFbmJa?=
+ =?utf-8?B?ZEI0eEc0cGdQZjU2R1o2ZzBWNFQ3NXB3Vm92MzRRQzhxMUhLdnE3Z3loTFdF?=
+ =?utf-8?B?MFQ4QUJOdEFBcXlYYWtFZkYwMUR1RmVIbjBJSEx0UnhHbjBhYkVzZzBrdGh5?=
+ =?utf-8?B?MGVZYWxiN21aRVRBNHFVYlZSSVIvKythd25BeEdVRy8wRTE5REdEM2s2bHFI?=
+ =?utf-8?B?bnYwdEhpMWFWaHpieDA1QTRHbWQyc0VoL1pqNzRxT1dCYU5iUDVFOGRBaU5M?=
+ =?utf-8?Q?H7pIqdfYx3vE8LCACW7aI0OhQ?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bfc9418f-8489-4585-d659-08ddb202c1e4
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 03:05:07.1568
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1E5RVOCI5DXNr9/u1dqpIi8hoXf4EF0eIhLX8EEpCGaZVWdBB06dXh73v/8I8a48UvYMVXlwjHzYseA+cfJQ3g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7044
 
-
-
-在 2025/6/2 14:30, Ilpo Järvinen 写道:
-> On Mon, 12 May 2025, Shuai Xue wrote:
+On 06/21/2025, Luca Ceresoli wrote:
+> The bridge returned by drm_bridge_chain_get_first_bridge() is
+> refcounted. Put it when done. Use a scope-based free action to catch all
+> the code paths.
 > 
->> Hotplug events are critical indicators for analyzing hardware health,
->> particularly in AI supercomputers where surprise link downs can
->> significantly impact system performance and reliability.
->>
->> To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
->> tracepoint for hotplug event to help healthy check, and generate
->> tracepoints for pcie hotplug event. Add enum pci_hotplug_event in
->> include/uapi/linux/pci.h so applications like rasdaemon can register
->> tracepoint event handlers for it.
->>
->> The output like below:
->>
->> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
->> $ cat /sys/kernel/debug/tracing/trace_pipe
->>      <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
->>
->>      <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
->>
->> Suggested-by: Lukas Wunner <lukas@wunner.de>
->> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->> Reviewed-by: Lukas Wunner <lukas@wunner.de>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> ---
->> changes since v7:
->> - replace the TRACE_INCLUDE_PATH to avoid macro conflict per Steven
->> - pick up Reviewed-by from Lukas Wunner
->> ---
->>   drivers/pci/hotplug/Makefile      |  3 ++
->>   drivers/pci/hotplug/pciehp_ctrl.c | 33 ++++++++++++---
->>   drivers/pci/hotplug/trace.h       | 68 +++++++++++++++++++++++++++++++
->>   include/uapi/linux/pci.h          |  7 ++++
->>   4 files changed, 105 insertions(+), 6 deletions(-)
->>   create mode 100644 drivers/pci/hotplug/trace.h
->>
->> diff --git a/drivers/pci/hotplug/Makefile b/drivers/pci/hotplug/Makefile
->> index 40aaf31fe338..a1a9d1e98962 100644
->> --- a/drivers/pci/hotplug/Makefile
->> +++ b/drivers/pci/hotplug/Makefile
->> @@ -3,6 +3,9 @@
->>   # Makefile for the Linux kernel pci hotplug controller drivers.
->>   #
->>   
->> +# define_trace.h needs to know how to find our header
->> +CFLAGS_pciehp_ctrl.o				:= -I$(src)
->> +
->>   obj-$(CONFIG_HOTPLUG_PCI)		+= pci_hotplug.o
->>   obj-$(CONFIG_HOTPLUG_PCI_COMPAQ)	+= cpqphp.o
->>   obj-$(CONFIG_HOTPLUG_PCI_IBM)		+= ibmphp.o
->> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
->> index d603a7aa7483..f9beb4d3a9b8 100644
->> --- a/drivers/pci/hotplug/pciehp_ctrl.c
->> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
->> @@ -23,6 +23,9 @@
->>   #include "../pci.h"
->>   #include "pciehp.h"
->>   
->> +#define CREATE_TRACE_POINTS
->> +#include "trace.h"
+> Reviewed-by: Maxime Ripard <mripard@kernel.org>
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> ---
 > 
-> Hi,
+> This patch was added in v7.
+> ---
+>  drivers/gpu/drm/mxsfb/lcdif_kms.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> Instead of spreading tracepoint creating into subdriver code like this,
-> should we place it into one place, e.g., drivers/pci/pci-trace.c (which is
-> what I seem to have used in my yet to be submitted patch that adds
-> tracepoints into bwctrl link speed events)?
-> 
->> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
->> new file mode 100644
->> index 000000000000..21329c198019
->> --- /dev/null
->> +++ b/drivers/pci/hotplug/trace.h
-> 
-> Perhaps in include/trace/events/pci.h (or
-> include/trace/events/pci-hotplug.h)?
-> 
-> I don't know what is the general rule having them inside drivers/ vs
-> include/trace/events, Documentation/trace/tracepoints.rst only mentions
-> the latter, but there seems to be plenty under drivers/ too.
+> diff --git a/drivers/gpu/drm/mxsfb/lcdif_kms.c b/drivers/gpu/drm/mxsfb/lcdif_kms.c
+> index dbd42cc1da87f82ef9cd4ccc70cdecbe56035174..21311cf5efee7d26c80316bffe80dd2bfed02238 100644
+> --- a/drivers/gpu/drm/mxsfb/lcdif_kms.c
+> +++ b/drivers/gpu/drm/mxsfb/lcdif_kms.c
+> @@ -433,7 +433,6 @@ static int lcdif_crtc_atomic_check(struct drm_crtc *crtc,
+>  	struct drm_connector *connector;
+>  	struct drm_encoder *encoder;
+>  	struct drm_bridge_state *bridge_state;
+> -	struct drm_bridge *bridge;
+>  	u32 bus_format, bus_flags;
+>  	bool format_set = false, flags_set = false;
+>  	int ret, i;
+> @@ -448,6 +447,8 @@ static int lcdif_crtc_atomic_check(struct drm_crtc *crtc,
+>  
+>  	/* Try to find consistent bus format and flags across first bridges. */
+>  	for_each_new_connector_in_state(state, connector, connector_state, i) {
+> +		struct drm_bridge *bridge __free(drm_bridge_put) = NULL;
+> +
+>  		if (!connector_state->crtc)
+>  			continue;
+
+To avoid the unnecessary cleanup for !connector_state->crtc, I would write:
+
+-8<-
+--- a/drivers/gpu/drm/mxsfb/lcdif_kms.c
++++ b/drivers/gpu/drm/mxsfb/lcdif_kms.c
+@@ -433,7 +433,6 @@ static int lcdif_crtc_atomic_check(struct drm_crtc *crtc,
+        struct drm_connector *connector;
+        struct drm_encoder *encoder;
+        struct drm_bridge_state *bridge_state;
+-       struct drm_bridge *bridge;
+        u32 bus_format, bus_flags;
+        bool format_set = false, flags_set = false;
+        int ret, i;
+@@ -453,7 +452,8 @@ static int lcdif_crtc_atomic_check(struct drm_crtc *crtc,
+ 
+                encoder = connector_state->best_encoder;
+ 
+-               bridge = drm_bridge_chain_get_first_bridge(encoder);
++               struct drm_bridge *bridge __free(drm_bridge_put) =
++                               drm_bridge_chain_get_first_bridge(encoder);
+                if (!bridge)
+                        continue;
+-8<-
+
+>  
 > 
 
-Hi, Ilpo,
-
-I don't know either.
-
-I think it is tracepoint stuff and it is up to @Steve.
-@Steve, which way do you prefer?
-
-Thanks for help.
-
-Best Regards,
-Shuai
-
-
+-- 
+Regards,
+Liu Ying
