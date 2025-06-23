@@ -1,97 +1,126 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E505266EE7;
-	Mon, 23 Jun 2025 16:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C08C188735
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750696227; cv=none; b=H/j4Z6rQGcaLZmVUmoEze/U46YPNb+yaqf3GE+umeurvi41dy6XvIOYwklzCw8LAKuDCZkL6Tr2xLM8ibVrmL6Iez4UMk7ovsbEzs5iBJkLcjKWD4laVdx40eSGdBdEFwmC1XNUoPcjakJX70fGd1+jajfV+qVU92uqdNiPcW9I=
+	t=1750696298; cv=none; b=XwORPOWL+Hw3Lu7gyAEmsZBtomxyPWQDNzJNFeH7JeyHiqUWLhX/P9nKOjwmD2HQPCVL+00S1yYYOchuhxM5xGR8wX3HzO+qX5dzonwSkrZw1/WQBzaXHRiEFLTMls0vEyjMyQwVhvVOu/RNf9WXdUJXW/OWGL2Zr/S45/9FNes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750696227; c=relaxed/simple;
-	bh=7ECXGsFUva9QNGfgrOK7NVROKgyu9NjU4V8G0ctTWa0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uI4wpkcPPHdoxvQIL2BrqRc6txoPk4nd31+pOJVFfLv99VC2GSF05p8RNnqGE1n90rq83+9JkgXonk1MhEoQrLRbuCBvXyx8C+1WLp550VmmCfX2Tii934H7dWvCD74dNncdCd3V1Pw3HkxIQcLjboKo/K8YCFkPqLdCMb7WfVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mrk9geb2; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750696298; c=relaxed/simple;
+	bh=8KsekKS5aRcVIvVUBtntQtfWkhVyoUlhEiE174K9srA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NTO8CFJpN/RopgTzAqaOR4dsJHQVoRN6LxVpPBHGPW0OiIglBiWnGNxWZE2Kfud/UmrTNyOpfJuMT4maumiT7tNYUTw+w+zjKcwC7THHhQaIKbEvq8c4mRZhuQdVESkL+LpQjHxNX1QJblwRZSeq4wcsS4XLpTcfyghPmfuwh3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qHnlrAH6; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mrk9geb2"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a5123c1533so2224775f8f.2;
-        Mon, 23 Jun 2025 09:30:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qHnlrAH6"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a536ecbf6fso2471564f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:31:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750696221; x=1751301021; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/0pqYb3tUeSBl/lIRawvuaSAg/yO32TdfmjQOsmwU1A=;
-        b=Mrk9geb26I492jESlDKfvsncZneNekxMJs/PzaHa+KS+OX6WB2Q+Az8NuEyzxr7Uke
-         CLFzOGScWz60AATUFN/Z3dFUmHE/a5040uDo2X2w2FCYXLTs3oq2boFec4Go54ZkGh10
-         MIRK0x6u0+p1AlR7pN5VXjdcIENjnj8H7vkEz3ygTRiJtW/RU6v1Idwc5+zc/noTjc1Z
-         AG7pT6SmlKL/YK7uP+Tbe4rQEZiYbuqQ0qIaCDADyJZ8UVrpia2Oraz0b6xq038iQs+X
-         xa4r59pRolo0xeG+Fge3+pUtI6TzaAzbRUZdSCEJT4eew94GIqkOJwPfk6//5c1rHSY9
-         UL1w==
+        d=linaro.org; s=google; t=1750696294; x=1751301094; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0j8AmL2vgCPrh67szF4XCY9cmGpFOza5ajW2zlzTb44=;
+        b=qHnlrAH65AWvyLf+ffRGDHFQlQ8UXXXXodW7rITXKEKgsBWRUUJ01Pt101tLfNdNgz
+         druRmSX5U+bCqNoLkySpbRnNjBEvGhtqWEA6sZgE3faNVC1MOopFIt7aJgpedENnbgA+
+         vLhT/oF+iV4NNJl7ZENbUwAqvYWH3iddwhnanR5l4wIgKj8vv6iI+GCZR6dQ89GS88lQ
+         4HUQJcYLu1l64TswOFIPMbymXvof9EgYaCIw8NBp8I3/Eqx4VOXqXjnURJXJZOFsUk3g
+         05y1QuuzYM81dH5UL1YrQufYoHDEwKgH0zffz4y/y13dXfC9GgNjUFU4R5cTo53tNQSx
+         Q+yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750696221; x=1751301021;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/0pqYb3tUeSBl/lIRawvuaSAg/yO32TdfmjQOsmwU1A=;
-        b=DZQlz6TfQdryRQUEF+71JwZI5iEI8LOI2psEEHowwvMtqR9etF0WkQlgnCoHLY7rsp
-         /d/838zybQiCUWUDNOzJTGbmHmovMDvArSHravU3bHyl+yuqQ7V/1BX4cAp/eTpEgVUF
-         p7Xi2XvjlWadLVo6uPQDk3g60P0yDKCWBpY9y9UJmm5/aE7t4Vy8n/OrGDEhzEGSJbNi
-         K5Tp6zRfiVt7tjD5/kK/i75rg61hZlTk54qtHyK3GItLdyuAoMlKQToR30aCYvytZTAg
-         OUw6JC+yNdD9lexheHv9od6Tj9EG9FohVcv3KFmVAsJhd3nvMwlA8kozuTnBMCG/GgeH
-         9ttQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3LydlZ7Dl5nprVPrBNevA5E9soFeyNatVeiyD+NJbLpvSGiDdVDImO8C6mnOUtX6bLSi3+07scjY=@vger.kernel.org, AJvYcCUTAlY1N/JJeqWiFz8d8Yd3ap/jPLe897i4iVbqwEtnnFG7iE16MpqRJUlHjygdNk76Kp6j39UmMk4ge9Ul@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjJFKSnry90RQ2s0y7a5iZ1KbuZ7nSL/3ftdb7pJDcXGrPqkqH
-	b9dHcxt3dGOATAA8wKTVPARA54FLKXGfM0z3h3qjtWa1XW2VhjV2+w6j
-X-Gm-Gg: ASbGncviM/vyvFoCxQkS+0LRdKRMxnjiJgRcu+ggx/GN6CGrAFym/J0M2NEMY+4vzPl
-	TwSaai4B30BlseV08zTfNFnYHcYX9oVW0JsRao+MjFDz0QNn5s4o+9Sp367K9LfUyGyydGn5TdD
-	N/YEdw+WN5Fg7vaMvcozf3oy6WXXp6KbjhinCClizg2JCsi88UgTKKFPOoizvBZMwJHPP7vY8YU
-	Hz58ytWUpZdOB9Gq18VRgRnoEPfgV76XJPUPlyK5CDeWrGBu7zcJIFc8hTet25veAV/eFg57sNX
-	SeDPQxKcT3SVnncVTEBDB00QBJu6Thjm0vROA4pPswPYtazCj8LZa9fG8AyphgNJiTAVGxEaDzO
-	u
-X-Google-Smtp-Source: AGHT+IH3+aFym5Y1PuEfzW1Qu45WJVQwDF74ldMdWRBk4mcrR7j5xDv/KzXcBPxdWgZvfinY+6Vyzw==
-X-Received: by 2002:a05:6000:25f2:b0:3a4:f024:6717 with SMTP id ffacd0b85a97d-3a6d12e652bmr10478510f8f.53.1750696221241;
-        Mon, 23 Jun 2025 09:30:21 -0700 (PDT)
-Received: from localhost.localdomain ([41.79.198.24])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45364708297sm116967885e9.35.2025.06.23.09.30.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 09:30:20 -0700 (PDT)
-From: Khalid Ali <khaliidcaliy@gmail.com>
-X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
-To: brgerst@gmail.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	ubizjak@gmail.com
-Cc: x86@kernel.org,
-	hpa@zytor.com,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] x86/boot: Supply boot_param in rdi instead of rsi from startup_64()
-Date: Mon, 23 Jun 2025 16:29:34 +0000
-Message-ID: <20250623162935.681-1-khaliidcaliy@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <CAMzpN2jBOW3PVJQLvua=knQNu_1mZ6RZYi8JvNenFd5t30UC1Q@mail.gmail.com>
-References: 
+        d=1e100.net; s=20230601; t=1750696294; x=1751301094;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0j8AmL2vgCPrh67szF4XCY9cmGpFOza5ajW2zlzTb44=;
+        b=hzwoePU9YAn+p7Q57kh4mKmQeJ1NavWNYXtQY5eJWuQJNMuy5fONq8EHN6xCSUuur9
+         UskcMnt6poTLbKsosg5+fpJt6KvqhNv2iw8wrQIfKDCOpW1NGQLyj5bkr7DpTyhmZbEe
+         jQ2VPuWV9Sl5lIUn9nG0K5641HD5wh6uOkqLpVRSrLTSIJZjVHuHboyje0hAT/qIjYfq
+         o30ZgIOiOriY7qDrnxeiVGhEyifmKwoCuYEXVg02UnJ0wKiJGazKmatrYBWnaLSSY3Rl
+         nBn9E5r1bCwIUVgKiXIg+Qwb94wATfhPUnH/fLYifNmWNUIYzHWt4xd32WJtLDRbgMv3
+         EfuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZZzylIVW4GI5POD+MfTRx9DtBrHbgqnDDX2fn9ytn8aYyhwDSgdEcB3dc6eMaIYKu3IyhE6GkMJLDzUM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0Hjl197QK5x3ajS6FRtU0L73hsuQM8p7/gz0nNZlJ9PR+Qhbb
+	9+vZkELwedl+7Nq7H5dtgYqc3+SMkSUgO2I9UiWQpwcGgGGX60lPNsY669psV9RxnZY=
+X-Gm-Gg: ASbGncuzlslAaxeFlUw3ikOR2V8pcm/5YVpk39bZXH1Oe15gVYvaNBpRoxc2V/m29sp
+	E9gRuaLZkt7p3F+I9LMtJVbDN6I4j1dX2uSutPeHOnkrkIyM6cPM+geWQLh9ySDXy8xiIvJBnwi
+	V1+gsw5nOdreUvOSBPGGcB02l9HPedyQvfu582s28uYAgw0E1HKyq060AsLCWcmPtqSmbZD3QVB
+	LREl0I+P1GQqevSVQfkIVZKS45MUbttKfm3/ijwMz3F2O7siBLOYWNHTKdyxOPomKPGRGe7hvGI
+	9E42nCzoXlagZ76DtDtgbyVbUmi/jyK8ZK/QBcryA2w35l5g7fyeEjiAYSahBSeMC4fJRSXNP80
+	=
+X-Google-Smtp-Source: AGHT+IFtp9SY06hL7tr/NWr3bIhdcZjACNg+h+Rg5V3jKzfHdcvWGYIa/oooWJLbVLfw9PBe9ecQTg==
+X-Received: by 2002:adf:9dc8:0:b0:3a3:63d3:369a with SMTP id ffacd0b85a97d-3a6d130ace1mr9778129f8f.25.1750696293870;
+        Mon, 23 Jun 2025 09:31:33 -0700 (PDT)
+Received: from [192.168.1.159] ([213.240.182.16])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d1187cf0sm9786922f8f.71.2025.06.23.09.31.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 09:31:33 -0700 (PDT)
+Message-ID: <48c87af4-7d42-4283-b407-697b78d5b913@linaro.org>
+Date: Mon, 23 Jun 2025 18:31:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: rectify file entry in QUALCOMM SMB CHARGER
+ DRIVER
+To: Lukas Bulwahn <lbulwahn@redhat.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Lukas Bulwahn <lukas.bulwahn@redhat.com>
+References: <20250623081240.149446-1-lukas.bulwahn@redhat.com>
+Content-Language: en-US
+From: Casey Connolly <casey.connolly@linaro.org>
+In-Reply-To: <20250623081240.149446-1-lukas.bulwahn@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> This was never intended to conform to the C ABI, why is it necessary
-> to change it?
 
-Technically speaking, you are right, however that doesn't mean we can put something where
-ever we like. We came from C code which is bootloader and we end up to C code, so we should 
-comply the ABI here too.
 
-> Also, you cannot break this up into three patches.  Every patch must
-> be fully functional so that git bisect will work.
+On 6/23/25 10:12, Lukas Bulwahn wrote:
+> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> 
+> Commit 4deeea4b0741  ("MAINTAINERS: add myself as smbx charger driver
+> maintainer") adds the section QUALCOMM SMB CHARGER DRIVER in MAINTAINERS,
+> including a file entry pointing to qcom_smbx_charger.c. Within the same
+> patch series, the commit 5ec53bcc7fce ("power: supply: pmi8998_charger:
+> rename to qcom_smbx") renames qcom_pmi8998_charger.c to qcom_smbx.c and not
+> to qcom_smbx_charger.c, though. Note that the commit message clearly
+> indicates the intentional removal of the "_charger" suffix.
+> 
+> Refer to the intended file.
 
-Thanks for the tip. I will do next time.
+oh dear, thanks for catching this!
+
+> 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+
+Acked-by: Casey connolly <casey.connolly@linaro.org>
+
+> ---
+>   MAINTAINERS | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 41f13ccef4c8..c76ea415c56f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -20612,7 +20612,7 @@ M:	Casey Connolly <casey.connolly@linaro.org>
+>   L:	linux-arm-msm@vger.kernel.org
+>   S:	Maintained
+>   F:	Documentation/devicetree/bindings/power/supply/qcom,pmi8998-charger.yaml
+> -F:	drivers/power/supply/qcom_smbx_charger.c
+> +F:	drivers/power/supply/qcom_smbx.c
+>   
+>   QUALCOMM QSEECOM DRIVER
+>   M:	Maximilian Luz <luzmaximilian@gmail.com>
+
+-- 
+Casey (she/they)
+
