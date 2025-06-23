@@ -1,125 +1,128 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25542FB2
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 04:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76CFCA95C;
+	Mon, 23 Jun 2025 04:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750652884; cv=none; b=KiK9NRSmHoyc792CuGSHOCB8i/6kIExMfU1Qxcfyi9Xct9KIZMKV2GmdnvoF2gG5yN4xOc4CdSuLGcwowJPFauouzAGWc7JHse3HlI/NALjWntjZYGpOsgnFGouuL9g5wT3NAh952nbzDBAeO160EMw647BKGCNwKZOuaPUJWzE=
+	t=1750653141; cv=none; b=S/qi2eBGexumtRn2L9CSL8+eM61pzt8qhXsiCBoKFPQnB2Az8Aj+K961GJSJV/ISPxKTmdwN05SNMf2+t8tH9O4h643okB9/U+cX4fsexHmFByLcGEvk/V+76t5bjBj+/eolHFG3qIRCAHT7jacwbKVlFnEDq3Y7/3sLxdUwAGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750652884; c=relaxed/simple;
-	bh=sszOZ04ExISycRNK4B4fQqqZeSX1CdavOXWPDv/kvqk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ZLVHtWcsF4f7g3Ygx2sW5w2/2gPeeUlCOQNoC2VyiPPVduqnk4jYD2PyyXs+yFwDKYaBph+zTouKFi6jL9XniKLCCez5KnB7orYkuApQ+R+vo9gTevTmtmkjyOpn79ifkgEgsOJ62tXTE5QKPvOqmuANc8x68vOO7IOemnMdf4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddb4dcebfaso105405895ab.1
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 21:28:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750652882; x=1751257682;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zct5OHhk6ecwHi0znPKz8+T1+4MxcnWRqgw9X0N5X3A=;
-        b=AHgs7//dn0LiWIz0VYT718xIHmU6c2GQRc8WF+YkrXzak8n17Kolt4Y08WZVRwfDVa
-         LJohgvup2ILz4/3YcUjz39KqpmbAq2iRulZ5KbKApIehsixSRgSDQxnqh2xMz+HGGhi4
-         9SuM9km8vJi8m+sBXVidkcw5+jLyST01bhNRxkR1hFnxpo9mTN287+0/FAN2n9BerQWT
-         DgdcUPxHqXnc6O9s3PKG/Aejhdf4zRiRKDbK7BzWPwToxPuZWR1vmkLXFJyUdgXRXnrJ
-         UgkQaij5owvr9e3t1E+FGjsMhRGrs2WS931Ad4mIC0SDpECFft+f4onoU0DtRhW0351u
-         v6BQ==
-X-Gm-Message-State: AOJu0Ywab3Sg8t9U1f9nr81KrQYbDWRhVJNEcW87xr7OnthL/HLC9vHP
-	+/BMIkEwKcYOMR1JzdG3SvV1Pa2fyM7YEGbt7N1ZhkO8w435jaFi0HZBrMbWSSGg+mvRszGdymo
-	d6tpw/mcuyQi2O1GRMJn5TfpiCDI6Z8ixX7ES9v2aeGLDZdW3K9d743YzDz8=
-X-Google-Smtp-Source: AGHT+IH7Tl0kjsU+uef2QWz7SdbF2RX930Yk4uSXB0KxLhEnNPI0++naHL/KiHE6hG6DQQkPE3QMfqXY/AkTVUdyXdJWWtwGHUSU
+	s=arc-20240116; t=1750653141; c=relaxed/simple;
+	bh=ggo/SI/AISA8J6s0yt0k1qoyYkjyPngK3bM8bZl5ikQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IKd8avWAJQGBPq2thfFwk/jUdid8fNIV3T7yjmu/vWAbO2cwU+mKnXRNEtW/LHVNfr3LaRsEx/OeezN58Z0yL7yOD6fN/vozC/a/JgfZFLL8SOK7eEYQI1sVZSeChbdwxyenBlIRnSIARpbDe9MIZr9Pq1GSpptcXOvCVcY6B5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-e8-6858d8cc5518
+Date: Mon, 23 Jun 2025 13:32:07 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: willy@infradead.org, netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
+	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	david@redhat.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, horms@kernel.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com, hannes@cmpxchg.org, ziy@nvidia.com,
+	jackmanb@google.com
+Subject: Re: [PATCH net-next v6 6/9] netmem: remove __netmem_get_pp()
+Message-ID: <20250623043207.GA31962@system.software.com>
+References: <20250620041224.46646-1-byungchul@sk.com>
+ <20250620041224.46646-7-byungchul@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:11:b0:3dc:7563:c3d7 with SMTP id
- e9e14a558f8ab-3de38caae76mr147290625ab.12.1750652882086; Sun, 22 Jun 2025
- 21:28:02 -0700 (PDT)
-Date: Sun, 22 Jun 2025 21:28:02 -0700
-In-Reply-To: <20250623030312.2337101-1-lizhi.xu@windriver.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6858d7d2.a00a0220.2e5631.0005.GAE@google.com>
-Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
- (3)
-From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250620041224.46646-7-byungchul@sk.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHe3af3V2Xi+syfVIiWklgmRVlBwqNQrpfKiEISyMveWkjXbql
+	qRRprizxDYuyuWoRmWmwmqmzF8211KhIDWOVOtE0MdPUFDezckrktx//8+f8zofDUPIHYj9G
+	pT4haNR8nIKWYul3z1tBb+yRyvV3ckLAYLpPQ/lkCtztsojBUFaF4KfzswTGbI003L41QYHh
+	nQ7DuMlFQW9DtwTKzbvBUdKH4WlWNQXd+U005OqmKHjmHJLAWUupCJqr8sRw2XWHgur0Lgm8
+	f2ygofP+HzH0WXMxvNLfw+DI2w4NRh+YeD2IwGaqFsFEznUaLrUaaejRORC0vujGUJyRh8BU
+	axfD1OTMjuKXnZLtq7gXg8MU9+jeRxFXo++QcEZzEldRGshl21spzlx2kebMo4USrv3DU5pr
+	KprCXI1lTMTlZg7R3EjvJ8wN17bRnOlRG+beGG2SCK+D0m2xQpwqWdAEh8ZIlaar9TghY1HK
+	w3wDTkd1C7ORB0PYTaQz6wb1j0d0zdjNmA0gjZ2FsznNriZ2u3OGGcabDSYfCg9kIylDsZk0
+	KWxzzvYXs+HkbWkO7WYZC8T54xtys5zlyYWBc2gu9yKvrn2Z7VPsWlJT2U67d1KsP7n7m5mL
+	l5PMyuJZrQcbQvqHmkRuXsKuJM+rGkVzZzYzxGRLneOlpL7UjguQl36eQT/PoP9v0M8zGBEu
+	Q3KVOjmeV8VtWqdMVatS1h05Hm9GM39UcvpXlAWNNu+zIpZBCk9ZjGekUi7mk7Wp8VZEGErh
+	LbPu2K+Uy2L51DRBc/ywJilO0FqRP4MVvrKNEydj5exR/oRwTBASBM2/qYjx8EtHEaYVLYkD
+	tvbENP9+JmjLnj/L66ZFPo/PhLWs8ap1FQU9Cay/MnI+IKvOvtl1ROe6GX3qYGXeHvOA7zJ2
+	esjHA0kd4R22Tw0qlSO9qnLL1lZKG7SguIa+MZ1Wbv66K+JQeFHY3jWW8RZeEebZE1rQFfM8
+	qi16yc4Flw7HjFeUqRUKrFXyGwIpjZb/C5Lllu9DAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRjG+e/8d3Zczk5r1Uk/RDMLokzpwptFSCEdsiII1Ppgjjy15bUt
+	TaPIy0IztZpRNlctRF0mrZbXsqx5mWKRKNqypWkqZualdDjt5ozIbz+e9+H3fHkpQpzDd6cU
+	0ac4ZbQsUkoKsXD/ttT1r6whcp9P6Z6gM5aQcH8qAYo+VvJBV1yOYMLxXgDf6ywk5N+1E6B7
+	o8YwaZwmoL+hVwD3Tfugu3AAQ3VaBQG9lxtJyFLPEPDMMSKAlEoDD2pvNfGhpTybD9emCwio
+	SPoogLYnOhK6Sn7zYcCchaFJew9Dd7Y/NOiXgr15GEGdsYIH9sxbJOS06kn4pO5G0FrbiyEv
+	ORuB8bmVDzNTs468+i6BvxdbOzxKsKX33vHYKu0HAas3xbGPDWvZDGsrwZqKL5Ks6ZtGwNo6
+	qkm2MXcGs1WV33lsVuoIyY73d2J29Hk7yeYPjvFYY2k7PiA+LNwezkUq4jnlhh1hQrnxxksc
+	m+yW8OiyDiehmgUZyIVi6E3MuLoFOxnTXoylS0M4maTXMFarY5YpSkJvYDo0hzKQkCLoVJLR
+	tDvm+ovpAOa1IZN0sogGxjH2BTlZTMuY9KEL6G++iGm62TfXJ+h1TFWZjXQ6CdqDKfpF/Y1X
+	MKlleXOzLvQWZnCkkefkJbQn86LcwruC3LTzTNp5Ju1/k3aeSY9wMZIoouOjZIrIzd6qCHli
+	tCLB+2hMlAnNvkrhuR9XK9FE224zoikkdRUZAkPkYr4sXpUYZUYMRUglIvPOILlYFC5LPMMp
+	Y44o4yI5lRl5UFi6TLQnmAsT08dlp7gIjovllP+uPMrFPQnhga81Kw2HA0sXzsSnTFX7rc7v
+	WO7bs7Xn4O2GtJOaveWWoFHHF9uq83GXJk+/dLtTd6Dq7fqzybb3PvWZSe82YunPPl3nCdex
+	66e9a+iBuLPBi0KajfbPDyWhBSMF7lf9AnI9UybVuzpj/AnLmWOTgz0FoVfk+gcSQebTIbtt
+	eWGYFKvkMt+1hFIl+wM4qcRvJgMAAA==
+X-CFilter-Loop: Reflected
 
-Hello,
+On Fri, Jun 20, 2025 at 01:12:21PM +0900, Byungchul Park wrote:
+> There are no users of __netmem_get_pp().  Remove it.
+> 
+> Signed-off-by: Byungchul Park <byungchul@sk.com>
+> Reviewed-by: Mina Almasry <almasrymina@google.com>
+> Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
+> Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+> Reviewed-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+> ---
+>  include/net/netmem.h | 16 ----------------
+>  1 file changed, 16 deletions(-)
+> 
+> diff --git a/include/net/netmem.h b/include/net/netmem.h
+> index e27ed0b9c82e..d0a84557983d 100644
+> --- a/include/net/netmem.h
+> +++ b/include/net/netmem.h
+> @@ -245,22 +245,6 @@ static inline struct net_iov *__netmem_clear_lsb(netmem_ref netmem)
+>  	return (struct net_iov *)((__force unsigned long)netmem & ~NET_IOV);
+>  }
+>  
+> -/**
+> - * __netmem_get_pp - unsafely get pointer to the &page_pool backing @netmem
+> - * @netmem: netmem reference to get the pointer from
+> - *
+> - * Unsafe version of netmem_get_pp(). When @netmem is always page-backed,
+> - * e.g. when it's a header buffer, performs faster and generates smaller
+> - * object code (avoids clearing the LSB). When @netmem points to IOV,
+> - * provokes invalid memory access.
+> - *
+> - * Return: pointer to the &page_pool (garbage if @netmem is not page-backed).
+> - */
+> -static inline struct page_pool *__netmem_get_pp(netmem_ref netmem)
+> -{
+> -	return __netmem_to_page(netmem)->pp;
+> -}
+> -
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
+In the meantime, libeth started to use __netmem_get_pp() again :(
 
-=====================================================
-BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
-BUG: KMSAN: kernel-infoleak in _inline_copy_to_user include/linux/uaccess.h:196 [inline]
-BUG: KMSAN: kernel-infoleak in _copy_to_user+0xcc/0x120 lib/usercopy.c:26
- instrument_copy_to_user include/linux/instrumented.h:114 [inline]
- _inline_copy_to_user include/linux/uaccess.h:196 [inline]
- _copy_to_user+0xcc/0x120 lib/usercopy.c:26
- copy_to_user include/linux/uaccess.h:225 [inline]
- vmci_host_do_receive_datagram drivers/misc/vmw_vmci/vmci_host.c:441 [inline]
- vmci_host_unlocked_ioctl+0x3d49/0x5340 drivers/misc/vmw_vmci/vmci_host.c:935
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0x239/0x400 fs/ioctl.c:893
- __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
- x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Discard this patch please.  Do I have to resend this series with this
+excluded?
 
-Uninit was stored to memory at:
- kmemdup_noprof+0xb0/0x100 mm/util.c:139
- kmemdup_noprof include/linux/fortify-string.h:765 [inline]
- dg_dispatch_as_host drivers/misc/vmw_vmci/vmci_datagram.c:272 [inline]
- vmci_datagram_dispatch+0x4eb/0x1560 drivers/misc/vmw_vmci/vmci_datagram.c:340
- ctx_fire_notification drivers/misc/vmw_vmci/vmci_context.c:257 [inline]
- ctx_free_ctx drivers/misc/vmw_vmci/vmci_context.c:435 [inline]
- kref_put include/linux/kref.h:65 [inline]
- vmci_ctx_put+0x88e/0x15d0 drivers/misc/vmw_vmci/vmci_context.c:497
- vmci_ctx_destroy+0x15d/0x250 drivers/misc/vmw_vmci/vmci_context.c:195
- vmci_host_do_init_context drivers/misc/vmw_vmci/vmci_host.c:341 [inline]
- vmci_host_unlocked_ioctl+0x46a7/0x5340 drivers/misc/vmw_vmci/vmci_host.c:931
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0x239/0x400 fs/ioctl.c:893
- __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
- x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+	Byungchul
 
-Local variable ev.i.i created at:
- ctx_fire_notification drivers/misc/vmw_vmci/vmci_context.c:248 [inline]
- ctx_free_ctx drivers/misc/vmw_vmci/vmci_context.c:435 [inline]
- kref_put include/linux/kref.h:65 [inline]
- vmci_ctx_put+0x76b/0x15d0 drivers/misc/vmw_vmci/vmci_context.c:497
- vmci_ctx_destroy+0x15d/0x250 drivers/misc/vmw_vmci/vmci_context.c:195
-
-Bytes 28-31 of 40 are uninitialized
-Memory access of size 40 starts at ffff88804ac905c0
-Data copied to user address 000000000000a4bf
-
-CPU: 0 UID: 0 PID: 6748 Comm: syz.0.16 Not tainted 6.16.0-rc3-syzkaller-g86731a2a651e-dirty #0 PREEMPT(undef) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-=====================================================
-
-
-Tested on:
-
-commit:         86731a2a Linux 6.16-rc3
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1707a182580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=595d344ff0b23ac5
-dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1176f370580000
-
+>  static inline struct page_pool *netmem_get_pp(netmem_ref netmem)
+>  {
+>  	return __netmem_clear_lsb(netmem)->pp;
+> -- 
+> 2.17.1
