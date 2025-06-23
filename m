@@ -1,38 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E32525C71C;
-	Mon, 23 Jun 2025 10:31:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB67625D1FE;
+	Mon, 23 Jun 2025 10:31:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750674668; cv=none; b=OL+3a2drOlt5NKLdnjC9Yi8jq0P2i+Cdw11qI9GsYZpgU7JCJtAZ3VqdQJw7A6Uv6zvn5xCqvxt87VV4Pq0WXmu/yWQ5jekAhIlJyUnkMrBGLtESn4oaV98GolQ8zFnztHgCw1buOEp6MZcfei3ZZZQ2t2jIJL8HPT9dQ4wL7dc=
+	t=1750674670; cv=none; b=ZSqGeAUJWEt5tugseEyDe0ni3GpUV5oB2uDOAyPkVynObPd55HwSeBQJrhS79jO/iqOLpbM99hPWipBkZtm7NfDuVfRcb/3h2p6wSqfx1CH8TyBS6BZk6gGbLmmwPjo+Ghw5OXJ3NPo2x9Jy8sMD9sRbHRTPRUTYee08+IHRrM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750674668; c=relaxed/simple;
-	bh=3rLFJ1DSNQK8xVprilTYSRnopXqh1Sfb9L31LzR2SD8=;
+	s=arc-20240116; t=1750674670; c=relaxed/simple;
+	bh=dJ5sI20tp1diFS6ne8k9ATvo0R0aRFweq4g1hPQN7tc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KJQFkh041WW/A+fdqFGvuAAJLrb34L8qhPPQkdfMgOOulginCzTaKKgUV9lUKE2EhT/3aOf2aytbpIazUciLHJPsmAILvBPHL0631o1TVRd3LxsCknfekZXu2rZrWglOpJRO4XlB+qoUKBkSn+6+VxfJERUzii3WXIq2w3wS68k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=DPpjcYcJ; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=HM8o9Cxq/G5Eg9H8g16sXsNKVQ/fHoBxLJrCtF4Qd1/8QjMAQmtjJR1lto5LXANt76q+iZijXk9GEtup4M1cN52zF+vPgRqvOaQkHQUe4tmRG5ZxacH0y08qEvGoTMYCwKiIiZsmgpbQSLg9XfaUYWYXbNRz/P4fIhCrIXWMtgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=EdwuI3RH; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="DPpjcYcJ"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="EdwuI3RH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750674664;
-	bh=3rLFJ1DSNQK8xVprilTYSRnopXqh1Sfb9L31LzR2SD8=;
+	s=mail; t=1750674667;
+	bh=dJ5sI20tp1diFS6ne8k9ATvo0R0aRFweq4g1hPQN7tc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DPpjcYcJoieJb3MhAisSoKFAiD2NwRc8Ia3a7nrHe60shtfTi/8Zx+XjBVD0J1KSk
-	 Q+S3Qf5YV9rGrmxtQHy9bOMx8JlLYWgEEZBkfHQ051+p3oMFPpA2b24HiTduw1C3jW
-	 Y+jLpE9JhhxjtLh/UVfVnDEp57U+89jB/1wCNJDHxhL87+WppxanNjnQGhqKogNBZb
-	 JEHTp3jaQK7ie4TD2aVrUY8m4OjLRbirJIO/c3LuMyzbCZMq1znh2Zcd5+Y3kOJefi
-	 1NPI2Qohx3SsgQGyROX+ay727UwoGObQNV57EkHQdLxjr9KqY/JPF8XINtfhKO2rDO
-	 Farfj4jUEUbBg==
+	b=EdwuI3RHPSaWXVGlwOKWMiXklZfBngTs/iIh/+CMyUWzLjO7WZpnWLgcFAA4VcxfP
+	 pGqrXE3EEq2sfPyp9BMMA8LQZv8KY5rqFIRl6GYnv1u4ftDIkROpmdgUJVl3JR3nIN
+	 7NCZCqor4k7gsTSLN4CdCoB7vT5Yi4SROa2wD4pqouD3KobSyJq0CC5YCcZ1ZtdBLI
+	 /k5ABruNxpzvy7euyBpvWjIEKP09qaNkhb64zveXU+hYPhZY5V6ExRD8HHrVPV1ACA
+	 ZB1Dco7EecSLEuPgl6FZfNy/M638hR4lU18u8N/D1hQIAB27iYWEsilH8GhMvxAl4w
+	 gOlsmGWsuym4g==
 Received: from laura.lan (unknown [IPv6:2001:b07:646b:e2:e046:b666:1d47:e832])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: laura.nao)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 48B6617E05BD;
-	Mon, 23 Jun 2025 12:31:03 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id EAD1417E0FDB;
+	Mon, 23 Jun 2025 12:31:05 +0200 (CEST)
 From: Laura Nao <laura.nao@collabora.com>
 To: mturquette@baylibre.com,
 	sboyd@kernel.org,
@@ -53,9 +53,9 @@ Cc: guangjie.song@mediatek.com,
 	netdev@vger.kernel.org,
 	kernel@collabora.com,
 	Laura Nao <laura.nao@collabora.com>
-Subject: [PATCH 28/30] clk: mediatek: Add MT8196 vencsys clock support
-Date: Mon, 23 Jun 2025 12:29:38 +0200
-Message-Id: <20250623102940.214269-29-laura.nao@collabora.com>
+Subject: [PATCH 30/30] clk: mediatek: mt8196: Add UFS and PEXTP0/1 reset controllers
+Date: Mon, 23 Jun 2025 12:29:40 +0200
+Message-Id: <20250623102940.214269-31-laura.nao@collabora.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250623102940.214269-1-laura.nao@collabora.com>
 References: <20250623102940.214269-1-laura.nao@collabora.com>
@@ -67,288 +67,145 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for the MT8196 vencsys clock controller, which provides
-clock gate control for the video encoder.
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
+Add definitions to register the reset controllers found in the
+UFS and PEXTP clock controllers.
+
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Laura Nao <laura.nao@collabora.com>
 ---
- drivers/clk/mediatek/Kconfig           |   7 +
- drivers/clk/mediatek/Makefile          |   1 +
- drivers/clk/mediatek/clk-mt8196-venc.c | 235 +++++++++++++++++++++++++
- 3 files changed, 243 insertions(+)
- create mode 100644 drivers/clk/mediatek/clk-mt8196-venc.c
+ drivers/clk/mediatek/clk-mt8196-pextp.c  | 36 ++++++++++++++++++++++++
+ drivers/clk/mediatek/clk-mt8196-ufs_ao.c | 25 ++++++++++++++++
+ 2 files changed, 61 insertions(+)
 
-diff --git a/drivers/clk/mediatek/Kconfig b/drivers/clk/mediatek/Kconfig
-index fc20942a547e..84b91e7bc8f6 100644
---- a/drivers/clk/mediatek/Kconfig
-+++ b/drivers/clk/mediatek/Kconfig
-@@ -1131,6 +1131,13 @@ config COMMON_CLK_MT8196_VDECSYS
- 	help
- 	  This driver supports MediaTek MT8196 vdecsys clocks.
+diff --git a/drivers/clk/mediatek/clk-mt8196-pextp.c b/drivers/clk/mediatek/clk-mt8196-pextp.c
+index 938100e4836b..9a7623bf2b1c 100644
+--- a/drivers/clk/mediatek/clk-mt8196-pextp.c
++++ b/drivers/clk/mediatek/clk-mt8196-pextp.c
+@@ -6,6 +6,7 @@
+  *                    Laura Nao <laura.nao@collabora.com>
+  */
+ #include <dt-bindings/clock/mediatek,mt8196-clock.h>
++#include <dt-bindings/reset/mediatek,mt8196-resets.h>
+ #include <linux/clk-provider.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
+@@ -13,6 +14,9 @@
  
-+config COMMON_CLK_MT8196_VENCSYS
-+	tristate "Clock driver for MediaTek MT8196 vencsys"
-+	depends on COMMON_CLK_MT8196
-+	default m
-+	help
-+	  This driver supports MediaTek MT8196 vencsys clocks.
+ #include "clk-gate.h"
+ #include "clk-mtk.h"
++#include "reset.h"
 +
- config COMMON_CLK_MT8365
- 	tristate "Clock driver for MediaTek MT8365"
- 	depends on ARCH_MEDIATEK || COMPILE_TEST
-diff --git a/drivers/clk/mediatek/Makefile b/drivers/clk/mediatek/Makefile
-index 5d3b68649a53..069cca024cd1 100644
---- a/drivers/clk/mediatek/Makefile
-+++ b/drivers/clk/mediatek/Makefile
-@@ -173,6 +173,7 @@ obj-$(CONFIG_COMMON_CLK_MT8196_MMSYS) += clk-mt8196-disp0.o clk-mt8196-disp1.o c
- obj-$(CONFIG_COMMON_CLK_MT8196_PEXTPSYS) += clk-mt8196-pextp.o
- obj-$(CONFIG_COMMON_CLK_MT8196_UFSSYS) += clk-mt8196-ufs_ao.o
- obj-$(CONFIG_COMMON_CLK_MT8196_VDECSYS) += clk-mt8196-vdec.o
-+obj-$(CONFIG_COMMON_CLK_MT8196_VENCSYS) += clk-mt8196-venc.o
- obj-$(CONFIG_COMMON_CLK_MT8365) += clk-mt8365-apmixedsys.o clk-mt8365.o
- obj-$(CONFIG_COMMON_CLK_MT8365_APU) += clk-mt8365-apu.o
- obj-$(CONFIG_COMMON_CLK_MT8365_CAM) += clk-mt8365-cam.o
-diff --git a/drivers/clk/mediatek/clk-mt8196-venc.c b/drivers/clk/mediatek/clk-mt8196-venc.c
-new file mode 100644
-index 000000000000..ecbd42629e9f
---- /dev/null
-+++ b/drivers/clk/mediatek/clk-mt8196-venc.c
-@@ -0,0 +1,235 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2025 MediaTek Inc.
-+ *                    Guangjie Song <guangjie.song@mediatek.com>
-+ * Copyright (c) 2025 Collabora Ltd.
-+ *                    Laura Nao <laura.nao@collabora.com>
-+ */
-+#include <dt-bindings/clock/mediatek,mt8196-clock.h>
-+#include <linux/clk-provider.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
++#define MT8196_PEXTP_RST0_SET_OFFSET	0x8
+ 
+ static const struct mtk_gate_regs pext_cg_regs = {
+ 	.set_ofs = 0x18,
+@@ -41,9 +45,25 @@ static const struct mtk_gate pext_clks[] = {
+ 	GATE_PEXT(CLK_PEXT_PEXTP_VLP_AO_P0_LP, "pext_pextp_vlp_ao_p0_lp", "clk26m", 19),
+ };
+ 
++static u16 pext_rst_ofs[] = { MT8196_PEXTP_RST0_SET_OFFSET };
 +
-+#include "clk-gate.h"
-+#include "clk-mtk.h"
-+
-+static const struct mtk_gate_regs ven10_cg_regs = {
-+	.set_ofs = 0x4,
-+	.clr_ofs = 0x8,
-+	.sta_ofs = 0x0,
++static u16 pext_rst_idx_map[] = {
++	[MT8196_PEXTP0_RST0_PCIE0_MAC] = 0,
++	[MT8196_PEXTP0_RST0_PCIE0_PHY] = 1,
 +};
 +
-+static const struct mtk_gate_regs ven10_hwv_regs = {
-+	.set_ofs = 0x00b8,
-+	.clr_ofs = 0x00bc,
-+	.sta_ofs = 0x2c5c,
++static const struct mtk_clk_rst_desc pext_rst_desc = {
++	.version = MTK_RST_SET_CLR,
++	.rst_bank_ofs = pext_rst_ofs,
++	.rst_bank_nr = ARRAY_SIZE(pext_rst_ofs),
++	.rst_idx_map = pext_rst_idx_map,
++	.rst_idx_map_nr = ARRAY_SIZE(pext_rst_idx_map),
 +};
 +
-+static const struct mtk_gate_regs ven11_cg_regs = {
-+	.set_ofs = 0x10,
-+	.clr_ofs = 0x14,
-+	.sta_ofs = 0x10,
+ static const struct mtk_clk_desc pext_mcd = {
+ 	.clks = pext_clks,
+ 	.num_clks = ARRAY_SIZE(pext_clks),
++	.rst_desc = &pext_rst_desc,
+ };
+ 
+ static const struct mtk_gate pext1_clks[] = {
+@@ -69,9 +89,25 @@ static const struct mtk_gate pext1_clks[] = {
+ 	GATE_PEXT(CLK_PEXT1_PEXTP_VLP_AO_P2_LP, "pext1_pextp_vlp_ao_p2_lp", "clk26m", 27),
+ };
+ 
++static u16 pext1_rst_idx_map[] = {
++	[MT8196_PEXTP1_RST0_PCIE1_MAC] = 0,
++	[MT8196_PEXTP1_RST0_PCIE1_PHY] = 1,
++	[MT8196_PEXTP1_RST0_PCIE2_MAC] = 8,
++	[MT8196_PEXTP1_RST0_PCIE2_PHY] = 9,
 +};
 +
-+static const struct mtk_gate_regs ven11_hwv_regs = {
-+	.set_ofs = 0x00c0,
-+	.clr_ofs = 0x00c4,
-+	.sta_ofs = 0x2c60,
++static const struct mtk_clk_rst_desc pext1_rst_desc = {
++	.version = MTK_RST_SET_CLR,
++	.rst_bank_ofs = pext_rst_ofs,
++	.rst_bank_nr = ARRAY_SIZE(pext_rst_ofs),
++	.rst_idx_map = pext1_rst_idx_map,
++	.rst_idx_map_nr = ARRAY_SIZE(pext1_rst_idx_map),
 +};
 +
-+#define GATE_VEN10(_id, _name, _parent, _shift) {	\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &ven10_cg_regs,			\
-+		.shift = _shift,			\
-+		.flags = CLK_OPS_PARENT_ENABLE,		\
-+		.ops = &mtk_clk_gate_ops_setclr_inv,	\
-+	}
+ static const struct mtk_clk_desc pext1_mcd = {
+ 	.clks = pext1_clks,
+ 	.num_clks = ARRAY_SIZE(pext1_clks),
++	.rst_desc = &pext1_rst_desc,
+ };
+ 
+ static const struct of_device_id of_match_clk_mt8196_pextp[] = {
+diff --git a/drivers/clk/mediatek/clk-mt8196-ufs_ao.c b/drivers/clk/mediatek/clk-mt8196-ufs_ao.c
+index 49f4f4af7f41..858706b3ba6f 100644
+--- a/drivers/clk/mediatek/clk-mt8196-ufs_ao.c
++++ b/drivers/clk/mediatek/clk-mt8196-ufs_ao.c
+@@ -6,6 +6,7 @@
+  *                    Laura Nao <laura.nao@collabora.com>
+  */
+ #include <dt-bindings/clock/mediatek,mt8196-clock.h>
++#include <dt-bindings/reset/mediatek,mt8196-resets.h>
+ #include <linux/clk-provider.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
+@@ -14,6 +15,9 @@
+ #include "clk-gate.h"
+ #include "clk-mtk.h"
+ 
++#define MT8196_UFSAO_RST0_SET_OFFSET	0x48
++#define MT8196_UFSAO_RST1_SET_OFFSET	0x148
 +
-+#define GATE_HWV_VEN10_FLAGS(_id, _name, _parent, _shift, _flags) {	\
-+		.id = _id,						\
-+		.name = _name,						\
-+		.parent_name = _parent,					\
-+		.regs = &ven10_cg_regs,					\
-+		.hwv_regs = &ven10_hwv_regs,				\
-+		.shift = _shift,					\
-+		.ops = &mtk_clk_gate_hwv_ops_setclr_inv,		\
-+		.flags = (_flags) |					\
-+			 CLK_OPS_PARENT_ENABLE,				\
-+	}
-+
-+#define GATE_HWV_VEN10(_id, _name, _parent, _shift)	\
-+	GATE_HWV_VEN10_FLAGS(_id, _name, _parent, _shift, 0)
-+
-+#define GATE_HWV_VEN11(_id, _name, _parent, _shift) {	\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &ven11_cg_regs,			\
-+		.hwv_regs = &ven11_hwv_regs,		\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_hwv_ops_setclr_inv,\
-+		.flags = CLK_OPS_PARENT_ENABLE		\
-+	}
-+
-+static const struct mtk_gate ven1_clks[] = {
-+	/* VEN10 */
-+	GATE_HWV_VEN10(CLK_VEN1_CKE0_LARB, "ven1_larb", "venc", 0),
-+	GATE_HWV_VEN10(CLK_VEN1_CKE1_VENC, "ven1_venc", "venc", 4),
-+	GATE_VEN10(CLK_VEN1_CKE2_JPGENC, "ven1_jpgenc", "venc", 8),
-+	GATE_VEN10(CLK_VEN1_CKE3_JPGDEC, "ven1_jpgdec", "venc", 12),
-+	GATE_VEN10(CLK_VEN1_CKE4_JPGDEC_C1, "ven1_jpgdec_c1", "venc", 16),
-+	GATE_HWV_VEN10(CLK_VEN1_CKE5_GALS, "ven1_gals", "venc", 28),
-+	GATE_HWV_VEN10(CLK_VEN1_CKE29_VENC_ADAB_CTRL, "ven1_venc_adab_ctrl",
-+			"venc", 29),
-+	GATE_HWV_VEN10_FLAGS(CLK_VEN1_CKE29_VENC_XPC_CTRL,
-+			      "ven1_venc_xpc_ctrl", "venc", 30,
-+			      CLK_IGNORE_UNUSED),
-+	GATE_HWV_VEN10(CLK_VEN1_CKE6_GALS_SRAM, "ven1_gals_sram", "venc", 31),
-+	/* VEN11 */
-+	GATE_HWV_VEN11(CLK_VEN1_RES_FLAT, "ven1_res_flat", "venc", 0),
+ static const struct mtk_gate_regs ufsao0_cg_regs = {
+ 	.set_ofs = 0x108,
+ 	.clr_ofs = 0x10c,
+@@ -59,9 +63,30 @@ static const struct mtk_gate ufsao_clks[] = {
+ 	GATE_UFSAO1(CLK_UFSAO_PHY_SAP, "ufsao_phy_sap", "clk26m", 8),
+ };
+ 
++static u16 ufsao_rst_ofs[] = {
++	MT8196_UFSAO_RST0_SET_OFFSET,
++	MT8196_UFSAO_RST1_SET_OFFSET
 +};
 +
-+static const struct mtk_clk_desc ven1_mcd = {
-+	.clks = ven1_clks,
-+	.num_clks = ARRAY_SIZE(ven1_clks),
-+	.need_runtime_pm = true,
++static u16 ufsao_rst_idx_map[] = {
++	[MT8196_UFSAO_RST0_UFS_MPHY] = 8,
++	[MT8196_UFSAO_RST1_UFS_UNIPRO] = 1 * RST_NR_PER_BANK + 0,
++	[MT8196_UFSAO_RST1_UFS_CRYPTO] = 1 * RST_NR_PER_BANK + 1,
++	[MT8196_UFSAO_RST1_UFSHCI] = 1 * RST_NR_PER_BANK + 2,
 +};
 +
-+static const struct mtk_gate_regs ven20_hwv_regs = {
-+	.set_ofs = 0x00c8,
-+	.clr_ofs = 0x00cc,
-+	.sta_ofs = 0x2c64,
++static const struct mtk_clk_rst_desc ufsao_rst_desc = {
++	.version = MTK_RST_SET_CLR,
++	.rst_bank_ofs = ufsao_rst_ofs,
++	.rst_bank_nr = ARRAY_SIZE(ufsao_rst_ofs),
++	.rst_idx_map = ufsao_rst_idx_map,
++	.rst_idx_map_nr = ARRAY_SIZE(ufsao_rst_idx_map),
 +};
 +
-+static const struct mtk_gate_regs ven21_hwv_regs = {
-+	.set_ofs = 0x00d0,
-+	.clr_ofs = 0x00d4,
-+	.sta_ofs = 0x2c68,
-+};
-+
-+#define GATE_VEN20(_id, _name, _parent, _shift) {	\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &ven10_cg_regs,			\
-+		.shift = _shift,			\
-+		.flags = CLK_OPS_PARENT_ENABLE,		\
-+		.ops = &mtk_clk_gate_ops_setclr_inv,	\
-+	}
-+
-+#define GATE_HWV_VEN20(_id, _name, _parent, _shift) {	\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &ven10_cg_regs,			\
-+		.hwv_regs = &ven20_hwv_regs,		\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_hwv_ops_setclr_inv,\
-+		.flags = CLK_OPS_PARENT_ENABLE,		\
-+	}
-+
-+#define GATE_HWV_VEN21(_id, _name, _parent, _shift) {	\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &ven11_cg_regs,			\
-+		.hwv_regs = &ven21_hwv_regs,		\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_hwv_ops_setclr,	\
-+		.flags = CLK_OPS_PARENT_ENABLE		\
-+	}
-+
-+static const struct mtk_gate ven2_clks[] = {
-+	/* VEN20 */
-+	GATE_HWV_VEN20(CLK_VEN2_CKE0_LARB, "ven2_larb", "venc", 0),
-+	GATE_HWV_VEN20(CLK_VEN2_CKE1_VENC, "ven2_venc", "venc", 4),
-+	GATE_VEN20(CLK_VEN2_CKE2_JPGENC, "ven2_jpgenc", "venc", 8),
-+	GATE_VEN20(CLK_VEN2_CKE3_JPGDEC, "ven2_jpgdec", "venc", 12),
-+	GATE_HWV_VEN20(CLK_VEN2_CKE5_GALS, "ven2_gals", "venc", 28),
-+	GATE_HWV_VEN20(CLK_VEN2_CKE29_VENC_XPC_CTRL, "ven2_venc_xpc_ctrl", "venc", 30),
-+	GATE_HWV_VEN20(CLK_VEN2_CKE6_GALS_SRAM, "ven2_gals_sram", "venc", 31),
-+	/* VEN21 */
-+	GATE_HWV_VEN21(CLK_VEN2_RES_FLAT, "ven2_res_flat", "venc", 0),
-+};
-+
-+static const struct mtk_clk_desc ven2_mcd = {
-+	.clks = ven2_clks,
-+	.num_clks = ARRAY_SIZE(ven2_clks),
-+	.need_runtime_pm = true,
-+};
-+
-+static const struct mtk_gate_regs ven_c20_hwv_regs = {
-+	.set_ofs = 0x00d8,
-+	.clr_ofs = 0x00dc,
-+	.sta_ofs = 0x2c6c,
-+};
-+
-+static const struct mtk_gate_regs ven_c21_hwv_regs = {
-+	.set_ofs = 0x00e0,
-+	.clr_ofs = 0x00e4,
-+	.sta_ofs = 0x2c70,
-+};
-+
-+#define GATE_HWV_VEN_C20(_id, _name, _parent, _shift) {\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &ven10_cg_regs,		\
-+		.hwv_regs = &ven_c20_hwv_regs,		\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_hwv_ops_setclr_inv,\
-+		.flags = CLK_OPS_PARENT_ENABLE,		\
-+	}
-+
-+#define GATE_HWV_VEN_C21(_id, _name, _parent, _shift) {\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &ven11_cg_regs,		\
-+		.hwv_regs = &ven_c21_hwv_regs,		\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_hwv_ops_setclr,	\
-+		.flags = CLK_OPS_PARENT_ENABLE,		\
-+	}
-+
-+static const struct mtk_gate ven_c2_clks[] = {
-+	/* VEN_C20 */
-+	GATE_HWV_VEN_C20(CLK_VEN_C2_CKE0_LARB, "ven_c2_larb", "venc", 0),
-+	GATE_HWV_VEN_C20(CLK_VEN_C2_CKE1_VENC, "ven_c2_venc", "venc", 4),
-+	GATE_HWV_VEN_C20(CLK_VEN_C2_CKE5_GALS, "ven_c2_gals", "venc", 28),
-+	GATE_HWV_VEN_C20(CLK_VEN_C2_CKE29_VENC_XPC_CTRL, "ven_c2_venc_xpc_ctrl",
-+			  "venc", 30),
-+	GATE_HWV_VEN_C20(CLK_VEN_C2_CKE6_GALS_SRAM, "ven_c2_gals_sram", "venc", 31),
-+	/* VEN_C21 */
-+	GATE_HWV_VEN_C21(CLK_VEN_C2_RES_FLAT, "ven_c2_res_flat", "venc", 0),
-+};
-+
-+static const struct mtk_clk_desc ven_c2_mcd = {
-+	.clks = ven_c2_clks,
-+	.num_clks = ARRAY_SIZE(ven_c2_clks),
-+	.need_runtime_pm = true,
-+};
-+
-+static const struct of_device_id of_match_clk_mt8196_venc[] = {
-+	{ .compatible = "mediatek,mt8196-vencsys", .data = &ven1_mcd },
-+	{ .compatible = "mediatek,mt8196-vencsys-c1", .data = &ven2_mcd },
-+	{ .compatible = "mediatek,mt8196-vencsys-c2", .data = &ven_c2_mcd },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, of_match_clk_mt8196_venc);
-+
-+static struct platform_driver clk_mt8196_venc_drv = {
-+	.probe = mtk_clk_simple_probe,
-+	.remove = mtk_clk_simple_remove,
-+	.driver = {
-+		.name = "clk-mt8196-venc",
-+		.of_match_table = of_match_clk_mt8196_venc,
-+	},
-+};
-+module_platform_driver(clk_mt8196_venc_drv);
-+
-+MODULE_DESCRIPTION("MediaTek MT8196 Video Encoders clocks driver");
-+MODULE_LICENSE("GPL");
+ static const struct mtk_clk_desc ufsao_mcd = {
+ 	.clks = ufsao_clks,
+ 	.num_clks = ARRAY_SIZE(ufsao_clks),
++	.rst_desc = &ufsao_rst_desc,
+ };
+ 
+ static const struct of_device_id of_match_clk_mt8196_ufs_ao[] = {
 -- 
 2.39.5
 
