@@ -1,106 +1,119 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2703594B;
-	Mon, 23 Jun 2025 22:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C108219301;
+	Mon, 23 Jun 2025 22:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750718732; cv=none; b=Lxcq6Ehb0C62FvmjbLQdovxEKI3FAewPgjuNO70/smVY5K9MwIVkZRkBWDgeYQ+PAFsTiESgfu7m91Msy2vkEZr337zWyrOBaapFbsDNogHltbCKoTuZbUYC4Rlk2pXeBauGuGrjWNhdMr9+FMb5HnYx2ouaD1SUWeOkYYNBxEc=
+	t=1750718845; cv=none; b=rDAx3CA9H3/kUqqLXUoEfCa+PxuKP97i1vg5JDLQAqD0jc4l/IZ1vbKEWNSCByuC6A/G4vyIKnLxR1UGJMsziCkvjsLw82JLm/z0HYuLq9QgHcOyk/bCKRuHf2xR+dR6HNf0kXXQZ/+ia7pQWpF7IDLDdLDmVwSULiZWOhk+n9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750718732; c=relaxed/simple;
-	bh=CeO8AY4lnLWCMgU1gN94LRHZAB8UqehzLbM0fBlC9DU=;
+	s=arc-20240116; t=1750718845; c=relaxed/simple;
+	bh=F0Eful+LsC18qHuUWUpPOReAr7tTH2VPyfj+njae52A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IpHQqqMdAy5MD40E6cY8C0z4cjb0SsMplX5KySS5VsnR3SV9OPDcwpCAvIv9MVkNgIw0M0Jb8PQUFCz7tIm7nyMhf6pcKM9uDLficJ7Woq/3vj29N25IoHey5D5jl+JeNmwUIE1UlN7vdVv6SkRqhwLYIlGfU+aG6MRkhuR+LKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=zS4OurQO; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=WanKwQ/Z10z2ddhln1ECLV5uHHjZMKFBPVBDSZoru7n3MzRle7iK20YTkW9saWbSur2olmZJ4moG2t4NQ9cNqyNdoSAKDTWp0he9U/YCG+rSIYTsbkx5AvHmImnAYZcJANz/aPNV7iayT7rolhvXx2Tqj2vzt0ZgkfDCAx+tHd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Q3XYhwpu; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zS4OurQO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=CHdSNTwyhEj3ZOnn8e0uBB6QJpASsij9hXSlRqn95gA=; b=zS4OurQOgKjixDkTZUxxvRu1MV
-	cdvpkvkICmkHHCwoGqsknSGMpLlkE+f2CHsH1GUTo+zHMFyt7HiJiDwUxjvk4ckGiGAhhp5uNT6yG
-	F16tQKiX5GaqxW2XIWe8IRjvrgPKywJIstwjT9jHUCiiul80dG5BXcawhVwVujbdZbSc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uTpuc-00Gjnq-Lj; Tue, 24 Jun 2025 00:45:14 +0200
-Date: Tue, 24 Jun 2025 00:45:14 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Michal Simek <michal.simek@amd.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net 4/4] net: axienet: Split into MAC and MDIO drivers
-Message-ID: <3e2acebe-a9db-494b-bca8-2e1bbc3c1eaf@lunn.ch>
-References: <20250619200537.260017-1-sean.anderson@linux.dev>
- <20250619200537.260017-5-sean.anderson@linux.dev>
- <16ebbe27-8256-4bbf-ad0a-96d25a3110b2@lunn.ch>
- <0854ddee-1b53-472c-a4fe-0a345f65da65@linux.dev>
- <c543674a-305e-4691-b600-03ede59488ef@lunn.ch>
- <a8a3e849-bef9-4320-8b32-71d79afbab87@linux.dev>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Q3XYhwpu"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 6739FD77;
+	Tue, 24 Jun 2025 00:47:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750718824;
+	bh=F0Eful+LsC18qHuUWUpPOReAr7tTH2VPyfj+njae52A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q3XYhwpuqK0L+qXf1fWK9gwowy4XCVUHuCVlFzCmRdfy2X0UvLLwlc0AYCc8hKp2o
+	 bZNJ/0p65erJO9q7Rig5OR+oqdTlGtgAsmSzo0Jx0MDPpqmFAw5BxjjeIqwigHRFbe
+	 k/bvmAhvpIzZPtDbOS36WYcNcxOHOHVMIILyyMkM=
+Date: Tue, 24 Jun 2025 01:47:01 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kumar M <anil.mamidala@xilinx.com>, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, "Guoniu.zhou" <guoniu.zhou@nxp.com>,
+	Stefan Hladnik <stefan.hladnik@gmail.com>,
+	Florian Rebaudo <frebaudo@witekio.com>
+Subject: Re: [PATCH v3 2/2] media: i2c: Add ON Semiconductor AP1302 ISP driver
+Message-ID: <20250623224701.GE15951@pendragon.ideasonboard.com>
+References: <20250623-ap1302-v3-0-c9ca5b791494@nxp.com>
+ <20250623-ap1302-v3-2-c9ca5b791494@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <a8a3e849-bef9-4320-8b32-71d79afbab87@linux.dev>
+In-Reply-To: <20250623-ap1302-v3-2-c9ca5b791494@nxp.com>
 
-On Mon, Jun 23, 2025 at 02:48:53PM -0400, Sean Anderson wrote:
-> On 6/23/25 14:27, Andrew Lunn wrote:
-> > On Mon, Jun 23, 2025 at 11:16:08AM -0400, Sean Anderson wrote:
-> >> On 6/21/25 03:33, Andrew Lunn wrote:
-> >> > On Thu, Jun 19, 2025 at 04:05:37PM -0400, Sean Anderson wrote:
-> >> >> Returning EPROBE_DEFER after probing a bus may result in an infinite
-> >> >> probe loop if the EPROBE_DEFER error is never resolved.
-> >> > 
-> >> > That sounds like a core problem. I also thought there was a time
-> >> > limit, how long the system will repeat probes for drivers which defer.
-> >> > 
-> >> > This seems like the wrong fix to me.
-> >> 
-> >> I agree. My first attempt to fix this did so by ignoring deferred probes
-> >> from child devices, which would prevent "recursive" loops like this one
-> >> [1]. But I was informed that failing with EPROBE_DEFER after creating a
-> >> bus was not allowed at all, hence this patch.
-> > 
-> > O.K. So why not change the order so that you know you have all the
-> > needed dependencies before registering the MDIO bus?
-> > 
-> > Quoting your previous email:
-> > 
-> >> Returning EPROBE_DEFER after probing a bus may result in an infinite
-> >> probe loop if the EPROBE_DEFER error is never resolved. For example,
-> >> if the PCS is located on another MDIO bus and that MDIO bus is
-> >> missing its driver then we will always return EPROBE_DEFER.
-> > 
-> > Why not get a reference on the PCS device before registering the MDIO
-> > bus?
+Hi Frank,
+
+Thank you for the patch.
+
+On Mon, Jun 23, 2025 at 03:17:38PM -0400, Frank Li wrote:
+> From: Anil Kumar Mamidala <anil.mamidala@xilinx.com>
 > 
-> Because the PCS may be on the MDIO bus. This is probably the most-common
-> case.
+> The AP1302 is a standalone ISP for ON Semiconductor sensors.
+> AP1302 ISP supports single and dual sensor inputs. The driver
+> code supports AR1335, AR0144 and AR0330 sensors with single and
+> dual mode by loading the corresponding firmware.
+> 
+> Signed-off-by: Anil Kumar Mamidala <anil.mamidala@xilinx.com>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Stefan Hladnik <stefan.hladnik@gmail.com>
+> Signed-off-by: Florian Rebaudo <frebaudo@witekio.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> Change in v3:
+> - add extra empty line between difference register define
+> - add bits.h
+> - use GEN_MASK and align regiser bit define from 31 to 0.
+> - add ap1302_sensor_supply
+> - add enable gpio
+> - update firmware header format
 
-So you are saying the PCS is physically there, but the driver is
-missing because of configuration errors? Then it sounds like a kconfig
-issue?
+One of the main issues with this driver is that we need to standardize
+the header format. The standardized format will need to be approved by
+onsemi as we will need to provide not just a driver, but also a
+toolchain that will produce firmwares in the right format. Furthermore,
+some time ago the AP1302 firmware was extended with the ability to
+dynamically compute PLL parameters IIRC. This needs to be taken into
+account.
 
-Or are you saying the driver has been built but then removed from
-/lib/modules/
+I want to resuscitate this driver and get it merged. There's more work
+to do, in collaboration with onsemi, and I haven't had time to tackle
+it. If you want to propose a proper design for firmware handling I would
+be happy to participate in the discussion.
 
-	Andrew
+> - update raw sensor supply delay time
+> - use gpiod_set_value_cansleep() insteand gpiod_set_value()
+> - update use latest v4l2 api
+> - use ctrl_to_sd() helper function
+> - add ap1302_g_volatile_ctrl()
+> - remove ap1302_get_fmt()
+> - use guard for mutex.
+> - use dev_err_probe
+> - use devm_add_action_or_reset to simple error handle at probe.
+> - use read_poll_timeout() simple dma idle polling.
+> 
+> previous upstream:
+> https://lore.kernel.org/linux-media/1631091372-16191-1-git-send-email-anil.mamidala@xilinx.com/
+> ---
+>  MAINTAINERS                |    1 +
+>  drivers/media/i2c/Kconfig  |    9 +
+>  drivers/media/i2c/Makefile |    1 +
+>  drivers/media/i2c/ap1302.c | 2838 ++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 2849 insertions(+)
 
+[snip]
+
+-- 
+Regards,
+
+Laurent Pinchart
