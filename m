@@ -1,126 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B272907;
-	Mon, 23 Jun 2025 11:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC10223774;
+	Mon, 23 Jun 2025 11:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750679367; cv=none; b=bJ+PNHYgguiqOXuDiWlX+rjXJ8I/CKe+L7uG+yl/x2EdUeCv699tC5z4UmN8QUVoihJ3olS2ZvNpyTKS0NG4f/Uyl4oOGKJr8Ig8sghU/j8qAMGzZJZIGLbrlcINgVglUFH7LoVcFUAGJ+EHXJeOX5BDiTZS+JyGQVgA4GvmQz8=
+	t=1750679381; cv=none; b=S/Sa1lgW3NGNq/83bEFjX54+GuNz0MZEk+fk+MoGXnsTPHF4i5VL4JvPcxqk47QIM1JbykkmFvBzFWPXifAKyFdGVl4kNSDjsUECJTX7bmIGypht45zrq0UlLbI79+iX7dF/KPQqraAzTd/Mt12hSJG0oh8WJl7MfwkjEfWRRIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750679367; c=relaxed/simple;
-	bh=8Trw3txrBdR13Nl/jH8oEvluQUWTm9KCCcSHmJZ68+M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dkQpRpmxHnn3PHKxLqIgx64ZHiy1cM15igIyy1s/7Ukum3Oc5lrqmZ9O+W4yl1DI+LCm5rCfRwLimrG+N65P6L5IawSrIrwaVQ8y9UKG1E3RrakAe6+JONqknghOgIcjiLFu900KsYZrLgG3LTvgWt7gzd9BZrKLEM25+M8s3AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CiacpnM3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750679381; c=relaxed/simple;
+	bh=m+Qd1Cb/X0RC7mbPvOpJ0Mdpw8OSC6q2uYPyT+xzuVs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D63dq0RAIGxH4OV3wzhDtknej3KI+KRR2eMBp6u1LLZJQ6gWVtBpJxCbWFRSuuu62ECQ7Jxkoaf4UDHysSbWwH0UnxekDLm9UW0eTMBKedJPPNz4NUOvVqFALFN6hdz1bJ0CgJYUbWebYGWqy8o0ZJWnrSy57XC++p9RAp5MJnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=XqXhwRmT; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CiacpnM3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FB11C4CEEA;
-	Mon, 23 Jun 2025 11:49:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750679366;
-	bh=8Trw3txrBdR13Nl/jH8oEvluQUWTm9KCCcSHmJZ68+M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CiacpnM3uFYiYKEJOiqajM/Uo8dZ5SJ7+xEvBNfDQaoO0tAyPYEui7zW+JncD1dhu
-	 L2rcPWP336C6tMmAuE6x7g79HZVJbG95yiPWp7NkLA6yxrmUsEwgU3oH1y2GZ7hh0P
-	 eUenP0jM4LHNc2/7B4z7NEF64u+NxZ/6oiMJIFkHWi7GYqvX7gKEtn9ghf6SwMAW41
-	 gaEC0y3ml5449Lju0nIVzrJ/O5sW4kvBARKjYtoii/k1K/SGH90TB8E77lV1QhKPvq
-	 SCWkdVkEGvNS6lPNmXPdbMjDLd6NfTStL74tVKaDn07mRmC7LC7rHcA5hvDWxQxtP8
-	 C+mTnnErlBiZQ==
-Message-ID: <cbd6b7e3-850a-4bde-a1f9-393c291c1ee3@kernel.org>
-Date: Mon, 23 Jun 2025 13:49:21 +0200
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="XqXhwRmT"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 407A840E019C;
+	Mon, 23 Jun 2025 11:49:37 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 9WEx8yNFNSCU; Mon, 23 Jun 2025 11:49:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1750679373; bh=kfvlOPZPYOqpJCisMXBomvYik2rz2a87LAMAgti+Ebo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XqXhwRmTnHrn17Yqo8ZTokhxjs5+ZHrhkWBnWUoMHAAXmmQEUfTM8s2vjsSpkRAZp
+	 cpCmf5odvPe5tsUZLwddIokSqQMBm4BpPFTAdRVIPe4/KR8hCQRR8bI04qvKMa6tpP
+	 b7hDIRymYp1+t+aMxK9JO377/5BS9V6kaAkZ/8gt3J+sO45q49q6NgxUa5MymZ3W1d
+	 IRal9cqx+qZM4FR81BLq0X7Gi70k740XfB3ld7l/YX3WoCygflfyMMaoPbTId2KOoq
+	 B2C7KT86qWLBc/3j0BCC7xufPfbEo3z3WHwxez6e8TuWt2FZUcB+WKCQHQdcqoKDiK
+	 FFh8L3WfG0OwCv9TURuZgagSAx7q/nAk+XO1PnbP3g7+a/KxanadIW6IV177CUqVR2
+	 L4QuPlC6NJx357/lvIRi2D4Sl582bhV+4GCcbRUkx7v20C02jO3V4UA+7uM0MdQ+Aw
+	 5v0ZPrLBtkwH212401e4c5S17V5wTvAxBYKYFuOrIEQ90tYZuPgRVbmWjonM4s6YHK
+	 ow6UO3aJOMwNid1BXet9/MuSUkbhF17KS4qTDmIlb5klI7t/qsCn94WS+gREqmTI60
+	 py4LAC0PRWn02hMgznoXMTz1wKu8V8REvLn94ib9t08hs+sC3KpZwbQJ0yNM5gDYQA
+	 R9e+tnF/y1/4U8r6DHsM+Btk=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 953BC40E00CE;
+	Mon, 23 Jun 2025 11:49:11 +0000 (UTC)
+Date: Mon, 23 Jun 2025 13:49:10 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	dave.hansen@linux.intel.com, Thomas.Lendacky@amd.com,
+	nikunj@amd.com, Santosh.Shukla@amd.com, Vasant.Hegde@amd.com,
+	Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com, x86@kernel.org,
+	hpa@zytor.com, peterz@infradead.org, seanjc@google.com,
+	pbonzini@redhat.com, kvm@vger.kernel.org,
+	kirill.shutemov@linux.intel.com, huibo.wang@amd.com,
+	naveen.rao@amd.com, francescolavra.fl@gmail.com,
+	tiala@microsoft.com
+Subject: Re: [RFC PATCH v7 03/37] x86/apic: KVM: Deduplicate APIC vector =>
+ register+bit math
+Message-ID: <20250623114910.GGaFk_NqzGmR81fG8f@fat_crate.local>
+References: <20250610175424.209796-1-Neeraj.Upadhyay@amd.com>
+ <20250610175424.209796-4-Neeraj.Upadhyay@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/5] media: dt-bindings: venus: Add qcm2290 dt schema
-To: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>,
- quic_vgarodia@quicinc.com, quic_dikshita@quicinc.com,
- bryan.odonoghue@linaro.org, mchehab@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org,
- konradybcio@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250623105107.3461661-1-jorge.ramirez@oss.qualcomm.com>
- <20250623105107.3461661-2-jorge.ramirez@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250623105107.3461661-2-jorge.ramirez@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250610175424.209796-4-Neeraj.Upadhyay@amd.com>
 
-On 23/06/2025 12:51, Jorge Ramirez-Ortiz wrote:
-> Add a schema for the venus video encoder/decoder on the qcm2290.
-> 
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>
-> ---
-Don't send multiple versions per day and allow other to actually perform
-review of your patchset instead of sending for every little thing.
+On Tue, Jun 10, 2025 at 11:23:50PM +0530, Neeraj Upadhyay wrote:
+> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+> index 23d86c9750b9..c84d4e86fe4e 100644
+> --- a/arch/x86/include/asm/apic.h
+> +++ b/arch/x86/include/asm/apic.h
+> @@ -488,11 +488,14 @@ static inline void apic_setup_apic_calls(void) { }
+>  
+>  extern void apic_ack_irq(struct irq_data *data);
+>  
+> +#define APIC_VECTOR_TO_BIT_NUMBER(v) ((unsigned int)(v) % 32)
+> +#define APIC_VECTOR_TO_REG_OFFSET(v) ((unsigned int)(v) / 32 * 0x10)
 
-<form letter>
-This is a friendly reminder during the review process.
+Dunno - I'd probably shorten those macro names:
 
-It looks like you received a tag and forgot to add it.
+APIC_VEC_TO_BITNUM()
+APIC_VEC_TO_REGOFF()
 
-If you do not know the process, here is a short explanation:
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-of patchset, under or above your Signed-off-by tag, unless patch changed
-significantly (e.g. new properties added to the DT bindings). Tag is
-"received", when provided in a message replied to you on the mailing
-list. Tools like b4 can help here. However, there's no need to repost
-patches *only* to add the tags. The upstream maintainer will do that for
-tags received on the version they apply.
+because this way of shortening those words is very common and is still very
+readable, even if not fully written out...
 
-Please read:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+LGTM regardless.
 
-If a tag was not added on purpose, please state why and what changed.
-</form letter>
+Thx.
 
-Best regards,
-Krzysztof
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
