@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9061A256E;
-	Mon, 23 Jun 2025 02:39:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC7F1B0439;
+	Mon, 23 Jun 2025 02:39:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750646348; cv=none; b=KMbdkaEOMXjz/GrQ6qdQsWqiVynFM8qAoky/FIGlmo0Js2pb4IgqvdovTAz6CBtMj0NCDzBeMlXJzSAkjuPmr3yWnjyMknCY/p4CSg4uJPgGkEj48zBkGFs3k+ZgmaK6yfvC4Hph7f7F7easbWJi18SrNmTR4dRqmvAWkFr5kRc=
+	t=1750646349; cv=none; b=taVsoWVK5rIMYaSbu5xCuV3/EtkVRIatOcD2bFLxlZu1XiqfrOSsa70a01fT6YYWWZwaMga3b845o8jFzaSxmQJC6OwBGTakBnOMukHC73IQLS0NYM7yXswNPxhexd9sL2QT/fqVrSNEoZnWAIwo12Ay7bAeDWMyVv8hqS9nls0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750646348; c=relaxed/simple;
-	bh=z+teoxeTAmCgQVzu+Jz6aydCP8vcrbY6GqWslL+3y8Y=;
+	s=arc-20240116; t=1750646349; c=relaxed/simple;
+	bh=Fvdn22+aLwNt5IcX7plkjuYY6MzRdeiquj8xeSPIR2A=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=UcsdRwE3vLeQ40KGosiOqH+zm/fFVwqATtI7SF0u37eSAmxid37qF15viJOSiVLP06IXMtdAgWbY/xqKn7j7Q3HpUi4n0CtxOVq7evx7lHOHI2tCSsmVOlBA7HXU6Fhaw83ZbGE6w45jCie686ys49L2C5kLq47tEDXFy9gLOWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yp/WX/Xh; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=SHk5X+lh+0BtYARvnoCSZId9C1cijTsSNNCrQRDFVUGs/oYXegYbTv5Ht7SdurRZzp8LdOpW80MIn3Xt1aSGRr252yeAMa7Yek4jtGL8HVrX/YTxq5I7Kj2KmMbgMdXQ3acTuTb147HFnsK2lfXz/Lq40A1Gb9WLviT++w5Umrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kdm5nweS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yp/WX/Xh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25D2AC4CEE3;
-	Mon, 23 Jun 2025 02:39:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kdm5nweS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A615C4CEF1;
+	Mon, 23 Jun 2025 02:39:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750646348;
-	bh=z+teoxeTAmCgQVzu+Jz6aydCP8vcrbY6GqWslL+3y8Y=;
+	s=k20201202; t=1750646349;
+	bh=Fvdn22+aLwNt5IcX7plkjuYY6MzRdeiquj8xeSPIR2A=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Yp/WX/XhrPBaXidYPuxT4pjPsfKN5DM2FB5pXmH5ptyaOSlk9l6RCDD4fXpV1vOLu
-	 GkjqHgqjKgd9nA5DXGlmqvQ7itU4vwkCOxCmCHxPaWzGXgz5RSC5z3fX/EbJyD5M7t
-	 7gA4nXAzScqT9zoaPVxTe4de7a9KhnlCMf3oTGgdwLraz2LWUDXu15rWLZ0AtYzFdu
-	 qhlSd9x0iKJishocD+37JnAOFXFQR6FvMxd9JVjwLHo053zUc5/a4FZzuN/GXoH3F4
-	 N0ZIIj7Wp8kwEz/Ns8MTKgVOtdVNAjVFRST3N85dqzO9nhv/FK1ep+1NjaWv6gdMjb
-	 +hxHD83wIbArg==
-Date: Sun, 22 Jun 2025 21:39:07 -0500
+	b=Kdm5nweSN23bTVlDMGIMReXxN4GS3yWfedMLMBuQO7ca+w72Y5ovB3tnUqRWM7gPB
+	 AY6DnY76QvHN0OxJ9hLv/cOQf+s48Tey4xdfal9Jp0c/44XjKj4LRJSqNXXrAOaGSh
+	 A0fIsDdL1faLQjYHfJUSHFZW28h0fhn3ToCz2Ceq1n8VjrJDygu0/7dveF2P1ZmZj1
+	 dUMfsSf83yt/CF5D3MH/pzr6lvx1SYttFn8iH3Yn/TX2HaPsC7HSUC/8cBKIFY0FRf
+	 Ly3bm5Dz3a3HwHsFT/9cr50wErRo48wbJF0Lg6hAC5VkYCPSHK7eAiZPAFhBA8t3Y1
+	 P5PRYsBHYAqkw==
+Date: Sun, 22 Jun 2025 21:39:08 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,65 +36,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- Diederik de Haas <didi.debian@cknow.org>, Johan Jonker <jbx6244@gmail.com>, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- Farouk Bouabid <farouk.bouabid@cherry.de>, 
- Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>, 
- stable@vger.kernel.org, Lukasz Czechowski <lukasz.czechowski@thaumatec.com>, 
- Dragan Simic <dsimic@manjaro.org>, 
- Quentin Schulz <quentin.schulz@cherry.de>, 
- Heiko Stuebner <heiko.stuebner@cherry.de>, 
+Cc: Jiri Slaby <jirislaby@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, linux-watchdog@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, 
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+ linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ Matthias Brugger <matthias.bgg@gmail.com>, linux-kernel@vger.kernel.org, 
+ linux-mediatek@lists.infradead.org, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Sean Wang <sean.wang@mediatek.com>, Guenter Roeck <linux@roeck-us.net>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Jakob Unterwurzacher <jakobunt@gmail.com>
-In-Reply-To: <20250620113549.2900285-1-jakob.unterwurzacher@cherry.de>
-References: <20250620113549.2900285-1-jakob.unterwurzacher@cherry.de>
-Message-Id: <175064594664.881054.5188113186564000482.robh@kernel.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: use cs-gpios for spi1 on
- ringneck
+To: Max Shevchenko <wctrl@proton.me>
+In-Reply-To: <20250620-mt6572-v1-0-e2d47820f042@proton.me>
+References: <20250620-mt6572-v1-0-e2d47820f042@proton.me>
+Message-Id: <175064594753.881101.7250770438494415279.robh@kernel.org>
+Subject: Re: [PATCH 00/11] ASoC: mediatek: Add support for MT6572 SoC
 
 
-On Fri, 20 Jun 2025 13:35:46 +0200, Jakob Unterwurzacher wrote:
-> From: Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>
+On Fri, 20 Jun 2025 18:40:39 +0300, Max Shevchenko wrote:
+> This series of patches adds support for the MT6572 SoC and
+> the JTY D101 tablet and Lenovo A369i smartphone based on it.
 > 
-> Hardware CS has a very slow rise time of about 6us,
-> causing transmission errors when CS does not reach
-> high between transaction.
-> 
-> It looks like it's not driven actively when transitioning
-> from low to high but switched to input, so only the CPU
-> pull-up pulls it high, slowly. Transitions from high to low
-> are fast. On the oscilloscope, CS looks like an irregular sawtooth
-> pattern like this:
->                          _____
->               ^         /     |
->       ^      /|        /      |
->      /|     / |       /       |
->     / |    /  |      /        |
-> ___/  |___/   |_____/         |___
-> 
-> With cs-gpios we have a CS rise time of about 20ns, as it should be,
-> and CS looks rectangular.
-> 
-> This fixes the data errors when running a flashcp loop against a
-> m25p40 spi flash.
-> 
-> With the Rockchip 6.1 kernel we see the same slow rise time, but
-> for some reason CS is always high for long enough to reach a solid
-> high.
-> 
-> The RK3399 and RK3588 SoCs use the same SPI driver, so we also
-> checked our "Puma" (RK3399) and "Tiger" (RK3588) boards.
-> They do not have this problem. Hardware CS rise time is good.
-> 
-> Fixes: c484cf93f61b ("arm64: dts: rockchip: add PX30-µQ7 (Ringneck) SoM with Haikou baseboard")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
-> Signed-off-by: Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>
+> Signed-off-by: Max Shevchenko <wctrl@proton.me>
 > ---
->  .../boot/dts/rockchip/px30-ringneck.dtsi      | 22 +++++++++++++++++++
->  1 file changed, 22 insertions(+)
+> Max Shevchenko (11):
+>       dt-bindings: serial: mediatek,uart: add MT6572
+>       dt-bindings: interrupt-controller: mediatek,mt6577-sysirq: add MT6572
+>       dt-bindings: timer: mediatek: add MT6572
+>       dt-bindings: watchdog: mediatek,mtk-wdt: add MT6572
+>       dt-bindings: vendor-prefixes: add JTY
+>       dt-bindings: arm: mediatek: add boards based on the MT6572 SoC
+>       ARM: mediatek: show the hardware name for the MT6572
+>       ARM: mediatek: add MT6572 smp bring up code
+>       ARM: dts: mediatek: add basic support for MT6572 SoC
+>       ARM: dts: mediatek: add basic support for JTY D101 board
+>       ARM: dts: mediatek: add basic support for Lenovo A369i board
+> 
+>  .../devicetree/bindings/arm/mediatek.yaml          |   5 +
+>  .../mediatek,mt6577-sysirq.yaml                    |   1 +
+>  .../devicetree/bindings/serial/mediatek,uart.yaml  |   1 +
+>  .../devicetree/bindings/timer/mediatek,timer.yaml  |   1 +
+>  .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+>  .../bindings/watchdog/mediatek,mtk-wdt.yaml        |   1 +
+>  arch/arm/boot/dts/mediatek/Makefile                |   2 +
+>  arch/arm/boot/dts/mediatek/mt6572-jty-d101.dts     |  62 ++++++++++++
+>  arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dts |  57 +++++++++++
+>  arch/arm/boot/dts/mediatek/mt6572.dtsi             | 105 +++++++++++++++++++++
+>  arch/arm/mach-mediatek/Kconfig                     |   4 +
+>  arch/arm/mach-mediatek/mediatek.c                  |   1 +
+>  arch/arm/mach-mediatek/platsmp.c                   |   7 ++
+>  13 files changed, 249 insertions(+)
+> ---
+> base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+> change-id: 20250619-mt6572-ef78a3d45168
+> 
+> Best regards,
+> --
+> Max Shevchenko <wctrl@proton.me>
+> 
+> 
 > 
 
 
@@ -113,18 +115,17 @@ make sure dt-schema is up to date:
 
 
 This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: tags/next-20250619 (exact match)
+ Base: using specified base-commit 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/rockchip/' for 20250620113549.2900285-1-jakob.unterwurzacher@cherry.de:
+New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/mediatek/' for 20250620-mt6572-v1-0-e2d47820f042@proton.me:
 
-arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dtb: spi1: spi1-csn0-gpio: {'rockchip,pins': [[3, 9, 0, 150]], 'phandle': 87} is not of type 'array'
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-consumer.yaml#
-arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dtb: spi1: spi1-csn1-gpio: {'rockchip,pins': [[3, 10, 0, 150]], 'phandle': 88} is not of type 'array'
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-consumer.yaml#
+arch/arm/boot/dts/mediatek/mt6572-jty-d101.dtb: / (jty,d101): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[2147483648, 1073741824]]}
+	from schema $id: http://devicetree.org/schemas/root-node.yaml#
+arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dtb: / (lenovo,a369i): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[2147483648, 536870912]]}
+	from schema $id: http://devicetree.org/schemas/root-node.yaml#
 
 
 
