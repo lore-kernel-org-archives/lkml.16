@@ -1,198 +1,288 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2079.outbound.protection.outlook.com [40.107.93.79])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2046.outbound.protection.outlook.com [40.107.92.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E990012C499
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F30B15689A;
+	Mon, 23 Jun 2025 10:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750676081; cv=fail; b=tIwFOx/+U1407QZU7zUYsGCW2SugRi8R5qzcnYFwZKAOasEvVkog+4ScWqNDXezlpCUQJa5LS0rH+gvH0ezWa/Kg+VOk2yz6efIPg3NI3mBJIFI8OYe9aTYcRRBowHN1V46o2jDRII+iDuHe1RXdGdzbS5tQyZIDPmFhLU5BKBs=
+	t=1750676100; cv=fail; b=fJi90PQiJnRAuO9UnwX0DAn6t6J2AFCbA1FuR0oUpZdK6RKT7/gCPvM6kVFbOdOlnn4hQD4c9lGSxDY74KqE1lla2ydfCfutjha+nOaWqz7uJ3gfsd2Tdh8dK0O/SjRhiMGMlMpyfKEhAWBOZDfrgZaVsqZUjWvkQuArjYaQWrI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750676081; c=relaxed/simple;
-	bh=4s0X9ikEef6jM+DjpS2N/xLznyJwgRZtvZ4sfu9zRQE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=hAtNdfygQoyDET8TzL19paKNFjzIQIxJd5xaUGFP0byP1tNiXo3CjgBerDjM1Y34QVGOWRkl3wrHdzeB2pUii4CdhAwK2wuW08LebI4f2Hss0OmTYYNbXhqGYLjI8f2vfl6608TkSdSJR9Ih+ZPTwGuDYhEtd6avodxRZ1rDfWQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=PEifsYKM; arc=fail smtp.client-ip=40.107.93.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1750676100; c=relaxed/simple;
+	bh=lo33dsIidDXyb1+/kBgPFU+w8mHmjnthPfiDruxVgVA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KjeOIOcAmbFsrzQ2adESiXr5bSAQyAoCTRzosdF1mrZk9gQf5rtNOQbDpuTbra+MWKdlV6XchGUd5ObbZ8Q23IiQYx6bGn4YsGNWxVsmyKaE3I97nckANnICl8vAv9J4ZBUcKKk9yXZyIs/63QJmmnKOvV4UAhpmKhkf3p/siFQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rVbgSgJV; arc=fail smtp.client-ip=40.107.92.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="PEifsYKM"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rVbgSgJV"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ldJbxPpIHX053iBQ9IHxd4qsuKIe6vjDaigA59QZl3OJPqhtIc/AAM4LwAo7dHaxRG0hfZ51TgWNncvXQZOL5f8/XOCejOeUTu1uEuGSlSVBTpGLBuigF65zhQ8/l+koytdk+i3GkdsOcdft3XTZN/DcVlhxM2Ca94N5t5ieUiAXxRujkpqsW+s1RKyYzA1JlR6rfdcavrxkwZAXlAyj30dYQFE59j8iJvvNfzWFpiKJ9D0VidKlAFih9BOPPGTNNUSbMyouvEoAzYCyvzXIJQSB2sCYTPJI1Pkz3686MgGWcIox7pQXtmQCsFlfke05a0LBY8cO6eeXzJS7DZlWVQ==
+ b=Be1m60dP1rqizX7izlqPg1GmiGn3bbH/2slMnu1z7MufXYq7L6N2sGnH+/WmiNeW+BbOX18K13tGhSICEbdmum2estKxaD6wn1Vf1Y+ChAxmaJtXq875jH+8B9jHxBk1k5PwxmEASp12D6/Xz5+DGhqPl+weI24UB6VqZ3+t4OMohO5QhBsXU9XzqseyYlZIUGpdDlnLxlijneQhzUE2ISJ0Joc4VQL7t2WJWW+m4VuKkdI7E0C8njw6BciXpzYC7zw8RMYiw9X3JYaAHY1oGZYgKJ7I9lc8BmHLT0jS9tBzS3qCNAccXjHmUucG2OY0K2gXmE/4/tci1M7gAbvPaA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4s0X9ikEef6jM+DjpS2N/xLznyJwgRZtvZ4sfu9zRQE=;
- b=Z1xLffUmJ2MZBmb87B10wiyAxuMvZegOHlDNdMGiGzic6CtyfSZi28UPpWiblq0n63zjbPkaDAA++ka5JcZSxtp6675P8OVw9syHTDv3CY5lXwB6oCP6RV5r0DWBT74nYtFQAYgnTaQgEVU8+M78PiTM6JFuR7yXdKDMX53d4HdEUhjeILgl1ArEV/JmpNaTMghT+F8fA7NxjXc8fH9KhH+3Iy3H8kFFu6+WAg287az8BVsVqAMtSWKFTDANAaJBbqBy1LTiHxU/LDs9C7DEKION7M3b3ttal65zKnHaIOyHuRDfUJgVWyHNu60hxmG/VGAbiizLLuIy1BdBmMezAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
- s=selector1;
+ bh=qjUD/Wu8snS6OlgFDnfg91MTTMfj7R7Y84ryk8H/ycc=;
+ b=XDSmFgwIbf3lM4r9ApkM04LzmzDkXfQcBrbFGY+I72yrk3Pwb8gu3mP9PKVpbQPhoBBp9k75k3lp9iVskMa33jYKPZeeuf3Fgnn0xFRRtVU8DZu4m6EwlRsuaf9Xi3DC2Kpb3FdGqY0wjZ4WmWx1nsIfHRgudIOIWU4HkAC4DGYcT73UN8+K2e9uuNDHnBRwHSyBufqxqnBjxQm1U9knK3P1qvhQnxT5c0GliYYkGrxwrS6Pfw36hcCQdSeCQvT3HiFOTOuA1Xidz57TMv1XNcAVXE5ySpEHc1Q/4Yv39rQ46TvyXJB35pXnMdiOsz/zJH9lnzkIwI+3FCyQmxdIXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=bootlin.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4s0X9ikEef6jM+DjpS2N/xLznyJwgRZtvZ4sfu9zRQE=;
- b=PEifsYKMs+kUpsu8Uo5HVDsqzcO/+PYdeNL24PHR3vMvxu79PMYjCmXLb3et54j4BKMx9l3IbDTsnHW2ijToxm5xrOH3qVp0rLOouq2ojkSFRWDmDofH4gr5Z8YnVsTQw8XjMowUY9ZQem53XeqbFrAeRSfEw4Nj5HGp3ZrNMQ6CRMG7iFUIhciVK5VTF+WqwMGXnhj2xl+7UfbahuDm2Kv2XNy8ByH2FalB/BuFEzRe2tFAtbtO+SWute8E4IpEUs7jopYpjS/3RBMwOJSrp8n7mBGsyYOIyFLOO4AUn+pnRgMJu8uFy0fagcN+6/lvurkxGQVwjOb+gZ2iIx6mTA==
-Received: from PH7PR11MB6451.namprd11.prod.outlook.com (2603:10b6:510:1f4::16)
- by SJ5PPFD56E32CC2.namprd11.prod.outlook.com (2603:10b6:a0f:fc02::859) with
+ bh=qjUD/Wu8snS6OlgFDnfg91MTTMfj7R7Y84ryk8H/ycc=;
+ b=rVbgSgJVkNYfi9J9av4pQdA7Q0LfYp00zVYkIslX2OgvHVgkNvW6U8jX54v/MeOXeLqxZ9qhmwnSvs4qkhgu4L/hOw5L/4iFPJc2l+Wtqckd/qZEhV415YeoQFnxzxB8A7SxPRFUC2PrW/zEFKVDvIxWgTeoQIYuJ3zQkOWQzZE=
+Received: from PH8P221CA0061.NAMP221.PROD.OUTLOOK.COM (2603:10b6:510:349::17)
+ by CYYPR12MB8938.namprd12.prod.outlook.com (2603:10b6:930:c7::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.27; Mon, 23 Jun
- 2025 10:54:36 +0000
-Received: from PH7PR11MB6451.namprd11.prod.outlook.com
- ([fe80::80a8:f388:d92e:41f8]) by PH7PR11MB6451.namprd11.prod.outlook.com
- ([fe80::80a8:f388:d92e:41f8%5]) with mapi id 15.20.8857.022; Mon, 23 Jun 2025
- 10:54:36 +0000
-From: <Dharma.B@microchip.com>
-To: <laurent.pinchart@ideasonboard.com>
-CC: <asrivats@redhat.com>, <dri-devel@lists.freedesktop.org>,
-	<Manikandan.M@microchip.com>, <neil.armstrong@linaro.org>,
-	<rfoss@kernel.org>, <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: bridge/microchip_lvds panel usage
-Thread-Topic: bridge/microchip_lvds panel usage
-Thread-Index: AQHb353QCN/22YFqFESSzU7dvbf6gLQIAgmAgABG6gCAAFVfgIAH/NyA
-Date: Mon, 23 Jun 2025 10:54:36 +0000
-Message-ID: <4bebca7c-d206-42a9-a233-f68f2c4cb1f1@microchip.com>
-References:
- <CAN9Xe3RV9aZLJ3zV3zip5MQweGbBghdOFGohd6Qg-XjvFoGing@mail.gmail.com>
- <20250617233623.GB22102@pendragon.ideasonboard.com>
- <f10ee1ce-5362-4dc9-8e61-726db9c27d64@microchip.com>
- <20250618085545.GC28826@pendragon.ideasonboard.com>
-In-Reply-To: <20250618085545.GC28826@pendragon.ideasonboard.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR11MB6451:EE_|SJ5PPFD56E32CC2:EE_
-x-ms-office365-filtering-correlation-id: ab2927c9-99eb-44ee-cac8-08ddb2445831
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?VWQ4WHpMOWkrYk1ubnY1enNjbmpuTVJvL1dxdGdSTkw1Z0dCMmpMYWFQOHQ4?=
- =?utf-8?B?S1E3Mzh0bWZKQXNWZFByUWk0OGFPOTlNNFc4S2xHUUp5RlJUYUp5VmtxUWEw?=
- =?utf-8?B?VnFONXQ3ZnZudkVwaU9Tem5oMWtIVmJid1dOZDVlY3lXQk55WUJrL2xwaHZX?=
- =?utf-8?B?UEdOM0JUVWpNZjRBTVZWNnZsRGpCdDczYWhEMGJteTYxYW5tL2IvWU5QMHZN?=
- =?utf-8?B?M3U5dFRJbzkrZ1oyT2FUa2VXNHdITHorMng0WDRBUUMxZ0lCTTc4clBBbHlz?=
- =?utf-8?B?aEV6U2w3Z0hKNEQ3MFhZR2p1OFN5RkRlVHVVcThid1Jpdy9kUHE5aDNyQlR4?=
- =?utf-8?B?UWFzcEVSTzRzM1dXYm5Sc2JSQ1NCZTY2VDA4UDlYNEx1Z254d0d2Tmh2azUr?=
- =?utf-8?B?akpKUEg5ZjNXNVgvVkN4V213TmFyUitiSjd2a1p0V1UzeTRobkpLalZiUjFX?=
- =?utf-8?B?aVZaakI2M3pYanJ3aW1KVlZKWmFYeDlBbTBsMWEzNDBoQ0NtYlFpMERtdEZa?=
- =?utf-8?B?T3VSMmQycVNHQVFtamROajBTMndFRmlPbXV6M1h2R3l2TGwrUjE0Mmc2Wll3?=
- =?utf-8?B?c3RRcGtaWHlvN21DSkN6U25ZSHdLYk92UDByR2JVRmhXVTQ4NGRRMlJ1a0ZG?=
- =?utf-8?B?TFZ2VEZvN1ovemVTQWNyNG1wSnhjRmdNYXVMYlJjMFBQb1BnQXUySzJYRmxX?=
- =?utf-8?B?YU5mc2UwYU5XWWh2bGRpU3ZzY1kxeW4xYkJIcVRWMEF4cVFseDA4Mi94QUxX?=
- =?utf-8?B?VW9UbGk5c0NxL0I5RXczQ1g4d0hINVROOTNsekRJUHJaNGtCMlFuRTZYSzdq?=
- =?utf-8?B?cUM2c3Mza3VsWm1OZUlJcHE4QWZldUc2MWdCd0VEWDNYN3pCWXZlbytGMi83?=
- =?utf-8?B?ZnpNUnVWa1p4Y3RCQy9IRGJnSjAyNTBxRFh4K1E2L0UwWU16MlpzOCtFakZ5?=
- =?utf-8?B?MDdQRHJueEEybzB0bkptUVo1Qys0QVRKQmp1ZVRIalFIMUQ1NERiNnVvelZZ?=
- =?utf-8?B?ZHNQKzRXWVNib0NKcGdLWEdKSjJFbUxBclgxcVYwMXI3TFlTZmxlaE1YUlJ0?=
- =?utf-8?B?bmZWWk44a2JTQXhxdVUyWkdoZWpSbVpjb3k5aGk3VG1OU29kNlM1UjlBZzF2?=
- =?utf-8?B?dmxjS2JZT1NEWXRoN3ovaVVYYTNrRm1sRU8vNUVTRWNsdllTbml4Q2NaNTlz?=
- =?utf-8?B?dll4UWY2emZUTTNqVnMvR1Ewd01MVU11RUliVUVOZDhkdUk0Vk5LelpMcUY1?=
- =?utf-8?B?blhqdmRqaHJaVk04WnNwdlZWbmdsa3R0cjl3NXhwbkVuZ2JPZXpmbHFkREJ1?=
- =?utf-8?B?RnBrTTdYZ1pvaVNtRW9wTEsyaVhpVlRLSjRYWTNWYnZKNjBYR3kxTXBSQnNa?=
- =?utf-8?B?ZENiazdZMFdVMXVQMlpxYTZNVkh0SWpEVUYyM01Kb2JVZVZhV2Y5SXhqdnpn?=
- =?utf-8?B?NTBRQlNKOVJYK1RUTmFnM0tDcDF1cUZDRXk4b2dVTS9WSFRDNGlIQmgzVzRP?=
- =?utf-8?B?YUlTMjlSQzlkM0UzaTRMRkpZQWdJenFYeVJPeVc2d0dIYTNXMWhWQlliRVRV?=
- =?utf-8?B?MnZIbXlyOUxST0RNTEZuMGxFSjEzZHFRZXB6dUQ3SDFYeXEwMTlBY0UxbXh1?=
- =?utf-8?B?VUJkVUpMQWtTSHpvU2ZINzNObXNoeVZiSzVwcENFOFBnNmIzNUFpekY1cERr?=
- =?utf-8?B?WFpKcGNuMmlhZkJWOEx0OVVUSmltT0lUYVhZWHVZYlBGU0RqR3FHdWhGcVhL?=
- =?utf-8?B?SVo1ZnFtdkF3V0oreWRpaGFGbkZFemFaZ1c3VEsrTmZ6SDZsRG93Z0lZR3hG?=
- =?utf-8?B?dXZnWHFHYWtQUDlqWCtDbEdnZkVwbE9kR3hNUDlKV20wOElVdFo3VU05eXZm?=
- =?utf-8?B?YU1iU3BoWkR0ZFU2NllDZyt3b3lTQjArY0F1NFc3MXljbDd5NHZFelRweXBI?=
- =?utf-8?Q?5WyJ6E15dR0nKXc+zHy+KzHSM2C/pX4R?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6451.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?ZVFCS1k4NTBnZzJ0OEZmODErNnZabGU4R3EvWng5TTlSYlZ5aUJKNTFVa0FO?=
- =?utf-8?B?ZVFHWHhuMXg1cklEQzR6MURCZ0QwVXBnTzNPQWdHS0Z4UHp6UGRkZ3BvbG9I?=
- =?utf-8?B?U3ZhRUJtZDBnRU9jc2RlbXIrRDZVU3pHRWltVm9LOTlPTVNUWjYrdVBWRWtX?=
- =?utf-8?B?eStrWElYcTd5aG1QU0szeG1HdXdMd3IyaXNucEF3emxSekdxV2JvNjEvR1lx?=
- =?utf-8?B?NER3ZCs0bzNJSHNZQk1jUEVCOHQwc2lrTTZ6bzhGZVRReWZwelBMVWhrNmVr?=
- =?utf-8?B?QlJ2YkV6RTlmYXZlVnMzd1RuNEFNL3pPa1NUc1IydmtZbVJWeTVEeHJzQVRu?=
- =?utf-8?B?REZLVlJ5azFVaGxiYzQ5T1IyK1BRWlBjZHE1Si9vRHpCU0ZrVEJja2c2SU9U?=
- =?utf-8?B?SDhNQ3VSMEszNVgyVEFuOU8zSlRYUitxNFgvWklCbXc4SnpDRVdGSi9vZEtM?=
- =?utf-8?B?Ump0Z0pkZ0h0d1EzTnU1NkRLTkhwWHcxaFJMbCtZMFZJT3RtM3h3ZHp5TDZ1?=
- =?utf-8?B?VXpBR1VFaHh0T3dHMThSOTFlVWhxaDFicEZhWUVjWXUrbk11ZFc1YkJhNzFo?=
- =?utf-8?B?cm5hVk93Y0o1R0VyL3lsblpnTXlNOUp6TTZRQ25semxzTWdSOFpLRCtUSkFj?=
- =?utf-8?B?NktSNWNJSXMwa2dIYUVsRGRTWWljZVRrZ3BRUm9UTzAwMW5HeXI3amdQTmp6?=
- =?utf-8?B?c3ZvKzhPQlVvVVZHNnVMNjlya2hFWUFHL0ppN0hFanJCL3ZRWElwMEh3TDhM?=
- =?utf-8?B?d1U4QThjaHBqaHZnRkdTWGVYd1MzamVXSm1rR21tUlBiZWJEaG5QZ05qbkl0?=
- =?utf-8?B?SE9KYkpkYlI2OVdGL0FxSGNTbVFHc2lEbnczRHp6USs3UnNTNi9XdjZVZ00x?=
- =?utf-8?B?Mlg5bnN1TktoWHBZaUJyY3J6ZWd3N2ZNRGFsalpTVUtOc2NuT3ZXZ2YwRk55?=
- =?utf-8?B?WVVJaGx0TnZ0TWZVaFoyMzI0RWpRamhucHBYeVRBaitXMzU4bzVMSk9ITWhX?=
- =?utf-8?B?am9OV3hkQTdhQ2RMSXc1dEV1TG5ycWtyeHRDYUVQTWZObGNJVXJWT0c4eEp3?=
- =?utf-8?B?c200ZzdwcTBESzYvUDI0UWFZVEZtTWxGREgxWEFpQzlORFpHanRrKzNzSlRh?=
- =?utf-8?B?ZUtqOVZBTU04RlliL0pOV2RVdG1odTl5aDBhNmRyYWpwWnRWVEdMdHRBSGhD?=
- =?utf-8?B?UnR4Y0IzNGRLcUJBWDl2RUNpcjVmM1pzQ1B1V1BCWWFLam1wVnM5eElFcUwx?=
- =?utf-8?B?MCtqTzNkbXdCczAzcmVGOEJQK2IyU1pVajBWeXVtWU12SEZmQmlEOVROUGc0?=
- =?utf-8?B?WW5zZjdDVTVJOURvMHlCUVVuZW1OVmI1dURBa1JHMFlHK05ZbFhhTXk4STBa?=
- =?utf-8?B?ZWt3VDdqNzVzR0hrbHV2cU5aaldReDhkRmxoVjJwd0NsdnUzN2VFNjVyOUNr?=
- =?utf-8?B?Lzh5bmxBeDI1MVpNQ1UrYU5LMjdQQXNoaTFrUkc3V3o3YkEzbVI1SkU2OUE3?=
- =?utf-8?B?TW1FVWxPOHlEUnRmNjBSK1Fub21rT3k2WmM2Nm9FT3lzTlVIU056V1pOVkZ5?=
- =?utf-8?B?L21lZkxoN2pSalQyVUN0cmFlUml0ZThtazJ3aUpvMGtaL242dE5acmpBSDVj?=
- =?utf-8?B?NjgzVU1tRUNmRm9IV0hlaXdXaUkzRHhSWEM2M1VvNFU4Wm1sSWdhYmVjb0dG?=
- =?utf-8?B?aUdGeVYvL3BCNS9yWHNrSjQ3VVlhOXhNaGUvWExxVmF6Y1dVNkw2Y0puVk9O?=
- =?utf-8?B?RWF0d1RNaUhsK1BMRUJwMVk0NmF0blZaZlJ5QW5uT0VkNXFvSkRPN0RTanFK?=
- =?utf-8?B?MVA5WnppZVlBM3pCb3dqcmw2RjliVW8xb1VKK3pYOWpjZXlvOVpYWDdCaEx3?=
- =?utf-8?B?VEdoaDdKVTNaSnE2SngzY0RoSzFnZlJUVlNzQmpmSURkZWMzMTM1N3ZjbEp0?=
- =?utf-8?B?ZDJmZjFjVVd5bXdTQWZ2Qnk0NjZpUjY1WDZLWWw4R3Z6THlzaWZUTWY3TXdU?=
- =?utf-8?B?N000cHZsMXNDclgwK3hRTWZURWRRdXF6dUdSU1gyMnVaQnR1eVJJNXNIaDYw?=
- =?utf-8?B?d1hLVlUvTHNBcThrNmhWRWRubFYvN3YrcDA3djJQK0ttc1lSMi9mVDN3UlIx?=
- =?utf-8?Q?QL/oQq6Qgz3mnjO7HUGFVIEIg?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6EEB71DD013A51428F62E4BA6397BE87@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.20; Mon, 23 Jun
+ 2025 10:54:53 +0000
+Received: from CY4PEPF0000EDD5.namprd03.prod.outlook.com
+ (2603:10b6:510:349:cafe::ee) by PH8P221CA0061.outlook.office365.com
+ (2603:10b6:510:349::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.30 via Frontend Transport; Mon,
+ 23 Jun 2025 10:54:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ CY4PEPF0000EDD5.mail.protection.outlook.com (10.167.241.201) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8880.14 via Frontend Transport; Mon, 23 Jun 2025 10:54:52 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 23 Jun
+ 2025 05:54:52 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 23 Jun
+ 2025 05:54:50 -0500
+Received: from xhdakumarma40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Mon, 23 Jun 2025 05:54:47 -0500
+From: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
+To: <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+	<robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <git@amd.com>, <amitrkcian2002@gmail.com>,
+	Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
+Subject: [PATCH v14 0/3] mtd: Add support for stacked memories 
+Date: Mon, 23 Jun 2025 16:24:42 +0530
+Message-ID: <20250623105445.2394825-1-amit.kumar-mahapatra@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microchip.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6451.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab2927c9-99eb-44ee-cac8-08ddb2445831
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jun 2025 10:54:36.3406
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD5:EE_|CYYPR12MB8938:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4de31d78-7a20-4738-85b5-08ddb24461e0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|376014|7416014|1800799024|7053199007|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?gclVB9a3yeJ7iUpGe2z4FDJzvIjxcLon8VxB9t04WcamzeYWVThb/5UWBya+?=
+ =?us-ascii?Q?cgNKiCU7WnOgoRoQecUeJdWF42L22LO0GM5gVJVFEAiCiA1Z1WGI+C4TCXQj?=
+ =?us-ascii?Q?x8PVeW20jqHFoGzSJxuHcaLrp+tfHdHnlQOL7G63fXW9eMxF6t1Zs/Pkv3jv?=
+ =?us-ascii?Q?TUp9Hb55r1iBtFxKKtU8Uwg1eiuGibp/4LtoU+ej7DnUQ0qyHEr8olKfWpHd?=
+ =?us-ascii?Q?xVW2W4JiInX1k5HzcyRX+J5QVPV2XelPxJyN3JP3pVXXjNQruagXaUS5bIWr?=
+ =?us-ascii?Q?5SXsQVJhFs89t+PnhlPva/0FmuyRI9W+QCGS8Q+YbcDO20OrKkFWbgdNJPQ3?=
+ =?us-ascii?Q?cJecOPwOdCpRGLUvb1O/XvjYtc75Qemq7mGDhCGuGaXvMRW80UWSCScdmA97?=
+ =?us-ascii?Q?qunHjFdP1C7efu3aQsbqmE2ki43OhufgjJNDMJYj/F1UZoZbqqoqPTOjzQNJ?=
+ =?us-ascii?Q?aQmSQZ13J88XEUMgytAFf5Qe6IxhLAHSIli3tlDH/Wqr7apOchWCWPfcybU4?=
+ =?us-ascii?Q?R8yz/Ye1cwJ0uBp73BdU1sK/5O9oiPzZNUVi5gG78ATsw2n3wOyynhR6VjM8?=
+ =?us-ascii?Q?4j4/yxlOW2geSc7507gsKR03pHNuEE/6K43YDWzSh6F2GrwwSMbyRYc8zEEK?=
+ =?us-ascii?Q?nOGWy44PM7LQgH3/186+KgsMvbSWCDcfu1+1EM+Hr6JKAeFsOVsMwTmjel5n?=
+ =?us-ascii?Q?LR2YmQDWGq+dZTUSUdF+ZYYJByyuhTBPW/mM+iUYhcMY75gWs/Ehx9nDoUMz?=
+ =?us-ascii?Q?J1cbJpl0/9TtTrUMiqneIQTHX/c5+7QLuEOiveBsQdJCwDPAlsAyhKxnvazH?=
+ =?us-ascii?Q?SIWinzgvYvLtyXO6FXKMr3G52cA2K8vjlI3Twmxj9ZB6rIgxX9EXtqNvdE8k?=
+ =?us-ascii?Q?cWchliu/WWnc3wAeBVDZbLz1JVMpChXMF18zGNPM/D4HJ8SMzspy7wjwbAiA?=
+ =?us-ascii?Q?kCMDwBI3QQ7EyGH9hz173lM5RsPjMNBndHQPUv5riCTK/BgFCouTzIKfJ/oN?=
+ =?us-ascii?Q?IwOsEJ3RLJYpVO/1v+/nOvm0Wu+ScwNKFmYBXhlfjr18W35quhk9pnISEMVk?=
+ =?us-ascii?Q?o/C0Z5sdKNt8pPt/onY7idXC8j9JiqlB4ar80Xfbcrwwolo0IMmKm4SKJ2JJ?=
+ =?us-ascii?Q?Sl6XSeTM/OcULNu3Ml8MUOmNthXM5OnJltKSUaw7/ezAmePF/npqvDSVkZNv?=
+ =?us-ascii?Q?Q3bZeTRNd78s1MRvhUAj2ZISIEvH1scH+p3jAMIjScaygmOIpkj14t1IqZjF?=
+ =?us-ascii?Q?vjwPPzKro0X1PSVyo5bqsC02nIiMQInPirLA2CxCq+ANRYQ5/2LRUWwN5cJT?=
+ =?us-ascii?Q?kbGn6LWgd71Yoyfh9huFRRFnDNx+9otDflmRMHxYXks0kMkjlNMowEQQhKiG?=
+ =?us-ascii?Q?fK+BlKzNeTMIcIK2rK3YlZN1Uayd6ubhn3kIjJgLC22InYzR9KJ00IA9hNlz?=
+ =?us-ascii?Q?j8tSXzbwla8db/J8823IkEfxKHH5f4Dze3YnIwio4NXlmcGvMe8j7JxuwBmj?=
+ =?us-ascii?Q?d+2yMXhrJ7F1enD+bxBcQHSJfLJKvGWCIVehCt0kLfjTrM30/fyyanNj1A?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(7416014)(1800799024)(7053199007)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 10:54:52.5224
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3Exttwj/0JMZ3+UuFFauIEDfylHz1K3Md7n7peQwqwsKfXXfoxC6GDgjsG3Pgnyh4AEQ9ZJPH2zsuEzYsdDhzQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPFD56E32CC2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4de31d78-7a20-4738-85b5-08ddb24461e0
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EDD5.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8938
 
-SGkgTGF1cmVudCwNCg0KT24gMTgvMDYvMjUgMjoyNSBwbSwgTGF1cmVudCBQaW5jaGFydCB3cm90
-ZToNCj4gRVhURVJOQUwgRU1BSUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1l
-bnRzIHVubGVzcyB5b3Uga25vdyB0aGUgY29udGVudCBpcyBzYWZlDQo+IA0KPiBPbiBXZWQsIEp1
-biAxOCwgMjAyNSBhdCAwMzo1MDoxMUFNICswMDAwLCBEaGFybWEuQkBtaWNyb2NoaXAuY29tIHdy
-b3RlOg0KPj4gT24gMTgvMDYvMjUgNTowNiBhbSwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToNCj4+
-PiBPbiBUdWUsIEp1biAxNywgMjAyNSBhdCAxMDozNjozNEFNIC0wNTAwLCBBbnVzaGEgU3JpdmF0
-c2Egd3JvdGU6DQo+Pj4+IEhleSBmb2xrcywNCj4+Pj4NCj4+Pj4gQ2FuIHNvbWVvbmUgcGxlYXNl
-IGV4cGxhaW4gd2h5IHRoZSBkcml2ZXIgbG9va3MgZm9yIGEgcGFuZWwgaGVyZToNCj4+Pj4gaHR0
-cHM6Ly9lbGl4aXIuYm9vdGxpbi5jb20vbGludXgvdjYuMTQuMTEvc291cmNlL2RyaXZlcnMvZ3B1
-L2RybS9icmlkZ2UvDQo+Pj4+IG1pY3JvY2hpcC1sdmRzLmMjTDE4MiBhbmQgZG9lc250IHVzZSBp
-dCBvciBzZXQgaXQgdXAgYW55d2hlcmU/DQo+Pj4+DQo+Pj4+IEkgYnVtcGVkIGludG8gdGhpcyB3
-aGlsZSB3b3JraW5nIG9uIGNvbnZlcnRpbmcgb2ZfZHJtX2ZpbmRfcGFuZWwoKSBjYWxsZXJzIGFu
-ZA0KPj4+PiB0aGUgbHZkcy0+cGFuZWwgdXNhZ2UgaW4gdGhpcyBkcml2ZXIgZmVsdCBvZmYuIEFt
-IEkgbWlzc2luZyBzb21ldGhpbmc/DQo+Pj4NCj4+PiBUaGF0IGRvZXNuJ3Qgc2VlbSBuZWVkZWQu
-DQo+Pg0KPj4gQ3VycmVudGx5IHRoZSBMVkRTIGNvbnRyb2xsZXIgZHJpdmVyIGlzIGhhcmRjb2Rl
-ZCB0byBtYXAgTFZEUyBsYW5lcyB0bw0KPj4gdGhlIEpFSURBIGZvcm1hdC4NCj4+DQo+PiBJbiBv
-cmRlciB0byBzdXBwb3J0IHRoZSBvdGhlciBmb3JtYXQgIlZFU0EiLCB3ZSBuZWVkIHRoaXMgdG8g
-cXVlcnkgdGhlDQo+PiBwYW5lbCBkcml2ZXIgYW5kIHNldCB0aGUgYXBwcm9wcmlhdGUgZm9ybWF0
-IGFjY29yZGluZ2x5Lg0KPj4NCj4+ICJkcm1fcGFuZWxfZ2V0X21vZGVzKGx2ZHMtPnBhbmVsLCBj
-b25uZWN0b3IpIg0KPiANCj4gSXQgd291bGQgYmUgbmljZSBpZiB0aGlzIGNvdWxkIGJlIGRvbmUg
-dXNpbmcgdGhlIGJyaWRnZSBBUEkgaW5zdGVhZC4gQW4NCj4gTFZEUyBzaW5rIGRvZXMgbm90IG5l
-Y2Vzc2FyaWx5IG5lZWQgdG8gYmUgYSBwYW5lbC4NCg0KSGVyZSBpcyB0aGUgdXBkYXRlZCBwYXRj
-aA0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8yMDI1MDYyMy1taWNyb2NoaXAtbHZkcy12
-Mi0xLThlY2JhYmM2YWJjNEBtaWNyb2NoaXAuY29tLw0KDQpJIHdpbGwgc2VuZCBhbm90aGVyIHBh
-dGNoIHRvIHJlbW92ZSAibHZkcy0+cGFuZWwiIGFzIGl0IGlzIHVudXNlZC4NCg0KVGhhbmtzLg0K
-PiANCj4+IFdlJ2xsIGJlIHN1Ym1pdHRpbmcgdGhlIHBhdGNoIHVwc3RyZWFtIHNob3J0bHkuDQo+
-Pg0KPj4+IEJ5IHRoZSB3YXksIHBsZWFzZSB1c2UgcGxhaW4gdGV4dCB3aGVuIHBvc3RpbmcgdG8g
-a2VybmVsIG1haWxpbmcgbGlzdHMuDQo+IA0KPiAtLQ0KPiBSZWdhcmRzLA0KPiANCj4gTGF1cmVu
-dCBQaW5jaGFydA0KDQoNCi0tIA0KV2l0aCBCZXN0IFJlZ2FyZHMsDQpEaGFybWEgQi4NCg==
+This patch series adds stacked support by enhancing the existing mtd-concat 
+driver to be more generic.
+
+As background, a few years ago, Bernhard Frauendienst initiated an effort 
+[2] to achieve the same, which was later adapted by Miquel [1] to introduce 
+stacked mode support. In this approach, partitions to be concatenated were 
+specified using a DT property "part-concat" within the partitions 
+definition, allowing two MTD devices to function as a single larger one in 
+order to be able to define partitions across chip boundaries. However, the 
+bindings were not accepted. As a result, the mtd-concat approach was 
+dropped, and alternative DT bindings were introduced [3][4][5], describing 
+the two flash devices as one. Corresponding SPI core changes to support 
+these bindings were later added [6].
+
+While integrating stacked mode support into SPI-NOR, Tudor provided 
+additional feedback, leading to discussions about updating the existing 
+DT bindings. To address this, I sent an RFC [7] to initiate discussions on 
+adapting the DT bindings as suggested by Miquel in [1]. Following that, 
+I am now submitting this patch series that updates the virtual concat DT
+bindings and the driver referenced in [1], along with some minor mtdcore 
+changes. 
+Since I have taken ownership of this effort, I have included Bernhard and 
+Miquel under the "Suggested-by" tag.
+
+[1] https://lore.kernel.org/linux-mtd/20191127105522.31445-1-miquel.raynal@bootlin.com/
+[2] https://lwn.net/ml/linux-kernel/20180907173515.19990-1-kernel@nospam.obeliks.de/
+[3] https://github.com/torvalds/linux/commit/f89504300e94524d5d5846ff8b728592ac72cec4
+[4] https://github.com/torvalds/linux/commit/eba5368503b4291db7819512600fa014ea17c5a8
+[5] https://github.com/torvalds/linux/commit/e2edd1b64f1c79e8abda365149ed62a2a9a494b4
+[6]https://github.com/torvalds/linux/commit/4d8ff6b0991d5e86b17b235fc46ec62e9195cb9b
+[7] https://lore.kernel.org/all/20241026075347.580858-1-amit.kumar-mahapatra@amd.com/
+---
+BRANCH: spi-nor/next
+
+Changes in v14:
+ - Updated 1/3 to address review comments.
+ - Updated 3/3 to add mtd_virt_concat_destroy() API that would remove a concat
+   incase one of the mtd device, which is part of the concat, is removed.
+ 
+Changes in v13:
+ - Updated 1/3 to modify the Device Tree binding to support multiple concatenated devices.
+ - Added Rob's "Suggested-by" tag in 1/3.
+ - Updated 3/3 to define CONFIG_MTD_VIRT_CONCAT as a boolean and depended on CONFIG_MTD_PARTITIONED_MASTER.
+ - Updated 3/3 to remove late_initcall and invoke the API directly from mtdcore instead.
+ - Updated 3/3 to add support for concatenating more than two MTD partitions.
+ - Updated 3/3 to add support for multiple sets of concatenated devices.
+
+Changes in v12:
+ - Add stacked mode support throught mtd-concat driver.
+
+Changes in v11:
+- Rebased patch series on top of latest for-next branch.
+- Added a new patch(1/10) to replace spi->chip_select with
+  spi_get_chipselect() call in tps6594-spi.c.
+- Added a new patch(2/10) to replace spi->chip_select with
+  spi_get_chipseletc() call in cs35l56_hda_spi.c.
+- In spi.c initialized unused CS[] to 0xff and spi->cs_index_mask
+  to 0x01 in all flows.
+- Updated spi_dev_check() to compare the CS of old spi device with
+  the new spi device CS.
+- Updated cover letter description to add information regarding GPIO CS
+  testing and added Stefen's Tested-by tag in 3/10 patch.
+
+Changes in v10:
+ - Rebased patch series on top of latest for-next branch and fixed
+   merge conflicts.
+
+Changes in v9:
+- Updated 1/8 patch description to add an high-level overview of
+  parallel(multi-cs) & stacked design.
+- Initialized all unused CS to 0xFF.
+- Moved CS check from spi_add_device() to __spi_add_device().
+- Updated __spi_add_device() to check to make sure that multiple logical CS
+  don't map to the same physical CS and same physical CS doesn't map to
+  different logical CS.
+- Updated 1/8, 5/8 & 7/8 to support arbitrary number of flash devices
+  connected in parallel or stacked mode.
+- Updated documentation for chip_select.
+- Added a new spi-nor structure member nor->num_flash to keep track of the
+  number of flashes connected.
+- Added a new patch in the series 4/8 to move write_enable call just before
+  spi_mem ops call in SPI-NOR.
+- Added comments in SPI core & SPI-NOR.
+- Rebased the patch series on top of the latest for-next branch.
+
+Changes in v8:
+- Updated __spi_add_device() and spi_set_cs() to fix spi driver failure
+  with GPIO CS.
+- Rebased the patch series on top of latest for-next branch and fixed
+  merge conflicts.
+- Updated cover letter description to add information regarding GPIO CS
+  testing and request Stefan to provide his Tested-by tag for 1/7 patch.
+- Updated 1/7 patch description.
+
+Changes in v7:
+- Updated spi_dev_check() to avoid failures for spi driver GPIO CS and
+  moved the error message from __spi_add_device() to spi_dev_check().
+- Resolved code indentation issue in spi_set_cs().
+- In spi_set_cs() call spi_delay_exec( ) once if the controller supports
+  multi cs with both the CS backed by GPIO.
+- Updated __spi_validate()to add checks for both the GPIO CS.
+- Replaced cs_index_mask bit mask with SPI_CS_CNT_MAX.
+- Updated struct spi_controller to represent multi CS capability of the
+  spi controller through a flag bit SPI_CONTROLLER_MULTI_CS instead of
+  a boolen structure member "multi_cs_cap".
+- Updated 1/7 patch description .
+
+Changes in v6:
+- Rebased on top of latest v6.3-rc1 and fixed merge conflicts in
+  spi-mpc512x-psc.c, sfdp.c, spansion.c files and removed spi-omap-100k.c.
+- Updated spi_dev_check( ) to reject new devices if any one of the
+  chipselect is used by another device.
+
+Changes in v5:
+- Rebased the patches on top of v6.3-rc1 and fixed the merge conflicts.
+- Fixed compilation warnings in spi-sh-msiof.c with shmobile_defconfig
+
+Changes in v4:
+- Fixed build error in spi-pl022.c file - reported by Mark.
+- Fixed build error in spi-sn-f-ospi.c file.
+- Added Reviewed-by: Serge Semin <fancer.lancer@gmail.com> tag.
+- Added two more patches to replace spi->chip_select with API calls in
+  mpc832x_rdb.c & cs35l41_hda_spi.c files.
+
+Changes in v3:
+- Rebased the patches on top of
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+- Added a patch to convert spi_nor_otp_region_len(nor) &
+  spi_nor_otp_n_regions(nor) macros into inline functions
+- Added Reviewed-by & Acked-by tags
+
+Changes in v2:
+- Rebased the patches on top of v6.2-rc1
+- Created separate patch to add get & set APIs for spi->chip_select &
+  spi->cs_gpiod, and replaced all spi->chip_select and spi->cs_gpiod
+  references with the API calls.
+- Created separate patch to add get & set APIs for nor->params.
+---
+Amit Kumar Mahapatra (3):
+  dt-bindings: mtd: Describe MTD partitions concatenation
+  mtd: Move struct mtd_concat definition to header file
+  mtd: Add driver for concatenating devices
+
+ .../bindings/mtd/partitions/partition.yaml    |  20 +
+ drivers/mtd/Kconfig                           |  10 +
+ drivers/mtd/Makefile                          |   1 +
+ drivers/mtd/mtd_virt_concat.c                 | 380 ++++++++++++++++++
+ drivers/mtd/mtdconcat.c                       |  12 -
+ drivers/mtd/mtdcore.c                         |  17 +
+ drivers/mtd/mtdpart.c                         |   6 +
+ include/linux/mtd/concat.h                    |  59 +++
+ 8 files changed, 493 insertions(+), 12 deletions(-)
+ create mode 100644 drivers/mtd/mtd_virt_concat.c
+
+-- 
+2.34.1
+
