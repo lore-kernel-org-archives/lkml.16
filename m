@@ -1,126 +1,136 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459B57DA7F
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 23:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6976A218596
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 23:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750721705; cv=none; b=G/1s/u9hKu3vNhufYYyNGstHOJwfFP1NCLztDnlP/BCRc5FVE92F6zjpLxQV/TQ97GBpw3Z//BSlbMF0hylz90jq0dh+2wXL5dWGdOvQ04hybxVNp+2U+2f9Dm4f0DXy1F1jhy8PY3xi0ul05sro7msbJBWDbSyyn56ab7VUWCc=
+	t=1750721740; cv=none; b=tg+hFHm1ju0XX3aRDFH4qVPFtVy+0eksqYme1olxpfwJcx8nf7XG67Yqu866t3YCTQyEiXEwX2lWjPwIBCQZEOC4Fjbw7q5+rW3l/H0IMkvhXPpmF/KY7P6tR3W/5raIgxyeKNtFPnzYuGLufV9vWnK4qW5SFdiunsZTOnzipA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750721705; c=relaxed/simple;
-	bh=UTPQdHjFwKTkGB9t0kUTkGNQ/g2HisdMouEZ4e40bws=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=fM838cAx5hBOU6tO9kGpZRkDnLTBFE8VMYbN/L+rSyrEKZheag8wQpm28GmDKXdyP5qzRE0hChARASMmJ/HjU6sskbj3SymRspK+Oe7VtVguERRbCIh3itOBqeQr6KRJUZ1ZCgrdcIEkIxZx7D8yIYs1499zmKBCAII/Aq+pAis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=CL9i9zyJ; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1750721740; c=relaxed/simple;
+	bh=m1HKbq78Us6LvTsFYq7f5GyQZbgKEbFCUsF2gE7tF5k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aFo705fwuTH7rQe0//0aWiH51UKUdrmp7ihI4rFwiwPq/5ji8laIfTlFzsj7m7SjiTd1GSyUINQaPdWisFEamYA9y5WlQQ8/dSvpw6iY5L1BPIlP88JtXkMpPj5hhoqn43UD+q7/yy9cQ/RkkClyV7FB2BWQk2TbhQNq25RQXLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HDipr21A; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="CL9i9zyJ"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2353a2bc210so41338545ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:35:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HDipr21A"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-237f18108d2so66255ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:35:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1750721702; x=1751326502; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3C1HBX/7TnNGVwZTeosVdWMVJ7HcYu8ETqN6upndI5g=;
-        b=CL9i9zyJnQ7MizxHw3iYMDKz2YejFofDA513x+30WiE/UitLAUHV+16YOFl65GeWCB
-         1XAJh2Kfju2oh51HML9pN5n+6thQbhhKl3LcBEByVnLOM94ECNsrjQ4Mjeb/j+Eyx4LM
-         jXrYM8THpobU5FqcFaG552hMhnN0uSqL0zCg68Z2SGOG8BwKVx3XKy8rkkTggHyVj+N/
-         4Zd9wNrHcGBKuehY1412PKEQpAeDdn9IYbcprwklML74catWfnQKnlt0/PTpqxH3MBni
-         dfmtINCWVV7zuOewR/YSaQSCDNoRAh5xI/UOgSPNy7Fsen/E1V5rUErXAKz/Ci0aGV6o
-         4/Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750721702; x=1751326502;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1750721739; x=1751326539; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3C1HBX/7TnNGVwZTeosVdWMVJ7HcYu8ETqN6upndI5g=;
-        b=UW4zkHHPrpz7lOMJPtL3DJJn3oJp4jVbKYnfAH3uPoVGAXURv616XOOXa4XJwL+K+V
-         r1IhLSe7T22K9mRhDesgNtoVzPQ9FAgZQvp6/RQn19DeUktehC92zXNsDi9ulJJ39Vhv
-         ChpkCLSYi56bFT+xPA7aNa0oQttESM2dBMjvpLhamWGbIjnEvvgB+1TMxias85EytGrR
-         a1ONmRxe+pxIGffOm3E9gswRH3pQgoLm/9AunhmFXtdfEF64Dk4IL2Iqu29K0hrMRUeD
-         gmcEuE32F2s+ZWN4ROGP0WpGs1f6rPzVh0skXcxrqc4xLBZC5LSjlivLrowNWjUwz2dI
-         cMcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUP704f3Q1mcDjULyZThqigXLgn9obDhBdH5VWYYAr91Gm248bmVQrPj62v/iwiaPv0zEthXP8+2k2WU+M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvCL/JD6TncNjNQ3ZFiMyB/gDUqBrZdrPyJOKuZoyPUimLnprg
-	0qwZepu/YLCeby4Y8M/+VOy0lV7LvaSZJnh9lmmvtRCN53GvbdB2RbzujKunEcU9iSc=
-X-Gm-Gg: ASbGnctq8dZ/fgTzgiEi72mVG6SqjXmKrzLPVUlyqCPlE+QkOCCHyrm8iwyvTz65vTw
-	h/n2HIukXumEn39k4eJmuXLFuv1oZXz8D+5xlaVGaBX0LzNXBi61LYRnztII3RtZ61Zhm0K5788
-	7v/pexpliS/xQeEg2qX1nMzbSTBYTRNjpJ604l8GXbE//DK5AVc9m8AYYfcjF4VtglFUhP0oyrP
-	LBMVzbHYTg+7x9spOxd0gE6wXvH4UZCCCptn9u8bUxdeHED5qJhiavAYJsX4NPbQ1WUp56QM/4l
-	d13tX81axBe74GsDyLJGNSW42JRJfT21fvtVGYmASCvUm8cclajG1pGG3hxoEYdJsvWNPUk=
-X-Google-Smtp-Source: AGHT+IEWQhK1ybI3F/dHuMp7BGaRHJD1DU/MK1xVISPFslSP0vZBJeLT7Qmd8Fs0FSYtyxoSaqreEQ==
-X-Received: by 2002:a17:903:287:b0:235:ed02:288b with SMTP id d9443c01a7336-237d98f1a1emr169782885ad.30.1750721702579;
-        Mon, 23 Jun 2025 16:35:02 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:500::4:8d10])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-237d83d0bedsm92289545ad.67.2025.06.23.16.35.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 16:35:01 -0700 (PDT)
-Date: Mon, 23 Jun 2025 16:35:01 -0700 (PDT)
-X-Google-Original-Date: Mon, 23 Jun 2025 16:34:57 PDT (-0700)
-Subject:     Re: [PATCH] riscv: export boot_cpu_hartid
-In-Reply-To: <20250619-rummage-cache-93f48564b7fb@wendy>
-CC: klarasmodin@gmail.com, Paul Walmsley <paul.walmsley@sifive.com>,
-  aou@eecs.berkeley.edu, Alexandre Ghiti <alex@ghiti.fr>, valentina.fernandezalanis@microchip.com,
-  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: Conor Dooley <conor.dooley@microchip.com>
-Message-ID: <mhng-38FFE919-5F5F-4F1E-A06E-85946E791E4B@palmerdabbelt-mac>
+        bh=iJZykzRp9XmGyR+bnKu4AsjxXNvJ484o746cN0kGIOw=;
+        b=HDipr21A5OiM5dG3t/ElumqU3x0U5We13tG2lNXxvfXvvibRm0E3v04ilyrng9bDMf
+         fYQbffjTFdOfdfx8ivQx/yCtmQxOb4q6l5zTL6NZXqnoW95GK0HXTYcDcjWpioBtVPnJ
+         HllmrQBxvgxNGii8siXP/cAMiNoHxxIvSSk/w27rhqD6L5qyKvYjWd4JdIb7VXBqsIKx
+         fxIkB5OizHyfhVdd382VAhn+qk35qw4CVS81d+6vlANtvAsOJO1WVTy+30m5o3Wn9QOP
+         KZQWdS0YUo1nwnfA2Qx9agkY6w6Tm7ppuXwC48pOy6kMtZp8b9DlMkowXltUdXQRzAne
+         hRzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750721739; x=1751326539;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iJZykzRp9XmGyR+bnKu4AsjxXNvJ484o746cN0kGIOw=;
+        b=SLvyFyf7FWmMW5t2YQt166FaZqohe4pSwjlWYCTGR+GMFqusPguNK+jLoCYlmHhfWE
+         tniOI8+6pdiH65G7L3HwDb6/kHqa3fCUmqd/EV8I86qzfNviRcOzKkam2gpw2Ed43j0S
+         QMNjp9To8NukvEWxE9yAClWnld248FPd11npYgXLZT2YZXfFQ8NKwQa/vH1Bq3m5du8p
+         OTDPj+oNfmPRFzVeh3gYrq64b6aJH/+8ihqwti9ikslzEflpMfdvIBX4h0Bli7GNnIsx
+         /4K7GmsU5Nr0OgUkR2xSxkWOsWK+nwspHBy6cNVHLMxGn4CQ5bxL7HruNNG7kfluMWWG
+         SIMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVJxYHo1T4nWNQKtw6/EctARSjh+2cKpBTQ6Q41l4Tse40Dyu4cUA5bY4OEEYC/QWOMpsByEx51YYwZ+1o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsFBJpx6yNR5fGbrWRUvxeIJh76vbB/TI4oL1/wSMiSoxNFYjN
+	M1AtufugFanoSryo+wXfxY2j8eEnpm/9/j0xotc3kl+r0wcEb6eOzL5QLsf4dYN5r4lBrbpEaBJ
+	6Zf2632MXdVjKYfHrgZzr/YvxpgaEx0kMjMpx9poQ
+X-Gm-Gg: ASbGnct1XHDhlvuaeTORF9ram2BnF4QrE7eO98DWpQGG347GN9246ZsL9jWCY1dIVty
+	QQmaexs25HTdmdA4gJ8D3M9Mfmok+u7WdpNZQM+6P9/VZLujsDEUugDKuMBB+Uh9+z6jshGKZUF
+	gffcAPeI0DRBUpe2N0KjZZNsj119chTfVgVUaebe0ByEW2A17pJ7eR9OARKYWmKBuEyaDVoBY1
+X-Google-Smtp-Source: AGHT+IHHi7AieERcNnwiCtwAQr+c1gSn7f18Q5q/KjVn16GYv8KAYNJTic+iEGQjgx2v132Il9E3nwVRKB4urQHS71M=
+X-Received: by 2002:a17:903:350f:b0:223:2630:6b86 with SMTP id
+ d9443c01a7336-23803ec11aemr328645ad.7.1750721738376; Mon, 23 Jun 2025
+ 16:35:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+References: <20250611095158.19398-2-adrian.hunter@intel.com>
+ <CAGtprH_cpbPLvW2rSc2o7BsYWYZKNR6QAEsA4X-X77=2A7s=yg@mail.gmail.com>
+ <e86aa631-bedd-44b4-b95a-9e941d14b059@intel.com> <CAGtprH_PwNkZUUx5+SoZcCmXAqcgfFkzprfNRH8HY3wcOm+1eg@mail.gmail.com>
+ <0df27aaf-51be-4003-b8a7-8e623075709e@intel.com> <aFNa7L74tjztduT-@google.com>
+ <4b6918e4-adba-48b2-931c-4d428a2775fc@intel.com> <aFVvDh7tTTXhX13f@google.com>
+ <CAGtprH-an308biSmM=c=W2FS2XeOWM9CxB3vWu9D=LD__baWUQ@mail.gmail.com>
+ <CAGtprH_9uq-FHHQ=APwgVCe+=_o=yrfCS9snAJfhcg3fr7Qs-g@mail.gmail.com> <aFnJdn0nHSrRoOnJ@google.com>
+In-Reply-To: <aFnJdn0nHSrRoOnJ@google.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Mon, 23 Jun 2025 16:35:24 -0700
+X-Gm-Features: AX0GCFsjOjS73cim-nFdh51zPwjCo36e2glhCmQoTmB3B2V_KD4zts3ihFF816g
+Message-ID: <CAGtprH-THz=odJ=yGKbr_exdy8_00FUGPir1g7pWOv6Ckt+h+g@mail.gmail.com>
+Subject: Re: [PATCH V4 1/1] KVM: TDX: Add sub-ioctl KVM_TDX_TERMINATE_VM
+To: Sean Christopherson <seanjc@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, pbonzini@redhat.com, kvm@vger.kernel.org, 
+	rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com, 
+	kai.huang@intel.com, reinette.chatre@intel.com, xiaoyao.li@intel.com, 
+	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
+	isaku.yamahata@intel.com, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com, 
+	chao.gao@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 19 Jun 2025 03:25:16 PDT (-0700), Conor Dooley wrote:
-> On Tue, Jun 17, 2025 at 02:58:47PM +0200, Klara Modin wrote:
->> The mailbox controller driver for the Microchip Inter-processor
->> Communication can be built as a module. It uses cpuid_to_hartid_map and
->> commit 4783ce32b080 ("riscv: export __cpuid_to_hartid_map") enables that
->> to work for SMP. However, cpuid_to_hartid_map uses boot_cpu_hartid on
->> non-SMP kernels and this driver can be useful in such configurations[1].
->> 
->> Export boot_cpu_hartid so the driver can be built as a module on non-SMP
->> kernels as well.
->> 
->> Link: https://lore.kernel.org/lkml/20250617-confess-reimburse-876101e099cb@spud/ [1]
->> Cc: stable@vger.kernel.org
->> Fixes: e4b1d67e7141 ("mailbox: add Microchip IPC support")
+On Mon, Jun 23, 2025 at 2:39=E2=80=AFPM Sean Christopherson <seanjc@google.=
+com> wrote:
 >
-> I'm not sure that this fixes tag is really right, but I have no better
-> suggestions
-
-Seems OK to me, the driver is what causes the symbol to need the 
-definition, so that patch is the first place we'd need this (unless some 
-other drivers want it, which wouldn't be surprising).
-
-I'm throwing it at the tester, it should show up on fixes soon.
-
-Thanks!
-
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> On Mon, Jun 23, 2025, Vishal Annapurve wrote:
+> > On Fri, Jun 20, 2025 at 9:14=E2=80=AFAM Vishal Annapurve <vannapurve@go=
+ogle.com> wrote:
+> > > Adrian's suggestion makes sense and it should be functional but I am
+> > > running into some issues which likely need to be resolved on the
+> > > userspace side. I will keep this thread updated.
+> > >
+> > > Currently testing this reboot flow:
+> > > 1) Issue KVM_TDX_TERMINATE_VM on the old VM.
+> > > 2) Close the VM fd.
+> > > 3) Create a new VM fd.
+> > > 4) Link the old guest_memfd handles to the new VM fd.
+> > > 5) Close the old guest_memfd handles.
+> > > 6) Register memslots on the new VM using the linked guest_memfd handl=
+es.
+> > >
+> >
+> > Apparently mmap takes a refcount on backing files.
 >
->> Signed-off-by: Klara Modin <klarasmodin@gmail.com>
->> ---
->>  arch/riscv/kernel/setup.c | 1 +
->>  1 file changed, 1 insertion(+)
->> 
->> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
->> index f7c9a1caa83e..14888e5ea19a 100644
->> --- a/arch/riscv/kernel/setup.c
->> +++ b/arch/riscv/kernel/setup.c
->> @@ -50,6 +50,7 @@ atomic_t hart_lottery __section(".sdata")
->>  #endif
->>  ;
->>  unsigned long boot_cpu_hartid;
->> +EXPORT_SYMBOL_GPL(boot_cpu_hartid);
->>  
->>  /*
->>   * Place kernel memory regions on the resource tree so that
->> -- 
->> 2.49.0
->> 
+> Heh, yep.
+>
+> > So basically I had to modify the reboot flow as:
+> > 1) Issue KVM_TDX_TERMINATE_VM on the old VM.
+> > 2) Close the VM fd.
+> > 3) Create a new VM fd.
+> > 4) Link the old guest_memfd handles to the new VM fd.
+> > 5) Unmap the VMAs backed by the guest memfd
+> > 6) Close the old guest_memfd handles. -> Results in VM destruction
+> > 7) Setup new VMAs backed by linked guest_memfd handles.
+> > 8) Register memslots on the new VM using the linked guest_memfd handles=
+.
+> >
+> > I think the issue simply is that we have tied guest_memfd lifecycle
+> > with VM lifecycle and that discussion is out of scope for this patch.
+>
+> I wouldn't say it's entirely out of scope.  E.g. if there's a blocking pr=
+oblem
+> _in the kernel_ that prevents utilizing KVM_TDX_TERMINATE_VM, then we def=
+initely
+> want to sort that out before adding support for KVM_TDX_TERMINATE_VM.
+>
+> But IIUC, the hiccups you've encountered essentially fall into the catego=
+ry of
+> "working as intended", albeit with a lot of not-so-obvious behaviors and =
+dependencies.
+
+Yes, that's correct. The "issue" I referred to above is just extra
+steps that need to be taken by userspace VMM and is still in the
+"working as intended" category.
