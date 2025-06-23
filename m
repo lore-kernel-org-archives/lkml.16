@@ -1,121 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369CD24EAB1;
-	Mon, 23 Jun 2025 13:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0472248F40
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750686304; cv=none; b=fIpQqBOhz2Zb+3AYjp+OTUQDfBPmMldwKa0qiV/lk3pTJoLKcbWvZ56OQ/oIl7PgC2NdJb7TGK7xEZN/Ym/AUYMoCH8l9gbc2DNWNWbyOzHGan28DuAnD8uv2CjkqPbP3TlQ2U1tIIuEC40gtd2/D0FzkUcLe26c/nnppGr//oI=
+	t=1750686313; cv=none; b=lno8Gn143b5Y8Y9wu5MEtCVyJHyGllV/8503LnR0+JXo/rO5EuI9H7nspnKM+dBHEU+J8MV8swuVBjIilbn12hi7cM/K9TH8ohIlP1WpQ2OTQg8vx+ry8y2HgY309UFBGXT0GsfT2e8slwUsym0k3qwgb/btQDwu7Qv2cDehSU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750686304; c=relaxed/simple;
-	bh=Qpdo2JYgAWplBWZwtCweIuG180S3M/uw3ulQ5ctfcag=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=ZGBKqYcVgQ/jF9TITRqpherjvNkGOAX6KFu4yAOX5A9p7x4usaUTxuYwvubm4OoQvEGICCoirvufUw4/jhMLAxqq0HOYzFmwnZ7cQj0ijqUWxTCn+jtNOXTT1HojKfE9SilXVeRQdKZGslIvKuZ15Rj99eRbzvTw01nu1vROWGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s3AyusYF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750686313; c=relaxed/simple;
+	bh=suvc5WbRVa5rRmFJhLgfpPlDChH0civ6Huy/T17A58w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IeTNsAq+WJk7aHPuygwnqTGtPQHpJl1gf5mVpPflphooK1MOCLZ4jJL2X6zJbBHc0wnZnegDAwoIgS7dLmFHuYS0TaCJKgKeJQJP+cGHHiQZxlSuAqBevbczvuFqfeN9/Yi0UJa98CQwGyIt/HmXwKFKDkNThz1E+/nNMMrFoxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kxyjpUq9; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s3AyusYF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A3EEC4CEF2;
-	Mon, 23 Jun 2025 13:45:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750686303;
-	bh=Qpdo2JYgAWplBWZwtCweIuG180S3M/uw3ulQ5ctfcag=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=s3AyusYFJTL0vRbPeCXDURpuCgzTwe+IvaQjX88PxUqQEnTb7fEKjY88l2VNL6/YX
-	 qPDZ3AeEsU9sgI3BxZjFPl8+GlzDLVOHHUTSUnPiA2Z+8oqhW5tJVJkg3WfA3DuD+k
-	 0nC9oE9068R3yQx5eO80GxvJYubWS9awRhgOsiQmZu0YQVqXutnZXhjPMWeVaitjDp
-	 73IG56JKMEt9tNzXJYTdsnr+A2OvWK1ykyNzwAOpVtBFMqwB8voDCz7VtlM2IU36w5
-	 vnRXgfKE06mmgIlJw2iAvG0afEpUidF7ygCLUqiK6nFNf2FQcKeOPX+BAgGpZyji0A
-	 jy0/EHhxwXOSw==
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kxyjpUq9"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750686298;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VXlnijRMaGhbbsaduEiRQFEzyVj0NFtPqTR2WJA2Fhg=;
+	b=kxyjpUq9lIC6m4D7oUtct4BRuR5tKkDB+HQFgdax0UpiwGKzFKneqGTX98W7KjiUFP879T
+	QbUaIFD2V8xED1MheM4mcXeoPx20N6B40qhlT1REEVl+5hz8gTV95eROz0df5faRBHH62p
+	LdE8vXVZuvSGSC9OM9QnOsaZr5g0C5w=
+From: Tao Chen <chen.dylane@linux.dev>
+To: kpsingh@kernel.org,
+	mattbobrowski@google.com,
+	song@kernel.org,
+	jolsa@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [PATCH bpf-next v5 2/3] bpf: Add show_fdinfo for uprobe_multi
+Date: Mon, 23 Jun 2025 21:43:41 +0800
+Message-ID: <20250623134342.227347-2-chen.dylane@linux.dev>
+In-Reply-To: <20250623134342.227347-1-chen.dylane@linux.dev>
+References: <20250623134342.227347-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 23 Jun 2025 15:44:58 +0200
-Message-Id: <DATYHYJVPL3L.3NLMH7PPHYU9@kernel.org>
-Cc: =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
- <ojeda@kernel.org>, <alex.gaynor@gmail.com>, <gary@garyguo.net>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
- <dakr@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
- <will@kernel.org>, <longman@redhat.com>, <felipe_life@live.com>,
- <daniel@sedlak.dev>, <bjorn3_gh@protonmail.com>
-Subject: Re: [PATCH v5 2/3] implement ww_mutex abstraction for the Rust tree
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Boqun Feng" <boqun.feng@gmail.com>
-X-Mailer: aerc 0.20.1
-References: <20250621184454.8354-1-work@onurozkan.dev>
- <20250621184454.8354-3-work@onurozkan.dev>
- <DASY7BECFRCT.332X5ZHZMV2W@kernel.org> <aFlQ7K_mYYbrG8Cl@Mac.home>
-In-Reply-To: <aFlQ7K_mYYbrG8Cl@Mac.home>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon Jun 23, 2025 at 3:04 PM CEST, Boqun Feng wrote:
-> On Sun, Jun 22, 2025 at 11:18:24AM +0200, Benno Lossin wrote:
->> On Sat Jun 21, 2025 at 8:44 PM CEST, Onur =C3=96zkan wrote:
->> > Adds Rust bindings for the kernel's `ww_mutex` infrastructure to enabl=
-e
->> > deadlock-free acquisition of multiple related locks.
->> >
->> > The patch abstracts `ww_mutex.h` header and wraps the existing
->> > C `ww_mutex` with three main types:
->> >     - `WwClass` for grouping related mutexes
->> >     - `WwAcquireCtx` for tracking lock acquisition context
->> >     - `WwMutex<T>` for the actual lock
->>=20
->> Going to repeat my question from the previous version:
->>=20
->>     I don't know the design of `struct ww_mutex`, but from the code belo=
-w I
->>     gathered that it has some special error return values that signify t=
-hat
->>     one should release other locks.
->>    =20
->>     Did anyone think about making a more Rusty API that would allow one =
-to
->>     try to lock multiple mutexes at the same time (in a specified order)=
- and
->>     if it fails, it would do the resetting automatically?
->
-> But the order may not be known ahead of time, for example say you have
-> a few:
->
->     pub struct Foo {
->         other: Arc<WwMutex<Foo>>,
-> 	data: i32,
->     }
->
-> you need to get the lock of the current object in order to know what's
-> the next object to lock.
->
->>=20
->> I'm not familiar with ww_mutex, so I can't tell if there is something
->> good that we could do.
->>=20
->
-> It's not a bad idea when it can apply, but we still need to support the
-> case where the order is unknown.
+Show uprobe_multi link info with fdinfo, the info as follows:
 
-I didn't have a concrete API in mind, but after having read the
-abstractions more, would this make sense?
+link_type:	uprobe_multi
+link_id:	10
+prog_tag:	7db356c03e61a4d4
+prog_id:	42
+uprobe_cnt:	3
+pid:	0
+path:	/home/dylane/bpf/tools/testing/selftests/bpf/test_progs
+offset           ref_ctr_offset   cookie
+0xa69f13         0x0              2
+0xa69f1e         0x0              3
+0xa69f29         0x0              1
 
-    let ctx: &WwAcquireCtx =3D ...;
-    let m1: &WwMutex<T> =3D ...;
-    let m2: &WwMutex<Foo> =3D ...;
-
-    let (t, foo, foo2) =3D ctx
-        .begin()
-        .lock(m1)
-        .lock(m2)
-        .lock_with(|(t, foo)| &*foo.other)
-        .finish();
-
-    let _: &mut T =3D t;
-    let _: &mut Foo =3D foo;
-    let _: &mut Foo =3D foo2;
-
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
 ---
-Cheers,
-Benno
+ kernel/trace/bpf_trace.c | 44 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 8ecb1a9f85d..90209dda819 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -3171,10 +3171,54 @@ static int bpf_uprobe_multi_link_fill_link_info(const struct bpf_link *link,
+ 	return err;
+ }
+ 
++#ifdef CONFIG_PROC_FS
++static void bpf_uprobe_multi_show_fdinfo(const struct bpf_link *link,
++					 struct seq_file *seq)
++{
++	struct bpf_uprobe_multi_link *umulti_link;
++	char *p, *buf;
++
++	umulti_link = container_of(link, struct bpf_uprobe_multi_link, link);
++
++	buf = kmalloc(PATH_MAX, GFP_KERNEL);
++	if (!buf)
++		return;
++
++	p = d_path(&umulti_link->path, buf, PATH_MAX);
++	if (IS_ERR(p)) {
++		kfree(buf);
++		return;
++	}
++
++	seq_printf(seq,
++		   "uprobe_cnt:\t%u\n"
++		   "pid:\t%u\n"
++		   "path:\t%s\n",
++		   umulti_link->cnt,
++		   umulti_link->task ? task_pid_nr_ns(umulti_link->task,
++			   task_active_pid_ns(current)) : 0,
++		   p);
++
++	seq_printf(seq, "%-16s %-16s %-16s\n", "offset", "ref_ctr_offset", "cookie");
++	for (int i = 0; i < umulti_link->cnt; i++) {
++		seq_printf(seq,
++			   "%#-16llx %#-16lx %-16llu\n",
++			   umulti_link->uprobes[i].offset,
++			   umulti_link->uprobes[i].ref_ctr_offset,
++			   umulti_link->uprobes[i].cookie);
++	}
++
++	kfree(buf);
++}
++#endif
++
+ static const struct bpf_link_ops bpf_uprobe_multi_link_lops = {
+ 	.release = bpf_uprobe_multi_link_release,
+ 	.dealloc_deferred = bpf_uprobe_multi_link_dealloc,
+ 	.fill_link_info = bpf_uprobe_multi_link_fill_link_info,
++#ifdef CONFIG_PROC_FS
++	.show_fdinfo = bpf_uprobe_multi_show_fdinfo,
++#endif
+ };
+ 
+ static int uprobe_prog_run(struct bpf_uprobe *uprobe,
+-- 
+2.48.1
+
