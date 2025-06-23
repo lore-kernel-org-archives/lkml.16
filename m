@@ -1,166 +1,101 @@
-Received: from buffalo.tulip.relay.mailchannels.net (buffalo.tulip.relay.mailchannels.net [23.83.218.24])
+Received: from mail-m19731118.qiye.163.com (mail-m19731118.qiye.163.com [220.197.31.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A373C2F29;
-	Mon, 23 Jun 2025 00:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.24
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750639310; cv=pass; b=cS2q6YlIX/xyf+XGqRUFhs1aUNVlDLpd2gtczANeTuPBq/A67gVsECXM53xZQ4zKEBHQePdbN6UsLmEt7666YZWHB6NnNinQw7wS0ikNtpRzWWgmIkgCHqFOVOkdIo1r7/P55dNdMEpHyklSTCCU0XBk2+DOGs6WkpTmh9U1o/Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750639310; c=relaxed/simple;
-	bh=4ehXf59ZxCKwIZe3x4VcN0FbVJWmUO2gSjtQNs8cW1Q=;
-	h=From:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc:Date; b=TXgR69g0nGWalXgvF+FufomySk7pMVcTRMomipKsRBLSsmiMqPDocT2p+9tdJ6lBIyG3gwhv/8TLpkOKq6PS+kcoDwul0WNqzHxDkgJ8PEp7aqIxCVvFlD3rJdJ5g0wtLqzprejMUGYcJMgeVRfcRBZ/90ibAMen2O+LOmZm+E0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com; spf=pass smtp.mailfrom=smankusors.com; dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b=s1Q7qZLu; arc=pass smtp.client-ip=23.83.218.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smankusors.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AAFB4A1A;
+	Mon, 23 Jun 2025 01:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.118
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750641061; cv=none; b=JCaHf+cZXYGS+YDBICkcOpYDHNDNHXYoJX33NISxUMGRpcy3jWgwU1WyBon5BNtWHZ48BZkKs3mwMcG/pR++zuYn23a05fqUTcgfUrllg70dj+kYzQVDLTNt5U9oQMFwVt71hB9ei451Bq7+wKC6zcrvR+pboFy2J/tbrHmHk3w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750641061; c=relaxed/simple;
+	bh=rwqqDu0KtBplQp8EOinHmccqzODA49z/gqlStx52Hzw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=WR9lNbMpRkfqjVR4yEDu2faqt4uVMhtgVv6qXT7WXAAt9kU/kJRK0lDs6Xqn8PBYOooDr0REjADJUE5PNWc61+VJGHcQLB4KjvsNeP0FdlDCogjoqYzwUj/Z1I6oAWgP5UqYgOUxlGOuhYvWTExQMJqa09Uxi5cN37weIeEdT/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=HcUQYdC1; arc=none smtp.client-ip=220.197.31.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b="s1Q7qZLu"
-X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id CE2118A3542;
-	Sun, 22 Jun 2025 18:26:49 +0000 (UTC)
-Received: from fr-int-smtpout7.hostinger.io (trex-green-8.trex.outbound.svc.cluster.local [100.108.116.219])
-	(Authenticated sender: hostingeremail)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 150998A01F8;
-	Sun, 22 Jun 2025 18:26:45 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1750616807; a=rsa-sha256;
-	cv=none;
-	b=xVuTaFtluxsXhKEjhG8okf7kI507hfNeoO5eYRvneL8OgvN7jHQTM2kGXUG8X8yh+aYpZy
-	Vk92gylVsrxwcgx6L35cODrkRRnZgKFnEHvKtCtK/czRwTQx+y9fAN3KaRUA+8RcpQV/X8
-	2XDsuNKeD7ZNzqGSIAPTKNdpZ3Xnw0Ltfl4Seo3m8lq34yx2ZiY0mWgzKVREsERNcX0Rx1
-	HaKTOwMtF6Tu9EYAur3iOYjRlaUnjsxRciI2rPv61kHAfflryPg79QFxI5Pgmh5qCyRfnR
-	TyQrMi67VKjaLQMEQDUGxTSUr+vPRMJHiYD6OzJrk/sGWnkL2KI/sjnPvsyg0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1750616807;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=KPo04CXgY+2Sr4BBCCBjD0uiSw0hxaC3xZEVcKPTLRg=;
-	b=N9z6rqOLY6QpD9TP2RVZdv6ma33xW3NKCFFQKLBsHbdSKXR/qjs+1w4cwmWV0KJh4YR20B
-	pHi2rAowgqdvukDJZac76C65lhDc1zc9TtpQxpZpSq8WgNtou6g4soWLRGoTHIL4tlfaYA
-	Bn4goitEGDTgWswnJfPK3szncMJ5pDfYRvakgvjJWc956/Bo0JU66RIQ4Z+tJhv14E+jw+
-	MgqvpYyBmLHXnakCM3dqiyrm4ySopyBFXThjjwe+VGJTFRuztEhVloaneoxzLcjRiUKA1G
-	yzsBXTInp9yWpL3/LrGPRLpWBik1b+BAJ6x5ArwrLKBwOdkTMHBpMCy1om5Qcg==
-ARC-Authentication-Results: i=1;
-	rspamd-6597f9cdc7-sql6l;
-	auth=pass smtp.auth=hostingeremail smtp.mailfrom=linux@smankusors.com
-X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: hostingeremail|x-authuser|linux@smankusors.com
-X-MailChannels-Auth-Id: hostingeremail
-X-Quick-Name: 6a7139280b0b5490_1750616809751_890448327
-X-MC-Loop-Signature: 1750616809751:1881878027
-X-MC-Ingress-Time: 1750616809751
-Received: from fr-int-smtpout7.hostinger.io (fr-int-smtpout7.hostinger.io
- [89.116.146.203])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.108.116.219 (trex/7.0.3);
-	Sun, 22 Jun 2025 18:26:49 +0000
-Received: from [172.17.0.2] (unknown [36.79.123.39])
-	(Authenticated sender: linux@smankusors.com)
-	by smtp.hostinger.com (smtp.hostinger.com) with ESMTPSA id 4bQKRj6MDVzKLLHq;
-	Sun, 22 Jun 2025 18:26:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smankusors.com;
-	s=hostingermail-a; t=1750616804;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KPo04CXgY+2Sr4BBCCBjD0uiSw0hxaC3xZEVcKPTLRg=;
-	b=s1Q7qZLuE3ZRRv5ecevYcM+kf5q2EsrwVhKaoQJ8XyByvBfq/r09pjcy9+hrzetbyBmb3M
-	SrTZyomdYv5voLdS1oB2KGTaowSb+q9+AEsareVJMzBRqxjo2NENqlFYvWaqnAPMXeTgLN
-	qWF9Lp9uqjrYEIgUotqzb7g9wpN3+Y3SDHNFHBkeLpz6PyAcowstiQ2t7uhrpJVpAEBIDG
-	WY8lrdSugEIAb61o+UGs5zaauXUdeSb5nr0Hzg+SMaNuv4xoIUSEYz0++b6T0eQpssbUem
-	kwBLnaLi0ajqYecEEOgRiKTUvWg3vKXsXLEabEQUpPPNF3EuFkQ8np1zOea0+Q==
-From: Antony Kurniawan Soemardi <linux@smankusors.com>
-Subject: [PATCH v2 2/5] ARM: dts: qcom: msm8960: add gsbi8 and its serial
- configuration
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="HcUQYdC1"
+Received: from xxm-vm.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1988856fd;
+	Mon, 23 Jun 2025 09:05:38 +0800 (GMT+08:00)
+From: Simon Xue <xxm@rock-chips.com>
+To: joro@8bytes.org,
+	will@kernel.org,
+	heiko@sntech.de
+Cc: robin.murphy@arm.com,
+	iommu@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Simon Xue <xxm@rock-chips.com>
+Subject: [PATCH v2] iommu/rockchip: prevent iommus dead loop when two masters share one IOMMU
+Date: Mon, 23 Jun 2025 09:05:32 +0800
+Message-Id: <20250623010532.584409-1-xxm@rock-chips.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250620073945.572523-1-xxm@rock-chips.com>
+References: <20250620073945.572523-1-xxm@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-msm8960-sdcard-v2-2-340a5e8f7df0@smankusors.com>
-References: <20250623-msm8960-sdcard-v2-0-340a5e8f7df0@smankusors.com>
-In-Reply-To: <20250623-msm8960-sdcard-v2-0-340a5e8f7df0@smankusors.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Antony Kurniawan Soemardi <linux@smankusors.com>, 
- Max Shevchenko <wctrl@proton.me>, Rudraksha Gupta <guptarud@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750616795; l=1551;
- i=linux@smankusors.com; s=20250609; h=from:subject:message-id;
- bh=4ehXf59ZxCKwIZe3x4VcN0FbVJWmUO2gSjtQNs8cW1Q=;
- b=0zEIYZTP+IYGEGpA5tZRamb6Ldh6TG3K4FJF3uwBldz0qy8Zz1sk8TA5YoXxGb1mX5DZ1NV6a
- 8+Q+lsio9ndD4b/0XsyogoGeHY+J2kWHbxHRz+XCOR0d+Wv2yzhV+7t
-X-Developer-Key: i=linux@smankusors.com; a=ed25519;
- pk=65wTy06fJl2/h/EJwjr704YG+yjHFhZObJBWzzK+N00=
-Date: Sun, 22 Jun 2025 18:26:41 +0000 (UTC)
-X-CM-Analysis: v=2.4 cv=Vv1xAP2n c=1 sm=1 tr=0 ts=68584ae4 a=vFgqIyFt8cetXi1S0ACNwg==:117 a=vFgqIyFt8cetXi1S0ACNwg==:17 a=IkcTkHD0fZMA:10 a=wxLWbCv9AAAA:8 a=dPS0CNwDI8gHXBqWMWoA:9 a=QEXdDO2ut3YA:10 a=bNUbUmQ3fjJCcntIu9VZ:22 a=QJY96suAAestDpCc5Gi9:22
-X-CM-Envelope: MS4xfGshWlmH8dwr44w6u2OWUeu0RmB8kB+wwjnoouZvLaONfVIq+FUAbkjtZYzqoenXZaAaqih5VJcadf1cUMcJiTsqauXbBvFghBBqXqjGnuM0I25f0NMy W5jlfS7pCK2QUuFTaDEF8UoFvUUE2XiauCFNJ0cyW5zXmNkZO7TmqlaXrAxpUSSFQZRwXR0wwSNocNcsw21zbpUHgfOQoeVQdg/RJRTrJNOmoVGG4oIupiDQ A45XjzjZ0zAODbSKnLH5Xh2CGPNbbobKn3smNw/OGelYDF0hBslJr9OvSma4OtXunSnYZeHndWblTLusnAMwzA5g7B0YHM3sVkZcvEyNkMMlKlZu/JsPF6Gh pL5FOWp84I4q/R4gpmLuTXVhsJ8sNAmR4LZENoMiF/33Ylw827RIYTdt479lTLXza0JSMO1vwefWVtLOePOJWVRMxSnX2PrZJR5/T5bgVp31OlVChscidZaa 6ukP7qTrvaqLudcmvBZWaRoHArus5MCtCG3HsPXf4tLo7ZI7VPNprjQXGqg=
-X-AuthUser: linux@smankusors.com
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGR9KHlZLTkNPSE4ZTExPHktWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a979a51c11e03ackunmb9b4d7f71b74391
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nj46Agw5NjEwSy45CB0hHgki
+	Ey0aCRdVSlVKTE5LTU9LTEhCQ0lJVTMWGhIXVQMDFjsJFBgQVhgTEgsIVRgUFkVZV1kSC1lBWU5D
+	VUlJVUxVSkpPWVdZCAFZQUlKTkg3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=HcUQYdC1n/fdfPwVzWQh5u9nT6IAJItWvktXDa+TMc5smGT+z3y3P+xgxIedR+wOHJy4zDL+gnyEikwHSvyT3oerFWtW+N7XEHoZG/IGDlWMN1id+/67ObSAEIbLcgToHcdUhKq8fLnWSgbgfKEtLNvq8Cry/gPy1kS8SZSimg0=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=j/L7z1+3IqwV7z6y8V8VJRap9OXNheZ0n7phc+aB5uM=;
+	h=date:mime-version:subject:message-id:from;
 
-The LTE variant of the MSM8960 SoC has a gsbi8 node used for the
-serial console.
+When two masters share an IOMMU, calling ops->of_xlate during
+the second master's driver init may overwrite iommu->domain set
+by the first. This causes the check if (iommu->domain == domain)
+in rk_iommu_attach_device() to fail, resulting in the same
+iommu->node being added twice to &rk_domain->iommus, which can
+lead to an infinite loop in subsequent &rk_domain->iommus operations.
 
-That's if the downstream kernel is to be believed, as Xperia SP has
-a serial console on gsbi8 even on the non-LTE variant.
+Fixes: 25c2325575cc ("iommu/rockchip: Add missing set_platform_dma_ops callback")
 
-Signed-off-by: Antony Kurniawan Soemardi <linux@smankusors.com>
+Signed-off-by: Simon Xue <xxm@rock-chips.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+
+v2:
+   No functional changes.
 ---
- arch/arm/boot/dts/qcom/qcom-msm8960.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/iommu/rockchip-iommu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
-index 4babd0bbe5d638b228e05cdfe6b068b4ea16335f..588ac6c7a51a667202550432bee14fa14f3f74e7 100644
---- a/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
-@@ -333,6 +333,34 @@ gsbi5_serial: serial@16440000 {
- 			};
- 		};
+diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
+index 22f74ba33a0e..e6bb3c784017 100644
+--- a/drivers/iommu/rockchip-iommu.c
++++ b/drivers/iommu/rockchip-iommu.c
+@@ -1157,7 +1157,6 @@ static int rk_iommu_of_xlate(struct device *dev,
+ 		return -ENOMEM;
  
-+		gsbi8: gsbi@1a000000  {
-+			compatible = "qcom,gsbi-v1.0.0";
-+			cell-index = <8>;
-+			reg = <0x1a000000 0x100>;
-+			clocks = <&gcc GSBI8_H_CLK>;
-+			clock-names = "iface";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
+ 	data->iommu = platform_get_drvdata(iommu_dev);
+-	data->iommu->domain = &rk_identity_domain;
+ 	dev_iommu_priv_set(dev, data);
+ 
+ 	platform_device_put(iommu_dev);
+@@ -1195,6 +1194,8 @@ static int rk_iommu_probe(struct platform_device *pdev)
+ 	if (!iommu)
+ 		return -ENOMEM;
+ 
++	iommu->domain = &rk_identity_domain;
 +
-+			syscon-tcsr = <&tcsr>;
-+
-+			status = "disabled";
-+
-+			gsbi8_serial: serial@1a040000 {
-+				compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
-+				reg = <0x1a040000 0x1000>,
-+				      <0x1a000000 0x1000>;
-+				interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&gcc GSBI8_UART_CLK>,
-+					 <&gcc GSBI8_H_CLK>;
-+				clock-names = "core",
-+					      "iface";
-+
-+				status = "disabled";
-+			};
-+		};
-+
- 		ssbi: ssbi@500000 {
- 			compatible = "qcom,ssbi";
- 			reg = <0x500000 0x1000>;
-
+ 	platform_set_drvdata(pdev, iommu);
+ 	iommu->dev = dev;
+ 	iommu->num_mmu = 0;
 -- 
 2.34.1
 
