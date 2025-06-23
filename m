@@ -1,37 +1,37 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D7B4409;
-	Mon, 23 Jun 2025 20:45:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E7F450FE;
+	Mon, 23 Jun 2025 20:46:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750711545; cv=none; b=PLdlnlerK+400vbIYMrWic2AJqpCmoom+gu27Ga4iozw+WHfTaHQeeStAbVjs8QjOQA21+xqQYD8IAQ5DI/v4YvLztk1gYdFkJSMVHgnV3rpcLdO9+wMogc0xM1Bpy1AzMtop5/7E+cMTea0YtfwPDf9GOCwDPlbB0JicGFtRXE=
+	t=1750711589; cv=none; b=WodmqSos63PMhhR/7SONYXPVaqUXq7Abt7Q8YPfAlOQXskYJ2fJ9q0sDHomzuYvAZ2u9z/QWM/gfzztucRnGCHivcWkV7FX1BbGgWWziRzN7DtlufGnY/iokW7GLENR2BDKSfc34SahW5tnr9DuZqmK+xy5Sg+TzTZJLhDOjjlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750711545; c=relaxed/simple;
-	bh=LXUcBbx555l5k/9ZvU/yQO1Jww+F76kR3LE+FHDDLfI=;
+	s=arc-20240116; t=1750711589; c=relaxed/simple;
+	bh=VdnbWeqI8Ap67iCrQCAySa8md3YMTF7BkfXz/DYRji8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tnvl77B8VhfZB9QORQe/jWozGtCoX/QKVTKpzUxYEDw7v0KMTzY4nWNfwYG2QNq65nBB2dbuWu922OicK5YFM7LTxek4M2UvrkYxncBtq9dspYD0gnsq704JUurXe9Btlja7fjxXVG4gjBWFLLB+KHg6HICtz8ccP13V5sRzqac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aE8df9Cd; arc=none smtp.client-ip=90.155.50.34
+	 In-Reply-To:Content-Type; b=oTOB9NcJ7IJlTS/IM1sVQTkRKqDSeI/ydAd/FG1NHekyjzzHHaNSEPh9b7NLL9RYlmi6Q9NfssyTA7qhapRQZdaeDo17b/XxaW+5TaZ+aUPinQ0NvKFw16YoUihzCrAUKnTV3KfOUMS+P1PI4O+BkE85owzIurHFjr7318ssjYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SZy/nLP/; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aE8df9Cd"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SZy/nLP/"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description;
-	bh=qKxUj3mSqe2ylrvojKPzYZcY3zgpPlBo94eym74T81o=; b=aE8df9CdEzwmZkDOLdi+H4GjIY
-	ay2wlqzEmQB1G3fXGj4TwjHX4kJWu3JD0XC0AQtyWtWzOhOCsVyDTCr4PVIjum6WqZC4F0Ng6dMTo
-	lylP3y2LTMecyqf1FLH5EyqymMXLviNX3SADRJptj8kZuWHK1URqZFmZ+pd9TM2MW+3UfJIA1Q4BY
-	ASYtrc+QkjhflVa8g1di97WGFF2P3eg44LmrrqTGI49Mja8O7ZHjp1qlVGSe8dVEwEr+u/4MhCR8Y
-	dkt/iNkYHfcwhynJVgPj7QMo5nTtVVlpB2eNA60AxT2uQfPF/NnuXBtUgABvliSRhXItfYsPaEI0j
-	r69evLJQ==;
+	bh=fqTupFHdWOP7XknPjNhQ1+otLO26YLnn5ZSEsxhj8Do=; b=SZy/nLP/3c+QnF2BTKRl/kNQxj
+	AvTwWK7ITnnOpj9kUWgxUlM079YiCqRv0XrRCWrbvBJD5o+xeJHfeGBxMjmGCMo5Q9PL2GlbGG1Q0
+	tyK3+41KZT/bFOsIW7hZMPLaFHzdHZlEfm8Y/N/APALXsPWLteRNWbKKDXl0KeGw4XRqdyl5hGbhb
+	Uft+5d1Cn7kgwT7dcOiafFVnKG8KIOukX+wiqgbPtU6v6oHcJoRZVn2DNKyRuoei2Tgadhp9YyK1I
+	hz3maER1osGsNiIUlG6+mCtitDdFDjwIH1BvYjrLeIBXOTb10S6jhTuBoag+fnD+HZgOFi1co54Lt
+	0Df6ep5w==;
 Received: from [50.53.25.54] (helo=[192.168.254.17])
 	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uTo2o-00000004Z4k-0bjY;
-	Mon, 23 Jun 2025 20:45:34 +0000
-Message-ID: <50e80a33-30cc-4231-87ad-c0fa392acf45@infradead.org>
-Date: Mon, 23 Jun 2025 13:45:31 -0700
+	id 1uTo3Y-00000004ZHA-0h2U;
+	Mon, 23 Jun 2025 20:46:20 +0000
+Message-ID: <ff61ff8e-d20c-444e-988f-6d97a197e070@infradead.org>
+Date: Mon, 23 Jun 2025 13:46:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,27 +39,26 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] nvmet: Remove redundant assignment of error code in
- nvmet_ns_enable()
+Subject: Re: [PATCH 4/5] nvme: Fix typo in status code constant for self-test
+ in progress
 To: Alok Tiwari <alok.a.tiwari@oracle.com>, linux-nvme@lists.infradead.org,
  kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
  kch@nvidia.com, nilay@linux.ibm.com, corbet@lwn.net
 Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250623064036.4187788-2-alok.a.tiwari@oracle.com>
- <20250623064036.4187788-4-alok.a.tiwari@oracle.com>
+ <20250623064036.4187788-5-alok.a.tiwari@oracle.com>
 Content-Language: en-US
 From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250623064036.4187788-4-alok.a.tiwari@oracle.com>
+In-Reply-To: <20250623064036.4187788-5-alok.a.tiwari@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 6/22/25 11:40 PM, Alok Tiwari wrote:
-> removing the unnecessary ret = -EMFILE; assignment since it is
-> immediately overwritten by the result of nvmet_bdev_ns_enable()
-> The initial value(-EMFILE) is redundant because it has no effect
-> on the code logic or outcome.
+> Corrected a typo error in the NVMe status code constant from
+> NVME_SC_SELT_TEST_IN_PROGRESS to NVME_SC_SELF_TEST_IN_PROGRESS to
+> accurately reflect its meaning.
 > 
 > Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 
@@ -68,22 +67,45 @@ Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
 Thanks.
 
 > ---
->  drivers/nvme/target/core.c | 2 --
->  1 file changed, 2 deletions(-)
+>  drivers/nvme/host/constants.c | 4 ++--
+>  include/linux/nvme.h          | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-> index 175c5b6d4dd58..884286f90688a 100644
-> --- a/drivers/nvme/target/core.c
-> +++ b/drivers/nvme/target/core.c
-> @@ -581,8 +581,6 @@ int nvmet_ns_enable(struct nvmet_ns *ns)
->  	if (ns->enabled)
->  		goto out_unlock;
->  
-> -	ret = -EMFILE;
-> -
->  	ret = nvmet_bdev_ns_enable(ns);
->  	if (ret == -ENOTBLK)
->  		ret = nvmet_file_ns_enable(ns);
+> diff --git a/drivers/nvme/host/constants.c b/drivers/nvme/host/constants.c
+> index 1a0058be58210..dc90df9e13a21 100644
+> --- a/drivers/nvme/host/constants.c
+> +++ b/drivers/nvme/host/constants.c
+> @@ -133,7 +133,7 @@ static const char * const nvme_statuses[] = {
+>  	[NVME_SC_NS_NOT_ATTACHED] = "Namespace Not Attached",
+>  	[NVME_SC_THIN_PROV_NOT_SUPP] = "Thin Provisioning Not Supported",
+>  	[NVME_SC_CTRL_LIST_INVALID] = "Controller List Invalid",
+> -	[NVME_SC_SELT_TEST_IN_PROGRESS] = "Device Self-test In Progress",
+> +	[NVME_SC_SELF_TEST_IN_PROGRESS] = "Device Self-test In Progress",
+>  	[NVME_SC_BP_WRITE_PROHIBITED] = "Boot Partition Write Prohibited",
+>  	[NVME_SC_CTRL_ID_INVALID] = "Invalid Controller Identifier",
+>  	[NVME_SC_SEC_CTRL_STATE_INVALID] = "Invalid Secondary Controller State",
+> @@ -145,7 +145,7 @@ static const char * const nvme_statuses[] = {
+>  	[NVME_SC_BAD_ATTRIBUTES] = "Conflicting Attributes",
+>  	[NVME_SC_INVALID_PI] = "Invalid Protection Information",
+>  	[NVME_SC_READ_ONLY] = "Attempted Write to Read Only Range",
+> -	[NVME_SC_CMD_SIZE_LIM_EXCEEDED	] = "Command Size Limits Exceeded",
+> +	[NVME_SC_CMD_SIZE_LIM_EXCEEDED] = "Command Size Limits Exceeded",
+>  	[NVME_SC_ZONE_BOUNDARY_ERROR] = "Zoned Boundary Error",
+>  	[NVME_SC_ZONE_FULL] = "Zone Is Full",
+>  	[NVME_SC_ZONE_READ_ONLY] = "Zone Is Read Only",
+> diff --git a/include/linux/nvme.h b/include/linux/nvme.h
+> index b65a1b9f2116c..655d194f8e722 100644
+> --- a/include/linux/nvme.h
+> +++ b/include/linux/nvme.h
+> @@ -2155,7 +2155,7 @@ enum {
+>  	NVME_SC_NS_NOT_ATTACHED		= 0x11a,
+>  	NVME_SC_THIN_PROV_NOT_SUPP	= 0x11b,
+>  	NVME_SC_CTRL_LIST_INVALID	= 0x11c,
+> -	NVME_SC_SELT_TEST_IN_PROGRESS	= 0x11d,
+> +	NVME_SC_SELF_TEST_IN_PROGRESS	= 0x11d,
+>  	NVME_SC_BP_WRITE_PROHIBITED	= 0x11e,
+>  	NVME_SC_CTRL_ID_INVALID		= 0x11f,
+>  	NVME_SC_SEC_CTRL_STATE_INVALID	= 0x120,
 
 -- 
 ~Randy
