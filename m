@@ -1,116 +1,101 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C29724A066;
-	Mon, 23 Jun 2025 12:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB2F1F4604
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750680593; cv=none; b=RUKhXdhwvk6W/qZeD0FjYNxY0OuuuzFhURQWFK0T3IjEVPqYnOokUv1Dh9b4JhDUBYGctTfrIryWoevMdZq0prWmKPMx3ITida0eNd/4a4gumKYQ9gZxUmkBioM9EhJCyYggfwzyLmsmmpnyui+SPCWwqm9/sRJ1gVfRhhyTRuY=
+	t=1750680666; cv=none; b=KhjwjqjQ1X3n9TY/vXpIFJ8yva6yqZpgtvTZUKKwM+jV6hPmgYRzuUAMpGcRAe4sBfdFsmpvNVUpVyX34dDBT5pPf1PNtHV6kVpShVitUy+Dx2gxCHdYCFkbUPUoh98yTCyXZRkqWsgoGz/zcuoiF4pGl/OH7n+433XX+Oua8w0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750680593; c=relaxed/simple;
-	bh=Qoev+AvdmPBHglTzwsX/BxL22BmFnBv4u3qjgg8DWOk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RxwCYSodx/OYiB0eu1tH6p+TMLTP+eorM4klRMTwYOJ4umcEmhk/TR2IIpt1Az8X3vY/fymCz1k8br+NYHanLG6AH7ACqrewDK2ZO8NrUpUXOgObI0A1X/nhVV8ptO4zf9qvgiRxv/n9b63YaPXjP/42BnSboKaOB0Bt9+voUpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=wntj8czy; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="wntj8czy"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 87C81D77;
-	Mon, 23 Jun 2025 14:09:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750680572;
-	bh=Qoev+AvdmPBHglTzwsX/BxL22BmFnBv4u3qjgg8DWOk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wntj8czyfGuouGhXsDmdmJYNx8DA/iiizco08QWeLVw5voHz45L9GC7058rLm38Hs
-	 h4uB3fdygpLZN7xHBfpqhNPUVwiSXheq7qejH6UU0gGreTfc+dgbBB7mQOeOWXh9Q4
-	 K3qpT08hT5uxOCCK9M6MuWe2Gay2P7qRZ4zO/HE0=
-Date: Mon, 23 Jun 2025 15:09:29 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: "Nirujogi, Pratap" <pnirujog@amd.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Hao Yao <hao.yao@intel.com>,
-	Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
-	hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org,
-	dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
-	jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com,
-	king.li@amd.com, dantony@amd.com, vengutta@amd.com,
-	dongcheng.yan@intel.com, jason.z.chen@intel.com, jimmy.su@intel.com
-Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
-Message-ID: <20250623120929.GE826@pendragon.ideasonboard.com>
-References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
- <6a49eb11-d434-4315-8ee9-0f8aa7347de2@intel.com>
- <aEygCdk-zEqRwfoF@kekkonen.localdomain>
- <3e8364e8-22e4-42ad-a0f0-017f86fd6bf9@amd.com>
+	s=arc-20240116; t=1750680666; c=relaxed/simple;
+	bh=7nT0WrDBykZ5FvNSeezUjkmVFkAs4KtAsHGFkCHZR58=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=ePPPFRwKMHOP4olBVX1QyJEMVuAcqMRWITfw7oXW0acjm0LLy6FIyj4JFLgsutU7NsBdmk+7kWQlHoI6Y3JuFbHYZuD1+uGYyEiqSvPXGpB72mSm2P6am3SeuWaA1XUVioVYQ1CL3WzSB6Zr9X4NYFJJsTBje8x5RrJA8qKzJv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-86f4e2434b6so342625539f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 05:11:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750680664; x=1751285464;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1zO4sbHLEdySPElpGPfo7IA6d34cxe0lvbaegVabyiY=;
+        b=oO5z/QOt75qyO2+H59tGZjiJDvzglRft5zVjk05cYtTVP1Wn4XHR/CLEx2CtfrsOYI
+         F6hXavChHyT9ZaVAYD6uyremsYRGFwgYtuvL3D/OnWXsmQGj6AutQuqUTm9U38KOsqt1
+         uIvuHpNHEOXNSRpQNPkX45utw9EcHJXmOPAxkgDTm/SnT9qMS3gkgKCSZcEPJvw9PxaQ
+         dYz24v3CcGBHy7AqrWRgk10aykeRkOxG/taMVFgE/mMe1VKd8LgqfJlp2OsW0ArpsFuW
+         g4dt7Pxw8J7JRlqBKXkUG37xl8koCCVAEDVFOmfD/jE+P3cpzA2YwEVO5tTCOUfOTFix
+         cuiQ==
+X-Gm-Message-State: AOJu0Yw6NAhMoTKzqypofi4LRrgEiqTkmSkWIvH8wbgcoWs1jsnbiGNb
+	nNIN156fMMg4ZivPpxfhXYBL55YwNWc7yPOL6Y1mmc3GKFWnscgkfZTuCsi9vSgHPKKEYBF7nEF
+	kPnrp9kob0qzz72ZULUrk4RFQ9RQUqDycRZWoqOHm5D+0vktLfKIrnMEJWuY=
+X-Google-Smtp-Source: AGHT+IGRrUNCG8Sur4C7BVl05Wf1HdQDtWQoZZrEH7BfMTjJ2XYmn5Esj/MccN+x8ZSVEil3Mv9JDOgvsWPPdKpDE8CSWnU4Hqwm
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3e8364e8-22e4-42ad-a0f0-017f86fd6bf9@amd.com>
+X-Received: by 2002:a05:6e02:3102:b0:3dc:7c9e:c3aa with SMTP id
+ e9e14a558f8ab-3de38cc2b51mr148221765ab.21.1750680664057; Mon, 23 Jun 2025
+ 05:11:04 -0700 (PDT)
+Date: Mon, 23 Jun 2025 05:11:04 -0700
+In-Reply-To: <20250623094537.3353300-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68594458.a00a0220.2e5631.0021.GAE@google.com>
+Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
+ (3)
+From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jun 16, 2025 at 07:12:28PM -0400, Nirujogi, Pratap wrote:
-> On 6/13/2025 6:02 PM, Sakari Ailus wrote:
-> > On Fri, Jun 13, 2025 at 12:55:46PM +0800, Hao Yao wrote:
-> >> Hi Pratap,
-> >>
-> >> Thanks for your patch.
-> >>
-> >> This patch is written for your camera sensor module, which seems very
-> >> different from those already applied on Dell laptops (some of "Dell Pro"
-> >> series). Looking into the driver, I think this version will break the
-> >> devices using ov05c10 sensor.
-> > 
-> > There never was such a driver in upstream so nothing breaks. However, in
-> > order to support these, could you check what would it take to support them
-> > using this driver and post patches, please?
-> > 
-> >> I think this patch is better to be validated on existing devices, but please
-> >> do some fixes before we can do validation. Please check my comments inline.
-> >>
-> >> On 2025/6/10 03:42, Pratap Nirujogi wrote:
-> >>> Add driver for OmniVision 5.2M OV05C10 sensor. This driver
-> >>> supports only the full size normal 2888x1808@30fps 2-lane
-> >>> sensor profile.
-> >>>
-> >>> Co-developed-by: Venkata Narendra Kumar Gutta <vengutta@amd.com>
-> >>> Signed-off-by: Venkata Narendra Kumar Gutta <vengutta@amd.com>
-> >>> Co-developed-by: Bin Du <bin.du@amd.com>
-> >>> Signed-off-by: Bin Du <bin.du@amd.com>
-> >>> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+Hello,
 
-[snip]
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
 
-> >> Hi Sakari,
-> >>
-> >> Seems there are already several camera sensors using page-based registers.
-> >> Is it a good idea to add page support in CCI interface?
-> > 
-> > Sounds like a good idea as such but I'm not sure how common this really is,
-> > I think I've seen a few Omnivision sensors doing this. If implemented, I
-> > think it would be nice if the page could be encoded in the register address
-> > which V4L2 CCI would store and switch page if needed only. This would
-> > require serialising accesses, too. There's some room in CCI register raw
-> > value space so this could be done without even changing that, say, with
-> > 8-bit page and 8-bit register address.
-> 
-> Hi Sakari, thank you for sharing your insights and guiding us. Could you 
-> please suggest if we should take up this work implementing the helpers 
-> in CCI and submit the patch or is it okay to leave it as-is for now and 
-> take care of updating in future once the implementation is ready.
+=====================================================
+BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+BUG: KMSAN: kernel-infoleak in _inline_copy_to_user include/linux/uaccess.h:196 [inline]
+BUG: KMSAN: kernel-infoleak in _copy_to_user+0xcc/0x120 lib/usercopy.c:26
+ instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+ _inline_copy_to_user include/linux/uaccess.h:196 [inline]
+ _copy_to_user+0xcc/0x120 lib/usercopy.c:26
+ copy_to_user include/linux/uaccess.h:225 [inline]
+ vmci_host_do_receive_datagram drivers/misc/vmw_vmci/vmci_host.c:445 [inline]
+ vmci_host_unlocked_ioctl+0x1e9b/0x52c0 drivers/misc/vmw_vmci/vmci_host.c:945
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0x239/0x400 fs/ioctl.c:893
+ __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
+ x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-I think it can live in the driver for now. Given that the device uses
-only 8 bits of register address, I would store the page number in bits
-15:8 instead of bits 31:24, as the CCI helpers do not make bits 27:24
-available for driver-specific purpose.
+Local variable filename created at:
+ ima_file_mprotect+0x78/0x800 security/integrity/ima/ima_main.c:500
+ security_file_mprotect+0x141/0x590 security/security.c:3012
 
--- 
-Regards,
+Bytes 28-31 of 40 are uninitialized
+Memory access of size 40 starts at ffff888013c6bf80
+Data copied to user address 000000000000a4bf
 
-Laurent Pinchart
+CPU: 0 UID: 0 PID: 6740 Comm: syz.0.16 Not tainted 6.16.0-rc3-syzkaller-g86731a2a651e-dirty #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+=====================================================
+
+
+Tested on:
+
+commit:         86731a2a Linux 6.16-rc3
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=150a0b70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=595d344ff0b23ac5
+dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=10726b0c580000
+
