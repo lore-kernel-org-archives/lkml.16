@@ -1,142 +1,100 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84380239E8A;
-	Mon, 23 Jun 2025 10:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6C023A566;
+	Mon, 23 Jun 2025 10:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750674139; cv=none; b=h7GjhgEas2p/Hi+U1a44coAeMcrYeZcCZieT+Zs2caEcx8q9bYO2G2oOpKeAVE/Ptsr14wgFHLi4VYjKQAPyH2ZGsD3x+Hucw61hd2HugYqJR+6PGNpIG5hZPHgOCiVOq0uKP+e669HDaWnpcctjfYQWp8DzbLdgklnUAtNy21Q=
+	t=1750674159; cv=none; b=FQl/kWiTB4kh3zmWFb/z+0tq1fdVTP96VJg6q2Aq3xvx8c+tbaGS+ZuZIXV+yEZ2F3Av8jPaD5p0c9QkT8ouhJPvGfTwI/NSPZJMWmZ45kp/e7tSc0xomFJy+b4KA6QQMoWWKQxMlGfL/sE5r5V80WVc1tbHDfo5MRTARGEUqP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750674139; c=relaxed/simple;
-	bh=buTQECq2VCKD1ICDi23k4UJqMyJjcgNtn8vEOvOp9lc=;
+	s=arc-20240116; t=1750674159; c=relaxed/simple;
+	bh=K6ejdeVWXNi1Joy2ps0u8ylB95bhYC8uYvSwet/9+BE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aHkltSuOZ4uPNMOZYpeRb+TRzmY8ONmb9XF4Z+dFp7izlXx0ztNGRWOOVYPbLFAGgzmZtYykN7QYnikgXn9vsIWL8R7J/ZodD5zkrCm4uKTzfek5aiuE89z9bCSKVVEvuxYAdjNOOA1UHBo56YBNq0/cJriVLjJ6Nf22fwVMTFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HbQHWs/l; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=WR4GJTDpWZfTXzGZQNRoH2oJwdpBr+zew1lNT/zIplt1BBEXCCYO/CpuRTJoC1LNXwatTx8SbdbhK+3BWCcXFBE4HeM6HghV3bnrYH7UOL/pu9M4XYBeGq+Vg7oO4NU/0wJJjQPZf/mIfLH+vlB8zOlwIWLPLUz5sNoxZL8o0FI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a7gPq/Ad; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HbQHWs/l"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6633040E019C;
-	Mon, 23 Jun 2025 10:22:13 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id X3JkVTcSfEkT; Mon, 23 Jun 2025 10:22:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1750674123; bh=bit8kbTV4D3YTiOYptKHmiW7XfvgF+MCkFLAQajwdzk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HbQHWs/ls8gZcfaGZhZv31VGHo7gwnSdUS6tcGx5ju6fZNZNY7nrxFpxNwZjLu2Oh
-	 XS7v/Ipqm7R5Gt4bJzO3gvfy9+TK/sEn4+UhrNhM2kODyyMDVofQNtyFmoAmi4pUvu
-	 7Bof7QehSI7Qhhp6CaQIgBS2XBwOGZTRQHy9D3jF2xfNhlFkQphtrKTYysOrLuQlcd
-	 5DZW3HGSwtZej+UmB3Q7HkqF9IHfDm5nYLDrrCzgOrASUWqXO4WHmmFy2xLrJ3Y4LB
-	 +J9SiPoSMBzFfPPuo/wXAZzC1UYbclUgVJJV0P+iFAo0GOH9d0cw3TvPC97R/QbMe+
-	 kfoFG7keh2xnoyupNaPcs/pZm2+ZEEFNlcrVOP07MwYrwdVqsTN++R93nArt0KvMOY
-	 ydmbpOUhFb7ypo+ObodoI3r5FfJABlmwGtjNbrPsgjLll9uf+hsXla0XB1hZesRsII
-	 0eAaH/vcQNEBsfbaHJk/dOvuGpSfecQHK5l+IqHnYT4NReLwCFb8yC7BhdFDlja4sv
-	 s4a0Hdz4FbszW8nVDNGvy3o+s+gonkxnzBWmVYIyqizfNXpKKqigDzu+ChQ2Na2PP+
-	 ToXCf8yvBgwWs7vd0+P4AcRe9tvgUAkqSUj/RpcQUgLU50z0XqT5EuTjBVWrshIEVU
-	 ciO9IULS86WrYB8ItxO4v1dc=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D19B440E01A0;
-	Mon, 23 Jun 2025 10:21:10 +0000 (UTC)
-Date: Mon, 23 Jun 2025 12:21:05 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Xiongwei Song <xiongwei.song@windriver.com>,
-	Xin Li <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Brijesh Singh <brijesh.singh@amd.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Tony Luck <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Breno Leitao <leitao@debian.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Alexei Starovoitov <ast@kernel.org>, Hou Tao <houtao1@huawei.com>,
-	Juergen Gross <jgross@suse.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Yuntao Wang <ytcoode@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>,
-	Huang Shijie <shijie@os.amperecomputing.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org, linux-mm@kvack.org,
-	Yian Chen <yian.chen@intel.com>
-Subject: Re: [PATCHv6 01/16] x86/cpu: Enumerate the LASS feature bits
-Message-ID: <20250623102105.GCaFkqkatFSbyl1YeN@fat_crate.local>
-References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
- <20250620135325.3300848-2-kirill.shutemov@linux.intel.com>
- <20250620163504.GCaFWNuI-8QFqAM0yI@fat_crate.local>
- <6y2iqv6c2idn7yebaec7tyhzl5zcsrwqq4lcsokumlqeophzaf@ljnmxorblgcj>
- <20250620182943.GDaFWolxhwogB2tTxb@fat_crate.local>
- <tmd5llufitosphzhiik2tlemjuwyi7xkcjlhbqhibrgjjhsqcj@b3xtgub42p45>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a7gPq/Ad"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750674158; x=1782210158;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=K6ejdeVWXNi1Joy2ps0u8ylB95bhYC8uYvSwet/9+BE=;
+  b=a7gPq/AdOGVeoJAyfWTAhY3lWb27RHkgb9ARYAM4uGSBQepJUdr9D4Mx
+   F9ZcPPB34bPdIoopiAZN8JmeOLzs3WswxHtJh6fnWScWjpH563yaJhCPl
+   M5W8phRXrg3LtX8+oE+O1qh55nskrdPz1uAlpPEjIVSlF6zHQSAtqxr+v
+   N8UBaaaf0JIqmwCjSaSFmQpNvmQKqT+tfFAr7iMUkocrVXagdUQc5f/QL
+   jfewUipcTQ5Gp4T262dXub9ghmc/H4EL9rFAKjVh+yEVVB0441hGFDd5W
+   lAZ2Hs96ecLtVP2OtJLNIsza095m17Ygi6YucRv5f/40cs1QSw5WxiKOj
+   g==;
+X-CSE-ConnectionGUID: 7Wut/jhIR92lJbJVNBbYWQ==
+X-CSE-MsgGUID: 55iaybUMRKS5ibYLwXrYUw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="52845552"
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="52845552"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 03:22:38 -0700
+X-CSE-ConnectionGUID: dT4HYpINQ0Kj6SeQmv7yIQ==
+X-CSE-MsgGUID: zwKtq7p2QqG19IGXrl0TUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="151331475"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 23 Jun 2025 03:22:34 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uTeJs-000Nwk-0T;
+	Mon, 23 Jun 2025 10:22:32 +0000
+Date: Mon, 23 Jun 2025 18:21:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: David Lechner <dlechner@baylibre.com>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-spi@vger.kernel.org, David Lechner <dlechner@baylibre.com>
+Subject: Re: [PATCH 8/9] iio: adc: ad_sigma_delta: add SPI offload support
+Message-ID: <202506231738.CgeNexV4-lkp@intel.com>
+References: <20250620-iio-adc-ad7173-add-spi-offload-support-v1-8-0766f6297430@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <tmd5llufitosphzhiik2tlemjuwyi7xkcjlhbqhibrgjjhsqcj@b3xtgub42p45>
+In-Reply-To: <20250620-iio-adc-ad7173-add-spi-offload-support-v1-8-0766f6297430@baylibre.com>
 
-On Mon, Jun 23, 2025 at 11:17:02AM +0300, Kirill A. Shutemov wrote:
-> What about this:
-> 
-> LASS provides protection against a class of speculative attacks, such as
-> SLAM[1]. Add the "lass" flag to /proc/cpuinfo to indicate that the feature
-> is supported by hardware and enabled by the kernel. This allows userspace
-> to determine if the setup is secure against such attacks.
+Hi David,
 
-Yeah, thanks.
+kernel test robot noticed the following build warnings:
 
-I'm still not fully on board with userspace determining whether they're
-mitigated or not but that's a general problem with our mitigations.
+[auto build test WARNING on d02f330b0c78bcf76643fbb7d3215a58b181f829]
 
-Also, I haven't looked at the patchset yet but I think it should be also
-adding code to bugs.c to make all those vulns which it addresses, report that
-they're mitigated by LASS now in
+url:    https://github.com/intel-lab-lkp/linux/commits/David-Lechner/iio-adc-ad_sigma_delta-sort-includes/20250621-063127
+base:   d02f330b0c78bcf76643fbb7d3215a58b181f829
+patch link:    https://lore.kernel.org/r/20250620-iio-adc-ad7173-add-spi-offload-support-v1-8-0766f6297430%40baylibre.com
+patch subject: [PATCH 8/9] iio: adc: ad_sigma_delta: add SPI offload support
+config: x86_64-buildonly-randconfig-004-20250621 (https://download.01.org/0day-ci/archive/20250623/202506231738.CgeNexV4-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250623/202506231738.CgeNexV4-lkp@intel.com/reproduce)
 
-grep -r . /sys/devices/system/cpu/vulnerabilities/
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506231738.CgeNexV4-lkp@intel.com/
 
-output.
+All warnings (new ones prefixed by >>, old ones prefixed by <<):
 
-Which makes your cpuinfo flag not really needed as we already have a special
-method for the mitigations reporting.
-
-But ok, it has gotten kernel enablement so stating so in cpuinfo is ok.
-
-Thx.
+>> WARNING: modpost: module ad_sigma_delta uses symbol devm_iio_dmaengine_buffer_setup_with_handle from namespace IIO_DMAENGINE_BUFFER, but does not import it.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
