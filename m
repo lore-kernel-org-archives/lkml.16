@@ -1,119 +1,104 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5731A23ABB2;
-	Mon, 23 Jun 2025 10:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E0CB663;
+	Mon, 23 Jun 2025 10:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750673150; cv=none; b=e43JJ00AFfYcz4SRY0WJU/FX69ucyXd6xgOu2wKN2OPYiaZvOWgJX8GlQgs5E4HcmEwccFHTxEjPL0ZTE9l6uYK5+r5ze7ei9c5mO0SYW5psz9E1iX8G7n70jNDVeiky4ykMqOjXsfkv9FIaGu/bBUCstc1rtIleUy6+cCR67lU=
+	t=1750673231; cv=none; b=YPPOoPp+83CkmAWSqujWrtEGc/O5DqgMVQhbg7cWZhb6frR3EoYsYtbW2WPwL9yyGyre+9/Rf6mbtJhNeRuI9VA//6/MXoGC39Zyl/qooJDNtDVLIsYViddz5YRN4pDdGWpNK9Up87DZ9QTqPOKoLyS0hlKmphG0v8w01qfiE4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750673150; c=relaxed/simple;
-	bh=iPNitE4nbuEDiKbUBmKidOk6gTXChF4de7gB/oOsN0g=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WjuQsvZOOB5ctQFige7MzI5Zo4/cBmQTBPNjze3JQkFEjzeYsv14oDeZ4jMOJNhS8QchZMnyLvCs5sWGq1SGCUbvJqhoDOtqG31JFt+p9mUH0MXZsfWzqWKX7omYTkpbYaHygyBGfpG+UpR6yJNlesIJTrrEaGV+adudRts3hn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQk9Z1cWTz6L5j9;
-	Mon, 23 Jun 2025 18:00:50 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0625E1402EA;
-	Mon, 23 Jun 2025 18:05:46 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
- 2025 12:05:45 +0200
-Date: Mon, 23 Jun 2025 11:05:44 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Peter
- Zijlstra" <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, "Linus
- Torvalds" <torvalds@linux-foundation.org>, David Lechner
-	<dlechner@baylibre.com>, "Fabio M. De Francesco"
-	<fabio.m.de.francesco@linux.intel.com>
-Subject: Re: [PATCH v2 1/8] cleanup: Introduce ACQUIRE() and ACQUIRE_ERR()
- for conditional locks
-Message-ID: <20250623110544.0000753d@huawei.com>
-In-Reply-To: <20250619050416.782871-2-dan.j.williams@intel.com>
-References: <20250619050416.782871-1-dan.j.williams@intel.com>
-	<20250619050416.782871-2-dan.j.williams@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1750673231; c=relaxed/simple;
+	bh=7SNzWtEzSTjQEsseEgDbz7X6RIzuPeZ3qaIYWeGQgrM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IY6rU4LcJDPbvX6Ytx12/7k5WCCXD7PF1wPE1AtFneqoKhkkq6gQm+FPLMpMU3Yzy0xA6RpTCSYi61u5A2WR2Qe2dsbhe29i9GWT0E4eet0as/FqSJntHnA/7Lm4eMxst6Q+cO4FM8I0scLDoXrCDw8JANekiOWbB4Y7TRIEbCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=uHXhW5tJ; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uHXhW5tJ"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55NA72Q61451920;
+	Mon, 23 Jun 2025 05:07:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750673222;
+	bh=43OOMOtrQdbIl0llSClmQm0cuBZtWECNSMICINWNa2E=;
+	h=From:To:CC:Subject:Date;
+	b=uHXhW5tJFimmz24kJt/rYj4/6sOmWDfXGQHU+FDpJ2q1vQJ+QiNkkS2LkXIhmLyYV
+	 CsZZJGpBWSCovWLU5dtYQlI9BpGkKLwISceVuq687O4T0bZ4So6UsbBI4UrtozgYUf
+	 r9IIrAvbuX7X4c0Lt2q/fZCKlNcdtcnQCLoOeO+g=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55NA72h03138105
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Mon, 23 Jun 2025 05:07:02 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Mon, 23
+ Jun 2025 05:07:02 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Mon, 23 Jun 2025 05:07:02 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.169])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55NA6wcW3627251;
+	Mon, 23 Jun 2025 05:06:58 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <rogerq@kernel.org>
+CC: <stable@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH] arm64: dts: ti: k3-j722s-evm: Fix USB gpio-hog level for Type-C
+Date: Mon, 23 Jun 2025 15:36:57 +0530
+Message-ID: <20250623100657.4082031-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, 18 Jun 2025 22:04:09 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+According to the "GPIO Expander Map / Table" section of the J722S EVM
+Schematic within the Evaluation Module Design Files package [0], the
+GPIO Pin P05 located on the GPIO Expander 1 (I2C0/0x23) has to be pulled
+down to select the Type-C interface. Since commit under Fixes claims to
+enable the Type-C interface, update the property within "p05-hog" from
+"output-high" to "output-low", thereby switching from the Type-A
+interface to the Type-C interface.
 
-> From: Peter Zijlstra <peterz@infradead.org>
-> 
-> scoped_cond_guard(), automatic cleanup for conditional locks, has a couple
-> pain points:
-> 
-> * It causes existing straight-line code to be re-indented into a new
->   bracketed scope. While this can be mitigated by a new helper function
->   to contain the scope, that is not always a comfortable conversion.
-> 
-> * The return code from the conditional lock is tossed in favor of a scheme
->   to pass a 'return err;' statement to the macro.
-> 
-> Other attempts to clean this up, to behave more like guard() [1], got hung
-> up trying to both establish and evaluate the conditional lock in one
-> statement.
-> 
-> ACQUIRE() solves this by reflecting the result of the condition in the
-> automatic variable established by the lock CLASS(). The result is
-> separately retrieved with the ACQUIRE_ERR() helper, effectively a PTR_ERR()
-> operation.
-> 
-> Link: http://lore.kernel.org/all/Z1LBnX9TpZLR5Dkf@gmail.com [1]
-> Link: http://patch.msgid.link/20250512105026.GP4439@noisy.programming.kicks-ass.net
-> Link: http://patch.msgid.link/20250512185817.GA1808@noisy.programming.kicks-ass.net
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: David Lechner <dlechner@baylibre.com>
-> Cc: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-> Not-yet-signed-off-by: Peter Zijlstra <peterz@infradead.org>
-> [djbw: wrap Peter's proposal with changelog and comments]
-> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-This looks like a nice solution.  One trivial style thing inline.
+[0]: https://www.ti.com/lit/zip/sprr495
+Cc: <stable@vger.kernel.org>
+Fixes: 485705df5d5f ("arm64: dts: ti: k3-j722s: Enable PCIe and USB support on J722S-EVM")
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+---
 
-> ---
->  include/linux/cleanup.h | 77 ++++++++++++++++++++++++++++++++++-------
->  include/linux/mutex.h   |  2 +-
->  include/linux/rwsem.h   |  2 +-
->  3 files changed, 67 insertions(+), 14 deletions(-)
-> 
-> diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
-> index 7093e1d08af0..1e1eb35cc225 100644
-> --- a/include/linux/cleanup.h
-> +++ b/include/linux/cleanup.h
-> +#define __GUARD_IS_ERR(_ptr) \
-> +	({ unsigned long _rc = (__force unsigned long)(_ptr); \
-> +	   unlikely((_rc-1) >= -MAX_ERRNO-1); })
+Hello,
 
-Trivial but I'd have added spaces to make this
-	   unlikely((_rc - 1) >= -MAX_ERRNO - 1); })
+This patch is based on commit
+86731a2a651e Linux 6.16-rc3
+of Mainline Linux.
 
-> +
->  #define __DEFINE_GUARD_LOCK_PTR(_name, _exp) \
->  	static inline void * class_##_name##_lock_ptr(class_##_name##_t *_T) \
-> -	{ return (void *)(__force unsigned long)*(_exp); }
-> +	{ void *_ptr = (void *)(__force unsigned long)*(_exp); \
-> +	  if (IS_ERR(_ptr)) { _ptr = NULL; } return _ptr; } \
-> +	static inline int class_##_name##_lock_err(class_##_name##_t *_T) \
-> +	{ long _rc = (__force unsigned long)*(_exp); \
-> +	  if (!_rc) { _rc = -EBUSY; } if (!IS_ERR_VALUE(_rc)) { _rc = 0; } \
-> +	  return _rc; }
->  
+Regards,
+Siddharth.
 
+ arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+index a47852fdca70..d0533723412a 100644
+--- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
++++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+@@ -634,7 +634,7 @@ p05-hog {
+ 			/* P05 - USB2.0_MUX_SEL */
+ 			gpio-hog;
+ 			gpios = <5 GPIO_ACTIVE_LOW>;
+-			output-high;
++			output-low;
+ 		};
+ 
+ 		p01_hog: p01-hog {
+-- 
+2.34.1
 
