@@ -1,73 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E513310E5;
-	Mon, 23 Jun 2025 03:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A051DDD1;
+	Mon, 23 Jun 2025 03:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750647804; cv=none; b=WhUBhiiWojSIXWwirVMkIkbomIP/Iv+Pc8t1JWTAbU2+tDaGoKEux+9i8wLiXF6ym4Ia1XZlLVjtuuiofzFNsOkEL7c05lfTfG2GxCLmVYHvYtU03DKdaGXBfDLtEQ1m8CtEnmVEccQD4PhAMGhjFhpsDd+p5QbvfoXmP0LNztg=
+	t=1750647895; cv=none; b=BFlEyi4PjXnUm0sS1t5eUPNecTtEP03vOQl/CIKuHrZvnGYt7ZZHD2o5oopgcf1W2JccuGQJjtd5cqDKnqYbn81Eaah8MVt8DMDUirgWJ0UdLql2shkkJnbJDkTx1d66U2yGEJJ4cqQpFyIIj/NcNt0kcQvoO87sSdVc5Tt98eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750647804; c=relaxed/simple;
-	bh=CtM1j44AW8Nx9dJ1sWGyQOtEti3sxM6oRMI24t/gS+Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lL+ziavMn/mK+oKpeR7DJL/ivsfoxiqNOp3jTN22mErcfAtnykLzsnQdHRMbl6lmND2QsJKjX9jcuQmQhvYokk2XyfoaX3DJ4lRhhA5J60wHDfwAZkiMA2xdljE6pBu9RDqWZ5P8fskTX7DclFIpsxgyPFtcveAz8x+qgzuhVSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dNm/WZ9B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750647895; c=relaxed/simple;
+	bh=a648IPzo65DASVTu/mn0R4z0gLCIMWV2LgAjH1BnKUg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Hjyyzjo2orI+neGiR23txGxoTVF/gPYRxRg60mmQzrSvu7SXQtAxAK0l4wOpNqBHTCywtAyk0c7ReekC6xDj4g0qYJYCz2bglrtTzoIorN5xNDUORroNFOIDVMg/dwAw6TzmzM8ha4YqI9UzcFHXp4JM8CuPtm3dxQFTMoaiZdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nKz+Mdq1; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dNm/WZ9B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CFF2C4CEE3;
-	Mon, 23 Jun 2025 03:03:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750647803;
-	bh=CtM1j44AW8Nx9dJ1sWGyQOtEti3sxM6oRMI24t/gS+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dNm/WZ9B2983JkffowdOz+WFQrh1QsQXBDZ8Dg3tr5uQTjMXEY8tVVIQy756iW53n
-	 0J6Xel9HnMEZ4/1rESG49XJgAfVGiWgdC5KgvTFk1FMPf+lUOG9H7lEJ7S4TQDzsTh
-	 PnL35RyBdoUS2EYJe/NZJkB6fTuCA9gM08vMoYd0qZC1UBHB/cljNG1CNXosTrIVNQ
-	 2tFOBEPqB68u6Vt+FeM2GPtOrtXFeuLMIp9/B3ysD8tTh0BU/SOLh2wlyDSIkjh4if
-	 UczUCnNH/gVfWS58c7ayXYK4WI8o9COiXENnd0U5LKLV3V4osDpk5ZjB8TjIdKefY+
-	 fVsZROON1LL+g==
-Date: Mon, 23 Jun 2025 03:03:20 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Naoya Tezuka <naoyatezuka@chromium.org>
-Cc: Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
-	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pstore/ram: Validate ECC parameters against Reed-Solomon
- constraint
-Message-ID: <aFjD-D45LkBH_gnA@google.com>
-References: <20250620054757.1006729-1-naoyatezuka@chromium.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nKz+Mdq1"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1750647883; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=mcNkuNTmzIQu0HBmtmC8P6vqmaUZwx5CS6edDfV1nks=;
+	b=nKz+Mdq1XqmGBwQarPf/RmT0yi6yN3mQw8rZ60OSWMB2P6aHGv41Sr52nRBoFp57RLhi6wTPBwsUAgloKD7hbflmpysrJ1AfY0FbkVm7fpm5UqebBB6okiPmsuR8dELoE27P4EP9ZQDBKcW6NUIirR1uFE5/sMLUFRKyzQeiIcs=
+Received: from 30.246.181.6(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WeSBcWA_1750647880 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 23 Jun 2025 11:04:41 +0800
+Message-ID: <c0cbdd85-9702-40ab-bc97-b51b02b9fc89@linux.alibaba.com>
+Date: Mon, 23 Jun 2025 11:04:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620054757.1006729-1-naoyatezuka@chromium.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug
+ event
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Lukas Wunner <lukas@wunner.de>, rostedt@goodmis.org
+Cc: rostedt@goodmis.org, linux-pci@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, helgaas@kernel.org, bhelgaas@google.com,
+ tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
+ davem@davemloft.net, anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
+ peterz@infradead.org, tianruidong@linux.alibaba.com
+References: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
+ <6b4d1351-805e-c8fc-3484-11c0ec466cf0@linux.intel.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <6b4d1351-805e-c8fc-3484-11c0ec466cf0@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 20, 2025 at 02:47:57PM +0900, Naoya Tezuka wrote:
-> The Reed-Solomon library enforces the constraint `n <= 2^m - 1` via a
-> BUG_ON(), where `n` is `block_size + ecc_size` and `m` is `symsize` for
-  ^^^^^^^^
-Better to provide a link, e.g. [1].
 
-[1]: https://elixir.bootlin.com/linux/v6.15/source/lib/reed_solomon/decode_rs.c#L43
 
-> the pstore RAM backend. A driver providing invalid parameters can trigger
-> this, leading to a kernel panic. For more details on the theory behind:
-> https://www.cs.cmu.edu/~guyb/realworld/reedsolomon/reed_solomon_codes.html
+在 2025/6/2 14:30, Ilpo Järvinen 写道:
+> On Mon, 12 May 2025, Shuai Xue wrote:
 > 
-> This issue was discovered during develop chromeos_pstore driver:
-
-s/develop/developing/.
-
-> https://lore.kernel.org/lkml/20250610050458.4014083-1-naoyatezuka@chromium.org/
+>> Hotplug events are critical indicators for analyzing hardware health,
+>> particularly in AI supercomputers where surprise link downs can
+>> significantly impact system performance and reliability.
+>>
+>> To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
+>> tracepoint for hotplug event to help healthy check, and generate
+>> tracepoints for pcie hotplug event. Add enum pci_hotplug_event in
+>> include/uapi/linux/pci.h so applications like rasdaemon can register
+>> tracepoint event handlers for it.
+>>
+>> The output like below:
+>>
+>> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+>> $ cat /sys/kernel/debug/tracing/trace_pipe
+>>      <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
+>>
+>>      <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
+>>
+>> Suggested-by: Lukas Wunner <lukas@wunner.de>
+>> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> ---
+>> changes since v7:
+>> - replace the TRACE_INCLUDE_PATH to avoid macro conflict per Steven
+>> - pick up Reviewed-by from Lukas Wunner
+>> ---
+>>   drivers/pci/hotplug/Makefile      |  3 ++
+>>   drivers/pci/hotplug/pciehp_ctrl.c | 33 ++++++++++++---
+>>   drivers/pci/hotplug/trace.h       | 68 +++++++++++++++++++++++++++++++
+>>   include/uapi/linux/pci.h          |  7 ++++
+>>   4 files changed, 105 insertions(+), 6 deletions(-)
+>>   create mode 100644 drivers/pci/hotplug/trace.h
+>>
+>> diff --git a/drivers/pci/hotplug/Makefile b/drivers/pci/hotplug/Makefile
+>> index 40aaf31fe338..a1a9d1e98962 100644
+>> --- a/drivers/pci/hotplug/Makefile
+>> +++ b/drivers/pci/hotplug/Makefile
+>> @@ -3,6 +3,9 @@
+>>   # Makefile for the Linux kernel pci hotplug controller drivers.
+>>   #
+>>   
+>> +# define_trace.h needs to know how to find our header
+>> +CFLAGS_pciehp_ctrl.o				:= -I$(src)
+>> +
+>>   obj-$(CONFIG_HOTPLUG_PCI)		+= pci_hotplug.o
+>>   obj-$(CONFIG_HOTPLUG_PCI_COMPAQ)	+= cpqphp.o
+>>   obj-$(CONFIG_HOTPLUG_PCI_IBM)		+= ibmphp.o
+>> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+>> index d603a7aa7483..f9beb4d3a9b8 100644
+>> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+>> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+>> @@ -23,6 +23,9 @@
+>>   #include "../pci.h"
+>>   #include "pciehp.h"
+>>   
+>> +#define CREATE_TRACE_POINTS
+>> +#include "trace.h"
 > 
-> Add a check to validate this constraint before initializing Reed-Solomon
-> codec. On failure, return -EINVAL to prevent the panic.
+> Hi,
 > 
-> Signed-off-by: Naoya Tezuka <naoyatezuka@chromium.org>
+> Instead of spreading tracepoint creating into subdriver code like this,
+> should we place it into one place, e.g., drivers/pci/pci-trace.c (which is
+> what I seem to have used in my yet to be submitted patch that adds
+> tracepoints into bwctrl link speed events)?
+> 
+>> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
+>> new file mode 100644
+>> index 000000000000..21329c198019
+>> --- /dev/null
+>> +++ b/drivers/pci/hotplug/trace.h
+> 
+> Perhaps in include/trace/events/pci.h (or
+> include/trace/events/pci-hotplug.h)?
+> 
+> I don't know what is the general rule having them inside drivers/ vs
+> include/trace/events, Documentation/trace/tracepoints.rst only mentions
+> the latter, but there seems to be plenty under drivers/ too.
+> 
 
-The patch makes sense to me:
-Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
+Hi, Ilpo,
+
+I don't know either.
+
+I think it is tracepoint stuff and it is up to @Steve.
+@Steve, which way do you prefer?
+
+Thanks for help.
+
+Best Regards,
+Shuai
+
+
