@@ -1,154 +1,98 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39829238D32
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF961DDA31;
+	Mon, 23 Jun 2025 19:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750705103; cv=none; b=JN47I1wE07kqfZqHxHpkR1WZsfmXx4u/oJj4ypxFL6wKPw3RDVS2YpkTmXcclKBPE/wdRDVMyKHSj2HEYWoOfxhZ8tw27QT66tznUZQxvygGMKgxeA5Hogo1p+UOc5NB+VJ5dRIZEuI3oBImaMFoEV727yDjelnrMKidaH3FRB4=
+	t=1750705499; cv=none; b=eiXIkt3GV+fqVz/vpBbUd4uRdfQfWSsHIHZbY3kRnl0jXcglndY/6vLzQ02AznoqKO76m4elaw+Q5pTbs50iUhY3OJISnMn9zO+WksZx65ReXXUm9JDtsRH/LdqojsMbLtUht7CQACU6pKAJs4bDD0N2fPrg1qc+WAZ3nxA2M7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750705103; c=relaxed/simple;
-	bh=KXC6nG9o6ovfA99bRXDtfifCdJkX3mbrQkn/5qBs7+c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lx49KZQizrdCUNeS6y//J8Tze4aGq4jHwtx2SbsHruM82iYkMuohW0IXgFc6xYOheIbo9QvvYFVkgNw59uazr8HHFAY/Nhm3Y8em3hfB2jgU2jWctw6EWGjfybIUKdtx5UBbtNm/IBjfmavLQRKm462AjCvbMixw48o/2jGO6F0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AvVKiLgd; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750705499; c=relaxed/simple;
+	bh=TR8ISfADIgMboKyCwl25EEKSp/wq6BbTsD/oRX+z1C8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KSoEMe5fsXWFSuuHxq1O8xD7WHqV09r5mlSCE7nCcEKF3R/J0sXISk1O9ITcMuof5yBkA6PJrZtptxuYzTIHg15Q1I90b7nyAfiHq6hIsSX+gz7QvlqKrPBE0cBRm1vuA10TpIZPojWQiSOUq/szBIjY7A1Y0aSjYyE3obl9xp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Wq8P8oSO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bJ3uGDEs; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AvVKiLgd"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2353a2bc210so39683175ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:58:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750705101; x=1751309901; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/O3h7OHyc2BiZHoJ0hTf/eryzYqTkwG6KkuAvS6L3sw=;
-        b=AvVKiLgdfdSIqscYHKusHBqWSGbOkCIQhJXKBPJe+HVWTK/D6cY07cQ7Uxymypad9w
-         gIbvUiosePAk3BfTrEgvHSmF0yGsu8iBovYLvvyPnuY13+3jkXhpruiOBy3pvIM/q4F3
-         QG6+W8WRjja3ea2a+CJvGUqulpbBVE+BlWitgz5t5/smrU85jhB0L+/B2eAw58HEnu23
-         xLher3Bcxa2u76mGk383+efLdq69xI0AyLdJZUA5HqqJ5sxj2pRoyZnjfq7A1zFLjKPH
-         qr3NNBxHPf1mkAxm+ZegC8Qxynk/GBPaA7suaQfo+zYuZJevuU/xQIyuomq7HNLEUBO+
-         pvng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750705101; x=1751309901;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/O3h7OHyc2BiZHoJ0hTf/eryzYqTkwG6KkuAvS6L3sw=;
-        b=pf8QaUJ+Utp0fHEmuKyr8sqlKmMCWU1Dck7ATE9Y60LNPlQP9ltDdnrC5Ls3wFl5dQ
-         CKbEAjQ9ujQj4hgKp2NE14qI4vtbnb4YNnnzBbQ1nOIrmdSmvAE2mo77oQl4EVHW36H2
-         XC9Ae4QXfyFNHgOjHJI3RSCvUIBf/fg5Ho3nRL5+Z8815HhGzuK55qq+Q5RlJ8hfjKdV
-         UC4lyqwEe9YsAIJkD20jBvLHOw5Jt37aztIqm67iCpfdYTy/B8PtCcL3xjKxpgCOpFGI
-         cUusAfvp+9Y2IdSlc5IdR0lUSehk2FIVXw5tkmbEgO839R4mMvIOQK4BUwDoZxQVdkj4
-         A8KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5l3vKqFI4fJcdOzpZ+QDntLhSCdaMGqtEuZDPqkBRPzBEb7HDqOddyRL2xGHc5MJYdxLuELMOFaQYQO8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFoJNs1h/EP/bRTufWmfVlkzQsl2KY/xL/4sImA7tTOnY1UL4E
-	1FobKCWMjcGZM9d7M6BFAgOKijnruLdHpb+P1PzQUlvMFWUVoDdmvKKL
-X-Gm-Gg: ASbGncv8nwUE212C3/ldbGWhteOUelEBB4DO9YGMdNZrGJ/t6d3htpVnLpBAG8Qh7Vy
-	w2C3Ut/OE51U+pvlBAnNpCphaF4QXWFJDZuKlnEd6oWoeEenWs7Sz6hZJD4o+TA5OZUimfc/L8T
-	4BJbHJLTEl1onK2m9uvInkr+GUeV9PhHURGgr0rX0BtfedY+Bj8zVzOC6GdxmvzYkEFqAhU8EsX
-	RZ8ZVsrpNbBWmim0HLcznOjaMmiENYgjCcM36db9ZD5bFLaGIvabzjIQ6GH+/NGS4Gfcm2OAosX
-	0ebtjaN5u5bMToFnU3OLHSxLEld0IkYBQi+HjJggCVCGn5gzycyJR8hPDZ5z9O01VEu30Ew2G47
-	hANDHqzaYU8fEZdAotB+xT3AB5Wv8H2PnlnaHxcDQafY=
-X-Google-Smtp-Source: AGHT+IENkeoSBuA4jTjYl9KWxptwSqcwo3i1xQKpXRpE42MjrM73xfnm42nrHcyeUL0MUt8nnDDBLQ==
-X-Received: by 2002:a17:903:4b27:b0:235:2799:640 with SMTP id d9443c01a7336-237d98e293amr171449175ad.25.1750705101493;
-        Mon, 23 Jun 2025 11:58:21 -0700 (PDT)
-Received: from ?IPV6:2401:4900:1f3e:1d84:1eef:8ea3:6428:4c20? ([2401:4900:1f3e:1d84:1eef:8ea3:6428:4c20])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86ef84fsm88022405ad.216.2025.06.23.11.58.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 11:58:21 -0700 (PDT)
-Message-ID: <85286090-e8da-4189-ad07-84876e0cf283@gmail.com>
-Date: Tue, 24 Jun 2025 00:28:17 +0530
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Wq8P8oSO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bJ3uGDEs"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750705495;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X6DcYddt5wym2Xskxe6KfcsdaZsVhnmiyQICeoOHbM8=;
+	b=Wq8P8oSOSnrEFmyK5tBA94+ro+F6vK1BDqjUoE2cyXQ7+BV/JEjWO58VVuAZ1TfKjH+64f
+	WqMXCGXHSNX07tPREailSfueUDYo2DFKi5TrXV1mokTpLI+TnIybDSvX3Zg6RMMhvqPfaC
+	9X0mPgCp0A74LFynqgJE9znnOlfXksasKZfK4BOi5Higm6dCMf7kj3KvYJrxjsfeDueYAV
+	LSs8H2jtQYcdk9VPUaDlP3cm5DT6EgWEq0xhz0uHXSzszsZx+JgilzK4NQ6XP5RqlsPMH1
+	DpyBg6RJKWxlRJUD32Rz6uK5YHRWPKhJFvOBNZlTL/ggRfmRqEMCh0ikudVXsw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750705495;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X6DcYddt5wym2Xskxe6KfcsdaZsVhnmiyQICeoOHbM8=;
+	b=bJ3uGDEsaB26JP9V7UX1Jlx1g4wZEoUxaRVea7vzQCcQzJlekZks5lMZkgtZUr16gahBgA
+	SNi+iyrrJuUoCwBQ==
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Sascha Bischoff <sascha.bischoff@arm.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, Timothy Hayes
+ <timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, "Liam R.
+ Howlett" <Liam.Howlett@oracle.com>, Peter Maydell
+ <peter.maydell@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jiri
+ Slaby <jirislaby@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 24/27] irqchip/gic-v5: Add GICv5 ITS support
+In-Reply-To: <aFkd0cigSKOSqUQI@lpieralisi>
+References: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
+ <20250618-gicv5-host-v5-24-d9e622ac5539@kernel.org> <87y0tmp6gn.ffs@tglx>
+ <aFkd0cigSKOSqUQI@lpieralisi>
+Date: Mon, 23 Jun 2025 21:04:54 +0200
+Message-ID: <87ms9ynusp.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] greybus: gb-beagleplay: remove unneeded calls to
- devm_gpiod_put()
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Johan Hovold <johan@kernel.org>,
- Alex Elder <elder@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250618082000.36039-1-brgl@bgdev.pl>
-Content-Language: en-US
-From: Ayush Singh <ayushdevel1325@gmail.com>
-In-Reply-To: <20250618082000.36039-1-brgl@bgdev.pl>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 6/18/25 13:50, Bartosz Golaszewski wrote:
-
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Jun 23 2025 at 11:26, Lorenzo Pieralisi wrote:
+> On Fri, Jun 20, 2025 at 09:18:32PM +0200, Thomas Gleixner wrote:
+>> Just add a MSI flag and set it in parent_ops::required_flags and extend
 >
-> gb_fw_init() is only called in this driver's probe() and we abort the
-> probing if it fails. This means that calling devm_gpiod_put() in error
-> path is not required as devres will already manage the releasing of the
-> resources when the device is detached.
+> I added that but it does not work (not if we use d->flags as below), it works
+> if I add it as an
 >
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->   drivers/greybus/gb-beagleplay.c | 21 ++++-----------------
->   1 file changed, 4 insertions(+), 17 deletions(-)
+> IRQ_DOMAIN_FLAG_*
 >
-> diff --git a/drivers/greybus/gb-beagleplay.c b/drivers/greybus/gb-beagleplay.c
-> index da31f1131afc..1ea48b71a030 100644
-> --- a/drivers/greybus/gb-beagleplay.c
-> +++ b/drivers/greybus/gb-beagleplay.c
-> @@ -1041,7 +1041,6 @@ static const struct fw_upload_ops cc1352_bootloader_ops = {
->   
->   static int gb_fw_init(struct gb_beagleplay *bg)
->   {
-> -	int ret;
->   	struct fw_upload *fwl;
->   	struct gpio_desc *desc;
->   
-> @@ -1060,29 +1059,17 @@ static int gb_fw_init(struct gb_beagleplay *bg)
->   	bg->bootloader_backdoor_gpio = desc;
->   
->   	desc = devm_gpiod_get(&bg->sd->dev, "reset", GPIOD_IN);
-> -	if (IS_ERR(desc)) {
-> -		ret = PTR_ERR(desc);
-> -		goto free_boot;
-> -	}
-> +	if (IS_ERR(desc))
-> +		return PTR_ERR(desc);
->   	bg->rst_gpio = desc;
->   
->   	fwl = firmware_upload_register(THIS_MODULE, &bg->sd->dev, "cc1352p7",
->   				       &cc1352_bootloader_ops, bg);
-> -	if (IS_ERR(fwl)) {
-> -		ret = PTR_ERR(fwl);
-> -		goto free_reset;
-> -	}
-> +	if (IS_ERR(fwl))
-> +		return PTR_ERR(fwl);
->   	bg->fwl = fwl;
->   
->   	return 0;
-> -
-> -free_reset:
-> -	devm_gpiod_put(&bg->sd->dev, bg->rst_gpio);
-> -	bg->rst_gpio = NULL;
-> -free_boot:
-> -	devm_gpiod_put(&bg->sd->dev, bg->bootloader_backdoor_gpio);
-> -	bg->bootloader_backdoor_gpio = NULL;
-> -	return ret;
->   }
->   
->   static void gb_fw_deinit(struct gb_beagleplay *bg)
+> and set it in irq_domain_info in the msi_create_parent_irq_domain()
+> call in the GICv5 ITS driver when creating the domain.
+>
+>> the lib with
+>> 
+>>         struct fwnode_handle *fwh;
+>> 
+>>         fwh = d->flags & MAGIC ? fwnode_get_parent(fwspec->fwnode) : fwspec->fwnode;
+>
+> Here we are using the domain flags and I think that's what we want.
+>
+> If I go with parent_ops flag, I believe here we need to use the parent
+> msi_domain_info::flags - I don't think that's what we want.
+>
+> It is a property of the IRQ domain so I think that adding an
+>
+> IRQ_DOMAIN_FLAG_FWNODE_PARENT
+>
+> is the best option.
+>
+> Please let me know.
 
-
-Can you add a comment above the function that it should only ever be 
-called from probing code since it does not free up the resources? I 
-might end up forgetting and using it improperly in the future.
-
-
-Best Regards,
-
-Ayush Singh
-
+Obviously. Doh :)
