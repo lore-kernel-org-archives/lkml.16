@@ -1,194 +1,117 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DCD222259A
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4500421B19D;
+	Mon, 23 Jun 2025 09:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750670175; cv=none; b=MuQIZa7f9aDkKBG3pLoowpDWHYjLIemXAQFSRmad6u/X2s6u0m2zmHG+i+VMQ5LVV/TIsgr8D3THMeXX0gzznW99CisfVs3QN8MWzi28/T50S7x9Z0xC33ovcM+xDTJOi4CHJeICFA2NXJBlrnvUME/ynLlNQkfL750jmsyX3Dk=
+	t=1750670178; cv=none; b=ENXQWYzU1bjNLvCsTxZAYe3KWnZPuDzfDgB0uybSxM2HjebVaQ3FqoDvAbjJHWZg//TsjsfTOfpPcSpqT//YuhBiMGXbsZncPH29/to6kF+mdKDPnGmuW/9Usr615a0LjqfIhFV3OBORdYRsQD5J/c/1iGz3TPMFpaJ6+McT5rI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750670175; c=relaxed/simple;
-	bh=lf0RZEh27udo7dIua8Dd4zOgw2WJ9Sqz4COJHd4tfDc=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=gxJIHbLR4QP9Zih7CrkdztHRYftpv9YLGaNGbFeSUqmb17vUmoss7D8AIehWl4pV1jqi+sm0svzuFOaI4ILJ2ZQijAKv08G8fYitt2FUbUsOUshwFL/sPsyKCAXpWy28tHjvVrbV3e4KDtlviAsECv2VfOJcMZzzGehNK9bx8xA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jHv6/9S4; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jHv6/9S4"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a582e09144so2349690f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 02:16:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750670172; x=1751274972; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eAxQTZngx0WHIcaV8nucPV/ca0L8EIaM6qjwzaEyM0Q=;
-        b=jHv6/9S4Kg1u+GLqluGAMEbofvYKmXSCnk0si7OAMkrqKxhfEGWra/Qw+KLTJSzjlH
-         jtEz7hSpuxcBD/RsyAkkRbk1D1X4hbNolcBPoCThndbJmIDZuNt9zjq4fgB/0lZcEl1T
-         Y9Nsu7AJx3Jdp3osZahOxwXO6WaekVt+nLfg+xkIlrJjHZt9L4BmwbhFdbfC6tSL+gfK
-         Pexbg5VPTPUhGCbLWZOmfLqmVTBbN9Ojv3rx+SVw56NOuqDoJDHd/fEWZNw0GSkRwo6G
-         GURyVCi0lniwr01/kvXOSjvp7JY77vNMBTtlldNyFaUmO6Bdh1VCQ4kYFAI2AwhQ1Hmi
-         vQxw==
+	s=arc-20240116; t=1750670178; c=relaxed/simple;
+	bh=SMTgouuv53WlY4KZjebO4g1qpffF1fKT28HWAjbsnQ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O7fDptwbsCVNZpV6SZwhpFbi3cPe7X8AGMS9VSOIiDbuCxKFPBcxNCeOMiqR69H/7lVZ0Qh1VuTsbyNwXrIqCgNv4Qoc1LFDNAv3NsgBnUZVOxg4t/WNBwjOkzy6OAhodJYo/anFMjEVS2t5ELGLqDKyQq9uYEBit9sq+59KY6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-606b58241c9so6119766a12.3;
+        Mon, 23 Jun 2025 02:16:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750670172; x=1751274972;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=eAxQTZngx0WHIcaV8nucPV/ca0L8EIaM6qjwzaEyM0Q=;
-        b=rqLw0ehvn+6B8NjpZ88DBCA6MxPq2j5xsWVDBjcSZwylfON8KCJB9yHc14tBZgTaI4
-         O4jkfyQgu2vGT3o4XsXQKtAb8iZq0YnrZLj16sG3xliSTerCM5qCd4i17y8R4rexjWz4
-         sm0zTdcQ24KkALSw31tXf8rtH5oY2pE3x0nxbcB4NaeEBa6QkDaOBxuwLKAB/lmV0qmn
-         ao02TXmg5Cv1rejbSdDxqBSxwZFcXYkjtKnXmJKr6WoGA3cI6qITTv81NI8jtPsnRSOA
-         TXQJXA6A/8waWfO2+FkxbuQRFaDKaAzKngy8bnjGikAPGC2lqvD+qGfk2ajl9I0dvQ1O
-         cpjA==
-X-Forwarded-Encrypted: i=1; AJvYcCX+FFjmDzvvi1PogyHojb6WLLogTliX62Nn/ymBgz3EZCTW1N/cc/ZdWsG824hWSdI/xGfbRzPESqqOuCc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypleahLvh6ohUWbYrm6NMXwBthvlErm9LJVOE8ZSYCnnvUET4A
-	vcfHsRUyGg8lWYxwxfaS8TnZMUmKIfZSo53T1MXSQRNPSHzwTpZJ3JhrBR0NrIF+rp4=
-X-Gm-Gg: ASbGncvLVVET2PQURYr4b5IpeHPfAp6DXFVoi5Bi6YKCMNXQGTdO0Ex07Ro5lleOxDw
-	IdHOW3FTFC1RSq7MkC+901h083jjRQocH3AkHYtp6+ICos3Mgte7lO5SVrRiyUUJj2AKJ8v0Bzh
-	sDEhftRpacVIBwz+oDTmJ4BUsM4pLrmcoXXD6bpW18GHso53NwZV8iRw6Tjrf/T06iHgdXxw7vP
-	6WkJD8z1VzL61Vk9YiuLw4koyJ3aM/x1oTkh5Aj84Ucyw8U+0N4vsWBK18J+tnUopKfYp7oimJ1
-	O0hTc1SquGzRw/zSp+0LGf6gVaOpZfr7GDgs27x7lY+Xy7Q29GrF44LnZ2uTJl0zESC/5XLoHdW
-	LAGKmMh+XFHFtIJXfj4cuZZnjxDeuW+pirXAW1Y9/b7D7yp1Uow==
-X-Google-Smtp-Source: AGHT+IGYkA9VsCTv6dZD67UfHbehpk1X6yMSRnE+SOQiFY/tsUVrRqzcivcNyok7TovteMwPJFvsgQ==
-X-Received: by 2002:a05:6000:5ca:b0:3a6:d26a:f0f5 with SMTP id ffacd0b85a97d-3a6d26af312mr11273043f8f.21.1750670171819;
-        Mon, 23 Jun 2025 02:16:11 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:8c08:7c51:bbb1:5a2d? ([2a01:e0a:3d9:2080:8c08:7c51:bbb1:5a2d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453647071f4sm104459665e9.34.2025.06.23.02.16.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 02:16:11 -0700 (PDT)
-Message-ID: <84fabc8f-c5bf-4e5a-82ee-dea1a4b3b3b6@linaro.org>
-Date: Mon, 23 Jun 2025 11:16:10 +0200
+        d=1e100.net; s=20230601; t=1750670176; x=1751274976;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bIUxRz+rwH/i111WGtAAGmLwLNtTNZbhbtnk+ofryfM=;
+        b=kpzF8a5DgpKnqbjb3ziNEBphrC/KqT4sAVFj0QVPrAquIUyFHd14Gu63vAMcT5UDsp
+         EsqJ1ABT9FnfvS5b9oM7pFnT1dioObBHoXBmZRshjrSdjjz2adD1xeW9CBTgkK/3DISn
+         hACnThGM/62aygAV9iVUheaTat/ZD1THdHdChYlXV0D0jQcFcZRrw54UMO4PU4DD+WMs
+         0J+m5+uAWNtBwzy/2bO4B7EOvE0saOFjFDPHG7DSRomVRBvcuc9jb6aVP9gqV38H62nv
+         Yw72LkKUDFjXT0KPc8kgdgSCkNaoqo1L7Z0O2CluyNlIs8c8zmVlNUC/2bUPKvAwr4oV
+         af4g==
+X-Forwarded-Encrypted: i=1; AJvYcCUsXQLuspBRgsrONNbTs6XKkk8f7VQWQUwMYwb+F6Aunhk8en9O08H2RaR41y3L/5swwb21DxfO@vger.kernel.org, AJvYcCVPOcCdyZE9qHqDBUnW1CrEPfhG/0v2SdmPqwS3Ag9ZJD3WWN0NNVntGd7ahcENPDszyGOWYHEnrKST0Z9tg6Lp@vger.kernel.org, AJvYcCVgnEUR5atHA3nMimnkha58THBTfchA6PNghQRRJ9xQ+RkR4gzZ2dhOagpYvPgRXS4X31vTB5r9PnnthyM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjAuFqddh97AtbfpS/RcYW3LVKl9gWpKuJyfPMtRjTX+FrESgL
+	1MmLAW6Jr9eZDdT0+AJ3ySTZwIYZ1ScIU9GZlVVvdODeEan8/bm1PlRP
+X-Gm-Gg: ASbGncvkJL1H6nIXXnhZzFGKZQ9D0YtgKZ0cjsEA3EgaNNAXiazPrNg5JHsQy51J6Hl
+	wY3plgw0xFcfPfZieaisGRp2XCKL5UEEQ5dz9k7r9BwMzWGkUWBpMM9zeoOwqmQlItCUHyoVbB3
+	oZ/fxNu5XKEZc6+uvHWGNBDny7a80lPbrYF/EeGkLMqM5dppP1G56tjJ1pPl/bjPGc55pbiiGwo
+	80V46Pf+TSJ8I7ABZHJrd8xY6l5xYokh/BA1vv70L4Ps0f5uwf5wRKxtPm46fX8eTpb+qpiyYuh
+	6rdXaK+5QYBYlchp/RpvzYifsW9ghmuqrbEy1pEEvUFJcbBy/rIS
+X-Google-Smtp-Source: AGHT+IHcutTLwUezCuTJnBQkkQOqvdS07bhlRajR2F7YpX5joza2suS0WGlVmjXs+hoO/t3GNawO7w==
+X-Received: by 2002:a05:6402:5c8:b0:609:9115:60f8 with SMTP id 4fb4d7f45d1cf-60a1cd2ca71mr9580805a12.21.1750670175440;
+        Mon, 23 Jun 2025 02:16:15 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:7::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60a18cba49dsm5689603a12.56.2025.06.23.02.16.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 02:16:14 -0700 (PDT)
+Date: Mon, 23 Jun 2025 02:16:12 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	ast@kernel.org
+Subject: Re: [PATCH net-next RFC] selftests: net: add netpoll basic
+ functionality test
+Message-ID: <aFkbXFvOKeMALwBg@gmail.com>
+References: <20250612-netpoll_test-v1-1-4774fd95933f@debian.org>
+ <684b8e8abb874_dcc45294a5@willemb.c.googlers.com.notmuch>
+ <aEwd9oLRnxna97JK@gmail.com>
+ <20250613174233.0dd5e7c1@kernel.org>
+ <aFUeT8HSPYiDyALB@gmail.com>
+ <20250621065121.78701641@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH V2] scsi: ufs: qcom : Fix NULL pointer dereference in
- ufs_qcom_setup_clocks
-To: Nitin Rawat <quic_nitirawa@quicinc.com>, mani@kernel.org,
- James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
- bvanassche@acm.org, andersson@kernel.org, konrad.dybcio@oss.qualcomm.com,
- dmitry.baryshkov@oss.qualcomm.com, quic_cang@quicinc.com, vkoul@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-scsi@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
- Aishwarya <aishwarya.tcv@arm.com>,
- Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
-References: <20250622175148.15978-1-quic_nitirawa@quicinc.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250622175148.15978-1-quic_nitirawa@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250621065121.78701641@kernel.org>
 
-On 22/06/2025 19:51, Nitin Rawat wrote:
-> Fix a NULL pointer dereference in ufs_qcom_setup_clocks due to an
-> uninitialized 'host' variable. The variable 'phy' is now assigned
-> after confirming 'host' is not NULL.
+On Sat, Jun 21, 2025 at 06:51:21AM -0700, Jakub Kicinski wrote:
+> On Fri, 20 Jun 2025 01:39:43 -0700 Breno Leitao wrote:
+> > > FWIW you can steal bpftrace integration from this series:
+> > > https://lore.kernel.org/all/20250421222827.283737-22-kuba@kernel.org/  
+> > 
+> > Yes, that would be great. I think we can iterate until we hit the poll
+> > path, otherwise we skip the test at timeout. Something as:
+> > 
+> > 	while (true):
+> > 		send msg
+> > 		if netpoll_poll_dev() was invoked:
+> > 			ksft_exit
+> > 		
+> > 		if timeout:
+> > 			raise KsftSkipEx
+> > 	
+> > As soon as your code lands, I will adapt the test to do so. Meanwhile,
+> > I will send the v1 for the netpoll, and later we can iterate.
+> > 
+> > Thanks for working on this bfptrace helper. This will be useful on other
+> > usecases as well.
 > 
-> Call Stack:
-> 
-> Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000000
-> 
-> ufs_qcom_setup_clocks+0x28/0x148 ufs_qcom (P)
-> ufshcd_setup_clocks (drivers/ufs/core/ufshcd-priv.h:142)
-> ufshcd_init (drivers/ufs/core/ufshcd.c:9468)
-> ufshcd_pltfrm_init (drivers/ufs/host/ufshcd-pltfrm.c:504)
-> ufs_qcom_probe+0x28/0x68 ufs_qcom
-> platform_probe (drivers/base/platform.c:1404)
-> really_probe (drivers/base/dd.c:579 drivers/base/dd.c:657)
-> __driver_probe_device (drivers/base/dd.c:799)
-> driver_probe_device (drivers/base/dd.c:829)
-> __driver_attach (drivers/base/dd.c:1216)
-> bus_for_each_dev (drivers/base/bus.c:370)
-> driver_attach (drivers/base/dd.c:1234)
-> bus_add_driver (drivers/base/bus.c:678)
-> driver_register (drivers/base/driver.c:249)
-> __platform_driver_register (drivers/base/platform.c:868)
-> ufs_qcom_pltform_init+0x28/0xff8 ufs_qcom
-> do_one_initcall (init/main.c:1274)
-> do_init_module (kernel/module/main.c:3041)
-> load_module (kernel/module/main.c:3511)
-> init_module_from_file (kernel/module/main.c:3704)
-> __arm64_sys_finit_module (kernel/module/main.c:3715.
-> 
-> Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-> Fixes: 77d2fa54a945 ("scsi: ufs: qcom : Refactor phy_power_on/off calls")
-> Tested-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> # sc8180x-primus
-> Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Reported-by: Aishwarya <aishwarya.tcv@arm.com>
-> Closes: https://lore.kernel.org/lkml/20250620214408.11028-1-aishwarya.tcv@arm.com/
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Closes: https://lore.kernel.org/linux-scsi/CA+G9fYuFQ2dBvYm1iB6rbwT=4b1c8e4NJ3yxqFPGZGUKH3GmMA@mail.gmail.com/T/#t
-> Co-developed-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
-> Signed-off-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
-> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
-> ---
->   drivers/ufs/host/ufs-qcom.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-> index ba4b2880279c..318dca7fe3d7 100644
-> --- a/drivers/ufs/host/ufs-qcom.c
-> +++ b/drivers/ufs/host/ufs-qcom.c
-> @@ -1124,7 +1124,7 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
->   				 enum ufs_notify_change_status status)
->   {
->   	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> -	struct phy *phy = host->generic_phy;
-> +	struct phy *phy;
->   	int err;
-> 
->   	/*
-> @@ -1135,6 +1135,8 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
->   	if (!host)
->   		return 0;
-> 
-> +	phy = host->generic_phy;
-> +
->   	switch (status) {
->   	case PRE_CHANGE:
->   		if (on) {
-> --
-> 2.48.1
-> 
+> Right, you're the second person I pointed that patch out to. Would be
+> great if someone could steal that patch and make it a part of their
+> series so that it gets merged 
 
-Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-QRD
-Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-HDK
-Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8650-QRD
-Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8650-HDK
+I can do that. I was expecting your patches to be landed, and then
+I would reuse it. I was not expecting to ship it as part of my patchset.
+
+
+So, the selftest for netpoll is already in the mailing list[1], so, we
+have two options, now:
+
+  1) Steal your patch and make [1] depend on it.
+  2) Merge the selftest [1] and, then, steal your patch by adding the
+     bpftrace support in it.
+
+What is your recommendation?
+
+Link: https://lore.kernel.org/all/20250620-netpoll_test-v1-1-5068832f72fc@debian.org/ [1]
 
 Thanks,
-Neil
+--breno
