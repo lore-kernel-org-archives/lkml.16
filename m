@@ -1,129 +1,89 @@
-Received: from panther.cherry.relay.mailchannels.net (panther.cherry.relay.mailchannels.net [23.83.223.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8F7146A66
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 23:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.141
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750721801; cv=pass; b=MwCyn5L13aF7TJm4J9f6hAzATGx/a7WlYEnMJrrLqSM7rt6t+Kc0zMMub1Q61W7WAnJs8WGXOdHIASKc24v6qzsyq0oG4nZ9i79Lqga4nrVMMZLwd5STLVAS+iM68zxEV4PVT/YKyQ+ujZpt71eCSqD/7MzM80QvJ/26+N+lIok=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750721801; c=relaxed/simple;
-	bh=CE2mHNZ+9Eog2dFdWpwOrrjyyGkcpM9V9hpM7yzG+E4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FyFzV1udtYwOS20KIP4qXajrv6D/SE+0vWnPdRo0wgZd0C2OYfrFWwibcLCI4DLcIqhFoLKNMHq2Mye8drWjgy8WK+JupuIIEzVHDARyeJRfvhUUf3juc3/3N2Ut3HxUoMKMjqXbpa84dMI0s+ztrzXjdbHAOE9YXVyZ73yG0dY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=YYCy+M/P; arc=pass smtp.client-ip=23.83.223.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268CF227EB9
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 23:37:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750721870; cv=none; b=lSfRGu3cU9geqtgDFJViqhjjCnq6TGtRQ2u6eXgqi1zTrZcPvVAo04kpQCl64J/v2brIAbe+U5/4WsB8rqPaKyxYswKleW9NSfgvAYRo25qzabRzsDMXeqwuTDu5pXQ1vzx1CYYQtN7xYlG2nt4FgW9w8Rbnn/Ur1/hXuUQhcCI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750721870; c=relaxed/simple;
+	bh=2U8MyFaiOscy6PTDWkSipIRny5s+XSGVuWIKEpHk3+M=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=oGe2xHvhlYwIqo/0czKlztJuRkXLEItb14b79uU2/wiUXKfIx3tzTApuynsbN+ks4AFXRYD8M9b965C7Af6n7i7AQZHur4S0lWOW8sXsKHlNvMjM0NIeyOxT+YQiA0NCWVCE18VFy5YQ3bA3vLJYnDCH1UK0esQDYzutuhm0jfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=cy+zTdJQ; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="YYCy+M/P"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id A0D1B8450F6;
-	Mon, 23 Jun 2025 23:36:33 +0000 (UTC)
-Received: from pdx1-sub0-mail-a262.dreamhost.com (trex-green-0.trex.outbound.svc.cluster.local [100.108.88.53])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 31072844C67;
-	Mon, 23 Jun 2025 23:36:33 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1750721793; a=rsa-sha256;
-	cv=none;
-	b=ivaUBsjtTbFvqsZZ3zABvVqqFNtEFPUW8hlSIdfDF2SsKzUfEhXMJh1kWAqVCX34EYmtYt
-	soFAjMRbyu4cInZZEe6AWqTDl133QifvHb//IlJLS2oe4ReqhlLbHxKis897NFWfe3yj5f
-	p0yTfBGF0l0j2GR9R91Xh5MSXcEFEBx78OUR8NbzcYOh0o2J0mQonAd/t/AwX5eGkfKc77
-	Yui3QLQ43pkn/78Ej8sFX9TSFnCocvyNHxHsin1Bnsk7btuN/zzWZwyIyKokUjG04gm+NF
-	sQfQzV4Sk56kA2WwQpQCe3uJcOCe63CF+6WsiYK+8UrXCL9mqL+B51OOp800lw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1750721793;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=OQyAC5Zwg9VOAoEoP5oerQJSnLa4XNp2rsgYqfm0n0Y=;
-	b=OvB9uYJT8ebCAZ97f8O0O35OWyFw1TNoI2deW2RV8cI2YpES1MqpEepU6XEqQYGRY7NXJd
-	OuDTrGNmrdOsy+uz8ywDyqpEmYhgKpChw4p0nOu0GbIWWLKkjEY1DXhKls1LUHICoE0xXp
-	FeRWujjuFbYPSzvJDTv2QnMaxDz6EfGdL/Xa30S8X1tL+PSVVUS30Q52VYlSD3L/h2VDuM
-	svzRe2RRM/TNqYbnHFqRr0daQZ0nKqjoirLVMS0XBG10rmENf7Bhw37wHzrlA+JtEsgHWq
-	DoIOi9jkWeBHpt1/Xa4yVkD/VNteKBXqlpZy2er+AnuhgnCpgsbnA0AdJyAfSQ==
-ARC-Authentication-Results: i=1;
-	rspamd-6597f9cdc7-tzmdw;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Slimy-Juvenile: 562a32f86304b267_1750721793479_2456449309
-X-MC-Loop-Signature: 1750721793479:2756345217
-X-MC-Ingress-Time: 1750721793479
-Received: from pdx1-sub0-mail-a262.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.108.88.53 (trex/7.1.3);
-	Mon, 23 Jun 2025 23:36:33 +0000
-Received: from offworld (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a262.dreamhost.com (Postfix) with ESMTPSA id 4bR4Gm3W1sz9v;
-	Mon, 23 Jun 2025 16:36:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1750721792;
-	bh=OQyAC5Zwg9VOAoEoP5oerQJSnLa4XNp2rsgYqfm0n0Y=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=YYCy+M/PJOzIJse6rDHHkkQvVR/gdqh61FsOaFOZrONM4ymwcVRIxBwjlBT9jIk5C
-	 ZT8tVlBNo84xY4dNmwxNwYL4+N2DQfYbLMhR0PSEL8AqYCCcYLJWLGfxezgNg2EKGA
-	 +8Z51B+nRl74CNRicejw9UjlHRnS6/g2QRFBx+fYO+ndRymNArIIZzIi5L+uAZ7Yw+
-	 Ilci6qzCU5zD67JFWoGP1/QHmTCl3SaHEQtRhH+PWF9u+sSngi7JBGFCTGgNIsyFMD
-	 dq9ZfFdQuw/D+Fh9PNnuOmOi5Ez6SuaFGHRNbOcYlWQmYexvEGb9exuN3QBcyrtqje
-	 vZwo8seBqWEmg==
-Date: Mon, 23 Jun 2025 16:36:28 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: mhocko@kernel.org, hannes@cmpxchg.org, roman.gushchin@linux.dev,
-	shakeel.butt@linux.dev, yosryahmed@google.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] mm/memcg: make memory.reclaim interface generic
-Message-ID: <20250623233628.kv4c4k74rdpfek7x@offworld>
-Mail-Followup-To: Andrew Morton <akpm@linux-foundation.org>,
-	mhocko@kernel.org, hannes@cmpxchg.org, roman.gushchin@linux.dev,
-	shakeel.butt@linux.dev, yosryahmed@google.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-References: <20250623185851.830632-1-dave@stgolabs.net>
- <20250623185851.830632-3-dave@stgolabs.net>
- <20250623144528.19721543236d8a0165df4cad@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="cy+zTdJQ"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-748e63d4b05so2834589b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:37:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1750721868; x=1751326668; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UcKF/Hbk3n0gfb5f/PYKJg7t66HvAlh7Py7W/Nz9PVM=;
+        b=cy+zTdJQG7M/KTuEj1KR4Mu/wrPpa4WRMty++k0kH1nwDPmd+yutAdPRZrfaoQWWcJ
+         XxcCzd58w2lD+ub1qtimvquSjBCqcHQ37D7htTHDhsYkpjATpdA2+xGOfCyM+OtKkjPp
+         yBtN8PprVfGnxuDbmJt40oDZDnOGccU2yn3QqbWjhX4EGGPmLu233C2BF3/A2dVHQWwl
+         Ppo5HMzUh8fXRccoIundoACMV9YS9cZbxUXB1losscSO09PLPwturw1kaJcgedq2YLgv
+         9xrR0SY2pIIVBok6N5mhYD0A18IqlMepDTv9AajB7ZBCUtkw7D6IGojCOV1O9zg0evwN
+         9t2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750721868; x=1751326668;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UcKF/Hbk3n0gfb5f/PYKJg7t66HvAlh7Py7W/Nz9PVM=;
+        b=sl7cj5IxtNLNkwyyeLguhO3/l0Doyjg4ZC9JXoA3VkUpOc8hJ8uJOnJsNtb7vBMhwy
+         UmOsn7ejdpqJ2gllWiNJ/GxKLHEkD8YaQZics40mKd/UV5WmVccYxsbvcb+pDNGiAJ62
+         QS+RwTATDK0a04qD0/4gfrqmG/MtGJaokvjmj8m+kc+PiCbj0pScFTcdwFLWomNJOkNj
+         FbFi7oo7k9xJ1AT0wC6CYyyqFv1brTNJ9K9nsmyzWlIJOzgzBw5Xw1f7mysoAoxQRZT7
+         oxEZlCNu79K9ttwO3pGvsM+1mfJqIaq6yNm3Yto2Qpw+vijrMKaYbT/ujUWH6feD0jYB
+         JwWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWP9eMJReZuNrDUaLdCJ7wq9ipD0e6wytkK3kbb0kcPPwrHnxkEViZqDTFHzx4pN8GoiVqI9nYhlKBjZCo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyf80ssjLdXisJL5JFS7A6lFGP6wQfRJTtTJmHt0MIvuf5qoAOM
+	EZslFqwldLF6j+QmoS3psUNsc1z4s57stnF89dJa3XKjoCgtTHEkfug6FqRWgiCxoSo=
+X-Gm-Gg: ASbGnct5xdbtfzEihciyEzR7cb4lCH29SGwYKmNU3D/PmGYAutDtQVPGHKTeYqFWSlB
+	eBl1jHflKkChHXkyFMxpxm5PoAOhWDET498MfNaGyKx+SqbCKCvkxSHxGaNy+CplpmRVOo6xtzT
+	jPmM0dvFcTCKYbxoD/rD4VQDOM4CUKAdSqyTrGBPkZUh8DycL1DmDdL8PuRWYowvylDu4sKl4vx
+	Lq/pZ2o67S8TksvcZMrtKo86krJLXJSQY25uYWXlJwNNkZt9OhAEBo5v9lDe2PPGgPtCWXDMIUh
+	3nWkkSM+sDLcbN7ekeeev6N4r5TdYILQ9HHfuoMHwqVUf8zYlSz2Kp9GHO1o
+X-Google-Smtp-Source: AGHT+IGAs3OuSAJDQHn2hdz8UrtA7+3G/pgzK3avyjgKR8NhPk0epLLLozqMdrMjxB8LM0T2Jjjpmg==
+X-Received: by 2002:a05:6a00:18a4:b0:742:aecc:c46d with SMTP id d2e1a72fcca58-7490d5c1af4mr17476048b3a.5.1750721868397;
+        Mon, 23 Jun 2025 16:37:48 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:500::4:8d10])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-749b5e08cfbsm284749b3a.18.2025.06.23.16.37.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 16:37:47 -0700 (PDT)
+Date: Mon, 23 Jun 2025 16:37:47 -0700 (PDT)
+X-Google-Original-Date: Mon, 23 Jun 2025 16:37:46 PDT (-0700)
+Subject:     Re: [PATCH v10 15/19] riscv: mm: Add page fault trace points
+In-Reply-To: <8ec7721c8c300ee99d5ec0782558c7689b7ec203.1749547399.git.namcao@linutronix.de>
+CC: rostedt@goodmis.org, gmonaco@redhat.com, linux-trace-kernel@vger.kernel.org,
+  linux-kernel@vger.kernel.org, john.ogness@linutronix.de, namcao@linutronix.de, alexghiti@rivosinc.com,
+  Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: namcao@linutronix.de
+Message-ID: <mhng-393F61AC-2A36-46DD-A969-D7EB83A7FFD5@palmerdabbelt-mac>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250623144528.19721543236d8a0165df4cad@linux-foundation.org>
-User-Agent: NeoMutt/20220429
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, 23 Jun 2025, Andrew Morton wrote:
-
->On Mon, 23 Jun 2025 11:58:49 -0700 Davidlohr Bueso <dave@stgolabs.net> wrote:
+On Tue, 10 Jun 2025 02:43:40 PDT (-0700), namcao@linutronix.de wrote:
+> Add page fault trace points, which are useful to implement RV monitor that
+> watches page faults.
 >
->> This adds a general call for both parsing as well as the
->> common reclaim semantics. memcg is still the only user and
->> no change in semantics.
->>
->> +int user_proactive_reclaim(char *buf,
->> +			   struct mem_cgroup *memcg, pg_data_t *pgdat);
->
->Feeling nitty, is this a good name for it?  It's hard to imagine what a
->function called "user_proactive_reclaim" actually does.
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> Acked-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 
-I'm open to another name, sure. But imo the chosen one is actually pretty
-descriptive: you know it's coming from userspace (justifying the 'buf'),
-you know this is not about memory pressure and the memcg/pgdat parameters
-tell the possible interfaces. Would prefixing a 'do_' be any better?
+Acked-by: Palmer Dabbelt <palmer@dabbelt.com>
 
->That it isn't documented isn't helpful either!
-
-I had done this but felt rather redundant and unnecessary, and further
-don't expect for it go gain any other users. But ok, will add.
-
-Thanks,
-Davidlohr
+Sorry if you were waiting on me.  I'm assuming you want to keep these 
+together.
