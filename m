@@ -1,88 +1,110 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17952980CD;
-	Mon, 23 Jun 2025 15:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3878329AB1B
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750693185; cv=none; b=kVc+T8egTutZyhZQ7WKyOR4w4eBbxRrCbohRyd+0qFh6rmmc7KxNa25/7IpXKV8NhVbdpuzpilJJLsqGBBZuMnOPpsBWaHmT6vH+GuQJwjJOQAjIzn+b/QdgKPceYEjKmzfKaQN/IJt5Vv1jYUcEBBOASv2pEQMCt0oBSAvZy24=
+	t=1750693186; cv=none; b=US4cN+2oaATMEPUk2el53PUjZ/ZZIxxQPAK2RAlvyXtezx9+L0iwoqtX9YyHS0Sgz0d29UHcB0kS4eRuE/aWeqDCEXITWGG7o8XbqaxZFoqadvLKf5x1D4Bsnp6uUIoHTsdQh0SNSCXa3jZzL7xJG8383dhMauzCPiK+gUn96qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750693185; c=relaxed/simple;
-	bh=4bDNVFCV1Re2zfChjnEdtk38UjbrX0DDqSN/Fh1aO6E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C6xwHoNMagbqGfvJEp1CqQLMChJ60ye2fIjj3duu2l+hr+TRas8qdYPrkKuz9n4n7tbZIq36WftRCm0CqaYu+wwXGUpJ0bwoPU85At09MxIz+BblnQqpgTgaa87fm17foDWanaQj3+zN6qyexSkLJ8fmST265h3o39HkWqLZV9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=pQUPwO3h; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1750693186; c=relaxed/simple;
+	bh=hzweejx2tV391E/xHsALnrKjfTLLQ1qXqDpwudaH8wY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=NrQEAWzZmnK9nLDOgL6FFoeT9kyQEddZ2jSCset4HZxmDpIAGCdWm0GIzCR+zPXefmSiu15QLfIxwOXqErOo2cb1erF2dhVsMnqg1devoiBPQDC77dCRvin+cV/ehu/m/GgYttJqRiiZ1pz1kC9/umEEOsy2z0ePH+LAg8BStbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ESr4kiMi; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="pQUPwO3h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750693180;
-	bh=4bDNVFCV1Re2zfChjnEdtk38UjbrX0DDqSN/Fh1aO6E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pQUPwO3h6u5ZEtSj+b5wGM9tiwlaUtD+Yam0kFhTNsaW44MuIvKdLbV7DfbX5wMao
-	 zrcliNYkCe3hDalEgve12860WSP04Hlz1/WkNVlciFBRuSJEk7SClOFLOQayY9PqYp
-	 /LyDFZulUB8Gm2eZt0Txi49yOVRBZwC3L/myNFfvzLQkrtk4W7mwWh2sCL2oGkxuc1
-	 IJsWLbA8ia4WY4ZRfLE7D/1uOoPf/Eb591EHspqmXbX5C8q60JH+P1JFLF7YbwtYZi
-	 iviFOiNs4RqwK1g0JWQotQSGzRDVdqU2MOvl0PZpSk1hLCk5m2wc6S1aSSXA5tadiS
-	 mdMKUcc5EawsA==
-Received: from benjamin-XPS-13-9310.. (unknown [IPv6:2a01:e0a:120:3210:d44b:b63b:15ee:9c1d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: benjamin.gaignard)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8A43917E159C;
-	Mon, 23 Jun 2025 17:39:39 +0200 (CEST)
-From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-To: joro@8bytes.org,
-	will@kernel.org,
-	robin.murphy@arm.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	heiko@sntech.de,
-	nicolas.dufresne@collabora.com,
-	jgg@ziepe.ca
-Cc: iommu@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	kernel@collabora.com,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Subject: [PATCH v4 5/5] arm64: defconfig: enable Verisilicon IOMMU
-Date: Mon, 23 Jun 2025 17:39:29 +0200
-Message-ID: <20250623153931.158765-6-benjamin.gaignard@collabora.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250623153931.158765-1-benjamin.gaignard@collabora.com>
-References: <20250623153931.158765-1-benjamin.gaignard@collabora.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ESr4kiMi"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7489d1f5e9fso5295793b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:39:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750693183; x=1751297983; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mohC5VFo2Khyq7uJVLtUEQiLH3jaozZVPkYc2uzJvvA=;
+        b=ESr4kiMifBbwCFUjQmmN6/s/2xF3LHDxBNye0yGKEE42uI1wxSgzgXukjKxeNEIS2w
+         u6idNOj3CErYWfNyKPx42xIj2BrafdNq8QgCzqDorQ34ICZk/Pbpu1sLIakqy/IBIcwS
+         gJlLrX731SmHqRxaawl0MEGS8C89SNrtqFPSO/pLa7c730lH8Km2Nsy60EhDNBiOPdJe
+         gKksP/RzW+KKyowTT9IIJEy80fTK3rwfPxX06Zt2XrTo2VUErKHMa8712Vb10CBmyodA
+         Kf2F9v/qSDhA0YW5JaByzMDhmFggTfDFqTDbHRvq9G2V+THs//ApWgZFy6xVKMPVFVBR
+         ubuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750693183; x=1751297983;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mohC5VFo2Khyq7uJVLtUEQiLH3jaozZVPkYc2uzJvvA=;
+        b=wTQykY0Vpyo6JsWFkv7MNiM3W2joHAJuncl1nUkh4vHinnIb0af1YJKx2f+sinxzB+
+         qm7BpECkASonkiKcX02p/F/iTo0Ibb1H7ZUi+jKskcEVIIjLs9hqymyRpRz9yjqB11Uu
+         Af8/3vqWHXIDjTN0WLdqa3qZLeOzPQ1lMJpyiE0ED8U7tEsxV8rP4jmVXOHd1KKMvxAW
+         gvjPjnlvn8FQYhkymxIYjPzy08RM1N5DvliKz+vBhj9s2j8dB2hlAh3XZP0n1zwse+u4
+         muXGNLyElnAPyP3fFRjnOxQjZJqA9hDi1/YTG2r5ce4CCxqW9QuqRH4FDIMEv/BAocnU
+         uh0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUKVZoAgW0ndKZ1a97vF/UmCOz1PM7QZKThLGlsXlLZ+JtrQqddyk29UccZogixf/Tzphycd9Qv3ES7Lek=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyp0fx7n1tETBj4EtTI5lgL4MlYDxzVyopQUAS8DCQJAooTRurl
+	Yl48vQujlsFQ2WFMvKYpE2vlYGLQay6x4v2aSsSLbjg9uIg6MMjiHCc/NQ4sVpS6l/t3fuVvQnM
+	W3p/Omw==
+X-Google-Smtp-Source: AGHT+IEtzfUGiXMebcgTMM/d+ycTT8KreG0zM+7jUxln2kINdcl11Cpifn/EmOu0VDMQqH0ZnY2khiJd4sw=
+X-Received: from pfblm18.prod.google.com ([2002:a05:6a00:3c92:b0:748:f16c:14c5])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1a8c:b0:749:9c2:e154
+ with SMTP id d2e1a72fcca58-7490d4788d9mr18371573b3a.4.1750693183347; Mon, 23
+ Jun 2025 08:39:43 -0700 (PDT)
+Date: Mon, 23 Jun 2025 08:39:41 -0700
+In-Reply-To: <1713a225-44e0-4018-bf5f-64ffd7746167@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250612214849.3950094-1-sohil.mehta@intel.com>
+ <20250612214849.3950094-3-sohil.mehta@intel.com> <7525af7f-a817-47d5-91f7-d7702380c85f@zytor.com>
+ <3281866f-2593-464d-a77e-5893b5e7014f@intel.com> <36374100-0587-47f1-9319-6333f6dfe4db@zytor.com>
+ <39987c98-1f63-4a47-b15e-8c78f632da4e@intel.com> <7acedeba-9c90-403c-8985-0247981bf2b5@zytor.com>
+ <aFXsPVIKi6wFUB6x@google.com> <1713a225-44e0-4018-bf5f-64ffd7746167@zytor.com>
+Message-ID: <aFl1PcnVuYuELvRQ@google.com>
+Subject: Re: [PATCH v7 02/10] x86/fred: Pass event data to the NMI entry point
+ from KVM
+From: Sean Christopherson <seanjc@google.com>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Sohil Mehta <sohil.mehta@intel.com>, Xin Li <xin@zytor.com>, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Tony Luck <tony.luck@intel.com>, Zhang Rui <rui.zhang@intel.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Andrew Cooper <andrew.cooper3@citrix.com>, 
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-edac@vger.kernel.org, kvm@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-Enable Verisilicon IOMMU used by RK3588 AV1 hardware codec.
+On Fri, Jun 20, 2025, H. Peter Anvin wrote:
+> On 2025-06-20 16:18, Sean Christopherson wrote:
+> > > 
+> > > So I was thinking about this, and wonder: how expensive is it to get the
+> > > event data exit information out of VMX? If it is not very expensive, it
+> > > would arguably be a good thing to future-proof by fetching that information,
+> > > even if it is currently always zero.
+> > 
+> > It's trivially easy to do in KVM, and the cost of the VMREAD should be less than
+> > 20 cycles.  So quite cheap in the grand scheme.  If VMREAD is more costly than
+> > that, then we have bigger problems :-)
+> > 
+> 
+> LOL. Since it is up to you, Paulo, etc. to decide how to do the tradeoffs
+> formaintainability, debuggability and performance in KVM I am guessing this
+> is a vote in favor? (You can always take it out if it is a performance
+> problem, until such time that the kernel itself starts consuming this
+> information for reasons currently unknown.)
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Unless you can pinky swear that vmcs.EXIT_QUALIFICATION will provide event data
+for IRQ exits, then I'd prefer to pass '0' unconditionally.  '0' will always be
+safe, if potentially suboptimal.  But passing what could in theory be something
+other than FRED-formatted event data could lead to buggy behavior.  Per the FRED
+spec, Revision 7.0, exit-qualification doesn't hold event data for IRQ exits.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 897fc686e6a9..a5122990ecfa 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1451,6 +1451,7 @@ CONFIG_ARM_SMMU=y
- CONFIG_ARM_SMMU_V3=y
- CONFIG_MTK_IOMMU=y
- CONFIG_QCOM_IOMMU=y
-+CONFIG_VSI_IOMMU=m
- CONFIG_REMOTEPROC=y
- CONFIG_IMX_REMOTEPROC=y
- CONFIG_MTK_SCP=m
--- 
-2.43.0
-
+  For some events for which event data is defined (see Section 5.2.1), the event
+  data is saved in the exit-qualification field. (This is done for #DB, #PF, and NMI.)
