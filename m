@@ -1,131 +1,179 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 948EA30E84D;
-	Mon, 23 Jun 2025 09:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E0019CCEC;
+	Mon, 23 Jun 2025 09:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750671245; cv=none; b=VPl7tDugEIjXiCOiyHn3dhI2lJynkgYg8HTu0/xedV2T5SfwGT+lgcXPqO3aZrK5I496kl8h2BxG9HEEMNTDwA7kTP40REUNCjssXI7WKCpd50ZQmziodgCo6Du3ovSUkB3fmssIDl9yluzEsE3a68zsr4L0qZzO2ehft/0JspE=
+	t=1750671252; cv=none; b=ju2v00TLxC/ovctpflFYwGKz7SBene6gQXQrKNbF9oAfzonYSAaP7bPFXFzu+DWcLCRZDbWqhyT8clOS7HQdHsde1OWisHjWyGLun3cDBL06jvTSX3yooTozCon5ixuCocmBwphb96DL36qtC7EYLsI3gS9EiTQyyb2WFR6sdJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750671245; c=relaxed/simple;
-	bh=KQQkkGa+FOJrfi+7O0ocknbs6Q+TgN71Lv+m1UTik/g=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=m/qFGJoBimFN8zDIim3da1E6qJLoETXxw8ukVsJh+uMU6YWf1YNberPxLrgG4aro2fVDur9XMuazrloHlC4PzVAQ/ovCyMxu4aiDgxdUBa7MG4QY+KGGr1e44IPnZijVz4OcF+8crPKxFx+/4Zlw5FSRpa1OyYPpFS1XV/rESIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8BxPOKBH1louIobAQ--.20857S3;
-	Mon, 23 Jun 2025 17:33:53 +0800 (CST)
-Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by front1 (Coremail) with SMTP id qMiowMBx3MR+H1lo9iwnAQ--.51623S3;
-	Mon, 23 Jun 2025 17:33:52 +0800 (CST)
-Subject: Re: [PATCH v4 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
-To: Thomas Gleixner <tglx@linutronix.de>, chenhuacai@kernel.org,
- kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
- jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
- lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
- gaosong@loongson.cn, yangtiezhu@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250610114252.21077-1-zhangtianyang@loongson.cn>
- <20250610114252.21077-3-zhangtianyang@loongson.cn> <87o6uris6p.ffs@tglx>
- <9c60326b-f7bd-0b36-3bc5-0ad7d19690f1@loongson.cn> <87v7omooag.ffs@tglx>
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <fceb603c-6072-2941-15d5-56c8a4b4c32c@loongson.cn>
-Date: Mon, 23 Jun 2025 17:33:08 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1750671252; c=relaxed/simple;
+	bh=Vz5OSubXfv+7o3fkxilrYlVlKM2SH7uyFsn4jPoJ3YA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lJYPEQCXNYRrJ8Cn8aX2so1Lo+g8ylw4iGIC9UuXMRHNf0iPKThpgiD69QyYvcfPEavK21HTu3mdMSiXkJbJgQUSlx5M+FG9gEllULcc8j/tptJPU8ERrOm4s3wY3C8rdfBEcQX6sERIhpaEqE2wn4GIxt62z37t/fwoWDm37gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JQgtWlKD; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JQgtWlKD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750671252; x=1782207252;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Vz5OSubXfv+7o3fkxilrYlVlKM2SH7uyFsn4jPoJ3YA=;
+  b=JQgtWlKDK6Wn36QzGLVD/4/aKLF8b2+hWM4c8UD8kl4Bo3qrDhW3nrNO
+   fdXCrNm4IUWTEZ2E7r6wq5QHy/X6Z1BsUm19ZZk4RY0BN/KVeRRf1bJRV
+   rZZsKPZmdB/tMEflytgoNRYGPnvZxn80usBDZZYORJZznEN2/pHNNJw9z
+   hHsdkOVKlfL4iDOgxRxdaQQ2SGMVP1J8B9UZgk9msTMdpfW//MIv7HAHw
+   fO0B4bs7O85p8zNkrUEkASMPuzQwDhoD3zjYB7PY9dgV4r1i12g4fCKBd
+   6BSiT1tOs20KxE442e03nL+IuwB6ZNJiOXHKEs4yvyevll4hU2j3R+e8J
+   g==;
+X-CSE-ConnectionGUID: mSWOb2l5Tb+O3B/l/EfFNQ==
+X-CSE-MsgGUID: a9bHveN6TQayO22iuvYiXg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="56541530"
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="56541530"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 02:34:11 -0700
+X-CSE-ConnectionGUID: IcjhYKI6SPq8ByprE03HEw==
+X-CSE-MsgGUID: 9Wevme+gRvSm3pHsEKbbmg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="151834511"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 02:34:07 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uTdYy-000000097hk-3rxN;
+	Mon, 23 Jun 2025 12:34:04 +0300
+Date: Mon, 23 Jun 2025 12:34:04 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+	corbet@lwn.net, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	eraretuya@gmail.com
+Subject: Re: [PATCH v10 3/7] iio: accel: adxl345: add activity event feature
+Message-ID: <aFkfjAekGJTU5o71@smile.fi.intel.com>
+References: <20250622155010.164451-1-l.rubusch@gmail.com>
+ <20250622155010.164451-4-l.rubusch@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <87v7omooag.ffs@tglx>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMBx3MR+H1lo9iwnAQ--.51623S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tF1rur1fGFWDJr45Xw13Awc_yoW8CF47p3
-	93K3Wxta1vqr4I9r12vanFvF97KF4kJay3C34kGryjv34qqF1agFs7XrWFkF18urs7Xryj
-	vrWY9rWq9wn8XabCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-	Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
-	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1l
-	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8uc_3UUUU
-	U==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250622155010.164451-4-l.rubusch@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi, Thomas
+On Sun, Jun 22, 2025 at 03:50:06PM +0000, Lothar Rubusch wrote:
+> Enable the sensor to detect activity and trigger interrupts accordingly.
+> Activity events are determined based on a threshold, which is initialized
+> to a sensible default during probe. This default value is adopted from the
+> legacy ADXL345 input driver to maintain consistent behavior.
+> 
+> The combination of activity detection, ODR configuration, and range
+> settings lays the groundwork for the activity/inactivity hysteresis
+> mechanism, which will be implemented in a subsequent patch. As such,
+> portions of this patch prepare switch-case structures to support those
+> upcoming changes.
 
-在 2025/6/23 下午4:27, Thomas Gleixner 写道:
-> On Mon, Jun 23 2025 at 10:45, Tianyang Zhang wrote:
->> 在 2025/6/13 下午11:20, Thomas Gleixner 写道:
->>> On Tue, Jun 10 2025 at 19:42, Tianyang Zhang wrote:
->>>
->>>> +	tail = (tail + 1) % INVALID_QUEUE_SIZE;
->>> Why is this before the barrier? The barrier does not do anything about
->>> this and you can simplify this. See below.
->>>
->>> And as there is no rmb() counterpart you want to explain that this is
->>> serializing against the hardware.
->>>> +	 */
->>>> +	wmb();
->>>> +
->>>> +	write_queue_tail(rqueue->node, tail);
->>> 	write_queue_tail(rqueue->node, (tail + 1) & INVALID_QUEUE_MASK);
->>>
->>> No?
->> The reason fo coding here is that during testing, it was found that a
->> barrier is needed between the update of temporary variable 'tail' and
->> the operation of register with 'write_queue_tail' , otherwise
->> write_queue_tail will probabilistically fail to obtain the correct
->> value.
-> How so?
->
-> tail is the software managed part of the ringbuffer which is shared with
-> the hardware, right?
->
-> So even if the compiler would be allowed to reevalutate tail after the
-> barrier (it is NOT), then tail would still contain the same value as
-> before, no?
->
-> The wmb() is required to ensure that the hardware can observe the full
-> write of the command _before_ it can observe the update to the tail
-> index.
->
-> Anything else is voodoo.
->
-> Thanks,
->
->          tglx
+...
 
-In my previous understanding, tail'value is actually a part of 'full 
-write of the command '.
+> +static int adxl345_set_act_inact_en(struct adxl345_state *st,
+> +				    enum adxl345_activity_type type,
+> +				    bool cmd_en)
+> +{
+> +	unsigned int axis_ctrl;
+> +	unsigned int threshold;
+> +	int ret;
+> +
+> +	if (cmd_en) {
+> +		/* When turning on, check if threshold is valid */
 
-We must ensure that tail is updated to the correct value first, and then 
-write this value
+> +		ret = regmap_read(st->regmap,
+> +				  adxl345_act_thresh_reg[type],
+> +				  &threshold);
 
-into the register (perhaps by adding wmb in write_queue_tail ).
+Can occupy less LoCs.
 
-In other words, this is originally to prevent the write register 
-instruction from being executed
+> +		if (ret)
+> +			return ret;
+> +
+> +		if (!threshold) /* Just ignore the command if threshold is 0 */
+> +			return 0;
+> +	}
+> +
+> +	/* Start modifying configuration registers */
+> +	ret = adxl345_set_measure_en(st, false);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Enable axis according to the command */
+> +	switch (type) {
+> +	case ADXL345_ACTIVITY:
 
-out of order before updating tail.
+> +		axis_ctrl = ADXL345_ACT_X_EN | ADXL345_ACT_Y_EN |
+> +				ADXL345_ACT_Z_EN;
 
-The above is just my personal understanding
+I think
 
-Thanks
+		axis_ctrl =
+			ADXL345_ACT_X_EN | ADXL345_ACT_Y_EN | ADXL345_ACT_Z_EN;
 
-Tianyang
+is slightly better to read.
+
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = regmap_assign_bits(st->regmap, ADXL345_REG_ACT_INACT_CTRL,
+> +				 axis_ctrl, cmd_en);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Enable the interrupt line, according to the command */
+> +	ret = regmap_assign_bits(st->regmap, ADXL345_REG_INT_ENABLE,
+> +				 adxl345_act_int_reg[type], cmd_en);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return adxl345_set_measure_en(st, true);
+> +}
+
+...
+
+> +	case IIO_EV_TYPE_MAG:
+> +		return adxl345_read_mag_config(st, dir,
+> +					       ADXL345_ACTIVITY);
+
+It looks like you set the editor to wrap at 72 characters, but here the single
+line less than 80! Note that the limit is *exactly* 80 character.
+
+...
+
+> +	case IIO_EV_TYPE_MAG:
+> +		return adxl345_write_mag_config(st, dir,
+> +						ADXL345_ACTIVITY,
+
+Ditto.
+
+...
+
+> +		return adxl345_read_mag_value(st, dir, info,
+> +					      ADXL345_ACTIVITY,
+> +					      val, val2);
+
+Ditto and so on...
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
