@@ -1,199 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09AD280327
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:43:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9749A277004;
+	Mon, 23 Jun 2025 15:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750693431; cv=none; b=ZAIA/poqRcamaVdz9FIx6w3Mb1d5l+6XGab+rJwgW0GBKTK/xCE6OUYCPpN6klCpo00b7KyR1u48iamxgX2cXsfrNrVBY3bGHiMKTWB/DEHnakK1M59Ns7VHNiV+tyMS8ehFH6Q4jMWFCFlzLvJYaFa0yWMDaPi84MvA8FPsSYs=
+	t=1750693479; cv=none; b=sCNjhqqgx5fXk+aEfLHbZmCbhfUzRLxgfUBvt2l3aVTjJUDB0jwplhC9ACONCV9RwE4TbzF7iP7RnZWW21/EzafRk3CI9vKty+OTdJ0Y9/z+X80myYRESyGiwmy4vvtupz/exBWWDJ66CtjQXiy3wyt24Bwc9q0r6Ory2vvFcJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750693431; c=relaxed/simple;
-	bh=EwKqjwcbw/T8RoZ/GrVIRDOq6nqjAfGLuMcMbDFjahE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iV5VSONhdYt+FdtGrDFKeIyHz+ToMjRmMhwUy3PfQ8Ti1iAivN+8csG7VO4yRsOsjjevBDCPyHyYiu8UbbpoXBwE5Rk3U21is9EdLD8y2kFhDnPXTz0kxHte7PSEAyjZ2iZgyWjagLM9/tzEyKdYDRg3gUp31cBBNYVOEQFcIrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U2ztAdYl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750693479; c=relaxed/simple;
+	bh=z6uWI1cuaie6yf/MtpZ0mP75H9G/PCflk8KuC0hKgJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LREGHo89d08xfGTkd6OLOl3KZFXJYH/AdDxcR0jBMQJF6UiXD9FiGcx7vfziNYD1H29mwdWAZiRVUTgo3triL/P4ilcIwiN1Q/V+NYTl2FTQGPaNKqf01tuU500KrpXltQ6BJAzWVvfSuHM2Kdd6cP9vbxxQuNjC5NEtxEt1o/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HkP3qsNN; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U2ztAdYl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750693428;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=23Yqz6D5y7M7u78E7VkUTuP0Y7WfwouQlTdg1wTNEMo=;
-	b=U2ztAdYlAvtJ5Imi4YBHAuLNrwNxEOJkLKtYnUcO2koAqbobMuQ04sI7S78YnFz7iHQsqS
-	9WlU0LrRe8mPUr/M0uVJ/dTBED6AV9JNOQx58DFGgNnqob8hKamziebJXEA5GSYRVNisSe
-	uVbqawzL5aV5Af1LYzJve5dDs8eFabw=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-659-4MsapDTVNTC_g05V5HJ9pg-1; Mon, 23 Jun 2025 11:43:47 -0400
-X-MC-Unique: 4MsapDTVNTC_g05V5HJ9pg-1
-X-Mimecast-MFC-AGG-ID: 4MsapDTVNTC_g05V5HJ9pg_1750693426
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a523ce0bb2so2416608f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:43:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750693426; x=1751298226;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=23Yqz6D5y7M7u78E7VkUTuP0Y7WfwouQlTdg1wTNEMo=;
-        b=HbmOeY8GKC4lcNtB3/k63cplGdZ+KesXex/ZHGBJOVZSAqUj40dr6c6JrESQuwDfTK
-         yMlgKL11xjfpuIiXxKGZJymUArrOJqvbz7sRt05wi4DspUaKUiU5CR3VdCF2NSbClr0I
-         7jof3uoeSN1agNaG1NAsbHOWU8xgdsUmZ11nj+84acnodZnvuYQ/jIXk4t+lPRaq40wW
-         CKtZp/N8+i9+WK8cXxWyLtQ3u5g8lYWQx5Evj3j4xN8srFRLnU9h9M0vyfDS4aJ+m03p
-         9ppJGrR9M+5Img1d9avvL+5+VY0c/Op+Qm1ISkyRjWZqxSpvVl5JeEYxal458ENo6XRN
-         kvxQ==
-X-Gm-Message-State: AOJu0YzChmsp/0J8F0WvgdHBSbu87j8ulLCq4eKkBo73b9P8hm9y+68t
-	4aK2aP1iSjnsB55LK6c5YgD7SjBDPPs55BrlYGfNCxIxZyNB5ZiT+TydXieux+qIVbgJiVFUeER
-	565jlMO/qukti8gABLrRNAS+0CTEmk0YFWdGiPhps5dBeW5GG1s8LHVG29dkIQ6bqHVPLfLRu39
-	Jh
-X-Gm-Gg: ASbGncuVBYp+yoI8up1gyW6tZLujtAKhwlN5Cu/l2YmVxnVhSpLRbZmDWZCO2MZD3b6
-	u1qd0KW1cOKviI3sHCy80sjh3KFb3TewT/v79IAPEtyazsjAwFxHLIUxx+dYB/mC0kN7hv6UFih
-	bU+/5qslmna7EF8myeXLWGH/X5flLUf2xgTDm4EOhUIDbyi/wWRYVZ0XqBh3z6KoCNCfTTl/T4e
-	FDJgapmQK83t8OSq7dq7wJ/VhXyTabOI7qBry+bZOmPsmEoboMO1+7o6Lp3V2suAyNkHsuLFRYi
-	SyaTOUtarbszIgNBA3kz94hddpNWK4XoG4Vmb8jZWw1LRcUw/VR+QZR2pagwJKqroypqIfxJ8mj
-	0TflLFPxrrp70yDn5vP/6aXfDwFWyfuZFaDE9SFRkA/T2PNBQNg==
-X-Received: by 2002:a5d:6f1d:0:b0:3a4:cfbf:5199 with SMTP id ffacd0b85a97d-3a6d128a528mr11275066f8f.9.1750693426108;
-        Mon, 23 Jun 2025 08:43:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGhqtrtlxl1Gchv2dH1mkzO8col2pfRQZ6piZoDOacwDoi8xsHoL99bl7bc3fGu2ZE5CWTyNA==
-X-Received: by 2002:a5d:6f1d:0:b0:3a4:cfbf:5199 with SMTP id ffacd0b85a97d-3a6d128a528mr11275028f8f.9.1750693425658;
-        Mon, 23 Jun 2025 08:43:45 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159? (p200300d82f4efd008e13e3b590c81159.dip0.t-ipconnect.de. [2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646cb672sm115985825e9.6.2025.06.23.08.43.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 08:43:44 -0700 (PDT)
-Message-ID: <3fc57897-4eb0-4f39-8428-bbf10d51b83d@redhat.com>
-Date: Mon, 23 Jun 2025 17:43:42 +0200
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HkP3qsNN"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0428640E01A0;
+	Mon, 23 Jun 2025 15:44:34 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id omm5Wp-Yq0vh; Mon, 23 Jun 2025 15:44:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1750693469; bh=wkp2duUgrbyHfHewe7CWhV6ocxmAcIGEYojd8cQElpo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HkP3qsNNiJJ+XYR1A5c/QlkUtdLVxxhFc+aWvHh4CZOQl82P6ET11X2ldr4GVjq1J
+	 amx3yHCjgGarLNglQY5sbxuj18TEwaOKByX0/Fv1DEKBJlFpJlR7xXKXHDa0ndg+kD
+	 YxSEfD3kkgFKTnOz907L0OBsKkEsofL5WBXpsMtyAdCNWiHp1K4/KVJLKHVQr73thD
+	 zT7MycV+9igUBBNBR27W9ep0DLgYevdR45Feui+oKwPASluTc4MJxY26JtlJilfswK
+	 Ywui0rTsgN5X0N84HIC+aM+Vhs4I1ExmEnQzGrF4f4KFu8Q7pMJdcTJ/hJpLgYDmiR
+	 A1whvZj1hzEdGy7ihNLqfdfv5y5WL7taIedwUomsdfxtdJOf8DR8kMQgKw3EjxBvyU
+	 +l1ad0o3ve0TP7ot/QNk4OVfk4dymv0RACGdYEIqX5ESZXkoJAkPLub/aQZksmW6wJ
+	 pIB6tyE86co+3/ne0kIgJhdox2YU3xMkf9NKii+dBTpGX22HVc8Swkzj3/xUZgAxXM
+	 Q0uJfsnbZz3+e7gl2AlPDRFcBhNrTs1S0NJhoY8LCvKzXnuWt4KY6DrnDi8iHl76Ys
+	 jws/O0SLKY3+PIdfYQ7BiZlYuJbdrY6Yb6UWcU5ANwA3zWIU3+bAWQFaMadA70N/rT
+	 gP1HkJXYX7+nAT4LuYRkC+zY=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 080B240E00CE;
+	Mon, 23 Jun 2025 15:44:18 +0000 (UTC)
+Date: Mon, 23 Jun 2025 17:44:12 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Gerd Hoffmann <kraxel@redhat.com>, linux-coco@lists.linux.dev,
+	kvm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] x86/sev/vc: fix efi runtime instruction emulation
+Message-ID: <20250623154412.GHaFl2TJL0iGvy30JY@fat_crate.local>
+References: <20250602105050.1535272-1-kraxel@redhat.com>
+ <20250602105050.1535272-2-kraxel@redhat.com>
+ <6b4b8924-c0a7-58ab-f282-93d019cd0b96@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 14/29] mm/migrate: remove __ClearPageMovable()
-To: Zi Yan <ziy@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Minchan Kim <minchan@kernel.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
- Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin
- <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
- Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
- Shakeel Butt <shakeel.butt@linux.dev>
-References: <20250618174014.1168640-1-david@redhat.com>
- <20250618174014.1168640-15-david@redhat.com>
- <501877A7-28C9-4203-84B8-E05E7A0E24F8@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <501877A7-28C9-4203-84B8-E05E7A0E24F8@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <6b4b8924-c0a7-58ab-f282-93d019cd0b96@amd.com>
 
-On 20.06.25 22:15, Zi Yan wrote:
-> On 18 Jun 2025, at 13:39, David Hildenbrand wrote:
-> 
->> Unused, let's remove it.
->>
->> The Chinese docs in Documentation/translations/zh_CN/mm/page_migration.rst
->> still mention it, but that whole docs is destined to get outdated and
->> updated by somebody that actually speaks that language.
->>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>   include/linux/migrate.h |  4 ----
->>   mm/compaction.c         | 11 -----------
->>   2 files changed, 15 deletions(-)
->>
-> 
-> The comment for struct movable_operations needs an update too.
-> "
-> If page migration is successful, the driver should call
-> __ClearPageMovable(@src) and return MIGRATEPAGE_SUCCESS.
- > "
+I have this now:
 
-Ah, thanks, it will simply be "should return MIGRATEPAGE_SUCCESS".
+From: Gerd Hoffmann <kraxel@redhat.com>
+Date: Mon, 2 Jun 2025 12:50:48 +0200
+Subject: [PATCH] x86/sev: Fix EFI runtime instruction emulation
 
-There is more magic to it (the driver must setup the dst page as
-movable), but probably that might all be reworked soon.
+In case efi_mm is active use the userspace instruction decoder which
+supports fetching instructions from active_mm.  This is needed to make
+instruction emulation work for EFI runtime code, so it can use CPUID and
+RDMSR.
+
+EFI runtime code uses the CPUID instruction to gather information about
+the environment it is running in, such as SEV being enabled or not, and
+choose (if needed) the SEV code path for ioport access.
+
+EFI runtime code uses the RDMSR instruction to get the location of the
+CAA page (see SVSM spec, section 4.2 - "Post Boot").
+
+The big picture behind this is that the kernel needs to be able to
+properly handle #VC exceptions that come from EFI runtime services.
+Since EFI runtime services have a special page table mapping for the EFI
+virtual address space, the efi_mm context must be used when decoding
+instructions during #VC handling.
+
+  [ bp: Massage and extend commit message with more backstory, add
+    clarifying comment from Tom. ]
+
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/20250602105050.1535272-2-kraxel@redhat.com
+---
+ arch/x86/coco/sev/vc-handle.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/coco/sev/vc-handle.c b/arch/x86/coco/sev/vc-handle.c
+index 0989d98da130..e498a8965939 100644
+--- a/arch/x86/coco/sev/vc-handle.c
++++ b/arch/x86/coco/sev/vc-handle.c
+@@ -17,6 +17,7 @@
+ #include <linux/mm.h>
+ #include <linux/io.h>
+ #include <linux/psp-sev.h>
++#include <linux/efi.h>
+ #include <uapi/linux/sev-guest.h>
+ 
+ #include <asm/init.h>
+@@ -178,9 +179,14 @@ static enum es_result __vc_decode_kern_insn(struct es_em_ctxt *ctxt)
+ 		return ES_OK;
+ }
+ 
++/*
++ * User instruction decoding is also required for the EFI runtime. Even though
++ * EFI runtime is running in kernel mode, it uses special EFI virtual address
++ * mappings that require the use of efi_mm to properly address and decode.
++ */
+ static enum es_result vc_decode_insn(struct es_em_ctxt *ctxt)
+ {
+-	if (user_mode(ctxt->regs))
++	if (user_mode(ctxt->regs) || current->active_mm == &efi_mm)
+ 		return __vc_decode_user_insn(ctxt);
+ 	else
+ 		return __vc_decode_kern_insn(ctxt);
+-- 
+2.43.0
+
 
 -- 
-Cheers,
+Regards/Gruss,
+    Boris.
 
-David / dhildenb
-
+https://people.kernel.org/tglx/notes-about-netiquette
