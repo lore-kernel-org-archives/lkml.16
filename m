@@ -1,66 +1,73 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662351078F;
-	Mon, 23 Jun 2025 19:21:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE331C6FF3
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 19:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750706468; cv=none; b=GEoBGN/rlX2b6nBwpuxIxO4we8DV9l+prykv2dKkZo/3a+iJTxFpiAHNvIxcAqdjEgqjPM+PLLJl7FzthzgJVszHRne/z9nveVSocS+0KxWnm54hVArhcVvpjznhVh2wmEA3UH9ChJXFTrqOCFknz81HwuKr0bzX71LXarMb+HE=
+	t=1750706532; cv=none; b=uf59fqIhWyq/LVsCsIB9eCml/K8z0DtRt8Y3pXWfTSCmgpqmGKE9VGBGlpjqgr3FYd0dcwedWrG7qMZ27WMvv8+ca7c4huMWoHht2fEcBnqL6M1LO+vf3gZRteG6Ls98ZoyJafkdFUqvdB+v+wCXcJGg25wcrIhOhELHe4jhvBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750706468; c=relaxed/simple;
-	bh=B/LYiPF2jq1udnr8kW6Wz4JrvaLjqh/botvaVbZfGBo=;
+	s=arc-20240116; t=1750706532; c=relaxed/simple;
+	bh=ZK3S0XPxcmYiS4vVibj9PCsaH7tpzJ/rlgCHRYNpd4U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fSbpWwBTZk8u8f002rW/CSoo/IQ72HqXUe+fOasSh9cX3x+27j16aB/v+UJPCMQU7pC9KXW1XJAejxyN4s0fXSYrGH1F42m3sck2jTGhQguphVPUQk4LgX5jHAqo0MAU413BOgwtQ2a8W2fk5+hfeYInYBkPsim42ZkxRC2en/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=efkITbyT; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=NnHzSJ+phz6Z/qaLfi+CKIxPNSiBByryy8Qd1U/7UN+UrNT7UQRqM8EktXdwuRAa8ApuOmdV4dzGOcip65FbL2RwhVOgNuKaztC/pTSTe+XyUAVFDu33TkGfQNuc4Bvh6YFvrq+5/r3c7tJmrlLG78lnHwmzwpmeCzL0Ma9FtBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qiaz0dtn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="efkITbyT"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-234d3261631so32341805ad.1;
-        Mon, 23 Jun 2025 12:21:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750706467; x=1751311267; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=S1vH0H7NtjGPUlDbrnQSLOBeFOgkd+rTZmu41DAhemA=;
-        b=efkITbyTDs6bGkAQPSKI3CMa9xOW36QcyUWsADH8G9fi+6BjgKwvqjxFBipvnc0gi5
-         azN7y0CQi12u7xd9iucZTCCJkLBm8njqs2pjiZUfrUjAxpAR6LyupNCUY2XmV9PrRZWE
-         x0kgrOUmJpMbjiuDKi7Di7AUTTNe4ahgTnNFJkjSXp+Xz4OqIHLR7W/Md18ejjkouTuA
-         Hw38m5pZbgnY7wX8TvQZ5Eelf6Umr+jFH6W0j/l7yiZUSlezAghX/ie81jzQHC2HjuEo
-         iYC6I0sL2SOwrleOzFUE1Gg49Lj5c7ejXfu8wiHwY6W6Lxjv20wqVJnhXBMLdq1ksmAS
-         23gw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qiaz0dtn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750706529;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bQlmBkT7YPFLGN3jkndyeHxVU2LJMrxMkjzinTzeACw=;
+	b=Qiaz0dtnedw+Mrwqrb1vSYxg9WwO6ND4i41udqhF9DEkIHanzR6cXWFuCOeEZCFtUJzjRY
+	aSOeQ09hI39hgswoQZIumJuOOvLLdALgd2nCtog+SNj2ZYwF3q/6KkSdZn/qX6b604hM+q
+	r9e17si98wn3s6Yoj0IgoMa5SJNbXUA=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-294-4wY6JvvTMLi8wM-O5UeFRA-1; Mon, 23 Jun 2025 15:22:07 -0400
+X-MC-Unique: 4wY6JvvTMLi8wM-O5UeFRA-1
+X-Mimecast-MFC-AGG-ID: 4wY6JvvTMLi8wM-O5UeFRA_1750706526
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4fac7fa27so1723672f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:22:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750706467; x=1751311267;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S1vH0H7NtjGPUlDbrnQSLOBeFOgkd+rTZmu41DAhemA=;
-        b=YJLAjmeW8UuaHTFhhxbbj45uFDg2HOsyBmo095vBvJsRvnExx7iCBuqoLl6AIrkFN5
-         B5JEaNHna9z5YrxlamqMjwheKPzFzIzGOoIGrSxspEkRCE3ALv+EfHNVkKniYR5dg7DX
-         QbGRRttAh7cJAfRndlWjUCCITPFDWKdZJn7AVDvRwjBadEEVHKXsutIy+FRGg6BSj4tz
-         s7kv91tI04Ew5DO4ovWQ+nRRLRYVBBudHVX+tYAcklFZ6XbAXDgjHo6myvudk0T1jJKk
-         U/p+UndS98RlA7jjQqCi/DhjZ6+uWP/2FhQWiVswTgE7A+YAn9hJ5rbiqgWj/8nfx0Jl
-         MxLw==
-X-Forwarded-Encrypted: i=1; AJvYcCUslpWR91CO0D5AF2qJiluMKjxN+Z2mrv2eQK4A+QXrgVtRt2IngJjg/ctS5gBtoHg9PpeISdFsuUtuIRo=@vger.kernel.org, AJvYcCXe53e8wgpl/DXKSjsFpQuaqW6PZ2p1RMfRNxtt16I+smt/0tQGLkrDU9f2xvepBI7RRO0WfyDr@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHRs1ZFHF0waeE5dUkSRVafm8nq5No6CeIfq0FpFJH/kF8t0MY
-	v65tE8RocT4a9Qb9/0EnIGkI2JpVvi14pL6gm86cAVQ7P2mWqaluANGX
-X-Gm-Gg: ASbGncseKtgKJECR5d8hXJGwSGhqZIxhIHG3E0tDD85OyIWsY4OF5fp5lHWELgs1jrg
-	fDoDfmNH3ilIxKzS1/sqBP6Y8ZrWnHUiMEeqLEnbPJRz8pR6o8J/+3UlLcCJdwja2i8tYZm7zGR
-	CKxkNXuSsgAEle3AL6mGogSHN8/iOYU0IGAuIpCsns2qFeDasJYMIBcBvMvkapI0N2fVo6iqLWb
-	wg55l/ufW7b/sXOZPSo6gpsvtpYfl299W4vlTdp1tVs6g5k9egDSvQQ3XZRx0M8F5BSr8CVCXg7
-	Y8CA/6ojJa7Zzq4orGZJsy3IgdjmKFFMjBRomXIe6nfF1Ktm5zwrOFWHBEt+9ei1YWUP4yNVIyb
-	zlF2yc5E4S3KUPg==
-X-Google-Smtp-Source: AGHT+IFh7wAj7dunSH6c3tjj30+ExI8r2On7mXZtxe1Ghvs5w4+KzMp5ZJb6Hs0WK95cs9LDHWEbNg==
-X-Received: by 2002:a17:902:ce85:b0:234:bc4e:4eb8 with SMTP id d9443c01a7336-237d9aaaacbmr202967005ad.46.1750706466668;
-        Mon, 23 Jun 2025 12:21:06 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8609209sm93011545ad.110.2025.06.23.12.21.04
+        d=1e100.net; s=20230601; t=1750706526; x=1751311326;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bQlmBkT7YPFLGN3jkndyeHxVU2LJMrxMkjzinTzeACw=;
+        b=HOt1PdZoWrXRkK4H6PotQ0jl/zASkm0/jd9EPrjisrDEjUBqxJkCogTQqlY/UlqP08
+         QZCZjIhLTM1MIHGxQ6ALS9Rp/ie4pnqdTNtdDp+UjYPS3EOyvMLdgd6DergxbYqFiIUo
+         4XCVyDjF7wc0mqNN0h0x9srRPDnokiTerpr+LjVmnqeJntW+mz1lIAGaok9WCEWrQJac
+         OaZ0amjUq1OMu1jxTTJ3bc9iPs+kSmw9oYsMwYkvZ3+aVVg7giFxHbvkzixYaxg9QIb4
+         qu/kKw2m8TpSmN/nnTLblp+BQbueMvPWFZI2fEDfK5dKn5J4voDDyDPFBxgtQzRF6JWX
+         rOFQ==
+X-Gm-Message-State: AOJu0YyYVPBhtRxkx40666xKgXnFgFWyPUdYx0srFA5zoT5Rt2yIxtLs
+	c6WhzBS0LbfGSagz+8pmNMGeQp+oXRnr0Js5RmMedFo8IG18VI0OOA3u3x6jRGk49o42mRbjTgO
+	FrApI+XWazGWrJeeUOcemNMi0ssKPg1ASJAaeUQghVI7pVIZgC7FXl6FSsj/4DvWjlPjTx6tYLf
+	FL
+X-Gm-Gg: ASbGncujTeS7h9XUx1sCxpqZRAyaYmcxbDEU5SizvkV3AZqLKGxhqaprkyb21ZTqMx5
+	1aZ0fyCg8JQFkBh3Sp0nuncHzs8DiLsuEfMNmfAl96k4HpFSbTBZBwBVBKTJsv0Bn2AF8G6Vi65
+	wGpn62kAATfScU4R+lksRxAh6rjbJRuNnLQhXaUU5WrRDpderUJZ9uPVrmxdHknJGalDrzaMHqd
+	1PD+JmLxNonxW6yzIvUOyX6g+SREDWGn9Ui8W4/4YzcrRtZcOr8BWFWMMp1Wo8rZrlXC4CADR3t
+	1OpCZ4l3j/sFUUk6DgW6D7oZY4tAtk9YHtYyGTEE/GeURIdKe97T7OZ2+gAGgrOJBwfQqxQPJw2
+	YL/tkLMoK+LEWgJAn+GqDH0p32Ro8vc62psRSyhwFCQGQ6I3cNg==
+X-Received: by 2002:a05:6000:2890:b0:3a4:d4e5:498a with SMTP id ffacd0b85a97d-3a6d130d49cmr11494755f8f.42.1750706526335;
+        Mon, 23 Jun 2025 12:22:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF87md/e3MMQCR4P74foXjnNwaFCtfLKwq6x9gBQ7WUQ/oG8Mjxt52qiatY+Y1JHSf1QQrKdw==
+X-Received: by 2002:a05:6000:2890:b0:3a4:d4e5:498a with SMTP id ffacd0b85a97d-3a6d130d49cmr11494745f8f.42.1750706525946;
+        Mon, 23 Jun 2025 12:22:05 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159? (p200300d82f4efd008e13e3b590c81159.dip0.t-ipconnect.de. [2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f1d902sm9900905f8f.43.2025.06.23.12.22.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 12:21:06 -0700 (PDT)
-Message-ID: <6ba5cf82-cd4b-40b0-8909-fa312759cbf7@gmail.com>
-Date: Mon, 23 Jun 2025 12:21:04 -0700
+        Mon, 23 Jun 2025 12:22:05 -0700 (PDT)
+Message-ID: <4d35795f-df24-40eb-a1e8-2914b0f5d697@redhat.com>
+Date: Mon, 23 Jun 2025 21:22:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,76 +75,153 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.4 000/222] 5.4.295-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250623130611.896514667@linuxfoundation.org>
+Subject: Re: [PATCH RFC 03/14] mm: compare pfns only if the entry is present
+ when inserting pfns/pages
+To: Oscar Salvador <osalvador@suse.de>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, nvdimm@lists.linux.dev,
+ Andrew Morton <akpm@linux-foundation.org>, Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ Dan Williams <dan.j.williams@intel.com>, Alistair Popple
+ <apopple@nvidia.com>, Matthew Wilcox <willy@infradead.org>,
+ Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Barry Song <baohua@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>
+References: <20250617154345.2494405-1-david@redhat.com>
+ <20250617154345.2494405-4-david@redhat.com>
+ <aFVhvYbRH2dtiFKY@localhost.localdomain>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250623130611.896514667@linuxfoundation.org>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aFVhvYbRH2dtiFKY@localhost.localdomain>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 6/23/25 06:05, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.295 release.
-> There are 222 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 20.06.25 15:27, Oscar Salvador wrote:
+> On Tue, Jun 17, 2025 at 05:43:34PM +0200, David Hildenbrand wrote:
+>> Doing a pte_pfn() etc. of something that is not a present page table
+>> entry is wrong. Let's check in all relevant cases where we want to
+>> upgrade write permissions when inserting pfns/pages whether the entry
+>> is actually present.
 > 
-> Responses should be made by Wed, 25 Jun 2025 13:05:50 +0000.
-> Anything received after that time might be too late.
+> Maybe I would add that's because the pte can have other info like
+> marker, swp_entry etc.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.295-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
+>> It's not expected to have caused real harm in practice, so this is more a
+>> cleanup than a fix for something that would likely trigger in some
+>> weird circumstances.
+>>
+>> At some point, we should likely unify the two pte handling paths,
+>> similar to how we did it for pmds/puds.
+>>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
 > 
-> thanks,
+> Reviewed-by: Oscar Salvador <osalvador@suse.de>
 > 
-> greg k-h
+> Should we scream if someone passes us a non-present entry?
+> 
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+Probably? Good point, let me think about that.
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> 
+>> ---
+>>   mm/huge_memory.c | 4 ++--
+>>   mm/memory.c      | 4 ++--
+>>   2 files changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index 8e0e3cfd9f223..e52360df87d15 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -1392,7 +1392,7 @@ static int insert_pmd(struct vm_area_struct *vma, unsigned long addr,
+>>   		const unsigned long pfn = fop.is_folio ? folio_pfn(fop.folio) :
+>>   					  fop.pfn;
+>>   
+>> -		if (write) {
+>> +		if (write && pmd_present(*pmd)) {
+>>   			if (pmd_pfn(*pmd) != pfn) {
+>>   				WARN_ON_ONCE(!is_huge_zero_pmd(*pmd));
+>>   				return -EEXIST;
+>> @@ -1541,7 +1541,7 @@ static void insert_pud(struct vm_area_struct *vma, unsigned long addr,
+>>   		const unsigned long pfn = fop.is_folio ? folio_pfn(fop.folio) :
+>>   					  fop.pfn;
+>>   
+>> -		if (write) {
+>> +		if (write && pud_present(*pud)) {
+>>   			if (WARN_ON_ONCE(pud_pfn(*pud) != pfn))
+>>   				return;
+>>   			entry = pud_mkyoung(*pud);
+>> diff --git a/mm/memory.c b/mm/memory.c
+>> index a1b5575db52ac..9a1acd057ce59 100644
+>> --- a/mm/memory.c
+>> +++ b/mm/memory.c
+>> @@ -2137,7 +2137,7 @@ static int insert_page_into_pte_locked(struct vm_area_struct *vma, pte_t *pte,
+>>   	pte_t pteval = ptep_get(pte);
+>>   
+>>   	if (!pte_none(pteval)) {
+>> -		if (!mkwrite)
+>> +		if (!mkwrite || !pte_present(pteval))
+>>   			return -EBUSY;
+> 
+> Why EBUSY? because it might transitory?
+
+I was confused myself about error handling, and why it differs for all 
+cases ... adding to me todo list to investigate that (clean it up ...) :)
+
 -- 
-Florian
+Cheers,
+
+David / dhildenb
+
