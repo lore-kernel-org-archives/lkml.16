@@ -1,106 +1,107 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F592236EF
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E602253EB;
+	Mon, 23 Jun 2025 08:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750667257; cv=none; b=JjO2GM6uBuAAkWYLRtnP2SjSOxGWIltqkKRCnFLamaRR1FAKQroovKBA5utXp2atqNEQZmiDuOYLnrXK3F2cXX+Kc8eH/Z1IXGJGruYVRIb1Jcwv9Mh8FGkmWCsF99fxHd9Re5HT8zxDpK3CWrapk5tmyRLM/heki/0yvZ4HdUk=
+	t=1750667274; cv=none; b=E69dOlczsFZF3RHePSW/8B3UHse5tqYtxwxewkVLp2IYj97mca19aoyLznCgq8J7fgfxtwSBJZWYn1Bym6OSfrkXLfoGhsV5VOPKluAWMgGoOCVkVo4GVFUTNdl70oM9FMyYTuFsGH9ghZGMjKQfUIWFenENh3Yg0cunP1hLvsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750667257; c=relaxed/simple;
-	bh=mHMAsoepGjQBv1mEgMO/VvRELEXdWNynFVVXIrPUYQQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mmKsaO1Pejo4jYnW4nZp7Vxq7GEEbw8Pp24+UtU6lNh5sC+SnWsAMbxrCbx62VfhHhD7tymWZRoqV4hX5O4zIgC9AwVRbE4dW7yNVdoQ/vLBXwpLNdAyWg6KX62LXtnyEdxAp1hec4rcTBHkq2pVf56bgrjZKB2W36G1hV1l15Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <jlu@pengutronix.de>)
-	id 1uTcWT-0007gI-Tv; Mon, 23 Jun 2025 10:27:25 +0200
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <jlu@pengutronix.de>)
-	id 1uTcWT-004upl-0c;
-	Mon, 23 Jun 2025 10:27:25 +0200
-Received: from localhost ([127.0.0.1] helo=[IPv6:::1])
-	by ptz.office.stw.pengutronix.de with esmtp (Exim 4.96)
-	(envelope-from <jlu@pengutronix.de>)
-	id 1uTcWT-005o58-00;
-	Mon, 23 Jun 2025 10:27:25 +0200
-Message-ID: <e3cb14a8e1a6ea1e9a050f8013730e56f79f62ec.camel@pengutronix.de>
-Subject: Re: [PATCH RFC/RFT 00/15] gpio: sysfs: add a per-chip
- export/unexport attribute pair
-From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson
- <warthog618@gmail.com>,  Marek Vasut <marex@denx.de>, Geert Uytterhoeven
- <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>,
- linux-gpio@vger.kernel.org,  linux-kernel@vger.kernel.org, Bartosz
- Golaszewski <bartosz.golaszewski@linaro.org>
-Date: Mon, 23 Jun 2025 10:27:24 +0200
-In-Reply-To: <CAMRc=Mc6ZSp+bu3i0-X-i_8=f69X0Rez98tGsS-g_uJ1nBH6fQ@mail.gmail.com>
-References: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
-	 <8570dedab1a7478c39b31125ad279038fe31ac13.camel@pengutronix.de>
-	 <CAMRc=Mc6ZSp+bu3i0-X-i_8=f69X0Rez98tGsS-g_uJ1nBH6fQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1750667274; c=relaxed/simple;
+	bh=0zLEjCG0VOj06Aau1Hewd6jtAnHMseBvtrc0ZA27foU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WLz1DMDJWlp5dWhekHmN5hEALKDPsNL7NH8LFt2aRRkLVlWLHwfFlKI/G2Qbs4wpSNqf1QnIkdBw5LxfGPph2j/gVmOmlJVkkQ3Gt6B2F3UCQ+7AtXHeRc7Ayw1s1RbPru53QikujY97eDkufsxL06K2Z26HdPU906/0HWkVaLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Gqzb4YQI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sPsnNy/Z; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Gqzb4YQI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sPsnNy/Z"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750667271;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n5TpW8PdAh4HBq1Z6euH+u8O8gkNmzgjavPMSX1mvmM=;
+	b=Gqzb4YQIJi/ozNfATPmKOO1s4Cm32jOsinpVrzvIl46Iyv7j7ljxbrDBjgxGN2/7AZbtVh
+	xQILYgDuoY5DQIxxM7rQEAF4nRpa+b6BHGuouppEtAihB4TwgSHucsFz4TccAXITJt9aaX
+	flIX/sGnXB4lLwWg+xxmo3WxaOfdT4VXGht46Nk9JZtlLjsm7P1ErDwOsfNqwx8SbFUhC/
+	1PWsvVrAp/J0oDQf+4qOmcUj+Ot1/yWDEWUC77CNI30fg16SkWO8zDFpmx1xRXxshJdTOL
+	q1lH6a6dKWlwUaQsdyinpLR7L6mr3UOrvDpJdY+2j6OPtmv0KpklSfMSsxacAQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750667271;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n5TpW8PdAh4HBq1Z6euH+u8O8gkNmzgjavPMSX1mvmM=;
+	b=sPsnNy/ZDFHWTgW+kV16G/ml7lo1BrghL4pg1Nvoj0Q8P/EiEChGX8XepEhMKusdmPL+dV
+	uDepzEC5+UQtH2Bw==
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
+ jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+ gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
+In-Reply-To: <9c60326b-f7bd-0b36-3bc5-0ad7d19690f1@loongson.cn>
+References: <20250610114252.21077-1-zhangtianyang@loongson.cn>
+ <20250610114252.21077-3-zhangtianyang@loongson.cn> <87o6uris6p.ffs@tglx>
+ <9c60326b-f7bd-0b36-3bc5-0ad7d19690f1@loongson.cn>
+Date: Mon, 23 Jun 2025 10:27:51 +0200
+Message-ID: <87v7omooag.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: jlu@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2025-06-18 at 17:56 +0200, Bartosz Golaszewski wrote:
-> On Wed, Jun 18, 2025 at 3:38=E2=80=AFPM Jan L=C3=BCbbe <jlu@pengutronix.d=
-e> wrote:
-> >=20
->=20
-> [snip]
->=20
->=20
-> > The contents of /sys/kernel/debug/gpio don't really fit any more:
-> >  gpiochip10: GPIOs 660-663, parent: i2c/0-0024, pca9570, can sleep:
-> >   gpio-660 (DUT_PWR_EN          |tacd                ) out hi
-> >   gpio-661 (DUT_PWR_DISCH       |tacd                ) out lo
-> >   gpio-662 (DUT_PWR_ADCRST      |reset               ) out lo
-> > The header is inconsistent: it uses the 'gpiochip' prefix, but not the =
-base as
-> > the old class devices in /sys/class/gpio/. Perhaps something like this?
-> >  chip10: GPIOs 0-2 (global IDs 660-663), parent: i2c/0-0024, pca9570, c=
-an sleep:
-> >   gpio-0 (660) (DUT_PWR_EN          |tacd                ) out hi
-> >   gpio-1 (661) (DUT_PWR_DISCH       |tacd                ) out lo
-> >   gpio-2 (662) (DUT_PWR_ADCRST      |reset               ) out lo
-> > If GPIO_SYSFS_LEGACY is disabled, the global IDs could be hidden.
-> >=20
->=20
-> After a second look: IMO this is unrelated to the sysfs changes. We
-> definitely should change the debugfs output and rid it off the global
-> numbers but it shouldn't be part of this series.
+On Mon, Jun 23 2025 at 10:45, Tianyang Zhang wrote:
+> =E5=9C=A8 2025/6/13 =E4=B8=8B=E5=8D=8811:20, Thomas Gleixner =E5=86=99=E9=
+=81=93:
+>> On Tue, Jun 10 2025 at 19:42, Tianyang Zhang wrote:
+>>
+>>> +	tail =3D (tail + 1) % INVALID_QUEUE_SIZE;
+>> Why is this before the barrier? The barrier does not do anything about
+>> this and you can simplify this. See below.
+>>
+>> And as there is no rmb() counterpart you want to explain that this is
+>> serializing against the hardware.
+>>> +	 */
+>>> +	wmb();
+>>> +
+>>> +	write_queue_tail(rqueue->node, tail);
+>> 	write_queue_tail(rqueue->node, (tail + 1) & INVALID_QUEUE_MASK);
+>>
+>> No?
+>
+> The reason fo coding here is that during testing, it was found that a
+> barrier is needed between the update of temporary variable 'tail' and
+> the operation of register with 'write_queue_tail' , otherwise
+> write_queue_tail will probabilistically fail to obtain the correct
+> value.
 
-Agreed.
+How so?
 
-> Also: are you using
-> this output in some way? Technically debugfs output is not stable ABI
-> so we can modify it without considering existing users but wanted to
-> run it by you to know if I'm going to break something for you.
+tail is the software managed part of the ringbuffer which is shared with
+the hardware, right?
 
-We're not parsing debugfs. :) I just checked manually if it matched the new
-naming and saw that it didn't.
+So even if the compiler would be allowed to reevalutate tail after the
+barrier (it is NOT), then tail would still contain the same value as
+before, no?
 
-Regards,
-Jan
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+The wmb() is required to ensure that the hardware can observe the full
+write of the command _before_ it can observe the update to the tail
+index.
+
+Anything else is voodoo.
+
+Thanks,
+
+        tglx
