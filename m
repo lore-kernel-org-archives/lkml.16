@@ -1,71 +1,78 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54D12868B8
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53C99279DAC;
+	Mon, 23 Jun 2025 15:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750691789; cv=none; b=SRBNGAIjY4FHiMUHeaDRv6JyOXE52yb36mUWizTdfC99BtNCi9BxR5jHq1DhQo7SIfEc6/axUgApZauw+wEkjCEpLc59+ioip7m1U+3cEgEEquCLzAXTp56rjzSoI/xEeM7wpuCNRPyeiKVArTXZBohCKtC4/cvzCGzmdhkXwy0=
+	t=1750691854; cv=none; b=ibmHBByvoLwGE0SaFrQcHcJ3jSwyy/8F8xRpyYv6rVpInbYBKu9tGj4wG4MUZZWN2+OalSqV4G1Z2xP8MOvY++tteYMm/5+o62n7fB+GyPGdXJUKLDEL1DwWsCkDyKqVu6Z/N9ByAjO5fEycCzU3FIDxJp66ZVSR3y5E/0O3+LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750691789; c=relaxed/simple;
-	bh=tTps1bgZeMgIyRyJgAf8j1ySEUwFTEFRO76HEfCVNHs=;
+	s=arc-20240116; t=1750691854; c=relaxed/simple;
+	bh=aj7MQYaw0F3FKWjB1RjA9hHWpq1/xvsjXliOhamT7hM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d4bo7DaQyjdW5SntuTKDnNIsR4w96SPwSqeHhKGh1/iVCPIOcnQSjMJ6wvEpr051n4Ax9jKY/9UDgY90wjOk0Um0jt3JJZg/0Mu8GW7bEuAGhmKYJGaAlekkSBetx4XeTO+k5mMcz8kaCkBf+5ontakuABPguYaKKZyV/PBSzuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sD5PmEZP; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sD5PmEZP"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-72c13802133so1198054a34.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:16:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750691787; x=1751296587; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6IukKYGwsGkuNIehFQ5uVE+/NktpdK3jn5Mck81hCcc=;
-        b=sD5PmEZPBDH7Gxh6c721EhwdNRp6I9zVOP0uQXkQxy4YSIu1teCxMhfQi0WCUBZtbX
-         +pEdNyvuffrUS/VPCUxzWJRgLuHaxN3tWsGPsM8VPN6w/UndADQDJ/DWqW7a3yppBYEF
-         ulb0Pt5HN8XGhrXx8pi5IivZG74YchlCnS6y4AjLA1fO9C5l0im/V2pNzr2FreIJAISx
-         UjIkE6kGmvD3hsJgKvoZyMqen04xGTLArgB2Lr5Fr11pwbBwBiUJzztTE5zRS3DP/rvM
-         MlU+TpEoEdtQWRbLpl+EBiq/Kqoio94NuaDEpG6JjccXe3xCd9bHZz6bXVQoGEccrxOA
-         edIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750691787; x=1751296587;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6IukKYGwsGkuNIehFQ5uVE+/NktpdK3jn5Mck81hCcc=;
-        b=QbXaRngTO5hzbyl/s1M+B94MJiF5AyEjIO2ehwT3DfTtHhMncF+t31SDCe3dGpJ9ye
-         pCKx8kNyXQs2LtQoc0VXAABa0oJrygPYe7hPfX7C8yo4uZvmNW55LIV9lUKwpaKecPtJ
-         7hzIoOEHa77wDQJD7tucNilj3diDrz34SjjhtbHnhYoMcw6zUk66EDFhLZClb/IuScNp
-         iNDsFPW8lOimR7UFoSUuDhC4XvsMOJpGxO0MK4LikuPgIIyFJlZpBVzJ39RhKGxvsRAX
-         jTRDudh/OqU7UqcHLLLpZUJ6WjQAqsl/cOXR9HQjOvLUPgsMz5/Oyn8qYjfQQSid3lda
-         xeoA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0PARdTme2PZ+4plvWS85Iryh1ldZBTR2s8T/dGmkBAucVF7XGeO5eqS4S8ZAUCdWi+xPKBu9BZbvlxew=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDdZvmi9+Q7Dt3ACoMbZCBabyBLYZpBnOGnz6gNQIWYSNY2RxA
-	2DVpG1a2qhsWhbEcOWqDC2CcLVRgp1v5G91oM80YpF6WaM98QSy5B7vHKCQ6ZiO4B6E=
-X-Gm-Gg: ASbGnctLjzpMGKaLGYHmW/OF+ym7vGxYufisYq6wk9Ud6w0+/mH+Ety/sZQ63tCkqeZ
-	j6hekcqsDZ2bZxiJsNaC2aRAh5+9ajKV/8ZCpgVE8v4j5cvjixocC+/zJp99ZoZDO/Zf86DfGin
-	QLNRYkuyZCPMqiJ5J8Pptsm+60OWkY+SYaQE9zAluq7hwjTx2Ydz9jTw6dGjkr63SenKXDOsUk2
-	SmdTFR5JJ6AZU973w2GpwvAb3qNqO4BrjDtw56Kh+R4zfEbIXti4wd4MUnxjlIfMU1HGsJPbSqy
-	kmRQGMRbqAW34wvpeaMNKE3BaThkjG9BQ3vLH7lNKZ7C5J6LkQc+oAwTftQHICtV+iNGOA==
-X-Google-Smtp-Source: AGHT+IHlbM4+Rmaq6vOY5wWyrfoXJ+idmbhQ0NYlP+olIKnC6D1vqqLXRsoxiZ2zwA9HYjiRRt9rYA==
-X-Received: by 2002:a05:6830:6991:b0:72b:9d5e:9429 with SMTP id 46e09a7af769-73a91aeec81mr9759609a34.12.1750691786969;
-        Mon, 23 Jun 2025 08:16:26 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:8c3f:8b5f:5c74:76a9])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a90b33b17sm1466219a34.30.2025.06.23.08.16.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 08:16:26 -0700 (PDT)
-Date: Mon, 23 Jun 2025 18:16:25 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Kisub Choe <kisub.choe.0x1@gmail.com>
-Cc: gregkh@linuxfoundation.org, philipp.g.hortmann@gmail.com,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: replace msleep(1)
-Message-ID: <a775180c-3ecc-4fb9-bd8f-9f8bacba94f9@suswa.mountain>
-References: <aFdAEM6GnCudvqMV@zinc>
- <efa56904-eabf-4493-b064-652d02839c6b@suswa.mountain>
- <aFlmL0DtydfsbFl0@rpi4B8Gs>
+	 Content-Type:Content-Disposition:In-Reply-To; b=EkkgNDT6nsL8khUguxzupUuemKXRJ4uZmwlS/SgkpEkRSNUNngkEC6KAlFbktLamS4RoFN2eOzoN+MnduCwES5Yd4MXbRc1mBEdHxEtNeNRTRcgqMFGKaUKLlx3ADcukRZ8bYbgu4JyYxXV+8GZYXc+S86cpPb/zQ2Pn5p/F+ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A753C1756;
+	Mon, 23 Jun 2025 08:17:14 -0700 (PDT)
+Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21A233F58B;
+	Mon, 23 Jun 2025 08:17:25 -0700 (PDT)
+Date: Mon, 23 Jun 2025 16:17:22 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S . Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>,
+	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+	Xu Xin <xu.xin16@zte.com.cn>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] mm: change vm_get_page_prot() to accept vm_flags_t
+ argument
+Message-ID: <aFlwAhSVMyLA0ttM@arm.com>
+References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
+ <a12769720a2743f235643b158c4f4f0a9911daf0.1750274467.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,35 +81,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aFlmL0DtydfsbFl0@rpi4B8Gs>
+In-Reply-To: <a12769720a2743f235643b158c4f4f0a9911daf0.1750274467.git.lorenzo.stoakes@oracle.com>
 
-On Mon, Jun 23, 2025 at 11:35:27PM +0900, Kisub Choe wrote:
-> On Mon, Jun 23, 2025 at 01:54:01PM +0300, Dan Carpenter wrote:
-> > On Sun, Jun 22, 2025 at 08:28:16AM +0900, Kisub Choe wrote:
-> > > changed msleep to usleep_range to
-> > > 
-> > > Adhere to Linux kernel coding style.
-> > > Reported by checkpatch:
-> > > 
-> > > WARNING: msleep < 20ms can sleep for up to 20ms;
-> > > see function description of msleep().
-> > > 
-> > > Signed-off-by: Kisub Choe <kisub.choe.0x1@gmail.com>
-> > 
-> > This type of change needs to be tested before it can be merged.
-> > 
-> > regards,
-> > dan carpenter
-> > 
+On Wed, Jun 18, 2025 at 08:42:52PM +0100, Lorenzo Stoakes wrote:
+> We abstract the type of the VMA flags to vm_flags_t, however in may places
+> it is simply assumed this is unsigned long, which is simply incorrect.
 > 
-> Thank you for feedback.
-> I understand that this type of change should be tested due to its impact
-> on time-sensitive behavior.
-> However, I currently don't have access to any device that uses this
-> driver.
-> Please let me know how you'd suggest proceeding in this case.
+> At the moment this is simply an incongruity, however in future we plan to
+> change this type and therefore this change is a critical requirement for
+> doing so.
+> 
+> Overall, this patch does not introduce any functional change.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> ---
+>  arch/arm64/mm/mmap.c                       | 2 +-
 
-Just leave it as-is until someone who has the hardware can test it.
+For arm64:
 
-regards,
-dan carpenter
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
