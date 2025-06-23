@@ -1,37 +1,38 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3721F873B;
-	Mon, 23 Jun 2025 07:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BFD20298D;
+	Mon, 23 Jun 2025 07:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750664825; cv=none; b=JNcENpB/nFbK3fQMEEBdWWpwpooheHjItegOTZPXPdBeuq5piihgiSW5ScWN7e0kG5HtddMNd/HrgEQr32QjfOTEgfY2ip2KbCFv1MDg2sfXAw/uU2GO0eL3tyJUyZ6rz6fFAyvleb9/RuXYwbtlbNuL5yVN+lJqlP3qB116PNo=
+	t=1750664826; cv=none; b=XQmajQA5wiibVPUqTu9vGauRVMbh7rmKPQ48G4Esc1IpHHEjsSu4cmj/0NnW6I/aO/czusra+s0hVPQHwyuJ17af59rUS5NzRgU1KY1Fv8fYbpzRe7WeXzZYB5q9dKjDVRWt2wU/YgDp5ghtxeg4/2jbVM+cC6LAiypnrNwxncE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750664825; c=relaxed/simple;
-	bh=gJ2vImNIjZMqWgvCr44KX88669L0OzhjtbTYuJvlBVQ=;
+	s=arc-20240116; t=1750664826; c=relaxed/simple;
+	bh=hSJ7W6iMQ4xKe7LZ1zPyhGNnD5O5rE8E3Ff+PUcoFOs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UV+okVkGPDyvcbSmJCsXn1nNrOJeHbN2mgOYUiQPm4Oo6S5qAHyps8B6JPYGlYq0aCDXEdVH+1GadhV38gVpRYWnlaDnvzUh6b+j2E1N9muNisIZEIVHDANAS6Bfr0GGAfqbrInk+V8uqyQkdY/IX/7/D/2DQA9VS7apFfkDPYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+	 MIME-Version:Content-Type; b=c+mGQJUwD3S4a7QJDRXqvoBkWE9eugOCwsKt4fpnMfgRHjPASYwSuE/r4Yx1ILxjwWXOYAwbXoZO/Al0+jgAHKCPJ5NNs8PDBV1ZyhTbLm38lZh6cX25gqo5EDpBJZuZI+F/LaWepnRZjLGB2yKrn+N8UuAeJ28Bq1qqcZP4FTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bQg6b72mTz2Cfbr;
-	Mon, 23 Jun 2025 15:43:03 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4bQgDF0gRhz2QVJ9;
+	Mon, 23 Jun 2025 15:47:57 +0800 (CST)
 Received: from dggpemf500013.china.huawei.com (unknown [7.185.36.188])
-	by mail.maildlp.com (Postfix) with ESMTPS id 966E61A0188;
-	Mon, 23 Jun 2025 15:47:00 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 526CB18005F;
+	Mon, 23 Jun 2025 15:47:02 +0800 (CST)
 Received: from huawei.com (10.175.112.188) by dggpemf500013.china.huawei.com
  (7.185.36.188) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 23 Jun
- 2025 15:46:59 +0800
+ 2025 15:47:01 +0800
 From: Baokun Li <libaokun1@huawei.com>
 To: <linux-ext4@vger.kernel.org>
 CC: <tytso@mit.edu>, <jack@suse.cz>, <adilger.kernel@dilger.ca>,
 	<ojaswin@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
-	<yi.zhang@huawei.com>, <yangerkun@huawei.com>, <libaokun1@huawei.com>
-Subject: [PATCH v2 07/16] ext4: convert sbi->s_mb_free_pending to atomic_t
-Date: Mon, 23 Jun 2025 15:32:55 +0800
-Message-ID: <20250623073304.3275702-8-libaokun1@huawei.com>
+	<yi.zhang@huawei.com>, <yangerkun@huawei.com>, <libaokun1@huawei.com>,
+	<stable@vger.kernel.org>
+Subject: [PATCH v2 09/16] ext4: fix zombie groups in average fragment size lists
+Date: Mon, 23 Jun 2025 15:32:57 +0800
+Message-ID: <20250623073304.3275702-10-libaokun1@huawei.com>
 X-Mailer: git-send-email 2.46.1
 In-Reply-To: <20250623073304.3275702-1-libaokun1@huawei.com>
 References: <20250623073304.3275702-1-libaokun1@huawei.com>
@@ -46,96 +47,80 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
  dggpemf500013.china.huawei.com (7.185.36.188)
 
-Previously, s_md_lock was used to protect s_mb_free_pending during
-modifications, while smp_mb() ensured fresh reads, so s_md_lock just
-guarantees the atomicity of s_mb_free_pending. Thus we optimized it by
-converting s_mb_free_pending into an atomic variable, thereby eliminating
-s_md_lock and minimizing lock contention. This also prepares for future
-lockless merging of free extents.
+Groups with no free blocks shouldn't be in any average fragment size list.
+However, when all blocks in a group are allocated(i.e., bb_fragments or
+bb_free is 0), we currently skip updating the average fragment size, which
+means the group isn't removed from its previous s_mb_avg_fragment_size[old]
+list.
 
-Following this modification, s_md_lock is exclusively responsible for
-managing insertions and deletions within s_freed_data_list, along with
-operations involving list_splice.
+This created "zombie" groups that were always skipped during traversal as
+they couldn't satisfy any block allocation requests, negatively impacting
+traversal efficiency.
 
-Performance test data follows:
+Therefore, when a group becomes completely free, bb_avg_fragment_size_order
+is now set to -1. If the old order was not -1, a removal operation is
+performed; if the new order is not -1, an insertion is performed.
 
-Test: Running will-it-scale/fallocate2 on CPU-bound containers.
-Observation: Average fallocate operations per container per second.
-
-                   | Kunpeng 920 / 512GB -P80|  AMD 9654 / 1536GB -P96 |
- Disk: 960GB SSD   |-------------------------|-------------------------|
-                   | base  |    patched      | base  |    patched      |
--------------------|-------|-----------------|-------|-----------------|
-mb_optimize_scan=0 | 19699 | 20982 (+6.5%)   | 53093 | 50629 (-4.6%)   |
-mb_optimize_scan=1 | 9862  | 10703 (+8.5%)   | 14401 | 14856 (+3.1%)   |
-
+Fixes: 196e402adf2e ("ext4: improve cr 0 / cr 1 group scanning")
+CC: stable@vger.kernel.org
 Signed-off-by: Baokun Li <libaokun1@huawei.com>
 ---
- fs/ext4/balloc.c  | 2 +-
- fs/ext4/ext4.h    | 2 +-
- fs/ext4/mballoc.c | 9 +++------
- 3 files changed, 5 insertions(+), 8 deletions(-)
+ fs/ext4/mballoc.c | 36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/fs/ext4/balloc.c b/fs/ext4/balloc.c
-index c48fd36b2d74..c9329ed5c094 100644
---- a/fs/ext4/balloc.c
-+++ b/fs/ext4/balloc.c
-@@ -703,7 +703,7 @@ int ext4_should_retry_alloc(struct super_block *sb, int *retries)
- 	 * possible we just missed a transaction commit that did so
- 	 */
- 	smp_mb();
--	if (sbi->s_mb_free_pending == 0) {
-+	if (atomic_read(&sbi->s_mb_free_pending) == 0) {
- 		if (test_opt(sb, DISCARD)) {
- 			atomic_inc(&sbi->s_retry_alloc_pending);
- 			flush_work(&sbi->s_discard_work);
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 294198c05cdd..003b8d3726e8 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -1602,7 +1602,7 @@ struct ext4_sb_info {
- 	unsigned short *s_mb_offsets;
- 	unsigned int *s_mb_maxs;
- 	unsigned int s_group_info_size;
--	unsigned int s_mb_free_pending;
-+	atomic_t s_mb_free_pending;
- 	struct list_head s_freed_data_list[2];	/* List of blocks to be freed
- 						   after commit completed */
- 	struct list_head s_discard_list;
 diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index 216b332a5054..5410fb3688ee 100644
+index 94950b07a577..e6d6c2da3c6e 100644
 --- a/fs/ext4/mballoc.c
 +++ b/fs/ext4/mballoc.c
-@@ -3680,7 +3680,7 @@ int ext4_mb_init(struct super_block *sb)
- 	}
+@@ -841,30 +841,30 @@ static void
+ mb_update_avg_fragment_size(struct super_block *sb, struct ext4_group_info *grp)
+ {
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+-	int new_order;
++	int new, old;
  
- 	spin_lock_init(&sbi->s_md_lock);
--	sbi->s_mb_free_pending = 0;
-+	atomic_set(&sbi->s_mb_free_pending, 0);
- 	INIT_LIST_HEAD(&sbi->s_freed_data_list[0]);
- 	INIT_LIST_HEAD(&sbi->s_freed_data_list[1]);
- 	INIT_LIST_HEAD(&sbi->s_discard_list);
-@@ -3894,10 +3894,7 @@ static void ext4_free_data_in_buddy(struct super_block *sb,
- 	/* we expect to find existing buddy because it's pinned */
- 	BUG_ON(err != 0);
+-	if (!test_opt2(sb, MB_OPTIMIZE_SCAN) || grp->bb_fragments == 0)
++	if (!test_opt2(sb, MB_OPTIMIZE_SCAN))
+ 		return;
  
--	spin_lock(&EXT4_SB(sb)->s_md_lock);
--	EXT4_SB(sb)->s_mb_free_pending -= entry->efd_count;
--	spin_unlock(&EXT4_SB(sb)->s_md_lock);
--
-+	atomic_sub(entry->efd_count, &EXT4_SB(sb)->s_mb_free_pending);
- 	db = e4b.bd_info;
- 	/* there are blocks to put in buddy to make them really free */
- 	count += entry->efd_count;
-@@ -6392,7 +6389,7 @@ ext4_mb_free_metadata(handle_t *handle, struct ext4_buddy *e4b,
+-	new_order = mb_avg_fragment_size_order(sb,
+-					grp->bb_free / grp->bb_fragments);
+-	if (new_order == grp->bb_avg_fragment_size_order)
++	old = grp->bb_avg_fragment_size_order;
++	new = grp->bb_fragments == 0 ? -1 :
++	      mb_avg_fragment_size_order(sb, grp->bb_free / grp->bb_fragments);
++	if (new == old)
+ 		return;
  
- 	spin_lock(&sbi->s_md_lock);
- 	list_add_tail(&new_entry->efd_list, &sbi->s_freed_data_list[new_entry->efd_tid & 1]);
--	sbi->s_mb_free_pending += clusters;
-+	atomic_add(clusters, &sbi->s_mb_free_pending);
- 	spin_unlock(&sbi->s_md_lock);
+-	if (grp->bb_avg_fragment_size_order != -1) {
+-		write_lock(&sbi->s_mb_avg_fragment_size_locks[
+-					grp->bb_avg_fragment_size_order]);
++	if (old >= 0) {
++		write_lock(&sbi->s_mb_avg_fragment_size_locks[old]);
+ 		list_del(&grp->bb_avg_fragment_size_node);
+-		write_unlock(&sbi->s_mb_avg_fragment_size_locks[
+-					grp->bb_avg_fragment_size_order]);
+-	}
+-	grp->bb_avg_fragment_size_order = new_order;
+-	write_lock(&sbi->s_mb_avg_fragment_size_locks[
+-					grp->bb_avg_fragment_size_order]);
+-	list_add_tail(&grp->bb_avg_fragment_size_node,
+-		&sbi->s_mb_avg_fragment_size[grp->bb_avg_fragment_size_order]);
+-	write_unlock(&sbi->s_mb_avg_fragment_size_locks[
+-					grp->bb_avg_fragment_size_order]);
++		write_unlock(&sbi->s_mb_avg_fragment_size_locks[old]);
++	}
++
++	grp->bb_avg_fragment_size_order = new;
++	if (new >= 0) {
++		write_lock(&sbi->s_mb_avg_fragment_size_locks[new]);
++		list_add_tail(&grp->bb_avg_fragment_size_node,
++				&sbi->s_mb_avg_fragment_size[new]);
++		write_unlock(&sbi->s_mb_avg_fragment_size_locks[new]);
++	}
  }
  
+ /*
 -- 
 2.46.1
 
