@@ -1,250 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CA9231836;
-	Mon, 23 Jun 2025 09:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AC11DDA0C;
+	Mon, 23 Jun 2025 09:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750670230; cv=none; b=q6KZFWQw9K9DvYgJ7KMJy+dAAt8jR7yIbx/Kh2LMlsSZAummbxEmeLvqW8z8oSDb+nUZx4xq8kie9SljyrIvZf9HOqhj2BP+hoS0tGWQR4xZI6IPhW5ksqWaw/emjhbWGM2CGerkNbF6DQslHkIE/qbKKI31aCcOVc05S8EclFY=
+	t=1750670267; cv=none; b=TehgrWhqQh6UtcZgTR5xLXidOZcR7Z6ZAC4fDTJ7LTntUeEw5EhUpHVV+9jStrLTFEaP5o6fiBYt9fnydx1aNwOYn9UYafOUrSEKN6GRE4GjQnyG/erCIUtXb89nUGy8CIu50cEsrJgP5900sKJx0fRFuYd1l7gsAEBr10pT1cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750670230; c=relaxed/simple;
-	bh=lTDfnouWRD6t3V6geE9rp1WNIhalLtWBgQjfMtQEnOE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RFVsJ5rkRmcWsqdZQfCcU1KhuatVvQCEy2tpKWaqJChX5X+ATplg/9HvwYegYcn+6rLPD34pr7r48OesiriaItEaseo98wdDu2bkgzHAlrWb8shAororhcn+8c0cmjinTxZJmuqO2GCxDuGYM2f5W0UiYy6u+PrdYAp1EksnGC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MUME+Uqq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MUME+Uqq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52D14C4CEEA;
-	Mon, 23 Jun 2025 09:17:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750670229;
-	bh=lTDfnouWRD6t3V6geE9rp1WNIhalLtWBgQjfMtQEnOE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MUME+Uqqq7s2+T36iA3RvUi0SBjyyMkJl4SKlUBTXtmPzHi9j5RO+ycfMilJ6C3Uq
-	 1zVHxG+wHBKMObnmE7sQ/Ectd5HvvSM72v/DU8SS7fB8R8/5ntX7X3x4C1+aWSlb2f
-	 +H/czKXjOmY5DiWiZwyUOoQZhJXYNxvsK1ipFnhaP0wHgAMJaOGYUqoZnTihupqz58
-	 6OPULul71gq+mtpKTkoNclWpgN54UN/A44+HHw5XaeTinNqlDII279RmCLCN7e1IGx
-	 URCfyoehLGA9gGBPvJZBTUj0pLiXEkrIatkLzFCBaGQohZtRM8irQBy7nEteiB8887
-	 2SC+iQuUK1JCQ==
-Message-ID: <682a48fc-8451-46e5-b3a8-5ad7c237588e@kernel.org>
-Date: Mon, 23 Jun 2025 11:17:05 +0200
+	s=arc-20240116; t=1750670267; c=relaxed/simple;
+	bh=Lz+4noPkADPzOVza6QdPRsZLH7WjZAqND7jwzSRYIug=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qkedgW+vnxcKqZao8hjTFYPu6saNEu0kN6cQUYZWtUdTHCPTH14+B9MSv9BLdH4B0FikUSjgdk6KEFLWKv94reu5vGuOrYe6Qdx86k+PC23qxZKx1CH1CAtkkoSF5EJ4Ze7VA8QwN2WXTuvAOthG2bCuR3u5WaI/OYUhvgzSCoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQj90252dz6HJqs;
+	Mon, 23 Jun 2025 17:15:16 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id E5FD81402EF;
+	Mon, 23 Jun 2025 17:17:42 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
+ 2025 11:17:42 +0200
+Date: Mon, 23 Jun 2025 10:17:40 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Neeraj Kumar <s.neeraj@samsung.com>
+CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>,
+	<anisa.su@samsung.com>, <vishak.g@samsung.com>, <krish.reddy@samsung.com>,
+	<arun.george@samsung.com>, <alok.rathore@samsung.com>,
+	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<gost.dev@samsung.com>, <cpgs@samsung.com>
+Subject: Re: [RFC PATCH 12/20] nvdimm/namespace_label: Skip region label
+ during namespace creation
+Message-ID: <20250623101740.00004840@huawei.com>
+In-Reply-To: <2024918163.301750165206130.JavaMail.epsvc@epcpadp1new>
+References: <20250617123944.78345-1-s.neeraj@samsung.com>
+	<CGME20250617124040epcas5p3be044cbdc5b33b0b8465d84870a5b280@epcas5p3.samsung.com>
+	<2024918163.301750165206130.JavaMail.epsvc@epcpadp1new>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] spi: Add Amlogic SPISG driver
-To: xianwei.zhao@amlogic.com, Sunny Luo <sunny.luo@amlogic.com>,
- Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-amlogic@lists.infradead.org, linux-spi@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250623-spisg-v3-0-c731f57e289c@amlogic.com>
- <20250623-spisg-v3-2-c731f57e289c@amlogic.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250623-spisg-v3-2-c731f57e289c@amlogic.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 23/06/2025 10:53, Xianwei Zhao via B4 Relay wrote:
-> From: Sunny Luo <sunny.luo@amlogic.com>
+On Tue, 17 Jun 2025 18:09:36 +0530
+Neeraj Kumar <s.neeraj@samsung.com> wrote:
+
+> During namespace creation skip presence of region label if present.
+> Also preserve region label into labels list if present.
 > 
-> Introduced support for the new SPI IP (SPISG) driver. The SPISG is
-> a communication-oriented SPI controller from Amlogic,supporting
-> three operation modes: PIO, block DMA, and scatter-gather DMA.
-> 
-> Signed-off-by: Sunny Luo <sunny.luo@amlogic.com>
-> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
 > ---
->  drivers/spi/Kconfig             |   9 +
->  drivers/spi/Makefile            |   1 +
->  drivers/spi/spi-amlogic-spisg.c | 876 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 886 insertions(+)
+>  drivers/nvdimm/namespace_devs.c | 48 +++++++++++++++++++++++++++++----
+>  1 file changed, 43 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-> index c51da3fc3604..e11341df2ecf 100644
-> --- a/drivers/spi/Kconfig
-> +++ b/drivers/spi/Kconfig
-> @@ -99,6 +99,15 @@ config SPI_AMLOGIC_SPIFC_A1
->  	  This enables master mode support for the SPIFC (SPI flash
->  	  controller) available in Amlogic A1 (A113L SoC).
+> diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+> index b081661b7aaa..ca8f8546170c 100644
+> --- a/drivers/nvdimm/namespace_devs.c
+> +++ b/drivers/nvdimm/namespace_devs.c
+> @@ -1976,6 +1976,10 @@ static struct device **scan_labels(struct nd_region *nd_region)
+>  		if (!nd_label)
+>  			continue;
 >  
-> +config SPI_AMLOGIC_SPISG
-> +	tristate "Amlogic SPISG controller"
-> +	depends on COMMON_CLK
-> +	depends on ARCH_MESON || COMPILE_TEST
-> +	help
-> +	  This enables master mode support for the SPISG (SPI scatter-gather
-> +	  communication controller), which is available on platforms such as
-> +	  Amlogic A4 SoCs.
+> +		/* skip region labels if present */
+> +		if (is_region_label(ndd, nd_label))
+> +			continue;
 > +
->  config SPI_APPLE
->  	tristate "Apple SoC SPI Controller platform driver"
->  	depends on ARCH_APPLE || COMPILE_TEST
-> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-> index 4ea89f6fc531..b74e3104d71f 100644
-> --- a/drivers/spi/Makefile
-> +++ b/drivers/spi/Makefile
-> @@ -20,6 +20,7 @@ obj-$(CONFIG_SPI_ALTERA)		+= spi-altera-platform.o
->  obj-$(CONFIG_SPI_ALTERA_CORE)		+= spi-altera-core.o
->  obj-$(CONFIG_SPI_ALTERA_DFL)		+= spi-altera-dfl.o
->  obj-$(CONFIG_SPI_AMLOGIC_SPIFC_A1)	+= spi-amlogic-spifc-a1.o
-> +obj-$(CONFIG_SPI_AMLOGIC_SPISG)		+= spi-amlogic-spisg.o
->  obj-$(CONFIG_SPI_APPLE)			+= spi-apple.o
->  obj-$(CONFIG_SPI_AR934X)		+= spi-ar934x.o
->  obj-$(CONFIG_SPI_ARMADA_3700)		+= spi-armada-3700.o
-> diff --git a/drivers/spi/spi-amlogic-spisg.c b/drivers/spi/spi-amlogic-spisg.c
-> new file mode 100644
-> index 000000000000..2f2982154d49
-> --- /dev/null
-> +++ b/drivers/spi/spi-amlogic-spisg.c
-> @@ -0,0 +1,876 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Driver for Amlogic SPI communication Scatter-Gather Controller
-> + *
-> + * Copyright (C) 2025 Amlogic, Inc. All rights reserved
-> + *
-> + * Author: Sunny Luo <sunny.luo@amlogic.com>
-> + * Author: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> + */
+>  		/* skip labels that describe extents outside of the region */
+>  		if (nsl_get_dpa(ndd, &nd_label->ns_label) < nd_mapping->start ||
+>  		    nsl_get_dpa(ndd, &nd_label->ns_label) > map_end)
+> @@ -2014,9 +2018,29 @@ static struct device **scan_labels(struct nd_region *nd_region)
+>  
+>  	if (count == 0) {
+>  		struct nd_namespace_pmem *nspm;
+> +		for (i = 0; i < nd_region->ndr_mappings; i++) {
+> +			struct nd_label_ent *le, *e;
+> +			LIST_HEAD(list);
+>  
+> -		/* Publish a zero-sized namespace for userspace to configure. */
+> -		nd_mapping_free_labels(nd_mapping);
+> +			nd_mapping = &nd_region->mapping[i];
+> +			if (list_empty(&nd_mapping->labels))
+> +				continue;
 > +
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/pm_domain.h>
-
-cacheflush
-
-> +#include <linux/platform_device.h>
-> +#include <linux/spi/spi.h>
-> +#include <linux/types.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/reset.h>
-
-So this you take to reset device... but your device does not have any
-resets! Just look at your binding.
-
-> +#include <linux/pinctrl/consumer.h>
-> +#include <linux/delay.h>
-> +#include <linux/cacheflush.h>
-
-Where do you use it?
-
-> +#include <linux/regmap.h>
-
-Actually several other headers looks unused. I am not going to keep
-checking one by one - you should check and do not include irrelevant
-headers.
-
+> +			list_for_each_entry_safe(le, e, &nd_mapping->labels,
+> +						 list) {
+> +				struct nd_lsa_label *nd_label = le->label;
 > +
-> +static int aml_spisg_probe(struct platform_device *pdev)
-> +{
-> +	struct spi_controller *ctlr;
-> +	struct spisg_device *spisg;
-> +	struct device *dev = &pdev->dev;
-> +	void __iomem *base;
-> +	int ret, irq;
+> +				/* preserve region labels if present */
+> +				if (is_region_label(ndd, nd_label))
+> +					list_move_tail(&le->list, &list);
+> +			}
 > +
-> +	const struct regmap_config aml_regmap_config = {
-> +		.reg_bits = 32,
-> +		.val_bits = 32,
-> +		.reg_stride = 4,
-> +		.max_register = SPISG_MAX_REG,
-> +	};
+> +			/* Publish a zero-sized namespace for userspace
+
+Comment syntax as before looks to be inconsistent with file.
+
+> +			 * to configure.
+> +			 */
+> +			nd_mapping_free_labels(nd_mapping);
+> +			list_splice_init(&list, &nd_mapping->labels);
+> +		}
+>  		nspm = kzalloc(sizeof(*nspm), GFP_KERNEL);
+>  		if (!nspm)
+>  			goto err;
+> @@ -2028,7 +2052,7 @@ static struct device **scan_labels(struct nd_region *nd_region)
+>  	} else if (is_memory(&nd_region->dev)) {
+>  		/* clean unselected labels */
+>  		for (i = 0; i < nd_region->ndr_mappings; i++) {
+> -			struct list_head *l, *e;
+> +			struct nd_label_ent *le, *e;
+>  			LIST_HEAD(list);
+>  			int j;
+>  
+> @@ -2039,10 +2063,24 @@ static struct device **scan_labels(struct nd_region *nd_region)
+>  			}
+>  
+>  			j = count;
+> -			list_for_each_safe(l, e, &nd_mapping->labels) {
+> +			list_for_each_entry_safe(le, e, &nd_mapping->labels,
+> +						 list) {
+> +				struct nd_lsa_label *nd_label = le->label;
 > +
-> +	if (of_property_read_bool(dev->of_node, "slave"))
-
-"slave" is not a bool. You want to check for child presence, don't you?
-You need to use appropriate API for that otherwise you just add one of
-the issues which was being fixed recently.
-
-> +		ctlr = spi_alloc_target(dev, sizeof(*spisg));
-> +	else
-> +		ctlr = spi_alloc_host(dev, sizeof(*spisg));
-> +	if (!ctlr)
-> +		return dev_err_probe(dev, -ENOMEM, "controller allocation failed\n");
+> +				/* preserve region labels */
+> +				if (is_region_label(ndd, nd_label)) {
+> +					list_move_tail(&le->list, &list);
+> +					continue;
+> +				}
 > +
-
-
-
+> +				/* Once preserving selected ns label done
+Comment syntax.
+> +				 * break out of loop
+> +				 */
+>  				if (!j--)
+>  					break;
+> -				list_move_tail(l, &list);
 > +
-> +static struct platform_driver amlogic_spisg_driver = {
-> +	.probe = aml_spisg_probe,
-> +	.remove = aml_spisg_remove,
-> +	.driver  = {
-> +		.name = "amlogic-spisg",
-> +		.of_match_table = of_match_ptr(amlogic_spisg_of_match),
+> +				/* preserve selected ns label */
+> +				list_move_tail(&le->list, &list);
+>  			}
+>  			nd_mapping_free_labels(nd_mapping);
+>  			list_splice_init(&list, &nd_mapping->labels);
 
-So now you will have warnings... drop of_match_ptr.
-
-Both suggest you send us some old code, instead of working on something
-recent.
-
-> +		.pm = &amlogic_spisg_pm_ops,
-> +	},
-> +};
-> +
-> +module_platform_driver(amlogic_spisg_driver);
-> +
-> +MODULE_DESCRIPTION("Amlogic SPI Scatter-Gather Controller driver");
-> +MODULE_AUTHOR("Sunny Luo <sunny.luo@amlogic.com>");
-> +MODULE_LICENSE("GPL");
-> 
-
-
-Best regards,
-Krzysztof
