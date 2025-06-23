@@ -1,88 +1,296 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC02188CC9;
-	Mon, 23 Jun 2025 11:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3F7188CC9
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750679799; cv=none; b=OBK23N7lB+N9ASKduyeI2TFPIzkJDJBpd6iB20nKAIMRmzkB5LLDOsk6BkkH2oRJfstBRKyrCYAtvT7pOIZquAwtkLVA1kWSBatSJXl7IQKrgMPytPtdlXb9BgubcsTD0G1R++jDFebCCrsaodLnQgiavB4s8XvGTyBcgK+Wo5I=
+	t=1750679805; cv=none; b=fKIAwV87OW40KRVB59LLsFD79qvsHX5/lSu71hz47OcUPwJJHvcqtz3Xdcv/RmytV+Ai7ypl58TrhvvLOH9Oq0m5t3gqrpbIfbxKxqCOo7D6L+3uysgywBKyF+K2QO479T3qYSWktJBL7GX30ixJ85vPkn9JVX9vd4w/8zEWSr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750679799; c=relaxed/simple;
-	bh=AsVQmS7bq9T9Ijg20TqdcrkVwjG2XZOy1DlfOyQadUk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O7t/ySxOC5RQz0o3FpYspIiXIwDyCX8QD43IJj6yDRFFBlXY9vd0zxvtuB9wsKx3oMIMZ/l2FdVctnfa+V78+ewX9ierpPMCOd0gBPMrK8D6W5ELQRC0YStjc/FkClrKEzLzvDoi+Iq+lVy7jdETKjZnxgOOFXnCgg0z00swTmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eYO9Ayvf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750679805; c=relaxed/simple;
+	bh=UbxiP1HMzgRKP4//469z6CJnvQrWp32Me/Ig5nIpoJo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=jyZqlZLUqlh5ikGXAWnQgOPQvEKXkQsw1B5K0agTYP5DUTT75SRep3CzbkfcGUCBPg/g70lxZ9nioXTGP1PdFwV41n3wGzC0sqSnESt9aFkDdulQ7q43vswA6qUlb5Ess6a7aFo1oadiGPoP1aS6Ocy0/A7SGwg2UDIk9jqigQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MAL5Igze; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eYO9Ayvf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAE3FC4CEEA;
-	Mon, 23 Jun 2025 11:56:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750679799;
-	bh=AsVQmS7bq9T9Ijg20TqdcrkVwjG2XZOy1DlfOyQadUk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eYO9AyvfD1Fz12Pekiy5r2TdUATUkIEbIktIoz7diA6XFKJlJu0RgwJgEoLbamMe5
-	 uHDyeLh7EMagUSkc4xJidI9CDc2mKgPJdzqiiwDTdcyeuWyysODXqx0Ve+H5vcTlfa
-	 r3mcsjw1990DowcUvxawUEwz2DIXBPZ0Gj87pHGt5urPD5CzBIfxcpgZCe1vRk1uF9
-	 aR++hwdpSEwxqrIiY8cys7+B1aT0RWrADkbY/yCbGt+R+vXhbL7RtHLiwz94OaCGke
-	 6CCVGRCfEnwA94MwelBPKOkziRkyuB99y/OvrdaSbsHGZYv4amEk4NDdcGe67Xvoa6
-	 F/uJSbFV0k25w==
-From: Christian Brauner <brauner@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	Miguel Ojeda <ojeda@kernel.org>
-Subject: Re: [PATCH] poll: rust: allow poll_table ptrs to be null
-Date: Mon, 23 Jun 2025 13:56:27 +0200
-Message-ID: <20250623-gigant-luftraum-ff854d561474@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250620-poll-table-null-v1-1-b3fe92a4fd0d@google.com>
-References: <20250620-poll-table-null-v1-1-b3fe92a4fd0d@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MAL5Igze"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-45334219311so19831035e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 04:56:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750679802; x=1751284602; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WznfPCr3ji0Qd/N5x0pdDuthOqQFGi24UpC7Z0hlolI=;
+        b=MAL5IgzemLl1F9GKalaEsxRq6WVvyFphgHSRmEZgCiqbqbfQjawc/yQxNB9T2bXboK
+         0O/ee3jPMshAAj/yGbmDn3fLUTv+Ve/SQpH5nHK2apNJJW8ydY12EjKSjM9DlxGvUFiZ
+         Qk0ZZwMbeUPK+svNB0eoule9wdI9BriZE8Ja5ttg9TzvNjbkMElRM5CxOSUAnU4UnYOX
+         VlBWyET8LbaV1BRvnvWDACZDdmvDzG20sAJ1/EDW4VUTH7TPmnXi/RrBlum0WRXrZZxh
+         ys4BTfq75BoctV7eNnulFtqydtq1whj564kPtD+yKtNt/jGjsFJeTrW6kdcfY2OsGl/F
+         qAJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750679802; x=1751284602;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WznfPCr3ji0Qd/N5x0pdDuthOqQFGi24UpC7Z0hlolI=;
+        b=FnU7Fl7I8QSFfSFqIPFX7In0Y0vJ1QTAMTSapLfLQMcfk9zOlkAkvhnZ7P0JF6JHfN
+         f+ouwMtkwz2Y2eF7+Px52EeUk22de+TbnHtvj8q8DwwtEhd9uSAwjn2VJxV1wlmfqnCx
+         y0wfSbPaOZPgHp/LUSqpz1d7FtlTvuv5d7B5M1Mm9ClOnrFQcX6dcf/pUwwqjZdGiAdm
+         LIBMsRHimPULBzz6M5qCa/5Wxu7eL+NGXQ8AWOAnVFdaCEhhPfagcbU/i/keIOiCfBGw
+         VM1LXUriTlxlecke4UFwp/V/8Q72V/NiUwSZfakumSMJ3Z0V2PpGr1LoIhWuUY4BvEAg
+         1d5w==
+X-Forwarded-Encrypted: i=1; AJvYcCXEVKBc+yDhXptT8XnC/omhNrupd1j4Utpy0M6Y160keUshS4s7ux6OFIpyECEJ2kOAKQzVv11B3+47cWk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIr4vxuoDcn1oZFONKXRxhu9SKOOGjStIxXnbtJhMyv4/c31aN
+	ufjUzG2+Z7aJyjShvwrNtz99/7YwgQFCt5VHqw146FJTn8SfyXoBfGYT2s9BPKCsdLs1YkTJPXB
+	tQsJgS63kjBew4vtX8Q==
+X-Google-Smtp-Source: AGHT+IFAk0L7Yy/cvufYoYyUIG8/CK919SkwakepzRxAgIht3daWeoHvt9gxR2iHyoZC4EAiRssQv2HNLcAs0IU=
+X-Received: from wmbfs5.prod.google.com ([2002:a05:600c:3f85:b0:450:cfda:ece7])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:5025:b0:450:d386:1afb with SMTP id 5b1f17b1804b1-453659c5915mr133240875e9.9.1750679801773;
+ Mon, 23 Jun 2025 04:56:41 -0700 (PDT)
+Date: Mon, 23 Jun 2025 11:56:39 +0000
+In-Reply-To: <20250622164050.20358-3-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20250622164050.20358-1-dakr@kernel.org> <20250622164050.20358-3-dakr@kernel.org>
+Message-ID: <aFlA92ooeQsSThLh@google.com>
+Subject: Re: [PATCH v2 2/4] rust: devres: replace Devres::new_foreign_owned()
+From: Alice Ryhl <aliceryhl@google.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org, 
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org, 
+	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com, 
+	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, Dave Airlie <airlied@redhat.com>, 
+	Simona Vetter <simona.vetter@ffwll.ch>, Viresh Kumar <viresh.kumar@linaro.org>
 Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1288; i=brauner@kernel.org; h=from:subject:message-id; bh=AsVQmS7bq9T9Ijg20TqdcrkVwjG2XZOy1DlfOyQadUk=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWREOnywV3irX9L95ojuXt4t2/OaJ2yPO+Fv+l7L7965W SbP3FYs7ChlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZiIxgKG/+ELXvxyfhGcUp15 S/OXw36lGT+iPTwr5+ReCZkYZmjF+J3hf3Shv69MluUcY22GKbK5x6LWOH3s6T598cOTrl+Kp2M teAE=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
 
-On Fri, 20 Jun 2025 11:49:35 +0000, Alice Ryhl wrote:
-> It's possible for a poll_table to be null. This can happen if an
-> end-user just wants to know if a resource has events right now without
-> registering a waiter for when events become available. Furthermore,
-> these null pointers should be handled transparently by the API, so we
-> should not change `from_ptr` to return an `Option`. Thus, change
-> `PollTable` to wrap a raw pointer rather than use a reference so that
-> you can pass null.
+On Sun, Jun 22, 2025 at 06:40:39PM +0200, Danilo Krummrich wrote:
+> Replace Devres::new_foreign_owned() with devres::register().
 > 
-> [...]
+> The current implementation of Devres::new_foreign_owned() creates a full
+> Devres container instance, including the internal Revocable and
+> completion.
+> 
+> However, none of that is necessary for the intended use of giving full
+> ownership of an object to devres and getting it dropped once the given
+> device is unbound.
+> 
+> Hence, implement devres::register(), which is limited to consume the
+> given data, wrap it in a KBox and drop the KBox once the given device is
+> unbound, without any other synchronization.
+> 
+> Cc: Dave Airlie <airlied@redhat.com>
+> Cc: Simona Vetter <simona.vetter@ffwll.ch>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
-Applied to the vfs-6.17.rust branch of the vfs/vfs.git tree.
-Patches in the vfs-6.17.rust branch should appear in linux-next soon.
+overall looks good
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+>  rust/helpers/device.c     |  7 ++++
+>  rust/kernel/cpufreq.rs    | 11 +++---
+>  rust/kernel/devres.rs     | 70 +++++++++++++++++++++++++++++++++------
+>  rust/kernel/drm/driver.rs | 14 ++++----
+>  4 files changed, 82 insertions(+), 20 deletions(-)
+> 
+> diff --git a/rust/helpers/device.c b/rust/helpers/device.c
+> index b2135c6686b0..502fef7e9ae8 100644
+> --- a/rust/helpers/device.c
+> +++ b/rust/helpers/device.c
+> @@ -8,3 +8,10 @@ int rust_helper_devm_add_action(struct device *dev,
+>  {
+>  	return devm_add_action(dev, action, data);
+>  }
+> +
+> +int rust_helper_devm_add_action_or_reset(struct device *dev,
+> +					 void (*action)(void *),
+> +					 void *data)
+> +{
+> +	return devm_add_action_or_reset(dev, action, data);
+> +}
+> diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
+> index 11b03e9d7e89..dd84e2b4d7ae 100644
+> --- a/rust/kernel/cpufreq.rs
+> +++ b/rust/kernel/cpufreq.rs
+> @@ -13,7 +13,7 @@
+>      cpu::CpuId,
+>      cpumask,
+>      device::{Bound, Device},
+> -    devres::Devres,
+> +    devres,
+>      error::{code::*, from_err_ptr, from_result, to_result, Result, VTABLE_DEFAULT_ERROR},
+>      ffi::{c_char, c_ulong},
+>      prelude::*,
+> @@ -1046,10 +1046,13 @@ pub fn new() -> Result<Self> {
+>  
+>      /// Same as [`Registration::new`], but does not return a [`Registration`] instance.
+>      ///
+> -    /// Instead the [`Registration`] is owned by [`Devres`] and will be revoked / dropped, once the
+> +    /// Instead the [`Registration`] is owned by [`devres::register`] and will be dropped, once the
+>      /// device is detached.
+> -    pub fn new_foreign_owned(dev: &Device<Bound>) -> Result {
+> -        Devres::new_foreign_owned(dev, Self::new()?, GFP_KERNEL)
+> +    pub fn new_foreign_owned(dev: &Device<Bound>) -> Result
+> +    where
+> +        T: 'static,
+> +    {
+> +        devres::register(dev, Self::new()?, GFP_KERNEL)
+>      }
+>  }
+>  
+> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+> index 544e50efab43..250073749279 100644
+> --- a/rust/kernel/devres.rs
+> +++ b/rust/kernel/devres.rs
+> @@ -9,12 +9,12 @@
+>      alloc::Flags,
+>      bindings,
+>      device::{Bound, Device},
+> -    error::{Error, Result},
+> +    error::{to_result, Error, Result},
+>      ffi::c_void,
+>      prelude::*,
+>      revocable::{Revocable, RevocableGuard},
+>      sync::{rcu, Arc, Completion},
+> -    types::ARef,
+> +    types::{ARef, ForeignOwnable},
+>  };
+>  
+>  #[pin_data]
+> @@ -184,14 +184,6 @@ pub fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Self> {
+>          Ok(Devres(inner))
+>      }
+>  
+> -    /// Same as [`Devres::new`], but does not return a `Devres` instance. Instead the given `data`
+> -    /// is owned by devres and will be revoked / dropped, once the device is detached.
+> -    pub fn new_foreign_owned(dev: &Device<Bound>, data: T, flags: Flags) -> Result {
+> -        let _ = DevresInner::new(dev, data, flags)?;
+> -
+> -        Ok(())
+> -    }
+> -
+>      /// Obtain `&'a T`, bypassing the [`Revocable`].
+>      ///
+>      /// This method allows to directly obtain a `&'a T`, bypassing the [`Revocable`], by presenting
+> @@ -261,3 +253,61 @@ fn drop(&mut self) {
+>          }
+>      }
+>  }
+> +
+> +/// Consume `data` and [`Drop::drop`] `data` once `dev` is unbound.
+> +fn register_foreign<P: ForeignOwnable>(dev: &Device<Bound>, data: P) -> Result {
+> +    let ptr = data.into_foreign();
+> +
+> +    #[allow(clippy::missing_safety_doc)]
+> +    unsafe extern "C" fn callback<P: ForeignOwnable>(ptr: *mut kernel::ffi::c_void) {
+> +        // SAFETY: `ptr` is the pointer to the `ForeignOwnable` leaked above and hence valid.
+> +        let _ = unsafe { P::from_foreign(ptr.cast()) };
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+Nit: I usually write this
+drop(unsafe { P::from_foreign(ptr.cast()) });
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+> +    }
+> +
+> +    // SAFETY:
+> +    // - `dev.as_raw()` is a pointer to a valid and bound device.
+> +    // - `ptr` is a valid pointer the `ForeignOwnable` devres takes ownership of.
+> +    to_result(unsafe {
+> +        // `devm_add_action_or_reset()` also calls `callback` on failure, such that the
+> +        // `ForeignOwnable` is released eventually.
+> +        bindings::devm_add_action_or_reset(dev.as_raw(), Some(callback::<P>), ptr.cast())
+> +    })
+> +}
+> +
+> +/// Encapsulate `data` in a [`KBox`] and [`Drop::drop`] `data` once `dev` is unbound.
+> +///
+> +/// # Examples
+> +///
+> +/// ```no_run
+> +/// use kernel::{device::{Bound, Device}, devres};
+> +///
+> +/// /// Registration of e.g. a class device, IRQ, etc.
+> +/// struct Registration;
+> +///
+> +/// impl Registration {
+> +///     fn new() -> Self {
+> +///         // register
+> +///
+> +///         Self
+> +///     }
+> +/// }
+> +///
+> +/// impl Drop for Registration {
+> +///     fn drop(&mut self) {
+> +///        // unregister
+> +///     }
+> +/// }
+> +///
+> +/// fn from_bound_context(dev: &Device<Bound>) -> Result {
+> +///     devres::register(dev, Registration::new(), GFP_KERNEL)
+> +/// }
+> +/// ```
+> +pub fn register<T, E>(dev: &Device<Bound>, data: impl PinInit<T, E>, flags: Flags) -> Result
+> +where
+> +    T: 'static,
+> +    Error: From<E>,
+> +{
+> +    let data = KBox::pin_init(data, flags)?;
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.17.rust
+Wouldn't we also want to expose the ForeignOwnable version? It seems
+likely someone would want to avoid the allocation.
 
-[1/1] poll: rust: allow poll_table ptrs to be null
-      https://git.kernel.org/vfs/vfs/c/6efbf978891b
+> +    register_foreign(dev, data)
+> +}
+> diff --git a/rust/kernel/drm/driver.rs b/rust/kernel/drm/driver.rs
+> index acb638086131..f63addaf7235 100644
+> --- a/rust/kernel/drm/driver.rs
+> +++ b/rust/kernel/drm/driver.rs
+> @@ -5,9 +5,7 @@
+>  //! C header: [`include/linux/drm/drm_drv.h`](srctree/include/linux/drm/drm_drv.h)
+>  
+>  use crate::{
+> -    bindings, device,
+> -    devres::Devres,
+> -    drm,
+> +    bindings, device, devres, drm,
+>      error::{to_result, Result},
+>      prelude::*,
+>      str::CStr,
+> @@ -130,18 +128,22 @@ fn new(drm: &drm::Device<T>, flags: usize) -> Result<Self> {
+>      }
+>  
+>      /// Same as [`Registration::new`}, but transfers ownership of the [`Registration`] to
+> -    /// [`Devres`].
+> +    /// [`devres::register`].
+>      pub fn new_foreign_owned(
+>          drm: &drm::Device<T>,
+>          dev: &device::Device<device::Bound>,
+>          flags: usize,
+> -    ) -> Result {
+> +    ) -> Result
+> +    where
+> +        T: 'static,
+> +    {
+>          if drm.as_ref().as_raw() != dev.as_raw() {
+>              return Err(EINVAL);
+>          }
+>  
+>          let reg = Registration::<T>::new(drm, flags)?;
+> -        Devres::new_foreign_owned(dev, reg, GFP_KERNEL)
+> +
+> +        devres::register(dev, reg, GFP_KERNEL)
+>      }
+>  
+>      /// Returns a reference to the `Device` instance for this registration.
+> -- 
+> 2.49.0
+> 
