@@ -1,103 +1,128 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7241DE4E6;
-	Mon, 23 Jun 2025 09:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621B0230BFB;
+	Mon, 23 Jun 2025 09:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750669869; cv=none; b=cuEKGVNwiCvU6RHQPCc39XFVMzQegr1fyuq1fti1TslG4swX5uHJ7NvQowe/EN3v53WTGnw5c+unhuKQYWzBKspTcb359+MBUe6dtW+7+9G5TF0FuL4h3aAu0U73xW4yZd8VoAKuP0Rv7EGROIhhY1Cs0bIBqXyGJdKQxijnysc=
+	t=1750669870; cv=none; b=B258clcwxfuaAanw+Kto0jFoOZTaSvAdgQQRYehWdNW/TodfbDtEY6twXt3zJznJavCODHaBG2DQ38mMV+lF/3OhqLjm3pxXfMRx6Nq2sRZlxhkNCJBBkFFNjn5U6xeSa/3oDfSZUbNZCiUQnb8/NwqTB4/nVFbup80gnt281Qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750669869; c=relaxed/simple;
-	bh=o569LL4BEBDrc3m63XJIygE9Fr1C6eR3/WlRs2aoNLY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bd5irpD9bPKLf4ircF8CQIxZ+TRJgmPJSXDFhoXHzP1adJX0tLVrzIwcPGNo+V6+3ywfdTgu42N7eJ9p4aQOOTV92ZbRVr74h1dgfpd6/PsLh7hY1G5gPFzFcxmYmLYSCCi7CpGBkLr7tNaRJXUkArjb8JHXiogvUpRFx7rJGiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQj1M3qsqz6HJqS;
-	Mon, 23 Jun 2025 17:08:39 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 29A941402F6;
-	Mon, 23 Jun 2025 17:11:06 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
- 2025 11:11:05 +0200
-Date: Mon, 23 Jun 2025 10:11:04 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Neeraj Kumar <s.neeraj@samsung.com>
-CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>,
-	<anisa.su@samsung.com>, <vishak.g@samsung.com>, <krish.reddy@samsung.com>,
-	<arun.george@samsung.com>, <alok.rathore@samsung.com>,
-	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<gost.dev@samsung.com>, <cpgs@samsung.com>
-Subject: Re: [RFC PATCH 07/20] nvdimm/namespace_label: Update namespace
- init_labels and its region_uuid
-Message-ID: <20250623101104.00001ca4@huawei.com>
-In-Reply-To: <720167805.241750165205630.JavaMail.epsvc@epcpadp1new>
-References: <20250617123944.78345-1-s.neeraj@samsung.com>
-	<CGME20250617124025epcas5p1ce6656fed9ef1175812f80574048cd7a@epcas5p1.samsung.com>
-	<720167805.241750165205630.JavaMail.epsvc@epcpadp1new>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1750669870; c=relaxed/simple;
+	bh=jgDGs6S8aBeEsYJh3stb90SoB64xktcDYB4e9GaxcnA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PPnbaig+RukTqxLYpUeSLDBIJWkmbL1lASyQGjHNKrE4bQZJNX4Te+sSOqwcAg2hVl0MJps5Zkrg3n9/LIAFqYHcSWfQtp5OZ0tnauL46pqb21TkK2Xmi0wkAcb2NQDVzzqgdJIg2ZzR2J12ttt7PKOIXTDcVgZPPrHQ9lJK22I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VPJiVphB; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VPJiVphB"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-45306976410so1101615e9.3;
+        Mon, 23 Jun 2025 02:11:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750669867; x=1751274667; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gz8t2oZkkwfZO8pX28gYQB4KOa728jeU/jhzTTj6UZc=;
+        b=VPJiVphBewlnR0xYbCOAeTl9zCUO3DuySWECRKIUqhZ62uKm4T0FWDjFUoonP/jD7L
+         82tEmvn/M1Qlu5fToAo3DlNuHxglWk/SQpFojYDo/5Fmg5LzV+a355rqhQ9bKjDganKo
+         t5tdfbfdgitsNTCzEgqBQg8B3gR7pRP6FxHOYVSF2nhFjarX1qJwdsR+Lf9pQUzVgxU4
+         OFKZtAyfm+5m55E6rYIGnHXipLdPO0ggZpC/alUX6UbhWvVENZESw3S5X2P1B9LRxe6h
+         mDlUjmzXUxmj82eWg7ScYJ5Ra4ilG6M8cpr4KVuXXefRMtuGJZ8uBFg/ROESjDHyuNz8
+         G1Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750669867; x=1751274667;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Gz8t2oZkkwfZO8pX28gYQB4KOa728jeU/jhzTTj6UZc=;
+        b=T69WchcJgR/6fvHBTi6ckHR4jVbhCZ0tMkxc52wzUMEFXvKHQ5TAZmCEx/R2fMFB6V
+         2iJKHPtUMQ+R32hcEox4MF0LEvNoLRl3uBO0yXJN+QJn54fELQR5YkKzGrOlONOJmkG6
+         oD2y9DnHcBPcub45guZGSAhOsAjKdYWexBX1o/iRH22b+78r2jZjDzotJr0Xw+KmlGGt
+         /Wzep2nsEkIfIg/ZjAcsPYtZDDLI7f7GP8OAk7bslKYFYW5fHdCBvdHNZxtGgiwsQhXt
+         xZTu4PqfkP6hnaMK/XRv/i6pmv4mFcFrnPTJ+5iTpMDBpjVl+HOUQlIm+mlixdKvT4W8
+         SirQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVwx9Sp4+NLT1uLKA3pYHTUYCPgw0/fZ7C8PG98/7oTYNmT/Rvnc6T6AeQlmK2TUfOwmkKKsckSibZLfQuo@vger.kernel.org, AJvYcCXg+6ZJrLIHl8t4Px5Zr3O/T0zVhc3cEZNBkGvgFKoHAECPtmGDVJKtrroDjnwpI9Rrf/WDpEh+ksabgXU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZFah9Zq7/dKVLv9DA/75RpP38/edNkgMQEQqItD6vAnB/Bp4D
+	CXp0g56Qom9gFTOUJ8LSgq62tHJO13XyWpBJcsxb2u/plJ2piNMr7diN
+X-Gm-Gg: ASbGncvMZ5oZDrxXO7kW8EnjGnae1lsOx9UXMcuzfMEjxLo8RnwnE+9nJNq0B5sVWkw
+	hOIiHvz3os5XleyygzQ3cYB7Mgy8PVSU9vIemuqPf24/CL5zSTb/6MS920eu0Wrzt5ZmYfeHH5K
+	USYzaOdaDTHxsknARcHNo/XUXDZQxghgRJNLeBmfILHMo6Xz3NrF+PjZiXPiBmRErQM2/65NZjU
+	oVn0E/XO7sr10mIXK5+vG1O1XJzU84rezfjQ+s53S8FhQEfoIRbID5oqOnal91WB0OGM/R+HW30
+	5Y8Wx6XlZNPnDzSFwoQX9lYVW54BBkF4WpGILXBlshJGXiBEhaE+KdEXKOOdLHuND4K1l28LODD
+	D9pSQxQcv2zowTOMQ2zucx8UqOA==
+X-Google-Smtp-Source: AGHT+IGDWWZaT403xBnNIukKkNikvHSsmJYoL9MI3srvKJv2z/ou2KLsn00R7ev+p8rY646+IShMCw==
+X-Received: by 2002:a05:600c:4685:b0:442:e608:12a6 with SMTP id 5b1f17b1804b1-453653d3d5cmr41354345e9.1.1750669866408;
+        Mon, 23 Jun 2025 02:11:06 -0700 (PDT)
+Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:9a26:612f:7b52:ee76])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4536466596asm107683615e9.0.2025.06.23.02.11.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 02:11:06 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Corentin Labbe <clabbe.montjoie@gmail.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Ovidiu Panait <ovidiu.panait.oss@gmail.com>,
+	Andre Przywara <andre.przywara@arm.com>,
+	linux-crypto@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: sun8i-ce: Fix `dma_unmap_sg()` nents value
+Date: Mon, 23 Jun 2025 11:10:06 +0200
+Message-ID: <20250623091009.65436-2-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Tue, 17 Jun 2025 18:09:31 +0530
-Neeraj Kumar <s.neeraj@samsung.com> wrote:
+The `dma_unmap_sg()` functions should be called with the same nents as the
+`dma_map_sg()`, not the value the map function returned.
 
-> nd_mapping->labels maintains the list of labels present into LSA.
-> init_labels function prepares this list while adding new label
+Fixes: 0605fa0f7826 ("crypto: sun8i-ce - split into prepare/run/unprepare")
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+---
+ drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-init_labels() prepares
-
-
-> into LSA and updates nd_mapping->labels accordingly. During cxl
-> region creation nd_mapping->labels list and LSA was updated with
-> one region label. Therefore during new namespace label creation
-> pre-include the previously created region label, so increase
-> num_labels count by 1.
-> 
-> Also updated nsl_set_region_uuid with region uuid with which
-> namespace is associated with.
-> 
-> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
-> ---
->  drivers/nvdimm/label.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
-> index 9381c50086fc..108100c4bf44 100644
-> --- a/drivers/nvdimm/label.c
-> +++ b/drivers/nvdimm/label.c
-> @@ -947,7 +947,7 @@ static int __pmem_label_update(struct nd_region *nd_region,
->  	nsl_set_slot(ndd, ns_label, slot);
->  	nsl_set_alignment(ndd, ns_label, 0);
->  	nsl_set_type_guid(ndd, ns_label, &nd_set->type_guid);
-> -	nsl_set_region_uuid(ndd, ns_label, NULL);
-> +	nsl_set_region_uuid(ndd, ns_label, &nd_set->uuid);
->  	nsl_set_claim_class(ndd, ns_label, ndns->claim_class);
->  	nsl_calculate_checksum(ndd, ns_label);
->  	nd_dbg_dpa(nd_region, ndd, res, "\n");
-> @@ -1114,7 +1114,8 @@ int nd_pmem_namespace_label_update(struct nd_region *nd_region,
->  				count++;
->  		WARN_ON_ONCE(!count);
->  
-> -		rc = init_labels(nd_mapping, count);
-> +		/* Adding 1 to pre include the already added region label */
-> +		rc = init_labels(nd_mapping, count + 1);
->  		if (rc < 0)
->  			return rc;
->  
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+index f9cf00d690e2..ce9d071f5693 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+@@ -326,8 +326,8 @@ static void sun8i_ce_cipher_unprepare(struct crypto_engine *engine,
+ 	struct sun8i_ce_flow *chan;
+ 	struct ce_task *cet;
+ 	unsigned int ivsize, offset;
+-	int nr_sgs = rctx->nr_sgs;
+-	int nr_sgd = rctx->nr_sgd;
++	int ns = sg_nents_for_len(areq->src, areq->cryptlen);
++	int nd = sg_nents_for_len(areq->dst, areq->cryptlen);
+ 	int flow;
+ 
+ 	flow = rctx->flow;
+@@ -336,11 +336,11 @@ static void sun8i_ce_cipher_unprepare(struct crypto_engine *engine,
+ 	ivsize = crypto_skcipher_ivsize(tfm);
+ 
+ 	if (areq->src == areq->dst) {
+-		dma_unmap_sg(ce->dev, areq->src, nr_sgs, DMA_BIDIRECTIONAL);
++		dma_unmap_sg(ce->dev, areq->src, ns, DMA_BIDIRECTIONAL);
+ 	} else {
+-		if (nr_sgs > 0)
+-			dma_unmap_sg(ce->dev, areq->src, nr_sgs, DMA_TO_DEVICE);
+-		dma_unmap_sg(ce->dev, areq->dst, nr_sgd, DMA_FROM_DEVICE);
++		if (rctx->nr_sgs > 0)
++			dma_unmap_sg(ce->dev, areq->src, ns, DMA_TO_DEVICE);
++		dma_unmap_sg(ce->dev, areq->dst, nd, DMA_FROM_DEVICE);
+ 	}
+ 
+ 	if (areq->iv && ivsize > 0) {
+-- 
+2.43.0
 
