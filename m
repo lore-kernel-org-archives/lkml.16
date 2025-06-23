@@ -1,104 +1,154 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7F46136;
-	Mon, 23 Jun 2025 14:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF2F7263F;
+	Mon, 23 Jun 2025 14:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750688999; cv=none; b=S74Z47phXSMeOUf4mqy02a5FcyRurhtcI7rC5mt9W0V16+sONz1D76bj7FVKlruZujNlhsmJaIK42SRAxq9FY7as/dQpG4Bvcwh768hY7ssj0s5PJln49UpSHs5QojQ3zR/vs8tOwggSeBL2u9cO9AaSb2vpLsYcig5gqcnnhDQ=
+	t=1750689027; cv=none; b=sWxoUDXHnLHk7pYWayBIDrjsd+9WnB9gwWI96JXE9xtxskCKeI/k89vAUJoyKEEQglRlCjMuY9A3GuS2I/gFHnp8m8ozismQyV+F18VDMkeCqXL4trjVYgvJFhihoSD0/T4I24fuHxy2evCkKyobQfbV6hcTwcA44JjIWvt2nTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750688999; c=relaxed/simple;
-	bh=kNgh50wRPa1IpbsSrhyg1ta6hy97Cr5M4hdhDESZDk4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JtcScOMnShj03L1CM5RwpjJWfOKmoIgnPF4f6OR4ePNowMpX6IJuzgmfrlxHvwOxvCDJldCrvLyyfRow3SbueGsrCXR97wEOZp2neboi7jKXx6YHvlUJTydVEaMUMBjSPAnPDQ3SBKFmCG0lr59xxzlCV2R0YBm0yld7WZUSCd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=gV+sSAhA; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750689027; c=relaxed/simple;
+	bh=48eVt2PPcxAS9n4RtU7GsK0fPkHm0p1WawWnWIodk7o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HOxNCM4CAonsUvhI/I9Tpa50+BNPIB1FryvTOsrlB9kuNZ+5GXnsj/4VtFjsVA1OOc1R9SUljCGFXt20Vi4la8Hz2w3ic28CU9haj14zn5bcKs7HR43/udykfytSQWBePBbOab5DMKKnWPjMza4styb7wovbRyXpvdSIv9KznZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y0Xx3kaW; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gV+sSAhA"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55NETrJ0907681;
-	Mon, 23 Jun 2025 09:29:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750688993;
-	bh=S1mJZ57ChC5HqF8yPvS2kAr0B+cCQirxzf4xeYNbbxk=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=gV+sSAhAdO2pOPeHwvwH6k/6kRqUkxKj1vrCc2OtWjHVj1tD2Cx3YaK8/GwfsPMTi
-	 G+kmt3rjT9ohl6SBQVj7CnT3ke37A08UiUQ4LVyQkcrDjjr/wkf/0espnNpNLlb15P
-	 JeW1hMnEaM6PE0WltdGRg7iAHWcLCu0MXOVHTTHo=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55NETr38586092
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Mon, 23 Jun 2025 09:29:53 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Mon, 23
- Jun 2025 09:29:52 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Mon, 23 Jun 2025 09:29:52 -0500
-Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55NETq4w4009277;
-	Mon, 23 Jun 2025 09:29:52 -0500
-Date: Mon, 23 Jun 2025 09:29:52 -0500
-From: Bryan Brattlof <bb@ti.com>
-To: Paresh Bhagat <p-bhagat@ti.com>
-CC: <nm@ti.com>, <vigneshr@ti.com>, <praneeth@ti.com>, <kristo@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <khasim@ti.com>, <v-singh1@ti.com>,
-        <afd@ti.com>, <devarsht@ti.com>
-Subject: Re: [PATCHv4 5/6] arm64: dts: ti: Update firmware-name for IPC
-Message-ID: <20250623142952.3aeec366w2lmoswv@bryanbrattlof.com>
-X-PGP-Fingerprint: D3D1 77E4 0A38 DF4D 1853 FEEF 41B9 0D5D 71D5 6CE0
-References: <20250623141253.3519546-1-p-bhagat@ti.com>
- <20250623141253.3519546-6-p-bhagat@ti.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y0Xx3kaW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750689027; x=1782225027;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=48eVt2PPcxAS9n4RtU7GsK0fPkHm0p1WawWnWIodk7o=;
+  b=Y0Xx3kaW2Wvc17ZhqQCjpeW7XBedqx07pIAFmRGpel9hIkV4WAG9h8vi
+   Mpox9VQWj98hWJEvgeDT0UxfytFFQvftS4B7P5gRoJEvbFpY33g/mdGuy
+   RbD+NdlNxE7PYXiLv/G96XGnB7orNAOHC1VtHMQEOXnMQopb6lWF4ZLPX
+   pP37j0PT9BPlHemR++P7yrvNaH5yLkPrdb+OY+a155tttOFUYlEq8RANe
+   /kIpc45acUNFfVhvry8bv0HuwkdaNzyvGgLoN7csjGh5CiWhrEWT00bdk
+   3laLP5OPk1qdfoVwv3ns8TDA4EKCfoP9vXgwwYec7sqZgJteDCFAJCLlO
+   A==;
+X-CSE-ConnectionGUID: qPipcxzgSHa5D8C8nNilNg==
+X-CSE-MsgGUID: LWWNxQbfSGSOyq2PgHxR2g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="53031893"
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="53031893"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 07:30:26 -0700
+X-CSE-ConnectionGUID: H7JwwNNASkipLkEQE+BTyw==
+X-CSE-MsgGUID: xVHtY9bDRp25jG8Rf2mRPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="155914307"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 07:30:22 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uTiBf-00000009CQ9-0zoy;
+	Mon, 23 Jun 2025 17:30:19 +0300
+Date: Mon, 23 Jun 2025 17:30:18 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+	andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, matthias.bgg@gmail.com,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, kernel@collabora.com
+Subject: Re: [PATCH v1 4/5] iio: adc: mt6359: Add support for MediaTek MT6363
+ PMIC AUXADC
+Message-ID: <aFlk-l5LhgO8dnXK@smile.fi.intel.com>
+References: <20250623120028.108809-1-angelogioacchino.delregno@collabora.com>
+ <20250623120028.108809-5-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250623141253.3519546-6-p-bhagat@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <20250623120028.108809-5-angelogioacchino.delregno@collabora.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On June 23, 2025 thus sayeth Paresh Bhagat:
-> Update the firmware-name properties in the dts file to point to new IPC
-> firmware binaries for both the mcu-r5 and c7x core.
+On Mon, Jun 23, 2025 at 02:00:27PM +0200, AngeloGioacchino Del Regno wrote:
+> MediaTek MT6363 is a PMIC found on MT8196/MT6991 board designs
+> and communicates with the SoC over SPMI.
 > 
-
-Same here. This seems like we should have squashed this into 4/6
-
-~Bryan
-
-> Signed-off-by: Paresh Bhagat <p-bhagat@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-am62d2-evm.dts | 2 ++
->  1 file changed, 2 insertions(+)
+> This PMIC integrates an Auxiliary ADC (AUXADC) which has a grand
+> total of 54 ADC channels: 49 PMIC-internal channels, 2 external
+> NTC thermistor channels and 2 generic ADC channels (mapped to 7
+> PMIC ADC external inputs).
 > 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62d2-evm.dts b/arch/arm64/boot/dts/ti/k3-am62d2-evm.dts
-> index 8fde89ecba67..c98e4c98c956 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62d2-evm.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am62d2-evm.dts
-> @@ -487,6 +487,7 @@ &mcu_r5fss0_core0 {
->  	mboxes = <&mailbox0_cluster2 &mbox_mcu_r5_0>;
->  	memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
->  			<&mcu_r5fss0_core0_memory_region>;
-> +	firmware-name = "am62d-mcu-r5f0_0-fw";
->  };
->  
->  &c7x_0 {
-> @@ -495,6 +496,7 @@ &c7x_0 {
->  	mboxes = <&mailbox0_cluster1 &mbox_c7x_0>;
->  	memory-region = <&c7x_0_dma_memory_region>,
->  			<&c7x_0_memory_region>;
-> +	firmware-name = "am62d-c71_0-fw";
->  };
->  
->  &cpsw3g {
-> -- 
-> 2.34.1
+> To use a generic ADC channel it is necessary to enable one of
+> the PMIC ADC inputs at a time and only then start the reading,
+> so in this case it is possible to read only one external input
+> for each generic ADC channel.
 > 
+> Due to the lack of documentation, this implementation supports
+> using only one generic ADC channel, hence supports reading only
+> one external input at a time.
+
+> +#define MT6363_EXT_CHAN_MASK		GENMASK(2, 0)
+> +#define MT6363_EXT_PURES_MASK		GENMASK(4, 3)
+> + #define MT6363_PULLUP_RES_100K		0
+> + #define MT6363_PULLUP_RES_OPEN		3
+
+I would rather expect the two spaces after #define. This most likely will break
+syntax highlighting in (some of) the editors.
+
+...
+
+> +#define MTK_PMIC_ADC_EXT_CHAN(_ch_idx, _req_idx, _req_bit, _rdy_idx, _rdy_bit,	\
+> +			      _ext_sel_idx, _ext_sel_ch, _ext_sel_pu,		\
+> +			      _samples, _rnum, _rdiv)				\
+
+Wondering, and it's out of scope here, if we can go to use a macro for
+initialization of struct *_fract.
+
+>  	[PMIC_AUXADC_CHAN_##_ch_idx] = {					\
+>  		.req_idx = _req_idx,						\
+>  		.req_mask = BIT(_req_bit),					\
+>  		.rdy_idx = _rdy_idx,						\
+>  		.rdy_mask = BIT(_rdy_bit),					\
+> +		.ext_sel_idx = _ext_sel_idx,					\
+> +		.ext_sel_ch = _ext_sel_ch,					\
+> +		.ext_sel_pu = _ext_sel_pu,					\
+>  		.num_samples = _samples,					\
+>  		.r_ratio = { _rnum, _rdiv }					\
+>  	}
+
+Perhaps something in math.h as
+
+#define INIT_STRUCT_FRACT_UXX(n, d) ...
+
+...
+
+> +	if (MTK_AUXADC_HAS_FLAG(cinfo, IS_SPMI)) {
+> +		/* If the previous read succeeded, this can't fail */
+> +		regmap_read(regmap, reg - 1, &lval);
+
+No error check? lval may contain garbage here, right?
+
+> +		val = (val << 8) | lval;
+
+Is it guaranteed that lval is always less than 256 (if unsigned)?
+
+> +	}
+
+...
+
+> +		regmap_update_bits(regmap, cinfo->regs[desc->ext_sel_idx],
+> +				   MT6363_EXT_PURES_MASK, ext_sel);
+
+No  error check?
+
+> +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
