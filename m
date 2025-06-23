@@ -1,243 +1,122 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486C2255E34
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50583257AEE
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:17:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750688229; cv=none; b=GO4Puaq37RSc9E91qVI+laCLituSpoT+Ih/v947Q1uedASNK6Wu7liwJytTLhNeOUdIskEzQ18lIjim6IEH5NdjlcYQpclsiy+iGlLHZmXGlDQfk2J5YJ4GFUg/aAt2IgTp138wa5nXF24gkwzTzG9yfFqA0mAC6Qpae5j9spvg=
+	t=1750688233; cv=none; b=Nu1va0GmQpUphP+aSr7HIPDs0BEpS9+Ch5D5m9nVxUWvC7ldWJkFXEflVavspvioT3DKv0Z5GSK4QW7RUPVqf6Z/eTbW6VNw+bjRUx0za8PKQbvmkLyWBaoWHpETnjnY8/g6P9x1yVr22IB8kvu63/X5OI58q0iD8l7xxPlRI/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750688229; c=relaxed/simple;
-	bh=HTKSyNSoON+KdvueDdTsIlHa3RGGeZ+v7jmerZYuiBY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h5JbFvxfpK8JJghnzNXBv3oKGHqmIPIv69L1RXa75Whhy2V8Xzpp0Xexq5EqKncYPVVNe9rk4Pqp6MhdTY9RuWq3oJcwniA60BwuV5MWyaXmC38hf5rghXu4p6QNPIUGqoYi/PYW5F73HkNGtZ+K0HPIgzMwbXo+gRRXKejPZ7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WqY0jDgy; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750688233; c=relaxed/simple;
+	bh=yxh7ilQonYBUqypJb67+dDP3F/Z9G9zjb1heS+hjcYw=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=JBLTB/Byh/NnQjr0TA/Ncfo3aYIVkquY4W5LovdUfXJDUgXCCq/Gz7SliMM8ZY3kfyyDwkL0LXXOvOR538bbtaxK3M+JALlkzcbeEZzrZytFcEndp27nUz1Tjl9DUHWGSgojLE6ivhvUR/KZdHivQ1VAkapjJnJgRGywd30BkUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PlmE8uPl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WqY0jDgy"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad883afdf0cso846139266b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 07:17:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750688225; x=1751293025; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=70tNPYqgSSY8XqkTztC+jIspGWzhAYhdeWY6QzJUGrU=;
-        b=WqY0jDgy7FNMBlKabKdsAeC83WcVmKcFmTLrFX6qbbDueeaWEP6qwpjTxyHP/z+7c9
-         xzbgX2af4OqrAU5aY7Jrsau07vIQc2yV/y1d+Cs01fBBFYJ9NejCOuto4m+SaRq00oXa
-         ndWN6sl834F31X6a+Ntx7uBF+huBtGeayQMavlh5FwE+ciYvRxtV84kgPg4BPVWlBccH
-         Sn/2biZty1HWON3Ie4+GZC8BZddCW5UAgzHoHBFmu3DOB/EGDPo96m4E97DIrVYQoQAv
-         vWnFcH63GVxEE+4mMkI96VDgEGh5JeEH4XZJN0VXfTgs/fzBHGye9TwLui5CCFj6cgX7
-         niGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750688225; x=1751293025;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=70tNPYqgSSY8XqkTztC+jIspGWzhAYhdeWY6QzJUGrU=;
-        b=NEpswFGYfMPJ76GF0kXkWeuLY3mIp3sARNRXtXsdamsV+SnF1qHr6aM4MaQUocom5P
-         AdeWQPe3jdBMtQV1CEH3YBU9JD4K1dl90yqE2FybuV0MexQKqeu7QmNH88eKDc2DGAKe
-         If+sh5aWdWDSuypaIu/0jTvvrF24MptpI21GvbFr8+OR8cGeLwxGs0ttEuQs2I1Uxetl
-         kWvAjyUzyyMHY0+KSkzDzIMbcw4GNFGKmGEgwd+D1Aad7PRFQB4J9ELNiIl86HnmMQRz
-         Y6D8HiH9A9X8EN6umqNcrpMX4FgavH2IEpZuSknW7Km/0Ry372UEAUlwHd0giYArK8Qw
-         b+fQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2X/mLFzMCoGJcSut7m6Cpqzbk4tU7tBDzbno7VN+aXk6z+wKoeGFBeDX/6X7cNg7MXcTYwHx29QFKXeg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxW2XPcZymwdpdtfP0nQKT1LLGI/yaE1VRSvKAJ/4aSCQ2xwe+w
-	uA5CDzTLwvbMHR2h5SzjJrcTRuh+kHbpZBNQY+PnT+uezxfCMd6YOTqHqc+EniR/g6fZWSIaH7Q
-	fleYw0pbtMuktzhj0odSD5pAeecXz7Bk=
-X-Gm-Gg: ASbGncs8UuHeU5k656QMDKEq6t76HVtsD6QIRey8K6trSIxfy2rZONmGxofArLbGlcP
-	bWNc/+B+l3pVlz6SOla1+SpJExUwpp4cWc+AanDDe0KnAA5XtpL5HfNb87EXgeLp4tkyZge7CHh
-	u0WFZ5+9TzokpBp5KzDiKv4/ncVbdZCGRQUsNMtMi6vsecGojRteyUMMjrgDN9A/SthPS63JJyG
-	xq++CL4Bo1eeVFm
-X-Google-Smtp-Source: AGHT+IGVXdpuDSD3u1Rcg2xH/siOX+NFS+fNsYQ1G8iqkKsJn6/Ib7Lu5EOX1WPfO/C6zAEddYxGbn3tllx6tvD1qEs=
-X-Received: by 2002:a17:907:7e95:b0:ad8:9257:5727 with SMTP id
- a640c23a62f3a-ae057bd5095mr1094933066b.51.1750688225183; Mon, 23 Jun 2025
- 07:17:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PlmE8uPl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750688231;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DENPfef9k5KPGfxCMnb/tEj2yf0fmCOohO51w/ehSyg=;
+	b=PlmE8uPly3FZbk1cMHFHxY4NGwvHUsMgCnRKNhH56szTBeIBM3LIq+OESpNE6FN/nL2cSe
+	nMjXtpCsIDxE5yrBNu69LYGgwHBzufqNjdO4OQHrTM7WR5rtBh+VpknNH9g9SPzQ0PemvA
+	9anLKm1587K+oHga4ia2fltaaE1gptA=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-19-rkV28ZGCPsW3UDW4tgao9A-1; Mon,
+ 23 Jun 2025 10:17:08 -0400
+X-MC-Unique: rkV28ZGCPsW3UDW4tgao9A-1
+X-Mimecast-MFC-AGG-ID: rkV28ZGCPsW3UDW4tgao9A_1750688226
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8303418011FB;
+	Mon, 23 Jun 2025 14:17:05 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.81])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0A2CB1800284;
+	Mon, 23 Jun 2025 14:16:59 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <aFlcPOpajICfVlFE@infradead.org>
+References: <aFlcPOpajICfVlFE@infradead.org> <1069540.1746202908@warthog.procyon.org.uk> <165f5d5b-34f2-40de-b0ec-8c1ca36babe8@lunn.ch> <0aa1b4a2-47b2-40a4-ae14-ce2dd457a1f7@lunn.ch> <1015189.1746187621@warthog.procyon.org.uk> <1021352.1746193306@warthog.procyon.org.uk> <2135907.1747061490@warthog.procyon.org.uk>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: dhowells@redhat.com, Andrew Lunn <andrew@lunn.ch>,
+    Eric Dumazet <edumazet@google.com>,
+    "David
+ S. Miller" <davem@davemloft.net>,
+    Jakub Kicinski <kuba@kernel.org>,
+    David Hildenbrand <david@redhat.com>,
+    John Hubbard <jhubbard@nvidia.com>, willy@infradead.org,
+    Christian Brauner <brauner@kernel.org>,
+    Al Viro <viro@zeniv.linux.org.uk>,
+    Miklos Szeredi <mszeredi@redhat.com>, torvalds@linux-foundation.org,
+    netdev@vger.kernel.org, linux-mm@kvack.org,
+    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: AF_UNIX/zerocopy/pipe/vmsplice/splice vs FOLL_PIN
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620180458.5041-3-bijan311@gmail.com> <20250621180215.36243-1-sj@kernel.org>
-In-Reply-To: <20250621180215.36243-1-sj@kernel.org>
-From: Bijan Tabatabai <bijan311@gmail.com>
-Date: Mon, 23 Jun 2025 09:16:53 -0500
-X-Gm-Features: AX0GCFtADaqGHnbxuGoJ2rP0UQkjTI20aRfoQkXyZ3eOD4JaHNMRaVIa-DTKVX0
-Message-ID: <CAMvvPS5JL20OJic0EFKbuY_VgEAjveJoquTReyLjknSZ-6BeVQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/2] mm/damon/paddr: Allow multiple migrate targets
-To: SeongJae Park <sj@kernel.org>
-Cc: damon@lists.linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	akpm@linux-foundation.org, david@redhat.com, ziy@nvidia.com, 
-	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com, 
-	byungchul@sk.com, gourry@gourry.net, ying.huang@linux.alibaba.com, 
-	apopple@nvidia.com, bijantabatab@micron.com, venkataravis@micron.com, 
-	emirakhur@micron.com, ajayjoshi@micron.com, vtavarespetr@micron.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1111402.1750688218.1@warthog.procyon.org.uk>
+Date: Mon, 23 Jun 2025 15:16:58 +0100
+Message-ID: <1111403.1750688218@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Sat, Jun 21, 2025 at 1:02=E2=80=AFPM SeongJae Park <sj@kernel.org> wrote=
-:
->
-> Hi Bijan,
->
-> On Fri, 20 Jun 2025 13:04:58 -0500 Bijan Tabatabai <bijan311@gmail.com> w=
-rote:
->
-> > From: Bijan Tabatabai <bijantabatab@micron.com>
-> >
-> > The migrate_{hot,cold} DAMONS actions take a parameter, target_nid, to
-> > indicate what node the actions should migrate pages to. In this patch,
-> > we allow passing in a list of migration targets into target_nid. When
-> > this is done, the mirgate_{hot, cold} actions will migrate pages betwee=
-n
-> > the specified nodes using the global interleave weights found at
-> > /sys/kernel/mm/mempolicy/weighted_interleave/node<N>. This functionalit=
-y
-> > can be used to dynamically adjust how pages are interleaved in response
-> > to changes in bandwidth utilization to improve performance, as discusse=
-d
-> > in [1]. When only a single migration target is passed to target_nid, th=
-e
-> > migrate_{hot,cold} actions will act the same as before.
-> [...]
-> >  include/linux/damon.h    |   8 +--
-> >  mm/damon/core.c          |   9 ++--
-> >  mm/damon/lru_sort.c      |   2 +-
-> >  mm/damon/paddr.c         | 108 +++++++++++++++++++++++++++++++++++++--
-> >  mm/damon/reclaim.c       |   2 +-
-> >  mm/damon/sysfs-schemes.c |  14 +++--
-> >  samples/damon/mtier.c    |   6 ++-
-> >  samples/damon/prcl.c     |   2 +-
-> >  8 files changed, 131 insertions(+), 20 deletions(-)
->
-> If we keep pursuing making DAMON users be able to specify multiple migrat=
-ion
-> destination nodes and their weights[1], I think we may need only paddr.c =
-part
-> change of this patch in the final version of this great work.
+Christoph Hellwig <hch@infradead.org> wrote:
 
-Sounds good to me.
+> > The question is what should happen here to a memory span for which the
+> > network layer or pipe driver is not allowed to take reference, but rather
+> > must call a destructor?  Particularly if, say, it's just a small part of a
+> > larger span.
+> 
+> What is a "span" in this context?
 
-> [...]
-> >  static unsigned long damon_pa_migrate(struct damon_region *r, struct d=
-amos *s,
-> >               unsigned long *sz_filter_passed)
-> >  {
-> >       unsigned long addr, applied;
-> > -     LIST_HEAD(folio_list);
-> > +     struct rmap_walk_control rwc;
-> [...]
-> >
-> >       addr =3D r->ar.start;
-> >       while (addr < r->ar.end) {
-> > @@ -522,15 +599,38 @@ static unsigned long damon_pa_migrate(struct damo=
-n_region *r, struct damos *s,
-> >               else
-> >                       *sz_filter_passed +=3D folio_size(folio);
-> >
-> > +             /*
-> > +              * If there is only one target node, migrate there. Other=
-wise,
-> > +              * interleave across the nodes according to the global
-> > +              * interleave weights
-> > +              */
-> > +             if (nr_nodes =3D=3D 1) {
-> > +                     target_nid =3D first_node(s->target_nids);
-> > +             } else {
-> > +                     target_nid =3D NUMA_NO_NODE;
-> > +                     /* Updates target_nid */
-> > +                     rmap_walk(folio, &rwc);
-> > +             }
->
-> So we are doing rmap_walk(), which is known to be not very fast, for gett=
-ing
-> the target node id of this page, in a way very similar to that of weighte=
-d
-> interleaving, right?  I don't think we really need to behave that same to
-> weighted interleaving with the cost.
->
-> I'd hence suggest to implement and use a simple weights handling mechanis=
-m
-> here.  It could be roud-robin way, like weighted interleaving, or probabi=
-listic
-> way, using damon_rand().
->
-> The round-robin way may be simpler in my opinion.  For example,
->
-> unsigned int damos_pa_nid_to_migrate(struct damos_migrate_dest *dest)
-> {
->         static unsigned int nr_migrated =3D 0;
->         unsigned int total_weight =3D 0;
->         unsigned int weights_to_ignore;
->         size_t i;
->
->         for (i =3D 0; i < dest->nr_dests; i++)
->                 total_weight +=3D dest->weight_arr[i];
->         weights_to_ignore =3D nr_migrate++ % total_weight;
->         total_weight =3D 0;
->         for (i =3D 0; i < dest->nr_dests; i++) {
->                 total_weight +=3D dest->weight_arr[i];
->                 if (total_weight >=3D weights_to_ignore)
->                         return dest->node_id_arr[i];
->         }
->         WARN_ON_ONCE(1, "I don't know what I did wrong");
->         return 0;
-> }
->
-> Then, we could replace the above rmap_walk() call with this one.  What do=
- you
-> think?
+In the first case, I was thinking along the lines of a bio_vec that says
+{physaddr,len} defining a "span" of memory.  Basically just a contiguous range
+of physical addresses, if you prefer.
 
-I do actually think doing the interleaving based on the VMA offset is
-important for a couple of reasons.
+However, someone can, for example, vmsplice a span of memory into a pipe - say
+they add a whole page, all nicely aligned, but then they splice it out a byte
+at a time into 4096 other pipes.  Each of those other pipes now has a small
+part of a larger span and needs to share the cleanup information.
 
-1. If also using the weighted interleaving mempolicy, and the DAMON
-weights are the same as the mempolicy weights, DAMON won't have to
-migrate newly allocated pages. This is relatively minor, but helps
-avoid unnecessary work.
+Now, imagine that a network filesystem writes a message into a TCP socket,
+where that message corresponds to an RPC call request and includes a number of
+kernel buffers that the network layer isn't permitted to look at the refcounts
+on, but rather a destructor must be called.  The request message may transit
+through the loopback driver and get placed on the Rx queue of another TCP
+socket - from whence it may be spliced off into a pipe.
 
-2. More importantly, I believe this approach will cause a lot of
-needless ping-ponging, where the same folios are being moved around
-when they don't need to be. For example, let's say folios A-F are hot,
-and just for simplification, if they are on the same node, they will
-be in the same DAMON region, and only those folios are in those DAMON
-regions. If all the folios start in Node 0 and both nodes have a
-weight of 1, we have:
+Alternatively, if virtual I/O is involved, this message may get passed down to
+a layer outside of the system (though I don't think this is, in principle, any
+different from DMA being done by a NIC).
 
-nr_migrated =3D 0
-Node 0           Node 1
-----------           ----------
-A-F                  <empty>
+And then there's relayfs and fuse, which seem to do weird stuff.
 
-After the scheme is first applied
+For the splicing of a loop-backed kernel message out of a TCP socket, it might
+make sense just to copy the message at that point.  The problem is that the
+kernel doesn't know what's going to happen next to it.
 
-nr_migrated =3D 6
-Node 0           Node 1
-----------           ----------
-A,C,E              B,D,F
+> In general splice unlike direct I/O relies on page reference counts inside
+> the splice machinery.  But that is configurable through the
+> pipe_buf_operations.  So if you want something to be handled by splice that
+> does not use simple page refcounts you need special pipe_buf_operations for
+> it.  And you'd better have a really good use case for this to be worthwhile.
 
-This is fine, but these folios are still hot, so the scheme will be
-applied to them again
+Yes.  vmsplice, is the equivalent of direct I/O and should really do the same
+pinning thing that, say, write() to an O_DIRECT file does.
 
-nr_migrated =3D 12
-Node 0           Node 1
-----------           ----------
-A,E,D             C,D,F
+David
 
-If I am understanding your code sample correctly, this will continue
-to happen each time the scheme is applied, causing folios to be
-migrated for no reason. Using the VMA offset to determine where a page
-should be placed avoids this problem because it gives a folio a single
-node it can be in for a given set of interleave weights. This means
-that in steady state, no folios will be migrated.
-
-I see what you're saying about rmap_walks being expensive, but since
-DAMON operates off the critical path for the workload, I don't think
-the cost is that problematic.
-
-[...]
-
-Let me know what you think,
-Bijan
