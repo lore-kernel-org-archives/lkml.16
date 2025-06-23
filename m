@@ -1,127 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0A8376;
-	Mon, 23 Jun 2025 07:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D575872625;
+	Mon, 23 Jun 2025 07:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750664778; cv=none; b=fRyxFeUnFlkl11vPcjZX7TPxUnS3h0IYw9H3xfp5Vqi4ZFNkUHwhW4RuFcgMh9WR0GRvjubP3E7KB8CcmlM0gWI/wbkRHE93aHNTL2UavuGl1LSer/DCJFazd82XiBIwcj0e4tPQTUOsigtYrKquX8dboav/+AKiO5nyC5i1Ye8=
+	t=1750664821; cv=none; b=BagN769DEnCpL9fg1lb3VVdY2Xv6T5InRj+G9AS0torZpQEpAvy/NbOtsNDK/VbHXVBbaefF6M+wvxxeJxw73MHF/iGZ1iofUmiEGuhbejoOzKug9sS+p3uzkHpzeF5RF4AL924cMA0d6fvSDQojCQFKvaoVYch9WwBnO4PmsCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750664778; c=relaxed/simple;
-	bh=+Uu7ZDBV8otT4ly3/z72aeMoH2gzzQm99pYq+sIxM2Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F93B18YQB6aI/MMa68IFkR0yvy4moSNGunejaeCeMSEH8m3gTcY+0mjLi7qcOu4ob5t1Kokdo6kRgQP8bU/Cru5LIk8fS6uSaUrZssDndLSOLSFgB85QnVLZBr6vSqtSm7H9MiDjvs+hnhAzops8oRweN/WRfTpQKRWKOcji4NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YaTiHsmx; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YaTiHsmx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A964C4CEF1;
-	Mon, 23 Jun 2025 07:46:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750664777;
-	bh=+Uu7ZDBV8otT4ly3/z72aeMoH2gzzQm99pYq+sIxM2Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YaTiHsmx9fcU1jHFGTUE/P7l3uItgMpvwlksKjUK53q1DIR4RLx3wMKNmRozrrruh
-	 kaVvWaOA0dUwrWOAfsrKQ8u+SShD72545UAh7cJNWDEI9KlJ19fctj26riZvz6dd3j
-	 8eZMzSAQ1WtC+ZrCF+l/JA5EHP2ZhyqS6Al4tEb5IUooUo49FwEABwK04ZSCFvksp8
-	 fyJlgW1iyyVhgZEgvtD2WcVMop7HBcjKfQrxXXI7FcHBH6Vxpvv/tBD4bf5bR6hxZP
-	 Ny3zUE2QLzOX6G8Ht4fQTWzUKIjKrD6PIUm7mzzM3GsBtg0axOO9fjjIYa9aln1Tou
-	 gmsqITgESetxQ==
-From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org
-Subject: [PATCH 5/5] tty: fix tty_port_tty_*hangup() kernel-doc
-Date: Mon, 23 Jun 2025 09:46:06 +0200
-Message-ID: <20250623074606.456532-6-jirislaby@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250623074606.456532-1-jirislaby@kernel.org>
-References: <20250623074606.456532-1-jirislaby@kernel.org>
+	s=arc-20240116; t=1750664821; c=relaxed/simple;
+	bh=Dn8aKeCp2MqLWglq2wjerggE0C1t22uLrSme0DTgoeE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dG74/hzxuYMe3+2QGNYEiCFzSQWsGsU6laANvzDtwZQJDDDCft672EPI+kUfrdjCjV7G8xF1X+1C+9E5kjbueg90ij7mx/iO+1uA+Hqe/U3YHUYSLV+leoBVOi/IwJTnlTNTFa0z8ZfXvpz22ytBwZlRdGW9hS0Z9TQl0dyQNn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4bQgD717Ssz2QVJ9;
+	Mon, 23 Jun 2025 15:47:51 +0800 (CST)
+Received: from dggpemf500013.china.huawei.com (unknown [7.185.36.188])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6228418005F;
+	Mon, 23 Jun 2025 15:46:56 +0800 (CST)
+Received: from huawei.com (10.175.112.188) by dggpemf500013.china.huawei.com
+ (7.185.36.188) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 23 Jun
+ 2025 15:46:55 +0800
+From: Baokun Li <libaokun1@huawei.com>
+To: <linux-ext4@vger.kernel.org>
+CC: <tytso@mit.edu>, <jack@suse.cz>, <adilger.kernel@dilger.ca>,
+	<ojaswin@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
+	<yi.zhang@huawei.com>, <yangerkun@huawei.com>, <libaokun1@huawei.com>
+Subject: [PATCH v2 02/16] ext4: remove unnecessary s_mb_last_start
+Date: Mon, 23 Jun 2025 15:32:50 +0800
+Message-ID: <20250623073304.3275702-3-libaokun1@huawei.com>
+X-Mailer: git-send-email 2.46.1
+In-Reply-To: <20250623073304.3275702-1-libaokun1@huawei.com>
+References: <20250623073304.3275702-1-libaokun1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ dggpemf500013.china.huawei.com (7.185.36.188)
 
-The commit below added a new helper, but omitted to move (and add) the
-corressponding kernel-doc. Do it now.
+ac->ac_g_ex.fe_start is only used in ext4_mb_find_by_goal(), but STREAM
+ALLOC is activated after ext4_mb_find_by_goal() fails, so there's no need
+to update ac->ac_g_ex.fe_start, remove the unnecessary s_mb_last_start.
 
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Fixes: 2b5eac0f8c6e ("tty: introduce and use tty_port_tty_vhangup() helper")
-Link: https://lore.kernel.org/all/b23d566c-09dc-7374-cc87-0ad4660e8b2e@linux.intel.com/
-Reported-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
 ---
- Documentation/driver-api/tty/tty_port.rst | 5 +++--
- drivers/tty/tty_port.c                    | 5 -----
- include/linux/tty_port.h                  | 9 +++++++++
- 3 files changed, 12 insertions(+), 7 deletions(-)
+ fs/ext4/ext4.h    | 1 -
+ fs/ext4/mballoc.c | 2 --
+ 2 files changed, 3 deletions(-)
 
-diff --git a/Documentation/driver-api/tty/tty_port.rst b/Documentation/driver-api/tty/tty_port.rst
-index 5cb90e954fcf..504a353f2682 100644
---- a/Documentation/driver-api/tty/tty_port.rst
-+++ b/Documentation/driver-api/tty/tty_port.rst
-@@ -42,9 +42,10 @@ TTY Refcounting
- TTY Helpers
- -----------
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index 9df74123e7e6..cfb60f8fbb63 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -1631,7 +1631,6 @@ struct ext4_sb_info {
+ 	unsigned int s_max_dir_size_kb;
+ 	/* where last allocation was done - for stream allocation */
+ 	unsigned long s_mb_last_group;
+-	unsigned long s_mb_last_start;
+ 	unsigned int s_mb_prefetch;
+ 	unsigned int s_mb_prefetch_limit;
+ 	unsigned int s_mb_best_avail_max_trim_order;
+diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+index 336d65c4f6a2..5cdae3bda072 100644
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -2171,7 +2171,6 @@ static void ext4_mb_use_best_found(struct ext4_allocation_context *ac,
+ 	if (ac->ac_flags & EXT4_MB_STREAM_ALLOC) {
+ 		spin_lock(&sbi->s_md_lock);
+ 		sbi->s_mb_last_group = ac->ac_f_ex.fe_group;
+-		sbi->s_mb_last_start = ac->ac_f_ex.fe_start;
+ 		spin_unlock(&sbi->s_md_lock);
+ 	}
+ 	/*
+@@ -2849,7 +2848,6 @@ ext4_mb_regular_allocator(struct ext4_allocation_context *ac)
+ 		/* TBD: may be hot point */
+ 		spin_lock(&sbi->s_md_lock);
+ 		ac->ac_g_ex.fe_group = sbi->s_mb_last_group;
+-		ac->ac_g_ex.fe_start = sbi->s_mb_last_start;
+ 		spin_unlock(&sbi->s_md_lock);
+ 	}
  
-+.. kernel-doc::  include/linux/tty_port.h
-+   :identifiers: tty_port_tty_hangup tty_port_tty_vhangup
- .. kernel-doc::  drivers/tty/tty_port.c
--   :identifiers: tty_port_tty_hangup tty_port_tty_wakeup
--
-+   :identifiers: tty_port_tty_wakeup
- 
- Modem Signals
- -------------
-diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
-index 903eebdbe12d..5b4d5fb99a59 100644
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -391,11 +391,6 @@ void tty_port_hangup(struct tty_port *port)
- }
- EXPORT_SYMBOL(tty_port_hangup);
- 
--/**
-- * tty_port_tty_hangup - helper to hang up a tty
-- * @port: tty port
-- * @check_clocal: hang only ttys with %CLOCAL unset?
-- */
- void __tty_port_tty_hangup(struct tty_port *port, bool check_clocal, bool async)
- {
- 	struct tty_struct *tty = tty_port_tty_get(port);
-diff --git a/include/linux/tty_port.h b/include/linux/tty_port.h
-index 021f9a8415c0..332ddb93603e 100644
---- a/include/linux/tty_port.h
-+++ b/include/linux/tty_port.h
-@@ -251,11 +251,20 @@ static inline int tty_port_users(struct tty_port *port)
- 	return port->count + port->blocked_open;
- }
- 
-+/**
-+ * tty_port_tty_hangup - helper to hang up a tty asynchronously
-+ * @port: tty port
-+ * @check_clocal: hang only ttys with %CLOCAL unset?
-+ */
- static inline void tty_port_tty_hangup(struct tty_port *port, bool check_clocal)
- {
- 	__tty_port_tty_hangup(port, check_clocal, true);
- }
- 
-+/**
-+ * tty_port_tty_vhangup - helper to hang up a tty synchronously
-+ * @port: tty port
-+ */
- static inline void tty_port_tty_vhangup(struct tty_port *port)
- {
- 	__tty_port_tty_hangup(port, false, false);
 -- 
-2.49.0
+2.46.1
 
