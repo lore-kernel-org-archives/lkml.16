@@ -1,138 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CDD9C120;
-	Mon, 23 Jun 2025 01:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E21FC120;
+	Mon, 23 Jun 2025 01:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750643712; cv=none; b=VuueaN7HVJe1gj1mj7u4oyQpmGA0Y7Dy/LJ7sftElCLNBuLvqH2WhxI4B0oCB9PMb6BOkpu+T6sbakC92dbquYE857cVw6DtVyprMwbjbPQeVOhekbRdS5sx+VlCfFqIZj83QilXh3C6FlU9CusDFlLdi46E/ImFxz4t/MNdlhA=
+	t=1750643722; cv=none; b=B4oesrecNIs2u6DoC8nOqNtb5b8DDV7WZBuEeoBgMzFXhBtiIkjaZ2r6ncK1drP6j/GVfpdgVdxY3L4smfdgKAGqO3RNoarDz0bwUUlje4UJQqw4dNeOgxZRPjjeMbrcylCEslYcaNMOCSHV7ckE1ovgBoSQcZdvEJT40Ogv2yU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750643712; c=relaxed/simple;
-	bh=9cFlEUoSXzuVkaDJmNBJnormf9antQdBn1PhkiCaI7c=;
-	h=Date:From:To:Cc:Subject:Message-Id:Mime-Version:Content-Type; b=CxkMWUNix9QEIwdJ7z1kVEKw2zTNnHoRckOOCPkhED0RZkh11AjCMSTMw/qog8d41k3gdNfHDfPrgN1y8Q5NjlJo9Hom2cqNIr5eA9aI8xagHqm4pM1a/0pRasX8gesZT7FWfacazprlW7zHsvYrl6GbA/K7M+brdb0tT8zKq/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Vm/KT6rl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750643722; c=relaxed/simple;
+	bh=M3Ruphr6lSZtXhQ1e4wsMZHH34wIAIpL6cObSlk/37A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n+H3j3C9TRTq6B8r4chE9XpcugYnQ6XwzJUycHl1nZV4DfmepHZiv+/T3EI0WnN3ybR3X8PYQHZ/jJZ5A9Y7y9bchtP2gHHbZ3fb1ehTvX3ugt1nksp7Ug8nVaYAfPW/hquYn1xTHYZKQ/MM8Mr+XopWf8Imv8fpgDKoCBbi6n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cUK47HKT; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Vm/KT6rl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D0E7C4CEE3;
-	Mon, 23 Jun 2025 01:55:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1750643711;
-	bh=9cFlEUoSXzuVkaDJmNBJnormf9antQdBn1PhkiCaI7c=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Vm/KT6rlFK73BnX66pXhE0VslsCvQhAocn7AsOWBn+t/tAekROFqsktMEQdVunfNs
-	 tYABL3tDMMoD5iBrWvjSX6AWrxWAjWptweOxaLrA8JxSoaXgWzzsddbslR2yacG3j9
-	 oDNKZnB3U2PwF0plZvP46l5Hf80HoJ7uYY9ZNnsk=
-Date: Sun, 22 Jun 2025 18:55:10 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-mm@kvack.org, mm-commits@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: [GIT PULL] hotfixes for 6.16-rc4
-Message-Id: <20250622185510.662af99051fedc1815b9de00@linux-foundation.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cUK47HKT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750643720; x=1782179720;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=M3Ruphr6lSZtXhQ1e4wsMZHH34wIAIpL6cObSlk/37A=;
+  b=cUK47HKT1NNi5HGZ6SsDn6sgCy4DtEsfwG7myLwLyrJ4scOLH+9bdxtV
+   xzx2OZRJ2jaV3AZxBeQnrns0fUC6RI60EAQM4aFP6DU73mQlSEOo+oINV
+   2rGzHJ5cMMI0SHl8WtQHXtBbSOMA49Jtwp892MtmncEVUcoCeKFNBFza8
+   BWeR5ghzTCc4PZ9xTqr5c1AhyrRS6pvneQQv/rRgJF3yZtSTT2aXsAag/
+   KxXW/YZPUpIKI4sKlJzSs53/+Ttf3HJTq29iyPYwnnPCkEHMstdliwgJq
+   vakbGq/D+KUIA4+8CSajsLO7jQJDmXs45579gSZm7hkNj4+GoyKZpO0U+
+   Q==;
+X-CSE-ConnectionGUID: F2xatiUiRAWwxtkcpWCm6g==
+X-CSE-MsgGUID: TVipZbXwQy+vZLOTwlDtlg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="52975316"
+X-IronPort-AV: E=Sophos;i="6.16,257,1744095600"; 
+   d="scan'208";a="52975316"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 18:55:19 -0700
+X-CSE-ConnectionGUID: qsJGoGGTQl6ucZIHvXFeJg==
+X-CSE-MsgGUID: LwbpHG3VR2yG535nDWjIaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,257,1744095600"; 
+   d="scan'208";a="188685383"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.144]) ([10.124.245.144])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 18:55:17 -0700
+Message-ID: <2136b1ae-6fd4-4037-95c3-3a8eb9f24e24@linux.intel.com>
+Date: Mon, 23 Jun 2025 09:55:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v4 09/13] perf/x86/intel: Setup PEBS data configuration
+ and enable legacy groups
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250620103909.1586595-1-dapeng1.mi@linux.intel.com>
+ <20250620103909.1586595-10-dapeng1.mi@linux.intel.com>
+ <20250621094134.GX1613376@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250621094134.GX1613376@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-Linus, please pull this batch of hotfixes, thanks.
+On 6/21/2025 5:41 PM, Peter Zijlstra wrote:
+> On Fri, Jun 20, 2025 at 10:39:05AM +0000, Dapeng Mi wrote:
+>
+>> +static inline void __intel_pmu_update_event_ext(int idx, u64 ext)
+>> +{
+>> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>> +	u32 msr = idx < INTEL_PMC_IDX_FIXED ?
+>> +		  x86_pmu_cfg_c_addr(idx, true) :
+>> +		  x86_pmu_cfg_c_addr(idx - INTEL_PMC_IDX_FIXED, false);
+>> +
+>> +	cpuc->cfg_c_val[idx] = ext;
+>> +	wrmsrq(msr, ext);
+>> +}
+>> +static inline unsigned int x86_pmu_cfg_c_addr(int index, bool gp)
+>> +{
+>> +	u32 base = gp ? MSR_IA32_PMC_V6_GP0_CFG_C : MSR_IA32_PMC_V6_FX0_CFG_C;
+>> +
+>> +	return base + (x86_pmu.addr_offset ? x86_pmu.addr_offset(index, false) :
+>> +					     index * MSR_IA32_PMC_V6_STEP);
+>> +}
+> This seems like an aweful lot of conditions just to get an ddress.
+>
+> Also, IIRC we have intel_pmu_v6_addr_offset() and that does: index *
+> MSR_IA32_PMC_V6_STEP, so something is very redundant here.
+
+Hmm, the intent of adding this helper is just to follow the existed helpers
+like x86_pmu_event_addr(), but considering currently only
+__intel_pmu_update_event_ext() need to touch the XXX_CFG_C MSRs, we may not
+need to an dedicated helper. Would remove this helper.
 
 
-The following changes since commit e04c78d86a9699d136910cfc0bdcf01087e3267e:
-
-  Linux 6.16-rc2 (2025-06-15 13:49:41 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-hotfixes-stable-2025-06-22-18-52
-
-for you to fetch changes up to c742d127d2d831aa83ae2987a508bca2bf0c7736:
-
-  MAINTAINERS: add additional mmap-related files to mmap section (2025-06-19 20:48:05 -0700)
-
-----------------------------------------------------------------
-20 hotfixes.  7 are cc:stable and the remainder address post-6.15 issues
-or aren't considered necessary for -stable kernels.  Only 4 are for MM.
-
-- The 3 patch series `Revert "bcache: update min_heap_callbacks to use
-  default builtin swap"' from Kuan-Wei Chiu backs out the author's recent
-  min_heap changes due to a performance regression.  A fix for this
-  regression has been developed but we felt it best to go back to the
-  known-good version to give the new code more bake time.
-
-- A lot of MAINTAINERS maintenance.  I like to get these changes
-  upstreamed promptly because they can't break things and more
-  accurate/complete MAINTAINERS info hopefully improves the speed and
-  accuracy of our responses to submitters and reporters.
-
-----------------------------------------------------------------
-David Hildenbrand (1):
-      mm/gup: revert "mm: gup: fix infinite loop within __get_longterm_locked"
-
-Dev Jain (1):
-      selftests/mm: add configs to fix testcase failure
-
-Kairui Song (2):
-      mm/shmem, swap: fix softlockup with mTHP swapin
-      mm: userfaultfd: fix race of userfaultfd_move and swap cache
-
-Kuan-Wei Chiu (3):
-      Revert "bcache: update min_heap_callbacks to use default builtin swap"
-      Revert "bcache: remove heap-related macros and switch to generic min_heap"
-      bcache: remove unnecessary select MIN_HEAP
-
-Liam R. Howlett (1):
-      maple_tree: fix MA_STATE_PREALLOC flag in mas_preallocate()
-
-Lorenzo Stoakes (7):
-      MAINTAINERS: add missing mm/workingset.c file to mm reclaim section
-      MAINTAINERS: add missing test files to mm gup section
-      MAINTAINERS: add further init files to mm init block
-      MAINTAINERS: add hugetlb_cgroup.c to hugetlb section
-      MAINTAINERS: add stray rmap file to mm rmap section
-      MAINTAINERS: add memfd, shmem quota files to shmem section
-      MAINTAINERS: add additional mmap-related files to mmap section
-
-Oscar Salvador (1):
-      MAINTAINERS: update maintainers for HugeTLB
-
-Pedro Falcato (1):
-      selftests/mm: skip uprobe vma merge test if uprobes are not enabled
-
-Pratyush Yadav (2):
-      MAINTAINERS: add linux-mm@ list to Kexec Handover
-      kho: initialize tail pages for higher order folios properly
-
-Shivank Garg (1):
-      selftests/mm: increase timeout from 180 to 900 seconds
-
- MAINTAINERS                         |  21 ++++++-
- drivers/md/bcache/Kconfig           |   1 -
- drivers/md/bcache/alloc.c           |  57 ++++++------------
- drivers/md/bcache/bcache.h          |   2 +-
- drivers/md/bcache/bset.c            | 116 ++++++++++++++----------------------
- drivers/md/bcache/bset.h            |  40 +++++++------
- drivers/md/bcache/btree.c           |  69 +++++++++------------
- drivers/md/bcache/extents.c         |  45 ++++++--------
- drivers/md/bcache/movinggc.c        |  33 ++++------
- drivers/md/bcache/super.c           |   3 +-
- drivers/md/bcache/sysfs.c           |   4 +-
- drivers/md/bcache/util.h            |  67 ++++++++++++++++++++-
- drivers/md/bcache/writeback.c       |  13 ++--
- kernel/kexec_handover.c             |  29 +++++----
- lib/maple_tree.c                    |   4 +-
- mm/gup.c                            |  14 +++--
- mm/memory.c                         |  20 -------
- mm/shmem.c                          |   6 +-
- mm/swap.h                           |  23 +++++++
- mm/userfaultfd.c                    |  33 +++++++++-
- tools/testing/selftests/mm/config   |   3 +
- tools/testing/selftests/mm/merge.c  |   5 +-
- tools/testing/selftests/mm/settings |   2 +-
- 23 files changed, 333 insertions(+), 277 deletions(-)
-
+>
+>
+>
