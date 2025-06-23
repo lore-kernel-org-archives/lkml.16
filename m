@@ -1,305 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E3A23C8A8;
-	Mon, 23 Jun 2025 09:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC67B2376E0
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750671095; cv=none; b=pNWSsZKPV6NPX0iehKySVSrcSn78KYYvUaTtczmqdgSJI7hQjurt6ZQwXNaxeHEKLgWsVMJcB1kxfoXfTMTHYERQDk++Wpfg1JGjDVa6JOMq2O9MA4XllcrLMZBPyateF6j4y+kMD1k2vNGWyUz7HLLGZh5zUzhIPz9UE//AHfI=
+	t=1750671126; cv=none; b=ZFqoYP51M2fZ9JHOkUzV+0JeHzwQgi5jh5gYIlYF8ZJCoLmcq8Mb5LFPUo3pdISPZrjUyJ0ss3txgvYSbkbqlCM3TWXY5Aw9pNBDqxtlAjBlcgthU/L4O+5b4sR+Q5Z3dgaKkrR4tKrzgOVZmEH+yrsPQVk1epDxysiibDCD+xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750671095; c=relaxed/simple;
-	bh=VsdfeJJ1hbGO21E4KqYifLzRCmMbubAPRj++2/0zit4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tD7gKDYw9ZCGVGODKtXj4GIBfyfg31xwplA2kSp8HaDeHUA1BADyltnkejRCqpB5I0Us8t0O6Uzv4m2tAVxk24eovvIvuz5iMzmgcHJ2CbdAfsdE/7pAfTGBSw9UqrGOKB9tIAd+TDcTyMokIzDt95lod7uw+hDQuPJ/+mRjpNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s1cju4yn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750671126; c=relaxed/simple;
+	bh=e/g0Sw988PkQY/FzMC4b4/0FPylfUMJyAuwwfoFlbSk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DJv9qBlH5HL1vtUBGCVQH/OkgOe89eDIwWYwYIB+8GdtheDjIygORMnpEtoBI3bm7PYTrkhxokd1xfkmc788I4TbXaj/xYli0ubeKm5B29Ot90d8hx2bEhDXureqll+1pTcGzIf+t2LTGsDSbneP62VL8ad2PqyKiPKYQ8mmMNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G84qEQZf; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s1cju4yn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C07CC4CEF2;
-	Mon, 23 Jun 2025 09:31:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750671095;
-	bh=VsdfeJJ1hbGO21E4KqYifLzRCmMbubAPRj++2/0zit4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=s1cju4ynEtfb27DxqAfIyPWw+QccoHZXy/cILRWXRC9BCUUTcYZth671pV6kVxzW3
-	 bZS+YtCZyyz1futjCyDE8xgu6wjRpKdIgapgHzGyhFEMEg1YT50DHS0tUoRD1Ibsll
-	 R+MnnGbwCK0JGc4yk8PVPCja+nHEskLMbz7eSmNWvf4o9UXKvoOVl7DBBh6XIIRJp1
-	 n59zpYwXG+SCItsUBO3LfqqZobHpaQzqIfq56gMI+9W10P9GuVO3AF5muMHfr3gU2y
-	 86n8lkhz0pqmBQdZDfL2DGLieSB8KPSipauN7EMGINil27ltzveq2tnprwnPXGDo+A
-	 t0yF8DokTlciA==
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5290be1aedcso2834848e0c.1;
-        Mon, 23 Jun 2025 02:31:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUShzGP1/S/RYbwfyx903qkLuD65goKa99Ua3mEB6g8+kE/fdTcNu7Zaaguyqqnqr9Mg4m0gCbo5gZ5MGk=@vger.kernel.org, AJvYcCUtmrqE+682qLx8qtkaZ2rTBQYX2HhT0y4MnnpLn8eq+zRvgJER6cYMuKPiRkHhRpxFKPi2sjdOmUbj9wok@vger.kernel.org, AJvYcCWNy+lvtnYN93X/F5bPATlznQaI6MwqpFgyuU/UkLAzgtT9b8wyaA+pPz6qA/EljxFX7ujDgidasrnvD8c=@vger.kernel.org, AJvYcCXshy+zEW1rbzQ9F9imrReta9KHPF7qujU3eqj4Rx8k12kaO1DKV52aPizzYtkhcoOzVbCAkZ7Lr4Ob@vger.kernel.org
-X-Gm-Message-State: AOJu0YyA/P8V5xiIcTBbDl7BOBQq7F+NjHQLaF+DAc3XqkxdlzprzrvY
-	uD7hWzW1lBQBQTYRLyHrQEDUYRDJn+Mk9rdKip0S/rAIwpzvKSMeiQN5dBo+++OQBWRCn7lzY2b
-	WUDX1QdY5zyhEKN+XWCluc9wDJZVXt2Y=
-X-Google-Smtp-Source: AGHT+IFz8HjnezG1zR147UloDiu7tc7NZbIaEkNDb0AV0ej/bEverhGUrGz1fw9s6NlbMHi5uUyf6V0APJORZMqK2bI=
-X-Received: by 2002:a05:6122:4882:b0:520:4806:a422 with SMTP id
- 71dfb90a1353d-531aeb929d9mr5790320e0c.3.1750671094254; Mon, 23 Jun 2025
- 02:31:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G84qEQZf"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2350fc2591dso32825235ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 02:32:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750671124; x=1751275924; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=B+nyQWkVcjVEgS4bxefq4bC2m0gmMPDc+2UfUzc21zA=;
+        b=G84qEQZfcSVQB6hay7i9zEien1kz0aznvTW+A9KtiNs2OxgEQMiCJxLEIoIpuZmzn9
+         tJUr7gE5tqMDEUZCqIJG5SKbTY/3MJMqyhrVyLGYruJvhGkoFmIG1Aw0MWTKLXEi7xoG
+         eJgRpTUjv4Hl1J3UPl7H11isAgP5NLDNUEo1SKFH61varJ0AWJDFn9etlWqxKqeJPFX7
+         IbqqfgXSW4F3iIejxRWvsA6Nc9WVVjHvbOP2fHSzdpxE+7331V4gatEYxy4BzUrogYrB
+         tURBrkH3NYAxUP2AilmXvi+90Lkwu6747BywvwaZGEQ8fn4WoTfQt7cnD3Mi/o9tbI+2
+         j8cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750671124; x=1751275924;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B+nyQWkVcjVEgS4bxefq4bC2m0gmMPDc+2UfUzc21zA=;
+        b=rIU+J7k2CaHJfUBhg2L0n7/skce2KAs4qnmqlDPtXgmRNvtjQRxz/TCBBNpZnf4KSt
+         ucAAuAylExLy9AkdrdOXTrm/SViyNHADKGBehRE+x7kbNavy3Bi/xU0XSyaEOWxlhN/X
+         2EQDBnIGVH3YjLXWVMAzCrIX5XGvppx5S+L8N4KMKYdT2eb2JcW5PAI+AySezBWL4cN0
+         OS4TLcGa9+AX2siuzXUurM8b100Bk4s2Vx9GbePB/jLCF8iwna4Ls+pD46ZV7lf7uup8
+         Vm4iJiVk4r2vny7pGVflrxJbbMdfq0yxnhyHTSt/0Vwf1b+84ikrd4TP7ZKfv2vdKT8l
+         uMTw==
+X-Gm-Message-State: AOJu0YwcEns7Dt6JFxPjSLYPZolz3vpm18KICofKsqOmL9oa1o3SNAGz
+	X9QaNPU/ElhyuzEGxnKCdpYjXMhHplAGEJM4jUbBtHguab0hwuT/enZF
+X-Gm-Gg: ASbGncv0dTW1hXfCogumZkXy1XQ0nPN1KrzziO2ziOF/UI31i+VaPmVX63r8XzyJuId
+	oNCgnFzSrxVLSbw7dF4w7FQ7U5M93KyF+nptGomdGxQoX0A4Mz929kxZ02bSpdVQuy5IZkMuPco
+	11Xml3Ke/enoamG8fR7yBBfQQqPDm99A+TjJsA7YwiwSvYl/Vw3HPSsZ+H0nPix/KZWE8EZiCu5
+	zGI5niKBTEKDhDWs+wrLXP3MfClnF/NekzskphofWqnwtOKdBtEcgGW5qTm7UqcVbsqFvIl8H+S
+	J+vK29pH5Im1HKeFY3AfhZ9mCgQMTRUmsbCmuxvBcgOzIfah5uUm/tnXSrTVGOVXj85h/kuKey4
+	tTB7M5Ibb5ztJR0bMgsJ4
+X-Google-Smtp-Source: AGHT+IH/bqmQDqcW/+Z7MmvgNwzAepK1hHloqm3RJJAUvU+vHjwX5usRhqfmpL3kIUkImEu9SE5H6g==
+X-Received: by 2002:a17:902:e54e:b0:215:6c5f:d142 with SMTP id d9443c01a7336-237db0d5a62mr153654585ad.20.1750671123939;
+        Mon, 23 Jun 2025 02:32:03 -0700 (PDT)
+Received: from localhost.localdomain ([180.101.244.64])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d869fbfcsm81271235ad.194.2025.06.23.02.31.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 02:32:02 -0700 (PDT)
+From: Tianxiang Peng <luminosity1999@gmail.com>
+X-Google-Original-From: Tianxiang Peng <txpeng@tencent.com>
+To: puwen@hygon.cn,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	hpa@zytor.com,
+	x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Tianxiang Peng <txpeng@tencent.com>,
+	Hui Li <caelli@tencent.com>
+Subject: [PATCH RESEND] x86/cpu/hygon: fix missing resctrl_cpu_detect() in bsp_init helper
+Date: Mon, 23 Jun 2025 17:31:53 +0800
+Message-ID: <20250623093153.3016937-1-txpeng@tencent.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250621-imx214_ccs_pll-v4-0-12178e5eb989@apitzsch.eu>
- <20250621-imx214_ccs_pll-v4-3-12178e5eb989@apitzsch.eu> <20250621181751.GA9125@pendragon.ideasonboard.com>
- <ed0b8fe3a20111477cafb1de7b399afb99caaa0c.camel@apitzsch.eu> <20250622171320.GA826@pendragon.ideasonboard.com>
-In-Reply-To: <20250622171320.GA826@pendragon.ideasonboard.com>
-From: Ricardo Ribalda Delgado <ribalda@kernel.org>
-Date: Mon, 23 Jun 2025 11:31:17 +0200
-X-Gmail-Original-Message-ID: <CAPybu_2WF=t4jnwsrTSCiSZ4T7Sck4-fCoub33=P_6KvdZ5ePg@mail.gmail.com>
-X-Gm-Features: Ac12FXxTrZtaPEPozn4yeGUBc3IN-yDzlj7J5zciRPbs1FoIczjQDRPa5pgF3Bk
-Message-ID: <CAPybu_2WF=t4jnwsrTSCiSZ4T7Sck4-fCoub33=P_6KvdZ5ePg@mail.gmail.com>
-Subject: Re: [PATCH RESEND v4 3/5] media: i2c: imx214: Make use of CCS PLL calculator
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, Ricardo Ribalda <ribalda@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 22, 2025 at 7:13=E2=80=AFPM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Andr=C3=A9,
->
-> On Sun, Jun 22, 2025 at 05:34:56PM +0200, Andr=C3=A9 Apitzsch wrote:
-> > Am Samstag, dem 21.06.2025 um 21:17 +0300 schrieb Laurent Pinchart:
-> > > On Sat, Jun 21, 2025 at 11:37:27AM +0200, Andr=C3=A9 Apitzsch via B4 =
-Relay wrote:
-> > > > From: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
-> > > >
-> > > > Calculate PLL parameters based on clock frequency and link
-> > > > frequency.
-> > > >
-> > > > Acked-by: Ricardo Ribalda <ribalda@chromium.org>
-> > > > Signed-off-by: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
-> > > > ---
-> > > >  drivers/media/i2c/Kconfig  |   1 +
-> > > >  drivers/media/i2c/imx214.c | 213 +++++++++++++++++++++++++++++++++=
-+++---------
-> > > >  2 files changed, 175 insertions(+), 39 deletions(-)
-> > > >
-> > > > diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> > > > index
-> > > > e68202954a8fd4711d108cf295d5771246fbc406..08db8abeea218080b0bf5bfe6
-> > > > cf82f1c0b100c4a 100644
-> > > > --- a/drivers/media/i2c/Kconfig
-> > > > +++ b/drivers/media/i2c/Kconfig
-> > > > [..]
-> > > > @@ -1224,42 +1336,52 @@ static int imx214_parse_fwnode(struct
-> > > > device *dev)
-> > > >   if (!endpoint)
-> > > >   return dev_err_probe(dev, -EINVAL, "endpoint node not found\n");
-> > > >
-> > > > - ret =3D v4l2_fwnode_endpoint_alloc_parse(endpoint, &bus_cfg);
-> > > > + bus_cfg->bus_type =3D V4L2_MBUS_CSI2_DPHY;
-> > > > + ret =3D v4l2_fwnode_endpoint_alloc_parse(endpoint, bus_cfg);
-> > > > + fwnode_handle_put(endpoint);
-> > >
-> > > ... drop this. Up to you.
-> > >
-> > > >   if (ret) {
-> > > >   dev_err_probe(dev, ret, "parsing endpoint node failed\n");
-> > > > - goto done;
-> > > > + goto error;
-> > >
-> > > You can return ret here.
-> > >
-> > > >   }
-> > > >
-> > > >   /* Check the number of MIPI CSI2 data lanes */
-> > > > - if (bus_cfg.bus.mipi_csi2.num_data_lanes !=3D 4) {
-> > > > + if (bus_cfg->bus.mipi_csi2.num_data_lanes !=3D 4) {
-> > > >   ret =3D dev_err_probe(dev, -EINVAL,
-> > > >       "only 4 data lanes are currently supported\n");
-> > > > - goto done;
-> > > > + goto error;
-> > > >   }
-> > > >
-> > > > - if (bus_cfg.nr_of_link_frequencies !=3D 1)
-> > > > + if (bus_cfg->nr_of_link_frequencies !=3D 1)
-> > > >   dev_warn(dev, "Only one link-frequency supported, please review
-> > > > your DT. Continuing anyway\n");
-> > >
-> > > Now that the driver can calculate PLL parameters dynamically, it
-> > > would be nice to lift this restriction and make the link frequency
-> > > control writable, in a separate patch on top of this series.
-> >
-> > Maybe this could be postponed, as I don't have any use for it at the
-> > moment and I don't want to further delay this series.
->
-> When I said "on top", I didn't mean in a new version of this series. We
-> can merge this first, and then lift this restriction. I don't have an
-> imx214-based device so I can't do it myself and test it :-/
->
-> > > > - for (i =3D 0; i < bus_cfg.nr_of_link_frequencies; i++) {
-> > > > - if (bus_cfg.link_frequencies[i] =3D=3D IMX214_DEFAULT_LINK_FREQ)
-> > > > + for (i =3D 0; i < bus_cfg->nr_of_link_frequencies; i++) {
-> > > > + u64 freq =3D bus_cfg->link_frequencies[i];
-> > > > + struct ccs_pll pll;
-> > > > +
-> > > > + if (!imx214_pll_calculate(imx214, &pll, freq))
-> > > >   break;
-> > > > - if (bus_cfg.link_frequencies[i] =3D=3D
-> > > > -     IMX214_DEFAULT_LINK_FREQ_LEGACY) {
-> > > > + if (freq =3D=3D IMX214_DEFAULT_LINK_FREQ_LEGACY) {
-> > > >   dev_warn(dev,
-> > > >   "link-frequencies %d not supported, please review your DT.
-> > > > Continuing anyway\n",
-> > > >   IMX214_DEFAULT_LINK_FREQ);
-> > > > + freq =3D IMX214_DEFAULT_LINK_FREQ;
-> > > > + if (imx214_pll_calculate(imx214, &pll, freq))
-> > > > + continue;
-> > > > + bus_cfg->link_frequencies[i] =3D freq;
-> > > >   break;
-> > > >   }
-> > >
-> > > How about separating the IMX214_DEFAULT_LINK_FREQ_LEGACY check from
-> > > the PLL calculation ? Something like
-> > >
-> > >  u64 freq =3D bus_cfg->link_frequencies[i];
-> > >  struct ccs_pll pll;
-> > >
-> > >  if (freq =3D=3D IMX214_DEFAULT_LINK_FREQ_LEGACY) {
-> > >  dev_warn(dev,
-> > >  "link-frequencies %d not supported, please review your DT.
-> > > Continuing anyway\n",
-> > >  IMX214_DEFAULT_LINK_FREQ);
-> > >  freq =3D IMX214_DEFAULT_LINK_FREQ;
-> > >  bus_cfg->link_frequencies[i] =3D freq;
-> > >  }
-> >
-> > With PLL calculation, 480000000 (=3DIMX214_DEFAULT_LINK_FREQ_LEGACY)
-> > might be a valid link frequency explicitly set by the user. I'm not
-> > sure whether it is a good idea to overwrite the link frequency, before
-> > trying the PLL calculation. That's why I would keep the code the way it
-> > is.
->
-> The current code accepts both IMX214_DEFAULT_LINK_FREQ (600 MHz) and
-> IMX214_DEFAULT_LINK_FREQ_LEGACY (400 MHz), and programs the PLL with (as
-> far as I understand) a 600 MHz clock frequency in either case. To avoid
-> a change in behaviour, I think overriding the 400 MHz frequency with 600
-> MHz in this patch would be best. We could then drop that in a later
-> patch, possibly by patching the clock frequency in a platform-specific
-> driver instead of the imx214 driver.
->
-> > >  if (!imx214_pll_calculate(imx214, &pll, freq))
-> > >  break;
-> > >
-> > > It will then become easier to drop this legacy support from the
-> > > driver. What platform(s) are know to specify an incorrect link
-> > > frequency ?
-> >
-> > I don't know.
->
-> Ricardo, do you have any information about this ?
+Since upstream commit 923f3a2b48bdccb6a1d1f0dd48de03de7ad936d9
+("x86/resctrl: Query LLC monitoring properties once during boot"),
+resctrl_cpu_detect() has been moved from common cpu initialization
+code to vendor-specific bsp init helper, while hygon didn't put
+that call in their code.
 
+This triggers div-zero fault during early booting stage on our
+machines with X86_FEATURE_CQM* supported, where
+get_rdt_mon_resources() tries to calculate mon_l3_config with
+uninitialized boot_cpu_data.x86_cache_occ_scale.
 
-This was for a development platform for Qualcomm, think of a pizero
-like, but with a Snapdragon device.
+Fix the missing resctrl_cpu_detect() in hygon bsp init helper.
 
-There was a Qtechnology product based on that platform. I asked them
-if they could provide me a device for testing, but it has been
-discontinued and  replaced with something better.
+Signed-off-by: Tianxiang Peng <txpeng@tencent.com>
+Reviewed-by: Hui Li <caelli@tencent.com>
+---
+ arch/x86/kernel/cpu/hygon.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-We can start to deprecate the clock quirk if you want.
+diff --git a/arch/x86/kernel/cpu/hygon.c b/arch/x86/kernel/cpu/hygon.c
+index 9f914bf80180..5f73bad0b9fd 100644
+--- a/arch/x86/kernel/cpu/hygon.c
++++ b/arch/x86/kernel/cpu/hygon.c
+@@ -16,6 +16,7 @@
+ #include <asm/page.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
++#include <asm/resctrl.h>
+ 
+ #ifdef CONFIG_X86_64
+ # include <asm/set_memory.h>
+@@ -271,6 +272,8 @@ static void bsp_init_hygon(struct cpuinfo_x86 *c)
+ 			x86_amd_ls_cfg_ssbd_mask = 1ULL << 10;
+ 		}
+ 	}
++
++	resctrl_cpu_detect(c);
+ }
+ 
+ static void early_init_hygon(struct cpuinfo_x86 *c)
+-- 
+2.43.5
 
->
-> > > >   }
-> > > >
-> > > > - if (i =3D=3D bus_cfg.nr_of_link_frequencies)
-> > > > + if (i =3D=3D bus_cfg->nr_of_link_frequencies)
-> > > >   ret =3D dev_err_probe(dev, -EINVAL,
-> > > > -     "link-frequencies %d not supported, please review your DT\n",
-> > > > -     IMX214_DEFAULT_LINK_FREQ);
-> > > > +     "link-frequencies %lld not supported, please review your
-> > > > DT\n",
-> > > > +     bus_cfg->nr_of_link_frequencies ?
-> > > > +     bus_cfg->link_frequencies[0] : 0);
-> > > >
-> > > > -done:
-> > > > - v4l2_fwnode_endpoint_free(&bus_cfg);
-> > > > - fwnode_handle_put(endpoint);
-> > > > + return 0;
-> > > > +
-> > > > +error:
-> > > > + v4l2_fwnode_endpoint_free(&imx214->bus_cfg);
-> > > >   return ret;
-> > > >  }
-> > > >
-> > > > @@ -1299,7 +1421,7 @@ static int imx214_probe(struct i2c_client
-> > > > *client)
-> > > >   return dev_err_probe(dev, PTR_ERR(imx214->regmap),
-> > > >        "failed to initialize CCI\n");
-> > > >
-> > > > - ret =3D imx214_parse_fwnode(dev);
-> > > > + ret =3D imx214_parse_fwnode(dev, imx214);
-> > > >   if (ret)
-> > > >   return ret;
-> > > >
-> > > > @@ -1310,7 +1432,9 @@ static int imx214_probe(struct i2c_client
-> > > > *client)
-> > > >   * Enable power initially, to avoid warnings
-> > > >   * from clk_disable on power_off
-> > > >   */
-> > > > - imx214_power_on(imx214->dev);
-> > > > + ret =3D imx214_power_on(imx214->dev);
-> > > > + if (ret < 0)
-> > > > + goto error_fwnode;
-> > >
-> > > This change seems to belong to a separate patch.
-> > >
-> > > >
-> > > >   ret =3D imx214_identify_module(imx214);
-> > > >   if (ret)
-> > > > @@ -1341,6 +1465,12 @@ static int imx214_probe(struct i2c_client
-> > > > *client)
-> > > >   pm_runtime_set_active(imx214->dev);
-> > > >   pm_runtime_enable(imx214->dev);
-> > > >
-> > > > + ret =3D imx214_pll_update(imx214);
-> > > > + if (ret < 0) {
-> > > > + dev_err_probe(dev, ret, "failed to update PLL\n");
-> > > > + goto error_subdev_cleanup;
-> > > > + }
-> > >
-> > > I would move this to imx214_ctrls_init().
-> > >
-> > > > +
-> > > >   ret =3D v4l2_async_register_subdev_sensor(&imx214->sd);
-> > > >   if (ret < 0) {
-> > > >   dev_err_probe(dev, ret,
-> > > > @@ -1366,6 +1496,9 @@ static int imx214_probe(struct i2c_client
-> > > > *client)
-> > > >  error_power_off:
-> > > >   imx214_power_off(imx214->dev);
-> > > >
-> > > > +error_fwnode:
-> > > > + v4l2_fwnode_endpoint_free(&imx214->bus_cfg);
-> > > > +
-> > > >   return ret;
-> > > >  }
-> > > >
-> > > > @@ -1378,6 +1511,8 @@ static void imx214_remove(struct i2c_client
-> > > > *client)
-> > > >   v4l2_subdev_cleanup(sd);
-> > > >   media_entity_cleanup(&imx214->sd.entity);
-> > > >   v4l2_ctrl_handler_free(&imx214->ctrls);
-> > > > + v4l2_fwnode_endpoint_free(&imx214->bus_cfg);
-> > > > +
-> > > >   pm_runtime_disable(&client->dev);
-> > > >   if (!pm_runtime_status_suspended(&client->dev)) {
-> > > >   imx214_power_off(imx214->dev);
->
-> --
-> Regards,
->
-> Laurent Pinchart
