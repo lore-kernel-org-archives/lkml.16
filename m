@@ -1,110 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B334615624B;
-	Mon, 23 Jun 2025 08:03:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D7A2036FE;
+	Mon, 23 Jun 2025 08:03:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750665810; cv=none; b=rg+10ov+Kvz8LlhX5hECHjCZfDOgignMkLcWBEJjH1nCLez9W/+K1foFyQ/ZJs5lOQcY5RHlGH3M+OUcz5pXeA8zRqhep8Ra+v7LcJXkFdkv2O5ZJOi4A0oodW39MtcLrRZwBcd+GNq1M6qE4VFT020GZy2lziGZdZEHeIv9v4o=
+	t=1750665828; cv=none; b=JBtICbHIWg7jlx0KcQllO6zJG7mbfQAYAexOFL/vmn4jy5V2j4Ruo+2ZXBA7210GrwC2thfdRihtOhPqbm/c6+q/hlJkUJ2gJpswTP+A5Y7SFVmtS6BTrWGAu+DQOqjtgnbPGOF4IphGWZ9IhgubiV7PnACdT3yQg2qxmXSf/pY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750665810; c=relaxed/simple;
-	bh=gu/rOe5ESBxHZs+Px8fbuROLzfecA+eHFC6m3syd/2Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fv6M+K6jewpYAz4h67PqOA6qSRKRt0F2QfFWUUEQyXEZ2+1peFE441QwR52jA5XAJ7a/U+5zWtd/svSFwQs2mBPtSs2hNbS+E+0bAgMCmDuS/3Qf2ClV0LelkmoWDZBu2y9/Js7Gvdqq5gwSLiXw2VNltzyaOHUU+YyjLdlnv68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kCHUevBO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750665828; c=relaxed/simple;
+	bh=+5tLIPL4mupk3HsQHmmJo2/UPa4agOpGHIdMIH/PnqI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DtPBju+R5hRH4gVf5GkippyhkFHDYU4RbT+Y8bunzK+8MFB/iqUliAGRx9Kxlv0zbgUInZXlFPImn5BUWj8NxUE30tB57ZH8ABt7Q7W/cm5wRijUKN6YYpGQW9+z6yFmD8hu0nSoGJ3VBd8msWoKtx2eGS0txhtALvgk6Zvskl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0FZvRXbK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kCHUevBO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE2F5C4CEED;
-	Mon, 23 Jun 2025 08:03:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750665810;
-	bh=gu/rOe5ESBxHZs+Px8fbuROLzfecA+eHFC6m3syd/2Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kCHUevBOyLwfwRYnVGD0C1q4dMm0Cs30hCqX61kDLwpXQitOjO4gjIW2cLgTUSbkJ
-	 YsHXxyODVbQ6a8uCn+aS4LUq4D0LvEW0GW+r9a7Qp/ropgttvW5miSYR5TOpWMKYPq
-	 OV1wPupK3q8Mpy1vfsSlHLZomAOgT6iztIOAhkbbkzKe78rIls1P54aWY/Uj/rdClL
-	 PDtsl3vBCDvhYsTVXT9Ptl4CF9ao5ih7RlveKRN7dvxxK60lEC+w5sUqMa5LffldOb
-	 XoX7FhQfEK2bkNbEJ90Lt+eOV/g5YR0pUUYos2fNtBjHk0DYv2Jc9LMmrma+A9XzU3
-	 OWaVqB2A4dR9w==
-Message-ID: <3ddf2df5-4591-421e-bfc2-50c7d3ca526d@kernel.org>
-Date: Mon, 23 Jun 2025 10:03:23 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0FZvRXbK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99D8AC4CEED;
+	Mon, 23 Jun 2025 08:03:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750665828;
+	bh=+5tLIPL4mupk3HsQHmmJo2/UPa4agOpGHIdMIH/PnqI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=0FZvRXbK5+kYxPJe9hIj1PrFuODwbd+g0bg4bvxtLSZcS4NwiUmTkJJsjEIikDq2F
+	 R7sInP+ntZuaaMB3NYX0sqvz4UaOJsLBDynsGq9xSTbaL+TCihCoNeqAPpMFeuoKNY
+	 28LQ0KInP4SL84r7ATrQMp6E3z/5mE8bL/s5pU2g=
+Date: Mon, 23 Jun 2025 10:03:45 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Sasha Levin <sashal@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org,
+	ziyao@disroot.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH for 6.1/6.6] platform/loongarch: laptop: Fix build error
+ due to backport
+Message-ID: <2025062339-till-sloping-58b2@gregkh>
+References: <20250622110148.3108758-1-chenhuacai@loongson.cn>
+ <2025062206-roundish-thumb-a20e@gregkh>
+ <CAAhV-H4S=z5O0+pq-x9X4-VjYsJQVxib+V-35g50WeaivryHLA@mail.gmail.com>
+ <2025062349-proximity-trapeze-24c6@gregkh>
+ <CAAhV-H7r-X-t0_i-x=oy2Gin4-ZMhSVwXtcaygZdJ1_J-zD3dg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] ASoC: dt-bindings: qcom,wsa8830: Add reset-gpios
- for shared line
-To: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>,
- Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Philipp Zabel <p.zabel@pengutronix.de>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, quic_pkumpatl@quicinc.com,
- kernel@oss.qualcomm.com
-References: <20250620103012.360794-1-mohammad.rafi.shaik@oss.qualcomm.com>
- <20250620103012.360794-2-mohammad.rafi.shaik@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250620103012.360794-2-mohammad.rafi.shaik@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H7r-X-t0_i-x=oy2Gin4-ZMhSVwXtcaygZdJ1_J-zD3dg@mail.gmail.com>
 
-On 20/06/2025 12:30, Mohammad Rafi Shaik wrote:
-> On Qualcomm platforms, like QCS6490-RB3Gen2 and QCM6490-IDP, the
-> WSA884x speakers share SD_N GPIOs between two speakers, thus
+On Mon, Jun 23, 2025 at 02:36:18PM +0800, Huacai Chen wrote:
+> On Mon, Jun 23, 2025 at 2:28 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Sun, Jun 22, 2025 at 09:11:44PM +0800, Huacai Chen wrote:
+> > > On Sun, Jun 22, 2025 at 9:10 PM Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > On Sun, Jun 22, 2025 at 07:01:48PM +0800, Huacai Chen wrote:
+> > > > > In 6.1/6.6 there is no BACKLIGHT_POWER_ON definition so a build error
+> > > > > occurs due to recently backport:
+> > > > >
+> > > > >   CC      drivers/platform/loongarch/loongson-laptop.o
+> > > > > drivers/platform/loongarch/loongson-laptop.c: In function 'laptop_backlight_register':
+> > > > > drivers/platform/loongarch/loongson-laptop.c:428:23: error: 'BACKLIGHT_POWER_ON' undeclared (first use in this function)
+> > > > >   428 |         props.power = BACKLIGHT_POWER_ON;
+> > > > >       |                       ^~~~~~~~~~~~~~~~~~
+> > > > >
+> > > > > Use FB_BLANK_UNBLANK instead which has the same meaning.
+> > > > >
+> > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > > ---
+> > > > >  drivers/platform/loongarch/loongson-laptop.c | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > What commit id is this fixing?
+> > >
+> > > commit 53c762b47f726e4079a1f06f684bce2fc0d56fba upstream.
+> >
+> > Great, can you resend this with a proper Fixes: tag so I don't have to
+> > manually add it myself?
+> Upstream kernel doesn't need to be fixed, and for 6.1/6.6, the commits
+> need to be fixed are in linux-stable-rc.git[1][2] rather than
+> linux-stable.git now.
+> 
+> I don't know your policy about stable branch maintenance, one of the
+> alternatives is modify [1][2] directly. And if you prefer me to resend
+> this patch, I think the commit id is not the upstream id, but the ids
+> in [1][2]?
+> 
+> [1]https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=queue/6.1&id=f78d337c63e738ebd556bf67472b2b5c5d8e9a1c
+> [2]https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=queue/6.6&id=797cbc5bc7e7a9cd349b5c54c6128a4077b9a8c6
 
-You copied everything from my commit 26c8a435fce6 ... even device name.
-Please don't blindly copy, but check what you are actually pasting.
+What we should do is just drop those patches from the 6.1.y and 6.6.y
+queues, I'll go do that now, and wait for you to submit a working
+version of this patch for those branches, so that we do not have any
+build breakages anywhere.
 
-Best regards,
-Krzysztof
+Can you submit the updated patches for that now?
+
+thanks,
+
+greg k-h
