@@ -1,267 +1,584 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from server.couthit.com (server.couthit.com [162.240.164.96])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A2329DB73
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A1911CA9;
+	Mon, 23 Jun 2025 16:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.164.96
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750697042; cv=none; b=lI6C9HBNKjgALsQIHu4cEQGIgaycQ4gOWCU2ud3IMehWHoMVY3Iur/rOspzAzakdIQlS/K4qQy784BqecH0tCjFWCBf3p08PqUfY6PEnHggiwiG2UNWQDfSQiAZxcc2czCS7L3priVFb3GFDl8/OxycoEByjQ9QDejWq18jA2es=
+	t=1750697060; cv=none; b=Y8LSBu6CBM+U/RBX4dNovubwH82lgks2a1svPNBd6J5vEX5+s6zZfIThh+WIlZzZGmzRPImqN+l7t0SDe17W4pCSGAw3505Pl01+J4d0cQRkrBR++ICpKRkdNvvQ+Q5B1Q1+gHXJVLEHWGeQCITfAEyCSti990vmNb+Z7mzlq3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750697042; c=relaxed/simple;
-	bh=sn1KF/6Ht8dkS8+c6d0VPrkLlRi1uh3h1hk4Rb9e8aw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TbeTYYfYeNOPweFR3EXoEYJEwU0uv52i0MiVWsWBjvjOOa60Bm59++GX7zCaioIgNCgvdK8mCsGKdXCe3hb04fgmfwnA9QZWMdl1bKVuV2sR858GVYR0l8u8nv93Xfw/bmOSVjIeXFRuGvVRt5rJWBRjUaeL6uxvoMJz/ADtZlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Y0b8AB0Q; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750697060; c=relaxed/simple;
+	bh=Ul3DVQI1/LcwZSt5bqvxKrjD+m73f10GQkE7vOV4cAg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=lrPZFqnQ/4mpHF5pLbiS41C6N8jlhG1xYB/rJWYC9gdO03NvZz1u1BMx8Pt0E8qSLgS9JrpM2l9lejXFhgaKPYQLq71sTm62clmJrIQuAjKcUua6e731xpEQnPs1NUoDJdUmGivmQ5wP4rgNpg04jLYLxcaH39pYaumVw7sXjbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=qB0VXJe+; arc=none smtp.client-ip=162.240.164.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=couthit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Y0b8AB0Q"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NGZP7a005909
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:43:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	qWNqZMKTL0RTyb8f45ntbHnU/u8jjeMVsb9+e79xe8I=; b=Y0b8AB0Qs2iqnAPB
-	daDNou9tezI1vzPFipSgtNpZdc6XN5f7wogT+SgGE7hcsK+beaGhlYL77Q8pwcha
-	A6ffV+82Qtwq+VGlify2nA3e+kUuNfFt84ygY3UE34c1frSMffqbAIO6SWn2KUMv
-	IK8KQQIPMb6Uo5yx1Mhbxwsx5Z6Ty9GTm+0RcH64N0VjusMn8d2/ifEbk4AjvqMf
-	K6QcsLNQm/+/QXtBbQ5+/w67cx8VbZsUEbimxQ/b6f54VgC3YIXMwwW5lJtWpxnR
-	CJ/T+VIjeSEmDVmoGlX/voKBbtO4sMBsU959x7M9DXdu4g88NVDiJfKm0gh6AT+A
-	4LgqOw==
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f3bg9e65-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:43:59 +0000 (GMT)
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-313d6d671ffso4123133a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:43:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750697038; x=1751301838;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qWNqZMKTL0RTyb8f45ntbHnU/u8jjeMVsb9+e79xe8I=;
-        b=RsIgQKR05iqlW2puTmGRd7cc8nuyH4t9AweaOMAsLF+v5hdQmCowbnHKYtFlRXmS27
-         CbwLRgFNbrH7xjr3ZK0NEib+u9zc4QQt+1dN0jNoxTCXKRVaStli0BmrXfVVvspfGN7A
-         8mRKim4p27BWGvVYWmS+kLbWPqxoenN8wU0sIDbJcmWTE9eHSDsGqoO/l1029uDWvu0x
-         tSPLpLMCMfWIPwD7TUaPRMtiepOQzXwsgxYeNGr0fZLf5zFrJGC1Va4tKdP7us5Y1qNA
-         RBsWywz0+fCQ3prcBHzPi80Ntw5yV4s/e0/wDP0ZqlZ5aEzTpZqt7DwJQ29imzXDDAmH
-         VVSA==
-X-Forwarded-Encrypted: i=1; AJvYcCWBDYpzPiZvaAZsObzy/PFDODJKL9GizLw4fOKUKSYPwubGNFdb6V76YyjBxSzbhILEgv+8NEDRlBFeSzk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSqNYPZ7WImC8xY+mJ4aXaptekkChGnBNRNK4RTWICpMvK4t3h
-	pZvkSrSIGd+ez0Ej6UJuuFZC+BaD1LXXlgaKlgSiSMa4WbjZ6NMYhFpyubH0lCgqYi1b6N3Xq/6
-	yho+v1yOrjZwo3J635xCAGQV+sMuwVCPdyumRdW7Em5M2kGy+auyIMjNvIXwdMVojWkc=
-X-Gm-Gg: ASbGnct5rfiFYzb5S4UjFfpdAy/cAd0j+xSUu7OG2qt3pW+vpNBhrHu3a+fZI04zuKC
-	jNYnLNaONGsfMutxxZSdXGJ5YXyYwYWJbOETUDGZlA1GNdXFC/WYNthhLv3Zf/Hc/nZc9JHyH8Y
-	hA+WexUlFptT0ZK44lyoi+N8eysg72346I8e6TTSVJvx6m+u2KGVHf0r0s8DIWyvUevJquPIs6a
-	fe1SVXaGAe22rRmmzuJQs4XILm+2HIfog9vM37GV9A3y+xsP9DYkVosNlkjBNb7XzM7XEIcWe5m
-	bg2RCKqmcmWk590wy5hztnjlfyioSTX886dqD/2/KSpStVsdyGs3
-X-Received: by 2002:a17:90b:5826:b0:2fe:e9c6:689e with SMTP id 98e67ed59e1d1-3159d64432cmr20159125a91.8.1750697038076;
-        Mon, 23 Jun 2025 09:43:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEc6+DPGexoqt9iFZAUHgGKTSWRV9mQ6Fl4MWUU0bfxuffMek6pig/mwkiOYyr/RXSKgvyvnA==
-X-Received: by 2002:a17:90b:5826:b0:2fe:e9c6:689e with SMTP id 98e67ed59e1d1-3159d64432cmr20159094a91.8.1750697037645;
-        Mon, 23 Jun 2025 09:43:57 -0700 (PDT)
-Received: from hu-kamalw-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159e048346sm9271254a91.26.2025.06.23.09.43.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 09:43:57 -0700 (PDT)
-From: Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>
-Date: Mon, 23 Jun 2025 22:13:41 +0530
-Subject: [PATCH 2/2] regulator: qcom-rpmh: Add support to read regulator
- settings
+	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="qB0VXJe+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
+	; s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=7npKhcq1MPn629dD4R4aL1MSwy5RHxCarlCRNWQ1CoQ=; b=qB0VXJe+GNLg3VGSi7TWOQIstY
+	7Odr9xswuK4WuQQfrpgOqrI1K3pCRxLdSyXwQ4wKImJmpftHSrQPEFAsE78ILINuPa8cZbDU7Tz7z
+	o6NcBG4kIYGYTrgXsq0gV9shzya2AYEWuRs+7u5jhr6zAnI3/ImbSNvbvnoXWDG0EEQuPW5Bod8y5
+	rVFrpcTPqBMU4pyJWQh5VbV4ca3lD3dx5X8NeBu83P+VqE/iQ4MluYGo8v7OyA5vqjrx/UZIZ7SLS
+	MfGIVHCS1xHPq+N/mXSziGMKuXpiuQdcBlFhpTY01Um2vSEC8xiY7XyEJCTTrD/7WVMWVD/xZygOv
+	mL6mhdgw==;
+Received: from [122.175.9.182] (port=13719 helo=cypher.couthit.local)
+	by server.couthit.com with esmtpa (Exim 4.98.1)
+	(envelope-from <parvathi@couthit.com>)
+	id 1uTkHD-00000006VGn-28Mp;
+	Mon, 23 Jun 2025 12:44:12 -0400
+From: Parvathi Pudi <parvathi@couthit.com>
+To: danishanwar@ti.com,
+	rogerq@kernel.org,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	ssantosh@kernel.org,
+	richardcochran@gmail.com,
+	s.hauer@pengutronix.de,
+	m-karicheri2@ti.com,
+	glaroque@baylibre.com,
+	afd@ti.com,
+	saikrishnag@marvell.com,
+	m-malladi@ti.com,
+	jacob.e.keller@intel.com,
+	diogo.ivo@siemens.com,
+	javier.carrasco.cruz@gmail.com,
+	horms@kernel.org,
+	s-anna@ti.com,
+	basharath@couthit.com,
+	parvathi@couthit.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pratheesh@ti.com,
+	prajith@ti.com,
+	vigneshr@ti.com,
+	praneeth@ti.com,
+	srk@ti.com,
+	rogerq@ti.com,
+	krishna@couthit.com,
+	pmohan@couthit.com,
+	mohan@couthit.com
+Subject: [PATCH net-next v9 11/11] net: ti: prueth: Adds PTP OC Support for AM335x and AM437x
+Date: Mon, 23 Jun 2025 22:12:36 +0530
+Message-Id: <20250623164236.255083-12-parvathi@couthit.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250623135949.254674-1-parvathi@couthit.com>
+References: <20250623135949.254674-1-parvathi@couthit.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-add-rpmh-read-support-v1-2-ae583d260195@oss.qualcomm.com>
-References: <20250623-add-rpmh-read-support-v1-0-ae583d260195@oss.qualcomm.com>
-In-Reply-To: <20250623-add-rpmh-read-support-v1-0-ae583d260195@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>,
-        David Collins <david.collins@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750697028; l=5166;
- i=kamal.wadhwa@oss.qualcomm.com; s=20241018; h=from:subject:message-id;
- bh=sn1KF/6Ht8dkS8+c6d0VPrkLlRi1uh3h1hk4Rb9e8aw=;
- b=EOeQmrffC193kGihEndFlAgPdXhvvTnjn+yaE0LDszh2PJZd0RPEd6NXWQbpmtm38atm5WTCg
- gSkNudxW7jFB3NNqaMBhBuYhALq/nNtQEkfbSZPm9k4fUxq5oqYG9Jo
-X-Developer-Key: i=kamal.wadhwa@oss.qualcomm.com; a=ed25519;
- pk=XbPE6DM5/mJi2tsiYwMCJCZ4O5XPMqColJRlGVcM7Hs=
-X-Proofpoint-ORIG-GUID: MFIsfhBu1qHMpqqBP-AoJxR_0KvsYYEQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDEwMSBTYWx0ZWRfX3CaMtQy3SbpT
- TQLyCunH1x03a93RCaq/QmXGJG9BFDNxxwxsJD207kfZRvUfIC9uK77aVsBrR5bBtRDwstzny/0
- fc/8M9BtrOKli9mOaqWyxKcSzFFra87MsoGQ4DMEgbiFN16sX4xy6lPu1LVYLQjdA3RQkweVYOV
- r1xtOqWd+mlNT4EsEHn6s6c90/N8odwcMblVCfEoW1huwclfa2LynqPdqTo6ZbgtD/8LQ9CYgwF
- Ht8LsVtgIrZkzzpm8pogpLI/a6BTyxvhPT8gKt59ebi0+dxMx/t1PGKQk10om9Ukv8b7g/MlITx
- vCdUok/DjD70Z4nxfs51RsgC3MjE8wOuswNq2p+siIHNATQcjrnYZ8UKgZWmV/Fgp8b5l+c/4Pc
- CPa4hj4MGWg469I5jrw8s6lxhUBkCZGEw7j6yNwdjuSCtBGFKzk+Py4NnGJ91H14oJIjSlAj
-X-Authority-Analysis: v=2.4 cv=L4kdQ/T8 c=1 sm=1 tr=0 ts=6859844f cx=c_pps
- a=RP+M6JBNLl+fLTcSJhASfg==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=oayDomAjHHfHustaWQ8A:9
- a=QEXdDO2ut3YA:10 a=iS9zxrgQBfv6-_F4QbHw:22
-X-Proofpoint-GUID: MFIsfhBu1qHMpqqBP-AoJxR_0KvsYYEQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-23_04,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 malwarescore=0 bulkscore=0 clxscore=1015 suspectscore=0
- adultscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
- spamscore=0 phishscore=0 mlxlogscore=999 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506230101
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.couthit.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - couthit.com
+X-Get-Message-Sender-Via: server.couthit.com: authenticated_id: parvathi@couthit.com
+X-Authenticated-Sender: server.couthit.com: parvathi@couthit.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-Currently, the RPMH regulator's `get_voltage_sel()` function only
-returns cached values from the last `set_voltage_sel()` operation.
-This limitation prevents the regulator framework from accurately
-reflecting the regulator configurations set during the bootloader
-stage. As a result, the regulator framework may trigger an
-unnecessary `set_voltage_sel()` call with the `min_uV` value
-specified in the regulator's device tree settings, which can
-cause issues for consumers like the display and UFS that require
-a consistent voltage setting from the bootloader state until
-their drivers are probed.
+From: Roger Quadros <rogerq@ti.com>
 
-To address this issue, enhance the `get_voltage_sel()`,
-`get_mode()`, and `is_enabled()` callbacks to read the regulator
-settings directly from the RPMH hardware using the `rpmh_read()`
-function. This change ensures that the regulator framework
-accurately reflects the actual state of the regulators, avoiding
-unnecessary voltage adjustments and maintaining consistent power
-settings across the transition from bootloader to kernel.
+PRU-ICSS IEP module, which is capable of timestamping RX and
+TX packets at HW level, is used for time synchronization by PTP4L.
 
-Signed-off-by: David Collins <david.collins@oss.qualcomm.com>
-Signed-off-by: Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>
+This change includes interaction between firmware/driver and user
+application (ptp4l) with required packet timestamps.
+
+RX SOF timestamp comes along with packet and firmware will rise
+interrupt with TX SOF timestamp after pushing the packet on to the wire.
+
+IEP driver available in upstream linux as part of ICSSG assumes 64-bit
+timestamp value from firmware.
+
+Enhanced the IEP driver to support the legacy 32-bit timestamp
+conversion to 64-bit timestamp by using 2 fields as below:
+- 32-bit HW timestamp from SOF event in ns
+- Seconds value maintained in driver.
+
+Currently ordinary clock (OC) configuration has been validated with
+Linux ptp4l.
+
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
+Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
 ---
- drivers/regulator/qcom-rpmh-regulator.c | 71 +++++++++++++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
+ drivers/net/ethernet/ti/icssg/icss_iep.c     | 155 ++++++++++++++++++-
+ drivers/net/ethernet/ti/icssg/icss_iep.h     |  12 ++
+ drivers/net/ethernet/ti/icssm/icssm_prueth.c |  56 ++++++-
+ drivers/net/ethernet/ti/icssm/icssm_prueth.h |  11 ++
+ 4 files changed, 230 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
-index 7870722b6ee21ce487c2cf911760fb4a385fc44b..ba5bd4ecec7429a1ada008c237cf7444a37a9cc6 100644
---- a/drivers/regulator/qcom-rpmh-regulator.c
-+++ b/drivers/regulator/qcom-rpmh-regulator.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (c) 2018-2021, The Linux Foundation. All rights reserved.
- // Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-+// Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+diff --git a/drivers/net/ethernet/ti/icssg/icss_iep.c b/drivers/net/ethernet/ti/icssg/icss_iep.c
+index d0850722814e..85e27cc77a3b 100644
+--- a/drivers/net/ethernet/ti/icssg/icss_iep.c
++++ b/drivers/net/ethernet/ti/icssg/icss_iep.c
+@@ -14,12 +14,15 @@
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
++#include <linux/timecounter.h>
++#include <linux/clocksource.h>
+ #include <linux/timekeeping.h>
+ #include <linux/interrupt.h>
+ #include <linux/of_irq.h>
+ #include <linux/workqueue.h>
  
- #define pr_fmt(fmt) "%s: " fmt, __func__
+ #include "icss_iep.h"
++#include "../icssm/icssm_prueth_ptp.h"
  
-@@ -33,8 +34,13 @@ enum rpmh_regulator_type {
+ #define IEP_MAX_DEF_INC		0xf
+ #define IEP_MAX_COMPEN_INC		0xfff
+@@ -53,6 +56,14 @@
+ #define IEP_CAP_CFG_CAPNR_1ST_EVENT_EN(n)	BIT(LATCH_INDEX(n))
+ #define IEP_CAP_CFG_CAP_ASYNC_EN(n)		BIT(LATCH_INDEX(n) + 10)
+ 
++#define IEP_TC_DEFAULT_SHIFT         28
++#define IEP_TC_INCR5_MULT            BIT(28)
++
++/* Polling period - how often iep_overflow_check() is called */
++#define IEP_OVERFLOW_CHECK_PERIOD_MS   50
++
++#define TIMESYNC_SECONDS_COUNT_SIZE    6
++
+ /**
+  * icss_iep_get_count_hi() - Get the upper 32 bit IEP counter
+  * @iep: Pointer to structure representing IEP.
+@@ -87,6 +98,28 @@ int icss_iep_get_count_low(struct icss_iep *iep)
+ }
+ EXPORT_SYMBOL_GPL(icss_iep_get_count_low);
+ 
++static u64 icss_iep_get_count32(struct icss_iep *iep)
++{
++	void __iomem *sram = iep->sram;
++	u64 v_sec = 0;
++	u32 v_ns = 0;
++	u64 v = 0;
++
++	v_ns = icss_iep_get_count_low(iep);
++	memcpy_fromio(&v_sec, sram + TIMESYNC_SECONDS_COUNT_OFFSET,
++		      TIMESYNC_SECONDS_COUNT_SIZE);
++	v = (v_sec * NSEC_PER_SEC) + v_ns;
++
++	return v;
++}
++
++static u64 icss_iep_cc_read(const struct cyclecounter *cc)
++{
++	struct icss_iep *iep = container_of(cc, struct icss_iep, cc);
++
++	return icss_iep_get_count32(iep);
++}
++
+ /**
+  * icss_iep_get_ptp_clock_idx() - Get PTP clock index using IEP driver
+  * @iep: Pointer to structure representing IEP.
+@@ -280,6 +313,78 @@ static void icss_iep_set_slow_compensation_count(struct icss_iep *iep,
+ 	regmap_write(iep->map, ICSS_IEP_SLOW_COMPEN_REG, compen_count);
+ }
+ 
++/* PTP PHC operations */
++static int icss_iep_ptp_adjfine_v1(struct ptp_clock_info *ptp, long scaled_ppm)
++{
++	struct icss_iep *iep = container_of(ptp, struct icss_iep, ptp_info);
++	s32 ppb = scaled_ppm_to_ppb(scaled_ppm);
++	struct timespec64 ts;
++	int neg_adj = 0;
++	u32 diff, mult;
++	u64 adj;
++
++	mutex_lock(&iep->ptp_clk_mutex);
++
++	if (ppb < 0) {
++		neg_adj = 1;
++		ppb = -ppb;
++	}
++	mult = iep->cc_mult;
++	adj = mult;
++	adj *= ppb;
++	diff = div_u64(adj, 1000000000ULL);
++
++	ts = ns_to_timespec64(timecounter_read(&iep->tc));
++	pr_debug("iep ptp adjfine check at %lld.%09lu\n", ts.tv_sec,
++		 ts.tv_nsec);
++
++	iep->cc.mult = neg_adj ? mult - diff : mult + diff;
++
++	mutex_unlock(&iep->ptp_clk_mutex);
++
++	return 0;
++}
++
++static int icss_iep_ptp_adjtime_v1(struct ptp_clock_info *ptp, s64 delta)
++{
++	struct icss_iep *iep = container_of(ptp, struct icss_iep, ptp_info);
++
++	mutex_lock(&iep->ptp_clk_mutex);
++	timecounter_adjtime(&iep->tc, delta);
++	mutex_unlock(&iep->ptp_clk_mutex);
++
++	return 0;
++}
++
++static int icss_iep_ptp_gettimeex_v1(struct ptp_clock_info *ptp,
++				     struct timespec64 *ts,
++				     struct ptp_system_timestamp *sts)
++{
++	struct icss_iep *iep = container_of(ptp, struct icss_iep, ptp_info);
++	u64 ns;
++
++	mutex_lock(&iep->ptp_clk_mutex);
++	ns = timecounter_read(&iep->tc);
++	*ts = ns_to_timespec64(ns);
++	mutex_unlock(&iep->ptp_clk_mutex);
++
++	return 0;
++}
++
++static int icss_iep_ptp_settime_v1(struct ptp_clock_info *ptp,
++				   const struct timespec64 *ts)
++{
++	struct icss_iep *iep = container_of(ptp, struct icss_iep, ptp_info);
++	u64 ns;
++
++	mutex_lock(&iep->ptp_clk_mutex);
++	ns = timespec64_to_ns(ts);
++	timecounter_init(&iep->tc, &iep->cc, ns);
++	mutex_unlock(&iep->ptp_clk_mutex);
++
++	return 0;
++}
++
+ /* PTP PHC operations */
+ static int icss_iep_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
+ {
+@@ -669,6 +774,17 @@ static int icss_iep_ptp_enable(struct ptp_clock_info *ptp,
+ 	return -EOPNOTSUPP;
+ }
+ 
++static long icss_iep_overflow_check(struct ptp_clock_info *ptp)
++{
++	struct icss_iep *iep = container_of(ptp, struct icss_iep, ptp_info);
++	unsigned long delay = iep->ovfl_check_period;
++	struct timespec64 ts;
++
++	ts = ns_to_timespec64(timecounter_read(&iep->tc));
++
++	pr_debug("iep overflow check at %lld.%09lu\n", ts.tv_sec, ts.tv_nsec);
++	return (long)delay;
++}
+ static struct ptp_clock_info icss_iep_ptp_info = {
+ 	.owner		= THIS_MODULE,
+ 	.name		= "ICSS IEP timer",
+@@ -680,6 +796,18 @@ static struct ptp_clock_info icss_iep_ptp_info = {
+ 	.enable		= icss_iep_ptp_enable,
  };
  
- #define RPMH_REGULATOR_REG_VRM_VOLTAGE		0x0
-+#define RPMH_REGULATOR_VOLTAGE_MASK		0x1FFF
++static struct ptp_clock_info icss_iep_ptp_info_v1 = {
++	.owner		= THIS_MODULE,
++	.name		= "ICSS IEP timer",
++	.max_adj	= 10000000,
++	.adjfine	= icss_iep_ptp_adjfine_v1,
++	.adjtime	= icss_iep_ptp_adjtime_v1,
++	.gettimex64	= icss_iep_ptp_gettimeex_v1,
++	.settime64	= icss_iep_ptp_settime_v1,
++	.enable		= icss_iep_ptp_enable,
++	.do_aux_work	= icss_iep_overflow_check,
++};
 +
- #define RPMH_REGULATOR_REG_ENABLE		0x4
-+#define RPMH_REGULATOR_ENABLE_MASK		0x1
-+
- #define RPMH_REGULATOR_REG_VRM_MODE		0x8
-+#define RPMH_REGULATOR_MODE_MASK		0x7
+ struct icss_iep *icss_iep_get_idx(struct device_node *np, int idx)
+ {
+ 	struct platform_device *pdev;
+@@ -701,6 +829,18 @@ struct icss_iep *icss_iep_get_idx(struct device_node *np, int idx)
+ 	if (!iep)
+ 		return ERR_PTR(-EPROBE_DEFER);
  
- #define PMIC4_LDO_MODE_RETENTION		4
- #define PMIC4_LDO_MODE_LPM			5
-@@ -174,6 +180,28 @@ static int rpmh_regulator_send_request(struct rpmh_vreg *vreg,
++	if (iep->plat_data->iep_rev == IEP_REV_V1_0) {
++		iep->cc.shift = IEP_TC_DEFAULT_SHIFT;
++		iep->cc.mult = IEP_TC_INCR5_MULT;
++
++		iep->cc.read = icss_iep_cc_read;
++		iep->cc.mask = CLOCKSOURCE_MASK(64);
++
++		iep->ovfl_check_period =
++			msecs_to_jiffies(IEP_OVERFLOW_CHECK_PERIOD_MS);
++		iep->cc_mult = iep->cc.mult;
++	}
++
+ 	device_lock(iep->dev);
+ 	if (iep->client_np) {
+ 		device_unlock(iep->dev);
+@@ -795,6 +935,10 @@ int icss_iep_init(struct icss_iep *iep, const struct icss_iep_clockops *clkops,
+ 		icss_iep_enable(iep);
+ 	icss_iep_settime(iep, ktime_get_real_ns());
+ 
++	if (iep->plat_data->iep_rev == IEP_REV_V1_0)
++		timecounter_init(&iep->tc, &iep->cc,
++				 ktime_to_ns(ktime_get_real()));
++
+ 	iep->ptp_clock = ptp_clock_register(&iep->ptp_info, iep->dev);
+ 	if (IS_ERR(iep->ptp_clock)) {
+ 		ret = PTR_ERR(iep->ptp_clock);
+@@ -802,6 +946,9 @@ int icss_iep_init(struct icss_iep *iep, const struct icss_iep_clockops *clkops,
+ 		dev_err(iep->dev, "Failed to register ptp clk %d\n", ret);
+ 	}
+ 
++	if (iep->plat_data->iep_rev == IEP_REV_V1_0)
++		ptp_schedule_worker(iep->ptp_clock, iep->ovfl_check_period);
++
  	return ret;
  }
+ EXPORT_SYMBOL_GPL(icss_iep_init);
+@@ -879,7 +1026,11 @@ static int icss_iep_probe(struct platform_device *pdev)
+ 		return PTR_ERR(iep->map);
+ 	}
  
-+static int rpmh_regulator_read_data(struct rpmh_vreg *vreg, struct tcs_cmd *cmd)
-+{
-+	return rpmh_read(vreg->dev, RPMH_ACTIVE_ONLY_STATE, cmd, 1);
-+}
-+
-+static int _rpmh_regulator_vrm_get_voltage(struct regulator_dev *rdev, int *uV)
-+{
-+	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
-+	struct tcs_cmd cmd = {
-+		.addr = vreg->addr + RPMH_REGULATOR_REG_VRM_VOLTAGE,
-+	};
-+	int ret;
-+
-+	ret = rpmh_regulator_read_data(vreg, &cmd);
-+	if (!ret)
-+		*uV = (cmd.data & RPMH_REGULATOR_VOLTAGE_MASK) * 1000;
+-	iep->ptp_info = icss_iep_ptp_info;
++	if (iep->plat_data->iep_rev == IEP_REV_V1_0)
++		iep->ptp_info = icss_iep_ptp_info_v1;
 +	else
-+		dev_err(vreg->dev, "failed to read VOLTAGE ret = %d\n", ret);
++		iep->ptp_info = icss_iep_ptp_info;
 +
-+	return ret;
+ 	mutex_init(&iep->ptp_clk_mutex);
+ 	dev_set_drvdata(dev, iep);
+ 	icss_iep_disable(iep);
+@@ -1004,6 +1155,7 @@ static const struct icss_iep_plat_data am57xx_icss_iep_plat_data = {
+ 		[ICSS_IEP_SYNC_START_REG] = 0x19c,
+ 	},
+ 	.config = &am654_icss_iep_regmap_config,
++	.iep_rev = IEP_REV_V2_1,
+ };
+ 
+ static bool am335x_icss_iep_valid_reg(struct device *dev, unsigned int reg)
+@@ -1057,6 +1209,7 @@ static const struct icss_iep_plat_data am335x_icss_iep_plat_data = {
+ 		[ICSS_IEP_SYNC_START_REG] = 0x11C,
+ 	},
+ 	.config = &am335x_icss_iep_regmap_config,
++	.iep_rev = IEP_REV_V1_0,
+ };
+ 
+ static const struct of_device_id icss_iep_of_match[] = {
+diff --git a/drivers/net/ethernet/ti/icssg/icss_iep.h b/drivers/net/ethernet/ti/icssg/icss_iep.h
+index 0bdca0155abd..f72f1ea9f3c9 100644
+--- a/drivers/net/ethernet/ti/icssg/icss_iep.h
++++ b/drivers/net/ethernet/ti/icssg/icss_iep.h
+@@ -47,21 +47,29 @@ enum {
+ 	ICSS_IEP_MAX_REGS,
+ };
+ 
++enum iep_revision {
++	IEP_REV_V1_0 = 0,
++	IEP_REV_V2_1
++};
++
+ /**
+  * struct icss_iep_plat_data - Plat data to handle SoC variants
+  * @config: Regmap configuration data
+  * @reg_offs: register offsets to capture offset differences across SoCs
+  * @flags: Flags to represent IEP properties
++ * @iep_rev: IEP revision identifier.
+  */
+ struct icss_iep_plat_data {
+ 	const struct regmap_config *config;
+ 	u32 reg_offs[ICSS_IEP_MAX_REGS];
+ 	u32 flags;
++	enum iep_revision iep_rev;
+ };
+ 
+ struct icss_iep {
+ 	struct device *dev;
+ 	void __iomem *base;
++	void __iomem *sram;
+ 	const struct icss_iep_plat_data *plat_data;
+ 	struct regmap *map;
+ 	struct device_node *client_np;
+@@ -70,6 +78,10 @@ struct icss_iep {
+ 	struct ptp_clock_info ptp_info;
+ 	struct ptp_clock *ptp_clock;
+ 	struct mutex ptp_clk_mutex;	/* PHC access serializer */
++	u32 cc_mult; /* for the nominal frequency */
++	struct cyclecounter cc;
++	struct timecounter tc;
++	unsigned long ovfl_check_period;
+ 	u32 def_inc;
+ 	s16 slow_cmp_inc;
+ 	u32 slow_cmp_count;
+diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.c b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
+index 67ee4c72d3d6..7e90f9e71921 100644
+--- a/drivers/net/ethernet/ti/icssm/icssm_prueth.c
++++ b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
+@@ -39,6 +39,8 @@
+ #define TX_START_DELAY		0x40
+ #define TX_CLK_DELAY_100M	0x6
+ 
++#define TIMESYNC_SECONDS_BIT_MASK   0x0000ffffffffffff
++
+ static struct prueth_fw_offsets fw_offsets_v2_1;
+ 
+ static void icssm_prueth_set_fw_offsets(struct prueth *prueth)
+@@ -642,13 +644,49 @@ irqreturn_t icssm_prueth_ptp_tx_irq_handle(int irq, void *dev)
+ 	return IRQ_HANDLED;
+ }
+ 
++/**
++ * icssm_iep_get_timestamp_cycles - IEP get timestamp
++ * @iep: icss_iep structure
++ * @mem: io memory address
++ *
++ * To convert the 10 byte timestamp from firmware
++ * i.e., nanoseconds part from 32-bit IEP counter(4 bytes)
++ * seconds part updated by firmware(rev FW_REV1_0) in SRAM
++ * (6 bytes) into 64-bit timestamp in ns
++ *
++ * Return: 64-bit converted timestamp
++ */
++u64 icssm_iep_get_timestamp_cycles(struct icss_iep *iep,
++				   void __iomem *mem)
++{
++	u64 cycles, cycles_sec = 0;
++	u32 cycles_ns;
++
++	memcpy_fromio(&cycles_ns, mem, sizeof(cycles_ns));
++	memcpy_fromio(&cycles_sec, mem + 4, sizeof(cycles_sec));
++
++	/*To get the 6 bytes seconds part*/
++	cycles_sec = (cycles_sec & TIMESYNC_SECONDS_BIT_MASK);
++	cycles = cycles_ns + (cycles_sec * NSEC_PER_SEC);
++	cycles = timecounter_cyc2time(&iep->tc, cycles);
++
++	return cycles;
 +}
 +
- static int _rpmh_regulator_vrm_set_voltage_sel(struct regulator_dev *rdev,
- 				unsigned int selector, bool wait_for_ack)
+ static u64 icssm_prueth_ptp_ts_get(struct prueth_emac *emac, u32 ts_offs)
  {
-@@ -215,6 +243,14 @@ static int rpmh_regulator_vrm_set_voltage_sel(struct regulator_dev *rdev,
- static int rpmh_regulator_vrm_get_voltage_sel(struct regulator_dev *rdev)
- {
- 	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
-+	int ret, uV = 0;
-+
-+	if (vreg->voltage_selector < 0) {
-+		ret = _rpmh_regulator_vrm_get_voltage(rdev, &uV);
-+		if (!ret && uV != 0)
-+			vreg->voltage_selector = regulator_map_voltage_linear_range(rdev,
-+							uV, INT_MAX);
-+	}
+ 	void __iomem *sram = emac->prueth->mem[PRUETH_MEM_SHARED_RAM].va;
+ 	u64 cycles;
  
- 	return vreg->voltage_selector;
- }
-@@ -222,6 +258,18 @@ static int rpmh_regulator_vrm_get_voltage_sel(struct regulator_dev *rdev)
- static int rpmh_regulator_is_enabled(struct regulator_dev *rdev)
- {
- 	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
-+	struct tcs_cmd cmd = {
-+		.addr = vreg->addr + RPMH_REGULATOR_REG_ENABLE,
-+	};
-+	int ret;
-+
-+	if (vreg->enabled < 0) {
-+		ret = rpmh_regulator_read_data(vreg, &cmd);
-+		if (!ret)
-+			vreg->enabled = cmd.data & RPMH_REGULATOR_ENABLE_MASK;
-+		else
-+			dev_err(vreg->dev, "failed to read ENABLE status ret = %d\n", ret);
-+	}
- 
- 	return vreg->enabled;
- }
-@@ -303,6 +351,29 @@ static int rpmh_regulator_vrm_set_mode(struct regulator_dev *rdev,
- static unsigned int rpmh_regulator_vrm_get_mode(struct regulator_dev *rdev)
- {
- 	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
-+	struct tcs_cmd cmd = {
-+		.addr = vreg->addr + RPMH_REGULATOR_REG_VRM_MODE,
-+	};
-+	int ret, pmic_mode, mode;
-+
-+	if (vreg->mode > REGULATOR_MODE_INVALID && vreg->mode <= REGULATOR_MODE_STANDBY)
-+		return vreg->mode;
-+
-+	ret = rpmh_regulator_read_data(vreg, &cmd);
-+	if (!ret) {
-+		pmic_mode = cmd.data & RPMH_REGULATOR_MODE_MASK;
-+		if (pmic_mode == 0)
-+			return vreg->mode;
-+
-+		for (mode = 0; mode <= REGULATOR_MODE_STANDBY; mode++) {
-+			if (pmic_mode == vreg->hw_data->pmic_mode_map[mode]) {
-+				vreg->mode = mode;
-+				break;
-+			}
-+		}
+-	memcpy_fromio(&cycles, sram + ts_offs, sizeof(cycles));
+-	memset_io(sram + ts_offs, 0, sizeof(cycles));
++	if (emac->prueth->fw_data->fw_rev == FW_REV_V1_0) {
++		cycles = icssm_iep_get_timestamp_cycles(emac->prueth->iep,
++							sram + ts_offs);
++		/* 4 bytes of timestamp + 6 bytes of seconds counter */
++		memset_io(sram + ts_offs, 0, 10);
 +	} else {
-+		dev_err(vreg->dev, "failed to read MODE ret = %d\n", ret);
++		memcpy_fromio(&cycles, sram + ts_offs, sizeof(cycles));
++		memset_io(sram + ts_offs, 0, sizeof(cycles));
 +	}
  
- 	return vreg->mode;
+ 	return cycles;
  }
-
+@@ -985,7 +1023,13 @@ int icssm_emac_rx_packet(struct prueth_emac *emac, u16 *bd_rd_ptr,
+ 		    pkt_info->timestamp) {
+ 			src_addr = (void *)PTR_ALIGN((uintptr_t)src_addr,
+ 						     ICSS_BLOCK_SIZE);
+-			memcpy(&ts, src_addr, sizeof(ts));
++			if (emac->prueth->fw_data->fw_rev == FW_REV_V1_0) {
++				ts = icssm_iep_get_timestamp_cycles
++					(emac->prueth->iep,
++					 (void __iomem *)src_addr);
++			} else {
++				memcpy(&ts, src_addr, sizeof(ts));
++			}
+ 			ssh = skb_hwtstamps(skb);
+ 			memset(ssh, 0, sizeof(*ssh));
+ 			ssh->hwtstamp = ns_to_ktime(ts);
+@@ -2189,6 +2233,9 @@ static int icssm_prueth_probe(struct platform_device *pdev)
+ 		goto netdev_exit;
+ 	}
+ 
++	if (prueth->fw_data->fw_rev == FW_REV_V1_0)
++		prueth->iep->sram = prueth->mem[PRUETH_MEM_SHARED_RAM].va;
++
+ 	/* Make rx interrupt pacing optional so that users can use ECAP for
+ 	 * other use cases if needed
+ 	 */
+@@ -2396,6 +2443,7 @@ static struct prueth_private_data am335x_prueth_pdata = {
+ 		.fw_name[PRUSS_ETHTYPE_EMAC] =
+ 			"ti-pruss/am335x-pru1-prueth-fw.elf",
+ 	},
++	.fw_rev = FW_REV_V1_0,
+ };
+ 
+ /* AM437x SoC-specific firmware data */
+@@ -2409,6 +2457,7 @@ static struct prueth_private_data am437x_prueth_pdata = {
+ 		.fw_name[PRUSS_ETHTYPE_EMAC] =
+ 			"ti-pruss/am437x-pru1-prueth-fw.elf",
+ 	},
++	.fw_rev = FW_REV_V1_0,
+ };
+ 
+ /* AM57xx SoC-specific firmware data */
+@@ -2422,6 +2471,7 @@ static struct prueth_private_data am57xx_prueth_pdata = {
+ 		.fw_name[PRUSS_ETHTYPE_EMAC] =
+ 			"ti-pruss/am57xx-pru1-prueth-fw.elf",
+ 	},
++	.fw_rev = FW_REV_V2_1,
+ };
+ 
+ static const struct of_device_id prueth_dt_match[] = {
+diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.h b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
+index 07c29c560cb9..c409b9a87bdc 100644
+--- a/drivers/net/ethernet/ti/icssm/icssm_prueth.h
++++ b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
+@@ -302,6 +302,12 @@ enum prueth_mem {
+ 	PRUETH_MEM_MAX,
+ };
+ 
++/* PRU firmware revision*/
++enum fw_revision {
++	FW_REV_V1_0 = 0,
++	FW_REV_V2_1
++};
++
+ /* Firmware offsets/size information */
+ struct prueth_fw_offsets {
+ 	u32 index_array_offset;
+@@ -336,12 +342,14 @@ enum pruss_device {
+  * struct prueth_private_data - PRU Ethernet private data
+  * @driver_data: PRU Ethernet device name
+  * @fw_pru: firmware names to be used for PRUSS ethernet usecases
++ * @fw_rev: Firmware revision identifier
+  * @support_lre: boolean to indicate if lre is enabled
+  * @support_switch: boolean to indicate if switch is enabled
+  */
+ struct prueth_private_data {
+ 	enum pruss_device driver_data;
+ 	const struct prueth_firmware fw_pru[PRUSS_NUM_PRUS];
++	enum fw_revision fw_rev;
+ 	bool support_lre;
+ 	bool support_switch;
+ };
+@@ -441,6 +449,9 @@ int icssm_emac_add_del_vid(struct prueth_emac *emac,
+ irqreturn_t icssm_prueth_ptp_tx_irq_handle(int irq, void *dev);
+ irqreturn_t icssm_prueth_ptp_tx_irq_work(int irq, void *dev);
+ 
++u64 icssm_iep_get_timestamp_cycles(struct icss_iep *iep,
++				   void __iomem *mem);
++
+ void icssm_emac_mc_filter_bin_allow(struct prueth_emac *emac, u8 hash);
+ void icssm_emac_mc_filter_bin_disallow(struct prueth_emac *emac, u8 hash);
+ u8 icssm_emac_get_mc_hash(u8 *mac, u8 *mask);
 -- 
-2.25.1
+2.34.1
 
