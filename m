@@ -1,119 +1,93 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317F72DCC03;
-	Mon, 23 Jun 2025 16:10:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AD22DECAF;
+	Mon, 23 Jun 2025 16:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750695049; cv=none; b=ZxZrmRGBTNKRlMrcD3yooNoVP7v3KY9d2WXx04jRH+nKQjxlN2CrkOFCuUKzwBsA7wKpeefIrmvjDlLvuZOPB+DtJ2oTFKbVDCXz62DfB0CQ4sI61+UVRKJ9BUnReT3LHjwWGvMblJ+vYAe8gbb2VD95C7+J7T8L+Q93R9/NSNg=
+	t=1750695050; cv=none; b=TJ1OgGZQTB2TRICXQ5HKxkj0YrhkpLYOpcQE9zzx7iBesswsMiK21/2nvMO7PTwwNJLDim7uXa4ZdSRLbblHgcVIB6b6Eg76BqYCdZ/EuYUGS2Xo0Dr5InmuYWayX4BvryE6czX08GthgvJi8LU+DiMa6OPnADfnoDy3migc254=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750695049; c=relaxed/simple;
-	bh=dS7QgYeAznkgEhzk7h32qFFNi0yjzq3+ztoyxkZ//XI=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=KkmOfsxEnX+zFY7ozqQrENFPOunPNJqiRc8LWmzk/ciN22YZcPLKSoqwKX1L6c8aROL8bnf8lcSC6FO/OKgWtTnIyqdqEyRpk/k6pLcFukzIMdywTm4sTIE55X0nqlxUFlGmWXIv5nF2Xra5rIig7KV0xBQgkUGZX868LZDEMe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=SZ1GzJXM; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1750695050; c=relaxed/simple;
+	bh=aBOjlPRKdMcxD8PHAn4EGg/r0CIp3KRLerTAYfraJHA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P7DpH2b2Dy4d0Yh1+hs1P2/izWJpuZE5N0UTnmVWYYKhCjymMSwSPt/8hPu8EJqt8rfY/l6u5evmbMwrXAfz7rlOvOos9tJXyL0LQ2FtTKt5cB5TwLSKAca4RW47H0fbLDpLjBY5jp20Ojxv9VIbkGVCtmnzBaz2J34HWUPrU08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=IBzJLZOg; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SZ1GzJXM"
-Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55NGA7TK995696
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 23 Jun 2025 09:10:08 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55NGA7TK995696
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025062101; t=1750695009;
-	bh=5OyKvEljcKH+TeDJlGA4fkMB6CCrF6QEZCXe4uNmwAs=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=SZ1GzJXMbd0V6nYkSdQZSdPQcNAKb5MOvCof6U/mOuVB+0QaDBj59VWf5L9cRdgqT
-	 itNQlfH2W269PbEwmkNbvulkUpxD/UUYAf21tFgjmxP08jvyuS59WLfrXO0m+c+x4l
-	 WGgqQOEmbV8yWjnJbwQmrkLJWBOUzH7/BPGJMQ4Y68rNvdHRoftSH09vAnFWX9ThT1
-	 b2fq5G5sXTvRlAM00Jmft2M0hQci085Nr0JAd9nUZ6EHm2uxF9g9YYRyZy+Y40PHfc
-	 dnNB/soxXQbG5F09Aq5J3cTLdmikLWRCSI3dwlJg8OoNQMHVTDWjdoHBDNBYN8PW30
-	 mT6yD9MhrJm5w==
-Date: Mon, 23 Jun 2025 09:10:07 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Sean Christopherson <seanjc@google.com>
-CC: Sohil Mehta <sohil.mehta@intel.com>, Xin Li <xin@zytor.com>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
-        Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Jacob Pan <jacob.pan@linux.microsoft.com>,
-        Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
-        Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
-        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v7_02/10=5D_x86/fred=3A_Pass_eve?=
- =?US-ASCII?Q?nt_data_to_the_NMI_entry_point_from_KVM?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <aFl1PcnVuYuELvRQ@google.com>
-References: <20250612214849.3950094-1-sohil.mehta@intel.com> <20250612214849.3950094-3-sohil.mehta@intel.com> <7525af7f-a817-47d5-91f7-d7702380c85f@zytor.com> <3281866f-2593-464d-a77e-5893b5e7014f@intel.com> <36374100-0587-47f1-9319-6333f6dfe4db@zytor.com> <39987c98-1f63-4a47-b15e-8c78f632da4e@intel.com> <7acedeba-9c90-403c-8985-0247981bf2b5@zytor.com> <aFXsPVIKi6wFUB6x@google.com> <1713a225-44e0-4018-bf5f-64ffd7746167@zytor.com> <aFl1PcnVuYuELvRQ@google.com>
-Message-ID: <D00BE3D4-C710-4304-85D3-B2A091E08035@zytor.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="IBzJLZOg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1750695048; x=1782231048;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=aBOjlPRKdMcxD8PHAn4EGg/r0CIp3KRLerTAYfraJHA=;
+  b=IBzJLZOgoqnCg+3pjEddKwNxnjOQvf70eRF2dH6WU4nr1m9TvKk6BT9l
+   y+NZ9huzMh1SG99Ry8ZnWcPExP0+PFV6zxNLMHi1ha+vfKVzSTqZmgzsp
+   +t4aL/2n3MEQwxvkOCdOUqGPBYEMjLjhkgi3WLe43Um9FdRKr6NMZ8x+h
+   59sqaZk3iMOgT4pWreB0oJik/rQvi2QxqjfxooKP1k2jt9nFdyQX4xaYZ
+   XwxkwDKA+pK+4fvsRzbLDY2zV5+HApzVQnunVmpr1zqMk8nvPIZ2gFxi/
+   +OI8WGKlfKXrlH6fVE98nY3tbfVwPBQD553eUdjkrYqhNdwOFQfrsYQml
+   A==;
+X-CSE-ConnectionGUID: 9d4q2IluRVm9uF2HS7TYvg==
+X-CSE-MsgGUID: 3LOxFOjHTBGyGOverkiLvA==
+X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
+   d="scan'208";a="48173830"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Jun 2025 09:10:47 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Mon, 23 Jun 2025 09:10:27 -0700
+Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Mon, 23 Jun 2025 09:10:27 -0700
+From: <Ryan.Wanner@microchip.com>
+To: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <nicolas.ferre@microchip.com>, <claudiu.beznea@tuxon.dev>,
+	<netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Ryan Wanner <Ryan.Wanner@microchip.com>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [RESEND][PATCH 1/1] dt-bindings: net: cdns,macb: add sama7d65 ethernet interface
+Date: Mon, 23 Jun 2025 09:11:08 -0700
+Message-ID: <35808b7cee5ba5b2ce55d741ae1ada0f1cd2f7cb.1750694691.git.Ryan.Wanner@microchip.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1750694691.git.Ryan.Wanner@microchip.com>
+References: <cover.1750694691.git.Ryan.Wanner@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On June 23, 2025 8:39:41 AM PDT, Sean Christopherson <seanjc@google=2Ecom> =
-wrote:
->On Fri, Jun 20, 2025, H=2E Peter Anvin wrote:
->> On 2025-06-20 16:18, Sean Christopherson wrote:
->> > >=20
->> > > So I was thinking about this, and wonder: how expensive is it to ge=
-t the
->> > > event data exit information out of VMX? If it is not very expensive=
-, it
->> > > would arguably be a good thing to future-proof by fetching that inf=
-ormation,
->> > > even if it is currently always zero=2E
->> >=20
->> > It's trivially easy to do in KVM, and the cost of the VMREAD should b=
-e less than
->> > 20 cycles=2E  So quite cheap in the grand scheme=2E  If VMREAD is mor=
-e costly than
->> > that, then we have bigger problems :-)
->> >=20
->>=20
->> LOL=2E Since it is up to you, Paulo, etc=2E to decide how to do the tra=
-deoffs
->> formaintainability, debuggability and performance in KVM I am guessing =
-this
->> is a vote in favor? (You can always take it out if it is a performance
->> problem, until such time that the kernel itself starts consuming this
->> information for reasons currently unknown=2E)
->
->Unless you can pinky swear that vmcs=2EEXIT_QUALIFICATION will provide ev=
-ent data
->for IRQ exits, then I'd prefer to pass '0' unconditionally=2E  '0' will a=
-lways be
->safe, if potentially suboptimal=2E  But passing what could in theory be s=
-omething
->other than FRED-formatted event data could lead to buggy behavior=2E  Per=
- the FRED
->spec, Revision 7=2E0, exit-qualification doesn't hold event data for IRQ =
-exits=2E
->
->  For some events for which event data is defined (see Section 5=2E2=2E1)=
-, the event
->  data is saved in the exit-qualification field=2E (This is done for #DB,=
- #PF, and NMI=2E)
+From: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-I agree, let's stick to that for now, since this is a kernel internal inte=
-rface and nothing consumes it=2E After all, it will save a handful of cycle=
-s=2E
+Add documentation for sama7d65 ethernet interface.
 
-I will still check into the "pinky swear", though=2E
+Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ Documentation/devicetree/bindings/net/cdns,macb.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/net/cdns,macb.yaml b/Documentation/devicetree/bindings/net/cdns,macb.yaml
+index 3c30dd23cd4e..eeb9b6592720 100644
+--- a/Documentation/devicetree/bindings/net/cdns,macb.yaml
++++ b/Documentation/devicetree/bindings/net/cdns,macb.yaml
+@@ -62,6 +62,7 @@ properties:
+       - items:
+           - enum:
+               - microchip,sam9x7-gem     # Microchip SAM9X7 gigabit ethernet interface
++              - microchip,sama7d65-gem   # Microchip SAMA7D65 gigabit ethernet interface
+           - const: microchip,sama7g5-gem # Microchip SAMA7G5 gigabit ethernet interface
+ 
+   reg:
+-- 
+2.43.0
+
