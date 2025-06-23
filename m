@@ -1,135 +1,148 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190E3298CD5
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD130299AAA
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750691753; cv=none; b=Ta4IjR+PKsAWqFvba2zeLeh3B9AcwajS2j4+/lZFZ/aO2koDysZNA37OrQpJ71pqFnwLjZASLdGmFtU+qk2c4Sntaxc2Y0vfpCkvQFVdSMIvVo77m8wM8zjGVGyQfuAUKCLCkXh70oVfWlUbjrNcDD8hIqk0uzzi5Yk2w/RA5Eg=
+	t=1750691758; cv=none; b=VIZQSYfQqcOQk9i1DIPVZ7seP3Y35E8UQDIc+wLCgZrn5M+12eSZ35WJccdChFMVB7BcwWbebkDtMh97Nkiwvmz1SHpRPNPNLTC91uPx1lxK1YSvjezx+q15aMiAgO0nhLdp1m4kECqe/bBzwfHXaID7nACALfWUw4/pIzxC8xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750691753; c=relaxed/simple;
-	bh=bqmkafwxydyORUt50Ur58Kwuhlign7ZQjhD916NZCSY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MijsEUsNnKp7R+PfKrr3THbIwE0oUZxxMP9pv9HdO/7ThFeQ55PtqTIYM4OjqXR4raGACC3cYHp6p49Qc9iBkIGPdmGeWUoUPm0qCodkZbbkQXS1zVjrqBGkVFpnORXglQDIjDtzi92aLQfOjLwQ9cObP05HTjfUCqjz5ZBYxcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=EKYe+ogk; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1750691758; c=relaxed/simple;
+	bh=hY1AO9wd7FYeyL43dCiTnguCwp/cs4kPIauJ1coyPFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ri1Y6vsKd8Xq16nwKiVXvfzgeoRUhVCDXfaDE/Xts2dLW1CsLIkLraa3+H2GrUimo1YJrfCcZcqMYZA9RYhy4BwPySZL6wioVA+kAetcedcOxcSUfpeu3Jc0afmrr9lui81BvvXlibH/z37GqgQLVSPWxv1ufAXHSeJuthi8sck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ecvmKvQV; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="EKYe+ogk"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e81ec95d944so3475827276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:15:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ecvmKvQV"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-23694cec0feso39407265ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:15:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1750691751; x=1751296551; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/cEM3zQRxkyeF8QlajSb8sKwoIOz06mgwPF6H5WCdJ0=;
-        b=EKYe+ogkX/OG1HhZRLqatx3ccfj/tYIE4kgYG87jUjQcRjccTjocq1jB1lMNhHPGRq
-         HVvhKW2AzCeUA37+5GN9cy7gNkL304wcUDb4vveYgRHcavzhBj0zzTNsPzVgzkN9w/Qr
-         9rP7KeS5zvw3CcE/F3eFpK2ztzdW9dtH1C5wQqIBGxvtEY16BLCU7Hd4xNH1G4sF/UDP
-         Nd4/trrkWCsA1EDmITaNhWWuu7U9kcyNbL0Fa1157ez8R0mLwRXlQo3mxf650uauZowL
-         X2mE0QhSiFnr2geIFqOLp1ReIMqydYNmSEM01NEihxVhk4uHmjOEzwe2dFYzOT8gT/KD
-         Ex2w==
+        d=linaro.org; s=google; t=1750691755; x=1751296555; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=T27t2nmr6ecFVKTwe7GdRGC1UuMYhsoPFZxzjgMw7XA=;
+        b=ecvmKvQVSsFDCL4gILMJcuuv0vsvKhtdS2iS3QwgZ8v9BVO4m0kn1XewyZ3vFdbZzd
+         INqAk62Zz+oZe0dCKX4nX9F7kv7UOYC8g2G/8zGpUJPb+XKopYIijISRxe3VQYoiy7Pp
+         8bxm/gxc/5mUoTQN+bh6YAROdbYEuwQFc56v11MVmOJcrn4u4AN1DXQsCuVJDWqF9TYe
+         SdGIgJHBIP231dk8objzems6Z53hsBXyd9dkpb0DsphGKHCOOoCD0zFra04BXH6YCJgv
+         EGACSMZL9cnQQcZJvdTKVuMi8350JkcF6R16DL+DCcb84v+IJAV+/tGPvWcQt7iYKrKS
+         N3GQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750691751; x=1751296551;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/cEM3zQRxkyeF8QlajSb8sKwoIOz06mgwPF6H5WCdJ0=;
-        b=d6sP7SiJOPGXCRSqHYm6o6u5l3G2IY0gRUay9YFnRBgOSwc7X+vCskDzfe6p5AqMhE
-         AhBEp3NZtsamKZ9LWZLlFiF4tuVNs9p2vsIdPVNLpCFqDF1ynhA3aoUXMuunECy9WA8t
-         r4xqAMrMyyC5TJ9BFpjA/qjjSFIEZc1HfNmp1HQ7RnzcTHa+S0l0yvOSoxlonqCnYDUq
-         1Tlc6QH5oMqN5XFSUlt/SfklNyOUY940pV8R9woPuOs2M3XTqyv4eb4oO3AfwtdGm6D0
-         4Mfw8FSP1iKMvUrTg+kN+lN86uElYBnBG0XqDJbdq6yI2k1tc78F12ukKA0fXLnHnoVj
-         WBGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXVBqkVmXHvII4uQpyZAAOhE74O5gggGhFfevtdHDAtPfmCqfqmnENeEr2apem0r/xbO/XeZD6DVFelDp8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzzo+dDebtIScrTMeJ/FwliYp3Ndb957UTKLyYFVBAvIUOXq6nB
-	baaS6kexHgsb+ZZ6F17vLMAORBMp9JLv/x77DqinshYEY5cWWSXz2gn0DhlZ2RzqntfWh/dzXT/
-	J4PEbQojtbcuRjS9vrzr52BdsJXygnIEMwJHEs+aM
-X-Gm-Gg: ASbGncsU/TB2hcTlX9LgRb0pohAsxdcd7XxJNedctypVnGd50BuNLf0+x+VodHHW5H5
-	QxQW1xHxtrylN4UB7a63mMgc2Y6VKsmA30ed37yomzWxiXsKW9dzE1nu6qWUMQ+2EOGxrE4Ktvj
-	by3r6hopDGFoZK1KqQ3KLAMIMVldTAWdIOAm8UgsTm9Rs=
-X-Google-Smtp-Source: AGHT+IFZQzn3+JMIyejKC2+W29AQd1WwouaHlQDxuqJsYDQVdOYz9u2SoStqSDrpqsqEky4EPBlD56TODEPQ9GFR58M=
-X-Received: by 2002:a05:690c:9683:b0:6f9:4c00:53ae with SMTP id
- 00721157ae682-712ca356122mr174541157b3.8.1750691751048; Mon, 23 Jun 2025
- 08:15:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750691755; x=1751296555;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T27t2nmr6ecFVKTwe7GdRGC1UuMYhsoPFZxzjgMw7XA=;
+        b=wYtjCju+QDE9hohMg+BhpFtzGauj0ySWlHsvZZzDXXwT0VTTZyp9Cl1DCrn0qU+lCk
+         qEYytPJu9ChLgBwZVWmX+65me7a9/1A1OttHna1TMRy5oBmvoyiKItMVmvLAjVpGDUgk
+         4AbfrvWi8PUTY+5Xu65AP4LCFPybbfNXPq5C1qL89hh/+vjgxRMYKqWTnfjbgn9TJGkm
+         7hcaPnBf0O7pJGNoaSAyCYQDwPUrOAws6hKs4wJGkWjDeyJU2x8kbPUF9SNfoyMW5MjC
+         YGnHCO4GnweKqEkmE5CU92uv/qRFZnLPA2yv01qksVAxqIt2bErqij2nIg1g0BaUPhWW
+         j/Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCUOnL1yzfyxqK3o5/s3qCxwQBJTLr3rNtXO9av1BteZ0T4uJi0VCuiEGVbNkNLJo4OeuRaIr6hihDd/aZw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNJzawMekwHeWP9QNd5ssnu7/qBANxZfU2YrUuJ6hOIwr6MHwP
+	y5nQpis26X4ngJg2MZAIeSl33MmedxUDOha/tusGm5HwtcRN6QURNKKbFPxjHBAJ+j0=
+X-Gm-Gg: ASbGncvjMNmh0IOloOjXFbFxhHvd7S3akTWA32GVp2ioxNUWpsh12i6F+8CeT6643My
+	ynM1ztpsFKGy5ZcqeKDDe3WU1V3pOaT3SpTyGgzKcZnd0VMrSIVqmY3pMpdolEno9pnSK1Ir5CJ
+	cn2b455fXvFxkv1Tgg9/oJS6kTP8sggYwj3mtv1Wtd0ojykURVMgKk9fb5uVVgFKtEtttrRCHWT
+	s+xl0lvliC8Sm7d3MBGYsubyXFBsvL0QialRQr0bnuFWsIjUxYy54DnlWYMPgsSdkb8oF+KjedN
+	sdqz4YePDqubwkyJ0Gbndmh7AURXVEgINgRK8AVaP6aW9DXEjxOpcSq+E1x0/utC
+X-Google-Smtp-Source: AGHT+IGEfd7ew/DbegL4/ehEu6z8rdU2NqGKWQUxfqGQJFlSmPlquHaa0QFJscSdtTcWRu86BS4OCA==
+X-Received: by 2002:a17:903:1b66:b0:234:d2fb:2d0e with SMTP id d9443c01a7336-237d96dfe41mr236501275ad.10.1750691755197;
+        Mon, 23 Jun 2025 08:15:55 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:d145:b99:ea4b:a65f])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d866488csm85961605ad.158.2025.06.23.08.15.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 08:15:54 -0700 (PDT)
+Date: Mon, 23 Jun 2025 09:15:52 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Hiago De Franco <hiagofranco@gmail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@oss.nxp.com>, daniel.baluta@nxp.com,
+	iuliana.prodan@oss.nxp.com,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v5 2/3] remoteproc: imx_rproc: skip clock enable when
+ M-core is managed by the SCU
+Message-ID: <aFlvqK6SHvWHIpMn@p14s>
+References: <20250617193450.183889-1-hiagofranco@gmail.com>
+ <20250617193450.183889-3-hiagofranco@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250622-toicsti-bug-v1-0-f374373b04b2@gmail.com>
- <20250622-toicsti-bug-v1-2-f374373b04b2@gmail.com> <CAEjxPJ6v12nLFx-x4-=esuPMp7L8UBvTzoj1kkTPcD2mDKKW8w@mail.gmail.com>
-In-Reply-To: <CAEjxPJ6v12nLFx-x4-=esuPMp7L8UBvTzoj1kkTPcD2mDKKW8w@mail.gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Mon, 23 Jun 2025 11:15:39 -0400
-X-Gm-Features: Ac12FXw75VZJClzZmRv1umOqFnfnvmDMNU_jKRuRdLW4QXd6DpSXCOL2kXN21Os
-Message-ID: <CAHC9VhS8gPQwgesV_0VbUuqxGrADm5uDofM3m=wZuAEgkWi5Hw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] selinux: add capability checks for TIOCSTI ioctl
-To: Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc: xandfury@gmail.com, Shuah Khan <shuah@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Ondrej Mosnacek <omosnace@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, llvm@lists.linux.dev, 
-	selinux@vger.kernel.org, kees@kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617193450.183889-3-hiagofranco@gmail.com>
 
-On Mon, Jun 23, 2025 at 8:39=E2=80=AFAM Stephen Smalley
-<stephen.smalley.work@gmail.com> wrote:
-> On Sun, Jun 22, 2025 at 9:41=E2=80=AFPM Abhinav Saxena via B4 Relay
-> <devnull+xandfury.gmail.com@kernel.org> wrote:
-> >
-> > From: Abhinav Saxena <xandfury@gmail.com>
-> >
-> > The TIOCSTI ioctl currently only checks the current process's
-> > credentials, creating a TOCTOU vulnerability where an unprivileged
-> > process can open a TTY fd and pass it to a privileged process via
-> > SCM_RIGHTS.
-> >
-> > Fix by requiring BOTH the file opener (file->f_cred) AND the current
-> > process to have CAP_SYS_ADMIN. This prevents privilege escalation
-> > while ensuring legitimate use cases continue to work.
-> >
-> > Link: https://github.com/KSPP/linux/issues/156
-> >
-> > Signed-off-by: Abhinav Saxena <xandfury@gmail.com>
-> > ---
-> >  security/selinux/hooks.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> > index 595ceb314aeb..a628551873ab 100644
-> > --- a/security/selinux/hooks.c
-> > +++ b/security/selinux/hooks.c
-> > @@ -3847,6 +3847,12 @@ static int selinux_file_ioctl(struct file *file,=
- unsigned int cmd,
-> >                                             CAP_OPT_NONE, true);
-> >                 break;
-> >
-> > +       case TIOCSTI:
-> > +               if (!file_ns_capable(file, &init_user_ns, CAP_SYS_ADMIN=
-) ||
-> > +                   !capable(CAP_SYS_ADMIN))
-> > +                       error =3D -EPERM;
-> > +               break;
-> > +
->
-> So, aside from what I said previously, this also will break any
-> existing policies currently controlling TIOCSTI
-> via the selinux ioctl checking in the default case, so at the very
-> least, this would need to be gated by a new
-> SELinux policy capability for compatibility purposes. But I'm still
-> unconvinced that this is the right approach.
+Hi Hiago,
 
-I want to add my voice to the other comments that adding these
-capability checks to the SELinux code and not the main TIOCSTI kernel
-code is not an approach we want to support.  Beyond that, as others
-have already pointed out, I think some additional inspection and
-testing is needed to ensure that the additional capability checks do
-not break existing, valid use cases.
+On Tue, Jun 17, 2025 at 04:34:49PM -0300, Hiago De Franco wrote:
+> From: Hiago De Franco <hiago.franco@toradex.com>
+> 
+> For the i.MX8X and i.MX8 family SoCs, when the M-core is powered up
+> by the bootloader, M-core and Linux are in same SCFW (System Controller
+> Firmware) partition, so linux has permission to control M-core.
 
---=20
-paul-moore.com
+Ok
+
+> 
+> But when M-core is started, the SCFW will automatically enable the clock
+
+I find the "But when M-core is started" part confusing.  Started by who?  And
+are you making a distinction between "powered up" and "started"?  It is not
+possible for someone that doesn't have HW documentation to understand what is
+going on. 
+
+> and configure the rate, and any users that want to enable the clock will
+> get error 'LOCKED' from SCFW. So current imx_rproc.c probe function
+> fails because clk_prepare_enable also fails. With that, the M-core power
+> domain is powered off when it is still running, causing a SCU (System
+> Controller Unit) fault reset, and the system restarts.
+> 
+> To address the issue, ignore handling the clk for i.MX8X and i.MX8 M-core,
+> because SCFW will automatically enable and configure the clock.
+> 
+> Suggested-by: Peng Fan <peng.fan@nxp.com>
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
+> ---
+> v4 -> v5:
+>  - Unchanged.
+> v3 -> v4:
+>  - Unchanged.
+> v2 -> v3:
+>  - Unchanged.
+> v1 -> v2:
+>  - Commit description updated, as suggested. Fixed Peng Fan email.
+> ---
+>  drivers/remoteproc/imx_rproc.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> index 74299af1d7f1..627e57a88db2 100644
+> --- a/drivers/remoteproc/imx_rproc.c
+> +++ b/drivers/remoteproc/imx_rproc.c
+> @@ -1029,8 +1029,8 @@ static int imx_rproc_clk_enable(struct imx_rproc *priv)
+>  	struct device *dev = priv->dev;
+>  	int ret;
+>  
+> -	/* Remote core is not under control of Linux */
+> -	if (dcfg->method == IMX_RPROC_NONE)
+> +	/* Remote core is not under control of Linux or it is managed by SCU API */
+> +	if (dcfg->method == IMX_RPROC_NONE || dcfg->method == IMX_RPROC_SCU_API)
+>  		return 0;
+>  
+>  	priv->clk = devm_clk_get(dev, NULL);
+> -- 
+> 2.39.5
+> 
