@@ -1,125 +1,130 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035F81F582A
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 21:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC701F582A
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 21:08:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750712875; cv=none; b=a1radprgaXFBTilddr7T4Fq8KZAAZJigrHI8M+RhxSvFT3JehiMdQJtQSAm21GD2ddy0btnmwe46Tadv+lDnTaoinwecOHamopAU3Fdb1bDZQSupZE0Cddr886EoIjaKsBLMFP8mQncbcb5ec09KjxURPzcbosyJ9oUHRV03kx4=
+	t=1750712889; cv=none; b=a23F9Fp9adV/dhcxAbRrVyIgZpXTGeGUX/Ji/fnZYYa2Yw8f3+jvu0asqlgnTTWUI2EeMMt9Oh17zHW3rKhYeVF4mgD/xEBbdLiA/ZO/L9S4cdmm7ZvQhuITT+zKzfUBn2AdwZ0ll83UjkWoc7MVJxLbAZsnTI14HdTA2/DryL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750712875; c=relaxed/simple;
-	bh=QYSgA2r9Hoq/PyEKP+W5aS5hG/seCLS+yMuWGfPqxDI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MiSmcK6B1CZjmXzRjwo32+UoQjGIpF6ZzL90byNLW4cx+K3N6uEl11PQSNWdUCZVDTKPAYNOSNMunzbu1p0gTNrrEo06x5iUKrVc0/gW4EOSIL5PtC1ReVGpwfKoERWQApOxnW675SWzUrQYQzHv5HF1PeXUB5hWLXv5l3S4XM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=st8Buq1X; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750712889; c=relaxed/simple;
+	bh=vdy5e14izDTeYU29Gvoio4S0TZa4cGG2J1dxKrlP4MY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=YLh/CUfkeMDbQy/Hx+MyPOnK162I2V5q+RFghRsg+KTmju+YUfA1Rbb5J39xyJGxl4NSysYT4B4UaOcJU/iYbOyIXHTy/hKpCr4dxzS0DuNyMb0c+SQt+UdtKDn2NpJ13cS14VWENjAUPKvLOsEzVv/tXzB5hR91ur5Tqyzeh+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=jl6h7Ky8; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="st8Buq1X"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so53285ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:07:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750712873; x=1751317673; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z4cX0phktxLtIZp90+OwfwSNf6uSHnahTRACJDaKBFA=;
-        b=st8Buq1Xh6wu5Z1sLuJ4RrIdSnsppsQ3TgldF/7GlHufJ+8TbJM/NQRWdu3qFIq3mV
-         IiSHJLJa8ya5q1+Wp84qZ/Vhc1Mtfg9fcnrjmdwQUEM6s5H5lPlMETVxS/AHs2OY1WCv
-         MBwX3Bl5pqK5jPl3CJeBLB2HlXJ3BNbQ5JVQBfBT+8yf7RZBpOxX9lXzl0W+8LsUmN6c
-         bKhAkkDSyEUILr0W4rnc/R5Y9rHwaWm9V0mMVKBcT6xEechSJ37Gio7cTtk4P1MWGXQn
-         kDJWjKqyG2aaruN6Dp4Wv0e3V5WHikousykFg+z8jPbXi9SeJwO5p7X1uknTU6RWKLSk
-         B2dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750712873; x=1751317673;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z4cX0phktxLtIZp90+OwfwSNf6uSHnahTRACJDaKBFA=;
-        b=YDFhDLsHURa6Da1hlq9660C43RXDy1XD8iGagwpykoFAfhQ89gyC0Dt9RvE/o2Et9P
-         5EWUkvHCgtUMhZjaA1zlZ0Nsn7RjNqBFcyPKELrsB3EWhPMCT/NSZnm824ZymkJHRQc/
-         V53EhAPRTT63XH9tSXpl+ccUErJnV679Cm7SC2FAnlnjqrE2VciZMfohmUzGMkFavkg3
-         4l3MS7+P/tWI/pqzYCw6A+69zUiMKDlkhU6VZpa/Sq3lgJ30J/DCzlQHYI0GmorZyUnD
-         cBzUFx86sWVeb3MnHWkkCp1wzUtrl9sKY7PlFWGOAfgd3N8u79SBhgexF/skfaD4jT13
-         oIiA==
-X-Forwarded-Encrypted: i=1; AJvYcCXCV6rTNftFndZbLikiWXsmjMMTzvyEadmaCWtXW5lENQrpo8XaXgwwhUGKvD3YtscGt+GPu33rnbWeG2Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywr5LUNa2utHOAOlTJ8FOe62jKu6BICwW91krhOMVjrE5x2mdiv
-	pVet1QGOqv7SJNpRIJcE8qZdj/4OI1QW8Mu83xmVJFDTkHEba3YWMnURHecICg0cgfmo/afZfcY
-	mgtNh3m+lekJvmlScxPMCt9wxhf1rlBL8Mn+Zga1o
-X-Gm-Gg: ASbGnctDanDtJtJk//hkOOq+PdUqGMweUYB+0FMa4aIuFvAzM2CjYsqHodvRV1hWt6W
-	A0Ll9Dwpy+VdZVcV0LP+Hxow1QWIP+0FIx3p7RlsGOnT5YIb3j30A+6LvPFGLUO/6s8EMfjLfbA
-	1Rh9FphMaEIWtsUL6rcFCvpLcrR5erFmM0/BBXRsfmfAaedsvE7GFDkgAFlVC3PBM7XGKVAgVG
-X-Google-Smtp-Source: AGHT+IFQo7whZ43umpkON7cWHCeG6OEupE+1dDqM8Rn4tGg8MZoRe7tVwq2DQ7onfuTeRsVjhMgAyWWGJyuOZG8BsFA=
-X-Received: by 2002:a05:6e02:3787:b0:3dc:a380:3ab3 with SMTP id
- e9e14a558f8ab-3df29806c65mr614355ab.29.1750712872755; Mon, 23 Jun 2025
- 14:07:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="jl6h7Ky8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: References: Cc:
+ To: From: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1750712886;
+ bh=gEB9Uu/BrBrdgfsB6ag5zH9CJIrem98ugMHj5C+RaBk=;
+ b=jl6h7Ky8H9onZFvdgS+VceSwaLsmF18yJkgcUZquc0ussuo4yyNi6+p6NB90vHir5yevLDWFD
+ jCmKlIfF/GcL5tbmCbMt9FEtxHhHDFrGOkvBCDglH78mNQHxTiac1j/HfJpUNIkoY6MFUEQOg9z
+ BGsiOnlmX77xiGsk8IIiZLpFakNMY2/MOB+hGfY6Gllo9fZ7JUIoNGDF0a95nwcWFEUJvQkrP4U
+ PfDLb/tip2y+ArN1HzjGUruo6u4o/lv2A2s+S3vWzP+bTw/D//L9bNNcbVo5YYwDPtpU9QETsGc
+ 8RcvAQupyKSL8Uu086SH546jr8vf09s2BePY/yxh9eHA==
+X-Forward-Email-ID: 6859c22e294ea86d0db707c3
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-Forward-Email-Version: 1.0.3
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+Message-ID: <90b7a1b6-bc49-414d-9cde-e6fad46d2650@kwiboo.se>
+Date: Mon, 23 Jun 2025 23:07:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620212435.93846-1-acme@kernel.org> <20250620212435.93846-2-acme@kernel.org>
-In-Reply-To: <20250620212435.93846-2-acme@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 23 Jun 2025 14:07:41 -0700
-X-Gm-Features: AX0GCFuW5EtyEiOg10N9QdQ_vnwsKRM3tQ-FpqSv0D_UnLEn_f4f-NRtdNqss98
-Message-ID: <CAP-5=fWzHDsa18SjSJgdJsZ8myyA-JH6K7CjZQo8f8GfX7+rAw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] perf build: Suggest java-latest-openjdk-devel instead
- of old 1.8.0 one
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] arm64: dts: rockchip: list all CPU supplies on ArmSoM
+ Sige5
+From: Jonas Karlman <jonas@kwiboo.se>
+To: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>,
+ Alexey Charkov <alchark@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+ XiaoDong Huang <derrick.huang@rock-chips.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
+ <3286000.Y6S9NjorxK@phil>
+ <CABjd4YyaNF1zosFFi6hEsZanPDxoaa1h4Dpd6uTPRwA3BZn0=w@mail.gmail.com>
+ <5897576.DvuYhMxLoT@phil>
+ <CABjd4Yy8WeXKmmxh2-TjjF5-ABy-NzzJsWpt1KvSjJqTHh0Xwg@mail.gmail.com>
+ <CABjd4Yz4NbqzZH4Qsed3ias56gcga9K6CmYA+BLDBxtbG915Ag@mail.gmail.com>
+ <36711B65-DD45-4539-BD9C-0382936FD0A3@gmail.com>
+ <dd1d0676-4eaa-4df7-b557-676b3de9a52e@kwiboo.se>
+Content-Language: en-US
+In-Reply-To: <dd1d0676-4eaa-4df7-b557-676b3de9a52e@kwiboo.se>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 20, 2025 at 2:24=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> Just tidying up the suggestion to pick the latest and not some specific
-> version.
->
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Link: https://lore.kernel.org/r/
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+On 2025-06-23 19:40, Jonas Karlman wrote:
+> On 2025-06-23 17:02, Piotr Oniszczuk wrote:
+>>
+>>
+>>> Wiadomość napisana przez Alexey Charkov <alchark@gmail.com> w dniu 23 cze 2025, o godz. 15:58:
+>>>
+>>> On Mon, Jun 23, 2025 at 1:19 PM Alexey Charkov <alchark@gmail.com> wrote:
+>>>>
+>>>>
+>>>
+>>> Okay, I've bisected this.
+>>>
+>>> TLDR: Linux and u-boot seem to have nothing to do with it, opensource
+>>> TF-A doesn't work, binary BL31 starting with v1.09 do not work. BL31
+>>> v1.08 and earlier work fine.
+> 
+> v1.09 added support for 1 GHz hrtimer in addition to the normal 24 MHz
+> rate. Mainline U-Boot may only support use of 24 MHz hrtimer, unsure
+> what impact the hrtimer rate has. Mixing blobs with/without 1 GHz
+> support is known to cause issues. At one point the latest rkbin tree may
+> have contained incompatible rk3576 blobs (mixed 1 ghz vs 24 mhz rate).
 
-For patches 1 to 3:
+Clarification:
+Following boot1 parameter activates use of 1 GHz hrtimer, see [3].
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+This parameter was added to rkbin repo before all blobs was updated to
+fully support use of the 1 ghz mode, and is the source for incompatible
+blobs I referenced above.
 
-Thanks,
-Ian
+  [BOOT1_PARAM]
+  WORD_2=0x100
 
-> ---
->  tools/perf/Makefile.config | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index d1ea7bf449647eb2..afebd3b1e6cb9f58 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -1144,7 +1144,7 @@ ifndef NO_JVMTI
->        endif
->      endif # NO_JVMTI_CMLR
->    else
-> -    $(warning No openjdk development package found, please install JDK p=
-ackage, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel)
-> +    $(warning No openjdk development package found, please install JDK p=
-ackage, e.g. openjdk-8-jdk, java-latest-openjdk-devel)
->      NO_JVMTI :=3D 1
->    endif
->  endif
-> --
-> 2.49.0
->
+[3] https://github.com/rockchip-linux/rkbin/commit/cbbc6868221fb416d4f0d86a10e493dbbbc1f117
+
+Regards,
+Jonas
+
+> 
+> Did you try with newer blobs, i.e. ddr init v1.09, bl31 v1.19 blobs [1]
+> and mainline U-Boot [2] ?
+> 
+> [1] https://github.com/radxa/rkbin/commits/develop-v2025.04/
+> [2] https://source.denx.de/u-boot/contributors/kwiboo/u-boot/-/commits/rk3576
+> 
+> Regards,
+> Jonas
+> 
+>>
+>>
+>> just fyi: 
+>> to confirm: replacing only bl31 to 1.08 makes all good
+>> with perf gov. clocks staying on 2200/2300
+>> clock estimations are predictable, constant and estimating constantly 2400
+>> ux is „like” on 3588
+>>
+>> Alexey: many thx for finding root cause component!
+>>   
+>>    
+> 
+
