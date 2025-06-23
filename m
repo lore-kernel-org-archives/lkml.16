@@ -1,78 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F3223BF9C;
-	Mon, 23 Jun 2025 18:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1964729CB39;
+	Mon, 23 Jun 2025 18:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750702780; cv=none; b=q2Qq87IwidmNWfMtdCprgm3hIEAQAPFPbN9RZUjapwJY669USYu4MtH4hT/Mhj40a67wnOKoaK0pP4Elf86RHFfrY25oxf1zY6UAMw5FZaH4reLPMwV6Oqha+jCcF7rkfOmKcyajl8o1juNCALwGgx92nZZmmD0Sy3Gq+29VBZA=
+	t=1750702788; cv=none; b=OJgK/Prn5ztHn6Z++3pmU6/3o5K9l9AtsY3dxej++919/JtywKOVYmA2448Xk5QFDoJmZZSZ92YEOZ7fgI6JHK6Qh0EuHkPnybjedz4JxmNCLusqA1oqBUGXu1c8mErmbngLiMjrPwx4aEOuqpjxLnmeYx38E9kU54v1hd9/MLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750702780; c=relaxed/simple;
-	bh=/kwMb7EYkX9jXCvAV1Tqjp1XqcVWjfLYQ3JkaVLEP8c=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=uXn5dbdaC4U56PTjpmqqr19I+KvqaHBggWTi0IlCBx/HRUTi33qfBp1dtZP3n//meV+zj8JQ/cl7cdj0X6QYqTOB3nbTdJWRYSUv9lm+Q90LcpY4TA9guU7VeX2+BPrO5fSWCPVGKjET7sK9KaIduimAWZeCU63BvKesTEuKcsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nf+woZbh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750702788; c=relaxed/simple;
+	bh=ESf+LmadPkuTIyz4p6caha2CR4G2QyEwoMSgk144nGg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=grroFXK2Pcssz/fIA+zr9ePAo2wgxJh4oh7hmPpr77JWY+4H8t3102W9fxE0wZQy1qdub3Om132OUp9I1EMkrysPAfTd42cYK0JSggQXoVCLIHeRa8X4j4YYmsR0tpq/ffLVYGT5hIGTnf4wkpq9Y7o0ujk0ltx9Liy3hNw7g4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=i1Z1mr4R; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nf+woZbh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EF34C4CEED;
-	Mon, 23 Jun 2025 18:19:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750702780;
-	bh=/kwMb7EYkX9jXCvAV1Tqjp1XqcVWjfLYQ3JkaVLEP8c=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=nf+woZbhQKymZE5VcKhMtLfWFDgIDBpsYCCEzeGKT1q6XrfUT1fH/027kMhUF1iLz
-	 sj4X8LXXZEyCIPRNt5ovqTkEu8k52PhmTP6RzIARp7yN/MN14Hcd7UZjrAc/7jo16D
-	 1Z/rRdc71JJdUZOaKwPDFsgzoIFLgrX6p74wapUozPu+vhFjBvtm/vdEY/0XLK3Bxo
-	 KMMt+B5mdGm7kNDYykrQ/NFjf1TbXJpxYC+zMEs1Zzo2dSHsxsaDefUbg8nRZyBHt+
-	 lRth1gjuINh6KVb3me1bdUP+FiwtUsLq29BoB+dYZeTSyxc2+bkA7sjL9x4czxJSmb
-	 I24oODzuQWuhA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7118438111DD;
-	Mon, 23 Jun 2025 18:20:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="i1Z1mr4R"
+Received: from [IPV6:2601:646:8081:9482:eb50:9bbc:f4fe:cc43] ([IPv6:2601:646:8081:9482:eb50:9bbc:f4fe:cc43])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55NIJGD81039127
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 23 Jun 2025 11:19:17 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55NIJGD81039127
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025062101; t=1750702759;
+	bh=GiAXLdNp3nC3MavPq2unzj2t9vG7BnSpq1GDijjcQag=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=i1Z1mr4RnE/r6kjX+XxW5qkUpy/IvwDlsZ6mfEbVtg2BWUoThKbOq++bUIt2VB7aK
+	 2WEmr6DpBGumss8s4LBiupLAhey4HG4h/LgHh6SxBv81tb76MyfOpWkpNPv+4K/okr
+	 +6gZntfXXT6b2hkwbJ5c7nD0cOd+UNM1Hzwn+1A8dIp+rJXFNvyMOiuQx2Ulx5dixd
+	 bnvIMD0641zDsPxh3mWiDLdbA0bUd0JyjxAZkofqZffOnRcsOhEG7zR3ort9EYx7KW
+	 qkwjst0yMz3plYG0XWyGM0NjkCNuCdnq1zarQlduM8t6LJiaK2tk3f6w2E+jdBdyne
+	 ddtK71QhG5sWQ==
+Message-ID: <860684c8-a985-47bc-af30-3370f203e80d@zytor.com>
+Date: Mon, 23 Jun 2025 11:19:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] libbpf: Fix null pointer dereference in btf_dump__free
- on
- allocation failure
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175070280727.3256207.16732864015027671510.git-patchwork-notify@kernel.org>
-Date: Mon, 23 Jun 2025 18:20:07 +0000
-References: <20250618011933.11423-1-chenyuan_fl@163.com>
-In-Reply-To: <20250618011933.11423-1-chenyuan_fl@163.com>
-To: Yuan Chen <chenyuan_fl@163.com>
-Cc: ast@kernel.org, andrii.nakryiko@gmail.com, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, chenyuan@kylinos.cn
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/3] x86/boot: Supply boot_param in rdi instead of rsi
+ from startup_64()
+To: Khalid Ali <khaliidcaliy@gmail.com>, brgerst@gmail.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        ubizjak@gmail.com
+Cc: x86@kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250623162935.681-1-khaliidcaliy@gmail.com>
+Content-Language: en-US
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <20250623162935.681-1-khaliidcaliy@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello:
-
-This patch was applied to bpf/bpf.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
-
-On Wed, 18 Jun 2025 09:19:33 +0800 you wrote:
-> From: chenyuan <chenyuan@kylinos.cn>
+On 2025-06-23 09:29, Khalid Ali wrote:
+>> This was never intended to conform to the C ABI, why is it necessary
+>> to change it?
 > 
-> When btf_dump__new() fails to allocate memory for the internal hashmap
-> (btf_dump->type_names), it returns an error code. However, the cleanup
-> function btf_dump__free() does not check if btf_dump->type_names is NULL
-> before attempting to free it. This leads to a null pointer dereference
-> when btf_dump__free() is called on a btf_dump object.
+> Technically speaking, you are right, however that doesn't mean we can put something where
+> ever we like. We came from C code which is bootloader and we end up to C code, so we should
+> comply the ABI here too.
 > 
-> [...]
 
-Here is the summary with links:
-  - [v2] libbpf: Fix null pointer dereference in btf_dump__free on allocation failure
-    https://git.kernel.org/bpf/bpf/c/aa485e8789d5
+This is also invoked by some external bootloaders that boot the ELF 
+image directly, even though this is strongly discouraged.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Therefore this patchset is NAKed with extreme prejudice.
 
+	-hpa
 
