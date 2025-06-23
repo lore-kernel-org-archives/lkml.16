@@ -1,133 +1,199 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9951719C558
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:27:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C949B19C558
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750688851; cv=none; b=XJvqK2mGSdQe7pt47lGL8rEu81KNxcr1IsAs22+KKKQwr8wcfJKfcE+L4j0khx4I52R5NllXuG3zAhGmA+5yDPIwG5brBqZusejnt7ZEEe6euZg6UekB5CdVPC4sDCIjKbipkYCPc5QuXutZ3aYIt90Wg/pkxg5qxbFn0cAicYQ=
+	t=1750688884; cv=none; b=JQuA019mEC6CA5RWNBMD0KArIRYtKHSv04rrQ4f73EC8chyD+TiMKwietZzjO23sAz6RNQxF99n6o9E/iQDzyqsGdBwAgFx5wtmv1yF8r9Wl/Nics1LKGQyIDeRt0vQf153kaQaFoG77tGXeIuXi2AgLzgnSKnSy3bKl4oQhnKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750688851; c=relaxed/simple;
-	bh=mnIK+W5KngtwZhVktOKMz0FyAthSv5HiBjAvWwmaW9k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=feUyPb55yg/B5TDEvGnjfiM2yjEzVzqo0/EMLdKo4rmwicy8oVBGInf30umusc5HFAJWgex6yUrb6AGjmCB/uCgxlL+TofS8reKdCKU+r5AY/RjBSeF80pguE0x6YgXxY8s05T31jRx39H2Y0DjAPp0dpjHs6e3e6lo1f4GSRLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lpw5sjBq; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750688884; c=relaxed/simple;
+	bh=YJCiIx6csLn0bpFv2gQQYRED31VRVaC9NNP5sjBpW0Q=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=eFUM2DtOIwwCrAU0p/tHXgIq6ka8Zc8E+eif5RlhnAYC5enVjRehlJl3MqyxtFc2zPuwKcxOUY6t9AWY46vfActTyZ+7D1ox+jhCz8ycRGv4aHrB3XnLf5acFKirvkYtdbY9lx7CjpvLk+1UUaGNtWRTy8zKQiCKDSLUm5NIszM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=x3hlEMs7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=oI968zJQ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=JYsVXf0I; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=heS3N+pq; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lpw5sjBq"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad574992fcaso729788766b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 07:27:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750688848; x=1751293648; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0mxmuO90Mgrv1homANIMZ/x/S7lf2iuPtj/uEFpEqR0=;
-        b=lpw5sjBqUj8UhcTyMkmp8NwmAdHxOIjhUFCpaM0of5S3QaYrzM/Ab7BRMYmC7RWj7e
-         Nz/eh/2EPSBuWbZ3ncMwkZEhvo9wCUJpfq5DLpWUcuZdKiLjx1EOBcZ57Ub6dFUJW6Kw
-         a4lk3MXnkLcKDpJpXNETDkb5ZAAuJKaurs5tMGkXuk6KiCkkx+9coVXJwgTO5IEOJ46j
-         C1Ez4dW254a0CQljbv7Dif6wNBqFFH+XnpdFUmF/Q3bwP739y1EdjiGeNc6jiW0wQXe7
-         KzCICW3fKFnncAlEzG9DIgkgieo0EFBv2WJMO+cjRukhmo0pqhzcOnhKJl5Ozo6jgign
-         rbzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750688848; x=1751293648;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0mxmuO90Mgrv1homANIMZ/x/S7lf2iuPtj/uEFpEqR0=;
-        b=n1tvo54ykB6Rj07SPIf+sZtEyfqMI+SQgrR+KyawSBw1SSLTTHjPE6W8YMhWcDi7/6
-         ZhXEdXcnmcwmDKbLiMM6NGYKSBQ+d1DZ56MUSfLOmuyoSM5qosa/Q9fa23evPNf7S3/a
-         AUH63/TvwShx4zacyPDGN2wJUDQzgWUEUQCdA4a5MP2rV1coiKR+BhebC4S+dMeXic4+
-         q62vVci9IsxLKtpZpEtGA0B3j3XmN++90bI/+BaqPE473xhvisG8JIkS3baSoYjJNYzC
-         Me78e7RTzKODW5jvPnmQtnz3gv8s8wOqOrqWVmrPYKqQ8gQ56y6G+JSYRgACRUQGVN/U
-         cTbg==
-X-Forwarded-Encrypted: i=1; AJvYcCUG1gt6nnJdrKxyH3U82kznePmOWIrfbLZRw7nDWaYGnnfQLguJErlHU9Ih0pP20CpeVl3AH6/fEKSO4iI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+JlG5cdEFktvfwFRX/eQoSEZi0xrhByTt8OpORffZDppisfGG
-	/Fsm4FApp8FpuTQLXg+irOwymxnECRp7EQ3ryzrDTtW7TDhxPE/85u2wEm3LuXM2KcAsdVzMaGg
-	htOA7+4cT9d/3l5ineNdJQnrV7gT7Q5k=
-X-Gm-Gg: ASbGnctb7rlG3GUrFhbueXzWofsR0EDplvDW/EIFppLJMX9Qo2GbQoAt9hKrtinD0FV
-	InTRNemGXSUyDXJhQBcIkEOYLJnDnF3NJ8SlqM17QWmX9n7MQLvUFEFor0ZRj3t1uaRb0s8KEE7
-	NlIDcaPzBlF/7LELtnWywnEVW6KuMdFcuzq6fhOvsn8RRFkqxSx58H0UF+F/BnHlsHWEYcqYxDP
-	kOwSQ==
-X-Google-Smtp-Source: AGHT+IFg5WdPq/qtv4lksfp6KScFWAG840JHC2XOEBUW7uElx1+hH2peDn+CU3J7X0rKpYK4v7bpx2FOMkfNnjWA/wI=
-X-Received: by 2002:a17:907:60c8:b0:add:ed0d:a56c with SMTP id
- a640c23a62f3a-ae0578d9c7amr1099129266b.0.1750688847762; Mon, 23 Jun 2025
- 07:27:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="x3hlEMs7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="oI968zJQ";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="JYsVXf0I";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="heS3N+pq"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D2F812116B;
+	Mon, 23 Jun 2025 14:28:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750688881; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=E5iEM9QDpyRDgX//nNw/KJ2WQ1r0Cs8xwFNmlzPnDVo=;
+	b=x3hlEMs7Qeam81RvadgdyX74sjneiRIuSoLTV8Zh7tHYVzOvvJPLpOmq456wZDs+K3lZwf
+	rhD5eDuzFJqLXL8TTTkzwLMQYDbwkURrobYjrXkQjk5qoqNRQN7o9v7FCFXFiiLQEXdHgK
+	yF+RP4OJ3PLvV9aqyZyIqyYRh0jxvgg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750688881;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=E5iEM9QDpyRDgX//nNw/KJ2WQ1r0Cs8xwFNmlzPnDVo=;
+	b=oI968zJQbRFY0zQwCT3VKqq9pG9i7OW2SURAfo5/ulY0hNG5ungqeZtZJpHZEnP3hy9ULG
+	3Q2MpRA+ZzDyF5Cg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=JYsVXf0I;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=heS3N+pq
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750688880; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=E5iEM9QDpyRDgX//nNw/KJ2WQ1r0Cs8xwFNmlzPnDVo=;
+	b=JYsVXf0It5vYCvQpCLT+/NBQkTuOiMRZH5Nxnrt9kAEfJj896Q80TeZ6vB9GyOpVfhylwH
+	5h8l6ifIWvzu8BSangwlhivu9ZBtwaSjKSJDSQNCpCIC9CMHY8KF5FCh+ENHIYSFf6g8IE
+	yGk7jFjXBhCmCtDZJzxA9VYcv/6T2rk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750688880;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=E5iEM9QDpyRDgX//nNw/KJ2WQ1r0Cs8xwFNmlzPnDVo=;
+	b=heS3N+pqYQB4nibgzso7aVZDikqAsmk3Towm7IX/mP8/6BiMXv7VjWEh4V/acQ4IMpjsKw
+	8RUrlCwPQZgvY9Ag==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A0FA313485;
+	Mon, 23 Jun 2025 14:28:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id +0kAJ3BkWWioZAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 23 Jun 2025 14:28:00 +0000
+Message-ID: <568cba54-dd42-45e9-be0f-53569811f2e9@suse.cz>
+Date: Mon, 23 Jun 2025 16:28:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250621180215.36243-1-sj@kernel.org> <20250621181127.36394-1-sj@kernel.org>
-In-Reply-To: <20250621181127.36394-1-sj@kernel.org>
-From: Bijan Tabatabai <bijan311@gmail.com>
-Date: Mon, 23 Jun 2025 09:27:16 -0500
-X-Gm-Features: AX0GCFu6T2Sb_KHAJnfSsDjk8-dMwbeEOaowGMMnJk16KremJtvAzwu_az7M350
-Message-ID: <CAMvvPS7ozBjY-YWHrkkGVQA8ug=0=xT=BeyZxi0YrHp6PNQmHg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/2] mm/damon/paddr: Allow multiple migrate targets
-To: SeongJae Park <sj@kernel.org>
-Cc: damon@lists.linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	akpm@linux-foundation.org, david@redhat.com, ziy@nvidia.com, 
-	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com, 
-	byungchul@sk.com, gourry@gourry.net, ying.huang@linux.alibaba.com, 
-	apopple@nvidia.com, bijantabatab@micron.com, venkataravis@micron.com, 
-	emirakhur@micron.com, ajayjoshi@micron.com, vtavarespetr@micron.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] fs: export anon_inode_make_secure_inode() and fix
+ secretmem LSM bypass
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+To: Shivank Garg <shivankg@amd.com>, David Hildenbrand <david@redhat.com>,
+ akpm@linux-foundation.org, brauner@kernel.org, paul@paul-moore.com,
+ rppt@kernel.org, viro@zeniv.linux.org.uk
+Cc: seanjc@google.com, willy@infradead.org, pbonzini@redhat.com,
+ tabba@google.com, afranji@google.com, ackerleytng@google.com, jack@suse.cz,
+ hch@infradead.org, cgzones@googlemail.com, ira.weiny@intel.com,
+ roypat@amazon.co.uk, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+References: <20250620070328.803704-3-shivankg@amd.com>
+ <f2a205a5-aca9-4788-88ff-bfb3283610c5@redhat.com>
+ <3114d54f-ed7c-4c68-9d32-53ce04175556@amd.com>
+ <39f95eb9-c494-4967-8d4d-9768200637f4@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <39f95eb9-c494-4967-8d4d-9768200637f4@suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: D2F812116B
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[googlemail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[google.com,infradead.org,redhat.com,suse.cz,googlemail.com,intel.com,amazon.co.uk,vger.kernel.org,kvack.org];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:mid];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Score: -4.51
+X-Spam-Level: 
 
-On Sat, Jun 21, 2025 at 1:11=E2=80=AFPM SeongJae Park <sj@kernel.org> wrote=
-:
->
-> On Sat, 21 Jun 2025 11:02:15 -0700 SeongJae Park <sj@kernel.org> wrote:
->
-> [...]
-> > I'd hence suggest to implement and use a simple weights handling mechan=
-ism
-> > here.  It could be roud-robin way, like weighted interleaving, or proba=
-bilistic
-> > way, using damon_rand().
-> >
-> > The round-robin way may be simpler in my opinion.  For example,
-> >
-> > unsigned int damos_pa_nid_to_migrate(struct damos_migrate_dest *dest)
-> > {
-> >       static unsigned int nr_migrated =3D 0;
-> >       unsigned int total_weight =3D 0;
-> >       unsigned int weights_to_ignore;
-> >       size_t i;
-> >
-> >       for (i =3D 0; i < dest->nr_dests; i++)
-> >               total_weight +=3D dest->weight_arr[i];
-> >       weights_to_ignore =3D nr_migrate++ % total_weight;
->
-> Actually, probabilistic way may be not that complicated.  Maybe we could =
-to
-> below here.
->
->         return damon_rand(0, total_weight) >=3D weight_to_ignore;
->
-> >       total_weight =3D 0;
-> >       for (i =3D 0; i < dest->nr_dests; i++) {
-> >               total_weight +=3D dest->weight_arr[i];
-> >               if (total_weight >=3D weights_to_ignore)
-> >                       return dest->node_id_arr[i];
-> >       }
-> >       WARN_ON_ONCE(1, "I don't know what I did wrong");
-> >       return 0;
-> > }
->
-> But damon_rand() might be more expensive than the roud-robin way, and arg=
-uably
-> roud-robin way is what usrs who familiar with weighted interleaving may e=
-asily
-> expect and even prefer?  I have no preferrence here.
+On 6/23/25 16:13, Vlastimil Babka wrote:
+> On 6/23/25 16:08, Shivank Garg wrote:
+>> 
+>> 
+>>> 
+>>> In general, LGTM, but I think the actual fix should be separated from exporting it for guest_memfd purposes?
+>>> 
+>>> Also makes backporting easier, when EXPORT_SYMBOL_GPL_FOR_MODULES does not exist yet ...
+>>> 
+>> I agree. I did not think about backporting conflicts when sending the patch.
+>> 
+>> Christian, I can send it as 2 separate patches to make it easier?
+> 
+> The proper way is to send the fix without the export, and then add the
+> export only when adding its user.
 
-I think my comments about the round-robin approach also apply here,
-but all things equal, I generally prefer being deterministic over
-being probabilistic when possible.
+Note: AFAIU either way the new user would be depending on a patch in a vfs
+tree (maybe scheduled for an 6.16 rc and not the next merge window?) if
+that's an issue for the development.
 
-Bijan
+>> Thanks,
+>> Shivank
+> 
 
-[...]
