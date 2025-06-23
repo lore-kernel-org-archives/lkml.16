@@ -1,141 +1,117 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6135FEE6
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:10:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228DD5FEE6;
+	Mon, 23 Jun 2025 14:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750687851; cv=none; b=GoZ1rE4lX0pY+L6TSuYs8YojKFyVZC9Vm/kWgjj/0LSlYm0dOdjtDMXwkauENrF1PbMM+ie395W6SViCOF5tPdo68Ho1YDmITh0/IUU9gWH6BI9xpoI3Z0y1uKZrbxkKQAA6rX0IBOvkjimXbpblFJHAe4NDBbn7tFgoNZklsnc=
+	t=1750687866; cv=none; b=dNWc7ZvgusJkrKsNG9+abomXlbPTrrYLl4+qbm8ikWCRqYG8HbEGyazUCz1y0MJK2Vn5zau8veGfy4bwTpqDS03Qw/p+Jlb1xiWumM91eRoYtW07SkRZc810a8cLNLxUhShWE/WIQT0/tIYr21/+OSGTNTja3SdXdHspeN9o3Pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750687851; c=relaxed/simple;
-	bh=nIC8FW1qrw909l8wvSt3cY7s7lffa33yp1Dh6OvbuR4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XwV4L9sMw8OUhH2wpgAQARyaWe2mPO7qX5K9+jttQyelNm+Zt/gcK4T0Xxh5qfuveDTVAtza0pfS9BSlcyWPVmOc/YyyQ2VsAQ4pBGaoRM0g0vUP+gIYtFUGT1TJ9DvXNtS733AWXI6xQr3ClUkmxdVVPhF8HyRpGLn/L6uIqQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hammernet.be; spf=fail smtp.mailfrom=hammernet.be; dkim=pass (2048-bit key) header.d=hammernet-be.20230601.gappssmtp.com header.i=@hammernet-be.20230601.gappssmtp.com header.b=vZWa1JKq; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hammernet.be
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=hammernet.be
+	s=arc-20240116; t=1750687866; c=relaxed/simple;
+	bh=S2l2sY8x6ARHJCtqhLtvEeZM+BBhQzDuZlxOYaXKcro=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EF8f8iiVJhfseadHt1DcPrJxCvP71li6sGQrc05KgMszGmztZEfaT8/SDrP4vOvi3qHRSaTqWKawEnNj0HwHjCuYYu9Qk7znGKy41u3AKWljybavHTe6xZasf4Bu34zCrgy+QNcnuJ8BRWRB211odoEYMOcGTIHodQjX8MZdaT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mndeAcmi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hammernet-be.20230601.gappssmtp.com header.i=@hammernet-be.20230601.gappssmtp.com header.b="vZWa1JKq"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4535fbe0299so22215145e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 07:10:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hammernet-be.20230601.gappssmtp.com; s=20230601; t=1750687845; x=1751292645; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lcv5YPu7e8CB/TGgk0GJfc6Wc4FUmKBKEj6aqoim6Y0=;
-        b=vZWa1JKqa/wYw/utO/1wjqGcZ4ZohAM8LZ972zak2/DN75RrW2rhCoPO3n8Dhiu3Zy
-         L/VyAkn+ccsLLBJdVmK/tMV+dUMNMkAOQjN641JCdGGvZiwbGzSF4ZrJuzRei4iyFwDJ
-         YP7XJfj0uar0AXlapnX6b+Wwe08i9z5/yWX1zXtdrMWG1kiYQPu/b/i5NibGYccakKM/
-         Y1WEBoEiBJHEzSJ06Z5uxJOKAyVlmkBu5xF+8lhZHHFgjgqFb4zh8apGpBCbtr8Orbxv
-         RKrLOwUpyY5d5hS9Jp8StbfEJc5D8zX94LUUBE/kxYa8QlAo4ij/OQVd2481Z0dnDXJy
-         LRNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750687845; x=1751292645;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Lcv5YPu7e8CB/TGgk0GJfc6Wc4FUmKBKEj6aqoim6Y0=;
-        b=RMW6uunaLY2biJYaGkxBJsXj+PSXM6hPS+peWuYX25OphP0j0GN+htYvTlk5UR3PhA
-         bBDn0c+2RDqJfqHYotxqgQ9viOYkSGfTlnyjxb1dkKYfHbmkyGSmlUfzbb3Jx7lVDjip
-         eR6OnNRcIqj+SmHNyZu2P8F3TH4wMwePwWSO9DsjN0YyCuVLblZFS/ZWGoirCXpdnkHh
-         zZ20pqyyjRxo+gomb3p9otOhKYAgQNLvu4mFYjURJseOFlGaRKQMDdiRXE/zjwQ3iCUs
-         qOHGY5vt/ay7a5rOk7ElBFWkZWM3jgaAapOyTEu58J1j4NqSBCvRd9zJQg3mrNuTjYYv
-         FEjg==
-X-Forwarded-Encrypted: i=1; AJvYcCWDkR1ltCmYIi/spjoJn7pBXbPVSJiva9JkuzaEkG0kzIWn7eSkVFlqG0/GjBmz3Zwkd6wTMD4huAbFPrA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFjCCkYwQyQ51I0oyol/8hdp1G1zxRFaJemCJ6nbUNNtmeTs+f
-	UezyHvvF4ubf+f1kvTcBJQ04NPPyFL5YANUYcagSNNbVFxRZSwvygkKd8jif0e61LqU=
-X-Gm-Gg: ASbGnctWOdUtVXEiLXj/Dtx0VyYPlrPcbMSS95ttSMKNe2f0Zp93uw/RsfUz/5R9XYT
-	iwJy3Lo9fm5w5E3zdLQ2no6wr89fcte/J+qnDJOBJl4evKyKqb5+M1CMwZo70geRtYU0O7jbTBP
-	aYY8VjgnF9eLtynS/XaH4RefQzHQi1VnVwfJRauqs8pguWo8mJ3KY2NnQvQc7lvWpKUwR5XG92N
-	N1HAerKPhsOvSfw5UlgZwC7rH+GUY4E+rQN1nB0vb6uk8xwXMMnec/9BBGEAbBU+tp1mKOQmyTZ
-	+QzYyLz1vZf7EHz6PTzjKChG4pUWovROS8LtPcd3PMChCvt8xlXWIcsGwwHDcXjjA3mOhnafc4l
-	VzEDUKKVvuZO3/0ZEOunXHJR4
-X-Google-Smtp-Source: AGHT+IHu8ThU4fWbJ971kUhXyTgqaaI7W/xvc9ZVSFaTQKtizCrSIiXqe5WNuEKSna35IWIMP6agnw==
-X-Received: by 2002:a05:600c:871b:b0:43c:f6c6:578c with SMTP id 5b1f17b1804b1-453659d0a9bmr130173895e9.15.1750687845066;
-        Mon, 23 Jun 2025 07:10:45 -0700 (PDT)
-Received: from pop-os.telenet.be ([2a02:1807:2a00:3400:8310:8165:973c:45af])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d117c02fsm9695584f8f.50.2025.06.23.07.10.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 07:10:44 -0700 (PDT)
-From: Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>
-To: stern@rowland.harvard.edu,
-	gregkh@linuxfoundation.org
-Cc: christophe.jaillet@wanadoo.fr,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	linux-usb@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mndeAcmi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A196EC4CEEA;
+	Mon, 23 Jun 2025 14:11:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750687865;
+	bh=S2l2sY8x6ARHJCtqhLtvEeZM+BBhQzDuZlxOYaXKcro=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mndeAcmiY8OItl4Ckcb2czE0f2tEwgc3Cau0eEXESzK/XDwyuIwW0rhXkL+s0pwBY
+	 9Ud3mGQwNkC738m+R6Tsbc8fQ5gAF4v4Cudno6MaO+TV/UTxzMqAywc7h7+8MrT9I9
+	 JyB4gLClWPxobJjjk6yf/Tps6oJKt3p4dRABaopcFAqrUCOwpIdA5c4rG0RWplbL8P
+	 yO0Exd2e313f3404E0BbmIjKW87GovUfFAmAXYofrbqD7m2rjH2bGk8fqKmuE26uxm
+	 8b1tO3NrRaKmViaTf5qKh6tiS/cqmrA1ModCeRVuafw2Duvx7iQtZaX/2+xPO52UXy
+	 c13lMLJ3DN/zQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uTht1-009Dbr-6F;
+	Mon, 23 Jun 2025 15:11:03 +0100
+Date: Mon, 23 Jun 2025 15:11:02 +0100
+Message-ID: <867c12czux.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Cc: Eric Auger <eauger@redhat.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>
-Subject: [PATCH v2] usb: ehci: replace scnprintf() with sysfs_emit()
-Date: Mon, 23 Jun 2025 16:09:50 +0200
-Message-ID: <20250623140950.61568-1-hendrik.hamerlinck@hammernet.be>
-X-Mailer: git-send-email 2.43.0
+	oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	seanjc@google.com,
+	darren@os.amperecomputing.com
+Subject: Re: [RFC PATCH v2 0/9] KVM: Enable Nested Virt selftests
+In-Reply-To: <9d5d82f1-b488-4b0a-98c2-27e95d63fc5c@os.amperecomputing.com>
+References: <20250512105251.577874-1-gankulkarni@os.amperecomputing.com>
+	<92c7e99c-5574-422c-92f1-62d5cde58fec@redhat.com>
+	<7bf7bd52-7553-42a7-afdb-a5e95f8699b5@os.amperecomputing.com>
+	<86a56veiyy.wl-maz@kernel.org>
+	<3be548bf-aee4-46ab-bcbf-15bf629b24da@os.amperecomputing.com>
+	<86jz58c5ut.wl-maz@kernel.org>
+	<9d5d82f1-b488-4b0a-98c2-27e95d63fc5c@os.amperecomputing.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: gankulkarni@os.amperecomputing.com, eauger@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, seanjc@google.com, darren@os.amperecomputing.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Per Documentation/filesystems/sysfs.rst, show() methods should only
-use sysfs_emit() or sysfs_emit_at() when formatting values to be
-returned to userspace.
+On Mon, 23 Jun 2025 11:31:32 +0100,
+Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com> wrote:
+> 
+> On 6/19/2025 5:15 PM, Marc Zyngier wrote:
+> >>   >
+> >>> Also, running EL2 is the least of our worries, because that's pretty
+> >>> easy to deal with. It is running at EL1/0 when EL2 is present that is
+> >>> interesting, and I see no coverage on that front.
+> >> 
+> >> Sorry, I did not get this comment fully.
+> >> When we run selftest on Host with -g option, the guest code will run in vEL2 as L1.
+> >> This is implemented as per comment in V1.
+> >> 
+> >> When we run same selftest from L1 shell, then guest_code will be running in EL0/1 like running from L0.
+> > 
+> > What good does this bring us if we need to boot a full guest OS to run
+> > tests? What we need is synthetic tests that implement the whole stack:
+> > 
+> > - L1 guest hypervisor
+> > - L2 guest hypervisor
+> > - L2 guest
+> > - L3 guest hypervisor
+> > - L3 guest
+> > - [...]
+> 
+> IIUC, selftest leverages host OS support and uses various IOCTLs to
+> support the guest_code run. Are you saying to implement all this
+> again (without OS help) in guest_code to run it as hypervisor and
+> launch guest_code2 as NestedVM?.
 
-Convert the uses of scnprintf() in sysfs show() methods to
-sysfs_emit() and sysfs_emit_at() for better safety and consistency.
+The whole point of having small selftests is to run something that is
+simpler several orders of magnitude simpler than the full blown
+OS/hypervisor. So indeed, I'm asking for selftests that build chains
+of guests up to some level and verify that the nesting, as described
+in the architecture, works correctly.
 
-Signed-off-by: Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>
----
-Changes in v2:
- - Removed unnecessary curly braces as per style guidelines
+> It seems to be complicated, doesn't it?
 
- drivers/usb/host/ehci-sysfs.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+Yes, it is complicated. What did you expect?
 
-diff --git a/drivers/usb/host/ehci-sysfs.c b/drivers/usb/host/ehci-sysfs.c
-index 8f75cb7b197c..5e6b545c30e6 100644
---- a/drivers/usb/host/ehci-sysfs.c
-+++ b/drivers/usb/host/ehci-sysfs.c
-@@ -12,21 +12,17 @@ static ssize_t companion_show(struct device *dev,
- 			      char *buf)
- {
- 	struct ehci_hcd		*ehci;
--	int			nports, index, n;
--	int			count = PAGE_SIZE;
--	char			*ptr = buf;
-+	int			nports, index;
-+	int			len = 0;
- 
- 	ehci = hcd_to_ehci(dev_get_drvdata(dev));
- 	nports = HCS_N_PORTS(ehci->hcs_params);
- 
- 	for (index = 0; index < nports; ++index) {
--		if (test_bit(index, &ehci->companion_ports)) {
--			n = scnprintf(ptr, count, "%d\n", index + 1);
--			ptr += n;
--			count -= n;
--		}
-+		if (test_bit(index, &ehci->companion_ports))
-+			len += sysfs_emit_at(buf, len, "%d\n", index + 1);
- 	}
--	return ptr - buf;
-+	return len;
- }
- 
- /*
-@@ -70,11 +66,9 @@ static ssize_t uframe_periodic_max_show(struct device *dev,
- 					char *buf)
- {
- 	struct ehci_hcd		*ehci;
--	int			n;
- 
- 	ehci = hcd_to_ehci(dev_get_drvdata(dev));
--	n = scnprintf(buf, PAGE_SIZE, "%d\n", ehci->uframe_periodic_max);
--	return n;
-+	return sysfs_emit(buf, "%d\n", ehci->uframe_periodic_max);
- }
- 
- 
+	M.
+
 -- 
-2.43.0
-
+Without deviation from the norm, progress is not possible.
