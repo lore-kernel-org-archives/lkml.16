@@ -1,210 +1,292 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07D01C07C4;
-	Mon, 23 Jun 2025 17:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B1B4A2D;
+	Mon, 23 Jun 2025 17:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750698318; cv=none; b=hj4pAN7Q6A4g6NGFyWE7Yy15topesnWvKREf6QVKYxYq5ZgqrK5+aWm3Z5WCzN3+6O8q4gz2H846jDNIRut6Zf+8mXZnnzB+SpQP74IiSuayYhhpqWyIkWgnoXlfTexDykjeZV/E3B4Na9BgBeMnM1h3ObZQjUDFMTXo/JE0wlk=
+	t=1750698678; cv=none; b=RKXB1+TvB6QcnWe+QlcSWlR7CSHJpNlTOPwitVQ7rHyNA7/dx4ljaT71xkqKqSJWtIQwy697+RRgey3GLKt0AboUkUfhCpvAxFbMUIhnYpcXrZQdZs7hQZW6ppSc2BIl8Ru0mNSjjiwoBN136In0Epj1azSHaVyqheaOLmxhswc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750698318; c=relaxed/simple;
-	bh=6nZoOQkZs6C4FQYLUnskHM0GHFTQYyosqeO+/BXGQdc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eHzgKFfD8Pra6UJpKDrMwWCiNnLtRETUBuCWRNQVtsJ3WWe6BrGVNWwrJ5GQ78Z5Aqs8IBS68GclR1td/d7xLZfdpyA4KmkxJ+YUSf4HKCcZPcizhJf48YNns3uxAfZLdttZvKZ1JFrCnLl5URkPyUSFFqVP3mml3Vjt48SZkzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JbSGZMR+; arc=none smtp.client-ip=209.85.218.48
+	s=arc-20240116; t=1750698678; c=relaxed/simple;
+	bh=cvbQWHe6A7sEweHLhhymq/nWw/NsmUARNPNdAg3ypCY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i5wi6NVxhHBh46L1ntRhpmeD1+FHRDapZPkWsktwiSYtlX4v3CKZRzcSZjS2M0ZL4nAyT7+u7Tzo+o3eOKMzjgA1EVbXuH+VTAAv/iexqcuCmh1UAnRQIW5sOFhxY/AMgTXwefiBc51rKHceYoZoujKCc2ujulRqBTWLG0ufxZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FxtR1m+c; arc=none smtp.client-ip=209.85.160.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JbSGZMR+"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ade48b24c97so777429566b.2;
-        Mon, 23 Jun 2025 10:05:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FxtR1m+c"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4a43972dcd7so55378771cf.3;
+        Mon, 23 Jun 2025 10:11:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750698315; x=1751303115; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pi3M8vSwwyPlCy0ds+MLiPgrDsER6WDeUbD1bJQq8OE=;
-        b=JbSGZMR+hZdXtyQMne2CDCoNWZQzxY0TJDPU/VdJi7nmNTgcTCbgtgRt+7obTDtTQe
-         ZnvqZAfjSmskm2CSoONCcdllsVZol48CQZJYvSiQ/+4jm7eLUbtDV+RmhpQP4HVVV+cm
-         a2x/NgHG6/KHhGBQeh3PdL9ktBvUQbmIuWK/zoWnhrXjYuJ4qojgfCJuJPE38OWIj1uC
-         Z/MgJSxAPuO6S+avdx0zxBxfuoPZmVBf+6BkXntLyf4zGJUCbWsNbgM2gNDrIVc8SIS5
-         VBwKlvGT/TmzhHVKg1toueJBX0AfXrUI8nNPmU7Sx5KyfohSe/JRNu+MQxk31G7jOPun
-         N7SA==
+        d=gmail.com; s=20230601; t=1750698675; x=1751303475; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jjiN2duDIoatADckXDg71LfnYdFHxDnQWcx0OYPZFTs=;
+        b=FxtR1m+cHnAMk+QiOLoHRhJEHuIaC/oeyyCZEx/WebdvXh6xaBa96pOYvcJ53bld4s
+         qB8ot2DB2IyZfYKZ1qFSOplp9iM6nC186oTLhmjOePPYIFF9Vri3hBMrRkyfwo9oDbzE
+         yavMv25A7GtUQqWVVAWZ5g5nfWfqnyN65sv7FCnuqlTMwn9K0B19Oa7TGbGwvg/VcrzT
+         L6jqpsb6NTZMwrl+DzPtgdoNjrwzogtKcKoOx5mQw3+B1c+rLQ+RbSHOXa98wCUaW8IJ
+         GrvXXaamgszlzF11gcFadl2eZsacRLSjxLKUF0IjiFXgAsxeG4WokTKFbQvl69jdvl1e
+         KwgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750698315; x=1751303115;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pi3M8vSwwyPlCy0ds+MLiPgrDsER6WDeUbD1bJQq8OE=;
-        b=ioWaLotzJ5vJIafUZn1rMeLvvLl+EuudI4DTPGf3rda+bOxwTigYyjJt+oJPmnZyvC
-         1sftT9cbDo/0PIGNm77yBNrgDWO33iT43xAAn0nHn7lCVtEtTvzWe+4RjSA1R3Nuek55
-         jlW+Q7leSOzI6oQ9KEIe6TUPJjBok6APlXCoc22JwqVeP8YuyWVwgQkUhoB4n4DP4iTW
-         4+SdHP8+krfYYdef6CfuFsLNgRYnbpZP40sIsIABTOY/98jv1E+ljBPyMLPX9OoP56av
-         mVInY7aV6LrXBRHFZxnVFcD+UcHdotvJDLozEJNBejapDjKCxtli1JXTwg8OssnbJp63
-         Q4lw==
-X-Forwarded-Encrypted: i=1; AJvYcCUeFbpClIPOufHSSFvvxqjkBMV2aa74KZVZQQ9y4Z+I2136XI1yfmo5EhI3IhW8NFJsvXlY08klUi0fhQSN@vger.kernel.org, AJvYcCUqAxhq4hONFmLSja5/30IHB9ORvko+wW8ZaQVstTJiDHLvbzWuonoQsmQEOGqRExDOxCzjOAQp@vger.kernel.org, AJvYcCVBpAkROhg93jcE7WIfU+CQUmbM4slRIwTZa7hARBvXsoDpPpl5URXl4mxxLFV7o5P/X9OYw26pDKI8Dw==@vger.kernel.org, AJvYcCVJ7XFAwzTFQt57RmzUwkHEcPUtiIOWr1ds9iuNsVOyvyjn2ePsoUrOf/zheU6im91H8D4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwH339qAf779nAfj+DcJ72+IJgMGHbJvO8VQZm1OVJDiCE1zv+R
-	ilvPk9gU4+bxuH/rcGY375lpPykwctLgUrKBnHWYUnHNtkYNFkpnzACt
-X-Gm-Gg: ASbGncsEID06bfKzTmIou2kVVfggWPL+eBxvt9s+xCnhRyaldcrvCnOCOE8nh89Hu16
-	SAOe49r7dsSGancXdZfu2aYG15r42Yc/pHF1i2qRol0hfWdw4IUZjIxN5hVbSWg8YSmUIxpfPhv
-	rqNRmnw5z5A+Q3+QV5S2wQuikXuDtl8mYaqfYZhcvRYUQx0whqwvYLvlsU0LN3maOj0EITOQ79M
-	aEo4LLULiqSuGAk7MEk7DyoCaAUY/Jcx9QUJvF8v2mpmZcHhXI7wbVP5OSGrmu/h5TO85lCATM5
-	E69f5PVBLjUA0kpyoDpcz028Ejl7tFfrRQ6aHGTaUdIJya/VFuCySk34pmHJeCew+j+kpL4bhBA
-	=
-X-Google-Smtp-Source: AGHT+IFkMr16MZMhGYOEMve0k+oWilXDkDPpSQstoYWVNutXXp/lz9Oc+tMJS730MOiqaVVD0hEmBQ==
-X-Received: by 2002:a17:907:3f18:b0:ade:4339:9367 with SMTP id a640c23a62f3a-ae057a222b4mr1293806966b.26.1750698314880;
-        Mon, 23 Jun 2025 10:05:14 -0700 (PDT)
-Received: from ?IPV6:2620:10d:c096:325::2ef? ([2620:10d:c092:600::1:85c4])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054082d25sm728555966b.88.2025.06.23.10.05.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 10:05:14 -0700 (PDT)
-Message-ID: <41e68e52-5747-4b18-810d-4b20ada01c9a@gmail.com>
-Date: Mon, 23 Jun 2025 18:06:37 +0100
+        d=1e100.net; s=20230601; t=1750698675; x=1751303475;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jjiN2duDIoatADckXDg71LfnYdFHxDnQWcx0OYPZFTs=;
+        b=vh+fZxUwPaOeB8sK+seVAym+lDiqRQ9Ir4oY7lXhUbcZORda02630uaha0TrcDAQzK
+         TQOISYoHkXJmqNNjmP2FueCcX8uZF/BoaCtlERcqOaeE5t8CEIfyMiZpyluzhLdXEA6Q
+         LKLPYvOLmuaWCYami+hgYSsuXpqBQVgmujW39LX0l2tyO9mSBD/DR+udnSEuMiQexerj
+         6rJICByx9kPB+NivrCNDbViGBzfSP10S9a7wakx4pHFO/8DEpkddx5fUohd6cbpVFFSi
+         VG3YcbOJIKbkP7IEG6eAHOVUTJPWZNVGcd7+Jrx8rWQ8a9FaiV7psbK6ci24IGbFoLxF
+         KyJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4sFdqNBW/ycxD3wCA3qWe3Nlww9D6L6/hbNYlvTMVjIx+RVzuK/o9pNsoZM/OWG4XAeiFVi4ggBH1vYs=@vger.kernel.org, AJvYcCXGBIL6eY80WDa0edmA6uYvGsV/J7BNTC5jOf6QIqTUOANis2IGMwNh/38W2PsDhM3MJjhzvSFudgx1KoAwuEE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyr66cnBog9JP1pHfhdXZ+4jMQuDEwG0mixhj6m6CAR+/WMv6Df
+	ltePbLGU/0ouZCDFAMBAKqb0hJKYp/ZWyUnGtsXvVhYPUMqU3xiTgupS
+X-Gm-Gg: ASbGncvZxUD9WWrnkiITVCiJfx6LM3EgtSiHSvUnG1oABffLTBAVMCg3XsM2N2v8RVO
+	ngOS/PqUvavxzTf/oZwUmjJcPDPrhJxo58+V7Q3NlcBCJJfqPLFamZ5qz/G7RFGl6Y9UpLaZXZ2
+	Yo1OQlMkZWClHPcOBeWu8J+UPh2E6bvRiraQw6wPPI5+K/Zk6GQXV6hVv1nxSjm+sNYeGKejBqn
+	N9h1ZJA+kPn9R91GzlW3Y3H+HziZiCIxj9eqqkT6uaC3fqIwLYRtMAR4qecRBiyJepQJwTYJpfD
+	lRAD/m9JDwjgapWSaHBRRGzUTs+1vZ4iNt/rg4APTqZVDxydiZ0GLi8GAbmVVtCr2pTtejsvpxn
+	LNx6e3kKzHfgihQzPzl+MOltLA6u/LSqqxb4onunySLxDvTKymWcq
+X-Google-Smtp-Source: AGHT+IF58ry0uAJhfksmJjPTy1j/2Vf/3WRbEa7P02vjo4MlhXaKwJYDBJeuv+kZYxPXTxkw/qD76g==
+X-Received: by 2002:a05:622a:400d:b0:4a5:aa42:49f3 with SMTP id d75a77b69052e-4a77a1c9d57mr264210731cf.20.1750698675299;
+        Mon, 23 Jun 2025 10:11:15 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a779e79f0dsm40380181cf.61.2025.06.23.10.11.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 10:11:14 -0700 (PDT)
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 1A7F2120006A;
+	Mon, 23 Jun 2025 13:11:14 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Mon, 23 Jun 2025 13:11:14 -0400
+X-ME-Sender: <xms:sYpZaF2am0H8M9JhfLMA36ZLn_RyRM-OEviVN7CtPEzRX8S62gylqg>
+    <xme:sYpZaMFjovciA7_an6AZCk8YJZk8_OglSiaFk4gb7wFk9XYjMilQshpe8fkj98Yw0
+    fiRIor0dzbtaV9aPQ>
+X-ME-Received: <xmr:sYpZaF43EKFZMJVoKUVHlCInLB1C0dhg15DE9PUZF8QpS1ebtYTQ0q2ZQQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddujeehlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfh
+    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
+    hrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudffiedv
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqh
+    hunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddu
+    jeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvg
+    drnhgrmhgvpdhnsggprhgtphhtthhopedvfedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtoheplhhoshhsihhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifohhrkhesoh
+    hnuhhrohiikhgrnhdruggvvhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhg
+    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehruhhsthdqfhhorhdqlhhinhhugi
+    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpd
+    hrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtoheprgdrhhhi
+    nhgusghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhhitggvrhihhhhlse
+    hgohhoghhlvgdrtghomh
+X-ME-Proxy: <xmx:sopZaC1zMfm1SuNsNSQ18amI0vXKCmGyVaGLPLOr6ZgLffljzjIXpA>
+    <xmx:sopZaIE8SPfQ9fA-ND901zBbEx2YXlbLDuWZolLLiAIwiqc0cwpnfw>
+    <xmx:sopZaD9F8FUxbrrz0UH1wIMJEIHKt4aLNy3VKeZLa3KvY_GQkuQXsQ>
+    <xmx:sopZaFmnNWC8touEIPVFFboI6xhkDlckHF4Q7I7Nclat3lJGCx4GGg>
+    <xmx:sopZaMED76cxqgp1cqMCijH7GFVbmWKEnc1_JGZDLDziiIx2OR_QlmT8>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 23 Jun 2025 13:11:13 -0400 (EDT)
+Date: Mon, 23 Jun 2025 10:11:12 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Onur =?iso-8859-1?Q?=D6zkan?= <work@onurozkan.dev>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	dakr@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	will@kernel.org, longman@redhat.com, felipe_life@live.com,
+	daniel@sedlak.dev, bjorn3_gh@protonmail.com, simona@ffwll.ch,
+	airlied@gmail.com, dri-devel@lists.freedesktop.org,
+	lyude@redhat.com
+Subject: Re: [PATCH v5 2/3] implement ww_mutex abstraction for the Rust tree
+Message-ID: <aFmKsE_nJkaVMv0T@tardis.local>
+References: <20250621184454.8354-1-work@onurozkan.dev>
+ <20250621184454.8354-3-work@onurozkan.dev>
+ <DASY7BECFRCT.332X5ZHZMV2W@kernel.org>
+ <aFlQ7K_mYYbrG8Cl@Mac.home>
+ <DATYHYJVPL3L.3NLMH7PPHYU9@kernel.org>
+ <aFlpFQ4ivKw81d-y@Mac.home>
+ <DAU0ELV91E2Q.35FZOII18W44J@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v6 9/9] page_pool: access ->pp_magic through
- struct netmem_desc in page_pool_page_is_pp()
-To: David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
- Byungchul Park <byungchul@sk.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com,
- kuba@kernel.org, almasrymina@google.com, ilias.apalodimas@linaro.org,
- harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
- davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch,
- toke@redhat.com, tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
- saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org,
- linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com,
- hannes@cmpxchg.org, jackmanb@google.com
-References: <20250620041224.46646-1-byungchul@sk.com>
- <20250620041224.46646-10-byungchul@sk.com>
- <ce5b4b18-9934-41e3-af04-c34653b4b5fa@redhat.com>
- <20250623101622.GB3199@system.software.com>
- <460ACE40-9E99-42B8-90F0-2B18D2D8C72C@nvidia.com>
- <a8d40a05-db4c-400f-839b-3c6159a1feab@redhat.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <a8d40a05-db4c-400f-839b-3c6159a1feab@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DAU0ELV91E2Q.35FZOII18W44J@kernel.org>
 
-On 6/23/25 15:58, David Hildenbrand wrote:
-> On 23.06.25 13:13, Zi Yan wrote:
->> On 23 Jun 2025, at 6:16, Byungchul Park wrote:
->>
->>> On Mon, Jun 23, 2025 at 11:16:43AM +0200, David Hildenbrand wrote:
->>>> On 20.06.25 06:12, Byungchul Park wrote:
->>>>> To simplify struct page, the effort to separate its own descriptor from
->>>>> struct page is required and the work for page pool is on going.
->>>>>
->>>>> To achieve that, all the code should avoid directly accessing page pool
->>>>> members of struct page.
->>>>>
->>>>> Access ->pp_magic through struct netmem_desc instead of directly
->>>>> accessing it through struct page in page_pool_page_is_pp().  Plus, move
->>>>> page_pool_page_is_pp() from mm.h to netmem.h to use struct netmem_desc
->>>>> without header dependency issue.
->>>>>
->>>>> Signed-off-by: Byungchul Park <byungchul@sk.com>
->>>>> Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
->>>>> Reviewed-by: Mina Almasry <almasrymina@google.com>
->>>>> Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
->>>>> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
->>>>> Acked-by: Harry Yoo <harry.yoo@oracle.com>
->>>>> ---
->>>>>    include/linux/mm.h   | 12 ------------
->>>>>    include/net/netmem.h | 14 ++++++++++++++
->>>>>    mm/page_alloc.c      |  1 +
->>>>>    3 files changed, 15 insertions(+), 12 deletions(-)
->>>>>
->>>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
->>>>> index 0ef2ba0c667a..0b7f7f998085 100644
->>>>> --- a/include/linux/mm.h
->>>>> +++ b/include/linux/mm.h
->>>>> @@ -4172,16 +4172,4 @@ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
->>>>>     */
->>>>>    #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
->>>>>
->>>>> -#ifdef CONFIG_PAGE_POOL
->>>>> -static inline bool page_pool_page_is_pp(struct page *page)
->>>>> -{
->>>>> -     return (page->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
->>>>> -}
->>>>> -#else
->>>>> -static inline bool page_pool_page_is_pp(struct page *page)
->>>>> -{
->>>>> -     return false;
->>>>> -}
->>>>> -#endif
->>>>> -
->>>>>    #endif /* _LINUX_MM_H */
->>>>> diff --git a/include/net/netmem.h b/include/net/netmem.h
->>>>> index d49ed49d250b..3d1b1dfc9ba5 100644
->>>>> --- a/include/net/netmem.h
->>>>> +++ b/include/net/netmem.h
->>>>> @@ -56,6 +56,20 @@ NETMEM_DESC_ASSERT_OFFSET(pp_ref_count, pp_ref_count);
->>>>>     */
->>>>>    static_assert(sizeof(struct netmem_desc) <= offsetof(struct page, _refcount));
->>>>>
->>>>> +#ifdef CONFIG_PAGE_POOL
->>>>> +static inline bool page_pool_page_is_pp(struct page *page)
->>>>> +{
->>>>> +     struct netmem_desc *desc = (struct netmem_desc *)page;
->>>>> +
->>>>> +     return (desc->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
->>>>> +}
->>>>> +#else
->>>>> +static inline bool page_pool_page_is_pp(struct page *page)
->>>>> +{
->>>>> +     return false;
->>>>> +}
->>>>> +#endif
->>>>
->>>> I wonder how helpful this cleanup is long-term.
->>>>
->>>> page_pool_page_is_pp() is only called from mm/page_alloc.c, right?
->>>
->>> Yes.
->>>
->>>> There, we want to make sure that no pagepool page is ever returned to
->>>> the buddy.
->>>>
->>>> How reasonable is this sanity check to have long-term? Wouldn't we be
->>>> able to check that on some higher-level freeing path?
->>>>
->>>> The reason I am commenting is that once we decouple "struct page" from
->>>> "struct netmem_desc", we'd have to lookup here the corresponding "struct
->>>> netmem_desc".
->>>>
->>>> ... but at that point here (when we free the actual pages), the "struct
->>>> netmem_desc" would likely already have been freed separately (remember:
->>>> it will be dynamically allocated).
->>>>
->>>> With that in mind:
->>>>
->>>> 1) Is there a higher level "struct netmem_desc" freeing path where we
->>>> could check that instead, so we don't have to cast from pages to
->>>> netmem_desc at all.
+On Mon, Jun 23, 2025 at 05:14:37PM +0200, Benno Lossin wrote:
+> On Mon Jun 23, 2025 at 4:47 PM CEST, Boqun Feng wrote:
+> > On Mon, Jun 23, 2025 at 03:44:58PM +0200, Benno Lossin wrote:
+> >> I didn't have a concrete API in mind, but after having read the
+> >> abstractions more, would this make sense?
+> >> 
+> >>     let ctx: &WwAcquireCtx = ...;
+> >>     let m1: &WwMutex<T> = ...;
+> >>     let m2: &WwMutex<Foo> = ...;
+> >> 
+> >>     let (t, foo, foo2) = ctx
+> >>         .begin()
+> >>         .lock(m1)
+> >>         .lock(m2)
+> >>         .lock_with(|(t, foo)| &*foo.other)
+> >>         .finish();
+> >> 
+> >
+> > Cute!
+> >
+> > However, each `.lock()` will need to be polymorphic over a tuple of
+> > locks that are already held, right? Otherwise I don't see how
+> > `.lock_with()` knows it's already held two locks. That sounds like a
+> > challenge for implementation.
+> 
+> I think it's doable if we have 
+> 
+>     impl WwActiveCtx {
 
-As you said, it's just a sanity check, all page pool pages should
-be freed by the networking code. It checks the ownership with
-netmem_is_pp(), which is basically the same as page_pool_page_is_pp()
-but done though some aliasing.
+I think you mean *WwAcquireCtx*
 
-static inline bool netmem_is_pp(netmem_ref netmem)
-{
-	return (netmem_get_pp_magic(netmem) & PP_MAGIC_MASK) == PP_SIGNATURE;
-}
+>         fn begin(&self) -> WwActiveCtx<'_, ()>;
+>     }
+> 
+>     struct WwActiveCtx<'a, Locks> {
+>         locks: Locks,
 
-I assume there is no point in moving the check to skbuff.c as it
-already does exactly same test, but we can probably just kill it.
+This probably need to to be Result<Locks>, because we may detect
+-DEADLOCK in the middle.
 
--- 
-Pavel Begunkov
+    let (a, c, d) = ctx.begin()
+        .lock(a)
+        .lock(b) // <- `b` may be locked by someone else. So we should
+                 // drop `a` and switch `locks` to an `Err(_)`.
+        .lock(c) // <- this should be a no-op if `locks` is an `Err(_)`.
+        .finish();
 
+>         _ctx: PhantomData<&'a WwAcquireCtx>,
+
+We can still take a reference to WwAcquireCtx here I think.
+
+>     }
+> 
+>     impl<'a, Locks> WwActiveCtx<'a, Locks>
+>     where
+>         Locks: Tuple
+>     {
+>         fn lock<'b, T>(
+>             self,
+>             lock: &'b WwMutex<T>,
+>         ) -> WwActiveCtx<'a, Locks::Append<WwMutexGuard<'b, T>>>;
+> 
+>         fn lock_with<'b, T>(
+>             self,
+>             get_lock: impl FnOnce(&Locks) -> &'b WwMutex<T>,
+>         ) -> WwActiveCtx<'a, Locks::Append<WwMutexGuard<'b, T>>>;
+>         // I'm not 100% sure that the lifetimes will work out...
+
+I think we can make the following work?
+
+    impl<'a, Locks> WwActiveCtx<'a, Locks>
+    where
+        Locks: Tuple
+    {
+        fn lock_with<T>(
+	    self,
+	    get_lock: impl FnOnce(&Locks) -> &WmMutex<T>,
+	) -> WwActiveCtx<'a, Locks::Append<WmMutexGuard<'a, T>>
+    }
+
+because with a `WwActiveCtx<'a, Locks>`, we can get a `&'a Locks`, which
+will give us a `&'a WmMutex<T>`, and should be able to give us a
+`WmMutexGuard<'a, T>`.
+
+> 
+>         fn finish(self) -> Locks;
+>     }
+> 
+>     trait Tuple {
+>         type Append<T>;
+> 
+>         fn append<T>(self, value: T) -> Self::Append<T>;
+>     }
+> 
+
+`Tuple` is good enough for its own, if you could remember, we have some
+ideas about using things like this to consolidate multiple `RcuOld` so
+that we can do one `synchronize_rcu()` for `RcuOld`s.
+
+>     impl Tuple for () {
+>         type Append<T> = (T,);
+> 
+>         fn append<T>(self, value: T) -> Self::Append<T> {
+>             (value,)
+>         }
+>     }
+>     
+>     impl<T1> Tuple for (T1,) {
+>         type Append<T> = (T1, T);
+> 
+>         fn append<T>(self, value: T) -> Self::Append<T> {
+>             (self.0, value,)
+>         }
+>     }
+> 
+>     impl<T1, T2> Tuple for (T1, T2) {
+>         type Append<T> = (T1, T2, T);
+> 
+>         fn append<T>(self, value: T) -> Self::Append<T> {
+>             (self.0, self.1, value,)
+>         }
+>     }
+> 
+>     /* these can easily be generated by a macro */
+> 
+> > We also need to take into consideration that the user want to drop any
+> > lock in the sequence? E.g. the user acquires a, b and c, and then drop
+> > b, and then acquires d. Which I think is possible for ww_mutex.
+> 
+> Hmm what about adding this to the above idea?:
+> 
+>     impl<'a, Locks> WwActiveCtx<'a, Locks>
+>     where
+>         Locks: Tuple
+>     {
+>         fn custom<L2>(self, action: impl FnOnce(Locks) -> L2) -> WwActiveCtx<'a, L2>;
+>     }
+> 
+> Then you can do:
+> 
+>     let (a, c, d) = ctx.begin()
+>         .lock(a)
+>         .lock(b)
+>         .lock(c)
+>         .custom(|(a, _, c)| (a, c))
+>         .lock(d)
+>         .finish();
+> 
+
+Seems reasonable. But we still need to present this to the end user to
+see how much they like it. For ww_mutex I think the major user is DRM,
+so add them into Cc list.
+
+Regards,
+Boqun
+
+> >>     let _: &mut T = t;
+> >>     let _: &mut Foo = foo;
+> >>     let _: &mut Foo = foo2;
+> 
+> Ah these will actually be `WwMutexGuard<'_, ...>`, but that should be
+> expected.
+> 
+> ---
+> Cheers,
+> Benno
