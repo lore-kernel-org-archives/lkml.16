@@ -1,148 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E558230BCB;
-	Mon, 23 Jun 2025 09:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09EF13FD86;
+	Mon, 23 Jun 2025 09:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750670067; cv=none; b=hv7sVJGJXPFNuGDs54V9/4NfN6yIu/1vInAS1nEu8MCmhsEpHXlSp4URwN8+BKpQkkzEitonO68sgxdQEPr0kPcMFtGDzUH3LUg4vQ0SRZF1Pbg/KGhtgj38SfwAj6yV5BLZvYozFx3i7YEVDQbRb8HSWUbzg8234JNM3sp0Y0U=
+	t=1750670122; cv=none; b=VWFLGmAsqXyBGzsn6YS7X6i3JbHogRvilwUZ9B0rP4iUDnpX6WQf2YgVsrFYB/EhwIPALxq7BXg6pz7Ynthxcu4LFikkz7027OHaxzaWnqvjc4R77KCCQ5Te9HKNLZJYrWJKJxolBhB0KhCoCNxtLSR4ETF5SX7ciVZdDM9p9FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750670067; c=relaxed/simple;
-	bh=eIeY3heN+gnrpZQU6Tbcw37VApX8DZLMbgNPQw+j5oI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b94k48Mja8JBcxkupEgRrPFFEeR6LgElEFtBeXABQyWCSIHdfgCAxdADgTPpH2oTrr+WkLdP3lYkFhSQBQEezvdj85dF+AFet1f7222ofomsxtsUgVpH3Z5Sjn7/DPXifRFS1e+5PdjWDuZts18rS0h/wgydFfPuaIjCQ02haxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M9+TxHmB; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750670122; c=relaxed/simple;
+	bh=jNDEYhgs0WeeerzsC5cGyqKVeft93lG2zOQrvoD3xWE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VU/ZorBrwVOE4EDf1ZFPHRlcKfSWJhXTpVwW+pz4Oze4hfxykqp1e/n820v0rrbZzSn4+tWdHYCJzf7dnWiOi96Ndx69QdyDXKDRNQWJpOG7KJQF/kCqhwh1R4J9bZj5wH43S6lSWRU3ItA9K79gBBGZ/1NtGzjYxLcdJESrvjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NXhYpgja; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M9+TxHmB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750670066; x=1782206066;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=eIeY3heN+gnrpZQU6Tbcw37VApX8DZLMbgNPQw+j5oI=;
-  b=M9+TxHmB9wMgmsHBBpmUDchcKOU6YAl3mI8DuUGWfIicDk19tplmuc1v
-   73lH+yr47P0JZkrvf3oxSye32TQ9TrT+l0wmH0ko8ND85Y1swOhHzskYq
-   o4u+ZXEURzBD7KwqocIhCCiseqejnqr31hfGeEPBsVvgyc4s9V5hr7Xrj
-   BGKTGIrehIqSjGclcx6oYOf+D/mGYtjBgLu67CNoRak3IjaJwFb687tnv
-   HkguNDEAYNeb3g2e66UTmQCHafHM16G4FZec7/HT3i6fM5Dy+uwoG3gXq
-   RpEjbxd2UyYTw9600vohNowxr+y1hOFyJD0monrkhGARvE6zI7XHrZ9Cr
-   w==;
-X-CSE-ConnectionGUID: lRLPUT1fTqSYrRuoXbqzGw==
-X-CSE-MsgGUID: YSNtN8uSR6GjswPq2vbwzg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="75401274"
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="75401274"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 02:14:18 -0700
-X-CSE-ConnectionGUID: e4ekD39qTday9sIFTi7Scg==
-X-CSE-MsgGUID: 9gtBh0Q9Tb6PnnFaBaRxUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="155846754"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 02:14:12 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uTdFf-000000097Qy-3DMk;
-	Mon, 23 Jun 2025 12:14:07 +0300
-Date: Mon, 23 Jun 2025 12:14:07 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 14/23] ACPI: property: Add support for cells property
-Message-ID: <aFka3y1494LIzyUA@smile.fi.intel.com>
-References: <20250618121358.503781-1-apatel@ventanamicro.com>
- <20250618121358.503781-15-apatel@ventanamicro.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXhYpgja"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-70e78e04e48so29635747b3.1;
+        Mon, 23 Jun 2025 02:15:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750670120; x=1751274920; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jNDEYhgs0WeeerzsC5cGyqKVeft93lG2zOQrvoD3xWE=;
+        b=NXhYpgjaj+zH48M5PfPxIjLYGRKjD28bM7pk3gdy/JKqZLcM30YOp0z1EgT2Gc5rnv
+         BRS+T6ORJyTcHHGtMDS968iAW1VGtghappVMNuIVr2atxg3COfpj3VNT8ldHVKM+7TLh
+         BaNmUeo6Dpvs034WM86lQDmJA0zOpjb8Ga4XbV5wsKTkzjefQjdA/rf/1EI3phTq1sjJ
+         CHwFRkzS/xJ6N3JxN/693nOGJwyEVXGWj+QPNYNDkFiJd9LpzO3WblGUHu9GG+yEVcVd
+         nuGB9f1cvWChJ7CS6MwUjiowxr6qeW5ujY6vcN/Ba495T7NDi7OMWpMSfhg5XyaPr0Cv
+         Qy4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750670120; x=1751274920;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jNDEYhgs0WeeerzsC5cGyqKVeft93lG2zOQrvoD3xWE=;
+        b=sBxlizotRr7jUR2h2zydLCcjqw7E008poLWTVUCeweCgrRxVvszfS/kP7ArZK4GszP
+         gjKxSWGymXTZo0lxN/xbAnkptlSPqp5YqETiURO7p6vfDOOywATyend6nLYFkzLZ454z
+         +9bzv+sFJkehjRgvjtBfVDpgpwxTDFuVYkpFgtpqArAJoOtNyvFDlU2lD1ULt/mtYb8z
+         Iv8SBvVy9kYslt+i9ZiLbrG/lCvta5g4hrsorFi9+up1bkTm/qUNEL+DGC4zIKK2ruQ0
+         mgcshaNMzGyFMVy5Xp8qANuZvsKlzBjMu608oP0zh2ZoZaajKPFhw1lceY0qZl7HASeq
+         /qgA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYHnifVjW7cvQhKGp2oy3SR1bGry4blVrEJ8wl3o79TCPNVGfLAIvdVzZ3ZAJjFNL/1p6pug4O3EM=@vger.kernel.org, AJvYcCXuSXsGoOldgUJzU5sCE6cs5C7JsX2AWLWin46U1nyxP9tw0qxVn/AP1Cv7y9jNn40rtz9wjWeXaAm7I3mg@vger.kernel.org
+X-Gm-Message-State: AOJu0YygOny++1szenAzKz1/5Jw4lkWUGBy4w0GxeVQ6jnweTBFovqWg
+	TPQ+vTroIoJsP/5zZWCz781hMakPjbBy53iVeiEQne/HsVAJc1g6ABL0MHXKS1zR1Vgc8R6nXg9
+	qSKAelwyIrBU0f3o/G5EJnVqgdlTf244=
+X-Gm-Gg: ASbGnctSFj7QDafbL6mI0LJyAasjG2Dpm0C8KzAl2Oh3PVthORgTMegXlYQKVqWmCUa
+	Fcc8ObHCHtm0B+EMPMSWAsHPq0jiQnGk6hxWG5oyrxN3fER2VkTS408GE9C7kW+7cpV18F0GgZv
+	wyS3S9/Av4GiUCJitmgSxRQQFN9GgZvJw5qwLLQWFD9WfIRg==
+X-Google-Smtp-Source: AGHT+IEZLyUUWnZDTj7iTiBv8uoCRzl4PUP0b6Qc/tp1spVVP9/zWpKwxPNKT06cTWXp5SGx9Z4m5FzzoXONgZ0ps8Y=
+X-Received: by 2002:a05:690c:6c12:b0:70e:404:85e5 with SMTP id
+ 00721157ae682-712c63beecbmr191813187b3.11.1750670119656; Mon, 23 Jun 2025
+ 02:15:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618121358.503781-15-apatel@ventanamicro.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20250622004249.9083-1-sef1548@gmail.com> <b16a1df5-0b81-4600-bd68-2d261d2a3780@redhat.com>
+ <CABZAGRGvf9Ge5EvMgFP3FUHt2QOpq6xXe9nB4=it9zb+V1DNwg@mail.gmail.com>
+In-Reply-To: <CABZAGRGvf9Ge5EvMgFP3FUHt2QOpq6xXe9nB4=it9zb+V1DNwg@mail.gmail.com>
+From: Dongliang Mu <mudongliangabcd@gmail.com>
+Date: Mon, 23 Jun 2025 17:14:53 +0800
+X-Gm-Features: AX0GCFuw-hQrlfhDhcuQC2wbNyBMQcxEi3JlCxtOn5Hrlf86LENxXTG6lu4NdNo
+Message-ID: <CAD-N9QVPekRZ2r_4TOvtfJouMVsOyTfHaU7yd-gDV3=mJYx-Rw@mail.gmail.com>
+Subject: Re: [PATCH] mm/balloon_compaction: update Chinese docs for movable_ops
+To: Nick Huang <sef1548@gmail.com>
+Cc: David Hildenbrand <david@redhat.com>, alexs@kernel.org, si.yanteng@linux.dev, 
+	dzm91@hust.edu.cn, corbet@lwn.net, akpm@linux-foundation.org, 
+	wangkefeng.wang@huawei.com, vishal.moola@gmail.com, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 05:43:49PM +0530, Anup Patel wrote:
-> From: Sunil V L <sunilvl@ventanamicro.com>
-> 
-> Currently, ACPI doesn't support cells property when
-> fwnode_property_get_reference_args() is called. ACPI always expects
-> the number of arguments to be passed. However, the above mentioned
-> call being a common interface for OF and ACPI, it is better to have
-> single calling convention which works for both. Hence, add support
-> for cells property on the reference device to get the number of
-> arguments dynamically.
+On Mon, Jun 23, 2025 at 4:51=E2=80=AFPM Nick Huang <sef1548@gmail.com> wrot=
+e:
+>
+> David Hildenbrand <david@redhat.com> =E6=96=BC 2025=E5=B9=B46=E6=9C=8823=
+=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=884:08=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> >
+> > On 22.06.25 02:42, Nick Huang wrote:
+> > > Remove Non-LRU Page Migration and Add Movable_ops Page Migration
+> > >
+> >
+> > I'm afraid most people you CC on Chinese doc updates will not be able t=
+o
+> > help in any reasonable way.
+> >
+> > --
+> > Cheers,
+> >
+> > David / dhildenb
+>
+> How can I fix these things?
 
-...
+BTW, you can refer to my patches[1] for Chinese translation updates.
 
-> +static unsigned int acpi_fwnode_get_args_count(const struct acpi_device *device,
-> +					       const char *nargs_prop)
-> +{
-> +	const union acpi_object *obj;
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/=
+?qt=3Dauthor&q=3DDongliang+Mu
 
-> +	if (!nargs_prop)
-> +		return 0;
-
-This check is implied by the call. No need to duplicate.
-
-> +	if (acpi_dev_get_property(device, nargs_prop, ACPI_TYPE_INTEGER, &obj))
-> +		return 0;
-> +
-> +	return obj->integer.value;
-> +}
-
-...
-
-> +			if (nargs_prop)
-
-Again, if you don't won't to reassign the existing value, it's better to have
-this data be collected in the temporary variable of the same semantics. Then
-you will choose one when it's needed, no need to have this dup check (again!).
-
-> +				args_count = acpi_fwnode_get_args_count(device, nargs_prop);
-> +
->  			element++;
->  
->  			ret = acpi_get_ref_args(idx == index ? args : NULL,
-
-...
-
-> +			if (nargs_prop) {
-
-Ditto.
-
-> +				device = to_acpi_device_node(ref_fwnode);
-> +				args_count = acpi_fwnode_get_args_count(device, nargs_prop);
-> +			}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>
+>
+> --
+> Regards,
+> Nick Huang
+>
