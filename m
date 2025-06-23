@@ -1,543 +1,342 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mx0a-0014ca01.pphosted.com (mx0a-0014ca01.pphosted.com [208.84.65.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1DD1C862B;
-	Mon, 23 Jun 2025 05:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750657877; cv=none; b=qH9rNPeQEGDDDR8taejltjNLjpwKsHMV4BnBvWnbbf2z7dcD+fas74AzNKdpYtZWcavYmNTzh897hTsyBQHrL+mSav2OLeXfYxKU39vUkrCLY6gXxqRd59erT+5xv2vzP0KfSyel6r5wELyDjg5q9bHKPnf8kw4uSj0qdddYWcc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750657877; c=relaxed/simple;
-	bh=W9uwQoYw0YTbjz/35hZfFK3sYCCCdJSJqXLSMfmgecs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aO+Kh3iu6V9tWLaNfk54tw1fmYkFETYojnA+C0Sm1gL+ZbW2wYItwIdZ0Ddj2q/vf80ytTXSXxnxjIfV8yaxT5uzldnFUkiP63F2rp0qD6dHpg5QJe6GApooCgk/l1iM6zsFUUCb/e/kSJj1PrUozGVHekBK/j/HAL4tCf8oAV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b=ppW5tDbk; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB1901D86DC;
+	Mon, 23 Jun 2025 05:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=208.84.65.235
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750657890; cv=fail; b=hTGc+daxem8XHWcWhPduNi6ZJf9uhWel8TVCSx3EDJbbXuDUeLc4X52k86pLpfg0nsnuBsaBgQkAbkxN4jy6FBS2FowW7vss+SmMkFU1xBBqEQUZHxPY1ppKv0Owg0b7ojAPZ8FFrN0yoZvfrZVNKO7vr/hGKRdyPTzxLv4kVXI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750657890; c=relaxed/simple;
+	bh=r6ECp2/PrxdM4rNOZULA7D8Vv0gjuQ2g/y4G1uKNbP8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=qGSlGZ9iX4pFhcLAPWxIys7avVDQuL31mUHW5lTThhXGFpbbFJIlq6IuSMOjkE9W62utJ+y4gRazY8jiLklbBCLq4orzdz63k2XIrndeyPknF9d+NbGxzYI3FbtQbKOUH7gvxzrotS8w4mvblrMSfpruriEWUqN39ZTJAkfidO0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cadence.com; spf=pass smtp.mailfrom=cadence.com; dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b=ro/CndgV; dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b=PtopMFqn; arc=fail smtp.client-ip=208.84.65.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cadence.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cadence.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="ppW5tDbk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
-	s=s31663417; t=1750657856; x=1751262656; i=quwenruo.btrfs@gmx.com;
-	bh=vTYRi7SsIOfrGQaEKPHppvlqcuX9j6RcjWAPG4EX80s=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=ppW5tDbklJJ4TRjijQUnGn703dfQeyHE0Ede6BDEMaRYgysp5dgfxBN3uWrFrYMr
-	 9E2wK3fHovPe4J9jAKBY7+chssxwgMsXbtAdkhj+ApK1joo2+MeS7+cvQpNfSojzQ
-	 JVs89BjCq1U5hDI1NFVvvv02qVIMxljqvfK10KN60Lg689Fop8FgyGmCCLGMaRWkc
-	 EAEMwyrMGmugH2YHaRWkQjfvW1xuo/BNggZK1T2+yei2KPwXUbCoZD4ddgaCaWYff
-	 fmc4bO1b7ESJVH/EjJUNFENyo4JUkHhkDliMAuMtuRcToUwMegOfdk37t9GAEfo58
-	 7vH1KwuMSN8u+vB7Fw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [172.16.0.229] ([159.196.52.54]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1Ml6m4-1vAIoF2zz2-00bOwM; Mon, 23
- Jun 2025 07:50:56 +0200
-Message-ID: <55c8b839-e844-49fe-bedc-948e60f681c7@gmx.com>
-Date: Mon, 23 Jun 2025 15:20:43 +0930
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="ro/CndgV";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="PtopMFqn"
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+	by mx0a-0014ca01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55MLTRBK028964;
+	Sun, 22 Jun 2025 22:51:11 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=proofpoint;
+	 bh=53+1BzpDmjTyDg0GEzNjBkV+0fEzChHhZBQkv2fyCik=; b=ro/CndgVBIO6
+	1Y1aqZAam48CqlJKjpWcTMFLKh1IRTYPEnY4G6MbZhHeZek5kYmXQsEmp5obujp6
+	+oXYFam3p+wXcCLgE6h37xtavhFLyZQZsHIO6OuXSbmdVf0k+1QHaqarKOlKkwpH
+	bAQlo24gbaVv5Joj4LgY1Bwou/9teu5MYECwjnpcsGHXL4UN03Cz2w5FPwyBcnea
+	JuFFb8v136XyVEn77ENEsG0uKW3idSMZaPs1T6SCBzfYzSgJUUbPo/ZLN2kKYCJF
+	ERWJ3Ru5VhZODAKWauCZRDgyN4uoElcbdpRVFbsC7EQ6zUzbSQwBA+h/mAJL3tLE
+	Kxu/wzK1eA==
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10on2089.outbound.protection.outlook.com [40.107.93.89])
+	by mx0a-0014ca01.pphosted.com (PPS) with ESMTPS id 47ds9ybqaa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 22 Jun 2025 22:51:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GhvL8RgoIaLMQyFEBEpEkGT0FW5Mf0By775VVeE+bNpijPeVT46TZJ2tONaEsnAfG2rr3tw8Gm5Es/TtaFVtM7nDNcELC2uo6EopBcqWtXgRFQ1v2rH9Yvhu7+MEEpNxVcndJgRMg/FCrdW+E+1LCz3uP0Xrk0UaCLHQgIL0Bsp0m3V8LW7K7c1sXdWHNSJkolbXHLrvZhZNgZ8iUcaYFq6W2aG4qlKGcqPP2K8NbKNgmHkgw+2UaXaFxW22oCfYcgj3wBncdr/VeKuwFKArM32YpWKTBjZV9xhOuLnu11F/TEMFhnfxyjzmX83gCiq1dgvYaQR7zyb25owhdyDKDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=53+1BzpDmjTyDg0GEzNjBkV+0fEzChHhZBQkv2fyCik=;
+ b=NmaPQ64ZvTqkav17l8yh/cL2e10m1dS+o3PPLUpDTBkJlj6gsDEBMw5pWWDomkaxquyeJDZaJ3tDJ4HrK47OSldDi+1ZWRRry9464QLg9U6BiEck7hmnNvqvLJCNXQz2JoOR7fav1B5aVPJngsJdR4Fh67ly8aPb1fH+9XaQpZxuxEXB1LsUDga/oXBIVaf9yF4hEZ6ALGuIv6F7RNwAvLwYGKjoqjLXyY88Rf02P/rDbdMORTknvvUyJzQaquenoIdviCaR6+5qqGU+rTQ6PaWf9Azdmr3H4iLJ8sCz4emSbMaJPWgHULxUgVMMvKOQxSHPcFYOAMSr0oUl5kxWpw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=53+1BzpDmjTyDg0GEzNjBkV+0fEzChHhZBQkv2fyCik=;
+ b=PtopMFqnhO4SrJqefEjKqZJE+cLIkBl/IU4w9VzCNrT3W1hUdv+OdVVzbubwwuf7uo8dYeB4H5pemoh/WzYUt7EnnGpo3eMESuv7Y7AgAWWjC97KYOh3ERNUXk46Q0kfoeTYxkMWnfMIFMAKn127qHfgYDxQocf/an4qmzpe4Cc=
+Received: from PH7PR07MB9538.namprd07.prod.outlook.com (2603:10b6:510:203::19)
+ by CO1PR07MB11235.namprd07.prod.outlook.com (2603:10b6:303:26f::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Mon, 23 Jun
+ 2025 05:51:08 +0000
+Received: from PH7PR07MB9538.namprd07.prod.outlook.com
+ ([fe80::5dbd:49e3:4dc:ccc7]) by PH7PR07MB9538.namprd07.prod.outlook.com
+ ([fe80::5dbd:49e3:4dc:ccc7%6]) with mapi id 15.20.8857.026; Mon, 23 Jun 2025
+ 05:51:08 +0000
+From: Pawel Laszczak <pawell@cadence.com>
+To: "Peter Chen (CIX)" <peter.chen@kernel.org>
+CC: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH v3] usb: cdnsp: Fix issue with CV Bad Descriptor test
+Thread-Topic: [PATCH v3] usb: cdnsp: Fix issue with CV Bad Descriptor test
+Thread-Index: AQHb4byQPqa7j5J6MUG7SRmJB3iE/rQMxaWAgAN5JwA=
+Date: Mon, 23 Jun 2025 05:51:08 +0000
+Message-ID:
+ <PH7PR07MB953862997AC245FB4ADEE60FDD79A@PH7PR07MB9538.namprd07.prod.outlook.com>
+References: <20250620074306.2278838-1-pawell@cadence.com>
+ <PH7PR07MB95382CCD50549DABAEFD6156DD7CA@PH7PR07MB9538.namprd07.prod.outlook.com>
+ <20250621003643.GA41153@nchen-desktop>
+In-Reply-To: <20250621003643.GA41153@nchen-desktop>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-dg-rorf: true
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH7PR07MB9538:EE_|CO1PR07MB11235:EE_
+x-ms-office365-filtering-correlation-id: 5c97982d-3f60-4a64-e210-08ddb219f387
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?ZxqVXp0+C00L0B+chLvTF45GAWJODU0gmJzKM7cq+52JnvD7b6lUyhsJmPtx?=
+ =?us-ascii?Q?2xouTkp1zlS/jZuuAy133A5Hp9wMjx6XfhqA45dSYWKxQYvupQolrBFmZbjm?=
+ =?us-ascii?Q?HuBjhRiFlJbYMFsUe3QPJhlYHfVVUgC02NMYiYBbmgl1RInr0QdDIvIqiXkC?=
+ =?us-ascii?Q?lv+9h4Ws0kS2ASvY/yCCFZGxzMqF+Mq89Xi+FPXCQIMF7JxyqEFXfirRMq9M?=
+ =?us-ascii?Q?42taeESmlSGaULz4E3u6l1z13jyAkWQlmguk27eGDstBrgqrbnAZ18Kl869C?=
+ =?us-ascii?Q?8UGd/io7on8kvIjbgKN9x9jkCMJBiFrgqmIPBpNkHsj+o/c2A45dlbk1rJqr?=
+ =?us-ascii?Q?RHKzAMqrwdx8HLt3L5cgKsDiklyBtMAcPNZLKaNaDG/Gq1H7FCNT5S1ZdkCY?=
+ =?us-ascii?Q?JcDUTQaamxDHE5cq8e6gwfiZjnrZu9rrfwiletRnqpyKY4NVvEAXyjSZuWPK?=
+ =?us-ascii?Q?Nf14fbImr/ABx8Yc34flR8qFST2ccdxceHNQK8OiimTpNdfOeQ0Dk3JEVyoa?=
+ =?us-ascii?Q?FISvdlJMn+LmJqSNUpVETk+NAiROvGyUS1G3B/QxFEM5fCyJyFwIEQmhmlZ1?=
+ =?us-ascii?Q?cwa9pEcn9EbW5byWVmIK7+cm7MrKGhARbhm2D3a47UWvDDmwHF6RbAeSTYdj?=
+ =?us-ascii?Q?HQ+VcuVRALy7SNyzSdO35A/5dVelpeWOXcXlwHCcrPvk7lLAEcX8N+ZKGsrD?=
+ =?us-ascii?Q?MtkSdQ/9z+6XgmNZ6PBrwWk8LNaAJYI7ekS5AXyz/8GwbXG1EdbF//j8YsrP?=
+ =?us-ascii?Q?1so8bXGAgKok/mIHxaRNFU4xxrqBmPxX9BLm4ujmMiv3iCBEoOQE1V4QM3Cq?=
+ =?us-ascii?Q?PBa1AAgzxF3EDA+5MEiUTR13RcTFfmxV4AV3YGMHQWEOtFrH1rYBJGyEoaPC?=
+ =?us-ascii?Q?kWfa/geXwzmzBMhyqZKiE3Uov/LUo7zvmW5smwT2N9TmHrAZ+GOQopRWwe0U?=
+ =?us-ascii?Q?ivOo4/VMWNMJ/+YRlMi5fIX9rgZ/Tq+wWmypaDV0ZbTLlhZaLcqGBwRHX5B2?=
+ =?us-ascii?Q?uxF2FkwHt/oNVhLBpP01tfyc/8kVpGmjU/Dxjki5HuIaEkDbJlWGGGQCVUOG?=
+ =?us-ascii?Q?zIi6WEVgAa6QODsYIkEDUktftN+tnsBuvSy7KD98xts/6Jjx6G3Q6C4O4Cxj?=
+ =?us-ascii?Q?VWqR+WGQVvzjvEvHdkO16UzY4NhTopf1WmiFUhCcMz2t+aATxQ9VmbJs6BGd?=
+ =?us-ascii?Q?UE/26967fJQ4WNhmBlCFn3g6r6xh6FvfMtAZ6ZxxSVDuj9nWzitIPsl0yyyw?=
+ =?us-ascii?Q?3uYU0+tIEOVrVfxK+jVELcqHOHyvP74Of3nEy6PxFAoJewtOqymW4BpX609Y?=
+ =?us-ascii?Q?yjh8q34H+55zFLAWi9hmmYbZEFwwXr3/fBo9k/g7UGcDJzbs6D8x6BOoFA45?=
+ =?us-ascii?Q?l24AVcWzTH4nuC2dG+fgpX5zXwffX15gLE3NwTP2xhppP7f9PBfYNQQkmaGI?=
+ =?us-ascii?Q?J51HYDw9kEY2y/YM73UE7HAiBzwv0LDTsQi1nbGTk4Sm/4JGqK0m3Ge4AWhT?=
+ =?us-ascii?Q?y8yH9qBw3Mz1TRY=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR07MB9538.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?iwaEu+WqLEMqjLWPBcCEzBqFQVRlzOkf1oIu704OR7660CdC5VthXhc/P1il?=
+ =?us-ascii?Q?OTzJh2rRnm6peWP+oJSjBptht4KLO8ojGeGPjeERLvv+9ooAYBSCsuT2U7fX?=
+ =?us-ascii?Q?dJQJV54WvTBZDPlbTE5IhIiE9M0ulQ5kWlcWaoE+D99XDXspVGRJzkMMba6o?=
+ =?us-ascii?Q?2OV7os+lXVpOaprWG0wCPxBylcbWwCFzSskOV14wH/pFBetsg1KxK0/gF7Bk?=
+ =?us-ascii?Q?p38L/2Co7Fu9/stc2GsEeaQyDQ2Aj7HYHmAdCrSPJFqzVHtW1eiFNpqRvh+C?=
+ =?us-ascii?Q?vG/CtL896o5kXFfnbM6WSxsmtuICC7C3c32kV81gl+2SGJNp6+JrNEtJ79pN?=
+ =?us-ascii?Q?XlLVsBn8vAWG2//V35FTLidwQlXuI6RtI4fL+Bo18Q7KAmwkI5jFx2g4Kz8C?=
+ =?us-ascii?Q?gWkI6Exzb2xd9c4qiEkjaYfymlM9MJJ6fHueRQq9Fys1o03kBIRx9vcGXeJ3?=
+ =?us-ascii?Q?1I7mmQgwwQUYTw/MLJ8U12neWte1mxbJR2LJYp7GuYw/ff+0cSgpjhRfXRHO?=
+ =?us-ascii?Q?dAVi2X18TDKgTRmFd7+DyQzvuQaO2uttESEGDdQ1kmn1zGl/mhDOAtZwWKPO?=
+ =?us-ascii?Q?MPSMk8qQ4HomS/5DhOMpHSBUsYQTWX0A5vAZnerhgIxe11kMn8SdmAVQ+Yue?=
+ =?us-ascii?Q?oifT1MebvMQIXWS3x/FzKyaPw/ualsDnooflYqdm3lH82Nq4+HbfTXVuUwdW?=
+ =?us-ascii?Q?pB7xd4gAR21mkDvbPubv6oWQi/QVByA66aHeo4T8BgXiPBHBaTuStSEUmnMs?=
+ =?us-ascii?Q?7sJBGBjfqnY3URcWbD3NFek3RLiA4CQ0X7dsIZvTU01F2Hy/y6y1KHHag5WL?=
+ =?us-ascii?Q?3j2n/BQiUYvJUz2sWAf/dOKsUZD8vhLjre2yjqX27LhStT8FT/FrFYEsDgWg?=
+ =?us-ascii?Q?37d7GlYw/NiU60DsIZbzn+mkoowdUSwgc6T2SvlnEsGoYEO83SR3hc1y0ada?=
+ =?us-ascii?Q?i07fyRfOmePjLGsBb1L2mbb6YKRW9sXGNFzEDcTYqUWV+MUHLp+TjAd1JgrR?=
+ =?us-ascii?Q?OOda4ieETs184gJMFSdQbY14KasOxCTG8yfnGEMF/OEZYu4fSbUTjUY0WDjb?=
+ =?us-ascii?Q?YDY5xjy1eIPTdxYqVHLkeHPglmww+knia4caJhXOizjLx8A1ssXM36/477pR?=
+ =?us-ascii?Q?IQp93AEt/WcNTMNou05W9hYQuv9xDeRQ75ebm4vnSVRWV6PT9zNTXbnBd3oH?=
+ =?us-ascii?Q?eJctunCP3s4PwenRNISXikM+m+hfA+RIRfo7ktA0/ehKXmfhv+imo1nw/JDF?=
+ =?us-ascii?Q?fQgwWu77ZFuytByb++03GE87j2v0EaKPMjeCFq8ImdrEKVtqzuTWnEjAwP0u?=
+ =?us-ascii?Q?msGGwWSkeFdWuh7OS8gD0allfMoQqKChAiYWm7iEjqfOckQhwCH34DvXvphm?=
+ =?us-ascii?Q?+ReMuatv0F0CSWsNAkPlmhMv+pPSMcT+LSW/6c4b7RKpiuTEThmwXb1kN4LK?=
+ =?us-ascii?Q?5dtc88KUz8TXBBL5yfftYVCagZiy3gDXRGC7dmA6VntejwHFYyphc12N4QOd?=
+ =?us-ascii?Q?TUJCRiYgbKymAUExc90fYjq6jqBOPd8Qt3WsZTs1xFz0zeo/JZaP1WTNpB4E?=
+ =?us-ascii?Q?pfrM/qdVIPlw7sroxwxJYnq+Ks4gYfCI03RHc4w+?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] DEPT report on around btrfs, unlink, and truncate
-To: Byungchul Park <byungchul@sk.com>, linux-kernel@vger.kernel.org,
- clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
- linux-btrfs@vger.kernel.org
-Cc: kernel_team@skhynix.com, torvalds@linux-foundation.org,
- akpm@linux-foundation.org, yeoreum.yun@arm.com, yunseong.kim@ericsson.com,
- gwan-gyeong.mun@intel.com, harry.yoo@oracle.com, ysk@kzalloc.com
-References: <20250623032152.GB70156@system.software.com>
-Content-Language: en-US
-From: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1YAUJEP5a
- sQAKCRDCPZHzoSX+qF+mB/9gXu9C3BV0omDZBDWevJHxpWpOwQ8DxZEbk9b9LcrQlWdhFhyn
- xi+l5lRziV9ZGyYXp7N35a9t7GQJndMCFUWYoEa+1NCuxDs6bslfrCaGEGG/+wd6oIPb85xo
- naxnQ+SQtYLUFbU77WkUPaaIU8hH2BAfn9ZSDX9lIxheQE8ZYGGmo4wYpnN7/hSXALD7+oun
- tZljjGNT1o+/B8WVZtw/YZuCuHgZeaFdhcV2jsz7+iGb+LsqzHuznrXqbyUQgQT9kn8ZYFNW
- 7tf+LNxXuwedzRag4fxtR+5GVvJ41Oh/eygp8VqiMAtnFYaSlb9sjia1Mh+m+OBFeuXjgGlG
- VvQFzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
- CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
- /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
- GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
- q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
- ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1gQUJEP5a0gAK
- CRDCPZHzoSX+qHGpB/kB8A7M7KGL5qzat+jBRoLwB0Y3Zax0QWuANVdZM3eJDlKJKJ4HKzjo
- B2Pcn4JXL2apSan2uJftaMbNQbwotvabLXkE7cPpnppnBq7iovmBw++/d8zQjLQLWInQ5kNq
- Vmi36kmq8o5c0f97QVjMryHlmSlEZ2Wwc1kURAe4lsRG2dNeAd4CAqmTw0cMIrR6R/Dpt3ma
- +8oGXJOmwWuDFKNV4G2XLKcghqrtcRf2zAGNogg3KulCykHHripG3kPKsb7fYVcSQtlt5R6v
- HZStaZBzw4PcDiaAF3pPDBd+0fIKS6BlpeNRSFG94RYrt84Qw77JWDOAZsyNfEIEE0J6LSR/
-In-Reply-To: <20250623032152.GB70156@system.software.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:iJhBABkkSVYjkvZtUcSeHuK119lRVUsMI9KOz1fq3F1/R9wu+mg
- GxcMHnKuTtDI5s7YsXXTgv9JlVRKhZP33Pko2QLVympmiRveIqOMFM8Bic91ZC3dND1bx0a
- dS4D04WL2hP6v5qH42h+YXZIWMLCBbpYJJPNhgGVTMVn1wS9YsLnO0s6B3INR6yphfsibrk
- hdpXR/HZwIJhkxwI3mJrg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:dVF9Cxwd460=;HIqEMToi43dRwD3F0rtWGtrzJ76
- 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
- rDeZa7n5waGj6qI2
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR07MB9538.namprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c97982d-3f60-4a64-e210-08ddb219f387
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jun 2025 05:51:08.5553
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3wP8GspOpKUlednMa4ouAkXs/ElZ6P7EtXm6a0d+bFyeSr7vErI1wYVDisO5f5XKLUCvSo9boU99tHI4frGpH16OSp4VyoiemixkxE5r5qc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR07MB11235
+X-Authority-Analysis: v=2.4 cv=fPA53Yae c=1 sm=1 tr=0 ts=6858eb4f cx=c_pps a=pfCY2Ats7XXgTBCGz+4jpg==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=Zpq2whiEiuAA:10 a=VwQbUJbxAAAA:8 a=Br2UW1UjAAAA:8 a=kG_ig2eaEDhO6EZHpVsA:9 a=CjuIK1q_8ugA:10 a=WmXOPjafLNExVIMTj843:22
+X-Proofpoint-ORIG-GUID: GW5rktK4tIT55ZH4WBBqEC0HTXnC1zih
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDAzMyBTYWx0ZWRfX4x73izePoX/Z NIZjN+BvpY4TimFKHvMy1C/RSOtf5QsMYc3PGEzwB8s+cpNYeryAX32+GxXYDHGudoJ9yf1++EA Z403FSeo6sDRT1NLY+VkIo8RirrnvH95ZrPRpGCYnO9amCyqkBBP2NImglyoietvswY2BDgtiXh
+ tLF7AFCvVhiO/K0EhV6LUrTSFusOGA28r2sBB+ByVlEIxkXK4dovrqW9fdnFyABZ+Eukuo5ruPi C48yY4le8nAm2xdlAddkCza62gnNIaZQUvySHaV3r5U3XL++XQkGwqV6kkn8apAwTD1xgcQnAUQ vBmeKHlmNr1BNPhZZJikXGya1TgvU19UT5Ia4aas2Tie3D01+8nQwxqZ0jYfiae55VL6AmJGyHb
+ 0aIKgXlMxkNdOJPmcBVW8EJBujjscsqvRQs/jbZwVuDD0pQCxY3a1MFlHUTpdS2hX0LTyn8a
+X-Proofpoint-GUID: GW5rktK4tIT55ZH4WBBqEC0HTXnC1zih
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-23_01,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 suspectscore=0
+ spamscore=0 clxscore=1015 adultscore=0 bulkscore=0 lowpriorityscore=0
+ mlxlogscore=759 malwarescore=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506230033
 
+>On 25-06-20 08:23:12, Pawel Laszczak wrote:
+>> The SSP2 controller has extra endpoint state preserve bit (ESP) which
+>> setting causes that endpoint state will be preserved during Halt
+>> Endpoint command. It is used only for EP0.
+>> Without this bit the Command Verifier "TD 9.10 Bad Descriptor Test"
+>> failed.
+>> Setting this bit doesn't have any impact for SSP controller.
+>>
+>> Fixes: 3d82904559f4 ("usb: cdnsp: cdns3 Add main part of Cadence
+>> USBSSP DRD Driver")
+>> cc: stable@vger.kernel.org
+>> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+>> ---
+>> Changelog:
+>> v3:
+>> - removed else {}
+>>
+>> v2:
+>> - removed some typos
+>> - added pep variable initialization
+>> - updated TRB_ESP description
+>>
+>>  drivers/usb/cdns3/cdnsp-debug.h  |  5 +++--
+>>  drivers/usb/cdns3/cdnsp-ep0.c    | 18 +++++++++++++++---
+>>  drivers/usb/cdns3/cdnsp-gadget.h |  6 ++++++
+>>  drivers/usb/cdns3/cdnsp-ring.c   |  3 ++-
+>>  4 files changed, 26 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/usb/cdns3/cdnsp-debug.h
+>> b/drivers/usb/cdns3/cdnsp-debug.h index cd138acdcce1..86860686d836
+>> 100644
+>> --- a/drivers/usb/cdns3/cdnsp-debug.h
+>> +++ b/drivers/usb/cdns3/cdnsp-debug.h
+>> @@ -327,12 +327,13 @@ static inline const char *cdnsp_decode_trb(char
+>*str, size_t size, u32 field0,
+>>  	case TRB_RESET_EP:
+>>  	case TRB_HALT_ENDPOINT:
+>>  		ret =3D scnprintf(str, size,
+>> -				"%s: ep%d%s(%d) ctx %08x%08x slot %ld flags
+>%c",
+>> +				"%s: ep%d%s(%d) ctx %08x%08x slot %ld flags
+>%c %c",
+>>  				cdnsp_trb_type_string(type),
+>>  				ep_num, ep_id % 2 ? "out" : "in",
+>>  				TRB_TO_EP_INDEX(field3), field1, field0,
+>>  				TRB_TO_SLOT_ID(field3),
+>> -				field3 & TRB_CYCLE ? 'C' : 'c');
+>> +				field3 & TRB_CYCLE ? 'C' : 'c',
+>> +				field3 & TRB_ESP ? 'P' : 'p');
+>>  		break;
+>>  	case TRB_STOP_RING:
+>>  		ret =3D scnprintf(str, size,
+>> diff --git a/drivers/usb/cdns3/cdnsp-ep0.c
+>> b/drivers/usb/cdns3/cdnsp-ep0.c index f317d3c84781..5cd9b898ce97
+>> 100644
+>> --- a/drivers/usb/cdns3/cdnsp-ep0.c
+>> +++ b/drivers/usb/cdns3/cdnsp-ep0.c
+>> @@ -414,6 +414,7 @@ static int cdnsp_ep0_std_request(struct
+>> cdnsp_device *pdev,  void cdnsp_setup_analyze(struct cdnsp_device
+>> *pdev)  {
+>>  	struct usb_ctrlrequest *ctrl =3D &pdev->setup;
+>> +	struct cdnsp_ep *pep;
+>>  	int ret =3D -EINVAL;
+>>  	u16 len;
+>>
+>> @@ -427,10 +428,21 @@ void cdnsp_setup_analyze(struct cdnsp_device
+>*pdev)
+>>  		goto out;
+>>  	}
+>>
+>> +	pep =3D &pdev->eps[0];
+>> +
+>>  	/* Restore the ep0 to Stopped/Running state. */
+>> -	if (pdev->eps[0].ep_state & EP_HALTED) {
+>> -		trace_cdnsp_ep0_halted("Restore to normal state");
+>> -		cdnsp_halt_endpoint(pdev, &pdev->eps[0], 0);
+>> +	if (pep->ep_state & EP_HALTED) {
+>> +		if (GET_EP_CTX_STATE(pep->out_ctx) =3D=3D EP_STATE_HALTED)
+>> +			cdnsp_halt_endpoint(pdev, pep, 0);
+>> +
+>> +		/*
+>> +		 * Halt Endpoint Command for SSP2 for ep0 preserve current
+>> +		 * endpoint state and driver has to synchronize the
+>> +		 * software endpoint state with endpoint output context
+>> +		 * state.
+>> +		 */
+>> +		pep->ep_state &=3D ~EP_HALTED;
+>> +		pep->ep_state |=3D EP_STOPPED;
+>
+>You do not reset endpoint by calling clear_halt, could we change ep_state
+>directly?
 
+It's only "software" endpoint state and this code is related only with ep0.
+For SSP2 the state in pep->out_ctx - "hardware" endpoint state in this
+place will be in EP_STATE_STOPPED but "software" pep->ep_state
+will be EP_HALTED.=20
+Driver only synchronizes pep->ep_state with this included in pep->out_ctx.
 
-=E5=9C=A8 2025/6/23 12:51, Byungchul Park =E5=86=99=E9=81=93:
-> Hi folks,
->=20
-> Thanks to Yunseong, we got two DEPT reports in btrfs.  It doesn't mean
-> it's obvious deadlocks, but after digging into the reports, I'm
-> wondering if it could happen by any chance.
->=20
-> 1) The first scenario that I'm concerning is:
->=20
->    context A		  context B
->=20
-> 			  do_truncate()
-> 			    ...
-> 			      btrfs_do_readpage() // with folio lock held
-
-				This one is for data.>    do_unlinkat()
->      ...
->        push_leaf_right()
-> 	btrfs_tree_lock_nested()
-> 	  down_write_nested(&eb->lock) // hold
-> 			        btrfs_get_extent()
-> 			          btrfs_lookup_file_extent()
-> 			            btrfs_search_slot()
-> 			              down_read_nested(&eb->lock) // stuck
-
-					This one is for metadata.
-
-Data and metadata page cache will never cross into each other.
-
-Thanks,
-Qu
-
-> 	  __push_leaf_right()
-> 	    ...
-> 	      folio_lock() // stuck
->=20
-> 2) The second scenario that I'm concerning is:
->=20
->    context A		  context B
->=20
-> 			  do_truncate()
-> 			    ...
-> 			      btrfs_do_readpage() // with folio lock held
->    do_unlinkat()
->      ...
->        btrfs_truncate_inode_items()
-> 	btrfs_lock_root_node()
-> 	  down_write_nested(&eb->lock) // hold
-> 	btrfs_del_items()
-> 	  push_leaf_right()
-> 	    __push_leaf_right()
-> 			        btrfs_get_extent()
-> 			          btrfs_lookup_file_extent()
-> 			            btrfs_search_slot()
-> 			              btrfs_read_lock_root_node()
-> 			                down_read_nested(&eb->lock) // stuck
-> 	      ...
-> 	        folio_lock() //stuck
->=20
-> Am I missing something?
->=20
-> FYI, the followings are the DEPT reports we got.
->=20
-> 	Byungchul
->=20
-> ---
->   [  304.343395][ T7488] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->   [  304.343446][ T7488] DEPT: Circular dependency has been detected.
->   [  304.343462][ T7488] 6.15.0-rc6-00043-ga83a69ec7f9f #5 Not tainted
->   [  304.343477][ T7488] -----------------------------------------------=
-=2D---
->   [  304.343488][ T7488] summary
->   [  304.343498][ T7488] -----------------------------------------------=
-=2D---
->   [  304.343509][ T7488] *** DEADLOCK ***
->   [  304.343509][ T7488]
->   [  304.343520][ T7488] context A
->   [  304.343531][ T7488]    [S] lock(btrfs-tree-00:0)
->   [  304.343545][ T7488]    [W] dept_page_wait_on_bit(pg_locked_map:0)
->   [  304.343559][ T7488]    [E] unlock(btrfs-tree-00:0)
->   [  304.343572][ T7488]
->   [  304.343581][ T7488] context B
->   [  304.343591][ T7488]    [S] (unknown)(pg_locked_map:0)
->   [  304.343603][ T7488]    [W] lock(btrfs-tree-00:0)
->   [  304.343616][ T7488]    [E] dept_page_clear_bit(pg_locked_map:0)
->   [  304.343629][ T7488]
->   [  304.343637][ T7488] [S]: start of the event context
->   [  304.343647][ T7488] [W]: the wait blocked
->   [  304.343656][ T7488] [E]: the event not reachable
->   [  304.343666][ T7488] -----------------------------------------------=
-=2D---
->   [  304.343676][ T7488] context A's detail
->   [  304.343686][ T7488] -----------------------------------------------=
-=2D---
->   [  304.343696][ T7488] context A
->   [  304.343706][ T7488]    [S] lock(btrfs-tree-00:0)
->   [  304.343718][ T7488]    [W] dept_page_wait_on_bit(pg_locked_map:0)
->   [  304.343731][ T7488]    [E] unlock(btrfs-tree-00:0)
->   [  304.343744][ T7488]
->   [  304.343753][ T7488] [S] lock(btrfs-tree-00:0):
->   [  304.343764][ T7488] [<ffff8000824f41d8>] btrfs_tree_lock_nested+0x3=
-8/0x324
->   [  304.343796][ T7488] stacktrace:
->   [  304.343805][ T7488]       down_write_nested+0xe4/0x21c
->   [  304.343826][ T7488]       btrfs_tree_lock_nested+0x38/0x324
->   [  304.343865][ T7488]       push_leaf_right+0x23c/0x628
->   [  304.343896][ T7488]       btrfs_del_items+0x974/0xaec
->   [  304.343916][ T7488]       btrfs_truncate_inode_items+0x1c5c/0x2b00
->   [  304.343938][ T7488]       btrfs_evict_inode+0xa4c/0xd38
->   [  304.343968][ T7488]       evict+0x340/0x7b0
->   [  304.343993][ T7488]       iput+0x4ec/0x840
->   [  304.344011][ T7488]       do_unlinkat+0x444/0x59c
->   [  304.344038][ T7488]       __arm64_sys_unlinkat+0x11c/0x260
->   [  304.344057][ T7488]       invoke_syscall+0x88/0x2e0
->   [  304.344084][ T7488]       el0_svc_common.constprop.0+0xe8/0x2e0
->   [  304.344104][ T7488]       do_el0_svc+0x44/0x60
->   [  304.344123][ T7488]       el0_svc+0x50/0x188
->   [  304.344151][ T7488]       el0t_64_sync_handler+0x10c/0x140
->   [  304.344172][ T7488]       el0t_64_sync+0x198/0x19c
->   [  304.344189][ T7488]
->   [  304.344198][ T7488] [W] dept_page_wait_on_bit(pg_locked_map:0):
->   [  304.344211][ T7488] [<ffff8000823b1d20>] __push_leaf_right+0x8f0/0x=
-c70
->   [  304.344232][ T7488] stacktrace:
->   [  304.344241][ T7488]       __push_leaf_right+0x8f0/0xc70
->   [  304.344260][ T7488]       push_leaf_right+0x408/0x628
->   [  304.344278][ T7488]       btrfs_del_items+0x974/0xaec
->   [  304.344297][ T7488]       btrfs_truncate_inode_items+0x1c5c/0x2b00
->   [  304.344314][ T7488]       btrfs_evict_inode+0xa4c/0xd38
->   [  304.344335][ T7488]       evict+0x340/0x7b0
->   [  304.344352][ T7488]       iput+0x4ec/0x840
->   [  304.344369][ T7488]       do_unlinkat+0x444/0x59c
->   [  304.344388][ T7488]       __arm64_sys_unlinkat+0x11c/0x260
->   [  304.344407][ T7488]       invoke_syscall+0x88/0x2e0
->   [  304.344425][ T7488]       el0_svc_common.constprop.0+0xe8/0x2e0
->   [  304.344445][ T7488]       do_el0_svc+0x44/0x60
->   [  304.344463][ T7488]       el0_svc+0x50/0x188
->   [  304.344482][ T7488]       el0t_64_sync_handler+0x10c/0x140
->   [  304.344503][ T7488]       el0t_64_sync+0x198/0x19c
->   [  304.344518][ T7488]
->   [  304.344527][ T7488] [E] unlock(btrfs-tree-00:0):
->   [  304.344539][ T7488] (N/A)
->   [  304.344549][ T7488] -----------------------------------------------=
-=2D---
->   [  304.344559][ T7488] context B's detail
->   [  304.344568][ T7488] -----------------------------------------------=
-=2D---
->   [  304.344578][ T7488] context B
->   [  304.344588][ T7488]    [S] (unknown)(pg_locked_map:0)
->   [  304.344600][ T7488]    [W] lock(btrfs-tree-00:0)
->   [  304.344613][ T7488]    [E] dept_page_clear_bit(pg_locked_map:0)
->   [  304.344625][ T7488]
->   [  304.344634][ T7488] [S] (unknown)(pg_locked_map:0):
->   [  304.344646][ T7488] (N/A)
->   [  304.344655][ T7488]
->   [  304.344663][ T7488] [W] lock(btrfs-tree-00:0):
->   [  304.344675][ T7488] [<ffff8000824f3b48>] btrfs_tree_read_lock_neste=
-d+0x38/0x330
->   [  304.344694][ T7488] stacktrace:
->   [  304.344703][ T7488]       down_read_nested+0xc8/0x368
->   [  304.344720][ T7488]       btrfs_tree_read_lock_nested+0x38/0x330
->   [  304.344737][ T7488]       btrfs_search_slot+0x1204/0x2dc8
->   [  304.344756][ T7488]       btrfs_lookup_file_extent+0xe0/0x128
->   [  304.344773][ T7488]       btrfs_get_extent+0x2cc/0x1e24
->   [  304.344789][ T7488]       btrfs_do_readpage+0x628/0x1258
->   [  304.344810][ T7488]       btrfs_read_folio+0x310/0x450
->   [  304.344828][ T7488]       btrfs_truncate_block+0x2c0/0xb24
->   [  304.344854][ T7488]       btrfs_cont_expand+0x11c/0xba8
->   [  304.344870][ T7488]       btrfs_setattr+0x8d8/0x10f4
->   [  304.344885][ T7488]       notify_change+0x900/0xfbc
->   [  304.344906][ T7488]       do_truncate+0x154/0x210
->   [  304.344937][ T7488]       vfs_truncate+0x55c/0x66c
->   [  304.344957][ T7488]       __arm64_sys_truncate+0x16c/0x1e4
->   [  304.344978][ T7488]       invoke_syscall+0x88/0x2e0
->   [  304.344997][ T7488]       el0_svc_common.constprop.0+0xe8/0x2e0
->   [  304.345017][ T7488]
->   [  304.345025][ T7488] [E] dept_page_clear_bit(pg_locked_map:0):
->   [  304.345037][ T7488] [<ffff80008249c284>] end_folio_read+0x3e4/0x590
->   [  304.345056][ T7488] stacktrace:
->   [  304.345065][ T7488]       folio_unlock+0x8c/0x160
->   [  304.345099][ T7488]       end_folio_read+0x3e4/0x590
->   [  304.345116][ T7488]       btrfs_do_readpage+0x830/0x1258
->   [  304.345132][ T7488]       btrfs_read_folio+0x310/0x450
->   [  304.345149][ T7488]       btrfs_truncate_block+0x2c0/0xb24
->   [  304.345164][ T7488]       btrfs_cont_expand+0x11c/0xba8
->   [  304.345179][ T7488]       btrfs_setattr+0x8d8/0x10f4
->   [  304.345194][ T7488]       notify_change+0x900/0xfbc
->   [  304.345213][ T7488]       do_truncate+0x154/0x210
->   [  304.345232][ T7488]       vfs_truncate+0x55c/0x66c
->   [  304.345252][ T7488]       __arm64_sys_truncate+0x16c/0x1e4
->   [  304.345272][ T7488]       invoke_syscall+0x88/0x2e0
->   [  304.345291][ T7488]       el0_svc_common.constprop.0+0xe8/0x2e0
->   [  304.345310][ T7488]       do_el0_svc+0x44/0x60
->   [  304.345328][ T7488]       el0_svc+0x50/0x188
->   [  304.345347][ T7488]       el0t_64_sync_handler+0x10c/0x140
->   [  304.345369][ T7488] -----------------------------------------------=
-=2D---
->   [  304.345379][ T7488] information that might be helpful
->   [  304.345388][ T7488] -----------------------------------------------=
-=2D---
->   [  304.345402][ T7488] CPU: 1 UID: 0 PID: 7488 Comm: syz-executor Not =
-tainted 6.15.0-rc6-00043-ga83a69ec7f9f #5 PREEMPT
->   [  304.345416][ T7488] Hardware name: QEMU KVM Virtual Machine, BIOS 2=
-025.02-8 05/13/2025
->   [  304.345422][ T7488] Call trace:
->   [  304.345426][ T7488]  show_stack+0x34/0x80 (C)
->   [  304.345452][ T7488]  dump_stack_lvl+0x104/0x180
->   [  304.345476][ T7488]  dump_stack+0x20/0x2c
->   [  304.345490][ T7488]  cb_check_dl+0x1080/0x10ec
->   [  304.345504][ T7488]  bfs+0x4d8/0x630
->   [  304.345514][ T7488]  add_dep+0x1cc/0x364
->   [  304.345526][ T7488]  __dept_wait+0x60c/0x16e0
->   [  304.345537][ T7488]  dept_wait+0x168/0x1a8
->   [  304.345548][ T7488]  btrfs_clear_buffer_dirty+0x420/0x820
->   [  304.345561][ T7488]  __push_leaf_right+0x8f0/0xc70
->   [  304.345575][ T7488]  push_leaf_right+0x408/0x628
->   [  304.345589][ T7488]  btrfs_del_items+0x974/0xaec
->   [  304.345603][ T7488]  btrfs_truncate_inode_items+0x1c5c/0x2b00
->   [  304.345616][ T7488]  btrfs_evict_inode+0xa4c/0xd38
->   [  304.345632][ T7488]  evict+0x340/0x7b0
->   [  304.345644][ T7488]  iput+0x4ec/0x840
->   [  304.345657][ T7488]  do_unlinkat+0x444/0x59c
->   [  304.345671][ T7488]  __arm64_sys_unlinkat+0x11c/0x260
->   [  304.345685][ T7488]  invoke_syscall+0x88/0x2e0
->   [  304.345698][ T7488]  el0_svc_common.constprop.0+0xe8/0x2e0
->   [  304.345713][ T7488]  do_el0_svc+0x44/0x60
->   [  304.345726][ T7488]  el0_svc+0x50/0x188
->   [  304.345741][ T7488]  el0t_64_sync_handler+0x10c/0x140
->   [  304.345756][ T7488]  el0t_64_sync+0x198/0x19c
->   [  304.345857][ T7488] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->   [  304.345995][ T7488] DEPT: Circular dependency has been detected.
->   [  304.346006][ T7488] 6.15.0-rc6-00043-ga83a69ec7f9f #5 Not tainted
->   [  304.346019][ T7488] -----------------------------------------------=
-=2D---
->   [  304.346029][ T7488] summary
->   [  304.346038][ T7488] -----------------------------------------------=
-=2D---
->   [  304.346049][ T7488] *** DEADLOCK ***
->   [  304.346049][ T7488]
->   [  304.346058][ T7488] context A
->   [  304.346069][ T7488]    [S] lock(btrfs-tree-01:0)
->   [  304.346082][ T7488]    [W] dept_page_wait_on_bit(pg_locked_map:0)
->   [  304.346095][ T7488]    [E] unlock(btrfs-tree-01:0)
->   [  304.346108][ T7488]
->   [  304.346117][ T7488] context B
->   [  304.346126][ T7488]    [S] (unknown)(pg_locked_map:0)
->   [  304.346139][ T7488]    [W] lock(btrfs-tree-01:0)
->   [  304.346151][ T7488]    [E] dept_page_clear_bit(pg_locked_map:0)
->   [  304.346164][ T7488]
->   [  304.346173][ T7488] [S]: start of the event context
->   [  304.346183][ T7488] [W]: the wait blocked
->   [  304.346192][ T7488] [E]: the event not reachable
->   [  304.346201][ T7488] -----------------------------------------------=
-=2D---
->   [  304.346211][ T7488] context A's detail
->   [  304.346221][ T7488] -----------------------------------------------=
-=2D---
->   [  304.346231][ T7488] context A
->   [  304.346240][ T7488]    [S] lock(btrfs-tree-01:0)
->   [  304.346253][ T7488]    [W] dept_page_wait_on_bit(pg_locked_map:0)
->   [  304.346266][ T7488]    [E] unlock(btrfs-tree-01:0)
->   [  304.346278][ T7488]
->   [  304.346287][ T7488] [S] lock(btrfs-tree-01:0):
->   [  304.346299][ T7488] [<ffff8000824f41d8>] btrfs_tree_lock_nested+0x3=
-8/0x324
->   [  304.346321][ T7488] stacktrace:
->   [  304.346330][ T7488]       down_write_nested+0xe4/0x21c
->   [  304.346347][ T7488]       btrfs_tree_lock_nested+0x38/0x324
->   [  304.346363][ T7488]       btrfs_lock_root_node+0x70/0xac
->   [  304.346379][ T7488]       btrfs_search_slot+0x3f8/0x2dc8
->   [  304.346399][ T7488]       btrfs_truncate_inode_items+0x2ec/0x2b00
->   [  304.346417][ T7488]       btrfs_evict_inode+0xa4c/0xd38
->   [  304.346438][ T7488]       evict+0x340/0x7b0
->   [  304.346456][ T7488]       iput+0x4ec/0x840
->   [  304.346473][ T7488]       do_unlinkat+0x444/0x59c
->   [  304.346492][ T7488]       __arm64_sys_unlinkat+0x11c/0x260
->   [  304.346511][ T7488]       invoke_syscall+0x88/0x2e0
->   [  304.346530][ T7488]       el0_svc_common.constprop.0+0xe8/0x2e0
->   [  304.346550][ T7488]       do_el0_svc+0x44/0x60
->   [  304.346568][ T7488]       el0_svc+0x50/0x188
->   [  304.346588][ T7488]       el0t_64_sync_handler+0x10c/0x140
->   [  304.346608][ T7488]       el0t_64_sync+0x198/0x19c
->   [  304.346623][ T7488]
->   [  304.346632][ T7488] [W] dept_page_wait_on_bit(pg_locked_map:0):
->   [  304.346644][ T7488] [<ffff8000823b1d20>] __push_leaf_right+0x8f0/0x=
-c70
->   [  304.346665][ T7488] stacktrace:
->   [  304.346674][ T7488]       __push_leaf_right+0x8f0/0xc70
->   [  304.346692][ T7488]       push_leaf_right+0x408/0x628
->   [  304.346711][ T7488]       btrfs_del_items+0x974/0xaec
->   [  304.346729][ T7488]       btrfs_truncate_inode_items+0x1c5c/0x2b00
->   [  304.346747][ T7488]       btrfs_evict_inode+0xa4c/0xd38
->   [  304.346767][ T7488]       evict+0x340/0x7b0
->   [  304.346785][ T7488]       iput+0x4ec/0x840
->   [  304.346802][ T7488]       do_unlinkat+0x444/0x59c
->   [  304.346820][ T7488]       __arm64_sys_unlinkat+0x11c/0x260
->   [  304.346850][ T7488]       invoke_syscall+0x88/0x2e0
->   [  304.346871][ T7488]       el0_svc_common.constprop.0+0xe8/0x2e0
->   [  304.346891][ T7488]       do_el0_svc+0x44/0x60
->   [  304.346909][ T7488]       el0_svc+0x50/0x188
->   [  304.346928][ T7488]       el0t_64_sync_handler+0x10c/0x140
->   [  304.346949][ T7488]       el0t_64_sync+0x198/0x19c
->   [  304.346963][ T7488]
->   [  304.346972][ T7488] [E] unlock(btrfs-tree-01:0):
->   [  304.346984][ T7488] (N/A)
->   [  304.346994][ T7488] -----------------------------------------------=
-=2D---
->   [  304.347004][ T7488] context B's detail
->   [  304.347013][ T7488] -----------------------------------------------=
-=2D---
->   [  304.347023][ T7488] context B
->   [  304.347033][ T7488]    [S] (unknown)(pg_locked_map:0)
->   [  304.347046][ T7488]    [W] lock(btrfs-tree-01:0)
->   [  304.347058][ T7488]    [E] dept_page_clear_bit(pg_locked_map:0)
->   [  304.347071][ T7488]
->   [  304.347080][ T7488] [S] (unknown)(pg_locked_map:0):
->   [  304.347092][ T7488] (N/A)
->   [  304.347101][ T7488]
->   [  304.347109][ T7488] [W] lock(btrfs-tree-01:0):
->   [  304.347121][ T7488] [<ffff8000824f3b48>] btrfs_tree_read_lock_neste=
-d+0x38/0x330
->   [  304.347140][ T7488] stacktrace:
->   [  304.347149][ T7488]       down_read_nested+0xc8/0x368
->   [  304.347165][ T7488]       btrfs_tree_read_lock_nested+0x38/0x330
->   [  304.347181][ T7488]       btrfs_read_lock_root_node+0x70/0xb4
->   [  304.347198][ T7488]       btrfs_search_slot+0x34c/0x2dc8
->   [  304.347217][ T7488]       btrfs_lookup_file_extent+0xe0/0x128
->   [  304.347233][ T7488]       btrfs_get_extent+0x2cc/0x1e24
->   [  304.347248][ T7488]       btrfs_do_readpage+0x628/0x1258
->   [  304.347270][ T7488]       btrfs_read_folio+0x310/0x450
->   [  304.347287][ T7488]       btrfs_truncate_block+0x2c0/0xb24
->   [  304.347302][ T7488]       btrfs_cont_expand+0x11c/0xba8
->   [  304.347317][ T7488]       btrfs_setattr+0x8d8/0x10f4
->   [  304.347332][ T7488]       notify_change+0x900/0xfbc
->   [  304.347352][ T7488]       do_truncate+0x154/0x210
->   [  304.347374][ T7488]       vfs_truncate+0x55c/0x66c
->   [  304.347394][ T7488]       __arm64_sys_truncate+0x16c/0x1e4
->   [  304.347414][ T7488]       invoke_syscall+0x88/0x2e0
->   [  304.347433][ T7488]
->   [  304.347441][ T7488] [E] dept_page_clear_bit(pg_locked_map:0):
->   [  304.347453][ T7488] [<ffff80008249c284>] end_folio_read+0x3e4/0x590
->   [  304.347471][ T7488] stacktrace:
->   [  304.347480][ T7488]       folio_unlock+0x8c/0x160
->   [  304.347504][ T7488]       end_folio_read+0x3e4/0x590
->   [  304.347520][ T7488]       btrfs_do_readpage+0x830/0x1258
->   [  304.347536][ T7488]       btrfs_read_folio+0x310/0x450
->   [  304.347553][ T7488]       btrfs_truncate_block+0x2c0/0xb24
->   [  304.347568][ T7488]       btrfs_cont_expand+0x11c/0xba8
->   [  304.347583][ T7488]       btrfs_setattr+0x8d8/0x10f4
->   [  304.347598][ T7488]       notify_change+0x900/0xfbc
->   [  304.347617][ T7488]       do_truncate+0x154/0x210
->   [  304.347636][ T7488]       vfs_truncate+0x55c/0x66c
->   [  304.347656][ T7488]       __arm64_sys_truncate+0x16c/0x1e4
->   [  304.347676][ T7488]       invoke_syscall+0x88/0x2e0
->   [  304.347695][ T7488]       el0_svc_common.constprop.0+0xe8/0x2e0
->   [  304.347714][ T7488]       do_el0_svc+0x44/0x60
->   [  304.347732][ T7488]       el0_svc+0x50/0x188
->   [  304.347751][ T7488]       el0t_64_sync_handler+0x10c/0x140
->   [  304.347772][ T7488] -----------------------------------------------=
-=2D---
->   [  304.347782][ T7488] information that might be helpful
->   [  304.347791][ T7488] -----------------------------------------------=
-=2D---
->   [  304.347803][ T7488] CPU: 1 UID: 0 PID: 7488 Comm: syz-executor Not =
-tainted 6.15.0-rc6-00043-ga83a69ec7f9f #5 PREEMPT
->   [  304.347815][ T7488] Hardware name: QEMU KVM Virtual Machine, BIOS 2=
-025.02-8 05/13/2025
->   [  304.347821][ T7488] Call trace:
->   [  304.347825][ T7488]  show_stack+0x34/0x80 (C)
->   [  304.347852][ T7488]  dump_stack_lvl+0x104/0x180
->   [  304.347870][ T7488]  dump_stack+0x20/0x2c
->   [  304.347884][ T7488]  cb_check_dl+0x1080/0x10ec
->   [  304.347897][ T7488]  bfs+0x4d8/0x630
->   [  304.347906][ T7488]  add_dep+0x1cc/0x364
->   [  304.347917][ T7488]  __dept_wait+0x60c/0x16e0
->   [  304.347928][ T7488]  dept_wait+0x168/0x1a8
->   [  304.347940][ T7488]  btrfs_clear_buffer_dirty+0x420/0x820
->   [  304.347952][ T7488]  __push_leaf_right+0x8f0/0xc70
->   [  304.347967][ T7488]  push_leaf_right+0x408/0x628
->   [  304.347980][ T7488]  btrfs_del_items+0x974/0xaec
->   [  304.347994][ T7488]  btrfs_truncate_inode_items+0x1c5c/0x2b00
->   [  304.348007][ T7488]  btrfs_evict_inode+0xa4c/0xd38
->   [  304.348023][ T7488]  evict+0x340/0x7b0
->   [  304.348036][ T7488]  iput+0x4ec/0x840
->   [  304.348048][ T7488]  do_unlinkat+0x444/0x59c
->   [  304.348062][ T7488]  __arm64_sys_unlinkat+0x11c/0x260
->   [  304.348076][ T7488]  invoke_syscall+0x88/0x2e0
->   [  304.348090][ T7488]  el0_svc_common.constprop.0+0xe8/0x2e0
->   [  304.348105][ T7488]  do_el0_svc+0x44/0x60
->   [  304.348118][ T7488]  el0_svc+0x50/0x188
->   [  304.348132][ T7488]  el0t_64_sync_handler+0x10c/0x140
->   [  304.348148][ T7488]  el0t_64_sync+0x198/0x19c
->   [  304.386144][ T8054] BTRFS info (device loop0): first mount of files=
-ystem 3a492a15-ac49-4ce6-945e-cef7a687c6c9
->   [  304.389687][ T8054] BTRFS info (device loop0): using crc32c (crc32c=
--arm64) checksum algorithm
->   [  304.389788][ T8054] BTRFS info (device loop0): using free-space-tre=
+For SSP the state in pep->out_ctx - "hardware" endpoint state in this pleas=
 e
->   [  304.701202][ T7488] BTRFS info (device loop3): last unmount of file=
-system 3a492a15-ac49-4ce6-945e-cef7a687c6c9
->=20
+will be in EP_STATE_HALTED, and "software" pep->ep_state will be
+EP_HALTED. For SSP driver will call cdnsp_halt_endpoint in which
+it changes the "hardware" and  "software" endpoint state
+to EP_STOPPED/EP_STATE_STOPPED.
 
+So for SSP the extra code:
+		pep->ep_state &=3D ~EP_HALTED;
+		pep->ep_state |=3D EP_STOPPED;
+will not change anything
+
+Pawel
+
+>
+>Peter
+>>  	}
+>>
+>>  	/*
+>> diff --git a/drivers/usb/cdns3/cdnsp-gadget.h
+>> b/drivers/usb/cdns3/cdnsp-gadget.h
+>> index 2afa3e558f85..a91cca509db0 100644
+>> --- a/drivers/usb/cdns3/cdnsp-gadget.h
+>> +++ b/drivers/usb/cdns3/cdnsp-gadget.h
+>> @@ -987,6 +987,12 @@ enum cdnsp_setup_dev {
+>>  #define STREAM_ID_FOR_TRB(p)		((((p)) << 16) & GENMASK(31,
+>16))
+>>  #define SCT_FOR_TRB(p)			(((p) << 1) & 0x7)
+>>
+>> +/*
+>> + * Halt Endpoint Command TRB field.
+>> + * The ESP bit only exists in the SSP2 controller.
+>> + */
+>> +#define TRB_ESP				BIT(9)
+>> +
+>>  /* Link TRB specific fields. */
+>>  #define TRB_TC				BIT(1)
+>>
+>> diff --git a/drivers/usb/cdns3/cdnsp-ring.c
+>> b/drivers/usb/cdns3/cdnsp-ring.c index fd06cb85c4ea..d397d28efc6e
+>> 100644
+>> --- a/drivers/usb/cdns3/cdnsp-ring.c
+>> +++ b/drivers/usb/cdns3/cdnsp-ring.c
+>> @@ -2483,7 +2483,8 @@ void cdnsp_queue_halt_endpoint(struct
+>> cdnsp_device *pdev, unsigned int ep_index)  {
+>>  	cdnsp_queue_command(pdev, 0, 0, 0, TRB_TYPE(TRB_HALT_ENDPOINT)
+>|
+>>  			    SLOT_ID_FOR_TRB(pdev->slot_id) |
+>> -			    EP_ID_FOR_TRB(ep_index));
+>> +			    EP_ID_FOR_TRB(ep_index) |
+>> +			    (!ep_index ? TRB_ESP : 0));
+>>  }
+>>
+>>  void cdnsp_force_header_wakeup(struct cdnsp_device *pdev, int
+>> intf_num)
+>> --
+>> 2.43.0
+>>
+>
+>--
+>
+>Best regards,
+>Peter
