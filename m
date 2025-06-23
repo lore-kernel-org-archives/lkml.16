@@ -1,59 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6447262F
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 17:38:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7632BD010
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 17:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750700336; cv=none; b=s3ad4RD+PmMqmeFVJILMYCl4plrK9/goAQzeZEmctogBzzID9djI3ytNJQ5F9KdJZxUge0N7rJUi71BcrOdCxDgLKLbV4B2OfD/DsAdXCNLaun8R3mf41MWQNLngDxjKOasdjLkWxwIaOI8s4YTdUv765s8rwAGYT8J9/8SaxBw=
+	t=1750700355; cv=none; b=ovmv0OrayaYlo3Q/nldALNvCtUNh3pVF1Q96iBRygLjoUjRxrj9eigQJnbmT1zeUYnQgd7X8klwfe8m8kKsj6eYU6hFLh+XgRagnla4CiZepP74/CyVta3W34Ts4P0mHRthI/Br112OKbQvTj1KrodJTRV049712rOYXQ5bVeNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750700336; c=relaxed/simple;
-	bh=w7fAhpsEqLdl8TuUCarpRODVHWlOqY93FGWAptkMNz4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=MjpAIT5jSwUF6p4H9WdKablU5F+3MVTLgT0kRAiJgTZZIVydWF0aCahikscUQRp8CyKiVWmf/IpzRtCKf9AzFofhiRAxPcFMVpDq3nL30Vry4KjkYQeOQtlh3UTNa/IRULc/QZHD+1jDALdi4GWC+Q3I4JQNHQDJEDFmanwQ/RQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JQi1BdEy; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750700355; c=relaxed/simple;
+	bh=L72s/UX6NmmXgLtNIT/BbsHV/TknVK5T0Q1W2uVpaO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IDXo4O+SMq78Wms9HpE1cM6IL7LT3ZH/Tu8rVThQrHA1FiLRsgWWuaJh2R60crlR7B5hwGzTOvHCKm8IgZ3BNBNMjn8EST79HJH5VbBLqF2QiCR+QM9zo4Ulpk+DJKynnJUUDxVMYe7o+gPVHJtrHCXLz7fqDJ9YnxrIEeXL+Wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qAk6fezc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JQi1BdEy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750700334; x=1782236334;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=w7fAhpsEqLdl8TuUCarpRODVHWlOqY93FGWAptkMNz4=;
-  b=JQi1BdEy1UlviUKojNqTDV4U+jJdYTfYfIJCUjmrRCngCXybO0PQVwWt
-   o6t3gTVuNOh3mSsjcVHxa/CxO73Kl0bLpFDZYxustbahSX/yrJDBqnca3
-   FUMtVif5vpdNCMW0ITH1FnkAj5jObHQUOUUCZJeN+CsOHCv55XgamBe89
-   Y4S7ET9M7tSei1i7RjUGM5iX0+u9IsXsFFRRLOfNOyHjLhvzas38mJvqk
-   SoOVTccCurT2ZHMjsZ9tAHwrTMEF6iEt/eexV4Jr9pczvwl3ya2Yi1756
-   KbKdR3AkfZa5JRdI6e3RwikF+WZnSKW9pthbIclLicFV8wSE9NIuJGe0p
-   g==;
-X-CSE-ConnectionGUID: KiiHsm/8SCGjg3Ns3mX+wA==
-X-CSE-MsgGUID: JfccxRz1ScWU77aEyvXvkw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="64349414"
-X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
-   d="scan'208";a="64349414"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 10:38:54 -0700
-X-CSE-ConnectionGUID: F+5CatMISSSnfBdTZNbbbw==
-X-CSE-MsgGUID: QpZGA2f/TvK9TPR1Im6phQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
-   d="scan'208";a="151836099"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 23 Jun 2025 10:38:52 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uTl85-000PAQ-35;
-	Mon, 23 Jun 2025 17:38:49 +0000
-Date: Tue, 24 Jun 2025 01:38:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: lib/crypto/sm3.c:169:6: warning: stack frame size (1200) exceeds
- limit (1024) in 'sm3_block_generic'
-Message-ID: <202506240133.iBttMRY7-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qAk6fezc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E08A5C4CEEA;
+	Mon, 23 Jun 2025 17:39:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750700354;
+	bh=L72s/UX6NmmXgLtNIT/BbsHV/TknVK5T0Q1W2uVpaO4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qAk6fezcIbpY5XtQ5Fa9vePm8ZcxhWYQwp09Fjm7wHzTKPrjeI2fcqq4nwjbx9z7f
+	 jLWBBwiGu4Ff5tPNfE7j6/8RoVyI+0RITpNHG4uyWzcw0H0tCDTWukYnV4msR1uYqZ
+	 tz7/54B2a9pWkHvbOoOBZrhuxpYyo26GthA6+vVe1meBPtYrsvEx9HhMc15fDMrJdE
+	 G6duTnBRVkyuLYicEJe81UuITob5606BZnfMV/XksHka/1cnUUv+k+K7vGkrS5NZv2
+	 +0eMfzhyLZtmF2JW1VSiTVKoHu93/ITHzmW2yUpcowDLuvBvHu7H7IS3OCS5LwUNO4
+	 9Kt6FNN9TI71A==
+Date: Mon, 23 Jun 2025 07:39:12 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Waiman Long <llong@redhat.com>
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH 02/27] sched/isolation: Introduce housekeeping per-cpu
+ rwsem
+Message-ID: <aFmRQLv2RWbqX01b@slm.duckdns.org>
+References: <20250620152308.27492-1-frederic@kernel.org>
+ <20250620152308.27492-3-frederic@kernel.org>
+ <3bf95ee2-1340-41b1-9f5c-1563f953c6eb@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,45 +50,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <3bf95ee2-1340-41b1-9f5c-1563f953c6eb@redhat.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   86731a2a651e58953fc949573895f2fa6d456841
-commit: cb16ba46958e41f8d805cbdb027a601b3a0c65b4 crypto: lib/sm3 - Export generic block function
-date:   10 weeks ago
-config: riscv-allmodconfig (https://download.01.org/0day-ci/archive/20250624/202506240133.iBttMRY7-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 875b36a8742437b95f623bab1e0332562c7b4b3f)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506240133.iBttMRY7-lkp@intel.com/reproduce)
+Hello,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506240133.iBttMRY7-lkp@intel.com/
+On Mon, Jun 23, 2025 at 01:34:58PM -0400, Waiman Long wrote:
+> On 6/20/25 11:22 AM, Frederic Weisbecker wrote:
+> > The HK_TYPE_DOMAIN isolation cpumask, and further the
+> > HK_TYPE_KERNEL_NOISE cpumask will be made modifiable at runtime in the
+> > future.
+> > 
+> > The affected subsystems will need to synchronize against those cpumask
+> > changes so that:
+> > 
+> > * The reader get a coherent snapshot
+> > * The housekeeping subsystem can safely propagate a cpumask update to
+> >    the susbsytems after it has been published.
+> > 
+> > Protect against readsides that can sleep with per-cpu rwsem. Updates are
+> > expected to be very rare given that CPU isolation is a niche usecase and
+> > related cpuset setup happen only in preparation work. On the other hand
+> > read sides can occur in more frequent paths.
+> > 
+> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> 
+> Thanks for the patch series and it certainly has some good ideas. However I
+> am a bit concern about the overhead of using percpu-rwsem for
+> synchronization especially when the readers have to wait for the completion
+> on the writer side. From my point of view, during the transition period when
+> new isolated CPUs are being added or old ones being removed, the reader will
+> either get the old CPU data or the new one depending on the exact timing.
+> The effect the CPU selection may persist for a while after the end of the
+> critical section.
+> 
+> Can we just rely on RCU to make sure that it either get the new one or the
+> old one but nothing in between without the additional overhead?
 
-All warnings (new ones prefixed by >>):
+So, I had a similar thought - ie. does this need full interlocking so that
+when the modification operation can wait for existing users to drain? It'd
+be nice to explain that part a bit more. That said, percpu_rwsem read path
+is pretty cheap, so if that is a requirement, I doubt the overhead
+difference between RCU access and percpu read locking would make meaningful
+difference.
 
->> lib/crypto/sm3.c:169:6: warning: stack frame size (1200) exceeds limit (1024) in 'sm3_block_generic' [-Wframe-larger-than]
-     169 | void sm3_block_generic(struct sm3_state *sctx, u8 const *data, int blocks)
-         |      ^
-   1 warning generated.
-
-
-vim +/sm3_block_generic +169 lib/crypto/sm3.c
-
-   168	
- > 169	void sm3_block_generic(struct sm3_state *sctx, u8 const *data, int blocks)
-   170	{
-   171		u32 W[16];
-   172	
-   173		do {
-   174			sm3_transform(sctx, data, W);
-   175			data += SM3_BLOCK_SIZE;
-   176		} while (--blocks);
-   177	
-   178		memzero_explicit(W, sizeof(W));
-   179	}
-   180	EXPORT_SYMBOL_GPL(sm3_block_generic);
-   181	
+Thanks.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+tejun
