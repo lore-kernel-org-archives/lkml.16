@@ -1,118 +1,241 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02DB622FE17
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E63233701
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750675826; cv=none; b=FCwott9Rr2cUjvuLNQuLFvZd1pl2ViyulN9/NgX8PJWaBE5sr9sBLdEJ2TIK4lRM9Q2BnDK9keWSVrNs6G94Nl7dZngycsMIao+sRTZgZUQ60RamkrFufxn/QNp5COsoKjsKDmjMwh0kzdXNk/jcrCDdTgUijMh9+UCUp9kSRj8=
+	t=1750675842; cv=none; b=ICj8RWX9Byc9rDKtTN9TE3Gds7LCQ9id/qGW+Pwk29+lT3WeGJkyN+MVXlEfJquV/KQo0XXNRZaEUtW0/zIlpcVDWDHbddKlnqwjt/AYfw0Nr2gYxSi5fzEg927JViHKPEjTCUR8a5wGfbUYeb04x2De9jO/avSlaKW62nSsa64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750675826; c=relaxed/simple;
-	bh=TMhuI8oyTSVxw9bC+sp9sw5qCfSwlWgIVLQsz6K/PlY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iwH2vk+XlyH5+j5poVR3a1GJtrI7A1MDAieCkiGxJdYqclomvhRkPjhSARUcc4peMQG3goAD5nkrS3uWMrvj9VmGkqCJvwMCUNACmaCoTvcIQdnJIsUCZH3EqSMMtkf+tLSqxTrwQtmPRUjWdRIWd/z4wlElVdm23QyqCB5ZIhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=neuq9Jjx; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750675842; c=relaxed/simple;
+	bh=rk3IUXQZtzpNgDHc4TWz8qsml0b4el8IWm2S5mzHUtg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=MKgXd2ZHzecoACWGwzv7i2zDxa/o5iCmciwpNrp2upL7bOhMto4tZzfXx32sDRklN3lo8fwewToMDJ8jT4WTP2SvElq9gOxRZXH4EWqI811x3sricg2fFUDO1EtTg0oySdmDZseyoPIa19xemLYeZZ1OBBfHL8Hb3pCVSzZlo5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=hTz1h2yI; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="neuq9Jjx"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-45363645a8eso22968785e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 03:50:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750675821; x=1751280621; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m08zWEvJfz/USiHAalcZNBUXJ7ks7hFL+IV7NJ3Oxxk=;
-        b=neuq9JjxqU1xexPv4Ifsv6k63Uzb2tGUjK67ZY1d8olgPhUNdXQOVFK5NM0taocIgz
-         2AxFWNSyg3hU/AhqWqhgwnJe2QUm85gUv/CqLjVXHHfVBBkM8fesWjzDkaSx+qAMm4lW
-         N8og2V5kDGDscqKaUgNwd4oA1HNHDvFdW6nT3QD3wKACR9TcXdqB6LJnLhgA1eRt0CXm
-         3VBwSoVu5g93tZ8NrQ0TJsSUQVJMld06hUu9e6TmAOxIYDqNoWsfQkr2ZHMrVvLJaXc/
-         9PYjhfwGGnlTOq6jMVsBPDbNUIH2qNpUrRyU+RNDv6MkWzcOcoAtPcNWdzi15ReFBOFM
-         s1MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750675821; x=1751280621;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m08zWEvJfz/USiHAalcZNBUXJ7ks7hFL+IV7NJ3Oxxk=;
-        b=eqvApwhl7FMyZ4RdVdAuJRKu8L6UW9r64WUB8PdnBBBTXsO7U+BfBijRwOYqEbtksS
-         tVn8GBaaSjGrCXQVl6qAsUumjCru9GJlFPDSNU1MU0pquXLORH1GCdnQlamsdPE51lNm
-         tbNWJJwpsLEsFdc1LBB+7iuC92b3omnTR1bEfOC7PY7U12MUPqrf48/SZ3MeTQEUPYkO
-         ia7Lh6XipWHoXHG5kndd5ndOfaYf141LHzE/ulg2o7G8boXWf7SFEA+YwLD+1SkdFH7y
-         WpRymMEipwkHNDYzqNniGRkvqXVnKkWyhnrHPbK+wX0O5wPFrujv5WLNDqXYzw0j+zz+
-         WaDw==
-X-Forwarded-Encrypted: i=1; AJvYcCV9Ih9J/6mV5bJ7f+5kqWF/DXKpNJWbDRA6892iMFIBnQhYFx8TGD7T0De3hatKamllHnsvY57THANBeM0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOyH38QoypmdjNhpHnDRFa4eGxJ9H+te3f6qFevsXuEn/pxdKp
-	W5vz093SFABZeS/PkkRk4Fgbb0q4fRX9JJvbue4sbqmdJgU3VjikCou7
-X-Gm-Gg: ASbGncsvyZpPCMSfibp/Y62/wirQg9Zc1lYQJcqVg8Hqif5v/EddQLsMB9Zl1/zUp4t
-	DgVtDsMdaLyQY/XqfgSNBjwJrth8bUaZDQPTgUV3EQNe2SkuXTksx4klWdzgQ1xwdeEhDcOQdMO
-	vREVe1teL/t9iSW/zYW2vHdGjJAE90rODWqfvCbmWakAT6wgy5D78QQzJywlUMzRRn3hQf1GsKy
-	8Deez/XQDlCY3KSH8Aa2YlZc6jbjyY0uhfRp6SQlGwnTUwcFdy/8Z6aa4ndXLr2pzxirhrLzg9e
-	fpypUyF8dDfrf4YdDgBzq+q4GErXcSEUUTXo2ZGoAFjKLPn/Uza9ukuSkZePrheFsJ9UcSE41cB
-	bmKvrCds/wByP7RgVWDGGxX/1
-X-Google-Smtp-Source: AGHT+IEp4jMR6u+d1seVukmVVWep1jFCD0YNNzWaNs/T8+Bt7/CO4kjMWT6zCDPPwvwNBaZwfFxNRQ==
-X-Received: by 2002:a05:600c:6995:b0:450:d367:c385 with SMTP id 5b1f17b1804b1-453658ba6c1mr103607175e9.16.1750675821079;
-        Mon, 23 Jun 2025 03:50:21 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d117c03asm9004137f8f.49.2025.06.23.03.50.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 03:50:20 -0700 (PDT)
-Date: Mon, 23 Jun 2025 11:50:19 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Rik van Riel <riel@surriel.com>
-Cc: Nadav Amit <nadav.amit@gmail.com>, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, dave.hansen@linux.intel.com, luto@kernel.org,
- peterz@infradead.org, bp@alien8.de, x86@kernel.org, seanjc@google.com,
- tglx@linutronix.de, mingo@kernel.org, Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: Re: [RFC PATCH v4 5/8] x86/mm: Introduce Remote Action Request
-Message-ID: <20250623115019.6a750e10@pumpkin>
-In-Reply-To: <49eee1cb79b75b02b8ed19a7f6d39e1ee8fae171.camel@surriel.com>
-References: <20250619200442.1694583-1-riel@surriel.com>
-	<20250619200442.1694583-6-riel@surriel.com>
-	<6f9d7c86-9faf-48a0-b7b9-d58bb21ce948@gmail.com>
-	<49eee1cb79b75b02b8ed19a7f6d39e1ee8fae171.camel@surriel.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="hTz1h2yI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1750675841; x=1782211841;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=rk3IUXQZtzpNgDHc4TWz8qsml0b4el8IWm2S5mzHUtg=;
+  b=hTz1h2yIhN2SwkME+BwW05g2vGeZCX8/KqXMJkibFqTyyFsP+wEbzFpJ
+   GwapiSJMpYyMG6dVON6PKH/3taXO4OtTr7I9TLdydckZkzI43qJiqlsEr
+   Y7wU0UZbFYzyNbVONp43ylLpm+4W1bg2DfaRZlDFByfFGkhSCJR37qIak
+   GVnFjFqNNfmivX4kbaWLhz5xHFXC5yOiWdX5gSj8ax9iXaZKB69DJz/XI
+   Qwm4aljjmRa3crW47KopsbGOuspssrr55sQRRsuPqJOyZUZS+33qfwIwx
+   ueTcu8UAU/XkfsHVWpI9RHfmzkHaW1k0djtZCoOjwQsvkDXFD/n2Zk+Zc
+   A==;
+X-CSE-ConnectionGUID: 6bSZM/9OSRy4OCnNpkPakQ==
+X-CSE-MsgGUID: Tgjy0TvIRPGqMZ48FubJyg==
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="43105617"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Jun 2025 03:50:34 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Mon, 23 Jun 2025 03:50:29 -0700
+Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Mon, 23 Jun 2025 03:50:23 -0700
+From: Dharma Balasubiramani <dharma.b@microchip.com>
+Date: Mon, 23 Jun 2025 16:20:20 +0530
+Subject: [PATCH v2] drm/bridge: microchip-lvds: fix bus format mismatch
+ with VESA displays
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20250623-microchip-lvds-v2-1-8ecbabc6abc4@microchip.com>
+X-B4-Tracking: v=1; b=H4sIAGsxWWgC/3WMzQ7CIBCEX6XZsxiWSH889T1MDwirbGJLA4ZoG
+ t5d7MGbmdM3mfk2SBSZEpybDSJlThyWCurQgPVmuZNgVxmUVFq22IuZbQzW8yoe2SVx7VCjG1o
+ 5nAzU0xrpxq9deJkqe07PEN+7P+O3/avKKGrIkDbWdaZX429wtGGGqZTyARMRUnewAAAA
+To: Manikandan Muralidharan <manikandan.m@microchip.com>, Andrzej Hajda
+	<andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+	"Robert Foss" <rfoss@kernel.org>, Laurent Pinchart
+	<Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, "Jernej
+ Skrabec" <jernej.skrabec@gmail.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+	"Sandeep Sheriker M" <sandeep.sheriker@microchip.com>, Dharma Balasubiramani
+	<dharma.b@microchip.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750675822; l=5514;
+ i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
+ bh=ERy9vkRv7sHUQQmIkZ0cGBnXyaHHcDyCGdJs2X5F8fM=;
+ b=4vUlMxxV3nHZ8s98H7ds6voTow3QFAke4gVDuv5SfegGyEHrzY6jfkPNKdnGAJHNEehNMSiPG
+ NvBJA9kJLOVBiX2Yl0L1gto5vHX75OEYAEvDM5tqYg/u7fxCvy1AxK5
+X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
+ pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
 
-On Thu, 19 Jun 2025 21:10:47 -0400
-Rik van Riel <riel@surriel.com> wrote:
+From: Sandeep Sheriker M <sandeep.sheriker@microchip.com>
 
-> On Fri, 2025-06-20 at 02:01 +0300, Nadav Amit wrote:
-> >   
-> > > +/*
-> > > + * Reduce contention for the RAR payloads by having a small number
-> > > of
-> > > + * CPUs share a RAR payload entry, instead of a free for all with
-> > > all CPUs.
-> > > + */
-> > > +struct rar_lock {
-> > > +	union {
-> > > +		raw_spinlock_t lock;
-> > > +		char __padding[SMP_CACHE_BYTES];
-> > > +	};
-> > > +};  
-> > 
-> > I think you can lose the __padding and instead have 
-> > ____cacheline_aligned (and then you won't need union).
-> >   
-> I tried that initially, but the compiler was unhappy
-> to have __cacheline_aligned in the definition of a
-> struct.
+The LVDS controller was hardcoded to JEIDA mapping, which leads to
+distorted output on panels expecting VESA mapping.
 
-You should be able to put it onto the first structure member.
-(Which would match the normal use.)
+Update the driver to dynamically select the appropriate mapping and
+pixel size based on the panel's advertised media bus format. This
+ensures compatibility with both JEIDA and VESA displays.
 
-The padding doesn't have the same effect.
-Even for rar_lock[] the first entry will share with whatever
-comes before, and the padding on the last entry just isn't used.
+Modernize the bridge ops to use atomic_enable/disable, and retrieve
+the bus format from the connector via the atomic bridge state.
 
-	David
+Signed-off-by: Sandeep Sheriker M <sandeep.sheriker@microchip.com>
+Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+---
+Note: Tested the changes on newvision 10.1 VESA display.
+
+Changes in v2:
+- Switch to atomic bridge functions
+- Drop custom connector creation
+- Use drm_atomic_get_new_connector_for_encoder()
+- Link to v1: https://lore.kernel.org/r/20250618-microchip-lvds-v1-1-1eae5acd7a82@microchip.com
+---
+ drivers/gpu/drm/bridge/microchip-lvds.c | 64 +++++++++++++++++++++++++++------
+ 1 file changed, 54 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/microchip-lvds.c b/drivers/gpu/drm/bridge/microchip-lvds.c
+index 9f4ff82bc6b4..b71478aa36e9 100644
+--- a/drivers/gpu/drm/bridge/microchip-lvds.c
++++ b/drivers/gpu/drm/bridge/microchip-lvds.c
+@@ -11,6 +11,7 @@
+ #include <linux/component.h>
+ #include <linux/delay.h>
+ #include <linux/jiffies.h>
++#include <linux/media-bus-format.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/of_graph.h>
+ #include <linux/pinctrl/devinfo.h>
+@@ -41,9 +42,11 @@
  
+ /* Bitfields in LVDSC_CFGR (Configuration Register) */
+ #define LVDSC_CFGR_PIXSIZE_24BITS	0
++#define LVDSC_CFGR_PIXSIZE_18BITS	1
+ #define LVDSC_CFGR_DEN_POL_HIGH		0
+ #define LVDSC_CFGR_DC_UNBALANCED	0
+ #define LVDSC_CFGR_MAPPING_JEIDA	BIT(6)
++#define LVDSC_CFGR_MAPPING_VESA		0
+ 
+ /*Bitfields in LVDSC_SR */
+ #define LVDSC_SR_CS	BIT(0)
+@@ -76,9 +79,10 @@ static inline void lvds_writel(struct mchp_lvds *lvds, u32 offset, u32 val)
+ 	writel_relaxed(val, lvds->regs + offset);
+ }
+ 
+-static void lvds_serialiser_on(struct mchp_lvds *lvds)
++static void lvds_serialiser_on(struct mchp_lvds *lvds, u32 bus_format)
+ {
+ 	unsigned long timeout = jiffies + msecs_to_jiffies(LVDS_POLL_TIMEOUT_MS);
++	u8 map, pix_size;
+ 
+ 	/* The LVDSC registers can only be written if WPEN is cleared */
+ 	lvds_writel(lvds, LVDSC_WPMR, (LVDSC_WPMR_WPKEY_PSSWD &
+@@ -93,11 +97,24 @@ static void lvds_serialiser_on(struct mchp_lvds *lvds)
+ 		usleep_range(1000, 2000);
+ 	}
+ 
++	switch (bus_format) {
++	case MEDIA_BUS_FMT_RGB666_1X7X3_SPWG:
++		map = LVDSC_CFGR_MAPPING_JEIDA;
++		pix_size = LVDSC_CFGR_PIXSIZE_18BITS;
++		break;
++	case MEDIA_BUS_FMT_RGB888_1X7X4_SPWG:
++		map = LVDSC_CFGR_MAPPING_VESA;
++		pix_size = LVDSC_CFGR_PIXSIZE_24BITS;
++		break;
++	default:
++		map = LVDSC_CFGR_MAPPING_JEIDA;
++		pix_size = LVDSC_CFGR_PIXSIZE_24BITS;
++		break;
++	}
++
+ 	/* Configure the LVDSC */
+-	lvds_writel(lvds, LVDSC_CFGR, (LVDSC_CFGR_MAPPING_JEIDA |
+-				LVDSC_CFGR_DC_UNBALANCED |
+-				LVDSC_CFGR_DEN_POL_HIGH |
+-				LVDSC_CFGR_PIXSIZE_24BITS));
++	lvds_writel(lvds, LVDSC_CFGR, (map | LVDSC_CFGR_DC_UNBALANCED |
++		    LVDSC_CFGR_DEN_POL_HIGH | pix_size));
+ 
+ 	/* Enable the LVDS serializer */
+ 	lvds_writel(lvds, LVDSC_CR, LVDSC_CR_SER_EN);
+@@ -113,7 +130,8 @@ static int mchp_lvds_attach(struct drm_bridge *bridge,
+ 				 bridge, flags);
+ }
+ 
+-static void mchp_lvds_enable(struct drm_bridge *bridge)
++static void mchp_lvds_atomic_pre_enable(struct drm_bridge *bridge,
++					struct drm_atomic_state *state)
+ {
+ 	struct mchp_lvds *lvds = bridge_to_lvds(bridge);
+ 	int ret;
+@@ -129,11 +147,35 @@ static void mchp_lvds_enable(struct drm_bridge *bridge)
+ 		dev_err(lvds->dev, "failed to get pm runtime: %d\n", ret);
+ 		return;
+ 	}
++}
++
++static void mchp_lvds_atomic_enable(struct drm_bridge *bridge,
++				    struct drm_atomic_state *state)
++{
++	struct mchp_lvds *lvds = bridge_to_lvds(bridge);
++	struct drm_connector *connector;
++
++	/* default to jeida-24 */
++	u32 bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA;
++
++	connector = drm_atomic_get_new_connector_for_encoder(state, bridge->encoder);
++	if (connector && connector->display_info.num_bus_formats)
++		bus_format = connector->display_info.bus_formats[0];
++
++	lvds_serialiser_on(lvds, bus_format);
++}
++
++static void mchp_lvds_atomic_disable(struct drm_bridge *bridge,
++				     struct drm_atomic_state *state)
++{
++	struct mchp_lvds *lvds = bridge_to_lvds(bridge);
+ 
+-	lvds_serialiser_on(lvds);
++	/* Turn off the serialiser */
++	lvds_writel(lvds, LVDSC_CR, 0);
+ }
+ 
+-static void mchp_lvds_disable(struct drm_bridge *bridge)
++static void mchp_lvds_atomic_post_disable(struct drm_bridge *bridge,
++					  struct drm_atomic_state *state)
+ {
+ 	struct mchp_lvds *lvds = bridge_to_lvds(bridge);
+ 
+@@ -143,8 +185,10 @@ static void mchp_lvds_disable(struct drm_bridge *bridge)
+ 
+ static const struct drm_bridge_funcs mchp_lvds_bridge_funcs = {
+ 	.attach = mchp_lvds_attach,
+-	.enable = mchp_lvds_enable,
+-	.disable = mchp_lvds_disable,
++	.atomic_pre_enable = mchp_lvds_atomic_pre_enable,
++	.atomic_enable = mchp_lvds_atomic_enable,
++	.atomic_disable = mchp_lvds_atomic_disable,
++	.atomic_post_disable = mchp_lvds_atomic_post_disable,
+ };
+ 
+ static int mchp_lvds_probe(struct platform_device *pdev)
+
+---
+base-commit: 4325743c7e209ae7845293679a4de94b969f2bef
+change-id: 20250618-microchip-lvds-b7151d96094a
+
+Best regards,
+-- 
+Dharma Balasubiramani <dharma.b@microchip.com>
+
