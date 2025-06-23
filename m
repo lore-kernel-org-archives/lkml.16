@@ -1,80 +1,59 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C8446BF;
-	Mon, 23 Jun 2025 18:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0875F1E1A05;
+	Mon, 23 Jun 2025 18:48:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750704462; cv=none; b=WxVpFFG4yWQ/EGolh5GQ6YgmLGfwD9w8/vX9xqPX3b7kya44fVP5DI+yxHv/UQQ8U9TnITpBSpCEU18+YalzV+0Lho5QL+TngXU6ukvZSA3pQuy/u5yXz0jUxl6aD9Bq0iiPG7nCkKdWNMp5eJP/F0Fpt3GvskpKn+WTdkKHRAY=
+	t=1750704488; cv=none; b=cv1z4AlAHqgjy/pF+jpVC/t1cwXUVgkoKyzCIGY3Ms2IiRB5QexGQO9R86GH0v4wwFKYFIYrowKamvpS3MTDvtBNqKusK1VQJMglxEFwUG+MCOfUA0rHD9NcwvSebV6c0rTFSHkZvKje+q5FnJEtcWCQ8IKGWmmQg8mncO6w4pM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750704462; c=relaxed/simple;
-	bh=3rshOR7CPuXyaGwHcakcso417Fg4JBCnCi4RyECR8xI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SkLZpchcAMDsTbwSkblG+hqnE9w88fICywrzcGAGV89vDGRZnbw5FCwq1DS0WVUxllItKcYMWwvSrsVAFcnVLLho5mWEoR6MLKjXTAjo6VjzPO/yGkyPN429k+r0blfyXAPJvuxTb2V0dOzvI96YyhP9+UgjpO0wHpYUzrA+tKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XsFDKzkJ; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750704488; c=relaxed/simple;
+	bh=GY8tIufr4Hd6SlZygWeAkfnwAyZfajXtBmdtfEVITZg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HQQ5n6s/4yRS+EoBlr1vobdQ5CMPzfgDYGIuk9PP9Iz31QfJvU3517b3OL7apr/y6ufLWqjRXGO+5kRiCjV/FZ0D7bjlF0232w9/afbLLjrZFWHpewh0pHqxdYhWmgLkO5vfXpkbjbWs3rq3WQyUnxtYBT4jNPalUY8cam37Xi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MSvgL1q5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XsFDKzkJ"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-236377f00a1so42367575ad.3;
-        Mon, 23 Jun 2025 11:47:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750704460; x=1751309260; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lX1PV8eCj+w6gmSly9JqA8eydGEbPW07Za33Kr6VYKg=;
-        b=XsFDKzkJbXZnydEav58Q+qn0vjRH4WgC2zpjMg8QNLUtPuJJ3MOz/n4z4je7ZZuExG
-         m6f9HmS+H/CKAEGaVa+Jq+fUZ7WzLd9RiRCRQm7a0iriCioO1rH/eBb2/lbclurMChgb
-         o0WDSow9uvtAI6MbgD8bBwxpesesc7NLjdGg4ixknWj0NUE/0h+IPJDV0P+tCnqx4kr5
-         sjgNSvFMdvo4Xr1TsVl2nBIjx3pmCR43gk41BRbDAqaNlsYM9o7DM8wE4k0P6aQZPCjM
-         +Siq7xQCvpKJvoBQ2WBGssdMvLHztNdnoBTtBh3WPsHaHJM16RYOEmiZOk1axBgedGXf
-         DvCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750704460; x=1751309260;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lX1PV8eCj+w6gmSly9JqA8eydGEbPW07Za33Kr6VYKg=;
-        b=cI3iV8Ww52UW3z5YGlNhWQ70UKRp+lg02Ke+t9Nnmvjiep9SWIIuT41KHVZ4ciyDmb
-         uW3+Z7JZh7xlmGpoELdAkttW+oyxW9YKHxPJUm4U/SoRTNVAIdf2Ora0YxFgk94JVPVW
-         AwjkrHuS55RtrkWCD0sKCnUAiWhsnV9gamEZsexRsa5xpJMFLwm9fMiv95H0SNYMkCgr
-         n+APsEv3OIhLwMpq8wxYY/X5ZE5ltomfW0y/aylKT4dlNJdYAPbXZ94C/S+3uM8lWr2S
-         34yxT7PWY0j6gkI7xazNkEzH9WNF4J24+Ed18baJDAy4glPZljTdvb1Xyxm442vh314e
-         MT8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWAGAdhd1uudTXtXcYoq/mjDQnd6rfFGjYLpNYEBYgLPraemANTeIPwA7TwAfwtFJVBgscGpcyIIsaYHVnk@vger.kernel.org, AJvYcCWeApr8ad0v/pEu6tMJbDIJWiefJ3ytgQeJnIXwfc8RONS/GHcLVPmSnsRWVLKbAxnCAj2nOVhV+Av1ox5H@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywv3M+UCTuIbOhxoerma4f0/IVej4yLIf75idWfsTEGd4gedfWx
-	+b1ouawJJ+M0XdqoVF4alZ3/ujtPuy5gsjaliYIPuYJ3FTnDvCg+/6o9
-X-Gm-Gg: ASbGncvhxRfqekTIbph/4lgvD01SspLZ8BbHSDjsiCJgya8UlRzdYLhSK3u6x5t21uI
-	BPUhiugjc6fGUSBqhw/KwvbCcaDgeKR/ykWdtQ8nGlU7h4K5/aE3jXWZ5jYkDN28vsBah4m+/bn
-	nZO9pg1O94+AxGq/B3i8eSy2xCPby5wNBlImUeM0to7DovUPVI3Rtnksk8WXSVz9LBf09DXKxbI
-	56d7d2tIDqgUAuul3egz5U1p8119cCsWgciUxNVV3M29H4WKYwgSEd1SLBD4SUGCy98Oc7+f1mJ
-	8XrlHrLfhdylEoXYPNqpSPgqqV/HzkaY36RXG3+8ETZvBD0hHo5RK1wxQoIZs/r8/17EInJhPwK
-	wduIz+cioFmmjXcVxZE7bCW/TPfE=
-X-Google-Smtp-Source: AGHT+IG+q7JDDjJJiD6LIsW+SwYhlGS8aClQvrcI6niGs17mM8MdIZ/h4GRG4ZubHXABG5IObcnk4g==
-X-Received: by 2002:a17:902:f64a:b0:235:6e1:3edf with SMTP id d9443c01a7336-237d9878c08mr226699925ad.34.1750704459951;
-        Mon, 23 Jun 2025 11:47:39 -0700 (PDT)
-Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:229b:2db5:edc5:d79f])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86150d8sm88037745ad.123.2025.06.23.11.47.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 11:47:39 -0700 (PDT)
-From: I Hsin Cheng <richard120310@gmail.com>
-To: robin.clark@oss.qualcomm.com
-Cc: lumag@kernel.org,
-	abhinav.kumar@linux.dev,
-	jessica.zhang@oss.qualcomm.com,
-	sean@poorly.run,
-	marijn.suijten@somainline.org,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	shuah@kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	I Hsin Cheng <richard120310@gmail.com>
-Subject: [RFC PATCH] drm/msm: Remove dead code in msm_ioctl_gem_submit()
-Date: Tue, 24 Jun 2025 02:47:34 +0800
-Message-ID: <20250623184734.22947-1-richard120310@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MSvgL1q5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4790CC4CEEA;
+	Mon, 23 Jun 2025 18:48:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750704487;
+	bh=GY8tIufr4Hd6SlZygWeAkfnwAyZfajXtBmdtfEVITZg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MSvgL1q5wZGV5IyyqUmlkvkUm7K0i8jPT1haS86qUQi+Kq92/DOHXePlD9lPVaMss
+	 oQYDZSms3mw8PVeDaBUngX0e49Q+iWyDeaVhFCQktYG5ShQLIIXNVyUuf3M1OkB7U+
+	 Q2hXfc1EfR7RP1vMRaq+T97sMyMwsLxxFVM3HWADNlMK4KlXkOwJF6PsUAKkPd/RWw
+	 Vx+YKnTT9vgkxhmRUykmTqyXw9/sGEqyXM2FGvCJN4DjBfeEBsqn3Vc8UFAvAQ72rw
+	 GczZPRxH0XE/cp9RLMf0oOOZX/ZrTwU4w2UB4IONrlDYWh57Sc82zUzdX5vm6XUIhq
+	 Yhc7XqWstP+RA==
+From: Mario Limonciello <superm1@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Lukas Wunner <lukas@wunner.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+	linux-kernel@vger.kernel.org (open list),
+	iommu@lists.linux.dev (open list:INTEL IOMMU (VT-d)),
+	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+	kvm@vger.kernel.org (open list:VFIO DRIVER),
+	linux-sound@vger.kernel.org (open list:SOUND),
+	Daniel Dadap <ddadap@nvidia.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v4 0/8] Adjust fbcon console device detection
+Date: Mon, 23 Jun 2025 13:47:49 -0500
+Message-ID: <20250623184757.3774786-1-superm1@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -84,29 +63,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-According to the report of Coverity Scan [1], "sync_file" is going to be
-NULL when entering the "if" section after "out_post_unlock", so
-"fput(sync_file->file)" is never going to be exected in this block.
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-[1]: https://scan5.scan.coverity.com/#/project-view/10074/10063?selectedIssue=1655089
-Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
----
- drivers/gpu/drm/msm/msm_gem_submit.c | 2 --
- 1 file changed, 2 deletions(-)
+This series started out as changes to VGA arbiter to try to handle a case
+of a system with 2 GPUs that are not VGA devices [1].  This was discussed
+but decided not to overload the VGA arbiter for non VGA devices.
 
-diff --git a/drivers/gpu/drm/msm/msm_gem_submit.c b/drivers/gpu/drm/msm/msm_gem_submit.c
-index d4f71bb54e84..cba1dc6fe6c6 100644
---- a/drivers/gpu/drm/msm/msm_gem_submit.c
-+++ b/drivers/gpu/drm/msm/msm_gem_submit.c
-@@ -904,8 +904,6 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
- out_post_unlock:
- 	if (ret && (out_fence_fd >= 0)) {
- 		put_unused_fd(out_fence_fd);
--		if (sync_file)
--			fput(sync_file->file);
- 	}
- 
- 	if (!IS_ERR_OR_NULL(submit)) {
+Instead move the x86 specific detection of framebuffer resources into x86
+specific code that the fbcon can use to properly identify the primary
+device. This code is still called from the VGA arbiter, and the logic does
+not change there. To avoid regression default to VGA arbiter and only fall
+back to looking up with x86 specific detection method.
+
+In order for userspace to also be able to discover which device was the
+primary video display device create a new sysfs file 'boot_display'.
+
+Mario Limonciello (8):
+  PCI: Add helper for checking if a PCI device is a display controller
+  vfio/pci: Use pci_is_display()
+  vga_switcheroo: Use pci_is_display()
+  iommu/vt-d: Use pci_is_display()
+  ALSA: hda: Use pci_is_display()
+  Fix access to video_is_primary_device() when compiled without
+    CONFIG_VIDEO
+  PCI/VGA: Move check for firmware default out of VGA arbiter
+  PCI: Add a new 'boot_display' attribute
+
+ Documentation/ABI/testing/sysfs-bus-pci |  9 +++++++
+ arch/parisc/include/asm/video.h         |  2 +-
+ arch/sparc/include/asm/video.h          |  2 ++
+ arch/x86/include/asm/video.h            |  2 ++
+ arch/x86/video/video-common.c           | 13 ++++++++-
+ drivers/gpu/vga/vga_switcheroo.c        |  2 +-
+ drivers/iommu/intel/iommu.c             |  2 +-
+ drivers/pci/pci-sysfs.c                 | 14 ++++++++++
+ drivers/pci/vgaarb.c                    | 36 ++-----------------------
+ drivers/vfio/pci/vfio_pci_igd.c         |  3 +--
+ include/linux/pci.h                     | 15 +++++++++++
+ sound/hda/hdac_i915.c                   |  2 +-
+ sound/pci/hda/hda_intel.c               |  4 +--
+ 13 files changed, 63 insertions(+), 43 deletions(-)
+
+
+base-commit: 86731a2a651e58953fc949573895f2fa6d456841
 -- 
 2.43.0
 
