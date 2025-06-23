@@ -1,154 +1,191 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848552D4B68
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 20:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CB72D4B68
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 20:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750711341; cv=none; b=TUYNATW8DMXbDCOqtRzuDhOUQRAjAMapk9pnxeMOelsh7thi0Y//PHYbqmwzjR42qPXsd7VTZ0fkGm1OEDe/SQRP8W3U7BVm6VGr/nXHVEeHy8g04jU1UyRvApYv4w8GQotBNbsft6oH4KDu15TRIW8KOXyFbZ7Qp18BUGgXKdI=
+	t=1750711400; cv=none; b=qa3LdxndwZBrjg2G9JLg8v04ieqSTDMYfgSfcCruJpULZn+Q95jtoykR69Vz9UegIQqVc5n04zvB3/PQvA32mucplAlytpTgOGYOysvYy/eXyziIdpSE1uVbDKChCo3TIT9KRfHQnG7s1xtvsJcv+O8U6PJ9iJTCVjlvW2jzA4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750711341; c=relaxed/simple;
-	bh=Wmo/ZDyQ4ImKtrJP3QIyntQ5jCXk1PtVU098o5eDPqA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YyhRWiTnjw+7Z3fvZuyoUHRfY3z/ZViDFcy/BUZUUGrasuiW4ZdMgzl+jMpZBGJK4CqcrfgEg/Bm/sx+vjsyhPpSNRS2OJPlvuWM0xSIZeBpFGXb5FYEtak4hunuQ57E+5ioPAwHHQXHepGe9xg+PGD+vq3vHWvk669wlIIqdFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hr6g/a/6; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750711400; c=relaxed/simple;
+	bh=6qWV4n/s+Ygofk7+59+ZVlVkXNAfE9cXC/Y/ph37odU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ZpsCOMju2WvW2caqqd8vb11BHxv5dJx77TeeYMa/fnBbatKhDfeAIWmrVI+RrTWO48jY8YamO4GQJLT4in6ouvgcgl9ypMy6H1Ayo4g3Ps9Gx6PIZKtWonLkrPc6pEeWR1UxhgL+1DZn/RKR3nvpHvxqFCl0GKiAsp0CgbmemBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HXfm0txO; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hr6g/a/6"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-234f17910d8so41582675ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:42:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750711339; x=1751316139; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=R1GMvmqx8uhrSae96cG9GRQgWxsC+nfXg2Ck3Wi+fO4=;
-        b=hr6g/a/6Hz5cKvTnaYKuQvhItXW4utN6cIrjBV0s6IgKbXaxMfvRdPg9amqKsSuDnR
-         E56gA8qO9Obvda04CZRtRVAAzkwFm83y08SsyjNPlkS9BGKeguDakYhs0r4+uXhRh/Fo
-         63XUiCWBc7F3vrrvh59QMa2YJ5wYzqtgy375TelOD0An5kTv4T+Rl22JZWZnmnAnDwbX
-         rsaIWVk5ZzvSJC9rYkxd1WaSBhJj1iUcF3OvdG9JcklKyst1Aq+fufSL6dyZoP43lqCK
-         290h570Hkcj7RIBsEgwegyJRj8EC6OWAD401tlal4amSwKOe63JQ7UrHrwjMbUVnF21D
-         3vgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750711339; x=1751316139;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=R1GMvmqx8uhrSae96cG9GRQgWxsC+nfXg2Ck3Wi+fO4=;
-        b=LXs9ywhgaXP7AunQreAz/GhtFZLtWv3pHTaNIbrkIMzFQBXvJWfZFXl86LQqUSa9qu
-         8VWRT7vGZZBfBNDDwBBVBpLPaUG5vP9bTi4qi38OgYhgb+D2JTemJil6D4aXHsPJucOU
-         +j+96Btt46Nr424f6zogxjHGugy+/b/Ypd3bQDEJjHwKe7liT9Un9h5NXL1C5DrHYlZl
-         g3nSaluXGfBxHgH1Yb3iuKHHiIjafH7l7q12qapkaH5DOwfZbuo+zmhrnxmB7TmR+no4
-         6aKLmxSha44kHML0gGB0UbC948RhLPIpv0HyvmV+PU332XyFy8B623vV4FlIKTez/Q+N
-         F1og==
-X-Forwarded-Encrypted: i=1; AJvYcCWSbFLRwoPxc/ohmLCF0xGXaCEyq2gFF5hSueVSL9i8dSjsliA25jgVCEINp/ul7f8h/j0CTVPBDemF/L8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1nD2ETt+J7DSsLQTnDkx8fM/gwgKSBCFlNo7ALB0etFnlNS4S
-	tVf10Nvm1ASDncPp3TfrH98Ce25kurAvHgqGBgRxsiSUvDb0a0J4q3Wq4c1tZAOg5kd8mHI4uhX
-	jlHwUsZ1MLc4WSQc6QGeQoF8W5pX0mROQNlaWBNodQLjKdluW81bTeXHwag==
-X-Gm-Gg: ASbGncs/n+4YDYFopPXsKtn6YWZ/7VYj+5tTVLMG9Q48Qn7Hz2qZDHHnYGXIUfPLMA+
-	oMGaNzz0d90+Hz0hpudRR9V+Ol29RwATEAsilfWhuBvgdHwfjaagwfhr4gqldOwapeKZtUDsUDg
-	3EPeagC98f2N3jdyxgABKlJl0EEK4Czl3w0qyn7vfHV/Qt/3SvTAQZS81nnaTnwy+DgRBob0+3F
-	hlx
-X-Google-Smtp-Source: AGHT+IFldOr82kECNHRGpbqAwkSHs/i+CSLaKvpxnRfW9bQfBnUjG7vDZLwfLs8m8yr8Dg3Wptvso52CY6mHfjG5K6E=
-X-Received: by 2002:a17:90b:3bc5:b0:312:25dd:1c86 with SMTP id
- 98e67ed59e1d1-3159d8cf587mr24603693a91.18.1750711338873; Mon, 23 Jun 2025
- 13:42:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HXfm0txO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750711398; x=1782247398;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=6qWV4n/s+Ygofk7+59+ZVlVkXNAfE9cXC/Y/ph37odU=;
+  b=HXfm0txO5vQ7VYfXh5YGipXL/Bk83WmYm6+Zu3fQdKxSFunbtf5i/2Np
+   9TMY1ZOk0LPDx2SCrass1E1CBJ7b+uDeN9nNuPMrge2KFAf2HO57owG+F
+   v+fUV7qiBPdypmnXzFt2p8vMtC6+x8aXebNiZbfat3Ey4EC+EXnJd+/xq
+   DHxguXaWHWvMHslmd0gUxxs9tMs0VDBg0WRUYpihvHkSGI8satgAlACit
+   B3L3IFWd7eDx7lvbGrNyiTVd2pdHHKucoiwNA4LkU0uon8UrP6INNZl0x
+   5rp7wcQickABEyiYlIHsoA8LoQcpbw96GNc+3v5eRXuzx43TV/i5OC8ZJ
+   Q==;
+X-CSE-ConnectionGUID: iuFwHei0R5qJY7gf9LuF8A==
+X-CSE-MsgGUID: AiWDIk2FSqGSEF7L08kkzw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="40547169"
+X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
+   d="scan'208";a="40547169"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 13:43:18 -0700
+X-CSE-ConnectionGUID: XmGKx6MDQeKWnpxnO3YN/w==
+X-CSE-MsgGUID: xD9/NftyS22OUREWbVR8Tw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
+   d="scan'208";a="152218073"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 23 Jun 2025 13:43:15 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uTo0X-000PJw-0c;
+	Mon, 23 Jun 2025 20:43:13 +0000
+Date: Tue, 24 Jun 2025 04:43:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Junfeng Guo <junfeng.guo@intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Marcin Szycik <marcin.szycik@linux.intel.com>,
+	Qi Zhang <qi.z.zhang@intel.com>, Ahmed Zaki <ahmed.zaki@intel.com>
+Subject: drivers/net/ethernet/intel/ice/ice_parser.c:1231:34: warning: stack
+ frame size (1040) exceeds limit (1024) in 'ice_bst_tcam_table_get'
+Message-ID: <202506240437.yrXLeKyv-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623130632.993849527@linuxfoundation.org>
-In-Reply-To: <20250623130632.993849527@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 24 Jun 2025 02:12:05 +0530
-X-Gm-Features: Ac12FXxCahOKxqInrOQt0BqXjl0ygzYTl3HNC4qxXj17qIpUny0WkUR4sQ_jwKU
-Message-ID: <CA+G9fYuU5uSG1MKdYPoaC6O=-w5z6BtLtwd=+QBzrtZ1uQ8VXg@mail.gmail.com>
-Subject: Re: [PATCH 5.15 000/411] 5.15.186-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, 
-	"James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, 23 Jun 2025 at 18:39, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.15.186 release.
-> There are 411 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 25 Jun 2025 13:05:51 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.186-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   86731a2a651e58953fc949573895f2fa6d456841
+commit: 68add288189a5490868ccf8cbed273320568928d ice: add debugging functions for the parser sections
+date:   10 months ago
+config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250624/202506240437.yrXLeKyv-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506240437.yrXLeKyv-lkp@intel.com/reproduce)
 
-Regressions on arm64 allyesconfig builds with gcc-12 and clang failed on
-the Linux stable-rc 5.15.186-rc1.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506240437.yrXLeKyv-lkp@intel.com/
 
-Regressions found on arm64
-* arm64, build
-  - gcc-12-allyesconfig
+All warnings (new ones prefixed by >>):
 
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
+   In file included from drivers/net/ethernet/intel/ice/ice_parser.c:4:
+   In file included from drivers/net/ethernet/intel/ice/ice_common.h:9:
+   In file included from drivers/net/ethernet/intel/ice/ice.h:12:
+   In file included from include/linux/netdevice.h:38:
+   In file included from include/net/net_namespace.h:43:
+   In file included from include/linux/skbuff.h:28:
+   In file included from include/linux/dma-mapping.h:11:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/s390/include/asm/io.h:93:
+   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     548 |         val = __raw_readb(PCI_IOBASE + addr);
+         |                           ~~~~~~~~~~ ^
+   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
+      37 | #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
+         |                                                           ^
+   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
+     102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
+         |                                                      ^
+   In file included from drivers/net/ethernet/intel/ice/ice_parser.c:4:
+   In file included from drivers/net/ethernet/intel/ice/ice_common.h:9:
+   In file included from drivers/net/ethernet/intel/ice/ice.h:12:
+   In file included from include/linux/netdevice.h:38:
+   In file included from include/net/net_namespace.h:43:
+   In file included from include/linux/skbuff.h:28:
+   In file included from include/linux/dma-mapping.h:11:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/s390/include/asm/io.h:93:
+   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
+      35 | #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
+         |                                                           ^
+   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
+     115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
+         |                                                      ^
+   In file included from drivers/net/ethernet/intel/ice/ice_parser.c:4:
+   In file included from drivers/net/ethernet/intel/ice/ice_common.h:9:
+   In file included from drivers/net/ethernet/intel/ice/ice.h:12:
+   In file included from include/linux/netdevice.h:38:
+   In file included from include/net/net_namespace.h:43:
+   In file included from include/linux/skbuff.h:28:
+   In file included from include/linux/dma-mapping.h:11:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/s390/include/asm/io.h:93:
+   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     585 |         __raw_writeb(value, PCI_IOBASE + addr);
+         |                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:693:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     693 |         readsb(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:701:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     701 |         readsw(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:709:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     709 |         readsl(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:718:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     718 |         writesb(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:727:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     727 |         writesw(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:736:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     736 |         writesl(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+>> drivers/net/ethernet/intel/ice/ice_parser.c:1231:34: warning: stack frame size (1040) exceeds limit (1024) in 'ice_bst_tcam_table_get' [-Wframe-larger-than]
+    1231 | static struct ice_bst_tcam_item *ice_bst_tcam_table_get(struct ice_hw *hw)
+         |                                  ^
+   13 warnings generated.
 
-Build regression: stable-rc 5.15.186-rc1 arm64
-drivers/scsi/qedf/qedf_main.c:702:9: error: positional initialization
-of field in 'struct' declared with 'designated_init' attribute
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+vim +/ice_bst_tcam_table_get +1231 drivers/net/ethernet/intel/ice/ice_parser.c
 
-## Build errors
-drivers/scsi/qedf/qedf_main.c:702:9: error: positional initialization
-of field in 'struct' declared with 'designated_init' attribute
-[-Werror=designated-init]
-  702 |         {
-      |         ^
-drivers/scsi/qedf/qedf_main.c:702:9: note: (near initialization for
-'qedf_cb_ops')
-cc1: all warnings being treated as errors
+75b4a938a94778 Junfeng Guo 2024-07-25  1224  
+75b4a938a94778 Junfeng Guo 2024-07-25  1225  /**
+75b4a938a94778 Junfeng Guo 2024-07-25  1226   * ice_bst_tcam_table_get - create a boost tcam table
+75b4a938a94778 Junfeng Guo 2024-07-25  1227   * @hw: pointer to the hardware structure
+75b4a938a94778 Junfeng Guo 2024-07-25  1228   *
+75b4a938a94778 Junfeng Guo 2024-07-25  1229   * Return: a pointer to the allocated Boost TCAM table.
+75b4a938a94778 Junfeng Guo 2024-07-25  1230   */
+75b4a938a94778 Junfeng Guo 2024-07-25 @1231  static struct ice_bst_tcam_item *ice_bst_tcam_table_get(struct ice_hw *hw)
+75b4a938a94778 Junfeng Guo 2024-07-25  1232  {
+75b4a938a94778 Junfeng Guo 2024-07-25  1233  	return ice_parser_create_table(hw, ICE_SID_RXPARSER_BOOST_TCAM,
+75b4a938a94778 Junfeng Guo 2024-07-25  1234  				       sizeof(struct ice_bst_tcam_item),
+75b4a938a94778 Junfeng Guo 2024-07-25  1235  				       ICE_BST_TCAM_TABLE_SIZE,
+75b4a938a94778 Junfeng Guo 2024-07-25  1236  				       ice_bst_parse_item, true);
+75b4a938a94778 Junfeng Guo 2024-07-25  1237  }
+75b4a938a94778 Junfeng Guo 2024-07-25  1238  
 
-## Source
-* Kernel version: 5.15.186-rc1
-* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-* Git sha: cab9785699236a7505c3f740e006a05ae70f47b0
-* Git describe: v5.15.185-412-gcab978569923
-* Project details:
-https://regressions.linaro.org/lkft/linux-stable-rc-linux-5.15.y/v5.15.185-412-gcab978569923/
-* Architectures: arm64
-* Toolchains: gcc-12
-* Kconfigs: allyesconfig
+:::::: The code at line 1231 was first introduced by commit
+:::::: 75b4a938a947785cdda8908cb700c58e95f8ff69 ice: parse and init various DDP parser sections
 
-## Build arm64
-* Build log: https://qa-reports.linaro.org/api/testruns/28835767/log_file/
-* Build details:
-https://regressions.linaro.org/lkft/linux-stable-rc-linux-5.15.y/v5.15.185-412-gcab978569923/build/gcc-12-allyesconfig/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2yuYENOCa5bRAG0bKRLJc7p69cI/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2yuYENOCa5bRAG0bKRLJc7p69cI/config
+:::::: TO: Junfeng Guo <junfeng.guo@intel.com>
+:::::: CC: Tony Nguyen <anthony.l.nguyen@intel.com>
 
-## Steps to reproduce
- - tuxmake --runtime podman --target-arch arm64 --toolchain gcc-12
---kconfig allyesconfig
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
