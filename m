@@ -1,175 +1,221 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA601684A4
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 19:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22DE2D4B5A;
+	Mon, 23 Jun 2025 19:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750705765; cv=none; b=rM5BUs59mZ2D8hzRKEIQBthg8+0XKkjFAkPeq+1Wntk7MznXpwQlw3TnTelejUX9NVNioKJjh/zKpMlpXQst+FRIS6W+IsQfMQDH84chp+8Sr3y/Am7erXAlz2SlJuAw2Vfvb+E8UDy9Si9G4cr6HS93RUWuEsiF22uEU4UEwQI=
+	t=1750705767; cv=none; b=IMAgK8zsnbj3k55T4x2WXlBSK1/nfdgcN/n45K0eD4MNZ+aRCuhdoyiKTOfwA7EhsecwLnPaVlfK1+TJ31MQxHwMkaRMC2YenUedtj0iH99dabTBYPWvTtsMr5Z2jX0ZK85fH++fsIkKXDHveH1L6AET4c8vfmGlSYKPBAa35rM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750705765; c=relaxed/simple;
-	bh=tH3eSBTG6tbTZzapgRbeJfffzzypj/6/QYNfupAEtkE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c1lDehMmVxPoUNvPpWgCqangfGLwhoWP8VCoMt8zLbC4UEFt/fBK+7vaKri0+yz4NXBHGCi1nuBtmVy+BmDuou6wAOul7cPdCpI/NHtZ08klxxBh6cgn/3ofz1GR6QmuHbUwczdc/B6gJNglRXhSalmKRBOirSL1AqcAMvDRWdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iarOq283; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750705767; c=relaxed/simple;
+	bh=3aUrTipdBM0DvG+bnkRlIqVvv9Fl0CJzrYFcGMsX7+0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kcq32xGTd8N5MThI8ZqwJhb/dTJkKFt3WUtjpMrViaP4klCb2uZU+MdlRLEe3uZvflzUaO/RSlZ54OlZrkd34X18/BrxbyGw5jEqCaYTlCrsl4ki2f9BrtLGigFMnS3TcfBElAYmHvFxGMaZdbNUYkOP2vmEwTJLoZptX5Gd/Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mw2ahumo; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iarOq283"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2357c61cda7so23815ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:09:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mw2ahumo"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7d0a0bcd3f3so512398485a.1;
+        Mon, 23 Jun 2025 12:09:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750705763; x=1751310563; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1750705764; x=1751310564; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cp/0chDgm2snxzxzq95eP+vthqt+mdAU4GERCYRoDSo=;
-        b=iarOq283A+lGOwRY14zh7T4XNo+d4ywWBZL79etz5yP8MOUIm5q/u2k6u9wit31SVg
-         UyzkcYRDvtOgmkdfGg60oGYhBmaHyQBPAMtlNUSwr7BVCnqxsmsPvf33S380tFv5qLiC
-         YlFvahde1iBEHaMrTb7s6O/tX6gIcQXeZLCyZNK3VlbnW05UUUglXjtgo3c9YzJFabPM
-         8Ht+vt58wZtH1fb6jne+Rcob6VaGqS6807gcly13IHhNtY/Ujl19BoX2w6tatkdHIRI3
-         c9OBhyJafjKO/XuJPkM9VehSR3ThlyE8CG6/C4g/SLjjnyHc1beLnVpvUQqzl2Op+/NW
-         hCkA==
+        bh=8sms7B4y2rI1NnoG8cKJvlxEFKP61lyDQPa3zPMR/0k=;
+        b=mw2ahumoqwXGFj88rCaLZ8MlrJwp0k3y/47i/4c9bc0Jh+fjJbHpQ4w/W2JutkjTVI
+         OO7Rcaj5kgO6GQss5mAqWYFB50mI9uMSrdK47ejW0D2mJXEZnrsLRzc/n2MXBB+24C1o
+         r+I1MYn/K0d6BPD1kiHTGveFwIhvm1KyPx+9LFJqz0DNMQdW2SwJEC8vnIY9Eouz8mNx
+         IhDDOI8tCUYUhNZbyaXB8m9tuLfEI8pZS4aPOFpOKhLVv8nDP4wtDThyfzfpgDlMs4Zl
+         Pbu33uK9hN7CiEGFt2ZeXQlKFb+rg7g3CiZcW61/vlVVhPWAdJmTWmDgqtTjh12SkvnF
+         eyUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750705763; x=1751310563;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750705764; x=1751310564;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cp/0chDgm2snxzxzq95eP+vthqt+mdAU4GERCYRoDSo=;
-        b=ACg3DYWHfeowU/EaPlMW08QpTsk5uDIzavOpAT/v8Lp2Xep3tgDVCM09eSFg88tsvM
-         0ER45kBV6uNeijefuxq2Hyx+wYjDwEeNWNTDZ9JnICWvQMMlF/c6dlqsZBZXqUw3hxgS
-         jcGCJ3t59QW7BHaOWjkJmtwaQs/p9bpF3qhnj682gDl1P6dpyDGnUMuZVMlkZckgqtIT
-         /mDvKsayslK5K4Md1wOnMJc3vAz1s+fOiZirzHClh8KHyiRU+1G2iqTv2rB/l2HpRqeB
-         FyJsMDvO2BrDgqoAhpYP+QXZ5ref2V8PWA4TaqxpQ7iYBKRZuiO1sFpk5uSALocRa0BD
-         Bpbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXeOg5aZ0totiw9eFhaXEnFW4ZXDy1/Kx1Sb9ZiQIjvOCeGgxs3PE/4d/lbrdzMqvh/imnLwOB9WHs5ys=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwT/VZKn0ec/84eS75gWwHPA2Zy1utV6oY07Nej//gwpBDqKes1
-	bZjpAdmpqGfZs46VOm/qUdfD6buC7I310B90/HV++oCUEHH5VHNarnqcydrcC9KgJeO++Haa61M
-	AFM5o2EAcW3MrnWaO4bWOzrsuycoTDlBpH4nKz4Fz
-X-Gm-Gg: ASbGncs8ndvRlxdAUAuCPye5pWA95KVY85v7AKk1ggKliV5TRIsmF9rXfUFpS43RBm3
-	9B7TgJu4G5tQCpK1PfzccyvMee2m0tLz48vpUBEzJkb5WrVjAg0u4MD8GedwoQ/u/s0YIsEcsnM
-	8IBkocylrDgu83bJdE2p2aKHS+QVYlaPSQxvfL9UDkz2xd7fyPC+p2VaCKAz91CwxkSPxBaPRLH
-	Q==
-X-Google-Smtp-Source: AGHT+IEP6CbJSMMIjAaNAJ9rOrnxvip7xFCbKZZbgsFvTLW3kA7gzinjehuUnzT5TsDabxmVW7mRkxDk9owGN0VC6EQ=
-X-Received: by 2002:a17:903:41cc:b0:234:b2bf:e67e with SMTP id
- d9443c01a7336-23802c66acdmr344235ad.13.1750705762491; Mon, 23 Jun 2025
- 12:09:22 -0700 (PDT)
+        bh=8sms7B4y2rI1NnoG8cKJvlxEFKP61lyDQPa3zPMR/0k=;
+        b=bTanNossIFRMIMukqjX6NU/0I9Wptzxgv/JuYz7mrvCgEgL0xz2KTKfzl5KpvkaKYV
+         GbckFIuv33JOdb81pE6SSLcWrNC0o3ojrod8UFuNcti0rusyQR5D3MS9xKnfrHbFioJy
+         cM9O8cVMgH5E/vvp5s/VDCFdHiWboqqG7RXb6w2j1uO0/RKzJpsGsWckJ3X+t5dKbCtA
+         MDHRnwIgINUfzRidd24qY5ksUwnTcijfeUfN1gBohv9+05JlebtNO6oN/IW8OdbIzCBS
+         Obe7ZpZVH3uRSJdlOKlLrqU5PSSo8ZrKYrE6pA620kZcGKnTqF9FaVMyISC+0RP6nrMJ
+         Pa8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUoBSI+gHNrUnnO/J63iji0BQsD1lE9YDA7yzc0P5I2oZUz4AmF75+kNrIqpNotbeiIX+6bzWY08CqC@vger.kernel.org, AJvYcCXgMMrP+SV2itPj5lfL4s4pvcT5z9xj8DaUd6CmqTc0f7o7obJDcLep9R4manrTT1WlrIafgAxILOi5v01wpqU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHfk/AIsgaJ9dUNrmUfL1LSriewdf/Q09SVOvtbReUrGYHH5HR
+	wxDHVBp497TpUQW2E1blmL+nvRbLy4LTlbGiir7tJ2IgNJvV+TU3w41Q
+X-Gm-Gg: ASbGnctPzHehyIfOGiTLuK24kGj5T3aCpUzTOLQ2UtKS1CJVU7+8C3yRPn22oQSt92x
+	T9LjI3Ir2X6glzsWetCQnLsIhZIDe2sbzD3z32sxT+mFmF6ZcO71iyAUW9tZ6K1QUZ0m4TWhZnu
+	FaDbpj9aBUyzcKYIHRu+HyQGZOVGN1w1vgh64tv3f7xe2dYRqhGuxGDy2VJZx49RpaJiuSLnaad
+	uperbzW2t4r6LUGdX+F0xgnRkCd39ksSvPWraK3hMQZmDzvV6aEitOdlGFqAdhJtz2h5NCFpBdW
+	WPg4wr5rsF7r386YhCYar+OhCEhKbfwKSNIMYQYoheJUcqf33FgN84Q0XfQ//AD6lQLksXgWIeC
+	RHePelwJvLHTSiW46ukOu1PhNZ+JmlLNFYgK8E3KGTk2SV68EqBa/
+X-Google-Smtp-Source: AGHT+IFY0SLaBFXkzJuI5EVp2A8p77EVAtcc7Ba+/G4JrsIRg5C2bcRBKquGlsSNvaGt38E2kEU+VA==
+X-Received: by 2002:a05:620a:a811:b0:7d4:2f2:a44f with SMTP id af79cd13be357-7d41ec42108mr75415285a.23.1750705764284;
+        Mon, 23 Jun 2025 12:09:24 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f9a06e6csm417860185a.107.2025.06.23.12.09.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 12:09:23 -0700 (PDT)
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 03AC51200043;
+	Mon, 23 Jun 2025 15:09:22 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Mon, 23 Jun 2025 15:09:23 -0400
+X-ME-Sender: <xms:YqZZaO5SpQ3ZYuDdTaKH5kB30Vw-FyLc6Yo3ZNurN9fFUzDEgjGWdA>
+    <xme:YqZZaH4_RHd_4UfZiShZ9a8h7m6h9NvzVMvq7sNUmSh6czwiF6R2HHQpAGpmd5DQl
+    9rM5A_rNoo_rejFJQ>
+X-ME-Received: <xmr:YqZZaNeUotxMrc1oYdOTAFQK3P-p0l5x5Il1IjTDHSUdb29ropMaFwlhjg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddujeekudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfh
+    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
+    hrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudffiedv
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqh
+    hunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddu
+    jeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvg
+    drnhgrmhgvpdhnsggprhgtphhtthhopedviedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtoheplhhinhhugidqkh
+    gvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhushhtqdhf
+    ohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhkmh
+    hmsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqrghrtghh
+    sehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdp
+    rhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgtph
+    htthhopehlohhsshhinheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:YqZZaLL1CfAXc78MDA_HThZsiJOPaWHUppguaQkdRm9DUhUflQQisg>
+    <xmx:YqZZaCJNVz_4kAieWRiIGwQyaCPFGdUIRxabiWXcn4lQl5M6Kb2cUA>
+    <xmx:YqZZaMz_tn-HXO3gMGH-g_JWzL0un4BBTs_BCC4F01eWizUo06qO_A>
+    <xmx:YqZZaGLDafVPWyCiDz1UCxnuVGeU8PLYCdkkf8udWtei4dvkyceIAQ>
+    <xmx:YqZZaJYJm6b2b0uOCNY-Kh5jD9JR1ggYaNpgaSRjWY1IN-OdIEc3h9f8>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 23 Jun 2025 15:09:22 -0400 (EDT)
+Date: Mon, 23 Jun 2025 12:09:21 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Gary Guo <gary@garyguo.net>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	lkmm@lists.linux.dev, linux-arch@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 04/10] rust: sync: atomic: Add generic atomics
+Message-ID: <aFmmYSAyvxotYfo7@tardis.local>
+References: <20250618164934.19817-1-boqun.feng@gmail.com>
+ <20250618164934.19817-5-boqun.feng@gmail.com>
+ <20250621123212.66fb016b.gary@garyguo.net>
+ <aFjj8AV668pl9jLN@Mac.home>
+ <20250623193019.6c425467.gary@garyguo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620041224.46646-1-byungchul@sk.com> <20250620041224.46646-2-byungchul@sk.com>
- <8eaf52bf-4c3c-4007-afe5-a22da9f228f9@redhat.com> <20250623102821.GC3199@system.software.com>
- <aFlGCam4_FnkGQYT@hyeyoo>
-In-Reply-To: <aFlGCam4_FnkGQYT@hyeyoo>
-From: Mina Almasry <almasrymina@google.com>
-Date: Mon, 23 Jun 2025 12:09:09 -0700
-X-Gm-Features: AX0GCFuS5sYOE7MPEWKATp8YxIxvbHC-ghHV1COC2m3qIITA4p4mPOlFQEJRPtU
-Message-ID: <CAHS8izMbtp0dN3+PZsivFD4Zg1DqaL5BJ4cw4jGjs=wCXAns3A@mail.gmail.com>
-Subject: Re: [PATCH net-next v6 1/9] netmem: introduce struct netmem_desc
- mirroring struct page
-To: Harry Yoo <harry.yoo@oracle.com>
-Cc: Byungchul Park <byungchul@sk.com>, David Hildenbrand <david@redhat.com>, willy@infradead.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	kernel_team@skhynix.com, kuba@kernel.org, ilias.apalodimas@linaro.org, 
-	hawk@kernel.org, akpm@linux-foundation.org, davem@davemloft.net, 
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch, asml.silence@gmail.com, 
-	toke@redhat.com, tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com, 
-	saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org, 
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com, 
-	hannes@cmpxchg.org, ziy@nvidia.com, jackmanb@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623193019.6c425467.gary@garyguo.net>
 
-On Mon, Jun 23, 2025 at 5:18=E2=80=AFAM Harry Yoo <harry.yoo@oracle.com> wr=
-ote:
->
-> On Mon, Jun 23, 2025 at 07:28:21PM +0900, Byungchul Park wrote:
-> > On Mon, Jun 23, 2025 at 11:32:16AM +0200, David Hildenbrand wrote:
-> > > On 20.06.25 06:12, Byungchul Park wrote:
-> > > > To simplify struct page, the page pool members of struct page shoul=
-d be
-> > > > moved to other, allowing these members to be removed from struct pa=
-ge.
-> > > >
-> > > > Introduce a network memory descriptor to store the members, struct
-> > > > netmem_desc, and make it union'ed with the existing fields in struc=
-t
-> > > > net_iov, allowing to organize the fields of struct net_iov.
-> > >
-> > > It would be great adding some result from the previous discussions in
-> > > here, such as that the layout of "struct net_iov" can be changed beca=
-use
-> > > it is not a "struct page" overlay, what the next steps based on this
-> >
-> > I think the network folks already know how to use and interpret their
-> > data struct, struct net_iov for sure.. but I will add the comment if it
-> > you think is needed.  Thanks for the comment.
->
-> I agree with David - it's not immediately obvious at first glance.
-> That was my feedback on the previous version as well :)
->
-> I think it'd be great to add that explanation, since this is where MM and
-> networking intersect.
->
+On Mon, Jun 23, 2025 at 07:30:19PM +0100, Gary Guo wrote:
+> On Sun, 22 Jun 2025 22:19:44 -0700
+> Boqun Feng <boqun.feng@gmail.com> wrote:
+> 
+> > On Sat, Jun 21, 2025 at 12:32:12PM +0100, Gary Guo wrote:
+> > [...]
+> > > > +#[repr(transparent)]
+> > > > +pub struct Atomic<T: AllowAtomic>(Opaque<T>);  
+> > > 
+> > > This should store `Opaque<T::Repr>` instead.
+> > >   
+> > 
+> > "should" is a strong word ;-) If we still use `into_repr`/`from_repr`
+> > it's a bit impossible, because Atomic::new() wants to be a const
+> > function, so it requires const_trait_impl I believe.
+> > 
+> > If we require transmutability as a safety requirement for `AllowAtomic`,
+> > then either `T` or `T::Repr` is fine.
+> > 
+> > > The implementation below essentially assumes that this is
+> > > `Opaque<T::Repr>`:
+> > > * atomic ops cast this to `*mut T::Repr`
+> > > * load/store operates on `T::Repr` then converts to `T` with
+> > >   `T::from_repr`/`T::into_repr`.
+> > >   
+> > 
+> > Note that we only require one direction of strong transmutability, that
+> > is: for every `T`, it must be able to safe transmute to a `T::Repr`, for
+> > `T::Repr` -> `T` transmutation, only if it's a result of a `transmute<T,
+> > T::Repr>()`. This is mostly due to potential support for unit-only enum.  
+> > E.g. using an atomic variable to represent a finite state.
+> > 
+> > > Note tha the transparent new types restriction on `AllowAtomic` is not
+> > > sufficient for this, as I can define
+> > >   
+> > 
+> > Nice catch! I do agree we should disallow `MyWeirdI32`, and I also agree
+> > that we should put transmutability as safety requirement for
+> > `AllowAtomic`. However, I would suggest we still keep
+> > `into_repr`/`from_repr`, and require the implementation to make them
+> > provide the same results as transmute(), as a correctness precondition
+> > (instead of a safety precondition), in other words, you can still write
+> > a `MyWeirdI32`, and it won't cause safety issues, but it'll be
+> > incorrect.
+> > 
+> > The reason why I think we should keep `into_repr`/`from_repr` but add
+> > a correctness precondition is that they are easily to implement as safe
+> > code for basic types, so it'll be better than a transmute() call. Also
+> > considering `Atomic<*mut T>`, would transmuting between integers and
+> > pointers act the same as expose_provenance() and
+> > from_exposed_provenance()?
+> 
+> Okay, this is more problematic than I thought then. For pointers, you
 
-I think a lot of people are now saying the same thing: (1) lets keep
-net_iov and page/netmem_desc separate, and (2) lets add comments
-explaining their relation so this intersection between MM and
-networking is not confused in the long term .
+Welcome to my nightmare ;-)
 
-For #1, concretely I would recommend removing the union inside struct
-net_iov? And also revert all the changes to net_iov for that matter.
-They are all to bring netmem_desc and net_iov closer together, but the
-feedback is that we should keep them separate, and I kinda agree with
-that. The fact that net_iov includes a netmem_desc in your patch makes
-readers think they're very closely related.
+> cannot just transmute between from pointers to usize (which is its
+> Repr):
+> * Transmuting from pointer to usize discards provenance
+> * Transmuting from usize to pointer gives invalid provenance
+> 
+> We want neither behaviour, so we must store `usize` directly and
+> always call into repr functions.
+> 
 
-For #2, add this comment (roughly) on top of struct net_iov? Untested
-with kdoc and spell checker:
+If we store `usize`, how can we support the `get_mut()` then? E.g.
 
-diff --git a/include/net/netmem.h b/include/net/netmem.h
-index 7a1dafa3f080..8fb2b294e5f2 100644
---- a/include/net/netmem.h
-+++ b/include/net/netmem.h
-@@ -30,6 +30,25 @@ enum net_iov_type {
-        NET_IOV_MAX =3D ULONG_MAX
- };
+    static V: i32 = 32;
 
-+/* A memory descriptor representing abstract networking I/O vectors.
-+ *
-+ * net_iovs are allocated by networking code, and generally represent some
-+ * abstract form of non-paged memory used by the networking stack. The siz=
-e
-+ * of the chunk is PAGE_SIZE.
-+ *
-+ * This memory can be any form of non-struct paged memory. Examples includ=
-e
-+ * imported dmabuf memory and imported io_uring memory. See
-net_iov_type for all
-+ * the supported types.
-+ *
-+ * @type: the type of the memory. Different types of net_iovs are supporte=
-d.
-+ * @pp_magic: pp field, similar to the one in struct page/struct netmem_de=
-sc.
-+ * @pp: the pp this net_iov belongs to, if any.
-+ * @owner: the net_iov_area this net_iov belongs to, if any.
-+ * @dma_addr: the dma addrs of the net_iov. Needed for the network card to
-+ * send/receive this net_iov.
-+ * @pp_ref_count:  the pp ref count of this net_iov, exactly the same usag=
-e as
-+ * struct page/struct netmem_desc.
-+ */
+    let mut x = Atomic::new(&V as *const i32 as *mut i32);
+    // ^ assume we expose_provenance() in new().
 
+    let ptr: &mut *mut i32 = x.get_mut(); // which is `&mut self.0.get()`.
 
+    let ptr_val = *ptr; // Does `ptr_val` have the proper provenance?
 
+> To make things cost I guess you would need an extra trait to indicate
+> that transmuting is fine.
 
+Could you maybe provide an example?
 
---
-Thanks,
-Mina
+Regards,
+Boqun
+
+> 
+> Best,
+> Gary
