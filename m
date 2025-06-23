@@ -1,501 +1,268 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC062D3A8C;
-	Mon, 23 Jun 2025 18:22:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750702969; cv=pass; b=odJQK8YK19Qy8lDR0agHwqXLDwoqENB3vTMf/inKeEtD7Cji8GxcsagEfRR1cSgrlm2YGowGa5HkhjLKNYQu2H5CmFfQHsXi90cvvHvvANgccZfbjw++Ia4hICDKH8f2+5m+CcR+6tExzA2bOy9a4rG4zEojvcQx56dqQXX+dFk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750702969; c=relaxed/simple;
-	bh=gi21jFCt7u6E8M2usV7AXIeFhe2OIx09j8QuIn6BLjw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RcloGu9v8SE9ZO29jn0Xdtsjja52CZsyCTnGOmcnHkJvpkIzFJH2NbjmjfPJmEHBEljinMEUYNopTaI8BQvXqDNKgGi0Caio7TkUDVCoVzcQtAXg8WdgyvUwyzLFCBCfg5qO+7d97OxhTWV0OQ3xGtsAO6xmh7Yl+BVBWs7OMO0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=ZU/UWFo6; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DCD2D3A77
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750702982; cv=none; b=hiQDnza1nchDcLtLYLnSre0pCHgqlNofSpykg1f+ew44cXdKkqmgpAv4Hxqva+gfYpx2HURh80E6vSv82ru5mEO84L7otzukoq145WgDDFVpvjmH8wIQ1220sGO+Vv9ldxkYgES+D653qoXY9a6hwEhSj07OlvYPEt6vdYZI6YA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750702982; c=relaxed/simple;
+	bh=06uLO9m3FXDtmilEMngPa29Gp666mPTIdb/WLw1ueiU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Vx+ZHJZOg09lhlGQDCylDq5qI4lFPq1JS+EJly0YWUl/rUat6xCssE9zjJWKWb91pwYOPazNvz9O6riOTeh9K0gu/MuTHfjx08ejJSjRMmB696wE0rGTV3uNrixlD49Sc6Y0CrDZCS5WloXBl1JFkq6lV5hP33HPeEaF+uyP3JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f/qX5UdK; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="ZU/UWFo6"
-ARC-Seal: i=1; a=rsa-sha256; t=1750702934; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=LY7MyW7Z2LmpEbgT8lMfDg9XbVurwVcjD1GEeeoFSU0dh6YRZQtqkTrNuURdv/AzCaCUe7ylfbJtZToonL+2pYUQoHydjW5HM60xhGp/GzTR9e2ROyKuv0iV8E8x5hkzETEy2ngS7tCZqG2bJSrHNz8bFom0UYMLKtCm8bRd354=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750702934; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=BvZwsBRRnw+XQVZodXUyd872Zp6jX7q6FaaWDrqBHHw=; 
-	b=dHmrdqguhJ1Yqub7JPcWZznINHUX7hM1Z6Q+ZeWCyryf7Q5s0YFX8pL5/bG/KsbWudXXv0TagQ7R26YPRUK4elbfWvR7QY22DRGNMnnSmKGapJF60603xgwPXgk9N+Z1uL7dn47p36vw9UWYYLrKHqMskz/PY0BKg/PUlHiIbU4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750702934;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=BvZwsBRRnw+XQVZodXUyd872Zp6jX7q6FaaWDrqBHHw=;
-	b=ZU/UWFo6RYA+p0Jgkq0xHcR5jEIcawLbcjw0+LO3YVSYri1j0oC23MTkRw5iHB/s
-	CBQQOe9gzHRYo1jEm0C5M/6MXMWT4aMb8ncP8fCB44TDKfSs7PHVaOj9BIvkmY9UmQx
-	jqU8f6gJc+d3fA08deCQTeNoRWMv6XZ+YlPQ2Xn8=
-Received: by mx.zohomail.com with SMTPS id 1750702932418825.1956168177345;
-	Mon, 23 Jun 2025 11:22:12 -0700 (PDT)
-From: Daniel Almeida <daniel.almeida@collabora.com>
-Date: Mon, 23 Jun 2025 15:21:56 -0300
-Subject: [PATCH v5 1/2] rust: regulator: add a bare minimum regulator
- abstraction
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f/qX5UdK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750702981; x=1782238981;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=06uLO9m3FXDtmilEMngPa29Gp666mPTIdb/WLw1ueiU=;
+  b=f/qX5UdKaYn7cptqctzynrfIEO6wtMueGW2eeBR/veLVUfAjxfTX1XWM
+   I/1SrNsEXlI0A2OcFuUU/WkEdWZamvIfxgKkdKQfQaQALj3KqU8ZLYPqB
+   xSYb+PIsaXaV+zrGLHyoN4ersMNnjesneLjnaYYNutRHzgW9ywf0dZ/Nj
+   XTlWk81guDlKJKVrISf0yU2w3di0Q2kLWbogmEne9VF++B729nFrtbz6J
+   nnVK+VRhh/e3KxW4NnmOkm9VAzJmyFUEqRYWePrcOzcJrO+uh8aGPsDzR
+   HRxPJgqPCnb+4ZYM+6+fcObwTRd38v6MXCfXgJTJFUW8Hir8bmfzZOSjx
+   Q==;
+X-CSE-ConnectionGUID: LMVCyZdNTRqOPDIifFLNaA==
+X-CSE-MsgGUID: CgZ62pRwQ8OXHY3eGoVeog==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52894581"
+X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
+   d="scan'208";a="52894581"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 11:22:59 -0700
+X-CSE-ConnectionGUID: BNv50jDpTBy8uGa+EN9kMQ==
+X-CSE-MsgGUID: dQGcEc3MQUiciiglCdSD/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
+   d="scan'208";a="155687683"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 23 Jun 2025 11:22:57 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uTlol-000PCY-18;
+	Mon, 23 Jun 2025 18:22:55 +0000
+Date: Tue, 24 Jun 2025 02:22:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: Hongbo Li <lihongbo22@huawei.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Kent Overstreet <kent.overstreet@linux.dev>
+Subject: fs/bcachefs/fs.c:867:12: warning: stack frame size (1056) exceeds
+ limit (1024) in 'bch2_rename2'
+Message-ID: <202506240200.Fsm6BEST-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-topics-tyr-regulator-v5-1-99069658cb54@collabora.com>
-References: <20250623-topics-tyr-regulator-v5-0-99069658cb54@collabora.com>
-In-Reply-To: <20250623-topics-tyr-regulator-v5-0-99069658cb54@collabora.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Boris Brezillon <boris.brezillon@collabora.com>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- Daniel Almeida <daniel.almeida@collabora.com>
-X-Mailer: b4 0.14.2
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Add a bare minimum regulator abstraction to be used by Rust drivers.
-This abstraction adds a small subset of the regulator API, which is
-thought to be sufficient for the drivers we have now.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   86731a2a651e58953fc949573895f2fa6d456841
+commit: e614a6c52d32c9c7ff545ca842eb2de4aeb1d2d9 bcachefs: make directory i_size meaningful
+date:   5 months ago
+config: s390-defconfig (https://download.01.org/0day-ci/archive/20250624/202506240200.Fsm6BEST-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 875b36a8742437b95f623bab1e0332562c7b4b3f)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506240200.Fsm6BEST-lkp@intel.com/reproduce)
 
-Regulators provide the power needed by many hardware blocks and thus are
-likely to be needed by a lot of drivers.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506240200.Fsm6BEST-lkp@intel.com/
 
-It was tested on rk3588, where it was used to power up the "mali"
-regulator in order to power up the GPU.
+All warnings (new ones prefixed by >>):
 
-Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
----
- rust/bindings/bindings_helper.h |   1 +
- rust/kernel/lib.rs              |   2 +
- rust/kernel/regulator.rs        | 382 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 385 insertions(+)
+   In file included from fs/bcachefs/fs.c:4:
+   In file included from fs/bcachefs/bcachefs.h:188:
+   In file included from include/linux/bio.h:10:
+   In file included from include/linux/blk_types.h:10:
+   In file included from include/linux/bvec.h:10:
+   In file included from include/linux/highmem.h:10:
+   In file included from include/linux/mm.h:2223:
+   include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     504 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     505 |                            item];
+         |                            ~~~~
+   include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     511 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     512 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+   include/linux/vmstat.h:524:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     524 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     525 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+>> fs/bcachefs/fs.c:867:12: warning: stack frame size (1056) exceeds limit (1024) in 'bch2_rename2' [-Wframe-larger-than]
+     867 | static int bch2_rename2(struct mnt_idmap *idmap,
+         |            ^
+   5 warnings generated.
 
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index ab37e1d35c70d52e69b754bf855bc19911d156d8..e14cce03338ef5f6a09a23fd41ca47b8c913fa65 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -31,6 +31,7 @@
- #include <linux/poll.h>
- #include <linux/property.h>
- #include <linux/refcount.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/sched.h>
- #include <linux/security.h>
- #include <linux/slab.h>
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 28007be98fbad0e875d7e5345e164e2af2c5da32..c8fd7e4e036e9e5b6958acf0dcfa952b916a3d48 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -86,6 +86,8 @@
- pub mod prelude;
- pub mod print;
- pub mod rbtree;
-+#[cfg(CONFIG_REGULATOR)]
-+pub mod regulator;
- pub mod revocable;
- pub mod security;
- pub mod seq_file;
-diff --git a/rust/kernel/regulator.rs b/rust/kernel/regulator.rs
-new file mode 100644
-index 0000000000000000000000000000000000000000..9972fa6056a74c09a4bad45c1f36558be768b097
---- /dev/null
-+++ b/rust/kernel/regulator.rs
-@@ -0,0 +1,382 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Regulator abstractions, providing a standard kernel interface to control
-+//! voltage and current regulators.
-+//!
-+//! The intention is to allow systems to dynamically control regulator power
-+//! output in order to save power and prolong battery life. This applies to both
-+//! voltage regulators (where voltage output is controllable) and current sinks
-+//! (where current limit is controllable).
-+//!
-+//! C header: [`include/linux/regulator/consumer.h`](srctree/include/linux/regulator/consumer.h)
-+//!
-+//! Regulators are modeled in Rust with a collection of states. Each state may
-+//! enforce a given invariant, and they may convert between each other where applicable.
-+//!
-+//! See [Voltage and current regulator API](https://docs.kernel.org/driver-api/regulator.html)
-+//! for more information.
-+
-+use crate::{
-+    bindings,
-+    device::Device,
-+    error::{from_err_ptr, to_result, Result},
-+    prelude::*,
-+};
-+
-+use core::{marker::PhantomData, ptr::NonNull};
-+
-+mod private {
-+    pub trait Sealed {}
-+
-+    impl Sealed for super::Enabled {}
-+    impl Sealed for super::Disabled {}
-+    impl Sealed for super::Dynamic {}
-+}
-+
-+/// A trait representing the different states a [`Regulator`] can be in.
-+pub trait RegulatorState: private::Sealed {}
-+
-+/// A state where the [`Regulator`] is known to be enabled.
-+pub struct Enabled;
-+
-+/// A state where this [`Regulator`] handle has not specifically asked for the
-+/// underlying regulator to be enabled. This means that this reference does not
-+/// own an `enable` reference count, but the regulator may still be on.
-+pub struct Disabled;
-+
-+/// A state that models the C API. The [`Regulator`] can be either enabled or
-+/// disabled, and the user is in control of the reference count. This is also
-+/// the default state.
-+///
-+/// Use [`Regulator::is_enabled`] to check the regulator's current state.
-+pub struct Dynamic;
-+
-+impl RegulatorState for Enabled {}
-+impl RegulatorState for Disabled {}
-+impl RegulatorState for Dynamic {}
-+
-+/// A trait that abstracts the ability to check if a [`Regulator`] is enabled.
-+pub trait IsEnabled: RegulatorState {}
-+impl IsEnabled for Disabled {}
-+impl IsEnabled for Dynamic {}
-+
-+/// An error that can occur when trying to convert a [`Regulator`] between states.
-+pub struct Error<State: RegulatorState + 'static> {
-+    /// The error that occurred.
-+    pub error: kernel::error::Error,
-+
-+    /// The regulator that caused the error, so that the operation may be retried.
-+    pub regulator: Regulator<State>,
-+}
-+
-+/// A `struct regulator` abstraction.
-+///
-+/// # Examples
-+///
-+/// ## Enabling a regulator
-+///
-+/// This example uses [`Regulator<Enabled>`], which is suitable for drivers that
-+/// enable a regulator at probe time and leave them on until the device is
-+/// removed or otherwise shutdown.
-+///
-+/// These users can store [`Regulator<Enabled>`] directly in their driver's
-+/// private data struct.
-+///
-+/// ```
-+/// # use kernel::prelude::*;
-+/// # use kernel::c_str;
-+/// # use kernel::device::Device;
-+/// # use kernel::regulator::{Microvolt, Regulator, Disabled, Enabled};
-+/// fn enable(dev: &Device, min_uv: Microvolt, max_uv: Microvolt) -> Result {
-+///     // Obtain a reference to a (fictitious) regulator.
-+///     let regulator: Regulator<Disabled> = Regulator::<Disabled>::get(dev, c_str!("vcc"))?;
-+///
-+///     // The voltage can be set before enabling the regulator if needed, e.g.:
-+///     regulator.set_voltage(min_uv, max_uv)?;
-+///
-+///     // The same applies for `get_voltage()`, i.e.:
-+///     let voltage: Microvolt = regulator.get_voltage()?;
-+///
-+///     // Enables the regulator, consuming the previous value.
-+///     //
-+///     // From now on, the regulator is known to be enabled because of the type
-+///     // `Enabled`.
-+///     //
-+///     // If this operation fails, the `Error` will contain the regulator
-+///     // reference, so that the operation may be retried.
-+///     let regulator: Regulator<Enabled> =
-+///         regulator.try_into_enabled().map_err(|error| error.error)?;
-+///
-+///     // The voltage can also be set after enabling the regulator, e.g.:
-+///     regulator.set_voltage(min_uv, max_uv)?;
-+///
-+///     // The same applies for `get_voltage()`, i.e.:
-+///     let voltage: Microvolt = regulator.get_voltage()?;
-+///
-+///     // Dropping an enabled regulator will disable it. The refcount will be
-+///     // decremented.
-+///     drop(regulator);
-+///
-+///     // ...
-+///
-+///     Ok(())
-+/// }
-+/// ```
-+///
-+/// A more concise shortcut is available for enabling a regulator. This is
-+/// equivalent to `regulator_get_enable()`:
-+///
-+/// ```
-+/// # use kernel::prelude::*;
-+/// # use kernel::c_str;
-+/// # use kernel::device::Device;
-+/// # use kernel::regulator::{Microvolt, Regulator, Enabled};
-+/// fn enable(dev: &Device, min_uv: Microvolt, max_uv: Microvolt) -> Result {
-+///     // Obtain a reference to a (fictitious) regulator and enable it.
-+///     let regulator: Regulator<Enabled> = Regulator::<Enabled>::get(dev, c_str!("vcc"))?;
-+///
-+///     // Dropping an enabled regulator will disable it. The refcount will be
-+///     // decremented.
-+///     drop(regulator);
-+///
-+///     // ...
-+///
-+///     Ok(())
-+/// }
-+/// ```
-+///
-+/// ## Disabling a regulator
-+///
-+/// ```
-+/// # use kernel::prelude::*;
-+/// # use kernel::device::Device;
-+/// # use kernel::regulator::{Regulator, Enabled, Disabled};
-+/// fn disable(dev: &Device, regulator: Regulator<Enabled>) -> Result {
-+///     // We can also disable an enabled regulator without reliquinshing our
-+///     // refcount:
-+///     //
-+///     // If this operation fails, the `Error` will contain the regulator
-+///     // reference, so that the operation may be retried.
-+///     let regulator: Regulator<Disabled> =
-+///         regulator.try_into_disabled().map_err(|error| error.error)?;
-+///
-+///     // The refcount will be decremented when `regulator` is dropped.
-+///     drop(regulator);
-+///
-+///     // ...
-+///
-+///     Ok(())
-+/// }
-+/// ```
-+///
-+/// ## Using [`Regulator<Dynamic>`]
-+///
-+/// This example mimics the behavior of the C API, where the user is in
-+/// control of the enabled reference count. This is useful for drivers that
-+/// might call enable and disable to manage the `enable` reference count at
-+/// runtime, perhaps as a result of `open()` and `close()` calls or whatever
-+/// other driver-specific or subsystem-specific hooks.
-+///
-+/// ```
-+/// # use kernel::prelude::*;
-+/// # use kernel::c_str;
-+/// # use kernel::device::Device;
-+/// # use kernel::regulator::{Regulator, Dynamic};
-+/// struct PrivateData {
-+///     regulator: Regulator<Dynamic>,
-+/// }
-+///
-+/// // A fictictious probe function that obtains a regulator and sets it up.
-+/// fn probe(dev: &Device, data: &mut PrivateData) -> Result<PrivateData> {
-+///     // Obtain a reference to a (fictitious) regulator.
-+///     let mut regulator = Regulator::<Dynamic>::get(dev, c_str!("vcc"))?;
-+///
-+///     // Enable the regulator. The type is still `Regulator<Dynamic>`.
-+///     regulator.enable()?;
-+///
-+///     Ok(PrivateData { regulator })
-+/// }
-+///
-+/// // A fictictious function that indicates that the device is going to be used.
-+/// fn open(dev: &Device, data: &mut PrivateData) -> Result {
-+///     // Increase the `enabled` reference count.
-+///     data.regulator.enable()?;
-+///
-+///     Ok(())
-+/// }
-+///
-+/// fn close(dev: &Device, data: &mut PrivateData) -> Result {
-+///     // Decrease the `enabled` reference count.
-+///     data.regulator.disable()?;
-+///
-+///     Ok(())
-+/// }
-+///
-+/// fn remove(dev: &Device, data: PrivateData) -> Result {
-+///     // `PrivateData` is dropped here, which will drop the
-+///     // `Regulator<Dynamic>` in turn.
-+///     //
-+///     // The reference that was obtained by `regulator_get()` will be
-+///     // released, but it is up to the user to make sure that the number of calls
-+///     // to `enable()` and `disabled()` are balanced before this point.
-+///     Ok(())
-+/// }
-+/// ```
-+///
-+/// # Invariants
-+///
-+/// - `inner` is a non-null wrapper over a pointer to a `struct
-+///   regulator` obtained from [`regulator_get()`].
-+///
-+/// [`regulator_get()`]: https://docs.kernel.org/driver-api/regulator.html#c.regulator_get
-+pub struct Regulator<State = Dynamic>
-+where
-+    State: RegulatorState + 'static,
-+{
-+    inner: NonNull<bindings::regulator>,
-+    _phantom: PhantomData<State>,
-+}
-+
-+impl<T: RegulatorState + 'static> Regulator<T> {
-+    /// Sets the voltage for the regulator.
-+    ///
-+    /// This can be used to ensure that the device powers up cleanly.
-+    pub fn set_voltage(&self, min_uv: Microvolt, max_uv: Microvolt) -> Result {
-+        // SAFETY: Safe as per the type invariants of `Regulator`.
-+        to_result(unsafe {
-+            bindings::regulator_set_voltage(self.inner.as_ptr(), min_uv.0, max_uv.0)
-+        })
-+    }
-+
-+    /// Gets the current voltage of the regulator.
-+    pub fn get_voltage(&self) -> Result<Microvolt> {
-+        // SAFETY: Safe as per the type invariants of `Regulator`.
-+        let voltage = unsafe { bindings::regulator_get_voltage(self.inner.as_ptr()) };
-+        if voltage < 0 {
-+            Err(kernel::error::Error::from_errno(voltage))
-+        } else {
-+            Ok(Microvolt(voltage))
-+        }
-+    }
-+
-+    fn get_internal(dev: &Device, name: &CStr) -> Result<Regulator<T>> {
-+        // SAFETY: It is safe to call `regulator_get()`, on a device pointer
-+        // received from the C code.
-+        let inner = from_err_ptr(unsafe { bindings::regulator_get(dev.as_raw(), name.as_ptr()) })?;
-+
-+        // SAFETY: We can safely trust `inner` to be a pointer to a valid
-+        // regulator if `ERR_PTR` was not returned.
-+        let inner = unsafe { NonNull::new_unchecked(inner) };
-+
-+        Ok(Self {
-+            inner,
-+            _phantom: PhantomData,
-+        })
-+    }
-+
-+    fn enable_internal(&mut self) -> Result {
-+        // SAFETY: Safe as per the type invariants of `Regulator`.
-+        to_result(unsafe { bindings::regulator_enable(self.inner.as_ptr()) })
-+    }
-+
-+    fn disable_internal(&mut self) -> Result {
-+        // SAFETY: Safe as per the type invariants of `Regulator`.
-+        to_result(unsafe { bindings::regulator_disable(self.inner.as_ptr()) })
-+    }
-+}
-+
-+impl Regulator<Disabled> {
-+    /// Obtains a [`Regulator`] instance from the system.
-+    pub fn get(dev: &Device, name: &CStr) -> Result<Self> {
-+        Regulator::get_internal(dev, name)
-+    }
-+
-+    /// Attempts to convert the regulator to an enabled state.
-+    pub fn try_into_enabled(mut self) -> Result<Regulator<Enabled>, Error<Disabled>> {
-+        self.enable_internal()
-+            .map(|()| Regulator {
-+                inner: self.inner,
-+                _phantom: PhantomData,
-+            })
-+            .map_err(|error| Error {
-+                error,
-+                regulator: self,
-+            })
-+    }
-+}
-+
-+impl Regulator<Enabled> {
-+    /// Obtains a [`Regulator`] instance from the system and enables it.
-+    ///
-+    /// This is equivalent to calling `regulator_get_enable()` in the C API.
-+    pub fn get(dev: &Device, name: &CStr) -> Result<Self> {
-+        Regulator::<Disabled>::get_internal(dev, name)?
-+            .try_into_enabled()
-+            .map_err(|error| error.error)
-+    }
-+
-+    /// Attempts to convert the regulator to a disabled state.
-+    pub fn try_into_disabled(mut self) -> Result<Regulator<Disabled>, Error<Enabled>> {
-+        self.disable_internal()
-+            .map(|()| Regulator {
-+                inner: self.inner,
-+                _phantom: PhantomData,
-+            })
-+            .map_err(|error| Error {
-+                error,
-+                regulator: self,
-+            })
-+    }
-+}
-+
-+impl Regulator<Dynamic> {
-+    /// Obtains a [`Regulator`] instance from the system. The current state of
-+    /// the regulator is unknown and it is up to the user to manage the enabled
-+    /// reference count.
-+    ///
-+    /// This closely mimics the behavior of the C API and can be used to
-+    /// dynamically manage the enabled reference count at runtime.
-+    pub fn get(dev: &Device, name: &CStr) -> Result<Self> {
-+        Regulator::get_internal(dev, name)
-+    }
-+
-+    /// Increases the `enabled` reference count.
-+    pub fn enable(&mut self) -> Result {
-+        self.enable_internal()
-+    }
-+
-+    /// Decreases the `enabled` reference count.
-+    pub fn disable(&mut self) -> Result {
-+        self.disable_internal()
-+    }
-+}
-+
-+impl<T: IsEnabled> Regulator<T> {
-+    /// Checks if the regulator is enabled.
-+    pub fn is_enabled(&self) -> bool {
-+        // SAFETY: Safe as per the type invariants of `Regulator`.
-+        unsafe { bindings::regulator_is_enabled(self.inner.as_ptr()) != 0 }
-+    }
-+}
-+
-+impl<T: RegulatorState + 'static> Drop for Regulator<T> {
-+    fn drop(&mut self) {
-+        if core::any::TypeId::of::<T>() == core::any::TypeId::of::<Enabled>() {
-+            // SAFETY: By the type invariants, we know that `self` owns a
-+            // reference on the enabled refcount, so it is safe to relinquish it
-+            // now.
-+            unsafe { bindings::regulator_disable(self.inner.as_ptr()) };
-+        }
-+        // SAFETY: By the type invariants, we know that `self` owns a reference,
-+        // so it is safe to relinquish it now.
-+        unsafe { bindings::regulator_put(self.inner.as_ptr()) };
-+    }
-+}
-+
-+/// A voltage in microvolts.
-+///
-+/// The explicit type is used to avoid confusion with other multiples of the
-+/// volt, which can be disastrous.
-+#[repr(transparent)]
-+#[derive(Copy, Clone, PartialEq, Eq)]
-+pub struct Microvolt(pub i32);
+
+vim +/bch2_rename2 +867 fs/bcachefs/fs.c
+
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   866  
+1c6fdbd8f2465d Kent Overstreet   2017-03-16  @867  static int bch2_rename2(struct mnt_idmap *idmap,
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   868  			struct inode *src_vdir, struct dentry *src_dentry,
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   869  			struct inode *dst_vdir, struct dentry *dst_dentry,
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   870  			unsigned flags)
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   871  {
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   872  	struct bch_fs *c = src_vdir->i_sb->s_fs_info;
+9638574229e3ae Kent Overstreet   2019-10-02   873  	struct bch_inode_info *src_dir = to_bch_ei(src_vdir);
+9638574229e3ae Kent Overstreet   2019-10-02   874  	struct bch_inode_info *dst_dir = to_bch_ei(dst_vdir);
+9638574229e3ae Kent Overstreet   2019-10-02   875  	struct bch_inode_info *src_inode = to_bch_ei(src_dentry->d_inode);
+9638574229e3ae Kent Overstreet   2019-10-02   876  	struct bch_inode_info *dst_inode = to_bch_ei(dst_dentry->d_inode);
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   877  	struct bch_inode_unpacked dst_dir_u, src_dir_u;
+4645855df01eda Sasha Finkelstein 2024-08-18   878  	struct bch_inode_unpacked src_inode_u, dst_inode_u, *whiteout_inode_u;
+6bd68ec266ad71 Kent Overstreet   2023-09-12   879  	struct btree_trans *trans;
+9638574229e3ae Kent Overstreet   2019-10-02   880  	enum bch_rename_mode mode = flags & RENAME_EXCHANGE
+9638574229e3ae Kent Overstreet   2019-10-02   881  		? BCH_RENAME_EXCHANGE
+9638574229e3ae Kent Overstreet   2019-10-02   882  		: dst_dentry->d_inode
+9638574229e3ae Kent Overstreet   2019-10-02   883  		? BCH_RENAME_OVERWRITE : BCH_RENAME;
+4645855df01eda Sasha Finkelstein 2024-08-18   884  	bool whiteout = !!(flags & RENAME_WHITEOUT);
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   885  	int ret;
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   886  
+4645855df01eda Sasha Finkelstein 2024-08-18   887  	if (flags & ~(RENAME_NOREPLACE|RENAME_EXCHANGE|RENAME_WHITEOUT))
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   888  		return -EINVAL;
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   889  
+9638574229e3ae Kent Overstreet   2019-10-02   890  	if (mode == BCH_RENAME_OVERWRITE) {
+9638574229e3ae Kent Overstreet   2019-10-02   891  		ret = filemap_write_and_wait_range(src_inode->v.i_mapping,
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   892  						   0, LLONG_MAX);
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   893  		if (ret)
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   894  			return ret;
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   895  	}
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   896  
+168f4c5fb37513 Kent Overstreet   2019-06-24   897  	bch2_lock_inodes(INODE_UPDATE_LOCK,
+9638574229e3ae Kent Overstreet   2019-10-02   898  			 src_dir,
+9638574229e3ae Kent Overstreet   2019-10-02   899  			 dst_dir,
+9638574229e3ae Kent Overstreet   2019-10-02   900  			 src_inode,
+9638574229e3ae Kent Overstreet   2019-10-02   901  			 dst_inode);
+9638574229e3ae Kent Overstreet   2019-10-02   902  
+f369de82679f4f Kent Overstreet   2024-07-04   903  	trans = bch2_trans_get(c);
+f369de82679f4f Kent Overstreet   2024-07-04   904  
+112d21fd1a122f Kent Overstreet   2024-06-08   905  	ret   = bch2_subvol_is_ro_trans(trans, src_dir->ei_inum.subvol) ?:
+112d21fd1a122f Kent Overstreet   2024-06-08   906  		bch2_subvol_is_ro_trans(trans, dst_dir->ei_inum.subvol);
+0d72ab35a925d6 Kent Overstreet   2023-12-29   907  	if (ret)
+74ec2f302402c4 Kent Overstreet   2024-10-14   908  		goto err_tx_restart;
+0d72ab35a925d6 Kent Overstreet   2023-12-29   909  
+9638574229e3ae Kent Overstreet   2019-10-02   910  	if (inode_attr_changing(dst_dir, src_inode, Inode_opt_project)) {
+9638574229e3ae Kent Overstreet   2019-10-02   911  		ret = bch2_fs_quota_transfer(c, src_inode,
+9638574229e3ae Kent Overstreet   2019-10-02   912  					     dst_dir->ei_qid,
+96012e143e699d Kent Overstreet   2018-12-17   913  					     1 << QTYP_PRJ,
+96012e143e699d Kent Overstreet   2018-12-17   914  					     KEY_TYPE_QUOTA_PREALLOC);
+96012e143e699d Kent Overstreet   2018-12-17   915  		if (ret)
+96012e143e699d Kent Overstreet   2018-12-17   916  			goto err;
+96012e143e699d Kent Overstreet   2018-12-17   917  	}
+96012e143e699d Kent Overstreet   2018-12-17   918  
+9638574229e3ae Kent Overstreet   2019-10-02   919  	if (mode == BCH_RENAME_EXCHANGE &&
+9638574229e3ae Kent Overstreet   2019-10-02   920  	    inode_attr_changing(src_dir, dst_inode, Inode_opt_project)) {
+9638574229e3ae Kent Overstreet   2019-10-02   921  		ret = bch2_fs_quota_transfer(c, dst_inode,
+9638574229e3ae Kent Overstreet   2019-10-02   922  					     src_dir->ei_qid,
+96012e143e699d Kent Overstreet   2018-12-17   923  					     1 << QTYP_PRJ,
+96012e143e699d Kent Overstreet   2018-12-17   924  					     KEY_TYPE_QUOTA_PREALLOC);
+96012e143e699d Kent Overstreet   2018-12-17   925  		if (ret)
+96012e143e699d Kent Overstreet   2018-12-17   926  			goto err;
+96012e143e699d Kent Overstreet   2018-12-17   927  	}
+4645855df01eda Sasha Finkelstein 2024-08-18   928  retry:
+4645855df01eda Sasha Finkelstein 2024-08-18   929  	bch2_trans_begin(trans);
+96012e143e699d Kent Overstreet   2018-12-17   930  
+4645855df01eda Sasha Finkelstein 2024-08-18   931  	ret = bch2_rename_trans(trans,
+6fed42bb7750e2 Kent Overstreet   2021-03-16   932  				inode_inum(src_dir), &src_dir_u,
+6fed42bb7750e2 Kent Overstreet   2021-03-16   933  				inode_inum(dst_dir), &dst_dir_u,
+9638574229e3ae Kent Overstreet   2019-10-02   934  				&src_inode_u,
+9638574229e3ae Kent Overstreet   2019-10-02   935  				&dst_inode_u,
+9638574229e3ae Kent Overstreet   2019-10-02   936  				&src_dentry->d_name,
+9638574229e3ae Kent Overstreet   2019-10-02   937  				&dst_dentry->d_name,
+4645855df01eda Sasha Finkelstein 2024-08-18   938  				mode);
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   939  	if (unlikely(ret))
+4645855df01eda Sasha Finkelstein 2024-08-18   940  		goto err_tx_restart;
+4645855df01eda Sasha Finkelstein 2024-08-18   941  
+4645855df01eda Sasha Finkelstein 2024-08-18   942  	if (whiteout) {
+4645855df01eda Sasha Finkelstein 2024-08-18   943  		whiteout_inode_u = bch2_trans_kmalloc_nomemzero(trans, sizeof(*whiteout_inode_u));
+4645855df01eda Sasha Finkelstein 2024-08-18   944  		ret = PTR_ERR_OR_ZERO(whiteout_inode_u);
+4645855df01eda Sasha Finkelstein 2024-08-18   945  		if (unlikely(ret))
+4645855df01eda Sasha Finkelstein 2024-08-18   946  			goto err_tx_restart;
+4645855df01eda Sasha Finkelstein 2024-08-18   947  		bch2_inode_init_early(c, whiteout_inode_u);
+4645855df01eda Sasha Finkelstein 2024-08-18   948  
+4645855df01eda Sasha Finkelstein 2024-08-18   949  		ret = bch2_create_trans(trans,
+4645855df01eda Sasha Finkelstein 2024-08-18   950  					inode_inum(src_dir), &src_dir_u,
+4645855df01eda Sasha Finkelstein 2024-08-18   951  					whiteout_inode_u,
+4645855df01eda Sasha Finkelstein 2024-08-18   952  					&src_dentry->d_name,
+4645855df01eda Sasha Finkelstein 2024-08-18   953  					from_kuid(i_user_ns(&src_dir->v), current_fsuid()),
+4645855df01eda Sasha Finkelstein 2024-08-18   954  					from_kgid(i_user_ns(&src_dir->v), current_fsgid()),
+4645855df01eda Sasha Finkelstein 2024-08-18   955  					S_IFCHR|WHITEOUT_MODE, 0,
+4645855df01eda Sasha Finkelstein 2024-08-18   956  					NULL, NULL, (subvol_inum) { 0 }, 0) ?:
+4645855df01eda Sasha Finkelstein 2024-08-18   957  		      bch2_quota_acct(c, bch_qid(whiteout_inode_u), Q_INO, 1,
+4645855df01eda Sasha Finkelstein 2024-08-18   958  				      KEY_TYPE_QUOTA_PREALLOC);
+4645855df01eda Sasha Finkelstein 2024-08-18   959  		if (unlikely(ret))
+4645855df01eda Sasha Finkelstein 2024-08-18   960  			goto err_tx_restart;
+4645855df01eda Sasha Finkelstein 2024-08-18   961  	}
+4645855df01eda Sasha Finkelstein 2024-08-18   962  
+4645855df01eda Sasha Finkelstein 2024-08-18   963  	ret = bch2_trans_commit(trans, NULL, NULL, 0);
+4645855df01eda Sasha Finkelstein 2024-08-18   964  	if (unlikely(ret)) {
+4645855df01eda Sasha Finkelstein 2024-08-18   965  err_tx_restart:
+4645855df01eda Sasha Finkelstein 2024-08-18   966  		if (bch2_err_matches(ret, BCH_ERR_transaction_restart))
+4645855df01eda Sasha Finkelstein 2024-08-18   967  			goto retry;
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   968  		goto err;
+4645855df01eda Sasha Finkelstein 2024-08-18   969  	}
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   970  
+9638574229e3ae Kent Overstreet   2019-10-02   971  	BUG_ON(src_inode->v.i_ino != src_inode_u.bi_inum);
+9638574229e3ae Kent Overstreet   2019-10-02   972  	BUG_ON(dst_inode &&
+9638574229e3ae Kent Overstreet   2019-10-02   973  	       dst_inode->v.i_ino != dst_inode_u.bi_inum);
+9638574229e3ae Kent Overstreet   2019-10-02   974  
+6bd68ec266ad71 Kent Overstreet   2023-09-12   975  	bch2_inode_update_after_write(trans, src_dir, &src_dir_u,
+e614a6c52d32c9 Hongbo Li         2025-01-07   976  				      ATTR_MTIME|ATTR_CTIME|ATTR_SIZE);
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   977  
+68a2054d88f7cd Kent Overstreet   2021-11-05   978  	if (src_dir != dst_dir)
+6bd68ec266ad71 Kent Overstreet   2023-09-12   979  		bch2_inode_update_after_write(trans, dst_dir, &dst_dir_u,
+e614a6c52d32c9 Hongbo Li         2025-01-07   980  					      ATTR_MTIME|ATTR_CTIME|ATTR_SIZE);
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   981  
+6bd68ec266ad71 Kent Overstreet   2023-09-12   982  	bch2_inode_update_after_write(trans, src_inode, &src_inode_u,
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   983  				      ATTR_CTIME);
+9638574229e3ae Kent Overstreet   2019-10-02   984  
+68a2054d88f7cd Kent Overstreet   2021-11-05   985  	if (dst_inode)
+6bd68ec266ad71 Kent Overstreet   2023-09-12   986  		bch2_inode_update_after_write(trans, dst_inode, &dst_inode_u,
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   987  					      ATTR_CTIME);
+1c6fdbd8f2465d Kent Overstreet   2017-03-16   988  err:
+6bd68ec266ad71 Kent Overstreet   2023-09-12   989  	bch2_trans_put(trans);
+96012e143e699d Kent Overstreet   2018-12-17   990  
+9638574229e3ae Kent Overstreet   2019-10-02   991  	bch2_fs_quota_transfer(c, src_inode,
+9638574229e3ae Kent Overstreet   2019-10-02   992  			       bch_qid(&src_inode->ei_inode),
+96012e143e699d Kent Overstreet   2018-12-17   993  			       1 << QTYP_PRJ,
+96012e143e699d Kent Overstreet   2018-12-17   994  			       KEY_TYPE_QUOTA_NOCHECK);
+9638574229e3ae Kent Overstreet   2019-10-02   995  	if (dst_inode)
+9638574229e3ae Kent Overstreet   2019-10-02   996  		bch2_fs_quota_transfer(c, dst_inode,
+9638574229e3ae Kent Overstreet   2019-10-02   997  				       bch_qid(&dst_inode->ei_inode),
+96012e143e699d Kent Overstreet   2018-12-17   998  				       1 << QTYP_PRJ,
+96012e143e699d Kent Overstreet   2018-12-17   999  				       KEY_TYPE_QUOTA_NOCHECK);
+96012e143e699d Kent Overstreet   2018-12-17  1000  
+168f4c5fb37513 Kent Overstreet   2019-06-24  1001  	bch2_unlock_inodes(INODE_UPDATE_LOCK,
+9638574229e3ae Kent Overstreet   2019-10-02  1002  			   src_dir,
+9638574229e3ae Kent Overstreet   2019-10-02  1003  			   dst_dir,
+9638574229e3ae Kent Overstreet   2019-10-02  1004  			   src_inode,
+9638574229e3ae Kent Overstreet   2019-10-02  1005  			   dst_inode);
+1c6fdbd8f2465d Kent Overstreet   2017-03-16  1006  
+1a1c93e7f81417 Kent Overstreet   2024-02-09  1007  	return bch2_err_class(ret);
+1c6fdbd8f2465d Kent Overstreet   2017-03-16  1008  }
+1c6fdbd8f2465d Kent Overstreet   2017-03-16  1009  
+
+:::::: The code at line 867 was first introduced by commit
+:::::: 1c6fdbd8f2465ddfb73a01ec620cbf3d14044e1a bcachefs: Initial commit
+
+:::::: TO: Kent Overstreet <kent.overstreet@gmail.com>
+:::::: CC: Kent Overstreet <kent.overstreet@linux.dev>
 
 -- 
-2.50.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
