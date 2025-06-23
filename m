@@ -1,134 +1,137 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E10288527;
-	Mon, 23 Jun 2025 16:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750694865; cv=pass; b=pZGrs0VoyjMx8nEhW9UW3zu9TYRUPcTc3vpqKvDFKhS0Q0O9tI8e3IeBBehqkRbNMOXorg14wzLywqk0UnasPqApbPyngGUhVyhC9BYyP+jTUykVu7Dk+GH4woCyBZa68BSxTEngLpNdLwH6bks/68b5DkfOg0+wfb2AdzEYLno=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750694865; c=relaxed/simple;
-	bh=4A7PiH6JvPYi4sJdigKOFkhBORADmbsygbSnofidQhM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VQy8Aad/+op7GZYMxUpg6EFcFwkeWpUd2obbePB59mFgStkWtM5Znf/sp2u1+liJmSqt0bnUYYtGtmwXVL7Q7lg2FrtWxK3G1dxzDESKfXVVbSJO6UxiogMUMNVb3XzHOjhDnFwteRacWZwOtjfATY+W+/hxFOkEirDvUoP38iY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=QvgjscK7; arc=pass smtp.client-ip=136.143.188.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38FE2BE7A1;
+	Mon, 23 Jun 2025 16:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750694867; cv=none; b=CRWeK6pfK2ChQCEAPob/6nFLYuK9YrN/CcAtx7NEvGh6BW0zYy3K7rBIuo5soAR63auP7kS8kK+Af33ltzcJrMJcUts3vlCkHS4hHy5k/MaEpYzFINXyidy7McDhSW1Z+8F4nwRhwB9xNhMIDI9ZOVlMTEluXgeTJNjPMOjtZ9c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750694867; c=relaxed/simple;
+	bh=potBOdXr8Iz2ioECm7kZqlRyCx32EonrYrShLBe6IA0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qcNoea9yr1C7Sx5GcVjNC1gXkCEU1iShuWgZxoFJ0maH23ZtelG10gpzQUKS63iOnPR/+CD0kPSvYLGz+ap+OUnQ9w4Nz+dLsaTm3gKyl8sFvDDo6hR1emSlaLsvirA6eCYiCmNj8mUETKUxyZAKciz6dPF0gzDakQDH1Bwut4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=mBIu00QN; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="QvgjscK7"
-ARC-Seal: i=1; a=rsa-sha256; t=1750694804; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=K7Q9tgTPlrIc9XNYWTYRVlRSai0pFbuSJBorOUBNIPY+oau4zgiPxYEPgOj8b2qnkhmolRvPH5enkTvGWEP8CfkkD+e6/mUYipWKby326nfUB8MVqCtaUOhiFSAG88cFax44NSlWZSKguDkiU7u4zzj3uOacH37glMUqADa+oXE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750694804; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=eoA5RXMl12cHfJONoAaxIbWb/2Djy5r2aatx6D/qAxo=; 
-	b=HbXlrW8MrBx0rnm8dd4j7pONXrgIvkSg1FnQNPCRmUJVxbOttZJ0LbPfdkrJg19QndoYY8kfmVvTmqF9QldXWFIXdDdWq5xn6CMd62ZmSsRvUZm5fyeQgo5+/9o2zFNZyXNAXZQfn69TKuM31u1yTckVWDB/8R5tV4+xfyM0KE8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750694804;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=eoA5RXMl12cHfJONoAaxIbWb/2Djy5r2aatx6D/qAxo=;
-	b=QvgjscK7NnhGzdZiOG35gHcfkGdacKLZFwgfE0aGSYu8uPGwjo+tyhWyXB6xOyne
-	lw67O2p25ysKrn2t9PSo7DlJ2VuZwYI/1ByZvm7P9DxxAoCSbeWrylAF0R1nit8F6ft
-	If+wtiFp6uGNcF26F450h8UeFojBEtLUJaFM46Ew=
-Received: by mx.zohomail.com with SMTPS id 1750694802450300.9211032358951;
-	Mon, 23 Jun 2025 09:06:42 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Mon, 23 Jun 2025 18:05:32 +0200
-Subject: [PATCH v2 04/20] media: synopsys: hdmirx: replace macros with
- bitfield variants
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="mBIu00QN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750694864;
+	bh=potBOdXr8Iz2ioECm7kZqlRyCx32EonrYrShLBe6IA0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mBIu00QNj1CLzYNlx8lmRn1yZwl8BwHb8ZyGA/R4yuut7XODfZQJbiFB5/sbi+fsf
+	 Bw2bOUpqvZIwTHJSLxTO7psFxYAyKq9zqlPFYlWsqqcI6EOOQ25XR3B6Mx83A5djyP
+	 pqjUwjEfK0hZxAVtKN2kPWGVYUiY1CtqITnzUlAvEoFqprNKlGrauXGP33M6h/g/N/
+	 d1I21SWkZYP+XO0+ajKlXWpTutAK1ydowgxxJSE0BudcAIhujvx3qer94e6ZjiWIZO
+	 sTXntA+k5WA8HQsSAaLruG3at6OXYKJSjWOor2i6mSVw+Xg0uniCMrFRJ0XKkY/YML
+	 rKX23HXSQbY5A==
+Received: from trenzalore.hitronhub.home (unknown [23.233.251.139])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: detlev)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id DBD5C17E0342;
+	Mon, 23 Jun 2025 18:07:40 +0200 (CEST)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Alexey Charkov <alchark@gmail.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Jianfeng Liu <liujianfeng1994@gmail.com>,
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Ricardo Ribalda <ribalda@chromium.org>,
+	Hans de Goede <hansg@kernel.org>,
+	Yunke Cao <yunkec@google.com>,
+	linux-media@vger.kernel.org,
+	kernel@collabora.com
+Subject: [PATCH 0/8] Prepare for new rkvdec variants
+Date: Mon, 23 Jun 2025 12:07:14 -0400
+Message-ID: <20250623160722.55938-1-detlev.casanova@collabora.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-byeword-update-v2-4-cf1fc08a2e1f@collabora.com>
-References: <20250623-byeword-update-v2-0-cf1fc08a2e1f@collabora.com>
-In-Reply-To: <20250623-byeword-update-v2-0-cf1fc08a2e1f@collabora.com>
-To: Yury Norov <yury.norov@gmail.com>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- Jaehoon Chung <jh80.chung@samsung.com>, 
- Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
- Shreeya Patel <shreeya.patel@collabora.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
- Nicolas Frattaroli <frattaroli.nicolas@gmail.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Shawn Lin <shawn.lin@rock-chips.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
- MyungJoo Ham <myungjoo.ham@samsung.com>, 
- Kyungmin Park <kyungmin.park@samsung.com>, Qin Jian <qinjian@cqplus1.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, 
- linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org, 
- linux-sound@vger.kernel.org, netdev@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
-drivers that use constant masks.
+This patch set introduces the necessary bits for new variants
+implementations that do not modify the driver.
+The driver changes will come in another patch set.
 
-Replace the UPDATE macro with bitfield.h's FIELD_PREP, to give us
-additional error checking.
+The first 4 patches document the device nodes and then add the nodes for
+rk3588 and rk3576. I kept the R-b tag from Conor Dooley as the patch
+didn't change much from [1]. I can remove it if needed.
 
-Also, replace the HIWORD_UPDATE macro at the same time with the new
-FIELD_PREP_WM16 macro in hw_bitfield.h, which also gives us additional
-error checking.
+Then a new v4l2 control for HEVC is added to be able to send the missing
+RPS information to the driver.
 
-The UPDATE/HIWORD_UPDATE macros are left as wrappers around the
-replacement macros, in order to not rock the boat too much, and keep the
-changes easy to review.
+Finally, the driver is unstaged as the TODO points are removed. I added
+myself as maintainer for now as I'll be adding support for several
+variants.
 
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
- drivers/media/platform/synopsys/hdmirx/snps_hdmirx.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Those 3 parts can be applied separately and do not depend on each other.
+Based on v6.16-rc3.
 
-diff --git a/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.h b/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.h
-index 220ab99ca61152b36b0a08b398ddefdb985709a5..b26668a98aafd1682b8342cc11f84666a13f07a3 100644
---- a/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.h
-+++ b/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.h
-@@ -8,10 +8,12 @@
- #ifndef DW_HDMIRX_H
- #define DW_HDMIRX_H
- 
-+#include <linux/bitfield.h>
- #include <linux/bitops.h>
-+#include <linux/hw_bitfield.h>
- 
--#define UPDATE(x, h, l)		(((x) << (l)) & GENMASK((h), (l)))
--#define HIWORD_UPDATE(v, h, l)	(((v) << (l)) | (GENMASK((h), (l)) << 16))
-+#define UPDATE(x, h, l)		(FIELD_PREP(GENMASK((h), (l)), (x)))
-+#define HIWORD_UPDATE(v, h, l)	(FIELD_PREP_WM16(GENMASK((h), (l)), (v)))
- 
- /* SYS_GRF */
- #define SYS_GRF_SOC_CON1			0x0304
+[1]: https://lore.kernel.org/all/20240620-unsmooth-surfer-b62ed94b4a5e@spud/
+
+Detlev Casanova (8):
+  media: dt-bindings: rockchip: Document RK3588 Video Decoder bindings
+  media: dt-bindings: rockchip: Add RK3576 Video Decoder bindings
+  arm64: dts: rockchip: Add the vdpu381 Video Decoders on RK3588
+  arm64: dts: rockchip: Add the vdpu383 Video Decoder on rk3576
+  media: uapi: HEVC: Add v4l2_ctrl_hevc_ext_sps_rps control
+  media: v4l2-ctrls: Add hevc_ext_sps_rps control
+  media: rkvdec: Remove TODO file
+  media: rkvdec: Unstage the driver
+
+ .../bindings/media/rockchip,vdec.yaml         | 80 ++++++++++++++++++-
+ .../media/v4l/ext-ctrls-codec-stateless.rst   | 73 +++++++++++++++++
+ .../media/v4l/vidioc-queryctrl.rst            |  6 ++
+ MAINTAINERS                                   |  8 ++
+ arch/arm64/boot/dts/rockchip/rk3576.dtsi      | 36 +++++++++
+ arch/arm64/boot/dts/rockchip/rk3588-base.dtsi | 74 +++++++++++++++++
+ drivers/media/platform/rockchip/Kconfig       |  1 +
+ drivers/media/platform/rockchip/Makefile      |  1 +
+ .../platform/rockchip}/rkvdec/Kconfig         |  0
+ .../platform/rockchip}/rkvdec/Makefile        |  0
+ .../platform/rockchip}/rkvdec/rkvdec-h264.c   |  0
+ .../platform/rockchip}/rkvdec/rkvdec-regs.h   |  0
+ .../platform/rockchip}/rkvdec/rkvdec-vp9.c    |  0
+ .../platform/rockchip}/rkvdec/rkvdec.c        |  0
+ .../platform/rockchip}/rkvdec/rkvdec.h        |  0
+ drivers/media/v4l2-core/v4l2-ctrls-core.c     |  9 +++
+ drivers/media/v4l2-core/v4l2-ctrls-defs.c     |  5 ++
+ drivers/staging/media/Kconfig                 |  2 -
+ drivers/staging/media/Makefile                |  1 -
+ drivers/staging/media/rkvdec/TODO             | 11 ---
+ include/uapi/linux/v4l2-controls.h            | 48 +++++++++++
+ include/uapi/linux/videodev2.h                |  1 +
+ 22 files changed, 339 insertions(+), 17 deletions(-)
+ rename drivers/{staging/media => media/platform/rockchip}/rkvdec/Kconfig (100%)
+ rename drivers/{staging/media => media/platform/rockchip}/rkvdec/Makefile (100%)
+ rename drivers/{staging/media => media/platform/rockchip}/rkvdec/rkvdec-h264.c (100%)
+ rename drivers/{staging/media => media/platform/rockchip}/rkvdec/rkvdec-regs.h (100%)
+ rename drivers/{staging/media => media/platform/rockchip}/rkvdec/rkvdec-vp9.c (100%)
+ rename drivers/{staging/media => media/platform/rockchip}/rkvdec/rkvdec.c (100%)
+ rename drivers/{staging/media => media/platform/rockchip}/rkvdec/rkvdec.h (100%)
+ delete mode 100644 drivers/staging/media/rkvdec/TODO
 
 -- 
 2.50.0
