@@ -1,146 +1,274 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B737211C;
-	Mon, 23 Jun 2025 08:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00684D529
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750667548; cv=none; b=gwLwrdSCnjw3122DmPIwFQk0k6I59guePh+NlxdOUJhiXChRe8OZWvNZb72+EzvkgnBYH45/BygFiT+1Z/zBiH7V+/uu8QOv0hoQpZwRfEFFdqB9ab2y68OKpGAIC7XmLwI6h8XGT9LVZvr7UnFMedYKvSIhvwVVUcv2utNXuH8=
+	t=1750667621; cv=none; b=JSZXu0jLpQr/V7ecz5fDDp3SgiBakqGJeTWeOwDtpm16smrcVsWwqrhJCmyZWB0JPtMa4uGta2z+SgioZ1CYNqF8Y71aqvuZ3q0kd/Vj4KJpyYmxVbYBEeFwgTpUqjIDcf6rpTeQxUr9dCEuMLDOnySWAuNDscf3kIcNNRka19c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750667548; c=relaxed/simple;
-	bh=NkTK2xU5GNOOTzt4+4ac7aMoAn+9hIaNTqCBu3oKpbI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=OUN+8fJUFUMa+k4CuV7UjZOcsp9TQSjYOddRqooKnHDS4Z7qB9M0UyD6K8GkADV+SVe8jiJLygZugd13NJE+4+fRjBSQXr5dOKI2s5Ch4AoA1kCrecigQcVF8MgzZoqB61KTZY/Y3Ub/jRf5SdZLl7tS8FJ8DTIcYcqinvD9VYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lkQF8OCx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CECKkIHZ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750667621; c=relaxed/simple;
+	bh=9m94uQJSiCXnY7//UgNH+rQhmcSjtMU+IgNkB9l4Vgs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Cl+OO5kIa/CHPaxnmH711L7JR6q9MUcK8JW3ocYv5kvcJGzzlY20QRdpfAOQ11DYqqcT7MYIFyAlPcecM4d3rBZixgiZ2148kGVXjUoppqQsWyAq2OHtPQ3/nq9QcGSdO1c5+M3KvQC+X088Ky9qpf5Hio9HVyGnApn5rCByKZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FTKSgrlz; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lkQF8OCx";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CECKkIHZ"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750667544;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FTKSgrlz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750667619;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6TBn4MEBOK0ZmxdXFsUTHmooPn2yAfLFgSEgICXe3Wg=;
-	b=lkQF8OCxmCGCB6iWsrGliKc+7GLLsC5mdKAEbfMLPnyPcZgyYVvBdn14i2CUlL6qLCCM5Q
-	DfgA782HtzGnZt0nxPzgX27haotYmdzZiV3VEfTOSwtmgnwsNsMxx4SFlj2eHQWsThWOOF
-	P7CkXc2yIGGRCnXwG3LyjXSNM+gX6WIp2Aney+BaSdJVu/g3mr+0CoSBlZ9pUKYL1rl89M
-	MsRQltWBKCrAhF6hcm3P62Cj7kIS2r90Sqb9euXnhOXmFmqdY4C4v0sVfp4M0XtlAbkYQ6
-	6+ciq7Nk6N/Fg3hbmYZhlugJ9qCQgIzOeQwk4+uE3LyYTtt9x7xUQHLsYGMP0A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750667544;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6TBn4MEBOK0ZmxdXFsUTHmooPn2yAfLFgSEgICXe3Wg=;
-	b=CECKkIHZGm4M0F5XqJ/bjKbES7SjUlsNHDOD4Vw5cw3bx6wC3oCXUZavDxLcNMs9twGyJq
-	AG4iZr9bntxaYMDA==
-To: yunhui cui <cuiyunhui@bytedance.com>, arnd@arndb.de,
- andriy.shevchenko@linux.intel.com, benjamin.larsson@genexis.eu,
- cuiyunhui@bytedance.com, gregkh@linuxfoundation.org,
- heikki.krogerus@linux.intel.com, ilpo.jarvinen@linux.intel.com,
- jirislaby@kernel.org, jkeeping@inmusicbrands.com,
- linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
- markus.mayer@linaro.org, matt.porter@linaro.org, namcao@linutronix.de,
- paulmck@kernel.org, pmladek@suse.com, schnelle@linux.ibm.com,
- sunilvl@ventanamicro.com, tim.kryger@linaro.org
-Cc: stable@vger.kernel.org
-Subject: Re: [PATCH v9 2/4] serial: 8250_dw: fix PSLVERR on RX_TIMEOUT
-In-Reply-To: <CAEEQ3w=pUPEVOM4fG6wr06eOD_uO6_ZBzORaG1zhtPswD8HLNQ@mail.gmail.com>
-References: <20250610092135.28738-1-cuiyunhui@bytedance.com>
- <20250610092135.28738-3-cuiyunhui@bytedance.com>
- <CAEEQ3w=pUPEVOM4fG6wr06eOD_uO6_ZBzORaG1zhtPswD8HLNQ@mail.gmail.com>
-Date: Mon, 23 Jun 2025 10:38:23 +0206
-Message-ID: <84cyauq2nc.fsf@jogness.linutronix.de>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=3+npad/odQqphVJbiB+rZH6xk0guAOkaC0w0dlFOsa4=;
+	b=FTKSgrlz6C9ZAnyHvs2oz5u7ZXCLEDoLMglr1eeZj0nJM9MOZhTGm6nCWdFKNBU+MYzaGU
+	T73aqMjIoivR1P9iXjQlMFQJVwJgj/tLmK9SZsANz9WIsU4Q1Rz4/1PxHXfNjN4GAmqr4h
+	32Y8+tIUdf2BJoRLEB40CYnih8c3+bk=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-342-1tfZO4EINKCTfFEOuowHbQ-1; Mon, 23 Jun 2025 04:33:35 -0400
+X-MC-Unique: 1tfZO4EINKCTfFEOuowHbQ-1
+X-Mimecast-MFC-AGG-ID: 1tfZO4EINKCTfFEOuowHbQ_1750667614
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43eed325461so23478055e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:33:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750667614; x=1751272414;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3+npad/odQqphVJbiB+rZH6xk0guAOkaC0w0dlFOsa4=;
+        b=K4dS0QTrKLGqrSMUYKKANQ+paCb84KGQpeBTduhrSqgBQ9MSV8bv8uObaMzfR5qtyQ
+         6Bk73oteODTcxwDTCWpGRPcdaMEWQ4nrnotcbCGnNdiIO/unALwMBznfc5rbTxNSRIKc
+         Og7ZQRUnmybjOFBs1lJGcfzOucW/jZlPDWX2bugu1D7MS7t2nOx2P09r7MoEk9tnwPXl
+         /UOMyODG8PodwEhVtoREM0q7ukj7jeO+HurxyxmeToQQhp949jtyWC2Xo5fHLdf9TGeq
+         dn67q0hUYz+T189XAbLimM07jPvVSN6Mv4tuSC66fWKqTuzBWHMkJftelsU8/yBHCNB2
+         deXg==
+X-Forwarded-Encrypted: i=1; AJvYcCWOMquMOWYyaZHQnIIlJAUHlTV0n7GEaiwmhhLr/0g27Aiq37OSHUPYuUJHnAQXyhskQZ+BpSG38gxUTlY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxsa76RNKXPmoUdR1wl2uuThiocA10FH8BMKDxE4pAb0WX7uZYH
+	qZuzrgIbARXHxCYvJ2gm+vpRW4OqfpYpx8z1p7hOPKlaS5KwKIwfRroi/hZnMyXr4tI5KQO78Cu
+	m6V1euhTnX7A8HluwtN7WptSE/tDu8XFwa4d4AIYnyEA+rzubV3yL/jtZ84h5iv5iJQ==
+X-Gm-Gg: ASbGncsOd9UE+e8Hx4k/vNFP4hjmtPbXwQUUjRXUd4bk9/Q72PNsig/C1d++9N5a6fa
+	Asb9uyOw5+aR4wH7OstSsXuV+xxa05L6MeWQsBWo1faM/aSs2Wc4f925e3Y3FQ4kLgT886TzTYJ
+	uGoTuNDmUblHeQFgA5OtrbjCxg0JkmRh2MvYBNIZTlCkw21+6tDWNYWrdYuiUxMnE9WQp1sNLc6
+	unhEUGT+S8OezHefCVS4Fh6lcjA5fy2ySW089417U3bdXir0KbXnRVAEdP938YGKFyYYy0jD3tS
+	4r2Yh/dpA+Bu1R4gC8/nKV86eZzHsEyhpHS3fIrm87V93WMoF7o8RLjU/aT6y+HQiAO+lpOdkB/
+	cGA4T61ROovFZmWlQkbamTUDraXrS4BtMWB6wHewg0t7ONhY9qw==
+X-Received: by 2002:a05:600c:81c8:b0:441:d4e8:76cd with SMTP id 5b1f17b1804b1-453659f6a8cmr109834655e9.29.1750667614347;
+        Mon, 23 Jun 2025 01:33:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEVA500VKWrMeirc3PvoA8BjNGub6mQK+nWWl3iBoZR+AeysXOc0nTX+nZuUKIriBmKwAv1MQ==
+X-Received: by 2002:a05:600c:81c8:b0:441:d4e8:76cd with SMTP id 5b1f17b1804b1-453659f6a8cmr109834275e9.29.1750667613899;
+        Mon, 23 Jun 2025 01:33:33 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159? (p200300d82f4efd008e13e3b590c81159.dip0.t-ipconnect.de. [2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453647082a2sm103293925e9.37.2025.06.23.01.33.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 01:33:33 -0700 (PDT)
+Message-ID: <ce92ebb5-92fd-47e0-a7f6-445655e60999@redhat.com>
+Date: Mon, 23 Jun 2025 10:33:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/selftests: improve UFFD-WP feature detection in KSM
+ test
+To: Li Wang <liwang@redhat.com>, akpm@linux-foundation.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Joey Gouly <joey.gouly@arm.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Keith Lucas <keith.lucas@oracle.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Shuah Khan <shuah@kernel.org>
+References: <20250622081035.378164-1-liwang@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250622081035.378164-1-liwang@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Yunhui,
+On 22.06.25 10:10, Li Wang wrote:
+> The current implementation of test_unmerge_uffd_wp() explicitly sets
+> `uffdio_api.features = UFFD_FEATURE_PAGEFAULT_FLAG_WP` before calling
+> UFFDIO_API. This can cause the ioctl() call to fail with EINVAL on kernels
+> that do not support UFFD-WP, leading the test to fail unnecessarily:
+> 
+>    # ------------------------------
+>    # running ./ksm_functional_tests
+>    # ------------------------------
+>    # TAP version 13
+>    # 1..9
+>    # # [RUN] test_unmerge
+>    # ok 1 Pages were unmerged
+>    # # [RUN] test_unmerge_zero_pages
+>    # ok 2 KSM zero pages were unmerged
+>    # # [RUN] test_unmerge_discarded
+>    # ok 3 Pages were unmerged
+>    # # [RUN] test_unmerge_uffd_wp
+>    # not ok 4 UFFDIO_API failed     <-----
+>    # # [RUN] test_prot_none
+>    # ok 5 Pages were unmerged
+>    # # [RUN] test_prctl
+>    # ok 6 Setting/clearing PR_SET_MEMORY_MERGE works
+>    # # [RUN] test_prctl_fork
+>    # # No pages got merged
+>    # # [RUN] test_prctl_fork_exec
+>    # ok 7 PR_SET_MEMORY_MERGE value is inherited
+>    # # [RUN] test_prctl_unmerge
+>    # ok 8 Pages were unmerged
+>    # Bail out! 1 out of 8 tests failed
+>    # # Planned tests != run tests (9 != 8)
+>    # # Totals: pass:7 fail:1 xfail:0 xpass:0 skip:0 error:0
+>    # [FAIL]
+> 
+> This patch improves compatibility and error handling by:
+> 
+> 1. Changes the feature check to first query supported features (features=0)
+>     rather than specifically requesting WP support.
+> 
+> 2. Gracefully skipping the test if:
+>     - UFFDIO_API fails with EINVAL (feature not supported), or
+>     - UFFD_FEATURE_PAGEFAULT_FLAG_WP is not advertised by the kernel.
+> 
+> 3. Providing better diagnostics by distinguishing expected failures (e.g.,
+>     EINVAL) from unexpected ones and reporting them using strerror().
+> 
+> The updated logic makes the test more robust across different kernel versions
+> and configurations, while preserving existing behavior on systems that do
+> support UFFD-WP.
+> 
+> Signed-off-by: Li Wang <liwang@redhat.com>
+> Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+> Cc: Bagas Sanjaya <bagasdotme@gmail.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Joey Gouly <joey.gouly@arm.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Keith Lucas <keith.lucas@oracle.com>
+> Cc: Ryan Roberts <ryan.roberts@arm.com>
+> Cc: Shuah Khan <shuah@kernel.org>
+> ---
+>   tools/testing/selftests/mm/ksm_functional_tests.c | 8 ++++++--
+>   1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/mm/ksm_functional_tests.c b/tools/testing/selftests/mm/ksm_functional_tests.c
+> index b61803e36d1c..f3db257dc555 100644
+> --- a/tools/testing/selftests/mm/ksm_functional_tests.c
+> +++ b/tools/testing/selftests/mm/ksm_functional_tests.c
+> @@ -393,9 +393,13 @@ static void test_unmerge_uffd_wp(void)
+>   
+>   	/* See if UFFD-WP is around. */
+>   	uffdio_api.api = UFFD_API;
+> -	uffdio_api.features = UFFD_FEATURE_PAGEFAULT_FLAG_WP;
+> +	uffdio_api.features = 0;
+>   	if (ioctl(uffd, UFFDIO_API, &uffdio_api) < 0) {
+> -		ksft_test_result_fail("UFFDIO_API failed\n");
+> +		if (errno == EINVAL)
+> +			ksft_test_result_skip("UFFDIO_API not supported (EINVAL)\n");
+> +		else
+> +			ksft_test_result_fail("UFFDIO_API failed: %s\n", strerror(errno));
+> +
+>   		goto close_uffd;
+>   	}
+>   	if (!(uffdio_api.features & UFFD_FEATURE_PAGEFAULT_FLAG_WP)) {
 
-On 2025-06-23, yunhui cui <cuiyunhui@bytedance.com> wrote:
->> The DW UART may trigger the RX_TIMEOUT interrupt without data
->> present and remain stuck in this state indefinitely. The
->> dw8250_handle_irq() function detects this condition by checking
->> if the UART_LSR_DR bit is not set when RX_TIMEOUT occurs. When
->> detected, it performs a "dummy read" to recover the DW UART from
->> this state.
->>
->> When the PSLVERR_RESP_EN parameter is set to 1, reading the UART_RX
->> while the FIFO is enabled and UART_LSR_DR is not set will generate a
->> PSLVERR error, which may lead to a system panic. There are two methods
->> to prevent PSLVERR: one is to check if UART_LSR_DR is set before reading
->> UART_RX when the FIFO is enabled, and the other is to read UART_RX when
->> the FIFO is disabled.
->>
->> Given these two scenarios, the FIFO must be disabled before the
->> "dummy read" operation and re-enabled afterward to maintain normal
->> UART functionality.
->>
->> Fixes: 424d79183af0 ("serial: 8250_dw: Avoid "too much work" from bogus rx timeout interrupt")
->> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
->> Cc: stable@vger.kernel.org
->> ---
->>  drivers/tty/serial/8250/8250_dw.c | 10 +++++++++-
->>  1 file changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
->> index 1902f29444a1c..082b7fcf251db 100644
->> --- a/drivers/tty/serial/8250/8250_dw.c
->> +++ b/drivers/tty/serial/8250/8250_dw.c
->> @@ -297,9 +297,17 @@ static int dw8250_handle_irq(struct uart_port *p)
->>                 uart_port_lock_irqsave(p, &flags);
->>                 status = serial_lsr_in(up);
->>
->> -               if (!(status & (UART_LSR_DR | UART_LSR_BI)))
->> +               if (!(status & (UART_LSR_DR | UART_LSR_BI))) {
->> +                       /* To avoid PSLVERR, disable the FIFO first. */
->> +                       if (up->fcr & UART_FCR_ENABLE_FIFO)
->> +                               serial_out(up, UART_FCR, 0);
->> +
->>                         serial_port_in(p, UART_RX);
->>
->> +                       if (up->fcr & UART_FCR_ENABLE_FIFO)
->> +                               serial_out(up, UART_FCR, up->fcr);
->> +               }
->> +
->>                 uart_port_unlock_irqrestore(p, flags);
->>         }
->>
->> --
->> 2.39.5
->
-> Any comments on this patch?
 
-I do not know enough about the hardware. Is a dummy read really the only
-way to exit the RX_TIMEOUT state?
+The man page (man UFFDIO_API) documents:
 
-What if there are bytes in the TX-FIFO. Are they in danger of being
-cleared?
+        Since  Linux  4.11,  applications should use the features field to perform a two-step handshake.
+        First, UFFDIO_API is called with the features field set to zero.  The kernel responds by setting
+        all supported feature bits.
 
-From [0] I see:
+        Applications which do not require any specific features can begin using the userfaultfd  immedi‐
+        ately.   Applications which do need specific features should call UFFDIO_API again with a subset
+        of the reported feature bits set to enable those features.
 
-"Writing a "0" to bit 0 will disable the FIFOs, in essence turning the
- UART into 8250 compatibility mode. In effect this also renders the rest
- of the settings in this register to become useless. If you write a "0"
- here it will also stop the FIFOs from sending or receiving data, so any
- data that is sent through the serial data port may be scrambled after
- this setting has been changed. It would be recommended to disable FIFOs
- only if you are trying to reset the serial communication protocol and
- clearing any working buffers you may have in your application
- software. Some documentation suggests that setting this bit to "0" also
- clears the FIFO buffers, but I would recommend explicit buffer clearing
- instead using bits 1 and 2."
+So likely, what you want in this patch here is something like:
 
-Have you performed tests where you fill the TX-FIFO and then
-disable/enable the FIFO to see if the TX-bytes survive?
+diff --git a/tools/testing/selftests/mm/ksm_functional_tests.c b/tools/testing/selftests/mm/ksm_functional_tests.c
+index b61803e36d1cf..5cf819ac958d0 100644
+--- a/tools/testing/selftests/mm/ksm_functional_tests.c
++++ b/tools/testing/selftests/mm/ksm_functional_tests.c
+@@ -393,7 +393,7 @@ static void test_unmerge_uffd_wp(void)
+  
+         /* See if UFFD-WP is around. */
+         uffdio_api.api = UFFD_API;
+-       uffdio_api.features = UFFD_FEATURE_PAGEFAULT_FLAG_WP;
++       uffdio_api.features = 0;
+         if (ioctl(uffd, UFFDIO_API, &uffdio_api) < 0) {
+                 ksft_test_result_fail("UFFDIO_API failed\n");
+                 goto close_uffd;
+@@ -403,6 +403,14 @@ static void test_unmerge_uffd_wp(void)
+                 goto close_uffd;
+         }
+  
++       /* Now, enable it ("two-step handshake") */
++       uffdio_api.api = UFFD_API;
++       uffdio_api.features = UFFD_FEATURE_PAGEFAULT_FLAG_WP;
++       if (ioctl(uffd, UFFDIO_API, &uffdio_api) < 0) {
++               ksft_test_result_fail("UFFDIO_API failed\n");
++               goto close_uffd;
++       }
++
+         /* Register UFFD-WP, no need for an actual handler. */
+         if (uffd_register(uffd, map, size, false, true, false)) {
+                 ksft_test_result_fail("UFFDIO_REGISTER_MODE_WP failed\n");
 
-John Ogness
 
-[0] https://en.wikibooks.org/wiki/Serial_Programming/8250_UART_Programming
+-- 
+Cheers,
+
+David / dhildenb
+
