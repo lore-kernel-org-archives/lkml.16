@@ -1,235 +1,163 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41F05FEE6;
-	Mon, 23 Jun 2025 14:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823297263D
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750687546; cv=none; b=M3LHEH8S1avemdTTaCJf0XXOHEZ6XhVO1ie/5mKeH+t2Njog88LNfNX4YuEP2NBD/4z5XKW576L5j/zwTZT5N45Ow2UqPjvsByXGaVND07jnw5Ek4vQ+mNt5Ve79DI0GykorkAo3LYRX0dyiscI6xo2wvsgb/bCDWgQMDydTzmo=
+	t=1750687695; cv=none; b=ZYujcRGjc2iwyWTu97iKoHeFNrqyMd9Uj8vLMFRrMwcNVRcNtLKj59CS+TUXaJsRF2rQB1zLxpkfR+OKaD0nUHYz0WdddF2elBy9gf6WCTzGDy4wOfFVkYWqEIUR5rxze/BrenNezbLRYNoQi6FFmbU0F505v3m+6h5StGpDyWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750687546; c=relaxed/simple;
-	bh=ospZQHAx1azzHgqpO0329Qy3iUeVF89ddO9PCGb2UkY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kZGZC0lzGnESJ2vIQA2jc9/zWuNemopBYTsj7WiQW3Dl+RXhAr2UbbDhN6zTQtOcSKGLqd1CcA1LnFTpxSWwBTB8k8cSE+u6doqBPQafTbIHnEAsPR7zmW03Q/i/VmrssSoEqT9fmAnHHXYh6GQ7CAhkoo4PDsfiX6gutshHR0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=KJH38pQM; arc=none smtp.client-ip=212.227.17.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1750687695; c=relaxed/simple;
+	bh=j2NwLLP+tVUQU3le2CHeY5WKItpY+MEWflBE5zdlwgw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=t1vc29pz25QCGrRH7nVePV64je62XyAXxpiGC0FYVrOVFpG49VMwJh5nkXHWdSJbjwkxITeYMd1yy/wdilQhurKYKXhI6K9MgUzytNc1rSwkpxou9ZvaATkhyVn+Ex+AGUsjLImgj1XewgT2IRq28VFyKg8EqCHNcIhxy7ME46Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lUn55GyP; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="KJH38pQM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1750687537; x=1751292337; i=christian@heusel.eu;
-	bh=5Onc4Y8lpnattujCyjGKi5wWqwWwEpnJ7+2O5Ajcx7A=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=KJH38pQMZ93/RuQ1fKJUN4BtpisNjlsTcCWghNaotY3knfDCtqsPzZFy1MCGkKl5
-	 UVBMKnEKh6tSeFQxsiC4KhvQP3uD1D/Jp5Jc/ojEhkROkxwdzxt/eTJ19roEwY4dx
-	 RKm0/ZL1FfLnxHN8RZmhmtcq+slfIqBB7Ujtl8S38nibiIRQU+fh0hFlwiPVmrAh/
-	 TZY4nlCSOEAs2fSyT/E+Yykn7O7MRrBnVWJN4VHYUqqeneJLF8CfO6wrwWpvMJgF3
-	 iCQkkbKroV/fr6io2fwjtCLAep2mHniuxL0MUlNeGhwbc5XZrK9TVyUFB44hK9wYm
-	 790NDWsRVn1tMU14qA==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([94.31.75.247]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Mzhax-1ugfyg2FZh-010Vx6; Mon, 23 Jun 2025 15:50:47 +0200
-Date: Mon, 23 Jun 2025 15:50:45 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, 
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, 
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, 
-	hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.15 000/592] 6.15.4-rc1 review
-Message-ID: <a0ebb389-f088-417b-9fd4-ac8c100d206f@heusel.eu>
-References: <20250623130700.210182694@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lUn55GyP"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e818a572828so2990630276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 07:08:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750687692; x=1751292492; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EowSWZHgBam44vNn1dpUDGU5HPdMXeRQtrflhATFszk=;
+        b=lUn55GyPBGxUmCgqCPXxuLMnOg6UMcJHIcA5o7I9E43J2GEjrSnL7nGW6ro3JG7cdq
+         /2IqzqG+9FFKhCkme3LQ2Lh/06La+tA+kFWZ+uow5NiAjF4PU1tMLUuNAl4R4Ae0KgZ4
+         hMOW7NMO/Yzjtd4XSvy+5UmBspm7AKCI0WDZwq0dp4jnxuDhJTYfIkVeumTBUSPWl0UE
+         9lENKJKO9lsoyNPlLs7VZpymXDBOkL+GaFIoIeFon5IZTT6papS2NFTClXS5CHbvXu0R
+         wzdMcsNvE3ZxahIlK1X4HGqp0Jy82u0igfgHvxUjTVt6iozrd8w3bIkXtlKqNxPBv5Tx
+         +9gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750687692; x=1751292492;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EowSWZHgBam44vNn1dpUDGU5HPdMXeRQtrflhATFszk=;
+        b=nEAeqR7Pj17yPenE0hkuuDL1MrXD+i4UEPOYVTVhfmA77wh8lJQFQcPYGVaUsN2pzC
+         /Vvfp/lpyZMi2dpmS8AIvsxjhb4WyCEkHAm7WeZsMnEDLnw6Q/STWpwDf+10Ns9YaqHO
+         5Vaq+/Az9lo36H1y45P3wTdG1UMMioQnh6XcyCD3odUW2FccBfR3ytKZBf+Ij0IuPotH
+         mbbIaAWMl0pqFAXFhFA3Qg3w7D5jqkLjQMwf1xbSfzvsQ0a6b+GpLoeEH/U+cMjZvn7m
+         gPV6jc4LPF4q7A9hVm1Uf8PjPTKE3XdU37nmBJhDEZFPo4HH0S5tC4vr/9JdDTOgNAPB
+         qALg==
+X-Forwarded-Encrypted: i=1; AJvYcCV40ZWvIAxDNVQNETiqTiZ9pmah3r3Qn18nZSku42aVyKnI/San+jR3WwJuxH9tQUfZq/d57Pbl6YIs3SA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4xXn5WVfvN/PpnViqZWZDGHQBM/9oDCIXEzWuvwaknKpahSFb
+	YIe2BGMYMyJfTLTplD0cxc0eRj+qwogzlBtjt33Wdbho6fHCm36iVrf4
+X-Gm-Gg: ASbGncuSX0V99+pfLG3NPmrOHHYVeKn74JyT9Epdh6rksbpBUfe/ddzVoiXB9IMXndE
+	Ziae3IC+0Tn210q2N9EZmsmgx3af57VH1WPkF8+pfej9MuaXI3OvkZLNwcyCKouA3G+9UJ8P3sl
+	RvR307chb+J2w93s05n9++XbElDmCIvQgJxbSGgrJwRgY8+sCHl6jwTRD+whf5dwg7+VwGHHCrd
+	LAkJP4q1Q6HJQucPV97qoP3GBD/S0hfPwJ5M6pYVbxJ28AnQ74KA4uu54Spw8i8MiEB2kRLnqoY
+	mHzh0asKg8Pk49By+GFaYH5fWGb8UzYq3py60h2ommHqOIXAHdy76pAfQ0piaQ==
+X-Google-Smtp-Source: AGHT+IHYE3nYS125xTmonu6rlnXOXYSJSgL5k5E0ktAjTh63MUDrmHzRWNjGR5ZWVHUoeEPNQJRVuw==
+X-Received: by 2002:a05:6902:72a:b0:e7d:cbd0:66a3 with SMTP id 3f1490d57ef6-e842bd078c9mr15228034276.35.1750687691448;
+        Mon, 23 Jun 2025 07:08:11 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:40::])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e85e70124e5sm341310276.11.2025.06.23.07.08.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 07:08:10 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: SeongJae Park <sj@kernel.org>
+Cc: Bijan Tabatabai <bijan311@gmail.com>,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com,
+	byungchul@sk.com,
+	gourry@gourry.net,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	bijantabatab@micron.com,
+	venkataravis@micron.com,
+	emirakhur@micron.com,
+	ajayjoshi@micron.com,
+	vtavarespetr@micron.com
+Subject: Re: [RFC PATCH v2 2/2] mm/damon/paddr: Allow multiple migrate targets
+Date: Mon, 23 Jun 2025 07:08:07 -0700
+Message-ID: <20250623140808.2479244-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250621181127.36394-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bzrlzjrxqd77i3z3"
-Content-Disposition: inline
-In-Reply-To: <20250623130700.210182694@linuxfoundation.org>
-X-Provags-ID: V03:K1:xQORCzsKcY/1G5rTjYyoobOjvK/C4mp5jHpyY05xgU6Q1cU5+rf
- SdLTMzVMQbqPNHLQSd9PILqzuj1kIEd4kkBfMjYulFb4t0V2tG2jF/0sWWUTqI38ygcKg5t
- /y4es4dWDGbMZHAEuHjwxJG0te6c91gdeLK2A4K8WATYD2BKmMDe8YPeRSeRJ1DaMmzgZIT
- lMxq2jG81BTI5GYFyzE2g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:AJeAl+Q5zUE=;Q/QspzaRZZY1dQGQ5kwICTS3l7L
- cGRv+pjsh3/3lbDJsqqHQWoJEQ8DM+JR7t4VUkyV3rBKfWR+9j3x/ZHkIFHwAEqTlVAGayGNU
- cfuUFSnCmDS6TjzYZ967+FCqL/XxQlgCrtWrojD8z/kqaEuMS641cc3bu2FbsfsKpnpMVbTK0
- eTtIwp0mGyNKbdUiDnXHmQjMISdvPxkUQhaIIq/Gk7L6tXSCMNDclwRULfe+LqiWzgyctqzJD
- B482PS/pN7D3u6LHzv3K6ecr1kaXh0V7/R0tvUqY4FvPpfHpIGVUf+VasdRiX2zol7cR54VH4
- rQC0Wa03ouwhh1c4AMaI9Gl651G4VeYW4T5cAK8NXEI4OKQO1Ib8sVBBUELoPsyEzAfGjUvsy
- 6xsbHP/idDUMZiu2/zsjlaHQxYc96krb55jPnuTadW8kns4wqPyTc0cpyHF0aR/4e0heMe7MV
- YaQLALcZbag8X554sY7cIUpWHxdwZnypU/fVTT9DgcLvFD/i5QxaiEIym2gRMjq24V+z5GXVB
- +n77tt7ykN1GjOvZ6hovuHJXBSoUaWmO8aqSrlyLF6ynzrGNP7CGbTEIbGtC50pQDnPfxE2Om
- M1XO4sxEGlrH8j+dyf/2SIdgS9/vSNiBuWq/gmiCrHatMjW3LurnrTvHUEgGKQg4mX0wd+LSP
- yHs5aojXiQjc4HyHvy3iKJJYX8MJBRy++uHH2xWAE4BHKoegGizrJSVo17h2zd4ia3IzKc/50
- p5zKX4NU9MQ7+VyLRH8pEHy42BL+RsB4Iojz4CIswzjbbsuGo3NC5qTUwtpnMXkqKeaR6XPDx
- rT0CBAAo/bu+oZbokkYfCrhuhQawuWSrOtRBK4OSVnwcR0nCBiRxklVhdv6oWe18b7rudCl42
- D1QZ54N5wrj6AEXnaLEoYZQyoxB9vkVoSpXpF45JalZdjXDUi6AumOLHCYVif/J1bJy7ePcoQ
- qsppv/e+6w6gKM8b/cueZf3wwpCvH8rkS8RXr6p8YDief/rSJAKwQWYJjROd0ZsI5hf6ahriN
- 5UEXvpRRAf0snGsV7dnCTUEcl7IFYokeT8ZmJ3Y35edb6TJfqN4oemUA/6xW0GFxY1rEFSbOP
- I+9YivKXGPUfN1sRkJ0LbUcgc9/QD4MifsAsfHUk+pyq33gITf3JuId6TfExjqqrTc7qO0oG0
- xP38FMVRkd8WcEANGrOr7FObjzRkiLwNGuUBYv1Z2NV8KIDEVh6YWjc/AV3LAsFkaCTDRCd7x
- H+ec+c+XfpWc2Sg8V1zXz2d+no5Ypj3YIdmdbvSWiaKFXCD8DyY/CguBzLp7ZPzvyDVAQfVPw
- rf+i6WwURNiIkU3LiMGgZxsbMD+QELGk/6ZofU6LNUyJZVQXyOLWKjbF4Z/o/MnWF78VRu27l
- OR6gj0wGmmRHOQQe+hfaJoK7LE0DekGHbdyuNgN2CPvWzVmfxQ4AczEEwRUKkigeAlOxfTlrS
- OGCWkbQ==
+Content-Transfer-Encoding: 8bit
 
+On Sat, 21 Jun 2025 11:11:27 -0700 SeongJae Park <sj@kernel.org> wrote:
 
---bzrlzjrxqd77i3z3
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 6.15 000/592] 6.15.4-rc1 review
-MIME-Version: 1.0
+> On Sat, 21 Jun 2025 11:02:15 -0700 SeongJae Park <sj@kernel.org> wrote:
+> 
+> [...]
+> > I'd hence suggest to implement and use a simple weights handling mechanism
+> > here.  It could be roud-robin way, like weighted interleaving, or probabilistic
+> > way, using damon_rand().
+> > 
+> > The round-robin way may be simpler in my opinion.  For example,
 
-On 25/06/23 02:59PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.15.4 release.
-> There are 592 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Wed, 25 Jun 2025 13:05:55 +0000.
-> Anything received after that time might be too late.
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.15.4-=
-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
- linux-6.15.y
-> and the diffstat can be found below.
->=20
-> thanks,
->=20
-> greg k-h
+[...snip...]
+ 
+> Actually, probabilistic way may be not that complicated.  Maybe we could to
+> below here.
 
-Hey Greg,
+[...snip...]
 
-this stable release candidate does not build for me as-is on x86:
+> But damon_rand() might be more expensive than the roud-robin way, and arguably
+> roud-robin way is what usrs who familiar with weighted interleaving may easily
+> expect and even prefer?  I have no preferrence here.
 
-error[E0432]: unresolved import `crate::sync::Completion`
-  --> rust/kernel/devres.rs:16:22
-   |
-16 |     sync::{rcu, Arc, Completion},
-   |                      ^^^^^^^^^^ no `Completion` in `sync`
+Hi SJ,
 
-error[E0412]: cannot find type `Bound` in this scope
-   --> rust/kernel/devres.rs:226:49
-    |
-226 |     pub fn access<'a>(&'a self, dev: &'a Device<Bound>) -> Result<&'a=
- T> {
-    |                                                 ^^^^^ not found in th=
-is scope
-    |
-help: consider importing this enum
-    |
-8   + use core::range::Bound;
-    |
+If you have no preference here, I would like to add some thoughts : -)
 
-error[E0107]: struct takes 0 generic arguments but 1 generic argument was s=
-upplied
-   --> rust/kernel/devres.rs:226:42
-    |
-226 |     pub fn access<'a>(&'a self, dev: &'a Device<Bound>) -> Result<&'a=
- T> {
-    |                                          ^^^^^^------- help: remove t=
-he unnecessary generics
-    |                                          |
-    |                                          expected 0 generic arguments
-    |
-note: struct defined here, with 0 generic parameters
-   --> rust/kernel/device.rs:45:12
-    |
-45  | pub struct Device(Opaque<bindings::device>);
-    |            ^^^^^^
+I think that code complexity aside, round-robin may be the better choice for
+a few reasons. Like you mentioned, I think it is what users might be used to,
+if they are coming from weighted interleave code. Also, I think a round-robin
+way will prevent worst-case scenarios where we get a long stretch of allocations
+on the "wrong" node (but maybe this isn't a big deal, since it is so unlikely).
 
-error[E0600]: cannot apply unary operator `!` to type `()`
-   --> rust/kernel/devres.rs:172:12
-    |
-172 |         if !inner.data.revoke() {
-    |            ^^^^^^^^^^^^^^^^^^^^ cannot apply unary operator `!`
+Finaly -- If we run workloads with mempolicy wet to weighted interleave
+*and* with the weights already set, then pages will be allocated in a
+round-robin fashion. I think it may be best to try and minimize migration costs
+by trying to keep these weights in-sync. That is, if we have a 2:1 ratio,
+we will have the following allocation:
 
-error[E0599]: no method named `access` found for struct `Revocable` in the =
-current scope
-   --> rust/kernel/devres.rs:234:33
-    |
-234 |         Ok(unsafe { self.0.data.access() })
-    |                                 ^^^^^^
-    |
-   ::: rust/kernel/revocable.rs:64:1
-    |
-64  | #[pin_data(PinnedDrop)]
-    | ----------------------- method `access` not found for this struct
-    |
-help: there is a method `try_access` with a similar name
-    |
-234 |         Ok(unsafe { self.0.data.try_access() })
-    |                                 ++++
+node0 | oo oo oo oo oo oo oo ...
+node1 |   o  o  o  o  o  o   ...
 
-error[E0599]: no method named `try_access_with` found for struct `Revocable=
-` in the current scope
-   --> rust/kernel/devres.rs:244:21
-    |
-244 |         self.0.data.try_access_with(f)
-    |                     ^^^^^^^^^^^^^^^
-    |
-   ::: rust/kernel/revocable.rs:64:1
-    |
-64  | #[pin_data(PinnedDrop)]
-    | ----------------------- method `try_access_with` not found for this s=
-truct
-    |
-help: there is a method `try_access` with a similar name, but with differen=
-t arguments
-   --> rust/kernel/revocable.rs:97:5
-    |
-97  |     pub fn try_access(&self) -> Option<RevocableGuard<'_, T>> {
-    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Using a probabilistic migration, it might change the pattern:
 
-error[E0308]: mismatched types
-   --> rust/kernel/devres.rs:257:21
-    |
-257 |         if unsafe { self.0.data.revoke_nosync() } {
-    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `bool`, foun=
-d `()`
+node0 |   oooo oo o ooo oo ...
+node1 | oo    o  o o   o   ...
 
-error: aborting due to 7 previous errors
+That is, the ratio might be preserved, but we may be doing unnecessary
+migrations, since a probabilistic allocation isn't aware of any underlying
+patterns. With a round-robin allocation, we have a 1/total_weight chance that
+there will be no additional migrations, depending on where the round-robin
+begins. I also want to note that weighted interleave auto-tuning is written
+to minimize total_weight.
 
-Some errors have detailed explanations: E0107, E0308, E0412, E0432, E0599, =
-E0600.
-For more information about an error, try `rustc --explain E0107`.
-make[2]: *** [rust/Makefile:536: rust/kernel.o] Error 1
-make[1]: *** [/build/linux/src/linux-6.15.3/Makefile:1280: prepare] Error 2
-make: *** [Makefile:248: __sub-make] Error 2
+I'm wondering what you think about this. Perhaps there is a way to know where
+the "beginning" of round-robin should begin, so that we try to keep the
+allocation & migration pattern as in-sync as possible? I have a suspicion
+that I am way over-thinking this, and none of this really has a tangible
+impact on performance as well ;)
 
+Thank you as always SJ, have a great day!!
+Joshua
 
---bzrlzjrxqd77i3z3
-Content-Type: application/pgp-signature; name="signature.asc"
+> Thanks,
+> SJ
+> 
+> [...]
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmhZW7UACgkQwEfU8yi1
-JYV7pBAAoLezFTzYpDLyAa2Xg8+9dwvSN121/S9xM+EPfrq72KeTvU+H0emNmKa+
-+nr5DxoIlE5ywlPMu759wMoS0sv2vdCSO4Fo9u0RYLwY8igZO3F7gNCtzLTOl5w3
-m54Dg0zKeKt+YljwZbXOeFiBVW6SGCzBXfRIukYzZU8Lx+6iDfQgAYVuTuBpe8Dg
-RodEzxKyw4W83yxbU9X7h/uNWc3HNmHu+YtPsvEnBLMlIXQ8m/gUSB7nDmLRlLW3
-HoJxDx1122V3vcZKhiNJYVScKqXtYI3jAVuzsnq+5s/HF3IEBQPiVr/ouHO1Lpkx
-JaRt1xv/rpLSAO2M9Zbmhhz7QFj7sJ0WpcIVYnixJQxjSGAL/GQ4cVKGfDVIYPL2
-yQPmI1aVQ7d7pGS5RD64SXXtTrl2+7UAdbvDuFxjTlCeY6ZkGreGuGiy+L4eB9vc
-n9pvVjAJSC6FkE3ICvS3OFxIF2KrSsQS7d3kDQ5GFqoQfVsFJtb0DLsOkhylUitm
-wF3pP+42RKUSPcsEdYJe7PCTAeCAWQVcaBtnM2KjctQGkTW5QcfX0to55W1y9xiM
-upVPaxdCoSUOGlpSYQuapIe39B4VyQad9qN7OdYe/4iJWbbto8rg0IqOS9JYbdJf
-w1/Cv1HYzowFUdxT5TKlPLCPQNaLC9VYSleec/iOUC2ig0VN5MA=
-=Nnoh
------END PGP SIGNATURE-----
-
---bzrlzjrxqd77i3z3--
+Sent using hkml (https://github.com/sjp38/hackermail)
