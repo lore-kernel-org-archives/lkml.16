@@ -1,127 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD2820E005;
-	Mon, 23 Jun 2025 08:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9356C1531C1
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750666213; cv=none; b=QvxNO+vyfvJ+i5gax1TLAldYlDEKfj0f8Orma/wfggHzOM4ybc9gSnTjqMVvyCymOFAFWBnvRI+pEumwhpLt41KGM/Zcrunh6d1PCJFOBO9IlEUWjIxqR6chosadT9OFaLyD5JsTgjf24KfBHbJ0dMbcQ0VZHwCLftaO85x8gIE=
+	t=1750666245; cv=none; b=rXnbKPPImXBy1shP7EyeM8bDQsy4uMd+zVEVOc9+F2k+Im3B89VIXYenPyOPNfxYHz2GsXA6tYPMOdRTVS6FiUtIOy4T8k6pPsBGe/s/X1K1ekN0YDnD6+a2O39Y2mWfHK3TmrjUYWR7/emG53pNAk8NuqnUCGNzMlrCSpDzjOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750666213; c=relaxed/simple;
-	bh=9UFfyxd2/b0B8guWxRhS4jzpop1VBAtfJC/n8ZrMlz0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NrtcQIWvqgCxvEwzMscU1w33uGBG/9LwMIRMMOf8nkaCu0lKFECuLaZrmDV8TE0f/7aOGS7/B25SMcs8O7CFHKbzcjbTfztkqsUZ94HB7myqGVBca4WCC9GPnsI1fnTV3DSEL7Vc7D0HSY1Dx+BeLyxRsHROqTSto129n7P01e8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FPyizjS+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750666245; c=relaxed/simple;
+	bh=FRct19OAbx0JJ/siNE7NxXqvXE/tfxAwAybWkm3Xm2U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LNi9il6bJ6EM0GukrI0AKV4zSXij08Bfu0z+chqElYfQLd/qOGEGbAW+MhV0wqTezuF5PFThPAZJB7KEYOhO37pSQxrBiJBsfNu519+meAoeqFTNbG6VG4g34yuJgBfoq8FFalcaIEuL3oSrFScZtZdOdKoulQw5pIxRUGGfrDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PC31B3Gn; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FPyizjS+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3567C4CEF6;
-	Mon, 23 Jun 2025 08:10:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750666212;
-	bh=9UFfyxd2/b0B8guWxRhS4jzpop1VBAtfJC/n8ZrMlz0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FPyizjS+kcmIUJdWgcX2yl5zU254/yT6y9fjJUzpsifXgAnOShDwKyuJa4Js7vi6W
-	 zazBcrc0dYF8VXhdBegmcqBrmW1sl2Nf5iN3Bt7q3b09z5Hc4I/fsUApQDMUEtyvgR
-	 qYZh/NvbVWnUkXlGpie58LgqMjIp5PK/aylLBDdOXl+GRF9Io3SHZUlg4exAjSJE1y
-	 WGQ2Lcmy5+iEuBtlqRQP2yX5Jxwkx84cyHIo/ueCHQzIzaAqdw6KZjo2WwKsY3JnOa
-	 RAMl+h2/8oJbez+mhgDxWQaHL8xNwejWoG/c5NKrt0bkO2HoxXIiGwJizb4iWRPcy6
-	 oEfBdbY9XjECQ==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-606b6dbe316so7437069a12.3;
-        Mon, 23 Jun 2025 01:10:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUBAIp/pkrxelHGqrawKzqEdG6xX1r2ehxVsvBiRvyX5znf+AoRre5Povtps7JT/Rn/D55OFBfG@vger.kernel.org, AJvYcCVsFl+ZS/Xsx5kGEEXiNAUveWPcHvlnOuS7WS5AE+drJhQd4VIzeTSM2tJK1l01hXfer+fdPnyCaCo8i5k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9XiUBfK+Mv+nRjP1DVWlhS1vnmqrqw9ksY9CJnYXQYKq+GPOR
-	sgz4J//5lSLw6JDS8Sf4MLvtgkyJJjx1VzuOdBhW/w5NQ1PJnJ5aY3ugkGJsqq/Y7chQxMDE4Jv
-	FSZ9Cqx6BHJn0YWodsxUvCUUIpg+ZKRs=
-X-Google-Smtp-Source: AGHT+IHVdXyQlxhUp2FRWU2idWY08CpHAI24CMuWlAmuGlq5qpodHyK+J3UrpjCva/pQR3fAFOc/BUmGTDLPAKsXno4=
-X-Received: by 2002:a05:6402:84c:b0:609:d20b:1af5 with SMTP id
- 4fb4d7f45d1cf-60a1cd1a81amr10778001a12.2.1750666209246; Mon, 23 Jun 2025
- 01:10:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PC31B3Gn"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a6cd1a6fecso3332381f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:10:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750666242; x=1751271042; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CdbQQJ+oM3Ao6FCPJJXeLk0AYTnG+ErtpUOCanma8hA=;
+        b=PC31B3GnQG+jsi9XfkD8BzeVf4Y/S1r9/+vlKDxBJiASSpip1EQQNv5LS+QZgXRJeA
+         kWmzSnu+JzRku16GFgT/0aUcsKqeFXOO1uCPuYzD3a9SmsDbaOAJRwK1o803V3wjhm1J
+         BqpwW+W7nETJg1U50YWe7HK7f7fc1aJNpOMLcM66MKpFFZAI/GMYmJoUOdKmUe/FxRxW
+         T0NCI9l7xN7JdDfHbgF+Y5+F1wTXDoVQqwX/eeh0XU0TehbQsfyHisvzfuyxZx4JhtMi
+         oEP0fFb3U9+Rg9DUg2Da5hVsxX7SuyNgUL3XGYXLxhaQ3X9tP+6uYa7RhpV/aF7PlWw4
+         SpGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750666242; x=1751271042;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CdbQQJ+oM3Ao6FCPJJXeLk0AYTnG+ErtpUOCanma8hA=;
+        b=SENWADlDq7BQbO7J+8aDqjOkpVNUQ/v9lKQ9tUIko2J41RuJWHxOhtE6jw/h6UcBzL
+         dV/6NSs/IHE3aWlGG0eYnLipPFo6GALHHujOQziFxsg6dvgDSxa49qUUqphK5RBsWBWi
+         iOlPcLL67nULUTEhFMH8oZeK7DwZ95dp/tvjvgYVV9++GB3Bh91AvQvv5W0dqzXiNvWX
+         0JtlRg7GV4y8/uLaH9Ij+QmoO/l4go/pJFwpevtKs7GSV4Gs+XrJw+dqO5hQVQt7WvTs
+         bNTi6yxvBinh3bSq4xr/WiMhVjp0DtFeckEDyABtH5xQFyKUg8HcBJagoe0b92zVnSuX
+         MKqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6AZn0Zx1LbWcMDWmezBShQxNFzA1BgiF79dp8OICSbwZHz6F6DigK9bktKkLggFb9sp08VuezaatzqwE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx802cANs88R3R5WQ5uekp2LNUxHGuDjRtAMWPMQnmn3EZQ7i1f
+	PJhVa9pFtHhIH2WiwDrIthTY9DkIZILX7GUq4qQSRaRT8MdpqkcTldoYdmMFrZXevI4=
+X-Gm-Gg: ASbGncsA9BkRDN+HwGNt5Z6A4c2OGySEjtADBXmyJT9AwuPjEZJjyI2arnixInrLpPp
+	rISQRQaTsBYqNVFNL3D+JkFTFO66Zg0y0HViJoLSI/t/dtGOZM8wwYwCbSyxsC5h9FPO3kFhKh2
+	aLAI24EWrOZ7C8wYgqYabelNlsjDTrRfKZvg6G5KEekT9XvkPXtjLINmlt/PkVjhV+ftPuNVbg0
+	3hNMarMzCV3lAF+K4NNIocyKRmSgX/Elew5DXfh5GFVRG+1JjEOLZydIc6hmtLlZI16J1+LNBw3
+	DorrUq8qOZCqtLTRvLxFXKd2cxtd7zxp5TKysfW2QVw0zs8uCyHNIPCdiKT871nnmCM=
+X-Google-Smtp-Source: AGHT+IG9/WCgHCRLCRdBfUm5EF+Cuc835GyTFmEmRHyzreAZVR+wonfkISgnq+jwxtYSzmlRlgOmfg==
+X-Received: by 2002:a05:6000:310a:b0:3a5:8cc2:10aa with SMTP id ffacd0b85a97d-3a6d12fbab7mr6880864f8f.32.1750666241927;
+        Mon, 23 Jun 2025 01:10:41 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f17d3bsm8685301f8f.21.2025.06.23.01.10.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 01:10:41 -0700 (PDT)
+Message-ID: <6f524405-a9a7-45c4-bf4d-9ae33e52bfbc@linaro.org>
+Date: Mon, 23 Jun 2025 09:10:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250622110148.3108758-1-chenhuacai@loongson.cn>
- <2025062206-roundish-thumb-a20e@gregkh> <CAAhV-H4S=z5O0+pq-x9X4-VjYsJQVxib+V-35g50WeaivryHLA@mail.gmail.com>
- <2025062349-proximity-trapeze-24c6@gregkh> <CAAhV-H7r-X-t0_i-x=oy2Gin4-ZMhSVwXtcaygZdJ1_J-zD3dg@mail.gmail.com>
- <2025062339-till-sloping-58b2@gregkh>
-In-Reply-To: <2025062339-till-sloping-58b2@gregkh>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 23 Jun 2025 16:09:56 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4Ntk0mdXGrvLPvwKmW2ROgyH7gnaSjYFgpDzg-d-hSfQ@mail.gmail.com>
-X-Gm-Features: Ac12FXzYxecj6L72SAnsBRFC2YxdneMCN2Ajasq-9wTeF6WqfrpvimZYH9Axjt0
-Message-ID: <CAAhV-H4Ntk0mdXGrvLPvwKmW2ROgyH7gnaSjYFgpDzg-d-hSfQ@mail.gmail.com>
-Subject: Re: [PATCH for 6.1/6.6] platform/loongarch: laptop: Fix build error
- due to backport
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Sasha Levin <sashal@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org, ziyao@disroot.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf build: Specify that spellcheck should use the bash
+ dialect.
+To: Collin Funk <collin.funk1@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>
+References: <e3751a74be34bbf3781c4644f518702a7270220b.1749785642.git.collin.funk1@gmail.com>
+ <20cce2b1-eaad-4565-817b-b094aecee0a5@linaro.org> <874iwa71mo.fsf@gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <874iwa71mo.fsf@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 23, 2025 at 4:03=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Jun 23, 2025 at 02:36:18PM +0800, Huacai Chen wrote:
-> > On Mon, Jun 23, 2025 at 2:28=E2=80=AFPM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Sun, Jun 22, 2025 at 09:11:44PM +0800, Huacai Chen wrote:
-> > > > On Sun, Jun 22, 2025 at 9:10=E2=80=AFPM Greg Kroah-Hartman
-> > > > <gregkh@linuxfoundation.org> wrote:
-> > > > >
-> > > > > On Sun, Jun 22, 2025 at 07:01:48PM +0800, Huacai Chen wrote:
-> > > > > > In 6.1/6.6 there is no BACKLIGHT_POWER_ON definition so a build=
- error
-> > > > > > occurs due to recently backport:
-> > > > > >
-> > > > > >   CC      drivers/platform/loongarch/loongson-laptop.o
-> > > > > > drivers/platform/loongarch/loongson-laptop.c: In function 'lapt=
-op_backlight_register':
-> > > > > > drivers/platform/loongarch/loongson-laptop.c:428:23: error: 'BA=
-CKLIGHT_POWER_ON' undeclared (first use in this function)
-> > > > > >   428 |         props.power =3D BACKLIGHT_POWER_ON;
-> > > > > >       |                       ^~~~~~~~~~~~~~~~~~
-> > > > > >
-> > > > > > Use FB_BLANK_UNBLANK instead which has the same meaning.
-> > > > > >
-> > > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > > > ---
-> > > > > >  drivers/platform/loongarch/loongson-laptop.c | 2 +-
-> > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > >
-> > > > > What commit id is this fixing?
-> > > >
-> > > > commit 53c762b47f726e4079a1f06f684bce2fc0d56fba upstream.
-> > >
-> > > Great, can you resend this with a proper Fixes: tag so I don't have t=
-o
-> > > manually add it myself?
-> > Upstream kernel doesn't need to be fixed, and for 6.1/6.6, the commits
-> > need to be fixed are in linux-stable-rc.git[1][2] rather than
-> > linux-stable.git now.
-> >
-> > I don't know your policy about stable branch maintenance, one of the
-> > alternatives is modify [1][2] directly. And if you prefer me to resend
-> > this patch, I think the commit id is not the upstream id, but the ids
-> > in [1][2]?
-> >
-> > [1]https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git/commit/?h=3Dqueue/6.1&id=3Df78d337c63e738ebd556bf67472b2b5c5d8e9a1c
-> > [2]https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git/commit/?h=3Dqueue/6.6&id=3D797cbc5bc7e7a9cd349b5c54c6128a4077b9a8c6
->
-> What we should do is just drop those patches from the 6.1.y and 6.6.y
-> queues, I'll go do that now, and wait for you to submit a working
-> version of this patch for those branches, so that we do not have any
-> build breakages anywhere.
->
-> Can you submit the updated patches for that now?
-OK, will do.
 
->
-> thanks,
->
-> greg k-h
+
+On 20/06/2025 6:40 pm, Collin Funk wrote:
+> Hi James,
+> 
+> James Clark <james.clark@linaro.org> writes:
+> 
+>> If we're enforcing bash style with static analysis shouldn't we also
+>> change all the hashbangs to bash? Recently there have been changes to
+>> change sh to bash in some of the tests so presumably the hard rule for
+>> sh is no more?
+>>
+>> In the past I've had to replace bashisms that didn't work in sh but it
+>> would be nice to have only one language to write tests in. I doubt
+>> anyone running the tests today is running somewhere without bash, or
+>> that changing it will break anything. If anything it will fix more
+>> bashisms that have already been written.
+>>
+>> Just for reference there are 34 #!/bin/bash and 42 #!/bin/sh in
+>> tools/perf/tests
+> 
+> That sounds reasonable to me. Writing portable shell is a hassle and if
+> we already assume a working /bin/bash in some places, I don't see a
+> reason not to use it for the others.
+> 
+> Regarding this patch, shellcheck will use the file extension or shebang
+> only if it does not find a 'shell' directive in a .shellcheckrc. So that
+> change will still require this patch.
+> 
+> I saw it was used in other places, so I assumed this patch was fine:
+> 
+> $ find tools/perf -name Build | xargs grep bash
+> tools/perf/Build:	$(Q)$(call echo-cmd,test)shellcheck -s bash -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
+> tools/perf/trace/beauty/Build:	$(Q)$(call echo-cmd,test)shellcheck -s bash -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
+> 
+> Collin
+
+In that case:
+
+Reviewed-by: James Clark <james.clark@linaro.org>
+
+And I'll send the bulk hashbang change separately.
+
