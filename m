@@ -1,68 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AC419E7F9;
-	Mon, 23 Jun 2025 22:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B60B7B676;
+	Mon, 23 Jun 2025 22:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750716918; cv=none; b=WfU47+Haemybqp7nlyP29Op24tK85L2s27TyRBWIgt/RD9P5lOHjuCHCTTtH1v1KYUp+RTBHotId+C5nBTCiuzaXJiU2dowSCRd3X0MPaE2PKAY2T2UXt1dihWM0TRUHGXNoLwzn5NT+5JezPaAuZ+ZbovgptgyN2a4oAvkOzs8=
+	t=1750717003; cv=none; b=tKn5ui5DnBVCpCPISBBIv6VSe2tTaZhE1POfPb2d+F5/NYOBBR0rnkGIvwOzh2pZv0JgcHuV27PclQxsbFu4t7xTdLJuNJC+lxu5CniSY34AZOmgEfvqAXN5Ro71P+c8nvSXJvW9/uD5gTGpDCB9pNgTICwcJ60EQEUaxVmJZos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750716918; c=relaxed/simple;
-	bh=NQnwdVGF9YDZMibpTyHJ/2X8jH/VklWZLlzwFJitvA0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=daXaT38kCWNq2kweQ+oz43RElogN46RM8oUZELntNXmAPu7m34PIFZsd9BW9z+cg/iW8z7rg52kCpqhwL4Zmzj7GaRdVSul37aJXuYa1wzNExrZ4lz+av3Z1yuCFvlnhynZ/VWp1EqkIZc2dFHSs+K5dtt8HG34f4pq1O9v385A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JQ86Q7Vp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JQ86Q7Vp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB573C4CEEA;
-	Mon, 23 Jun 2025 22:15:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750716917;
-	bh=NQnwdVGF9YDZMibpTyHJ/2X8jH/VklWZLlzwFJitvA0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JQ86Q7VpVqOCQrfi/hwLrTLo/Hyw1ZWw6cMaCiM0u8DdYBadWjSF76oxKNpSoSEiW
-	 X+Rp4n2Buz5XOGDWN2li65qIkcPsYxo1xs2ucCwP3Yefk/DuVN4ItOIkewuaVa37Tu
-	 epjnwtu7LLMpczPgMg9M9N+j4oXKT5SO/EfwXDRwg+xCbDyKuYjVoU7xD7+wBQCbGS
-	 Tuwt8KKPfXZdOC49WT+xLK9/OWY+NfqpP8brfPRBAEz7SHCQ8xV4zUWIE4ez4abTLD
-	 hm6W7nQMPZEe0U3ZCFugSG3m1kUrefBIEkuvbnZny5rV9X7TWglJB29Gbfp3V8efcs
-	 gvWpHBdzQ9sjg==
-Date: Mon, 23 Jun 2025 12:15:17 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>, bpf@vger.kernel.org
-Subject: Re: [PATCH v5 00/14] Add a deadline server for sched_ext tasks
-Message-ID: <aFnR9S6XTy6ww9_o@slm.duckdns.org>
-References: <20250620203234.3349930-1-joelagnelf@nvidia.com>
+	s=arc-20240116; t=1750717003; c=relaxed/simple;
+	bh=HPc7j1Rjffy+/FVRAD+2Y9VXgliY5w7VDMVHee2UYJI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g/ilAm16++8inwFseqwE5qK+oWD9WMbHgZyTDaFQBDiUCZewVxvaxF7C+YU5XbCff2yl5Eofi77sgxMQreZcH9ZlkfC5ufm0OxP9HhalKzZC74I7oWa+Gl7qz1yfGaaT8U10jn9w7Nit/rC1n5bzRgKzkciV+sUXm1zk1TIJxjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D76D5106F;
+	Mon, 23 Jun 2025 15:16:21 -0700 (PDT)
+Received: from [192.168.178.25] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 475413F58B;
+	Mon, 23 Jun 2025 15:16:38 -0700 (PDT)
+Message-ID: <e4854492-86cc-4775-bbc3-5f16b73d008d@arm.com>
+Date: Tue, 24 Jun 2025 00:16:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620203234.3349930-1-joelagnelf@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cpufreq: Fix initialization with disabled boost
+To: Christian Loehle <christian.loehle@arm.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ linux-pm <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+ Robin Murphy <robin.murphy@arm.com>, zhenglifeng1@huawei.com
+References: <3cc5b83b-f81c-4bd7-b7ff-4d02db4e25d8@arm.com>
+ <CAJZ5v0heNSqHKZsmzu8N_hNKXeg_BZ0g4p0=dQtkDxBFHN+=4w@mail.gmail.com>
+ <1458e4f8-bd76-4d75-acb9-87f7064ea40c@arm.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Language: en-US
+In-Reply-To: <1458e4f8-bd76-4d75-acb9-87f7064ea40c@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 20, 2025 at 04:32:15PM -0400, Joel Fernandes wrote:
-> sched_ext tasks currently are starved by RT hoggers especially since RT
-> throttling was replaced by deadline servers to boost only CFS tasks. Several
-> users in the community have reported issues with RT stalling sched_ext tasks.
-> Add a sched_ext deadline server as well so that sched_ext tasks are also
-> boosted and do not suffer starvation.
+On 18/06/2025 16:57, Christian Loehle wrote:
+> On 6/18/25 15:32, Rafael J. Wysocki wrote:
+>> On Mon, Jun 16, 2025 at 7:25 PM Christian Loehle
+>> <christian.loehle@arm.com> wrote:
+>>>
+>>> The boost_enabled early return in policy_set_boost() caused
+>>> the boost disabled at initialization to not actually set the
+>>> initial policy->max, therefore effectively enabling boost while
+>>> it should have been enabled.
+>>
+>> Did you mean "disabled"?
+> 
+> Yup, the latter 'enabled' should be disabled.
+> 
+>>
+>> It would be good to mention the failure scenario here too.
+>>
+> 
+> Absolutely, let me respin this in a series that provides some context, too.
 
-I left some minor comments and had a question about adding @rf to
-->pick_task() but the patchset generally looks great to me otherwise.
+I got confused as well. Is this for a dt file with some (higher) OPPs
+marked with 'turbo-mode' or not?
 
-Thanks.
-
--- 
-tejun
+[...]
