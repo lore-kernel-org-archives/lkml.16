@@ -1,137 +1,190 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B3D221299;
-	Mon, 23 Jun 2025 21:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114707482;
+	Mon, 23 Jun 2025 21:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750713442; cv=none; b=m07ztay+rjLOucAcSBUG5DoiZtjcl+OARQDoap56l1BuPOb3kqfKcDMERyl3bR9X3AKmP+yEBqEF246uiEQFSVCUljjC7iOlgvzsEhVdy8Cfa73JrboXTEmlv/IfkuSzB6fqG7XGv60Dcn9lNU/YYq3tiDayhR76VZmwed3PLhk=
+	t=1750713700; cv=none; b=CfKBmO0J4V5BJ+zf1/KXfE8/E3O57CojcOAexyAKtPdgiI+37azPGB6AiP/CkbW5bMIWJTJ+/lMljHrTmftAIR18uw51+JKOR7RjI27qdUtHFSn6WwvMTFstOduYaNWZhSd5Xt7DFLVPUIsk6R1eqq0dP1cc17UmL43l7vX2H5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750713442; c=relaxed/simple;
-	bh=T1gbs+ME0Z/CPRQJWSWlq3sPr3dmhric/2Lq5B04QoA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aDpIioynG1EfhbfljTF0LIssLg3kRdUSk87v/hCgg/7kbTNuqEIsNTjFt/OElMhVrd+IVjlkbZAWy+uKzqc8Akec4x7FgXoPllPPHwlrIruKYqEieFTTESYdC69tPT1ULZ7Cu8Drx86ApsEKRt61y7bQ+AybOTVnF+f3wQ2zkPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=NBBdcAa1; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1750713700; c=relaxed/simple;
+	bh=GUmRyiBipwQB1znn4EM8MMcdJpwBom/ghiZxQ5pF6gA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PHenOoJDTO6lbgNsTDSblgMBwyGJFFXBx6IwPGzWSPCVu3cv/xPCpCADA6pFUMQ5XusAOo079Egv25Mc4P1Br6ifE/ZH9/o2OyJAScCwbARyI0J42xt7hzHUT8CQwbyul70mgZ+Dk9PC9cFzSQ8cdRaiiogPdU98ZIiiAkpxWyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CUe42R9S; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="NBBdcAa1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=U3UErYnrVYZ1g9kUUb3a1dfR1/w+hPH2Q/0/oF/UJJM=; b=NBBdcAa17Q+xwBYcEk2T6MBbry
-	w7IWwueFxcfmjTlpHwOGRhXYx5Fuy0Z+BbUbgg9Va1yENMiAG2uL4ZAFmI+LKgJ+qMR9O+Rj+DMnM
-	Mf6QJ+ALWgWZxJL4mGvlqr+tVfF3BKK3cgqEO6LzZI+CDS1eSTU5cC12HQJpqCwRRPQihZJCcGQui
-	/fNd/rcdv0yWaazQDq9y4npbIarXGCzCMf+996ZwLU1wH0rpbucuPRZ30hdnZoE2y3j56zr0bMGiq
-	8+7rqqKvZUQR5xEbiDf5zgOdHekB+imCHSnFp81KD5lQJE4FZmUu6UHVyfSzKbdzxpQTYftX/b7Mh
-	Sty6zhGw==;
-Received: from [185.15.108.45] (helo=phil.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uToXM-0006NM-Cv; Mon, 23 Jun 2025 23:17:08 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>,
- Alexey Charkov <alchark@gmail.com>, Jonas Karlman <jonas@kwiboo.se>
-Cc: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- XiaoDong Huang <derrick.huang@rock-chips.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH 1/4] arm64: dts: rockchip: list all CPU supplies on ArmSoM Sige5
-Date: Mon, 23 Jun 2025 23:17:06 +0200
-Message-ID: <12692993.O9o76ZdvQC@phil>
-In-Reply-To: <90b7a1b6-bc49-414d-9cde-e6fad46d2650@kwiboo.se>
-References:
- <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
- <dd1d0676-4eaa-4df7-b557-676b3de9a52e@kwiboo.se>
- <90b7a1b6-bc49-414d-9cde-e6fad46d2650@kwiboo.se>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUe42R9S"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-7111f616c6bso4792957b3.1;
+        Mon, 23 Jun 2025 14:21:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750713698; x=1751318498; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5EhPVXv5KsxcXF90XtgQeQgh5a4/WNYm2viabusGVu4=;
+        b=CUe42R9SAQZSuHx3MmfMu+gQqYt4mLYoT8AUzp3x6Yq/6vm6LuTjwR88anoNpHjKU+
+         IMlGH8IqcqzVGzGD7E/rVmodGYNnBAB0oPEO7Gfkkj4gJzMFHHHhWYKW+BzzBB8J+qU4
+         KTtVJHTa9CrJWpM5xdCCUEFYGdKK7voz8s+uO+hLYW5T6MjxHlTi26XyQtUrVcUeGuCF
+         T2iI5bVm+WGRJXE2upC82a4twXonmKVnhKLT/p7FK2tq6WhAOaAEWW6b3b+UAaymxE3t
+         RQt11NqN3ursHFLJhvAQCC/I4H5q0a6DoPT+S9HsO7g0jBSdNl7uGTcrVoI4v81HDeWt
+         h5uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750713698; x=1751318498;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5EhPVXv5KsxcXF90XtgQeQgh5a4/WNYm2viabusGVu4=;
+        b=PdpBzN3j1QZBUOJqtMLRHoAPBZVN6f9/JhwOsprZEP+T+uv9kt3whQ05nDJYgBkEvw
+         ZEou6/XZAlBN8sOHDWJM+GM7ALna1QBHd68AJdCQ+ylRm6nP7eTlpnIdWS4JXEFTUkMU
+         11zjNhYXVN7vhhsjvaV3t9AWpMjW+QjICvxg6NPhvyl9/URjHbf78ysYC4Zww552b7wQ
+         BpzAE5cth/3y5iB6MOcrvOOp7H5FCxkAbAFaYJGkPOSrHFkG7dfTBD9emDVIuzoaKs5l
+         xvcwIKtD4bHyWgS3K1c5cNdPhLtYqcr/rs9dNxzQ7MzCcNMkmMHiis5+8O3tcjkbbvN9
+         FV/g==
+X-Forwarded-Encrypted: i=1; AJvYcCU9E5ZLcghRKZCfxVBdJktyW88YkECKXtgEkuRyJBaEQ11YJJSGZQBqrQDfnRcPdR32isXkkMJF0mU=@vger.kernel.org, AJvYcCVOGCyHhDIhWOl9afqszDdgB/xW+2RLGCjLPOF2L78V+WAb5wwG4HRLmJfnPb6rFvft0OSMiJg3mWpxqHvq@vger.kernel.org, AJvYcCWW5mUQB37tc/id4kl8HdNhmJunOdFxqztgTiadLEAfdpXyNzCu29/Rf6Jy+UcLRI1Q1sEa5UUVT388@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2LpZD6oKUqwrdCJwg2UJVk5CHuv4dXh9Ky0x29nmjBqxd2Pli
+	0MOUeckw31u0bM/zRCA1Ohv4HmxdXWwexxMU0u1wxuzXKX1kkfCMmwA0DOqdPZ/2Ng1AVAKQUUq
+	ZnoTQVcLaNi2dDMxu2fSfLHY9WeCYntsCJg==
+X-Gm-Gg: ASbGncuQi6L6/Y+UDTgOT3+uJCA7oxDDQ+qF/ElYQxrD6rFV3DPpGicXuSCTXIBrE8b
+	TV4gaZyrpn+wsS/l0TYgBA4eNARVgtg7MYXkCRgVcjx5l+W06QuIpgEagsNL1lLHpG6e8M1ktI6
+	qwHTLtVeTA12X/V/eO5d9tnV4mD5SpVvIGMDWeaS/QwXU=
+X-Google-Smtp-Source: AGHT+IES96Vhz9Z48D89qHM4JfJPRfuAbs2HBlR+RnR9BBxF8H5SHTIoOyQWADOKLTGV37ZEhEgZLOqoDW+0bkyaSY0=
+X-Received: by 2002:a05:690c:3588:b0:70e:2d3d:acdd with SMTP id
+ 00721157ae682-712c6762396mr91474187b3.9.1750713697442; Mon, 23 Jun 2025
+ 14:21:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250622155010.164451-1-l.rubusch@gmail.com> <20250622155010.164451-7-l.rubusch@gmail.com>
+ <aFkpv0CUkateel8q@smile.fi.intel.com>
+In-Reply-To: <aFkpv0CUkateel8q@smile.fi.intel.com>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Mon, 23 Jun 2025 23:21:01 +0200
+X-Gm-Features: AX0GCFuEKxrfHsfLqaoz47e3jOBKcPhE3y9Y_EC3s5zhy9Z1SpYK8UTDeG4oh6U
+Message-ID: <CAFXKEHb9Fbd_UOF90EumEtns82VPhYBrLZ=JtmhVJ4pJsT=q-g@mail.gmail.com>
+Subject: Re: [PATCH v10 6/7] iio: accel: adxl345: extend inactivity time for
+ less than 1s
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, 
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, eraretuya@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
 
-Am Montag, 23. Juni 2025, 23:07:53 Mitteleurop=C3=A4ische Sommerzeit schrie=
-b Jonas Karlman:
-> On 2025-06-23 19:40, Jonas Karlman wrote:
-> > On 2025-06-23 17:02, Piotr Oniszczuk wrote:
-> >>
-> >>
-> >>> Wiadomo=C5=9B=C4=87 napisana przez Alexey Charkov <alchark@gmail.com>=
- w dniu 23 cze 2025, o godz. 15:58:
-> >>>
-> >>> On Mon, Jun 23, 2025 at 1:19=E2=80=AFPM Alexey Charkov <alchark@gmail=
-=2Ecom> wrote:
-> >>>>
-> >>>>
-> >>>
-> >>> Okay, I've bisected this.
-> >>>
-> >>> TLDR: Linux and u-boot seem to have nothing to do with it, opensource
-> >>> TF-A doesn't work, binary BL31 starting with v1.09 do not work. BL31
-> >>> v1.08 and earlier work fine.
-> >=20
-> > v1.09 added support for 1 GHz hrtimer in addition to the normal 24 MHz
-> > rate. Mainline U-Boot may only support use of 24 MHz hrtimer, unsure
-> > what impact the hrtimer rate has. Mixing blobs with/without 1 GHz
-> > support is known to cause issues. At one point the latest rkbin tree may
-> > have contained incompatible rk3576 blobs (mixed 1 ghz vs 24 mhz rate).
->=20
-> Clarification:
-> Following boot1 parameter activates use of 1 GHz hrtimer, see [3].
->=20
-> This parameter was added to rkbin repo before all blobs was updated to
-> fully support use of the 1 ghz mode, and is the source for incompatible
-> blobs I referenced above.
->=20
->   [BOOT1_PARAM]
->   WORD_2=3D0x100
+Hi Andy,
 
-which I guess is something we don't do in u-boot at all right now?
-Which would also mean, that something may have broken with the 24MHz mode
-when the 1GHz thing was added. And nobody ever realized that because the
-Rockchip thing uses that boot param for all of them?
+This is a tricky one, I'll give some examples why (I think) the code
+is needed as is.
 
 
->=20
-> [3] https://github.com/rockchip-linux/rkbin/commit/cbbc6868221fb416d4f0d8=
-6a10e493dbbbc1f117
->=20
-> Regards,
-> Jonas
->=20
-> >=20
-> > Did you try with newer blobs, i.e. ddr init v1.09, bl31 v1.19 blobs [1]
-> > and mainline U-Boot [2] ?
-> >=20
-> > [1] https://github.com/radxa/rkbin/commits/develop-v2025.04/
-> > [2] https://source.denx.de/u-boot/contributors/kwiboo/u-boot/-/commits/=
-rk3576
-> >=20
-> > Regards,
-> > Jonas
-> >=20
-> >>
-> >>
-> >> just fyi:=20
-> >> to confirm: replacing only bl31 to 1.08 makes all good
-> >> with perf gov. clocks staying on 2200/2300
-> >> clock estimations are predictable, constant and estimating constantly =
-2400
-> >> ux is =E2=80=9Elike=E2=80=9D on 3588
-> >>
-> >> Alexey: many thx for finding root cause component!
-> >>  =20
-> >>   =20
-> >=20
->=20
->=20
+On Mon, Jun 23, 2025 at 12:17=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Sun, Jun 22, 2025 at 03:50:09PM +0000, Lothar Rubusch wrote:
+> > Inactivity and free-fall events are essentially the same type of sensor
+> > events. Therefore, inactivity detection (normally set for periods betwe=
+en 1
+> > and 255 seconds) can be extended for shorter durations to support free-=
+fall
+> > detection.
+> >
+> > For periods shorter than 1 second, the driver automatically configures =
+the
+> > threshold and duration using the free-fall register. For periods longer
+> > than 1 second, it uses the inactivity threshold and duration using the
+> > inactivity registers.
+> >
+> > When using the free-fall register, the link bit is not set, which means
+> > auto-sleep cannot be enabled if activity detection is also active.
+>
+> ...
+>
+> > -static int adxl345_set_inact_time(struct adxl345_state *st, u32 val_s)
+> > +static int adxl345_set_inact_time(struct adxl345_state *st, u32 val_in=
+t,
+> > +                               u32 val_fract)
+> >  {
+> >       int max_boundary =3D U8_MAX;
+> >       int min_boundary =3D 10;
+> > -     unsigned int val =3D min(val_s, U8_MAX);
+> > +     unsigned int val;
+>
+> You see, I even suggested splitting this assignment to begin with.
+> The change will be clearer with that done.
+>
+> >       enum adxl345_odr odr;
+> >       unsigned int regval;
+> >       int ret;
+> >
+> > -     if (val =3D=3D 0) {
+> > +     if (val_int =3D=3D 0 && val_fract =3D=3D 0) {
 
+The case for 0sec, 0.0 or setting "0" and fract will consequently be
+"0". 0 is an invalid input for this period and sensor, so it will
+default to an optimized period based on given ODR.
 
+> > +             /* Generated inactivity time based on ODR */
+> >               ret =3D regmap_read(st->regmap, ADXL345_REG_BW_RATE, &reg=
+val);
+> >               if (ret)
+> >                       return ret;
+>
+> >               odr =3D FIELD_GET(ADXL345_BW_RATE_MSK, regval);
+> >               val =3D clamp(max_boundary - adxl345_odr_tbl[odr][0],
+> >                           min_boundary, max_boundary);
+> > +             st->inact_time_ms =3D MILLI * val;
+> > +
+> > +             /* Inactivity time in s */
+> > +             return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, v=
+al);
+> > +     } else if (val_int =3D=3D 0 && val_fract > 0) {
+>
+> val_fract check is not needed here.
+>
 
+Case for e.g. 0.123, numbers under 1s. This goes into the free-fall registe=
+r.
 
+> > +             /* time < 1s, free-fall */
+> > +
+> > +             /*
+> > +              * Datasheet max. value is 255 * 5000 us =3D 1.275000 sec=
+onds.
+> > +              *
+> > +              * Recommended values between 100ms and 350ms (0x14 to 0x=
+46)
+> > +              */
+> > +             st->inact_time_ms =3D DIV_ROUND_UP(val_fract, MILLI);
+> > +
+> > +             return regmap_write(st->regmap, ADXL345_REG_TIME_FF,
+> > +                                 DIV_ROUND_CLOSEST(val_fract, 5));
+> > +     } else if (val_int > 0) {
+>
+> if now is redundant here, right?
+>
+
+So, this will be 1s through 255s. Periods above 1sec. This goes into
+the inactivity register.
+
+> > +             /* Time >=3D 1s, inactivity */
+> > +             st->inact_time_ms =3D MILLI * val_int;
+> > +
+> > +             return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, v=
+al_int);
+> >       }
+> >
+> > -     return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val);
+> > +     /* Do not support negative or wrong input. */
+> > +     return -EINVAL;
+> >  }
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
