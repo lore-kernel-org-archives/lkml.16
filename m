@@ -1,80 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A861A072C;
-	Mon, 23 Jun 2025 06:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1461E2852
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 06:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750660096; cv=none; b=T9t+9RburUzqmfyZ1AYyoVNIT60YulFiLyp78ecc7LeQYQ7wK0VUYYi6j8MVbAbQaIvjCHW7p6zNiacbjTXvMM1s39Dv/fyC2xurVaMYVj9bb9WAmmiiaTKLhIbeFMdlwcAvqOjF+8DvTDCxlJHJZTZCSkeUFSw09QL2iWbIgOQ=
+	t=1750660101; cv=none; b=gidnzelAVvZCLkrpS1hBmIjFcwo+tHe5VHokyaeJN9kvlUkX3SQ79Fbx7WTOQXTsqEZ6OwPVf9+3/1g/iSxVGRWgI0lHSv3EqnOzZn81sxYMFHYUd7zDeuC0khqH/ax1VjX4dj8qxMIAnm/KcvGlzvzErVzICFi4NCT6gdBbvKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750660096; c=relaxed/simple;
-	bh=HagfiHIsWhwV2eaS8RFEYMwbq2J6hxG1xCpPj6Ss2ew=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hTRI5ls0RzVrEIDZHcOqevy6QYk458zRLo1LbP+3blb//qOAVaKJxnwClJQJaahwemJTCyTqXwf5PWS5dGUnGEkLiU6n9zr3dnCzBBhrT8t1l0i9tmWsMOrVBxal6s4YGvX9gDAOlS2csPe41WIgIkennHnNIosdQxS0MC+698U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=oRnFs++g; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="oRnFs++g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90DECC4CEED;
-	Mon, 23 Jun 2025 06:28:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750660094;
-	bh=HagfiHIsWhwV2eaS8RFEYMwbq2J6hxG1xCpPj6Ss2ew=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oRnFs++gnVEAvl7o7Ruxy8QBPqaKMkhUB7gQkDl+ezSTSZ+zUvWqDcRY0prZIy4sC
-	 8Mc3a0ffakJzlX376fFqrGTmzQ2vT2UXdvDLoaK5BXFqo7EOhOFAxwZC8M3HnAZL0X
-	 j56JDN34QgevP+OcQPRvKX8eNK9RtBv6xZXjlit8=
-Date: Mon, 23 Jun 2025 08:28:12 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Sasha Levin <sashal@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org,
-	ziyao@disroot.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH for 6.1/6.6] platform/loongarch: laptop: Fix build error
- due to backport
-Message-ID: <2025062349-proximity-trapeze-24c6@gregkh>
-References: <20250622110148.3108758-1-chenhuacai@loongson.cn>
- <2025062206-roundish-thumb-a20e@gregkh>
- <CAAhV-H4S=z5O0+pq-x9X4-VjYsJQVxib+V-35g50WeaivryHLA@mail.gmail.com>
+	s=arc-20240116; t=1750660101; c=relaxed/simple;
+	bh=4V6OS7iCEGY040+hV9VWGSogwoPmP5nnqcnuzCqFCpQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XZzlUnOp1JrqbuhN6i8+B0V/SgDu/jA0q08oMrH3ATv6GxKqUg9wloB94QTUv1GsjEX/CYni/cRDPY6xfyLPr7I1A7WwBVdnFecF3OvG7OGPoUq9OTLvX1buXfV+CdAQ8zgDA0hCEavQXSNiGapOk872zaLeQDM8dob2pHQdvzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1uTaeS-0007Ec-61; Mon, 23 Jun 2025 08:27:32 +0200
+Message-ID: <133e7a14-9c61-46e6-9ac4-e1c17c0c28b1@pengutronix.de>
+Date: Mon, 23 Jun 2025 08:27:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H4S=z5O0+pq-x9X4-VjYsJQVxib+V-35g50WeaivryHLA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ARM: export __memset/__memcpy/__memmove
+To: Arnd Bergmann <arnd@kernel.org>, Russell King <linux@armlinux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>, Abbott Liu <liuwenliang@huawei.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Florian Fainelli <f.fainelli@gmail.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250620111257.3365489-1-arnd@kernel.org>
+Content-Language: en-US
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <20250620111257.3365489-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Sun, Jun 22, 2025 at 09:11:44PM +0800, Huacai Chen wrote:
-> On Sun, Jun 22, 2025 at 9:10 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Sun, Jun 22, 2025 at 07:01:48PM +0800, Huacai Chen wrote:
-> > > In 6.1/6.6 there is no BACKLIGHT_POWER_ON definition so a build error
-> > > occurs due to recently backport:
-> > >
-> > >   CC      drivers/platform/loongarch/loongson-laptop.o
-> > > drivers/platform/loongarch/loongson-laptop.c: In function 'laptop_backlight_register':
-> > > drivers/platform/loongarch/loongson-laptop.c:428:23: error: 'BACKLIGHT_POWER_ON' undeclared (first use in this function)
-> > >   428 |         props.power = BACKLIGHT_POWER_ON;
-> > >       |                       ^~~~~~~~~~~~~~~~~~
-> > >
-> > > Use FB_BLANK_UNBLANK instead which has the same meaning.
-> > >
-> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > ---
-> > >  drivers/platform/loongarch/loongson-laptop.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > What commit id is this fixing?
+On 20.06.25 13:12, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> commit 53c762b47f726e4079a1f06f684bce2fc0d56fba upstream.
+> When KASAN is locally disabled for one file, the string functions
+> get redirected to internal helpers, but those are not actually exported,
+> so this only works in built-in code but fails for loadable modules:
+> 
+> ERROR: modpost: "__memset" [crypto/ecc.ko] undefined!
+> ERROR: modpost: "__memcpy" [crypto/ecc.ko] undefined!
+> 
+> Add the missig exports.
+> 
+> Fixes: d6d51a96c7d6 ("ARM: 9014/2: Replace string mem* functions for KASan")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Great, can you resend this with a proper Fixes: tag so I don't have to
-manually add it myself?
+Reviewed-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-thanks,
+> ---
+>  arch/arm/kernel/armksyms.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm/kernel/armksyms.c b/arch/arm/kernel/armksyms.c
+> index 82e96ac83684..1ff50106afa4 100644
+> --- a/arch/arm/kernel/armksyms.c
+> +++ b/arch/arm/kernel/armksyms.c
+> @@ -83,10 +83,13 @@ EXPORT_SYMBOL(__raw_writesl);
+>  EXPORT_SYMBOL(strchr);
+>  EXPORT_SYMBOL(strrchr);
+>  EXPORT_SYMBOL(memset);
+> +EXPORT_SYMBOL(__memset);
+>  EXPORT_SYMBOL(__memset32);
+>  EXPORT_SYMBOL(__memset64);
+>  EXPORT_SYMBOL(memcpy);
+> +EXPORT_SYMBOL(__memcpy);
+>  EXPORT_SYMBOL(memmove);
+> +EXPORT_SYMBOL(__memmove);
+>  EXPORT_SYMBOL(memchr);
+>  
+>  EXPORT_SYMBOL(mmioset);
 
-greg k-h
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
