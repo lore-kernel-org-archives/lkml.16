@@ -1,94 +1,40 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30E21E834B;
-	Mon, 23 Jun 2025 06:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85FC1F03DE;
+	Mon, 23 Jun 2025 06:10:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750659036; cv=none; b=vCbDFRCgDNYrk5t6K+ZuQWADjNQO5Y6JQFm3+8GqAlsrW/M0MuSwA+SAslv49ewB3OYGFoZURGUgXwhAFBKXc7WXMpwtMAYmkoDTEer6hS4BA8rOZHem/SQmchD28/KC4JY3xlENLYydTeaXJeGBWGoed5QCTYfvfi0WNTQSkPs=
+	t=1750659039; cv=none; b=oDQmq5z7KSArkYHXPY5JEYDRcVMDWBl3r6/FhEGJPQv2XHEoOU73XDmaIdDMoJnSyrvM4XSFgTHM+c1zZO0gXF7DYKCjK6Hgrq14eBeEuIJy37Q1+BjTIYTJU02BNknd8w9YpSwQSzAb6wab2/eiI6eCA9oFpLfFyYGeNZz+eas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750659036; c=relaxed/simple;
-	bh=Rb82lXwhfTwYPKu8Q8XF7KI5JIB8d/RCndqm2TyQhxc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h8T8UR/c8h2hSP8THE3rWpgT6B+InGu8lAOPMQ+Cc47CfIEzS4AN2NtHg1iLxomM/5FQFujVR+v4SoRUfRLvNaSKlHS1JQEuCd/9w8AwIqeeqtg8vtSaxwjUeYqMGnvpl6TFIhZ7IEWw/catLzlfg3z7CJABeFzexadoXYPpC8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zyq4S5eL; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750659039; c=relaxed/simple;
+	bh=CHl8Bc1LPxNncbSW22kKIdroqpbenW6GL3LHLeZfJvQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FzjlHPRn/3Q3REJ+/gYU1Mv9ICN3vvaGG6NWgPZGhZjBvP9Jc8u/gYcdFketr1KBUk7Cry9+ATbQHV12z/y9oDFKz3TB6OynslWMTUy5bp7b+XEJA9gFU9SbZMe5w33NHKU9d1taa9yfujEE0an3h14XWzsWZ9u7Zvlel9/gp94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sTcGzDkb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zyq4S5eL"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so2581815b3a.0;
-        Sun, 22 Jun 2025 23:10:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750659034; x=1751263834; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jN4iAGbjA8Ktlzd5eLTpLdmfO5ssDEZ/FUSkzLKEQtA=;
-        b=Zyq4S5eLchJI5OfCr0mTEoTJQiRjdqKh8icmG+eU+ezgFjkHFe+Snb9zRtvIp8noIk
-         gAQM3NyZRSBE/WIG0wX0/JS4k3sqZhTwTTeQN+LpH86FoEu0vigjSIy1PlzQvIdOq4vb
-         eacA8RWRmPxqpYv5U/9aWmQtkDsBcgrU4dGb5+CIoWkQITtu2n5wdJ+EAeGTGhaPP5yQ
-         utcMT6ajJGlmsD2FO8Dz1lE7bR4bzxUBMndeZqujVAwxzK1HDU9PvM/V2TxbNlC88/yP
-         k0kt/paUaHpf3vqCrzVbNzT6X1UOYISn7rZF+c2MXHFBh9NOn6Fi7WMgEEuCG90Vb5Xf
-         SJww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750659034; x=1751263834;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jN4iAGbjA8Ktlzd5eLTpLdmfO5ssDEZ/FUSkzLKEQtA=;
-        b=Ujz7abKdE87TEEbGp64ez3cP/ro/40EmVafCgu0xefsJkiKoGG1k/L/mbeeyo+JqJg
-         N6IdO2KL/uTSi+z2QDIBPRKNlTM449qQaxrMjf5+qB+WtWVMOCimHze+NIGDAkmbw9MD
-         cDAUjggloPD+f086mATACTtvb5comoggeIEhLLTcO8BIcArMfeGkTO90ZaYG/J3hkeeW
-         t+eXcQd2zu5WzN9X0btl5rH9YyZ6c7Z9YIJwWAa0YGEq9nJjBrGJseCFr1kf/aVmGSj2
-         rSuVWXE//nDQBJFjAi4mbzakDCRBCvHDySqzjbK5UtTJ30oiWBYkSSIZARg2IvAMAwYo
-         qb2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU3QjQ2SBaYfQBypHXR7Y7o575slbe6+Gj7GZXPnBEtTAR/NdNGRpxxZ9iHhsuRZGmhkGhHmTzbprc3@vger.kernel.org, AJvYcCUmk0YdzoKJPhF6DiGygipWJikBTzHx0v5dE08uC4LR4KwjSp9MNrUM+10iMXJ0/AjCLtwkNgOEcYF4nEEnT1I=@vger.kernel.org, AJvYcCVNZQHXjjlY844LFdkaHZZhYOL3ZtJbGHQSZV6FYH1tZPJ1qxzcF1ciHsqwM8h7tG14bRLgsgLi@vger.kernel.org, AJvYcCX6NkcrxVGB7It8Etpn35c9vvFDwo2JfiSWD/KSu6sOYUdYt2kID9mQAXjqKmNVeH5GvMfTJLLYP/WjWiKe@vger.kernel.org, AJvYcCXeg5b61EEdUJE13/kKOSTnfhtd+dqZ4l6XaSQ9ObIYJ1pfKgk0m9QnB3eQiNtbIb4Rg8nE2yb6JIKb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7mtD8QI5jc6NofRmmtuR5ePYK5DvM1xH3afky+vR+2P0LSmad
-	XOiNPvf6DJdKBCWCGMpVHWvVLVmrwH2EaAUSxUHCATb8IbOrtoczMRVq
-X-Gm-Gg: ASbGnctE3u/MCq/NvcouTpKNtA7pADQZ3afWaAO4BHbPcG2mENWayIceSUPstmPSANF
-	tWhfY8vKEHTA310exPwh0w7k3RXEhujWAdbjnC4yzd/TQmWZEJYoa10Lhy835Hf7cIOQN+x/C0J
-	nNO+VxCt02Fv6QxldaWmCBT065La5YQou6CHAd21s/qQoWzLmOiSxmUt6xloCEme2CgzLffK2Qq
-	PA0m7dTQArxvhHgDWgPwBsE4kU11Ovm5reohkgEOai6H8Hxn3zcGaGxy8SEd8a0dVMQoovhR7F4
-	aCkln7iuS9hU/UzhpObLHEeSOPHNXg5zcShNoSuJLymMXsRHlbmgIfYRdU5TJsCGnDRlJ7E8x8q
-	3/mpmtij7qjv8m+3wBzuByNEPXFIrJc3Dj9U=
-X-Google-Smtp-Source: AGHT+IHJ0s+N82fET2NTu68HyBSgQnjWLVAQ5sAX+rRcZnyNqTiAyvuOJxtF7RDTNY4WSH3gQTcYrw==
-X-Received: by 2002:a05:6300:194:b0:220:21bf:b112 with SMTP id adf61e73a8af0-22026c3228amr16754814637.13.1750659034306;
-        Sun, 22 Jun 2025 23:10:34 -0700 (PDT)
-Received: from bee.. (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a623e8csm7391703b3a.83.2025.06.22.23.10.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 23:10:33 -0700 (PDT)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: alex.gaynor@gmail.com,
-	dakr@kernel.org,
-	gregkh@linuxfoundation.org,
-	ojeda@kernel.org,
-	rafael@kernel.org,
-	robh@kernel.org,
-	saravanak@google.com
-Cc: a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	bhelgaas@google.com,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	david.m.ertman@intel.com,
-	devicetree@vger.kernel.org,
-	gary@garyguo.net,
-	ira.weiny@intel.com,
-	kwilczynski@kernel.org,
-	leon@kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sTcGzDkb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C02BC4AF09;
+	Mon, 23 Jun 2025 06:10:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750659038;
+	bh=CHl8Bc1LPxNncbSW22kKIdroqpbenW6GL3LHLeZfJvQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sTcGzDkbyAFU66AoDlnGdHsccLgblIYbZp10hDpVDh16BARbT81rVewLF0g+PriVU
+	 4Ja4jm8rtnWTUkWV+dqSBgA5h0w2Ig7tRk6MIHCVTXUxyo/vriZpXXnz2MA0a5YO4f
+	 5Rdj9oW5NHxM4DEnJ5wT42nhNIWUO/JsQZ717TzQc3U2zLyiWw7u1HcmMzRYko8q4z
+	 E235v3R+mfmrJzk6GopvyVMHSxKokJpaLTW10E2FJy9WkAdn3yA2WX+OpTAHbMjP9J
+	 hpz/XpZXYCkMwYYb3UnVVgZUZx5wa9sQrKiUVrOZcMyf9RlrkstgM9WhxD70TVgiDE
+	 g9FH/XWwADC7Q==
+From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: linux-serial@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lossin@kernel.org,
-	netdev@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	tmgross@umich.edu
-Subject: [PATCH v1 2/3] rust: net::phy Represent DeviceId as transparent wrapper over mdio_device_id
-Date: Mon, 23 Jun 2025 15:09:50 +0900
-Message-ID: <20250623060951.118564-3-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250623060951.118564-1-fujita.tomonori@gmail.com>
-References: <20250623060951.118564-1-fujita.tomonori@gmail.com>
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH] serial: 8250: export RSA functions
+Date: Mon, 23 Jun 2025 08:10:35 +0200
+Message-ID: <20250623061035.436414-1-jirislaby@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -97,118 +43,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Refactor the DeviceId struct to be a #[repr(transparent)] wrapper
-around the C struct bindings::mdio_device_id.
+The RSA functions moved by the below commit to 8250_rsa.c are used in
+8250_base.c. Since that can be a module (when CONFIG_SERIAL_8250=m),
+this causes build failures:
+  ERROR: modpost: "rsa_autoconfig" [drivers/tty/serial/8250/8250_base.ko] undefined!
+  ERROR: modpost: "rsa_reset" [drivers/tty/serial/8250/8250_base.ko] undefined!
+  ERROR: modpost: "rsa_disable" [drivers/tty/serial/8250/8250_base.ko] undefined!
+  ERROR: modpost: "rsa_enable" [drivers/tty/serial/8250/8250_base.ko] undefined!
 
-This refactoring is a preparation for enabling the PHY abstractions to
-use device_id trait.
+Fix them by exporting the functions. But only to the base module using
+EXPORT_SYMBOL_GPL_FOR_MODULES(). (And not to the whole world.)
 
-Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Link: https://lore.kernel.org/all/20250619165607.33403e19@canb.auug.org.au/
+Fixes: 5a128fb475fb ("serial: 8250: move RSA functions to 8250_rsa.c")
 ---
- rust/kernel/net/phy.rs | 53 +++++++++++++++++++++---------------------
- 1 file changed, 27 insertions(+), 26 deletions(-)
+ drivers/tty/serial/8250/8250_rsa.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
-index 65ac4d59ad77..940972ffadae 100644
---- a/rust/kernel/net/phy.rs
-+++ b/rust/kernel/net/phy.rs
-@@ -507,7 +507,7 @@ pub const fn create_phy_driver<T: Driver>() -> DriverVTable {
-     DriverVTable(Opaque::new(bindings::phy_driver {
-         name: T::NAME.as_char_ptr().cast_mut(),
-         flags: T::FLAGS,
--        phy_id: T::PHY_DEVICE_ID.id,
-+        phy_id: T::PHY_DEVICE_ID.id(),
-         phy_id_mask: T::PHY_DEVICE_ID.mask_as_int(),
-         soft_reset: if T::HAS_SOFT_RESET {
-             Some(Adapter::<T>::soft_reset_callback)
-@@ -691,42 +691,41 @@ fn drop(&mut self) {
- ///
- /// Represents the kernel's `struct mdio_device_id`. This is used to find an appropriate
- /// PHY driver.
--pub struct DeviceId {
--    id: u32,
--    mask: DeviceMask,
--}
-+#[repr(transparent)]
-+#[derive(Clone, Copy)]
-+pub struct DeviceId(bindings::mdio_device_id);
- 
- impl DeviceId {
-     /// Creates a new instance with the exact match mask.
-     pub const fn new_with_exact_mask(id: u32) -> Self {
--        DeviceId {
--            id,
--            mask: DeviceMask::Exact,
--        }
-+        Self(bindings::mdio_device_id {
-+            phy_id: id,
-+            phy_id_mask: DeviceMask::Exact.as_int(),
-+        })
-     }
- 
-     /// Creates a new instance with the model match mask.
-     pub const fn new_with_model_mask(id: u32) -> Self {
--        DeviceId {
--            id,
--            mask: DeviceMask::Model,
--        }
-+        Self(bindings::mdio_device_id {
-+            phy_id: id,
-+            phy_id_mask: DeviceMask::Model.as_int(),
-+        })
-     }
- 
-     /// Creates a new instance with the vendor match mask.
-     pub const fn new_with_vendor_mask(id: u32) -> Self {
--        DeviceId {
--            id,
--            mask: DeviceMask::Vendor,
--        }
-+        Self(bindings::mdio_device_id {
-+            phy_id: id,
-+            phy_id_mask: DeviceMask::Vendor.as_int(),
-+        })
-     }
- 
-     /// Creates a new instance with a custom match mask.
-     pub const fn new_with_custom_mask(id: u32, mask: u32) -> Self {
--        DeviceId {
--            id,
--            mask: DeviceMask::Custom(mask),
--        }
-+        Self(bindings::mdio_device_id {
-+            phy_id: id,
-+            phy_id_mask: DeviceMask::Custom(mask).as_int(),
-+        })
-     }
- 
-     /// Creates a new instance from [`Driver`].
-@@ -734,18 +733,20 @@ pub const fn new_with_driver<T: Driver>() -> Self {
-         T::PHY_DEVICE_ID
-     }
- 
-+    /// Get a `phy_id` as u32.
-+    pub const fn id(&self) -> u32 {
-+        self.0.phy_id
-+    }
-+
-     /// Get a `mask` as u32.
-     pub const fn mask_as_int(&self) -> u32 {
--        self.mask.as_int()
-+        self.0.phy_id_mask
-     }
- 
-     // macro use only
-     #[doc(hidden)]
-     pub const fn mdio_device_id(&self) -> bindings::mdio_device_id {
--        bindings::mdio_device_id {
--            phy_id: self.id,
--            phy_id_mask: self.mask.as_int(),
--        }
-+        self.0
-     }
+diff --git a/drivers/tty/serial/8250/8250_rsa.c b/drivers/tty/serial/8250/8250_rsa.c
+index 2f1ee693103d..ff52ad02f6be 100644
+--- a/drivers/tty/serial/8250/8250_rsa.c
++++ b/drivers/tty/serial/8250/8250_rsa.c
+@@ -146,6 +146,7 @@ void rsa_enable(struct uart_8250_port *up)
+ 	if (up->port.uartclk == SERIAL_RSA_BAUD_BASE * 16)
+ 		serial_out(up, UART_RSA_FRR, 0);
  }
++EXPORT_SYMBOL_GPL_FOR_MODULES(rsa_enable, "8250_base");
  
+ /*
+  * Attempts to turn off the RSA FIFO and resets the RSA board back to 115kbps compat mode. It is
+@@ -177,6 +178,7 @@ void rsa_disable(struct uart_8250_port *up)
+ 	if (result)
+ 		up->port.uartclk = SERIAL_RSA_BAUD_BASE_LO * 16;
+ }
++EXPORT_SYMBOL_GPL_FOR_MODULES(rsa_disable, "8250_base");
+ 
+ void rsa_autoconfig(struct uart_8250_port *up)
+ {
+@@ -189,6 +191,7 @@ void rsa_autoconfig(struct uart_8250_port *up)
+ 	if (__rsa_enable(up))
+ 		up->port.type = PORT_RSA;
+ }
++EXPORT_SYMBOL_GPL_FOR_MODULES(rsa_autoconfig, "8250_base");
+ 
+ void rsa_reset(struct uart_8250_port *up)
+ {
+@@ -197,6 +200,7 @@ void rsa_reset(struct uart_8250_port *up)
+ 
+ 	serial_out(up, UART_RSA_FRR, 0);
+ }
++EXPORT_SYMBOL_GPL_FOR_MODULES(rsa_reset, "8250_base");
+ 
+ #ifdef CONFIG_SERIAL_8250_DEPRECATED_OPTIONS
+ #ifndef MODULE
 -- 
-2.43.0
+2.49.0
 
