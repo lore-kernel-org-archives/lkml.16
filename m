@@ -1,332 +1,238 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2048.outbound.protection.outlook.com [40.107.212.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3196519049B;
-	Mon, 23 Jun 2025 21:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B5E19049B;
+	Mon, 23 Jun 2025 21:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750715493; cv=pass; b=XLNHxmy2edxpPTjrEV3QIB/XJa/k5wbl9uZMor+YCByvEXAEgm7X6KTvOnjUPWHoJF7Wv72B6NqOtmteYudy97GE5/ttBdUc7pBrV+g6trC0JvXRWDkAWJhZK9Z2CR2oY5iErIZRH7rKujmcLVnAM849DIhwz1PjIMTpAlVt4HM=
+	t=1750715517; cv=fail; b=FEhqwcp8IjcOVxNMK4Qq5L/p4mCAgj7u8bvZncTZmSexPGbD6tz8margjA3wVpLYgWeri+vQdvIBCzhRt6ZSsA99uJMpTHBH3ShNVyUZ7Nyazvd6/4MNnrhZQi01IdAmvKB/IDguBHAEkGMFOgsFibw3QBb9XPRJK/RykV8A8UY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750715493; c=relaxed/simple;
-	bh=kUZ55aDwauHOi8YtXsztylF8oB2dhM0+AijzN5t7kiw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UXULbz3wVK2wMUdthaEJ2Krx7Aw+kJo2vjA/LQiHba/DEc1PLD2utYZ+4VpYDjwg4Bb3e0rmelJp9gXzXgF6M4QHMPyFH8MUN5hgyO/EkRmYZkPGdjCBfm8k6HwLEQsbn91HexbG3PuxrpEh9ELJQ8ubta+ZJj8leEzydtg9UMo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=RBuZ8fn3; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1750715517; c=relaxed/simple;
+	bh=w7hdVa0E/KU9w22DkjDduzOfhpDrTgMuYYAIOc1pQL8=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=tB53EAJQ5H0cZCtPpzqDbYot6mz1c8YmzfKYLmhiikxtVgBE17Wo4wncqvy7UUuQyOxuo+8Df/SmDVPDqKrhNz5cRL/g4pJ7jyC4Fg3xFn3GBMAMeerefs0D9drNeAoa/c70KJHjCaFYiG/Ru6Im01DS9bmfVkd9u5c7S1vCUuI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PFY6DitE; arc=fail smtp.client-ip=40.107.212.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="RBuZ8fn3"
-ARC-Seal: i=1; a=rsa-sha256; t=1750715481; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=XhA1f5X3vvs0h91NAHltQwTYl98YE2dKJwtll4jLSdW1LQdlNQsflFGiooMNCfYXYc/9SkCv9awxPOztsULBDnTS9Xfs1z07TidtDykdBgsAxQY8BEAHvmAH2kdATLEE5kRtCPejDxF+Mp6/0FUXOLd8FzZa0TIPWi8K6CiT3UU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750715481; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=GFXliCzQION6XnWXAAKpg1SFLETXLk2/Ys00udwEZjY=; 
-	b=XDE3mjnhDXHO+kZ8iECMHhkO1l3kgb1FsTq0pvfVk4TpdZBl6CHyx6tw4E9fcBK4pXprzgnnCxw/aSoKqlcblrzGCdyGYlO9Pdp2Oc/Q1SpU+OR9ykiQXai0P5HLFDjKai80iwGIxeu6efnSbARhuFNYMVrny7Gn+hROa+v0Jdo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750715481;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=GFXliCzQION6XnWXAAKpg1SFLETXLk2/Ys00udwEZjY=;
-	b=RBuZ8fn3jwpchuu3RcWAH+Fh5g/fAYD6KnLpCsXzrprX2sLjPxvqWyAp9gV9NTb0
-	aDz8q8NV+0tDf1cNG8kTyjucs+JFn4RJyUpFpsapxj6kf7tkKC4sOkqLCDGk+mzPDjv
-	42kyBiDN1jM7ehAl2y8VvHHnYVrmyuulTvUNbsw4=
-Received: by mx.zohomail.com with SMTPS id 1750715478062347.17253157085406;
-	Mon, 23 Jun 2025 14:51:18 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 5E5E2180AAB; Mon, 23 Jun 2025 23:51:13 +0200 (CEST)
-Date: Mon, 23 Jun 2025 23:51:13 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: amitsd@google.com
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Badhri Jagan Sridharan <badhri@google.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@kernel.org>, Kyle Tso <kyletso@google.com>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] usb: typec: tcpm: Add support for Battery Cap
- response message
-Message-ID: <g5w3ydcvtxwvcu5armmnt4v6y6wsymt7rothnvaesdql6kdscz@rhkxzx3y47iv>
-References: <20250507-batt_ops-v2-0-8d06130bffe6@google.com>
- <20250507-batt_ops-v2-5-8d06130bffe6@google.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PFY6DitE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sh/C9HyqKJahP339GfNtFMJvSZvtbHG4ee0u/ZLCPMFsURVyJpyC+an4j5UPyfMudNc6uL4spfTkOIaCcxlQzcguMymZuaObxo57Cx77o5V0cOubj3ETQvtDc+5DPYH8i3J1RoXZ1QIGC0dCJdJTW9vXYA24o/aZ1u9u3FxffAhmvUQbkCzPUuTKECq7MNbcVc3inZIpUfGxrhJ4J/wdVwzGeTBNmpX4IK8eH8tXZsHV8LyZLL/datMIm6MhPYx5Vcne5HCA+q0rQGVyiJWWXrgrz4iT6i0Mo2u0cEZFqSnZrNAFfaZOxkKAc4v3/uJW3TIB+EIBVOC+1AUL2XyqgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=i8Y7ieDekR1a4dqRtpOk3gA4y8UVKbGWgago7BYmDJM=;
+ b=rDTnS2ZIAvTpy9+nB4iWiXgJejjGGI2r4YaN58Y2Qy61SOGddR0zpoX8Km7CP60q8KQ+KNuYE9d7cHWjYH+G/7nGOfA2FB+RZxr2Tn5XXZQKM/QnNe76deFvNetMJ5w6W+mAZC8nPhFQ8X+izMojvrY65h1ojvAosR1bIvW/2xF0Dp1XiHMhMUEnzZCNES2mYWBWGsT4GnHwmlFbTuawpBcymB3kxUXY7rbtuii1X3JgYX7wvpQHEKzJ7lw7CzS50thbdd9+iPYCg6fkVARIvc6R+3S7Xp0MVxIvTh4cziBnKyttL1nzJGUpRVqXRj6CVjV7edPCrCn+8K4+jZ+PJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i8Y7ieDekR1a4dqRtpOk3gA4y8UVKbGWgago7BYmDJM=;
+ b=PFY6DitEAEnHpg8+rP9aBwzDDflIozICkOiFTcPWVTSZCF+Xa/wtIoXMJsy3h3gsN+7sDmEK2KbxDSGZkcitpJhpAzHkmZgs3f06F220lx0g7POH7LRuDFlP8of1ZpZzXjO5xis7fr0yZHfsFhD1f7/FRozLOSwljq0Rg3hlW80=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CY5PR12MB6429.namprd12.prod.outlook.com (2603:10b6:930:3b::16)
+ by SA3PR12MB7879.namprd12.prod.outlook.com (2603:10b6:806:306::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Mon, 23 Jun
+ 2025 21:51:52 +0000
+Received: from CY5PR12MB6429.namprd12.prod.outlook.com
+ ([fe80::1b40:2f7f:a826:3fa0]) by CY5PR12MB6429.namprd12.prod.outlook.com
+ ([fe80::1b40:2f7f:a826:3fa0%6]) with mapi id 15.20.8857.026; Mon, 23 Jun 2025
+ 21:51:52 +0000
+Message-ID: <8b16675a-c6ac-4619-aabe-ad2a4be6c964@amd.com>
+Date: Mon, 23 Jun 2025 17:51:48 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
+Content-Language: en-GB
+From: "Nirujogi, Pratap" <pnirujog@amd.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Pratap Nirujogi <pratap.nirujogi@amd.com>
+Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl,
+ bryan.odonoghue@linaro.org, krzk@kernel.org, dave.stevenson@raspberrypi.com,
+ hdegoede@redhat.com, jai.luthra@ideasonboard.com,
+ tomi.valkeinen@ideasonboard.com, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, benjamin.chan@amd.com, bin.du@amd.com,
+ grosikop@amd.com, king.li@amd.com, dantony@amd.com, vengutta@amd.com,
+ Svetoslav.Stoilov@amd.com, Yana.Zheleva@amd.com
+References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
+ <20250615000915.GQ10542@pendragon.ideasonboard.com>
+ <53674c5f-6b68-49e7-bbb0-fd06fff344c3@amd.com>
+In-Reply-To: <53674c5f-6b68-49e7-bbb0-fd06fff344c3@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SJ0PR05CA0137.namprd05.prod.outlook.com
+ (2603:10b6:a03:33d::22) To CY5PR12MB6429.namprd12.prod.outlook.com
+ (2603:10b6:930:3b::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4ffhg6s33jsl77op"
-Content-Disposition: inline
-In-Reply-To: <20250507-batt_ops-v2-5-8d06130bffe6@google.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.3/250.696.82
-X-ZohoMailClient: External
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6429:EE_|SA3PR12MB7879:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5f414c85-c7ab-4e47-f7b6-08ddb2a0299f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZXg4L2t6Y2lRbGNuQmxtSFRMK1dCMmxXdFh2VEZIY0dkaEtKdDVPOXE3di9y?=
+ =?utf-8?B?Q2Jma3V6QThQQVhwVDB3cGZUOTRBMXFCNVBPUktKeDllS2txMmwycUFRdWgy?=
+ =?utf-8?B?OVpVaUVZL3Y4QmNvT3NGNWw3SjJoWG5wSGJ3UDZZaUtoTlVsL3hSaDJEclM2?=
+ =?utf-8?B?enhsYlRIamZzeUdBVGtUZWRhR3pxaDV2UHB1NWkwU3dBLzJTK3d1OTdBZWp0?=
+ =?utf-8?B?TmcwbFVyZm9mTTArdVdUemNnbXYwTFBsT3dUazN2SmlnQ0VLTU96MzJGeHNJ?=
+ =?utf-8?B?TjdlWHJ0Q0FqUlBKR2xEN3VST0FlVm5QNkEwRG5EQXUxcTA5enp2emdsR2JH?=
+ =?utf-8?B?UWpBVFM3RDc1QXlGREVYSG82N2lBNk9zM1NFMGZOTlBsbnltaUxTWHpBM1dB?=
+ =?utf-8?B?SVQyaDlxeHdhWk16aWlVTm5MNXlIdEVEMXVrVWhOWFVOcU9yOS9Ubjc5Zjhv?=
+ =?utf-8?B?NjVrNDZycVhWNjY0WTIxZ3ljMzNkSnFZNXM0N2xZaGJxMnhxR2ZvK1ZQem42?=
+ =?utf-8?B?S3p0Z3BCNCtSUW9mTFIwbGFHalp0T0x3a1NmY2pQOHh3RHl3YmNRN0NBLzFo?=
+ =?utf-8?B?MHNxTzBTWXc3Ulc1M01wOVRXQWMzcFB2WHFLTGJ6elVrSGVMUkZWazZ2bGlY?=
+ =?utf-8?B?N1h0TDJNZzJ4aXFEaHJwbHlGdUE3S0dubmc2aHFhd1FrZUdIU0RLQ2hqN1FD?=
+ =?utf-8?B?bFhUS0xSTHNXMnNSck9aekRYMnZXZXJLWXhMdUtFTHNPQlFWbFd0U3dnSElV?=
+ =?utf-8?B?bUg0Zk9iYXZkNEtQdGsxTnVjYVA5UXlTRU5ibm9BWGJIS21CODlqaFhLTExT?=
+ =?utf-8?B?YVRaZXdXOWE3SzJkK2xoSEZDK01mZ2ZGUmk1NldkbzhjTmZlN3VBc2R6VFF2?=
+ =?utf-8?B?VHVuR3ZEMEhTOXU3dG1xeHllT1dTdnpsVUZlajJNYVNjU0dlWCszZHVmbE5k?=
+ =?utf-8?B?ald2eUdvdWVsN0hNZjMvY2R4eHV1Q0ZZbWdSZHEycTlMNWYweUZCN2dEd3Zr?=
+ =?utf-8?B?dzE2OHhiaGpRWFp2VG5CUHd2bW1aQXY1emxiSWZKSkpabG9pa2JpRE5yd296?=
+ =?utf-8?B?T3hwcGdhZEdZcDhTT3crOUtGRkhpYitJbllzZWNmSDZwVGMzS1BLWU1kNS9y?=
+ =?utf-8?B?bVN2emNJdVJFZVRLeTY1cHJuRFQrZk9wVUI2R2JIWFdYa0lyWmFYOUYzdEF2?=
+ =?utf-8?B?ZlRYOFhoS2EvZWI5d09HZm1GNDhEZGgzRkUxc3B1cWhJQTBnWCtpSXRZOXo5?=
+ =?utf-8?B?L3RzcGgzSW9rZmlwRnV5UXBlZlYxdk82d29sVW9PL3ByandOWVZWNzNXcGlO?=
+ =?utf-8?B?bnNtSkN3S3JFYmUzdkpXZlBMa1I3YXh2VjV3enVyakZXZjcyWVUzNkwydkVu?=
+ =?utf-8?B?RHJJK29pNXFSSlE1MnJsQk1xeU8wNytiNkxrSEYvWExPRStyT3l6VGxzSnhy?=
+ =?utf-8?B?bGl2R0VDeTJ6VVNBV2pEVWZhS0RNSUhqU2gwSmNVWlk5RjNHdDBXRG9LSERQ?=
+ =?utf-8?B?dzhIVy9mN2VkSitKMkhxU0pGZG5Uem1tdHlXVXdlZkVWRXRCN1poaUwyc01k?=
+ =?utf-8?B?d0MzM2p0M3NlMklGZUxsV0J3WkJjNTVQS09yVUpzQXZzTVNkc2krYllwRzAr?=
+ =?utf-8?B?cmZVcFI5TGV3dENnWW1URWNrNUhGbGpsbStlVk1TbllXU3J1WnY1VFZ0cmc3?=
+ =?utf-8?B?NkhnMk9ldG5iQWFTSXk4cWNMVGZDdGgzRzRoTGQ1V2Z5NVZKMjBZRFZ3RFJ1?=
+ =?utf-8?B?TkdNNy9SUmQyaFA1UENHYlFzcXpJWTkrdTJVSDkxQUVyM3BZVTFDaUNpL2hl?=
+ =?utf-8?B?ZnlLMFJTL1hxWmo1L3Q1bkoxU2hoM1hXLzZYZkJpOWlMRXNaSG9WUzhubU5h?=
+ =?utf-8?B?S3l1L0FvYWU4cjEvZmlUMGdtUlczVysxL251cTA0azdRQmYwR3NnL0Jjclpm?=
+ =?utf-8?Q?CR5l8tOfXDw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6429.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N09NN3BnQU5McjdLbnpsQWFINEt5SGZxeDh4V1phQUJzY0U5WFZLamtPbGRw?=
+ =?utf-8?B?aDlXaTF5cXpaWmNpNng1TW1FbEl5YXEyTGU5bnF3MWJTeVVKbVlKYnR5SFRB?=
+ =?utf-8?B?cEsvUGFCbk9HUThDRVU4QVppc3duNk1mcEdnOGxGVTdnekFCRG10VFI2Y082?=
+ =?utf-8?B?dUJWV25ndEdEQWR6QzhNTVZXZE1XWnpGY2VRSjQxZ0xmU3k4aXZ5YUF2dFFu?=
+ =?utf-8?B?dFhuRGVqR29OM3V5YUlwVGtiOHZNT3ZhUjQyMzIwc3FreHcvTjNxWXdDTTRt?=
+ =?utf-8?B?ZUl1V2w5OTlVOUJXVy9UZGVwR01DYXV4MjBpck03N1VFN0xGVk1RY3MxeStk?=
+ =?utf-8?B?dVlDWFY1Zmo5Q21KMW9OKzFZMUFCTHRCNDRaS1FRYmVwMk5qSWw1V3J2dlpX?=
+ =?utf-8?B?YTgrQUdpU3BWTjlRRk42U1BBSzM1aXN5ZzhDcFN1bG9MWnhLSVJFcWI4Q25P?=
+ =?utf-8?B?R01JaUlmZTdtZTJNb0dyMlNqTWhJRWpMK1JLVHZKSjdTaUZjYjIzVmM2VUFz?=
+ =?utf-8?B?akx4OVIzNS9hOFJYRHAxMFEybE5iL3NFSGsxbFp2VHRtZjVKSUdlRFRhSXha?=
+ =?utf-8?B?RlVBT1FSZmp0czBKOTVoVEFTRmxzOUNTNGxlZkRqRmpaeHR4YVQzZkg3MStV?=
+ =?utf-8?B?bURQTVZJdU5SVTNZbndjOFBJZUQzSXFLZTUwejRPUWJ0cHpYOTBkV3RTRnRM?=
+ =?utf-8?B?ZE00Y2FWUFZQeEpNQm95MmluQnQ0UzVVeW5RL0dHNkp2Z1NnUlo1RFBXSGJL?=
+ =?utf-8?B?Z0VCRkVnc1IwS0VGbzJYcWFHNnU5TUdjOFpsWGlDUHVSRkIzbElYUEpJV0p0?=
+ =?utf-8?B?czRjTGNkTHJJKzQrSEdLTkhNVGx3ZVdDNUNRVDNUWlZ1bE93MTFkZ3BBQngz?=
+ =?utf-8?B?L1dzdGdkWnlTbTViSDh0QVloWWVFcU9PSEpQcVdlek1VVnZVQlcvYmVNay96?=
+ =?utf-8?B?YXpUTVZ0Y1hwU1czeGJ6ZXNuRWZ3Qk5DQ3ZHQU9tVEhMSCtNM1EvajRobDBJ?=
+ =?utf-8?B?c1Bta2pUUjMwenVETk8yZzdjeG1HMDlyUGtxa3BrOTR2aTB3dy8vT1JBTXUy?=
+ =?utf-8?B?QnlxTStRdW1EaVQ0bFdZSHp5QzVPRFU1SzF4dE5VMEdHMURRNTVFMC9nVzBW?=
+ =?utf-8?B?eEdpSXNUZml3K0pObmdUbHZSSHhuVHp0VGd1WEZjSUdkMU85SzJZTytCd2FW?=
+ =?utf-8?B?UEZXbHNnUC9jM0kzUU9lKytaRW42YTdEb0QwRFNqemFVSGdIVU5uV1hXY3do?=
+ =?utf-8?B?ZTZ6a2RYNjRnbStiMUhLRUNKcVh6NEJMSUM1eUZieE5PclY3V0dlY0FzTjlU?=
+ =?utf-8?B?SUtCT2dWanloMUtKdmlscHRXOTlWNlBOTUNXSDhBbzdBTVlRMlFJSHFVL2Rw?=
+ =?utf-8?B?S3VqcUdWR0ZaeFVFTTRrNytjRENCNzBXVnZYcSswQk4wTlN3ZjBCZXZ6cjVN?=
+ =?utf-8?B?RXExV1JuUFlLWVMvMzNCeGdLV0VRRVhnR3djY0hkblNOZ0xxSVpHL2FxSnF6?=
+ =?utf-8?B?L0tkRklQNVlBaGdOQm9jRmlYaUNReGNQZzdlVmtTR0RkWERjdEZOQnBJeFA5?=
+ =?utf-8?B?WGZwWHZRWTM2STY2SVNSMzJDSkU4U1VVNi93WFJQRE1ESkhmNzZaaXN4cHdm?=
+ =?utf-8?B?K1l0eEJlQytMZ3RpRlQ2dWNXb1lyeit2SDhPUnpaNDNwbndkMCtVZStSa2ZX?=
+ =?utf-8?B?OXh1SnBXSnIvRDMwUGlQdW16MXpSeGVhQmNJcnBaR1AxTVNVVXV6NGtJNGRK?=
+ =?utf-8?B?dlhUMXhVRXRXdEJYWjJaa3AzTVRzZ2M4L0g4bHAwVmxoN3VIcWprb0pJeUJV?=
+ =?utf-8?B?bzVVcDVZS04xN0hzUXE1VkFVOFJoMU56QVVuWE5wRlpqdm10YkFJajF5UEpl?=
+ =?utf-8?B?aTdwMWRoRDN2dTYzLzllMDlncThzRnNOUkZockcyZUNwOVVhVVRzbk5HdFdr?=
+ =?utf-8?B?dThralVUVG1hSThLeW9ad25MYVg1RXFUbFZoajZ4amxGL3F3d25iSld6NTN3?=
+ =?utf-8?B?S3lENEhRSU9YZ3BqVmp5eXU2Q0RWU3M1Y2JCSnVLeHlxMXRtem1YTC9FOHAy?=
+ =?utf-8?B?OFFZeit3M2ZtT1pLRktmWVZlUkRnNHYxKzFyaHFNc1piNzVocFhCTXlHOXFZ?=
+ =?utf-8?Q?qNkTleRzn7Zko3Ge6ZRWm4/++?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f414c85-c7ab-4e47-f7b6-08ddb2a0299f
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6429.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 21:51:52.1722
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mGHkT/o0X5kv+YkHeAM1HobaQjvOo2Ii5sYonN50EtUVbuViNrxVeKyk063DBMOxQNbuSD5CtUKQImRJkUOtEw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7879
 
+Hi Laurent,
 
---4ffhg6s33jsl77op
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 5/5] usb: typec: tcpm: Add support for Battery Cap
- response message
-MIME-Version: 1.0
+On 6/16/2025 6:49 PM, Nirujogi, Pratap wrote:
+>>> +static int ov05c10_probe(struct i2c_client *client)
+>>> +{
+>>> +     struct ov05c10 *ov05c10;
+>>> +     u32 clkfreq;
+>>> +     int ret;
+>>> +
+>>> +     ov05c10 = devm_kzalloc(&client->dev, sizeof(*ov05c10), 
+>>> GFP_KERNEL);
+>>> +     if (!ov05c10)
+>>> +             return -ENOMEM;
+>>> +
+>>> +     struct fwnode_handle *fwnode = dev_fwnode(&client->dev);
+>>> +
+>>> +     ret = fwnode_property_read_u32(fwnode, "clock-frequency", 
+>>> &clkfreq);
+>>> +     if (ret)
+>>> +             return  dev_err_probe(&client->dev, -EINVAL,
+>>> +                                   "fail to get clock freq\n");
+>>
+>> Let's try to land
+>> https://lore.kernel.org/linux-media/20250521104115.176950-1- 
+>> mehdi.djait@linux.intel.com/
+>> and replace the code above with devm_v4l2_sensor_clk_get().
+>>
+> Ok, we will verify on our side.
+> 
+We tried using devm_v4l2_sensor_clk_get() and found its required to add 
+support for software_node to make it work with this driver. Please refer 
+the changes below and let us know if these should be submitted as a 
+separate patch.
 
-Hi,
+---
+@@ -645,16 +645,16 @@ struct clk *devm_v4l2_sensor_clk_get(struct device 
+*dev, const char *id)
+         const char *clk_id __free(kfree) = NULL;
+         struct clk_hw *clk_hw;
+         struct clk *clk;
+-       bool acpi_node;
++       bool is_node;
+         u32 rate;
+         int ret;
 
-On Wed, May 07, 2025 at 06:00:26PM -0700, Amit Sunil Dhamne via B4 Relay wr=
-ote:
-> From: Amit Sunil Dhamne <amitsd@google.com>
->=20
-> Add support for responding to Get_Battery_Cap (extended) request with a
-> a Battery_Capabilities (extended) msg. The requester will request
-> Battery Cap for a specific battery using an index in Get_Battery_Cap. In
-> case of failure to identify battery, TCPM shall reply with an
-> appropriate message indicating so.
->=20
-> Support has been added only for fixed batteries and not hot swappable
-> ones.
->=20
-> As the Battery Cap Data Block size is 9 Bytes (lesser than
-> MaxExtendedMsgChunkLen of 26B), only a single chunk is required to
-> complete the AMS.
->=20
-> Support for Battery_Capabilities message is required for sinks that
-> contain battery as specified in USB PD Rev3.1 v1.8
-> ("Applicability of Data Messages" section).
->=20
-> Signed-off-by: Amit Sunil Dhamne <amitsd@google.com>
-> Reviewed-by: Badhri Jagan Sridharan <badhri@google.com>
-> Reviewed-by: Kyle Tso <kyletso@google.com>
-> ---
->  drivers/usb/typec/tcpm/tcpm.c | 96 +++++++++++++++++++++++++++++++++++++=
-++++--
->  include/linux/usb/pd.h        | 31 ++++++++++++++
->  2 files changed, 123 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-> index 98df0c7ce00e43f6c95ab49237a414e1b4413369..4731126fbf19a50178be0cf88=
-67b3fe08595724c 100644
-> --- a/drivers/usb/typec/tcpm/tcpm.c
-> +++ b/drivers/usb/typec/tcpm/tcpm.c
-> @@ -228,7 +228,8 @@ enum pd_msg_request {
->  	PD_MSG_DATA_SINK_CAP,
->  	PD_MSG_DATA_SOURCE_CAP,
->  	PD_MSG_DATA_REV,
-> -	PD_MSG_DATA_BATT_STATUS
-> +	PD_MSG_DATA_BATT_STATUS,
-> +	PD_MSG_EXT_BATT_CAP,
->  };
-> =20
->  enum adev_actions {
-> @@ -597,8 +598,8 @@ struct tcpm_port {
->  	u8 fixed_batt_cnt;
-> =20
->  	/*
-> -	 * Variable used to store battery_ref from the Get_Battery_Status
-> -	 * request to process Battery_Status messages.
-> +	 * Variable used to store battery_ref from the Get_Battery_Status &
-> +	 * Get_Battery_Caps request to process Battery_Status messages.
->  	 */
->  	u8 batt_request;
->  #ifdef CONFIG_DEBUG_FS
-> @@ -1414,6 +1415,81 @@ static int tcpm_pd_send_batt_status(struct tcpm_po=
-rt *port)
->  	return tcpm_pd_transmit(port, TCPC_TX_SOP, &msg);
->  }
-> =20
-> +static int tcpm_pd_send_batt_cap(struct tcpm_port *port)
-> +{
-> +	struct pd_message msg;
-> +	struct power_supply *batt;
-> +	struct batt_cap_ext_msg bcdb;
-> +	u32 batt_id =3D port->batt_request;
-> +	int ret;
-> +	union power_supply_propval val;
-> +	bool batt_present =3D false;
-> +	u16 batt_design_cap =3D BATTERY_PROPERTY_UNKNOWN;
-> +	u16 batt_charge_cap =3D BATTERY_PROPERTY_UNKNOWN;
-> +	u8 data_obj_cnt;
-> +	/*
-> +	 * As per USB PD Rev3.1 v1.8, if battery reference is incorrect,
-> +	 * then set the VID field to 0xffff.
-> +	 * If VID field is set to 0xffff, always set the PID field to
-> +	 * 0x0000.
-> +	 */
-> +	u16 vid =3D BATTERY_PROPERTY_UNKNOWN;
-> +	u16 pid =3D 0x0;
-> +
-> +	memset(&msg, 0, sizeof(msg));
-> +
-> +	if (batt_id < MAX_NUM_FIXED_BATT && port->fixed_batt[batt_id]) {
-> +		batt_present =3D true;
+         clk = devm_clk_get_optional(dev, id);
+         ret = device_property_read_u32(dev, "clock-frequency", &rate);
+-       acpi_node = is_acpi_node(dev_fwnode(dev));
++       is_node = is_acpi_node(dev_fwnode(dev)) || 
+is_software_node(dev_fwnode(dev));
 
-This should also handle POWER_SUPPLY_PROP_PRESENT.
+         if (clk) {
+-               if (!ret && acpi_node) {
++               if (!ret && is_node) {
+                         ret = clk_set_rate(clk, rate);
+                         if (ret) {
+                                 dev_err(dev, "Failed to set clock rate: 
+%u\n",
+@@ -668,7 +668,7 @@ struct clk *devm_v4l2_sensor_clk_get(struct device 
+*dev, const char *id)
+         if (ret)
+                 return ERR_PTR(ret);
 
-Greetings,
+-       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !acpi_node)
++       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !is_node)
+                 return ERR_PTR(-ENOENT);
 
--- Sebastian
+         if (!id) {
+----
 
-> +		batt =3D port->fixed_batt[batt_id];
-> +		ret =3D power_supply_get_property(batt,
-> +						POWER_SUPPLY_PROP_USBIF_VENDOR_ID,
-> +						&val);
-> +		if (!ret)
-> +			vid =3D val.intval;
-> +
-> +		if (vid !=3D BATTERY_PROPERTY_UNKNOWN) {
-> +			ret =3D power_supply_get_property(batt,
-> +							POWER_SUPPLY_PROP_USBIF_PRODUCT_ID,
-> +							&val);
-> +			if (!ret)
-> +				pid =3D val.intval;
-> +		}
-> +
-> +		ret =3D power_supply_get_property(batt,
-> +						POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN,
-> +						&val);
-> +		if (!ret)
-> +			batt_design_cap =3D (u16)UWH_TO_WH(val.intval * 10);
-> +
-> +		ret =3D power_supply_get_property(batt,
-> +						POWER_SUPPLY_PROP_ENERGY_FULL,
-> +						&val);
-> +		if (!ret)
-> +			batt_charge_cap =3D (u16)UWH_TO_WH(val.intval * 10);
-> +	}
-> +
-> +	bcdb.vid =3D cpu_to_le16(vid);
-> +	bcdb.pid =3D cpu_to_le16(pid);
-> +	bcdb.batt_design_cap =3D cpu_to_le16(batt_design_cap);
-> +	bcdb.batt_last_chg_cap =3D cpu_to_le16(batt_charge_cap);
-> +	bcdb.batt_type =3D !batt_present ? BATT_CAP_BATT_TYPE_INVALID_REF : 0;
-> +	memcpy(msg.ext_msg.data, &bcdb, sizeof(bcdb));
-> +	msg.ext_msg.header =3D PD_EXT_HDR_LE(sizeof(bcdb),
-> +					   0, /* Denotes if request chunk */
-> +					   0, /* Chunk number */
-> +					   1  /* Chunked */);
-> +
-> +	data_obj_cnt =3D count_chunked_data_objs(sizeof(bcdb));
-> +	msg.header =3D cpu_to_le16(PD_HEADER(PD_EXT_BATT_CAP,
-> +					   port->pwr_role,
-> +					   port->data_role,
-> +					   port->negotiated_rev,
-> +					   port->message_id,
-> +					   data_obj_cnt,
-> +					   1 /* Denotes if ext header */));
-> +	return tcpm_pd_transmit(port, TCPC_TX_SOP, &msg);
-> +}
-> +
->  static void mod_tcpm_delayed_work(struct tcpm_port *port, unsigned int d=
-elay_ms)
->  {
->  	if (delay_ms) {
-> @@ -3711,8 +3787,12 @@ static void tcpm_pd_ext_msg_request(struct tcpm_po=
-rt *port,
->  		tcpm_pd_handle_msg(port, PD_MSG_DATA_BATT_STATUS,
->  				   GETTING_BATTERY_STATUS);
->  		break;
-> -	case PD_EXT_SOURCE_CAP_EXT:
->  	case PD_EXT_GET_BATT_CAP:
-> +		port->batt_request =3D ext_msg->data[0];
-> +		tcpm_pd_handle_msg(port, PD_MSG_EXT_BATT_CAP,
-> +				   GETTING_BATTERY_CAPABILITIES);
-> +		break;
-> +	case PD_EXT_SOURCE_CAP_EXT:
->  	case PD_EXT_BATT_CAP:
->  	case PD_EXT_GET_MANUFACTURER_INFO:
->  	case PD_EXT_MANUFACTURER_INFO:
-> @@ -3921,6 +4001,14 @@ static bool tcpm_send_queued_message(struct tcpm_p=
-ort *port)
->  					 ret);
->  			tcpm_ams_finish(port);
->  			break;
-> +		case PD_MSG_EXT_BATT_CAP:
-> +			ret =3D tcpm_pd_send_batt_cap(port);
-> +			if (ret)
-> +				tcpm_log(port,
-> +					 "Failed to send battery cap ret=3D%d",
-> +					 ret);
-> +			tcpm_ams_finish(port);
-> +			break;
->  		default:
->  			break;
->  		}
-> diff --git a/include/linux/usb/pd.h b/include/linux/usb/pd.h
-> index 4efa7bfd9863915dfc8048da264116d9b05a447b..c89594177da57f4398b75c89c=
-1991b4937614a70 100644
-> --- a/include/linux/usb/pd.h
-> +++ b/include/linux/usb/pd.h
-> @@ -204,6 +204,37 @@ struct pd_message {
->  	};
->  } __packed;
-> =20
-> +/*
-> + * count_chunked_data_objs: Helper to calculate number of Data Objects o=
-n a 4
-> + *   byte boundary.
-> + * @size: Size of data block for extended message. Should *not* include =
-extended
-> + *   header size.
-> + */
-> +static inline u8 count_chunked_data_objs(u32 size)
-> +{
-> +	size +=3D offsetof(struct pd_chunked_ext_message_data, data);
-> +	return ((size / 4) + (size % 4 ? 1 : 0));
-> +}
-> +
-> +/**
-> + * batt_cap_ext_msg - Battery capability extended PD message
-> + * @vid: Battery Vendor ID (assigned by USB-IF)
-> + * @pid: Battery Product ID (assigned by battery or device vendor)
-> + * @batt_design_cap: Battery design capacity in 0.1Wh
-> + * @batt_last_chg_cap: Battery last full charge capacity in 0.1Wh
-> + * @batt_type: Battery Type. bit0 when set indicates invalid battery ref=
-erence.
-> + *             Rest of the bits are reserved.
-> + */
-> +struct batt_cap_ext_msg {
-> +	__le16 vid;
-> +	__le16 pid;
-> +	__le16 batt_design_cap;
-> +	__le16 batt_last_chg_cap;
-> +	u8 batt_type;
-> +} __packed;
-> +
-> +#define BATT_CAP_BATT_TYPE_INVALID_REF			BIT(0)
-> +
->  /* PDO: Power Data Object */
->  #define PDO_MAX_OBJECTS		7
-> =20
->=20
-> --=20
-> 2.49.0.987.g0cc8ee98dc-goog
->=20
->=20
+Thanks,
+Pratap
 
---4ffhg6s33jsl77op
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhZzFAACgkQ2O7X88g7
-+pp/ohAAmhwozxPOZbt+0M9zZ6EZHKbxIA4dyREIo4bxCyozSGJq/qVY6p+kUK9K
-c8HtERDjM0VixLFk/eNC4oMj2AeczzCSR3Y5BCoqJstXqLqznquXnKjER6U1i8uY
-iaFHQEPVjZCtD96B/NTkeJ0Z7A6+A5EXLNpRjUc+sOw02sXVp7z1TWPDPkB6gZri
-MVHzZlKJwmua5cvBFBPYVd/UevbZleQ2HY3XzyPjRlhUurhCkZt7ZyLaWJqDS7ek
-tsbg8WNiai1QZ/b7oDI8k7ICJsxjaPWPCBrmYrr+97ibHJ8WMWN/Mo6aAb/U8MWs
-Agfrd1k6tEQAPeftdNpwQp5qktcrbcVrOwEgToHIdLVc+qC8iezju9S0ui41L8gy
-Bl3ljdW/p4YrEnxQkHnyU5e02v0+zZohWA/fnLx6w33au6o0l4m9YgjCYlGSdSy0
-/XaPyfL0lVsCeiscUITSXETSzupCalzaJX3WbNsTLAnVfnC1ZatDIdXPFy4Nm5I8
-QFJl0D2p/0Jedzd74SBRZY2DnzfN+npRBCIgh2t0NFWhEUXtx04Yc52SRfE4pMC9
-2SqZQpWNN20AgWtW+bd/AMvUaNf0EkkssdyVJkdxbENqtpW7dy8vEIEUeUpGloOb
-PLBXHO4enu/j9tQadA8mr946DnYF3PZTSwqPgcpALXvOU6WSyYc=
-=27wT
------END PGP SIGNATURE-----
-
---4ffhg6s33jsl77op--
