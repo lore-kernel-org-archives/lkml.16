@@ -1,132 +1,94 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE448231C8D
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE2610E9
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750677399; cv=none; b=Fam25MiFlbVJzTuZ+EUUazoaLnSpkJp6qyBFweFcZogsBhYBswn37tqetdck5JtCrPz0/aaU7ITGq0t6lQ2Ptlq91KQvMSDfrEWgCneJuE4LOfJUS+TCG4iGe/jbWn3B97BlHIejnpyrGkubsVQMjTPjt8dXjcW0bHg+pVWIhMs=
+	t=1750677450; cv=none; b=RHYPmsUvQFnkDMYX+ZEkAvm+miy6PMA8IbvToIirWpMZGWjBp8GnhKUbew89OE3nUbWef3OCwL8vt0OhTKF9Swt2ztPfxwu4kAZgy5j1Cm72xQEz67Y61d6jAOYdBIWON4slfw4TmUzYN/SjXxzBLRWu/ihM6sayMxj9krUI/OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750677399; c=relaxed/simple;
-	bh=DYNqBNUlWgKAuEVOS77tdc0ByrFSa87MJlxXA+bR9/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iVIgUXk6na8VUfTN7RI7aWHSZVeYbQeOO5qPuTu1f/0QfZAMln6mWtf0y7EBJqt3sOo+j+ZVMexAG4vOkXLun5n0BE/luugaJTrLJDCj3VT5cPfWNSiLkj2kMfhSzxtBifPWg4/AKiHbnODS7pb398LaLJLtgv/ZiPneD5Z6xjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RCTRSHQw; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750677450; c=relaxed/simple;
+	bh=ovl/bHYb6C3KR3AeewAgyU8Q13C+1+oe9okwz4HcAeg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=uiPgigxsGPL5LbqOPd6Nw5ayx7ynXkY6eL3HuNbNEQLlZfm6G0XS8L6IpzDal3et7ulBhY8r1YNsChaJYhxQUuzCDfr1yf5p1djB08TEpdQQvYOSQdzbVo9OGWzAEPOeysMoR6kucLigFRPDArz30NC8tEOVk2MCyBbp/mK2LJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OEr69dhK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RCTRSHQw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=FLmwIsPITEhQQnQYQD3b/uMa0DBJuudsbqTBC6gMFw8=; b=RCTRSHQwiDz31/tj4iZJ7P086H
-	4s0nkNqFxwSjdrGYF2J9sV9/831UqffpQhR7DuB8ypTiyeXoHSlqFg3g9si2K5PpSfjtKHimoxf3M
-	dMBTtDd04H4q9+SznOZWZlKUH8SNS37GiD4sOP83eKaLOJtSp9yzbc01sqVsA0v+QEYyoGV/n+22i
-	CYhjkXUYA2OwKdnFp8JO9uXTvpPfVEwwk90w7WR71H6pdgIDJ02h/qog4T7fj9c6Ivj9F+Bk97jaz
-	v2XWaMSpw9k3T1CYMS0rRZOEU6GhGHyGz8m4dXUcjXOfs+8DP18L762VoljhRAzT2roGcaYKAV9OL
-	FMcfLz0A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uTfA5-00000003EHW-18yT;
-	Mon, 23 Jun 2025 11:16:29 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 68B52307E51; Mon, 23 Jun 2025 13:16:28 +0200 (CEST)
-Date: Mon, 23 Jun 2025 13:16:28 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] sched/fair: Manage lag and run to parity with
- different slices
-Message-ID: <20250623111628.GS1613200@noisy.programming.kicks-ass.net>
-References: <20250613140514.2781138-1-vincent.guittot@linaro.org>
- <20250617092208.GQ1613376@noisy.programming.kicks-ass.net>
- <CAKfTPtA-2YjQ-9jgrAZPT6v0R5X04Q5PoZ6Pa0TzAZji3=jiyg@mail.gmail.com>
- <CAKfTPtCRBMYue3smo-iXEXSzeFGYSJs5mp50zwQZLRvfL-szVg@mail.gmail.com>
- <20250620084228.GP1613376@noisy.programming.kicks-ass.net>
- <CAKfTPtAvuuOTmuMpzs8GUpUebL76h7F8zuN1tnJz_KFYxAFN3w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OEr69dhK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A78F6C4CEF0;
+	Mon, 23 Jun 2025 11:17:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750677449;
+	bh=ovl/bHYb6C3KR3AeewAgyU8Q13C+1+oe9okwz4HcAeg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=OEr69dhKSRthCqaEgPW64NAaUuEPniLMmF9+/ZeaS31fTcklJn52PJOAiqardC16M
+	 7SE8iurS7Xnkqck1Rnwd10AzqjmoC1N4PL1K9EBFczG21fUXomRqhFYVmShBjsCr3k
+	 NGKDeCyxnDmA4f/U2OxhUBkRBWpMPFOSQ/AnIyBJ4lPbhfdOB3Ssce41bZ+Ubj1//p
+	 aLDIQ4y0NzbDsJemMMNMH4yBnFP5P6ftUV76MEpgPPNNMXPgpNvjAHRY0/V4p12MHV
+	 6vxwQTZ13XXjhdrczmCft1yfwbFk+UUp98mO3ZwRiS+e9fQoXFbcFrckuC78C/VrOD
+	 oGx6zyzj/YA/A==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,  Pratyush Yadav
+ <pratyush@kernel.org>,  Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>,  Alexander Usyskin
+ <alexander.usyskin@intel.com>,  Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: Linux 6.16-rc1
+In-Reply-To: <2e7b74ad-b308-46af-9edb-59c0ce416d89@roeck-us.net>
+References: <CAHk-=wiiqYoM_Qdr3L15BqJUyRi6JjR02HSovwwz+BXy7DdVeA@mail.gmail.com>
+	<241b0829-5fec-4d88-866a-ba59e2ca748e@roeck-us.net>
+	<CAHk-=whDM950+cCgmNH2edB2edCaktdpvBLGjFESAZfYZ3ZpRQ@mail.gmail.com>
+	<mafs08qlluuvj.fsf@kernel.org>
+	<CAHk-=wjYB7tvFoqsL3aED9YZ2eusi9dMc=ckPzF-dnrRsERBUA@mail.gmail.com>
+	<2e7b74ad-b308-46af-9edb-59c0ce416d89@roeck-us.net>
+Date: Mon, 23 Jun 2025 13:17:27 +0200
+Message-ID: <mafs0wm92u2pk.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtAvuuOTmuMpzs8GUpUebL76h7F8zuN1tnJz_KFYxAFN3w@mail.gmail.com>
+Content-Type: text/plain
 
-On Fri, Jun 20, 2025 at 12:29:27PM +0200, Vincent Guittot wrote:
+On Sun, Jun 22 2025, Guenter Roeck wrote:
 
-> yes but at this point any waking up task is either the next running
-> task or enqueued in the rb tree
+> On Sat, Jun 21, 2025 at 08:59:46AM -0700, Linus Torvalds wrote:
+>> On Sat, 21 Jun 2025 at 05:44, Pratyush Yadav <pratyush@kernel.org> wrote:
+>> >
+>> > I don't have much idea of how people use qemu for testing, but since you
+>> > say this is important for testing workloads, I can take a deeper dive
+>> > next week and have an answer by -rc4.
+>> 
+>> Thanks. I'm not sure *how* important this is, but if it affects
+>> Guenter's test coverage, I assume it affects others too.
+>> 
+>> But it's not entirely clear how much it *does* affect Guenter. He says
+>> five failed tests, but those are all accounted for by the master
+>> device thing.
+>> 
+>> Guenter, maybe you can clarify?
+>> 
+>
+> Sorry for the delay; I was travelling.
+>
+> I modified qemu to make the flash type configurable, so it is not a problem
+> for me. However, anyone using upstream qemu will see the problem. My qemu patch
+> adding the option to configure the flash type was rejected, so those affected
+> will have to wait for a proper qemu fix.
+>
+> I would suggest to not make any changes in the kernel: The qemu problems should be
+> fixed in qemu. I only brought this up to raise awareness that there is a qemu related
+> problem, not to ask for a change in the Linux kernel.
 
-The scenario I was thinking of was something like:
+In case you missed it, see my reply in [0]. For me the flash works fine
+with qemu v10.0.0. Which version do you have?
 
-A (long slice)
-B (short slice)
-C (short slice)
+Anyway, I agree with you. Without further evidence, I think the kernel
+side is fine and no fixes should be needed.
 
-  A wakes up and goes running
+[0] https://lore.kernel.org/linux-mtd/mafs01prbvbjm.fsf@kernel.org/
 
-Since A is the only task around, it gets normal protection
- 
-  B wakes up and doesn't win
-
-So now we have A running with long protection and short task on-rq
-
-  C wakes up ...
-
-Whereas what we would've wanted to end up with for C is A running with
-short protection.
-
-> > Which is why I approached it by moving the protection to after pick;
-> > because then we can directly compare the task we're running to the
-> > best pick -- which includes the tasks that got woken. This gives
-> > check_preempt_wakeup_fair() better chances.
-> 
-> we don't always want to break the run to parity but only when a task
-> wakes up and should preempt current or decrease the run to parity
-> period. Otherwise, the protection applies for a duration that is short
-> enough to stay fair for others
-> 
-> I will see if check_preempt_wakeup_fair can be smarter when deciding
-> to cancel the protection
-
-Thanks. In the above scenario B getting selected when C wakes up would
-be a clue I suppose :-)
-
-> > To be fair, I did not get around to testing the patches much beyond
-> > booting them, so quite possibly they're buggered :-/
-> >
-> > > Also, my patchset take into account the NO_RUN_TO_PARITY case by
-> > > adding a notion of quantum execution time which was missing until now
-> >
-> > Right; not ideal, but I suppose for the people that disable
-> > RUN_TO_PARITY it might make sense. But perhaps there should be a little
-> > more justification for why we bother tweaking a non-default option.
-> 
-> Otherwise disabling RUN_TO_PARITY to check if it's the root cause of a
-> regression or a problem becomes pointless because the behavior without
-> the feature is wrong.
-
-Fair enough.
-
-> And some might not want to run to parity but behave closer to the
-> white paper with a pick after each quantum with quantum being
-> something in the range [0.7ms:2*tick)
-> 
-> >
-> > The problem with usage of normalized_sysctl_ values is that you then get
-> > behavioural differences between 1 and 8 CPUs or so. Also, perhaps its
-> 
-> normalized_sysctl_ values don't scale with the number of CPUs. In this
-> case, it's always 0.7ms which is short enough compare to 1ms tick
-> period to prevent default irq accounting to keep current for another
-> tick
-
-Right; but it not scaling means it is the full slice on UP, half the
-slice on SMP-4 and a third for SMP-8 and up or somesuch.
-
-It probably doesn't matter much, but its weird.
+-- 
+Regards,
+Pratyush Yadav
