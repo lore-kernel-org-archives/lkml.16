@@ -1,101 +1,82 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745E119CCEC
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:28:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD7019CCEC
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750670885; cv=none; b=TI5n9WAtCWCOzlQQW3fVvOC5WZ223Io4T0bf7F30Qx3Datg7Kjg7iy4TAL0LPNhLm0/Mck+2nXKDC30v13g8q+MvCGQ1HCsB+dVoqG0p7r+9McwXS8ZiHMBIchodfpopJLYSTxpMHBrf6TvJHmJV3ievzVbkmqTd68iKBEhSJbQ=
+	t=1750670917; cv=none; b=FkTK94qeryWPdAgZbVAJvp6IxShJwLwoLocYsmP6KpKF4N1jQjul2wzajBwnd/h6/v+We/zUFAlM0WirQW7SSOdWe0hIDKE0TE78CCCVa0a62d6K7ZaaXqj0rMgsApsADpXdBhFi6YMVjf8KYlKszSPtFnJgPrR+j51ryRIM19M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750670885; c=relaxed/simple;
-	bh=kWp+U3SeloDqZK9P9oT/FPSgJQMzRGNUhDhwOD1oUrg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=dTLUdso+3fEU7UXiSiRqyGrAZC4gKQcVRn3qifUuF3UxDbzCWMuHoaNvjoh7u4yAdhJrIETdQ1nKOw11TEhk3VQ0F+v49jd4FsFkbXI/TxkjFKFUt4YNPwC8MVH1rlmKWg4Pwg+tyAxj6IvRN9l7k+cjg8HUC437ANDJPxOcAcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddcfea00afso54835325ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 02:28:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750670882; x=1751275682;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nGmrMuMpdWZSYI6DROsbSwsitajxWTPLRmdhRxd70Ck=;
-        b=hOK/NqJrUDkERBaG5qljrBoyxsYd+xLGNF/ORNCPW51els9Rgm0WyBIRJLxmLqY8B9
-         L6L7b3TOlSTD2vy278ta9bx/jGBLVoqlssAJWI0vrnRkLHreMPIg00gz/vGXC4l3hwi6
-         gs0L/BoDCrJyRBxZHE/fhXD9kf7t35SQNDEvdRVVAj4V8Zu2qoWYTx12jawAR+MmGoN3
-         xISEWe82rFWHDssoMZVAcdupzlavkAu+8uojBAtCQ473iMR44xdHd2ub1ROCzJmUIpUU
-         HnWb9Wa4EM1k6ja/JVs/g62NKS4Pd5/x1eHFmQ0yawEvZrsLKA5M7xnqnOYnxuFTBJiC
-         38Uw==
-X-Gm-Message-State: AOJu0Yymdehr1sUhspgMj2cqbehew/ssrtFC27RL0rzRC4SQ5F8n860f
-	Y8KoG8cbxlc5K0A4+2prfDMSd504Von5AMweiVy3DnmB0ALBO8fKzVgazRzip7k70AmWLEZDhZT
-	bNSB0KwmbpT210YSOSI1IKFJO8TMAIB+RXtEgRrTIK/II99girFNVC16hjso=
-X-Google-Smtp-Source: AGHT+IGimlpY+7tSSY+1JTQhrY5dOIclOv4Tu1SBePPsf/BpXwQGY+lAQZ/rfHBqJT/niL8nivob/UMAXKd4YdavUUCDDT4E/Vr/
+	s=arc-20240116; t=1750670917; c=relaxed/simple;
+	bh=oTTb1P3+SbaWFugd7Kj7cJ4THFSP1C9qjAukg/YaqwU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=sbWwA3n1CIA1Aeb5QeD7u1xK8YO9QyRKaHOORox5NyUdMM2nA3qJDQ/5pRp1SC5zj1wucFG6HeeLtio6Zbjf81YunUglGa05MmxET0VEzgvXmm3JfY2tpWmAH3bMXeldP2f7iXF+XrC7OSPTaAmGQVhusdHLeAL5AF+YgVbXA0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dOJW9RNY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ImYI6ydk; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dOJW9RNY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ImYI6ydk"
+Date: Mon, 23 Jun 2025 11:28:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750670913;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=Xhhp2tP3LkJhQSrcaszxj6Ld96KgaNYUUFlD/62Ak+A=;
+	b=dOJW9RNYEURdL7c8dcdx6CmsHu7k/a2yMLaLRVvIP/2jEPLrd+tbNfuXjedfDUC0paEAql
+	F8g96ZrF5+NEwQyPXJQ24GhIc1zMoE/q6WG+fFYPydBrUeS0gudk4LKg1sWkkbNoMKD5UC
+	q/k96pGQO8ysFAM/ubBU8Bq8K3epgMFGuYXmdqHxacFHWsRY2fBJe7KudMTM9MCJlx15X6
+	vAu3Y2RkkSrjsFUEiqMaTlKLJhD6Q4zAOXCoq/DapBNwuNdodrQlpJwqj6McYl3wuedZmZ
+	o4Aa92+Uo7IgBvXAh4LrVAHM7B7L7MnhSR+6ZQlqqeJJNhKIZelGPSqLanxh8g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750670913;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=Xhhp2tP3LkJhQSrcaszxj6Ld96KgaNYUUFlD/62Ak+A=;
+	b=ImYI6ydklqpx6prnzeqgUzQJVfi2Kbe3chmjPz+wypvvO7TT46Dn3GzMwkbbZjITO1tY9k
+	XDVz8+wb4YurQcDQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-kernel@vger.kernel.org
+Cc: Boqun Feng <boqun.feng@gmail.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>
+Subject: Improving mutex_init() optimisation for !lockdep
+Message-ID: <20250623092832.nmgJY7V5@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1546:b0:3dd:c78c:ec3e with SMTP id
- e9e14a558f8ab-3de38cc5e7fmr141650165ab.22.1750670882622; Mon, 23 Jun 2025
- 02:28:02 -0700 (PDT)
-Date: Mon, 23 Jun 2025 02:28:02 -0700
-In-Reply-To: <20250623085022.3182174-1-lizhi.xu@windriver.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68591e22.a00a0220.34b642.0006.GAE@google.com>
-Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
- (3)
-From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Hello,
+Hi,
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
+while looking at the assembly of something else I stumbled upon
+code that originated from mutex_int() on a !LOCKDEP kernel.
+We have this macro:
 
-=====================================================
-BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
-BUG: KMSAN: kernel-infoleak in _inline_copy_to_user include/linux/uaccess.h:196 [inline]
-BUG: KMSAN: kernel-infoleak in _copy_to_user+0xcc/0x120 lib/usercopy.c:26
- instrument_copy_to_user include/linux/instrumented.h:114 [inline]
- _inline_copy_to_user include/linux/uaccess.h:196 [inline]
- _copy_to_user+0xcc/0x120 lib/usercopy.c:26
- copy_to_user include/linux/uaccess.h:225 [inline]
- vmci_host_do_receive_datagram drivers/misc/vmw_vmci/vmci_host.c:442 [inline]
- vmci_host_unlocked_ioctl+0x1d6f/0x52d0 drivers/misc/vmw_vmci/vmci_host.c:942
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0x239/0x400 fs/ioctl.c:893
- __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
- x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+| #define mutex_init(mutex)                                               \
+| do {                                                                    \
+|         static struct lock_class_key __key;                             \
+|                                                                         \
+|         __mutex_init((mutex), #mutex, &__key);                          \
+| } while (0)
 
-Local variable filename created at:
- ima_file_mprotect+0x78/0x800 security/integrity/ima/ima_main.c:500
- security_file_mprotect+0x141/0x590 security/security.c:3012
+and the compiler computed an offset for __key and an offset and storage
+for #mutex. These two arguments aren't used by __mutex_init() but the
+compiler can't know that.
+If I remove these two arguments on a x86-64 defconfig, I see:
 
-Bytes 28-31 of 40 are uninitialized
-Memory access of size 40 starts at ffff888021ad2880
-Data copied to user address 000000000000a4bf
+|    text     data     bss      dec     hex filename
+| 29753523 8033942 1306232 39093697 25485c1 vmlinux.before
+| 29748880 8021654 1306168 39076702 254435e vmlinux.after
+|     4643   12288      64    16995  0x4263 diff in bytes
 
-CPU: 1 UID: 0 PID: 6749 Comm: syz.0.16 Not tainted 6.16.0-rc3-syzkaller-g86731a2a651e-dirty #0 PREEMPT(undef) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-=====================================================
+That is 4KiB in text and 12KiB in data. I don't know why we lost 64
+bytes in BSS.
 
+Any objections in redoing this to save some bytes?
 
-Tested on:
-
-commit:         86731a2a Linux 6.16-rc3
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=112fdb0c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=595d344ff0b23ac5
-dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=16bff370580000
-
+Sebastian
