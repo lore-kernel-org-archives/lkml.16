@@ -1,118 +1,107 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3F625BEE3;
-	Mon, 23 Jun 2025 12:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC6B25B69D
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750680088; cv=none; b=TCqYDQJeMlbtBH+LU4vRq7oi3kxvjbG9DdBcl2vIrkg7/ZEKMcJEvEdYOXHygVMRpBhJoD4pchiWsZqaHjyAeRnZwTrH00jcZvZgTOw8+RB3zJOLQSTGw0QKbYVs3HedlHk/0Dyz7V693ZKBLPk4iT2yJ9pEvr83FyqP692/pkQ=
+	t=1750680089; cv=none; b=Zi8OIBasCJBnMPmGuXW7wELE9o9hx2G4/Q0Lh1FF2qETSXHR/Z1jR5Bg+2/EEzbR1CRR+IqLWOdmbwGO5FZOcyciniXnlSIRaU4yEPXwyokDLfyhakDY5hbgpjLVd5EMvBWt7/zft0LXcDP34cVIvqaxXBkuIhc3zkRA+6uA6Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750680088; c=relaxed/simple;
-	bh=Wqto3p2O9ygvp/uRrLvFV9jgjx5W1SFttAJN2GmqEow=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D7A9g9xlNKB8SnIyAHme2D+499BpM+8RYwTU6Q5zBU1bU+yooCurItWVu8SOFMJPAAZ60DRF8QflRW6fofpikzAIyETtKx/OMWxMVUif6P5wTlBAwNsMPxX3CXkJ6r/yu9DCt8IOQc5DTwrNDcT7Rap8oCvWg8n7MBcZVlTvMnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=F6jlQNyh; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1750680089; c=relaxed/simple;
+	bh=BKnx4RIjek7E/rOPu3UOodiyY/m4uTgXkFgE5y0mRIA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=ZFBdKCY2YTRf3OIO71CT9LMnz0PQq/FHBajbe8Ioq/93ezmy3tZGHdW5ZGhqSDd6X5dbyZ8C51l1biAcsuDvBOXIqSt8evHjntTy/QZdqfqtTYGfTZ6f8riM1sn6Rt4DVY0mkjuMzIYQQt480qjMrn6PrxuAiSpb9FOf9YrPAPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=J3KThsGO; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="F6jlQNyh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750680085;
-	bh=Wqto3p2O9ygvp/uRrLvFV9jgjx5W1SFttAJN2GmqEow=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=F6jlQNyhDgrrJI6CjJyW6sR77WpPIbp+QS/von5pm8IBLVOWeqzsdCXkk6XDEdfax
-	 U4/BchVKrzWHdEqsT36Y1Wzi0ZUnnObvzUfLP3cBuonTvAx0y2dRBmUJqoN6khHKoK
-	 UPyHxQcqiqyiwy+4gxfcks/a85Mw8NUISF0paI/AAqFcRm7MqpMaqspYazDYFSo1tb
-	 y4nuINI7/cqgC8/G69Zkz3ObsefyOrHLbETPbRjyqJObQAWzLc/avsvlcTAQC9b7BJ
-	 uQ5kV2knV+w1qi9ENxu/O0VOK/mnlWQMmAUCvkoS1Di9wiOvG5n1VufNWvAwfpq5a2
-	 LSOs8kal7AifA==
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id E38BA17E156D;
-	Mon, 23 Jun 2025 14:01:24 +0200 (CEST)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: ukleinek@kernel.org
-Cc: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	john@phrozen.org,
-	linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	kernel@collabora.com
-Subject: [PATCH v1 3/3] pwm: pwm-mediatek: Add support for PWM IP V3.0.2 in MT6991/MT8196
-Date: Mon, 23 Jun 2025 14:01:18 +0200
-Message-ID: <20250623120118.109170-4-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250623120118.109170-1-angelogioacchino.delregno@collabora.com>
-References: <20250623120118.109170-1-angelogioacchino.delregno@collabora.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="J3KThsGO"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250623120124euoutp02acb9d5636a52126f16ba6aafcf6ffc52~LqkL7tj260180501805euoutp02N
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:01:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250623120124euoutp02acb9d5636a52126f16ba6aafcf6ffc52~LqkL7tj260180501805euoutp02N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750680084;
+	bh=QmswFbqzDq4XOvS740eYk+68L2oNBkefGQTaJgQK+NY=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=J3KThsGOubEgfg0IwfVOeEA0quwMGx4pOLWaqXWJysp0fJTqskxNJWJ5sIhvynS+I
+	 QKhL+ARVFJFgTl6yg8dSnhSN78CVSoAUvvNLEsPFxm/G3AWi66CtR5/ui3XMpmZc0o
+	 sfBOoArXI1Cn8047YyJrRVU1IirsQxU/jVhdUnXg=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250623120124eucas1p2441d1be7176d61d849aea1bd1b892b8e~LqkLj4zVB1744517445eucas1p2Y;
+	Mon, 23 Jun 2025 12:01:24 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250623120123eusmtip20dfa1daf0bd30559e6dac8b8c2bf818b~LqkKytaR50067700677eusmtip21;
+	Mon, 23 Jun 2025 12:01:23 +0000 (GMT)
+Message-ID: <ed07e57d-00e0-44b3-b53e-b5295aee8561@samsung.com>
+Date: Mon, 23 Jun 2025 14:01:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH v4 1/4] dma-mapping: benchmark: Add padding to
+ ensure uABI remained consistent
+To: Barry Song <21cnbao@gmail.com>, Jonathan Cameron
+	<Jonathan.Cameron@huawei.com>
+Cc: Qinxin Xia <xiaqinxin@huawei.com>, robin.murphy@arm.com,
+	yangyicong@huawei.com, hch@lst.de, iommu@lists.linux.dev,
+	prime.zeng@huawei.com, fanghao11@huawei.com, linux-kernel@vger.kernel.org,
+	linuxarm@huawei.com
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <CAGsJ_4wOB+cmGzuzzacwJGeUYgGLuKg94wuWC+mA-_=r0TVuhQ@mail.gmail.com>
 Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250623120124eucas1p2441d1be7176d61d849aea1bd1b892b8e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250616104053eucas1p1017f1af71a338aed4cbdf61930f79e0c
+X-EPHeader: CA
+X-CMS-RootMailID: 20250616104053eucas1p1017f1af71a338aed4cbdf61930f79e0c
+References: <20250614143454.2927363-1-xiaqinxin@huawei.com>
+	<20250614143454.2927363-2-xiaqinxin@huawei.com>
+	<20250616105318.00001132@huawei.com>
+	<CGME20250616104053eucas1p1017f1af71a338aed4cbdf61930f79e0c@eucas1p1.samsung.com>
+	<CAGsJ_4wOB+cmGzuzzacwJGeUYgGLuKg94wuWC+mA-_=r0TVuhQ@mail.gmail.com>
 
-Add support for the PWM IP version 3.0.2, found in MediaTek's
-Dimensity 9400 MT6991 and in the MT8196 Chromebook SoC: this
-needs a new register offset array and also a different offset
-for the PWM_CK_26M_SEL register.
+On 16.06.2025 12:40, Barry Song wrote:
+> On Mon, Jun 16, 2025 at 9:53 PM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+>> On Sat, 14 Jun 2025 22:34:51 +0800
+>> Qinxin Xia <xiaqinxin@huawei.com> wrote:
+>>> The padding field in the structure was previously reserved to
+>>> maintain a stable interface for potential new fields, ensuring
+>>> compatibility with user-space shared data structures.
+>>> However,it was accidentally removed by tiantao in a prior commit,
+>>> which may lead to incompatibility between user space and the kernel.
+>>>
+>>> This patch reinstates the padding to restore the original structure
+>>> layout and preserve compatibility.
+>>>
+>>> Fixes: 8ddde07a3d28 ("dma-mapping: benchmark: extract a common header file for map_benchmark definition")
+>>> Cc: stable@vger.kernel.org
+>>> Acked-by: Barry Song <baohua@kernel.org>
+>>> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
+>> FWIW I checked the patch above indeed accidentally dropped the padding and the structure
+>> is copied to userspace so this fix is correct.  Given it's not in a uapi header this
+>> only really affects the selftest I think this is mostly a case of there possibly being
+>> out of tree tools with a local copy of this structure definition.
+> Somehow, I feel we have placed
+> tools/testing/selftests/dma/dma_map_benchmark.c in the wrong location.
+> As a selftest, it should have a mechanism to check kernel dependencies,
+> start properly and automatically, and report pass or fail.
+>
+> dma_map_benchmark.c seems more like a tool that belongs in tools/dma,
+> rather than a test.
 
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- drivers/pwm/pwm-mediatek.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Indeed imho it would be better to move it out of selftests directory.
 
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index 38e9e9dc91c6..1fbc84d47543 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -29,6 +29,7 @@
- #define PWM45DWIDTH_FIXUP	0x30
- #define PWMTHRES		0x30
- #define PWM45THRES_FIXUP	0x34
-+#define PWM_CK_26M_SEL_V3	0x74
- #define PWM_CK_26M_SEL		0x210
- 
- #define PWM_CLK_DIV_MAX		7
-@@ -64,6 +65,11 @@ static const unsigned int mtk_pwm_reg_offset_v2[] = {
- 	0x0080, 0x00c0, 0x0100, 0x0140, 0x0180, 0x01c0, 0x0200, 0x0240
- };
- 
-+/* PWM IP Version 3.0.2 */
-+static const unsigned int mtk_pwm_reg_offset_v3[] = {
-+	0x0100, 0x0200, 0x0300, 0x0400, 0x0500, 0x0600, 0x0700, 0x0800
-+};
-+
- static inline struct pwm_mediatek_chip *
- to_pwm_mediatek_chip(struct pwm_chip *chip)
- {
-@@ -366,9 +372,17 @@ static const struct pwm_mediatek_of_data mt8516_pwm_data = {
- 	.reg_offset = mtk_pwm_reg_offset_v1,
- };
- 
-+static const struct pwm_mediatek_of_data mt6991_pwm_data = {
-+	.num_pwms = 4,
-+	.pwm45_fixup = false,
-+	.pwm_ck_26m_sel_reg = PWM_CK_26M_SEL_V3,
-+	.reg_offset = mtk_pwm_reg_offset_v3,
-+};
-+
- static const struct of_device_id pwm_mediatek_of_match[] = {
- 	{ .compatible = "mediatek,mt2712-pwm", .data = &mt2712_pwm_data },
- 	{ .compatible = "mediatek,mt6795-pwm", .data = &mt6795_pwm_data },
-+	{ .compatible = "mediatek,mt6991-pwm", .data = &mt6991_pwm_data },
- 	{ .compatible = "mediatek,mt7622-pwm", .data = &mt7622_pwm_data },
- 	{ .compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data },
- 	{ .compatible = "mediatek,mt7628-pwm", .data = &mt7628_pwm_data },
+Best regards
 -- 
-2.49.0
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
