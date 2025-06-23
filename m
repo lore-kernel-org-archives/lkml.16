@@ -1,117 +1,125 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355CD2907;
-	Mon, 23 Jun 2025 03:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4165B4C74
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 03:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750650360; cv=none; b=kBuGOlknb42O2qt3cdhsDQ0r9UoSvcLVLCjs9tmXo0eYDmtX1FNL7hTwLmjzcmPzQp/O8xGvEo1tXcAducwOnekQ+q+jQbh+mLvFynCShZ2zRuda/sDhyEbvstPojTxyfW9+0iqFOBm7Ddyw4MTVp3RJQosC+7/Bo3O+CxEQA+Q=
+	t=1750650375; cv=none; b=tpa0mCz188lvrEOe9dbhffUk7tvX8ALfY2aq8Y2b2ZZAom2rU9x0BvjSTtr0IPbo6PU3Kw7J5GhdlGNy9fNWPwunTtqFuRlJ7437IR4oZs8ecihp0ETa4EC0APxWpqqiRufLuARuum7XFGIe0xby9ygnwkXHngNJO7kkeJAX+NY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750650360; c=relaxed/simple;
-	bh=G5Uc5D02m76z4ScjY7e+hO5tY6bfNFOQgKMduFLxKEY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W+TYX6SWb3vdtlWC9IhLlxcSoPheOwittEF3Gx9X3pRYwKugIXSAbooyIMbgADtfdZ1IN1/2u/k83a+eDxA3p6NtQo5AtXfwK309KPdQQntPzPujg5ZiDof+3/J00s4INTY5ucJrAOW/eW53YVySyi7SzCnyCVKwZMDhCfUtZUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Otv4NTSs; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750650375; c=relaxed/simple;
+	bh=ulYSEjpBN4splYt8fIcoHLxT6OWXfZLBf4RXhizV6pE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ICK0UXeHKoeJsu4r5huYSNEaUa+N025mo7a4Q06QqE9uS8UJmyDRYoYiTOPJt4vyIHVZKbl3xpmuGMbD/LQOhpumTUd/fDkLhHtguq1HDLnJoeyQY9+8wzsyq4Et0f5KIH6MReFus0qLOIvXkOuxfBbwQe7NFynRe9wOlqardMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=pmbsGm+5; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Otv4NTSs"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2366e5e4dbaso29475555ad.1;
-        Sun, 22 Jun 2025 20:45:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="pmbsGm+5"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-553d2eb03a0so5243621e87.1
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 20:46:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750650358; x=1751255158; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=46czZ5RTorkh2CcgjyXvPjRLRUA/PdHb71pPU7kVdIg=;
-        b=Otv4NTSshc31T4o4xGSUsuSqy6ThHQhqyBG5hiACBJ/epOleqz8SIskbSBOZhDDzes
-         SoQCwbGBP7tCc3Ksp0nebRQUoFxkVul20UFKGO+URWd+o8j3D3yVqWkmLltgfCLU4Gq+
-         ZvZYE3xigoCekTYr1M5CDCPa6+uW1T0Kcir5HyNWv4xtn22mGmfZk4gcSqoElC7ltH1Z
-         5Po/bdNnscPWS1iCOVc6rmD9UBTAR03c8tP1clfZA5MJI+BMkgrBKnqXueHU+K5Xxkef
-         Ih8PQvC2CGvv3svdRmUyg7QvXO4vB8GXGEWiwXGvOzBp2WMHintS6j8+DL6FKK1Ytttx
-         cG0A==
+        d=ventanamicro.com; s=google; t=1750650370; x=1751255170; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EoqSulrN5L9yXszHfbntSe8zEg3j5zVN4faitdl+3Ao=;
+        b=pmbsGm+5EDKCMB0NOkVIKYZ90Moz/WeMWBRFQ8epbUTMutcCmczOlynsB0LAtursOT
+         ZDsOUSwJfFNpGX6g9tOP52P5onv2jKDLiGUJGMz7NMbJvl/ZbwxAcUMTGJRWVBaA6QmL
+         tFNFa/XjEAzLprvpgTFHcvct6sJwJMNJfHciEJYzD3FDlosx+/JO5EFZKTHDNYvzpuhN
+         gkePAtcZZlFbem9Czuc21COJcLOTPKhocTmCSyWYS27GC2e9HOWMUqSzv6jZCIk53DCo
+         RcVqvxNwq+TU0RrUFMy3+Bc/sK+GrUXGiHqOU7CgJ6CQlpB+vY2eGa2yumGGxq0qoYCD
+         ztlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750650358; x=1751255158;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=46czZ5RTorkh2CcgjyXvPjRLRUA/PdHb71pPU7kVdIg=;
-        b=U8K4fVo8FspoRUufT5amHE6dcQJv+jcbEMWELylJ3gvRg0IQ0vGRepN/Vyw3oiXnle
-         4kXDy/NQFO2POeDlRbhqzYeMIdBIQBMBz76hrVoRTeusXa+yUmo5SpHUHPgqxCd6vw+4
-         bryi4YAHhrrhPlwkmyYT5Hu/1V+u+ArhBSIhVGmzUkEqCk9R5ssdNaZBt5XGpXeQS+jo
-         b4mF5ezzd6lD3yk2bN3/2anQGN4JqAEWP9WbJYrxLCQ8qQ1Gj5E3p5rj1wdXgUQFGZaO
-         jv5SeYVLaRvfXlxcRWkkL8uBFAwc1PZa04fxqOzDr1WtZKKUBFtQms4ldcI3MwO1niPw
-         uNhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrRlfHOUsxN9O8nXKixVyqXHJv3Byrif1D8DYUfEJEUQxEfhcvaA2WUIRUcSPrF4BrzIr4740Ug7SXgHg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmG+SEhkDCVW/mbaW8qfwRw2b5ATn8m0xv+gaO+YKiUNjLyMH7
-	CBhcMuDdkSvAbDSjtD/+SYJqFyWZHMKzUmJck6Bi1rfwzSkD5cWbtNyq
-X-Gm-Gg: ASbGncuAhL3o2klMUeYz+Z2DfibbtvcVQhzDvu88C11wW3gpNFza/W8ypXsXN+OuIhH
-	y8+Wib1XQUF8mEzR+f5g3Id2cxhscgwM/mffXpFAmhvvUhxgf57ZJhvBeT6prLlN1gsNnEdwfx1
-	d7O/WCSnRuifjdeJWhT181SOuG+8wJeHgyL1PGi2U1PYJCTD1y5wVfLFFOmq5hfZIsJU1iy2zkz
-	TIc9+ZeprKSOS7sZX2vn+cm79u/0pOpWJAmR5wSoLXi9ioEpRC7tsBFiQaKOIUzwxE8hD88GXWP
-	6+/hLo/Wai2CCLfNOmXUPnlpf3X1boEfcCgQ3PDX0ziL
-X-Google-Smtp-Source: AGHT+IGDZUf9WAoOlziNtYa2tatWnL25kiOuHa+V3kHYAJ6nw7Y6HGb319q2Ags8nZVZ35i0HZvl8A==
-X-Received: by 2002:a17:902:d50a:b0:215:b1e3:c051 with SMTP id d9443c01a7336-237dafecd35mr150827205ad.11.1750650358292;
-        Sun, 22 Jun 2025 20:45:58 -0700 (PDT)
-Received: from [127.0.0.1] ([2604:a840:3::1028])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8393292sm71356235ad.13.2025.06.22.20.45.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Jun 2025 20:45:58 -0700 (PDT)
-Message-ID: <0b9376b8-6132-4b48-a5bd-75eacd121561@gmail.com>
-Date: Mon, 23 Jun 2025 11:45:54 +0800
+        d=1e100.net; s=20230601; t=1750650370; x=1751255170;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EoqSulrN5L9yXszHfbntSe8zEg3j5zVN4faitdl+3Ao=;
+        b=gBapfOXoLlUaARNcRKTWQcIOlFis6BS3eIe8WPVwEuVfJ9ZcrnMaSt0lUjbE5mXO6d
+         IHrMllukW3QrlQrxWeoTj5NIb0cGGtoL0okdRotWD7e+9PDGY2myRgG2XWS+M8hDbGTE
+         whq8G0xuAg2A5hcWmfvUBo+2Z++/oQdMp6etDjdhb/1tguIIs15ptX1FAYlH+RSoxq3W
+         /elRuS49IfYe8Y/pzHzD1Qf2gpK/1oQhfQcSwep8l+6IiHxmO7cyNRG/d8F2g1i8BBqy
+         VNB7Qbn/TROlMvvMegXsDmGUy4MRWDh0vvqa6+ZbCsM/WYCFWV1FJp19FGOGcpfkgFPf
+         AM/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVHulV32HlszJt+1gduh1ELVgVK3Ch4EDOiGmpcQ04BrAwhqQH7A895APaSoCn+UzPnIo0f6nTq6XgMKak=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGfOxj+hc1VZ/fZj49VwoDfwxS/wBjzpqCHyHXV5wZduWo2TGH
+	Q6wk9UsScSjXR5iFX5EXHA1UwfNgbqEL8cCjT6DgC76PwwwpK1ZMCJKjuCGn1VH2Wh3d4RC8TxR
+	H/FOOtc/cDI8Z/OmzmcitRSVdkWTPOAIXcq7xjM17qQ==
+X-Gm-Gg: ASbGncvFvRxpbZ7UZRbVrHs80MnRkdGubvDyX9EuwFA2DdaRYwTMZitaZJ34EkPM0lK
+	zvORsqI8U+76tQy3z98unrXkRoYzgrwykTUHN/isL03Tp97wjN+9eKtl1M1vSnutFkotSfRTtYJ
+	uNA/Kj0jSBMAgfIuszKPYmAa+YLMeW0XYHIZFNbP81yl15J/cj+1e/GA==
+X-Google-Smtp-Source: AGHT+IE0Jkesv6pAtTAvnI4YAZPll7TdweNoY+w50jD3bpHSeBhHHCGGisCxbc8QIYILMjmd8O72zuctCezkc0bAqvQ=
+X-Received: by 2002:a05:6512:a8e:b0:552:21b9:8bae with SMTP id
+ 2adb3069b0e04-553e4fe12c4mr3138959e87.7.1750650370384; Sun, 22 Jun 2025
+ 20:46:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] md/raid1: change r1conf->r1bio_pool to a pointer type
-Content-Language: en-US
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: linux-raid@vger.kernel.org, Song Liu <song@kernel.org>,
- linux-kernel@vger.kernel.org, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250618114120.130584-1-wangjinchao600@gmail.com>
- <35358897-5009-4843-8234-136bd5756e0b@gmail.com>
- <dd532c80-2597-deff-4a3e-3d8ce88cbc19@huaweicloud.com>
-From: Wang Jinchao <wangjinchao600@gmail.com>
-In-Reply-To: <dd532c80-2597-deff-4a3e-3d8ce88cbc19@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250618121358.503781-1-apatel@ventanamicro.com>
+ <20250618121358.503781-8-apatel@ventanamicro.com> <175053960304.4372.5933123695583752824@lazor>
+In-Reply-To: <175053960304.4372.5933123695583752824@lazor>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Mon, 23 Jun 2025 09:15:59 +0530
+X-Gm-Features: AX0GCFvKul9rLlA0ewcROor8dZBLyfCt2SyRm-GbcQtvCrJAULk_IJwmPLxWSvQ
+Message-ID: <CAK9=C2WutH5+3eNvMpD89WhXdNaJAJVz=h5r6c_Jc39nBx9NEw@mail.gmail.com>
+Subject: Re: [PATCH v6 07/23] dt-bindings: clock: Add RPMI clock service
+ message proxy bindings
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Conor Dooley <conor+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
+	Atish Patra <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Conor Dooley <conor.dooley@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/23/25 11:26, Yu Kuai wrote:
-> Hi,
-> 
-> 在 2025/06/23 11:18, Wang Jinchao 写道:
->> Comparing mempool_create_kmalloc_pool() and mempool_create(), the 
->> former requires the pool element size as a parameter, while the latter 
->> uses r1bio_pool_alloc() to allocate new elements, with the size 
->> calculated based on poolinfo->raid_disks.
->> The key point is poolinfo, which is used for both r1bio_pool and 
->> r1buf_pool.
->> If we change from mempool_create() to mempool_create_kmalloc_pool(), 
->> we would need to introduce a new concept, such as r1bio_pool_size, and 
->> store it somewhere. In this case, the original conf->poolinfo would 
->> lose its meaning and become just r1buf_poolinfo.
->> So I think keeping poolinfo is a better fit for the pool in RAID1.
->>
-> 
-> I said multiple times it's a fixed size and won't change, you don't need
-> to store it. Not sure if you get this. :(
-> 
-> conf->r1bio_pool = mempool_create_kmalloc_pool(NR_RAID_BIOS,
->              offsetof(struct r1bio, bios[mddev->raid_disks *2]);
-> 
-> Thanks,
-> Kuai
-> 
+On Sun, Jun 22, 2025 at 2:30=E2=80=AFAM Stephen Boyd <sboyd@kernel.org> wro=
+te:
+>
+> Quoting Anup Patel (2025-06-18 05:13:42)
+> > diff --git a/Documentation/devicetree/bindings/clock/riscv,rpmi-mpxy-cl=
+ock.yaml b/Documentation/devicetree/bindings/clock/riscv,rpmi-mpxy-clock.ya=
+ml
+> > new file mode 100644
+> > index 000000000000..70ffc88d0110
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/riscv,rpmi-mpxy-clock.yam=
+l
+> > @@ -0,0 +1,64 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/clock/riscv,rpmi-mpxy-clock.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> [...]
+> > +
+> > +examples:
+> > +  - |
+> > +    clock-controller {
+> > +        compatible =3D "riscv,rpmi-mpxy-clock";
+> > +        mboxes =3D <&rpmi_shmem_mbox 0x8>;
+> > +        riscv,sbi-mpxy-channel-id =3D <0x1000>;
+>
+> Why aren't there any #clock-cells in this clock controller node?
 
-This time I got it.
-I used to think it was a pointer, but now I realize it’s actually a 
-pointer cast from a fixed value.
-I can change it to use mempool_create_kmalloc_pool now.
-I will also reconsider your three previous suggestions.
-Thanks for your patience.
+This binding is intended for M-mode firmware (OpenSBI) and not
+for S-mode OS (Linux) where the firmware will use this binding to
+probe a message proxy driver which in-turn will allows the Linux
+RPMI clock driver to access RPMI clocks via SBI calls.
 
----
-Jinchao
+Regards,
+Anup
