@@ -1,93 +1,165 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30C3770E2;
-	Mon, 23 Jun 2025 15:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7991E2673B5
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750692287; cv=none; b=FwmzbIBjEm5oPrN7yicyoNkd80XZCj5kBU1WLOlLp1vLEo7wryF0U6QeUHBcX967gulVbwSVQ5d6elskPtgFsapQ2qZJcq3K/ec0dWVXu4y29CqgeoW85F9SfMz6CFYoessGee8jF04dSBlZQAJRSdsylM4GcJl85X9vgXu8Uq4=
+	t=1750692321; cv=none; b=eP3qs5hkri2dpLbMYLQmBkyMkhzqxru7RV/r9ichDYRtTmPCE362vVTwjvybx+d8QxxDTRWkKhGSgxyCs2TKb6rojElU+kolEfu+iWInuid2IaFuv6jC89DavJ1rR9QV7kg5ky1U+gq3z2m1065N68sHU5FYPRVLLRDr/CzYpg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750692287; c=relaxed/simple;
-	bh=wlTiKIjvWwqf6t18hxDB41x4laHO4+OvmqsPz5wPksw=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=vDrcWsY19BGOM5D2k7FMqmJxWU3tnkTrt1NukI1nDYyBpbeaXZR4VIGsQMKcb0WNfk8dLQJvf9x98u2baDwBdbh8AcW4dGDdteZgQLfItOwaR6AD4J+9ZMmnOAOOlFiCmRkedEyErflqafxISP0UHasiFDe0hSnxo5ejIz/uywU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=KA9g1Hl5; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1750692321; c=relaxed/simple;
+	bh=rooemphzOqtubFfw/F97wIDqZd1so1tZE56RR6AJh4I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tA6jBVClXe5NxXRTuRc1SslfCJdQXMEPJQslGyxy4TLABkJmR7JH2HBuS6X2KbF94fYIyBxYKumN6mOzRqNh38GULlptt52n4vU9yPbVFQFzns4tFD3cafM1h0aDBsDUgwjJxJ11U3DgoXJe8xFal0Jx5zRTiXHW4E4E+KGUsSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jcRyYChw; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KA9g1Hl5"
-Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55NFOFxO981170
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 23 Jun 2025 08:24:15 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55NFOFxO981170
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025062101; t=1750692256;
-	bh=A1jMMXa/nw7lqBnFyr8Ce3LJwcClP6AKSk/3M0i9qfA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=KA9g1Hl56Dr7ze7uSMBmDaEo4af0rw/UOjgUFavm0WLWHKVlTPzThFkEG/sWIlhcR
-	 pdhvtbSRmnh7IUFVzzN6zGV7OS+5b6DDk9O3p+v5ciw8J6q6NmFsaDHnhK9OfQFKQ5
-	 1jOQwG5rSIVwXkntRYi3ccTte4j0Tr3RUQc/lVvIf0LdvqZRkEeWXGs5kAt46Wfr/g
-	 +QW8HSARe3/32K5n9pjFMJ5NHpOUTxhdJ1W+1sya9VRSuKd9J/7DuK++VfwV449fpy
-	 HEU0pqlrNjAFPoza97J3a8vrCZJoC6dj50hBORuCtmES8flPgwcRbXj16JLnhiuo/q
-	 +BAhyw7oMGj5Q==
-Date: Mon, 23 Jun 2025 08:24:16 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Khalid Ali <khaliidcaliy@gmail.com>, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, ubizjak@gmail.com
-CC: x86@kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] Recieve boot_param from RDI Instead of RSI
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250623081550.1262-1-khaliidcaliy@gmail.com>
-References: <20250623081550.1262-1-khaliidcaliy@gmail.com>
-Message-ID: <2D63735B-FA76-428E-8F68-8EBCAEA0985E@zytor.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jcRyYChw"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a507e88b0aso3669919f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:25:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750692318; x=1751297118; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JmXZjjSvv6KRZI/6FKBR1ZLR3DullsuqN4s2MM1/x5M=;
+        b=jcRyYChwZ05ZY9W149+v1RAesLOW1R3rb6v9juG24u9Ou6qpjkBuL0bRUXcKL10RET
+         Z6TzSf9LPMLE5MfUF1bfTo8Tf+39iarYFUgXYgSq8GZiqoP5E+BN4+7a51Bl7F0N4q2R
+         gn2Iq9yxyqCX20fqY6AtWMGAQbdTEq3In+YMieQS+2N4cRpPZIrxkv/YgIwECmxltLIm
+         zrHGVGnQHOYkDE6ISWlwjC0XZTDZBSymqrbvwfSyvqxG+CCOcAjuK8ag4pSVA+ypL78u
+         CsQIx5+9OF73RlphUQm3x2XjC5vuEjcqK9r/7DcmrfAM9qIvvypuR2SbD3Vr6jPVp2Ux
+         aZDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750692318; x=1751297118;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JmXZjjSvv6KRZI/6FKBR1ZLR3DullsuqN4s2MM1/x5M=;
+        b=Y9Q9hq1CElxUVo380u59KSPrqddL4/1RMC3pne23ErLMqPB1Kiq5GTAFQsrVpY41y9
+         WE4vaq+Io4Wb/S37NqzCux5wHA4QvbOACt0Jc7f5cBIb6VnYE0u8PKTFXPJ1R1ADo8Qt
+         lztQbGSJSU2Vq4NJouZX1N966gTVI5paGnZberVTBro/Qq8ZJHKqIp7O1h+70YwOexqg
+         R9jwXAVTFCxgmhrxmoJNGDStjMFq64ltlzajiT5R9/gCxGuero5jr39H+ERQaOdeGhz0
+         ruHQXbvPoZHxqwZXNfRaMqw9AIKV6GOP9lCYRRb1Ze0S3i0zew/P+gy2Vtror/JlSVV1
+         +DuA==
+X-Forwarded-Encrypted: i=1; AJvYcCW+8AU2bOP/9392ojcoRfFGYetHuhqTBZ6Sq+LSZwzbExr1yBg+cPmiXSG5dw2RWTWU0S3wwoMsBL9gRlM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhzhHYOQDxjLz2lj6rgMbuHwrq9jmd1xBnlGqXJd6QoNcUMrhu
+	YvtXU9TSeFoS8nDLjiP2pEPGZIy1ziYVeOetoO5I1eVTcfY8/a/hQg12CfqNVA9tL1YgKghDc6Y
+	5N47ATsurPnpZhMKjAxdKqc5FqonnVtIBvbXNM260
+X-Gm-Gg: ASbGnct/4mTEw2nXRGI2A6TkquKTJFoG/keR/+D9Xy6CJSa1teftwx+hMVxwAZp58AQ
+	PIpprmUEZdb78+lh/GnkGnifcUT/nSjrrxMbogiyWJG+H3Va4Zsz2sMihZHaWxylvvbHTrp2SCI
+	gjZvbaTBIoqrHW3/cVhkCl3/RaapN+I1ZwFKSFiw60vVAGAJSbFNqskkMAJlSIxM9J2kackKw=
+X-Google-Smtp-Source: AGHT+IFM///a/o7NHCUrhz8JPaRc40ICRJPP9JISkr8ZSl+zk8SDCl551tho6AamwirxjOCO4tDCa3hYmXK5w6/vb8o=
+X-Received: by 2002:a05:6000:1a8e:b0:3a4:eeb5:21cb with SMTP id
+ ffacd0b85a97d-3a6d12e5b71mr10700599f8f.26.1750692317667; Mon, 23 Jun 2025
+ 08:25:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
+ <20250608-topics-tyr-request_irq-v4-3-81cb81fb8073@collabora.com>
+ <aEbJt0YSc3-60OBY@pollux> <CAH5fLghDbrgO2PiKyKZ87UrtouG25xWhVP_YmcgO0fFcnvZRkQ@mail.gmail.com>
+ <aFlxVlMYWig1N2Hy@cassiopeiae>
+In-Reply-To: <aFlxVlMYWig1N2Hy@cassiopeiae>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 23 Jun 2025 16:25:05 +0100
+X-Gm-Features: Ac12FXxyv0kAilreQ5Zm3W4KKmQb04F-9AgepG9LhG7dkMGHyJnrjjLP_SjGXbo
+Message-ID: <CAH5fLghr7Z4NGdwZO6MqnYCpwp4pwKVaTq78dnm3PNYYvL8cCA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/6] rust: irq: add support for non-threaded IRQs and handlers
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Daniel Almeida <daniel.almeida@collabora.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Benno Lossin <lossin@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On June 23, 2025 1:15:23 AM PDT, Khalid Ali <khaliidcaliy@gmail=2Ecom> wrot=
-e:
->From: Khalid Ali <khaliidcaliy@gmail=2Ecom>
+On Mon, Jun 23, 2025 at 4:23=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
+wrote:
 >
->Adjust the kernel entry point to recieve arguments from RDI instead of
->RSI=2E
+> On Mon, Jun 23, 2025 at 04:10:50PM +0100, Alice Ryhl wrote:
+> > On Mon, Jun 9, 2025 at 12:47=E2=80=AFPM Danilo Krummrich <dakr@kernel.o=
+rg> wrote:
+> > >
+> > > On Sun, Jun 08, 2025 at 07:51:08PM -0300, Daniel Almeida wrote:
+> > > > +        dev: &'a Device<Bound>,
+> > > > +        irq: u32,
+> > > > +        flags: Flags,
+> > > > +        name: &'static CStr,
+> > > > +        handler: T,
+> > > > +    ) -> impl PinInit<Self, Error> + 'a {
+> > > > +        let closure =3D move |slot: *mut Self| {
+> > > > +            // SAFETY: The slot passed to pin initializer is valid=
+ for writing.
+> > > > +            unsafe {
+> > > > +                slot.write(Self {
+> > > > +                    inner: Devres::new(
+> > > > +                        dev,
+> > > > +                        RegistrationInner {
+> > > > +                            irq,
+> > > > +                            cookie: slot.cast(),
+> > > > +                        },
+> > > > +                        GFP_KERNEL,
+> > > > +                    )?,
+> > > > +                    handler,
+> > > > +                    _pin: PhantomPinned,
+> > > > +                })
+> > > > +            };
+> > > > +
+> > > > +            // SAFETY:
+> > > > +            // - The callbacks are valid for use with request_irq.
+> > > > +            // - If this succeeds, the slot is guaranteed to be va=
+lid until the
+> > > > +            // destructor of Self runs, which will deregister the =
+callbacks
+> > > > +            // before the memory location becomes invalid.
+> > > > +            let res =3D to_result(unsafe {
+> > > > +                bindings::request_irq(
+> > > > +                    irq,
+> > > > +                    Some(handle_irq_callback::<T>),
+> > > > +                    flags.into_inner() as usize,
+> > > > +                    name.as_char_ptr(),
+> > > > +                    slot.cast(),
+> > > > +                )
+> > > > +            });
+> > > > +
+> > > > +            if res.is_err() {
+> > > > +                // SAFETY: We are returning an error, so we can de=
+stroy the slot.
+> > > > +                unsafe { core::ptr::drop_in_place(&raw mut (*slot)=
+.handler) };
+> > > > +            }
+> > > > +
+> > > > +            res
+> > > > +        };
+> > > > +
+> > > > +        // SAFETY:
+> > > > +        // - if this returns Ok, then every field of `slot` is ful=
+ly
+> > > > +        // initialized.
+> > > > +        // - if this returns an error, then the slot does not need=
+ to remain
+> > > > +        // valid.
+> > > > +        unsafe { pin_init_from_closure(closure) }
+> > >
+> > > Can't we use try_pin_init!() instead, move request_irq() into the ini=
+tializer of
+> > > RegistrationInner and initialize inner last?
+> >
+> > We need a pointer to the entire struct when calling
+> > bindings::request_irq. I'm not sure this allows you to easily get one?
+> > I don't think using container_of! here is worth it.
 >
->Signed-off-by: Khalid Ali <khaliidcaliy@gmail=2Ecom>
->---
-> arch/x86/kernel/head_64=2ES | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
->
->diff --git a/arch/x86/kernel/head_64=2ES b/arch/x86/kernel/head_64=2ES
->index dfb5390e5c9a=2E=2Ed24fea15b6a6 100644
->--- a/arch/x86/kernel/head_64=2ES
->+++ b/arch/x86/kernel/head_64=2ES
->@@ -43,7 +43,7 @@ SYM_CODE_START_NOALIGN(startup_64)
-> 	 * for us=2E  These identity mapped page tables map all of the
-> 	 * kernel pages and possibly all of memory=2E
-> 	 *
->-	 * %RSI holds the physical address of the boot_params structure
->+	 * %RDI holds the physical address of the boot_params structure
-> 	 * provided by the bootloader=2E Preserve it in %R15 so C function call=
-s
-> 	 * will not clobber it=2E
-> 	 *
->@@ -56,7 +56,7 @@ SYM_CODE_START_NOALIGN(startup_64)
-> 	 * compiled to run at we first fixup the physical addresses in our page
-> 	 * tables and then reload them=2E
-> 	 */
->-	mov	%rsi, %r15
->+	mov	%rdi, %r15
->=20
-> 	/* Set up the stack for verify_cpu() */
-> 	leaq	__top_init_kernel_stack(%rip), %rsp
+> Would `try_pin_init!(&this in Self { ...` work?
 
-This is an ABI=2E
+Ah, could be. If that works, then that's fine with me.
 
-Nacked-by: H=2E Peter Anvin <hpa@zytor=2Ecom>
+Alice
