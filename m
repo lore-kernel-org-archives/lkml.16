@@ -1,44 +1,44 @@
 Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6244424677D
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:44:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858212472A2
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:44:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750679078; cv=none; b=iTVf89TLUpzPm38HuTi+dXNaf6TwOgk41nrC047wCawa2fp3kqYqR1Qy4OwvQwxXeIdj0Ljb0A+TE3lQDMvpXAZZjlq+BpfQgyiS5VFLVzux+hnmcqtCCqHoCkmQyAGTPX7v7UojPEjkW/3bWWGFKR4Zm+Z9p+RSCS+wj1U0XMI=
+	t=1750679080; cv=none; b=adXjdT1MzJLZm9cs8tFRmH9oiq3bsAXb2st+FrsEuRi4e3Gujf3sMwUAOiUA+zdondlz2DhJQDheZFZI2AU2SOn2yRBKLa+lRbdGMq7n1O34nJz+hQiUowYsODH+58fHOICBA1/R1Tn2SlKCIZ4g+b5j4D0LLkxcQUymKsO6eS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750679078; c=relaxed/simple;
-	bh=V208OQo0bJMgjPiu9h2Q5BXj5lfKHj8G+CR2nBqzDyc=;
+	s=arc-20240116; t=1750679080; c=relaxed/simple;
+	bh=hh0yfnQUKhiTf5bjsq6MDQVxmkCOxIApaADjJF4CNQg=;
 	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:To:Cc:
-	 Content-Type:References; b=JX+4SySmGJ+8/LF0cLc0cFJUWzohup/Vrte8jdeYVqufQSXB7+pB3vYpWyJgLehxmTi9w2diqQ4JF6VEDExafhT0IWJ6/RW8MSqlBc3abuwUKUp3i3xeRxlp3QN0EeoP5WBz1NoQicbI5YtzwvRvsXzTG814r4zgJEq3soH60mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=OnhoKDKU; arc=none smtp.client-ip=210.118.77.12
+	 Content-Type:References; b=ID9Xek7qeeA7OMpAB7Au/A+2V7BnJmuwVhtij4bAC7pd4p/S8I0itTZjgEfiR3oRVQTDcfYlu+aZAJmpD+URapTpfSu5Ps6qOUIzQMvcJdRZrlFK8moGCO2SFFPk5VF26Be3sCtWNe8Yd76LSzG85GZV9l1wOJ6US2hufFd4vDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=mOx5eqim; arc=none smtp.client-ip=210.118.77.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OnhoKDKU"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mOx5eqim"
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250623114433euoutp02d892acd0996ef24232781ae3eee399e6~LqVd5iSJt1764417644euoutp02K
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:44:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250623114433euoutp02d892acd0996ef24232781ae3eee399e6~LqVd5iSJt1764417644euoutp02K
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250623114437euoutp02f7c71a32d2f4f803505de50536c9e626~LqVhZ7qNU1639416394euoutp02s
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:44:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250623114437euoutp02f7c71a32d2f4f803505de50536c9e626~LqVhZ7qNU1639416394euoutp02s
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750679073;
-	bh=tNSG9xdO/yT874UKULeA9IupmCwWnGM0EeVN9ziifd8=;
+	s=mail20170921; t=1750679077;
+	bh=H1rGnOtR74xeJYKxpm+NO1laK19Izpd1vlfX7eD26VQ=;
 	h=From:Date:Subject:In-Reply-To:To:Cc:References:From;
-	b=OnhoKDKUJlMu/iX+3AiCvoLOUUqaaH2ZSv/MNJ2FDG3W8gBnNFkFQIxEeKxzsln+u
-	 6DovMPJbN0tZTKmcB6CY24kVWpKzkZRkT7cxnnSudcy7HNI+ztOsw2C1TIuh7Gncjc
-	 pol13vVuUqvVKqvMrGMxmYM6Gl0G0g4K6uYeCP1k=
+	b=mOx5eqimlZ+gVjVSPRyaCHXhHMjcdG+cfvwt1k9HIk98ctc+LouADYW79NrPSKZJt
+	 bdF706t1+rRkiJQ6Gxp4lAJPVPg4T81CV+oq2VdFk//mHB7WvhbA4AzDWAekCa/t43
+	 Tw3gzy+GcJ/CTGZ5x81NGc9q0lVWyH42Rmzoo48k=
 Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250623114432eucas1p2642e24f2dea577c211f26e2738210c4a~LqVdXeNiM1259112591eucas1p29;
-	Mon, 23 Jun 2025 11:44:32 +0000 (GMT)
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250623114436eucas1p1ab8455b32937a472f5f656086e38f428~LqVgykXd71399313993eucas1p1c;
+	Mon, 23 Jun 2025 11:44:36 +0000 (GMT)
 Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
 	[106.210.136.40]) by eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250623114431eusmtip17d8774218f038c94d99c5c902eb2247c~LqVcV2wB-1799017990eusmtip1j;
-	Mon, 23 Jun 2025 11:44:31 +0000 (GMT)
+	20250623114434eusmtip1190a72352b897b95137ce69ce4a96d8a~LqVeloFza1638616386eusmtip12;
+	Mon, 23 Jun 2025 11:44:34 +0000 (GMT)
 From: Michal Wilczynski <m.wilczynski@samsung.com>
-Date: Mon, 23 Jun 2025 13:42:41 +0200
-Subject: [PATCH v6 3/8] pmdomain: thead: Instantiate GPU power sequencer via
- auxiliary bus
+Date: Mon, 23 Jun 2025 13:42:43 +0200
+Subject: [PATCH v6 5/8] dt-bindings: gpu: img,powervr-rogue: Add TH1520 GPU
+ compatible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,7 +46,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-apr_14_for_sending-v6-3-6583ce0f6c25@samsung.com>
+Message-Id: <20250623-apr_14_for_sending-v6-5-6583ce0f6c25@samsung.com>
 In-Reply-To: <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
 To: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,  Fu Wei
 	<wefu@redhat.com>, Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
@@ -62,129 +62,64 @@ To: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,  Fu Wei
 	<ulf.hansson@linaro.org>,  Marek Szyprowski <m.szyprowski@samsung.com>
 Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org,  Bartosz Golaszewski
+	dri-devel@lists.freedesktop.org,  Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,  Bartosz Golaszewski
 	<bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.15-dev
-X-CMS-MailID: 20250623114432eucas1p2642e24f2dea577c211f26e2738210c4a
+X-CMS-MailID: 20250623114436eucas1p1ab8455b32937a472f5f656086e38f428
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250623114432eucas1p2642e24f2dea577c211f26e2738210c4a
+X-RootMTR: 20250623114436eucas1p1ab8455b32937a472f5f656086e38f428
 X-EPHeader: CA
-X-CMS-RootMailID: 20250623114432eucas1p2642e24f2dea577c211f26e2738210c4a
+X-CMS-RootMailID: 20250623114436eucas1p1ab8455b32937a472f5f656086e38f428
 References: <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
-	<CGME20250623114432eucas1p2642e24f2dea577c211f26e2738210c4a@eucas1p2.samsung.com>
+	<CGME20250623114436eucas1p1ab8455b32937a472f5f656086e38f428@eucas1p1.samsung.com>
 
-In order to support the complex power sequencing required by the TH1520
-GPU, the AON power domain driver must be responsible for initiating the
-corresponding sequencer driver. This functionality is specific to
-platforms where the GPU power sequencing hardware is controlled by the
-AON block.
+Update the img,powervr-rogue.yaml to include the T-HEAD TH1520 SoC's
+specific GPU compatible string.
 
-Extend the AON power domain driver to check for the presence of the
-"gpu-clkgen" reset in its own device tree node.
+The thead,th1520-gpu compatible, along with its full chain
+img,img-bxm-4-64, and img,img-rogue, is added to the
+list of recognized GPU types.
 
-If the property is found, create and register a new auxiliary device.
-This device acts as a proxy that allows the dedicated `pwrseq-thead-gpu`
-auxiliary driver to bind and take control of the sequencing logic.
+The power-domains property requirement for img,img-bxm-4-64 is also
+ensured by adding it to the relevant allOf condition.
 
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 ---
- drivers/pmdomain/thead/Kconfig             |  1 +
- drivers/pmdomain/thead/th1520-pm-domains.c | 51 ++++++++++++++++++++++++++++++
- 2 files changed, 52 insertions(+)
+ Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pmdomain/thead/Kconfig b/drivers/pmdomain/thead/Kconfig
-index 7d52f8374b074167d508a80fd807929c53faef12..208828e0fa0dc91256bf808b905bea32bb84250d 100644
---- a/drivers/pmdomain/thead/Kconfig
-+++ b/drivers/pmdomain/thead/Kconfig
-@@ -4,6 +4,7 @@ config TH1520_PM_DOMAINS
- 	tristate "Support TH1520 Power Domains"
- 	depends on TH1520_AON_PROTOCOL
- 	select REGMAP_MMIO
-+	select AUXILIARY_BUS
- 	help
- 	  This driver enables power domain management for the T-HEAD
- 	  TH-1520 SoC. On this SoC there are number of power domains,
-diff --git a/drivers/pmdomain/thead/th1520-pm-domains.c b/drivers/pmdomain/thead/th1520-pm-domains.c
-index f702e20306f469aeb0ed15e54bd4f8309f28018c..9040b698e7f7f2400163841530fecacfb0f917bc 100644
---- a/drivers/pmdomain/thead/th1520-pm-domains.c
-+++ b/drivers/pmdomain/thead/th1520-pm-domains.c
-@@ -5,6 +5,7 @@
-  * Author: Michal Wilczynski <m.wilczynski@samsung.com>
-  */
- 
-+#include <linux/auxiliary_bus.h>
- #include <linux/firmware/thead/thead,th1520-aon.h>
- #include <linux/slab.h>
- #include <linux/platform_device.h>
-@@ -128,6 +129,50 @@ static void th1520_pd_init_all_off(struct generic_pm_domain **domains,
- 	}
- }
- 
-+static void th1520_pd_pwrseq_unregister_adev(void *adev)
-+{
-+	auxiliary_device_delete(adev);
-+	auxiliary_device_uninit(adev);
-+}
-+
-+static int th1520_pd_pwrseq_gpu_init(struct device *dev)
-+{
-+	struct auxiliary_device *adev;
-+	int ret;
-+
-+	/*
-+	 * Correctly check only for the property's existence in the DT node.
-+	 * We don't need to get/claim the reset here; that is the job of
-+	 * the auxiliary driver that we are about to spawn.
-+	 */
-+	if (device_property_match_string(dev, "reset-names", "gpu-clkgen") < 0)
-+		/*
-+		 * This is not an error. It simply means the optional sequencer
-+		 * is not described in the device tree.
-+		 */
-+		return 0;
-+
-+	adev = devm_kzalloc(dev, sizeof(*adev), GFP_KERNEL);
-+	if (!adev)
-+		return -ENOMEM;
-+
-+	adev->name = "pwrseq-gpu";
-+	adev->dev.parent = dev;
-+
-+	ret = auxiliary_device_init(adev);
-+	if (ret)
-+		return ret;
-+
-+	ret = auxiliary_device_add(adev);
-+	if (ret) {
-+		auxiliary_device_uninit(adev);
-+		return ret;
-+	}
-+
-+	return devm_add_action_or_reset(dev, th1520_pd_pwrseq_unregister_adev,
-+					adev);
-+}
-+
- static int th1520_pd_probe(struct platform_device *pdev)
- {
- 	struct generic_pm_domain **domains;
-@@ -186,8 +231,14 @@ static int th1520_pd_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_clean_genpd;
- 
-+	ret = th1520_pd_pwrseq_gpu_init(dev);
-+	if (ret)
-+		goto err_clean_provider;
-+
- 	return 0;
- 
-+err_clean_provider:
-+	of_genpd_del_provider(dev->of_node);
- err_clean_genpd:
- 	for (i--; i >= 0; i--)
- 		pm_genpd_remove(domains[i]);
+diff --git a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
+index 4450e2e73b3ccf74d29f0e31e2e6687d7cbe5d65..9b241a0c1f5941dc58a1e23970f6d3773d427c22 100644
+--- a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
++++ b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
+@@ -21,6 +21,11 @@ properties:
+           # work with newer dts.
+           - const: img,img-axe
+           - const: img,img-rogue
++      - items:
++          - enum:
++              - thead,th1520-gpu
++          - const: img,img-bxm-4-64
++          - const: img,img-rogue
+       - items:
+           - enum:
+               - ti,j721s2-gpu
+@@ -93,7 +98,9 @@ allOf:
+       properties:
+         compatible:
+           contains:
+-            const: img,img-axe-1-16m
++            enum:
++              - img,img-axe-1-16m
++              - img,img-bxm-4-64
+     then:
+       properties:
+         power-domains:
 
 -- 
 2.34.1
