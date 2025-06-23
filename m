@@ -1,95 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F53188CC9;
-	Mon, 23 Jun 2025 11:54:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3F21ACEDE;
+	Mon, 23 Jun 2025 11:55:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750679685; cv=none; b=K08NK6NB7a8bPbJnL7JbOBRnstiDMuOSz8s0/rAiLdUqdLOHCoVX67SPQSgslJi5VwB48cfTmExEOOpLHLab1JEepFIecuCydXk0zXXQ4FuwPwO/AxeiMdLSv3UeDBO+LrE5Eu+CXh7Mh7pkuRlFYqb8WUEXxmR8DiF3ZKbs0cg=
+	t=1750679707; cv=none; b=R+/FIeVU+055xEpq7ISjpcl/kdCqJ6e0K2qOeH2cArOHZ2yhDTFO2gspqEKrXJFS2zwPUezt+b1W3f1oNmeNnNCvFYSapPD97OmfdXmIRfdhzGJiBqQ9e92APLYPnXIUzAz0oFfeK4ANW2HPE/rLG0A6PAXs/uscVK2OGKdd9Ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750679685; c=relaxed/simple;
-	bh=/uT155bZSbLCiM0qCfhRE3uZEOZiDrXtCzPyDSsBQ6g=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=eDZl8iAwZP3UBMR8wyfnsLqs1CNTRu4zzOqvZA8afNYQdkKvQ3Iz7SQB+s3no63e26Bl3pXTk3K6FtmUp6TEZkLl8UI0Dtiph7ijWTCf1iZaXSJNN0eN1eaHuqGK4Zoc13XSbZ2k4SPPhqFo6KyqW7xt5cbHrCKSaY+iKAhXJps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEzDE9rD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750679707; c=relaxed/simple;
+	bh=NuOPFfSC8q0YK4nKJwmp0Dt/jeyROAJj92ZrYJI9kb0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aNDl7eXqXVVEPp70i72WNM3LIfNRjkRWlc1/lGzgeqZfHoVHUErSAuXgm+UAR5GqoGHiiTb/+8jaLym4K+qzKFhXA9ha2/sg8CQfd7Jum0zUacqjOTRJJllnojJj2DUrL9V9Kg7lEr9TfdaZ8kg0YW7m/WhNot7UfOEfFtqQn/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B5uM6nD2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aEzDE9rD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 404CDC4CEEA;
-	Mon, 23 Jun 2025 11:54:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B5uM6nD2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90601C4CEEA;
+	Mon, 23 Jun 2025 11:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750679684;
-	bh=/uT155bZSbLCiM0qCfhRE3uZEOZiDrXtCzPyDSsBQ6g=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=aEzDE9rDNoQg8vhz8itfbNQn/JbKJiELUhuRe09vzbthtQZb3ucyMox6uuRQ/wWHi
-	 T6BWQO9R2OwZNdK8dgzpcaFVSe+2qh3j/wbVTApYKh/eMzYLMbybohZTl/J6inh1Kc
-	 tnYVFSJnCh8s0ttfeNbS8Pr0quCoJajAMqQ+7USFsKTzgBGnwa7cE+80+iWrVQpwv/
-	 HUvv/Sm9CHs1KB7hanR1AEUfrHCM6KrQg1RpW1xOWfJDpT5/zwCkyRtMaJHe0GQHa8
-	 P7nPVhPxIKUpJ8H/thzrn4HaLVE8rp+beSgYIUf6NQ2GQwE4j+wkWs/WCaSzS66SO6
-	 hj6aYJIGvVbLw==
+	s=k20201202; t=1750679706;
+	bh=NuOPFfSC8q0YK4nKJwmp0Dt/jeyROAJj92ZrYJI9kb0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B5uM6nD27M78ewGmS/GmiNz6feGB4D/gUhAzvn7Qp9IjhZnKjOJ0gCTkQ+ojoXSKI
+	 VqGGttfTyeiWw83tZm8uMHHctaREOyLIQykqYl6FvUpdyU351XCmPUoFD/01antj2w
+	 BU0UssZ3YqgFcDF+wAI5LDDBR7xR8/kr6pX71eHTlzajbj+SiFwZcriaxu3hEpk5qz
+	 8btl7VvjwSEVdABIndHT95GknOmPt2MwVfnOOkARbqxZgkAi2F7WgeZg30ei0ZPm+l
+	 Y2FGCqYTWkZNtNtnG/ItMhHTodoWGFyiFBX91rqeabsQrduEp4dxcS19dyC+k1Etjn
+	 2lJ+FyPebErfA==
+Date: Mon, 23 Jun 2025 13:55:02 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, 
+	Luca Boccassi <luca.boccassi@gmail.com>, Oleg Nesterov <oleg@redhat.com>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Documentation/sysctl: coredump: add %F for pidfd number
+Message-ID: <20250623-anwesen-hierin-326b4aaf5fec@brauner>
+References: <20250612060204.1159734-1-carnil@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 23 Jun 2025 13:54:38 +0200
-Message-Id: <DATW5HJ259PB.1289VEJEUBT2Z@kernel.org>
-Subject: Re: [PATCH v5 04/10] rust: sync: atomic: Add generic atomics
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>
-Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
- <lkmm@lists.linux.dev>, <linux-arch@vger.kernel.org>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
- "Will Deacon" <will@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>,
- "Mark Rutland" <mark.rutland@arm.com>, "Wedson Almeida Filho"
- <wedsonaf@gmail.com>, "Viresh Kumar" <viresh.kumar@linaro.org>, "Lyude
- Paul" <lyude@redhat.com>, "Ingo Molnar" <mingo@kernel.org>, "Mitchell Levy"
- <levymitchell0@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Linus Torvalds"
- <torvalds@linux-foundation.org>, "Thomas Gleixner" <tglx@linutronix.de>
-X-Mailer: aerc 0.20.1
-References: <20250618164934.19817-1-boqun.feng@gmail.com>
- <20250618164934.19817-5-boqun.feng@gmail.com>
- <20250621123212.66fb016b.gary@garyguo.net> <aFjj8AV668pl9jLN@Mac.home>
-In-Reply-To: <aFjj8AV668pl9jLN@Mac.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250612060204.1159734-1-carnil@debian.org>
 
-On Mon Jun 23, 2025 at 7:19 AM CEST, Boqun Feng wrote:
-> On Sat, Jun 21, 2025 at 12:32:12PM +0100, Gary Guo wrote:
->> Note tha the transparent new types restriction on `AllowAtomic` is not
->> sufficient for this, as I can define
->>=20
->
-> Nice catch! I do agree we should disallow `MyWeirdI32`, and I also agree
-> that we should put transmutability as safety requirement for
-> `AllowAtomic`. However, I would suggest we still keep
-> `into_repr`/`from_repr`, and require the implementation to make them
-> provide the same results as transmute(), as a correctness precondition
-> (instead of a safety precondition), in other words, you can still write
-> a `MyWeirdI32`, and it won't cause safety issues, but it'll be
-> incorrect.
+On Thu, Jun 12, 2025 at 08:02:04AM +0200, Salvatore Bonaccorso wrote:
+> In commit b5325b2a270f ("coredump: hand a pidfd to the usermode coredump
+> helper") a new core_pattern specifier, %F, was added to provide a pidfs
+> to the usermode helper process referring to the crashed process.
+> 
+> Update the documentation to include the new core_pattern specifier.
+> 
+> Link: https://github.com/systemd/systemd/pull/37125
+> Link: https://lwn.net/Articles/1024160/
+> Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
+> ---
 
-Hmm I don't like keeping the function when we add the transmute
-requirement.
+Thanks!
 
-> The reason why I think we should keep `into_repr`/`from_repr` but add
-> a correctness precondition is that they are easily to implement as safe
-> code for basic types, so it'll be better than a transmute() call. Also
-> considering `Atomic<*mut T>`, would transmuting between integers and
-> pointers act the same as expose_provenance() and
-> from_exposed_provenance()?
+Just throwing a random thought out there: It would be nice if we could
+optionally create a connection between a source code path/file and the
+documentation directory/file in Documentation. For example, coredump
+stuff is documented in Documentation/admin-guide/sysctl/kernel.rst so
+there could be a line to that effect in fs/coredump.c and it creates a
+warning if that file is removed.
 
-Hmmm, this is indeed a problem for pointers. I guess we do need the
-functions...
+Maybe that's dumb but it certainly would help to not miss such updates
+in the future.
 
-But this also prevents us from adding the transmute requirement, as it
-doesn't hold for pointers. Maybe we need to add the requirement that
-`into_repr`/`from_repr` preserve the binary representation?
+Christian
 
----
-Cheers,
-Benno
+>  Documentation/admin-guide/sysctl/kernel.rst | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index dd49a89a62d3..f1b2ab219a08 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -177,6 +177,7 @@ core_pattern
+>  	%E		executable path
+>  	%c		maximum size of core file by resource limit RLIMIT_CORE
+>  	%C		CPU the task ran on
+> +	%F		pidfd number
+>  	%<OTHER>	both are dropped
+>  	========	==========================================
+>  
+> -- 
+> 2.49.0
+> 
