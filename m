@@ -1,125 +1,131 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6FF425392D;
-	Mon, 23 Jun 2025 13:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DFB242D90;
+	Mon, 23 Jun 2025 13:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750686145; cv=none; b=u8VdwQ45Yz7u+PqojypE3jhlEl0d4u1lDm5lNqLVCvogDBu2poLkY2kJ8jQDgkPYKbefnfClpZXfLIxG9yZ6dH6XutRkdJvsRADvcrNxgRy4Ee7uDt+JoOoWdiwwPle2xAeWmxceglDCYN33iLnxUZDVAwzSCRCLptleVJ4oUUk=
+	t=1750686176; cv=none; b=SVOwdbpsczAl53jBOmi/ohjHo1cR/XC+0ZTuHjX+6OCUyWK2eJtfG3gyVmCSwgQnk9o79Ie1OcJ07fUwxm1ra7IudPE6bItw4WkFBVzONY3e0irG2Z0ZsjrLiYZ6GkbSPve1oeSv+bgLQsjQwpFtFMg53KQa6svFFyww1psRONw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750686145; c=relaxed/simple;
-	bh=Co65TiTS9Q9fFk3zQhoDANBVjWL264C3AopEEfcpMSY=;
+	s=arc-20240116; t=1750686176; c=relaxed/simple;
+	bh=N/wybOTy4smjB16l7nsGvyZZFI/vEE7f4zQ+AuUb+fM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DcXJCyfusJ4un3LBjjbtYRSbRz0en1+gZi6KtbIid01V1QzTe7Q7xmRcq/8HMdtBIaqodmYDiwdHRK6vO023npoTJ3BU4jUAR+pG3z2VcVcR2GdCyqW4Y85ITu/n1tClwVRl4z8tXdiVvyazs2o6ZQXyT6wf40z33RW3TgHxxWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=XPgSn8Di; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=pLD2CmAXURN7uMSUIxMErQHR8uz6T6z1zxjmFwbwkE5GyaZQzqqbGerJ+YVWJxk8qsixivP7mIY9/DNJggEsOhplQ3dtw6wsZqHKTFmWYg7ioQjmr1wp/upGyFnQ+Qy7guP56fTny5sabY298iTNMB2E4KFoZFTTqBFbEh4VcYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a/Efor4r; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XPgSn8Di"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 0BC82D77;
-	Mon, 23 Jun 2025 15:42:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750686124;
-	bh=Co65TiTS9Q9fFk3zQhoDANBVjWL264C3AopEEfcpMSY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XPgSn8DiIzbVcYeL3Sczq7Yfh6z7OGdlM+w7DBf864iBpJssbvVExCn2ASGiBvH0V
-	 ey26Qih2Ar40/bQQOF5oxVKbHhaXPh/WFbVjFA8+0CFaTG/Mwv3/BI3xJUh69uYWBm
-	 HGze8i3572IklaXG1bALeuIB9CD25OeX/26/0eiU=
-Date: Mon, 23 Jun 2025 16:42:00 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: "Nirujogi, Pratap" <pnirujog@amd.com>, Hao Yao <hao.yao@intel.com>,
-	Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
-	hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org,
-	dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
-	jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com,
-	king.li@amd.com, dantony@amd.com, vengutta@amd.com,
-	dongcheng.yan@intel.com, jason.z.chen@intel.com, jimmy.su@intel.com
-Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
-Message-ID: <20250623134200.GB29597@pendragon.ideasonboard.com>
-References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
- <6a49eb11-d434-4315-8ee9-0f8aa7347de2@intel.com>
- <aEygCdk-zEqRwfoF@kekkonen.localdomain>
- <3e8364e8-22e4-42ad-a0f0-017f86fd6bf9@amd.com>
- <20250623120929.GE826@pendragon.ideasonboard.com>
- <aFlU-E_GCHWBXErq@kekkonen.localdomain>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a/Efor4r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750686174; x=1782222174;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=N/wybOTy4smjB16l7nsGvyZZFI/vEE7f4zQ+AuUb+fM=;
+  b=a/Efor4rYKHK2VelsL64z8peMtoPrwYbBp2awiNmg+/leuE9D6W0R81A
+   nyD5P1C38gsaaLV3ZLr06hpbrLfdXjjBFshcV8OC2sJSFbH7FwjkOnO2j
+   SZ3ImvEhF9Hdx9fnZJVRV0qx2tIRohrFtICTbuAuz3WrJ1WBAi5pSe7tW
+   tF3NUNiG7oaeRV3MRbxMAsAI6Z0Vv+lbkFiGzYvmsoZlsc1pTAZwFObvj
+   5wLZKDv0CU6f3BUKxajNjRxSq1U/1RwMSdrB6AmC4x3FuRAjM5iLJ9M5X
+   R9l3tEGMXcNNE4+I62QBnPgE2P/EPUCQnK9/aLNsp6HdP882Tf3uFzP2a
+   g==;
+X-CSE-ConnectionGUID: oMDy6UmdS0a6IzGsLHNfMg==
+X-CSE-MsgGUID: UjkdAvNIRoKLEJOEIj59HQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="64325177"
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="64325177"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 06:42:54 -0700
+X-CSE-ConnectionGUID: sWHx9E82TwqF7r/zmduUmw==
+X-CSE-MsgGUID: A5WspalTSpmZe+o8bh522g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="152286392"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa010.fm.intel.com with ESMTP; 23 Jun 2025 06:42:42 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 2FACC108; Mon, 23 Jun 2025 16:42:41 +0300 (EEST)
+Date: Mon, 23 Jun 2025 16:42:41 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
+	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
+	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
+	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, 
+	Ingo Molnar <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
+	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
+	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
+	linux-mm@kvack.org, Yian Chen <yian.chen@intel.com>
+Subject: Re: [PATCHv6 01/16] x86/cpu: Enumerate the LASS feature bits
+Message-ID: <ztkgdk72p2z3q6z4hslfg4gj6pejirh7cnssxhd7u72mo4enn4@viqrwrycderf>
+References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
+ <20250620135325.3300848-2-kirill.shutemov@linux.intel.com>
+ <20250620163504.GCaFWNuI-8QFqAM0yI@fat_crate.local>
+ <6y2iqv6c2idn7yebaec7tyhzl5zcsrwqq4lcsokumlqeophzaf@ljnmxorblgcj>
+ <20250620182943.GDaFWolxhwogB2tTxb@fat_crate.local>
+ <tmd5llufitosphzhiik2tlemjuwyi7xkcjlhbqhibrgjjhsqcj@b3xtgub42p45>
+ <20250623102105.GCaFkqkatFSbyl1YeN@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aFlU-E_GCHWBXErq@kekkonen.localdomain>
+In-Reply-To: <20250623102105.GCaFkqkatFSbyl1YeN@fat_crate.local>
 
-On Mon, Jun 23, 2025 at 01:22:00PM +0000, Sakari Ailus wrote:
-> On Mon, Jun 23, 2025 at 03:09:29PM +0300, Laurent Pinchart wrote:
-> > On Mon, Jun 16, 2025 at 07:12:28PM -0400, Nirujogi, Pratap wrote:
-> > > On 6/13/2025 6:02 PM, Sakari Ailus wrote:
-> > > > On Fri, Jun 13, 2025 at 12:55:46PM +0800, Hao Yao wrote:
-> > > >> Hi Pratap,
-> > > >>
-> > > >> Thanks for your patch.
-> > > >>
-> > > >> This patch is written for your camera sensor module, which seems very
-> > > >> different from those already applied on Dell laptops (some of "Dell Pro"
-> > > >> series). Looking into the driver, I think this version will break the
-> > > >> devices using ov05c10 sensor.
-> > > > 
-> > > > There never was such a driver in upstream so nothing breaks. However, in
-> > > > order to support these, could you check what would it take to support them
-> > > > using this driver and post patches, please?
-> > > > 
-> > > >> I think this patch is better to be validated on existing devices, but please
-> > > >> do some fixes before we can do validation. Please check my comments inline.
-> > > >>
-> > > >> On 2025/6/10 03:42, Pratap Nirujogi wrote:
-> > > >>> Add driver for OmniVision 5.2M OV05C10 sensor. This driver
-> > > >>> supports only the full size normal 2888x1808@30fps 2-lane
-> > > >>> sensor profile.
-> > > >>>
-> > > >>> Co-developed-by: Venkata Narendra Kumar Gutta <vengutta@amd.com>
-> > > >>> Signed-off-by: Venkata Narendra Kumar Gutta <vengutta@amd.com>
-> > > >>> Co-developed-by: Bin Du <bin.du@amd.com>
-> > > >>> Signed-off-by: Bin Du <bin.du@amd.com>
-> > > >>> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+On Mon, Jun 23, 2025 at 12:21:05PM +0200, Borislav Petkov wrote:
+> On Mon, Jun 23, 2025 at 11:17:02AM +0300, Kirill A. Shutemov wrote:
+> > What about this:
 > > 
-> > [snip]
-> > 
-> > > >> Hi Sakari,
-> > > >>
-> > > >> Seems there are already several camera sensors using page-based registers.
-> > > >> Is it a good idea to add page support in CCI interface?
-> > > > 
-> > > > Sounds like a good idea as such but I'm not sure how common this really is,
-> > > > I think I've seen a few Omnivision sensors doing this. If implemented, I
-> > > > think it would be nice if the page could be encoded in the register address
-> > > > which V4L2 CCI would store and switch page if needed only. This would
-> > > > require serialising accesses, too. There's some room in CCI register raw
-> > > > value space so this could be done without even changing that, say, with
-> > > > 8-bit page and 8-bit register address.
-> > > 
-> > > Hi Sakari, thank you for sharing your insights and guiding us. Could you 
-> > > please suggest if we should take up this work implementing the helpers 
-> > > in CCI and submit the patch or is it okay to leave it as-is for now and 
-> > > take care of updating in future once the implementation is ready.
-> > 
-> > I think it can live in the driver for now. Given that the device uses
-> > only 8 bits of register address, I would store the page number in bits
-> > 15:8 instead of bits 31:24, as the CCI helpers do not make bits 27:24
-> > available for driver-specific purpose.
+> > LASS provides protection against a class of speculative attacks, such as
+> > SLAM[1]. Add the "lass" flag to /proc/cpuinfo to indicate that the feature
+> > is supported by hardware and enabled by the kernel. This allows userspace
+> > to determine if the setup is secure against such attacks.
 > 
-> I'd use the CCI private bits, the driver uses page numbers up to 4 so 4
-> bits are plenty for that. If we add pages to CCI later, this may be
-> refactored then.
+> Yeah, thanks.
+> 
+> I'm still not fully on board with userspace determining whether they're
+> mitigated or not but that's a general problem with our mitigations.
+> 
+> Also, I haven't looked at the patchset yet but I think it should be also
+> adding code to bugs.c to make all those vulns which it addresses, report that
+> they're mitigated by LASS now in
+> 
+> grep -r . /sys/devices/system/cpu/vulnerabilities/
+> 
+> output.
+> 
+> Which makes your cpuinfo flag not really needed as we already have a special
+> method for the mitigations reporting.
+> 
+> But ok, it has gotten kernel enablement so stating so in cpuinfo is ok.
 
-That works too.
+Due to SLAM, we decided to postpone LAM enabling, until LASS is landed.
+
+I am not sure if we want to add static
+/sys/devices/system/cpu/vulnerabilities/slam with "Mitigation: LASS".
+
+There might be other yet-to-be-discovered speculative attacks that LASS
+mitigates. Security features have to visible to userspace independently of
+known vulnerabilities.
 
 -- 
-Regards,
-
-Laurent Pinchart
+  Kiryl Shutsemau / Kirill A. Shutemov
