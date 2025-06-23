@@ -1,238 +1,228 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C932C190;
-	Mon, 23 Jun 2025 20:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC811E1A05;
+	Mon, 23 Jun 2025 20:59:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750712298; cv=none; b=XL7W4Zhw3wecac1Br2WD8nS4tbWVYdvfwaJFbwqK3x1+MtoCZ5THNxv0BRWzYzFET+pRy4tlUPBR3UZtPm0QnfTHdVLS2fcaIegONUMptnmoOBvsYPJKraEsrrEF6AUYhQK5tkkYHNeNsLNDhHiYefXtxUlDi4YrvtXKJYaj+yo=
+	t=1750712373; cv=none; b=gJ8oWfRBIAyvx3gnI/39fFR0dUDLaxny/ALTxvqjA7pWTysoipVUftW5gRev8DgvBnk6cDCRVHAKpAJMG10ujSCrnVedoC52ljJ7srZL1+WNgdPpC/UZPuypWEXp+3IivmQbhwCSbxs7WR6JI/yz7W5h/sTN6a1k3p37bCEVGmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750712298; c=relaxed/simple;
-	bh=776wSncQW1xwOP34kmp9xdM/HLTWzzodZmtjjkoBmgs=;
+	s=arc-20240116; t=1750712373; c=relaxed/simple;
+	bh=WZruAnztn6MF7xWYnIIM0veISFiEsNO/iHg0h++rAR4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CiO57bf2gERLdh5h/zxdgqifscmaS7s2rHElpCCmJKPGqkkD+ESBZv0wv4YPRnNpRwTwj1yFNosM0MWbtRuT55jMQWzgJ/lEeX7t14TNB1Bpm1skfeo6TswlkZdzoHBRsL/rjCwxHOXa1VR7hGbs3/yWPlaFDH8yeQXi9yssjUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GPyYVwdK; arc=none smtp.client-ip=209.85.219.174
+	 To:Cc:Content-Type; b=rBN7MiPs7rW4z0tYqinBuzeZDtbBxjaTSXmqqQEHrqjiTjsXlB4/bJQWbhLmQ/QJhLZ/KxqeE7qYz4yPgaGs8V1d+NWfe5NvIaYsVIEJauUKblZL0iZgUkEOOF/a8hcCu/BFgHpHY/yxLg8F9pB1VVfwa2ERcJtHU9JMu0OiMsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QDORCNeS; arc=none smtp.client-ip=209.85.216.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPyYVwdK"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e81e8321f11so554835276.0;
-        Mon, 23 Jun 2025 13:58:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDORCNeS"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-311bd8ce7e4so3876565a91.3;
+        Mon, 23 Jun 2025 13:59:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750712296; x=1751317096; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750712371; x=1751317171; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RCvTT8wvpYdg449blLDp6fi3HEHpX9BGcZcH416Lr44=;
-        b=GPyYVwdKWh0nc9airPnZnoA+b82oKRgAgIo34TpU8YJzvIKckZ8DEEZxilh8dmguJJ
-         J/S3Zzuq6Trg4XhdzQflMXCZB/Itb7hvYme8SJebVAlvBCPXUKO+Zx21gMctmDlKazbn
-         YrK2hM4GgUhEpJZku2x5KCxwNZaw+t8zBYtqbfiuWBKVpyw4kEdZkEcUuD5+YvaF1Wdu
-         q6naTNV77jvmqOI9qd+9/+RHPZ6HI5XvAJjtdGPIYEg+IW7K//m5WJQrIDCed4GMlkWQ
-         kx6pEx/6ny1Ao9CvQl1EI4S3uPo9XWG4fPq9FwPQlt28V3kcuUGXQBb/xN4mVYzStzDw
-         LG6Q==
+        bh=IIYisaKrEPvbF6CacQ7ic1VL3m70GVRp4DrkFHHRCLY=;
+        b=QDORCNeSCVl1JtQtBtOxKNm9nAEJGOdmxzHbc1sttgNVNqGFw4IHvJuE04iDyxzfnO
+         4nPW6ZlejzUwXmJfs7yVyv1KR0gpbI2v9rU7tTo5edI/2dPMMr217ypvXbC8w7iZOlpD
+         P36naLaIxCv8H60REsDim6Og4eRfq4glC32J6qnz0A+K0d0sVg20Lme9UwLMkWizX4Xm
+         VLMa3AQWtMdXsKYgvs8UpTUQ57QMPckQRIsOIquItqocIC3N7Jqyv2D3Tx7/N6Vee8vc
+         cEVyhnWi+hVB2xVQdSKSIHumH3Km5Ib92fKXAusijpoO5OcmB3rweJNaD33nW3/LIvcy
+         UcEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750712296; x=1751317096;
+        d=1e100.net; s=20230601; t=1750712371; x=1751317171;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RCvTT8wvpYdg449blLDp6fi3HEHpX9BGcZcH416Lr44=;
-        b=UiowfiPRqOjfTzV0OJIVxlYz6esuLHuYkaZPXRbahTD+NkLUI+ZyNIGOrD1ZdJZ0UO
-         6llm+MK715ptSYbDnAikF5XOUHclsAW1PwtJia9YAPUEJG1yA1VK6/rDHWtalh/7mtYR
-         1QrAp0s9qY86S05CWgxNx/fMhnd05b9yrTo+4p3XKWOZr0vpGTCYA43QyS35RQDdSQJa
-         cNKju/AznyuaoJE56T7gNh+cZH8s9ejyKijg2Qfo7NQSFgtG00bTRbjcwhHPpb/Ayq/k
-         poBKlrWcmKhEh73lM5T6fg0mskE835/CCGFhDZPOWnrm3Wh/rqsSh7FIs2oL2fmb/Gk7
-         Fz5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVFHdkBZ3efaz2skN+fZ35JoGUkjCR5JYJwmW1cd4tOj/Z8LYk/qvn1nlF5Q2MmOHCO8g0sX5pb7oo=@vger.kernel.org, AJvYcCVMvojeJR9Osg6cdgx7WpcOdHSt/RL/qR2/BNY/h6EslCCSyox6tc0zmqddABYA5MPobEI5oOLgmQFz@vger.kernel.org, AJvYcCWlflHDhV/C6QNg8yLC1bbryCQoqmP/rkQUrY20OMBwBwMmO0D8qyGiUe4wg79T94HJ8ALpPspt/44zI0GA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yykm1Cnd5+5f6egS5yEFJdRQYi6JrwxZm2bXrEds3pSElgr+U5+
-	kqXsTZkR2YrpdqdbYpaKjhybajXVMl4K05ZOsLJ1Vtwg3yvraDw3Xtvh0u3tHdiFl9X33Ujk3vI
-	eCO64bKi3Qc4rFZBIa1jNuNhwqmnsVuI=
-X-Gm-Gg: ASbGncuJmkJEJG0lkGVsk6v2igdXsZJUNdm+B1JzIx3REvwK6s/MOYAoZZnn0fnfQY9
-	ZvOPDz1xs8IVWWSa6BjN63MK4BlRoLCVbz9zSHJp1r+WkRaOlie0rWoGl77Mu703wf8IzTdDMYb
-	YkEmNFvTkPhyEVj1gYaw43gducGZjQPBraQ94OO4oa6zw=
-X-Google-Smtp-Source: AGHT+IHLCiITHeFFUwoaBxSNyLK4rYf8WdbLwlQxrGcpm/VoZtCB2g+5XkdMP3yvnFePdMAoH9a2s+LwPMMXJAto858=
-X-Received: by 2002:a05:690c:6ac9:b0:710:eb0c:da33 with SMTP id
- 00721157ae682-712c654a9e5mr95110387b3.9.1750712295894; Mon, 23 Jun 2025
- 13:58:15 -0700 (PDT)
+        bh=IIYisaKrEPvbF6CacQ7ic1VL3m70GVRp4DrkFHHRCLY=;
+        b=kSfWchIMl0cJaAksWwXD269Y40cuqGWk3Jwy+8cKphyk1JyEwcIs4n/3Bt0S7X1r+6
+         iovTZQpVLCYui+9fecSQipKfblLVQjjjogFmggzzgKVY6WXNfGahfU1F2rllaD1eKGTj
+         w5lX4U2rM/o3G7DCUbMcuJxHsOYffxe++inFECj6tHv2R7YqFP6T4m3oKktl0lK14L2d
+         LLhbtLR/uhih5GDtHbKjQqtUQOsQlDIyYVQurXhakb9wuMedZ+eLf0177GIq6cj/YNH2
+         us3aXTgGOMzt3KwJrMFmfKgPLlkp8LXtQerJhJ08Q8tqc70n/u0ogYjYXBl9wRXLJVl2
+         d2wg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGiTHcm+yD3c1jMvhWn1ceMqN/KSpqv/0UZmJHdX4/J79CX11xwZGbiY9O+6EuaMmBK+Y=@vger.kernel.org, AJvYcCWtqapkDigzczgrhF+E0nFyJfF7oYQzFn4NaFdLQFzUQsiK/NI3paD9D49P61tkvLPsURw0FsJ8Rv/tYRuJ@vger.kernel.org, AJvYcCXkTeeTLlvyvjulSe8E8d/yvpV1HXVBBVZy308Z+M5zOBTzCLGa8PoMG36MMEB2ej/58NLXLyFrwfiGOaYdGT1qEyDZ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzlp+zrkOP9RSrENEeKuyjkMMTS5/wJ9CxmtupR3JRQ1kw2N9X8
+	4x4wEE7xGGBWbPxLNE76zOWNA/8i8yPEqLSvv5P9DezNU0ut6yK3N5tILZ2/XZw2xBVKgnrkrGN
+	8Ra0G16gVit0kMwx9qehrwd79zdWh+wsVl7EXkb8=
+X-Gm-Gg: ASbGncvuPwORb1zBVuxHrexjYeRJ0NdEf4daMB0w/XO10Ll2bVxX4gdI9gXm64YYr9R
+	udkU2EAOCM2rz1CU7atyTQaDuwnewgXxVlCZSl2WWgZPsHzJMaKG0kPK6IEtH0KAslmFcTwK0I0
+	EW21033wZ8gctnGcdf/g76z4TGWy+epRyQuX3GlBBm8xwtNQ2Umuc+nPRtNUw=
+X-Google-Smtp-Source: AGHT+IEJ1r4+4S62s8+RfRSEKVsBZin0OkzARoxCIjvu0jINETaQLPIEbbajvP2ZXPmd5Aq+ABd5ORvmmb5Gx2HKCUA=
+X-Received: by 2002:a17:90b:3802:b0:312:e8ed:758 with SMTP id
+ 98e67ed59e1d1-3159d64cb4cmr22831896a91.13.1750712370575; Mon, 23 Jun 2025
+ 13:59:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250622155010.164451-1-l.rubusch@gmail.com> <20250622155010.164451-4-l.rubusch@gmail.com>
- <aFkfjAekGJTU5o71@smile.fi.intel.com>
-In-Reply-To: <aFkfjAekGJTU5o71@smile.fi.intel.com>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Mon, 23 Jun 2025 22:57:39 +0200
-X-Gm-Features: AX0GCFtB93pXClswuiGY716ZjbH1aG0FWIojnaRDxI8nwCzYrny1LzkihVh3GS8
-Message-ID: <CAFXKEHbGThKzMxg=aZMgVEZ2S2hUoGAOoE5wu_vCuzEPqL0+cA@mail.gmail.com>
-Subject: Re: [PATCH v10 3/7] iio: accel: adxl345: add activity event feature
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, 
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, eraretuya@gmail.com
+References: <20250623134342.227347-1-chen.dylane@linux.dev> <CAADnVQ+aZw4-3Ab9nLWrZUg78sc-SXuEGYnPrdOChw8m9sRLvw@mail.gmail.com>
+In-Reply-To: <CAADnVQ+aZw4-3Ab9nLWrZUg78sc-SXuEGYnPrdOChw8m9sRLvw@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 23 Jun 2025 13:59:18 -0700
+X-Gm-Features: AX0GCFvcaaDX9RNsqxJ0KrpocEQKEc9AnYShotDaNDti4oIGI457khj9jcSwtPc
+Message-ID: <CAEf4BzZVw4aSpdTH+VKkG_q6J-sQwSFSCyU+-c5DcA5euP49ng@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v5 1/3] bpf: Show precise link_type for
+ {uprobe,kprobe}_multi fdinfo
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Tao Chen <chen.dylane@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
-
-Thank you so much. I really appreciate your quick feedback. I'll try
-to implement
-the changes in another version, as far as needed.
-
-Talking about the 80 characters, let me give an anser inlined down below.
-
-On Mon, Jun 23, 2025 at 11:34=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
+On Mon, Jun 23, 2025 at 10:56=E2=80=AFAM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
 >
-> On Sun, Jun 22, 2025 at 03:50:06PM +0000, Lothar Rubusch wrote:
-> > Enable the sensor to detect activity and trigger interrupts accordingly=
-.
-> > Activity events are determined based on a threshold, which is initializ=
-ed
-> > to a sensible default during probe. This default value is adopted from =
-the
-> > legacy ADXL345 input driver to maintain consistent behavior.
+> On Mon, Jun 23, 2025 at 6:44=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> =
+wrote:
 > >
-> > The combination of activity detection, ODR configuration, and range
-> > settings lays the groundwork for the activity/inactivity hysteresis
-> > mechanism, which will be implemented in a subsequent patch. As such,
-> > portions of this patch prepare switch-case structures to support those
-> > upcoming changes.
->
-> ...
->
-> > +static int adxl345_set_act_inact_en(struct adxl345_state *st,
-> > +                                 enum adxl345_activity_type type,
-> > +                                 bool cmd_en)
+> > Alexei suggested, 'link_type' can be more precise and differentiate
+> > for human in fdinfo. In fact BPF_LINK_TYPE_KPROBE_MULTI includes
+> > kretprobe_multi type, the same as BPF_LINK_TYPE_UPROBE_MULTI, so we
+> > can show it more concretely.
+> >
+> > link_type:      kprobe_multi
+> > link_id:        1
+> > prog_tag:       d2b307e915f0dd37
+> > ...
+> > link_type:      kretprobe_multi
+> > link_id:        2
+> > prog_tag:       ab9ea0545870781d
+> > ...
+> > link_type:      uprobe_multi
+> > link_id:        9
+> > prog_tag:       e729f789e34a8eca
+> > ...
+> > link_type:      uretprobe_multi
+> > link_id:        10
+> > prog_tag:       7db356c03e61a4d4
+> >
+> > Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> > ---
+> >  include/linux/trace_events.h | 10 ++++++++++
+> >  kernel/bpf/syscall.c         |  9 ++++++++-
+> >  kernel/trace/bpf_trace.c     | 28 ++++++++++++++++++++++++++++
+> >  3 files changed, 46 insertions(+), 1 deletion(-)
+> >
+> > Change list:
+> >   v4 -> v5:
+> >     - Add patch1 to show precise link_type for
+> >       {uprobe,kprobe}_multi.(Alexei)
+> >     - patch2,3 just remove type field, which will be showed in
+> >       link_type
+> >   v4:
+> >   https://lore.kernel.org/bpf/20250619034257.70520-1-chen.dylane@linux.=
+dev
+> >
+> >   v3 -> v4:
+> >     - use %pS to print func info.(Alexei)
+> >   v3:
+> >   https://lore.kernel.org/bpf/20250616130233.451439-1-chen.dylane@linux=
+.dev
+> >
+> >   v2 -> v3:
+> >     - show info in one line for multi events.(Jiri)
+> >   v2:
+> >   https://lore.kernel.org/bpf/20250615150514.418581-1-chen.dylane@linux=
+.dev
+> >
+> >   v1 -> v2:
+> >     - replace 'func_cnt' with 'uprobe_cnt'.(Andrii)
+> >     - print func name is more readable and security for kprobe_multi.(A=
+lexei)
+> >   v1:
+> >   https://lore.kernel.org/bpf/20250612115556.295103-1-chen.dylane@linux=
+.dev
+> >
+> > diff --git a/include/linux/trace_events.h b/include/linux/trace_events.=
+h
+> > index fa9cf4292df..951c91babbc 100644
+> > --- a/include/linux/trace_events.h
+> > +++ b/include/linux/trace_events.h
+> > @@ -780,6 +780,8 @@ int bpf_get_perf_event_info(const struct perf_event=
+ *event, u32 *prog_id,
+> >                             unsigned long *missed);
+> >  int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bp=
+f_prog *prog);
+> >  int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bp=
+f_prog *prog);
+> > +void bpf_kprobe_multi_link_type_show(const struct bpf_link *link, char=
+ *link_type, int len);
+> > +void bpf_uprobe_multi_link_type_show(const struct bpf_link *link, char=
+ *link_type, int len);
+> >  #else
+> >  static inline unsigned int trace_call_bpf(struct trace_event_call *cal=
+l, void *ctx)
+> >  {
+> > @@ -832,6 +834,14 @@ bpf_uprobe_multi_link_attach(const union bpf_attr =
+*attr, struct bpf_prog *prog)
+> >  {
+> >         return -EOPNOTSUPP;
+> >  }
+> > +static inline void
+> > +bpf_kprobe_multi_link_type_show(const struct bpf_link *link, char *lin=
+k_type, int len)
 > > +{
-> > +     unsigned int axis_ctrl;
-> > +     unsigned int threshold;
-> > +     int ret;
-> > +
-> > +     if (cmd_en) {
-> > +             /* When turning on, check if threshold is valid */
->
-> > +             ret =3D regmap_read(st->regmap,
-> > +                               adxl345_act_thresh_reg[type],
-> > +                               &threshold);
->
-> Can occupy less LoCs.
->
-> > +             if (ret)
-> > +                     return ret;
-> > +
-> > +             if (!threshold) /* Just ignore the command if threshold i=
-s 0 */
-> > +                     return 0;
-> > +     }
-> > +
-> > +     /* Start modifying configuration registers */
-> > +     ret =3D adxl345_set_measure_en(st, false);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     /* Enable axis according to the command */
-> > +     switch (type) {
-> > +     case ADXL345_ACTIVITY:
->
-> > +             axis_ctrl =3D ADXL345_ACT_X_EN | ADXL345_ACT_Y_EN |
-> > +                             ADXL345_ACT_Z_EN;
->
-> I think
->
->                 axis_ctrl =3D
->                         ADXL345_ACT_X_EN | ADXL345_ACT_Y_EN | ADXL345_ACT=
-_Z_EN;
->
-> is slightly better to read.
->
-
-Agree.
-
-> > +             break;
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     ret =3D regmap_assign_bits(st->regmap, ADXL345_REG_ACT_INACT_CTRL=
-,
-> > +                              axis_ctrl, cmd_en);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     /* Enable the interrupt line, according to the command */
-> > +     ret =3D regmap_assign_bits(st->regmap, ADXL345_REG_INT_ENABLE,
-> > +                              adxl345_act_int_reg[type], cmd_en);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return adxl345_set_measure_en(st, true);
 > > +}
+> > +static inline void
+> > +bpf_uprobe_multi_link_type_show(const struct bpf_link *link, char *lin=
+k_type, int len)
+> > +{
+> > +}
+> >  #endif
+> >
+> >  enum {
+> > diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> > index 51ba1a7aa43..43b821b37bc 100644
+> > --- a/kernel/bpf/syscall.c
+> > +++ b/kernel/bpf/syscall.c
+> > @@ -3226,9 +3226,16 @@ static void bpf_link_show_fdinfo(struct seq_file=
+ *m, struct file *filp)
+> >         const struct bpf_prog *prog =3D link->prog;
+> >         enum bpf_link_type type =3D link->type;
+> >         char prog_tag[sizeof(prog->tag) * 2 + 1] =3D { };
+> > +       char link_type[64] =3D {};
+> >
+> >         if (type < ARRAY_SIZE(bpf_link_type_strs) && bpf_link_type_strs=
+[type]) {
+> > -               seq_printf(m, "link_type:\t%s\n", bpf_link_type_strs[ty=
+pe]);
+> > +               if (link->type =3D=3D BPF_LINK_TYPE_KPROBE_MULTI)
+> > +                       bpf_kprobe_multi_link_type_show(link, link_type=
+, sizeof(link_type));
+> > +               else if (link->type =3D=3D BPF_LINK_TYPE_UPROBE_MULTI)
+> > +                       bpf_uprobe_multi_link_type_show(link, link_type=
+, sizeof(link_type));
+> > +               else
+> > +                       strscpy(link_type, bpf_link_type_strs[type], si=
+zeof(link_type));
+> > +               seq_printf(m, "link_type:\t%s\n", link_type);
 >
-> ...
+> New callbacks just to print a string?
+> Let's find a different way.
 >
-> > +     case IIO_EV_TYPE_MAG:
-> > +             return adxl345_read_mag_config(st, dir,
-> > +                                            ADXL345_ACTIVITY);
+> How about moving 'flags' from bpf_[ku]probe_multi_link into bpf_link ?
+> (There is a 7 byte hole there anyway)
+> and checking flags inline.
 >
-> It looks like you set the editor to wrap at 72 characters, but here the s=
-ingle
-> line less than 80! Note that the limit is *exactly* 80 character.
+> Jiri, Andrii,
 >
+> better ideas?
 
-I have my setup adjusted to 80 characters. Anyway, the cases here is
-different, it needs
-to be seen in context of the follow up patches. I tried to prepare the
-patches now in a way
-where changes are mostly "added". Is this correct and desired patch prepara=
-tion?
-
-In the particular case, this patch now adds ACTIVITY. A follow up
-patch will add INACTIVITY.
-Since this is still building up, it will add yet another argument to
-those functions, i.e.
-> > +             return adxl345_write_mag_config(st, dir,
-> > +                                             ADXL345_ACTIVITY,
-
-will become, later
-> >               return adxl345_write_mag_config(st, dir,
-> >                                               ADXL345_ACTIVITY,
-> > +                                             ADXL345_INACTIVITY,
-
-To make the change more additive, I did linebreaks earlier than 80
-characters. Is this
-legitimate in this case?
-
-If so, I'll keep all related formatting as is (and will only change
-the other requests).
-Otherwise, I can do it differently and adopt all the formatting
-changes to prioritize 80 characters.
-
-Please let me know, what you think.
-Best,
-L
-
-
-> ...
->
-> > +     case IIO_EV_TYPE_MAG:
-> > +             return adxl345_write_mag_config(st, dir,
-> > +                                             ADXL345_ACTIVITY,
->
-> Ditto.
->
-> ...
->
-> > +             return adxl345_read_mag_value(st, dir, info,
-> > +                                           ADXL345_ACTIVITY,
-> > +                                           val, val2);
->
-> Ditto and so on...
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+We can just remember original attr->link_create.attach_type in
+bpf_link itself, and then have a small helper that will accept link
+type and attach type, and fill out link type representation based on
+those two. Internally we can do the special-casing of  uprobe vs
+uretprobe and kprobe vs kretprobe transparently to all the other code.
+And use that here in show_fdinfo
