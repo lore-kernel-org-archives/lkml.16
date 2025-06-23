@@ -1,46 +1,59 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40393248F6E;
-	Mon, 23 Jun 2025 12:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160FE2405E8
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:52:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750683124; cv=none; b=WnacGYmX/hxtnrUGBzJZ8JxbWkbuIt2nm+Hmr0/wtV3FszYNddT2ffmIaRz7mkWtddEAvqTOrqECQg3PrlscTaC+IpBnm9qXVuiWSjhYPe9snXEthZ2PvJ81qSeodT45iW9zszye00Gfj+WNoZqnM7XODouAG47pjrAThs/85pk=
+	t=1750683177; cv=none; b=lNQ7JiGlo1Czxgiml81HblX+JY/CALvNzVzdSeA3ilUQkI5BMR+N89756rY4HpvzgJmq+x8IC67hxq0Ctu3zbGO45CzRGV5AuYNjynFymkLgfxDesLgLg0Hu7QuQMoMbl+lBnVrTWiTDbXD7PIDteGLeKmE0r+Yrvm/bO58SpXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750683124; c=relaxed/simple;
-	bh=agJj4kYh8kr853tyRsYlX2onZ0GFTf4kg9la+EqMjlM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fc1PQzZcj46H1DBt2bC75+dS9hXiABnLPJYBbAA6P3fYueAfCsiDFyuRZUN70+2MVlC356sVwE1k5b0qpv6oekDRlziGShxPlw7mT/lrU1HEuRCIFa16F+/lINDTKY2KPruv/eAYTj7VhaL52ZMzv02EkAxlx766zlrMpv6M+EU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tq46LZAN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750683177; c=relaxed/simple;
+	bh=JFaDGUHW7KTeYfDt0PWdTNAXJjlRTiT4D3ApfVEeo6E=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=b0g0rnYyvV/ZSUOwOrmZW9Xgn6QkrnJmag8rcqYoJ/Fp4Zz9l+63LexYexL7JBHYIZEBLbTsCa6hUXWv0HP+a//VaErWm3AgzmyJCFIckXl1BkuIQihoK888fGRZxVyoAD28h06dxuVS5NIflVmkgxEEqp6Yb4uP3kSoBWQpMJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XFTCj8xi; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tq46LZAN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08220C4CEEA;
-	Mon, 23 Jun 2025 12:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750683123;
-	bh=agJj4kYh8kr853tyRsYlX2onZ0GFTf4kg9la+EqMjlM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Tq46LZANmOtBJ85Z9P9DsC9vwn68amjzFGw19HCiRQiMQ1VkGm26fVByeMXG1J8o8
-	 UHjXLp+4yOYVZZxtJ7j1e1Gu/vmF+dsNMzqdLyXWDmuWpLDuyKT+zVbetC+CwIT3tB
-	 Rf7gQH+tUc+6erciqtiazqUEhl7UN0nAP6f/xw19z8ZPt3DbC9/TwkshftA0jc3j4Z
-	 1zJnum4tKBXX60M7hrYzrjNroNYaKIbjLXFc8sjV2e+I5/STjEbzUuuj5XaUJkJ2I0
-	 nsznF/dolX2GMnC0eWri6BggSc/HoS9Cde9D1ob46TX4l02fZF7JYREdZLlefyp1yi
-	 nrg+QeAR/mT/Q==
-Date: Mon, 23 Jun 2025 14:51:57 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
-	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
-	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] rust: devres: implement register_release()
-Message-ID: <aFlN7W5rMRcmE300@cassiopeiae>
-References: <20250622164050.20358-1-dakr@kernel.org>
- <20250622164050.20358-5-dakr@kernel.org>
- <aFlCCsvXCSJeYaFQ@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XFTCj8xi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750683176; x=1782219176;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=JFaDGUHW7KTeYfDt0PWdTNAXJjlRTiT4D3ApfVEeo6E=;
+  b=XFTCj8xiC+l8kemAxV4+ZD3IEGD4fgrQMSYbormUvpydrDj4cmi9gau+
+   mYBrCVjwsA3bjQmtVdA3E7A4MBBqQDFoeviow3EoZrwS3RyCO04KYh1bH
+   TKCs0zJUUpVRQkVFg2NpQTs87W+XfaX1tBREo+k1Y+yzTCvpDv3mmtCy4
+   ScSLTWvPy21IGTt8tlcxDSwklK75CzGbsG75jmFooNfbfpyOPiyGVptjv
+   aOGkfBqkWnn3JGSdtuaI2SV0BF7/3LXY+5GrEhR7niqEasYo1l59fsG/i
+   tQZzdmXW8wG+JAXM/Vm7FAsCJWLi0YEMVkfCcfm7f/4e/8+mqH0/uxmrm
+   g==;
+X-CSE-ConnectionGUID: 8tbWc4XlSzCLZVbLFVo5Uw==
+X-CSE-MsgGUID: GzyIvQG6RJKU4gxNIx8nJw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="40498286"
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="40498286"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 05:52:55 -0700
+X-CSE-ConnectionGUID: q3U5erVhQd28+R0wDHauuw==
+X-CSE-MsgGUID: 3CQGCyRzSzm0xnXgRjiNGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="152103587"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 23 Jun 2025 05:52:55 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uTgfM-000O5S-01;
+	Mon, 23 Jun 2025 12:52:52 +0000
+Date: Mon, 23 Jun 2025 20:51:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: Christian Schrrefl <chrisi.schrefl@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Alice Ryhl <aliceryhl@google.com>
+Subject: error: kernel-address sanitizer is not supported for this target
+Message-ID: <202506232026.y3pShEn6-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,18 +62,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aFlCCsvXCSJeYaFQ@google.com>
 
-On Mon, Jun 23, 2025 at 12:01:14PM +0000, Alice Ryhl wrote:
-> On Sun, Jun 22, 2025 at 06:40:41PM +0200, Danilo Krummrich wrote:
-> > +pub fn register_release<P>(dev: &Device<Bound>, data: P) -> Result
-> > +where
-> > +    P: ForeignOwnable,
-> > +    for<'a> P::Borrowed<'a>: Release,
-> 
-> I think we need where P: ForeignOwnable + 'static too.
-> 
-> otherwise I can pass something with a reference that expires before the
-> device is unbound and access it in the devm callback as a UAF.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   86731a2a651e58953fc949573895f2fa6d456841
+commit: ccb8ce526807fcbd4578d6619100d8ec48769ea8 ARM: 9441/1: rust: Enable Rust support for ARMv7
+date:   3 months ago
+config: arm-randconfig-r052-20250623 (https://download.01.org/0day-ci/archive/20250623/202506232026.y3pShEn6-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250623/202506232026.y3pShEn6-lkp@intel.com/reproduce)
 
-I can't really come up with an example for such a case, mind providing one? :)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506232026.y3pShEn6-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> error: kernel-address sanitizer is not supported for this target
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
