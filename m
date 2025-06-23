@@ -1,82 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1452E19CD17;
-	Mon, 23 Jun 2025 13:49:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A426724DCFD;
+	Mon, 23 Jun 2025 13:49:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750686582; cv=none; b=m5iO1EofaBPgEQZCCwMR1N+PlbE1Oz2NGGrNoEHD4O5wddOg9ER+8YzxDHzYBynpdsy4BOXggu/utfQDcZcee0al7T7Qf+fAI0Wo1PFVG+Mysm/ZI2n7qmeIKUBQ9c/hZ8MsS+ZGIHvuZA2cp2Gv0T2Di2zXfimvoQ6wlx6yG/w=
+	t=1750686594; cv=none; b=gGs29YVFc8teuzeOzJyrK4NW1OwxPlIab0Ow24sR5mZTWsodVxF9D9rEeZrzHXGntAsRp2Zhi2hQTxZBeQSwqcKiifS0YjmmNsxU2n4Y1oFRqkyIeFzUKCcVLA64sCFj68BnTprUdh9lcsWx2XWzanm9SLWE84z5O9DM97OyX/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750686582; c=relaxed/simple;
-	bh=j3FUL7lAGubA/HiHlIi3dlPR2ex594MgXDFSkKeKxLw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FSJwTa4jtRrgNMTcWD6lEDbf8Vnn/bCsu3jF6p9rkKX9e6qVHMVxec6++jq6IHJsFreVKOmkZnxaVaOPFWQ+ntDh9h1Ef+6uTIg8PHZ8lp5Zsmt0UAHajtQhnbwqVtCHTjOP6w5b6RjIWFYGnjR45p54c6BlIIRrQBwsTvfXtxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gc/4jh09; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750686594; c=relaxed/simple;
+	bh=tFNiRzAffr71bbPsV2DOGZh7VVU+ne3AoexZ2EclchI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fcg/WeYFLTcz/CKYs7sdOtwcsBH0QYKiOeVTxOtmb/omEEfBsX2LU9UKuD0WRi4FR3Alhdfp/vD+ubVQnzs4RinGnCqqQXM16TZTD+JmF6A5oFjrbxio3s5p/8E/n/lmHpU4fDgPrC49XK33kqGzDVn/t1k6ffJGGcqhpKS04VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sZewjF5E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gc/4jh09"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE467C4CEEA;
-	Mon, 23 Jun 2025 13:49:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sZewjF5E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FEAFC4CEEA;
+	Mon, 23 Jun 2025 13:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750686581;
-	bh=j3FUL7lAGubA/HiHlIi3dlPR2ex594MgXDFSkKeKxLw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Gc/4jh092TuZDjEOdjKCJzqNBzvJHxLt3fYKffhYkTjoHqn5kX6uyxq7WZcfOgZ1i
-	 uKc2BUstYEtbOzv+H72jSZnFNcmwlVR5WD+eiwGz2wEUz+ZJRxfsDtykCAUvjiwnkM
-	 MIy2TEODm/Q4XTSHTEG89WMLyRfLflk6wGHc/8zXRnTqBnACzX0uN4Tvn+K+NyZhcQ
-	 a8RdAce4pRVG5mrvql43yfohjKQ1wTG1sK/F3nlRblYTZj90AzQdhdh6MnbLotS8Mx
-	 qWxQvI6ojMFZaf119Da6krwmhgJ4ai3f0nBfd6k0zr6pR/7630ehKo8PCIGbZi8w1a
-	 BTSKo7ecxmjOg==
-From: Chuck Lever <cel@kernel.org>
-To: NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] sunrpc: patches and cleanups for v6.17
-Date: Mon, 23 Jun 2025 09:49:34 -0400
-Message-ID: <175068655499.1133652.7806743483169461253.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250620-rpc-6-17-v1-0-a309177d713b@kernel.org>
-References: <20250620-rpc-6-17-v1-0-a309177d713b@kernel.org>
+	s=k20201202; t=1750686594;
+	bh=tFNiRzAffr71bbPsV2DOGZh7VVU+ne3AoexZ2EclchI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sZewjF5EwXbcvf/YcaF9NBIxkGTj9JRj+m6co7EBnNxW6KgWCJDlim8XPDTP7k8LZ
+	 zKXcwb2rC4sx8y6BUiagEQXxQvaSHZ8hywWHwjBg0Nbs5gTahkgne/e13pEqA3OulS
+	 KKyR/yaiWk3VJG/rlK9eOdh3feNpHJwXRTCHXjDU4kPyOSJCBy54lFWOhq27rJjxSG
+	 ysjX92wODTzeya3rYs6RtPAc2HGFShf/cg94LZ1iIYrvVvZ3Oy012XZFitZJE8FGab
+	 Nhy+N9mipFS33VFX6jhzQywxl5wa4u6SlponpQaCOK4D5px8KYgPLC3e64FxjalYIc
+	 Wtwp9S2L2+eOA==
+Date: Mon, 23 Jun 2025 15:49:47 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Alice Ryhl <aliceryhl@google.com>, gregkh@linuxfoundation.org,
+	rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	a.hindborg@kernel.org, tmgross@umich.edu, david.m.ertman@intel.com,
+	ira.weiny@intel.com, leon@kernel.org, kwilczynski@kernel.org,
+	bhelgaas@google.com, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] rust: devres: implement register_release()
+Message-ID: <aFlbe5zxPsxwl3zn@cassiopeiae>
+References: <20250622164050.20358-1-dakr@kernel.org>
+ <20250622164050.20358-5-dakr@kernel.org>
+ <aFlCCsvXCSJeYaFQ@google.com>
+ <aFlN7W5rMRcmE300@cassiopeiae>
+ <DATYE858ERJP.9B9NY8NPMOM2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DATYE858ERJP.9B9NY8NPMOM2@kernel.org>
 
-From: Chuck Lever <chuck.lever@oracle.com>
-
-On Fri, 20 Jun 2025 08:16:00 -0400, Jeff Layton wrote:
-> The first 3 are directly related to the svc_process_common() patch I
-> sent yesterday. They're just further cleanups and fixes to that
-> codepath. The other two are random sunrpc patches I've been carrying for
-> a while.
+On Mon, Jun 23, 2025 at 03:40:05PM +0200, Benno Lossin wrote:
+> On Mon Jun 23, 2025 at 2:51 PM CEST, Danilo Krummrich wrote:
+> > On Mon, Jun 23, 2025 at 12:01:14PM +0000, Alice Ryhl wrote:
+> >> On Sun, Jun 22, 2025 at 06:40:41PM +0200, Danilo Krummrich wrote:
+> >> > +pub fn register_release<P>(dev: &Device<Bound>, data: P) -> Result
+> >> > +where
+> >> > +    P: ForeignOwnable,
+> >> > +    for<'a> P::Borrowed<'a>: Release,
+> >> 
+> >> I think we need where P: ForeignOwnable + 'static too.
+> >> 
+> >> otherwise I can pass something with a reference that expires before the
+> >> device is unbound and access it in the devm callback as a UAF.
+> >
+> > I can't really come up with an example for such a case, mind providing one? :)
 > 
-> 
+>     {
+>         let local = MyLocalData { /* ... */ };
+>         let data = Arc::new(Data { r: &local });
+>         devres::register_release(dev, data)?;
+>     }
+>     // devres still holds onto `data`, but that points at `MyLocalData`
+>     // which is on the stack and freed here...
 
-Applied to nfsd-testing, thanks!
-
-[1/6] sunrpc: fix handling of unknown auth status codes
-      commit: 0df827f0bd0529b4abd4f6c593f0416c8777df11
-[2/6] sunrpc: remove SVC_SYSERR
-      commit: 59d160a8f609674a51e7d90afbed8cb88534b962
-[3/6] sunrpc: reset rq_accept_statp when starting a new RPC
-      commit: 1e52e9a78dba2abf7c01b68c534d9ca22e9a1de7
-[4/6] sunrpc: return better error in svcauth_gss_accept() on alloc failure
-      commit: fedc609d9422e2b35e1a5af40b6ae134d6e4cc97
-[5/6] sunrpc: rearrange struct svc_rqst for fewer cachelines
-      commit: 32eb3ea18747600ebb2133ec167f6c56e71977be
-[6/6] sunrpc: make svc_tcp_sendmsg() take a signed sentp pointer
-      commit: 71d5b98c95c393e53a9cddac4e1c0f7a10ee92b2
-
---
-Chuck Lever
-
+Thanks for providing the example, I think I slightly misunderstood. Gonna add
+the corresponding lifetime bound.
