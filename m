@@ -1,116 +1,122 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFB01A00F0
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C819205AB8
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750665895; cv=none; b=WtU94QNwp+PAOsiL6koNTEuqkaAww0z6abJqynkhjQ3zEVMNCmDR+UKeksyqHhEwOREmX524HjlYVYCihlrAsr5LxJ5yKWlhdcZSKyqMDwyluaZqkANZ+NYC8uSQYpQBxmOxIa93VTAVOsR0UX0LG1oNW5PcexC0jCDMR2nzNvU=
+	t=1750665899; cv=none; b=nvh5vIKs4B9zWGiooa5LPIFVNWNC7E6waIQ9QDb+CtzcH2Vc4QRIp2hessAeGc4AxN/7B+7oSGQfyVnDSajjJVrlhPwybVe1WTNhZPyw9dzuTEtIMFLccoLPf/scEYMwU9NjQtbxzGWC35TJcku6qHLlKhL6oF7ajklLuOBMw7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750665895; c=relaxed/simple;
-	bh=+OHByPgRl5RiXGFNl0E58mJNINq7pj5C9YweCi5djds=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sfZdNMvCIvuTOlpfei8DDMpf7dFvtbBbAEg61/lUUl7Uny5Cc0ktPVVSU1nEWl49OhiB57C/JFJpL3XLjwVdyE2uReT7iBtfJ45JnZcMBaiU/bH2y3Z0wwFj+WUX9Zm7M9X/qxQXVIeDt6nRujbglR1dqqEDexx5zmxJAinjHdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bfOBrXv6; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750665899; c=relaxed/simple;
+	bh=G1w0adoxO+ajxlGkY1rIijF7bO7HKR5s4V4mGepiLAg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fqvzZ8jEJBeKVcHPknHNv2181FVnssFzeN1GAnopebMjA7B+bfdKDPfMjjhIB6kDy+3s+CdPrQGD/bgi6VfofiQnTybpal0HtHGouhi/rDHncslIluq7ndMIcWcmkaGi3cGuJa/ltcsyvgnch0+P6MsOHBC4XzJtjVXb8XLccZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=hlIr0+xG; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bfOBrXv6"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55N3i5Zu021411;
-	Mon, 23 Jun 2025 08:04:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=2AMcuYHsldxHRn+sbTsoboTobvXdpEEEIuvyOd9+x
-	E8=; b=bfOBrXv6DX80JNX2tjCb9YzRKmzMsQ7f319/Fu82yb/jhn2OdlLNEK7rH
-	nsYcaVjOBRyHeKOQkbuQ1V7rmHw0rAzRwj1txAOiKZW/LMgAe+rQI7FKAdEP0jip
-	SHCZxlML2tjCuUTcvYatXtpwSn4bn+auDzEffp2AgPbipy0PNJF6Vb72/PmqdrCe
-	jRdfNKNAV4KWuHILD872XZqGOZErLw5opkideQ5AOjDBusyhW6xqMYPzx2SoeVc/
-	GywQVgL1cvE75wadzk3NWCP65tWvkiNrwPYc0slMvMo2ur/+OTP3+QWoUDTEDnhq
-	f2vuxI3VX8UIAj9/ETzbONEuKe1kw==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dj5tg9h2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Jun 2025 08:04:43 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55N60Bp9014698;
-	Mon, 23 Jun 2025 08:04:42 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e9s24t82-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Jun 2025 08:04:42 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55N84e6T25166364
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 23 Jun 2025 08:04:40 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CEFC12004B;
-	Mon, 23 Jun 2025 08:04:40 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BD82820040;
-	Mon, 23 Jun 2025 08:04:40 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 23 Jun 2025 08:04:40 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
-	id 65FF6E073A; Mon, 23 Jun 2025 10:04:40 +0200 (CEST)
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mm: move mask update out of the atomic context
-Date: Mon, 23 Jun 2025 10:04:40 +0200
-Message-ID: <20250623080440.3005693-1-agordeev@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="hlIr0+xG"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-23633a6ac50so53045325ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:04:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1750665897; x=1751270697; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4vmYNde3494s1oZAkDWHVWSrNdQuXQcEtL0WwaKvH1w=;
+        b=hlIr0+xGB14mwjiEXA1GHSOqonDemjrupW/YtxymfiQuoHKBs13aFZNwFSuIz+wYO2
+         9UDbsuw5/rxifbu4pD04jD3VXm1UyxqaQw8f/REsRRPqFEQDlAg/WH0gS9MXfnbIn6sv
+         Y1tvmZQ/Qa3V6d9mRJ04yJolXqaOeZJ8mragNHy0c0CQknPCdKTWGqZpYodPD4vwEZsj
+         wXjohd06RXos8QZM71VsBImA/OKRY7opwiVO6xR4Zphj0HTDCzC9N6VivNesaflLCsnG
+         qhyRLuBFN2n7qj+27IBQV1VUvBpJ171FXM7cc0ujx2U6lGuWJoYTvRfEHa6uzqEJXEMb
+         W8uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750665897; x=1751270697;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4vmYNde3494s1oZAkDWHVWSrNdQuXQcEtL0WwaKvH1w=;
+        b=fHXdZvlvwXL08g2AVs9xd3b9TG7/0amyrBv+rgSjWFxRGgiilqCjDxxiE7NMWCY2WZ
+         B4rMvNaKvt2HjjYsffGOQrG0yD9HWudFRavAlYams6doBlOgA3DW7dNV89kEG7DjZCov
+         T4KZI7bBMZ9GXI/65atlVi+xUeps27zdMisX7trxJbn36wwEQbttWSBQx4tkfGUtSMh1
+         VqwLBbpdDLlpvM7JrSg8+pl4vD2dUGCHSe3I7/KeoPQTUnGGUZUqFMnHSdBHa32P0Kc8
+         EuWUW2yzRooaCHOsneBN9HNIAnOTUZPHGXybyQUZMC9Xv13o1Un1b5LKFo5nb4wXCQNh
+         iybg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpqGd3o12mIwfUyVds9I1dXsJTP7qzJKxys6Di9/D6dr7k17roKiLTTK8Z0zJ+XiD5wMHnPJeUPOE/JH0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwONlYLYDO6/9OqyNvbaQGTFJXM4aAcGr4N7yF3sQptSfhPmMX8
+	nKiUyADq0FCbb1t3zkluwOWMaUU/+EyauHlggAZGwt9nHVydfyQh2FN1ozwq9IThAkw=
+X-Gm-Gg: ASbGnctopzqDuLUJGl/sXufa3CFTQ84be2lXRW4oMjwUp7C7G9ra/1ae0ZLfnRD4sOi
+	oUjpjLwKYIOp7MJ5rcQbJT7nFXzRrmDatH7rejYy12M0xFB1uqjPDgDyXMD63B3vIKdZlBaFT5S
+	+0l/APR10DqDx+We0RFKJ6pZ8jen+/0b0YZ6fpa9JVeOcvtNdX6lFZ85Evr3Cuk5bn6YeaE4oIJ
+	MxE2Rs6E6WHqtrFwR/dCfRdeS3clo3fpeZpx5hhV2uegdkEacSpdaXSMcq6ymziu0BUi0N1QKh4
+	2Ssm0MJp2JgVkYm5yXV9g12sy/wbI+RTbsx5Zl/Sz0XH87IGbcoKCqBzQkmy5mBHrrsSL4EErJI
+	KGWxaPttVKd1OSZ6YxSycZFbbB8JWBnA=
+X-Google-Smtp-Source: AGHT+IGAu8sRN9d6YginLzXnR26SBrwXTWtMoIeqalY4gdd+wB4xJaqi8iWblIrCKepqAoQGghGYIw==
+X-Received: by 2002:a17:903:4b30:b0:234:8c3d:2912 with SMTP id d9443c01a7336-237d96b6361mr175973175ad.11.1750665897172;
+        Mon, 23 Jun 2025 01:04:57 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d867f8d0sm78007835ad.175.2025.06.23.01.04.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 01:04:56 -0700 (PDT)
+Message-ID: <1d9ad2a8-6ab5-4f5e-b514-4a902392e074@rivosinc.com>
+Date: Mon, 23 Jun 2025 10:04:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] RISC-V: KVM: Delegate illegal instruction fault
+To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>,
+ Xu Lu <luxu.kernel@bytedance.com>, anup@brainfault.org,
+ atish.patra@linux.dev, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, alex@ghiti.fr
+Cc: kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-riscv <linux-riscv-bounces@lists.infradead.org>
+References: <20250620091720.85633-1-luxu.kernel@bytedance.com>
+ <DARCHDIZG7IP.2VTEVNMVX8R1E@ventanamicro.com>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <DARCHDIZG7IP.2VTEVNMVX8R1E@ventanamicro.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 5uzd94gi1LW3t-YnPUx-svgf-hSM2JJK
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA0NSBTYWx0ZWRfXxDrWbhO9SBzZ khbnsS2thK392Wj8fdxXCOAjsiTEuLZSc1cyNKCgZv4fVYoL4ZIc04a6wMszS8GffakRMMUs39N QgdtoicBMACmuj22SxnAJxAjSGvjw2jL0LfjoDVqC/5+4y5je3mzixyF/PmJsxix2fs4PxZO3l/
- BWgM79qr7M/jVwWULeySSC8oN+kSrp36w97yB0ZcwYI4H9juOmuH+lpCotUbvEkBZ95LlOC6rov o6PQHiYrODe0SQHWhxtoH3whfMpZbPcoDi/nW3CdYCmBFdDfXMvHXQozYUP5VbC4xaLmumlOK3Q d3GzgBzOfKZ8NsdxyTWw0F598PGkxCqLjwEWzrg2oOUZmTTAiupcCdIrVzEsFN8ON9A4nyVyc1b
- GBvMXJh4nY4CS/3LvLoTS0bvCmjJhxCtnSTEyeNZKD+KkmN8P0Vm8lrY7muaOVQv0BZmdTyF
-X-Authority-Analysis: v=2.4 cv=MshS63ae c=1 sm=1 tr=0 ts=68590a9b cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=gryDZzxsDFo3jIyxcIsA:9
-X-Proofpoint-GUID: 5uzd94gi1LW3t-YnPUx-svgf-hSM2JJK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-23_02,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=807 impostorscore=0
- clxscore=1015 phishscore=0 malwarescore=0 suspectscore=0 adultscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506230045
 
-There is not need to modify page table synchronization mask
-while apply_to_pte_range() holds user page tables spinlock.
 
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- mm/memory.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index 8eba595056fe..6849ab4e44bf 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3035,12 +3035,13 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
- 			}
- 		} while (pte++, addr += PAGE_SIZE, addr != end);
- 	}
--	*mask |= PGTBL_PTE_MODIFIED;
- 
- 	arch_leave_lazy_mmu_mode();
- 
- 	if (mm != &init_mm)
- 		pte_unmap_unlock(mapped_pte, ptl);
-+	*mask |= PGTBL_PTE_MODIFIED;
-+
- 	return err;
- }
- 
--- 
-2.48.1
+On 20/06/2025 14:04, Radim Krčmář wrote:
+> 2025-06-20T17:17:20+08:00, Xu Lu <luxu.kernel@bytedance.com>:
+>> Delegate illegal instruction fault to VS mode in default to avoid such
+>> exceptions being trapped to HS and redirected back to VS.
+>>
+>> Signed-off-by: Xu Lu <luxu.kernel@bytedance.com>
+>> ---
+>> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+>> @@ -48,6 +48,7 @@
+>> +					 BIT(EXC_INST_ILLEGAL)    | \
+> 
+> You should also remove the dead code in kvm_riscv_vcpu_exit.
+> 
+> And why not delegate the others as well?
+> (EXC_LOAD_MISALIGNED, EXC_STORE_MISALIGNED, EXC_LOAD_ACCESS,
+>  EXC_STORE_ACCESS, and EXC_INST_ACCESS.)
+
+Currently, OpenSBI does not delegate misaligned exception by default and
+handles misaligned access by itself, this is (partially) why we added
+the FWFT SBI extension to request such delegation. Since some supervisor
+software expect that default, they do not have code to handle misaligned
+accesses emulation. So they should not be delegated by default.
+
+Thanks,
+
+Clément
+
+> 
+> Thanks.
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
