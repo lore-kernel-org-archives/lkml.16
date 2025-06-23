@@ -1,151 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA912DA753;
-	Mon, 23 Jun 2025 18:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BD31E1A05
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750704507; cv=none; b=sUuYHmXuWyyDZC5Skx7NPBEoHibpSFXzHgIODYRik45rYutBYarAChMJDG1Sj2n/uICDabVKN9YPozXYonAOaxy0I7uyyoBfNG5sC++yIFGrZ96FTSPWufh8RQlJfiZsa/hR3HxJD9vwP1p+F2tUcRt4noHBH55Mp81IiIFxrow=
+	t=1750704543; cv=none; b=lgbD5uR9MlbfoIx/E8DkW55cjilz16VmVDtsiRSevRapCQxSSxFc4efNQJKrPCayi2HjhZXukxHK/LB/e0GvmWxckXKrYX1Jh+upLazCwcSVczXl6qIGDtkKeEnwTS79qpNrTNe+cU3ULDpSisl1/DA17qDfLrgoDqAuMVPDWdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750704507; c=relaxed/simple;
-	bh=g0M2DgNSBrZnHKAamPsJaiVPp+me19vm+3rXOtUbK/k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c4d/Zj7R85zM8lreUOECRQUGLNH8fE1G04p/SuNreqYqkqeafSfHzCWvhuYUCwvsoqq4XqZKj6Ay6DcSiipZ0ARPe2p2lpS+614gED0kk25TNKLrf+Ikdw2Nqfg+BPAUIjTnI8CPLzFOr8/ttjOxcDeJqxuUhmpe/Qfqc0JoXfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FlkMMZKx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750704543; c=relaxed/simple;
+	bh=kFM0TNlX/U+yDgwFjIEMNOTe+9mt+VLKNv3TBfQoHu0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ealAv76GwqvGNIQm7gczJINUhyxjfLy4n1mzBuasbhOEmVaC37G/kuRpU+N/4BtjSwg5B4MWDv2LoYUbazNNvwTprAyICVs5yB9L/9uvuCXQcZ67CbIUms/x7cFDE6Y97Mgu5jDlTMXYLgRdvqxmJRPxVUf/T34H765pDWaSUHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PXieTfFN; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FlkMMZKx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67266C4CEF2;
-	Mon, 23 Jun 2025 18:48:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750704507;
-	bh=g0M2DgNSBrZnHKAamPsJaiVPp+me19vm+3rXOtUbK/k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FlkMMZKxXH4xc4d/NdzCCYVUetE3wjUW1moJk+VXz2ScXAxwhw4X/eBTRPOEUiySb
-	 xpMzQsa5eZBih7XLT6A+uzq868tEhMg39SD3aOBE2tB91mCIeTvz47jq3DkqOonftl
-	 CnMa/QMh/IU4uJlRZhEKFUj4Q8XAOfQ83FBfEJadeNboHj/cZSbv6w0L89rcqiMT1D
-	 lBTSaQfCUP/Uq75Q1KyiENvNd166/Bx8SPFKoWsV4VOIvt6ARbV0keyauZrrPSYECw
-	 Dga5ESJrQILf4NHNBcXkHLYpJ6B8VrSDgL6l9ttNg5FJhtQ2/Pj5d/Jxk7tDR2UbWZ
-	 h3MyOb0LfkFJw==
-From: Mario Limonciello <superm1@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Lukas Wunner <lukas@wunner.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	linux-kernel@vger.kernel.org (open list),
-	iommu@lists.linux.dev (open list:INTEL IOMMU (VT-d)),
-	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-	kvm@vger.kernel.org (open list:VFIO DRIVER),
-	linux-sound@vger.kernel.org (open list:SOUND),
-	Daniel Dadap <ddadap@nvidia.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v4 8/8] PCI: Add a new 'boot_display' attribute
-Date: Mon, 23 Jun 2025 13:47:57 -0500
-Message-ID: <20250623184757.3774786-9-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250623184757.3774786-1-superm1@kernel.org>
-References: <20250623184757.3774786-1-superm1@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PXieTfFN"
+Message-ID: <a8a3e849-bef9-4320-8b32-71d79afbab87@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750704537;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gPeP8du2qBa6yFfD4N13fXz74Emk3SySRJAz2DZwT+g=;
+	b=PXieTfFNnH2x0MB6xi3e+6LGZLqrOxLZI3i0CcOdyGfCvdjd7oBe6wW/zwNLrAyB877f21
+	ejPCyCi4UknfuJ1Xgqn8myevhtFm14NvQVD9OS0Q/Am4s6Dc+xdwaO3JAtIQ1BLfv3DdhU
+	bKacHtVK2GuqyI7UQ2SIZtfsr58L+QE=
+Date: Mon, 23 Jun 2025 14:48:53 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 4/4] net: axienet: Split into MAC and MDIO drivers
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ netdev@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Michal Simek <michal.simek@amd.com>, Saravana Kannan <saravanak@google.com>,
+ Leon Romanovsky <leon@kernel.org>, Dave Ertman <david.m.ertman@intel.com>,
+ linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+ linux-arm-kernel@lists.infradead.org
+References: <20250619200537.260017-1-sean.anderson@linux.dev>
+ <20250619200537.260017-5-sean.anderson@linux.dev>
+ <16ebbe27-8256-4bbf-ad0a-96d25a3110b2@lunn.ch>
+ <0854ddee-1b53-472c-a4fe-0a345f65da65@linux.dev>
+ <c543674a-305e-4691-b600-03ede59488ef@lunn.ch>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <c543674a-305e-4691-b600-03ede59488ef@lunn.ch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On 6/23/25 14:27, Andrew Lunn wrote:
+> On Mon, Jun 23, 2025 at 11:16:08AM -0400, Sean Anderson wrote:
+>> On 6/21/25 03:33, Andrew Lunn wrote:
+>> > On Thu, Jun 19, 2025 at 04:05:37PM -0400, Sean Anderson wrote:
+>> >> Returning EPROBE_DEFER after probing a bus may result in an infinite
+>> >> probe loop if the EPROBE_DEFER error is never resolved.
+>> > 
+>> > That sounds like a core problem. I also thought there was a time
+>> > limit, how long the system will repeat probes for drivers which defer.
+>> > 
+>> > This seems like the wrong fix to me.
+>> 
+>> I agree. My first attempt to fix this did so by ignoring deferred probes
+>> from child devices, which would prevent "recursive" loops like this one
+>> [1]. But I was informed that failing with EPROBE_DEFER after creating a
+>> bus was not allowed at all, hence this patch.
+> 
+> O.K. So why not change the order so that you know you have all the
+> needed dependencies before registering the MDIO bus?
+> 
+> Quoting your previous email:
+> 
+>> Returning EPROBE_DEFER after probing a bus may result in an infinite
+>> probe loop if the EPROBE_DEFER error is never resolved. For example,
+>> if the PCS is located on another MDIO bus and that MDIO bus is
+>> missing its driver then we will always return EPROBE_DEFER.
+> 
+> Why not get a reference on the PCS device before registering the MDIO
+> bus?
 
-On systems with multiple GPUs there can be uncertainty which GPU is the
-primary one used to drive the display at bootup. In order to disambiguate
-this add a new sysfs attribute 'boot_display' that uses the output of
-video_is_primary_device() to populate whether a PCI device was used for
-driving the display.
+Because the PCS may be on the MDIO bus. This is probably the most-common
+case.
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v4:
- * new patch
----
- Documentation/ABI/testing/sysfs-bus-pci |  9 +++++++++
- drivers/pci/pci-sysfs.c                 | 14 ++++++++++++++
- 2 files changed, 23 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index 69f952fffec72..2e6f85fbe2e2e 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -612,3 +612,12 @@ Description:
- 
- 		  # ls doe_features
- 		  0001:01        0001:02        doe_discovery
-+
-+What:		/sys/bus/pci/devices/.../boot_display
-+Date:		October 2025
-+Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
-+Description:
-+		This file indicates whether the device was used as a boot
-+		display. If the device was used as the boot display, the file
-+		will contain "1". If the device is a display device but wasn't
-+		used as a boot display, the file will contain "0".
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 268c69daa4d57..5bbf79b1b953d 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -30,6 +30,7 @@
- #include <linux/msi.h>
- #include <linux/of.h>
- #include <linux/aperture.h>
-+#include <asm/video.h>
- #include "pci.h"
- 
- #ifndef ARCH_PCI_DEV_GROUPS
-@@ -679,6 +680,13 @@ const struct attribute_group *pcibus_groups[] = {
- 	NULL,
- };
- 
-+static ssize_t boot_display_show(struct device *dev, struct device_attribute *attr,
-+				 char *buf)
-+{
-+	return sysfs_emit(buf, "%u\n", video_is_primary_device(dev));
-+}
-+static DEVICE_ATTR_RO(boot_display);
-+
- static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
- 			     char *buf)
- {
-@@ -1698,6 +1706,7 @@ late_initcall(pci_sysfs_init);
- 
- static struct attribute *pci_dev_dev_attrs[] = {
- 	&dev_attr_boot_vga.attr,
-+	&dev_attr_boot_display.attr,
- 	NULL,
- };
- 
-@@ -1710,6 +1719,11 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
- 	if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
- 		return a->mode;
- 
-+#ifdef CONFIG_VIDEO
-+	if (a == &dev_attr_boot_display.attr && pci_is_display(pdev))
-+		return a->mode;
-+#endif
-+
- 	return 0;
- }
- 
--- 
-2.43.0
+--Sean
 
