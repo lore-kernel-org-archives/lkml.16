@@ -1,105 +1,112 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B476525E806
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B905B260560;
+	Mon, 23 Jun 2025 14:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750689335; cv=none; b=TGhqG+dOfFn6DwspXhAgSADTJRUHysePZaCs9buvyHVAdjyYlN3hcGjHoIrhQg8DTkNkVPB0B/NTyrIyiRL6WtCJmf2Cf8ivP0xTUfn4clbwPXXBNxkuzedd4fgyWLrcvLPvwE24k6ZfffYgj4OHoMaiy+Njky9+m/exGH122Ps=
+	t=1750689407; cv=none; b=Qyc80SiDvVZQE2lmgJb1pdhrECIraE1M/VKVPjBpMHaH41UQdrMX0IWsO7laaOo4gPS3Dx0dIdedo28QJ1QTlEMpd/203gbKYfEysNLTjvJIqbuxsumPkxGfmKOy2kx8W6TqOv4Nr7u7saALmRfNP+zaLf1XoxvUvuJO5dEN66o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750689335; c=relaxed/simple;
-	bh=9LGKOzoBSn5ielAxf43x1FsCr8uxqxO5k4cdaz7r3uo=;
+	s=arc-20240116; t=1750689407; c=relaxed/simple;
+	bh=eFi6qWyko4q95G1qV6b/bkdDjJ4xkEd1EzWEqFQjMzU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kyzGTJzdFklTpEfDmLYzNhDKpdSe4vO2DR9HdGGDK0j4sm4wUpRn9QRoU3a7NJWjh+qfQegXVz8Ks9GMYvgJFgJ824+/xMg45yY0I5Zyt61PllZmlYeBbcrAASG5J106hrIBO6hG9CijKz4jJIJBi9kq8oRguLY0X9RQWndHIbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iykw1VWe; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=uvp0hXPUZZLA7wh6WJdqA6pmHi7f+3L5vUDx5R/+6AYBxQacOLv8gW6oeqzry8vZH1JWHs4ulwHgtI+WE2R6qJNexi32YuUW+qiMw46gyqxCTXdJvqVLf9+L53dvw2r1cdnF3eGW3SkihITqZVOqwR2aC6DYEJTPosDPytY+too=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VflVaaes; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iykw1VWe"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-7fd35b301bdso4959275a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 07:35:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750689333; x=1751294133; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XlzQYA4Vqi8dQ5FDOU8JcHAlJHgTJcysjtW2A8SXnvI=;
-        b=Iykw1VWeg30uwTVKIhBm+zuieJ/fnGvEbXb4roB+GF+K92e0H8bTTAI5rvhNLoafCh
-         KVqXudSUlWaOP/NNXP3ghmPSJ4+G+5FEXnUOTiBJ6F4KZYHGXkN4OuEWSVRzOPGJ2Bma
-         qA5mjmVLYs0gF4r61rGE2c73keQUq4hR23NVV9QjrqygsGP4VfbLCqyoRur5JL8k1jg1
-         NP4331RIkS7rsR0kVN+16eWHHSytIjoSzU3/aoKp39+Atz3t9Qd5MoQbROzMfB4cWjuc
-         qJhMJsoayoJceP46qqejz4yP/0jqrPssxqcQp8fUlKxsu0Mli6rrukC6qlX1OMFXyjod
-         vVLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750689333; x=1751294133;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XlzQYA4Vqi8dQ5FDOU8JcHAlJHgTJcysjtW2A8SXnvI=;
-        b=MOIknf0q2oansLpE7th/y0V2nkLOf6kesGA6TXuD7m95tou5XUl1wUYcjuafSIEZDm
-         NmVN0c5Cbs7pdpyqRr7ehQrYK4G4hnSQ8ORV7XqIVA5VSzzZoDYgLgDb9Aup7JEZvhGj
-         fDsBZpdB7mPOE4W5861BXD55YW+M1/bzaRMoOeZPqB9JnKnS15cmnnhfent9n7fTGhu+
-         P2DwHMjLLB8f5jZUtupGwBdCHNwWEYKqGi8iZdTcLOHddzvblB2tATLD7G7rnE3F8YDA
-         YtRg0e1f3HD2DOXlTUFn6XP5EPSocw8SHokQ78urlhEj2tau9rtZxgj7Iznui2IEGvhG
-         H6Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCXD6JuGHbRogKVJNmT1QcxyOjvjzi+AP4VfcdFcEgrebBv1lK9jJ2E1HoonWTZYQ+Lzgxr6fe8BEGdFAbk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywi9Swe6avSA1pjR2saItMJLKDyGujS2ZYikn30nf81l3oV1PQc
-	X0jnyadrKZzEXgMyI+ZtfHf/FqxvGO03d0XCbTGArnsjwIL3Bu6UB+5G
-X-Gm-Gg: ASbGnctH3Z3tHaM2WcUU3xkOppPrsAg2C0zYVtE2dPut1pD8bE+mf7ATpOCx7UprGBC
-	TSrh4Tx/oCta3RHz2f3HAHf5VbmwQ/hqxHOIjdZySgLs5+t1vO9wCr8qmcUmPRSBgADl0UqFKg0
-	6abRYIF+eUZrUwxIXQzulF9OO1rJ/XbzCvkhZyC5iG12RrHSnkMYQAwoYE7KACFNevFWpkWAqBB
-	3YyZkEtAyDBeNAfQlQFOWpIem1tecbKrB626wlfAxn05edFyyFO4o4fem3DoDZconzHoE9gV32a
-	FQFe2f0vR2OLjMcuIsvTCvSkSuyWCaDlvX+5isGkkTsPbRK9sHjlWBYKiwTAnss=
-X-Google-Smtp-Source: AGHT+IFX+VmhiUBnmA4pNZEE74T73jbLUZc8BjmHxWRKCnJo1+RhenR8isYSZfLvtDMHgo1LsTb7Cg==
-X-Received: by 2002:a17:90b:4fc2:b0:314:7e4a:db08 with SMTP id 98e67ed59e1d1-3159d8c5de2mr23707176a91.18.1750689332776;
-        Mon, 23 Jun 2025 07:35:32 -0700 (PDT)
-Received: from rpi4B8Gs ([182.216.63.93])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3158a331288sm11812762a91.43.2025.06.23.07.35.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 07:35:32 -0700 (PDT)
-Date: Mon, 23 Jun 2025 23:35:27 +0900
-From: Kisub Choe <kisub.choe.0x1@gmail.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Kisub Choe <kisub.choe.0x1@gmail.com>, gregkh@linuxfoundation.org,
-	philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: replace msleep(1)
-Message-ID: <aFlmL0DtydfsbFl0@rpi4B8Gs>
-References: <aFdAEM6GnCudvqMV@zinc>
- <efa56904-eabf-4493-b064-652d02839c6b@suswa.mountain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VflVaaes"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B90CC4CEEA;
+	Mon, 23 Jun 2025 14:36:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750689407;
+	bh=eFi6qWyko4q95G1qV6b/bkdDjJ4xkEd1EzWEqFQjMzU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VflVaaesju+Z85bTPS02OiXknR48/LxrmGx88zwcCxt04hyH5eYBaejbkThbEFlR8
+	 poDrxTPJpax3lmcbFd4UqLV8b8So7tj+JJYY6FquTl03nPg86xqCBIFfY58nB2tePi
+	 xOjlW6fiOWtIho4ckxMj6tPM8ZbfEt+7RWmWyUu64Dyg5U0iTL/XNlmV1KKHMV8mi0
+	 DqfFlF5XNhlcb+iPNo17fH/cCuEkX9TC+dpfs8jQvMj/pksJ7zLc8dsyVplCFNOthE
+	 zFa5f7D26iD0JqZqTz/2Xyfs7432kFghpiLhxEewcEU5+gtkK8NyjUTmPQTA00VE1u
+	 E8C9QCpTHZBvw==
+Date: Mon, 23 Jun 2025 15:36:41 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Barker <paul.barker@sancloud.com>,
+	Marc Murphy <marc.murphy@sancloud.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Romain Gantois <romain.gantois@bootlin.com>,
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+	Bajjuri Praneeth <praneeth@ti.com>, Andrew Davis <afd@ti.com>
+Subject: Re: [PATCH 1/2] dt-bindings: omap: Add missing AM33xx compatible
+ strings
+Message-ID: <20250623-gluten-bulb-cff911ccf00d@spud>
+References: <20250620-ti_dts_clean-v1-0-786a3059bca7@bootlin.com>
+ <20250620-ti_dts_clean-v1-1-786a3059bca7@bootlin.com>
+ <20250620-mortally-fifteen-7a2566545a5d@spud>
+ <20250620-widow-licorice-66fbd43b18b0@spud>
+ <20250620162617.50ca0a7f@kmaincent-XPS-13-7390>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Z6loaMYSs0CfFWNj"
 Content-Disposition: inline
-In-Reply-To: <efa56904-eabf-4493-b064-652d02839c6b@suswa.mountain>
+In-Reply-To: <20250620162617.50ca0a7f@kmaincent-XPS-13-7390>
 
-On Mon, Jun 23, 2025 at 01:54:01PM +0300, Dan Carpenter wrote:
-> On Sun, Jun 22, 2025 at 08:28:16AM +0900, Kisub Choe wrote:
-> > changed msleep to usleep_range to
-> > 
-> > Adhere to Linux kernel coding style.
-> > Reported by checkpatch:
-> > 
-> > WARNING: msleep < 20ms can sleep for up to 20ms;
-> > see function description of msleep().
-> > 
-> > Signed-off-by: Kisub Choe <kisub.choe.0x1@gmail.com>
-> 
-> This type of change needs to be tested before it can be merged.
-> 
-> regards,
-> dan carpenter
-> 
 
-Thank you for feedback.
-I understand that this type of change should be tested due to its impact
-on time-sensitive behavior.
-However, I currently don't have access to any device that uses this
-driver.
-Please let me know how you'd suggest proceeding in this case.
+--Z6loaMYSs0CfFWNj
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Kisub Choe.
+On Fri, Jun 20, 2025 at 04:26:17PM +0200, Kory Maincent wrote:
+> Le Fri, 20 Jun 2025 15:09:41 +0100,
+> Conor Dooley <conor@kernel.org> a =E9crit :
+>=20
+> > On Fri, Jun 20, 2025 at 03:08:24PM +0100, Conor Dooley wrote:
+> > > On Fri, Jun 20, 2025 at 10:24:08AM +0200, Kory Maincent wrote: =20
+> > > > Add several compatible strings that were missing from the binding
+> > > > documentation for AM33xx-based boards. Update vendor prefix from
+> > > > "ti" to "beagle" for BeagleBone to match actual hardware vendors.
+> > > >=20
+> > > > Reviewed-by: Andrew Davis <afd@ti.com>
+> > > > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com> =20
+> > >=20
+> > > This is a v1 apparently, what is the relationship between this patch =
+and
+> > > https://lore.kernel.org/all/20250617-bbg-v4-1-827cbd606db6@bootlin.co=
+m/
+> > > ? =20
+> >=20
+> > (I ask because at a scan I didn't see differences and I had acked the
+> > last one, which doesn't show here even though Andrew's r-b does)
+>=20
+> Oh, you acked-by was lost in the void during the patch series split sorry=
+ for
+> that.
+
+In that case,=20
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+--Z6loaMYSs0CfFWNj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaFlmeQAKCRB4tDGHoIJi
+0rZEAQDe5mN87Tk29xJZ7cPHT6fEDF80FUZTHGyl9/oNchF3+gEAhjKhB5ljKGZi
+y1LRHCJVDjjH5WoVTNyAnqd0D854Cwo=
+=9UG+
+-----END PGP SIGNATURE-----
+
+--Z6loaMYSs0CfFWNj--
