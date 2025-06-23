@@ -1,135 +1,88 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EA127585D
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BF725BEE2;
+	Mon, 23 Jun 2025 15:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750691304; cv=none; b=fFyxpz3NJ+yLWtV1UN8Eh2/6LKufgJjZ+eMWPIAoIekyTYDavVbATK8E8l7v9EzI4bLhALOc3nCqT9M7tjeyq7UQQKfbT7lXTVGyx5IJqgzgigMnJcDE/Rfd8TG1fKjSphG/FSVFNXprioLvXHu/odunBOZiEoIdQlxQkPOF9CM=
+	t=1750691315; cv=none; b=QA0wAazh7PYLnB3s4HRMhcvrv1Te1m4WBFkI+fQ4K+x5kq13YLO6+2M1L0OgLBGd8qS96T2ebbQs1ume/lgD7SBGH1mmLWQWLm4v8ynQzzP5XXfs33zldE7g/aqxPDG1zfsL3oflUJ1Bn/4K43RGdia2ZGK1qWy8mScXgHtPahs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750691304; c=relaxed/simple;
-	bh=lCHEKHDTBGA7sngthTxGgEm0DdxCj/5wv0WcOAMH1rc=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=btv+II3/byTa2y5+HU4wVasa92dKiBTS4SxVxNME3vOFSfxdhT90kjnpqFfiXr0Yg48eAlJ/WHasV+Bhqk2F1l8x0qcmSyRodoJJCGz4WenhmDKlSNbIuHNM9woJPFqMJQ5YmFQw3U7osVSQUZQPhmX/VHRA92F35OkbJG2zhc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oBEnQcLd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Qzjn4OTv; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=g2BfOa9Q; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bJ19qL1M; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1750691315; c=relaxed/simple;
+	bh=a71/2Ue33rw39RNd+lnzupReDwpTHqZ0pqweFgks0U8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WNYKoJ7d+CeUYIibeFkoyzFbbnz9Uscb7Av/idozSQU/eeqDyzoffI8SD+/+/KJ8TKqgLY5CpuBUny0hIB7NfXHyU4g36RxTHP93vgTYEf8Zwz1ZwZ/Qs39Vr5/CTQW1LnDEbbaIU4T4BqBRg8nutGvgy0UUKuwPBvHRqGpoqhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=G7dTtAD4; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oBEnQcLd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Qzjn4OTv";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="g2BfOa9Q";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bJ19qL1M"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="G7dTtAD4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1750690805;
+	bh=jLvrxNOLfc3fbfwBKLMN+s9XeJSBspgyoztJCta+7KA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=G7dTtAD4paR3Aidw88ZgTEGiysPNxyQQXKctAEaPLfZxvlwHO7cGpnWKpdUBnWpAM
+	 6vzcFS99bQeYkfMVlW0g+8hNJ5v1ucv0o4Eh6B74fR+25YwgjNdBgmMEQbCu0Lbr98
+	 Glur/qvFbunCzQHlj4derg77OyhNbX1HLyIOm8rA=
+Received: from [IPv6:2409:8a4c:e21:5211::e90] (unknown [IPv6:2409:8a4c:e21:5211::e90])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CFF081F391;
-	Mon, 23 Jun 2025 15:08:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750691300; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jm17F0qCMLZaEtjGisUEhzTepmYvnFzS3mvvaRneJAw=;
-	b=oBEnQcLd/BH6a1PaEqTZA9wn786AWwaK1mYUp8QsmDXV0Rr+SxYUh/nI5J4YZLpQbyJXIW
-	tfrZNjNBUX7adiTLavlzHI9nohmi8BKyD0igVKeKGBGkN7kIfOq/Hd2FusIWLj1w+nB6K8
-	AFhmCX3OmHRZznilLK/EfEWWr65ynZU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750691300;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jm17F0qCMLZaEtjGisUEhzTepmYvnFzS3mvvaRneJAw=;
-	b=Qzjn4OTvBiUP252OwBAO0qGPHpMZwgniIIIiJQAcxI3qlA0oBPGevbSrmHfH2tiAGoQn4a
-	41th81XD+GWBcvAQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=g2BfOa9Q;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=bJ19qL1M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750691299; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jm17F0qCMLZaEtjGisUEhzTepmYvnFzS3mvvaRneJAw=;
-	b=g2BfOa9QTq+BfDYify54/Qiv/koTrnnA92LGszxSHSe682xY0sChZ3QdTVpWdE3irjVy7k
-	D6ZKxUPZQXq6q4D1smiuvz5AQCmlnfU0SoP9RmRsdj66JJNi4YO9fJ3v2a4aSts73GaQj7
-	x8sBw1KZHvIHfsi7YLmlTU/4Yz5wLJw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750691299;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jm17F0qCMLZaEtjGisUEhzTepmYvnFzS3mvvaRneJAw=;
-	b=bJ19qL1MImFgzJ5Yin9PpoZseyeqg70H/ZYqDStrNSqTKvK0VbYh8faWLiKMkJzdA2hBNo
-	RR59MkthcJ5gcMBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9DF3D13A27;
-	Mon, 23 Jun 2025 15:08:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ieiYJONtWWgTdAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 23 Jun 2025 15:08:19 +0000
-Date: Mon, 23 Jun 2025 17:08:19 +0200
-Message-ID: <87cyaumr6k.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Chris Chiu <chris.chiu@canonical.com>
-Cc: tiwai@suse.com,
-	kailang@realtek.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: hda/realtek: fix mute/micmute LEDs for HP EliteBook 6 G1a
-In-Reply-To: <20250623063023.374920-1-chris.chiu@canonical.com>
-References: <20250623063023.374920-1-chris.chiu@canonical.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id A708A65F62;
+	Mon, 23 Jun 2025 10:59:58 -0400 (EDT)
+Message-ID: <9246b226e356ea0db044a592fed8853dd593f7f7.camel@xry111.site>
+Subject: Re: [PATCH] cpufreq: loongson3: Support older SMC firmware
+From: Xi Ruoyao <xry111@xry111.site>
+To: Yao Zi <ziyao@disroot.org>, Huacai Chen <chenhuacai@kernel.org>, WANG
+ Xuerui <kernel@xen0n.name>, "Rafael J. Wysocki" <rafael@kernel.org>, Viresh
+ Kumar	 <viresh.kumar@linaro.org>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, Mingcong Bai <jeffbai@aosc.io>, 
+ Kexy Biscuit <kexybiscuit@aosc.io>, loongarch@lists.linux.dev,
+ linux-pm@vger.kernel.org, 	linux-kernel@vger.kernel.org
+Date: Mon, 23 Jun 2025 22:59:50 +0800
+In-Reply-To: <20250623123321.5622-1-ziyao@disroot.org>
+References: <20250623123321.5622-1-ziyao@disroot.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: CFF081F391
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -3.51
-X-Spam-Level: 
+MIME-Version: 1.0
 
-On Mon, 23 Jun 2025 08:30:23 +0200,
-Chris Chiu wrote:
-> 
-> HP EliteBook 6 G1a laptops use ALC236 codec and need the fixup
-> ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF to make the mic/micmute LEDs
-> work.
-> 
-> Signed-off-by: Chris Chiu <chris.chiu@canonical.com>
+On Mon, 2025-06-23 at 12:33 +0000, Yao Zi wrote:
 
-Applied now.  Thanks.
+/* snip */
 
+> -static struct cpufreq_driver loongson3_cpufreq_driver =3D {
+> +static struct cpufreq_driver loongson3_cpufreq_smc0_driver =3D {
+> =C2=A0	.name =3D "loongson3",
 
-Takashi
+How about using different names for the drivers?
+
+> =C2=A0	.flags =3D CPUFREQ_CONST_LOOPS,
+> -	.init =3D loongson3_cpufreq_cpu_init,
+> +	.init =3D loongson3_cpufreq_cpu_smc0_init,
+> =C2=A0	.exit =3D loongson3_cpufreq_cpu_exit,
+> =C2=A0	.online =3D loongson3_cpufreq_cpu_online,
+> =C2=A0	.offline =3D loongson3_cpufreq_cpu_offline,
+> -	.get =3D loongson3_cpufreq_get,
+> -	.target_index =3D loongson3_cpufreq_target,
+> +	.target_index =3D loongson3_cpufreq_smc0_target,
+> +	.verify =3D cpufreq_generic_frequency_table_verify,
+> +	.suspend =3D cpufreq_generic_suspend,
+> +};
+> +
+> +static struct cpufreq_driver loongson3_cpufreq_smc1_driver =3D {
+> +	.name =3D "loongson3",
+
+Tested on a 3A6000 laptop with the schedutil policy.  On idle one core
+is at 2000MHz and other cores are at 250MHz, when building the kernel
+all cores are at 2000MHz.
+
+Tested-by: Xi Ruoyao <xry111@xry111.site>
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
