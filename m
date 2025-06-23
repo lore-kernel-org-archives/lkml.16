@@ -1,248 +1,143 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013050.outbound.protection.outlook.com [40.107.162.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CD33C26;
-	Mon, 23 Jun 2025 20:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750710629; cv=fail; b=a8OZFs//XhVvGGjsDQHtWgBU6XeH82oMB22HJELjLIDj9QWUzGwNOCeoAlANriu6aLIC0leQvJJ8g7sQTUuDo/1CyxaJKMwYrawARTfCbC96e9gBPshesnQ8sXlfbj5/8ohQAPL3htAMRO6mK12FrDQcYVNZkVD0otCeS11SpWg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750710629; c=relaxed/simple;
-	bh=tOi+QEC/MdpQCFED/4ZtuBqa9MXSRTvKaZ63oNdu7ik=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=RAFiWD5z9EzPjQXwQCG/XTt3gJ68LCeTkIDTma4YT1tCtgH2ck07W5Z892f2Nr8WlNbYYQjERLz9pUD5H5Hp8NBE8QMpyex/PF9iwkSTidhQRW986kLvWeTWxUxJb9TT2K8aH+MbNmqImBAbZoc1TQFJPGPsoC/ozQE1NcHefEI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=mhgvXClz; arc=fail smtp.client-ip=40.107.162.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F6A3C26;
+	Mon, 23 Jun 2025 20:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750710662; cv=none; b=K95oHh+JxXhztr7xLEEA1AgmS5bgVS8nXHEKO6v40L0pMGXROcF1sf4oCD+mjB43XDu3ar61qPJ89kiBQ5aQ62fZ3XoaZotdzAnPgrGApFRm7NMMH4PvMc2r0W+Tl4ioP4pxfdcxRpsSG1GK2/6ihzoGeYIo8cbFYpb805+3Ng4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750710662; c=relaxed/simple;
+	bh=Yr0uDDaYWVuJTb0Gu/o6MZ4n4mr1c0btuqzbaHxC3Ak=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aCwGS8/Ft4liaB66sgVft1VY4PIqWMN3Tjilnfq+w136FYnyaLnYkwKHF3uxOZVGBBuTkZdXdeTSuYNgFgGdHTvSvS9xS02EuS1ZVdBemFIQDZqEJp6OXEMK9/w7NZrb7v61fJSLWu9SoQlOrvhP0Q/g5Yt2zK2yH4fT6sqdTHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EeMEzGHn; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="mhgvXClz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EN3dEnASby4mk+7PmoypQsA4E/5b9EUtfapHy6lDHsFZsbGYIB1egT4VYPFHa5Oaxiz9CDzFSUiMkh/MATD2p147KhgH3EGt0MXT+g5MmnDrNMEcVIc3Qr5+4aTrggmXhdBaCtCoQCrBOXtkBKP0MZB5QTuyxKY2oHL7UQcZhiW4TZmjciM7oSFz0mjljrL2beWGHGWSM7J1L7Eo9wGC4B0xQ7RsNvjpMDNU+2VK9FWLcfeZ/TCo92UMQF/HNz2U10uq2RKrtmVkIM9EiRnlpdNxIDz05h3SYteAzTIJ4S8ZfCx5KKoXo02xNgiIFDdmoKlXOICVzJteK95ii6bSrg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mnYgWtXKMflq5vzb/M7bvhhaCC3ccowezPBHg8rwtXA=;
- b=UX+iMyM5NH5egRUaKUFLBM3WKn2g04YcCI2iVR6zbeRRyx6xiCeYLSaszZKF4eD5M+te7VrrtVFpC5h7ALa2ed5qxYcME9RuQJzCuqoTjUJSjrplfkmHym1Djf3Q2jZV7LUyotRwnpyK5reKXLtON8+M2Vb3S6CCMVlAxlxDbVrl6Q+KmRE1nKx8Kb2d76kHO9wVK3W05ZLW5GHQI/OLHzgsmoxheEsCCkSoo1iTOqn3hyw3ub+kkUR+a60vmCrXS8RPWUN4V6MxsGN2bau3MKrlv+6kIPjeVYHkoyVy/rVbGaR0mMlO5rGhFr4Wf7LxfmBoLRZoiebI+OITd1uw8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mnYgWtXKMflq5vzb/M7bvhhaCC3ccowezPBHg8rwtXA=;
- b=mhgvXClzJ0eurb/1A9+tG6eECqUMaY5WyuwduSjP29D890CQIoAVJ6RvYUmZ6P9JJBrkADjyRTmFwpik5HW4qv8grTC2u10sZnmlSjfZ1H3X6gZsSlxnCW9JWK/8OOrqhq+FPTl3Fzv3/pn0r7bScCfX2qnbaQv/67i2IO/bYs/aa4slLVMmTZ9kVkbb5lgFb/2gmX7YT5E4J3G4w8iQrDoj51JhgCXFBNcDgqILEj17mNFC6b3pgVBN3hDW0swCxEscy3xx5KP8W+B5JjvYDD5ZVEmWKqdOO9krX1gDbp+iTpiJLbK3L4WitDHqwIqmfNZzuVYKRTJFeHupt1brnQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DB8PR04MB7065.eurprd04.prod.outlook.com (2603:10a6:10:127::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Mon, 23 Jun
- 2025 20:30:24 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8835.027; Mon, 23 Jun 2025
- 20:30:24 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	linux-usb@vger.kernel.org (open list:USB SUBSYSTEM),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/LPC32XX SOC SUPPORT),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH 1/1] dt-bindings: usb: convert lpc32xx-udc.txt to yaml format
-Date: Mon, 23 Jun 2025 16:30:10 -0400
-Message-Id: <20250623203011.2473290-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR07CA0012.namprd07.prod.outlook.com
- (2603:10b6:a02:bc::25) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EeMEzGHn"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-237311f5a54so45860835ad.2;
+        Mon, 23 Jun 2025 13:31:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750710660; x=1751315460; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=7ayWLqMZSDTtWa6i+XfG/Qrqdj0vKbKDEHjxi0h2ptk=;
+        b=EeMEzGHnm5BTNlW3oI0igi2svVHhdbsXvks7esIR4mz9Vzrr3eL/KK2M6VUeriBxzG
+         a2GPmQ/u/6o3lrMmAFBW+oGdrXbiNs6o8x9A2rffdwHQAg1P+3GFFMv6oW2WswzttV2P
+         AjcQ7G2bbKaZnNhTNltqUCfpMyAwJuaziB29dzJz9rR8tewyp2+F1tifTrE9zC8V4o9D
+         XZmiVpk9MPusMwyhMpeJaPr7KiqG2GaCQanmIXf9Bg/TExUvtG2AiH1hqhKVRllRbxVp
+         juymhvo6Rju5RtIp5WIh8zDzzBeE78SOmA78hrX/SV5hYOoLHAh63dkmdLBbFv+62kFk
+         iseg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750710660; x=1751315460;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7ayWLqMZSDTtWa6i+XfG/Qrqdj0vKbKDEHjxi0h2ptk=;
+        b=I3YeOiL8dxjjpnxC50lvVB9pQ4WIMiBSC6aDxh1UZi6JJvG4EgkkL5f5lfg36dmbxp
+         OcY6bR3T25ohBSn37INR7l0vrJhlDxQ9WNE1Lmr71V0oWdCc87BsIswRbev/0PmSwkmS
+         DqPnvZJL8ZTMOtGEfyWT2Ny/aHmaZOywMuKOjovHcmcbcFrE++naXJc8FrLZIkRN3q1F
+         6NWKeC1hASviYfSQXf/hfuRsZSBgBwFVfQA8FjhXg4mtKPshD2kvmL2WQK6/ikmx9dfp
+         1K8qP4S8df97iFoEy4NOpzc7Zr9jXKRd+T6I/Ag+pYkKTwYpXa8cx25mdsLii1eAYptV
+         7Enw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZLAKsJO9XKhsKf9L48jdYvdPHFq1Cc65WP7IEybpYhX+WYQt2jLVQi6zNka0NVsSWgfEZvgko@vger.kernel.org, AJvYcCV1+/XywmsEe97sFA9P+KOsvSlO/ZOFCRKgV7ZdWNuafqx3tKNPfNgLWCwaqlhcWxZRZAZ/TwcK6/exVVE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywthc9f4nIvGPAoIoIYOwBFTU3BxNBkcrGqRoMQBpCYQFUkg8r+
+	HqGTcJBG3GyvcjwILIrLKotnPUemI9WFslSleDq7zKqBAdus2scaPdl+ipXorpjH
+X-Gm-Gg: ASbGncuk/wlxSU92DEWDUc7/s7rQcryHwdI9LrDjso0HvO/cqjo8uGrxq2E7IatJuGc
+	+qnLP0GAX0I/Kbb2LI5kZ2cSqZtpgcWe9tlQZlkpUrjSSlfq2cM+dzrIBgTdltK7C2atovir9Qb
+	fEQouKfDfeY4jjaMp6kxkAeFbHFISnen7yz/CqE7pakcv/+iiq6mwr62SQWeevfb12kcfS6k13M
+	3zM/jvS22eoE0dK4i7clIrWIpoiE7XtxOyNBUyLc+6PIMonBSNiuGN99SxV0skcjgxuf/uLSGfw
+	4jgkQxMe4eHh63aL8U77JDRUC87akvdLcVVStlh8+/Y5zKdKhylUc9w0mwwOWtt40POdk2PQs0J
+	vyy9s5QFMV3fY3Q==
+X-Google-Smtp-Source: AGHT+IFfeEmO8VTrLWnfE+bK+xc8yt8MRFMyv0mJNLLnIOdN8rK3x2pKD3mz79gtbUADGgHjE9Tybw==
+X-Received: by 2002:a17:90b:3d4d:b0:311:d670:a10d with SMTP id 98e67ed59e1d1-3159d8d96f1mr17441006a91.26.1750710660201;
+        Mon, 23 Jun 2025 13:31:00 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8608efasm90073835ad.133.2025.06.23.13.30.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 13:30:59 -0700 (PDT)
+Message-ID: <16fd9ccb-e4e1-4836-aa00-6caf11752f30@gmail.com>
+Date: Mon, 23 Jun 2025 13:30:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB8PR04MB7065:EE_
-X-MS-Office365-Filtering-Correlation-Id: f9bedbab-78bf-4bdd-09a1-08ddb294c84b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|52116014|7416014|376014|366016|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?eH76Gr2uwNd5FCIvMRnLRvLcS6/VQrSqvFmI6h4gKdBDf+mtZ4A2omB6LcxB?=
- =?us-ascii?Q?xPFDN1uZtcdUSrVw5j/6r5HEo1e3w+9AaOva4KW4yDikJAiYdgCDNctoPqus?=
- =?us-ascii?Q?uA5U0iQO0WtDxMRmhu3nbMp0z9ceFf1plEAZ3ZLXppF5cxZ2B98pFYlDfNNO?=
- =?us-ascii?Q?TAbpwGD08jYqBkTpqmziGxcaT+wTuR6wQiBPeNBQNUPV9UNIt6h9wqE0ocoh?=
- =?us-ascii?Q?6uFRa7EJvp7yuMNElTgBJbMw3qKVxfi3+z6jVVDwAD6XfxEy0q4Dl+zQz/2z?=
- =?us-ascii?Q?b/sae+EMk7pQJitfODJM7672hiS9+GV4JVADBZdDcy4J+djpY3QmFd7+hjhe?=
- =?us-ascii?Q?RegtHwUbkzMuGxva+VTfC6/qvp5xPtaaBVMkK2LsEHxVAaqY/pqxQZo5MF62?=
- =?us-ascii?Q?6snyTE/SsCQ4kd2QMZKH9JJhMGNsaPl7pQLyyL+Ms+bg2SwnZZjWQbKsfwnn?=
- =?us-ascii?Q?btohS/J02MBOM6MqXYqPX3sDqq6qK6CVMK/o5IcMQGpqWJW1y4qXpGJt+AqN?=
- =?us-ascii?Q?W/XTMr8/e0JzNjt5OqN86+B9gauYsVHEVtzz7wb6oXYA/xuuXWXtevrXB30Z?=
- =?us-ascii?Q?AK//zcQHENgEz+y0u1vasqwvtdb6j63gR2QWAgauUNG4svmQ1sFDX2rUaiwh?=
- =?us-ascii?Q?+svTykhNWf/ZH2XsqewuGY6yqkSYhmHgfN00mmXRBNI7c64wtYbmy2tsuKx+?=
- =?us-ascii?Q?F54hxqbW+7DKEwHG61IAfI3x1BgpjtEwMai1Dl0Qms9AXDGNXeVwL3T+LZd9?=
- =?us-ascii?Q?D8DPk7wZevrLThOghwIH7gW4iBltPQoVHRwC6mnq5XM3ODB/GS06gccMv6pf?=
- =?us-ascii?Q?Rq4GBy4MtP6wdb8yjJmZxROAZ+w3EXtWrRgEydKfzQcvDBQ9K1SLuqoavg1T?=
- =?us-ascii?Q?lpGgmJemUZLbKM1BKd1hHpDvXnH+aCRb1KXbjw4Od2jdRnLYQukynG+WqWHb?=
- =?us-ascii?Q?4ZmdB2PNqYVPNe452wGUD4jQOYo2hxVuXHbdG2cGIY2KAIS89zLZDspTKoI0?=
- =?us-ascii?Q?ehzbOlZrxp5ZMiwXeFoXfici4ZQk0f5upTB8qj3nTHQQQogWl7SfK+UDJTRI?=
- =?us-ascii?Q?rilZlMfKrDawU7PZ4R0Ms7DJehfwFeNb8F0giRK0K/HPRuumULHjD9NjlcwK?=
- =?us-ascii?Q?12NYmLbf017atjYDf577cv3g4RGIoJI15x85tbYDtLd3REOFIxfHJXPQZmhf?=
- =?us-ascii?Q?L4bWQf4Jc8K3rEo9rOVvUlU/5bwLxL7LIRBXEkitAvnhlHI47AgNFUabIvqw?=
- =?us-ascii?Q?8cdxkySD6CRxzyBfbgAC5AG+reS8c3wE6BXtAjVv9cHOogJXEQvx1lziehi/?=
- =?us-ascii?Q?CPXhsZhn81u6Uvw3Vm88C0DtTG1BSc0U3ORwbnniL2eEz7x0Xi9intUBFLcV?=
- =?us-ascii?Q?lNlKutcToOPQ2fY2UgTI5dKqYFwCLC4Uk/wIPQBMykUA5me+xiv9oHGM/yK2?=
- =?us-ascii?Q?B1ZiqvYWjaqn5ow1FJuvh3DEL0C1/SHN?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(7416014)(376014)(366016)(38350700014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?JOaM/3Sm+wAd6RbilF3XQcF4cn4n7DGd/9c5Asp45wRh+e5KfBWLvqAFN7Ih?=
- =?us-ascii?Q?XuHlvzcO7GxtS/MxHM2z2Y2ze4iOzZXiXdfcK12tSkz2Fujk/TBjUIpHzPEX?=
- =?us-ascii?Q?KlCat4BG1fAx9vZ5KXOM4P4JRcdd73sO7TqLdAW3VyYNdQ8UYIUUkoGSiijv?=
- =?us-ascii?Q?F0e4W8OCtF2UJERSgjS5E31R+AfKPUqk19Z6Jvbafy4vBd58AiYC/rUGgprr?=
- =?us-ascii?Q?jc4CSX55V7V6+aha0IHQsQOKLMsdrxt59P2ONMJaQ9iYPsCwXSDM5kdJOVOn?=
- =?us-ascii?Q?xxCw5EQgUjL9+32fPdri1tM8fdGcsoKnkoKoFcypJQsAAwMaCuyYtOsvC34f?=
- =?us-ascii?Q?07aCAzu0kKwN9PTMZqAajH9vCkzbo2iPxUUDQQwcN9TS0TLTRrTFmvVKh8mV?=
- =?us-ascii?Q?zC5zLpvdOZaOrbt+8Zp4cGIveqaSDIzYMy8VeH4ekLIW1Im4K7v+t7fi2BgS?=
- =?us-ascii?Q?RnKO5gvuklr5tDwg1ngPQyyqMpLnVqBf3lNWxte2l7OS7U3ptEwtuBju+U/8?=
- =?us-ascii?Q?BIW1jpQt2FLx1nanXgwiSE51yv67X5UoI0awjGvNQCZyMA3iuLVo6GDGuoyh?=
- =?us-ascii?Q?b+9Tdi8Nf8t5xJB+2ua38LvtFLr/nfkO/LjBBio3uH+o+718StsIBXfCuigj?=
- =?us-ascii?Q?5wRISM67e329eVwCfIk20YtEx953yokCgrIoyvxdrDTbcMEUG4OSOpQ88Jwb?=
- =?us-ascii?Q?rJu5rAD5WAYKO1gEuj0LHAxZW5NfNGstCfPCc8PgodivDceO/RNJ/I3dqqqX?=
- =?us-ascii?Q?0doOs2GGj4rUASzOTZllIwHZm0bQpriGulyvTHbywoYryVwFrLExht+vdTeb?=
- =?us-ascii?Q?LwG0at4Kmk5mRvV9WiOSrwBsfmH+Q2znAj4c1Y0PDQqiUrb0+ZF5FnMzet63?=
- =?us-ascii?Q?kisSLNCk3V7XgSGWZN54G8Bmi6YpqRGzxuVl0VNjDEwF9v/6NnKFxDB5r0zH?=
- =?us-ascii?Q?zg0F4vlx4a0VBJ6MJYlPNAXfL+WGgaUhYdyUjNDrYFewGpxjBn+T1m+Bu8vl?=
- =?us-ascii?Q?07e841ozG14xzauHvVlaF46XW0TE38Yck0FysMliczXy8Pw/X8kUMinbhm5G?=
- =?us-ascii?Q?2SnD1MhtV3ayd0AKBWTZ6G+4OtMzh/HhcU5TfBKVT/KbwWEQzamk4wS+qA25?=
- =?us-ascii?Q?70z3yb5JdcfvjKvLvVMCtzEd+j1MTx6ZMupkVAINYC1DTrmAtZukz0QJChYB?=
- =?us-ascii?Q?oPfqDpCP0jUoDJtFSmTvsKTjPplUKr1K69LuVwYuXGQsM4JV6dytXUgSZyTk?=
- =?us-ascii?Q?R+MW7yJx+K+NE+psusv0mgb3NK8QaukL+3FuZI5PoJHZeXE+mughfBKJFFQR?=
- =?us-ascii?Q?LGfasCy4HstUrIbUALFfJ5XZtzvh3cOWlpRTvmVP5KTaZE4u/3+HgKZ7ayTV?=
- =?us-ascii?Q?otpSbG956nhEig0eZMz/dNF2iZK5PeYIsDMNaDDPlpinloq7RTTp4kyHRMDn?=
- =?us-ascii?Q?XqBjBt0wlt50gNwJxAxZK9tL6PfTd/1csB5ASYTrzoMI8X1VToihLHMWfGUu?=
- =?us-ascii?Q?TvqZ+SQ20HSKKhccF4+yxy9ZPpzK9xF+AbNX1s/pvKFDB/4dJnXUH4pvIGCY?=
- =?us-ascii?Q?UKZNBERDw+H15p/w8PPZyJg8xIejo8tBfHmmmEej?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9bedbab-78bf-4bdd-09a1-08ddb294c84b
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 20:30:24.3820
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NOeiJgrF084/hsDB13SNQUCAMDMSPV9jmsIoAdqcpe8eSdvhCALXE6zTEr/eaUNvbjySUi0WIgs6zI8BsuAx3Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7065
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.10 000/355] 5.10.239-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250623130626.716971725@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250623130626.716971725@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Convert lpc32xx-udc.txt to yaml format.
+On 6/23/25 06:03, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.10.239 release.
+> There are 355 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 25 Jun 2025 13:05:51 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.239-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- .../devicetree/bindings/usb/lpc32xx-udc.txt   | 28 -----------
- .../bindings/usb/nxp,lpc3220-udc.yaml         | 50 +++++++++++++++++++
- 2 files changed, 50 insertions(+), 28 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/usb/lpc32xx-udc.txt
- create mode 100644 Documentation/devicetree/bindings/usb/nxp,lpc3220-udc.yaml
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-diff --git a/Documentation/devicetree/bindings/usb/lpc32xx-udc.txt b/Documentation/devicetree/bindings/usb/lpc32xx-udc.txt
-deleted file mode 100644
-index 29f12a533f666..0000000000000
---- a/Documentation/devicetree/bindings/usb/lpc32xx-udc.txt
-+++ /dev/null
-@@ -1,28 +0,0 @@
--* NXP LPC32xx SoC USB Device Controller (UDC)
--
--Required properties:
--- compatible: Must be "nxp,lpc3220-udc"
--- reg: Physical base address of the controller and length of memory mapped
--  region.
--- interrupts: The USB interrupts:
--              * USB Device Low Priority Interrupt
--              * USB Device High Priority Interrupt
--              * USB Device DMA Interrupt
--              * External USB Transceiver Interrupt (OTG ATX)
--- transceiver: phandle of the associated ISP1301 device - this is necessary for
--               the UDC controller for connecting to the USB physical layer
--
--Example:
--
--	isp1301: usb-transceiver@2c {
--		compatible = "nxp,isp1301";
--		reg = <0x2c>;
--	};
--
--	usbd@31020000 {
--		compatible = "nxp,lpc3220-udc";
--		reg = <0x31020000 0x300>;
--		interrupt-parent = <&mic>;
--		interrupts = <0x3d 0>, <0x3e 0>, <0x3c 0>, <0x3a 0>;
--		transceiver = <&isp1301>;
--	};
-diff --git a/Documentation/devicetree/bindings/usb/nxp,lpc3220-udc.yaml b/Documentation/devicetree/bindings/usb/nxp,lpc3220-udc.yaml
-new file mode 100644
-index 0000000000000..be0457a068616
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/nxp,lpc3220-udc.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/usb/nxp,lpc3220-udc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NXP LPC32xx SoC USB Device Controller (UDC)
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+properties:
-+  compatible:
-+    const: nxp,lpc3220-udc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: USB Device Low Priority Interrupt
-+      - description: USB Device High Priority Interrupt
-+      - description: USB Device DMA Interrupt
-+      - description: External USB Transceiver Interrupt (OTG ATX)
-+
-+  clocks:
-+    maxItems: 1
-+
-+  transceiver:
-+    description:
-+      phandle of the associated ISP1301 device - this is necessary for
-+      the UDC controller for connecting to the USB physical layer
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - transceiver
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    usbd@31020000 {
-+        compatible = "nxp,lpc3220-udc";
-+        reg = <0x31020000 0x300>;
-+        interrupt-parent = <&mic>;
-+        interrupts = <0x3d 0>, <0x3e 0>, <0x3c 0>, <0x3a 0>;
-+        transceiver = <&isp1301>;
-+    };
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-2.34.1
-
+Florian
