@@ -1,276 +1,210 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2074.outbound.protection.outlook.com [40.107.237.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F2927875C;
-	Mon, 23 Jun 2025 16:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750694717; cv=fail; b=no6pFQl38huQtOObFfEIUihXGqeaTpgivQCVXpPTRF7mOP6R5wCIpaA3/ivF36uQ4Y7o4gHyHSVxRsQ4EYOB64Jn32jiZ72lX/pb/IQcqeVMnaKa3gUTp8Uxlyubap/lBBaG/xz0HLacQty9B9UWJJXEag4lvzEYSgZDLsRM2EU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750694717; c=relaxed/simple;
-	bh=P0WPMuARHfreyGlunpzNMh6sTZh0X5p27dHvl49qJI8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qlqjgUI228qQ6ZoN5sMXno5bsJkJRmYJibpwP6IY3QC82/dA0Hssx52aKot9L8JPIFEUq/HXXqhBGY3US9Yy+P5OpybDUFyCGP8EmJE8HAZ4uwsDR/A81oHZNCKIqRw2KnFSs8YR4vgI0Pg4p/SZsnmvFbhpPimB0ATa8auRVZI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OknFkyF2; arc=fail smtp.client-ip=40.107.237.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83772262FC5
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750694804; cv=none; b=fjIqu9DWFKaY55FX1nsP98DGMGTkL/57SKXBJeKjwV+JcgVkkxaMneR2p8NvSjY0uGUe94qPYKxQGz1hXo9kVi7MpOVmi40+ve1JXgV8qq0We6aIypQex6dYde3mCqQmTs6ybhnZIwccIDwK/vu62f1RT4PijOA1+MpLN2vBgK0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750694804; c=relaxed/simple;
+	bh=Mi/60CA7Ydz3R+PY7UFNgNc1KYMFHge7mElfLwWKOr8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=J5rnC+rDio/l+yHRjhXmsrGg5d3Hc87Q9k7B2fi9fbRFWzA1SFUNTCW4xGjXbU9FC4TF8idYZSHUv4oEMWl4+GiOZajX3WCVk2z6rwBjU3YkW1/osNHiBEmy9kdYkIK5qcEG3DpGan5W+yc782dZZnDRRlcmUQW3lXB5NUaCzPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=HZR9Cz4d; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OknFkyF2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=amECBPOpWjtiuEpNh6J3E0BY5gP+x4nTyL2/T5jc695xstFph9CZvi69WIbqE/KuqqlderkPrZ2AbSb9Pf5Cs1SciRg/kbNpaUekbiv+ill210Bdkhi5h8QMQOsENfM97IkL3l9uo7LogNgHmWa50C18UNUNjbGMA4ufbWAfpN/oc7BAOy7MZlDQL+6ap7CsRdZDgaa5aXikGH1WcPNzgz9QbqL6XH7svXpy79pmzyRy6YaxJiJniZUbm7Ru5r3O3QSGsjBT3bLLUU+I2Iz2KJzeJMuGGTI065UpBvUsdLmF5L70WFmvRaGF2/CBq5FES+OMkL4Ye0ATqFGujBmAQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AoiAeg/yVYS1Zt5MTTHJYSmM9q4nI5TTT0pYf4CDJrg=;
- b=rdir9vJf0TwbzJFuO7kMd0Ycqi9pb3GYkb7uRSaWEGXxNHOjqz132FGPS4QFTiUScyC+i/y4vkkBCo5sWsvSsoLJO5qUp6F8JK72GmghugOjwu7WvTPZS9plfc1KiM6+3oaXOTaATyeRPw5vTVBx/RiCZIMaqQDD4y1PoOsj6VoVtplPg6I0vw4YgCTbHvPl7kpKMbte7X110AOH7ycv4jZdNi6fD4CHoEXRhCTbK3xwoJfW4nMp/VdpA5noQIQ0mZMFIk3+bXdQZR8YNk6IFs8F7G606EKoBzySFhMfq0X6IN/Pd2m+xheWlDJszjJwI/f0imFgP57EeqId24dkMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AoiAeg/yVYS1Zt5MTTHJYSmM9q4nI5TTT0pYf4CDJrg=;
- b=OknFkyF2TPwRQisDdwSxWafPFn6RsvPk7zxZLYCvqrInZIlf1nQp8s2N0Lh9/m1tsLobsFf/tbPftM2j4eP/qfPKd1kGT8BzPEJRKxAp7Zez9CLuUUZzbPjnbhYHP4PlyMgJa98+XEuNDEi0+Oo2qddHrQZ3hs5qWjnTbczCE4RKHVKV+yzkjgTPvXvdJkh+/M5QtmMmhuPMUwKEv3YGhc/jmjgKucYRNelOWHyrtoDDi0s38/N3K4prF8Yn1uZfgaUEbXcC648nzB+KKeo6wBBQYULXzOXJzuOAWyE1F01D1t1lDS9d2RCfUkvff6lvDx4t8meuCgOpmfTvMMiW7w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- SA1PR12MB6971.namprd12.prod.outlook.com (2603:10b6:806:24e::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.27; Mon, 23 Jun
- 2025 16:05:10 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8835.037; Mon, 23 Jun 2025
- 16:05:09 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Minchan Kim <minchan@kernel.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
- Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
- Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
- Shakeel Butt <shakeel.butt@linux.dev>
-Subject: Re: [PATCH RFC 16/29] mm: rename __PageMovable() to
- page_has_movable_ops()
-Date: Mon, 23 Jun 2025 12:05:04 -0400
-X-Mailer: MailMate (2.0r6265)
-Message-ID: <DD051CFE-9B2A-4140-9D90-8B3F8C8D80FC@nvidia.com>
-In-Reply-To: <d6208fab-9ab5-485e-9cc3-94256fef2e1b@redhat.com>
-References: <20250618174014.1168640-1-david@redhat.com>
- <20250618174014.1168640-17-david@redhat.com>
- <DAA0D876-D5A4-4E54-9BD3-363E34D8B3F3@nvidia.com>
- <d6208fab-9ab5-485e-9cc3-94256fef2e1b@redhat.com>
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: BL0PR01CA0002.prod.exchangelabs.com (2603:10b6:208:71::15)
- To DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="HZR9Cz4d"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7d38cfa9773so464106585a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:06:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1750694801; x=1751299601; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ktC6cfOVZ/76Z0Ijy6OOpcQ17JdhB2dNNAa6r8b5k90=;
+        b=HZR9Cz4dpBF6zvt6bbVFA/8QW+qOjnBv3pj+SgGnlEerrAmoSn1JrfXxWlLHAA2Ogs
+         Lr2pzCKYHLt5GwFCBh201FMKxDBjqofdtwJLOnl+wdgGfRauyg3Ucc49hB1dusnp/RBh
+         pOeDEW5iN9rkXSDGaeNH1po0ohysR3fqh6fLaofVHr5Jcw86OpaR5xXh3jbXAak81GaF
+         oDzn3c5NsiMt2zrtuz+JymjMXYXPwssnzrj3Gb9UiW2EhvinEKCcPrWUZ54VPNPxjz6c
+         OupEzcCi9HswQdllA0QIVvzV51HvsbYyk2KyxECpepv4uoKU4dmbE8aMgRWbn00mFOUz
+         x+EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750694801; x=1751299601;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ktC6cfOVZ/76Z0Ijy6OOpcQ17JdhB2dNNAa6r8b5k90=;
+        b=lyMsd6B85plRLszkJDTvZhNUyCYJXSqI7W2H4Pf3tlQauXlXCENYFWTy7lgrJuPBTB
+         JniNqQj34MFzAbnmATyxlFw26Zg6f7n5yREeJYL8u5Y3IYeIichWy/kfiykH2YFHdY2f
+         S/jqwfVJvt6720kPAmwLliKaIb93nm4DNZLeG86I3xIccZnQN73FV0JcH51sIAHWG81J
+         jn9TuiUWLyggPwTe8Ij+9CnDn6uHaugLvigsV7FSV/L/q/aMcLwshCT6oOqNGZCW/mgx
+         XF6p27XbzIj+bFAac5yXHr/4DydbePBSjPSwt9eB4Wrv+DtvGijGyek+pyVM64fr1qY7
+         bGNA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+e0t4zMJxQ33JTzMuhILgTr6udM8hT6Q9rlIGCYDXygg4PKO91G7IGaX7xFRmSGjQcw4zJoTa2zJKsto=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyyu4ZWKovJ9rjCcH1H6y5R1AJin/WyTjkaVmqoS3OOUqwp7JIS
+	Ii0nFeEElFw9w50BApmH9RG7QteUpuAOGOWa+OZSxPWioJCy6vGzO5TYeXVZbAPz1xw=
+X-Gm-Gg: ASbGncvBXV2R2vk3hO3j9JehCAU0GpUfmsNbpKokgODKakowaTwiacIpvi/JM/pbsQ3
+	+somxCKT9qqIggXGf6bVKirgnbppa1X5+xRhD1yehyvePkeJ+f+72IgtxbjDIZeFUz/DchprRKS
+	xEHt3M3TviCH3YIhqhV+RRf/+kKlB/Vfu+20MUiz2+4UQeQrayki1jc3BWX534/nHDCuqUy+3Z9
+	qNkElA3c2lGjCy5C4P+AW7YhdmVJ/qyAAIAfRVA5+xdhYcTDFYUnK/mJc5+zUkyQkxKiNopbq5C
+	FNNmyDb9vdPS7oDD7/kZe0vIORmLyuzZWFxgoJtEHOsTDFx05Wo=
+X-Google-Smtp-Source: AGHT+IGoR8ANNdKqeXSB6QUjUR7YL2sWmX6fZq3ocRFUEgh9F0Tx0iW7Wm2+7Ic1YaQV1+hJP8HI+A==
+X-Received: by 2002:a05:620a:319b:b0:7d3:9ba1:a044 with SMTP id af79cd13be357-7d3f9923097mr1677605985a.33.1750694801144;
+        Mon, 23 Jun 2025 09:06:41 -0700 (PDT)
+Received: from debian.debian ([2a09:bac5:7a49:1cd2::2df:3a])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3ffdb190esm349258785a.86.2025.06.23.09.06.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 09:06:40 -0700 (PDT)
+Date: Mon, 23 Jun 2025 09:06:38 -0700
+From: Yan Zhai <yan@cloudflare.com>
+To: netdev@vger.kernel.org
+Cc: Michael Chan <michael.chan@broadcom.com>,
+	Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, kernel-team@cloudflare.com
+Subject: [PATCH net] bnxt: properly flush XDP redirect lists
+Message-ID: <aFl7jpCNzscumuN2@debian.debian>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|SA1PR12MB6971:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0e5b295e-0867-4fc4-0e05-08ddb26fba25
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|7416014|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?3L8+d3mIbajIo3sltLLCclTqGg3hlDU4taHzmxLz9gV6rcDmH7ddRRZP/Vts?=
- =?us-ascii?Q?qpNkoNElc5lqrIxt8HO23t6r6/8S91UHIVwPEEL6iFHcyHuMi3PV/7QIHaP2?=
- =?us-ascii?Q?PG2UWU0sg0GCimqUFA4Vx2M7FFYdwmrvF8vcazCXaeAnGpoYMBdydGod6TPT?=
- =?us-ascii?Q?YPmbrbAJ51aTZ2401XZfz+91ld0l9K1utrwpD8/L5YXU7tJ0zstuL4GBeZ/C?=
- =?us-ascii?Q?AukwkNvlfjZ17IwsDhg6KVkLSQkwzYWniReGG9dwkVn06YrgPXsmHyDLqU8Y?=
- =?us-ascii?Q?5z5ybsaz0iikHdztYpcslk34o6co+SIeppvZglZQz1FGPMAebYDVNb0WiE3B?=
- =?us-ascii?Q?TNwBuxDM93FClcs8Ih5eJUzTtITZH/TserCjGQUvwF4fkq9ilH5HZIhpZU/9?=
- =?us-ascii?Q?ANe7Pu2AsKibDOelNmigb7USc6yX6xCMagQbJTm1Y/btk90ZfOyetRS9kwX4?=
- =?us-ascii?Q?EPccrJoEucUBZFJZDL4FXWspc+6foQMEMNrDFPvXK7ckBYFbsVoOTl4iX3kt?=
- =?us-ascii?Q?bDB7Ucy+Jc6Mqq+Vfy80E4dUpoopOi00CagfZYWs2U6j63bPOrR4UKaHdVIl?=
- =?us-ascii?Q?xN5jfVvxKf3xOu2AgFhKA30bC+yeTeL3/eJTPqx464aCSLdr0hcKmLpqNtL0?=
- =?us-ascii?Q?d/CuDol/nv8lJxwiue82l5NguvE9KglmocPI9yTjOUh29eFRT/9hEpmPmxgh?=
- =?us-ascii?Q?es2HuT/xnuVz5sK0dzVgNBmgRbhNYAmRElK1ZI6F96AnMaG21VbZgX7dfi+5?=
- =?us-ascii?Q?AGNdzYifNgwHgLEfg7C6du7jmSQHpofWYGl944ULwcCvh3vOQrYgu6sIdgmx?=
- =?us-ascii?Q?L7gfXd+7jicbUTkgrnIHTYxbwlr/Szj4J6G1aJUXltIPHaw6EeuXicrdxhzC?=
- =?us-ascii?Q?Fd6Kgn9zGIzR7fQPgpIzkzKWaAUQuj1LmfQd1CO++j+p7zMak+Zi/+zWg9nn?=
- =?us-ascii?Q?qnLRFxe2nRqQbJwOlLzvRAdDZk1Y38m4wGkJghzwREbjQ0SzZNHMra3Ajb4s?=
- =?us-ascii?Q?yBdy7VVjijm+7gYn0sw9jYk1/lKzlJyMxVhRN4ap+yrwRepsmEv1qO/zwOW0?=
- =?us-ascii?Q?eaXJe27BrXmlP9A1l/P2ypAqG462jJTZDLN5BGw3BWJjE7zYkPA668yhZDaw?=
- =?us-ascii?Q?md6WYeYukbX4cprGC1hnndz6ZrNrhQXUlE2iisMzcsoL8CvsE6knWjV/C6QK?=
- =?us-ascii?Q?/lwZR8yb+79l4htNVw+6v+ekd10kDVe7uGTn5aI7fS11vIaQERxg6JMb9EcU?=
- =?us-ascii?Q?/+/z3BXgucRNS7vf9wVcIMqV9YRU3P/q0hCHLSd4T0gVtf6nzLQ+eYG5AmZE?=
- =?us-ascii?Q?BSAhslBL2qZx+81NFMpuoJjGx2pjSoNlZrr2Y4+i86NpmpXkZ+lq7koIVof5?=
- =?us-ascii?Q?RFk4YoKmkJY7PNAj7+wNf1tbweUP1Lc/ohPeELeDvgrMspWSrht4L3M/KFU0?=
- =?us-ascii?Q?46Zg660zcGA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/XwGD5uljOG5HXRnat087Y1NtSVVHeBgV9GncZaoi/47ncYo/hPu/qFOjafW?=
- =?us-ascii?Q?+ONi5axEpnfTRHYNyF7L6vYHl4AXuortWCFhJYk628nETMCGzw6VIWaaYbJN?=
- =?us-ascii?Q?cGFfuN3DXIhTJXUFx9QGloNwHFcWweoB7cT+XYj6NqC1GC+u0KnjDr8hozF6?=
- =?us-ascii?Q?QpngJe5FSgcVkN8vxXrXyN0NAL5fLlcHCePp0ZXHjtYhstbW1RCyHK9EA1LG?=
- =?us-ascii?Q?Sk9IGE0LAQbuxaLJ0cPwGjXzVN1z+0tNR4tS2Vf9EnzRNvoVYu1u4dzdV5Bg?=
- =?us-ascii?Q?XHr2YbVxPBHyD8u0Iq85beWLFyjXTQgSCWoRLXZrPlHfH8rsgOsLVSt2nhig?=
- =?us-ascii?Q?nebUrL3DKo4MNFXlOMuPapnlwRcfGTAm5uHLrEaGIt8YSXtncQ/RHbTHuw+H?=
- =?us-ascii?Q?pXOLlgMw++DGsKte861UDWHLEoHao3Bez2UC2Kb1hJu7RCso3nvh28iyNE0A?=
- =?us-ascii?Q?galh23X9OJQQYng5VfrnXu+ka55kyyKsgEeVTmOFTm579ojP/UFvO9M2gdPP?=
- =?us-ascii?Q?rr0yOci410yzAvKGAsgvyW5IMK93Y+yaT2Bjgjkoi+lNBmtBgnwmg9tcKItW?=
- =?us-ascii?Q?tG0MVyofRDqywmNoCYjPin97z+QV+qOaFH8FWS/zZIKvurFPGccsTlwt1kPH?=
- =?us-ascii?Q?z+59OwSz8RJk3sRtYoN9zA8QKK/KI3s9Zdo9MHl4C4bq27uigtxbGqvZg/zL?=
- =?us-ascii?Q?gCeKxPJR3GTimMKwRlrX9zRa9rCRq3KJnobcnxfOLKuJfoD6yBT7Bo6meRf9?=
- =?us-ascii?Q?VI7vE2nEVwJBOa5dK+gcPxWu9/7T2G/OQFUYDPGVhgmgE4IbT+vWd1XpZnY/?=
- =?us-ascii?Q?rlUIL/KEURGxwEfjOSuAY1ZkFiNpu+c9u2GAEl64XN7xIyEc7N3APHyXKQuY?=
- =?us-ascii?Q?tCGpxZzDaolZKyTZtbj0MGtD7z/PU0qi66ScauSl21pfGMVDitbyPg/bdLua?=
- =?us-ascii?Q?0huSOamqAXedWfm5A7GNyt91CVC+dBxgFgkWJ5OkprWy3z4DLV1+rCNrVJFc?=
- =?us-ascii?Q?SmAR3ncI54iX0rO6eW5MoQavZyo7LRVX/MFZdSdQF7d/8dnHDAs8GQ3ZvuGn?=
- =?us-ascii?Q?kgv8FZ3PdPo3JMvz5iUlDPxyDf0nyratMX5oh1JcA7fvRZS5220n81WO5xo4?=
- =?us-ascii?Q?yJIerx+rrFrpZsaHiVKuD2p72kRL5P/0PvdCFoijw8o9u6dMe92Y2d32dL+N?=
- =?us-ascii?Q?wdVzsU00KdNLFy1Jyp4nyOG5KhmNa1nUiR52sQxXKwdiS+yWhgeFDlMwCEAj?=
- =?us-ascii?Q?AUjqW8Xo7aBsKubZdVSqFByNGpF0OfWXn5fRnU2oiDiBKbNQdkpAeEhjwPgZ?=
- =?us-ascii?Q?Dag4w2LEJNGv7mVqHXg5RBCV+WPH5lOjz6xWpouJLaQRVSCkkyDIurldxvFE?=
- =?us-ascii?Q?NTUiN3tpOKZ/ki64Dy0UZLE1AGfDK7YXu8DVVGZc5y243nWCWJIIwAwJkDtf?=
- =?us-ascii?Q?K+BFyGn1exD1Q8HAGiDQOaIYrMHW6ghpwvxhl3Bm81ehVlD+YmNRtej3RRsO?=
- =?us-ascii?Q?1qu7eg7SYZclGFEeocFTVKTLx9Kwc1VFPl5Oe4NRJtAePbIpqRFAhvxaUHzq?=
- =?us-ascii?Q?JqBORKzZUXGan4gJ+RgBF0x5/lGjGW8IM9ek8aMEbP+wSE70XSg0VeluXVq2?=
- =?us-ascii?Q?25/WGWOS11ZD5vv1y5d5j37pSdnnOEyoYd424bu/uSSj?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e5b295e-0867-4fc4-0e05-08ddb26fba25
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 16:05:09.3079
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GD6N2N2oin/HBSTQLlHJ33NcCdwqm8u9m96pYzdI8Ey1qCUR6RCIn1MP6bIy/yF3
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6971
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 23 Jun 2025, at 11:47, David Hildenbrand wrote:
+We encountered following crash when testing a XDP_REDIRECT feature
+in production:
 
-> On 20.06.25 22:37, Zi Yan wrote:
->> On 18 Jun 2025, at 13:39, David Hildenbrand wrote:
->>
->>> Let's make it clearer that we are talking about movable_ops pages.
->>>
->>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>> ---
->>>   include/linux/migrate.h    |  2 +-
->>>   include/linux/page-flags.h |  2 +-
->>>   mm/compaction.c            |  7 ++-----
->>>   mm/memory-failure.c        |  4 ++--
->>>   mm/memory_hotplug.c        |  8 +++-----
->>>   mm/migrate.c               |  8 ++++----
->>>   mm/page_alloc.c            |  2 +-
->>>   mm/page_isolation.c        | 10 +++++-----
->>>   8 files changed, 19 insertions(+), 24 deletions(-)
->>>
->>> diff --git a/include/linux/migrate.h b/include/linux/migrate.h
->>> index 204e89eac998f..c575778456f97 100644
->>> --- a/include/linux/migrate.h
->>> +++ b/include/linux/migrate.h
->>> @@ -115,7 +115,7 @@ static inline void __SetPageMovable(struct page *=
-page,
->>>   static inline
->>>   const struct movable_operations *page_movable_ops(struct page *page=
-)
->>>   {
->>> -	VM_BUG_ON(!__PageMovable(page));
->>> +	VM_BUG_ON(!page_has_movable_ops(page));
->>>
->>>   	return (const struct movable_operations *)
->>>   		((unsigned long)page->mapping - PAGE_MAPPING_MOVABLE);
->>> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
->>> index 4fe5ee67535b2..c67163b73c5ec 100644
->>> --- a/include/linux/page-flags.h
->>> +++ b/include/linux/page-flags.h
->>> @@ -750,7 +750,7 @@ static __always_inline bool __folio_test_movable(=
-const struct folio *folio)
->>>   			PAGE_MAPPING_MOVABLE;
->>>   }
->>>
->>> -static __always_inline bool __PageMovable(const struct page *page)
->>> +static __always_inline bool page_has_movable_ops(const struct page *=
-page)
->>>   {
->>>   	return ((unsigned long)page->mapping & PAGE_MAPPING_FLAGS) =3D=3D
->>>   				PAGE_MAPPING_MOVABLE;
->>> diff --git a/mm/compaction.c b/mm/compaction.c
->>> index 5c37373017014..f8b7c09e2e48c 100644
->>> --- a/mm/compaction.c
->>> +++ b/mm/compaction.c
->>> @@ -1056,11 +1056,8 @@ isolate_migratepages_block(struct compact_cont=
-rol *cc, unsigned long low_pfn,
->>>   		 * Skip any other type of page
->>>   		 */
->>>   		if (!PageLRU(page)) {
->>> -			/*
->>> -			 * __PageMovable can return false positive so we need
->>> -			 * to verify it under page_lock.
->>> -			 */
->>> -			if (unlikely(__PageMovable(page)) &&
->>> +			/* Isolation will grab the page lock. */
->>
->> I feel that the removed comment should stay, since the current comment=
+[56251.579676] list_add corruption. next->prev should be prev (ffff93120dd40f30), but was ffffb301ef3a6740. (next=ffff93120dd
+40f30).
+[56251.601413] ------------[ cut here ]------------
+[56251.611357] kernel BUG at lib/list_debug.c:29!
+[56251.621082] Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+[56251.632073] CPU: 111 UID: 0 PID: 0 Comm: swapper/111 Kdump: loaded Tainted: P           O       6.12.33-cloudflare-2025.6.
+3 #1
+[56251.653155] Tainted: [P]=PROPRIETARY_MODULE, [O]=OOT_MODULE
+[56251.663877] Hardware name: MiTAC GC68B-B8032-G11P6-GPU/S8032GM-HE-CFR, BIOS V7.020.B10-sig 01/22/2025
+[56251.682626] RIP: 0010:__list_add_valid_or_report+0x4b/0xa0
+[56251.693203] Code: 0e 48 c7 c7 68 e7 d9 97 e8 42 16 fe ff 0f 0b 48 8b 52 08 48 39 c2 74 14 48 89 f1 48 c7 c7 90 e7 d9 97 48
+ 89 c6 e8 25 16 fe ff <0f> 0b 4c 8b 02 49 39 f0 74 14 48 89 d1 48 c7 c7 e8 e7 d9 97 4c 89
+[56251.725811] RSP: 0018:ffff93120dd40b80 EFLAGS: 00010246
+[56251.736094] RAX: 0000000000000075 RBX: ffffb301e6bba9d8 RCX: 0000000000000000
+[56251.748260] RDX: 0000000000000000 RSI: ffff9149afda0b80 RDI: ffff9149afda0b80
+[56251.760349] RBP: ffff9131e49c8000 R08: 0000000000000000 R09: ffff93120dd40a18
+[56251.772382] R10: ffff9159cf2ce1a8 R11: 0000000000000003 R12: ffff911a80850000
+[56251.784364] R13: ffff93120fbc7000 R14: 0000000000000010 R15: ffff9139e7510e40
+[56251.796278] FS:  0000000000000000(0000) GS:ffff9149afd80000(0000) knlGS:0000000000000000
+[56251.809133] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[56251.819561] CR2: 00007f5e85e6f300 CR3: 00000038b85e2006 CR4: 0000000000770ef0
+[56251.831365] PKRU: 55555554
+[56251.838653] Call Trace:
+[56251.845560]  <IRQ>
+[56251.851943]  cpu_map_enqueue.cold+0x5/0xa
+[56251.860243]  xdp_do_redirect+0x2d9/0x480
+[56251.868388]  bnxt_rx_xdp+0x1d8/0x4c0 [bnxt_en]
+[56251.877028]  bnxt_rx_pkt+0x5f7/0x19b0 [bnxt_en]
+[56251.885665]  ? cpu_max_write+0x1e/0x100
+[56251.893510]  ? srso_alias_return_thunk+0x5/0xfbef5
+[56251.902276]  __bnxt_poll_work+0x190/0x340 [bnxt_en]
+[56251.911058]  bnxt_poll+0xab/0x1b0 [bnxt_en]
+[56251.919041]  ? srso_alias_return_thunk+0x5/0xfbef5
+[56251.927568]  ? srso_alias_return_thunk+0x5/0xfbef5
+[56251.935958]  ? srso_alias_return_thunk+0x5/0xfbef5
+[56251.944250]  __napi_poll+0x2b/0x160
+[56251.951155]  bpf_trampoline_6442548651+0x79/0x123
+[56251.959262]  __napi_poll+0x5/0x160
+[56251.966037]  net_rx_action+0x3d2/0x880
+[56251.973133]  ? srso_alias_return_thunk+0x5/0xfbef5
+[56251.981265]  ? srso_alias_return_thunk+0x5/0xfbef5
+[56251.989262]  ? __hrtimer_run_queues+0x162/0x2a0
+[56251.996967]  ? srso_alias_return_thunk+0x5/0xfbef5
+[56252.004875]  ? srso_alias_return_thunk+0x5/0xfbef5
+[56252.012673]  ? bnxt_msix+0x62/0x70 [bnxt_en]
+[56252.019903]  handle_softirqs+0xcf/0x270
+[56252.026650]  irq_exit_rcu+0x67/0x90
+[56252.032933]  common_interrupt+0x85/0xa0
+[56252.039498]  </IRQ>
+[56252.044246]  <TASK>
+[56252.048935]  asm_common_interrupt+0x26/0x40
+[56252.055727] RIP: 0010:cpuidle_enter_state+0xb8/0x420
+[56252.063305] Code: dc 01 00 00 e8 f9 79 3b ff e8 64 f7 ff ff 49 89 c5 0f 1f 44 00 00 31 ff e8 a5 32 3a ff 45 84 ff 0f 85 ae
+ 01 00 00 fb 45 85 f6 <0f> 88 88 01 00 00 48 8b 04 24 49 63 ce 4c 89 ea 48 6b f1 68 48 29
+[56252.088911] RSP: 0018:ffff93120c97fe98 EFLAGS: 00000202
+[56252.096912] RAX: ffff9149afd80000 RBX: ffff9141d3a72800 RCX: 0000000000000000
+[56252.106844] RDX: 00003329176c6b98 RSI: ffffffe36db3fdc7 RDI: 0000000000000000
+[56252.116733] RBP: 0000000000000002 R08: 0000000000000002 R09: 000000000000004e
+[56252.126652] R10: ffff9149afdb30c4 R11: 071c71c71c71c71c R12: ffffffff985ff860
+[56252.136637] R13: 00003329176c6b98 R14: 0000000000000002 R15: 0000000000000000
+[56252.146667]  ? cpuidle_enter_state+0xab/0x420
+[56252.153909]  cpuidle_enter+0x2d/0x40
+[56252.160360]  do_idle+0x176/0x1c0
+[56252.166456]  cpu_startup_entry+0x29/0x30
+[56252.173248]  start_secondary+0xf7/0x100
+[56252.179941]  common_startup_64+0x13e/0x141
+[56252.186886]  </TASK>
 
->> makes no sense when I read it alone.
->
-> Well, talking about the page lock is moot either way. The thing is, any=
-thing can change while we don't hold a page reference. So should we chang=
-e the comment to
->
-> /* isolation code will deal with any races. */
+From the crash dump, we found that the cpu_map_flush_list inside
+redirect info is partially corrupted: its list_head->next points to
+itself, but list_head->prev points to a valid list of unflushed bq
+entries.
 
-Sounds good to me.
+This turned out to be a result of missed XDP flush on redirect lists. By
+digging in the actual source code, we found that
+commit 7f0a168b0441 ("bnxt_en: Add completion ring pointer in TX and RX
+ring structures") incorrectly overwrites the event mask for XDP_REDIRECT
+in bnxt_rx_xdp. We can stably reproduce this crash by returning XDP_TX
+and XDP_REDIRECT randomly for incoming packets in a naive XDP program.
+Properly propagate the XDP_REDIRECT events back fixes the crash.
 
->
-> ... or drop it completely?
->
->>
->> In addition, why is __PageMovable() is renamed to page_has_movable_ops=
-() but
->> __SetPageMovable() stays the same? page_has_movable_ops() and __SetPag=
-eMovable()
->> are functions for checking and setting PAGE_MAPPING_MOVABLE. The namin=
-g just
->> does not look symmetric.
->
-> See follow-up commits where __SetPageMovable() is cleaned up.
+Fixes: 7f0a168b0441 ("bnxt_en: Add completion ring pointer in TX and RX ring structures")
+Tested-by: Andrew Rzeznik <arzeznik@cloudflare.com>
+Signed-off-by: Yan Zhai <yan@cloudflare.com>
+---
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Right. It becomes clear at Patch 20.
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 2cb3185c442c..ae89a981e052 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -2989,6 +2989,7 @@ static int __bnxt_poll_work(struct bnxt *bp, struct bnxt_cp_ring_info *cpr,
+ {
+ 	struct bnxt_napi *bnapi = cpr->bnapi;
+ 	u32 raw_cons = cpr->cp_raw_cons;
++	bool flush_xdp = false;
+ 	u32 cons;
+ 	int rx_pkts = 0;
+ 	u8 event = 0;
+@@ -3042,6 +3043,8 @@ static int __bnxt_poll_work(struct bnxt *bp, struct bnxt_cp_ring_info *cpr,
+ 			else
+ 				rc = bnxt_force_rx_discard(bp, cpr, &raw_cons,
+ 							   &event);
++			if (event & BNXT_REDIRECT_EVENT)
++				flush_xdp = true;
+ 			if (likely(rc >= 0))
+ 				rx_pkts += rc;
+ 			/* Increment rx_pkts when rc is -ENOMEM to count towards
+@@ -3066,7 +3069,7 @@ static int __bnxt_poll_work(struct bnxt *bp, struct bnxt_cp_ring_info *cpr,
+ 		}
+ 	}
+ 
+-	if (event & BNXT_REDIRECT_EVENT) {
++	if (flush_xdp) {
+ 		xdp_do_flush();
+ 		event &= ~BNXT_REDIRECT_EVENT;
+ 	}
+-- 
+2.39.5
 
-Reviewed-by: Zi Yan <ziy@nvidia.com>
 
---
-Best Regards,
-Yan, Zi
