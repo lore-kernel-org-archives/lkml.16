@@ -1,109 +1,139 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0D21D6DA9;
-	Mon, 23 Jun 2025 08:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F471D6DA9
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750666664; cv=none; b=dQ104kMBdhwxuiE6hOqfG1lKV0Kf4JQU+USZbh0cMU3uHSAZzwbw4vkN/yCzIc+bk88mPW3jWLnJKdetPWlDD+X2MfMLvJk805a2QCR6sNIJxvXthyFgU4hi4biaPMuM1kEsUefuwQqCUBu7djXrdChRTUWktcmRHrGHZr3Ovhc=
+	t=1750666680; cv=none; b=ayC6AvVuOipZQhnsXVQONISTAMGeZNztBzD+pHeEwC25mENRRJ4IDCfnVZCd/SifLapk/hBjag/6rCGi8mBgxXNe8mCB7LKl/R9pOrebK9dUiHfSX9oWJAkkY6gdI5MaLHgzeoy8ti/UrtTSbihUd8LSe0pz9veVIym/Xlocok4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750666664; c=relaxed/simple;
-	bh=xABlpFKCI7tvbKgSAmn4BEyY09ekpiP8IizGsmnqo1w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tJqCO4iM3fHr9x7R15zyLKCCfK+W+BoVEw48rW73ZWRyS7MX2zNWsnBAMdHJAWkudb2ir6zO2zWRajsOztsf48uNQzSDGOCj8btnYBkay47nxbsxkGJQ3CUl92LyIZ77Locl4LxLtBZFNGRyxpUF7oggLyZg1qTAZqSDOtiq2hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XhWhxhLx; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750666680; c=relaxed/simple;
+	bh=taXP7WDD8/lU11UK+rOL7KaY9hZzQVVsVxIvQvyqAuk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DoctbgzMvxJckYgjRalJjREm6nPvFr3UrhBPkIf/erKrvaGPA16LHMkWNxpzB+9y2S9YKdbnzhRRLqv6VliyzBT6UeOR/eM6MN78rjPmT2j9/sjFH3yXR7ZCpa5pqPTxHsyiZWmGhxB9PTTT3cu0GTmQ54+/oEZKzidTnAb2euM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gFrhyEAW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XhWhxhLx"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-609c6afade7so9068137a12.1;
-        Mon, 23 Jun 2025 01:17:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750666661; x=1751271461; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q0ldZjivV1lpUZD2fqgWNSEgeUozCBiIx7NicXZLPzM=;
-        b=XhWhxhLxab+7722d7MeHkcAjXYxvjY16oBS5WBoSJLfhf1iXvflhATc5PXpfb9niUl
-         H9k7uANVNaqAy3JRB8aLyyz1pBjhkvjLEaTcccsRDsASGnoZadCE7UUu1fsVsNBeNH1J
-         xRSyXdZyQ0tzsIZyIDx096F++x64zJS+RCoKlMMjzNF7VHwrW8ONdGmbebdoyITRwEM7
-         j+mToQIdg3MVwi8OJxnso2qrGItoyDg8k/rbdISNHYZ4W+MZciYKVovg371EFaxyUqCm
-         x+0i4CE2NFCT6Y88HVYipmhFw0CSM2BTW2PB1cP/OGkskHxyafhfJPRwm9lptx8phFp5
-         UMQA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gFrhyEAW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750666677;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N2optOidOvuh7QFbVIaP7zX4TDef2ae6cy4KvRW9fls=;
+	b=gFrhyEAWqyufkSFsDNZE3lBj5LG2IscfCKCR/PaVuT5LFOpA9E9T7yImDRkQt9KWtkKbS8
+	Cx20MiSMUuV/VX1Fj0nRGgzJYno7dyTkSBjEj/9Ccnys7zMtrdmxk+9s2y66AoUb5aZrWQ
+	mqy/aAjTnP8myHtZ9DF4hWiCz6dfetQ=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-56-FcDRAz7qMa-2M1IgUPrdcA-1; Mon, 23 Jun 2025 04:17:55 -0400
+X-MC-Unique: FcDRAz7qMa-2M1IgUPrdcA-1
+X-Mimecast-MFC-AGG-ID: FcDRAz7qMa-2M1IgUPrdcA_1750666675
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-60724177a1fso3539814a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:17:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750666661; x=1751271461;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q0ldZjivV1lpUZD2fqgWNSEgeUozCBiIx7NicXZLPzM=;
-        b=giqJElPHuXGX/VCJZKrPDyA9XlZfaIJg/L7/HmieSmTpqIX5vh0mBY/rRWGl6EflPd
-         bVQwgNImsBgOYS4w29NERvlLtpb1Y8smcYop7Aacq6Wpj2IyrlU4qtXmvDmHQzfNKqE1
-         +wy2gY9W6S/S+Qs0wIWbRYxsHMQJjT80tyAc4KHlx4lGKDAEo+IXrVj5erDFbDSIR/Qy
-         CxAurKrTvsj924cRQK5+v5KED0KNyTmWWYm+8KDFy8k8lyHLshbCSY4u91XZ2ktfpjF2
-         bknr+z88xirQVsw1lkF5fyg45FOZr1hsZMQ0lt8ggsWGZmNbhNe02z4M7KpxBxKln7WU
-         mByg==
-X-Forwarded-Encrypted: i=1; AJvYcCWOR6TUebhj8cWTgVdZ3Vv9QUOsL92qEixRGBBWIHQ7TjuCL09AWMRq/xAgmSl3M362lga71ADkWaRYNqaD@vger.kernel.org, AJvYcCWSBSveamSlXkqn2Tpi4dtq5P8ucEAci3xuAHBIhFHFJ3gHhfVEmQNg1EVFAk38QGM13tsM6i7zWYU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXd1a34Cvrefihe9iORm6vX9LS4ZVrdCldiac4zxnVKmsoriA+
-	561+8v6BSPLw31cJvDCKaEwc9QhwICqRq03M/S5rAjoZMyMaVCt90J9X
-X-Gm-Gg: ASbGncslH8GNKTT4i0MKTxFTTb8r2rNMKruxtGLLsq9sTZiA0HXWw/hVWciMQP+a7pV
-	KvOrZl3efMsaRDbO3P9zXRXI/y/A6tab4C1rGrKG/U1uFn/0uhSdkK6qpxeqaz+ZEsXFBCCbzak
-	Ki5r9bVtx6U7QDL/avSINgCKHXW/tqjiPlepRExu6JaEJUJb1vao6UDt1MnxUlSk4Jx2akpvHn+
-	8vq6JfKiT79/DWGBMyvukT2f2fRngkOyaGj3p1OwArIOxgTlnE8ZMUK8ts/2o0/C0C+gKFh9EaO
-	zFZqoIvUnhfpm2lQEDOvMM7m/TUy6HW1RClCSxj/2I+gkXcNdTW6WX+UR8sGqJ17kDpexciSe+Z
-	v
-X-Google-Smtp-Source: AGHT+IGygq4BgBIH/An5jrlMX4bO2TbpXKrBaZx0SApj+U+km9rMpRWoZwUu6E6qBZXhz9adheWngQ==
-X-Received: by 2002:a17:907:1c95:b0:ade:44da:d2cf with SMTP id a640c23a62f3a-ae05afc1bacmr1232128866b.18.1750666661183;
-        Mon, 23 Jun 2025 01:17:41 -0700 (PDT)
-Received: from localhost.localdomain ([41.79.198.24])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0540833fasm674982766b.103.2025.06.23.01.17.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 01:17:40 -0700 (PDT)
-From: Khalid Ali <khaliidcaliy@gmail.com>
-X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	ubizjak@gmail.com
-Cc: x86@kernel.org,
-	hpa@zytor.com,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Khalid Ali <khaliidcaliy@gmail.com>
-Subject: [PATCH v1 3/3] efi/efistub: Make libstub to supply boot_param from RDI
-Date: Mon, 23 Jun 2025 08:16:39 +0000
-Message-ID: <20250623081656.1303-1-khaliidcaliy@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1750666674; x=1751271474;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=N2optOidOvuh7QFbVIaP7zX4TDef2ae6cy4KvRW9fls=;
+        b=hbuCmXP+OqIlxbXlucDUMA1lXmN0DHZqWTW7i9rZLBaDzAOMlDUssa1zddN4paN0XH
+         8DV71fdUe0bSmI+uJoIfp76XF2RrHdisTwYtTWoCqIkHhHFNUUgTTS6TF16ozDPcnFNj
+         ThXOkg2UlCmZ772KyCea6IdfRP/pGjA3+tss6vuuRcQgz0VwRMXBR7n3Yg+SNqCaB/Ks
+         hvqi/nL3B7+EayE6YN9j08SSN/sQtZEg/7JLLzu+gU9njPLuuehGhvhSUfd8o6vc7gCH
+         97XbisQ6iW9mdSXvTAe/2ilPhr0HYNI9/J4edkxPt1Qmfs1QDsbPYa6s/Q2zXCaxpDvu
+         LCcw==
+X-Forwarded-Encrypted: i=1; AJvYcCUqGF+DwAzf5n/yto7WHTsV/1bgBj35CFmiWIbPrZLqNRNqmX3REIdNuUhaWyhBuqjWk7vPDzNU8pE41bU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZnr/HndymMNP8eD1Lhf9DV9UDXAWrRkGaRo1YOl8kIDa9NhQA
+	6Qtf2NnaHAsyyJo3YPijODcJrkMQ5x5zYXfaHlH3ZN4snoX4r8lWUG823tQWP8eV54K9eZB5ROa
+	p/iSBFNvdviUjXqsnzX4NfDF9Pi37GLT+hmxajUv21NErsXm7fkVROf2vJtkcmxTAQw==
+X-Gm-Gg: ASbGncvczI+rGNaC7g2WuPW3jCVlJLYT/Jsp/NSEv1upig3/CyNfOGkNur9FKNHLH/w
+	LmOXiipY1Q8y1gjXdyMePk6fnypI74P9M1MAQvftp3lSzRKhszCTEdwjBIz/3pseHg3ngRkKFQT
+	iccdYx8mkyRjd1LCR9mWJa4+K0jZ5IyOuljAPs9mjF/NbNhj4v6NfUs0GtL6wg3TYO/GT0yWM1/
+	DE/YJ+0C3pBHQyIQ+z1s2xA8Ce67W2W84dUHG5YiqoDcmJpLzuOVexj4vhI7xvKpx/qPdXkptgP
+	yFSPMQndtz0TOUtS0b2xktoB8A==
+X-Received: by 2002:a05:6402:44cb:b0:60b:8603:2ff8 with SMTP id 4fb4d7f45d1cf-60b86033002mr6272829a12.15.1750666674667;
+        Mon, 23 Jun 2025 01:17:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGNNF8jZCqYgheFCScBSFPj8i52Q5VHppO0D3a8RZj2iDP7EeavHZjc6mZHpik98x9jOB3QBQ==
+X-Received: by 2002:a05:6402:44cb:b0:60b:8603:2ff8 with SMTP id 4fb4d7f45d1cf-60b86033002mr6272816a12.15.1750666674268;
+        Mon, 23 Jun 2025 01:17:54 -0700 (PDT)
+Received: from [10.40.98.122] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60a18514500sm5761336a12.5.2025.06.23.01.17.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 01:17:53 -0700 (PDT)
+Message-ID: <bc831f09-08d2-41d6-b552-ede43f8f2be2@redhat.com>
+Date: Mon, 23 Jun 2025 10:17:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/5] Add interconnent support for simpledrm/simplefb
+To: Luca Weiss <luca.weiss@fairphone.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Javier Martinez Canillas <javierm@redhat.com>, Helge Deller <deller@gmx.de>
+Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Khalid Ali <khaliidcaliy@gmail.com>
+Hi,
 
-This adjusts the libstub to supply argument from RDI instead of RSI.
+On 23-Jun-25 08:44, Luca Weiss wrote:
+> Some devices might require keeping an interconnect path alive so that
+> the framebuffer continues working. Add support for that by setting the
+> bandwidth requirements appropriately for all provided interconnect
+> paths.
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+> Changes in v2:
+> - Sort the headers before adding the new interconnect header, in
+>   separate commits.
+> - Use the correct #if guards for new interconnect code
+> - Pick up tags
+> - Link to v1: https://lore.kernel.org/r/20250620-simple-drm-fb-icc-v1-0-d92142e8f74f@fairphone.com
 
-Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
----
- drivers/firmware/efi/libstub/x86-stub.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks, the entire series looks good to me:
 
-diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index 09ed1c122106..9da9b6295b1d 100644
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -794,8 +794,8 @@ static efi_status_t efi_decompress_kernel(unsigned long *kernel_entry,
- static void __noreturn enter_kernel(unsigned long kernel_addr,
- 				    struct boot_params *boot_params)
- {
--	/* enter decompressed kernel with boot_params pointer in RSI/ESI */
--	asm("jmp *%0"::"r"(kernel_addr), "S"(boot_params));
-+	/* enter decompressed kernel with boot_params pointer in RDI/EDI */
-+	asm("jmp *%0"::"r"(kernel_addr), "D"(boot_params));
- 
- 	unreachable();
- }
--- 
-2.49.0
+Reviewed-by: Hans de Goede <hansg@kernel.org>
+
+for the series.
+
+Regards,
+
+Hans
+
+
+> 
+> ---
+> Luca Weiss (5):
+>       dt-bindings: display: simple-framebuffer: Add interconnects property
+>       drm/sysfb: simpledrm: Sort headers correctly
+>       drm/sysfb: simpledrm: Add support for interconnect paths
+>       fbdev/simplefb: Sort headers correctly
+>       fbdev/simplefb: Add support for interconnect paths
+> 
+>  .../bindings/display/simple-framebuffer.yaml       |  3 +
+>  drivers/gpu/drm/sysfb/simpledrm.c                  | 85 ++++++++++++++++++++-
+>  drivers/video/fbdev/simplefb.c                     | 89 +++++++++++++++++++++-
+>  3 files changed, 173 insertions(+), 4 deletions(-)
+> ---
+> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+> change-id: 20250617-simple-drm-fb-icc-89461c559913
+> 
+> Best regards,
 
