@@ -1,206 +1,96 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5207429B233;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13C929A300;
 	Mon, 23 Jun 2025 16:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750694838; cv=pass; b=E9+w+nYMfQMHGsqlgidEAvqp1h6uOjM9jn30U9kZuI+enMbrLiRMxiWOfZ1r9p0TYgm67BE3O+fOesgRrdlx2fEX9Ms3e0s6cGnVkJryi5ArAAg0D8LkvkI6YUKw1ASwwWsHrvBrDRng70tSHQSMghCVW22VTkLfZR6OBo4N6nM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750694838; c=relaxed/simple;
-	bh=U3dR7usceUoB1k3W9+wDecW/kRSYlS4inY/JHvz40oQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KabGEIgFqyntHft2PqaDY0PKreVLbdzRPTS73E8U2ScmDbSj6jr36ITgN20r5ESxGU7IdWfIg2pLg+W5i5gwh/j+bf552lTJ3mIWxR+h1zN8gAGoGVG6So9vqKSUsMp56E9px7MejFPbWHJ4L229CEdMYIW37inoMLOSGzk4x+U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=hJ5Aj3up; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750694839; cv=none; b=m4lwxgT8fA7qQFfWYXYAmhX9FjqfY9CFe2Ok8KtdVqf8E4NF3fHW24oaA8hOXCK2nG662EZj2tL6uMfhSpajTNLbT4FUUk6GYLP+ak/TvcHyfOnHeZSU94I5Kd7FeMynNTYZLdzNyPa9aI/sKrxbIS4pYnOu+Mx+PX94eXT0r/s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750694839; c=relaxed/simple;
+	bh=0tcXdovPS+zbja9QJVEVBxGT38A9W3l9YFmoO5UqOAk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sac+ynCOUop2cSaM5Aju2+fGLksCo4htWPfl7QjApdVvtebbNaXWT9pkZAjX5zxk9gIqsaRSApJwgS9HKQssOQHaeYQHM0Vk7n3N8+UAKMfAQ9r1TBXufUUJyLbv2ujKlh2OaPyAl8zQxFDHgOSH8t3/TAYvBVg5dzg7eIT9xMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fa1/GkpO; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="hJ5Aj3up"
-ARC-Seal: i=1; a=rsa-sha256; t=1750694764; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=UVao7uPKb2Ut1L2cDmAKFM6EvbHFJRJRhzjSiR3OU7fc8TAq2vkP//x2lQ85ZKZBnrA5ZVgLn0N3WshR5q/SArOMQGYWDUh+5uE+KqBTfH47mg4GP792rXUg54EEPruBFGpfYaJtIVmWKsnRj2HVLVTg3QXutP9eReD31SSLnCw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750694764; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=iE9yh19l2ifejmMUwyg2PaFSbh+ZLdHsr2HyVG2JpXE=; 
-	b=KLSor59+fk9LAZCaS55LP3NyjRaHTxa/zZqVL8VBobubkrK3iPBj+8+i37q6pajVRKlhi3lxhM1Is3yWSOO/ZS4q9s69QbpU+PqcDL+6vZjdfvgD60O/8oi73A08mIUV4s/Mep7meA3flPLRRZOgnOcOdmH3/ClxT+jsoZisD4A=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750694764;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=iE9yh19l2ifejmMUwyg2PaFSbh+ZLdHsr2HyVG2JpXE=;
-	b=hJ5Aj3uplpiKDx8h+ipBhfmJ8l1L4DLklGLaMyLb/OlN2IOCKfQ8V2EB2YYC1xmx
-	RHZkF2ydgekMX00dHgsDxXb7edfllVicyUHvbDYeR0hHsX+RzanXWqULQArOhAGqzNf
-	7Oo23uvk7asskBGSDtkVzpYxYSbtt7c2S/JbgwPE=
-Received: by mx.zohomail.com with SMTPS id 1750694762676661.9667739946736;
-	Mon, 23 Jun 2025 09:06:02 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Mon, 23 Jun 2025 18:05:29 +0200
-Subject: [PATCH v2 01/20] bitmap: introduce hardware-specific bitfield
- operations
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fa1/GkpO"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b31ca219b97so652340a12.2;
+        Mon, 23 Jun 2025 09:07:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750694836; x=1751299636; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0tcXdovPS+zbja9QJVEVBxGT38A9W3l9YFmoO5UqOAk=;
+        b=fa1/GkpOkoCsFuKgai6tHv127/vIC+s8HfQlNjMyQxpVR7JO9aJTZSSJX9YXZRRGcL
+         OQUKb1KE8P+q1/L/uhk3kJil2nBHKH/0aa5HNl7BXtjnc3OG166eQjBFddhb+E6QIUmM
+         0GkSVmUV9cQzuxQ8bY1p8Fq+p0Vfz3L4nMflBKHy9D8PLNfzSwKlIZZUmUQHF3OwjMOO
+         jdLFc0ss511VC3T0G607+d27hBUdwTHZE0CUyF7dNOjTXvy4q1X1y19JtM+avfoTww7u
+         bMxh/Njcs2KyFOB064uABJtG5S2xmlaxb55grDZW+GxmQKfDszcFc4RbDiYenFqBAr3n
+         ObBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750694836; x=1751299636;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0tcXdovPS+zbja9QJVEVBxGT38A9W3l9YFmoO5UqOAk=;
+        b=SxDUQq/rR6anXJAVcp9q4CcmWYq1jSFEAgPn1p/OnGxxSYbNF/nzbGubOmTisCHSFX
+         0doliVQknFTXw9r/AQaPQdiRawNnZtIoIomM/gtc8KvLkfjUfx03GotmAPsZhvFGDSI0
+         I3N5fouryfG6NhgTNwXBPlnwIoCCvhg6bsOQLcxmvnMgN1Xfyk8HhPrDf/rxAblcDMqE
+         y4Hmrrw2mvVa00SQF9h79KICz4JShjtmnHhjA55wsTioPaMdxR78r7B9goFmRNtP3ajF
+         3IYKmR8CteY0CJFwy0I0Y/J/LI54LbUJE1VaqA7KpfK3aTshy4g5bi+5CHLB4I1TYzQy
+         ehIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXN5Y2ogQGEV4rxAMxLpEcw2TOhdz+eg3hNDJ+xztVi3sw1DdXy4Hy/Z8dpC+4JGxnhixsQGftg7+O7aFA=@vger.kernel.org, AJvYcCXuZKnsQXUmYUFc0Apuww4QYC6x94ewNMe6YK6MqUMPETnn1QykHed8l/wiQc4JiVVVpSxMRUJY4gfrkst1MGA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzsOVzgTrSMzXcDOgOScWoxF3ZugNBgKHK3Odj0ijDfr7zrIXl
+	F402JgzTGbHtSOaynT1qoDGrbCLFpKsvYegqtIjOIqPoQ+Yv/XxTyypuJvN1IDqhd7pXQ59P5Lf
+	PTlyrlGwyWw49lfts7muk8N95yr1CcvI=
+X-Gm-Gg: ASbGncsKwgKrDID8liUqJu/P9DsH2Y51ysI+sz6j9cmX3gj0qsCJOhOOxqV9mITLVQZ
+	PzHupwGtxeDbLBkHU93vMrHTSNm7e4bvGMY91kJFaR1Y6cpKN5GtlLpSO6ZNBIOHtpdjOBiow/Z
+	bTGgEXOWya6XEj6D3h5csiSWPqAcqB65F/ke9lUgGBwfU=
+X-Google-Smtp-Source: AGHT+IH9NL2lR9Uv4yi5aC7j9ur7IZFnZE3iQLVNBw894nkCrk2aK30n5d+w8auc9bWtvBbdzHz7hXqgkVpLEIog/tI=
+X-Received: by 2002:a17:90b:5305:b0:312:e987:11b0 with SMTP id
+ 98e67ed59e1d1-3159d8d99d5mr7675733a91.6.1750694836185; Mon, 23 Jun 2025
+ 09:07:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-byeword-update-v2-1-cf1fc08a2e1f@collabora.com>
-References: <20250623-byeword-update-v2-0-cf1fc08a2e1f@collabora.com>
-In-Reply-To: <20250623-byeword-update-v2-0-cf1fc08a2e1f@collabora.com>
-To: Yury Norov <yury.norov@gmail.com>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- Jaehoon Chung <jh80.chung@samsung.com>, 
- Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
- Shreeya Patel <shreeya.patel@collabora.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
- Nicolas Frattaroli <frattaroli.nicolas@gmail.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Shawn Lin <shawn.lin@rock-chips.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
- MyungJoo Ham <myungjoo.ham@samsung.com>, 
- Kyungmin Park <kyungmin.park@samsung.com>, Qin Jian <qinjian@cqplus1.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, 
- linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org, 
- linux-sound@vger.kernel.org, netdev@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+References: <20250619-nova-frts-v6-0-ecf41ef99252@nvidia.com> <20250619-nova-frts-v6-4-ecf41ef99252@nvidia.com>
+In-Reply-To: <20250619-nova-frts-v6-4-ecf41ef99252@nvidia.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 23 Jun 2025 18:07:04 +0200
+X-Gm-Features: Ac12FXxeFboeOQbrXj_NuX7sHbNjZwJOguO3r6RADbc_AKUo0NVkevTFuXJ8N_8
+Message-ID: <CANiq72moyFrMi--y9ZdZK0EAoG26bTVsAo2O8ETxYHv4v_C6SQ@mail.gmail.com>
+Subject: Re: [PATCH v6 04/24] rust: make ETIMEDOUT error available
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Benno Lossin <lossin@kernel.org>, John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>, 
+	Joel Fernandes <joelagnelf@nvidia.com>, Timur Tabi <ttabi@nvidia.com>, 
+	Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hardware of various vendors, but very notably Rockchip, often uses
-32-bit registers where the upper 16-bit half of the register is a
-write-enable mask for the lower half.
+On Thu, Jun 19, 2025 at 3:24=E2=80=AFPM Alexandre Courbot <acourbot@nvidia.=
+com> wrote:
+>
+> We will use this error in the nova-core driver.
+>
+> Reviewed-by: Benno Lossin <lossin@kernel.org>
+> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
 
-This type of hardware setup allows for more granular concurrent register
-write access.
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
 
-Over the years, many drivers have hand-rolled their own version of this
-macro, usually without any checks, often called something like
-HIWORD_UPDATE or FIELD_PREP_HIWORD, commonly with slightly different
-semantics between them.
-
-Clearly there is a demand for such a macro, and thus the demand should
-be satisfied in a common header file. As this is a convention that spans
-across multiple vendors, and similar conventions may also have
-cross-vendor adoption, it's best if it lives in a vendor-agnostic header
-file that can be expanded over time.
-
-Add hw_bitfield.h with two macros: FIELD_PREP_WM16, and
-FIELD_PREP_WM16_CONST. The latter is a version that can be used in
-initializers, like FIELD_PREP_CONST.
-
-Suggested-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
- MAINTAINERS                 |  1 +
- include/linux/hw_bitfield.h | 62 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 63 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 41f13ccef4c84dcb1762c166553a2dc35704f211..8d2cf600d5cd722b5b08e81b6b24338fdc044240 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4187,6 +4187,7 @@ F:	include/linux/bits.h
- F:	include/linux/cpumask.h
- F:	include/linux/cpumask_types.h
- F:	include/linux/find.h
-+F:	include/linux/hw_bitfield.h
- F:	include/linux/nodemask.h
- F:	include/linux/nodemask_types.h
- F:	include/vdso/bits.h
-diff --git a/include/linux/hw_bitfield.h b/include/linux/hw_bitfield.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..df202e167ce487122e4440962eacb2e44817ad9f
---- /dev/null
-+++ b/include/linux/hw_bitfield.h
-@@ -0,0 +1,62 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (C) 2025, Collabora Ltd.
-+ */
-+
-+#ifndef _LINUX_HW_BITFIELD_H
-+#define _LINUX_HW_BITFIELD_H
-+
-+#include <linux/bitfield.h>
-+#include <linux/build_bug.h>
-+#include <linux/limits.h>
-+
-+/**
-+ * FIELD_PREP_WM16() - prepare a bitfield element with a mask in the upper half
-+ * @_mask: shifted mask defining the field's length and position
-+ * @_val:  value to put in the field
-+ *
-+ * FIELD_PREP_WM16() masks and shifts up the value, as well as bitwise ORs the
-+ * result with the mask shifted up by 16.
-+ *
-+ * This is useful for a common design of hardware registers where the upper
-+ * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
-+ * register, a bit in the lower half is only updated if the corresponding bit
-+ * in the upper half is high.
-+ */
-+#define FIELD_PREP_WM16(_mask, _val)					     \
-+	({								     \
-+		typeof(_val) __val = _val;				     \
-+		typeof(_mask) __mask = _mask;				     \
-+		__BF_FIELD_CHECK(__mask, ((u16)0U), __val,		     \
-+				 "HWORD_UPDATE: ");			     \
-+		(((typeof(__mask))(__val) << __bf_shf(__mask)) & (__mask)) | \
-+		((__mask) << 16);					     \
-+	})
-+
-+/**
-+ * FIELD_PREP_WM16_CONST() - prepare a constant bitfield element with a mask in
-+ *                           the upper half
-+ * @_mask: shifted mask defining the field's length and position
-+ * @_val:  value to put in the field
-+ *
-+ * FIELD_PREP_WM16_CONST() masks and shifts up the value, as well as bitwise ORs
-+ * the result with the mask shifted up by 16.
-+ *
-+ * This is useful for a common design of hardware registers where the upper
-+ * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
-+ * register, a bit in the lower half is only updated if the corresponding bit
-+ * in the upper half is high.
-+ *
-+ * Unlike FIELD_PREP_WM16(), this is a constant expression and can therefore
-+ * be used in initializers. Error checking is less comfortable for this
-+ * version.
-+ */
-+#define FIELD_PREP_WM16_CONST(_mask, _val)				 \
-+	(								 \
-+		FIELD_PREP_CONST(_mask, _val) |				 \
-+		(BUILD_BUG_ON_ZERO(const_true((u64)(_mask) > U16_MAX)) + \
-+		 ((_mask) << 16))					 \
-+	)
-+
-+
-+#endif /* _LINUX_HW_BITFIELD_H */
-
--- 
-2.50.0
-
+Cheers,
+Miguel
