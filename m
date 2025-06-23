@@ -1,302 +1,137 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C82F2D4B40
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 19:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688151C6FF3;
+	Mon, 23 Jun 2025 19:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750706774; cv=none; b=bucloVS1wuxGySV8nBOZNC4MWwCV3LoIZ4NYKh07FIHSAkvhUdcZowWJGThL3GHQGJHCyDQexoU7ad+8TIeBD/dk5d4hs7Fz/pBreTaVaShYoo+gMdMBXWO/Ak4oMKb4g1/qW55X2wg1Bw6LZ0NzIkbtpMk9hj7mQChjrmeYOvU=
+	t=1750706834; cv=none; b=lFj4jpCfSTNPj0wae7A+P1EbMbw37WJBRPDsi5LaCBSoiEYNIyGJfNaqsYHYN0x2JkWpVkM9RYuy2oP2GS3gH+RaCg1/7UYbxcekExMQTYihwXGmYZVXNdZrAYw8btsLDgJE+Fmn/qwcrwKRCT868HgpjgItiEfmDkLF6QcvsTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750706774; c=relaxed/simple;
-	bh=XwwMkrgJbQ+iphWDh7a1A3iYblM9/iVX+IUeIy/8wrc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QCTQHSocVfFLPHHjbuzz7JPvxzE/A9FDWJ/teGY01fLJp7qLspEKTcSm1FjZg6DELeHeZ/jIs5Uz+cK1TRiflzxHEPgqdH4hvEWjpZpYpNf7z9AADzbT9dzvXhGXdjNJ+/enNSCYWu8K0L5SbU9/tjQ8ptCLGLt6Y+aebNH6UHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=GMcHEavG; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1750706834; c=relaxed/simple;
+	bh=VajGqpSEAp5ELYK4M9sGUyxfmEefU94Khr0i25CbJ3w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hVrHJjCrTW3M5CkVDYcODokUnd/9pb08ROiGjn3+zBHAFWPZE53Uv16AjBtev3VH7NJMNzabZiwYKK0vbJ3GAW2dyP1B5FuDiSnv0melSjLYyT+PHzt4sFJlPOrlhGO8SIouebXt7fvZit8auGHtivK3Qi79eZbeORHOldHkLwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PivDLs6E; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="GMcHEavG"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-addda47ebeaso952848766b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:26:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PivDLs6E"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-acbb85ce788so877982666b.3;
+        Mon, 23 Jun 2025 12:27:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750706767; x=1751311567; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wHvDFrJ6H1+v1HU0C9Dh3b9mcZBS7rbiWmZCIgdgUQQ=;
-        b=GMcHEavG7nqxHVl7o/7fX7lO+e+q28z0dzSxgpSnFTM+IiW1BVrisBrFW+YOgVc4Mg
-         XcviGwuiWwiHTNulfqqKRc9gPei6Jr0F8Q+pfJryttL7+X6rCiB7WEHVGUqZL1SCVk6l
-         tPOJKQ6FQOTogZtK6/g4gYZbcYu3lNYV3pq8nxMa+hpSEaFeARRzkQHr34PeBzkdxay3
-         VGtKvEjFOQPBEopzWAx6UfSlaDoHy/tyng9biIP/KfqVxhdaDvkr7z5ZU9lua4pbsTX8
-         gvHNe88H/jHXVWFc6qtlFHiZdOpTiSY3PIAHcrLRhDCuBkJzLEobiKVMYpInx+29YoWJ
-         glmQ==
+        d=gmail.com; s=20230601; t=1750706831; x=1751311631; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=z0pQ8faF0LLlqRUSGGG645sRY5ONBRjSfmgC64O42P8=;
+        b=PivDLs6EDtFIQqUfQaA/nxDypvXyYRzxPCA9oO7tYixNU1tSWd2Oh4wgNyDmJuOdaH
+         hrBwWUvL2u+3TDNjUnjh6JWI5AaOX22p/AMV5n3RamxqNCXl5ylugOumc6j2A/3NPOzK
+         snvL97oERwn6E8BICmWQSAwqfL8D1MvmTFivfV2lpaX5SWf/8R2Y1KNBXL6uPc/tEaXn
+         jMwynIBMmsQWFM1i4VfeMUioo0lQXUZnurdoW5StJ1E/vxJH02EP6872EiF5d++nK+rh
+         B3UeT864Lon8Iy8DG2fA998vK8+LwHRSs2/POYQVixp4fEpWgymgT5gPFu+aM2i+FTHo
+         5CGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750706767; x=1751311567;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wHvDFrJ6H1+v1HU0C9Dh3b9mcZBS7rbiWmZCIgdgUQQ=;
-        b=Wa4yrKyQOcO4ICvK9jNze4m5e5dO4nu1vTZbS6VcCizFj9nKkw6Ud32Ny5Dtr88AJT
-         SkTMke6+qzUbXBW83S409M2Inbt46DECFpg/+OfGHfUu9ahwz4mtnNvxGkAiKLKEMeOT
-         9xF2KKGlVk4FXbFVNX0fe7twydauhndvyqaKuiyWcMHg7Y2NEMSN5DDLjsry76MVVjLp
-         axTuHCKm+5TP+ksl7d3MwYEhLb8BI0LHFNN1/PpVQDgJNvqBZPUjSbU5ixkVffwxQH9Q
-         WJVk0to3CBgjWwJP9Yq9gUD+KSfgjP9GhtWSCpIvajXBFS7jE8AOpQjGyxh+8BY62XiI
-         0dpw==
-X-Forwarded-Encrypted: i=1; AJvYcCVo2v996vODTtEaodJwLR0ZvEZJ3dC52Gw2WNsnYh52kPdpfvPGLvPhX5gCBdfJVZtZiK7GMCPfSQxbwYQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTdQlwcn1mLLVcd2l+4sEdcJz0LKI9bxsQ1+jXN3yY7r/OdbAg
-	YDz6fo0ophYxKzDj5c/lSWZbtQiqaRVauW5dnG1rdusi1lM5QPfv7BySX6TJEedSIrQ=
-X-Gm-Gg: ASbGncvetmIbWxL1JRQQqCUZEfgwuRrUnaksv0KU+AHaoFDmLKT2eyTDMNnI+kZES6D
-	4Cpnf32Fax9vqgWBUzV4oZKlvD4ae0rX2qtNJBiU0mhdvOQ2G2i1RvKKthWWogJYVk+tlameFpV
-	WlBGG5nqT2YW3alqgYfFL52AzSZUG27g5KIUf59n77Pj8HTpG/Mj6PnHUL/THF5uS6gVkF3ZyW8
-	X83BIwoKYXf/n8LFVWos07mCuos3ZUuzWp+5X+tNtDofstnZnvYI6GOIU5+sZuEm7W2zGizIMGB
-	EUQo1A/VumNUBJrg3CNT46cIM2d8+98Sb2AHhr98NCfwRBERrlHqJgNBpUw/8Gf8VkLqHg==
-X-Google-Smtp-Source: AGHT+IGSavjgIZ9sXrSj5rozKvqmWef3mvFzR/a5f+aszpHgcxKWhvv9wF7jXblJfFcjqdtuPSj0KA==
-X-Received: by 2002:a17:907:c0e:b0:adf:f883:aa78 with SMTP id a640c23a62f3a-ae0578d5db5mr1417258966b.10.1750706767405;
-        Mon, 23 Jun 2025 12:26:07 -0700 (PDT)
-Received: from localhost ([2001:4090:a244:83c4:9fe4:a128:a20c:8b84])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ae09d72008dsm113675466b.55.2025.06.23.12.26.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 12:26:06 -0700 (PDT)
-From: Markus Schneider-Pargmann <msp@baylibre.com>
-Date: Mon, 23 Jun 2025 21:24:30 +0200
-Subject: [PATCH 3/3] clocksource/drivers/timer-ti-dm: Add clockevent
- support
+        d=1e100.net; s=20230601; t=1750706831; x=1751311631;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z0pQ8faF0LLlqRUSGGG645sRY5ONBRjSfmgC64O42P8=;
+        b=XJmBY7hfd8C3iIQF6KOU0aWY6nl/SIcBeE2O6myc03PKIN16JxpE1g+mEcLYT5vLJN
+         v6pLJqVao9mW351wcekMlgnZwiG6UbBCn+hjXgrgbsXQmtRka4unSuksgqPGXa6deoku
+         3h4Qhe/iBOcdHbFNvyg4N4ha3ud6RjAp3EkCzexcoxN8RlRIsVx8RIFvCFMqus0e6k4Q
+         h1HvWZc+49CWDmfMVSgAvuZj4KLNP5Ymg7p9qoV6PUpTb8EyWgRyhuu1K9ZNxkbjlxdD
+         deyIRSh1wYiRpynGrYBAPXQJ4QDnEg1y/+jYNrClnQ22ZjYl+IK8SRDEhJNDAPJytylp
+         tbnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3o44140jhz9FvWvFiRttyaZ6t6sH1YoQmUDXJj2SK2GUf3BV981plAPDnrJ5froG1DOMMe+6I@vger.kernel.org, AJvYcCU8HXa32s6eTBfGgOggCvqH4Z0qPKNWOZTJO9YNfBi+5qPd1a15Of+J46s1Y3BelmCUC9btI8Tbjf4tckb/@vger.kernel.org, AJvYcCVDIRhLevWqZybiHqaHQ8wG6SXdi++V/96tpauzbDMBHaIPR0haXfboyT36ZPFZ3PwK1Pk=@vger.kernel.org, AJvYcCWqMTU3pbOPg4myLcr4J8jUth6gmaX0ks+3vSpK/J5z1gefyaXf0ACVZ8Rs8AmV7IhtVBx3/Z+4E9qA0w==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3QOGt1NO+YGrcWSMiWGmwbsgysSH8pjTZFgSVgBu4iMDZ2DRD
+	MXgvOQUiHB1l8y+pMVc3DRMCZrHDnsiIcD3Z7g4HuV+CockI7rIcw5SCfd4SUBwS
+X-Gm-Gg: ASbGnctUslu1ri+6aAaFyy44RbJc/h9x6WQZTViAypx/Bnqdp9Q2w97frhGD755VYKb
+	eP980sFg8MCrBGuPH96EuUgtFzsiTlVYgzbBReHPauaX3DeBeQ1j+WC+bIgb8UpwqpDLQM5O9dz
+	rd3dYivezm7eIaEDo575me79DId65hlJqQW0cQU9uVwW16ple8jUKgH30YutZ+khZL8SoHNhCb2
+	X9gc6qswCWRkkUHEk8F5Sr/M0Z9Sn2bowfRT5GrBvBFmti70SbgtW+q4+85LsHs38oosDGpW1ok
+	B+aviuHWPSubp1coIKKCs3NEwr8ZQYVzQf6bV3H3XhWa/JhcToBYQCG1oSmfsaengfpOtWY=
+X-Google-Smtp-Source: AGHT+IEXXca94xNAO8z0yI/gJqozBF4gVbj1JqChwHR36kNEKHmNp94k2ZaYauElDPmDtIU5+I1vkA==
+X-Received: by 2002:a17:906:f593:b0:aca:c507:a4e8 with SMTP id a640c23a62f3a-ae0579c4416mr1256185566b.21.1750706830494;
+        Mon, 23 Jun 2025 12:27:10 -0700 (PDT)
+Received: from [192.168.8.100] ([148.252.128.65])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054080e28sm753471266b.73.2025.06.23.12.27.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 12:27:09 -0700 (PDT)
+Message-ID: <3b71cfa9-6c6f-48f7-8457-dac915438216@gmail.com>
+Date: Mon, 23 Jun 2025 20:28:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-topic-ti-dm-clkevt-v6-16-v1-3-b00086761ee1@baylibre.com>
-References: <20250623-topic-ti-dm-clkevt-v6-16-v1-0-b00086761ee1@baylibre.com>
-In-Reply-To: <20250623-topic-ti-dm-clkevt-v6-16-v1-0-b00086761ee1@baylibre.com>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, 
- Thomas Gleixner <tglx@linutronix.de>
-Cc: Vishal Mahaveer <vishalm@ti.com>, Kevin Hilman <khilman@baylibre.com>, 
- Dhruva Gole <d-gole@ti.com>, Sebin Francis <sebin.francis@ti.com>, 
- Kendall Willis <k-willis@ti.com>, Akashdeep Kaur <a-kaur@ti.com>, 
- linux-kernel@vger.kernel.org, Markus Schneider-Pargmann <msp@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6658; i=msp@baylibre.com;
- h=from:subject:message-id; bh=XwwMkrgJbQ+iphWDh7a1A3iYblM9/iVX+IUeIy/8wrc=;
- b=owGbwMvMwCXWejAsc4KoVzDjabUkhozIVa6b1nHzFvuuE5l2+5prcPXkp5q3yh2MGFZ+WHPW1
- Saj5zZTRykLgxgXg6yYIktnYmjaf/mdx5IXLdsMM4eVCWQIAxenAEzE/AfDX6E1+z8zFzyLjt+6
- LT/HZ73Djvd790Xl2bw12OkofXWpQwDD/4zX57jMvaZ0/TL8+/xAoJ7y91nz+Walxq8XNxU3n3/
- jORsA
-X-Developer-Key: i=msp@baylibre.com; a=openpgp;
- fpr=BADD88DB889FDC3E8A3D5FE612FA6A01E0A45B41
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v6 1/9] netmem: introduce struct netmem_desc
+ mirroring struct page
+To: Mina Almasry <almasrymina@google.com>, Harry Yoo <harry.yoo@oracle.com>
+Cc: Byungchul Park <byungchul@sk.com>, David Hildenbrand <david@redhat.com>,
+ willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org,
+ ilias.apalodimas@linaro.org, hawk@kernel.org, akpm@linux-foundation.org,
+ davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+ toke@redhat.com, tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
+ saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org,
+ linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com,
+ hannes@cmpxchg.org, ziy@nvidia.com, jackmanb@google.com
+References: <20250620041224.46646-1-byungchul@sk.com>
+ <20250620041224.46646-2-byungchul@sk.com>
+ <8eaf52bf-4c3c-4007-afe5-a22da9f228f9@redhat.com>
+ <20250623102821.GC3199@system.software.com> <aFlGCam4_FnkGQYT@hyeyoo>
+ <CAHS8izMbtp0dN3+PZsivFD4Zg1DqaL5BJ4cw4jGjs=wCXAns3A@mail.gmail.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <CAHS8izMbtp0dN3+PZsivFD4Zg1DqaL5BJ4cw4jGjs=wCXAns3A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Add support for using the TI Dual-Mode Timer for clockevents. The second
-always on device with the "ti,timer-alwon" property is selected to be
-used for clockevents. The first one is used as clocksource.
+On 6/23/25 20:09, Mina Almasry wrote:
+> On Mon, Jun 23, 2025 at 5:18 AM Harry Yoo <harry.yoo@oracle.com> wrote:
+>>
+>> On Mon, Jun 23, 2025 at 07:28:21PM +0900, Byungchul Park wrote:
+>>> On Mon, Jun 23, 2025 at 11:32:16AM +0200, David Hildenbrand wrote:
+>>>> On 20.06.25 06:12, Byungchul Park wrote:
+>>>>> To simplify struct page, the page pool members of struct page should be
+>>>>> moved to other, allowing these members to be removed from struct page.
+>>>>>
+>>>>> Introduce a network memory descriptor to store the members, struct
+>>>>> netmem_desc, and make it union'ed with the existing fields in struct
+>>>>> net_iov, allowing to organize the fields of struct net_iov.
+>>>>
+>>>> It would be great adding some result from the previous discussions in
+>>>> here, such as that the layout of "struct net_iov" can be changed because
+>>>> it is not a "struct page" overlay, what the next steps based on this
+>>>
+>>> I think the network folks already know how to use and interpret their
+>>> data struct, struct net_iov for sure.. but I will add the comment if it
+>>> you think is needed.  Thanks for the comment.
+>>
+>> I agree with David - it's not immediately obvious at first glance.
+>> That was my feedback on the previous version as well :)
+>>
+>> I think it'd be great to add that explanation, since this is where MM and
+>> networking intersect.
+>>
+> 
+> I think a lot of people are now saying the same thing: (1) lets keep
+> net_iov and page/netmem_desc separate, and (2) lets add comments
+> explaining their relation so this intersection between MM and
+> networking is not confused in the long term .
+> 
+> For #1, concretely I would recommend removing the union inside struct
+> net_iov? And also revert all the changes to net_iov for that matter.
 
-This allows clockevents to be setup independently of the CPU.
-
-Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
----
- drivers/clocksource/timer-ti-dm.c | 138 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 133 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
-index 085609ba2d249dcc8f53c8aaa831d8fbe69b3753..a17e3e81508793a46cdee815bde3ad17fedd55e7 100644
---- a/drivers/clocksource/timer-ti-dm.c
-+++ b/drivers/clocksource/timer-ti-dm.c
-@@ -21,8 +21,10 @@
- #include <linux/clk.h>
- #include <linux/clk-provider.h>
- #include <linux/clocksource.h>
-+#include <linux/clockchips.h>
- #include <linux/cpu_pm.h>
- #include <linux/module.h>
-+#include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/device.h>
- #include <linux/err.h>
-@@ -158,7 +160,14 @@ struct dmtimer_clocksource {
- 	unsigned int loadval;
- };
- 
-+struct omap_dm_timer_clockevent {
-+	struct clock_event_device dev;
-+	struct dmtimer *timer;
-+	u32 period;
-+};
-+
- static resource_size_t omap_dm_timer_clocksource_base;
-+static resource_size_t omap_dm_timer_clockevent_base;
- static void __iomem *omap_dm_timer_sched_clock_counter;
- 
- enum {
-@@ -1091,6 +1100,9 @@ static void omap_dm_timer_find_alwon(void)
- {
- 	struct device_node *np;
- 
-+	if (omap_dm_timer_clocksource_base && omap_dm_timer_clockevent_base)
-+		return;
-+
- 	for_each_matching_node(np, omap_timer_match) {
- 		struct resource res;
- 
-@@ -1103,13 +1115,22 @@ static void omap_dm_timer_find_alwon(void)
- 		if (of_address_to_resource(np, 0, &res))
- 			continue;
- 
--		omap_dm_timer_clocksource_base = res.start;
-+		if (!omap_dm_timer_clocksource_base) {
-+			omap_dm_timer_clocksource_base = res.start;
-+			continue;
-+		}
- 
--		of_node_put(np);
--		return;
-+		if (res.start != omap_dm_timer_clocksource_base) {
-+			omap_dm_timer_clockevent_base = res.start;
-+
-+			of_node_put(np);
-+			return;
-+		}
- 	}
- 
--	omap_dm_timer_clocksource_base = -1;
-+	if (!omap_dm_timer_clocksource_base)
-+		omap_dm_timer_clocksource_base = -1;
-+	omap_dm_timer_clockevent_base = -1;
- }
- 
- static struct dmtimer_clocksource *omap_dm_timer_to_clocksource(struct clocksource *cs)
-@@ -1188,6 +1209,105 @@ static int omap_dm_timer_setup_clocksource(struct dmtimer *timer)
- 	return 0;
- }
- 
-+static struct omap_dm_timer_clockevent *to_dm_timer_clockevent(struct clock_event_device *evt)
-+{
-+	return container_of(evt, struct omap_dm_timer_clockevent, dev);
-+}
-+
-+static int omap_dm_timer_evt_set_next_event(unsigned long cycles,
-+					    struct clock_event_device *evt)
-+{
-+	struct omap_dm_timer_clockevent *clkevt = to_dm_timer_clockevent(evt);
-+	struct dmtimer *timer = clkevt->timer;
-+
-+	dmtimer_write(timer, OMAP_TIMER_COUNTER_REG, 0xffffffff - cycles);
-+	dmtimer_write(timer, OMAP_TIMER_CTRL_REG, OMAP_TIMER_CTRL_ST);
-+
-+	return 0;
-+}
-+
-+static int omap_dm_timer_evt_shutdown(struct clock_event_device *evt)
-+{
-+	struct omap_dm_timer_clockevent *clkevt = to_dm_timer_clockevent(evt);
-+	struct dmtimer *timer = clkevt->timer;
-+
-+	__omap_dm_timer_stop(timer);
-+
-+	return 0;
-+}
-+
-+static int omap_dm_timer_evt_set_periodic(struct clock_event_device *evt)
-+{
-+	struct omap_dm_timer_clockevent *clkevt = to_dm_timer_clockevent(evt);
-+	struct dmtimer *timer = clkevt->timer;
-+
-+	omap_dm_timer_evt_shutdown(evt);
-+
-+	omap_dm_timer_set_load(&timer->cookie, clkevt->period);
-+	dmtimer_write(timer, OMAP_TIMER_COUNTER_REG, clkevt->period);
-+	dmtimer_write(timer, OMAP_TIMER_CTRL_REG,
-+		      OMAP_TIMER_CTRL_AR | OMAP_TIMER_CTRL_ST);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t omap_dm_timer_evt_interrupt(int irq, void *dev_id)
-+{
-+	struct omap_dm_timer_clockevent *clkevt = dev_id;
-+	struct dmtimer *timer = clkevt->timer;
-+
-+	__omap_dm_timer_write_status(timer, OMAP_TIMER_INT_OVERFLOW);
-+
-+	clkevt->dev.event_handler(&clkevt->dev);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int omap_dm_timer_setup_clockevent(struct dmtimer *timer)
-+{
-+	struct device *dev = &timer->pdev->dev;
-+	struct omap_dm_timer_clockevent *clkevt;
-+	int ret;
-+
-+	clkevt = devm_kzalloc(dev, sizeof(*clkevt), GFP_KERNEL);
-+	if (!clkevt)
-+		return -ENOMEM;
-+
-+	timer->reserved = 1;
-+	clkevt->timer = timer;
-+
-+	clkevt->dev.name = "omap_dm_timer";
-+	clkevt->dev.features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
-+	clkevt->dev.rating = 300;
-+	clkevt->dev.set_next_event = omap_dm_timer_evt_set_next_event;
-+	clkevt->dev.set_state_shutdown = omap_dm_timer_evt_shutdown;
-+	clkevt->dev.set_state_periodic = omap_dm_timer_evt_set_periodic;
-+	clkevt->dev.set_state_oneshot = omap_dm_timer_evt_shutdown;
-+	clkevt->dev.set_state_oneshot_stopped = omap_dm_timer_evt_shutdown;
-+	clkevt->dev.tick_resume = omap_dm_timer_evt_shutdown;
-+	clkevt->dev.cpumask = cpu_possible_mask;
-+	clkevt->period = 0xffffffff - DIV_ROUND_CLOSEST(timer->fclk_rate, HZ);
-+
-+	__omap_dm_timer_init_regs(timer);
-+	__omap_dm_timer_stop(timer);
-+	__omap_dm_timer_enable_posted(timer);
-+
-+	ret = devm_request_irq(dev, timer->irq, omap_dm_timer_evt_interrupt,
-+			       IRQF_TIMER, "omap_dm_timer_clockevent", clkevt);
-+	if (ret) {
-+		dev_err(dev, "Failed to request interrupt: %d\n", ret);
-+		return ret;
-+	}
-+
-+	__omap_dm_timer_int_enable(timer, OMAP_TIMER_INT_OVERFLOW);
-+
-+	clockevents_config_and_register(&clkevt->dev, timer->fclk_rate,
-+					3,
-+					0xffffffff);
-+
-+	return 0;
-+}
-+
- /**
-  * omap_dm_timer_probe - probe function called for every registered device
-  * @pdev:	pointer to current timer platform device
-@@ -1204,7 +1324,7 @@ static int omap_dm_timer_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	int ret;
- 
--	if (!omap_dm_timer_clocksource_base)
-+	if (!omap_dm_timer_clocksource_base || !omap_dm_timer_clockevent_base)
- 		omap_dm_timer_find_alwon();
- 
- 	pdata = of_device_get_match_data(dev);
-@@ -1281,6 +1401,14 @@ static int omap_dm_timer_probe(struct platform_device *pdev)
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 
-+	if (omap_dm_timer_clockevent_base && res &&
-+	    res->start == omap_dm_timer_clockevent_base &&
-+	    !IS_ERR_OR_NULL(timer->fclk)) {
-+		ret = omap_dm_timer_setup_clockevent(timer);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	if (omap_dm_timer_clocksource_base && res &&
- 	    res->start == omap_dm_timer_clocksource_base &&
- 	    !IS_ERR_OR_NULL(timer->fclk)) {
+Without it the merge logistics will get more complicated than it
+should be because of conflicts with changes in the io_uring tree.
+It's a temporary solution, I'll convert once the series is merged
+and reaches io_uring.
 
 -- 
-2.49.0
+Pavel Begunkov
 
