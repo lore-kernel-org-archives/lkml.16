@@ -1,159 +1,276 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D394746BF;
-	Mon, 23 Jun 2025 16:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750694659; cv=none; b=V9xA0dhfeb1AHM1wFMtf2loqWfwekgubABRQptVlU35Kmf6KjmcCT9zLu+3F+3zCcjkvE9tke4msOGJtb8H9ca1frSx4KoFWsEUtwaXwuqQoVUpir1GatOM0mdNCG8n4GJgQ+wgDbiEIlFnyH1dTGlfSsrNxrO/GqQZ+AeaGkjY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750694659; c=relaxed/simple;
-	bh=LrKGy4WBpoQHJ3dVz+8gr7LXnPo+a03MXlgQE5KvJug=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n0jfhif0y9dJduUYKQ09SL2HkTcKsszRF9tzLbM8Um/KbfkHvQLJfKVw/35NhqmI1OoOvH8pqqPR/hquIFPdtoEdA3HbqTP3CGQ/7AN/q8MviBdFk4eyAptpzWv6xrCZcsDXXKV4SfADVrg+JqZSb7Sq4knmFPbaWzCjzqGx4VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 107A7113E;
-	Mon, 23 Jun 2025 09:03:58 -0700 (PDT)
-Received: from [10.57.29.183] (unknown [10.57.29.183])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA5B23F66E;
-	Mon, 23 Jun 2025 09:04:11 -0700 (PDT)
-Message-ID: <69e0107f-6c40-4ea1-ac69-51ad8aa78dff@arm.com>
-Date: Mon, 23 Jun 2025 17:04:09 +0100
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2074.outbound.protection.outlook.com [40.107.237.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F2927875C;
+	Mon, 23 Jun 2025 16:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750694717; cv=fail; b=no6pFQl38huQtOObFfEIUihXGqeaTpgivQCVXpPTRF7mOP6R5wCIpaA3/ivF36uQ4Y7o4gHyHSVxRsQ4EYOB64Jn32jiZ72lX/pb/IQcqeVMnaKa3gUTp8Uxlyubap/lBBaG/xz0HLacQty9B9UWJJXEag4lvzEYSgZDLsRM2EU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750694717; c=relaxed/simple;
+	bh=P0WPMuARHfreyGlunpzNMh6sTZh0X5p27dHvl49qJI8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qlqjgUI228qQ6ZoN5sMXno5bsJkJRmYJibpwP6IY3QC82/dA0Hssx52aKot9L8JPIFEUq/HXXqhBGY3US9Yy+P5OpybDUFyCGP8EmJE8HAZ4uwsDR/A81oHZNCKIqRw2KnFSs8YR4vgI0Pg4p/SZsnmvFbhpPimB0ATa8auRVZI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OknFkyF2; arc=fail smtp.client-ip=40.107.237.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OknFkyF2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=amECBPOpWjtiuEpNh6J3E0BY5gP+x4nTyL2/T5jc695xstFph9CZvi69WIbqE/KuqqlderkPrZ2AbSb9Pf5Cs1SciRg/kbNpaUekbiv+ill210Bdkhi5h8QMQOsENfM97IkL3l9uo7LogNgHmWa50C18UNUNjbGMA4ufbWAfpN/oc7BAOy7MZlDQL+6ap7CsRdZDgaa5aXikGH1WcPNzgz9QbqL6XH7svXpy79pmzyRy6YaxJiJniZUbm7Ru5r3O3QSGsjBT3bLLUU+I2Iz2KJzeJMuGGTI065UpBvUsdLmF5L70WFmvRaGF2/CBq5FES+OMkL4Ye0ATqFGujBmAQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AoiAeg/yVYS1Zt5MTTHJYSmM9q4nI5TTT0pYf4CDJrg=;
+ b=rdir9vJf0TwbzJFuO7kMd0Ycqi9pb3GYkb7uRSaWEGXxNHOjqz132FGPS4QFTiUScyC+i/y4vkkBCo5sWsvSsoLJO5qUp6F8JK72GmghugOjwu7WvTPZS9plfc1KiM6+3oaXOTaATyeRPw5vTVBx/RiCZIMaqQDD4y1PoOsj6VoVtplPg6I0vw4YgCTbHvPl7kpKMbte7X110AOH7ycv4jZdNi6fD4CHoEXRhCTbK3xwoJfW4nMp/VdpA5noQIQ0mZMFIk3+bXdQZR8YNk6IFs8F7G606EKoBzySFhMfq0X6IN/Pd2m+xheWlDJszjJwI/f0imFgP57EeqId24dkMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AoiAeg/yVYS1Zt5MTTHJYSmM9q4nI5TTT0pYf4CDJrg=;
+ b=OknFkyF2TPwRQisDdwSxWafPFn6RsvPk7zxZLYCvqrInZIlf1nQp8s2N0Lh9/m1tsLobsFf/tbPftM2j4eP/qfPKd1kGT8BzPEJRKxAp7Zez9CLuUUZzbPjnbhYHP4PlyMgJa98+XEuNDEi0+Oo2qddHrQZ3hs5qWjnTbczCE4RKHVKV+yzkjgTPvXvdJkh+/M5QtmMmhuPMUwKEv3YGhc/jmjgKucYRNelOWHyrtoDDi0s38/N3K4prF8Yn1uZfgaUEbXcC648nzB+KKeo6wBBQYULXzOXJzuOAWyE1F01D1t1lDS9d2RCfUkvff6lvDx4t8meuCgOpmfTvMMiW7w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ SA1PR12MB6971.namprd12.prod.outlook.com (2603:10b6:806:24e::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.27; Mon, 23 Jun
+ 2025 16:05:10 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8835.037; Mon, 23 Jun 2025
+ 16:05:09 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Alistair Popple <apopple@nvidia.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Minchan Kim <minchan@kernel.org>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
+ Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>,
+ Naoya Horiguchi <nao.horiguchi@gmail.com>,
+ Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
+ Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>
+Subject: Re: [PATCH RFC 16/29] mm: rename __PageMovable() to
+ page_has_movable_ops()
+Date: Mon, 23 Jun 2025 12:05:04 -0400
+X-Mailer: MailMate (2.0r6265)
+Message-ID: <DD051CFE-9B2A-4140-9D90-8B3F8C8D80FC@nvidia.com>
+In-Reply-To: <d6208fab-9ab5-485e-9cc3-94256fef2e1b@redhat.com>
+References: <20250618174014.1168640-1-david@redhat.com>
+ <20250618174014.1168640-17-david@redhat.com>
+ <DAA0D876-D5A4-4E54-9BD3-363E34D8B3F3@nvidia.com>
+ <d6208fab-9ab5-485e-9cc3-94256fef2e1b@redhat.com>
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: BL0PR01CA0002.prod.exchangelabs.com (2603:10b6:208:71::15)
+ To DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 20/43] arm64: RME: Runtime faulting of memory
-To: Gavin Shan <gshan@redhat.com>, kvm@vger.kernel.org, kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
- <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
- Emi Kisanuki <fj0570is@fujitsu.com>
-References: <20250611104844.245235-1-steven.price@arm.com>
- <20250611104844.245235-21-steven.price@arm.com>
- <e75dfc47-5b74-4898-91c0-fed9880f9727@redhat.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <e75dfc47-5b74-4898-91c0-fed9880f9727@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|SA1PR12MB6971:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0e5b295e-0867-4fc4-0e05-08ddb26fba25
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|7416014|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?3L8+d3mIbajIo3sltLLCclTqGg3hlDU4taHzmxLz9gV6rcDmH7ddRRZP/Vts?=
+ =?us-ascii?Q?qpNkoNElc5lqrIxt8HO23t6r6/8S91UHIVwPEEL6iFHcyHuMi3PV/7QIHaP2?=
+ =?us-ascii?Q?PG2UWU0sg0GCimqUFA4Vx2M7FFYdwmrvF8vcazCXaeAnGpoYMBdydGod6TPT?=
+ =?us-ascii?Q?YPmbrbAJ51aTZ2401XZfz+91ld0l9K1utrwpD8/L5YXU7tJ0zstuL4GBeZ/C?=
+ =?us-ascii?Q?AukwkNvlfjZ17IwsDhg6KVkLSQkwzYWniReGG9dwkVn06YrgPXsmHyDLqU8Y?=
+ =?us-ascii?Q?5z5ybsaz0iikHdztYpcslk34o6co+SIeppvZglZQz1FGPMAebYDVNb0WiE3B?=
+ =?us-ascii?Q?TNwBuxDM93FClcs8Ih5eJUzTtITZH/TserCjGQUvwF4fkq9ilH5HZIhpZU/9?=
+ =?us-ascii?Q?ANe7Pu2AsKibDOelNmigb7USc6yX6xCMagQbJTm1Y/btk90ZfOyetRS9kwX4?=
+ =?us-ascii?Q?EPccrJoEucUBZFJZDL4FXWspc+6foQMEMNrDFPvXK7ckBYFbsVoOTl4iX3kt?=
+ =?us-ascii?Q?bDB7Ucy+Jc6Mqq+Vfy80E4dUpoopOi00CagfZYWs2U6j63bPOrR4UKaHdVIl?=
+ =?us-ascii?Q?xN5jfVvxKf3xOu2AgFhKA30bC+yeTeL3/eJTPqx464aCSLdr0hcKmLpqNtL0?=
+ =?us-ascii?Q?d/CuDol/nv8lJxwiue82l5NguvE9KglmocPI9yTjOUh29eFRT/9hEpmPmxgh?=
+ =?us-ascii?Q?es2HuT/xnuVz5sK0dzVgNBmgRbhNYAmRElK1ZI6F96AnMaG21VbZgX7dfi+5?=
+ =?us-ascii?Q?AGNdzYifNgwHgLEfg7C6du7jmSQHpofWYGl944ULwcCvh3vOQrYgu6sIdgmx?=
+ =?us-ascii?Q?L7gfXd+7jicbUTkgrnIHTYxbwlr/Szj4J6G1aJUXltIPHaw6EeuXicrdxhzC?=
+ =?us-ascii?Q?Fd6Kgn9zGIzR7fQPgpIzkzKWaAUQuj1LmfQd1CO++j+p7zMak+Zi/+zWg9nn?=
+ =?us-ascii?Q?qnLRFxe2nRqQbJwOlLzvRAdDZk1Y38m4wGkJghzwREbjQ0SzZNHMra3Ajb4s?=
+ =?us-ascii?Q?yBdy7VVjijm+7gYn0sw9jYk1/lKzlJyMxVhRN4ap+yrwRepsmEv1qO/zwOW0?=
+ =?us-ascii?Q?eaXJe27BrXmlP9A1l/P2ypAqG462jJTZDLN5BGw3BWJjE7zYkPA668yhZDaw?=
+ =?us-ascii?Q?md6WYeYukbX4cprGC1hnndz6ZrNrhQXUlE2iisMzcsoL8CvsE6knWjV/C6QK?=
+ =?us-ascii?Q?/lwZR8yb+79l4htNVw+6v+ekd10kDVe7uGTn5aI7fS11vIaQERxg6JMb9EcU?=
+ =?us-ascii?Q?/+/z3BXgucRNS7vf9wVcIMqV9YRU3P/q0hCHLSd4T0gVtf6nzLQ+eYG5AmZE?=
+ =?us-ascii?Q?BSAhslBL2qZx+81NFMpuoJjGx2pjSoNlZrr2Y4+i86NpmpXkZ+lq7koIVof5?=
+ =?us-ascii?Q?RFk4YoKmkJY7PNAj7+wNf1tbweUP1Lc/ohPeELeDvgrMspWSrht4L3M/KFU0?=
+ =?us-ascii?Q?46Zg660zcGA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?/XwGD5uljOG5HXRnat087Y1NtSVVHeBgV9GncZaoi/47ncYo/hPu/qFOjafW?=
+ =?us-ascii?Q?+ONi5axEpnfTRHYNyF7L6vYHl4AXuortWCFhJYk628nETMCGzw6VIWaaYbJN?=
+ =?us-ascii?Q?cGFfuN3DXIhTJXUFx9QGloNwHFcWweoB7cT+XYj6NqC1GC+u0KnjDr8hozF6?=
+ =?us-ascii?Q?QpngJe5FSgcVkN8vxXrXyN0NAL5fLlcHCePp0ZXHjtYhstbW1RCyHK9EA1LG?=
+ =?us-ascii?Q?Sk9IGE0LAQbuxaLJ0cPwGjXzVN1z+0tNR4tS2Vf9EnzRNvoVYu1u4dzdV5Bg?=
+ =?us-ascii?Q?XHr2YbVxPBHyD8u0Iq85beWLFyjXTQgSCWoRLXZrPlHfH8rsgOsLVSt2nhig?=
+ =?us-ascii?Q?nebUrL3DKo4MNFXlOMuPapnlwRcfGTAm5uHLrEaGIt8YSXtncQ/RHbTHuw+H?=
+ =?us-ascii?Q?pXOLlgMw++DGsKte861UDWHLEoHao3Bez2UC2Kb1hJu7RCso3nvh28iyNE0A?=
+ =?us-ascii?Q?galh23X9OJQQYng5VfrnXu+ka55kyyKsgEeVTmOFTm579ojP/UFvO9M2gdPP?=
+ =?us-ascii?Q?rr0yOci410yzAvKGAsgvyW5IMK93Y+yaT2Bjgjkoi+lNBmtBgnwmg9tcKItW?=
+ =?us-ascii?Q?tG0MVyofRDqywmNoCYjPin97z+QV+qOaFH8FWS/zZIKvurFPGccsTlwt1kPH?=
+ =?us-ascii?Q?z+59OwSz8RJk3sRtYoN9zA8QKK/KI3s9Zdo9MHl4C4bq27uigtxbGqvZg/zL?=
+ =?us-ascii?Q?gCeKxPJR3GTimMKwRlrX9zRa9rCRq3KJnobcnxfOLKuJfoD6yBT7Bo6meRf9?=
+ =?us-ascii?Q?VI7vE2nEVwJBOa5dK+gcPxWu9/7T2G/OQFUYDPGVhgmgE4IbT+vWd1XpZnY/?=
+ =?us-ascii?Q?rlUIL/KEURGxwEfjOSuAY1ZkFiNpu+c9u2GAEl64XN7xIyEc7N3APHyXKQuY?=
+ =?us-ascii?Q?tCGpxZzDaolZKyTZtbj0MGtD7z/PU0qi66ScauSl21pfGMVDitbyPg/bdLua?=
+ =?us-ascii?Q?0huSOamqAXedWfm5A7GNyt91CVC+dBxgFgkWJ5OkprWy3z4DLV1+rCNrVJFc?=
+ =?us-ascii?Q?SmAR3ncI54iX0rO6eW5MoQavZyo7LRVX/MFZdSdQF7d/8dnHDAs8GQ3ZvuGn?=
+ =?us-ascii?Q?kgv8FZ3PdPo3JMvz5iUlDPxyDf0nyratMX5oh1JcA7fvRZS5220n81WO5xo4?=
+ =?us-ascii?Q?yJIerx+rrFrpZsaHiVKuD2p72kRL5P/0PvdCFoijw8o9u6dMe92Y2d32dL+N?=
+ =?us-ascii?Q?wdVzsU00KdNLFy1Jyp4nyOG5KhmNa1nUiR52sQxXKwdiS+yWhgeFDlMwCEAj?=
+ =?us-ascii?Q?AUjqW8Xo7aBsKubZdVSqFByNGpF0OfWXn5fRnU2oiDiBKbNQdkpAeEhjwPgZ?=
+ =?us-ascii?Q?Dag4w2LEJNGv7mVqHXg5RBCV+WPH5lOjz6xWpouJLaQRVSCkkyDIurldxvFE?=
+ =?us-ascii?Q?NTUiN3tpOKZ/ki64Dy0UZLE1AGfDK7YXu8DVVGZc5y243nWCWJIIwAwJkDtf?=
+ =?us-ascii?Q?K+BFyGn1exD1Q8HAGiDQOaIYrMHW6ghpwvxhl3Bm81ehVlD+YmNRtej3RRsO?=
+ =?us-ascii?Q?1qu7eg7SYZclGFEeocFTVKTLx9Kwc1VFPl5Oe4NRJtAePbIpqRFAhvxaUHzq?=
+ =?us-ascii?Q?JqBORKzZUXGan4gJ+RgBF0x5/lGjGW8IM9ek8aMEbP+wSE70XSg0VeluXVq2?=
+ =?us-ascii?Q?25/WGWOS11ZD5vv1y5d5j37pSdnnOEyoYd424bu/uSSj?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e5b295e-0867-4fc4-0e05-08ddb26fba25
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 16:05:09.3079
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GD6N2N2oin/HBSTQLlHJ33NcCdwqm8u9m96pYzdI8Ey1qCUR6RCIn1MP6bIy/yF3
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6971
 
-On 16/06/2025 12:55, Gavin Shan wrote:
-> Hi Steven,
-> 
-> On 6/11/25 8:48 PM, Steven Price wrote:
->> At runtime if the realm guest accesses memory which hasn't yet been
->> mapped then KVM needs to either populate the region or fault the guest.
+On 23 Jun 2025, at 11:47, David Hildenbrand wrote:
+
+> On 20.06.25 22:37, Zi Yan wrote:
+>> On 18 Jun 2025, at 13:39, David Hildenbrand wrote:
 >>
->> For memory in the lower (protected) region of IPA a fresh page is
->> provided to the RMM which will zero the contents. For memory in the
->> upper (shared) region of IPA, the memory from the memslot is mapped
->> into the realm VM non secure.
+>>> Let's make it clearer that we are talking about movable_ops pages.
+>>>
+>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>> ---
+>>>   include/linux/migrate.h    |  2 +-
+>>>   include/linux/page-flags.h |  2 +-
+>>>   mm/compaction.c            |  7 ++-----
+>>>   mm/memory-failure.c        |  4 ++--
+>>>   mm/memory_hotplug.c        |  8 +++-----
+>>>   mm/migrate.c               |  8 ++++----
+>>>   mm/page_alloc.c            |  2 +-
+>>>   mm/page_isolation.c        | 10 +++++-----
+>>>   8 files changed, 19 insertions(+), 24 deletions(-)
+>>>
+>>> diff --git a/include/linux/migrate.h b/include/linux/migrate.h
+>>> index 204e89eac998f..c575778456f97 100644
+>>> --- a/include/linux/migrate.h
+>>> +++ b/include/linux/migrate.h
+>>> @@ -115,7 +115,7 @@ static inline void __SetPageMovable(struct page *=
+page,
+>>>   static inline
+>>>   const struct movable_operations *page_movable_ops(struct page *page=
+)
+>>>   {
+>>> -	VM_BUG_ON(!__PageMovable(page));
+>>> +	VM_BUG_ON(!page_has_movable_ops(page));
+>>>
+>>>   	return (const struct movable_operations *)
+>>>   		((unsigned long)page->mapping - PAGE_MAPPING_MOVABLE);
+>>> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+>>> index 4fe5ee67535b2..c67163b73c5ec 100644
+>>> --- a/include/linux/page-flags.h
+>>> +++ b/include/linux/page-flags.h
+>>> @@ -750,7 +750,7 @@ static __always_inline bool __folio_test_movable(=
+const struct folio *folio)
+>>>   			PAGE_MAPPING_MOVABLE;
+>>>   }
+>>>
+>>> -static __always_inline bool __PageMovable(const struct page *page)
+>>> +static __always_inline bool page_has_movable_ops(const struct page *=
+page)
+>>>   {
+>>>   	return ((unsigned long)page->mapping & PAGE_MAPPING_FLAGS) =3D=3D
+>>>   				PAGE_MAPPING_MOVABLE;
+>>> diff --git a/mm/compaction.c b/mm/compaction.c
+>>> index 5c37373017014..f8b7c09e2e48c 100644
+>>> --- a/mm/compaction.c
+>>> +++ b/mm/compaction.c
+>>> @@ -1056,11 +1056,8 @@ isolate_migratepages_block(struct compact_cont=
+rol *cc, unsigned long low_pfn,
+>>>   		 * Skip any other type of page
+>>>   		 */
+>>>   		if (!PageLRU(page)) {
+>>> -			/*
+>>> -			 * __PageMovable can return false positive so we need
+>>> -			 * to verify it under page_lock.
+>>> -			 */
+>>> -			if (unlikely(__PageMovable(page)) &&
+>>> +			/* Isolation will grab the page lock. */
 >>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>   arch/arm64/include/asm/kvm_emulate.h |  10 ++
->>   arch/arm64/include/asm/kvm_rme.h     |  10 ++
->>   arch/arm64/kvm/mmu.c                 | 133 ++++++++++++++++++++-
->>   arch/arm64/kvm/rme.c                 | 165 +++++++++++++++++++++++++++
->>   4 files changed, 312 insertions(+), 6 deletions(-)
+>> I feel that the removed comment should stay, since the current comment=
+
+>> makes no sense when I read it alone.
+>
+> Well, talking about the page lock is moot either way. The thing is, any=
+thing can change while we don't hold a page reference. So should we chang=
+e the comment to
+>
+> /* isolation code will deal with any races. */
+
+Sounds good to me.
+
+>
+> ... or drop it completely?
+>
 >>
-> 
-> [...]
-> 
->> @@ -1078,6 +1091,9 @@ void kvm_free_stage2_pgd(struct kvm_s2_mmu *mmu)
->>       if (kvm_is_realm(kvm) &&
->>           (kvm_realm_state(kvm) != REALM_STATE_DEAD &&
->>            kvm_realm_state(kvm) != REALM_STATE_NONE)) {
->> +        struct realm *realm = &kvm->arch.realm;
->> +
->> +        kvm_stage2_unmap_range(mmu, 0, BIT(realm->ia_bits - 1), false);
->>           write_unlock(&kvm->mmu_lock);
->>           kvm_realm_destroy_rtts(kvm, pgt->ia_bits);
->>   
-> 
-> I'm giving it a try before taking time to review, @may_block needs to be
-> true.
-> I don't see there is anything why not to do so :)
+>> In addition, why is __PageMovable() is renamed to page_has_movable_ops=
+() but
+>> __SetPageMovable() stays the same? page_has_movable_ops() and __SetPag=
+eMovable()
+>> are functions for checking and setting PAGE_MAPPING_MOVABLE. The namin=
+g just
+>> does not look symmetric.
+>
+> See follow-up commits where __SetPageMovable() is cleaned up.
 
-You are right - I've no idea why I passed false to may_block. Thanks for
-the report.
+Right. It becomes clear at Patch 20.
 
-Thanks,
-Steve
+Reviewed-by: Zi Yan <ziy@nvidia.com>
 
->   kvm_stage2_unmap_range(mmu, 0, BIT(realm->ia_bits - 1), true);
-> 
-> Otherwise, there is RCU stall when the VM is destroyed.
-> 
-> [12730.399825] rcu: INFO: rcu_preempt self-detected stall on CPU
-> [12730.401922] rcu:     5-....: (5165 ticks this GP)
-> idle=3544/1/0x4000000000000000 softirq=41673/46605 fqs=2625
-> [12730.404598] rcu:     (t=5251 jiffies g=61757 q=36 ncpus=8)
-> [12730.406771] CPU: 5 UID: 0 PID: 170 Comm: qemu-system-aar Not tainted
-> 6.16.0-rc1-gavin-gfbc56042a9cf #36 PREEMPT
-> [12730.407918] Hardware name: QEMU QEMU Virtual Machine, BIOS unknown
-> 02/02/2022
-> [12730.408796] pstate: 61402009 (nZCv daif +PAN -UAO -TCO +DIT -SSBS
-> BTYPE=--)
-> [12730.409515] pc : realm_unmap_private_range+0x1b4/0x310
-> [12730.410825] lr : realm_unmap_private_range+0x98/0x310
-> [12730.411377] sp : ffff8000808f3920
-> [12730.411777] x29: ffff8000808f3920 x28: 0000000104d29000 x27:
-> 000000004229b000
-> [12730.413410] x26: 0000000000000000 x25: ffffb8c82d23f000 x24:
-> 00007fffffffffff
-> [12730.414292] x23: 000000004229c000 x22: 0001000000000000 x21:
-> ffff80008019deb8
-> [12730.415229] x20: 0000000101b3f000 x19: 000000004229b000 x18:
-> ffff8000808f3bd0
-> [12730.416119] x17: 0000000000000001 x16: ffffffffffffffff x15:
-> 0000ffff91cc5000
-> [12730.417004] x14: ffffb8c82cfccb48 x13: 0000ffff4b1fffff x12:
-> 0000000000000000
-> [12730.417876] x11: 0000000038e38e39 x10: 0000000000000004 x9 :
-> ffffb8c82c39a030
-> [12730.418863] x8 : ffff80008019deb8 x7 : 0000010000000000 x6 :
-> 0000000000000000
-> [12730.419738] x5 : 0000000038e38e39 x4 : ffff0000c0d80000 x3 :
-> 0000000000000000
-> [12730.420609] x2 : 000000004229c000 x1 : 0000000104d2a000 x0 :
-> 0000000000000000
-> [12730.421602] Call trace:
-> [12730.422209]  realm_unmap_private_range+0x1b4/0x310 (P)
-> [12730.423096]  kvm_realm_unmap_range+0xbc/0xe0
-> [12730.423657]  __unmap_stage2_range+0x74/0xa8
-> [12730.424198]  kvm_free_stage2_pgd+0xc8/0x120
-> [12730.424746]  kvm_uninit_stage2_mmu+0x24/0x48
-> [12730.425284]  kvm_arch_flush_shadow_all+0x74/0x98
-> [12730.425849]  kvm_mmu_notifier_release+0x38/0xa0
-> [12730.426409]  __mmu_notifier_release+0x80/0x1f0
-> [12730.427031]  exit_mmap+0x3d8/0x438
-> [12730.427526]  __mmput+0x38/0x160
-> [12730.428000]  mmput+0x58/0x78
-> [12730.428463]  do_exit+0x210/0x9d8
-> [12730.428945]  do_group_exit+0x3c/0xa0
-> [12730.429458]  get_signal+0x8d4/0x9c0
-> [12730.429954]  do_signal+0x98/0x400
-> [12730.430455]  do_notify_resume+0xec/0x1a0
-> [12730.431030]  el0_svc+0xe8/0x130
-> [12730.431536]  el0t_64_sync_handler+0x10c/0x138
-> [12730.432085]  el0t_64_sync+0x1ac/0x1b0
-> 
-> Thanks,
-> Gavin
-> 
-
+--
+Best Regards,
+Yan, Zi
