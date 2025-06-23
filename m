@@ -1,131 +1,116 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1077C21D3EC
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 00:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F2F1853;
+	Mon, 23 Jun 2025 00:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750636824; cv=none; b=lJIQwzNF2iSnKjnTY2428XSYs9159CtSLvUb/UInfZt3mDbKBhBfxwrsNVkAa3d8lDqZD+7HjYHUahpu7xrDJerqKK71snD+6ZQW5KyTx/WAWn0Y7GlJQ7rfN/x0e7zcs2h+kHCLM8DsjTKb1M0Wxq/7iioqq+5Bf3JzrzzoqkI=
+	t=1750637657; cv=none; b=KEtJpN22lojaJhWOaYs8mQD0/2qmYc6HSejP6RzavaPflnoJ/cAHYZpvx1Wm5zvRJs1NZDLbX5V1Ns4NPckViY/YGNn8w7Kg7VYc7R9w+K98zLLBEYJoD7Dsqf0M9DMr8o8bjoKihVfMmTIINzAhyydLv93OQvi4Ror/FJ6D4l0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750636824; c=relaxed/simple;
-	bh=XNhTVp0zHBlF+0PsXbzMdH+Fm4DPs2k4Bhj5e2VKuYg=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KqtbaWo/zCoKt01h8hwRNMpaBIcX6/HQz7tVv9DAMUbOL3qVm5TPH3U7eW1hWXUv+smoZJGLcRAAP4Aa6aNRzJ60Wu/dHTE+cgi1VScCgeKvQRJQuX2a3p49DIq8qP8+W7mPdAYYai3Kdmia0XXdO7OuuBC7dl0u8msVmwid3uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mze+4VuT; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750637657; c=relaxed/simple;
+	bh=auQrh4sKT3ktd4MJdeuOHfL+JJir07MH+eYLsNPEjWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=lCHg2ZVFT3AaSr5XqA7fuLAfgDQBsm88GfdmlbHfovsn6zeNcJ3oXH9xgdXT9ha4sIul+qNX5G7/Qv0uRBczkEfTPDkSPLgh62AzHj1Xw65ecJuXVspdkyczgZ9oov5m49qvPoYU97puljwESVJnWUxS67RJz0lfor98WwcPOKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Cd4G+Tfs; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mze+4VuT"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-70f862dbeaeso32656997b3.1
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 17:00:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750636822; x=1751241622; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tTdIBCLwszMjDGDcQS0PiAhY3upxjYQq8cnaKLJOLs4=;
-        b=Mze+4VuTozIEc3i8gMvzFVL9CvBFQcpQjEi4A839p8mFCDZJFuwveZi50aE8/1fEKf
-         G5faF+6ZjcUebVOrftMDMzTITbDAtZBo2ZuYQCEJC+3slTxpi4xMNUd7BkF4RBbbstKF
-         mHD2ciKx73PLw26IzXXNKAfa1kriXTodGw4JLHdKAqyQ2QekglMkU6W00Qz2rgbO3kt5
-         n6frnnxT5jkV1c/SkgpSdeonOu2KkY2dp1JIlZWBd063dGsCBUow70ZUXDiPjUpjB6PX
-         YCo9bkXpcIXq5UJLqJZr42HFiD9SrRpCqAn46bEw9+zuh7aFcqRxgTw2zoxhAiKWegY/
-         Qh7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750636822; x=1751241622;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tTdIBCLwszMjDGDcQS0PiAhY3upxjYQq8cnaKLJOLs4=;
-        b=dERXb/Abc53SAEZwjiyp3xDB6+uDpGWLjfRaBsNqDL9cptTZKlA8uMO+6hL29e4Dui
-         Y9KyncfwxoydD16/S7uNZkBtk0g+HdIAbuODLQySEHObHx3VzXOrWErsCv4EB5yEFvSZ
-         S1GifJZ/nvOHTuG/YrXbqVORcoF5O/EFPI5kWuVOGAdw8DGr56ndLp7ulJ6lXBr8YSAu
-         dKwXutaLp/rQjBM0Utn7BxYqRvaT6zc+lkXBpilQk1jvH7pPW8lOwdFiEx3mH5B3kLC0
-         IOtqkbf4XZDKMeBJ/+pYiY6V6jfLyRCtg/R4r0+x1SAoHXiCbKfURByeMbNNYnyC4ITQ
-         6E5g==
-X-Forwarded-Encrypted: i=1; AJvYcCXravfjvXzl/UUZ2PRmYGSkAxWqJRkeSYMqPfKPtwExJbcTLJW11HDaIu/BxRxHQgw0VAWUAnJPmcqDM7s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJ1xeMGPzgaTzzndt6H5tchsOg8O43GSaPakXGNASfeMbVXs9A
-	lh+ZDCr36/aQ91CXfYAyoC4SJz/gMbvghry6R8T9Cya7sqsVMTpqNFfp
-X-Gm-Gg: ASbGncumsahEVpsBZN2svwpFXzhirhCakcHbnsRckIKGPZ3E4rc5jI8xyFDm45USJCc
-	rlALBrM3efV7WJY31f4Kxrk10vIo3SBwkYqscwFaVwdyPEZ9JbCUweEvCQthIn4Xo6hEOw5p2Vj
-	u/9BtjX/0/bShP+P2w7PuQYXDCrGcv9f3oXWZGq8lnMXRyx0pxb2eKx5zxppHeyAYTmiTS8S+xO
-	LWhDU1OpMwTbOQn5vYfUyCjwu0T3yWyG25SUZpAdr47s+c5zRhPxXaJ+s1quH5UJUs/caIL/o2D
-	kmR/iGfEdxEmeS+qNBLSLhVPAKuJpE2AB9Y+G2Qk+6b+2oC4vHRHJVXkNNbzFVhpp90ui/NQtAA
-	RRAYhD6kB3o+CkWwNMIqzmA==
-X-Google-Smtp-Source: AGHT+IE/FToaPD7e3stm/h5Nd5LdAGsbRpIXHVZILc+iD7zhtzS2H6pcFI5YM5xmu9Jobq1oSeuY7A==
-X-Received: by 2002:a05:690c:6213:b0:70d:ff2a:d686 with SMTP id 00721157ae682-712c6511072mr142592417b3.28.1750636821915;
-        Sun, 22 Jun 2025 17:00:21 -0700 (PDT)
-Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-712c4a23909sm13531887b3.46.2025.06.22.17.00.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 17:00:21 -0700 (PDT)
-From: Yury Norov <yury.norov@gmail.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	"Yury Norov [NVIDIA]" <yury.norov@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] smp: Defer check for local execution in smp_call_function_many_cond()
-Date: Sun, 22 Jun 2025 20:00:09 -0400
-Message-ID: <20250623000010.10124-5-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250623000010.10124-1-yury.norov@gmail.com>
-References: <20250623000010.10124-1-yury.norov@gmail.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Cd4G+Tfs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1750637650;
+	bh=g93xWPClsSQDiTUFHn+j/vo5yn/0oiO5TP1Q91W3ovo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Cd4G+TfsJQtDXU6QmsZpZsCIbERCTJV7Gis2C1wjFGDBAtzpncawBap0OQqLMocoA
+	 0X3qrU9WSgVs3ON3xyJb1ymEQqdhJ5+Hcwmqij9zoQohgjRDTaByUmIbeH1WMWZBJI
+	 0lAMAlcy/Hjb1XAk8g/70aHjd9CcdvEqY5zlU276OpJPx72SUbjLFq2e4DImyLr6DC
+	 KrDEJgwi5hMQq5p185m059G7mekxJZLcK8gBlOKvcCB3nMBbAjud0SeM1NMoDY9skB
+	 BuVeVCUWQ5+oG0nNUb7nommMlnRWvcJaxuiG/Sk+HrCdbXPIO2l8HsxEP3V3e0Cwk/
+	 8m1oh61AJp+bg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bQT8c0XrDz4x0t;
+	Mon, 23 Jun 2025 10:14:08 +1000 (AEST)
+Date: Mon, 23 Jun 2025 10:14:07 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andrew Morton <akpm@linux-foundation.org>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Drew Fustini <fustini@kernel.org>, Duje =?UTF-8?B?TWloYW5vdmnEhw==?=
+ <duje@dujemihanovic.xyz>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the mm-unstable tree with the
+ risc-v-fixes tree
+Message-ID: <20250623101407.4fe17973@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/w.bWvhLFu/GuivKZ5WXRQvH";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-From: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
+--Sig_/w.bWvhLFu/GuivKZ5WXRQvH
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Defer check for local execution to the actual place where it is needed,
-and save some stack on a useless local variable.
+Hi all,
 
-Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
----
- kernel/smp.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+Today's linux-next merge of the mm-unstable tree got a conflict in:
 
-diff --git a/kernel/smp.c b/kernel/smp.c
-index 715190669e94..84561258cd22 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -779,7 +779,6 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
- 	bool wait = scf_flags & SCF_WAIT;
- 	int nr_cpus = 0;
- 	bool run_remote = false;
--	bool run_local = false;
- 
- 	lockdep_assert_preemption_disabled();
- 
-@@ -801,11 +800,6 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
- 	 */
- 	WARN_ON_ONCE(!in_task());
- 
--	/* Check if we need local execution. */
--	if ((scf_flags & SCF_RUN_LOCAL) && cpumask_test_cpu(this_cpu, mask) &&
--	    (!cond_func || cond_func(this_cpu, info)))
--		run_local = true;
--
- 	/* Check if we need remote execution, i.e., any CPU excluding this one. */
- 	if (cpumask_any_and_but(mask, cpu_online_mask, this_cpu) < nr_cpu_ids) {
- 		run_remote = true;
-@@ -853,7 +847,9 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
- 			run_remote = false;
- 	}
- 
--	if (run_local) {
-+	/* Check if we need local execution. */
-+	if ((scf_flags & SCF_RUN_LOCAL) && cpumask_test_cpu(this_cpu, mask) &&
-+	    (!cond_func || cond_func(this_cpu, info))) {
- 		unsigned long flags;
- 
- 		local_irq_save(flags);
--- 
-2.43.0
+  .mailmap
 
+between commit:
+
+  850f0e2433cd ("MAINTAINERS: Update Drew Fustini's email address")
+
+from the risc-v-fixes tree and commit:
+
+  a5d3f8d805d2 ("mailmap: update Duje Mihanovi=C4=87's email address")
+
+from the mm-unstable tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc .mailmap
+index 93e94b0b9376,60165a8144bd..000000000000
+--- a/.mailmap
++++ b/.mailmap
+@@@ -223,7 -222,7 +223,8 @@@ Dmitry Safonov <0x7f454c46@gmail.com> <
+  Dmitry Safonov <0x7f454c46@gmail.com> <dsafonov@virtuozzo.com>
+  Domen Puncer <domen@coderock.org>
+  Douglas Gilbert <dougg@torque.net>
+ +Drew Fustini <fustini@kernel.org> <drew@pdp7.com>
++ <duje@dujemihanovic.xyz> <duje.mihanovic@skole.hr>
+  Ed L. Cashin <ecashin@coraid.com>
+  Elliot Berman <quic_eberman@quicinc.com> <eberman@codeaurora.org>
+  Enric Balletbo i Serra <eballetbo@kernel.org> <enric.balletbo@collabora.c=
+om>
+
+--Sig_/w.bWvhLFu/GuivKZ5WXRQvH
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhYnE8ACgkQAVBC80lX
+0GxRbggAk6DTMLsSKnRP5LV38NKeWzCptAXtv+85r9qeMd/SKBF5cgQo5YooHan/
+RhMCDBhuMzhJVfFCswbSwSfgSBkGNXUCXjFaxX9dWzn/GfQoUx6hC6CPZ5XkQBXN
+0ZY3K4OpY60RV2g+0FaYrNHOyuUIKpHfXjEvwC4beaYcob9N4fLt4t/pgIbN4/9C
+awUBfc1L0nHSF+nHVWsN8txccIliCrEdRnaJUdr44bdBuLZHQePkdTw0ItkiZBRR
+njnccTCZqCNe9B4CjR2Ll9lkLbfFFlH9GCHstvWitKd4lDnAD+vqDaZVYJo1yPFp
+J/zhbi94Pq4EyW6JzShzfx6C5tznkw==
+=Nzcm
+-----END PGP SIGNATURE-----
+
+--Sig_/w.bWvhLFu/GuivKZ5WXRQvH--
