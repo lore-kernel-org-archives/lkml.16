@@ -1,154 +1,125 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A352FB2;
-	Mon, 23 Jun 2025 04:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750652576; cv=pass; b=dObK/bZBLamREc6QsZ/xYt60OYHdb0cSg9mS01O3G9XbYHDNxWRipIhbPZ+n47G79bsBHsJCqjZnn2U+do3NkI3lDG8kxAC5IL2Gq8xDgs6X1zVNr3//zOol5f3TIOHklslqYQWikgnLd2z0AqKDN56K2g+wZkvEfONBK170tO8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750652576; c=relaxed/simple;
-	bh=q9h1Zu5Ol6SLyA6ymFUAZPl1yFWJTcGqAKQmxynmf3U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jkARu++Z91KrGREJIQIfQGMgcURzJ6aM3c7O2n3pShwjiamEOnXQaWJcpJcckTW8AvP2iNdELBcl5YwRsvywuwglRHxlvAUjjtTWABJxeihXbB/uoVEzvzlZneTR2I+uf+jdm8HBVBK8DLz0KmOuuf/HOP77UhtGz8vAMqTuxX4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=j76InUmz; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="j76InUmz"
-ARC-Seal: i=1; a=rsa-sha256; t=1750652551; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=nio7iI08OincqbdaECjbl4hhoPYw1puSM4LVgnWL3YjVLqMQsxlpWPCqZPCNB2SuPMcuAWW1Uo1U/N7YYY5DcyiHFs8u6FU+NeHW2wB2+j1V6S55dBK43p+qruN3+wJtUURrzmtMY4YPxwPSbwd5NnsvAf9WY54l7grq6wCFBVQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750652551; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=nyr1QBpT/cq5OQ5ZrMG6Eq7xXww1oQmtMkfRYQ9Gas0=; 
-	b=NtLZFYiMhys/O+FpcRo5/6NhfavtIrciLLp0sweORxtTnSUUjHO3PvIFJnhwtrizbJSS62IsJBZ9DO4CXJyr9ajx3xzod9iHyFwmiLDCV9oS3wBls78/QYARXbAyzXdDCGHhQb3D0jwi+VSpbmTN3Y/7CbZb4WDCzRNliTt9dzI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750652551;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=nyr1QBpT/cq5OQ5ZrMG6Eq7xXww1oQmtMkfRYQ9Gas0=;
-	b=j76InUmzHm1Tz5epcAcio4sMr9YDaSTaetUpzaXuVWsVNmN0SzizeWvJ9Pa8oURo
-	KCIsdpiuAsDnXaZypj9ordlq9r9IA7EcV1DutqLhPat7xgdbbJunc1mvI6LJmb2HsfO
-	iKwK1vg7dAJFO+RzHWEm16RzKRtrQpFZ0adQfXB0=
-Received: by mx.zohomail.com with SMTPS id 1750652549950418.8510153490747;
-	Sun, 22 Jun 2025 21:22:29 -0700 (PDT)
-Message-ID: <f9b2deab-bdc4-4fd4-be1b-cb6617060086@collabora.com>
-Date: Mon, 23 Jun 2025 09:22:31 +0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25542FB2
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 04:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750652884; cv=none; b=KiK9NRSmHoyc792CuGSHOCB8i/6kIExMfU1Qxcfyi9Xct9KIZMKV2GmdnvoF2gG5yN4xOc4CdSuLGcwowJPFauouzAGWc7JHse3HlI/NALjWntjZYGpOsgnFGouuL9g5wT3NAh952nbzDBAeO160EMw647BKGCNwKZOuaPUJWzE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750652884; c=relaxed/simple;
+	bh=sszOZ04ExISycRNK4B4fQqqZeSX1CdavOXWPDv/kvqk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=ZLVHtWcsF4f7g3Ygx2sW5w2/2gPeeUlCOQNoC2VyiPPVduqnk4jYD2PyyXs+yFwDKYaBph+zTouKFi6jL9XniKLCCez5KnB7orYkuApQ+R+vo9gTevTmtmkjyOpn79ifkgEgsOJ62tXTE5QKPvOqmuANc8x68vOO7IOemnMdf4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddb4dcebfaso105405895ab.1
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 21:28:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750652882; x=1751257682;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zct5OHhk6ecwHi0znPKz8+T1+4MxcnWRqgw9X0N5X3A=;
+        b=AHgs7//dn0LiWIz0VYT718xIHmU6c2GQRc8WF+YkrXzak8n17Kolt4Y08WZVRwfDVa
+         LJohgvup2ILz4/3YcUjz39KqpmbAq2iRulZ5KbKApIehsixSRgSDQxnqh2xMz+HGGhi4
+         9SuM9km8vJi8m+sBXVidkcw5+jLyST01bhNRxkR1hFnxpo9mTN287+0/FAN2n9BerQWT
+         DgdcUPxHqXnc6O9s3PKG/Aejhdf4zRiRKDbK7BzWPwToxPuZWR1vmkLXFJyUdgXRXnrJ
+         UgkQaij5owvr9e3t1E+FGjsMhRGrs2WS931Ad4mIC0SDpECFft+f4onoU0DtRhW0351u
+         v6BQ==
+X-Gm-Message-State: AOJu0Ywab3Sg8t9U1f9nr81KrQYbDWRhVJNEcW87xr7OnthL/HLC9vHP
+	+/BMIkEwKcYOMR1JzdG3SvV1Pa2fyM7YEGbt7N1ZhkO8w435jaFi0HZBrMbWSSGg+mvRszGdymo
+	d6tpw/mcuyQi2O1GRMJn5TfpiCDI6Z8ixX7ES9v2aeGLDZdW3K9d743YzDz8=
+X-Google-Smtp-Source: AGHT+IH7Tl0kjsU+uef2QWz7SdbF2RX930Yk4uSXB0KxLhEnNPI0++naHL/KiHE6hG6DQQkPE3QMfqXY/AkTVUdyXdJWWtwGHUSU
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] selftests/filesystems/mount-notify: fix unused unused
- result warning
-To: Chen Linxuan <chenlinxuan@uniontech.com>
-Cc: Shuah Khan <shuah@kernel.org>, Christian Brauner <brauner@kernel.org>,
- Amir Goldstein <amir73il@gmail.com>, John Hubbard <jhubbard@nvidia.com>,
- Miklos Szeredi <mszeredi@redhat.com>, Jan Kara <jack@suse.cz>,
- zhanjun@uniontech.com, niecheng1@uniontech.com,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250620035125.2938774-2-chenlinxuan@uniontech.com>
- <213adda0-1db2-46e7-9342-cc97fbd58d96@collabora.com>
- <CAC1kPDMUUc3c7Ofyr7vXiW_Yt-kwrAOHK=9kQd5uCm2vv4h1gA@mail.gmail.com>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <CAC1kPDMUUc3c7Ofyr7vXiW_Yt-kwrAOHK=9kQd5uCm2vv4h1gA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+X-Received: by 2002:a05:6e02:11:b0:3dc:7563:c3d7 with SMTP id
+ e9e14a558f8ab-3de38caae76mr147290625ab.12.1750652882086; Sun, 22 Jun 2025
+ 21:28:02 -0700 (PDT)
+Date: Sun, 22 Jun 2025 21:28:02 -0700
+In-Reply-To: <20250623030312.2337101-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6858d7d2.a00a0220.2e5631.0005.GAE@google.com>
+Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
+ (3)
+From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/20/25 7:55 PM, Chen Linxuan wrote:
-> On Fri, Jun 20, 2025 at 10:46 PM Muhammad Usama Anjum
-> <usama.anjum@collabora.com> wrote:
->>
->> On 6/20/25 8:50 AM, Chen Linxuan wrote:
->>> When running `make kselftest`, the following compilation warning was encountered:
->>>
->>> mount-notify_test.c: In function ‘fanotify_rmdir’:
->>> mount-notify_test.c:490:17: warning: ignoring return value of ‘chdir’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
->>>   490 |                 chdir("/");
->>>       |                 ^~~~~~~~~~
->>>
->>> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
->>> ---
->>> Changes in v2:
->>> - Apply changes suggested by Shuah Khan
->>> - Link to v1: https://lore.kernel.org/all/20250610020758.2798787-2-chenlinxuan@uniontech.com/
->>> ---
->>>  .../filesystems/mount-notify/mount-notify_test.c  | 15 ++++++++++-----
->>>  .../mount-notify/mount-notify_test_ns.c           | 15 ++++++++++-----
->>>  2 files changed, 20 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
->>> index 5a3b0ace1a88c..f8e0c6b06e2d9 100644
->>> --- a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
->>> +++ b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
->>> @@ -458,12 +458,17 @@ TEST_F(fanotify, rmdir)
->>>       ASSERT_GE(ret, 0);
->>>
->>>       if (ret == 0) {
->>> -             chdir("/");
->>> -             unshare(CLONE_NEWNS);
->>> -             mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL);
->>> -             umount2("/a", MNT_DETACH);
->>> +             if (chdir("/"))
->> Please use the APIs provided by the kselftest_harness.h instead of checking
->> return types manually. For example:
->> use ASSERT_EQ(chdir("/", 0)).
-> 
-> Are you sure？We're in a forked sub process here.
-ASSERT_* are macros. They can be used anywhere. Please give it a try.
+Hello,
 
-> 
->>
->>> +                     exit(-1);
->>> +             if (unshare(CLONE_NEWNS))
->>> +                     exit(-1);
->>> +             if (mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL))
->>> +                     exit(-1);
->>> +             if (umount2("/a", MNT_DETACH))
->>> +                     exit(-1);
->>>               // This triggers a detach in the other namespace
->>> -             rmdir("/a");
->>> +             if (rmdir("/a"))
->>> +                     exit(-1);
->>>               exit(0);
->>>       }
->>>       wait(NULL);
->>> diff --git a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test_ns.c b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test_ns.c
->>> index d91946e69591a..d6a6a7ee87028 100644
->>> --- a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test_ns.c
->>> +++ b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test_ns.c
->>> @@ -486,12 +486,17 @@ TEST_F(fanotify, rmdir)
->>>       ASSERT_GE(ret, 0);
->>>
->>>       if (ret == 0) {
->>> -             chdir("/");
->>> -             unshare(CLONE_NEWNS);
->>> -             mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL);
->>> -             umount2("/a", MNT_DETACH);
->>> +             if (chdir("/"))
->>> +                     exit(-1);
->>> +             if (unshare(CLONE_NEWNS))
->>> +                     exit(-1);
->>> +             if (mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL))
->>> +                     exit(-1);
->>> +             if (umount2("/a", MNT_DETACH))
->>> +                     exit(-1);
->>>               // This triggers a detach in the other namespace
->>> -             rmdir("/a");
->>> +             if (rmdir("/a"))
->>> +                     exit(-1);
->>>               exit(0);
->>>       }
->>>       wait(NULL);
->>
->>
->>
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
+
+=====================================================
+BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+BUG: KMSAN: kernel-infoleak in _inline_copy_to_user include/linux/uaccess.h:196 [inline]
+BUG: KMSAN: kernel-infoleak in _copy_to_user+0xcc/0x120 lib/usercopy.c:26
+ instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+ _inline_copy_to_user include/linux/uaccess.h:196 [inline]
+ _copy_to_user+0xcc/0x120 lib/usercopy.c:26
+ copy_to_user include/linux/uaccess.h:225 [inline]
+ vmci_host_do_receive_datagram drivers/misc/vmw_vmci/vmci_host.c:441 [inline]
+ vmci_host_unlocked_ioctl+0x3d49/0x5340 drivers/misc/vmw_vmci/vmci_host.c:935
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0x239/0x400 fs/ioctl.c:893
+ __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
+ x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Uninit was stored to memory at:
+ kmemdup_noprof+0xb0/0x100 mm/util.c:139
+ kmemdup_noprof include/linux/fortify-string.h:765 [inline]
+ dg_dispatch_as_host drivers/misc/vmw_vmci/vmci_datagram.c:272 [inline]
+ vmci_datagram_dispatch+0x4eb/0x1560 drivers/misc/vmw_vmci/vmci_datagram.c:340
+ ctx_fire_notification drivers/misc/vmw_vmci/vmci_context.c:257 [inline]
+ ctx_free_ctx drivers/misc/vmw_vmci/vmci_context.c:435 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ vmci_ctx_put+0x88e/0x15d0 drivers/misc/vmw_vmci/vmci_context.c:497
+ vmci_ctx_destroy+0x15d/0x250 drivers/misc/vmw_vmci/vmci_context.c:195
+ vmci_host_do_init_context drivers/misc/vmw_vmci/vmci_host.c:341 [inline]
+ vmci_host_unlocked_ioctl+0x46a7/0x5340 drivers/misc/vmw_vmci/vmci_host.c:931
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0x239/0x400 fs/ioctl.c:893
+ __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
+ x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Local variable ev.i.i created at:
+ ctx_fire_notification drivers/misc/vmw_vmci/vmci_context.c:248 [inline]
+ ctx_free_ctx drivers/misc/vmw_vmci/vmci_context.c:435 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ vmci_ctx_put+0x76b/0x15d0 drivers/misc/vmw_vmci/vmci_context.c:497
+ vmci_ctx_destroy+0x15d/0x250 drivers/misc/vmw_vmci/vmci_context.c:195
+
+Bytes 28-31 of 40 are uninitialized
+Memory access of size 40 starts at ffff88804ac905c0
+Data copied to user address 000000000000a4bf
+
+CPU: 0 UID: 0 PID: 6748 Comm: syz.0.16 Not tainted 6.16.0-rc3-syzkaller-g86731a2a651e-dirty #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+=====================================================
+
+
+Tested on:
+
+commit:         86731a2a Linux 6.16-rc3
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1707a182580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=595d344ff0b23ac5
+dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1176f370580000
 
