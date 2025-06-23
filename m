@@ -1,92 +1,71 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5E62417F0
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750680189; cv=pass; b=T/ANZh0gJTJ1fYiZOdxehegC5bILVLpdusm1drPVIFuI5nE1bi11Xmm9NSrCnFRtySnc3FYvjgPif51bhnygin8fibo5W4ZOn9oeziaw/O5dwSTRiDdQ4fTmkjBdINDjsBI77e28H+dMZTUfw6UZ120gmHbwEPh5pbJ8zKSmGQU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750680189; c=relaxed/simple;
-	bh=uAoHuX1gjS1DqxUIDY3j8c8e7+esgywDv/fHvp55QkY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XjvTc9fvooOeGad+t7eLRhK+5jgZhjhX5os2CiVRh4UNop9ufLD8VDK2Yq4t2d8LpzX5RIuSpw2iKpGzp8udCgVRyQxE08YAH7EvkjuAR1h2G/jBUN+gVWbdoGqeSa2mcI01KOVMSJ7n3STzT+QIpdba5ufh5elA0iWXHn8Fyc0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=gert.wollny@collabora.com header.b=MbwXf5+O; arc=pass smtp.client-ip=136.143.188.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEFD246781
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750680201; cv=none; b=jUG4IKjRJ/0ZgWfwFMG0rpR42rO9a3fwcsoKu6MjQ59ttIZSw05d8rQV/TGntVm7UCzm6R3AoRjCLeIa4LlJRZzZyUN3oRRsajizDaz6yxX+fIR5B1ElOWBd2DPqmATS8X826FxfR9Y5tYmhh7yUSOpQx5FwKj6lH1jcX4UNg2g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750680201; c=relaxed/simple;
+	bh=3nnjzdKDL/XFZioXMgbkMzk/XvnybYXfQac1elnYKk0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=liPSFMxhYw/wu0pK/5GkJsFQ+cTRmRQdJOp4ZlnNv+3BODamap9son6e5xns7+fTr5olmGjbNmRTxaNoCliESDUQiDgOrjxenjuHFECALKoXCpivv2LLJUp0yRy234duDac2pKasZIzcKMnby7ER83eYWotIaLeBqxaS/HKuRJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=k6RSQSAO; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=gert.wollny@collabora.com header.b="MbwXf5+O"
-ARC-Seal: i=1; a=rsa-sha256; t=1750680167; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=YH4sFFDjORTCbDM4u5fyy9J6JR0S7GL5W1BoMk2HUurVuUccMNx03GXg7TbrAajidA3YPS/mdwHl9XP862u0IP1ww/Ox313PhN929auapZRG/Jj1DrTiwrNjx+BOtWlv2FYaf2A+9cHrw7eaq4UQhCj/Px19RkRcA4tYc4yU0Ok=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750680167; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=+2G5Oc8bg9km4uo1iR9FAfo0ipQPmDTdZujVVUvZ5XE=; 
-	b=kOXZAlZFX/PkvRe6bGJnTHkfYb+I8hIkP0Qf0a5UkIvN2zT3T/YP4bn2bqBgay8wER6zsPM4FuhDmuaQEkbwg8u4hC10T2r0bw7FijEBj/Bh6lmvfoxQgyTd5Nzcw6LjJMaZVPMNi7/KhhUb64QtE3BYXv7StBum+IYL7YwVlR4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=gert.wollny@collabora.com;
-	dmarc=pass header.from=<gert.wollny@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750680167;
-	s=zohomail; d=collabora.com; i=gert.wollny@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=+2G5Oc8bg9km4uo1iR9FAfo0ipQPmDTdZujVVUvZ5XE=;
-	b=MbwXf5+OHY+Z3psfEVqbT9vl0YWx21ykiHELbMkLpRdfCr1bkwzDxCn78QBFb9HX
-	EGYFuDqAPnzZNYTT5GrDcFyy1GaAciy7FZPEIeUce/QEXxbsqOTdzYgLriTouDIqJbD
-	4nvn+cbECL7gDWrPueO9SIwyKEWafsSo2fvJDMEg=
-Received: by mx.zohomail.com with SMTPS id 1750680164845368.277656923059;
-	Mon, 23 Jun 2025 05:02:44 -0700 (PDT)
-Message-ID: <7c8b78f040d872f7f119f849e7969a7f2a4e9c86.camel@collabora.com>
-Subject: Re: [PATCH v2 5/6] drm/etnaviv: Add PPU flop reset
-From: Gert Wollny <gert.wollny@collabora.com>
-To: Lucas Stach <l.stach@pengutronix.de>, Russell King
- <linux+etnaviv@armlinux.org.uk>, Christian Gmeiner
- <christian.gmeiner@gmail.com>
-Cc: etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Date: Mon, 23 Jun 2025 14:05:07 +0200
-In-Reply-To: <3197df27de7438c67558060414bff16662cb155a.camel@pengutronix.de>
-References: <20250618204400.21808-1-gert.wollny@collabora.com>
-	 <20250618204400.21808-6-gert.wollny@collabora.com>
-	 <3197df27de7438c67558060414bff16662cb155a.camel@pengutronix.de>
-Organization: Collabora Ltd
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="k6RSQSAO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750680198;
+	bh=3nnjzdKDL/XFZioXMgbkMzk/XvnybYXfQac1elnYKk0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=k6RSQSAOKKvHMpOXyLsoGT1dnJCjdRQDwxSGY61BzZUTS3VjCE9JIOoTBFekGL6yc
+	 ++vTE/zycKImJfVDxqPfw5ryZW6DihXBZz1oW+mu1EIZWwWlSOJWM0ZgUzTAssA2yo
+	 KnlkSFu9hrXjLSIYOIDxwLxfNNuU8dlzcV5ZyJJxBf6OTrUAI/VfqdEGLxSiDLV74v
+	 Da/0QpbaaUlsfVjDRq52ei26DLRVx/+AMQ1Wn8s0Qbk5JP0joqszyp2GuAYy1WszFe
+	 qJgdZ41doiknFjDhDbe565XiGgN4b5VfbyOsTIJbOOALl5jY1cbcrf2Bnwx7PrODJw
+	 wCKNzizFDh2NQ==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id EE7BB17E090E;
+	Mon, 23 Jun 2025 14:03:17 +0200 (CEST)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: chunfeng.yun@mediatek.com
+Cc: vkoul@kernel.org,
+	kishon@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-phy@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kernel@collabora.com
+Subject: [PATCH v1 0/2] MediaTek TPHY Cleanups
+Date: Mon, 23 Jun 2025 14:03:13 +0200
+Message-ID: <20250623120315.109881-1-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2025-06-20 at 22:22 +0200, Lucas Stach wrote:
->=20
-> > @@ -1807,6 +1808,11 @@ static int etnaviv_gpu_bind(struct device
-> > *dev, struct device *master,
-> > =C2=A0		ret =3D -ENXIO;
-> > =C2=A0		goto out_sched;
-> > =C2=A0	}
-> > +
-> > +	if (etnaviv_flop_reset_ppu_require(&gpu->identity) &&
-> > +	=C2=A0=C2=A0=C2=A0 !priv->flop_reset_data_ppu)
-> > +		etnaviv_flop_reset_ppu_init(priv);
-> > +
-> I don't see why you would need to do this in the bind callback. You
-> should be able to move this to etnaviv_gpu_init(), so you have the
-> needed identification data. gpu_init is also executed serially over
-> all GPUs in the device, so there is no problem with potential races
-> there.
+While doing my usual round of cleanups, I've found some room for
+improvement in the MediaTek T-PHY driver. This series performs some
+cleanups on that.
 
-I moved this here because you wrote before:=20
+AngeloGioacchino Del Regno (2):
+  phy: mediatek: tphy: Clarify and add kerneldoc to mtk_phy_pdata
+  phy: mediatek: tphy: Cleanup and document slew calibration
 
-> But then you should allocate this buffer
-> in etnaviv_gpu_bind to avoid races between GPUs starting up and=20
-> trying to allocate this global memory.
+ drivers/phy/mediatek/phy-mtk-tphy.c | 65 ++++++++++++++++-------------
+ 1 file changed, 37 insertions(+), 28 deletions(-)
 
-If etnaviv_gpu_init() is fine, I'll move it there.=20
-
-Regards,
-Gert=20
+-- 
+2.49.0
 
