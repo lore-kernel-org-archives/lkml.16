@@ -1,84 +1,74 @@
-Received: from mx.nixnet.email (mx.nixnet.email [5.161.67.119])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADFC188CC9;
-	Mon, 23 Jun 2025 11:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.161.67.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C29188CC9;
+	Mon, 23 Jun 2025 11:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750679605; cv=none; b=ew51RNJ+GjehW5lZaONZuFKwd0v9sT/mlhvv1HLo0wbjjqsC3Y8KTX6kxyfKYNW8R53kL6OOfiDgs06vO/8dS7BtgBuTftI/+UqBcgelM67h381NNq19+uucyJaTyQk6S81bsQxG/mBN4C5+lotZptWyYdhMBOtXQIcQ7VHZTAk=
+	t=1750679608; cv=none; b=ZwC9Ehs2LRcVxSrCF/whEEtFLgX7EST1zsZqY6aiZFgidPOeWvUxm5Mt4VkA0IMHMZZhYw0nCzzRlPnjmSPLCI+GKjXjNA7ij9izdfCM1aPPw4kI/AXJApHBibvPF5zBbVV29AtH0tq1O1FAz660YImFLHzEUOHday3XwlGT9gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750679605; c=relaxed/simple;
-	bh=Q+Vh0f3FEfaSjdhyV9/D3F33UGK3JGdNTHOi6QDQrLY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=td0UCtfGbM/GfYVnKmioz3sg+CngWuUYDEzV90hR57Ww/qRMLu3UFXBHX8zqt84+p2nK3bF+5Cv+ZgEio6hkLOgMfCrsPZrxReFqWrfDUIrRxqwPJpvWh5LGwRdyIAcyajBAX2Wxjhs0tdl4vMnjeUa4pjqYltVH4AH3z6/ylfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=pwned.life; spf=pass smtp.mailfrom=pwned.life; dkim=pass (1024-bit key) header.d=pwned.life header.i=@pwned.life header.b=BNBbYErO; arc=none smtp.client-ip=5.161.67.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=pwned.life
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pwned.life
+	s=arc-20240116; t=1750679608; c=relaxed/simple;
+	bh=l78T6d0rVhac0qoO9WlfEVxu95VKyR0dZVkQUB5NHpE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=QC0XOzELo9Hinff+yx8ek9RIQPq9BQnpfZO4M9qMjXpsiLxbDJxE0Pr6BhGVs2+pJvFmmS0N7XX9vqdNlWp0UbYoWj0VBQyUlmsz/p1COmQKgn4pxzUreHiXXXvivqJ5qrivW8E2wz8BeLHlzrMZwJhFuRQJwejBHGGBY4eW/Dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/8JD0Pb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pwned.life header.i=@pwned.life header.b="BNBbYErO"
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by mx.nixnet.email (Postfix) with ESMTPSA id 82F3C7D3B8;
-	Mon, 23 Jun 2025 13:53:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pwned.life; s=202002021149;
-	t=1750679593;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uRaI4i7DYLsfm/jQj9FFBzNDsdP4kcTnLOTUm/S2ckY=;
-	b=BNBbYErO0rytOESS4LBixCk9HjwnNbGQTiSWnV0RiTnKwDEo9/rEZKTq62o9tsd8F08zu9
-	NSfSLHnsDCnBB79U1CFF3rspaaVeUJt1MdEwlzWlGwmINsScN37Qzvh9G+ieyjla8AyzL5
-	1VovUmDDhU+tbqciaSQ/iAMk/QVuyFw=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/8JD0Pb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D5CBC4CEEA;
+	Mon, 23 Jun 2025 11:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750679608;
+	bh=l78T6d0rVhac0qoO9WlfEVxu95VKyR0dZVkQUB5NHpE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=s/8JD0Pbs7L0ea7UysC1tt6PzIvHh++2KQZ2hHdIqnVHpHgw869d/o8D0gbH4kI/O
+	 6MQIN8XGARuX7wtMvvdWunutPAd5DepDIsuWEtHGv5y+Tt2F69URD1eNBgmt9ZMOJg
+	 Gb+w//+izsZIhvRar86VkH4/zjcTcu5w/ftthUpVBxefXYrIRnozObtlZ/3p5lZroa
+	 iwi3Ev45TeCTh7VhlVyWNrOxGakG8JmD3/61t9W/lJ7+4yGzednGUbGCv/ZvAVWFMb
+	 YZF5iFrRFgkTKhnwQy2ouycmWAkSofna7Z199HkIEcxQbBqq5kKSdU15uTlzQpxgmq
+	 QW2CBIb5FjsbA==
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, bcm-kernel-feedback-list@broadcom.com, 
+ jim2101024@gmail.com, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ Jim Quinlan <james.quinlan@broadcom.com>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-rpi-kernel@lists.infradead.org
+In-Reply-To: <20250530224035.41886-1-james.quinlan@broadcom.com>
+References: <20250530224035.41886-1-james.quinlan@broadcom.com>
+Subject: Re: [PATCH 0/2] PCI: brcmstb: Use "num-lanes" DT property if
+ present
+Message-Id: <175067960711.8006.9074251471563711510.b4-ty@kernel.org>
+Date: Mon, 23 Jun 2025 05:53:27 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 23 Jun 2025 13:53:11 +0200
-Message-Id: <DATW4DAU81FO.388H7H1WSUKAB@pwned.life>
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Linus Torvalds"
- <torvalds@linux-foundation.org>, "Shuah Khan" <skhan@linuxfoundation.org>,
- <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <stable@vger.kernel.org>
-Subject: Re: [RESEND PATCH v2] kallsyms: fix build without execinfo
-From: "Achill Gilgenast" <fossdd@pwned.life>
-To: "Andrew Morton" <akpm@linux-foundation.org>
-X-Greeting: Hi mom! Look, I'm in somebodys mail client!
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250622014608.448718-1-fossdd@pwned.life>
- <20250622113602.48092b368afc5f1729b45cb6@linux-foundation.org>
-In-Reply-To: <20250622113602.48092b368afc5f1729b45cb6@linux-foundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Sun Jun 22, 2025 at 8:36 PM CEST, Andrew Morton wrote:
-> On Sun, 22 Jun 2025 03:45:49 +0200 Achill Gilgenast <fossdd@pwned.life> w=
-rote:
->
->> Some libc's like musl libc don't provide execinfo.h since it's not part
->> of POSIX. In order to fix compilation on musl, only include execinfo.h
->> if available (HAVE_BACKTRACE_SUPPORT)
->>=20
->> This was discovered with c104c16073b7 ("Kunit to check the longest symbo=
-l length")
->> which starts to include linux/kallsyms.h with Alpine Linux' configs.
->>=20
->> ...
->>
->> --- a/tools/include/linux/kallsyms.h
->> +++ b/tools/include/linux/kallsyms.h
->> @@ -18,6 +18,7 @@ static inline const char *kallsyms_lookup(unsigned lon=
-g addr,
->>  	return NULL;
->>  }
->> =20
->> +#ifdef HAVE_BACKTRACE_SUPPORT
->>  #include <execinfo.h>
->>  #include <stdlib.h>
->>  static inline void print_ip_sym(const char *loglvl, unsigned long ip)
->
-> I'm not seeing anything in there which needs execinfo.h.  Can we simply
-> remove the inclusion?
 
-No, since backtrace_symbols is provided by execinfo.h.
+On Fri, 30 May 2025 18:40:31 -0400, Jim Quinlan wrote:
+> v2:
+>   -- DT bindings: Add default, maximum values for 'num-lanes' (Rob)
+>   -- Add 'if' clause to clamp maximum requested num-lanes
+> 
+> 
+> v1: original
+> 
+> [...]
+
+Applied, thanks!
+
+[1/2] dt-bindings: PCI: brcm,stb-pcie: Add num-lanes property
+      commit: dbb1258daf75f2b98e465ba5a0e26073eda6e539
+[2/2] PCI: brcmstb: Use "num-lanes" DT property if present
+      commit: a364d10ffe361fb34c3838d33604da493045de1e
+
+Best regards,
+-- 
+Manivannan Sadhasivam <mani@kernel.org>
+
