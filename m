@@ -1,206 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026522940F;
-	Mon, 23 Jun 2025 09:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47CFB22DA0C;
+	Mon, 23 Jun 2025 09:44:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750671873; cv=none; b=ZwqS+nasEOl0kuA+JtjsWVnX4uooR9xGfVc95N3u/8uam0rpdHxaSoCpW2m3PwULi1th8vaLciq5ABFZ7stA2PWbHVnKDxn44ZqwMWXeFMJ2S1fWHXoAoOVHv9HfB/XKFBisU2tzx1arOQ0sgrPJC7MVliKnogAJNupv5vFbz94=
+	t=1750671895; cv=none; b=Sqlu/4NbXg5EXzCPd6HD7P24AycXhoXbdZmMQmJAoRcpvcoO05cfxczgbJv01jHIcUFq2H/g8LaK6T4vcyAIc30N1/sX/0t8YpMiKP+h8CxY+oZBKQoNWcVs20oc9MqsFzl5oCQDizKflMwZZV79JNn7PKMrRsrJmvgk2I/iytM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750671873; c=relaxed/simple;
-	bh=0E/AaZN6qOMuMlMCYG2o1/Ze/MndbrvBCcrhbvfO9Ms=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SpEd5U/IFxFvCFTIWp7pUJmvc1PByt5E+8AdsSEwx50p32cQKZuJh3mhi0V6uz5cdKAABvgzy9VmlSGLEGWMnDF0SDbF5hh/0daS9yR+2fuagwQ4qTXmc6po3w4QVfYRqAKQd3+8ZR6vx/Bb4f+bTdVtGbTEmf0wHJ0jfzSgsuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ntrFiZG/; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ntrFiZG/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750671872; x=1782207872;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=0E/AaZN6qOMuMlMCYG2o1/Ze/MndbrvBCcrhbvfO9Ms=;
-  b=ntrFiZG/bI1uaGcJw0qh7QtJNu1wb35vdaaSRDx4XmS4JW4EhYiRH2HI
-   DUpcm64FRFSvv+f0YkZOWSqLqCOD3Gfzcys/ddrquEzuPBZVVQaqChHs9
-   NVLrCXQcE4gSxqwxBkgWVpE2MB8N+zr+W58xjix54Ol33emLMccBzgkTp
-   +oLHCG+PuWu/uifmGQp91V6Fq1+tCSDE6KraA9puVXAzutsZq4OQjQnUN
-   eUgsWNvwSWhzhPItqSB4S01sfcD/zai5UkkU7Ip4Kt1xpWnterqfrnFEP
-   /Zs/wwN6DMbbGV84L/gew6lKElQuO+l70uFkP6mwDXrV9L1UbJi5vd0v5
-   g==;
-X-CSE-ConnectionGUID: k7XhyCbEQrCZndlpCZ709A==
-X-CSE-MsgGUID: 78klbsd7Tcuyd+Q38v/skg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="70438468"
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="70438468"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 02:44:31 -0700
-X-CSE-ConnectionGUID: vrNO2kbtRN6+XVxw1vmkOw==
-X-CSE-MsgGUID: fsNGcGK7QA+tT23BwSybFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="157336260"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 02:44:28 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uTdiy-000000097qN-2V8z;
-	Mon, 23 Jun 2025 12:44:24 +0300
-Date: Mon, 23 Jun 2025 12:44:24 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
-	corbet@lwn.net, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	eraretuya@gmail.com
-Subject: Re: [PATCH v10 4/7] iio: accel: adxl345: add inactivity feature
-Message-ID: <aFkh-E1dG__p_G4m@smile.fi.intel.com>
-References: <20250622155010.164451-1-l.rubusch@gmail.com>
- <20250622155010.164451-5-l.rubusch@gmail.com>
+	s=arc-20240116; t=1750671895; c=relaxed/simple;
+	bh=tVBj86PgtKM5634jqszKnYiIMkwXNySjUTkVWBXtn0w=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UKNRaeKUDN1w43SGY9Dmdjr3yongZqsbi3IeHy9cnyLxuFLtz9/ZV6C94L1BSY97dUc9rJIWK4uRLqZQpaaq2K2R/pNpZ1Y25NRDKur06lPwLHF/bYSj7S4c8RssA/LOJmGmG3laZ/hS/twLUaYdR6+IuRA7AOHlieDj4PWOB9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQjpJ6gSWz6M51k;
+	Mon, 23 Jun 2025 17:44:08 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6D23B1402E9;
+	Mon, 23 Jun 2025 17:44:51 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
+ 2025 11:44:50 +0200
+Date: Mon, 23 Jun 2025 10:44:49 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Neeraj Kumar <s.neeraj@samsung.com>
+CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>,
+	<anisa.su@samsung.com>, <vishak.g@samsung.com>, <krish.reddy@samsung.com>,
+	<arun.george@samsung.com>, <alok.rathore@samsung.com>,
+	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<gost.dev@samsung.com>, <cpgs@samsung.com>
+Subject: Re: [RFC PATCH 15/20] cxl: Add a routine to find cxl root decoder
+ on cxl bus
+Message-ID: <20250623104449.000069b3@huawei.com>
+In-Reply-To: <1295226194.21750165382072.JavaMail.epsvc@epcpadp2new>
+References: <20250617123944.78345-1-s.neeraj@samsung.com>
+	<CGME20250617124049epcas5p1de7eeee3b5ddd12ea221ca3ebf22f6e8@epcas5p1.samsung.com>
+	<1295226194.21750165382072.JavaMail.epsvc@epcpadp2new>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250622155010.164451-5-l.rubusch@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Sun, Jun 22, 2025 at 03:50:07PM +0000, Lothar Rubusch wrote:
-> Add support for the sensor’s inactivity feature in the driver. When both
-> activity and inactivity detection are enabled, the sensor sets a link bit
-> that ties the two functions together. This also enables auto-sleep mode,
-> allowing the sensor to automatically enter sleep state upon detecting
-> inactivity.
+On Tue, 17 Jun 2025 18:09:39 +0530
+Neeraj Kumar <s.neeraj@samsung.com> wrote:
+
+> Add cxl_find_root_decoder to find root decoder on cxl bus. It is used to
+> find root decoder during region creation
 > 
-> Inactivity detection relies on a configurable threshold and a specified
-> time period. If sensor measurements remain below the threshold for the
-> defined duration, the sensor transitions to the inactivity state.
+> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+> ---
+>  drivers/cxl/core/port.c | 26 ++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h       |  1 +
+>  2 files changed, 27 insertions(+)
 > 
-> When an Output Data Rate (ODR) is set, the inactivity time period is
-> automatically adjusted to a sensible default. Higher ODRs result in shorter
-> inactivity timeouts, while lower ODRs allow longer durations-within
-> reasonable upper and lower bounds. This is important because features like
-> auto-sleep operate effectively only between 12.5 Hz and 400 Hz. These
-> defaults are applied when the sample rate is modified, but users can
-> override them by explicitly setting a custom inactivity timeout.
-> 
-> Similarly, configuring the g-range provides default threshold values for
-> both activity and inactivity detection. These are implicit defaults meant
-> to simplify configuration, but they can also be manually overridden as
-> needed.
-
-...
-
-> +static int adxl345_set_inact_time(struct adxl345_state *st, u32 val_s)
-> +{
-> +	int max_boundary = U8_MAX;
-> +	int min_boundary = 10;
-> +	unsigned int val = min(val_s, U8_MAX);
-
-Wondering if it's possible to refer here to max_boundary?
-In any case, split this assignment since it will be easier
-to maintain.
-
-> +	enum adxl345_odr odr;
-> +	unsigned int regval;
-> +	int ret;
-
-	val = min(val_s, max_boundary);
-
-> +	if (val == 0) {
-> +		ret = regmap_read(st->regmap, ADXL345_REG_BW_RATE, &regval);
-> +		if (ret)
-> +			return ret;
-> +
-> +		odr = FIELD_GET(ADXL345_BW_RATE_MSK, regval);
-> +		val = clamp(max_boundary - adxl345_odr_tbl[odr][0],
-> +			    min_boundary, max_boundary);
-> +	}
-> +
-> +	return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val);
-> +}
-
-...
-
-> +	case ADXL345_INACTIVITY:
-> +		en = FIELD_GET(ADXL345_INACT_X_EN, axis_ctrl) |
-> +			FIELD_GET(ADXL345_INACT_Y_EN, axis_ctrl) |
-> +			FIELD_GET(ADXL345_INACT_Z_EN, axis_ctrl);
-
-As I pointed out earlier. the indentation is supposed to be on the same colomn
-for 'F' letters.
-
-> +		if (!en)
-> +			return false;
-> +		break;
-
-...
-
-> +			ret = regmap_read(st->regmap,
-> +					  ADXL345_REG_TIME_INACT,
-> +					  &period);
-
-There is plenty of room on the previous lines. Depending on the next
-changes (which I believe unlikely touch this) it may be packed to two
-lines with a logical split, like
-
-			ret = regmap_read(st->regmap,
-					  ADXL345_REG_TIME_INACT, &period);
-
-It again seems the byproduct of the too strict settings of the wrap limit in
-your editor.
-
-...
-
-> +	case ADXL345_INACTIVITY:
-> +		axis_ctrl = ADXL345_INACT_X_EN | ADXL345_INACT_Y_EN |
-> +				ADXL345_INACT_Z_EN;
-
-Consider
-		axis_ctrl =
-			ADXL345_INACT_X_EN | ADXL345_INACT_Y_EN | ADXL345_INACT_Z_EN;
-
-(yes, I see that it's longer than 80, but it might worth doing it for the sake of
- consistency with the previous suggestion).
-
-
-...
-
->  static int adxl345_set_range(struct adxl345_state *st, enum adxl345_range range)
->  {
-> -	return regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORMAT,
-
-> +	int ret;
-> +
-> +	ret = regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORMAT,
->  				 ADXL345_DATA_FORMAT_RANGE,
->  				 FIELD_PREP(ADXL345_DATA_FORMAT_RANGE, range));
-> +	if (ret)
-> +		return ret;
-
-If it's a code from the previous patch, it might make sense to introduce ret
-there.
-
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 2452f7c15b2d..94d9322b8e38 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -513,6 +513,32 @@ struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev)
 >  }
+>  EXPORT_SYMBOL_NS_GPL(to_cxl_switch_decoder, "CXL");
+>  
+> +static int match_root_decoder(struct device *dev, void *data)
+> +{
+> +	return is_root_decoder(dev);
+> +}
+> +
+> +/**
+> + * cxl_find_root_decoder() - find a cxl root decoder on cxl bus
+> + * @port: any descendant port in root-cxl-port topology
+> + */
+> +struct cxl_root_decoder *cxl_find_root_decoder(struct cxl_port *port)
+> +{
+> +	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
+> +	struct device *dev;
+> +
+> +	if (!cxl_root)
+> +		return NULL;
+> +
+> +	dev = device_find_child(&cxl_root->port.dev, NULL, match_root_decoder);
+> +
 
-...
+No blank line here.  Generally when we have a call then an error check
+it is easier to see how they are related if we keep them in one block.
 
-> +	case IIO_EV_INFO_PERIOD:
-> +		ret = regmap_read(st->regmap,
-> +				  ADXL345_REG_TIME_INACT,
-> +				  &period);
-
-Too short lines.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> +	if (!dev)
+> +		return NULL;
+> +
+> +	return to_cxl_root_decoder(dev);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_find_root_decoder, "CXL");
+> +
+>  static void cxl_ep_release(struct cxl_ep *ep)
+>  {
+>  	put_device(ep->ep);
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 30c80e04cb27..2c6a782d0941 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -871,6 +871,7 @@ bool is_cxl_nvdimm_bridge(struct device *dev);
+>  int devm_cxl_add_nvdimm(struct cxl_port *parent_port, struct cxl_memdev *cxlmd);
+>  struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_port *port);
+>  void cxl_region_discovery(struct cxl_port *port);
+> +struct cxl_root_decoder *cxl_find_root_decoder(struct cxl_port *port);
+>  
+>  #ifdef CONFIG_CXL_REGION
+>  bool is_cxl_pmem_region(struct device *dev);
 
