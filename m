@@ -1,136 +1,83 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514082C3265;
-	Mon, 23 Jun 2025 16:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2E528E607;
+	Mon, 23 Jun 2025 16:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750695162; cv=none; b=UH+Unbb8unD+csqiooIuT29ZzIFWqGdlk/ZqKwMNXf9UxYHVx/J+Sp1aPXW6NJpOHA5KzimsHfO3ZKLWrKMKptFmRhRmH0EGgMyE6uoaSBHC/8E0tpgUzmZrBVDpoyyMiqpEvubMhTKcgYX60j3LXBiliZgZpepcPDLyQyw2ySI=
+	t=1750695305; cv=none; b=jOqNGhbuG2UdrRuF6rhrkiYpEFCe0PmOp7uh7Jo5Awuj3dLLX8hzNHa2OmwJedUAXfdPr1TMXoHTXAD4j9jZ3TFlZRnRbx08bbDleKWJ7oQbGF1YZ4R7rq8SjxKBhWPkdWyEXOYXsiUYF3yLvXV3e64ZairgfDv7oNE7FNo00l8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750695162; c=relaxed/simple;
-	bh=NGNHqVeHxydNd/a2vIf96yJJA/aOVMOt2dlmMgPjKOQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hXX9jvFBsLUSsyzyrvo+jAny8Tly045bIsox21L7+qLIQW6gQhIJgSdaA9FN6ZiiU9tjxu3bw/x3IUCp46NFL5H+ZuWa2XDQ2H6Bcc3ZJRwRO693QssKWKrN/Ff11PAmI6iZ8A01eQTCA4erB1GeFfxtRDICMdvtPS3MtvnY7mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a1boP2I4; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750695305; c=relaxed/simple;
+	bh=V2trAmon8nMb/3Uqjyt7L8fDFnJFLh9kd6estMca12A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MPW6JX+0voBpiuvwJqY5su+pOnvLWI1COu2lQOSbWGMEEdtCwfz4f6ke/VJbzcVvcgUSZ0lK0o5hSxy1uynD+fslVzmESJrH5RJIBs/AKjgEdYqt4r2I6idoRVstpfgHHgt7hq6UwuHFdnleOKF09Niy1VnZ1ovco2tm2fSIQ0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oUAHjfHZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a1boP2I4"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7425bd5a83aso3838613b3a.0;
-        Mon, 23 Jun 2025 09:12:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750695160; x=1751299960; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=f78YX8Jv2hkXlixOcjovzULMHQy54ZDO00RkiEOZMLg=;
-        b=a1boP2I4O+S+6yxw1IckzVyj8Gye9uSCo0UqRIPx//MMs/nwnuY6FjvbkpTnhQVY3N
-         o0xIQmMTv6e52BYSWwyVtUZgK9Q5qhpHEKPJSTV+suSS6cWSGn3p6wI6Hp5CRIEgfOuO
-         vbZFClP1Al39gSOBCFINjzb1DadlInC1y3VUzq9Uh+WfaLJvDFwwRyFQ6UftVTCHoZ3g
-         i+cO/NoAclUQ2/UR8kExNLctNNppNALTaFOEFXayB8obPBw2wx+zZS6MT47/JRNjdkkG
-         sxXnvuUAq7PbmS2Vc8vyCv19DBE68tHgqXyFNiV5vl0Y5f3n7q82MkZaD6GbjZDWI38S
-         xtQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750695160; x=1751299960;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f78YX8Jv2hkXlixOcjovzULMHQy54ZDO00RkiEOZMLg=;
-        b=I/+OalDFw12TlTGFtDBlPVPUAKMcl4zufyQHrmjPbZnf+w0tz5pyexle6i5XjBOFY6
-         QoEBQiTE8dV7py3YeVjQLrVo0mBsdHJt9EC9MtAwtI9+Kv4NR/vczQ9maIsMDIgmD6Oc
-         QtMqBvRatA8ZCgxh6K0mqDaeqdqF/fUQS7Pt0kxswjWP1DX4wTJFv6ZcBu9eM7PoZusK
-         +R9XGSmgYmoafuv/5gQAxa4HKHqArfW56pemKfzkH8zmfKm18Rsu8sWhqERy0suGL5do
-         fvoe135j9g/6dCJzZLyV5+SMvX3pzK0Tg/lz/mYzZnVtOfv437gEidb0Z/l2hC8HsfOK
-         /FAw==
-X-Forwarded-Encrypted: i=1; AJvYcCWKepFD5loxVIhGPzHR7dZiuIty9uVpzbR7f+ZP3PmVhC9JAfxvEg0qcMpKRULVDBt2blrcYP+YY/Os@vger.kernel.org, AJvYcCWflq2izVN9/meynruuuaelrKjHqD0yHSzlMEOp9IslicOhvlzYDNlPDxG15OIOQLzQqMkj7X8KZtfItUP3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+Oh7ZZXT570WoXM8DDQIfT6yPJyvS766k9kpmYI4vHo8qRFAB
-	rJuyQxUfL83Ahuma3HevYz4JMHy1kC2meozOY//DcJqowOcBiscnd6voZaQKgpTG
-X-Gm-Gg: ASbGncs59NZqg4dmzYwCeTItLdU0ValINP4n/qHUATl0cPt/2wUUlPDZnQZzeUcw89d
-	zXgW65k22//eR/XKaJ9AVJG+hI4zAHSsGes6eECSbhRSKmK422NNIMj0Oad1mTMfDyQ8P+q6oSM
-	eBntguesXfhF5Z5ffcSiUI+ipHRa8PuV0+z0gL05cstKmGjFsJNcKuB5bScr5zjduiES3CpYPZ7
-	7PJxKC/a8D3OmKueuQVcjb7Ky0AkNO/Z1QvpZNErqlhhBNeiOkpoyuaek/2KxKd3M8NLSNoBYxv
-	AdmyDdy4blBllPMd5uABQV+sTMrr27zDvVmJCOiuqcvJBzfL3HUAB0K83ZqQlVF9oO+wr+Xw9u1
-	rUo+sFFb5Y28a5nk=
-X-Google-Smtp-Source: AGHT+IEQFD7ncJGbn/pBz/+p1d4K7L7mh1a5kN90gM3aF97um4Xo6JRQuOcwRlaKlzaUrBNsaYvNLw==
-X-Received: by 2002:a05:6a00:2e18:b0:748:ffaf:9b53 with SMTP id d2e1a72fcca58-7490d723218mr17461031b3a.16.1750695160533;
-        Mon, 23 Jun 2025 09:12:40 -0700 (PDT)
-Received: from [10.22.1.180] ([67.159.246.222])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a467e6dsm9029608b3a.13.2025.06.23.09.12.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 09:12:40 -0700 (PDT)
-From: =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>
-Date: Mon, 23 Jun 2025 13:12:27 -0300
-Subject: [PATCH 2/2] arm64: dts: ti: k3-am62p-verdin: Adjust temperature
- trip points
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oUAHjfHZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A605C4CEEA;
+	Mon, 23 Jun 2025 16:15:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750695305;
+	bh=V2trAmon8nMb/3Uqjyt7L8fDFnJFLh9kd6estMca12A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oUAHjfHZ7wP9z4uLcLWdCsGlRAA4mxsqG924jEqzyw2M4VNvHQLkW7/XaK7eikRNx
+	 nuWsZ4xTYXzcS1qpM0N9dUaJ5KvuHA9WdHnn+AfPFA9M9TNy0FWPw7mfibWHHaEnWs
+	 0dVf7wJFCv8zWmjdrMg08ri9taKDKJFerpwqYC0Qq/4xJnmX8Hv4EVlbbJuWIWGC3V
+	 aZ2uG/9IAJkd3CvKEU5RPBpEXiqNVnaHrc6udpbJ1s6JVTLew1crDKD2WQ/LYiRCYB
+	 qCYU/TGhbcHB4MaAX6QB7kQXaHSAZuBSKB/QUcE8iZm+78j+xLUA5And5xhy37VDMc
+	 kbKr417JlXlZw==
+Date: Mon, 23 Jun 2025 17:15:00 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
+	nicolas.dufresne@collabora.com, jgg@ziepe.ca, iommu@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, kernel@collabora.com
+Subject: Re: [PATCH v4 2/5] dt-bindings: iommu: verisilicon: Add binding for
+ VSI IOMMU
+Message-ID: <20250623-squiggly-unopposed-8b0ca15adbdb@spud>
+References: <20250623153931.158765-1-benjamin.gaignard@collabora.com>
+ <20250623153931.158765-3-benjamin.gaignard@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250623-b4-verdin-am62p-cooling-device-v1-2-cc185ba5843d@toradex.com>
-References: <20250623-b4-verdin-am62p-cooling-device-v1-0-cc185ba5843d@toradex.com>
-In-Reply-To: <20250623-b4-verdin-am62p-cooling-device-v1-0-cc185ba5843d@toradex.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, 
- Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>
-X-Mailer: b4 0.14.2
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="RBUMPEX8/HmZilKF"
+Content-Disposition: inline
+In-Reply-To: <20250623153931.158765-3-benjamin.gaignard@collabora.com>
 
-From: João Paulo Gonçalves <joao.goncalves@toradex.com>
 
-While the TI AM62P supports a junction temperature (Tj) of up to 125°C
-for industrial and automotive parts, Toradex Verdin-AM62P hardware
-lifetime guarantees consider a 105°C Tj. Change the passive trip points
-to 95°C and the critical trip points to 105°C to be compliant with the
-hardware specifications.
+--RBUMPEX8/HmZilKF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
----
- arch/arm64/boot/dts/ti/k3-am62p-verdin.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+On Mon, Jun 23, 2025 at 05:39:26PM +0200, Benjamin Gaignard wrote:
+> Add a device tree binding for the Verisilicon (VSI) IOMMU.
+> This IOMMU sits in front of hardware encoder and decoder
+> blocks on SoCs using Verisilicon IP, such as the Rockchip RK3588.
+>=20
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+> ---
+> changes in version 4:
+> - rename and reorder compatibles fields.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p-verdin.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-verdin.dtsi
-index 226398c37fa9b348b8ea30e1e21f75e98bd3d60b..7676b24b13f67da81245c023e0fdc27294efec82 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p-verdin.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62p-verdin.dtsi
-@@ -848,6 +848,30 @@ mbox_mcu_r5_0: mbox-mcu-r5-0 {
- 	};
- };
- 
-+&main0_alert {
-+	temperature = <95000>;
-+};
-+
-+&main0_crit {
-+	temperature = <105000>;
-+};
-+
-+&main1_alert {
-+	temperature = <95000>;
-+};
-+
-+&main1_crit {
-+	temperature = <105000>;
-+};
-+
-+&main2_alert {
-+	temperature = <95000>;
-+};
-+
-+&main2_crit {
-+	temperature = <105000>;
-+};
-+
- &main_gpio0 {
- 	gpio-line-names =
- 		"SODIMM_52",
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
--- 
-2.43.0
+--RBUMPEX8/HmZilKF
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaFl9hAAKCRB4tDGHoIJi
+0jBSAP0QEA7xsWu1uTUJGvGMxKQiDolLdO1bwbcDbNWauJJweAD+MeNwvPqaJfCo
+UGWS8QtxVnFJeDPlL0cimI/NBdYjFAM=
+=8bDY
+-----END PGP SIGNATURE-----
+
+--RBUMPEX8/HmZilKF--
