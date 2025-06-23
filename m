@@ -1,122 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85551F09A3;
-	Mon, 23 Jun 2025 06:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E94D78F51;
+	Mon, 23 Jun 2025 06:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750661145; cv=none; b=OcUClztnaW0iBwAVb7HM1XMVGUih0PVwCEZ/Rr0OkN8zHgTONTupvnnu+/JvR6NnNiP1GLiVWz44GwJhHkCVGAXOaku44pWcJ+IKvlXQNPwXV8AT+JHzoikJwf+0pNRUEVH2RmeCbL3AA7LGPShcYbgSoWPQFSM+UGkooCsuCTc=
+	t=1750661274; cv=none; b=MIMlgNtIGg6YxgR1RZ9AnYyXSBWNVpMMq+3B3XS6PP1fFu9UdMFImTAEwGYHWJAvStn3ugC/YYeyIr3C3DcSRW77n+JKMN6YNNc3iJ+Fz8gb44bKH3p/DjXx2QE5lg+wUj5DcGiMmxzB9NGRrA6GXj/aKUVuUwBi1tvFtuK2tog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750661145; c=relaxed/simple;
-	bh=w9OiTzZhaI79QJy6G2ci/B5q4sjHXmS4dpoPIF9Jmqc=;
+	s=arc-20240116; t=1750661274; c=relaxed/simple;
+	bh=YS5QfchkXQuDpizebXwc+i/GQO/Ujou+O/e0qMENePo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yd+xEdY+D1Fw9rA/zcgoE3AgvFfeUygkbjeY/IT4MHwYSEs6m6McusHqWn3ozDDo91433fhRVzxUCO54LNanQz9b57esGpoSzMSdaJs9vfCwCwdGAiCUlPkqGTCnp+a9DaWJlEUIIn1qYT9fkcd3vUMOK6utOI5pkYG6VM5iQ70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eyLuO6PD; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=MS9PPdbRoZ0DeP0k4A5DMlOxwHdzCp/mJKUgfw8xURLLduoytzQpqFYgrKv3mtfZ4boHR8Ruv3PhXJRcEuIOHe7JRnksFV3d8TbibN9RzhFnqgMz+0XRLlGecdDrf5EKNfJOrE+WM3hMJ9g6pZfhyH1hvY0dgZo594u/HDvkM4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SwPXFBpd; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eyLuO6PD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SwPXFBpd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750661144; x=1782197144;
+  t=1750661273; x=1782197273;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=w9OiTzZhaI79QJy6G2ci/B5q4sjHXmS4dpoPIF9Jmqc=;
-  b=eyLuO6PDZQS1KqSnJs23+qT3+Bt+x859vjjVlSU3CN8yFVsfT+Y4wBaL
-   Cbo9dev8QyP3nYwQETis9rjo9qWegLEeaNmOfIgiRjrpJ4hTNYouPISoy
-   qB6cl9NxdUmr90qFY+txFoxYWwjPbhtblFHM1gvXh+8QJbwhbHTn60wu8
-   7QB3pUVOraddE8d6CPOOwvpWcvFgYgk6UoYusL0Uj6qD8aEGmKLkugpDK
-   CIl9H0f3xRKQBPbYeXDvnYpgQ588x/8XQNzkUT2U/2Mh9V0TvdsWVbqbo
-   +otRYa/tt7v4zaewoTf2bjrMpZVHDfZ96hUT1pvVcg5lsdtmxqEATPM2H
-   Q==;
-X-CSE-ConnectionGUID: +TLoDMBORV+2d6MZnCA1ew==
-X-CSE-MsgGUID: jgJP4pmWRuG426BwKJvWqA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="70422682"
+   mime-version:in-reply-to;
+  bh=YS5QfchkXQuDpizebXwc+i/GQO/Ujou+O/e0qMENePo=;
+  b=SwPXFBpdFwt+CSnBgkBnprVADEbNvKzDB8vyxuue6b2yjBAmNT4PKd0n
+   w44dyr2LC6dqkrX+2ybT/ZKccu/A6N6QqkNHLskiGL7xtSF+xZul/Z7zR
+   AOZLG376z8PtvuNw9NjYy82JkNelJYjp0bvbiwv8aVrIo6aA147jRCYVB
+   bR/sBqgoGvCvZUJqpCMuEDMNcbQMC9npVFWzLzqOGeRU0FyDEpZKdbG+I
+   qCK46NlYG78GO9x2z1gOc3WCohQfM35q1ySwZ7pIjMXT7XjjBPxZtys3W
+   Q5smpqjuLlB01MFmne2+hBLBR14G8U+cOS0Iicf4GW3WnzFAVcxb/izZF
+   g==;
+X-CSE-ConnectionGUID: gbDNnaQtQEmlN66WmkcECg==
+X-CSE-MsgGUID: 2uslWLd3RD6SB8WsMuZW1Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="52991727"
 X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="70422682"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 23:45:43 -0700
-X-CSE-ConnectionGUID: J3jnEaL7TRK4Pr1OCI+Bfw==
-X-CSE-MsgGUID: yMYO4c2ARjOyC+stvMUHHw==
+   d="scan'208";a="52991727"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 23:47:52 -0700
+X-CSE-ConnectionGUID: mNrnjtrWSK6xeohGlUJjsw==
+X-CSE-MsgGUID: Pz/9sXzLRiW91MMh1pUT1Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="182379901"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 23:45:40 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uTavx-000000095P7-0Qjh;
-	Mon, 23 Jun 2025 09:45:37 +0300
-Date: Mon, 23 Jun 2025 09:45:36 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Victor.Duicu@microchip.com,
-	dlechner@baylibre.com, nuno.sa@analog.com,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	robh@kernel.org, andy@kernel.org, krzk+dt@kernel.org,
-	linux-kernel@vger.kernel.org, Marius.Cristea@microchip.com,
-	conor+dt@kernel.org
-Subject: Re: [PATCH v3 2/2] iio: temperature: add support for MCP998X
-Message-ID: <aFj4EI5CEIIQ8adl@smile.fi.intel.com>
-References: <20250613130207.8560-1-victor.duicu@microchip.com>
- <20250613130207.8560-3-victor.duicu@microchip.com>
- <CAHp75VdRisP+trez2Ysgrhan_zXMWsmawB3XeW+_ePsbNC4RzQ@mail.gmail.com>
- <f980b3c1a4fbd60f70dda9670648479a38313439.camel@microchip.com>
- <CAHp75Vc2nueOycoy8+dYyQekAAMPO82wOYSVT0RZOC4yRaE5jA@mail.gmail.com>
- <20250621181946.28d831ac@jic23-huawei>
+   d="scan'208";a="150924944"
+Received: from abityuts-desk.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.8])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 23:47:48 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 9431E1201F7;
+	Mon, 23 Jun 2025 09:47:44 +0300 (EEST)
+Date: Mon, 23 Jun 2025 06:47:44 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Olivier Benjamin <olivier.benjamin@bootlin.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
+	Nicholas Roth <nicholas@rothemail.net>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+	imx@lists.linux.dev, ~diederik/pine64-discuss@lists.sr.ht,
+	Dragan Simic <dsimic@manjaro.org>, Ondrej Jirman <megi@xff.cz>
+Subject: Re: [PATCH v4 0/4] Describe the cameras in the PinePhone Pro dts
+Message-ID: <aFj4kAXEhrR4Wbnz@kekkonen.localdomain>
+References: <20250620-camera-v4-0-0201a8ed5fae@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250621181946.28d831ac@jic23-huawei>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20250620-camera-v4-0-0201a8ed5fae@bootlin.com>
 
-On Sat, Jun 21, 2025 at 06:19:46PM +0100, Jonathan Cameron wrote:
-> On Thu, 19 Jun 2025 11:29:30 +0300
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > On Thu, Jun 19, 2025 at 10:22 AM <Victor.Duicu@microchip.com> wrote:
-> > > On Sat, 2025-06-14 at 00:50 +0300, Andy Shevchenko wrote:  
-> > > > On Fri, Jun 13, 2025 at 4:02 PM <victor.duicu@microchip.com> wrote:  
+Hi Olivier,
 
-...
-
-> > > > > +MICROCHIP MCP9982 TEMPERATURE DRIVER
-> > > > > +M:     Victor Duicu <victor.duicu@microchip.com>
-> > > > > +L:     linux-iio@vger.kernel.org
-> > > > > +S:     Supported
-> > > > > +F:
-> > > > > Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982
-> > > > > .yaml
-> > > > > +F:     drivers/iio/temperature/mcp9982.c  
-> > > >
-> > > > So, with the first patch only the dangling file will be present
-> > > > without record in MAINTAINERS. Please, make sure that your DT schema
-> > > > file is in MAINTAINERS.  
-> > >
-> > > Are you referring here to the file sysfs-bus-iio-temperature-mcp9982?
-> > > This file was in v2 where there were a few custom attributes. In v3
-> > > I removed them, so the driver currently doesn't have custom attributes.
-> > > Should I had added it to the files in MAINTAINERS?  
-> > 
-> > You should have added the file to the MAINTAINERS in the same patch it
-> > appears. Not in some arbitrary change afterwards.
+On Fri, Jun 20, 2025 at 05:21:31PM +0200, Olivier Benjamin wrote:
+> This series adds support for the Pine64 PinePhone Pro's rear and front
+> cameras in Device Tree.
+> This is based on some of Ondrej Jirman's patches hosted in his tree at
+> https://codeberg.org/megi/linux, but I have also fully reviewed and
+> re-written the code from the RK3399 datasheet, the PinePhone Pro
+> schematic, and the IMX258-0AQH5 software reference manual.
 > 
-> Perhaps the confusion here is that Andy is talking about 2 lines above, not
-> the immediate line above this feedback.  So the one with the dt-binding
-> file.  If Victor was reading it as being about the .c file then
-> this whole cross discussion makes more sense!
+> I have tested these changes on my PinePhone Pro and am able to take
+> photos from both cameras using libcamera's cam.
+> 
+> This series has raised a question about the proper label name for the
+> front/user camera and rear/world camera for phones.
+> This series is using "ucam" and "wcam", which is used in a few other
+> Rockship DTBs:
+>  - arch/arm64/boot/dts/rockchip/px30-evb.dts
+>  - rk3399-gru-scarlet.dtsi
+> 
+> Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
 
-Yep, sorry for the confusion. My point is that the first patch in the series
-added a file, it should start a MAINTAINERS at the same time.
+Thanks for the patches.
+
+I've picked the first two in the set, presumably the rest will be merged
+via another tree?
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards,
 
-
+Sakari Ailus
