@@ -1,68 +1,109 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B60B7B676;
-	Mon, 23 Jun 2025 22:16:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65D01F7580;
+	Mon, 23 Jun 2025 22:17:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750717003; cv=none; b=tKn5ui5DnBVCpCPISBBIv6VSe2tTaZhE1POfPb2d+F5/NYOBBR0rnkGIvwOzh2pZv0JgcHuV27PclQxsbFu4t7xTdLJuNJC+lxu5CniSY34AZOmgEfvqAXN5Ro71P+c8nvSXJvW9/uD5gTGpDCB9pNgTICwcJ60EQEUaxVmJZos=
+	t=1750717040; cv=none; b=MkvxzHuznNtds4fwAxayOKgNwhAopQEaSz3WMT/Y8Z6dqmavr26uTJq9ffLw/9zY3wGTeqqHY9NvBEm/7+88CzqAk0WQ+KnKvwLqgL8XZfENLeEbCxnt24Y31rbWzFtxeZGtdBjSfA2QVpOK91sQhQPT/ajaJ5hjWAg8kRFEUu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750717003; c=relaxed/simple;
-	bh=HPc7j1Rjffy+/FVRAD+2Y9VXgliY5w7VDMVHee2UYJI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g/ilAm16++8inwFseqwE5qK+oWD9WMbHgZyTDaFQBDiUCZewVxvaxF7C+YU5XbCff2yl5Eofi77sgxMQreZcH9ZlkfC5ufm0OxP9HhalKzZC74I7oWa+Gl7qz1yfGaaT8U10jn9w7Nit/rC1n5bzRgKzkciV+sUXm1zk1TIJxjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D76D5106F;
-	Mon, 23 Jun 2025 15:16:21 -0700 (PDT)
-Received: from [192.168.178.25] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 475413F58B;
-	Mon, 23 Jun 2025 15:16:38 -0700 (PDT)
-Message-ID: <e4854492-86cc-4775-bbc3-5f16b73d008d@arm.com>
-Date: Tue, 24 Jun 2025 00:16:16 +0200
+	s=arc-20240116; t=1750717040; c=relaxed/simple;
+	bh=Yb2Oac6qZK2DSoUU4vrrkQAAhRRXhu/4wRFPumLI90k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fSYIsm2CdC2SRGZB3xIz+n7igvCY+JOLsI0WvaF+jY3NeAQFFR83MekfGJ5NCYCFr4EaBtdWpYKPJYj0VsQa6vWdfWKh3W/GOEzRFfNil1xmTV7JJKCusybJ761sJ44v8mAg4pkIwc5xf5ps7MxisYpurN/likVlu5HugYXb2OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hjBhVmbG; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hjBhVmbG"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B816C4316C;
+	Mon, 23 Jun 2025 22:17:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750717034;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/wujDbdLCxL/DpdBnoqRy5zFxIIGeoL7Sk6EHzkya0U=;
+	b=hjBhVmbGcyiU0FhamaTO4mJ8fYzx9cqq5s7T/OqiVIGwK3l9XsvlKbbCpw2j686knF3DX1
+	P6ZDaxbHqy44tYfap8QsCVkqX3NeoNMbHl3OFW5wvubSbJMLHVhe/Ayj9gWLET0IYLCq0A
+	0J6lZdsUQjOxotNQWgs9Te5pRl8yw+LcspAy39/cF+NV6YjnO8ljYxSbNuobXgIElu8UQ3
+	LcGIIZfm6lOzdIJYy0QcOwZPLG/O5gQ1MDegxr0j99s3n2ubfJV3CHZ6KZzkripG1pYycz
+	dgC171lIPK8pBJU5yL3oW4Y+QA4Uo3KW7hjpmpqwvNRvEupji28KO2Kk1RqP8g==
+Date: Tue, 24 Jun 2025 00:17:12 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>,
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	=?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: (subset) [PATCH v4 00/32] Samsung S2MPG10 PMIC MFD-based drivers
+Message-ID: <175071653812.1309305.11999722555032816982.b4-ty@bootlin.com>
+References: <20250409-s2mpg10-v4-0-d66d5f39b6bf@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpufreq: Fix initialization with disabled boost
-To: Christian Loehle <christian.loehle@arm.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- linux-pm <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
- Robin Murphy <robin.murphy@arm.com>, zhenglifeng1@huawei.com
-References: <3cc5b83b-f81c-4bd7-b7ff-4d02db4e25d8@arm.com>
- <CAJZ5v0heNSqHKZsmzu8N_hNKXeg_BZ0g4p0=dQtkDxBFHN+=4w@mail.gmail.com>
- <1458e4f8-bd76-4d75-acb9-87f7064ea40c@arm.com>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Content-Language: en-US
-In-Reply-To: <1458e4f8-bd76-4d75-acb9-87f7064ea40c@arm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250409-s2mpg10-v4-0-d66d5f39b6bf@linaro.org>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddukedulecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttddunecuhfhrohhmpeetlhgvgigrnhgurhgvuceuvghllhhonhhiuceorghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfffieeiffeffedvgedtjedvhfdvheeftddutdetfeefvdelheeiveekgeeutddunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvgedprhgtphhtthhopehkrhiikheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrn
+ hgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrnhgrfihrohgtkhhisehsrghmshhunhhgrdgtohhmpdhrtghpthhtoheptgiftddtrdgthhhoihesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopegrlhhimhdrrghkhhhtrghrsehsrghmshhunhhgrdgtohhmpdhrtghpthhtohepmhhtuhhrqhhuvghtthgvsegsrgihlhhisghrvgdrtghomh
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-On 18/06/2025 16:57, Christian Loehle wrote:
-> On 6/18/25 15:32, Rafael J. Wysocki wrote:
->> On Mon, Jun 16, 2025 at 7:25â€¯PM Christian Loehle
->> <christian.loehle@arm.com> wrote:
->>>
->>> The boost_enabled early return in policy_set_boost() caused
->>> the boost disabled at initialization to not actually set the
->>> initial policy->max, therefore effectively enabling boost while
->>> it should have been enabled.
->>
->> Did you mean "disabled"?
+On Wed, 09 Apr 2025 21:37:21 +0100, André Draszik wrote:
+> This series adds initial support for the Samsung S2MPG10 PMIC using the
+> MFD framework. This is a PMIC for mobile applications and is used on
+> the Google Pixel 6 and 6 Pro (oriole / raven).
 > 
-> Yup, the latter 'enabled' should be disabled.
+> *** dependency note ***
 > 
->>
->> It would be good to mention the failure scenario here too.
->>
+> To compile, this depends on the Samsung ACPM driver in Linux next with
+> the following additional patches:
+> https://lore.kernel.org/all/20250324-acpm-atomic-v2-0-7d87746e1765@linaro.org/
+> https://lore.kernel.org/all/20250319-acpm-fixes-v2-0-ac2c1bcf322b@linaro.org/
+> https://lore.kernel.org/all/20250327-acpm-children-v1-0-0afe15ee2ff7@linaro.org/
 > 
-> Absolutely, let me respin this in a series that provides some context, too.
+> [...]
 
-I got confused as well. Is this for a dt file with some (higher) OPPs
-marked with 'turbo-mode' or not?
+Applied, thanks!
 
-[...]
+[25/32] rtc: s5m: cache device type during probe
+        https://git.kernel.org/abelloni/c/002cc0ee90e6
+[26/32] rtc: s5m: prepare for external regmap
+        https://git.kernel.org/abelloni/c/a57743bf009e
+[27/32] rtc: s5m: add support for S2MPG10 RTC
+        https://git.kernel.org/abelloni/c/e64180846e7e
+[28/32] rtc: s5m: fix a typo: peding -> pending
+        https://git.kernel.org/abelloni/c/972a3b47f6e1
+[29/32] rtc: s5m: switch to devm_device_init_wakeup
+        https://git.kernel.org/abelloni/c/1dd609587414
+[30/32] rtc: s5m: replace regmap_update_bits with regmap_clear/set_bits
+        https://git.kernel.org/abelloni/c/f5adb1fa04d0
+[31/32] rtc: s5m: replace open-coded read/modify/write registers with regmap helpers
+        https://git.kernel.org/abelloni/c/b1248da00836
+
+Best regards,
+
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
