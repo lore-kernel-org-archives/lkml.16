@@ -1,72 +1,215 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E937922DA0A
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CB11F4CB3
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750667764; cv=none; b=Tk5wa3ZVasCOC+vzkbaV30qAs6HzF1YASm48gw3a0TqzpbrPkLuswU18OC2ENmFSPYBVtooghGC8CdUxYgVzpSxrEKerqmawMxg2j2ctTDTKTo408gFoGLtgy7iWvJa9AGGCq6SvgPtSnzw9EHPLnEb3kgqFkn4Qw7k3tWO2GPQ=
+	t=1750667877; cv=none; b=ur+JSDHEVuHltrus1knhO5Xk9dQx9Xq5lUc9ne12iBshFNz4CALyt4xfCeIxMIScq6Qixz4RXGZYXWh8kjxiPT2q4dszElY8XpnMJKAPBgsXPQjM0nZu9TE8lhFoH03KTxjDnMjvJuLfiPaQUeugGCEQgDGbhrqUv88gITVhWiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750667764; c=relaxed/simple;
-	bh=uDUMgzEBp5JV3JZQ+f9mdHo7Wo//lw43FkAxNI1p1to=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=rAz9aVo2D2Wgr4NJPxOi1NDludSydioHkFeGg2qaSf1MX8WLKl503mtyCN8gMRwmwQWyUSn7UVqCNExfKGUM4R3PbLlxH0Zn++LvYIpRINzhmawFY9OLthJc6SBRD5gyr8E4V+r2Z1IooUQ4rfU36SMWHQQt8PV6oT0ZaoGw4gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddc0a6d4bdso45688595ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:36:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750667762; x=1751272562;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vflh0wMpfs9YIwAtX7H9KdsrcvCKuFQ3cK3z1R6CAv4=;
-        b=vPCdlKsi/DlI+HKoZYYSpm+x/eJeZWap+XtOBxgoFqkJ8aqqkwD2bQSIjfx2Lb/evb
-         ae/2H4J7eOzPJlE7J3pfhGM1jXOyCGmvO3+6Dn2J8eacTVXU8GSNPCou4jGkQ6sxJPXP
-         suKpOLZNNRQaNWktLD/mF9l0ZAoY/ldjPPdhPSUrUgKI7tbjjDdI8zPrFy8RW4oB/BMT
-         AZGEr+3F3vN56InqRm6eUZIMzW5rthWDJvAk7sQZ4o/R2aq0R7V0FfRT3aumQzuah1BT
-         Por68l5MRkjBRrJQHtndrCu/hUDhKETEbGlfKtuEiuvzjPngwye4Ov20iILpkg142yZP
-         41rg==
-X-Gm-Message-State: AOJu0YxWQUchQf9wJClySb8sKl6gkDXFkfYeBzcK3ssR26MfwDzrhaWM
-	fFAGcFZ3o32POimPeOUg1dZnn1iq8H06Avo+nG6RMVBN/Rcr+9pbGrvqjTMMPSuG83cEN0Qk9Ve
-	hbrqwOCpHVYJjzl08JlN0OHPwxgyGHXjp7Mx6AmkuJLIvBFNB4SZAuuZ1fsA=
-X-Google-Smtp-Source: AGHT+IFdlB7lPmWeJwCRxZZTOlngrs2RuNSP2aQtGuEvTiX3l25+/vt3mowsV38KLRvWRKdH+6aKTNB0JqXPGIxlt2LntVnY/u/9
+	s=arc-20240116; t=1750667877; c=relaxed/simple;
+	bh=FldPjQGRH1b4Bxpg3kd7f8EwpqO/Gsiw8EPinVDQv6s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BQu5o6/EPhFF/e5ckozQBrXLM8H22y6uPfeNHWk+svRWrLYhYdoBjHCUeSqsoIOy2H7ygylGCXB5PGhJPwj2vyfjuRwcebb9oMRJh/BLQ0KlRD4dystBj6FcyIlXKjQyQ9h8bc2oEgKaBGepU/72fDkbjz58wBHSW4jS4GD7BXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=EziRWid3; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=TtlTV00Y; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PtAp3ntZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=aH8XsV6F; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="EziRWid3";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="TtlTV00Y";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PtAp3ntZ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="aH8XsV6F"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E49D7211AD;
+	Mon, 23 Jun 2025 08:37:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750667874; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=PgJiopltFdnGzrRwoU2M0nfMXz1bXazdPNj1w8H15po=;
+	b=EziRWid3PwTwA7WAN9w9LuyqRtncAAY/gwu49StwIPsqAerh6pGRQyjH21121BbpNywOlv
+	nAH3Ww2JutK28Q43przoBaoXXROGP/6r+W3o5o3kwe7hd1m6OwI6FzpxNrH+AXIhyaqCpq
+	7iVQikYqTnu/IJNIftICSCZUV6l1vn4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750667874;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=PgJiopltFdnGzrRwoU2M0nfMXz1bXazdPNj1w8H15po=;
+	b=TtlTV00YO27qHJlN/N65LAz8yqVhv1S0F3PXJP4/tJ4cDO7vKlqP0rs4QclED5JSTVk4gC
+	59a0Uc7qA+Ytv8Bg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=PtAp3ntZ;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=aH8XsV6F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750667873; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=PgJiopltFdnGzrRwoU2M0nfMXz1bXazdPNj1w8H15po=;
+	b=PtAp3ntZXFA8McrCTcZ5D+UpZ3a/ngJMGH/LBeAGPCYq/QjuCwfc77yjX6dXmb33Lr+zV6
+	6rUEza69K6vja1yi6BandOy2YbAHZ1pikd1xv1qXala5uIanorRAKN/aZlfhuG/yWUeIdo
+	jq13og/CjU6+XfU01bNpKmrmnWlpzNk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750667873;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=PgJiopltFdnGzrRwoU2M0nfMXz1bXazdPNj1w8H15po=;
+	b=aH8XsV6F9MliT2f8Ljw83vFvROp6p7wED1sKAEYvYLzOlBEct0+f4yOi4/Uq5E8LG0Y37V
+	32Oa5qdgz2dJHMDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C886B13485;
+	Mon, 23 Jun 2025 08:37:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id gG+ZMGESWWgVeAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 23 Jun 2025 08:37:53 +0000
+Message-ID: <3f8da2c9-a877-40f9-b1cd-1e6455eae9ff@suse.cz>
+Date: Mon, 23 Jun 2025 10:37:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c241:0:b0:3dd:dd39:324c with SMTP id
- e9e14a558f8ab-3de38c35458mr116735775ab.9.1750667762128; Mon, 23 Jun 2025
- 01:36:02 -0700 (PDT)
-Date: Mon, 23 Jun 2025 01:36:02 -0700
-In-Reply-To: <20250623080347.3056823-1-lizhi.xu@windriver.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685911f2.050a0220.d71a0.0004.GAE@google.com>
-Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
- (3)
-From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/4] mm: prevent KSM from breaking VMA merging for new
+ VMAs
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, David Hildenbrand <david@redhat.com>,
+ Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, Stefan Roesch <shr@devkernel.io>
+References: <cover.1748537921.git.lorenzo.stoakes@oracle.com>
+ <3ba660af716d87a18ca5b4e635f2101edeb56340.1748537921.git.lorenzo.stoakes@oracle.com>
+ <5861f8f6-cf5a-4d82-a062-139fb3f9cddb@lucifer.local>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <5861f8f6-cf5a-4d82-a062-139fb3f9cddb@lucifer.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: E49D7211AD
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.51
 
-Hello,
+On 6/20/25 14:48, Lorenzo Stoakes wrote:
+> Hi Andrew,
+> 
+> Sending a fix-patch for this commit due to a reported syzbot issue which
+> highlighted a bug in the implementation.
+> 
+> I discuss the syzbot report at [0].
+> 
+> [0]: https://lore.kernel.org/all/a55beb72-4288-4356-9642-76ab35a2a07c@lucifer.local/
+> 
+> There's a very minor conflict around the map->vm_flags vs. map->flags change,
+> easily resolvable, but if you need a respin let me know.
+> 
+> I ran through all mm self tests included the newly introduced one in 4/4 and all
+> good.
+> 
+> Thanks, Lorenzo
+> 
+> ----8<----
+> From 4d9dde3013837595d733b5059c2d6474261654d6 Mon Sep 17 00:00:00 2001
+> From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Date: Fri, 20 Jun 2025 13:21:03 +0100
+> Subject: [PATCH] mm/vma: correctly invoke late KSM check after mmap hook
+> 
+> Previously we erroneously checked whether KSM was applicable prior to
+> invoking the f_op->mmap() hook in the case of not being able to perform
+> this check early.
+> 
+> This is problematic, as filesystems such as hugetlb, which use anonymous
+> memory and might otherwise get KSM'd, set VM_HUGETLB in the f_op->mmap()
+> hook.
+> 
+> Correct this by checking at the appropriate time.
+> 
+> Reported-by: syzbot+a74a028d848147bc5931@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/all/6853fc57.a00a0220.137b3.0009.GAE@google.com/
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+I've checked the version in mm tree, LGTM.
 
-Reported-by: syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com
-Tested-by: syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-Tested on:
-
-commit:         86731a2a Linux 6.16-rc3
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10eff370580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=595d344ff0b23ac5
-dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=11a46182580000
-
-Note: testing is done by a robot and is best-effort only.
