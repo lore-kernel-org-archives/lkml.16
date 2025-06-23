@@ -1,159 +1,100 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9F8233701
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4925C23D286;
+	Mon, 23 Jun 2025 10:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750675975; cv=none; b=pje94aukelwAZyxpaMx1YA2aIrMmqqr9nyP6h2+axLvqAjHBnC32Sc1b3gEnOOf9h2De87XuwBmFHfEoh9hZc8VWbE2GSQHJP4N1gHMvL1tksUAhtYQypEpviyz/RU+1WVE471SBJ2ch2D/8jZk0xQ5u47LxeSteGZKAFy0qADs=
+	t=1750675991; cv=none; b=NzAp0sKr6HwdvaHQy35d9QoIWS1ROKDwaMn9ICvq03r900E9cebJG7Umua/ypvzU6Sqv1wzVRIaRDTyzAPH+XrnUbLJ3U3DLxXR8hUCcPa1rdcubjy7M9Iq4QAYBR6bRHyIHykqcFRR8GnAtbyoe0KNtPl1twiYjt807yRb9gLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750675975; c=relaxed/simple;
-	bh=K4yThSDueV+AZ0w+s23aWYis98NN54wJ9EH+EVikzYs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=if8X16Qs17D8bHVucIoj6gUVqSI+65cXhtKe5Ojl7+PI/HNTRIvB4+BWRPtZYqpRsue1H/StNimWeNqxixBUiUcf9vpHpNsqVP153azjx9a4Bn7jyZcj6P8cx/ZScPK5gBeTou5xlQvPLg4ydp9EeOIebqLMOySaTwuC4LWD1Ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Ys9CTIv6; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gnA2QG4Z; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Ys9CTIv6; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gnA2QG4Z; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Ys9CTIv6";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gnA2QG4Z";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Ys9CTIv6";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gnA2QG4Z"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D1CAC21174;
-	Mon, 23 Jun 2025 10:52:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750675971; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6U+vycsx0yOGyeto/sQB753cmjZS5l0fRUpZ5LcgcIw=;
-	b=Ys9CTIv6p2+9ZvWZkv/yo481zGnFbs/Y+KtaSyN6dQrXBpXaEuycMWkIYBWCIW+PD5yx/5
-	msxRwA31m5T9BLq8G60U46gQJ9I2kQksGSEXp/gwkg4MzitCdB9WhaxZWXktDpTJOSR8YC
-	wlHUTzV/441AmQGKx/RE6Gcx3Bgy/c8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750675971;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6U+vycsx0yOGyeto/sQB753cmjZS5l0fRUpZ5LcgcIw=;
-	b=gnA2QG4Z75pKwDZQOAb/+uDU1J0tnBNYGYJq/5RuojxEZNh7CQqJzLtMdEm1/hPnW/73xX
-	Q9xTuwRUhaWxkgBQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750675971; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6U+vycsx0yOGyeto/sQB753cmjZS5l0fRUpZ5LcgcIw=;
-	b=Ys9CTIv6p2+9ZvWZkv/yo481zGnFbs/Y+KtaSyN6dQrXBpXaEuycMWkIYBWCIW+PD5yx/5
-	msxRwA31m5T9BLq8G60U46gQJ9I2kQksGSEXp/gwkg4MzitCdB9WhaxZWXktDpTJOSR8YC
-	wlHUTzV/441AmQGKx/RE6Gcx3Bgy/c8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750675971;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6U+vycsx0yOGyeto/sQB753cmjZS5l0fRUpZ5LcgcIw=;
-	b=gnA2QG4Z75pKwDZQOAb/+uDU1J0tnBNYGYJq/5RuojxEZNh7CQqJzLtMdEm1/hPnW/73xX
-	Q9xTuwRUhaWxkgBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C6D9713485;
-	Mon, 23 Jun 2025 10:52:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 94iHMAMyWWihJQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 23 Jun 2025 10:52:51 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 7241BA2A00; Mon, 23 Jun 2025 12:52:47 +0200 (CEST)
-Date: Mon, 23 Jun 2025 12:52:47 +0200
-From: Jan Kara <jack@suse.cz>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, 
-	Matthew Bobrowski <repnop@google.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] fanotify: wake-up all waiters on release
-Message-ID: <lzvbms7m4n67h46u6xrp3nvdpyoapgghz4sowakfeek44bjndn@kgamxd67q6cd>
-References: <3p5hvygkgdhrpbhphtjm55vnvprrgguk46gic547jlwdhjonw3@nz54h4fjnjkm>
- <20250520123544.4087208-1-senozhatsky@chromium.org>
- <bsji6w5ytunjt5vlgj6t53rrksqc7lp5fukwi2sbettzuzvnmg@fna73sxftrak>
- <ccdghhd5ldpqc3nps5dur5ceqa2dgbteux2y6qddvlfuq3ar4g@m42fp4q5ne7n>
- <xlbmnncnw6swdtf74nlbqkn57sxpt5f3bylpvhezdwgavx5h2r@boz7f5kg3x2q>
- <yo2mrodmg32xw3v3pezwreqtncamn2kvr5feae6jlzxajxzf6s@dclplmsehqct>
- <76mwzuvqxrpml7zm3ebqaqcoimjwjda27xfyqracb7zp4cf5qv@ykpy5yabmegu>
- <osoyo6valq3slgx5snl4dqw5bc23aogqoqmjdt7zct4izuie3e@pjmakfrsgjgm>
+	s=arc-20240116; t=1750675991; c=relaxed/simple;
+	bh=Tv3ZYfUFa/xK8PobRaNXT1vnz+JJp5obteZTMq8t78Y=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=p5p9yL+OB4l1wAXjcTk46GtnjS4fLCkEALNxuftzSaI4s68dTLxfHWB9QrK9p5dK2RLgUJedLAlSLqdzqs3946QTyfuDv5bOUEmtaj2Tky9ExKwh5KDT4rfIC5kgQ3dwO2ZmVCuWGLpqJtt1H/ZbXq1YFQ7LIyg04gt8iBdeN/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQlK43fB6z6L7DK;
+	Mon, 23 Jun 2025 18:52:24 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 172A41402F6;
+	Mon, 23 Jun 2025 18:53:07 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
+ 2025 12:53:06 +0200
+Date: Mon, 23 Jun 2025 11:53:05 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Davidlohr
+ Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison
+ Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, "Ira Weiny" <ira.weiny@intel.com>
+Subject: Re: [PATCH v2 4/8] cxl/decoder: Drop pointless locking
+Message-ID: <20250623115305.0000382e@huawei.com>
+In-Reply-To: <20250619050416.782871-5-dan.j.williams@intel.com>
+References: <20250619050416.782871-1-dan.j.williams@intel.com>
+	<20250619050416.782871-5-dan.j.williams@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <osoyo6valq3slgx5snl4dqw5bc23aogqoqmjdt7zct4izuie3e@pjmakfrsgjgm>
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.cz,gmail.com,google.com,vger.kernel.org];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri 20-06-25 14:48:47, Sergey Senozhatsky wrote:
-> On (25/06/20 13:53), Sergey Senozhatsky wrote:
-> > On (25/05/26 23:12), Sergey Senozhatsky wrote:
-> [..]
-> > Surprisingly enough, this did not help.
-> > 
-> > Jan, one more silly question:
-> > 
-> > fsnotify_get_mark_safe() and fsnotify_put_mark_wake() can be called on
-> > NULL mark.  Is it possible that between fsnotify_prepare_user_wait(iter_info)
-> > and fsnotify_finish_user_wait(iter_info) iter_info->marks[type] changes in
-> > such a way that creates imbalance?  That is, fsnotify_finish_user_wait() sees
-> > more NULL marks and hence does not rollback all the group->user_waits
-> > increments that fsnotify_prepare_user_wait() did?
+On Wed, 18 Jun 2025 22:04:12 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> cxl_dpa_rwsem coordinates changes to dpa allocation settings for a given
+> decoder. cxl_decoder_reset() has no need for a consistent snapshot of the
+> dpa settings since it is merely clearing out whatever was there previously.
 > 
-> No, that doesn't seem to be possible.  Sorry for the noise.
+> Otherwise, cxl_region_rwsem protects against 'reset' racing 'setup'.
+> 
+> In preparationg for converting to rw_semaphore_acquire semantics, drop this
 
-Yeah, iter_info is local and should not change outside of the call itself.
+typo
 
-> My another silly idea was, fsnotify_put_mark_wake() is called in a loop
-> and it tests group->shutdown locklessly, as far as I can tell, so maybe
-> there is a speculative load and we use stale/"cached" group->shutdown
-> value w/o ever waking up ->notification_waitq.  Am running out of ideas.
+> locking.
+> 
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Well, but atomic_dec_and_test() in fsnotify_put_mark_wake() should be a
-full memory barrier so such reordering should not be possible? At least
-not on the CPU, you can check disassembly of fsnotify_put_mark_wake() on
-your kernel whether the fetch of group->shutdown indeed happens after the
-atomic_dec_and_test() (but it should because && is a sequencing point and
-thus a compiler barrier).
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-								Honza
+> ---
+>  drivers/cxl/core/hdm.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 81556d12e9b8..e9cb34e30248 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -914,7 +914,6 @@ static void cxl_decoder_reset(struct cxl_decoder *cxld)
+>  			"%s: out of order reset, expected decoder%d.%d\n",
+>  			dev_name(&cxld->dev), port->id, port->commit_end);
+>  
+> -	down_read(&cxl_dpa_rwsem);
+>  	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
+>  	ctrl &= ~CXL_HDM_DECODER0_CTRL_COMMIT;
+>  	writel(ctrl, hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
+> @@ -923,7 +922,6 @@ static void cxl_decoder_reset(struct cxl_decoder *cxld)
+>  	writel(0, hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(id));
+>  	writel(0, hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(id));
+>  	writel(0, hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(id));
+> -	up_read(&cxl_dpa_rwsem);
+>  
+>  	cxld->flags &= ~CXL_DECODER_F_ENABLE;
+>  
 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
