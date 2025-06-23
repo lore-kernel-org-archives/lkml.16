@@ -1,115 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7F922F74E;
-	Mon, 23 Jun 2025 09:05:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EB622F74E;
+	Mon, 23 Jun 2025 09:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750669546; cv=none; b=bhwUnu2HKOnIDjrN8rz1WI115tFMC5c21iglcR3Knnh1P0FcOePJW0oYa+9dPNM6pNrI3oZoNDfni4ZMNaGnc1MfOnRTpGFKoM/aKnjWyd2mVDOIxlFjmyJFKGkaXorhc+q0nyFUedw1OK6v3dQeubbG5fn7deEaRdXE07NOjrg=
+	t=1750669578; cv=none; b=gA64UtALuF9vKZqRJ0eTBn1i2JHqXPfUUUH9qP9QlObomNXzKP9ArNVak8oKOU1qQS/cuLkaLqFZ8wPMYxJjg9fa9kgxQVR/LD0r8ukXwE+MIW1jty2iO4Hkk3tDm3fpZk7UZXDlA3Yy9sS/K96XaliIZIxD+9/MtF6qQP4Wofk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750669546; c=relaxed/simple;
-	bh=UQtpKkCNK/ydA/BGLNBKX3hmfJ58T1rD0l8E43Ckjyw=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f+JbKB7kOqhWkX5HbumBMd6+YAYk1+dcEL1kBFx7hYu+1JCOK/5OAU1vYx8I1yFE+Mtk0qnMqaJvFeot5QPTlq25GgR4Pyl3JdgCOWP235915GhOPX8RqiAW20oR1UZkhep+0p+AxhBG5zkvUzzeVKkMS42RIa9k4IAZzmbPbRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RdwNAsk/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750669578; c=relaxed/simple;
+	bh=5pF4vDNlHIa6c6oA7h5CZ5pMihTZP50eXtCrfdW6rRE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C/CPtJWnRcviTxaxueEnSCiTFWUxwu9jxFlREsFSwPUeZuW5c9cqs8qfUoIaaNvpmP4eWzeD/JkIsVGK/yTGDmmxjOK2W4SOcOrF0Aqu20d/9oz6qWyehOvGbTDUEu1+mr7H8PzKjB770E1mBsD2pxgUeRf+5Ns4+Vfng5wMzpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HJx862tP; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RdwNAsk/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D786BC4CEEA;
-	Mon, 23 Jun 2025 09:05:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750669545;
-	bh=UQtpKkCNK/ydA/BGLNBKX3hmfJ58T1rD0l8E43Ckjyw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RdwNAsk/8b7WLbAxEMp1SS3DyQKQ4MKz8D03+cE6S+ArTXiVisYG9wF410ACpoqq2
-	 MQjJwmiG0UCQ9jSboMnpuA3UlOnCywiOifZjOSNHRTgkvf03uUhA72Veum88iRVuCc
-	 pNoYneMfGqzCKBbLfvIERKnD3u9We8NU2Hsc5Qeob0BpKl5CP3Fb+csjI7qoTqLJrX
-	 SEpQAmhfLNvjZq/Kxp2DXUduqy0iEmUBWJgmA2rJVx3iXl6keckrbZK9DLhkt/8Tkm
-	 A3bRxUsGauu5MdlqZR9oAfJ6PBMqi45NuQxLLlAwlTf+OdwI4h4zi8yJjOVSuo7LYj
-	 Iye6m91OBcEjw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uTd7X-0097hz-BJ;
-	Mon, 23 Jun 2025 10:05:43 +0100
-Date: Mon, 23 Jun 2025 10:05:42 +0100
-Message-ID: <868qliddzt.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: Raghavendra Rao Ananta <rananta@google.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] KVM: arm64: Introduce attribute to control GICD_TYPER2.nASSGIcap
-In-Reply-To: <aFkTDmj9u1ERnvHO@linux.dev>
-References: <20250613155239.2029059-1-rananta@google.com>
-	<20250613155239.2029059-4-rananta@google.com>
-	<87frftfpg7.wl-maz@kernel.org>
-	<aFkTDmj9u1ERnvHO@linux.dev>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJx862tP"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a5257748e1so2470472f8f.2;
+        Mon, 23 Jun 2025 02:06:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750669575; x=1751274375; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kEGfnWR9y2R5Hb4sOmq+4EG1fJXcUTguVBT64eS7amA=;
+        b=HJx862tPfX00iWvHCHVN+dqyfXYxWW+In29gof2cpqdPrRGDfvwx6mdb1F8S2QAHd7
+         RIiO81+qjedALFu/qyeGr1Ut0xsjKry3BaHUSWhIBPMnhAmFvLBCko58c5TvVYdgS8xg
+         DzGMqHxl5J9zf5EoL8+RklYaGK926s0ueqGmfLqAn6akkpXym6ZxFqh4xr99D5NNHD8A
+         /E2SmNy0NQXXctcaGD2ZmHgWcc/EfFdq7UekWrr96BKqjyalrSo8l52wuieHEj8av27b
+         k1TrkDQvD57cvwFd5M9vJ5NKx7E1rEyTdRFJQSEhm1yUfNw0Ijkm1UqpfU8MXmkAALMh
+         Wx5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750669575; x=1751274375;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kEGfnWR9y2R5Hb4sOmq+4EG1fJXcUTguVBT64eS7amA=;
+        b=vspygmw1PQtMTPNHSqXU7KoHKZ1DgOV+R/N5sFLqaB8PBQxOM9M/zwWTF7dZwAJp7B
+         aefYjxP76Rcit/aDWFKsoMIMqDUsnPxsMsEk8II6j4uV4NKQVMND0m1GrM+PnZfn+y/u
+         /EjNo3kDbi999coch2g+HnYlJwdHKnDLpc5nR3pkykIjg0JuHzmLR3EHGLWptFmFR6Yg
+         62oWwM3bE4BaQXZMq+dMmNx1O94Ezt786Zt4xhbv4QDtUk+G81rTSIt1+iwBkZXIMnGm
+         IdltKVCN3j5KhzlwO/GLvZV073P52a4MaCoL1Cq+fdgPo52zjPFjAXNxUTK1BUVn30cP
+         txaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUiSEUgAu7O0wjoEX/fcVtp+0QGkbXeUpcONg1OR/VEkUvwxuuVZQHGpT4Wh8RvP0LPCt0M3/wGaJ8zGL12hjY=@vger.kernel.org, AJvYcCVcdtyv+E8qXxR3UCDoKA9vNWreTFY600tpzbA1FKE5lc9Hqo2uWEqGFaBOUUwk+WK6RKFTS1TtFF7z4vFL@vger.kernel.org, AJvYcCVwL85wppBzYeAn/gNtw/YiHQX6JCgAIz+HzrvKlUQqj3D/tsEvqmyJEohuYgwb4zlFkbq0k7j38/Uy@vger.kernel.org, AJvYcCWdc+8ZMbvUlZPhdEPd/nONio+rQkmt8GZc53iO0kkfQ3kCs7saiTiJCVEtCk56Q4vbvEPlHGrK3I4PPQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5caVEzW7IDySNN+50urpgEls4UMhrQZpVxHqxkMiJiieETZC5
+	DO7lSxxc0vWofUuAjBKLGzSVsBscpRYkfhcZIDte0/RVYejG/9tfEwJB
+X-Gm-Gg: ASbGncv09JJ0tCdS94QkFiag18RfM31V1c/NrqSGiWUpwKe3NJ4yUm7z8ZGTE5bq7ej
+	sUJ45BT1bkZRY/r1bHsvw+V9wrGZjccSGGiHLcaE1Mcvp2Y9bPQnZb3RGXmbjmFP4OA++IqllzB
+	ynuM1mut/40YE/+Se12eczmtlZRVNmL72g9oHIfgyRNrZfvISKSHhGoHwr0Abxs4Fz9Rlk5XzMQ
+	F3YaL3O31VCVPywvWmAW+WtZJFRjaU/vdqQ0ZTee4D5/LECXDO0uvXkHynpK418xvdYEQWK+Why
+	ZHaKGhrn7djIg2tM9wkcUFqRZ+kjbIwWX/sAXaD5HjkirmiDdaQ8rjtZBdLrJWyOXvGm
+X-Google-Smtp-Source: AGHT+IE0jNES0f1isvf0t0jssclUaz/qe8sm8GaviZjXBxkREDmbJO8rKf8In2RJvpDsEDCES9npdA==
+X-Received: by 2002:a05:6000:491a:b0:3a5:39e9:928d with SMTP id ffacd0b85a97d-3a6d1166d39mr11221330f8f.0.1750669574903;
+        Mon, 23 Jun 2025 02:06:14 -0700 (PDT)
+Received: from [10.38.1.85] ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45364705748sm101407075e9.28.2025.06.23.02.06.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 02:06:14 -0700 (PDT)
+Message-ID: <4655e2ee-6a5e-4ab5-8adc-4f91acd3d325@gmail.com>
+Date: Mon, 23 Jun 2025 10:03:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: oliver.upton@linux.dev, rananta@google.com, mizhang@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 4/9] rust: acpi: add `acpi::DeviceId` abstraction
+To: Danilo Krummrich <dakr@kernel.org>, "Rafael J . Wysocki"
+ <rafael@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>,
+ Saravana Kannan <saravanak@google.com>, Alex Hung <alex.hung@amd.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Jakub Kicinski <kuba@kernel.org>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ Remo Senekowitsch <remo@buenzli.dev>, Tamir Duberstein <tamird@gmail.com>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>,
+ Xiangfei Ding <dingxiangfei2009@gmail.com>, devicetree@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Benno Lossin <lossin@kernel.org>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ Len Brown <lenb@kernel.org>, Trevor Gross <tmgross@umich.edu>
+References: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
+ <20250620152425.285683-1-igor.korotin.linux@gmail.com>
+ <aFXbcDKP_jw_Sg5k@cassiopeiae>
+Content-Language: en-US
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+In-Reply-To: <aFXbcDKP_jw_Sg5k@cassiopeiae>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 23 Jun 2025 09:40:46 +0100,
-Oliver Upton <oliver.upton@linux.dev> wrote:
+
+
+On 6/20/25 23:06, Danilo Krummrich wrote:
+> On Fri, Jun 20, 2025 at 04:24:25PM +0100, Igor Korotin wrote:
+>> `acpi::DeviceId` is an abstraction around `struct acpi_device_id`.
+>>
+>> This is used by subsequent patches, in particular the i2c driver
+>> abstractions, to create ACPI device ID tables.
 > 
-> On Sat, Jun 21, 2025 at 09:50:48AM +0100, Marc Zyngier wrote:
-> > On Fri, 13 Jun 2025 16:52:37 +0100, Raghavendra Rao Ananta <rananta@google.com> wrote:
-> > > @@ -683,8 +714,14 @@ static int vgic_v3_has_attr(struct kvm_device *dev,
-> > >  			return 0;
-> > >  		case KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES:
-> > >  			return 0;
-> > > +		default:
-> > > +			return -ENXIO;
-> > >  		}
-> > > +	case KVM_DEV_ARM_VGIC_GRP_FEATURES:
-> > > +		return attr->attr != KVM_DEV_ARM_VGIC_FEATURE_nASSGIcap ?
-> > > +		       -ENXIO : 0;
-> > 
-> > Do we really want to advertise KVM_DEV_ARM_VGIC_FEATURE_nASSGIcap even
-> > when we don't have GICv4.1? This seems rather odd. My take on this API
-> > is that this should report whether the feature is configurable, making
-> > it backward compatible with older versions of KVM.
+> I think this should say something like
 > 
-> So this was because of me, as I wanted nASSGIcap to behave exactly like
-> the ID registers. I do think exposing the capability unconditionally is
-> useful, as otherwise there's no way to definitively say whether or not
-> the underlying platform supports GICv4.1.
+> 	"Enable drivers to build ACPI device ID tables, to be consumed by the
+> 	 corresponding bus abstractions, such as platform or I2C."
 > 
-> KVM_HAS_DEVICE_ATTR can't be used alone for probing since old kernels
-> use GICv4.1 but don't expose the attribute.
+> instead.
 > 
-> Does that make sense?
+> If we agree, I can change it when applying the patch -- no need to resend.
+> 
 
-My own reasoning is that if we expose the capability, userspace is
-able to use it and rely on it to take effect (VPE allocation error
-notwithstanding). This is not the case with this approach, and that's
-at odds with the other attributes.
+No objections.
 
-But taking a step back: if we want to control the nASSGIcap bit, why
-don't we allow writing to GICD_TYPER2 from userspace? This does
-matches your view that we treat it as an ID register (GICD_TYPER2
-matches this definition if you squint hard enough). It also avoids
-adding new UAPI with unusual semantics.
-
-Has this been considered?
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Thanks
+Igor
