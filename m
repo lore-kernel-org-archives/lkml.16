@@ -1,176 +1,159 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954281DD543;
-	Mon, 23 Jun 2025 10:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9F8233701
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750675919; cv=none; b=LTPnc1fcK0wjskH8y6F1JbjiaLuJyqExO9//vkhCAufW6j01R1ogu4zm6EsQpglNA2tdpW4aiksF4jVC2XeV/MNe+h+AC5RwR9165rjHb3U9mPRPFxlGkmpnlgqOWqEkx4w+f90RpGJTD0aUGhDPrlyfKh5/kAgbSxn+2Br/+YM=
+	t=1750675975; cv=none; b=pje94aukelwAZyxpaMx1YA2aIrMmqqr9nyP6h2+axLvqAjHBnC32Sc1b3gEnOOf9h2De87XuwBmFHfEoh9hZc8VWbE2GSQHJP4N1gHMvL1tksUAhtYQypEpviyz/RU+1WVE471SBJ2ch2D/8jZk0xQ5u47LxeSteGZKAFy0qADs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750675919; c=relaxed/simple;
-	bh=0XU8MvGtflyTb8Qyclt6Swc20R9/zSrAQiqlaey2a84=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m0e063cyUqO9wtWQaz/tZn3f4YfB5ShsDisRiiyPQR/8LBrNwZHz9FAI4JLuTQuOfcAvD8UGZLr3t7yCKesk35n9iCVNb1bbAcWFVJnBYardiyUQl8BoQ3JLsASoMZq+BozsP2FvlGBXP+WFWsFCn7Rg+I9CLclJ1r/gxYMmiKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQlFg6yrxz6HJtS;
-	Mon, 23 Jun 2025 18:49:27 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id C7F8E1404C5;
-	Mon, 23 Jun 2025 18:51:54 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
- 2025 12:51:54 +0200
-Date: Mon, 23 Jun 2025 11:51:52 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Davidlohr
- Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison
- Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, "Ira Weiny" <ira.weiny@intel.com>
-Subject: Re: [PATCH v2 3/8] cxl/decoder: Move decoder register programming
- to a helper
-Message-ID: <20250623115152.00005aba@huawei.com>
-In-Reply-To: <20250619050416.782871-4-dan.j.williams@intel.com>
-References: <20250619050416.782871-1-dan.j.williams@intel.com>
-	<20250619050416.782871-4-dan.j.williams@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1750675975; c=relaxed/simple;
+	bh=K4yThSDueV+AZ0w+s23aWYis98NN54wJ9EH+EVikzYs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=if8X16Qs17D8bHVucIoj6gUVqSI+65cXhtKe5Ojl7+PI/HNTRIvB4+BWRPtZYqpRsue1H/StNimWeNqxixBUiUcf9vpHpNsqVP153azjx9a4Bn7jyZcj6P8cx/ZScPK5gBeTou5xlQvPLg4ydp9EeOIebqLMOySaTwuC4LWD1Ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Ys9CTIv6; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gnA2QG4Z; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Ys9CTIv6; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gnA2QG4Z; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Ys9CTIv6";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gnA2QG4Z";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Ys9CTIv6";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gnA2QG4Z"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D1CAC21174;
+	Mon, 23 Jun 2025 10:52:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750675971; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6U+vycsx0yOGyeto/sQB753cmjZS5l0fRUpZ5LcgcIw=;
+	b=Ys9CTIv6p2+9ZvWZkv/yo481zGnFbs/Y+KtaSyN6dQrXBpXaEuycMWkIYBWCIW+PD5yx/5
+	msxRwA31m5T9BLq8G60U46gQJ9I2kQksGSEXp/gwkg4MzitCdB9WhaxZWXktDpTJOSR8YC
+	wlHUTzV/441AmQGKx/RE6Gcx3Bgy/c8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750675971;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6U+vycsx0yOGyeto/sQB753cmjZS5l0fRUpZ5LcgcIw=;
+	b=gnA2QG4Z75pKwDZQOAb/+uDU1J0tnBNYGYJq/5RuojxEZNh7CQqJzLtMdEm1/hPnW/73xX
+	Q9xTuwRUhaWxkgBQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750675971; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6U+vycsx0yOGyeto/sQB753cmjZS5l0fRUpZ5LcgcIw=;
+	b=Ys9CTIv6p2+9ZvWZkv/yo481zGnFbs/Y+KtaSyN6dQrXBpXaEuycMWkIYBWCIW+PD5yx/5
+	msxRwA31m5T9BLq8G60U46gQJ9I2kQksGSEXp/gwkg4MzitCdB9WhaxZWXktDpTJOSR8YC
+	wlHUTzV/441AmQGKx/RE6Gcx3Bgy/c8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750675971;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6U+vycsx0yOGyeto/sQB753cmjZS5l0fRUpZ5LcgcIw=;
+	b=gnA2QG4Z75pKwDZQOAb/+uDU1J0tnBNYGYJq/5RuojxEZNh7CQqJzLtMdEm1/hPnW/73xX
+	Q9xTuwRUhaWxkgBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C6D9713485;
+	Mon, 23 Jun 2025 10:52:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 94iHMAMyWWihJQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 23 Jun 2025 10:52:51 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 7241BA2A00; Mon, 23 Jun 2025 12:52:47 +0200 (CEST)
+Date: Mon, 23 Jun 2025 12:52:47 +0200
+From: Jan Kara <jack@suse.cz>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, 
+	Matthew Bobrowski <repnop@google.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] fanotify: wake-up all waiters on release
+Message-ID: <lzvbms7m4n67h46u6xrp3nvdpyoapgghz4sowakfeek44bjndn@kgamxd67q6cd>
+References: <3p5hvygkgdhrpbhphtjm55vnvprrgguk46gic547jlwdhjonw3@nz54h4fjnjkm>
+ <20250520123544.4087208-1-senozhatsky@chromium.org>
+ <bsji6w5ytunjt5vlgj6t53rrksqc7lp5fukwi2sbettzuzvnmg@fna73sxftrak>
+ <ccdghhd5ldpqc3nps5dur5ceqa2dgbteux2y6qddvlfuq3ar4g@m42fp4q5ne7n>
+ <xlbmnncnw6swdtf74nlbqkn57sxpt5f3bylpvhezdwgavx5h2r@boz7f5kg3x2q>
+ <yo2mrodmg32xw3v3pezwreqtncamn2kvr5feae6jlzxajxzf6s@dclplmsehqct>
+ <76mwzuvqxrpml7zm3ebqaqcoimjwjda27xfyqracb7zp4cf5qv@ykpy5yabmegu>
+ <osoyo6valq3slgx5snl4dqw5bc23aogqoqmjdt7zct4izuie3e@pjmakfrsgjgm>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <osoyo6valq3slgx5snl4dqw5bc23aogqoqmjdt7zct4izuie3e@pjmakfrsgjgm>
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.cz,gmail.com,google.com,vger.kernel.org];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-On Wed, 18 Jun 2025 22:04:11 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> In preparation for converting to rw_semaphore_acquire semantics move the
-> contents of an open-coded {down,up}_read(&cxl_dpa_rwsem) section to a
-> helper function.
+On Fri 20-06-25 14:48:47, Sergey Senozhatsky wrote:
+> On (25/06/20 13:53), Sergey Senozhatsky wrote:
+> > On (25/05/26 23:12), Sergey Senozhatsky wrote:
+> [..]
+> > Surprisingly enough, this did not help.
+> > 
+> > Jan, one more silly question:
+> > 
+> > fsnotify_get_mark_safe() and fsnotify_put_mark_wake() can be called on
+> > NULL mark.  Is it possible that between fsnotify_prepare_user_wait(iter_info)
+> > and fsnotify_finish_user_wait(iter_info) iter_info->marks[type] changes in
+> > such a way that creates imbalance?  That is, fsnotify_finish_user_wait() sees
+> > more NULL marks and hence does not rollback all the group->user_waits
+> > increments that fsnotify_prepare_user_wait() did?
 > 
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> No, that doesn't seem to be possible.  Sorry for the noise.
 
-Seems reasonable.
+Yeah, iter_info is local and should not change outside of the call itself.
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> My another silly idea was, fsnotify_put_mark_wake() is called in a loop
+> and it tests group->shutdown locklessly, as far as I can tell, so maybe
+> there is a speculative load and we use stale/"cached" group->shutdown
+> value w/o ever waking up ->notification_waitq.  Am running out of ideas.
 
-> ---
->  drivers/cxl/core/hdm.c | 77 +++++++++++++++++++++++-------------------
->  1 file changed, 42 insertions(+), 35 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index ab1007495f6b..81556d12e9b8 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -764,14 +764,53 @@ static int cxld_await_commit(void __iomem *hdm, int id)
->  	return -ETIMEDOUT;
->  }
->  
-> +static void setup_hw_decoder(struct cxl_decoder *cxld, void __iomem *hdm)
-> +{
-> +	int id = cxld->id;
-> +	u64 base, size;
-> +	u32 ctrl;
-> +
-> +	/* common decoder settings */
-> +	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-> +	cxld_set_interleave(cxld, &ctrl);
-> +	cxld_set_type(cxld, &ctrl);
-> +	base = cxld->hpa_range.start;
-> +	size = range_len(&cxld->hpa_range);
-> +
-> +	writel(upper_32_bits(base), hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(id));
-> +	writel(lower_32_bits(base), hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(id));
-> +	writel(upper_32_bits(size), hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(id));
-> +	writel(lower_32_bits(size), hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(id));
-> +
-> +	if (is_switch_decoder(&cxld->dev)) {
-> +		struct cxl_switch_decoder *cxlsd =
-> +			to_cxl_switch_decoder(&cxld->dev);
-> +		void __iomem *tl_hi = hdm + CXL_HDM_DECODER0_TL_HIGH(id);
-> +		void __iomem *tl_lo = hdm + CXL_HDM_DECODER0_TL_LOW(id);
-> +		u64 targets;
-> +
-> +		cxlsd_set_targets(cxlsd, &targets);
-> +		writel(upper_32_bits(targets), tl_hi);
-> +		writel(lower_32_bits(targets), tl_lo);
-> +	} else {
-> +		struct cxl_endpoint_decoder *cxled =
-> +			to_cxl_endpoint_decoder(&cxld->dev);
-> +		void __iomem *sk_hi = hdm + CXL_HDM_DECODER0_SKIP_HIGH(id);
-> +		void __iomem *sk_lo = hdm + CXL_HDM_DECODER0_SKIP_LOW(id);
-> +
-> +		writel(upper_32_bits(cxled->skip), sk_hi);
-> +		writel(lower_32_bits(cxled->skip), sk_lo);
-> +	}
-> +
-> +	writel(ctrl, hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
-> +}
-> +
->  static int cxl_decoder_commit(struct cxl_decoder *cxld)
->  {
->  	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
->  	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
->  	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
->  	int id = cxld->id, rc;
-> -	u64 base, size;
-> -	u32 ctrl;
->  
->  	if (cxld->flags & CXL_DECODER_F_ENABLE)
->  		return 0;
-> @@ -804,39 +843,7 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
->  	}
->  
->  	down_read(&cxl_dpa_rwsem);
-> -	/* common decoder settings */
-> -	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-> -	cxld_set_interleave(cxld, &ctrl);
-> -	cxld_set_type(cxld, &ctrl);
-> -	base = cxld->hpa_range.start;
-> -	size = range_len(&cxld->hpa_range);
-> -
-> -	writel(upper_32_bits(base), hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(id));
-> -	writel(lower_32_bits(base), hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(id));
-> -	writel(upper_32_bits(size), hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(id));
-> -	writel(lower_32_bits(size), hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(id));
-> -
-> -	if (is_switch_decoder(&cxld->dev)) {
-> -		struct cxl_switch_decoder *cxlsd =
-> -			to_cxl_switch_decoder(&cxld->dev);
-> -		void __iomem *tl_hi = hdm + CXL_HDM_DECODER0_TL_HIGH(id);
-> -		void __iomem *tl_lo = hdm + CXL_HDM_DECODER0_TL_LOW(id);
-> -		u64 targets;
-> -
-> -		cxlsd_set_targets(cxlsd, &targets);
-> -		writel(upper_32_bits(targets), tl_hi);
-> -		writel(lower_32_bits(targets), tl_lo);
-> -	} else {
-> -		struct cxl_endpoint_decoder *cxled =
-> -			to_cxl_endpoint_decoder(&cxld->dev);
-> -		void __iomem *sk_hi = hdm + CXL_HDM_DECODER0_SKIP_HIGH(id);
-> -		void __iomem *sk_lo = hdm + CXL_HDM_DECODER0_SKIP_LOW(id);
-> -
-> -		writel(upper_32_bits(cxled->skip), sk_hi);
-> -		writel(lower_32_bits(cxled->skip), sk_lo);
-> -	}
-> -
-> -	writel(ctrl, hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
-> +	setup_hw_decoder(cxld, hdm);
->  	up_read(&cxl_dpa_rwsem);
->  
->  	port->commit_end++;
+Well, but atomic_dec_and_test() in fsnotify_put_mark_wake() should be a
+full memory barrier so such reordering should not be possible? At least
+not on the CPU, you can check disassembly of fsnotify_put_mark_wake() on
+your kernel whether the fetch of group->shutdown indeed happens after the
+atomic_dec_and_test() (but it should because && is a sequencing point and
+thus a compiler barrier).
 
+								Honza
+
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
