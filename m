@@ -1,141 +1,245 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010069.outbound.protection.outlook.com [52.101.69.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E494239E84;
-	Mon, 23 Jun 2025 10:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750673314; cv=none; b=XmBEIxgOmwSxAqnwJ7+5ifCJR5GG/kyYhqfpRnlCA0aI8aGKd6Bm3Z6NYuq+JhPWdfPs+8g7ezBm4cJy+xpUYGvpnOb5Zxbs0a0GvsaHEAL9iyVyZQGLcNhzG9GolVn2bbi+x90LKiUoVQIX8ANuuMN3B8+edZEcUZEUsUDKCFg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750673314; c=relaxed/simple;
-	bh=rxytXpv5wo27moJlcA5NuL2zOOMcZuDo39JoSMJKbhc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vD3PnhWvcZmUZ5ZYs/7+JuTL5YyUVgVGyZwQTTnI+3Y9wyxiVJP9g4EkWijD4Qi2bBlc9mQTWotRVLHwaPKig5BTaNgyCEt4/pb8HjvxYCdErjWIsFzHnGXAAEM9EpSXCdRthpflLYGiaaHseNAM9A11763LKs+PR6enoIDUNfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQkHC3zccz6HJrx;
-	Mon, 23 Jun 2025 18:05:43 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3CAAA1402EA;
-	Mon, 23 Jun 2025 18:08:10 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
- 2025 12:08:09 +0200
-Date: Mon, 23 Jun 2025 11:08:08 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Linus
- Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra
-	<peterz@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
-	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal
- Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH v2 2/8] cxl/mbox: Convert poison list mutex to ACQUIRE()
-Message-ID: <20250623110808.00003fcb@huawei.com>
-In-Reply-To: <20250619050416.782871-3-dan.j.williams@intel.com>
-References: <20250619050416.782871-1-dan.j.williams@intel.com>
-	<20250619050416.782871-3-dan.j.williams@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0B7217730
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.69
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750673400; cv=fail; b=c6BKSfRacEQihBKA+hbzvNb90LeI4EOQ0Ofpda/63uzOvC+RftLtGj+Bp9qcE2oyqpVLCTf20kOnxqe5/sNFX/NCkxYIIybv96Avy3/DkK7t1/cPwZvx+DlALVr7iXWJeBsbsNls5Fja7H7jqF67URGS0NHO8awpWgblHIcbUcM=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750673400; c=relaxed/simple;
+	bh=mHQWjFTn5sJD51k1RKTDF2otkzP+OqBjEWN7GrTQ0Fo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ifAtAiM80zjFGtcx80FE8AlFFnA3sX5U4oQT+SRZJG0vmrCq+Og/jXd5lv2dGQboC/sa+YLYhqeQfDoNwC8JpAOjWg2BtcCivkRUScDoHMm/lLMsMSFe5gzrCmqES8stnzH6yHnNwX96lywigy7K/wDGBDeJt0Wfb4RNVkXGv00=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=TH192FJo; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=TH192FJo; arc=fail smtp.client-ip=52.101.69.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="TH192FJo";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="TH192FJo"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=QQPmbk1PBhu5bCydrZzf2MO1mZxqkQS3LpA/EGfZG57GNots8D/OZrZQQqn+GK40bwxFY6qacqVoVo018uqmoSU8u8w02UNeM7tUxTfK0GhXJunmZ66qK9ThO3B3j1Er66zKLeiXSt/cyNaattHftsQEA3TzNTW9n6+6iLzAk2q+QZTiUfvSBdb1YDH16ZvmpOvxrTGnPox6bYlqKAQG4277kDLj8vcxyRK6N952SfImufb7VIU1e/39HYFmhZEB9hPqr6rrCdCV6KRfl3CU7x7l57LnlOMGETJYAyflxelEwNBPLMgcxhDLmYUQNSibpOGg0SG23/EmIvQz/2MgWg==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3HLnSYWOjkhE5iQPlVTumtkOkxw4ssBtFH3EkmOPoi8=;
+ b=JsV/h6gbPBKuDacLos2eiJNDjRqrXT3Th8lG/Ot4zxkAdiTqG1lPmgKR5t7Gm3O4b5s5PnuE0L/NUMH5ZSnLEbKAhcNkxl8sWk3iIk5jIDNIL1grbUSbOEyrKcH4hPgKDfvihTPcaoDn9CBw5t/ZavJo25WNqJhYV330YpRVsHlBwBnhRp+TWxKMAErzj8T5hJphxMaAtBdtxulfANdWx70dcoidwh/9d1mPzXPDaBA5rI8muRS1oh9ngtfWlBHIs+c1ZuHhmAI6Gh1nA6UQozYQqsEERc3oqho+YhiA+4Tzw6aavrFYfXBds4adRNgnHSM/PMfCHpnORaB06xXDeQ==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=linux.ibm.com smtp.mailfrom=arm.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
+ dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3HLnSYWOjkhE5iQPlVTumtkOkxw4ssBtFH3EkmOPoi8=;
+ b=TH192FJownE35ciVj2wa0kWGIiidSncqOeAwOdwHS3NwcCiwRcQ0Nl+ZR/ry1ryL7kOKsUXSvCVxXeluz/PTqSbsHcc7nRwf087n+HQd0AiIxzXT8MtArSVTTbETiAPpVxqyktCfkydd9OcPIkXvmjqmOYX+rhOphr3D2YrgMRI=
+Received: from DU7P195CA0012.EURP195.PROD.OUTLOOK.COM (2603:10a6:10:54d::22)
+ by DU5PR08MB10610.eurprd08.prod.outlook.com (2603:10a6:10:51a::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Mon, 23 Jun
+ 2025 10:09:50 +0000
+Received: from DB5PEPF00014B88.eurprd02.prod.outlook.com
+ (2603:10a6:10:54d:cafe::2f) by DU7P195CA0012.outlook.office365.com
+ (2603:10a6:10:54d::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.29 via Frontend Transport; Mon,
+ 23 Jun 2025 10:09:50 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ DB5PEPF00014B88.mail.protection.outlook.com (10.167.8.196) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.14
+ via Frontend Transport; Mon, 23 Jun 2025 10:09:50 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kr3asqVXtnlGwY3QoFWRxDVSw1PqCHNrmK6lQHLHs90nQT3h9yHEUR9t1eyB0t/BlICKZBWxXnlUdTVlhdQZHc6Aus8DE+/jOqqwrs1FnFsNUkLGiYFg1jTViYm9XtQk4X16LvC61jkh3wPMWXNHVlNbeCqzG+H2hGTJd5eC682+7lgKdx/zjvi+LXkcWTE65CQHPKvV2VdRUAyk7GZ1wVtPzEMYdDitHYASAXd4deLMZVu8EsWvVpJwxZ2yt+M8rfxfQuWn0pVbDDQpURhCAig1b1KLUw1Ki9KrXq9uhRPNhgNLMoLv2oqYX06KYVeA28jCiI0uZvKI0QBZi5gD0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3HLnSYWOjkhE5iQPlVTumtkOkxw4ssBtFH3EkmOPoi8=;
+ b=BeTkapHNDVYQ2PFwxLMr98ZlhLWxx8YUY8Z3lbrZg4sGkkePKO3KtORrf4Ll36DqB682LMq3q/qru0qER/VWfe/5Qh5FerGfWTqjHJB6G5gNwhwoXNoWoFxgF/hcCJrw5dOQBLLdg0IrK1NzSAT845WOOekd/r/41dhl5qRZ860NoNGFBNxpabCW+dzom6pVE03ftfW2kv4SKp1/G/E1HVMZrdgLs8/nC3oUqGqn5bSUmyfFKM973iM+ZwXlQS/nDhNoba9jL/H8iZAlpd7vU+ac9X4Xy1z7abXzegAUX9BaWQisAxuwlwYbLBrO0E2q0LCmZIrfuM8Vp/zSACjnew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3HLnSYWOjkhE5iQPlVTumtkOkxw4ssBtFH3EkmOPoi8=;
+ b=TH192FJownE35ciVj2wa0kWGIiidSncqOeAwOdwHS3NwcCiwRcQ0Nl+ZR/ry1ryL7kOKsUXSvCVxXeluz/PTqSbsHcc7nRwf087n+HQd0AiIxzXT8MtArSVTTbETiAPpVxqyktCfkydd9OcPIkXvmjqmOYX+rhOphr3D2YrgMRI=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+Received: from AM9PR08MB7120.eurprd08.prod.outlook.com (2603:10a6:20b:3dc::22)
+ by AS2PR08MB8405.eurprd08.prod.outlook.com (2603:10a6:20b:558::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Mon, 23 Jun
+ 2025 10:09:17 +0000
+Received: from AM9PR08MB7120.eurprd08.prod.outlook.com
+ ([fe80::2933:29aa:2693:d12e]) by AM9PR08MB7120.eurprd08.prod.outlook.com
+ ([fe80::2933:29aa:2693:d12e%4]) with mapi id 15.20.8857.026; Mon, 23 Jun 2025
+ 10:09:17 +0000
+Message-ID: <f5c7ed26-b034-4600-ba29-26761eb1eef5@arm.com>
+Date: Mon, 23 Jun 2025 15:39:13 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: move mask update out of the atomic context
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250623080440.3005693-1-agordeev@linux.ibm.com>
+ <c11a4b2e-6895-43b7-9ff6-620793bf8551@arm.com>
+ <aFkgTA+02bV6nldk@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <aFkgTA+02bV6nldk@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA1PR01CA0171.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:d::17) To AM9PR08MB7120.eurprd08.prod.outlook.com
+ (2603:10a6:20b:3dc::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-MS-TrafficTypeDiagnostic:
+	AM9PR08MB7120:EE_|AS2PR08MB8405:EE_|DB5PEPF00014B88:EE_|DU5PR08MB10610:EE_
+X-MS-Office365-Filtering-Correlation-Id: 855a88ac-7980-4e0c-8423-08ddb23e171f
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?utf-8?B?QUQ5UEViRTYvSUpWTElnd1VVQ2EwcSt3dy9heEVQVmFsajVtU3VGQ3E4VXMz?=
+ =?utf-8?B?WkdHMjVuREpHWVZRUHZraGpUVlFOYVNhVGIzODhRZkRQOWtGeDJzQ0JNY3Qw?=
+ =?utf-8?B?RkZ1djJJWVlLNXpOSE55dEFlUzRvQ21VN2RxRi9DaktwY05kckxlOGZnSFZm?=
+ =?utf-8?B?R3FrOTQ3cWN0eGFabDB0Ymo3VkJQMTVib3lDYllNWGRPQ3oxYXpUa295WERl?=
+ =?utf-8?B?ZVhpc1ZwTmZGQkRvdk5NQTBnaStJeHhLRDk4bDh6SFNxN05sbVJ3TytaOVBQ?=
+ =?utf-8?B?K3lEK283UkFRSlcvSWJScVJ4KzhQT3FIeXl4U0tQMURETlpzdGN5aSt4VStH?=
+ =?utf-8?B?WXVnQ1B5WHlqMStBQ2djSTZpVlNNQzRodUlTdDRjZ2FBcDgzcmVDalB5ekhj?=
+ =?utf-8?B?WENFTUlFWVI0SERlSEtmOE5yK25WVzIxeEQ2djRlNzArVzBwVXEyS0JoNHZ1?=
+ =?utf-8?B?VjUwYjZla01mZVJFbExtQ0dTeXlMajlLN0tmVno4ZHBRVzRPU2lJNUxJNE5y?=
+ =?utf-8?B?dkhQS01hUFV4aVZ3QnlOZE5HdHBKbUpZY1lxT3o4WEs3dUorR3JocUt1VzBV?=
+ =?utf-8?B?N2c2c0FxcmpLOHZDNXNJTXpWRHVEWXFVNkl1SldTaXRKUEV5ZEV4ak9DdWRW?=
+ =?utf-8?B?YldzdGFLUXAvU0lUQlBLa3NjdGtWazB6N3l6SzZnZTdzN0JuSUVQZHI2SFNx?=
+ =?utf-8?B?V3NuOHA5M0Ziajl3UkhxMEFpbzE2WUc2VzRUUTBBRmlkeUJiWnZ1a1M3cVBM?=
+ =?utf-8?B?bGtMWDJYVWtKV2dqTG4vSVk4eVk5QWF3bjhZM2VKRGQ0RUNqV1lHK2UwUzUz?=
+ =?utf-8?B?NmdzbGhzeVBOZW5ETmFHY3RycStWelFvcVQ2amRXcWV4VEM3ZVg2LzNkMDU2?=
+ =?utf-8?B?cnVLMnZGZEd2OEp3VXZoUzFOZ2N3RCtRcHFNeVczMEJ6SE9sTEM1T1BtZS9D?=
+ =?utf-8?B?c0h2OXZZMDRDakx6VjR5R2ducXY1b2JPaDJOQUV0djU1ekx5NHZXNmdtT2pS?=
+ =?utf-8?B?MEtXY3hsbWRwWXNvQW9SNkNtYVJicmdSQ3Z3YUV3cmFPbXdOaWJLdm5sanJk?=
+ =?utf-8?B?TFdBVitMbE93a1BSWFd1MW5mY1duRjkwZzBUaEFkWEJrcVAxbW0yZkY4OEZl?=
+ =?utf-8?B?VUxHWktpdkRhSFArWVhPTWRZQmwzeXVQRlRrcEdWM2lOak0rb1JvVUwrbS9v?=
+ =?utf-8?B?Uyt2QUJGV0xoMTJEaWNRemFEczYzQy9jQitNb0MrS01LaEhRWXdCcWNhRXdX?=
+ =?utf-8?B?ZGkrSThSYXJxUDNJMGZFeFNQWEM4UWsrRmI2R1hWUC9OUzkxa1NzZ0tib0R0?=
+ =?utf-8?B?MXFMM0tVSXEyVjlWNzcxTjhkdDBqOHp2bWpicGhPMlNxOTZSVStzYjlaMk92?=
+ =?utf-8?B?cVVHS0FUN2MvWSt6VlN3eDBkZXRVYUxKay9UWmJxV0RMUHpYUWQxejM1b3F4?=
+ =?utf-8?B?d2ROUzI1ZS8wNy9GTHhoKzRIeklZSERxY3pRemN3Ui96VDNGY3pLOStIN1cx?=
+ =?utf-8?B?QUtJa1owUFZKNngvSUF5OU9QTjc5VDJVS1Z4Y3hyblNJT1RXc3Exc3QwaHhB?=
+ =?utf-8?B?Vm1aL1BNTk1mVkhtSjZuUGphb1N5MjlucjVqcnNHRlRVbnN0VzByVlBtb0Q0?=
+ =?utf-8?B?Tmx0cEQyOUpUdGdmYzh3aTI3bzRXMnRCalI5M0hTK3pwWnFQV3FEck5paUN6?=
+ =?utf-8?B?cVNCSG5BL245UXhsakZ0SmZUWVZCNE0xdkVQQW1iVndsQVpFR0dXYzhMb3JG?=
+ =?utf-8?B?Q2FSdlUrK2dZM0RJcHRjZ0tpYkFEdzA1emk2YWkzdW1hNlV6WXU5VGdkalE3?=
+ =?utf-8?B?R2R6ZkpJd1NtK1JIdUtkTTVxUnFabnFCK1AzSkxEQ3pONjF3VTQ3dEN3SFgr?=
+ =?utf-8?B?Z01uVEhNSnZqV0tLYnpyeGp6YlJScDkvOGlJUHFhSTBOL2c9PQ==?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB7120.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR08MB8405
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ DB5PEPF00014B88.eurprd02.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	70aed484-68b6-49fb-16af-08ddb23e0382
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|35042699022|14060799003|1800799024|36860700013|82310400026|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?T3Fualk0VFJwR2JjR1NNOXJjSlBZSVh0Ym51d041TmhsRm9yVHpnanp3ajdy?=
+ =?utf-8?B?Tll6MDBJUy83R0lFVjJ3akVyNnBXMXpsdlpLWGVmTEtVMmh5VGFKc3dzcFlJ?=
+ =?utf-8?B?dWhvL1BKcHlJR2lucGQ5aWpmRTREOWFyNXpnRm0wQUwzcm1NYkJRWTNxOHJP?=
+ =?utf-8?B?Q0RtbHA1UWRMOUZJQzROVWxmNTFreWRHN3QyM0U3SkR6eTlYNWZ1Yzl3aE85?=
+ =?utf-8?B?cFByckZXTHphY2RLbjZuOGV6aXl1UGZXb2tlNXBHaEZmTjZjakNpWGFFcDcy?=
+ =?utf-8?B?Q3Nkc2JKUXB1d3VvODV3ai9xQlBaSGJCbGN4TnAwNG50RnNaL1ExOUprcHhx?=
+ =?utf-8?B?QlBkMkQ2WVBaYUNFVDBiU3kxbnBrcVB0WUF3TEpIbjhhQlBZNVZFWCtOZzFH?=
+ =?utf-8?B?WGU2SitTR2lwTkJhVUhhU0I5NDVqbmN1eVowOG1yV3h3WDYrUW1jM1NoUUc5?=
+ =?utf-8?B?RUtaL3ViNjliVFN3TXV3MzVoSXRtN2h3NE04QWEzQUJ1VHN2WWxjdllFWmkr?=
+ =?utf-8?B?TkJhOEp2QThuU3Axby9VQ2haOVZLTGNjRVp6ckI2ZHNsOU9lRE5iVmwwNTVI?=
+ =?utf-8?B?eEViWEtjTDZsb2QxaGUybFNxS0dmSFRWNytPRzZGN0RMWUtDWFEzOUlwWHhi?=
+ =?utf-8?B?TnVYLzRGR2IzWWwyMzlmb0E1WEQ1SkJhYlhVWGZOQ0RHTWEyV1kzZXlobHlJ?=
+ =?utf-8?B?aGExLytUbTRBaW05R2VuY1ZvUnd0QUZwd1Y1K1NpTmxJbGNDY1dWR2NZY2FW?=
+ =?utf-8?B?bUl2S0k3Zlc0d1hoNXFsQWlUTExuczBsUXo4Zm9vKzY4dHdMbUtUQXBYSFRq?=
+ =?utf-8?B?bzc3VkthemVCcUtGVUsvNVcwNzMvcTFWTkpUemZ6ejlKY2V2cGFYV1RFSHJZ?=
+ =?utf-8?B?T2E4R0xlMXQ4K25ZQ0FrRmFVK1dOQUlzYWVhUm1jVzZPN0x5RUxIVFFxL0po?=
+ =?utf-8?B?RkdIOFlmRHNSSnVQT05ibjJSVVorSGkwSUM4WVhESnVoQVdrRlFOYVhJTVNs?=
+ =?utf-8?B?UHVObUIwZ2NaMGphRzVERm1XaitnazVqU0thZjhOUlhjMjh1U285R1BLR0hr?=
+ =?utf-8?B?MForTzZNSytsd0doeFhzMG13Uk1KRERORmxUVUovTUxxMmQzamNuUTduQ2Fx?=
+ =?utf-8?B?bDZiUHVqVHhyNXdzVUFKY0NqaHVJNFVKNTJLN1llYUwrcXVyL0h3aHB3ZWdy?=
+ =?utf-8?B?WVFoWmRva3pUZCtJS2dsbWFVcEQ5NHZkYnMwK2doZzM2eXZLYlVMVnluTU92?=
+ =?utf-8?B?OXkvRnVENHVWRFdEMVhoTUxSR05VY3E1SVE4c1NTajVGS1BYV0l1ekdXY0N0?=
+ =?utf-8?B?RzJreWRZWm44U2NBRk9CT2dWVjZrS3VNL0lVK25mdVcrT2FtQXI4Skl6cEVv?=
+ =?utf-8?B?UkwxdVF1eDRQS3lQQ2ExMDFqNW44QmxOV013MVZnbWtsRmJwejk0dXF2TXd5?=
+ =?utf-8?B?bmwxb095TkxFSS9GaUx0ZGI3SzBVU3ZBQUJ5ZExicjVDYnBPUGpnczc1L3U5?=
+ =?utf-8?B?MEk2a3phK0tTcXA1VGtHV1ZoUnI0NVU0TkpQZ1dBRHB3NWc2QmlJTzNBS1NS?=
+ =?utf-8?B?aTNMZm1yTVh4RTFnK2NqdktoSUlwenFpUjA4UVZOUmsrWFU2RWRwcGZsVkdH?=
+ =?utf-8?B?L3hjbllUS2MxY2RhTGVpLzdlYnUzT3pkVnV1WWxnYTRwUkJXVVEvQWE2ZDE4?=
+ =?utf-8?B?Q3BrVEhlVE4rS1Z5ell1a3V6RXZmcWorbjZkZEVwUVRvMlNFL3RXeTMwZXZN?=
+ =?utf-8?B?OVFtYjlGWEVjUzlPSjJhRkg1WVdadmJ6bDNONFBVZFRCVmdRUTRpU0NzMEhS?=
+ =?utf-8?B?cHAyU1IwMWE3ZnZsRzZ2ekpBZGZHbXZ3REVpcCtHS3JVdnFwdDBWMTUwZmlk?=
+ =?utf-8?B?VXVMMHRVaUZiK05jNGR5R1hwSGxSbVlSa2FOQkJ6Y3lNdHNUZnpuVzFQSUdI?=
+ =?utf-8?B?N0ZiK3FHa2FuVC8zejNPTmUwOXBJUVZ1eDREN0NmdGNUeXJvMUpaZVJkR1Jl?=
+ =?utf-8?B?RjFzRkt6SDVRTzBvWjVKTDZnUkxDK0RUMFZEZWNVOUxHYU1sc1o1aS82d1BB?=
+ =?utf-8?Q?75t5JZ?=
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(35042699022)(14060799003)(1800799024)(36860700013)(82310400026)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 10:09:50.1142
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 855a88ac-7980-4e0c-8423-08ddb23e171f
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB5PEPF00014B88.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU5PR08MB10610
 
-On Wed, 18 Jun 2025 22:04:10 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Towards removing all explicit unlock calls in the CXL subsystem, convert
-> the conditional poison list mutex to use a conditional lock guard.
-> 
-> Rename the lock to have the compiler validate that all existing call sites
-> are converted.
-> 
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+On 23/06/25 3:07 pm, Alexander Gordeev wrote:
+> On Mon, Jun 23, 2025 at 02:26:29PM +0530, Dev Jain wrote:
+>> On 23/06/25 1:34 pm, Alexander Gordeev wrote:
+>>> There is not need to modify page table synchronization mask
+>>> while apply_to_pte_range() holds user page tables spinlock.
+>> I don't get you, what is the problem with the current code?
+>> Are you just concerned about the duration of holding the
+>> lock?
+> Yes.
 
-One trivial inline. Either way
+Doesn't really matter but still a correct change:
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Reviewed-by: Dev Jain <dev.jain@arm.com>
 
-> ---
->  drivers/cxl/core/mbox.c | 7 +++----
->  drivers/cxl/cxlmem.h    | 4 ++--
->  2 files changed, 5 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 2689e6453c5a..81b21effe8cf 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1401,8 +1401,8 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->  	int nr_records = 0;
->  	int rc;
->  
-> -	rc = mutex_lock_interruptible(&mds->poison.lock);
-> -	if (rc)
-> +	ACQUIRE(mutex_intr, lock)(&mds->poison.mutex);
-
-I'd slightly prefer the 'canonical' style from the cleanup.h docs in previous patch.
-
-	rc = ACQUIRE_ERR(mutex_intr, &lock);
-	if (rc)
-		return rc;
-
-> +	if ((rc = ACQUIRE_ERR(mutex_intr, &lock)))
->  		return rc;
->  
->  	po = mds->poison.list_out;
-> @@ -1437,7 +1437,6 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->  		}
->  	} while (po->flags & CXL_POISON_FLAG_MORE);
->  
-> -	mutex_unlock(&mds->poison.lock);
->  	return rc;
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_mem_get_poison, "CXL");
-> @@ -1473,7 +1472,7 @@ int cxl_poison_state_init(struct cxl_memdev_state *mds)
->  		return rc;
->  	}
->  
-> -	mutex_init(&mds->poison.lock);
-> +	mutex_init(&mds->poison.mutex);
->  	return 0;
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_poison_state_init, "CXL");
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 551b0ba2caa1..f5b20641e57c 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -254,7 +254,7 @@ enum security_cmd_enabled_bits {
->   * @max_errors: Maximum media error records held in device cache
->   * @enabled_cmds: All poison commands enabled in the CEL
->   * @list_out: The poison list payload returned by device
-> - * @lock: Protect reads of the poison list
-> + * @mutex: Protect reads of the poison list
->   *
->   * Reads of the poison list are synchronized to ensure that a reader
->   * does not get an incomplete list because their request overlapped
-> @@ -265,7 +265,7 @@ struct cxl_poison_state {
->  	u32 max_errors;
->  	DECLARE_BITMAP(enabled_cmds, CXL_POISON_ENABLED_MAX);
->  	struct cxl_mbox_poison_out *list_out;
-> -	struct mutex lock;  /* Protect reads of poison list */
-> +	struct mutex mutex;  /* Protect reads of poison list */
->  };
->  
->  /*
-
+>
+>>> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+>>> ---
+>>>    mm/memory.c | 3 ++-
+>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/mm/memory.c b/mm/memory.c
+>>> index 8eba595056fe..6849ab4e44bf 100644
+>>> --- a/mm/memory.c
+>>> +++ b/mm/memory.c
+>>> @@ -3035,12 +3035,13 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+>>>    			}
+>>>    		} while (pte++, addr += PAGE_SIZE, addr != end);
+>>>    	}
+>>> -	*mask |= PGTBL_PTE_MODIFIED;
+>>>    	arch_leave_lazy_mmu_mode();
+>>>    	if (mm != &init_mm)
+>>>    		pte_unmap_unlock(mapped_pte, ptl);
+>>> +	*mask |= PGTBL_PTE_MODIFIED;
+>>> +
+>>>    	return err;
+>>>    }
