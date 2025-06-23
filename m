@@ -1,235 +1,113 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1C829B767
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4439A937;
+	Mon, 23 Jun 2025 15:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750693162; cv=none; b=LYEBwtz2nKg5ZINLb9V5EDWzZRiwkNUOnaEyDGxMMHhLAvu6CAjMEFBl7vRpuWxTHpAozdXfETubOWRlXM+aPxA7mGaQqT9S0akBxRH9rMcGyRgfcGn8Zj1/k3ZUzDY2Wm9cqmWvXOKdZtPO/DzJVFU72E4UBK5+FXm+my7YmQ8=
+	t=1750693179; cv=none; b=d+sTFV35ptfmOVX0Eo1Iq0Nv623CN3UP/Orebe0u48pkly4VMfk1kqTBNZbjBff7uIGNr+uPxFMKvIQQuEer/+UVmF/l9b9awSKVZad6n8Ba7U8R2IRo0BjTMrYON8cdUjFMRj3LGGe+3jyALdi4As6y7nTDtg6PqlBGaODICtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750693162; c=relaxed/simple;
-	bh=mquKo7q72V+xUN/n2Zfv1gwSkGcWTeHtpD0P5laj5eY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Blx/jpSZ+TxkQcNWnMHGgRKQED5bYZXuDc5n/2nDRNbFOiLbYiAkjdcDCNIh1Iu4q5zRF32faE6CG/nKI013M+EFZu+/bvZ/gI5IvcMvAB2qCB1k+D3246bx/7LlevmIPZrGpE1KdimSbpdrRDrn8JOXuoIpTl/N48mG+WSSBVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NNjnjoy8; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750693179; c=relaxed/simple;
+	bh=Agb4s8yFfOc4EUdCKON5wzhzGt5/IWxyJQUTOetmPeo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XRKevVU8uy2nUOMqvtACupBAxTdmcoMoJ6PeYkeg3FGkb/lZiDtBGnx+aye5LOAXuVsuLJjEcJet8kwq7scN4iUWDMvCKe7Aye8SSLAL+Fuf7i6o/hwsFdvhTX5EWZAGKy0O3RFUmedllZhyYViNdm9s0H72Kq1To+eCR09gQak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GjiKbONO; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NNjnjoy8"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-47e9fea29easo757451cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:39:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750693158; x=1751297958; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yXpGhB8D/EFyEFVKBdpBHH5TY+f9AXT6r2w1zPMMC18=;
-        b=NNjnjoy82uZsu9De0cpv2mEHSODcTQCgG6A4nAlmOoFXmff3GuUNnYHzWB7C3lYEt1
-         kzdeS+tohLxmTvljQ8KIHgA/5tznoqqvublgUxCJKBiWFnx4JJruyZ+9lmG9azwIPUV2
-         3Zvi53CGzFai+O64KRHHsJfeE/6PjGt/ZyKHTdddLds7ZSuu6TnDPY6TwM1zpyKu+RaH
-         xpSYwmQ/8BPHx0FUL56ARHTD2mhtNFo8pRdHF4xKK11zOXqPgI7h6yCSaXADMVqRVMPY
-         CXc2wQOEbrKy69ay54D+BGN2VOWZB7DLmGwz+9V4ZMUn75urL099LIN8iBnWUS5TA80y
-         B24w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750693158; x=1751297958;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yXpGhB8D/EFyEFVKBdpBHH5TY+f9AXT6r2w1zPMMC18=;
-        b=a8Q8fXtYru/IwDeiqPtpNMEB2tTe4h6UBZviw2E3pJOrOCDFszBHa5s8SEp87meyqq
-         OgSIprYVSHOrmuPBG7XoLrsVCs8wqPS1CDcNfo4OssagNdXctxxfzVa/8pn9sqJ5gzs0
-         rWQ7aLE7rIUfpPg4fjQIe8VyJugc/tw0gWp9NWc22dv5qBiGeEDK+JqUoqqdaTkGvOst
-         SlQc73e73JOMhQ0gD8D1f1aRzV5Ycjg/svzudW8imysgBT9oIK2VtL9GzX0MX9jDZP3h
-         wMq7bWPKEkgVq+s71Qjmp9bEdfOXvvpHh6cptIqmkpGCPp2+6duSu68XgpcnOy2Pydli
-         iLjA==
-X-Forwarded-Encrypted: i=1; AJvYcCXSn+Z/nv00bZsxE27xOzZJvBWxJtb6A+NxHJdrNf0cahKnoPaoERm6/xpL5d6RnC49fibewZFN1Y+2O38=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZ+vYneIYSogYU3I0kqKTDIfiJlukGoq2Xngjw2QSYJJaLTjCw
-	KF9J8Wr7G3ZYlRJP+zq8xhobUspnpiEQC1IY1Fyhp0o2RScyVWClRRMav8FavVaylU8r22pfmRk
-	y37GAcA64oKo/fCphKQ+L5Rq4qW1OnFo/Q64QiMK8
-X-Gm-Gg: ASbGncsJpvzF3COmpZ1A0mOMW8fWlxv0lyAWxfKWoi+5sQmcQMFJox0FVjBfyl+m3u4
-	VJl8borpe5oLKoVaznjPc5WyZyEzGd5Kyz3TyCQ7emkOtqeurQwjPeZw82ps/wblydgWdCparMG
-	FWDg1zETOmsFVT2Qx2DPZumdTUR3MK+6T/IKbwGiGNihBRgIe1bjlB
-X-Google-Smtp-Source: AGHT+IF95EFLkc/FCP1YCcV3dI+eQE9bOqB4iNEeLrvaybuWX/WfpRtkSxzFcESxVTnkO2L/DcAlKqhu8ewdgrnOaN4=
-X-Received: by 2002:a05:622a:8596:b0:480:dde:aa4c with SMTP id
- d75a77b69052e-4a785418ccdmr6434191cf.4.1750693158070; Mon, 23 Jun 2025
- 08:39:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GjiKbONO"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NAI8jL031109;
+	Mon, 23 Jun 2025 15:39:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=Nx/ahc6Pz+bp64mF9iOFx7uxMl9Opg
+	Y/wT7kWk7dD5g=; b=GjiKbONOG49OGAfgywyQNLj2Zg493IF5aqFeLu9vn0O5rT
+	QImKIQPYIwLpEm7E+fdVV1B6iZie+8OmHz2Ez9jnE59aKWAgF57w7V2YRsEA0ZSM
+	atzf/TjxosG2aT/omXqEOQfCZpR2wMkWkueBmrah65Bk2vNz9kK6IgJeLBczg/i4
+	fkaIOL2yPG+ac4kRoHOzoZQr0HJX3JCdsCZ7KuLQ0ubizreI5bj6NcOSOdnsNUKF
+	tsNLZe85K6mVSLvOK07lWJmm0V0Uo4A0beTlnQY3iH//iOL6+Usc6pXM7fj3SUVN
+	IL9IEJytnLLjD16btBBV3EypWFDkIAGl4sLgAtnw==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dm8j340q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 23 Jun 2025 15:39:35 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55NEvPU1004643;
+	Mon, 23 Jun 2025 15:39:34 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e99kf9uv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 23 Jun 2025 15:39:34 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55NFdUkd19071366
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 23 Jun 2025 15:39:30 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BA7482004E;
+	Mon, 23 Jun 2025 15:39:30 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7F4242004B;
+	Mon, 23 Jun 2025 15:39:30 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 23 Jun 2025 15:39:30 +0000 (GMT)
+Date: Mon, 23 Jun 2025 17:39:29 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/boot: Use -D__DISABLE_EXPORTS
+Message-ID: <aFl1MU8RBymnFTso@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20250620154649.116068-1-petr.pavlu@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623-anon_name_cleanup-v1-0-04c94384046f@suse.cz> <20250623-anon_name_cleanup-v1-1-04c94384046f@suse.cz>
-In-Reply-To: <20250623-anon_name_cleanup-v1-1-04c94384046f@suse.cz>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Mon, 23 Jun 2025 08:39:07 -0700
-X-Gm-Features: Ac12FXypuLgcEDBw9XhSelwuQgJJ0khGAjfDvtlFfTgvOwT9ulXoeO2zFqOjGy0
-Message-ID: <CAJuCfpG_ORN2+pifB4H16eASTAQFY+Fa_5FRROkffLKuNJpD3Q@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/2] mm, madvise: simplify anon_name handling
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, David Hildenbrand <david@redhat.com>, 
-	Jann Horn <jannh@google.com>, Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
-	Colin Cross <ccross@google.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620154649.116068-1-petr.pavlu@suse.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA5MiBTYWx0ZWRfX/HtxD0ioiQMp ZSpEYx2AC8dcppBmNtgjAmxCkBhPUgEygpMxKlAg4dMcpM73qYBq846HK8Zyt3kmIs3ggcsGcbu 4JaqX/GrFo/w3QLqOvwajX69m7YDjvfcNWS9pDU5frQIRBxwOrGt+HHav5ldhtNX0lteF3/OlfO
+ 6IZilBXhb/GyXHFM+Hc8a5N9cZfu6hRLAbI4cl3Ha28SS7e1PSaOZqxUtkCwBVkg3d8C9ifF/5R pAMqFhlvmXaH1RXx9Tu3TnjqaEDgiFzPeLh32zSrrj5dFy8TwBpx2ty609ZpiXsTVuL7iqnWla7 P/9q1yU+dozMoyiZsMTVbmA/5sJyG6chQ3xJwiCVw8Gw5xv7pGyVfuN/VE39HlqQZE9dnUZHnV0
+ nA5gU1U0wXxUJxpRD86E4TEdkF3Dr+OoY6/3K65tEPfNM1S/JV2HbTp7w6YPWxT0cgMuBbhI
+X-Proofpoint-GUID: c_v-99qjdliSBGbtzNcGCrE35ZVuGdom
+X-Proofpoint-ORIG-GUID: c_v-99qjdliSBGbtzNcGCrE35ZVuGdom
+X-Authority-Analysis: v=2.4 cv=combk04i c=1 sm=1 tr=0 ts=68597537 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=iox4zFpeAAAA:8 a=Qwefet294171jl4ETmQA:9 a=CjuIK1q_8ugA:10
+ a=WzC6qhA0u3u7Ye7llzcV:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-23_04,2025-06-23_06,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 spamscore=0 adultscore=0 mlxlogscore=699 clxscore=1011
+ impostorscore=0 suspectscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506230092
 
-On Mon, Jun 23, 2025 at 8:00=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
->
-> Since the introduction in 9a10064f5625 ("mm: add a field to store names
-> for private anonymous memory") the code to set anon_name on a vma has
-> been using madvise_update_vma() to call replace_vma_anon_name(). Since
-
-s/replace_vma_anon_name()/replace_anon_vma_name()
-
-> the former is called also by a number of other madvise behaviours that
-> do not set a new anon_name, they have been passing the existing
-> anon_name of the vma to make replace_vma_anon_name() a no-op.
->
-> This is rather wasteful as it needs anon_vma_name_eq() to determine the
-> no-op situations, and checks for when replace_vma_anon_name() is allowed
-> (the vma is anon/shmem) duplicate the checks already done earlier in
-> madvise_vma_behavior(). It has also lead to commit 942341dcc574 ("mm:
-> fix use-after-free when anon vma name is used after vma is freed")
-> adding anon_name refcount get/put operations exactly to the cases that
-> actually do not change anon_name - just so the replace_vma_anon_name()
-> can keep safely determining it has nothing to do.
->
-> The recent madvise cleanups made this suboptimal handling very obvious,
-> but happily also allow for an easy fix. madvise_update_vma() now has the
-> complete information whether it's been called to set a new anon_name, so
-> stop passing it the existing vma's name and doing the refcount get/put
-> in its only caller madvise_vma_behavior().
->
-> In madvise_update_vma() itself, limit calling of replace_anon_vma_name()
-> only to cases where we are setting a new name, otherwise we know it's a
-> no-op. We can rely solely on the __MADV_SET_ANON_VMA_NAME behaviour and
-> can remove the duplicate checks for vma being anon/shmem that were done
-> already in madvise_vma_behavior().
->
-> The remaining reason to obtain the vma's existing anon_name is to pass
-> it to vma_modify_flags_name() for the splitting and merging to work
-> properly. In case of merging, the vma might be freed along with the
-> anon_name, but madvise_update_vma() will not access it afterwards
-
-This is quite subtle. Can we add a comment in the code that anon_name
-might be freed as a result of vma merge after vma_modify_flags_name()
-gets called and anon_name should not be accessed afterwards?
-
-> so the
-> UAF previously fixed by commit 942341dcc574 is not reintroduced.
->
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
-
+On Fri, Jun 20, 2025 at 05:45:49PM +0200, Petr Pavlu wrote:
+> Files in the arch/s390/boot directory reuse logic from the rest of the
+> kernel by including certain C and assembly files from the kernel and lib
+> directories. Some of these included files contain EXPORT_SYMBOL directives.
+> For instance, arch/s390/boot/cmdline.c includes lib/cmdline.c, which
+> exports the get_option() function.
+> 
+> This inclusion triggers genksyms processing for the files in
+> arch/s390/boot, which is unnecessary and slows down the build.
+> Additionally, when KBUILD_SYMTYPES=1 is set, the generated symtypes data
+> contain exported symbols that are duplicated with the main kernel. This
+> duplication can confuse external kABI tools that process the symtypes data.
+> 
+> Address this issue by compiling the files in arch/s390/boot with
+> -D__DISABLE_EXPORTS.
+> 
+> Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
 > ---
->  mm/madvise.c | 37 +++++++++++++------------------------
->  1 file changed, 13 insertions(+), 24 deletions(-)
->
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index 4491bf080f55d6d1aeffb2ff0b8fdd28904af950..ae29395b4fc7f65a449c5772b=
-1901a90f4195885 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -176,21 +176,25 @@ static int replace_anon_vma_name(struct vm_area_str=
-uct *vma,
->  }
->  #endif /* CONFIG_ANON_VMA_NAME */
->  /*
-> - * Update the vm_flags on region of a vma, splitting it or merging it as
-> - * necessary.  Must be called with mmap_lock held for writing;
-> - * Caller should ensure anon_name stability by raising its refcount even=
- when
-> - * anon_name belongs to a valid vma because this function might free tha=
-t vma.
-> + * Update the vm_flags and/or anon_name on region of a vma, splitting it=
- or
-> + * merging it as necessary. Must be called with mmap_lock held for writi=
-ng.
->   */
->  static int madvise_update_vma(vm_flags_t new_flags,
->                 struct madvise_behavior *madv_behavior)
->  {
-> -       int error;
->         struct vm_area_struct *vma =3D madv_behavior->vma;
->         struct madvise_behavior_range *range =3D &madv_behavior->range;
-> -       struct anon_vma_name *anon_name =3D madv_behavior->anon_name;
-> +       bool set_new_anon_name =3D madv_behavior->behavior =3D=3D __MADV_=
-SET_ANON_VMA_NAME;
-> +       struct anon_vma_name *anon_name;
->         VMA_ITERATOR(vmi, madv_behavior->mm, range->start);
->
-> -       if (new_flags =3D=3D vma->vm_flags && anon_vma_name_eq(anon_vma_n=
-ame(vma), anon_name))
-> +       if (set_new_anon_name)
-> +               anon_name =3D madv_behavior->anon_name;
-> +       else
-> +               anon_name =3D anon_vma_name(vma);
-> +
-> +       if (new_flags =3D=3D vma->vm_flags && (!set_new_anon_name
-> +                       || anon_vma_name_eq(anon_vma_name(vma), anon_name=
-)))
->                 return 0;
->
->         vma =3D vma_modify_flags_name(&vmi, madv_behavior->prev, vma,
+>  arch/s390/boot/Makefile | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Maybe here we can add a comment, something like this:
-/*
- * vma->anon_name might be freed by vma_modify_flags_name() as a
-result of vma merge,
- * therefore accessing anon_name in the code below is unsafe if
-!set_new_anon_name.
- */
-
-> @@ -203,11 +207,8 @@ static int madvise_update_vma(vm_flags_t new_flags,
->         /* vm_flags is protected by the mmap_lock held in write mode. */
->         vma_start_write(vma);
->         vm_flags_reset(vma, new_flags);
-> -       if (!vma->vm_file || vma_is_anon_shmem(vma)) {
-> -               error =3D replace_anon_vma_name(vma, anon_name);
-> -               if (error)
-> -                       return error;
-> -       }
-> +       if (set_new_anon_name)
-> +               return replace_anon_vma_name(vma, anon_name);
->
->         return 0;
->  }
-> @@ -1313,7 +1314,6 @@ static int madvise_vma_behavior(struct madvise_beha=
-vior *madv_behavior)
->         int behavior =3D madv_behavior->behavior;
->         struct vm_area_struct *vma =3D madv_behavior->vma;
->         vm_flags_t new_flags =3D vma->vm_flags;
-> -       bool set_new_anon_name =3D behavior =3D=3D __MADV_SET_ANON_VMA_NA=
-ME;
->         struct madvise_behavior_range *range =3D &madv_behavior->range;
->         int error;
->
-> @@ -1403,18 +1403,7 @@ static int madvise_vma_behavior(struct madvise_beh=
-avior *madv_behavior)
->         /* This is a write operation.*/
->         VM_WARN_ON_ONCE(madv_behavior->lock_mode !=3D MADVISE_MMAP_WRITE_=
-LOCK);
->
-> -       /*
-> -        * madvise_update_vma() might cause a VMA merge which could put a=
-n
-> -        * anon_vma_name, so we must hold an additional reference on the
-> -        * anon_vma_name so it doesn't disappear from under us.
-> -        */
-> -       if (!set_new_anon_name) {
-> -               madv_behavior->anon_name =3D anon_vma_name(vma);
-> -               anon_vma_name_get(madv_behavior->anon_name);
-> -       }
->         error =3D madvise_update_vma(new_flags, madv_behavior);
-> -       if (!set_new_anon_name)
-> -               anon_vma_name_put(madv_behavior->anon_name);
->  out:
->         /*
->          * madvise() returns EAGAIN if kernel resources, such as
->
-> --
-> 2.50.0
->
+Applied, thanks!
