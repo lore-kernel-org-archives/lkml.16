@@ -1,1016 +1,206 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F41D1F542E;
-	Mon, 23 Jun 2025 09:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195881422AB;
+	Mon, 23 Jun 2025 09:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750669515; cv=none; b=Ryoxy8/AdzIhl7kWJ4eYB6DUTwgv9Xu8O4k2G5U1SPECKDDcv7ratdVYT9J9BHvqPIGb26t9uUv5xf69sClgqBHIS/vBLZK9YRKukF8DwDvC9Rv1asw0n0dSk1OeeQyZSsHhF8hnESW2D4YxULIAbqyko8lROQIsxB/CvK6t104=
+	t=1750669535; cv=none; b=oEvtpQtp5eUtcC7a5eo4K8dWiDhNLtOe/r4V4HC1fnGgcIao1tdUtuVQs2JqJkR9+Ap5n3huXUyNp79iJF6y1rbFZn53dKijLx8O4EyDttFN1A8/fHseU/ekx13l7vZ/YjItaHaVgxebeQ3BJ2FSlqMmei/wtMpd/1egyeuFXE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750669515; c=relaxed/simple;
-	bh=dzUo6R62Pf1NBNpaqBk1+vlvYSpBOm9JYC73dp+SeYA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KCsqpd+RdoIeVPnm2mfPY6duZ3zGQpdMiAAeR8h9KyRvbcp45zQPZQiRzA3CRAwHpzPiHbD/SdaO5PNIvrOSALHBNTiREl5TuVdfk14bjwKwfjTzOql6ucz+xOuyHLgXmJcaQCUu+HCsxIKruEby2Fgv3k3HcE9CKxHKsCNQh9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=qJXocqVJ; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qJXocqVJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750669510;
-	bh=dzUo6R62Pf1NBNpaqBk1+vlvYSpBOm9JYC73dp+SeYA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qJXocqVJeh9j2VyX+F96yYK/oJP6pkdqoY4a4duDw7gtxA063+9m5xvzC5Nvl60s/
-	 DLj8dc7q97mfpkTUBftz+ho0WYANyhrHYXchk5t4lrjeKjhoSD7BvsSPn6hHzv4IC3
-	 ONEBH0ijYORKlWf72qNB5kCIn3p0AOlgvdWIih0MBH/sp4eljbLpP3Sl+T4A3MhvYz
-	 FcYiy03DDV1g7CObPumjyIV2kbgtrjPwIdd4hP1XtBf2fO7+qF34LLcNLrrGvpCtpC
-	 Rhn1pW3knm0Yj6piyFKvH3InQm441zNlFfuf5lwtznT+oamhG0ZAtpth5tj0X/s/uD
-	 4zbEkwbWwz6iA==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id BAD9E17E0202;
-	Mon, 23 Jun 2025 11:05:09 +0200 (CEST)
-Message-ID: <ff7049b0-9145-4dc8-8dd3-51f54c108b98@collabora.com>
-Date: Mon, 23 Jun 2025 11:05:08 +0200
+	s=arc-20240116; t=1750669535; c=relaxed/simple;
+	bh=RWuS71A2QsnVIVDB4RKGk4iONoi5tzTDwm8Np/A6zUs=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aUlCYLVhNZiseg7gW/KQxeC4SkCVcsEEEfxiXp7SF5nxjnjwUazZUPrlyXc8mMsETu/6IHu4dn3h9So1pXwVBN03Izvf0J+AE76HpLVHyvjVQ/J3+CWNdYzIn6qZCuRMFhhcCNXtmgiargoRHzcnylqL/Q0lBrBPhRs4MN83RLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQhtm4tCFz6HJqB;
+	Mon, 23 Jun 2025 17:02:56 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4C11F1402F4;
+	Mon, 23 Jun 2025 17:05:23 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
+ 2025 11:05:22 +0200
+Date: Mon, 23 Jun 2025 10:05:20 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Neeraj Kumar <s.neeraj@samsung.com>
+CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>,
+	<anisa.su@samsung.com>, <vishak.g@samsung.com>, <krish.reddy@samsung.com>,
+	<arun.george@samsung.com>, <alok.rathore@samsung.com>,
+	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<gost.dev@samsung.com>, <cpgs@samsung.com>
+Subject: Re: [RFC PATCH 05/20] nvdimm/region_label: Add region label
+ updation routine
+Message-ID: <20250623100520.00003f34@huawei.com>
+In-Reply-To: <1690859824.141750165204442.JavaMail.epsvc@epcpadp1new>
+References: <20250617123944.78345-1-s.neeraj@samsung.com>
+	<CGME20250617124019epcas5p39815cc0f2b175aee40c194625166695c@epcas5p3.samsung.com>
+	<1690859824.141750165204442.JavaMail.epsvc@epcpadp1new>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 05/10] ASoC: mediatek: mt8196: support I2S in platform
- driver
-To: "Darren.Ye" <darren.ye@mediatek.com>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
-References: <20250620094140.11093-1-darren.ye@mediatek.com>
- <20250620094140.11093-6-darren.ye@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250620094140.11093-6-darren.ye@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Il 20/06/25 11:40, Darren.Ye ha scritto:
-> From: Darren Ye <darren.ye@mediatek.com>
+On Tue, 17 Jun 2025 18:09:29 +0530
+Neeraj Kumar <s.neeraj@samsung.com> wrote:
+
+Add region label update routine
+
+
+> Added __pmem_region_label_update region label update routine to update
+> region label
 > 
-> Add mt8196 I2S DAI driver support.
-> 
-> Signed-off-by: Darren Ye <darren.ye@mediatek.com>
+> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+A few trivial comments inline. 
+
+Jonathan
+
 > ---
->   sound/soc/mediatek/mt8196/mt8196-dai-i2s.c | 3970 ++++++++++++++++++++
->   1 file changed, 3970 insertions(+)
->   create mode 100644 sound/soc/mediatek/mt8196/mt8196-dai-i2s.c
+>  drivers/nvdimm/label.c          | 142 ++++++++++++++++++++++++++++++++
+>  drivers/nvdimm/label.h          |   2 +
+>  drivers/nvdimm/namespace_devs.c |  12 +++
+>  drivers/nvdimm/nd.h             |  20 +++++
+>  include/linux/libnvdimm.h       |   8 ++
+>  5 files changed, 184 insertions(+)
 > 
-> diff --git a/sound/soc/mediatek/mt8196/mt8196-dai-i2s.c b/sound/soc/mediatek/mt8196/mt8196-dai-i2s.c
-> new file mode 100644
-> index 000000000000..56c4ddfc1bdd
-> --- /dev/null
-> +++ b/sound/soc/mediatek/mt8196/mt8196-dai-i2s.c
-> @@ -0,0 +1,3970 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + *  MediaTek ALSA SoC Audio DAI I2S Control
-> + *
-> + *  Copyright (c) 2024 MediaTek Inc.
-> + *  Author: Darren Ye <darren.ye@mediatek.com>
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/regmap.h>
-> +#include <sound/pcm_params.h>
-> +#include "mt8196-afe-clk.h"
-> +#include "mt8196-afe-common.h"
-> +#include "mt8196-interconnection.h"
-> +#include "mtk-afe-fe-dai.h"
-> +
-> +#define ETDM_22M_CLOCK_THRES 11289600
-> +
-> +#define FM_SRC_CAIL
-
-What's that? I don't see any usage of this, and if I did, I'd anyway tell you to
-remove this define and ifdefs.
-Drop.
-
-> +enum {
-> +	ETDM_CLK_SOURCE_H26M = 0,
-
-The first entry of an enumeration is always zero, and
-
-> +	ETDM_CLK_SOURCE_APLL = 1,
-
-any other entry is always +1. You don't need to assign values, unless
-there is a hole in between.
-
-> +	ETDM_CLK_SOURCE_SPDIF = 2,
-> +	ETDM_CLK_SOURCE_HDMI = 3,
-> +	ETDM_CLK_SOURCE_EARC = 4,
-> +	ETDM_CLK_SOURCE_LINEIN = 5,
-> +};
-> +
-> +enum {
-> +	ETDM_RELATCH_SEL_H26M = 0,
-> +	ETDM_RELATCH_SEL_APLL = 1,
-> +};
-> +
-> +enum {
-> +	ETDM_RATE_8K = 0,
-> +	ETDM_RATE_12K = 1,
-> +	ETDM_RATE_16K = 2,
-> +	ETDM_RATE_24K = 3,
-> +	ETDM_RATE_32K = 4,
-> +	ETDM_RATE_48K = 5,
-> +	ETDM_RATE_64K = 6, //not support
-
-If it's not supported, why is this entry here?
-
-...
-
-ETDM_RATE_8K,
-ETDM_RATE_12K
-....
-ETDM_RATE_48K, (implicitly == 5)
-ETDM_RATE_96K = 7,
-ETDM_RATE_192K = 9,
-ETDM_RATE_384K = 11,
-ETDM_RATE_11025 = 16,
-ETDM_RATE_22050,
-ETDM.....
-
-
-> +	ETDM_RATE_96K = 7,
-> +	ETDM_RATE_128K = 8, //not support
-> +	ETDM_RATE_192K = 9,
-> +	ETDM_RATE_256K = 10, //not support
-> +	ETDM_RATE_384K = 11,
-> +	ETDM_RATE_11025 = 16,
-> +	ETDM_RATE_22050 = 17,
-> +	ETDM_RATE_44100 = 18,
-> +	ETDM_RATE_88200 = 19,
-> +	ETDM_RATE_176400 = 20,
-> +	ETDM_RATE_352800 = 21,
-> +};
-> +
-> +enum {
-> +	ETDM_CONN_8K = 0,
-> +	ETDM_CONN_11K = 1,
-> +	ETDM_CONN_12K = 2,
-> +	ETDM_CONN_16K = 4,
-> +	ETDM_CONN_22K = 5,
-> +	ETDM_CONN_24K = 6,
-> +	ETDM_CONN_32K = 8,
-> +	ETDM_CONN_44K = 9,
-> +	ETDM_CONN_48K = 10,
-> +	ETDM_CONN_88K = 13,
-> +	ETDM_CONN_96K = 14,
-> +	ETDM_CONN_176K = 17,
-> +	ETDM_CONN_192K = 18,
-> +	ETDM_CONN_352K = 21,
-> +	ETDM_CONN_384K = 22,
-> +};
-> +
-> +enum {
-> +	ETDM_WLEN_8_BIT = 0x7,
-> +	ETDM_WLEN_16_BIT = 0xf,
-> +	ETDM_WLEN_32_BIT = 0x1f,
-> +};
-> +
-> +enum {
-> +	ETDM_SLAVE_SEL_ETDMIN0_MASTER = 0,
-> +	ETDM_SLAVE_SEL_ETDMIN0_SLAVE = 1,
-> +	ETDM_SLAVE_SEL_ETDMIN1_MASTER = 2,
-> +	ETDM_SLAVE_SEL_ETDMIN1_SLAVE = 3,
-> +	ETDM_SLAVE_SEL_ETDMIN2_MASTER = 4,
-> +	ETDM_SLAVE_SEL_ETDMIN2_SLAVE = 5,
-> +	ETDM_SLAVE_SEL_ETDMIN3_MASTER = 6,
-> +	ETDM_SLAVE_SEL_ETDMIN3_SLAVE = 7,
-> +	ETDM_SLAVE_SEL_ETDMOUT0_MASTER = 8,
-> +	ETDM_SLAVE_SEL_ETDMOUT0_SLAVE = 9,
-> +	ETDM_SLAVE_SEL_ETDMOUT1_MASTER = 10,
-> +	ETDM_SLAVE_SEL_ETDMOUT1_SLAVE = 11,
-> +	ETDM_SLAVE_SEL_ETDMOUT2_MASTER = 12,
-> +	ETDM_SLAVE_SEL_ETDMOUT2_SLAVE = 13,
-> +	ETDM_SLAVE_SEL_ETDMOUT3_MASTER = 14,
-> +	ETDM_SLAVE_SEL_ETDMOUT3_SLAVE = 15,
-> +};
-> +
-> +enum {
-> +	ETDM_SLAVE_SEL_ETDMIN4_MASTER = 0,
-> +	ETDM_SLAVE_SEL_ETDMIN4_SLAVE = 1,
-> +	ETDM_SLAVE_SEL_ETDMIN5_MASTER = 2,
-> +	ETDM_SLAVE_SEL_ETDMIN5_SLAVE = 3,
-> +	ETDM_SLAVE_SEL_ETDMIN6_MASTER = 4,
-> +	ETDM_SLAVE_SEL_ETDMIN6_SLAVE = 5,
-> +	ETDM_SLAVE_SEL_ETDMIN7_MASTER = 6,
-> +	ETDM_SLAVE_SEL_ETDMIN7_SLAVE = 7,
-> +	ETDM_SLAVE_SEL_ETDMOUT4_MASTER = 8,
-> +	ETDM_SLAVE_SEL_ETDMOUT4_SLAVE = 9,
-> +	ETDM_SLAVE_SEL_ETDMOUT5_MASTER = 10,
-> +	ETDM_SLAVE_SEL_ETDMOUT5_SLAVE = 11,
-> +	ETDM_SLAVE_SEL_ETDMOUT6_MASTER = 12,
-> +	ETDM_SLAVE_SEL_ETDMOUT6_SLAVE = 13,
-> +	ETDM_SLAVE_SEL_ETDMOUT7_MASTER = 14,
-> +	ETDM_SLAVE_SEL_ETDMOUT7_SLAVE = 15,
-> +};
-> +
-> +enum {
-> +	MTK_DAI_ETDM_FORMAT_I2S = 0,
-> +	MTK_DAI_ETDM_FORMAT_LJ,
-> +	MTK_DAI_ETDM_FORMAT_RJ,
-> +	MTK_DAI_ETDM_FORMAT_EIAJ,
-> +	MTK_DAI_ETDM_FORMAT_DSPA,
-> +	MTK_DAI_ETDM_FORMAT_DSPB,
-> +};
-> +
-> +static unsigned int get_etdm_wlen(snd_pcm_format_t format)
+> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
+> index d5cfaa99f976..7f33d14ce0ef 100644
+> --- a/drivers/nvdimm/label.c
+> +++ b/drivers/nvdimm/label.c
+> @@ -381,6 +381,16 @@ static void nsl_calculate_checksum(struct nvdimm_drvdata *ndd,
+>  	nsl_set_checksum(ndd, nd_label, sum);
+>  }
+>  
+> +static void rgl_calculate_checksum(struct nvdimm_drvdata *ndd,
+> +				   struct cxl_region_label *rg_label)
 > +{
-> +	unsigned int wlen = 0;
+> +	u64 sum;
 > +
-> +	/* The reg_word_length should be >= reg_bit_length */
-> +	wlen = snd_pcm_format_physical_width(format);
-> +
-> +	if (wlen < 16)
-> +		return ETDM_WLEN_16_BIT;
-> +	else
-> +		return ETDM_WLEN_32_BIT;
-
-	return snd_pcm_format_physical_width(format) < 16 ? ETDM_WLEN_16_BIT : 
-ETDM_WLEN_32_BIT;
-
+> +	rgl_set_checksum(rg_label, 0);
+> +	sum = nd_fletcher64(rg_label, sizeof_namespace_label(ndd), 1);
+> +	rgl_set_checksum(rg_label, sum);
 > +}
 > +
-> +static unsigned int get_etdm_lrck_width(snd_pcm_format_t format)
+>  static bool slot_valid(struct nvdimm_drvdata *ndd,
+>  		struct nd_lsa_label *nd_label, u32 slot)
+>  {
+> @@ -1117,6 +1127,138 @@ int nd_pmem_namespace_label_update(struct nd_region *nd_region,
+>  	return 0;
+>  }
+>  
+> +static int __pmem_region_label_update(struct nd_region *nd_region,
+> +		struct nd_mapping *nd_mapping, int pos, unsigned long flags)
 > +{
-> +	/* The valid data bit number should be large than 7 due to hardware limitation. */
-> +	return snd_pcm_format_physical_width(format) - 1;
-> +}
+> +	struct nd_interleave_set *nd_set = nd_region->nd_set;
+> +	struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
+> +	struct nd_lsa_label *nd_label;
+> +	struct cxl_region_label *rg_label;
+> +	struct nd_namespace_index *nsindex;
+> +	struct nd_label_ent *label_ent;
+> +	unsigned long *free;
+> +	u32 nslot, slot;
+> +	size_t offset;
+> +	int rc;
+> +	uuid_t tmp;
 > +
-> +static unsigned int get_etdm_rate(unsigned int rate)
-> +{
-> +	switch (rate) {
-> +	case 8000:
-> +		return ETDM_RATE_8K;
-> +	case 12000:
-> +		return ETDM_RATE_12K;
-> +	case 16000:
-> +		return ETDM_RATE_16K;
-> +	case 24000:
-> +		return ETDM_RATE_24K;
-> +	case 32000:
-> +		return ETDM_RATE_32K;
-> +	case 48000:
-> +		return ETDM_RATE_48K;
-> +	case 64000:
-> +		return ETDM_RATE_64K;
-> +	case 96000:
-> +		return ETDM_RATE_96K;
-> +	case 128000:
-> +		return ETDM_RATE_128K;
-> +	case 192000:
-> +		return ETDM_RATE_192K;
-> +	case 256000:
-> +		return ETDM_RATE_256K;
-> +	case 384000:
-> +		return ETDM_RATE_384K;
-> +	case 11025:
-> +		return ETDM_RATE_11025;
-> +	case 22050:
-> +		return ETDM_RATE_22050;
-> +	case 44100:
-> +		return ETDM_RATE_44100;
-> +	case 88200:
-> +		return ETDM_RATE_88200;
-> +	case 176400:
-> +		return ETDM_RATE_176400;
-> +	case 352800:
-> +		return ETDM_RATE_352800;
-> +	default:
-> +		return 0;
-> +	}
-> +}
+> +	if (!preamble_next(ndd, &nsindex, &free, &nslot))
+> +		return -ENXIO;
 > +
-> +static unsigned int get_etdm_inconn_rate(unsigned int rate)
-> +{
-> +	switch (rate) {
-> +	case 8000:
-> +		return ETDM_CONN_8K;
-> +	case 12000:
-> +		return ETDM_CONN_12K;
-> +	case 16000:
-> +		return ETDM_CONN_16K;
-> +	case 24000:
-> +		return ETDM_CONN_24K;
-> +	case 32000:
-> +		return ETDM_CONN_32K;
-> +	case 48000:
-> +		return ETDM_CONN_48K;
-> +	case 96000:
-> +		return ETDM_CONN_96K;
-> +	case 192000:
-> +		return ETDM_CONN_192K;
-> +	case 384000:
-> +		return ETDM_CONN_384K;
-> +	case 11025:
-> +		return ETDM_CONN_11K;
-> +	case 22050:
-> +		return ETDM_CONN_22K;
-> +	case 44100:
-> +		return ETDM_CONN_44K;
-> +	case 88200:
-> +		return ETDM_CONN_88K;
-> +	case 176400:
-> +		return ETDM_CONN_176K;
-> +	case 352800:
-> +		return ETDM_CONN_352K;
-> +	default:
-> +		return 0;
-> +	}
-> +}
+> +	/* allocate and write the label to the staging (next) index */
+> +	slot = nd_label_alloc_slot(ndd);
+> +	if (slot == UINT_MAX)
+> +		return -ENXIO;
+> +	dev_dbg(ndd->dev, "allocated: %d\n", slot);
 > +
-> +struct mtk_afe_i2s_priv {
-> +	int id;
-> +	int rate; /* for determine which apll to use */
-> +	int low_jitter_en;
+> +	nd_label = to_label(ndd, slot);
 > +
-> +	const char *share_property_name;
-> +	int share_i2s_id;
+> +	memset(nd_label, 0, sizeof_namespace_label(ndd));
+> +	rg_label = &nd_label->rg_label;
 > +
-> +	int mclk_id;
-
-mclk_id can never be a negative number, and it can never be very large.
-Either u8 or unsigned short would be better.
-
-
-> +	int mclk_rate;
-
-same here, but probably u32.
-
-> +	int mclk_apll;
-
+> +	/* Set Region Label Format identification UUID */
+> +	uuid_parse(CXL_REGION_UUID, &tmp);
+> +	export_uuid(nd_label->rg_label.type, &tmp);
 > +
-> +	int ch_num;
-> +	int sync;
-> +	int ip_mode;
-> +	int lpbk_mode;
-
-no idea about those, but I think you got the point - please, use the
-right types.
-
-> +	unsigned int format;
-> +};
+> +	/* Set Current Region Label UUID */
+> +	export_uuid(nd_label->rg_label.uuid, &nd_set->uuid);
 > +
-> +/* this enum is merely for mtk_afe_i2s_priv & mtk_base_etdm_data declare */
-> +enum {
-> +	DAI_I2SIN0 = 0,
-> +	DAI_I2SIN1,
-> +	DAI_I2SIN2,
-> +	DAI_I2SIN3,
-> +	DAI_I2SIN4,
-> +	DAI_I2SIN6,
-> +	DAI_I2SOUT0,
-> +	DAI_I2SOUT1,
-> +	DAI_I2SOUT2,
-> +	DAI_I2SOUT3,
-> +	DAI_I2SOUT4,
-> +	DAI_I2SOUT6,
-> +	DAI_FMI2S_MASTER,
-> +	DAI_I2S_NUM,
-> +};
+> +	rg_label->flags = __cpu_to_le32(flags);
+> +	rg_label->nlabel = __cpu_to_le16(nd_region->ndr_mappings);
+> +	rg_label->position = __cpu_to_le16(pos);
+> +	rg_label->dpa = __cpu_to_le64(nd_mapping->start);
+> +	rg_label->rawsize = __cpu_to_le64(nd_mapping->size);
+> +	rg_label->hpa = __cpu_to_le64(nd_set->res->start);
+> +	rg_label->slot = __cpu_to_le32(slot);
+> +	rg_label->ig = __cpu_to_le32(nd_set->interleave_granularity);
+> +	rg_label->align = __cpu_to_le16(0);
 > +
-> +static bool is_etdm_in_pad_top(unsigned int dai_num)
-> +{
-> +	if (dai_num >= DAI_I2S_NUM)
-> +		return false;
-
-This if branch is useless, because you already have a default case in the
-switch that covers the same. Please drop.
-
+> +	/* Update fletcher64 Checksum */
+> +	rgl_calculate_checksum(ndd, rg_label);
 > +
-> +	switch (dai_num) {
-> +	case DAI_I2SOUT4:
-> +	case DAI_I2SIN4:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +struct mtk_base_etdm_data {
-> +	int enable_reg;
-
-Apparently, all of those xxxx_reg are register offsets, and all seem to fit in
-a u16: that's a lot of memory, as you have *lots* of entries.
-
-
-> +	int enable_mask;
-> +	int enable_shift;
-
-.... and all of the xxxx_shift can be u8 - even more memory to spare.
-
-> +	int sync_reg;
-> +	int sync_mask;
-> +	int sync_shift;
-> +	int ch_reg;
-> +	int ch_mask;
-> +	int ch_shift;
-> +	int ip_mode_reg;
-> +	int ip_mode_mask;
-> +	int ip_mode_shift;
-> +	int init_count_reg;
-> +	int init_count_mask;
-> +	int init_count_shift;
-> +	int init_point_reg;
-> +	int init_point_mask;
-> +	int init_point_shift;
-> +	int lrck_reset_reg;
-> +	int lrck_reset_mask;
-> +	int lrck_reset_shift;
-> +	int clk_source_reg;
-> +	int clk_source_mask;
-> +	int clk_source_shift;
-> +	int ck_en_sel_reg;
-> +	int ck_en_sel_mask;
-> +	int ck_en_sel_shift;
-> +	int fs_timing_reg;
-> +	int fs_timing_mask;
-> +	int fs_timing_shift;
-> +	int relatch_en_sel_reg;
-> +	int relatch_en_sel_mask;
-> +	int relatch_en_sel_shift;
-> +	int use_afifo_reg;
-> +	int use_afifo_mask;
-> +	int use_afifo_shift;
-> +	int afifo_mode_reg;
-> +	int afifo_mode_mask;
-> +	int afifo_mode_shift;
-> +	int almost_end_ch_reg;
-> +	int almost_end_ch_mask;
-> +	int almost_end_ch_shift;
-> +	int almost_end_bit_reg;
-> +	int almost_end_bit_mask;
-> +	int almost_end_bit_shift;
-> +	int out2latch_time_reg;
-> +	int out2latch_time_mask;
-> +	int out2latch_time_shift;
-> +	int tdm_mode_reg;
-> +	int tdm_mode_mask;
-> +	int tdm_mode_shift;
-> +	int relatch_domain_sel_reg;
-> +	int relatch_domain_sel_mask;
-> +	int relatch_domain_sel_shift;
-> +	int bit_length_reg;
-> +	int bit_length_mask;
-> +	int bit_length_shift;
-> +	int word_length_reg;
-> +	int word_length_mask;
-> +	int word_length_shift;
-> +	int cowork_reg;
-> +	int cowork_mask;
-> +	int cowork_shift;
-> +	int cowork_val;
-> +	int in2latch_time_reg;
-> +	int in2latch_time_mask;
-> +	int in2latch_time_shift;
-
-
-> +	int pad_top_ck_en_reg;
-> +	int pad_top_ck_en_mask;
-> +	int pad_top_ck_en_shift;
-> +	int master_latch_reg;
-> +	int master_latch_mask;
-> +	int master_latch_shift;
-
-pad_top_ck and master_latch register offset can never be zero; you could still
-use a u16 for those, and check if they're zero instead of -1.
-
-> +};
-> +
-
-...snip..
-
-> +};
-> +
-> +/* lpbk */
-> +static const int etdm_lpbk_idx_0[] = {
-
-static const u8
-
-> +	0x0, 0x8,
-> +};
-> +
-> +static const int etdm_lpbk_idx_1[] = {
-> +	0x2, 0xa,
-> +};
-> +
-> +static const int etdm_lpbk_idx_2[] = {
-> +	0x4, 0xc,
-> +};
-> +
-> +static const int etdm_lpbk_idx_3[] = {
-> +	0x6, 0xe,
-> +};
-> +
-> +static int etdm_lpbk_get(struct snd_kcontrol *kcontrol,
-> +			 struct snd_ctl_elem_value *ucontrol)
-> +{
-> +	struct snd_soc_component *component =
-> +		snd_soc_kcontrol_component(kcontrol);
-> +	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(component);
-
-
-> +	unsigned int value = 0;
-> +	unsigned int value_ipmode = 0;
-> +	unsigned int reg = 0;
-> +	unsigned int mask = 0;
-> +	unsigned int shift = 0;
-
-there's no need to initialize any of those unsigned int vars here, as you're
-double-initializing them later on.
-
-Besides, please use fixed types (u32?).
-
-> +
-> +	if (!strcmp(kcontrol->id.name, "I2SIN0_LPBK")) {
-> +		reg = ETDM_0_3_COWORK_CON1;
-> +		mask = ETDM_IN0_SDATA0_SEL_MASK_SFT;
-> +		shift = ETDM_IN0_SDATA0_SEL_SFT;
-> +	} else if (!strcmp(kcontrol->id.name, "I2SIN1_LPBK")) {
-> +		reg = ETDM_0_3_COWORK_CON1;
-> +		mask = ETDM_IN1_SDATA0_SEL_MASK_SFT;
-> +		shift = ETDM_IN1_SDATA0_SEL_SFT;
-> +	} else if (!strcmp(kcontrol->id.name, "I2SIN2_LPBK")) {
-> +		reg = ETDM_0_3_COWORK_CON3;
-> +		mask = ETDM_IN2_SDATA0_SEL_MASK_SFT;
-> +		shift = ETDM_IN2_SDATA0_SEL_SFT;
-> +	} else if (!strcmp(kcontrol->id.name, "I2SIN3_LPBK")) {
-> +		reg = ETDM_0_3_COWORK_CON3;
-> +		mask = ETDM_IN3_SDATA0_SEL_MASK_SFT;
-> +		shift = ETDM_IN3_SDATA0_SEL_SFT;
-> +	} else if (!strcmp(kcontrol->id.name, "I2SIN4_LPBK")) {
-> +		reg = ETDM_4_7_COWORK_CON1;
-> +
-> +		// Get I2SIN4 multi-ip mode
-> +		regmap_read(afe->regmap, ETDM_IN4_CON2, &value_ipmode);
-> +		value_ipmode &= REG_MULTI_IP_MODE_MASK_SFT;
-> +		value_ipmode >>= REG_MULTI_IP_MODE_SFT;
-
-You can use the FIELD_GET() macro here.
-
-> +
-> +		if (value_ipmode) {
-> +			mask = ETDM_IN4_SDATA1_15_SEL_MASK_SFT;
-> +			shift = ETDM_IN4_SDATA1_15_SEL_SFT;
-> +		} else {
-> +			mask = ETDM_IN4_SDATA0_SEL_MASK_SFT;
-> +			shift = ETDM_IN4_SDATA0_SEL_SFT;
-> +		}
-> +	} else if (!strcmp(kcontrol->id.name, "I2SIN6_LPBK")) {
-> +		reg = ETDM_4_7_COWORK_CON3;
-> +		mask = ETDM_IN6_SDATA0_SEL_MASK_SFT;
-> +		shift = ETDM_IN6_SDATA0_SEL_SFT;
+> +	/* update label */
+> +	offset = nd_label_offset(ndd, nd_label);
+> +	rc = nvdimm_set_config_data(ndd, offset, nd_label,
+> +			sizeof_namespace_label(ndd));
+> +	if (rc < 0) {
+> +		nd_label_free_slot(ndd, slot);
+> +		return rc;
 > +	}
 > +
-> +	if (reg)
-> +		regmap_read(afe->regmap, reg, &value);
+> +	/* Garbage collect the previous label */
+> +	mutex_lock(&nd_mapping->lock);
 
-	else
-		value = 0;
+Perhaps use
 
-> +
-> +	value &= mask;
-> +	value >>= shift;
-> +	ucontrol->value.enumerated.item[0] = value;
-> +
-> +	if (value == 0x8 || value == 0xa || value == 0xc || value == 0xe)
+	guard(mutex)(&nd_mapping->lock);
 
-switch (value)
-.... etc
+so you can directly return in the error path below and simplify the flow
+a tiny bit.
 
-> +		ucontrol->value.enumerated.item[0] = 1;
-> +	else
-> +		ucontrol->value.enumerated.item[0] = 0;
-> +
-> +	return 0;
-> +}
-> +
-> +static int etdm_lpbk_put(struct snd_kcontrol *kcontrol,
-> +			 struct snd_ctl_elem_value *ucontrol)
-> +{
-> +	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
-> +	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(component);
-> +	unsigned int value = ucontrol->value.integer.value[0];
-> +	unsigned int value_ipmode = 0;
-> +	unsigned int reg = 0;
-> +	unsigned int val = 0;
-> +	unsigned int mask = 0;
-
-same comments as before
-
-> +
-> +	if (value >= ARRAY_SIZE(etdm_lpbk_idx_0))
-> +		return -EINVAL;
-> +
-> +	if (!strcmp(kcontrol->id.name, "I2SIN0_LPBK")) {
-> +		reg = ETDM_0_3_COWORK_CON1;
-> +		mask = ETDM_IN0_SDATA0_SEL_MASK_SFT;
-> +		val = etdm_lpbk_idx_0[value] << ETDM_IN0_SDATA0_SEL_SFT;
-> +	} else if (!strcmp(kcontrol->id.name, "I2SIN1_LPBK")) {
-> +		reg = ETDM_0_3_COWORK_CON1;
-> +		mask = ETDM_IN1_SDATA0_SEL_MASK_SFT;
-> +		val = etdm_lpbk_idx_1[value] << ETDM_IN1_SDATA0_SEL_SFT;
-> +	} else if (!strcmp(kcontrol->id.name, "I2SIN2_LPBK")) {
-> +		reg = ETDM_0_3_COWORK_CON3;
-> +		mask = ETDM_IN2_SDATA0_SEL_MASK_SFT;
-> +		val = etdm_lpbk_idx_2[value] << ETDM_IN2_SDATA0_SEL_SFT;
-> +	} else if (!strcmp(kcontrol->id.name, "I2SIN3_LPBK")) {
-> +		reg = ETDM_0_3_COWORK_CON3;
-> +		mask = ETDM_IN3_SDATA0_SEL_MASK_SFT;
-> +		val = etdm_lpbk_idx_3[value] << ETDM_IN3_SDATA0_SEL_SFT;
-> +	} else if (!strcmp(kcontrol->id.name, "I2SIN4_LPBK")) {
-> +		reg = ETDM_4_7_COWORK_CON1;
-> +
-> +		// Get I2SIN4 multi-ip mode
-> +		regmap_read(afe->regmap, ETDM_IN4_CON2, &value_ipmode);
-> +		value_ipmode &= REG_MULTI_IP_MODE_MASK_SFT;
-> +		value_ipmode >>= REG_MULTI_IP_MODE_SFT;
-
-FIELD_GET()
-
-> +
-> +		if (!value) {
-> +			mask = ETDM_IN4_SDATA1_15_SEL_MASK_SFT |
-> +				ETDM_IN4_SDATA0_SEL_MASK_SFT;
-> +			val = (etdm_lpbk_idx_0[value] << ETDM_IN4_SDATA1_15_SEL_SFT) |
-> +				(etdm_lpbk_idx_0[value] << ETDM_IN4_SDATA0_SEL_SFT);
-> +		} else if (value_ipmode) {
-> +			mask = ETDM_IN4_SDATA1_15_SEL_MASK_SFT;
-> +			val = etdm_lpbk_idx_0[value] << ETDM_IN4_SDATA1_15_SEL_SFT;
-> +		} else {
-> +			mask = ETDM_IN4_SDATA0_SEL_MASK_SFT;
-> +			val = etdm_lpbk_idx_0[value] << ETDM_IN4_SDATA0_SEL_SFT;
-> +		}
-> +	} else {
-> +		reg = ETDM_4_7_COWORK_CON3;
-> +		mask = ETDM_IN6_SDATA0_SEL_MASK_SFT;
-> +		val = etdm_lpbk_idx_2[value] << ETDM_IN6_SDATA0_SEL_SFT;
+> +	list_for_each_entry(label_ent, &nd_mapping->labels, list) {
+> +		if (!label_ent->label)
+> +			continue;
+> +		if (rgl_uuid_equal(&label_ent->label->rg_label, &nd_set->uuid))
+> +			reap_victim(nd_mapping, label_ent);
 > +	}
 > +
-> +	if (reg)
-> +		regmap_update_bits(afe->regmap, reg, mask, val);
+> +	/* update index */
+> +	rc = nd_label_write_index(ndd, ndd->ns_next,
+> +			nd_inc_seq(__le32_to_cpu(nsindex->seq)), 0);
 > +
-> +	return 0;
-> +}
-> +
-> +static const char *const etdm_lpbk_map[] = {
-> +	"Off", "On",
-> +};
-> +
+With guard this can be 
+	if (rc)
+		return rec;
 
-..snip..
+	list_for_each...
 
-> +/* i2s dai ops*/
-> +static int mtk_dai_i2s_config(struct mtk_base_afe *afe,
-> +			      struct snd_pcm_hw_params *params,
-> +			      int i2s_id)
-> +{
-> +	struct mt8196_afe_private *afe_priv = afe->platform_priv;
-> +	struct mtk_afe_i2s_priv *i2s_priv;
-> +	struct mtk_afe_i2s_priv *i2sin_priv = NULL;
-> +	int id = i2s_id - MT8196_DAI_I2S_IN0; //47
-> +	struct mtk_base_etdm_data etdm_data;
-> +	unsigned int rate = params_rate(params);
-> +	unsigned int rate_reg = get_etdm_inconn_rate(rate);
-> +	snd_pcm_format_t format = params_format(params);
-> +	unsigned int channels = params_channels(params);
-> +	unsigned int i2s_con = 0;
-> +	int ret = 0;
-
-don't initialize i2s_con, ret and pad_top, or those will be double-initialized in
-this function.
-
-> +	int pad_top = 0;
-> +
-> +	if (i2s_id >= MT8196_DAI_NUM || i2s_id < 0)
-
-if (i2s_id >= MT8196_DAI_NUM || i2s_id < 0 || id < 0 || id >= DAI_I2S_NUM)
-
-> +		return -EINVAL;
-> +	i2s_priv = afe_priv->dai_priv[i2s_id];
-> +
-> +	if (!i2s_priv)
-> +		return -EINVAL;
-> +
-> +	if (id < 0 || id >= DAI_I2S_NUM) {
-> +		dev_err(afe->dev, "i2s id is invalid\n");
-> +		return -EINVAL;
+> +	if (rc == 0) {
+> +		list_for_each_entry(label_ent, &nd_mapping->labels, list)
+> +			if (!label_ent->label) {
+> +				label_ent->label = nd_label;
+> +				nd_label = NULL;
+> +				break;
+> +			}
+> +		dev_WARN_ONCE(&nd_region->dev, nd_label,
+> +				"failed to track label: %d\n",
+> +				to_slot(ndd, nd_label));
+> +		if (nd_label)
+> +			rc = -ENXIO;
 > +	}
+> +	mutex_unlock(&nd_mapping->lock);
 > +
-> +	dev_info(afe->dev, "id: %d, rate: %d, pcm_fmt: %d, fmt: %d, ch: %d\n",
-> +		 i2s_id, rate, format, i2s_priv->format, channels);
-> +
-> +	i2s_priv->rate = rate;
-> +	etdm_data = mtk_etdm_data[id];
-> +
-> +	if (is_etdm_in_pad_top(id))
-> +		pad_top = 0x3;
-> +	else
-> +		pad_top = 0x5;
-> +
-> +	switch (id) {
-> +	case DAI_FMI2S_MASTER:
-> +		i2s_con = I2S_IN_PAD_IO_MUX << I2SIN_PAD_SEL_SFT;
-> +		i2s_con |= rate_reg << I2S_MODE_SFT;
-> +		i2s_con |= I2S_FMT_I2S << I2S_FMT_SFT;
-> +		i2s_con |= get_i2s_wlen(format) << I2S_WLEN_SFT;
-> +		regmap_update_bits(afe->regmap, AFE_CONNSYS_I2S_CON,
-> +				   0xffffeffe, i2s_con);
-> +		break;
-> +	case DAI_I2SIN0:
-> +	case DAI_I2SIN1:
-> +	case DAI_I2SIN2:
-> +	case DAI_I2SIN3:
-> +	case DAI_I2SIN4:
-> +	case DAI_I2SIN6:
-> +		/* ---etdm in --- */
-> +		regmap_update_bits(afe->regmap,
-> +				   etdm_data.init_count_reg,
-> +				   etdm_data.init_count_mask << etdm_data.init_count_shift,
-> +				   0x5 << etdm_data.init_count_shift);
-> +
-> +		/* 3: pad top 5: no pad top */
-> +		regmap_update_bits(afe->regmap,
-> +				   etdm_data.init_point_reg,
-> +				   etdm_data.init_point_mask << etdm_data.init_point_shift,
-> +				   pad_top << etdm_data.init_point_shift);
-> +
-> +		regmap_update_bits(afe->regmap,
-> +				   etdm_data.lrck_reset_reg,
-> +				   etdm_data.lrck_reset_mask << etdm_data.lrck_reset_shift,
-> +				   0x1 << etdm_data.lrck_reset_shift);
-> +
-> +		regmap_update_bits(afe->regmap,
-> +				   etdm_data.clk_source_reg,
-> +				   etdm_data.clk_source_mask << etdm_data.clk_source_shift,
-> +				   ETDM_CLK_SOURCE_APLL << etdm_data.clk_source_shift);
-> +
-> +		/* 0: manual 1: auto */
-> +		regmap_update_bits(afe->regmap,
-> +				   etdm_data.ck_en_sel_reg,
-> +				   etdm_data.ck_en_sel_mask << etdm_data.ck_en_sel_shift,
-> +				   0x1 << etdm_data.ck_en_sel_shift);
-> +
-> +		regmap_update_bits(afe->regmap,
-> +				   etdm_data.fs_timing_reg,
-> +				   etdm_data.fs_timing_mask << etdm_data.fs_timing_shift,
-> +				   get_etdm_rate(rate) << etdm_data.fs_timing_shift);
-> +
-> +		regmap_update_bits(afe->regmap,
-> +				   etdm_data.relatch_en_sel_reg,
-> +				   etdm_data.relatch_en_sel_mask << etdm_data.relatch_en_sel_shift,
-> +				   get_etdm_inconn_rate(rate) << etdm_data.relatch_en_sel_shift);
-> +
-> +		regmap_update_bits(afe->regmap,
-> +				   etdm_data.use_afifo_reg,
-> +				   etdm_data.use_afifo_mask << etdm_data.use_afifo_shift,
-> +				   0x0 << etdm_data.use_afifo_shift);
-
-zero, bit-shifted to the left by a million bits, is still zero... :-)
-
-> +
-> +		regmap_update_bits(afe->regmap,
-> +				   etdm_data.afifo_mode_reg,
-> +				   etdm_data.afifo_mode_mask << etdm_data.afifo_mode_shift,
-> +				   0x0 << etdm_data.afifo_mode_shift);
-> +
-> +		regmap_update_bits(afe->regmap,
-> +				   etdm_data.almost_end_ch_reg,
-> +				   etdm_data.almost_end_ch_mask << etdm_data.almost_end_ch_shift,
-> +				   0x0 << etdm_data.almost_end_ch_shift);
-> +
-> +		regmap_update_bits(afe->regmap,
-> +				   etdm_data.almost_end_bit_reg,
-> +				   etdm_data.almost_end_bit_mask << etdm_data.almost_end_bit_shift,
-> +				   0x0 << etdm_data.almost_end_bit_shift);
-
-Same for all those other 3, just say 0, don't shift zeroes.
-
-> +
-> +		if (is_etdm_in_pad_top(id)) {
-> +			regmap_update_bits(afe->regmap,
-> +					   etdm_data.out2latch_time_reg,
-> +					   etdm_data.out2latch_time_mask <<
-> +					   etdm_data.out2latch_time_shift,
-> +					   0x6 << etdm_data.out2latch_time_shift);
-> +		} else {
-> +			regmap_update_bits(afe->regmap,
-> +					   etdm_data.out2latch_time_reg,
-> +					   etdm_data.out2latch_time_mask <<
-> +					   etdm_data.out2latch_time_shift,
-> +					   0x4 << etdm_data.out2latch_time_shift);
-> +		}
-
-
-..snip..
-
-> +		break;
-> +	default:
-> +		dev_err(afe->dev, "id %d not support\n", id);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* set share i2s */
-> +	if (i2s_priv && i2s_priv->share_i2s_id >= 0) {
-> +		i2sin_priv = afe_priv->dai_priv[i2s_priv->share_i2s_id];
-> +		i2sin_priv->format = i2s_priv->format;
-> +		ret = mtk_dai_i2s_config(afe, params, i2s_priv->share_i2s_id);
-
-		if (ret)
-			return ret;
-
-> +	}
-> +
-> +	return ret;
-
-return 0;
-
-> +}
-> +
-> +static int mtk_dai_i2s_hw_params(struct snd_pcm_substream *substream,
-> +				 struct snd_pcm_hw_params *params,
-> +				 struct snd_soc_dai *dai)
-> +{
-> +	struct mtk_base_afe *afe = snd_soc_dai_get_drvdata(dai);
-> +
-> +	return mtk_dai_i2s_config(afe, params, dai->id);
-> +}
-> +
-> +static int mtk_dai_i2s_set_sysclk(struct snd_soc_dai *dai,
-> +				  int clk_id, unsigned int freq, int dir)
-> +{
-> +	struct mtk_base_afe *afe = dev_get_drvdata(dai->dev);
-> +	struct mt8196_afe_private *afe_priv = afe->platform_priv;
-> +	struct mtk_afe_i2s_priv *i2s_priv;
-> +	int apll;
-> +	int apll_rate;
-> +
-> +	if (dai->id >= MT8196_DAI_NUM || dai->id < 0)
-
-dai->id >= MT8196_DAI_NUM || dai->id < 0 || dir != SND_SOC_CLOCK_OUT
-
-> +		return -EINVAL;
-> +	i2s_priv = afe_priv->dai_priv[dai->id];
-> +
-> +	dev_dbg(afe->dev, "freq: %u\n", freq);
-> +
-> +	if (!i2s_priv)
-> +		return -EINVAL;
-> +
-> +	if (dir != SND_SOC_CLOCK_OUT)
-> +		return -EINVAL;
-> +
-> +	apll = mt8196_get_apll_by_rate(afe, freq);
-> +	apll_rate = mt8196_get_apll_rate(afe, apll);
-> +
-> +	if (freq > apll_rate)
-
-if (freq > apll_rate || apll_rate % freq)
-	return -EINVAL;
-
-> +		return -EINVAL;
-> +
-> +	if (apll_rate % freq != 0)
-> +		return -EINVAL;
-> +
-> +	i2s_priv->mclk_rate = freq;
-> +	i2s_priv->mclk_apll = apll;
-> +
-> +	if (i2s_priv->share_i2s_id > 0) {
-> +		struct mtk_afe_i2s_priv *share_i2s_priv;
-> +
-> +		share_i2s_priv = afe_priv->dai_priv[i2s_priv->share_i2s_id];
-> +		if (!share_i2s_priv)
-> +			return -EINVAL;
-> +
-> +		share_i2s_priv->mclk_rate = i2s_priv->mclk_rate;
-> +		share_i2s_priv->mclk_apll = i2s_priv->mclk_apll;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int mtk_dai_i2s_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
-> +{
-> +	struct mtk_base_afe *afe = snd_soc_dai_get_drvdata(dai);
-> +	struct mt8196_afe_private *afe_priv = afe->platform_priv;
-> +	struct mtk_afe_i2s_priv *i2s_priv;
-> +
-> +	if (dai->id >= MT8196_DAI_NUM || dai->id < 0)
-> +		return -EINVAL;
-> +
-> +	i2s_priv = afe_priv->dai_priv[dai->id];
-> +
-> +	if (!i2s_priv)
-> +		return -EINVAL;
-> +
-> +	dev_dbg(afe->dev, "dai->id: %d, fmt: 0x%x\n", dai->id, fmt);
-> +
-> +	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-> +	case SND_SOC_DAIFMT_I2S:
-> +		i2s_priv->format = MTK_DAI_ETDM_FORMAT_I2S;
-> +		break;
-> +	case SND_SOC_DAIFMT_LEFT_J:
-> +		i2s_priv->format = MTK_DAI_ETDM_FORMAT_LJ;
-> +		break;
-> +	case SND_SOC_DAIFMT_RIGHT_J:
-> +		i2s_priv->format = MTK_DAI_ETDM_FORMAT_RJ;
-> +		break;
-> +	case SND_SOC_DAIFMT_DSP_A:
-> +		i2s_priv->format = MTK_DAI_ETDM_FORMAT_DSPA;
-> +		break;
-> +	case SND_SOC_DAIFMT_DSP_B:
-> +		i2s_priv->format = MTK_DAI_ETDM_FORMAT_DSPB;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	dev_dbg(afe->dev, "dai->id: %d, i2s_priv->format: 0x%x\n",
-> +		dai->id, i2s_priv->format);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct snd_soc_dai_ops mtk_dai_i2s_ops = {
-> +	.hw_params = mtk_dai_i2s_hw_params,
-> +	.set_sysclk = mtk_dai_i2s_set_sysclk,
-> +	.set_fmt = mtk_dai_i2s_set_fmt,
-> +};
-> +
-> +/* dai driver */
-> +#define MTK_ETDM_RATES (SNDRV_PCM_RATE_8000_384000)
-> +#define MTK_ETDM_FORMATS (SNDRV_PCM_FMTBIT_S8 |\
-> +			  SNDRV_PCM_FMTBIT_S16_LE |\
-> +			  SNDRV_PCM_FMTBIT_S24_LE |\
-> +			  SNDRV_PCM_FMTBIT_S32_LE)
-> +
-> +#define MT8196_I2S_DAI_PLAYBACK(_name, _id, max_ch) \
-> +{ \
-> +	.name = #_name, \
-> +	.id = _id, \
-> +	.playback = { \
-> +		.stream_name = #_name, \
-> +		.channels_min = 1, \
-> +		.channels_max = max_ch, \
-> +		.rates = MTK_ETDM_RATES, \
-> +		.formats = MTK_ETDM_FORMATS, \
-> +	}, \
-> +	.ops = &mtk_dai_i2s_ops, \
-> +}
-> +
-> +#define MT8196_I2S_DAI_CAPTURE(_name, _id, max_ch) \
-> +{ \
-> +	.name = #_name, \
-> +	.id = _id, \
-> +	.capture = { \
-> +		.stream_name = #_name, \
-> +		.channels_min = 1, \
-> +		.channels_max = max_ch, \
-> +		.rates = MTK_ETDM_RATES, \
-> +		.formats = MTK_ETDM_FORMATS, \
-> +	}, \
-> +	.ops = &mtk_dai_i2s_ops, \
+> +	return rc;
 > +}
 
-Those two macros seem to be *exactly* the same, and you don't need to have two.
-
-> +
-> +static struct snd_soc_dai_driver mtk_dai_i2s_driver[] = {
-> +	/* capture */
-> +	MT8196_I2S_DAI_CAPTURE(I2SIN0, MT8196_DAI_I2S_IN0, 2),
-> +	MT8196_I2S_DAI_CAPTURE(I2SIN1, MT8196_DAI_I2S_IN1, 2),
-> +	MT8196_I2S_DAI_CAPTURE(I2SIN2, MT8196_DAI_I2S_IN2, 2),
-> +	MT8196_I2S_DAI_CAPTURE(I2SIN3, MT8196_DAI_I2S_IN3, 2),
-> +	MT8196_I2S_DAI_CAPTURE(I2SIN4, MT8196_DAI_I2S_IN4, 8),
-> +	MT8196_I2S_DAI_CAPTURE(I2SIN6, MT8196_DAI_I2S_IN6, 2),
-> +	MT8196_I2S_DAI_CAPTURE(FMI2S_MASTER, MT8196_DAI_FM_I2S_MASTER, 2),
-> +	/* playback */
-> +	MT8196_I2S_DAI_PLAYBACK(I2SOUT0, MT8196_DAI_I2S_OUT0, 2),
-> +	MT8196_I2S_DAI_PLAYBACK(I2SOUT1, MT8196_DAI_I2S_OUT1, 2),
-> +	MT8196_I2S_DAI_PLAYBACK(I2SOUT2, MT8196_DAI_I2S_OUT2, 2),
-> +	MT8196_I2S_DAI_PLAYBACK(I2SOUT3, MT8196_DAI_I2S_OUT3, 2),
-> +	MT8196_I2S_DAI_PLAYBACK(I2SOUT4, MT8196_DAI_I2S_OUT4, 8),
-> +	MT8196_I2S_DAI_PLAYBACK(I2SOUT6, MT8196_DAI_I2S_OUT6, 2),
-> +};
-> +
-Cheers,
-Angelo
