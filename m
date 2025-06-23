@@ -1,239 +1,139 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6479A24DD1F
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F28299A8C
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750696673; cv=none; b=FynGOsVkWVmw6BkKh+EqpMgn032zGY1Vo4d0XESdqSULK++tV673HEQ+qzOL1FcxSxoze99vhwQcOMYUoGMI4p04GZ/KhMCzigSZhVQZd/fyPl06PidJ6Fojb+rcX4C+YQbT5QI36JIWWICFIn0ncl0U7219pZTqAZ0nI24wDMY=
+	t=1750696679; cv=none; b=LtTf+6WkrU8kSRFtT+tABkBN2HOGEvPug9NHcobn2qdI8ZGGGoXeuMKFyOeffyrf2pBfkiK3dmwfGedXWNPXowb9hQTqfWhjyxXAHEJQMF39HuPs5chXchmpLm9438DqwZ8IY2/BxaVdvXvZuTTlG/qSy1eQHOiV8KubvyV9+Eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750696673; c=relaxed/simple;
-	bh=lY/+jeINkrBTULMr0fgrgjWAsXe5te4CfoeDV9q3UOI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AjokpU98/QOsxrGxDcyKBBiHqtyqrAhcDFncevCZFZYRuOcCDRcrneKxJJPU8eiaopf09jRwMCxqNXo9Cj7ALz4aMA9PUm7vTW3XYQYSuhD+f6CxZOeo/h9E+J6+m3nIJ32qRcvJHb5Hpv94vOUrZ4vP5xYpcfEKof7TWlFbCH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=r1cmcTCO; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1750696679; c=relaxed/simple;
+	bh=JS1FG2qENkQ353/qm/Vo5hQuv0HIVwdvuruB5QR/gzY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aVyjDJc5y3CQYBVoNHOzIzm0GX0HdtBvKvRH08BWDzTfxW7b0DZOn4kBdLBcHmXTmt2iyr91M0RZVsMcrogboISEQvacwnlncOc3KK2gkIkYf7RS3ogQ8W9pGLYLOcIINK3ZfkVuowdjtVqnSrziAOr6uAam9HHpqC09ES2lEt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B6D3KXE7; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="r1cmcTCO"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-451d54214adso29297975e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:37:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B6D3KXE7"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so2935ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:37:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750696669; x=1751301469; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VsxgOlrXfF5DThbMKG1kzcbU55xtnGyMNENY81j7+2I=;
-        b=r1cmcTCOB6AEEGhqMwfO2w5TpR628PAgyCfMLLOM7EP5L8Wu1IMMDF3S01ava7DV2B
-         4sOZ79CDbO0rWMXNjpLms5dD2DOPQ0tgxcx9uWRDMoomLokSSJT7HuueM/x+F/zxV58L
-         ExZZZh+8wMPpA4Ymd6WEauyzoJvYx3AP8PdwdzW2iyOwD4+7/Stfxk1TqlHfvE4ErDvu
-         J4xp/H1WQ/4qf6zELmKqRsPsSReCTGvG2E5EdCgi8bvf1zaGUjYUq48s617WCxOSkeJd
-         4JbrorKbbwYingksy2j7DHlLiBYmifmkVjwEs/x2k4XzdgrDY8kLsDUUnWPRYulz9Aig
-         H7ag==
+        d=google.com; s=20230601; t=1750696677; x=1751301477; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ri3+Ap4cqoeDbRAUlcrZd437nBvU+XraT/8Lh4iGeK0=;
+        b=B6D3KXE76BIQVNqRZxqzThbRtp42uPjlR5m8BSm5LHuALEPl9XbKFwNYU8vsCVLhb0
+         2tmz7/W59rjp5YJublF2o/0rXjl5PNDa2+iIDhvVpM4ZgfET0eGLASPLtrgUpP6XQCtk
+         T5AWPvPQqM4bKiiZVcSqIRc4jjJvRECd4W4l7Mo5/V0jZy8jAMdAfLGp8BjADQWXFF8L
+         1jIudAeHFR/LIBLuzw+Q7HvJZAvZp9Yk8ekG8A7h7fs8td7/ev5Wleu+iSvTISxokzju
+         vVhLM/JFaAgTzNt5pTy+Ts6HuaAS92Z/09SLc9pYWEofCWMhKRywlQhGPAHSc9VX+H5M
+         BeMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750696669; x=1751301469;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750696677; x=1751301477;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VsxgOlrXfF5DThbMKG1kzcbU55xtnGyMNENY81j7+2I=;
-        b=fMv5VEHAUNH/gnjITogw5PvapROXDUV/aLqoEtH7QCrEst3oAS+JJWDFK5YdOLriQV
-         mBQcv19TAlruHFMgjg/xb5LkDkKhdYVAoYS8IGoVhiwXoU/1hfoET57wNBGhzSwx5gEt
-         uh1vSzLh9Y+iR4ps+hJJfRUOYys9c2liOi4ULLSJ7eWCW90PdEcxoi70t30MgVUa8hgc
-         8cGVUZ1eR30Xrk2UP+9W3yxDX/J8vKkZl0Fry8p3ssvKY3zVmJ0uUQgJJbn6iGGbYU0m
-         ECX1/3zC4/CdJNmJrkBgIrY3riWlosPHBTHPVMydtISljFwOc9OTLv+Mwf/xSgzrwXh0
-         Z+tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUMVHGTgZqrFHANasqIHfZ3Oobo01XLJBEh4jHKhENp2DQUMUNcCxbu8V2YgsduLfeAR8oPzGNzICFUT8A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwssW/zGtmS2p2HnSDImD8TYar2PYo7r+l0vI8KJG3T1UiI4CfY
-	I8VkI/lK0N/JYTRY8gNy7cvcO+MQZLTAVqIqQSJxsrfnFH9fBbA8MUO0UJNcnEYfbVc=
-X-Gm-Gg: ASbGnctur8skUbBSahTR0A0Cr/dNPGuJKbC7gv/EG5X+85DdQ3e2nUGrNbncLc71qCx
-	JzbwmTdFkgP+AOasylArnSTzenLtz0YkoccjLHvvvjBqzpZCG9zxJX1hfBEvYnMujxx8YvbjTNW
-	FB+mk6HG0Cu1nRszfee4R+U36H0lRlWvLKh+mfYgP69bkAhqsdX9/UEbay4s061ecHoWRfDSzuQ
-	JVjHFLjIILVjN81mzlN31YfGKKRmx2XY0JipxUpwAHjTEDGxnzMyjyXBnNpMEbQxRnwYla6GP1y
-	6X+TqdlqmxSHeRSjviQK4x3KSmaNXgGh0Y5nP8un+U8wzHc5T5wDLw6NxVIVdlGgHmywEltCVrB
-	l
-X-Google-Smtp-Source: AGHT+IFi/UBk2HwAnllzHqb7XPWGf9QFYR4a94bir3bwedo9/Llza5DcgNihEeICX6IArc5TRzULPA==
-X-Received: by 2002:a05:6000:3103:b0:3a5:58a5:6a83 with SMTP id ffacd0b85a97d-3a6d13013eemr12059049f8f.13.1750696668742;
-        Mon, 23 Jun 2025 09:37:48 -0700 (PDT)
-Received: from toaster.baylibre.com ([2a01:e0a:3c5:5fb1:7b0f:c522:cad6:acd1])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a6d0f1011fsm9852947f8f.7.2025.06.23.09.37.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 09:37:48 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Mon, 23 Jun 2025 18:37:39 +0200
-Subject: [PATCH v4 3/3] clk: amlogic: s4: remove unused data
+        bh=ri3+Ap4cqoeDbRAUlcrZd437nBvU+XraT/8Lh4iGeK0=;
+        b=ff/01j3yZVNjILbLB62QTpEvxQNwXvF8sOf00OYVlX/rbX1rX/tBYO3RMH8BL0gaeQ
+         4EMe0g7+hUakHnPfMQye6w0UKAXwtFSGJjUeVLgnCkn74NPg2fPuTtFk9SFghq2fah+t
+         nYk08isgUGsVKBhoqs+/eqf/K5atuUKHSf5hA0bSuQHoKPepr81V1k+pKVetLB/2FHdA
+         V5ZiTKrAGFlk3QlaZYrHNkvUkjFV+0UvLqwRoU+YU8z2T1F4dbkENjFfX7qmLM0tHBVL
+         DaQQbCMuOnG8ebkjtrGY7vnvtxbY79ry/5LTbwyLXoEtTsKh5Si6N9ozLbb8gVBnDf63
+         wI1A==
+X-Forwarded-Encrypted: i=1; AJvYcCXppJxHUBBh7yznEI5XJ0Xx2yPKF2JNf4dSq+89Irvir5cZBDFV4MZ8pzHUkIOiiZfgsCHxcU4q6cz4/1s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhufiivM6KHkU4IrYcJKWXmbGJkygPUhxtpCfAO6nFQG3TjdU9
+	+9MUZr155pIhmudK3iVPdu6WS7/hPZmt5SPTYjwnsBqH2Gx9GsuXkK7h+Q3YaQ44H1rH1SxGGH3
+	jND0KDMr4OvoQ8jyXLvArwh7tSfnkaScNh3RQQ/8u
+X-Gm-Gg: ASbGncuaUys5iJ8qe4Q4Ym53iGHm+Dn/x/fusbeZfP/PkSO5BqD4UoZawcxnXOqBtyY
+	fcnfxVxh8TegWveTx0x8YZtZxwf/DEjLFBFkkn/2scnplTojviLqXINWBencuNzv+GiZ09xoWeF
+	kNMWl+ZY/wiZt6DoBqr7ZaN4yceuy2x68Gx4UMNI2k+3PWLwQgpqTElAu/OnPUWtUB8egQXozr
+X-Google-Smtp-Source: AGHT+IGdxgr8P+XalPte1GIMEXQlB83/Ff2yJxb0FI5ykWekoHN3CN4Qry4jy0ooIKs9GE80H/Wjo6lwAjGkNsxfkb4=
+X-Received: by 2002:a05:6e02:3c06:b0:3dd:a7f3:a229 with SMTP id
+ e9e14a558f8ab-3df0703957amr6032785ab.4.1750696676770; Mon, 23 Jun 2025
+ 09:37:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-amlogic-clk-drop-clk-regmap-tables-v4-3-ff04918211cc@baylibre.com>
-References: <20250623-amlogic-clk-drop-clk-regmap-tables-v4-0-ff04918211cc@baylibre.com>
-In-Reply-To: <20250623-amlogic-clk-drop-clk-regmap-tables-v4-0-ff04918211cc@baylibre.com>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- Jerome Brunet <jbrunet@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3973; i=jbrunet@baylibre.com;
- h=from:subject:message-id; bh=lY/+jeINkrBTULMr0fgrgjWAsXe5te4CfoeDV9q3UOI=;
- b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBoWYLYO0zm2Ij1fDff8rSEVAszTwR1HrjavXeaU
- 0Uem7bF9VeJAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCaFmC2AAKCRDm/A8cN/La
- hc/CD/4m/uWRim24OFAgeUrpZSDUlhz+owSrV5ms30HqiIr49Tu/MkLik1fNxtOZoP7F3o7Vd9w
- I1ljZ786kW8PqUn9WvzghDsgbY2H1rmf7myPVPgO5cMxtzP8JXFozngMvwPnlm7xoZ1+6P0Bkdc
- PN47s/Ji69FMhx2JWbZVT/+0qfmpBKAlGn5Sbh2OOKCtkMazBWQRAU3jfjqLGpVpiQbwqVd8jPV
- gNF3JSxbQwnX8ghEC1HWQI4h/sq3w0UeLo68K3qGcJTLE3MSQARLwLdmn9VYdQqkKiGzGDrPRn+
- J3xBs9BrRzWyanNumrpOXqPnZADZHYudv5rkwY4gvuFWpMyO9KlcLiOvihX7nmgDrruDdaK7hkR
- bbQ1br1vNnTrPZK4A62Jkxj/z8v7A3KjL89I7RuBdBlVTZi1UfM511q5UtYXSPQMvYW/VNJWqUK
- MiueAteGQhWVE7a2BSwOKqlhQoH55D5JXdSS/xmcdYkTAj/g5Z455Z9oY00R4VzDcCxyeoiwEEM
- uJHCFa6zgqTUKmuka6A3+RdRpVg7HHo+qG6u1n/AYvNT6eAFgqyPxWbG3RbuRV72dJcNpca+mJ1
- 4iNSzWhQuYvDOhufnvDkni/Yn/JiALR2mA9mC75E8Fu6x/LCJyq3tFDOwfQsOD6kH/RQUTM2bos
- H0LyBCHLEn47Unw==
-X-Developer-Key: i=jbrunet@baylibre.com; a=openpgp;
- fpr=F29F26CF27BAE1A9719AE6BDC3C92AAF3E60AED9
+References: <e3751a74be34bbf3781c4644f518702a7270220b.1749785642.git.collin.funk1@gmail.com>
+ <20cce2b1-eaad-4565-817b-b094aecee0a5@linaro.org> <874iwa71mo.fsf@gmail.com> <6f524405-a9a7-45c4-bf4d-9ae33e52bfbc@linaro.org>
+In-Reply-To: <6f524405-a9a7-45c4-bf4d-9ae33e52bfbc@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 23 Jun 2025 09:37:44 -0700
+X-Gm-Features: AX0GCFvasLURCKicqFzCPNy0SCLEOxEQZz8PHex8H2GTWGdkfSVmQ_yM79QpXxY
+Message-ID: <CAP-5=fVoya-X+BBBuVwZQ527WKyGwC8tirk=gj37t2H_BBmwVg@mail.gmail.com>
+Subject: Re: [PATCH] perf build: Specify that spellcheck should use the bash dialect.
+To: James Clark <james.clark@linaro.org>
+Cc: Collin Funk <collin.funk1@gmail.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Following the removal of the clk_regmap clock table from the s4-peripherals
-clock controller driver, it appears some clocks are unused, which means
-these are not exported or even registered.
+On Mon, Jun 23, 2025 at 1:10=E2=80=AFAM James Clark <james.clark@linaro.org=
+> wrote:
+>
+>
+>
+> On 20/06/2025 6:40 pm, Collin Funk wrote:
+> > Hi James,
+> >
+> > James Clark <james.clark@linaro.org> writes:
+> >
+> >> If we're enforcing bash style with static analysis shouldn't we also
+> >> change all the hashbangs to bash? Recently there have been changes to
+> >> change sh to bash in some of the tests so presumably the hard rule for
+> >> sh is no more?
+> >>
+> >> In the past I've had to replace bashisms that didn't work in sh but it
+> >> would be nice to have only one language to write tests in. I doubt
+> >> anyone running the tests today is running somewhere without bash, or
+> >> that changing it will break anything. If anything it will fix more
+> >> bashisms that have already been written.
+> >>
+> >> Just for reference there are 34 #!/bin/bash and 42 #!/bin/sh in
+> >> tools/perf/tests
+> >
+> > That sounds reasonable to me. Writing portable shell is a hassle and if
+> > we already assume a working /bin/bash in some places, I don't see a
+> > reason not to use it for the others.
+> >
+> > Regarding this patch, shellcheck will use the file extension or shebang
+> > only if it does not find a 'shell' directive in a .shellcheckrc. So tha=
+t
+> > change will still require this patch.
+> >
+> > I saw it was used in other places, so I assumed this patch was fine:
+> >
+> > $ find tools/perf -name Build | xargs grep bash
+> > tools/perf/Build:     $(Q)$(call echo-cmd,test)shellcheck -s bash -a -S=
+ warning "$<" > $@ || (cat $@ && rm $@ && false)
+> > tools/perf/trace/beauty/Build:        $(Q)$(call echo-cmd,test)shellche=
+ck -s bash -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
+> >
+> > Collin
+>
+> In that case:
+>
+> Reviewed-by: James Clark <james.clark@linaro.org>
+>
+> And I'll send the bulk hashbang change separately.
 
-In all likelihood, these clocks have not been tested. Remove the unused
-clocks for now. These can added back later when they have been properly
-tested.
+I've no objection to switching to using bash globally. It seems
+sub-optimal that we've copy-pasted the shellcheck command across many
+different Build files and that this patch will cause the
+tools/perf/tests/Build one to differ. My preference would be to have a
+global definition probably in Makefile.perf, then use it consistently.
+Alternative all shellcheck invocations can pass "-s bash" for the sake
+of consistency.  Fwiw, I think the 'tools/arch/x86/tools/gen-insn-*'
+which is to some extent taken from the kernel's 'arch/x86/tools' is
+okay with the change too.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- drivers/clk/meson/s4-peripherals.c | 112 -------------------------------------
- 1 file changed, 112 deletions(-)
-
-diff --git a/drivers/clk/meson/s4-peripherals.c b/drivers/clk/meson/s4-peripherals.c
-index fd2d4d725f9e2595a865909db3c0c598309ef448..c9400cf54c84c3dc7c63d0636933951b0cac230c 100644
---- a/drivers/clk/meson/s4-peripherals.c
-+++ b/drivers/clk/meson/s4-peripherals.c
-@@ -3174,118 +3174,6 @@ static struct clk_regmap s4_gen_clk = {
- 	},
- };
- 
--static const struct clk_parent_data s4_adc_extclk_in_parent_data[]  = {
--	{ .fw_name = "xtal", },
--	{ .fw_name = "fclk_div4", },
--	{ .fw_name = "fclk_div3", },
--	{ .fw_name = "fclk_div5", },
--	{ .fw_name = "fclk_div7", },
--	{ .fw_name = "mpll2", },
--	{ .fw_name = "gp0_pll", },
--	{ .fw_name = "hifi_pll", },
--};
--
--static struct clk_regmap s4_adc_extclk_in_mux = {
--	.data = &(struct clk_regmap_mux_data) {
--		.offset = CLKCTRL_DEMOD_CLK_CTRL,
--		.mask = 0x7,
--		.shift = 25,
--	},
--	.hw.init = &(struct clk_init_data){
--		.name = "adc_extclk_in_mux",
--		.ops = &clk_regmap_mux_ops,
--		.parent_data = s4_adc_extclk_in_parent_data,
--		.num_parents = ARRAY_SIZE(s4_adc_extclk_in_parent_data),
--		.flags = 0,
--	},
--};
--
--static struct clk_regmap s4_adc_extclk_in_div = {
--	.data = &(struct clk_regmap_div_data) {
--		.offset = CLKCTRL_DEMOD_CLK_CTRL,
--		.shift = 16,
--		.width = 7,
--	},
--	.hw.init = &(struct clk_init_data){
--		.name = "adc_extclk_in_div",
--		.ops = &clk_regmap_divider_ops,
--		.parent_hws = (const struct clk_hw *[]) {
--			&s4_adc_extclk_in_mux.hw
--		},
--		.num_parents = 1,
--		.flags = CLK_SET_RATE_PARENT,
--	},
--};
--
--static struct clk_regmap s4_adc_extclk_in_gate = {
--	.data = &(struct clk_regmap_gate_data) {
--		.offset = CLKCTRL_DEMOD_CLK_CTRL,
--		.bit_idx = 24,
--	},
--	.hw.init = &(struct clk_init_data){
--		.name = "adc_extclk_in",
--		.ops = &clk_regmap_gate_ops,
--		.parent_hws = (const struct clk_hw *[]) {
--			&s4_adc_extclk_in_div.hw
--		},
--		.num_parents = 1,
--		.flags = CLK_SET_RATE_PARENT,
--	},
--};
--
--static struct clk_regmap s4_demod_core_clk_mux = {
--	.data = &(struct clk_regmap_mux_data) {
--		.offset = CLKCTRL_DEMOD_CLK_CTRL,
--		.mask = 0x3,
--		.shift = 9,
--	},
--	.hw.init = &(struct clk_init_data){
--		.name = "demod_core_clk_mux",
--		.ops = &clk_regmap_mux_ops,
--		.parent_data = (const struct clk_parent_data []) {
--			{ .fw_name = "xtal", },
--			{ .fw_name = "fclk_div7", },
--			{ .fw_name = "fclk_div4", },
--			{ .hw = &s4_adc_extclk_in_gate.hw }
--		},
--		.num_parents = 4,
--		.flags = CLK_SET_RATE_PARENT,
--	},
--};
--
--static struct clk_regmap s4_demod_core_clk_div = {
--	.data = &(struct clk_regmap_div_data) {
--		.offset = CLKCTRL_DEMOD_CLK_CTRL,
--		.shift = 0,
--		.width = 7,
--	},
--	.hw.init = &(struct clk_init_data){
--		.name = "demod_core_clk_div",
--		.ops = &clk_regmap_divider_ops,
--		.parent_hws = (const struct clk_hw *[]) {
--			&s4_demod_core_clk_mux.hw
--		},
--		.num_parents = 1,
--		.flags = CLK_SET_RATE_PARENT,
--	},
--};
--
--static struct clk_regmap s4_demod_core_clk_gate = {
--	.data = &(struct clk_regmap_gate_data) {
--		.offset = CLKCTRL_DEMOD_CLK_CTRL,
--		.bit_idx = 8,
--	},
--	.hw.init = &(struct clk_init_data){
--		.name = "demod_core_clk",
--		.ops = &clk_regmap_gate_ops,
--		.parent_hws = (const struct clk_hw *[]) {
--			&s4_demod_core_clk_div.hw
--		},
--		.num_parents = 1,
--		.flags = CLK_SET_RATE_PARENT,
--	},
--};
--
- #define MESON_GATE(_name, _reg, _bit) \
- 	MESON_PCLK(_name, _reg, _bit, &s4_sys_clk.hw)
- 
-
--- 
-2.47.2
-
+Thanks,
+Ian
