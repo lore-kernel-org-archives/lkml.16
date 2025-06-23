@@ -1,182 +1,106 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B1522FDEA
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3CC22FDEA;
+	Mon, 23 Jun 2025 15:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750691582; cv=none; b=QR6aWUarFV4Ff+8jB147nVMGLydlv9LnfX87uZiD1SViloO6aY5uGbI0T2o30hlakifq6wvd0nN9Abih/3SEmMm+cSah1x1A7kQti/cv0aASwRX/9QHQ/hv7Xl7+yYcgAaBdzqIYzzEbaQlMFawbN4DrXXnwnYtHrbYoiidMHg8=
+	t=1750691604; cv=none; b=LQU50N8HFwEKFfxvPNH5QN5ppLexakZtXYdEyeE+QrC1VJUWu727+q8i9yDzrKwxJcDKJ+r/2XHfyUvto3tKvgtTdwj0WlLMBpMR7ZevMzIC6poISauOn0U7vl2CptoUBUMTkIgvCxXERvlOOH44dkVAUNHMObDd4j1tCWvO9zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750691582; c=relaxed/simple;
-	bh=pTTZcRj9DId2ZvPOeWmaUNyph2whs2Bb+Fr/O9WRfwo=;
+	s=arc-20240116; t=1750691604; c=relaxed/simple;
+	bh=m6+zeFbf7/Zy3uTO9XIn4MuWc9MoVBSP7ewq69H7+T0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mYBcfXoE9no77E6mu9CJWQxFd7l7AQzAYNIKC0xuJBE0Ji9KaQJBqKGfVbFZgHBh4NfIxtC9osUaw3x4EKxbIOP+Zly/zgFv+N4lKR47rW1sLDhOhlvmBTYmWRM4mKQ8C8mufrBgOSSIxS2sxfl6xLWM1wYx4JAxFGrm3g9Tw5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SF0cCj7L; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=tr5606/Rk7PEWDAZi/9aXL99DZ5OpJOxgViV50huHHqyo8W0qjKPiu9CNIxYXkHoQ6Gj38DXGIgpVu9tg9R1EO0VYHaJARdCrfNMEfy8X1QMLt4P+98y7dhKx5tnzQxMuUmdlq/m8Jp15Mxo3qDY3HH+WHECGQ7HQWm9YwZzypM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJ+vEFs0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SF0cCj7L"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3ddd1a3e659so361145ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:13:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750691579; x=1751296379; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mnxjz5dmIOfE5ct74X590DWV56+gnOXa9jI3Dx4SADY=;
-        b=SF0cCj7L4s1AWqU5k/qEEQrG3WgqAzxi9IsSYWMO/CqxJA7HBrACzNxtaFmhgxjc63
-         TKdmgIRekAQLamaG3hlKuzlUTDeQ8E9F2tAN5u+wrfL2gxOi8oF7YYcxc1VOqlPNrEyD
-         RrAIXwubeRa4uVmJqRHczSId3+J/fcKKw1byfxvBhk7QJPtNDd07qnVWaIqD/s9DJp7N
-         hbWya0QE7KXzyB4ROsmN+FED6KAYCQUzHSJ4iZ6PLYmOTKhDr/b2w8uNgmjNDRLlRtz7
-         OomgfX8RTHvLXX4qpYGrAvB9MTBrujIH04/M2t2PCwUI/q9fwEpS4GlEqupS/jzWa6P9
-         phLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750691579; x=1751296379;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mnxjz5dmIOfE5ct74X590DWV56+gnOXa9jI3Dx4SADY=;
-        b=hhqhO1dxq80vZQEEotwFOQ3YVZ01yupdoA35W2/7Kooemm4hvCMpXkVpIYlEbzadnP
-         DqnwjsO4SDOOO5kOtf5Ocjs94iqVFYOMBMDuXsXQtxvdRWI0maMvO6Bag5EtBXCspFWT
-         NRevwGlwXGYoXB8n6REVDBvm2tKkndqBhFG0Wqah4PfHMhvPMO00Zv4Pzd3+nt96mR2c
-         LDVAKxspNsiw0Gh8gUATynu7Rwh7P4TJRuIXfFT2Cylu6yADUi1hLt0Q1ycvJbedGkPO
-         tksqIg5EFnmW36B4IW1DrspwsjGUNAE+KulwQPwkRvtY7CSKOYU1IQW3h1S3BBScuxrp
-         jwww==
-X-Forwarded-Encrypted: i=1; AJvYcCUYUUe07K84UHoHty7moQut5ZqyCFtg7OXpgcGXsN75txjnJAMy3aPohk/VtiAvUZhszWHyx37KAWDimA0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2h6ydSplMWuRx8RvlzkD3Rd7qDE6drEQiFYLgSrd2C/vVjHZ3
-	MfKvPb/ZQYAFKfngC7QtiF25kydNZsVc3ZwDWJUd03nuarn42NSOQaYGOc8ON74LLkUTPu9q4r5
-	pma4MpOmazGtCt1ypnEgFqoOywSLc4yqIr5WgJMQ8
-X-Gm-Gg: ASbGncthJorXkoVuRHZV+GAH1UXDxWOec7gIr7WHnCjYLzwoP6IdGQ9IpRj+oIbMpvC
-	yn6IwYpk4SkgfMUrP7dwZ9VNGG/3S/ZT0nO9Yc+F8iw+Ls4JzinyneUlaXmP73BxtqKfYqtpPV+
-	8vaaFFZHKdHbfTM8kMzBcdXVodm8nMrqVp9u4MJ0CfxdJmu5xaYGKEIigeeOjVAV7eB+kZ20g4
-X-Google-Smtp-Source: AGHT+IE8gIT7WMGF5c34LGPl6UQebM0f8gjV+JTGABGoMmYQ/5qwTt7OO7vZdNuzPwnYzz+ZM+IfaqM7KM/36j/PkHU=
-X-Received: by 2002:a05:6e02:184f:b0:3dc:5cb1:8f24 with SMTP id
- e9e14a558f8ab-3df0da148f5mr5687465ab.9.1750691579267; Mon, 23 Jun 2025
- 08:12:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJ+vEFs0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7478DC4CEEA;
+	Mon, 23 Jun 2025 15:13:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750691603;
+	bh=m6+zeFbf7/Zy3uTO9XIn4MuWc9MoVBSP7ewq69H7+T0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=kJ+vEFs0j00QDs92yVfX6WZxq8Qy6AkSlDniiIRy7hDGzBsxfw8YkiTQmE79xNngW
+	 NktYvcGFrn01CBzlG+o5XpzITzlCJbZa7rXC9rZnvnsb1HlJ7wb0FA0gIFu+VoOVij
+	 1ScSV9VMvzH53sW/+uHQb7NZ/OVplDPUdPPN0ZqjWYCM9mPWHXUkxytG30QIRR9DoA
+	 ZdA2qB/YsKL8Jkh/LR0EXoSA5YMjJJne7+Ak2hNUd9td/sb6wbKkIk5wE1ZnPWCemw
+	 pT3SLq8JOgYmXMETAWePn/OtdTh8oVKo2lmrrTGSC29BScI9pvIkdAftm0gXQJCxnm
+	 6jWCgZumgyPQg==
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-6118c1775dbso145049eaf.1;
+        Mon, 23 Jun 2025 08:13:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVGUYkWOa1X4maXy1QXZr8RxZfyGNPFFWUq9Sf05ZReN34KtMmzt2EtdIMlIsEVx0Yj22daahOyMt0=@vger.kernel.org, AJvYcCVjgZmPIsH7ZoaRFwyUYFDIoLP8NGTBtRIbqaXgoQ0kvkqLKY8zGzOg82Zc5GRrFRnjYJNLQaRi/AncQWQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyofp2J0MPvMFGeLvFt84QlxIJN8ePIkibFXGr4DyBsAEk43VND
+	wBH6kc77YssLbyhFVKc/FB69Iy+c+D0tj4LKzDzRjPo+rmAPdFZn2KUmJanoTqHmyXFGaAWeFgX
+	oUY9HvJxbzkO/tpiuP79sbVpNvY2J1Zs=
+X-Google-Smtp-Source: AGHT+IGpm04yVlsU1rtbWQdJ5UO5ztXKe7NWSoIPZJyX3DsiZk/jtE/bA2b81WS4/pOaLopOXfilysz0oBGyTKPU6MI=
+X-Received: by 2002:a05:6820:1b05:b0:611:5853:3ecb with SMTP id
+ 006d021491bc7-6115b734ecfmr8708103eaf.0.1750691602814; Mon, 23 Jun 2025
+ 08:13:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619002034.97007-1-irogers@google.com> <aFW4VJtk96JD865U@google.com>
-In-Reply-To: <aFW4VJtk96JD865U@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 23 Jun 2025 08:12:47 -0700
-X-Gm-Features: AX0GCFuBMGlka0OTxLTpe-4n1RG-F3_OoLNQ1mo06Bc_W8WiH7hXnMEGIn4fhxc
-Message-ID: <CAP-5=fUpnW1DE68pMW0q3vMT+n6d5SeNkwXd45XLaf01-eP47A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] perf test workload noploop: Name the noploop process
-To: Namhyung Kim <namhyung@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20250623133402.3120230-1-zhenglifeng1@huawei.com> <20250623133402.3120230-7-zhenglifeng1@huawei.com>
+In-Reply-To: <20250623133402.3120230-7-zhenglifeng1@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 23 Jun 2025 17:13:11 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0huLAM5XaGr1MWOwL5V-p7KX-ea7FYGx70GPwyVHETnHg@mail.gmail.com>
+X-Gm-Features: AX0GCFsZ-nJyD3aKqSoDIy7nHLaVawW_CCC7pCQKRuRnoWPZrSQNKJcHar1AA4g
+Message-ID: <CAJZ5v0huLAM5XaGr1MWOwL5V-p7KX-ea7FYGx70GPwyVHETnHg@mail.gmail.com>
+Subject: Re: [PATCH 6/7] cpufreq: Refactor code about starting governor in cpufreq_set_policy()
+To: Lifeng Zheng <zhenglifeng1@huawei.com>
+Cc: rafael@kernel.org, viresh.kumar@linaro.org, ionela.voinescu@arm.com, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linuxarm@huawei.com, 
+	jonathan.cameron@huawei.com, zhanjie9@hisilicon.com, lihuisong@huawei.com, 
+	yubowen8@huawei.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 20, 2025 at 12:36=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
+On Mon, Jun 23, 2025 at 3:34=E2=80=AFPM Lifeng Zheng <zhenglifeng1@huawei.c=
+om> wrote:
 >
-> Hi Ian,
+> Refactor code about starting governor without functional change in
+> cpufreq_set_policy() to make it more readable.
+
+Sorry, but I don't see the point.
+
+> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
+> ---
+>  drivers/cpufreq/cpufreq.c | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
 >
-> On Wed, Jun 18, 2025 at 05:20:33PM -0700, Ian Rogers wrote:
-> > Name the noploop process "perf-noploop" so that tests can easily check
-> > for its existence.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/tests/workloads/noploop.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/tools/perf/tests/workloads/noploop.c b/tools/perf/tests/wo=
-rkloads/noploop.c
-> > index 940ea5910a84..8b954d466083 100644
-> > --- a/tools/perf/tests/workloads/noploop.c
-> > +++ b/tools/perf/tests/workloads/noploop.c
-> > @@ -2,6 +2,8 @@
-> >  #include <stdlib.h>
-> >  #include <signal.h>
-> >  #include <unistd.h>
-> > +#include <linux/prctl.h>
-> > +#include <sys/prctl.h>
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 9b2578b905a5..7b82ffb50283 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -2698,15 +2698,19 @@ static int cpufreq_set_policy(struct cpufreq_poli=
+cy *policy,
+>         /* start new governor */
+>         policy->governor =3D new_gov;
+>         ret =3D cpufreq_init_governor(policy);
+> -       if (!ret) {
+> -               ret =3D cpufreq_start_governor(policy);
+> -               if (!ret) {
+> -                       pr_debug("governor change\n");
+> -                       return 0;
+> -               }
+> +       if (ret)
+> +               goto start_old_gov;
+> +
+> +       ret =3D cpufreq_start_governor(policy);
+> +       if (ret) {
+>                 cpufreq_exit_governor(policy);
+> +               goto start_old_gov;
+>         }
 >
-> I'm afraid it'd introduce a build failure on musl.  Please see
->
-> https://lore.kernel.org/linux-perf-users/20250611092542.F4ooE2FL@linutron=
-ix.de/
->
-> I think <sys/prctl.h> would be enough.
-
-Hi Namhyung,
-
-we could do that but in the glibc man page it says:
-https://man7.org/linux/man-pages/man2/prctl.2.html
-```
-#include <linux/prctl.h>  /* Definition of PR_* constants */
-#include <sys/prctl.h>
-```
-So wouldn't the PR_SET_NAME definition potentially be missing then? We
-could fill in the missing definition with `#ifndef PR_SET_NAME` it
-seems sub-optimal - I see this is what was done in the linked to
-changes. Perhaps we need something like a tools/perf/util/prctl.h, and
-a feature test, then in that we have something like:
-```
-/* A header file to work around musl libc breakages caused conflicting
-definitions in linux/prctl.h . */
-#ifndef HAVE_SENSIBLE_PRCTL
-#  include <linux/prctl.h>
-#  include <sys/prctl.h>
-#else // !HAVE_SENSIBLE_PRCTL
-#  include <sys/prctl.h>
-#  ifndef PR_SET_NAME
-#    define PR_SET_NAME 15
-#  endif // PR_SET_NAME
-#  ifndef PR_FUTEX_HASH
-#    define PR_FUTEX_HASH                   78
-#    define PR_FUTEX_HASH_SET_SLOTS        1
-#    define FH_FLAG_IMMUTABLE              (1ULL << 0)
-#    define PR_FUTEX_HASH_GET_SLOTS        2
-#    define PR_FUTEX_HASH_GET_IMMUTABLE    3
-#  endif // PR_FUTEX_HASH
-#endif // HAVE_SENSIBLE_PRCTL
-```
-The feature test would just be to include the two headers and see if
-the build breaks.
-
-It'd be nice to think musl was slowly getting fixed. I notice we're
-carrying two comments in the code about working around musl, but I
-suspect we do this kind of thing in a lot of places (just knowing the
-issues that come up from yourself and Arnaldo when trying to integrate
-patches). It'd be nice if perf's code could keep close to what the man
-page, or whatever, is saying the standard should be, rather than doing
-some kind of adhoc linux/prctl.h rewrite (or if we are doing that,
-make the code more explicit that it's what we're doing).
-
-It'd be nice to think that the perf code could be clean wrt analyses
-like "include what you use" [1], but strategically removing #includes
-to try to work around musl issues seems like the opposite of this.
-
-Thanks,
-Ian
-
-[1] https://github.com/include-what-you-use/include-what-you-use
-
-> Thanks,
-> Namhyung
->
->
-> >  #include <linux/compiler.h>
-> >  #include "../tests.h"
-> >
-> > @@ -16,6 +18,7 @@ static int noploop(int argc, const char **argv)
-> >  {
-> >       int sec =3D 1;
-> >
-> > +     prctl(PR_SET_NAME, "perf-noploop");
-> >       if (argc > 0)
-> >               sec =3D atoi(argv[0]);
-> >
-> > --
-> > 2.50.0.rc2.701.gf1e915cc24-goog
-> >
+> +       pr_debug("governor change\n");
+> +       return 0;
+> +
+> +start_old_gov:
+>         /* new governor failed, so re-start old one */
+>         pr_debug("starting governor %s failed\n", policy->governor->name)=
+;
+>         if (old_gov) {
+> --
