@@ -1,376 +1,150 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B47D1E51FA;
-	Mon, 23 Jun 2025 21:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750713946; cv=none; b=l/4dOl9AoVBNvhqH2U+0kAy6ljU5lESy5l2CxJ75C4v8Omg5ODjsxXvFf1LSD9wiglQ+J1BatgktjlGtgtEyc5YQBlFd0S2CKDxPMfRn6JniOLQrka3G02xTgfWhRRQuYO3g1ZkvPaUzmf8b60eU+9V13IV387em3TLccOK9j0I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750713946; c=relaxed/simple;
-	bh=UeQDK9ENQ7vUtQyrUkOq5dcJzYpYWfOhsPHIfj1iITM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cBIwq0UIWR2sMHZmANyHLNbFyzGZKSGIcgY0JCWb6xwQodODB5Rom2olbyGkJaeWsWwx+azeROkR5R0lENd0DC5s6wcQAP4qiO/Q0gorl/K5CAIoTmYjopYgZPdYVdpyZ6TRnE08+iou4XIY/W3yaMBuMdOStldma5+SFm/+9BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=CoxXizIW; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A9F1EDA0F;
+	Mon, 23 Jun 2025 21:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750714081; cv=pass; b=BySnnxceE8mSGpmcBwNVAqB0vcUML2zibdo3w6N/OdM9EkhWKABjgfKO/Mt+h1KxwtxrEJBkq7GvmcTyELGxMoIKCc+wZ6eo/JiG5ZgP+ntf0/zpBoK7qQzvqvH8pe2YXt0pxx5impYmTgm7eRAGL0j6YYohdB15d/nJwwKzY3E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750714081; c=relaxed/simple;
+	bh=eavMjGPTqGzQIzHZGIMxTJh0ITJeBmp6lze0L+JQxEI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ji6E2RzJoEHvZNFywguAYfzzr12Huewc9tGePhyZIUa8K0tlBaaxLVha1kamGFZKC4zvWaxGcph65sb8FkJeQ2GHfELRxz9Dg25G2pClSDmcGxcY8GgyVt+EjkV6pFm+fDgOjxtYvP3sCNO3jgkD/ZgMXJPJFlo8YaaHIB3HekM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=aJUjdr9F; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="CoxXizIW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1750713942;
-	bh=UeQDK9ENQ7vUtQyrUkOq5dcJzYpYWfOhsPHIfj1iITM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=CoxXizIW+zt23YgX9hL6aDtyR+6dStg/ArgBUfBGU+NvbJa/SrbWXY2oRjP5gqI2m
-	 VyjAVfHA4J706yFRVCR4jgNw2DGoqp1i0eQcQTczeV/msqMA4tkaV/DeqBPFG1c0Jv
-	 +Ek5aRkMm/QUWu6wtkihp592R/E81shvYqY2F6BU=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Mon, 23 Jun 2025 23:25:39 +0200
-Subject: [PATCH v3 4/4] tools/nolibc: MIPS: add support for N64 and N32
- ABIs
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="aJUjdr9F"
+ARC-Seal: i=1; a=rsa-sha256; t=1750714068; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=XZpR3d1yairrFpFm75ilCvkZ9UWhISocwuL+bJOfTKJNoFefmgMSIOi8AloAe21brwretNmhCfPG7FlsNEzMC7/STAiDdmxLl3UyyN156am6UbJ+3CuDIPq5/ShOBQTl1pIgXjlthz3cnrR3ISYDv6uhwEQuLOUEs8HFPz7ARbQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750714068; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=XcgGMhxGkYvwiMgM2QxzC87EaD/VMquOZCNHTL2GpbM=; 
+	b=dqCAYzmsq2WN4V7n1TOLIk+Ff2kMjnQEU6u8WSP3e0oeWBX1RfeKiB+98mQBNB5JT8evgwyG8HlXG1/nJ3UndPXvgKRikMDGKxrFXZTlNY2ZKce+FhUHujz1SqFEFVU+490Oii7Y7Sx7y6+PuJwul1WCPW931ZawiLjxoXC3+a4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750714068;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=XcgGMhxGkYvwiMgM2QxzC87EaD/VMquOZCNHTL2GpbM=;
+	b=aJUjdr9FJOq5V7jsORSj9prz5oBq+9gu6IbI9mrqcbHgnuL6NVrpn8V+b8ff3Xd4
+	IHubsjCwDf/QTggnfC0T0rTxTnfU29Y1+8b5jA6pv/YNNOZGRDeCwnvehyPHdlSGpK1
+	G0u6AfKaxVkLjSpqDc2xsjD45zmlf9c9Qloy34+w=
+Received: by mx.zohomail.com with SMTPS id 1750714067400350.06194474162146;
+	Mon, 23 Jun 2025 14:27:47 -0700 (PDT)
+Received: by venus (Postfix, from userid 1000)
+	id B67E0180AAB; Mon, 23 Jun 2025 23:27:42 +0200 (CEST)
+Date: Mon, 23 Jun 2025 23:27:42 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: amitsd@google.com
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Badhri Jagan Sridharan <badhri@google.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@kernel.org>, Kyle Tso <kyletso@google.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] usb: typec: tcpm: Add support for Battery Status
+ response message
+Message-ID: <iqsj5w5pqcbjof3vqohhzptdp5xj7bir6digzqes775at2tpj2@r7kzy4j2fqmw>
+References: <20250507-batt_ops-v2-0-8d06130bffe6@google.com>
+ <20250507-batt_ops-v2-3-8d06130bffe6@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250623-nolibc-mips-n32-v3-4-6ae2d89f4259@weissschuh.net>
-References: <20250623-nolibc-mips-n32-v3-0-6ae2d89f4259@weissschuh.net>
-In-Reply-To: <20250623-nolibc-mips-n32-v3-0-6ae2d89f4259@weissschuh.net>
-To: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, 
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-mips@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750713941; l=15927;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=UeQDK9ENQ7vUtQyrUkOq5dcJzYpYWfOhsPHIfj1iITM=;
- b=eh141JVPYa/Hx3BdzR2cslKxpOvpD/40HYaLrS0vPt2xxDo7mm9I29mAbnesO9Xjqc56nLXd+
- OChk5v/lnOSD+YtP9o2n8Z/boEd740VwuOVZLqfg2KJqupexatsMqMj
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="s27v4sw3pnebflzu"
+Content-Disposition: inline
+In-Reply-To: <20250507-batt_ops-v2-3-8d06130bffe6@google.com>
+X-Zoho-Virus-Status: 1
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.4.3/250.696.82
+X-ZohoMailClient: External
 
-Add support for the MIPS 64bit N64 and ILP32 N32 ABIs.
 
-In addition to different byte orders and ABIs there are also different
-releases of the MIPS architecture. To avoid blowing up the test matrix,
-only add a subset of all possible test combinations.
+--s27v4sw3pnebflzu
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 3/5] usb: typec: tcpm: Add support for Battery Status
+ response message
+MIME-Version: 1.0
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-Tested-by: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
----
- tools/include/nolibc/arch-mips.h               | 105 +++++++++++++++++++++----
- tools/testing/selftests/nolibc/Makefile.nolibc |  26 ++++++
- tools/testing/selftests/nolibc/run-tests.sh    |   2 +-
- 3 files changed, 117 insertions(+), 16 deletions(-)
+Hi,
 
-diff --git a/tools/include/nolibc/arch-mips.h b/tools/include/nolibc/arch-mips.h
-index 4f0b969f66af610d3c986f3ff0e1c3f3a0be16b5..0cbac63b249adf80ecbf70ba074f9ea5d56d9278 100644
---- a/tools/include/nolibc/arch-mips.h
-+++ b/tools/include/nolibc/arch-mips.h
-@@ -10,7 +10,7 @@
- #include "compiler.h"
- #include "crt.h"
- 
--#if !defined(_ABIO32)
-+#if !defined(_ABIO32) && !defined(_ABIN32) && !defined(_ABI64)
- #error Unsupported MIPS ABI
- #endif
- 
-@@ -32,11 +32,32 @@
-  *   - the arguments are cast to long and assigned into the target registers
-  *     which are then simply passed as registers to the asm code, so that we
-  *     don't have to experience issues with register constraints.
-+ *
-+ * Syscalls for MIPS ABI N32, same as ABI O32 with the following differences :
-+ *   - arguments are in a0, a1, a2, a3, t0, t1, t2, t3.
-+ *     t0..t3 are also known as a4..a7.
-+ *   - stack is 16-byte aligned
-  */
- 
-+#if defined(_ABIO32)
-+
- #define _NOLIBC_SYSCALL_CLOBBERLIST \
- 	"memory", "cc", "at", "v1", "hi", "lo", \
- 	"t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9"
-+#define _NOLIBC_SYSCALL_STACK_RESERVE "addiu $sp, $sp, -32\n"
-+#define _NOLIBC_SYSCALL_STACK_UNRESERVE "addiu $sp, $sp, 32\n"
-+
-+#else /* _ABIN32 || _ABI64 */
-+
-+/* binutils, GCC and clang disagree about register aliases, use numbers instead. */
-+#define _NOLIBC_SYSCALL_CLOBBERLIST \
-+	"memory", "cc", "at", "v1", \
-+	"10", "11", "12", "13", "14", "15", "24", "25"
-+
-+#define _NOLIBC_SYSCALL_STACK_RESERVE
-+#define _NOLIBC_SYSCALL_STACK_UNRESERVE
-+
-+#endif /* _ABIO32 */
- 
- #define my_syscall0(num)                                                      \
- ({                                                                            \
-@@ -44,9 +65,9 @@
- 	register long _arg4 __asm__ ("a3");                                   \
- 									      \
- 	__asm__ volatile (                                                    \
--		"addiu $sp, $sp, -32\n"                                       \
-+		_NOLIBC_SYSCALL_STACK_RESERVE                                 \
- 		"syscall\n"                                                   \
--		"addiu $sp, $sp, 32\n"                                        \
-+		_NOLIBC_SYSCALL_STACK_UNRESERVE                               \
- 		: "=r"(_num), "=r"(_arg4)                                     \
- 		: "r"(_num)                                                   \
- 		: _NOLIBC_SYSCALL_CLOBBERLIST                                 \
-@@ -61,9 +82,9 @@
- 	register long _arg4 __asm__ ("a3");                                   \
- 									      \
- 	__asm__ volatile (                                                    \
--		"addiu $sp, $sp, -32\n"                                       \
-+		_NOLIBC_SYSCALL_STACK_RESERVE                                 \
- 		"syscall\n"                                                   \
--		"addiu $sp, $sp, 32\n"                                        \
-+		_NOLIBC_SYSCALL_STACK_UNRESERVE                               \
- 		: "=r"(_num), "=r"(_arg4)                                     \
- 		: "0"(_num),                                                  \
- 		  "r"(_arg1)                                                  \
-@@ -80,9 +101,9 @@
- 	register long _arg4 __asm__ ("a3");                                   \
- 									      \
- 	__asm__ volatile (                                                    \
--		"addiu $sp, $sp, -32\n"                                       \
-+		_NOLIBC_SYSCALL_STACK_RESERVE                                 \
- 		"syscall\n"                                                   \
--		"addiu $sp, $sp, 32\n"                                        \
-+		_NOLIBC_SYSCALL_STACK_UNRESERVE                               \
- 		: "=r"(_num), "=r"(_arg4)                                     \
- 		: "0"(_num),                                                  \
- 		  "r"(_arg1), "r"(_arg2)                                      \
-@@ -100,9 +121,9 @@
- 	register long _arg4 __asm__ ("a3");                                   \
- 									      \
- 	__asm__ volatile (                                                    \
--		"addiu $sp, $sp, -32\n"                                       \
-+		_NOLIBC_SYSCALL_STACK_RESERVE                                 \
- 		"syscall\n"                                                   \
--		"addiu $sp, $sp, 32\n"                                        \
-+		_NOLIBC_SYSCALL_STACK_UNRESERVE                               \
- 		: "=r"(_num), "=r"(_arg4)                                     \
- 		: "0"(_num),                                                  \
- 		  "r"(_arg1), "r"(_arg2), "r"(_arg3)                          \
-@@ -120,9 +141,9 @@
- 	register long _arg4 __asm__ ("a3") = (long)(arg4);                    \
- 									      \
- 	__asm__ volatile (                                                    \
--		"addiu $sp, $sp, -32\n"                                       \
-+		_NOLIBC_SYSCALL_STACK_RESERVE                                 \
- 		"syscall\n"                                                   \
--		"addiu $sp, $sp, 32\n"                                        \
-+		_NOLIBC_SYSCALL_STACK_UNRESERVE                               \
- 		: "=r" (_num), "=r"(_arg4)                                    \
- 		: "0"(_num),                                                  \
- 		  "r"(_arg1), "r"(_arg2), "r"(_arg3), "r"(_arg4)              \
-@@ -131,6 +152,8 @@
- 	_arg4 ? -_num : _num;                                                 \
- })
- 
-+#if defined(_ABIO32)
-+
- #define my_syscall5(num, arg1, arg2, arg3, arg4, arg5)                        \
- ({                                                                            \
- 	register long _num __asm__ ("v0") = (num);                            \
-@@ -141,10 +164,10 @@
- 	register long _arg5 = (long)(arg5);                                   \
- 									      \
- 	__asm__ volatile (                                                    \
--		"addiu $sp, $sp, -32\n"                                       \
-+		_NOLIBC_SYSCALL_STACK_RESERVE                                 \
- 		"sw %7, 16($sp)\n"                                            \
- 		"syscall\n"                                                   \
--		"addiu $sp, $sp, 32\n"                                        \
-+		_NOLIBC_SYSCALL_STACK_UNRESERVE                               \
- 		: "=r" (_num), "=r"(_arg4)                                    \
- 		: "0"(_num),                                                  \
- 		  "r"(_arg1), "r"(_arg2), "r"(_arg3), "r"(_arg4), "r"(_arg5)  \
-@@ -164,11 +187,53 @@
- 	register long _arg6 = (long)(arg6);                                   \
- 									      \
- 	__asm__ volatile (                                                    \
--		"addiu $sp, $sp, -32\n"                                       \
-+		_NOLIBC_SYSCALL_STACK_RESERVE                                 \
- 		"sw %7, 16($sp)\n"                                            \
- 		"sw %8, 20($sp)\n"                                            \
- 		"syscall\n"                                                   \
--		"addiu $sp, $sp, 32\n"                                        \
-+		_NOLIBC_SYSCALL_STACK_UNRESERVE                               \
-+		: "=r" (_num), "=r"(_arg4)                                    \
-+		: "0"(_num),                                                  \
-+		  "r"(_arg1), "r"(_arg2), "r"(_arg3), "r"(_arg4), "r"(_arg5), \
-+		  "r"(_arg6)                                                  \
-+		: _NOLIBC_SYSCALL_CLOBBERLIST                                 \
-+	);                                                                    \
-+	_arg4 ? -_num : _num;                                                 \
-+})
-+
-+#else /* _ABIN32 || _ABI64 */
-+
-+#define my_syscall5(num, arg1, arg2, arg3, arg4, arg5)                        \
-+({                                                                            \
-+	register long _num __asm__ ("v0") = (num);                            \
-+	register long _arg1 __asm__ ("$4") = (long)(arg1);                    \
-+	register long _arg2 __asm__ ("$5") = (long)(arg2);                    \
-+	register long _arg3 __asm__ ("$6") = (long)(arg3);                    \
-+	register long _arg4 __asm__ ("$7") = (long)(arg4);                    \
-+	register long _arg5 __asm__ ("$8") = (long)(arg5);                    \
-+									      \
-+	__asm__ volatile (                                                    \
-+		"syscall\n"                                                   \
-+		: "=r" (_num), "=r"(_arg4)                                    \
-+		: "0"(_num),                                                  \
-+		  "r"(_arg1), "r"(_arg2), "r"(_arg3), "r"(_arg4), "r"(_arg5)  \
-+		: _NOLIBC_SYSCALL_CLOBBERLIST                                 \
-+	);                                                                    \
-+	_arg4 ? -_num : _num;                                                 \
-+})
-+
-+#define my_syscall6(num, arg1, arg2, arg3, arg4, arg5, arg6)                  \
-+({                                                                            \
-+	register long _num __asm__ ("v0")  = (num);                           \
-+	register long _arg1 __asm__ ("$4") = (long)(arg1);                    \
-+	register long _arg2 __asm__ ("$5") = (long)(arg2);                    \
-+	register long _arg3 __asm__ ("$6") = (long)(arg3);                    \
-+	register long _arg4 __asm__ ("$7") = (long)(arg4);                    \
-+	register long _arg5 __asm__ ("$8") = (long)(arg5);                    \
-+	register long _arg6 __asm__ ("$9") = (long)(arg6);                    \
-+									      \
-+	__asm__ volatile (                                                    \
-+		"syscall\n"                                                   \
- 		: "=r" (_num), "=r"(_arg4)                                    \
- 		: "0"(_num),                                                  \
- 		  "r"(_arg1), "r"(_arg2), "r"(_arg3), "r"(_arg4), "r"(_arg5), \
-@@ -178,15 +243,25 @@
- 	_arg4 ? -_num : _num;                                                 \
- })
- 
-+#endif /* _ABIO32 */
-+
- /* startup code, note that it's called __start on MIPS */
- void __start(void);
- void __attribute__((weak, noreturn)) __nolibc_entrypoint __no_stack_protector __start(void)
- {
- 	__asm__ volatile (
- 		"move  $a0, $sp\n"       /* save stack pointer to $a0, as arg1 of _start_c */
-+#if defined(_ABIO32)
- 		"addiu $sp, $sp, -16\n"  /* the callee expects to save a0..a3 there        */
-+#endif /* _ABIO32 */
- 		"lui $t9, %hi(_start_c)\n" /* ABI requires current function address in $t9 */
- 		"ori $t9, %lo(_start_c)\n"
-+#if defined(_ABI64)
-+		"lui  $t0, %highest(_start_c)\n"
-+		"ori  $t0, %higher(_start_c)\n"
-+		"dsll $t0, 0x20\n"
-+		"or   $t9, $t0\n"
-+#endif /* _ABI64 */
- 		"jalr $t9\n"             /* transfer to c runtime                          */
- 	);
- 	__nolibc_entrypoint_epilogue();
-diff --git a/tools/testing/selftests/nolibc/Makefile.nolibc b/tools/testing/selftests/nolibc/Makefile.nolibc
-index 6d62f350d0c16405785a8aabc7f5741b82e55370..9b56191b10b3c2a12da8ae22a41d57167b63707e 100644
---- a/tools/testing/selftests/nolibc/Makefile.nolibc
-+++ b/tools/testing/selftests/nolibc/Makefile.nolibc
-@@ -53,6 +53,10 @@ ARCH_ppc64       = powerpc
- ARCH_ppc64le     = powerpc
- ARCH_mips32le    = mips
- ARCH_mips32be    = mips
-+ARCH_mipsn32le   = mips
-+ARCH_mipsn32be   = mips
-+ARCH_mips64le    = mips
-+ARCH_mips64be    = mips
- ARCH_riscv32     = riscv
- ARCH_riscv64     = riscv
- ARCH_s390x       = s390
-@@ -69,6 +73,10 @@ IMAGE_arm        = arch/arm/boot/zImage
- IMAGE_armthumb   = arch/arm/boot/zImage
- IMAGE_mips32le   = vmlinuz
- IMAGE_mips32be   = vmlinuz
-+IMAGE_mipsn32le  = vmlinuz
-+IMAGE_mipsn32be  = vmlinuz
-+IMAGE_mips64le   = vmlinuz
-+IMAGE_mips64be   = vmlinuz
- IMAGE_ppc        = vmlinux
- IMAGE_ppc64      = vmlinux
- IMAGE_ppc64le    = arch/powerpc/boot/zImage
-@@ -93,6 +101,10 @@ DEFCONFIG_arm        = multi_v7_defconfig
- DEFCONFIG_armthumb   = multi_v7_defconfig
- DEFCONFIG_mips32le   = malta_defconfig
- DEFCONFIG_mips32be   = malta_defconfig generic/eb.config
-+DEFCONFIG_mipsn32le  = malta_defconfig generic/64r2.config
-+DEFCONFIG_mipsn32be  = malta_defconfig generic/64r6.config generic/eb.config
-+DEFCONFIG_mips64le   = malta_defconfig generic/64r6.config
-+DEFCONFIG_mips64be   = malta_defconfig generic/64r2.config generic/eb.config
- DEFCONFIG_ppc        = pmac32_defconfig
- DEFCONFIG_ppc64      = powernv_be_defconfig
- DEFCONFIG_ppc64le    = powernv_defconfig
-@@ -124,6 +136,10 @@ QEMU_ARCH_arm        = arm
- QEMU_ARCH_armthumb   = arm
- QEMU_ARCH_mips32le   = mipsel  # works with malta_defconfig
- QEMU_ARCH_mips32be  = mips
-+QEMU_ARCH_mipsn32le  = mips64el
-+QEMU_ARCH_mipsn32be  = mips64
-+QEMU_ARCH_mips64le   = mips64el
-+QEMU_ARCH_mips64be   = mips64
- QEMU_ARCH_ppc        = ppc
- QEMU_ARCH_ppc64      = ppc64
- QEMU_ARCH_ppc64le    = ppc64
-@@ -139,6 +155,8 @@ QEMU_ARCH_m68k       = m68k
- QEMU_ARCH            = $(QEMU_ARCH_$(XARCH))
- 
- QEMU_ARCH_USER_ppc64le = ppc64le
-+QEMU_ARCH_USER_mipsn32le = mipsn32el
-+QEMU_ARCH_USER_mipsn32be = mipsn32
- QEMU_ARCH_USER         = $(or $(QEMU_ARCH_USER_$(XARCH)),$(QEMU_ARCH_$(XARCH)))
- 
- QEMU_BIOS_DIR = /usr/share/edk2/
-@@ -157,6 +175,10 @@ QEMU_ARGS_arm        = -M virt -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
- QEMU_ARGS_armthumb   = -M virt -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
- QEMU_ARGS_mips32le   = -M malta -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
- QEMU_ARGS_mips32be   = -M malta -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_mipsn32le  = -M malta -cpu 5KEc -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_mipsn32be  = -M malta -cpu I6400 -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_mips64le   = -M malta -cpu I6400 -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_mips64be   = -M malta -cpu 5KEc -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
- QEMU_ARGS_ppc        = -M g3beige -append "console=ttyS0 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
- QEMU_ARGS_ppc64      = -M powernv -append "console=hvc0 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
- QEMU_ARGS_ppc64le    = -M powernv -append "console=hvc0 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-@@ -191,6 +213,10 @@ CFLAGS_s390x = -m64
- CFLAGS_s390 = -m31
- CFLAGS_mips32le = -EL -mabi=32 -fPIC
- CFLAGS_mips32be = -EB -mabi=32
-+CFLAGS_mipsn32le = -EL -mabi=n32 -fPIC -march=mips64r2
-+CFLAGS_mipsn32be = -EB -mabi=n32 -march=mips64r6
-+CFLAGS_mips64le = -EL -mabi=64 -march=mips64r6
-+CFLAGS_mips64be = -EB -mabi=64 -march=mips64r2
- CFLAGS_sparc32 = $(call cc-option,-m32)
- ifeq ($(origin XARCH),command line)
- CFLAGS_XARCH = $(CFLAGS_$(XARCH))
-diff --git a/tools/testing/selftests/nolibc/run-tests.sh b/tools/testing/selftests/nolibc/run-tests.sh
-index 53d843731c3e0d80dac0764d58b63c43a105021f..97fa9b7c7232dc1e3fb79a7cf8ecdb0934cb38be 100755
---- a/tools/testing/selftests/nolibc/run-tests.sh
-+++ b/tools/testing/selftests/nolibc/run-tests.sh
-@@ -20,7 +20,7 @@ llvm=
- all_archs=(
- 	i386 x86_64
- 	arm64 arm armthumb
--	mips32le mips32be
-+	mips32le mips32be mipsn32le mipsn32be mips64le mips64be
- 	ppc ppc64 ppc64le
- 	riscv32 riscv64
- 	s390x s390
+On Wed, May 07, 2025 at 06:00:24PM -0700, Amit Sunil Dhamne via B4 Relay wr=
+ote:
+> From: Amit Sunil Dhamne <amitsd@google.com>
+>=20
+> Add support for responding to Get_Battery_Status (extended) request with
+> a Battery_Status (data) msg. The requester shall request the status of
+> an individual battery by providing an index in Get_Battery_Status. In
+> case of failure to identify battery, the responder shall reply with an
+> appropriate message indicating so.
+>=20
+> Battery status support is only provided for fixed batteries indexed from
+> 0 - 3.
+>=20
+> Support for Battery_Status message is required for sinks that contain
+> battery as specified in USB PD Rev3.1 v1.8
+> ("Applicability of Data Messages" section).
+>=20
+> Signed-off-by: Amit Sunil Dhamne <amitsd@google.com>
+> Reviewed-by: Badhri Jagan Sridharan <badhri@google.com>
+> Reviewed-by: Kyle Tso <kyletso@google.com>
+> ---
 
--- 
-2.50.0
+(partial review)
 
+> +static int tcpm_pd_send_batt_status(struct tcpm_port *port)
+> +{
+> +	struct pd_message msg;
+> +	struct power_supply *batt;
+> +	u32 bsdo;
+> +	u32 batt_id =3D port->batt_request;
+> +	union power_supply_propval val;
+> +	int ret;
+> +	bool batt_present =3D false;
+> +	u8 charging_status =3D BSDO_BATTERY_INFO_RSVD;
+> +	u16 present_charge =3D BATTERY_PROPERTY_UNKNOWN;
+> +
+> +	memset(&msg, 0, sizeof(msg));
+> +	if (batt_id < MAX_NUM_FIXED_BATT && port->fixed_batt[batt_id]) {
+> +		batt_present =3D true;
+
+power_supply_get_property(batt, POWER_SUPPLY_PROP_PRESENT, &batt_present);
+
+> ...
+
+Greetings,
+
+-- Sebastian
+
+--s27v4sw3pnebflzu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhZxs4ACgkQ2O7X88g7
++prX8w//eXySjzU8zhY0Cdhr5c9eK9R0aV6ZD93z73P6hZpIJ7St7LBheCKjROBn
+aFZKJAWzSmDRv60tlLIskVE7NQCtTVZ6V31mBhDh7B46WhFRMrIjfdKs4Y1GrbXq
+opP91qZj0y5xddpr2oZUOOOFs8pvurJHrKKWz0m82PRTdh3pAJnZVBcHakYqUdQv
+zCplY3iJcyseZytMqWa6GnZks1TMwHAhwcH4KaqpMsPgZ88sNuljWl84nARCZM+K
+9lBqOylCnHI8MwQ4IYKjyrKIaIXXI+GY9EuLeK08LVDPDH+OiA1JK0BvSAoW6P3l
++/I9Kkr9cZWMv4huBz61T+QDlhbWvGikkGvIhJ6wSYrROmiMBhg9X0OQKrwNXOIR
+FdJiEmLy91OTI24CHFXSoffcD08oXoeS/1fVEFr1RF2AITKaRZylTAmHd5qMuF/9
+zaeTjc1ytT2t9ktHKQ8Ju3Z1B+X+xtMjm407eceS1OyFKhbdBvlAQnw63Ms18W2T
+eRGkT7TGpbEepdu8saDFr7E4TSAWHKdJr9+8sGKswcNBRDSUsnSHk7IvQShlbqcN
+bwfLwmuZVnPx0xfYyNgXeWlZdl0SW12xSGxvwIuEBp2+aPD3IscwLeAtq1tCBcLQ
+Is6j4ojjiExdqvzHI3a1fP+3bOidcrnlAu7Vn/69/LcGW5pq6Nw=
+=qeSd
+-----END PGP SIGNATURE-----
+
+--s27v4sw3pnebflzu--
