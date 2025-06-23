@@ -1,100 +1,154 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C061CD0C
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 04:22:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750652564; cv=none; b=VfJMn2CmijpcUy3pR7o+/ziJny6way4jB21ctIUFcKAVEl/B/hw7un3boeFfWhK1zrx8OBfRcT0y2yTsFfYLO7/BxvMslq/382QbGMzuoc8kybe+XN4TXP2yELdrVC65A5GYldtlO4zVgkgszhKoADxfxwOFDA1ddZBvYIRlHmI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750652564; c=relaxed/simple;
-	bh=5st921uDKTkKgU9TnR9YHhTWnF9x4IKBuHUsPF/rAnw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LSx+QDTyQ3lDAFHIN4p+BtjzSTOwu3Bjo+wfbfschxwU+9D2k2IpuVK7U3oCHD4SSqkhfAQp7n2pmc6InvUiBPob2mq86QiLa1954M0TGLu/zF964ScUrJtm4L9nSiHHXvwWryOnzPIDzlr1cd7XPSOgNjqgGxgdadObIGekFFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RNIz7TiT; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A352FB2;
+	Mon, 23 Jun 2025 04:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750652576; cv=pass; b=dObK/bZBLamREc6QsZ/xYt60OYHdb0cSg9mS01O3G9XbYHDNxWRipIhbPZ+n47G79bsBHsJCqjZnn2U+do3NkI3lDG8kxAC5IL2Gq8xDgs6X1zVNr3//zOol5f3TIOHklslqYQWikgnLd2z0AqKDN56K2g+wZkvEfONBK170tO8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750652576; c=relaxed/simple;
+	bh=q9h1Zu5Ol6SLyA6ymFUAZPl1yFWJTcGqAKQmxynmf3U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jkARu++Z91KrGREJIQIfQGMgcURzJ6aM3c7O2n3pShwjiamEOnXQaWJcpJcckTW8AvP2iNdELBcl5YwRsvywuwglRHxlvAUjjtTWABJxeihXbB/uoVEzvzlZneTR2I+uf+jdm8HBVBK8DLz0KmOuuf/HOP77UhtGz8vAMqTuxX4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=j76InUmz; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RNIz7TiT"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7424ccbef4eso2762873b3a.2
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 21:22:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750652562; x=1751257362; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5le86o5MqelUxj2e52/BUzqyGfWPs3z+KMJ1+yNcPzE=;
-        b=RNIz7TiTIAXBb2+QIkWrigkzTdXFQwbQUtb553PGcs75/uylo91RYCbTX2F+NzkbjI
-         KwPKJ0u0HOB/JAfsNwq6O3Zi0E+f4onqRi5IBCEe4z+AOzCg/JYs5QE4DLDPGnVF0xGe
-         TCOWdwtnlfCmN9lnuwjtWc7gPIfZyTW3pIlp/82VALG1ImZK7ixKWzKqy/RdAMWQZkfb
-         cqEyKZPGkbITuTCDHulW2iUD+yD6ifhqwIk50bsz8nggK48IAg6O0JJVP2XZA619z22f
-         OvOwrSnLHU2OlYS3XVAKADami5u55iUC7K1S2S/t0KXE1E6qMVELi3YCKqs5mRzNrY41
-         8Xkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750652562; x=1751257362;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5le86o5MqelUxj2e52/BUzqyGfWPs3z+KMJ1+yNcPzE=;
-        b=tRe01PzvdM4/GRlITD3xd5QdjhwRSLie3CO/BV+L2gffM4s7nDZ/bonDYxwnFtLier
-         9x4JaGZFXZmv75alHtn2ujY7ZD/207c9iOBM+3+ta6QK8dUaXn7RPUC5FQgm5ZGj4pxn
-         GSizd3AxHPRjs8m1JEgvdIjP/vA51K3oBIM0bL62iR9DR6NdcVodCQOuuqgStd0vMXfI
-         4WnLjcr0msYMTbNZp0iy7SsXj8Bd2+i611LVVormXVfbZHZTgUcR80dvWHw3ebgG2JJb
-         nFaUxUrjaHu6ajC51qV6dctm7ZnG2UyXlAyyW/7T1jXnIiaNvc70KywD+7NlgcbUgzK7
-         MGBw==
-X-Forwarded-Encrypted: i=1; AJvYcCUyglqWF9f1nxss8FKclAdXa1dDqrGu8LUYv7L2UlK1/Z2vPVx7+OJC7sf2JJiOouufNj8U60F6QZMucPQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLjhL8uWj8PBfC4TBVOZtTdhEKiPt22HhSPUtOPx4P41RJ3Poj
-	DFfdH5FMvI2hC1idLIRoC12hlsjA31e4KXDRI2jO7P+t8nIb7Z+OOkgk4NtblNkgb5g=
-X-Gm-Gg: ASbGncv9ncFEyYOTnbo1+TmGDPxik6Ms7e0bPHkpAfbJnFavUxxIKF8JBiRJIGI72qG
-	2qNCDyZsQz3Li3NpH1cPKNk5K6njqQAWSdFI72bKJA2BFOOR45I7+vpScltD4Ay2gRGKWzrGD3x
-	z3B6/NODQy5TPmvKufHV2zU+vDNqQN7ZMcvO40/CCDFaRvvgz94VWTPPTD4DHnZJLXRGJWj3XN6
-	4nYHCEaDEKibHYre/+PTIgUaWeHQsEOIBni76ffSbnl28pgbRr61Vb7CtD8nc2KqUEfMKwDDLKa
-	hUsKxe+Jhg/Gku0vGNKcHdWZ5zTq6AXE1nvZJVcLVD8SD9i1TnPnZRIr8vvD//HlBi+DMLf48w=
-	=
-X-Google-Smtp-Source: AGHT+IE5TuInEJuZ3oFFcgdcOzCV6/0HecXdCRlo90x7islTcM4Alv43ENFRCRPNZUw0wjGIr3K+EQ==
-X-Received: by 2002:a05:6a20:729d:b0:21d:375a:ee33 with SMTP id adf61e73a8af0-22026e8226amr18176424637.9.1750652562097;
-        Sun, 22 Jun 2025 21:22:42 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a6743basm7412269b3a.142.2025.06.22.21.22.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 21:22:41 -0700 (PDT)
-Date: Mon, 23 Jun 2025 09:52:39 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Abhinav Ananthu <abhinav.ogl@gmail.com>
-Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
-	aliceryhl@google.com, tmgross@umich.edu, dakr@kernel.org,
-	linux-pm@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rust: opp: use c_* types via kernel prelude
-Message-ID: <20250623042239.4sea6d6lmamfrc4w@vireshk-i7>
-References: <20250620095920.20765-1-abhinav.ogl@gmail.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="j76InUmz"
+ARC-Seal: i=1; a=rsa-sha256; t=1750652551; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=nio7iI08OincqbdaECjbl4hhoPYw1puSM4LVgnWL3YjVLqMQsxlpWPCqZPCNB2SuPMcuAWW1Uo1U/N7YYY5DcyiHFs8u6FU+NeHW2wB2+j1V6S55dBK43p+qruN3+wJtUURrzmtMY4YPxwPSbwd5NnsvAf9WY54l7grq6wCFBVQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750652551; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=nyr1QBpT/cq5OQ5ZrMG6Eq7xXww1oQmtMkfRYQ9Gas0=; 
+	b=NtLZFYiMhys/O+FpcRo5/6NhfavtIrciLLp0sweORxtTnSUUjHO3PvIFJnhwtrizbJSS62IsJBZ9DO4CXJyr9ajx3xzod9iHyFwmiLDCV9oS3wBls78/QYARXbAyzXdDCGHhQb3D0jwi+VSpbmTN3Y/7CbZb4WDCzRNliTt9dzI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750652551;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=nyr1QBpT/cq5OQ5ZrMG6Eq7xXww1oQmtMkfRYQ9Gas0=;
+	b=j76InUmzHm1Tz5epcAcio4sMr9YDaSTaetUpzaXuVWsVNmN0SzizeWvJ9Pa8oURo
+	KCIsdpiuAsDnXaZypj9ordlq9r9IA7EcV1DutqLhPat7xgdbbJunc1mvI6LJmb2HsfO
+	iKwK1vg7dAJFO+RzHWEm16RzKRtrQpFZ0adQfXB0=
+Received: by mx.zohomail.com with SMTPS id 1750652549950418.8510153490747;
+	Sun, 22 Jun 2025 21:22:29 -0700 (PDT)
+Message-ID: <f9b2deab-bdc4-4fd4-be1b-cb6617060086@collabora.com>
+Date: Mon, 23 Jun 2025 09:22:31 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620095920.20765-1-abhinav.ogl@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] selftests/filesystems/mount-notify: fix unused unused
+ result warning
+To: Chen Linxuan <chenlinxuan@uniontech.com>
+Cc: Shuah Khan <shuah@kernel.org>, Christian Brauner <brauner@kernel.org>,
+ Amir Goldstein <amir73il@gmail.com>, John Hubbard <jhubbard@nvidia.com>,
+ Miklos Szeredi <mszeredi@redhat.com>, Jan Kara <jack@suse.cz>,
+ zhanjun@uniontech.com, niecheng1@uniontech.com,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250620035125.2938774-2-chenlinxuan@uniontech.com>
+ <213adda0-1db2-46e7-9342-cc97fbd58d96@collabora.com>
+ <CAC1kPDMUUc3c7Ofyr7vXiW_Yt-kwrAOHK=9kQd5uCm2vv4h1gA@mail.gmail.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <CAC1kPDMUUc3c7Ofyr7vXiW_Yt-kwrAOHK=9kQd5uCm2vv4h1gA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On 20-06-25, 15:29, Abhinav Ananthu wrote:
-> Update OPP FFI callback signatures to use `c_int` from the `kernel::prelude`,
-> instead of accessing it via `kernel::ffi::c_int`.
+On 6/20/25 7:55 PM, Chen Linxuan wrote:
+> On Fri, Jun 20, 2025 at 10:46 PM Muhammad Usama Anjum
+> <usama.anjum@collabora.com> wrote:
+>>
+>> On 6/20/25 8:50 AM, Chen Linxuan wrote:
+>>> When running `make kselftest`, the following compilation warning was encountered:
+>>>
+>>> mount-notify_test.c: In function ‘fanotify_rmdir’:
+>>> mount-notify_test.c:490:17: warning: ignoring return value of ‘chdir’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+>>>   490 |                 chdir("/");
+>>>       |                 ^~~~~~~~~~
+>>>
+>>> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+>>> ---
+>>> Changes in v2:
+>>> - Apply changes suggested by Shuah Khan
+>>> - Link to v1: https://lore.kernel.org/all/20250610020758.2798787-2-chenlinxuan@uniontech.com/
+>>> ---
+>>>  .../filesystems/mount-notify/mount-notify_test.c  | 15 ++++++++++-----
+>>>  .../mount-notify/mount-notify_test_ns.c           | 15 ++++++++++-----
+>>>  2 files changed, 20 insertions(+), 10 deletions(-)
+>>>
+>>> diff --git a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
+>>> index 5a3b0ace1a88c..f8e0c6b06e2d9 100644
+>>> --- a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
+>>> +++ b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
+>>> @@ -458,12 +458,17 @@ TEST_F(fanotify, rmdir)
+>>>       ASSERT_GE(ret, 0);
+>>>
+>>>       if (ret == 0) {
+>>> -             chdir("/");
+>>> -             unshare(CLONE_NEWNS);
+>>> -             mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL);
+>>> -             umount2("/a", MNT_DETACH);
+>>> +             if (chdir("/"))
+>> Please use the APIs provided by the kselftest_harness.h instead of checking
+>> return types manually. For example:
+>> use ASSERT_EQ(chdir("/", 0)).
 > 
-> Although these types are defined in a crate named `ffi`, they are re-exported
-> via the `kernel::prelude` and should be used from there. This aligns with the
-> Rust-for-Linux coding guidelines and ensures ABI correctness when interfacing
-> with C code.
+> Are you sure？We're in a forked sub process here.
+ASSERT_* are macros. They can be used anywhere. Please give it a try.
+
 > 
-> Signed-off-by: Abhinav Ananthu <abhinav.ogl@gmail.com>
-> Suggested-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  rust/kernel/opp.rs | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>>> +                     exit(-1);
+>>> +             if (unshare(CLONE_NEWNS))
+>>> +                     exit(-1);
+>>> +             if (mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL))
+>>> +                     exit(-1);
+>>> +             if (umount2("/a", MNT_DETACH))
+>>> +                     exit(-1);
+>>>               // This triggers a detach in the other namespace
+>>> -             rmdir("/a");
+>>> +             if (rmdir("/a"))
+>>> +                     exit(-1);
+>>>               exit(0);
+>>>       }
+>>>       wait(NULL);
+>>> diff --git a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test_ns.c b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test_ns.c
+>>> index d91946e69591a..d6a6a7ee87028 100644
+>>> --- a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test_ns.c
+>>> +++ b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test_ns.c
+>>> @@ -486,12 +486,17 @@ TEST_F(fanotify, rmdir)
+>>>       ASSERT_GE(ret, 0);
+>>>
+>>>       if (ret == 0) {
+>>> -             chdir("/");
+>>> -             unshare(CLONE_NEWNS);
+>>> -             mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL);
+>>> -             umount2("/a", MNT_DETACH);
+>>> +             if (chdir("/"))
+>>> +                     exit(-1);
+>>> +             if (unshare(CLONE_NEWNS))
+>>> +                     exit(-1);
+>>> +             if (mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL))
+>>> +                     exit(-1);
+>>> +             if (umount2("/a", MNT_DETACH))
+>>> +                     exit(-1);
+>>>               // This triggers a detach in the other namespace
+>>> -             rmdir("/a");
+>>> +             if (rmdir("/a"))
+>>> +                     exit(-1);
+>>>               exit(0);
+>>>       }
+>>>       wait(NULL);
+>>
+>>
+>>
 
-Applied. Thanks.
-
--- 
-viresh
