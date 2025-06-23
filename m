@@ -1,172 +1,102 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5EE188CC9
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2D8221F1E
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750679886; cv=none; b=U0D6nFonSFB7nlMPeQl3P6u67fwvWbncl/hjHqYUoqmP7iPVqP9MZwuaMYZMDs8rzQrSXCLHR7vrdqd1NjHxHFpggQRgdNAq8kT9DWe1+QHQEdk9WRPC/i0Ab/IQo+cQKRCOR0qAp5rgLAt7ROuvyf6G1CnwuUJVAt2Fl5aA528=
+	t=1750679961; cv=none; b=h1LMrISk8BHWJJw3VUyC+oJ17rZVOXGCPwJ3BoLwD6EL4+5X9k/dS/CCj5Yvyqt+stF0T8PbT31WXq1gH2KxoG91wr3wpiSGnZ8ZZuGwG0QwgouWtJ9KU5Q99AwPV3qmod80pMOTFsJXebmjiyRuEtwbVhg7DBw1hfVcKBcMpYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750679886; c=relaxed/simple;
-	bh=72cjFCmD24Kj+63QGAd5ORmDyPkNVI1vAaJn25guyyw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Jb7vRJ7aturQsRLQQ3mXEEzg0AP7F73ATcS+z2cXhkRRuTH8lQwdov+a3S/MYM5qG3zXManZ/3fmXbEfYFjmZy8Yb919ItRDGefeHv/xGmrrytNwMSY1/8Cq8NvqPMpowpgGpeKqBiVlLJzjR1Q6cStfyFjgbF6Csy3piC5ua54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TGigCntQ; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1750679961; c=relaxed/simple;
+	bh=OVtZWEvqTrxWs+fFB85Jr4OAZ+vncZldhZNNzJnUtQE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ejm2AletqeEMAKTs9KhPz+42ys1PVPQHQ+AA0whNns/rzSH/66VFiGIaod5ifzZRUMvAEjiwBT4fS+fVsiDTxL/pv41iJ/KuPU3WwNTJw5DQFljLlu8eXlCjosLxiCIOnGVD+5QscVLgtKfBEq9EKB/clC3ke1/PNJyNGJQIpIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NAnzVDiN; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TGigCntQ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 46DCC432A2;
-	Mon, 23 Jun 2025 11:57:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750679876;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tOC6uwvwIRMsvFgMBBtmc0lgl6NuOHr5njzJISpueqU=;
-	b=TGigCntQHvsp4QAUs2e4HAVvalTFA5cWrtZ2F+OeuDcuX1MnJqEVtjMjvm1AYjkCpUj5aK
-	78voDLzgNwD+ZqrcXZI5HJqNlb6RY9uhFRprJjLaG6LMB7LKF9D65cGn2It4UlZ6sQdH/G
-	BbTfCD1vlic8thR5pGju1VNHhyR5HP8xc9j5zlforuKLF4X4GxBXRp4VKcSJF8jRjbJZ2K
-	X32npA0F0IB6NcKCY8qohfimOG/7CUQBkrPiIDhBD8AcJc0yTnkSXjfUMQ7jqPVSorLcfq
-	Bf386bv26vhTCY3yXf3PymkJ6FQZNyngbbt4zN/YNjhD0pYW8Jpn2XSdho5Cgg==
-Date: Mon, 23 Jun 2025 13:57:51 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Anusha Srivatsa
- <asrivats@redhat.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, Hui Pu <Hui.Pu@gehealthcare.com>, Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v9 3/3] drm/bridge: add warning for bridges not using
- devm_drm_bridge_alloc()
-Message-ID: <20250623135751.683f65c2@booty>
-In-Reply-To: <a506cff0-6a0f-44b2-93e5-0488aa041fa2@oss.qualcomm.com>
-References: <20250620-drm-bridge-alloc-getput-drm-bridge-c-v9-0-ca53372c9a84@bootlin.com>
-	<20250620-drm-bridge-alloc-getput-drm-bridge-c-v9-3-ca53372c9a84@bootlin.com>
-	<a506cff0-6a0f-44b2-93e5-0488aa041fa2@oss.qualcomm.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAnzVDiN"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-747fc7506d4so3067020b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 04:59:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750679960; x=1751284760; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2gFDaetMHey6dIvIJRhaxCKOYO3Bx8c45WBFbsYOF0E=;
+        b=NAnzVDiNxx3FqL7br40O89s9hqzuYkDQ8ke/0sHrBpNcofYiyhM2c2fOuqx9P97sSP
+         VyBfbYDQuuL1Vo8HAbWUBBye/CaP3L9jD/MuXFY58LXEK5fa9FgFw4LpSNRbR72C12Q4
+         fP+hMKhzEaQLeIZH4dSpySCEaPizxQ2eSPkW03M6o1FdJ2AVwXgD9Q93bzW9CWkZcaaD
+         +95hCDPoTVBh+BnnmBZxGkFvJiPiO7aT6jI1wJLx2i3z4AxOAneUBy3n/V2LTPJkE8hf
+         BF0IeXwRbckrrac3WiO37fD++qpCmrxVAy9URor5QWROmy+lNaGk2hxfyeTNQkQW/RwX
+         WFSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750679960; x=1751284760;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2gFDaetMHey6dIvIJRhaxCKOYO3Bx8c45WBFbsYOF0E=;
+        b=B+LaQrqHXkfAegE1HHbVW7PkwM6VErMAqtUY6b0wW5lDKxfCxkbAmhry5j1FmWh/Kf
+         XEtytnGyTe7n347WKSSnGt+PM/gKJiU8RUKjKpStjqGPEctI2OEiRV1Tn86J5sbeJ8h/
+         e8vlChvX6tID3fcVQuOgc6TxZGCRVzdvmVnam6hSRiqAt0x8JToVjZdcIXg3+zdXisrw
+         9hMyaztCYoQzl3V+EWSj4tWd6M40AyBIHEQ//q+/g1Gh3eKw6aGPtX+zxtmy3WLmlyJX
+         wO/0ttOFD7YtyWzZpqc2IiNaGisOhvEWtv5Zj4Y3eKmaxS2lgUpE7tporel3zt68piXP
+         zeNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVm3qiQI0jojQKPCYZM1c41WlQdU2u1LWlwNipGaNVOn4/Ghk52zc5RxxfkZYn+ya2YpNuaIhwrVzxo4/k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUnYsAmKrYD3aDMgqEexG/HquF8Qfn9TPuYcSFHMvoUHR3G9tr
+	ONZtENlKQwV+uFS1kbRnkPY69Ktj99e2W8mD/RztEmMUOVTkEMEqz4wA
+X-Gm-Gg: ASbGncuTJ0caPYNixuzqFUu5/3Sgb4XFdNn2d7bRYxCqyPHopn3uzllNVyi63cS8vBa
+	F6ayAegCY/BYQqGlE58RXiOkMXVLnuUKIz8GBk9iBPcOoHWEpCzsrq5G4nwLEjrlG/7uHuqOQPg
+	Rzc93FWjrqGxX+x5cdjthE2v04Aco4rw97HIvsIjK7AsL1JN3QNDdfjx9hCzsQa8TTqTlqeOlfh
+	3qyqQXAVaIwYN+TMGz/WD/U4wOZbyNjU55MIrgj1pgYT5CxgyKpRUWg7YY8nzzbdodcjKyqxIoX
+	Hli6dDogc/MHotpULYgPgQBlp1fef+pb/IDxmbqZTyB0hUI9mbK3JZkZHkAUg+Z+Ohh/MPlB/Rl
+	aCowi/g==
+X-Google-Smtp-Source: AGHT+IGENzbwd+w5kSORrib4SFE4rljagkxk+oYR70cHi8N8EhVYkvNfh9DewpM7VwsdB7llU3bPcQ==
+X-Received: by 2002:a05:6a20:748b:b0:1f5:95a7:8159 with SMTP id adf61e73a8af0-22026e92b60mr18266313637.10.1750679959732;
+        Mon, 23 Jun 2025 04:59:19 -0700 (PDT)
+Received: from localhost ([202.43.239.100])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a491576sm8196104b3a.40.2025.06.23.04.59.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 23 Jun 2025 04:59:19 -0700 (PDT)
+From: Jiazi Li <jqqlijiazi@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Jiazi Li <jqqlijiazi@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	"peixuan.qiu" <peixuan.qiu@transsion.com>
+Subject: [PATCH] stacktrace: do not trace user stack for user_worker tasks
+Date: Mon, 23 Jun 2025 19:59:11 +0800
+Message-ID: <20250623115914.12076-1-jqqlijiazi@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdduieeliecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejtefftdelheeghfffffdukefhudejuedvfefhteelfeetgfffkeejteejtddvveenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedujedprhgtphhtthhopegumhhithhrhidrsggrrhihshhhkhhovhesohhsshdrqhhurghltghomhhmrdgtohhmpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrt
- ghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnfgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehjohhnrghssehkfihisghoohdrshgvpdhrtghpthhtohepjhgvrhhnvghjrdhskhhrrggsvggtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Hello Dmitry,
+Tasks with PF_USER_WORKER flag also only run in kernel space,
+so do not trace user stack for these tasks.
 
-thanks for reviewing!
+Signed-off-by: Jiazi Li <jqqlijiazi@gmail.com>
+Signed-off-by: peixuan.qiu <peixuan.qiu@transsion.com>
+---
+ kernel/stacktrace.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Mon, 23 Jun 2025 14:06:43 +0300
-Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> wrote:
-
-> On 20/06/2025 18:59, Luca Ceresoli wrote:
-> > To the best of my knowledge, all drivers in the mainline kernel adding a
-> > DRM bridge are now converted to using devm_drm_bridge_alloc() for
-> > allocation and initialization. Among others this ensures initialization of
-> > the bridge refcount, allowing dynamic allocation lifetime.
-> > 
-> > devm_drm_bridge_alloc() is now mandatory for all new bridges. Code using
-> > the old pattern ([devm_]kzalloc + filling the struct fields +
-> > drm_bridge_add) is not allowed anymore.
-> > 
-> > Any drivers that might have been missed during the conversion, patches in
-> > flight towards mainline and out-of-tre drivers still using the old pattern
-> > will already be caught by a warning looking like:
-> > 
-> >    ------------[ cut here ]------------
-> >    refcount_t: addition on 0; use-after-free.
-> >    WARNING: CPU: 2 PID: 83 at lib/refcount.c:25 refcount_warn_saturate+0x120/0x148
-> >    [...]
-> >    Call trace:
-> >     refcount_warn_saturate+0x120/0x148 (P)
-> >     drm_bridge_get.part.0+0x70/0x98 [drm]
-> >     drm_bridge_add+0x34/0x108 [drm]
-> >     sn65dsi83_probe+0x200/0x480 [ti_sn65dsi83]
-> >     [...]
-> > 
-> > This warning comes from the refcount code and happens because
-> > drm_bridge_add() is increasing the refcount, which is uninitialized and
-> > thus initially zero.
-> > 
-> > Having a warning and the corresponding stack trace is surely useful, but
-> > the warning text does not clarify the root problem nor how to fix it.
-> > 
-> > Add a DRM_WARN() just before increasing the refcount, so the log will be
-> > much more readable:
-> > 
-> >    [drm] DRM bridge corrupted or not allocated by devm_drm_bridge_alloc()
-> >    ------------[ cut here ]------------
-> >    refcount_t: addition on 0; use-after-free.
-> >    [...etc...]
-> > 
-> > A DRM_WARN is used because drm_warn and drm_WARN require a struct
-> > drm_device pointer which is not yet available when adding a bridge.
-> > 
-> > Do not print the dev_name() in the warning because struct drm_bridge has no
-> > pointer to the struct device. The affected driver should be easy to catch
-> > based on the following stack trace however.
-> > 
-> > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> > 
-> > ---
-> > 
-> > Changes in v9:
-> > - change warning trigger from "refcount != 1" to "container not NULL"
-> > 
-> > This patch was added in v8
-> > ---
-> >   drivers/gpu/drm/drm_bridge.c | 3 +++
-> >   1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> > index f001bbe95559aabf0aac9f25f89250ad4e1ad9c8..0b450b334afd82e0460f18fdd248f79d0a2b153d 100644
-> > --- a/drivers/gpu/drm/drm_bridge.c
-> > +++ b/drivers/gpu/drm/drm_bridge.c
-> > @@ -295,6 +295,9 @@ EXPORT_SYMBOL(__devm_drm_bridge_alloc);
-> >    */
-> >   void drm_bridge_add(struct drm_bridge *bridge)  
-> 
-> Can we rename this function, making sure that noone can call it 
-> directly? E.g. adding two underscores might point out that is is an 
-> internal API.
-
-I'm afraid I don't think this would be correct. Every bridge driver is
-expected to call drm_bridge_add() at the end of probe/initialization,
-to make the DRM subsystem aware that this bridge is ready for being
-used.
-
-The point of this patch, which is a completion to [1], is to ensure
-that all drivers use the "new" process:
-
- 1. bridge = devm_drm_bridge_alloc()
- 2. drm_bridge_add(bridge)
-
-and there are no users of the old process:
-
- 1. bridge = [devm_]kzalloc()
- 2. drm_bridge_add(bridge)
-
-Does this addresses your concern?
-
-[1] https://cgit.freedesktop.org/drm/drm-misc/commit/?id=b3f13e00a8de351832df7d628a15ca4db49ca94f
-
-Luca
-
+diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+index afb3c116da91..82fbccdd1a24 100644
+--- a/kernel/stacktrace.c
++++ b/kernel/stacktrace.c
+@@ -228,8 +228,8 @@ unsigned int stack_trace_save_user(unsigned long *store, unsigned int size)
+ 		.size	= size,
+ 	};
+ 
+-	/* Trace user stack if not a kernel thread */
+-	if (current->flags & PF_KTHREAD)
++	/* Skip tasks that do not return to userspace */
++	if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
+ 		return 0;
+ 
+ 	arch_stack_walk_user(consume_entry, &c, task_pt_regs(current));
 -- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.49.0
+
