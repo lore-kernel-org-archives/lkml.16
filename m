@@ -1,166 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549C6E555;
-	Mon, 23 Jun 2025 01:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDA61DFE8
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750642695; cv=none; b=ZQn0Nf9uhWWB1WAHJ1PLZcCoTrDkFXooYoRmXrw8vDVyMXCLEYDIBQhuUkobLyRp2wTLhAaFUWlRStAouTKtd/1u1xxSfqQl/gHSenoBNdONPeyg2hr2svPh7/nIVjcDl9x+gjcM+hXwCzNQMf6ZkBX5o0ZbY8XA3Mv4T4pnTeU=
+	t=1750642755; cv=none; b=LaYrUJhwZZacTZn4J9VJEd+8TOGnoIe5v3W4uHkWIQD58OUuLIhQUa3hsrVuJKuSKJIaKpWWdgzeakOn0dh/hUrJg0lIEsSHkrUZ5qzFfx5wkWsMAbNowqlRwy3DztOz2PWJB4tFhLZrEYhxhHHEIfcqajxWubPyBGaS3CxoCKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750642695; c=relaxed/simple;
-	bh=HfqyG3kXHnCcLbS8cbdxIXtXdT7Qjgp9E12+G2/XvYM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q2tXaWI68/G7wRBcBiQVd+JQPkZEE4UOt3c/1QIfGh+CTIUCMWT3pd+qlGNp04/30kBGDa86RQ7575hvznGedYsxeqkCbmL5Jbiks9viMbKRPVB+7uCeVe4t6qY4SF145pKhX1Ojq99eym8AF2eSpzqYnumlUUdM2OifvC+BqZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I1Kn9mpv; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750642755; c=relaxed/simple;
+	bh=mOMZmDtg7UpragCui3/1ieWMRXj97ofX5z4uaqmbxc0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QXK36e+wvu+xLZLLWx+0VL73Ii2ZIDnkXH4XH4j3fE2vrUkQuc3R5/nFR24ONzrLXeJn7Y4NApa7vWtBcWrgC2GlvZf0lhLqtaOAuLonPmWK9T8R/a1f+XyOIJzaz6zJdH+EJXyHWUJFIEaxCYc2qzV7/6ERYU+EoxcRVJ+cczE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iHstmvHy; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I1Kn9mpv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750642693; x=1782178693;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=HfqyG3kXHnCcLbS8cbdxIXtXdT7Qjgp9E12+G2/XvYM=;
-  b=I1Kn9mpv/h/0z9qJ53c94bPdAckokok6xVniZdmDKnv9nID0ws3o5UCd
-   rDMnL7/MTWSqWr++y30w9qngv1ZmI/FTO4PkWNXTNUseisdhk13n/VmRq
-   eHQOOEh8Q/GEDtZMYw/2EXF1R7ZAiStlrCaw5scO7TMBWImwvzrxmNJMO
-   ywfhXcIdzgu6PtYCn09fRspT9ugcP0IFA19Q8bWvnX2o4uFbURh5LkKo6
-   PQrNEkI/elxTvtS/+mvia8D227T8bx+ciRrYg6Hek3iyyEPjuv7Wkqgn+
-   Qik2GC5C2suGgAxhVpKpy4yUTNFiteu77CNvGvcWhcc7y4ggUyHfwMTdi
-   A==;
-X-CSE-ConnectionGUID: +729Chv8Rtm7rtGwxk0C2g==
-X-CSE-MsgGUID: ThE0f3RbRbO3R9c5/wZ8Yw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="55471366"
-X-IronPort-AV: E=Sophos;i="6.16,257,1744095600"; 
-   d="scan'208";a="55471366"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 18:38:12 -0700
-X-CSE-ConnectionGUID: ZpBNVfeHTCObCtjuXJMe3A==
-X-CSE-MsgGUID: T3CWd3UNTGqUuXStwzafEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,257,1744095600"; 
-   d="scan'208";a="151654523"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.144]) ([10.124.245.144])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 18:38:09 -0700
-Message-ID: <b31633cf-4127-4f0e-94b1-233d76aa38d6@linux.intel.com>
-Date: Mon, 23 Jun 2025 09:38:06 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iHstmvHy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750642752;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yexjD/xwmxHkcuPr5ND041umEuakLm6g0ZCZufHMl+c=;
+	b=iHstmvHy08fsoD+YsCuhn4pw7D6naV+qzBeUnnFw750rjElSH/VU5CYBUBe7meaXXd7Qn/
+	AH/dG7ETQhzv7zDy1m1Ixw6fkg0GvngITPoleQ33Pa8x7jwiUuvZIuU7i8C72QN1PA3bKT
+	qHYnLF0zrnd15LNh4t+24VMBOTvwHwE=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-556-nXpEzMJ8Ot-i-eeU0V48nQ-1; Sun,
+ 22 Jun 2025 21:39:09 -0400
+X-MC-Unique: nXpEzMJ8Ot-i-eeU0V48nQ-1
+X-Mimecast-MFC-AGG-ID: nXpEzMJ8Ot-i-eeU0V48nQ_1750642748
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2976719560AA;
+	Mon, 23 Jun 2025 01:39:08 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.88])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7F4CB180045B;
+	Mon, 23 Jun 2025 01:39:04 +0000 (UTC)
+Date: Mon, 23 Jun 2025 09:38:59 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>, selinux@vger.kernel.org
+Subject: Re: [v6.16-rc2+ Bug] panic in inode_doinit_with_dentry during booting
+Message-ID: <aFiwMxE4OlcFp7Ox@fedora>
+References: <CAFj5m9KOjqYmUOYM4EgDBrJ-rQxEgOhm+pokmdAE6w+bCGrhSg@mail.gmail.com>
+ <CAHC9VhQ0dyqsjsNt98yiPCGsiuUXep3T7T24LWWRHy8V8xjV4Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v4 09/13] perf/x86/intel: Setup PEBS data configuration
- and enable legacy groups
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
- Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250620103909.1586595-1-dapeng1.mi@linux.intel.com>
- <20250620103909.1586595-10-dapeng1.mi@linux.intel.com>
- <20250621093437.GV1613376@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250621093437.GV1613376@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHC9VhQ0dyqsjsNt98yiPCGsiuUXep3T7T24LWWRHy8V8xjV4Q@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+
+On Sat, Jun 21, 2025 at 02:40:41PM -0400, Paul Moore wrote:
+> On Sat, Jun 21, 2025 at 2:08 AM Ming Lei <ming.lei@redhat.com> wrote:
+> >
+> > Hello Guys,
+> >
+> > The latest v6.16-rc2+ kernel panics during booting, commit
+> > 3f75bfff44be ("Merge tag 'mtd/fixes-for-6.16-rc3' of
+> > git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux"):
+> >
+> >
+> > [  OK  ] Finished systemd-modules-load.service - Load Kernel Modules.
+> >          Starting systemd-sysctl.service - Apply Kernel Variables...
+> >          Starting systemd-sysusers.service - Create System Users...
+> > [  OK  ] Finished systemd-sysctl.service - Apply Kernel Variables.
+> > [    1.851473] Oops: general protection fault, probably for
+> > non-canonical address 0x8cbad568292ed62c: 0000 [#1] SMP NOPTI
+> > [    1.853362] CPU: 9 UID: 0 PID: 269 Comm: systemd-sysuser Not
+> > tainted 6.16.0-rc2+ #328 PREEMPT(full)
+> > [    1.854923] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+> > BIOS 1.16.3-1.fc39 04/01/2014
+> > [    1.856374] RIP: 0010:__list_add_valid_or_report+0x1e/0xa0
+> > [    1.857366] Code: 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa
+> > 53 48 83 ec 08 48 85 f6 0f 84 76 2f 76 ff 48 89 d3 48 85 d2 0f 84 5c
+> > 2f9
+> > [    1.860338] RSP: 0018:ffffd152c0de3a10 EFLAGS: 00010286
+> > [    1.861244] RAX: ffff8aa5414d38d8 RBX: 8cbad568292ed624 RCX: 0000000000000000
+> > [    1.862439] RDX: 8cbad568292ed624 RSI: ffff8aa5401f40f0 RDI: ffff8aa5414d38d8
+> > [    1.863622] RBP: ffff8aa5414d38f4 R08: ffffd152c0de3a7c R09: ffffd152c0de3a20
+> > [    1.864810] R10: ffff8aa5401f40c0 R11: 0000000000000007 R12: ffff8aa5414d38d8
+> > [    1.864813] R13: ffff8aa5401f40c0 R14: ffff8aa5401f40f0 R15: ffff8aa5414d38d0
+> > [    1.864814] FS:  00007feebef42bc0(0000) GS:ffff8aa9ed02f000(0000)
+> > knlGS:0000000000000000
+> > [    1.864816] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [    1.864818] CR2: 00007feebfb58180 CR3: 0000000117f4d004 CR4: 0000000000770ef0
+> > [    1.870018] PKRU: 55555554
+> > [    1.870020] Call Trace:
+> > [    1.870029]  <TASK>
+> > [    1.870031]  inode_doinit_with_dentry+0x42d/0x520
+> 
+> Thanks for the report.  I'm assuming you didn't see this with
+> v6.16-rc1, or earlier?
+
+It isn't observed on -rc2.
+
+> 
+> Do you have any line number information you could share?  Also, based
+> on the RIP in __list_add_valid_or_report(), can you confirm that this
+> is either happening in an initrd/initramfs or on a system where a
+> SELinux policy is not being loaded?
+
+Looks the issue can't be reproduced any more with -rc3.
 
 
-On 6/21/2025 5:34 PM, Peter Zijlstra wrote:
-> On Fri, Jun 20, 2025 at 10:39:05AM +0000, Dapeng Mi wrote:
->
->> +static void intel_pmu_enable_event_ext(struct perf_event *event)
->> +{
->> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->> +	struct hw_perf_event *hwc = &event->hw;
->> +	union arch_pebs_index cached, index;
->> +	struct arch_pebs_cap cap;
->> +	u64 ext = 0;
->> +
->> +	if (!x86_pmu.arch_pebs)
->> +		return;
->> +
->> +	cap = hybrid(cpuc->pmu, arch_pebs_cap);
->> +
->> +	if (event->attr.precise_ip) {
->> +		u64 pebs_data_cfg = intel_get_arch_pebs_data_config(event);
->> +
->> +		ext |= ARCH_PEBS_EN;
->> +		if (hwc->flags & PERF_X86_EVENT_AUTO_RELOAD)
->> +			ext |= (-hwc->sample_period) & ARCH_PEBS_RELOAD;
->> +
->> +		if (pebs_data_cfg && cap.caps) {
->> +			if (pebs_data_cfg & PEBS_DATACFG_MEMINFO)
->> +				ext |= ARCH_PEBS_AUX & cap.caps;
->> +
->> +			if (pebs_data_cfg & PEBS_DATACFG_GP)
->> +				ext |= ARCH_PEBS_GPR & cap.caps;
->> +
->> +			if (pebs_data_cfg & PEBS_DATACFG_XMMS)
->> +				ext |= ARCH_PEBS_VECR_XMM & cap.caps;
->> +
->> +			if (pebs_data_cfg & PEBS_DATACFG_LBRS)
->> +				ext |= ARCH_PEBS_LBR & cap.caps;
->> +		}
->> +
->> +		if (cpuc->n_pebs == cpuc->n_large_pebs)
->> +			index.split.thresh = ARCH_PEBS_THRESH_MUL;
->> +		else
->> +			index.split.thresh = ARCH_PEBS_THRESH_SINGLE;
->> +
->> +		rdmsrl(MSR_IA32_PEBS_INDEX, cached.full);
-> Its unclear to me we need this rdmrsl(); does anything actually change
-> in there or is it just the value we wrote last? The naming seems to
-> suggested you want it cached instead of re-read. Most confusing.
 
-HW could write MSR_IA32_PEBS_INDEX as well, so strictly speaking it's not
-we wrote last. The aim of this part of code is to check if large PEBS is
-used by last time, if so we need to drain up the PEBS buffer before
-re-enable PEBS. 
+thanks,
+Ming
 
-Yes, the "cache" is some kind of misleading. I would change it.
-
-
->
-> Also, if you do:
->
-> union arch_perf_index {
-> 	u64 full;
-> 	struct {
-> 		u64 foo:1,
-> 		    bar:2;
-> 	};
-> };
->
-> Then you can get rid of that .split naming.
-
-Sure. Thanks.
-
-
->
->> +		if (index.split.thresh != cached.split.thresh || !cached.split.en) {
->> +			if (cached.split.thresh == ARCH_PEBS_THRESH_MUL &&
->> +			    cached.split.wr > 0) {
->> +				/*
->> +				 * Large PEBS was enabled.
->> +				 * Drain PEBS buffer before applying the single PEBS.
->> +				 */
->> +				intel_pmu_drain_pebs_buffer();
->> +			} else {
->> +				index.split.wr = 0;
->> +				index.split.full = 0;
->> +				index.split.en = 1;
->> +				wrmsrq(MSR_IA32_PEBS_INDEX, index.full);
->> +			}
->> +		}
->> +	}
->> +
->> +	if (cpuc->cfg_c_val[hwc->idx] != ext)
->> +		__intel_pmu_update_event_ext(hwc->idx, ext);
->> +}
