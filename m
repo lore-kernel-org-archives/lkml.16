@@ -1,175 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A16C1F4E39;
-	Mon, 23 Jun 2025 10:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02DB622FE17
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750675782; cv=none; b=AaJpcCaIZN2OJkhS12eKY7DlOK7n6Z+mV9pMTyAVLNOD+uW82p6dhYkFSAuZ03CPr5TE8un7Sxw+WkimUHa3y+N3/7xx5v3wrDx9eAFrQ5YTlt2eT0iKsaJAH0wyjLeJMNT1/FKA1qWAkGmF46nDIWMLGt4KouwmbBlzZFceUho=
+	t=1750675826; cv=none; b=FCwott9Rr2cUjvuLNQuLFvZd1pl2ViyulN9/NgX8PJWaBE5sr9sBLdEJ2TIK4lRM9Q2BnDK9keWSVrNs6G94Nl7dZngycsMIao+sRTZgZUQ60RamkrFufxn/QNp5COsoKjsKDmjMwh0kzdXNk/jcrCDdTgUijMh9+UCUp9kSRj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750675782; c=relaxed/simple;
-	bh=KHAztxVJHUgqnqPaPlSKsa5GmeQPudLPzlRAuAA+pgc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UzSVe8TCgboqyD2U6MqVi+pUn65KL59ZryqxVM7jjNRd24dTWOxQnQzsXTgc2Y36rImzhWUSzWje8NJpNG0DdyVhlIHs5ZwS5jvUy+BPK8jiX/Cs6Pvv1y2gZWN6SzFDgK0PMesc+aj1MMTfvCEktwJsVnOb0M7LIuvG6Gph6og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hp3rTr3Z; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750675826; c=relaxed/simple;
+	bh=TMhuI8oyTSVxw9bC+sp9sw5qCfSwlWgIVLQsz6K/PlY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iwH2vk+XlyH5+j5poVR3a1GJtrI7A1MDAieCkiGxJdYqclomvhRkPjhSARUcc4peMQG3goAD5nkrS3uWMrvj9VmGkqCJvwMCUNACmaCoTvcIQdnJIsUCZH3EqSMMtkf+tLSqxTrwQtmPRUjWdRIWd/z4wlElVdm23QyqCB5ZIhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=neuq9Jjx; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hp3rTr3Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750675782; x=1782211782;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KHAztxVJHUgqnqPaPlSKsa5GmeQPudLPzlRAuAA+pgc=;
-  b=hp3rTr3ZxKHTwGJbKsofN7b5ZDn0LYFBfjC0VXHIyJUtMxJfBJkSZG0O
-   YAHpNqlesFyttvvqY8KiXHkyovWRBaC5UbRfHhbNlt0EeFrP618D6y+C1
-   yfySE2D5WX8sEcVKTIxRimWbB+3NBoNYB2xxKeDf6PyH6EWP6B/5WKGkB
-   XTTKMN49cPeKMu837KHTgHOAuEmn7lJBa2OpEYIzwxBvHjPH5bzPeGC6u
-   qEvHinxbf9+VTidrp3YbVSctmA+/vVRpkAM21rf2bQREr1imzKQ0mUK8B
-   qDeB089ULF6VTfWiV0CCCsRp90VxYk0Ro0BLWPesUzrxHkxl4c1lTlKjX
-   Q==;
-X-CSE-ConnectionGUID: cJxErB3/TMucDART9XP4WA==
-X-CSE-MsgGUID: im4LgCUNQKaVpDnPOYPKXg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="52593388"
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="52593388"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 03:49:37 -0700
-X-CSE-ConnectionGUID: 9GZ1QGZhTgyynab6BY1qSQ==
-X-CSE-MsgGUID: 82Pw+woNQrOgLbts22tCxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="188785369"
-Received: from abityuts-desk.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.8])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 03:49:27 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 1B3031201F7;
-	Mon, 23 Jun 2025 13:49:24 +0300 (EEST)
-Date: Mon, 23 Jun 2025 10:49:24 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mehdi Djait <mehdi.djait@linux.intel.com>, akinobu.mita@gmail.com,
-	stanislaw.gruszka@linux.intel.com, hdegoede@redhat.com,
-	arnd@arndb.de, alain.volmat@foss.st.com, andrzej.hajda@intel.com,
-	benjamin.mugnier@foss.st.com, dave.stevenson@raspberrypi.com,
-	hansg@kernel.org, hverkuil@xs4all.nl, jacopo.mondi@ideasonboard.com,
-	jonas@kwiboo.se, kieran.bingham@ideasonboard.com, khalasa@piap.pl,
-	prabhakar.csengg@gmail.com, mani@kernel.org,
-	m.felsch@pengutronix.de, martink@posteo.de, mattwmajewski@gmail.com,
-	matthias.fend@emfend.at, mchehab@kernel.org,
-	michael.riesch@collabora.com, naush@raspberrypi.com,
-	nicholas@rothemail.net, nicolas.dufresne@collabora.com,
-	paul.elder@ideasonboard.com, dan.scally@ideasonboard.com,
-	pavel@kernel.org, petrcvekcz@gmail.com, rashanmu@gmail.com,
-	ribalda@chromium.org, rmfrfs@gmail.com, zhengsq@rock-chips.com,
-	slongerbeam@gmail.com, sylvain.petinot@foss.st.com,
-	s.nawrocki@samsung.com, tomi.valkeinen@ideasonboard.com,
-	umang.jain@ideasonboard.com, zhi.mao@mediatek.com,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH v1 02/55] Documentation: media: camera-sensor: Mention
- v4l2_devm_sensor_clk_get() for obtaining the clock
-Message-ID: <aFkxNB0EPFzlhOl5@kekkonen.localdomain>
-References: <cover.1750352394.git.mehdi.djait@linux.intel.com>
- <1261f41358da597fb9900b7880618ebcc392160d.1750352394.git.mehdi.djait@linux.intel.com>
- <20250619214705.GR22102@pendragon.ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="neuq9Jjx"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-45363645a8eso22968785e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 03:50:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750675821; x=1751280621; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m08zWEvJfz/USiHAalcZNBUXJ7ks7hFL+IV7NJ3Oxxk=;
+        b=neuq9JjxqU1xexPv4Ifsv6k63Uzb2tGUjK67ZY1d8olgPhUNdXQOVFK5NM0taocIgz
+         2AxFWNSyg3hU/AhqWqhgwnJe2QUm85gUv/CqLjVXHHfVBBkM8fesWjzDkaSx+qAMm4lW
+         N8og2V5kDGDscqKaUgNwd4oA1HNHDvFdW6nT3QD3wKACR9TcXdqB6LJnLhgA1eRt0CXm
+         3VBwSoVu5g93tZ8NrQ0TJsSUQVJMld06hUu9e6TmAOxIYDqNoWsfQkr2ZHMrVvLJaXc/
+         9PYjhfwGGnlTOq6jMVsBPDbNUIH2qNpUrRyU+RNDv6MkWzcOcoAtPcNWdzi15ReFBOFM
+         s1MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750675821; x=1751280621;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m08zWEvJfz/USiHAalcZNBUXJ7ks7hFL+IV7NJ3Oxxk=;
+        b=eqvApwhl7FMyZ4RdVdAuJRKu8L6UW9r64WUB8PdnBBBTXsO7U+BfBijRwOYqEbtksS
+         tVn8GBaaSjGrCXQVl6qAsUumjCru9GJlFPDSNU1MU0pquXLORH1GCdnQlamsdPE51lNm
+         tbNWJJwpsLEsFdc1LBB+7iuC92b3omnTR1bEfOC7PY7U12MUPqrf48/SZ3MeTQEUPYkO
+         ia7Lh6XipWHoXHG5kndd5ndOfaYf141LHzE/ulg2o7G8boXWf7SFEA+YwLD+1SkdFH7y
+         WpRymMEipwkHNDYzqNniGRkvqXVnKkWyhnrHPbK+wX0O5wPFrujv5WLNDqXYzw0j+zz+
+         WaDw==
+X-Forwarded-Encrypted: i=1; AJvYcCV9Ih9J/6mV5bJ7f+5kqWF/DXKpNJWbDRA6892iMFIBnQhYFx8TGD7T0De3hatKamllHnsvY57THANBeM0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOyH38QoypmdjNhpHnDRFa4eGxJ9H+te3f6qFevsXuEn/pxdKp
+	W5vz093SFABZeS/PkkRk4Fgbb0q4fRX9JJvbue4sbqmdJgU3VjikCou7
+X-Gm-Gg: ASbGncsvyZpPCMSfibp/Y62/wirQg9Zc1lYQJcqVg8Hqif5v/EddQLsMB9Zl1/zUp4t
+	DgVtDsMdaLyQY/XqfgSNBjwJrth8bUaZDQPTgUV3EQNe2SkuXTksx4klWdzgQ1xwdeEhDcOQdMO
+	vREVe1teL/t9iSW/zYW2vHdGjJAE90rODWqfvCbmWakAT6wgy5D78QQzJywlUMzRRn3hQf1GsKy
+	8Deez/XQDlCY3KSH8Aa2YlZc6jbjyY0uhfRp6SQlGwnTUwcFdy/8Z6aa4ndXLr2pzxirhrLzg9e
+	fpypUyF8dDfrf4YdDgBzq+q4GErXcSEUUTXo2ZGoAFjKLPn/Uza9ukuSkZePrheFsJ9UcSE41cB
+	bmKvrCds/wByP7RgVWDGGxX/1
+X-Google-Smtp-Source: AGHT+IEp4jMR6u+d1seVukmVVWep1jFCD0YNNzWaNs/T8+Bt7/CO4kjMWT6zCDPPwvwNBaZwfFxNRQ==
+X-Received: by 2002:a05:600c:6995:b0:450:d367:c385 with SMTP id 5b1f17b1804b1-453658ba6c1mr103607175e9.16.1750675821079;
+        Mon, 23 Jun 2025 03:50:21 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d117c03asm9004137f8f.49.2025.06.23.03.50.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 03:50:20 -0700 (PDT)
+Date: Mon, 23 Jun 2025 11:50:19 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Rik van Riel <riel@surriel.com>
+Cc: Nadav Amit <nadav.amit@gmail.com>, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com, dave.hansen@linux.intel.com, luto@kernel.org,
+ peterz@infradead.org, bp@alien8.de, x86@kernel.org, seanjc@google.com,
+ tglx@linutronix.de, mingo@kernel.org, Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: Re: [RFC PATCH v4 5/8] x86/mm: Introduce Remote Action Request
+Message-ID: <20250623115019.6a750e10@pumpkin>
+In-Reply-To: <49eee1cb79b75b02b8ed19a7f6d39e1ee8fae171.camel@surriel.com>
+References: <20250619200442.1694583-1-riel@surriel.com>
+	<20250619200442.1694583-6-riel@surriel.com>
+	<6f9d7c86-9faf-48a0-b7b9-d58bb21ce948@gmail.com>
+	<49eee1cb79b75b02b8ed19a7f6d39e1ee8fae171.camel@surriel.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619214705.GR22102@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Mehdi, Laurent,
+On Thu, 19 Jun 2025 21:10:47 -0400
+Rik van Riel <riel@surriel.com> wrote:
 
-On Fri, Jun 20, 2025 at 12:47:05AM +0300, Laurent Pinchart wrote:
-> Hi Mehdi,
-> 
-> Thank you for the patch.
-> 
-> On Thu, Jun 19, 2025 at 07:58:55PM +0200, Mehdi Djait wrote:
-> > Add the new v4l2 helper devm_v4l2_sensor_clk_get() to Documentation. the
-> > helper works on both DT- and ACPI-based platforms to retrieve a
-> > reference to the clock producer from firmware.
+> On Fri, 2025-06-20 at 02:01 +0300, Nadav Amit wrote:
+> >   
+> > > +/*
+> > > + * Reduce contention for the RAR payloads by having a small number
+> > > of
+> > > + * CPUs share a RAR payload entry, instead of a free for all with
+> > > all CPUs.
+> > > + */
+> > > +struct rar_lock {
+> > > +	union {
+> > > +		raw_spinlock_t lock;
+> > > +		char __padding[SMP_CACHE_BYTES];
+> > > +	};
+> > > +};  
 > > 
-> > Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
-> > 
-> > diff --git a/Documentation/driver-api/media/camera-sensor.rst b/Documentation/driver-api/media/camera-sensor.rst
-> > index c290833165e6..c82c018a5f40 100644
-> > --- a/Documentation/driver-api/media/camera-sensor.rst
-> > +++ b/Documentation/driver-api/media/camera-sensor.rst
-> > @@ -32,7 +32,8 @@ user.
-> >  ACPI
-> >  ~~~~
-> >  
-> > -Read the ``clock-frequency`` _DSD property to denote the frequency. The driver
-> > +Use ``devm_v4l2_sensor_clk_get()`` to get the clock. The function will read the
-> > +``clock-frequency`` _DSD property to denote the frequency. The driver
-> >  can rely on this frequency being used.
-> 
-> This isn't specific to ACPI anymore. I think the documentation should be
-> refactored further. Here's a proposal.
-> 
-> 
-> Handling clocks
-> ---------------
-> 
-> Camera sensors have an internal clock tree including a PLL and a number of
-> divisors. The clock tree is generally configured by the driver based on a few
-> input parameters that are specific to the hardware: the external clock frequency
-> and the link frequency. The two parameters generally are specified by system
-> firmware. **No other frequencies should be used in any circumstances.**
-> 
-> The reason why the clock frequencies are so important is that the system is
-> usually designed to use specific external clock and link frequencies to ensure
-> electro-magnetic compatibility. Using other frequencies may cause harmful
-> effects elsewhere. Therefore only the pre-determined frequencies are
-> configurable by the user.
-> 
-> The external clock frequency shall be retrieved by obtaining the external clock
-> using the ``devm_v4l2_sensor_clk_get()`` helper function, and then getting its
-> frequency with ``clk_get_rate()``. Usage of the helper function guarantees
-> correct behaviour regardless of whether the sensor is integrated in a DT-based
-> or ACPI-based system.
-> 
-> ACPI
-> ~~~~
-> 
-> ACPI-based systems typically don't register the sensor external clock with the
-> kernel, but specify the external clock frequency in the ``clock-frequency``
-> _DSD property. The ``devm_v4l2_sensor_clk_get()`` helper creates and returns a
-> fixed clock set at that rate.
-> 
-> Devicetree
-> ~~~~~~~~~~
-> 
-> Devicetree-based systems declare the sensor external clock in the device tree
-> and reference it from the sensor node. The preferred way to select the external
-> clock frequency is to use the ``assigned-clocks``, ``assigned-clock-parents``
-> and ``assigned-clock-rates`` properties in the sensor node to set the clock
-> rate. See the `clock device tree bindings
-> <https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/clock/clock.yaml>`_
-> for more information. The ``devm_v4l2_sensor_clk_get()`` helper retrieves and
-> returns that clock.
-> 
-> This approach has the drawback that there's no guarantee that the frequency
-> hasn't been modified directly or indirectly by another driver, or supported by
-> the board's clock tree to begin with. Changes to the Common Clock Framework API
-> are required to ensure reliability.
+> > I think you can lose the __padding and instead have 
+> > ____cacheline_aligned (and then you won't need union).
+> >   
+> I tried that initially, but the compiler was unhappy
+> to have __cacheline_aligned in the definition of a
+> struct.
 
-This looks good to me.
+You should be able to put it onto the first structure member.
+(Which would match the normal use.)
 
-> 
-> 
-> >  
-> >  Devicetree
-> 
+The padding doesn't have the same effect.
+Even for rar_lock[] the first entry will share with whatever
+comes before, and the padding on the last entry just isn't used.
 
--- 
-Regards,
-
-Sakari Ailus
+	David
+ 
