@@ -1,357 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34CD5253F12;
-	Mon, 23 Jun 2025 12:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719A724C06A;
+	Mon, 23 Jun 2025 12:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750683443; cv=none; b=gik5RP3PRRjzVMTWIygP88sOeUu/jzp1CpUTvhf9erXqQ1HYntU+vbMBoOZd+/2Bjo/r5J66M0QSrsprLqpQfg2aC7SZHAQemfhG7StLWzgRHtLmYm48ZOTzdmzHMaLKqlmKC2VpEcUT6VaAasWnBJiX0Mez/2RXB1MUmRz3gPA=
+	t=1750683486; cv=none; b=YMKE53ftBR++usSimNB8B6ITK3P4DUoTcdi/RuGxG8GZAhJR1W9McDDsFj+66XagO+OdesWQlqt0k51mPq94OqY7ocb3oDjhlCzswgn/ewF+F4rqyP/dtQyiDmwrw4WE2I5prbc6nas9yFMiLLzkHVoIoy4NXtUR+QZ3TvzNkqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750683443; c=relaxed/simple;
-	bh=nDmXGid+HX75bqpdmYZ2WxwC0IlRF4aAoqhrrbUmWe8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E6TmQ0gQ0vVdBaf38m+qfDDFYYAwtstaWDFdFfhjzevEFYbdBidDWQtvxS93kfxPhlvOs2lT1XkW2QCylrQdRVjvbM1Tohl/DhGg0zoVS6OXixTc4O9z7lbS1mTaCQ+DW28OHCKoiDruJ3sAK/2lZ5dHJWfZqGXr53O62yOyiR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uBWjM6uC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750683486; c=relaxed/simple;
+	bh=2uRzPBv8XmRl6PL+xwcMHqnVmSrlShU09YdB9fiVk9E=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RY2xdP0bk0zh5fDkUOEVW0tJ4WvTXnOb0uyAX8yBOe1bNrVFAs+SR35fHSw9PHdjFA3QGrFQ/1KDV8uUNUZFVy4pumBY4+Rjb2TJdPK7u0d25dSJvnov27aZmocxlIbijph/4SskUG2HQrSOlCYuWUTYxCT4om6UN/buVASjPeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZQh8aRsL; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uBWjM6uC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7E32C4CEF2;
-	Mon, 23 Jun 2025 12:57:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750683443;
-	bh=nDmXGid+HX75bqpdmYZ2WxwC0IlRF4aAoqhrrbUmWe8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uBWjM6uCOi7S9/o7F4oIwb/r48WO6CwD7lR4NY42WkXRDDcAJvqKyb/UR+zJ0eLG2
-	 pbFAW7vuPkeiOJ5fuaT7YK7AMMZjif1wLdlsDo4oOAzpdn9nVa7y3o+3X1ihYp15l4
-	 iWTXt21vk/urVSi6ZJyO+eSaEi5nHghGZ3Futk7cshRJHdsTAMFtq86TBkvqN3CcMS
-	 MjNf134gsEMkoPx6AQlwAgkxnfh+YbHAotstXyMdH95WZf23103Ozr61XSn54zOEKG
-	 LqLy6u2cvERWKe+mLoIfIOoFAZcqud3QJEgzajYMcm3XtMrTXXS8YqDElHQcXDK5eY
-	 Uu45OG345dkUg==
-From: Conor Dooley <conor@kernel.org>
-To: sboyd@kernel.org
-Cc: conor@kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	pierre-henry.moussay@microchip.com,
-	valentina.fernandezalanis@microchip.com,
-	Michael Turquette <mturquette@baylibre.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Lee Jones <lee@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-riscv@lists.infradead.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 9/9] clk: microchip: mpfs: use regmap clock types
-Date: Mon, 23 Jun 2025 13:56:23 +0100
-Message-ID: <20250623-battering-cable-b61e1047d180@spud>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250623-levitate-nugget-08c9a01f401d@spud>
-References: <20250623-levitate-nugget-08c9a01f401d@spud>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZQh8aRsL"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55NCvqqj889428;
+	Mon, 23 Jun 2025 07:57:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750683472;
+	bh=31eJ+AWxiGbYg4zWcNeGQWhipTSARDm8us14p739GWk=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=ZQh8aRsLTZ/HYz2VBgn6xeYDbBaWGyxFZ+DW2pnNvEuJU+xN3NQc2XRrk02KGFRJH
+	 tfX+was6O/v15f66++Jd9mNJsouyAMIfmP6L7W8qMUS5yw9P/A+XUdTDLtRiH2J3mo
+	 R6we3XetfvJ4kAUNJjOc90HYbls0wo8xKgb7ScUc=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55NCvppg3243449
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Mon, 23 Jun 2025 07:57:52 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Mon, 23
+ Jun 2025 07:57:51 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Mon, 23 Jun 2025 07:57:51 -0500
+Received: from localhost (lcpd911.dhcp.ti.com [172.24.227.226])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55NCvoeg4136274;
+	Mon, 23 Jun 2025 07:57:51 -0500
+Date: Mon, 23 Jun 2025 18:27:50 +0530
+From: Dhruva Gole <d-gole@ti.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+CC: Sudeep Holla <sudeep.holla@arm.com>,
+        Cristian Marussi
+	<cristian.marussi@arm.com>,
+        <arm-scmi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Ranjani Vaidyanathan <ranjani.vaidyanathan@nxp.com>,
+        Chuck Cannon
+	<chuck.cannon@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 2/2] firmware: arm_scmi: power_control: Set
+ SCMI_SYSPOWER_IDLE in pm resume
+Message-ID: <20250623125750.kzwndmcf5yo3siao@lcpd911>
+References: <20250620-scmi-pm-v1-0-c2f02cae5122@nxp.com>
+ <20250620-scmi-pm-v1-2-c2f02cae5122@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10031; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=GO9ApPaEu2krjObe/V++g6BUriuEocKEs23aw1DaxIU=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDBmRfh9fmf8x9X92rMnWcMJVPh6T5U7R16u2W6U2R2gcs HnDkZTaUcrCIMbBICumyJJ4u69Fav0flx3OPW9h5rAygQxh4OIUgIkoTGL473HlqMmVgplXrJMX KfGLHln4dPO/0EltE+6f9N4q+mqq4VpGht95zwUFQxfZcXQ+Vpicl3ig3mODfZ9crf/i7Fm9au9 6WQA=
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250620-scmi-pm-v1-2-c2f02cae5122@nxp.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Conor Dooley <conor.dooley@microchip.com>
+On Jun 20, 2025 at 11:37:14 +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> When two consecutive suspend message send to the Linux agent, Linux will
+> suspend and wake up. The exepcted behaviour should be suspend, wake up
 
-Convert the PolarFire SoC clock driver to use regmap clock types as a
-preparatory work for supporting the new binding for this device that
-will only provide the second of the two register regions, and will
-require the use of syscon regmap to access the "cfg" and "periph" clocks
-currently supported by the driver.
+I am first trying to gather more context of the issue at hand here,
+Why and who is sending 2 consecutive suspend messages to Linux?
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
- drivers/clk/microchip/Kconfig    |   4 +
- drivers/clk/microchip/clk-mpfs.c | 151 ++++++++++++++++++++-----------
- 2 files changed, 101 insertions(+), 54 deletions(-)
+Just quoting the cover letter:
 
-diff --git a/drivers/clk/microchip/Kconfig b/drivers/clk/microchip/Kconfig
-index 0724ce65898f3..cab9a909893b2 100644
---- a/drivers/clk/microchip/Kconfig
-+++ b/drivers/clk/microchip/Kconfig
-@@ -7,6 +7,10 @@ config MCHP_CLK_MPFS
- 	bool "Clk driver for PolarFire SoC"
- 	depends on ARCH_MICROCHIP_POLARFIRE || COMPILE_TEST
- 	default ARCH_MICROCHIP_POLARFIRE
-+	depends on MFD_SYSCON
- 	select AUXILIARY_BUS
-+	select COMMON_CLK_DIVIDER_REGMAP
-+	select COMMON_CLK_GATE_REGMAP
-+	select REGMAP_MMIO
- 	help
- 	  Supports Clock Configuration for PolarFire SoC
-diff --git a/drivers/clk/microchip/clk-mpfs.c b/drivers/clk/microchip/clk-mpfs.c
-index c22632a7439c5..c7fec0fcbe379 100644
---- a/drivers/clk/microchip/clk-mpfs.c
-+++ b/drivers/clk/microchip/clk-mpfs.c
-@@ -6,8 +6,10 @@
-  */
- #include <linux/clk-provider.h>
- #include <linux/io.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/regmap.h>
- #include <dt-bindings/clock/microchip,mpfs-clock.h>
- #include <soc/microchip/mpfs.h>
- 
-@@ -30,6 +32,14 @@
- #define MSSPLL_POSTDIV_WIDTH	0x07u
- #define MSSPLL_FIXED_DIV	4u
- 
-+static const struct regmap_config clk_mpfs_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.val_format_endian = REGMAP_ENDIAN_LITTLE,
-+	.max_register = REG_SUBBLK_CLOCK_CR,
-+};
-+
- /*
-  * This clock ID is defined here, rather than the binding headers, as it is an
-  * internal clock only, and therefore has no consumers in other peripheral
-@@ -39,6 +49,7 @@
- 
- struct mpfs_clock_data {
- 	struct device *dev;
-+	struct regmap *regmap;
- 	void __iomem *base;
- 	void __iomem *msspll_base;
- 	struct clk_hw_onecell_data hw_data;
-@@ -68,14 +79,12 @@ struct mpfs_msspll_out_hw_clock {
- #define to_mpfs_msspll_out_clk(_hw) container_of(_hw, struct mpfs_msspll_out_hw_clock, hw)
- 
- struct mpfs_cfg_hw_clock {
--	struct clk_divider cfg;
--	struct clk_init_data init;
-+	struct clk_divider_regmap divider;
- 	unsigned int id;
--	u32 reg_offset;
- };
- 
- struct mpfs_periph_hw_clock {
--	struct clk_gate periph;
-+	struct clk_gate_regmap gate;
- 	unsigned int id;
- };
- 
-@@ -172,15 +181,15 @@ static int mpfs_clk_register_mssplls(struct device *dev, struct mpfs_msspll_hw_c
-  * MSS PLL output clocks
-  */
- 
--#define CLK_PLL_OUT(_id, _name, _parent, _flags, _shift, _width, _offset) {	\
--	.id = _id,								\
--	.output.shift = _shift,							\
--	.output.width = _width,							\
--	.output.table = NULL,							\
--	.reg_offset = _offset,							\
--	.output.flags = _flags,							\
--	.output.hw.init = CLK_HW_INIT(_name, _parent, &clk_divider_ops, 0),	\
--	.output.lock = &mpfs_clk_lock,						\
-+#define CLK_PLL_OUT(_id, _name, _parent, _flags, _shift, _width, _offset) {		\
-+	.id = _id,									\
-+	.output.shift = _shift,								\
-+	.output.width = _width,								\
-+	.output.table = NULL,								\
-+	.reg_offset = _offset,								\
-+	.output.flags = _flags,								\
-+	.output.hw.init = CLK_HW_INIT(_name, _parent, &clk_divider_regmap_ops, 0),	\
-+	.output.lock = &mpfs_clk_lock,							\
- }
- 
- static struct mpfs_msspll_out_hw_clock mpfs_msspll_out_clks[] = {
-@@ -220,15 +229,14 @@ static int mpfs_clk_register_msspll_outs(struct device *dev,
-  * "CFG" clocks
-  */
- 
--#define CLK_CFG(_id, _name, _parent, _shift, _width, _table, _flags, _offset) {		\
--	.id = _id,									\
--	.cfg.shift = _shift,								\
--	.cfg.width = _width,								\
--	.cfg.table = _table,								\
--	.reg_offset = _offset,								\
--	.cfg.flags = _flags,								\
--	.cfg.hw.init = CLK_HW_INIT(_name, _parent, &clk_divider_ops, 0),		\
--	.cfg.lock = &mpfs_clk_lock,							\
-+#define CLK_CFG(_id, _name, _parent, _shift, _width, _table, _flags, _offset) {	\
-+	.id = _id,								\
-+	.divider.shift = _shift,						\
-+	.divider.width = _width,						\
-+	.divider.table = _table,						\
-+	.divider.map_offset = _offset,						\
-+	.divider.flags = _flags,						\
-+	.divider.hw.init = CLK_HW_INIT(_name, _parent, &clk_divider_regmap_ops, 0),	\
- }
- 
- #define CLK_CPU_OFFSET		0u
-@@ -245,13 +253,13 @@ static struct mpfs_cfg_hw_clock mpfs_cfg_clks[] = {
- 		REG_CLOCK_CONFIG_CR),
- 	{
- 		.id = CLK_RTCREF,
--		.cfg.shift = 0,
--		.cfg.width = 12,
--		.cfg.table = mpfs_div_rtcref_table,
--		.reg_offset = REG_RTC_CLOCK_CR,
--		.cfg.flags = CLK_DIVIDER_ONE_BASED,
--		.cfg.hw.init =
--			CLK_HW_INIT_PARENTS_DATA("clk_rtcref", mpfs_ext_ref, &clk_divider_ops, 0),
-+		.divider.shift = 0,
-+		.divider.width = 12,
-+		.divider.table = mpfs_div_rtcref_table,
-+		.divider.map_offset = REG_RTC_CLOCK_CR,
-+		.divider.flags = CLK_DIVIDER_ONE_BASED,
-+		.divider.hw.init =
-+			CLK_HW_INIT_PARENTS_DATA("clk_rtcref", mpfs_ext_ref, &clk_divider_regmap_ops, 0),
- 	}
- };
- 
-@@ -264,14 +272,14 @@ static int mpfs_clk_register_cfgs(struct device *dev, struct mpfs_cfg_hw_clock *
- 	for (i = 0; i < num_clks; i++) {
- 		struct mpfs_cfg_hw_clock *cfg_hw = &cfg_hws[i];
- 
--		cfg_hw->cfg.reg = data->base + cfg_hw->reg_offset;
--		ret = devm_clk_hw_register(dev, &cfg_hw->cfg.hw);
-+		cfg_hw->divider.regmap = data->regmap;
-+		ret = devm_clk_hw_register(dev, &cfg_hw->divider.hw);
- 		if (ret)
- 			return dev_err_probe(dev, ret, "failed to register clock id: %d\n",
- 					     cfg_hw->id);
- 
- 		id = cfg_hw->id;
--		data->hw_data.hws[id] = &cfg_hw->cfg.hw;
-+		data->hw_data.hws[id] = &cfg_hw->divider.hw;
- 	}
- 
- 	return 0;
-@@ -281,15 +289,14 @@ static int mpfs_clk_register_cfgs(struct device *dev, struct mpfs_cfg_hw_clock *
-  * peripheral clocks - devices connected to axi or ahb buses.
-  */
- 
--#define CLK_PERIPH(_id, _name, _parent, _shift, _flags) {			\
--	.id = _id,								\
--	.periph.bit_idx = _shift,						\
--	.periph.hw.init = CLK_HW_INIT_HW(_name, _parent, &clk_gate_ops,		\
--				  _flags),					\
--	.periph.lock = &mpfs_clk_lock,						\
-+#define CLK_PERIPH(_id, _name, _parent, _shift, _flags) {				\
-+	.id = _id,									\
-+	.gate.map_offset = REG_SUBBLK_CLOCK_CR,						\
-+	.gate.bit_idx = _shift,								\
-+	.gate.hw.init = CLK_HW_INIT_HW(_name, _parent, &clk_gate_regmap_ops, _flags),	\
- }
- 
--#define PARENT_CLK(PARENT) (&mpfs_cfg_clks[CLK_##PARENT##_OFFSET].cfg.hw)
-+#define PARENT_CLK(PARENT) (&mpfs_cfg_clks[CLK_##PARENT##_OFFSET].divider.hw)
- 
- /*
-  * Critical clocks:
-@@ -346,19 +353,60 @@ static int mpfs_clk_register_periphs(struct device *dev, struct mpfs_periph_hw_c
- 	for (i = 0; i < num_clks; i++) {
- 		struct mpfs_periph_hw_clock *periph_hw = &periph_hws[i];
- 
--		periph_hw->periph.reg = data->base + REG_SUBBLK_CLOCK_CR;
--		ret = devm_clk_hw_register(dev, &periph_hw->periph.hw);
-+		periph_hw->gate.map = data->regmap;
-+		ret = devm_clk_hw_register(dev, &periph_hw->gate.hw);
- 		if (ret)
- 			return dev_err_probe(dev, ret, "failed to register clock id: %d\n",
- 					     periph_hw->id);
- 
- 		id = periph_hws[i].id;
--		data->hw_data.hws[id] = &periph_hw->periph.hw;
-+		data->hw_data.hws[id] = &periph_hw->gate.hw;
- 	}
- 
- 	return 0;
- }
- 
-+static inline int mpfs_clk_syscon_probe(struct mpfs_clock_data *clk_data,
-+					struct platform_device *pdev)
-+{
-+	clk_data->regmap = syscon_regmap_lookup_by_compatible("microchip,mpfs-mss-top-sysreg");
-+	if (IS_ERR(clk_data->regmap))
-+		return PTR_ERR(clk_data->regmap);
-+
-+	clk_data->msspll_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(clk_data->msspll_base))
-+		return PTR_ERR(clk_data->msspll_base);
-+
-+	return 0;
-+}
-+
-+static inline int mpfs_clk_old_format_probe(struct mpfs_clock_data *clk_data,
-+					    struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	dev_warn(&pdev->dev, "falling back to old devicetree format");
-+
-+	clk_data->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(clk_data->base))
-+		return PTR_ERR(clk_data->base);
-+
-+	clk_data->msspll_base = devm_platform_ioremap_resource(pdev, 1);
-+	if (IS_ERR(clk_data->msspll_base))
-+		return PTR_ERR(clk_data->msspll_base);
-+
-+	clk_data->regmap = devm_regmap_init_mmio(dev, clk_data->base, &clk_mpfs_regmap_config);
-+	if (IS_ERR(clk_data->regmap))
-+		return PTR_ERR(clk_data->regmap);
-+
-+	ret = mpfs_reset_controller_register(dev, clk_data->base + REG_SUBBLK_RESET_CR);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
- static int mpfs_clk_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -374,13 +422,12 @@ static int mpfs_clk_probe(struct platform_device *pdev)
- 	if (!clk_data)
- 		return -ENOMEM;
- 
--	clk_data->base = devm_platform_ioremap_resource(pdev, 0);
--	if (IS_ERR(clk_data->base))
--		return PTR_ERR(clk_data->base);
--
--	clk_data->msspll_base = devm_platform_ioremap_resource(pdev, 1);
--	if (IS_ERR(clk_data->msspll_base))
--		return PTR_ERR(clk_data->msspll_base);
-+	ret = mpfs_clk_syscon_probe(clk_data, pdev);
-+	if (ret) {
-+		ret = mpfs_clk_old_format_probe(clk_data, pdev);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	clk_data->hw_data.num = num_clks;
- 	clk_data->dev = dev;
-@@ -406,11 +453,7 @@ static int mpfs_clk_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, &clk_data->hw_data);
--	if (ret)
--		return ret;
--
--	return mpfs_reset_controller_register(dev, clk_data->base + REG_SUBBLK_RESET_CR);
-+	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, &clk_data->hw_data);
- }
- 
- static const struct of_device_id mpfs_clk_of_match_table[] = {
+> When testing on i.MX95, two consecutive suspend message send to the Linux
+> agent, Linux will suspend(by the 1st suspend message) and wake up(by the
+> 2nd suspend message).
+> 
+> The ARM SCMI spec does not allow for filtering of which messages an agent
+> wants to get on the system power protocol. To i.MX95, as we use mailbox
+> to receive message, and the mailbox supports wake up, so linux will also
+> get a repeated suspend message. This will cause Linux to wake (and should
+> then go back into suspend).
+
+When you say mailbox supports wake up you mean the mailbox IP in your
+SoC actually gets some sort of wake interrupt that triggers a wakeup?
+Is this wakeup sent to the SM then to be processed further and trigger a
+linux wakeup?
+
+<or> the mailbox directly wakes up linux, ie. triggers a resume flow but
+then you are saying it was an unintentional wakeup so you want to
+suspend linux again? This just seems like the wakeup routing is
+incorrect and the system is going through a who resume and then suspend
+cycle without a good reason?
+
+Why and when in this flow is linux ending up with a duplicate suspend message is
+something I still don't follow.
+
+Could you point us to any flow diagrams or software sequences that we
+could review?
+
+> and suspend again.
+> 
+> The ARM SCMI spec does not allow for filtering of which messages an agent
+> wants to get on the system power protocol. To i.MX95, as we use mailbox
+> to receive message, and the mailbox supports wake up, so linux will also
+> get a repeated suspend message. This will cause Linux to wake (and should
+> then go back into suspend).
+> 
+> In current driver, the state is set back to SCMI_SYSPOWER_IDLE after
+> pm_suspend finish, however the workqueue could be scheduled after
+> thaw_kernel_threads. So the 2nd suspend will return early with
+> "Transition already in progress...ignore", and leave Linux in wakeup
+> state.
+> 
+> So set SCMI_SYSPOWER_IDLE in device resume phase before workqueue
+> is scheduled to make the 2nd suspend message could suspend Linux again.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/firmware/arm_scmi/scmi_power_control.c | 24 +++++++++++++++++++-----
+>  1 file changed, 19 insertions(+), 5 deletions(-)
+> 
+[...]
+
 -- 
-2.45.2
-
+Best regards,
+Dhruva Gole
+Texas Instruments Incorporated
