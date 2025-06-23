@@ -1,104 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D7A2036FE;
-	Mon, 23 Jun 2025 08:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580B01FC0E3
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750665828; cv=none; b=JBtICbHIWg7jlx0KcQllO6zJG7mbfQAYAexOFL/vmn4jy5V2j4Ruo+2ZXBA7210GrwC2thfdRihtOhPqbm/c6+q/hlJkUJ2gJpswTP+A5Y7SFVmtS6BTrWGAu+DQOqjtgnbPGOF4IphGWZ9IhgubiV7PnACdT3yQg2qxmXSf/pY=
+	t=1750665836; cv=none; b=OJbFAPtdBcU+6pcue/zBe0AhG+Q+tkqvoiiojaQJKgDteF+xTryAurk07aGjNH62B+nQRpX7NK4M8IvCtlR858qn/zfNloBfj1f5EoNwCpO6ENLtb8m9zqLzHM6m7wjK/hAoKBTdP9yA3fxgg//nFp9GmhGWat+kkGnJkhAhNik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750665828; c=relaxed/simple;
-	bh=+5tLIPL4mupk3HsQHmmJo2/UPa4agOpGHIdMIH/PnqI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DtPBju+R5hRH4gVf5GkippyhkFHDYU4RbT+Y8bunzK+8MFB/iqUliAGRx9Kxlv0zbgUInZXlFPImn5BUWj8NxUE30tB57ZH8ABt7Q7W/cm5wRijUKN6YYpGQW9+z6yFmD8hu0nSoGJ3VBd8msWoKtx2eGS0txhtALvgk6Zvskl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0FZvRXbK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0FZvRXbK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99D8AC4CEED;
-	Mon, 23 Jun 2025 08:03:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750665828;
-	bh=+5tLIPL4mupk3HsQHmmJo2/UPa4agOpGHIdMIH/PnqI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=0FZvRXbK5+kYxPJe9hIj1PrFuODwbd+g0bg4bvxtLSZcS4NwiUmTkJJsjEIikDq2F
-	 R7sInP+ntZuaaMB3NYX0sqvz4UaOJsLBDynsGq9xSTbaL+TCihCoNeqAPpMFeuoKNY
-	 28LQ0KInP4SL84r7ATrQMp6E3z/5mE8bL/s5pU2g=
-Date: Mon, 23 Jun 2025 10:03:45 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Sasha Levin <sashal@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org,
-	ziyao@disroot.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH for 6.1/6.6] platform/loongarch: laptop: Fix build error
- due to backport
-Message-ID: <2025062339-till-sloping-58b2@gregkh>
-References: <20250622110148.3108758-1-chenhuacai@loongson.cn>
- <2025062206-roundish-thumb-a20e@gregkh>
- <CAAhV-H4S=z5O0+pq-x9X4-VjYsJQVxib+V-35g50WeaivryHLA@mail.gmail.com>
- <2025062349-proximity-trapeze-24c6@gregkh>
- <CAAhV-H7r-X-t0_i-x=oy2Gin4-ZMhSVwXtcaygZdJ1_J-zD3dg@mail.gmail.com>
+	s=arc-20240116; t=1750665836; c=relaxed/simple;
+	bh=Kkp1NuYRKEzbQMR2D07L6XhZKTIBXzdR4HYW4ZgNdsc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=dBnVLfp6Cw/P9LoPhhg+6AnJCD1NRWA1L51xxasMvpE6FU7Dyrdg3Z3Jz0oZwdhabpZwhywwKdK+beBawV8zDif2AoryEzU9Rp3iIWaYVVoEPqXeFP81/cTBR3Gm0s9lbg6cSMwwuOgtzHSNy0mk/x3WpAoTFf7xesHpnYoFdZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddd5cd020dso88741175ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:03:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750665834; x=1751270634;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mIeAXSj392mLcGJdE7Z1VpxC/y1pcJ/JVfWHw96kPoE=;
+        b=UbYLONRRvXxuXfI+6+dVa4WzdiGmgrn1jh7KGcmytJpGBrkJGDlJACt2yraT6kB1Ar
+         PzolLKl7G7avSFZftUGEzeTUg3FGhgzWuMYg2KLDN4reC5nKKMMJWSU79dHjBNPGi9DH
+         PJk5Lw7AN5qFe3aMuFwT8McIxvesTq+laeKr31HBEVTf0HruYWaIN3L8xc8DTtkyYCE+
+         qJyMJmvhier7DbCRU6lTCvUwS+7G5f0KXV/ASEJRwoSc1RaiuDSgwYGTcv+RP2Hhdaco
+         7G/qroClZepyA3mNrUdDjIGyTW44PAhd6gB1B08KcF8JMqXUwsop1iQvTFkWMv9FmWUD
+         IBXg==
+X-Gm-Message-State: AOJu0YzqLdKEcQxqdZN4Z0BIkRFC9u4NfqFx9mRYGR7mO2zcUr1Thu/o
+	uvx8EGr+bGO82okGcgjWb6He6Y32y662jMU6bFMc3E/EWyMP3rEf+YjkpdOJNrrt1g/HXf99K24
+	srmjyvPb0gusGBo6XjROPe2DBD4ov5YNvqy68V4iuHQ1cmEFEWW3WO8r5g/c=
+X-Google-Smtp-Source: AGHT+IHCaaOs5PZRHdI0LQSEvJ9Dycpwbx6GmkKR+fqrq00g4PRW9viYqt7KTiumksSZ5aEONF48f3gOZhGPOJjwClHViKTPry0i
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H7r-X-t0_i-x=oy2Gin4-ZMhSVwXtcaygZdJ1_J-zD3dg@mail.gmail.com>
+X-Received: by 2002:a05:6e02:194b:b0:3dc:8b2c:4bc7 with SMTP id
+ e9e14a558f8ab-3de38c1ba33mr136327265ab.1.1750665834282; Mon, 23 Jun 2025
+ 01:03:54 -0700 (PDT)
+Date: Mon, 23 Jun 2025 01:03:54 -0700
+In-Reply-To: <6854a3e6.a00a0220.137b3.0022.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68590a6a.050a0220.d71a0.0003.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in
+ vmci_host_unlocked_ioctl (3)
+From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jun 23, 2025 at 02:36:18PM +0800, Huacai Chen wrote:
-> On Mon, Jun 23, 2025 at 2:28 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Sun, Jun 22, 2025 at 09:11:44PM +0800, Huacai Chen wrote:
-> > > On Sun, Jun 22, 2025 at 9:10 PM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Sun, Jun 22, 2025 at 07:01:48PM +0800, Huacai Chen wrote:
-> > > > > In 6.1/6.6 there is no BACKLIGHT_POWER_ON definition so a build error
-> > > > > occurs due to recently backport:
-> > > > >
-> > > > >   CC      drivers/platform/loongarch/loongson-laptop.o
-> > > > > drivers/platform/loongarch/loongson-laptop.c: In function 'laptop_backlight_register':
-> > > > > drivers/platform/loongarch/loongson-laptop.c:428:23: error: 'BACKLIGHT_POWER_ON' undeclared (first use in this function)
-> > > > >   428 |         props.power = BACKLIGHT_POWER_ON;
-> > > > >       |                       ^~~~~~~~~~~~~~~~~~
-> > > > >
-> > > > > Use FB_BLANK_UNBLANK instead which has the same meaning.
-> > > > >
-> > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > > ---
-> > > > >  drivers/platform/loongarch/loongson-laptop.c | 2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > What commit id is this fixing?
-> > >
-> > > commit 53c762b47f726e4079a1f06f684bce2fc0d56fba upstream.
-> >
-> > Great, can you resend this with a proper Fixes: tag so I don't have to
-> > manually add it myself?
-> Upstream kernel doesn't need to be fixed, and for 6.1/6.6, the commits
-> need to be fixed are in linux-stable-rc.git[1][2] rather than
-> linux-stable.git now.
-> 
-> I don't know your policy about stable branch maintenance, one of the
-> alternatives is modify [1][2] directly. And if you prefer me to resend
-> this patch, I think the commit id is not the upstream id, but the ids
-> in [1][2]?
-> 
-> [1]https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=queue/6.1&id=f78d337c63e738ebd556bf67472b2b5c5d8e9a1c
-> [2]https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=queue/6.6&id=797cbc5bc7e7a9cd349b5c54c6128a4077b9a8c6
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-What we should do is just drop those patches from the 6.1.y and 6.6.y
-queues, I'll go do that now, and wait for you to submit a working
-version of this patch for those branches, so that we do not have any
-build breakages anywhere.
+***
 
-Can you submit the updated patches for that now?
+Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl (3)
+Author: lizhi.xu@windriver.com
 
-thanks,
+#syz test
 
-greg k-h
+diff --git a/drivers/misc/vmw_vmci/vmci_context.c b/drivers/misc/vmw_vmci/vmci_context.c
+index f22b44827e92..e8c58c3993c3 100644
+--- a/drivers/misc/vmw_vmci/vmci_context.c
++++ b/drivers/misc/vmw_vmci/vmci_context.c
+@@ -245,7 +245,7 @@ static int ctx_fire_notification(u32 context_id, u32 priv_flags)
+ 	array_size = vmci_handle_arr_get_size(subscriber_array);
+ 	for (i = 0; i < array_size; i++) {
+ 		int result;
+-		struct vmci_event_ctx ev;
++		struct vmci_event_ctx ev = {0};
+ 
+ 		ev.msg.hdr.dst = vmci_handle_arr_get_entry(subscriber_array, i);
+ 		ev.msg.hdr.src = vmci_make_handle(VMCI_HYPERVISOR_CONTEXT_ID,
