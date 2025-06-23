@@ -1,121 +1,197 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EB622F74E;
-	Mon, 23 Jun 2025 09:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E73122FDFF;
+	Mon, 23 Jun 2025 09:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750669578; cv=none; b=gA64UtALuF9vKZqRJ0eTBn1i2JHqXPfUUUH9qP9QlObomNXzKP9ArNVak8oKOU1qQS/cuLkaLqFZ8wPMYxJjg9fa9kgxQVR/LD0r8ukXwE+MIW1jty2iO4Hkk3tDm3fpZk7UZXDlA3Yy9sS/K96XaliIZIxD+9/MtF6qQP4Wofk=
+	t=1750669603; cv=none; b=IiXvPHKP6U5049d2gfh+fd+rRUv8onchL/s/nNZ55tfTrhEZ5kr/CIaE3ilGBiX68LiMR8q4eavM8H6xQ2JUDpyYYV6zn2op//qCZjQGurwVwdFFjlnl3IhP7ZieCG7xKxdZIvkePBsPDTUqCeEGqxJAwcl8gF06xoAXJ053huU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750669578; c=relaxed/simple;
-	bh=5pF4vDNlHIa6c6oA7h5CZ5pMihTZP50eXtCrfdW6rRE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C/CPtJWnRcviTxaxueEnSCiTFWUxwu9jxFlREsFSwPUeZuW5c9cqs8qfUoIaaNvpmP4eWzeD/JkIsVGK/yTGDmmxjOK2W4SOcOrF0Aqu20d/9oz6qWyehOvGbTDUEu1+mr7H8PzKjB770E1mBsD2pxgUeRf+5Ns4+Vfng5wMzpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HJx862tP; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750669603; c=relaxed/simple;
+	bh=GVH6c9DZl4pr7m3z15pjRT1YLBqjK4aE5D2BKO766T0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BfXlawKin+6mNG5F757owrjI8iY7wjD4syfoyr+Rz4hOJoHIqTVw3nMECYcqKGgI4QodAZbnqXUl9W81I2pzpVsKy0I0Rwto2/lBSs/Z7eTMWd8SzAF0FE+7asi5EImpyWUcGwHuE+RNgBRvUp19SVNro05CSSps4iSrQSrWAt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IpZvq1Jn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJx862tP"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a5257748e1so2470472f8f.2;
-        Mon, 23 Jun 2025 02:06:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750669575; x=1751274375; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kEGfnWR9y2R5Hb4sOmq+4EG1fJXcUTguVBT64eS7amA=;
-        b=HJx862tPfX00iWvHCHVN+dqyfXYxWW+In29gof2cpqdPrRGDfvwx6mdb1F8S2QAHd7
-         RIiO81+qjedALFu/qyeGr1Ut0xsjKry3BaHUSWhIBPMnhAmFvLBCko58c5TvVYdgS8xg
-         DzGMqHxl5J9zf5EoL8+RklYaGK926s0ueqGmfLqAn6akkpXym6ZxFqh4xr99D5NNHD8A
-         /E2SmNy0NQXXctcaGD2ZmHgWcc/EfFdq7UekWrr96BKqjyalrSo8l52wuieHEj8av27b
-         k1TrkDQvD57cvwFd5M9vJ5NKx7E1rEyTdRFJQSEhm1yUfNw0Ijkm1UqpfU8MXmkAALMh
-         Wx5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750669575; x=1751274375;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kEGfnWR9y2R5Hb4sOmq+4EG1fJXcUTguVBT64eS7amA=;
-        b=vspygmw1PQtMTPNHSqXU7KoHKZ1DgOV+R/N5sFLqaB8PBQxOM9M/zwWTF7dZwAJp7B
-         aefYjxP76Rcit/aDWFKsoMIMqDUsnPxsMsEk8II6j4uV4NKQVMND0m1GrM+PnZfn+y/u
-         /EjNo3kDbi999coch2g+HnYlJwdHKnDLpc5nR3pkykIjg0JuHzmLR3EHGLWptFmFR6Yg
-         62oWwM3bE4BaQXZMq+dMmNx1O94Ezt786Zt4xhbv4QDtUk+G81rTSIt1+iwBkZXIMnGm
-         IdltKVCN3j5KhzlwO/GLvZV073P52a4MaCoL1Cq+fdgPo52zjPFjAXNxUTK1BUVn30cP
-         txaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUiSEUgAu7O0wjoEX/fcVtp+0QGkbXeUpcONg1OR/VEkUvwxuuVZQHGpT4Wh8RvP0LPCt0M3/wGaJ8zGL12hjY=@vger.kernel.org, AJvYcCVcdtyv+E8qXxR3UCDoKA9vNWreTFY600tpzbA1FKE5lc9Hqo2uWEqGFaBOUUwk+WK6RKFTS1TtFF7z4vFL@vger.kernel.org, AJvYcCVwL85wppBzYeAn/gNtw/YiHQX6JCgAIz+HzrvKlUQqj3D/tsEvqmyJEohuYgwb4zlFkbq0k7j38/Uy@vger.kernel.org, AJvYcCWdc+8ZMbvUlZPhdEPd/nONio+rQkmt8GZc53iO0kkfQ3kCs7saiTiJCVEtCk56Q4vbvEPlHGrK3I4PPQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5caVEzW7IDySNN+50urpgEls4UMhrQZpVxHqxkMiJiieETZC5
-	DO7lSxxc0vWofUuAjBKLGzSVsBscpRYkfhcZIDte0/RVYejG/9tfEwJB
-X-Gm-Gg: ASbGncv09JJ0tCdS94QkFiag18RfM31V1c/NrqSGiWUpwKe3NJ4yUm7z8ZGTE5bq7ej
-	sUJ45BT1bkZRY/r1bHsvw+V9wrGZjccSGGiHLcaE1Mcvp2Y9bPQnZb3RGXmbjmFP4OA++IqllzB
-	ynuM1mut/40YE/+Se12eczmtlZRVNmL72g9oHIfgyRNrZfvISKSHhGoHwr0Abxs4Fz9Rlk5XzMQ
-	F3YaL3O31VCVPywvWmAW+WtZJFRjaU/vdqQ0ZTee4D5/LECXDO0uvXkHynpK418xvdYEQWK+Why
-	ZHaKGhrn7djIg2tM9wkcUFqRZ+kjbIwWX/sAXaD5HjkirmiDdaQ8rjtZBdLrJWyOXvGm
-X-Google-Smtp-Source: AGHT+IE0jNES0f1isvf0t0jssclUaz/qe8sm8GaviZjXBxkREDmbJO8rKf8In2RJvpDsEDCES9npdA==
-X-Received: by 2002:a05:6000:491a:b0:3a5:39e9:928d with SMTP id ffacd0b85a97d-3a6d1166d39mr11221330f8f.0.1750669574903;
-        Mon, 23 Jun 2025 02:06:14 -0700 (PDT)
-Received: from [10.38.1.85] ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45364705748sm101407075e9.28.2025.06.23.02.06.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 02:06:14 -0700 (PDT)
-Message-ID: <4655e2ee-6a5e-4ab5-8adc-4f91acd3d325@gmail.com>
-Date: Mon, 23 Jun 2025 10:03:57 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IpZvq1Jn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B0C3C4AF09;
+	Mon, 23 Jun 2025 09:06:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750669601;
+	bh=GVH6c9DZl4pr7m3z15pjRT1YLBqjK4aE5D2BKO766T0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IpZvq1JnIygdyuu9JWXXANSByiycdWcpgh14f8+AY/Qwb2gezv4ECRDSLs4qeRAsd
+	 ydzO8cUEBjtMUTZtEL0IirTwHlN6n0yQMteh3Fj65vCUbyic692ANtye1sGH/vT07r
+	 y4YXgspuHvW99NKcq5UlIR0pJM1wuhbU5S4E9p0lYMdkPeKfB4XNkwiJIts5MDBB19
+	 vHFbDoM1K5jeClWOYiuBdn9v5NVm/gocxKil6JihXbTlHa2gw8XC3edLzH+lTnNtZy
+	 9MnIV8iYs0rvrM4OtQLME4vVY6Pm8bAZKU+2D7iiE325zOAi315c1YETkGYcWTxdaK
+	 T17htAsnjbBAw==
+Date: Mon, 23 Jun 2025 09:55:40 +0200
+From: Joel Granados <joel.granados@kernel.org>
+To: Bert Karwatzki <spasswolf@web.de>
+Cc: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, 
+	Waiman Long <longman@redhat.com>, Kees Cook <kees@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Subject: Re: register_syctl_init error in linux-next-20250612
+Message-ID: <ue32pzorcdfcj4i7xtvq5qcpkw2vcvnnc3dvuovl7t4vuxrkyi@efk3ptq7fy73>
+References: <20250612175515.3251-1-spasswolf@web.de>
+ <mve232hzw4tqc5rnqlacofzlygqks7uirkumfmibrnmzcmpywh@kpchyerpb4ju>
+ <3eec91e437e2b9861e069a6c63e80b2bfd7e9802.camel@web.de>
+ <agdzhkcb7f7w7zmcivjx6gnlilwglvd526pp3p5cgkdricwfx4@6iduwkqkerjp>
+ <bf583355c889ec19f908b1a95c4d6f73a32fcc8f.camel@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 4/9] rust: acpi: add `acpi::DeviceId` abstraction
-To: Danilo Krummrich <dakr@kernel.org>, "Rafael J . Wysocki"
- <rafael@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>,
- Saravana Kannan <saravanak@google.com>, Alex Hung <alex.hung@amd.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jakub Kicinski <kuba@kernel.org>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- Remo Senekowitsch <remo@buenzli.dev>, Tamir Duberstein <tamird@gmail.com>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Wedson Almeida Filho <wedsonaf@gmail.com>,
- Xiangfei Ding <dingxiangfei2009@gmail.com>, devicetree@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>,
- Andreas Hindborg <a.hindborg@kernel.org>, Benno Lossin <lossin@kernel.org>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- Len Brown <lenb@kernel.org>, Trevor Gross <tmgross@umich.edu>
-References: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
- <20250620152425.285683-1-igor.korotin.linux@gmail.com>
- <aFXbcDKP_jw_Sg5k@cassiopeiae>
-Content-Language: en-US
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-In-Reply-To: <aFXbcDKP_jw_Sg5k@cassiopeiae>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3xfavmjctzmlngzr"
+Content-Disposition: inline
+In-Reply-To: <bf583355c889ec19f908b1a95c4d6f73a32fcc8f.camel@web.de>
 
 
+--3xfavmjctzmlngzr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 6/20/25 23:06, Danilo Krummrich wrote:
-> On Fri, Jun 20, 2025 at 04:24:25PM +0100, Igor Korotin wrote:
->> `acpi::DeviceId` is an abstraction around `struct acpi_device_id`.
->>
->> This is used by subsequent patches, in particular the i2c driver
->> abstractions, to create ACPI device ID tables.
-> 
-> I think this should say something like
-> 
-> 	"Enable drivers to build ACPI device ID tables, to be consumed by the
-> 	 corresponding bus abstractions, such as platform or I2C."
-> 
-> instead.
-> 
-> If we agree, I can change it when applying the patch -- no need to resend.
-> 
+On Fri, Jun 20, 2025 at 01:17:15PM +0200, Bert Karwatzki wrote:
+> Am Freitag, dem 20.06.2025 um 13:11 +0200 schrieb Joel Granados:
+> > On Fri, Jun 20, 2025 at 11:37:40AM +0200, Bert Karwatzki wrote:
+> > > Am Donnerstag, dem 19.06.2025 um 14:39 +0200 schrieb Joel Granados:
+> > > > On Thu, Jun 12, 2025 at 07:55:13PM +0200, Bert Karwatzki wrote:
 
-No objections.
+=2E..
 
-Thanks
-Igor
+> >=20
+> > Did you have the chance to test with the patch that I sent?
+> >=20
+> > Best
+>=20
+> I did not test your patch, but it seems I independently came up with the
+> same soulution:=20
+>=20
+> It seems to be a compile/file include issue: kernel/locking/rtmutex.c is =
+not compiled
+> via a Makefile but it's included in via #include:
+>=20
+> $ rg "include.*rtmutex.c\>"
+> kernel/locking/rwsem.c
+> 1405:#include "rtmutex.c"
+>=20
+> kernel/locking/spinlock_rt.c
+> 25:#include "rtmutex.c"
+>=20
+> kernel/locking/ww_rt_mutex.c
+> 10:#include "rtmutex.c"
+>=20
+> kernel/locking/rtmutex_api.c
+> 9:#include "rtmutex.c"
+>=20
+> which in the case of PREEMPT_RT=3Dy leads to four call to init_rtmutex_sy=
+sctl().
+>=20
+> I solved this by moving the code to kernel/locking/rtmutex_api.c:
+>=20
+> diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
+> index 705a0e0fd72a..cf24eacef48d 100644
+> --- a/kernel/locking/rtmutex.c
+> +++ b/kernel/locking/rtmutex.c
+> @@ -34,24 +34,6 @@
+> */
+> static int max_lock_depth =3D 1024;
+
+I think leaving max_lock_depth hear is not a good idea. Every time rtmutex.=
+c is
+included, it will create a private (inside the scope of the file that is
+including rtmutex.c) copy of max_lock_depth. This might not result in
+misbehavior at the outset, but it increases the potential for trouble.
+
+For now I'll push my original fix to next. Which leaves the definition
+of max_lock_depth in rtmutex_api.c avoiding multiptle definitions when
+rtmutex.c is included in other files.
+
+Also: CCing maintainers to see if they have any additional info.
+
+Best
+
+> -static const struct ctl_table rtmutex_sysctl_table[] =3D {
+> - {
+> - .procname =3D "max_lock_depth",
+> - .data =3D &max_lock_depth,
+> - .maxlen =3D sizeof(int),
+> - .mode =3D 0644,
+> - .proc_handler =3D proc_dointvec,
+> - },
+> -};
+> -
+> -static int __init init_rtmutex_sysctl(void)
+> -{
+> - register_sysctl_init("kernel", rtmutex_sysctl_table);
+> - return 0;
+> -}
+> -
+> -subsys_initcall(init_rtmutex_sysctl);
+> -
+> #ifndef WW_RT
+> # define build_ww_mutex() (false)
+> # define ww_container_of(rtm) NULL
+> diff --git a/kernel/locking/rtmutex_api.c b/kernel/locking/rtmutex_api.c
+> index 9e00ea0e5cfa..a133870b4519 100644
+> --- a/kernel/locking/rtmutex_api.c
+> +++ b/kernel/locking/rtmutex_api.c
+> @@ -8,6 +8,24 @@
+> #define RT_MUTEX_BUILD_MUTEX
+> #include "rtmutex.c"
+> +static const struct ctl_table rtmutex_sysctl_table[] =3D {
+> + {
+> + .procname =3D "max_lock_depth",
+> + .data =3D &max_lock_depth,
+> + .maxlen =3D sizeof(int),
+> + .mode =3D 0644,
+> + .proc_handler =3D proc_dointvec,
+> + },
+> +};
+> +
+> +static int __init init_rtmutex_sysctl(void)
+> +{
+> + register_sysctl_init("kernel", rtmutex_sysctl_table);
+> + return 0;
+> +}
+> +
+> +subsys_initcall(init_rtmutex_sysctl);
+> +
+> /*
+> * Debug aware fast / slowpath lock,trylock,unlock
+> *
+>=20
+> I tested this patch with and without CONFIG_PREEMPT_RT=3Dy and it
+> works in both cases.
+>=20
+> Bert Karwatzki
+>=20
+
+--=20
+
+Joel Granados
+
+--3xfavmjctzmlngzr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmhZCHIACgkQupfNUreW
+QU8k8Qv8DmM8lKWCPleNmDcJUZagHsovq49q62CZBsZl6n5r4BI7g9eskeApOEa+
+fd4e4O14iIfpKdaVFFxTDwPR0TawnV0cfCqJ2Hi+B6pwLA/AUcG0wSVw8+c4t612
+Bu3h4qb/40wQ9SGHkY5USAHeKfc4BPejA5bylkcS40DTzJ6U0/dzgPeomgK7vCLe
+RwrtKZePgmhanlXbK2YN3Yagld8FPUEyerDGMRGs2n8MOlgwk4PO9GHmpy14MsvJ
+wSSnq5Gg0jC/SYkA1H4tAhDupuHgnysctKJF1rY01PpZDW7nGDzYtHjb41mxh4/L
+Aspa3SxGFuMFFgqszunXSpTgT3KEvi8wFhkv5+ot61WbZlE2CwL3v3fxMYhUsYwo
+nLQNJPcKR4HnvIt0CJDhtYWJmgWLdPnd4tglVU+iJXt5L2/XdzXJodnzFB8vFtId
+IOhEoBjYfN6tNgxnFtFD23dqEsOoc67c364sYl3RER9UrUujicLqwTXGneRrKUQK
+wetPs6qL
+=+G6L
+-----END PGP SIGNATURE-----
+
+--3xfavmjctzmlngzr--
