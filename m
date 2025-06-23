@@ -1,139 +1,139 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC52241116
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0803594F;
+	Mon, 23 Jun 2025 14:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750688933; cv=none; b=durccTDKyq67FgJ+M+jOKhRjd5aoP+AVx4UDDN5/8upmPyIZdyaDV2vzlY+MdZfcDkeJ8NIs9iHafFM7TLq1qpnVlfgnZX3KX8zWv4RZKiEekYhpLCoAvAfB80vOVKmCljaTEkPrFYwMmc/iCZOIhNlDHomGlrLVLUAU2uyWfBQ=
+	t=1750688948; cv=none; b=Qoct42rEe5bYebKuoTL+t0dRBvwW5UK2+FVaDup9WgmYOMbmxMLBssIZJrFHwVpx6Z4U6csYeHpFlyRcl3HkuLlObwnrD4/LPxxiNZMj+Xkh26F3et+tMZXTLWuhk24nVP0pfiwfHfLiO8ORJXu4nydalrUV6H5ruiFJB6hKoRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750688933; c=relaxed/simple;
-	bh=/14cwYyKwKubJFvYMHEKWQA22KWCV38zKaWXVdcaG2g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WhZiAYfTLCJm6aE2F3C4l2DpOKccojXAfxFvrLB6A6qdO8zrNDQ9hEFip+RPRx3ZR5+78W2Yf2nl2J1BVKdP8BOfdROyCEqTpPj3CUw+xQCsS2IOQXJdvarbW7DbCA8Ram3fhvR4+S3xD/mUbawJoZ3jeEkuhKqq6ziDQ850Xos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=gGG3Pc4H; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
+	s=arc-20240116; t=1750688948; c=relaxed/simple;
+	bh=iETrDTxF2h0Jz/EA2/ujzXy+/qESUCrSq93X7gVgmj0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SoiLggPmzg/rtMkfTToFPYSCWba8guhBpvtUIqpXYCiaBurmNNq8ys2M+ydkSXUWDxN3nQAGk4ndoRyBR2foYMp2mgsXTA7px+Ij/UJPzI7DDM40NU1KgFbuOpYxVodpL5sRkekRYdZXY1ieHAG6sXXxM00pDqadobeVth1XF2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=JvZ2X/EO; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="gGG3Pc4H"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4a44b9b2af8so20584821cf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 07:28:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1750688928; x=1751293728; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/14cwYyKwKubJFvYMHEKWQA22KWCV38zKaWXVdcaG2g=;
-        b=gGG3Pc4HaxosWf5dMaa+c/J3BbeyQ3nBdt1Z1bcgahYj/++kkU4K3oOnOzwDHkvgo5
-         /fKJBOBLhmXf1XhwSejoDNSqtrdxIMLwS8bJyccDKvZzwbuyWbPQmKp/ccpNLnj1z+wU
-         r+XcSMoUCpUEQ4N1C8Gobr6CozOBzG7Nebo4doxW6k/3FCl44cX+Dsd/e9EW0nQJz43X
-         iBqk2APQE9NJt1OXz5SiZ3jYdqLizYH7JDip1faAfaMO1Rp3rJPuKBD5lwOcbx2epR4F
-         +5WdhJ9ukYoSNwE0Cr5Mvm6TeunTmawLmGTxsq4L0i5VC92rTOREwNXhH1uLGVzAe1+w
-         t4sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750688928; x=1751293728;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/14cwYyKwKubJFvYMHEKWQA22KWCV38zKaWXVdcaG2g=;
-        b=II2epRBpcGrbzb3Z1fmP9r3tHut5FVr/x/xFkXlN+9dDmWzrty2m/FUx0RSNGdNlAV
-         GaTwuQhZSakIXCzdAlVz7N0ioerNZaTlIZZZExjOiEhv9nQB5kfnh71xuPMQeiTW7nlY
-         /0iUi3U+IrCedaG92pJyOxOuXnve5zY+i7qyJ3DjxRke1clcG9ZghnT+02VlbPfQFVut
-         i2vAJ0LgoshH7WhH72QrIbqVKdedW7tXkLpDIaVaxoBGzVFGjHWEqZ4maGc+FRVwFqAJ
-         AsAiZr4CoplDzQzgYUAyDRoIjldAikglp2n5AMU0Js7QVBc9jnUMBjASQZp0C2nIMKcI
-         n+Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCUQhETtzTVqAqumnxAKpoBqH2XoJ22rYzv5fuQ3vyZqGKlbVufDxlIxarj1qWSWuM3MLF3Fqab0x6K/nog=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVpaai5lz3z9erXwjuCMYwWTIs3dl0PQir71se22R2AKvntzIM
-	/n9CYJRkTSJ+hSMsX4eGbGm53Bu4klwX1/HV1kKgjl34zWXMr6x3iWcHIq9f615ffFlPMo+2PSA
-	8ExMyvq0yxXYEDFoJAGxBFR4+hgstPoSfyoRalrCoMA==
-X-Gm-Gg: ASbGnctDLh+KvUHvzlJ7FkT7+BeI0eNwHIW6FryWVt4Fymn07mtsEjywf0iE27F9ktr
-	WhG/Z8o3XzMNW2twDjrVYrx8Zkkw5uSehVYYk12I/wf4uZPGIza8IlM1smlp4H8DAIHQwzQVIgz
-	PE4YmeMGDC59XAV7N+XGUvu1MhPryClxQfwqQXgHTq3daisV5p9nS0HdI2eGoiRaR9pzsygNCkq
-	VjxJw==
-X-Google-Smtp-Source: AGHT+IGAEU79vWFsEbGN71mgZpuPejwVzDs9CuFGRu/kIPPECPSaBJWX6S8IOXgJzNmRFrQ3GoKYDSjB9QaqmPokmug=
-X-Received: by 2002:a05:622a:50f:b0:4a7:146b:c5e5 with SMTP id
- d75a77b69052e-4a77a20840emr222574351cf.21.1750688927718; Mon, 23 Jun 2025
- 07:28:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JvZ2X/EO"
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55NESxFn1278087;
+	Mon, 23 Jun 2025 09:28:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750688939;
+	bh=28qHpeJ7n3i+ZmLypf33BQPEzMkO3cAjs7UitAeXugs=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=JvZ2X/EOpGlRsganSuUUE+PJAJhid3g9wMVBCFpGtCvRqtXdpmyKu3wb4HDr0oPK0
+	 Jh042cw9t3ELPlYEu9qASLMUL3lOLE59Y+FDSaVLfhs1m/87LMMy0K4bBC1z6TaTtD
+	 xwwTw/yQcq3p5dx5FpgCgmfaDQLuiFEZlzF0aZiU=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55NESxow838469
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Mon, 23 Jun 2025 09:28:59 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Mon, 23
+ Jun 2025 09:28:59 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Mon, 23 Jun 2025 09:28:59 -0500
+Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55NESxAP070412;
+	Mon, 23 Jun 2025 09:28:59 -0500
+Date: Mon, 23 Jun 2025 09:28:59 -0500
+From: Bryan Brattlof <bb@ti.com>
+To: Paresh Bhagat <p-bhagat@ti.com>
+CC: <nm@ti.com>, <vigneshr@ti.com>, <praneeth@ti.com>, <kristo@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <khasim@ti.com>, <v-singh1@ti.com>,
+        <afd@ti.com>, <devarsht@ti.com>
+Subject: Re: [PATCHv4 6/6] arm64: dts: ti: Add eMMC support for AM62D
+Message-ID: <20250623142859.fankjmvhdo2bxjgd@bryanbrattlof.com>
+X-PGP-Fingerprint: D3D1 77E4 0A38 DF4D 1853 FEEF 41B9 0D5D 71D5 6CE0
+References: <20250623141253.3519546-1-p-bhagat@ti.com>
+ <20250623141253.3519546-7-p-bhagat@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530-rss-v12-0-95d8b348de91@daynix.com> <20250530-rss-v12-1-95d8b348de91@daynix.com>
- <CACGkMEufffSj1GQMqwf598__-JgNtXRpyvsLtjSbr3angLmJXg@mail.gmail.com>
- <95cb2640-570d-4f51-8775-af5248c6bc5a@daynix.com> <CACGkMEu6fZaErFEu7_UFsykXRL7Z+CwmkcxmvJHC+eN_j0pQvg@mail.gmail.com>
- <4eaa7aaa-f677-4a31-bcc2-badcb5e2b9f6@daynix.com> <CACGkMEu3QH+VdHqQEePYz_z+_bNYswpA-KNxzz0edEOSSkJtWw@mail.gmail.com>
- <75ef190e-49fc-48aa-abf2-579ea31e4d15@daynix.com> <CACGkMEu2n-O0UtVEmcPkELcg9gpML=m5W=qYPjeEjp3ba73Eiw@mail.gmail.com>
- <760e9154-3440-464f-9b82-5a0c66f482ee@daynix.com> <CACGkMEtCr65RFB0jeprX3iQ3ke997AWF0FGH6JW_zuJOLqS5uw@mail.gmail.com>
- <CAOEp5OcybMttzRam+RKQHv4KA-zLnxGrL+UApc5KrAG+op9LKg@mail.gmail.com> <CACGkMEsfxXtHce2HeYwYxmhB0e5cOjn17qM6zFEt75bQhbtrDw@mail.gmail.com>
-In-Reply-To: <CACGkMEsfxXtHce2HeYwYxmhB0e5cOjn17qM6zFEt75bQhbtrDw@mail.gmail.com>
-From: Yuri Benditovich <yuri.benditovich@daynix.com>
-Date: Mon, 23 Jun 2025 17:28:36 +0300
-X-Gm-Features: AX0GCFu3hePJcE8mBSHlKXkSVpPD8N_41tEP_O5fU60lBvVDsaWZNc7CeBwagRc
-Message-ID: <CAOEp5Oet1P2EWTwLJnMYY4CVAzDWgdM8wbvV3+BH6aY0kE+O8g@mail.gmail.com>
-Subject: Re: [PATCH net-next v12 01/10] virtio_net: Add functions for hashing
-To: Jason Wang <jasowang@redhat.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, kvm@vger.kernel.org, 
-	virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org, 
-	Andrew Melnychenko <andrew@daynix.com>, Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com, 
-	Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20250623141253.3519546-7-p-bhagat@ti.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, Jun 23, 2025 at 11:07=E2=80=AFAM Jason Wang <jasowang@redhat.com> w=
-rote:
->
-> On Mon, Jun 23, 2025 at 1:40=E2=80=AFAM Yuri Benditovich
-> <yuri.benditovich@daynix.com> wrote:
-> >
-> > > Yuri, can you help to clarify this?
-> >
-> > I see here several questions:
-> > 1. Whether it is ok for the device not to indicate support for XXX_EX h=
-ash type?
-> > - I think, yes (strictly speaking, it was better to test that before
-> > submitting the patches )
-> > 2. Is it possible that the guest will enable some XXX_EX hash type if
-> > the device does not indicate that it is supported?
-> > - No (I think this is part of the spec)
->
-> There's another question, is the device allowed to fallback to
-> VIRTIO_NET_HASH_TYPE_IPv6 if it fails to parse extensions?
-MSFT expectations for that are at
-https://learn.microsoft.com/en-us/windows-hardware/drivers/network/rss-hash=
-ing-types
-If I read them correctly, the answer is "no"
-BTW, my personal opinion is that placing all these things with hash
-calculations into kernel instead of ebpf does not make too much sense.
+On June 23, 2025 thus sayeth Paresh Bhagat:
+> Add the necessary device tree node for eMMC controller along with the
+> required pinmux configuration.
+> 
 
->
-> > 3. What to do if we migrate between systems with different
-> > capabilities of hash support/reporting/whatever
-> > - IMO, at this moment such case should be excluded and only mechanism
-> > we have for that is the compatible machine version
-> > - in some future the change of device capabilities can be communicated
-> > to the driver and _probably_ the driver might be able to communicate
-> > the change of device capabilities to the OS
->
-> Are you suggesting implementing all hash types? Note that Akihiko
-> raises the issue that in the actual implementation there should be a
-> limitation of the maximum number of options. If such a limitation is
-> different between src and dst, the difference could be noticed by the
-> guest.
->
-> > 4. Does it make sense to have fine configuration of hash types mask
-> > via command-line?
-> > - IMO, no. This would require the user to have too much knowledge
-> > about RSS internals
-> >
-> > Please let me know if I missed something.
-> >
->
-> Thanks
->
+Could this be squashed in 4/6?
+
+> Signed-off-by: Paresh Bhagat <p-bhagat@ti.com>
+> ---
+>  arch/arm64/boot/dts/ti/k3-am62d2-evm.dts | 27 ++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62d2-evm.dts b/arch/arm64/boot/dts/ti/k3-am62d2-evm.dts
+> index c98e4c98c956..5ceecdd68b3f 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62d2-evm.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am62d2-evm.dts
+> @@ -20,6 +20,7 @@ aliases {
+>  		serial0 = &wkup_uart0;
+>  		serial1 = &mcu_uart0;
+>  		serial2 = &main_uart0;
+> +		mmc0 = &sdhci0;
+>  		mmc1 = &sdhci1;
+>  		rtc0 = &wkup_rtc0;
+>  		ethernet0 = &cpsw_port1;
+> @@ -226,6 +227,22 @@ AM62DX_IOPAD(0x00b4, PIN_INPUT_PULLUP, 1) /* (M20) GPMC0_CSn3.I2C2_SDA */
+>  		>;
+>  	};
+>  
+> +	main_mmc0_pins_default: main-mmc0-default-pins {
+> +		pinctrl-single,pins = <
+> +			AM62DX_IOPAD(0x0220, PIN_INPUT_PULLUP, 0) /* (Y6) MMC0_CMD */
+> +			AM62DX_IOPAD(0x0218, PIN_OUTPUT, 0) /* (AB7) MMC0_CLK */
+> +			AM62DX_IOPAD(0x0214, PIN_INPUT_PULLUP, 0) /* (AA6) MMC0_DAT0 */
+> +			AM62DX_IOPAD(0x0210, PIN_INPUT_PULLUP, 0) /* (AB6) MMC0_DAT1 */
+> +			AM62DX_IOPAD(0x020c, PIN_INPUT_PULLUP, 0) /* (Y7) MMC0_DAT2 */
+> +			AM62DX_IOPAD(0x0208, PIN_INPUT_PULLUP, 0) /* (AA7) MMC0_DAT3 */
+> +			AM62DX_IOPAD(0x0204, PIN_INPUT_PULLUP, 0) /* (Y8) MMC0_DAT4 */
+> +			AM62DX_IOPAD(0x0200, PIN_INPUT_PULLUP, 0) /* (W7) MMC0_DAT5 */
+> +			AM62DX_IOPAD(0x01fc, PIN_INPUT_PULLUP, 0) /* (W9) MMC0_DAT6 */
+> +			AM62DX_IOPAD(0x01f8, PIN_INPUT_PULLUP, 0) /* (AB8) MMC0_DAT7 */
+> +		>;
+> +		bootph-all;
+> +	};
+> +
+>  	main_mmc1_pins_default: main-mmc1-default-pins {
+>  		pinctrl-single,pins = <
+>  			AM62DX_IOPAD(0x023c, PIN_INPUT, 0) /* (C21) MMC1_CMD */
+> @@ -397,6 +414,16 @@ &main_i2c2 {
+>  	clock-frequency = <400000>;
+>  };
+>  
+> +&sdhci0 {
+> +	/* eMMC */
+> +	bootph-all;
+> +	status = "okay";
+> +	non-removable;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&main_mmc0_pins_default>;
+> +	disable-wp;
+> +};
+
+Make sure we follow the ordering of these properties:
+
+    https://www.kernel.org/doc/html/latest/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
+
+> +
+>  &sdhci1 {
+>  	/* SD/MMC */
+>  	status = "okay";
+> -- 
+> 2.34.1
+> 
