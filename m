@@ -1,288 +1,572 @@
-Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022096.outbound.protection.outlook.com [52.101.126.96])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73ADD566A;
-	Mon, 23 Jun 2025 02:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.96
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750646536; cv=fail; b=Pmjc4Unat7DbqAYmmVfRGPyDYeBxZzHmE+1R50CxdNXrLbaQC1w/zE/kAuWbHEzU7bz+rF6+hz63kXRUNYzfEoEpo3SpwzHannTK0zRUAk5/dElZ0xqQEMsyOVQdndh0+zXhb7gYHqLQIIzKIKaCfI5Th8lF1BYJ77tpJ91F/dE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750646536; c=relaxed/simple;
-	bh=JLMb7eJjr7XkcjcZ8BY9s2O7UkP9trFycXwFrhrEgfI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=TcHx7iGGkzWiXWN5qb+6nblu1e2kT1Za2UyQO8aTznmTJuDRA2r6JYNT29eOxdGwBzTrVvtcFwwAMkspUwqS9TUKxnFlcmIWltwxvL+e1AjHCh0lXgi8xg6XqlWQTCJwU+7yq/EM4oEJ41DoA6dnhgcjnq8kWX3e+q0F/FDqAAc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=YiEqq14O; arc=fail smtp.client-ip=52.101.126.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="YiEqq14O"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=INx45uJRlL9nV+w1WjkD4TywSInnFmv8Ao3gwy8qjX0uwSXTBhg/vm5kLyNtEyCTRfQplDhjFNGr2/u6Hjvbb+FYvlsQJi79MwYzJa92OYNj9+9H89eE6goMKDN5EYLaEteNf/+m0bgwr5jF5/n+WEC54vmcVhFjJ5wpj83WRQGZEBAUd0CUfYOmDVks2eq602Ugx8/hkYlOpN4xwBQyuE1CDtylG10hUePXaoLUw6199ubTu8nM8Rf9CVRTtf2m/TFPcwtQbcJbc77ecEhmRFJXjaVfsiDrPuUtdWiWSipbNwcs+4n8GE28VkOJZKJ1hkaybPikgK8N6D0IiCmIIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JLMb7eJjr7XkcjcZ8BY9s2O7UkP9trFycXwFrhrEgfI=;
- b=rSSfHq5FSg1kOaVj7JDJoMzCVDKNMg7PLITZEjuybm8uPfe4+jN0E7EYL2ZsXJf0pdMgpvtd0SqNVXfUJ0tCtDxvlM1HCLSRxzwLFodSEZYqNFxpGVQ/yq3SL4tNdNHt3P6CQjmFrkz9Niir/ab3NPtC8DtEb0Dj+zNkbKpHfHTMPDQw1OzGkyS4ps3OCPWrc+2bTOFeOwMQzI32vYdF8QQZW6w6r4hjwwaQmn5EPU/ok5adFOzWUge1I1x2og8RAwDojcMLbrPeaZnyjvpu8qfFnqZ0lRA6XxcYMXV6hoKMfGBhhUVblVnSTwS/IEcqnKkTyGaVpPIk7Q3FwaPa/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JLMb7eJjr7XkcjcZ8BY9s2O7UkP9trFycXwFrhrEgfI=;
- b=YiEqq14O2lelZ46lAcXJ9/oAwSSOEqlfkih2tOiQC7xDLxmDHzblSiV56ZQbGIps14EVZHVkTtdP1nMgZCEDIUFtH6MrqRdQvCvAd3nLcIPrp+3JrZXqLfQf1KB9EJs3OnXlD1Cn3nES1VOYQYcgx0azsZIdxaYqagsNqJtjQe2dO1CB+XEI+Y7i0QXtOCtaMs1aGajsfvA8XzN6cu4Q6R93uLWm05UB3JPB/5kKTxz2mkX5e1ojTp9w7P6IeFBPsX+qvHq89zJAPj8176Bre8N6RxAAk9fjfXc6Yla5JShe0D1+MK5yU5Jy5Sppj1YR/A5v7UUftWOIQBXhTLLEbA==
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
- by JH0PR06MB7151.apcprd06.prod.outlook.com (2603:1096:990:8e::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.27; Mon, 23 Jun
- 2025 02:42:07 +0000
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28%5]) with mapi id 15.20.8857.025; Mon, 23 Jun 2025
- 02:42:07 +0000
-From: Jacky Chou <jacky_chou@aspeedtech.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kwilczynski@kernel.org" <kwilczynski@kernel.org>, "mani@kernel.org"
-	<mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"joel@jms.id.au" <joel@jms.id.au>, "andrew@codeconstruct.com.au"
-	<andrew@codeconstruct.com.au>, "vkoul@kernel.org" <vkoul@kernel.org>,
-	"kishon@kernel.org" <kishon@kernel.org>, "linus.walleij@linaro.org"
-	<linus.walleij@linaro.org>, "p.zabel@pengutronix.de"
-	<p.zabel@pengutronix.de>, "linux-aspeed@lists.ozlabs.org"
-	<linux-aspeed@lists.ozlabs.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-phy@lists.infradead.org"
-	<linux-phy@lists.infradead.org>, "openbmc@lists.ozlabs.org"
-	<openbmc@lists.ozlabs.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>
-CC: "elbadrym@google.com" <elbadrym@google.com>, "romlem@google.com"
-	<romlem@google.com>, "anhphan@google.com" <anhphan@google.com>,
-	"wak@google.com" <wak@google.com>, "yuxiaozhang@google.com"
-	<yuxiaozhang@google.com>, BMC-SW <BMC-SW@aspeedtech.com>
-Subject:
- =?utf-8?B?5Zue6KaGOiBbUEFUQ0ggNy83XSBwY2k6IGFzcGVlZDogQWRkIEFTUEVFRCBQ?=
- =?utf-8?Q?CIe_host_controller_driver?=
-Thread-Topic: [PATCH 7/7] pci: aspeed: Add ASPEED PCIe host controller driver
-Thread-Index: AQHb3BN5QYkLFJ4SFk66wBBeIABUJbQA2i+AgArqpKA=
-Date: Mon, 23 Jun 2025 02:42:06 +0000
-Message-ID:
- <SEYPR06MB5134623F42A5B204C20E14A99D79A@SEYPR06MB5134.apcprd06.prod.outlook.com>
-References: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
- <20250613033001.3153637-8-jacky_chou@aspeedtech.com>
- <576ca6bb-291c-458e-9703-46e7d2f43bbe@kernel.org>
-In-Reply-To: <576ca6bb-291c-458e-9703-46e7d2f43bbe@kernel.org>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|JH0PR06MB7151:EE_
-x-ms-office365-filtering-correlation-id: 92d6b196-db1b-4640-a36c-08ddb1ff8b7c
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700018|921020;
-x-microsoft-antispam-message-info:
- =?utf-8?B?elBSall4VC8wSFNXdlB3SkQzV2RhZmdWbjJlKzdCN1k1Nit1d2krSkJmYmR4?=
- =?utf-8?B?NlpucVplR2ZrRXBOMXR0RVV4QW1zeGhOSmplc3FGdjJLU0RxbWxFczdOTCtW?=
- =?utf-8?B?UWpCaElucUZ4dWlIdmFaR1ZBZkxMRHYxaVMxY3JHVkpzbm9UOVFvQ1pOWWhQ?=
- =?utf-8?B?b1psMVZ4UU1ETno2RWd6SFVCNFl0bzIvSmhDR3BYc3B3SDkzN0RTdnc5WTU1?=
- =?utf-8?B?RlFuZzc5SUpmeEg2MExrSFFLcFo4UmlxaTY2YXQzR2VGUWtIV3RaaU85Z3VM?=
- =?utf-8?B?NmM0Z3RMTDlIU3ZyRTdPQ3NlQlhsZnB3ZnJQNnlLeUx6bDhhVjJRZFEzOXJ1?=
- =?utf-8?B?MWxRY0VmZmNDaitkejFRZ2dBQXhyMHlhVGRXaTFEdzB0R3hDalY4VVM0Ty9F?=
- =?utf-8?B?ZGFyeURWeXp0Q2tYUzUvaW9JRlMzVmN3WENYZGtnKytYRFVBVDNkM0dHZXVC?=
- =?utf-8?B?bStrWlJKRDBoWjhkdDIxMnFsNGg1R3lBSi9iSzJUT2FHeHRRbE5JQjNqdDJt?=
- =?utf-8?B?N0NKUmJVT0djRVlicEcrN2x1TUVRdXdlWTBRclY5ZFI0NThNNXNQVFYxVVR4?=
- =?utf-8?B?cVhISVVCNjREYXpCdmowVEVJdkVLaWRBc0dFaWpDdXZ4dUMzaVRwQlQ0L01W?=
- =?utf-8?B?WkxNbUczZzdrSkluK0NnRzNqUGh5cjZleGVhZ2toQk5tV2taKzRyNjFSTlFi?=
- =?utf-8?B?Y3FiREtQTUdnaEIrWFMyZHEwaTdoajd2eVJHbmRtZGF0UjJhTSs0OFE3VXBo?=
- =?utf-8?B?QzlWb2p0YlZJMzM4RkJlWVFKVitHNEQvZFBqRXMyS1lLNEwzSS85MGk2b054?=
- =?utf-8?B?K0lWRVJBbjNLTjVNT0JZc1lZaGRvcDdTM0VxdkV3UXJCWkhjd1p2d29XemE4?=
- =?utf-8?B?VWgrQkR1Zis1bE0rbDlqY2w0RWp2VlA5eTNKWjhocVpqTU5Fam5HYXFVT3hu?=
- =?utf-8?B?elFiVVNYQ3lRVi94K25ma1pSQ045N0MxbXJqVDBPMDRBSlZ6ZGJsbW5RUWIv?=
- =?utf-8?B?TmNsYmNFNWNNQTF3MTllYWh6Tk15VnF1OGFwWWNoMFd2NXpvOUxMVExLREpz?=
- =?utf-8?B?cnozakluTWhnYitxb0hlTzdXV3ZyYzVEUXZmc0RYYnhCZkQ4dU9kaGxZY0ZS?=
- =?utf-8?B?anhNMC94YlhZSk9SQjUyeFZaVEpxWDVwWlIzVG5BazhoVkh0OHhBSWZjd090?=
- =?utf-8?B?OGlnZVlVY0RmUmFJK3E0RU42L01jaHNtUkdGa3NsVkxMWjRQSVVuNEpLaCt0?=
- =?utf-8?B?YTY4Qkt4dTc4dnZvTVB6cCs0cEYyTmF3WmVtTjlnRE9mMnZiRCs4dUdXbTVt?=
- =?utf-8?B?ckt6emtSNHE1dHdYT2k1RDlONEdwMzZNT3MySTJmOHFQSURRY3pPZ0kzNjlk?=
- =?utf-8?B?QlNMMUJBemVTaVBJTVBiaHNjRW0zT1BQUEM0OGU0clV5YXB1VDZQUHVlUVBo?=
- =?utf-8?B?VzdmNmtHM1M2elVVMjVOSDBDdVI0NVdHTWtUZkpkcS9FSTVPTldIS01QSlEw?=
- =?utf-8?B?Z2JIN2RvTDNoKytXQmVwQTNyV3dsZlk2bmJqTXFPYnVIbE0zMzRPYlVzVDEr?=
- =?utf-8?B?bUJSNThzZGt4d3RxT01wL2xzQWwzNzlOWjhzMEdRekUyZGdjTXVTMVBqZHIy?=
- =?utf-8?B?UlBQTVlSTFpPTFcwVTEvcVJGaWpDemJ3aHp1U0MwTExhVjlJQ1RMN2Zqc0N1?=
- =?utf-8?B?b0d0ZjFGM1RNNFh4UUN6Ykc0RFJlZ2YzM2RiMWg3MlBILzhwOHlxQzk2YUlj?=
- =?utf-8?B?MHUvY3ZHeUNLME9tWGVUTGpsd0RKS0Z5ZTRiZlRzUkV3c2c0elBwdG9mZDZo?=
- =?utf-8?B?aS9hVTB6R0xVYmhUOUxybm1GRDUzaXNka3EwZXU0Q2ZZZHlWdFIxb0ErMW1P?=
- =?utf-8?B?Q3d4YTJqOU4xNDhCL0FUN0NXQ0VvRVBjcUp3ZTRIOWpobkRHYWJuVmg0S3h1?=
- =?utf-8?B?Rlh5c1AzU1hxS3FzRU5iN2JyN1RFV0ZGYWRPc01sTDkzYjhxUHdiRVV5Smxq?=
- =?utf-8?Q?/ZMXBILUVZ1j9S7irkcfTn++GGItI8=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700018)(921020);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?dkE2clRjYkVvYXRBVm5KdVhKUkpkOEppNitEL0t5VkhOWlcreWUvdEV4QkFi?=
- =?utf-8?B?aU4xUDhaVzUrSjBzdFN6QjRVN1dLRmNtMHhNQ2ViZnBPbFFkZmQwZTV6dHU4?=
- =?utf-8?B?WkJYODkvRzgvMnVDSW8rSlZLeHV5eFBzNHgwOWdTQnJCcnVQVEJhNWllcURZ?=
- =?utf-8?B?ckE1bDNuRUpGbUh4Uzh6azlwLzJSdFczUkRXVFF1MS9odlN6YnZqQlBFV1BY?=
- =?utf-8?B?TFo2b0FpRmZJOStsaXJzTnZKcUtLeFpOZlM2RHU5aWVIZDYrMnIwRUtFa0t4?=
- =?utf-8?B?V29tRkRCeEh6blJqMmJuNHhLaDdxUTZVcnp0aUlmSTArcXJabmhQdG1INi9O?=
- =?utf-8?B?Q0p6bm1kQWZBTzVjTXplSXJzb3Q1QUR4L2RwYzZSWFNpTDh4MVBtSVlYL3d2?=
- =?utf-8?B?VXJCS012OUxQbmcwUGNmWGZwVSszWHc0WHhDY2hTWThwdStpcFEvOEZjVysy?=
- =?utf-8?B?ekxvNGJoOTF1S2xFU3hkSTRKU21iY1lkS2o1R241V1c1UWdUY1F0bi9Cc21U?=
- =?utf-8?B?YnB3VUJScm1tOWVxTE1QUlVjN0xMOFQ5MGZMQWJDOGpzbW5kSVhmRnpJS1BF?=
- =?utf-8?B?OWFZaEtoUlJUWmFjWG5VaTZrcjk3cDg1TXlBYk9VYVhoV3ZhbnVJVytlbC9X?=
- =?utf-8?B?RDAzVFBkQWtjOGtLdFhLRkw1WjNoSmRSMnppam4rWW5VcElxZzZLSWRCd3Q5?=
- =?utf-8?B?WXFhMG1odmVHemoya1Y5eVdVQ2I2Tkh5KzUyNXdraUd6NmRZUUdoR0JOTEJB?=
- =?utf-8?B?OGdhczNFYnFBUmJaVnFZMUNtanhnSHhBYjhzZGZpbGpBRkppVWRxSjBoT1F2?=
- =?utf-8?B?V1JXMXI5bGRHWUVlRExvbW1qZ1EyNWJ6dXVTQVNsUXdIN0tQVjM3Ty80UUFX?=
- =?utf-8?B?Tlk2VVdjNEJKWEdEN21qZVlhVlYzdlpNUWxucXRQOXBLb2NZNW1sUHF4RVp6?=
- =?utf-8?B?ME5UOFFMMVYxcXNjQW0zd0FTc2V5dDVFVjZaWWpHRjAzaXExbHBMOVpkSmJ0?=
- =?utf-8?B?djV4R2tMK082VG9yc2FieU1OL29oNWVyVkFIY000RG1WQzFDM2tldWIxQ0Vs?=
- =?utf-8?B?K1c5N3NROHhTTC9GK3YxdTFPRFFwYWZQeVNSSUUzdFlGSEU3RlM2OUpYeVNw?=
- =?utf-8?B?SHF6MXh0S3grVndZQVJsL09vMkkzamttRHRzMnk3eVNrVFd5VkFoYW9kU0FY?=
- =?utf-8?B?OXBlSmxpcG9yMm5CQkVjYnczUUZ6NVBGMFJKWjFFODVVVEc5Vi9GcVhLWnBT?=
- =?utf-8?B?Z3FrRkZDZUxiKzVSYjU1bTVCOVpQYUJ6SDhldjJTb2lkNkVPZUZnbTFqUG5G?=
- =?utf-8?B?NldBcjJRektYRTBzU0xWVmpDRld3d3k2LzdQSThnOSt6Vkw0eGZKNVNBOVRW?=
- =?utf-8?B?TzRjZno0ZnpvelBpK1UxMHhrbnU1NmtLRzA0RDNSVWpnUG1wMG5HaCtEcDJU?=
- =?utf-8?B?L3RBbFI2UFN1YVF3TnZ3UkJQWkwwNzVvM3grY2pmUGpOTEo2QWprVExkNkhl?=
- =?utf-8?B?MEljNTF4QW5LS2IzZFQyc0tKSnlTL05kYVNuZS9VUU1JVTgzQUdSeTR6MTlv?=
- =?utf-8?B?aVRwV0FtMVBjaXpQWml1RFRXMEI2ZjNVbzNNOC9uVGxRcTZjQkxVeVFUQUZp?=
- =?utf-8?B?YXRMWlFrZzMzYkEzdXhlbitGVU1DZjV0M2tHTGFSN3NuWnNpUEIrUmpDVnd2?=
- =?utf-8?B?VUlUcmYzWVdUbnM3T2FrWFhidDZtL0JtcHJFcjhXbUpOOEFabHA1RlEwMlho?=
- =?utf-8?B?TDhiQkMzT1daNjV5eGFaOFpVMWxUTC9EVy9VY0ZhbURVWWdneWpjaXk5RHpp?=
- =?utf-8?B?OHVsZmxOeXNKWGpuVDJCeFordmJhdit4U2p2dTV6K1pVbHRsUzBHYVRWYTEx?=
- =?utf-8?B?V3Y4eGMzUUo3a1dQU2VvRldiUFVtbWFqZjNaUVdDejd5OGY4elZseGc4YkJz?=
- =?utf-8?B?SThNYTdIQTh6OXF1T0MxSERzbHRBTnFQdXNFSlZxY21TVDVlYSthS2RBb3NE?=
- =?utf-8?B?dzczWDdkMjFFczBQZXFEaGpmeERpVjM3UENnUytEZENxNFI5K05tNENCdjF4?=
- =?utf-8?B?L01PV0JRb3ExYXJsWWRQT29PZFV6SVBCS0w4R29ENFM1WkwzbmduN09DSCsz?=
- =?utf-8?Q?Zh3Uhfnj1/C6qG7tbZ9GiglLi?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8314ABA50;
+	Mon, 23 Jun 2025 02:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750646775; cv=none; b=IGXMt9AVSIYMHkAfYovvtHDZPOP614M0PrZfBsHP6qQnTh7XWOVxUH5DTSSzjAsDiloCsAWUp8NGD0+ejnWe3xHsEkBZ3h/f8KnZ83obyHzRjdzty8Ie+hyoU/It6r6Z9JALdpsaPgUu3wZBiBHMONSaY/YqEO2wqr+q+l2RMq0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750646775; c=relaxed/simple;
+	bh=noVEtO+mmxWEMSDatHCpAJTN3cZTOH7PStFp6VmyguE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=HrJGHI9BdAmHEYtGoN1DU8qk53l27980ddf91LjqHyLaBWcJVG9+KHkfSN1G+KytEnpgMhRNwlWxts4yTupwhxFzlTdBAqEYLagVhHl/JhASaNBqOQXLz5qwg0BFZGMXg522RDordQSWhaHJ8a1Q2ONC2+edHgHOve3yXxcKZh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8Bxnmvwv1ho4WAbAQ--.20967S3;
+	Mon, 23 Jun 2025 10:46:08 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by front1 (Coremail) with SMTP id qMiowMBx3xvfv1ho7qcmAQ--.62230S3;
+	Mon, 23 Jun 2025 10:45:54 +0800 (CST)
+Subject: Re: [PATCH v4 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
+To: Thomas Gleixner <tglx@linutronix.de>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
+ jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+ gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250610114252.21077-1-zhangtianyang@loongson.cn>
+ <20250610114252.21077-3-zhangtianyang@loongson.cn> <87o6uris6p.ffs@tglx>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <9c60326b-f7bd-0b36-3bc5-0ad7d19690f1@loongson.cn>
+Date: Mon, 23 Jun 2025 10:45:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92d6b196-db1b-4640-a36c-08ddb1ff8b7c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jun 2025 02:42:07.0867
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5ekJbExjzwNFB9pWRL399kB9xS1pjMEOZtBfK6KleEyZJSC7PsX/50yEHSJZBJUJjma1BJDw5Jro25kxQDRvoEVVNb+NxBFJn7hWkJU2xa8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB7151
+In-Reply-To: <87o6uris6p.ffs@tglx>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMBx3xvfv1ho7qcmAQ--.62230S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9fXoW3tFy5ur45Cw48KFy8CF15GFX_yoW8XrW7Xo
+	WfJrs7Aa18Wr1rGrWUCayIyFy3Aa4rur48Aw1UGwsrA3Z0va1UCw4xG3y5XFWagF40qF47
+	Ja48J3s8KFWjqrn3l-sFpf9Il3svdjkaLaAFLSUrUUUU5b8apTn2vfkv8UJUUUU8wcxFpf
+	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
+	UjIYCTnIWjp_UUUOn7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
+	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
+	Y2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
+	wI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
+	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+	xGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAK
+	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrV
+	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCI
+	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_
+	Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8XTm3
+	UUUUU==
 
-PiA+ICAJICBUaGlzIHNlbGVjdHMgYSBkcml2ZXIgZm9yIHRoZSBNZWRpYVRlayBNVDc2MjEgUENJ
-ZSBDb250cm9sbGVyLg0KPiA+DQo+ID4gK2NvbmZpZyBQQ0lFX0FTUEVFRA0KPiA+ICsJYm9vbCAi
-QVNQRUVEIFBDSWUgY29udHJvbGxlciINCj4gPiArCWRlcGVuZHMgb24gUENJDQo+IA0KPiBkZXBl
-bmRzIEFSQ0hfQVNQRUVEIHx8IENPTVBJTEVfVEVTVA0KPiANCg0KQWdyZWVkLg0KDQo+ID4gKwlk
-ZXBlbmRzIG9uIE9GIHx8IENPTVBJTEVfVEVTVA0KPiA+ICsJc2VsZWN0IFBDSV9NU0lfQVJDSF9G
-QUxMQkFDS1MNCj4gPiArCWhlbHANCj4gPiArCSAgRW5hYmxlIHRoaXMgb3B0aW9uIHRvIGFkZCBz
-dXBwb3J0IGZvciB0aGUgUENJZSBjb250cm9sbGVyDQo+ID4gKwkgIGZvdW5kIG9uIEFTUEVFRCBT
-b0NzLg0KPiA+ICsJICBUaGlzIGRyaXZlciBwcm92aWRlcyBpbml0aWFsaXphdGlvbiBhbmQgbWFu
-YWdlbWVudCBmb3IgUENJZQ0KPiA+ICsJICBSb290IENvbXBsZXggZnVuY3Rpb25hbGl0eSwgaW5j
-bHVkaW5nIGludGVycnVwdCBhbmQgTVNJIHN1cHBvcnQuDQo+ID4gKwkgIFNlbGVjdCBZIGlmIHlv
-dXIgcGxhdGZvcm0gdXNlcyBhbiBBU1BFRUQgU29DIGFuZCByZXF1aXJlcyBQQ0llDQo+ID4gKwkg
-IGNvbm5lY3Rpdml0eS4NCj4gPiArDQo+ID4gIGNvbmZpZyBQQ0lfSFlQRVJWX0lOVEVSRkFDRQ0K
-PiA+ICAJdHJpc3RhdGUgIk1pY3Jvc29mdCBIeXBlci1WIFBDSSBJbnRlcmZhY2UiDQo+ID4gIAlk
-ZXBlbmRzIG9uICgoWDg2ICYmIFg4Nl82NCkgfHwgQVJNNjQpICYmIEhZUEVSViAmJiBQQ0lfTVNJ
-IGRpZmYNCj4gPiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvTWFrZWZpbGUNCj4gPiBi
-L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvTWFrZWZpbGUgaW5kZXggMDM4Y2NiZDllM2JhLi4xMzM5
-Zjg4ZTE1M2QNCj4gPiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL01h
-a2VmaWxlDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9NYWtlZmlsZQ0KPiA+IEBA
-IC0zOSw2ICszOSw3IEBAIG9iai0kKENPTkZJR19QQ0lfTE9PTkdTT04pICs9IHBjaS1sb29uZ3Nv
-bi5vDQo+ID4gIG9iai0kKENPTkZJR19QQ0lFX0hJU0lfRVJSKSArPSBwY2llLWhpc2ktZXJyb3Iu
-bw0KPiA+ICBvYmotJChDT05GSUdfUENJRV9BUFBMRSkgKz0gcGNpZS1hcHBsZS5vDQo+ID4gIG9i
-ai0kKENPTkZJR19QQ0lFX01UNzYyMSkgKz0gcGNpZS1tdDc2MjEubw0KPiA+ICtvYmotJChDT05G
-SUdfUENJRV9BU1BFRUQpICs9IHBjaWUtYXNwZWVkLm8NCj4gPg0KPiA+ICAjIHBjaWUtaGlzaS5v
-IHF1aXJrcyBhcmUgbmVlZGVkIGV2ZW4gd2l0aG91dCBDT05GSUdfUENJRV9EVw0KPiA+ICBvYmot
-eQkJCQkrPSBkd2MvDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNp
-ZS1hc3BlZWQuYw0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLWFzcGVlZC5jDQo+
-ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLmM3NDU2ODRh
-N2Y5Yg0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVy
-L3BjaWUtYXNwZWVkLmMNCj4gPiBAQCAtMCwwICsxLDEwMzkgQEANCj4gPiArLy8gU1BEWC1MaWNl
-bnNlLUlkZW50aWZpZXI6IEdQTC0yLjArDQo+ID4gKy8qDQo+ID4gKyAqIENvcHlyaWdodCAyMDI1
-IEFzcGVlZCBUZWNobm9sb2d5IEluYy4NCj4gPiArICovDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9p
-cnFjaGlwL2NoYWluZWRfaXJxLmg+ICNpbmNsdWRlIDxsaW51eC9pcnFkb21haW4uaD4NCj4gPiAr
-I2luY2x1ZGUgPGxpbnV4L21mZC9zeXNjb24uaD4gI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPiAj
-aW5jbHVkZQ0KPiA+ICs8bGludXgvbXNpLmg+ICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4gI2lu
-Y2x1ZGUNCj4gPiArPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPiAjaW5jbHVkZSA8bGludXgvb2Zf
-cGxhdGZvcm0uaD4NCj4gDQo+IFdoZXJlIGRvIHlvdSB1c2UgaXQ/DQoNCk5vLCBJIHdpbGwgcmVt
-b3ZlIGl0IGluIG5leHQgdmVyc2lvbi4NCg0KPiANCj4gPiArI2luY2x1ZGUgPGxpbnV4L29mX2Fk
-ZHJlc3MuaD4NCj4gDQo+IFdoZXJlIGRvIHlvdSB1c2UgaXQ/DQo+IA0KDQpObywgSSB3aWxsIHJl
-bW92ZSBpdCBpbiBuZXh0IHZlcnNpb24uDQoNCj4gDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZl9p
-cnEuaD4NCj4gDQo+IFdoZXJlIGRvIHlvdSB1c2UgaXQ/DQo+IA0KDQpObywgSSB3aWxsIHJlbW92
-ZSBpdCBpbiBuZXh0IHZlcnNpb24uDQoNCj4gDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZl9wY2ku
-aD4NCj4gDQo+IFdoZXJlIGRvIHlvdSB1c2UgaXQ/DQo+IA0KDQpObywgSSB3aWxsIHJlbW92ZSBp
-dCBpbiBuZXh0IHZlcnNpb24uDQoNCj4gPiArI2luY2x1ZGUgPGxpbnV4L3BjaS5oPg0KPiA+ICsj
-aW5jbHVkZSA8bGludXgvcmVnbWFwLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9yZXNldC5oPg0K
-PiA+ICsjaW5jbHVkZSA8bGludXgvaXJxLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1
-cHQuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3dvcmtxdWV1ZS5oPg0KPiA+ICsjaW5jbHVkZSA8
-bGludXgvZ3Bpby9jb25zdW1lci5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvYml0ZmllbGQuaD4N
-Cj4gPiArI2luY2x1ZGUgPGxpbnV4L2Nsay5oPg0KPiA+ICsNCj4gDQo+IA0KPiANCj4gLi4uDQo+
-IA0KPiA+ICsNCj4gPiArc3RhdGljIGludCBhc3BlZWRfcGNpZV9wcm9iZShzdHJ1Y3QgcGxhdGZv
-cm1fZGV2aWNlICpwZGV2KSB7DQo+ID4gKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2
-Ow0KPiA+ICsJc3RydWN0IHBjaV9ob3N0X2JyaWRnZSAqaG9zdDsNCj4gPiArCXN0cnVjdCBhc3Bl
-ZWRfcGNpZSAqcGNpZTsNCj4gPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSA9IGRldi0+b2Zf
-bm9kZTsNCj4gPiArCWNvbnN0IHZvaWQgKm1kID0gb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKGRl
-dik7DQo+IA0KPiBOb3Qgdm9pZCwgYnV0IHNwZWNpZmljIHR5cGUuIFRoaXMgaXMgbm90IEphdmFz
-Y3JpcHQsIHdlIGhhdmUgaGVyZSB0eXBlcy4NCj4gDQoNCkFncmVlZC4NCkkgd2lsbCBhZGQgdGhp
-cyB0eXBlIGluIG5leHQgdmVyc2lvbi4NCg0KPiA+ICsJaW50IGlycSwgcmV0Ow0KPiA+ICsNCj4g
-PiArCWlmICghbWQpDQo+ID4gKwkJcmV0dXJuIC1FTk9ERVYNCg0KLi4uDQoNCj4gPiArDQo+ID4g
-KwlpcnEgPSBwbGF0Zm9ybV9nZXRfaXJxKHBkZXYsIDApOw0KPiA+ICsJaWYgKGlycSA8IDApDQo+
-ID4gKwkJZ290byBlcnJfaXJxOw0KPiA+ICsNCj4gPiArCXJldCA9IGRldm1fcmVxdWVzdF9pcnEo
-ZGV2LCBpcnEsIGFzcGVlZF9wY2llX2ludHJfaGFuZGxlciwgSVJRRl9TSEFSRUQsDQo+IGRldl9u
-YW1lKGRldiksDQo+ID4gKwkJCSAgICAgICBwY2llKTsNCj4gPiArCWlmIChyZXQpDQo+ID4gKwkJ
-Z290byBlcnJfaXJxOw0KPiA+ICsNCj4gPiArCXBjaWUtPmNsb2NrID0gY2xrX2dldChkZXYsIE5V
-TEwpOw0KPiANCj4gSHVoLi4uDQo+IA0KPiA+ICsJaWYgKElTX0VSUihwY2llLT5jbG9jaykpDQo+
-ID4gKwkJZ290byBlcnJfY2xrOw0KPiA+ICsJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKHBjaWUt
-PmNsb2NrKTsNCj4gDQo+IGRldm1fY2xrX2dldF9lbmFibGVkLg0KPiANCg0KSSB3aWxsIGNoYW5n
-ZSBpdCBpbiBuZXh0IHZlcnNpb24uDQoNCj4gPiArCWlmIChyZXQpDQo+ID4gKwkJZ290byBlcnJf
-Y2xrX2VuYWJsZTsNCj4gPiArDQo+ID4gKwlyZXQgPSBwY2lfaG9zdF9wcm9iZShob3N0KTsNCj4g
-PiArCWlmIChyZXQpDQo+ID4gKwkJZ290byBlcnJfY2xrX2VuYWJsZTsNCj4gPiArDQo+ID4gKwly
-ZXR1cm4gMDsNCj4gPiArDQo+ID4gK2Vycl9jbGtfZW5hYmxlOg0KPiA+ICsJY2xrX3B1dChwY2ll
-LT5jbG9jayk7DQo+ID4gK2Vycl9jbGs6DQo+ID4gK2Vycl9pcnE6DQo+ID4gKwlhc3BlZWRfcGNp
-ZV9pcnFfZG9tYWluX2ZyZWUocGNpZSk7DQo+ID4gK2Vycl9pcnFfaW5pdDoNCj4gPiArZXJyX3Nl
-dHVwOg0KPiA+ICsJcmV0dXJuIGRldl9lcnJfcHJvYmUoZGV2LCByZXQsICJGYWlsZWQgdG8gc2V0
-dXAgUENJZSBSQ1xuIik7IH0NCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIGFzcGVlZF9wY2llX3Jl
-bW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KSB7DQo+ID4gKwlzdHJ1Y3QgYXNwZWVk
-X3BjaWUgKnBjaWUgPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsNCj4gPiArDQo+ID4gKwlp
-ZiAocGNpZS0+Y2xvY2spIHsNCj4gPiArCQljbGtfZGlzYWJsZV91bnByZXBhcmUocGNpZS0+Y2xv
-Y2spOw0KPiA+ICsJCWNsa19wdXQocGNpZS0+Y2xvY2spOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiAr
-CXBjaV9zdG9wX3Jvb3RfYnVzKHBjaWUtPmhvc3QtPmJ1cyk7DQo+ID4gKwlwY2lfcmVtb3ZlX3Jv
-b3RfYnVzKHBjaWUtPmhvc3QtPmJ1cyk7DQo+ID4gKwlhc3BlZWRfcGNpZV9pcnFfZG9tYWluX2Zy
-ZWUocGNpZSk7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBzdHJ1Y3QgYXNwZWVkX3BjaWVf
-cmNfcGxhdGZvcm0gcGNpZV9yY19hc3QyNjAwID0gew0KPiANCj4gVGhpcyBzaG91bGQgYmUgY29u
-c3QuIFdoeSBpdCBjYW5ub3Q/DQo+IA0KDQpBZ3JlZWQuDQoNCj4gPiArCS5zZXR1cCA9IGFzcGVl
-ZF9hc3QyNjAwX3NldHVwLA0KPiA+ICsJLnJlZ19pbnR4X2VuID0gMHgwNCwNCj4gPiArCS5yZWdf
-aW50eF9zdHMgPSAweDA4LA0KPiA+ICsJLnJlZ19tc2lfZW4gPSAweDIwLA0KPiA+ICsJLnJlZ19t
-c2lfc3RzID0gMHgyOCwNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBzdHJ1Y3QgYXNwZWVk
-X3BjaWVfcmNfcGxhdGZvcm0gcGNpZV9yY19hc3QyNzAwID0gew0KPiANCj4gVGhpcyBzaG91bGQg
-YmUgY29uc3QuIFdoeSBpdCBjYW5ub3Q/DQo+IA0KDQpBZ3JlZWQuDQoNCj4gPiArCS5zZXR1cCA9
-IGFzcGVlZF9hc3QyNzAwX3NldHVwLA0KPiA+ICsJLnJlZ19pbnR4X2VuID0gMHg0MCwNCj4gPiAr
-CS5yZWdfaW50eF9zdHMgPSAweDQ4LA0KPiA+ICsJLnJlZ19tc2lfZW4gPSAweDUwLA0KPiA+ICsJ
-LnJlZ19tc2lfc3RzID0gMHg1OCwNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBz
-dHJ1Y3Qgb2ZfZGV2aWNlX2lkIGFzcGVlZF9wY2llX29mX21hdGNoW10gPSB7DQo+ID4gKwl7IC5j
-b21wYXRpYmxlID0gImFzcGVlZCxhc3QyNjAwLXBjaWUiLCAuZGF0YSA9ICZwY2llX3JjX2FzdDI2
-MDAgfSwNCj4gPiArCXsgLmNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI3MDAtcGNpZSIsIC5kYXRh
-ID0gJnBjaWVfcmNfYXN0MjcwMCB9LA0KPiA+ICsJe30NCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0
-YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIGFzcGVlZF9wY2llX2RyaXZlciA9IHsNCj4gPiAr
-CS5kcml2ZXIgPSB7DQo+ID4gKwkJLm5hbWUgPSAiYXNwZWVkLXBjaWUiLA0KPiA+ICsJCS5zdXBw
-cmVzc19iaW5kX2F0dHJzID0gdHJ1ZSwNCj4gDQo+IFdoeT8NCj4gDQoNCkkgd2lsbCByZW1vdmUg
-aXQgaW4gbmV4dCB2ZXJzaW9uLg0KDQo+ID4gKwkJLm9mX21hdGNoX3RhYmxlID0gYXNwZWVkX3Bj
-aWVfb2ZfbWF0Y2gsDQo+ID4gKwl9LA0KPiA+ICsJLnByb2JlID0gYXNwZWVkX3BjaWVfcHJvYmUs
-DQo+ID4gKwkucmVtb3ZlID0gYXNwZWVkX3BjaWVfcmVtb3ZlLA0KPiANCj4gU28gaG93IGV4YWN0
-bHkgcmVtb3ZlIGNhbiBiZSB0cmlnZ2VyZWQ/DQo+IA0KDQpBZ3JlZWQuDQpJIHRoaW5rIGl0IG1h
-eSBiZSB0cmlnZ2VyZWQgd2hlbiByZWJvb3RpbmcuDQpJIHdpbGwgcmVtb3ZlIGl0IGluIG5leHQg
-dmVyc2lvbi4NCg0KVGhhbmtzLA0KSmFja3kNCg0K
+Hi, Thomas
+
+ÔÚ 2025/6/13 ÏÂÎç11:20, Thomas Gleixner Ð´µÀ:
+> On Tue, Jun 10 2025 at 19:42, Tianyang Zhang wrote:
+>>   		if (cpu_online(adata->cpu) && cpumask_test_cpu(adata->cpu, dest))
+>> -			return 0;
+>> +			/*
+>> +			 * The new affinity configuration has taken effect,
+>> +			 * and returning IRQ_SET_MASK_OK_DONE here indicates that no further
+>> +			 * changes need to be made in the subsequent process
+> This is not what IRQ_SET_MASK_OK_DONE is about. The documentation
+> clearly says:
+>
+>   * IRQ_SET_MASK_OK_DONE - Same as IRQ_SET_MASK_OK for core. Special code to
+>   *                        support stacked irqchips, which indicates skipping
+>   *                        all descendant irqchips.
+>
+> It's not about further changes. It's about preventing invoking
+> set_affinity() callbacks down the hierarchy.
+>
+> And you still fail to explain why this change is correct for the
+> existing code. That explanation wants to be in the changelog of the
+> seperate patch doing this change.
+>
+> And then you can spare the comment, which is btw. also violating the
+> bracket rules in the tip maintainers documentation.
+
+OK, This means that this change involves adjustments to the code 
+organization
+
+and cannot be included solely in a large patch. It requires clearer 
+submission records and explanations
+
+If that's the case, I will make the necessary modifications as 
+requested. Thank you
+
+>
+>
+>> +			 */
+>> +			return IRQ_SET_MASK_OK_DONE;
+>>   
+>>   		cpumask_and(&intersect_mask, dest, cpu_online_mask);
+>>   
+>> @@ -121,7 +116,8 @@ static int avecintc_set_affinity(struct irq_data *data, const struct cpumask *de
+>>   		adata->cpu = cpu;
+>>   		adata->vec = vector;
+>>   		per_cpu_ptr(irq_map, adata->cpu)[adata->vec] = irq_data_to_desc(data);
+>> -		avecintc_sync(adata);
+>> +		if (!cpu_has_redirectint)
+>> +			avecintc_sync(adata);
+>>   	}
+>>   
+>>   	irq_data_update_effective_affinity(data, cpumask_of(cpu));
+>> @@ -412,6 +408,9 @@ static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
+>>   
+>>   static inline int __init acpi_cascade_irqdomain_init(void)
+>>   {
+>> +	if (cpu_has_redirectint)
+>> +		return redirect_acpi_init(loongarch_avec.domain);
+>> +
+>>   	return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
+>>   }
+>>   
+>> diff --git a/drivers/irqchip/irq-loongarch-ir.c b/drivers/irqchip/irq-loongarch-ir.c
+>> new file mode 100644
+>> index 000000000000..ae42ec5028d2
+>> --- /dev/null
+>> +++ b/drivers/irqchip/irq-loongarch-ir.c
+>> @@ -0,0 +1,562 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2020 Loongson Technologies, Inc.
+>> + */
+>> +
+>> +#include <linux/cpuhotplug.h>
+>> +#include <linux/init.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/irq.h>
+>> +#include <linux/irqchip.h>
+>> +#include <linux/irqdomain.h>
+>> +#include <linux/spinlock.h>
+>> +#include <linux/msi.h>
+>> +
+>> +#include <asm/irq.h>
+>> +#include <asm/loongarch.h>
+>> +#include <asm/setup.h>
+>> +#include <larchintrin.h>
+>> +
+>> +#include "irq-loongson.h"
+>> +#include "irq-msi-lib.h"
+>> +
+>> +#define IRD_ENTRIES			65536
+>> +
+>> +/* redirect entry size 128bits */
+>> +#define IRD_PAGE_ORDER			(20 - PAGE_SHIFT)
+>> +
+>> +/* irt cache invalid queue */
+>> +#define	INVALID_QUEUE_SIZE		4096
+> Use SPACE after #define, not TAB. All over the place...
+OK, I got it
+>
+>> +#define INVALID_QUEUE_PAGE_ORDER	(16 - PAGE_SHIFT)
+> I'm pretty sure that the above magic numbers have dependencies in some
+> way, right? So why is it not expressed in a way which makes this obvious?
+>
+> These magic numbers are just incomprehensible as they make the reader
+> guess what this is about. Here is my (probably not so) wild guess:
+>
+> #define IRD_ENTRY_SIZE			16
+>
+> #define IRD_ENTRIES			65536
+> #define IRD_PAGE_ORDER			get_order(IRD_ENTRIES * IRD_ENTRY_SIZE)
+>
+> #define	INVALID_QUEUE_SIZE		4096
+> #define IRD_INVALID__QUEUE_PAGE_ORDER	get_order(INVALID_QUEUE_SIZE * IRD_ENTRY_SIZE)
+>
+> No?
+Yes, this is better way , and I will pay attention to improving the 
+readability of the code in the future
+>
+> GENMASK()
+Ok , I got it , thanks
+>
+>> +#define CFG_DISABLE_IDLE		2
+>> +#define INVALID_INDEX			0
+>> +
+>> +#define MAX_IR_ENGINES			16
+>
+>> +struct redirect_gpid {
+>> +	u64	pir[4];      /* Pending interrupt requested */
+>> +	u8	en	: 1, /* doorbell */
+> Use C++ style tail comments for this as documented. Do you I really have
+> to point out every single item in the documentation explicitely or can
+> you just read all of it and follow the guidelines?
+
+Okay, here are some references to existing code....
+
+I will reorganize all code style issues according to the documentation
+
+>
+>> +struct irde_desc {
+>> +	struct	redirect_table	ird_table;
+>> +	struct	redirect_queue	inv_queue;
+>> +	int	finish;
+> Groan.
+>
+> "Struct declarations should align the struct member names in a tabular fashion:
+>
+>   struct bar_order {
+>          unsigned int    guest_id;
+>          int             ordered_item;
+>          struct menu     *menu;
+>   };"
+>
+> It clearly says to align the struct member names, no?
+>
+> Otherwise the example would be:
+>
+>   struct bar_order {
+>          unsigned int    guest_id;
+>          int             ordered_item;
+>          struct 		menu     	*menu;
+>   };
+>
+> which is unreadable garbage obviously.
+Ok, I will adjust here and check for other similar issues
+>
+>> +static void invalid_enqueue(struct redirect_queue *rqueue, struct irde_inv_cmd *cmd)
+>> +{
+>> +	struct irde_inv_cmd *inv_addr;
+>> +	u32 tail;
+>> +
+>> +	guard(raw_spinlock_irqsave)(&rqueue->lock);
+>> +
+>> +	while (invalid_queue_is_full(rqueue->node, &tail))
+>> +		cpu_relax();
+>> +
+>> +	inv_addr = (struct irde_inv_cmd *)(rqueue->base + tail * sizeof(struct irde_inv_cmd));
+>> +	memcpy(inv_addr, cmd, sizeof(struct irde_inv_cmd));
+> Seriously?
+>
+> struct redirect_queue {
+> 	int				node;
+>          union {
+>   		u64			base;
+>                  struct irde_inv_cmd	*cmds;
+>          };
+> 	u32				max_size;
+>          ...
+> };
+>
+> and then this becomes
+>
+>      	memcpy(&rqueue->cmds[tail], cmd, sizeof(cmd));
+>
+> That's too comprehensible, right?
+Yes, this is a more readable writing style, thank you
+>
+>> +	tail = (tail + 1) % INVALID_QUEUE_SIZE;
+> Why is this before the barrier? The barrier does not do anything about
+> this and you can simplify this. See below.
+>
+> And as there is no rmb() counterpart you want to explain that this is
+> serializing against the hardware.
+>> +	 */
+>> +	wmb();
+>> +
+>> +	write_queue_tail(rqueue->node, tail);
+> 	write_queue_tail(rqueue->node, (tail + 1) & INVALID_QUEUE_MASK);
+>
+> No?
+
+The reason fo coding here is that during testing, it was found that a 
+barrier is needed between the
+
+update of temporary variable 'tail' and the operation of register with 
+'write_queue_tail'
+
+, otherwise write_queue_tail will probabilistically fail to obtain the 
+correct value.
+
+We will conduct testing on the above methods, and if possible, make 
+changes as required, or promote improvements in code readability
+
+thanks
+
+>
+>> +}
+>> +
+>> +static void irde_invlid_entry_node(struct redirect_item *item)
+>> +{
+>> +	struct redirect_queue *rqueue;
+>> +	struct irde_inv_cmd cmd;
+>> +	volatile u64 raddr = 0;
+> No. See Documentation/process/volatile-considered-harmful.rst
+Ok, I will follow the agreement here
+>
+>> +static void redirect_table_free(struct redirect_item *item)
+>> +{
+>> +	struct redirect_table *ird_table;
+>> +	struct redirect_entry *entry;
+>> +
+>> +	ird_table = item->table;
+>> +
+>> +	entry = item->entry;
+>> +	memset(entry, 0, sizeof(struct redirect_entry));
+>          memset(entry, 0, sizeof(entry));
+>
+> It's obvious why using sizeof(type) is a bad idea.
+Ok, I got it
+>
+>> +	scoped_guard(raw_spinlock_irqsave, &ird_table->lock)
+> raw_spinlock_irq as this code can never be invoked from an interrupt
+> disabled region.
+Ok, I will make the necessary corrections here
+>
+>> +		bitmap_release_region(ird_table->bitmap, item->index, 0);
+>> +
+>> +	kfree(item->gpid);
+>> +
+>> +	irde_invlid_entry_node(item);
+>> +}
+>> +static inline void redirect_domain_prepare_entry(struct redirect_item *item,
+>> +						 struct avecintc_data *adata)
+>> +{
+>> +	struct redirect_entry *entry = item->entry;
+>> +
+>> +	item->gpid->en = 1;
+>> +	item->gpid->irqnum = adata->vec;
+>> +	item->gpid->dst = adata->cpu;
+>> +
+>> +	entry->lo.valid = 1;
+>> +	entry->lo.gpid = ((long)item->gpid >> GPID_ADDR_SHIFT) & (GPID_ADDR_MASK);
+> Hardware addresses are type unsigned long and not long.
+Ok , I got it
+>
+>> +	entry->lo.vector = 0xff;
+>> +}
+>> +static void redirect_compose_msi_msg(struct irq_data *d, struct msi_msg *msg)
+>> +{
+>> +	struct redirect_item *item;
+>> +
+>> +	item = irq_data_get_irq_chip_data(d);
+> Just move the initialization into the declaration line.
+Ok, I got it
+>
+>> +		if (irq_data && irq_data->chip_data) {
+>> +			struct redirect_item *item;
+>> +
+>> +			item = irq_data->chip_data;
+> Same and all over the place.
+>
+>> +			redirect_table_free(item);
+>> +			kfree(item);
+>> +		}
+>> +	}
+>> +}
+>> +
+>> +static int redirect_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>> +			unsigned int nr_irqs, void *arg)
+> I asked you before to align the arguments of the second line properly
+> and according to documentation..
+
+Sorry, I have reconfirmed the modification records and found that it was 
+fixed in the first temporary version.
+
+However, the modification was lost during several testing environment 
+migrations in the middle.
+
+I will adjust my code organization process
+
+>
+>> +{
+>> +	struct redirect_table *ird_table;
+>> +	struct avecintc_data *avec_data;
+>> +	struct irq_data *irq_data;
+>> +	msi_alloc_info_t *info;
+>> +	int ret, i, node;
+>> +
+>> +	info = (msi_alloc_info_t *)arg;
+> What's that type cast for?
+emm......, An oversight during the code modification process
+>
+>> +	node = dev_to_node(info->desc->dev);
+>> +	ird_table = &irde_descs[node].ird_table;
+>> +
+>> +	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	for (i = 0; i < nr_irqs; i++) {
+>> +		struct redirect_item *item;
+>> +
+>> +		item = kzalloc(sizeof(struct redirect_item), GFP_KERNEL);
+>> +		if (!item) {
+>> +			pr_err("Alloc redirect descriptor failed\n");
+>> +			goto out_free_resources;
+>> +		}
+>> +
+>> +		irq_data = irq_domain_get_irq_data(domain, virq + i);
+>> +
+>> +		avec_data = irq_data_get_avec_data(irq_data);
+> Neither irq_data nor avec_data are used here and only required way
+> down. Can you structure your code so it makes sense?
+Ok, I will follow your advice
+>
+>> +		ret = redirect_table_alloc(item, ird_table);
+>> +		if (ret) {
+>> +			pr_err("Alloc redirect table entry failed\n");
+>> +			goto out_free_resources;
+>> +		}
+>> +
+>> +		item->gpid = kzalloc_node(sizeof(struct redirect_gpid), GFP_KERNEL, node);
+>> +		if (!item->gpid) {
+>> +			pr_err("Alloc redirect GPID failed\n");
+>> +			goto out_free_resources;
+>> +		}
+> Why do you need this extra allocation here instead of simply embedding
+> gpid into item?
+Ok, I got it , thanks
+>> +		irq_data->chip_data = item;
+>> +		irq_data->chip = &loongarch_redirect_chip;
+>> +		redirect_domain_prepare_entry(item, avec_data);
+>> +	}
+>> +	return 0;
+>> +	iocsr_write64(((rqueue->base & (CQB_ADDR_MASK << CQB_ADDR_SHIFT)) |
+>> +				(CQB_SIZE_MASK << CQB_SIZE_SHIFT)), LOONGARCH_IOCSR_REDIRECT_CQB);
+> Align second line properly.
+Ok, I got it , thanks
+>
+>> +	return 0;
+>> +}
+>> +
+>> +static int redirect_table_init(int node)
+>> +{
+>> +	struct redirect_table *ird_table = &(irde_descs[node].ird_table);
+> Remove the pointless brackets.
+Ok, I got it , thanks
+>
+>> +	unsigned long *bitmap;
+>> +	struct page *pages;
+>> +	int ret;
+>> +
+>> +	pages = alloc_pages_node(node, GFP_KERNEL | __GFP_ZERO, IRD_PAGE_ORDER);
+>> +	if (!pages) {
+>> +		pr_err("Node [%d] redirect table alloc pages failed!\n", node);
+>> +		return -ENOMEM;
+>> +	}
+>> +	ird_table->page = pages;
+>> +	ird_table->table = page_address(pages);
+>> +
+>> +	bitmap = bitmap_zalloc(IRD_ENTRIES, GFP_KERNEL);
+>> +	if (!bitmap) {
+>> +		pr_err("Node [%d] redirect table bitmap alloc pages failed!\n", node);
+>> +		ret = -ENOMEM;
+>> +		goto free_pages;
+>> +	}
+>> +
+>> +	ird_table->bitmap = bitmap;
+>> +	ird_table->nr_ird = IRD_ENTRIES;
+>> +	ird_table->node = node;
+>> +
+>> +	raw_spin_lock_init(&ird_table->lock);
+>> +
+>> +	if (redirect_queue_init(node)) {
+>> +		ret = -EINVAL;
+>> +		goto free_bitmap;
+> So redirect_queue_init() returns -ENOMEM which is then converted to
+> -EINVAL here. That makes absolutely no sense at all.
+>
+> Neither makes the 'ret' variable sense because all failures should
+> return -ENOMEM and therefore you can make redirect_queue_init() return
+> bool (true on success) and return -ENOMEM in the failure path.
+>
+> No?
+Yes, it is a more reasonable way to do this
+>> +static void redirect_table_fini(int node)
+>> +{
+>> +	struct redirect_table *ird_table = &(irde_descs[node].ird_table);
+>> +	struct redirect_queue *rqueue = &(irde_descs[node].inv_queue);
+> No brackets. They have no value and just disturb reading.
+Ok, I got it , thanks
+>
+>> +static int redirect_cpu_online(unsigned int cpu)
+>> +{
+>> +	int ret, node = cpu_to_node(cpu);
+>> +
+>> +	if (cpu != cpumask_first(cpumask_of_node(node)))
+>> +		return 0;
+>> +
+>> +	if (irde_descs[node].finish)
+>> +		return 0;
+> What's this finish thing about?
+>
+> Neither the CPU mask check nor this finish hack is required:
+>
+>          if (irde_descs[node].pages)
+>          	return 0;
+>
+> covers all of it, no?
+Ok, I got it , thanks
+>
+>> +	ret = redirect_table_init(node);
+>> +	if (ret) {
+>> +		redirect_table_fini(node);
+> What is this for? You already mopped up the mess in the failure path of
+> redirect_table_init(), so doing it again makes no sense.
+>
+> Just get rid of the failure path in redirect_table_init() and let that
+> return a bool (true on success) and invoke redirect_table_fini() here
+There may have been a logical confusion in the version iteration here, 
+and I will reorganize this part of the code, thanks
+>
+>> +		return -EINVAL;
+> Seriously? The failure condition is -ENOMEM so why do you want to change
+> that?
+Ok , return ret is enought there, thanks
+>> +	}
+>> +
+>> +	irde_descs[node].finish = 1;
+>> +	return 0;
+>> +}
+>> +
+>> +#ifdef	CONFIG_ACPI
+> What's the TAB for?
+Ok. I got it , thanks
+>> +int __init redirect_acpi_init(struct irq_domain *parent)
+>> +{
+>> +	struct fwnode_handle *fwnode;
+>> +	struct irq_domain *domain;
+>> +	int ret;
+>> +
+>> +	fwnode = irq_domain_alloc_named_fwnode("redirect");
+>> +	if (!fwnode) {
+>> +		pr_err("Unable to alloc redirect domain handle\n");
+>> +		goto fail;
+>> +	}
+>> +
+>> +	domain = irq_domain_create_hierarchy(parent, 0, IRD_ENTRIES, fwnode,
+>> +					     &redirect_domain_ops, irde_descs);
+>> +	if (!domain) {
+>> +		pr_err("Unable to alloc redirect domain\n");
+>> +		goto out_free_fwnode;
+>> +	}
+>> +
+>> +	redirect_domain = domain;
+> What's the point of this local domain variable?
+This is indeed meaningless, thanks
+>
+>> +	ret = redirect_table_init(0);
+>> +	if (ret)
+>> +		goto out_free_table;
+>> +
+> Oh well...
+There may have been a logical confusion in the version iteration here, 
+and I will reorganize this part of the code, thanks
+>
+> Thanks,
+>
+>          tglx
+
+Thanks
+
+Tianyang
+
