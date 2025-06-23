@@ -1,217 +1,145 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1697723643E
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BEA23278D
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750669223; cv=none; b=bYDIbUPBcvyR6BwHOLAkjO649nXe2VxQBSqOfd3WfwleeKLO6nqIzrW+Wyjua4m/5jG5jRY2vk0FK3RMJbWvlRd7Dsi/Hsy/F+FkAdp+gocsZd6NPYc+ANBbzhxW+6K3zxHqTaZ7VQseuCE+gfz/14b7as9qU6w9/FBjAwQs6GU=
+	t=1750669224; cv=none; b=bhWbGQCL77Giv3B5M4Gc57QRSF9+lGAbyWWeOxBp+cY6bylIpKVryIT0pnHbzI53p2aQTWA4yfyCjzQruPT2e7+ED67iIV2JTMUpuxai4PgtVnwsu+Bhy8PwuBKXyFu5vmVJP7ZTQw5sLh2NcXRlcrGRT7YfxMn7GWQ+g10L/+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750669223; c=relaxed/simple;
-	bh=qhXKR5mSbv8ApDx6/W5MMvt+Akaan9xh97RBCcLaYwY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sB9FQyQ2GxyCsAG+e/6XxAAhlpfK8B9zj83Rzpk1/eJ+5DCxLCKUFLmtnXuJOoQuQFYrbzx5XYBUh71+EGJ22mR7XLoQ4HZ1laPRHQRy4bZeEwPiocKOEyRcSYTq5kyhNPO50VJlC3VJ8ZJlIrl8iW+XKREqt3DLi0vXTysj0Uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=R5COwnhi; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750669224; c=relaxed/simple;
+	bh=7Co64V9r6PMRUvirB7RVpke81XvzYVPNFR//Uv1Gj2w=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GTx5I2vBxeUOp7pTfLaj2CD4+/p1yit6iUCYxy9+8WN+D7gPi3GCKeC//1SC+/JjS0X+kTdV6Qp6I3AZRnqq32xOq873pAechpBtXCs4NtA7CqKjGeioYW3aC9WJq+dgHJEZYpb8JHRP8Hx/2NMCy5FJB3gz3acMT+6cRViGuM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=mLdfDnLL; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="R5COwnhi"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-453643020bdso22316865e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 02:00:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750669220; x=1751274020; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xE1x+VGK8VPIQVNQvYqCI6uexl0lL7Kq5+Z/LW/Baew=;
-        b=R5COwnhiJwCtOzD+YtoXh7dBflX25mjuJSBzP1gLJzTc7o/EiD5W17EZpCP9hYVh77
-         nKTeyzQo2ezjiRMRH+odN5YpzEH5XuIbsyAB7xhTboJCGkSzTIobpOSm41/mASfNpWJD
-         i5uJa06APRHdAIYwUZJ9COYX7Gcpci2txuSxi+FtVwTbX3hTPbjdTCHVfEgTPWrYBnTa
-         cFL8txC5roFaXWKdpUYEOyvDyaz8DcRNvLGaEwu2cciFkMdiDr9vvyuYN5OitlLF8v2X
-         gfXc8wv8W5UnjJU4fEMy737Q8fvRhGHan4ySENESSWC6v8CqJnVg4l+9489ITgl5DndS
-         vvPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750669220; x=1751274020;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xE1x+VGK8VPIQVNQvYqCI6uexl0lL7Kq5+Z/LW/Baew=;
-        b=lWY7TL3ucDtSo1Z7B2FlSl6IbeEM0P8sF4dOvun7QBIvvs3x9LRVlqCWbb0KUgF7kG
-         x184/+tTJzBtYkRMxhj51VKwDyATQCxUB1ABhYuD3qmukx9GMKURc5nRKaOnpW/CNDYZ
-         mUZnDHTodtbR39AvAAzTM60ty1/q9pmvE3cy9CKWRLRQYFEh4/p5LVxGT8E5xZd5dJNp
-         DOWvp5R9O1Qg+JMM8zoA2bA8q/XhcMUmIox4rEx0VYvZ1MnfstD1Ht+WLdYyDTg/ZcrS
-         RpNWLwT3qIvyDvZwJ4/vlhEP51qadUuox/zGraWYv7EeA7zCkm5b9/hII9+nKzl4Ue5v
-         AQAw==
-X-Forwarded-Encrypted: i=1; AJvYcCUeq5tF6hapw9egF7gsq5cg9Hdx96e4Uj3O56GGCo27HXhewcZDBJn/S5UuU73FEDTyuQC8wt3uEh8rvGY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKGOVyEnOdmLr4bmNpSmA0auw1i2n4zjM+JOJ9wHqyBnFHPBkA
-	lTIKnR6yD2DT8l1/r4JlNuxp19ZgzoplaT8jKT048pGtx/8W23TK2u7rLX4gJu9EqeY=
-X-Gm-Gg: ASbGncuYXEpqTl2pLI83Rlc2FWgIpieD7poAMEwRRa87i1+A/7Ncms7FRZMG7siwIer
-	Im7U/iBN/CFIiHSHdWXvsdUdw09jA0hKT6l7o10YzXgPMGI2QbcpKsuEgFzEBZbCU8LO6zktbwG
-	9RMNh8E7oNr8xdwtYlAWllQCChn+XE9QQ+kCaCZAA4nJNAS9NTOthT7sGcvErW2KFsfmc9CE4rX
-	pXvgZilPFHBTH3lBWeZIjtmiKMNqT2NntHgT7d5QYNUI4BAJnAbqjgU1qlFScNjdAgZ6lD9mynF
-	iEsUJStDPtFBkt7YuB3VCDTVFclWk2DycQXmnLaPfFXoeksnHuTund4=
-X-Google-Smtp-Source: AGHT+IGyfl6XgfHw/Z/xgUn3ZCFhcTWnEk0s+22gzMu/4rZrmNBRzdVL7I4XCSMLxBzyPQe8+rqvXg==
-X-Received: by 2002:a05:600c:1989:b0:450:d00d:d0 with SMTP id 5b1f17b1804b1-453659dd7e8mr91864485e9.19.1750669220441;
-        Mon, 23 Jun 2025 02:00:20 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:5ce:238e:62a6:cbbc])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453632312a3sm113401145e9.1.2025.06.23.02.00.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 02:00:19 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 23 Jun 2025 10:59:55 +0200
-Subject: [PATCH v2 7/9] gpio: sysfs: export the GPIO directory locally in
- the gpiochip<id> directory
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="mLdfDnLL"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bQhqj5n5kz9t7s;
+	Mon, 23 Jun 2025 11:00:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1750669217; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2pdTGf4aOzFco3CbqX1+pZ1sCp9cJ0yHF3Wx+oJKZXQ=;
+	b=mLdfDnLL73cvJaE6Um9HnlMA3YXVvAxj2M0tX3Pd1OjYnjwmKQtgyD7VURwFGS4nFXTlzI
+	LYQatyOEjNxGvNGhohvO9cuSpMNKadpUQbBWBwdymY1CtMpkPdGCR8YGuGvzNdUZh41hdX
+	yP6GbsruwBLgCMioRUKlJmEMPNhz7hmZdffOKDLUn+b5cd+R5puU0ReDb309cvmDfxcwCK
+	wGyMe2kWc7lxmXuti3jFDdJF5EdxUHKK+lrC70d48j7JEkOcSMV70m0Pw4kIjGrRKOu+ID
+	hwfdIG+I0ku52jB0QH/3kIfti5vF54QBDjIiIskg6p/LUMaUuX6Z880etOX8Sg==
+Message-ID: <79ba97ca2c04b7707b9641fbb89715873c11c979.camel@mailbox.org>
+Subject: Re: [PATCH] drm/sched/tests: Make timedout_job callback a better
+ role model
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Philipp Stanner <phasta@kernel.org>, Matthew Brost
+ <matthew.brost@intel.com>,  Danilo Krummrich <dakr@kernel.org>, Christian
+ =?ISO-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>,  Thomas Zimmermann <tzimmermann@suse.de>, David
+ Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Tvrtko Ursulin
+ <tvrtko.ursulin@igalia.com>, Pierre-Eric Pelloux-Prayer
+ <pierre-eric.pelloux-prayer@amd.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Date: Mon, 23 Jun 2025 11:00:11 +0200
+In-Reply-To: <20250605134154.191764-2-phasta@kernel.org>
+References: <20250605134154.191764-2-phasta@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-gpio-sysfs-chip-export-v2-7-d592793f8964@linaro.org>
-References: <20250623-gpio-sysfs-chip-export-v2-0-d592793f8964@linaro.org>
-In-Reply-To: <20250623-gpio-sysfs-chip-export-v2-0-d592793f8964@linaro.org>
-To: Ahmad Fatoum <a.fatoum@pengutronix.de>, 
- Kent Gibson <warthog618@gmail.com>, 
- =?utf-8?q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, 
- Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4015;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=69h/lz9me1gz3hK9nMhFDYUeePtna8eHSBEPbFHyXuU=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoWReakhUNrQOuwA6fsapAuNzYerJ9SF+SiJIU3
- 4yl6OQP+8mJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaFkXmgAKCRARpy6gFHHX
- cloiD/94FDSiH3pAS0d9z4rgM3FSjbNQk7PiJ3Xwo73Orh4R4PYIWRIw7/KAOHxO45xqh6uVWG7
- pHAJpSmkWjKbC9T7TVljGgO7uJiHZ/WtJyVQ9PvNI9Pd8ePYs5pmedsoJPLtMtS9MJogMqbIQuw
- IMZzRUTaq148sYRR8NBPD4dV0gfv62+k4QnXNNJLnfCpHpO/QftaM0i2/DQuzSNPaE8VbO2d0R9
- HF2Eqy/WKak1js6H7fiyzbpAangiyroE3hMo2XmeEoL0Dcx4xEkNOhKhNJFP1Z9RgKb6dRr5qVq
- rHLz/mfE2SbWlGRu7dI9r2fndvDLGyng/25hop9deTcHNqCLaspiS44raOrorMxUl7wrOQLVXq8
- JhqiSaeoRB7miO8PGSEFwYJtpAYe4xYNh78ZxpK+mEV3IYgBPuIT3Og83Qnm+FaZIIFxvdLEkML
- XvsZPA+LBVbQJ9Cd2MzRF6boCjA8U9LkSKQDlQKx/VL7E1Is8Ky9kHiO61RxjMc+azb5TSXC1S0
- rjsNzSPu2tbfahV3/ip+JjxNbA3AXl+425QlouupxpklPSlKfbh8IhBA9Qi28OZCNc9ZiEZFegO
- e5OreYmEmqNq5j9ytvc8hzfh5mjRxHyjrmH5VO+BULix7vwbLBnD2H/UC+mUokgR0jMPlWmUQVo
- 7WzQ0Dqe/06VxxA==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+X-MBO-RS-META: kqcq4mi3woc19r9dpy6d75jr4cgnzcfh
+X-MBO-RS-ID: 5688e913798ba5321d3
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, 2025-06-05 at 15:41 +0200, Philipp Stanner wrote:
+> Since the drm_mock_scheduler does not have real users in userspace,
+> nor
+> does it have real hardware or firmware rings, it's not necessary to
+> signal timedout fences nor free jobs - from a functional standpoint.
+>=20
+> The unit tests, however, serve as a reference implementation and a
+> first
+> example for new scheduler users. Therefore, they should approximate
+> the
+> canonical usage as much as possible.
+>=20
+> Make sure timed out hardware fences get signaled with the appropriate
+> error code.
+>=20
+> Signed-off-by: Philipp Stanner <phasta@kernel.org>
 
-As a way to allow the user-space to stop referring to GPIOs by their
-global numbers, introduce a parallel group of line attributes for
-exported GPIO that live inside the GPIO chip class device and are
-referred to by their HW offset within their parent chip.
+Any further objections with me merging this?
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- Documentation/ABI/obsolete/sysfs-gpio |  5 +++++
- drivers/gpio/gpiolib-sysfs.c          | 40 ++++++++++++++++++++++++++++++++++-
- 2 files changed, 44 insertions(+), 1 deletion(-)
+P.
 
-diff --git a/Documentation/ABI/obsolete/sysfs-gpio b/Documentation/ABI/obsolete/sysfs-gpio
-index ff694708a3bef787afa42dedf94faf209c44dbf0..c0bb51412a912cefe032c4e84288f99754acb1b5 100644
---- a/Documentation/ABI/obsolete/sysfs-gpio
-+++ b/Documentation/ABI/obsolete/sysfs-gpio
-@@ -27,6 +27,11 @@ Description:
- 	    /base ... (r/o) same as N
- 	    /label ... (r/o) descriptive chip name
- 	    /ngpio ... (r/o) number of GPIOs; numbered N to N + (ngpio - 1)
-+	    /gpio<OFFSET>
-+	        /value ... always readable, writes fail for input GPIOs
-+	        /direction ... r/w as: in, out (default low); write: high, low
-+	        /edge ... r/w as: none, falling, rising, both
-+	        /active-low ... r/w as: 0, 1
- 	/chipX ... for each gpiochip; #X is the gpio device ID
- 	    /export ... asks the kernel to export a GPIO at HW offset X to userspace
- 	    /unexport ... to return a GPIO at HW offset X to the kernel
-diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index adf030f74eb163f5d8b1092d00418b84354f923f..37d58009a51333f7d6a8d600dbeaeb333df27ac3 100644
---- a/drivers/gpio/gpiolib-sysfs.c
-+++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -47,11 +47,13 @@ struct gpiod_data {
- 
- 	struct mutex mutex;
- 	struct kernfs_node *value_class_node;
-+	struct kernfs_node *value_chip_node;
- 	int irq;
- 	unsigned char irq_flags;
- 
- 	bool direction_can_change;
- 
-+	struct kobject *parent;
- 	struct device_attribute dir_attr;
- 	struct device_attribute val_attr;
- 	struct device_attribute edge_attr;
-@@ -180,6 +182,7 @@ static irqreturn_t gpio_sysfs_irq(int irq, void *priv)
- 	struct gpiod_data *data = priv;
- 
- 	sysfs_notify_dirent(data->value_class_node);
-+	kernfs_notify(data->value_chip_node);
- 
- 	return IRQ_HANDLED;
- }
-@@ -780,13 +783,46 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- 	gdev_data = gdev_get_data(gdev);
- 	if (!gdev_data) {
- 		status = -ENODEV;
--		goto err_unregister_device;
-+		goto err_put_dirent;
- 	}
- 
- 	list_add(&desc_data->list, &gdev_data->exported_lines);
- 
-+	desc_data->attr_group.name = kasprintf(GFP_KERNEL, "gpio%u",
-+					       gpio_chip_hwgpio(desc));
-+	if (!desc_data->attr_group.name) {
-+		status = -ENOMEM;
-+		goto err_put_dirent;
-+	}
-+
-+	desc_data->parent = &gdev_data->cdev_id->kobj;
-+	status = sysfs_create_groups(desc_data->parent,
-+				     desc_data->attr_groups);
-+	if (status)
-+		goto err_free_name;
-+
-+	char *path __free(kfree) = kasprintf(GFP_KERNEL, "gpio%u/value",
-+					     gpio_chip_hwgpio(desc));
-+	if (!path) {
-+		status = -ENOMEM;
-+		goto err_remove_groups;
-+	}
-+
-+	desc_data->value_chip_node = kernfs_walk_and_get(desc_data->parent->sd,
-+							 path);
-+	if (!desc_data->value_chip_node) {
-+		status = -ENODEV;
-+		goto err_remove_groups;
-+	}
-+
- 	return 0;
- 
-+err_remove_groups:
-+	sysfs_remove_groups(desc_data->parent, desc_data->attr_groups);
-+err_free_name:
-+	kfree(desc_data->attr_group.name);
-+err_put_dirent:
-+	sysfs_put(desc_data->value_class_node);
- err_unregister_device:
- 	device_unregister(desc_data->dev);
- err_free_data:
-@@ -876,6 +912,8 @@ void gpiod_unexport(struct gpio_desc *desc)
- 		clear_bit(FLAG_EXPORT, &desc->flags);
- 		sysfs_put(desc_data->value_class_node);
- 		device_unregister(desc_data->dev);
-+		sysfs_remove_groups(desc_data->parent, desc_data->attr_groups);
-+		kernfs_put(desc_data->value_chip_node);
- 
- 		/*
- 		 * Release irq after deregistration to prevent race with
 
--- 
-2.48.1
+> ---
+> =C2=A0.../gpu/drm/scheduler/tests/mock_scheduler.c=C2=A0 | 26
+> ++++++++++++++++++-
+> =C2=A01 file changed, 25 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> index 7f947ab9d322..49d067fecd67 100644
+> --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> @@ -200,12 +200,36 @@ static struct dma_fence
+> *mock_sched_run_job(struct drm_sched_job *sched_job)
+> =C2=A0	return &job->hw_fence;
+> =C2=A0}
+> =C2=A0
+> +/*
+> + * Normally, drivers would take appropriate measures in this
+> callback, such as
+> + * killing the entity the faulty job is associated with, resetting
+> the hardware
+> + * and / or resubmitting non-faulty jobs.
+> + *
+> + * For the mock scheduler, there are no hardware rings to be
+> resetted nor jobs
+> + * to be resubmitted. Thus, this function merely ensures that
+> + *=C2=A0=C2=A0 a) timedout fences get signaled properly and removed from=
+ the
+> pending list
+> + *=C2=A0=C2=A0 b) the mock scheduler framework gets informed about the t=
+imeout
+> via a flag
+> + *=C2=A0=C2=A0 c) The drm_sched_job, not longer needed, gets freed
+> + */
+> =C2=A0static enum drm_gpu_sched_stat
+> =C2=A0mock_sched_timedout_job(struct drm_sched_job *sched_job)
+> =C2=A0{
+> +	struct drm_mock_scheduler *sched =3D
+> drm_sched_to_mock_sched(sched_job->sched);
+> =C2=A0	struct drm_mock_sched_job *job =3D
+> drm_sched_job_to_mock_job(sched_job);
+> +	unsigned long flags;
+> =C2=A0
+> -	job->flags |=3D DRM_MOCK_SCHED_JOB_TIMEDOUT;
+> +	spin_lock_irqsave(&sched->lock, flags);
+> +	if (!dma_fence_is_signaled_locked(&job->hw_fence)) {
+> +		list_del(&job->link);
+> +		job->flags |=3D DRM_MOCK_SCHED_JOB_TIMEDOUT;
+> +		dma_fence_set_error(&job->hw_fence, -ETIMEDOUT);
+> +		dma_fence_signal_locked(&job->hw_fence);
+> +	}
+> +	spin_unlock_irqrestore(&sched->lock, flags);
+> +
+> +	dma_fence_put(&job->hw_fence);
+> +	drm_sched_job_cleanup(sched_job);
+> +	/* Mock job itself is freed by the kunit framework. */
+> =C2=A0
+> =C2=A0	return DRM_GPU_SCHED_STAT_NOMINAL;
+> =C2=A0}
 
