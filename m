@@ -1,160 +1,126 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3A1188735
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A55224468A
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750679068; cv=none; b=Y2DcAdp4xj4Lis0cFDAzTrTBqfoV27kQTX7HW4cbr9jquFpStud9ZCjZHBrIFcKf2uxRceK3YQ5R7IzaKbPVJ5llQYwVJnOcoTrcfPFEuW4iBeg43M34rGrlkd/uEDMK1KQfT0Fblz155fzQh4Ei8WYZixI+3hM7W7yIrklw1jU=
+	t=1750679075; cv=none; b=uZFD0szzOBbx8gWT39yUPtWIUtwSx6nSOEj9iVCc4kt1bL7PjjNsfHVQ3TXUz4SrqaQy162ZaO2RYUEo2/9UOf0Pyv9D7i38Zld8h315yu7vE5eNFYL0/JrzgnA+yiUghZ6a4hxcd6hkIqTK48oimLMEjaQ4ks2CTAUt1yYieMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750679068; c=relaxed/simple;
-	bh=4ZqoQKdDvBPRQXyCngBAlFvRk74fScCEs9u1xA/pSDI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f1goUKPp2aFbD5nN4vmx23wq1oGv5ahFJ2AalXyUyVajoiFScjyql6j0QFwC3FlP/2fWqzaZkjWkvl5zZuf2P+0em7iD947kXY2645HnABDdWhxG/xpC2KxIAMHuL0gXsnQgVlfZpImnOV9pp1j0Ga9vSmkND6qRHZMoqcPaDrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PxJJpEfT; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750679075; c=relaxed/simple;
+	bh=bGfQixIths9UEkoJwYSWUAD/PNjVNrl5JxSmr5DABww=;
+	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:To:Cc:
+	 Content-Type:References; b=UjbXxypkcdHjB2d92H16Gb3/Klzjgc2NDETxW8Zsw2u/hS5qoW+2jzXXPW4KG4bE7Fh1vzzNc2HZf+eC4kyxcDfUQ6dmrjlxOfysfMDp9FsWE43HmqF3sBvEHOYRsVXurdJ5bvEwnFcRXbVWOh+wQMhJXOGfuHgBhi+riH/IzJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=YltEA3z+; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PxJJpEfT"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4a440a72584so45037271cf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 04:44:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750679066; x=1751283866; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mrHTjhxlEVyzlxLPx8Yr8nFxLDqwxAF0xyp3qSY+qZQ=;
-        b=PxJJpEfTmjLyvhiOKFI5GTh+dOTi/378xb7t37Pk9AAUUFK8wtVBYPCfudYu+CP5jc
-         IQvtcFj+4+3CDqjUJskv8Xcth2KJ9abvvAeEih5RJaofDyZJaR38sOlcBlmgSbQ9rP8f
-         Ef1BnH/c+ilX3BObEuJpOT3f8nO+dPOfO8MZzfjHSkm42bc6tGive6vKLev7IOFpqINb
-         3p7tHB0V9CsOPca8+9r2IN+nZrwkbyNVzVPzNiEtIe0rea67x643f3MKeVt6OWOXMjzN
-         VTNg14BdPTEbkTFoghnyezdyUgEljOdKMk1xAPipj77UVfna3cjaxrI2nlI05psfPVMa
-         8oFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750679066; x=1751283866;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mrHTjhxlEVyzlxLPx8Yr8nFxLDqwxAF0xyp3qSY+qZQ=;
-        b=QwXfY3GNwLq4TLNza8PBkjc8Wm3ZoEoXqXpQUlB78zAU9B8wLNPE58c7zpIh8iGItg
-         7kpa0Vm2G5UeejHJR9F7bIyjG3qWHLVMfrXR3qGaUdh9OMkNXS4MLtQB0inORM8iR8zH
-         lgCaF/5z6Q1AFcaEE4jQKBpdXWDVyWv4GYLIXUT+4QVQ8UZXbOFDnk418YyDbUafDblr
-         3xcAbs10scI5Vv6kIRWRCRqRbDu9NQw1/AwNxNVxHn0mX8uMjxFdB4ZWA9OUvTKv7X0V
-         PPBMScqB1j17aIy2a80k/naZbNjm4KYWVamgJlgcUpfhar6s3AMldjo8mbD/VI6RPaqo
-         nYUw==
-X-Forwarded-Encrypted: i=1; AJvYcCW77f71NUvyf0IgKSW2y9IgBFojkObILhks/NDBn2qJ86At5wWm8/UquHVHJhwGI/2zgWv0CVERzoR8MCQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5RBSAXBmuvdhddMyJ9+fgGXzIgoM/9lQr37RY5EqgCbzPobXa
-	wN2DGiuQOeVtDjR9i8Rjq8a9Tw2NnSzqO4UP7+js1bSP8WO1AQ4B+x1ndfztd6zsJw/0dgqNBgN
-	Da29g+0PBkOBZ9+MWNcWBTmozrCf8gtHgWe2z3WKI
-X-Gm-Gg: ASbGnctsykEeQ16oW8phrEiaAJkn1PParp+2Ip8YB7uhQTE8aA06s/Aq0bbY6ermiaq
-	SAM8esRU1T7IkIlVlZVL1slS9KXgv2sZqACMuxTLf3mq9hqXYpAuYdLUfvYTDa0W/swdY0yBgZk
-	kUqXk8L0NFBCIRMt9FuPabE7V2sSigCwzVqukoekRsJEE=
-X-Google-Smtp-Source: AGHT+IHfB/vZlIK9/FvjHWffL16LexUgBodwMHiN20SOOnfFPs17HBBf8UZjdusDwWuVV6zghVMq4F6HwMqGXNnWlks=
-X-Received: by 2002:ac8:7f87:0:b0:4a4:4165:ed60 with SMTP id
- d75a77b69052e-4a77a23a330mr188912371cf.3.1750679065927; Mon, 23 Jun 2025
- 04:44:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YltEA3z+"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250623114432euoutp02f6a4558391f7a402e2d579bc2fd41592~LqVc9R7xG1765417654euoutp02K
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:44:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250623114432euoutp02f6a4558391f7a402e2d579bc2fd41592~LqVc9R7xG1765417654euoutp02K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750679072;
+	bh=snLx4JRv75lRpgWYDV6hSgEiKwVBWVcVe6z8ZUMZE/4=;
+	h=From:Date:Subject:In-Reply-To:To:Cc:References:From;
+	b=YltEA3z+bkmNQeBYA3x7KNCLdOm2IeVJU0//HuAEIbeZYT+1s817n8sgbulWFkFfd
+	 jA5NeLWTt+Mt+YNiwute9jn492A546Jf1pZKOcAM3VDd3UBcrzpjN9/oi94rjItfXp
+	 wVY3z3gqj2QLMNbk9iMtyM76iCv0IJhfQvOd21X0=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250623114431eucas1p23e8afc09574e2c2026b0e05323db821f~LqVcSGMCD2915729157eucas1p2i;
+	Mon, 23 Jun 2025 11:44:31 +0000 (GMT)
+Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
+	[106.210.136.40]) by eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250623114430eusmtip1b8811fa83d3fe7951975aa26c0c678b2~LqVbKVMve2309023090eusmtip19;
+	Mon, 23 Jun 2025 11:44:30 +0000 (GMT)
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+Date: Mon, 23 Jun 2025 13:42:40 +0200
+Subject: [PATCH v6 2/8] dt-bindings: firmware: thead,th1520: Add resets for
+ GPU clkgen
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620125644.1045603-1-ptesarik@suse.com> <CANn89iLrJiqu1SdjKfkOPcSktvmAUWR2rJWkiPdvzQn+MMAOPg@mail.gmail.com>
- <20250623093604.01b74726@mordecai.tesarici.cz>
-In-Reply-To: <20250623093604.01b74726@mordecai.tesarici.cz>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 23 Jun 2025 04:44:15 -0700
-X-Gm-Features: AX0GCFsucZXpCrOv00H7hp6ojejTsrZfYjmXvKm7wa1_ILtb3HSf82YKGy7NqRQ
-Message-ID: <CANn89iLKuzbEq=7A-TnB6jZypx0mObbLSNA=HmLjj5CBooBYPg@mail.gmail.com>
-Subject: Re: [PATCH net v2 0/2] tcp_metrics: fix hanlding of route options
-To: Petr Tesarik <ptesarik@suse.com>, Willem de Bruijn <willemb@google.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
-	Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
-	"open list:NETWORKING [TCP]" <netdev@vger.kernel.org>, David Ahern <dsahern@kernel.org>, 
-	Jakub Kicinski <kuba@kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250623-apr_14_for_sending-v6-2-6583ce0f6c25@samsung.com>
+In-Reply-To: <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
+To: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,  Fu Wei
+	<wefu@redhat.com>, Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Michal
+	Wilczynski <m.wilczynski@samsung.com>,  Bartosz Golaszewski <brgl@bgdev.pl>,
+	Philipp Zabel <p.zabel@pengutronix.de>,  Frank Binns
+	<frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>,  Maarten
+	Lankhorst <maarten.lankhorst@linux.intel.com>,  Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,  David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,  Paul Walmsley
+	<paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>,  Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson
+	<ulf.hansson@linaro.org>,  Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org,  Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>,  Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.15-dev
+X-CMS-MailID: 20250623114431eucas1p23e8afc09574e2c2026b0e05323db821f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250623114431eucas1p23e8afc09574e2c2026b0e05323db821f
+X-EPHeader: CA
+X-CMS-RootMailID: 20250623114431eucas1p23e8afc09574e2c2026b0e05323db821f
+References: <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
+	<CGME20250623114431eucas1p23e8afc09574e2c2026b0e05323db821f@eucas1p2.samsung.com>
 
-On Mon, Jun 23, 2025 at 12:36=E2=80=AFAM Petr Tesarik <ptesarik@suse.com> w=
-rote:
->
-> On Fri, 20 Jun 2025 06:24:23 -0700
-> Eric Dumazet <edumazet@google.com> wrote:
->
-> > On Fri, Jun 20, 2025 at 5:57=E2=80=AFAM Petr Tesarik <ptesarik@suse.com=
-> wrote:
-> > >
-> > > I ran into a couple of issues while trying to tweak TCP congestion
-> > > avoidance to analyze a potential performance regression. It turns out
-> > > that overriding the parameters with ip-route(8) does not work as
-> > > expected and appears to be buggy.
-> >
-> > Hi Petr
-> >
-> > Could you add packetdrill tests as well ?
->
-> Glad to do that. But it will be my first time. ;-) Is there a tutorial?
-> I looked under Documentation/ and didn't see anything.
+Extend the TH1520 AON to describe the GPU clkgen reset line, required
+for proper GPU clock and reset sequencing.
 
-I came up with the following test (currently working for IPv4 only).
-Neal, Willem, any idea on how to have this test done for upstream tree ?
+The T-HEAD TH1520 GPU requires coordinated management of two clocks
+(core and sys) and two resets (GPU core reset and GPU clkgen reset).
+Only the clkgen reset is exposed at the AON level, to support SoC
+specific initialization handled through a dedicated auxiliary power
+sequencing driver. The GPU core reset remains described in the GPU
+device node, as from the GPU driver's perspective, there is only a
+single reset line [1].
 
-tools/testing/selftests/net/packetdrill/ksft_runner.sh does not have a
-way to make a test family dependent.
+This follows upstream maintainers' recommendations [2] to abstract SoC
+specific details into the PM domain layer rather than exposing them to
+drivers directly.
 
+Link: https://lore.kernel.org/all/816db99d-7088-4c1a-af03-b9a825ac09dc@imgtec.com/ - [1]
+Link: https://lore.kernel.org/all/38d9650fc11a674c8b689d6bab937acf@kernel.org/ - [2]
 
-diff --git a/tools/testing/selftests/net/packetdrill/tcp_cwnd5.pkt
-b/tools/testing/selftests/net/packetdrill/tcp_cwnd5.pkt
-new file mode 100644
-index 0000000000000000000000000000000000000000..e28b63b696d200ca447f613c300=
-03571c1ff1ae8
---- /dev/null
-+++ b/tools/testing/selftests/net/packetdrill/tcp_cwnd5.pkt
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Test of RTAX_CWND routing attribute
-+
-+// Set up config.
-+`./defaults.sh`
-+
-++0 `ip ro change 192.0.2.1 via 192.168.0.1 dev tun0 cwnd lock 6`
-+
-+   +0 socket(..., SOCK_STREAM, IPPROTO_TCP) =3D 3
-+   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) =3D 0
-+   +0 bind(3, ..., ...) =3D 0
-+   +0 listen(3, 1) =3D 0
-+
-+   +0 < S 0:0(0) win 32792 <mss 1000,sackOK,nop,nop,nop,wscale 7>
-+   +0 > S. 0:0(0) ack 1 <mss 1460,nop,nop,sackOK,nop,wscale 8>
-+  +.1 < . 1:1(0) ack 1 win 257
-+   +0 accept(3, ..., ...) =3D 4
-+
-+   +0 %{ assert tcpi_snd_cwnd =3D=3D 6, tcpi_snd_cwnd }%
-+
-+   +0 write(4, ..., 20000) =3D 20000
-+   +0 > P. 1:6001(6000) ack 1
-+
-+   +.1 < . 1:1(0) ack 6001 win 257
-+
-+   +0 %{ assert tcpi_snd_cwnd =3D=3D 6, tcpi_snd_cwnd }%
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Drew Fustini <drew@pdp7.com>
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+---
+ Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml b/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
+index bbc183200400de7aadbb21fea21911f6f4227b09..3365124c7fd4736922717bd31caa13272f4a4ea6 100644
+--- a/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
++++ b/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
+@@ -32,6 +32,13 @@ properties:
+     items:
+       - const: aon
+ 
++  resets:
++    maxItems: 1
++
++  reset-names:
++    items:
++      - const: gpu-clkgen
++
+   "#power-domain-cells":
+     const: 1
+ 
 
+-- 
+2.34.1
 
->
-> > Given this could accidentally break user setups, maybe net-next would b=
-e safer.
->
-> Yeah, you're right. Technically, it is a bugfix, but if it's been
-> broken for more than a decade without anyone complaining, it can't be
-> super-urgent.
->
-> > Some of us disable tcp_metrics, because metrics used one minute (or
-> > few seconds) in the past are not very helpful, and source of
-> > confusion.
-> >
-> > (/proc/sys/net/ipv4/tcp_no_metrics_save set to 1)
->
-> Yes, I know about that one. FWIW it didn't help at all in my case,
-> because then the value from the routing table was ALWAYS ignored...
->
-> Petr T
