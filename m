@@ -1,76 +1,84 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AE5D256C6C
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61E92F24
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750685512; cv=none; b=SlffSLRzgy3oRwPjBv/c743HHWOsajMBlaLPmIxcOhBkiDzrZqitX8C0Z5j+5aRHUFwt8XcxkiPTMFeI2k3iZm8jYj2c1gcIrKr3W8s5oj2shMYV2+FvZZUoPziN3o1nLJvqBsL8PtGn7t4PX3KsX49SzBc+dCYvCbpO4ULG00U=
+	t=1750685582; cv=none; b=IMfFaPSLGoffehivlvz6vRaEkKpv8hyFhOktn4FSikc0ej0sC2LI1dFrIunlCVvAiwfYud/V/J7Hh4TAPcYf/szkdjQHIPtNyvR5wyBBlowRqTwRzW/GSzdFmwHMpJj24nA0VsP29C/zlWxUZfAC+qAatkqXFajOds7HZCoA9ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750685512; c=relaxed/simple;
-	bh=d3CjObu7ti7j2leHXsCAQMHwoeOMPWVu3hazULI9Ykc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n7oYUq18n0ZQj453jz2ILaDjZQd7hx++BaSuAQeRKUjsrohkKB8TIewY2JkGe8513tLkb+jOvJIWW89/NRXvSkP3RZBMUp0nOcKnrGtyAnYgrvZbhQCFHbkqCJ6ZFBzeF45GI/XU/xQMqK/w1+toBqypyyS4zCEa/R0oQC7jfns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91D2A113E;
-	Mon, 23 Jun 2025 06:31:32 -0700 (PDT)
-Received: from [10.1.29.169] (XHFQ2J9959.cambridge.arm.com [10.1.29.169])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E265D3F58B;
-	Mon, 23 Jun 2025 06:31:49 -0700 (PDT)
-Message-ID: <cb71d9f4-aaae-4240-88f5-50a745717f22@arm.com>
-Date: Mon, 23 Jun 2025 14:31:48 +0100
+	s=arc-20240116; t=1750685582; c=relaxed/simple;
+	bh=XnDQyvsf65cmQSAtLv1zcelfA5SwFSMQkFj+f3CyjXo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=eeDPbcA6Ou1bwS6ycMxId9bkrfkbu8C5Y9gfikx4HLmvw0wqgv9V6pFrr3nPJtY2kHnp60ol2jjSpeL6bZl3DoQvzGdS08HKSgBDy3GPU5FmrO7PXzXVmLO4YK9gefrmqR/JgJvwwdn0eOsixV9sxrlcevKb58aAhKpUOdFmx7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LyJy9G/i; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LyJy9G/i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90DD3C4CEF2;
+	Mon, 23 Jun 2025 13:33:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750685581;
+	bh=XnDQyvsf65cmQSAtLv1zcelfA5SwFSMQkFj+f3CyjXo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=LyJy9G/i4fBVOIIf9I9yRb+SyiR6vlRICkEfaYyRdlJrAVfWHJyAGUP7yS/xUlQf/
+	 lgPdmayOi3Mg4xk24ikxsmgH7P8Z+h7ktA47s77y58A+B3dr6kF44N8o7cPqafKhPK
+	 yIWjSBaEiPdmuZ4orn5IgPbu/6DgnE9l8kkrBnwJnqOCFqz5z9hYb94bqKnAUsNz8W
+	 6TLdtAnGBMeps9GHgc804vGu68GZkQi0O9MC1nEO4gQfz+wT35L1rptvZ3pEmv1mpX
+	 YEpKZx/VUN9+MVfbbdlGiDhk5zAokFbhlcONt+6s85KNvLLmf6APgQmagvmI/dST2e
+	 65Kzr2vUHQLXg==
+From: Mark Brown <broonie@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, 
+ Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>, 
+ Primoz Fiser <primoz.fiser@norik.com>
+Cc: Joy Zou <joy.zou@nxp.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <20250618063339.2508893-1-primoz.fiser@norik.com>
+References: <20250618063339.2508893-1-primoz.fiser@norik.com>
+Subject: Re: [PATCH] regulator: pca9450: Support PWM mode also for pca9451a
+Message-Id: <175068558032.58081.3489129245775741886.b4-ty@kernel.org>
+Date: Mon, 23 Jun 2025 14:33:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/vmalloc: leave lazy MMU mode on PTE mapping error
-Content-Language: en-GB
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250623075721.2817094-1-agordeev@linux.ibm.com>
- <107bfdb7-c8f5-45fa-872e-3e6928dc8025@arm.com>
- <aFlQv4dx7wFU5Cql@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <aFlQv4dx7wFU5Cql@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-08c49
 
-On 23/06/2025 14:03, Alexander Gordeev wrote:
-> On Mon, Jun 23, 2025 at 01:37:11PM +0100, Ryan Roberts wrote:
->> On 23/06/2025 08:57, Alexander Gordeev wrote:
->>> Function vmap_pages_pte_range() enters the lazy MMU mode,
->>> but fails to leave it in case an error is encountered.
->>>
->>> Reported-by: kernel test robot <lkp@intel.com>
->>> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
->>> Closes: https://lore.kernel.org/r/202506132017.T1l1l6ME-lkp@intel.com/
->>> Fixes: 44562c71e2cf ("mm/vmalloc: Enter lazy mmu mode while manipulating vmalloc ptes")
->>> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
->>
->> Ouch, sorry about that! The patch looks good to me so:
->>
->> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
->>
->> I wonder an aditional Fixes: should be added for Commit 2ba3e6947aed
->> ("mm/vmalloc: track which page-table levels were modified") though? That's the
->> one that added the "*mask |= PGTBL_PTE_MODIFIED;" which would have also been
->> skipped if an error occured before this patch.
+On Wed, 18 Jun 2025 08:33:39 +0200, Primoz Fiser wrote:
+> Previous commit 548d770c330c ("regulator: pca9450: Add support for mode
+> operations") added support for setting forced PWM mode on the buck
+> regulators for pca9450a and pca9450bc parts. However part pca9451a also
+> supports this feature, thus add support for it.
 > 
-> Good catch! I think it certainly needs to be reported with Fixes
-> and I even doubt whether your commit should be mentioned at all?
+> 
 
-Well I would certainly argue that my patch is broken as is. So happy to have 2
-Fixes: tags. But I'm not really sure what the rules are here...
+Applied to
 
-> 
->> Thanks,
->> Ryan
-> 
-> Thanks!
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+
+Thanks!
+
+[1/1] regulator: pca9450: Support PWM mode also for pca9451a
+      commit: 19cbc930c209d59a2c9828de4c7b767e9f14667e
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
