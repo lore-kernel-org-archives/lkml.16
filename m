@@ -1,251 +1,306 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42CC7080E;
-	Mon, 23 Jun 2025 22:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750716504; cv=pass; b=r19VpoOHjotOf3Z1NlTwRHIbQ+oFOoOCymUbZDxp9Aqy6+UbmBtxifLFAdl9axfLNATmgmeSoPY+sV9dyin03zT000h1sx1eZofkN0YrBDi9i5Zlgcsu8OOgKifz+ajVA8ybtZMZ7hj1Ayp6/i5staRffSbMd+fyXJMWHpW089c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B390421FF2B;
+	Mon, 23 Jun 2025 22:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750716504; cv=none; b=ajk9GwgaCOka31vGyfI0tEe9pRSahlHM+Ug8ynjqrM/Svgd3QylejOUaBfg3g4yHZHHJmcFOaIuoV4XsE0Uv6vQWynn69JqdOqXw1FNtCAto239Wi9oAEl0WgNO2PiZTg6M+hxCMiUZJgKg60Eg8kpRs6aBXYtvT+d7h1nqsHM8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750716504; c=relaxed/simple;
-	bh=JDPs4eXH1GKDynFvyfnMIazD78wsvR6WqglIGDUk0RI=;
+	bh=4ubACdoLtmTWspA2/xYT1/XL3PMWzVKt/9CdDgzP9aU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G+WP2QojV/0OXelSQ5HmUvHHYCiT3EP+jE4BTy2fIZSmZhH1EgNfw9O84bJdcmf5EXgz942cYaqeR/9glLP92rEdQaexaSRahHOeELReguM+8p8LrpMFi9i4x3Sf4D4qk6r5V1Wz0mtxCR/Zjz2h/BzrEXMZIyFVNm8dInoQrRE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=G9hXsTzR; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=WHJDk1xN85I0+ZvOecsdLce5CW/Q1q1JLIoBhMnlftOgZ/ZNlihhBXJsrmTyAPTR0ZTdqhx4jRI8a7FtTRehyKPGNIqA4D21p9RIo7Yz6Ca8AOloroOlvDKZN9pr3cYK7DJCss0E80JlVUT5Mmn5tVIXRvBp/sYtW7kkJEtvVk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SMZzeHkF; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="G9hXsTzR"
-ARC-Seal: i=1; a=rsa-sha256; t=1750716490; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=YRbDsl6UDTgqiLNXD6FOOYF7QMs4k1Fof/h54LtAlOcWESaMYSLv0M/F82t7uYA6QpZoMMnYJE/YgZfr8vMlH9Vd+wgChJw+EJMJzdusBj8xRYHKg207idBBvxWLdgYinzO655PU+7j83auyS5gYrga4zrqbMtySkmH4zV2kD18=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750716490; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=/BXgpXwhzYtQIWwdqXLgsVk4WStiLAj0XHlChIgBw3M=; 
-	b=XL21455Ail7tSBw/eAf7lhtRyw5tOHGFGHcePKq5uYirNsaKLY9L765rFqUF+lsrA4ea/BOgcT3kLz1nL1+zCs6UeBQ1g7Tm65Cnl/DLKnyEjUfJ1gt+an8UNE5c5LtsCzDjAZeO4Awg/m0/Ct5b0PqLZZDmfpXWlszGAVOf4MQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750716490;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=/BXgpXwhzYtQIWwdqXLgsVk4WStiLAj0XHlChIgBw3M=;
-	b=G9hXsTzREqibMweZdE0PXJ/yFt539DBxTgFgiU0D1+YLJudVvNqIYpZXOKMfyPVL
-	2uPPmYL9u5lSzxm3ulNwoQ94vtD1/KZ/SLp76EHW3JwHJCm5a+IvSzg6zRmQqc6jO4q
-	JsvsIvix4nJrXwQ5fb+AN4ZOnLLmpTY628e+Jarc=
-Received: by mx.zohomail.com with SMTPS id 1750716488768202.2640415999;
-	Mon, 23 Jun 2025 15:08:08 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 0B36B180AAB; Tue, 24 Jun 2025 00:08:04 +0200 (CEST)
-Date: Tue, 24 Jun 2025 00:08:03 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Amit Sunil Dhamne <amitsd@google.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Badhri Jagan Sridharan <badhri@google.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@kernel.org>, Kyle Tso <kyletso@google.com>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] dt-bindings: connector: extend ports property to
- model power connections
-Message-ID: <z2wrzts6cgunxs5tc764izvrfi4i2d637zpt6tj5f4piry6j66@cke2yxhih6dg>
-References: <20250507-batt_ops-v2-0-8d06130bffe6@google.com>
- <20250507-batt_ops-v2-1-8d06130bffe6@google.com>
- <20250514194249.GA2881453-robh@kernel.org>
- <b4a22161-8cab-4d76-a4b0-4bfd0d79cdc1@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SMZzeHkF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750716503; x=1782252503;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4ubACdoLtmTWspA2/xYT1/XL3PMWzVKt/9CdDgzP9aU=;
+  b=SMZzeHkFBlwuWE3OzrpLvjXFUhrMZc4Ib3AmXJDB9Tjy6vbNQBDR67Br
+   yoU+5mfamdMQD1DgmvUt9/GBQ5UamL1yh0ZDjzYRumEhoYcaLffi1Hh3U
+   4W8pabUXlzslN40keWCDSbwqKI7gIammzIZyZRm11DM3E1FHtsA4Nn5w+
+   7VCWFpX/QfgWUaeGcHC5M2JZ5Qqsrn7T2x2ZSWaI8a359QE6UsRcBY/IZ
+   8aHVJvUKKmYJ9FDdLapyj7/a4WXT9EM0pNUpVP3VVplRgvrzwQGgX8/EU
+   ZJBsYhbguEMCjnG14Bd0TfAupQ2IN0HjycDeUBC+7vDwGBOjauEOcNAYF
+   A==;
+X-CSE-ConnectionGUID: OakrEHm3QYen6zNY/ZqgZA==
+X-CSE-MsgGUID: YIBc2Y+xRlmBdHJWldSJFw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56744829"
+X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
+   d="scan'208";a="56744829"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 15:08:22 -0700
+X-CSE-ConnectionGUID: DqMHNaMSQMa9rG6dqUY0cg==
+X-CSE-MsgGUID: 3rLef4w7T2CHBV7sorbZrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
+   d="scan'208";a="151138052"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 23 Jun 2025 15:08:18 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uTpKq-000QsA-0E;
+	Mon, 23 Jun 2025 22:08:16 +0000
+Date: Tue, 24 Jun 2025 06:07:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Ahmad Fatoum <a.fatoum@pengutronix.de>,
+	Kent Gibson <warthog618@gmail.com>,
+	Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>,
+	Marek Vasut <marex@denx.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 7/9] gpio: sysfs: export the GPIO directory locally in
+ the gpiochip<id> directory
+Message-ID: <202506240548.l2wS2XW6-lkp@intel.com>
+References: <20250623-gpio-sysfs-chip-export-v2-7-d592793f8964@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="boxpunqqsxkyyd4w"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b4a22161-8cab-4d76-a4b0-4bfd0d79cdc1@google.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.3/250.696.82
-X-ZohoMailClient: External
+In-Reply-To: <20250623-gpio-sysfs-chip-export-v2-7-d592793f8964@linaro.org>
+
+Hi Bartosz,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on cb908f3699fb137e28017a8fdf506c35762b3eb6]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpio-sysfs-add-a-parallel-class-device-for-each-GPIO-chip-using-device-IDs/20250623-170412
+base:   cb908f3699fb137e28017a8fdf506c35762b3eb6
+patch link:    https://lore.kernel.org/r/20250623-gpio-sysfs-chip-export-v2-7-d592793f8964%40linaro.org
+patch subject: [PATCH v2 7/9] gpio: sysfs: export the GPIO directory locally in the gpiochip<id> directory
+config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250624/202506240548.l2wS2XW6-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506240548.l2wS2XW6-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506240548.l2wS2XW6-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/gpio/gpiolib-sysfs.c:802:3: error: cannot jump from this goto statement to its label
+     802 |                 goto err_free_name;
+         |                 ^
+   drivers/gpio/gpiolib-sysfs.c:804:8: note: jump bypasses initialization of variable with __attribute__((cleanup))
+     804 |         char *path __free(kfree) = kasprintf(GFP_KERNEL, "gpio%u/value",
+         |               ^
+   drivers/gpio/gpiolib-sysfs.c:795:3: error: cannot jump from this goto statement to its label
+     795 |                 goto err_put_dirent;
+         |                 ^
+   drivers/gpio/gpiolib-sysfs.c:804:8: note: jump bypasses initialization of variable with __attribute__((cleanup))
+     804 |         char *path __free(kfree) = kasprintf(GFP_KERNEL, "gpio%u/value",
+         |               ^
+   drivers/gpio/gpiolib-sysfs.c:786:3: error: cannot jump from this goto statement to its label
+     786 |                 goto err_put_dirent;
+         |                 ^
+   drivers/gpio/gpiolib-sysfs.c:804:8: note: jump bypasses initialization of variable with __attribute__((cleanup))
+     804 |         char *path __free(kfree) = kasprintf(GFP_KERNEL, "gpio%u/value",
+         |               ^
+   drivers/gpio/gpiolib-sysfs.c:780:3: error: cannot jump from this goto statement to its label
+     780 |                 goto err_unregister_device;
+         |                 ^
+   drivers/gpio/gpiolib-sysfs.c:804:8: note: jump bypasses initialization of variable with __attribute__((cleanup))
+     804 |         char *path __free(kfree) = kasprintf(GFP_KERNEL, "gpio%u/value",
+         |               ^
+   drivers/gpio/gpiolib-sysfs.c:773:3: error: cannot jump from this goto statement to its label
+     773 |                 goto err_free_data;
+         |                 ^
+   drivers/gpio/gpiolib-sysfs.c:804:8: note: jump bypasses initialization of variable with __attribute__((cleanup))
+     804 |         char *path __free(kfree) = kasprintf(GFP_KERNEL, "gpio%u/value",
+         |               ^
+   drivers/gpio/gpiolib-sysfs.c:733:3: error: cannot jump from this goto statement to its label
+     733 |                 goto err_clear_bit;
+         |                 ^
+   drivers/gpio/gpiolib-sysfs.c:804:8: note: jump bypasses initialization of variable with __attribute__((cleanup))
+     804 |         char *path __free(kfree) = kasprintf(GFP_KERNEL, "gpio%u/value",
+         |               ^
+   drivers/gpio/gpiolib-sysfs.c:727:3: error: cannot jump from this goto statement to its label
+     727 |                 goto err_clear_bit;
+         |                 ^
+   drivers/gpio/gpiolib-sysfs.c:804:8: note: jump bypasses initialization of variable with __attribute__((cleanup))
+     804 |         char *path __free(kfree) = kasprintf(GFP_KERNEL, "gpio%u/value",
+         |               ^
+   7 errors generated.
 
 
---boxpunqqsxkyyd4w
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 1/5] dt-bindings: connector: extend ports property to
- model power connections
-MIME-Version: 1.0
+vim +802 drivers/gpio/gpiolib-sysfs.c
 
-Hi,
+   677	
+   678	/**
+   679	 * gpiod_export - export a GPIO through sysfs
+   680	 * @desc: GPIO to make available, already requested
+   681	 * @direction_may_change: true if userspace may change GPIO direction
+   682	 * Context: arch_initcall or later
+   683	 *
+   684	 * When drivers want to make a GPIO accessible to userspace after they
+   685	 * have requested it -- perhaps while debugging, or as part of their
+   686	 * public interface -- they may use this routine.  If the GPIO can
+   687	 * change direction (some can't) and the caller allows it, userspace
+   688	 * will see "direction" sysfs attribute which may be used to change
+   689	 * the gpio's direction.  A "value" attribute will always be provided.
+   690	 *
+   691	 * Returns:
+   692	 * 0 on success, or negative errno on failure.
+   693	 */
+   694	int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
+   695	{
+   696		struct gpiodev_data *gdev_data;
+   697		struct gpiod_data *desc_data;
+   698		struct gpio_device *gdev;
+   699		struct attribute **attrs;
+   700		int status;
+   701	
+   702		/* can't export until sysfs is available ... */
+   703		if (!class_is_registered(&gpio_class)) {
+   704			pr_debug("%s: called too early!\n", __func__);
+   705			return -ENOENT;
+   706		}
+   707	
+   708		if (!desc) {
+   709			pr_debug("%s: invalid gpio descriptor\n", __func__);
+   710			return -EINVAL;
+   711		}
+   712	
+   713		CLASS(gpio_chip_guard, guard)(desc);
+   714		if (!guard.gc)
+   715			return -ENODEV;
+   716	
+   717		if (test_and_set_bit(FLAG_EXPORT, &desc->flags))
+   718			return -EPERM;
+   719	
+   720		gdev = desc->gdev;
+   721	
+   722		guard(mutex)(&sysfs_lock);
+   723	
+   724		if (!test_bit(FLAG_REQUESTED, &desc->flags)) {
+   725			gpiod_dbg(desc, "%s: unavailable (not requested)\n", __func__);
+   726			status = -EPERM;
+   727			goto err_clear_bit;
+   728		}
+   729	
+   730		desc_data = kzalloc(sizeof(*desc_data), GFP_KERNEL);
+   731		if (!desc_data) {
+   732			status = -ENOMEM;
+   733			goto err_clear_bit;
+   734		}
+   735	
+   736		desc_data->desc = desc;
+   737		mutex_init(&desc_data->mutex);
+   738		if (guard.gc->direction_input && guard.gc->direction_output)
+   739			desc_data->direction_can_change = direction_may_change;
+   740		else
+   741			desc_data->direction_can_change = false;
+   742	
+   743		gpiod_attr_init(&desc_data->dir_attr, "direction",
+   744				direction_show, direction_store);
+   745		gpiod_attr_init(&desc_data->val_attr, "value", value_show, value_store);
+   746		gpiod_attr_init(&desc_data->edge_attr, "edge", edge_show, edge_store);
+   747		gpiod_attr_init(&desc_data->active_low_attr, "active_low",
+   748					active_low_show, active_low_store);
+   749	
+   750		attrs = desc_data->attrs;
+   751		desc_data->attr_group.is_visible = gpio_is_visible;
+   752		attrs[GPIO_SYSFS_LINE_ATTR_DIRECTION] = &desc_data->dir_attr.attr;
+   753		attrs[GPIO_SYSFS_LINE_ATTR_VALUE] = &desc_data->val_attr.attr;
+   754		attrs[GPIO_SYSFS_LINE_ATTR_EDGE] = &desc_data->edge_attr.attr;
+   755		attrs[GPIO_SYSFS_LINE_ATTR_ACTIVE_LOW] =
+   756					&desc_data->active_low_attr.attr;
+   757	
+   758		desc_data->attr_group.attrs = desc_data->attrs;
+   759		desc_data->attr_groups[0] = &desc_data->attr_group;
+   760	
+   761		/*
+   762		 * Note: we need to continue passing desc_data here as there's still
+   763		 * at least one known user of gpiod_export_link() in the tree. This
+   764		 * function still uses class_find_device() internally.
+   765		 */
+   766		desc_data->dev = device_create_with_groups(&gpio_class, &gdev->dev,
+   767							   MKDEV(0, 0), desc_data,
+   768							   desc_data->attr_groups,
+   769							   "gpio%u",
+   770							   desc_to_gpio(desc));
+   771		if (IS_ERR(desc_data->dev)) {
+   772			status = PTR_ERR(desc_data->dev);
+   773			goto err_free_data;
+   774		}
+   775	
+   776		desc_data->value_class_node = sysfs_get_dirent(desc_data->dev->kobj.sd,
+   777							       "value");
+   778		if (!desc_data->value_class_node) {
+   779			status = -ENODEV;
+   780			goto err_unregister_device;
+   781		}
+   782	
+   783		gdev_data = gdev_get_data(gdev);
+   784		if (!gdev_data) {
+   785			status = -ENODEV;
+   786			goto err_put_dirent;
+   787		}
+   788	
+   789		list_add(&desc_data->list, &gdev_data->exported_lines);
+   790	
+   791		desc_data->attr_group.name = kasprintf(GFP_KERNEL, "gpio%u",
+   792						       gpio_chip_hwgpio(desc));
+   793		if (!desc_data->attr_group.name) {
+   794			status = -ENOMEM;
+   795			goto err_put_dirent;
+   796		}
+   797	
+   798		desc_data->parent = &gdev_data->cdev_id->kobj;
+   799		status = sysfs_create_groups(desc_data->parent,
+   800					     desc_data->attr_groups);
+   801		if (status)
+ > 802			goto err_free_name;
+   803	
+   804		char *path __free(kfree) = kasprintf(GFP_KERNEL, "gpio%u/value",
+   805						     gpio_chip_hwgpio(desc));
+   806		if (!path) {
+   807			status = -ENOMEM;
+   808			goto err_remove_groups;
+   809		}
+   810	
+   811		desc_data->value_chip_node = kernfs_walk_and_get(desc_data->parent->sd,
+   812								 path);
+   813		if (!desc_data->value_chip_node) {
+   814			status = -ENODEV;
+   815			goto err_remove_groups;
+   816		}
+   817	
+   818		return 0;
+   819	
+   820	err_remove_groups:
+   821		sysfs_remove_groups(desc_data->parent, desc_data->attr_groups);
+   822	err_free_name:
+   823		kfree(desc_data->attr_group.name);
+   824	err_put_dirent:
+   825		sysfs_put(desc_data->value_class_node);
+   826	err_unregister_device:
+   827		device_unregister(desc_data->dev);
+   828	err_free_data:
+   829		kfree(desc_data);
+   830	err_clear_bit:
+   831		clear_bit(FLAG_EXPORT, &desc->flags);
+   832		gpiod_dbg(desc, "%s: status %d\n", __func__, status);
+   833		return status;
+   834	}
+   835	EXPORT_SYMBOL_GPL(gpiod_export);
+   836	
 
-On Tue, May 20, 2025 at 01:10:25PM -0700, Amit Sunil Dhamne wrote:
-> Hi Rob,
->=20
-> Thanks for your response!
->=20
-> On 5/14/25 12:42 PM, Rob Herring wrote:
-> > On Wed, May 07, 2025 at 06:00:22PM -0700, Amit Sunil Dhamne wrote:
-> >> Extend ports property to model power lines going between connector to
-> >> charger or battery/batteries. As an example, connector VBUS can supply
-> >> power in & out of the battery for a DRP.
-> >>
-> >> Additionally, add ports property to maxim,max33359 controller example.
-> >>
-> >> Signed-off-by: Amit Sunil Dhamne <amitsd@google.com>
-> >> ---
-> >>  .../bindings/connector/usb-connector.yaml          | 20 +++++++++++--=
-----
-> >>  .../devicetree/bindings/usb/maxim,max33359.yaml    | 25 +++++++++++++=
-+++++++++
-> >>  2 files changed, 38 insertions(+), 7 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/connector/usb-connector=
-=2Eyaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> >> index 11e40d225b9f3a0d0aeea7bf764f1c00a719d615..706094f890026d324e6ece=
-8b0c1e831d04d51eb7 100644
-> >> --- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> >> +++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> >> @@ -181,16 +181,16 @@ properties:
-> >> =20
-> >>    port:
-> >>      $ref: /schemas/graph.yaml#/properties/port
-> >> -    description: OF graph bindings modeling a data bus to the connect=
-or, e.g.
-> >> -      there is a single High Speed (HS) port present in this connecto=
-r. If there
-> >> -      is more than one bus (several port, with 'reg' property), they =
-can be grouped
-> >> -      under 'ports'.
-> >> +    description: OF graph binding to model a logical connection betwe=
-en a device
-> >> +      and connector. This connection may represent a data bus or powe=
-r line. For
-> >> +      e.g. a High Speed (HS) data port present in this connector or V=
-BUS line.
-> >> +      If there is more than one connection (several port, with 'reg' =
-property),
-> >> +      they can be grouped under 'ports'.
-> > 'port' and 'port@0' are equivalent. So you can't be changing its=20
-> > definition.
->=20
-> Noted!
->=20
->=20
-> > I'm not sure showing a power connection with the graph is the right=20
-> > approach.
->=20
-> I want to provide some more context and rationale behind using this desig=
-n.
->=20
-> From a hardware perspective:
->=20
-> The max77759/max33359 IC has Type-C port controller, charger, fuel gauge
-> (FG) ICs. The Vbus from the connector goes to/from the TCPC and connects
-> with the charger IP via circuitry & from there on to the battery. The FG
-> is connected to the battery in parallel. As it can be seen that while
-> these IPs are interconnected, there's no direct connection of the fuel
-> gauge & the connector.
->=20
-> For this feature, I am interested in getting the reference to the FG. As
-> per graph description: "...These common bindings do not contain any
-> information about the direction or type of the connections, they just
-> map their existence." This works for my case because I just want the
-> connector to be aware of the Fuel gauge device without imposing a
-> specific directionality in terms of power supplier/supplied. This is
-> also the reason why I didn't use
-> "/schemas/power/supply/power-supply.yaml#power-supplies" binding.
->=20
-> > We have a binding for that already with the regulator binding.
->=20
-> I haven't explored the option of using regulator bindings. But in my
-> case I am interested in fuel gauge and unfortunately, they're modeled as
-> power_supply devices.
-
-=46rom hardware point of view there is no direct connection at all
-between the fuel gauge and the connector. The usual hardware
-connection is
-
-connector -> charger -> battery
-
-With the charger potentially supporting reverse operation to provide
-energy from the battery to the connector (with "battery" I assume
-a "smart" battery, so the raw cells and some kind of fuel gauge).
-
-Thus the following example should properly document the hardware
-connections:
-
----------------------------------------
-typec-connector {
-    /* ... */
-};
-
-charger {
-    /* ... */
-    power-supplies =3D <&connector>;
-};
-
-fuel-gauge {
-    /* ... */
-    power-supplies =3D <&charger>;
-};
----------------------------------------
-
-It means instead of the direct graph lookup for the fuel gauge,
-you would need a function walking through the graph build by the
-power-supplies phandles. But it also means that the DT properly
-describes the hardware instead of adding random graph connections.
-
-Greetings,
-
--- Sebastian
-
-> > Perhaps the connector needs to be a supply. It's already using that=20
-> > binding in the supplying power to the connector case.
->=20
-> Want to clarify, in this case you mean
-> /schemas/regulator/regulator.yaml#*-supply$ right?
->=20
-> Adding to my response above, the reason I don't want to impose a
-> directionality in terms of supplier/supplied is that in case of USB Dual
-> Role Port they're dynamic i.e., when USB is source, the power is
-> supplied out of the battery (battery/FG will be supplier) and in case
-> USB is sink, battery is supplied power. Whether the connector port is in
-> source or sink role is determined on a connection to connection basis.
-> Also, the knowledge of the supply direction is of no consequence for
-> this feature.
->=20
->=20
-> Please let me know what you think.
->=20
-> Thanks,
->=20
-> Amit
->=20
->=20
-> > Rob
->=20
-
---boxpunqqsxkyyd4w
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhZ0EAACgkQ2O7X88g7
-+pomEA//YVUVu98W2c34fvdaBGPXhG5LICkMydDQzHm/ycXUSLBKZdQwKFMoVYrs
-GLUUn8a5VFSCBLfcUSUTN889escHyOEwjNVZlQhGhAuwaq3AVlXPR2QchgPm/JXw
-kE9zcBKbzGk9KMPs/MdlGxF4gHJG2RULAQSYo3i6HgVCIKkPIoUYDMbTLOMBedWu
-9kNCd6JQ0w8y/aWEfE17rwkr5wO8/tEurfBri/5NTOYSHvEZOEddKlIwNis/SZR7
-BMYx8aV1cdIo+90sdyvGZdB6LQ1MbV8eI3xDOtp/8kwpvPUWUnlFmm/We1MOvrAH
-uVX1kflR63hKzTxfYFqyyQV2hCBQYGInT3jocBHYhWLOm5kkmGgODpYS3xthlMdO
-7uiP5fbHVW+SZYfkB8bjUlu3lT9IRLuvJ6KvMEBYsxvmMoANl7ZwXHssRqVTGygy
-UbLnHLdMrVgukw6qq6cgFvbN5JygzUAW4c3+1s4s5vQ0g4bAju+Ym8m25h0F5RRo
-ns9HwYaa9G+BtC/uteHyx9j7NjaSNhbmWOvp7cG+b93X7uPE2ljyvYbiPL0IGand
-W6TDVRP4sZTqL64FU/4G/0iHeBkrMc1ou2CxIMRyOLlmUJepLMpjR8aA3asuHQZ4
-iJZJQoFHn0RgQuAjG6wqSZUJXNtCBhPhDMliv811CFrC9L7SB1I=
-=jjhP
------END PGP SIGNATURE-----
-
---boxpunqqsxkyyd4w--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
