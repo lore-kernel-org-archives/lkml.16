@@ -1,56 +1,74 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F178E1957FF;
-	Mon, 23 Jun 2025 13:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7A2248891
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750686785; cv=none; b=fK7KiwMUhqIrrnOp6dUbxzja3zBV8CZvUTmm4GZArO6lQURxj8wEs90nMd0MvMWJglCI7XGQp8+AXyXxZ8SrzXRfCb10GDAhDAa1uVYFVMCdzjrSpynXewJoGPGNV4zaBFAAPSsjCSsNGNr/FpjdZ72OHFg1GOb5Z+1VsXAOB7A=
+	t=1750686817; cv=none; b=OrbcfRMaBouWhlfMWKDam6rnv0ViKQjayJdWen/iD6ZnbqlUVndw8tnhfDjqu1p4iRhMMEYW3+jvUyTI8xBKOEXpLb7K/P7MUzfQ7B8/6zQ8vg2LyThav5sRSzuQLNnQ/dv+6Nn9Gy2KsvTqFv7sQooJ4Kbj3UK8NrPjWimcKTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750686785; c=relaxed/simple;
-	bh=qehOKHW0DXOUEoQt7yoJi/kRC/gnYrNDCeKceRmhrsc=;
+	s=arc-20240116; t=1750686817; c=relaxed/simple;
+	bh=WyXD0HlTkzAg3Wih1I1aD6LSwUij8meoNj0lDz3XnGo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KZO7w1j82gWEZJ98ZZTfGeKFxfjEqfWttuTwI2w9Begw7fF5MjLsDZugfxeFnp8L6n4swoyr2u+8g/0qcFrfCpZCKfWagEkdSp8+lCkXxsgsqt9ujkZ2PsH1PkwWoYefw6wH3ZK+7+RV7TDHA1Fv2Tp7Adzp1gh8Wq+4BbvI0t0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=0g9CUqnB; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=nMX+pAQ1TaOqnVSUo67VFy+ukWcwtIcG1/zEniVE+gOBcislscWh3ccCe/dsoqqD4FS0owCm4md3whbVE9PMcHHrLt+WW/x0yKycjyVupYWLa3INRSOgRfxpWjlHYOMCpHt9CYyZ+8+aONG8tAw0omtWfJQkFZ7sV9ybFi5KVNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZJzZFsZx; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0g9CUqnB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=YVHSJAiRhj7qf6Q+0VoJztFQx2dBI/eUpzohiN1zMCc=; b=0g9CUqnB1CfKDqlHsdyDKWKIJR
-	AbYW4CnHUKJerou9qQ1LyzJhKkI2On3ZQyoBz1p3EKk/ybJyUzUaIQPSGxRosBwBsfyRAB1tm4m3T
-	qlDA5bF99eMEprEbvv9J5UvRfUoejni6zhLUmN5M8gaZ+6+1NxAqWMH+rrSb+wzOYmBu5oR95udXJ
-	lPrS0doZWtcg1PEbYrSArNVAMJCMYZ0W4B8sWRLKHWn8eefz/HUuhVRhLWO40J4ELRCv8hxQVteU5
-	e6UiPIU9BVb70rl/h9KAz55Z2rvMQuZJjRB/Pu7HemRvxEwekrSST5U5sOzDxUdoVc9mtKLYLQGVW
-	XCFluUZQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uThbY-00000002wC1-1uG3;
-	Mon, 23 Jun 2025 13:53:00 +0000
-Date: Mon, 23 Jun 2025 06:53:00 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: David Howells <dhowells@redhat.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Christoph Hellwig <hch@infradead.org>, willy@infradead.org,
-	Christian Brauner <brauner@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Miklos Szeredi <mszeredi@redhat.com>, torvalds@linux-foundation.org,
-	netdev@vger.kernel.org, linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: AF_UNIX/zerocopy/pipe/vmsplice/splice vs FOLL_PIN
-Message-ID: <aFlcPOpajICfVlFE@infradead.org>
-References: <1069540.1746202908@warthog.procyon.org.uk>
- <165f5d5b-34f2-40de-b0ec-8c1ca36babe8@lunn.ch>
- <0aa1b4a2-47b2-40a4-ae14-ce2dd457a1f7@lunn.ch>
- <1015189.1746187621@warthog.procyon.org.uk>
- <1021352.1746193306@warthog.procyon.org.uk>
- <2135907.1747061490@warthog.procyon.org.uk>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZJzZFsZx"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-40a7322f081so819218b6e.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 06:53:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750686815; x=1751291615; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3K6FPu8xv2O6mOsMnZyCHRYplU2tK2S/oPBdlJF7GUw=;
+        b=ZJzZFsZxPzdk41g3VPBWOQU0P40jn9nA6aQh4DWxJepFk8A6+j94sW/JLaCJrFtkWc
+         5FznnLawqR/NawFf3qArnlV6PD8d5Vybr7sInaDodfLsB8HgZcG/dl+3hplTTa2shQGH
+         Uvyss4acOAaB66nukQNgE1+EWgUY7rW1wOFOlyJ9Eb3uqLEKGIUauj+n/3b42TRxAj12
+         5/6c1OTbpeiS2BIni39+wxb24dLsC1DWzMw28a7MlyVEnbvx0PvelgkOP/aYCwuGvnVd
+         AUwWbJidC7eV6nV/7FpfqAtt0gy4oQ3FhSAROHQfR25msKjSqr9BGdl0k8Ko0msogPlx
+         EAaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750686815; x=1751291615;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3K6FPu8xv2O6mOsMnZyCHRYplU2tK2S/oPBdlJF7GUw=;
+        b=QPt2eYcOip1fsTIRS/GbJwVey8GcitpdVPkWNfETMc+CFEs/SkDCqJ0Gule1rT7xW7
+         rPe8lcIARe24P5qWaxbh6KWsiDMA0LKlMfpaMVl195TdoJrgd3kX42X0eCH8u+yypjYE
+         LskdtLARjoJOYxUXV14L8nV/HgBGxlprU0ey1R7eqDEYYS5ZBh2bdKYuT0oYj6Rjy/Vc
+         CS06pI+19x2HJuhY98iJAryTDzRHgB+kWKl3j9tmOsdfYLQXRAkOklcgg45ht3Afj3xX
+         MzqA6Lgf67QrPdgCDrPGeMAeN0GMO34YIxz8PfW0RJvc+4yDiT/EPGitTTeKLLO6Ebfp
+         cbqg==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ9O8Msm/8qi5irSszrjLO6HFr0b20RDaGoDYBNjAZFVXAM0O94eDb7FtjxrcCjI5ttJQ7xQgDf9mspbo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtZWvtWAVIipG80yyODq59B7DCHVwAhVIAZZGU6w+28kGyWMBl
+	KENS6V/DmNGYou/fTG41sd+lfF7cy00zSLDG2ItvhQ2C7jNCezdk10a2RYeeUV82fBE=
+X-Gm-Gg: ASbGncs2Fs1QBz6Wh5VLM2LbHm/d28TxSje1uk+tlaIKaTQPBTdqL0jqY9Aqn5qk3nN
+	PlHN1USfoe3GGMqlKZAi3/8TyulU0n2YUb4NMjTTi/8+zkxfGMomGF5PUM9AycguFJTfz2f6qdv
+	SG0pUCsZTDRQWT2Q4vREFh/1byZwzPghxeZlULgc/5P3TcT1P6E31oKJaUcIx9BLIllxqcutM7c
+	2TYQuxb3VGnlnHSiDJxA9x4t1UHjYrxb7tb+iGVwLK8fl4SHnM+p9sTTZHWRxh368TLjALC1cA0
+	k4SY0S+J38hUBOKfDIsoFt4sds8Lz9ueb1v/QjDpwtNcYGSrQYwQnyuD6elPRfbwu//6wAdvfrX
+	/a5o=
+X-Google-Smtp-Source: AGHT+IEqXwixIusFGOrWBDfBa1jltNWDM9f6X/YBAXgpQr8rertMKAekyzQDD4eMiV31CNpW761mAg==
+X-Received: by 2002:a05:6808:14cf:b0:40a:52cf:8870 with SMTP id 5614622812f47-40ac7106496mr10493462b6e.26.1750686814982;
+        Mon, 23 Jun 2025 06:53:34 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:608c:e09c:db47:348])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6115b6c80adsm981061eaf.12.2025.06.23.06.53.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 06:53:34 -0700 (PDT)
+Date: Mon, 23 Jun 2025 16:53:33 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/vmalloc: leave lazy MMU mode on PTE mapping error
+Message-ID: <9214718e-97d0-4e8f-b223-59351e664707@suswa.mountain>
+References: <20250623075721.2817094-1-agordeev@linux.ibm.com>
+ <107bfdb7-c8f5-45fa-872e-3e6928dc8025@arm.com>
+ <aFlQv4dx7wFU5Cql@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+ <cb71d9f4-aaae-4240-88f5-50a745717f22@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,32 +77,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2135907.1747061490@warthog.procyon.org.uk>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <cb71d9f4-aaae-4240-88f5-50a745717f22@arm.com>
 
-On Mon, May 12, 2025 at 03:51:30PM +0100, David Howells wrote:
-> I'm looking at how to make sendmsg() handle page pinning - and also working
-> towards supporting the page refcount eventually being removed and only being
-> available with certain memory types.
+On Mon, Jun 23, 2025 at 02:31:48PM +0100, Ryan Roberts wrote:
+> On 23/06/2025 14:03, Alexander Gordeev wrote:
+> > On Mon, Jun 23, 2025 at 01:37:11PM +0100, Ryan Roberts wrote:
+> >> On 23/06/2025 08:57, Alexander Gordeev wrote:
+> >>> Function vmap_pages_pte_range() enters the lazy MMU mode,
+> >>> but fails to leave it in case an error is encountered.
+> >>>
+> >>> Reported-by: kernel test robot <lkp@intel.com>
+> >>> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> >>> Closes: https://lore.kernel.org/r/202506132017.T1l1l6ME-lkp@intel.com/
+> >>> Fixes: 44562c71e2cf ("mm/vmalloc: Enter lazy mmu mode while manipulating vmalloc ptes")
+> >>> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> >>
+> >> Ouch, sorry about that! The patch looks good to me so:
+> >>
+> >> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+> >>
+> >> I wonder an aditional Fixes: should be added for Commit 2ba3e6947aed
+> >> ("mm/vmalloc: track which page-table levels were modified") though? That's the
+> >> one that added the "*mask |= PGTBL_PTE_MODIFIED;" which would have also been
+> >> skipped if an error occured before this patch.
+> > 
+> > Good catch! I think it certainly needs to be reported with Fixes
+> > and I even doubt whether your commit should be mentioned at all?
+> 
+> Well I would certainly argue that my patch is broken as is. So happy to have 2
+> Fixes: tags. But I'm not really sure what the rules are here...
 
-Yes, that would be great.
+I would only list the older commit 2ba3e6947aed ("mm/vmalloc: track
+which page-table levels were modified").  The static checker warning
+came later, but it's not really the important bit.  It's just one bug.
 
-> The question is what should happen here to a memory span for which the network
-> layer or pipe driver is not allowed to take reference, but rather must call a
-> destructor?  Particularly if, say, it's just a small part of a larger span.
+We'll have to hand edit the commit if we want to backport it so that's
+a separate issue.
 
-What is a "span" in this context?  In general splice unlike direct I/O
-relies on page reference counts inside the splice machinery.  But that is
-configurable through the pipe_buf_operations.  So if you want something
-to be handled by splice that does not use simple page refcounts you need
-special pipe_buf_operations for it.  And you'd better have a really good
-use case for this to be worthwhile.
-
-> And then there's vmsplice().  The same goes for vmsplice() to AF_UNIX or to a
-> pipe.  That should also pin memory.  It may also be possible to vmsplice a
-> pinned page into the target process's VM or a page from a memory span with
-> some other type of destruction.  I don't suppose we can deprecate vmsplice()?
-
-You'll need a longterm pin for vmsplice.  I'd love to deprecate it,
-but I doubt it's going to go away any time soon if ever.
+regards,
+dan carpenter
 
