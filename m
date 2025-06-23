@@ -1,142 +1,122 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96AC6241122;
-	Mon, 23 Jun 2025 09:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C2F2EAE5
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750671379; cv=none; b=P5XYvIN5FtoLVOlQaZdYOMpc60AgiX9Prhs6cZN9CpAu3d4BB+cOe8E/KtBmXAWFw1zdRneAFATWsp53yGmeCDKMKbq9B+4SLRAcqATohsnLHHwj2CYbuBcjECLwvCdQijqHyM/US3AbAxuaHF8BsJYKftHvQAWs6UB/NNAj2ZI=
+	t=1750671449; cv=none; b=GkSyDz4RUeni69N0ueVfhCtUDtTjexuiorbt3t1SyhCFlPBYyb4qjD+DpB8rlt82AKm0JnCy3AdAQPySUV1tLZCrXfZcmz1xVl+mS2+belPCqjfNrrC5n0qRsjBOuql7NnFtziN0nCevATsT7NFex2JhD/usq7Fa2Q5tx/W77HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750671379; c=relaxed/simple;
-	bh=XY7HqLsJJXFsX1Gp8sB4yUNvrl6iqaqmtL6uxO2bzRo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XWHIJLS44tzQGapz+dtgQSmeCmzKEcTh8EQJTpNETLIpEu7Pqb7bi3ol218eMlB4EWdu68+uq5wshFE2ohthhJ/LQd9eouZhwufkGnImsoL4gU6AlQ325pGHzGMSHekVuVdCd3D1VBx/YtVT1QIuZ6JaVvH/Be8rHbQWjXXsnlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VeeFx1jE; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750671449; c=relaxed/simple;
+	bh=aGAsZtOVZnmCbGPZiQ3PAX45eEr5Ak6Qn9bMauLq2wk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RlQXS9BfxW+ju59MDRA7zH2QXgF0EaSHrqMNkhElxkRE1CrIJJGYGrtM4aKJhf9kMZtlu51KyQnbFK+OXfeDVLVnQ97gGxExoHT3TIAU/8GJi3BKQyMuN1MbMf8HmjUxSOadt1EilFtpVnaYbYOCL3GvMufc8jaOWfV2m9x/Vbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dm7qr4/u; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VeeFx1jE"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-70e40e3f316so30135867b3.0;
-        Mon, 23 Jun 2025 02:36:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750671376; x=1751276176; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F4Za1BNV8XX88H1slqrdAbMavvWiucCm8pD1Upe5ORM=;
-        b=VeeFx1jEzJftPFVIgXKNyBljYiBdwIaQZkLoODRxjPya9lpTgibvzHHc7cslUD3nz6
-         HXtFRYid7Sr682NdUi20TXOrCM9rB2uQ5OD15HvRtDvNIbZ34vm5Qg4dVmQxxmjK6j1h
-         x7QxqCBHKzYuxGsJSjHGJKz63QQFVGYneNDAlAHl4pYoGCcJ95m23MZL3TV1RUfmGeMr
-         A8qvBV0I+8/ADdusSom7I/0l7eIz3P0vLxEu3iFacC+HOtzhs3gMwR4JDO+9TdLsot8r
-         XzXyzGuJ/kfbYmU67/stL8+zc/t/L8QyufFiJ8VUB1OFxbdqFGeOJzryugcgdtzztrJL
-         KdWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750671376; x=1751276176;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F4Za1BNV8XX88H1slqrdAbMavvWiucCm8pD1Upe5ORM=;
-        b=kxZ6SjhhGD7KfN60IR1y1/HeQpj1oyhXT1iKYLQbg2hV1oP09HybxZJ6xR8eSUR5zk
-         8+z/NKyxoOwmO2tLwDyABhyYHN0Sbkmull51jkqZ1pW+qVXjghHqrO97WTE3nqxFVYsf
-         SkuSPSjxOvYQEyn6HXQOCSKN0Qx6R4lL0tsrYsyEtoQhK6q2tO2m7jGd0ADDo3ldUn2A
-         7fDpJFeWbgxIVpv3k10KAxcw0JeBH1EzJ0v/nOzMJ+Hr9q58mvF3Sl8EOksgvztyLlPb
-         1N1vkv5Pm29rhPpTyc2iLDUVWZRtrQTYcnhwyVkJr/d6xx4OaYbJoRRGf6nuw/sxgXHm
-         Mmyw==
-X-Forwarded-Encrypted: i=1; AJvYcCWh+fX2cZwWoMar4fM2jz2JRmBpbewBa07421DYn8a26J27DwJvJy4Sc1lzgqR42uw+2xO+0BS2lNIB+SGq@vger.kernel.org, AJvYcCXak9/1fyXTXmY1ouhBgGRvhQEm2VUxcpzkWC3w0Jj/Q9Ca/JIpjab+/SXXlFq+xBvIQPYLA3VpwTs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuUf/7agrhTnoC4Xd1PZt3UmuR0j9ELJBq+rGdgNknyS1r/6Iv
-	NUb4cGm3RBJG+PRhgLrxKinhIgm7p0auCEzO4PIR1OYCv+DaujJ7ufY//Ecv5WFj0j3gPkzEpAd
-	lcnTqnu87VWdT9yQ030oMRXR4otUYGSQ=
-X-Gm-Gg: ASbGncsFm21eBHwX8kyNuV7T6ja8Ri4deV8l85iLELAiIoA4bA6W9xqsBfGQ6GOzSa5
-	h3/I/K1scd0JB/xPDxsMu3NJhPAgU+Ya+wXHdxCHOeV9oHfekaUhCIVh7Y9CBKZmPyWPGL+G0sl
-	7D24nBcYMgK0lV+PRWOEmOiL1PPysFvfZkTPR1iRBSfKzJ8Q==
-X-Google-Smtp-Source: AGHT+IEvVMm48GYLrqkAtPw36yMgBzNA/Wq9BF9LgxpO431BIfJpnOAH0eRxD/1ClnEuiMM0+l9ZX9EEY9TD5aH4jwQ=
-X-Received: by 2002:a05:690c:82:b0:70f:83ef:de07 with SMTP id
- 00721157ae682-712c676eaf4mr172673617b3.33.1750671376384; Mon, 23 Jun 2025
- 02:36:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dm7qr4/u"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55MMjbjX012278;
+	Mon, 23 Jun 2025 09:37:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=l1TtOuRllpOCNnGMcD45DT7zyGjF1i
+	ie8WDbcU0BFxU=; b=dm7qr4/uPkHO4DV6fiky9VzQsNVA71uh2lP4D0rVvrdhM8
+	Oka3X6B4ZKqEWbYVjuh/Gr7uRJk4QTxYTDUkytZnu95OLIwlqADCZ2wTBcw49cMO
+	75v6I3f0nxJSpHyqZaOdA7HIDIvG11XQL9RU64KNch7Gg8OVDkTDVo1rILPKCyPT
+	SIc66xz2esrh5ktMrVxz9B2SOF88jWvHw2YCnqOF5V16q1fZmb8H9I24euqOJz1W
+	bacPcMpGMWM858PEI6HqgBRjS9F6nNYxcp8xKYy1+sB+aOUStlMbfWiv5uKB5Oqo
+	VqTAE6nCHrNF7pnKAefvhwGHAqAFv+yVzCzenYLQ==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dmfe0nhm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 23 Jun 2025 09:37:20 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55N9R5JW004643;
+	Mon, 23 Jun 2025 09:37:19 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e99kdaup-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 23 Jun 2025 09:37:19 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55N9bHq633620450
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 23 Jun 2025 09:37:17 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B565D20043;
+	Mon, 23 Jun 2025 09:37:17 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8D3DE20040;
+	Mon, 23 Jun 2025 09:37:17 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 23 Jun 2025 09:37:17 +0000 (GMT)
+Date: Mon, 23 Jun 2025 11:37:16 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Dev Jain <dev.jain@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: move mask update out of the atomic context
+Message-ID: <aFkgTA+02bV6nldk@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20250623080440.3005693-1-agordeev@linux.ibm.com>
+ <c11a4b2e-6895-43b7-9ff6-620793bf8551@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250622004249.9083-1-sef1548@gmail.com> <b16a1df5-0b81-4600-bd68-2d261d2a3780@redhat.com>
- <CABZAGRGvf9Ge5EvMgFP3FUHt2QOpq6xXe9nB4=it9zb+V1DNwg@mail.gmail.com>
- <CAD-N9QV5r4YyO6qbL477x0sJar2=WTdHH=x58P9Qatff_HC3Nw@mail.gmail.com> <3c5f4ecf-d71e-4e61-a3d2-b7cdb3043efe@redhat.com>
-In-Reply-To: <3c5f4ecf-d71e-4e61-a3d2-b7cdb3043efe@redhat.com>
-From: Dongliang Mu <mudongliangabcd@gmail.com>
-Date: Mon, 23 Jun 2025 17:35:50 +0800
-X-Gm-Features: AX0GCFuSxWK_1g_GzSOPBKbDi4_dJxhznzgu_H4kzY4vzrDzTODhYMQmOCC_z5E
-Message-ID: <CAD-N9QVTWRotabnVi9O4GViEGCU+MPE8VRw1ccGiEQRgh7mpQQ@mail.gmail.com>
-Subject: Re: [PATCH] mm/balloon_compaction: update Chinese docs for movable_ops
-To: David Hildenbrand <david@redhat.com>
-Cc: Nick Huang <sef1548@gmail.com>, alexs@kernel.org, si.yanteng@linux.dev, 
-	dzm91@hust.edu.cn, corbet@lwn.net, akpm@linux-foundation.org, 
-	wangkefeng.wang@huawei.com, vishal.moola@gmail.com, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c11a4b2e-6895-43b7-9ff6-620793bf8551@arm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 2G9D2zeuV1BGw5-UikZsaNQVpHz3CkAR
+X-Proofpoint-GUID: 2G9D2zeuV1BGw5-UikZsaNQVpHz3CkAR
+X-Authority-Analysis: v=2.4 cv=BpqdwZX5 c=1 sm=1 tr=0 ts=68592050 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=QBSra2SYcZg9TIse_A4A:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA1NCBTYWx0ZWRfX+L4UXNbSV4+T tBTReFTYYwutmoz0knu/XNIKLBq69M7aXgDRLv1bitj4RYXanO99MFD2NenfqtGWe2cMhsNIa8i 0x8po7TjkMyQrVlIBLxIb5atSCZ4MrVR+q1NYBu7hi2gcEoplXyk0sENGggFplod6zQQu86Yxlx
+ B6u+ySvJYAve5iZpVPVeEK7t5XJbr4QmAKsvz3bAmaXOScf8ix99qDSSWh/Tydams6aMyz6hxJ7 YOkWV9TWLJ0zpnQPCbI5ZM+ipDbDhkmZR6WDfA82ioSP77PNaY4of34ugAhONY1ctPFfjrPxUoa ZCVjdg5PHUKA/TwJDi5jepKjYgKzULAAXl/gJIyX7ydqS9W0wEP+/VDHEUgR2TFG4wLL/8omCe0
+ ee96nHe8I/Gu8jTeWoSTaZxOksFdGXiNNsjRRpGQ8oH861hSYwDsFIFSWql6bNtnARI3mRrB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-23_03,2025-06-23_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 clxscore=1011 spamscore=0 mlxlogscore=861
+ priorityscore=1501 phishscore=0 malwarescore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506230054
 
-On Mon, Jun 23, 2025 at 5:23=E2=80=AFPM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> On 23.06.25 11:12, Dongliang Mu wrote:
-> > On Mon, Jun 23, 2025 at 4:51=E2=80=AFPM Nick Huang <sef1548@gmail.com> =
-wrote:
-> >>
-> >> David Hildenbrand <david@redhat.com> =E6=96=BC 2025=E5=B9=B46=E6=9C=88=
-23=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=884:08=E5=AF=AB=E9=81=93=EF=
-=BC=9A
-> >>>
-> >>> On 22.06.25 02:42, Nick Huang wrote:
-> >>>> Remove Non-LRU Page Migration and Add Movable_ops Page Migration
-> >>>>
-> >>>
-> >>> I'm afraid most people you CC on Chinese doc updates will not be able=
- to
-> >>> help in any reasonable way.
-> >>>
-> >>> --
-> >>> Cheers,
-> >>>
-> >>> David / dhildenb
-> >>
-> >> How can I fix these things?
-> >
-> >  From my understanding, you can follow this how-to.rst[1] and submit
-> > your patches.
->
-> Great, a how-to.rst in a language I don't know. So I assume you meant
-> "one can follow", not me in particular. Because I can only parse some
-> git commands etc in there that are in English.
+On Mon, Jun 23, 2025 at 02:26:29PM +0530, Dev Jain wrote:
+> 
+> On 23/06/25 1:34 pm, Alexander Gordeev wrote:
+> > There is not need to modify page table synchronization mask
+> > while apply_to_pte_range() holds user page tables spinlock.
+> 
+> I don't get you, what is the problem with the current code?
+> Are you just concerned about the duration of holding the
+> lock?
 
-Yes, this is only for Nick.
+Yes.
 
-I should mention the name before the massage. Please ignore it.
-
->
-> Which bring us back to the problem: if you CC me (and many others) on
-> something that is Chinese, I will not be able to contribute anything of
-> value.
-
-Yes. Nick should not cc you in this thread since this is only about
-the Chinese content update in my mind.
-
->
-> Quite the opposite, I will ramble about how non-sensical these in-tree
-> translations are.
->
-> So likely, when you perform a Chinese doc update you want to only CC
-> Chinese doc maintainers. Because they can actually provide review I hope.
->
-> Maybe that should be clarified in the how-to.rst[1] that I'm afraid I
-> cannot read.
-
-This document is listed in the translations/zh_CN/ folder. No one
-except the Chinese translators needs to read it.
-
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+> > Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> > ---
+> >   mm/memory.c | 3 ++-
+> >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/mm/memory.c b/mm/memory.c
+> > index 8eba595056fe..6849ab4e44bf 100644
+> > --- a/mm/memory.c
+> > +++ b/mm/memory.c
+> > @@ -3035,12 +3035,13 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+> >   			}
+> >   		} while (pte++, addr += PAGE_SIZE, addr != end);
+> >   	}
+> > -	*mask |= PGTBL_PTE_MODIFIED;
+> >   	arch_leave_lazy_mmu_mode();
+> >   	if (mm != &init_mm)
+> >   		pte_unmap_unlock(mapped_pte, ptl);
+> > +	*mask |= PGTBL_PTE_MODIFIED;
+> > +
+> >   	return err;
+> >   }
