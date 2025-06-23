@@ -1,90 +1,202 @@
-Received: from outbound.pv.icloud.com (p-west1-cluster6-host7-snip4-8.eps.apple.com [57.103.67.111])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33AC123C509
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:24:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.67.111
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 653BDAD2C;
+	Mon, 23 Jun 2025 11:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750677847; cv=none; b=pB8A0kesup4KaUOlLZUVRAxuhMN6DsUdlRlbM7Wuc3c/SV309CapCpVjv6UHWbIfcuRsHbLVHdPpyes1BwirJ+tTWG0im0DaNHhDCBMG1l+w+4dgjpT7V75GiSXLJj2jFeS0DVBCq/4ugRyeMNY1VcECjyGqF3odOKXHoIF2EMM=
+	t=1750677944; cv=none; b=KqrEs2MjPXcH2QvUPkccMEjLBU5JXgq//xGzARWtqwr6zmfX5FvCOaYMpZ5ev3lgPweR4T9iGiq7rCYhNJLSdKkQIDoxF87WwE7HwdOtY2m1NICwL9ue35EUPmHp6pTXfCSrPpD39b1dBGZt7ZL3xou+dZqC4CxYorgfyh+4OaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750677847; c=relaxed/simple;
-	bh=xs5CAZeO2kCTK14Z4YEuLqifgzUc9ovVFslAeRWAxm4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=o/reeAdPelnNrf26PhA3BpTiBfJVVw25vH3l7PoKnh4tGW8RvbzX1XkONujUgm7BNR25baW1g61a0iw67hdA0AuJ92PLfwTkpKAbjsPW1cKZrFSQYzGScUsBLW5Vc2RoiUXcu11JFweX/Gazd48wobvOqyApy1XtMmo0VtzUt0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=gTwcHlfa; arc=none smtp.client-ip=57.103.67.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="gTwcHlfa"
-Received: from outbound.pv.icloud.com (unknown [127.0.0.2])
-	by outbound.pv.icloud.com (Postfix) with ESMTPS id B5E991800A0B;
-	Mon, 23 Jun 2025 11:24:03 +0000 (UTC)
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com; s=1a1hai; bh=FXO5JrJqKm5uEmDS5QxFD75CtUcUoWq1Z3yegABBRjU=; h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme; b=gTwcHlfasq+ZqJhGSIbJjGJjPvyV58v1W6hzjXB+6IrDAgH5Op7C98LSEnVlOsq/Z755izGrzZx5JV+bDMC/0fF6cfIQo+XHN4kdB30J9WPSZDveDZk2y4LB9MGDldmF0+Yd7LdkruWd2ukEDLy5hAHBD0K89MnoJcuZQnZkwn+d645r57Paf/CBpieOk0QDrKkQYP/EGXVXPHmNR8GsczuagYLHDxnXcG2JbQU50v6yrxA/ZM1ndaAOrfybpzm/8YTcb3J7iNdXC5Uq6TdcqhbDX02vbnsQYV0HoBEY3XyD3Ja1UxLK4D0rKxzAiv+RyzMF4ubwqg1nTabmUoIxzQ==
-Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id BA3761800271;
-	Mon, 23 Jun 2025 11:24:01 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Mon, 23 Jun 2025 19:23:48 +0800
-Subject: [PATCH] Bluetooth: hci_qca: Enable ISO data packet RX
+	s=arc-20240116; t=1750677944; c=relaxed/simple;
+	bh=AfGEXRx1HFoQszR4uv7ffzuBfSxCOCFfR097o41bj/U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cE9q6IJUCW2iWWeDkNP1MFuzcRSyWQ4eC1xkoYUVQEnwu+e0n7Xt/uvUgNmZuHyCsm9qf7dgRENlzFzCUcNlH4sg/BsW0oWYPD6QlASDSxaL1+m6AvFbAB72+fc8yXsd+rt2PIhK7y6HO9DO3FjlWsclAGnSy41B4KA0OEsgQws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-80-685939af5f24
+Date: Mon, 23 Jun 2025 20:25:30 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Zi Yan <ziy@nvidia.com>
+Cc: David Hildenbrand <david@redhat.com>, willy@infradead.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org,
+	almasrymina@google.com, ilias.apalodimas@linaro.org,
+	harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
+	davem@davemloft.net, john.fastabend@gmail.com,
+	andrew+netdev@lunn.ch, asml.silence@gmail.com, toke@redhat.com,
+	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
+	saeedm@nvidia.com, leon@kernel.org, ast@kernel.org,
+	daniel@iogearbox.net, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, horms@kernel.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com, hannes@cmpxchg.org, jackmanb@google.com
+Subject: Re: [PATCH net-next v6 9/9] page_pool: access ->pp_magic through
+ struct netmem_desc in page_pool_page_is_pp()
+Message-ID: <20250623112530.GA67291@system.software.com>
+References: <20250620041224.46646-1-byungchul@sk.com>
+ <20250620041224.46646-10-byungchul@sk.com>
+ <ce5b4b18-9934-41e3-af04-c34653b4b5fa@redhat.com>
+ <20250623101622.GB3199@system.software.com>
+ <460ACE40-9E99-42B8-90F0-2B18D2D8C72C@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-iso_rx-v1-1-65dd2882b670@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAEM5WWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDMyNj3czi/PiiCl3z5LTkVANTo0TDREMloOKCotS0zAqwQdGxtbUAurg
- mg1gAAAA=
-X-Change-ID: 20250623-iso_rx-7cfce052a1a1
-To: Marcel Holtmann <marcel@holtmann.org>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-bluetooth@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Zijun Hu <zijun.hu@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-GUID: lAENmWWWen2W7bjIfLX1xhn2TFWZKg5v
-X-Proofpoint-ORIG-GUID: lAENmWWWen2W7bjIfLX1xhn2TFWZKg5v
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA2OCBTYWx0ZWRfX/CZqQmeKPUiK
- lJaBsbqxkX7dG2Yd/3hKDzw2Xu0o2u4tH1vVt2eVckcYwVlYy/qf3l5GzaSLt/twSSiBd4G55oP
- luiR/X6PR5JM5UuXGIDkKCGfzi4byCGaVit7eEBAHGHnbFIh0JrWSS+Fh5WNJarkqx0r6GC+Xc4
- vzDJTRvg5XUNavIfGGXrO6T5xEk8Uncpkz/3nNiufDbBGeLHwYvLc8HtrNdUSH4xwDynfJ2veNA
- Ld9NIlplgKC2ozRsqdOVOwbqgG8ZdCf48E8h3489dKakHtfyp293U1wSjDG48MHgupqn5Vt6E=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-23_03,2025-06-23_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999
- spamscore=0 mlxscore=0 clxscore=1011 malwarescore=0 adultscore=0
- suspectscore=0 bulkscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.22.0-2506060001 definitions=main-2506230068
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <460ACE40-9E99-42B8-90F0-2B18D2D8C72C@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXfec3E5OK7bm1bCKgrpjtETiFQf4hAI0dWKyNVObTSnzLx1
+	tZQi03UVclqtxDQtlkud5oVa1jQDxUpnmpqpXTTFmWNeqJwS+e3H/7n8ng8PR8kLaF9Oozsu
+	6nVKrYKRYulP7/srzBv2qld/bg6ATPMjBvLdcZDTUUJDZl4xgl8jLSwMVdkZyLrnoiCzLgnD
+	sHmUgu7XnSzkW0Kg/UEPhvKLVgo6r1QzkJo0RkHFSD8L50tyJVBfbKDh5mg2BdaEDhbePctk
+	oO3RHxp6bKkYaowPMbQbNsJr0xxw1fYhqDJbJeBKuc3AjQYTA1+S2hE0vOzEkHHOgMBc6aBh
+	zD2xI+NVG7txsfCyb4ASCh82S4RS4ydWMFmihae5AUKyo4ESLHmXGMHivM4KrY3ljFB9awwL
+	pSVDEiE1sZ8RBrs/YmGg8gMjmAs/YOGtqYrd5rNPGqQStZoYUb8qOEyqLsgaxpEXF8f1PvmF
+	EtCP+cnIiyN8IDE4UyXJiJtkd85JT4z5JaSt/TvtYYZfShyOEcrDs3g/UmsYn2ApR/GFDHly
+	oZH1FGbycWSss2eyScYDybFWTrKcdyOSXRkylfuQmvQu7GGKX05Ki1oZj5eaWJrzm5uK/Uli
+	UcbkqBcfTJzJKYyHZ/OLyPNiu8TjJXw1R8rL7kim7p9HXuQ68FXkY5ymME5TGP8rjNMUJoTz
+	kFyjiwlXarSBK9XxOk3cysMR4RY08UgPTo/vL0HO+h02xHNI4S0L8w5Vy2llTFR8uA0RjlLM
+	ktk271bLZSpl/AlRH3FQH60Vo2zIj8OKubK1rliVnD+qPC4eE8VIUf+vKuG8fBPQwi3SA017
+	dDU7034k9W7KLvKveL87xHtR6Fb786D0xFPRdGL9Hzt7ZHvZ4GWtG6s+nr7RGzuybmBBBTNj
+	8BvvsyqWX9qRb695nPXG3WKN7N4ubaKO1DVdvhL4NdLrbmPo2TNH026LTl+p09VF26+lrJ/b
+	WDacrvq82ly7bFdX86FYBY5SK9cEUPoo5V98/A9vRAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXfOzo6jyXGtPGkoLCWKsoSiJ5KIoHpJ7OKHLn6xUx7c8tpW
+	4orEUoqW85JBNmcpovOWszWdE5OY5iUha6JYmStv2AUrb8xWmVMiv/34/5/n93x5aEKaL/Sj
+	lYkXeVUiFy+nxKT4yJ6MrabdpxXbf3+XgcFUQ0G1KxWMHxqFYKhqQDAz/04E020dFJSWzBFg
+	6MkkYdb0k4Cx9mERVJsjwFk+TkLzTSsBwzmdFOgy3QQ8nZ8UwfXGCgG0FnUJ4VVDthDu/iwj
+	wJr+QQS9TQYKhmoWhDBu15HQpa8kwZm9D9qL18Jc91cEbSarAOayiijIdxRTMJLpROBoHSah
+	8Fo2AlPLgBDcrkVH4fMh0b5g3Pr1G4EtlW8E2KZ/L8LF5kv4ScVmrB1wENhcdYvC5qk7IjzY
+	30zhzgI3iW2N0wKsy5ik8I+xtyT+1tJH4dKJ7wJssvSRx6RR4rAYPl6Zwqu27T0jVjwunSWT
+	bwalfqmbQeno83otommW2cG6jFe0yIsmmWB2yPlJ6GGK2cgODMwTHpYx/mx39q9FFtMEY6HY
+	uhv9Ik+xmkll3cPjS0MSBlijtWWJpYwLsWUtEcu5D9t1f5T0MMFsYW31g5TnLrEoNf6hl+NA
+	NqO+cGnVi9nLTmmzKA+vYTawzxo6BLnIW7/CpF9h0v836VeYihFZhWTKxJQEThm/M0Qdp9Ak
+	KlNDziUlmNHiq5Rf/ZXXiGZ6D9kRQyP5KklF+CmFVMilqDUJdsTShFwmse8/oZBKYjjNZV6V
+	FK26FM+r7cifJuW+ksMn+TNSJpa7yMfxfDKv+tcKaC+/dFT7zK+nhObqIrW3w9odj3S6Wlpl
+	Dts1FyOHkuM5nxb85WKfAwsf86IdvLXpxbrZAE1kR6/hbOiUZSQvqFl2nmp4520rnKQv2Hzv
+	HfTSkOGDac6q8LyXORO8vKBAEJWw6ZDe3VH9AM/8jnVVjFpyHwYe9ePK0npf7++vDFhnlJNq
+	BRe6mVCpub9KbC+1JgMAAA==
+X-CFilter-Loop: Reflected
 
-From: Zijun Hu <zijun.hu@oss.qualcomm.com>
+On Mon, Jun 23, 2025 at 07:13:21AM -0400, Zi Yan wrote:
+> On 23 Jun 2025, at 6:16, Byungchul Park wrote:
+> > On Mon, Jun 23, 2025 at 11:16:43AM +0200, David Hildenbrand wrote:
+> >> On 20.06.25 06:12, Byungchul Park wrote:
+> >>> To simplify struct page, the effort to separate its own descriptor from
+> >>> struct page is required and the work for page pool is on going.
+> >>>
+> >>> To achieve that, all the code should avoid directly accessing page pool
+> >>> members of struct page.
+> >>>
+> >>> Access ->pp_magic through struct netmem_desc instead of directly
+> >>> accessing it through struct page in page_pool_page_is_pp().  Plus, move
+> >>> page_pool_page_is_pp() from mm.h to netmem.h to use struct netmem_desc
+> >>> without header dependency issue.
+> >>>
+> >>> Signed-off-by: Byungchul Park <byungchul@sk.com>
+> >>> Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
+> >>> Reviewed-by: Mina Almasry <almasrymina@google.com>
+> >>> Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+> >>> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+> >>> Acked-by: Harry Yoo <harry.yoo@oracle.com>
+> >>> ---
+> >>>   include/linux/mm.h   | 12 ------------
+> >>>   include/net/netmem.h | 14 ++++++++++++++
+> >>>   mm/page_alloc.c      |  1 +
+> >>>   3 files changed, 15 insertions(+), 12 deletions(-)
+> >>>
+> >>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> >>> index 0ef2ba0c667a..0b7f7f998085 100644
+> >>> --- a/include/linux/mm.h
+> >>> +++ b/include/linux/mm.h
+> >>> @@ -4172,16 +4172,4 @@ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
+> >>>    */
+> >>>   #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
+> >>>
+> >>> -#ifdef CONFIG_PAGE_POOL
+> >>> -static inline bool page_pool_page_is_pp(struct page *page)
+> >>> -{
+> >>> -     return (page->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
+> >>> -}
+> >>> -#else
+> >>> -static inline bool page_pool_page_is_pp(struct page *page)
+> >>> -{
+> >>> -     return false;
+> >>> -}
+> >>> -#endif
+> >>> -
+> >>>   #endif /* _LINUX_MM_H */
+> >>> diff --git a/include/net/netmem.h b/include/net/netmem.h
+> >>> index d49ed49d250b..3d1b1dfc9ba5 100644
+> >>> --- a/include/net/netmem.h
+> >>> +++ b/include/net/netmem.h
+> >>> @@ -56,6 +56,20 @@ NETMEM_DESC_ASSERT_OFFSET(pp_ref_count, pp_ref_count);
+> >>>    */
+> >>>   static_assert(sizeof(struct netmem_desc) <= offsetof(struct page, _refcount));
+> >>>
+> >>> +#ifdef CONFIG_PAGE_POOL
+> >>> +static inline bool page_pool_page_is_pp(struct page *page)
+> >>> +{
+> >>> +     struct netmem_desc *desc = (struct netmem_desc *)page;
+> >>> +
+> >>> +     return (desc->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
+> >>> +}
+> >>> +#else
+> >>> +static inline bool page_pool_page_is_pp(struct page *page)
+> >>> +{
+> >>> +     return false;
+> >>> +}
+> >>> +#endif
+> >>
+> >> I wonder how helpful this cleanup is long-term.
+> >>
+> >> page_pool_page_is_pp() is only called from mm/page_alloc.c, right?
+> >
+> > Yes.
+> >
+> >> There, we want to make sure that no pagepool page is ever returned to
+> >> the buddy.
+> >>
+> >> How reasonable is this sanity check to have long-term? Wouldn't we be
+> >> able to check that on some higher-level freeing path?
+> >>
+> >> The reason I am commenting is that once we decouple "struct page" from
+> >> "struct netmem_desc", we'd have to lookup here the corresponding "struct
+> >> netmem_desc".
+> >>
+> >> ... but at that point here (when we free the actual pages), the "struct
+> >> netmem_desc" would likely already have been freed separately (remember:
+> >> it will be dynamically allocated).
+> >>
+> >> With that in mind:
+> >>
+> >> 1) Is there a higher level "struct netmem_desc" freeing path where we
+> >> could check that instead, so we don't have to cast from pages to
+> >> netmem_desc at all.
+> >
+> > I also thought it's too paranoiac.  However, I thought it's other issue
+> > than this work.  That's why I left the API as is for now, it can be gone
+> > once we get convinced the check is unnecessary in deep buddy.  Wrong?
+> >
+> >> 2) How valuable are these sanity checks deep in the buddy?
+> >
+> > That was also what I felt weird on.
+> 
+> It seems very useful when I asked last time[1]:
+> 
+> |> We have actually used this at Cloudflare to catch some page_pool bugs.
 
-Enable ISO data packet RX for LE audio.
+Indeed..  So I think it'd be better to leave the check as is until we
+will be fully convinced on that issue, I ideally agree with David's
+opinion tho.
 
-Signed-off-by: Zijun Hu <zijun.hu@oss.qualcomm.com>
----
- drivers/bluetooth/hci_qca.c | 1 +
- 1 file changed, 1 insertion(+)
+	Byungchul
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 976ec88a0f62aaaf994091459c49188c435f3f7b..2324a4f5b95740ca500e64408cc7253eabfa9aa7 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1264,6 +1264,7 @@ static const struct h4_recv_pkt qca_recv_pkts[] = {
- 	{ H4_RECV_ACL,             .recv = qca_recv_acl_data },
- 	{ H4_RECV_SCO,             .recv = hci_recv_frame    },
- 	{ H4_RECV_EVENT,           .recv = qca_recv_event    },
-+	{ H4_RECV_ISO,             .recv = hci_recv_frame    },
- 	{ QCA_IBS_WAKE_IND_EVENT,  .recv = qca_ibs_wake_ind  },
- 	{ QCA_IBS_WAKE_ACK_EVENT,  .recv = qca_ibs_wake_ack  },
- 	{ QCA_IBS_SLEEP_IND_EVENT, .recv = qca_ibs_sleep_ind },
-
----
-base-commit: dc3f099e8d709c2fbb25e1079e1b3d703a6828b2
-change-id: 20250623-iso_rx-7cfce052a1a1
-
-Best regards,
--- 
-Zijun Hu <zijun.hu@oss.qualcomm.com>
-
+> [1] https://lore.kernel.org/linux-mm/4d35bda2-d032-49db-bb6e-b1d70f10d436@kernel.org/
+> 
+> --
+> Best Regards,
+> Yan, Zi
