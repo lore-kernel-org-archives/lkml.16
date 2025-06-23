@@ -1,102 +1,177 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7F1231C8D;
-	Mon, 23 Jun 2025 11:26:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF3F233D8E;
+	Mon, 23 Jun 2025 11:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750678011; cv=none; b=Gdji8NrYXoZXDwXCvtS98wqDtEUCsiLOs7/UReQ77uGzJzlCndPcVTF9UCsW3CAzN+6Wmm82mNBBmcoouwtrbzd7vkwJ1kJcCBVZnP/zX3a6HxE6W1F84R/KG2//N2zM61TiWmW1Usn1ZLmUfcULU+BbCUr7qhHxSZNDfwU9zkw=
+	t=1750678047; cv=none; b=KXodj3Tg/yCFGSHMJIeomO+X1aS+afBweFJgEA/5z0d/Xns6ffi7cLUKVVLmXILU4tfcruOORY8p8TbjXIJoctNn/gxDNydGZPbwmc0qZMIunMsJbVg842OeSUP9KGc6UKhzHZ6jp1aHtzBpba2vhm9jnkR1hdlSu8JtekdmfKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750678011; c=relaxed/simple;
-	bh=AFKyudrR7+szYWjXjrL9H5jQwyzAn4iMDd/27Hht0Hw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KOC/UXIPf9eZclFTKH8z7PeL5ASlaWuswt8wRWFXcpweF0bgiPeGKOjx7bXVZ5vwi14kVZnchObVEyFqXTTEZ+3ftptdUbw6FnvFqPHGAYJAT6yS/sbneHaKfLqL2gwEnkucr4Np41KcHDKwa7U6xgyjps1PRaNdkcD5coxIhRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=C2KTII+t; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="C2KTII+t"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A08BB40E01FC;
-	Mon, 23 Jun 2025 11:26:46 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id O1-0Nqdl9xpc; Mon, 23 Jun 2025 11:26:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1750678001; bh=b8YW3wQQJsx2YWUhHESzkkFpIy/unRLxkCns1tBbzj8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C2KTII+t5MujHsZ93m7d+MPYpXKuVuKvwYVMea5vJV70q9v48dwSLwUy3m4Y4tQRe
-	 bGc+xBYoN7ORB7HAXP6d5LAY3FAvTkWECoZkxZtQfJg+TCGJQsqF3Y8a5E9zfO8n/B
-	 FjZQWzv8Bd3DKoLexqcCG4GAUwh0mUAARsrFrNO+I9mY8jQqkznvupVwZAQbHIem2w
-	 7WXoCg3inwEGORZ3T+OAFucZXShJMKnkTTdqENJoGHI5ay0xvza8FHoanXXa/jynvy
-	 HOojC6jl/v2rXJkd/wHwtba3Uge690+R25laGv586oeZsABk7X8oMAbvjZBMnwOZr3
-	 jKHyjm6x6mAr6ggmMcwFB5KyDt9RloVV4N3E+d/wSoKZlzn+5WhWa8Jw46sIVoXSii
-	 V4/L7zLZcVONjCRWpCbtEdYxZkUvZmQe9tcVgmevA8/dft1Ue18gH0dYCyfDZlu6Je
-	 P8INwZ86NTFna/2j3/Mlktyt1mpUMjWAu8M6yCQ1m8JXofvcMyLsjYDr3cRsglWHlE
-	 CpVvJJXdWG482S56rwJU281hj0BHoCergidzChMQS7qEmQjVHn5R2Ktt54eX/b7o9H
-	 z15CaYKR/1qutHlFfGHbO5yyO+lHtjI6xGq2hS04kEslK5qAD4lVzc9m1zgEgvH5EE
-	 PrPw2TmfaY6D/dyHVggwZsG4=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5868840E00CE;
-	Mon, 23 Jun 2025 11:26:19 +0000 (UTC)
-Date: Mon, 23 Jun 2025 13:26:12 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	dave.hansen@linux.intel.com, Thomas.Lendacky@amd.com,
-	nikunj@amd.com, Santosh.Shukla@amd.com, Vasant.Hegde@amd.com,
-	Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com, x86@kernel.org,
-	hpa@zytor.com, peterz@infradead.org, seanjc@google.com,
-	pbonzini@redhat.com, kvm@vger.kernel.org,
-	kirill.shutemov@linux.intel.com, huibo.wang@amd.com,
-	naveen.rao@amd.com, francescolavra.fl@gmail.com,
-	tiala@microsoft.com
-Subject: Re: [RFC PATCH v7 01/37] KVM: lapic: Remove
- __apic_test_and_{set|clear}_vector()
-Message-ID: <20250623112612.GEaFk51EOLBBvZWWJm@fat_crate.local>
-References: <20250610175424.209796-1-Neeraj.Upadhyay@amd.com>
- <20250610175424.209796-2-Neeraj.Upadhyay@amd.com>
+	s=arc-20240116; t=1750678047; c=relaxed/simple;
+	bh=fvQmKS+q8anQOQNfof/RQ6Zx18n8YUESLQUFUXaG4vg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CmJNXsA3aATwklH3f7Fqk566WFCaB/Qd/IjqxiAVKSZ4hsKo57Uh23R/k7mnkFdDWovf6Vhw4aMoy7nvQqqsZv45DHPfd8suJiNYxKJnD6cSX3sIB7lr8ofkDV0q0U39y0vTvhZMOHG6ybFaUhJM6qE/9rLDNA5Fdz/BY6VxNqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bQm0455B6z10XL5;
+	Mon, 23 Jun 2025 19:22:44 +0800 (CST)
+Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3107C180489;
+	Mon, 23 Jun 2025 19:27:21 +0800 (CST)
+Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
+ dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 23 Jun 2025 19:27:20 +0800
+Received: from localhost.localdomain (10.175.104.82) by
+ kwepemq200002.china.huawei.com (7.202.195.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 23 Jun 2025 19:27:20 +0800
+From: Dong Chenchen <dongchenchen2@huawei.com>
+To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <horms@kernel.org>, <jiri@resnulli.us>,
+	<oscmaes92@gmail.com>, <linux@treblig.org>, <pedro.netdev@dondevamos.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>
+Subject: [PATCH net] net: vlan: fix VLAN 0 refcount imbalance of toggling filtering during runtime
+Date: Mon, 23 Jun 2025 19:30:08 +0800
+Message-ID: <20250623113008.695446-1-dongchenchen2@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250610175424.209796-2-Neeraj.Upadhyay@amd.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemq200002.china.huawei.com (7.202.195.90)
 
-On Tue, Jun 10, 2025 at 11:23:48PM +0530, Neeraj Upadhyay wrote:
-> Remove __apic_test_and_set_vector() and __apic_test_and_clear_vector(),
-> because the _only_ register that's safe to modify with a non-atomic
-> operation is ISR, because KVM isn't running the vCPU, i.e. hardware can't
-> service an IRQ or process an EOI for the relevant (virtual) APIC.
-> 
-> No functional change intended.
-> 
-> Suggested-by: Sean Christopherson <seanjc@google.com>
-> [Neeraj: Add "inline" for apic_vector_to_isr()]
-> Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-> ---
-> Changes since v6:
-> 
->  - New change.
-> 
->  arch/x86/kvm/lapic.c | 19 +++++++------------
->  1 file changed, 7 insertions(+), 12 deletions(-)
+8021q(vlan_device_event) will add VLAN 0 when enabling the device, and
+remove it on disabling it if NETIF_F_HW_VLAN_CTAG_FILTER set.
+However, if changing filter feature during netdev runtime,
+null-ptr-unref[1] or bug_on[2] will be triggered by unregister_vlan_dev()
+for refcount imbalance.
 
-FWIW: LGTM.
+[1]
+BUG: KASAN: null-ptr-deref in unregister_vlan_dev (net/8021q/vlan.h:90 net/8021q/vlan.c:110)
+Write of size 8 at addr 0000000000000000 by task ip/382
+CPU: 2 UID: 0 PID: 382 Comm: ip Not tainted 6.16.0-rc3 #60 PREEMPT(voluntary)
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ <TASK>
+dump_stack_lvl (lib/dump_stack.c:123)
+kasan_report (mm/kasan/report.c:636)
+unregister_vlan_dev (net/8021q/vlan.h:90 net/8021q/vlan.c:110)
+rtnl_dellink (net/core/rtnetlink.c:3511 net/core/rtnetlink.c:3553)
+rtnetlink_rcv_msg (net/core/rtnetlink.c:6945)
+netlink_rcv_skb (net/netlink/af_netlink.c:2535)
+netlink_unicast (net/netlink/af_netlink.c:1314 net/netlink/af_netlink.c:1339)
+netlink_sendmsg (net/netlink/af_netlink.c:1883)
+____sys_sendmsg (net/socket.c:712 net/socket.c:727 net/socket.c:2566)
 
-:-)
+[2]
+kernel BUG at net/8021q/vlan.c:99!
+Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
+CPU: 0 UID: 0 PID: 382 Comm: ip Not tainted 6.16.0-rc3 #61 PREEMPT(voluntary)
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+RIP: 0010:unregister_vlan_dev (net/8021q/vlan.c:99 (discriminator 1))
+RSP: 0018:ffff88810badf310 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffff88810da84000 RCX: ffffffffb47ceb9a
+RDX: dffffc0000000000 RSI: 0000000000000008 RDI: ffff88810e8b43c8
+RBP: 0000000000000000 R08: 0000000000000000 R09: fffffbfff6cefe80
+R10: ffffffffb677f407 R11: ffff88810badf3c0 R12: ffff88810e8b4000
+R13: 0000000000000000 R14: ffff88810642a5c0 R15: 000000000000017e
+FS:  00007f1ff68c20c0(0000) GS:ffff888163a24000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f1ff5dad240 CR3: 0000000107e56000 CR4: 00000000000006f0
+Call Trace:
+ <TASK>
+rtnl_dellink (net/core/rtnetlink.c:3511 net/core/rtnetlink.c:3553)
+rtnetlink_rcv_msg (net/core/rtnetlink.c:6945)
+netlink_rcv_skb (net/netlink/af_netlink.c:2535)
+netlink_unicast (net/netlink/af_netlink.c:1314 net/netlink/af_netlink.c:1339)
+netlink_sendmsg (net/netlink/af_netlink.c:1883)
+____sys_sendmsg (net/socket.c:712 net/socket.c:727 net/socket.c:2566)
+___sys_sendmsg (net/socket.c:2622)
+__sys_sendmsg (net/socket.c:2652)
+do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_64.c:94)
 
+Root cause is as below:
+step1: add vlan0 for real_dev, such as bond, team.
+register_vlan_dev
+    vlan_vid_add(real_dev,htons(ETH_P_8021Q),0) //refcnt=1
+step2: disable vlan filter feature and enable real_dev
+step3: change filter from 0 to 1
+vlan_device_event
+    vlan_filter_push_vids
+    	ndo_vlan_rx_add_vid //No refcnt added to real_dev vlan0
+step4: real_dev down
+vlan_device_event
+    vlan_vid_del(dev, htons(ETH_P_8021Q), 0); //refcnt=0
+        vlan_info_rcu_free //free vlan0
+step5: real_dev up
+vlan_device_event
+    vlan_vid_add(dev, htons(ETH_P_8021Q), 0);
+        vlan_info_alloc //alloc new empty vid0. refcnt=1
+step6: delete vlan0
+unregister_vlan_dev
+    BUG_ON(!vlan_info); //will trigger it if step5 was not executed
+    vlan_group_set_device
+        array = vg->vlan_devices_arrays
+	//null-ptr-ref will be triggered after step5
+
+E.g. the following sequence can reproduce null-ptr-ref
+
+$ ip link add bond0 type bond mode 0
+$ ip link add link bond0 name vlan0 type vlan id 0 protocol 802.1q
+$ ethtool -K bond0 rx-vlan-filter off
+$ ifconfig bond0 up
+$ ethtool -K bond0 rx-vlan-filter on
+$ ifconfig bond0 down
+$ ifconfig bond0 up
+$ ip link del vlan0
+
+Fix it by correctly modifying vid0 refcnt of real_dev when changing
+the NETIF_F_HW_VLAN_CTAG_FILTER flag during runtime.
+
+Fixes: ad1afb003939 ("vlan_dev: VLAN 0 should be treated as "no vlan tag" (802.1p packet)")
+Reported-by: syzbot+a8b046e462915c65b10b@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=a8b046e462915c65b10b
+Signed-off-by: Dong Chenchen <dongchenchen2@huawei.com>
+---
+ net/8021q/vlan.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/net/8021q/vlan.c b/net/8021q/vlan.c
+index 06908e37c3d9..6e01ece0a95c 100644
+--- a/net/8021q/vlan.c
++++ b/net/8021q/vlan.c
+@@ -504,12 +504,21 @@ static int vlan_device_event(struct notifier_block *unused, unsigned long event,
+ 		break;
+ 
+ 	case NETDEV_CVLAN_FILTER_PUSH_INFO:
++		flgs = dev_get_flags(dev);
++		if (flgs & IFF_UP) {
++			pr_info("adding VLAN 0 to HW filter on device %s\n",
++				dev->name);
++			vlan_vid_add(dev, htons(ETH_P_8021Q), 0);
++		}
+ 		err = vlan_filter_push_vids(vlan_info, htons(ETH_P_8021Q));
+ 		if (err)
+ 			return notifier_from_errno(err);
+ 		break;
+ 
+ 	case NETDEV_CVLAN_FILTER_DROP_INFO:
++		flgs = dev_get_flags(dev);
++		if (flgs & IFF_UP)
++			vlan_vid_del(dev, htons(ETH_P_8021Q), 0);
+ 		vlan_filter_drop_vids(vlan_info, htons(ETH_P_8021Q));
+ 		break;
+ 
 -- 
-Regards/Gruss,
-    Boris.
+2.25.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
