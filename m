@@ -1,101 +1,104 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183CB289E1C
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2978415B971;
+	Mon, 23 Jun 2025 15:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750692611; cv=none; b=XHKYxx19+LY2hbOCTsMV/sUUJs5rL/u+QgiVIizfzQR2ZUXN4U7+O0vAUAGQ5KhAP8DUjtcXl+3NitClAc6XL560VnbOP3EVgssPoujbd9JFHmekeCsQBgK9JcuccdKsOdDZ4scu6DQzruwI1y5qMKaLBp0mgQ0hCX4bbL47uvU=
+	t=1750692656; cv=none; b=T6Hw5xMS2Vnt/oP/SYlfsWjdDMISCIq1i7HGFZnBVMLmjuopAkH+YsoQFpUo/P+YVD9iMXOE4nNV2upcj3pvH3Dto9MLc71ew06ubrW7ishv3Hco/wmsjEufxehWSfOBo1JNIrXtpVHaYGVzdvB+kQHkXDTP0J9iJd/DmC3esqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750692611; c=relaxed/simple;
-	bh=L/cfSGnSX28XY4cLKESl0PHduhleGIW8TtQJ6a7uSMg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=N1ZbX6oSqcqjL9zgavD02hMUuHHYHmjkUk7HopoV6cZaViVVHIVWh25nwGKW1Q2HWCzW68GzVjlSKAVytj62QMtOjd+DXck5rK5OeShIZ6AnvFbONzJtoZHXLkY8KqjainvXBPMfVgN4AYIt5OW0Y8lzfZuv7hIYcRhHBSQPU1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gnu2gg9K; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750692656; c=relaxed/simple;
+	bh=w8Dnt4rNYB2Yfj0F9id0Q9CQfAhyf767XNDo1qH05a0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C76eI8xErhzh20LJ6lUmqxYP+Lzm2BZbTyFbNrkyDDKvBhd6uXlRqWRG4SpiDyeBMjgIEawsVVTqeoJ1SS3pkU22qw+G/tmmcpBqVN2gb4pE01usEwxyT+UuL3u8Hat6TcvFeyCm9OqEqV6VPsTYzUYRppJIF3EwLPmooNGEEYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iFN2jnyo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gnu2gg9K"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-234f1acc707so39431095ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:30:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750692608; x=1751297408; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KdWZjBOZrnoU5S/xxe3p4LyXR96yMFXC81nKL3+yk3w=;
-        b=Gnu2gg9K5VjoJqa4XV+g1WVNR4O5UeHDp7z0gkgKanaOuUXvXyMpDpbz07hty8YCPt
-         AzT7R69Com6vzX9utR74L5eogxBnheU5Y9/xe7P8Gi9FDuSOhY73N33yk6E4DeNtbz7j
-         +1b/66QBtJS2oci/Air/YkcxlEk64OVSh6ohapZVd5Qrm13FMfOFC6L5PhAweIkUdJ2g
-         4O2Kg2Ft23Y77nlc6AY4Fnt9yGMV8c7c+7r/mZasMz0hVzK2CNlSm2IOyS+OILIswN9B
-         SIh8uI6ADHz3/19Q2+oWxpcs99XtlH6bU09IgNdmgFqBxnmc2eAH5UV4/mQqC/a0FDie
-         3pUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750692608; x=1751297408;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KdWZjBOZrnoU5S/xxe3p4LyXR96yMFXC81nKL3+yk3w=;
-        b=Xf33ghpK1FHvq629VMazqEAvaq2G5RpA3vEbWmU73xhMUbirdE4UQGQtkGSiHJgrZr
-         SFadUX8f8GIoyc6awiNRgMbK8wK29yB3BQwpJlP0snLf2qMYvc9BJeQhEuYPHXNQFE5E
-         LngyiXYOYHL5N+hz7Q7C59EcvVX9D2Njg0SM/cNVn9eVH9COJK70R6gTwj/eKlnVReGe
-         2cX6Ee+IUtAAGbcZP4P8Kcp0ctEaiFCUhvt8SAIQU41Yh0M/jxlLvwk7EL8ZYuCSYQB0
-         qjdtF7WDF52KdGJrzfmIJ52qYmre+m0S9VBBW8KgtCrhH91vAA2YUHLcrR3Qm7120BC8
-         8epg==
-X-Forwarded-Encrypted: i=1; AJvYcCVZPc8vL97eSiJ9vVbkgzK65GjOiEfHsMamELY1uI0vGomn23Ly9idc4FXa7aHeNoYhscpB5cDaQ9s91Ps=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxk0RIGhsDdijPqhIK1UXMsRorYdQLi+6ee+mrJha1ok7B3fH+o
-	bkSR9K0zbabZkNJL8Ugy2LAuCu/vcul+yp5n6E6pHQsQfiuTcxaM8jWbAt2wo+o3f2ueVKNVTkb
-	+4FEimw==
-X-Google-Smtp-Source: AGHT+IEMdoRNFqlp7zHt8uHjKfPleNVgWrvxFNisVXQLf3SXuV2EWfHq7AYIrMPraED+yf8roaT/XGVYptg=
-X-Received: from plhw5.prod.google.com ([2002:a17:903:2f45:b0:234:a456:85ba])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:da8c:b0:236:6e4f:d439
- with SMTP id d9443c01a7336-237d9965716mr203757385ad.23.1750692608274; Mon, 23
- Jun 2025 08:30:08 -0700 (PDT)
-Date: Mon, 23 Jun 2025 08:30:07 -0700
-In-Reply-To: <jskiyda3defofthrtniugcdbcoftx4o5yvgt47koswq64qf7d7@2pzrr5v5yssy>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iFN2jnyo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A599FC4CEEF;
+	Mon, 23 Jun 2025 15:30:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750692655;
+	bh=w8Dnt4rNYB2Yfj0F9id0Q9CQfAhyf767XNDo1qH05a0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=iFN2jnyo2iWV86J3mtgzb7la+zYVWuxoz4u0LahMnyxCBN4aqLVwemmnirLGvmMd6
+	 EQK5OV7HJUgDnegVPEhUi8+XHL4tCPe7lYsbvlAwHm4MudlQmJRIKRIT7XenUTq1Qp
+	 FXKmsYKjgseKixSCZpoTzaEzYSPxGhtQtPUwq1XtUaVkhWNqHf63y3iU4TkawFMS14
+	 Zk88clTRoXsuO4nxH8KiWEgKy2R4XaobGEtXNmF0m/gkiDvbG3PmnnKBF2xbNhLIXh
+	 BJkKL+0djYa5wzbzeKVvH6xzjU3NKqHIOj0lVfXTLUwGmLmHcvqXjrVIl7FNo+AoqV
+	 WigeaZsvPCyVw==
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-611827bd683so506390eaf.0;
+        Mon, 23 Jun 2025 08:30:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU4LH+bxOng9brOJ7ohTc7orfJr042yJ0y5qmcpfufpwfWqsg412Ko/KWzF1f5ztTocyEpnC5x/T4hLZpQ=@vger.kernel.org, AJvYcCVTlNadCAbumhdxPGUcqg30Tmk9iGfFrNPQ2rbZ09AjU3dL07LbagQmnlLbvd8UU5++Y6sK+bn6kcQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymU6MWt+oyLvExLv+uDElRjQoLkk+kaF9Q91ot9zlKFXcB6fVF
+	iRqwpAVBrBgZ7y9yWE1H74/vq4p1j+f3l+/kNHn60JXXAl+oEgZjePaIO1X/JEy4n9clUz6gnTh
+	rn28xH331OS8W9vthrWTgY960b8XnZcE=
+X-Google-Smtp-Source: AGHT+IFEHjPNXmsLMf1CmtMBMZpf8gObthk5wQojfBRJKHMRuCLkNe+gFtJKljeN0HNEiPl860loD6+zYjcfY82g7oU=
+X-Received: by 2002:a05:6820:f48:b0:611:5a3b:9ce9 with SMTP id
+ 006d021491bc7-6115bb0e72emr9008941eaf.7.1750692654990; Mon, 23 Jun 2025
+ 08:30:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250611224604.313496-2-seanjc@google.com> <20250611224604.313496-20-seanjc@google.com>
- <jskiyda3defofthrtniugcdbcoftx4o5yvgt47koswq64qf7d7@2pzrr5v5yssy>
-Message-ID: <aFly_5c0aqTOGEem@google.com>
-Subject: Re: [PATCH v3 18/62] KVM: SVM: Disable (x2)AVIC IPI virtualization if
- CPU has erratum #1235
-From: Sean Christopherson <seanjc@google.com>
-To: Naveen N Rao <naveen@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
-	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Sairaj Kodilkar <sarunkod@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
-	Francesco Lavra <francescolavra.fl@gmail.com>, David Matlack <dmatlack@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+References: <20250623133402.3120230-1-zhenglifeng1@huawei.com> <20250623133402.3120230-4-zhenglifeng1@huawei.com>
+In-Reply-To: <20250623133402.3120230-4-zhenglifeng1@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 23 Jun 2025 17:30:44 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jvdttYihgNcTF=VVnd2K5QsC+W9XJJanqy4F_PXw+u2g@mail.gmail.com>
+X-Gm-Features: AX0GCFvbSFdejTwNWkx-8BFU2U2H8vGGfyobrhK6VbLomE2gnlzhGj2xV51V9Mg
+Message-ID: <CAJZ5v0jvdttYihgNcTF=VVnd2K5QsC+W9XJJanqy4F_PXw+u2g@mail.gmail.com>
+Subject: Re: [PATCH 3/7] cpufreq: Contain scaling_cur_freq.attr in cpufreq_attrs
+To: Lifeng Zheng <zhenglifeng1@huawei.com>
+Cc: rafael@kernel.org, viresh.kumar@linaro.org, ionela.voinescu@arm.com, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linuxarm@huawei.com, 
+	jonathan.cameron@huawei.com, zhanjie9@hisilicon.com, lihuisong@huawei.com, 
+	yubowen8@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 23, 2025, Naveen N Rao wrote:
-> On Wed, Jun 11, 2025 at 03:45:21PM -0700, Sean Christopherson wrote:
-> > diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-> > index 48c737e1200a..bf8b59556373 100644
-> > --- a/arch/x86/kvm/svm/avic.c
-> > +++ b/arch/x86/kvm/svm/avic.c
-> > @@ -1187,6 +1187,14 @@ bool avic_hardware_setup(void)
-> >  	if (x2avic_enabled)
-> >  		pr_info("x2AVIC enabled\n");
-> >  
-> > +	/*
-> > +	 * Disable IPI virtualization for AMD Family 17h CPUs (Zen1 and Zen2)
-> > +	 * due to erratum 1235, which results in missed GA log events and thus
-> 							^^^^^^^^^^^^^
-> Not sure I understand the reference to GA log events here -- those are 
-> only for device interrupts and not IPIs.
+On Mon, Jun 23, 2025 at 3:34=E2=80=AFPM Lifeng Zheng <zhenglifeng1@huawei.c=
+om> wrote:
+>
+> After commit c034b02e213d ("cpufreq: expose scaling_cur_freq sysfs file f=
+or
+> set_policy() drivers"), the file scaling_cur_freq is exposed to all
+> drivers. No need to create this file separately. It's better to be
+> contained in cpufreq_attrs.
 
-Doh, you're absolutely right.  I'll fix to this when applying:
+Fair enough.
 
-	/*
-	 * Disable IPI virtualization for AMD Family 17h CPUs (Zen1 and Zen2)
-	 * due to erratum 1235, which results in missed VM-Exits on the sender
-	 * and thus missed wake events for blocking vCPUs due to the CPU
-	 * failing to see a software update to clear IsRunning.
-	 */
+> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
+> ---
+>  drivers/cpufreq/cpufreq.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+>
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index efc1f4ac85cb..2303890de0ba 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -967,6 +967,7 @@ static struct attribute *cpufreq_attrs[] =3D {
+>         &cpuinfo_min_freq.attr,
+>         &cpuinfo_max_freq.attr,
+>         &cpuinfo_transition_latency.attr,
+> +       &scaling_cur_freq.attr,
+>         &scaling_min_freq.attr,
+>         &scaling_max_freq.attr,
+>         &affected_cpus.attr,
+> @@ -1095,10 +1096,6 @@ static int cpufreq_add_dev_interface(struct cpufre=
+q_policy *policy)
+>                         return ret;
+>         }
+>
+> -       ret =3D sysfs_create_file(&policy->kobj, &scaling_cur_freq.attr);
+> -       if (ret)
+> -               return ret;
+> -
+>         if (cpufreq_driver->bios_limit) {
+>                 ret =3D sysfs_create_file(&policy->kobj, &bios_limit.attr=
+);
+>                 if (ret)
+> --
+> 2.33.0
+>
