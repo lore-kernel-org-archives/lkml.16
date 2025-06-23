@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372D61E5B71;
-	Mon, 23 Jun 2025 07:57:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04B3149DE8;
+	Mon, 23 Jun 2025 07:59:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750665464; cv=none; b=dLU+f1cwD7Z2sgt9Px9KRUa3ZyDQMBGz1dJfO8RXmmK5S11RubkIAV1AnIjARkJzeu2zNg4yOf+2oCX9x4uWWno3tNBS/jDyKQmuU/pTdnSjw3HttgtW2f1GIYWdBEKBTGluoK9996sbXZuyDU+ryic8zEgZ2ikNXchkG8lQI0o=
+	t=1750665553; cv=none; b=hrtUlPNjtIc4VNL58a2n+zLvh7p1NpLYVrCs/AKkZKXEi0A0fNnFTUE4wc3lmI367s2TMoIoF3g1qch+6FvoMWpIDEtQJ4yjeDXBkre171vaTBgUqXJf8zS7/G/m7rim2+IGfiGEYpGgerkCRhU8J/Idhwy5417BFSOMCHt9Qxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750665464; c=relaxed/simple;
-	bh=yOXQLap2q3Gy7n81SFMJGAzWWZgV2Sk57nyxMb5GoB4=;
+	s=arc-20240116; t=1750665553; c=relaxed/simple;
+	bh=PEjxTVB/gET4aknxVSzoZvnupdKn+ica7GgyMElR380=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NWZJ3xN8nHsiiX7+jtkxNTpM3gJtw08wfSfw6F4k7QtyL+Onpfbg4qYJjpWRLSWEpjkY/rFWChkOHyFYabdR/Aw5lZIsciUv6umC2X14vFGwr3QL5GregZdtdRql5AOSla3kHxStAX3dvF94HeadjVvALg3D1LTCkwQtrtG6u90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dGGuUeTL; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=J1fcHhv/MGYCZc9Rj6gy46yaJ8sqm/6NOkk6CsHUQsE+NgjYgJtYOnjW64YqUCU1JOjCpC07NwylLxjVcq/MBwNJZNjhxpy8lDvgPs4qtB6nIhpvZQz211SRmN9z1oW5hwB2jWwpCnTjWnOW+tTbpaZ+jvac5MT6ohpiYrbDUPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JOYaKGPv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGGuUeTL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AA97C4CEEF;
-	Mon, 23 Jun 2025 07:57:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JOYaKGPv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3350CC4CEEF;
+	Mon, 23 Jun 2025 07:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750665463;
-	bh=yOXQLap2q3Gy7n81SFMJGAzWWZgV2Sk57nyxMb5GoB4=;
+	s=k20201202; t=1750665553;
+	bh=PEjxTVB/gET4aknxVSzoZvnupdKn+ica7GgyMElR380=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dGGuUeTLViTNBXONGqpN197XSAkI9WF1JXE1vSWGamPrCTRjO6zhFzzQmNdjmBatd
-	 nvCLLkA+LBp4123MEXaz1aynRpLgePkDnd7tQ+Y2O7acpnMQdcQ3+dGGO9HGAnc4Pq
-	 APJ9V540WqPF9VehzjIe6kHgazK9DGuGhjAFVTfkS19bVhQerB/w7iginx3izZqtLz
-	 yhPZlsXbLAYnT5s5WdflXy1U/PxzP5HbSQodrOTB1TYeAK8/0V45mbW/ds2iHULm+1
-	 GIemoRFKZy6NJO4WLhnEbOjakXq5hR7axa6Ftz6BPPLoX7EmzapWdJ7BalCkw7yB6U
-	 uGKhsv2hvTz0g==
-Message-ID: <526fb91f-6a5b-4f70-aa70-b29f532f7eee@kernel.org>
-Date: Mon, 23 Jun 2025 09:57:38 +0200
+	b=JOYaKGPv6MEXp5qU8g65jI3/mA25zaIFH7kdk1hSTQbFcVf5g4aHjqFkOsv2wPz6G
+	 VIzupuYOuZHJAwRHn/vdOC1TGwha/hrSw/0yloEcACQeiOka6tbhY9TfudLY2Yh5/X
+	 L7+mTqDbZnvJ5u0qL0s5jD0C9pUwZsd9x21xmlohThFezEgUISZZvQgFZIRUHdmNS7
+	 REBGdSgE4kbVAYkcsziarlEhTGRd/c7OXAHR05eDHCudxon4lInGwUOhnXJ9dceJEa
+	 tljU9VPd62ptFP2ahOF48XSesU9zefh61wx6Je3Vz23hFlCTNMeSyVsfeAJQtd2AMF
+	 +syfcvxIqSsgw==
+Message-ID: <52383350-5c94-4f6e-87da-d8705af03b20@kernel.org>
+Date: Mon, 23 Jun 2025 09:59:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,17 +35,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] dt-bindings: media: venus: Add qcm2290 dt schema
-To: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>,
- quic_vgarodia@quicinc.com, quic_dikshita@quicinc.com,
- bryan.odonoghue@linaro.org, mchehab@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org,
- konradybcio@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250613140402.3619465-1-jorge.ramirez@oss.qualcomm.com>
- <20250623074940.3445115-1-jorge.ramirez@oss.qualcomm.com>
- <20250623074940.3445115-2-jorge.ramirez@oss.qualcomm.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: net: bluetooth: nxp: Add support for
+ 4M baudrate
+To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>, marcel@holtmann.org,
+ luiz.dentz@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org
+Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, amitkumar.karwar@nxp.com, sherry.sun@nxp.com,
+ manjeet.gupta@nxp.com
+References: <20250623072744.130594-1-neeraj.sanjaykale@nxp.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -91,23 +89,18 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250623074940.3445115-2-jorge.ramirez@oss.qualcomm.com>
+In-Reply-To: <20250623072744.130594-1-neeraj.sanjaykale@nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 23/06/2025 09:49, Jorge Ramirez-Ortiz wrote:
-> Add a schema for the venus video encoder/decoder on the qcm2290.
+On 23/06/2025 09:27, Neeraj Sanjay Kale wrote:
+> Add support for 4000000 as secondary baudrate.
+
+Here you explain why... the most frequent review comment given these days :/
+
 > 
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>
+> Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
 > ---
->  .../bindings/media/qcom,qcm2290-venus.yaml    | 117 ++++++++++++++++++
->  1 file changed, 117 insertions(+)
-
-
-So now I see the reason why v2 and v3 did not pop up in my inbox.
-
-Subject prefix is still incorrect/reversed.
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
