@@ -1,111 +1,97 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D837262F
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 17:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890827262F;
+	Mon, 23 Jun 2025 17:41:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750700430; cv=none; b=V5B5dD8DKe38hoYacg907UAx5gYiBUvq22YS9QRGP3OdnjNyZFXMIaFDQQ8hbeh5D1KCWdiK4D3kIFV4pOpPdvjXiWX4kKq8+GkdH8iZ/kSdeTlenMeoFmVuAGCSwx37alfgT2wxcpLMfBUfqk/lsNXyGpSqbJCaiYZ6P6KYtQs=
+	t=1750700509; cv=none; b=g1TEfCGuaXSOhh6ZT0vKvKHNKRfsalmsUOOCj7fqu7nBt2JlNPUaF9t+dYhW86DK2gXojvt/ExcCf7zJoOXxSAQP33pgpoX30IFjtpxzws9T2DssSQEe6ObSIR+X49aMz2NCWBnJD82UO4bm6Di2yig8Tc9QAqQTSXD7bn54oPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750700430; c=relaxed/simple;
-	bh=IsUNm5zN3nf3/mIsm1o8QkuSZRhfwKwP6g4hYu1alZk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FIdmkZLCf92GYRzeF6vzgxjXp0c6bBODd3oVT9VbQ81WiwdpVDQzlfCUqgdWbiyTMzrea8TmXArscxz0gJHbcgFqJbvW030kEkicoStHG4WLCHU/9rYGgyDaLAPXrWKetjbP3EVqqGlzUSZSs+hGtiPoxHoeR86raWb6B2rvIV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=zE9YvuVQ; arc=none smtp.client-ip=121.127.44.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1750700509; c=relaxed/simple;
+	bh=xN/A8HvexlN7YR43s6eAIX13svQo3ngl0HP/TpVfgL8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=hOYg6jvOxOqN17N2iPpBiKYm+czppZbV7ljCtlhMSaI1ehHUv+jOc1AwOBOarVcRovA4EV4SmIsk+f9GgaFickY66fqaXRlBV3OeXAaq+xHK1JiRJUzfLcyRv1ehIJsw4Xl9FiS8g/C0lPG9RY9PRvlP7rVSpyLWSVqK9Q5MGV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JkLc4AK5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="zE9YvuVQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1750700422;
- bh=vlOL8X69KAf43rpa448wfskj/jjDGmOWw431Aoz2DQk=;
- b=zE9YvuVQMYfUB8/mMU1ftphfVL7PQ4O23Kzl4X/4byayXY+3ADO/XnYQYyGSu+inNEEWAXSQh
- R6Opmt4DLXu9ur+B02FqmrqEqqQCYEymNTwPwGCw5w1PKqeRqoNLgbvEgChlljS5p+ADz2Qyjvw
- PGAkTpLYw43PExVBic+Yg5AHoSDnY+hQbgN04bFWhWnrmk80CxHRpgbfbclQU6WUNMMUqLoU0IJ
- EYNIOWQO1Iu9TdxIgi8wYLJa4L9d/Tf8tpQO2po/LqKGwTZSYWTFvib4TC91wOhXEog/9Rd7duM
- XIno9JzUkW5zPGLWSBWCfo+URprblqnS2QFzD1+BeACQ==
-X-Forward-Email-ID: 6859917f54073d00e4b5a183
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 121.127.44.73
-X-Forward-Email-Version: 1.0.3
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <dd1d0676-4eaa-4df7-b557-676b3de9a52e@kwiboo.se>
-Date: Mon, 23 Jun 2025 19:40:11 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JkLc4AK5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03739C4CEEA;
+	Mon, 23 Jun 2025 17:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750700509;
+	bh=xN/A8HvexlN7YR43s6eAIX13svQo3ngl0HP/TpVfgL8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=JkLc4AK5rsNIaammDjeW4cmKVnVKAoa2c54D5jWoFfJvWgMWEZBsO6E746V/w2EHR
+	 uW8gGVkIe10A50Dadg5750SaRxEOw6bc7ZZSalsTsbSvAJr3DKikCBQlyVpLrR3rnB
+	 WggFC+r7Tq3wCbGXgAwZ/rLPWsF/J6LW883h+BwV0CfmzrRKjaelkXb/bQW/thljcE
+	 Dwgpd1XRh/1ZbR9NCzkB/5SsCPh7yumJTLdtgGVbONVFll5ikzQ7AqmZSv3dEgX+fV
+	 sNlURWvQXOQF3iXJ7bvYJCAOzae9+86xObv2DzJH8R1nTj0Uv21APn03y1wf9XHz7D
+	 cQfJnitoVHhmg==
+From: Mark Brown <broonie@kernel.org>
+To: lgirdwood@gmail.com, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+ matthias.bgg@gmail.com, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, kernel@collabora.com
+In-Reply-To: <20250623120144.109359-1-angelogioacchino.delregno@collabora.com>
+References: <20250623120144.109359-1-angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH v1 0/4] regulator: dvfsrc: Add support for MT8196 and
+ MT6893
+Message-Id: <175070050673.180798.18078248798013183788.b4-ty@kernel.org>
+Date: Mon, 23 Jun 2025 18:41:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] arm64: dts: rockchip: list all CPU supplies on ArmSoM
- Sige5
-To: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>,
- Alexey Charkov <alchark@gmail.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- XiaoDong Huang <derrick.huang@rock-chips.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
- <3286000.Y6S9NjorxK@phil>
- <CABjd4YyaNF1zosFFi6hEsZanPDxoaa1h4Dpd6uTPRwA3BZn0=w@mail.gmail.com>
- <5897576.DvuYhMxLoT@phil>
- <CABjd4Yy8WeXKmmxh2-TjjF5-ABy-NzzJsWpt1KvSjJqTHh0Xwg@mail.gmail.com>
- <CABjd4Yz4NbqzZH4Qsed3ias56gcga9K6CmYA+BLDBxtbG915Ag@mail.gmail.com>
- <36711B65-DD45-4539-BD9C-0382936FD0A3@gmail.com>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <36711B65-DD45-4539-BD9C-0382936FD0A3@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-08c49
 
-On 2025-06-23 17:02, Piotr Oniszczuk wrote:
+On Mon, 23 Jun 2025 14:01:40 +0200, AngeloGioacchino Del Regno wrote:
+> This series adds support for the DVFSRC regulators found on the MediaTek
+> MT8196 Chromebook SoC and the (unrelated) MT6893 Dimensity 1200.
 > 
+> AngeloGioacchino Del Regno (4):
+>   dt-bindings: regulator: mediatek-dvfsrc: Add MT6893 support
+>   regulator: mtk-dvfsrc: Add support for Dimensity 1200 MT6893
+>   dt-bindings: regulator: mediatek-dvfsrc: Add MT8196 support
+>   regulator: mtk-dvfsrc: Add support for MediaTek MT8196 DVFSRC
 > 
->> Wiadomość napisana przez Alexey Charkov <alchark@gmail.com> w dniu 23 cze 2025, o godz. 15:58:
->>
->> On Mon, Jun 23, 2025 at 1:19 PM Alexey Charkov <alchark@gmail.com> wrote:
->>>
->>>
->>
->> Okay, I've bisected this.
->>
->> TLDR: Linux and u-boot seem to have nothing to do with it, opensource
->> TF-A doesn't work, binary BL31 starting with v1.09 do not work. BL31
->> v1.08 and earlier work fine.
+> [...]
 
-v1.09 added support for 1 GHz hrtimer in addition to the normal 24 MHz
-rate. Mainline U-Boot may only support use of 24 MHz hrtimer, unsure
-what impact the hrtimer rate has. Mixing blobs with/without 1 GHz
-support is known to cause issues. At one point the latest rkbin tree may
-have contained incompatible rk3576 blobs (mixed 1 ghz vs 24 mhz rate).
+Applied to
 
-Did you try with newer blobs, i.e. ddr init v1.09, bl31 v1.19 blobs [1]
-and mainline U-Boot [2] ?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-[1] https://github.com/radxa/rkbin/commits/develop-v2025.04/
-[2] https://source.denx.de/u-boot/contributors/kwiboo/u-boot/-/commits/rk3576
+Thanks!
 
-Regards,
-Jonas
+[1/4] dt-bindings: regulator: mediatek-dvfsrc: Add MT6893 support
+      commit: a6c05c2e6871c94b349703c1ec8584763797fd8e
+[2/4] regulator: mtk-dvfsrc: Add support for Dimensity 1200 MT6893
+      commit: 7aafbb463be85472dc6db194ab9df45fd497c998
+[3/4] dt-bindings: regulator: mediatek-dvfsrc: Add MT8196 support
+      commit: ae77b8e8b0326818bd170818b37d055aa57a1569
+[4/4] regulator: mtk-dvfsrc: Add support for MediaTek MT8196 DVFSRC
+      commit: 024f39fff6d222cedde361f7fe34d9ba4e6afb92
 
-> 
-> 
-> just fyi: 
-> to confirm: replacing only bl31 to 1.08 makes all good
-> with perf gov. clocks staying on 2200/2300
-> clock estimations are predictable, constant and estimating constantly 2400
-> ux is „like” on 3588
-> 
-> Alexey: many thx for finding root cause component!
->   
->    
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
