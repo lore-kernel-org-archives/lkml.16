@@ -1,130 +1,264 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D0A111BF
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 05:22:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E3A2AD0C;
+	Mon, 23 Jun 2025 05:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750656169; cv=none; b=Vv4VeJvoB5Pm8BmyZb+9wTHJbFb+LeR4qHQJMzHdtdfuDoNK4TZo+04VGjHV2UJ+1AGiq4H9dfT3Xjb0m4XzJ8uKLr4jmYHAW0X9ZLUPdedQCIa44BRH91ITlm2VIf964NR7H/0OLd+mf8rp4pcK4eWAY2g1f0SH50Tkewc/BH4=
+	t=1750656204; cv=none; b=aW4dN1IiwTd8kIEtEsOTQjsS5WTQM1XfwZ8+fqXi45tn8wO5o/1DTBUsjdaWdTGfp2ZK4xYIO0Vkat10mNhn/2WlWSZxUiU0tgv6WBE+ltKeW2RZop3cjvRTIFYyAPGD9Rl8dhOznpFStT2nF0LcatOnNyURIjCluTYZbJV35bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750656169; c=relaxed/simple;
-	bh=+Kas6rw2gUuGcCXNxLZRLTxtV+rGsYFJHHqXLmHlZDE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FAffhqgXTDKJqBH98YftSlHMHfCN7BUAMr4PmbeXnN81nIlkdPO3OLu+D5G0QR0XHkK20zwLaT8z2jOkRfyf4qjOW/ladqP7rTSUJ9SS+vIh0xmZi7fIwCJBTDhHpBf1bcndNyfwB82+zrBd313QmQhcc6q1Z4qFervNp+Vp60Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YxtkILJ2; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750656204; c=relaxed/simple;
+	bh=I9Tqdm0liT8qHxpY2SF1FPCTfF6GGAr8ugJt3v6wxdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qXAGngFDHj3PPYi3wEXWZxPR1MlbhwYY9FHE5gqRCltG3cpkJTywz3ZoG6UIJhm/xOVpA3zbeMwoNDZxF6bOXtEj0bEdZ3Xf2fvZBCfNx+JVVgxV7UXaACaaqei+D9K3N2qD1pZfh8nPaLOMAHqFmDmYyTqWSgZlCvh+SFa99Lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J1sxJPsK; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YxtkILJ2"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55MLuWrb021510
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 05:22:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hLTjHztutua3z5I4nsvOTKbG4m9yNPn0gh8iTJrQ/94=; b=YxtkILJ22j77Lvbt
-	1AWZYgTxsA0nxvlFD65y0HkRFD4ThGDotDJVoAy22T7Z40KaYzNpqzVZ696K8SUq
-	UYfogTeIyUmh/LRTP7QtaU1+oa5X1TFKBdLOHPbsVSDuJxaSfNHSbnQR8KLqajef
-	3q3MrwocUgpRr/X7k1yp+YADnvhoBgRe1504WUcDPQve9nncTqMKwJdB7x/i7sJK
-	ES6EE7ennAouWY0hRYWyrSarQj/5p3aW1EpKLm8jDgHi0YLtEa1Jlb+ZTlYAAyCy
-	1SheVsZI8jd6PdsAnEAZM1pXrGg4Y15t0dJO0yZUw2kd1/TWt7vMHTRI//FmGa3E
-	ogfi8Q==
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47esa4gpmu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 05:22:47 +0000 (GMT)
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b31ff60558eso1432558a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 22:22:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J1sxJPsK"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4a745fc9bafso40870681cf.1;
+        Sun, 22 Jun 2025 22:23:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750656202; x=1751261002; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Sr5oEbFyfEjRzNkoJqnkBmtmxzigx3Ub/Q0nw1vBNVw=;
+        b=J1sxJPsKBFviAneB7p1UzGZgYktHDRUB06oNXwFvyxWtY5cPQPqFvJg0sSs4Cpn5Oz
+         pTnlBUR5CtwxB1YwKYXh5uG7y83/eOYfeTvYPROsGYj1G/71NAJ2F6+hd3ZqLU3EET1c
+         Dc0dxf7rFJUIQN7WA5BpAjBwMmd63oNPqCPuU4tYw2DDkcVDv0rsm3vgTUm6Z7u4W4W/
+         sO4eAH2555cLmhA7q9thc3U85cnLVmSphCBlTx4qAes2mLolpPo6uDhYkMnyGAgLCxC2
+         FiaIj1zFd8vRINDw95AloSBmX+1ea2LJp+aUh33ytSqPrVV3AdhBD2NoxEn9yLVCiGqA
+         rIPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750656166; x=1751260966;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hLTjHztutua3z5I4nsvOTKbG4m9yNPn0gh8iTJrQ/94=;
-        b=KRRS9hLiHA30gyLg21pHt6+bqNix73pDp75/8Vtll6IWVBunHMK1aYyUh8fKpISoDh
-         DUwOw/ZeniDozCx+FRd8RNKz6ybp4m7MiEFFkxlMzZknhEQh70vtmYrEmhBAYiROMXSn
-         RXDohb45B0Jitln8TPFOpmADDMGRiGjDo95DjINqsUvxd+wWCunmsqjduv3ZGUKVZTT6
-         /OPv5UM53LIueEGEGr8EgYGfHUGpfof9cwzjL6oF+RoQqBPzfTBBijdwZ01J66lFPmw2
-         5YMiv4EVIsKCacJRzHf6c5F5Ut2eP+SpuQnjpDK3b15TPdcYJZzJtjG6W4xMhjM7KuTA
-         J+jw==
-X-Forwarded-Encrypted: i=1; AJvYcCUj1+0Y6DryetyeLjFJwhdqZ2CYh8Sd4SIcW/efnLJ9WzkuvGUQohA34exnnApx2GQwM9Z25D9gtWhl6hw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxA3JPFgMayp/beuRM21cmyMdaAANmmgIArc8iiiHchA7Nm81a
-	iVi9BFFzotrLbpFJWTd8SceVy4XG79BTJfySRB4NRSN/2LEGoxjJcaQqFcoLjUH9pzPTJaTUlTl
-	fvYtZB6L3mC7NdyKoGUNdx4UQNpkPZdwl9g8/CDcvK8MT+qgmz499gEtR7Mra7WR/KQc=
-X-Gm-Gg: ASbGncvYmPGj9ZR0hTuipeZqisTyy4aLx5uYuCZX9ms24bhNQ8yMdEqyivkY4sEh7L4
-	9jHMdvOkmxHBUVcRjbfSscvL7M2aUUFbqhnTZE0XLcVYaBbVqDoUc3BL/FdFIBtAf8V1oohJOgn
-	M3kRJGWqKBGNllRMwIZNZYUO5gaYZvx+knDndNTR5MUyZFSoR5U8ygJJgfIrIZWhiI8Ia94Um16
-	x24PAHY7k8KUszpzenvm5k+nVGj39zNAK/RiCT9QVgKw3nxEfQNjI6VQD6164NyKvFXVpHZ6e/L
-	rqabkH73W8gRoh2pQZNJrwQLXZcyj56P9RA4qJV0nLFWjzfrG2/WZJGcfC3Fms7q
-X-Received: by 2002:a17:902:ea04:b0:22e:457d:3989 with SMTP id d9443c01a7336-237dad62e05mr157842745ad.0.1750656166367;
-        Sun, 22 Jun 2025 22:22:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEPbiH4zXPXU8XN3CMiJXdjzBJctNi2A9Anl0Doa38MkcwwcT6EaraSrDq/JY2/ygobpeCE6g==
-X-Received: by 2002:a17:902:ea04:b0:22e:457d:3989 with SMTP id d9443c01a7336-237dad62e05mr157842595ad.0.1750656165996;
-        Sun, 22 Jun 2025 22:22:45 -0700 (PDT)
-Received: from [10.152.204.0] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83940f0sm74662795ad.18.2025.06.22.22.22.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Jun 2025 22:22:45 -0700 (PDT)
-Message-ID: <b2415006-6176-8645-9ac1-47b8598dec17@oss.qualcomm.com>
-Date: Mon, 23 Jun 2025 10:52:41 +0530
+        d=1e100.net; s=20230601; t=1750656202; x=1751261002;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Sr5oEbFyfEjRzNkoJqnkBmtmxzigx3Ub/Q0nw1vBNVw=;
+        b=NSlsqH6SsCMM4KItE9bFpD9+dBhwq2GSGGgySGtM+cdcoqLroz2SFEufFUQn/cA+H8
+         sj/jevUFAnihQHqXwIfY6oK/P88lZV6hFwzXxgydH/MDwjUH9pm0uWgGFs4jfUc7lzFO
+         2ftMHzJk4/vkGoYyE10fEMTKuWlCxmj0leq9YqtW7w1v8G/GcPs+ZNGkrf07u/vrgixG
+         yr1+ArEF+MnnPjbIxmmcVml23I3Vqz2nqaZvXQ1UkYBQ654M+nH6YK71kfK/NMbg3qvl
+         2KJhuBgULFqwYdiAQ9r+N17ze9TjlD83KN4Gago8iOj/6vHOpv+c86Pt4RTo63Pcz31R
+         tkAA==
+X-Forwarded-Encrypted: i=1; AJvYcCUm+A5b/29bA9IxpAwGwDOrhE+gtJTA9YMhsNCgXiamoMRLsvscd9VafCHmItX2Mw6huZEDWwwHLKiwfUSJJwY=@vger.kernel.org, AJvYcCXF5L5FxNvKkIXaRIvBmT80ocKSEOFUNYO0d31+lxHV5QypFfqlCj6Lf6kRN7eLXiN1sIBjUafeByiZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzP7RmMCnsTcmctp8PBuaqtL/ducCstv24y8AdjpX4zNPA90E4l
+	6s0cc86+6smZzJuOOwdl4WhtVY/xpA/5VgJopyq+gY6juCbsSZ/S8COS
+X-Gm-Gg: ASbGncv0hdwLE1nA+UIQ+pFC1bYicp9bOw/YHhhUFYtZfHSgq5zkLJb3proUqYW5UFh
+	7iqtTUbVmfjwKwCM5bQVT9cm6qVsrgJC5iQaClZeB1S+e7/7kkLHEyIR5Bab4ARuH4bORF2TBRD
+	10ZjsBlQMYZNr1xLTJ1hzwYri+N9WP8f97DhQtCB32SsvxgpV4vdH/99I1/CKM52QSuPPFqscsu
+	bbi8U8wueuXvG5agjqIzgAdH8HJjXYpG39rqwO6r4GPi3LBdak6DzB7oTAfNVtBWejKTs3s6x7w
+	TW6lz9JVWghnCGYYLWquv4UdR9nhc3P17d5gTTD6lClri3xTz38+spR2thCaxJ3sdCYI7m2IGj6
+	scHw/8rVfOo4Zgk/kMyuB70tiStJ4561fQdJYwFgUBoBU/elkEPWE
+X-Google-Smtp-Source: AGHT+IF8ui6HcFrhNAQtPJsyNOrh2z91qZHAYXZ2gqkTVMHabrtx84Vz5YTt6FSz0HrHPvK3EvWhLA==
+X-Received: by 2002:a05:622a:250d:b0:49a:4fc0:56ff with SMTP id d75a77b69052e-4a77c35892amr165709491cf.12.1750656201862;
+        Sun, 22 Jun 2025 22:23:21 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a79de8d57bsm9746031cf.72.2025.06.22.22.23.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Jun 2025 22:23:20 -0700 (PDT)
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 8FD4B1200043;
+	Mon, 23 Jun 2025 01:23:19 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Mon, 23 Jun 2025 01:23:19 -0400
+X-ME-Sender: <xms:x-RYaLMk8b8X3XWefmq8a_pWjZDfjiJ_cDxCzoDe8Ak3y0kbJo6Hlg>
+    <xme:x-RYaF-On7f3oTuTWWWEOh-fVaYHRPg4geZ4h4rIk2d6tRGMZi8bzSvVzhfaZUk2o
+    vW_mQRoIHA0q57zjw>
+X-ME-Received: <xmr:x-RYaKRQzSHoNjuRY1R8nvjP3Iqe8TLjWMT3VJHNdnIxDCmaXVL-3tQZsw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdduiedujecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfh
+    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
+    hrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudffiedv
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqh
+    hunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddu
+    jeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvg
+    drnhgrmhgvpdhnsggprhgtphhtthhopedviedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtoheplhhinhhugidqkh
+    gvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhushhtqdhf
+    ohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhkmh
+    hmsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqrghrtghh
+    sehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdp
+    rhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgtph
+    htthhopehlohhsshhinheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:x-RYaPsZ8q7KxqSsU17dj9nZUC-zC_DY-xdSUjjxd54QslsyQu5Bkg>
+    <xmx:x-RYaDdWFNrLr0LiV3_QMhzt5AzsDZOkaAIcSki1Kiy7U_FFxZHhjg>
+    <xmx:x-RYaL27uM2IvG8h_Hjy48nZlOJ9zXw9VSE1NRNiXeFBXoJQNfOT2w>
+    <xmx:x-RYaP9OLftPMCDJyjdl4GM0Z45SRvFRnR2noZjHkLZF2H0i1rJ8Xw>
+    <xmx:x-RYaG-JCKVJTWPvrt_yVArB38gAlJT5GTYnnRrkpwzYZVZve_TU0qZG>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 23 Jun 2025 01:23:19 -0400 (EDT)
+Date: Sun, 22 Jun 2025 22:23:18 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Gary Guo <gary@garyguo.net>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	lkmm@lists.linux.dev, linux-arch@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 05/10] rust: sync: atomic: Add atomic {cmp,}xchg
+ operations
+Message-ID: <aFjkxqnU60kqESjp@Mac.home>
+References: <20250618164934.19817-1-boqun.feng@gmail.com>
+ <20250618164934.19817-6-boqun.feng@gmail.com>
+ <20250621123753.2009f05b.gary@garyguo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH ath-next 5/5] wifi: ath12k: Add missing include of
- export.h
-Content-Language: en-US
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-        Jeff Johnson <jjohnson@kernel.org>,
-        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vu?=
- =?UTF-8?Q?sen?= <toke@toke.dk>
-Cc: linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
-        linux-kernel@vger.kernel.org, ath11k@lists.infradead.org,
-        ath12k@lists.infradead.org
-References: <20250611-ath-unused-export-v1-0-c36819df7e7b@oss.qualcomm.com>
- <20250611-ath-unused-export-v1-5-c36819df7e7b@oss.qualcomm.com>
-From: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
-In-Reply-To: <20250611-ath-unused-export-v1-5-c36819df7e7b@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=eLYTjGp1 c=1 sm=1 tr=0 ts=6858e4a7 cx=c_pps
- a=rz3CxIlbcmazkYymdCej/Q==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=rPD8waAe7N7EK57NJTkA:9
- a=QEXdDO2ut3YA:10 a=bFCP_H2QrGi7Okbo017w:22
-X-Proofpoint-GUID: o5Emz3yln5t4-I59Km3ZC45ZBzNFTA2R
-X-Proofpoint-ORIG-GUID: o5Emz3yln5t4-I59Km3ZC45ZBzNFTA2R
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDAyOSBTYWx0ZWRfX64fTT7FLpnl2
- ck35U4oDyuDEj1IQIaZJyWgB1ycxOk+wn+W8iopdEKGFsjt5HK3f9oB0i8GRm3gSgI27BMyJrG2
- 2ZA1r2ifdMb7F//fVFzeZY90YRlXTrYmmMuCJjksT4pYKmKveZYogkDYbOMVu9Q6z41QFGCv44R
- wDQ8YIOP1Lyv2kLXVSdSZ+KlRukV2+hiI4cVHa/93QLD3Z/qekY7xEWNhJb5pyQJ1tcOHSuvMPB
- ksd8KFEKgH3pT3i1N4I0vorDpyRkuOBFIMrlMHJyYdDXKFDWFJzHlpOQxuogulsOVo5I0IBOLxb
- E/YKd6XvSsFkFi+LoxJWztop+5m1YPnXD59r+8H0JK0pO2P81zXFsJbjpT4D43WEhzQ6T/grVsY
- cLZZlGtdzCLko9S2ujVnvF0/nzcp2dV0ouo3pNwzGpyzpBMMODvbNhyGwhQBs4YSs9LoHjzy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-23_01,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 mlxscore=0 clxscore=1015 mlxlogscore=977
- suspectscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506230029
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250621123753.2009f05b.gary@garyguo.net>
 
-
-
-On 6/11/2025 9:43 PM, Jeff Johnson wrote:
-> Commit a934a57a42f6 ("scripts/misc-check: check missing #include
-> <linux/export.h> when W=1") introduced a new check that is producing
-> the following warning:
+On Sat, Jun 21, 2025 at 12:37:53PM +0100, Gary Guo wrote:
+[...]
+> > +    /// Atomic compare and exchange.
+> > +    ///
+> > +    /// Compare: The comparison is done via the byte level comparison between the atomic variables
+> > +    /// with the `old` value.
+> > +    ///
+> > +    /// Ordering: When succeeds, provides the corresponding ordering as the `Ordering` type
+> > +    /// parameter indicates, and a failed one doesn't provide any ordering, the read part of a
+> > +    /// failed cmpxchg should be treated as a relaxed read.
+> > +    ///
+> > +    /// Returns `Ok(value)` if cmpxchg succeeds, and `value` is guaranteed to be equal to `old`,
+> > +    /// otherwise returns `Err(value)`, and `value` is the value of the atomic variable when
+> > +    /// cmpxchg was happening.
+> > +    ///
+> > +    /// # Examples
+> > +    ///
+> > +    /// ```rust
+> > +    /// use kernel::sync::atomic::{Atomic, Full, Relaxed};
+> > +    ///
+> > +    /// let x = Atomic::new(42);
+> > +    ///
+> > +    /// // Checks whether cmpxchg succeeded.
+> > +    /// let success = x.cmpxchg(52, 64, Relaxed).is_ok();
+> > +    /// # assert!(!success);
+> > +    ///
+> > +    /// // Checks whether cmpxchg failed.
+> > +    /// let failure = x.cmpxchg(52, 64, Relaxed).is_err();
+> > +    /// # assert!(failure);
+> > +    ///
+> > +    /// // Uses the old value if failed, probably re-try cmpxchg.
+> > +    /// match x.cmpxchg(52, 64, Relaxed) {
+> > +    ///     Ok(_) => { },
+> > +    ///     Err(old) => {
+> > +    ///         // do something with `old`.
+> > +    ///         # assert_eq!(old, 42);
+> > +    ///     }
+> > +    /// }
+> > +    ///
+> > +    /// // Uses the latest value regardlessly, same as atomic_cmpxchg() in C.
+> > +    /// let latest = x.cmpxchg(42, 64, Full).unwrap_or_else(|old| old);
+> > +    /// # assert_eq!(42, latest);
+> > +    /// assert_eq!(64, x.load(Relaxed));
+> > +    /// ```
+> > +    #[doc(alias(
+> > +        "atomic_cmpxchg",
+> > +        "atomic64_cmpxchg",
+> > +        "atomic_try_cmpxchg",
+> > +        "atomic64_try_cmpxchg"
+> > +    ))]
+> > +    #[inline(always)]
+> > +    pub fn cmpxchg<Ordering: All>(&self, mut old: T, new: T, o: Ordering) -> Result<T, T> {
+> > +        // Note on code generation:
+> > +        //
+> > +        // try_cmpxchg() is used to implement cmpxchg(), and if the helper functions are inlined,
+> > +        // the compiler is able to figure out that branch is not needed if the users don't care
+> > +        // about whether the operation succeeds or not. One exception is on x86, due to commit
+> > +        // 44fe84459faf ("locking/atomic: Fix atomic_try_cmpxchg() semantics"), the
+> > +        // atomic_try_cmpxchg() on x86 has a branch even if the caller doesn't care about the
+> > +        // success of cmpxchg and only wants to use the old value. For example, for code like:
+> > +        //
+> > +        //     let latest = x.cmpxchg(42, 64, Full).unwrap_or_else(|old| old);
+> > +        //
+> > +        // It will still generate code:
+> > +        //
+> > +        //     movl    $0x40, %ecx
+> > +        //     movl    $0x34, %eax
+> > +        //     lock
+> > +        //     cmpxchgl        %ecx, 0x4(%rsp)
+> > +        //     jne     1f
+> > +        //     2:
+> > +        //     ...
+> > +        //     1:  movl    %eax, %ecx
+> > +        //     jmp 2b
+> > +        //
+> > +        // This might be "fixed" by introducing a try_cmpxchg_exclusive() that knows the "*old"
+> > +        // location in the C function is always safe to write.
+> > +        if self.try_cmpxchg(&mut old, new, o) {
+> > +            Ok(old)
+> > +        } else {
+> > +            Err(old)
+> > +        }
+> > +    }
+> > +
+> > +    /// Atomic compare and exchange and returns whether the operation succeeds.
+> > +    ///
+> > +    /// "Compare" and "Ordering" part are the same as [`Atomic::cmpxchg()`].
+> > +    ///
+> > +    /// Returns `true` means the cmpxchg succeeds otherwise returns `false` with `old` updated to
+> > +    /// the value of the atomic variable when cmpxchg was happening.
+> > +    #[inline(always)]
+> > +    fn try_cmpxchg<Ordering: All>(&self, old: &mut T, new: T, _: Ordering) -> bool {
+> > +        let old = (old as *mut T).cast::<T::Repr>();
+> > +        let new = T::into_repr(new);
+> > +        let a = self.0.get().cast::<T::Repr>();
+> > +
+> > +        // SAFETY:
+> > +        // - For calling the atomic_try_cmpchg*() function:
+> > +        //   - `self.as_ptr()` is a valid pointer, and per the safety requirement of `AllowAtomic`,
+> > +        //      a `*mut T` is a valid `*mut T::Repr`. Therefore `a` is a valid pointer,
+> > +        //   - per the type invariants, the following atomic operation won't cause data races.
+> > +        //   - `old` is a valid pointer to write because it comes from a mutable reference.
+> > +        // - For extra safety requirement of usage on pointers returned by `self.as_ptr():
+> > +        //   - atomic operations are used here.
+> > +        unsafe {
+> > +            match Ordering::TYPE {
+> > +                OrderingType::Full => T::Repr::atomic_try_cmpxchg(a, old, new),
+> > +                OrderingType::Acquire => T::Repr::atomic_try_cmpxchg_acquire(a, old, new),
+> > +                OrderingType::Release => T::Repr::atomic_try_cmpxchg_release(a, old, new),
+> > +                OrderingType::Relaxed => T::Repr::atomic_try_cmpxchg_relaxed(a, old, new),
+> > +            }
+> > +        }
 > 
-> drivers/net/wireless/ath/ath12k/core.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+> Again this function is only using `T::into_repr`, bypassing
+> `T::from_repr` and just use pointer casting.
 > 
-> Add the missing #include to satisfy the check.
+> BTW, any reason that this is a separate function, and it couldn't just
+> be in `cmpxchg` function?
 > 
-> Signed-off-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
 
-Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
+It's a non-public function, I feel it's easier to see that Rust's
+cmpxchg() is implemented via a try_cmpxchg() that is a wrapper of
+`atomic_try_cmpxchg*()`.
+
+Regards,
+Boqun
+
+> 
+> > +    }
+> > +}
+> 
