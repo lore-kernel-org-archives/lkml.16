@@ -1,115 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3381DF742;
-	Mon, 23 Jun 2025 06:36:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C311DED42;
+	Mon, 23 Jun 2025 06:37:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750660592; cv=none; b=DIaXuzdUENAdf691ArbVyaboux5y0ztDxpcX+Zf7gu5mQAHg2h4+5bVssgabD/CQqamiSP4bnDPQ1sCHPim2SnvM+RKD7YivWHMQ1fIOUe6jepRrWD4/lTrC38GGNr4Yy0Yfi6I8mGHEJXrkue8WhlA0H9ctEq+fADjNvVp9BLc=
+	t=1750660640; cv=none; b=dOURMzSCKEpEPNgzHuL+d+hyOkj3rBsVRxHn6TD/KrpM6jgAV3hI81naKwNV/EHtN4dY2FnoD6nwrkunTbbj+hVyiNTIqm47q0KZmomdp5VErVQo96Mx2/gFIO1z6oyz1j8OLKug0DkGrSA5dHDKVjSQm12KLeZF/IFN6YhpG6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750660592; c=relaxed/simple;
-	bh=MQqIQaqFTcceO2ptgIhJ47aNU4rFFFRQHISs+6wARKA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GGwZ3GZyTRuzukC97Nhu9Jgw93mvekgvbul4sNn38eNJ/X3jr3gZhqmPTEkmoWILkNgmFwJQyHK61wP8BIln4P4j2Yd0Ui/3yTEDYQuDJnkAX5hqFbjuOe6ojUljY8FRrj00gEZ3FPkoTPD2u88wYXToFcAfdH/oh5t09v8EI3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GHwOoNRH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750660640; c=relaxed/simple;
+	bh=buOrcItc7yFXj8/CRQ3HtUD8/SjMJ7yOSDKIv29T3ng=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=cylTv4gC/Y9qvPIKqrQcY3qY+pWHqof76zx0naQuD8XOYdOyyHPp+r9Izcb2vdsEmIyiXm4ZI/3OVoq2v3ny609QZK95YPx+fzw2iiR34Lyd76zeGXA6AZT2TyD8sPmcIH78tdQFNgUVbluTdKAWj1RNtQW92Pk3ufCeDV+LmgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T65d0tDU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GHwOoNRH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E26DFC4CEF1;
-	Mon, 23 Jun 2025 06:36:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T65d0tDU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CEF0C4CEF1;
+	Mon, 23 Jun 2025 06:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750660591;
-	bh=MQqIQaqFTcceO2ptgIhJ47aNU4rFFFRQHISs+6wARKA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GHwOoNRHp1esb+ZtXpBZNf3KevC/NNQVWqpO+qjTC6nwzTsyosRLXVqUDIxauTqlo
-	 8jeXIP7NCOeYvdeN41bw+e/t+UgZ/N++k8LYbNDaHzQWGibVuDBF4B0Vn84RTqJ8QK
-	 Gp25FmdHKzcr6GXuBFycxdqutlYeFIF76fwYGL8Of3Vsuckom9LTUo1cfRI/lgPl60
-	 sgnsTNhtfUyYG3iZSamLea2sZLoyuWaYWBpZSdrh2R6R81D/4uLpXGG7u6i0CppRo0
-	 G/cHcLUZItb/LA50OGULMGiwy+A/D0tviqD8vGTIOWbDrR8ww8nIYAT05q/kPS1MQq
-	 Os9IcCLUclLng==
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-acb5ec407b1so625467166b.1;
-        Sun, 22 Jun 2025 23:36:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVNG6AK8w0X788rMQPE7x6MwCkXm6YCn2kJfJIwObIwALS2QN+GsxD5J4LOjPDhJpCjX48oEhqa@vger.kernel.org, AJvYcCVqIrXmw919aPuzYvYkIc7AilZLrJWGnupCAGyO/SeEDOhqWSFGA34KCTnglgBld9ladUBOZNzJ5DSreVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz08D1GOIGRkMAzxKg5Db2aPvCdgUBj2r65CvAAQ3c2Y6i+vo1o
-	+SvOjxQytxVaThNnyh1N5YyBOoq/o3spv1dfbb4hE7+6pwjI1plGSGCnphkrIjA1VS3MxDCxtLr
-	3miFcKXxwL7aNDBiVjjNyfduVqyK6ips=
-X-Google-Smtp-Source: AGHT+IEA6COgDBs0qwjVGo1C38N6TH3X/9OjF1VirjRhwYLxZrK2V43Ve2GTAq5zQkmiKr67gpJQ7dzJbondmWWGwus=
-X-Received: by 2002:a17:907:6088:b0:ad2:3fa9:7511 with SMTP id
- a640c23a62f3a-ae057bb8dcamr1099998066b.41.1750660590450; Sun, 22 Jun 2025
- 23:36:30 -0700 (PDT)
+	s=k20201202; t=1750660640;
+	bh=buOrcItc7yFXj8/CRQ3HtUD8/SjMJ7yOSDKIv29T3ng=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=T65d0tDUe1US9zePadEL+6tCzAXcbFizDttfkcVhDQy9thSXFf8LTOwcycUrKE5f9
+	 rYDhcJX4R9Rhs0WLpsJ3B6lxOgZxXzIZzIvxgF43pnonWnu3f/13r/RNERtFxuVYra
+	 cFKhsJBUogYwFe6R3rdOdH/6CWFi9feiVWAg2M2denOPAAriu6g9fJFCT90+PgV2J1
+	 J09cTIhsphm8TaXsGBQxmDLR1nOFhZUXak2juvkYAPui+ORnOqIcIEwddGawcN2QiQ
+	 9ZVoMbN0cdu2Fri+eZK9lvsJifwa9hM6pK9MI3aYnmUVFbiXpfQtPLMlhN8cdXDOO8
+	 irHLW05gERtKw==
+Message-ID: <809a7142-7055-47e7-8bc3-18bef86e2b4e@kernel.org>
+Date: Mon, 23 Jun 2025 08:37:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250622110148.3108758-1-chenhuacai@loongson.cn>
- <2025062206-roundish-thumb-a20e@gregkh> <CAAhV-H4S=z5O0+pq-x9X4-VjYsJQVxib+V-35g50WeaivryHLA@mail.gmail.com>
- <2025062349-proximity-trapeze-24c6@gregkh>
-In-Reply-To: <2025062349-proximity-trapeze-24c6@gregkh>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 23 Jun 2025 14:36:18 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7r-X-t0_i-x=oy2Gin4-ZMhSVwXtcaygZdJ1_J-zD3dg@mail.gmail.com>
-X-Gm-Features: AX0GCFvvYomJBYKcVNajSqdnUm4ssBmny_9ZzEH6TG458ktGPVd3agNJFs8hSLU
-Message-ID: <CAAhV-H7r-X-t0_i-x=oy2Gin4-ZMhSVwXtcaygZdJ1_J-zD3dg@mail.gmail.com>
-Subject: Re: [PATCH for 6.1/6.6] platform/loongarch: laptop: Fix build error
- due to backport
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Sasha Levin <sashal@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org, ziyao@disroot.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 12/17] dt-bindings: dma: ti: Add K3 BCDMA V2
+To: Sai Sree Kartheek Adivi <s-adivi@ti.com>,
+ Peter Ujfalusi <peter.ujfalusi@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+ Santosh Shilimkar <ssantosh@kernel.org>, dmaengine@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, praneeth@ti.com, vigneshr@ti.com,
+ u-kumar1@ti.com, a-chavda@ti.com, p-mantena@ti.com
+References: <20250623053716.1493974-1-s-adivi@ti.com>
+ <20250623053716.1493974-13-s-adivi@ti.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250623053716.1493974-13-s-adivi@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 23, 2025 at 2:28=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Sun, Jun 22, 2025 at 09:11:44PM +0800, Huacai Chen wrote:
-> > On Sun, Jun 22, 2025 at 9:10=E2=80=AFPM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Sun, Jun 22, 2025 at 07:01:48PM +0800, Huacai Chen wrote:
-> > > > In 6.1/6.6 there is no BACKLIGHT_POWER_ON definition so a build err=
-or
-> > > > occurs due to recently backport:
-> > > >
-> > > >   CC      drivers/platform/loongarch/loongson-laptop.o
-> > > > drivers/platform/loongarch/loongson-laptop.c: In function 'laptop_b=
-acklight_register':
-> > > > drivers/platform/loongarch/loongson-laptop.c:428:23: error: 'BACKLI=
-GHT_POWER_ON' undeclared (first use in this function)
-> > > >   428 |         props.power =3D BACKLIGHT_POWER_ON;
-> > > >       |                       ^~~~~~~~~~~~~~~~~~
-> > > >
-> > > > Use FB_BLANK_UNBLANK instead which has the same meaning.
-> > > >
-> > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > ---
-> > > >  drivers/platform/loongarch/loongson-laptop.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > What commit id is this fixing?
-> >
-> > commit 53c762b47f726e4079a1f06f684bce2fc0d56fba upstream.
->
-> Great, can you resend this with a proper Fixes: tag so I don't have to
-> manually add it myself?
-Upstream kernel doesn't need to be fixed, and for 6.1/6.6, the commits
-need to be fixed are in linux-stable-rc.git[1][2] rather than
-linux-stable.git now.
+On 23/06/2025 07:37, Sai Sree Kartheek Adivi wrote:
+> New binding document for
+> Texas Instruments K3 Block Copy DMA (BCDMA) V2.
+> 
+> BCDMA V2 is introduced as part of AM62L.
+> 
+> Signed-off-by: Sai Sree Kartheek Adivi <s-adivi@ti.com>
+> ---
+>  .../bindings/dma/ti/k3-bcdma-v2.yaml          | 94 +++++++++++++++++++
+>  1 file changed, 94 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-bcdma-v2.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/ti/k3-bcdma-v2.yaml b/Documentation/devicetree/bindings/dma/ti/k3-bcdma-v2.yaml
+> new file mode 100644
+> index 0000000000000..c50b2edbf8441
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/ti/k3-bcdma-v2.yaml
 
-I don't know your policy about stable branch maintenance, one of the
-alternatives is modify [1][2] directly. And if you prefer me to resend
-this patch, I think the commit id is not the upstream id, but the ids
-in [1][2]?
+Filename: missing vendor and anyway this should be compatible, so
+ti,am62l-dmss-bcdma.yaml
 
-[1]https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.g=
-it/commit/?h=3Dqueue/6.1&id=3Df78d337c63e738ebd556bf67472b2b5c5d8e9a1c
-[2]https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.g=
-it/commit/?h=3Dqueue/6.6&id=3D797cbc5bc7e7a9cd349b5c54c6128a4077b9a8c6
 
-Huacai
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
->
-> thanks,
->
-> greg k-h
+Best regards,
+Krzysztof
