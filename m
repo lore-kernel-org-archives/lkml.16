@@ -1,142 +1,111 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7074D1C8FB5
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D491C8FB5;
+	Mon, 23 Jun 2025 11:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750678627; cv=none; b=Ac3vT+hlM7Nc8PM+597Saeta5mw1phGwn212okSh1XqFqsswz5wQE0MnLq5nLeA0r81rEuCEWvNZcjR+EnfhB1V3XQ7BqsN9HXPYGJ1O+5NJA2rYKFlWh8Dvx7d1PZkxnXNEdeQdUEwmHXGUJIbbkA7q74IEe3kV/zDxuTzjQYc=
+	t=1750678636; cv=none; b=Hq1rBUQaknykiDcliwS/6Q/ZD4t+xpJwSxZ8WjSZXGeBIPSRiwtdTEIVgWF2j+hRZwU6srB3UwM8HUCvXZTzTwQGZ4hbQbY0Y544iBJPQ1Rwq7M330OCxzlxwTK1opfYE9rfaaqVbDgMxZGG+GUMuG2sveIqcvZWHJA0R0wM2M0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750678627; c=relaxed/simple;
-	bh=YQEAJCLfezUIG7yoU9HGhernWupP/zjzQJHrHDVuTeY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g1iFos/4JIhvMJ7VZvdoi3yscRsHOVEcsoB/uMQjObPhJ5RFxrVcdm4dLWOc3q0DOYD0YDj9g5HAOyytkR+EjP8jJYXN8wNE4xkq6V3zlQuw+fvHKTcGhbzz390iJbwNifBi17RL0+0jlANuxaEOrorZ+lob03nzwng8TbrNiCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=d1ZvPhgN; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750678636; c=relaxed/simple;
+	bh=xJ21nilBot/4fY6rxK807VjXlpNflwQgbZb766PVkJU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lMpdKfI+GoSaZ7ZhwMh7Fqghon6OwSLUBGRzVge6cuFTCjpckc6sV3A2fkgQ1MQmBe/Uv6fg5Y9KvvUC7AM9R0TkhViZN6oCfl+wZB4T0zsVIqOeqeYHZcamkyc9vQF+LwtpShww6FEDTba10QBC0JexgwQyWyR9pD2fkAfT8OA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AGSwnSbx; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="d1ZvPhgN"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55N8aqf2011465
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:37:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	RNES+f92fEjKmzMHA6ySrLrXjwkhHw9zw3WBGAogWQw=; b=d1ZvPhgNu3dU0tyQ
-	5Nuzi3JZq8xpQ/7A4oQlAlLJ863p236YYgL99jmePBSYXbOu4Oz2wMF7Nrkc8mnV
-	aCDRhOv8ijx4MLtN5QH3li9A1pLQ5Bpr8KxexLTDJPTGa+Rsym7dy9+RwkJUNVYS
-	iwy5VBXfKp972WjmMfR80Y+4+KROnoswfg/W3rCsjm/m11iLnpFR2wwHnUuzznQF
-	SSWctwpDAYdPG52WH6pKo6D/lJa8tCAdbTg4EmM5iMW0VRKngTk9bFRdk1Ss6irP
-	jkw/klJ6uFrA/81EPGidLM58u/jvcCA6W/300gfwRO5mjVVzJBERkaw9DgDiIdtP
-	aVJFAQ==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47emcmj3cy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:37:05 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d21080c26fso108077985a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 04:37:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGSwnSbx"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a548a73ff2so3791218f8f.0;
+        Mon, 23 Jun 2025 04:37:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750678633; x=1751283433; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l1JKQUGKtHDlQHcmf9kJpu3IEXIyyhBw8aQN8H1Yz00=;
+        b=AGSwnSbxn3dIig7x/f9nTFWSDc0cSY7ZhYi6YOUtUfUoGfMDr93+zaLtXyr+1KpwBP
+         PhUa/KocEKOko9UHB+61NoXE3Zq8zc9JCOaf4TINRHE1WQ7lwdVr3DizJ0hIhXBny/Be
+         ncQP3bjTMFpxPGt/fP58WN6fS62vxu+6joKjNrwOXZnNxur/9OQ9JzKPTQm+Se2NCWcT
+         6UNVzQCyOCzed0v97MVIqy6UlHmCqiuASMD9GMGS/R5QKkN423d9ys58kUcsp48xrKvj
+         +9xQ2ndEjG5TnAf5LY4Tm+7y939I5NJMWXXlIew9RxG2BPa/xFJ9+c2WO6to69RfXaXl
+         QuCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750678624; x=1751283424;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RNES+f92fEjKmzMHA6ySrLrXjwkhHw9zw3WBGAogWQw=;
-        b=U/jo5hbXyvo7wMo318g6m1F8HSyBrCmUcgYGYlRMTCPjYCLB7V+cWiiyRubEMFNYnt
-         C6w0R3o5WpblqVVxWq/FW/q5EAZiVT+rxYWiAGlR9UirNUtaMwlxXgC+sYzte7QLkbFL
-         Ka96VFQW6lV00mLA/b9N1En/V/0bPy/zKxEvLV1nUxnX+sZU9GKn+4UW2M0ZIBl0iEQj
-         /UvlcZckTX4COG3FdAgg99uiDPGDG1LzOltUMNlUhbvre0OWxUcJr9fnalPM/8Chk9rJ
-         TVLgmqVtu6018TlKk1QfchvFG0xt0yUS7tC0pN0QeL9hQS4Yl31zz1P4KSc1V8aArMxP
-         KF9A==
-X-Forwarded-Encrypted: i=1; AJvYcCXjKRvH0r7gC0/jAiUlE0SyajOc3OXNXNf1MVvtZu0pVezBZalfRVAyQp5bAHvidaKqX2B5Xh1xX0Glq7c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQ7By6fuei0soG+pjA99KGb5ksIE0KKISi1i9fDV01Uj/ObIcC
-	tCJdMXgFo2RUjSWSLzqpc0O4Z6lbGdCPTuyssyCyRc7sGdezWwJwOxBvTE94q+idn5y64V/cF8D
-	smHYE+G9ALLg3c0PATYcR13HJTWUOGDrTgxAAGIoNruUd4nCtWkq7cxSDMb/H3zaMB1M=
-X-Gm-Gg: ASbGncvFhj3Rl3p7ZTcSL5UZnGbibhfJjBg4dTY4h8sbFEOGh9AH9JOEdC8OW2LeoVi
-	nmXAyYkemZ4U+GAaMnsm0SyCRZ2dnowE8ZkIEM4uML+yY1rtSxyVPJSf6C3YO8WtlzxyIctxowA
-	JyFrgOXglcLNqX8Hp/JbN/HMFbf7rbsmgMEfOa8b3DwdpcG0yfgxNOrqAE24/t9S/Yv9ZmMDr5b
-	zWvn4//lAoPNHc30jPCSSehmpYiBC1hhOvoTqh1n27W4iNetrIPqfSWd/2z8VlvspAIFZf/SUvV
-	ByLhtrI9WAU6TuOkBXzI871oUj/zuw0KD1S/UiJCvWwkeNi+Vop+SbllJ4/kwOqtP2V323XReNk
-	1z4M=
-X-Received: by 2002:a05:620a:46a9:b0:7c3:cccc:8790 with SMTP id af79cd13be357-7d3f98dc881mr756578385a.5.1750678624270;
-        Mon, 23 Jun 2025 04:37:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE64KulbHhXpkGuf8qB1USD8QxfJD2kcnD0exRsp233FiT2+hiKockefxscwnsSJEqw7UcENQ==
-X-Received: by 2002:a05:620a:46a9:b0:7c3:cccc:8790 with SMTP id af79cd13be357-7d3f98dc881mr756575885a.5.1750678623807;
-        Mon, 23 Jun 2025 04:37:03 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0541bc9absm700991766b.145.2025.06.23.04.37.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 04:37:03 -0700 (PDT)
-Message-ID: <519f9e21-466f-4e8b-9bd0-dfe0448920bb@oss.qualcomm.com>
-Date: Mon, 23 Jun 2025 13:37:01 +0200
+        d=1e100.net; s=20230601; t=1750678633; x=1751283433;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l1JKQUGKtHDlQHcmf9kJpu3IEXIyyhBw8aQN8H1Yz00=;
+        b=uN2UdJnbTgPYVIMCnhjesfFL/ia5TdVxspwYXAC/c3Q7Gbbg7gr7nJK6TbbwiJEGrH
+         FTU1aSLkmLDXBnewoUN9WpNA1ktBKWT/RpsXCOpce87Tz2orbfSc+CH0j4x6q9Gz4x2y
+         J1jyKbHCuhMXClriG7SWMTJccK659lScRHmPf1DXC82QBOo844FQi+y1B0yhKywV3L6t
+         TfW5VQ9Q7j/6/iI71AqC8neXCrfBnfswFQEMTvGpzssRS14zIgd0BHikPn/IWPoAQdYq
+         dUs6cOrUQH3UE7LxDdDK7G1DoOC3GB41+PBm4oEVKO6a5MEkV2zyrlwt2fEGIUlO38ZQ
+         VO4g==
+X-Forwarded-Encrypted: i=1; AJvYcCX+IpqzXpWGVCWo7qLpG4+AWWRbRxjn2GxKcV0AIFjCqrqRus46/+Cp+mGFGaP5wnYw+P1aVVP2DRZuyFjv@vger.kernel.org, AJvYcCXg0Cjm4GmKxTeWBqIUNkuQ/GmUxxJ/9KdHNCdbObFfuT0wKdXPt+RAy+mzIEcX5R8wrEaL/Kp8WRo8@vger.kernel.org, AJvYcCXjeAiDdy3/jfuWDIuM5sc+x56UqC5VLBffTEYYG8QOu3LsNhbnlzk/MWLFJ4cujPB3CfEuLOoSqXDyIrDpaA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGZkXNlBC3KzDX1cWHtzjT5N4YP7AeqAGWcM13xYZ7sKzEGF+C
+	fkpxSJ864itkf+9CNBvNeocVSF4CsO/GEbAWr5D8a7V2zik95rQj5W0=
+X-Gm-Gg: ASbGnct1g0o3o3N54/jNwBUAzoQJ51KdZHB/hRPdy+UdCNy0d2fibz+kxZX98HiDAhs
+	z3u2E6JoBz5EuKAQOgTFLKg7wjnJEv00KJzCtFIKN13EI1jn3ZzgJ1DLnI7vEt8NgodVWyT+kW/
+	sgIPG6cqRsbRH9ZyU3GSG4+fdw4VihpXS+0k/6vsqL3/H/BPY/8itwrwegj910/EgKxqVHrZmIJ
+	H6kGybEgwfrMt+hWrRp/8+k6OckexJeBQ3+2OH6Sf/SyDB/tW+Bt2r7vtvp7b+RklOlrJTLQ4zp
+	TVkN6yaAuZ5zsolLtWbATlL1mLBAA7UYkMs3jx5XuCJU0JoxDqJ/m6j98pp9lEsbtJV/ji78tet
+	LAKnFNFaE9PiTfVNrm8vFxX+eO2PI2w==
+X-Google-Smtp-Source: AGHT+IE2RTGSFjJk4MFLsZPJVqj2yyUhB6opmzSaC3+yQjEpdfp2SrS3HcTsJ7iKvNkAhBmjnBo1uw==
+X-Received: by 2002:a05:6000:40c9:b0:3a4:f439:e715 with SMTP id ffacd0b85a97d-3a6d12bb71bmr8920279f8f.9.1750678632528;
+        Mon, 23 Jun 2025 04:37:12 -0700 (PDT)
+Received: from alex-x1.. (mob-194-230-148-213.cgn.sunrise.net. [194.230.148.213])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f18215sm9092625f8f.29.2025.06.23.04.37.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 04:37:12 -0700 (PDT)
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Subject: [PATCH v2 0/2] Asus Zenbook A14 improvements
+Date: Mon, 23 Jun 2025 13:36:12 +0200
+Message-ID: <20250623113709.21184-1-alex.vinarskis@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: x1e80100-dell-xps13-9345: Disable
- PM8010
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: bjorn.andersson@oss.qualcomm.com, Konrad Dybcio <konradybcio@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
-        laurentiu.tudor1@dell.com
-References: <20250318-xps13-no-pm8010-v1-1-c46236d96428@oss.qualcomm.com>
- <Z9qXFLmnae86_GT9@linaro.org>
- <a7zyhmv5lqxl2l5rdg2x5g55wokm6ztwvzwrfkyeignwdromjr@afpe7zwsmkt2>
- <d2eabc30-f1d2-47d8-82f9-86f6f7a705bb@gmail.com>
- <7c850205-0c42-4e6d-bf5f-f1255367d53a@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <7c850205-0c42-4e6d-bf5f-f1255367d53a@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: Yzt2xZFnmvzyADcn4zNggoyDaAG5Gt5w
-X-Proofpoint-ORIG-GUID: Yzt2xZFnmvzyADcn4zNggoyDaAG5Gt5w
-X-Authority-Analysis: v=2.4 cv=J+eq7BnS c=1 sm=1 tr=0 ts=68593c61 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=FUMimz6QtM2Ddm9xIjYA:9
- a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA2OSBTYWx0ZWRfXyK6q5NQJHLDy
- tbmE600AmYCpbAFyfjpS0Y0UoR4O544kbmgvM3vhowRospl4YBH+47sKgjiB0ZvXJRzftxeSVvy
- rWhU/O4jZI/TAawj58/d8cTrSw2dmFLbTRdrh3Q5wASeEUMBh1dOtJ8eu+LIDHcEAT+MSNVNUFr
- Arm1yMNIuLZak5oXx5XP/fq6Sr8sNT8SRPNyt8CqrIk8FnD1+gUA6aCokzMkRtGiBw+30V41ZAj
- jcXJ9pRBWOKPG8C8viZFlr4XaU/JGogIJrgFtvyke6GLNl8beq3sZ+w5FbIOQsL/Cnj5UzYf7Bt
- mYK2MiOruzBjs4yD2jAZkj0GlBLoAcEMtR7sQBIZGIvV5ovbGYvWY1rrTlherMtRdwdj8R843AJ
- A0g676fx+soQC5z134n2h1JmdRZV+XCcN/rEKpzqfyqu2pQcf3Z9YvxUEZwFEnrhNOBMmiS9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-23_03,2025-06-23_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 mlxlogscore=878 adultscore=0 impostorscore=0 clxscore=1015
- spamscore=0 malwarescore=0 phishscore=0 priorityscore=1501 suspectscore=0
- mlxscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506230069
+Content-Transfer-Encoding: 8bit
 
-On 6/16/25 10:09 AM, Bryan O'Donoghue wrote:
-> On 15/06/2025 19:29, Aleksandrs Vinarskis wrote:
->> Hi all,
->>
->>
->> Revisiting this change in context of Dell XPS 9345 and now Lenovo ThinkBook 16 [1] (and upcoming Lenovo Ideapad 5) as these do not have pm8010.
->>
->>
->> Perhaps safest and easiest is to simply disable pm8010 in `x1e80100- pmics.dtsi` as proposed and _not_ enable it on any devices, since its known to not be used anywhere _yet_? As its a camera PMIC, the only submitted upstream (did not land yet) change that utilizes pm8010 on X1/ X1E is Bryan's CAMSS series that enables camera on CRD [2]. There are a few other laptops that have patches to enable the camera (my Zenbook, Bryan's branch on Gitlab for few more laptops) but those were not submitted yet, so can be easily changed to explicitly enable pm8010 before submission. This way we could simplify this change and not have to figure out which of the upstream devices do in fact have pm8010 onboard.
-> 
-> As a general principle, unless its used it should be disabled.
-> 
-> pm8010 is a camera specific PMIC and Dell has its own way of powering the camera sensors on XPS, Inspiron and I'd guess other models too, presumably as a result of reusing the x86 design with Qcom with minimal changes.
-> 
-> Disable by default. +1
+First round of improvements for Asus Zenbook A14 which has just landed
+to linux-next.
 
-Sure, we can do that
+* First patch updates DTs from v5 to v7 that was mailed earlier. Fixes
+  GPU enable and mistake in firmware path for Purwa/X1P
+* Second patch adds audio support. Audioreach topology and Alsa UCM
+  configs were already merged [1],[2].
 
-Konrad
+[1] https://github.com/linux-msm/audioreach-topology/commit/952d16b16c4ee23578c001c97a31540c61315a0c
+[2] https://github.com/alsa-project/alsa-ucm-conf/commit/87a48b90213106f6e310dd611590e6a608ae6596
+
+---
+
+Change in v2:
+* Change order of audio nodes to be alphabetic
+* Pick Konrad's R-b
+Link to v1: https://lore.kernel.org/all/20250622134301.10403-1-alex.vinarskis@gmail.com/
+
+Aleksandrs Vinarskis (2):
+  arm64: dts: qcom: x1-asus-zenbook: fixup GPU nodes
+  arm64: dts: qcom: x1-asus-zenbook: support sound
+
+ .../boot/dts/qcom/x1-asus-zenbook-a14.dtsi    | 198 +++++++++++++++++-
+ .../dts/qcom/x1e80100-asus-zenbook-a14.dts    |   4 +
+ .../dts/qcom/x1p42100-asus-zenbook-a14.dts    |   6 +-
+ 3 files changed, 203 insertions(+), 5 deletions(-)
+
+-- 
+2.45.2
+
