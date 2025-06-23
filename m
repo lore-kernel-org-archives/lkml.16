@@ -1,145 +1,112 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1DF4C83
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C8446BF;
+	Mon, 23 Jun 2025 18:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750704346; cv=none; b=mslJITdt7Voy60lqPsMswINcZbC95uc5jEuASlwjQ3GGeacahfZ1+bHypMLpAnhmwCd6TGpyC887nOlaYf/z5q3IdndbnLCuZa+bG3aNTK3f7OVmx6FFLAukfykS3v8i7g53aKn+uiuQxL94di6uBn74/Ozyovc71NTonNad80k=
+	t=1750704462; cv=none; b=WxVpFFG4yWQ/EGolh5GQ6YgmLGfwD9w8/vX9xqPX3b7kya44fVP5DI+yxHv/UQQ8U9TnITpBSpCEU18+YalzV+0Lho5QL+TngXU6ukvZSA3pQuy/u5yXz0jUxl6aD9Bq0iiPG7nCkKdWNMp5eJP/F0Fpt3GvskpKn+WTdkKHRAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750704346; c=relaxed/simple;
-	bh=jB4MKuZY+Ffi3QK7qpUEThxOxdtk8engxwoxg/tQK+M=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=snZNb8D88DHcJOYB4WfbDeg+Oh6hiUlxVYZklOXD6UIjcP1mL87teJ4zBgdXVz0IQaRHVDZqXLSd1X8Pxl+c7Br8IKO+jNgBo1KYtvm9TwXoPFaY3Ngur6mI4TJRDK6tfJLkAXe6qHxIg7ScWthN8Yej40igh8ERuCbVgfmZ0ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WmORnRdQ; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1750704462; c=relaxed/simple;
+	bh=3rshOR7CPuXyaGwHcakcso417Fg4JBCnCi4RyECR8xI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SkLZpchcAMDsTbwSkblG+hqnE9w88fICywrzcGAGV89vDGRZnbw5FCwq1DS0WVUxllItKcYMWwvSrsVAFcnVLLho5mWEoR6MLKjXTAjo6VjzPO/yGkyPN429k+r0blfyXAPJvuxTb2V0dOzvI96YyhP9+UgjpO0wHpYUzrA+tKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XsFDKzkJ; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WmORnRdQ"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so3664795f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:45:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XsFDKzkJ"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-236377f00a1so42367575ad.3;
+        Mon, 23 Jun 2025 11:47:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1750704343; x=1751309143; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jB4MKuZY+Ffi3QK7qpUEThxOxdtk8engxwoxg/tQK+M=;
-        b=WmORnRdQ1bRXiW339VIWESeowWbm3d1kwGgrd3eGg2E7BAkkyCo0+ONJxnV5iX83/2
-         rkjAYl19WKJUesKyZF3cH69dmzqPrl7r1l6gPcu7Yf7pNKYQfxKsBzFqiomy871HFTk2
-         IsM0FBgb5884ryFQsSR2GU0mmARJWoWxbhkxcDfVvhgrDF4ciPS2mvUplIAr3waUmh1k
-         NFWrzTTVEX7Ybq+pxGLStlsH4d9QDGuhX8p5IgTKRLi6nviVhgEIf2E6b/OOd4DRxYN+
-         kpvZzsJXzDEu6WN0asWvbQk6FI2ZUtvKXby8qv3fCR/Wx1zkv1fZWUlA5HlhtQSRFJNZ
-         yNxQ==
+        d=gmail.com; s=20230601; t=1750704460; x=1751309260; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lX1PV8eCj+w6gmSly9JqA8eydGEbPW07Za33Kr6VYKg=;
+        b=XsFDKzkJbXZnydEav58Q+qn0vjRH4WgC2zpjMg8QNLUtPuJJ3MOz/n4z4je7ZZuExG
+         m6f9HmS+H/CKAEGaVa+Jq+fUZ7WzLd9RiRCRQm7a0iriCioO1rH/eBb2/lbclurMChgb
+         o0WDSow9uvtAI6MbgD8bBwxpesesc7NLjdGg4ixknWj0NUE/0h+IPJDV0P+tCnqx4kr5
+         sjgNSvFMdvo4Xr1TsVl2nBIjx3pmCR43gk41BRbDAqaNlsYM9o7DM8wE4k0P6aQZPCjM
+         +Siq7xQCvpKJvoBQ2WBGssdMvLHztNdnoBTtBh3WPsHaHJM16RYOEmiZOk1axBgedGXf
+         DvCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750704343; x=1751309143;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jB4MKuZY+Ffi3QK7qpUEThxOxdtk8engxwoxg/tQK+M=;
-        b=HHkmybVd9KTFsavbLHMC7K92QbsBiEoqg0ygfA7NDJyoOpGdR9zkWDBes0CE4uuVOf
-         51/W7DvvrFhwUD9YBlcBdW3LI1N1oBtnRbbad0J4ibLFGjyIqVuJE6eHh0FL7++hnbYk
-         xuXgsBsJS+11XsUQH1tfdVmkos4hwFlSRplfNQ2AidKGX2AXWdV28U0OEYT1RPpq7AIs
-         yVdcm1CNSHghGGXjOAMcb9C3jSNzHI3mkvI0g5ve8gqDiOQ3KgTUCY5OxdZqUCYaJzqq
-         wrpIOHp9Mro6uVWxtLp29YHUWjpC82zoCyMf/9eUFfoXSCYvG+rpy6DXQqxrJEgXldHS
-         mzKA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8ke20SSNLi0TCZQ3hVXUeXIbbfkMOrLJx2U64gEE2TB0S8ub6yG0zdyTV5sPyxq6a+segerEeGJgG13o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzILrjrJPsFIquTiHbp3tZGXiGjEu5j2orPV/h+KJg+2XdfdR5H
-	2LMew2HxbG3NF02R9zbW0MQdB0PGrudYNvb/wGLkTY+X9NgGgsOsVhN+KJ5aRLmHUR0=
-X-Gm-Gg: ASbGncs9RE7qS9ouGIkzXMxFTNWfQ77ix0qpvmlngnIfiUrr24y7pRYCdd/h0n1dmJf
-	ZhexLpK8DwFjhVs6L1m2M4fTV+FwbLaf2ohb1gMVq87hMmGBr0DLwePeAM9pYdMXg6cbOUS4rsp
-	SSxrwrlwRA4geD9qegdwmhEL7zSJ+y/8nAqPfYpb/yrPW3mDZlIeqhZDxHJUQcWQHfkUT5mNHLU
-	RWt7gbyMlEJFoXDl6Va/Ee1dHbKE6ZlYSQuMmlehcZvn2rxsANgabbsXDRhOs2359J1MiaZSWFH
-	wtlDRcx9x3kqSnwoIbpcDeozO3KsgEfKa/IpA/lO70k9vRXoG0djIyxKtjkTD46zRIcyHxqFteM
-	IY5M9SxOTJW16rTGDFiiV9Rln
-X-Google-Smtp-Source: AGHT+IHDRPumMTiGBj2bKfNpuQzAm+7VlyB5Tr2Ge/4ynqkxj9vUq5oRX4iaFtPKRy4untvXuea0VQ==
-X-Received: by 2002:a05:6000:40e1:b0:3a4:f607:a5ad with SMTP id ffacd0b85a97d-3a6e7206acfmr430150f8f.19.1750704343074;
-        Mon, 23 Jun 2025 11:45:43 -0700 (PDT)
-Received: from ?IPv6:2804:5078:805:6b00:58f2:fc97:371f:2? ([2804:5078:805:6b00:58f2:fc97:371f:2])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a6ca165sm9303644b3a.172.2025.06.23.11.45.38
+        d=1e100.net; s=20230601; t=1750704460; x=1751309260;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lX1PV8eCj+w6gmSly9JqA8eydGEbPW07Za33Kr6VYKg=;
+        b=cI3iV8Ww52UW3z5YGlNhWQ70UKRp+lg02Ke+t9Nnmvjiep9SWIIuT41KHVZ4ciyDmb
+         uW3+Z7JZh7xlmGpoELdAkttW+oyxW9YKHxPJUm4U/SoRTNVAIdf2Ora0YxFgk94JVPVW
+         AwjkrHuS55RtrkWCD0sKCnUAiWhsnV9gamEZsexRsa5xpJMFLwm9fMiv95H0SNYMkCgr
+         n+APsEv3OIhLwMpq8wxYY/X5ZE5ltomfW0y/aylKT4dlNJdYAPbXZ94C/S+3uM8lWr2S
+         34yxT7PWY0j6gkI7xazNkEzH9WNF4J24+Ed18baJDAy4glPZljTdvb1Xyxm442vh314e
+         MT8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWAGAdhd1uudTXtXcYoq/mjDQnd6rfFGjYLpNYEBYgLPraemANTeIPwA7TwAfwtFJVBgscGpcyIIsaYHVnk@vger.kernel.org, AJvYcCWeApr8ad0v/pEu6tMJbDIJWiefJ3ytgQeJnIXwfc8RONS/GHcLVPmSnsRWVLKbAxnCAj2nOVhV+Av1ox5H@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywv3M+UCTuIbOhxoerma4f0/IVej4yLIf75idWfsTEGd4gedfWx
+	+b1ouawJJ+M0XdqoVF4alZ3/ujtPuy5gsjaliYIPuYJ3FTnDvCg+/6o9
+X-Gm-Gg: ASbGncvhxRfqekTIbph/4lgvD01SspLZ8BbHSDjsiCJgya8UlRzdYLhSK3u6x5t21uI
+	BPUhiugjc6fGUSBqhw/KwvbCcaDgeKR/ykWdtQ8nGlU7h4K5/aE3jXWZ5jYkDN28vsBah4m+/bn
+	nZO9pg1O94+AxGq/B3i8eSy2xCPby5wNBlImUeM0to7DovUPVI3Rtnksk8WXSVz9LBf09DXKxbI
+	56d7d2tIDqgUAuul3egz5U1p8119cCsWgciUxNVV3M29H4WKYwgSEd1SLBD4SUGCy98Oc7+f1mJ
+	8XrlHrLfhdylEoXYPNqpSPgqqV/HzkaY36RXG3+8ETZvBD0hHo5RK1wxQoIZs/r8/17EInJhPwK
+	wduIz+cioFmmjXcVxZE7bCW/TPfE=
+X-Google-Smtp-Source: AGHT+IG+q7JDDjJJiD6LIsW+SwYhlGS8aClQvrcI6niGs17mM8MdIZ/h4GRG4ZubHXABG5IObcnk4g==
+X-Received: by 2002:a17:902:f64a:b0:235:6e1:3edf with SMTP id d9443c01a7336-237d9878c08mr226699925ad.34.1750704459951;
+        Mon, 23 Jun 2025 11:47:39 -0700 (PDT)
+Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:229b:2db5:edc5:d79f])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86150d8sm88037745ad.123.2025.06.23.11.47.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 11:45:42 -0700 (PDT)
-Message-ID: <49eed036f3c230d066ff44620c222fe5a2c3da1a.camel@suse.com>
-Subject: Re: [PATCH 1/7] printk: Make console_{suspend,resume} handle
- CON_SUSPENDED
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, John Ogness	
- <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>,
-  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
- <jirislaby@kernel.org>, Jason Wessel	 <jason.wessel@windriver.com>, Daniel
- Thompson <danielt@kernel.org>, Douglas Anderson <dianders@chromium.org>,
- Richard Weinberger <richard@nod.at>, Anton Ivanov	
- <anton.ivanov@cambridgegreys.com>, Johannes Berg
- <johannes@sipsolutions.net>, 	linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, 	kgdb-bugreport@lists.sourceforge.net,
- linux-um@lists.infradead.org
-Date: Mon, 23 Jun 2025 15:45:37 -0300
-In-Reply-To: <aEq9_kOoLSQwuYBq@pathway.suse.cz>
-References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
-	 <20250606-printk-cleanup-part2-v1-1-f427c743dda0@suse.com>
-	 <aEq9_kOoLSQwuYBq@pathway.suse.cz>
-Autocrypt: addr=mpdesouza@suse.com; prefer-encrypt=mutual;
- keydata=mDMEZ/0YqhYJKwYBBAHaRw8BAQdA4JZz0FED+JD5eKlhkNyjDrp6lAGmgR3LPTduPYGPT
- Km0Kk1hcmNvcyBQYXVsbyBkZSBTb3V6YSA8bXBkZXNvdXphQHN1c2UuY29tPoiTBBMWCgA7FiEE2g
- gC66iLbhUsCBoBemssEuRpLLUFAmf9GKoCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- QemssEuRpLLWGxwD/S1I0bjp462FlKb81DikrOfWbeJ0FOJP44eRzmn20HmEBALBZIMrfIH2dJ5eM
- GO8seNG8sYiP6JfRjl7Hyqca6YsE
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (by Flathub.org) 
+        Mon, 23 Jun 2025 11:47:39 -0700 (PDT)
+From: I Hsin Cheng <richard120310@gmail.com>
+To: robin.clark@oss.qualcomm.com
+Cc: lumag@kernel.org,
+	abhinav.kumar@linux.dev,
+	jessica.zhang@oss.qualcomm.com,
+	sean@poorly.run,
+	marijn.suijten@somainline.org,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	shuah@kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	I Hsin Cheng <richard120310@gmail.com>
+Subject: [RFC PATCH] drm/msm: Remove dead code in msm_ioctl_gem_submit()
+Date: Tue, 24 Jun 2025 02:47:34 +0800
+Message-ID: <20250623184734.22947-1-richard120310@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-06-12 at 13:46 +0200, Petr Mladek wrote:
-> On Fri 2025-06-06 23:53:43, Marcos Paulo de Souza wrote:
-> > Since commit 9e70a5e109a4 ("printk: Add per-console suspended
-> > state") the
-> > CON_SUSPENDED flag was introced, and this flag was being checked on
-> > console_is_usable function, which returns false if the console is
-> > suspended.
-> >=20
-> > No functional changes.
->=20
-> I double checked potential functional changes. In particular, I
-> checked where the CON_ENABLED and CON_SUSPENDED flags were used.
->=20
-> Both flags seems to have the same effect in most situations,
-> for example, in console_is_usable() or console_unblank().
->=20
-> But there seems to be two exceptions: kdb_msg_write() and
-> show_cons_active(). These two functions check only
-> the CON_ENABLED flag. And they think that the console is
-> usable when the flag is set.
->=20
-> The change in this patch would change the behavior of the two
-> functions during suspend. It is later fixed by the 3rd and 4th
-> patch. But it might cause regressions during bisections.
->=20
-> It is probably not a big deal because the system is not much
-> usable during the suspend anyway. But still, I would feel more
-> comfortable if we prevented the "temporary" regression.
->=20
-> I see two possibilities:
->=20
-> =C2=A0=C2=A0 1. Merge the 3rd and 4th patch into this one. It would chang=
-e
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 the semantic in a single patch.
+According to the report of Coverity Scan [1], "sync_file" is going to be
+NULL when entering the "if" section after "out_post_unlock", so
+"fput(sync_file->file)" is never going to be exected in this block.
 
-I liked the suggestion, I'll do it in the next revision. Thanks for
-looking into it!
+[1]: https://scan5.scan.coverity.com/#/project-view/10074/10063?selectedIssue=1655089
+Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+---
+ drivers/gpu/drm/msm/msm_gem_submit.c | 2 --
+ 1 file changed, 2 deletions(-)
 
->=20
-> =C2=A0=C2=A0 2. First update kdb_msg_write() and show_cons_active()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 to check both CON_ENABLE and CON_SUSPENDED=
- flags.
->=20
-> The 1st solution probably makes more sense because we are going
-> to remove the CON_ENABLE flag in the end. And even the merged
-> patch is small enough.
->=20
-> Best Regards,
-> Petr
+diff --git a/drivers/gpu/drm/msm/msm_gem_submit.c b/drivers/gpu/drm/msm/msm_gem_submit.c
+index d4f71bb54e84..cba1dc6fe6c6 100644
+--- a/drivers/gpu/drm/msm/msm_gem_submit.c
++++ b/drivers/gpu/drm/msm/msm_gem_submit.c
+@@ -904,8 +904,6 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
+ out_post_unlock:
+ 	if (ret && (out_fence_fd >= 0)) {
+ 		put_unused_fd(out_fence_fd);
+-		if (sync_file)
+-			fput(sync_file->file);
+ 	}
+ 
+ 	if (!IS_ERR_OR_NULL(submit)) {
+-- 
+2.43.0
+
