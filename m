@@ -1,140 +1,245 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D9C2417F2;
-	Mon, 23 Jun 2025 15:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD8F728A726;
+	Mon, 23 Jun 2025 15:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750691683; cv=none; b=avYAQGcj+GL4S6OzjSF06z2I4HplH4OzRvQqMN/v1TOqGHXTV/0WD2qiWyRzBF+MDi2dUsi1coygZFLjdsdj7YRY+oOp7rQTOaDXzkEhYf0BuR+tnmVsJwB1zftNXbVzeM/FvWiwm8tCYfJsszCzs4T2fHisGIfkoPDa9o4BHVc=
+	t=1750691688; cv=none; b=lnbBim8ay6CSvKUbUspG9S0xvspte9Ebo2sk+ErXGEzQrI7TxJviI0+1FPyt4IKUrzvMXyrey/KccQdo7WnHxUL3X1+6Xvu7pl/1Be3zv7+OaYEkhP0ijRZkx+c2dfKpyprXI9bjVnWfKr2WQqAHbJ/+DhPxpytxpdyUHkVqmnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750691683; c=relaxed/simple;
-	bh=H4OXV6xVIEzOfTYcR2qXyIESfMeFmsULCzausGED3rA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F12qqs7BHRG4SseCPwSCtH8DbjmT1C0ORcp4Z61fxEA+obgAAZR560MPUyV62eJ3nbsF7RFmWsvY+RVPBbf4yWHeKIx/4HkmCyTqHwB5eZaXyXrYgnRFqZIKEnZh1ix5DS2Lf+IwioJ00QoUpsEqEHaykH5Q6lXAmJFtG0Sqb/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ngGdxyJL; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ngGdxyJL"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b31fc7c27abso2722289a12.3;
-        Mon, 23 Jun 2025 08:14:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750691681; x=1751296481; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fJl0bofvsCNb/IhdYpO8yEuEs+fLAbcokn6DAhbWI2Y=;
-        b=ngGdxyJLkZdUk5uQrnMHjpVXUVzIlzIGAb/XOJ07ztICxzHbcCzW3gt/9V1M20zadL
-         kyB6pW9lKwVt8fW07PN1PiyeL6CGrJtdUBT+nUwKTMYh9T5MNihky9ocAzi7OfUhnzhQ
-         Do+g9x8tEJTHMMZ2PDaKcfaq4pq47bIn2MsP2dcuTxmsW+ME/elBLua2KYhSEN48gzUk
-         wWvlYt8hGyqEfChknvu/J5X1I/yL6OjBX5JCcyMzFJRvwdXjreORotydfwwlIrhhZh+K
-         W/Cp67pMsJmEosHBFv1TJqVhjq+hwJEgv15Hm9YheDeLbAlRA/O2VgSdQAWsBTphE8PC
-         CVKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750691681; x=1751296481;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fJl0bofvsCNb/IhdYpO8yEuEs+fLAbcokn6DAhbWI2Y=;
-        b=PbMn8IjdYXuyvzs6veRqhuwbNVNaMfvSlhYsiLcN8IoZLEWTMURovjdZfMBBjI8y45
-         BBBMPI2S6O42o2yn9GTVyNP7L8QgmnvBcWL9ePh/5YLsUX8SmTqwMbVYaGT8VgC4drdH
-         SlJY1JiW+drxfWPtPL0/ueoWJtqDm52cx/XhyZg0xbxGJjZMyz1La+KFsTikvuv3e6OZ
-         AuItNZvog3o15cH+WpmdB1tAdSMr+ebTvfYpUwTYUWrDb5sZ/67pvRYfAvYEklFdr0oQ
-         9ytbzaulmXBPOIcbs2jph9WzIBNe7FKkTtVTSIYrVZ18EJXfWYmupzzTKpXE+crHyONk
-         FiWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVE8LjyfgOB/fdVb+kETn8RejbXYehf9rL7Z68zh9o4wv49TgWNV+8+6/PWWwVYs1iBZOKsNfoX7x3+SkUlyw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsEnSrDhurqON5YUYyFxRLj+h96GMztl4Y8V0dPHjUh7cZBA+A
-	VXyTK/UfMN6S03EzWzPDpF1uJw0TSIZR7ia0ghDUBttNsxqnNDxNo8ZE
-X-Gm-Gg: ASbGncusyPwZPQlFgbKJ2I719gOijvVUX2lHaPSeoux7tx+Lh+wpbsPMUrfpdMi0d1F
-	aUj2rUlKGZhnc+6W9siQ+n6TXhMsBxCs8SFi7bm7n4NB89MYmgk12fsevRvQhfp+N3N1Qvhj8xV
-	4ll49Ld1B3uUNjyndYwtrH0ysJmQB96kJ9bHL0RMH0ZbrwegRXfDn6+7/35XyB/bmWqxn+KmNkh
-	DFcmdc1jUGMVTc491S/6zDFJAmqCrl7OCT9ufJ07sdE6VDs0zkFSvr+7QooafDNQdx0BMv4PNzs
-	qIMGIYUITNKmTdEFPWqM14a65RMqzb/faUDbrRL2qQrTB6vVFWS28zm1eAv/sLBH0aLFIQVxm3U
-	WBK0zklE=
-X-Google-Smtp-Source: AGHT+IGKsva6kVgzg4Cok11z5b+GUl9qeuWFMNPVQGJXb1rtZHDejue9tGLjW0VLzgTh0jN+h79VWQ==
-X-Received: by 2002:a17:90b:3d50:b0:311:a314:c2cf with SMTP id 98e67ed59e1d1-3159d8f7de2mr17582857a91.30.1750691681066;
-        Mon, 23 Jun 2025 08:14:41 -0700 (PDT)
-Received: from localhost.localdomain ([112.149.32.52])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159df71cd6sm8338512a91.4.2025.06.23.08.14.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 08:14:40 -0700 (PDT)
-From: Jesung Yang <y.j3ms.n@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	nouveau@lists.freedesktop.org,
-	Jesung Yang <y.j3ms.n@gmail.com>
-Subject: [PATCH 0/4] rust: add `FromPrimitive` support
-Date: Mon, 23 Jun 2025 15:14:26 +0000
-Message-Id: <cover.1750689857.git.y.j3ms.n@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1750691688; c=relaxed/simple;
+	bh=E9Fv6toRxKhDNaubeqQOetAlmqCsc7p7O2VyjX35bVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IN2KK1LAqVLfTh1fKT/b+r67GFE2nc/atPxqmJvD0j1KneaGkHf94jps2bufEY39SyNCcyGyESqIDxGezcaKRwm/Xsrptm4YVcE9SGsav4TqbdUoE9OA7Gcdcn9wyMeFhvqIY0S5gw2L/s0f80LTE17m4tQjTi/kOVdJ8jYjnwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C832113E;
+	Mon, 23 Jun 2025 08:14:27 -0700 (PDT)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0F7973F58B;
+	Mon, 23 Jun 2025 08:14:43 -0700 (PDT)
+Date: Mon, 23 Jun 2025 16:14:33 +0100
+From: Dave Martin <Dave.Martin@arm.com>
+To: Su Hui <suhui@nfschina.com>
+Cc: tony.luck@intel.com, reinette.chatre@intel.com, james.morse@arm.com,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] fs/resctrl: using guard to simplify lock/unlock code
+Message-ID: <aFlvTt+GGSIqgOKH@e133380.arm.com>
+References: <20250623112540.3581675-1-suhui@nfschina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623112540.3581675-1-suhui@nfschina.com>
 
-This patch series introduces a new `FromPrimitive` trait along with its
-corresponding derive macro.
+Hi,
 
-A few enhancements were made to the custom `quote!` macro to write the
-derive macro. These include support for additional punctuation tokens
-and a fix for an unused variable warning when quoting simple forms.
-Detailed information about these enhancements is provided in the
-relevant patches.
+On Mon, Jun 23, 2025 at 07:25:41PM +0800, Su Hui wrote:
+> Using guard() to replace *unlock* label. guard() is better than goto
+> unlock patterns and is more concise. No functional changes.
+> 
+> Signed-off-by: Su Hui <suhui@nfschina.com>
 
-While cleaning up the implementations, I came across an alternative
-form of the `FromPrimitive` trait that might better suit the current
-use case. Since types that implement this trait may often rely on just
-one `from_*` method, the following design could be a simpler fit:
+How were these cases chosen?
 
-    trait FromPrimitive: Sized {
-        type Primitive;
-
-        fn from_bool(b: bool) -> Option<Self>
-        where
-            <Self as FromPrimitive>::Primitive: From<bool>,
-        {
-            Self::from_primitive(b.into())
-        }
-
-        fn from_primitive(n: Self::Primitive) -> Option<Self>;
-    }
-
-This is just a thought and not something I feel strongly about, but I
-wanted to share it in case others find the idea useful. Feedback or
-suggestions are very welcome.
-
-The original discussion of FromPrimitive can be found on Zulip [1].
-
-[1] https://rust-for-linux.zulipchat.com/#narrow/channel/288089/topic/x/near/524427350
-
-Jesung Yang (4):
-  rust: introduce `FromPrimitive` trait
-  rust: macros: extend custom `quote!` macro
-  rust: macros: prefix variable `span` with underscore
-  rust: macros: add derive macro for `FromPrimitive`
-
- rust/kernel/convert.rs | 154 +++++++++++++++++++++++++++++
- rust/kernel/lib.rs     |   1 +
- rust/macros/convert.rs | 217 +++++++++++++++++++++++++++++++++++++++++
- rust/macros/lib.rs     |  71 ++++++++++++++
- rust/macros/quote.rs   |  46 ++++++++-
- 5 files changed, 487 insertions(+), 2 deletions(-)
- create mode 100644 rust/kernel/convert.rs
- create mode 100644 rust/macros/convert.rs
+I notice that this patch only handles some straightforward mutex_unlock()
+cases.  There are other opportunities in some places -- particularly
+alloc/free patterns.
 
 
-base-commit: dc35ddcf97e99b18559d0855071030e664aae44d
--- 
-2.39.5
+Overall, I'm not totally convinced that backporting the guard()
+infrastructure into code that wasn't originally written to use it is
+always worthwhile.
 
+If the code is simple, there is not much benefit.  Otherwise, there is
+a significant chance of unintentionally changing the behaviour of the
+code (though the exercise may be useful if it identifies actual bugs).
+
+Either way, such changes will get in the way of people who are rebasing
+on top of this code.
+
+[continues below ...]
+
+> ---
+>  fs/resctrl/monitor.c  | 25 ++++++++-----------------
+>  fs/resctrl/rdtgroup.c | 29 +++++++++--------------------
+>  2 files changed, 17 insertions(+), 37 deletions(-)
+> 
+> diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
+> index f5637855c3ac..12e999eb7ed8 100644
+> --- a/fs/resctrl/monitor.c
+> +++ b/fs/resctrl/monitor.c
+> @@ -769,10 +769,10 @@ static int dom_data_init(struct rdt_resource *r)
+>  	u32 idx_limit = resctrl_arch_system_num_rmid_idx();
+>  	u32 num_closid = resctrl_arch_get_num_closid(r);
+>  	struct rmid_entry *entry = NULL;
+> -	int err = 0, i;
+> +	int i;
+>  	u32 idx;
+>  
+> -	mutex_lock(&rdtgroup_mutex);
+> +	guard(mutex)(&rdtgroup_mutex);
+>  	if (IS_ENABLED(CONFIG_RESCTRL_RMID_DEPENDS_ON_CLOSID)) {
+>  		u32 *tmp;
+>  
+> @@ -783,10 +783,8 @@ static int dom_data_init(struct rdt_resource *r)
+>  		 * use.
+>  		 */
+>  		tmp = kcalloc(num_closid, sizeof(*tmp), GFP_KERNEL);
+> -		if (!tmp) {
+> -			err = -ENOMEM;
+> -			goto out_unlock;
+> -		}
+> +		if (!tmp)
+> +			return -ENOMEM;
+>  
+>  		closid_num_dirty_rmid = tmp;
+>  	}
+> @@ -797,8 +795,7 @@ static int dom_data_init(struct rdt_resource *r)
+>  			kfree(closid_num_dirty_rmid);
+>  			closid_num_dirty_rmid = NULL;
+>  		}
+> -		err = -ENOMEM;
+> -		goto out_unlock;
+> +		return -ENOMEM;
+>  	}
+>  
+>  	for (i = 0; i < idx_limit; i++) {
+> @@ -819,18 +816,15 @@ static int dom_data_init(struct rdt_resource *r)
+>  	entry = __rmid_entry(idx);
+>  	list_del(&entry->list);
+>  
+> -out_unlock:
+> -	mutex_unlock(&rdtgroup_mutex);
+> -
+> -	return err;
+> +	return 0;
+>  }
+>  
+>  static void dom_data_exit(struct rdt_resource *r)
+>  {
+> -	mutex_lock(&rdtgroup_mutex);
+> +	guard(mutex)(&rdtgroup_mutex);
+>  
+>  	if (!r->mon_capable)
+> -		goto out_unlock;
+> +		return;
+>  
+>  	if (IS_ENABLED(CONFIG_RESCTRL_RMID_DEPENDS_ON_CLOSID)) {
+>  		kfree(closid_num_dirty_rmid);
+> @@ -839,9 +833,6 @@ static void dom_data_exit(struct rdt_resource *r)
+>  
+>  	kfree(rmid_ptrs);
+>  	rmid_ptrs = NULL;
+> -
+> -out_unlock:
+> -	mutex_unlock(&rdtgroup_mutex);
+>  }
+>  
+>  static struct mon_evt llc_occupancy_event = {
+> diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
+> index 77d08229d855..73bc1ab05b5e 100644
+> --- a/fs/resctrl/rdtgroup.c
+> +++ b/fs/resctrl/rdtgroup.c
+> @@ -916,14 +916,13 @@ int proc_resctrl_show(struct seq_file *s, struct pid_namespace *ns,
+>  		      struct pid *pid, struct task_struct *tsk)
+>  {
+>  	struct rdtgroup *rdtg;
+> -	int ret = 0;
+>  
+> -	mutex_lock(&rdtgroup_mutex);
+> +	guard(mutex)(&rdtgroup_mutex);
+>  
+>  	/* Return empty if resctrl has not been mounted. */
+>  	if (!resctrl_mounted) {
+>  		seq_puts(s, "res:\nmon:\n");
+> -		goto unlock;
+> +		return 0;
+>  	}
+>  
+>  	list_for_each_entry(rdtg, &rdt_all_groups, rdtgroup_list) {
+> @@ -952,17 +951,13 @@ int proc_resctrl_show(struct seq_file *s, struct pid_namespace *ns,
+>  			break;
+>  		}
+>  		seq_putc(s, '\n');
+> -		goto unlock;
+> +		return 0;
+>  	}
+>  	/*
+>  	 * The above search should succeed. Otherwise return
+>  	 * with an error.
+>  	 */
+> -	ret = -ENOENT;
+> -unlock:
+> -	mutex_unlock(&rdtgroup_mutex);
+> -
+> -	return ret;
+> +	return -ENOENT;
+>  }
+>  #endif
+>  
+> @@ -4132,11 +4127,11 @@ int resctrl_online_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d)
+>  {
+>  	int err;
+>  
+> -	mutex_lock(&rdtgroup_mutex);
+> +	guard(mutex)(&rdtgroup_mutex);
+>  
+>  	err = domain_setup_mon_state(r, d);
+>  	if (err)
+> -		goto out_unlock;
+> +		return err;
+>  
+>  	if (resctrl_is_mbm_enabled()) {
+>  		INIT_DELAYED_WORK(&d->mbm_over, mbm_handle_overflow);
+> @@ -4156,10 +4151,7 @@ int resctrl_online_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d)
+>  	if (resctrl_mounted && resctrl_arch_mon_capable())
+>  		mkdir_mondata_subdir_allrdtgrp(r, d);
+>  
+> -out_unlock:
+> -	mutex_unlock(&rdtgroup_mutex);
+> -
+> -	return err;
+> +	return 0;
+>  }
+>  
+>  void resctrl_online_cpu(unsigned int cpu)
+> @@ -4202,7 +4194,7 @@ void resctrl_offline_cpu(unsigned int cpu)
+>  	struct rdt_mon_domain *d;
+>  	struct rdtgroup *rdtgrp;
+>  
+> -	mutex_lock(&rdtgroup_mutex);
+> +	guard(mutex)(&rdtgroup_mutex);
+>  	list_for_each_entry(rdtgrp, &rdt_all_groups, rdtgroup_list) {
+>  		if (cpumask_test_and_clear_cpu(cpu, &rdtgrp->cpu_mask)) {
+>  			clear_childcpus(rdtgrp, cpu);
+> @@ -4211,7 +4203,7 @@ void resctrl_offline_cpu(unsigned int cpu)
+>  	}
+>  
+>  	if (!l3->mon_capable)
+> -		goto out_unlock;
+> +		return;
+>  
+>  	d = get_mon_domain_from_cpu(cpu, l3);
+>  	if (d) {
+> @@ -4225,9 +4217,6 @@ void resctrl_offline_cpu(unsigned int cpu)
+>  			cqm_setup_limbo_handler(d, 0, cpu);
+>  		}
+>  	}
+> -
+> -out_unlock:
+> -	mutex_unlock(&rdtgroup_mutex);
+>  }
+
+[...]
+
+FWIW, this patch looks OK though, and the diffstat looks reasonable.
+Since this code was recently moved into fs/, diff context noise may be
+less of a concern.
+
+Cheers
+---Dave
