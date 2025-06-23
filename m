@@ -1,250 +1,165 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5071CD1F
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:26:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F791CD1F;
+	Mon, 23 Jun 2025 15:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750692375; cv=none; b=ZP6qE2jXtPiGA22zoGL9mmAmhDHlDJwXZ+fcfPc5oZVXvsp6uIrdsRSSvFxSF6msVyoaeP3O8ChkOu7KPuF9BsK+cEGMHnXU7Lc33VxhLNat+cNmmiAZFWVVVAhH6FKNsSfZ4NsmxNYQ1C8fOOwASoi7KqGWjJ5whtQSmlIkedI=
+	t=1750692379; cv=none; b=ZIvYoEhdYp5DSx24l7k5eauxupTbLFWD4KfpAzJcwEMU5EmS5trdIq9JzVw1Qg2Ek7kQlRWK6v93S8LqHZrObIPHBSWa1pzENwqqNtzv7G0fgY0sZDbc6pyzt5tH+UPearkAu7gSwUq73ixdRJqJQObTZMk9cfUyDxrpt5fzPME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750692375; c=relaxed/simple;
-	bh=9WkkSDw8tmOek/IeGfBmFEWN9Dq+68hL6BqxWrW4HDA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VWb7eWGytU9wSuNehyWVO6VACyspLpVqcejMzvO759ETmzL/fgDGtSOYrkeopWd8zb5+HT5FYdvKQkaqw61HL7gXr05e8WusxcTL7NyLRxEgxRcEHP6rOq0OjJE5INhPFVc9xT9gbkja6ns50Fu55u5Ahr6E7v3Kd76AvYvcv3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=euleBV4G; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750692379; c=relaxed/simple;
+	bh=+hXT9NgKl54nrfoBfadxq8ETqumOuW4V7oUlv+01yZI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=BmFZjwiqk/juWPO2+Q0QETpGHMf+KVpSWQA7gmTpeymyCDo1JJTNOpnweQK6PF3vgcO+UZzIIF5u17cWk+Lx+Tbz52eenDbOop9IuHZ8BLFQSWiHwzRw8EWbeps1nG7I1maJnOVcPXtNy5HEljmd0ruclmE7oZ7nnYMXIgvSs4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JxnO0C6b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="euleBV4G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750692372;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=LfnsJNwnopUCMOcQWvVWb39kYZClfhVnA47NiR2APjM=;
-	b=euleBV4G5ElbE5it8UQoxawprLlwn6RTMT22fnXyqL8tdeQcuervdLEWzTDIGwbL1kMjyQ
-	JNey9regQpRRDRN0TlWBvwkYZGuuF5MteWmJ1jRN7JSxn+Prgs4a0YS/AYyKdvIcm+JIcY
-	GO5VRQgt2j/hBFHnrSA6l3UvJlsDDs0=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-488-vzdx9POBM2ObV5GSvzIo2A-1; Mon, 23 Jun 2025 11:26:10 -0400
-X-MC-Unique: vzdx9POBM2ObV5GSvzIo2A-1
-X-Mimecast-MFC-AGG-ID: vzdx9POBM2ObV5GSvzIo2A_1750692370
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450eaae2934so37279455e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:26:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750692369; x=1751297169;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LfnsJNwnopUCMOcQWvVWb39kYZClfhVnA47NiR2APjM=;
-        b=L6rewNw2uox78HfXGWUgw2ElkxPQ5PXUOqAFrB0IFC5qzx/A4HdzAfK89jTxi8/oys
-         4FsIhkdsqdwRGlAIdTMCn8xWqvB74p4JnVzpDuX+Fvw4HAkP1sUtg/8Gk0t1vGA2edxc
-         WD9I30IGBA8ukWR+YYJRmfCNwrMtnufbQMHogkdiomg6pikj0+zh1jH1lO+XV9dzZdYf
-         wbE1QsYUHreITdSPXmvpi7+2QXb3RLBEVpPLz4OHxtrl8kUwwTmMXxqkPsoQQuntDLbe
-         Vm/kZRXoHLrjbV9LBqDmLvL/KZjM1/GIqx1cxYacuKQTmsfVlkBI+JnOdB+7fbUgkng1
-         AmOA==
-X-Gm-Message-State: AOJu0YxsHrRH1jpRAWx42/4aWgXM4oeqOBwcIQrgqO7oErbm7HLFByNw
-	N1whrZe9DTzRlWLNjywuZU8hyroKgg1cli4Tk+ZPZui+z7P190sgVd9IdWAafiqacXFjrkEse2R
-	u3Qq1RXCcZz6o3PvGRVrmKO+K+6HDzGV+/MAnHsdsSpBQi8W7jigFFFqaH/eqL1e1zA==
-X-Gm-Gg: ASbGncv6JiL303UtjxNMy87lWi3y6TvGOKvjRHkvUWHjVHnhH30jPre9fI5eOWx95GT
-	yfGHU0RFJ6uJkQo6h/ox5JdHRmJLBkcMLoV6VjsbEiEXJme6qDlqmreOP6sxq8qAF0dgc13hLbm
-	h6KY3okg8pv3qhL2HkDkpmq3j5Kv45hw9nUAn0Aayve5VU0UbukxB0e0qXX2gO5FJoM4Sm5GKqv
-	CxGPVxJjyFAGEOoM7jz1/JeTpjHmQukhfX2H9EuoSH4yqPZpTRiNdCSXawsH5JFe8cyok+Mn6rx
-	XukDoXOmM8R77mSOfbMMLP47DvkC5I0d//1hUmZ4Kerml4L5Ls2IrLkYqrysYrpHEkpYTDDkwF/
-	RwaHJgff68ihBnqIsPGAl1VqpYgsQXub/BraGCvKf0xthtC6mwA==
-X-Received: by 2002:a05:600c:c48e:b0:453:8a6:d8de with SMTP id 5b1f17b1804b1-453659c483emr103725405e9.1.1750692369560;
-        Mon, 23 Jun 2025 08:26:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGNRVVyXINDL7jZY1JkLGKvD6g8kads4JqMObyTsbdAPuaz4KvSAWgxOrlnqAthyUwCZZZneA==
-X-Received: by 2002:a05:600c:c48e:b0:453:8a6:d8de with SMTP id 5b1f17b1804b1-453659c483emr103725115e9.1.1750692369103;
-        Mon, 23 Jun 2025 08:26:09 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159? (p200300d82f4efd008e13e3b590c81159.dip0.t-ipconnect.de. [2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4536470826fsm112280375e9.36.2025.06.23.08.26.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 08:26:08 -0700 (PDT)
-Message-ID: <18ef9192-168f-4d07-a29a-952f2ce3a4f0@redhat.com>
-Date: Mon, 23 Jun 2025 17:26:05 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JxnO0C6b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D822AC4CEEF;
+	Mon, 23 Jun 2025 15:26:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750692379;
+	bh=+hXT9NgKl54nrfoBfadxq8ETqumOuW4V7oUlv+01yZI=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=JxnO0C6bM+y5mdsqgVRs6SRVQiKmcNmRb2yI+wAPQSM6DDHueeuhxpQ6IP4ocbp8c
+	 X6RfZr128BtMRyabHNVxToqBNi34raB6iTkfilIYgOheIfPxjKD3Gsvd3vMLJJgtw5
+	 G9eqIXf40iVMXZRYibCpCUhV7hfn7f83khSgSuQQghbW/BdWuCZ65x13tDmTH781M1
+	 49KaoKy8Ibpd1dqP8tYndEwEus+zBNekkJdor0Cz3ngn/LaTPRJ5xt51H4ke/txB3g
+	 30EZzcOS+fzarwnHX/9cFzXQV1X1mndQS6BZuwl09lYlwxYDXLo6GHF/SDbZNHWJNc
+	 YBz4VT1/Wm5GQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 04/29] mm/page_alloc: allow for making page types
- sticky until freed
-To: Zi Yan <ziy@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Minchan Kim <minchan@kernel.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
- Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin
- <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
- Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
- Shakeel Butt <shakeel.butt@linux.dev>
-References: <20250618174014.1168640-1-david@redhat.com>
- <20250618174014.1168640-5-david@redhat.com>
- <D80D504B-20FC-4C2B-98EB-7694E9BAD64C@nvidia.com>
- <D718A3EA-89E2-4AD8-A663-2DDA129600C4@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <D718A3EA-89E2-4AD8-A663-2DDA129600C4@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 23 Jun 2025 17:26:14 +0200
+Message-Id: <DAU0NHTHTDG4.2HNEABNAI8GHZ@kernel.org>
+Subject: Re: [PATCH v4 3/6] rust: irq: add support for non-threaded IRQs and
+ handlers
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Alice Ryhl" <aliceryhl@google.com>, "Danilo Krummrich"
+ <dakr@kernel.org>
+Cc: "Daniel Almeida" <daniel.almeida@collabora.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Trevor Gross" <tmgross@umich.edu>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Thomas Gleixner" <tglx@linutronix.de>, "Bjorn
+ Helgaas" <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com> <20250608-topics-tyr-request_irq-v4-3-81cb81fb8073@collabora.com> <aEbJt0YSc3-60OBY@pollux> <CAH5fLghDbrgO2PiKyKZ87UrtouG25xWhVP_YmcgO0fFcnvZRkQ@mail.gmail.com>
+In-Reply-To: <CAH5fLghDbrgO2PiKyKZ87UrtouG25xWhVP_YmcgO0fFcnvZRkQ@mail.gmail.com>
 
-On 18.06.25 20:08, Zi Yan wrote:
-> On 18 Jun 2025, at 14:04, Zi Yan wrote:
-> 
->> On 18 Jun 2025, at 13:39, David Hildenbrand wrote:
+On Mon Jun 23, 2025 at 5:10 PM CEST, Alice Ryhl wrote:
+> On Mon, Jun 9, 2025 at 12:47=E2=80=AFPM Danilo Krummrich <dakr@kernel.org=
+> wrote:
+>> On Sun, Jun 08, 2025 at 07:51:08PM -0300, Daniel Almeida wrote:
+>> > +        dev: &'a Device<Bound>,
+>> > +        irq: u32,
+>> > +        flags: Flags,
+>> > +        name: &'static CStr,
+>> > +        handler: T,
+>> > +    ) -> impl PinInit<Self, Error> + 'a {
+>> > +        let closure =3D move |slot: *mut Self| {
+>> > +            // SAFETY: The slot passed to pin initializer is valid fo=
+r writing.
+>> > +            unsafe {
+>> > +                slot.write(Self {
+>> > +                    inner: Devres::new(
+>> > +                        dev,
+>> > +                        RegistrationInner {
+>> > +                            irq,
+>> > +                            cookie: slot.cast(),
+>> > +                        },
+>> > +                        GFP_KERNEL,
+>> > +                    )?,
+>> > +                    handler,
+>> > +                    _pin: PhantomPinned,
+>> > +                })
+>> > +            };
+>> > +
+>> > +            // SAFETY:
+>> > +            // - The callbacks are valid for use with request_irq.
+>> > +            // - If this succeeds, the slot is guaranteed to be valid=
+ until the
+>> > +            // destructor of Self runs, which will deregister the cal=
+lbacks
+>> > +            // before the memory location becomes invalid.
+>> > +            let res =3D to_result(unsafe {
+>> > +                bindings::request_irq(
+>> > +                    irq,
+>> > +                    Some(handle_irq_callback::<T>),
+>> > +                    flags.into_inner() as usize,
+>> > +                    name.as_char_ptr(),
+>> > +                    slot.cast(),
+>> > +                )
+>> > +            });
+>> > +
+>> > +            if res.is_err() {
+>> > +                // SAFETY: We are returning an error, so we can destr=
+oy the slot.
+>> > +                unsafe { core::ptr::drop_in_place(&raw mut (*slot).ha=
+ndler) };
+>> > +            }
+>> > +
+>> > +            res
+>> > +        };
+>> > +
+>> > +        // SAFETY:
+>> > +        // - if this returns Ok, then every field of `slot` is fully
+>> > +        // initialized.
+>> > +        // - if this returns an error, then the slot does not need to=
+ remain
+>> > +        // valid.
+>> > +        unsafe { pin_init_from_closure(closure) }
 >>
->>> Let's allow for not clearing a page type before freeing a page to the
->>> buddy.
->>>
->>> We'll focus on having a type set on the first page of a larger
->>> allocation only.
->>>
->>> With this change, we can reliably identify typed folios even though
->>> they might be in the process of getting freed, which will come in handy
->>> in migration code (at least in the transition phase).
->>>
->>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>> ---
->>>   mm/page_alloc.c | 3 +++
->>>   1 file changed, 3 insertions(+)
->>>
->>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->>> index 858bc17653af9..44e56d31cfeb1 100644
->>> --- a/mm/page_alloc.c
->>> +++ b/mm/page_alloc.c
->>> @@ -1380,6 +1380,9 @@ __always_inline bool free_pages_prepare(struct page *page,
->>>   			mod_mthp_stat(order, MTHP_STAT_NR_ANON, -1);
->>>   		page->mapping = NULL;
->>>   	}
->>> +	if (unlikely(page_has_type(page)))
->>> +		page->page_type = UINT_MAX;
->>> +
->>>   	if (is_check_pages_enabled()) {
->>>   		if (free_page_is_bad(page))
->>>   			bad++;
->>> -- 
->>> 2.49.0
->>
->> How does this preserve page type? Isn’t page->page_type = UINT_MAX clearing
->> page_type?
-> 
-> OK, next patch explains it. free_pages_prepare() clears page_type,
-> so that caller does not need to.
-> 
-> I think the message is better to be
-> 
-> mm/page_alloc: clear page_type at page free time
-> 
-> page_type is no longer needed to be cleared before a page is freed, as
-> page free code does that.
-> 
-> With this change, we can reliably identify typed folios even though
-> they might be in the process of getting freed, which will come in handy
-> in migration code (at least in the transition phase).
+>> Can't we use try_pin_init!() instead, move request_irq() into the initia=
+lizer of
+>> RegistrationInner and initialize inner last?
+>
+> We need a pointer to the entire struct when calling
+> bindings::request_irq. I'm not sure this allows you to easily get one?
+> I don't think using container_of! here is worth it.
 
+There is the `&this in` syntax (`this` is of type `NonNull<Self>`):
 
-I'll change it to
+    try_pin_init!(&this in Self {
+        inner: Devres::new(
+            dev,
+            RegistrationInner {
+                irq,
+                cookie: this.as_ptr().cast(),
+            },
+            GFP_KERNEL,
+        )?,
+        handler,
+        _pin: {
+            to_result(unsafe {
+                bindings::request_irq(
+                    irq,
+                    Some(handle_irq_callback::<T>),
+                    flags.into_inner() as usize,
+                    name.as_char_ptr(),
+                    slot.as_ptr().cast(),
+                )
+            })?;
+            PhantomPinned
+        },
+    })
 
-     mm/page_alloc: let page freeing clear any set page type
-     
-     Currently, any user of page types must clear that type before freeing
-     a page back to the buddy, otherwise we'll run into mapcount related
-     sanity checks (because the page type currently overlays the page
-     mapcount).
-     
-     Let's allow for not clearing the page type by page type users by letting
-     the buddy handle it instead.
-     
-     We'll focus on having a page type set on the first page of a larger
-     allocation only.
-     
-     With this change, we can reliably identify typed folios even though
-     they might be in the process of getting freed, which will come in handy
-     in migration code (at least in the transition phase).
-     
+Last time around, I also asked this question and you replied with that
+we need to abort the initializer when `request_irq` returns false and
+avoid running `Self::drop` (thus we can't do it using `pin_chain`).
 
+I asked what we could do instead and you mentioned the `_: {}`
+initializers and those would indeed solve it, but we can abuse the
+`_pin` field for that :)
 
-
--- 
+---
 Cheers,
-
-David / dhildenb
-
+Benno
