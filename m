@@ -1,99 +1,92 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040E43FB1B;
-	Mon, 23 Jun 2025 23:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D927229B16;
+	Mon, 23 Jun 2025 23:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750720462; cv=none; b=BddxEIkWBxxKFrDTlgVLPVZuyPvOHZYym2GbQvXXWpjLJuqvezxwMgyPhLY5/hcecVKFUODdaJrNHDVMIDb2H0y64a0rnm1wC2g2YsyQ8Z3b/xkH1AzK3yvA/Oixg5JQKK9fpvwkK7fNRR2/t3/hf1Vt0HlafYP/wPL2SrTpNfg=
+	t=1750720489; cv=none; b=cqQdnTORY9devEwbqKWJvPBhq05/8I8aBYiYSPeHrZugQ3fw39I7/54z3nXjzG3yBV2/mz99gHlL5NafUSWrSAl70PtBYbEIHr4QSSmjrbw8KWvPjVGNs/OFcYbBB4LRJELmQdUNnyyRB4M2p5Tc+oZf9tzEFm3zTo8a0Fy+7fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750720462; c=relaxed/simple;
-	bh=qZfM3+qxtQpx6gfqjvivz5oVhIMPAwRL0sy7SYW70eo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RAjGoqod7l4mZjocYo3iNqUd1OpJPe4QmtAh+dCoWuoW+TFrFvPCXnAn1s89hz5z+rH5m0QUkWvytmQwVGmD95RCnyk8aDdBiXpeVarEvELTCM673Ww4dHqIPi69uY6GCG3OZIK7MuWmjXv+pPZnfF+4CeTLKdkm4UGnyjMfqa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DzZ775JC; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750720489; c=relaxed/simple;
+	bh=6LzesJl0kmLg/Yoa6T382QmQxVwEVUfX/TAiShEDAEk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=d0XE20wF3ozcv8vQt4vvCu7MajwhsT3jZUZBkB9dvWvLuhz8/D2TooaTW3S5PpNHWlf/9CAdj/YUmHToP9VZlzCPW3dBCcg2EJiI2fMOGruVCM7vshsvJixVDxiHvmwQrXgb2JAfECukiHQz2QBNZtjZD+BIygXyXI5Dplb+pwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kMx7Wr4f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DzZ775JC"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-313756c602fso540903a91.3;
-        Mon, 23 Jun 2025 16:14:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750720459; x=1751325259; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sngl8tyAMi3uwXk0DJtqeHxatiEd8iNe6qf5tHF3BoE=;
-        b=DzZ775JC1WEsIo3UR6y3mkDzESljWtO3gxBTxss3N8usEHSuxVRWOZOUt3AA236kJS
-         nJrhvvx9AfwN5vrDg9AiIRFkQJfBQ+Saaydk824GksqsGSzE4FaBi1WT+Nc9aYdsZG+r
-         2QBRIkt/3nOxSZ4CGoPkT/IxybBLIAHP1zdEb1OKWS4JL9gKe28XuASj4IiyW4+T4PYx
-         x34SUQZJgkvR9zlOiAu5vwXb/dFL/s1/QgRr3rq5DoIKlHJn0FQuohGO4r0kX9wLKbwH
-         u44ZExUjNuA5BMX1gsoMeSjNODVvzMjfiIHBEDcsL49qdX/WmUHXR73ZJ2rpx3UgB+ys
-         6edg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750720459; x=1751325259;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sngl8tyAMi3uwXk0DJtqeHxatiEd8iNe6qf5tHF3BoE=;
-        b=IJKLOyK2QlbXaszjPlqrbzLOP8xTnSXeeb1Iix3tnrabJO54SmgehjsUfciXkVhaOb
-         RsT1pvRP9eY7DQjG9xuck1jBt8RPiKqqzQKgr6ql1J49DBylogryjYsgDeCWNhwxQD9l
-         tOcnghx+qOfZCVrI7HMV+CM1gGfFo0eP+3NZLrgJaslHCLbX8HRQqpUJU8mB3LbMDkFr
-         TtW1J0TiyVQnf4zNTZ08/G4Sd9nJx/PP0IAvMNtg4wCe8i+k/vDIXhhcEn+5Zdcqu3eI
-         BFv8Us+4PK5PYBR2RYrX5xyKQYCXnfe3LBLL6d4yGZv4S7k7uI/fDpCbsoCBnca5rMWc
-         UI5A==
-X-Forwarded-Encrypted: i=1; AJvYcCVkcLTl+HXjuuJGIuhF0t6KTAHO8zoiHypCrckOCj96gdarDjpAnUELHTV3Mq2iDE0PZoD6HQ3uDtyzafA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCQb4y5WjlPnART8byPR4SJMEoLMn7fluTlZj0ef5cFASOJ2U6
-	WF2e5SBToYKGTeYcbXvkPcfaqtI+hXxwvk0Zem2CQd5vyhBIGT5nIlH7D1sH68ocPVLxhlm/4Lh
-	7wnfHGxM6t7Ig8UB339b1JblpCNef5Io=
-X-Gm-Gg: ASbGncu0CrQ/CiInDTA7R5JXx70Gv0STEyjgWxCwhiVeAOxGoEadsocTjb66NmkcfB+
-	+hVQXSk0vlq5QKhkNB57dL1JQGW+HzaZuH/ygaSOU1QkSqnzquNOCMJB50Aflo5w8NQ1QaFt3vN
-	5b09Fhxjs8ib875YoyDTxK21KA37ZfWVBs/pUK41WW6dc=
-X-Google-Smtp-Source: AGHT+IGZ3tiVKlkXWPqLG9MnXGdRjgQCZE/XhXvv2PUbhwLgT2jcWW3+NJWC5d8bHaCU0LTeg5qzWb4swSkwpApQ02s=
-X-Received: by 2002:a17:90b:17cb:b0:311:c5d9:2c8b with SMTP id
- 98e67ed59e1d1-3159d8e05f7mr8360421a91.5.1750720459212; Mon, 23 Jun 2025
- 16:14:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kMx7Wr4f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72C9BC4CEEA;
+	Mon, 23 Jun 2025 23:14:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750720488;
+	bh=6LzesJl0kmLg/Yoa6T382QmQxVwEVUfX/TAiShEDAEk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=kMx7Wr4fbnk/OW/YvdljcMwfmBjZhDh0Q/9ALni+SFRZvk8ogsIogtkBFck15xHZs
+	 oKelFlmsXQgR7XLJoiMShq98NGyWzsGi7AuplNLuw0GdmkYKB7U4Rxnj+60kW6CDHi
+	 W0YJVlA5fFOMFPdnbucDFKkLuR8ILnblAy0jY/4Sc9O1jG7MfuQ3oxjwOYrwAhpMMZ
+	 4ALzWQ/bHaLnLeUJqada7xvk/desc+kQCG5Tq8tbdpbxpNb9qk0XliDwBklYtFLk/2
+	 FzxBBOzRttdHDDi9xHVtjWYATXb7IrOzaj6ybNDVcb4CLu1oU4tNuFtGpBMu7lbZyf
+	 SANU2FJJvYBvw==
+Date: Mon, 23 Jun 2025 18:14:47 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
+Subject: Re: [PATCH v2 stblinux/next 2/2] clk: rp1: Implement remaining clock
+ tree
+Message-ID: <20250623231447.GA1450188@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602164923.48893-2-saivishnu725@gmail.com>
-In-Reply-To: <20250602164923.48893-2-saivishnu725@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 24 Jun 2025 01:14:06 +0200
-X-Gm-Features: Ac12FXyqZ3g-1ON5fFexR90xH35tHfSbVnzNE1OtPfzOPTL7_G5-x-04YBhAohU
-Message-ID: <CANiq72=drJrCgfrFyyDOKiEANPMsOEMxbwJhcqhPWEchjAvm3g@mail.gmail.com>
-Subject: Re: [PATCH v4] rust: doc: Clean up formatting in io.rs
-To: Sai Vishnu M <saivishnu725@gmail.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org, 
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, 
-	dakr@kernel.org, gregkh@linuxfoundation.org, daniel.almeida@collabora.com, 
-	me@kloenk.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <17e5c6e0c085cfa0bf4b63b639cdc92c6a4c1418.1750714412.git.andrea.porta@suse.com>
 
-On Mon, Jun 2, 2025 at 6:51=E2=80=AFPM Sai Vishnu M <saivishnu725@gmail.com=
-> wrote:
->
-> From: Sai Vishnu M <saivishnu725@gmail.com>
->
-> Removed reference to internal variables in the comment of `IoMem`
-> This avoids using private variable names in public documentation.
->
-> Reported-by: Miguel Ojeda <ojeda@kernel.org>
-> Closes:  https://github.com/Rust-for-Linux/linux/issues/1167
-> Signed-off-by: Sai Vishnu M <saivishnu725@gmail.com>
+On Mon, Jun 23, 2025 at 11:46:28PM +0200, Andrea della Porta wrote:
+> The RP1 clock generator driver currently defines only the fundamental
+> clocks such as the front PLLs for system, audio and video subsystems
+> and the ethernet clock.
+> 
+> Add the remaining clocks to the tree so as to be completed, which means
+> that the following RP1 peripherals could now consume their specific clocks
+> and be enabled to work (provided that the relevant driver changes for each
+> specific peripheral, if any, are committed):
+> 
+> - ADC
+> - Audio IN/OUT
+> - DMA controller
+> - I2S
+> - MIPI DPI/DSI
+> - PWM
+> - SDIO
+> - UART
+> - Video Encoder
 
-Applied to `rust-next` -- thanks!
-
-    [ Reworded title and adjusted tags. - Miguel ]
-
-Danilo: you originally added this, so if you are against this one,
-please let me know.
-
-Cheers,
-Miguel
+Thanks for this detail, that's exactly what I hoped for!
