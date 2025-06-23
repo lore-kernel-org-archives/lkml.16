@@ -1,296 +1,172 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3F7188CC9
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5EE188CC9
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750679805; cv=none; b=fKIAwV87OW40KRVB59LLsFD79qvsHX5/lSu71hz47OcUPwJJHvcqtz3Xdcv/RmytV+Ai7ypl58TrhvvLOH9Oq0m5t3gqrpbIfbxKxqCOo7D6L+3uysgywBKyF+K2QO479T3qYSWktJBL7GX30ixJ85vPkn9JVX9vd4w/8zEWSr0=
+	t=1750679886; cv=none; b=U0D6nFonSFB7nlMPeQl3P6u67fwvWbncl/hjHqYUoqmP7iPVqP9MZwuaMYZMDs8rzQrSXCLHR7vrdqd1NjHxHFpggQRgdNAq8kT9DWe1+QHQEdk9WRPC/i0Ab/IQo+cQKRCOR0qAp5rgLAt7ROuvyf6G1CnwuUJVAt2Fl5aA528=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750679805; c=relaxed/simple;
-	bh=UbxiP1HMzgRKP4//469z6CJnvQrWp32Me/Ig5nIpoJo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jyZqlZLUqlh5ikGXAWnQgOPQvEKXkQsw1B5K0agTYP5DUTT75SRep3CzbkfcGUCBPg/g70lxZ9nioXTGP1PdFwV41n3wGzC0sqSnESt9aFkDdulQ7q43vswA6qUlb5Ess6a7aFo1oadiGPoP1aS6Ocy0/A7SGwg2UDIk9jqigQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MAL5Igze; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1750679886; c=relaxed/simple;
+	bh=72cjFCmD24Kj+63QGAd5ORmDyPkNVI1vAaJn25guyyw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Jb7vRJ7aturQsRLQQ3mXEEzg0AP7F73ATcS+z2cXhkRRuTH8lQwdov+a3S/MYM5qG3zXManZ/3fmXbEfYFjmZy8Yb919ItRDGefeHv/xGmrrytNwMSY1/8Cq8NvqPMpowpgGpeKqBiVlLJzjR1Q6cStfyFjgbF6Csy3piC5ua54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TGigCntQ; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MAL5Igze"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-45334219311so19831035e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 04:56:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750679802; x=1751284602; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WznfPCr3ji0Qd/N5x0pdDuthOqQFGi24UpC7Z0hlolI=;
-        b=MAL5IgzemLl1F9GKalaEsxRq6WVvyFphgHSRmEZgCiqbqbfQjawc/yQxNB9T2bXboK
-         0O/ee3jPMshAAj/yGbmDn3fLUTv+Ve/SQpH5nHK2apNJJW8ydY12EjKSjM9DlxGvUFiZ
-         Qk0ZZwMbeUPK+svNB0eoule9wdI9BriZE8Ja5ttg9TzvNjbkMElRM5CxOSUAnU4UnYOX
-         VlBWyET8LbaV1BRvnvWDACZDdmvDzG20sAJ1/EDW4VUTH7TPmnXi/RrBlum0WRXrZZxh
-         ys4BTfq75BoctV7eNnulFtqydtq1whj564kPtD+yKtNt/jGjsFJeTrW6kdcfY2OsGl/F
-         qAJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750679802; x=1751284602;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WznfPCr3ji0Qd/N5x0pdDuthOqQFGi24UpC7Z0hlolI=;
-        b=FnU7Fl7I8QSFfSFqIPFX7In0Y0vJ1QTAMTSapLfLQMcfk9zOlkAkvhnZ7P0JF6JHfN
-         f+ouwMtkwz2Y2eF7+Px52EeUk22de+TbnHtvj8q8DwwtEhd9uSAwjn2VJxV1wlmfqnCx
-         y0wfSbPaOZPgHp/LUSqpz1d7FtlTvuv5d7B5M1Mm9ClOnrFQcX6dcf/pUwwqjZdGiAdm
-         LIBMsRHimPULBzz6M5qCa/5Wxu7eL+NGXQ8AWOAnVFdaCEhhPfagcbU/i/keIOiCfBGw
-         VM1LXUriTlxlecke4UFwp/V/8Q72V/NiUwSZfakumSMJ3Z0V2PpGr1LoIhWuUY4BvEAg
-         1d5w==
-X-Forwarded-Encrypted: i=1; AJvYcCXEVKBc+yDhXptT8XnC/omhNrupd1j4Utpy0M6Y160keUshS4s7ux6OFIpyECEJ2kOAKQzVv11B3+47cWk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIr4vxuoDcn1oZFONKXRxhu9SKOOGjStIxXnbtJhMyv4/c31aN
-	ufjUzG2+Z7aJyjShvwrNtz99/7YwgQFCt5VHqw146FJTn8SfyXoBfGYT2s9BPKCsdLs1YkTJPXB
-	tQsJgS63kjBew4vtX8Q==
-X-Google-Smtp-Source: AGHT+IFAk0L7Yy/cvufYoYyUIG8/CK919SkwakepzRxAgIht3daWeoHvt9gxR2iHyoZC4EAiRssQv2HNLcAs0IU=
-X-Received: from wmbfs5.prod.google.com ([2002:a05:600c:3f85:b0:450:cfda:ece7])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:5025:b0:450:d386:1afb with SMTP id 5b1f17b1804b1-453659c5915mr133240875e9.9.1750679801773;
- Mon, 23 Jun 2025 04:56:41 -0700 (PDT)
-Date: Mon, 23 Jun 2025 11:56:39 +0000
-In-Reply-To: <20250622164050.20358-3-dakr@kernel.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TGigCntQ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 46DCC432A2;
+	Mon, 23 Jun 2025 11:57:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750679876;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tOC6uwvwIRMsvFgMBBtmc0lgl6NuOHr5njzJISpueqU=;
+	b=TGigCntQHvsp4QAUs2e4HAVvalTFA5cWrtZ2F+OeuDcuX1MnJqEVtjMjvm1AYjkCpUj5aK
+	78voDLzgNwD+ZqrcXZI5HJqNlb6RY9uhFRprJjLaG6LMB7LKF9D65cGn2It4UlZ6sQdH/G
+	BbTfCD1vlic8thR5pGju1VNHhyR5HP8xc9j5zlforuKLF4X4GxBXRp4VKcSJF8jRjbJZ2K
+	X32npA0F0IB6NcKCY8qohfimOG/7CUQBkrPiIDhBD8AcJc0yTnkSXjfUMQ7jqPVSorLcfq
+	Bf386bv26vhTCY3yXf3PymkJ6FQZNyngbbt4zN/YNjhD0pYW8Jpn2XSdho5Cgg==
+Date: Mon, 23 Jun 2025 13:57:51 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Anusha Srivatsa
+ <asrivats@redhat.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Hui Pu <Hui.Pu@gehealthcare.com>, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v9 3/3] drm/bridge: add warning for bridges not using
+ devm_drm_bridge_alloc()
+Message-ID: <20250623135751.683f65c2@booty>
+In-Reply-To: <a506cff0-6a0f-44b2-93e5-0488aa041fa2@oss.qualcomm.com>
+References: <20250620-drm-bridge-alloc-getput-drm-bridge-c-v9-0-ca53372c9a84@bootlin.com>
+	<20250620-drm-bridge-alloc-getput-drm-bridge-c-v9-3-ca53372c9a84@bootlin.com>
+	<a506cff0-6a0f-44b2-93e5-0488aa041fa2@oss.qualcomm.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250622164050.20358-1-dakr@kernel.org> <20250622164050.20358-3-dakr@kernel.org>
-Message-ID: <aFlA92ooeQsSThLh@google.com>
-Subject: Re: [PATCH v2 2/4] rust: devres: replace Devres::new_foreign_owned()
-From: Alice Ryhl <aliceryhl@google.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org, 
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
-	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org, 
-	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com, 
-	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, Dave Airlie <airlied@redhat.com>, 
-	Simona Vetter <simona.vetter@ffwll.ch>, Viresh Kumar <viresh.kumar@linaro.org>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdduieeliecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejtefftdelheeghfffffdukefhudejuedvfefhteelfeetgfffkeejteejtddvveenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedujedprhgtphhtthhopegumhhithhrhidrsggrrhihshhhkhhovhesohhsshdrqhhurghltghomhhmrdgtohhmpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrt
+ ghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnfgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehjohhnrghssehkfihisghoohdrshgvpdhrtghpthhtohepjhgvrhhnvghjrdhskhhrrggsvggtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Sun, Jun 22, 2025 at 06:40:39PM +0200, Danilo Krummrich wrote:
-> Replace Devres::new_foreign_owned() with devres::register().
+Hello Dmitry,
+
+thanks for reviewing!
+
+On Mon, 23 Jun 2025 14:06:43 +0300
+Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> wrote:
+
+> On 20/06/2025 18:59, Luca Ceresoli wrote:
+> > To the best of my knowledge, all drivers in the mainline kernel adding a
+> > DRM bridge are now converted to using devm_drm_bridge_alloc() for
+> > allocation and initialization. Among others this ensures initialization of
+> > the bridge refcount, allowing dynamic allocation lifetime.
+> > 
+> > devm_drm_bridge_alloc() is now mandatory for all new bridges. Code using
+> > the old pattern ([devm_]kzalloc + filling the struct fields +
+> > drm_bridge_add) is not allowed anymore.
+> > 
+> > Any drivers that might have been missed during the conversion, patches in
+> > flight towards mainline and out-of-tre drivers still using the old pattern
+> > will already be caught by a warning looking like:
+> > 
+> >    ------------[ cut here ]------------
+> >    refcount_t: addition on 0; use-after-free.
+> >    WARNING: CPU: 2 PID: 83 at lib/refcount.c:25 refcount_warn_saturate+0x120/0x148
+> >    [...]
+> >    Call trace:
+> >     refcount_warn_saturate+0x120/0x148 (P)
+> >     drm_bridge_get.part.0+0x70/0x98 [drm]
+> >     drm_bridge_add+0x34/0x108 [drm]
+> >     sn65dsi83_probe+0x200/0x480 [ti_sn65dsi83]
+> >     [...]
+> > 
+> > This warning comes from the refcount code and happens because
+> > drm_bridge_add() is increasing the refcount, which is uninitialized and
+> > thus initially zero.
+> > 
+> > Having a warning and the corresponding stack trace is surely useful, but
+> > the warning text does not clarify the root problem nor how to fix it.
+> > 
+> > Add a DRM_WARN() just before increasing the refcount, so the log will be
+> > much more readable:
+> > 
+> >    [drm] DRM bridge corrupted or not allocated by devm_drm_bridge_alloc()
+> >    ------------[ cut here ]------------
+> >    refcount_t: addition on 0; use-after-free.
+> >    [...etc...]
+> > 
+> > A DRM_WARN is used because drm_warn and drm_WARN require a struct
+> > drm_device pointer which is not yet available when adding a bridge.
+> > 
+> > Do not print the dev_name() in the warning because struct drm_bridge has no
+> > pointer to the struct device. The affected driver should be easy to catch
+> > based on the following stack trace however.
+> > 
+> > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> > 
+> > ---
+> > 
+> > Changes in v9:
+> > - change warning trigger from "refcount != 1" to "container not NULL"
+> > 
+> > This patch was added in v8
+> > ---
+> >   drivers/gpu/drm/drm_bridge.c | 3 +++
+> >   1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+> > index f001bbe95559aabf0aac9f25f89250ad4e1ad9c8..0b450b334afd82e0460f18fdd248f79d0a2b153d 100644
+> > --- a/drivers/gpu/drm/drm_bridge.c
+> > +++ b/drivers/gpu/drm/drm_bridge.c
+> > @@ -295,6 +295,9 @@ EXPORT_SYMBOL(__devm_drm_bridge_alloc);
+> >    */
+> >   void drm_bridge_add(struct drm_bridge *bridge)  
 > 
-> The current implementation of Devres::new_foreign_owned() creates a full
-> Devres container instance, including the internal Revocable and
-> completion.
-> 
-> However, none of that is necessary for the intended use of giving full
-> ownership of an object to devres and getting it dropped once the given
-> device is unbound.
-> 
-> Hence, implement devres::register(), which is limited to consume the
-> given data, wrap it in a KBox and drop the KBox once the given device is
-> unbound, without any other synchronization.
-> 
-> Cc: Dave Airlie <airlied@redhat.com>
-> Cc: Simona Vetter <simona.vetter@ffwll.ch>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> Can we rename this function, making sure that noone can call it 
+> directly? E.g. adding two underscores might point out that is is an 
+> internal API.
 
-overall looks good
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+I'm afraid I don't think this would be correct. Every bridge driver is
+expected to call drm_bridge_add() at the end of probe/initialization,
+to make the DRM subsystem aware that this bridge is ready for being
+used.
 
->  rust/helpers/device.c     |  7 ++++
->  rust/kernel/cpufreq.rs    | 11 +++---
->  rust/kernel/devres.rs     | 70 +++++++++++++++++++++++++++++++++------
->  rust/kernel/drm/driver.rs | 14 ++++----
->  4 files changed, 82 insertions(+), 20 deletions(-)
-> 
-> diff --git a/rust/helpers/device.c b/rust/helpers/device.c
-> index b2135c6686b0..502fef7e9ae8 100644
-> --- a/rust/helpers/device.c
-> +++ b/rust/helpers/device.c
-> @@ -8,3 +8,10 @@ int rust_helper_devm_add_action(struct device *dev,
->  {
->  	return devm_add_action(dev, action, data);
->  }
-> +
-> +int rust_helper_devm_add_action_or_reset(struct device *dev,
-> +					 void (*action)(void *),
-> +					 void *data)
-> +{
-> +	return devm_add_action_or_reset(dev, action, data);
-> +}
-> diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
-> index 11b03e9d7e89..dd84e2b4d7ae 100644
-> --- a/rust/kernel/cpufreq.rs
-> +++ b/rust/kernel/cpufreq.rs
-> @@ -13,7 +13,7 @@
->      cpu::CpuId,
->      cpumask,
->      device::{Bound, Device},
-> -    devres::Devres,
-> +    devres,
->      error::{code::*, from_err_ptr, from_result, to_result, Result, VTABLE_DEFAULT_ERROR},
->      ffi::{c_char, c_ulong},
->      prelude::*,
-> @@ -1046,10 +1046,13 @@ pub fn new() -> Result<Self> {
->  
->      /// Same as [`Registration::new`], but does not return a [`Registration`] instance.
->      ///
-> -    /// Instead the [`Registration`] is owned by [`Devres`] and will be revoked / dropped, once the
-> +    /// Instead the [`Registration`] is owned by [`devres::register`] and will be dropped, once the
->      /// device is detached.
-> -    pub fn new_foreign_owned(dev: &Device<Bound>) -> Result {
-> -        Devres::new_foreign_owned(dev, Self::new()?, GFP_KERNEL)
-> +    pub fn new_foreign_owned(dev: &Device<Bound>) -> Result
-> +    where
-> +        T: 'static,
-> +    {
-> +        devres::register(dev, Self::new()?, GFP_KERNEL)
->      }
->  }
->  
-> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-> index 544e50efab43..250073749279 100644
-> --- a/rust/kernel/devres.rs
-> +++ b/rust/kernel/devres.rs
-> @@ -9,12 +9,12 @@
->      alloc::Flags,
->      bindings,
->      device::{Bound, Device},
-> -    error::{Error, Result},
-> +    error::{to_result, Error, Result},
->      ffi::c_void,
->      prelude::*,
->      revocable::{Revocable, RevocableGuard},
->      sync::{rcu, Arc, Completion},
-> -    types::ARef,
-> +    types::{ARef, ForeignOwnable},
->  };
->  
->  #[pin_data]
-> @@ -184,14 +184,6 @@ pub fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Self> {
->          Ok(Devres(inner))
->      }
->  
-> -    /// Same as [`Devres::new`], but does not return a `Devres` instance. Instead the given `data`
-> -    /// is owned by devres and will be revoked / dropped, once the device is detached.
-> -    pub fn new_foreign_owned(dev: &Device<Bound>, data: T, flags: Flags) -> Result {
-> -        let _ = DevresInner::new(dev, data, flags)?;
-> -
-> -        Ok(())
-> -    }
-> -
->      /// Obtain `&'a T`, bypassing the [`Revocable`].
->      ///
->      /// This method allows to directly obtain a `&'a T`, bypassing the [`Revocable`], by presenting
-> @@ -261,3 +253,61 @@ fn drop(&mut self) {
->          }
->      }
->  }
-> +
-> +/// Consume `data` and [`Drop::drop`] `data` once `dev` is unbound.
-> +fn register_foreign<P: ForeignOwnable>(dev: &Device<Bound>, data: P) -> Result {
-> +    let ptr = data.into_foreign();
-> +
-> +    #[allow(clippy::missing_safety_doc)]
-> +    unsafe extern "C" fn callback<P: ForeignOwnable>(ptr: *mut kernel::ffi::c_void) {
-> +        // SAFETY: `ptr` is the pointer to the `ForeignOwnable` leaked above and hence valid.
-> +        let _ = unsafe { P::from_foreign(ptr.cast()) };
+The point of this patch, which is a completion to [1], is to ensure
+that all drivers use the "new" process:
 
-Nit: I usually write this
-drop(unsafe { P::from_foreign(ptr.cast()) });
+ 1. bridge = devm_drm_bridge_alloc()
+ 2. drm_bridge_add(bridge)
 
-> +    }
-> +
-> +    // SAFETY:
-> +    // - `dev.as_raw()` is a pointer to a valid and bound device.
-> +    // - `ptr` is a valid pointer the `ForeignOwnable` devres takes ownership of.
-> +    to_result(unsafe {
-> +        // `devm_add_action_or_reset()` also calls `callback` on failure, such that the
-> +        // `ForeignOwnable` is released eventually.
-> +        bindings::devm_add_action_or_reset(dev.as_raw(), Some(callback::<P>), ptr.cast())
-> +    })
-> +}
-> +
-> +/// Encapsulate `data` in a [`KBox`] and [`Drop::drop`] `data` once `dev` is unbound.
-> +///
-> +/// # Examples
-> +///
-> +/// ```no_run
-> +/// use kernel::{device::{Bound, Device}, devres};
-> +///
-> +/// /// Registration of e.g. a class device, IRQ, etc.
-> +/// struct Registration;
-> +///
-> +/// impl Registration {
-> +///     fn new() -> Self {
-> +///         // register
-> +///
-> +///         Self
-> +///     }
-> +/// }
-> +///
-> +/// impl Drop for Registration {
-> +///     fn drop(&mut self) {
-> +///        // unregister
-> +///     }
-> +/// }
-> +///
-> +/// fn from_bound_context(dev: &Device<Bound>) -> Result {
-> +///     devres::register(dev, Registration::new(), GFP_KERNEL)
-> +/// }
-> +/// ```
-> +pub fn register<T, E>(dev: &Device<Bound>, data: impl PinInit<T, E>, flags: Flags) -> Result
-> +where
-> +    T: 'static,
-> +    Error: From<E>,
-> +{
-> +    let data = KBox::pin_init(data, flags)?;
+and there are no users of the old process:
 
-Wouldn't we also want to expose the ForeignOwnable version? It seems
-likely someone would want to avoid the allocation.
+ 1. bridge = [devm_]kzalloc()
+ 2. drm_bridge_add(bridge)
 
-> +    register_foreign(dev, data)
-> +}
-> diff --git a/rust/kernel/drm/driver.rs b/rust/kernel/drm/driver.rs
-> index acb638086131..f63addaf7235 100644
-> --- a/rust/kernel/drm/driver.rs
-> +++ b/rust/kernel/drm/driver.rs
-> @@ -5,9 +5,7 @@
->  //! C header: [`include/linux/drm/drm_drv.h`](srctree/include/linux/drm/drm_drv.h)
->  
->  use crate::{
-> -    bindings, device,
-> -    devres::Devres,
-> -    drm,
-> +    bindings, device, devres, drm,
->      error::{to_result, Result},
->      prelude::*,
->      str::CStr,
-> @@ -130,18 +128,22 @@ fn new(drm: &drm::Device<T>, flags: usize) -> Result<Self> {
->      }
->  
->      /// Same as [`Registration::new`}, but transfers ownership of the [`Registration`] to
-> -    /// [`Devres`].
-> +    /// [`devres::register`].
->      pub fn new_foreign_owned(
->          drm: &drm::Device<T>,
->          dev: &device::Device<device::Bound>,
->          flags: usize,
-> -    ) -> Result {
-> +    ) -> Result
-> +    where
-> +        T: 'static,
-> +    {
->          if drm.as_ref().as_raw() != dev.as_raw() {
->              return Err(EINVAL);
->          }
->  
->          let reg = Registration::<T>::new(drm, flags)?;
-> -        Devres::new_foreign_owned(dev, reg, GFP_KERNEL)
-> +
-> +        devres::register(dev, reg, GFP_KERNEL)
->      }
->  
->      /// Returns a reference to the `Device` instance for this registration.
-> -- 
-> 2.49.0
-> 
+Does this addresses your concern?
+
+[1] https://cgit.freedesktop.org/drm/drm-misc/commit/?id=b3f13e00a8de351832df7d628a15ca4db49ca94f
+
+Luca
+
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
