@@ -1,99 +1,104 @@
-Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7B5EAC6;
-	Mon, 23 Jun 2025 15:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF38277028;
+	Mon, 23 Jun 2025 15:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750694357; cv=none; b=IHBxYver+PKSJgRlb0po7GHV+6UNLQLWu/03Fg1ncF8AxYvLpEPWMLI4ajqsXx0wt2NmKEf+WxE6rRx9D1Qlck75rB9SU+bJNjAVCvyNgM4kEOyOg5/URl6cmxTBAai1Nxq3vClyYSNW5UJ5nwYvvUSUKpRGVq8LPzW4lRleFq0=
+	t=1750694364; cv=none; b=CCkRcFXjIAV2/s8x5MQaT8Tr0CMxz/lVMJRHObHrmh2FmkO4IeN3zkE6ej4I6PArtXX0PPuUNpTBE64l/R/Dc2NRU2YJj0tBwpeg49Fs/12qCIUcnnwFcMI22vXKv8QBsKc+XbDVOVdYPjWLkNPRxtEtkQoB9U7dBzOBvg3sSz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750694357; c=relaxed/simple;
-	bh=5SNzJG34BaNHLNojkHzQMSWdy62ROpkWI/bAj3LGaNs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cziOfDbnfOx4lgx9AiuRQbgE2cAo6NUXy7QBhoh2FGPeh8jH+3UZFhjAfbuwuf+3D7XXrkFDtLV4hPTuaJ8UEaI8iNcIqzbOmhNLsOt/GJJin2e5M1G3ey8Mx4nAW8Sj49laad68+eI7kNU0UiQPUad5f9r3UgIR7isr665zUIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=F2WccYM9; arc=none smtp.client-ip=199.89.3.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1750694364; c=relaxed/simple;
+	bh=/rfl7gOGpO0g14cYMRJ7KQfJPeeEo1fzAajmHgRfcP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MkX45T3I0Mdbl+dEdhWot/ls/kwUIgTeHjdUGn4lj38bGeZeAa6pMOCL/jry5Icz3J7PsN+VElGS5Bkg9CTeCc8UhGphIiQuRpj2Tfc4jPGX1YJ+bX4bp/z13wETBMIwhZbSNP3pRGK023QU46VCmRWxUtC6A0Y9u0WkATd/rEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=gJP4cXg9; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="F2WccYM9"
-Received: from localhost (localhost [127.0.0.1])
-	by 004.mia.mailroute.net (Postfix) with ESMTP id 4bQt7655b9zm0yQh;
-	Mon, 23 Jun 2025 15:59:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1750694353; x=1753286354; bh=cbVOYUXSPTzoe7vacJFqcLVK
-	J0SLk5Eu0pKoTubhiBY=; b=F2WccYM9LmTeP2k0Z0w2XDnB7cpL69LkjZMkl9wX
-	yGN8+V9fDrUXIjMIj9uLk/Wf3fxM61hm0vidTq+oV7dxnHlfPzeGSt7O4JkoZLgz
-	8X4X9OdVhJ+yB5dTLmbvq9h39SfSiNwGMoH+bQd6etHKsxoO2w0HEnwx9DyFocD/
-	pL0/qJN3jA598mmusewlpUFJORHeHj0PibGbMfSaKiCy5/FHRiw1yUHkJ1LEZJBI
-	KmbZqQKP0qaBs7xNfSR3o4mLqQWP7neYPNoosdYFOGk1rRIHfrSUpR9AcY6BYDFF
-	7nmzngznJxwSX/ppZmFHHdcw9vqMnMjK9ml/v5LsWVY9HQ==
-X-Virus-Scanned: by MailRoute
-Received: from 004.mia.mailroute.net ([127.0.0.1])
- by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id pphezMWeszEu; Mon, 23 Jun 2025 15:59:13 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4bQt6z4zdPzm0yt2;
-	Mon, 23 Jun 2025 15:59:06 +0000 (UTC)
-Message-ID: <57435584-b04e-4de6-908c-018fe48ad0ac@acm.org>
-Date: Mon, 23 Jun 2025 08:59:05 -0700
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="gJP4cXg9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ivJftfXIlijyNb6aPqxEHL2vbAZ+7Nan5sa8DA4Nd4s=; b=gJP4cXg900T3X2PP4GO2+aWAyS
+	eo+T+0X1Oo3zr3UET8GybiWIdDBy/H5GwrGDRhyW7IOLilENX7aJCNnZ6QT4+XPSsgROObz6T5fai
+	52pLJ6BJ6BRSsLSlU0OjdgPhvWa5rp2p9kZMZYF1WrbSmCO07z2WO0F1zFa/R39r8UZK+ARzysPnV
+	c/afMbJWDuHuQDJ3nfuEAiBvqJZ80PrpOSk8gHIyfFHLcJ+K5qlCSFo9/MxLg726OBArGclzvOHdl
+	aqnrLDjXWVVTzd3hV08OI/n6FsnG5wb7+6uP5OzDy7QN5DLn3NmDAS4aq6I/X+ewruGynu+DJgj0L
+	5zhBr+Kw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36456)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uTjZi-0004O5-1x;
+	Mon, 23 Jun 2025 16:59:14 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uTjZh-0003Zx-0L;
+	Mon, 23 Jun 2025 16:59:13 +0100
+Date: Mon, 23 Jun 2025 16:59:12 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Kamil =?iso-8859-1?Q?Hor=E1k?= - 2N <kamilh@axis.com>
+Cc: florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+	andrew@lunn.ch, hkallweit1@gmail.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	robh@kernel.org
+Subject: Re: [PATCH net-next v2 3/3] dt-bindings: ethernet-phy: add optional
+ mii-lite-mode flag
+Message-ID: <aFl50MeMElkRbyzj@shell.armlinux.org.uk>
+References: <20250623151048.2391730-1-kamilh@axis.com>
+ <20250623151048.2391730-4-kamilh@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] scsi: scsi_devinfo: remove redundant 'found'
-To: mrigendrachaubey <mrigendra.chaubey@gmail.com>,
- James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250622055709.7893-1-mrigendra.chaubey@gmail.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250622055709.7893-1-mrigendra.chaubey@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250623151048.2391730-4-kamilh@axis.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On 6/21/25 10:57 PM, mrigendrachaubey wrote:
-> Remove the unnecessary 'found' flag in scsi_devinfo_lookup_by_key().
-> The loop can return the matching entry directly when found, and fall
-> through to return ERR_PTR(-EINVAL) otherwise.
+On Mon, Jun 23, 2025 at 05:10:48PM +0200, Kamil Horák - 2N wrote:
+> From: Kamil Horák (2N) <kamilh@axis.com>
 > 
-> Signed-off-by: mrigendrachaubey <mrigendra.chaubey@gmail.com>
+> The Broadcom bcm54810 and bcm54811 PHYs support MII and MII-Lite
+> interface modes. The MII-Lite mode does not use TXR, RXER, CRS and COL
+> signals. However, the hardware strapping only selects MII mode,
+> distinction between MII and MII-Lite must be done by software.
+> 
+> Add optional mii-lite-mode flag to switch the PHY to MII-Lite mode.
+> 
+> Signed-off-by: Kamil Horák (2N) <kamilh@axis.com>
 > ---
->   drivers/scsi/scsi_devinfo.c | 11 +++--------
->   1 file changed, 3 insertions(+), 8 deletions(-)
+>  Documentation/devicetree/bindings/net/ethernet-phy.yaml | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
-> index a348df895dca..e364829b6079 100644
-> --- a/drivers/scsi/scsi_devinfo.c
-> +++ b/drivers/scsi/scsi_devinfo.c
-> @@ -269,17 +269,12 @@ static struct {
->   static struct scsi_dev_info_list_table *scsi_devinfo_lookup_by_key(int key)
->   {
->   	struct scsi_dev_info_list_table *devinfo_table;
-> -	int found = 0;
->   
->   	list_for_each_entry(devinfo_table, &scsi_dev_info_list, node)
-> -		if (devinfo_table->key == key) {
-> -			found = 1;
-> -			break;
-> -		}
-> -	if (!found)
-> -		return ERR_PTR(-EINVAL);
-> +		if (devinfo_table->key == key)
-> +			return devinfo_table;
->   
-> -	return devinfo_table;
-> +	return ERR_PTR(-EINVAL);
->   }
+> diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> index 71e2cd32580f..edfd16044770 100644
+> --- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> @@ -101,6 +101,14 @@ properties:
+>        1BR-10 names. The PHY must be configured to operate in BroadR-Reach mode
+>        by software.
+>  
+> +  mii-lite-mode:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description:
+> +      If set, indicates the use of MII-Lite variant of MII, without the
+> +      functions of TXER, RXER, CRS and COL signals for Broadcom PHYs. These
+> +      PHYs can be strapped to use MII mode but the MII or MII-Lite selection
+> +      must be done by software.
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+I'll put the same question here as I did on patch 2. Do we want this to
+be a separate property, or would it make more sense as a different
+phy-mode value?
 
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
