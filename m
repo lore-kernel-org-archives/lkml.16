@@ -1,44 +1,44 @@
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5DC028ECDE;
-	Mon, 23 Jun 2025 18:01:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87F82D3A66;
+	Mon, 23 Jun 2025 18:01:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750701710; cv=pass; b=pz5IrgOXSQwDaGquW7HbTuqrJhk+3wCKnFUXGluoKbb4aPgJdslbXXzoWQETotJIPPpDFvSPYjMgadkJJs2Z0/bRUEfm3QpKlU0NeQOCkH3uo16vPXnXdnIHIu+FY/jfOZtA54ZgcS7GhhiRslHs6dAqgXJMqnjkbJmaKXVXJME=
+	t=1750701715; cv=pass; b=uQgrSKmNxj9mVgDdQVvHejRabNzBEJLD3MpI71ci7+Z8igo0oWjGBsqrFRWV4eUbozQhzu25WUlfUSwoMVgUkNZvB6SK8oAD0lc4A0uyPCIz3LCA4LLosCur/4s959Tvu5ay4cEUd4GtsDar8JZHWzQ1fngGSPPFWU3+hOvhjdI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750701710; c=relaxed/simple;
-	bh=sq3Q0uLG8bGNYrc02jS2SFjriPDRGj4eOUz8WbyIXKE=;
+	s=arc-20240116; t=1750701715; c=relaxed/simple;
+	bh=jD0Bs8pEGYPz7Co3uofmKUKddNMzKnpOUNwkMt5xm9U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gdUaaJG/YQy88Bx+/xF+g8ibae2Kwqp0BJBeurz3os25XvS2iFzFWUQa3czCcsYr1MtT10bdmpQ9NAZk2Ck0J60jJZay4zmXKqx8TPRfA3M+HijbQiik7QOSLzI9ApaZybUUa2suX685t8ZKl3H/H02fIfnbszXPoLN9I25TPKg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=AwI7HGih; arc=pass smtp.client-ip=136.143.188.112
+	 In-Reply-To:To:Cc; b=PA9Dohf3aicmQsJvlleyDHfc2SUiL29YILW89BQ9hkICVjEVKBDC7zUPYGWsVH0vavryKfKmy+OgoqSGSW/g5SCOy5/cbp6pRt4ecTUbrTid/P2YmeVHlFo9Qz//RVfki7OercFrvUbNZB7cTvQEnfmI/9ch/hKfwjHxqOd+fdE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=ARPuBqwK; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="AwI7HGih"
-ARC-Seal: i=1; a=rsa-sha256; t=1750701691; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="ARPuBqwK"
+ARC-Seal: i=1; a=rsa-sha256; t=1750701695; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=ZJFAN8gqMz3WHD5WWJNUJC/zDsIXyf0yin7sxJ9zMOnXGu7dADPxKwwHeHno5WoBcfHLujbKndcRS7ImzhIfMCWD9m8OtBYX359Ld4DpJVQN+gNnUw/NqEvJi7l4phz7FZq+PGRp5UfLgc5S3CQGavSQ7lgX51oGQ1uAr6RIdBk=
+	b=iCbDQEXnNosRGbP0xeH85y5jc+bx0dqN7yojPmAU8guMR1lCQVLk7W4KJQTtGKGRCbIlchq5m96sQ4Z+E7gWQPlN7qlbcrE2cshfuyYzed+jQNoEgP4OzQuWDp1ZnF38TNRvxEMpXO99NVLOcRIxiWfiNNQ2JjoE5Qaa/BqSn1I=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750701691; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=v/zklfuAzyTlu9HDCWeDf9Ydv1ELPS8SbfUtRAJHhSs=; 
-	b=LhgrdAz6K1xdnIrO4Q1270YnxdalGI51GZq7HqvQp0dL5XQfaooIpHLzyrBQlTWyNaNsX0+pFbIEq98OpzQ9bzLPsZIwJ2LdFSi4j8Rq22W8i5uapujgqDIjO5lPXd8AvzfKNr3eD6jYYKoZ80vaRlUL4wXU6JexgNapjnuWYxk=
+	t=1750701695; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=jXtQ5usej9364YkX/FNJQWmiFrppYRFaFOduw0COy+E=; 
+	b=O75osqKpFlXyhx55p9bA92Lmx2PRQHYafUC4sTMRb26Bc2mCz64fnTuzCaK6k97tqc7Uv3laoMr5Xt+Hp5Jcr07bScx8GzreercMyHJmb9utiCPGPDgiNtrI9NIm9k0ezEpE5QnhtzJBhqf9Aj/qnefYAQLEDXhEruhnNymkCek=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
 	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750701691;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750701695;
 	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=v/zklfuAzyTlu9HDCWeDf9Ydv1ELPS8SbfUtRAJHhSs=;
-	b=AwI7HGihOcrtk1JagyeL9e+kigp1aTBBS5rF+HPHBzJ1xrxwDkq+xzN+tkD1lcpD
-	7Zhsych1Bih5dOdKAl7Q3cu5E+R8dRdo3VoTrTKv1DNQWskAnmk0de7wL8iUyY8RYvW
-	S7hXDMuAPQYHMYtEJCCzrznsMF3x+iTUWX7zU8JA=
-Received: by mx.zohomail.com with SMTPS id 1750701688729856.990313539685;
-	Mon, 23 Jun 2025 11:01:28 -0700 (PDT)
+	bh=jXtQ5usej9364YkX/FNJQWmiFrppYRFaFOduw0COy+E=;
+	b=ARPuBqwKaL1kv2BvRx7u3jqemRHU0i3CqMBHAz9L84PeoZclRCUm1bSSRzF5WFl6
+	S5XnP3NfFhQIIOC+Y0I+l+idutSIwbggiLYye+HnJLgYaZTo9t6VuCkMe+/FQhogQEM
+	aH+QexbBxGDIYitpCkTj/SBmwymcppWuwPBdxc7I=
+Received: by mx.zohomail.com with SMTPS id 1750701693614683.6155317146832;
+	Mon, 23 Jun 2025 11:01:33 -0700 (PDT)
 From: Daniel Almeida <daniel.almeida@collabora.com>
-Date: Mon, 23 Jun 2025 15:00:59 -0300
-Subject: [PATCH v10 2/4] rust: io: mem: add a generic iomem abstraction
+Date: Mon, 23 Jun 2025 15:01:00 -0300
+Subject: [PATCH v10 3/4] rust: platform: add resource accessors
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,7 +47,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-topics-tyr-platform_iomem-v10-2-ed860a562940@collabora.com>
+Message-Id: <20250623-topics-tyr-platform_iomem-v10-3-ed860a562940@collabora.com>
 References: <20250623-topics-tyr-platform_iomem-v10-0-ed860a562940@collabora.com>
 In-Reply-To: <20250623-topics-tyr-platform_iomem-v10-0-ed860a562940@collabora.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
@@ -68,199 +68,72 @@ Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
 X-Mailer: b4 0.14.2
 X-ZohoMailClient: External
 
-Add a generic iomem abstraction to safely read and write ioremapped
-regions.
+A previous patch has exposed the abstractions struct resource.
 
-The reads and writes are done through IoRaw, and are thus checked either
-at compile-time, if the size of the region is known at that point, or at
-runtime otherwise.
-
-Non-exclusive access to the underlying memory region is made possible to
-cater to cases where overlapped regions are unavoidable.
+Now make it possible to retrieve resources from platform devices in Rust
+using either a name or an index.
 
 Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
 ---
- rust/helpers/io.c     |   5 ++
- rust/kernel/io.rs     |   1 +
- rust/kernel/io/mem.rs | 142 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 148 insertions(+)
+ rust/kernel/platform.rs | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-diff --git a/rust/helpers/io.c b/rust/helpers/io.c
-index 404776cf6717c8570c7600a24712ce6e4623d3c6..c475913c69e647b1042e8e7d66b9148d892947a1 100644
---- a/rust/helpers/io.c
-+++ b/rust/helpers/io.c
-@@ -8,6 +8,11 @@ void __iomem *rust_helper_ioremap(phys_addr_t offset, size_t size)
- 	return ioremap(offset, size);
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index 5b21fa517e55348582622ec10471918919502959..0eedb8239fec31df7ab64dc68d220c9d965f1f21 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -7,6 +7,7 @@
+ use crate::{
+     bindings, container_of, device, driver,
+     error::{to_result, Result},
++    io::Resource,
+     of,
+     prelude::*,
+     str::CStr,
+@@ -188,6 +189,43 @@ impl<Ctx: device::DeviceContext> Device<Ctx> {
+     fn as_raw(&self) -> *mut bindings::platform_device {
+         self.0.get()
+     }
++
++    /// Returns the resource at `index`, if any.
++    pub fn resource_by_index(&self, index: u32) -> Option<&Resource> {
++        // SAFETY: `self.as_raw()` returns a valid pointer to a `struct platform_device`.
++        let resource = unsafe {
++            bindings::platform_get_resource(self.as_raw(), bindings::IORESOURCE_MEM, index)
++        };
++
++        if resource.is_null() {
++            return None;
++        }
++
++        // SAFETY: `resource` is a valid pointer to a `struct resource` as
++        // returned by `platform_get_resource`.
++        Some(unsafe { Resource::as_ref(resource) })
++    }
++
++    /// Returns the resource with a given `name`, if any.
++    pub fn resource_by_name(&self, name: &CStr) -> Option<&Resource> {
++        // SAFETY: `self.as_raw()` returns a valid pointer to a `struct
++        // platform_device` and `name` points to a valid C string.
++        let resource = unsafe {
++            bindings::platform_get_resource_byname(
++                self.as_raw(),
++                bindings::IORESOURCE_MEM,
++                name.as_char_ptr(),
++            )
++        };
++
++        if resource.is_null() {
++            return None;
++        }
++
++        // SAFETY: `resource` is a valid pointer to a `struct resource` as
++        // returned by `platform_get_resource`.
++        Some(unsafe { Resource::as_ref(resource) })
++    }
  }
  
-+void __iomem *rust_helper_ioremap_np(phys_addr_t offset, size_t size)
-+{
-+	return ioremap_np(offset, size);
-+}
-+
- void rust_helper_iounmap(void __iomem *addr)
- {
- 	iounmap(addr);
-diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
-index 7b70d5b5477e57d6d0f24bcd26bd8b0071721bc0..b7fc759f8b5d3c3ac6f33f5a66e9f619c58b7405 100644
---- a/rust/kernel/io.rs
-+++ b/rust/kernel/io.rs
-@@ -7,6 +7,7 @@
- use crate::error::{code::EINVAL, Result};
- use crate::{bindings, build_assert};
- 
-+pub mod mem;
- pub mod resource;
- 
- pub use resource::Resource;
-diff --git a/rust/kernel/io/mem.rs b/rust/kernel/io/mem.rs
-new file mode 100644
-index 0000000000000000000000000000000000000000..2bd9cf4c4f1a59f027999a6e9a203dc99ad6c003
---- /dev/null
-+++ b/rust/kernel/io/mem.rs
-@@ -0,0 +1,142 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Generic memory-mapped IO.
-+
-+use core::ops::Deref;
-+
-+use crate::device::Bound;
-+use crate::device::Device;
-+use crate::devres::Devres;
-+use crate::io;
-+use crate::io::resource::Region;
-+use crate::io::resource::Resource;
-+use crate::io::Io;
-+use crate::io::IoRaw;
-+use crate::prelude::*;
-+
-+/// An exclusive memory-mapped IO region.
-+///
-+/// # Invariants
-+///
-+/// - [`ExclusiveIoMem`] has exclusive access to the underlying [`IoMem`].
-+pub struct ExclusiveIoMem<const SIZE: usize> {
-+    /// The region abstraction. This represents exclusive access to the
-+    /// range represented by the underlying `iomem`.
-+    ///
-+    /// It's placed first to ensure that the region is released before it is
-+    /// unmapped as a result of the drop order.
-+    ///
-+    /// This field is needed for ownership of the region.
-+    _region: Region,
-+    /// The underlying `IoMem` instance.
-+    iomem: IoMem<SIZE>,
-+}
-+
-+impl<const SIZE: usize> ExclusiveIoMem<SIZE> {
-+    /// Creates a new `ExclusiveIoMem` instance.
-+    pub(crate) fn ioremap(resource: &Resource) -> Result<Self> {
-+        let iomem = IoMem::ioremap(resource)?;
-+
-+        let start = resource.start();
-+        let size = resource.size();
-+        let name = resource.name();
-+
-+        let region = resource
-+            .request_region(start, size, name, io::resource::flags::IORESOURCE_MEM)
-+            .ok_or(EBUSY)?;
-+
-+        let iomem = ExclusiveIoMem {
-+            iomem,
-+            _region: region,
-+        };
-+
-+        Ok(iomem)
-+    }
-+
-+    pub(crate) fn new(resource: &Resource, device: &Device<Bound>) -> Result<Devres<Self>> {
-+        let iomem = Self::ioremap(resource)?;
-+        let devres = Devres::new(device, iomem, GFP_KERNEL)?;
-+
-+        Ok(devres)
-+    }
-+}
-+
-+impl<const SIZE: usize> Deref for ExclusiveIoMem<SIZE> {
-+    type Target = Io<SIZE>;
-+
-+    fn deref(&self) -> &Self::Target {
-+        &self.iomem
-+    }
-+}
-+
-+/// A generic memory-mapped IO region.
-+///
-+/// Accesses to the underlying region is checked either at compile time, if the
-+/// region's size is known at that point, or at runtime otherwise.
-+///
-+/// # Invariants
-+///
-+/// [`IoMem`] always holds an [`IoRaw`] instance that holds a valid pointer to the
-+/// start of the I/O memory mapped region.
-+pub struct IoMem<const SIZE: usize = 0> {
-+    io: IoRaw<SIZE>,
-+}
-+
-+impl<const SIZE: usize> IoMem<SIZE> {
-+    fn ioremap(resource: &Resource) -> Result<Self> {
-+        let size = resource.size();
-+        if size == 0 {
-+            return Err(EINVAL);
-+        }
-+
-+        let res_start = resource.start();
-+
-+        let addr = if resource
-+            .flags()
-+            .contains(io::resource::flags::IORESOURCE_MEM_NONPOSTED)
-+        {
-+            // SAFETY:
-+            // - `res_start` and `size` are read from a presumably valid `struct resource`.
-+            // - `size` is known not to be zero at this point.
-+            unsafe { bindings::ioremap_np(res_start, size as usize) }
-+        } else {
-+            // SAFETY:
-+            // - `res_start` and `size` are read from a presumably valid `struct resource`.
-+            // - `size` is known not to be zero at this point.
-+            unsafe { bindings::ioremap(res_start, size as usize) }
-+        };
-+
-+        if addr.is_null() {
-+            return Err(ENOMEM);
-+        }
-+
-+        let io = IoRaw::new(addr as usize, size as usize)?;
-+        let io = IoMem { io };
-+
-+        Ok(io)
-+    }
-+
-+    /// Creates a new `IoMem` instance.
-+    pub(crate) fn new(resource: &Resource, device: &Device<Bound>) -> Result<Devres<Self>> {
-+        let io = Self::ioremap(resource)?;
-+        let devres = Devres::new(device, io, GFP_KERNEL)?;
-+
-+        Ok(devres)
-+    }
-+}
-+
-+impl<const SIZE: usize> Drop for IoMem<SIZE> {
-+    fn drop(&mut self) {
-+        // SAFETY: Safe as by the invariant of `Io`.
-+        unsafe { bindings::iounmap(self.io.addr() as *mut core::ffi::c_void) }
-+    }
-+}
-+
-+impl<const SIZE: usize> Deref for IoMem<SIZE> {
-+    type Target = Io<SIZE>;
-+
-+    fn deref(&self) -> &Self::Target {
-+        // SAFETY: Safe as by the invariant of `IoMem`.
-+        unsafe { Io::from_raw(&self.io) }
-+    }
-+}
+ // SAFETY: `Device` is a transparent wrapper of a type that doesn't depend on `Device`'s generic
 
 -- 
 2.50.0
