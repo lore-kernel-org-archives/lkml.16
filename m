@@ -1,237 +1,91 @@
-Received: from mail-oi1-f202.google.com (mail-oi1-f202.google.com [209.85.167.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FAD8278767
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10911C07F6;
+	Mon, 23 Jun 2025 18:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750703206; cv=none; b=NmZSK7ZA/rGWKJUDdbVx+cec6NSP/rnhq0/GAw77flwsrXPZpH/YWG0xK3SByT9G1+Pru3ODsKoN+cPtkPYFOie8q118bHHzJqH3Dg7jcwJYcv3t/jLOvNhfMpEMEWNKMQzfn1r8F/epj85KvuKSA23fx1fDbB4F5dBTilUD+L4=
+	t=1750703247; cv=none; b=GAqeZ6qhHBeDIBx4GJ1Bt5nO+7lyLX3vimEnJ667UjAkIbLYvFDmqHI/SvoLlXz3DJHGIegmTC3MH9aOTvq0SPh7aAhLmyGmt5AZ4FNV04TUKpODAPGFkw2IZq1Pm830idxDrMolIhI7X00XMdSctnlVAZeKNi6Q36gtP2JQyQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750703206; c=relaxed/simple;
-	bh=TJbyCjpQUTgcNzSy2LbHi3jtU+JgR5DmqnRNp0zwnzU=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=YWT9PTXApun3p7lyPsaNCo/ITa7C0oQqpf8DTNxqFlxE2txXQx2QlkjWGiK3GXZqmuevQRIRh6yWYlRnYdJO8DIe7TD2hW/xV1FgSKKO1vbDdBIs794uMpF/sVawxnUuQqehJjUzRECXjz2Yo55VW40ruDJYe20QE5ZnvOtulfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CzDUp7Zt; arc=none smtp.client-ip=209.85.167.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1750703247; c=relaxed/simple;
+	bh=QKXndZMyfb7p1e0Wg1A7S+bTfVPj5+F3kMyJbJcoiAU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o4LW8tdzHjsr3JFGUGL1fln4dpS4yl3aWVN8aVGfD0J4LrViZ7xWR0BcnZvKhQyhEI1UgHhwt44lvzJrMrJjmQA0xGvlh2vriAjK3c6/WnNQ0kEoeWP4Va/9XZbZVbskKSy7TgPfC8XqHL+eZu/U+SdLDyUbA6X5MEo2cwrn84Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=YXI94wCG; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CzDUp7Zt"
-Received: by mail-oi1-f202.google.com with SMTP id 5614622812f47-408d05d8c03so833870b6e.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:26:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750703203; x=1751308003; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=iJHuSuwyngESt8WBCKXgeOnblRRUSgRFggwy+8QiK3Q=;
-        b=CzDUp7ZtTacqwgkX/0UBjeDuYjk7hskVNN3cNFfQzty82/IYTxqC3De3ohsi29QpfM
-         +lfvWxSpyVpDBbLHlQoBQt4fXDpAmJ3piYbfoE4G5AdBszsd2vC8LvXESzlNNwvb1voB
-         1F8nF/ND4s8/MwdPDZmLFUsyriSXkSrL5km5JF2CSoLbtXZ16L9tHYr42PFz9eQnm9TX
-         nrmpjdJYMCdzVwnB9zVTBciMbajtQwZf5Lk/rBw8DHiWhRcDMtJWBrmiNpncoSGV2zeC
-         MfjTUnyRbsPtmtAs5l+L2O2j7a2b5tClGPXV/1heKgof45X/wkwVWraG80AeicmKwfwX
-         uxrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750703203; x=1751308003;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iJHuSuwyngESt8WBCKXgeOnblRRUSgRFggwy+8QiK3Q=;
-        b=du+i9vwlmodzoWZD8Ro0PyDucWHZpXXX/E6nOdNDx/RFWvj8LS2EVfIMQtnlWiqV8s
-         7NpE+GP80Dfwyy0rirYD/l8tpafPRfWEDBQ6I+ugdWOns2FsuDRY/jAXd/lcVH6YNVIY
-         onVD9P9StuocTQ2/abFK1xbZEKv5gIg13q+sIApDcjp0DfOj4YntXxTnmw2SWLnPmvbq
-         tbjYZFYxD3GBwHx6KFiPCDXuVntG2E+xq3bfhDpTGZiJKRkPKa8fDWKM+S31qmazKFOn
-         kNRlYI5SiV5xEPJ8cBEW/LJbo2/KVEZamZycDuKvFLRVLOqfNLqeU42qAxEHuR9ebBo1
-         uqNw==
-X-Forwarded-Encrypted: i=1; AJvYcCX8FUUMUrsoynOvxyEypkhd8t+MjYJppOrOJCzEgbtyFKRhFGi2bzZt+GULvWf/Xt86vN4UBWFPFOQP730=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtcjHs3iEz2DouVyLe1FkNkfncxIhjt8coeWF6Rt1z+4OnM/sb
-	ljk4li4VLp2t0r9Cn7VlVOp892cJYW8KexLpa+4PjzJCiYcLvJLJhqYPAw2N1R5AvxoDcY/RB4v
-	btYSsaJK+C4G4kxj8nCFA4KVmCQ==
-X-Google-Smtp-Source: AGHT+IGC715JfAZ6bB+MUmt3e2UkqjENUKLIOq46BUMkNYiBZaTpU+l16Sml2Ik55e/lBKhpSWes9ItyhVpKmkS24Q==
-X-Received: from oirr11.prod.google.com ([2002:a05:6808:840b:b0:40a:c991:8f3c])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6808:1645:b0:401:918a:5b89 with SMTP id 5614622812f47-40ac6ef30e6mr10779472b6e.26.1750703203710;
- Mon, 23 Jun 2025 11:26:43 -0700 (PDT)
-Date: Mon, 23 Jun 2025 18:26:42 +0000
-In-Reply-To: <aFYFqrYRsmCi6oii@linux.dev> (message from Oliver Upton on Fri,
- 20 Jun 2025 18:06:50 -0700)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="YXI94wCG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=yTO3YdBSku104YsDHmadAMJYlJFGtvsp+k7l1sVkgSg=; b=YXI94wCGPdOe2CSM6CC4T+f6Rk
+	s67hx3V6dimXQeRJaWcv0iJpYTreqPJ1GAJtE2RG6zijyvgwEotQkcTR6PkSPsSECwHwMobeAY0WT
+	tbRRgl3SMECeUH7B5QTEI0gX6c1f6+vslJkZ1kIGzRKmVZ/+Cpp8BePYS5rAEztTIUVg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uTlsv-00Gij3-1s; Mon, 23 Jun 2025 20:27:13 +0200
+Date: Mon, 23 Jun 2025 20:27:13 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Michal Simek <michal.simek@amd.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH net 4/4] net: axienet: Split into MAC and MDIO drivers
+Message-ID: <c543674a-305e-4691-b600-03ede59488ef@lunn.ch>
+References: <20250619200537.260017-1-sean.anderson@linux.dev>
+ <20250619200537.260017-5-sean.anderson@linux.dev>
+ <16ebbe27-8256-4bbf-ad0a-96d25a3110b2@lunn.ch>
+ <0854ddee-1b53-472c-a4fe-0a345f65da65@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsntpleu9uvx.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [PATCH v2 07/23] perf: arm_pmuv3: Introduce method to partition
- the PMU
-From: Colton Lewis <coltonlewis@google.com>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, 
-	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
-	maz@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com, 
-	yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0854ddee-1b53-472c-a4fe-0a345f65da65@linux.dev>
 
-Oliver Upton <oliver.upton@linux.dev> writes:
+On Mon, Jun 23, 2025 at 11:16:08AM -0400, Sean Anderson wrote:
+> On 6/21/25 03:33, Andrew Lunn wrote:
+> > On Thu, Jun 19, 2025 at 04:05:37PM -0400, Sean Anderson wrote:
+> >> Returning EPROBE_DEFER after probing a bus may result in an infinite
+> >> probe loop if the EPROBE_DEFER error is never resolved.
+> > 
+> > That sounds like a core problem. I also thought there was a time
+> > limit, how long the system will repeat probes for drivers which defer.
+> > 
+> > This seems like the wrong fix to me.
+> 
+> I agree. My first attempt to fix this did so by ignoring deferred probes
+> from child devices, which would prevent "recursive" loops like this one
+> [1]. But I was informed that failing with EPROBE_DEFER after creating a
+> bus was not allowed at all, hence this patch.
 
-> On Fri, Jun 20, 2025 at 10:13:07PM +0000, Colton Lewis wrote:
->> For PMUv3, the register field MDCR_EL2.HPMN partitiones the PMU
->> counters into two ranges where counters 0..HPMN-1 are accessible by
->> EL1 and, if allowed, EL0 while counters HPMN..N are only accessible by
->> EL2.
+O.K. So why not change the order so that you know you have all the
+needed dependencies before registering the MDIO bus?
 
->> Create module parameters partition_pmu and reserved_guest_counters to
->> reserve a number of counters for the guest. These numbers are set at
->> boot because the perf subsystem assumes the number of counters will
->> not change after the PMU is probed.
+Quoting your previous email:
 
->> Introduce the function armv8pmu_partition() to modify the PMU driver's
->> cntr_mask of available counters to exclude the counters being reserved
->> for the guest and record reserved_guest_counters as the maximum
->> allowable value for HPMN.
+> Returning EPROBE_DEFER after probing a bus may result in an infinite
+> probe loop if the EPROBE_DEFER error is never resolved. For example,
+> if the PCS is located on another MDIO bus and that MDIO bus is
+> missing its driver then we will always return EPROBE_DEFER.
 
->> Due to the difficulty this feature would create for the driver running
->> at EL1 on the host, partitioning is only allowed in VHE mode. Working
->> on nVHE mode would require a hypercall for every counter access in the
->> driver because the counters reserved for the host by HPMN are only
->> accessible to EL2.
+Why not get a reference on the PCS device before registering the MDIO
+bus?
 
->> Signed-off-by: Colton Lewis <coltonlewis@google.com>
->> ---
->>   arch/arm/include/asm/arm_pmuv3.h   | 10 ++++
->>   arch/arm64/include/asm/arm_pmuv3.h |  5 ++
->>   drivers/perf/arm_pmuv3.c           | 95 +++++++++++++++++++++++++++++-
->>   include/linux/perf/arm_pmu.h       |  1 +
->>   4 files changed, 109 insertions(+), 2 deletions(-)
-
->> diff --git a/arch/arm/include/asm/arm_pmuv3.h  
->> b/arch/arm/include/asm/arm_pmuv3.h
->> index 2ec0e5e83fc9..9dc43242538c 100644
->> --- a/arch/arm/include/asm/arm_pmuv3.h
->> +++ b/arch/arm/include/asm/arm_pmuv3.h
->> @@ -228,6 +228,11 @@ static inline bool kvm_set_pmuserenr(u64 val)
-
->>   static inline void kvm_vcpu_pmu_resync_el0(void) {}
-
->> +static inline bool has_vhe(void)
->> +{
->> +	return false;
->> +}
->> +
-
-> This has nothing to do with PMUv3, I'm a bit surprised to see you're
-> touching 32-bit ARM. Can you just gate the whole partitioning thing on
-> arm64?
-
-The PMUv3 driver also has to compile on 32-bit ARM.
-
-My first series had the partitioning code in arch/arm64 but you asked me
-to move it to the PMUv3 driver.
-
-How are you suggesting I square those two requirements?
-
->> +static bool partition_pmu __read_mostly;
->> +static u8 reserved_guest_counters __read_mostly;
->> +
->> +module_param(partition_pmu, bool, 0);
->> +MODULE_PARM_DESC(partition_pmu,
->> +		 "Partition the PMU into host and guest VM counters [y/n]");
->> +
->> +module_param(reserved_guest_counters, byte, 0);
->> +MODULE_PARM_DESC(reserved_guest_counters,
->> +		 "How many counters to reserve for guest VMs [0-$NR_COUNTERS]");
->> +
-
-> This is confusing and not what we discussed offline.
-
-> Please use a single parameter that describes the number of counters used
-> by the *host*. This affects the *host* PMU driver, KVM can discover (and
-> use) the leftovers.
-
-> If the single module parameter goes unspecified the user did not ask for
-> PMU partitioning.
-
-I understand what we discussed offline, but I had a dilemma.
-
-If we do a single module parameter for number of counters used by the
-host, then it defaults to 0 if unset and there is no way to distinguish
-between no partitioning and a request for partitioning reserving 0
-counters to the host which I also thought you requested. Would you be
-happy leaving no way to specify that?
-
-In any case, I think the usage is more self explainatory if
-partitition=[y/n] is a separate bit. The other parameter for guest
-reservation is then based on a consideration of what an unset parameter
-should mean and I decided it's a more sane default if partition=y
-[other-param]=0/unset gives 0 counters to the guest.
-
-It does affect the host, but by default the host owns everything. The
-only people who will be tweaking these parameters are going to be
-concerned with how many counters the guest gets and I think the
-parameters should reflect that intent.
-
->> +/**
->> + * armv8pmu_reservation_is_valid() - Determine if reservation is allowed
->> + * @guest_counters: Number of host counters to reserve
->> + *
->> + * Determine if the number of host counters in the argument is
->> + * allowed. It is allowed if it will produce a valid value for
->> + * register field MDCR_EL2.HPMN.
->> + *
->> + * Return: True if reservation allowed, false otherwise
->> + */
->> +static bool armv8pmu_reservation_is_valid(u8 guest_counters)
->> +{
->> +	return guest_counters <= armv8pmu_pmcr_n_read();
->> +}
->> +
->> +/**
->> + * armv8pmu_partition_supported() - Determine if partitioning is  
->> possible
->> + *
->> + * Partitioning is only supported in VHE mode (with PMUv3, assumed
->> + * since we are in the PMUv3 driver)
->> + *
->> + * Return: True if partitioning is possible, false otherwise
->> + */
->> +static bool armv8pmu_partition_supported(void)
->> +{
->> +	return has_vhe();
->> +}
->> +
->> +/**
->> + * armv8pmu_partition() - Partition the PMU
->> + * @pmu: Pointer to pmu being partitioned
->> + * @guest_counters: Number of host counters to reserve
->> + *
->> + * Partition the given PMU by taking a number of host counters to
->> + * reserve and, if it is a valid reservation, recording the
->> + * corresponding HPMN value in the hpmn field of the PMU and clearing
->> + * the guest-reserved counters from the counter mask.
->> + *
->> + * Passing 0 for @guest_counters has the effect of disabling  
->> partitioning.
->> + *
->> + * Return: 0 on success, -ERROR otherwise
->> + */
->> +static int armv8pmu_partition(struct arm_pmu *pmu, u8 guest_counters)
->> +{
->> +	u8 nr_counters;
->> +	u8 hpmn;
->> +
->> +	if (!armv8pmu_reservation_is_valid(guest_counters))
->> +		return -EINVAL;
->> +
->> +	nr_counters = armv8pmu_pmcr_n_read();
->> +	hpmn = guest_counters;
->> +
->> +	pmu->hpmn_max = hpmn;
-
-> I'm not sure the host driver needs this for anything, KVM just needs to
-> know what's potentially in use by the host.
-
->> +	/* Inform host driver of available counters */
-
-> ... said the driver to itself :)
-
-I can delete that comment now :)
+	Andrew
