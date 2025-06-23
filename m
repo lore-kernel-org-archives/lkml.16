@@ -1,98 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEADF1F3BB0;
-	Mon, 23 Jun 2025 10:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668C423BD09;
+	Mon, 23 Jun 2025 10:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750675305; cv=none; b=LC2EqlCOnWeAGclel39QeRe1MujTB/ewDzZQHaipb52DGOBzGpOg9Bc7Zdsx4I7p42v5YhQJhNiGiUnnZdZiujYxnwhKozoZZHPLk7t5JYiNJ8/VRlbrBkEJhN5Mo3Mg/81VpZe1Hs+7hVJydJEAGmBRJis7xRAC7OLSQxNQdIw=
+	t=1750675328; cv=none; b=e7cJ8Og5CceS8+uozXB0bgVVzG6ddAuYWZs5t8xfyMJyIxcjstsyDDk/Yc5dkPQZY4CWjI3bYwJWfcjosMrIAbELLF0KByZ7Is5vV0fGpvaPQ9Mjj9nj5ileepz79jiSOmDyJrGe2KcNnYPKDD5eexeo43qO2t5+dG3ktZU4GNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750675305; c=relaxed/simple;
-	bh=TjVPoKfdwA4LC6d6Oiek3FJXnEusgEo0vEnY+quhvUY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cbE3fsYzeK+PwzyNvjy+qIIWgcgUpHpT04126lJ6mXZXmuJSN1lY9vXVWYjcqp982f0Xkp1pSPV9N5vVI+Eoi2moTXQ5LRpqZcfLdiRvNgtPMvJYdyee0ms6jlFZQ3/xQrddpjgyxiQMjlZ2HPbKaowBedOXY+Gvv5ncYKpGhEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cTUAD/gU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750675328; c=relaxed/simple;
+	bh=BpponAcg+z4hGFK/u5zBtOrapD2VBIN9qxipHbAfAZc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=UA56g/+bLNLxt153mbXpSmWPZ6aU5bV4mriWfrdFKxu0Z+khDI3yLwzwmNSegnhxvOydskhDpsu6cPSKCE+iPqmystSCV+5SUaNwQqSR7TQjBHi87qv2PTFUrr+bZM6/S7XpU2wCBe37Ie7U2wLpjyvfbGwp5Of3CxAEdLEaAAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=GzKVBdPw; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cTUAD/gU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8893BC4CEF1;
-	Mon, 23 Jun 2025 10:41:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750675304;
-	bh=TjVPoKfdwA4LC6d6Oiek3FJXnEusgEo0vEnY+quhvUY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cTUAD/gUMZOHoJKyYa9WlHoR8tQ+Dl2l5zyAa0WhMxz2xMnLNrJFCZBuZ2deldPUr
-	 KYhAyDywxD7UoBZ+C6RHd+qOlwuM8AUmXT/PNbt2XdsfvbZn/xmONwgfMCNi/blkXw
-	 eymthVUItsI9Z74j6AyATPLUwHeTNPoqeCkdKR3R5aNVQXGaO+K13TEbPoHENG26Fz
-	 uXBLdeG23wCeyZNuneL+aWpGOcN7OlQyKRXbfz/g7iO39vyFuSV2kQ9/WvF1R2djAE
-	 JXqgGbppJS+V/DqnR3vHk+kNTFCZeH1/R8d+NSYJ/2dsIaYokAan7FAsDdJymTEqoz
-	 1DFPZUbVuYbMg==
-From: Christian Brauner <brauner@kernel.org>
-To: Shivank Garg <shivankg@amd.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	seanjc@google.com,
-	vbabka@suse.cz,
-	willy@infradead.org,
-	pbonzini@redhat.com,
-	tabba@google.com,
-	afranji@google.com,
-	ackerleytng@google.com,
-	jack@suse.cz,
-	hch@infradead.org,
-	cgzones@googlemail.com,
-	ira.weiny@intel.com,
-	roypat@amazon.co.uk,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	david@redhat.com,
-	akpm@linux-foundation.org,
-	paul@paul-moore.com,
-	rppt@kernel.org,
-	viro@zeniv.linux.org.uk
-Subject: Re: [PATCH V2] fs: export anon_inode_make_secure_inode() and fix secretmem LSM bypass
-Date: Mon, 23 Jun 2025 12:41:28 +0200
-Message-ID: <20250623-abmessungen-vakuum-9c0c03207fcd@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250620070328.803704-3-shivankg@amd.com>
-References: <20250620070328.803704-3-shivankg@amd.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GzKVBdPw"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250623104204euoutp012401a2774c3ecc6088173c26bf10b1ec~Lpe6VQh3p2279622796euoutp012;
+	Mon, 23 Jun 2025 10:42:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250623104204euoutp012401a2774c3ecc6088173c26bf10b1ec~Lpe6VQh3p2279622796euoutp012
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750675324;
+	bh=ZgC7RmHblf1sf7WhXqmx7u6LQrZhsQXE/footszyEW0=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=GzKVBdPw94wRPygDILO19gR4YjbJe52ce42rJk/B3hzlaWlrRlfdwI8nsZzPkDiQR
+	 oHaiH1lEGlhXsfloz3SwuT/GSfXbXvhOrUWgy+NKZPTMSNBdHMWEf8RvcPeRf9TVzb
+	 iloMNZJkhXyEyTut7qAzHEx/iDzsnRv5iMjOI6wE=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250623104203eucas1p1ad615a6dbbfc1e4a493d4eb81b68d666~Lpe52oEhj0250002500eucas1p1v;
+	Mon, 23 Jun 2025 10:42:03 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250623104202eusmtip1432554c88ece7735183b4593540639d1~Lpe4jGdCu1485414854eusmtip1Q;
+	Mon, 23 Jun 2025 10:42:02 +0000 (GMT)
+Message-ID: <962be35f-65be-4589-a844-cb613ea40286@samsung.com>
+Date: Mon, 23 Jun 2025 12:42:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1342; i=brauner@kernel.org; h=from:subject:message-id; bh=TjVPoKfdwA4LC6d6Oiek3FJXnEusgEo0vEnY+quhvUY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRE6sf/n97Pffb45Slvap1Wcy1hlKj5ssXp7D7NOueo7 UrPtmtu6ChlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZiIABfD/zi7I5F/1ydFnnJ7 fuX4njkd1h2/Nz7NOG4eUDNd6XOJaiojQ1Oghci+2dYTX9yqW/COcbPd1oWejCf2X4k2kfs/SWw KJyMA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/9] Rust Abstractions for PWM subsystem with TH1520
+ PWM driver
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Drew Fustini
+	<fustini@kernel.org>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Miguel Ojeda
+	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
+	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas
+	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
+	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Drew Fustini
+	<drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob
+	Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+	Dooley <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski
+	<m.szyprowski@samsung.com>, Benno Lossin <lossin@kernel.org>, Michael
+	Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <CANiq72=YsoFSSm9QU0W2ZQseeQTWFNkXYVR1mODdv3HHg-0PAQ@mail.gmail.com>
 Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250623104203eucas1p1ad615a6dbbfc1e4a493d4eb81b68d666
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250618122801eucas1p2f9ca464e9e5c8d954d5150500952aeed
+X-EPHeader: CA
+X-CMS-RootMailID: 20250618122801eucas1p2f9ca464e9e5c8d954d5150500952aeed
+References: <CGME20250618122801eucas1p2f9ca464e9e5c8d954d5150500952aeed@eucas1p2.samsung.com>
+	<20250618-rust-next-pwm-working-fan-for-sending-v4-0-a6a28f2b6d8a@samsung.com>
+	<aFSw44++s7xMkJ9I@x1>
+	<CANiq72=YsoFSSm9QU0W2ZQseeQTWFNkXYVR1mODdv3HHg-0PAQ@mail.gmail.com>
 
-On Fri, 20 Jun 2025 07:03:30 +0000, Shivank Garg wrote:
-> Export anon_inode_make_secure_inode() to allow KVM guest_memfd to create
-> anonymous inodes with proper security context. This replaces the current
-> pattern of calling alloc_anon_inode() followed by
-> inode_init_security_anon() for creating security context manually.
+
+
+On 6/21/25 14:21, Miguel Ojeda wrote:
+> On Fri, Jun 20, 2025 at 2:52 AM Drew Fustini <fustini@kernel.org> wrote:
+>>
+>> Did I do something wrong?
 > 
-> This change also fixes a security regression in secretmem where the
-> S_PRIVATE flag was not cleared after alloc_anon_inode(), causing
-> LSM/SELinux checks to be bypassed for secretmem file descriptors.
+> No -- the file just doesn't exist in the patches.
+
+Yeah I did something wrong, I missed it during the commit split, and for
+me compilation worked as I had many untracked files in the repository
+and were compiling with pwm.c as one of them.
+
 > 
-> [...]
+> Cheers,
+> Miguel
+> 
 
-Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-Patches in the vfs.fixes branch should appear in linux-next soon.
-
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.fixes
-
-[1/1] fs: export anon_inode_make_secure_inode() and fix secretmem LSM bypass
-      https://git.kernel.org/vfs/vfs/c/cbe4134ea4bc
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
