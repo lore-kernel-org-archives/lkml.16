@@ -1,174 +1,131 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1562BE7BE
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151D52D29B1;
+	Mon, 23 Jun 2025 16:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750695529; cv=none; b=ErlUZSm1zk0mhpW8QWlZWWl+1ccB/L57tXJJb1LReLFQ0kVC+KyZZlu7W2DvdG41t47qE1aB440vpUjjvBbByVvLQFFFuIymMjPznjIbG3vha/RcWxC8FlMV7/0NJVbjDlh1LCdypwilNv+pHSx8RHGzNCEw8Xp6gOW1OPAL6pM=
+	t=1750695545; cv=none; b=gEfZq0WOsJdfeWqP6E7W+KAnEXA1+ffNDIY92BT/HK2q9b7Mb6i7/v+uVu9zqCPQxoe0HBUV8yz9vg4jdbIy1dvZQQyTziHMNc6UHFGUjlgAThdrI9mJBkW37SBkxrk7+JuKzKUuxxHDIVknxsiE9f7G/N7Mlj9W32HP0J7ywt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750695529; c=relaxed/simple;
-	bh=EDHaxySB1XyXigRSYjSRI7C2L41azpKZfXI/ttcEEo0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Kf6DFmtonUY/KwiqnOmUMVtENyJllPhQw1ijnUc3+4YhFPcRqxsco06MxI/Ma2Ki7HIgQYlsumwu9ex7FWOlcR+1HvSZt+yK2QNcXVrERLNzloHXHfgTKZn+XmMYQ25NjdzVZ58FNI9uvGmMmu4FyQd+upCKWxDKXquTCEpryFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ok3fQtyN; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750695545; c=relaxed/simple;
+	bh=bJeI13UOBy2+tAGnslx3UMPJTEgbJ0XaXFZ2738ja9g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=A3VzNeXAjRLPYR28ykrqJA76Yg1mylwMw+gXfDaLct8tT6aBBncJHdF8q0zy0VLkewVxTO3Va8gUKFcdPmoFZV5aVfc9V8SzjYMcLYJEkC2C4S8od1Owz/ugWR1eBNpvs8IAVxNfvgFqSE8qeyG1dybW9bYVYX8dbX98dRf1FBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OhIi8qbv; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ok3fQtyN"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2c36951518so5571828a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:18:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OhIi8qbv"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-441ab63a415so46433535e9.3;
+        Mon, 23 Jun 2025 09:19:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750695527; x=1751300327; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OOkpzMlhlXRiMCNdOIvauV/qFub0T/UowmpNSsYnBL4=;
-        b=ok3fQtyNSBcUqCubl+Lz2K0WlkXRHfvXkDzsv/rGPc7b1ghBZc+p2/IYP5cwxthWEF
-         rn9Nx0bpDO/K7E5va/IkUeW7tpTJQRbe8DqDFP82HxyTTPe3V7zV1t4l1fRs7My5LtUZ
-         /N9Nb91DUny3N/8MFK1qTU2RDH/8yUB5FgZpPcNRA9KKcfenjfcGv5MLYK/uyv/4KHOe
-         uZBvN7FLoX6qDzVaWmrIv9G2J+CnrEA1/EoVwApG8Yiu7ECmgLE+Dozn58L9acBrfRgv
-         H2zfUsJvp12C6RwZraUq4sT2GdVHQ/tNTT8Jz52AIWTtUtdQvQ9iSQvYzGczv+DFnr7I
-         rerg==
+        d=gmail.com; s=20230601; t=1750695542; x=1751300342; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+tpOC8J9R9fSt7hQyUzw01Amv/SyWf6vMX3xdtAovfw=;
+        b=OhIi8qbvRlt7og2gfT1ORU+GTIsR8Jig2tiHmsXlp+6UD8CbDhQkAORML6gnek038M
+         EYmaqHr31bmoCo09Uwb+plPJOwp+RL7q+WSbmswNoSn3fz0i7AVhx62ohPyRsdfF0btU
+         r6n/kjtBTkqtWKMvTdvJ0Bv/aPFWVDfuROTjN8f9BXlhRrCQz0hs3Qf+MDTroVnkDs+h
+         WMaQcKRTnE7efiuBDMm6wpGGFEapqJhYlfQYih5tKxb2egeCo/tQxdTIofGaIyHN/7wj
+         XLooahR74GpELPnCvl52g7WoFz9MwL6VPCmkKS5WGT0qjuZS14JKVJSJKxNRs7K93sgV
+         6xzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750695527; x=1751300327;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OOkpzMlhlXRiMCNdOIvauV/qFub0T/UowmpNSsYnBL4=;
-        b=mtdApbpgs+ISEGL1b6qD0c84Cbc5BlO64pwTQmYTy6ZnMFJPB87oAZCRA/1217ICV7
-         GVTYCcqyeWA+rOm7Ej2mD9AllfbHcZsKoyqO6fSkksOecSYn48GKIvp/t7KmGlRvFdwr
-         JOMiCNsxtpTYUO/ithYoLHatyGrGbFPPwL9YJ0Jj5bPdhNW6N3nwmKVIV7SN1kFwgtWK
-         0G3ucUsVw+ShcLWjPYykrT4OMONHzrzcyayq2CRD8vjxqe8kSFkRXq7IpJOrjzjTnA+H
-         Jf8gtz6Tf6AaeggZmnB23WAVn/otMLogMPFgAnBl9pZlWG5Iy32wMaEfgm1ULMf3ZhcU
-         TInw==
-X-Forwarded-Encrypted: i=1; AJvYcCV/UrljV2iTOSzJYLCrqL10JlHexVdbKmu1gJdXmxH5l5MC8TQ26Qd6l2dmh8CYkgIh2EiCPQeB96m/lN8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEyxsQqlvEriuvHFxNRfZGoY/NUxJ2auRMioDTCJ+kTGYDVJd+
-	0GFEy0Xh3nQnDsNFOMctri/ZB3FnPe9UwYaeQOQ52xdI7bwBOhU5hbyox0Bf8802zVFWL8Ffr62
-	x90qoEw==
-X-Google-Smtp-Source: AGHT+IENQipggL2SOcRyFklB3/6faa8uHHLu36CbWgSZEypv6kRSEUBRnwpSzpoNeCEIYgBhsThVyFLxqUA=
-X-Received: from pfug19.prod.google.com ([2002:a05:6a00:793:b0:749:8f7:e14e])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:c992:b0:21f:5c9d:498e
- with SMTP id adf61e73a8af0-22026d32fe2mr19839452637.7.1750695527173; Mon, 23
- Jun 2025 09:18:47 -0700 (PDT)
-Date: Mon, 23 Jun 2025 09:18:45 -0700
-In-Reply-To: <pxtvegopzsyhn7lelksclxiiee7tumppu76553rax7octqpy7i@giclgo667htf>
+        d=1e100.net; s=20230601; t=1750695542; x=1751300342;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+tpOC8J9R9fSt7hQyUzw01Amv/SyWf6vMX3xdtAovfw=;
+        b=m4C/AzUvMsbKEhb6ewbPU+hA/PlRBY8KGvl09L1vEpTE6m6Bn5SpOUV/vc7R5GQ+K+
+         dncOhAoctxLDvIPxZAonOHz5Bj4mD/uXlhSaow4sRo9nld8C0PsV91c6ZXUhT49vR0c7
+         a4wy1ukPUhj+dOY0YSHtOYr/rBh3mj9F1rgit0uDk84Reb17WKEYBa8TN111ZaPbEl44
+         aAIzp+LhN24f0BogCDKASbBQzGrCemW35EWa8jMhUIQPLd3BKjGSb3RqMSR4ucYfDPpo
+         EYeq8DT6Ylz191aqKGb+feiYqoZ2eNclnpHMhmOxBz8kiAzRMauSTGOZdvfVtBpd3UJ6
+         xu2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVyZjvOaPIcahlX2o1dJ+QsNIe4KRUO7oYRz2ui+SYfEkogb/19hILQ6QkcjTloq9nt/6oHOYHf36k=@vger.kernel.org, AJvYcCW2yUmfzOfD6z0x0deEoq/ylR0AT3sEzOf45e0B40AzpcYc+kDizjm3geTXRHxtK1rQ0sDmh4XoJIoy6pV5@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSdVvfV/UwmaQYMsu7io9CmWFzwpUl+QXO8mtJiFIQkTwvDs9C
+	koaMVrzI1NMgXVW5ij6r/Op+/WbnhUSpJusvGKOtvheeYATvHY0o7b/r
+X-Gm-Gg: ASbGncshAhOUTaKnK9qRF1oUKPjhp9WU4r+GBNnV7HdcBjKUNntpb8mNeCcjxtrWtVQ
+	ek4UOJOGQYsTpyja2x9SZYhbTqbEioh2riL3iAD1H+K8C4FJ9svVIYnTbp087edgt2NYDXLZwe3
+	62gwTMB3Ab6ohfk/qrTYaOCfIwjiy2CUVG94jD2+1Em6U0LM/JTtmIL5ujrvlyRszLGpirY4gvq
+	yybTucKgZwIWJ4CE8lcENwaxJaRQqzGSUc1R04nCTVuvU2HSpqsvx9ODwZAO/1C3lZ1agXY0kRe
+	P8yLLj/u+0IZTeVEF6LtiITaClaN+dlPJ0/GlsrJ07EbsXb8M2gubxo/+eEhd8s/3VpLHDcfa5a
+	m
+X-Google-Smtp-Source: AGHT+IHW1KS6DZgszV8TRKavm2+rGnxthAJy2Y+zJYOtYLaIKnoNeYWITRi9v5gVHXPt24t3FM2Q2w==
+X-Received: by 2002:a05:600c:4684:b0:453:d3d:d9fd with SMTP id 5b1f17b1804b1-453654cb7cdmr136417035e9.12.1750695541894;
+        Mon, 23 Jun 2025 09:19:01 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.24])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646d7fe5sm113817985e9.16.2025.06.23.09.19.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 09:19:01 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: hpa@zytor.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	ubizjak@gmail.com
+Cc: x86@kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re:[PATCH v1 1/3] Recieve boot_param from RDI Instead of RSI
+Date: Mon, 23 Jun 2025 16:16:56 +0000
+Message-ID: <20250623161741.623-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <2D63735B-FA76-428E-8F68-8EBCAEA0985E@zytor.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250611224604.313496-2-seanjc@google.com> <20250611224604.313496-22-seanjc@google.com>
- <pxtvegopzsyhn7lelksclxiiee7tumppu76553rax7octqpy7i@giclgo667htf>
-Message-ID: <aFl-ZYyf9guxSkHE@google.com>
-Subject: Re: [PATCH v3 20/62] KVM: SVM: Add a comment to explain why
- avic_vcpu_blocking() ignores IRQ blocking
-From: Sean Christopherson <seanjc@google.com>
-To: Naveen N Rao <naveen@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
-	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Sairaj Kodilkar <sarunkod@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
-	Francesco Lavra <francescolavra.fl@gmail.com>, David Matlack <dmatlack@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 23, 2025, Naveen N Rao wrote:
-> On Wed, Jun 11, 2025 at 03:45:23PM -0700, Sean Christopherson wrote:
-> > Add a comment to explain why KVM clears IsRunning when putting a vCPU,
-> > even though leaving IsRunning=1 would be ok from a functional perspective.
-> > Per Maxim's experiments, a misbehaving VM could spam the AVIC doorbell so
-> > fast as to induce a 50%+ loss in performance.
-> > 
-> > Link: https://lore.kernel.org/all/8d7e0d0391df4efc7cb28557297eb2ec9904f1e5.camel@redhat.com
-> > Cc: Maxim Levitsky <mlevitsk@redhat.com>
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> >  arch/x86/kvm/svm/avic.c | 31 ++++++++++++++++++-------------
-> >  1 file changed, 18 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-> > index bf8b59556373..3cf929ac117f 100644
-> > --- a/arch/x86/kvm/svm/avic.c
-> > +++ b/arch/x86/kvm/svm/avic.c
-> > @@ -1121,19 +1121,24 @@ void avic_vcpu_blocking(struct kvm_vcpu *vcpu)
-> >  	if (!kvm_vcpu_apicv_active(vcpu))
-> >  		return;
-> >  
-> > -       /*
-> > -        * Unload the AVIC when the vCPU is about to block, _before_
-> > -        * the vCPU actually blocks.
-> > -        *
-> > -        * Any IRQs that arrive before IsRunning=0 will not cause an
-> > -        * incomplete IPI vmexit on the source, therefore vIRR will also
-> > -        * be checked by kvm_vcpu_check_block() before blocking.  The
-> > -        * memory barrier implicit in set_current_state orders writing
-> > -        * IsRunning=0 before reading the vIRR.  The processor needs a
-> > -        * matching memory barrier on interrupt delivery between writing
-> > -        * IRR and reading IsRunning; the lack of this barrier might be
-> > -        * the cause of errata #1235).
-> > -        */
-> > +	/*
-> > +	 * Unload the AVIC when the vCPU is about to block, _before_ the vCPU
-> > +	 * actually blocks.
-> > +	 *
-> > +	 * Note, any IRQs that arrive before IsRunning=0 will not cause an
-> > +	 * incomplete IPI vmexit on the source; kvm_vcpu_check_block() handles
-> > +	 * this by checking vIRR one last time before blocking.  The memory
-> > +	 * barrier implicit in set_current_state orders writing IsRunning=0
-> > +	 * before reading the vIRR.  The processor needs a matching memory
-> > +	 * barrier on interrupt delivery between writing IRR and reading
-> > +	 * IsRunning; the lack of this barrier might be the cause of errata #1235).
-> > +	 *
-> > +	 * Clear IsRunning=0 even if guest IRQs are disabled, i.e. even if KVM
-> > +	 * doesn't need to detect events for scheduling purposes.  The doorbell
-> 
-> Nit: just IsRunning (you can drop the =0 part).
+> On June 23, 2025 1:15:23 AM PDT, Khalid Ali <khaliidcaliy@gmail.com> wrote:
+> >From: Khalid Ali <khaliidcaliy@gmail.com>
+> >
+> >Adjust the kernel entry point to recieve arguments from RDI instead of
+> >RSI.
+> >
+> >Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
+> >---
+> > arch/x86/kernel/head_64.S | 4 ++--
+> > 1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> >diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+> >index dfb5390e5c9a..d24fea15b6a6 100644
+> >--- a/arch/x86/kernel/head_64.S
+> >+++ b/arch/x86/kernel/head_64.S
+> >@@ -43,7 +43,7 @@ SYM_CODE_START_NOALIGN(startup_64)
+> >        * for us.  These identity mapped page tables map all of the
+> >        * kernel pages and possibly all of memory.
+> >        *
+> >-       * %RSI holds the physical address of the boot_params structure
+> >+       * %RDI holds the physical address of the boot_params structure
+> >        * provided by the bootloader. Preserve it in %R15 so C function calls
+> >        * will not clobber it.
+> >        *
+> >@@ -56,7 +56,7 @@ SYM_CODE_START_NOALIGN(startup_64)
+> >        * compiled to run at we first fixup the physical addresses in our page
+> >        * tables and then reload them.
+> >        */
+> >-      mov     %rsi, %r15
+> >+      mov     %rdi, %r15
+> >
+> >       /* Set up the stack for verify_cpu() */
+> >       leaq    __top_init_kernel_stack(%rip), %rsp
 
-Hmm, not really.  It could be:
+> This is an ABI.
+>
+> Nacked-by: H. Peter Anvin <hpa@zytor.com>
 
-	/* Note, any IRQs that arrive while IsRunning is set will not cause an
+Peter, thanks for the response but if i ask you:
+What is specific reason that this patch is wrong?
+Why used RSI instead of RDI at the first place?
 
-or
+I broke my patch reference and it became stand alone each one, however this is one of three series. 
+This makes the entry more ABI complaint, if there is no specific reason of objection.
 
-	/* Note, any IRQs that arrive while IsRunning=1 will not cause an
-
-but that's just regurgitating the spec.  The slightly more interesting scenario
-that's being described here is what will happen if an IRQ arrives _just_ before
-the below code toggle IsRunning from 1 => 0.
-
-> Trying to understand the significance of IRQs being disabled here. Is 
-> that a path KVM tries to optimize?
-
-Yep.  KVM doesn't need a notification for the undelivered (virtual) IRQ, because
-it won't be handled by the vCPU until the vCPU enables IRQs, and thus it's not a
-valid wake event for the vCPU.
-
-So, *if* spurious doorbells didn't affect performance or functionality, then
-ideally KVM would leave IsRunning=1, e.g. so that the IOMMU doesn't need to
-generate GA log events, and so that other vCPUs aren't forced to VM-Exit when
-sending an IPI.  Unfortunately, spurious doorbells are quite intrusive, and so
-KVM "needs" to clear IsRunning.
-
-> Theoretically, it looks like we want to clear IsRunning regardless of whether
-> the vCPU is blocked so as to prevent the guest from spamming the host with
-> AVIC doorbells -- compared to always keeping IsRunning set so as to speed up
-> VM entry/exit.
-
-Yep, exactly.
-
-> > +	 * used to signal running vCPUs cannot be blocked, i.e. will perturb the
-> > +	 * CPU and cause noisy neighbor problems if the VM is sending interrupts
-> > +	 * to the vCPU while it's scheduled out.
-> > +	 */
-> >  	avic_vcpu_put(vcpu);
-> >  }
-> 
-> Otherwise, this LGTM.
-> Acked-by: Naveen N Rao (AMD) <naveen@kernel.org>
-> 
-> 
-> Thanks,
-> Naveen
-> 
+Thanks
