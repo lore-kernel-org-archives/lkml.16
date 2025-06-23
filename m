@@ -1,277 +1,209 @@
-Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11012057.outbound.protection.outlook.com [52.101.126.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49DA246BAA;
-	Mon, 23 Jun 2025 12:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750682086; cv=fail; b=B6Cm2sgtsiZ3x44zC1nAa2YF2qDn+qfem3QBBTaHd4KyMxpQAhpyTJ5z5KsnQ7uolHXJpgAfm6TrZwen3oLasbUacsYH59UCxBquzTSRSoTD4pS+KgipFeSfxcxO9HwV6Xr7n9h63mRe9ZlX5RdB19PrSJkjwPfpYZYKhgDX1aU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750682086; c=relaxed/simple;
-	bh=10ZeyYAPSEDfMPlP6AFojrhgT4UFvJP8iY/F1+L25bA=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=sv5aiQwHNDVsxhgCvjgUcVXtIX/59fYhP7BB83kpyv4AoxPGGq4yQb/BVKkUUgs7Pqi/443/+1cXpB2LBfs+CKN8clikO0Kr3UGfjTZgMMpAoGDL9W7WwYefnjEIy6hq56u1pC77XCVCPEUrUQp60PHeoJRbUSiTs7yUFx0XdLE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=ngTVmbSU; arc=fail smtp.client-ip=52.101.126.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C001DF728;
+	Mon, 23 Jun 2025 12:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750682137; cv=none; b=Eu785+KqhKlSorT1SNO0t2urJT6Y1hGG3ENCiSRGv0edPxghURrHG3eSfDK5GM+bZQGn/JAi75J/dtbHcBPxCYhjdpCd5piz193jmZo9dKtVVXgd0LsOcvypAVgXknn5I4cR/bBoRCFosS64tfDrejRibbztDqWAEdB5maxZoNE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750682137; c=relaxed/simple;
+	bh=Fw8H1bJz3s55X12OstVPkl/Ss/KPoSsjGMv4XIofF3Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JBF2+a+PTkBhRyA9swwvXIdyNihTCvgu9K4dr2+yy3Kc/fXxOr7e6q0iB6DeRRUJhpj/NWWhBfUvGb8EH4Pc0Kp4ci6DC5RlDoAzSFa+FVHqXsMyNi1QLccRnLLhnZt41AxURTxYW75xcxTKzvU2n5rD4Ntw1ASqU6wsC0fx9Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B3yQUiSa; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="ngTVmbSU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pmIvOUiceNAgFv/1cSAnXTH8NXy3SRfNlvrPghnbl/sC07tkfwU8Cmkoqzmroo76AjwLGYT5TXqQJUA4b2HaI/zz4dhVlVLGO6RZg64TRKGO6Biq5aOJXrK7xoqecGC4LtvzWxCzv8KHWn+pSDb+lRmK2oaGnnchhLXkML8T/+ml+5Sk8AiP42iV8bO4PfMSqk3fOsgOOkFD0E6541BnS8g4BsPQIs2y88Zp2uPTHs+6qej/ZU9P7QxL5X2vnicWAGbe4EfRW7VGQhD66kW+payb1ef4PIntwgBLsEaG9VJ8atDf4H508y/N8JCSAgs3Lq+a0depUxwieUQf2uPgAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=R+8HIINLxPHdJ00nrYFShEfcQm9a1AuSi+oYJHdnGZo=;
- b=MJFTrkhg/M0PHWMAwJMM/y9zrAXimeX2hEHMQ8f0iL8zxY51skmWdcw5+sPHCIotPakj7LbflLg6OnrK04nS+wsub3sv7pWOsbZ5vMHksCZdDrlNUWHxPHuSn/M0egS7yMHH0IO1VxUFiLBcbvZFjpyCZ9O4Zf5jvob6AYpqTrTxJyaaxJh3Bpu9OJmzirr1D2XG+0jhT6Kf75PVzuIQwbXh2rBJ9+yOz1VJkZd9ixQZsQ9DIG56/XFsw0fp6nbx1anZI1o9UNuNtJBs6Ed9l8z07+xYTTsGzho0z6LuD1akkqdhK1iHoU1s/wwj7CyIwJBFOwIp/enoV+s+vfRWbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R+8HIINLxPHdJ00nrYFShEfcQm9a1AuSi+oYJHdnGZo=;
- b=ngTVmbSUfj9Nwf48LFldwTi6a0yMyi/UVAPUmlridf6gio4MCTFneuWbIiSI7MjEqDTEE2AcsHetimq5+kW75G6GfPFI+vcjwXR+XLONHYnPNWkBZkTgHRzF4moT4RkB88P05q5IIJ2UFVGCXqSMr/iIiVx/Xg3Ekdx9Iu+yqPTqhNFsMNzGK0hVcnSNyXnLEjkDLVlC8TCWf4v1KtMe8GwiZEJkpxuzeOSRUEsmUEqj9S29N+1v1HnQiQV0EutHMoAQFoLSBozDj/wHby/hHftX/YwoKh/QS0CQRWGWYqw6zdbYFdr1zlh7E/WvJ/snBKTKxgUrs5EbpR02ZZ3JPw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from OS8PR06MB7663.apcprd06.prod.outlook.com (2603:1096:604:2ac::8)
- by TYUPR06MB6196.apcprd06.prod.outlook.com (2603:1096:400:35c::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Mon, 23 Jun
- 2025 12:34:39 +0000
-Received: from OS8PR06MB7663.apcprd06.prod.outlook.com
- ([fe80::46a5:9b06:416e:1e49]) by OS8PR06MB7663.apcprd06.prod.outlook.com
- ([fe80::46a5:9b06:416e:1e49%3]) with mapi id 15.20.8857.026; Mon, 23 Jun 2025
- 12:34:39 +0000
-From: Pan Chuang <panchuang@vivo.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	linux-pm@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Yangtao Li <frank.li@vivo.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Thierry Reding <treding@nvidia.com>,
-	Pan Chuang <panchuang@vivo.com>
-Subject: [PATCH v6 05/24] thermal/drivers/tegra: convert to use devm_request*_irq_probe()
-Date: Mon, 23 Jun 2025 20:34:17 +0800
-Message-Id: <20250623123422.472872-1-panchuang@vivo.com>
-X-Mailer: git-send-email 2.34.1
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: TYAPR01CA0186.jpnprd01.prod.outlook.com
- (2603:1096:404:ba::30) To OS8PR06MB7663.apcprd06.prod.outlook.com
- (2603:1096:604:2ac::8)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B3yQUiSa"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-312e747d2d8so3205345a91.0;
+        Mon, 23 Jun 2025 05:35:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750682135; x=1751286935; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O7qhLKSaZBJUrIQxrexkwHh16gMLen9lREkpVcdbEtQ=;
+        b=B3yQUiSa7l3Ph10YCNdYqsld90RF15RqUG3arqhBT3Ym/fgxggwleqexhl1gNvxEVG
+         3b3om6XIvKaYc2POshekmDqoB2YElD42NQqUL+eMCpSOPoIPVYJVGAXwMC5UkUoDel4q
+         hcIWDBWUeqoqIjTTWgfcxcrI2Xnn68N7Y+aCzuXrLjmBmp7+4HTysSqUIC/yPAtM6yRc
+         Lvu9mzg2aVy2Fwhk13gyGE14AKP1ZMDanz87gLBJmPgwHI+ujRMqLeuqKva0l1UMDmvm
+         ttPw2TPU6TMwB+BxeevYHxT7ttbaxy2dseVyNiePJoawyS2WmCNs/3MUhSZLUSx/+OE7
+         9IGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750682135; x=1751286935;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O7qhLKSaZBJUrIQxrexkwHh16gMLen9lREkpVcdbEtQ=;
+        b=HmwonrBC8yEqGeks13dwCAPbiwTpSD6W5QdM1riggl9BFfubMKRyXwBQK5cBvqNHx7
+         I0ZB9kKlw0v8FXR4oBtusZHhmBkCnMoLJTrYiMbTY2s/wcd92LTo72e7ieoVHU6qHMk5
+         V22xglT/XFYcppK0HIT8XHJckEMhe77RUIs2+Q524zNQoVz80z7bfHWPJKphX9wxuu8O
+         FDLDF/qAFa2YBeLKw/7hHCjlDXk4IURpZfFmUL6Nh29yJ3nVgf1U8yLdGaryUliffdjh
+         KO+6M2ISmJcUbUxFDT/WjXaramzP3GZ+h6NhTT9yd0JCPJF/YHP/mCWcOsAl7jNMVjKV
+         VG0w==
+X-Forwarded-Encrypted: i=1; AJvYcCV+uWKliNGpZcnykMPNPkDOZy2zo3vujhvCOsO2O0+AwEVvLuz2WmAnX8eS0d66CSp/nwYziMngg4TNd3xCmjD0@vger.kernel.org, AJvYcCWmgmX4XyUJN/NtxVnUvk7fOCfEluXr9fl38AT2pb/ri7V9lDDBjP0uNF70XrwYR+fserIVjYoJzHFTh9LY2dw=@vger.kernel.org, AJvYcCX22DHYN9a+ZjjokXuwrXZ+Qiz+dSaFt9k6PQoFx4OU7UqSDZkPwNK1ZLFAI7PswCFx0E2Ltm8wQQ==@vger.kernel.org, AJvYcCXF6qNlICpwF87LD9gUwlZYk08IPgZaw0lhJU0hM0x2yrGSWR3wCD1j1tFAfkbCfz+ixS9DFbdjUsgocyz/@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLHS2S1tokvSFCJZ5nTpclWIFjJFpTMPlEdyz795ziqQhEXwNJ
+	ftm2JyjE3kToc1FGo5VngpqGdYMS1cKtRrkGh9JEOOta0EDjjeXInUqfxcuo8aHh4uQOEDR7mxL
+	YFHaEqw2yek7BaTWxzHxlWdWQqzFwURU=
+X-Gm-Gg: ASbGncsP3llbvsoteKz9sDPZ9sezWXaxNuZBM/JFGOZAAOSC1fhpiEo1KV7Fmx0FzN3
+	f6oRjXE3qgPNpAk2vlHb4zXxBd6Xpkgoivg/Jxx6hFFM1ftZhTokyCe167gn8BhwpiQ33cL07tI
+	eIsW4TeO5Np4124gP2RBRnXXYqnnn3Ah9YeUOU2/bYkcMYjxywgjRZ5g==
+X-Google-Smtp-Source: AGHT+IFgLQuZoeX9b3aKKJtmdXKrWNO2mg86tL81LoOCWkqAY8Cl6nMZugpAgQtX1P3C6+d9ero2JdkR6FprooZDhVc=
+X-Received: by 2002:a17:90b:4c50:b0:30e:6a9d:d78b with SMTP id
+ 98e67ed59e1d1-3159f50379bmr16763807a91.12.1750682135242; Mon, 23 Jun 2025
+ 05:35:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: OS8PR06MB7663:EE_|TYUPR06MB6196:EE_
-X-MS-Office365-Filtering-Correlation-Id: 37f5d8f1-e9eb-4de4-4662-08ddb25251ef
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|52116014|366016|921020|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZkhRWUliR3VxeWRaVHpJdVFVdTUxZ09kUTkyaTlmY2NTaUs5bWc0cmozM1E5?=
- =?utf-8?B?NStYQ2tUMVAxUlpUb2dGY215dE9CRlRlUTBwRjZtQXRBeUJqcnNaNktqdVU2?=
- =?utf-8?B?bEpML21jUE5UQ3dpZ0R4RnVMTmdHay9lVTJmazNNNVNhK0pWejhOckU5ei9z?=
- =?utf-8?B?MHJEaWFpdHoxZXpWeE1pcVRveUtFR2VCVFdvUWxjblJkUk5uT1BKZDA4bXA0?=
- =?utf-8?B?eE42aUVJd3RLb0NVTE5aeUd1MG9tRlVvSS85MFdZNmFkdGJyNWlEekZzd0xq?=
- =?utf-8?B?RXE1cXlwR1hlYUFwS1dtNjFhK0pOUVVtajUrQnd2QlZWYnpnTmhoZ3NBVmI4?=
- =?utf-8?B?UUpHakNvWkNQMXJ4aUlEVkhyRm1lak5jRzdwWC9rb25qSWRhYUFlbDR5YmRN?=
- =?utf-8?B?OWpZYzhkNW9NblRMNzlxYlY3bXp4SEt3Qmt1cWYvQ3c1Sk1HNkFOMlVzMWJp?=
- =?utf-8?B?dVhiYVRjYmtTc1NFdTBrNXdKWCtha3dWQnFhc2toM1g3aGVmTHFrWkVpa1NC?=
- =?utf-8?B?QnZNRlZCWGVad1luUjIvZ0JpMEt6cHdiazVMYVZrNU5HNEpTbFVpRWxDSTI0?=
- =?utf-8?B?NmhzV3QrdWVOb256SkRYNkxuRk44Z2hvQi9IU1Y3TTR1aU9IRFdnMDlHeS9D?=
- =?utf-8?B?VEt5Q3BpTEJoWE82QWQ0UUJpZDVuTDJBNStQNlgrT2IxMnhTRVZ5Ujh2MlpP?=
- =?utf-8?B?N0hzOWpKL3RqR2E4TTJIYlRGeHZvbkRVb005Z1A3cll1WE1vc0dwdkFodVBr?=
- =?utf-8?B?VU4vNjE1d0JsUWVGeEFzaTJTaWtRb0J1Z3JmQ0FNNFFnZ2hGUFRxbmpJQjJv?=
- =?utf-8?B?dUx2MGF6TnROamtUcnNLTE8rY3FZbmppRys0eWdaaDU1M3NoVEgzdXMyNkRm?=
- =?utf-8?B?N0VJOTg4OFdtSjhBVUNGbXU1RWpKd0VkYmw2OFBqYmxrWU1jbmI4VmFnQWJB?=
- =?utf-8?B?S3I5d2p5aFlndi91eFZ2b204RFltWnlaWGltcmRoSWNiVW1YVUFMNlBySHBa?=
- =?utf-8?B?Vis1b3lncnpyQ3BqaENTbFJWeHdaMUhJYUFpQmR5b2xnQU1TVWdRS0QwcTJT?=
- =?utf-8?B?TVpVWERseFNTbzlKM2RNM01XQWZJcjFPM3dOZWpFQ1htNzRHbUE5MVEzVmta?=
- =?utf-8?B?WDIrMkxsbm1lMUg1U2toZTlhbzJMczZueHlDQ3htRFk3TmhycFZ4cGUxRXRT?=
- =?utf-8?B?REdXNFBXN2NVMFBSeEU5dDFkWG1IWFhLRWhudkxMbzdhWGtqNkx3OTkvQ1lX?=
- =?utf-8?B?OS8vdEtCSWdNb253Z0JhcFAyU1NxV2M1ZDc1dDQ4VTF0Q25nRmdKSFU4QlYw?=
- =?utf-8?B?emNWRWZTcHg0dEdNTWZKV3lPMitNa3FwcVZJVHJsQStXWG1vS1Erdm1DY1N4?=
- =?utf-8?B?c3NoTkx2UmR3b2VueEVOajBIc0JQMDJEOTRNY2swNlNpYU8vRVNXQ1NIT1pN?=
- =?utf-8?B?WmtFWHZQWUo2NTZQNlpkVkhIQmc0c3E2VFZ3Y3h4VWNPUXJpdTkvTDhaeElm?=
- =?utf-8?B?NFBkU1czakhsUzVOSkJmTFN1RUtIVDRVaWoyT3dhclg3WTIxaThHSDNCK2pm?=
- =?utf-8?B?N2hvb08xSkJScy9OMWdrTmliRjVaRHdrZzNLNWduQkROMHZwTDdiRU1tMVBT?=
- =?utf-8?B?T3ZsQjdBZXc5bVZEcldCRjNIaFdabWRuQ1hLcDJ6aFU3eVduSld6Qk0yQzZZ?=
- =?utf-8?B?OTdTT0c1OUx2am1LWFdudm1FMlFKWG53QkxWd3BxcDhKdnZNMGxKTEhCUlN5?=
- =?utf-8?B?V2sweFFadCs2bmN0MjBJVHB0U0gxbkRwMGc2R2UyRE5XZjM0Y0wrWmMvdUMy?=
- =?utf-8?B?YVdlbU9aN2RYb2xuY2Y0eXRLVW9DalJTU1FSa29qaEtEUWZOclpaMjcwalBp?=
- =?utf-8?B?MXRvWnJ5WFA4d2toeXNzMEpWUytuNmI5MHpHK3paMHRnWlJRaWJHRCtTNUZR?=
- =?utf-8?B?dnl5QjNMamlFbFcwV1h0U3hDM1ZudWh0aWZ1d2pmVkF2dy9rSHJZTHN6dWlW?=
- =?utf-8?Q?EX9O8Sao53J2Yqs80piHlCMiSiXaFQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS8PR06MB7663.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(52116014)(366016)(921020)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dWcySHRQYUY0bE14Q2RISlJxTng2VEZKcnlNb25FRkJsbkJTckpHQVNKTGdE?=
- =?utf-8?B?cHZjczJrV0JQbEFFRGNvampSY0M3eC80NTlUbWRZZUF0d2NGTjZESVFOYmM2?=
- =?utf-8?B?RXJsN0dMUXhJZktJcHl5K0dGLzRyVnI2eGsvcHR4eWJJaytieFU0b2pFZUVi?=
- =?utf-8?B?RWVrQksxQUlsZXdCM3YxcUsvVi9Ca0t6VnBUSGZGNlhwK2t6YnB3V2dMbms2?=
- =?utf-8?B?Tk01bEpjMGJHd2tSMGhoenlJSWlLYWpjeVN3QWNJaGhzK3pickdJSzkwUmlO?=
- =?utf-8?B?L0lRY3N1M296S3VFUlBGWTVXMzQwZHBMb0hSVkdvTGV2aUtaWjJXYmlSY2M2?=
- =?utf-8?B?NWtXMmVFblpOS3E3Z2lmK2x5RGFvK3o1OFJ0RDN1bE4wLzJ6ckxPN0FacWhN?=
- =?utf-8?B?ZzNkdUh4ZTFlL0RndXkyc0o1ejZOSWdaRjlwaHAxckUvMVV1ZG80Qk9pb3Vz?=
- =?utf-8?B?UzliNEdXOWwrNjRxc3Zzd2J0S1E3Z2tHdFBLekVnZ1ZCWC9mR0RKcHpUbkt4?=
- =?utf-8?B?dWJqM1BZd01MTDNJVlgxeWl4R1NoV2lYMk45ZTJTMzEvZEtYWDZFaTJybjRG?=
- =?utf-8?B?cEJMTk1XN0lvQjdpWkhVQzA5K1JxSEg1eXBNcmtsM0FYSjlocmRyRTgwTVVX?=
- =?utf-8?B?Zmc1bU95a09kQWE2MkxhOFpLOHVkNXRYY0tpSGc0SjAxcHkyeU82RkExeW5U?=
- =?utf-8?B?VDhZT3IzWkFjQTIwSjRsVGdiUkxWOFhxSCt0amNabmtKN2lXTzI4R0ZCOWRn?=
- =?utf-8?B?SlhCMlBnUU90NURnMU1CQzlaK0htZzB5bk1RaWNFR1AyT25FeDA3V1lvK0xZ?=
- =?utf-8?B?Zi8xaC82aUtNSFNQTHNJUDRCK0tKcG9LaTBIYlNqd0RNYmxNelBMMFVIajJv?=
- =?utf-8?B?Zk5BbEJaaXR3VFE5NklkREJHS0FYazdFTkZQNXNaTkdQalNLRDN5NEJ0WUk1?=
- =?utf-8?B?Y0hVcHNqSEcwaHVyMGt4a082enNqTVo2RUdRTzVTSTYyWnBOY2dTcmFrUUE5?=
- =?utf-8?B?SnZQa0tjdk51aCs2NnNDY1RocXdPTkczK25jQlBTNXpvSHNFSUJ6a1pNUUxR?=
- =?utf-8?B?WFBKejcxRzV5VEpoajJ5eUltRUtVTVdMSk1HUk03bkJZQldUUnNIbXorRFAv?=
- =?utf-8?B?U2NQaFV4ajBDRGdCSTA5dFpoOE5xdmRmL3BjWGQ3c2JFZVpLTndxM2ZJcmcx?=
- =?utf-8?B?QktDMW1oQ1Q2UEhHVWV0SzJSS0FtZEszdTVjeTNSR0Zyc1RwbytiSjEvQXh5?=
- =?utf-8?B?T2xyRjA4MGI1eE1kNEZicklyVi9vdnJZNzJ5TGd5Y0dYSE1EYk5hbXNmZzRa?=
- =?utf-8?B?UG5yQUwrL3hnVnlPOXM5SWRTRGNoMzdaUUxpT2VoMWJQbEUwMlc1WEMxMVh1?=
- =?utf-8?B?bGtoa2tSQlcwN212bVB4bTVKQmF2ekR3dHJsVkw3aEhlUGp6QlJ3YWZsdEla?=
- =?utf-8?B?OXFqODZyTTJRM0dVcThZTVNaSlhlMUswNVdUeFhDbjVjNC8yb0pKWXErR09C?=
- =?utf-8?B?SlFYVWp1Ui9XN1lZcDd1UGdjeFlRU2NDdW9GV3hHZEpGQ2dyanpSOUlvRHdY?=
- =?utf-8?B?bkEzOWI1ZWI3bWZIN0s4bDBQUk80N01XU1lQaU56UlZOSmg0aWpaRWg1c3No?=
- =?utf-8?B?MGtuTTBhYkVlQ0xIbzI4OXJnQWNBanJSTko1SWdMTEk0TnNsSys3NGJKbmFJ?=
- =?utf-8?B?L2oxTC9laUhKdW9yVVl2aVdJWDAxN0tuOU0yUkkyYkU1U3U4TEVhTzRmNnpC?=
- =?utf-8?B?eklXS2RiajF0Qm9YbE5jKzVHTXJYbzZFVXpGWXl6My9MdUlPZnZmOVBoc0hI?=
- =?utf-8?B?WjZObFlhK2g2ejVxRUtLU04xSXB1Q1F0YVpWamJkb2NHOE5yNllHSUpnTlJt?=
- =?utf-8?B?K09pdmZad1FhNXhndzlQQ0lrMVlINTMyU3FWOERFK0tsVUxtWExmcVV4Rktu?=
- =?utf-8?B?WmlyN0Z4Y0h3QWZEYWpXY01xaFJncUd1NnkyaVdMK2VTVXJJeUdSRXFtMGJX?=
- =?utf-8?B?QnRld2pJVEgxRWtXUCtvS1JFemxtWGdmM1JFVVJzQXZhdkVoQzBjc05lS2Vu?=
- =?utf-8?B?dStvN0RLei80WDc3dWlTbXdNUkU5QUlSQ1k2U0NsNTZHWXVFcm84T1kxclFp?=
- =?utf-8?Q?duvF1j1huqfEQ7CepygwoWnXv?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 37f5d8f1-e9eb-4de4-4662-08ddb25251ef
-X-MS-Exchange-CrossTenant-AuthSource: OS8PR06MB7663.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 12:34:39.1696
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vEg6cRJZxMw/4R5noHqM9L7yoPnW6WHsj76H+DHx3oTU+l5Tr/kZnHCbG0zicq/dJbpCSJuaLZKeqw0EGWUN0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYUPR06MB6196
+References: <20250622-toicsti-bug-v1-0-f374373b04b2@gmail.com>
+In-Reply-To: <20250622-toicsti-bug-v1-0-f374373b04b2@gmail.com>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+Date: Mon, 23 Jun 2025 08:35:23 -0400
+X-Gm-Features: AX0GCFuLnTJxzf2okVc0glfm3bX5AeBW2XJ6g5gUFYldkEA9RJmWnCx-TMi6png
+Message-ID: <CAEjxPJ4bru=J=XZGSFXoxkQJZHQX_iJaxdCwpY8PAcaNv0F2fA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Possible TTY privilege escalation in TIOCSTI ioctl
+To: xandfury@gmail.com
+Cc: Shuah Khan <shuah@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Paul Moore <paul@paul-moore.com>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, llvm@lists.linux.dev, 
+	selinux@vger.kernel.org, kees@kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Yangtao Li <frank.li@vivo.com>
+On Sun, Jun 22, 2025 at 9:41=E2=80=AFPM Abhinav Saxena via B4 Relay
+<devnull+xandfury.gmail.com@kernel.org> wrote:
+>
+> This patch series was initially sent to security@k.o; resending it in
+> public. I might follow-up with a tests series which addresses similar
+> issues with TIOCLINUX.
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> The TIOCSTI ioctl uses capable(CAP_SYS_ADMIN) for access control, which
+> checks the current process's credentials. However, it doesn't validate
+> against the file opener's credentials stored in file->f_cred.
+>
+> This creates a potential security issue where an unprivileged process
+> can open a TTY fd and pass it to a privileged process via SCM_RIGHTS.
+> The privileged process may then inadvertently grant access based on its
+> elevated privileges rather than the original opener's credentials.
+>
+> Background
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> As noted in previous discussion, while CONFIG_LEGACY_TIOCSTI can restrict
+> TIOCSTI usage, it is enabled by default in most distributions. Even when
+> CONFIG_LEGACY_TIOCSTI=3Dn, processes with CAP_SYS_ADMIN can still use TIO=
+CSTI
+> according to the Kconfig documentation.
+>
+> Additionally, CONFIG_LEGACY_TIOCSTI controls the default value for the
+> dev.tty.legacy_tiocsti sysctl, which remains runtime-configurable. This
+> means the described attack vector could work on systems even with
+> CONFIG_LEGACY_TIOCSTI=3Dn, particularly on Ubuntu 24.04 where it's "restr=
+icted"
+> but still functional.
+>
+> Solution Approach
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> This series addresses the issue through SELinux LSM integration rather
+> than modifying core TTY credential checking to avoid potential compatibil=
+ity
+> issues with existing userspace.
 
-The new devm_request_*irq_probe API prints an error message by default
-when the request fails, and consumers can provide custom error messages.
+So I'm unconvinced that fixing bugs in core kernel permission checks
+by adding new checks to SELinux is the right way to go.
+Also, SELinux already provides a way to control ioctl, although it too
+uses the current cred, but the granularity of the
+process labels and the ability to distinguish individual ioctl cmds
+may mitigate this issue in practice.
 
-Converting drivers to use this API has the following benefits:
-
-  1.More than 2,000 lines of code can be saved by removing redundant error
-  messages in drivers.
-
-  2.Upper-layer functions can directly return error codes without missing
-  debugging information.
-
-  3.Having proper and consistent information about why the device cannot
-  be used is useful.
-
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
-Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: AngeloGioacchino Del Regno  <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Yangtao Li <frank.li@vivo.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Pan Chuang <panchuang@vivo.com>
----
- drivers/thermal/tegra/soctherm.c        | 38 ++++++++++++-------------
- drivers/thermal/tegra/tegra30-tsensor.c |  9 +++---
- 2 files changed, 22 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/thermal/tegra/soctherm.c b/drivers/thermal/tegra/soctherm.c
-index 926f1052e6de..aea9931175e8 100644
---- a/drivers/thermal/tegra/soctherm.c
-+++ b/drivers/thermal/tegra/soctherm.c
-@@ -1989,29 +1989,27 @@ static int soctherm_interrupts_init(struct platform_device *pdev,
- 		return 0;
- 	}
- 
--	ret = devm_request_threaded_irq(&pdev->dev,
--					tegra->thermal_irq,
--					soctherm_thermal_isr,
--					soctherm_thermal_isr_thread,
--					IRQF_ONESHOT,
--					dev_name(&pdev->dev),
--					tegra);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "request_irq 'thermal_irq' failed.\n");
-+	ret = devm_request_threaded_irq_probe(&pdev->dev,
-+					      tegra->thermal_irq,
-+					      soctherm_thermal_isr,
-+					      soctherm_thermal_isr_thread,
-+					      IRQF_ONESHOT,
-+					      dev_name(&pdev->dev),
-+					      tegra,
-+					      "thermal_irq");
-+	if (ret < 0)
- 		return ret;
--	}
- 
--	ret = devm_request_threaded_irq(&pdev->dev,
--					tegra->edp_irq,
--					soctherm_edp_isr,
--					soctherm_edp_isr_thread,
--					IRQF_ONESHOT,
--					"soctherm_edp",
--					tegra);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "request_irq 'edp_irq' failed.\n");
-+	ret = devm_request_threaded_irq_probe(&pdev->dev,
-+					      tegra->edp_irq,
-+					      soctherm_edp_isr,
-+					      soctherm_edp_isr_thread,
-+					      IRQF_ONESHOT,
-+					      "soctherm_edp",
-+					      tegra,
-+					      "edp_irq");
-+	if (ret < 0)
- 		return ret;
--	}
- 
- 	return 0;
- }
-diff --git a/drivers/thermal/tegra/tegra30-tsensor.c b/drivers/thermal/tegra/tegra30-tsensor.c
-index 6245f6b97f43..807e568e5b25 100644
---- a/drivers/thermal/tegra/tegra30-tsensor.c
-+++ b/drivers/thermal/tegra/tegra30-tsensor.c
-@@ -598,12 +598,11 @@ static int tegra_tsensor_probe(struct platform_device *pdev)
- 			return err;
- 	}
- 
--	err = devm_request_threaded_irq(&pdev->dev, irq, NULL,
--					tegra_tsensor_isr, IRQF_ONESHOT,
--					"tegra_tsensor", ts);
-+	err = devm_request_threaded_irq_probe(&pdev->dev, irq, NULL,
-+					      tegra_tsensor_isr, IRQF_ONESHOT,
-+					      "tegra_tsensor", ts, NULL);
- 	if (err)
--		return dev_err_probe(&pdev->dev, err,
--				     "failed to request interrupt\n");
-+		return err;
- 
- 	return 0;
- }
--- 
-2.39.0
-
+>
+> The enhancement adds proper current task and file credential capability
+> validation in SELinux's selinux_file_ioctl() hook specifically for
+> TIOCSTI operations.
+>
+> Testing
+> =3D=3D=3D=3D=3D=3D=3D
+>
+> All patches have been validated using:
+> - scripts/checkpatch.pl --strict (0 errors, 0 warnings)
+> - Functional testing on kernel v6.16-rc2
+> - File descriptor passing security test scenarios
+> - SELinux policy enforcement testing
+>
+> The fd_passing_security test demonstrates the security concern.
+> To verify, disable legacy TIOCSTI and run the test:
+>
+> $ echo "0" | sudo tee /proc/sys/dev/tty/legacy_tiocsti
+> $ sudo ./tools/testing/selftests/tty/tty_tiocsti_test -t fd_passing_secur=
+ity
+>
+> Patch Overview
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> PATCH 1/2: selftests/tty: add TIOCSTI test suite
+> Comprehensive test suite demonstrating the issue and fix validation
+>
+> PATCH 2/2: selinux: add capability checks for TIOCSTI ioctl
+> Core security enhancement via SELinux LSM hook
+>
+> References
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> - tty_ioctl(4) - documents TIOCSTI ioctl and capability requirements
+> - commit 83efeeeb3d04 ("tty: Allow TIOCSTI to be disabled")
+> - Documentation/security/credentials.rst
+> - https://github.com/KSPP/linux/issues/156
+> - https://lore.kernel.org/linux-hardening/Y0m9l52AKmw6Yxi1@hostpad/
+> - drivers/tty/Kconfig
+>
+> Configuration References:
+> [1] - https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
+tree/drivers/tty/Kconfig#n149
+> [2] - https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
+tree/drivers/tty/Kconfig#n162
+> [3] - https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
+tree/drivers/tty/Kconfig#n188
+>
+> To: Shuah Khan <shuah@kernel.org>
+> To: Nathan Chancellor <nathan@kernel.org>
+> To: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
+> To: Bill Wendling <morbo@google.com>
+> To: Justin Stitt <justinstitt@google.com>
+> To: Paul Moore <paul@paul-moore.com>
+> To: Stephen Smalley <stephen.smalley.work@gmail.com>
+> To: Ondrej Mosnacek <omosnace@redhat.com>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-kselftest@vger.kernel.org
+> Cc: llvm@lists.linux.dev
+> Cc: selinux@vger.kernel.org
+>
+> Signed-off-by: Abhinav Saxena <xandfury@gmail.com>
+> ---
+> Abhinav Saxena (2):
+>       selftests/tty: add TIOCSTI test suite
+>       selinux: add capability checks for TIOCSTI ioctl
+>
+>  security/selinux/hooks.c                       |   6 +
+>  tools/testing/selftests/tty/Makefile           |   6 +-
+>  tools/testing/selftests/tty/config             |   1 +
+>  tools/testing/selftests/tty/tty_tiocsti_test.c | 421 +++++++++++++++++++=
+++++++
+>  4 files changed, 433 insertions(+), 1 deletion(-)
+> ---
+> base-commit: 5adb635077d1b4bd65b183022775a59a378a9c00
+> change-id: 20250618-toicsti-bug-7822b8e94a32
+>
+> Best regards,
+> --
+> Abhinav Saxena <xandfury@gmail.com>
+>
+>
