@@ -1,85 +1,59 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F811957FF;
-	Mon, 23 Jun 2025 13:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47344C7F;
+	Mon, 23 Jun 2025 13:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750686944; cv=none; b=NLDEul7fagYw2fzrk+rYh4DV8+Pr+KUDIa5U1I3uylaCUlMVkk+kIL3uw8plbIbgIAKBr2REE7lJ6Uz29Hx/94U85o8kKaHsyT/tBkJayTX/iUPywD4mR0Nz2f5SPxUkCT5H40PmgLhxoU30WTdfcq15F4Lq8TkIA54nVr24Lqo=
+	t=1750686969; cv=none; b=iUszwU7JvkG8s+ZYkKFFjOyD9gsiFBnarcJKM++wz26GulsZDtZiOh6X6C+LSooNGvzz9TcQBq3vLfZ1ZDrHgk31evuJmNqb1d3k0TfceBkBIXQXggd+w1WyT7q47aMDw/iN4e7A1UoObiPAHDPey0NYqcx5WvVeoe9A1E0/HcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750686944; c=relaxed/simple;
-	bh=/Ag7v6ZQya0VRiBpyA8Kql7m+wSMLKuyVmJ/dONXjk0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Rz3saIYFB+ZYLq+0tk+dNR3btC2jdPe+0Bk9eIfbOK+JxPWq5K01/Dht3JM3+uVevQlujkLBJkQcEGdwwpwVvYa5+IFjc7d1oBdJr4TxsDEP0EQYQxKg13QoUEDxtWGmpxmVspZevnaamWWin3mqNc9UEdpGmegw9gpbTHAzdtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a7FxlE2m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750686969; c=relaxed/simple;
+	bh=kswF/vinj7GnK79fLBwJ+CaAgQTqEMy43A7XebCvfVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=otXNkOb1djbPPq2xOj3EUadU5DivXkwL8ffzXgDtdOjpgSXhvTqMEDPWp5I2zYC5DX4/OC2oytPelUmvD/pUgwym5V/Dauiu5QgdAA4a6PpYlimpjjPTt8DIhRlgLcHDexP+py2PTXxjo7r+8HbkjjIOkqawjsSDYDkZoQsNzQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=eYYlWNj4; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a7FxlE2m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6BEDC4CEEA;
-	Mon, 23 Jun 2025 13:55:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750686943;
-	bh=/Ag7v6ZQya0VRiBpyA8Kql7m+wSMLKuyVmJ/dONXjk0=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=a7FxlE2m6dWEXl7rt1U2aYfWkWlTwLI8NBLXC2n7o0SJ+xDRD4qW8s45fryqENIE7
-	 l1Ja7J4V5t5yI25UFpZvujNYCN49P/h/xRUgLW6/gY0p7D9d6+b8CeV/JEEAOGd+Cw
-	 HwTNuuTLNOlztLTUqeYxnDOfdDwkjjIdk4F+689dFI52lJ1bPKv79DstmE1P1QT1eS
-	 vvhhtVrdgQYph8EASW3Rkmk/LiDICnYpk5P+TOWY8t661kV7tGhvKjhRJtzr7OSI9J
-	 Paqp8TdJmnFYrZJAHrBem8KY7SmzLtww+o8W6F9f9ZUWciQuKogif9JYza+AhlC6rs
-	 kzV4/msZzJGmw==
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="eYYlWNj4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=kswF/vinj7GnK79fLBwJ+CaAgQTqEMy43A7XebCvfVI=; b=eYYlWNj4u2trPCTGmRhR2on2AW
+	68FU9GAW8YSVHmdB4HkmVr8XS9BAiB9INjIOyCuzsTJlWKONyZqR+VyEvjxH5NrV8Mn9xVTQ3yT5x
+	lMXHlK/fwfiPX61Ze6iLQktcVtsBYE7SMssEoSVMmp//e7HUhL8lYlGnwH16+N6dDKRWmUwUvLeE7
+	9DANkzlUyRXdaqoQyOQBWzW2O/hZkvpiYuvQzwrXojF9k92GJ/WMdA1s3a/7NPCykU5kSUzq5xVt9
+	raHyRhi43WL0SX0c2vk5y4EbECtduQK21CsxGrhE98rN55rE/2Ze1VcobznSk/9h3MFE+OMLZ8TAT
+	3nK7VfNA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uTheU-0000000CH0p-2StS;
+	Mon, 23 Jun 2025 13:56:02 +0000
+Date: Mon, 23 Jun 2025 14:56:02 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	linux-fsdevel@vger.kernel.org, riteshh@linux.ibm.com
+Subject: Re: [linux-next-20250620] Fails to boot to IBM Power Server
+Message-ID: <20250623135602.GA1880847@ZenIV>
+References: <aafeb4a9-31ea-43ad-b807-fd082cc0c9ad@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 23 Jun 2025 15:55:36 +0200
-Message-Id: <DATYQ3ZIFGZO.1CLIKLTTO2YM3@kernel.org>
-Cc: "Andreas Hindborg" <a.hindborg@kernel.org>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Alice Ryhl"
- <aliceryhl@google.com>, "Masahiro Yamada" <masahiroy@kernel.org>, "Nathan
- Chancellor" <nathan@kernel.org>, "Luis Chamberlain" <mcgrof@kernel.org>,
- "Danilo Krummrich" <dakr@kernel.org>, "Nicolas Schier"
- <nicolas.schier@linux.dev>, "Trevor Gross" <tmgross@umich.edu>, "Adam
- Bratschi-Kaye" <ark.email@gmail.com>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>, "Petr
- Pavlu" <petr.pavlu@suse.com>, "Sami Tolvanen" <samitolvanen@google.com>,
- "Daniel Gomez" <da.gomez@samsung.com>, "Simona Vetter"
- <simona.vetter@ffwll.ch>, "Greg KH" <gregkh@linuxfoundation.org>, "Fiona
- Behrens" <me@kloenk.dev>, "Daniel Almeida" <daniel.almeida@collabora.com>,
- <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
-X-Mailer: aerc 0.20.1
-References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
- <20250612-module-params-v3-v13-2-bc219cd1a3f8@kernel.org>
- <COU2bqJOzCHRf6g4rwFpu2NY3wLY0G0AmNjRaU9aGEqu1HaPZ5X4KzfDT_CEB3Okh5BV50sJS10sKhmtHut8ew==@protonmail.internalid> <DAQJCUE1C2JE.204A8IS7LBIVZ@kernel.org> <87ikkq648o.fsf@kernel.org> <smOfUo2mEmQu-lykKKMiNOUWq2ze6p_CoEEpgGE0dtAnoJDGEpvQMkP1q-n13MiUxLK1xAiM-4QLsivPrG57sg==@protonmail.internalid> <DARCZYNPIJVZ.3JJSZ6PSAEMEC@kernel.org> <877c126bce.fsf@kernel.org> <DATW0XWNN45X.1L2WMZ41JJ5O8@kernel.org> <CANiq72nV3QzpRZTyDTv7Qx-c83jeayUY3nnvhpbtOYXf47EgJA@mail.gmail.com>
-In-Reply-To: <CANiq72nV3QzpRZTyDTv7Qx-c83jeayUY3nnvhpbtOYXf47EgJA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aafeb4a9-31ea-43ad-b807-fd082cc0c9ad@linux.ibm.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Mon Jun 23, 2025 at 2:37 PM CEST, Miguel Ojeda wrote:
-> On Mon, Jun 23, 2025 at 1:48=E2=80=AFPM Benno Lossin <lossin@kernel.org> =
-wrote:
->>
->> Another way would be to use a `Once`-like type (does that exist on the C
->> side?) so a type that can be initialized once and then never changes.
->
-> There are `DO_ONCE{,_SLEEPABLE,_LITE}`.
+On Mon, Jun 23, 2025 at 07:20:03PM +0530, Venkat Rao Bagalkote wrote:
 
-Thanks for the pointer, it is pretty much exactly what the `Once` type
-in Rust is.
+[NULL pointer dereference somewhere in collect_paths()]
 
-It's not exactly what I'm thinking of in this case, but since it is
-implemented with static key, maybe we can do something similar with a
-static key? So switch the return value of the `ModuleParamAccess::read`
-function depending on weather the module parameters have been written
-and while they haven't just return a dummy value and WARN.
-
-Thoughts @Andreas?
-
----
-Cheers,
-Benno
+Could you put objdump -d of the function in question somewhere?
+Or just fs/namespace.o from your build...
