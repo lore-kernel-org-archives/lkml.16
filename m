@@ -1,80 +1,125 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53343253B67;
-	Mon, 23 Jun 2025 15:58:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E826B253B67;
+	Mon, 23 Jun 2025 15:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750694316; cv=none; b=iJENpd7gwzQyFU2Cij5jwMXVgIf++D2AvDhXYsYun2xZ1z/qPiLMcGYAvsX68PSVjlwZd13dG6VYel36U+ffnyP9af4fLp0q4fNR9QkeOBIcha7BQA0mne5IwQUcD7KGNSmJxPopgEDFZjkpn/aeXVAqqd8vUDb3vGWA5S3BgUo=
+	t=1750694320; cv=none; b=nToXZ0xxR8zhHDGMgvqaat42T5qeiXG0ISIsh5IutRQXdVfGDK+fygtTzTV3lP0gqmMIBnw64n4vFUvyLwLMzI7jE4nRj9jULwhXmYUNzwI1P1m1ZlhNWdw9FaOBCB3IrVSNIHl89osKI8lB7v9lAGmfUXNqqYagGRacQpmZKHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750694316; c=relaxed/simple;
-	bh=+gnHtm2Xm/AQkHsS012Lke7TKUT19K3x/CmgqHYwJIQ=;
+	s=arc-20240116; t=1750694320; c=relaxed/simple;
+	bh=MBmtOH9m6zr81wji+yIuMSpqTbR3C3+WuqdmMBu0WVU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VeKtOv8lX0Napozg0B/RnzqXNCVqwyCtWZ/qF5rujhHFbKriYgXq9t6QzeBpkQgdELAu3F9gLz01Hy1qR8WVtvbyw00MDhe7a12b2s7bNjZRznABQBa/Rf8RpwR/M+968Eet11QloVYmP1i7PBHDdFDELbnUAK7pFAuTjD5pfiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=klqEhPVu; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=d57bslakNdTIszY6dHd518I7wUToFRn81gU/Vr8cPa8BO9DR2bou+EL/GfnhYJOpDgzm+D6GGST4RSRT3i+eg8Ib0iReGyNaEXKXzeR2uTK1mwErrPd6z+ujJuHa6AO9C3q2SRqP6iI3smDNzpLh/goCovPEiAvfiPXPncFNgbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a/hdkmmf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="klqEhPVu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Z9yxtwVTuu9+nWIOqzKx4H8/wNr3LFIBV48QefUFSGM=; b=klqEhPVuEIx1LkXon5v/AVlYy9
-	97ku757xqnJ+e18+0H74sd4uk9Am5SghuEhZc/eQzJl1t7FYlt1IyB5GDrWDyJ5R7J5WFkK+V7czL
-	Y5HPPYgw2AGwSJxu9ZaWRYEVBDVOErJ78TNLSfNecOJjVZsWQ1RahZC7BxZvZ2srhBXZGil3Oz4Be
-	6FfSeb9ZuzXCJQIEJTiz245LzyADlfZ6KgtcEaOHr9b2rblXSQkGy4LUGtGttl0ZbCe+wgM/E2Hll
-	F7CgLB8HLO0T9RupS6/+x3RdQ4nAAAK8uZWD6D2w18d+7uvWHmff8dvQJYvycl4xSxr+o+lqSFvuR
-	/PA9ybSA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40854)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uTjYx-0004Nk-0A;
-	Mon, 23 Jun 2025 16:58:27 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uTjYv-0003Zp-2S;
-	Mon, 23 Jun 2025 16:58:25 +0100
-Date: Mon, 23 Jun 2025 16:58:25 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Kamil =?iso-8859-1?Q?Hor=E1k?= - 2N <kamilh@axis.com>
-Cc: florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	andrew@lunn.ch, hkallweit1@gmail.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	robh@kernel.org
-Subject: Re: [PATCH net-next v2 2/3] net: phy: bcm5481x: Implement MII-Lite
- mode
-Message-ID: <aFl5obpjq8Zvw-gd@shell.armlinux.org.uk>
-References: <20250623151048.2391730-1-kamilh@axis.com>
- <20250623151048.2391730-2-kamilh@axis.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a/hdkmmf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81277C4CEEA;
+	Mon, 23 Jun 2025 15:58:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750694317;
+	bh=MBmtOH9m6zr81wji+yIuMSpqTbR3C3+WuqdmMBu0WVU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a/hdkmmf37JuuBRRIQqHxENDG6LmCaTmsJp2DHu7KCr0mZRs4pMvtzIzwaJWRy3Xa
+	 4fYQWPNVfpITMNEkZLGMafBo6GVgCwxjW8sW0YsiqKG/unwlNXMPR4GpPrZy6AwCzZ
+	 vvAWz50fwIGN7BHS5wK8ouR+ISNxq8yd16oS8fYckmhD5hAvz0hvTy7muPjfc4kxbg
+	 QyicczYhD/4fzwCShSSpTX4eWkVEvInZKE5MBwmC2xDCqWQUWSqTN5dHU18wYrSTHG
+	 QLZyUBoHa9ZkMEWNMJZV0ebpOq8Q6Z89vV3uYkr98l4tGodaCeAaa0iiLEfybrQRRd
+	 1nRuvP660Ry6w==
+Date: Mon, 23 Jun 2025 21:24:37 +0530
+From: Naveen N Rao <naveen@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
+	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, kvm@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, Sairaj Kodilkar <sarunkod@amd.com>, 
+	Vasant Hegde <vasant.hegde@amd.com>, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Joao Martins <joao.m.martins@oracle.com>, Francesco Lavra <francescolavra.fl@gmail.com>, 
+	David Matlack <dmatlack@google.com>
+Subject: Re: [PATCH v3 20/62] KVM: SVM: Add a comment to explain why
+ avic_vcpu_blocking() ignores IRQ blocking
+Message-ID: <pxtvegopzsyhn7lelksclxiiee7tumppu76553rax7octqpy7i@giclgo667htf>
+References: <20250611224604.313496-2-seanjc@google.com>
+ <20250611224604.313496-22-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250623151048.2391730-2-kamilh@axis.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20250611224604.313496-22-seanjc@google.com>
 
-On Mon, Jun 23, 2025 at 05:10:46PM +0200, Kamil Horák - 2N wrote:
-> +	priv->mii_lite_mode = of_property_read_bool(np, "mii-lite-mode");
+On Wed, Jun 11, 2025 at 03:45:23PM -0700, Sean Christopherson wrote:
+> Add a comment to explain why KVM clears IsRunning when putting a vCPU,
+> even though leaving IsRunning=1 would be ok from a functional perspective.
+> Per Maxim's experiments, a misbehaving VM could spam the AVIC doorbell so
+> fast as to induce a 50%+ loss in performance.
+> 
+> Link: https://lore.kernel.org/all/8d7e0d0391df4efc7cb28557297eb2ec9904f1e5.camel@redhat.com
+> Cc: Maxim Levitsky <mlevitsk@redhat.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/x86/kvm/svm/avic.c | 31 ++++++++++++++++++-------------
+>  1 file changed, 18 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+> index bf8b59556373..3cf929ac117f 100644
+> --- a/arch/x86/kvm/svm/avic.c
+> +++ b/arch/x86/kvm/svm/avic.c
+> @@ -1121,19 +1121,24 @@ void avic_vcpu_blocking(struct kvm_vcpu *vcpu)
+>  	if (!kvm_vcpu_apicv_active(vcpu))
+>  		return;
+>  
+> -       /*
+> -        * Unload the AVIC when the vCPU is about to block, _before_
+> -        * the vCPU actually blocks.
+> -        *
+> -        * Any IRQs that arrive before IsRunning=0 will not cause an
+> -        * incomplete IPI vmexit on the source, therefore vIRR will also
+> -        * be checked by kvm_vcpu_check_block() before blocking.  The
+> -        * memory barrier implicit in set_current_state orders writing
+> -        * IsRunning=0 before reading the vIRR.  The processor needs a
+> -        * matching memory barrier on interrupt delivery between writing
+> -        * IRR and reading IsRunning; the lack of this barrier might be
+> -        * the cause of errata #1235).
+> -        */
+> +	/*
+> +	 * Unload the AVIC when the vCPU is about to block, _before_ the vCPU
+> +	 * actually blocks.
+> +	 *
+> +	 * Note, any IRQs that arrive before IsRunning=0 will not cause an
+> +	 * incomplete IPI vmexit on the source; kvm_vcpu_check_block() handles
+> +	 * this by checking vIRR one last time before blocking.  The memory
+> +	 * barrier implicit in set_current_state orders writing IsRunning=0
+> +	 * before reading the vIRR.  The processor needs a matching memory
+> +	 * barrier on interrupt delivery between writing IRR and reading
+> +	 * IsRunning; the lack of this barrier might be the cause of errata #1235).
+> +	 *
+> +	 * Clear IsRunning=0 even if guest IRQs are disabled, i.e. even if KVM
+> +	 * doesn't need to detect events for scheduling purposes.  The doorbell
 
-Do we really want a property for this, or is it really a separate
-interface mode? Should we introduce PHY_INTERFACE_MODE_MII_LITE ?
+Nit: just IsRunning (you can drop the =0 part).
 
-> +	if (!phy_interface_is_rgmii(phydev) ||
-> +	    phydev->interface == PHY_INTERFACE_MODE_MII) {
+Trying to understand the significance of IRQs being disabled here. Is 
+that a path KVM tries to optimize? Theoretically, it looks like we want 
+to clear IsRunning regardless of whether the vCPU is blocked so as to 
+prevent the guest from spamming the host with AVIC doorbells -- compared 
+to always keeping IsRunning set so as to speed up VM entry/exit.
 
-Same comment on this as in patch 1.
+> +	 * used to signal running vCPUs cannot be blocked, i.e. will perturb the
+> +	 * CPU and cause noisy neighbor problems if the VM is sending interrupts
+> +	 * to the vCPU while it's scheduled out.
+> +	 */
+>  	avic_vcpu_put(vcpu);
+>  }
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Otherwise, this LGTM.
+Acked-by: Naveen N Rao (AMD) <naveen@kernel.org>
+
+
+Thanks,
+Naveen
+
