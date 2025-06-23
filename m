@@ -1,147 +1,111 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1896A1F582B
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 20:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A9C1F4722;
+	Mon, 23 Jun 2025 20:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750711082; cv=none; b=I/hGAs9bMCfv1M+fC1Ef7rNWyP/aaY8indb1xeVcPMVWC4qJgQYvY8MrIpCe4B33sDd7VH4f/Dy1i56PBxVSRbEPFlNVHY8widv5D5jYep/OAxIn8mq0XXzPD+QxhjgevjVETaovoYSgK5VlIKNRn9oIEL6PrCfVAxcEau5PC6Q=
+	t=1750711167; cv=none; b=uwmOfDVyBaBNGgDE98U9Oko0278w8Yma3wXg6dizEe1ME+VPhHn4W6wrf/O9/podgiBhydSaZfKlh3954I98wbSMx+GjoVBFrF7dFVxPYExB5MEHE2H/lXUm2Rq3Oh2w2Iycs9HJvG5guLk0ANhdtQHybLU8FADBD47qNHxiMzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750711082; c=relaxed/simple;
-	bh=mWCAX680+qRZ1+4aHKuhQiGgYeG77i0nRNf740hJIP4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JCznekzyq+tK1hp0Z62w9/DpjYn3w04GXnwFN71bFJvNW9ksmDT7tH/AAOgQbLImA1k5oXc4xLuboO0tD5AVPJD+ayTlLUwMQ8LNMKEg0m5KgXilV3MOWnwXZEQsU2EWz8phl/8QB4rgFCelod4XeDLxH03cctm4QAgLAQ/Tka4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KPEcMLlF; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750711167; c=relaxed/simple;
+	bh=jOBHMkhfK17KwiJCLSBMVKuPedcRRXNEGl8b4o/dC1U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BaNqMOZL67a50A4TL/pG/oEzG9NOzFg9Ix/itQ5HX/dRLbRrAruDju5YUnnJBiolkk6y7krrs+/KgQ7EDFHP6i5EgiWmSob761cc8cmxnSTLPoL+aPh36TD/Y+4jcQ593Ll0q2B2Thpul+TCK3X7WMV2GhenScxgyyCsg0bingM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BGNYKeJA; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KPEcMLlF"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b1ffc678adfso2956697a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:38:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750711080; x=1751315880; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lojioo5UwNmVrjdVbpKysqClNWNwBWr9dRMAgFa7ZYU=;
-        b=KPEcMLlF1lhYR3BFPGQfRJQJa/QjWwPtvap4hfrkCODYojstaQImHRnSvs9aJ7CVw5
-         Y2L1cJsAzPZg7IsYzWVd/yRUipKrqD0SlG0APWbmtKD2sFfSGtsdfxKOlNs5/177QpXF
-         NKLvo3wjFfZ3wqc1SdEADJR6OpNW4VganZTMzHFSdYph7yjjL669Qd4zsWunC6RFIx7V
-         G7RkydBBvURQp6S3lB6ZehAbNCbVrBBnXlJ/rXEj9Exm1iBbubGoAGMR9yVKsUud5nyA
-         WiNmRxWXWRFGyUqTBGJW3bnedmy+I4Y1FsKja+RfdQfHfK/9xxRu+yIf35Wuc113ZKP2
-         827A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750711080; x=1751315880;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lojioo5UwNmVrjdVbpKysqClNWNwBWr9dRMAgFa7ZYU=;
-        b=jLAwHxA1JmH9wzgTX6SnrIpBX1TXdta05EXwOTlZoi1gNtCqGJuPpSQy1jOGoCtNhD
-         7vRkhigczmCN+RAGeAn7hpPeOFE8Kdb4z1RmDM6hDRR7p/B5yS4V5Of2Md2AtJF3i2Gj
-         mYpDtQNgqx76w3vfBOwpC++vf0itIAPRoQdAPu8kKXYbat639ocsPGcUaDykRfR0AJ66
-         lUZfSK4tBo7vnMuw5I53LX9EOyBjc8u65aQjEje+ZIsbW1uSRvyU+hTlFhDVtz35WukI
-         mORflPusOp+JHVSY6gFV2y3HkgTXLf7pkJ3oInXo4zxVoQsF+JLc48e8EAvWuG+f9niq
-         qMLw==
-X-Forwarded-Encrypted: i=1; AJvYcCVaXmFjexsUBY3F5G3bKf+TAqpZPk/UNGAl0gBUW0QAfEqi6E+Q5A1ydBF1Ih4nXgn1IDYJb+jy4haCarc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8vW5QoZnYdKaWzRg+Sx4c9NtBMeF4L3I7FxmGSqzDpimV72dr
-	nqHX64u5h9cHpmzcPf9mx5ZFeZ7v+qQqTWZXfxz1UdVjSjG/o5ws0xaoiyt18BVmsTmT+v9WjPN
-	60xd8Dg==
-X-Google-Smtp-Source: AGHT+IFSL/5dFrJLz7PeQwAUIL6kzN3CGq96msr7Do6Zqx1vWxQ3Yu+HoV9pUozdU0LrcUA9PVv+DsCQ9j8=
-X-Received: from pjtu14.prod.google.com ([2002:a17:90a:c88e:b0:311:a879:981f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4b42:b0:311:d670:a0e9
- with SMTP id 98e67ed59e1d1-3159d8c603bmr19392847a91.21.1750711080367; Mon, 23
- Jun 2025 13:38:00 -0700 (PDT)
-Date: Mon, 23 Jun 2025 13:37:58 -0700
-In-Reply-To: <6f5af820-5ccf-92e6-1acd-b87aef9885e6@amd.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BGNYKeJA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=gu+6pmFreAAsWhh78QzgjCygCkuWla9oYWkSW6ad8RI=; b=BGNYKeJA9cA8ap+f6qIae/xbFg
+	YBSFQwwCvjPd66KdSHhyr3LYnSCAHXk7Z/oyfrD1H8dddkCNgnGEvMANOUtiiQD96rxafOHkHn+Hq
+	CBqkR+U8f9AB+Satn1EwagdcrLmOdk237bhXoD0ULQd30veMz+3jzz08PaY1Z/1PCg7wR8U8QY6w2
+	86zpIZPfZy/jN1jMXjNbbtN9++3bXnQdc3xjDFmmjnVaC8qklrM2EV1k0rVqrISiqWVwn2jqRutce
+	9MhLjMdeHsd+bltLRSWAGo7U4QDWjK/zFYxiORCu+IZpCnRlxq0pfnqlPiJ+GaIDqKvMAWctErQbH
+	j4Ol9uYg==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uTnwf-00000004Y38-1yap;
+	Mon, 23 Jun 2025 20:39:13 +0000
+Message-ID: <e2b0e9fc-c1dc-4f2e-9a6d-c92d25f28fed@infradead.org>
+Date: Mon, 23 Jun 2025 13:39:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250326193619.3714986-1-yosry.ahmed@linux.dev>
- <20250326193619.3714986-7-yosry.ahmed@linux.dev> <aFXrFKvZcJ3dN4k_@google.com>
- <6f5af820-5ccf-92e6-1acd-b87aef9885e6@amd.com>
-Message-ID: <aFm7JtFe5NzrhwyW@google.com>
-Subject: Re: [RFC PATCH 06/24] KVM: SEV: Track ASID->vCPU instead of ASID->VMCB
-From: Sean Christopherson <seanjc@google.com>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Yosry Ahmed <yosry.ahmed@linux.dev>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Jim Mattson <jmattson@google.com>, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Rik van Riel <riel@surriel.com>, x86@kernel.org, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] docs: nvme: fix grammar in
+ nvme-pci-endpoint-target.rst
+To: Alok Tiwari <alok.a.tiwari@oracle.com>, linux-nvme@lists.infradead.org,
+ kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
+ kch@nvidia.com, nilay@linux.ibm.com, corbet@lwn.net
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250623064036.4187788-2-alok.a.tiwari@oracle.com>
+ <20250623064036.4187788-6-alok.a.tiwari@oracle.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250623064036.4187788-6-alok.a.tiwari@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 23, 2025, Tom Lendacky wrote:
-> On 6/20/25 18:13, Sean Christopherson wrote:
-> > On Wed, Mar 26, 2025, Yosry Ahmed wrote:
-> > The more I think about all of this, the less it makes sense.  The *entire* point
-> > of an ASID is to tag TLB entries so that a flush isn't required when running code
-> > for the same address space.
-> > 
-> > The main problem I'm struggling with is that, as usual, the APM doesn't properly
-> > document anything, and just gives "suggestions" for the VMM.  *sigh*
-> > 
-> > As I read it, these snippets from the APM are saying ASIDs tag only GPA=>PA entries
-> > when NPT is in use.
-> > 
-> >   TLB entries are tagged with Address Space Identifier (ASID) bits to distinguish
-> >   different guest virtual address spaces when shadow page tables are used, or
-> >   different guest physical address spaces when nested page tables are used. The
-> >   VMM can choose a software strategy in which it keeps multiple shadow page tables,
-> >   and/or multiple nested page tables in processors that support nested paging,
-> >   up-to-date; the VMM can allocate a different ASID for each shadow or nested
-> >   page table. This allows switching to a new process in a guest under shadow
-> >   paging (changing CR3 contents), or to a new guest under nested paging (changing
-> >   nCR3 contents), without flushing the TLBs.
-> > 
-> >   Note that because an ASID is associated with the guest's physical address
-> >   space, it is common across all of the guest's virtual address spaces within a
-> >   processor. This differs from shadow page tables where ASIDs tag individual
-> >   guest virtual address spaces. Note also that the same ASID may or may not be
-> >   associated with the same address space across all processors in a
-> >   multiprocessor system, for either nested tables or shadow tables; this depends
-> >   on how the VMM manages ASID assignment.
-> > 
-> > But then the "15.16.1 TLB Flush" section says this, without any qualification
-> > whatsoever that it applies only to shadow paging.
-> > 
-> >   A MOV-to-CR3, a task switch that changes CR3, or clearing or setting CR0.PG or
-> >   bits PGE, PAE, PSE of CR4 affects only the TLB entries belonging to the current
-> >   ASID, regardless of whether the operation occurred in host or guest mode. The
-> >   current ASID is 0 when the CPU is not inside a guest context.
-> > 
-> > And honestly, tagging only GPA=>PA entries doesn't make any sense, because
-> > GVA=>GPA needs to be tagged with *something*.  And the APM doesn't say anything
-> > about caching GPA=>PA translations, only about caching VA=>PA.
-> 
-> VA=>PA translations are always tagged with a TLB tag value.  Outside of
-> SEV-SNP, the TLB tag value is ASID.
-> 
-> So for those guests, VA=>PA translation are tagged with the ASID.  For
-> SEV-SNP guests, see below.
-> 
-> > 
-> > The thing that doesn't fit is that SEV+ uses ASIDs on a per-VM basis.  I suggested
-> > per-VM ASIDs for all VM types based solely on that fact, but now I'm wondering if
-> > it's SEV+ that crazy and broken.  Because if ASIDs also tag GVA=>GPA, then SEV has
-> > a massive architectural security hole, e.g. a malicious hypervisor can coerce the
-> > CPU into using a stale GVA=>GPA TLB entry by switching vCPUs and letting guest
-> > process with CR3=x access memory for guest process with CR3=y.  But again, if
-> > ASIDs don't tag GVA=>GPA, then what provides isolation between vCPUs!?!?!
-> 
-> No.
-> 
-> For SEV/SEV-ES guests, the HV (which remains partially trusted) must do a
-> TLB flush before running a different VMCB of the same guest, in order to
-> avoid this problem. This code is in pre_sev_run().
-> 
-> For SEV-SNP guests, this is handled automatically by hardware through the
-> PCPU_ID and TLB_ID VMSA fields (documented somewhat in APM 15.36.15).
+Hi,
 
-Aha!  I knew I had to be missing something.  Rule #1: don't doubt Kaplan ;-)
+On 6/22/25 11:40 PM, Alok Tiwari wrote:
+> Notable changes:
+> Use "an NVMe" instead of "a NVMe" throughout the document
+> Fix incorrect phrasing such as "will is discoverable" -> "is
+> discoverable"
+> Ensure consistent and proper article usage for clarity.
+> 
+> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+> ---
+>  Documentation/nvme/nvme-pci-endpoint-target.rst | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/nvme/nvme-pci-endpoint-target.rst b/Documentation/nvme/nvme-pci-endpoint-target.rst
+> index b699595d1762b..48f3b7f685945 100644
+> --- a/Documentation/nvme/nvme-pci-endpoint-target.rst
+> +++ b/Documentation/nvme/nvme-pci-endpoint-target.rst
 
-> In short, the TLB is tagged with {TLB_ID, ASID} and TLB_ID is managed by
-> HW and guaranteed to be different for each vCPU of the guest running on a
-> physical core. This ensures that the TLB tag is unique for each guest and
-> for each vCPU of the guest.
+[snip]
 
-Thanks Tom, very much appreciated!
+> @@ -181,10 +181,10 @@ Creating an NVMe endpoint device is a two step process. First, an NVMe target
+>  subsystem and port must be defined. Second, the NVMe PCI endpoint device must
+>  be setup and bound to the subsystem and port created.
+>  
+> -Creating a NVMe Subsystem and Port
+> +Creating an NVMe Subsystem and Port
+>  ----------------------------------
+
+The underline needs to be extended one more character.
+
+>  
+> -Details about how to configure a NVMe target subsystem and port are outside the
+> +Details about how to configure an NVMe target subsystem and port are outside the
+>  scope of this document. The following only provides a simple example of a port
+>  and subsystem with a single namespace backed by a null_blk device.
+>  
+> @@ -234,7 +234,7 @@ Finally, create the target port and link it to the subsystem::
+>          # ln -s /sys/kernel/config/nvmet/subsystems/nvmepf.0.nqn \
+>                  /sys/kernel/config/nvmet/ports/1/subsystems/nvmepf.0.nqn
+>  
+> -Creating a NVMe PCI Endpoint Device
+> +Creating an NVMe PCI Endpoint Device
+>  -----------------------------------
+
+Same here.
+
+>  
+>  With the NVMe target subsystem and port ready for use, the NVMe PCI endpoint
+
+With those changes made, you can add:
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks.
+-- 
+~Randy
