@@ -1,190 +1,165 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CB72D4B68
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 20:43:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E12B2D542B;
+	Mon, 23 Jun 2025 20:43:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750711400; cv=none; b=qa3LdxndwZBrjg2G9JLg8v04ieqSTDMYfgSfcCruJpULZn+Q95jtoykR69Vz9UegIQqVc5n04zvB3/PQvA32mucplAlytpTgOGYOysvYy/eXyziIdpSE1uVbDKChCo3TIT9KRfHQnG7s1xtvsJcv+O8U6PJ9iJTCVjlvW2jzA4U=
+	t=1750711403; cv=none; b=b2sm+v+eEpQEGMx3FBZoJkrG8P+W0QZQpwm0MpXkxNLQ71WI6Kju0l7Ifar4WWkM1UyHlWDidwq1W6LXQ130/Q/zMMp/ExK4CWm4ge7B3gz1q2Dxxcl2+qULAI7rbl+EDKoLGOVE4dtiHGt8OMVrh9Ka8sJ7ZrWEqdTXaEk/8MI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750711400; c=relaxed/simple;
-	bh=6qWV4n/s+Ygofk7+59+ZVlVkXNAfE9cXC/Y/ph37odU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ZpsCOMju2WvW2caqqd8vb11BHxv5dJx77TeeYMa/fnBbatKhDfeAIWmrVI+RrTWO48jY8YamO4GQJLT4in6ouvgcgl9ypMy6H1Ayo4g3Ps9Gx6PIZKtWonLkrPc6pEeWR1UxhgL+1DZn/RKR3nvpHvxqFCl0GKiAsp0CgbmemBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HXfm0txO; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1750711403; c=relaxed/simple;
+	bh=ZF8iOADmf8w+7qUTaik1sR5sLxxucpt9xz9r6IIBx8E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tHd6s64ApfLulcqqX4uQ5KdqDWYBOKiwKCJw5jWHjrjrMGQORFVnV0rUMHA/c450BQGXYqyJrRxnKL8eH1MLXiWUO+QvavVrs8fPkF1BPebChpl2Sn3Bd/pi3GT2DSY/OQ/pf9A6riVYDu6wksJ4/l5ZgGMynD7fawoyz19/ftw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JFjLTigN; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HXfm0txO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JFjLTigN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750711398; x=1782247398;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=6qWV4n/s+Ygofk7+59+ZVlVkXNAfE9cXC/Y/ph37odU=;
-  b=HXfm0txO5vQ7VYfXh5YGipXL/Bk83WmYm6+Zu3fQdKxSFunbtf5i/2Np
-   9TMY1ZOk0LPDx2SCrass1E1CBJ7b+uDeN9nNuPMrge2KFAf2HO57owG+F
-   v+fUV7qiBPdypmnXzFt2p8vMtC6+x8aXebNiZbfat3Ey4EC+EXnJd+/xq
-   DHxguXaWHWvMHslmd0gUxxs9tMs0VDBg0WRUYpihvHkSGI8satgAlACit
-   B3L3IFWd7eDx7lvbGrNyiTVd2pdHHKucoiwNA4LkU0uon8UrP6INNZl0x
-   5rp7wcQickABEyiYlIHsoA8LoQcpbw96GNc+3v5eRXuzx43TV/i5OC8ZJ
-   Q==;
-X-CSE-ConnectionGUID: iuFwHei0R5qJY7gf9LuF8A==
-X-CSE-MsgGUID: AiWDIk2FSqGSEF7L08kkzw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="40547169"
+  t=1750711401; x=1782247401;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ZF8iOADmf8w+7qUTaik1sR5sLxxucpt9xz9r6IIBx8E=;
+  b=JFjLTigNx+cO+8ycNfK0fX+kyN4ViHfz+eHbnRNOy6ioT3yud8P6jmgD
+   74/kqmMpgx45E6eFOyA2DD5itGJw989w+CLuld5CmjAzzwUsjSLIavvnY
+   FXp0h/xtz2HiLrqHehr6qktST0VUzcr7yq2HS5IKrayfMY7wKdjpsK0M0
+   PxLubOMs/glkLrZk28zFJnSimk4ij69Igkhpb4IRjLZdKLSLJ9joFr59N
+   6H0OIaJITia2VwBvPKprl8MbsHykMlwhV2sJZ0IVs6fVeFvBZCuG9tPzE
+   H0imYgQyxNoi2B8Aln6Z42wcCl18Eg7DFhNKmwOT6BcuyA9yrWxyFS1P+
+   A==;
+X-CSE-ConnectionGUID: jzCD4RxET7W1EI5zjrRlPA==
+X-CSE-MsgGUID: gpTGF5f1RxaFSRCRnJrJEg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="40547183"
 X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
-   d="scan'208";a="40547169"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 13:43:18 -0700
-X-CSE-ConnectionGUID: XmGKx6MDQeKWnpxnO3YN/w==
-X-CSE-MsgGUID: xD9/NftyS22OUREWbVR8Tw==
+   d="scan'208";a="40547183"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 13:43:21 -0700
+X-CSE-ConnectionGUID: vhpMNoOJRVyHoigd9p+7Iw==
+X-CSE-MsgGUID: sLayHnBySu6O9o+QgzInsA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
-   d="scan'208";a="152218073"
+   d="scan'208";a="151185395"
 Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 23 Jun 2025 13:43:15 -0700
+  by orviesa006.jf.intel.com with ESMTP; 23 Jun 2025 13:43:15 -0700
 Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uTo0X-000PJw-0c;
-	Mon, 23 Jun 2025 20:43:13 +0000
-Date: Tue, 24 Jun 2025 04:43:01 +0800
+	id 1uTo0W-000PJq-2Z;
+	Mon, 23 Jun 2025 20:43:12 +0000
+Date: Tue, 24 Jun 2025 04:43:02 +0800
 From: kernel test robot <lkp@intel.com>
-To: Junfeng Guo <junfeng.guo@intel.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Marcin Szycik <marcin.szycik@linux.intel.com>,
-	Qi Zhang <qi.z.zhang@intel.com>, Ahmed Zaki <ahmed.zaki@intel.com>
-Subject: drivers/net/ethernet/intel/ice/ice_parser.c:1231:34: warning: stack
- frame size (1040) exceeds limit (1024) in 'ice_bst_tcam_table_get'
-Message-ID: <202506240437.yrXLeKyv-lkp@intel.com>
+To: =?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Gatien Chevallier <gatien.chevallier@foss.st.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Gabriel Fernandez <gabriel.fernandez@foss.st.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	=?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>
+Subject: Re: [PATCH 06/13] perf: stm32: introduce DDRPERFM driver
+Message-ID: <202506240401.zlRG1qiO-lkp@intel.com>
+References: <20250623-ddrperfm-upstream-v1-6-7dffff168090@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250623-ddrperfm-upstream-v1-6-7dffff168090@foss.st.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   86731a2a651e58953fc949573895f2fa6d456841
-commit: 68add288189a5490868ccf8cbed273320568928d ice: add debugging functions for the parser sections
-date:   10 months ago
-config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250624/202506240437.yrXLeKyv-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506240437.yrXLeKyv-lkp@intel.com/reproduce)
+Hi Clément,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on 86731a2a651e58953fc949573895f2fa6d456841]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Cl-ment-Le-Goffic/bus-firewall-move-stm32_firewall-header-file-in-include-folder/20250623-173554
+base:   86731a2a651e58953fc949573895f2fa6d456841
+patch link:    https://lore.kernel.org/r/20250623-ddrperfm-upstream-v1-6-7dffff168090%40foss.st.com
+patch subject: [PATCH 06/13] perf: stm32: introduce DDRPERFM driver
+config: i386-buildonly-randconfig-002-20250624 (https://download.01.org/0day-ci/archive/20250624/202506240401.zlRG1qiO-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506240401.zlRG1qiO-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506240437.yrXLeKyv-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506240401.zlRG1qiO-lkp@intel.com/
 
-All warnings (new ones prefixed by >>):
+All errors (new ones prefixed by >>):
 
-   In file included from drivers/net/ethernet/intel/ice/ice_parser.c:4:
-   In file included from drivers/net/ethernet/intel/ice/ice_common.h:9:
-   In file included from drivers/net/ethernet/intel/ice/ice.h:12:
-   In file included from include/linux/netdevice.h:38:
-   In file included from include/net/net_namespace.h:43:
-   In file included from include/linux/skbuff.h:28:
-   In file included from include/linux/dma-mapping.h:11:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     548 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
-     102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
-         |                                                      ^
-   In file included from drivers/net/ethernet/intel/ice/ice_parser.c:4:
-   In file included from drivers/net/ethernet/intel/ice/ice_common.h:9:
-   In file included from drivers/net/ethernet/intel/ice/ice.h:12:
-   In file included from include/linux/netdevice.h:38:
-   In file included from include/net/net_namespace.h:43:
-   In file included from include/linux/skbuff.h:28:
-   In file included from include/linux/dma-mapping.h:11:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
-     115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
-         |                                                      ^
-   In file included from drivers/net/ethernet/intel/ice/ice_parser.c:4:
-   In file included from drivers/net/ethernet/intel/ice/ice_common.h:9:
-   In file included from drivers/net/ethernet/intel/ice/ice.h:12:
-   In file included from include/linux/netdevice.h:38:
-   In file included from include/net/net_namespace.h:43:
-   In file included from include/linux/skbuff.h:28:
-   In file included from include/linux/dma-mapping.h:11:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     585 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:693:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     693 |         readsb(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:701:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     701 |         readsw(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:709:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     709 |         readsl(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:718:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     718 |         writesb(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:727:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     727 |         writesw(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:736:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     736 |         writesl(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
->> drivers/net/ethernet/intel/ice/ice_parser.c:1231:34: warning: stack frame size (1040) exceeds limit (1024) in 'ice_bst_tcam_table_get' [-Wframe-larger-than]
-    1231 | static struct ice_bst_tcam_item *ice_bst_tcam_table_get(struct ice_hw *hw)
-         |                                  ^
-   13 warnings generated.
+   drivers/perf/stm32_ddr_pmu.c: In function 'stm32_ddr_start_counters':
+>> drivers/perf/stm32_ddr_pmu.c:205:9: error: implicit declaration of function 'writel_relaxed' [-Werror=implicit-function-declaration]
+     205 |         writel_relaxed(r->start.mask, pmu->membase + r->start.reg);
+         |         ^~~~~~~~~~~~~~
+   drivers/perf/stm32_ddr_pmu.c: In function 'stm32_ddr_clear_counter':
+>> drivers/perf/stm32_ddr_pmu.c:232:22: error: implicit declaration of function 'readl_relaxed' [-Werror=implicit-function-declaration]
+     232 |         u32 status = readl_relaxed(pmu->membase + r->status.reg);
+         |                      ^~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
 
-vim +/ice_bst_tcam_table_get +1231 drivers/net/ethernet/intel/ice/ice_parser.c
+vim +/writel_relaxed +205 drivers/perf/stm32_ddr_pmu.c
 
-75b4a938a94778 Junfeng Guo 2024-07-25  1224  
-75b4a938a94778 Junfeng Guo 2024-07-25  1225  /**
-75b4a938a94778 Junfeng Guo 2024-07-25  1226   * ice_bst_tcam_table_get - create a boost tcam table
-75b4a938a94778 Junfeng Guo 2024-07-25  1227   * @hw: pointer to the hardware structure
-75b4a938a94778 Junfeng Guo 2024-07-25  1228   *
-75b4a938a94778 Junfeng Guo 2024-07-25  1229   * Return: a pointer to the allocated Boost TCAM table.
-75b4a938a94778 Junfeng Guo 2024-07-25  1230   */
-75b4a938a94778 Junfeng Guo 2024-07-25 @1231  static struct ice_bst_tcam_item *ice_bst_tcam_table_get(struct ice_hw *hw)
-75b4a938a94778 Junfeng Guo 2024-07-25  1232  {
-75b4a938a94778 Junfeng Guo 2024-07-25  1233  	return ice_parser_create_table(hw, ICE_SID_RXPARSER_BOOST_TCAM,
-75b4a938a94778 Junfeng Guo 2024-07-25  1234  				       sizeof(struct ice_bst_tcam_item),
-75b4a938a94778 Junfeng Guo 2024-07-25  1235  				       ICE_BST_TCAM_TABLE_SIZE,
-75b4a938a94778 Junfeng Guo 2024-07-25  1236  				       ice_bst_parse_item, true);
-75b4a938a94778 Junfeng Guo 2024-07-25  1237  }
-75b4a938a94778 Junfeng Guo 2024-07-25  1238  
-
-:::::: The code at line 1231 was first introduced by commit
-:::::: 75b4a938a947785cdda8908cb700c58e95f8ff69 ice: parse and init various DDP parser sections
-
-:::::: TO: Junfeng Guo <junfeng.guo@intel.com>
-:::::: CC: Tony Nguyen <anthony.l.nguyen@intel.com>
+   200	
+   201	static void stm32_ddr_start_counters(struct stm32_ddr_pmu *pmu)
+   202	{
+   203		const struct stm32_ddr_pmu_regspec *r = pmu->cfg->regs;
+   204	
+ > 205		writel_relaxed(r->start.mask, pmu->membase + r->start.reg);
+   206	}
+   207	
+   208	static void stm32_ddr_stop_counters(struct stm32_ddr_pmu *pmu)
+   209	{
+   210		const struct stm32_ddr_pmu_regspec *r = pmu->cfg->regs;
+   211	
+   212		writel_relaxed(r->stop.mask, pmu->membase + r->stop.reg);
+   213	}
+   214	
+   215	static void stm32_ddr_clear_time_counter(struct stm32_ddr_pmu *pmu)
+   216	{
+   217		const struct stm32_ddr_pmu_regspec *r = pmu->cfg->regs;
+   218	
+   219		writel_relaxed(r->clear_time.mask, pmu->membase + r->clear_time.reg);
+   220	}
+   221	
+   222	static void stm32_ddr_clear_event_counter(struct stm32_ddr_pmu *pmu, struct stm32_ddr_cnt *counter)
+   223	{
+   224		const struct stm32_ddr_pmu_regspec *r = pmu->cfg->regs;
+   225	
+   226		writel_relaxed(r->clear_cnt.mask & BIT(counter->idx), pmu->membase + r->clear_cnt.reg);
+   227	}
+   228	
+   229	static void stm32_ddr_clear_counter(struct stm32_ddr_pmu *pmu, struct stm32_ddr_cnt *counter)
+   230	{
+   231		const struct stm32_ddr_pmu_regspec *r = pmu->cfg->regs;
+ > 232		u32 status = readl_relaxed(pmu->membase + r->status.reg);
+   233	
+   234		if (counter->idx == pmu->cfg->time_cnt_idx)
+   235			stm32_ddr_clear_time_counter(pmu);
+   236		else
+   237			stm32_ddr_clear_event_counter(pmu, counter);
+   238	
+   239		if (status & r->status.mask)
+   240			dev_err(pmu->dev, "Failed to clear counter %i because the PMU is busy\n",
+   241				counter->idx);
+   242	}
+   243	
 
 -- 
 0-DAY CI Kernel Test Service
