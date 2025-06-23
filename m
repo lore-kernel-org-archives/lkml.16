@@ -1,91 +1,225 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63D7D2566F5
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6783725B684;
+	Mon, 23 Jun 2025 14:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750689034; cv=none; b=gUJtsOSTG7FkPrQlbjrllHIidaHAcOoOKt/sWp7sIrPUt5VWv+J2xqMdKFbMYoLvlH1AQQSQShUYOS8mlpDWjCw/Fbnscpll2/9ZJDkSyLPeoZEhC5jueizC5rdELLia1t7fuBlWdXtt4k56c0t5nJaLDbTPiQMm1L7F3VokQCQ=
+	t=1750689120; cv=none; b=fasyYysbylquGQbjRoM+RmFW8kIWny6JB5lo+X2/oiUtyQ/mYM06CKpyu4WjCsmuxmZzmYsPPfLZU9/dH3k0EOoYbUoYkmnzxv2eDyBY9U2H709C5EHr/pXI/f+LpWdpyr4DhFBp9002faWDFCTwIJ/rKyrNmK8ivH0XP1aBiGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750689034; c=relaxed/simple;
-	bh=q1cPnjP5LDmCwkLjQNxQ71alVvth8kIaai6E10d1Io8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=thG4/IIUb6FbWWoXQt2ba+EE4/7vYG+bSTYPHfEDeKhqgQO8HaMCDFitqmwuXDOwoG3/0cncGHG90oMEyg3iRmJzKC0nbj0/Q7Y2LAlTzKPJ/HlQlF094rIxIYAt2kB8lXfXqe+4y6W4nFT/qVpHiYrlwS1GcdZjwnAASR6iKfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 770D7113E;
-	Mon, 23 Jun 2025 07:30:12 -0700 (PDT)
-Received: from [10.1.29.169] (XHFQ2J9959.cambridge.arm.com [10.1.29.169])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB3D43F66E;
-	Mon, 23 Jun 2025 07:30:29 -0700 (PDT)
-Message-ID: <e45fa35c-315a-45ea-a14f-030c5258f533@arm.com>
-Date: Mon, 23 Jun 2025 15:30:28 +0100
+	s=arc-20240116; t=1750689120; c=relaxed/simple;
+	bh=ZCQSFONaYxeZZAAKU4SpBHMquV6hYTWRC8UGHRliBp4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OxTOKOlbUVlprETeKFn6cqG2K4o0YmunrvlASmpj2QhQUZL1d784exHsMm5KcOakVsuqkJIZY9cPSVxlKptN/B6kxfsop0NF0SZDf6BXahF7CUgBf33GkXqhAYyeOkU/6UBvAvyI7qpWAmapEZdzvP9hQAWL9M1UI8e2lRThhfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jck3wg9R; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jck3wg9R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CA72C4CEEA;
+	Mon, 23 Jun 2025 14:31:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750689119;
+	bh=ZCQSFONaYxeZZAAKU4SpBHMquV6hYTWRC8UGHRliBp4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Jck3wg9RZb7bC/hxuIJDfydr1nNweR7OZJwVDH678MV6CoDluvzhfc59m0hb27d0R
+	 z9+2urvvjL1OCQjoBm8RHH34/8FTMHW3LPeLq5XnC2Tn3uDp4aC+7Zup9ShnVNdanG
+	 I2ImATQ1Ie3dohqcbHJYfh+HEFFLgOH+W9tpEjuRbcVZntHJCM/iXmVU9POCLs3hsv
+	 tOOi8KnY2VxMT0UsTCT6EYYzOFz6JiA4L0DHAtLoWSYfD4abaIZLUm1tgHSNMBG7a6
+	 HDZbrnbZpKkVntLXje5BSEEOP58hexCD7FngXqRfVq2o6uidA6yIl9g5/xPaKNomQ6
+	 0lN2fvcsM5dyw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <lossin@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice
+ Ryhl" <aliceryhl@google.com>,  "Masahiro Yamada" <masahiroy@kernel.org>,
+  "Nathan Chancellor" <nathan@kernel.org>,  "Luis Chamberlain"
+ <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,  "Nicolas
+ Schier" <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
+  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
+  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
+ <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
+ KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
+  "Daniel Almeida" <daniel.almeida@collabora.com>,
+  <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
+In-Reply-To: <DATW0XWNN45X.1L2WMZ41JJ5O8@kernel.org> (Benno Lossin's message
+	of "Mon, 23 Jun 2025 13:48:42 +0200")
+References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
+	<20250612-module-params-v3-v13-2-bc219cd1a3f8@kernel.org>
+	<COU2bqJOzCHRf6g4rwFpu2NY3wLY0G0AmNjRaU9aGEqu1HaPZ5X4KzfDT_CEB3Okh5BV50sJS10sKhmtHut8ew==@protonmail.internalid>
+	<DAQJCUE1C2JE.204A8IS7LBIVZ@kernel.org> <87ikkq648o.fsf@kernel.org>
+	<smOfUo2mEmQu-lykKKMiNOUWq2ze6p_CoEEpgGE0dtAnoJDGEpvQMkP1q-n13MiUxLK1xAiM-4QLsivPrG57sg==@protonmail.internalid>
+	<DARCZYNPIJVZ.3JJSZ6PSAEMEC@kernel.org> <877c126bce.fsf@kernel.org>
+	<Mg1_h6lRpg9tdi0VjiyDfIEy2juzgDWxOhYX61qSUfyEpeMMksWW1e-blTka_G1dXUvpZVktdD-zL3X1a6T6Cg==@protonmail.internalid>
+	<DATW0XWNN45X.1L2WMZ41JJ5O8@kernel.org>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Mon, 23 Jun 2025 16:31:45 +0200
+Message-ID: <87v7om4jhq.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/vmalloc: leave lazy MMU mode on PTE mapping error
-Content-Language: en-GB
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250623075721.2817094-1-agordeev@linux.ibm.com>
- <107bfdb7-c8f5-45fa-872e-3e6928dc8025@arm.com>
- <aFlQv4dx7wFU5Cql@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
- <cb71d9f4-aaae-4240-88f5-50a745717f22@arm.com>
- <9214718e-97d0-4e8f-b223-59351e664707@suswa.mountain>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <9214718e-97d0-4e8f-b223-59351e664707@suswa.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 23/06/2025 14:53, Dan Carpenter wrote:
-> On Mon, Jun 23, 2025 at 02:31:48PM +0100, Ryan Roberts wrote:
->> On 23/06/2025 14:03, Alexander Gordeev wrote:
->>> On Mon, Jun 23, 2025 at 01:37:11PM +0100, Ryan Roberts wrote:
->>>> On 23/06/2025 08:57, Alexander Gordeev wrote:
->>>>> Function vmap_pages_pte_range() enters the lazy MMU mode,
->>>>> but fails to leave it in case an error is encountered.
->>>>>
->>>>> Reported-by: kernel test robot <lkp@intel.com>
->>>>> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
->>>>> Closes: https://lore.kernel.org/r/202506132017.T1l1l6ME-lkp@intel.com/
->>>>> Fixes: 44562c71e2cf ("mm/vmalloc: Enter lazy mmu mode while manipulating vmalloc ptes")
->>>>> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
->>>>
->>>> Ouch, sorry about that! The patch looks good to me so:
->>>>
->>>> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
->>>>
->>>> I wonder an aditional Fixes: should be added for Commit 2ba3e6947aed
->>>> ("mm/vmalloc: track which page-table levels were modified") though? That's the
->>>> one that added the "*mask |= PGTBL_PTE_MODIFIED;" which would have also been
->>>> skipped if an error occured before this patch.
->>>
->>> Good catch! I think it certainly needs to be reported with Fixes
->>> and I even doubt whether your commit should be mentioned at all?
+"Benno Lossin" <lossin@kernel.org> writes:
+
+> On Mon Jun 23, 2025 at 11:44 AM CEST, Andreas Hindborg wrote:
+>> "Benno Lossin" <lossin@kernel.org> writes:
 >>
->> Well I would certainly argue that my patch is broken as is. So happy to have 2
->> Fixes: tags. But I'm not really sure what the rules are here...
-> 
-> I would only list the older commit 2ba3e6947aed ("mm/vmalloc: track
-> which page-table levels were modified").  The static checker warning
-> came later, but it's not really the important bit.  It's just one bug.
+>>> On Fri Jun 20, 2025 at 1:29 PM CEST, Andreas Hindborg wrote:
+>>>> "Benno Lossin" <lossin@kernel.org> writes:
+>>>>> On Thu Jun 12, 2025 at 3:40 PM CEST, Andreas Hindborg wrote:
+>>>>>> +/// A wrapper for kernel parameters.
+>>>>>> +///
+>>>>>> +/// This type is instantiated by the [`module!`] macro when module parameters are
+>>>>>> +/// defined. You should never need to instantiate this type directly.
+>>>>>> +///
+>>>>>> +/// Note: This type is `pub` because it is used by module crates to access
+>>>>>> +/// parameter values.
+>>>>>> +#[repr(transparent)]
+>>>>>> +pub struct ModuleParamAccess<T> {
+>>>>>> +    data: core::cell::UnsafeCell<T>,
+>>>>>> +}
+>>>>>> +
+>>>>>> +// SAFETY: We only create shared references to the contents of this container,
+>>>>>> +// so if `T` is `Sync`, so is `ModuleParamAccess`.
+>>>>>> +unsafe impl<T: Sync> Sync for ModuleParamAccess<T> {}
+>>>>>> +
+>>>>>> +impl<T> ModuleParamAccess<T> {
+>>>>>> +    #[doc(hidden)]
+>>>>>> +    pub const fn new(value: T) -> Self {
+>>>>>> +        Self {
+>>>>>> +            data: core::cell::UnsafeCell::new(value),
+>>>>>> +        }
+>>>>>> +    }
+>>>>>> +
+>>>>>> +    /// Get a shared reference to the parameter value.
+>>>>>> +    // Note: When sysfs access to parameters are enabled, we have to pass in a
+>>>>>> +    // held lock guard here.
+>>>>>> +    pub fn get(&self) -> &T {
+>>>>>> +        // SAFETY: As we only support read only parameters with no sysfs
+>>>>>> +        // exposure, the kernel will not touch the parameter data after module
+>>>>>> +        // initialization.
+>>>>>
+>>>>> This should be a type invariant. But I'm having difficulty defining one
+>>>>> that's actually correct: after parsing the parameter, this is written
+>>>>> to, but when is that actually?
+>>>>
+>>>> For built-in modules it is during kernel initialization. For loadable
+>>>> modules, it during module load. No code from the module will execute
+>>>> before parameters are set.
+>>>
+>>> Gotcha and there never ever will be custom code that is executed
+>>> before/during parameter setting (so code aside from code in `kernel`)?
+>>>
+>>>>> Would we eventually execute other Rust
+>>>>> code during that time? (for example when we allow custom parameter
+>>>>> parsing)
+>>>>
+>>>> I don't think we will need to synchronize because of custom parameter
+>>>> parsing. Parameters are initialized sequentially. It is not a problem if
+>>>> the custom parameter parsing code name other parameters, because they
+>>>> are all initialized to valid values (as they are statics).
+>>>
+>>> If you have `&'static i64`, then the value at that reference is never
+>>> allowed to change.
+>>>
+>>>>> This function also must never be `const` because of the following:
+>>>>>
+>>>>>     module! {
+>>>>>         // ...
+>>>>>         params: {
+>>>>>             my_param: i64 {
+>>>>>                 default: 0,
+>>>>>                 description: "",
+>>>>>             },
+>>>>>         },
+>>>>>     }
+>>>>>
+>>>>>     static BAD: &'static i64 = module_parameters::my_param.get();
+>>>>>
+>>>>> AFAIK, this static will be executed before loading module parameters and
+>>>>> thus it makes writing to the parameter UB.
+>>>>
+>>>> As I understand, the static will be initialized by a constant expression
+>>>> evaluated at compile time. I am not sure what happens when this is
+>>>> evaluated in const context:
+>>>>
+>>>>     pub fn get(&self) -> &T {
+>>>>         // SAFETY: As we only support read only parameters with no sysfs
+>>>>         // exposure, the kernel will not touch the parameter data after module
+>>>>         // initialization.
+>>>>         unsafe { &*self.data.get() }
+>>>>     }
+>>>>
+>>>> Why would that not be OK? I would assume the compiler builds a dependency graph
+>>>> when initializing statics?
+>>>
+>>> Yes it builds a dependency graph, but that is irrelevant? The problem is
+>>> that I can create a `'static` reference to the inner value *before* the
+>>> parameter is written-to (as the static is initialized before the
+>>> parameters).
+>>
+>> I see, I did not consider this situation. Thanks for pointing this out.
+>>
+>> Could we get around this without a lock maybe? If we change
+>> `ModuleParamAccess::get` to take a closure instead:
+>>
+>>     /// Call `func` with a reference to the parameter value stored in `Self`.
+>>     pub fn read(&self, func: impl FnOnce(&T)) {
+>>         // SAFETY: As we only support read only parameters with no sysfs
+>>         // exposure, the kernel will not touch the parameter data after module
+>>         // initialization.
+>>         let data = unsafe { &*self.data.get() };
+>>
+>>         func(data)
+>>     }
+>>
+>> I think this would bound the lifetime of the reference passed to the
+>> closure to the duration of the call, right?
+>
+> Yes that is correct. Now you can't assign the reference to a static.
+> However, this API is probably very clunky to use, since you always have
+> to create a closure etc.
+>
+> Since you mentioned in the other reply that one could spin up a thread
+> and do something simultaneously, I don't think this is enough. You could
+> have a loop spin over the new `read` function and read the value and
+> then the write happens.
 
-Given smatch caught the locking bug, I wonder if it could be taught to look for
-lazy_mmu issues? i.e. unbalanced enter/leave, nesting and read hazards. I think
-Alexander previously found a read hazard so I wouldn't be surprised if there are
-more.
+Yes you are right, we have to treat it as if it could be written at any
+point in time.
 
-> 
-> We'll have to hand edit the commit if we want to backport it so that's
-> a separate issue.
-> 
-> regards,
-> dan carpenter
-> 
+> One way to fix this issue would be to use atomics to read the value and
+> to not create a reference to it. So essentially have
+>
+>     pub fn read(&self) -> T {
+>         unsafe { atomic_read_unsafe_cell(&self.data) }
+>     }
+
+That could work.
+
+> Another way would be to use a `Once`-like type (does that exist on the C
+> side?) so a type that can be initialized once and then never changes.
+> While it doesn't have a value set, we return some default value for the
+> param and print a warning, when it's set, we just return the value. But
+> this probably also requires atomics...
+
+I think atomic bool is not that far away. Either that, or we can lock.
+
+> Is parameter accessing used that often in hot paths? Can't you just copy
+> the value into your `Module` struct?
+
+I don't imagine this being read in a hot path. If so, the user could
+make a copy.
+
+
+Best regards,
+Andreas Hindborg
+
 
