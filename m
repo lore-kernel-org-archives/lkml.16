@@ -1,116 +1,130 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D448D29C337;
-	Mon, 23 Jun 2025 16:08:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750694892; cv=none; b=tFCieP7PxPJbErTegVcFmcaPoCEZ7m/ibArEJMmnBxxktzbUzZcG17jCWEyb7kfeUZY1Eo1A7eNQw9QIpt/k7x0PHeQHkY6KJIWSK4HcJDiZ6WgNmqRbMxV4CaeWEBEZCMAOdkpXXF+xAXe26U6V17Xsc2YUy3BKixsZK+WMRLU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750694892; c=relaxed/simple;
-	bh=xDvkLdk8hMUQqSvQi1R6ZixD6fEY6eb3RFzWM6baH4o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pLRwlEM0Un5dKtadAcOsqZMzR1eCd59vpbnnNZvlTTFrXBIPzmaM4GIsh2TrMiTeqz2M86sdiQCuIyOdSQYmeGU6cmBpUUdd7Da3zWqnbTayltE/J5b03pu57bvki8zt+BwWLoOGKjy024IJGGJis3NdZoJeN6r7NsbEyM2PwzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=oNoRSzib; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B81B2D238A;
+	Mon, 23 Jun 2025 16:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750694896; cv=pass; b=J1iaaW0Gw+2z5FktKPfPZMD+PQOQUs78tjdB0ao8dNckuWL0aHTDkkC9Gl91uAgjmco9a4aAIpbYnfsAvMgnMStmyQYtQ9zT2Niw2O1ffqOWH+Ki3gn1Bg+Dq72OZ1cO8ami8PR81wsO7L3ZNFviZ+sW/tEeUKJ9OQejg7XJpSA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750694896; c=relaxed/simple;
+	bh=QnxR+sK44HALhLWSBvHY6Bv+Hrit1SCdQvPFy31Lxo0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=oAojWQeHBtjdMVftBvxowkv8ZKB5SkM4vxiNVEvqkBAlfl0FzcdgHRa1eEBFXwGzPajjRFKbwC1Dxf3ABQtHKZpVuHpnILvUORwSIJICrDmNi59S8TbhT7t2Tun3tTLLR4iozLirMs0spZqYsulpNLzukxtGmYMxh1lOWCU/3LY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=T/FuRxcx; arc=pass smtp.client-ip=136.143.188.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="oNoRSzib"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750694889;
-	bh=xDvkLdk8hMUQqSvQi1R6ZixD6fEY6eb3RFzWM6baH4o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oNoRSzib+zbMQPDZnMpSIymSkOk5vbP2+kE4B+QLlBlmB2nWX22ZzU2G76VfViNKM
-	 KQJ8IqahXEvsP4i4F3Wgg0hhMmsLKQtQzi/J5AAvVMTkXrOctj1vFrokZQY2mBtfIb
-	 9hGF32pz7VLt4p2bqpWF+/LnSNOEucTIFkoRlqonHewBS9WrtFUSeDSo7xmD96nDUd
-	 Hu69tPCHe3pdg9fG1XeHaj+npraAnyGCeOVqPtExWSUZW5gzxrsKx+cHAv7bqqYzWS
-	 z06/VySIHr7ETpczvNE3H8MYUnUMZwiYW4SjVUg0OemLCd+KgyvRZ5pwvbMd2fJHpg
-	 NC4tNIyZb9CjA==
-Received: from trenzalore.hitronhub.home (unknown [23.233.251.139])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: detlev)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id E065E17E3700;
-	Mon, 23 Jun 2025 18:08:05 +0200 (CEST)
-From: Detlev Casanova <detlev.casanova@collabora.com>
-To: linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	Alexey Charkov <alchark@gmail.com>,
-	Dragan Simic <dsimic@manjaro.org>,
-	Jianfeng Liu <liujianfeng1994@gmail.com>,
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Frank Wang <frank.wang@rock-chips.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Ricardo Ribalda <ribalda@chromium.org>,
-	Hans de Goede <hansg@kernel.org>,
-	Yunke Cao <yunkec@google.com>,
-	linux-media@vger.kernel.org,
-	kernel@collabora.com
-Subject: [PATCH 7/8] media: rkvdec: Remove TODO file
-Date: Mon, 23 Jun 2025 12:07:21 -0400
-Message-ID: <20250623160722.55938-8-detlev.casanova@collabora.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250623160722.55938-1-detlev.casanova@collabora.com>
-References: <20250623160722.55938-1-detlev.casanova@collabora.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="T/FuRxcx"
+ARC-Seal: i=1; a=rsa-sha256; t=1750694830; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=loJS8W16Z02Cu6fnl3R0RD/dzALHZA4dxEuncXhZBhvJq+Jx+BmHws/0REPfKX6GvS4LKDBm7U9SJeuncg1yecSHB6bUmPwvLcTlHfgJ7WQOBNKrVSQmnOy9rDdeK7bU9w7jemn1HmKbQQ7D38Iqsg5zagMhdRK25qio1G5lbaA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750694830; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=w4UQ2aQQRHizQgGHJB0otQTEkx720VSWFSPI0QYEkHo=; 
+	b=KMgkETM5XpmyKyeC+bjMzixubiqqS3C4M2/RFA7n9o/7X1aCHBqjGYraQIEW3poim8VAG+87A3sTTq0UMbMKGJ8xjFfq0N1cGev4yBvpiQ67nqKlTj/dpQ6FpUSD8lcey7gFreEyCbDplRq0Gz49mlyOypgocHUxw+lTdppw0l0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750694830;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=w4UQ2aQQRHizQgGHJB0otQTEkx720VSWFSPI0QYEkHo=;
+	b=T/FuRxcxjlZFOyVf/dMNjf1pk3VdNoieHWVKfSh/vHXALTivmf7DAokMhbIo6Qew
+	xmPVO3Z9Gah27lnlBQENxc0HMiMOaLxBjsFxcnMgC3mdSQALF6e/+JHKRCXi9BbWDxn
+	4tVNFdjpbA3BQj9d37nR7MgJb72RbTL23VKUgDyU=
+Received: by mx.zohomail.com with SMTPS id 1750694828635697.2662783904857;
+	Mon, 23 Jun 2025 09:07:08 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Date: Mon, 23 Jun 2025 18:05:34 +0200
+Subject: [PATCH v2 06/20] phy: rockchip-emmc: switch to FIELD_PREP_WM16
+ macro
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250623-byeword-update-v2-6-cf1fc08a2e1f@collabora.com>
+References: <20250623-byeword-update-v2-0-cf1fc08a2e1f@collabora.com>
+In-Reply-To: <20250623-byeword-update-v2-0-cf1fc08a2e1f@collabora.com>
+To: Yury Norov <yury.norov@gmail.com>, 
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+ Jaehoon Chung <jh80.chung@samsung.com>, 
+ Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Shreeya Patel <shreeya.patel@collabora.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Nicolas Frattaroli <frattaroli.nicolas@gmail.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Shawn Lin <shawn.lin@rock-chips.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
+ MyungJoo Ham <myungjoo.ham@samsung.com>, 
+ Kyungmin Park <kyungmin.park@samsung.com>, Qin Jian <qinjian@cqplus1.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, 
+ linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org, 
+ linux-sound@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org, 
+ linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+X-Mailer: b4 0.14.2
 
-2 items are present in the TODO file:
- - HEVC support
- - Evaluate adding helper for rkvdec_request_validate
+The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
+drivers that use constant masks.
 
-Missing HEVC support is not a reason for a driver to be in staging,
-support for different features of the hardware can be added in drivers
-in the main tree.
+Replace the implementation of the rockchip eMMC PHY driver's
+HIWORD_UPDATE macro with hw_bitfield.h's FIELD_PREP_WM16. This makes the
+change more easily reviewable.
 
-The rkvdec_request_validate function was simplified in
-commit 54676d5f5630 ("media: rkvdec: Do not require all controls to be present in every request")
-by not setting controls that have not changed.
-As it now basically just calls vb2_request_validate(), there is no need
-for a helper.
-
-Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
- drivers/staging/media/rkvdec/TODO | 11 -----------
- 1 file changed, 11 deletions(-)
- delete mode 100644 drivers/staging/media/rkvdec/TODO
+ drivers/phy/rockchip/phy-rockchip-emmc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/rkvdec/TODO b/drivers/staging/media/rkvdec/TODO
-deleted file mode 100644
-index 2c0779383276e..0000000000000
---- a/drivers/staging/media/rkvdec/TODO
-+++ /dev/null
-@@ -1,11 +0,0 @@
--* Support for HEVC is planned for this driver.
--
--  Given the V4L controls for that CODEC will be part of
--  the uABI, it will be required to have the driver in staging.
--
--  For this reason, we are keeping this driver in staging for now.
--
--* Evaluate introducing a helper to consolidate duplicated
--  code in rkvdec_request_validate and cedrus_request_validate.
--  The helper needs to the driver private data associated with
--  the videobuf2 queue, from a media request.
+diff --git a/drivers/phy/rockchip/phy-rockchip-emmc.c b/drivers/phy/rockchip/phy-rockchip-emmc.c
+index 20023f6eb9944eaab505101d57e806476ecfac71..5187983c58e5e9bc56e65c208122a3be7be00427 100644
+--- a/drivers/phy/rockchip/phy-rockchip-emmc.c
++++ b/drivers/phy/rockchip/phy-rockchip-emmc.c
+@@ -8,6 +8,7 @@
+ 
+ #include <linux/clk.h>
+ #include <linux/delay.h>
++#include <linux/hw_bitfield.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+@@ -21,7 +22,7 @@
+  * only if BIT(x + 16) set to 1 the BIT(x) can be written.
+  */
+ #define HIWORD_UPDATE(val, mask, shift) \
+-		((val) << (shift) | (mask) << ((shift) + 16))
++		(FIELD_PREP_WM16((mask) << (shift), (val)))
+ 
+ /* Register definition */
+ #define GRF_EMMCPHY_CON0		0x0
+
 -- 
 2.50.0
 
