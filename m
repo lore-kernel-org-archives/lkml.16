@@ -1,136 +1,129 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from panther.cherry.relay.mailchannels.net (panther.cherry.relay.mailchannels.net [23.83.223.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6976A218596
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 23:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750721740; cv=none; b=tg+hFHm1ju0XX3aRDFH4qVPFtVy+0eksqYme1olxpfwJcx8nf7XG67Yqu866t3YCTQyEiXEwX2lWjPwIBCQZEOC4Fjbw7q5+rW3l/H0IMkvhXPpmF/KY7P6tR3W/5raIgxyeKNtFPnzYuGLufV9vWnK4qW5SFdiunsZTOnzipA8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750721740; c=relaxed/simple;
-	bh=m1HKbq78Us6LvTsFYq7f5GyQZbgKEbFCUsF2gE7tF5k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aFo705fwuTH7rQe0//0aWiH51UKUdrmp7ihI4rFwiwPq/5ji8laIfTlFzsj7m7SjiTd1GSyUINQaPdWisFEamYA9y5WlQQ8/dSvpw6iY5L1BPIlP88JtXkMpPj5hhoqn43UD+q7/yy9cQ/RkkClyV7FB2BWQk2TbhQNq25RQXLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HDipr21A; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8F7146A66
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 23:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.141
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750721801; cv=pass; b=MwCyn5L13aF7TJm4J9f6hAzATGx/a7WlYEnMJrrLqSM7rt6t+Kc0zMMub1Q61W7WAnJs8WGXOdHIASKc24v6qzsyq0oG4nZ9i79Lqga4nrVMMZLwd5STLVAS+iM68zxEV4PVT/YKyQ+ujZpt71eCSqD/7MzM80QvJ/26+N+lIok=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750721801; c=relaxed/simple;
+	bh=CE2mHNZ+9Eog2dFdWpwOrrjyyGkcpM9V9hpM7yzG+E4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FyFzV1udtYwOS20KIP4qXajrv6D/SE+0vWnPdRo0wgZd0C2OYfrFWwibcLCI4DLcIqhFoLKNMHq2Mye8drWjgy8WK+JupuIIEzVHDARyeJRfvhUUf3juc3/3N2Ut3HxUoMKMjqXbpa84dMI0s+ztrzXjdbHAOE9YXVyZ73yG0dY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=YYCy+M/P; arc=pass smtp.client-ip=23.83.223.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HDipr21A"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-237f18108d2so66255ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:35:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750721739; x=1751326539; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iJZykzRp9XmGyR+bnKu4AsjxXNvJ484o746cN0kGIOw=;
-        b=HDipr21A5OiM5dG3t/ElumqU3x0U5We13tG2lNXxvfXvvibRm0E3v04ilyrng9bDMf
-         fYQbffjTFdOfdfx8ivQx/yCtmQxOb4q6l5zTL6NZXqnoW95GK0HXTYcDcjWpioBtVPnJ
-         HllmrQBxvgxNGii8siXP/cAMiNoHxxIvSSk/w27rhqD6L5qyKvYjWd4JdIb7VXBqsIKx
-         fxIkB5OizHyfhVdd382VAhn+qk35qw4CVS81d+6vlANtvAsOJO1WVTy+30m5o3Wn9QOP
-         KZQWdS0YUo1nwnfA2Qx9agkY6w6Tm7ppuXwC48pOy6kMtZp8b9DlMkowXltUdXQRzAne
-         hRzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750721739; x=1751326539;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iJZykzRp9XmGyR+bnKu4AsjxXNvJ484o746cN0kGIOw=;
-        b=SLvyFyf7FWmMW5t2YQt166FaZqohe4pSwjlWYCTGR+GMFqusPguNK+jLoCYlmHhfWE
-         tniOI8+6pdiH65G7L3HwDb6/kHqa3fCUmqd/EV8I86qzfNviRcOzKkam2gpw2Ed43j0S
-         QMNjp9To8NukvEWxE9yAClWnld248FPd11npYgXLZT2YZXfFQ8NKwQa/vH1Bq3m5du8p
-         OTDPj+oNfmPRFzVeh3gYrq64b6aJH/+8ihqwti9ikslzEflpMfdvIBX4h0Bli7GNnIsx
-         /4K7GmsU5Nr0OgUkR2xSxkWOsWK+nwspHBy6cNVHLMxGn4CQ5bxL7HruNNG7kfluMWWG
-         SIMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJxYHo1T4nWNQKtw6/EctARSjh+2cKpBTQ6Q41l4Tse40Dyu4cUA5bY4OEEYC/QWOMpsByEx51YYwZ+1o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsFBJpx6yNR5fGbrWRUvxeIJh76vbB/TI4oL1/wSMiSoxNFYjN
-	M1AtufugFanoSryo+wXfxY2j8eEnpm/9/j0xotc3kl+r0wcEb6eOzL5QLsf4dYN5r4lBrbpEaBJ
-	6Zf2632MXdVjKYfHrgZzr/YvxpgaEx0kMjMpx9poQ
-X-Gm-Gg: ASbGnct1XHDhlvuaeTORF9ram2BnF4QrE7eO98DWpQGG347GN9246ZsL9jWCY1dIVty
-	QQmaexs25HTdmdA4gJ8D3M9Mfmok+u7WdpNZQM+6P9/VZLujsDEUugDKuMBB+Uh9+z6jshGKZUF
-	gffcAPeI0DRBUpe2N0KjZZNsj119chTfVgVUaebe0ByEW2A17pJ7eR9OARKYWmKBuEyaDVoBY1
-X-Google-Smtp-Source: AGHT+IHHi7AieERcNnwiCtwAQr+c1gSn7f18Q5q/KjVn16GYv8KAYNJTic+iEGQjgx2v132Il9E3nwVRKB4urQHS71M=
-X-Received: by 2002:a17:903:350f:b0:223:2630:6b86 with SMTP id
- d9443c01a7336-23803ec11aemr328645ad.7.1750721738376; Mon, 23 Jun 2025
- 16:35:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="YYCy+M/P"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id A0D1B8450F6;
+	Mon, 23 Jun 2025 23:36:33 +0000 (UTC)
+Received: from pdx1-sub0-mail-a262.dreamhost.com (trex-green-0.trex.outbound.svc.cluster.local [100.108.88.53])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 31072844C67;
+	Mon, 23 Jun 2025 23:36:33 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1750721793; a=rsa-sha256;
+	cv=none;
+	b=ivaUBsjtTbFvqsZZ3zABvVqqFNtEFPUW8hlSIdfDF2SsKzUfEhXMJh1kWAqVCX34EYmtYt
+	soFAjMRbyu4cInZZEe6AWqTDl133QifvHb//IlJLS2oe4ReqhlLbHxKis897NFWfe3yj5f
+	p0yTfBGF0l0j2GR9R91Xh5MSXcEFEBx78OUR8NbzcYOh0o2J0mQonAd/t/AwX5eGkfKc77
+	Yui3QLQ43pkn/78Ej8sFX9TSFnCocvyNHxHsin1Bnsk7btuN/zzWZwyIyKokUjG04gm+NF
+	sQfQzV4Sk56kA2WwQpQCe3uJcOCe63CF+6WsiYK+8UrXCL9mqL+B51OOp800lw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1750721793;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=OQyAC5Zwg9VOAoEoP5oerQJSnLa4XNp2rsgYqfm0n0Y=;
+	b=OvB9uYJT8ebCAZ97f8O0O35OWyFw1TNoI2deW2RV8cI2YpES1MqpEepU6XEqQYGRY7NXJd
+	OuDTrGNmrdOsy+uz8ywDyqpEmYhgKpChw4p0nOu0GbIWWLKkjEY1DXhKls1LUHICoE0xXp
+	FeRWujjuFbYPSzvJDTv2QnMaxDz6EfGdL/Xa30S8X1tL+PSVVUS30Q52VYlSD3L/h2VDuM
+	svzRe2RRM/TNqYbnHFqRr0daQZ0nKqjoirLVMS0XBG10rmENf7Bhw37wHzrlA+JtEsgHWq
+	DoIOi9jkWeBHpt1/Xa4yVkD/VNteKBXqlpZy2er+AnuhgnCpgsbnA0AdJyAfSQ==
+ARC-Authentication-Results: i=1;
+	rspamd-6597f9cdc7-tzmdw;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Slimy-Juvenile: 562a32f86304b267_1750721793479_2456449309
+X-MC-Loop-Signature: 1750721793479:2756345217
+X-MC-Ingress-Time: 1750721793479
+Received: from pdx1-sub0-mail-a262.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.108.88.53 (trex/7.1.3);
+	Mon, 23 Jun 2025 23:36:33 +0000
+Received: from offworld (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a262.dreamhost.com (Postfix) with ESMTPSA id 4bR4Gm3W1sz9v;
+	Mon, 23 Jun 2025 16:36:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1750721792;
+	bh=OQyAC5Zwg9VOAoEoP5oerQJSnLa4XNp2rsgYqfm0n0Y=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=YYCy+M/PJOzIJse6rDHHkkQvVR/gdqh61FsOaFOZrONM4ymwcVRIxBwjlBT9jIk5C
+	 ZT8tVlBNo84xY4dNmwxNwYL4+N2DQfYbLMhR0PSEL8AqYCCcYLJWLGfxezgNg2EKGA
+	 +8Z51B+nRl74CNRicejw9UjlHRnS6/g2QRFBx+fYO+ndRymNArIIZzIi5L+uAZ7Yw+
+	 Ilci6qzCU5zD67JFWoGP1/QHmTCl3SaHEQtRhH+PWF9u+sSngi7JBGFCTGgNIsyFMD
+	 dq9ZfFdQuw/D+Fh9PNnuOmOi5Ez6SuaFGHRNbOcYlWQmYexvEGb9exuN3QBcyrtqje
+	 vZwo8seBqWEmg==
+Date: Mon, 23 Jun 2025 16:36:28 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: mhocko@kernel.org, hannes@cmpxchg.org, roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev, yosryahmed@google.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] mm/memcg: make memory.reclaim interface generic
+Message-ID: <20250623233628.kv4c4k74rdpfek7x@offworld>
+Mail-Followup-To: Andrew Morton <akpm@linux-foundation.org>,
+	mhocko@kernel.org, hannes@cmpxchg.org, roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev, yosryahmed@google.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+References: <20250623185851.830632-1-dave@stgolabs.net>
+ <20250623185851.830632-3-dave@stgolabs.net>
+ <20250623144528.19721543236d8a0165df4cad@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611095158.19398-2-adrian.hunter@intel.com>
- <CAGtprH_cpbPLvW2rSc2o7BsYWYZKNR6QAEsA4X-X77=2A7s=yg@mail.gmail.com>
- <e86aa631-bedd-44b4-b95a-9e941d14b059@intel.com> <CAGtprH_PwNkZUUx5+SoZcCmXAqcgfFkzprfNRH8HY3wcOm+1eg@mail.gmail.com>
- <0df27aaf-51be-4003-b8a7-8e623075709e@intel.com> <aFNa7L74tjztduT-@google.com>
- <4b6918e4-adba-48b2-931c-4d428a2775fc@intel.com> <aFVvDh7tTTXhX13f@google.com>
- <CAGtprH-an308biSmM=c=W2FS2XeOWM9CxB3vWu9D=LD__baWUQ@mail.gmail.com>
- <CAGtprH_9uq-FHHQ=APwgVCe+=_o=yrfCS9snAJfhcg3fr7Qs-g@mail.gmail.com> <aFnJdn0nHSrRoOnJ@google.com>
-In-Reply-To: <aFnJdn0nHSrRoOnJ@google.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Mon, 23 Jun 2025 16:35:24 -0700
-X-Gm-Features: AX0GCFsjOjS73cim-nFdh51zPwjCo36e2glhCmQoTmB3B2V_KD4zts3ihFF816g
-Message-ID: <CAGtprH-THz=odJ=yGKbr_exdy8_00FUGPir1g7pWOv6Ckt+h+g@mail.gmail.com>
-Subject: Re: [PATCH V4 1/1] KVM: TDX: Add sub-ioctl KVM_TDX_TERMINATE_VM
-To: Sean Christopherson <seanjc@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, pbonzini@redhat.com, kvm@vger.kernel.org, 
-	rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com, 
-	kai.huang@intel.com, reinette.chatre@intel.com, xiaoyao.li@intel.com, 
-	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
-	isaku.yamahata@intel.com, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com, 
-	chao.gao@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250623144528.19721543236d8a0165df4cad@linux-foundation.org>
+User-Agent: NeoMutt/20220429
 
-On Mon, Jun 23, 2025 at 2:39=E2=80=AFPM Sean Christopherson <seanjc@google.=
-com> wrote:
->
-> On Mon, Jun 23, 2025, Vishal Annapurve wrote:
-> > On Fri, Jun 20, 2025 at 9:14=E2=80=AFAM Vishal Annapurve <vannapurve@go=
-ogle.com> wrote:
-> > > Adrian's suggestion makes sense and it should be functional but I am
-> > > running into some issues which likely need to be resolved on the
-> > > userspace side. I will keep this thread updated.
-> > >
-> > > Currently testing this reboot flow:
-> > > 1) Issue KVM_TDX_TERMINATE_VM on the old VM.
-> > > 2) Close the VM fd.
-> > > 3) Create a new VM fd.
-> > > 4) Link the old guest_memfd handles to the new VM fd.
-> > > 5) Close the old guest_memfd handles.
-> > > 6) Register memslots on the new VM using the linked guest_memfd handl=
-es.
-> > >
-> >
-> > Apparently mmap takes a refcount on backing files.
->
-> Heh, yep.
->
-> > So basically I had to modify the reboot flow as:
-> > 1) Issue KVM_TDX_TERMINATE_VM on the old VM.
-> > 2) Close the VM fd.
-> > 3) Create a new VM fd.
-> > 4) Link the old guest_memfd handles to the new VM fd.
-> > 5) Unmap the VMAs backed by the guest memfd
-> > 6) Close the old guest_memfd handles. -> Results in VM destruction
-> > 7) Setup new VMAs backed by linked guest_memfd handles.
-> > 8) Register memslots on the new VM using the linked guest_memfd handles=
-.
-> >
-> > I think the issue simply is that we have tied guest_memfd lifecycle
-> > with VM lifecycle and that discussion is out of scope for this patch.
->
-> I wouldn't say it's entirely out of scope.  E.g. if there's a blocking pr=
-oblem
-> _in the kernel_ that prevents utilizing KVM_TDX_TERMINATE_VM, then we def=
-initely
-> want to sort that out before adding support for KVM_TDX_TERMINATE_VM.
->
-> But IIUC, the hiccups you've encountered essentially fall into the catego=
-ry of
-> "working as intended", albeit with a lot of not-so-obvious behaviors and =
-dependencies.
+On Mon, 23 Jun 2025, Andrew Morton wrote:
 
-Yes, that's correct. The "issue" I referred to above is just extra
-steps that need to be taken by userspace VMM and is still in the
-"working as intended" category.
+>On Mon, 23 Jun 2025 11:58:49 -0700 Davidlohr Bueso <dave@stgolabs.net> wrote:
+>
+>> This adds a general call for both parsing as well as the
+>> common reclaim semantics. memcg is still the only user and
+>> no change in semantics.
+>>
+>> +int user_proactive_reclaim(char *buf,
+>> +			   struct mem_cgroup *memcg, pg_data_t *pgdat);
+>
+>Feeling nitty, is this a good name for it?  It's hard to imagine what a
+>function called "user_proactive_reclaim" actually does.
+
+I'm open to another name, sure. But imo the chosen one is actually pretty
+descriptive: you know it's coming from userspace (justifying the 'buf'),
+you know this is not about memory pressure and the memcg/pgdat parameters
+tell the possible interfaces. Would prefixing a 'do_' be any better?
+
+>That it isn't documented isn't helpful either!
+
+I had done this but felt rather redundant and unnecessary, and further
+don't expect for it go gain any other users. But ok, will add.
+
+Thanks,
+Davidlohr
