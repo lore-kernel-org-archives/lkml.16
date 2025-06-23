@@ -1,83 +1,45 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81847221D9E
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E15423817F;
+	Mon, 23 Jun 2025 11:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750678170; cv=none; b=vBeiVQsbQQ8Jxbt3M3tMx+I2tavNm77dX/nTrCmzDhnCgzpT2ICgUxmG6BAbJ8XxXZrbTFn+na73RxlHz9ATIbDYUV3GJMNfhDPPLNxTkWrF84OBRJKboPqa5sWMRPGRWyTMkVevdxS3QAZdtU78dlV57Gwr8onqcRIXesA+Ods=
+	t=1750678189; cv=none; b=WKbtJlzrKqb6IZsaKcU75FDPIXzYTk9S3nbdv2oa5zxWBgjO7EGL186ylWeIXDVBr8W3Kg7y+ty2t/715G3ptLDIwxL9aeWkddLTnl6ww6qPHwW4Zk+HObZIT/JunmHIxEDncfZKKdyej4voTALA2+J36QruD/raklOn9Xmk7FE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750678170; c=relaxed/simple;
-	bh=wLQFKtSJGzFg4lKtATX7H7j9UPlk+P13KegXT5k15Eo=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TwyVlRKZ6arpAMPLhSlhT0vaDuCr9OZsriEGJV9lKtP+a+N527iINCIrzYWZUkMO7qyPd7/IFHNv7RHjADR5ll7KzSlKg5aVnwIjFGm90XqUrDTfcM2QZmOSNeYD1PPj4RIXoehaNqQxBxwDYVUB3unZz8KQmMBxvRDYo3EisPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KKZFyNac; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750678189; c=relaxed/simple;
+	bh=w6AaO6fgK2fNbORRzUvx6Qa3WCSt0XSFElEO927wLeY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ESwvF4vgSMdZHVKseIkLoC9XMpcxbi5gHjWXHo7ZZ9xWnvdqx1k4JTOPxoDeuOlJpjWJ2+QYozRUmPBOUek7PFKoBjQ/5s7g6etmKGfnYCR2/U1tZKMNeRptY2Vlj//h2Tui2VskZOFpn24t3NA1dwY+x6zz9M6pLmp6Ws6ctA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rqSFoUy6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KKZFyNac"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-32addf54a00so31734031fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 04:29:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750678167; x=1751282967; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=YgfPRIB+BYAuUXDEK/9DOfwH7aJtQFPBBRMLIHLTgX8=;
-        b=KKZFyNacHddMm53yaQUFjAj10PbclA0ZqHQUMuYH1dXqrwEWMVWQLwsNfk0IUIgSCH
-         r1J7F0bZ16ww2e/HhpH90C4mGYP+nlq9OyY5wMrzQOqdFqHVyozJqJ0LuhLsYId00Cfy
-         4xnIc/FWiXzduUOGcWbMpbLQq6D5DjigA36uyxLYdi71uA1QQSdCMZ0XQQHFEH2zqGMA
-         BPxNqnIGKo+Gv9Haf6WyKfiUNdZZ2C6dKP8zL8kNfN/QAopqKto3Ihzr/Hsu5V2fcGKd
-         SapDHJ36DSRzqoJ8zlfzSy7B0qtw4GAC5pNitOnLpdySxyMYHhC2Rwgfwz8xzK1mrr5p
-         2ofw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750678167; x=1751282967;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YgfPRIB+BYAuUXDEK/9DOfwH7aJtQFPBBRMLIHLTgX8=;
-        b=GRhI5Z+1r+vzRh3A1Vc06+bR+yyS57VNTPNfOOVeBOBNXSmLWjH5OcynBnf543iFTx
-         vsVyZHnX4QRMtWTRSvc9DYSAb+uKma31juCCNiiAZEi7mLDnpjOccBnfLalATgrAii/H
-         PEejn9ABmWs2U/uRLPT7q8T/SkX0Mqh5+4OMj9F511jjC0Xuy2xW8XMELJ3PzVO7E3yf
-         unDzamtykkGTf3DySuX9RXuiNTbPTjBoBGHEcR4ySsCMN2WU8kmJF8rqo8+yIHuGFpLL
-         CZamqVb+KLwCiY56BauNo3iLzupdL7zBU11g4MxSsuuycvM62x/wOgX3d93X20+2N9gN
-         UxNA==
-X-Forwarded-Encrypted: i=1; AJvYcCVyIJ56SVc8a8zxB6mtnlWR5yTyNsf6SC8MuIlkAVUr6dNQkiYxWwOwtlLcboGWiDRSLw5hY0UNYnqXQYk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzetUGgiBeVjKjOWDrikemh7NFDqttkjzfJr/Y/7zkbnRR1GtwN
-	C20WMOKr5858mHHscthGXm8p/0vEVbZtW+H+EWAiC+qycfnd895ne/tq
-X-Gm-Gg: ASbGnct76ach1WCV9tvd57bdQ0Cqc8WusH2NYp1M34ecE0ViN/GQSM5uXz3zT2Mqa6x
-	v4jyk/AmGc7Wn/zv3lQayCDrVYdK/rza9sOjjLuu3E+a6r2TBhciO3o8I37MogPvVDr6pPscJP3
-	BHalOhuit6KioCxDsv6ReBzuwfirJX4fXPAHNtO5zgWj+p6sG+TvPvrN5G4JbSbJEdWDWkdpyAo
-	N9kbQur5d1kmUSLjAOrl9Y0+EeXfHIqC+ehEaILgzBPPmEgzfdK8wlSQR8zodFIYr5HUjaB6Be+
-	SqJRswQQQH1mLJuNPWF0uzCJjSqcKxthquLeUMqinbQcMcIcDcGkadpjxMM0/W8tz0sVmNs/XJ+
-	IOGyurb8VMcE=
-X-Google-Smtp-Source: AGHT+IE1MZF6wlC72ECSHVOr+2VOUjVmkH4XiG30NEvX7gqf7FRE361lIOqKCXeUz4nUIgSU9qz8Zg==
-X-Received: by 2002:a05:6512:3186:b0:553:34ea:fc41 with SMTP id 2adb3069b0e04-553e3d0ecdcmr3278922e87.56.1750678166243;
-        Mon, 23 Jun 2025 04:29:26 -0700 (PDT)
-Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553e41cc0d4sm1359864e87.197.2025.06.23.04.29.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 04:29:25 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Mon, 23 Jun 2025 13:29:22 +0200
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>, Harry Yoo <harry.yoo@oracle.com>,
-	kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
-	lkp@intel.com, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Adrian Huang <ahuang12@lenovo.com>,
-	Christop Hellwig <hch@infradead.org>,
-	Mateusz Guzik <mjguzik@gmail.com>, linux-mm@kvack.org,
-	Kent Overstreet <kent.overstreet@linux.dev>
-Subject: Re: Kernel crash due to alloc_tag_top_users() being called when
- !mem_profiling_support?
-Message-ID: <aFk6krRwyMtbH0y4@pc636>
-References: <202506181351.bba867dd-lkp@intel.com>
- <aFQaY4Bxle8-GT6O@harry>
- <aFQnEj0UASzl2Lxa@hyeyoo>
- <aFUgJgrc_eIHRy5-@pc636>
- <CAJuCfpHRVq+T8v-7J0kJ=mnbSJYX2kjG_8spgZFdfe4Tzbcs4g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rqSFoUy6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EE97C4CEF7;
+	Mon, 23 Jun 2025 11:29:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750678188;
+	bh=w6AaO6fgK2fNbORRzUvx6Qa3WCSt0XSFElEO927wLeY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rqSFoUy60QVVLtbY4efKUq1P1PcXwr3lo6+JMXseUEvm9py7YL7hax6kFOSdZwdym
+	 pTpZJh8spMc7wsGJXNvqY21TZArnFf5DV4hBRq0OxOzUd6GwDcmYQdd4J1eKvLEtlD
+	 AJLG+YlZNMWC/1H2uMoN+rbrbbLrP7vqX5C67lAzhbSZB1GV9XWz00+6wGx6F6eWto
+	 L5XtZS/rW+goRAs5AX+JNetLMNKAYTyAjsJNR3mC5ZmjWGu+Kf7eoiL4Y8L0r0BrEu
+	 z9R8efYMX4mKAU89Yf/gBmIuL5DVZafBAb1zVfMSVph/EPQeOAufP4yXBkhCx1AyTS
+	 Pcn2e2Bnp0C2g==
+Date: Mon, 23 Jun 2025 05:29:46 -0600
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Geraldo Nascimento <geraldogabriel@gmail.com>
+Cc: linux-rockchip@lists.infradead.org, 
+	Hugh Cole-Baker <sigmaris@gmail.com>, Shawn Lin <shawn.lin@rock-chips.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v3 2/3] PCI: rockchip-host: Retry link training on
+ failure without PERST#
+Message-ID: <zuiq3b2rsixymtjr3xzrb26clikvlja62wgj65umnse4kuk75c@x5qan73ispxe>
+References: <cover.1749582046.git.geraldogabriel@gmail.com>
+ <b7c09279b4a7dbdba92543db9b9af169776bd90c.1749582046.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,53 +49,75 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJuCfpHRVq+T8v-7J0kJ=mnbSJYX2kjG_8spgZFdfe4Tzbcs4g@mail.gmail.com>
+In-Reply-To: <b7c09279b4a7dbdba92543db9b9af169776bd90c.1749582046.git.geraldogabriel@gmail.com>
 
-On Sun, Jun 22, 2025 at 03:54:51PM -0700, Suren Baghdasaryan wrote:
-> On Fri, Jun 20, 2025 at 1:47 AM Uladzislau Rezki <urezki@gmail.com> wrote:
-> >
-> > On Fri, Jun 20, 2025 at 12:04:50AM +0900, Harry Yoo wrote:
-> > > On Thu, Jun 19, 2025 at 11:10:43PM +0900, Harry Yoo wrote:
-> > > > On Wed, Jun 18, 2025 at 02:25:37PM +0800, kernel test robot wrote:
-> > > > >
-> > > > > Hello,
-> > > > >
-> > > > > for this change, we reported
-> > > > > "[linux-next:master] [lib/test_vmalloc.c]  7fc85b92db: Mem-Info"
-> > > > > in
-> > > > > https://lore.kernel.org/all/202505071555.e757f1e0-lkp@intel.com/
-> > > > >
-> > > > > at that time, we made some tests with x86_64 config which runs well.
-> > > > >
-> > > > > now we noticed the commit is in mainline now.
-> > > >
-> > > > (Re-sending due to not Ccing people and the list...)
-> > > >
-> > > > Hi, I'm facing the same error on my testing environment.
-> > >
-> > > I should have clarified that the reason the kernel failed to allocate
-> > > memory on my machine was due to running out of memory, not because of the
-> > > vmalloc test module.
-> > >
-> > > But based on the fact that the test case (align_shift_alloc_test) is
-> > > expected to fail, the issue here is not memory allocation failure
-> > > itself, but rather that the kernel crashes when the allocation fails.
-> > >
-> > It looks someone tries to test the CONFIG_TEST_VMALLOC=y as built-in
-> > approach test-cases. Yes, it will trigger a lot of warnings as some
-> > use cases are supposed to be failed. This will trigger a lot of kernel
-> > warnings which can be considered by test-robot or people as problem.
-> >
-> > In this case i can exclude those use cases or even not run at all unless
-> > boot-parameters properly sets if built-in.
+On Tue, Jun 10, 2025 at 04:05:40PM -0300, Geraldo Nascimento wrote:
+> After almost 30 days of battling with RK3399 buggy PCIe on my Rock Pi
+> N10 through trial-and-error debugging, I finally got positive results
+> with enumeration on the PCI bus for both a Realtek 8111E NIC and a
+> Samsung PM981a SSD.
 > 
-> Sorry, I'm catching up on my email backlog. IIUC
-> https://lore.kernel.org/all/20250620195305.1115151-1-harry.yoo@oracle.com/
-> addresses this issue. Is my understanding correct?
+> The NIC was connected to a M.2->PCIe x4 riser card and it would get
+> stuck on Polling.Compliance, without breaking electrical idle on the
+> Host RX side. The Samsung PM981a SSD is directly connected to M.2
+> connector and that SSD is known to be quirky (OEM... no support)
+> and non-functional on the RK3399 platform.
 > 
-I checked/tested the .config from the test-robot in order to reproduce
-the kernel crash. Unfortunately i can not trigger this. But, people from
-the another thread already confirmed that it solves the crash.
+> The Samsung SSD was even worse than the NIC - it would get stuck on
+> Detect.Active like a bricked card, even though it was fully functional
+> via USB adapter.
+> 
+> It seems both devices benefit from retrying Link Training if - big if
+> here - PERST# is not toggled during retry.
+> 
+> For retry to work, flow must be exactly as handled by present patch,
+> that is, we must cut power, disable the clocks, then re-enable
+> both clocks and power regulators and go through initialization
+> without touching PERST#. Then quirky devices are able to sucessfully
+> enumerate.
+> 
 
---
-Uladzislau Rezki
+This sounds weird. PERST# is just an indication to the device that the power and
+refclk are applied or going to be removed. The devices uses PERST# to prepare
+for the power removal during assert and start functioning after deassert.
+
+It looks like the PERST# polarity is inverted in your case. Could you please
+change the 'ep-gpios' polarity to GPIO_ACTIVE_LOW and see if it fixes the issue
+without this patch?
+
+If that didn't work, could you please drop the 'ep-gpios' property and check?
+
+> No functional change intended for already working devices.
+> 
+> Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
+> ---
+>  drivers/pci/controller/pcie-rockchip-host.c | 47 ++++++++++++++++++---
+>  1 file changed, 40 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+> index 2a1071cd3241..67b3b379d277 100644
+> --- a/drivers/pci/controller/pcie-rockchip-host.c
+> +++ b/drivers/pci/controller/pcie-rockchip-host.c
+> @@ -338,11 +338,14 @@ static int rockchip_pcie_set_vpcie(struct rockchip_pcie *rockchip)
+>  static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
+>  {
+>  	struct device *dev = rockchip->dev;
+> -	int err, i = MAX_LANE_NUM;
+> +	int err, i = MAX_LANE_NUM, is_reinit = 0;
+>  	u32 status;
+>  
+> -	gpiod_set_value_cansleep(rockchip->perst_gpio, 0);
+> +	if (!is_reinit) {
+> +		gpiod_set_value_cansleep(rockchip->perst_gpio, 0);
+> +	}
+>  
+> +reinit:
+
+So this reinit part only skips the PERST# assert, but calls
+rockchip_pcie_init_port() which resets the Root Port including PHY. I don't
+think it is safe to do it if PERST# is wired.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
