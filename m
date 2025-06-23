@@ -1,112 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mail2.ecloud.global (mail2.ecloud.global [135.181.6.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E94D78F51;
-	Mon, 23 Jun 2025 06:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750661274; cv=none; b=MIMlgNtIGg6YxgR1RZ9AnYyXSBWNVpMMq+3B3XS6PP1fFu9UdMFImTAEwGYHWJAvStn3ugC/YYeyIr3C3DcSRW77n+JKMN6YNNc3iJ+Fz8gb44bKH3p/DjXx2QE5lg+wUj5DcGiMmxzB9NGRrA6GXj/aKUVuUwBi1tvFtuK2tog=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750661274; c=relaxed/simple;
-	bh=YS5QfchkXQuDpizebXwc+i/GQO/Ujou+O/e0qMENePo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MS9PPdbRoZ0DeP0k4A5DMlOxwHdzCp/mJKUgfw8xURLLduoytzQpqFYgrKv3mtfZ4boHR8Ruv3PhXJRcEuIOHe7JRnksFV3d8TbibN9RzhFnqgMz+0XRLlGecdDrf5EKNfJOrE+WM3hMJ9g6pZfhyH1hvY0dgZo594u/HDvkM4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SwPXFBpd; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D26B78F51;
+	Mon, 23 Jun 2025 06:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=135.181.6.248
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750661284; cv=pass; b=A8KeBfuCxWxBsQl/I/srW7LKkIKzHI53dSxPrwjV27Yu26KttPYGvsdhiCygylLqAtnyVgsJtKyMP2DrmdFzqz0WPo67IDIScQiRxfWDe7wFMCGb5iBHlP3hZideHh8DtVAI/JOmO+D2i6NfzTz72D+P9x78c0j6pSEZDFT25dQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750661284; c=relaxed/simple;
+	bh=0j/Z5yh5tbFiw8rk0QBBfNVRu8U4mrVCE94WwPQ4NYw=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=te/wElwKpboR7v6KYX/hZ1V1+sK3yTVJSSg6puyeq5J6QiEBjWjr/u4516UrbXBaHhlo3A6ISTZyqzWa/u1rdVOw5Y4QzVZv4aG6atT6oZDvCxZCDmhJRECG6ozkKurCJ8xpn/kz0gbVmOq+ygWmPeBsqFjc8UWUmnSdm5kXtfQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=murena.io; spf=pass smtp.mailfrom=murena.io; dkim=pass (1024-bit key) header.d=murena.io header.i=@murena.io header.b=ip5sLEiB; arc=pass smtp.client-ip=135.181.6.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=murena.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=murena.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SwPXFBpd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750661273; x=1782197273;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YS5QfchkXQuDpizebXwc+i/GQO/Ujou+O/e0qMENePo=;
-  b=SwPXFBpdFwt+CSnBgkBnprVADEbNvKzDB8vyxuue6b2yjBAmNT4PKd0n
-   w44dyr2LC6dqkrX+2ybT/ZKccu/A6N6QqkNHLskiGL7xtSF+xZul/Z7zR
-   AOZLG376z8PtvuNw9NjYy82JkNelJYjp0bvbiwv8aVrIo6aA147jRCYVB
-   bR/sBqgoGvCvZUJqpCMuEDMNcbQMC9npVFWzLzqOGeRU0FyDEpZKdbG+I
-   qCK46NlYG78GO9x2z1gOc3WCohQfM35q1ySwZ7pIjMXT7XjjBPxZtys3W
-   Q5smpqjuLlB01MFmne2+hBLBR14G8U+cOS0Iicf4GW3WnzFAVcxb/izZF
-   g==;
-X-CSE-ConnectionGUID: gbDNnaQtQEmlN66WmkcECg==
-X-CSE-MsgGUID: 2uslWLd3RD6SB8WsMuZW1Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="52991727"
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="52991727"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 23:47:52 -0700
-X-CSE-ConnectionGUID: mNrnjtrWSK6xeohGlUJjsw==
-X-CSE-MsgGUID: Pz/9sXzLRiW91MMh1pUT1Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="150924944"
-Received: from abityuts-desk.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.8])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 23:47:48 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 9431E1201F7;
-	Mon, 23 Jun 2025 09:47:44 +0300 (EEST)
-Date: Mon, 23 Jun 2025 06:47:44 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Olivier Benjamin <olivier.benjamin@bootlin.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
-	Nicholas Roth <nicholas@rothemail.net>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-	imx@lists.linux.dev, ~diederik/pine64-discuss@lists.sr.ht,
-	Dragan Simic <dsimic@manjaro.org>, Ondrej Jirman <megi@xff.cz>
-Subject: Re: [PATCH v4 0/4] Describe the cameras in the PinePhone Pro dts
-Message-ID: <aFj4kAXEhrR4Wbnz@kekkonen.localdomain>
-References: <20250620-camera-v4-0-0201a8ed5fae@bootlin.com>
+	dkim=pass (1024-bit key) header.d=murena.io header.i=@murena.io header.b="ip5sLEiB"
+Received: from authenticated-user (mail2.ecloud.global [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail2.ecloud.global (Postfix) with ESMTPSA id 297857209A4;
+	Mon, 23 Jun 2025 06:40:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=murena.io; s=mail2;
+	t=1750660838;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oLgpNtx/boIApBv5pSWc//bswQhEsFbXQypbXTIeykY=;
+	b=ip5sLEiBUhLNEb7dQe1Iz9dBtnXg4R38RsViRxUSbeXJzoioSdD6Ex6VQv3l53AKvBcBCU
+	iMetLjvnRLSXxbczpkWTZwWfYOyL5JO/pn0M+AVhtOZg20Ac8ba/9F6BfFK3HA7Xl+AOTm
+	1E5k+po1T1Qm5/VSUdFSXQiZz8nJhoc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=murena.io;
+	s=mail2; t=1750660838;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oLgpNtx/boIApBv5pSWc//bswQhEsFbXQypbXTIeykY=;
+	b=c+kjGhqvGy47p2nqRb2Oa1q399S8ukOiSgu404gkJiJ7WFTR0x8CSs0fryDoQau4WJXwUN
+	2iN4ZIGS7GOs+OZ+4AFADlWJGlC5DpAsPVjiJbQhVJ/VSn5h0Rh2rslNkcVTHFavdV+1rB
+	TfJ6y4Bb+mbirIcm1c80LbSVeIRCgxU=
+ARC-Authentication-Results: i=1;
+	mail2.ecloud.global;
+	auth=pass smtp.mailfrom=maud_spierings@murena.io
+ARC-Seal: i=1; s=mail2; d=murena.io; t=1750660838; a=rsa-sha256; cv=none;
+	b=FAuKfniINvB77wTngpcUPVsI6Eq1dqhr/efasdsLnGMRsweZEfFWLJz4ihNJrR8nJAP11F
+	S/5Bgx/b4h2VcGTBtywDSPcOe90me7Ir0KrcC5tLMGPcqTnipQmzFAcYbA2x5Nn9JLHZk6
+	9R88Q3nWaOQwKdhiBihu5KjMB8KVp7Q=
+Message-ID: <4cb09d05-d1f2-4d34-b3f7-be523b900a9e@murena.io>
+Date: Mon, 23 Jun 2025 08:40:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620-camera-v4-0-0201a8ed5fae@bootlin.com>
+To: inochiama@gmail.com
+Cc: alex@ghiti.fr, alexander.sverdlin@gmail.com, andrew+netdev@lunn.ch,
+ aou@eecs.berkeley.edu, conor+dt@kernel.org, conor.dooley@microchip.com,
+ davem@davemloft.net, devicetree@vger.kernel.org, dlan@gentoo.org,
+ edumazet@google.com, huangze@whut.edu.cn, krzk+dt@kernel.org,
+ kuba@kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, looong.bin@gmail.com,
+ netdev@vger.kernel.org, pabeni@redhat.com, palmer@dabbelt.com,
+ paul.walmsley@sifive.com, richardcochran@gmail.com, robh@kernel.org,
+ sophgo@lists.linux.dev, thomas.bonnefille@bootlin.com,
+ unicorn_wang@outlook.com, yu.yuan@sjtu.edu.cn
+References: <20250623003049.574821-2-inochiama@gmail.com>
+Subject: Re: [PATCH net-next RFC v2 1/4] dt-bindings: net: Add support for
+ Sophgo CV1800 dwmac
+Content-Language: en-US
+From: Maud Spierings <maud_spierings@murena.io>
+In-Reply-To: <20250623003049.574821-2-inochiama@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Olivier,
-
-On Fri, Jun 20, 2025 at 05:21:31PM +0200, Olivier Benjamin wrote:
-> This series adds support for the Pine64 PinePhone Pro's rear and front
-> cameras in Device Tree.
-> This is based on some of Ondrej Jirman's patches hosted in his tree at
-> https://codeberg.org/megi/linux, but I have also fully reviewed and
-> re-written the code from the RK3399 datasheet, the PinePhone Pro
-> schematic, and the IMX258-0AQH5 software reference manual.
+Inochi sent:> The GMAC IP on CV1800 series SoC is a standard Synopsys
+> DesignWare MAC (version 3.70a).
 > 
-> I have tested these changes on my PinePhone Pro and am able to take
-> photos from both cameras using libcamera's cam.
+> Add necessary compatible string for this device.
 > 
-> This series has raised a question about the proper label name for the
-> front/user camera and rear/world camera for phones.
-> This series is using "ucam" and "wcam", which is used in a few other
-> Rockship DTBs:
->  - arch/arm64/boot/dts/rockchip/px30-evb.dts
->  - rk3399-gru-scarlet.dtsi
+> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  .../bindings/net/sophgo,cv1800b-dwmac.yaml    | 113 ++++++++++++++++++
+>  1 file changed, 113 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/sophgo,cv1800b-dwmac.yaml
 > 
-> Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
+> diff --git a/Documentation/devicetree/bindings/net/sophgo,cv1800b-dwmac.yaml b/Documentation/devicetree/bindings/net/sophgo,cv1800b-dwmac.yaml
+> new file mode 100644
+> index 000000000000..2821cca26487
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/sophgo,cv1800b-dwmac.yaml
+> @@ -0,0 +1,113 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/sophgo,cv1800b-dwmac.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sophgo SG2044 DWMAC glue layer
 
-Thanks for the patches.
+This looks like a copy paste error
 
-I've picked the first two in the set, presumably the rest will be merged
-via another tree?
+kind regards,
+Maud
 
--- 
-Regards,
-
-Sakari Ailus
