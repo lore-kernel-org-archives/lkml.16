@@ -1,143 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB463209;
-	Mon, 23 Jun 2025 10:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2148C23F424;
+	Mon, 23 Jun 2025 10:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750675194; cv=none; b=FoqebciCzD9fOMMv/vjozHGaVlAoUgX4+vVbvCDt+Y0RulXgYUX2etDA9s6+qi5fR1BDgg0JHNhAjLTbBGiF+KLrD0EA0n+55cSod8bGzl4Oss3lmQjaBoVwjDsSKwU+/IQnaBezXYp5ZZ2dvk/Q88PfN1sP0DJ/Iekq2RI7nD8=
+	t=1750675202; cv=none; b=EuOM5rcj9ybEX2xgFVV4jHqOvSGJPMT7IsuHyhD9Ik7flwQtqQctRsjmP1zr3BzY6+4boASiwP6ee00lPwM5UA/8xlShmdBMEqzghTTgJItFPX05EhGg2wD8L6NSga7ZKVhmkLlSFOG0Zf4MEtT/HiozTxPLziQZg+I7H8/8bBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750675194; c=relaxed/simple;
-	bh=gjIHlc0EFcjZAEwUPY6btZvUfUSNZ+XgJN8YYVR48NM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Br5E0/P4+vPwjjb67Trl1M9orq8He+UIUUc5yJr+7Tgud8zrP4RclaJB839qvTsjR6Q0xdu4DFUP6/OkQV1gtJIodN8xLCW2Q5OYWu1gAXndeLcBq0nv64yLO4FPjFKnZr9AKjb9DAiH1yPrD3Wrz9vKP2SNzFsSROtEwIjZdvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aOtaOltl; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750675202; c=relaxed/simple;
+	bh=q0IbJe5Acyv2o2iG7qQqBmB32b5yE1J/4NdxJvABi38=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cnrCwGVovcgcZmwQMs6eO8NKtMMgmU7MBEveMGrAD3ram59rAvRptuRZ1mDVIgMEt+9WkfPUfKwrknmZ0YJNPX2DPodpWvnjlBuHb62XKP0ceZ7wRfSJd6vRu3u6m5FpKzkOBOy0N/KAZ9o//wgADtpEFknzQtiMj2fFu5km4l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LWDUxkui; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aOtaOltl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750675193; x=1782211193;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gjIHlc0EFcjZAEwUPY6btZvUfUSNZ+XgJN8YYVR48NM=;
-  b=aOtaOltlmLnRkEBp/RJaUasDKYLSHwKiXDju69MfNHv8URXFFJBhPM8P
-   CXbqGHosLOGK8rlhUq5mjL7uI1kUG9zsUjCWrM1kvqWiVRHjdftcXBF6S
-   cu2nZiEw/pa76mcm6ZUi+G7hc3OdcFbyY7bCgTpdq9NeGw6grWD66vc5R
-   ozILrkfwFDFXCr6l1jpOgdORxfB2UgUMMnxsJdsWPc/GB9pO2i7jVtYJ6
-   Qz9Bfp/JAqVn745VhE4TN/C3JdHN/91QLog8y1G3lsmadnvOcm27kmrdv
-   cJVbo6p2J6FZUMf0Al4LPco+hKiA3qZkdryEPZKOiy0ycWXvOVlXfls9x
-   A==;
-X-CSE-ConnectionGUID: pFDtCZJnTM++lAhduo551Q==
-X-CSE-MsgGUID: btyy1W0eTcmg6T1nWhDzqg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="40484321"
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="40484321"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 03:39:52 -0700
-X-CSE-ConnectionGUID: q5V88mBoSnqqvcjRzighnA==
-X-CSE-MsgGUID: IIBEGLduSeqVTBq7okjWDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="151746370"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 03:39:39 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uTeaL-000000098pr-3hfA;
-	Mon, 23 Jun 2025 13:39:33 +0300
-Date: Mon, 23 Jun 2025 13:39:33 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Alexander Kochetkov <al.kochet@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nishad Saraf <nishads@amd.com>,
-	Lizhi Hou <lizhi.hou@amd.com>, Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Paul Cercueil <paul@crapouillou.net>,
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>, Zhou Wang <wangzhou1@hisilicon.com>,
-	Longfang Liu <liulongfang@huawei.com>,
-	Andy Shevchenko <andy@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Keguang Zhang <keguang.zhang@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
-	=?iso-8859-1?Q?Am=E9lie?= Delaunay <amelie.delaunay@foss.st.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Laxman Dewangan <ldewangan@nvidia.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Amit Vadhavana <av2082000@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Md Sadre Alam <quic_mdalam@quicinc.com>,
-	Casey Connolly <casey.connolly@linaro.org>,
-	Kees Cook <kees@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
-	Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-Subject: Re: [PATCH v2 1/2] dmaengine: virt-dma: convert tasklet to BH
- workqueue for callback invocation
-Message-ID: <aFku5QPf38JKlcPt@smile.fi.intel.com>
-References: <20250616124934.141782-1-al.kochet@gmail.com>
- <20250616124934.141782-2-al.kochet@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LWDUxkui"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BE66C4CEF3;
+	Mon, 23 Jun 2025 10:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750675201;
+	bh=q0IbJe5Acyv2o2iG7qQqBmB32b5yE1J/4NdxJvABi38=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LWDUxkuigNvEYP+j1pGAphQRreHDT+ztMamwMaryiOX7mhGgDBmjPAFTCQk/n4FIQ
+	 MhHAGMmwz38Vcrtkh2mn7b9TnWDIRqd8381kadT/bIGHVLrOzX1GSc1jXvICf6Fp4o
+	 bLzuYi4jr7uc5Rfeek7ZzRpjzfWvrQRoZqDZATwtCRU3Um/eg82cuJ99vcjTs3zyby
+	 GOxeSjNZzKHRC3iGcdBM3rj8YAG4+WeDYqW3wYMv8kiNlREK+SlnIK26wbvmAj07ic
+	 Mr3FvuTPwDaoyQpuZUsCdPaF3allFZrzzOGQ4u3qsL0gaVjqqxgPD0MSV1vBnMlrtR
+	 Nab3ScIDagwRg==
+From: Christian Brauner <brauner@kernel.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	Shuah Khan <shuah@kernel.org>,
+	Luca Boccassi <luca.boccassi@gmail.com>,
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+	linux-kselftest@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests/coredump: Fix "socket_detect_userspace_client" test failure
+Date: Mon, 23 Jun 2025 12:39:41 +0200
+Message-ID: <20250623-zoologie-tumult-df3f34426b71@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250620110252.1640391-1-namcao@linutronix.de>
+References: <20250620110252.1640391-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616124934.141782-2-al.kochet@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1280; i=brauner@kernel.org; h=from:subject:message-id; bh=q0IbJe5Acyv2o2iG7qQqBmB32b5yE1J/4NdxJvABi38=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRE6v26I3Kt9Jb+9+kF7jMaFTv48ydbOP2OyP9497gr/ xeJ0Hz1jlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIl4iTMyrAxY8/at6g+7hoV7 zjXVM/zc+eDEL4aJxmX6k78H5DgmtTAyzE82Dlu6a7133L7vhdELGW4u3hofafWlW2hL0yHNiUc uswEA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 16, 2025 at 12:48:03PM +0000, Alexander Kochetkov wrote:
-> Currently DMA callbacks are called from tasklet. However the tasklet is
-> marked deprecated and must be replaced by BH workqueue. Tasklet callbacks
-> are executed either in the Soft IRQ context or from ksoftirqd thread. BH
-> workqueue work items are executed in the BH context. Changing tasklet to
-> BH workqueue improved DMA callback latencies.
+On Fri, 20 Jun 2025 13:02:52 +0200, Nam Cao wrote:
+> The coredump.socket_detect_userspace_client test occasionally fails:
+>     #  RUN           coredump.socket_detect_userspace_client ...
+>     # stackdump_test.c:500:socket_detect_userspace_client:Expected 0 (0) != WIFEXITED(status) (0)
+>     # socket_detect_userspace_client: Test terminated by assertion
+>     #          FAIL  coredump.socket_detect_userspace_client
+>     not ok 3 coredump.socket_detect_userspace_client
 > 
-> The commit changes virt-dma driver and all of its users:
-> - tasklet is replaced to work_struct, tasklet callback updated accordingly
-> - kill_tasklet() is replaced to cancel_work_sync()
-> - added include of linux/interrupt.h where necessary
+> [...]
 
-...
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
->  drivers/dma/hsu/hsu.c                          |  2 +-
->  drivers/dma/idma64.c                           |  3 ++-
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-for the above two.
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
 
+[1/1] selftests/coredump: Fix "socket_detect_userspace_client" test failure
+      https://git.kernel.org/vfs/vfs/c/ce9bb9487ef0
