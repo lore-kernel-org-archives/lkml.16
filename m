@@ -1,74 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B583C24293F;
-	Mon, 23 Jun 2025 12:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA71244663;
+	Mon, 23 Jun 2025 12:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750682511; cv=none; b=NDXxyt2gaXSZezrLEbgf4EHeZywlieV7oD/uWuDbJPODgXgPP6gB2uLRKrYAHMOJFxLWAIqk/Zbf68xOORrSlT77HAKc5pT/vR+QtOl1Tb4VUxQ9ux1+hmAqYVkwAuWnJcWbmPc5QeZbB+bajz7UCd6zITsLBeRAQ99X1bR+d2c=
+	t=1750682517; cv=none; b=sCnvVIEL50Ui71MAFDsh0Y9jDj1v3CHzo0JgQsJkVqszzWCD+2tfjg1NiT0mD8nZfUEdIhD4B8I0YjEyMmtaD4gPiodNZ3wEVdUh0m6ms264jPMx1gLJA9X9V1u7aoVeo6I16vWluTBqm8v6nXHDunX5E5ziUhwSJnA2NIAxUpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750682511; c=relaxed/simple;
-	bh=K3UZr1v5ln6fJSE0bzWb9sF553xHwQWW1kwtTJIV7Kk=;
+	s=arc-20240116; t=1750682517; c=relaxed/simple;
+	bh=+FElCxP+gPXujA324quUzQTpAMHP1zjz6iLGuGL6yIE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qvBDUZ32JnW1cRZoYL7c7LzyTq1IwTlR6DY+7kHZmiK3hT95DygghEX/sfYI1nMk/HfpXXlhIyzfMhFe+p0oUTPZsev3VbQOxCXlVVEjUKb3ioJytbYOJsoS/aM4+6nwDSxZ7Eyyeerc1joeHVNrftE0qbHK9BSWBd2Upe0eTEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nd5WcWaG; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=cYbxMnGlPq2Q1dX8gqWHvXf4IxdrrNspLW0LlVuXKapaEsIPU7y0V0v74ND4nnqk/sO7Jlw5vgorQE+ZHouKE91JGyvNlE6zIy1YRJfsDN1GQfnJiaLRAjLro9YR0ryD0sruE2ONCvZTciQlWw2OAmBTXEJHJvWn8v72KsMBDbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I4a8RYcu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nd5WcWaG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750682509; x=1782218509;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=K3UZr1v5ln6fJSE0bzWb9sF553xHwQWW1kwtTJIV7Kk=;
-  b=nd5WcWaGaltpjrJkvLFr90dUeCS8jsIEKbqW+K8Ym4oai1CnxwDfL3u7
-   cia7HynY5GWaUYar0ln/7bLCpdffCuN3ogibOJviCC7HmgYbxwJgOc/ui
-   VbmTeGTZyOqceFPF+3IfGr3+m9Q+DKNHzf/EkX+7H1sWlWtsFFzwcpO/0
-   WxT+Aggpy+PDuio/+Z/LAtcPfELnR9OuCPYAomm60FSkrbrHBGvNcgJTr
-   ikReCDDnubedqXOrHysg8AbmEwOV1Z3Sc6qv3khhNmqoYeURg3Gmxf0OJ
-   TffetA5G/fAogNkwWT3N0sKPLIsUCQic/5wcGRPLb/UHaJmCMRoeinNc2
-   Q==;
-X-CSE-ConnectionGUID: ZqISHIsXQcSjKElzjUm67Q==
-X-CSE-MsgGUID: HjeGr1okTrO5oNRJs6c0XA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="53026755"
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="53026755"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 05:41:48 -0700
-X-CSE-ConnectionGUID: 10Ymcep+Q3up0gnu1kePHQ==
-X-CSE-MsgGUID: I55PCHToQRCNtiihmEgd6A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="151738727"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa006.fm.intel.com with ESMTP; 23 Jun 2025 05:41:32 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id D7895126; Mon, 23 Jun 2025 15:41:30 +0300 (EEST)
-Date: Mon, 23 Jun 2025 15:41:30 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>, acme@redhat.com, 
-	aik@amd.com, akpm@linux-foundation.org, alexander.shishkin@linux.intel.com, 
-	ardb@kernel.org, ast@kernel.org, bp@alien8.de, brijesh.singh@amd.com, 
-	changbin.du@huawei.com, christophe.leroy@csgroup.eu, corbet@lwn.net, 
-	daniel.sneddon@linux.intel.com, dave.hansen@linux.intel.com, ebiggers@google.com, 
-	geert+renesas@glider.be, houtao1@huawei.com, hpa@zytor.com, jgg@ziepe.ca, jgross@suse.com, 
-	jpoimboe@kernel.org, kai.huang@intel.com, kees@kernel.org, leitao@debian.org, 
-	linux-doc@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux@rasmusvillemoes.dk, luto@kernel.org, mcgrof@kernel.org, 
-	mhiramat@kernel.org, michael.roth@amd.com, mingo@kernel.org, mingo@redhat.com, 
-	namhyung@kernel.org, paulmck@kernel.org, pawan.kumar.gupta@linux.intel.com, 
-	peterz@infradead.org, rick.p.edgecombe@intel.com, rppt@kernel.org, 
-	sandipan.das@amd.com, shijie@os.amperecomputing.com, sohil.mehta@intel.com, 
-	tglx@linutronix.de, tj@kernel.org, tony.luck@intel.com, vegard.nossum@oracle.com, 
-	x86@kernel.org, xin3.li@intel.com, xiongwei.song@windriver.com, 
-	ytcoode@gmail.com
-Subject: Re: [PATCHv6 07/16] x86/vsyscall: Reorganize the #PF emulation code
-Message-ID: <kthmv63jrvrr3shhzhhcib7qrjp7sjkah65kogbfphfr6wg6cb@z5zydz6ov7pv>
-References: <9d351d80-66fe-486f-bdb3-370859dc47cc@intel.com>
- <262c0fd2-ac66-4ce7-903f-4062f1fe1d6e@citrix.com>
- <b6f8a90d-4309-45c5-84cd-32e281d076fb@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I4a8RYcu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E8BBC4CEF0;
+	Mon, 23 Jun 2025 12:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750682516;
+	bh=+FElCxP+gPXujA324quUzQTpAMHP1zjz6iLGuGL6yIE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I4a8RYcui3jW+pZ++5z/Y9O58xN6h3JAMC1hy1bAl2d2/Iol0QfeJmsnvXc8EZxWK
+	 f1Gm/EEwKH8qqVN4Jnh51r0qoRVuQ6KmY+hF5glEQvpZ0sEi0L8k+XfhROjVqC3oae
+	 Y7HtOJcU8dtZS2aSWWX02ceXhLIX8QGNaIcGcf1jhOprcVi7moIjRmuFTmONlBhQKJ
+	 cYZzMNHiYpchEWyssdB3V8Kac/yih7c7mMaxnzhis5rNpypPZM/5nB3c/0CSLb02VU
+	 veRpDRwbcpfBZSYZ4dznOs70rJ+ZtLD9NsDZus0el9kqQF+f6/zAtMm3oSULGxUI0K
+	 PxGinu+3ky0Cg==
+Date: Mon, 23 Jun 2025 14:41:49 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
+	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
+	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, Dave Airlie <airlied@redhat.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v2 2/4] rust: devres: replace Devres::new_foreign_owned()
+Message-ID: <aFlLjQFZ8gzh5Mz6@cassiopeiae>
+References: <20250622164050.20358-1-dakr@kernel.org>
+ <20250622164050.20358-3-dakr@kernel.org>
+ <aFlA92ooeQsSThLh@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,36 +51,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b6f8a90d-4309-45c5-84cd-32e281d076fb@intel.com>
+In-Reply-To: <aFlA92ooeQsSThLh@google.com>
 
-On Fri, Jun 20, 2025 at 04:21:38PM -0700, Dave Hansen wrote:
-> On 6/20/25 16:08, Andrew Cooper wrote:
-> >> But, the resulting code is wonky. It needs to do something more like this:
-> >>
-> >> 	if ((error_code & (X86_PF_WRITE | X86_PF_USER)) != X86_PF_USER)
-> >> 		return false;
-> >>
-> >> 	if (error_code & X86_PF_INSTR))
-> >> 		return __emulate_vsyscall(regs, address);
-> > To do this, LASS needs a proper interlink against NX || SMEP.
-> > 
-> > If neither NX nor SMEP are active, the CPU does not report X86_PF_INSTR,
-> > meaning that fetches are reported as plain reads.
-> Interesting point.
+On Mon, Jun 23, 2025 at 11:56:39AM +0000, Alice Ryhl wrote:
+> On Sun, Jun 22, 2025 at 06:40:39PM +0200, Danilo Krummrich wrote:
+> > +pub fn register<T, E>(dev: &Device<Bound>, data: impl PinInit<T, E>, flags: Flags) -> Result
+> > +where
+> > +    T: 'static,
+> > +    Error: From<E>,
+> > +{
+> > +    let data = KBox::pin_init(data, flags)?;
 > 
-> I think the easiest way to do this is just make a cpuid_deps[] entry for
-> LASS and NX. If there's a CPU where LASS is available but where NX isn't
-> available, we have much bigger problems on our hands.
+> Wouldn't we also want to expose the ForeignOwnable version? It seems
+> likely someone would want to avoid the allocation.
 
-I am not sure what I suppose to do here.
+Allowing other things than Box changes the semantics of the API. For instance,
+if it'd be a reference counted thing (e.g. Arc), it would basically mean "please
+make this object live *at least* as long as the device is bound".
 
-Sohil pointed out that with LASS we get #GP on vsyscall, not #PF and PFEC
-is not relevant for LASS.
-
-So, IIUC, that's dependency of vsyscall PF on NX. Do we want to disable
-vsyscall on boot if NX is not available?
-
-BTW, why do we even support !NX on X86_64? Is there such HW?
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Before considering to allow such things, I really want a potential user to
+present a valid use-case for that.
