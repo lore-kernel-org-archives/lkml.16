@@ -1,67 +1,65 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831A81E22E6
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 06:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B649F155CBD
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 06:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750661100; cv=none; b=A9ejtYCTZX0dKNq7YwCYv1RNP34365O2iI1yzrANrO7JAcuay9uL8fIfdKmueFCAw7/WLeyGq9YH88tehilrWAmhu9Ao+JNcCKFXDchMhBSvE8xjrqnk8OJIWxghLwfO2WEO/I7wCKtqJdHnFxAj1/u+oO0Nn4IYJYJ0gy7r0Gw=
+	t=1750661100; cv=none; b=niPEdmJL7rKJmWRdvg+Ig7KK19Dp1yF1nQ1M3ckmJqw3koYr6a39RmrfUY7t54VsVK8NExfZ/6vcMlhtE8ePduHw9NsFrBbnnUwdMcd26Fj4tkJ3ZDRq7MxkP0XouzHqFIxhEgUeaUIesdsdewwxY8pZlFu+K8vCCNAugJ8jXn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750661100; c=relaxed/simple;
-	bh=P/y3z3w1bngNRTUAIAgXINyaHlzNiSUuhAN9U3zpOWw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qfSZ45EmMEXWXznMqeTJ+Gg/+9gymijjrwIaZyG/2ngMtHapnucEv1j1IvMpBJWF3Go/WOOdKD7nOuXAi8a880ysE8W5snh3OSV/YNWusZ4ruoYl1AYCHMX9RzyZBLDNqC6JJay9mMbSWSwKXOsGJL9JabJI3xoz7NrQQl769wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=zClBLkYV; arc=none smtp.client-ip=209.85.208.49
+	bh=mG0ZFKhM/nBtFju2w5kydTvhmmvJKrUqQYrMK9O0+gQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cHxxybCeImVck/gKvZVLvrcSLPc3bwhW+0wtvYT39DEHbO2+jFW5ijYirocDfC8NCvvfI1zlejE6DYi982gUhit1OPS0R0RdADqnTPHUy5EB9ZMWe1miBMoDTw9PIdD1ly3be/EZcOyR/WdUWyLBDseMwv1Ub5XwCl64MWZuVwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=5HpkMIW4; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="zClBLkYV"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6088d856c6eso7388621a12.0
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 23:44:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="5HpkMIW4"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-adfb562266cso684964566b.0
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Jun 2025 23:44:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1750661097; x=1751265897; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JCS5FhWMALYSCiWPAUtyrj6QhDfP/0lmNW3Nr7cvou0=;
-        b=zClBLkYVl/L0cfN73dDvFKluhkWFpYpnFd3Y22fzEBu1MZ144r0GvS4zXSGzyh3WgC
-         BLHk5YniDmsHPyLnVX4W4DFwnal1ijNXsRWu3zNYluPG0g84/Y003ggZcYiQMZFEVS6l
-         90r9J/TUgpa9WjRBzQBNL8TJK2wWKg/tMmcdRO4Ks4JWQk5KzfVR+4qCkW5DAFTGfbSL
-         rZhYs8WMw7LWP1A20UGhR7JE1zWqR+tTKFKZjsrpYIz/3rt2thuGjmdSgma7nZauQXay
-         jL621F2ISoFXkb1o0ryJZvpoAvK3hTMgR1QvR7Udy7W2QWaZO6JD1pqwOQ8ZnXUHcqn6
-         2XQA==
+        d=fairphone.com; s=fair; t=1750661096; x=1751265896; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rfv2PMTDIceIpvbq9xZVeanT080dZzydc/UXVnCEv1g=;
+        b=5HpkMIW4x+vnSd0/LTmWt1NQmYTsLjWI3YfyEHX+dd8gcMoDzq+xif/ls1wPIJJUko
+         0bge3vEVdGIIFkBhcqz79RUEgbLy9Vxv6mrhaAxvVqpnWtqiN8LGfUhQNI5+qsCQZAYp
+         5gGUOE1VnbFu0yhnWFZjbNX+nrCSkhxq+vg5BUx3+5Lp816tVjm5JBQMydaFS1LUHx26
+         r0n7Y16ZPQoZqibq1te8z9s6IPNRpKrCowWG9k2LjW0TQ5OrgWSnyR3zfxImP1jCr3oa
+         9fN1GrAHDMjSMRvL4CC1SL+4EodFIOuR5VXodbp+ocWZT0GgZkFP7LYI3HmJqiBoNr/v
+         3TLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750661097; x=1751265897;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JCS5FhWMALYSCiWPAUtyrj6QhDfP/0lmNW3Nr7cvou0=;
-        b=AeuqM7r7r9ai3ARkK8ZhtA/ihhgBX3M2k0qBAieXzs+oKyixumGSfAgn/uNPFzW3gE
-         NV/zh5OhnQjtgv8ZVFWcyj834G7EBDZ2zzS6OsNVP1q+Jd6jg1nqG4UClVLpydVtO3V/
-         Oq/cMaIqvd9DA8NACBRPURfI8uLDC+3brftxKQGsB2T9foBijKfI7Gwxo9IM7ndEknjM
-         l7krL7fX557RFxXulIF51YAxEhYkkOAXVmsL/LV/A9davdnORfC9v0OKnmozE9PQY/A9
-         oitSv2aHYXTXLV2jW8MUwrHzb6ZYRSR2l6tILy68/82RjBppS/gRssdafDgy9xCs10Yo
-         XkBw==
-X-Forwarded-Encrypted: i=1; AJvYcCX7TyndJXm204M1MHIvyHF4tM1MZ9Jg6/RQYKilx2XptlY1C2hXmZ/lsHiRljCpZaRIDZ7kycE0ZmFCxrM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUeKulR/rr8nmL3nQkm+XDXMtWpD5wGVc8MJDpghHJlzRBNFAg
-	cbSXTx4LgaOQBrezq2DTqx9f/Q+JgBFDVbKbSvjSDoujceNN+kuo9RkRVYiqBpeR/xg=
-X-Gm-Gg: ASbGnctnmqIOgMs47hk7acpRAIMLSlXW01D42JmXfcazy17HsX/LuNM54WR28x+Gj0U
-	qSk8ABTih32CFYFxaPox5A36eaV1S0VJPmYq3KFIc+U+IPhceM4UWcyxQ+cpiiwyulKOOTgQ6gg
-	Efk+jACiSCgb6X2AzlLNO5ZNLzGdjpGGig/R64iitR9omzPdkO8vVrbkv6JSihOinhzQXCe/lzj
-	eei57M7HGomsuZ8lZTqpNScZyFa50rddACadRZs49qAfmKb45beaOBEPwWN5SekzFXmoK7cy3t0
-	kdVpP0LRCOnkQ5ATsIabh9SSELpRbJMnuu7BorX92MHWU1og1A7aYqOaLIBelwaMgey0XB+iY1M
-	BcyJhTx5ZzmVpWXE9wQpV9zIKcHXBVpJQ
-X-Google-Smtp-Source: AGHT+IGsh9xvJEArfar+Dr0uRl16EBYyKnUhy6OWWKR/qb5aCazP3FzJZEQo/dxm9nUzIFyPy5Bewg==
-X-Received: by 2002:a17:907:d8f:b0:ad8:8c09:a51a with SMTP id a640c23a62f3a-ae0578f5642mr1122704566b.4.1750661096907;
+        d=1e100.net; s=20230601; t=1750661096; x=1751265896;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Rfv2PMTDIceIpvbq9xZVeanT080dZzydc/UXVnCEv1g=;
+        b=r4Tgz8Q8zNd3JBhNdK0UyypRvMKlS3dbU/DqO0LbDY90bCx0FY6ibSgkikInUvquD+
+         lvovlLzYVvWjK24vy5ME5kcHNkrWRnt6Utb6/l1msJOCIYXcSaK2XwYQqt9bfdO0C+jl
+         cvU1p391FLBQ3Yk14dvYls9FpqeoqEiA2rYyvXBc0V0Sx/LHP1hzGp7pWawstSB+nY/H
+         IwH84sO2Q+iD5QFbeBDzQQllfNgcrpvcgTh+XdxInyaL5tNOhjKTivQxYXuWctnvGNtU
+         6phrw7kEJnN+D71O9JtG4q1sWErfpEXb5BDcA6VCAaegLZ3r4m9G58xfnC9ztMqr8Cn8
+         6GyA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8UpoaAWPky7lVRjrHQWkvcZqG4ZI5eMUPvcx1biQQEbixEb1UUTjxT5KhCimYvtCTmV4Pcb7nH7goPX4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwD39+FvmJWu6ralKYrNtMx+HHTJrFeudRQ+dUXynrRZ5jL6R+c
+	t0emSGDl6Pn2TnKhzhvEewtkf+eN6GMWYhw4NWo5wwr5Y9IHbacq18X+4OcEb6HL7Bk=
+X-Gm-Gg: ASbGncvn29qogqp2RKOrqimFV0NxSDBNOlNqznyzg5e918f04hwLenxQZeMQn4wBMMB
+	GGRFjcm/8vp2BmnrsQDcM+NGrDbxajTNmdfEvyYwojlLn+edkkA06oBOiLgI+XEjm9nmaLEGklE
+	+H3CkTXSnWExg9l+z75Rojws8agU9ELoRDq9jflTPoimETTz8Ve9ym1T8xG9Y+HDfwqYvqGyxBA
+	L7QPhFBkmQB+msaVRY0QwMqyCNnRAG+1ENs7t6BOVQYJOUfiqjPaWI4WAbWGX5oa2VAdM8VG9Oz
+	WK8MW0OsXKP18LkLKlOVAUtIfdDB+iF+i3tfsR7XZgbJkVEWWglGIQl9Wi/y5wJD2N5Hj7wdvwo
+	ZSSrBaM5CCrfklrCvNRaDXSYBRQvA7qN9
+X-Google-Smtp-Source: AGHT+IEIK4HYmI0KuUkjMGJQo8hgJeoSxD4CTOsQVO12rPi+l3/A1YCQcq/euCV+EvS2bfnw4by8Eg==
+X-Received: by 2002:a17:906:d260:b0:add:deb0:8b64 with SMTP id a640c23a62f3a-ae0579df1e2mr988741966b.24.1750661096075;
         Sun, 22 Jun 2025 23:44:56 -0700 (PDT)
 Received: from otso.local (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053ee4ce9sm659258266b.69.2025.06.22.23.44.56
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053ee4ce9sm659258266b.69.2025.06.22.23.44.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 23:44:56 -0700 (PDT)
+        Sun, 22 Jun 2025 23:44:55 -0700 (PDT)
 From: Luca Weiss <luca.weiss@fairphone.com>
-Date: Mon, 23 Jun 2025 08:44:45 +0200
-Subject: [PATCH v2 1/5] dt-bindings: display: simple-framebuffer: Add
- interconnects property
+Subject: [PATCH v2 0/5] Add interconnent support for simpledrm/simplefb
+Date: Mon, 23 Jun 2025 08:44:44 +0200
+Message-Id: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,9 +68,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-simple-drm-fb-icc-v2-1-f69b86cd3d7d@fairphone.com>
-References: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
-In-Reply-To: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
+X-B4-Tracking: v=1; b=H4sIANz3WGgC/22NywrCMBBFf6XM2pEk9hVX/od0UZOJHbBNSSQoJ
+ f9uLC5dngP33A0iBaYI52qDQIkj+6WAOlRgpnG5E7ItDEqoRrSyw8jz+iC0YUZ3QzYGe1230jS
+ N1vIEZbcGcvzam9eh8MTx6cN7v0jya381Jf7UkkSBVitZK+pdV7uLGzmsk1/oaPwMQ875A5p80
+ rS2AAAA
+X-Change-ID: 20250617-simple-drm-fb-icc-89461c559913
 To: Hans de Goede <hdegoede@redhat.com>, 
  Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
  Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
@@ -84,39 +84,45 @@ Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Luca Weiss <luca.weiss@fairphone.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750661095; l=1141;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750661095; l=1324;
  i=luca.weiss@fairphone.com; s=20250611; h=from:subject:message-id;
- bh=P/y3z3w1bngNRTUAIAgXINyaHlzNiSUuhAN9U3zpOWw=;
- b=6pjVbQkuIUa2qv2HWVS78fdybrtLmM+hDbK9+CQFefqu+4O7IH7z+Lx0F9v1sVHODRyMqXBxS
- 7Wh2+Zt4EiKC+fvVHgIMp5BhnDBPnUj+x9vrujCz05xSnU29wMieOM9
+ bh=mG0ZFKhM/nBtFju2w5kydTvhmmvJKrUqQYrMK9O0+gQ=;
+ b=I+KJQKTokZRRzCjESYV5r3Vrrf+Epv1ziNUE8LuNep5eK0MjSPosyfeoDYv8RZeU6jY5CZxTZ
+ xhHsZM5KA+7B8Jq8+WQNHdc3VT7AJpG+u0BOirf4OMNaxUxiruPXKC5
 X-Developer-Key: i=luca.weiss@fairphone.com; a=ed25519;
  pk=O1aw+AAust5lEmgrNJ1Bs7PTY0fEsJm+mdkjExA69q8=
 
-Document the interconnects property which is a list of interconnect
-paths that is used by the framebuffer and therefore needs to be kept
-alive when the framebuffer is being used.
+Some devices might require keeping an interconnect path alive so that
+the framebuffer continues working. Add support for that by setting the
+bandwidth requirements appropriately for all provided interconnect
+paths.
 
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
 Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
 ---
- Documentation/devicetree/bindings/display/simple-framebuffer.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+Changes in v2:
+- Sort the headers before adding the new interconnect header, in
+  separate commits.
+- Use the correct #if guards for new interconnect code
+- Pick up tags
+- Link to v1: https://lore.kernel.org/r/20250620-simple-drm-fb-icc-v1-0-d92142e8f74f@fairphone.com
 
-diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
-index 296500f9da05e296dbbeec50ba5186b6b30aaffc..f0fa0ef23d91043dfb2b220c654b80e2e80850cd 100644
---- a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
-+++ b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
-@@ -79,6 +79,9 @@ properties:
-   power-domains:
-     description: List of power domains used by the framebuffer.
- 
-+  interconnects:
-+    description: List of interconnect paths used by the framebuffer.
-+
-   width:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     description: Width of the framebuffer in pixels
+---
+Luca Weiss (5):
+      dt-bindings: display: simple-framebuffer: Add interconnects property
+      drm/sysfb: simpledrm: Sort headers correctly
+      drm/sysfb: simpledrm: Add support for interconnect paths
+      fbdev/simplefb: Sort headers correctly
+      fbdev/simplefb: Add support for interconnect paths
 
+ .../bindings/display/simple-framebuffer.yaml       |  3 +
+ drivers/gpu/drm/sysfb/simpledrm.c                  | 85 ++++++++++++++++++++-
+ drivers/video/fbdev/simplefb.c                     | 89 +++++++++++++++++++++-
+ 3 files changed, 173 insertions(+), 4 deletions(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250617-simple-drm-fb-icc-89461c559913
+
+Best regards,
 -- 
-2.50.0
+Luca Weiss <luca.weiss@fairphone.com>
 
