@@ -1,256 +1,235 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFBF15383A
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41F05FEE6;
+	Mon, 23 Jun 2025 14:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750687503; cv=none; b=sy02JQzT/ZUs30RA/fIGPzVa3MyCBqAImudtMiCX2OUYBMpZqSCL0cqL7QRg8Pvmf0vbUK9dA0xpkuWh1vKKo/Okc8hY9gWVD0PnHYStCBc1LYBRfLawfYgUbDxp59Vgf12frS519RSAwAyuUs/q01+wRsFQfgSe80mHECnbVLU=
+	t=1750687546; cv=none; b=M3LHEH8S1avemdTTaCJf0XXOHEZ6XhVO1ie/5mKeH+t2Njog88LNfNX4YuEP2NBD/4z5XKW576L5j/zwTZT5N45Ow2UqPjvsByXGaVND07jnw5Ek4vQ+mNt5Ve79DI0GykorkAo3LYRX0dyiscI6xo2wvsgb/bCDWgQMDydTzmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750687503; c=relaxed/simple;
-	bh=FfP8tkdvG9UtNgg6dvh/7AgGSsN2krjZSQ2tXWpR92M=;
+	s=arc-20240116; t=1750687546; c=relaxed/simple;
+	bh=ospZQHAx1azzHgqpO0329Qy3iUeVF89ddO9PCGb2UkY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A94GVBxC3USpgmqjnlYecDf+XxLolovWVNARVWQkJshOIeSjGfQ59aCsqyJnT/lyizSOVNeXhjjTPY/ReG1wrFHtQbFx4HT1O6m+j4KSDdnYBPwcxeKp+tGySPPXM5LJeEJ4W61d7TLsEWIbh7X0tJkffzBV472JJ/42TnJjD7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=OVzSW22R; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=kZGZC0lzGnESJ2vIQA2jc9/zWuNemopBYTsj7WiQW3Dl+RXhAr2UbbDhN6zTQtOcSKGLqd1CcA1LnFTpxSWwBTB8k8cSE+u6doqBPQafTbIHnEAsPR7zmW03Q/i/VmrssSoEqT9fmAnHHXYh6GQ7CAhkoo4PDsfiX6gutshHR0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=KJH38pQM; arc=none smtp.client-ip=212.227.17.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="OVzSW22R"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad572ba1347so693095466b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 07:05:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1750687499; x=1751292299; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BiwWRM0CdO0mCYDwXynObL1UDQi5thYGbEgLeQCW4C8=;
-        b=OVzSW22RFcDyb49ETz5JqHYi+9L1xano5JpEPzEPtCUxbuUO+UI4Ik9QTTQzuPK2Ze
-         TJjUv+WwTS/W+QhsBUIXHWw/fZioo6pqiFJ8Tgu2WT0Xo8WNO7j+2PQD7QnSYUkQ9ekY
-         caYRjk5BKlJBnz/Ve3MV/UsQPypUY6QqrracznT2HC/NQRxjxP834wtCub0wFbPdpOOS
-         oHAaN9yLI1mR6vggmjkDPDIw7wZqwzbNrhWMq5KnpCGNuzz2rpDmuc4WBgNwMJgpYDvz
-         ijANwa7qpPZeQuXLact/RbiYxT0Ag5CUEGFZ6L/C3bZAfbgKv9yP9wuZ2WYGI23e5hWA
-         jvPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750687499; x=1751292299;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BiwWRM0CdO0mCYDwXynObL1UDQi5thYGbEgLeQCW4C8=;
-        b=VV590E8UyF/meqO/HTLo+HYfeJYPxAQQtZChYWVfE/q8TU8A+wjc3jWHpfPft7PU2N
-         fAnnqXPRGc0inYi90T2Ol+P/cVpz05lxys8PcNKpj/ekGrwtC61cTTrXhwZq8nB/y5Y/
-         LI2sJ+LfdxaeBzloiNXRVQVDiSLuV95e0MAOLI3bjEUVZn7iEO+qfGMWize7VwWmOx3U
-         YhyxiBu/16zQ4hq5GMh5/y5/81IHwdjpPXZQwazOGaKFj2R4mf8OGck71cZgVa0xRRDe
-         223Up7jtELxkxZG1muVKAmWYNnS5oGHshlRjmYPa5n3aiis8sSAx2wSiQKSGGAzQshga
-         3dpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVjxlsAbHLrDAYQW2q3BA2mZ4sATuEeCKgqRO6UNU81xfI6Y7LYij9aWxLtv/xGdVbHvQag7ovfP+SOZJU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXj44RtN/q7eJYRXmvGiakPZmbivJpp/mh/0MVXfOwRyNrzv6x
-	yY8V8a9OnH8D40tYoe6yUIAyLTYF9iyVupRpGvBDLvf5Rk8LyJl65wlzqlzYySq5rGM=
-X-Gm-Gg: ASbGncvJ1T4vFTSpeMTFlJCSnuP7eADeOeYZ+vtVGrvjHT7yuP3SOLUhubK8DV5JhOG
-	HtjHS9x15CBYpvs4zFNMpGvSNsqZpHRurL7o/P9qC7LOKydx4XsKOjafLP7WBGnRxpJvX5B1cSQ
-	KbKn8tF3y/1jQz9uxXIS9ZaJ20ZNO3WZIfaruJjRxTVedAVNfSxReoFlb49HoDQ0vuKsMp2mWjm
-	ebl+84G9MhUkUcGNnUd4jYccdVAZoqHubfNQOgbLuvAxr7HWQcriK7RN/Zlea28SxFOmRoVtEH3
-	dZHQ1l++dXgCSHsCIvxsPi963ovG3MkpY6ILcwfYbG3DUyc0AhCxSAanALDNiYjC
-X-Google-Smtp-Source: AGHT+IEZK+cKcXwj6H745JxNBD6L9r2Ck22uk68tyKhRVlMQYWUpQGiQ1xsjaqcD2gPzsaACfHFbhQ==
-X-Received: by 2002:a17:907:d2c9:b0:adb:1eee:a083 with SMTP id a640c23a62f3a-ae057c8b8aemr1141846566b.47.1750687499027;
-        Mon, 23 Jun 2025 07:04:59 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054080e28sm716407966b.73.2025.06.23.07.04.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 07:04:58 -0700 (PDT)
-Date: Mon, 23 Jun 2025 16:04:56 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Feng Tang <feng.tang@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Lance Yang <lance.yang@linux.dev>, Jonathan Corbet <corbet@lwn.net>,
-	linux-kernel@vger.kernel.org, paulmck@kernel.org,
-	john.ogness@linutronix.de
-Subject: Re: [PATCH V2 3/5] sys_info: add help to translate sys_info string
- to bitmap
-Message-ID: <aFlfCCFZQJ9IJm-8@pathway.suse.cz>
-References: <20250616010840.38258-1-feng.tang@linux.alibaba.com>
- <20250616010840.38258-4-feng.tang@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="KJH38pQM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1750687537; x=1751292337; i=christian@heusel.eu;
+	bh=5Onc4Y8lpnattujCyjGKi5wWqwWwEpnJ7+2O5Ajcx7A=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=KJH38pQMZ93/RuQ1fKJUN4BtpisNjlsTcCWghNaotY3knfDCtqsPzZFy1MCGkKl5
+	 UVBMKnEKh6tSeFQxsiC4KhvQP3uD1D/Jp5Jc/ojEhkROkxwdzxt/eTJ19roEwY4dx
+	 RKm0/ZL1FfLnxHN8RZmhmtcq+slfIqBB7Ujtl8S38nibiIRQU+fh0hFlwiPVmrAh/
+	 TZY4nlCSOEAs2fSyT/E+Yykn7O7MRrBnVWJN4VHYUqqeneJLF8CfO6wrwWpvMJgF3
+	 iCQkkbKroV/fr6io2fwjtCLAep2mHniuxL0MUlNeGhwbc5XZrK9TVyUFB44hK9wYm
+	 790NDWsRVn1tMU14qA==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([94.31.75.247]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mzhax-1ugfyg2FZh-010Vx6; Mon, 23 Jun 2025 15:50:47 +0200
+Date: Mon, 23 Jun 2025 15:50:45 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, 
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, 
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, 
+	hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.15 000/592] 6.15.4-rc1 review
+Message-ID: <a0ebb389-f088-417b-9fd4-ac8c100d206f@heusel.eu>
+References: <20250623130700.210182694@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="bzrlzjrxqd77i3z3"
 Content-Disposition: inline
-In-Reply-To: <20250616010840.38258-4-feng.tang@linux.alibaba.com>
+In-Reply-To: <20250623130700.210182694@linuxfoundation.org>
+X-Provags-ID: V03:K1:xQORCzsKcY/1G5rTjYyoobOjvK/C4mp5jHpyY05xgU6Q1cU5+rf
+ SdLTMzVMQbqPNHLQSd9PILqzuj1kIEd4kkBfMjYulFb4t0V2tG2jF/0sWWUTqI38ygcKg5t
+ /y4es4dWDGbMZHAEuHjwxJG0te6c91gdeLK2A4K8WATYD2BKmMDe8YPeRSeRJ1DaMmzgZIT
+ lMxq2jG81BTI5GYFyzE2g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:AJeAl+Q5zUE=;Q/QspzaRZZY1dQGQ5kwICTS3l7L
+ cGRv+pjsh3/3lbDJsqqHQWoJEQ8DM+JR7t4VUkyV3rBKfWR+9j3x/ZHkIFHwAEqTlVAGayGNU
+ cfuUFSnCmDS6TjzYZ967+FCqL/XxQlgCrtWrojD8z/kqaEuMS641cc3bu2FbsfsKpnpMVbTK0
+ eTtIwp0mGyNKbdUiDnXHmQjMISdvPxkUQhaIIq/Gk7L6tXSCMNDclwRULfe+LqiWzgyctqzJD
+ B482PS/pN7D3u6LHzv3K6ecr1kaXh0V7/R0tvUqY4FvPpfHpIGVUf+VasdRiX2zol7cR54VH4
+ rQC0Wa03ouwhh1c4AMaI9Gl651G4VeYW4T5cAK8NXEI4OKQO1Ib8sVBBUELoPsyEzAfGjUvsy
+ 6xsbHP/idDUMZiu2/zsjlaHQxYc96krb55jPnuTadW8kns4wqPyTc0cpyHF0aR/4e0heMe7MV
+ YaQLALcZbag8X554sY7cIUpWHxdwZnypU/fVTT9DgcLvFD/i5QxaiEIym2gRMjq24V+z5GXVB
+ +n77tt7ykN1GjOvZ6hovuHJXBSoUaWmO8aqSrlyLF6ynzrGNP7CGbTEIbGtC50pQDnPfxE2Om
+ M1XO4sxEGlrH8j+dyf/2SIdgS9/vSNiBuWq/gmiCrHatMjW3LurnrTvHUEgGKQg4mX0wd+LSP
+ yHs5aojXiQjc4HyHvy3iKJJYX8MJBRy++uHH2xWAE4BHKoegGizrJSVo17h2zd4ia3IzKc/50
+ p5zKX4NU9MQ7+VyLRH8pEHy42BL+RsB4Iojz4CIswzjbbsuGo3NC5qTUwtpnMXkqKeaR6XPDx
+ rT0CBAAo/bu+oZbokkYfCrhuhQawuWSrOtRBK4OSVnwcR0nCBiRxklVhdv6oWe18b7rudCl42
+ D1QZ54N5wrj6AEXnaLEoYZQyoxB9vkVoSpXpF45JalZdjXDUi6AumOLHCYVif/J1bJy7ePcoQ
+ qsppv/e+6w6gKM8b/cueZf3wwpCvH8rkS8RXr6p8YDief/rSJAKwQWYJjROd0ZsI5hf6ahriN
+ 5UEXvpRRAf0snGsV7dnCTUEcl7IFYokeT8ZmJ3Y35edb6TJfqN4oemUA/6xW0GFxY1rEFSbOP
+ I+9YivKXGPUfN1sRkJ0LbUcgc9/QD4MifsAsfHUk+pyq33gITf3JuId6TfExjqqrTc7qO0oG0
+ xP38FMVRkd8WcEANGrOr7FObjzRkiLwNGuUBYv1Z2NV8KIDEVh6YWjc/AV3LAsFkaCTDRCd7x
+ H+ec+c+XfpWc2Sg8V1zXz2d+no5Ypj3YIdmdbvSWiaKFXCD8DyY/CguBzLp7ZPzvyDVAQfVPw
+ rf+i6WwURNiIkU3LiMGgZxsbMD+QELGk/6ZofU6LNUyJZVQXyOLWKjbF4Z/o/MnWF78VRu27l
+ OR6gj0wGmmRHOQQe+hfaJoK7LE0DekGHbdyuNgN2CPvWzVmfxQ4AczEEwRUKkigeAlOxfTlrS
+ OGCWkbQ==
 
-On Mon 2025-06-16 09:08:38, Feng Tang wrote:
-> Bitmap definition is hard to remember and decode. Add sysctl interface
-> to translate human readable string like "tasks,mem,timer,lock,ftrace,..."
-> to bitmap.
-> 
-> Suggested-by: Petr Mladek <pmladek@suse.com>
-> Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
-> ---
->  include/linux/sys_info.h |  7 +++
->  lib/sys_info.c           | 97 ++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 104 insertions(+)
-> 
-> diff --git a/include/linux/sys_info.h b/include/linux/sys_info.h
-> index 79bf4a942e5f..0b49863cd414 100644
-> --- a/include/linux/sys_info.h
-> +++ b/include/linux/sys_info.h
-> @@ -16,5 +16,12 @@
->  #define SYS_SHOW_BLOCKED_TASKS		0x00000080
->  
->  extern void sys_show_info(unsigned long info_mask);
-> +extern unsigned long sys_info_parse_param(char *str);
->  
-> +#ifdef CONFIG_SYSCTL
-> +struct ctl_table;
-> +extern int sysctl_sys_info_handler(const struct ctl_table *ro_table, int write,
-> +					  void *buffer, size_t *lenp,
-> +					  loff_t *ppos);
-> +#endif
->  #endif	/* _LINUX_SYS_INFO_H */
-> diff --git a/lib/sys_info.c b/lib/sys_info.c
-> index 90a79b5164c9..9693542435ba 100644
-> --- a/lib/sys_info.c
-> +++ b/lib/sys_info.c
-> @@ -5,6 +5,103 @@
->  #include <linux/console.h>
->  #include <linux/nmi.h>
->  
-> +struct sys_info_name {
-> +	unsigned long bit;
-> +	const char *name;
-> +};
-> +
-> +static const char sys_info_avail[] = "tasks,mem,timer,lock,ftrace,all_bt,blocked_tasks";
-> +
-> +static const struct sys_info_name  si_names[] = {
-> +	{ SYS_SHOW_TASK_INFO,	"tasks" },
-> +	{ SYS_SHOW_MEM_INFO,	"mem" },
-> +	{ SYS_SHOW_TIMER_INFO,	"timer" },
 
-I see that the naming is a bit inconsistent in using singulars
-vs. plurals. I suggest to use plulars when it makes sense.
-It means here:
+--bzrlzjrxqd77i3z3
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 6.15 000/592] 6.15.4-rc1 review
+MIME-Version: 1.0
 
-	{ SYS_SHOW_TIMERS_INFO,	"timers" },
+On 25/06/23 02:59PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.15.4 release.
+> There are 592 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>=20
+> Responses should be made by Wed, 25 Jun 2025 13:05:55 +0000.
+> Anything received after that time might be too late.
+>=20
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.15.4-=
+rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
+ linux-6.15.y
+> and the diffstat can be found below.
+>=20
+> thanks,
+>=20
+> greg k-h
 
-> +	{ SYS_SHOW_LOCK_INFO,	"lock" },
+Hey Greg,
 
-and here
+this stable release candidate does not build for me as-is on x86:
 
-	{ SYS_SHOW_LOCKS_INFO,	"locks" },
+error[E0432]: unresolved import `crate::sync::Completion`
+  --> rust/kernel/devres.rs:16:22
+   |
+16 |     sync::{rcu, Arc, Completion},
+   |                      ^^^^^^^^^^ no `Completion` in `sync`
 
-> +	{ SYS_SHOW_FTRACE_INFO, "ftrace" },
-> +	{ SYS_SHOW_ALL_CPU_BT,	"all_bt" },
-> +	{ SYS_SHOW_BLOCKED_TASKS, "blocked_tasks" },
-> +};
+error[E0412]: cannot find type `Bound` in this scope
+   --> rust/kernel/devres.rs:226:49
+    |
+226 |     pub fn access<'a>(&'a self, dev: &'a Device<Bound>) -> Result<&'a=
+ T> {
+    |                                                 ^^^^^ not found in th=
+is scope
+    |
+help: consider importing this enum
+    |
+8   + use core::range::Bound;
+    |
 
-[...]
+error[E0107]: struct takes 0 generic arguments but 1 generic argument was s=
+upplied
+   --> rust/kernel/devres.rs:226:42
+    |
+226 |     pub fn access<'a>(&'a self, dev: &'a Device<Bound>) -> Result<&'a=
+ T> {
+    |                                          ^^^^^^------- help: remove t=
+he unnecessary generics
+    |                                          |
+    |                                          expected 0 generic arguments
+    |
+note: struct defined here, with 0 generic parameters
+   --> rust/kernel/device.rs:45:12
+    |
+45  | pub struct Device(Opaque<bindings::device>);
+    |            ^^^^^^
 
-> +#ifdef CONFIG_SYSCTL
-> +int sysctl_sys_info_handler(const struct ctl_table *ro_table, int write,
-> +					  void *buffer, size_t *lenp,
-> +					  loff_t *ppos)
-> +{
-> +	char names[sizeof(sys_info_avail) + 1];
-> +	struct ctl_table table;
-> +	unsigned long *si_bits_global;
-> +	int i, ret, len;
-> +
-> +	si_bits_global = ro_table->data;
-> +
-> +	if (write) {
-> +		unsigned long si_bits;
-> +
-> +		table = *ro_table;
-> +		table.data = names;
-> +		table.maxlen = sizeof(names);
-> +		ret = proc_dostring(&table, write, buffer, lenp, ppos);
-> +		if (ret)
-> +			return ret;
-> +
-> +		si_bits = sys_info_parse_param(names);
-> +		/*
-> +		 * The access to the global value is not synchronized.
-> +		 */
+error[E0600]: cannot apply unary operator `!` to type `()`
+   --> rust/kernel/devres.rs:172:12
+    |
+172 |         if !inner.data.revoke() {
+    |            ^^^^^^^^^^^^^^^^^^^^ cannot apply unary operator `!`
 
-Nit, the comment fits on a single line. I would use:
+error[E0599]: no method named `access` found for struct `Revocable` in the =
+current scope
+   --> rust/kernel/devres.rs:234:33
+    |
+234 |         Ok(unsafe { self.0.data.access() })
+    |                                 ^^^^^^
+    |
+   ::: rust/kernel/revocable.rs:64:1
+    |
+64  | #[pin_data(PinnedDrop)]
+    | ----------------------- method `access` not found for this struct
+    |
+help: there is a method `try_access` with a similar name
+    |
+234 |         Ok(unsafe { self.0.data.try_access() })
+    |                                 ++++
 
-		/* The access to the global value is not synchronized. */
+error[E0599]: no method named `try_access_with` found for struct `Revocable=
+` in the current scope
+   --> rust/kernel/devres.rs:244:21
+    |
+244 |         self.0.data.try_access_with(f)
+    |                     ^^^^^^^^^^^^^^^
+    |
+   ::: rust/kernel/revocable.rs:64:1
+    |
+64  | #[pin_data(PinnedDrop)]
+    | ----------------------- method `try_access_with` not found for this s=
+truct
+    |
+help: there is a method `try_access` with a similar name, but with differen=
+t arguments
+   --> rust/kernel/revocable.rs:97:5
+    |
+97  |     pub fn try_access(&self) -> Option<RevocableGuard<'_, T>> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-> +		WRITE_ONCE(*si_bits_global, si_bits);
-> +		return 0;
-> +	} else {
-> +		/* for 'read' operation */
-> +		bool first = true;
-> +		char *buf;
-> +
-> +		buf = names;
-> +		for (i = 0; i < ARRAY_SIZE(si_names); i++) {
-> +			if (*si_bits_global & si_names[i].bit) {
-> +
-> +				if (first) {
-> +					first = false;
-> +				} else {
-> +					*buf = ',';
-> +					buf++;
-> +				}
-> +
-> +				len = strlen(si_names[i].name);
-> +				strncpy(buf, si_names[i].name, len);
+error[E0308]: mismatched types
+   --> rust/kernel/devres.rs:257:21
+    |
+257 |         if unsafe { self.0.data.revoke_nosync() } {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `bool`, foun=
+d `()`
 
-I am afraid of a buffer overflow when people add new entry into
-si_names[] table but they forget to update sys_info_avail[] string.
-I would prefer to limit the write to the buffer by the size of the buffer.
+error: aborting due to 7 previous errors
 
-Something like (on top of this patch):
+Some errors have detailed explanations: E0107, E0308, E0412, E0432, E0599, =
+E0600.
+For more information about an error, try `rustc --explain E0107`.
+make[2]: *** [rust/Makefile:536: rust/kernel.o] Error 1
+make[1]: *** [/build/linux/src/linux-6.15.3/Makefile:1280: prepare] Error 2
+make: *** [Makefile:248: __sub-make] Error 2
 
---- a/lib/sys_info.c
-+++ b/lib/sys_info.c
-@@ -50,7 +50,7 @@ int sysctl_sys_info_handler(const struct ctl_table *ro_table, int write,
- 	char names[sizeof(sys_info_avail) + 1];
- 	struct ctl_table table;
- 	unsigned long *si_bits_global;
--	int i, ret, len;
-+	int i, ret;
- 
- 	si_bits_global = ro_table->data;
- 
-@@ -72,27 +72,18 @@ int sysctl_sys_info_handler(const struct ctl_table *ro_table, int write,
- 		return 0;
- 	} else {
- 		/* for 'read' operation */
--		bool first = true;
--		char *buf;
-+		char *delim = "";
-+		int len = 0;
- 
--		buf = names;
-+		names[0] = '\0';
- 		for (i = 0; i < ARRAY_SIZE(si_names); i++) {
- 			if (*si_bits_global & si_names[i].bit) {
--
--				if (first) {
--					first = false;
--				} else {
--					*buf = ',';
--					buf++;
--				}
--
--				len = strlen(si_names[i].name);
--				strncpy(buf, si_names[i].name, len);
--				buf += len;
-+				len += scnprintf(names + len, sizeof(names) - len,
-+						 "%s%s", delim, si_names[i].name);
-+				delim = ",";
- 			}
- 
- 		}
--		*buf = '\0';
- 
- 		table = *ro_table;
- 		table.data = names;
 
-Best Regards,
-Petr
+--bzrlzjrxqd77i3z3
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmhZW7UACgkQwEfU8yi1
+JYV7pBAAoLezFTzYpDLyAa2Xg8+9dwvSN121/S9xM+EPfrq72KeTvU+H0emNmKa+
++nr5DxoIlE5ywlPMu759wMoS0sv2vdCSO4Fo9u0RYLwY8igZO3F7gNCtzLTOl5w3
+m54Dg0zKeKt+YljwZbXOeFiBVW6SGCzBXfRIukYzZU8Lx+6iDfQgAYVuTuBpe8Dg
+RodEzxKyw4W83yxbU9X7h/uNWc3HNmHu+YtPsvEnBLMlIXQ8m/gUSB7nDmLRlLW3
+HoJxDx1122V3vcZKhiNJYVScKqXtYI3jAVuzsnq+5s/HF3IEBQPiVr/ouHO1Lpkx
+JaRt1xv/rpLSAO2M9Zbmhhz7QFj7sJ0WpcIVYnixJQxjSGAL/GQ4cVKGfDVIYPL2
+yQPmI1aVQ7d7pGS5RD64SXXtTrl2+7UAdbvDuFxjTlCeY6ZkGreGuGiy+L4eB9vc
+n9pvVjAJSC6FkE3ICvS3OFxIF2KrSsQS7d3kDQ5GFqoQfVsFJtb0DLsOkhylUitm
+wF3pP+42RKUSPcsEdYJe7PCTAeCAWQVcaBtnM2KjctQGkTW5QcfX0to55W1y9xiM
+upVPaxdCoSUOGlpSYQuapIe39B4VyQad9qN7OdYe/4iJWbbto8rg0IqOS9JYbdJf
+w1/Cv1HYzowFUdxT5TKlPLCPQNaLC9VYSleec/iOUC2ig0VN5MA=
+=Nnoh
+-----END PGP SIGNATURE-----
+
+--bzrlzjrxqd77i3z3--
