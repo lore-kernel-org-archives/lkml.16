@@ -1,95 +1,40 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9541C8612;
-	Mon, 23 Jun 2025 04:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6ADEC13B;
+	Mon, 23 Jun 2025 04:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750651491; cv=none; b=LRxTouVHSpPsgD0tLK9xIT5sFes0wCg24Kr9VBP2/zSTAXrr8QrV0hi+nYdPv0iiBWdm/ihzTZ28CdlQIrOFL+HGeoqhWcJx40oSoXXCUdHzWjCpSuhah4XDioOhDx6gzFNC7iEUyVIwXCQQZq4GPcA5KLbdjkweEWgXWCzEkFU=
+	t=1750651661; cv=none; b=FKug0XSu7N8c0vRcN6T1P8Yy+XG+ZpJpB/tZnc6AQAN7rStqXMnUCm2wLcGIU96Tk8zucHT53qdvHk5t0rYNdGgCCiNfa+oz0VYx6+sSZQNp9C3Z7lOqUPCiYui3jvbKvtkvsQFhDQHNUQhTX933BNHuswQE8Vev8T4bYJSE7kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750651491; c=relaxed/simple;
-	bh=Om7oDGhV8WhIe7MihQ/sdXI7ZWZeAbnV9SZEqTmmH0w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bfaBfzy0i9jya7PN/mVXMFrI5pTzSzmWyUnbK4PCJjynkHNrpenbCbTiLagAIkLpCrWTrvQKIF5SQFL+ZDqznHVn5iJrtgelzbP0o2gtriAL+xO9nFecRr5yO4yyu43A3rIRnfHNMUup5VPn8VjhTVJZkbUzTc+lAB3AduwVeLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f6UrStKy; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6UrStKy"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7d38cfa9773so404031785a.2;
-        Sun, 22 Jun 2025 21:04:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750651488; x=1751256288; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KxiQZQWkAOiMlWzdIY0yzPCGK3zVKGxK5z7H8GVPDEM=;
-        b=f6UrStKyGeCW7VtNtQ30Eq1UcPePgFiF/Wsejo4c52ERdznrbDH5TZCb3KAGa858TR
-         T+ix4b81lTBU0mTTULVMzZ1PpTbtH+4nvskLlMf+mRs064Kis5nlAs4oCZM9XaIqx3DD
-         3cuEHwavKLhH2ipQBv1b/GPcdOp9RLixKU8IEpwO3O7QP7QXEaDToYOEyslU4geEzbJs
-         LiDyjlfC/jPMYt3921Dn83AR1mNEC7rpbwFvastZasjOZYA+L8aCDCJlOw/3woPbsb7+
-         MAufcCBtELR//PdlYoIt5wYc7iRf2zKLhXrgNVEr0yDBlkVxPw5J0pRSLiKduku+W1Sc
-         lybA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750651488; x=1751256288;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KxiQZQWkAOiMlWzdIY0yzPCGK3zVKGxK5z7H8GVPDEM=;
-        b=WUYz5Ey/UQM0P7PqaO+g5+Xqhvy8sP+ubic5gUMLoWSQUswVvg3r2Y6vGCNkq6rnFF
-         8n/TAxp9ZnEtSqQ3X0QV5rar3TZvojtuHOQVIgL2lt1Geq66DCUSYVZnl+IIrvmM1gEK
-         dj2xp/68ZE9XyPcZwY+JA74jajkqz79+wDT1QZ4jVB/yb6CKrvnt6pgVeCH5Ug44xzmN
-         IRroosKEaCWSNW6iakhMBJZ2Zdr9U6R2J7rtKnozgtIl52KesPXKmfm8Zhyc3Frz9raJ
-         0LAMyJFHkE00RuCF7CPnY2bTwHjjlgdtp1KDpQ5mR7WXAzmrDL+mtayR6UwTLG3CGK4x
-         vnQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUWGwCqV25g1WDpipx/VfXh0EUrS6x7QepeiV+/YzGp57eVLwCk6J6uOj3bFYnJONo8n/oaveqAR9sJOg7s@vger.kernel.org, AJvYcCVHKLRFy3wq9EDD/mh9swwB1qwHRrZR1YjmYolLVgy4j0zU1ZKEBxkpOxnQh9FEjNgtS929wL8ziOkyty4vjJcV@vger.kernel.org, AJvYcCXEC+ss02RfsYNoSR7CkcLm3OyuwpzE7rUqTfhP4SKGYdvvTyCNpsqEIuZ852haw+9sKSU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcH1LmRcYPglwMI5Yd5BIg+2ssn7xl4Fy0FxqGl7pMl7TFV98y
-	m+y4Z916wJEkxVesyy2/ZV508lMsrRVLmvPGiNs4VfpzaNZE7oUm1fkx
-X-Gm-Gg: ASbGncuuYmcb7V1lf6YeCr/uOKKJAd0wl/CZDWoP+Tf3hXcjor6PU11oeEoB5IzNkka
-	Eme6Ig7kPlG/uNFd4YwApDtwUS0SxU6AK+o8L0A/9qjdaf5orDHOUo0BcdAghA059nVfBdWfFA4
-	pmpfo94PUqvOV2R2E34r4D6Tqdq7L+J+MpykwrMsw0kpe5KjDpqNPOgQGrv2Y1KasCvHk2gr6Ie
-	KuOuuY2vfntemFERXdSH3gsD3Ef6mxWSY8/tdgiv66vtXHECa6TbesHmL+a1BlQneYy/dIsif5v
-	EJkzRrWUTN0ZXfPZhMHAvbQuz2h/1Gdsnw+GkLnL8I7+XgwvWxwIp+7GNTKu+6ZBIG+n20DQTcg
-	XbOzXJJDuVQ+b0FTNp013goS1lRROtodrJLOqpw4mjguY6aDRjHynWTBUhYEMUaPqHBGTCA==
-X-Google-Smtp-Source: AGHT+IEB+CtGeKi3Mghgbkve8NhXsQpZ3/7P7VeN57IvlHIz4GSzj4W8NkOFZ/GfWWwCM3KTkq/J/A==
-X-Received: by 2002:a05:620a:bc1:b0:7d1:fc53:c6b2 with SMTP id af79cd13be357-7d3f9939f14mr1645336585a.41.1750651488257;
-        Sun, 22 Jun 2025 21:04:48 -0700 (PDT)
-Received: from lima-default.. (pool-108-50-252-180.nwrknj.fios.verizon.net. [108.50.252.180])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f99fc0a8sm347274385a.80.2025.06.22.21.04.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 21:04:48 -0700 (PDT)
-From: Harishankar Vishwanathan <harishankar.vishwanathan@gmail.com>
-To: ast@kernel.org
-Cc: m.shachnai@rutgers.edu,
-	srinivas.narayana@rutgers.edu,
-	santosh.nagarakatte@rutgers.edu,
-	Harishankar Vishwanathan <harishankar.vishwanathan@gmail.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Matan Shachnai <m.shachnai@gmail.com>,
-	Henriette Herzog <henriette.herzog@rub.de>,
-	Luis Gerhorst <luis.gerhorst@fau.de>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v3 2/2] selftests/bpf: Add testcases for BPF_ADD and BPF_SUB
-Date: Mon, 23 Jun 2025 00:03:57 -0400
-Message-ID: <20250623040359.343235-3-harishankar.vishwanathan@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250623040359.343235-1-harishankar.vishwanathan@gmail.com>
-References: <20250623040359.343235-1-harishankar.vishwanathan@gmail.com>
+	s=arc-20240116; t=1750651661; c=relaxed/simple;
+	bh=UIdNVAQoE4i3JnHbIbrPMnN1r1Dd3QV0MY260T0VhzM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=H0RDLvAagDOrU4tt76CRwOOcEK+iWbiJQC6thJ0LpWKHjil1JpYBOb5M9UGjmJYbd01mv9aaXZ2OvyOp/X7pa6QjHJecq7h1C+4ybInQChRmL7nNz6xzjlMj4iH3EP9Zly1ZVqsmQzmx+hXXFjjEqCHNy6/U/ktEaZ5ahz4m+4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bQZJc15CMztS0f;
+	Mon, 23 Jun 2025 12:06:24 +0800 (CST)
+Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id A09E71401E9;
+	Mon, 23 Jun 2025 12:07:33 +0800 (CST)
+Received: from localhost.localdomain (10.90.31.46) by
+ kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 23 Jun 2025 12:07:32 +0800
+From: Jijie Shao <shaojijie@huawei.com>
+To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
+CC: <shenjian15@huawei.com>, <wangpeiyang1@huawei.com>,
+	<liuyonglong@huawei.com>, <chenhao418@huawei.com>,
+	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
+	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <shaojijie@huawei.com>
+Subject: [PATCH v4 net-next 0/7]There are some cleanup for hns3 driver
+Date: Mon, 23 Jun 2025 12:00:36 +0800
+Message-ID: <20250623040043.857782-1-shaojijie@huawei.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -97,195 +42,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemk100013.china.huawei.com (7.202.194.61)
 
-The previous commit improves the precision in scalar(32)_min_max_add,
-and scalar(32)_min_max_sub. The improvement in precision occurs in cases
-when all outcomes overflow or underflow, respectively.
+There are some cleanup for hns3 driver
 
-This commit adds selftests that exercise those cases.
-
-This commit also adds selftests for cases where the output register
-state bounds for u(32)_min/u(32)_max are conservatively set to unbounded
-(when there is partial overflow or underflow).
-
-Signed-off-by: Harishankar Vishwanathan <harishankar.vishwanathan@gmail.com>
-Co-developed-by: Matan Shachnai <m.shachnai@rutgers.edu>
-Signed-off-by: Matan Shachnai <m.shachnai@rutgers.edu>
-Suggested-by: Eduard Zingerman <eddyz87@gmail.com>
 ---
- .../selftests/bpf/progs/verifier_bounds.c     | 161 ++++++++++++++++++
- 1 file changed, 161 insertions(+)
+ChangeLog:
+v3 -> v4:
+  - Drop the patch about pointer set to NULL operation, suggested by Jakub Kicinski
+  v3: https://lore.kernel.org/all/20250621083310.52c8e7ae@kernel.org/
+v2 -> v3:
+  - Remove unnecessary pointer set to NULL operation, suggested by Simon Horman.
+  v2: https://lore.kernel.org/all/20250617010255.1183069-1-shaojijie@huawei.com/
+v1 -> v2:
+  - Change commit message and title, suggested by Michal Swiatkowski.
+  v1: https://lore.kernel.org/all/20250612021317.1487943-1-shaojijie@huawei.com/
+---
 
-diff --git a/tools/testing/selftests/bpf/progs/verifier_bounds.c b/tools/testing/selftests/bpf/progs/verifier_bounds.c
-index 30e16153fdf1..31986f6c609e 100644
---- a/tools/testing/selftests/bpf/progs/verifier_bounds.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_bounds.c
-@@ -1371,4 +1371,165 @@ __naked void mult_sign_ovf(void)
- 	  __imm(bpf_skb_store_bytes)
- 	: __clobber_all);
- }
-+
-+SEC("socket")
-+__description("64-bit addition, all outcomes overflow")
-+__success __log_level(2)
-+__msg("5: (0f) r3 += r3 {{.*}} R3_w=scalar(umin=0x4000000000000000,umax=0xfffffffffffffffe)")
-+__retval(0)
-+__naked void add64_full_overflow(void)
-+{
-+	asm volatile (
-+	"r4 = 0;"
-+	"r4 = -r4;"
-+	"r3 = 0xa000000000000000 ll;"
-+	"r3 |= r4;"
-+	"r3 += r3;"
-+	"r0 = 0;"
-+	"exit"
-+	:
-+	:
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("64-bit addition, partial overflow, result in unbounded reg")
-+__success __log_level(2)
-+__msg("4: (0f) r3 += r3 {{.*}} R3_w=scalar()")
-+__retval(0)
-+__naked void add64_partial_overflow(void)
-+{
-+	asm volatile (
-+	"r4 = 0;"
-+	"r4 = -r4;"
-+	"r3 = 2;"
-+	"r3 |= r4;"
-+	"r3 += r3;"
-+	"r0 = 0;"
-+	"exit"
-+	:
-+	:
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("32-bit addition overflow, all outcomes overflow")
-+__success __log_level(2)
-+__msg("4: (0c) w3 += w3 {{.*}} R3_w=scalar(smin=umin=umin32=0x40000000,smax=umax=umax32=0xfffffffe,var_off=(0x0; 0xffffffff))")
-+__retval(0)
-+__naked void add32_full_overflow(void)
-+{
-+	asm volatile (
-+	"w4 = 0;"
-+	"w4 = -w4;"
-+	"w3 = 0xa0000000;"
-+	"w3 |= w4;"
-+	"w3 += w3;"
-+	"r0 = 0;"
-+	"exit"
-+	:
-+	:
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("32-bit addition, partial overflow, result in unbounded u32 bounds")
-+__success __log_level(2)
-+__msg("4: (0c) w3 += w3 {{.*}} R3_w=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))")
-+__retval(0)
-+__naked void add32_partial_overflow(void)
-+{
-+	asm volatile (
-+	"w4 = 0;"
-+	"w4 = -w4;"
-+	"w3 = 2;"
-+	"w3 |= w4;"
-+	"w3 += w3;"
-+	"r0 = 0;"
-+	"exit"
-+	:
-+	:
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("64-bit subtraction, all outcomes underflow")
-+__success __log_level(2)
-+__msg("6: (1f) r3 -= r1 {{.*}} R3_w=scalar(umin=1,umax=0x8000000000000000)")
-+__retval(0)
-+__naked void sub64_full_overflow(void)
-+{
-+	asm volatile (
-+	"r1 = 0;"
-+	"r1 = -r1;"
-+	"r2 = 0x8000000000000000 ll;"
-+	"r1 |= r2;"
-+	"r3 = 0;"
-+	"r3 -= r1;"
-+	"r0 = 0;"
-+	"exit"
-+	:
-+	:
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("64-bit subtration, partial overflow, result in unbounded reg")
-+__success __log_level(2)
-+__msg("3: (1f) r3 -= r2 {{.*}} R3_w=scalar()")
-+__retval(0)
-+__naked void sub64_partial_overflow(void)
-+{
-+	asm volatile (
-+	"r3 = 0;"
-+	"r3 = -r3;"
-+	"r2 = 1;"
-+	"r3 -= r2;"
-+	"r0 = 0;"
-+	"exit"
-+	:
-+	:
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("32-bit subtraction overflow, all outcomes underflow")
-+__success __log_level(2)
-+__msg("5: (1c) w3 -= w1 {{.*}} R3_w=scalar(smin=umin=umin32=1,smax=umax=umax32=0x80000000,var_off=(0x0; 0xffffffff))")
-+__retval(0)
-+__naked void sub32_full_overflow(void)
-+{
-+	asm volatile (
-+	"w1 = 0;"
-+	"w1 = -w1;"
-+	"w2 = 0x80000000;"
-+	"w1 |= w2;"
-+	"w3 = 0;"
-+	"w3 -= w1;"
-+	"r0 = 0;"
-+	"exit"
-+	:
-+	:
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("32-bit subtration, partial overflow, result in unbounded u32 bounds")
-+__success __log_level(2)
-+__msg("3: (1c) w3 -= w2 {{.*}} R3_w=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))")
-+__retval(0)
-+__naked void sub32_partial_overflow(void)
-+{
-+	asm volatile (
-+	"w3 = 0;"
-+	"w3 = -w3;"
-+	"w2 = 1;"
-+	"w3 -= w2;"
-+	"r0 = 0;"
-+	"exit"
-+	:
-+	:
-+	: __clobber_all);
-+}
-+
- char _license[] SEC("license") = "GPL";
+Jian Shen (1):
+  net: hns3: set the freed pointers to NULL when lifetime is not end
+
+Jijie Shao (4):
+  net: hns3: fix spelling mistake "reg_um" -> "reg_num"
+  net: hns3: use hns3_get_ae_dev() helper to reduce the unnecessary
+    middle layer conversion
+  net: hns3: use hns3_get_ops() helper to reduce the unnecessary middle
+    layer conversion
+  net: hns3: add complete parentheses for some macros
+
+Peiyang Wang (2):
+  net: hns3: add \n at the end when print msg
+  net: hns3: clear hns alarm: comparison of integer expressions of
+    different signedness
+
+Yonglong Liu (1):
+  net: hns3: delete redundant address before the array
+
+ .../hns3/hns3_common/hclge_comm_cmd.c         |  2 +-
+ .../ethernet/hisilicon/hns3/hns3_debugfs.c    | 10 +--
+ .../net/ethernet/hisilicon/hns3/hns3_enet.c   | 38 +++++-----
+ .../net/ethernet/hisilicon/hns3/hns3_enet.h   |  4 +-
+ .../ethernet/hisilicon/hns3/hns3_ethtool.c    | 74 +++++++++----------
+ .../hisilicon/hns3/hns3pf/hclge_debugfs.c     | 15 ++--
+ .../hisilicon/hns3/hns3pf/hclge_main.c        | 34 ++++-----
+ .../hisilicon/hns3/hns3pf/hclge_mbx.c         |  7 +-
+ .../hisilicon/hns3/hns3pf/hclge_mdio.c        |  2 +-
+ .../hisilicon/hns3/hns3pf/hclge_ptp.h         |  2 +-
+ .../hisilicon/hns3/hns3vf/hclgevf_main.c      |  4 +-
+ .../hisilicon/hns3/hns3vf/hclgevf_mbx.c       |  2 +-
+ .../hisilicon/hns3/hns3vf/hclgevf_regs.c      | 27 +++----
+ 13 files changed, 111 insertions(+), 110 deletions(-)
+
 -- 
-2.45.2
+2.33.0
 
