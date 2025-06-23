@@ -1,83 +1,106 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8081D86DC;
-	Mon, 23 Jun 2025 08:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F592236EF
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:27:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750667232; cv=none; b=BLhXSS6Z2OCfEJ8oBwS0bUn551uFvF8XsWfsdwh/vhYn37ffHKYFfAYsM3afMTmpy1NdkASBTIzOjUeEFEzzRu5sf0nAtBQV/STVDWqgvUlBEeLlyRjzc6LhCRQo63kr8aemMWfVzX/zMEWvvDXETf1WXmQbomRGI1lwRudiods=
+	t=1750667257; cv=none; b=JjO2GM6uBuAAkWYLRtnP2SjSOxGWIltqkKRCnFLamaRR1FAKQroovKBA5utXp2atqNEQZmiDuOYLnrXK3F2cXX+Kc8eH/Z1IXGJGruYVRIb1Jcwv9Mh8FGkmWCsF99fxHd9Re5HT8zxDpK3CWrapk5tmyRLM/heki/0yvZ4HdUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750667232; c=relaxed/simple;
-	bh=I2RHzOCqZiz/ej3QKR8ozrRKNcND3ktYGlOZ9oF0vjs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T6SUAhgaXnoetn8BlbhoC5fEeQLF60t5LMfvzVlHXM6WnShMqouGuMSc1EZhPD7jevGqHu1min539fwivoEciNBD92MU23x0urdXBap01QXXlUYQqT1gDWHqgEE0Sxq3HWwCqElXlkLLi36lSRoj/kOwW/DAWTXdLS0mr9++1JE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55N4PIbB002542;
-	Mon, 23 Jun 2025 01:26:30 -0700
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 47dv8mh76g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 23 Jun 2025 01:26:30 -0700 (PDT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.57; Mon, 23 Jun 2025 01:26:29 -0700
-Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Mon, 23 Jun 2025 01:26:26 -0700
-From: Lizhi Xu <lizhi.xu@windriver.com>
-To: <johannes@sipsolutions.net>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
-        <lizhi.xu@windriver.com>, <netdev@vger.kernel.org>,
-        <pabeni@redhat.com>,
-        <syzbot+189dcafc06865d38178d@syzkaller.appspotmail.com>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: [PATCH] wifi: cfg80211: Prevent comparison with invalid registered dev scan req
-Date: Mon, 23 Jun 2025 16:26:25 +0800
-Message-ID: <20250623082626.3104528-1-lizhi.xu@windriver.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <c78aef54d57a83c874cd9092d6e50c3656540c02.camel@sipsolutions.net>
-References: <c78aef54d57a83c874cd9092d6e50c3656540c02.camel@sipsolutions.net>
+	s=arc-20240116; t=1750667257; c=relaxed/simple;
+	bh=mHMAsoepGjQBv1mEgMO/VvRELEXdWNynFVVXIrPUYQQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mmKsaO1Pejo4jYnW4nZp7Vxq7GEEbw8Pp24+UtU6lNh5sC+SnWsAMbxrCbx62VfhHhD7tymWZRoqV4hX5O4zIgC9AwVRbE4dW7yNVdoQ/vLBXwpLNdAyWg6KX62LXtnyEdxAp1hec4rcTBHkq2pVf56bgrjZKB2W36G1hV1l15Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <jlu@pengutronix.de>)
+	id 1uTcWT-0007gI-Tv; Mon, 23 Jun 2025 10:27:25 +0200
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <jlu@pengutronix.de>)
+	id 1uTcWT-004upl-0c;
+	Mon, 23 Jun 2025 10:27:25 +0200
+Received: from localhost ([127.0.0.1] helo=[IPv6:::1])
+	by ptz.office.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <jlu@pengutronix.de>)
+	id 1uTcWT-005o58-00;
+	Mon, 23 Jun 2025 10:27:25 +0200
+Message-ID: <e3cb14a8e1a6ea1e9a050f8013730e56f79f62ec.camel@pengutronix.de>
+Subject: Re: [PATCH RFC/RFT 00/15] gpio: sysfs: add a per-chip
+ export/unexport attribute pair
+From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson
+ <warthog618@gmail.com>,  Marek Vasut <marex@denx.de>, Geert Uytterhoeven
+ <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>,
+ linux-gpio@vger.kernel.org,  linux-kernel@vger.kernel.org, Bartosz
+ Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Mon, 23 Jun 2025 10:27:24 +0200
+In-Reply-To: <CAMRc=Mc6ZSp+bu3i0-X-i_8=f69X0Rez98tGsS-g_uJ1nBH6fQ@mail.gmail.com>
+References: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
+	 <8570dedab1a7478c39b31125ad279038fe31ac13.camel@pengutronix.de>
+	 <CAMRc=Mc6ZSp+bu3i0-X-i_8=f69X0Rez98tGsS-g_uJ1nBH6fQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA0OSBTYWx0ZWRfXytO55s3AmuW+ 5c9xZvno/Wq+dmEhwmr/i0zJOomjW0yVSOXymGUZzD5mmRysMIU8IpHFj+YB8+AopneMsxP9Ldg wTCOTaFhNgiQe8k5hGC7wYnUzhLyKKwE5a8Sa3kcQzg5aN81vtlNVkR6MkK/gLFa4/t3IzDFTwa
- d8zuiS5Vo5zg3sDsS/zO63Lg+ztFrBfH9f74yOSAhogWiTQlp4V5Xt5/Jlx/KdBw5RbEQ4z5nWO nmVdv7we3uoz3t+VkRn0hSewSOpov4Tk2p0rv8t/bkUJA8eDYdqm1WCgxGadLtw3meKb8JVAixU fnN90fNt4jxTb8rF12cD990hK4oH6gpdAf5JLAIyx0G+LIqWirzCwVEo+5iw3EY+oF+vYIwU8YM
- hQEifrgquMbbXPKZbTiJ4e2MX0mFYO0QDNCx8dQZhswNvdhBkCORBn6jgGwgWI/1hs9rI4Ct
-X-Authority-Analysis: v=2.4 cv=MeNsu4/f c=1 sm=1 tr=0 ts=68590fb6 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=6IFa9wvqVegA:10 a=J1YBbKYVWwK1OX1Y3BsA:9
-X-Proofpoint-GUID: vIrRGiyC5ypHUKuL2kgVxH63CP1OPy0e
-X-Proofpoint-ORIG-GUID: vIrRGiyC5ypHUKuL2kgVxH63CP1OPy0e
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-23_02,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
- mlxscore=0 malwarescore=0 lowpriorityscore=0 priorityscore=1501
- suspectscore=0 spamscore=0 bulkscore=0 phishscore=0 adultscore=0
- mlxlogscore=493 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2505280000
- definitions=main-2506230049
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: jlu@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Fri, 20 Jun 2025 13:01:51 +0200, Johannes Berg wrote:
-> > The scan req of a registered device may have been released, so it should
-> > be checked to be valid before comparing it with the current req.
-> >
-> 
-> I don't understand the subject/commit log at all. You're now accepting
-> scan_done() with a NULL scan request, why does that make sense?
-It is meaningless to compare the registered device with NULL scan_req with
-the current scan request.
+On Wed, 2025-06-18 at 17:56 +0200, Bartosz Golaszewski wrote:
+> On Wed, Jun 18, 2025 at 3:38=E2=80=AFPM Jan L=C3=BCbbe <jlu@pengutronix.d=
+e> wrote:
+> >=20
+>=20
+> [snip]
+>=20
+>=20
+> > The contents of /sys/kernel/debug/gpio don't really fit any more:
+> >  gpiochip10: GPIOs 660-663, parent: i2c/0-0024, pca9570, can sleep:
+> >   gpio-660 (DUT_PWR_EN          |tacd                ) out hi
+> >   gpio-661 (DUT_PWR_DISCH       |tacd                ) out lo
+> >   gpio-662 (DUT_PWR_ADCRST      |reset               ) out lo
+> > The header is inconsistent: it uses the 'gpiochip' prefix, but not the =
+base as
+> > the old class devices in /sys/class/gpio/. Perhaps something like this?
+> >  chip10: GPIOs 0-2 (global IDs 660-663), parent: i2c/0-0024, pca9570, c=
+an sleep:
+> >   gpio-0 (660) (DUT_PWR_EN          |tacd                ) out hi
+> >   gpio-1 (661) (DUT_PWR_DISCH       |tacd                ) out lo
+> >   gpio-2 (662) (DUT_PWR_ADCRST      |reset               ) out lo
+> > If GPIO_SYSFS_LEGACY is disabled, the global IDs could be hidden.
+> >=20
+>=20
+> After a second look: IMO this is unrelated to the sysfs changes. We
+> definitely should change the debugfs output and rid it off the global
+> numbers but it shouldn't be part of this series.
 
-Because there is a check for scan_req being NULL in ___cfg80211_scan_done(),
-cfg80211_scan_done() is not directly exited when the scan_req of the registered
-device is NULL.
+Agreed.
 
-Lizhi
+> Also: are you using
+> this output in some way? Technically debugfs output is not stable ABI
+> so we can modify it without considering existing users but wanted to
+> run it by you to know if I'm going to break something for you.
+
+We're not parsing debugfs. :) I just checked manually if it matched the new
+naming and saw that it didn't.
+
+Regards,
+Jan
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
