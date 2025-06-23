@@ -1,409 +1,267 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78E4264A86
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A7A257ACA
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750697095; cv=none; b=aFGPXKTPClxlJ2DyItTgaqWHXv48l4mhlu6hGDPrK9LmxHxp+xihY0kmmEuEMlmR/Y2O7kucYySz2ytTUcqnezsCh7qFtabVVNnOb8oZfzC4RigdPDIv6eP6MRV/gO6v4UTtHaKZDIo+iEAiQG1wPgiUzJ7S7MLPhK5aRyj6bJQ=
+	t=1750697158; cv=none; b=lamrIkAqbl8YaQrJozrZhPxWTYLb28RnD5TshE74uA4v1tmqIPtjvroBKpTBoJep0otZSTQJQU+hjFxG7CyR6rd9ieqk/Wog99y4MAfO5Q0sBbFpZlB+dm0V9CX0yv4SltKlNXiyl/LIsn9t4qh5axc0LMoSEixlu3HL7CZq7vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750697095; c=relaxed/simple;
-	bh=R9K4m09udi+0sMcSNQK1kQmf4YD66o0JqyIRS0dQpK0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=EgFpQQJwWv+ZV0QF1i7KjLrJ7i1MEBNwOjH2m24+jY8Ufo8QdWH7hIENTju7DY8kq5WFB2ikNeNApzcVNB3l24jmSycj/QLE/pZd9GTIHTOYKx/IW/25RpNHKqUHjceGNnu2Kq+w7IQxJZMYLRrdCDfpY1cdm4tZxYFXgQPQxKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sHrbiGG8; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750697158; c=relaxed/simple;
+	bh=PTD3Lnffz3UxuppdSnjmAgp+lvmMLAcpySYUlrRH2dc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UkJmhy+Iy7a3Df/Dt/Vw2pAd5YvThyb8OEjwhqCnPActl1nPzwlNOIZViTiUx4sl3iwwp155EYg0tFrSSNC10xxgieVDmsOT/tmQUYJkkKATmkzfaMj4xEtXzhHIu7H/3x4oaCxCEUTqk9OHynyI4V+Hm5qKkahbalVo85F2heM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aVq5TrAw; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sHrbiGG8"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3122368d82bso6410397a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:44:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750697093; x=1751301893; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EtqRjZBGHHt/HAYBxBNK67aTSi+qEb7ysAn9P7r+YL4=;
-        b=sHrbiGG8/zPtPikSJja90IQvXAFyWDwztNIRXQJsdgpC/Xc5QJNoQfSGOfyJzEt4qM
-         V572BKNb1+bt1/G5wQ5d0t8ZUoTkShwumFXrcuLbaihxIzlvm/k3qatlRZrX+uhyAM/H
-         iqXDbyU1mOBkICpGLX2A8UdoTcLyrvw+hyINdtsLBEgbNSJYXaoV2SdGRvrWnF5FbAWw
-         M7tKOxnv+79Oyg8C+TI2qySfXmHTKSKqv39bqQU/DndPSROztMsUeWk1Pi4EpxE3Ea9A
-         WhJ/U2rqrTX9u3pMGzqZkmIUbH1pWZS6CGDFIGIlzSdnGnkzSorVe2AOoqVF84a87JJC
-         hhzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750697093; x=1751301893;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EtqRjZBGHHt/HAYBxBNK67aTSi+qEb7ysAn9P7r+YL4=;
-        b=LpHxrI3+AwVqJKIv+dVpxyHMIJGr2TzrtoPJWmGWdVUW+zeJ32gfnpe3eWZettmO0x
-         QAUchW97z6bsXm7nT+nD+a7KAKjWKsSOIVh1ZsZSlcxV+VOZCDMReSbIe4TL5xFclaH/
-         LCjJdb1Vhl3VwGsaL0e/LSW0tc4S9gTGVLdI3dq8xBMvj1t77GyU6Mlpo2BNMn2qFVc5
-         NIAdEs111VSxoqcXsgXkSnYAaBy7VHpneCDugEDDZTqDVUtHeb+XizGesCdtNnNyaia1
-         RdYbuUIO4XKqoxRCvvwV0mHVJ4PREbiXgkBGnjuDbhmAUvVUHYkE5DlW3x0RjQv8hbEl
-         doaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZiHSS3YVzKfVuxIfII+wSF6m9GNlbge9wqIzcMYkMavtkLnBuGU2E2kPX/o8wDhhMUN12X5+uCRLeZfQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywfv8muco8avuszuwPVz0f7yf0aDs+CLFdDIxEuqHSlFUmx3a2D
-	wagjCS7LTEJJNdXPYWKrVTQWA59/5jfRdgEyrFvycKylkKstaPunLDGGisjgcX3ouFfw4sGO12N
-	yJ6Pq/A==
-X-Google-Smtp-Source: AGHT+IFGE7oloPpGbkkEZNZWS1a26xilhGzB63CfGjKyoBorkc/mB5YwBvxpZAKN5jqQR+Na0fc+PsM0cj4=
-X-Received: from pjn14.prod.google.com ([2002:a17:90b:570e:b0:312:1e70:e233])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3cd0:b0:311:fde5:c4b6
- with SMTP id 98e67ed59e1d1-3159d6260admr16331009a91.6.1750697093101; Mon, 23
- Jun 2025 09:44:53 -0700 (PDT)
-Date: Mon, 23 Jun 2025 09:44:51 -0700
-In-Reply-To: <20250326193619.3714986-2-yosry.ahmed@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aVq5TrAw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750697157; x=1782233157;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=PTD3Lnffz3UxuppdSnjmAgp+lvmMLAcpySYUlrRH2dc=;
+  b=aVq5TrAwAwawQB09h+POho6Vn2TkTkKlV54KNSZfhIDCg7bdTxd0lqm/
+   1HgtIUgzpyqD/ybFoMJjqefnIS9NZsO8+yEk4PkEQWD5N2KJp+ILKTH5b
+   GPqCUAHb7hBeVRWr36wTPj2xoy929KLc5yKj+YZ672Qcl0z+33gSjo6a1
+   s20dCiK0E9UR2PcVq/u6vblv+Dn4dHgbG9HTiga/DUfQjgscM73QND+3+
+   YTeq/bhBVDLog6syNXrdToHttjrJV+eRAjCy8E6s5aatf3tTmeiNX973R
+   Y5TF1KrcMiKmMJNTomzrN5QdnEluub5NIBfx1djS1Pszqfeu4OWc7Oxvf
+   Q==;
+X-CSE-ConnectionGUID: JHilAxA0TjKRaUl2BtPnlQ==
+X-CSE-MsgGUID: bJFvTmbSTjSEmjUwPTLuQA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52029505"
+X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
+   d="scan'208";a="52029505"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 09:45:56 -0700
+X-CSE-ConnectionGUID: LevOzmC+R0mssUZJXCYS0Q==
+X-CSE-MsgGUID: /CQ5fDQSTfqxAGkR9vE7iA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
+   d="scan'208";a="152164351"
+Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.222.214]) ([10.124.222.214])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 09:45:55 -0700
+Message-ID: <946aec3cd4fe308b45d0cff661d80a3d75109b7b.camel@linux.intel.com>
+Subject: Re: [RFC patch v3 00/20] Cache aware scheduling
+From: Tim Chen <tim.c.chen@linux.intel.com>
+To: Madadi Vineeth Reddy <vineethr@linux.ibm.com>, Peter Zijlstra
+	 <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, K Prateek Nayak
+	 <kprateek.nayak@amd.com>, "Gautham R . Shenoy" <gautham.shenoy@amd.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>, Dietmar Eggemann
+ <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben
+ Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin
+ Schneider <vschneid@redhat.com>, Tim Chen <tim.c.chen@intel.com>, Vincent
+ Guittot <vincent.guittot@linaro.org>, Libo Chen <libo.chen@oracle.com>,
+ Abel Wu <wuyun.abel@bytedance.com>, Hillf Danton <hdanton@sina.com>, Len
+ Brown <len.brown@intel.com>, linux-kernel@vger.kernel.org, Chen Yu
+ <yu.c.chen@intel.com>
+Date: Mon, 23 Jun 2025 09:45:54 -0700
+In-Reply-To: <8c98fff7-fef3-494a-98a3-4b6d4cc2e6d1@linux.ibm.com>
+References: <cover.1750268218.git.tim.c.chen@linux.intel.com>
+	 <8c98fff7-fef3-494a-98a3-4b6d4cc2e6d1@linux.ibm.com>
+Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250326193619.3714986-1-yosry.ahmed@linux.dev> <20250326193619.3714986-2-yosry.ahmed@linux.dev>
-Message-ID: <aFmEgxB7EWvEOixP@google.com>
-Subject: Re: [RFC PATCH 01/24] KVM: VMX: Generalize VPID allocation to be vendor-neutral
-From: Sean Christopherson <seanjc@google.com>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jim Mattson <jmattson@google.com>, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Rik van Riel <riel@surriel.com>, Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
 
-On Wed, Mar 26, 2025, Yosry Ahmed wrote:
-> Generalize the VMX VPID allocation code and make move it to common code
-> in preparation for sharing with SVM. Create a generic struct
-> kvm_tlb_tags, representing a factory for VPIDs (or ASIDs later), and use
-> one for VPIDs.
+On Sat, 2025-06-21 at 00:55 +0530, Madadi Vineeth Reddy wrote:
+> Hi Tim,
+>=20
+> On 18/06/25 23:57, Tim Chen wrote:
+> > This is the third revision of the cache aware scheduling patches,
+> > based on the original patch proposed by Peter[1].
+> > =20
+> > The goal of the patch series is to aggregate tasks sharing data
+> > to the same cache domain, thereby reducing cache bouncing and
+> > cache misses, and improve data access efficiency. In the current
+> > implementation, threads within the same process are considered
+> > as entities that potentially share resources.
+> > =20
+> > In previous versions, aggregation of tasks were done in the
+> > wake up path, without making load balancing paths aware of
+> > LLC (Last-Level-Cache) preference. This led to the following
+> > problems:
+> >=20
+> > 1) Aggregation of tasks during wake up led to load imbalance
+> >    between LLCs
+> > 2) Load balancing tried to even out the load between LLCs
+> > 3) Wake up tasks aggregation happened at a faster rate and
+> >    load balancing moved tasks in opposite directions, leading
+> >    to continuous and excessive task migrations and regressions
+> >    in benchmarks like schbench.
+> >=20
+> > In this version, load balancing is made cache-aware. The main
+> > idea of cache-aware load balancing consists of two parts:
+> >=20
+> > 1) Identify tasks that prefer to run on their hottest LLC and
+> >    move them there.
+> > 2) Prevent generic load balancing from moving a task out of
+> >    its hottest LLC.
+> >=20
+> > By default, LLC task aggregation during wake-up is disabled.
+> > Conversely, cache-aware load balancing is enabled by default.
+> > For easier comparison, two scheduler features are introduced:
+> > SCHED_CACHE_WAKE and SCHED_CACHE_LB, which control cache-aware
+> > wake up and cache-aware load balancing, respectively. By default,
+> > NO_SCHED_CACHE_WAKE and SCHED_CACHE_LB are set, so tasks aggregation
+> > is only done on load balancing.
+>=20
+> Tested this patch series on a Power11 system with 28 cores and 224 CPUs.
+> LLC on this platform spans 4 threads.
 
-I don't see any reason in creating a factory, just have common KVM provide the
-structure.
+Hi Madadi,
+
+Thank you for testing this patch series.
+
+If I understand correctly, the Power 11 you tested has 8 threads per core.
+My suspicion is we benefit much more from utilizing more cores
+than aggregating the load on less cores but sharing the cache
+more in this case.
 
 
-> Most of the functionality remains the same, with the following
-> differences:
-> - The enable_vpid checks are moved to the callers for allocate_vpid()
->   and free_vpid(), as they are specific to VMX.
-> - The bitmap allocation is now dynamic (which will be required for SVM),
->   so it is initialized and cleaned up in vmx_hardware_{setup/unsetup}().
-> - The range of valid TLB tags is expressed in terms of min/max instead
->   of the number of tags to support SVM use cases.
-> 
-> Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
-> ---
->  arch/x86/kvm/vmx/nested.c |  4 +--
->  arch/x86/kvm/vmx/vmx.c    | 38 +++++--------------------
->  arch/x86/kvm/vmx/vmx.h    |  4 +--
->  arch/x86/kvm/x86.c        | 58 +++++++++++++++++++++++++++++++++++++++
->  arch/x86/kvm/x86.h        | 13 +++++++++
->  5 files changed, 82 insertions(+), 35 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index d06e50d9c0e79..b017bd2eb2382 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -343,7 +343,7 @@ static void free_nested(struct kvm_vcpu *vcpu)
->  	vmx->nested.vmxon = false;
->  	vmx->nested.smm.vmxon = false;
->  	vmx->nested.vmxon_ptr = INVALID_GPA;
-> -	free_vpid(vmx->nested.vpid02);
-> +	kvm_tlb_tags_free(&vmx_vpids, vmx->nested.vpid02);
->  	vmx->nested.posted_intr_nv = -1;
->  	vmx->nested.current_vmptr = INVALID_GPA;
->  	if (enable_shadow_vmcs) {
-> @@ -5333,7 +5333,7 @@ static int enter_vmx_operation(struct kvm_vcpu *vcpu)
->  		     HRTIMER_MODE_ABS_PINNED);
->  	vmx->nested.preemption_timer.function = vmx_preemption_timer_fn;
->  
-> -	vmx->nested.vpid02 = allocate_vpid();
-> +	vmx->nested.vpid02 = enable_vpid ? kvm_tlb_tags_alloc(&vmx_vpids) : 0;
+>=20
+> schbench:
+>                         baseline (sd%)        baseline+cacheaware (sd%)  =
+    %change
+> Lat 50.0th-worker-1        6.33 (24.12%)           6.00 (28.87%)         =
+      5.21%
+> Lat 90.0th-worker-1        7.67 ( 7.53%)           7.67 (32.83%)         =
+      0.00%
+> Lat 99.0th-worker-1        8.67 ( 6.66%)           9.33 (37.63%)         =
+     -7.61%
+> Lat 99.9th-worker-1       21.33 (63.99%)          12.33 (28.47%)         =
+     42.19%
+>=20
+> Lat 50.0th-worker-2        4.33 (13.32%)           5.67 (10.19%)         =
+    -30.95%
+> Lat 90.0th-worker-2        5.67 (20.38%)           7.67 ( 7.53%)         =
+    -35.27%
+> Lat 99.0th-worker-2        7.33 ( 7.87%)           8.33 ( 6.93%)         =
+    -13.64%
+> Lat 99.9th-worker-2       11.67 (24.74%)          10.33 (11.17%)         =
+     11.48%
+>=20
+> Lat 50.0th-worker-4        5.00 ( 0.00%)           7.00 ( 0.00%)         =
+    -40.00%
+> Lat 90.0th-worker-4        7.00 ( 0.00%)           9.67 ( 5.97%)         =
+    -38.14%
+> Lat 99.0th-worker-4        8.00 ( 0.00%)          11.33 (13.48%)         =
+    -41.62%
+> Lat 99.9th-worker-4       10.33 ( 5.59%)          14.00 ( 7.14%)         =
+    -35.53%
+>=20
+> Lat 50.0th-worker-8        4.33 (13.32%)           5.67 (10.19%)         =
+    -30.95%
+> Lat 90.0th-worker-8        6.33 (18.23%)           8.67 ( 6.66%)         =
+    -36.99%
+> Lat 99.0th-worker-8        7.67 ( 7.53%)          10.33 ( 5.59%)         =
+    -34.69%
+> Lat 99.9th-worker-8       10.00 (10.00%)          12.33 ( 4.68%)         =
+    -23.30%
+>=20
+> Lat 50.0th-worker-16       4.00 ( 0.00%)           5.00 ( 0.00%)         =
+    -25.00%
+> Lat 90.0th-worker-16       6.33 ( 9.12%)           7.67 ( 7.53%)         =
+    -21.21%
+> Lat 99.0th-worker-16       8.00 ( 0.00%)          10.33 ( 5.59%)         =
+    -29.13%
+> Lat 99.9th-worker-16      12.00 ( 8.33%)          13.33 ( 4.33%)         =
+    -11.08%
+>=20
+> Lat 50.0th-worker-32       5.00 ( 0.00%)           5.33 (10.83%)         =
+     -6.60%
+> Lat 90.0th-worker-32       7.00 ( 0.00%)           8.67 (17.63%)         =
+    -23.86%
+> Lat 99.0th-worker-32      10.67 (14.32%)          12.67 ( 4.56%)         =
+    -18.75%
+> Lat 99.9th-worker-32      14.67 ( 3.94%)          19.00 (13.93%)         =
+    -29.49%
+>=20
+> Lat 50.0th-worker-64       5.33 (10.83%)           6.67 ( 8.66%)         =
+    -25.14%
+> Lat 90.0th-worker-64      10.00 (17.32%)          14.33 ( 4.03%)         =
+    -43.30%
+> Lat 99.0th-worker-64      14.00 ( 7.14%)          16.67 ( 3.46%)         =
+    -19.07%
+> Lat 99.9th-worker-64      55.00 (56.69%)          47.00 (61.92%)         =
+     14.55%
+>=20
+> Lat 50.0th-worker-128      8.00 ( 0.00%)           8.67 (13.32%)         =
+     -8.38%
+> Lat 90.0th-worker-128     13.33 ( 4.33%)          14.33 ( 8.06%)         =
+     -7.50%
+> Lat 99.0th-worker-128     16.00 ( 0.00%)          20.00 ( 8.66%)         =
+    -25.00%
+> Lat 99.9th-worker-128   2258.33 (83.80%)        2974.67 (21.82%)         =
+    -31.72%
+>=20
+> Lat 50.0th-worker-256     47.67 ( 2.42%)          45.33 ( 3.37%)         =
+      4.91%
+> Lat 90.0th-worker-256   3470.67 ( 1.88%)        3558.67 ( 0.47%)         =
+     -2.54%
+> Lat 99.0th-worker-256   9040.00 ( 2.76%)        9050.67 ( 0.41%)         =
+     -0.12%
+> Lat 99.9th-worker-256  13824.00 (20.07%)       13104.00 ( 6.84%)         =
+      5.21%
+>=20
+> The above data shows mostly regression both in the lesser and
+> higher load cases.
+>=20
+>=20
+> Hackbench pipe:
+>=20
+> Pairs   Baseline Avg (s) (Std%)     Patched Avg (s) (Std%)      % Change
+> 2       2.987 (1.19%)               2.414 (17.99%)              24.06%
+> 4       7.702 (12.53%)              7.228 (18.37%)               6.16%
+> 8       14.141 (1.32%)              13.109 (1.46%)               7.29%
+> 15      27.571 (6.53%)              29.460 (8.71%)              -6.84%
+> 30      65.118 (4.49%)              61.352 (4.00%)               5.78%
+> 45      105.086 (9.75%)             97.970 (4.26%)               6.77%
+> 60      149.221 (6.91%)             154.176 (4.17%)             -3.32%
+> 75      199.278 (1.21%)             198.680 (1.37%)              0.30%
+>=20
+> A lot of run to run variation is seen in hackbench runs. So hard to tell
+> on the performance but looks better than schbench.
+>=20
+> In Power 10 and Power 11, The LLC size is relatively smaller (4 CPUs)
+> when compared to platforms like sapphire rapids and Milan. Didn't go
+> through this series yet. Will go through and try to understand why
+> schbench is not happy on Power systems.
 
-Since the tag allocator already needs to handle "no tag available", it should also
-handle the "tagging" not enabled scenario.  That way this can simply be:
+My guess is having 8 threads per core, LLC aggregation may have
+been too aggressive in consolidating tasks on fewer cores and may have left=
+ some
+cpu cycles unused. Doing experiments by running one thread per core on Powe=
+r11
+may give us some insights if this conjecture is true.
 
-	vmx->nested.vpid02 = kvm_tlb_tags_alloc(&vmx_vpids);
+>=20
+> Meanwhile, Wanted to know your thoughts on how does smaller LLC
+> size get impacted with this patch?
+>=20
 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 69c20a68a3f01..182f18ebc62f3 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -13992,6 +13992,64 @@ int kvm_sev_es_string_io(struct kvm_vcpu *vcpu, unsigned int size,
->  }
->  EXPORT_SYMBOL_GPL(kvm_sev_es_string_io);
->  
-> +int kvm_tlb_tags_init(struct kvm_tlb_tags *tlb_tags, unsigned int min,
-> +		      unsigned int max)
+This patch series is currently tuned for systems with single threaded core,
+and having many cores and large cache per LLC. =C2=A0
 
-I'd much prefer we don't create a "kvm_tlb_tags" namespace, and insteaad go with:
+With only 4 cores and 32 threads per LLC as in Power 11, we run out of core=
+s quickly
+and have more cache contention between the tasks consolidated.
+We may have to set aggregation threshold (sysctl_llc_aggr_cap) less
+than 50% utilization (default), so we consolidate less aggressively
+and spread the tasks much sooner.=20
 
-  kvm_init_tlb_tags()
-  kvm_alloc_tlb_tag()
-  kvm_free_tlb_tag()
 
-Because kvm_tlb_tags_alloc() in particular reads like it allocates *multiple*
-tags.
-
-I also think it's probably worth a typedef for the tag, mostly to help with
-understanding what's being pased around, e.g.
-
-typedef unsigned int kvm_tlb_tag_t;
-
-void kvm_init_tlb_tags(kvm_tlb_tag_t min, kvm_tlb_tag_t max);
-kvm_tlb_tag_t kvm_alloc_tlb_tag(void);
-void kvm_free_tlb_tag(kvm_tlb_tag_t tag);
-
-> +{
-> +	/*
-> +	 * 0 is assumed to be the host's TLB tag and is returned on failed
-
-Not assumed, *is*.
-
-> +	 * allocations.
-> +	 */
-> +	if (WARN_ON_ONCE(min == 0))
-> +		return -1;
-> +
-> +	/*
-> +	 * Allocate enough bits to index the bitmap directly by the tag,
-> +	 * potentially wasting a bit of memory.
-> +	 */
-> +	tlb_tags->bitmap = bitmap_zalloc(max + 1, GFP_KERNEL);
-
-Rather than blindly allocate SVM's theoretical max of 4 *billion* tags, I think
-we should statically reserve space for 65k tags, i.e. for the max possible VMX
-VPID.
-
-As mentioned in a different reply, current AMD CPUs support 32k ASIDs, so in
-practice it's not even a meaningful limit.  And I strongly suspect that pushing
-past ~4k active vCPUs, let alone 32k vCPUs, will run into other bottlenecks long
-before the number of ASIDs becomes problematic.
-
-That way KVM doesn't need to bail on failure, or as is done for VMX, silently
-disable VPID usage.
-
-Untested, but this is what I'm thinking:
-
----
- arch/x86/kvm/mmu.h        |  6 ++++
- arch/x86/kvm/mmu/mmu.c    | 61 +++++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/vmx/nested.c |  4 +--
- arch/x86/kvm/vmx/vmx.c    | 38 +++++-------------------
- arch/x86/kvm/vmx/vmx.h    |  2 --
- 5 files changed, 76 insertions(+), 35 deletions(-)
-
-diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-index b4b6860ab971..9e7343722530 100644
---- a/arch/x86/kvm/mmu.h
-+++ b/arch/x86/kvm/mmu.h
-@@ -78,6 +78,12 @@ static inline gfn_t kvm_mmu_max_gfn(void)
- 
- u8 kvm_mmu_get_max_tdp_level(void);
- 
-+typedef unsigned int kvm_tlb_tag_t;
-+
-+void kvm_init_tlb_tags(kvm_tlb_tag_t min, kvm_tlb_tag_t max);
-+kvm_tlb_tag_t kvm_alloc_tlb_tag(void);
-+void kvm_free_tlb_tag(kvm_tlb_tag_t tag);
-+
- void kvm_mmu_set_mmio_spte_mask(u64 mmio_value, u64 mmio_mask, u64 access_mask);
- void kvm_mmu_set_mmio_spte_value(struct kvm *kvm, u64 mmio_value);
- void kvm_mmu_set_me_spte_mask(u64 me_value, u64 me_mask);
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 4e06e2e89a8f..e58d998ed10a 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -121,6 +121,63 @@ static int max_tdp_level __read_mostly;
- 
- #include <trace/events/kvm.h>
- 
-+#define KVM_MAX_TLB_TAG			0xffff
-+
-+struct kvm_tlb_tags {
-+	spinlock_t	lock;
-+	DECLARE_BITMAP(used, KVM_MAX_TLB_TAG + 1);
-+	kvm_tlb_tag_t	min;
-+	kvm_tlb_tag_t	max;
-+};
-+
-+struct kvm_tlb_tags kvm_tlb_tags;
-+
-+void kvm_init_tlb_tags(kvm_tlb_tag_t min, kvm_tlb_tag_t max)
-+{
-+	/*
-+	 * 0 is the host's TLB tag for both VMX's VPID and SVM's ASID, and is
-+	 * returned on failed allocations, e.g. if there are no more tags left.
-+	 */
-+	if (WARN_ON_ONCE(!min || max < min))
-+		return;
-+
-+	kvm_tlb_tags.min = min;
-+	kvm_tlb_tags.max = min(max, KVM_MAX_TLB_TAG);
-+}
-+EXPORT_SYMBOL_GPL(kvm_init_tlb_tags);
-+
-+kvm_tlb_tag_t kvm_alloc_tlb_tag(void)
-+{
-+	struct kvm_tlb_tags *tags = &kvm_tlb_tags;
-+	kvm_tlb_tag_t tag;
-+
-+	if (!kvm_tlb_tags.min)
-+		return 0;
-+
-+	guard(spinlock)(&kvm_tlb_tags.lock);
-+
-+	tag = find_next_zero_bit(tags->used, tags->max + 1, tags->min);
-+	if (tag > tags->max)
-+		return 0;
-+
-+	__set_bit(tag, tags->used);
-+	return tag;
-+}
-+EXPORT_SYMBOL_GPL(kvm_alloc_tlb_tag);
-+
-+void kvm_free_tlb_tag(kvm_tlb_tag_t tag)
-+{
-+	struct kvm_tlb_tags *tags = &kvm_tlb_tags;
-+
-+	if (!tag || WARN_ON_ONCE(tag < tags->min || tag > tags->max))
-+		return;
-+
-+	guard(spinlock)(&tags->lock);
-+
-+	__clear_bit(tag, tags->used);
-+}
-+EXPORT_SYMBOL_GPL(kvm_free_tlb_tag);
-+
- /* make pte_list_desc fit well in cache lines */
- #define PTE_LIST_EXT 14
- 
-@@ -7426,6 +7483,10 @@ int kvm_mmu_vendor_module_init(void)
- 
- 	kvm_mmu_reset_all_pte_masks();
- 
-+	kvm_tlb_tags.min = 0;
-+	kvm_tlb_tags.max = 0;
-+	bitmap_zero(kvm_tlb_tags.used, KVM_MAX_TLB_TAG + 1);
-+
- 	pte_list_desc_cache = KMEM_CACHE(pte_list_desc, SLAB_ACCOUNT);
- 	if (!pte_list_desc_cache)
- 		goto out;
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 7211c71d4241..7f02dbe196e3 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -344,7 +344,7 @@ static void free_nested(struct kvm_vcpu *vcpu)
- 	vmx->nested.vmxon = false;
- 	vmx->nested.smm.vmxon = false;
- 	vmx->nested.vmxon_ptr = INVALID_GPA;
--	free_vpid(vmx->nested.vpid02);
-+	kvm_tlb_tags_free(&vmx_vpids, vmx->nested.vpid02);
- 	vmx->nested.posted_intr_nv = -1;
- 	vmx->nested.current_vmptr = INVALID_GPA;
- 	if (enable_shadow_vmcs) {
-@@ -5333,7 +5333,7 @@ static int enter_vmx_operation(struct kvm_vcpu *vcpu)
- 	hrtimer_setup(&vmx->nested.preemption_timer, vmx_preemption_timer_fn, CLOCK_MONOTONIC,
- 		      HRTIMER_MODE_ABS_PINNED);
- 
--	vmx->nested.vpid02 = allocate_vpid();
-+	vmx->nested.vpid02 = kvm_alloc_tlb_tag();
- 
- 	vmx->nested.vmcs02_initialized = false;
- 	vmx->nested.vmxon = true;
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 4953846cb30d..4f3d78e71461 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -501,8 +501,7 @@ DEFINE_PER_CPU(struct vmcs *, current_vmcs);
-  */
- static DEFINE_PER_CPU(struct list_head, loaded_vmcss_on_cpu);
- 
--static DECLARE_BITMAP(vmx_vpid_bitmap, VMX_NR_VPIDS);
--static DEFINE_SPINLOCK(vmx_vpid_lock);
-+struct kvm_tlb_tags vmx_vpids;
- 
- struct vmcs_config vmcs_config __ro_after_init;
- struct vmx_capability vmx_capability __ro_after_init;
-@@ -3970,31 +3969,6 @@ static void seg_setup(int seg)
- 	vmcs_write32(sf->ar_bytes, ar);
- }
- 
--int allocate_vpid(void)
--{
--	int vpid;
--
--	if (!enable_vpid)
--		return 0;
--	spin_lock(&vmx_vpid_lock);
--	vpid = find_first_zero_bit(vmx_vpid_bitmap, VMX_NR_VPIDS);
--	if (vpid < VMX_NR_VPIDS)
--		__set_bit(vpid, vmx_vpid_bitmap);
--	else
--		vpid = 0;
--	spin_unlock(&vmx_vpid_lock);
--	return vpid;
--}
--
--void free_vpid(int vpid)
--{
--	if (!enable_vpid || vpid == 0)
--		return;
--	spin_lock(&vmx_vpid_lock);
--	__clear_bit(vpid, vmx_vpid_bitmap);
--	spin_unlock(&vmx_vpid_lock);
--}
--
- static void vmx_msr_bitmap_l01_changed(struct vcpu_vmx *vmx)
- {
- 	/*
-@@ -7480,7 +7454,7 @@ void vmx_vcpu_free(struct kvm_vcpu *vcpu)
- 
- 	if (enable_pml)
- 		vmx_destroy_pml_buffer(vmx);
--	free_vpid(vmx->vpid);
-+	kvm_tlb_tags_free(&vmx_vpids, vmx->vpid);
- 	nested_vmx_free_vcpu(vcpu);
- 	free_loaded_vmcs(vmx->loaded_vmcs);
- 	free_page((unsigned long)vmx->ve_info);
-@@ -7499,7 +7473,7 @@ int vmx_vcpu_create(struct kvm_vcpu *vcpu)
- 
- 	err = -ENOMEM;
- 
--	vmx->vpid = allocate_vpid();
-+	vmx->vpid = kvm_alloc_tlb_tag();
- 
- 	/*
- 	 * If PML is turned on, failure on enabling PML just results in failure
-@@ -7602,7 +7576,7 @@ int vmx_vcpu_create(struct kvm_vcpu *vcpu)
- free_pml:
- 	vmx_destroy_pml_buffer(vmx);
- free_vpid:
--	free_vpid(vmx->vpid);
-+	kvm_tlb_tags_free(&vmx_vpids, vmx->vpid);
- 	return err;
- }
- 
-@@ -8522,7 +8496,9 @@ __init int vmx_hardware_setup(void)
- 	kvm_caps.has_bus_lock_exit = cpu_has_vmx_bus_lock_detection();
- 	kvm_caps.has_notify_vmexit = cpu_has_notify_vmexit();
- 
--	set_bit(0, vmx_vpid_bitmap); /* 0 is reserved for host */
-+	/* VPID 0 is reserved for host, so min=1  */
-+	if (enable_vpid)
-+		kvm_init_tlb_tags(1, VMX_NR_VPIDS - 1);
- 
- 	if (enable_ept)
- 		kvm_mmu_set_ept_masks(enable_ept_ad_bits,
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index b5758c33c60f..5feec05de9b4 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -355,8 +355,6 @@ static __always_inline u32 vmx_get_intr_info(struct kvm_vcpu *vcpu)
- }
- 
- void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu);
--int allocate_vpid(void);
--void free_vpid(int vpid);
- void vmx_set_constant_host_state(struct vcpu_vmx *vmx);
- void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu);
- void vmx_set_host_fs_gs(struct vmcs_host_state *host, u16 fs_sel, u16 gs_sel,
-
-base-commit: ecff148f29dade8416abee4d492d2a7a6d7cd610
---
+Tim
