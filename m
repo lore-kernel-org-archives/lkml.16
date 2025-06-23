@@ -1,64 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1FF2367CF;
-	Mon, 23 Jun 2025 09:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBBB3233722;
+	Mon, 23 Jun 2025 09:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750670703; cv=none; b=cOE0tWsKBlJS7/FUZwgLPNET36f+OGIrTkrEWKuzE/A3y8scFEs31R2tuD6U10y5a4njmAaE8bjxT3S+8j/l4pjPKne/SrBzH4z9l+8djlvLQly6xydtYKv2h+Ty8aiHAh0lnin+NM8qlBgt7xaMNL7QjQ/iWM1tcx0P9v8R+C8=
+	t=1750670721; cv=none; b=qU3e9bD02K+oe7JUEzWxDixCHUnsj/XUuP/jU0fq42Ho1VTvM0Ditf1HIxgnTDV29+P72tTWNzT+6Wqq7ukmThjDmK/jRcT0nrQWVSOWm2jBUZNJgC6c7xE7WN189DGq7SjzY4OKepq5H+O5+KybpU8e3YWshl6OIU1/dGeUBoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750670703; c=relaxed/simple;
-	bh=Ggee8f6F0frfCKXRsvTw3cnGg40txmMCsgO5DeKU+pQ=;
+	s=arc-20240116; t=1750670721; c=relaxed/simple;
+	bh=L8B2deKK+r2XqnIujSu5bNPd55wQpCODVj8yE59TsEQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TrqqVlD77ySlSHRDoUNVS0Odxa9b4cBEg4Bs4PeV+NyDIwyKjURJr9o1ecOUkZbIAUswbg9C+xQDZ6FGooglp5GMVXKUANZ2xanKIwcawxwBghB0nfCcBOfHxJ3ElfcNEfu9EozqjXzkOC7PvHoensEaWstOitUwMSrZnUWzs28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yby7p2wu; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=oDu3D5IlStz8o4gqq0lbwAk6azJKsK/UH0fymppzwUV4jPXKiK5fgtjKvKtYfMIEs/SvQzjl+6rqkkUdIxaQm8c18YzKNTWR2x5WRzF4N1g4AMWlKzrK3qzuEdI3GLNSRUrmrfpM3fHPgYRox+bren7bxX3BzMqaM9lHPywANCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gtt2cQWL; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yby7p2wu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750670701; x=1782206701;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ggee8f6F0frfCKXRsvTw3cnGg40txmMCsgO5DeKU+pQ=;
-  b=Yby7p2wuo9JWD5g/BkK7SBLkG4pjaIlS8qb0VxcyoXSQZy6OFx43JXQr
-   z4oI1NBjas5JsPT/+fiZqNmQHosb7fZ4v8C41wWQuZe1X/nHT0Cs0+4u7
-   wGJjlXrR87t3H7jTzHfTDNuXSf+qauhnxTV5QFRngRDCcYrMnET+6SKen
-   JhLYoI82SyxRdVQcXf/y/Lt2OHIsEw4wqdUIth1N6/T4vbVFegQvOfrzo
-   gWZLVr2rik59jE0x3PsDgBuxcOZ4uNqqprQPCbw3G2nyp4MfvF1P8oPAb
-   WVNFNw23TEVd9QW0oRyG+i6DmNJI/ydBAqd/+DsFSoa8vP8/w6ABBJOkC
-   w==;
-X-CSE-ConnectionGUID: kr88jhILTL6ddz5iYpPfQQ==
-X-CSE-MsgGUID: DksU0uVVSbqgjngYo3Y/fg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="64301350"
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="64301350"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 02:25:00 -0700
-X-CSE-ConnectionGUID: /8wK24XaQBWNJz5k8eORqg==
-X-CSE-MsgGUID: 7ySY7qyzRBS23f3jwIsJ6A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="152065477"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 02:24:58 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uTdQ5-000000097Zo-3rAz;
-	Mon, 23 Jun 2025 12:24:53 +0300
-Date: Mon, 23 Jun 2025 12:24:53 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
-	corbet@lwn.net, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	eraretuya@gmail.com
-Subject: Re: [PATCH v10 1/7] iio: accel: adxl345: simplify interrupt mapping
-Message-ID: <aFkdZVD4j31QZ0eD@smile.fi.intel.com>
-References: <20250622155010.164451-1-l.rubusch@gmail.com>
- <20250622155010.164451-2-l.rubusch@gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gtt2cQWL"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55MKkf4v005257;
+	Mon, 23 Jun 2025 09:25:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=kUZSBs68C3cRDU3YZNvVuoNImAjbZL
+	hX1gVd6nuoMxo=; b=gtt2cQWLBwyuAkrnkv10RfTjnVsWlU+PyJZM2tsZ8/sQBi
+	oQqa9G57VDkfMDVg+BP+CjX7HSnYaP/vewulagt3ZLGKAbfk/lUEw3E2VrfTsPdE
+	t98Sg8tLC25u44+kwOoM25ryvWrqbmwvW2vaCoIJayx5MxkC2OififZxcCQIlFKn
+	6z+BZPgnemuBn0FJbIJPnXvhBlZZFIMAvHsS32VBjvViLvEzlP5xndPwNrKKr7Ko
+	QJ+qJs4PSDUfUZkDHj+999FVuR+vrO7+TqhWjYdUfXk2PvcVhlzTztcunTPgkcNk
+	cQknQrrkOZxU5uVMKK97+wmsfOTYydh95oLJ4xzA==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dk63gje9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 23 Jun 2025 09:25:17 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55N8tUEu002908;
+	Mon, 23 Jun 2025 09:25:17 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e8jkwcvg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 23 Jun 2025 09:25:16 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55N9PD6R20972004
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 23 Jun 2025 09:25:13 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 04ECB20043;
+	Mon, 23 Jun 2025 09:25:13 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 85F2720040;
+	Mon, 23 Jun 2025 09:25:12 +0000 (GMT)
+Received: from osiris (unknown [9.111.67.237])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 23 Jun 2025 09:25:12 +0000 (GMT)
+Date: Mon, 23 Jun 2025 11:25:10 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/boot: Use -D__DISABLE_EXPORTS
+Message-ID: <20250623092510.11264A74-hca@linux.ibm.com>
+References: <20250620154649.116068-1-petr.pavlu@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,29 +71,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250622155010.164451-2-l.rubusch@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20250620154649.116068-1-petr.pavlu@suse.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA1NCBTYWx0ZWRfX0hCwXYP/xnfb VRhqqjhBGD7apAKH/x6YHM/SRZ3bIbffn61DQp+a+0jx0bwz7nC9ZDjDbjg9hov06nHFUHa/WmV f8uP2BkkYxbeAI4jN13jkg11M4yLKOOrrAcWKAp9SGXGTrx9TFNx2NfM0EpE0P+5nrPgp/Ld35+
+ uWP6eHiZVPSC9jWvEHfkjfLaAQWjOnFohHE7PDbgat4kccI4Z2vdv/pEBWL0MSqgANXMKcWip7I 6baEJ3yWTEzC5ZqPgSUWicG5SMcVwfb5yd+cynxy+SNpq3wQUOQE8kny8/vYfKlwY5By7oqkkla vIL3ck6oJbBKotPfQQIth/AO9NFFBlIiZHAbH6Dn8jMlBLqEwSjJEzUfDkq7ZqFpQG+uH+qBr3O
+ oA3Ra0kR91dlrMEk0MN5pg989SF2ATyEW0tiWaQ/+4SmH8zlHZgZ1pTTi3QA5zvfnlG8vjiy
+X-Proofpoint-ORIG-GUID: 1U_k5faDoIYcw9BSwDhvnmXoNZYQR1Cn
+X-Proofpoint-GUID: 1U_k5faDoIYcw9BSwDhvnmXoNZYQR1Cn
+X-Authority-Analysis: v=2.4 cv=BfvY0qt2 c=1 sm=1 tr=0 ts=68591d7d cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=iox4zFpeAAAA:8 a=VnNF1IyMAAAA:8 a=Qwefet294171jl4ETmQA:9 a=CjuIK1q_8ugA:10
+ a=WzC6qhA0u3u7Ye7llzcV:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-23_03,2025-06-23_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1011 suspectscore=0 adultscore=0 spamscore=0
+ impostorscore=0 mlxlogscore=655 malwarescore=0 phishscore=0 bulkscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506230054
 
-On Sun, Jun 22, 2025 at 03:50:04PM +0000, Lothar Rubusch wrote:
-> Refactor the sensor interrupt mapping by utilizing regmap_assign_bits(),
-> which accepts a boolean value directly. Introduce a helper function to
-> streamline the identification of the configured interrupt line pin. Also,
-> use identifiers from units.h to represent the full 8-bit register when
-> setting bits.
+On Fri, Jun 20, 2025 at 05:45:49PM +0200, Petr Pavlu wrote:
+> Files in the arch/s390/boot directory reuse logic from the rest of the
+> kernel by including certain C and assembly files from the kernel and lib
+> directories. Some of these included files contain EXPORT_SYMBOL directives.
+> For instance, arch/s390/boot/cmdline.c includes lib/cmdline.c, which
+> exports the get_option() function.
 > 
-> This is a purely refactoring change and does not affect functionality.
+> This inclusion triggers genksyms processing for the files in
+> arch/s390/boot, which is unnecessary and slows down the build.
+> Additionally, when KBUILD_SYMTYPES=1 is set, the generated symtypes data
+> contain exported symbols that are duplicated with the main kernel. This
+> duplication can confuse external kABI tools that process the symtypes data.
+> 
+> Address this issue by compiling the files in arch/s390/boot with
+> -D__DISABLE_EXPORTS.
+> 
+> Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+> ---
+>  arch/s390/boot/Makefile | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-> +static int _get_int_line(struct device *dev, int *irq)
-
-Oh, I should have been clear, I meant the suffix of the name, one still needs
-a namespace for this: adxl345_get_int_line().
-
-With that fixed,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Reviewed-by: Heiko Carstens <hca@linux.ibm.com>
