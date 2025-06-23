@@ -1,550 +1,114 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB2C24DD0C;
-	Mon, 23 Jun 2025 12:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF1126B080
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:02:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750680134; cv=none; b=mfdN9oeCk9YvBsWl26Qo6QNv1rQwfI5vPNdak5WTb3NcimRRTbynGhnbHsJymxDKTLkFhy1SEhc7vCN7fqUaxpSdwPTs+TerNIHEENinVWms2ZkvTK/+JRdQRWS7wk6Eb5UtPNy4E/v1tsiC1ozLK1fA9g0FJrvgCsxF0zqtwDs=
+	t=1750680140; cv=none; b=S/y3sqLkr2E7QB5ql0MZZOkjrMezMeojoaX0DzUQSzLJN9kCZydicvzNXr+z1cTtu5N6Q1/Kgph3TD4iE21O/z/wSverY2EyDmQGlzM7z8cUnW3XjT98YcxDQbHirvR82ASolhMG00NjpeOa4+KRybeeJk4qQmV2ymDmQOctT+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750680134; c=relaxed/simple;
-	bh=LSyHrlFGyo7c0WTq8DAXk9KB6kA39KmJiCDm729+Ri4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XqOSmUNCRJR9YNl+/XoebsG1dlGuo2B9YFVWRoePws9cV72aXGIMlUJF1Idxuuq4UNuwc880O6+U8lDnKJIGlaUKMkS97emEQ+ioNoZz+PsMa2SMY2ykpBi+KnrQ6biP8R6rn6ER8ShHpl/GthCtvh8CxZz+Nn5D35ek3zl0YOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=piW7G54z; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1750680140; c=relaxed/simple;
+	bh=Y5hDoV8L/G+XG/Mk2UP5nwzN7exrsEd+MJZCvR+m6uA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=uNSnELXTioMlvUzJUcYO6yfXgs0ifqkCaj+LVyv/z7lTWF13/jZ8/Wk41jKoen7WHb4GSqLMn5DOykc3OtWCC2MGzDkHD8n5xkK6ZSnI2HubPjz6T0kZxJwsu25vYtkG2/qJSfksOJ4F62MevELbqVznfjRxmd6YgjwWyChuJi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sv0HvcbA; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="piW7G54z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750680130;
-	bh=LSyHrlFGyo7c0WTq8DAXk9KB6kA39KmJiCDm729+Ri4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=piW7G54zbaxx/aYF5CAumpGElXiuj+gwJakyfyi3GhOHkyTxOiutpG1aFMdnTCmG5
-	 xBtlTVw6cmaFODrYORX34W7RtUJ3ktzaC8RKeFb+VaDygslMSuPXUlMKLF8FU+Amnj
-	 6A0mfnVvr8/qeV02h6VIUfI2dqYKIGQxhQwciQqFWaD6Q7APP+tYJlp86ltjP6zE8s
-	 duD1CW03+S3nXFd19EG0OUS3oDCMH/qNUg+w38NuIrjsYBu0i+WyeXY3p498TL06nc
-	 XGmWDhmCSB7Cvfx5lWMg6Uwj8QzJpl0IDJocs7nj3VZw6XmZLgBJY5+7DETMXvZ2pL
-	 vlU/LJP5ZmBrA==
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id D3BD417E1560;
-	Mon, 23 Jun 2025 14:02:09 +0200 (CEST)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: linux-mediatek@lists.infradead.org
-Cc: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	ulf.hansson@linaro.org,
-	y.oudjana@protonmail.com,
-	fshao@chromium.org,
-	wenst@chromium.org,
-	lihongbo22@huawei.com,
-	mandyjh.liu@mediatek.com,
-	mbrugger@suse.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pm@vger.kernel.org,
-	kernel@collabora.com
-Subject: [PATCH v1 12/13] pmdomain: mediatek: Add support for MT8196 SCPSYS power domains
-Date: Mon, 23 Jun 2025 14:01:53 +0200
-Message-ID: <20250623120154.109429-13-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250623120154.109429-1-angelogioacchino.delregno@collabora.com>
-References: <20250623120154.109429-1-angelogioacchino.delregno@collabora.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sv0HvcbA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750680138; x=1782216138;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=Y5hDoV8L/G+XG/Mk2UP5nwzN7exrsEd+MJZCvR+m6uA=;
+  b=Sv0HvcbAfS5jN+j7EWt8FX3n878gAmAyChOdGitu/7FVAEaXZIYALz5z
+   SIh2jLXC7w8GcjTj2qs9DSh2ITI36xNESLR+YtC+UjTrbvxw/6rmx0s8t
+   TJS/b52p3xrfptpFmRcMuPgVVFXojkniUe+0o5MmZUe1konX7hDrJTd2b
+   aDKdzzuHSeaBXdpJUY43n35Y2FBOO4OSJt3NzzoLfseioR7RlIg7UuwMq
+   HJx98wTSmoChpFdRUL0bnj5ICq0ClxfNV7OWAYYnKaCfI/VJQuy2SgSiJ
+   fKoOFBLi79CttNXDCWxPYex3xglkXow58AtPY4ViyZw4R05JKOWgJuYyW
+   Q==;
+X-CSE-ConnectionGUID: jd8XUFCkTQm6+BNYsyhuIw==
+X-CSE-MsgGUID: P2uLmSvtRoOXZKG+oHwWmw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="63575049"
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="63575049"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 05:02:18 -0700
+X-CSE-ConnectionGUID: x9EzZMHTRbWoIMVvnxW2wA==
+X-CSE-MsgGUID: I4ScjVvrRLGRQ8lgvOs7Gw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="151732162"
+Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO [10.245.244.111]) ([10.245.244.111])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 05:02:13 -0700
+Message-ID: <cfbcb660-d102-4cca-afb4-4e88a4ef2d32@linux.intel.com>
+Date: Mon, 23 Jun 2025 14:02:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 00/10] drm/i915: Add drm_panic support
+To: Jocelyn Falempe <jfalempe@redhat.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>,
+ =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>,
+ Matthew Auld <matthew.auld@intel.com>,
+ Matthew Brost <matthew.brost@intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250618094011.238154-1-jfalempe@redhat.com>
+ <c28aad52-7977-4763-9690-9aed1910c834@linux.intel.com>
+ <4d81cf64-7bf1-4a7d-8682-fc817d74c373@redhat.com>
+Content-Language: en-US
+From: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+In-Reply-To: <4d81cf64-7bf1-4a7d-8682-fc817d74c373@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add a new SPM bus protection block and add support for both the
-direct control and HW Voter control SCPSYS power domains found
-in the MT8196 and MT6991 SoCs.
+Hey,
 
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- drivers/pmdomain/mediatek/mt8196-pm-domains.h | 386 ++++++++++++++++++
- drivers/pmdomain/mediatek/mtk-pm-domains.c    |  18 +-
- drivers/pmdomain/mediatek/mtk-pm-domains.h    |   3 +
- 3 files changed, 404 insertions(+), 3 deletions(-)
- create mode 100644 drivers/pmdomain/mediatek/mt8196-pm-domains.h
+On 2025-06-23 12:10, Jocelyn Falempe wrote:
+> On 23/06/2025 09:40, Maarten Lankhorst wrote:
+>> Hey,
+>>
+>> Thanks for the series. I didn't see you on irc so I wanted to ask if you are planning to send a v11 with
+>> the changes from void * to struct intel_panic_data and adding the VRAM support?
+> 
+> Yes, I'm preparing a v11, and I'm considering to do something like this, to allocate the panic data with the struct intel_framebuffer:
+> 
+> struct xe_framebuffer {
+>     struct intel_framebuffer base;
+>     struct xe_panic_data panic;
+> };
+> 
+> struct intel_framebuffer *intel_bo_alloc_framebuffer(void)
+> {
+>     struct xe_framebuffer *xe_fb;
+> 
+>     xe_fb = kmalloc(sizeof(struct xe_framebuffer), GFP_KERNEL);
+>     return &xe_fb->base;
+> }
+> 
+> (And the same for i915).
+> That should allow you to add battlemage support.
+> 
+>>
+>>
+>> Other than that, I think the series looks good and I'll be able to test it on my battlemage.
+>>
 
-diff --git a/drivers/pmdomain/mediatek/mt8196-pm-domains.h b/drivers/pmdomain/mediatek/mt8196-pm-domains.h
-new file mode 100644
-index 000000000000..ce8d594c46f8
---- /dev/null
-+++ b/drivers/pmdomain/mediatek/mt8196-pm-domains.h
-@@ -0,0 +1,386 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2025 Collabora Ltd
-+ *                    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-+ */
-+
-+#ifndef __SOC_MEDIATEK_MT8196_PM_DOMAINS_H
-+#define __SOC_MEDIATEK_MT8196_PM_DOMAINS_H
-+
-+#include "mtk-pm-domains.h"
-+#include <dt-bindings/power/mediatek,mt8196-power.h>
-+
-+/*
-+ * MT8196 and MT6991 power domain support
-+ */
-+
-+/* INFRA TOP_AXI registers */
-+#define MT8196_TOP_AXI_PROT_EN_SET		0x4
-+#define MT8196_TOP_AXI_PROT_EN_CLR		0x8
-+#define MT8196_TOP_AXI_PROT_EN_STA		0xc
-+ #define MT8196_TOP_AXI_PROT_EN_SLEEP0_MD	BIT(29)
-+
-+#define MT8196_TOP_AXI_PROT_EN_1_SET		0x24
-+#define MT8196_TOP_AXI_PROT_EN_1_CLR		0x28
-+#define MT8196_TOP_AXI_PROT_EN_1_STA		0x2c
-+ #define MT8196_TOP_AXI_PROT_EN_1_SLEEP1_MD	BIT(0)
-+
-+/* SPM BUS_PROTECT registers */
-+#define MT8196_SPM_BUS_PROTECT_CON_SET		0xdc
-+#define MT8196_SPM_BUS_PROTECT_CON_CLR		0xe0
-+#define MT8196_SPM_BUS_PROTECT_RDY		0x208
-+ #define MT8196_SPM_PROT_EN_BUS_CONN		BIT(1)
-+ #define MT8196_SPM_PROT_EN_BUS_SSUSB_DP_PHY_P0	BIT(6)
-+ #define MT8196_SPM_PROT_EN_BUS_SSUSB_P0	BIT(7)
-+ #define MT8196_SPM_PROT_EN_BUS_SSUSB_P1	BIT(8)
-+ #define MT8196_SPM_PROT_EN_BUS_SSUSB_P23	BIT(9)
-+ #define MT8196_SPM_PROT_EN_BUS_SSUSB_PHY_P2	BIT(10)
-+ #define MT8196_SPM_PROT_EN_BUS_PEXTP_MAC0	BIT(13)
-+ #define MT8196_SPM_PROT_EN_BUS_PEXTP_MAC1	BIT(14)
-+ #define MT8196_SPM_PROT_EN_BUS_PEXTP_MAC2	BIT(15)
-+ #define MT8196_SPM_PROT_EN_BUS_PEXTP_PHY0	BIT(16)
-+ #define MT8196_SPM_PROT_EN_BUS_PEXTP_PHY1	BIT(17)
-+ #define MT8196_SPM_PROT_EN_BUS_PEXTP_PHY2	BIT(18)
-+ #define MT8196_SPM_PROT_EN_BUS_AUDIO		BIT(19)
-+ #define MT8196_SPM_PROT_EN_BUS_ADSP_TOP	BIT(21)
-+ #define MT8196_SPM_PROT_EN_BUS_ADSP_INFRA	BIT(22)
-+ #define MT8196_SPM_PROT_EN_BUS_ADSP_AO		BIT(23)
-+ #define MT8196_SPM_PROT_EN_BUS_MM_PROC		BIT(24)
-+
-+/* PWR_CON registers */
-+#define MT8196_PWR_ACK				BIT(30)
-+#define MT8196_PWR_ACK_2ND			BIT(31)
-+
-+static enum scpsys_bus_prot_block scpsys_bus_prot_blocks_mt8196[] = {
-+	BUS_PROT_BLOCK_INFRA, BUS_PROT_BLOCK_SPM
-+};
-+
-+static const struct scpsys_domain_data scpsys_domain_data_mt8196[] = {
-+	[MT8196_POWER_DOMAIN_MD] = {
-+		.name = "md",
-+		.sta_mask = MT8196_PWR_ACK,
-+		.sta2nd_mask = MT8196_PWR_ACK_2ND,
-+		.ctl_offs = 0xe00,
-+		.pwr_sta_offs = 0xe00,
-+		.pwr_sta2nd_offs = 0xe00,
-+		.ext_buck_iso_offs = 0xefc,
-+		.ext_buck_iso_mask = GENMASK(1, 0),
-+		.bp_cfg = {
-+			BUS_PROT_WR_IGN(INFRA, MT8196_TOP_AXI_PROT_EN_SLEEP0_MD,
-+					MT8196_TOP_AXI_PROT_EN_SET,
-+					MT8196_TOP_AXI_PROT_EN_CLR,
-+					MT8196_TOP_AXI_PROT_EN_STA),
-+			BUS_PROT_WR_IGN(INFRA, MT8196_TOP_AXI_PROT_EN_1_SLEEP1_MD,
-+					MT8196_TOP_AXI_PROT_EN_1_SET,
-+					MT8196_TOP_AXI_PROT_EN_1_CLR,
-+					MT8196_TOP_AXI_PROT_EN_1_STA),
-+		},
-+		.caps = MTK_SCPD_MODEM_PWRSEQ | MTK_SCPD_EXT_BUCK_ISO |
-+			MTK_SCPD_SKIP_RESET_B | MTK_SCPD_KEEP_DEFAULT_OFF,
-+	},
-+	[MT8196_POWER_DOMAIN_CONN] = {
-+		.name = "conn",
-+		.sta_mask = MT8196_PWR_ACK,
-+		.sta2nd_mask = MT8196_PWR_ACK_2ND,
-+		.ctl_offs = 0xe04,
-+		.pwr_sta_offs = 0xe04,
-+		.pwr_sta2nd_offs = 0xe04,
-+		.bp_cfg = {
-+			BUS_PROT_WR_IGN(SPM, MT8196_SPM_PROT_EN_BUS_CONN,
-+					MT8196_SPM_BUS_PROTECT_CON_SET,
-+					MT8196_SPM_BUS_PROTECT_CON_CLR,
-+					MT8196_SPM_BUS_PROTECT_RDY),
-+		},
-+		.caps = MTK_SCPD_KEEP_DEFAULT_OFF,
-+		.rtff_type = SCPSYS_RTFF_TYPE_GENERIC,
-+	},
-+	[MT8196_POWER_DOMAIN_SSUSB_DP_PHY_P0] = {
-+		.name = "ssusb-dp-phy-p0",
-+		.sta_mask = MT8196_PWR_ACK,
-+		.sta2nd_mask = MT8196_PWR_ACK_2ND,
-+		.ctl_offs = 0xe18,
-+		.pwr_sta_offs = 0xe18,
-+		.pwr_sta2nd_offs = 0xe18,
-+		.bp_cfg = {
-+			BUS_PROT_WR_IGN(SPM, MT8196_SPM_PROT_EN_BUS_SSUSB_DP_PHY_P0,
-+					MT8196_SPM_BUS_PROTECT_CON_SET,
-+					MT8196_SPM_BUS_PROTECT_CON_CLR,
-+					MT8196_SPM_BUS_PROTECT_RDY),
-+		},
-+		.caps = MTK_SCPD_ALWAYS_ON,
-+		.rtff_type = SCPSYS_RTFF_TYPE_GENERIC,
-+	},
-+	[MT8196_POWER_DOMAIN_SSUSB_P0] = {
-+		.name = "ssusb-p0",
-+		.sta_mask = MT8196_PWR_ACK,
-+		.sta2nd_mask = MT8196_PWR_ACK_2ND,
-+		.ctl_offs = 0xe1c,
-+		.pwr_sta_offs = 0xe1c,
-+		.pwr_sta2nd_offs = 0xe1c,
-+		.sram_pdn_bits = BIT(8),
-+		.sram_pdn_ack_bits = BIT(12),
-+		.bp_cfg = {
-+			BUS_PROT_WR_IGN(SPM, MT8196_SPM_PROT_EN_BUS_SSUSB_P0,
-+					MT8196_SPM_BUS_PROTECT_CON_SET,
-+					MT8196_SPM_BUS_PROTECT_CON_CLR,
-+					MT8196_SPM_BUS_PROTECT_RDY),
-+		},
-+		.caps = MTK_SCPD_ALWAYS_ON,
-+		.rtff_type = SCPSYS_RTFF_TYPE_GENERIC,
-+	},
-+	[MT8196_POWER_DOMAIN_SSUSB_P1] = {
-+		.name = "ssusb-p1",
-+		.sta_mask = MT8196_PWR_ACK,
-+		.sta2nd_mask = MT8196_PWR_ACK_2ND,
-+		.ctl_offs = 0xe20,
-+		.pwr_sta_offs = 0xe20,
-+		.pwr_sta2nd_offs = 0xe20,
-+		.sram_pdn_bits = BIT(8),
-+		.sram_pdn_ack_bits = BIT(12),
-+		.bp_cfg = {
-+			BUS_PROT_WR_IGN(SPM, MT8196_SPM_PROT_EN_BUS_SSUSB_P1,
-+					MT8196_SPM_BUS_PROTECT_CON_SET,
-+					MT8196_SPM_BUS_PROTECT_CON_CLR,
-+					MT8196_SPM_BUS_PROTECT_RDY),
-+		},
-+		.caps = MTK_SCPD_ALWAYS_ON,
-+		.rtff_type = SCPSYS_RTFF_TYPE_GENERIC,
-+	},
-+	[MT8196_POWER_DOMAIN_SSUSB_P23] = {
-+		.name = "ssusb-p23",
-+		.sta_mask = MT8196_PWR_ACK,
-+		.sta2nd_mask = MT8196_PWR_ACK_2ND,
-+		.ctl_offs = 0xe24,
-+		.pwr_sta_offs = 0xe24,
-+		.pwr_sta2nd_offs = 0xe24,
-+		.bp_cfg = {
-+			BUS_PROT_WR_IGN(SPM, MT8196_SPM_PROT_EN_BUS_SSUSB_P23,
-+					MT8196_SPM_BUS_PROTECT_CON_SET,
-+					MT8196_SPM_BUS_PROTECT_CON_CLR,
-+					MT8196_SPM_BUS_PROTECT_RDY),
-+		},
-+		.caps = MTK_SCPD_KEEP_DEFAULT_OFF,
-+		.rtff_type = SCPSYS_RTFF_TYPE_GENERIC,
-+	},
-+	[MT8196_POWER_DOMAIN_SSUSB_PHY_P2] = {
-+		.name = "ssusb-phy-p2",
-+		.sta_mask = MT8196_PWR_ACK,
-+		.sta2nd_mask = MT8196_PWR_ACK_2ND,
-+		.ctl_offs = 0xe28,
-+		.pwr_sta_offs = 0xe28,
-+		.pwr_sta2nd_offs = 0xe28,
-+		.sram_pdn_bits = BIT(8),
-+		.sram_pdn_ack_bits = BIT(12),
-+		.bp_cfg = {
-+			BUS_PROT_WR_IGN(SPM, MT8196_SPM_PROT_EN_BUS_SSUSB_PHY_P2,
-+					MT8196_SPM_BUS_PROTECT_CON_SET,
-+					MT8196_SPM_BUS_PROTECT_CON_CLR,
-+					MT8196_SPM_BUS_PROTECT_RDY),
-+		},
-+		.caps = MTK_SCPD_KEEP_DEFAULT_OFF,
-+		.rtff_type = SCPSYS_RTFF_TYPE_GENERIC,
-+	},
-+	[MT8196_POWER_DOMAIN_PEXTP_MAC0] = {
-+		.name = "pextp-mac0",
-+		.sta_mask = MT8196_PWR_ACK,
-+		.sta2nd_mask = MT8196_PWR_ACK_2ND,
-+		.ctl_offs = 0xe34,
-+		.pwr_sta_offs = 0xe34,
-+		.pwr_sta2nd_offs = 0xe34,
-+		.sram_pdn_bits = BIT(8),
-+		.sram_pdn_ack_bits = BIT(12),
-+		.bp_cfg = {
-+			BUS_PROT_WR_IGN(SPM, MT8196_SPM_PROT_EN_BUS_PEXTP_MAC0,
-+					MT8196_SPM_BUS_PROTECT_CON_SET,
-+					MT8196_SPM_BUS_PROTECT_CON_CLR,
-+					MT8196_SPM_BUS_PROTECT_RDY),
-+		},
-+		.rtff_type = SCPSYS_RTFF_TYPE_PCIE_PHY,
-+	},
-+	[MT8196_POWER_DOMAIN_PEXTP_MAC1] = {
-+		.name = "pextp-mac1",
-+		.sta_mask = MT8196_PWR_ACK,
-+		.sta2nd_mask = MT8196_PWR_ACK_2ND,
-+		.ctl_offs = 0xe38,
-+		.pwr_sta_offs = 0xe38,
-+		.pwr_sta2nd_offs = 0xe38,
-+		.sram_pdn_bits = BIT(8),
-+		.sram_pdn_ack_bits = BIT(12),
-+		.bp_cfg = {
-+			BUS_PROT_WR_IGN(SPM, MT8196_SPM_PROT_EN_BUS_PEXTP_MAC1,
-+					MT8196_SPM_BUS_PROTECT_CON_SET,
-+					MT8196_SPM_BUS_PROTECT_CON_CLR,
-+					MT8196_SPM_BUS_PROTECT_RDY),
-+		},
-+		.rtff_type = SCPSYS_RTFF_TYPE_PCIE_PHY,
-+	},
-+	[MT8196_POWER_DOMAIN_PEXTP_MAC2] = {
-+		.name = "pextp-mac2",
-+		.sta_mask = MT8196_PWR_ACK,
-+		.sta2nd_mask = MT8196_PWR_ACK_2ND,
-+		.ctl_offs = 0xe3c,
-+		.pwr_sta_offs = 0xe3c,
-+		.pwr_sta2nd_offs = 0xe3c,
-+		.sram_pdn_bits = BIT(8),
-+		.sram_pdn_ack_bits = BIT(12),
-+		.bp_cfg = {
-+			BUS_PROT_WR_IGN(SPM, MT8196_SPM_PROT_EN_BUS_PEXTP_MAC2,
-+					MT8196_SPM_BUS_PROTECT_CON_SET,
-+					MT8196_SPM_BUS_PROTECT_CON_CLR,
-+					MT8196_SPM_BUS_PROTECT_RDY),
-+		},
-+		.rtff_type = SCPSYS_RTFF_TYPE_PCIE_PHY,
-+	},
-+	[MT8196_POWER_DOMAIN_PEXTP_PHY0] = {
-+		.name = "pextp-phy0",
-+		.sta_mask = MT8196_PWR_ACK,
-+		.sta2nd_mask = MT8196_PWR_ACK_2ND,
-+		.ctl_offs = 0xe40,
-+		.pwr_sta_offs = 0xe40,
-+		.pwr_sta2nd_offs = 0xe40,
-+		.bp_cfg = {
-+			BUS_PROT_WR_IGN(SPM, MT8196_SPM_PROT_EN_BUS_PEXTP_PHY0,
-+					MT8196_SPM_BUS_PROTECT_CON_SET,
-+					MT8196_SPM_BUS_PROTECT_CON_CLR,
-+					MT8196_SPM_BUS_PROTECT_RDY),
-+		},
-+		.rtff_type = SCPSYS_RTFF_TYPE_PCIE_PHY,
-+	},
-+	[MT8196_POWER_DOMAIN_PEXTP_PHY1] = {
-+		.name = "pextp-phy1",
-+		.sta_mask = MT8196_PWR_ACK,
-+		.sta2nd_mask = MT8196_PWR_ACK_2ND,
-+		.ctl_offs = 0xe44,
-+		.pwr_sta_offs = 0xe44,
-+		.pwr_sta2nd_offs = 0xe44,
-+		.bp_cfg = {
-+			BUS_PROT_WR_IGN(SPM, MT8196_SPM_PROT_EN_BUS_PEXTP_PHY1,
-+					MT8196_SPM_BUS_PROTECT_CON_SET,
-+					MT8196_SPM_BUS_PROTECT_CON_CLR,
-+					MT8196_SPM_BUS_PROTECT_RDY),
-+		},
-+		.rtff_type = SCPSYS_RTFF_TYPE_PCIE_PHY,
-+	},
-+	[MT8196_POWER_DOMAIN_PEXTP_PHY2] = {
-+		.name = "pextp-phy2",
-+		.sta_mask = MT8196_PWR_ACK,
-+		.sta2nd_mask = MT8196_PWR_ACK_2ND,
-+		.ctl_offs = 0xe48,
-+		.pwr_sta_offs = 0xe48,
-+		.pwr_sta2nd_offs = 0xe48,
-+		.bp_cfg = {
-+			BUS_PROT_WR_IGN(SPM, MT8196_SPM_PROT_EN_BUS_PEXTP_PHY2,
-+					MT8196_SPM_BUS_PROTECT_CON_SET,
-+					MT8196_SPM_BUS_PROTECT_CON_CLR,
-+					MT8196_SPM_BUS_PROTECT_RDY),
-+		},
-+		.rtff_type = SCPSYS_RTFF_TYPE_PCIE_PHY,
-+	},
-+	[MT8196_POWER_DOMAIN_AUDIO] = {
-+		.name = "audio",
-+		.sta_mask = MT8196_PWR_ACK,
-+		.sta2nd_mask = MT8196_PWR_ACK_2ND,
-+		.ctl_offs = 0xe4c,
-+		.pwr_sta_offs = 0xe4c,
-+		.pwr_sta2nd_offs = 0xe4c,
-+		.sram_pdn_bits = BIT(8),
-+		.sram_pdn_ack_bits = BIT(12),
-+		.bp_cfg = {
-+			BUS_PROT_WR_IGN(SPM, MT8196_SPM_PROT_EN_BUS_AUDIO,
-+					MT8196_SPM_BUS_PROTECT_CON_SET,
-+					MT8196_SPM_BUS_PROTECT_CON_CLR,
-+					MT8196_SPM_BUS_PROTECT_RDY),
-+		},
-+		.rtff_type = SCPSYS_RTFF_TYPE_GENERIC,
-+	},
-+	[MT8196_POWER_DOMAIN_ADSP_TOP_DORMANT] = {
-+		.name = "adsp-top-dormant",
-+		.sta_mask = MT8196_PWR_ACK,
-+		.sta2nd_mask = MT8196_PWR_ACK_2ND,
-+		.ctl_offs = 0xe54,
-+		.pwr_sta_offs = 0xe54,
-+		.pwr_sta2nd_offs = 0xe54,
-+		/* Note: This is not managing powerdown (pdn), but sleep instead (slp) */
-+		.sram_pdn_bits = BIT(9),
-+		.sram_pdn_ack_bits = BIT(13),
-+		.bp_cfg = {
-+			BUS_PROT_WR_IGN(SPM, MT8196_SPM_PROT_EN_BUS_ADSP_TOP,
-+					MT8196_SPM_BUS_PROTECT_CON_SET,
-+					MT8196_SPM_BUS_PROTECT_CON_CLR,
-+					MT8196_SPM_BUS_PROTECT_RDY),
-+		},
-+		.caps = MTK_SCPD_SRAM_ISO | MTK_SCPD_SRAM_PDN_INVERTED,
-+	},
-+	[MT8196_POWER_DOMAIN_ADSP_INFRA] = {
-+		.name = "adsp-infra",
-+		.sta_mask = MT8196_PWR_ACK,
-+		.sta2nd_mask = MT8196_PWR_ACK_2ND,
-+		.ctl_offs = 0xe58,
-+		.pwr_sta_offs = 0xe58,
-+		.pwr_sta2nd_offs = 0xe58,
-+		.bp_cfg = {
-+			BUS_PROT_WR_IGN(SPM, MT8196_SPM_PROT_EN_BUS_ADSP_INFRA,
-+					MT8196_SPM_BUS_PROTECT_CON_SET,
-+					MT8196_SPM_BUS_PROTECT_CON_CLR,
-+					MT8196_SPM_BUS_PROTECT_RDY),
-+		},
-+		.caps = MTK_SCPD_ALWAYS_ON,
-+		.rtff_type = SCPSYS_RTFF_TYPE_GENERIC,
-+	},
-+	[MT8196_POWER_DOMAIN_ADSP_AO] = {
-+		.name = "adsp-ao",
-+		.sta_mask = MT8196_PWR_ACK,
-+		.sta2nd_mask = MT8196_PWR_ACK_2ND,
-+		.ctl_offs = 0xe5c,
-+		.pwr_sta_offs = 0xe5c,
-+		.pwr_sta2nd_offs = 0xe5c,
-+		.bp_cfg = {
-+			BUS_PROT_WR_IGN(SPM, MT8196_SPM_PROT_EN_BUS_ADSP_AO,
-+					MT8196_SPM_BUS_PROTECT_CON_SET,
-+					MT8196_SPM_BUS_PROTECT_CON_CLR,
-+					MT8196_SPM_BUS_PROTECT_RDY),
-+		},
-+		.caps = MTK_SCPD_ALWAYS_ON,
-+		.rtff_type = SCPSYS_RTFF_TYPE_GENERIC,
-+	},
-+};
-+
-+static const struct scpsys_hwv_domain_data scpsys_hwv_domain_data_mt8196[] = {
-+	[MT8196_POWER_DOMAIN_MM_PROC_DORMANT] = {
-+		.name = "mm-proc-dormant",
-+		.set = 0x0218,
-+		.clr = 0x021c,
-+		.done = 0x141c,
-+		.en = 0x1410,
-+		.set_sta = 0x146c,
-+		.clr_sta = 0x1470,
-+		.setclr_bit = 0,
-+		.caps = MTK_SCPD_ALWAYS_ON,
-+	},
-+	[MT8196_POWER_DOMAIN_SSR] = {
-+		.name = "ssrsys",
-+		.set = 0x0218,
-+		.clr = 0x021c,
-+		.done = 0x141c,
-+		.en = 0x1410,
-+		.set_sta = 0x146c,
-+		.clr_sta = 0x1470,
-+		.setclr_bit = 1,
-+	},
-+};
-+
-+static const struct scpsys_soc_data mt8196_scpsys_data = {
-+	.domains_data = scpsys_domain_data_mt8196,
-+	.num_domains = ARRAY_SIZE(scpsys_domain_data_mt8196),
-+	.bus_prot_blocks = scpsys_bus_prot_blocks_mt8196,
-+	.num_bus_prot_blocks = ARRAY_SIZE(scpsys_bus_prot_blocks_mt8196),
-+	.type = SCPSYS_MTCMOS_TYPE_DIRECT_CTL,
-+};
-+
-+static const struct scpsys_soc_data mt8196_scpsys_hwv_data = {
-+	.hwv_domains_data = scpsys_hwv_domain_data_mt8196,
-+	.num_hwv_domains = ARRAY_SIZE(scpsys_hwv_domain_data_mt8196),
-+	.type = SCPSYS_MTCMOS_TYPE_HW_VOTER,
-+};
-+
-+#endif /* __SOC_MEDIATEK_MT8196_PM_DOMAINS_H */
-diff --git a/drivers/pmdomain/mediatek/mtk-pm-domains.c b/drivers/pmdomain/mediatek/mtk-pm-domains.c
-index 101ce20d5be4..bff78775baf7 100644
---- a/drivers/pmdomain/mediatek/mtk-pm-domains.c
-+++ b/drivers/pmdomain/mediatek/mtk-pm-domains.c
-@@ -27,6 +27,7 @@
- #include "mt8188-pm-domains.h"
- #include "mt8192-pm-domains.h"
- #include "mt8195-pm-domains.h"
-+#include "mt8196-pm-domains.h"
- #include "mt8365-pm-domains.h"
- 
- #define MTK_POLL_DELAY_US		10
-@@ -81,13 +82,16 @@ struct scpsys {
- static bool scpsys_domain_is_on(struct scpsys_domain *pd)
- {
- 	struct scpsys *scpsys = pd->scpsys;
--	u32 status, status2;
-+	u32 mask = pd->data->sta_mask;
-+	u32 status, status2, mask2;
-+
-+	mask2 = pd->data->sta2nd_mask ? pd->data->sta2nd_mask : mask;
- 
- 	regmap_read(scpsys->base, pd->data->pwr_sta_offs, &status);
--	status &= pd->data->sta_mask;
-+	status &= mask;
- 
- 	regmap_read(scpsys->base, pd->data->pwr_sta2nd_offs, &status2);
--	status2 &= pd->data->sta_mask;
-+	status2 &= mask2;
- 
- 	/* A domain is on when both status bits are set. */
- 	return status && status2;
-@@ -1150,6 +1154,14 @@ static const struct of_device_id scpsys_of_match[] = {
- 		.compatible = "mediatek,mt8195-power-controller",
- 		.data = &mt8195_scpsys_data,
- 	},
-+	{
-+		.compatible = "mediatek,mt8196-power-controller",
-+		.data = &mt8196_scpsys_data,
-+	},
-+	{
-+		.compatible = "mediatek,mt8196-hwv-scp-power-controller",
-+		.data = &mt8196_scpsys_hwv_data,
-+	},
- 	{
- 		.compatible = "mediatek,mt8365-power-controller",
- 		.data = &mt8365_scpsys_data,
-diff --git a/drivers/pmdomain/mediatek/mtk-pm-domains.h b/drivers/pmdomain/mediatek/mtk-pm-domains.h
-index 8adf23d4d0f9..ace05de5795f 100644
---- a/drivers/pmdomain/mediatek/mtk-pm-domains.h
-+++ b/drivers/pmdomain/mediatek/mtk-pm-domains.h
-@@ -62,6 +62,7 @@ enum scpsys_bus_prot_block {
- 	BUS_PROT_BLOCK_INFRA,
- 	BUS_PROT_BLOCK_INFRA_NAO,
- 	BUS_PROT_BLOCK_SMI,
-+	BUS_PROT_BLOCK_SPM,
- 	BUS_PROT_BLOCK_COUNT,
- };
- 
-@@ -143,6 +144,7 @@ enum scpsys_mtcmos_type {
-  * struct scpsys_domain_data - scp domain data for power on/off flow
-  * @name: The name of the power domain.
-  * @sta_mask: The mask for power on/off status bit.
-+ * @sta2nd_mask: The mask for second power on/off status bit.
-  * @ctl_offs: The offset for main power control register.
-  * @sram_pdn_bits: The mask for sram power control bits.
-  * @sram_pdn_ack_bits: The mask for sram power control acked bits.
-@@ -155,6 +157,7 @@ enum scpsys_mtcmos_type {
- struct scpsys_domain_data {
- 	const char *name;
- 	u32 sta_mask;
-+	u32 sta2nd_mask;
- 	int ctl_offs;
- 	u32 sram_pdn_bits;
- 	u32 sram_pdn_ack_bits;
--- 
-2.49.0
+A private member is fine, but if you can get signoff from the i915 people for the xe_fb slpit, I would really like that for other things too. :)
+
+Kind regards,
+~Maarten
 
