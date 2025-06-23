@@ -1,212 +1,95 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3FE239E65
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888D31531C1;
+	Mon, 23 Jun 2025 12:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750679992; cv=none; b=hyGeY2HR53vBA+/2Xm8zwh6zGZ+hYGWEBSWA/J2mSEvk16wUcQ6vQA88D2lJCzWniA0UvID3msPQ4v3fueF+N/+QJOwl4YaHcCTRxfmvqS9G4u3K/82K38Vp/LcnukKM2FHqACFrYjJEdMUXilrt5Xm9lyVPpzbZYEVVsygO7/Y=
+	t=1750680026; cv=none; b=sU5yF0krwV/vA274I8NLduRKTFSsoLdhJOBAVwQ6KIT0SwczLX8aUxjIb/B0wu6u+EcIlcOVVdYDRFQTEVw2pmq4N15AsDxgV39RTyosBUvKmNR0DuQAgMZ/Sy0qq5q1Qa0Lgi6CDr8eJVk6g20k23ixGr+INPEJIGBW1ZEdJxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750679992; c=relaxed/simple;
-	bh=sUkXXqaPcEc+7VppZMJIlI+UWrPSwDWJ1n4g43Pjq2U=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=eAwmvzcFMJ2W2MBHXmg2WkewtdrQjiVPCZ8yYgL7KAud7MmoFOkTKm6lYs4Gi91TvgpkWUAE1pxp0uUUN+E1QBOh2Sq3CVP4U6IgF/EP5jrpmWUxNnybL5gtVWvjUADfXOnnszUbu0eaBzd61g/NkZ5sp+YYXFWQlyFvQl2Oxxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vzfIQ8IM; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750680026; c=relaxed/simple;
+	bh=tV8ORaIQbQLMSY8zkLMfrpms34GMlXjixrFwRo6YJy0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZDGiyAGWNWLqVS5vVpHlFeYM7GzwMTDlrAWYL1mzBWjUEhgjvjAibtT3zW8kclPUnsBAmcQpN6byZTPRHwEC5C1OmO27KuHiyYhyRE9a0vyfZp3sgTZPWwTOFXiB1TcAWJbEAnhQGqKSgJsYSmdir56TQTLaYK911L/MfsDrUpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=k3HVXr6+; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vzfIQ8IM"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-236470b2dceso41409615ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 04:59:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750679990; x=1751284790; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=AXNiPa/vEGx138D93gyNZSNaepDJkn5LZASDwOnaP3Q=;
-        b=vzfIQ8IMD4RjepRrBmAVuIT9sd6rhcSKdiM7rIVUtX62PXsiTSuze+pWniQ7UDa6WH
-         7ODdD++Vuebu6x6dTk6dOxRYLcvP01EZkBWK6D+E9/3a5QVcUxZRrY+JKMEBTL3kT6kG
-         i4Uuen4q9nE9xU412cz2YYBblDO4KMT/HZ3xk8eDSyPR/KcMU7UAeHJBoBd1X5Dk/IB3
-         FBR6S2Vnjz1kQnM09muH6EWkR72L4rv7jXd2Awqw5Y6HYapT/aDSC1xPDE0VMIPsdq3q
-         qC5yQR19jetlrs4b72tBDCm2pvH+OibMhdQCEOoTxyJAm119pi9V5eIZOKPp+wOx/BB7
-         Qwag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750679990; x=1751284790;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AXNiPa/vEGx138D93gyNZSNaepDJkn5LZASDwOnaP3Q=;
-        b=xOaE+2+Iq6/nVFbYt61GJAqTmvuzo+cr0CX+UKY8JBNtJs2sI2HjtvFZj4EkAPkx8+
-         4lo0sKDKATAvGHzwImKv88ox8qu6yKmlxPgt4CdownHbq4YmlJB3GfAgC65AaDlWwI0H
-         n6dCBKvzszFMzvxCWIZBU3KBe7aOHqiGBYXHlQw5G/N8IoEGUMhv7VA1uLQnc+6qGEJA
-         n6wR+cL1oRnrw9LIVatdIgtihXhnlqEv4HDdbCdTkVdLIExmDGni2aZdzg08n6ORZ1O1
-         BuMzIc1A5jChT5EMevZzsYlqNg9QcazXuz0CAPy0n0IpIuVrzp7n6qwWyzf6x6HKkWag
-         Ix1Q==
-X-Gm-Message-State: AOJu0YwpQ0WD14YBpSM/ey3Ao8OM/rLtz8jS71s9FxRPmyf6sKs0U6iD
-	uYOjQ2NT0a9dy8L7vZRKzo0M2YERJaXlrodYPaDjqZVqOv1StwNievQwHonx1+aQqHe9n5u16JP
-	6OsJMbic8CQ+lRMHdVXeNwvUFmsVbPT40GO/Eny4bxxUq7M+UPdF+Ge3b8A==
-X-Gm-Gg: ASbGnctaUd5wlGxmF+GAVEaBJ/lENFjkG/XzSd44xKEG2M2TIvn+f33Q7d/hjJlFHJJ
-	WSUfRkUZSl0xZ+Am7R0r5DCtWDf1kQbjRibXZJtJWzJJsuH+KSC8i9GEC3FBMfguWl3FIWxoTCj
-	5nu3iXrxfgKp4fprlFFKXMZX704w+gfr//yS+xNzF4Lwjf4iyDBe5YLr4OCzcJ0ecHZOojUjsRS
-	dcdQ5mWmjv9DEY=
-X-Google-Smtp-Source: AGHT+IGiBd4kCVa0ywnRkcqWhGcCEeGyvisvkfyFlm7078947nB9TYKkqnxCIHumnODAWFdThN/AY578nByJKVZ7yKI=
-X-Received: by 2002:a17:90b:2252:b0:313:14b5:2538 with SMTP id
- 98e67ed59e1d1-3159d8ff782mr18970645a91.35.1750679989565; Mon, 23 Jun 2025
- 04:59:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="k3HVXr6+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750680022;
+	bh=tV8ORaIQbQLMSY8zkLMfrpms34GMlXjixrFwRo6YJy0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=k3HVXr6+R+bc3cfY7iW8UOHT9TSS8Vlud6/ZIcCmlV6xnYcJHYeDFHI/V4ErPX5Qv
+	 RkTbBul6wzC8wYZe/6z9tddgzYyfdzWMW9GO1RjJgfsrqQilqJwKFYpaZbtr01ZpIh
+	 EhgKrh+5FGjVBdaevhaG+5phpNGK1Mmcnm5y7n2cW7J2WqlsFDEpRFqxdPhd2uZmk8
+	 f0aS6ZrODg5OdK+hF9jgCpbY0Hn6jpy0nbk9sRN09U3lMKbVsORfK21Rm4BUslC+1E
+	 QGhEji+CfdF8BD6KuMa1BLlWcP792Q63wu5UA1QNpNksTiaqoFpjpI4/IdWDLwGD8F
+	 xu7xhY31NhxrA==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id F3A0517E0202;
+	Mon, 23 Jun 2025 14:00:21 +0200 (CEST)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: broonie@kernel.org
+Cc: lgirdwood@gmail.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	kernel@collabora.com
+Subject: [PATCH v1 0/6] regulator: Add support for MediaTek MT6316/6363/6373 PMICs
+Date: Mon, 23 Jun 2025 14:00:10 +0200
+Message-ID: <20250623120016.108732-1-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 23 Jun 2025 17:29:38 +0530
-X-Gm-Features: Ac12FXxA4fdzSIPFEQ5fKIVplDtkIGiICrKuBKW8khXp_ABe7FgMqBB3FaOP2YI
-Message-ID: <CA+G9fYt0MfXMEKqHKHrdfqg3Q5NgQsuG1f+cXRt83d7AscX5Fw@mail.gmail.com>
-Subject: next-20250623: arm64 devices kernel panic Internal error Oops at
- pidfs_free_pid (fs/pidfs.c:162)
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, linux-fsdevel@vger.kernel.org
-Cc: Christian Brauner <brauner@kernel.org>, Jann Horn <jannh@google.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Alexander Mikhalitsyn <alexander@mihalicyn.com>, 
-	Jeff Layton <jlayton@kernel.org>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
-	Lennart Poettering <lennart@poettering.net>, Mike Yuan <me@yhndnzj.com>, 
-	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Regressions on arm64 devices and qemu-arm64 while running LTP controllers
-and selftests cgroup test cases the following kernel Panic Internal error oops
-found on the Linux next-20250623 tag.
+This series adds support for three new MediaTek PMICs: MT6316, MT6363
+and MT6373 and their variants - used in board designs featuring the
+MediaTek MT8196 Chromebook SoC, or the MT6991 Dimensity 9400 Smartphone
+SoC.
 
-Regressions found on arm64 device
-  - Kernel Panic Internal oops @ LTP controllers
-  - Kernel Panic Internal oops @ selftest cgroups
+AngeloGioacchino Del Regno (6):
+  dt-bindings: regulator: Document MediaTek MT6316 PMIC Regulators
+  regulator: Add support for MediaTek MT6316 SPMI PMIC Regulators
+  dt-bindings: regulator: Document MediaTek MT6363 PMIC Regulators
+  regulator: Add support for MediaTek MT6363 SPMI PMIC Regulators
+  dt-bindings: regulator: Document MediaTek MT6373 PMIC Regulators
+  regulator: Add support for MediaTek MT6373 SPMI PMIC Regulators
 
-Test environments:
- - Dragonboard-410c
- - e850-96
- - FVP
- - Juno-r2
- - rk3399-rock-pi-4b
- - qemu-arm64
+ .../regulator/mediatek,mt6316-regulator.yaml  |   81 ++
+ .../regulator/mediatek,mt6363-regulator.yaml  |  123 ++
+ .../regulator/mediatek,mt6373-regulator.yaml  |  119 ++
+ drivers/regulator/Kconfig                     |   27 +
+ drivers/regulator/Makefile                    |    3 +
+ drivers/regulator/mt6316-regulator.c          |  343 ++++++
+ drivers/regulator/mt6363-regulator.c          | 1060 +++++++++++++++++
+ drivers/regulator/mt6373-regulator.c          |  729 ++++++++++++
+ include/linux/regulator/mt6363-regulator.h    |  326 +++++
+ include/linux/regulator/mt6373-regulator.h    |  154 +++
+ 10 files changed, 2965 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mediatek,mt6316-regulator.yaml
+ create mode 100644 Documentation/devicetree/bindings/regulator/mediatek,mt6363-regulator.yaml
+ create mode 100644 Documentation/devicetree/bindings/regulator/mediatek,mt6373-regulator.yaml
+ create mode 100644 drivers/regulator/mt6316-regulator.c
+ create mode 100644 drivers/regulator/mt6363-regulator.c
+ create mode 100644 drivers/regulator/mt6373-regulator.c
+ create mode 100644 include/linux/regulator/mt6363-regulator.h
+ create mode 100644 include/linux/regulator/mt6373-regulator.h
 
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
+-- 
+2.49.0
 
-Boot regression: arm64 devices kernel panic Internal error Oops at
-pidfs_free_pid (fs/pidfs.c:162)
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Test log
-[   67.087303] Internal error: Oops: 0000000096000004 [#1]  SMP
-[   67.094021] Modules linked in: snd_soc_hdmi_codec venus_enc
-venus_dec videobuf2_dma_contig pm8916_wdt qcom_wcnss_pil
-coresight_cpu_debug coresight_tmc coresight_replicator qcom_camss
-coresight_stm snd_soc_lpass_apq8016 msm qrtr coresight_funnel
-snd_soc_msm8916_digital snd_soc_lpass_cpu coresight_tpiu
-snd_soc_msm8916_analog videobuf2_dma_sg stm_core coresight_cti
-snd_soc_lpass_platform snd_soc_apq8016_sbc venus_core
-snd_soc_qcom_common qcom_q6v5_mss v4l2_fwnode coresight snd_soc_core
-qcom_pil_info v4l2_async snd_compress llcc_qcom snd_pcm_dmaengine
-ocmem qcom_q6v5 v4l2_mem2mem videobuf2_memops snd_pcm qcom_sysmon
-drm_exec adv7511 snd_timer videobuf2_v4l2 gpu_sched qcom_common snd
-videodev drm_dp_aux_bus qcom_glink_smem soundcore qcom_spmi_vadc
-mdt_loader drm_display_helper qnoc_msm8916 qmi_helpers
-videobuf2_common qcom_vadc_common qcom_spmi_temp_alarm rtc_pm8xxx
-qcom_pon qcom_stats mc cec drm_client_lib qcom_rng rpmsg_ctrl
-display_connector rpmsg_char phy_qcom_usb_hs socinfo drm_kms_helper
-rmtfs_mem ramoops
-[   67.094437]  reed_solomon fuse drm backlight ip_tables x_tables
-[   67.189084] CPU: 3 UID: 0 PID: 0 Comm: swapper/3 Not tainted
-6.16.0-rc3-next-20250623 #1 PREEMPT
-[   67.194810] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[   67.234078] pc : pidfs_free_pid (fs/pidfs.c:162)
-[   67.236989] lr : put_pid.part.0 (kernel/pid.c:104)
-[   67.239958] sp : ffff80008001be50
-[   67.243892] x29: ffff80008001be50 x28: ffff800082288180 x27: ffff8000801c7654
-[   67.247206] x26: ffff8000822882c0 x25: 000000000000000a x24: ffff00003fc96940
-[   67.254295] x23: 0000000000000000 x22: 000000000000003f x21: ffff00003fc968c0
-[   67.261410] x20: ffff800082212740 x19: 0000000000000000 x18: ffff8000875abc00
-[   67.268490] x17: ffff7fffbdb7b000 x16: ffff800080018000 x15: 010c194d58e3a052
-[   67.275644] x14: 0000000000000000 x13: 0000000000000000 x12: 00000000000003d4
-[   67.282785] x11: 0000000000000000 x10: 000000000000003f x9 : ffff00000295a500
-[   67.289863] x8 : ffff80008001be30 x7 : 0000000000000000 x6 : ffff00003fc99be0
-[   67.296923] x5 : ffff8000811fafe8 x4 : 0000000000100004 x3 : 0000000000000000
-[   67.304036] x2 : 0000000000000000 x1 : 0000000000000001 x0 : ffff00000487a9c0
-[   67.311148] Call trace:
-[   67.318222] pidfs_free_pid (fs/pidfs.c:162) (P)
-[   67.320916] put_pid.part.0 (kernel/pid.c:104)
-[   67.324597] delayed_put_pid (kernel/pid.c:114)
-[   67.328231] rcu_core (arch/arm64/include/asm/preempt.h:13
-(discriminator 1) kernel/rcu/tree.c:2589 (discriminator 1)
-kernel/rcu/tree.c:2838 (discriminator 1))
-[   67.331859] rcu_core_si (kernel/rcu/tree.c:2856)
-[   67.335210] handle_softirqs (arch/arm64/include/asm/preempt.h:13
-(discriminator 1) kernel/softirq.c:581 (discriminator 1))
-[   67.338511] __do_softirq (kernel/softirq.c:614)
-[   67.342526] ____do_softirq (arch/arm64/kernel/irq.c:82)
-[   67.345735] call_on_irq_stack (arch/arm64/kernel/entry.S:897)
-[   67.349550] do_softirq_own_stack (arch/arm64/kernel/irq.c:87)
-[   67.353544] __irq_exit_rcu (kernel/softirq.c:460 kernel/softirq.c:680)
-[   67.357431] irq_exit_rcu (kernel/softirq.c:699)
-[   67.361234] el1_interrupt (arch/arm64/include/asm/current.h:19
-arch/arm64/kernel/entry-common.c:280
-arch/arm64/kernel/entry-common.c:586
-arch/arm64/kernel/entry-common.c:598)
-[   67.364591] el1h_64_irq_handler (arch/arm64/kernel/entry-common.c:604)
-[   67.368381] el1h_64_irq (arch/arm64/kernel/entry.S:596)
-[   67.372250] cpuidle_enter_state (drivers/cpuidle/cpuidle.c:292) (P)
-[   67.375640] cpuidle_enter (drivers/cpuidle/cpuidle.c:391 (discriminator 2))
-[   67.380025] do_idle (kernel/sched/idle.c:160
-kernel/sched/idle.c:235 kernel/sched/idle.c:330)
-[   67.383811] cpu_startup_entry (kernel/sched/idle.c:428 (discriminator 1))
-[   67.387062] secondary_start_kernel
-(arch/arm64/include/asm/atomic_ll_sc.h:95 (discriminator 2)
-arch/arm64/include/asm/atomic.h:28 (discriminator 2)
-include/linux/atomic/atomic-arch-fallback.h:546 (discriminator 2)
-include/linux/atomic/atomic-arch-fallback.h:994 (discriminator 2)
-include/linux/atomic/atomic-instrumented.h:436 (discriminator 2)
-include/linux/sched/mm.h:37 (discriminator 2)
-arch/arm64/kernel/smp.c:214 (discriminator 2))
-[   67.390956] __secondary_switched (arch/arm64/kernel/head.S:405)
-[ 67.395181] Code: f9401c13 f9001c1f b140067f 540001a8 (f9400274)
-All code
-========
-   0: f9401c13 ldr x19, [x0, #56]
-   4: f9001c1f str xzr, [x0, #56]
-   8: b140067f cmn x19, #0x1, lsl #12
-   c: 540001a8 b.hi 0x40  // b.pmore
-  10:* f9400274 ldr x20, [x19] <-- trapping instruction
-
-Code starting with the faulting instruction
-===========================================
-   0: f9400274 ldr x20, [x19]
-[   67.399334] ---[ end trace 0000000000000000 ]---
-
-
-## Source
-* Kernel version: 6.16.0-rc3-next-20250623
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: f817b6dd2b62d921a6cdc0a3ac599cd1851f343c
-* Git describe: next-20250623
-* Project details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250623/
-* Architectures: arm64
-* Toolchains: gcc-13
-* Kconfigs: defconfig+selftest/configs
-
-## Build arm64
-* Test log: https://qa-reports.linaro.org/api/testruns/28834568/log_file/
-* Test Lava log: https://lkft.validation.linaro.org/scheduler/job/8326000#L2426
-* Test Lava log 2:
-https://lkft.validation.linaro.org/scheduler/job/8326094#L5378
-* Test details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250623/log-parser-test/internal-error-oops-oops-smp/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2ytmpuyjaGkw1YlPt0MbPk2y7vM/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2ytmpuyjaGkw1YlPt0MbPk2y7vM/config
-
---
-Linaro LKFT
-https://lkft.linaro.org
