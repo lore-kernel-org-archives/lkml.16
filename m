@@ -1,207 +1,157 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6C1221F0F;
-	Mon, 23 Jun 2025 21:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750713706; cv=pass; b=AI4ueNE8uzaYuZuCfi75pL5tws7/ywSwy5Zhvq72JmvU/Y2uxWRzsdlHxk4WCzeVIWdPjaa7TRunChVEV0mPlxLl5MgMteC9pHPs/V+6eCOtdpalT7Mi7u9NfZLA2fJGt69rgqnyAxiqNH90laSaTIM9kcgXAOU9bRiZGgITitY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750713706; c=relaxed/simple;
-	bh=KtakUjgv+UZf2zaxQpHTQu+8cOFck/+XtuwX2MXy47c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o5OuHF6AKvYuZJTKeQMxaazt/6k6GPk086ppss5ZtuBabF3eDdwkp+ATC4ayEP/HNP+L/TGAMWQ5jB32y1uxrkp7ca/m2Eqk6sqTTnoS8ejNOtril/9+5+8HwuvLuDcXiM0JUmNVQoZaf18YbYU+aad5h/urswhfXmqCD1Ith9I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=djTOojxP; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D1921B9C9
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 21:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750713839; cv=none; b=F7fSZppdifeeX0fX4Ka5b8Zv49J2cDtcKDBavmJ6jTjxrHPO/Ui/Bw0QByyg8jWBpNvTlcaq7SWglVotrZmN/2i/JDdOMp5g90jVOD6hx2Kr5UH23V6BGVlmi31s3owbmOXuVpTIhp4+Ftm6eG0mBeeDuPAVkN1f7KnznS8hm8c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750713839; c=relaxed/simple;
+	bh=/Kg0WRXw5VKnsXhRWYSpnatlSaD/D8BnYoR5CRjJ7wQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=thd7p7L9BdWfijBCrmXB/LME7GcY5peEGIn9UXIUleLaMhDjZp5FRtaSKuVt0vrLUHEIc/o0AUL5UF4p0mOLMJm7X/SBnos4ja1EeX99BWXKJgjuf1RVZtLQ1j+XHl+382v9ddcLZ3pSlprhS88L998Ey0YbcShGdzrkRDcJ0zU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lSOwPplZ; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="djTOojxP"
-ARC-Seal: i=1; a=rsa-sha256; t=1750713689; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=m/XM4rTD4QhoU7m/KHv0O/CbvojXCAGpoveJYiDyugG6jrPiy+ovLCuFL5xdIpbq8g1Ezw/SBpxdy12FllDjoEKYO+tbvpjgXA1UU767DRSKtWstXrSvNFWWmETC7RqkhDPsuN5BHEEX4utxIGznQS89puhFpXpCft4K5uBn2ks=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750713689; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ZfiWeBvfNnXnUysh0G/D5Vm9Y8TLgU9BFV02Xs7k2HE=; 
-	b=ZwD+qKKO1bwXT24zCaTJMJS84YZwzNRFij1DX28o5oHxiK8e/45SF/LUzjrQeda/cqvGdo7MnhbrQrm8KNmSnPdxDCGK9Q2hqUw+cW7Baqz5c5vNFxBrFh4JnbdsfS2E4JCp1vTCQidiOKWXkA4Yyea1cxN4fSH3OemfMv7LLtg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750713689;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=ZfiWeBvfNnXnUysh0G/D5Vm9Y8TLgU9BFV02Xs7k2HE=;
-	b=djTOojxPua9C2oq5c7PAFfYvDezovncq8tTlPMGXz9g15tH4l5DAyXu1xXpJsN1n
-	iA+ULtjIp2ndaFNHjogkiBq136100Y1jehHHnC8vXkyyrotY19GUZSoUlOuTZH2vtvC
-	DN1sdOSt81zXYPNIqPlEKZkWBXEO+1XwUvg+jGdw=
-Received: by mx.zohomail.com with SMTPS id 1750713688281148.819607680059;
-	Mon, 23 Jun 2025 14:21:28 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 139A4180AAB; Mon, 23 Jun 2025 23:21:23 +0200 (CEST)
-Date: Mon, 23 Jun 2025 23:21:22 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: amitsd@google.com
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Badhri Jagan Sridharan <badhri@google.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@kernel.org>, Kyle Tso <kyletso@google.com>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] power: supply: core: add helper to get power
- supply given a fwnode
-Message-ID: <djqmdlnsftquum3wayigqryzfy7xkn67uj4pfk3wugxl3lx3wr@y26ydci57iwi>
-References: <20250507-batt_ops-v2-0-8d06130bffe6@google.com>
- <20250507-batt_ops-v2-2-8d06130bffe6@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lSOwPplZ"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-312e747d2d8so3741951a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:23:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750713837; x=1751318637; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=By+WfrXAyPyITn9F5TDk+hwemNBoK/rCwALmacNE1Jk=;
+        b=lSOwPplZ91UDKmLvEUVhFin2qG1CQnWWY0syFUbgwyk4VypirZlP9n9Z3evsr7q3jX
+         PdHj1OFLQBw+jmk2ApFlEycPy/FDodod8nn7qeukn3M5EeNk4S0goO1Z3BP5rnMAOGMC
+         KOa6PbWvqbMd7MP4r6tdNk/Y1TMdAtQ7k3hLIr/0BuvWzsDIsVkPDJke432grohUQHvd
+         FFHBPZPzF8iQpTHPCApSMm84Dsp6gA2F5P8HojEJNlv+tg/bltdYNLdg+katsZL/JlKs
+         gF1FriW1jj4t0itmguB+YnwEhOdpHrQJ4AADRndkdVWt0BDBUAI9uwT7TLg3fM29h9U2
+         eGkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750713837; x=1751318637;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=By+WfrXAyPyITn9F5TDk+hwemNBoK/rCwALmacNE1Jk=;
+        b=wwW4GhS51ODXnjjlBthR5nPui2NZ85okR6X5Lb9kxoHXCRJhgA6qYnjrMyoNh4iP0y
+         WbVp5GFnSlLJkhvTcGHLLpfIIf5fdEDWit/A72O1rGk0bQhQNryOK44mlkFH8YmtrZdD
+         49ImtKXSffo5Ae1AgnG5e/og0YMcRSdQ9buoTd8dFBQbQTvLhgUmY72WlV2z8l5qBGpV
+         kpdKfvt5/E7cbU6Sb6zOZNcUEU+ftSau3+T/rfgHpSNACZBi645KfjdvNACPJ1JjF02h
+         jVaMfO71yXiEEMBCFhxUtrq71RctCz5TpoFNIbEy1K2b9mTANQ18ynq3IZ55YOwYtEdh
+         Gm+w==
+X-Forwarded-Encrypted: i=1; AJvYcCV+o720PzWKGzX1Cs2Eq/wyQ/dUfYLiw4G4dwz8nfvYe/SrG/z8CZh2knGY4k2/prBKtdz/tKdm8g7w3m4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcAyifGiDOfSPYOGwsjPsym3SpftwrRdEhsPkXxqRbbZ/tGCgk
+	2Wh1Zg/YNq4DvvV0+fiWOj345fL5EkPALLduiV6voRyW9ih0HV0HijPfa2aerRSgosCqFot8RO4
+	cYLovUJMXqxtE7iMCYwxCs9WiCzvj+5EtMhgKtN+PfQ==
+X-Gm-Gg: ASbGnct+GzzCQswtzNlFUlkS/V0HMOZzT1L1H4ZaWTSBjmKcTkYtMLVf3ZqyEV5PyzB
+	/2LEEzthxrHLXBXd5D+ntnHFG+otnkQgMFP5poAP/7s4BEffd0nDlPINGp87eP2rSzXpPHr0jof
+	TCG0EtnMFCrM4O0X9SL1BIqVG5LWoicGhCasbwIVZ8REKKt+7nZfvECBmZSUN0Wu4qZ7ktoVe/D
+	lZV
+X-Google-Smtp-Source: AGHT+IHJlRRLWWoQ6yh3AeFZC83NODh6v6Ss+DAN43JkjEBbpOfz48bjecKNoDN25759ZXlyzX8KWTWbCxW22IU+1EE=
+X-Received: by 2002:a17:90b:38c9:b0:313:f995:91cc with SMTP id
+ 98e67ed59e1d1-315ccc32116mr1516367a91.2.1750713835691; Mon, 23 Jun 2025
+ 14:23:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kdcwqy7o5osxokcj"
-Content-Disposition: inline
-In-Reply-To: <20250507-batt_ops-v2-2-8d06130bffe6@google.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.3/250.696.82
-X-ZohoMailClient: External
+References: <20250623130626.910356556@linuxfoundation.org>
+In-Reply-To: <20250623130626.910356556@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 24 Jun 2025 02:53:43 +0530
+X-Gm-Features: Ac12FXzeAzIXRWJ7lKN4j0ifqWtMYFRuT9M7G2PFqIjYGj7Dh1wwE6lAMfMxRVY
+Message-ID: <CA+G9fYtROQg1rpX_6uG-AYktDOHqaEzEPVvL9Fxi9mQfLy6zBQ@mail.gmail.com>
+Subject: Re: [PATCH 6.6 000/290] 6.6.95-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Mon, 23 Jun 2025 at 18:39, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.6.95 release.
+> There are 290 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 25 Jun 2025 13:05:53 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.95-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
---kdcwqy7o5osxokcj
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 2/5] power: supply: core: add helper to get power
- supply given a fwnode
-MIME-Version: 1.0
+Regressions on parisc, s390 allmodconfig builds with gcc-13 and gcc-11 failed on
+the Linux stable-rc 6.6.95-rc1.
 
-Hi,
+Regressions found on s390
+* parisc, build
+  - gcc-11-allmodconfig
 
-On Wed, May 07, 2025 at 06:00:23PM -0700, Amit Sunil Dhamne via B4 Relay wr=
-ote:
-> From: Amit Sunil Dhamne <amitsd@google.com>
->=20
-> Add a helper function power_supply_get_by_fwnode() to retrieve
-> power_supply given a valid fwnode reference.
->=20
-> Signed-off-by: Amit Sunil Dhamne <amitsd@google.com>
-> ---
->  drivers/power/supply/power_supply_core.c | 30 ++++++++++++++++++++++++++=
-++++
->  include/linux/power_supply.h             |  3 +++
->  2 files changed, 33 insertions(+)
->=20
-> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/sup=
-ply/power_supply_core.c
-> index 76c340b38015af0a67a0d91305e6242a8646bf53..ef6ba22b837b0b9463f9a3065=
-425e2720f40b9eb 100644
-> --- a/drivers/power/supply/power_supply_core.c
-> +++ b/drivers/power/supply/power_supply_core.c
-> @@ -496,6 +496,36 @@ struct power_supply *power_supply_get_by_name(const =
-char *name)
->  }
->  EXPORT_SYMBOL_GPL(power_supply_get_by_name);
-> =20
-> +static int power_supply_match_device_by_fwnode(struct device *dev, const=
- void *data)
-> +{
-> +	return dev->parent && dev_fwnode(dev->parent) =3D=3D data;
-> +}
+* s390, build
+  - gcc-13-allmodconfig
 
-This already exists as power_supply_match_device_fwnode().
+Regression Analysis:
+ - New regression? Yes
+ - Reproducibility? Yes
 
-> +
-> +/**
-> + * power_supply_get_by_fwnode() - Search for power supply given a fwnode=
- ref.
-> + * @fwnode: fwnode reference
-> + *
-> + * If power supply was found, it increases reference count for the inter=
-nal
-> + * power supply's device. The user should power_supply_put() after use.
-> + *
-> + * Return: Reference to power_supply node matching the fwnode on success=
- or
-> + * NULL on failure.
-> + */
-> +struct power_supply *power_supply_get_by_fwnode(struct fwnode_handle *fw=
-node)
-> +{
-> +	struct power_supply *psy =3D NULL;
-> +	struct device *dev =3D class_find_device(&power_supply_class, NULL, fwn=
-ode,
-> +					       power_supply_match_device_by_fwnode);
-> +
-> +	if (dev) {
-> +		psy =3D dev_get_drvdata(dev);
-> +		atomic_inc(&psy->use_cnt);
-> +	}
-> +
-> +	return psy;
-> +}
-> +EXPORT_SYMBOL_GPL(power_supply_get_by_fwnode);
+Build regression: stable-rc 6.6.95-rc1 s390 parisc allmodconfig
+sdhci-esdhc-imx.c 'sdhc_esdhc_tuning_restore' defined but not used
 
-And this is a 50% of power_supply_get_by_reference(), so the
-function should be updated to use power_supply_get_by_fwnode().
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Greetings,
+## Build errors
+drivers/mmc/host/sdhci-esdhc-imx.c:1571:13: error:
+'sdhc_esdhc_tuning_restore' defined but not used
+[-Werror=unused-function]
+ 1571 | static void sdhc_esdhc_tuning_restore(struct sdhci_host *host)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/mmc/host/sdhci-esdhc-imx.c:1549:13: error:
+'sdhc_esdhc_tuning_save' defined but not used
+[-Werror=unused-function]
+ 1549 | static void sdhc_esdhc_tuning_save(struct sdhci_host *host)
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
 
--- Sebastian
+## Source
+* Kernel version: 6.6.95-rc1
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+* Git sha: 44f41e69469d0de714a6e7e56848c3e423ac2bb9
+* Git describe: v6.6.94-291-g44f41e69469d
+* Project details:
+https://regressions.linaro.org/lkft/linux-stable-rc-linux-6.6.y/v6.6.94-291-g44f41e69469d/
+* Architectures: parisc, s390
+* Toolchains: gcc-11, gcc-13
+* Kconfigs: allmodconfig
 
->  /**
->   * power_supply_put() - Drop reference obtained with power_supply_get_by=
-_name
->   * @psy: Reference to put
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index 6ed53b292162469d7b357734d5589bff18a201d0..a35b08bd368e9305554e1a608=
-dc8e526983cfa12 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -801,10 +801,13 @@ extern void power_supply_unreg_notifier(struct noti=
-fier_block *nb);
->  #if IS_ENABLED(CONFIG_POWER_SUPPLY)
->  extern struct power_supply *power_supply_get_by_name(const char *name);
->  extern void power_supply_put(struct power_supply *psy);
-> +extern struct power_supply *power_supply_get_by_fwnode(struct fwnode_han=
-dle *fwnode);
->  #else
->  static inline void power_supply_put(struct power_supply *psy) {}
->  static inline struct power_supply *power_supply_get_by_name(const char *=
-name)
->  { return NULL; }
-> +static inline struct power_supply *power_supply_get_by_fwnode(struct fwn=
-ode_handle *fwnode)
-> +{ return NULL; }
->  #endif
->  #ifdef CONFIG_OF
->  extern struct power_supply *power_supply_get_by_phandle(struct device_no=
-de *np,
->=20
-> --=20
-> 2.49.0.987.g0cc8ee98dc-goog
->=20
->=20
+## Build s390
+* Build log: https://qa-reports.linaro.org/api/testruns/28839625/log_file/
+* Build details:
+https://regressions.linaro.org/lkft/linux-stable-rc-linux-6.6.y/v6.6.94-291-g44f41e69469d/build/gcc-13-allmodconfig/
+* Build link:  https://storage.tuxsuite.com/public/linaro/lkft/builds/2yuYHPJ5UcFEMxXVXUOIqaCBQWP/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2yuYHPJ5UcFEMxXVXUOIqaCBQWP/config
 
---kdcwqy7o5osxokcj
-Content-Type: application/pgp-signature; name="signature.asc"
+## Steps to reproduce
+  - tuxmake --runtime podman --target-arch s390 --toolchain gcc-13
+--kconfig allmodconfig
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhZxU4ACgkQ2O7X88g7
-+ppp0w//bAvpD5lKXf4rI7iyQxFwENWWOhcb8530kiDRTCMw5KdjDEG6u8UvZyGy
-ScKNgaGNGvqy4su03assapnNnpOtb+N+CDm80bcgDYDNooRO9LX7S4eyB+I6wKp3
-BPj87u055U50RJ8RQmkvOq40rmJY2Ri8e5Grd1yRqHtt4uEaF5ev1Me7msnxr41v
-mnyMOE6s9Qv13a6u/TZlP+XDVoHeCwvg10w3XWZHYss/PfOgMSbPO/Zm3i7nF7QL
-yWBM0HrbQsNj0FRaGcTU8EiGKhzgejgveRuKsfLFhyExlyK1NhDfAK07UwRdfcBG
-FeliJKPdRpCNZyGMSPNuv1f48L9TIj6Vq7sWh4HNJkanMOYXgsgPgrXA63GShm+d
-XQRvAhqBNVG7Ym1iQrWA6YaS+6AQL7I+kvfp6HeYWx2v7xtveDkw2xkJ6tzTsQYr
-4QWZi5QFCxGCnOh+KYfhUyxNhai41kkaDXefBD5RaYdAEI572kNAJHGlyv4TAaFZ
-OkWNG/37vuP7/BN0J1AjXzplAkgIdXhLO6sEFBRdh4IHgNuZZZHEA111cv8D5yOU
-aKTwsLL3S8Pu1JFMuN/KoB7zaIfeRlRbGo6P5FNvKWg1mlq6cyrZkHjHnZUGag5q
-c0IgY+o69cn4LAOVmVL3vgLYNo1buOzYhxdis0G1z1pz//G1Hi4=
-=wVCb
------END PGP SIGNATURE-----
-
---kdcwqy7o5osxokcj--
+--
+Linaro LKFT
+https://lkft.linaro.org
