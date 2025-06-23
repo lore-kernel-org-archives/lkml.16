@@ -1,78 +1,105 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F2D24BD02;
-	Mon, 23 Jun 2025 12:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320C0248F63;
+	Mon, 23 Jun 2025 12:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750683366; cv=none; b=ZREjtjENfuB/m1goHI4w9XRzPkQvNI2xBwkaggZkUqgnQXMbEpqVOzOEaagReiJfZszFBWzz5SJ98HxnN9W/xlGFKuz0XJPbzOxmwNhkD0f9AYRRNPHHXT0qw+wO3Ghls1YZ+vDNkQ4wW88D8zPvRhnrkYfr7Y5ocSKIXjTwaC0=
+	t=1750683395; cv=none; b=rrW//STmZrwNX4KgMLM8oTs+sRVCEqzVGII2f3RvAxsLfqyqaEiFSRQwD6aROyl2VnIvzkawskg4aN6YFx6GEb7N7lPyeJHvOTT+PaXIZk7Vb9qs0/FZEFJppap3m715eHTKeR4ZAhHCwaWuQBwEHoGUDVhX0ULpFsZakNE3PEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750683366; c=relaxed/simple;
-	bh=aKqzR660yAGjlQxlkDw+qNq0du0z+ZkUKklGbL8VbCs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=G8jhoxAJZ0yElSDgSLw3XIe2QyQI1hQNKHoATSjeqbgPFs40kOesA5YHMrc21/0wShZrqdyukp38luShLT/DRaSEpqu2Awbov34ZMmt1Rpvr6IGkGuNj3OgcsBoNOKVmlm6yX/ivk14AHmIMpVnggVlNzOe7WJh1vcC79DyAIrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=om0TrK79; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1750683395; c=relaxed/simple;
+	bh=/Ru9AP2QGbA67LIOI47cR1sT7LARCHOvoI+J1683xFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oTcnD81LR5jeWtuCo6TDqlnhrUTSYIAuWeDYAH1ZaSlmn8ZqCl3GfAprH10ETxEfLxTU89wm/2RCjH5Eyg2Jz16aDUEGVAByRM/sLNGJ/2ZmES0gU8iInw23bbsOYXgGq5nwo8vaf6fQSQmZUaMCk6seWdpm+mPjfwDflB3sOaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oIe5k82e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="om0TrK79"
-Received: from kreacher.localnet (unknown [5.63.189.50])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 209AE66DEE5;
-	Mon, 23 Jun 2025 14:55:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1750683352;
-	bh=aKqzR660yAGjlQxlkDw+qNq0du0z+ZkUKklGbL8VbCs=;
-	h=From:Subject:Date;
-	b=om0TrK79Gj6e9fxm+piGMrWeEaxHgC8jfJ+e6oUUy7tfSuw9eA5bQl3/9m6mAzw/N
-	 LFLt2fb+INhBD4pC8ozow6Y9V+nc+h8v1TBVt2kYjbLqgWNjMb5BgNh6qFa9RQF3KP
-	 qQ4DQva5xUIkMSprnNdPW9JGC1a9FNWJIUJh+N1WU8JpVDOycvfYTXf0gYJVbVQzKb
-	 a1v7xVM+igf5vbD5j2348TqlNeSLMBNpwsxEcJJy0DgmcByhDll8i1JbcpXuw43Bta
-	 08ZPQUwpQU21qQbLc0yp8qIy2xJbItDaLmcWdTA8JWoZ6/ESy38WfqOAjSnlthFw4q
-	 7eSjXVJz9r28g==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Chris Bainbridge <chris.bainbridge@gmail.com>,
- Ulf Hansson <ulf.hansson@linaro.org>, Saravana Kannan <saravanak@google.com>,
- Sudeep Holla <sudeep.holla@arm.com>
-Subject:
- [RFT][PATCH v4 0/2] PM: sleep: Handle async suppliers like parents and async
- consumers like children
-Date: Mon, 23 Jun 2025 14:44:09 +0200
-Message-ID: <5011988.GXAFRqVoOG@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oIe5k82e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06BD8C4CEEA;
+	Mon, 23 Jun 2025 12:56:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750683394;
+	bh=/Ru9AP2QGbA67LIOI47cR1sT7LARCHOvoI+J1683xFg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oIe5k82e1gXkUxRcP5vq15pTzRC8oSL8F1QZIZfAffKflmpHK5GKO5TxIz3Ye6p29
+	 Klz/FHt2tyxSmLlxQRa4H4Xeg4+CEKxJERBrUNXsLjuu4CTMOdbl7u1lYY3A7d72RW
+	 EXuM3kuUxcW4C5hJ91Yao1xaTeW4Go4ov4umKihyVUQ5AH5ZidxppOrocc1uofjvnz
+	 3paZ/GqgH72ywIPlJLkLqw8kgC0WUIXBo3F6FF9Z7VgKU/o42jaoZyJT7KySqZSi8o
+	 R0w5KO7kHwibgOh3GqwyFIHE/lEWvBY3VJ1mVjECiuztSo6l9G/opO5OQjo630JoEj
+	 1PAKIuqt1oPtw==
+Date: Mon, 23 Jun 2025 14:56:28 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, linux-fsdevel@vger.kernel.org, Jann Horn <jannh@google.com>, 
+	Josef Bacik <josef@toxicpanda.com>, Alexander Mikhalitsyn <alexander@mihalicyn.com>, 
+	Jeff Layton <jlayton@kernel.org>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
+	Lennart Poettering <lennart@poettering.net>, Mike Yuan <me@yhndnzj.com>, 
+	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: next-20250623: arm64 devices kernel panic Internal error Oops at
+ pidfs_free_pid (fs/pidfs.c:162)
+Message-ID: <20250623-salat-kilowatt-3368c5e29631@brauner>
+References: <CA+G9fYt0MfXMEKqHKHrdfqg3Q5NgQsuG1f+cXRt83d7AscX5Fw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 5.63.189.50
-X-CLIENT-HOSTNAME: 5.63.189.50
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: dmFkZTG3zHbptXhQ2rOEtAqAw8vDfZ+PQ2olFRdKM0UOeCotRwcGzsAx8iQZgutWl2OiRKbIqxZKSpGvHFTxXViPl7VT2D6V3hUWQFwzUvk4V1QzeQvlUk6EnsE4msyRwv/9bJnlEjcPRtvImkqEutTcRlrstVT/XkbeP+kADdlMXK2T8VWSOAxSFZld0c8Bu5a2CPqSfMt45hOCwpw2kl8DrQ5Gu3qrbpPFyGgzaXYRYuLEktGyao0D+CVVF/Hi1I8EMZTNyIuei/XRUUzJz42HBNoQilXQPCQpxmC0r/3j9bMgim0Oo3U9YBCFOllvUEGXYsHxBhTXLDLRBT5I8B7rMZyWVBj6gmAn1k9a7safMnnxo17T6+v7xTdgjry9RciWAK71aKRfAD4ytGP1zLBEhSXBCez6BXI68p7lZFZxDcckGDfkBLQpNXhhJjHXlv35Y63GbHF4iRMU9SMDBot+7z4ELoEoma8JQJlX4oQd8GI4yjf4dNCpbMPpoRjoZBtWAv3Qrndc7pOmMvpUKdPks7BcrKSZ3wLAkpI6WN1mGQTuH7vgXZWL4FzpH/2mpeCerjLCO0FMJdj94iaRIMb9/K2V/IQD+mrh/vhxb1ePcjnQxIy+ZBMeVAfnuvdYnSRBTb3J0yprq9hPnbOlAWCvJwZ623eNpfnFvfsdehp2tVhqtA
-X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYt0MfXMEKqHKHrdfqg3Q5NgQsuG1f+cXRt83d7AscX5Fw@mail.gmail.com>
 
-Hi Everyone,
+On Mon, Jun 23, 2025 at 05:29:38PM +0530, Naresh Kamboju wrote:
+> Regressions on arm64 devices and qemu-arm64 while running LTP controllers
+> and selftests cgroup test cases the following kernel Panic Internal error oops
+> found on the Linux next-20250623 tag.
+> 
+> Regressions found on arm64 device
+>   - Kernel Panic Internal oops @ LTP controllers
+>   - Kernel Panic Internal oops @ selftest cgroups
+> 
+> Test environments:
+>  - Dragonboard-410c
+>  - e850-96
+>  - FVP
+>  - Juno-r2
+>  - rk3399-rock-pi-4b
+>  - qemu-arm64
+> 
+> Regression Analysis:
+>  - New regression? Yes
+>  - Reproducibility? Yes
+> 
+> Boot regression: arm64 devices kernel panic Internal error Oops at
+> pidfs_free_pid (fs/pidfs.c:162)
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> ## Test log
+> [   67.087303] Internal error: Oops: 0000000096000004 [#1]  SMP
+> [   67.094021] Modules linked in: snd_soc_hdmi_codec venus_enc
+> venus_dec videobuf2_dma_contig pm8916_wdt qcom_wcnss_pil
+> coresight_cpu_debug coresight_tmc coresight_replicator qcom_camss
+> coresight_stm snd_soc_lpass_apq8016 msm qrtr coresight_funnel
+> snd_soc_msm8916_digital snd_soc_lpass_cpu coresight_tpiu
+> snd_soc_msm8916_analog videobuf2_dma_sg stm_core coresight_cti
+> snd_soc_lpass_platform snd_soc_apq8016_sbc venus_core
+> snd_soc_qcom_common qcom_q6v5_mss v4l2_fwnode coresight snd_soc_core
+> qcom_pil_info v4l2_async snd_compress llcc_qcom snd_pcm_dmaengine
+> ocmem qcom_q6v5 v4l2_mem2mem videobuf2_memops snd_pcm qcom_sysmon
+> drm_exec adv7511 snd_timer videobuf2_v4l2 gpu_sched qcom_common snd
+> videodev drm_dp_aux_bus qcom_glink_smem soundcore qcom_spmi_vadc
+> mdt_loader drm_display_helper qnoc_msm8916 qmi_helpers
+> videobuf2_common qcom_vadc_common qcom_spmi_temp_alarm rtc_pm8xxx
+> qcom_pon qcom_stats mc cec drm_client_lib qcom_rng rpmsg_ctrl
+> display_connector rpmsg_char phy_qcom_usb_hs socinfo drm_kms_helper
+> rmtfs_mem ramoops
+> [   67.094437]  reed_solomon fuse drm backlight ip_tables x_tables
+> [   67.189084] CPU: 3 UID: 0 PID: 0 Comm: swapper/3 Not tainted
+> 6.16.0-rc3-next-20250623 #1 PREEMPT
+> [   67.194810] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+> [   67.234078] pc : pidfs_free_pid (fs/pidfs.c:162)
 
-These two patches complement the recently made PM core changes related to
-the async suspend and resume of devices.  They should apply on top of
-6.16-rc3.
-
-They were sent along with the other changes mentioned above:
-
-https://lore.kernel.org/linux-pm/2229735.Mh6RI2rZIc@rjwysocki.net/
-https://lore.kernel.org/linux-pm/2651185.Lt9SDvczpP@rjwysocki.net/
-
-(and this is v4 because they have been rebased in the meantime), but they don't
-make any difference on my test-bed x86 systems, so I'd appreciate a confirmation
-that they are actually needed on ARM (or another architecture using DT).
-
-Thanks!
-
-
-
+Thanks, I see the issue. I'm pushing out a fix. Please let me know if
+that reproduces in the next few days.
