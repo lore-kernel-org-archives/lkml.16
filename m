@@ -1,78 +1,95 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C165D2CCC1
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63A52F43;
+	Mon, 23 Jun 2025 01:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750642926; cv=none; b=lMjBP24/sNEJx3zE6l9w+Zqn4yS7BExeBdBZ2hy7PFC5i+rOg1OEDNszEIGqi/KlC4lOUAsNjmHLPrHkYcCqNVL8VgvumoumV4gltFfViq3fVOatqaIIgQmIAbek0yKxG48N1E2gdCQ5lGEMFQ1pS587QFv4f5enqjMu+qJRUXA=
+	t=1750643018; cv=none; b=rLHzmKdTxEHNu8pSsMulxUIsIaMEYeyU0WMpnV+ckPbHHVozgQap7eBPm58qD4ePhDPnwKEfG56IHO3a0klI5azBLfyu+n6XttCawC3XJ7Tz1e/37xaBwzBepnM6cw9Mo0k75ZV8cTB+Jht5cyfAN7Jgce10nTv/idiz8e75xJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750642926; c=relaxed/simple;
-	bh=tZ6ACI6+qkNKJDG4TzvggulCC/YlI2a5QfoP3IGsyo4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hpsJKI3wNARsirb3Mg7Zd6oOA2bF2pUtHmxmRuhcAtQatyA1M1tQZtQnrwq4vbLXAiXAZMqys0otyoWG4+cI9a/jOT03TCXXhWbg6hADQACP3WXAYeUw4wWjja9LGvXTX8zL8ry8/9GoysqGklk8bkACTAmDRvmLQ3vnT/KXeWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MyDlJKPo; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MyDlJKPo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750642923;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RppXmlqXYtwn2IaAFW7C4LW7Gma4dq2BWE+LoO6fA+c=;
-	b=MyDlJKPo1NLF5NPML/2webfZyMfPtFC9tH9nsl1nvnyjnuAnyJjRUsSHnFL9ZYlk2AjNmN
-	+M/hMC1p83ZJPAkqocm4+CbhID4liGvkq4xXEpCiVTEBEnDYr3JJE0trWoj87T31OyHcGr
-	pnQKEyN2U9cSg180Xq5Odnz+c1bAWuU=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-245-dTIQymJAPtKYuuZPn-qi2Q-1; Sun,
- 22 Jun 2025 21:42:02 -0400
-X-MC-Unique: dTIQymJAPtKYuuZPn-qi2Q-1
-X-Mimecast-MFC-AGG-ID: dTIQymJAPtKYuuZPn-qi2Q_1750642921
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 611DF19560BA;
-	Mon, 23 Jun 2025 01:42:01 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.88])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B2A9619560AF;
-	Mon, 23 Jun 2025 01:41:58 +0000 (UTC)
-Date: Mon, 23 Jun 2025 09:41:53 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ublk: update UBLK_F_SUPPORT_ZERO_COPY comment in UAPI
- header
-Message-ID: <aFiw4eaajxKEOVa7@fedora>
-References: <20250621171015.354932-1-csander@purestorage.com>
+	s=arc-20240116; t=1750643018; c=relaxed/simple;
+	bh=+gdfI7A/tzayixzmDPeS3II3+oUXbkW3kDFTSY2WBHU=;
+	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qkbMmyiemZvH0YvWbzeDy7Gl875ljtr+hhm5pZGgu6tXybWMrfbQp4VbdpFVFgKRaX8SwfT0J9ZJCd/W9RZimkoZyRXS0q0twJGIPSWkX6/RtquwN5P5yt6mDN0//YR/ywgLlEDYhjLu23VEOqh1aVYXz3IqmvBKgrki8vu/RIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4bQW8g5ltbz2QTyp;
+	Mon, 23 Jun 2025 09:44:19 +0800 (CST)
+Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 13FF4180042;
+	Mon, 23 Jun 2025 09:43:25 +0800 (CST)
+Received: from [10.67.120.192] (10.67.120.192) by
+ kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 23 Jun 2025 09:43:24 +0800
+Message-ID: <8e896bc3-b153-4db2-b874-4374376db9a0@huawei.com>
+Date: Mon, 23 Jun 2025 09:43:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250621171015.354932-1-csander@purestorage.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+User-Agent: Mozilla Thunderbird
+CC: <shaojijie@huawei.com>, <davem@davemloft.net>, <edumazet@google.com>,
+	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>,
+	<shenjian15@huawei.com>, <wangpeiyang1@huawei.com>, <liuyonglong@huawei.com>,
+	<chenhao418@huawei.com>, <jonathan.cameron@huawei.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <salil.mehta@huawei.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 3/3] net: hibmcge: configure FIFO thresholds
+ according to the MAC controller documentation
+To: Jakub Kicinski <kuba@kernel.org>
+References: <20250619144423.2661528-1-shaojijie@huawei.com>
+ <20250619144423.2661528-4-shaojijie@huawei.com>
+ <20250621083543.67459b3b@kernel.org>
+From: Jijie Shao <shaojijie@huawei.com>
+In-Reply-To: <20250621083543.67459b3b@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemk100013.china.huawei.com (7.202.194.61)
 
-On Sat, Jun 21, 2025 at 11:10:14AM -0600, Caleb Sander Mateos wrote:
-> UBLK_F_SUPPORT_ZERO_COPY has a very old comment describing the initial
-> idea for how zero-copy would be implemented. The actual implementation
-> added in commit 1f6540e2aabb ("ublk: zc register/unregister bvec") uses
-> io_uring registered buffers rather than shared memory mapping.
-> Remove the inaccurate remarks about mapping ublk request memory into the
-> ublk server's address space and requiring 4K block size. Replace them
-> with a description of the current zero-copy mechanism.
-> 
-> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+on 2025/6/21 23:35, Jakub Kicinski wrote:
+> On Thu, 19 Jun 2025 22:44:23 +0800 Jijie Shao wrote:
+>> +		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_TX_FULL_M, full);
+>> +		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_TX_EMPTY_M	, empty);
+>> +	}
+>> +
+>> +	if (dir & HBG_DIR_RX) {
+>> +		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_RX_FULL_M, full);
+>> +		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_RX_EMPTY_M	, empty);
+> nit checkpatch says:
+>
+> WARNING: line length of 81 exceeds 80 columns
+> #62: FILE: drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c:306:
+> +		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_TX_EMPTY_M	, empty);
+>
+> ERROR: space prohibited before that ',' (ctx:WxW)
+> #62: FILE: drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c:306:
+> +		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_TX_EMPTY_M	, empty);
+>   		                                                      	^
+>
+> WARNING: line length of 81 exceeds 80 columns
+> #67: FILE: drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c:311:
+> +		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_RX_EMPTY_M	, empty);
+>
+> ERROR: space prohibited before that ',' (ctx:WxW)
+> #67: FILE: drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c:311:
+> +		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_RX_EMPTY_M	, empty);
+>   		                                                      	^
+>
+> total: 2 errors, 2 warnings, 0 checks, 79 lines checked
+>
+> NOTE: For some of the reported defects, checkpatch may be able to
+>        mechanically convert to the typical style using --fix or --fix-inplace.
 
-thanks,
-Ming
+This is my mistake.
+Thanks for the guidance.
+
+Thanks
+Jijie Shao
 
