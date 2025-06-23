@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E158B22FF59
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:50:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71838231840
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:51:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750668659; cv=none; b=DJ/t9WkpyNAIzhk1m8IKSbd4M8PiWkq9lUIEqTTxoIRUKG+brH6r5JRIp7z36nPYsBm5RMOxkSh3YzkYH1v7AJsIXAKQEl792YwXKKvmSWowAWmHg3xFI/iGHe+OuXH2uRtpUT3JW8SDFAIVu6C7//XcbRe7R+uXjkxlOdMPADQ=
+	t=1750668661; cv=none; b=G1X3/OZZY/kjx6SLgQl0ARyi+0HXtDKHjZZBjxHIkuXrx3bSN+xiQVQLZqww4Mnuimyo1IPJJ7NeDsnvu5+p61jX8hikQ4yVULHUWWtGTt6QjSTHrZgmYYjDTHj24eLNKMgaeUtnK3H/tN13R9dmLompxrwP9Fjv/2ITHbRfpOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750668659; c=relaxed/simple;
-	bh=/uZSQ/EcB0rNwZGbsbtYX0UqygEGMdYs4umPwvkBw0E=;
+	s=arc-20240116; t=1750668661; c=relaxed/simple;
+	bh=03/CqbBBRYZh+o/TBOQRC+HPvVJ9MFfeXziT++jGwQQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n6Du2CcLBqg7HBVeSfU0sP7S5MnFikTN1cfilzBK66vQ5qTUSA6EJ5UWv93F9+mL17j+QUCauc3JevFoSEfghPlRqDXBD5tnuDaKHcwh38gJ6lKJ1beSl7T4bPE+sQxGcvsiFCtUS/vK6LjhjzWCPEPS/lYJNZBOAH65XQfWB+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qZlmLXhw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OB3AK8OuFolttgIPB9yZHs9HQVmT7g6xaz3XC92GCH+E+52eJPSArT34xg96grJjYKtW1OaCCY0DjUy0/ljwHgH1BrWRVp6ySYKwdk0gHyXa/HvJBL5lZkbWDtbXPuMvZGCjvGHliWrVBmGuji+10CWnKcOTIU8babBDrvwjChM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ByFQ4r9U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZlmLXhw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6AE4C4CEF2;
-	Mon, 23 Jun 2025 08:50:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ByFQ4r9U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29434C4CEED;
+	Mon, 23 Jun 2025 08:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750668658;
-	bh=/uZSQ/EcB0rNwZGbsbtYX0UqygEGMdYs4umPwvkBw0E=;
+	s=k20201202; t=1750668661;
+	bh=03/CqbBBRYZh+o/TBOQRC+HPvVJ9MFfeXziT++jGwQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qZlmLXhwkIjVP81t2ICRxnF6FJlEZdSpsv1p4tv++0nU+xrHF3KlrIR7u0ik3P4Zc
-	 3vPIjk/7bIN1yPDvtVOIh1wwxSrnuoT4+2XvBwFVe0y8ohdnVg0+EZDF8DqAz/kWpi
-	 cuajgkY4KJh914Q6RwnZ8zWwCtnyZGGWmTgTHT96cJq4YjH0g7UAhtx1bxF+i4D9u2
-	 ie6PMzNI6xfKG0P02jRuYutCgtJbmINQbBspGACedOlSbGxuwXBFoTMoeErtjapAdX
-	 9RmH3pt7Nru5XNKKHj8ipOz5rwT1c6/ohbA7oWpC1vGx8S/6ZyL+jOiKDH73mDVTLj
-	 AVXZA+MPn1mSg==
+	b=ByFQ4r9Uxl+OLVn9qZ4PrmxbnQxAcrYthjFn/0zvMhmLjXtFiZ+mVe+iu1lB8f93g
+	 UkbFrnXkekcdr4QJQZmQG9PyXiJMbcgtHYcZhuQldBwLukm0RnJS8Rcz3OC/o9s+EH
+	 kux4wucD4TU+CBg02GKeA6LlEllNI4eEC4qD/tpT59P+2JQTh03i7w8UME/ata6tiZ
+	 5c5NcGuhmx0iRTxPd7YKA1mDL7uM0/mixfOpYHGPBj55epHYj/t2QnNj172OuIpo+w
+	 57lxHwTGiI7TL9WBXMsQBz3uylyXMlTbWPZ0msf4YWggf7CwLOHx7Nzvu0FTrKBCix
+	 ABhqi1IQYGF6w==
 From: Hans de Goede <hansg@kernel.org>
 To: Sakari Ailus <sakari.ailus@linux.intel.com>,
 	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
@@ -34,9 +34,9 @@ Cc: Hans de Goede <hansg@kernel.org>,
 	Arnd Bergmann <arnd@arndb.de>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 01/10] mei: vsc: Drop unused vsc_tp_request_irq() and vsc_tp_free_irq()
-Date: Mon, 23 Jun 2025 10:50:43 +0200
-Message-ID: <20250623085052.12347-2-hansg@kernel.org>
+Subject: [PATCH 02/10] mei: vsc: Don't re-init VSC from mei_vsc_hw_reset() on stop
+Date: Mon, 23 Jun 2025 10:50:44 +0200
+Message-ID: <20250623085052.12347-3-hansg@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250623085052.12347-1-hansg@kernel.org>
 References: <20250623085052.12347-1-hansg@kernel.org>
@@ -48,70 +48,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Drop the unused vsc_tp_request_irq() and vsc_tp_free_irq() functions.
+mei_vsc_hw_reset() gets called from mei_start() and mei_stop() in
+the latter case we do not need to re-init the VSC by calling vsc_tp_init().
 
+mei_stop() only happens on shutdown and driver unbind. On shutdown we
+don't need to load + boot the firmware and if the driver later is
+bound to the device again then mei_start() will do another reset.
+
+The intr_enable flag is true when called from mei_start() and false on
+mei_stop(). Skip vsc_tp_init() when intr_enable is false.
+
+This avoids unnecessarily uploading the firmware, which takes 11 seconds.
+This change reduces the poweroff/reboot time by 11 seconds.
+
+Fixes: 386a766c4169 ("mei: Add MEI hardware support for IVSC device")
 Signed-off-by: Hans de Goede <hansg@kernel.org>
 ---
- drivers/misc/mei/vsc-tp.c | 31 -------------------------------
- drivers/misc/mei/vsc-tp.h |  3 ---
- 2 files changed, 34 deletions(-)
+ drivers/misc/mei/platform-vsc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/misc/mei/vsc-tp.c b/drivers/misc/mei/vsc-tp.c
-index 267d0de5fade..99a55451e1fc 100644
---- a/drivers/misc/mei/vsc-tp.c
-+++ b/drivers/misc/mei/vsc-tp.c
-@@ -406,37 +406,6 @@ int vsc_tp_register_event_cb(struct vsc_tp *tp, vsc_tp_event_cb_t event_cb,
+diff --git a/drivers/misc/mei/platform-vsc.c b/drivers/misc/mei/platform-vsc.c
+index 435760b1e86f..1ac85f0251c5 100644
+--- a/drivers/misc/mei/platform-vsc.c
++++ b/drivers/misc/mei/platform-vsc.c
+@@ -256,6 +256,9 @@ static int mei_vsc_hw_reset(struct mei_device *mei_dev, bool intr_enable)
+ 
+ 	vsc_tp_reset(hw->tp);
+ 
++	if (!intr_enable)
++		return 0;
++
+ 	return vsc_tp_init(hw->tp, mei_dev->dev);
  }
- EXPORT_SYMBOL_NS_GPL(vsc_tp_register_event_cb, "VSC_TP");
  
--/**
-- * vsc_tp_request_irq - request irq for vsc_tp device
-- * @tp: vsc_tp device handle
-- */
--int vsc_tp_request_irq(struct vsc_tp *tp)
--{
--	struct spi_device *spi = tp->spi;
--	struct device *dev = &spi->dev;
--	int ret;
--
--	irq_set_status_flags(spi->irq, IRQ_DISABLE_UNLAZY);
--	ret = request_threaded_irq(spi->irq, vsc_tp_isr, vsc_tp_thread_isr,
--				   IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
--				   dev_name(dev), tp);
--	if (ret)
--		return ret;
--
--	return 0;
--}
--EXPORT_SYMBOL_NS_GPL(vsc_tp_request_irq, "VSC_TP");
--
--/**
-- * vsc_tp_free_irq - free irq for vsc_tp device
-- * @tp: vsc_tp device handle
-- */
--void vsc_tp_free_irq(struct vsc_tp *tp)
--{
--	free_irq(tp->spi->irq, tp);
--}
--EXPORT_SYMBOL_NS_GPL(vsc_tp_free_irq, "VSC_TP");
--
- /**
-  * vsc_tp_intr_synchronize - synchronize vsc_tp interrupt
-  * @tp: vsc_tp device handle
-diff --git a/drivers/misc/mei/vsc-tp.h b/drivers/misc/mei/vsc-tp.h
-index 14ca195cbddc..f9513ddc3e40 100644
---- a/drivers/misc/mei/vsc-tp.h
-+++ b/drivers/misc/mei/vsc-tp.h
-@@ -37,9 +37,6 @@ int vsc_tp_xfer(struct vsc_tp *tp, u8 cmd, const void *obuf, size_t olen,
- int vsc_tp_register_event_cb(struct vsc_tp *tp, vsc_tp_event_cb_t event_cb,
- 			     void *context);
- 
--int vsc_tp_request_irq(struct vsc_tp *tp);
--void vsc_tp_free_irq(struct vsc_tp *tp);
--
- void vsc_tp_intr_enable(struct vsc_tp *tp);
- void vsc_tp_intr_disable(struct vsc_tp *tp);
- void vsc_tp_intr_synchronize(struct vsc_tp *tp);
 -- 
 2.49.0
 
