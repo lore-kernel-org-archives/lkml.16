@@ -1,864 +1,240 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2077.outbound.protection.outlook.com [40.107.95.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A66E825E839;
-	Mon, 23 Jun 2025 15:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750693183; cv=none; b=UjCvOg6mrwdRwJsurk4YBpjw5ViBAqyX34SmpIeBIKaH+eI9uIXzR1yYzFL3UHTwxruO+cH6Kh01iBCM4JdDFwMJlnTwDVe7KAIrZ6fK4KCUJwC8YWpzgQI7VXGbrL65K06puBtS6DJVvmSzXzB3JzTdkcdQ+gO2SqmrHETY/wQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750693183; c=relaxed/simple;
-	bh=KDH+/gW6yn9I2UwYlMTdNzQWTyMyt5BVfKx7aD5TECo=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ECAA54758;
+	Mon, 23 Jun 2025 15:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750693336; cv=fail; b=lrxlstNxSsSZ9nzNFCFimSKlHsmKI+YSbCJIuW2yHnyALo+F8vKEiqqssirIXUqCG+ksURziKulZIP8bvRFWpZmVpA9FFpUEJ32X7h3VOF9wq6cnL0hiXRLYD6LFJRCseDjKUhuwDpyFDzuJcM9FeCDfcysxXaHbgwG4sIGmOgg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750693336; c=relaxed/simple;
+	bh=0xB8xwJXNbPKfd8c2A6UpOnu/bDvdU6kVinLwzhG4yM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NLDGADq2Wi6oNBA6Mrtv/2uTMxhAzX2qB72OgiVLEIBnplxb8Nu3l9NVuI6HXu291j4TeLEi0d+XOn4P8GA8Tc6Ey/ed6sbg6Zxo+kvPnx/hq3ThdTfn03A34yB/zZWA6siucIGgUzfdtrEF1AoOPZK0YkNix3xclE6RESWArh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=VXrR8Xiy; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 Content-Type:MIME-Version; b=rF4MUZswddUkOygSwh4fgLYCZTXtTE4Yhyn/rUsv9z2NN3tdmknDKHX2AzG3pKlfu3B307vOW+/Du/Dn8VnRkMHs/vzxb37aZnYUW+8erh9skjqS7UehZKEZhGSG1YkUjRwjJBcoSxpl174tCMVM17hyAInPj7CgqmGRtSgEqqA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mYBVpqGM; arc=fail smtp.client-ip=40.107.95.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="VXrR8Xiy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750693178;
-	bh=KDH+/gW6yn9I2UwYlMTdNzQWTyMyt5BVfKx7aD5TECo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VXrR8XiyDlGac1c/hJuar7OefG8QiBek+2tWhysQOpEW/HUc1IEv6hmLIKTyKPVNi
-	 UDB5tCM4Pi4XLcj1gliAUzTulIpWbFXLWkD4Bnps15OV2ZnPz+Tvw5LDgVPWRq29Ko
-	 0BUq9ewsbMR2MY0MA6nZVoBGSSbD2M9Y1Tr5cyTwrVUfvI9pdI6WY5xcKxPF3ut2IE
-	 4p465XfCWUA+DWQfFGuLvIufNYMfK35rwsrLCjWWrGVaHOZj+epGwfoxhi3A2vxEcE
-	 y1TqWzwguZHy5+LIyyZB41bPMAegH+elH1daq65hF+/tVco2dB1cBfU8YTEyMoMil0
-	 GH5LhJROs3Bng==
-Received: from benjamin-XPS-13-9310.. (unknown [IPv6:2a01:e0a:120:3210:d44b:b63b:15ee:9c1d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: benjamin.gaignard)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6737E17E156E;
-	Mon, 23 Jun 2025 17:39:38 +0200 (CEST)
-From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-To: joro@8bytes.org,
-	will@kernel.org,
-	robin.murphy@arm.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	heiko@sntech.de,
-	nicolas.dufresne@collabora.com,
-	jgg@ziepe.ca
-Cc: iommu@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	kernel@collabora.com,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Subject: [PATCH v4 3/5] iommu: Add verisilicon IOMMU driver
-Date: Mon, 23 Jun 2025 17:39:27 +0200
-Message-ID: <20250623153931.158765-4-benjamin.gaignard@collabora.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250623153931.158765-1-benjamin.gaignard@collabora.com>
-References: <20250623153931.158765-1-benjamin.gaignard@collabora.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mYBVpqGM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CNHaUhkvHKurRP71Ie9XQjar2c2gVmXHnlESvsNTFPeT1F7dQIlpotDslqlTAw0g+Ex0WLq1Z+g8VP4sqjPbBolmre8agtwWABQD6LZQ4C0rJW0u8JwMmhm36IWbbvzjf7mIJ6SrPPic4UszK6fo2VtPqJV/qnJ65K51B0mm49ojIDriUcN+2eH67AmYVHJ5D/A4Kj+sZhFi6XOr1aP3zb10ItiLF5F+HUpNUrAS5TV3mAh2vXGydzyNLMBLVTUa+FYpJBaQhLKRX8tsfQScEK/vU45y+Y2nFdd7vLcBEnAJbV1syto9MXoPRcCHofEpZdsA0Y4hpywwFlIou5k+Ag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0xB8xwJXNbPKfd8c2A6UpOnu/bDvdU6kVinLwzhG4yM=;
+ b=KA7yADePPhuLrPTU33IkJo88SUj1FzS3kjQh/3HIAloGu2pwUUni56jiRK2Tc4bMhukr6zjYryW1J67jP2pLO2/k5Ko7a5cDEQ89iZi1coouBXnIU7tBxXh+CMIY57wA+IqVlmKjvYLBgrtgo1TVQKrdZV7GIGfSYqmW2S8G1Zlmo0msGH7WUy0QvIo9oeAFuo+K3W+gwf0/DORHa88veczLYoAH718IQaDDZ1P0CSdYrwg6dEQHkkc0F3Uu8VrKf6KuO7ejV61+VmSwnhWsgwM15fjZzRgwu/ERZ6sHz5LQtMRutGST2qxXwlas3ZxRMfcEIOcTXKQxkcxO1G+2gw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0xB8xwJXNbPKfd8c2A6UpOnu/bDvdU6kVinLwzhG4yM=;
+ b=mYBVpqGMBuusjHxELShTg7szaOE4cP3hG7W8bXF5bV3z0H94fymBmpuCAS2heO9up7j6PQlcepOExlcEPY03Bpu/AqW7e5YYnVbM7VIgAWS2OM+FEav+3KxYL/9N72FusbAX0kBjjF49TebGHSYN8ITBwPlFg9C6xSfcGTffCmsYLWhpc4QctwjmZSXSoI17NSZzS9lxrgaoQ1ann7fqocwxexeYoU+vqBO5qJAGlah1wIL4dB9HBEhlbo2SgQKOMvztImw0MGpJ08C07eJJAcp3iVb0X0GfQIPJvjZI8d+rTmuSdWOPyzTh9Rm9XXDLnuU0p256usq2HHfLIm44SQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ MW6PR12MB8708.namprd12.prod.outlook.com (2603:10b6:303:242::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Mon, 23 Jun
+ 2025 15:42:11 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8835.037; Mon, 23 Jun 2025
+ 15:42:11 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Alistair Popple <apopple@nvidia.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Minchan Kim <minchan@kernel.org>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
+ Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>,
+ Naoya Horiguchi <nao.horiguchi@gmail.com>,
+ Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
+ Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>
+Subject: Re: [PATCH RFC 07/29] mm/migrate: rename isolate_movable_page() to
+ isolate_movable_ops_page()
+Date: Mon, 23 Jun 2025 11:42:06 -0400
+X-Mailer: MailMate (2.0r6265)
+Message-ID: <8FE2EDF1-DF20-4DC4-A179-83E598508748@nvidia.com>
+In-Reply-To: <bef13481-5218-4732-831d-fe22d95184c1@redhat.com>
+References: <20250618174014.1168640-1-david@redhat.com>
+ <20250618174014.1168640-8-david@redhat.com>
+ <9F76592E-BB0E-4136-BDBA-195CC6FF3B03@nvidia.com>
+ <aFMH0TmoPylhkSjZ@casper.infradead.org>
+ <4D6D7321-CAEC-4D82-9354-4B9786C4D05E@nvidia.com>
+ <bef13481-5218-4732-831d-fe22d95184c1@redhat.com>
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: BN9P221CA0024.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:408:10a::23) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|MW6PR12MB8708:EE_
+X-MS-Office365-Filtering-Correlation-Id: a3d2a679-eeb3-4e83-1d15-08ddb26c84e2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?gztkjYBmY0mjCYYuZl0MwaFJ4sUvbg1C1cd5dxLnRTyJxq/Pg0izTJL0QfPV?=
+ =?us-ascii?Q?xaonYBzE5eftSGGrgPFUzmH8TrMJdLXQb2mu8xUvCVAZ6Kl7gEM3dyPeMDoM?=
+ =?us-ascii?Q?bkpO+UCc5at7l6yn9lDzIJICvEMO9b+5BYy9dihCsnfr2RC25Cgi62ALpE9I?=
+ =?us-ascii?Q?NjtrOKRZwOcEiaihRPafAV1eN4zWGczU6NbtY6R+i/gVM+iObmIeniPeAZy1?=
+ =?us-ascii?Q?FGE+QL0TqUI6PNQyeisTTKcOAAk1wEvqJhWrXnoNfVQf3jgkN3MWf4xcffCx?=
+ =?us-ascii?Q?uZx/988Wi5+gnI5tBhitmSQKgVoQoWGpBGvPjO/m0U3u/Q2BYFIYM1pClUpd?=
+ =?us-ascii?Q?ESqGeevuDyw1EE1QU8w24+v+sdhekJTW9MPHEqkJZbagEzRURD/I3HRqMUoO?=
+ =?us-ascii?Q?Ous44zf8e5p0V3hKvSX1xjIOfrTVBfVyhki7GsOQDo5SwQWOA6bxLPnVcMDs?=
+ =?us-ascii?Q?9gpY0rrgNx3nj30XKkkLzdm/7PaowDtOCUr0JVbqYLohECHt35h3G3D+MQms?=
+ =?us-ascii?Q?syIhdf8o3UHdMiyMwaftJgCKBlheXHGsiT+HQVn+4cSNnVv4hGKJbxZ92Q5N?=
+ =?us-ascii?Q?sZv/OLd2fxafJdkdmKB1fBBZHRSgkNHXJ6JIkpJTNDw1MZTEwgw++hAwcHt/?=
+ =?us-ascii?Q?00ilNqaHIa+U133Do/a29AimXbJqY18RiOyyy7hqnNPszrtrrB4aPrFjasxi?=
+ =?us-ascii?Q?FYMaBcPUMRdspPYmf7N9lJDrhcf3Pn1vcuL9q8yzFOyx8rMH5zkS+lMVCdsJ?=
+ =?us-ascii?Q?Sp7iK3IJd4kycyc783gMBcBSgDcYGy2MiV8J486itmnxX6vK3O2Z2uCd5QHA?=
+ =?us-ascii?Q?WCrzE1Uju9ZSil6hEUqjtaOKgbXDUl5fwusUBgZaSsMWAcqMwi3r52MV2c33?=
+ =?us-ascii?Q?oMSeh55YAi3HsTcselQoQ2eFFAPwUk1dAZ7v+S7zWr0feBZzD/HXlc0sXRpE?=
+ =?us-ascii?Q?QBj2RFI0fL0e0XWjv4hkqNgnHyLWizqCcIpyKOXjWZQ9xg7R1GYtP2aKSEfB?=
+ =?us-ascii?Q?yll3S5lNzhtIgRbpN8FyLTQlnN6AVuywrQ++jcCdOGZjANF+AP0Kp3olxVwH?=
+ =?us-ascii?Q?GzBMytq2Vn7kQXY2/32rq6170lLgNOp2u1OCS93g6bdi39ewJKvjWsZHETB7?=
+ =?us-ascii?Q?qOgv2Sq0rJ6oVwaMw+MHUldy02Q87wxA9s7MG4cBFzvGx5mvfiVHG/SIaWj5?=
+ =?us-ascii?Q?+ZUSx3HJ54m/lbSCHsqOT/l4pp5JdoeLcACoTOy540zNaWtNCHdRnfw6/TdO?=
+ =?us-ascii?Q?P2p/6bPF90nLqtabKNrTQ/+O4tfowRrIEJSHv0LlhggrxPcS5goAXjvkPMh0?=
+ =?us-ascii?Q?SWCfyuAyXIcHlmA6WnQvSmy9UxWmk/k5LqhjNSxg81YCuvz7XEEdNCISHkHw?=
+ =?us-ascii?Q?jkv9/Ts6cB2+ZpSF45WdAhR1o5fF7nrbvHPo5PV00h+2vK3yCQiCZKXBEaQS?=
+ =?us-ascii?Q?jxzvvBXEZYU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?jyzqmRxMfUlRqvTgEViASMGzKJdEl47LLHynvBnHKlfGimWImFuq9nfYytYq?=
+ =?us-ascii?Q?WftoXSsupKVUYit6QoC4rd4ilVhEnE/uXYtul2ehJs9jRstiBUMflMuB6M7u?=
+ =?us-ascii?Q?78HZ56KhkrR+5WVcGAmMbDQFPqlpSv+GcVMzUL231/XI/3ZH9tPeo5ZO/G/W?=
+ =?us-ascii?Q?lGs9sWds8d8o8duIkMDY4tFp3Oe5hNqh94cLELcCauSvLIjJ5AMab+7Xm3ue?=
+ =?us-ascii?Q?kY/JOyxc9TNWdEqrqaAup2KPxCje7kaXmBN1TGMpaMuSBb9UaQ8qvJ2Ud2Ig?=
+ =?us-ascii?Q?HpGJKo210D257vr6TovBHbr0MLq8ZvLP/RCYLUCjaJnXAwiRoqGAoKiT5fwq?=
+ =?us-ascii?Q?VuT/mVedEzPEArAFok6kGVIcXBI2++Brw8DyCIBIkQNaZDWpfEFXRn+mic2R?=
+ =?us-ascii?Q?2wkOC2u171Prb0796qEVrCgGCYWmswRVqMtOLHvFPxHkjGnSBrArQTXFBymH?=
+ =?us-ascii?Q?K/li6jFyisao/706B0Sx15+Gdz3NmSMSPRQCw5uJUibCnWE0bo1F+AKfo7CU?=
+ =?us-ascii?Q?1SvppB+IO8uVhOdHCPgktBc5DQ0hUdGoFZSp939I/p9IMw4X0DhhMLtP1DAO?=
+ =?us-ascii?Q?SevX1NdGW8TINGZ9yJ8tFxfbl4gaCJsQufFBD2fHoI7yi+hfAgqdywW34SQ2?=
+ =?us-ascii?Q?WWevO3NhcvFegIGNg7kTLchAsyMpWOfv0LyZYEZZ6PhxctONKRR8Pg4GdCd2?=
+ =?us-ascii?Q?8zdsjXixzGmrdQSD1FhI9Bp3vKwwQVIUTab80fn84Zv7Y5VlutUFTs+yGFAD?=
+ =?us-ascii?Q?h2yE6z5qL2ycBUaExY5E7l3kuWIFE7O0lYmrtlYNbJ/eSho6Raw+c6yTLnhr?=
+ =?us-ascii?Q?QIXaT7nCv2HtzPzbIXTSb6oDxkDC0BrtY7QT83EtskeRZOgEcZdFmouDrrgd?=
+ =?us-ascii?Q?5s2RyrYfx5pX/qHUF3Wqn9pzC6kPevAWNM8X2Mc10zaS1TaF3vlxdtDKnMTB?=
+ =?us-ascii?Q?cfHhb78r0Xk3Jj9nuBY4isFRHXMjNvLrIuI2XsUz7TLEWBcpe/xLwi0wVrsd?=
+ =?us-ascii?Q?wnrQiZQRUv1TzS9dTb2yXffB2aV29VksbIBT+v9tFKke9jWo8NXCXhmtFrPC?=
+ =?us-ascii?Q?bGkYbcjFpWMoB9X2a6wD+WYL2I+C1OuQQtl1hWrGmS4rf3EgbNlEFdH36AbH?=
+ =?us-ascii?Q?CIc/YyZaSBS0/prsgPUEUm9Q829y9gSrf85zXQUonJWrJQKWM8j2yk6FdQwd?=
+ =?us-ascii?Q?olJYR5OfPbCaMvSawkBHm4zfcVpwLKZxCX/+IM0wTvoG0T1xfWf8OJodzLtS?=
+ =?us-ascii?Q?2XwnJlXq1LJoypHTqyQ3Qc29poj3u7zEIZZTJwOZKcu2VUzryFPySYPMx9r5?=
+ =?us-ascii?Q?3483k9QjMhWMzoA1Z1/9GjH/VfcSKhJQE5lyC944QeXp5wflCywa/MOOuY0B?=
+ =?us-ascii?Q?EfLJGVqFSX/nEqEDUACivprtMIP969lcV0GVHuwOQiF1THHrY180t4SNe5VR?=
+ =?us-ascii?Q?j6IWW1Lerf0VozxIcX0DC1P5l5FjC7Z10frDtPiz42F9rwUGFJ8fpUyGJ8jb?=
+ =?us-ascii?Q?6i4BQcijyNqMyH6SsjPPNCwZOZtrA8tyVUA9dmti+86vYuNXBR7It5PLFoKc?=
+ =?us-ascii?Q?msGgqPewmZHgTgbMitM89YKzjs9f6jx4aZMWG9lV?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a3d2a679-eeb3-4e83-1d15-08ddb26c84e2
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 15:42:11.4924
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TxpB/HcmwTzZl/oUJeqUQfAAYa4KRO44FknvTJwf99qwP3ZXevnSuKiHovdht6XA
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8708
 
-The Verisilicon IOMMU hardware block can be found in combination
-with Verisilicon hardware video codecs (encoders or decoders) on
-different SoCs.
-Enable it will allow us to use non contiguous memory allocators
-for Verisilicon video codecs.
+On 23 Jun 2025, at 11:33, David Hildenbrand wrote:
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
----
-change in version 4:
-- Kconfig dependencies
-- Fix the remarks done by Jason and Robin: locking, clocks, macros
-  probing, pm_runtime, atomic allocation.
+> On 18.06.25 20:48, Zi Yan wrote:
+>> On 18 Jun 2025, at 14:39, Matthew Wilcox wrote:
+>>
+>>> On Wed, Jun 18, 2025 at 02:14:15PM -0400, Zi Yan wrote:
+>>>> On 18 Jun 2025, at 13:39, David Hildenbrand wrote:
+>>>>
+>>>>> ... and start moving back to per-page things that will absolutely n=
+ot be
+>>>>> folio things in the future. Add documentation and a comment that th=
+e
+>>>>> remaining folio stuff (lock, refcount) will have to be reworked as =
+well.
+>>>>>
+>>>>> While at it, convert the VM_BUG_ON() into a WARN_ON_ONCE() and hand=
+le
+>>>>> it gracefully (relevant with further changes), and convert a
+>>>>> WARN_ON_ONCE() into a VM_WARN_ON_ONCE_PAGE().
+>>>>
+>>>> The reason is that there is no upstream code, which use movable_ops =
+for
+>>>> folios? Is there any fundamental reason preventing movable_ops from
+>>>> being used on folios?
+>>>
+>>> folios either belong to a filesystem or they are anonymous memory, an=
+d
+>>> so either the filesystem knows how to migrate them (through its a_ops=
+)
+>>> or the migration code knows how to handle anon folios directly.
+>
+> Right, migration of folios will be handled by migration core.
+>
+>>
+>> for device private pages, to support migrating >0 order anon or fs fol=
+ios
+>> to device, how should we represent them for devices? if you think foli=
+o is
+>> only for anon and fs.
+>
+> I assume they are proper folios, so yes. Just like they are handled tod=
+ay (-> folios)
+>
+> I was asking a related question at LSF/MM in Alistair's session: are we=
+ sure these things will be folios even before they are assigned to a file=
+system? I recall the answer was "yes".
+>
+> So we don't (and will not) support movable_ops for folios.
 
- drivers/iommu/Kconfig     |  11 +
- drivers/iommu/Makefile    |   1 +
- drivers/iommu/vsi-iommu.c | 741 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 753 insertions(+)
- create mode 100644 drivers/iommu/vsi-iommu.c
+Got it. (I was abusing it to help develop alloc_contig_range() at pageblo=
+ck
+granularity, since it was easy to write a driver to allocate a compound p=
+age
+at a specific PFN and claim the page is movable, then do page online/offl=
+ine
+the range containing the PFNs. :) )
 
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index 0a33d995d15d..e6e75b39ec22 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -383,4 +383,15 @@ config SPRD_IOMMU
- 
- 	  Say Y here if you want to use the multimedia devices listed above.
- 
-+config VSI_IOMMU
-+	tristate "Verisilicon IOMMU Support"
-+	depends on (ARCH_ROCKCHIP && ARM64) || COMPILE_TEST
-+	select IOMMU_API
-+	help
-+	  Support for IOMMUs used by Verisilicon sub-systems like video
-+	  decoders or encoder hardware blocks.
-+
-+	  Say Y here if you want to use this IOMMU in front of these
-+	  hardware blocks.
-+
- endif # IOMMU_SUPPORT
-diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-index 355294fa9033..68aeff31af8b 100644
---- a/drivers/iommu/Makefile
-+++ b/drivers/iommu/Makefile
-@@ -34,3 +34,4 @@ obj-$(CONFIG_IOMMU_SVA) += iommu-sva.o
- obj-$(CONFIG_IOMMU_IOPF) += io-pgfault.o
- obj-$(CONFIG_SPRD_IOMMU) += sprd-iommu.o
- obj-$(CONFIG_APPLE_DART) += apple-dart.o
-+obj-$(CONFIG_VSI_IOMMU) += vsi-iommu.o
-diff --git a/drivers/iommu/vsi-iommu.c b/drivers/iommu/vsi-iommu.c
-new file mode 100644
-index 000000000000..d26c2fd06711
---- /dev/null
-+++ b/drivers/iommu/vsi-iommu.c
-@@ -0,0 +1,741 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright (C) 2025 Collabora Ltd.
-+ *
-+ * IOMMU API for Verisilicon
-+ *
-+ * Module Authors:	Yandong Lin <yandong.lin@rock-chips.com>
-+ *			Simon Xue <xxm@rock-chips.com>
-+ *			Benjamin Gaignard <benjamin.gaignard@collabora.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/compiler.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/errno.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/iommu.h>
-+#include <linux/list.h>
-+#include <linux/mm.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_iommu.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+
-+#include "iommu-pages.h"
-+
-+struct vsi_iommu {
-+	struct device *dev;
-+	void __iomem *regs;
-+	struct clk_bulk_data *clocks;
-+	int num_clocks;
-+	struct iommu_device iommu;
-+	struct list_head node; /* entry in vsi_iommu_domain.iommus */
-+	struct iommu_domain *domain; /* domain to which iommu is attached */
-+	spinlock_t lock;
-+	int irq;
-+};
-+
-+struct vsi_iommu_domain {
-+	struct vsi_iommu *iommu;
-+	struct list_head iommus;
-+	u32 *dt;
-+	dma_addr_t dt_dma;
-+	struct iommu_domain domain;
-+	u64 *pta;
-+	dma_addr_t pta_dma;
-+};
-+
-+static struct iommu_domain vsi_identity_domain;
-+
-+#define NUM_DT_ENTRIES	1024
-+#define NUM_PT_ENTRIES	1024
-+#define PT_SIZE		(NUM_PT_ENTRIES * sizeof(u32))
-+
-+#define SPAGE_SIZE	BIT(12)
-+
-+/* vsi iommu regs address */
-+#define VSI_MMU_CONFIG1_BASE			0x1ac
-+#define VSI_MMU_AHB_EXCEPTION_BASE		0x380
-+#define VSI_MMU_AHB_CONTROL_BASE		0x388
-+#define VSI_MMU_AHB_TLB_ARRAY_BASE_L_BASE	0x38C
-+
-+/* MMU register offsets */
-+#define VSI_MMU_FLUSH_BASE		0x184
-+#define VSI_MMU_BIT_FLUSH		BIT(4)
-+
-+#define VSI_MMU_PAGE_FAULT_ADDR		0x380
-+#define VSI_MMU_STATUS_BASE		0x384	/* IRQ status */
-+
-+#define VSI_MMU_BIT_ENABLE		BIT(0)
-+
-+#define VSI_MMU_OUT_OF_BOUND		BIT(28)
-+/* Irq mask */
-+#define VSI_MMU_IRQ_MASK		0x7
-+
-+#define VSI_DTE_PT_ADDRESS_MASK		0xffffffc0
-+#define VSI_DTE_PT_VALID		BIT(0)
-+
-+#define VSI_PAGE_DESC_LO_MASK		0xfffff000
-+
-+static inline phys_addr_t vsi_dte_pt_address(u32 dte)
-+{
-+	return (phys_addr_t)dte & VSI_DTE_PT_ADDRESS_MASK;
-+}
-+
-+static inline u32 vsi_mk_dte(u32 dte)
-+{
-+	return (phys_addr_t)dte | VSI_DTE_PT_VALID;
-+}
-+
-+#define VSI_PTE_PAGE_WRITABLE		BIT(2)
-+#define VSI_PTE_PAGE_VALID		BIT(0)
-+
-+static inline phys_addr_t vsi_pte_page_address(u32 pte)
-+{
-+	return (phys_addr_t)(pte & VSI_PAGE_DESC_LO_MASK);
-+}
-+
-+static u32 vsi_mk_pte(phys_addr_t page, int prot)
-+{
-+	u32 flags = 0;
-+
-+	flags |= (prot & IOMMU_WRITE) ? VSI_PTE_PAGE_WRITABLE : 0;
-+	page = (page & VSI_PAGE_DESC_LO_MASK);
-+
-+	return page | flags | VSI_PTE_PAGE_VALID;
-+}
-+
-+#define VSI_DTE_PT_VALID	BIT(0)
-+
-+static inline bool vsi_dte_is_pt_valid(u32 dte)
-+{
-+	return dte & VSI_DTE_PT_VALID;
-+}
-+
-+static inline bool vsi_pte_is_page_valid(u32 pte)
-+{
-+	return pte & VSI_PTE_PAGE_VALID;
-+}
-+
-+static u32 vsi_mk_pte_invalid(u32 pte)
-+{
-+	return pte & ~VSI_PTE_PAGE_VALID;
-+}
-+
-+#define VSI_MASTER_TLB_MASK	GENMASK_ULL(31, 10)
-+/* mode 0 : 4k */
-+#define VSI_PTA_4K_MODE	0
-+
-+static u64 vsi_mk_pta(dma_addr_t dt_dma)
-+{
-+	u64 val = (dt_dma & VSI_MASTER_TLB_MASK) | VSI_PTA_4K_MODE;
-+
-+	return val;
-+}
-+
-+static struct vsi_iommu_domain *to_vsi_domain(struct iommu_domain *dom)
-+{
-+	return container_of(dom, struct vsi_iommu_domain, domain);
-+}
-+
-+static void vsi_iommu_disable(struct vsi_iommu *iommu)
-+{
-+	writel(0, iommu->regs + VSI_MMU_AHB_CONTROL_BASE);
-+}
-+
-+static void vsi_iommu_enable(struct vsi_iommu *iommu, struct iommu_domain *domain)
-+{
-+	struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
-+
-+	writel(vsi_domain->pta_dma, iommu->regs + VSI_MMU_AHB_TLB_ARRAY_BASE_L_BASE);
-+	writel(VSI_MMU_OUT_OF_BOUND, iommu->regs + VSI_MMU_CONFIG1_BASE);
-+	writel(VSI_MMU_BIT_ENABLE, iommu->regs + VSI_MMU_AHB_EXCEPTION_BASE);
-+	writel(VSI_MMU_BIT_ENABLE, iommu->regs + VSI_MMU_AHB_CONTROL_BASE);
-+}
-+
-+static inline void vsi_table_flush(struct vsi_iommu_domain *vsi_domain, dma_addr_t dma,
-+				   unsigned int count)
-+{
-+	size_t size = count * sizeof(u32); /* count of u32 entry */
-+
-+	dma_sync_single_for_device(vsi_domain->iommu->dev, dma, size, DMA_TO_DEVICE);
-+}
-+
-+#define VSI_IOVA_DTE_MASK	0xffc00000
-+#define VSI_IOVA_DTE_SHIFT	22
-+#define VSI_IOVA_PTE_MASK	0x003ff000
-+#define VSI_IOVA_PTE_SHIFT	12
-+#define VSI_IOVA_PAGE_MASK	0x00000fff
-+#define VSI_IOVA_PAGE_SHIFT	0
-+
-+static u32 vsi_iova_dte_index(u32 iova)
-+{
-+	return (iova & VSI_IOVA_DTE_MASK) >> VSI_IOVA_DTE_SHIFT;
-+}
-+
-+static u32 vsi_iova_pte_index(u32 iova)
-+{
-+	return (iova & VSI_IOVA_PTE_MASK) >> VSI_IOVA_PTE_SHIFT;
-+}
-+
-+static u32 vsi_iova_page_offset(u32 iova)
-+{
-+	return (iova & VSI_IOVA_PAGE_MASK) >> VSI_IOVA_PAGE_SHIFT;
-+}
-+
-+static void vsi_iommu_flush_tlb_all(struct iommu_domain *domain)
-+{
-+	struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
-+	struct list_head *pos;
-+
-+	list_for_each(pos, &vsi_domain->iommus) {
-+		struct vsi_iommu *iommu;
-+		unsigned long flags;
-+		int ret;
-+
-+		iommu = list_entry(pos, struct vsi_iommu, node);
-+		ret = pm_runtime_resume_and_get(iommu->dev);
-+		if (ret < 0)
-+			continue;
-+
-+		spin_lock_irqsave(&iommu->lock, flags);
-+
-+		writel(VSI_MMU_BIT_FLUSH, iommu->regs + VSI_MMU_FLUSH_BASE);
-+		writel(0, iommu->regs + VSI_MMU_FLUSH_BASE);
-+
-+		spin_unlock_irqrestore(&iommu->lock, flags);
-+		pm_runtime_mark_last_busy(iommu->dev);
-+		pm_runtime_put_autosuspend(iommu->dev);
-+	}
-+}
-+
-+static irqreturn_t vsi_iommu_irq(int irq, void *dev_id)
-+{
-+	struct vsi_iommu *iommu = dev_id;
-+	unsigned long flags;
-+	dma_addr_t iova;
-+	u32 status;
-+
-+	if (pm_runtime_resume_and_get(iommu->dev) < 0)
-+		return IRQ_NONE;
-+
-+	spin_lock_irqsave(&iommu->lock, flags);
-+
-+	status = readl(iommu->regs + VSI_MMU_STATUS_BASE);
-+	if (status & VSI_MMU_IRQ_MASK) {
-+		dev_err(iommu->dev, "unexpected int_status=%08x\n", status);
-+		iova = readl(iommu->regs + VSI_MMU_PAGE_FAULT_ADDR);
-+		report_iommu_fault(iommu->domain, iommu->dev, iova, status);
-+	}
-+	writel(0, iommu->regs + VSI_MMU_STATUS_BASE);
-+
-+	spin_unlock_irqrestore(&iommu->lock, flags);
-+	pm_runtime_mark_last_busy(iommu->dev);
-+	pm_runtime_put_autosuspend(iommu->dev);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static struct vsi_iommu *vsi_iommu_get_from_dev(struct device *dev)
-+{
-+	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
-+	struct device *iommu_dev = bus_find_device_by_fwnode(&platform_bus_type,
-+							     fwspec->iommu_fwnode);
-+
-+	put_device(iommu_dev);
-+
-+	return iommu_dev ? dev_get_drvdata(iommu_dev) : NULL;
-+}
-+
-+static struct iommu_domain *vsi_iommu_domain_alloc_paging(struct device *dev)
-+{
-+	struct vsi_iommu *iommu = dev_iommu_priv_get(dev);
-+	struct vsi_iommu_domain *vsi_domain;
-+
-+	vsi_domain = kzalloc(sizeof(*vsi_domain), GFP_KERNEL);
-+	if (!vsi_domain)
-+		return NULL;
-+
-+	vsi_domain->iommu = iommu;
-+
-+	/*
-+	 * iommu use a 2 level pagetable.
-+	 * Each level1 (dt) and level2 (pt) table has 1024 4-byte entries.
-+	 * Allocate one 4 KiB page for each table.
-+	 */
-+	vsi_domain->dt = iommu_alloc_pages_sz(GFP_KERNEL | GFP_DMA32,
-+					      SPAGE_SIZE);
-+	if (!vsi_domain->dt)
-+		goto err_free_domain;
-+
-+	vsi_domain->dt_dma = dma_map_single(iommu->dev, vsi_domain->dt,
-+					    SPAGE_SIZE, DMA_TO_DEVICE);
-+	if (dma_mapping_error(iommu->dev, vsi_domain->dt_dma)) {
-+		dev_err(iommu->dev, "DMA map error for DT\n");
-+		goto err_free_dt;
-+	}
-+
-+	vsi_domain->pta = iommu_alloc_pages_sz(GFP_KERNEL | GFP_DMA32,
-+					       SPAGE_SIZE);
-+	if (!vsi_domain->pta)
-+		goto err_unmap_dt;
-+
-+	vsi_domain->pta[0] = vsi_mk_pta(vsi_domain->dt_dma);
-+	vsi_domain->pta_dma = dma_map_single(iommu->dev, vsi_domain->pta,
-+					     SPAGE_SIZE, DMA_TO_DEVICE);
-+	if (dma_mapping_error(iommu->dev, vsi_domain->pta_dma)) {
-+		dev_err(iommu->dev, "DMA map error for PTA\n");
-+		goto err_free_pta;
-+	}
-+
-+	INIT_LIST_HEAD(&vsi_domain->iommus);
-+
-+	vsi_domain->domain.geometry.aperture_start = 0;
-+	vsi_domain->domain.geometry.aperture_end   = DMA_BIT_MASK(32);
-+	vsi_domain->domain.geometry.force_aperture = true;
-+	vsi_domain->domain.pgsize_bitmap = SZ_4K;
-+
-+	return &vsi_domain->domain;
-+
-+err_free_pta:
-+	iommu_free_pages(vsi_domain->pta);
-+err_unmap_dt:
-+	dma_unmap_single(iommu->dev, vsi_domain->dt_dma,
-+			 SPAGE_SIZE, DMA_TO_DEVICE);
-+err_free_dt:
-+	iommu_free_pages(vsi_domain->dt);
-+err_free_domain:
-+	kfree(vsi_domain);
-+
-+	return NULL;
-+}
-+
-+static phys_addr_t vsi_iommu_iova_to_phys(struct iommu_domain *domain,
-+					  dma_addr_t iova)
-+{
-+	struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
-+	struct vsi_iommu *iommu = vsi_domain->iommu;
-+	phys_addr_t pt_phys, phys = 0;
-+	unsigned long flags;
-+	u32 dte, pte;
-+	u32 *page_table;
-+
-+	spin_lock_irqsave(&iommu->lock, flags);
-+	dte = vsi_domain->dt[vsi_iova_dte_index(iova)];
-+	if (!vsi_dte_is_pt_valid(dte))
-+		goto unlock;
-+
-+	pt_phys = vsi_dte_pt_address(dte);
-+	page_table = (u32 *)phys_to_virt(pt_phys);
-+	pte = page_table[vsi_iova_pte_index(iova)];
-+	if (!vsi_pte_is_page_valid(pte))
-+		goto unlock;
-+
-+	phys = vsi_pte_page_address(pte) + vsi_iova_page_offset(iova);
-+
-+unlock:
-+	spin_unlock_irqrestore(&iommu->lock, flags);
-+	return phys;
-+}
-+
-+static size_t vsi_iommu_unmap_iova(struct vsi_iommu_domain *vsi_domain,
-+				   u32 *pte_addr, dma_addr_t pte_dma,
-+				   size_t size)
-+{
-+	unsigned int pte_count;
-+	unsigned int pte_total = size / SPAGE_SIZE;
-+
-+	for (pte_count = 0;
-+	     pte_count < pte_total && pte_count < NUM_PT_ENTRIES; pte_count++) {
-+		u32 pte = pte_addr[pte_count];
-+
-+		if (!vsi_pte_is_page_valid(pte))
-+			break;
-+
-+		pte_addr[pte_count] = vsi_mk_pte_invalid(pte);
-+	}
-+
-+	vsi_table_flush(vsi_domain, pte_dma, pte_count);
-+
-+	return pte_count * SPAGE_SIZE;
-+}
-+
-+static int vsi_iommu_map_iova(struct vsi_iommu_domain *vsi_domain, u32 *pte_addr,
-+			      dma_addr_t pte_dma, dma_addr_t iova,
-+			      phys_addr_t paddr, size_t size, int prot)
-+{
-+	unsigned int pte_count;
-+	unsigned int pte_total = size / SPAGE_SIZE;
-+
-+	for (pte_count = 0;
-+	     pte_count < pte_total && pte_count < NUM_PT_ENTRIES; pte_count++) {
-+		u32 pte = pte_addr[pte_count];
-+
-+		if (vsi_pte_is_page_valid(pte))
-+			return (pte_count - 1) * SPAGE_SIZE;
-+
-+		pte_addr[pte_count] = vsi_mk_pte(paddr, prot);
-+
-+		paddr += SPAGE_SIZE;
-+	}
-+
-+	vsi_table_flush(vsi_domain, pte_dma, pte_total);
-+
-+	return 0;
-+}
-+
-+static size_t vsi_iommu_unmap(struct iommu_domain *domain, unsigned long _iova,
-+			      size_t size, size_t count, struct iommu_iotlb_gather *gather)
-+{
-+	struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
-+	struct vsi_iommu *iommu = vsi_domain->iommu;
-+	dma_addr_t pte_dma, iova = (dma_addr_t)_iova;
-+	unsigned long flags;
-+	phys_addr_t pt_phys;
-+	u32 dte;
-+	u32 *pte_addr;
-+	size_t unmap_size = 0;
-+
-+	spin_lock_irqsave(&iommu->lock, flags);
-+
-+	dte = vsi_domain->dt[vsi_iova_dte_index(iova)];
-+	/* Just return 0 if iova is unmapped */
-+	if (!vsi_dte_is_pt_valid(dte))
-+		goto unlock;
-+
-+	pt_phys = vsi_dte_pt_address(dte);
-+	pte_addr = (u32 *)phys_to_virt(pt_phys) + vsi_iova_pte_index(iova);
-+	pte_dma = pt_phys + vsi_iova_pte_index(iova) * sizeof(u32);
-+	unmap_size = vsi_iommu_unmap_iova(vsi_domain, pte_addr, pte_dma, size);
-+
-+unlock:
-+	spin_unlock_irqrestore(&iommu->lock, flags);
-+
-+	return unmap_size;
-+}
-+
-+static u32 *vsi_dte_get_page_table(struct vsi_iommu_domain *vsi_domain,
-+				   dma_addr_t iova, gfp_t gfp)
-+{
-+	u32 *page_table, *dte_addr;
-+	u32 dte_index, dte;
-+	phys_addr_t pt_phys;
-+	dma_addr_t pt_dma;
-+	gfp_t flags;
-+
-+	dte_index = vsi_iova_dte_index(iova);
-+	dte_addr = &vsi_domain->dt[dte_index];
-+	dte = *dte_addr;
-+	if (vsi_dte_is_pt_valid(dte))
-+		goto done;
-+
-+	/* Do not allow to sleep while allocating the buffer */
-+	flags = (gfp & ~GFP_KERNEL) | GFP_ATOMIC | GFP_DMA32;
-+	page_table = iommu_alloc_pages_sz(flags, PAGE_SIZE);
-+	if (!page_table)
-+		return ERR_PTR(-ENOMEM);
-+
-+	pt_dma = dma_map_single(vsi_domain->iommu->dev, page_table, PAGE_SIZE, DMA_TO_DEVICE);
-+	if (dma_mapping_error(vsi_domain->iommu->dev, pt_dma)) {
-+		dev_err(vsi_domain->iommu->dev, "DMA mapping error while allocating page table\n");
-+		iommu_free_pages(page_table);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	dte = vsi_mk_dte(pt_dma);
-+	*dte_addr = dte;
-+
-+	vsi_table_flush(vsi_domain,
-+			vsi_domain->dt_dma + dte_index * sizeof(u32), 1);
-+done:
-+	pt_phys = vsi_dte_pt_address(dte);
-+	return (u32 *)phys_to_virt(pt_phys);
-+}
-+
-+static int vsi_iommu_map(struct iommu_domain *domain, unsigned long _iova,
-+			 phys_addr_t paddr, size_t size, size_t count,
-+			 int prot, gfp_t gfp, size_t *mapped)
-+{
-+	struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
-+	struct vsi_iommu *iommu = vsi_domain->iommu;
-+	dma_addr_t pte_dma, iova = (dma_addr_t)_iova;
-+	u32 *page_table, *pte_addr;
-+	u32 dte, pte_index;
-+	unsigned long flags;
-+	int ret;
-+
-+	spin_lock_irqsave(&iommu->lock, flags);
-+
-+	page_table = vsi_dte_get_page_table(vsi_domain, iova, gfp);
-+	if (IS_ERR(page_table)) {
-+		spin_unlock_irqrestore(&iommu->lock, flags);
-+		return PTR_ERR(page_table);
-+	}
-+
-+	dte = vsi_domain->dt[vsi_iova_dte_index(iova)];
-+	pte_index = vsi_iova_pte_index(iova);
-+	pte_addr = &page_table[pte_index];
-+	pte_dma = vsi_dte_pt_address(dte) + pte_index * sizeof(u32);
-+	ret = vsi_iommu_map_iova(vsi_domain, pte_addr, pte_dma, iova,
-+				 paddr, size, prot);
-+
-+	spin_unlock_irqrestore(&iommu->lock, flags);
-+	if (!ret)
-+		*mapped = size;
-+
-+	return ret;
-+}
-+
-+static int vsi_iommu_identity_attach(struct iommu_domain *domain,
-+				     struct device *dev)
-+{
-+	struct vsi_iommu *iommu = dev_iommu_priv_get(dev);
-+	unsigned long flags;
-+	int ret;
-+
-+	ret = pm_runtime_resume_and_get(iommu->dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	spin_lock_irqsave(&iommu->lock, flags);
-+	if (iommu->domain == domain)
-+		goto unlock;
-+
-+	vsi_iommu_disable(iommu);
-+	list_del_init(&iommu->node);
-+	iommu->domain = domain;
-+
-+unlock:
-+	spin_unlock_irqrestore(&iommu->lock, flags);
-+	pm_runtime_mark_last_busy(iommu->dev);
-+	pm_runtime_put_autosuspend(iommu->dev);
-+	return 0;
-+}
-+
-+static const struct iommu_domain_ops vsi_identity_ops = {
-+	.attach_dev = vsi_iommu_identity_attach,
-+};
-+
-+static struct iommu_domain vsi_identity_domain = {
-+	.type = IOMMU_DOMAIN_IDENTITY,
-+	.ops = &vsi_identity_ops,
-+};
-+
-+static int vsi_iommu_attach_device(struct iommu_domain *domain,
-+				   struct device *dev)
-+{
-+	struct vsi_iommu *iommu = dev_iommu_priv_get(dev);
-+	struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
-+	unsigned long flags;
-+	int ret = 0;
-+
-+	ret = pm_runtime_resume_and_get(iommu->dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	spin_lock_irqsave(&iommu->lock, flags);
-+	/* iommu already attached */
-+	if (iommu->domain == domain)
-+		goto unlock;
-+
-+	vsi_iommu_enable(iommu, domain);
-+	list_add_tail(&iommu->node, &vsi_domain->iommus);
-+	iommu->domain = domain;
-+
-+unlock:
-+	spin_unlock_irqrestore(&iommu->lock, flags);
-+	pm_runtime_mark_last_busy(iommu->dev);
-+	pm_runtime_put_autosuspend(iommu->dev);
-+	return ret;
-+}
-+
-+static void vsi_iommu_domain_free(struct iommu_domain *domain)
-+{
-+	struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
-+	int i;
-+
-+	WARN_ON(!list_empty(&vsi_domain->iommus));
-+
-+	for (i = 0; i < NUM_DT_ENTRIES; i++) {
-+		u32 dte = vsi_domain->dt[i];
-+
-+		if (vsi_dte_is_pt_valid(dte)) {
-+			phys_addr_t pt_phys = vsi_dte_pt_address(dte);
-+			u32 *page_table = phys_to_virt(pt_phys);
-+
-+			dma_unmap_single(vsi_domain->iommu->dev, pt_phys,
-+					 SPAGE_SIZE, DMA_TO_DEVICE);
-+			iommu_free_pages(page_table);
-+		}
-+	}
-+
-+	dma_unmap_single(vsi_domain->iommu->dev, vsi_domain->dt_dma,
-+			 SPAGE_SIZE, DMA_TO_DEVICE);
-+	iommu_free_pages(vsi_domain->dt);
-+
-+	dma_unmap_single(vsi_domain->iommu->dev, vsi_domain->pta_dma,
-+			 SPAGE_SIZE, DMA_TO_DEVICE);
-+	iommu_free_pages(vsi_domain->pta);
-+
-+	kfree(vsi_domain);
-+}
-+
-+static struct iommu_device *vsi_iommu_probe_device(struct device *dev)
-+{
-+	struct vsi_iommu *iommu = vsi_iommu_get_from_dev(dev);
-+	struct device_link *link;
-+
-+	link = device_link_add(dev, iommu->dev,
-+			       DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME);
-+	if (!link)
-+		dev_err(dev, "Unable to link %s\n", dev_name(iommu->dev));
-+
-+	dev_iommu_priv_set(dev, iommu);
-+	return &iommu->iommu;
-+}
-+
-+static void vsi_iommu_release_device(struct device *dev)
-+{
-+	struct vsi_iommu *iommu = dev_iommu_priv_get(dev);
-+
-+	device_link_remove(dev, iommu->dev);
-+}
-+
-+static const struct iommu_ops vsi_iommu_ops = {
-+	.identity_domain = &vsi_identity_domain,
-+	.release_domain = &vsi_identity_domain,
-+	.domain_alloc_paging = vsi_iommu_domain_alloc_paging,
-+	.probe_device = vsi_iommu_probe_device,
-+	.release_device = vsi_iommu_release_device,
-+	.device_group = generic_single_device_group,
-+	.default_domain_ops = &(const struct iommu_domain_ops) {
-+		.attach_dev		= vsi_iommu_attach_device,
-+		.map_pages		= vsi_iommu_map,
-+		.unmap_pages		= vsi_iommu_unmap,
-+		.flush_iotlb_all	= vsi_iommu_flush_tlb_all,
-+		.iova_to_phys		= vsi_iommu_iova_to_phys,
-+		.free			= vsi_iommu_domain_free,
-+	}
-+};
-+
-+static const struct of_device_id vsi_iommu_dt_ids[] = {
-+	{
-+		.compatible = "verisilicon,iommu-1.2",
-+	},
-+	{
-+		.compatible = "rockchip,rk3588-av1-iommu",
-+	},
-+	{ /* sentinel */ }
-+};
-+
-+static int vsi_iommu_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct vsi_iommu *iommu;
-+	int err;
-+
-+	iommu = devm_kzalloc(dev, sizeof(*iommu), GFP_KERNEL);
-+	if (!iommu)
-+		return -ENOMEM;
-+
-+	iommu->dev = dev;
-+
-+	iommu->regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(iommu->regs))
-+		return -ENOMEM;
-+
-+	iommu->num_clocks = devm_clk_bulk_get_all(dev, &iommu->clocks);
-+	if  (iommu->num_clocks < 0)
-+		return err;
-+
-+	err = clk_bulk_prepare(iommu->num_clocks, iommu->clocks);
-+	if (err)
-+		return err;
-+
-+	iommu->irq = platform_get_irq(pdev, 0);
-+	if (iommu->irq < 0)
-+		return iommu->irq;
-+
-+	err = devm_request_irq(iommu->dev, iommu->irq, vsi_iommu_irq,
-+			       IRQF_SHARED, dev_name(dev), iommu);
-+	if (err)
-+		goto err_unprepare_clocks;
-+
-+	spin_lock_init(&iommu->lock);
-+	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-+	platform_set_drvdata(pdev, iommu);
-+
-+	pm_runtime_set_autosuspend_delay(dev, 100);
-+	pm_runtime_use_autosuspend(dev);
-+	pm_runtime_enable(dev);
-+
-+	err = iommu_device_sysfs_add(&iommu->iommu, dev, NULL, dev_name(dev));
-+	if (err)
-+		goto err_runtime_disable;
-+
-+	err = iommu_device_register(&iommu->iommu, &vsi_iommu_ops, dev);
-+	if (err)
-+		goto err_remove_sysfs;
-+
-+	return 0;
-+
-+err_remove_sysfs:
-+	iommu_device_sysfs_remove(&iommu->iommu);
-+err_runtime_disable:
-+	pm_runtime_disable(dev);
-+err_unprepare_clocks:
-+	clk_bulk_unprepare(iommu->num_clocks, iommu->clocks);
-+	return err;
-+}
-+
-+static void vsi_iommu_shutdown(struct platform_device *pdev)
-+{
-+	struct vsi_iommu *iommu = platform_get_drvdata(pdev);
-+
-+	disable_irq(iommu->irq);
-+	pm_runtime_force_suspend(&pdev->dev);
-+}
-+
-+static int __maybe_unused vsi_iommu_suspend(struct device *dev)
-+{
-+	struct vsi_iommu *iommu = dev_get_drvdata(dev);
-+
-+	clk_bulk_disable(iommu->num_clocks, iommu->clocks);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused vsi_iommu_resume(struct device *dev)
-+{
-+	struct vsi_iommu *iommu = dev_get_drvdata(dev);
-+
-+	return clk_bulk_enable(iommu->num_clocks, iommu->clocks);
-+}
-+
-+static DEFINE_RUNTIME_DEV_PM_OPS(vsi_iommu_pm_ops,
-+				 vsi_iommu_suspend, vsi_iommu_resume,
-+				 NULL);
-+
-+static struct platform_driver rockchip_vsi_iommu_driver = {
-+	.probe = vsi_iommu_probe,
-+	.shutdown = vsi_iommu_shutdown,
-+	.driver = {
-+		   .name = "vsi_iommu",
-+		   .of_match_table = vsi_iommu_dt_ids,
-+		   .pm = pm_sleep_ptr(&vsi_iommu_pm_ops),
-+		   .suppress_bind_attrs = true,
-+	},
-+};
-+module_platform_driver(rockchip_vsi_iommu_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Benjamin Gaignard <benjamin.gaignard@collabora.com>");
-+MODULE_DESCRIPTION("Verisilicon IOMMU driver");
--- 
-2.43.0
+For the patch, Reviewed-by: Zi Yan <ziy@nvidia.com>
 
+--
+Best Regards,
+Yan, Zi
