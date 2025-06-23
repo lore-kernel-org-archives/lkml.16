@@ -1,207 +1,142 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76EA32367B0
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFEC248191;
+	Mon, 23 Jun 2025 13:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750685219; cv=none; b=Cx+UaCpqqXH8Ig12t8PN3UHGC4NBNSRHTwMfwD9G0TZ2qcVR4Dp7ONy3j171FL4LawAtcvAp00NXvw66QUxedQc+nk6zY2EOWgduyPkJHVVjNRGOBMHMeiomCnZW1Vtln2Af6dypROK1cHEV0DZO1jN8El75SBmlUqi0+A0SsZI=
+	t=1750685242; cv=none; b=qonDkb5qy3LmBzf5pXJR1VTctj+1rdm9MFz0dVBEDmtp/eAhdBBDs07g497HRx5xkZcO1taW/2RhGnW0NVGdnGL621xUfoO2TiH6eDYjZ9/LY0hWU3/6H99d8R4Fnu+l6NlD0xbYRcThhm26gNKkt7JlCuTJ7lIOr/gGLBVinXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750685219; c=relaxed/simple;
-	bh=sBcqW/mLnhnW+uEyQ6BkMfLELuAbcSFHWYwrmkBvRkM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YpaxvFKu8QUWS0AJLJ90b1Ug9JNhBjQzAG0pIvZWL82p34gD1HisZYkfweT++S3g8B2GFDd3avRkKlJ6EHVFFLg0QAUMPYlEo/UanpkOE0oWyujTwAr4Dptj6MTHXyw9lM2kIdhRYyRlAe0e62jJrm+uIGo8HAVMmH4uG1An7zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA28A113E;
-	Mon, 23 Jun 2025 06:26:38 -0700 (PDT)
-Received: from [10.1.29.169] (XHFQ2J9959.cambridge.arm.com [10.1.29.169])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B4E53F58B;
-	Mon, 23 Jun 2025 06:26:55 -0700 (PDT)
-Message-ID: <ed942c01-58e8-4d91-8f86-3b3645af6940@arm.com>
-Date: Mon, 23 Jun 2025 14:26:54 +0100
+	s=arc-20240116; t=1750685242; c=relaxed/simple;
+	bh=+Yo6QHO/HDcDoO6sU/l2I7OQYWvWeS3PgqO/bbhd1Vo=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=LYyLpbssZDKiLB2jVHpIlw985AtNHDJ4NZkWGzBzigeEqxivJbwzUGXa1rfFq7/DUjtozsMcQC/r+0TevO6Sc0Yl57xLX0B133wVXSh/j1D+GfH0QRyKeg7OgOxY/S0uXfdNab0vwqS1zK3tFB4oJaEr+aSkLd94nJ9jew2zxaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fhFdLsed; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fhFdLsed"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=kVTNc/9jknS5UWRVRntQL1AqoiLE1DkjRtltxTY4gME=; b=fhFdLsed89bXtHgCUXKRvrY855
+	uS/n0/sZv6VAii+sbTXtGN956j2OqjnQIfb3WLkOuaX+UY+Yp3E5JnQQOeQo4mK5E/RazM0p7unzB
+	7CWtOari5IS3pZWoRAb5L77JdLUCDK8XPoMejX+OCM3HxUUd3Pjk5skldx464RuoJ/+gpOg0I+G4o
+	EOyRgyNoYy4AtjhijxX+g6rtaLTb0bFS134Nbed1Zk1O9tAPRl4BjEzpAKTPT5WMsBtbexOOdLgi7
+	RI5WVN15Ns8B9SYkr9WH/QEr0+aUnPbbVLHsn5CiQKm37/cfre46STxm1dOWtCwz5C0y0jdPPrQs5
+	ZPY9Bopw==;
+Received: from [2001:8b0:10b:1::425] (helo=i7.infradead.org)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uThCc-00000003XSl-3cfe;
+	Mon, 23 Jun 2025 13:27:14 +0000
+Received: from dwoodhou by i7.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uThCc-000000043AL-2a63;
+	Mon, 23 Jun 2025 14:27:14 +0100
+From: David Woodhouse <dwmw2@infradead.org>
+To: Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Sebastian Ott <sebott@redhat.com>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [RFC PATCH 1/2] KVM: Add arch hooks for KVM syscore ops
+Date: Mon, 23 Jun 2025 14:27:13 +0100
+Message-ID: <20250623132714.965474-1-dwmw2@infradead.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] arm64: mm: support large block mapping when
- rodata=full
-Content-Language: en-GB
-To: Yang Shi <yang@os.amperecomputing.com>, will@kernel.org,
- catalin.marinas@arm.com, Miko.Lenczewski@arm.com, dev.jain@arm.com,
- scott@os.amperecomputing.com, cl@gentwo.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250531024545.1101304-1-yang@os.amperecomputing.com>
- <20250531024545.1101304-4-yang@os.amperecomputing.com>
- <f036acea-1bd1-48a7-8600-75ddd504b8db@arm.com>
- <50a4f767-0007-4f6a-8c62-398962d54029@os.amperecomputing.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <50a4f767-0007-4f6a-8c62-398962d54029@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Sender: David Woodhouse <dwmw2@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
-[...]
+From: David Woodhouse <dwmw@amazon.co.uk>
 
->> +
->> +int split_leaf_mapping(unsigned long addr)
-> 
-> Thanks for coming up with the code. It does help to understand your idea. Now I
-> see why you suggested "split_mapping(start); split_mapping(end);" model. It does
-> make the implementation easier because we don't need a loop anymore. But this
-> may have a couple of problems:
->   1. We need walk the page table twice instead of once. It sounds expensive.
+Allow the architecture to hook kvm_shutdown(), kvm_suspend() and kvm_resume()
 
-Yes we need to walk twice. That may be more expensive or less expensive,
-depending on the size of the range that you are splitting. If the range is large
-then your approach loops through every leaf mapping between the start and end
-which will be more expensive than just doing 2 walks. If the range is small then
-your approach can avoid the second walk, but at the expense of all the extra
-loop overhead.
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+---
+ include/linux/kvm_host.h |  3 +++
+ virt/kvm/kvm_main.c      | 17 +++++++++++++++++
+ 2 files changed, 20 insertions(+)
 
-My suggestion requires 5 loads (assuming the maximum of 5 levels of lookup).
-Personally I think this is probably acceptable? Perhaps we need some other
-voices here.
-
-
->   2. How should we handle repainting? We need split all the page tables all the
-> way down to PTE for repainting between start and end rather than keeping block
-> mappings. This model doesn't work, right? For example, repaint a 2G block. The
-> first 1G is mapped by a PUD, the second 1G is mapped by 511 PMD and 512 PTEs.
-> split_mapping(start) will split the first 1G, but split_mapping(end) will do
-> nothing, the 511 PMDs are kept intact. In addition, I think we also prefer reuse
-> the split primitive for repainting instead of inventing another one.
-
-I agree my approach doesn't work for the repainting case. But I think what I'm
-trying to say is that the 2 things are different operations;
-split_leaf_mapping() is just trying to ensure that the start and end of a ragion
-are on leaf boundaries. Repainting is trying to ensure that all leaf mappings
-within a range are PTE-size. I've implemented the former and you've implemented
-that latter. Your implementation looks like meets the former's requirements
-because you are only testing it for the case where the range is 1 page. But
-actually it is splitting everything in the range to PTEs.
-
-Thanks,
-Ryan
-
-> 
-> Thanks,
-> Yang
-> 
->> +{
->> +    pgd_t *pgdp, pgd;
->> +    p4d_t *p4dp, p4d;
->> +    pud_t *pudp, pud;
->> +    pmd_t *pmdp, pmd;
->> +    pte_t *ptep, pte;
->> +    int ret = 0;
->> +
->> +    /*
->> +     * !BBML2_NOABORT systems should not be trying to change permissions on
->> +     * anything that is not pte-mapped in the first place. Just return early
->> +     * and let the permission change code raise a warning if not already
->> +     * pte-mapped.
->> +     */
->> +    if (!system_supports_bbml2_noabort())
->> +        return 0;
->> +
->> +    /*
->> +     * Ensure addr is at least page-aligned since this is the finest
->> +     * granularity we can split to.
->> +     */
->> +    if (addr != PAGE_ALIGN(addr))
->> +        return -EINVAL;
->> +
->> +    arch_enter_lazy_mmu_mode();
->> +
->> +    /*
->> +     * PGD: If addr is PGD aligned then addr already describes a leaf
->> +     * boundary. If not present then there is nothing to split.
->> +     */
->> +    if (ALIGN_DOWN(addr, PGDIR_SIZE) == addr)
->> +        goto out;
->> +    pgdp = pgd_offset_k(addr);
->> +    pgd = pgdp_get(pgdp);
->> +    if (!pgd_present(pgd))
->> +        goto out;
->> +
->> +    /*
->> +     * P4D: If addr is P4D aligned then addr already describes a leaf
->> +     * boundary. If not present then there is nothing to split.
->> +     */
->> +    if (ALIGN_DOWN(addr, P4D_SIZE) == addr)
->> +        goto out;
->> +    p4dp = p4d_offset(pgdp, addr);
->> +    p4d = p4dp_get(p4dp);
->> +    if (!p4d_present(p4d))
->> +        goto out;
->> +
->> +    /*
->> +     * PUD: If addr is PUD aligned then addr already describes a leaf
->> +     * boundary. If not present then there is nothing to split. Otherwise,
->> +     * if we have a pud leaf, split to contpmd.
->> +     */
->> +    if (ALIGN_DOWN(addr, PUD_SIZE) == addr)
->> +        goto out;
->> +    pudp = pud_offset(p4dp, addr);
->> +    pud = pudp_get(pudp);
->> +    if (!pud_present(pud))
->> +        goto out;
->> +    if (pud_leaf(pud)) {
->> +        ret = split_pud(pudp, pud);
->> +        if (ret)
->> +            goto out;
->> +    }
->> +
->> +    /*
->> +     * CONTPMD: If addr is CONTPMD aligned then addr already describes a
->> +     * leaf boundary. If not present then there is nothing to split.
->> +     * Otherwise, if we have a contpmd leaf, split to pmd.
->> +     */
->> +    if (ALIGN_DOWN(addr, CONT_PMD_SIZE) == addr)
->> +        goto out;
->> +    pmdp = pmd_offset(pudp, addr);
->> +    pmd = pmdp_get(pmdp);
->> +    if (!pmd_present(pmd))
->> +        goto out;
->> +    if (pmd_leaf(pmd)) {
->> +        if (pmd_cont(pmd))
->> +            split_contpmd(pmdp);
->> +        /*
->> +         * PMD: If addr is PMD aligned then addr already describes a
->> +         * leaf boundary. Otherwise, split to contpte.
->> +         */
->> +        if (ALIGN_DOWN(addr, PMD_SIZE) == addr)
->> +            goto out;
->> +        ret = split_pmd(pmdp, pmd);
->> +        if (ret)
->> +            goto out;
->> +    }
->> +
->> +    /*
->> +     * CONTPTE: If addr is CONTPTE aligned then addr already describes a
->> +     * leaf boundary. If not present then there is nothing to split.
->> +     * Otherwise, if we have a contpte leaf, split to pte.
->> +     */
->> +    if (ALIGN_DOWN(addr, CONT_PMD_SIZE) == addr)
->> +        goto out;
->> +    ptep = pte_offset_kernel(pmdp, addr);
->> +    pte = __ptep_get(ptep);
->> +    if (!pte_present(pte))
->> +        goto out;
->> +    if (pte_cont(pte))
->> +        split_contpte(ptep);
->> +
->> +out:
->> +    arch_leave_lazy_mmu_mode();
->> +    return ret;
->> +}
->> ---8<---
->>
->> Thanks,
->> Ryan
->>
-> 
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 3bde4fb5c6aa..8e16b6c0d2ba 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1622,6 +1622,9 @@ void kvm_arch_disable_virtualization(void);
+  */
+ int kvm_arch_enable_virtualization_cpu(void);
+ void kvm_arch_disable_virtualization_cpu(void);
++void kvm_arch_shutdown(void);
++void kvm_arch_suspend(void);
++void kvm_arch_resume(void);
+ #endif
+ bool kvm_vcpu_has_events(struct kvm_vcpu *vcpu);
+ int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu);
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index eec82775c5bf..4af1d9943d39 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -5609,6 +5609,20 @@ static int kvm_offline_cpu(unsigned int cpu)
+ 	return 0;
+ }
+ 
++__weak void kvm_arch_shutdown(void)
++{
++
++}
++
++__weak void kvm_arch_suspend(void)
++{
++
++}
++__weak void kvm_arch_resume(void)
++{
++
++}
++
+ static void kvm_shutdown(void)
+ {
+ 	/*
+@@ -5625,6 +5639,7 @@ static void kvm_shutdown(void)
+ 	pr_info("kvm: exiting hardware virtualization\n");
+ 	kvm_rebooting = true;
+ 	on_each_cpu(kvm_disable_virtualization_cpu, NULL, 1);
++	kvm_arch_shutdown();
+ }
+ 
+ static int kvm_suspend(void)
+@@ -5641,6 +5656,7 @@ static int kvm_suspend(void)
+ 	lockdep_assert_irqs_disabled();
+ 
+ 	kvm_disable_virtualization_cpu(NULL);
++	kvm_arch_suspend();
+ 	return 0;
+ }
+ 
+@@ -5649,6 +5665,7 @@ static void kvm_resume(void)
+ 	lockdep_assert_not_held(&kvm_usage_lock);
+ 	lockdep_assert_irqs_disabled();
+ 
++	kvm_arch_resume();
+ 	WARN_ON_ONCE(kvm_enable_virtualization_cpu());
+ }
+ 
+-- 
+2.49.0
 
