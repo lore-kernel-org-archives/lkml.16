@@ -1,154 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0BD288511;
-	Mon, 23 Jun 2025 19:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375061C5D7A
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 19:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750706341; cv=none; b=Oap9rqKzbThZH5J0k0BZVrOnl3PKmmLABzpll4f6um8ZCfX4cjFahw25Zc0GzxGg9X3boVAjU9thp0hx8/GXNyE9ldhNJJV0eAbC9bxhVx33ASreiZiBaBiqGwxM8PFMkO/1/SifqIYB2G1jp7qh5JlDyKpbEMhJbk5diDdRGTw=
+	t=1750706396; cv=none; b=jkXFcuhtrBa5yYMFgbsZsFwL1M4MYQTkd4bDXx9q5mBqCQz6bBQ7GV1uijHLMkSUn/+IxSDNrWylg1YI1IvXNnIR7YM8Ayt6EybFeLKX9bO/aaA1rqgI3nKnPqMzBzLucBR+nja5i/O+oIILzumJ5HNCkxzJC9eUSdxk6G28WzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750706341; c=relaxed/simple;
-	bh=Kbzxz2PSJrErSIphMGnNnRpgo/ytfR0oIkkJHEBXpTY=;
+	s=arc-20240116; t=1750706396; c=relaxed/simple;
+	bh=/KzjYP4jGRkOL8tv1XYhP6PhsnBHTBQpvSmWP9PLkkc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R7wDkirHmYvSJ6ddxH0DOX6R6uZPJRf1fR00smuZeDaiuJ81V+9SQUE01pybf12pa/teDGjld2OombqeSJ5L6YaDPqsOXxPwLqxr7vgE37vPmSOcdQ18n7Vr4uI0dQQKHOn3crECl5/ZETuZtfrzI+rzfVpg7dUXPbY2X/JSqg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJRhowE2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=T3UqLNDtQDfH0QOeEwjcRLtA/JA6Auoa0gLlOpnKwn+njCW3ZcJEMPrpvA55LpK+wYGzw7gwsgVvVsBC+9PJQVoWJQ0DOtZ5Sw1uSYjvFsiiPITlKRVkELpLS/ydfXRUwt+dtpZR6Cjlr40IM8qb5dA2zXHktg4Wjmhca+7ZOrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=bpvhanDW; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJRhowE2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A29CBC4CEEA;
-	Mon, 23 Jun 2025 19:19:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750706341;
-	bh=Kbzxz2PSJrErSIphMGnNnRpgo/ytfR0oIkkJHEBXpTY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kJRhowE2cpac0qUCMcjdUDtTr5jBXtonjTiJ8oqFGOOqzKUqcqu+CSBoUvUDcKuM3
-	 n33DfJ8rZG2uK4b6gmQdDfuuDZe6Bu8xjLvbcHF8vhaoq6RFCXbCNSlRnvQrYYosTr
-	 7Q/RHDaauyyyxy180Y6luY4vxOjOPsFv3UZefwm7CHhbddmVA9SPcbRg9densry8Mv
-	 vIynVcaNeoJTBrFXYbveoLyMbv1/GDfuXiM5r9o2vmfmCcdLQktkcGllZJc2Ih/vNn
-	 24dGDfEmjvCBrzU+RBR4DDjGs/7yhGwhl0CoP2iz3i+sxnsOBrtMDDwQFNOIISThWa
-	 iGjI8pOd793FA==
-Date: Mon, 23 Jun 2025 16:18:57 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] perf test workload noploop: Name the noploop
- process
-Message-ID: <aFmooVYz-6p1DTSv@x1>
-References: <20250619002034.97007-1-irogers@google.com>
- <aFW4VJtk96JD865U@google.com>
- <CAP-5=fUpnW1DE68pMW0q3vMT+n6d5SeNkwXd45XLaf01-eP47A@mail.gmail.com>
- <aFmSuSyZ1ZNT94Tq@x1>
- <CAP-5=fXms87LVH-Y5V3OpVbwUjY=hWAe0NTX4uKQf1q3Ax-WSA@mail.gmail.com>
- <aFmZl-SUT85Im8BJ@google.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="bpvhanDW"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a76ea97cefso50352271cf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:19:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1750706394; x=1751311194; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sc/yka3hfGiPDvvwtGoDtghN7JXKc2MnzeWxQ4J3bkI=;
+        b=bpvhanDWrZRD4KArqodsP1nwH0JPliKlVjUo4dQFo8upKAgTyCVu5/XNHgiAutqk/A
+         b2o+o8XCaA9p8OXqZVeyegeTZ6lULObDALj2vFnr5xsp1e6s5Yen9rt0AzJjCy2sBhPI
+         34NO+MLFxyJplJ/MIP7sR5zAR6EeBq/VAfhEeJUNuB7z45/DWS5CiWtDQKLh2TjM7dxT
+         RhxiX+7tguTY8clfb12xBKogkDhHNZ3cRiAeNUGY8nGg80z7+aH6XDF6ckXyrwkO7n5k
+         SlOuGC6My5KTfOLATK2te1ZDnTixhj0n5r3RHeaoaULFzItObTutXQJdAo2Bi/TN+FvN
+         InWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750706394; x=1751311194;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Sc/yka3hfGiPDvvwtGoDtghN7JXKc2MnzeWxQ4J3bkI=;
+        b=a6CRhR0vHb2pkX2vwnh1VvZ/VXlo9KDfyzS9eTxp7Wuv2gJsEC+BuT2LHTAwwFIXL+
+         wpCsV7NQJ5IvH3KhaPy2GidIR5OJhnRaV4A5JEonGVQ+q6dxTIkB2rIeWnZoQmxvfGLh
+         ALB1jtowV5eUoFeSxnZekSo5czOCIespC+wO++Hyd40jTs227n04Na+ZJp61aDwLb6lV
+         rHlbMimn6OLJVbZseNTbjCgJyX5puiIhQ3ZDtmfxiWOOq9LhKPfS01qWQjLbgWnisfyE
+         1gjdW0JAEvRvKwr5Z9pm1ivOQN09ur4Nrb44qV9n9Xomk8U6x4qGtZLjFjzj7Jo2Cxa2
+         Wx+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWe9RRx2i4BQGL49WhxYLA53Y7VyfHt5mi7vxW3u73wi4A5ZT+yaBbZpBqcUEfsJvrfx9ZQ0gQddBfeQRo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKu/TpvxiZcRyLLd3A41zAMl43/HYpJoMLS5nbEoIX/WYw3irG
+	3LpPOsrJYeIHXfLH413Ci/404/VxRptpw+S1LfB+f/uZG+CgFr3S8rTjt00xAY4LbRM=
+X-Gm-Gg: ASbGncvD8G2pB3MBsa5m3lYvIooVPCqm4tZkDdR3lzBH3ziHOWSRznG3j47InhtZHR3
+	740l2A0IcyEgJFH5sbIOHz1cjwo/G7RE1j6MTuymiEDEdInig/aAmdDiGqC1jnTWKXICw7q8X44
+	8w8PsRzCk2hIi3833kWvnxqUC8cePAjQJpKitHP50SbwDqKWvxAjVAHUe4fD/9xwNYf5nkq9Ozo
+	IDfxsw+8+Ynr92eEfUOmRKO/TvnWjYeXSfsEaSW1U1pDy+EBdNJzuqy5bZWXQqOkTtJpo4zPb35
+	gQEtlFSbXSM1YUmsiOmaHwuXRMhKKasDSS2ixrQe+ZgpekHdpzI/fLSJ1Q==
+X-Google-Smtp-Source: AGHT+IEJDgRZZ4nVCbDO5jD8bXYatavVeTWpCEC8bT+J/SLimj0HRJIsJlld3v5/Yfo/JKK58W+zjw==
+X-Received: by 2002:a05:6214:268d:b0:6fb:4f9e:957b with SMTP id 6a1803df08f44-6fd0a600403mr207925346d6.43.1750706393967;
+        Mon, 23 Jun 2025 12:19:53 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:400::5:e19e])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd1dcf1be2sm28135296d6.71.2025.06.23.12.19.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 12:19:53 -0700 (PDT)
+Date: Mon, 23 Jun 2025 14:19:51 -0500
+From: Gregory Price <gourry@gourry.net>
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Cc: linux-cxl@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] cxl: docs/driver-api/conventions resolve conflicts
+ btw CFMWS, LMH, ED
+Message-ID: <aFmo18OEZGMA2HU8@gourry-fedora-PF4VCD3F>
+References: <20250623152923.1048525-1-fabio.m.de.francesco@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aFmZl-SUT85Im8BJ@google.com>
+In-Reply-To: <20250623152923.1048525-1-fabio.m.de.francesco@linux.intel.com>
 
-On Mon, Jun 23, 2025 at 11:14:47AM -0700, Namhyung Kim wrote:
-> On Mon, Jun 23, 2025 at 11:05:41AM -0700, Ian Rogers wrote:
-> > On Mon, Jun 23, 2025 at 10:45 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > On Mon, Jun 23, 2025 at 08:12:47AM -0700, Ian Rogers wrote:
-> > > > On Fri, Jun 20, 2025 at 12:36 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > I'm afraid it'd introduce a build failure on musl.  Please see
+On Mon, Jun 23, 2025 at 05:29:02PM +0200, Fabio M. De Francesco wrote:
+> Add documentation on how to resolve conflicts between CXL Fixed Memory
+> Windows, Platform Memory Holes, and Endpoint Decoders.
+> 
+> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 
-> > > > > https://lore.kernel.org/linux-perf-users/20250611092542.F4ooE2FL@linutronix.de/
+I won't block a doc update on a suggestion so
 
-> > > > > I think <sys/prctl.h> would be enough.
+Reviewed-by: Gregory Price <gourry@gourry.net>
 
-> > > > we could do that but in the glibc man page it says:
-> > > > https://man7.org/linux/man-pages/man2/prctl.2.html
-> > > > ```
-> > > > #include <linux/prctl.h>  /* Definition of PR_* constants */
-> > > > #include <sys/prctl.h>
-> > > > ```
+> +Platform Firmware (BIOS) might reserve part of physical addresses below
+> +4 GB (e.g., the Low Memory Hole that describes PCIe memory space for MMIO
+> +or a requirement for the greater than 8 way interleave CXL regions starting
+> +at address 0). In that case the Window Size value cannot be anymore
+> +constrained to the NIW * 256 MB above-mentioned rule.
 
-> > > > It'd be nice to think musl was slowly getting fixed. I notice we're
+It might be nice to have a diagram that explains this visually, as it's
+difficult for me to understand the implications through words alone...
 
-> > > Sebastian reported on the musl libc, its maintainer replied:
+which is likely why the conflict exists in the first place :]
 
-> > > https://www.openwall.com/lists/musl/2025/06/12/11
-
-> > Ugh. I'm not sure how we're expected to resolve this and have glibc
-> > and musl be happy without basically not trusting libc.
-
-> Maybe pthread_setname_np()?  It seems musl also implemented it.
-
-⬢ [acme@toolbx perf-tools-next]$ git diff
-diff --git a/tools/perf/tests/workloads/noploop.c b/tools/perf/tests/workloads/noploop.c
-index 8b954d4660833a2f..656e472e618822a3 100644
---- a/tools/perf/tests/workloads/noploop.c
-+++ b/tools/perf/tests/workloads/noploop.c
-@@ -1,9 +1,8 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+#include <pthread.h>
- #include <stdlib.h>
- #include <signal.h>
- #include <unistd.h>
--#include <linux/prctl.h>
--#include <sys/prctl.h>
- #include <linux/compiler.h>
- #include "../tests.h"
- 
-@@ -18,7 +17,7 @@ static int noploop(int argc, const char **argv)
- {
-        int sec = 1;
- 
--       prctl(PR_SET_NAME, "perf-noploop");
-+       pthread_setname_np(pthread_self(), "perf-noploop");
-        if (argc > 0)
-                sec = atoi(argv[0]);
- 
-⬢ [acme@toolbx perf-tools-next]$ 
-
-⬢ [acme@toolbx perf-tools-next]$ perf test -w noploop &
-[1] 1179763
-⬢ [acme@toolbx perf-tools-next]$ ps
-    PID TTY          TIME CMD
-   3935 pts/1    00:00:00 bash
-   4053 pts/1    00:00:00 toolbox
-   4222 pts/1    00:00:28 podman
- 971900 pts/1    00:00:00 bash
-1100453 pts/1    00:00:00 tail
-1160346 pts/1    00:00:00 bash
-1179763 pts/1    00:00:00 perf-noploop
-1179765 pts/1    00:00:00 ps
-⬢ [acme@toolbx perf-tools-next]$
-
-And then on one of the Alpine Linux containers:
-
-make: Leaving directory '/tmp/perf-6.16.0-rc3/tools/perf'
-/tmp/perf-6.16.0-rc3 $ cat /etc/os-release 
-NAME="Alpine Linux"
-ID=alpine
-VERSION_ID=3.18.12
-PRETTY_NAME="Alpine Linux v3.18"
-HOME_URL="https://alpinelinux.org/"
-BUG_REPORT_URL="https://gitlab.alpinelinux.org/alpine/aports/-/issues"
-/tmp/perf-6.16.0-rc3 $ tools/perf/perf test -w noploop &
-/tmp/perf-6.16.0-rc3 $ ps
-PID   USER     TIME  COMMAND
-    1 toolsbui  0:00 /bin/sh
- 5693 toolsbui  0:00 {perf-noploop} tools/perf/perf test -w noploop
- 5694 toolsbui  0:00 ps
-/tmp/perf-6.16.0-rc3 $ 
-[1]+  Done                       tools/perf/perf test -w noploop
-/tmp/perf-6.16.0-rc3
-
-There are more direct use of prctl() to set the name in tools/perf/,
-using pthread_setname_np() seems cleaner :-)
-
-- Arnaldo
+~Gregory
