@@ -1,99 +1,246 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail-24427.protonmail.ch (mail-24427.protonmail.ch [109.224.244.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BFB23815B
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C2522DA0C;
+	Mon, 23 Jun 2025 09:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750672195; cv=none; b=X48C0Sb90Z5KmGVc3k1eJ7PvNsAXsBiEC0AzUFmjuixjqPOp5UuTKheaFKLZ5+Baj/nbik8pehqPvWHuNoc8ApnMeAJN/6EOxCSLXO6Y0eYc0CLpVJ7vzg6UGrK8VkzYcNY7GQFdHfLCSWYVkEok3rAyWj/HiQVDN3yvh8XYNBo=
+	t=1750672216; cv=none; b=E+d3i7oF3EF+zVUq4gmYccSGS7pnkgCHgDCu1bMjOnx9/DtGUnYBbYl4J703jy3TJj7bl9QkOX9ghMOuNptDvwpwRAW0uSCoFqIIqtA2P7HXcfAAoR4CLPCOS60sDTsCobCAL2c8VS1oPqWtbofUf56KQ7JFf1xDT7i7njOODJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750672195; c=relaxed/simple;
-	bh=tYYN68KIhKpUm94dvkFIqNu0JEd7ylMdObP13UaACv0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=V4cKNh7FA/2QfvoZgu0S+/mh++vxvOP3cAdkj+pPHtqoXy6wUrOewXVCkPo13H22Y3Coe6XOrVyFzLMcweiojUqT8ClAIEc0fKGFdaUeKFFlArJITz0Esi7p/mQJX+HeVDhSuxNqRwcdgY5W6EMtFDEk03sZWdR5AL7FIO24SnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SDIOLCFH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750672216; c=relaxed/simple;
+	bh=2qh1CJjO8c2zLPbBAKpH3KGrCB+i0u1GVzjXdu6Efzw=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UIczler/bOI62Q6mJbHTx5hyb7JXrbGuHkxcZN/QhgAogaoc2j2wLivL3qYv0xSOlUGrM2Va9YGc6OaXVcKtJRXL6OFG9fUipkrgUbOrCIb/w7YdAz/sLRvdnlWDscichgyToHyXiigSOhufESGnzyf58rh2yVWs5xXzQ/wgX44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=E8POB4Dv; arc=none smtp.client-ip=109.224.244.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SDIOLCFH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750672192;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I3UBDVi5sXjr+Xruv6MaOfSJ09qNph1kaTFIkhQo8sc=;
-	b=SDIOLCFHCE+JJe8wesnAfdnRWxftWtazuswW+KuMLn7bOLGxIybBaspTjRB2o/BI6EWi0A
-	UCUq91FlFsv/4AnFcohea+H1v+LD5xCtQNY5if5LRTv+FWfl+p4S2GiNLnwGDJlXB0EYQr
-	ztDT3jtlTPe8God1nH8Z0l2FSiETlGY=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-100-wPkyuED1OGSDkcQVVfsOFQ-1; Mon,
- 23 Jun 2025 05:49:46 -0400
-X-MC-Unique: wPkyuED1OGSDkcQVVfsOFQ-1
-X-Mimecast-MFC-AGG-ID: wPkyuED1OGSDkcQVVfsOFQ_1750672184
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9E2D21955F06;
-	Mon, 23 Jun 2025 09:49:43 +0000 (UTC)
-Received: from [10.22.80.93] (unknown [10.22.80.93])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4F36718046C7;
-	Mon, 23 Jun 2025 09:49:34 +0000 (UTC)
-Date: Mon, 23 Jun 2025 11:49:31 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: John Garry <john.g.garry@oracle.com>
-cc: agk@redhat.com, snitzer@kernel.org, song@kernel.org, yukuai3@huawei.com, 
-    hch@lst.de, nilay@linux.ibm.com, axboe@kernel.dk, dm-devel@lists.linux.dev, 
-    linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, 
-    linux-block@vger.kernel.org, ojaswin@linux.ibm.com, 
-    martin.petersen@oracle.com
-Subject: Re: [PATCH v2 4/5] dm-stripe: limit chunk_sectors to the stripe
- size
-In-Reply-To: <20250618083737.4084373-5-john.g.garry@oracle.com>
-Message-ID: <0ba540a3-9434-c02a-f2ea-fa5ce13325e3@redhat.com>
-References: <20250618083737.4084373-1-john.g.garry@oracle.com> <20250618083737.4084373-5-john.g.garry@oracle.com>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="E8POB4Dv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1750672205; x=1750931405;
+	bh=2qh1CJjO8c2zLPbBAKpH3KGrCB+i0u1GVzjXdu6Efzw=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=E8POB4Dv/lqhX+/sJjDZa0/eRygsCa8wa0bD650TGPocFSrQmngVcmH1D3sAxuPA+
+	 LW1kx1i/1pOmqd1rUMvyIAhqBWl1APVUa8m9mGWcG7GKTjZYT6pcqc9TgtP7e47tmX
+	 qniN6zrdbbESjD1VetTautbvt1mkQo6xrcZtlg2bNE8ZxjqWMJH+FOeC792/ZFCjA2
+	 cJYsbS5g0TjVCk8W/p8chAN4R8U7yoOff0HvBQ2Nd5H/49aF46mWlAnjhafpzeMz3Z
+	 K47KMGRf+oZnnk9ahBhiWXKdU8vibpziYrRLgevjgfQ3LlNNNuqTpqC9bZtwqcdO9a
+	 e7L6adwy/WWKQ==
+Date: Mon, 23 Jun 2025 09:49:59 +0000
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+From: Max Shevchenko <wctrl@proton.me>
+Cc: "conor+dt@kernel.org" <conor+dt@kernel.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "jirislaby@kernel.org" <jirislaby@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux@roeck-us.net" <linux@roeck-us.net>, "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "robh@kernel.org" <robh@kernel.org>, "sean.wang@mediatek.com" <sean.wang@mediatek.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "wctrl@proton.me" <wctrl@proton.me>, "wim@linux-watchdog.org"
+	<wim@linux-watchdog.org>
+Subject: Re: [PATCH 09/11] ARM: dts: mediatek: add basic support for MT6572 SoC
+Message-ID: <kZ6sH6-8EHhW5FtsAmo9HXndj7D1jFyW0cv0A4KDO3i5SS9JiGEZNTd1gbMXizu4vI0M0hjROLK5DEnKbB36jWUKUPRKukq5IRK9Tz2qz7k=@proton.me>
+In-Reply-To: <94fd71e6-0f09-42d0-94ef-1ff111daac9f@collabora.com>
+References: <20250620-mt6572-v1-0-e2d47820f042@proton.me> <20250620-mt6572-v1-9-e2d47820f042@proton.me> <94fd71e6-0f09-42d0-94ef-1ff111daac9f@collabora.com>
+Feedback-ID: 131238559:user:proton
+X-Pm-Message-ID: 776204d2426614811a793f4a9aa639b87ffcd972
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
+On Monday, June 23rd, 2025 at 11:35 AM, AngeloGioacchino Del Regno <angelog=
+ioacchino.delregno@collabora.com> wrote:
 
-On Wed, 18 Jun 2025, John Garry wrote:
+> Il 20/06/25 17:40, Max Shevchenko via B4 Relay ha scritto:
+>
+> > From: Max Shevchenko wctrl@proton.me
+> >
+> > Add basic support for the MediaTek MT6572 SoC.
+> >
+> > Signed-off-by: Max Shevchenko wctrl@proton.me
+> > ---
+> > arch/arm/boot/dts/mediatek/mt6572.dtsi | 105 ++++++++++++++++++++++++++=
++++++++
+> > 1 file changed, 105 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/mediatek/mt6572.dtsi b/arch/arm/boot/dts=
+/mediatek/mt6572.dtsi
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..dd12231ca745be7455e9939=
+1abd2d708f2f1a8a9
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/mediatek/mt6572.dtsi
+> > @@ -0,0 +1,105 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (c) 2025 Max Shevchenko wctrl@proton.me
+> > + */
+> > +
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +
+> > +/ {
+> > + #address-cells =3D <1>;
+> > + #size-cells =3D <1>;
+> > + compatible =3D "mediatek,mt6572";
+> > + interrupt-parent =3D <&sysirq>;
+> > +
+> > + cpus {
+> > + #address-cells =3D <1>;
+> > + #size-cells =3D <0>;
+> > + enable-method =3D "mediatek,mt6589-smp";
+> > +
+> > + cpu@0 {
+> > + device_type =3D "cpu";
+> > + compatible =3D "arm,cortex-a7";
+> > + reg =3D <0x0>;
+> > + };
+> > + cpu@1 {
+> > + device_type =3D "cpu";
+> > + compatible =3D "arm,cortex-a7";
+> > + reg =3D <0x1>;
+> > + };
+> > + };
+> > +
+> > + system_clk: dummy13m {
+> > + compatible =3D "fixed-clock";
+> > + clock-frequency =3D <13000000>;
+> > + #clock-cells =3D <0>;
+> > + };
+> > +
+> > + rtc_clk: dummy32k {
+> > + compatible =3D "fixed-clock";
+> > + clock-frequency =3D <32000>;
+> > + #clock-cells =3D <0>;
+> > + };
+> > +
+> > + uart_clk: dummy26m {
+> > + compatible =3D "fixed-clock";
+> > + clock-frequency =3D <26000000>;
+> > + #clock-cells =3D <0>;
+> > + };
+> > +
+>
+>
+> Anything that has an MMIO address shall be child of "soc".
+>
+> soc {
+> watchdog@....
+>
+> timer@....
+>
+> etc.
+> };
+>
+> > + watchdog: watchdog@10007000 {
+> > + compatible =3D "mediatek,mt6572-wdt",
+> > + "mediatek,mt6589-wdt";
+>
+>
+> those fit in one line:
+>
+> compatible =3D "mediatek,mt6572-wdt", "mediatek,mt6589-wdt";
+>
+> > + reg =3D <0x10007000 0x100>;
+> > + interrupts =3D <GIC_SPI 126 IRQ_TYPE_LEVEL_LOW>;
+> > + timeout-sec =3D <15>;
+> > + #reset-cells =3D <1>;
+> > + };
+> > +
+> > + timer: timer@10008000 {
+> > + compatible =3D "mediatek,mt6572-timer",
+> > + "mediatek,mt6577-timer";
+>
+>
+> same
+>
+> > + reg =3D <0x10008000 0x80>;
+> > + interrupts =3D <GIC_SPI 74 IRQ_TYPE_LEVEL_LOW>;
+> > + clocks =3D <&system_clk>, <&rtc_clk>;
+> > + clock-names =3D "system-clk", "rtc-clk";
+> > + };
+> > +
+> > + sysirq: interrupt-controller@10200100 {
+> > + compatible =3D "mediatek,mt6572-sysirq",
+> > + "mediatek,mt6577-sysirq";
+>
+>
+> same; and reg goes after compatible.
+>
+> > + interrupt-controller;
+> > + #interrupt-cells =3D <3>;
+> > + interrupt-parent =3D <&gic>;
+>
+>
+> are you sure that interrupt-parent is gic?
 
-> Same as done for raid0, set chunk_sectors limit to appropriately set the
-> atomic write size limit.
-> 
-> Setting chunk_sectors limit in this way overrides the stacked limit
-> already calculated based on the bottom device limits. This is ok, as
-> when any bios are sent to the bottom devices, the block layer will still
-> respect the bottom device chunk_sectors.
-> 
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
-> ---
->  drivers/md/dm-stripe.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/md/dm-stripe.c b/drivers/md/dm-stripe.c
-> index a7dc04bd55e5..5bbbdf8fc1bd 100644
-> --- a/drivers/md/dm-stripe.c
-> +++ b/drivers/md/dm-stripe.c
-> @@ -458,6 +458,7 @@ static void stripe_io_hints(struct dm_target *ti,
->  	struct stripe_c *sc = ti->private;
->  	unsigned int chunk_size = sc->chunk_size << SECTOR_SHIFT;
->  
-> +	limits->chunk_sectors = sc->chunk_size;
->  	limits->io_min = chunk_size;
->  	limits->io_opt = chunk_size * sc->stripes;
->  }
-> -- 
-> 2.31.1
+Other MT65xx devicetrees have GIC as parent for itself and SYSIRQ, so I ass=
+ume.
 
-Reviewed-by: Mikulas Patocka <mpatocka@redhat.com>
+>
+> > + reg =3D <0x10200100 0x1c>;
+> > + };
+> > +
+> > + gic: interrupt-controller@10211000 {
+> > + compatible =3D "arm,cortex-a7-gic";
+>
+>
+> reg here.
+>
+> > + interrupt-controller;
+> > + #interrupt-cells =3D <3>;
+> > + interrupt-parent =3D <&gic>;
+>
+>
+> are you sure that the interrupt parent isn't sysirq here? :-)
 
+not really, downstream has no mentions about SYSIRQ or its' address
+
+>
+> > + reg =3D <0x10211000 0x1000>,
+> > + <0x10212000 0x2000>,
+> > + <0x10214000 0x2000>,
+> > + <0x10216000 0x2000>;
+> > + };
+> > +
+> > + uart0: serial@11005000 {
+> > + compatible =3D "mediatek,mt6572-uart",
+> > + "mediatek,mt6577-uart";
+>
+>
+> fits in one line
+>
+> > + reg =3D <0x11005000 0x400>;
+> > + interrupts =3D <GIC_SPI 31 IRQ_TYPE_LEVEL_LOW>;
+> > + clocks =3D <&uart_clk>;
+>
+>
+> clock-names =3D .....
+>
+> > + status =3D "disabled";
+> > + };
+> > +
+> > + uart1: serial@11006000 {
+> > + compatible =3D "mediatek,mt6572-uart",
+>
+>
+> ...again.
+>
+> > + "mediatek,mt6577-uart";
+> > + reg =3D <0x11006000 0x400>;
+> > + interrupts =3D <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
+> > + clocks =3D <&uart_clk>;
+> > + status =3D "disabled";
+> > + };
+> > +};
+>
+>
+> Cheers,
+> Angelo
+
+thanks for suggestions, applied.
+
+
+Sincerely,
+Max
