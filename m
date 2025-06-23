@@ -1,67 +1,48 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC10223774;
-	Mon, 23 Jun 2025 11:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2F223182D;
+	Mon, 23 Jun 2025 11:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750679381; cv=none; b=S/Sa1lgW3NGNq/83bEFjX54+GuNz0MZEk+fk+MoGXnsTPHF4i5VL4JvPcxqk47QIM1JbykkmFvBzFWPXifAKyFdGVl4kNSDjsUECJTX7bmIGypht45zrq0UlLbI79+iX7dF/KPQqraAzTd/Mt12hSJG0oh8WJl7MfwkjEfWRRIQ=
+	t=1750679427; cv=none; b=CPxoIpOhcYViD7s8rdnQG0HHsJ/9YleooR6IQYtB3RE0lMb/fkApbN/Vo2hvSE7VVr63QfeToCGol5hFSLzrHV8/W9ozeTDKf99eluNc8YqfDGnEkuNK2NGsZ79fx2V4jtXCvqDA8KpWuwmZo3RTDTRg6ZPPWqKlDZBow6v/4d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750679381; c=relaxed/simple;
-	bh=m+Qd1Cb/X0RC7mbPvOpJ0Mdpw8OSC6q2uYPyT+xzuVs=;
+	s=arc-20240116; t=1750679427; c=relaxed/simple;
+	bh=ActTs+qIg1fuo+yvfrQokf0GdyTmEgBrTcnMxW4n8hE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D63dq0RAIGxH4OV3wzhDtknej3KI+KRR2eMBp6u1LLZJQ6gWVtBpJxCbWFRSuuu62ECQ7Jxkoaf4UDHysSbWwH0UnxekDLm9UW0eTMBKedJPPNz4NUOvVqFALFN6hdz1bJ0CgJYUbWebYGWqy8o0ZJWnrSy57XC++p9RAp5MJnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=XqXhwRmT; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=qeldqlhG+S9DfMyJMas9x8z4+OtzhjU3F0lLLXxdrubiZYEleGHQd2KobErIKdT9weOEpJrni+RBFGU6O/7InLc4UvtHuNhgr4tdJuNMKmeT5f+NDQpj4F7wIBJODSmoTEs6NvXsphK61ljxsV4Om2lSCEc+d0A2TW5X0r5dbXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h+9Z7d1M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="XqXhwRmT"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 407A840E019C;
-	Mon, 23 Jun 2025 11:49:37 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 9WEx8yNFNSCU; Mon, 23 Jun 2025 11:49:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1750679373; bh=kfvlOPZPYOqpJCisMXBomvYik2rz2a87LAMAgti+Ebo=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h+9Z7d1M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A998C4CEEA;
+	Mon, 23 Jun 2025 11:50:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750679426;
+	bh=ActTs+qIg1fuo+yvfrQokf0GdyTmEgBrTcnMxW4n8hE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XqXhwRmTnHrn17Yqo8ZTokhxjs5+ZHrhkWBnWUoMHAAXmmQEUfTM8s2vjsSpkRAZp
-	 cpCmf5odvPe5tsUZLwddIokSqQMBm4BpPFTAdRVIPe4/KR8hCQRR8bI04qvKMa6tpP
-	 b7hDIRymYp1+t+aMxK9JO377/5BS9V6kaAkZ/8gt3J+sO45q49q6NgxUa5MymZ3W1d
-	 IRal9cqx+qZM4FR81BLq0X7Gi70k740XfB3ld7l/YX3WoCygflfyMMaoPbTId2KOoq
-	 B2C7KT86qWLBc/3j0BCC7xufPfbEo3z3WHwxez6e8TuWt2FZUcB+WKCQHQdcqoKDiK
-	 FFh8L3WfG0OwCv9TURuZgagSAx7q/nAk+XO1PnbP3g7+a/KxanadIW6IV177CUqVR2
-	 L4QuPlC6NJx357/lvIRi2D4Sl582bhV+4GCcbRUkx7v20C02jO3V4UA+7uM0MdQ+Aw
-	 5v0ZPrLBtkwH212401e4c5S17V5wTvAxBYKYFuOrIEQ90tYZuPgRVbmWjonM4s6YHK
-	 ow6UO3aJOMwNid1BXet9/MuSUkbhF17KS4qTDmIlb5klI7t/qsCn94WS+gREqmTI60
-	 py4LAC0PRWn02hMgznoXMTz1wKu8V8REvLn94ib9t08hs+sC3KpZwbQJ0yNM5gDYQA
-	 R9e+tnF/y1/4U8r6DHsM+Btk=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 953BC40E00CE;
-	Mon, 23 Jun 2025 11:49:11 +0000 (UTC)
-Date: Mon, 23 Jun 2025 13:49:10 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	dave.hansen@linux.intel.com, Thomas.Lendacky@amd.com,
-	nikunj@amd.com, Santosh.Shukla@amd.com, Vasant.Hegde@amd.com,
-	Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com, x86@kernel.org,
-	hpa@zytor.com, peterz@infradead.org, seanjc@google.com,
-	pbonzini@redhat.com, kvm@vger.kernel.org,
-	kirill.shutemov@linux.intel.com, huibo.wang@amd.com,
-	naveen.rao@amd.com, francescolavra.fl@gmail.com,
-	tiala@microsoft.com
-Subject: Re: [RFC PATCH v7 03/37] x86/apic: KVM: Deduplicate APIC vector =>
- register+bit math
-Message-ID: <20250623114910.GGaFk_NqzGmR81fG8f@fat_crate.local>
-References: <20250610175424.209796-1-Neeraj.Upadhyay@amd.com>
- <20250610175424.209796-4-Neeraj.Upadhyay@amd.com>
+	b=h+9Z7d1MZYThb4BzC0sAtbzRCw2VDvjT/N1z/g0j1L4XdAT9UD9UR9CI4vA1PqZ5d
+	 iGYoetZQ/yTHvVS/ZbgCV6707ruW7FBquAvH6tcQoSWF2XFrUnDMGJMCgs7XIUu9av
+	 IW6kGBVeQp+V6IAsL2X2DmlZmt0mQSHqNqldozuJBHnoxS1YBLvZwo6zykE9RHGPma
+	 8A2ALmHgOibmvUFWhU2se6YH/2X7g0d4AEwslixKX3ozxncqxUV7LI6NVwu8sBM6CW
+	 pnMROxuJ9XK7frRtRVaXfpg0WDw1+6Qf/CU+MVYTl3En2FaWP3alBcvmhfe/8c8H6k
+	 3Qy8HKIFSuqRA==
+Date: Mon, 23 Jun 2025 13:50:20 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Eric Dumazet <edumazet@google.com>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	David Hildenbrand <david@redhat.com>, John Hubbard <jhubbard@nvidia.com>, 
+	Christoph Hellwig <hch@infradead.org>, willy@infradead.org, Al Viro <viro@zeniv.linux.org.uk>, 
+	Miklos Szeredi <mszeredi@redhat.com>, torvalds@linux-foundation.org, netdev@vger.kernel.org, 
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: AF_UNIX/zerocopy/pipe/vmsplice/splice vs FOLL_PIN
+Message-ID: <20250623-absetzbar-barzahlung-3d124847a2b4@brauner>
+References: <1069540.1746202908@warthog.procyon.org.uk>
+ <165f5d5b-34f2-40de-b0ec-8c1ca36babe8@lunn.ch>
+ <0aa1b4a2-47b2-40a4-ae14-ce2dd457a1f7@lunn.ch>
+ <1015189.1746187621@warthog.procyon.org.uk>
+ <1021352.1746193306@warthog.procyon.org.uk>
+ <2135907.1747061490@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,34 +51,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250610175424.209796-4-Neeraj.Upadhyay@amd.com>
+In-Reply-To: <2135907.1747061490@warthog.procyon.org.uk>
 
-On Tue, Jun 10, 2025 at 11:23:50PM +0530, Neeraj Upadhyay wrote:
-> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-> index 23d86c9750b9..c84d4e86fe4e 100644
-> --- a/arch/x86/include/asm/apic.h
-> +++ b/arch/x86/include/asm/apic.h
-> @@ -488,11 +488,14 @@ static inline void apic_setup_apic_calls(void) { }
->  
->  extern void apic_ack_irq(struct irq_data *data);
->  
-> +#define APIC_VECTOR_TO_BIT_NUMBER(v) ((unsigned int)(v) % 32)
-> +#define APIC_VECTOR_TO_REG_OFFSET(v) ((unsigned int)(v) / 32 * 0x10)
+On Mon, May 12, 2025 at 03:51:30PM +0100, David Howells wrote:
+> I'm looking at how to make sendmsg() handle page pinning - and also working
+> towards supporting the page refcount eventually being removed and only being
+> available with certain memory types.
+> 
+> One of the outstanding issues is in sendmsg().  Analogously with DIO writes,
+> sendmsg() should be pinning memory (FOLL_PIN/GUP) rather than simply getting
+> refs on it before it attaches it to an sk_buff.  Without this, if memory is
+> spliced into an AF_UNIX socket and then the process forks, that memory gets
+> attached to the child process, and the child can alter the data, probably by
+> accident, if the memory is on the stack or in the heap.
+> 
+> Further, kernel services can use MSG_SPLICE_PAGES to attach memory directly to
+> an AF_UNIX pipe (though I'm not sure if anyone actually does this).
 
-Dunno - I'd probably shorten those macro names:
-
-APIC_VEC_TO_BITNUM()
-APIC_VEC_TO_REGOFF()
-
-because this way of shortening those words is very common and is still very
-readable, even if not fully written out...
-
-LGTM regardless.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+I would possible be interested in using this for the coredump af_unix socket.
