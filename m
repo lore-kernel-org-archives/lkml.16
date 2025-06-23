@@ -1,35 +1,43 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from r3-25.sinamail.sina.com.cn (r3-25.sinamail.sina.com.cn [202.108.3.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD42226D1D;
-	Mon, 23 Jun 2025 23:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4370B23315A
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 23:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750722580; cv=none; b=t1UWNNUE1oog/2RkI5bijZZJOSnh37i0/0H3ZaxN4mwF9jEOZStZqErqyieGbWyDW/4lMbgYrGo32+OMOkic60xg5fZa6znp9hhlugC4ks+8ygpHZtBRTst/kJz5R1TL0hmFh9+SxG4ovcM/kmht4qa00kPcOfLKnYz/F+HiC8s=
+	t=1750722586; cv=none; b=e84LYYtQjJnrvfTOl0yPE5iHmR3JG4zHIpb2w591RodF6WwmwJqRm5ipqE1awVZ6MdS9vVOsq5GoNzDZNsFaKwC9cxyGLX1s8lGIEgUUYlh3x2tRatuQ5Nu4WzKIwO3dWu0f+SaW7+dm1JpU/FrAogM8WHgfxbK8r1qYM5QhNWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750722580; c=relaxed/simple;
-	bh=JXf4iqa6uVPdc95/3ut6i4KOOl+285/4w9IgaOmNnvo=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Bp/J9gnGUobcORrldFFNIdb6J4dYrd16GOjaeUW1JT+73AAC6NPL8xIVktVrDWJy0ca0ED7+xazEJJ/CeAEGyLibiTomfm5oyiV0z8SXHStmtJo/d3ix9K2dBvv6KSSZyBINRT2ueQa+mYj8Yalilyjc36QMLiFLNNY9n3Oc0mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rMV3yzoL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rMV3yzoL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8356C4CEEA;
-	Mon, 23 Jun 2025 23:49:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750722578;
-	bh=JXf4iqa6uVPdc95/3ut6i4KOOl+285/4w9IgaOmNnvo=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=rMV3yzoLyacUcSN7NtUwK6YaC734GZeSrR8noGhYLXAcRcGs4Dbkt8cdnfdO+Jqus
-	 Gcg9FpbgjuGaHpEZJnjVGU/O372+TtdeCC6ZPlnSkYWWnde+TtuVbjdu/K38ufxLzT
-	 DXyK89J9Hs3uC2GWFAH/amxN/8/WJ+8GR3pKftDSHsAH+yDlCypJyAZ76tdBcy2KtZ
-	 ynkqzLD+r3IvoJO5rWtvsu8Tzjhbkkor4eG+63Dbvtqd+A4PtFmt3wzDIQd+jUqAoB
-	 lBBEdEF53/DPDTJiqHxY59letbj2s0nEuJbtuTSLPGKH3Iz2x5K5Vt38cNusppO/JK
-	 AUIqrpGKyGFJQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB29839FEB7D;
-	Mon, 23 Jun 2025 23:50:06 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1750722586; c=relaxed/simple;
+	bh=zYYNL9ZNBTW71CWEJ+bmm+yGMH+6jAUFzhqfzIy/SGY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=J0S/ZmO7pdXnnNWxLu2PML8bGS3InFmRVwTYRO5Sy1gxFWdfBsXHBBk3p7t2FDbJvHzrR5kwS0FRMqqamEnKaCbLaU2MqsaqhRr8rRgifRe1G6SCyexMK3Zh7hJpVz1xMuvQ6ZNMsaG3xZIIYC2HbDku2cPRKRtIIi1whwGt8n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=202.108.3.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
+	by sina.com (10.54.253.31) with ESMTP
+	id 6859E80A0000487F; Mon, 24 Jun 2025 07:49:32 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 4108076816599
+X-SMAIL-UIID: 2E0F3B67F8E34F5C99B00B8BEA120525-20250624-074932-1
+From: Hillf Danton <hdanton@sina.com>
+To: Marco Crivellari <marco.crivellari@suse.com>
+Cc: linux-kernel@vger.kernel.org,
+	Tejun Heo <tj@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH v5 1/3] Workqueue: add system_percpu_wq and system_dfl_wq
+Date: Tue, 24 Jun 2025 07:49:19 +0800
+Message-ID: <20250623234920.1531-1-hdanton@sina.com>
+In-Reply-To: <20250614133531.76742-2-marco.crivellari@suse.com>
+References: <20250614133531.76742-1-marco.crivellari@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,43 +45,21 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v3] ethernet: ionic: Fix DMA mapping tests
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175072260577.3335826.15218857163577175458.git-patchwork-notify@kernel.org>
-Date: Mon, 23 Jun 2025 23:50:05 +0000
-References: <20250619094538.283723-2-fourier.thomas@gmail.com>
-In-Reply-To: <20250619094538.283723-2-fourier.thomas@gmail.com>
-To: Thomas Fourier <fourier.thomas@gmail.com>
-Cc: shannon.nelson@amd.com, brett.creeley@amd.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
- john.fastabend@gmail.com, sdf@fomichev.me, vladimir.oltean@nxp.com,
- csander@purestorage.com, ap420073@gmail.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
 
-Hello:
+On Sat, 14 Jun 2025 15:35:29 +0200 Marco Crivellari wrote:
+> @@ -7829,10 +7833,11 @@ void __init workqueue_init_early(void)
+>  	}
+>  
+>  	system_wq = alloc_workqueue("events", 0, 0);
+> +	system_percpu_wq = alloc_workqueue("events", 0, 0);
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Different workqueue names are prefered until system_wq is cut off.
 
-On Thu, 19 Jun 2025 11:45:30 +0200 you wrote:
-> Change error values of `ionic_tx_map_single()` and `ionic_tx_map_frag()`
-> from 0 to `DMA_MAPPING_ERROR` to prevent collision with 0 as a valid
-> address.
-> 
-> This also fixes the use of `dma_mapping_error()` to test against 0 in
-> `ionic_xdp_post_frame()`
-> 
-> [...]
+>  	system_highpri_wq = alloc_workqueue("events_highpri", WQ_HIGHPRI, 0);
+>  	system_long_wq = alloc_workqueue("events_long", 0, 0);
+> -	system_unbound_wq = alloc_workqueue("events_unbound", WQ_UNBOUND,
+> -					    WQ_MAX_ACTIVE);
+> +	system_unbound_wq = alloc_workqueue("events_unbound", WQ_UNBOUND, WQ_MAX_ACTIVE);
+> +	system_dfl_wq = alloc_workqueue("events_unbound", WQ_UNBOUND, WQ_MAX_ACTIVE);
 
-Here is the summary with links:
-  - [net,v3] ethernet: ionic: Fix DMA mapping tests
-    https://git.kernel.org/netdev/net/c/d5e3241c5a38
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Ditto
