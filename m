@@ -1,189 +1,131 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 961243594B;
-	Mon, 23 Jun 2025 10:16:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042A223BCE3;
+	Mon, 23 Jun 2025 10:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750673795; cv=none; b=DeBbIz9oa8/ljEwYMGjajIC1P7bZuVN1jOw3WQvTJlGpuwxOTWVPrR9h9WwBbCZxCJraNiJzY/RTUW1vviCuVxMhs828t9JpWm/7oe3W6uMr+9fWqEkGkza2x6EqrW+7Bkw7G2h6JdPau/9udtqjeOi8CYFPgebmhOdr/3BqIgQ=
+	t=1750673797; cv=none; b=lrl/HOcoOI3Rpq9s6A742gyDPZoOiMGDUoZwz7N6IAW0xN4Sa+zGkRyay3+BT+0vIl9EPj4tll71BDsjy+KHaAJv5Y+xdGltCfbX1fCa60K2I4bDcACa/Y6LOeljs+MdHxoDHtUkbAALcQAOhbYhiK3k6VnN0q6wqo+9TZqdVd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750673795; c=relaxed/simple;
-	bh=4hlRXYti4Od8c6oYubkTk0N9zQ1yF2SNKRST9MEGxDA=;
+	s=arc-20240116; t=1750673797; c=relaxed/simple;
+	bh=uANWeMNyTEGUxGx9R6g80F8R/lxIBbDL+x6N92SBdcA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SPD0sy+8qTkjceCZt3DwWuRlL5vc+VffbnneFkthpDI13fjF4mUsWxyiL6bRRorksGebM8qT8hiZ4D0Du2uaVvwFSyOkHR8Zvl3wMiRWPHUp5UduLvyI6KVQqQOnIsAuxJJFnyfAv3BG4jvujV1qHV9n/WZDUh0drozvYISaLSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-6b-6859297b1aaf
-Date: Mon, 23 Jun 2025 19:16:22 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
-	akpm@linux-foundation.org, davem@davemloft.net,
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
-	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
-	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-	vishal.moola@gmail.com, hannes@cmpxchg.org, ziy@nvidia.com,
-	jackmanb@google.com
-Subject: Re: [PATCH net-next v6 9/9] page_pool: access ->pp_magic through
- struct netmem_desc in page_pool_page_is_pp()
-Message-ID: <20250623101622.GB3199@system.software.com>
-References: <20250620041224.46646-1-byungchul@sk.com>
- <20250620041224.46646-10-byungchul@sk.com>
- <ce5b4b18-9934-41e3-af04-c34653b4b5fa@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=JUnpS19orifCDmbUMPSk0rQ6C37fil2xLFr8MImo2MEnTUcOKw0ngffs/507nCbVXtT4AJvuOX7uca4qTo6pdODGKlulZz3h9T16w+Xrhq3K8PQqSgID0d+S2h3C2RE5IhWSRYjckIgqLiW9f8Y3C1qex5hS0yXsieTXo5Th9D0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUjqUI2t; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kUjqUI2t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCE6EC4CEF0;
+	Mon, 23 Jun 2025 10:16:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750673796;
+	bh=uANWeMNyTEGUxGx9R6g80F8R/lxIBbDL+x6N92SBdcA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kUjqUI2tWmvPUPoMTkwJDfBa0vFFJLqGjdn+pzExsg2adnrlJ9aQi6TlF/4QMR/lW
+	 2QXmBWrc7i8N7RFeJu39wki9n3pVEpGTCOi0ZpPJtUv6LNbbJ3BNjzNmJO0vexSjhH
+	 Y/b36coxu7XGxmkU8Hyefqemrb15U6fOREfQ++8wzL6B1EJj0ne3IyZRLBicjbgPIn
+	 Rg3FXxu2I5263anXonUzxyhQWRxCkfM54smFSWhOL/Zq5kfLzUE5wqU7ZaA5OFQV7r
+	 t+k/siDb5gQAv+lmeoLZT038qa06KHlD2yAS2P0IiIPxL0vJJoyvjkbKf7C9V9kHwD
+	 VMr35Yv8SS0Sw==
+Date: Mon, 23 Jun 2025 12:16:27 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Mike Rapoport <rppt@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, 
+	Shivank Garg <shivankg@amd.com>, david@redhat.com, akpm@linux-foundation.org, paul@paul-moore.com, 
+	viro@zeniv.linux.org.uk, willy@infradead.org, pbonzini@redhat.com, tabba@google.com, 
+	afranji@google.com, ackerleytng@google.com, jack@suse.cz, hch@infradead.org, 
+	cgzones@googlemail.com, ira.weiny@intel.com, roypat@amazon.co.uk, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH] fs: export anon_inode_make_secure_inode() and fix
+ secretmem LSM bypass
+Message-ID: <20250623-warmwasser-giftig-ff656fce89ad@brauner>
+References: <20250619073136.506022-2-shivankg@amd.com>
+ <da5316a7-eee3-4c96-83dd-78ae9f3e0117@suse.cz>
+ <20250619-fixpunkt-querfeldein-53eb22d0135f@brauner>
+ <aFPuAi8tPcmsbTF4@kernel.org>
+ <20250619-ablichten-korpulent-0efe2ddd0ee6@brauner>
+ <aFQATWEX2h4LaQZb@kernel.org>
+ <aFV3-sYCxyVIkdy6@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ce5b4b18-9934-41e3-af04-c34653b4b5fa@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRzGe3fOzjkOR8d1e7vXVEwtu0n9P4REEL1BRRREF6RGntpouphl
-	UwosJUmahl2dK5Zhs2lMZs7NMnRqWiqFXVhqaqsMyzStpLXItknktx/P8/L83g9/jpJViudw
-	qpRjgjZFoZYzElryJbR42cnoPcoVl99yYLSWM1D2UwfmPocYjBY7gu/eLha+NTYzcOvmGAXG
-	p9k0/LD+ouDDIw8LZbat0Hu7n4YHOdUUePJbGNBn+yio9Q6xcMZRKoJn9jwxXPpVQkF1Zh8L
-	z2uMDPSUj4uh36Wn4bHhDg29eevhkWkmjLUOImi0Votg7Px1Bi52mBh4l92LoKPBQ0PR6TwE
-	1oduMfh++jeKmnrY9RGkYXCYIvfuvBYRp+ENS0y246SyNIbkujsoYrOcY4httIAl3a8eMKTl
-	mo8mTsc3EdFnDTFk5EMnTYYfvmSI9d5LmrSZGtntYXsl65IEtSpN0C5POCBRFjh72aP3F+jq
-	zPVUJirEuSiEw3w8bjb+YP5xVbuZCjDNR+Kyto/BnOGjsNvtDebT+SXYdrbCzxKO4m8w2HSp
-	O1hM43XY5+kPspRfiwsG8sWBRzL+CsJtBQ40UYThx4Xv6QBT/FLsrOr2Gzg/z8XmP9xEvBBn
-	VRUFd0L4BDx0a4AN8Aw+HNfZm0WBTcy3cNic2S6a+PVsXF/qpi+gMMMkhWGSwvBfYZikMCHa
-	gmSqlLRkhUodH6dMT1Hp4g5qkm3If0q3T/3e50Cjz3a6EM8heaj0QOhupUysSEtNT3YhzFHy
-	6VLXhl1KmTRJkZ4haDX7tcfVQqoLzeVo+SzpqrETSTL+sOKYcEQQjgraf62IC5mTicrWLcp4
-	4cuL+DiuLv+UE9W20ZjlzS/Ub/paEx1acb2rtuLQ4OfY1kQF++nKeeF3cfzI5oTVrXKwkIXz
-	ntj6lqyKWfyusi48d3Rek73bW1NrSbTr73o0ziLpmqThquUe0fCmc/fnaxKvxprCI1aUl5Ts
-	2DagiYyf2tiZM0U3viWLkdOpSsXKGEqbqvgLvm7RmEYDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXfOzjmOJqd56U3DYNFFKUsoeqASiaCXbvQlrQhy6KHNO5tT
-	l0SmkmXeUhs5XSysvBWL5WWWhW6WSkqlWGbmxNIuhJWaqYtqUyK//fj///yeLw9Hya6I/ThV
-	QrKgTlDEyRkJLTm0I2tTeuAx5ZY7bSFQYb7NQN1sGlSNWMVQUduIYHruDQtT7R0MVF6foaDi
-	WTYNP8zzFIw9GWWhznIQHLfGaWjJaaJgtLCTgfxsJwUP5yZYyLRWi8Bu7BLD88YCMZTO36Sg
-	KWOEhb77FQwM3/4jhnFbPg1dhhoaHAVh8MTkCzNPvyBoNzeJYCbPyEBJr4mBd9kOBL32URrK
-	zxUgMD8aEINz1uUofzzMhq0l9i9fKVJf81pEmg1vWWKyaMm96iCSO9BLEUvtRYZYJotZMvSy
-	hSGdV500abZOiUh+1gRDvo8N0uTro36GVH78JiLm+n76sOy4ZGe0EKdKEdSbQyMlyuJmB5v0
-	ICCttaqNykBlOBd5cJjfiht6qig30/xaXNf9gXEzw6/HAwNzC7k3vwFbzt91sYSj+GsMNpUO
-	LRRefBp2jo4vsJTfjos/FYrdIxmvR7i72IoWi+W4q+w97WaK34ibG4ZcFzgX++Oq39xivBpn
-	NZQveDz4UDxR+Yl1sw+/Brc2doiKkKdhicmwxGT4bzIsMZkQXYu8VQkp8QpV3LZgTaxSl6BK
-	C45KjLcg17PcOvPrshVN9+21IZ5D8mXS6v1HlTKxIkWji7chzFFyb6ltd7hSJo1W6E4L6sST
-	am2coLEhf46Wr5DuixAiZfwpRbIQKwhJgvpfK+I8/DJQTqRZE74utatvpZO07LniyJzXrThw
-	dqe+Z6+oJVVrPzwYMmjct+rSpO82Y/YJX72/OmVNTaen/GDw/KuYG7TWHlqUfCFQ4lduaTO1
-	fg60Gr1P2b06dqXn5Z1W5kfOpvro6xOdfkUquzaqMjwkJqJX/4K36ErenQw4clfCeXz8Kac1
-	SkVIEKXWKP4CP4WDFSgDAAA=
-X-CFilter-Loop: Reflected
+In-Reply-To: <aFV3-sYCxyVIkdy6@google.com>
 
-On Mon, Jun 23, 2025 at 11:16:43AM +0200, David Hildenbrand wrote:
-> On 20.06.25 06:12, Byungchul Park wrote:
-> > To simplify struct page, the effort to separate its own descriptor from
-> > struct page is required and the work for page pool is on going.
+On Fri, Jun 20, 2025 at 08:02:18AM -0700, Sean Christopherson wrote:
+> On Thu, Jun 19, 2025, Mike Rapoport wrote:
+> > On Thu, Jun 19, 2025 at 02:06:17PM +0200, Christian Brauner wrote:
+> > > On Thu, Jun 19, 2025 at 02:01:22PM +0300, Mike Rapoport wrote:
+> > > > On Thu, Jun 19, 2025 at 12:38:25PM +0200, Christian Brauner wrote:
+> > > > > On Thu, Jun 19, 2025 at 11:13:49AM +0200, Vlastimil Babka wrote:
+> > > > > > On 6/19/25 09:31, Shivank Garg wrote:
+> > > > > > > Export anon_inode_make_secure_inode() to allow KVM guest_memfd to create
+> > > > > > > anonymous inodes with proper security context. This replaces the current
+> > > > > > > pattern of calling alloc_anon_inode() followed by
+> > > > > > > inode_init_security_anon() for creating security context manually.
+> > > > > > > 
+> > > > > > > This change also fixes a security regression in secretmem where the
+> > > > > > > S_PRIVATE flag was not cleared after alloc_anon_inode(), causing
+> > > > > > > LSM/SELinux checks to be bypassed for secretmem file descriptors.
+> > > > > > > 
+> > > > > > > As guest_memfd currently resides in the KVM module, we need to export this
+> > > > > > 
+> > > > > > Could we use the new EXPORT_SYMBOL_GPL_FOR_MODULES() thingy to make this
+> > > > > > explicit for KVM?
+> > > > > 
+> > > > > Oh? Enlighten me about that, if you have a second, please. 
+> > > > 
+> > > > From Documentation/core-api/symbol-namespaces.rst:
+> > > > 
+> > > > The macro takes a comma separated list of module names, allowing only those
+> > > > modules to access this symbol. Simple tail-globs are supported.
+> > > > 
+> > > > For example::
+> > > > 
+> > > >   EXPORT_SYMBOL_GPL_FOR_MODULES(preempt_notifier_inc, "kvm,kvm-*")
+> > > > 
+> > > > will limit usage of this symbol to modules whoes name matches the given
+> > > > patterns.
+> > > 
+> > > Is that still mostly advisory and can still be easily circumenvented?
+> 
+> Yes and no.  For out-of-tree modules, it's mostly advisory.  Though I can imagine
+> if someone tries to report a bug because their module is masquerading as e.g. kvm,
+> then they will be told to go away (in far less polite words :-D).
+> 
+> For in-tree modules, the restriction is much more enforceable.  Renaming a module
+> to circumvent a restricted export will raise major red flags, and getting "proper"
+> access to a symbol would require an ack from the relevant maintainers.  E.g. for
+> many KVM-induced exports, it's not that other module writers are trying to misbehave,
+> there simply aren't any guardrails to deter them from using a "dangerous" export.
+>  
+> The other big benefit I see is documentation, e.g. both for readers/developers to
+> understand the intent, and for auditing purposes (I would be shocked if there
+> aren't exports that were KVM-induced, but that are no longer necessary).
+> 
+> And we can utilize the framework to do additional hardening.  E.g. for exports
+> that exist solely for KVM, I plan on adding wrappers so that the symbols are
+> exproted if and only if KVM is enabled in the kernel .config[*].  Again, that's
+> far from perfect, e.g. AFAIK every distro enables KVM, but it should help keep
+> everyone honest.
+> 
+> [*] https://lore.kernel.org/all/ZzJOoFFPjrzYzKir@google.com 
+> 
+> > The commit message says
 > > 
-> > To achieve that, all the code should avoid directly accessing page pool
-> > members of struct page.
-> > 
-> > Access ->pp_magic through struct netmem_desc instead of directly
-> > accessing it through struct page in page_pool_page_is_pp().  Plus, move
-> > page_pool_page_is_pp() from mm.h to netmem.h to use struct netmem_desc
-> > without header dependency issue.
-> > 
-> > Signed-off-by: Byungchul Park <byungchul@sk.com>
-> > Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
-> > Reviewed-by: Mina Almasry <almasrymina@google.com>
-> > Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
-> > Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-> > Acked-by: Harry Yoo <harry.yoo@oracle.com>
-> > ---
-> >   include/linux/mm.h   | 12 ------------
-> >   include/net/netmem.h | 14 ++++++++++++++
-> >   mm/page_alloc.c      |  1 +
-> >   3 files changed, 15 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index 0ef2ba0c667a..0b7f7f998085 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -4172,16 +4172,4 @@ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
-> >    */
-> >   #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
-> > 
-> > -#ifdef CONFIG_PAGE_POOL
-> > -static inline bool page_pool_page_is_pp(struct page *page)
-> > -{
-> > -     return (page->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
-> > -}
-> > -#else
-> > -static inline bool page_pool_page_is_pp(struct page *page)
-> > -{
-> > -     return false;
-> > -}
-> > -#endif
-> > -
-> >   #endif /* _LINUX_MM_H */
-> > diff --git a/include/net/netmem.h b/include/net/netmem.h
-> > index d49ed49d250b..3d1b1dfc9ba5 100644
-> > --- a/include/net/netmem.h
-> > +++ b/include/net/netmem.h
-> > @@ -56,6 +56,20 @@ NETMEM_DESC_ASSERT_OFFSET(pp_ref_count, pp_ref_count);
-> >    */
-> >   static_assert(sizeof(struct netmem_desc) <= offsetof(struct page, _refcount));
-> > 
-> > +#ifdef CONFIG_PAGE_POOL
-> > +static inline bool page_pool_page_is_pp(struct page *page)
-> > +{
-> > +     struct netmem_desc *desc = (struct netmem_desc *)page;
-> > +
-> > +     return (desc->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
-> > +}
-> > +#else
-> > +static inline bool page_pool_page_is_pp(struct page *page)
-> > +{
-> > +     return false;
-> > +}
-> > +#endif
+> >    will limit the use of said function to kvm.ko, any other module trying
+> >    to use this symbol will refure to load (and get modpost build
+> >    failures).
 > 
-> I wonder how helpful this cleanup is long-term.
-> 
-> page_pool_page_is_pp() is only called from mm/page_alloc.c, right?
+> To Christian's point, the restrictions are trivial to circumvent by out-of-tree
+> modules.  E.g. to get access to the above, simply name your module kvm-lol.ko or
+> whatever.
 
-Yes.
-
-> There, we want to make sure that no pagepool page is ever returned to
-> the buddy.
-> 
-> How reasonable is this sanity check to have long-term? Wouldn't we be
-> able to check that on some higher-level freeing path?
-> 
-> The reason I am commenting is that once we decouple "struct page" from
-> "struct netmem_desc", we'd have to lookup here the corresponding "struct
-> netmem_desc".
-> 
-> ... but at that point here (when we free the actual pages), the "struct
-> netmem_desc" would likely already have been freed separately (remember:
-> it will be dynamically allocated).
-> 
-> With that in mind:
-> 
-> 1) Is there a higher level "struct netmem_desc" freeing path where we
-> could check that instead, so we don't have to cast from pages to
-> netmem_desc at all.
-
-I also thought it's too paranoiac.  However, I thought it's other issue
-than this work.  That's why I left the API as is for now, it can be gone
-once we get convinced the check is unnecessary in deep buddy.  Wrong?
-
-> 2) How valuable are these sanity checks deep in the buddy?
-
-That was also what I felt weird on.
-
-	Byungchul
-
-> --
-> Cheers,
-> 
-> David / dhildenb
+Thanks for all the details!
+I'm more than happy to switch a bunch of our exports so that we only
+allow them for specific modules. But for that we also need
+EXPOR_SYMBOL_FOR_MODULES() so we can switch our non-gpl versions.
