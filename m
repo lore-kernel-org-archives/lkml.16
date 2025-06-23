@@ -1,72 +1,176 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD5C1AA1DA;
-	Mon, 23 Jun 2025 11:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F6210E9;
+	Mon, 23 Jun 2025 11:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750676403; cv=none; b=nRB03B83aGbht3HXh0PZvcwJHLgB/23stWMRMKmDmZqB2m0g+dw9AcMswzvtxxezQdQZMNshxqcSkeKfA+TK4VkXH4Ob/KzwHNAhNOVi/LImULEJlZ7dAEbGCG6vrXsaNa9iT4iCgBCdD4NM0OTbXjevWABcCJXtzvrSniK//iQ=
+	t=1750676532; cv=none; b=XQQZvvChEjNjeltxj7uPo4El+bxcSkLQsyTEWo8bif/EDnxYQbOZrf5lXwcukpOKLQuoHOMJwfHZ0z16jZhiukxazqWzSeL+EL1julkOFRc/qibrL/dqon/AG0W5v/M3kll2UnX+dUEzM5ot9OMhCn0PCpqtXTQu9YJ3ERG1lsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750676403; c=relaxed/simple;
-	bh=qDokKc/d+8ogqph9zuLiu0qSyFYefdaicmpI6ptI2d8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uA6mz2/4UcVe/rlSbKMfK4g38TLFN5IrAe6tRq5PrmAD2oK+yeXCNaSO6nXpAYZPIOeXrEgueVBXcaxcoDQTi5aAlkSvcXdLpeGfGU3siC6/43DUdusOvRVZd++QCRyvuMotftU8JTDsBUlthhhvRFJ086rI59ORqmJVsjnNP70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQlR03FnGz6HJtd;
-	Mon, 23 Jun 2025 18:57:32 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4C3AB140277;
-	Mon, 23 Jun 2025 18:59:59 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
- 2025 12:59:58 +0200
-Date: Mon, 23 Jun 2025 11:59:57 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Davidlohr
- Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison
- Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, "Ira Weiny" <ira.weiny@intel.com>
-Subject: Re: [PATCH v2 5/8] cxl/region: Split commit_store() into __commit()
- and queue_reset() helpers
-Message-ID: <20250623115957.000017c0@huawei.com>
-In-Reply-To: <20250619050416.782871-6-dan.j.williams@intel.com>
-References: <20250619050416.782871-1-dan.j.williams@intel.com>
-	<20250619050416.782871-6-dan.j.williams@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1750676532; c=relaxed/simple;
+	bh=evGzHeB4WNKHHHAGC9tgEqnwu97LeAnrdONED4IO+5Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=brbj/rBTNPoRnPchu3llQxHEypjOqVlOvfKqkvCBny+oZVLJstcSAuZt9riVriPztR0VOIPUJZXCo5OO6kN/B7grG7y/+ZKXDrwdq0XKoYLMKzkw1Ib/hSYaFrw/3hRouv1URJhag32xjVty90SpcsQc1l6Gexg3RDByWeVjJVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R1qKOlBp; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R1qKOlBp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D19FC4CEF2;
+	Mon, 23 Jun 2025 11:02:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750676532;
+	bh=evGzHeB4WNKHHHAGC9tgEqnwu97LeAnrdONED4IO+5Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R1qKOlBpu/0rIM6Ji8L5AndT8QVn1RDzf5C2Qt1d1t+47pEidgDvAD6beSBbGdi9c
+	 Xe8RITdWphHD2cYAjWI4UVsD2eLvznZUrUo3m8Fv4D9AFutwkZQEf2xSZNvvCj3av5
+	 sT0k6rYQI5trTwR6wyKUwSCogH0MF1SPBq23/1I2I5tcisBfIX//KBm3Cb3Bpvx+wx
+	 Xx9m3moar4tLyF73R1BJRfOg135UAu86PtjgZ6L4P53pQZQX0Y1FPXH+LqrB/C+lte
+	 KKDYmhP/Ftof4HzJ/AXYK3Ezr9xFFLQ+lRpyxYnxDe08t1Xxj96+fYKL3vQUGBQCsR
+	 ydqg1zDbMOcmA==
+Date: Mon, 23 Jun 2025 19:02:04 +0800
+From: "Peter Chen (CIX)" <peter.chen@kernel.org>
+To: Pawel Laszczak <pawell@cadence.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v3] usb: cdnsp: Fix issue with CV Bad Descriptor test
+Message-ID: <20250623110204.GA53306@nchen-desktop>
+References: <20250620074306.2278838-1-pawell@cadence.com>
+ <PH7PR07MB95382CCD50549DABAEFD6156DD7CA@PH7PR07MB9538.namprd07.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH7PR07MB95382CCD50549DABAEFD6156DD7CA@PH7PR07MB9538.namprd07.prod.outlook.com>
 
-On Wed, 18 Jun 2025 22:04:13 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On 25-06-20 08:23:12, Pawel Laszczak wrote:
+> The SSP2 controller has extra endpoint state preserve bit (ESP) which
+> setting causes that endpoint state will be preserved during
+> Halt Endpoint command. It is used only for EP0.
+> Without this bit the Command Verifier "TD 9.10 Bad Descriptor Test"
+> failed.
+> Setting this bit doesn't have any impact for SSP controller.
+> 
+> Fixes: 3d82904559f4 ("usb: cdnsp: cdns3 Add main part of Cadence USBSSP DRD Driver")
+> cc: stable@vger.kernel.org
+> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
 
-> The complexity of dropping the lock is removed in favor of splitting commit
-> operations to a helper, and leaving all the complexities of "decommit" for
-> commit_store() to coordinate the different locking contexts.
+Acked-by: Peter Chen <peter.chen@kernel.org>
+
+Peter
+> ---
+> Changelog:
+> v3:
+> - removed else {}
 > 
-> The CPU cache-invalidation in the decommit path is solely handled now by
-> cxl_region_decode_reset(). Previously the CPU caches were being needlessly
-> flushed twice in the decommit path where the first flush had no guarantee
-> that the memory would not be immediately re-dirtied.
+> v2:
+> - removed some typos
+> - added pep variable initialization
+> - updated TRB_ESP description
 > 
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Seems fine
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+>  drivers/usb/cdns3/cdnsp-debug.h  |  5 +++--
+>  drivers/usb/cdns3/cdnsp-ep0.c    | 18 +++++++++++++++---
+>  drivers/usb/cdns3/cdnsp-gadget.h |  6 ++++++
+>  drivers/usb/cdns3/cdnsp-ring.c   |  3 ++-
+>  4 files changed, 26 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/usb/cdns3/cdnsp-debug.h b/drivers/usb/cdns3/cdnsp-debug.h
+> index cd138acdcce1..86860686d836 100644
+> --- a/drivers/usb/cdns3/cdnsp-debug.h
+> +++ b/drivers/usb/cdns3/cdnsp-debug.h
+> @@ -327,12 +327,13 @@ static inline const char *cdnsp_decode_trb(char *str, size_t size, u32 field0,
+>  	case TRB_RESET_EP:
+>  	case TRB_HALT_ENDPOINT:
+>  		ret = scnprintf(str, size,
+> -				"%s: ep%d%s(%d) ctx %08x%08x slot %ld flags %c",
+> +				"%s: ep%d%s(%d) ctx %08x%08x slot %ld flags %c %c",
+>  				cdnsp_trb_type_string(type),
+>  				ep_num, ep_id % 2 ? "out" : "in",
+>  				TRB_TO_EP_INDEX(field3), field1, field0,
+>  				TRB_TO_SLOT_ID(field3),
+> -				field3 & TRB_CYCLE ? 'C' : 'c');
+> +				field3 & TRB_CYCLE ? 'C' : 'c',
+> +				field3 & TRB_ESP ? 'P' : 'p');
+>  		break;
+>  	case TRB_STOP_RING:
+>  		ret = scnprintf(str, size,
+> diff --git a/drivers/usb/cdns3/cdnsp-ep0.c b/drivers/usb/cdns3/cdnsp-ep0.c
+> index f317d3c84781..5cd9b898ce97 100644
+> --- a/drivers/usb/cdns3/cdnsp-ep0.c
+> +++ b/drivers/usb/cdns3/cdnsp-ep0.c
+> @@ -414,6 +414,7 @@ static int cdnsp_ep0_std_request(struct cdnsp_device *pdev,
+>  void cdnsp_setup_analyze(struct cdnsp_device *pdev)
+>  {
+>  	struct usb_ctrlrequest *ctrl = &pdev->setup;
+> +	struct cdnsp_ep *pep;
+>  	int ret = -EINVAL;
+>  	u16 len;
+>  
+> @@ -427,10 +428,21 @@ void cdnsp_setup_analyze(struct cdnsp_device *pdev)
+>  		goto out;
+>  	}
+>  
+> +	pep = &pdev->eps[0];
+> +
+>  	/* Restore the ep0 to Stopped/Running state. */
+> -	if (pdev->eps[0].ep_state & EP_HALTED) {
+> -		trace_cdnsp_ep0_halted("Restore to normal state");
+> -		cdnsp_halt_endpoint(pdev, &pdev->eps[0], 0);
+> +	if (pep->ep_state & EP_HALTED) {
+> +		if (GET_EP_CTX_STATE(pep->out_ctx) == EP_STATE_HALTED)
+> +			cdnsp_halt_endpoint(pdev, pep, 0);
+> +
+> +		/*
+> +		 * Halt Endpoint Command for SSP2 for ep0 preserve current
+> +		 * endpoint state and driver has to synchronize the
+> +		 * software endpoint state with endpoint output context
+> +		 * state.
+> +		 */
+> +		pep->ep_state &= ~EP_HALTED;
+> +		pep->ep_state |= EP_STOPPED;
+>  	}
+>  
+>  	/*
+> diff --git a/drivers/usb/cdns3/cdnsp-gadget.h b/drivers/usb/cdns3/cdnsp-gadget.h
+> index 2afa3e558f85..a91cca509db0 100644
+> --- a/drivers/usb/cdns3/cdnsp-gadget.h
+> +++ b/drivers/usb/cdns3/cdnsp-gadget.h
+> @@ -987,6 +987,12 @@ enum cdnsp_setup_dev {
+>  #define STREAM_ID_FOR_TRB(p)		((((p)) << 16) & GENMASK(31, 16))
+>  #define SCT_FOR_TRB(p)			(((p) << 1) & 0x7)
+>  
+> +/*
+> + * Halt Endpoint Command TRB field.
+> + * The ESP bit only exists in the SSP2 controller.
+> + */
+> +#define TRB_ESP				BIT(9)
+> +
+>  /* Link TRB specific fields. */
+>  #define TRB_TC				BIT(1)
+>  
+> diff --git a/drivers/usb/cdns3/cdnsp-ring.c b/drivers/usb/cdns3/cdnsp-ring.c
+> index fd06cb85c4ea..d397d28efc6e 100644
+> --- a/drivers/usb/cdns3/cdnsp-ring.c
+> +++ b/drivers/usb/cdns3/cdnsp-ring.c
+> @@ -2483,7 +2483,8 @@ void cdnsp_queue_halt_endpoint(struct cdnsp_device *pdev, unsigned int ep_index)
+>  {
+>  	cdnsp_queue_command(pdev, 0, 0, 0, TRB_TYPE(TRB_HALT_ENDPOINT) |
+>  			    SLOT_ID_FOR_TRB(pdev->slot_id) |
+> -			    EP_ID_FOR_TRB(ep_index));
+> +			    EP_ID_FOR_TRB(ep_index) |
+> +			    (!ep_index ? TRB_ESP : 0));
+>  }
+>  
+>  void cdnsp_force_header_wakeup(struct cdnsp_device *pdev, int intf_num)
+> -- 
+> 2.43.0
+> 
+
+-- 
+
+Best regards,
+Peter
