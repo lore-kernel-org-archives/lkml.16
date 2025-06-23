@@ -1,132 +1,157 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813852472A8
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F434239E75
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750672869; cv=none; b=qDQ4RyiFAAWSL1biq6lgHaUga0I07EUV3imQl+QG54FyZlAZkSqSyStoLbUqnRecWeZ7oJwhWkRK90c0drCw4eFQf1WcUJN3Qua6pBFi4dOJtPTwrvtb+aXawsE/Ko0d+UrnT7ujYmUt5Unixg2C/VdheL6Mvcs4/BhXXpfTn6U=
+	t=1750672879; cv=none; b=hPwL1RUHN32RMtsyXN8odHhgvcMR6+OJLk943slSLo8gJlosJh/Z0yF9m+8zKJzVn6OX430wQd0BnPfNcTIpwOhHl/O8ZWNFZD4LHy438qrktNPsKevvDAw/A8jZFp5OicxZEdaCSJC/uJYG3qbakLFOdypL6ULUalEdoKPg2BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750672869; c=relaxed/simple;
-	bh=Q5iqcjL9Nx3GILkRpH3081upzUIxlt4JKXojGl4BQ/s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ECn1bQxQbfsHM2PfpavJ4CGZpVe9QCNawTSc+qUGDrL5Nm7pDq74rrG/kSpRg1iPRX2tV4s1LiDSj06o5JL7E9OVBmw2j0xf66HM4uR8E8bIKO2mC1Y0SXCmGB60lyJeB+lNvTqQJz6x297l8/PO66IgtGvP7b8x+DGmWk7tLIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ChFbGFRK; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750672879; c=relaxed/simple;
+	bh=hEzR9f/pVzdnR2q2Os57Kxsn5Q7ojiITh9etL1uva70=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fMdYUB91oLsQF/Kc08Oz9PziBh++qVFEZRlCXgxCQvIE+oUnUn6M3FRflg6XGiwRg4O4jqB5zb4NnHPBgA0DBKkZOqTkAlv3RE8wN1R/tvp1xRtQPuck4y3FYZfNUu+jXM9Om266ubx29+mW3+bqyn3iz6xJWhrRH9Lj/a0UnTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=idEa+NPg; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ChFbGFRK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750672866;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Cg11dcRkqMpCTj1960kW5hmHn/C5yTPB14wnt8MXdok=;
-	b=ChFbGFRKaOJJHVYPTldcf9QV5yPUJV1hOkDhmnXaM976yQHmkzc2tfwNL0jIvdg0w8a3MD
-	b7B9/hM6O+MSsaQ1FAme/mMGI1tXkJ2/BgubQiPUOSIFvmIdiWZmEDmbkZ3wFD/rHMcWO4
-	naBtwzrpyPhNgj0HGyH+DCnj7yx9AiY=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-534-s3-KPWdZPOWvURsUnAY4IQ-1; Mon, 23 Jun 2025 06:01:05 -0400
-X-MC-Unique: s3-KPWdZPOWvURsUnAY4IQ-1
-X-Mimecast-MFC-AGG-ID: s3-KPWdZPOWvURsUnAY4IQ_1750672864
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4a585ad6726so140224051cf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 03:01:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="idEa+NPg"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55N9ca7H012688
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:01:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	dmI4axmiuDRIOEMjY4CzWX76Iufc77l66VOjnoaKHVY=; b=idEa+NPgqx09x+m+
+	cNjBPTuW5rQDkrBctBYo3ir0rnZ7yzd5RAq6uk2PGlx2K/ZKReaLtFCc62OirhQm
+	q3uX8T+Pp0g0fdh04rKHDC3scyO1eRtOs3LJsgZvIVRgoCx+z0bRlQad6n0k92SM
+	SD97gQAseLfFavE7ajvZhsXDpWMERYc5HLaw+ucGvRa7WzwNDhYdo2Vv6GIDG9Es
+	p4qoHaafYWvo62kQj4RDwxSYJ0Do+ktzllnWDSoo+1WO0ybH+GUfL5EbwMW4Nmjh
+	CZgbZtBW8QOVPCkwFVta3IroxGKlLaa1555KcOTA5qj2SLzNy1jFsV/DQgFI3YoK
+	Xj304w==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47eud09cbg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:01:16 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d3ea727700so65098785a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 03:01:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750672864; x=1751277664;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Cg11dcRkqMpCTj1960kW5hmHn/C5yTPB14wnt8MXdok=;
-        b=ZDjmKR6mtjAAeVnZNUwGDcRWHV/c3m7Sute/VVme1jqLqH24FYJGPmvGKd4TftXCWc
-         6vwZrWhP3VD3Bw1Ni8gF0Xs3R+WQikmQil7pdEof1pviCvb0MiMxYvNg/8Q7uWweQcPr
-         1E4O2lra/h9Vw1FDhyxgfRuOLczM/4YVAgF4pR+fVR4cZlMvugTgOpnwIuhKC90CjV6X
-         y5/Vbj/S9YqW9FDdi3w2eaBk4bmMNfgIP/MmLogsMMrOEccaDXbxXqsp/5YwiElpOfrr
-         bk7DhD+M6E8ZuJ7owYj7/WeMztJ+BilrUiUU1DPQelgDAJ2XDee3OicrDY5w2mdPCZwo
-         5Bkw==
-X-Forwarded-Encrypted: i=1; AJvYcCWLyJdi+ABPoaCyA6AsJA5HoWJeN8i8ma8U6SUHRcrvagyFkpiuyFjuALQH4gPeZFWlUxH8hIQo8sSgyCY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHf3jmoHeQ1X6fhcc7IKicdlzYg5+e+5hxkEQfkokFlggaBpg+
-	d55P5A3Nis7wNoaV599R8ZeLKND+vKsN1j5MblzfexFkg7T2iFrSDod/GmJXHmoMegNRKlr3ez8
-	+Ep2yX1wfXK+jAJqwv5za6CY1qTmJuEkJgSex1VxDKvQBco3UKhde+BPDNe2ltWlqxw==
-X-Gm-Gg: ASbGncv5Fzuw0NZFol6/dY9F6eGrPGGz9GPriJTGGGJe/wNBj694DdBITYV5zbX1qSy
-	B21GXINdHzCYgk1OgPXqb8CmhMAl4eWjpi6w9pm7g6okJSSt+EQgVWzYbLEWIYDErD6OdPpWAvV
-	AcaySWdN5AOFGPe7Ilq7UMlmEDIVB+Z4HgbFRJTzO7hiZqpznfC8P4mabsH8Zpk1YQryelfE/lw
-	QLlNhjdXVmt9zSSrqKGu62KSpUppVO8CCcBE163L9DPfsoP68hU5INCbgtNepOY+6AoJPcUqKEe
-	h2bR9m8PkllERQ/1vWNGYW0gpOk0
-X-Received: by 2002:ac8:5903:0:b0:4a7:693a:6ae8 with SMTP id d75a77b69052e-4a77a25763fmr190862311cf.52.1750672864631;
-        Mon, 23 Jun 2025 03:01:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGXzLpFhw4QDvJz+bsfP+zBCHk665drBIUKJoN12gXU74K8bXpg+kpWK89icqArO8RccMpeNw==
-X-Received: by 2002:ac8:5903:0:b0:4a7:693a:6ae8 with SMTP id d75a77b69052e-4a77a25763fmr190861721cf.52.1750672864007;
-        Mon, 23 Jun 2025 03:01:04 -0700 (PDT)
-Received: from stex1.redhat.com ([193.207.202.87])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a779d4e5d5sm36886681cf.7.2025.06.23.03.00.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 03:01:02 -0700 (PDT)
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Andy King <acking@vmware.com>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	George Zhang <georgezhang@vmware.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Simon Horman <horms@kernel.org>,
-	virtualization@lists.linux.dev,
-	Paolo Abeni <pabeni@redhat.com>,
-	Dmitry Torokhov <dtor@vmware.com>,
-	linux-kernel@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Daan De Meyer <daan.j.demeyer@gmail.com>
-Subject: [PATCH net] vsock/uapi: fix linux/vm_sockets.h userspace compilation errors
-Date: Mon, 23 Jun 2025 12:00:53 +0200
-Message-ID: <20250623100053.40979-1-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1750672875; x=1751277675;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dmI4axmiuDRIOEMjY4CzWX76Iufc77l66VOjnoaKHVY=;
+        b=p1kRQxm6QdKsjPM1sH7KkabdBQEDwwnfjpYUkriFJ9HjgFrDMHTKxFzBZ1JMyiOXkZ
+         RQ8NEqxym6Mp1A0LUQE8JXc1kKPJR3tqcTPVJnh/JjDlIY1FWe1KBaNmgtVpzOMTIsb+
+         LiiPJY5ai6h98qgkBgzoeyuHcRgnoNmqdqrhu/XBwwO2v90YBW2HRcQrq4ejsN4jd98u
+         g3RA0nMBp0I32CEaC8Zj3CwSDbuWbo1FBXpA852Jnmcpw1xklM8FWLdJggpOlSeK68a/
+         0/KG/iL4f+9pqBdO6QdeT7fGlgbC/2N9dgse8wwAWfUcU2tivXYHwGNXUnnhPsSyGpD0
+         Nc3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUtoFffAnJyHaiYldeEPe4QVwe7jqjbKcGOBhJa7ZSaN3CENr7ccyz8BmHS0yVQ3QaRuy6jipDdDaR7F6k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyD0E/ldJOSwB3RMVnHnu3h2t+VDTEaCHCU7vDqKkqjvadXAwH+
+	MtpNr7hz0Zyt0IDjWJdjZjWyMrycKDy3bnakGg+5QHrhcZF6Hz6uOMgoZvmWE71T1D+p5+GIV0/
+	0mJjPYLIgguRP3od2z6Ljojnwt29f1+hM47E190tk0rAPFvxmzzF2/LLpkB1TLxlOf/U=
+X-Gm-Gg: ASbGncuUDzy+/QHeQWkhoXGgDTVDffI/SIqk6+sfM9HZJ6ge05uriwHq+pi8cZ4A3Wa
+	N8jfXpHay3uWpWun/DaVrFB4d/Oz1WiarSCVo4RBXsdpXNL4y0VMhPdipDeX86Nj6c3Z1LhxyAo
+	YC07wX6cUqBf77nAZj7zWZSbZqkkAulnpAganr/FE679OZEzgJGooHLcm89mb9ufe9cTjg8fbR1
+	dhq1rKeFyApQNn3w8B9MBo4g1W7iT1Tzbto9405ohutBd7nKXaVl43tCnfyMspL/0d/PpWVV39R
+	z1eHCn1IaDOY9tGYoZq1rD6S3BfU90onzgIH539XJKFzC2zgO5iT+MzEmForm2EH4pDbThVSQu+
+	+do4=
+X-Received: by 2002:a05:620a:26aa:b0:7c0:b43c:b36c with SMTP id af79cd13be357-7d3f98e252fmr557149985a.6.1750672875175;
+        Mon, 23 Jun 2025 03:01:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFd0DfyOKsfHiqaekfIPWUjRqgIfAWTnyptuHPnWpwgrdGU6UXcEE9cVKR04xkNRWtBD8aFqQ==
+X-Received: by 2002:a05:620a:26aa:b0:7c0:b43c:b36c with SMTP id af79cd13be357-7d3f98e252fmr557147385a.6.1750672874595;
+        Mon, 23 Jun 2025 03:01:14 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60a18cbd8easm5770386a12.67.2025.06.23.03.01.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 03:01:13 -0700 (PDT)
+Message-ID: <cf1c9d32-9034-4d22-8be6-2abacb3ece56@oss.qualcomm.com>
+Date: Mon, 23 Jun 2025 12:01:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: sc8180x: Add video clock controller
+ node
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250623-sc8180x-videocc-dt-v1-1-9d210c140600@quicinc.com>
+ <7c55acd5-6d30-42a3-aec6-2d7aa2a640b0@kernel.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <7c55acd5-6d30-42a3-aec6-2d7aa2a640b0@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: vLHdjNRqJtSHJycYNhohO1_0-1x-z2cu
+X-Proofpoint-ORIG-GUID: vLHdjNRqJtSHJycYNhohO1_0-1x-z2cu
+X-Authority-Analysis: v=2.4 cv=eco9f6EH c=1 sm=1 tr=0 ts=685925ec cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=t5UmTshxakG7yEKo4UwA:9
+ a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA1OSBTYWx0ZWRfXyXPbLOYRXxnS
+ ZiR7QVaouZAISqR9iZG8mM401d0vpJ2Xw8HtOmJbGL2b/PDWh0jU7rmHRE4PqRf9XmE1HiBG/nB
+ IWH5WJkkCLJsrcJeJ0y0Tru+ME9r759990hvEWvumwd20JwTzgAp9WV7DJDzBGMVoDDG5Csw16N
+ vDRuKYXNhn1AD6+RjaB/HUEhfrwIb/ZfO5KHdiFFpiYKnx/yJQFkxowR28B8wALs3dhojTkWayZ
+ WiRb7EWvM4azPugacLmN5vZaNwHyhrIGw4eArTZoDnMFIarnvHdmsFLAtW/VI78ts6CItFdrfvA
+ XHdXUUBYkevASDfjj+JYv8G65U3hl1dA2cfP8NERRhT+HneImMABDzSNTLnl+D+OllSsG4DJ0Nm
+ uxmyHFGI1l2tVpzmY4i7YHUBnJcvwvVsKJ3wLtxsz2EvIL3KdxLpzoC8bttD1b8GFY4tKr0x
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-23_03,2025-06-23_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 suspectscore=0 adultscore=0 clxscore=1015 mlxlogscore=936
+ priorityscore=1501 phishscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0
+ malwarescore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506230059
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+On 6/23/25 10:44 AM, Krzysztof Kozlowski wrote:
+> On 23/06/2025 10:14, Satya Priya Kakitapalli wrote:
+>> Add device node for video clock controller on Qualcomm
+>> SC8180X platform.
+>>
+>> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+>> ---
+>> Add device node for video clock controller on Qualcomm
+>> SC8180X platform.
+>> ---
+>>  arch/arm64/boot/dts/qcom/sc8180x.dtsi | 14 ++++++++++++++
+>>  1 file changed, 14 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sc8180x.dtsi b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+>> index b74ce3175d209b569e634073662307964158b340..4590c2ff68a9885d8047d728bbf2dea0236d5b8f 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+>> @@ -10,6 +10,7 @@
+>>  #include <dt-bindings/clock/qcom,gpucc-sm8150.h>
+>>  #include <dt-bindings/clock/qcom,rpmh.h>
+>>  #include <dt-bindings/clock/qcom,sc8180x-camcc.h>
+>> +#include <dt-bindings/clock/qcom,videocc-sm8150.h>
+>>  #include <dt-bindings/interconnect/qcom,icc.h>
+>>  #include <dt-bindings/interconnect/qcom,osm-l3.h>
+>>  #include <dt-bindings/interconnect/qcom,sc8180x.h>
+>> @@ -2943,6 +2944,19 @@ usb_sec_dwc3_ss: endpoint {
+>>  			};
+>>  		};
+>>  
+>> +		videocc: clock-controller@ab00000 {
+> Why are you adding the same multiple times? This was added A YEAR AGO,
+> so you clearly send us some complete outdated ancient tree!
 
-If a userspace application just include <linux/vm_sockets.h> will fail
-to build with the following errors:
+It seems like you're confusing something, there is no videocc node in
+sc8180x.dtsi
 
-    /usr/include/linux/vm_sockets.h:182:39: error: invalid application of ‘sizeof’ to incomplete type ‘struct sockaddr’
-      182 |         unsigned char svm_zero[sizeof(struct sockaddr) -
-          |                                       ^~~~~~
-    /usr/include/linux/vm_sockets.h:183:39: error: ‘sa_family_t’ undeclared here (not in a function)
-      183 |                                sizeof(sa_family_t) -
-          |
-
-Include <sys/socket.h> for userspace (guarded by ifndef __KERNEL__)
-where `struct sockaddr` and `sa_family_t` are defined.
-We already do something similar in <linux/mptcp.h> and <linux/if.h>.
-
-Fixes: d021c344051a ("VSOCK: Introduce VM Sockets")
-Reported-by: Daan De Meyer <daan.j.demeyer@gmail.com>
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- include/uapi/linux/vm_sockets.h | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/include/uapi/linux/vm_sockets.h b/include/uapi/linux/vm_sockets.h
-index ed07181d4eff..e05280e41522 100644
---- a/include/uapi/linux/vm_sockets.h
-+++ b/include/uapi/linux/vm_sockets.h
-@@ -17,6 +17,10 @@
- #ifndef _UAPI_VM_SOCKETS_H
- #define _UAPI_VM_SOCKETS_H
- 
-+#ifndef __KERNEL__
-+#include <sys/socket.h>        /* for struct sockaddr and sa_family_t */
-+#endif
-+
- #include <linux/socket.h>
- #include <linux/types.h>
- 
--- 
-2.49.0
-
+Konrad
