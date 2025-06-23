@@ -1,103 +1,106 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90B854C7F;
-	Mon, 23 Jun 2025 01:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A6D19A;
+	Mon, 23 Jun 2025 01:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750641276; cv=none; b=qVPsrU8i82UCZE4vInjrNmnTwvxqYFgyjS6Hh9c0cFrJVGbxU2JiaywpaEcm+TYabYKQTQt5b2/LLDk1OVYI1UrV8AWX9neOQk02wn4Lx+W03m0cX/qITJJpF6FydtjI6MDH6TglpCcyrA1dW4BtMYX1o/Gw9ePN4cDP8srl9i0=
+	t=1750641452; cv=none; b=hj2D0duFGtstaV/hADlqpOgR+l4Y/vKPC3yyR5ZfdX46cU1hc59bhftsEcGhcbYLXEsIdHZEq1j/BZnfVd98B9KgZb3k+Uw9eRGhuO/YqcvNdATG2MxuJVV+nmCpvb7IIfzL8Z5EodZRm3Nr76dy7QgoHCTX1ypGpf8mRznGrbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750641276; c=relaxed/simple;
-	bh=7ULXjxBT15KMqSaHyqu0hXJQEiICOMQf/UAcK91OmgA=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=QdSGqlHDJf6wo17WEcXo7qfWdqVSPOvFB7LhV0mJY7jTlqUbc7OKj9acd3WoWtX2BBqO3VEzq6cdou8gzJ2fwg6Qnr6jvgoPkYPe7xID8qDI86rvFltmstvQctY88evhKGr4LuZDjAyP6XvuR+1IipBfizIZ9+SxUEyWsFRvy70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8DxjXJvqlho41gbAQ--.61527S3;
-	Mon, 23 Jun 2025 09:14:23 +0800 (CST)
-Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by front1 (Coremail) with SMTP id qMiowMCxbsVkqlhoqo4mAQ--.54823S3;
-	Mon, 23 Jun 2025 09:14:15 +0800 (CST)
-Subject: Re: [PATCH v4 0/2] Loongarch irq-redirect supprot
-To: Thomas Gleixner <tglx@linutronix.de>, chenhuacai@kernel.org,
- kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
- jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
- lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
- gaosong@loongson.cn, yangtiezhu@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Super User <root@localhost.localdomain>
-References: <20250610114252.21077-1-zhangtianyang@loongson.cn>
- <87qzznivtp.ffs@tglx>
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <10014657-8756-f31a-c3b4-f175b764346c@loongson.cn>
-Date: Mon, 23 Jun 2025 09:13:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1750641452; c=relaxed/simple;
+	bh=GMCBoZMulpjxiLy8cBhLZG3VWdf79Ci7wuDXKwKF1fQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bKNuabqt8NUaDyzS74GaQt1YsULU2k6nkgP8NlBFUZ3d5TCHIw7gt3R7kn5pV/g5jd9uaMDh5eh9GrSDe2eV6aMfchYZRuKYtzpqu+EWSlEsFGorg6ljPYp1Cg4ASmGhbJcrDp+XuIzFKxA2uY3S4/Fupxh1excgMNqlVxH1cBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JEpDYmiQ; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JEpDYmiQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750641451; x=1782177451;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=GMCBoZMulpjxiLy8cBhLZG3VWdf79Ci7wuDXKwKF1fQ=;
+  b=JEpDYmiQZ3tjFrOs2V3ayRA7GMTR9vw/YrSuBNl4Y/gWRj9Sb+9T5dgZ
+   oNlOQHPW5qO6bHQKu+RTfE3dUp1sU67CF7mhzvptCllSTiPabmiiaeVCQ
+   oMpjCtpS0U9+AlfzVmIdonizqhjMFs35ah0YR9NTV3FXhPw5n9fcf5Foc
+   KbAVqStQOJfbzPDDyLWcNbaqvodhc3Z0SNJznLF6u0z9VKwgXMCJISJrM
+   XdxJ1CahC1mjNCLK56bBkGZ5D25n0xQ+3tVoW2PP//8uiKb+q5uRtFsLk
+   Iv6I4rb8vWE7Hi9tk+M/lNHhWYlbFuHGNxBfXmUUwrIdiT/D4zrXdJ8G8
+   Q==;
+X-CSE-ConnectionGUID: cJeat3Y4SviYQDrTM/eelQ==
+X-CSE-MsgGUID: e765NTaVSbeTRb4iYSUDaQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="52921837"
+X-IronPort-AV: E=Sophos;i="6.16,257,1744095600"; 
+   d="scan'208";a="52921837"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 18:17:30 -0700
+X-CSE-ConnectionGUID: dOCoXtziT7W1YO1wZ0GYuw==
+X-CSE-MsgGUID: 1YDDZ47rQSCKuaK22nCnKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,257,1744095600"; 
+   d="scan'208";a="155832133"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.144]) ([10.124.245.144])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 18:17:26 -0700
+Message-ID: <8f6effaf-0a4b-411e-8e12-57f3c83069c2@linux.intel.com>
+Date: Mon, 23 Jun 2025 09:17:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <87qzznivtp.ffs@tglx>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v4 07/13] perf/x86/intel: Allocate arch-PEBS buffer and
+ initialize PEBS_BASE MSR
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250620103909.1586595-1-dapeng1.mi@linux.intel.com>
+ <20250620103909.1586595-8-dapeng1.mi@linux.intel.com>
+ <20250621092001.GT1613376@noisy.programming.kicks-ass.net>
 Content-Language: en-US
-X-CM-TRANSID:qMiowMCxbsVkqlhoqo4mAQ--.54823S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrKryrZr4fAFyxuryrWr4Dtrc_yoWDuFg_ur
-	1xtwn8AF1UZrWxZr4S9F43Grs7Za1xurWUtFWvq34jq34rJa4DCF4q9ryS9an8XF43Jrnx
-	Xr90vr15t3sF9osvyTuYvTs0mTUanT9S1TB71UUUUb7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbqkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1q6r43M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
-	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxG
-	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUtVW8ZwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jTq2NUUU
-	UU=
-
-Hi, Thomas
-
-ÔÚ 2025/6/13 ÏÂÎç10:02, Thomas Gleixner Ð´µÀ:
-> On Tue, Jun 10 2025 at 19:42, Tianyang Zhang wrote:
->> From: Super User <root@localhost.localdomain>
-> That's a valid developer name :)
-Sorry , it's a realy stupid fault.....
->
->> This series of patches introduces support for interrupt-redirect
->> controllers, and this hardware feature will be supported on 3C6000
->> for the first time
->>
->> change log:
->> 	v3->v4
->> 	1.Provide reasonable comments on the modifications made to IRQ_SET_MASK_OK_DONE	
-> That's not really what I asked for:
->
->    "This change really wants to be seperate with a proper explanation and
->     not burried inside of this pile of changes."
->
-> Emphasis on _seperate_, which translates to:
->
->    "Put it into a seperate patch with a proper changelog explaining this
->     modification and why it is correct."
->
-> You still have burried this in the whole pile of unrelated changes.
->
-> Thanks,
->
->          tglx
-
-Okay, I thought it was just a dissatisfaction with the "inclusion" of 
-some changes. I will try to modify it here
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250621092001.GT1613376@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
-Tianyang
+On 6/21/2025 5:20 PM, Peter Zijlstra wrote:
+> On Fri, Jun 20, 2025 at 10:39:03AM +0000, Dapeng Mi wrote:
+>
+>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+>> index b6eface4dccd..72b925b8c482 100644
+>> --- a/arch/x86/events/intel/ds.c
+>> +++ b/arch/x86/events/intel/ds.c
+>> @@ -625,13 +625,22 @@ static int alloc_pebs_buffer(int cpu)
+>>  	int max, node = cpu_to_node(cpu);
+>>  	void *buffer, *insn_buff, *cea;
+>>  
+>> -	if (!x86_pmu.ds_pebs)
+>> +	if (!intel_pmu_has_pebs())
+>>  		return 0;
+>>  
+>> -	buffer = dsalloc_pages(bsiz, GFP_KERNEL, cpu);
+>> +	/*
+>> +	 * alloc_pebs_buffer() could be called by init_arch_pebs_buf_on_cpu()
+>> +	 * which is in atomic context.
+>> +	 */
+>> +	buffer = dsalloc_pages(bsiz, preemptible() ? GFP_KERNEL : GFP_ATOMIC, cpu);
+>>  	if (unlikely(!buffer))
+>>  		return -ENOMEM;
+> Here we go again.. that is CPU_STARTING context, that has IRQs disabled
+> and as such no allocation is allowed. Not even GFP_ATOMIC -- this will
+> break PREEMPT_RT.
+
+Thanks. So we could have to follow what current legacy PEBS does and defer
+the PEBS buffer allocation until creating perf events
+(x86_reserve_hardware()).Â 
+
 
