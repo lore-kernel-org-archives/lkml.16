@@ -1,197 +1,229 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2086.outbound.protection.outlook.com [40.107.223.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2598328DEE3;
-	Mon, 23 Jun 2025 15:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750692591; cv=fail; b=ix5qRKlad1OfFGzaHjJ3lziyJTUwKn4TU7Ehlq5Sy2GwgwK4C7n1AvIvjC846q1885QnnNzrAuUGI9rbu302rLEKMCp5GUjxUHj0ARpx/JfIftfiZ2kCatTUkWnrp8WeSbLI/lhD8Kef5OylgZXORJcqQlZU17czlxXiKM5Q+tQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750692591; c=relaxed/simple;
-	bh=BP4YhttcudsyLEHZIMJMYtq73RasqewWdRf4K0DHxgM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GlB2sxeDLJrJi0KmyOs8sdr4/Vk2TaoWMnH60Eu+TNCBa6EeTXE+sH+aIH3YxkpZp4pxkOzRzcV62/L268d70LIHVnF/GZTvr5TK1wC0ukBo9FJBqSVENOSRIeOK7dsR3ywmHZWH6rpQw1V3OqM8PvCbIPaVlW3yVerlCGQ/b/Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=RlDWW3sF; arc=fail smtp.client-ip=40.107.223.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19E228D8F1
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:29:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750692593; cv=none; b=OcoPeeyi0DAr07iBYEJQZ3UA39yE+frWDSOPzuFRfS0dPx2UTDgswPAg1Qv0bKxw2k3kgsw2u/KhoWc5thX/gRWw8cFhdjLBn0KyML1SAxoZbwLSEjV//o88ldU7rGLh23BqS3PuoIaER/x7dC5JvUEO/JBVCJeYntY30UNjj+4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750692593; c=relaxed/simple;
+	bh=rvlexOk2KxBUOGBjG89VU+HC4brRNmm9u14ZwZa9zuo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GB0m0I8eKGvyxsSj1ML/69bo3n69WtEsi1K2nRgm89X7ralawcHFMQwrwQB06qIoPg3XH5XxKZz5p4FsIBvcWetkrRMmHyvJHUXZa5w4c3N2NJbf5I5QePdzG8k6mxd7WVir2EhKjdI3Qs0jK+4l9fJMrJLNDhH44Q/PJWQRRXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cmsz0fG1; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="RlDWW3sF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=guhITH/EOl+xF/vDG1QkUAkZwpeH+2idLbVe4FR2YFnPaR1Yg/QFsCm91Fs66mSeqbTafHoTe6lQuCjFd52woj9hDbVg9wLl44KvbvGJE+KCkK7qYZWPpuIRknhNtm3iKeK2/Ofmo3txGV2ovnlhyCqkGQ3VQQ2K4d/TB7XPcPCBYfyzDjumSjhdpp8NSEls3JB1OxgSCwFI+MEruemZN39m14OrrP5mCGBI7Bx5IE4JTvvvGhjheTAiexS52fJSWIMZJb4FY93x1QQJc/RA6DInNwW1OjJB4VlAc0RkOAp8PEYnFaHPNgCTiYDG4QLNzi2hi/3hlzfeaqE4/R9g3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BP4YhttcudsyLEHZIMJMYtq73RasqewWdRf4K0DHxgM=;
- b=nByqee/q8a8qMet+hoFsf3qAaKbhmbJe0TTQTXT1dzWi+95aFf20J/GYxc+zedYKNfg7ul18r5i3+YcDuKm7a9wWhMSb0E1Sbbjj/4U8FeQilT+LbrcjB0xW0VsCJn89PkZQAU3rFut93kTwKNKRqA3P62C7M+2nnMEOprncrZioqJfyNSU6NiYE2wjb4o/Arqpl2Y19lJqSYbHlhDuRNDC1lBNLAFV+dWpkcqCcwv4dHE4KPKeQRTv3viC9QwN/RP5zpxiHwZ4gnsJ5eNGslV9xDRipKa+kL+jx1DIo5uVItDKrlZEflHLYKPLRFCPqmlWOyeotGqx4orwYuh3HlA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BP4YhttcudsyLEHZIMJMYtq73RasqewWdRf4K0DHxgM=;
- b=RlDWW3sF0qVek75MrMya7sOJBSpVO22NSDudFZyhPf+dW2oGPQ8X1QtzU1q+brRkG4sB30TLm+CFPxYKKDzbjT9VvYB3yIDRiVVA8vdGP9SN17VXE/+dLKb6JXHXfmlCvONLPFVjekWmUzdTpafRItxTOArzzlmU8eAu3ltTugZ2weoOVvGRZV3HS5GWUpwFrBuXK+wBe4D34EoAskKp9WrGzw/dR1JHO8WpkjW03xlYaE0AxucKPF45nvjlQlkvkEuzsg6iUPyHsQGXlxUic7/CfEMxJCMA+NZpVZHZFMM0eVMInGAFIac5TzrWzc7x6EuaUlbrGUMZoyewoWwAdw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- IA0PPF64A94D5DF.namprd12.prod.outlook.com (2603:10b6:20f:fc04::bd0) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.26; Mon, 23 Jun
- 2025 15:29:44 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8835.037; Mon, 23 Jun 2025
- 15:29:44 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Minchan Kim <minchan@kernel.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
- Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
- Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
- Shakeel Butt <shakeel.butt@linux.dev>
-Subject: Re: [PATCH RFC 05/29] mm/balloon_compaction: make PageOffline sticky
-Date: Mon, 23 Jun 2025 11:29:40 -0400
-X-Mailer: MailMate (2.0r6265)
-Message-ID: <AEF7E290-7B51-4325-8744-7CD3559FE8A9@nvidia.com>
-In-Reply-To: <b0e47950-9fcb-4fb8-8bf4-c4a3c69387af@redhat.com>
-References: <20250618174014.1168640-1-david@redhat.com>
- <20250618174014.1168640-6-david@redhat.com>
- <D114CF56-016B-4140-97A0-42163727EB6C@nvidia.com>
- <b0e47950-9fcb-4fb8-8bf4-c4a3c69387af@redhat.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BL1PR13CA0099.namprd13.prod.outlook.com
- (2603:10b6:208:2b9::14) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cmsz0fG1"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234f17910d8so38366965ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:29:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750692591; x=1751297391; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+jAVqu/xxn5U99+rZ3TEpqjiwAM44h/eW9lw9VkDNhA=;
+        b=cmsz0fG1MEpkD4+3zUVSaoPiglOu2d6FKV1k1BLSJfa8CyaqYNfLBp/3iB/MboJjnG
+         4uogqpEL/Wg9a/cXazouEOGkuVyHzFuHNI73HJxdwIsc6aiX27xwyyZz1dXP/9tLz/6P
+         /CiACCtg1UcZRxqsFlQKJt+dHC30EFW8F4+Q0LnddixxgqsMbIupQ/SSD5T/K97Uk/dT
+         kGQIgoRvjjt6P5m/mITwYUhT2yxDhfWkAKbBHh6YXY5Rgag925OrA8JHJgUpQBBaIZ7S
+         S9CbxcEnLMfwcl3o7LDl9YMLiMS8s6rwDA8g2ZGBTM/jlzAo3Lur6My3rXobCOfQsv4T
+         UlDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750692591; x=1751297391;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+jAVqu/xxn5U99+rZ3TEpqjiwAM44h/eW9lw9VkDNhA=;
+        b=ua1ETkuyDMVnXRI18zxju2Q1c5q4Tm8lssi9MSmsk1NL5vw3QDJDHuj0SRBegQUKxb
+         s2X/s/QmWg2xNY9G/TfQz3xlDM+JtaB/cW73ffBQ1y7CBaQZqSbWVCQmYdHF4ItnD439
+         TNfH9uqORqiX1noF18ecLNV8f9v9U7nNBLBwjrZicY3CNFgPO+hpLspGEybwRaH0jcHW
+         4nVNGYZH5sNuuKLUrXVq87zx9pBtcR+ZZxbveaYyEhtcSZjX26NBaqW0Sy7uZRVUjY0p
+         qmLtDnsu73WMVHS0I+zwUpOmbPkKflDc1SFBUYUfvoEQgvS8ZEZrqQcyaHqU2SBnyirL
+         lsvg==
+X-Forwarded-Encrypted: i=1; AJvYcCVexjc25ajd/9btG8cS9KdmX+CkyWbMSGnyS0pkoPXcnvZAgzQqa3W/m9+kULweV0RMiLC5DB08qIHUMco=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywz1pkWn9NSXwMoJAv5TR9+gYfLXkUSWVTzdW0YMpWXuq9gDkGh
+	+Sp+qNTxCay97ZzqJ/4dhypNBZLKRb/Rp9zi7PpaNPjydHmavUWc19Dz+mQEOxI8EzM=
+X-Gm-Gg: ASbGncthkFAj8e3S6R4pcdnVQ/XvBX2Rs4PNHe6dJws25Q90Dnmf8j1UcOnlHlP9lS6
+	sY7fXGQAr2WbJClmCr7KXg8coPJF/9w+YmgZ1FA34/QGpB4ZRI402OyW1d8Vba6LhCdOEBmoziQ
+	rJ5KSQ+3f7YwottE4fel/t6AaR/KbXYH5IcvkBCeOjNOoaYQ5WmYHUCR9L0tseQcj8CLhxcXcf/
+	moyXwPIQorXOqKCnzHoNoXy9DVHQEiPGFiGN/TSEUgieUn+pbcHw4+chHS/iFR6Ikm/yug8c5fR
+	Pr3JO0AsEvIfvUjmg+Q8nWd08aKtiq1IIo4zhY8TGcQYAVEQcH4H0EDCA/uXaDOfTl4bdWP3hck
+	=
+X-Google-Smtp-Source: AGHT+IE/tDEriXoZY84SIRgiQjRfx7Nqv/jCO1aRGKRzkXGAXMW0IvvtgLzNFd2r0jGkIlFdCJKogw==
+X-Received: by 2002:a17:902:d501:b0:235:f3df:bc26 with SMTP id d9443c01a7336-237d976311fmr188832525ad.3.1750692590758;
+        Mon, 23 Jun 2025 08:29:50 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:d145:b99:ea4b:a65f])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f12427cdsm7052225a12.39.2025.06.23.08.29.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 08:29:50 -0700 (PDT)
+Date: Mon, 23 Jun 2025 09:29:47 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Hiago De Franco <hiagofranco@gmail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@oss.nxp.com>, daniel.baluta@nxp.com,
+	iuliana.prodan@oss.nxp.com,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v5 3/3] remoteproc: imx_rproc: detect and attach to
+ pre-booted remote cores
+Message-ID: <aFly61yCMttkp12e@p14s>
+References: <20250617193450.183889-1-hiagofranco@gmail.com>
+ <20250617193450.183889-4-hiagofranco@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|IA0PPF64A94D5DF:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1af71732-ea05-45d6-a6e0-08ddb26ac7b2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?xFfsIvX9tfnEmmz4ccVP34+lkFqEt6E2pAigSYkqIHnFYKyFfTr+WGMdc8jx?=
- =?us-ascii?Q?JGJ33jCL5Ae2IGwMddO/Yl6DA/jZf9yDsxNx+Zcxl8rEl/o07LtaNsofwaaZ?=
- =?us-ascii?Q?QasiCNJ/4qqSGiefv1EG0l9Oc2HBOphlDyc/mlFdF4V76POdK2gvtUBvvyJb?=
- =?us-ascii?Q?bkZMnOBIKgysrz8chQ/EiEWHrV1SRV6XQuA2WryQSk+wG25ivWkyJVtMNqeY?=
- =?us-ascii?Q?+Y9RPvXg8zNl2W/R8kWk1f01506rog371UR87K5XGXgdmuvmEMwi/VLVgdxg?=
- =?us-ascii?Q?M+yjjWQd+VKG11jhLACS0yhCJNVoxGoWFUrlsbLW/qXy5gJVyJGuk3prMb1j?=
- =?us-ascii?Q?PgVbB/00cZloZwJ6+7IeViqy+zJ7pfCSB+Muf1cUWm8R9xMFJr3Shl/VWsc2?=
- =?us-ascii?Q?8sDTMhyB8K/ljNmTjzOdb5B/4hx8rHqwmhSIKR/BJn1DI+ehTmjm0ySk+nGm?=
- =?us-ascii?Q?4vGEnNuw/zl2tbbMy0cr2hm4P35fDDbUmCL7QGJABT1El+hhQuyEkaJsVkNP?=
- =?us-ascii?Q?antDJf9y1k9OxRnAXH4YJ4LCiI8EgalPGGQHM812TllnBgL3JwABMHARM0YZ?=
- =?us-ascii?Q?rpN9JNyZld1Hf/T7vW7ehAXErroMTQg6r7CcCfWY77hrKpb7XhJ4lMHkm04q?=
- =?us-ascii?Q?1A4pYCLW2Lw0hCVSj5zqRk03mfAaeFT8Ouyt32B4qOywg3Af88/uMKBaBlnZ?=
- =?us-ascii?Q?RV6HpFFnNTLVsri3OMYpmrq2uQhtGkgsBqAHPMZVgdwEGoVscfPBNwz0Qs6U?=
- =?us-ascii?Q?abeXrKvmm1Q00GVj05/h5LY1bXuw9iRQWERGI5DkIX0dvu4dJyasKojQuRub?=
- =?us-ascii?Q?Yu+u5Dlkj6VrPomej6UBck+ipPzo7yV6Vae5xXz9mWtLnqhoUnAhyUdMntlQ?=
- =?us-ascii?Q?OgcTdIt+07BoNbovbaxyjfc2MyOjbOaMl5YQQkawPmEVyDXDBzRuBb4Ijc0v?=
- =?us-ascii?Q?Gx20zPZWve9LQH4NRyVdFrOrvLS3OjV3AMhRahOSUkgJuzX2aXmCpvuENba6?=
- =?us-ascii?Q?A4XV7b7n4DJBqe8wKjg5HJ3xi/gjejpiKGJScZV14eq3VbhvPgKXFPQhsQae?=
- =?us-ascii?Q?okxYE6jryX4wEXB+H21SxYEcc/V8pr33XdVpDSTfM5W2qbnErp6kT05/wezv?=
- =?us-ascii?Q?1zG4dv41soDAqvvS3GGr4zO/+Dpk2xyh49xRzIJB/YlJbtKE84KQswKt7NNz?=
- =?us-ascii?Q?2VtQLR3Z0njl8e1gm8M6whxAy9PnOG0iDKSMlzyAljLCi7A3pi8DhpPJOCuk?=
- =?us-ascii?Q?0jO8uAX2R/4MsIiQ9V+kPaCZyK3E/tD3a9zXPrqNH+oh2tkwmiA8pQOq31/2?=
- =?us-ascii?Q?ZMiNw7Y1Z0abHYPVL/vRU9ucatSwfH0leWw/+Z0+vMZTR48w249zP1K2+duz?=
- =?us-ascii?Q?sI3EkqS1JjLvV/hGZBcAIi3hY0xXcI0cnTdu3dxAByUvUak+pHZnDTMHXgzo?=
- =?us-ascii?Q?5BWsUZ8Qkfs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Ge5PjFHQcTR83hXoip0a09gDSXKwdKpDkqQytw09ldeFeOHNydRgGNR1EBKf?=
- =?us-ascii?Q?JifVPmrw4+Vj2hSAvmm4KWonM/f7UDwvopbAF/Nk0J1EcBouMkysoMChkpqi?=
- =?us-ascii?Q?5LHBD8SVFJyNjBOymUDUKjg8X2U6gjVpwzUEsoD83XMAM2JC9cc9/2pDm9Bb?=
- =?us-ascii?Q?Jyyd6HwwPbGGVuvBojQ9EYrmTGRPQRZoyGWoW1HDe4wZ/oz04aNcOj8Oav1F?=
- =?us-ascii?Q?TQua/usDHe+zBCbSXBiCFEzUemPjFgTUmcg1lxHDAjxiUAnfi37rY4YAlVum?=
- =?us-ascii?Q?v4prYo6O7jaX4AV3isIWCHOZwQnx3JFvbSbjzshRt907BbYOacvzTTUyfKWC?=
- =?us-ascii?Q?NWF+W6X25dsRVCd6Ei7uM8oQkibAKaiHZhPZCFmvftGjli9tJqFdfxGSnzCU?=
- =?us-ascii?Q?7QXlcPq2Yln1DTtT6076uei1EQRKiplUQtXY46j0omqvKLJhUtIP7Pdfk31K?=
- =?us-ascii?Q?r6o8rww6hFg5AycvZX8mpfFFp8eRaGZ+JRTyjeUOOZBeDNjDu6CkJdDi9TZb?=
- =?us-ascii?Q?76+mZWahkOn7YjkLmIP5WDMpur5l1a3+P9f9ybAS1/+pWM5orUoF696t9uXG?=
- =?us-ascii?Q?mg52aFRk1kW5xTBrNx/TodYuLXrabOhGjy2bAenQqjoTb12BjpP+ZEG3Og6E?=
- =?us-ascii?Q?fdASFVne2HHjnHahJrQycVN4+Gx//ZA9PTn/uKcQvmnh242TxGCMYmmU2smX?=
- =?us-ascii?Q?A8VIhOy9sBPxt3FGd09ZiJspIgG8BQpQyqZPribPjvheBcW2lo1zOuEMa4pz?=
- =?us-ascii?Q?QbRfL4E/DagwEb0bNtYXZCTSIhIiXovT23dxvX2YTQQt1h9jlfGfMEh0sdjk?=
- =?us-ascii?Q?UvEA7dWeaG9w+Oxsszq/xdsRxWqavwJApHHIZIdInucOfmls9VBlPMhbtgp5?=
- =?us-ascii?Q?iyOZ1Bu9SVF7zyKfWiQAB8ARDdEa+xwbQusneg3tTgHCCqeX56EjOFKQ8PY1?=
- =?us-ascii?Q?MeU2KCC7Xjpjlon5LznaPJQkbaV9vN4yd6wyCERgDIbpKdySEHkMJF1ol9Xi?=
- =?us-ascii?Q?fi/Ev2BnyqTj8+vcZOHzMAY8e+nkJrBgmXB4DjEkussQfrz6RCigUZoG6VHV?=
- =?us-ascii?Q?F8tboGHsfYKMDDdKDOhaVmo7LRRjmK0PsKMidhmvocQcimUugC0CUVHnbjsy?=
- =?us-ascii?Q?MOi4P4dUD0Udv6YGdstBLbcE6rMawfS6S9UZr1+e2WYO9vauBn99gtaiTrDC?=
- =?us-ascii?Q?5MGOy3cK36iDfG7hAVPZEZE+ka+QJ4NScHn+anO4FiV7JYjyjtRNCwWj/Ll6?=
- =?us-ascii?Q?dUMHYNOJ74I+ommKt3igp/Ul/wwbWxm5fvWeTfn80d0Wkv2tKaqZTTCDy/bp?=
- =?us-ascii?Q?+nzmEH3oLitBDtlDcvsvO9tMgnXsOGyEtdNJ6Up3UBDtp107Y5lw5ZkAPitL?=
- =?us-ascii?Q?yKKCFfpPsWWJ9T1r2tD+094g1NyRLQDICQaeBIYm4XAuHeVhzK8s5lTzKE0d?=
- =?us-ascii?Q?PDCyM5PSI2IpQ7X4ZG99xPRefkMZJodhgz4yyPh1KNJ865katht0yJbS60Up?=
- =?us-ascii?Q?gjcRJ8WYNemJx9joZJHmEMBkTfuT7/0sdUqAjWFq//sBtHDWc4XWb72aKNIB?=
- =?us-ascii?Q?d6JEHuYRfp36hRtDSRBnNEPGKVKpc/vkQFRDwZxt?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1af71732-ea05-45d6-a6e0-08ddb26ac7b2
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 15:29:44.5474
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2YFT1Ccq3/Jvf3ZQuSESPIL9b+giMfTfFgTF9X2n/t46bX6CRsvDUK0ZxlhMYxeD
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF64A94D5DF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617193450.183889-4-hiagofranco@gmail.com>
 
-On 23 Jun 2025, at 11:28, David Hildenbrand wrote:
+On Tue, Jun 17, 2025 at 04:34:50PM -0300, Hiago De Franco wrote:
+> From: Hiago De Franco <hiago.franco@toradex.com>
+> 
+> When the remote core is started before Linux boots (e.g., by the
+> bootloader), the driver currently is not able to attach because it only
+> checks for cores running in different partitions. If the core was kicked
 
-> On 18.06.25 20:50, Zi Yan wrote:
->> On 18 Jun 2025, at 13:39, David Hildenbrand wrote:
->>
->>> Let the buddy handle clearing the type.
->>
->> The below might be more precise? Since page type is cleared
->> before the page reaches buddy code.
->>
->> Let the free page routine handle clearing the type.
->
-> "Let the page freeing code handle clearing the page type."
->
-> ?
->
+Again, we have a nomenclature issue here with "If the core was kicked by the
+bootloader".  What does "kicked" mean here?  Is it just powered and held in
+reset or is it executing.  And are you referring to the A core or the M core?
 
-Sounds good to me. :)
 
---
-Best Regards,
-Yan, Zi
+> by the bootloader, it is in the same partition as Linux and it is
+> already up and running.
+> 
+> This adds power mode verification through dev_pm_genpd_is_on(), enabling
+> the driver to detect when the remote core is already running and
+> properly attach to it if all the power domain devices are on.
+> 
+> To accomplish this, we need to avoid passing any attach_data or flags to
+> dev_pm_domain_attach_list(), letting the platform device become a
+> consumer of the power domain provider. With that the current power state
+> of the genpds will not change, allowing the detection of the remote core
+> power state.
+> 
+> We enable and sync the device runtime PM during probe to make sure the
+> power domains are correctly managed when the core is controlled by the
+> kernel.
+> 
+> Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
+> ---
+> v4 -> v5:
+>  - pm_runtime_get_sync() removed in favor of
+>    pm_runtime_resume_and_get(). Now it also checks the return value of
+>    this function.
+>  - Added pm_runtime_disable() and pm_runtime_put() to imx_rproc_remove()
+>    function.
+> v3 -> v4:
+>  - Changed to use the new dev_pm_genpd_is_on() function instead, as
+>    suggested by Ulf. This will now get the power status of the two
+>    remote cores power domains to decided if imx_rpoc needs to attach or
+>    not. In order to do that, pm_runtime_enable() and
+>    pm_runtime_get_sync() were introduced and pd_data was removed.
+> v2 -> v3:
+>  - Unchanged.
+> v1 -> v2:
+>  - Dropped unecessary include. Removed the imx_rproc_is_on function, as
+>    suggested.
+> ---
+>  drivers/remoteproc/imx_rproc.c | 37 +++++++++++++++++++++++++++++-----
+>  1 file changed, 32 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> index 627e57a88db2..b53083f2553e 100644
+> --- a/drivers/remoteproc/imx_rproc.c
+> +++ b/drivers/remoteproc/imx_rproc.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/of_reserved_mem.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_domain.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/reboot.h>
+>  #include <linux/regmap.h>
+>  #include <linux/remoteproc.h>
+> @@ -890,10 +891,8 @@ static int imx_rproc_partition_notify(struct notifier_block *nb,
+>  static int imx_rproc_attach_pd(struct imx_rproc *priv)
+>  {
+>  	struct device *dev = priv->dev;
+> -	int ret;
+> -	struct dev_pm_domain_attach_data pd_data = {
+> -		.pd_flags = PD_FLAG_DEV_LINK_ON,
+> -	};
+> +	int ret, i;
+> +	bool detached = true;
+>  
+>  	/*
+>  	 * If there is only one power-domain entry, the platform driver framework
+> @@ -902,7 +901,22 @@ static int imx_rproc_attach_pd(struct imx_rproc *priv)
+>  	if (dev->pm_domain)
+>  		return 0;
+>  
+> -	ret = dev_pm_domain_attach_list(dev, &pd_data, &priv->pd_list);
+> +	ret = dev_pm_domain_attach_list(dev, NULL, &priv->pd_list);
+> +	/*
+> +	 * If all the power domain devices are already turned on, the remote
+> +	 * core is already up when the kernel booted (e.g. kicked by the
+> +	 * bootloader). In this case attach to it.
+
+Same comment as above.  What got kicked?  A core or M core.  And what does
+"kicked" mean?  I can guess what is happening but guessing rarely leads to
+anything positive.
+
+In the next revision, please use other words than "kicked".
+
+
+> +	 */
+> +	for (i = 0; i < ret; i++) {
+> +		if (!dev_pm_genpd_is_on(priv->pd_list->pd_devs[i])) {
+> +			detached = false;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (detached)
+> +		priv->rproc->state = RPROC_DETACHED;
+> +
+
+Ok for the above.
+
+>  	return ret < 0 ? ret : 0;
+>  }
+>  
+> @@ -1146,6 +1160,15 @@ static int imx_rproc_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +	if (dcfg->method == IMX_RPROC_SCU_API) {
+> +		pm_runtime_enable(dev);
+> +		ret = pm_runtime_resume_and_get(dev);
+> +		if (ret) {
+> +			dev_err(dev, "pm_runtime get failed: %d\n", ret);
+> +			goto err_put_clk;
+> +		}
+> +	}
+> +
+>  	ret = rproc_add(rproc);
+>  	if (ret) {
+>  		dev_err(dev, "rproc_add failed\n");
+> @@ -1171,6 +1194,10 @@ static void imx_rproc_remove(struct platform_device *pdev)
+>  	struct rproc *rproc = platform_get_drvdata(pdev);
+>  	struct imx_rproc *priv = rproc->priv;
+>  
+> +	if (priv->dcfg->method == IMX_RPROC_SCU_API) {
+> +		pm_runtime_disable(priv->dev);
+> +		pm_runtime_put(priv->dev);
+> +	}
+>  	clk_disable_unprepare(priv->clk);
+>  	rproc_del(rproc);
+>  	imx_rproc_put_scu(rproc);
+> -- 
+> 2.39.5
+> 
