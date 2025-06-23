@@ -1,115 +1,115 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127DB17F7;
-	Mon, 23 Jun 2025 11:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30E151E3DCD;
+	Mon, 23 Jun 2025 11:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750678369; cv=none; b=p+/WOO2cCw5xrCbgV4QGsyHt+5wS4fPs7ipchQb4xEi/ojSQipQv12PlxjshO4N46AMz0DNagSGvjXIdiqlIenvrzXHiVGKmdb0IeQLDOsuT3TxaT7U8NmNEfAGy5xynZ5znkSfSAqt695TwCEYnkauZR703j/97xtPXT6kNAMQ=
+	t=1750678400; cv=none; b=sSHr0DKaQMSvCrvbZGX+vJK+LCTaygozefEdCKXn+A90+EI59W7Q6y/JIrzftDfoxOzB9oeP8RWP27/Y53CthpIXjnBTH4CZbFOnfz99LPi5GBEBknYWyJcCh0DbmT8cOqRWly7ocXYY1gX8LkTvq37qWzR0MspdiPzEfocuSyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750678369; c=relaxed/simple;
-	bh=gYoRQ8riTOcFQIClbe2l7AMLjvfVEj5/44JdTR8TbrU=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HkbjAlEw600sPf+8amgSV0Qeuhw5spWTE40FAt9/8nEnRdiZ/C3SUKI+S7+nOGhFTgxKmCZiY3tFHbIDv0BCq9QfCB73eCuAQb8qlAW2NZtJjgRFvRpTxTrvUPnPVFnzqNSFPDhpkhMnskeMBUkr+U0UedEcqAwy/yHhh24dZhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GmvTf2wl; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GmvTf2wl"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NA072x016508;
-	Mon, 23 Jun 2025 11:32:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=U/qscSYLQkkcXhMBNze7IH
-	vYw5xXXh+LksiNPwoHDig=; b=GmvTf2wlNuqVQUqcpkfN/aOxOUsb3+4Lw4o8hX
-	zWeddL8Crt4a4cZ8bvumFmQ+aJ8aZlcMKspVp1rd/8P8NxEvs/8iAPIWC2Ii9MTu
-	a+LJZOF/9NJOPMrkvQrMTnJAUXRmqWI7AoiVki/hrDVRQlhQlXO45xXWQtlOGt8W
-	ztPaLd7Wed4w96UvrgPWcqRbeuzLOuqOerOQMPz0Fsce/g6o9+S4coPSQhj2pQYh
-	8gOWmGr8YRtk2oUUXV15hngk7FC9I62f1nmYBoJitQP4f3jh5BHHTCbHugWy+Kba
-	XeAf2R/Y4llfl43j8l//+3F9sJmEM3lxczvOXznp6X77ZWKA==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47eccdjjgb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Jun 2025 11:32:44 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55NBWhDE006259
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Jun 2025 11:32:43 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 23 Jun 2025 04:32:40 -0700
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <quic_varada@quicinc.com>,
-        <lumag@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] arm64: dts: qcom: ipq9574: Fix 'l2' regulator min/max voltages
-Date: Mon, 23 Jun 2025 17:02:27 +0530
-Message-ID: <20250623113227.1754156-1-quic_varada@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1750678400; c=relaxed/simple;
+	bh=4Byfl6XKyk9PR8pgbpDrhICsoDtDHYLEMWWU/ZfABpQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WFFOAX5sBw7ZitT8FFS/rxyQmfgqjM001vTetZnawD+2toYhsyJT/ek0jnS5NWN7d9NRb8uZSkeufffqT0KIypWoJXlJbtqZseeEFRRYe8ZAwccECwkVOnshmYSmLu+AMpHM4sNPlrxsMhAKR7dSrOaLMQpT3uJXGS46o4pOeGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43268113E;
+	Mon, 23 Jun 2025 04:32:58 -0700 (PDT)
+Received: from [10.57.29.116] (unknown [10.57.29.116])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3092E3F66E;
+	Mon, 23 Jun 2025 04:33:12 -0700 (PDT)
+Message-ID: <9f80f7c4-01a3-4a03-94dc-2a19136707f8@arm.com>
+Date: Mon, 23 Jun 2025 12:33:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 11/11] arm64: defconfig: Enable Apple Silicon drivers
+To: Sven Peter <sven@kernel.org>
+Cc: asahi@lists.linux.dev, Stephen Boyd <sboyd@kernel.org>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Janne Grunau <j@jannau.net>,
+ linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+ Srinivas Kandagatla <srini@kernel.org>, linux-kernel@vger.kernel.org,
+ Viresh Kumar <viresh.kumar@linaro.org>, Neal Gompa <neal@gompa.dev>,
+ linux-clk@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+ linux-i2c@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, =?UTF-8?Q?Martin_Povi=C5=A1er?=
+ <povik+lin@cutebit.org>, Joerg Roedel <joro@8bytes.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Mark Brown <broonie@kernel.org>, iommu@lists.linux.dev,
+ linux-input@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-sound@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ Michael Turquette <mturquette@baylibre.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Will Deacon <will@kernel.org>
+References: <20250612-apple-kconfig-defconfig-v1-0-0e6f9cb512c1@kernel.org>
+ <20250612-apple-kconfig-defconfig-v1-11-0e6f9cb512c1@kernel.org>
+ <2e022f4e-4c87-4da1-9d02-f7a3ae7c5798@arm.com>
+ <d5a616f3-67a3-4504-904e-6cec503ab157@kernel.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <d5a616f3-67a3-4504-904e-6cec503ab157@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=LOVmQIW9 c=1 sm=1 tr=0 ts=68593b5c cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=J2FsxmtKjVhLwy8KIqgA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: aaTlNzGNGsMDq1hgoKSph5IPRMtLV8hb
-X-Proofpoint-ORIG-GUID: aaTlNzGNGsMDq1hgoKSph5IPRMtLV8hb
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA2OSBTYWx0ZWRfX+96LGOXiRW1f
- Riltanxo1iTYUSKeoefgRzEmgNrpRm4jnUPan/lvO5NHxbd/KmUkI1nOC4pqhE9TLLkV5a5VYxe
- xgnX2r22phbaD7ZEPRfHkc32uO7zgbfDNMchoMhMO2DixLWReI+G8UWgNrlaqBgWBAGMDeg/J/O
- D/8gDT79ewll+ukSUaoWUP3RmcWzsvuKJOoLT5e2UES9wo1MudJpk22kt24AQUnRNqiqOZvL1+M
- 6gtEdAHZ18GMkpfaD7xWJCo48PeMRmCAGG1ib92lpjE0c+HzkYjo7e9en1rknEpcJ8vo9qjF3i6
- Lzkueme4qZ+nEGrWJus4HQVAWL0eAPj36l7NpJJBtD+ZU0P6O+EacKTmygDPAVF0grFkmRhtBd7
- JDejYrdmColqcgu6oOGCM+4RZNb5D0zoeTQ9mmhvCWMAVKXG2GbZvgUPoDjYkLa8s8bM2evV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-23_03,2025-06-23_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 bulkscore=0 adultscore=0 mlxlogscore=624 phishscore=0
- lowpriorityscore=0 priorityscore=1501 impostorscore=0 spamscore=0
- suspectscore=0 malwarescore=0 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506230069
 
-The min and max voltages on l2 regulator is 850000uV. This was
-incorrectly set at 1800000uV earlier and that affected the
-stability of the networking subsystem.
+On 2025-06-21 5:01 pm, Sven Peter wrote:
+> On 13.06.25 18:50, Robin Murphy wrote:
+>> On 2025-06-12 10:11 pm, Sven Peter wrote:
+>>> Enable drivers for hardware present on Apple Silicon machines.
+>>> The power domain and interrupt driver should be built-it since these are
+>>> critical for the system to boot, the rest can be build as modules.
+>>
+>> Nit: I'd be tempted to put this patch first, just in case anyone 
+>> bisecting with "make defconfig" in their process lands in the middle 
+>> and suddenly loses some drivers (although arguably them going from 
+>> "=y" to "=m" could still be a surprise, but at least a bit less so).
+> 
+> Ah, that's a good point that I hadn't even thought about.
+> Now that most of these have already been merged into different trees 
+> that ship has sailed though.
 
-Fixes: d5506524d9d9 ("arm64: dts: qcom: ipq9574: Add LDO regulator node")
-Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
----
- arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Yeah, like I say it's only minor and rather contrived anyway. Not a big 
+worry.
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi b/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
-index bdb396afb992..21b04a2c629d 100644
---- a/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
-@@ -106,8 +106,8 @@ ipq9574_s1: s1 {
- 		};
- 
- 		mp5496_l2: l2 {
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <1800000>;
-+			regulator-min-microvolt = <850000>;
-+			regulator-max-microvolt = <850000>;
- 			regulator-always-on;
- 			regulator-boot-on;
- 		};
+>> [...]
+>>> @@ -1504,6 +1520,7 @@ CONFIG_ARCH_TEGRA_194_SOC=y
+>>>   CONFIG_ARCH_TEGRA_234_SOC=y
+>>>   CONFIG_TI_PRUSS=m
+>>>   CONFIG_OWL_PM_DOMAINS=y
+>>> +CONFIG_APPLE_PMGR_PWRSTATE=y
+>>
+>> If this is critical for any Apple platform to work then it would 
+>> probably make sense to explicitly select it from ARCH_APPLE, as is 
+>> done for APPLE_AIC...
+> 
+> 
+> Documentation/kbuild/kconfig-language.rst:
+> 
+>    select should be used with care. select will force a symbol to a value
+>    without visiting the dependencies. By abusing select you are able to
+>    select a symbol FOO even if FOO depends on BAR that is not set. In
+>    general use select only for non-visible symbols (no prompts anywhere)
+>    and for symbols with no dependencies. That will limit the usefulness
+>    but on the other hand avoid the illegal configurations all over.
+> 
+> 
+> That's probably fine for APPLE_AIC which only depends on ARM64 (and 
+> ARCH_APPLE) which is guaranteed to be set when ARCH_APPLE is set anyway.
+> APPLE_PMGR_PWRSTATE also has an additional dependency on PM so it should 
+> probably remain in defconfig and not use select.
 
-base-commit: 5d4809e25903ab8e74034c1f23c787fd26d52934
--- 
-2.34.1
+Sorry if the implication wasn't clear, but I did mean "select it" in the 
+sense of "select it and all of its necessary dependencies in a manner 
+that works correctly". The same argument applies all the way down - if a 
+!PM config will not be able to boot on ARCH_APPLE platforms due to 
+forcibly deselecting APPLE_PMGR_PWRSTATE, then there is little point in 
+permitting that combination. Which of course the user would already have 
+to disable at least ARCH_MXC, ARCH_ROCKCHIP, ARCH_TEGRA and 
+ARCH_VEXPRESS to achieve in the first place ;)
 
+Thanks,
+Robin.
