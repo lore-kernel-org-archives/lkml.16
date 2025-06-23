@@ -1,127 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AA51DA23;
-	Mon, 23 Jun 2025 10:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BE31DA23
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750673297; cv=none; b=lNc6W8lyouuB1gKYEZVCFrd+EKbnLYF0cDpRHcTThTYepHCeBdc7cg8dR85cfshDPUeDTdY37RUM6kOEr9VnalMn4a0DkiP/GpapBIDUaubrsivuQxQynft2mbIHvflH7K7R8W1iAo94+SNWP5S+JdmZTzl2/LtvzsroZhLH2Zw=
+	t=1750673305; cv=none; b=s35w7LINmKBGtrm3UJkC1greduaAL8s/d9FCMnEs8ubYkBs/puaj7riOPBFrnJVsH6hBGMKcrejmFpJ+RsbhmQa2hydpML6XxASHwNgYykIY+Ar9K5ZBb8vFNbK/Dhj2pEgTo/0STF11irqL1M05UcTN8y3zdU/88qTOFk0VAOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750673297; c=relaxed/simple;
-	bh=dix0Yhu3c8boRB+3OYeK+56zmV1v3N5vctgiK7sTU9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BqPrlurj8c0bunqZM3zazBahB5kz2h2CHHLuI04fLRzJbzeUevEgTkkT0b7oWQ04ECouMVYZurocxDQ8USoXJZYc0tPCmwDbKWyKeaST3w1w+R8DNu6yaTEaeobAkmLCOBFaY2/273tA4/e2iGCXuGPhXkf/DZaIML+MqO5d3/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=alt1eMxf; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750673305; c=relaxed/simple;
+	bh=eIeyqlTM7XajqirG2GsOm0mN2EPqcedROiQ84CPbzhM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pdKAHbVbSW81GEtDzjTxiNqYKXW4oA76tw4G+gYcT52OGFmMQ3fJadgRa4set/86znVYDkElqFnfZEv+tPj51eVjcaukGSfF+x49/H3jCqODbq+rMdf4xdQdwbkR51iJGZoMZgKO4RF3q6/iFT6LVD+tKEcQTwGL/ifkqEEdwkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WuaRtJ34; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="alt1eMxf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750673295; x=1782209295;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=dix0Yhu3c8boRB+3OYeK+56zmV1v3N5vctgiK7sTU9I=;
-  b=alt1eMxfR2YNfH5FQ56VKCliDoU79taO9Lity1B5H2xxOyw/XlIXyGEo
-   Ss7paGoKhbalhHDwxEmQeKKGFxbrzhI7hWisttGmQ0kiKFILHu53YdHiz
-   QVkrKaCDasyWi71GkCgOjhrx5YjOvXuYgFRq+q+ZwKhQkNTCq2R5XH+zi
-   Eeo+VpJsFQWdWAjqwsxVIW1BQ4EU6JO2Vei39/6UjFQraQsCZrBc39W0Z
-   JY46Vo1lBVuG4pn3Hecu9+Aw9kYvEONj1CYKJCaGXuiwMNfDDBZ++atRn
-   rS2d37B+106vjNpwLkILGSL6AYnAFA2ve3znfQbTxV/j5DVBAUMzvr7H7
-   w==;
-X-CSE-ConnectionGUID: 2Gf7c0wYTqyHCGSS0nPGrw==
-X-CSE-MsgGUID: TWdwYcYMRU6yGlqQZV63Fw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="52740974"
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="52740974"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 03:08:14 -0700
-X-CSE-ConnectionGUID: b1RtfYh9QqGx1/7cVXdpcA==
-X-CSE-MsgGUID: lQO2/vW8TGuyVMaj/z1Yig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="175160611"
-Received: from abityuts-desk.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.8])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 03:08:11 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 42C691201F7;
-	Mon, 23 Jun 2025 13:08:07 +0300 (EEST)
-Date: Mon, 23 Jun 2025 10:08:07 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Olivier Benjamin <olivier.benjamin@bootlin.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
-	Nicholas Roth <nicholas@rothemail.net>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-	imx@lists.linux.dev, ~diederik/pine64-discuss@lists.sr.ht,
-	Dragan Simic <dsimic@manjaro.org>, Ondrej Jirman <megi@xff.cz>
-Subject: Re: [PATCH v4 0/4] Describe the cameras in the PinePhone Pro dts
-Message-ID: <aFknh7weIKoGKajQ@kekkonen.localdomain>
-References: <20250620-camera-v4-0-0201a8ed5fae@bootlin.com>
- <aFj4kAXEhrR4Wbnz@kekkonen.localdomain>
- <13788127.uLZWGnKmhe@phil>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WuaRtJ34"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55N9QZFh015731
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:08:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	PnyKX1fEcR6bJxd/pvho3kDJwhwkeyCLZI3+nIr4TFs=; b=WuaRtJ341nFVLWVF
+	qEi25tLMfnDbbQWDZvBDnjAD/oeCWQHYZ27+sifMW1HhX4yVcpwoad2i8TxBZnWE
+	zVNQl2cc+/OFzYYXJ7ZwKaeKIDgE3SCepFvgaZmEZckXyVA5QT40OOKrxZFcOIMn
+	G8qFoqlvQl6ogmDf+UMgw/jAhKz27i5C8X9rVEeh+VX5PVnv7CfptJqYyEGB6YPc
+	ljFYs/pX1ZtduDBMMnw8Cm01L5KHiUWeFZ7Tvb7RiJV9JN/NOVWqj2pIOvz6x+vO
+	08w46rxAUlNPVpq0uOIp8qD1kSZFsYP5vdsiRpp0FgOdELsx9F4XRGX1o1Lo2UlY
+	R5JL6A==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47evc5hbeu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:08:23 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f539358795so4157636d6.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 03:08:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750673302; x=1751278102;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PnyKX1fEcR6bJxd/pvho3kDJwhwkeyCLZI3+nIr4TFs=;
+        b=nEG1dYPBay7mevKog89epjNq2qG9wdFySr23JRvCEdbhn3EWJwM26i3tuXKmtPtQ2l
+         9qMFt7zpkY5bJRNOZ3Tvt4eEJMeAENGQqbPk+jSFW9YWSO+t3TEZb4kFQOWhA455z0oV
+         rLRmRV2SZ5i3jGe7/eHlQayzZlxnGcpKkOmN/Ht0sEiXrYLnvxIUpD7X9d4a5Mz2zDEU
+         +c34oWCbtTH12FlcjyJojiP+ppd21T1mUjjaBlmh/Y+07hZzst/xNVN4i11TkTZSdubW
+         BypS6D9h5ACzALCfB0uorRUo5Ja8OCv/xOMf9NxLBAEZa1/FQLxnwGF0/xxLHLsNBxO4
+         RPWA==
+X-Forwarded-Encrypted: i=1; AJvYcCV3TP7FVVYao2UbjM19vUEUH6z3gC4vz0ixXJo42H2YQgE/gf1pIv4v7Wjma466wO4HZmbQzbPLSUBkRsI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXKut/P+Ty9Tas7YUezqBdgRdFOHv9nbYpmqP45AhpWTI7Quse
+	74uFKlPAT6eMas6Mg5udxFlWW8ehruXQiilTBYZuE4Vf2c0hgUOqC1EI5VPGPEfNQVaYAbhzeyh
+	2inC7xiVnznhGvBrLwqLtLzW4KRgBqflRWhkwUB1IikXIcmYlufOzdETQS2zoqBxYkl4=
+X-Gm-Gg: ASbGncuCyZsV9/e8arO9hb1LC8H7Wu6TGU5lnwMTKFOdoE5ElqMSSnb66kP1Pq+cVoQ
+	kE5V+HxiC/atZyuxspvOCSqgHBbArXzBsB2NEoDcyslUD5o++RBBcqBrWXB2vUOo6aK0l4GHhI2
+	sy4ziEvvTMBSabcI4iiRgmK2mEiYgSGiLKg4mYImI7TtUHgy7PdWHx2J9r5fcJCs44/MBPY47iC
+	Fpe9fdfQ6Aj0CWea5wm3MCFWFX7HaD9nqifPXZ6mVSbGgxQfOWyifFVIMzAaRJf+sFnInlwB4wV
+	hfV4MrWa+vpTi762O8ixg7VnralkvqBem55PVG1Suqd0tH25dPtzx/4s7KmP6+7hSwhmF9DPMuM
+	QIMk=
+X-Received: by 2002:a05:6214:2c13:b0:6fa:ba15:e86 with SMTP id 6a1803df08f44-6fd0a2fd7a7mr77471136d6.0.1750673301742;
+        Mon, 23 Jun 2025 03:08:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGS/1yCegb7N0aHHgiVh72Q6EJAth0MgnKHXXG+J9DtMg+J5O92x5oynT6QeF3XgvXxs2uA6A==
+X-Received: by 2002:a05:6214:2c13:b0:6fa:ba15:e86 with SMTP id 6a1803df08f44-6fd0a2fd7a7mr77470986d6.0.1750673301349;
+        Mon, 23 Jun 2025 03:08:21 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054080a61sm693438466b.106.2025.06.23.03.08.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 03:08:06 -0700 (PDT)
+Message-ID: <b5d181d8-26bc-4855-a8df-ab352837e800@oss.qualcomm.com>
+Date: Mon, 23 Jun 2025 12:08:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <13788127.uLZWGnKmhe@phil>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: sc8180x: Add video clock controller
+ node
+To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250623-sc8180x-videocc-dt-v1-1-9d210c140600@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250623-sc8180x-videocc-dt-v1-1-9d210c140600@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: ezNib9-7BlAJr9ENScoOyGsgQfEYZaSl
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA2MCBTYWx0ZWRfX39rS0mAFBQGl
+ SLqe5flXQfTl0JNo24k4jjGEtNfcDe/KPkGxXyKutwkBXa9eQh/yZRvnWYleNzQomNfsa7a+pSI
+ qNTTF1P36DIv59/YtT5X8kM7A8GiQDP8nu1RKqad+N2RiKVAZa8t7i4p0BVTCLUOH55X9451X4T
+ lBOWT7tYfxK3N4MRKpJA5nJHVDCAO6zLC3VN26qQhQvNocK5Ck87iwIY3L4Hw02NMVd5qzSMo77
+ O9M09R6aETLIxlITTKzXFgFV81NgPHbdUg6fEDoYLdk0NyIuLsrd3wblPsABfIGFi4rJCVAq2TU
+ VHmecmhtc+kb9GbileoD23VMEYMzXPj5HMA6uqPNyGU7wPFz5EM3Dhoc2SfyvS40V9eX6yc4PKP
+ e41Uh/Kh2hMHnuepDeg5BrjAtKVAo5MCoQ/DcdpQUzwHKVtZQ2Tl2wpXDIH0PMtStubVQ5oa
+X-Authority-Analysis: v=2.4 cv=caHSrmDM c=1 sm=1 tr=0 ts=68592797 cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=970yK1cPiZu4FA_SsT4A:9
+ a=QEXdDO2ut3YA:10 a=iYH6xdkBrDN1Jqds4HTS:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: ezNib9-7BlAJr9ENScoOyGsgQfEYZaSl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-23_03,2025-06-23_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 mlxlogscore=999 suspectscore=0 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 phishscore=0 clxscore=1015 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506230060
 
-Hi Heiko,
-
-On Mon, Jun 23, 2025 at 12:05:22PM +0200, Heiko Stuebner wrote:
-> Hi,
+On 6/23/25 10:14 AM, Satya Priya Kakitapalli wrote:
+> Add device node for video clock controller on Qualcomm
+> SC8180X platform.
 > 
-> Am Montag, 23. Juni 2025, 08:47:44 Mitteleuropäische Sommerzeit schrieb Sakari Ailus:
-> > Hi Olivier,
-> > 
-> > On Fri, Jun 20, 2025 at 05:21:31PM +0200, Olivier Benjamin wrote:
-> > > This series adds support for the Pine64 PinePhone Pro's rear and front
-> > > cameras in Device Tree.
-> > > This is based on some of Ondrej Jirman's patches hosted in his tree at
-> > > https://codeberg.org/megi/linux, but I have also fully reviewed and
-> > > re-written the code from the RK3399 datasheet, the PinePhone Pro
-> > > schematic, and the IMX258-0AQH5 software reference manual.
-> > > 
-> > > I have tested these changes on my PinePhone Pro and am able to take
-> > > photos from both cameras using libcamera's cam.
-> > > 
-> > > This series has raised a question about the proper label name for the
-> > > front/user camera and rear/world camera for phones.
-> > > This series is using "ucam" and "wcam", which is used in a few other
-> > > Rockship DTBs:
-> > >  - arch/arm64/boot/dts/rockchip/px30-evb.dts
-> > >  - rk3399-gru-scarlet.dtsi
-> > > 
-> > > Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
-> > 
-> > Thanks for the patches.
-> > 
-> > I've picked the first two in the set, presumably the rest will be merged
-> > via another tree?
+> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+> ---
+> Add device node for video clock controller on Qualcomm
+> SC8180X platform.
+
+Because you added this text under '---', it will not be included in
+the commit log (and we want it to be there), please put the message
+above your sign-off
+
+> ---
+>  arch/arm64/boot/dts/qcom/sc8180x.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> correct, and with the first two being applied, I can now also safely pick
-> the other two :-)
+> diff --git a/arch/arm64/boot/dts/qcom/sc8180x.dtsi b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+> index b74ce3175d209b569e634073662307964158b340..4590c2ff68a9885d8047d728bbf2dea0236d5b8f 100644
+> --- a/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+> @@ -10,6 +10,7 @@
+>  #include <dt-bindings/clock/qcom,gpucc-sm8150.h>
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+>  #include <dt-bindings/clock/qcom,sc8180x-camcc.h>
+> +#include <dt-bindings/clock/qcom,videocc-sm8150.h>
+>  #include <dt-bindings/interconnect/qcom,icc.h>
+>  #include <dt-bindings/interconnect/qcom,osm-l3.h>
+>  #include <dt-bindings/interconnect/qcom,sc8180x.h>
+> @@ -2943,6 +2944,19 @@ usb_sec_dwc3_ss: endpoint {
+>  			};
+>  		};
+>  
+> +		videocc: clock-controller@ab00000 {
+> +			compatible = "qcom,sm8150-videocc";
 
-Once in my tree, they'll next end up to the media committers' tree and
-after some time you should be able to find them in linux-next. This process
-will take some time. Just FYI.
+If the blocks are truly 1:1 shared, with no additional software changes
+required, please still include a 8180-specific compatible in the front,
+with a 8150 fallback:
 
--- 
-Sakari Ailus
+"qcom,sc8180x-videocc", "qcom,sm8150-videocc"
+
+which will require a dt-bindings update
+
+Konrad
