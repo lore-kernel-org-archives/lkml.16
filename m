@@ -1,343 +1,157 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F286E1F3FF8;
-	Mon, 23 Jun 2025 21:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67E618E377
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 21:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750713373; cv=none; b=jsYNZtX+3mYr2PURneP2v7yGbFgsrYZD/i81SPBE7E4qZtgohVDZvfBtEF/LoHSra6PxcOiaF54JyelAcLi9pXfIuMwWJraTMpDxbA1G/9NorHfsxHKxkri9n//6FQploo00wNJGVH+sJ6HjaQV4QcC3MbMpbiveglNLiz6SVV8=
+	t=1750713408; cv=none; b=n0qYYLYwirFzQDFA1er3VDkdXO5Yynerg2qh6RUoF3iOoZDTv4yUYSc6XvDos6f5gL38wOlROGa29wiG4hyhPtiDH61swvDVrkD/feQ53WH9eNy2ShDaniP5yeYPGcNK+u3YZjp+LzBMl3GGkBXVfzzLZDE4TghXIn4a58i0vVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750713373; c=relaxed/simple;
-	bh=YpKOiuy7+fqEFDRa7/CBt4BroadQtFTU7CicTLWPDGE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kWjv4EzxHeNV/MN2mLiui6iQ3y1Q67Cg24eg9w+LOsb9pNUYVOOPkU3W0PF8lf5zhw5b+dM/r4k9QD6dMqTT3upxXGklm28zl89hPwmQpGTVJU7Oye26k8eIwXzA0766a33yR6fUWrp2TmOJYyw44RAlPHQJOxjygViO5A5CO9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=DoE976Nf; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1750713408; c=relaxed/simple;
+	bh=LtDdaRCFnOzRaKVTAE3F/dlf7+IT0xFa6bseJet1gxM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uQQaKRUEMzbcxiDXbUlMOM3biGjvQUauaT8Gu8vZKT100MfJjjmJEYb3PSDODT+GKz7YSU/IAXk6JmWWVxWwbboWhgyeAJQdKgUSoAMxTNM1o7LTvadOxR0JsKXifgW580oEIfj2+tkCJwMb3VOGfJCVlwYTrieshAz2/nnH+sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Em1yFZH5; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="DoE976Nf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1750713368;
-	bh=YpKOiuy7+fqEFDRa7/CBt4BroadQtFTU7CicTLWPDGE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=DoE976Nfz4kVeLHcG/ji1c9wlZUaW5CJBL2lTF3t6y7dBFhAZYPsqjrKiSeuTp6ja
-	 Hv3Hn/pndA+m0cEXoT0sVnxmlMJWEZ9hbmogAEFpU7SGnuAj/PxU6/jjPcivm7dRbC
-	 4PnMl++xjRbfwTpIw7kn0HHJIoNJuY3Z6jUxrOrU=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Mon, 23 Jun 2025 23:15:54 +0200
-Subject: [PATCH v2 3/3] tools/nolibc: add support for SuperH
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Em1yFZH5"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b2c4476d381so3578866a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:16:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750713406; x=1751318206; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=zAxIbG7Zl9ZnLRYF7XmoS7J2q0R3DwVsCI7SvRvrNiY=;
+        b=Em1yFZH59f1mlQOzsdnTpgTQNByQwYO2Onm712PmJojwnHar4KolbbpTRrlQ47qn5/
+         YoY5WziYWX2DuWoWMRydVxm/4IuLbAwNKgM/yt7Bkv2rpMeIZZLjuPXmIM2aea3BOI0n
+         qTrMzrHibXjP6xD62J/To6qHpcp0ixJNhBdl5nycESZ6yQKRlrni1b7G3OQojqNP9unn
+         V8JBlaTurnEJhgFpArRw1uWU+2i/+PoVW+ahGc6Lee98L6+V84nBtstOZxXkcBRrYXvD
+         dfjvB4ewfFkPcD9cWqFZgfygTMlgHmuFndnAwEymI/zgSc6UlGc30eNISeG/7cWJ2lVE
+         gByg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750713406; x=1751318206;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zAxIbG7Zl9ZnLRYF7XmoS7J2q0R3DwVsCI7SvRvrNiY=;
+        b=GxgdFRl7zR+YsNAUeRBs6DqlPvdCWPFaMo0rF61vU7ikzgBYCfkSYYtEV/OdIUesjs
+         Ox+VO6UDgapRlDl8eJnIMW1N9b7Mxa1PbVaP20FVdkRVvJVcmaMHcNYGw6MJ5PxtBkKS
+         PuIOXDASX+1W5AW56O3KcDtajUAEqVNHtQ0sao8LH2YDabTo2XIaVQSZkKooMKpzbor5
+         lN0vWEbStMzwO5UA5pyp+zl5828W4z35sc13NbnWSSmWk0pm45JojAjgPRe9vKltrw+h
+         jgTbgbmHzbhuf0jIojCm3koxWN5006foyfzhqHpjUnQSfYepNWOEskZgKwJ9EzjpOAb6
+         DYtA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZ2peZ11Y5/ET8x0Q8m8JiZc7vRITCccosg6ZfrUpK7lC6X6T6ivoUqPXFwYxS7dn50OizzSsf2oj9dxA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLjrUTtl8BRCoqG+KbC5hmQAnDLWcI4ND7hM/UFHy4YVEhIjbA
+	h3unkoU+L0QbDpkLhMp0Qtf0o78WaHmpRDsGQEz6H2T4/dJegx2zHoDql3Gwnej+l9MKbWPfC5v
+	wF6k5/FDoQq1pjxVT3uEjk+cGZWC4moHGTKZbuVzftQ==
+X-Gm-Gg: ASbGncthqbBvIm/zPPNl966Z8r/7KHTr32oysu5cO3RgE+qpAWFZoI5JVvhNzZL3T+C
+	xwB0fEQWOy/ZI5AjykQUkBxqE5P5JAWyMxjcWeWgnqzHBiywyAx7dXQsAWtfnEr9fuqbTQ6S5KE
+	kli6kA4AgJc8i3m2OV4TC1lB9F+6NxDrRt6yGAwVci7c/aCbIMiU1IZSBLjiae2Hkc9KCSDyO/b
+	Q6Z
+X-Google-Smtp-Source: AGHT+IHdXTjLmFniSVEoVRLtzjN2ucReqYqHFsQsGXxHYWXnRGns80Bi6bWad99swFSENzSSlizfjzmNIUY68yEdsng=
+X-Received: by 2002:a17:90a:da83:b0:312:dbcd:b94f with SMTP id
+ 98e67ed59e1d1-315cccc4472mr1503356a91.11.1750713405985; Mon, 23 Jun 2025
+ 14:16:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250623-nolibc-sh-v2-3-0f5b4b303025@weissschuh.net>
-References: <20250623-nolibc-sh-v2-0-0f5b4b303025@weissschuh.net>
-In-Reply-To: <20250623-nolibc-sh-v2-0-0f5b4b303025@weissschuh.net>
-To: Yoshinori Sato <ysato@users.sourceforge.jp>, 
- Rich Felker <dalias@libc.org>, 
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
- Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>
-Cc: linux-sh@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750713367; l=13930;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=YpKOiuy7+fqEFDRa7/CBt4BroadQtFTU7CicTLWPDGE=;
- b=Fpi6WPw4V95ew/7knr+a/8HXPNqQ3QyXiJSXpDWuZfibIPUAaLxXM8Ljaf0/3cyUEUWztgsfR
- tusNO9+kxAJCPi1NQB01fAH0al8InP0WGKZ/lwQTE3xGLLruIa+qG2H
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
+References: <20250623130642.015559452@linuxfoundation.org>
+In-Reply-To: <20250623130642.015559452@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 24 Jun 2025 02:46:34 +0530
+X-Gm-Features: Ac12FXww9_WpdOaHdkgJbruDk5iAmI9JDDJZ3Q-jbazbPa6fMcxkmYRxXtADy4A
+Message-ID: <CA+G9fYtdHwOUg==LJ-uiH2xy_GXU97yb2Fui0PnXShG_X8PA8Q@mail.gmail.com>
+Subject: Re: [PATCH 6.12 000/414] 6.12.35-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add support for SuperH/"sh" to nolibc.
-Only sh4 is tested for now.
+On Mon, 23 Jun 2025 at 18:39, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.12.35 release.
+> There are 414 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 25 Jun 2025 13:05:53 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.35-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-The startup code is special:
+Regressions on parisc, s390 allmodconfig builds with gcc-11 and gcc-13 failed on
+the Linux stable-rc 6.12.35-rc1.
 
-__nolibc_entrypoint_epilogue() calls __builtin_unreachable() which emits
-a call to abort(). To make this work a function prologue is generated to
-set up a GOT pointer which corrupts "sp".
-__builtin_unreachable() is necessary for __attribute__((noreturn)).
-Also depending on compiler flags (for example -fPIC) even more prologue
-is generated.
+Regressions found on s390
+* parisc, build
+  - gcc-11-allmodconfig
 
-Work around this by defining a nested function in asm.
+* s390, build
+  - gcc-13-allmodconfig
 
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70216
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-Acked-by: Willy Tarreau <w@1wt.eu>
----
- tools/include/nolibc/arch-sh.h                 | 162 +++++++++++++++++++++++++
- tools/include/nolibc/arch.h                    |   2 +
- tools/testing/selftests/nolibc/Makefile.nolibc |   7 ++
- tools/testing/selftests/nolibc/run-tests.sh    |   3 +-
- 4 files changed, 173 insertions(+), 1 deletion(-)
+Regression Analysis:
+ - New regression? Yes
+ - Reproducibility? Yes
 
-diff --git a/tools/include/nolibc/arch-sh.h b/tools/include/nolibc/arch-sh.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..1ad006cba0f627f663eea36b41bc7399cca4addb
---- /dev/null
-+++ b/tools/include/nolibc/arch-sh.h
-@@ -0,0 +1,162 @@
-+/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
-+/*
-+ * SuperH specific definitions for NOLIBC
-+ * Copyright (C) 2025 Thomas Weißschuh <linux@weissschuh.net>
-+ */
-+
-+#ifndef _NOLIBC_ARCH_SH_H
-+#define _NOLIBC_ARCH_SH_H
-+
-+#include "compiler.h"
-+#include "crt.h"
-+
-+/*
-+ * Syscalls for SuperH:
-+ *   - registers are 32bit wide
-+ *   - syscall number is passed in r3
-+ *   - arguments are in r4, r5, r6, r7, r0, r1, r2
-+ *   - the system call is performed by calling trapa #31
-+ *   - syscall return value is in r0
-+ */
-+
-+#define my_syscall0(num)                                                      \
-+({                                                                            \
-+	register long _num __asm__ ("r3") = (num);                            \
-+	register long _ret __asm__ ("r0");                                    \
-+									      \
-+	__asm__ volatile (                                                    \
-+		"trapa #31"                                                   \
-+		: "+r"(_ret)                                                  \
-+		: "r"(_num)                                                   \
-+		: "memory", "cc"                                              \
-+	);                                                                    \
-+	_ret;                                                                 \
-+})
-+
-+#define my_syscall1(num, arg1)                                                \
-+({                                                                            \
-+	register long _num __asm__ ("r3") = (num);                            \
-+	register long _ret __asm__ ("r0");                                    \
-+	register long _arg1 __asm__ ("r4") = (long)(arg1);                    \
-+									      \
-+	__asm__ volatile (                                                    \
-+		"trapa #31"                                                   \
-+		: "=r"(_ret)                                                  \
-+		: "r"(_num), "r"(_arg1)                                       \
-+		: "memory", "cc"                                              \
-+	);                                                                    \
-+	_ret;                                                                 \
-+})
-+
-+#define my_syscall2(num, arg1, arg2)                                          \
-+({                                                                            \
-+	register long _num __asm__ ("r3") = (num);                            \
-+	register long _ret __asm__ ("r0");                                    \
-+	register long _arg1 __asm__ ("r4") = (long)(arg1);                    \
-+	register long _arg2 __asm__ ("r5") = (long)(arg2);                    \
-+									      \
-+	__asm__ volatile (                                                    \
-+		"trapa #31"                                                   \
-+		: "=r"(_ret)                                                  \
-+		: "r"(_num), "r"(_arg1), "r"(_arg2)                           \
-+		: "memory", "cc"                                              \
-+	);                                                                    \
-+	_ret;                                                                 \
-+})
-+
-+#define my_syscall3(num, arg1, arg2, arg3)                                    \
-+({                                                                            \
-+	register long _num __asm__ ("r3") = (num);                            \
-+	register long _ret __asm__ ("r0");                                    \
-+	register long _arg1 __asm__ ("r4") = (long)(arg1);                    \
-+	register long _arg2 __asm__ ("r5") = (long)(arg2);                    \
-+	register long _arg3 __asm__ ("r6") = (long)(arg3);                    \
-+									      \
-+	__asm__ volatile (                                                    \
-+		"trapa #31"                                                   \
-+		: "=r"(_ret)                                                  \
-+		: "r"(_num), "r"(_arg1), "r"(_arg2), "r"(_arg3)               \
-+		: "memory", "cc"                                              \
-+	);                                                                    \
-+	_ret;                                                                 \
-+})
-+
-+#define my_syscall4(num, arg1, arg2, arg3, arg4)                              \
-+({                                                                            \
-+	register long _num __asm__ ("r3") = (num);                            \
-+	register long _ret __asm__ ("r0");                                    \
-+	register long _arg1 __asm__ ("r4") = (long)(arg1);                    \
-+	register long _arg2 __asm__ ("r5") = (long)(arg2);                    \
-+	register long _arg3 __asm__ ("r6") = (long)(arg3);                    \
-+	register long _arg4 __asm__ ("r7") = (long)(arg4);                    \
-+									      \
-+	__asm__ volatile (                                                    \
-+		"trapa #31"                                                   \
-+		: "=r"(_ret)                                                  \
-+		: "r"(_num), "r"(_arg1), "r"(_arg2), "r"(_arg3), "r"(_arg4)   \
-+		: "memory", "cc"                                              \
-+	);                                                                    \
-+	_ret;                                                                 \
-+})
-+
-+#define my_syscall5(num, arg1, arg2, arg3, arg4, arg5)                        \
-+({                                                                            \
-+	register long _num __asm__ ("r3") = (num);                            \
-+	register long _ret __asm__ ("r0");                                    \
-+	register long _arg1 __asm__ ("r4") = (long)(arg1);                    \
-+	register long _arg2 __asm__ ("r5") = (long)(arg2);                    \
-+	register long _arg3 __asm__ ("r6") = (long)(arg3);                    \
-+	register long _arg4 __asm__ ("r7") = (long)(arg4);                    \
-+	register long _arg5 __asm__ ("r0") = (long)(arg5);                    \
-+									      \
-+	__asm__ volatile (                                                    \
-+		"trapa #31"                                                   \
-+		: "=r"(_ret)                                                  \
-+		: "r"(_num), "r"(_arg1), "r"(_arg2), "r"(_arg3), "r"(_arg4),  \
-+		  "r"(_arg5)                                                  \
-+		: "memory", "cc"                                              \
-+	);                                                                    \
-+	_ret;                                                                 \
-+})
-+
-+#define my_syscall6(num, arg1, arg2, arg3, arg4, arg5, arg6)                  \
-+({                                                                            \
-+	register long _num __asm__ ("r3") = (num);                            \
-+	register long _ret __asm__ ("r0");                                    \
-+	register long _arg1 __asm__ ("r4") = (long)(arg1);                    \
-+	register long _arg2 __asm__ ("r5") = (long)(arg2);                    \
-+	register long _arg3 __asm__ ("r6") = (long)(arg3);                    \
-+	register long _arg4 __asm__ ("r7") = (long)(arg4);                    \
-+	register long _arg5 __asm__ ("r0") = (long)(arg5);                    \
-+	register long _arg6 __asm__ ("r1") = (long)(arg6);                    \
-+									      \
-+	__asm__ volatile (                                                    \
-+		"trapa #31"                                                   \
-+		: "=r"(_ret)                                                  \
-+		: "r"(_num), "r"(_arg1), "r"(_arg2), "r"(_arg3), "r"(_arg4),  \
-+		  "r"(_arg5), "r"(_arg6)                                      \
-+		: "memory", "cc"                                              \
-+	);                                                                    \
-+	_ret;                                                                 \
-+})
-+
-+/* startup code */
-+void _start_wrapper(void);
-+void __attribute__((weak,noreturn)) __nolibc_entrypoint __no_stack_protector _start_wrapper(void)
-+{
-+	__asm__ volatile (
-+		".global _start\n"           /* The C function will have a prologue,         */
-+		".type _start, @function\n"  /* corrupting "sp"                              */
-+		".weak _start\n"
-+		"_start:\n"
-+
-+		"mov sp, r4\n"               /* save argc pointer to r4, as arg1 of _start_c */
-+		"bsr _start_c\n"             /* transfer to c runtime                        */
-+		"nop\n"                      /* delay slot                                   */
-+
-+		".size _start, .-_start\n"
-+	);
-+	__nolibc_entrypoint_epilogue();
-+}
-+
-+#endif /* _NOLIBC_ARCH_SH_H */
-diff --git a/tools/include/nolibc/arch.h b/tools/include/nolibc/arch.h
-index 4ae57aaf9779610dfb63458416f147116d0a98e6..5a34bce2981eaec557bc3616c7ef7b809a6dbf0b 100644
---- a/tools/include/nolibc/arch.h
-+++ b/tools/include/nolibc/arch.h
-@@ -35,6 +35,8 @@
- #include "arch-sparc.h"
- #elif defined(__m68k__)
- #include "arch-m68k.h"
-+#elif defined(__sh__)
-+#include "arch-sh.h"
- #else
- #error Unsupported Architecture
- #endif
-diff --git a/tools/testing/selftests/nolibc/Makefile.nolibc b/tools/testing/selftests/nolibc/Makefile.nolibc
-index ba3b762cb103ee87aafecbd5e838fc0e678b7b50..41c708419d761df5de9e7df97b2f070396e8cbf3 100644
---- a/tools/testing/selftests/nolibc/Makefile.nolibc
-+++ b/tools/testing/selftests/nolibc/Makefile.nolibc
-@@ -58,6 +58,7 @@ ARCH_riscv64     = riscv
- ARCH_s390x       = s390
- ARCH_sparc32     = sparc
- ARCH_sparc64     = sparc
-+ARCH_sh4         = sh
- ARCH            := $(or $(ARCH_$(XARCH)),$(XARCH))
- 
- # kernel image names by architecture
-@@ -81,6 +82,7 @@ IMAGE_loongarch  = arch/loongarch/boot/vmlinuz.efi
- IMAGE_sparc32    = arch/sparc/boot/image
- IMAGE_sparc64    = arch/sparc/boot/image
- IMAGE_m68k       = vmlinux
-+IMAGE_sh4        = arch/sh/boot/zImage
- IMAGE            = $(objtree)/$(IMAGE_$(XARCH))
- IMAGE_NAME       = $(notdir $(IMAGE))
- 
-@@ -105,11 +107,13 @@ DEFCONFIG_loongarch  = defconfig
- DEFCONFIG_sparc32    = sparc32_defconfig
- DEFCONFIG_sparc64    = sparc64_defconfig
- DEFCONFIG_m68k       = virt_defconfig
-+DEFCONFIG_sh4        = rts7751r2dplus_defconfig
- DEFCONFIG            = $(DEFCONFIG_$(XARCH))
- 
- EXTRACONFIG_arm       = -e CONFIG_NAMESPACES
- EXTRACONFIG_armthumb  = -e CONFIG_NAMESPACES
- EXTRACONFIG_m68k      = -e CONFIG_BLK_DEV_INITRD
-+EXTRACONFIG_sh4       = -e CONFIG_BLK_DEV_INITRD -e CONFIG_CMDLINE_FROM_BOOTLOADER
- EXTRACONFIG           = $(EXTRACONFIG_$(XARCH))
- 
- # optional tests to run (default = all)
-@@ -136,6 +140,7 @@ QEMU_ARCH_loongarch  = loongarch64
- QEMU_ARCH_sparc32    = sparc
- QEMU_ARCH_sparc64    = sparc64
- QEMU_ARCH_m68k       = m68k
-+QEMU_ARCH_sh4        = sh4
- QEMU_ARCH            = $(QEMU_ARCH_$(XARCH))
- 
- QEMU_ARCH_USER_ppc64le = ppc64le
-@@ -169,6 +174,7 @@ QEMU_ARGS_loongarch  = -M virt -append "console=ttyS0,115200 panic=-1 $(TEST:%=N
- QEMU_ARGS_sparc32    = -M SS-5 -m 256M -append "console=ttyS0,115200 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
- QEMU_ARGS_sparc64    = -M sun4u -append "console=ttyS0,115200 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
- QEMU_ARGS_m68k       = -M virt -append "console=ttyGF0,115200 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_sh4        = -M r2d -serial file:/dev/stdout -append "console=ttySC1,115200 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
- QEMU_ARGS            = -m 1G $(QEMU_ARGS_$(XARCH)) $(QEMU_ARGS_BIOS) $(QEMU_ARGS_EXTRA)
- 
- # OUTPUT is only set when run from the main makefile, otherwise
-@@ -192,6 +198,7 @@ CFLAGS_s390 = -m31
- CFLAGS_mips32le = -EL -mabi=32 -fPIC
- CFLAGS_mips32be = -EB -mabi=32
- CFLAGS_sparc32 = $(call cc-option,-m32)
-+CFLAGS_sh4 = -ml -m4
- ifeq ($(origin XARCH),command line)
- CFLAGS_XARCH = $(CFLAGS_$(XARCH))
- endif
-diff --git a/tools/testing/selftests/nolibc/run-tests.sh b/tools/testing/selftests/nolibc/run-tests.sh
-index 279fbd93ef70497868689b7f1e14ddc6c5c1a15f..c55d6d3c10bba5df7f7e6413eea496148a5fbf52 100755
---- a/tools/testing/selftests/nolibc/run-tests.sh
-+++ b/tools/testing/selftests/nolibc/run-tests.sh
-@@ -27,6 +27,7 @@ all_archs=(
- 	loongarch
- 	sparc32 sparc64
- 	m68k
-+	sh4
- )
- archs="${all_archs[@]}"
- 
-@@ -187,7 +188,7 @@ test_arch() {
- 		echo "Unsupported configuration"
- 		return
- 	fi
--	if [ "$arch" = "m68k" ] && [ "$llvm" = "1" ]; then
-+	if [ "$arch" = "m68k" -o "$arch" = "sh4" ] && [ "$llvm" = "1" ]; then
- 		echo "Unsupported configuration"
- 		return
- 	fi
+Build regression: stable-rc 6.12.35-rc1 s390 allmodconfig
+sdhci-esdhc-imx.c 'sdhc_esdhc_tuning_restore' defined but not used
 
--- 
-2.50.0
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
+## Build errors
+drivers/mmc/host/sdhci-esdhc-imx.c:1595:13: error:
+'sdhc_esdhc_tuning_restore' defined but not used
+[-Werror=unused-function]
+ 1595 | static void sdhc_esdhc_tuning_restore(struct sdhci_host *host)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/mmc/host/sdhci-esdhc-imx.c:1573:13: error:
+'sdhc_esdhc_tuning_save' defined but not used
+[-Werror=unused-function]
+ 1573 | static void sdhc_esdhc_tuning_save(struct sdhci_host *host)
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
+
+## Source
+* Kernel version: 6.12.35-rc1
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+* Git sha: 97420f337f2e873945307514e185ab28a4eab0de
+* Git describe: v6.12.34-415-g97420f337f2e
+* Project details:
+https://regressions.linaro.org/lkft/linux-stable-rc-linux-6.12.y/v6.12.34-415-g97420f337f2e/build/gcc-11-allmodconfig/
+* Architectures: parisc
+* Toolchains: gcc-11
+* Kconfigs: allmodconfig
+
+## Build parisc
+* Build log: https://storage.tuxsuite.com/public/linaro/lkft/builds/2yuYNm13k63nvGpMv5Vv07a4U9J/config
+* Build details:
+https://regressions.linaro.org/lkft/linux-stable-rc-linux-6.12.y/v6.12.34-415-g97420f337f2e/build/gcc-11-allmodconfig/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2yuYNm13k63nvGpMv5Vv07a4U9J/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2yuYNm13k63nvGpMv5Vv07a4U9J/config
+
+## Steps to reproduce
+  - tuxmake --runtime podman --target-arch parisc --toolchain gcc-11
+--kconfig allmodconfig
+
+--
+Linaro LKFT
+https://lkft.linaro.org
