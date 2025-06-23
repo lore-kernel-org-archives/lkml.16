@@ -1,79 +1,111 @@
-Received: from mailrelay-egress12.pub.mailoutpod2-cph3.one.com (mailrelay-egress12.pub.mailoutpod2-cph3.one.com [46.30.211.187])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1968A217730
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB59D22D4F1;
+	Mon, 23 Jun 2025 10:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750673453; cv=none; b=YvTjJQPu3Sn/Dm/UI0VmlofoRUiyAahPo2BbBcVIqKoZ3MmJChwV+aWSM0atfDGgxYDgiYEdLIrhPnBCxrWOvS//0uw9Fm8neAmfM8GSiawLu2ZMGdUN0qkH5/CRTvjYjRAP7a8149Sst4YxyeWFX1jZTTLy9Lsh6choAnMN2WU=
+	t=1750673488; cv=none; b=CDbvEBdN6RUCoEs0orRis5tFgKqyJDBGgAVboSEysRj+8ruolKwK9oDsAPZw846LtBrhztI3dw+qdr1vT6XBTQeru/9S7sVUMhFHtdSGY6HlyzAXSvSEazLiFK1PbmHIGluLJvdGX3+3fI54NaMWh9r62Px0fSt+vwoI+/dELF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750673453; c=relaxed/simple;
-	bh=i9Hpy5KuYP/My0o1RPn21zno2K2uXm5iOUSaR9BtUv8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dRFWIikEDquGx+qddw4g6gqsrFpq1eFRAcF8c19pX0r78DWmXMpgwfy63SlqhiWxzy6wFO01FQ6wGEP0PAgyBBSdQ365BsiriUSyCo7mAE/J04y/96y8ChUqDQusKHe5G4QDraRShl8Ndywegh4dYSsY/2RIDtLzkE19+VYm04Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=1QQ8GrHH; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=pFgAp1px; arc=none smtp.client-ip=46.30.211.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
+	s=arc-20240116; t=1750673488; c=relaxed/simple;
+	bh=OFKwZS2f1yjDnUpAHHlzk5SdSS1w7t5kE90KGJKypWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ab3jHqPwZNQZRyniy5pwoQDlYukdmniwfmaYfy4AWOgnD+9GRnXhFpyTdxErQP5zlkBKmIkFztZIw3P00eqyxwnPzRjn8Xt8YXDKrUDlIzz9ypRpnXCvpy9SoHBEkKh/o5BmM7bkWtUzIhLpYfqwPC3fxCIJfiuXjh3VREQ5mtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KvSTr90x; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="1QQ8GrHH";
-	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="pFgAp1px"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1750673441; x=1751278241;
-	d=konsulko.se; s=rsa1;
-	h=content-transfer-encoding:content-type:in-reply-to:from:references:cc:to:
-	 subject:mime-version:date:message-id:from;
-	bh=e/4wAU2MMN25qAei27JXFenl3y/9Bx6y37wunFoJlec=;
-	b=1QQ8GrHH2kVU413eR4MZvv37v+nN43qoniSktmfPwtmwC4zchTKWiG/EkTaB85v4LhU8S7K1WsEs8
-	 khWWu9OqD+YM3G7EXqOzjDQ7nuRl+dd5yeJyQlIx5rLPVhETGDGon1nRYxdJIoSSpU5j9Ryp40z+V7
-	 x3u7ONtc03DST5+wePFfMl0v9/4b1emtF2wgNmA12/kTls55ahYof/wCTdLNYg2ibF5vsr+wKskU/W
-	 f/K5GlGSusBfYcfhxxOEqzBk3UKj54s+Fc4+iZ9iBGxerFSAp9roFuDAomG79S0/86UxvwLdhzSgSd
-	 9MXPp/qIMPYqeqxNZw+gmp/35zvfKhg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1750673441; x=1751278241;
-	d=konsulko.se; s=ed1;
-	h=content-transfer-encoding:content-type:in-reply-to:from:references:cc:to:
-	 subject:mime-version:date:message-id:from;
-	bh=e/4wAU2MMN25qAei27JXFenl3y/9Bx6y37wunFoJlec=;
-	b=pFgAp1pxldR1nK5Zc8BySWAC1b4XH1lCaoMsA2F6oRMQ5Y/3SbamBasRCBRQWfK2TdJCL+ocWS8gw
-	 quYZxpCCw==
-X-HalOne-ID: 50105f82-501a-11f0-a817-f78b1f841584
-Received: from [192.168.10.245] (host-90-238-19-233.mobileonline.telia.com [90.238.19.233])
-	by mailrelay1.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
-	id 50105f82-501a-11f0-a817-f78b1f841584;
-	Mon, 23 Jun 2025 10:10:40 +0000 (UTC)
-Message-ID: <24bacfdd-ec42-4819-9b2d-f94e29fb1fbe@konsulko.se>
-Date: Mon, 23 Jun 2025 12:10:40 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KvSTr90x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750673487; x=1782209487;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OFKwZS2f1yjDnUpAHHlzk5SdSS1w7t5kE90KGJKypWk=;
+  b=KvSTr90xiWqTSSWE/pTylGvzjoNYaq+PNJVF0k6E2StjHF7DfXfBW/KK
+   HEXQX+rxtK/F3LIc8V/IpjTplLqVOnXYbfq1eSo/vEoHXup4/xM2BvFB7
+   4HNq+IU5PR9xRNzwXmjNqMeMA2FyfhZpvSLap+Sv/SyOVL1piYv5MWgJw
+   Q+TuVXW7waral5btKxUDBXiPUGDD7pmqY7Y09wPlo94pqV2OB9JAympXs
+   LsxS52oWGiZBxfnd27mDCRIiveU43hBXylar6Te9S1n+jjP2G1hs4Zo9c
+   Iz7zrqXUm47KQv3bPKTwK25BaN/X7pVWfwrcvgh96ShX/Q/ezFvMFIsvQ
+   A==;
+X-CSE-ConnectionGUID: fM//FshUTMC9VQbyeGdWAg==
+X-CSE-MsgGUID: McvQqpOZSPWp3lDQIRks1Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="56681978"
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="56681978"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 03:11:26 -0700
+X-CSE-ConnectionGUID: +cWrTyRVSK+2Q/9SQcr93g==
+X-CSE-MsgGUID: oFv+Fkr2QBuXEG3Tnk3/+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="157051613"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 03:11:23 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uTe92-000000098LK-1i91;
+	Mon, 23 Jun 2025 13:11:20 +0300
+Date: Mon, 23 Jun 2025 13:11:20 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+	corbet@lwn.net, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	eraretuya@gmail.com
+Subject: Re: [PATCH v10 5/7] iio: accel: adxl345: add coupling detection for
+ activity/inactivity
+Message-ID: <aFkoSBXuPOoQj3JI@smile.fi.intel.com>
+References: <20250622155010.164451-1-l.rubusch@gmail.com>
+ <20250622155010.164451-6-l.rubusch@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/zswap: export zswap API to modules
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
- linux-kernel@vger.kernel.org, Igor Belousov <igor.b@beldev.am>
-References: <20250620193552.2772125-1-vitaly.wool@konsulko.se>
- <aFW6xI4m15JepI8Y@casper.infradead.org>
-Content-Language: en-US
-From: Vitaly Wool <vitaly.wool@konsulko.se>
-In-Reply-To: <aFW6xI4m15JepI8Y@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250622155010.164451-6-l.rubusch@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-
-
-On 6/20/25 21:47, Matthew Wilcox wrote:
-> On Fri, Jun 20, 2025 at 09:35:52PM +0200, Vitaly Wool wrote:
->> There is no reason to not let modules use zswap capabilies to
->> densely store unused pages in RAM. This will allow to remove some
->> homebrew solutions for e.g. GPU drivers in favor of plainly using
->> zswap pool.
+On Sun, Jun 22, 2025 at 03:50:08PM +0000, Lothar Rubusch wrote:
+> Enable AC/DC coupling configuration for activity and inactivity detection
+> by setting the AC/DC bit. Extend existing magnitude-based detection with
+> adaptive AC-coupled mode.
 > 
-> I really think these should be _GPL exports.  And I'm not sure why the
-> GPU drivers are using "homebrew solutions" instead of using the shmem
-> APIs which work whether zswap is configured in or not.
+> Use DC-coupled mode to compare acceleration samples directly against
+> configured thresholds. Use AC-coupled mode to compare samples against a
+> reference taken at the start of activity detection. Implement DC-coupled
+> events using MAG, and AC-coupled events using MAG_ADAPTIVE.
+> 
+> Expose configuration of thresholds and periods via separate sysfs handles.
+> Note that both coupling modes share the same sensor registers, so activity
+> or inactivity detection cannot be configured for both AC and DC
+> simultaneously. Apply the most recently configured mode.
+> 
+> Simplify event handling and support adaptive AC-coupling.
 
-shmem API adds an extra copy which would be nice to avoid. Changing 
-exports to _GPL I have indeed no problem with.
+...
 
-~Vitaly
+>  static int adxl345_set_act_inact_linkbit(struct adxl345_state *st,
+>  					 enum adxl345_activity_type type,
+>  					 bool en)
+>  {
+> -	int act_en, inact_en;
+> +	int act_en, act_ac_en, inact_en, inact_ac_en;
+
+Just make it two,
+
+	int act_ac_en, inact_ac_en;
+	int act_en, inact_en;
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
