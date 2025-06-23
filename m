@@ -1,31 +1,32 @@
-Received: from outbound.pv.icloud.com (p-west1-cluster2-host4-snip4-9.eps.apple.com [57.103.64.250])
+Received: from outbound.pv.icloud.com (p-west1-cluster2-host11-snip4-1.eps.apple.com [57.103.64.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD7F374EA
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.64.250
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4B92459F1
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 12:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.64.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750681899; cv=none; b=O6884D66Vdn+kWuNTNc1x8nA8tFFszOuV4JFwXjHm2Gh7/TGwXDZWSx6XJAsR4KgzdLL36WQpzAKzidrrEyzCZf7Pi9mf5iKnm1OguLDjCvPNgjgXBIAB4h+fMk5by/nR9Z+WtR/MbX8NW79NoCVlgQRwqrWyYxBNm51g+1Rq80=
+	t=1750681901; cv=none; b=Tdy03OJKsPhHOJdg1FVLvIHnIRW4pVL04r3w5U2MS9Zh78y5M4kGE1ZFgMGSuBGpFS0uQAID3USqJEVDZQbdbX+55RdICf7JGZhiNv6WAkA1w2tRzk9AVTv0gYohAbxAKxryd6FARLSSOBKZi2wnEY93OJOmzbdQgZUFtkoF7jM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750681899; c=relaxed/simple;
-	bh=BN8DBGXySBoTVfMs+bmQgj2+i/NZzqjolT1YHNgGSjI=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DMcNR9knR1tBiU+v4L+/FyPYwekNhxdyeULiWvQSBs+ccNkwpQO+ONI47F/UDjvLxxoiW0oMVi/sgC0v5CKm52fsjwNt+TzxRXeAUElyEiwnWxvRfMgjA1WXszWTkctgvZDzhQvhoSqmNOcS+TzetvmUy57Qgn2+YMTmSbiPpsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=IYMo8yBz; arc=none smtp.client-ip=57.103.64.250
+	s=arc-20240116; t=1750681901; c=relaxed/simple;
+	bh=fkwjlgmRRs46qzcBjCAqAA9El9cLBiccykLVz3LbkvI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=AP6hVxG/CO38zjlby0TPem9n4Use8mxMIang0xRtUkC7s6++SyO6Z58aiY8vIjJReLmTra646zi2PjjLvlsGFsPjrW93uL8QMx+M7ndRmFB9xa58h4ubyJhG236JEY3aPQDaI2UU6s3/5xwzHPvs1zfBffshrM4VB37mMVz6+a0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=vzHQd/nt; arc=none smtp.client-ip=57.103.64.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="IYMo8yBz"
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="vzHQd/nt"
 Received: from outbound.pv.icloud.com (unknown [127.0.0.2])
-	by outbound.pv.icloud.com (Postfix) with ESMTPS id BBC9E18001C4;
-	Mon, 23 Jun 2025 12:31:33 +0000 (UTC)
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com; s=1a1hai; bh=gw/2H+w3/Dh1/O5dkqOpLntn2CUwjysaImd5LMVil/g=; h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:x-icloud-hme; b=IYMo8yBz1/bILRQBmf6eWoHNoURLnGFTYgYI2Fyl0ZWFkNhV+rhz7wZ8wWiKE8wKLNpfAqA3uVxdVYNrwvh9eEYH8r9d2O0PN+KaLNWzeuUyVV781WKAuDz9WiklLNjRUo3bgRwEvtKZ8N38PNrLWGy2CpGAaeqU+Cbnq5H1qGBTTpE+eUOu9XwgTDzTJiYJp3LumRxQ90iwqBYiYbjgAIkJAPCXRaq1djdt8J9NASlfldcRwd4JGzZ3J+dGZZ9grb8xcILWJclZrxgy5FJ5QQ8fE8qSI3ZVjByenwT8bLx+UAbptQaROrghd5U3BkdZqW3XUJRZ5CXszLzApcb+bw==
+	by outbound.pv.icloud.com (Postfix) with ESMTPS id 0231C180377A;
+	Mon, 23 Jun 2025 12:31:35 +0000 (UTC)
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com; s=1a1hai; bh=NHgxlTzvgc5QNV7cJrvxK2AUxsXCg2hdL0DYremg4GU=; h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme; b=vzHQd/ntnLd5RGHoLoDaLBAFMHWMs5uqVmwQWP2VWMObvDJj7g6i5RO99L7djyucQu1u9Hhk701mwNrorg6eYtWmKNuo7S0JekuK8+m9EcQ9thbVfsnWbQXRAKEnQWAA+KSKXt84GrPOrqTS8TVmVN6JsKdwt0fVpL0kTpn98xo18yo3oS+IuwZIWv48Y5GDy4fZI0nehbg6FVT5Gb6/eRrjTuzfCFCUFIjbb0mpvjJ30URQQhnhFquRaQ85mgminXabHb0R1s7fmQwZHVvcnPTrxIiS1xld0kpoXyyew5FppAHBOSLTFBgcAW6TnO+hyKnHScDfId0cc3yX83y1YQ==
 Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id 57B6F1803778;
-	Mon, 23 Jun 2025 12:31:31 +0000 (UTC)
+	by outbound.pv.icloud.com (Postfix) with ESMTPSA id 69D5318000C0;
+	Mon, 23 Jun 2025 12:31:33 +0000 (UTC)
 From: Zijun Hu <zijun_hu@icloud.com>
-Subject: [PATCH 0/4] Bluetooth: Trivial cleanup
-Date: Mon, 23 Jun 2025 20:31:15 +0800
-Message-Id: <20250623-bt_cleanup-v1-0-5d3d171e3822@oss.qualcomm.com>
+Date: Mon, 23 Jun 2025 20:31:16 +0800
+Subject: [PATCH 1/4] Bluetooth: hci_sock: Reset cookie to zero in
+ hci_sock_free_cookie()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,51 +35,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABNJWWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDMyNj3aSS+OSc1MS80gLdtMQ006TkxGTjpERLJaCGgqLUtMwKsGHRsbW
- 1AI5adPpcAAAA
-X-Change-ID: 20250623-bt_cleanup-faf5bcac3ba9
+Message-Id: <20250623-bt_cleanup-v1-1-5d3d171e3822@oss.qualcomm.com>
+References: <20250623-bt_cleanup-v1-0-5d3d171e3822@oss.qualcomm.com>
+In-Reply-To: <20250623-bt_cleanup-v1-0-5d3d171e3822@oss.qualcomm.com>
 To: Marcel Holtmann <marcel@holtmann.org>, 
  Johan Hedberg <johan.hedberg@gmail.com>, 
  Luiz Augusto von Dentz <luiz.dentz@gmail.com>
 Cc: Zijun Hu <zijun_hu@icloud.com>, linux-bluetooth@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Zijun Hu <zijun.hu@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA3NSBTYWx0ZWRfX/IxPR7gtxWmu
- wWXLcEHg9GKgpBI+BxbPkchaG3OT9gWm4cgxFh9BSd5mp7joLFp8I2HaqupJO52FDosQcnRJR9s
- mQeStWvDoDCnentxhkoElCqBCRHm9By2JCf9Harovd01MParpM3cRjz9iD2u2ase7VOWlR/1DJV
- juTfOombKuvUbYHFgtIYxgzB+03Wwaeh6C+9RG+Ufi7oHNmYkK5MfJ/sE8jokIMKSJux3ifApfm
- FZw0hUYj+powaw6Gin1JlLbMl/igoFJmD4nWlpFFl9GQvDNqFRQ1ocoU/SAnx2N8e/j4zDSXg=
-X-Proofpoint-GUID: oU73P-fGLC9Gz30Tn7cqtvp0_VWaXleb
-X-Proofpoint-ORIG-GUID: oU73P-fGLC9Gz30Tn7cqtvp0_VWaXleb
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA3NSBTYWx0ZWRfXx04nththdni4
+ oDtmNzzKPh7cqGrgzbxUUsP7DAvXAajI3fS8bmYuzkNiYccD5cy6J5CtSaiMf++3a+pCC0TMi0w
+ WkhWZLHaDdlnMdlmkNQkjX4MQDgVg/Bcyd2zsMNzOGrYbZwSxLdvCYRRn7ZXVWjPcGyb0i+GT3Z
+ TLqRQVhrFwEWg6hWVrvaHKMPrqSV++rhBjKMcT1e4dZ5XFjbj8TZDXqAyup0mBut8vOFgE1GYGQ
+ JcKqWCELsrDPqnS4xzH3uL4J8iD5HOQTluqUauY65pZlOrvbAPwI1dqnBznxSp63Y6D64N8vw=
+X-Proofpoint-ORIG-GUID: m6KzkSG0Oj9PaEL_VXDLV5ePqEXbUK9x
+X-Proofpoint-GUID: m6KzkSG0Oj9PaEL_VXDLV5ePqEXbUK9x
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-23_03,2025-06-23_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999
- suspectscore=0 adultscore=0 clxscore=1011 mlxscore=0 bulkscore=0 spamscore=0
- phishscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.22.0-2506060001 definitions=main-2506230075
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0
+ adultscore=0 spamscore=0 mlxscore=0 clxscore=1015 mlxlogscore=999
+ phishscore=0 malwarescore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.22.0-2506060001 definitions=main-2506230075
 
-This patch series is to do trivial cleanup for bluetooth core driver.
+From: Zijun Hu <zijun.hu@oss.qualcomm.com>
+
+Reset cookie value to 0 instead of 0xffffffff in hci_sock_free_cookie()
+since:
+0         :  means cookie has not been assigned yet
+0xffffffff:  means cookie assignment failure
+
+Also fix generating cookie failure with usage shown below:
+hci_sock_gen_cookie(sk)   // generate cookie
+hci_sock_free_cookie(sk)  // free cookie
+hci_sock_gen_cookie(sk)   // Can't generate cookie any more
 
 Signed-off-by: Zijun Hu <zijun.hu@oss.qualcomm.com>
 ---
-Zijun Hu (4):
-      Bluetooth: hci_sock: Reset cookie to zero in hci_sock_free_cookie()
-      Bluetooth: hci_sync: Use bt_dev_err() to log error message in hci_update_event_filter_sync()
-      Bluetooth: hci_core: Eliminate an unnecessary goto label in hci_find_irk_by_addr()
-      Bluetooth: hci_event: Correct comment about HCI_EV_EXTENDED_INQUIRY_RESULT
+ net/bluetooth/hci_sock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- net/bluetooth/hci_core.c  | 4 +---
- net/bluetooth/hci_event.c | 2 +-
- net/bluetooth/hci_sock.c  | 2 +-
- net/bluetooth/hci_sync.c  | 2 +-
- 4 files changed, 4 insertions(+), 6 deletions(-)
----
-base-commit: dc3f099e8d709c2fbb25e1079e1b3d703a6828b2
-change-id: 20250623-bt_cleanup-faf5bcac3ba9
+diff --git a/net/bluetooth/hci_sock.c b/net/bluetooth/hci_sock.c
+index 428ee5c7de7ea32fea08a2ebcf57e30dee59e3fa..fc866759910d95f40f159cfd63710f4c5e519dfd 100644
+--- a/net/bluetooth/hci_sock.c
++++ b/net/bluetooth/hci_sock.c
+@@ -118,7 +118,7 @@ static void hci_sock_free_cookie(struct sock *sk)
+ 	int id = hci_pi(sk)->cookie;
+ 
+ 	if (id) {
+-		hci_pi(sk)->cookie = 0xffffffff;
++		hci_pi(sk)->cookie = 0;
+ 		ida_free(&sock_cookie_ida, id);
+ 	}
+ }
 
-Best regards,
 -- 
-Zijun Hu <zijun.hu@oss.qualcomm.com>
+2.34.1
 
