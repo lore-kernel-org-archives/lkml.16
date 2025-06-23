@@ -1,102 +1,117 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825222459F1;
-	Mon, 23 Jun 2025 12:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1342242927;
+	Mon, 23 Jun 2025 12:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750681949; cv=none; b=NIZ36Hl3TIMts5cnFf16GuaprRYuh1x6U9HNvVQEKWNn0jxIlhhdv+FfPvJweFg9Gay7yIKK856C4ndTpGHMyBIMyaw8cq7StuaQAuxZF9OQPhihz5zvTK1c+5TKHdVz7zH/YkyAnIWO/rj4tbrfaPnoXsmuGoiwOpRXk30ZaIs=
+	t=1750682001; cv=none; b=ULE6hEkfcqppABm+4epE49gSmlyk24KB5dvF0SRZ+vGk5uwCZwAwS7u+2HgUOVlG2wHAjX+FVmGfzBmxnoUyN0F2BWMN1Aqoe13eWiS8EA0Dbbdg3S2yAovxX7Ggmv3a+HZYkxwBVKogjwXfuef6q++KPsoDoVmOHM+/h9C5h/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750681949; c=relaxed/simple;
-	bh=Hi9Eh4Q8Idz+PcP0DJGiXpcq9TCKuca5A6YCe8h1Q6U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PNwPrVsb4F1fcnOPOEC/fGnuJaGqy3yvGGDHdiwPIGUKM/jl0/fM3nFEDf4a4w1Dj8+B0R1Dckwx+S9rhbfkWASfuY4opXC9mqxHKbKzvXeu659pqXRHc4Ivdn1a/VpkizrCe36fiC/SrGVR0Dm8LQrBdfzvB5YtkP/VVlbZKxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fRzoI1dl; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1750682001; c=relaxed/simple;
+	bh=1DPd1rG0FiAZN/l3XVHAIpg9e7oYvTgCp4KsTGp3seY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WnaYS+OKBGLvr1I69w8aSAJQpnre2OtzC1cjz/ywFJ//vCmcSZIIFgtFxWV4AWmY++aA/ki4bJIUfnw41XHdpFc0bC64ddryUgNEHzLjnDFj1TGJY/MnaxAZ6+D64JtQk+4KR7FUI9vpZgz5cj1PIy02SdgPHYeikgysyvbqJ3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gCy1Brtd; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fRzoI1dl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750681945;
-	bh=Hi9Eh4Q8Idz+PcP0DJGiXpcq9TCKuca5A6YCe8h1Q6U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fRzoI1dlS3MhNk3kaIep6i4WWNWcAedful78drVRlvm/4Xh1SkS3K+ztOxFgSXAoH
-	 2vbxKawbsztUnl09cPgSt+uFvVJ1tHS6KKrdllwE7bz4z7Nx8fjloQ81iDlj4Xj79Q
-	 /D5ypsq0jDLDquYdSE6sGH6Vs3QoA6d6ufaxnnBWl5rl/oV0zaA/r9/MsmuncGTLQ/
-	 zChQ5ri/Q5UxqkUf8s5FwHisxQIwpUKH8BYjPGN4ASCoS3jQkHgPzClBohAjnAg3zh
-	 ePgONva+hO8UErkrt4zINF+7jcMmK0nTWjXo4ELEAsJk5/M9CCDUjpnlURnSI/Wd6Q
-	 usJOc2BEtxn3w==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 13E9717E05BD;
-	Mon, 23 Jun 2025 14:32:25 +0200 (CEST)
-Message-ID: <9e8d0dfc-7dc4-461d-afd9-bd381219422f@collabora.com>
-Date: Mon, 23 Jun 2025 14:32:24 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gCy1Brtd"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-32b910593edso31649511fa.1;
+        Mon, 23 Jun 2025 05:33:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750681998; x=1751286798; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W+IuXF9DlMlGH+Aiu+nfFVoQv16+hkfTLv/4sosn5sM=;
+        b=gCy1BrtdANqufabnNcofKf7Upwc+MZwGaH4Gy6Ue/cuTcuPcFmbMfje75l3ceq6M3Q
+         HQGj3pCLaUqcc//K6GA14Fc2XSBSqeUFCLNgaVMolA5Z7Ck7jZaBi1+W7VF/BrUSvLUQ
+         hiSeyQ0ijoj2BiTTH6rq6iQx2gBO56ylVIo2OS6rtgUW9fRvZ7CJt61yPaz6rHuc5zAC
+         uuDn+eXb3nwsZcUD2lkxoUjoUVnOiuVdRXYZeJPmgPxRzRU58lSnx4Vf7Rit3sEFI8v/
+         GaXHKLnoSsEEY0iLcjWefTYSBFJpU2nLGXIc3ebs9Ll2j70k+cd2jradn4904K32m9SY
+         Ffxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750681998; x=1751286798;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W+IuXF9DlMlGH+Aiu+nfFVoQv16+hkfTLv/4sosn5sM=;
+        b=bYX+I4rGFrENb4ePWHVzJYGJcHB0jr/CeWsjjzb6wcKyol3WyS+wPzG/XAy/Uo0+aS
+         5WDag9hYoFOGBvH6fMd1NjesG0LYP0Qgb08AwybTek0yGSDvNoTxOfFIgBnEC977e0hI
+         IRXgusyLY3m/SzkfXlCf3ZjmT793THRyWHhrxvCi2uetV7Bz/46COJd4CKnVKOscbAic
+         zHlVajjPfzkXjb7ed7hTyZtXL5mHaXRLsgZ4znptRJjFyv++Wx5yGUvx9YYUAkMDhncg
+         bxTl+Ce0XrEijUpcYA2qkg5sMVAl1oHb2NO9Qq3GMXE69CiUXTP+rwITfJW+JLJIjh0i
+         Y0Ww==
+X-Forwarded-Encrypted: i=1; AJvYcCU25qC4dbmxDqrrT1qudGnI7KAPn/36Dnbkrq7YhACG5fs1z2dL16JePeJALb1OYXCyWyxqLYMMHK2Y7Myz@vger.kernel.org, AJvYcCUVnaylTXZnYNieayC0KQfyhoE0/1L4UwWLDtQ8FuXYKHFfhc19HgkquKDJqrFFlrbm5lMy96Kw7bQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIV8vWgJiH3EL3UiqgfwChCjiw+LIu9Wv15h91XxOhNaV8BtvA
+	KwIfL6UsKZXatyDfchEzs02T4v7KQnIxOjWd3OGq+6Lr8q52mDEwexeH/I0XU6Onlix8EybtGeT
+	Y4h74LdNMqRSj41dna4uUiBo/N9k4d0l2
+X-Gm-Gg: ASbGnctWZMVRY1s9xoPN4a0KWgUcri6YsDguW43JJzftrviXPJcYD7glFFjwm0WvfCB
+	yqGdF9eaHhJjo3ErPb0ImQ6GdYyg572/Tfoi3gkNu6Ovw4F/g4IA8p1tf46clsoa22hixQt03BK
+	KI4Wh43lqUfi/1UZiACoqngQZ+5MH2Atbbe3hS/6expkFkmkld/hnBpz/3xg==
+X-Google-Smtp-Source: AGHT+IHbs/NqSnxFpIyynnriPXXe9sNxDaDSvw4MGJ1GuCNbeLiHRsPivmYWpuvMLVUKajdSiZkR1th4FuUfmOqTrZE=
+X-Received: by 2002:a05:6512:b05:b0:553:3532:5b30 with SMTP id
+ 2adb3069b0e04-553e3be86ccmr3217582e87.27.1750681997445; Mon, 23 Jun 2025
+ 05:33:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/2] firmware: Add MediaTek TinySYS SCMI Protocol
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- matthias.bgg@gmail.com, sudeep.holla@arm.com, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, arm-scmi@vger.kernel.org,
- kernel@collabora.com
-References: <20250623120136.109311-1-angelogioacchino.delregno@collabora.com>
- <aFlFw-AjqxXcIuBO@pluto>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <aFlFw-AjqxXcIuBO@pluto>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250623081458.1243-1-khaliidcaliy@gmail.com>
+In-Reply-To: <20250623081458.1243-1-khaliidcaliy@gmail.com>
+From: Brian Gerst <brgerst@gmail.com>
+Date: Mon, 23 Jun 2025 08:33:05 -0400
+X-Gm-Features: AX0GCFuAWptiRw2maE0BWmiixwuVE1WmhRCAOu-kPZL92eirSB8J4cZ_QQmrR7U
+Message-ID: <CAMzpN2jBOW3PVJQLvua=knQNu_1mZ6RZYi8JvNenFd5t30UC1Q@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] x86/boot: Supply boot_param in rdi instead of rsi
+ from startup_64()
+To: Khalid Ali <khaliidcaliy@gmail.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, ubizjak@gmail.com, x86@kernel.org, hpa@zytor.com, 
+	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Il 23/06/25 14:17, Cristian Marussi ha scritto:
-> On Mon, Jun 23, 2025 at 02:01:34PM +0200, AngeloGioacchino Del Regno wrote:
->> This series adds basic support for the MediaTek TinySYS SCMI Protocol,
->> found on the MediaTek Dimensity 9200, 9300 and 9400, other than on the
->> MT8196 Chromebook SoC.
->>
->> This is used to communicate with the CM_MGR and other MCUs for power
->> management purposes.
-> 
-> Hi Angelo,
-> 
-> thanks for this.
-> 
-> I will do a proper review in the coming days of this series anyway, but
-> upfront for future V2:
-> 
-> - you should provide some sort of documentation for this new
->    vendor protocol and its messages, as an example from IMX:
-> 
-> 	drivers/firmware/arm_scmi/vendors/imx/imx95.rst
+On Mon, Jun 23, 2025 at 4:16=E2=80=AFAM Khalid Ali <khaliidcaliy@gmail.com>=
+ wrote:
+>
+> From: Khalid Ali <khaliidcaliy@gmail.com>
+>
+> The current kernel entry point takes one argument which is boot_param
+> from RSI. The only argument entry point recieves is pointer to
+> boot_param.
+>
+> In order to comply with the ABI calling convension the entry point must
+> recieve the boot_param from RDI instead of RSI. There were no specific
+> use case used for RDI, so the kernel can safely recieve argument from
+> that register to better comply with ABI.
+>
+> This patch makes the kernel to recieve boot_param which is the only
+> argument it recieves, from RDI instead of RSI. All changes needed for
+> stability and clarity have being changed.
+>
+> Changelog:
+>  * Kernel uncompressed entry point expects boot_param from RDI instead
+>    of RSI.
+>  * The decompressor has being adjusted to supply argument from RDI
+>    instead RSI.
+>  * libstub has being adjusted to supply argument from RDI instead of RSI.
+>
+> After throughly tested there were no regression and UDs has being
+> observed. Looking forward for feedback.
+>
+>  arch/x86/boot/compressed/head_64.S      | 2 +-
+>  arch/x86/kernel/head_64.S               | 4 ++--
+>  drivers/firmware/efi/libstub/x86-stub.c | 4 ++--
+>  3 files changed, 5 insertions(+), 5 deletions(-)
 
-Noted.
+This was never intended to conform to the C ABI, why is it necessary
+to change it?
 
-> 
-> - where is the SCMI driver that will call all the new vendor ops
->    defined in: scmi_mtk_protocol.h ?
-
-This was tested with code that is not clean at all (hence I can't push it upstream)
-and well... I didn't think about the fact that, effectively, without an user, this
-code ends up being unused.
-
-I can't promise to send a clean user in this cycle, but I would really appreciate
-if you could still check the protocol code, so that if there's anything that you
-can spot I can fix it while the rest gets done :-)
-
-Thank you,
-Angelo
-
-> 
-> Thanks,
-> Cristian
+Also, you cannot break this up into three patches.  Every patch must
+be fully functional so that git bisect will work.
 
 
+Brian Gerst
