@@ -1,447 +1,256 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013057.outbound.protection.outlook.com [40.107.159.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7925B256C83;
-	Mon, 23 Jun 2025 13:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750684735; cv=none; b=BxOQ1nSSLDTtT5Ibgm1Uhs8qnXZqIdL6LVD6jtgcI4ZAPQuCWcEdUBSj5L8e9dq3SNO8IJg5WBImedtsu3XRsnMIiB+bK6BguxhAhWVQyCsMoafiyrRwx2AF4qbSblIhYqtHGLUMknqSXbg4QcXx4uoF7Oao63u8Me5WFsiqDuY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750684735; c=relaxed/simple;
-	bh=e3OzJbB8Wf28/Du+VCLKaLjpFFhqXcCZJTDTmDoy7zw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b6Gj7Y14kjZBaehHqgjUf+Ki1CVSUNPxVhODa3ZKb3seNqvlUR57+OsKG/EfwVXl5JrgqThckNrVE5r/JSM7Y7RMzUvNsr+VcTwffeFRmLrCD9BWD/3meZBU5A6+HDLVv1j2Eo/AR52sOB2ituFwDxUbzsiDEMCCkR/XIcvumNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ht3etf6I; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59444C7F;
+	Mon, 23 Jun 2025 13:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750684787; cv=fail; b=WRSvfBP+IR8qGDJgwoN7GldYMkshl49DaNgdnedd4Kfs9iY8/4o1QdMdvHAkvso34Xbm/b1+9KyA6GOe9JlXzYng/goUJI10f0Rtt5zU41om3ZrL+B7zVI1XRdUcopUXoNJH5yix8Xt15FWZEYO0iwh4rjP/vc0+jYKlzpoKOgo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750684787; c=relaxed/simple;
+	bh=e3kd5E+aNoODx3tZdul4FgXbQhTAa6rckTtn8A2sRDY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=eOuGa1tGKtzWn7TAq95xuK1w4PV1hn75Ryx387venpL43gmdgwB1XR2Ujg8fPITiMLeyL1rxMi2XKhOnCD+jiYRZ6rG0cgqWTSJZLtxKvoe30MYcoLtjhGz9vq4esUcWRUmgPR/d8QRoLRyUbCX5Qebs7TDMojrUU//mcmmjxXI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=xm5kIM4F; arc=fail smtp.client-ip=40.107.159.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ht3etf6I"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55N95QUx007226;
-	Mon, 23 Jun 2025 13:18:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=gVMgS5y5O7Jii0xEd
-	Jat2PaINYW81PyVxGrZ7lTrXms=; b=Ht3etf6IdwMsqdVxFKhtoPw+0vMytqQ0B
-	M3pobPmW4ogCnFzRBsRww8tBNvE2nJjXiJI/PtVrV0+NxxUBJqcP6SnVPgaBLMEd
-	usKSl26E1ChvM+FdE3WDA7sd582P8PjHCkv50aAUf250hFjMtUpQGAg5iDATAS34
-	8MX6w+P7U8pDTWKnLcO9IsyPA7vBDPhDjuggUkZzeWPZJL1x+61ukyC+NTmAQ9Gi
-	RdMSfIflCt6jXLxQSaPLYSbsya3sSx+iRT4cVgxhaJXRUrcvEGVQQuva8af1tDNw
-	vLHo3qcRmYDQqMl77xCXfUqeUXjPyFPRr6z72HqJazok/k2FQZt4w==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dk63j3tk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Jun 2025 13:18:44 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55NCXUfq014775;
-	Mon, 23 Jun 2025 13:18:43 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e9s26g54-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Jun 2025 13:18:43 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55NDIgB859638214
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 23 Jun 2025 13:18:42 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 609D758055;
-	Mon, 23 Jun 2025 13:18:42 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E1C3158059;
-	Mon, 23 Jun 2025 13:18:41 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 23 Jun 2025 13:18:41 +0000 (GMT)
-From: Stefan Berger <stefanb@linux.ibm.com>
-To: linux-crypto@vger.kernel.org, herbert@gondor.apana.org.au,
-        davem@davemloft.net
-Cc: linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com,
-        dhowells@redhat.com, simo@redhat.com,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: [RFC PATCH 3/4] crypto: Add tests cases for shake128 & shake256 to testmgr
-Date: Mon, 23 Jun 2025 09:18:29 -0400
-Message-ID: <20250623131830.2194643-4-stefanb@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250623131830.2194643-1-stefanb@linux.ibm.com>
-References: <20250623131830.2194643-1-stefanb@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="xm5kIM4F"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jxSMnVsbcwvM10U5VCgYxG5iDyBrUZ0d6u0BZFkgcJHy7tCE8jAxhxCbSTyRCtYAIYq03ZjVG0eCCLikOH70T3y7ohhwj/X9gjARoJeBD9PzfA4BcRtps8aiDIt7KLVlaMWTwwOapqSzDOrMX5edfXLN6E6Y0DWm6gaDNt50FxsNyOCOjVG8+VWGZkvyrlAPjRd1Q/01Zia7dFIt5xacNypZ5Lh3gm5GcK+SQpEulbbWXtuoK08lCtptYtLVV38MiO8NFwBjGMS4V7wtgI873ZeMQvbfbrk7it/mFxLGwDdO1jZSiia2VsOHGT+eX1DWSoXoPX5AgPT6QSs+hCt/eg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2N3idTaNphnMlaxEjIl5CKoEY74MHWRk9Spj5X7S/PE=;
+ b=sB0le/EmjaeonoX3yG9qLEMqPsyUR9LPYc0Q7M4sLykml8FUDQ3I5CytP4I7SzUxsW77wfJkPvx2Zv1zmEhpLp6RCnoF2nmKIW8Whctm5C9CZkaR0vC/2bPdzywfAW5R84GjBPaXyTHapJpRuhjwywo3lYc7Eplu88+eOu4+3rPxCn43ZCwDpPQxueTJG/YY4I62vQan8WBNqOLPQ3uh+wXEwDzkpYrNPLxyW4M/0eNJndF+oq5MFwWqSqtULN1EJ/gUfkcHB0C6blkNB5sFmfSg6KQ7Jyf01snjn+Byt9aZkHhNNaF3lhKTQjckBTiWj0fvtI+Cd6RNQq8l1/Yibg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2N3idTaNphnMlaxEjIl5CKoEY74MHWRk9Spj5X7S/PE=;
+ b=xm5kIM4FjHcob5bUgaHcbPlA3KiOLcmit4MquNpF+p1VcdQ7VB3oQpz1EcjVgupoSyAV3L7zG3rIf/WYU8JLtFe5mKKnly46sJubtaXCO93Bt//T7yQucNjMAMRREv0RevF5Ao4jA9rR51i/M6PPDHO8XUI0Fj1I8uZiYtv0nR8ZxQpad/9ava292USWcp55tq8fGVuGmHi6Ju6d64uauvVb+UaDwvNfFa3kkYO4Ba4qKvgo8d9f1Fg9Bs/H733jsqxC6ii2IQeqHZODEcQhShimmFhL6mupWA5I1czhmF6pDs492jYGp1kq1eq1LSRr9LtXJ6v6cOiXHMymXw39+w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by AM8PR04MB7955.eurprd04.prod.outlook.com (2603:10a6:20b:249::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Mon, 23 Jun
+ 2025 13:19:39 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%3]) with mapi id 15.20.8857.026; Mon, 23 Jun 2025
+ 13:19:38 +0000
+Date: Mon, 23 Jun 2025 22:29:57 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Dhruva Gole <d-gole@ti.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Ranjani Vaidyanathan <ranjani.vaidyanathan@nxp.com>,
+	Chuck Cannon <chuck.cannon@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 2/2] firmware: arm_scmi: power_control: Set
+ SCMI_SYSPOWER_IDLE in pm resume
+Message-ID: <20250623142957.GA10415@nxa18884-linux>
+References: <20250620-scmi-pm-v1-0-c2f02cae5122@nxp.com>
+ <20250620-scmi-pm-v1-2-c2f02cae5122@nxp.com>
+ <20250623125750.kzwndmcf5yo3siao@lcpd911>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623125750.kzwndmcf5yo3siao@lcpd911>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SI1PR02CA0035.apcprd02.prod.outlook.com
+ (2603:1096:4:1f6::8) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA4MCBTYWx0ZWRfX1F5nnKAqYMKw VwWlEVpWX+XzjrcxT6GGPgH7nbo1gQSMgqZZpacjfxIqmVRB9ixbAeQTYoiP2npwnCgQ8r1J4nW rkjGCVY6nASV0PszrXLD3aIyK1qPWgOX294Si6C+LTh/trK9WcTXaUdRMNOVUL1EXG8Hp0zN7EB
- zM2wj2HLfkUn2OXG8moq/NWxHz2q+ls1wwV6rpCKrfJYJtoU1I1RV1VTuqVbEtnh0rfGnrX+zuM Q1fOwMiOBifZ1Ylz6NqrBn+IbpCmB6DNtb8Uzceap3ftwoyUAHv+owsOObvSjdFQY0PW4EV+LYS y569M4VD/Ofdh5vZIohILQXeQ7Xg0sRydQFMK/fkN7JoT68/eiKWYMkVKHlKpvmianblStnBjYL
- i9HhhCUrDuYKWzN5tUt1g564mqJyolD+6WrDchWvbpjzaqHkelY2PSHWxwQWwI3g8LwlkiqI
-X-Proofpoint-ORIG-GUID: lJqUz4S59PtGFCfZyv-d4Etc8kx2B3qH
-X-Proofpoint-GUID: lJqUz4S59PtGFCfZyv-d4Etc8kx2B3qH
-X-Authority-Analysis: v=2.4 cv=BfvY0qt2 c=1 sm=1 tr=0 ts=68595434 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=xF6bd4FRdrIRRYsjWBcA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-23_03,2025-06-23_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- lowpriorityscore=0 clxscore=1015 suspectscore=0 adultscore=0 spamscore=0
- impostorscore=0 mlxlogscore=602 malwarescore=0 phishscore=0 bulkscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506230080
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|AM8PR04MB7955:EE_
+X-MS-Office365-Filtering-Correlation-Id: e29ae0b2-c9df-4920-df8b-08ddb2589b11
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|52116014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?2KoN46U7bGZyYZ7aqJadNdwacGM6Qzdvsn4MTT7F3G49P1MLnveNm9Li/ZFm?=
+ =?us-ascii?Q?/ID1f1gn4dUHvFbtUM4vehCkzDFaoLa80BINzlwfPbYwq3YTIRuNuSmMvaY2?=
+ =?us-ascii?Q?E3pyFm8leXeMFbm7E0rbpPAxx7nZKMpfl+0NyqTWZKUJ2ttx8e63ERYTMkRo?=
+ =?us-ascii?Q?SElE1DBqwjQY9YTeECMOoC7knyyF2KqO4O5Bf9ZuECUajN+mLoD8t1xa2hpN?=
+ =?us-ascii?Q?xSXcjr+xSRgj4zh0mPS+uC3cCpR2SQbX/3PgpXui0QKwpz314GR60To8Ncl+?=
+ =?us-ascii?Q?iV2P0H9wlPl4wnJf49ltgoUyCk5ljfjqAd9uSvtGCLCgCd84NPQ5xKUGFk+d?=
+ =?us-ascii?Q?VcM0cnoPt0z1TjqcX4r3Cg6sypnVV70ASPGEmgAZgsX+w37KgjXd0vd7lvxJ?=
+ =?us-ascii?Q?bxNxVOStVlTbgUUs6BlbXDB4e8G6ZJ/03yNv3Yfh4xRGiRYHEvwppfm/s6QT?=
+ =?us-ascii?Q?vUe4fJdoaI4FnyB9Qi/nqB/15W+w7Ns5EF5ZlX0MsxYa8Ysc3tbimnE1gg4B?=
+ =?us-ascii?Q?OBiMdmcHrtnt1MF8FY/wfcffajWpHYkUgx3C7aZrnFf5O64a9qqpUXdj2Czz?=
+ =?us-ascii?Q?6P9+SvHNs2pzbXvX4Ft5lLZ8N3lZNJfKrRV7Uv1J2nP0yd5QBBYFzi/KAVvv?=
+ =?us-ascii?Q?d4MkHI1O6aFEmJ1oJ4cS8AkANnAEUcAZ279JTvsF1AKcG7/MX3txlkBGYD1M?=
+ =?us-ascii?Q?nHXNhpwmyrxakasLJJ85Kmu20yBOUcYRvKbyXaqu37QvK4iQ3jKZ3JT2CrDK?=
+ =?us-ascii?Q?iw0AG325YppGwsxc6xB4SHHKkzO3SOdYk1mXr0O/ozQfOwxb4AEIzpWJXNU4?=
+ =?us-ascii?Q?0xO9ouJ90GK6JGIoUnB9EKJx4gd0FCk+qvQoj9mwJO3n2K892vECvq4KGveS?=
+ =?us-ascii?Q?yvpEPc9ch9ELMvaA3HUn5WwtZ5/srok+CmfXMQsPkljNhwZaKdkXfi47yXAu?=
+ =?us-ascii?Q?FXEsY1svMojvqMRC+B4YRBPkhFbl4RnBHixTNaVtbF7WwfCsGuOTRWdy9ZcS?=
+ =?us-ascii?Q?tqs/buWWV1/7QDDbk7ijAb9dTOTEv7pgrQjDUuc+jAfCAZhZ+dY7HdDijOCf?=
+ =?us-ascii?Q?HTD6L2fOrlzkLo0PLlKwHOLQ01Gm48D7yXhSobwuBDobK6NvnfEY91ZWrOTV?=
+ =?us-ascii?Q?ksbA+VTC/H0EEP39BKuIZ3A17bkXbtnti8yqDFT9t6TE0cXwVZPYmCZ0ttvf?=
+ =?us-ascii?Q?i3romzTOtVkm8gWiVGZ6744e9v0r8MnD1rD8xqAWoPsGn0eTbL8C5px37dSg?=
+ =?us-ascii?Q?AR83Jd2h6YV15HFV+vRAYPT8u/fIfviNR+9XdnmWgo2AJXGJXxM4Lt1M62AX?=
+ =?us-ascii?Q?gpmNrr1saW+ld+6oN/hmYtmUw8RX95SgCWh+xvSt+78vc/gH+ETZoterwaPA?=
+ =?us-ascii?Q?xa/+TfUZxeuEmGldhdPsTMNZw3yWddXZRV1cGH9zE3r0Niw+oUqi+jt7ZVXy?=
+ =?us-ascii?Q?a1Dw9x+mAl8rkZu+Q1FR0yoBuEtBI8rQg/1ksRO6KwRT9MygldMEDQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?0v/mRGv86Jfft8myPzW4cjUObj3uEr6EuGbNXeLMS92OR3hGRZ4bcdOn42uk?=
+ =?us-ascii?Q?+gelPribg5NAfOLg2PDcAJ/imKb6JaAhoFbb/m6gChsNeFfW2hjADuJH1S4w?=
+ =?us-ascii?Q?wSepScBOwZgoLbvzD0fntVznP828FOlKA9ND+TdFhKo61O+KLBBYluwc7OEj?=
+ =?us-ascii?Q?/M9EGDf+iwZyu8BMU7R3YianLYPCKYZl6avkl523XSspXj83rXv70o1ycHw3?=
+ =?us-ascii?Q?3khzT8+Jl+vz48C9tphCFwk7UqFtTS8qhtW+r+Qgwtupx6kHHIxZia7JjwNM?=
+ =?us-ascii?Q?yWvX/EOV3AXM2KNoEOT4fEkGKiaBao00Vf0dIQpsZx1GfiQbOeHtAo82kyWf?=
+ =?us-ascii?Q?ud3UAnB69SPGVnayc6NKwByd8YjheiPV+FbuTnhhtbZXLcqBRxHNY86KfYq3?=
+ =?us-ascii?Q?vqITyhkczl08wGelqTkMlJeQJPq/Oz/wzVZzVc2HehipQK7x2xzpG1c18haB?=
+ =?us-ascii?Q?elqi72TRbZpH6zQgpoS9yDRQav8A1Ta7oX9et/BRrqEiz2X3soVU0b6MbBXy?=
+ =?us-ascii?Q?y1hGDxSo9/FDJx+ufvA5ypvl3OSVYFp3knghh1FuDWl0c28wujpldPLc7Z7y?=
+ =?us-ascii?Q?KeR25G2T1cEwRmBtwuBQnnOmt0i01owMCeL1VMoXacv1GotHEh111mHVleSi?=
+ =?us-ascii?Q?FToV5P/RmFEznD/z1A6plY3wwfTD9DyIRegkNzpVtmC8cwAdfCRrUiR6muq6?=
+ =?us-ascii?Q?XEGEoaMgYsDvQ3dXRpI/19V/CqNfwYER+1+b158PwxRVsMTz0xE2iYuSkdI0?=
+ =?us-ascii?Q?JFG65Ij0AYIAFL0/i9MC+oQMwYEdlaRXL5EgsyIbidMqSEGpu4+sdv0pufHb?=
+ =?us-ascii?Q?tPwCD5+tw02lCozIYEwHGDBa/AcxwcHnoijOzVSKA7Gx/lywEbAyXWB577fz?=
+ =?us-ascii?Q?ZjoKM2Gd9NZSmR8zFqntugllfuMuueC00kc8IqJaBvDn8aPB4/aCSqSfhR0J?=
+ =?us-ascii?Q?04/bckueXf/YxY2EuPSANcyvgmBgotUKbXIe/FU7JN31f+mtb6GRoxDJOL1t?=
+ =?us-ascii?Q?LtILpPU39Lr6MLc6NJRsEPC6JMtPke/KNHhaVHqR8xJbr/NQWVRmixkQkxG2?=
+ =?us-ascii?Q?e1rt3fLDZdROycZ4k43ogV+cBNVIwRixahH8AE0CRJW8Ct6ptX+TQ523Inq5?=
+ =?us-ascii?Q?wQwVA20LwUJ3Jn8Sx5gqoQKWGPWPvmQCRDElSEdvEAGQz5RlDGYIHEMS6AQe?=
+ =?us-ascii?Q?iHqagKk+s77TRf+6U7BLAYHuGJJg/WxSQPtj6uFn8FR21VSLVmYA8GR+nrQd?=
+ =?us-ascii?Q?VTpn+v5POXaEGjEQxKIZ6BmNc1yGk2w+cAj7LFql26I3HhoAdfEuvYsdB2rE?=
+ =?us-ascii?Q?DZHUY6Is+sz5UXIlu32p3nRmh5BgTvB5OqyYfLH57KOYGkabE1TU02RBmGiW?=
+ =?us-ascii?Q?2XbwCQnfBHaJ5X7V/rihlVdABUWxPxGMeneo7dfgEvRQwe42Vq/wovmS/GCc?=
+ =?us-ascii?Q?lhGeexNCnuqtsC/RRaJfjX10RqGJ0nr+tHRtG16Asq7ALzHUOOBJDRauYqwB?=
+ =?us-ascii?Q?6j5EhbDSTxr3TLbF6Sc40F0daGMlCWVqU579emAzJ0ioo3H43bnBektPtYD2?=
+ =?us-ascii?Q?xooDJl9LHQwdxhJgo8VMXvTKwfTMCKOW9VF+NMhL?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e29ae0b2-c9df-4920-df8b-08ddb2589b11
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 13:19:38.7739
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QXXrA9P6bKI1rOfidpgY4Ga0mkKeWFgnccCyOzuRdl/n6ZjG81WD6Q+v+bZ7Fzz+PWF+fOhocJn+UTpbWaze5w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7955
 
-Add test cases for shake128 & shake256 to the testmgr.
+On Mon, Jun 23, 2025 at 06:27:50PM +0530, Dhruva Gole wrote:
+>On Jun 20, 2025 at 11:37:14 +0800, Peng Fan (OSS) wrote:
+>> From: Peng Fan <peng.fan@nxp.com>
+>> 
+>> When two consecutive suspend message send to the Linux agent, Linux will
+>> suspend and wake up. The exepcted behaviour should be suspend, wake up
+>
+>I am first trying to gather more context of the issue at hand here,
+>Why and who is sending 2 consecutive suspend messages to Linux?
 
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
----
- crypto/testmgr.c |  14 +++
- crypto/testmgr.h | 310 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 324 insertions(+)
+Currently in my test, it is SCMI platform send two suspend messages.
+But in real cases, other high priviledge agents could send suspend messages
+to linux agent.
 
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index 82977ea25db3..2e4740448e3a 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -5558,6 +5558,20 @@ static const struct alg_test_desc alg_test_descs[] = {
- 		.suite = {
- 			.hash = __VECS(sha512_tv_template)
- 		}
-+	}, {
-+		.alg = "shake128",
-+		.test = alg_test_hash,
-+		.fips_allowed = 1,
-+		.suite = {
-+			.hash = __VECS(shake128_tv_template)
-+		}
-+	}, {
-+		.alg = "shake256",
-+		.test = alg_test_hash,
-+		.fips_allowed = 1,
-+		.suite = {
-+			.hash = __VECS(shake256_tv_template)
-+		}
- 	}, {
- 		.alg = "sm3",
- 		.test = alg_test_hash,
-diff --git a/crypto/testmgr.h b/crypto/testmgr.h
-index afc10af59b0a..c99dc61353b1 100644
---- a/crypto/testmgr.h
-+++ b/crypto/testmgr.h
-@@ -5914,6 +5914,316 @@ static const struct hash_testvec sha3_512_tv_template[] = {
- 	},
- };
- 
-+static const struct hash_testvec shake128_tv_template[] = {
-+	{
-+		.plaintext = "",
-+		.digest	= "\x7f\x9c\x2b\xa4\xe8\x8f\x82\x7d"
-+				"\x61\x60\x45\x50\x76\x05\x85\x3e",
-+	}, {
-+		.plaintext = "a",
-+		.psize	= 1,
-+		.digest	= "\x85\xc8\xde\x88\xd2\x88\x66\xbf"
-+				"\x08\x68\x09\x0b\x39\x61\x16\x2b",
-+	}, {
-+		.plaintext = "abcdbcdecdefdefgefghfghighijhijkijkl"
-+			     "jklmklmnlmnomnopnopq",
-+		.psize	= 56,
-+		.digest = "\x1a\x96\x18\x2b\x50\xfb\x8c\x7e"
-+				"\x74\xe0\xa7\x07\x78\x8f\x55\xe9",
-+	}, {
-+		.plaintext = "\x08\x9f\x13\xaa\x41\xd8\x4c\xe3"
-+			     "\x7a\x11\x85\x1c\xb3\x27\xbe\x55"
-+			     "\xec\x60\xf7\x8e\x02\x99\x30\xc7"
-+			     "\x3b\xd2\x69\x00\x74\x0b\xa2\x16"
-+			     "\xad\x44\xdb\x4f\xe6\x7d\x14\x88"
-+			     "\x1f\xb6\x2a\xc1\x58\xef\x63\xfa"
-+			     "\x91\x05\x9c\x33\xca\x3e\xd5\x6c"
-+			     "\x03\x77\x0e\xa5\x19\xb0\x47\xde"
-+			     "\x52\xe9\x80\x17\x8b\x22\xb9\x2d"
-+			     "\xc4\x5b\xf2\x66\xfd\x94\x08\x9f"
-+			     "\x36\xcd\x41\xd8\x6f\x06\x7a\x11"
-+			     "\xa8\x1c\xb3\x4a\xe1\x55\xec\x83"
-+			     "\x1a\x8e\x25\xbc\x30\xc7\x5e\xf5"
-+			     "\x69\x00\x97\x0b\xa2\x39\xd0\x44"
-+			     "\xdb\x72\x09\x7d\x14\xab\x1f\xb6"
-+			     "\x4d\xe4\x58\xef\x86\x1d\x91\x28"
-+			     "\xbf\x33\xca\x61\xf8\x6c\x03\x9a"
-+			     "\x0e\xa5\x3c\xd3\x47\xde\x75\x0c"
-+			     "\x80\x17\xae\x22\xb9\x50\xe7\x5b"
-+			     "\xf2\x89\x20\x94\x2b\xc2\x36\xcd"
-+			     "\x64\xfb\x6f\x06\x9d\x11\xa8\x3f"
-+			     "\xd6\x4a\xe1\x78\x0f\x83\x1a\xb1"
-+			     "\x25\xbc\x53\xea\x5e\xf5\x8c\x00"
-+			     "\x97\x2e\xc5\x39\xd0\x67\xfe\x72"
-+			     "\x09\xa0\x14\xab\x42\xd9\x4d\xe4"
-+			     "\x7b\x12\x86\x1d\xb4\x28\xbf\x56"
-+			     "\xed\x61\xf8\x8f\x03\x9a\x31\xc8"
-+			     "\x3c\xd3\x6a\x01\x75\x0c\xa3\x17"
-+			     "\xae\x45\xdc\x50\xe7\x7e\x15\x89"
-+			     "\x20\xb7\x2b\xc2\x59\xf0\x64\xfb"
-+			     "\x92\x06\x9d\x34\xcb\x3f\xd6\x6d"
-+			     "\x04\x78\x0f\xa6\x1a\xb1\x48\xdf"
-+			     "\x53\xea\x81\x18\x8c\x23\xba\x2e"
-+			     "\xc5\x5c\xf3\x67\xfe\x95\x09\xa0"
-+			     "\x37\xce\x42\xd9\x70\x07\x7b\x12"
-+			     "\xa9\x1d\xb4\x4b\xe2\x56\xed\x84"
-+			     "\x1b\x8f\x26\xbd\x31\xc8\x5f\xf6"
-+			     "\x6a\x01\x98\x0c\xa3\x3a\xd1\x45"
-+			     "\xdc\x73\x0a\x7e\x15\xac\x20\xb7"
-+			     "\x4e\xe5\x59\xf0\x87\x1e\x92\x29"
-+			     "\xc0\x34\xcb\x62\xf9\x6d\x04\x9b"
-+			     "\x0f\xa6\x3d\xd4\x48\xdf\x76\x0d"
-+			     "\x81\x18\xaf\x23\xba\x51\xe8\x5c"
-+			     "\xf3\x8a\x21\x95\x2c\xc3\x37\xce"
-+			     "\x65\xfc\x70\x07\x9e\x12\xa9\x40"
-+			     "\xd7\x4b\xe2\x79\x10\x84\x1b\xb2"
-+			     "\x26\xbd\x54\xeb\x5f\xf6\x8d\x01"
-+			     "\x98\x2f\xc6\x3a\xd1\x68\xff\x73"
-+			     "\x0a\xa1\x15\xac\x43\xda\x4e\xe5"
-+			     "\x7c\x13\x87\x1e\xb5\x29\xc0\x57"
-+			     "\xee\x62\xf9\x90\x04\x9b\x32\xc9"
-+			     "\x3d\xd4\x6b\x02\x76\x0d\xa4\x18"
-+			     "\xaf\x46\xdd\x51\xe8\x7f\x16\x8a"
-+			     "\x21\xb8\x2c\xc3\x5a\xf1\x65\xfc"
-+			     "\x93\x07\x9e\x35\xcc\x40\xd7\x6e"
-+			     "\x05\x79\x10\xa7\x1b\xb2\x49\xe0"
-+			     "\x54\xeb\x82\x19\x8d\x24\xbb\x2f"
-+			     "\xc6\x5d\xf4\x68\xff\x96\x0a\xa1"
-+			     "\x38\xcf\x43\xda\x71\x08\x7c\x13"
-+			     "\xaa\x1e\xb5\x4c\xe3\x57\xee\x85"
-+			     "\x1c\x90\x27\xbe\x32\xc9\x60\xf7"
-+			     "\x6b\x02\x99\x0d\xa4\x3b\xd2\x46"
-+			     "\xdd\x74\x0b\x7f\x16\xad\x21\xb8"
-+			     "\x4f\xe6\x5a\xf1\x88\x1f\x93\x2a"
-+			     "\xc1\x35\xcc\x63\xfa\x6e\x05\x9c"
-+			     "\x10\xa7\x3e\xd5\x49\xe0\x77\x0e"
-+			     "\x82\x19\xb0\x24\xbb\x52\xe9\x5d"
-+			     "\xf4\x8b\x22\x96\x2d\xc4\x38\xcf"
-+			     "\x66\xfd\x71\x08\x9f\x13\xaa\x41"
-+			     "\xd8\x4c\xe3\x7a\x11\x85\x1c\xb3"
-+			     "\x27\xbe\x55\xec\x60\xf7\x8e\x02"
-+			     "\x99\x30\xc7\x3b\xd2\x69\x00\x74"
-+			     "\x0b\xa2\x16\xad\x44\xdb\x4f\xe6"
-+			     "\x7d\x14\x88\x1f\xb6\x2a\xc1\x58"
-+			     "\xef\x63\xfa\x91\x05\x9c\x33\xca"
-+			     "\x3e\xd5\x6c\x03\x77\x0e\xa5\x19"
-+			     "\xb0\x47\xde\x52\xe9\x80\x17\x8b"
-+			     "\x22\xb9\x2d\xc4\x5b\xf2\x66\xfd"
-+			     "\x94\x08\x9f\x36\xcd\x41\xd8\x6f"
-+			     "\x06\x7a\x11\xa8\x1c\xb3\x4a\xe1"
-+			     "\x55\xec\x83\x1a\x8e\x25\xbc\x30"
-+			     "\xc7\x5e\xf5\x69\x00\x97\x0b\xa2"
-+			     "\x39\xd0\x44\xdb\x72\x09\x7d\x14"
-+			     "\xab\x1f\xb6\x4d\xe4\x58\xef\x86"
-+			     "\x1d\x91\x28\xbf\x33\xca\x61\xf8"
-+			     "\x6c\x03\x9a\x0e\xa5\x3c\xd3\x47"
-+			     "\xde\x75\x0c\x80\x17\xae\x22\xb9"
-+			     "\x50\xe7\x5b\xf2\x89\x20\x94\x2b"
-+			     "\xc2\x36\xcd\x64\xfb\x6f\x06\x9d"
-+			     "\x11\xa8\x3f\xd6\x4a\xe1\x78\x0f"
-+			     "\x83\x1a\xb1\x25\xbc\x53\xea\x5e"
-+			     "\xf5\x8c\x00\x97\x2e\xc5\x39\xd0"
-+			     "\x67\xfe\x72\x09\xa0\x14\xab\x42"
-+			     "\xd9\x4d\xe4\x7b\x12\x86\x1d\xb4"
-+			     "\x28\xbf\x56\xed\x61\xf8\x8f\x03"
-+			     "\x9a\x31\xc8\x3c\xd3\x6a\x01\x75"
-+			     "\x0c\xa3\x17\xae\x45\xdc\x50\xe7"
-+			     "\x7e\x15\x89\x20\xb7\x2b\xc2\x59"
-+			     "\xf0\x64\xfb\x92\x06\x9d\x34\xcb"
-+			     "\x3f\xd6\x6d\x04\x78\x0f\xa6\x1a"
-+			     "\xb1\x48\xdf\x53\xea\x81\x18\x8c"
-+			     "\x23\xba\x2e\xc5\x5c\xf3\x67\xfe"
-+			     "\x95\x09\xa0\x37\xce\x42\xd9\x70"
-+			     "\x07\x7b\x12\xa9\x1d\xb4\x4b\xe2"
-+			     "\x56\xed\x84\x1b\x8f\x26\xbd\x31"
-+			     "\xc8\x5f\xf6\x6a\x01\x98\x0c\xa3"
-+			     "\x3a\xd1\x45\xdc\x73\x0a\x7e\x15"
-+			     "\xac\x20\xb7\x4e\xe5\x59\xf0\x87"
-+			     "\x1e\x92\x29\xc0\x34\xcb\x62\xf9"
-+			     "\x6d\x04\x9b\x0f\xa6\x3d\xd4\x48"
-+			     "\xdf\x76\x0d\x81\x18\xaf\x23\xba"
-+			     "\x51\xe8\x5c\xf3\x8a\x21\x95\x2c"
-+			     "\xc3\x37\xce\x65\xfc\x70\x07\x9e"
-+			     "\x12\xa9\x40\xd7\x4b\xe2\x79\x10"
-+			     "\x84\x1b\xb2\x26\xbd\x54\xeb\x5f"
-+			     "\xf6\x8d\x01\x98\x2f\xc6\x3a\xd1"
-+			     "\x68\xff\x73\x0a\xa1\x15\xac\x43"
-+			     "\xda\x4e\xe5\x7c\x13\x87\x1e\xb5"
-+			     "\x29\xc0\x57\xee\x62\xf9\x90\x04"
-+			     "\x9b\x32\xc9\x3d\xd4\x6b\x02\x76"
-+			     "\x0d\xa4\x18\xaf\x46\xdd\x51\xe8"
-+			     "\x7f\x16\x8a\x21\xb8\x2c\xc3\x5a"
-+			     "\xf1\x65\xfc\x93\x07\x9e\x35\xcc"
-+			     "\x40\xd7\x6e\x05\x79\x10\xa7\x1b"
-+			     "\xb2\x49\xe0\x54\xeb\x82\x19\x8d"
-+			     "\x24\xbb\x2f\xc6\x5d\xf4\x68\xff"
-+			     "\x96\x0a\xa1\x38\xcf\x43\xda\x71"
-+			     "\x08\x7c\x13\xaa\x1e\xb5\x4c",
-+		.psize     = 1023,
-+		.digest    = "\x13\x0a\x5b\xcb\x83\x9f\x10\x89"
-+			     "\xbb\x62\xda\xe4\xf4\xd3\x21\xf8",
-+	},
-+};
-+
-+static const struct hash_testvec shake256_tv_template[] = {
-+	{
-+		.plaintext = "",
-+		.digest	= "\x46\xb9\xdd\x2b\x0b\xa8\x8d\x13"
-+				"\x23\x3b\x3f\xeb\x74\x3e\xeb\x24"
-+				"\x3f\xcd\x52\xea\x62\xb8\x1b\x82"
-+				"\xb5\x0c\x27\x64\x6e\xd5\x76\x2f",
-+	}, {
-+		.plaintext = "a",
-+		.psize	= 1,
-+		.digest	= "\x86\x7e\x2c\xb0\x4f\x5a\x04\xdc"
-+				"\xbd\x59\x25\x01\xa5\xe8\xfe\x9c"
-+				"\xea\xaf\xca\x50\x25\x56\x26\xca"
-+				"\x73\x6c\x13\x80\x42\x53\x0b\xa4",
-+	}, {
-+		.plaintext = "abcdbcdecdefdefgefghfghighijhijkijkl"
-+			     "jklmklmnlmnomnopnopq",
-+		.psize	= 56,
-+		.digest = "\x4d\x8c\x2d\xd2\x43\x5a\x01\x28"
-+				"\xee\xfb\xb8\xc3\x6f\x6f\x87\x13"
-+				"\x3a\x79\x11\xe1\x8d\x97\x9e\xe1"
-+				"\xae\x6b\xe5\xd4\xfd\x2e\x33\x29",
-+	}, {
-+		.plaintext = "\x08\x9f\x13\xaa\x41\xd8\x4c\xe3"
-+			     "\x7a\x11\x85\x1c\xb3\x27\xbe\x55"
-+			     "\xec\x60\xf7\x8e\x02\x99\x30\xc7"
-+			     "\x3b\xd2\x69\x00\x74\x0b\xa2\x16"
-+			     "\xad\x44\xdb\x4f\xe6\x7d\x14\x88"
-+			     "\x1f\xb6\x2a\xc1\x58\xef\x63\xfa"
-+			     "\x91\x05\x9c\x33\xca\x3e\xd5\x6c"
-+			     "\x03\x77\x0e\xa5\x19\xb0\x47\xde"
-+			     "\x52\xe9\x80\x17\x8b\x22\xb9\x2d"
-+			     "\xc4\x5b\xf2\x66\xfd\x94\x08\x9f"
-+			     "\x36\xcd\x41\xd8\x6f\x06\x7a\x11"
-+			     "\xa8\x1c\xb3\x4a\xe1\x55\xec\x83"
-+			     "\x1a\x8e\x25\xbc\x30\xc7\x5e\xf5"
-+			     "\x69\x00\x97\x0b\xa2\x39\xd0\x44"
-+			     "\xdb\x72\x09\x7d\x14\xab\x1f\xb6"
-+			     "\x4d\xe4\x58\xef\x86\x1d\x91\x28"
-+			     "\xbf\x33\xca\x61\xf8\x6c\x03\x9a"
-+			     "\x0e\xa5\x3c\xd3\x47\xde\x75\x0c"
-+			     "\x80\x17\xae\x22\xb9\x50\xe7\x5b"
-+			     "\xf2\x89\x20\x94\x2b\xc2\x36\xcd"
-+			     "\x64\xfb\x6f\x06\x9d\x11\xa8\x3f"
-+			     "\xd6\x4a\xe1\x78\x0f\x83\x1a\xb1"
-+			     "\x25\xbc\x53\xea\x5e\xf5\x8c\x00"
-+			     "\x97\x2e\xc5\x39\xd0\x67\xfe\x72"
-+			     "\x09\xa0\x14\xab\x42\xd9\x4d\xe4"
-+			     "\x7b\x12\x86\x1d\xb4\x28\xbf\x56"
-+			     "\xed\x61\xf8\x8f\x03\x9a\x31\xc8"
-+			     "\x3c\xd3\x6a\x01\x75\x0c\xa3\x17"
-+			     "\xae\x45\xdc\x50\xe7\x7e\x15\x89"
-+			     "\x20\xb7\x2b\xc2\x59\xf0\x64\xfb"
-+			     "\x92\x06\x9d\x34\xcb\x3f\xd6\x6d"
-+			     "\x04\x78\x0f\xa6\x1a\xb1\x48\xdf"
-+			     "\x53\xea\x81\x18\x8c\x23\xba\x2e"
-+			     "\xc5\x5c\xf3\x67\xfe\x95\x09\xa0"
-+			     "\x37\xce\x42\xd9\x70\x07\x7b\x12"
-+			     "\xa9\x1d\xb4\x4b\xe2\x56\xed\x84"
-+			     "\x1b\x8f\x26\xbd\x31\xc8\x5f\xf6"
-+			     "\x6a\x01\x98\x0c\xa3\x3a\xd1\x45"
-+			     "\xdc\x73\x0a\x7e\x15\xac\x20\xb7"
-+			     "\x4e\xe5\x59\xf0\x87\x1e\x92\x29"
-+			     "\xc0\x34\xcb\x62\xf9\x6d\x04\x9b"
-+			     "\x0f\xa6\x3d\xd4\x48\xdf\x76\x0d"
-+			     "\x81\x18\xaf\x23\xba\x51\xe8\x5c"
-+			     "\xf3\x8a\x21\x95\x2c\xc3\x37\xce"
-+			     "\x65\xfc\x70\x07\x9e\x12\xa9\x40"
-+			     "\xd7\x4b\xe2\x79\x10\x84\x1b\xb2"
-+			     "\x26\xbd\x54\xeb\x5f\xf6\x8d\x01"
-+			     "\x98\x2f\xc6\x3a\xd1\x68\xff\x73"
-+			     "\x0a\xa1\x15\xac\x43\xda\x4e\xe5"
-+			     "\x7c\x13\x87\x1e\xb5\x29\xc0\x57"
-+			     "\xee\x62\xf9\x90\x04\x9b\x32\xc9"
-+			     "\x3d\xd4\x6b\x02\x76\x0d\xa4\x18"
-+			     "\xaf\x46\xdd\x51\xe8\x7f\x16\x8a"
-+			     "\x21\xb8\x2c\xc3\x5a\xf1\x65\xfc"
-+			     "\x93\x07\x9e\x35\xcc\x40\xd7\x6e"
-+			     "\x05\x79\x10\xa7\x1b\xb2\x49\xe0"
-+			     "\x54\xeb\x82\x19\x8d\x24\xbb\x2f"
-+			     "\xc6\x5d\xf4\x68\xff\x96\x0a\xa1"
-+			     "\x38\xcf\x43\xda\x71\x08\x7c\x13"
-+			     "\xaa\x1e\xb5\x4c\xe3\x57\xee\x85"
-+			     "\x1c\x90\x27\xbe\x32\xc9\x60\xf7"
-+			     "\x6b\x02\x99\x0d\xa4\x3b\xd2\x46"
-+			     "\xdd\x74\x0b\x7f\x16\xad\x21\xb8"
-+			     "\x4f\xe6\x5a\xf1\x88\x1f\x93\x2a"
-+			     "\xc1\x35\xcc\x63\xfa\x6e\x05\x9c"
-+			     "\x10\xa7\x3e\xd5\x49\xe0\x77\x0e"
-+			     "\x82\x19\xb0\x24\xbb\x52\xe9\x5d"
-+			     "\xf4\x8b\x22\x96\x2d\xc4\x38\xcf"
-+			     "\x66\xfd\x71\x08\x9f\x13\xaa\x41"
-+			     "\xd8\x4c\xe3\x7a\x11\x85\x1c\xb3"
-+			     "\x27\xbe\x55\xec\x60\xf7\x8e\x02"
-+			     "\x99\x30\xc7\x3b\xd2\x69\x00\x74"
-+			     "\x0b\xa2\x16\xad\x44\xdb\x4f\xe6"
-+			     "\x7d\x14\x88\x1f\xb6\x2a\xc1\x58"
-+			     "\xef\x63\xfa\x91\x05\x9c\x33\xca"
-+			     "\x3e\xd5\x6c\x03\x77\x0e\xa5\x19"
-+			     "\xb0\x47\xde\x52\xe9\x80\x17\x8b"
-+			     "\x22\xb9\x2d\xc4\x5b\xf2\x66\xfd"
-+			     "\x94\x08\x9f\x36\xcd\x41\xd8\x6f"
-+			     "\x06\x7a\x11\xa8\x1c\xb3\x4a\xe1"
-+			     "\x55\xec\x83\x1a\x8e\x25\xbc\x30"
-+			     "\xc7\x5e\xf5\x69\x00\x97\x0b\xa2"
-+			     "\x39\xd0\x44\xdb\x72\x09\x7d\x14"
-+			     "\xab\x1f\xb6\x4d\xe4\x58\xef\x86"
-+			     "\x1d\x91\x28\xbf\x33\xca\x61\xf8"
-+			     "\x6c\x03\x9a\x0e\xa5\x3c\xd3\x47"
-+			     "\xde\x75\x0c\x80\x17\xae\x22\xb9"
-+			     "\x50\xe7\x5b\xf2\x89\x20\x94\x2b"
-+			     "\xc2\x36\xcd\x64\xfb\x6f\x06\x9d"
-+			     "\x11\xa8\x3f\xd6\x4a\xe1\x78\x0f"
-+			     "\x83\x1a\xb1\x25\xbc\x53\xea\x5e"
-+			     "\xf5\x8c\x00\x97\x2e\xc5\x39\xd0"
-+			     "\x67\xfe\x72\x09\xa0\x14\xab\x42"
-+			     "\xd9\x4d\xe4\x7b\x12\x86\x1d\xb4"
-+			     "\x28\xbf\x56\xed\x61\xf8\x8f\x03"
-+			     "\x9a\x31\xc8\x3c\xd3\x6a\x01\x75"
-+			     "\x0c\xa3\x17\xae\x45\xdc\x50\xe7"
-+			     "\x7e\x15\x89\x20\xb7\x2b\xc2\x59"
-+			     "\xf0\x64\xfb\x92\x06\x9d\x34\xcb"
-+			     "\x3f\xd6\x6d\x04\x78\x0f\xa6\x1a"
-+			     "\xb1\x48\xdf\x53\xea\x81\x18\x8c"
-+			     "\x23\xba\x2e\xc5\x5c\xf3\x67\xfe"
-+			     "\x95\x09\xa0\x37\xce\x42\xd9\x70"
-+			     "\x07\x7b\x12\xa9\x1d\xb4\x4b\xe2"
-+			     "\x56\xed\x84\x1b\x8f\x26\xbd\x31"
-+			     "\xc8\x5f\xf6\x6a\x01\x98\x0c\xa3"
-+			     "\x3a\xd1\x45\xdc\x73\x0a\x7e\x15"
-+			     "\xac\x20\xb7\x4e\xe5\x59\xf0\x87"
-+			     "\x1e\x92\x29\xc0\x34\xcb\x62\xf9"
-+			     "\x6d\x04\x9b\x0f\xa6\x3d\xd4\x48"
-+			     "\xdf\x76\x0d\x81\x18\xaf\x23\xba"
-+			     "\x51\xe8\x5c\xf3\x8a\x21\x95\x2c"
-+			     "\xc3\x37\xce\x65\xfc\x70\x07\x9e"
-+			     "\x12\xa9\x40\xd7\x4b\xe2\x79\x10"
-+			     "\x84\x1b\xb2\x26\xbd\x54\xeb\x5f"
-+			     "\xf6\x8d\x01\x98\x2f\xc6\x3a\xd1"
-+			     "\x68\xff\x73\x0a\xa1\x15\xac\x43"
-+			     "\xda\x4e\xe5\x7c\x13\x87\x1e\xb5"
-+			     "\x29\xc0\x57\xee\x62\xf9\x90\x04"
-+			     "\x9b\x32\xc9\x3d\xd4\x6b\x02\x76"
-+			     "\x0d\xa4\x18\xaf\x46\xdd\x51\xe8"
-+			     "\x7f\x16\x8a\x21\xb8\x2c\xc3\x5a"
-+			     "\xf1\x65\xfc\x93\x07\x9e\x35\xcc"
-+			     "\x40\xd7\x6e\x05\x79\x10\xa7\x1b"
-+			     "\xb2\x49\xe0\x54\xeb\x82\x19\x8d"
-+			     "\x24\xbb\x2f\xc6\x5d\xf4\x68\xff"
-+			     "\x96\x0a\xa1\x38\xcf\x43\xda\x71"
-+			     "\x08\x7c\x13\xaa\x1e\xb5\x4c",
-+		.psize     = 1023,
-+		.digest    = "\x24\xab\xec\xa1\x22\x05\x1c\xf3"
-+			     "\xce\xdc\xc1\x02\x31\x6c\x0f\x19"
-+			     "\x0a\xb2\x77\x24\xe7\x68\x71\x3b"
-+			     "\x9b\x6d\x5f\xbc\xcf\x60\x28\x4c",
-+	},
-+};
-+
- 
- /*
-  * MD5 test vectors from RFC1321
--- 
-2.49.0
+One agent may wrongly send two suspend messages by user or the agent is hacked.
 
+>
+>Just quoting the cover letter:
+>
+>> When testing on i.MX95, two consecutive suspend message send to the Linux
+>> agent, Linux will suspend(by the 1st suspend message) and wake up(by the
+>> 2nd suspend message).
+>> 
+>> The ARM SCMI spec does not allow for filtering of which messages an agent
+>> wants to get on the system power protocol. To i.MX95, as we use mailbox
+>> to receive message, and the mailbox supports wake up, so linux will also
+>> get a repeated suspend message. This will cause Linux to wake (and should
+>> then go back into suspend).
+>
+>When you say mailbox supports wake up you mean the mailbox IP in your
+>SoC actually gets some sort of wake interrupt that triggers a wakeup?
+
+There is no dedicated wake interrupt  for mailbox.
+
+The interrupt is the doorbell for processing notification, and this
+interrupt could also wakeup Linux.
+
+>Is this wakeup sent to the SM then to be processed further and trigger a
+>linux wakeup?
+
+No. As above, the mailbox received a doorbell notification interrupt.
+
+>
+><or> the mailbox directly wakes up linux, ie. triggers a resume flow but
+>then you are saying it was an unintentional wakeup so you want to
+>suspend linux again?
+
+Right.
+
+This just seems like the wakeup routing is
+>incorrect and the system is going through a who resume and then suspend
+>cycle without a good reason?
+>
+>Why and when in this flow is linux ending up with a duplicate suspend message is
+>something I still don't follow.
+
+Other agents could send duplicated suspend messages, right?
+We could not expect other agents always behave correctly.
+
+>
+>Could you point us to any flow diagrams or software sequences that we
+>could review?
+
+Not sure what kind diagram or sequences you wanna. It is just one agent
+wrongly send duplicate suspend message to Linux agent. And Linux agent
+should suspend again.
+
+One more example is
+Linux suspended, other agent send reboot linux message, Linux should
+wakeup and reboot itself.
+
+Same to suspend
+Linux suspended, other agent send suspend Linux message, Linux wakeup
+and suspend again.
+
+Regards,
+Peng
+>
+>> and suspend again.
+>> 
+>> The ARM SCMI spec does not allow for filtering of which messages an agent
+>> wants to get on the system power protocol. To i.MX95, as we use mailbox
+>> to receive message, and the mailbox supports wake up, so linux will also
+>> get a repeated suspend message. This will cause Linux to wake (and should
+>> then go back into suspend).
+>> 
+>> In current driver, the state is set back to SCMI_SYSPOWER_IDLE after
+>> pm_suspend finish, however the workqueue could be scheduled after
+>> thaw_kernel_threads. So the 2nd suspend will return early with
+>> "Transition already in progress...ignore", and leave Linux in wakeup
+>> state.
+>> 
+>> So set SCMI_SYSPOWER_IDLE in device resume phase before workqueue
+>> is scheduled to make the 2nd suspend message could suspend Linux again.
+>> 
+>> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+>> ---
+>>  drivers/firmware/arm_scmi/scmi_power_control.c | 24 +++++++++++++++++++-----
+>>  1 file changed, 19 insertions(+), 5 deletions(-)
+>> 
+>[...]
+>
+>-- 
+>Best regards,
+>Dhruva Gole
+>Texas Instruments Incorporated
