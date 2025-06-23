@@ -1,23 +1,67 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B2813FD86;
-	Mon, 23 Jun 2025 09:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DCD222259A
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750670162; cv=none; b=ohfmvWSR6VD1EYlrONZ3BzDZf20KMc5JaEGXM9z/M+90z9jVLiG6Cuio95kk7a9ijGRYh4Aj/pSyN+hVM/DpNZiO85DrWOaii4nL60Ml/dLNyuQ6EfzAXPnWpkTQLEZXEH3srGax2ZE7uTBa5KwBVlhd2PCGhGH2/9lJHmQBbvU=
+	t=1750670175; cv=none; b=MuQIZa7f9aDkKBG3pLoowpDWHYjLIemXAQFSRmad6u/X2s6u0m2zmHG+i+VMQ5LVV/TIsgr8D3THMeXX0gzznW99CisfVs3QN8MWzi28/T50S7x9Z0xC33ovcM+xDTJOi4CHJeICFA2NXJBlrnvUME/ynLlNQkfL750jmsyX3Dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750670162; c=relaxed/simple;
-	bh=CdYWB1HHn5KIwcQQ9Kqi9JFPTBckXzWwoZEkVi60h3g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RhHUTcgNnG2lgMEwD/jQUGwFk3LS4m+s8mKvPnZYabjLuHTq+oKM5AAFUzMqHCdp+FZs9QIVUxXZPZRxf47Jk5advIK7QEM2qMyeg48e1+uByyoE18N4hIl1Qb4o5a4EPDicOZ2H4kRz5gjDxkZJWTSaRng+xqKuwBt0+nDDm7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BD23D41B5F;
-	Mon, 23 Jun 2025 09:15:48 +0000 (UTC)
-Message-ID: <027ef1a9-6a5c-4dba-8816-159411739b71@ghiti.fr>
-Date: Mon, 23 Jun 2025 11:15:48 +0200
+	s=arc-20240116; t=1750670175; c=relaxed/simple;
+	bh=lf0RZEh27udo7dIua8Dd4zOgw2WJ9Sqz4COJHd4tfDc=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=gxJIHbLR4QP9Zih7CrkdztHRYftpv9YLGaNGbFeSUqmb17vUmoss7D8AIehWl4pV1jqi+sm0svzuFOaI4ILJ2ZQijAKv08G8fYitt2FUbUsOUshwFL/sPsyKCAXpWy28tHjvVrbV3e4KDtlviAsECv2VfOJcMZzzGehNK9bx8xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jHv6/9S4; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jHv6/9S4"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a582e09144so2349690f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 02:16:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750670172; x=1751274972; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eAxQTZngx0WHIcaV8nucPV/ca0L8EIaM6qjwzaEyM0Q=;
+        b=jHv6/9S4Kg1u+GLqluGAMEbofvYKmXSCnk0si7OAMkrqKxhfEGWra/Qw+KLTJSzjlH
+         jtEz7hSpuxcBD/RsyAkkRbk1D1X4hbNolcBPoCThndbJmIDZuNt9zjq4fgB/0lZcEl1T
+         Y9Nsu7AJx3Jdp3osZahOxwXO6WaekVt+nLfg+xkIlrJjHZt9L4BmwbhFdbfC6tSL+gfK
+         Pexbg5VPTPUhGCbLWZOmfLqmVTBbN9Ojv3rx+SVw56NOuqDoJDHd/fEWZNw0GSkRwo6G
+         GURyVCi0lniwr01/kvXOSjvp7JY77vNMBTtlldNyFaUmO6Bdh1VCQ4kYFAI2AwhQ1Hmi
+         vQxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750670172; x=1751274972;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eAxQTZngx0WHIcaV8nucPV/ca0L8EIaM6qjwzaEyM0Q=;
+        b=rqLw0ehvn+6B8NjpZ88DBCA6MxPq2j5xsWVDBjcSZwylfON8KCJB9yHc14tBZgTaI4
+         O4jkfyQgu2vGT3o4XsXQKtAb8iZq0YnrZLj16sG3xliSTerCM5qCd4i17y8R4rexjWz4
+         sm0zTdcQ24KkALSw31tXf8rtH5oY2pE3x0nxbcB4NaeEBa6QkDaOBxuwLKAB/lmV0qmn
+         ao02TXmg5Cv1rejbSdDxqBSxwZFcXYkjtKnXmJKr6WoGA3cI6qITTv81NI8jtPsnRSOA
+         TXQJXA6A/8waWfO2+FkxbuQRFaDKaAzKngy8bnjGikAPGC2lqvD+qGfk2ajl9I0dvQ1O
+         cpjA==
+X-Forwarded-Encrypted: i=1; AJvYcCX+FFjmDzvvi1PogyHojb6WLLogTliX62Nn/ymBgz3EZCTW1N/cc/ZdWsG824hWSdI/xGfbRzPESqqOuCc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypleahLvh6ohUWbYrm6NMXwBthvlErm9LJVOE8ZSYCnnvUET4A
+	vcfHsRUyGg8lWYxwxfaS8TnZMUmKIfZSo53T1MXSQRNPSHzwTpZJ3JhrBR0NrIF+rp4=
+X-Gm-Gg: ASbGncvLVVET2PQURYr4b5IpeHPfAp6DXFVoi5Bi6YKCMNXQGTdO0Ex07Ro5lleOxDw
+	IdHOW3FTFC1RSq7MkC+901h083jjRQocH3AkHYtp6+ICos3Mgte7lO5SVrRiyUUJj2AKJ8v0Bzh
+	sDEhftRpacVIBwz+oDTmJ4BUsM4pLrmcoXXD6bpW18GHso53NwZV8iRw6Tjrf/T06iHgdXxw7vP
+	6WkJD8z1VzL61Vk9YiuLw4koyJ3aM/x1oTkh5Aj84Ucyw8U+0N4vsWBK18J+tnUopKfYp7oimJ1
+	O0hTc1SquGzRw/zSp+0LGf6gVaOpZfr7GDgs27x7lY+Xy7Q29GrF44LnZ2uTJl0zESC/5XLoHdW
+	LAGKmMh+XFHFtIJXfj4cuZZnjxDeuW+pirXAW1Y9/b7D7yp1Uow==
+X-Google-Smtp-Source: AGHT+IGYkA9VsCTv6dZD67UfHbehpk1X6yMSRnE+SOQiFY/tsUVrRqzcivcNyok7TovteMwPJFvsgQ==
+X-Received: by 2002:a05:6000:5ca:b0:3a6:d26a:f0f5 with SMTP id ffacd0b85a97d-3a6d26af312mr11273043f8f.21.1750670171819;
+        Mon, 23 Jun 2025 02:16:11 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:8c08:7c51:bbb1:5a2d? ([2a01:e0a:3d9:2080:8c08:7c51:bbb1:5a2d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453647071f4sm104459665e9.34.2025.06.23.02.16.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 02:16:11 -0700 (PDT)
+Message-ID: <84fabc8f-c5bf-4e5a-82ee-dea1a4b3b3b6@linaro.org>
+Date: Mon, 23 Jun 2025 11:16:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -25,82 +69,126 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Revert "riscv: Define TASK_SIZE_MAX for __access_ok()"
-To: Nam Cao <namcao@linutronix.de>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: rtm@csail.mit.edu, stable@vger.kernel.org
-References: <20250619155858.1249789-1-namcao@linutronix.de>
-Content-Language: en-US
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250619155858.1249789-1-namcao@linutronix.de>
+From: neil.armstrong@linaro.org
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH V2] scsi: ufs: qcom : Fix NULL pointer dereference in
+ ufs_qcom_setup_clocks
+To: Nitin Rawat <quic_nitirawa@quicinc.com>, mani@kernel.org,
+ James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
+ bvanassche@acm.org, andersson@kernel.org, konrad.dybcio@oss.qualcomm.com,
+ dmitry.baryshkov@oss.qualcomm.com, quic_cang@quicinc.com, vkoul@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-scsi@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
+ Aishwarya <aishwarya.tcv@arm.com>,
+ Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
+References: <20250622175148.15978-1-quic_nitirawa@quicinc.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250622175148.15978-1-quic_nitirawa@quicinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdduieeigecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhephffhuddtveegleeggeefledtudfhudelvdetudfhgeffffeigffgkeethfejudejnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmedvieeijeemvgejvgdtmeehudeltdemfhgvtdehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmedvieeijeemvgejvgdtmeehudeltdemfhgvtdehpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmedvieeijeemvgejvgdtmeehudeltdemfhgvtdehngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepnhgrmhgtrghosehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepp
- hgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhtmhestghsrghilhdrmhhithdrvgguuhdprhgtphhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: alex@ghiti.fr
 
-Hi Nam,
-
-On 6/19/25 17:58, Nam Cao wrote:
-> This reverts commit ad5643cf2f69 ("riscv: Define TASK_SIZE_MAX for
-> __access_ok()").
->
-> This commit changes TASK_SIZE_MAX to be LONG_MAX to optimize access_ok(),
-> because the previous TASK_SIZE_MAX (default to TASK_SIZE) requires some
-> computation.
->
-> The reasoning was that all user addresses are less than LONG_MAX, and all
-> kernel addresses are greater than LONG_MAX. Therefore access_ok() can
-> filter kernel addresses.
->
-> Addresses between TASK_SIZE and LONG_MAX are not valid user addresses, but
-> access_ok() let them pass. That was thought to be okay, because they are
-> not valid addresses at hardware level.
->
-> Unfortunately, one case is missed: get_user_pages_fast() happily accepts
-> addresses between TASK_SIZE and LONG_MAX. futex(), for instance, uses
-> get_user_pages_fast(). This causes the problem reported by Robert [1].
->
-> Therefore, revert this commit. TASK_SIZE_MAX is changed to the default:
-> TASK_SIZE.
->
-> This unfortunately reduces performance, because TASK_SIZE is more expensive
-> to compute compared to LONG_MAX. But correctness first, we can think about
-> optimization later, if required.
->
-> Reported-by: <rtm@csail.mit.edu>
-> Closes: https://lore.kernel.org/linux-riscv/77605.1750245028@localhost/
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> Cc: stable@vger.kernel.org
+On 22/06/2025 19:51, Nitin Rawat wrote:
+> Fix a NULL pointer dereference in ufs_qcom_setup_clocks due to an
+> uninitialized 'host' variable. The variable 'phy' is now assigned
+> after confirming 'host' is not NULL.
+> 
+> Call Stack:
+> 
+> Unable to handle kernel NULL pointer dereference at
+> virtual address 0000000000000000
+> 
+> ufs_qcom_setup_clocks+0x28/0x148 ufs_qcom (P)
+> ufshcd_setup_clocks (drivers/ufs/core/ufshcd-priv.h:142)
+> ufshcd_init (drivers/ufs/core/ufshcd.c:9468)
+> ufshcd_pltfrm_init (drivers/ufs/host/ufshcd-pltfrm.c:504)
+> ufs_qcom_probe+0x28/0x68 ufs_qcom
+> platform_probe (drivers/base/platform.c:1404)
+> really_probe (drivers/base/dd.c:579 drivers/base/dd.c:657)
+> __driver_probe_device (drivers/base/dd.c:799)
+> driver_probe_device (drivers/base/dd.c:829)
+> __driver_attach (drivers/base/dd.c:1216)
+> bus_for_each_dev (drivers/base/bus.c:370)
+> driver_attach (drivers/base/dd.c:1234)
+> bus_add_driver (drivers/base/bus.c:678)
+> driver_register (drivers/base/driver.c:249)
+> __platform_driver_register (drivers/base/platform.c:868)
+> ufs_qcom_pltform_init+0x28/0xff8 ufs_qcom
+> do_one_initcall (init/main.c:1274)
+> do_init_module (kernel/module/main.c:3041)
+> load_module (kernel/module/main.c:3511)
+> init_module_from_file (kernel/module/main.c:3704)
+> __arm64_sys_finit_module (kernel/module/main.c:3715.
+> 
+> Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+> Fixes: 77d2fa54a945 ("scsi: ufs: qcom : Refactor phy_power_on/off calls")
+> Tested-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> # sc8180x-primus
+> Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Reported-by: Aishwarya <aishwarya.tcv@arm.com>
+> Closes: https://lore.kernel.org/lkml/20250620214408.11028-1-aishwarya.tcv@arm.com/
+> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Closes: https://lore.kernel.org/linux-scsi/CA+G9fYuFQ2dBvYm1iB6rbwT=4b1c8e4NJ3yxqFPGZGUKH3GmMA@mail.gmail.com/T/#t
+> Co-developed-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
+> Signed-off-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
+> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
 > ---
->   arch/riscv/include/asm/pgtable.h | 1 -
->   1 file changed, 1 deletion(-)
->
-> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-> index 438ce7df24c39..5bd5aae60d536 100644
-> --- a/arch/riscv/include/asm/pgtable.h
-> +++ b/arch/riscv/include/asm/pgtable.h
-> @@ -1075,7 +1075,6 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
->    */
->   #ifdef CONFIG_64BIT
->   #define TASK_SIZE_64	(PGDIR_SIZE * PTRS_PER_PGD / 2)
-> -#define TASK_SIZE_MAX	LONG_MAX
->   
->   #ifdef CONFIG_COMPAT
->   #define TASK_SIZE_32	(_AC(0x80000000, UL) - PAGE_SIZE)
+>   drivers/ufs/host/ufs-qcom.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+> index ba4b2880279c..318dca7fe3d7 100644
+> --- a/drivers/ufs/host/ufs-qcom.c
+> +++ b/drivers/ufs/host/ufs-qcom.c
+> @@ -1124,7 +1124,7 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
+>   				 enum ufs_notify_change_status status)
+>   {
+>   	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> -	struct phy *phy = host->generic_phy;
+> +	struct phy *phy;
+>   	int err;
+> 
+>   	/*
+> @@ -1135,6 +1135,8 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
+>   	if (!host)
+>   		return 0;
+> 
+> +	phy = host->generic_phy;
+> +
+>   	switch (status) {
+>   	case PRE_CHANGE:
+>   		if (on) {
+> --
+> 2.48.1
+> 
 
-
-I agree with this revert, the next step is to implement the same 
-optimization using alternatives (like x86 does).
-
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-
-It should land into -fixes.
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-QRD
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-HDK
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8650-QRD
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8650-HDK
 
 Thanks,
-
-Alex
-
+Neil
