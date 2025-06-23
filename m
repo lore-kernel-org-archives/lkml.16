@@ -1,98 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1635C26B751;
-	Mon, 23 Jun 2025 14:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB7BB26C3B3;
+	Mon, 23 Jun 2025 14:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750689935; cv=none; b=Kv4l6tuV1mD0lyuCUVGZOykES6m05K8nck0vlUXFHE6je8lPtSgJnI64sIjpfC2BdSi60KIwykc9Ik7X/i00MA5LpEA2IYWSaWBdeRfLD5PuzOnVvVLyLeS7Xb5IvEcFB8i7nR74Dii0gsGzFSxEmIW9rqgPmvXW88fGp6uSLyo=
+	t=1750689940; cv=none; b=IfKi6B5Xjfr+xoPehtMTTJjlwIeq5W/2UDOZziJ0JA79JMBw8QVyQ8vY4eJ0qCtL9IQ51KQHg0O+vo+rHDkFRFzmidF2yOBHG96JC5VXsqy86scvn9izNGKc4rHvp85ntFmRSVCXKj3ermmW8ImBz0ahBzIYxTjR+84U9TxrEIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750689935; c=relaxed/simple;
-	bh=BWNrsADcgYwZ2dvZXwG1N6G2J7mZGyjM3XJMSbDzw44=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VE0h+mKDeiwnlQRa84G6a3ObZneWyKAKWI+sMJT9o9I1xYlkr0S6vvp2/VkJSok4zvR/4GQvpQTRtudcVUN+BGIBor8WintgBMeOZCjhFxqpjpMERCMxDPVjw2POsHZkI5qwHkcgXSlNpU0lgKjNKjnbE6+r9qY5queSRGTp9xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OiQgFoRh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OiQgFoRh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ADDEC4CEF1;
-	Mon, 23 Jun 2025 14:45:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750689934;
-	bh=BWNrsADcgYwZ2dvZXwG1N6G2J7mZGyjM3XJMSbDzw44=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OiQgFoRhJD/skmkSCiSbp8PcIJRnlwIFpnOpPNgOFONDQF5xzCKMu3/YOgz5i2ML1
-	 CUvseUYm3azLa7D0nYVj2Hj7mYaZFzb5hDxSKrwE0akP0stAKxLyA9Tf02eDHUXX2H
-	 caXb1D4Z9YG410lVECHcoVEuNUJF0YeSfTiAKYuFmqexPTzTwHw36bKW/UHhak6RwQ
-	 4SysyGU2wnHcd8sQvX0M6UuzjgpbdecktL/s7PXLoQ+VxCJsqAdJSKmIJDBRsXV567
-	 z2Uald1ms+kpHEp8h+PcX+ZQnMK3vT5WibcOWuzLDcKj1E+pPMANMrUWoOnvOwOmwK
-	 c+XqQM6jvJMuA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uTiQL-000000006Qw-1WSI;
-	Mon, 23 Jun 2025 16:45:30 +0200
-Date: Mon, 23 Jun 2025 16:45:29 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] firmware: qcom: uefisecapp: add support for R/O
- UEFI vars
-Message-ID: <aFloifxONXnQbVg6@hovoldconsulting.com>
-References: <20250621-more-qseecom-v2-0-6e8f635640c5@oss.qualcomm.com>
- <20250621-more-qseecom-v2-2-6e8f635640c5@oss.qualcomm.com>
+	s=arc-20240116; t=1750689940; c=relaxed/simple;
+	bh=ml2WHOrRaZXlImblmApJ9TNiFC7BKrRWyn3drFSQq3o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jaVnB5JOaJ4vTZHXV08SZnUMirlSy0LwCFrw8i+7tUWIRaMHfdOi8kFKq4AzfY9ReHRGwkBo60dNC//yih9eO7Zc+aYbGms/bMM9Pb4tZcPHmdzOZ7f22/jbBJ3N348iV2OYQWzvZdPKCyaEUz6J1y/FHry53PvBNza8HTmPLeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5414D1D14;
+	Mon, 23 Jun 2025 07:45:20 -0700 (PDT)
+Received: from [10.57.29.183] (unknown [10.57.29.183])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D3E143F66E;
+	Mon, 23 Jun 2025 07:45:33 -0700 (PDT)
+Message-ID: <1c1f1970-4b6d-4914-b6eb-fd8f53a55356@arm.com>
+Date: Mon, 23 Jun 2025 15:45:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250621-more-qseecom-v2-2-6e8f635640c5@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 15/43] arm64: RME: Allow VMM to set RIPAS
+To: zhuangyiwei <zhuangyiwei@huawei.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
+ Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
+ <aneesh.kumar@kernel.org>, Emi Kisanuki <fj0570is@fujitsu.com>,
+ zhouguangwei5@huawei.com, wangyuan46@huawei.com
+References: <20250611104844.245235-1-steven.price@arm.com>
+ <20250611104844.245235-16-steven.price@arm.com>
+ <5934e102-0e3c-43a8-a887-0c97904e6f6c@huawei.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <5934e102-0e3c-43a8-a887-0c97904e6f6c@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 21, 2025 at 10:56:11PM +0300, Dmitry Baryshkov wrote:
-> For some platforms (e.g. Lenovo Yoga C630) we don't yet know a way to
-> update variables in the permanent storage. However being able to read
-> the vars is still useful as it allows us to get e.g. RTC offset.
+On 17/06/2025 13:56, zhuangyiwei wrote:
+> Hi Steven
 > 
-> Add a quirk for QSEECOM specifying that UEFI variables for this platform
-> should be registered in read-only mode.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
->  drivers/firmware/qcom/qcom_qseecom_uefisecapp.c | 18 +++++++++++++++++-
->  include/linux/firmware/qcom/qcom_qseecom.h      |  2 ++
->  2 files changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/firmware/qcom/qcom_qseecom_uefisecapp.c b/drivers/firmware/qcom/qcom_qseecom_uefisecapp.c
-> index 98a463e9774bf04f2deb0f7fa1318bd0d2edfa49..05f700dcb8cf3189f640237ff0e045564abb8264 100644
-> --- a/drivers/firmware/qcom/qcom_qseecom_uefisecapp.c
-> +++ b/drivers/firmware/qcom/qcom_qseecom_uefisecapp.c
-> @@ -792,6 +792,12 @@ static efi_status_t qcuefi_query_variable_info(u32 attr, u64 *storage_space, u64
->  	return status;
->  }
->  
-> +static const struct efivar_operations qcom_efivars_ro_ops = {
-> +	.get_variable = qcuefi_get_variable,
-> +	.get_next_variable = qcuefi_get_next_variable,
-> +	.query_variable_info = qcuefi_query_variable_info,
-> +};
+> On 2025/6/11 18:48, Steven Price wrote:
+>> Each page within the protected region of the realm guest can be marked
+>> as either RAM or EMPTY. Allow the VMM to control this before the guest
+>> has started and provide the equivalent functions to change this (with
+>> the guest's approval) at runtime.
+>>
+>> When transitioning from RIPAS RAM (1) to RIPAS EMPTY (0) the memory is
+>> unmapped from the guest and undelegated allowing the memory to be reused
+>> by the host. When transitioning to RIPAS RAM the actual population of
+>> the leaf RTTs is done later on stage 2 fault, however it may be
+>> necessary to allocate additional RTTs to allow the RMM track the RIPAS
+>> for the requested range.
+>>
+>> When freeing a block mapping it is necessary to temporarily unfold the
+>> RTT which requires delegating an extra page to the RMM, this page can
+>> then be recovered once the contents of the block mapping have been
+>> freed.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+[...]
+>> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+>> index 25705da6f153..fe75c41d6ac3 100644
+>> --- a/arch/arm64/kvm/rme.c
+>> +++ b/arch/arm64/kvm/rme.c
+[...]
+>> @@ -126,6 +206,40 @@ static int realm_rtt_destroy(struct realm *realm,
+>> unsigned long addr,
+>>       return ret;
+>>   }
+>>   +static int realm_create_rtt_levels(struct realm *realm,
+>> +                   unsigned long ipa,
+>> +                   int level,
+>> +                   int max_level,
+>> +                   struct kvm_mmu_memory_cache *mc)
+>> +{
+>> +    if (level == max_level)
+>> +        return 0;
+>> +
+>> +    while (level++ < max_level) {
+>> +        phys_addr_t rtt = alloc_rtt(mc);
+>> +        int ret;
+>> +
+>> +        if (rtt == PHYS_ADDR_MAX)
+>> +            return -ENOMEM;
+>> +
+>> +        ret = realm_rtt_create(realm, ipa, level, rtt);
+>> +
+>> +        if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT &&
+>> +            RMI_RETURN_INDEX(ret) == level - 1) {
+>> +            /* The RTT already exists, continue */
+> Should rtt be freed and undelegated in this branch?
 
-It looks like the efivars implementation does not support read-only
-efivars and this will lead to NULL pointer dereferences whenever you try
-to write a variable.
+Indeed it should! There's a missing call to free_rtt(). Thanks for spotting.
 
-Also not sure how useful it is to only be able to read variables,
-including for the RTC where you'll end up with an RTC that's always
-slightly off due to drift (even if you can set it when booting into
-Windows or possibly from the UEFI setup).
+>> +            continue;
+>> +        }
+>> +        if (ret) {
+>> +            WARN(1, "Failed to create RTT at level %d: %d\n",
+>> +                 level, ret);
+>> +            free_rtt(rtt);
+>> +            return -ENXIO;
+>> +        }
+>> +    }
+>> +
+>> +    return 0;
+>> +}
+>> +
 
-Don't you have any SDAM blocks in the PMICs that you can use instead for
-a proper functioning RTC on these machines?
-
-Johan
+Thanks,
+Steve
