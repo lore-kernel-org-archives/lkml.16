@@ -1,110 +1,136 @@
-Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525D31EF397;
-	Mon, 23 Jun 2025 08:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DDE81F1522
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750665732; cv=none; b=urFyTtta/Str/IUJFvBuD9bf3Exm0TDpOtoM2LTClP7s7QCwSVDEEvKNsQWaSVEdbeYyIpXvYVtTwUEZGGHyc0krYH97+/xQlkigY8s2b4NeDaFMxXStV8Q/j94IHflFSzMFDFOHjuYHNGICFYMcnqqw8j9JdTokTc6T/cBTLIo=
+	t=1750665742; cv=none; b=p0cvw4j5//Kh/3Q2IwBTjnwTw2Hd/kw2xOFrKwZUEL0TPkf1j6zp2zeJJSYANPe2SbuTD+qlyF5WSO+Trb9VEEfD/OO7cI/sFkhwJxsvx/K9tDAWuoajIn+b2bN7jGM6tJtmvGKNB4+JZdL9NhDcNdpe3osQlphwKPi1tGzp9xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750665732; c=relaxed/simple;
-	bh=qxuJWLlQd045xAY1mNgWXGUHyPX2arHVAHJ1hv5sGK0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=pFoBY3NBvPg0a2/AoTs7hjXryfuE49os6BUtXu9ZO8V7gKWqut0zuYYTVR5M+v/nhF3XriYHmYnGGX5eXmwKDC+XTKFpzAxq4oDzfOYChofYXXv3RpeDSKrtecJmMU0IYkRPWie0RfxMFf9aAXNQeJfc8rafwvM+1k28RrNGBKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=mGrnUBXQ; arc=none smtp.client-ip=217.92.40.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
+	s=arc-20240116; t=1750665742; c=relaxed/simple;
+	bh=Q1XA+JXOXCtWnCp7t/Ht+LN00pee1Odcfo7xDqQpe9M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G/K4sLbovD69sOQmj1C+/8JDsa+lj1esWEbtLvPGAItAU3w+0lUpz4x3r71nQPF8qlXZVl3JlK056VlwhKeZssiefwmJctRkfyoCY3ITegu6uWeWQtoSrH42iVByL/0UvP/RK3W+K2W7geom1cvVYaDsnuH71UMHZN3NEFBWhWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=D4YRDySO; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="mGrnUBXQ"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id DF04A1483FA8;
-	Mon, 23 Jun 2025 09:54:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
-	t=1750665287; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=rgy/dV9hiRjmDOzfF33PTkPljLUb2D+gAPORxCVHCIs=;
-	b=mGrnUBXQSd6JgDYmcwpPh+ViDk6d1h6HhcQasoJc59Wb8uiEOFTS1UgAPwf5pVbMsv87Ue
-	v777pYevIAsD9XK2LrVt9ZD8uI4QG31yRei4ZQRBW3WFDAP5lQ2ZTMVDuOFCkyw1Tk0Ai0
-	pclHWthQnVeu9ixc30A39lUT2u+iqL/P2KR+E+zcBqwy1fZVn/MDFY8v6gwKGOUv6Lvc8R
-	6x9dYz2jHyHgoaNpsdPGwFJ3afpwoFENDeEghsxqWkTj60pONDVX2gSr94Vq2lTM5D97tp
-	D+RsoyrVGWgocXrgdaVGJqLMzJn4OPRyJhrgjViXWJ6urCnBnoHo1wkr7Q4BDw==
-From: Alexander Dahl <ada@thorsis.com>
-To: devicetree@vger.kernel.org
-Cc: Frank Li <Frank.li@nxp.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	imx@lists.linux.dev (open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] arm64: dts: imx8dxl-ss-conn: Disable USB3 nodes
-Date: Mon, 23 Jun 2025 09:54:40 +0200
-Message-Id: <20250623075440.36660-1-ada@thorsis.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="D4YRDySO"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553dceb342aso2961947e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:02:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750665739; x=1751270539; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=90hYW1+aPldHsph4xdNI+bk1oOWB4WZEP2NZvvKLy10=;
+        b=D4YRDySOH9FmimArWTAMwZnEKhzSqXMdMjCSFUeHq+cvo21FE+OnsuSMgzWsW2Y1IY
+         Yw5YA2stcOLa7+MnvzxbFQsWjZNvMcjpJkxxBbsUpOeErSaHaDgA4oGylByJFsUcJ3ad
+         IQtISQ76Yjtp6O0m6tiBKpqrl+MoEvhx7gnDqwSouIlSIQoy0tdTdcI85ewXzuMehz/a
+         3rFMBTE39bkRSW9RuB7PIA2iKouHOrWgvMTfhNMHjeQO59bDKaz7BO5nhxtm8o6wyem8
+         oGyY2h26qZz3wqFDx1AtwDFT4xBajozUSf5aab35U4tX0SmLF8akfz9W2a5eGDJGbRRg
+         ZlPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750665739; x=1751270539;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=90hYW1+aPldHsph4xdNI+bk1oOWB4WZEP2NZvvKLy10=;
+        b=k1JnxjhiROFlHyUEXktYFWdRWOcbOhPT93Moa4pYE33yupgPlv5+pYRZJ/P47xtfcC
+         Ynnavn8nUUMca20rQZ8lF44K4KsdgQQveLzwY/+yA9C09IbvWp81Rigess2LX1lUOmtS
+         vqYhIL47EwujG1mWEpBrKg9mq6iOkOVJr3bSoft0qkr5TdW8cgnrk2HrZq24olTpvr5N
+         E/JxKydcJIRtrBNnHbo6K8LqdwLaN3IO5JLZr2wWaqO7eBe9/3F43CF6Sv280g+4WMgI
+         KcDdjW3dHJViNQQ0Sseyt+oY19Uq56r2ugRAXZCfONRc48gRmyDRDWXT7LKB9+C3c9nR
+         6BXw==
+X-Forwarded-Encrypted: i=1; AJvYcCVz+lw36twH9XA6bu2ZIuwRJEEXfIVs1IyI+DszASq3mKnhIVxhCuSYe6HzXK43AyppMdsk8nTRv1ESfFM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAajEpOJNn6+7eeRBh2+v5RLau/60jKpvITQpJSMyfMkGU3QGX
+	kBIQf+VNUS0h52J7Tpzit3dSMzwtksCJv//av+9Y0PhSbGYAw0Mv03typQwYrdRFkn6fV2/+moH
+	paeMff3BGCiMSjQLi4H+P3lkz7GpYpIlEvsyxrZjrGA==
+X-Gm-Gg: ASbGnctD1p9jhJA3ajwrMzCAqbedLOSoIJq/XQRHd3gUDB2QenpkDcJckQdHV4zjJQa
+	gHBVpXx5xciQLAt/Cp0gVb1soNqRafxvOFC2Vrsa0FzcZVUEZ0bjkzVM423n0M2zJWWCmt7XsAd
+	LL9r2Fa0N09WzHFew+DuZVxQbuL3QVVLcUZk/817QVMeiimm2YoqydIerdBIVrHRy5ocpye9cPf
+	1bi4dP4zLK8
+X-Google-Smtp-Source: AGHT+IEFylPNpljR3XEed8pOfJjdvyjRz09M/WdcYWwyhunaD1GCVyLqOiEz7HDVLXwhU8X3xjf+1mUDhqvI4bVZzDk=
+X-Received: by 2002:a05:6512:220b:b0:553:5e35:b250 with SMTP id
+ 2adb3069b0e04-553e3bf3becmr3556332e87.32.1750665738699; Mon, 23 Jun 2025
+ 01:02:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
+ <20250610-gpio-sysfs-chip-export-v1-7-a8c7aa4478b1@linaro.org> <CACRpkdZ0W10E7UX7KDnej0SX_Jtuo8r1xSTJsGmXDrDYwArO7Q@mail.gmail.com>
+In-Reply-To: <CACRpkdZ0W10E7UX7KDnej0SX_Jtuo8r1xSTJsGmXDrDYwArO7Q@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 23 Jun 2025 10:02:07 +0200
+X-Gm-Features: AX0GCFtqPzZP2-oWr-aSqSDePQwxUQnU63M4YMuZivBMwcnE-5malFS4943V3L0
+Message-ID: <CAMRc=Meaif1zDeV5mQj3sdJB5et36a_6RctLoVLQc+EH8ig9LQ@mail.gmail.com>
+Subject: Re: [PATCH RFC/RFT 07/15] gpio: sysfs: add a parallel class device
+ for each GPIO chip using device IDs
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
+	=?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Marek Vasut <marex@denx.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The i.MX 8DualXLite/8SoloXLite has a different connectivity memory map
-than the generic i.MX8 has.  One conflicting resource is usb, where the
-imx8dxl has a second usb2 phy @5b110000, while the generic imx8 dtsi has
-one usb2 phy and one usb3 phy, and the usb3otg @5b110000.  When
-including both imx8dxl-ss-conn.dtsi and imx8-ss-conn.dtsi as done in
-imx8dxl.dtsi this leads to a duplicate unit-address warning.
+On Wed, Jun 11, 2025 at 10:27=E2=80=AFAM Linus Walleij <linus.walleij@linar=
+o.org> wrote:
+>
+> On Tue, Jun 10, 2025 at 4:38=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+>
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > In order to enable moving away from the global GPIO numberspace-based
+> > exporting of lines over sysfs: add a parallel, per-chip entry under
+> > /sys/class/gpio/ for every registered GPIO chip, denoted by device ID
+> > in the file name and not its base GPIO number.
+> >
+> > Compared to the existing chip group: it does not contain the "base"
+> > attribute as the goal of this change is to not refer to GPIOs by their
+> > global number from user-space anymore. It also contains its own,
+> > per-chip export/unexport attribute pair which allow to export lines by
+> > their hardware offset within the chip.
+> >
+> > Caveat #1: the new device cannot be a link to (or be linked to by) the
+> > existing "gpiochip<BASE>" entry as we cannot create links in
+> > /sys/class/xyz/.
+> >
+> > Caveat #2: the new entry cannot be named "gpiochipX" as it could
+> > conflict with devices whose base is statically defined to a low number.
+> > Let's go with "chipX" instead.
+>
+> That's unfortunate but it's good to separate them, and
+> gpio/gpiochip is a bit tautological so this is a better sysfs name
+> anyway.
+>
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> > +       /chipX ... for each gpiochip; #X is the gpio device ID
+> > +           /export ... asks the kernel to export a GPIO at HW offset X=
+ to userspace
+> > +           /unexport ... to return a GPIO at HW offset X to the kernel
+> > +           /label ... (r/o) descriptive, not necessarily unique
+>
+> Not necessarily *globally* unique, I think it's required to be unique
+> per-gpiochip right? Otherwise it will be hard to create these files.
+>
 
-The usb3otg node was introduced after the initial imx8dxl support with
-commit a8bd7f155126 ("arm64: dts: imx8qxp: add cadence usb3 support")
-and since then leads to warnings like this (when built with W=2):
+Yes, this must be updated as well, the labels are of course unique.
 
-      DTC     arch/arm64/boot/dts/freescale/imx8dxl-evk.dtb
-    …/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi:148.24-182.4: Warning (unique_unit_address): /bus@5b000000/usb@5b110000: duplicate unit-address (also used in node /bus@5b000000/usbphy@5b110000)
-    …/arch/arm64/boot/dts/freescale/imx8-ss-hsio.dtsi:52.23-81.4: Warning (unique_unit_address): /bus@5f000000/pcie@5f010000: duplicate unit-address (also used in node /bus@5f000000/pcie-ep@5f010000)
-      also defined at …/arch/arm64/boot/dts/freescale/imx8dxl-ss-hsio.dtsi:41.23-50.4
-      also defined at …/arch/arm64/boot/dts/freescale/imx8dxl-evk.dts:645.8-653.3
+Bart
 
-After the change that usb related warning is gone:
-
-      DTC     arch/arm64/boot/dts/freescale/imx8dxl-evk.dtb
-    …/arch/arm64/boot/dts/freescale/imx8-ss-hsio.dtsi:52.23-81.4: Warning (unique_unit_address): /bus@5f000000/pcie@5f010000: duplicate unit-address (also used in node /bus@5f000000/pcie-ep@5f010000)
-      also defined at …/arch/arm64/boot/dts/freescale/imx8dxl-ss-hsio.dtsi:41.23-50.4
-      also defined at …/arch/arm64/boot/dts/freescale/imx8dxl-evk.dts:645.8-653.3
-
-Signed-off-by: Alexander Dahl <ada@thorsis.com>
----
-
-Notes:
-    v2:
-    - reworded commit message (build on mainline with W=2)
-    - rebased on v6.16-rc3
-    
-    v1:
-    - Link: https://lore.kernel.org/linux-devicetree/20250610060756.8212-1-ada@thorsis.com/
-
- arch/arm64/boot/dts/freescale/imx8dxl-ss-conn.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8dxl-ss-conn.dtsi b/arch/arm64/boot/dts/freescale/imx8dxl-ss-conn.dtsi
-index 9b114bed084b..a66ba6d0a8c0 100644
---- a/arch/arm64/boot/dts/freescale/imx8dxl-ss-conn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8dxl-ss-conn.dtsi
-@@ -5,6 +5,8 @@
- 
- /delete-node/ &enet1_lpcg;
- /delete-node/ &fec2;
-+/delete-node/ &usbotg3;
-+/delete-node/ &usb3_phy;
- 
- / {
- 	conn_enet0_root_clk: clock-conn-enet0-root {
-
-base-commit: 86731a2a651e58953fc949573895f2fa6d456841
--- 
-2.39.5
-
+> > +           /ngpio ... (r/o) number of GPIOs exposed by the chip
+>
+> I like this approach, it's a good compromise between different
+> desires of the sysfs ABI.
+>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> Yours,
+> Linus Walleij
