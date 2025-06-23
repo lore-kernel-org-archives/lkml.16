@@ -1,38 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C68263F32;
-	Mon, 23 Jun 2025 12:02:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2732652B0;
+	Mon, 23 Jun 2025 12:02:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750680129; cv=none; b=sEHP8t82sGLBnG/ZgOzG56jNyyZVWcVqzwpmRsB8txn2zIBP1OGwQ5NE0Duxqhx3+z6dq/QoQEE52n1SVRpccGvvXLgtAK215wjiazTfDiJTWpusIqb3FcsbxfVoTiQaJU/6/OKJB5HTNkw0LEnJWRabp5e6TgsdOVWXDqKLjes=
+	t=1750680131; cv=none; b=QmERydGbEx4TV1st+pu2PW7fOFkdcG8Pa+D8dlPGIQ2KDSf2hymCr3bHTbo9j/aOgYrytH5xPQtf/F21fDdP7caSofOqBOADdPALvr5OdXKgrweNqe/Kb5NODjz+AuSblJMXrL9Drsmc+G1XBjSnngNw50Dbkf6FaZDxn+FzfS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750680129; c=relaxed/simple;
-	bh=IoUsNVe0Yo88xEvaAxYNGc3JFqeP1ogQUYh4NKW/uOM=;
+	s=arc-20240116; t=1750680131; c=relaxed/simple;
+	bh=eim72WFFw0hgS/DlK1JwbuAVE47pGc2rjtb1MD+9DwM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hYYODz1pN49ji/Q1QZrMZyp2c6q8hKvEVS2aBKSLeXEB2B35VlKRV68eUbO/zvZ8XhbOgIDbDAXKcOlz6HfQhTXTRH/aPI8WigrTJydeKznCZa/zzLwIIxfagE0ZFPOIFBbJnYPLP5ZjiuP7xtJt0FYSiSJ3skmEAoMB8RaSQN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Dr9CnfXu; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=Umwk2xRbg8mCa1zKQkev3TRSYkpTLdgb3SuRpucLJ6Tg3iQuCuEOjrz26+I4OHdEbyr+tzHgknaLEGHLM/YDR1FbwDhGc09hQSdQ6eXNwIQvdBLIO3WH2MH6w5IMfEx8VTmvHsoXEYPPYCP/jFgSvx1JS9Ml8NUt/P2uGV1EO4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Bax/+hUX; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Dr9CnfXu"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Bax/+hUX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750680125;
-	bh=IoUsNVe0Yo88xEvaAxYNGc3JFqeP1ogQUYh4NKW/uOM=;
+	s=mail; t=1750680127;
+	bh=eim72WFFw0hgS/DlK1JwbuAVE47pGc2rjtb1MD+9DwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Dr9CnfXucIU1KVoiiP3EifjudzKuAqd5twVgC9Y0S4gy2xn4tnM+byc+buJ+A7hti
-	 e6N4KGGIUtkzcaUHs1xgozssBsG3R4IfHrTxJI1MQLF2McTsl22OeedudJu8iWumAn
-	 gEzG3OHeXdqJlQZxupA87S5O4vSX4R6o1FndutSY6DK/q3ILAVgisQDWflu+CZrBsv
-	 Vh8xpqipOTt8CaEpzuB/3w1yCeVDH0LlYiEnjCSx/u+nDbANRHcCvneZmHhVb/O5oR
-	 M31+/8VO9rtTYMHRumAJPLVAJRbodOrpqEwwWfMxbeImFoFvopzo7Mv5kokojtkqZG
-	 H1SqqP81HlUeQ==
+	b=Bax/+hUXRf3vYM5Uir6RHyrcs6CzrgdYjTAPJ2N0cYFZUev4eGTmA63KLEsSHX7pV
+	 OXwWZ5Tj+R8BnTi9U4qdast8r36NC4bRR3KdtLhY5En4FK8TWV10VcozqjvtpJ2Nbb
+	 WV6fLizrVVvQhpdppzRrgRfuQvLEKzRuAaTAJMPuOKkCbL++nHoIeVDwxzXaMF948x
+	 SEwq9RWWs+7rMpsDuD2bmIE7gMzsmR6XQK0MnI1Wbgh+TGdE3B55wv072kUQWZFWLO
+	 JEaGKkrJLwQbAgHeVrT3gP+kYwbxAuM6VB/RLbTBgdSjxOn7PvqSSeEwewmvp+I0Yd
+	 kFSnfXkamNkfw==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9440B17E159C;
-	Mon, 23 Jun 2025 14:02:04 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id AD86717E35E7;
+	Mon, 23 Jun 2025 14:02:06 +0200 (CEST)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: linux-mediatek@lists.infradead.org
 Cc: robh@kernel.org,
@@ -52,9 +52,9 @@ Cc: robh@kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-pm@vger.kernel.org,
 	kernel@collabora.com
-Subject: [PATCH v1 07/13] pmdomain: mediatek: Add support for Hardware Voter power domains
-Date: Mon, 23 Jun 2025 14:01:48 +0200
-Message-ID: <20250623120154.109429-8-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v1 09/13] pmdomain: mediatek: Convert all SoCs to new style regmap retrieval
+Date: Mon, 23 Jun 2025 14:01:50 +0200
+Message-ID: <20250623120154.109429-10-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250623120154.109429-1-angelogioacchino.delregno@collabora.com>
 References: <20250623120154.109429-1-angelogioacchino.delregno@collabora.com>
@@ -66,454 +66,234 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-New generation SoCs like MT8196/MT6991 feature a new type of power
-domains, managed by a Hardware Voter (HWV) helper (through a SoC
-internal fixed-function MCU): this is used to collect votes from
-both the AP and the various other remote processors present in the
-SoC and transparently power on/off various power domains, avoiding
-unpowered access of registers in various internal IPs from all of
-the integrated remote processors (or from the AP...!).
-
-Add a new power domain type and differentiate between the old
-SCPSYS_MTCMOS_TYPE_DIRECT_CTL - where power domains are controlled
-directly by and exclusively from the Application Processor, and
-the new SCPSYS_MTCMOS_TYPE_HW_VOTER, where the power domains are
-voted through the HWV.
-
-With the two needing different handling, check the power domain
-type and assign a different power_{off,on} callback for pm_genpd:
-for this specific reason, also move the check for the SCPD cap
-MTK_SCPD_KEEP_DEFAULT_OFF after the assignment, and use the
-assigned power_on function instead of calling scpsys_power_on()
-directly to make that work for both HW_VOTER and DIRECT_CTL.
+Add the bus_prot_blocks handle and declare num_bus_prot_blocks to
+allow all of the currently supported AArch64 MediaTek SoCs to use
+the new style regmap retrieval in the driver when a new style
+devicetree declaring the mediatek,bus-protection phandle(s) in
+the main power controller node is found.
 
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- drivers/pmdomain/mediatek/mtk-pm-domains.c | 250 ++++++++++++++++++---
- drivers/pmdomain/mediatek/mtk-pm-domains.h |  45 +++-
- 2 files changed, 268 insertions(+), 27 deletions(-)
+ drivers/pmdomain/mediatek/mt6795-pm-domains.h | 5 +++++
+ drivers/pmdomain/mediatek/mt8167-pm-domains.h | 5 +++++
+ drivers/pmdomain/mediatek/mt8173-pm-domains.h | 5 +++++
+ drivers/pmdomain/mediatek/mt8183-pm-domains.h | 5 +++++
+ drivers/pmdomain/mediatek/mt8186-pm-domains.h | 5 +++++
+ drivers/pmdomain/mediatek/mt8188-pm-domains.h | 6 ++++++
+ drivers/pmdomain/mediatek/mt8192-pm-domains.h | 5 +++++
+ drivers/pmdomain/mediatek/mt8195-pm-domains.h | 5 +++++
+ drivers/pmdomain/mediatek/mt8365-pm-domains.h | 6 ++++++
+ 9 files changed, 47 insertions(+)
 
-diff --git a/drivers/pmdomain/mediatek/mtk-pm-domains.c b/drivers/pmdomain/mediatek/mtk-pm-domains.c
-index 8711773e75d4..977e4e7de831 100644
---- a/drivers/pmdomain/mediatek/mtk-pm-domains.c
-+++ b/drivers/pmdomain/mediatek/mtk-pm-domains.c
-@@ -31,6 +31,12 @@
- #define MTK_POLL_DELAY_US		10
- #define MTK_POLL_TIMEOUT		USEC_PER_SEC
- 
-+#define MTK_HWV_POLL_DELAY_US		5
-+#define MTK_HWV_POLL_TIMEOUT		(300 * USEC_PER_MSEC)
-+
-+#define MTK_HWV_PREPARE_DELAY_US	1
-+#define MTK_HWV_PREPARE_TIMEOUT		(3 * USEC_PER_MSEC)
-+
- #define PWR_RST_B_BIT			BIT(0)
- #define PWR_ISO_BIT			BIT(1)
- #define PWR_ON_BIT			BIT(2)
-@@ -48,6 +54,7 @@
- struct scpsys_domain {
- 	struct generic_pm_domain genpd;
- 	const struct scpsys_domain_data *data;
-+	const struct scpsys_hwv_domain_data *hwv_data;
- 	struct scpsys *scpsys;
- 	int num_clks;
- 	struct clk_bulk_data *clks;
-@@ -83,6 +90,32 @@ static bool scpsys_domain_is_on(struct scpsys_domain *pd)
- 	return status && status2;
- }
- 
-+static bool scpsys_hwv_domain_is_disable_done(struct scpsys_domain *pd)
-+{
-+	const struct scpsys_hwv_domain_data *hwv = pd->hwv_data;
-+	u32 regs[2] = { hwv->done, hwv->clr_sta };
-+	u32 val[2];
-+	u32 mask = BIT(hwv->setclr_bit);
-+
-+	regmap_multi_reg_read(pd->scpsys->base, regs, val, 2);
-+
-+	/* Disable is done when the bit is set in DONE, cleared in CLR_STA */
-+	return (val[0] & mask) && !(val[1] & mask);
-+}
-+
-+static bool scpsys_hwv_domain_is_enable_done(struct scpsys_domain *pd)
-+{
-+	const struct scpsys_hwv_domain_data *hwv = pd->hwv_data;
-+	u32 regs[3] = { hwv->done, hwv->en, hwv->set_sta };
-+	u32 val[3];
-+	u32 mask = BIT(hwv->setclr_bit);
-+
-+	regmap_multi_reg_read(pd->scpsys->base, regs, val, 3);
-+
-+	/* Enable is done when the bit is set in DONE and EN, cleared in SET_STA */
-+	return (val[0] & mask) && (val[1] & mask) && !(val[2] & mask);
-+}
-+
- static int scpsys_sram_enable(struct scpsys_domain *pd)
- {
- 	u32 expected_ack, pdn_ack = pd->data->sram_pdn_ack_bits;
-@@ -250,6 +283,137 @@ static int scpsys_regulator_disable(struct regulator *supply)
- 	return supply ? regulator_disable(supply) : 0;
- }
- 
-+static int scpsys_hwv_power_on(struct generic_pm_domain *genpd)
-+{
-+	struct scpsys_domain *pd = container_of(genpd, struct scpsys_domain, genpd);
-+	const struct scpsys_hwv_domain_data *hwv = pd->hwv_data;
-+	struct scpsys *scpsys = pd->scpsys;
-+	u32 val;
-+	int ret;
-+
-+	ret = scpsys_regulator_enable(pd->supply);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_bulk_prepare_enable(pd->num_clks, pd->clks);
-+	if (ret)
-+		goto err_reg;
-+
-+	/* For HWV the subsys clocks refer to the HWV low power subsystem */
-+	ret = clk_bulk_prepare_enable(pd->num_subsys_clks, pd->subsys_clks);
-+	if (ret)
-+		goto err_disable_clks;
-+
-+	/* Make sure the HW Voter is idle and able to accept commands */
-+	ret = regmap_read_poll_timeout_atomic(scpsys->base, hwv->done, val,
-+					      val & BIT(hwv->setclr_bit),
-+					      MTK_HWV_POLL_DELAY_US,
-+					      MTK_HWV_POLL_TIMEOUT);
-+	if (ret) {
-+		dev_err(scpsys->dev, "Failed to power on: HW Voter busy.\n");
-+		goto err_disable_subsys_clks;
-+	}
-+
-+	/*
-+	 * Instruct the HWV to power on the MTCMOS (power domain): after that,
-+	 * the same bit will be unset immediately by the hardware.
-+	 */
-+	regmap_write(scpsys->base, hwv->set, BIT(hwv->setclr_bit));
-+
-+	/*
-+	 * Wait until the HWV sets the bit again, signalling that its internal
-+	 * state machine was started and it now processing the vote command.
-+	 */
-+	ret = regmap_read_poll_timeout_atomic(scpsys->base, hwv->set, val,
-+					      val & BIT(hwv->setclr_bit),
-+					      MTK_HWV_PREPARE_DELAY_US,
-+					      MTK_HWV_PREPARE_TIMEOUT);
-+	if (ret) {
-+		dev_err(scpsys->dev, "Failed to power on: HW Voter not starting.\n");
-+		goto err_disable_subsys_clks;
-+	}
-+
-+	/* Wait for ACK, signalling that the MTCMOS was enabled */
-+	ret = readx_poll_timeout_atomic(scpsys_hwv_domain_is_enable_done, pd, val, val,
-+					MTK_HWV_POLL_DELAY_US, MTK_HWV_POLL_TIMEOUT);
-+	if (ret) {
-+		dev_err(scpsys->dev, "Failed to power on: HW Voter ACK timeout.\n");
-+		goto err_disable_subsys_clks;
-+	}
-+
-+	/* It's done! Disable the HWV low power subsystem clocks */
-+	clk_bulk_disable_unprepare(pd->num_subsys_clks, pd->subsys_clks);
-+
-+	return 0;
-+
-+err_disable_subsys_clks:
-+	clk_bulk_disable_unprepare(pd->num_subsys_clks, pd->subsys_clks);
-+err_disable_clks:
-+	clk_bulk_disable_unprepare(pd->num_clks, pd->clks);
-+err_reg:
-+	scpsys_regulator_disable(pd->supply);
-+	return ret;
+diff --git a/drivers/pmdomain/mediatek/mt6795-pm-domains.h b/drivers/pmdomain/mediatek/mt6795-pm-domains.h
+index a3f7785b04bd..dc8e9f8877ad 100644
+--- a/drivers/pmdomain/mediatek/mt6795-pm-domains.h
++++ b/drivers/pmdomain/mediatek/mt6795-pm-domains.h
+@@ -9,6 +9,9 @@
+ /*
+  * MT6795 power domain support
+  */
++static enum scpsys_bus_prot_block scpsys_bus_prot_blocks_mt6795[] = {
++	BUS_PROT_BLOCK_INFRA
 +};
-+
-+static int scpsys_hwv_power_off(struct generic_pm_domain *genpd)
-+{
-+	struct scpsys_domain *pd = container_of(genpd, struct scpsys_domain, genpd);
-+	const struct scpsys_hwv_domain_data *hwv = pd->hwv_data;
-+	struct scpsys *scpsys = pd->scpsys;
-+	u32 val;
-+	int ret;
-+
-+	ret = clk_bulk_prepare_enable(pd->num_subsys_clks, pd->subsys_clks);
-+	if (ret)
-+		return ret;
-+
-+	/* Make sure the HW Voter is idle and able to accept commands */
-+	ret = regmap_read_poll_timeout_atomic(scpsys->base, hwv->done, val,
-+					      val & BIT(hwv->setclr_bit),
-+					      MTK_HWV_POLL_DELAY_US,
-+					      MTK_HWV_POLL_TIMEOUT);
-+	if (ret)
-+		goto err_disable_subsys_clks;
-+
-+
-+	/*
-+	 * Instruct the HWV to power off the MTCMOS (power domain): differently
-+	 * from poweron, the bit will be kept set.
-+	 */
-+	regmap_write(scpsys->base, hwv->clr, BIT(hwv->setclr_bit));
-+
-+	/*
-+	 * Wait until the HWV clears the bit, signalling that its internal
-+	 * state machine was started and it now processing the clear command.
-+	 */
-+	ret = regmap_read_poll_timeout_atomic(scpsys->base, hwv->clr, val,
-+					      !(val & BIT(hwv->setclr_bit)),
-+					      MTK_HWV_PREPARE_DELAY_US,
-+					      MTK_HWV_PREPARE_TIMEOUT);
-+	if (ret)
-+		goto err_disable_subsys_clks;
-+
-+	/* Poweroff needs 100us for the HW to stabilize */
-+	udelay(100);
-+
-+	/* Wait for ACK, signalling that the MTCMOS was disabled */
-+	ret = readx_poll_timeout_atomic(scpsys_hwv_domain_is_disable_done, pd, val, val,
-+					MTK_HWV_POLL_DELAY_US, MTK_HWV_POLL_TIMEOUT);
-+	if (ret)
-+		goto err_disable_subsys_clks;
-+
-+	clk_bulk_disable_unprepare(pd->num_subsys_clks, pd->subsys_clks);
-+	clk_bulk_disable_unprepare(pd->num_clks, pd->clks);
-+
-+	scpsys_regulator_disable(pd->supply);
-+
-+	return 0;
-+
-+err_disable_subsys_clks:
-+	clk_bulk_disable_unprepare(pd->num_subsys_clks, pd->subsys_clks);
-+	return ret;
-+};
-+
- static int scpsys_ctl_pwrseq_on(struct scpsys_domain *pd)
- {
- 	struct scpsys *scpsys = pd->scpsys;
-@@ -514,6 +678,7 @@ static struct
- generic_pm_domain *scpsys_add_one_domain(struct scpsys *scpsys, struct device_node *node)
- {
- 	const struct scpsys_domain_data *domain_data;
-+	const struct scpsys_hwv_domain_data *hwv_domain_data;
- 	struct scpsys_domain *pd;
- 	struct property *prop;
- 	const char *clk_name;
-@@ -529,14 +694,33 @@ generic_pm_domain *scpsys_add_one_domain(struct scpsys *scpsys, struct device_no
- 		return ERR_PTR(-EINVAL);
- 	}
  
--	if (id >= scpsys->soc_data->num_domains) {
--		dev_err(scpsys->dev, "%pOF: invalid domain id %d\n", node, id);
--		return ERR_PTR(-EINVAL);
--	}
-+	switch (scpsys->soc_data->type) {
-+	case SCPSYS_MTCMOS_TYPE_DIRECT_CTL:
-+		if (id >= scpsys->soc_data->num_domains) {
-+			dev_err(scpsys->dev, "%pOF: invalid domain id %d\n", node, id);
-+			return ERR_PTR(-EINVAL);
-+		}
-+
-+		domain_data = &scpsys->soc_data->domains_data[id];
-+		hwv_domain_data = NULL;
- 
--	domain_data = &scpsys->soc_data->domains_data[id];
--	if (domain_data->sta_mask == 0) {
--		dev_err(scpsys->dev, "%pOF: undefined domain id %d\n", node, id);
-+		if (domain_data->sta_mask == 0) {
-+			dev_err(scpsys->dev, "%pOF: undefined domain id %d\n", node, id);
-+			return ERR_PTR(-EINVAL);
-+		}
-+
-+		break;
-+	case SCPSYS_MTCMOS_TYPE_HW_VOTER:
-+		if (id >= scpsys->soc_data->num_hwv_domains) {
-+			dev_err(scpsys->dev, "%pOF: invalid HWV domain id %d\n", node, id);
-+			return ERR_PTR(-EINVAL);
-+		}
-+
-+		domain_data = NULL;
-+		hwv_domain_data = &scpsys->soc_data->hwv_domains_data[id];
-+
-+		break;
-+	default:
- 		return ERR_PTR(-EINVAL);
- 	}
- 
-@@ -545,6 +729,7 @@ generic_pm_domain *scpsys_add_one_domain(struct scpsys *scpsys, struct device_no
- 		return ERR_PTR(-ENOMEM);
- 
- 	pd->data = domain_data;
-+	pd->hwv_data = hwv_domain_data;
- 	pd->scpsys = scpsys;
- 
- 	if (MTK_SCPD_CAPS(pd, MTK_SCPD_DOMAIN_SUPPLY)) {
-@@ -604,6 +789,31 @@ generic_pm_domain *scpsys_add_one_domain(struct scpsys *scpsys, struct device_no
- 		pd->subsys_clks[i].clk = clk;
- 	}
- 
-+	if (scpsys->domains[id]) {
-+		ret = -EINVAL;
-+		dev_err(scpsys->dev,
-+			"power domain with id %d already exists, check your device-tree\n", id);
-+		goto err_put_subsys_clocks;
-+	}
-+
-+	if (pd->data && pd->data->name)
-+		pd->genpd.name = pd->data->name;
-+	else if (pd->hwv_data && pd->hwv_data->name)
-+		pd->genpd.name = pd->hwv_data->name;
-+	else
-+		pd->genpd.name = node->name;
-+
-+	if (scpsys->soc_data->type == SCPSYS_MTCMOS_TYPE_DIRECT_CTL) {
-+		pd->genpd.power_off = scpsys_power_off;
-+		pd->genpd.power_on = scpsys_power_on;
-+	} else {
-+		pd->genpd.power_off = scpsys_hwv_power_off;
-+		pd->genpd.power_on = scpsys_hwv_power_on;
-+
-+		/* HW-Voter code can be invoked in atomic context */
-+		pd->genpd.flags |= GENPD_FLAG_IRQ_SAFE;
-+	}
-+
- 	/*
- 	 * Initially turn on all domains to make the domains usable
- 	 * with !CONFIG_PM and to get the hardware in sync with the
-@@ -615,7 +825,7 @@ generic_pm_domain *scpsys_add_one_domain(struct scpsys *scpsys, struct device_no
- 			dev_warn(scpsys->dev,
- 				 "%pOF: A default off power domain has been ON\n", node);
- 	} else {
--		ret = scpsys_power_on(&pd->genpd);
-+		ret = pd->genpd.power_on(&pd->genpd);
- 		if (ret < 0) {
- 			dev_err(scpsys->dev, "%pOF: failed to power on domain: %d\n", node, ret);
- 			goto err_put_subsys_clocks;
-@@ -625,21 +835,6 @@ generic_pm_domain *scpsys_add_one_domain(struct scpsys *scpsys, struct device_no
- 			pd->genpd.flags |= GENPD_FLAG_ALWAYS_ON;
- 	}
- 
--	if (scpsys->domains[id]) {
--		ret = -EINVAL;
--		dev_err(scpsys->dev,
--			"power domain with id %d already exists, check your device-tree\n", id);
--		goto err_put_subsys_clocks;
--	}
--
--	if (!pd->data->name)
--		pd->genpd.name = node->name;
--	else
--		pd->genpd.name = pd->data->name;
--
--	pd->genpd.power_off = scpsys_power_off;
--	pd->genpd.power_on = scpsys_power_on;
--
- 	if (MTK_SCPD_CAPS(pd, MTK_SCPD_ACTIVE_WAKEUP))
- 		pd->genpd.flags |= GENPD_FLAG_ACTIVE_WAKEUP;
- 
-@@ -870,7 +1065,8 @@ static int scpsys_get_bus_protection(struct device *dev, struct scpsys *scpsys)
- 		scpsys->bus_prot[i] = device_node_to_regmap(node);
- 		of_node_put(node);
- 		if (IS_ERR_OR_NULL(scpsys->bus_prot[i]))
--			return dev_err_probe(dev, PTR_ERR(scpsys->bus_prot[i]),
-+			return dev_err_probe(dev, scpsys->bus_prot[i] ?
-+					     PTR_ERR(scpsys->bus_prot[i]) : -ENXIO,
- 					     "Cannot get regmap for bus prot %d\n", i);
- 	}
- 
-@@ -933,7 +1129,7 @@ static int scpsys_probe(struct platform_device *pdev)
- 	struct device_node *node;
- 	struct device *parent;
- 	struct scpsys *scpsys;
--	int ret;
-+	int num_domains, ret;
- 
- 	soc = of_device_get_match_data(&pdev->dev);
- 	if (!soc) {
-@@ -941,7 +1137,9 @@ static int scpsys_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	scpsys = devm_kzalloc(dev, struct_size(scpsys, domains, soc->num_domains), GFP_KERNEL);
-+	num_domains = soc->num_domains + soc->num_hwv_domains;
-+
-+	scpsys = devm_kzalloc(dev, struct_size(scpsys, domains, num_domains), GFP_KERNEL);
- 	if (!scpsys)
- 		return -ENOMEM;
- 
-diff --git a/drivers/pmdomain/mediatek/mtk-pm-domains.h b/drivers/pmdomain/mediatek/mtk-pm-domains.h
-index e1dae6409d4a..6fe06c4a06e1 100644
---- a/drivers/pmdomain/mediatek/mtk-pm-domains.h
-+++ b/drivers/pmdomain/mediatek/mtk-pm-domains.h
-@@ -16,7 +16,9 @@
- #define MTK_SCPD_SRAM_PDN_INVERTED	BIT(9)
- #define MTK_SCPD_MODEM_PWRSEQ		BIT(10)
- #define MTK_SCPD_SKIP_RESET_B		BIT(11)
--#define MTK_SCPD_CAPS(_scpd, _x)	((_scpd)->data->caps & (_x))
-+#define MTK_SCPD_CAPS(_scpd, _x)	((_scpd)->data ?		\
-+					 (_scpd)->data->caps & (_x) :	\
-+					 (_scpd)->hwv_data->caps & (_x))
- 
- #define SPM_VDE_PWR_CON			0x0210
- #define SPM_MFG_PWR_CON			0x0214
-@@ -124,6 +126,18 @@ enum scpsys_rtff_type {
- 	SCPSYS_RTFF_TYPE_MAX
+ static const struct scpsys_domain_data scpsys_domain_data_mt6795[] = {
+ 	[MT6795_POWER_DOMAIN_VDEC] = {
+@@ -107,6 +110,8 @@ static const struct scpsys_domain_data scpsys_domain_data_mt6795[] = {
+ static const struct scpsys_soc_data mt6795_scpsys_data = {
+ 	.domains_data = scpsys_domain_data_mt6795,
+ 	.num_domains = ARRAY_SIZE(scpsys_domain_data_mt6795),
++	.bus_prot_blocks = scpsys_bus_prot_blocks_mt6795,
++	.num_bus_prot_blocks = ARRAY_SIZE(scpsys_bus_prot_blocks_mt6795),
  };
  
-+/**
-+ * enum scpsys_mtcmos_type - Type of power domain controller
-+ * @SCPSYS_MTCMOS_TYPE_DIRECT_CTL: Power domains are controlled with direct access
-+ * @SCPSYS_MTCMOS_TYPE_HW_VOTER:   Hardware-assisted voted power domain control
-+ * @SCPSYS_MTCMOS_TYPE_MAX:        Number of supported power domain types
-+ */
-+enum scpsys_mtcmos_type {
-+	SCPSYS_MTCMOS_TYPE_DIRECT_CTL = 0,
-+	SCPSYS_MTCMOS_TYPE_HW_VOTER,
-+	SCPSYS_MTCMOS_TYPE_MAX
+ #endif /* __SOC_MEDIATEK_MT6795_PM_DOMAINS_H */
+diff --git a/drivers/pmdomain/mediatek/mt8167-pm-domains.h b/drivers/pmdomain/mediatek/mt8167-pm-domains.h
+index 8a0e898b79ab..f6ee48a711a1 100644
+--- a/drivers/pmdomain/mediatek/mt8167-pm-domains.h
++++ b/drivers/pmdomain/mediatek/mt8167-pm-domains.h
+@@ -12,6 +12,9 @@
+ /*
+  * MT8167 power domain support
+  */
++static enum scpsys_bus_prot_block scpsys_bus_prot_blocks_mt8167[] = {
++	BUS_PROT_BLOCK_INFRA
 +};
-+
- /**
-  * struct scpsys_domain_data - scp domain data for power on/off flow
-  * @name: The name of the power domain.
-@@ -152,11 +166,40 @@ struct scpsys_domain_data {
- 	int pwr_sta2nd_offs;
+ 
+ static const struct scpsys_domain_data scpsys_domain_data_mt8167[] = {
+ 	[MT8167_POWER_DOMAIN_MM] = {
+@@ -99,6 +102,8 @@ static const struct scpsys_domain_data scpsys_domain_data_mt8167[] = {
+ static const struct scpsys_soc_data mt8167_scpsys_data = {
+ 	.domains_data = scpsys_domain_data_mt8167,
+ 	.num_domains = ARRAY_SIZE(scpsys_domain_data_mt8167),
++	.bus_prot_blocks = scpsys_bus_prot_blocks_mt8167,
++	.num_bus_prot_blocks = ARRAY_SIZE(scpsys_bus_prot_blocks_mt8167),
  };
  
-+/**
-+ * struct scpsys_hwv_domain_data - Hardware Voter power domain data
-+ * @name:       Name of the power domain
-+ * @set:        Offset of the HWV SET register
-+ * @clr:        Offset of the HWV CLEAR register
-+ * @done:       Offset of the HWV DONE register
-+ * @en:         Offset of the HWV ENABLE register
-+ * @set_sta:    Offset of the HWV SET STATUS register
-+ * @clr_sta:    Offset of the HWV CLEAR STATUS register
-+ * @setclr_bit: The SET/CLR bit to enable/disable the power domain
-+ * @sta_bit:    The SET/CLR STA bit to check for on/off ACK
-+ * @caps:       The flag for active wake-up action
-+ */
-+struct scpsys_hwv_domain_data {
-+	const char *name;
-+	u16 set;
-+	u16 clr;
-+	u16 done;
-+	u16 en;
-+	u16 set_sta;
-+	u16 clr_sta;
-+	u8 setclr_bit;
-+	u8 sta_bit;
-+	u16 caps;
+ #endif /* __SOC_MEDIATEK_MT8167_PM_DOMAINS_H */
+diff --git a/drivers/pmdomain/mediatek/mt8173-pm-domains.h b/drivers/pmdomain/mediatek/mt8173-pm-domains.h
+index 7be0f47f5214..561a644b5d1c 100644
+--- a/drivers/pmdomain/mediatek/mt8173-pm-domains.h
++++ b/drivers/pmdomain/mediatek/mt8173-pm-domains.h
+@@ -9,6 +9,9 @@
+ /*
+  * MT8173 power domain support
+  */
++static enum scpsys_bus_prot_block scpsys_bus_prot_blocks_mt8173[] = {
++	BUS_PROT_BLOCK_INFRA
 +};
-+
- struct scpsys_soc_data {
- 	const struct scpsys_domain_data *domains_data;
- 	int num_domains;
-+	const struct scpsys_hwv_domain_data *hwv_domains_data;
-+	int num_hwv_domains;
- 	enum scpsys_bus_prot_block *bus_prot_blocks;
- 	int num_bus_prot_blocks;
-+	enum scpsys_mtcmos_type type;
+ 
+ static const struct scpsys_domain_data scpsys_domain_data_mt8173[] = {
+ 	[MT8173_POWER_DOMAIN_VDEC] = {
+@@ -118,6 +121,8 @@ static const struct scpsys_domain_data scpsys_domain_data_mt8173[] = {
+ static const struct scpsys_soc_data mt8173_scpsys_data = {
+ 	.domains_data = scpsys_domain_data_mt8173,
+ 	.num_domains = ARRAY_SIZE(scpsys_domain_data_mt8173),
++	.bus_prot_blocks = scpsys_bus_prot_blocks_mt8173,
++	.num_bus_prot_blocks = ARRAY_SIZE(scpsys_bus_prot_blocks_mt8173),
  };
  
- #endif /* __SOC_MEDIATEK_MTK_PM_DOMAINS_H */
+ #endif /* __SOC_MEDIATEK_MT8173_PM_DOMAINS_H */
+diff --git a/drivers/pmdomain/mediatek/mt8183-pm-domains.h b/drivers/pmdomain/mediatek/mt8183-pm-domains.h
+index c4c1b63d85b1..3742782a2702 100644
+--- a/drivers/pmdomain/mediatek/mt8183-pm-domains.h
++++ b/drivers/pmdomain/mediatek/mt8183-pm-domains.h
+@@ -9,6 +9,9 @@
+ /*
+  * MT8183 power domain support
+  */
++static enum scpsys_bus_prot_block scpsys_bus_prot_blocks_mt8183[] = {
++	BUS_PROT_BLOCK_INFRA, BUS_PROT_BLOCK_SMI
++};
+ 
+ static const struct scpsys_domain_data scpsys_domain_data_mt8183[] = {
+ 	[MT8183_POWER_DOMAIN_AUDIO] = {
+@@ -290,6 +293,8 @@ static const struct scpsys_domain_data scpsys_domain_data_mt8183[] = {
+ static const struct scpsys_soc_data mt8183_scpsys_data = {
+ 	.domains_data = scpsys_domain_data_mt8183,
+ 	.num_domains = ARRAY_SIZE(scpsys_domain_data_mt8183),
++	.bus_prot_blocks = scpsys_bus_prot_blocks_mt8183,
++	.num_bus_prot_blocks = ARRAY_SIZE(scpsys_bus_prot_blocks_mt8183),
+ };
+ 
+ #endif /* __SOC_MEDIATEK_MT8183_PM_DOMAINS_H */
+diff --git a/drivers/pmdomain/mediatek/mt8186-pm-domains.h b/drivers/pmdomain/mediatek/mt8186-pm-domains.h
+index cbac715c38fa..00b9861af7c9 100644
+--- a/drivers/pmdomain/mediatek/mt8186-pm-domains.h
++++ b/drivers/pmdomain/mediatek/mt8186-pm-domains.h
+@@ -13,6 +13,9 @@
+ /*
+  * MT8186 power domain support
+  */
++static enum scpsys_bus_prot_block scpsys_bus_prot_blocks_mt8186[] = {
++	BUS_PROT_BLOCK_INFRA
++};
+ 
+ static const struct scpsys_domain_data scpsys_domain_data_mt8186[] = {
+ 	[MT8186_POWER_DOMAIN_MFG0] = {
+@@ -361,6 +364,8 @@ static const struct scpsys_domain_data scpsys_domain_data_mt8186[] = {
+ static const struct scpsys_soc_data mt8186_scpsys_data = {
+ 	.domains_data = scpsys_domain_data_mt8186,
+ 	.num_domains = ARRAY_SIZE(scpsys_domain_data_mt8186),
++	.bus_prot_blocks = scpsys_bus_prot_blocks_mt8186,
++	.num_bus_prot_blocks = ARRAY_SIZE(scpsys_bus_prot_blocks_mt8186),
+ };
+ 
+ #endif /* __SOC_MEDIATEK_MT8186_PM_DOMAINS_H */
+diff --git a/drivers/pmdomain/mediatek/mt8188-pm-domains.h b/drivers/pmdomain/mediatek/mt8188-pm-domains.h
+index 007235be9efe..3a989e83e9b7 100644
+--- a/drivers/pmdomain/mediatek/mt8188-pm-domains.h
++++ b/drivers/pmdomain/mediatek/mt8188-pm-domains.h
+@@ -14,6 +14,10 @@
+  * MT8188 power domain support
+  */
+ 
++static enum scpsys_bus_prot_block scpsys_bus_prot_blocks_mt8188[] = {
++	BUS_PROT_BLOCK_INFRA
++};
++
+ static const struct scpsys_domain_data scpsys_domain_data_mt8188[] = {
+ 	[MT8188_POWER_DOMAIN_MFG0] = {
+ 		.name = "mfg0",
+@@ -685,6 +689,8 @@ static const struct scpsys_domain_data scpsys_domain_data_mt8188[] = {
+ static const struct scpsys_soc_data mt8188_scpsys_data = {
+ 	.domains_data = scpsys_domain_data_mt8188,
+ 	.num_domains = ARRAY_SIZE(scpsys_domain_data_mt8188),
++	.bus_prot_blocks = scpsys_bus_prot_blocks_mt8188,
++	.num_bus_prot_blocks = ARRAY_SIZE(scpsys_bus_prot_blocks_mt8188),
+ };
+ 
+ #endif /* __SOC_MEDIATEK_MT8188_PM_DOMAINS_H */
+diff --git a/drivers/pmdomain/mediatek/mt8192-pm-domains.h b/drivers/pmdomain/mediatek/mt8192-pm-domains.h
+index 6f139eed3769..5d62fac5f682 100644
+--- a/drivers/pmdomain/mediatek/mt8192-pm-domains.h
++++ b/drivers/pmdomain/mediatek/mt8192-pm-domains.h
+@@ -9,6 +9,9 @@
+ /*
+  * MT8192 power domain support
+  */
++static enum scpsys_bus_prot_block scpsys_bus_prot_blocks_mt8192[] = {
++	BUS_PROT_BLOCK_INFRA
++};
+ 
+ static const struct scpsys_domain_data scpsys_domain_data_mt8192[] = {
+ 	[MT8192_POWER_DOMAIN_AUDIO] = {
+@@ -380,6 +383,8 @@ static const struct scpsys_domain_data scpsys_domain_data_mt8192[] = {
+ static const struct scpsys_soc_data mt8192_scpsys_data = {
+ 	.domains_data = scpsys_domain_data_mt8192,
+ 	.num_domains = ARRAY_SIZE(scpsys_domain_data_mt8192),
++	.bus_prot_blocks = scpsys_bus_prot_blocks_mt8192,
++	.num_bus_prot_blocks = ARRAY_SIZE(scpsys_bus_prot_blocks_mt8192),
+ };
+ 
+ #endif /* __SOC_MEDIATEK_MT8192_PM_DOMAINS_H */
+diff --git a/drivers/pmdomain/mediatek/mt8195-pm-domains.h b/drivers/pmdomain/mediatek/mt8195-pm-domains.h
+index 59aa031ae632..9405e8f62eaf 100644
+--- a/drivers/pmdomain/mediatek/mt8195-pm-domains.h
++++ b/drivers/pmdomain/mediatek/mt8195-pm-domains.h
+@@ -13,6 +13,9 @@
+ /*
+  * MT8195 power domain support
+  */
++static enum scpsys_bus_prot_block scpsys_bus_prot_blocks_mt8195[] = {
++	BUS_PROT_BLOCK_INFRA
++};
+ 
+ static const struct scpsys_domain_data scpsys_domain_data_mt8195[] = {
+ 	[MT8195_POWER_DOMAIN_PCIE_MAC_P0] = {
+@@ -661,6 +664,8 @@ static const struct scpsys_domain_data scpsys_domain_data_mt8195[] = {
+ static const struct scpsys_soc_data mt8195_scpsys_data = {
+ 	.domains_data = scpsys_domain_data_mt8195,
+ 	.num_domains = ARRAY_SIZE(scpsys_domain_data_mt8195),
++	.bus_prot_blocks = scpsys_bus_prot_blocks_mt8195,
++	.num_bus_prot_blocks = ARRAY_SIZE(scpsys_bus_prot_blocks_mt8195),
+ };
+ 
+ #endif /* __SOC_MEDIATEK_MT8195_PM_DOMAINS_H */
+diff --git a/drivers/pmdomain/mediatek/mt8365-pm-domains.h b/drivers/pmdomain/mediatek/mt8365-pm-domains.h
+index 6fbd5ef8d672..33265ab8ce76 100644
+--- a/drivers/pmdomain/mediatek/mt8365-pm-domains.h
++++ b/drivers/pmdomain/mediatek/mt8365-pm-domains.h
+@@ -33,6 +33,10 @@
+ 			      _sta_mask, _sta,				\
+ 			      BUS_PROT_INVERTED | BUS_PROT_REG_UPDATE)
+ 
++static enum scpsys_bus_prot_block scpsys_bus_prot_blocks_mt8365[] = {
++	BUS_PROT_BLOCK_INFRA, BUS_PROT_BLOCK_INFRA_NAO, BUS_PROT_BLOCK_SMI
++};
++
+ static const struct scpsys_domain_data scpsys_domain_data_mt8365[] = {
+ 	[MT8365_POWER_DOMAIN_MM] = {
+ 		.name = "mm",
+@@ -190,6 +194,8 @@ static const struct scpsys_domain_data scpsys_domain_data_mt8365[] = {
+ static const struct scpsys_soc_data mt8365_scpsys_data = {
+ 	.domains_data = scpsys_domain_data_mt8365,
+ 	.num_domains = ARRAY_SIZE(scpsys_domain_data_mt8365),
++	.bus_prot_blocks = scpsys_bus_prot_blocks_mt8365,
++	.num_bus_prot_blocks = ARRAY_SIZE(scpsys_bus_prot_blocks_mt8365),
+ };
+ 
+ #endif /* __SOC_MEDIATEK_MT8365_PM_DOMAINS_H */
 -- 
 2.49.0
 
