@@ -1,118 +1,120 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E7515689A
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82402566A;
+	Mon, 23 Jun 2025 10:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750676263; cv=none; b=mXUxR5zjpjZ/kfeQFlvj1F7zqVcKUSz33pKMlHSqceOYvR3hooQQcG4Wyj7ZVkrSUnFxfEojuA6yatO/wlmA7dQO7anqVe3xfdo9FWEUyzpb012LPslKjJiepclxIs4vJhaBoLhv2b2f9pMS3GLu6iYXklnkulcT7e2y6YjcZqM=
+	t=1750676290; cv=none; b=TZkOPruHrfKN+ezKb6Cez0WPcwx5nxj8OSjRj2AHrc5jHYFHP7FGXk0/Oyg5q3sMlp8YJc85mmJtxbQltH9zu/kozCNvA9Er0+kwZcfbL0x1VfyIkXh8ecZE3S6Q+oRvaBtJcZOdh8iUNkbztt0rY431qljFif84QJJkFMPjCW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750676263; c=relaxed/simple;
-	bh=di9FW3fogKW8ME2CExAyyZ/YTmJNCTF6mSxeyZx1+O8=;
+	s=arc-20240116; t=1750676290; c=relaxed/simple;
+	bh=KQEP5ij24VEA8YmbYKGHIizffbrpTimsVDgCFJ93uCU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rA7bFDapnwqJwhhay2BlE6cBshIHtJxbZEyYG4mcFaEG5GAv8ETd48Hvlabu0y3xpHUEOpNP4QHUgzdKI1Z5uYrDrn1IP8WyM637ldrgSlMrNkFNyOV2sWn8a6RLRVweGJTV0fQ8cjZKH/vugwWfDcTcSzN4LNreMlyxevWgvn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=c7vgMwpk; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=WpGhCUcuI8m3I4WkLB1Pl/l1RrBd9PrdMfWEB0HIz4k0/3er9EVx/793eMee4bPwlgP3vVtcFY6AvhBXYEQvxlGCT8AmaHJBM8Uyzaefl0OHlw0UZvigvHYvVyNpM1sJxzy3l5AWKSN7Eknt5ggXKAx6C02T0koqr+e7GEWC9Z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZOWRX/WM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c7vgMwpk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=n1f3tWRLNJyWqK8KxGyKKzRKbXbWYg7R5Zh9b97gGk8=; b=c7vgMwpkCBJk/WCVXjdaZ4su44
-	mlYaxcbwX0D1QNSZRzVitrIMBlr6ZlMVvvtA6vt9GBNBCBaxEJe5+3E31o4JM4UvBUbLIl+/akYZb
-	eZnXAwBe2JtzNuCG1k/EHbnx68sq/A9bY9HRMQQTJMNrvOJDnNWQK+zu+FPVzbeKe44Tfp9pQuqwU
-	JNytKws3JMNeiop12DCN9lGDFeY/R5IjiVxvwr/78fSuaO+5N5bja85GpOPC/oa5BQsytEUtu/TNl
-	zJ67LYcclU6eS4crwD+A8iaJt6Xs8Bz2tV+S4cqQytN0ZT8VmfaeBEMhevZdFBp5MDW+DfDE8YM/9
-	KsElDBMw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uTerr-00000005BxS-3lMG;
-	Mon, 23 Jun 2025 10:57:40 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 301BB30BAFF; Mon, 23 Jun 2025 12:57:39 +0200 (CEST)
-Date: Mon, 23 Jun 2025 12:57:39 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Gary Yang <gary.yang@cixtech.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [sched/eevdf] llama-bench performace drop
-Message-ID: <20250623105739.GR1613200@noisy.programming.kicks-ass.net>
-References: <20250623102732.3447837-1-gary.yang@cixtech.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZOWRX/WM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6401AC4CEF2;
+	Mon, 23 Jun 2025 10:58:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750676290;
+	bh=KQEP5ij24VEA8YmbYKGHIizffbrpTimsVDgCFJ93uCU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZOWRX/WM6ATuFay5qVBF3U6yDvYFbsL3dgLTVha1A3bEeH7hijXd05KUo/J5ZjMyc
+	 rwjOiaWuHyBKQnQ5OFzoCFYklqOMIg0XNCmfSVOSdDZe+JVnHTME+pdagvTLqQipBm
+	 weVAhIE3pZ52YocrXvvyhMyBG/7Z6osMkG01ct9z9wZHyApZd2gDCSn5XT+ahyD3Cn
+	 LGOL9JWJfS4auNvI7mXtG6ra8xdVhbS9Mvgn2ZtLovJUoBBisQiRkVfC6lM0sEVkZW
+	 UyFybkR+AX5MPihNsp9J7iIsqb2qWAIp5iih0UcoB0h1h/gP/GzL+U4rCTxrMwmMJA
+	 r0qkmqWOv9qdw==
+Date: Mon, 23 Jun 2025 04:58:08 -0600
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com, 
+	heiko@sntech.de, yue.wang@amlogic.com, pali@kernel.org, neil.armstrong@linaro.org, 
+	robh@kernel.org, jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com, 
+	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v5 1/2] PCI: Configure root port MPS during host probing
+Message-ID: <qxbedjehrhddc627lukpxvxje6dze6nxfjztlbexp5hap327ac@ojo564izhttk>
+References: <20250620155507.1022099-1-18255117159@163.com>
+ <20250620155507.1022099-2-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250623102732.3447837-1-gary.yang@cixtech.com>
+In-Reply-To: <20250620155507.1022099-2-18255117159@163.com>
 
-On Mon, Jun 23, 2025 at 06:27:18PM +0800, Gary Yang wrote:
-> Problem: The llama-bench test uses cpu to run AI model. It can create a
-> lot of threads, so it belongs to cpu-bounds type process. 
-
-How many threads per CPU? Typically compute workloads stick with 1
-thread per CPU.
-
-> It can outputs
-> three scores. 1st score is primarily influenced by CPU frequency, 2nd score
-> is primarily influenced by memory, or L1/L2 cache, but 3rd score is influenced
-> by CPU frequency and memory.
+On Fri, Jun 20, 2025 at 11:55:06PM +0800, Hans Zhang wrote:
+> Current PCIe initialization logic may leave root ports operating with
+> non-optimal Maximum Payload Size (MPS) settings. While downstream device
+> configuration is handled during bus enumeration, root port MPS values
+> inherited from firmware or hardware defaults might not utilize the full
+> capabilities supported by the controller hardware. This can result in
+> suboptimal data transfer efficiency across the PCIe hierarchy.
 > 
-> when run llama-bench test on ARM A720 with kernel6.1, it outputs three scores:
-> root# taskset -c 0,5,6,7,8,9,10,11 llama-bench -m DeepSeek-R1-Distill-Qwen-7B-Q4_0.gguf
-> -pg 128,128 -t 8
-> | model         |     size | params | backend | threads |       test |          t/s |
-> | ------------- |--------: |------: | ------- | ------: |------ ---: | -----------: |
+> During host controller probing phase, when PCIe bus tuning is enabled,
+> the implementation now configures root port MPS settings to their
+> hardware-supported maximum values. Specifically, when configuring the MPS
+> for a PCIe device, if the device is a root port and the bus tuning is not
+> disabled (PCIE_BUS_TUNE_OFF), the MPS is set to 128 << dev->pcie_mpss to
+> match the Root Port's maximum supported payload size. The Max Read Request
+> Size (MRRS) is subsequently adjusted through existing companion logic to
+> maintain compatibility with PCIe specifications.
 > 
-> | qwen2 7B Q4_0 | 4.12 GiB | 7.62 B | CPU     |       8 |      pp512 | 58.67 � 3.08 |
-> | qwen2 7B Q4_0 | 4.12 GiB | 7.62 B | CPU     |       8 |      tg128 |  9.32 � 0.22 |
-> | qwen2 7B Q4_0 | 4.12 GiB | 7.62 B | CPU     |       8 |pp128+tg128 | 15.10 � 1.08 |
+> Note that this initial setting of the root port MPS to the maximum might
+> be reduced later during the enumeration of downstream devices if any of
+> those devices do not support the maximum MPS of the root port.
+> 
+> Explicit initialization at host probing stage ensures consistent PCIe
+> topology configuration before downstream devices perform their own MPS
+> negotiations. This proactive approach addresses platform-specific
+> requirements where controller drivers depend on properly initialized
+> root port settings, while maintaining backward compatibility through
+> PCIE_BUS_TUNE_OFF conditional checks. Hardware capabilities are fully
+> utilized without altering existing device negotiation behaviors.
+> 
+> Suggested-by: Niklas Cassel <cassel@kernel.org>
+> Suggested-by: Manivannan Sadhasivam <mani@kernel.org>
+> Signed-off-by: Hans Zhang <18255117159@163.com>
 
-Your taskset has 8 CPUs listed, and the threads column has 8. So 1
-thread per CPU. This should be a boring workload. Are they sleeping
-frequently to sync up or something?
+Acked-by: Manivannan Sadhasivam <mani@kernel.org>
 
-> build: 14d627f4 (5288)
-> 
-> when run llama-bench test on ARM A720 with kernel6.6.89, it outputs three scores:
-> root# taskset -c 0,5,6,7,8,9,10,11 llama-bench -m DeepSeek-R1-Distill-Qwen-7B-Q4_0.gguf
-> -pg 128,128 -t 8
-> | model         |     size | params | backend | threads |        test |          t/s |
-> | --------------|--------: |------: | ------- | ------: | ----------: | -----------: |
-> 
-> | qwen2 7B Q4_0 | 4.12 GiB | 7.62 B | CPU     |       8 |       pp512 | 49.89 � 3.83 |
-> | qwen2 7B Q4_0 | 4.12 GiB | 7.62 B | CPU     |       8 |       tg128 |  2.66 � 1.98 |
-> | qwen2 7B Q4_0 | 4.12 GiB | 7.62 B | CPU     |       8 | pp128+tg128 |  1.92 � 0.45 |
-> 
-> build: 14d627f4 (5288)
-> 
-> We find the 2nd and 3rd scores are both lower than kernel6.1. During analyze this issue,
-> we note there is a new feature on kernel 6.6. It introduces EEVDF scheduler, instand of
-> CFS used in kernel 6.1. After we try to revert some EEVDF patches below, the two scores
-> are better, almost near those got from kernel 6.1.
-> 
-> 9ef5bc6e07a5 Revert "sched/fair: Commit to EEVDF"
-> a21eaad7417a Revert "sched/eevdf: Curb wakeup-preemption"
-> 2cf7e10af999 Revert "sched/eevdf: Also update slice on placement"
-> a19837e0f27b Revert "sched/eevdf: Fix avg_vruntime()"
-> eae55a336cf3 Revert "sched/eevdf: Fix min_deadline heap integrity"
-> ba3c4b6b5aa9 Revert "sched/eevdf: Fix pick_eevdf()"
-> 37561f3cdba5 Revert "sched/eevdf: Fix heap corruption more"
-> 9a80e5bf2bb5 Revert "sched/eevdf: Fix vruntime adjustment on reweight"
-> df483ee656d5 Revert "sched/eevdf: Always update V if se->on_rq when reweighting"
-> 587fe3a23160 Revert "sched/eevdf: Fix miscalculation in reweight_entity() when se is not curr"
-> 65f847ba8cc3 Revert "sched/eevdf: Prevent vlag from going out of bounds in reweight_eevdf()"
-> 
-> Does anyone encounter the similar issue? What suggestions do you have to us?
+- Mani
 
-Try a newer kernel, like 6.15. 6.6 is ancient and I can't remember that
-it looked like.
+> ---
+>  drivers/pci/probe.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 4b8693ec9e4c..9f8803da914c 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2178,6 +2178,16 @@ static void pci_configure_mps(struct pci_dev *dev)
+>  		return;
+>  	}
+>  
+> +	/*
+> +	 * Unless MPS strategy is PCIE_BUS_TUNE_OFF (don't touch MPS at all),
+> +	 * start off by setting root ports' MPS to MPSS. Depending on the MPS
+> +	 * strategy, and the MPSS of the devices below the root port, the MPS
+> +	 * of the root port might get overridden later.
+> +	 */
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
+> +	    pcie_bus_config != PCIE_BUS_TUNE_OFF)
+> +		pcie_set_mps(dev, 128 << dev->pcie_mpss);
+> +
+>  	if (!bridge || !pci_is_pcie(bridge))
+>  		return;
+>  
+> -- 
+> 2.25.1
+> 
 
-Then try and run your workload using SCHED_BATCH and or increase
-/debug/sched/base_slice_ns to 15000000 or so.
-
-
+-- 
+மணிவண்ணன் சதாசிவம்
