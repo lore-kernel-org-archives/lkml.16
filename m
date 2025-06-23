@@ -1,126 +1,111 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2DA2A1C9
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7658F23BF80;
+	Mon, 23 Jun 2025 10:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750673074; cv=none; b=XWjWs1c/fJg+ID8QUeejRZfq7hgPGRWsQAcSNBkrn1YSeWdburNk8i8rYddeg3ecko5Bw0glPipLjhQgwZehWBUO/zHG01B3ZcTqS2N1y2d3UFcmAq7cmG28qijokXM+3lGHqGMLFyDNUW/1/Mv3wHFMeoTfWCmsS/MYr0rnNcI=
+	t=1750673087; cv=none; b=sWC5DeOl8L5JpiNN15L6oCoaivDHV1VuScJOcR+xFfyJx3UK3i/CVwIGtxm45t0Urw2rh49SA5Ma8rcIou/r/ppgvkHqaQR2k3zvlHW2aKJL4YI3IgcWZ529jdbAqaCIQ/K/R7Fd454KhrzR9S9ERQvBCJrohXGgRzZ3X7Lzwrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750673074; c=relaxed/simple;
-	bh=JQDW2gTsoLVK187JuY0wEWiF6jBFSRBP7iPLXBKcrBk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=hvRJedT+nxUwZ83TXUS2hXIqlphFzH7nTLBRMikv4kgSqyJmy1iRbd7VR4voPuI1c7Att872SstQn6SZyY5TCYSlLkz5EU1EUYkB67giFzOdoipPkVXWcwQDD0qxZ5r7C6FPE6s9hiezFImBIfV7cIDfcyqDku0/k1QmW2iobOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Hi/ggJub; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Hi/ggJub"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4e575db1aso189470f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 03:04:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1750673071; x=1751277871; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q72uVLN6Dd/lEgG34G+gl19V3OHTLM7bT/jbIRgpIbI=;
-        b=Hi/ggJub9mtTLPb6UUgm9Vo42fb7WIis5vUo0kXcUjBHUkbFxRTD/vhqYcPpUnhy+o
-         wTr3QviXRYrpVLK2XD08TuOEe+zK+K5FSahT89tah/UT52xMQBV/RJVNX66q70gKbgEU
-         J9QMW0XFECw191RawhilpSlavFToBKgxTs+f5mrvK5twmrNfkLZ6IXlPgB3Y+0Zx5O2X
-         FeSCTvlU6haoQVGfe/lKHXLoPnMbpm9gSMnFVS9jC7NeDSZzd9CSkHNn33lZPhBpZ3QF
-         +jBPidHflxTiYZJZ0OiMw8yQPySeQ3OdmDNsVwk4NNk9kQS7znPBt8EO5uNs0qhBIqqQ
-         Vozw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750673071; x=1751277871;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=q72uVLN6Dd/lEgG34G+gl19V3OHTLM7bT/jbIRgpIbI=;
-        b=vDf0uDDCWVMR4h6lkZCx4tJ9oVB/AdgQfevEUOKdyr7tmSeEichI3ZgONCUEFuOkD3
-         wuLXfdaEWMmAmIVR9olus79E1rI70IIC2hjE45wdHsJUKxbeM8oIGGh2mRqLbBVJQs6G
-         QaqCl5QCd/1nL16n/cLo3w6AthKkwdVIXCjvj2Xnr/68tsvMNL94UqLZkiquFBg6Xm6W
-         o92LPncjJLVIeJGHqJZ6I/W5aX5LQypVK6Lhfw6H43mSbE2QSF4mXwuhyxN9NyOl/aVd
-         dtXP3wF84n4DxcDYWaJSF2IWDcvK+/ELIX7m+uonDpW+57BRzLXHauGZv/8TNMueYgOp
-         wdOA==
-X-Forwarded-Encrypted: i=1; AJvYcCXg6DZDGI8UeJi/KJ4MqdB8c01TmzRxppY3az5CBdL4aWzIK/SqJb7jVa1L8fw2Tk8na0unNPrwceCM2xs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMbvplDkCig/wK8U/hXnTE1j9AVnAqNap3J9SgziOPiEwlTED/
-	cJ5c4llHlQ92FJFsl89gz1ZnKFO94wE8o3Cwbv+bQdv26v3wilKazlxxyBf2H9adKdeNB3RjgkY
-	UMWTn/LY=
-X-Gm-Gg: ASbGnctfHCysbsS8WSGWUYqRu+ZG5SsYru4cMtThC6gx9WS+s8YLncpSKgMhDbAlhsw
-	8Mx7sxvf/FO/CO7f1NAVNIiumHC2gKxCQLTQG2oNAAX+i25wOlbEr1fCo5LjBMT5M+jdMVjkIhZ
-	YIYlGx5rU/3ucFl9c5q1iZMlckRESKcLREUxWmiJqFSEtIll9B3rjxB7/XzimUQnyxFJz+kWcoT
-	BGY1aQ4Com6GMVWAJPEa8C/ypi/4Xnz8zvFFWAMTxa09EjcleBR+7qdR2rsWrDB7e2mLu0YllJ0
-	N5hqlc6shlFN3sat0sM5OEPxOIji4K3BmmHckkUMjTtauovuI4DlfxYL8AomstD8Rio=
-X-Google-Smtp-Source: AGHT+IFs2pQCa+3bKTkdor2w3FPfdSYUbedMYRtHjGttAZlhUfRN/r/Qxtzp7NLRxL4SrXakOUW0PA==
-X-Received: by 2002:a05:6000:24c8:b0:3a4:e193:e6e7 with SMTP id ffacd0b85a97d-3a6d12e995amr3291773f8f.5.1750673071422;
-        Mon, 23 Jun 2025 03:04:31 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:8947:973b:de:93b7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f19f9esm9077130f8f.39.2025.06.23.03.04.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 03:04:31 -0700 (PDT)
+	s=arc-20240116; t=1750673087; c=relaxed/simple;
+	bh=vipnkNgUoh8epWZYj8+rXAcynGvmE/NRgqg8z9mtprA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fJF09lQ6b0mQuEsog/wD5Lw6kn29+AjmeRga3J7mFpYwuZ0WZ0mi2jHkFzJYb/W3ljXBOYAC+q8MlVO5D88CIpUMnfDMv47JKNyteUEGEAOM18yjzfD6yp+6CaJZiTojBAT9kQxaKbpp3rM7+LFCz5vFiQsKDuieDgHurfObzQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from [127.0.0.2] (unknown [210.73.43.2])
+	by APP-01 (Coremail) with SMTP id qwCowAD3ptWtJlloxg+rCA--.29805S2;
+	Mon, 23 Jun 2025 18:04:30 +0800 (CST)
+From: Vivian Wang <wangruikang@iscas.ac.cn>
+Subject: [PATCH 0/3] riscv: dts: spacemit: Add DMA translation buses for K1
+Date: Mon, 23 Jun 2025 18:04:15 +0800
+Message-Id: <20250623-k1-dma-buses-rfc-wip-v1-0-c0144082061f@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 23 Jun 2025 12:04:30 +0200
-Message-Id: <DATTT5U64J4L.3UTDRVT2YP7GT@ventanamicro.com>
-Subject: Re: [External] Re: [PATCH] RISC-V: KVM: Delegate illegal
- instruction fault
-Cc: <anup@brainfault.org>, <atish.patra@linux.dev>,
- <paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
- <alex@ghiti.fr>, <kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>,
- <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-To: "Xu Lu" <luxu.kernel@bytedance.com>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-References: <20250620091720.85633-1-luxu.kernel@bytedance.com>
- <DARCHDIZG7IP.2VTEVNMVX8R1E@ventanamicro.com>
- <CAPYmKFvcnDJWXAUEX8oY6seQrgwKiZjDqrJ_R2rJ4kWq7RQUSg@mail.gmail.com>
-In-Reply-To: <CAPYmKFvcnDJWXAUEX8oY6seQrgwKiZjDqrJ_R2rJ4kWq7RQUSg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJ8mWWgC/23PTW6DMBAF4KsgrzsIO/wFVVXuUWVhxmMYVeDUQ
+ 2irKHevAXXX5RvJ73t+KKHIJKrLHirSysJhTkG/ZApHOw8E7FJWpjBVUesaPjS4yUJ/FxKIHuG
+ Lb3DqqbGF9mWDrUpPb5E8f++179eUR5YlxJ9dWfV2/Sts/i9cNWjAllCfje991V5Y0EpuMcdZX
+ Z+HEenznhYvB6R6KwQYpomXLlvrPK2NqLc9E4nY/S9d9rrLlTmBMRsubkQ+wJoK65zzTXkuLwP
+ NSwh5iMNbAp+/R12YhioBAAA=
+X-Change-ID: 20250616-k1-dma-buses-rfc-wip-3be7a01f47c8
+To: Yixun Lan <dlan@gentoo.org>, Guodong Xu <guodong@riscstar.com>, 
+ Ze Huang <huangze@whut.edu.cn>, Alex Elder <elder@riscstar.com>, 
+ spacemit@lists.linux.dev, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: Vivian Wang <uwu@dram.page>, devicetree@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Vivian Wang <wangruikang@iscas.ac.cn>
+X-Mailer: b4 0.14.2
+X-CM-TRANSID:qwCowAD3ptWtJlloxg+rCA--.29805S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr1DWF4UAFyfXFyUWw1ftFb_yoW8Ww1kpF
+	WfursxArW3trWIkFs2k3y2vr1rKrsYgF4UWrnrKwn5JFsrZF4qvrWI9r4xCryDXryru342
+	vr1vqr1kWF42ywUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9E14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK67AK6r4DMxAIw28IcxkI7VAKI4
+	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
+	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
+	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUUnXo7UUUUU==
+X-CM-SenderInfo: pzdqw2pxlnt03j6l2u1dvotugofq/
 
-2025-06-22T18:11:49+08:00, Xu Lu <luxu.kernel@bytedance.com>:
-> Hi Radim,
->
-> On Fri, Jun 20, 2025 at 8:04=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrc=
-mar@ventanamicro.com> wrote:
->>
->> 2025-06-20T17:17:20+08:00, Xu Lu <luxu.kernel@bytedance.com>:
->> > Delegate illegal instruction fault to VS mode in default to avoid such
->> > exceptions being trapped to HS and redirected back to VS.
->> >
->> > Signed-off-by: Xu Lu <luxu.kernel@bytedance.com>
->> > ---
->> > diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/as=
-m/kvm_host.h
->> > @@ -48,6 +48,7 @@
->> > +                                      BIT(EXC_INST_ILLEGAL)    | \
->>
->> You should also remove the dead code in kvm_riscv_vcpu_exit.
->
-> I only want to delegate it by default. And KVM may still want to
-> delegate different exceptions for different VMs like what it does for
-> EXC_BREAKPOINT.
+The SpacemiT K1 has various static translations of DMA accesses. This
+series adds all the DMA translation bus nodes and also moves existing
+nodes as necessary.
 
-(I think we could easily reintroduce the code if KVM wants to do that in
- the future.  I also think that it's bad that this patch is doing an
- observable change without userspace involvement -- the counting of KVM
- SBI PMU events, but others will probably disagree with me on this.)
+According to SpacemiT DT maintainer Yixun Lan [1], it's preferable from
+a SoC DT maintainer's perspective to have this done at once instead of
+spreading these changes into various driver series. Once this is merged,
+life will be easier for future users of the buses.
 
->                 So maybe it is better to reserve these codes?
+This series contains no bindings changes.
 
-Possibly, the current is acceptable if you have considered the
-implications on PMU events.
+Patch 3 moves the eMMC node added in [1].
 
->> And why not delegate the others as well?
->> (EXC_LOAD_MISALIGNED, EXC_STORE_MISALIGNED, EXC_LOAD_ACCESS,
->>  EXC_STORE_ACCESS, and EXC_INST_ACCESS.)
->
-> Thanks for the reminder. I will have a test and resend the patch if it wo=
-rks.
+These patches can also be pulled from:
 
-The misaligned exceptions are already being worked on, so don't waste
-your time on them, sorry.
+https://github.com/dramforever/linux/tree/k1/dma-ranges/v1
+
+[1]: https://lore.kernel.org/r/20250623070147-GYA193822@gentoo
+[2]: https://lore.kernel.org/r/20250523-22-k1-sdhci-v1-1-6e0adddf7494@gentoo.org
+
+---
+Changes since RFC
+- Reworded patch messages
+- Also moved existing nodes under relevant buses
+- Link to RFC: https://lore.kernel.org/r/20250617-k1-dma-buses-rfc-wip-v1-1-c8ec192fbf58@iscas.ac.cn
+
+---
+Vivian Wang (3):
+      riscv: dts: spacemit: Add DMA translation buses for K1
+      riscv: dts: spacemit: Move UARTs under dma-bus for K1
+      riscv: dts: spacemit: Move eMMC under storage-bus for K1
+
+ arch/riscv/boot/dts/spacemit/k1.dtsi | 314 +++++++++++++++++++++--------------
+ 1 file changed, 189 insertions(+), 125 deletions(-)
+---
+base-commit: d9946fe286439c2aeaa7953b8c316efe5b83d515
+change-id: 20250616-k1-dma-buses-rfc-wip-3be7a01f47c8
+prerequisite-message-id: <20250523-22-k1-sdhci-v1-1-6e0adddf7494@gentoo.org>
+prerequisite-patch-id: 53fc23b06e26ab0ebb2c52ee09f4b2cffab889e2
+
+Best regards,
+-- 
+Vivian "dramforever" Wang
+
