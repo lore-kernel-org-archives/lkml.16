@@ -1,154 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF2F7263F;
-	Mon, 23 Jun 2025 14:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63D7D2566F5
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750689027; cv=none; b=sWxoUDXHnLHk7pYWayBIDrjsd+9WnB9gwWI96JXE9xtxskCKeI/k89vAUJoyKEEQglRlCjMuY9A3GuS2I/gFHnp8m8ozismQyV+F18VDMkeCqXL4trjVYgvJFhihoSD0/T4I24fuHxy2evCkKyobQfbV6hcTwcA44JjIWvt2nTs=
+	t=1750689034; cv=none; b=gUJtsOSTG7FkPrQlbjrllHIidaHAcOoOKt/sWp7sIrPUt5VWv+J2xqMdKFbMYoLvlH1AQQSQShUYOS8mlpDWjCw/Fbnscpll2/9ZJDkSyLPeoZEhC5jueizC5rdELLia1t7fuBlWdXtt4k56c0t5nJaLDbTPiQMm1L7F3VokQCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750689027; c=relaxed/simple;
-	bh=48eVt2PPcxAS9n4RtU7GsK0fPkHm0p1WawWnWIodk7o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HOxNCM4CAonsUvhI/I9Tpa50+BNPIB1FryvTOsrlB9kuNZ+5GXnsj/4VtFjsVA1OOc1R9SUljCGFXt20Vi4la8Hz2w3ic28CU9haj14zn5bcKs7HR43/udykfytSQWBePBbOab5DMKKnWPjMza4styb7wovbRyXpvdSIv9KznZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y0Xx3kaW; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y0Xx3kaW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750689027; x=1782225027;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=48eVt2PPcxAS9n4RtU7GsK0fPkHm0p1WawWnWIodk7o=;
-  b=Y0Xx3kaW2Wvc17ZhqQCjpeW7XBedqx07pIAFmRGpel9hIkV4WAG9h8vi
-   Mpox9VQWj98hWJEvgeDT0UxfytFFQvftS4B7P5gRoJEvbFpY33g/mdGuy
-   RbD+NdlNxE7PYXiLv/G96XGnB7orNAOHC1VtHMQEOXnMQopb6lWF4ZLPX
-   pP37j0PT9BPlHemR++P7yrvNaH5yLkPrdb+OY+a155tttOFUYlEq8RANe
-   /kIpc45acUNFfVhvry8bv0HuwkdaNzyvGgLoN7csjGh5CiWhrEWT00bdk
-   3laLP5OPk1qdfoVwv3ns8TDA4EKCfoP9vXgwwYec7sqZgJteDCFAJCLlO
-   A==;
-X-CSE-ConnectionGUID: qPipcxzgSHa5D8C8nNilNg==
-X-CSE-MsgGUID: LWWNxQbfSGSOyq2PgHxR2g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="53031893"
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="53031893"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 07:30:26 -0700
-X-CSE-ConnectionGUID: H7JwwNNASkipLkEQE+BTyw==
-X-CSE-MsgGUID: xVHtY9bDRp25jG8Rf2mRPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="155914307"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 07:30:22 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uTiBf-00000009CQ9-0zoy;
-	Mon, 23 Jun 2025 17:30:19 +0300
-Date: Mon, 23 Jun 2025 17:30:18 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
-	andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, matthias.bgg@gmail.com,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v1 4/5] iio: adc: mt6359: Add support for MediaTek MT6363
- PMIC AUXADC
-Message-ID: <aFlk-l5LhgO8dnXK@smile.fi.intel.com>
-References: <20250623120028.108809-1-angelogioacchino.delregno@collabora.com>
- <20250623120028.108809-5-angelogioacchino.delregno@collabora.com>
+	s=arc-20240116; t=1750689034; c=relaxed/simple;
+	bh=q1cPnjP5LDmCwkLjQNxQ71alVvth8kIaai6E10d1Io8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=thG4/IIUb6FbWWoXQt2ba+EE4/7vYG+bSTYPHfEDeKhqgQO8HaMCDFitqmwuXDOwoG3/0cncGHG90oMEyg3iRmJzKC0nbj0/Q7Y2LAlTzKPJ/HlQlF094rIxIYAt2kB8lXfXqe+4y6W4nFT/qVpHiYrlwS1GcdZjwnAASR6iKfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 770D7113E;
+	Mon, 23 Jun 2025 07:30:12 -0700 (PDT)
+Received: from [10.1.29.169] (XHFQ2J9959.cambridge.arm.com [10.1.29.169])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB3D43F66E;
+	Mon, 23 Jun 2025 07:30:29 -0700 (PDT)
+Message-ID: <e45fa35c-315a-45ea-a14f-030c5258f533@arm.com>
+Date: Mon, 23 Jun 2025 15:30:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250623120028.108809-5-angelogioacchino.delregno@collabora.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/vmalloc: leave lazy MMU mode on PTE mapping error
+Content-Language: en-GB
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250623075721.2817094-1-agordeev@linux.ibm.com>
+ <107bfdb7-c8f5-45fa-872e-3e6928dc8025@arm.com>
+ <aFlQv4dx7wFU5Cql@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+ <cb71d9f4-aaae-4240-88f5-50a745717f22@arm.com>
+ <9214718e-97d0-4e8f-b223-59351e664707@suswa.mountain>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <9214718e-97d0-4e8f-b223-59351e664707@suswa.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 23, 2025 at 02:00:27PM +0200, AngeloGioacchino Del Regno wrote:
-> MediaTek MT6363 is a PMIC found on MT8196/MT6991 board designs
-> and communicates with the SoC over SPMI.
+On 23/06/2025 14:53, Dan Carpenter wrote:
+> On Mon, Jun 23, 2025 at 02:31:48PM +0100, Ryan Roberts wrote:
+>> On 23/06/2025 14:03, Alexander Gordeev wrote:
+>>> On Mon, Jun 23, 2025 at 01:37:11PM +0100, Ryan Roberts wrote:
+>>>> On 23/06/2025 08:57, Alexander Gordeev wrote:
+>>>>> Function vmap_pages_pte_range() enters the lazy MMU mode,
+>>>>> but fails to leave it in case an error is encountered.
+>>>>>
+>>>>> Reported-by: kernel test robot <lkp@intel.com>
+>>>>> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+>>>>> Closes: https://lore.kernel.org/r/202506132017.T1l1l6ME-lkp@intel.com/
+>>>>> Fixes: 44562c71e2cf ("mm/vmalloc: Enter lazy mmu mode while manipulating vmalloc ptes")
+>>>>> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+>>>>
+>>>> Ouch, sorry about that! The patch looks good to me so:
+>>>>
+>>>> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+>>>>
+>>>> I wonder an aditional Fixes: should be added for Commit 2ba3e6947aed
+>>>> ("mm/vmalloc: track which page-table levels were modified") though? That's the
+>>>> one that added the "*mask |= PGTBL_PTE_MODIFIED;" which would have also been
+>>>> skipped if an error occured before this patch.
+>>>
+>>> Good catch! I think it certainly needs to be reported with Fixes
+>>> and I even doubt whether your commit should be mentioned at all?
+>>
+>> Well I would certainly argue that my patch is broken as is. So happy to have 2
+>> Fixes: tags. But I'm not really sure what the rules are here...
 > 
-> This PMIC integrates an Auxiliary ADC (AUXADC) which has a grand
-> total of 54 ADC channels: 49 PMIC-internal channels, 2 external
-> NTC thermistor channels and 2 generic ADC channels (mapped to 7
-> PMIC ADC external inputs).
+> I would only list the older commit 2ba3e6947aed ("mm/vmalloc: track
+> which page-table levels were modified").  The static checker warning
+> came later, but it's not really the important bit.  It's just one bug.
+
+Given smatch caught the locking bug, I wonder if it could be taught to look for
+lazy_mmu issues? i.e. unbalanced enter/leave, nesting and read hazards. I think
+Alexander previously found a read hazard so I wouldn't be surprised if there are
+more.
+
 > 
-> To use a generic ADC channel it is necessary to enable one of
-> the PMIC ADC inputs at a time and only then start the reading,
-> so in this case it is possible to read only one external input
-> for each generic ADC channel.
+> We'll have to hand edit the commit if we want to backport it so that's
+> a separate issue.
 > 
-> Due to the lack of documentation, this implementation supports
-> using only one generic ADC channel, hence supports reading only
-> one external input at a time.
-
-> +#define MT6363_EXT_CHAN_MASK		GENMASK(2, 0)
-> +#define MT6363_EXT_PURES_MASK		GENMASK(4, 3)
-> + #define MT6363_PULLUP_RES_100K		0
-> + #define MT6363_PULLUP_RES_OPEN		3
-
-I would rather expect the two spaces after #define. This most likely will break
-syntax highlighting in (some of) the editors.
-
-...
-
-> +#define MTK_PMIC_ADC_EXT_CHAN(_ch_idx, _req_idx, _req_bit, _rdy_idx, _rdy_bit,	\
-> +			      _ext_sel_idx, _ext_sel_ch, _ext_sel_pu,		\
-> +			      _samples, _rnum, _rdiv)				\
-
-Wondering, and it's out of scope here, if we can go to use a macro for
-initialization of struct *_fract.
-
->  	[PMIC_AUXADC_CHAN_##_ch_idx] = {					\
->  		.req_idx = _req_idx,						\
->  		.req_mask = BIT(_req_bit),					\
->  		.rdy_idx = _rdy_idx,						\
->  		.rdy_mask = BIT(_rdy_bit),					\
-> +		.ext_sel_idx = _ext_sel_idx,					\
-> +		.ext_sel_ch = _ext_sel_ch,					\
-> +		.ext_sel_pu = _ext_sel_pu,					\
->  		.num_samples = _samples,					\
->  		.r_ratio = { _rnum, _rdiv }					\
->  	}
-
-Perhaps something in math.h as
-
-#define INIT_STRUCT_FRACT_UXX(n, d) ...
-
-...
-
-> +	if (MTK_AUXADC_HAS_FLAG(cinfo, IS_SPMI)) {
-> +		/* If the previous read succeeded, this can't fail */
-> +		regmap_read(regmap, reg - 1, &lval);
-
-No error check? lval may contain garbage here, right?
-
-> +		val = (val << 8) | lval;
-
-Is it guaranteed that lval is always less than 256 (if unsigned)?
-
-> +	}
-
-...
-
-> +		regmap_update_bits(regmap, cinfo->regs[desc->ext_sel_idx],
-> +				   MT6363_EXT_PURES_MASK, ext_sel);
-
-No  error check?
-
-> +	}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> regards,
+> dan carpenter
+> 
 
