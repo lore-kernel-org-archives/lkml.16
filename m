@@ -1,76 +1,85 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447F6279DCA
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B61C281509
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750691629; cv=none; b=QtAypYDneFHmNfiwfgboLVru+2LbUrrIEsN06O8p6d8I/LM3VE71+WYnkn2SROQgy9xhqv5nUGt01O3N02iFc07fN50iRXMu/dbTRy6jBoe2UucFe6Dcb8CAX5T5r5I/7R4L6tjC5437QngX+lRtde2tDjtxDnG6VSBT2HIawbo=
+	t=1750691645; cv=none; b=klfMI49d+ggoAdfCgDhaDwq+eym5EdE57tgKJ9z+xaYuswijKXlEsnJw8R+/9iQ9tf1h7PiZ3pgtKO/F4He6zeUM5XALnE4bbk+wnMbwQa8swxMQHfOJpIBKa73imjBb3VCb5xT5WQM7SU0LjkreT9m1Q91OkxZ1fluNOcRebtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750691629; c=relaxed/simple;
-	bh=67Wvvnk7IrWKdKcRZEoXjz8V7aJTgzoNCSVU0Cu58W8=;
+	s=arc-20240116; t=1750691645; c=relaxed/simple;
+	bh=T97FIRu7KTdXAKAuE2uiR/N85Qp0pQvg5x4paRRjBE0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s0kytrOgjmYxC3uQBF6WXLXLbzNzkQiK8ctZ+HB70o20gTvPs450CmMwKjMHwHU3A3SrYby4PjGRdXbFvGYv3ZrAvVr/JR5b9xKRUNi3nUY/vgNj2fuGpdWNP5UQpKMDi+AURfVl19XFx/mTKlkAqgPvee32RL3c+9o+G0x37so=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=G/Eutygf; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=LS00plfoOETJK6QebFoK/fV+fXhaHHOXuw5tHlqBzIBq1eQEk+jUvUI/KyJpg97ANCmNi1AjC1xB/iRKRFHTb/6L7NpWV0xVco9TK0I1vubF0GBlHgZ1C3VI9JfgIDSnJAN1knqTHNsCnURN48VEA8rGaz1GGqx/2hYhDeddPaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VKkhY7Ta; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="G/Eutygf"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a6d77b43c9so1933606f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:13:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VKkhY7Ta"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2357c61cda7so223415ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:14:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1750691625; x=1751296425; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750691644; x=1751296444; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lOWz6yeiTc1RySB3Pgh2AEWSr7V30NJ9sX40nnSaN74=;
-        b=G/EutygfC8zeZ/QIWoc9wpRpd40mrF3tdDidgABfhwJB2ZVCzj84RS/9OLmVhOfWw1
-         Cv3ubQeSQ8O97Nh+XjfeZCSoYod+YY4lZ8p7cKKm5v6XY7EI5z4cmVgqRghuN8uzg+R5
-         O2hyvGMmB7IlSkzp8N/gJM4BaeeSB3TV2zAcRbzEg+Wi/dvb551QgXTwQJieHe1n50Xk
-         Q+MEjGlfKq6t6v9WiSIko/+6LofytXXtIe7fQoDZ7RJXAbIlgullfLZUggKuE2j8sl/h
-         fJIvMx+iHasc1CTrNf9rEEUmGf8vYbhUykXFpW3o5EnVDNqBWkeh8xjEfq0HZRMMU2Rw
-         gTGw==
+        bh=sQjNcvHYakrNgjIQGLE/wyS2yfZF4798fujbYGUPWpc=;
+        b=VKkhY7Ta928BptYCHJVYvcLh5d5S42bzKA+iRJ+oEn0vaAOt9h0TsdKx0TVjsG5sH4
+         Z4q93H89iMYgYf0aYTsAgCNfxEn9VdxmzIGv5nStyrSyPIKbxJo9juXqmMMNq7ECHFDx
+         B8JomsblSvNpl/fEvJo6R4/YPa9gv3aZKDa1EMjVHvRE+O9+BIZhlH/xK/wIzNWS/YSZ
+         u5O5ucng1O3F0A9odAfGrmPgdSFcRgmoE3vaSf9skQt3uezUoJ5cU1m8WFQM9WRytk3B
+         +hYacxGBwtbMioE5B0mmYlJdkMqV/80MQguGEMxtequZg9ItcVJDvF+AGxR7FFvPz+ij
+         jIZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750691625; x=1751296425;
+        d=1e100.net; s=20230601; t=1750691644; x=1751296444;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lOWz6yeiTc1RySB3Pgh2AEWSr7V30NJ9sX40nnSaN74=;
-        b=vejsjBUevLzDuDB+6064zGebPweqDrkf+HOFa98bLNwqA3QCewl6hkLS91ZXDCeDfm
-         HxvW53gnrnU2n0otUEfwsW/fKJkUDNSQedg+zshM2wxkDtMfLDzEMY7j7aWohXvyOfb0
-         BXrd/kfLNVY17iZkq2lmx/P9jNxkyS5wQWAYpjnjzegjitWQz+YlKEhyZhUoSnyRgLrJ
-         zqYLZw03zbHOjJ4W6ifpg0fXYHG2NqplwQBBMg8+912pZ3Bol8TVHA/hzqNlNNCFH4EF
-         14mtNvF/QqhxcwGYSLZ+VzXPbRiRDq5fJL72fhJ7gXeCYevwlnoUMXDmRTY7wGteX78N
-         mknQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWVm7+hl3SogxyWOCRIFSR/iUTMga69srshMw2CdT+hFabTihT45rPjSDFyIxamxuH3pZIg8zVCkUJSGus=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEh6xMBBEHP/G4nqEAMSqwgh1EjMiRBL7rnb4TS6ZunsjhH+K7
-	/FbtkxwlBUy+PpBm2akQLV95YlukP6CixlR+gF+lcybOkpaD+OINVhXuPj1yTdjgiXs=
-X-Gm-Gg: ASbGncupRWnscm4meNQC4hqGResdooxWQ16er9fsJrbDdXPNPu+gQX6wPC5IaYkwpb7
-	RkC0CRc+meyds9ea2oxJ3MfuY0Ib4uoNeQCyYah5bpvOrKjbKvypMYJWnvzIXP/zRbXpgWFuBJJ
-	0B/rn0NN4tTzT7UY05OB1fPFbN006/pVSE0NcH3TtRNNVfDlJM3ipgbYx7rB3lvvCU4EFpYzh2M
-	ZyWzMysWiIzFcfeQxiJk8BfhuumLutXSD0X5Vv3NVkdHwvhSHySFFEUE+kNSaV1diWR0r4o6W6i
-	6gz1cLg+4klk2u7dEft+pNeQC5rtsInAPVHpdhotYXsN5CbNukgbu3dpBqqQYAjxUl9wwJogt+A
-	=
-X-Google-Smtp-Source: AGHT+IEiP0D8qVIyLWMar6gISPuxv7fyxagehM1R6zg28ZvmgE2BHBGvS42uR5iuUd5pUyo8L128yw==
-X-Received: by 2002:a05:6000:26c1:b0:3a4:fbaf:3f99 with SMTP id ffacd0b85a97d-3a6d12dd6e7mr11540132f8f.13.1750691625412;
-        Mon, 23 Jun 2025 08:13:45 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646fd816sm113897235e9.24.2025.06.23.08.13.44
+        bh=sQjNcvHYakrNgjIQGLE/wyS2yfZF4798fujbYGUPWpc=;
+        b=W0tg0zu6Orh0L+Ma4FsxLP7O5v+iSao3PIxoRMlt+VasN0Tt8kiBICoVuv9xJWr8JZ
+         6CzGUOiq9w5OFo56VU36y2GaqcvAX+MyO8JdnVak3q+G0lRgm5RtBKg3L80KAThnjfvW
+         KZBfkVgd4N2Gw1DxGn0YDIH/wzLOEg3xyToiboNvuKzoEtLedGUgVzDO4x2ZJgVlr+BT
+         DtEyJju+LJuCgfksejklTQpLeuVZG3grSdDbBXIWEW4hvjOnv5VgzWzbj5ILlYGBYXO+
+         sjAYCoTpQBu4IL0r3J2I+WpEdUoIXnJY24JalTMBaFWwy+EMisS7LCA9hwvGkwzTqoRn
+         fwnw==
+X-Forwarded-Encrypted: i=1; AJvYcCWjBxpTYBe9bWcnuInvwy7r/rFWeVf0biogvBghMLcw907ZiaUtoa4458wqT8Zvzogjy+yX300tjk0OD9w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyKl4uqN3bbV3xxchadKVQjAP/pRo6NsocpztyRldHLpd/IVvQ
+	08O4/MQZf//Z84ro0mbjmpdSbibNzmeubXqB12i5ueEm1YbuHH/ZFHhbvoZq42hdEQ==
+X-Gm-Gg: ASbGncseE1i2kgRnrrOXTVQu0c7ppJm7Ia4jaWZgL2soqgEnrL5xsC7i0g/2cgFrIBx
+	dA6+7CL9y1BZBCbsyIFdxMa8Sp3MlKWinWHxWZpgVJnq+dOyyCNSFUtgHRMWE4dnj1CCCOCK79g
+	2s0jz2rR06t1HQZ53fZIHJxaQIJBHBXiRsEUUf0fmaNKcxkTJitxl3rCmPXLfa9LySuKIhVW1q8
+	PMkw7plOqYpkHgrFQF8mXLWv9TjHVw4rCBtGCWjOkOBaPZ3GSd3oVd9Z4HxFDi8O5Z/rYdZLTBy
+	WKcxADQeFGJ7ozxtmkP/jPL3/qem338h+02quxx0is1K3KOfAna3/PBjtO0oHt4kDM6mG2/61Q+
+	u+qvkBpjHYKBYCSNESd5JI1OcmFv0zIM=
+X-Google-Smtp-Source: AGHT+IFjZuHSmjWz3mlyiiORGjulfaekm2TrngIFHZiE0ZqJkNGQDEFi3n1LBmgMIlW05C9z3Da4aQ==
+X-Received: by 2002:a17:902:e951:b0:224:6c8:8d84 with SMTP id d9443c01a7336-237e478a96fmr4808555ad.4.1750691643222;
+        Mon, 23 Jun 2025 08:14:03 -0700 (PDT)
+Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3158a23e6fbsm11004566a91.14.2025.06.23.08.13.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 08:13:45 -0700 (PDT)
-Date: Mon, 23 Jun 2025 17:13:43 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Lance Yang <lance.yang@linux.dev>
-Cc: Feng Tang <feng.tang@linux.alibaba.com>, paulmck@kernel.org,
-	john.ogness@linutronix.de,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH V2 5/5] panic: add note that panic_print interface is
- deprecated
-Message-ID: <aFlvJ4WcLb03x2i7@pathway.suse.cz>
-References: <20250616010840.38258-1-feng.tang@linux.alibaba.com>
- <20250616010840.38258-6-feng.tang@linux.alibaba.com>
- <0088c3f5-d2a0-48c4-b69a-fb385c527b32@linux.dev>
+        Mon, 23 Jun 2025 08:14:02 -0700 (PDT)
+Date: Mon, 23 Jun 2025 15:13:51 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, kevin.tian@intel.com, corbet@lwn.net,
+	will@kernel.org, bagasdotme@gmail.com, robin.murphy@arm.com,
+	joro@8bytes.org, thierry.reding@gmail.com, vdumpa@nvidia.com,
+	jonathanh@nvidia.com, shuah@kernel.org, jsnitsel@redhat.com,
+	nathan@kernel.org, peterz@infradead.org, yi.l.liu@intel.com,
+	mshavit@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
+	dwmw2@infradead.org, baolu.lu@linux.intel.com
+Subject: Re: [PATCH v6 20/25] iommu/arm-smmu-v3-iommufd: Add hw_info to
+ impl_ops
+Message-ID: <aFlvLw0SHgYiA614@google.com>
+References: <cover.1749884998.git.nicolinc@nvidia.com>
+ <f36b5e42bac83d0cdf5773cad1c3a44c3eaed396.1749884998.git.nicolinc@nvidia.com>
+ <aFP4zHIVT6epJeLb@google.com>
+ <20250619185325.GB17127@nvidia.com>
+ <aFTWQ4v6aZABpzeV@google.com>
+ <aFZE+MhTOCvbkKbH@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,58 +88,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0088c3f5-d2a0-48c4-b69a-fb385c527b32@linux.dev>
+In-Reply-To: <aFZE+MhTOCvbkKbH@nvidia.com>
 
-On Mon 2025-06-16 09:45:16, Lance Yang wrote:
+On Fri, Jun 20, 2025 at 10:36:56PM -0700, Nicolin Chen wrote:
+> On Fri, Jun 20, 2025 at 03:32:19AM +0000, Pranjal Shrivastava wrote:
+> > My point is that in-case someone passed INTEL_VTD type, we would end up
+> > calling impl_ops->hw_info and then the impl_ops->hw_info shall check for
+> > the type to return -EOPNOTSUPP. Either we should clearly mention that
+> > each impl_op implementing hw_info *must* add another type and check for
+> > it
 > 
+> Let's add this:
 > 
-> On 2025/6/16 09:08, Feng Tang wrote:
-> > Long term wise, the 'panic_sys_info' should be the only controlling
-> > interface, which can be referred by other modules.
-> > 
-> > Suggested-by: Petr Mladek <pmladek@suse.com>
-> > Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
-> > ---
-> >   kernel/panic.c | 9 ++++++++-
-> >   1 file changed, 8 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/panic.c b/kernel/panic.c
-> > index ea238f7d4b54..e8a05fc6b733 100644
-> > --- a/kernel/panic.c
-> > +++ b/kernel/panic.c
-> > @@ -76,6 +76,13 @@ ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
-> >   EXPORT_SYMBOL(panic_notifier_list);
-> >   #ifdef CONFIG_SYSCTL
-> > +static int sysctl_panic_print_handler(const struct ctl_table *table, int write,
-> > +			   void *buffer, size_t *lenp, loff_t *ppos)
-> > +{
-> > +	printk_once("panic: 'panic_print' sysctl interface will be obsoleted by 'panic_sys_info' interface.\n");
+> @@ -721,6 +721,11 @@ struct arm_smmu_impl_ops {
+>         int (*init_structures)(struct arm_smmu_device *smmu);
+>         struct arm_smmu_cmdq *(*get_secondary_cmdq)(
+>                 struct arm_smmu_device *smmu, struct arm_smmu_cmdq_ent *ent);
+> +       /*
+> +        * An implementation should define its own type other than the default
+> +        * IOMMU_HW_INFO_TYPE_ARM_SMMUV3. And it must validate the input @type
+> +        * to return its own structure.
+> +        */
+>         void *(*hw_info)(struct arm_smmu_device *smmu, u32 *length, u32 *type);
+>         const size_t vsmmu_size;
+>         const enum iommu_viommu_type vsmmu_type;
 > 
-> Hmm... I would get scared for a second when I read messages prefixed with
-> "panic:"
-> from dmesg. That prefix should have a very specific meaning ;)
+> And I found that we could have another patch changing "u32 *type"
+> to "enum iommufd_hw_info_flags *type" to avoid some duplications
+> in the kdocs.
 > 
-> Well, we can just change the prefix to something more neutral:
-> 
-> printk_once("Kernel: 'panic_print' sysctl interface will be obsoleted by
-> 'panic_sys_info' interface.\n");
 
-I agree that this looks better.
+Yea, that sounds good. Thanks!
 
-That said, I am not a native speaker but I think the "will be
-obsoleted" is not correct. I would use "has been obsoleted" instead.
-
-Also the messages should use a particular loglevel, e.g. KERN_INFO.
-
-I would do:
-
-	pr_info_once("Kernel: 'panic_print' sysctl interface has been obsoleted by 'panic_sys_info' interface.\n");
-
-
-> 
-> > +	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
-> > +}
-> > +
-
-Best Regards,
-Petr
+> Thanks
+> Nicolin
