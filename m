@@ -1,252 +1,82 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7929730E85D;
-	Mon, 23 Jun 2025 12:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 148A124293F;
+	Mon, 23 Jun 2025 12:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750681691; cv=none; b=VIhSn/0PP4vLqrm+tXd/rP17FwKR/Lm2iom/ZK9VgLDUDzXIQLf1z0EY7OlnG5LVp4rnFra7G3VUGn8nu6ZHHCz8vONuQX6j83FyKGMmuM2DAIPRZ8mKOR9NjHtSe/mpgRoMenypTBDvxKf961tSVitB0WCngJ6hvgfRzNtqYak=
+	t=1750681701; cv=none; b=T5V7VYAHLdGCnQWoMgB1SW5dAFYy2fUJHf/nsUa2pfZ29utJjv/nmlUJHTY78SBxanX2SsX6on75gGeGJPDSnkqdyg3JX1oM+0ZDIwHHdtgJ/gpbsEhXhB6woudef4xv+yD4XitJxWevbyCVJVUNtJ9dUJOh8sX6NjZGkyV74Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750681691; c=relaxed/simple;
-	bh=L3lwm4Q79M0itc0l84wAC7ShG2c5tjBD0AKvgW2+PHg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U4pZFVO4gi4LllwAJ/5yveK9aYTJ2u0QGXoV8oh28QIJtZ0oM9nlIrGSyuXpjZlJLiYPME6119m35VeAK7AXmmqhMQXLdeXNgA3K4G0ZNEdwoFoW9o3+aXruwca2m64Yo5Tv+gEwFxjYvJiWG3VHxQkvjhj1ER20lLJjkKh7TGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=A1PlZFFG; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="A1PlZFFG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750681687;
-	bh=L3lwm4Q79M0itc0l84wAC7ShG2c5tjBD0AKvgW2+PHg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=A1PlZFFGfM1WxjDwRSi2gG2bnXsvodBiTa3IQX1Iaqlw1rzqHEZu4rjeDYU7YymrS
-	 TCWH9rVwp06kgswjOGnb6hXnZoKxsBD3wwoRVboOoKyYG9BRPbGmeImTCUHH/rsYwI
-	 0nfJV9ok/6U9iROToQz4yqnQys6R9wgSe9qii2e4SiRvlX/JS6NPa8W345gEgv4q+m
-	 vwxFXZJWXf14HR0LFYOmY5BQnht6y1p5dKbKvSH+ey94HnIFGcVWrRO9bp2Sd0qway
-	 NQqHJP+VZ6+ezTOPKrU94Y+6QHfpovYna7+oXgpTfuiGcBrcofvC1Xmr7UmAbWf1Ol
-	 MHpyJe1JyCnJg==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	s=arc-20240116; t=1750681701; c=relaxed/simple;
+	bh=p6zkyi7mfGGhWfH9ZVP49rp2AGQ3CMoXQdfVucu5/RU=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=nh8f/kHuhd/ZTykcSqVh9Yq6ImnvqkAgW3buyKxD7Hu/09B3rCyQ6L31cRsKJHDch2rNMWu93H/5fScnLlNyViO45BcTxUl0C27iTeP77R7wLjUJlnPtbxf72puBIBOmelBXpRqVZRO9lmze17n/tUIOCXtIIaRSylerGEnaCYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id BBA1417E05BD;
-	Mon, 23 Jun 2025 14:28:06 +0200 (CEST)
-Message-ID: <b21b9865-7344-45ab-8f03-09cbd8b961b5@collabora.com>
-Date: Mon, 23 Jun 2025 14:28:06 +0200
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bQnRg5GWnz5FHRw;
+	Mon, 23 Jun 2025 20:28:15 +0800 (CST)
+Received: from njy2app03.zte.com.cn ([10.40.13.14])
+	by mse-fl1.zte.com.cn with SMTP id 55NCSAs6046267;
+	Mon, 23 Jun 2025 20:28:10 +0800 (+08)
+	(envelope-from long.yunjian@zte.com.cn)
+Received: from mapi (njy2app02[null])
+	by mapi (Zmail) with MAPI id mid201;
+	Mon, 23 Jun 2025 20:28:14 +0800 (CST)
+Date: Mon, 23 Jun 2025 20:28:14 +0800 (CST)
+X-Zmail-TransId: 2afa6859485effffffffac9-64105
+X-Mailer: Zmail v1.0
+Message-ID: <20250623202814633ukJqUDLU7BRlLLhvWkbD7@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/30] dt-bindings: clock: mediatek: Describe MT8196
- peripheral clock controllers
-To: Krzysztof Kozlowski <krzk@kernel.org>, Laura Nao
- <laura.nao@collabora.com>, mturquette@baylibre.com, sboyd@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- matthias.bgg@gmail.com, p.zabel@pengutronix.de, richardcochran@gmail.com
-Cc: guangjie.song@mediatek.com, wenst@chromium.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
- kernel@collabora.com
-References: <20250623102940.214269-1-laura.nao@collabora.com>
- <20250623102940.214269-10-laura.nao@collabora.com>
- <ef64816f-0ba2-4a12-bef8-aa10e44793e1@kernel.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <ef64816f-0ba2-4a12-bef8-aa10e44793e1@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+From: <long.yunjian@zte.com.cn>
+To: <mani@kernel.org>
+Cc: <fang.yumeng@zte.com.cn>, <mhi@lists.linux.dev>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mou.yi@zte.com.cn>, <xu.lifeng1@zte.com.cn>,
+        <ouyang.maochun@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIXSBidXM6IG1oaTogaG9zdDogVXNlIHN0cl90cnVlX2ZhbHNlKCkgaGVscGVy?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 55NCSAs6046267
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6859485F.000/4bQnRg5GWnz5FHRw
 
-Il 23/06/25 14:12, Krzysztof Kozlowski ha scritto:
-> On 23/06/2025 12:29, Laura Nao wrote:
->> +properties:
->> +  compatible:
->> +    items:
->> +      - enum:
->> +          - mediatek,mt8196-adsp
->> +          - mediatek,mt8196-imp-iic-wrap-c
->> +          - mediatek,mt8196-imp-iic-wrap-e
->> +          - mediatek,mt8196-imp-iic-wrap-n
->> +          - mediatek,mt8196-imp-iic-wrap-w
->> +          - mediatek,mt8196-mdpsys0
->> +          - mediatek,mt8196-mdpsys1
->> +          - mediatek,mt8196-pericfg-ao
->> +          - mediatek,mt8196-pextp0cfg-ao
->> +          - mediatek,mt8196-pextp1cfg-ao
->> +          - mediatek,mt8196-ufscfg-ao
->> +          - mediatek,mt8196-vencsys
->> +          - mediatek,mt8196-vencsys-c1
->> +          - mediatek,mt8196-vencsys-c2
->> +          - mediatek,mt8196-vdecsys
->> +          - mediatek,mt8196-vdecsys-soc
->> +      - const: syscon
-> 
-> Why everything is syscon?
-> 
-> 
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  '#clock-cells':
->> +    const: 1
->> +
->> +  '#reset-cells':
->> +    const: 1
->> +
->> +  mediatek,hardware-voter:
->> +    $ref: /schemas/types.yaml#/definitions/phandle
->> +    description: A phandle of the hw voter node
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - '#clock-cells'
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    pericfg_ao: clock-controller@16640000 {
->> +        compatible = "mediatek,mt8196-pericfg-ao", "syscon";
->> +        reg = <0x16640000 0x1000>;
->> +        mediatek,hardware-voter = <&scp_hwv>;
->> +        #clock-cells = <1>;
->> +    };
->> +  - |
->> +    pextp0cfg_ao: clock-controller@169b0000 {
->> +        compatible = "mediatek,mt8196-pextp0cfg-ao", "syscon";
->> +        reg = <0x169b0000 0x1000>;
->> +        #clock-cells = <1>;
->> +        #reset-cells = <1>;
->> +    };
->> diff --git a/Documentation/devicetree/bindings/clock/mediatek,mt8196-sys-clock.yaml b/Documentation/devicetree/bindings/clock/mediatek,mt8196-sys-clock.yaml
->> new file mode 100644
->> index 000000000000..363ebe87c525
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/mediatek,mt8196-sys-clock.yaml
->> @@ -0,0 +1,76 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/clock/mediatek,mt8196-sys-clock.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: MediaTek System Clock Controller for MT8196
->> +
->> +maintainers:
->> +  - Guangjie Song <guangjie.song@mediatek.com>
->> +  - Laura Nao <laura.nao@collabora.com>
->> +
->> +description: |
->> +  The clock architecture in MediaTek SoCs is structured like below:
->> +  PLLs -->
->> +          dividers -->
->> +                      muxes
->> +                           -->
->> +                              clock gate
->> +
->> +  The apmixedsys, apmixedsys_gp2, vlpckgen, armpll, ccipll, mfgpll and ptppll
->> +  provide most of the PLLs which are generated from the SoC's 26MHZ crystal oscillator.
->> +  The topckgen, topckgen_gp2 and vlpckgen provide dividers and muxes which
->> +  provide the clock source to other IP blocks.
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - enum:
->> +          - mediatek,mt8196-apmixedsys
->> +          - mediatek,mt8196-armpll-b-pll-ctrl
->> +          - mediatek,mt8196-armpll-bl-pll-ctrl
->> +          - mediatek,mt8196-armpll-ll-pll-ctrl
->> +          - mediatek,mt8196-apmixedsys-gp2
->> +          - mediatek,mt8196-ccipll-pll-ctrl
->> +          - mediatek,mt8196-mfgpll-pll-ctrl
->> +          - mediatek,mt8196-mfgpll-sc0-pll-ctrl
->> +          - mediatek,mt8196-mfgpll-sc1-pll-ctrl
->> +          - mediatek,mt8196-ptppll-pll-ctrl
->> +          - mediatek,mt8196-topckgen
->> +          - mediatek,mt8196-topckgen-gp2
->> +          - mediatek,mt8196-vlpckgen
->> +      - const: syscon
-> 
-> Why everything is syscon?
+From: Yumeng Fang <fang.yumeng@zte.com.cn>
 
-Like all other MediaTek SoCs - each sub-IP has its own clock controller, and all
-of those sub-IPs have part of the system controller.
+Remove hard-coded strings by using the str_true_false() helper.
 
-It's just a MediaTek SoC being a... MediaTek SoC.
+Signed-off-by: Yumeng Fang <fang.yumeng@zte.com.cn>
+---
+ drivers/bus/mhi/host/debugfs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> 
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  '#clock-cells':
->> +    const: 1
->> +
->> +  mediatek,hardware-voter:
->> +    $ref: /schemas/types.yaml#/definitions/phandle
->> +    description: A phandle of the hw voter node
-> 
-> Do not copy property name to description, but say something useful - for
-> what? And why this cannot be or is not a proper interconnect?
-> 
+diff --git a/drivers/bus/mhi/host/debugfs.c b/drivers/bus/mhi/host/debugfs.c
+index cfec7811dfbb..39e45748a24c 100644
+--- a/drivers/bus/mhi/host/debugfs.c
++++ b/drivers/bus/mhi/host/debugfs.c
+@@ -10,6 +10,7 @@
+ #include <linux/list.h>
+ #include <linux/mhi.h>
+ #include <linux/module.h>
++#include <linux/string_choices.h>
+ #include "internal.h"
 
-Laura, please check the commit description of my power domains HWV patches
-here: 20250623120154.109429-8-angelogioacchino.delregno@collabora.com
+ static int mhi_debugfs_states_show(struct seq_file *m, void *d)
+@@ -22,7 +23,7 @@ static int mhi_debugfs_states_show(struct seq_file *m, void *d)
+ 		   mhi_is_active(mhi_cntrl) ? "Active" : "Inactive",
+ 		   mhi_state_str(mhi_cntrl->dev_state),
+ 		   TO_MHI_EXEC_STR(mhi_cntrl->ee),
+-		   mhi_cntrl->wake_set ? "true" : "false");
++		   str_true_false(mhi_cntrl->wake_set));
 
-...and follow what krzk just said which... well, my bad for not complaining
-about this during internal reviewing.
-
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - '#clock-cells'
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    apmixedsys_clk: syscon@10000800 {
->> +        compatible = "mediatek,mt8196-apmixedsys", "syscon";
->> +        reg = <0x10000800 0x1000>;
->> +        #clock-cells = <1>;
->> +    };
->> +  - |
->> +    topckgen: syscon@10000000 {
->> +        compatible = "mediatek,mt8196-topckgen", "syscon";
->> +        reg = <0x10000000 0x800>;
->> +        mediatek,hardware-voter = <&scp_hwv>;
->> +        #clock-cells = <1>;
->> +    };
->> +
-> 
-> 
-> 
->> +#define CLK_OVL1_DLO9					56
->> +#define CLK_OVL1_DLO10					57
->> +#define CLK_OVL1_DLO11					58
->> +#define CLK_OVL1_DLO12					59
->> +#define CLK_OVL1_OVLSYS_RELAY0				60
->> +#define CLK_OVL1_OVL_INLINEROT0				61
->> +#define CLK_OVL1_SMI					62
->> +
->> +
->> +/* VDEC_SOC_GCON_BASE */
->> +#define CLK_VDE1_LARB1_CKEN				0
->> +#define CLK_VDE1_LAT_CKEN				3
-> 
-> IDs increment by 1, not 3.
-
-Thank you, Krzysztof - sharp as always!
-
-Cheers,
-Angelo
-
+ 	/* counters */
+ 	seq_printf(m, "M0: %u M2: %u M3: %u", mhi_cntrl->M0, mhi_cntrl->M2,
+-- 
+2.25.1
