@@ -1,42 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA5C22A4EF;
-	Mon, 23 Jun 2025 23:40:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF5E22B8D5;
+	Mon, 23 Jun 2025 23:44:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750722043; cv=none; b=dWOx/YKXFJivAs1xTUG9rMi/LkPTJLY8MbV6qeOz2QfuedvkyGjj1PYXYVrrtYtMi7ZRe2NcSVNrldGvIHDL1GHXflrODmFIUV5SYw1u50AscFH7KtDapkJz1hK1ZmyKwZ7Z8J1tTH+xRgUV7rnZv0ol35ed8K7h3ayjICaf/NA=
+	t=1750722257; cv=none; b=dMZyeuzOAQ5LTOt+DVqEO4QQNAgrubWG5JaD4SUqaAdRELnT92AWhzDtuEFHgJ8b01IrCvJiNTqCcwHAMaF7o85RgvU0c9d+Gr3+m7UILmO3S1Ngahn7mYYH6EoflgXtJ10IVbC32kIKH/XGRzaVaWBI1DaRJCVnMqvx+1pMVfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750722043; c=relaxed/simple;
-	bh=VsI/42vgtdVPgkNI/zM0SZ7BpdbkioOf5/2lMgLEPFc=;
+	s=arc-20240116; t=1750722257; c=relaxed/simple;
+	bh=4alzvxQVK4jWWlPYV9BjKW2WFBd79+SJ/hF3XSWO/lk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T4gSUwo3wuCiRS6OBZn4zaCJLdX6tb9tJ9r1PyUBIQ+kZfKlrkfw3RZ8FRG32yWEmrqFVkURTrq0/+YrGLZLqhVqRgj66xBKyIqdqcJYtE4bT/fjagY+4iQ+4P+fPs0REZJ4AbwnnPh0jhhK7Ibnbfw7wmaTx8CnRdELbgVkKAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dwCcI4C5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=XuMjAC7vpHhKzRyDXoOCfyvXrJ5KL/tNTg1HQQGJ3lrUTlVJ9E4dnOwLRa9PEcRSHrqWotMAAoJniJ5GXplq/mINL3HQnMvKeQzF6DEnu3KcDsIZg1Ah0RAu3Q+DHNCz+S+P99xvbBCMevuEnzq137HJqFhpB98EFtN1g4S4RzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JKrk1ZmY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dwCcI4C5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56F31C4CEEA;
-	Mon, 23 Jun 2025 23:40:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JKrk1ZmY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B68EBC4CEEA;
+	Mon, 23 Jun 2025 23:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750722042;
-	bh=VsI/42vgtdVPgkNI/zM0SZ7BpdbkioOf5/2lMgLEPFc=;
+	s=k20201202; t=1750722257;
+	bh=4alzvxQVK4jWWlPYV9BjKW2WFBd79+SJ/hF3XSWO/lk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dwCcI4C5uqM6LqURGnyegVDKQxX2hGExjyN6k9EaeF/VltjC+u1yt8bm63luMXy9Z
-	 yTy3DTI1ihFmHK3bvRETIWKYM74wrWLrIyvkJ9H+H1Da7AHgLzFsRP/Ux/u7WlsrrE
-	 d+yY24SMLeTAMgGN2UrwbNoYhf/ls4YPsJU0O/clY91655mG45x7ET/Rwnz4lXOWfg
-	 gyda8o7RzjGHKJiO0i/mT67E09BeoRp5UXiTDcsh9NDU9wmgRgdvU9DH7lMAx8UuWQ
-	 Z89jo4PhoxWRfDZAnaO4i2cyrY8CaxpsVOzVnQ42zv/YwDihGDbZM4tn9THg6q9rZs
-	 Zb1x7t7H7czYw==
-Date: Mon, 23 Jun 2025 16:40:41 -0700
+	b=JKrk1ZmYjY53AN1liXH1dnBijaDiG0HxRqWosVJySl9DkMR9iiDjsznjADcF/j0Rm
+	 fx1jC/Uul032//mz3JjLTZopm3Lfg3kotuJO4zc6eu26SiQpCF2n+GCN1UfVFDYoHu
+	 gAf+Ql97s+4YjVz8wnwGRMWbFJaX1yArGQ6QyRvv4fDX8Bjq+BpamvsTCgSTnVDlTc
+	 rZqAyqYeVj0uBR+POQ9P9Xpc+z54NIzPf5oso6JgDLPSclfsq+xfkRDU3oUS+Fx5gv
+	 hlD3yOKo24dGgm8hByNZ16Au7oCMO8LpzhQWsin8XS2hjd5I4Bln7dDDqReg4VsCTr
+	 me8ZcrBWZxgiQ==
+Date: Mon, 23 Jun 2025 16:44:16 -0700
 From: Jakub Kicinski <kuba@kernel.org>
-To: Thomas Fourier <fourier.thomas@gmail.com>
-Cc: Chas Williams <3chas3@gmail.com>,
- linux-atm-general@lists.sourceforge.net (moderated list:ATM),
- netdev@vger.kernel.org (open list:ATM), linux-kernel@vger.kernel.org (open
- list)
-Subject: Re: [PATCH] atm: idt77252: Add missing `dma_map_error()`
-Message-ID: <20250623164041.66ef9cb3@kernel.org>
-In-Reply-To: <20250619105707.320393-2-fourier.thomas@gmail.com>
-References: <20250619105707.320393-2-fourier.thomas@gmail.com>
+To: Brett Creeley <bcreeley@amd.com>
+Cc: Simon Horman <horms@kernel.org>, Thomas Fourier
+ <fourier.thomas@gmail.com>, Shannon Nelson <shannon.nelson@amd.com>, Brett
+ Creeley <brett.creeley@amd.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov
+ <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard
+ Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
+ Stanislav Fomichev <sdf@fomichev.me>, Vladimir Oltean
+ <vladimir.oltean@nxp.com>, Caleb Sander Mateos <csander@purestorage.com>,
+ Taehee Yoo <ap420073@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH net v3] ethernet: ionic: Fix DMA mapping tests
+Message-ID: <20250623164416.12f60d8a@kernel.org>
+In-Reply-To: <8f54ae13-7943-4e45-9881-a01108a1b58f@amd.com>
+References: <20250619094538.283723-2-fourier.thomas@gmail.com>
+	<bb84f844-ac16-4a35-9abf-614bbf576551@amd.com>
+	<20250620105114.GH194429@horms.kernel.org>
+	<8f54ae13-7943-4e45-9881-a01108a1b58f@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,21 +56,10 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 19 Jun 2025 12:57:06 +0200 Thomas Fourier wrote:
-> @@ -1857,6 +1859,8 @@ add_rx_skb(struct idt77252_dev *card, int queue,
->  		paddr = dma_map_single(&card->pcidev->dev, skb->data,
->  				       skb_end_pointer(skb) - skb->data,
->  				       DMA_FROM_DEVICE);
-> +		if (dma_mapping_error(&card->pcidev->dev, paddr))
-> +			goto outfree;
->  		IDT77252_PRV_PADDR(skb) = paddr;
->  
->  		if (push_rx_skb(card, skb, queue)) {
+On Mon, 23 Jun 2025 08:44:39 -0700 Brett Creeley wrote:
+> I suspect you are right and this probably shouldn't be categorized as a 
+> bug fix since the change only addresses a corner case that would happen 
+> if the DMA mapping API(s) return 0 as a valid adddress, which wouldn't 
+> cause a crash with/without this patch.
 
-Hm, you're missing undoing sb_pool_add()
-
-Like in another patch from you -- either jump to a new label in between 
-the existing two which does the necessary unwind, or move the mapping
-earlier, before we start adding the skb into the SW queue.
--- 
-pw-bot: cr
+It's fine either way, so let me apply it and we can move on..
