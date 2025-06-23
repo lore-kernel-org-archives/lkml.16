@@ -1,383 +1,120 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC63A219A91;
-	Mon, 23 Jun 2025 08:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EAB322DFB5;
+	Mon, 23 Jun 2025 08:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750668460; cv=none; b=m6a8AiHZq5p/2KhevjEoc87x0sfd0Z9ceZDVSsYwdIdjKE8qbFTMvJC3Cvt5s80i9/YoAw7VToXepl2/oktjO3OJ0KYepe5ariKHxEADlyadzVv16cJct01th7pgCVilQLQ4M8sc22PpUqa0AdwiL9bBZcUNUrNdkUc9JmOMsdM=
+	t=1750668540; cv=none; b=CLLTYQc+aMnh/1/BPN26171JDT8JXll93vwqE0sLm1nIRt87WbhCw/YBsyCyayttHb+56zYwr8k4u80jHplSS85dD0VCEGOpRsQspC5wc5PbcwmGMlkgk5LzqZLOxeHEgL7ZgidoQuui9Z9xUACNJ4USUrk6ari2fYUD3ChIqV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750668460; c=relaxed/simple;
-	bh=hNq4rkHqQ51UkHrC9U41OXCHAhCtKb1Q3dXk8ivWjuw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fv5oyuGdatxTZcht8KZyUJVLA53kVOdHCpYoWJymaBRWPksnT09QdW2/7A7mhInbBWvShqFy08rP2ClKiMNsyiWJoYU6v0OJJB17yXSU7KAzUe67hdpOpe7AvbuBEtgYkJQRrUIHtUryOsZ7M9Mzmpj3d2xyNMoGTO3PKZq0t9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=lOa5Tfze; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="lOa5Tfze"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=EPoZSArN2kgtXJzaLg/XSoUgUso/YZ0pGXH57AfX9WI=; b=lOa5TfzeTdW3MDYbj5HP0nHBrz
-	A3uhN4oapCA4E7oxD7OvXaH61r4t1VfnROg0e9Q0k/p4P1wr6PQIdOh3TJySKyKyL41gjrxKLNUFz
-	SodRSxwyRlWAN1LWBMfUJPLR5l5At5SouSBlRcnxtxxpm6T6XqrHwJTKAoTx59nHQirBlbVwXvyTE
-	+CErUbQDFNhmEKY+IDqvuObR6Ew6eKShkUbiKA4OYudD0r/XizQYR22DkUkPsk+dW2YTQsyouJFJB
-	Y8QmOvY0KLegQcrwyIlZG3YumYdErewV2q1kNeJXCdnmXIfW4LsWtjvBOawnFa0SWIBUsqmaVUSnx
-	XHROU5MA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uTcaP-000F0U-0V;
-	Mon, 23 Jun 2025 16:47:26 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 23 Jun 2025 16:47:25 +0800
-Date: Mon, 23 Jun 2025 16:47:25 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Klara Modin <klarasmodin@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Song Liu <song@kernel.org>, Yu Kuai <yukuai3@huawei.com>,
-	linux-raid@vger.kernel.org
-Subject: [v3 PATCH] lib/raid6: Replace custom zero page with ZERO_PAGE
-Message-ID: <aFkUnXWtxcgOTVkw@gondor.apana.org.au>
-References: <Z9flJNkWQICx0PXk@gondor.apana.org.au>
- <g7ymicehyrtnmepvpupzpds7yv3v53h3oui4sbcb5njcwsmigq@x5gtxzyw5tc6>
+	s=arc-20240116; t=1750668540; c=relaxed/simple;
+	bh=C9SOOGoa6Xk+PFkOm1w1yIEgDP8716caW/HXobeuvNA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gZ6zttBAmkTonmebhcsqsWE6c4lwKChF3sp41OuYmY8De19Ox82x84IXtrTSyf27FRGYlcGeGJprIK2G7rUT3udm4A6+q832ritJlkX+8Qv7uuRE/6M3rCVM3ayWSMI5JsPydpNHyjZrhRtm2wmlxy3EMDSBZmKsKtt1X1pYAzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A60C943210;
+	Mon, 23 Jun 2025 08:48:44 +0000 (UTC)
+Message-ID: <1ebde39e-f5b4-4f8c-a0df-f53cce67f4ef@ghiti.fr>
+Date: Mon, 23 Jun 2025 10:48:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <g7ymicehyrtnmepvpupzpds7yv3v53h3oui4sbcb5njcwsmigq@x5gtxzyw5tc6>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/3] Move duplicated instructions macros into
+ asm/insn.h
+To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Anup Patel <anup@brainfault.org>, Atish Patra <atish.patra@linux.dev>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+ Andrew Jones <ajones@ventanamicro.com>
+References: <20250620-dev-alex-insn_duplicate_v5_manual-v5-0-d865dc9ad180@rivosinc.com>
+ <c12729a1-5046-4821-b5fe-5fea72af76c8@rivosinc.com>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <c12729a1-5046-4821-b5fe-5fea72af76c8@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdduieehjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepudffueegvddtgeeluefhueetteeugeeffeekhfehffdvudfhgedvheduudekffegnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpihhnfhhrrgguvggrugdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmedvieeijeemvgejvgdtmeehudeltdemfhgvtdehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmedvieeijeemvgejvgdtmeehudeltdemfhgvtdehpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmedvieeijeemvgejvgdtmeehudeltdemfhgvtdehngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedufedprhgtphhtthhopegtlhgvghgvrhesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtoheprghlvgigghhhihhtihesrhhivhhoshhinhgtr
+ dgtohhmpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopegrnhhuphessghrrghinhhfrghulhhtrdhorhhgpdhrtghpthhtoheprghtihhshhdrphgrthhrrgeslhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhg
+X-GND-Sasl: alex@ghiti.fr
 
-On Fri, Jun 20, 2025 at 06:49:51PM +0200, Klara Modin wrote:
+
+On 6/23/25 10:07, Clément Léger wrote:
 >
-> Note that an RISC-V vector syndrome implementation was added in commit
-> 6093faaf9593 ("raid6: Add RISC-V SIMD syndrome and recovery calculations")
-> which this patch does not change.
+> On 20/06/2025 22:21, Alexandre Ghiti wrote:
+>> The instructions parsing macros were duplicated and one of them had different
+>> implementations, which is error prone.
+>>
+>> So let's consolidate those macros in asm/insn.h.
+>>
+>> v1: https://lore.kernel.org/linux-riscv/20250422082545.450453-1-alexghiti@rivosinc.com/
+>> v2: https://lore.kernel.org/linux-riscv/20250508082215.88658-1-alexghiti@rivosinc.com/
+>> v3: https://lore.kernel.org/linux-riscv/20250508125202.108613-1-alexghiti@rivosinc.com/
+>> v4: https://lore.kernel.org/linux-riscv/20250516140805.282770-1-alexghiti@rivosinc.com/
+>>
+>> Changes in v5:
+>> - Rebase on top of 6.16-rc1
+>>
+>> Changes in v4:
+>> - Rebase on top of for-next (on top of 6.15-rc6)
+>>
+>> Changes in v3:
+>> - Fix patch 2 which caused build failures (linux riscv bot), but the
+>>    patchset is exactly the same as v2
+>>
+>> Changes in v2:
+>> - Rebase on top of 6.15-rc5
+>> - Add RB tags
+>> - Define RV_X() using RV_X_mask() (Clément)
+>> - Remove unused defines (Clément)
+>> - Fix tabulations (Drew)
+>>
+>> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+>> ---
+>> Alexandre Ghiti (3):
+>>        riscv: Fix typo EXRACT -> EXTRACT
+>>        riscv: Strengthen duplicate and inconsistent definition of RV_X()
+>>        riscv: Move all duplicate insn parsing macros into asm/insn.h
+>>
+>>   arch/riscv/include/asm/insn.h          | 206 +++++++++++++++++++++++++++++----
+>>   arch/riscv/kernel/machine_kexec_file.c |   2 +-
+>>   arch/riscv/kernel/traps_misaligned.c   | 144 +----------------------
+>>   arch/riscv/kernel/vector.c             |   2 +-
+>>   arch/riscv/kvm/vcpu_insn.c             | 128 +-------------------
+>>   5 files changed, 188 insertions(+), 294 deletions(-)
+>> ---
+>> base-commit: 731e998c429974cb141a049c1347a9cab444e44c
+>> change-id: 20250620-dev-alex-insn_duplicate_v5_manual-2c23191c30fb
+>>
+>> Best regards,
+> Hi Alex,
+>
+> I already gave my Reviewed-by for the last two commits of this series in V4.
 
-Thank you.  Here is a v3 that includes this:
 
----8<---
-Use the system-wide zero page instead of a custom zero page.
+Sorry, I'll add them when I merge this patchset.
 
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Thanks,
 
-diff --git a/crypto/async_tx/async_pq.c b/crypto/async_tx/async_pq.c
-index 5e2b2680d7db..9e4bb7fbde25 100644
---- a/crypto/async_tx/async_pq.c
-+++ b/crypto/async_tx/async_pq.c
-@@ -119,7 +119,7 @@ do_sync_gen_syndrome(struct page **blocks, unsigned int *offsets, int disks,
- 	for (i = 0; i < disks; i++) {
- 		if (blocks[i] == NULL) {
- 			BUG_ON(i > disks - 3); /* P or Q can't be zero */
--			srcs[i] = (void*)raid6_empty_zero_page;
-+			srcs[i] = raid6_get_zero_page();
- 		} else {
- 			srcs[i] = page_address(blocks[i]) + offsets[i];
- 
-diff --git a/crypto/async_tx/async_raid6_recov.c b/crypto/async_tx/async_raid6_recov.c
-index 354b8cd5537f..539ea5b378dc 100644
---- a/crypto/async_tx/async_raid6_recov.c
-+++ b/crypto/async_tx/async_raid6_recov.c
-@@ -414,7 +414,7 @@ async_raid6_2data_recov(int disks, size_t bytes, int faila, int failb,
- 		async_tx_quiesce(&submit->depend_tx);
- 		for (i = 0; i < disks; i++)
- 			if (blocks[i] == NULL)
--				ptrs[i] = (void *) raid6_empty_zero_page;
-+				ptrs[i] = raid6_get_zero_page();
- 			else
- 				ptrs[i] = page_address(blocks[i]) + offs[i];
- 
-@@ -497,7 +497,7 @@ async_raid6_datap_recov(int disks, size_t bytes, int faila,
- 		async_tx_quiesce(&submit->depend_tx);
- 		for (i = 0; i < disks; i++)
- 			if (blocks[i] == NULL)
--				ptrs[i] = (void*)raid6_empty_zero_page;
-+				ptrs[i] = raid6_get_zero_page();
- 			else
- 				ptrs[i] = page_address(blocks[i]) + offs[i];
- 
-diff --git a/include/linux/raid/pq.h b/include/linux/raid/pq.h
-index 72ff44cca864..2467b3be15c9 100644
---- a/include/linux/raid/pq.h
-+++ b/include/linux/raid/pq.h
-@@ -11,8 +11,13 @@
- #ifdef __KERNEL__
- 
- #include <linux/blkdev.h>
-+#include <linux/mm.h>
- 
--extern const char raid6_empty_zero_page[PAGE_SIZE];
-+/* This should be const but the raid6 code is too convoluted for that. */
-+static inline void *raid6_get_zero_page(void)
-+{
-+	return page_address(ZERO_PAGE(0));
-+}
- 
- #else /* ! __KERNEL__ */
- /* Used for testing in user space */
-@@ -191,6 +196,11 @@ static inline uint32_t raid6_jiffies(void)
- 	return tv.tv_sec*1000 + tv.tv_usec/1000;
- }
- 
-+static inline void *raid6_get_zero_page(void)
-+{
-+	return raid6_empty_zero_page;
-+}
-+
- #endif /* ! __KERNEL__ */
- 
- #endif /* LINUX_RAID_RAID6_H */
-diff --git a/lib/raid6/algos.c b/lib/raid6/algos.c
-index 75ce3e134b7c..799e0e5eac26 100644
---- a/lib/raid6/algos.c
-+++ b/lib/raid6/algos.c
-@@ -18,9 +18,6 @@
- #else
- #include <linux/module.h>
- #include <linux/gfp.h>
--/* In .bss so it's zeroed */
--const char raid6_empty_zero_page[PAGE_SIZE] __attribute__((aligned(256)));
--EXPORT_SYMBOL(raid6_empty_zero_page);
- #endif
- 
- struct raid6_calls raid6_call;
-diff --git a/lib/raid6/recov.c b/lib/raid6/recov.c
-index a7c1b2bbe40d..b5e47c008b41 100644
---- a/lib/raid6/recov.c
-+++ b/lib/raid6/recov.c
-@@ -31,10 +31,10 @@ static void raid6_2data_recov_intx1(int disks, size_t bytes, int faila,
- 	   Use the dead data pages as temporary storage for
- 	   delta p and delta q */
- 	dp = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks-2] = dp;
- 	dq = (u8 *)ptrs[failb];
--	ptrs[failb] = (void *)raid6_empty_zero_page;
-+	ptrs[failb] = raid6_get_zero_page();
- 	ptrs[disks-1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
-@@ -72,7 +72,7 @@ static void raid6_datap_recov_intx1(int disks, size_t bytes, int faila,
- 	/* Compute syndrome with zero for the missing data page
- 	   Use the dead data page as temporary storage for delta q */
- 	dq = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks-1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
-diff --git a/lib/raid6/recov_avx2.c b/lib/raid6/recov_avx2.c
-index 4e8095403ee2..97d598d2535c 100644
---- a/lib/raid6/recov_avx2.c
-+++ b/lib/raid6/recov_avx2.c
-@@ -28,10 +28,10 @@ static void raid6_2data_recov_avx2(int disks, size_t bytes, int faila,
- 	   Use the dead data pages as temporary storage for
- 	   delta p and delta q */
- 	dp = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks-2] = dp;
- 	dq = (u8 *)ptrs[failb];
--	ptrs[failb] = (void *)raid6_empty_zero_page;
-+	ptrs[failb] = raid6_get_zero_page();
- 	ptrs[disks-1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
-@@ -196,7 +196,7 @@ static void raid6_datap_recov_avx2(int disks, size_t bytes, int faila,
- 	/* Compute syndrome with zero for the missing data page
- 	   Use the dead data page as temporary storage for delta q */
- 	dq = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks-1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
-diff --git a/lib/raid6/recov_avx512.c b/lib/raid6/recov_avx512.c
-index 310c715db313..7986120ca444 100644
---- a/lib/raid6/recov_avx512.c
-+++ b/lib/raid6/recov_avx512.c
-@@ -37,10 +37,10 @@ static void raid6_2data_recov_avx512(int disks, size_t bytes, int faila,
- 	 */
- 
- 	dp = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks-2] = dp;
- 	dq = (u8 *)ptrs[failb];
--	ptrs[failb] = (void *)raid6_empty_zero_page;
-+	ptrs[failb] = raid6_get_zero_page();
- 	ptrs[disks-1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
-@@ -238,7 +238,7 @@ static void raid6_datap_recov_avx512(int disks, size_t bytes, int faila,
- 	 */
- 
- 	dq = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks-1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
-diff --git a/lib/raid6/recov_loongarch_simd.c b/lib/raid6/recov_loongarch_simd.c
-index 94aeac85e6f7..93dc515997a1 100644
---- a/lib/raid6/recov_loongarch_simd.c
-+++ b/lib/raid6/recov_loongarch_simd.c
-@@ -42,10 +42,10 @@ static void raid6_2data_recov_lsx(int disks, size_t bytes, int faila,
- 	 * delta p and delta q
- 	 */
- 	dp = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks - 2] = dp;
- 	dq = (u8 *)ptrs[failb];
--	ptrs[failb] = (void *)raid6_empty_zero_page;
-+	ptrs[failb] = raid6_get_zero_page();
- 	ptrs[disks - 1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
-@@ -197,7 +197,7 @@ static void raid6_datap_recov_lsx(int disks, size_t bytes, int faila,
- 	 * Use the dead data page as temporary storage for delta q
- 	 */
- 	dq = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks - 1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
-@@ -316,10 +316,10 @@ static void raid6_2data_recov_lasx(int disks, size_t bytes, int faila,
- 	 * delta p and delta q
- 	 */
- 	dp = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks - 2] = dp;
- 	dq = (u8 *)ptrs[failb];
--	ptrs[failb] = (void *)raid6_empty_zero_page;
-+	ptrs[failb] = raid6_get_zero_page();
- 	ptrs[disks - 1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
-@@ -436,7 +436,7 @@ static void raid6_datap_recov_lasx(int disks, size_t bytes, int faila,
- 	 * Use the dead data page as temporary storage for delta q
- 	 */
- 	dq = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks - 1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
-diff --git a/lib/raid6/recov_neon.c b/lib/raid6/recov_neon.c
-index 1bfc14174d4d..70e1404c1512 100644
---- a/lib/raid6/recov_neon.c
-+++ b/lib/raid6/recov_neon.c
-@@ -36,10 +36,10 @@ static void raid6_2data_recov_neon(int disks, size_t bytes, int faila,
- 	 * delta p and delta q
- 	 */
- 	dp = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks - 2] = dp;
- 	dq = (u8 *)ptrs[failb];
--	ptrs[failb] = (void *)raid6_empty_zero_page;
-+	ptrs[failb] = raid6_get_zero_page();
- 	ptrs[disks - 1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
-@@ -74,7 +74,7 @@ static void raid6_datap_recov_neon(int disks, size_t bytes, int faila,
- 	 * Use the dead data page as temporary storage for delta q
- 	 */
- 	dq = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks - 1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
-diff --git a/lib/raid6/recov_rvv.c b/lib/raid6/recov_rvv.c
-index f29303795ccf..5d54c4b437df 100644
---- a/lib/raid6/recov_rvv.c
-+++ b/lib/raid6/recov_rvv.c
-@@ -165,10 +165,10 @@ static void raid6_2data_recov_rvv(int disks, size_t bytes, int faila,
- 	 * delta p and delta q
- 	 */
- 	dp = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks - 2] = dp;
- 	dq = (u8 *)ptrs[failb];
--	ptrs[failb] = (void *)raid6_empty_zero_page;
-+	ptrs[failb] = raid6_get_zero_page();
- 	ptrs[disks - 1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
-@@ -203,7 +203,7 @@ static void raid6_datap_recov_rvv(int disks, size_t bytes, int faila,
- 	 * Use the dead data page as temporary storage for delta q
- 	 */
- 	dq = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks - 1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
-diff --git a/lib/raid6/recov_s390xc.c b/lib/raid6/recov_s390xc.c
-index 179eec900cea..1d32c01261be 100644
---- a/lib/raid6/recov_s390xc.c
-+++ b/lib/raid6/recov_s390xc.c
-@@ -35,10 +35,10 @@ static void raid6_2data_recov_s390xc(int disks, size_t bytes, int faila,
- 	   Use the dead data pages as temporary storage for
- 	   delta p and delta q */
- 	dp = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks-2] = dp;
- 	dq = (u8 *)ptrs[failb];
--	ptrs[failb] = (void *)raid6_empty_zero_page;
-+	ptrs[failb] = raid6_get_zero_page();
- 	ptrs[disks-1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
-@@ -82,7 +82,7 @@ static void raid6_datap_recov_s390xc(int disks, size_t bytes, int faila,
- 	/* Compute syndrome with zero for the missing data page
- 	   Use the dead data page as temporary storage for delta q */
- 	dq = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks-1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
-diff --git a/lib/raid6/recov_ssse3.c b/lib/raid6/recov_ssse3.c
-index 4bfa3c6b60de..2e849185c32b 100644
---- a/lib/raid6/recov_ssse3.c
-+++ b/lib/raid6/recov_ssse3.c
-@@ -30,10 +30,10 @@ static void raid6_2data_recov_ssse3(int disks, size_t bytes, int faila,
- 	   Use the dead data pages as temporary storage for
- 	   delta p and delta q */
- 	dp = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks-2] = dp;
- 	dq = (u8 *)ptrs[failb];
--	ptrs[failb] = (void *)raid6_empty_zero_page;
-+	ptrs[failb] = raid6_get_zero_page();
- 	ptrs[disks-1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
-@@ -203,7 +203,7 @@ static void raid6_datap_recov_ssse3(int disks, size_t bytes, int faila,
- 	/* Compute syndrome with zero for the missing data page
- 	   Use the dead data page as temporary storage for delta q */
- 	dq = (u8 *)ptrs[faila];
--	ptrs[faila] = (void *)raid6_empty_zero_page;
-+	ptrs[faila] = raid6_get_zero_page();
- 	ptrs[disks-1] = dq;
- 
- 	raid6_call.gen_syndrome(disks, bytes, ptrs);
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Alex
+
+
+> Thanks,
+>
+> Clément
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
