@@ -1,37 +1,66 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E7F450FE;
-	Mon, 23 Jun 2025 20:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714C714658D;
+	Mon, 23 Jun 2025 20:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750711589; cv=none; b=WodmqSos63PMhhR/7SONYXPVaqUXq7Abt7Q8YPfAlOQXskYJ2fJ9q0sDHomzuYvAZ2u9z/QWM/gfzztucRnGCHivcWkV7FX1BbGgWWziRzN7DtlufGnY/iokW7GLENR2BDKSfc34SahW5tnr9DuZqmK+xy5Sg+TzTZJLhDOjjlU=
+	t=1750711798; cv=none; b=UBJ180Kgh1d7CgD9EYD8fWYfZncUi8+Clx1qOP8BLCGNDGJdT/BoWT6hZIoYTSkHUw+NsnrEag2lHYemoWoRSXGORLeKbNdgH2zfYHSAOIvG6XpGmOauX7inqaAJnmSyOXKPrYFcFZ11wGxZpjpfsBtmhKM3/BptCBASGKO9apQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750711589; c=relaxed/simple;
-	bh=VdnbWeqI8Ap67iCrQCAySa8md3YMTF7BkfXz/DYRji8=;
+	s=arc-20240116; t=1750711798; c=relaxed/simple;
+	bh=hiRiP1mEeVcp0//Bh7jTxxu+orSUMoHruu9X+qCE/fg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oTOB9NcJ7IJlTS/IM1sVQTkRKqDSeI/ydAd/FG1NHekyjzzHHaNSEPh9b7NLL9RYlmi6Q9NfssyTA7qhapRQZdaeDo17b/XxaW+5TaZ+aUPinQ0NvKFw16YoUihzCrAUKnTV3KfOUMS+P1PI4O+BkE85owzIurHFjr7318ssjYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SZy/nLP/; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=ssD4B8NTeqKXTqDcJviCmtCk2fLDBZht/Cq2g7Prk5QYokS3w4LTmXQCcsftojqR+qKfCRu5/RdfadE/6EVhgNoiDn3lqpZ9L+uvQ7lc/3XKr4UHMF/jCR24HrvgXJLQ9EoRvekhsSRFQWaLe3EuL3w5c8+8APxi7XahScCAVfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=niGShkW8; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SZy/nLP/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=fqTupFHdWOP7XknPjNhQ1+otLO26YLnn5ZSEsxhj8Do=; b=SZy/nLP/3c+QnF2BTKRl/kNQxj
-	AvTwWK7ITnnOpj9kUWgxUlM079YiCqRv0XrRCWrbvBJD5o+xeJHfeGBxMjmGCMo5Q9PL2GlbGG1Q0
-	tyK3+41KZT/bFOsIW7hZMPLaFHzdHZlEfm8Y/N/APALXsPWLteRNWbKKDXl0KeGw4XRqdyl5hGbhb
-	Uft+5d1Cn7kgwT7dcOiafFVnKG8KIOukX+wiqgbPtU6v6oHcJoRZVn2DNKyRuoei2Tgadhp9YyK1I
-	hz3maER1osGsNiIUlG6+mCtitDdFDjwIH1BvYjrLeIBXOTb10S6jhTuBoag+fnD+HZgOFi1co54Lt
-	0Df6ep5w==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uTo3Y-00000004ZHA-0h2U;
-	Mon, 23 Jun 2025 20:46:20 +0000
-Message-ID: <ff61ff8e-d20c-444e-988f-6d97a197e070@infradead.org>
-Date: Mon, 23 Jun 2025 13:46:17 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="niGShkW8"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2350b1b9129so34013145ad.0;
+        Mon, 23 Jun 2025 13:49:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750711796; x=1751316596; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=weXHogG41g/cWGKJLnZuTZtl70yy4s5IwHwPHS5+yNE=;
+        b=niGShkW8iRXMHXHF+oivKb7cIzDYxjiKOJxTrZmToKpwkB4SMVJpADx/HnfiGSqzuj
+         omUJUkJe+5XZ+Y8u2Hbjcp3bnGg1EboV6LQD/Z4NFp5aX5NyIyjj0eGeDbt93ZFyhRBn
+         7EV28IYGJNgus0Wh45SdNHh1w7qlvxC1zark/1HUsU9stApZpm5A3T4XDMaBz9qmTbZh
+         SyvKwMDpSHqTy4hNt654iGowqynHH2qiPkFUJn65t1fXMsJ9jcKFk/VVBXQM8AVL7tMC
+         ILX7h1GbKonkCPa6Pd3QI6j9vQL7Jrh0lUo/2/dCYbf7kxgL38LPx4QnXlMvVwJ2HgSS
+         ZDIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750711796; x=1751316596;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=weXHogG41g/cWGKJLnZuTZtl70yy4s5IwHwPHS5+yNE=;
+        b=Ps4fGVjwo4qTvNg5vUdZKFoDfJ919FFdPAmPoei6Uf8G2ssJFmL4a1+UIj2S/lSBMx
+         kXP+Pk5D4kqhtPpl0gN1EAoZqRs2fnTmG0g+z19DQtXKqYn15V/MiGi/02PnvrMZxbf5
+         9Kq3sOS2jixc50mssbHHjmuMju0RLtzSAzNR+7hrvKYucg8rS9cGm85/7WwpULK8r/xf
+         lc09xF1hnZXb4t/6gpBiS6ZjTmGOJMZt970rfp0AJ7x+OeZnlc2AvFhKgiYyRC9kCrIa
+         7DbYiD4zFjLbCqJ42HdbjTrjC2h1N+//k1HO59HfupJdFxmc2DTPXRS80PCDtZ/p/AKX
+         iPSA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnjQTwUaKjlgoaJgaOKmjlIP6eZD7/KrrM5FfeH6DVwXsh/dt0iNEAiX86UDOz4Y0vVduqebiL@vger.kernel.org, AJvYcCX2tLwCJwQ3Ryox5xNklQXdyTWVvpbQYou1sJGXFYtetS8XwAyFhnL82Tha9fFRIKmsoXs1OSNnEjRs+lg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCqYpN6DZA91oyR5RXJVJ1f0ijYcDXlhivvlHdYBIy9BDzppGY
+	m5iPPW+YvQn7GwoqqXfMahfuIfrHI2IiIEDZwmNSR8e1HsZssrNEgnIE
+X-Gm-Gg: ASbGnctOLdroeeN6h3wRgcU08NRHh6OGblPBfY44pDWlfD9u08kGR9lfDCzojffE7hD
+	PTjGohXUvpDA7Y6Y3RlXUuLMvAaMNgND6wGCq4RXrNsebpEwsiSH2jamezhhpN6VLP2tORtCaUf
+	UVgZt4uEltvFVNO6y8BioB7KqzEeLmguXFClmjwp54ynGpvqx4yRwMtNh2x0qeVDBI/WlqSAko/
+	3o7AvFx6NMkPvNigPtCEzJB561xE4h733TfEQk2LmRkRWftm5hqeh/VWPMcEom9ASQ2BOZlngne
+	NZ9V844SmdQJE2FYr53SPBPf8XHqhQR0wpsvUQQlPd8mfItT7iuX5oEqVx9KDlJL7u9zcnKPQXc
+	YGsa2GkCp/LEtEA==
+X-Google-Smtp-Source: AGHT+IGgSkiqCgu3Tlo68vWVQORrqfMWSdM0S0CmW4fT8T2aHvF9owwjkeUL1/HhaX9k6yylZohtRA==
+X-Received: by 2002:a17:902:ea0c:b0:234:a139:120d with SMTP id d9443c01a7336-237d9779b69mr206885575ad.7.1750711796573;
+        Mon, 23 Jun 2025 13:49:56 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8673d1asm91970485ad.172.2025.06.23.13.49.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 13:49:56 -0700 (PDT)
+Message-ID: <0413c7f8-d5fb-4b6d-a97b-cbabb61b87c3@gmail.com>
+Date: Mon, 23 Jun 2025 13:49:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,73 +68,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] nvme: Fix typo in status code constant for self-test
- in progress
-To: Alok Tiwari <alok.a.tiwari@oracle.com>, linux-nvme@lists.infradead.org,
- kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
- kch@nvidia.com, nilay@linux.ibm.com, corbet@lwn.net
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250623064036.4187788-2-alok.a.tiwari@oracle.com>
- <20250623064036.4187788-5-alok.a.tiwari@oracle.com>
+Subject: Re: [PATCH 5.15 000/411] 5.15.186-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250623130632.993849527@linuxfoundation.org>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250623064036.4187788-5-alok.a.tiwari@oracle.com>
-Content-Type: text/plain; charset=UTF-8
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250623130632.993849527@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 6/22/25 11:40 PM, Alok Tiwari wrote:
-> Corrected a typo error in the NVMe status code constant from
-> NVME_SC_SELT_TEST_IN_PROGRESS to NVME_SC_SELF_TEST_IN_PROGRESS to
-> accurately reflect its meaning.
+On 6/23/25 06:02, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.15.186 release.
+> There are 411 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
-
-> ---
->  drivers/nvme/host/constants.c | 4 ++--
->  include/linux/nvme.h          | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
+> Responses should be made by Wed, 25 Jun 2025 13:05:51 +0000.
+> Anything received after that time might be too late.
 > 
-> diff --git a/drivers/nvme/host/constants.c b/drivers/nvme/host/constants.c
-> index 1a0058be58210..dc90df9e13a21 100644
-> --- a/drivers/nvme/host/constants.c
-> +++ b/drivers/nvme/host/constants.c
-> @@ -133,7 +133,7 @@ static const char * const nvme_statuses[] = {
->  	[NVME_SC_NS_NOT_ATTACHED] = "Namespace Not Attached",
->  	[NVME_SC_THIN_PROV_NOT_SUPP] = "Thin Provisioning Not Supported",
->  	[NVME_SC_CTRL_LIST_INVALID] = "Controller List Invalid",
-> -	[NVME_SC_SELT_TEST_IN_PROGRESS] = "Device Self-test In Progress",
-> +	[NVME_SC_SELF_TEST_IN_PROGRESS] = "Device Self-test In Progress",
->  	[NVME_SC_BP_WRITE_PROHIBITED] = "Boot Partition Write Prohibited",
->  	[NVME_SC_CTRL_ID_INVALID] = "Invalid Controller Identifier",
->  	[NVME_SC_SEC_CTRL_STATE_INVALID] = "Invalid Secondary Controller State",
-> @@ -145,7 +145,7 @@ static const char * const nvme_statuses[] = {
->  	[NVME_SC_BAD_ATTRIBUTES] = "Conflicting Attributes",
->  	[NVME_SC_INVALID_PI] = "Invalid Protection Information",
->  	[NVME_SC_READ_ONLY] = "Attempted Write to Read Only Range",
-> -	[NVME_SC_CMD_SIZE_LIM_EXCEEDED	] = "Command Size Limits Exceeded",
-> +	[NVME_SC_CMD_SIZE_LIM_EXCEEDED] = "Command Size Limits Exceeded",
->  	[NVME_SC_ZONE_BOUNDARY_ERROR] = "Zoned Boundary Error",
->  	[NVME_SC_ZONE_FULL] = "Zone Is Full",
->  	[NVME_SC_ZONE_READ_ONLY] = "Zone Is Read Only",
-> diff --git a/include/linux/nvme.h b/include/linux/nvme.h
-> index b65a1b9f2116c..655d194f8e722 100644
-> --- a/include/linux/nvme.h
-> +++ b/include/linux/nvme.h
-> @@ -2155,7 +2155,7 @@ enum {
->  	NVME_SC_NS_NOT_ATTACHED		= 0x11a,
->  	NVME_SC_THIN_PROV_NOT_SUPP	= 0x11b,
->  	NVME_SC_CTRL_LIST_INVALID	= 0x11c,
-> -	NVME_SC_SELT_TEST_IN_PROGRESS	= 0x11d,
-> +	NVME_SC_SELF_TEST_IN_PROGRESS	= 0x11d,
->  	NVME_SC_BP_WRITE_PROHIBITED	= 0x11e,
->  	NVME_SC_CTRL_ID_INVALID		= 0x11f,
->  	NVME_SC_SEC_CTRL_STATE_INVALID	= 0x120,
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.186-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
+
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-~Randy
+Florian
