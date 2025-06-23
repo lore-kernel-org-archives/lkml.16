@@ -1,162 +1,105 @@
-Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022092.outbound.protection.outlook.com [52.101.126.92])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0194418BC3B
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.92
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750674461; cv=fail; b=GPz1SLzEknHY4lfS3DFBH0Ml1Cq8pR1wWgBc3AKDVMharNG8jEF/xhQSaVAVIMVYc9mKubBVIYB+zc0NGYmeIfBypquw68ejrofzX9YA9WZUzkAq5QRtb66fCJCGt0d6KkX2zOGx6x5jUbLEt53D5mjWcKtsU76lxfiSRg48GO8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750674461; c=relaxed/simple;
-	bh=yGBvh7+7GTLHrJBCGEMzZTw8oXTYof1cI/YuQZbnWqI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CvmFbZH0LbLAnMFoo2UStrj67LkAJJ68d1yuOOc34E7d7UvicBSpjgXi/gDS+pYo2852NsxwmIYznpPTn8RA5xdySXm/dTBFezuF4ud7ispBHefEQ86LrFaMnd1d/6kGpGUnLevvwWhHHwpYufQ2UGIin43/oMbwICU3x5nXtLw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.126.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RCeU2UsthVpZZtCJ+csToP4JfQJH4zdVWkMcXvW1G9oOrNLcypiNX5G+3Aye2yDYVIhpwkbSS4Kym5CrNBbcHfAH9j437m/OoyZIBKNUyE7qrowNRR15VXzXeQ6UAS7qkgYT2QHY8bYmkPpA2BGGeZ4rRym4Xr+JTQCxhsUyoV05ahVjiOI21G0/MclMWlwcfPZ8EOxMfs9suP0HR0TafaQ1ZnDxTCh9KDW1zPAk75+LL6k5P/A87YR7lXdTFak6Qu751Tn3XWB3p/07UY0HdDXEPHJ59GqtE8IQrSs/b7bcN3zOQ1q2DJpvqY44yHozIs3kfS0T8GvlQXFiSiAyTA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Qs2zKwjdiDy4fgf7IwKtscfNmHqIxnAgcPR7k8cIFOo=;
- b=Fz6PGlPCkplRkPeJhSyq9CIl1BdT8CQkd+tFnk4YuFwyMTP+1nPuEa549JyK3ckdWhQvzwZDlCCWezznKoB1nYWn4tQJy+D8HksHnlOJVMqsev82kD9mzgY+bF3/CN+dlZEcq2NqQ7kmkMIPbat4DqxyjJxFcZmeVz9n96G7qvCR91KOvVyqqklUD/+MWJIP9CBEhwuWHunsA5hBZkfL/PQkKt0vjM6NOWxozh8DBCfCcWGqefdca9wI3BIc8ZUUTQPFUWsAkJQ66TaPpR9duX4SSxXkTsE/9ZnU1GGMyupiQiOGnTcr1oCaNjLo2pBBTohQ4VXTdYWgY44j1sTQPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=cixtech.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from TY4P286CA0021.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:2b0::6)
- by SG2PR06MB5058.apcprd06.prod.outlook.com (2603:1096:4:1c6::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Mon, 23 Jun
- 2025 10:27:34 +0000
-Received: from TY2PEPF0000AB88.apcprd03.prod.outlook.com
- (2603:1096:405:2b0:cafe::99) by TY4P286CA0021.outlook.office365.com
- (2603:1096:405:2b0::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.29 via Frontend Transport; Mon,
- 23 Jun 2025 10:27:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- TY2PEPF0000AB88.mail.protection.outlook.com (10.167.253.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8880.14 via Frontend Transport; Mon, 23 Jun 2025 10:27:33 +0000
-Received: from localhost.localdomain (unknown [172.16.64.196])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 4AED440A5BD4;
-	Mon, 23 Jun 2025 18:27:32 +0800 (CST)
-From: Gary Yang <gary.yang@cixtech.com>
-To: gary.yang@cixtech.com,
-	peterz@infradead.org
-Cc: linux-kernel@vger.kernel.org
-Subject: [sched/eevdf] llama-bench performace drop
-Date: Mon, 23 Jun 2025 18:27:18 +0800
-Message-ID: <20250623102732.3447837-1-gary.yang@cixtech.com>
-X-Mailer: git-send-email 2.49.0
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9922F1B4240;
+	Mon, 23 Jun 2025 10:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750674514; cv=none; b=joXbe0v97/p25otNPbE6arqV6PhhaKN81MJF7LREjR1VwtL6JIa3DQx7wbDKg3Oa3p4zRJU9gzZVI0MI1pYfJnl8NqI89/jvRL6zzwnOPOn1TUpBSWecCEPcC2rYQNgIy4LRRgQeKyDPuw+QG/EHhp9InqUIKPD9PoCuXxmS+WI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750674514; c=relaxed/simple;
+	bh=N7ZQxV+Tkg0+Ls4X+f9GzaVY7wm4dgYAmb5ovUUI3Po=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qytbLPF1ZR/ehPA2CoataopSkn8E0AR2SSznpb8LUrg8E6RIL9br4sjC3vauEKryaCHiMUv2l20r7bdU6SuwyCZk8WQO8OLWQ6JbxXlEQdhaya7thzx94GOqj5n1rqwTm8wQaiKnmGPUmaXryrvmOfyAXcwN0Preo2FJTOs+I7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-cd-68592c4b26b2
+Date: Mon, 23 Jun 2025 19:28:21 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
+	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com, hannes@cmpxchg.org, ziy@nvidia.com,
+	jackmanb@google.com
+Subject: Re: [PATCH net-next v6 1/9] netmem: introduce struct netmem_desc
+ mirroring struct page
+Message-ID: <20250623102821.GC3199@system.software.com>
+References: <20250620041224.46646-1-byungchul@sk.com>
+ <20250620041224.46646-2-byungchul@sk.com>
+ <8eaf52bf-4c3c-4007-afe5-a22da9f228f9@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB88:EE_|SG2PR06MB5058:EE_
-X-MS-Office365-Filtering-Correlation-Id: d9707567-ff23-4302-d15f-08ddb240913e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?RaYl+/rWuqdZ0E3tBM6BENIf+gkkLtQbqg9I9XWqODEqhqYsFIBNUziRRSaU?=
- =?us-ascii?Q?g0CDudnRb3oElxg5iJ46KFzMXMotQdZimtIzFDS2+FvV0YdqY5yPoqB7gs1e?=
- =?us-ascii?Q?YWrcqgVtfb63bEwsrf8Lt5U2fj+umTwBWt9ZxQ9QxWPTNZ1N6SWQ/1vS5kRr?=
- =?us-ascii?Q?iuULoHdre3kKniq74pTWWVhEAdIbLgRMgaTNeXrPnpEVWij+8xV1lLanH0ze?=
- =?us-ascii?Q?8gx4p/wmA9KecF9Qh+oThYXeNQ9X6RWS6DEXcq6WvHN4d7MYJ6s3zaAXOsqy?=
- =?us-ascii?Q?FbXtps9YYP9jPVQ+ITc8c8QGkpEODfnc9jxi4uzWKzAJTpkQ+Dgl9ITVPsB3?=
- =?us-ascii?Q?7gs2PF5TZrVyIbhEZeRycqazDRfOwU//0ha0rxT7XGpgDBrZkhI7SBisx3s1?=
- =?us-ascii?Q?eLwAL2/QEyAAKTx1ziwzo6qiRSraouqXHyqntwAFO7Dr3UDxipRxyQmxKYDT?=
- =?us-ascii?Q?Lqb5jg8NLMO2SpLglz233SLjhIiE3OB0hCCV3s/CokWhM37tJ0SLlEdYtsUm?=
- =?us-ascii?Q?FLo9FKL4a3edvZvej9nAVn4cxEVXikUiHMZE+hD3x210Dd9e3TYJly9NjUo4?=
- =?us-ascii?Q?NMV1AalAd+Kazo3OvRBc4NFJjlSMZHbepQlCGuXDQPTwpwUFIhXHGdhUCZYz?=
- =?us-ascii?Q?swFT1TYK9CEnq7XcKu6p4spWZfPTzg3cPRZRFydBgRn+FVXWloeXqz1NPYPk?=
- =?us-ascii?Q?C6ejYd+5aoNoDBmWvAzRw3q3HaKwhm+vbqh5klBopnGtWf7W7k/7ukM8b11u?=
- =?us-ascii?Q?ISKDhQ1SwQ/dRDwrzFMg2upXgJQTIb66njXW9IdBKFgfhpeKwDJkJyNvVxw5?=
- =?us-ascii?Q?k1gYfEA/Mx6kdBlCc9U+li5WItDafjNagpMuKY5zJ8NcqvwROnCrGa8ITdpr?=
- =?us-ascii?Q?kDbBqleMLfZRFKCdmsxaNuE3CDhA2enYnzaAvrk7YKGZnJGy4N1ZZ4k3Cnt/?=
- =?us-ascii?Q?XE4lI4JqluQmLKhUpCaCkc2PiloBp5fluEYjo7Yn0zA1IXGoAeHYRsJLNotl?=
- =?us-ascii?Q?byj3ON1kMzJybjXarM3BtS7Vjozrewofb6x9VEYED+bJCc4uwED7Xj6m2CoQ?=
- =?us-ascii?Q?aEvAuPD+/9yGdvvHduTWTj6RKGen9tDPjZscs4tkL0C5m840HcMXPZcrUk9Z?=
- =?us-ascii?Q?bD2KErgslx6Ed4mKw+GmTfZAxlvUUdCU13qzyU1JdQQqdkFbpHWv6vWq+99x?=
- =?us-ascii?Q?t43NftLb6HUMQ12c/FfUzj+ahjYikBThS4jBvvl4oFBrTyYscomWjfKCFb3F?=
- =?us-ascii?Q?L6l3kJfH0YiX883uVKXK2BXrWBR2HXbo3JUqErJXoxDMdN4khEc6pxgDZ0Id?=
- =?us-ascii?Q?4X1dR0IEjI8bvdVbjo9gExoLV4HC1A+CUjKeoTc8YXguSiS6862Q9BvnNZk1?=
- =?us-ascii?Q?B78uyQ/HpWH76GQwc6sUtaJVtN7sczj72Q41yuCz6lyxUextb7jWjx3PIFZp?=
- =?us-ascii?Q?m4pyN3frMFE3fhYSTUpn9CGpG5Bwh1oN2JegDMOYG1cSwCLG6hLodkkIltUH?=
- =?us-ascii?Q?mLtxm1jAeAw6aZzZgiZtiAFN0Eo1VJjV3xel?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 10:27:33.5620
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9707567-ff23-4302-d15f-08ddb240913e
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	TY2PEPF0000AB88.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR06MB5058
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8eaf52bf-4c3c-4007-afe5-a22da9f228f9@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRiGefd+p00HX8vqLX8U62BZOQup54faQaoPOxgF0Qlq5EebzRWb
+	mgaBlhlJWi07TZNpZJ5gNQ+bYVJLnbJAs7RVprZUCMwwD2SW5oyofxf3/XBx/3g4rDDTCzit
+	PkE06NU6JSOjZF/8C1ZvX3VAE/r6fgDkWcsZKPueDA96HDTklVYjGBl/z8JwvYuBewVjGPJa
+	0ikYtf7A0NfoZaHMthO6i/opqL1ox+C90sRAVvoEhifjgyyccxRLoLU6m4acH/cx2FN7WHj1
+	OI+BrvIpGvqdWRQ0m0so6M7eCI2WuTDmHkBQb7VLYOzyXQaut1kY+JTejaDtuZeC3LRsBNY6
+	Dw0T36cduQ1d7MYlwvOBr1ioLHkrEWrMH1jBYksUKoqDhUxPGxZspZcYwfbNxAqdHbWM0HR7
+	ghJqHMMSIev8ICMM9b2jhK917YxgrWynhBeWenb3rIOy8FhRp00SDarIozKN60kNc+oVm9zU
+	8xKnoik6E3Ec4cNIWufCTCSdQZd7EvuY4pcSp/sm42OGDyIez/hMHsAvJ7aMh9Ms4zCfzxBL
+	TudMMZtXk1umTxIfy/n15G1l18yRgr+ByJCtjP5TzCLNd3opH2M+mHgmP0t8IzAfSB5Mcr5Y
+	ykcSk7kR+XgOv5g8rXZJfB7COzgyNGDGf5bOJ8+KPdRVxJv/05r/05r/aS0IlyKFVp8Ur9bq
+	wkI0KXptcsixk/E2NP0xRWd/HnKgb617nYjnkNJfftR/v0ZBq5OMKfFORDisDJA7N+/TKOSx
+	6pQzouHkEUOiTjQ6USBHKefJ146djlXwx9UJ4glRPCUa/rYSTrogFYlsu99o6OGcxSUfMxzl
+	fjqX4YJJNedXxwbp5vDRXa9V1i6VfUtc77PCbSNyb4QpLj2qxb0yQRcdJX2jii6ovdIRnlO3
+	KSZwXdSLp0Zn7zIajXgnVmTHaPM7x+fvqYpkkV9D2L79GRUR/WX6RY+qGqJTBgd2XLq2dchS
+	mHt7XlGQkjJq1GuCscGo/g1pi+z/LQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRjG+Z9zds5xNDqtVSclgkVU6yoUvWGIFNSfzOpTmhF6yINbeWPL
+	WySZrkJRy0uZxxkzU+cFV0t0hkbM8sKivGCsLCeaUSKWaZJZ1mZEffvxPM/v/fSypPIn5cvq
+	4s6J+jghRk3LKfmRgMytwVtOaHe09BJgstbTUPctBaqH7TIw1TYhmJkbZGD6SScNFeWzJJhe
+	GCn4av1OwljHCAN1thBwV72noPVqMwkj17poyDXOk9A2N8lAht1CQHtZtwx6mvJkUPS9koTm
+	9GEG+h+aaBiq/yWD945cCrqlGgrceUHQYV4Js84JBE+szQTM5pTRUNhnpmHU6EbQ1z5CQeml
+	PATWRy4ZzH/z3Ch9OsQErcftE59I3FjzisAt0lsGm22J+IFFg7NdfSS21WbR2PalgMFvXrbS
+	uOvWPIVb7NMEzs2cpPHU2GsKf3o0QOOKD58JbG0coI4pw+V7o8QYXZKo3x4YKdd2trXQCf1M
+	StdwL5mOfsmykQ/Lczv5TucC6WWKW887nDdpL9PcBt7lmlvMVdxG3nblnoflLMndpnlz0ZvF
+	Yjkn8MUFo4SXFdxu/lXj0OJIyd1A/JStTvanWMZ3l7yjvExyGt618NEjsB7246sXWG/swwXy
+	BVIH8vIKbh3/uKmTuI4U0n+29J8t/bPNiKxFKl1cUqygi9m1zXBWmxqnS9l2Oj7WhjxPUZX2
+	I9+OZvoPOhDHIvUShSU4TKuUCUmG1FgH4llSrVI49h3XKhVRQup5UR8foU+MEQ0O5MdS6lWK
+	Q6FipJKLFs6JZ0UxQdT/bQnWxzcdnZLOJx9WVo3XXtD8GCu6jMMsWXeeb2i9veVLsu9pIdrx
+	YmmletNaY8IzLiC0QjuWVp6dPX7sdUhUYcnRyXx//66G/WbVwJmczU4/nakMvXOOmhculYbX
+	rw5WNgT7HSh2F67ZaZmULp4cDHyYHy7t8a+53xMglOTZVXebrpARGb1qyqAV/DWk3iD8BkQV
+	x6EQAwAA
+X-CFilter-Loop: Reflected
 
-Problem: The llama-bench test uses cpu to run AI model. It can create a
-lot of threads, so it belongs to cpu-bounds type process. It can outputs
-three scores. 1st score is primarily influenced by CPU frequency, 2nd score
-is primarily influenced by memory, or L1/L2 cache, but 3rd score is influenced
-by CPU frequency and memory.
+On Mon, Jun 23, 2025 at 11:32:16AM +0200, David Hildenbrand wrote:
+> On 20.06.25 06:12, Byungchul Park wrote:
+> > To simplify struct page, the page pool members of struct page should be
+> > moved to other, allowing these members to be removed from struct page.
+> > 
+> > Introduce a network memory descriptor to store the members, struct
+> > netmem_desc, and make it union'ed with the existing fields in struct
+> > net_iov, allowing to organize the fields of struct net_iov.
+> 
+> It would be great adding some result from the previous discussions in
+> here, such as that the layout of "struct net_iov" can be changed because
+> it is not a "struct page" overlay, what the next steps based on this
 
-when run llama-bench test on ARM A720 with kernel6.1, it outputs three scores:
-root# taskset -c 0,5,6,7,8,9,10,11 llama-bench -m DeepSeek-R1-Distill-Qwen-7B-Q4_0.gguf
--pg 128,128 -t 8
-| model         |     size | params | backend | threads |       test |          t/s |
-| ------------- |--------: |------: | ------- | ------: |------ ---: | -----------: |
+I think the network folks already know how to use and interpret their
+data struct, struct net_iov for sure.. but I will add the comment if it
+you think is needed.  Thanks for the comment.
 
-| qwen2 7B Q4_0 | 4.12 GiB | 7.62 B | CPU     |       8 |      pp512 | 58.67 ± 3.08 |
-| qwen2 7B Q4_0 | 4.12 GiB | 7.62 B | CPU     |       8 |      tg128 |  9.32 ± 0.22 |
-| qwen2 7B Q4_0 | 4.12 GiB | 7.62 B | CPU     |       8 |pp128+tg128 | 15.10 ± 1.08 |
+	Byungchul
 
-build: 14d627f4 (5288)
-
-when run llama-bench test on ARM A720 with kernel6.6.89, it outputs three scores:
-root# taskset -c 0,5,6,7,8,9,10,11 llama-bench -m DeepSeek-R1-Distill-Qwen-7B-Q4_0.gguf
--pg 128,128 -t 8
-| model         |     size | params | backend | threads |        test |          t/s |
-| --------------|--------: |------: | ------- | ------: | ----------: | -----------: |
-
-| qwen2 7B Q4_0 | 4.12 GiB | 7.62 B | CPU     |       8 |       pp512 | 49.89 ± 3.83 |
-| qwen2 7B Q4_0 | 4.12 GiB | 7.62 B | CPU     |       8 |       tg128 |  2.66 ± 1.98 |
-| qwen2 7B Q4_0 | 4.12 GiB | 7.62 B | CPU     |       8 | pp128+tg128 |  1.92 ± 0.45 |
-
-build: 14d627f4 (5288)
-
-We find the 2nd and 3rd scores are both lower than kernel6.1. During analyze this issue,
-we note there is a new feature on kernel 6.6. It introduces EEVDF scheduler, instand of
-CFS used in kernel 6.1. After we try to revert some EEVDF patches below, the two scores
-are better, almost near those got from kernel 6.1.
-
-9ef5bc6e07a5 Revert "sched/fair: Commit to EEVDF"
-a21eaad7417a Revert "sched/eevdf: Curb wakeup-preemption"
-2cf7e10af999 Revert "sched/eevdf: Also update slice on placement"
-a19837e0f27b Revert "sched/eevdf: Fix avg_vruntime()"
-eae55a336cf3 Revert "sched/eevdf: Fix min_deadline heap integrity"
-ba3c4b6b5aa9 Revert "sched/eevdf: Fix pick_eevdf()"
-37561f3cdba5 Revert "sched/eevdf: Fix heap corruption more"
-9a80e5bf2bb5 Revert "sched/eevdf: Fix vruntime adjustment on reweight"
-df483ee656d5 Revert "sched/eevdf: Always update V if se->on_rq when reweighting"
-587fe3a23160 Revert "sched/eevdf: Fix miscalculation in reweight_entity() when se is not curr"
-65f847ba8cc3 Revert "sched/eevdf: Prevent vlag from going out of bounds in reweight_eevdf()"
-
-Does anyone encounter the similar issue? What suggestions do you have to us?
+> patch are etc.
+> 
+> --
+> Cheers,
+> 
+> David / dhildenb
