@@ -1,139 +1,234 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5149B17996
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 02:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F7D184524;
+	Mon, 23 Jun 2025 02:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750646821; cv=none; b=ubfjv4fcK0FHiNYXcNZHvCgPhwTtDlg0MHCT9zVMGBpqYvZ9tWY34ggeJsiRNqkt4UiiRirFk8tu7veP7vNLH+Zug3PeWELz2GtzySDR6i9KOPJ5H+Yot03aUON1W466AX8cH8AcFhks8VILnPvC+0wedZjnUfah07PP8Upe9OM=
+	t=1750646895; cv=none; b=jePLLaUk07PAkPcFdmFMsYfh2qgD/UvJkHamtOEqpd63iZrfJHxUXGJWX+QRkC77rrMqNNU+HBXTaexreeteRxtU12ULC1oglR5WnyTG9FYKodghlP23sVJZaJY1Nmth6RM6GZgar8biLIiySJQJluo24xyF6ffXuTT3YRComZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750646821; c=relaxed/simple;
-	bh=LGAJtWI6dAuiMgWXlkKRboPFf3HNxBoBn1sCn29qfd8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=d84mcccDa1IWgZAGWNXSf4FaOIGRMv+3KMOTGduYuL3LljkHsuiecuWuVXiykTpE7yZFKe9j9Qu+SFRs9sW2PuUFlcaXWsUHs4bt1SrRFtAHntvm2AyUZeJW1/WzBo6xpUzg7iSqulH4Ha12ITMmLW6L7wTkCjWQCpqDHamAF4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=nyXNZtmX reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750646895; c=relaxed/simple;
+	bh=9yVcyJBRJnRpt1iF81CbrRUu+UUHjwSxXynZSJdXxrw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KKbpSCJcQ9BA3toSEuk+rnL1WKMqU4bT6z3qMkK/R3OapK3dhNQYvDjxE+7q4AGUqTpFGoS2yZwIo2kVtQBcG8LH9TNphzREl5zsTjDvuA0SrL2RXHOYeD0hSuQ5muViORyN0B5efSgo4YOeuLmf/cFHOyAm11e6pj2vHYPztFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RmVYrbrD; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="nyXNZtmX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=gAYfzw7Vqx6j01PdT9cwt2c/gOB9RnRGbBMWkkVnrdo=; b=n
-	yXNZtmXoBWNmGM5VkJIXAg2hCuVIe7NZQ3Yo+/PWmk5FOAyRa1I4znfrIPpSNNiG
-	KAMcvTWcYPCfZMu3iC81shJqPYVLCqroNolgd+B5CdhiXs12JBryDAM28h0uj4q3
-	m/w0xpwwHgmDNVmzwaiTjmeXE36hASjKWgXlE4e1xY=
-Received: from 00107082$163.com ( [111.35.191.131] ) by
- ajax-webmail-wmsvr-40-133 (Coremail) ; Mon, 23 Jun 2025 10:45:31 +0800
- (CST)
-Date: Mon, 23 Jun 2025 10:45:31 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Suren Baghdasaryan" <surenb@google.com>
-Cc: oliver.sang@intel.com, urezki@gmail.com, ahuang12@lenovo.com,
-	akpm@linux-foundation.org, bhe@redhat.com, hch@infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lkp@intel.com,
-	mjguzik@gmail.com, oe-lkp@lists.linux.dev, harry.yoo@oracle.com,
-	kent.overstreet@linux.dev
-Subject: Re: CONFIG_TEST_VMALLOC=y conflict/race with alloc_tag_init
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <CAJuCfpFLKR7CqAHG+QjHt4wCLgWmP7dD+f5D8Jx6gHUoXSe1AA@mail.gmail.com>
-References: <202506181351.bba867dd-lkp@intel.com>
- <20250620100258.595495-1-00107082@163.com>
- <CAJuCfpFLKR7CqAHG+QjHt4wCLgWmP7dD+f5D8Jx6gHUoXSe1AA@mail.gmail.com>
-X-NTES-SC: AL_Qu2eAvqfuU8o5yCdYukZnEYQheY4XMKyuPkg1YJXOp80mSXy+iYnZ25qPV7/9PmhFD2moQmnSjRn68FjTbJCXIlT2m1HWQ+Bysp3OCN0wfuT
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RmVYrbrD"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7d09ab17244so394049185a.0;
+        Sun, 22 Jun 2025 19:48:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750646893; x=1751251693; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CJHmf9BuChhjoB+0hgGrMkj7NgDeDPSjjYZiYpn+uMQ=;
+        b=RmVYrbrDNQDa2+mqfXnk4jHRdfk2wShXCFFSXW0MaVfKVtCdlAy5vsYSzLnDEdDCkl
+         M7LuSgVShlhrm5TzrrEynL5PBSx4K4V0PjSMAjGE+U6SiTrzLnCO+0LRPz/pGsPXDSLc
+         WdbKy8y/huWvbzPHri2+AFmrSoQ3Ivwq0PikQMKO5WqCtfd0nMQBNxZjzAHRnJsaM01h
+         8E47GuOeDIpGCFnfbgCh98HZeOiKd48naJoTrRCcwpF/at6hp24i+nQofYWLBkIpsJ83
+         O+WSEizL9RSJPpj49CLiiX824t7gWfY2luQ2FNuSMmcQ7Z4AxWQRRz1fIdhik0veyXCs
+         1WGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750646893; x=1751251693;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CJHmf9BuChhjoB+0hgGrMkj7NgDeDPSjjYZiYpn+uMQ=;
+        b=t986vWnRA/8+n5L/mJRxyE4evoq0MIOpJA9gu/hlDSQAZM6hkPdRzm25Qg/49tv49R
+         mtzSwbK4CVLJeW8zcOBiQFKXMaO1aYVdTe3fLj4P2f3EQGHM7MpdhFh+6BlrBp9TjG4h
+         dVVLIrtKrqXI1wArahDd4RCjKOnU6o/ualCm6R/IoS2vu8+CDjxuB8lGwMXABpd9zgAS
+         NBva+AO6Il8mEApkzH1VOsQ5uNHU+9xgfs148a4fidTv+2IkWvLjkQgtK6YnmKwEmKid
+         IN6Yt2XzmZgMmsA2CeLS87R4z9l+0U75GOy0FjWhUaeNqrCUwg/YdOX6SQkxVIRNMzLs
+         KXQA==
+X-Forwarded-Encrypted: i=1; AJvYcCUrtmDq7FP3AM2OYTRjkdKJC+xqwcxDYDmn2+P66wXvBdRRTXo3MLE6/gMDj4GsXfAI8V4hLvWFUWTN@vger.kernel.org, AJvYcCW2hIW002sltrnDJwUQN6qiosstdjX7AFAcFWNVEfWdAFpj5qPSSic8IirXttY5OL4CdAoVG5SEDzzqk8eXGlU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiM/+X/PLjSbDX/mK4kNWlywDu9Ou3yEn53bsKE9PnB8yzTfvl
+	Ey4GaKixDs2/gF6WVzYzW6/A+Vc20i7Tpdbo7C8zDEFVrj70P3ZYwociEksKwg==
+X-Gm-Gg: ASbGncsotl8af6G6OKV3wXD0y1KarXcH3VKZMgPLBXVHg3Xe4H467Hm0aytjuFSFtf/
+	hUtJ2G7WBPIFvFUk+GMaX1rtDgbm/VDHZ7yQAlygxzB30cq7wGwVKWQmyg3T5vKkKY7U0fZkw/0
+	9XrhV9zgaSNQxfTgUXWKzD9byhOYNnCNQ3WPa3KjtwYN7Gbiq+s5zr+66YyQX3xaQh7N42kiCPJ
+	AootMnDEvGHd2/RhXdQL5rfaPSqBr+9MvCpAAsW7gamHNtSMovQQ6BVYA9n3JqFsKLStP3tMZOV
+	uQNCwmput1KNim6X1BpYOcAyw+zJFzM0oelzwpvFYkD49u+638Hy7uI8NPUpTx6N09KB7HPG5aN
+	pLAQqrBQVLbloIUV8zHR15Cv60jS+MeNiDhnOU63OLOc7VCx78Omx
+X-Google-Smtp-Source: AGHT+IEgIIA1mAlgzss/AbRlW6vBFk50Ygy+OJLrrlVrrDryQW9ibya3VqZUGjDidzFElD3ARz9mVg==
+X-Received: by 2002:a05:620a:4727:b0:7d3:dccd:4048 with SMTP id af79cd13be357-7d3f99540aamr1889476685a.55.1750646892658;
+        Sun, 22 Jun 2025 19:48:12 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a779d9db4bsm34012431cf.35.2025.06.22.19.48.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Jun 2025 19:48:12 -0700 (PDT)
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 634281200043;
+	Sun, 22 Jun 2025 22:48:11 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Sun, 22 Jun 2025 22:48:11 -0400
+X-ME-Sender: <xms:a8BYaBlh_9fB2I80ppJGMq8DKx65H_YaYgIQycySnRkvnCGkIbTb_A>
+    <xme:a8BYaM3p-uHvF5RzYpOu0SopxYPyJVOmKFbJfzJu2ScgdpIeCop-DZIuQ878X6nPy
+    VZfMNC1lnUAtfyK6A>
+X-ME-Received: <xmr:a8BYaHoSQOyQEx6ic5HUKRr4J4xH5QMbFHtnNFUekCU26I7Sbmzg0UVnQw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdduheekiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfh
+    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
+    hrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudffiedv
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqh
+    hunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddu
+    jeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvg
+    drnhgrmhgvpdhnsggprhgtphhtthhopedviedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtoheplhhinhhugidqkh
+    gvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhushhtqdhf
+    ohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhkmh
+    hmsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqrghrtghh
+    sehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdp
+    rhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgtph
+    htthhopehlohhsshhinheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:a8BYaBnmPEFJ4d8QKvi-WMEHfFqEuO2FHAvh3xzmaEkcsqYNlGqgEg>
+    <xmx:a8BYaP0y-IaM7xqPn_0XfF4xLex-_D_ND-YIHOzDh9m2sQUf7MxvVg>
+    <xmx:a8BYaAugn12AZrGcyaRiMgYkQFmjEVoNq_DSkx1kyCdo5ydSnsq4LA>
+    <xmx:a8BYaDWYgs1GqJ0VGwXURuyTeV6QE5scxNx6bIbsr9OX2NJlqrJbpg>
+    <xmx:a8BYaG055yTWM9iLKHGd0Vj6deBdyhKVufpRtwATfwBRZOaxwvojcxZf>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 22 Jun 2025 22:48:10 -0400 (EDT)
+Date: Sun, 22 Jun 2025 19:48:10 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Gary Guo <gary@garyguo.net>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	lkmm@lists.linux.dev, linux-arch@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 03/10] rust: sync: atomic: Add ordering annotation
+ types
+Message-ID: <aFjAarXzLPnv2kHO@Mac.home>
+References: <20250618164934.19817-1-boqun.feng@gmail.com>
+ <20250618164934.19817-4-boqun.feng@gmail.com>
+ <20250621121842.0c3ca452.gary@garyguo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <375419f4.2ba1.1979aad313a.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:hSgvCgDnX6XMv1hoLhEiAA--.2818W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBEgF1qmhYtSo62gADsA
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250621121842.0c3ca452.gary@garyguo.net>
 
-CkF0IDIwMjUtMDYtMjMgMDY6NTA6NDQsICJTdXJlbiBCYWdoZGFzYXJ5YW4iIDxzdXJlbmJAZ29v
-Z2xlLmNvbT4gd3JvdGU6Cj5PbiBGcmksIEp1biAyMCwgMjAyNSBhdCAzOjAz4oCvQU0gRGF2aWQg
-V2FuZyA8MDAxMDcwODJAMTYzLmNvbT4gd3JvdGU6Cj4+Cj4+IE9uIFdlZCwgSnVuIDE4LCAyMDI1
-IGF0IDAyOjI1OjM3UE0gKzA4MDAsIGtlcm5lbCB0ZXN0IHJvYm90IHdyb3RlOgo+PiA+Cj4+ID4g
-SGVsbG8sCj4+ID4KPj4gPiBmb3IgdGhpcyBjaGFuZ2UsIHdlIHJlcG9ydGVkCj4+ID4gIltsaW51
-eC1uZXh0Om1hc3Rlcl0gW2xpYi90ZXN0X3ZtYWxsb2MuY10gIDdmYzg1YjkyZGI6IE1lbS1JbmZv
-Igo+PiA+IGluCj4+ID4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjUwNTA3MTU1NS5l
-NzU3ZjFlMC1sa3BAaW50ZWwuY29tLwo+PiA+Cj4+ID4gYXQgdGhhdCB0aW1lLCB3ZSBtYWRlIHNv
-bWUgdGVzdHMgd2l0aCB4ODZfNjQgY29uZmlnIHdoaWNoIHJ1bnMgd2VsbC4KPj4gPgo+PiA+IG5v
-dyB3ZSBub3RpY2VkIHRoZSBjb21taXQgaXMgaW4gbWFpbmxpbmUgbm93Lgo+Pgo+PiA+IHRoZSBj
-b25maWcgc3RpbGwgaGFzIGV4cGVjdGVkIGRpZmYgd2l0aCBwYXJlbnQ6Cj4+ID4KPj4gPiAtLS0g
-L3BrZy9saW51eC94ODZfNjQtcmFuZGNvbmZpZy0xNjEtMjAyNTA2MTQvZ2NjLTEyLzdhNzMzNDhl
-NWQ0NzE1YjU1NjVhNTNmMjFjMDFlYTdiNTRlNDZjYmQvLmNvbmZpZyAgIDIwMjUtMDYtMTcgMTQ6
-NDA6MjkuNDgxMDUyMTAxICswODAwCj4+ID4gKysrIC9wa2cvbGludXgveDg2XzY0LXJhbmRjb25m
-aWctMTYxLTIwMjUwNjE0L2djYy0xMi8yZDc2ZTc5MzE1ZTQwM2FhYjU5NWQ0Yzg4MzBiN2E0NmMx
-OWYwZjNiLy5jb25maWcgICAyMDI1LTA2LTE3IDE0OjQxOjE4LjQ0ODU0MzczOCArMDgwMAo+PiA+
-IEBAIC03NTUxLDcgKzc1NTEsNyBAQCBDT05GSUdfVEVTVF9JREE9bQo+PiA+ICBDT05GSUdfVEVT
-VF9NSVNDX01JTk9SPW0KPj4gPiAgIyBDT05GSUdfVEVTVF9MS00gaXMgbm90IHNldAo+PiA+ICBD
-T05GSUdfVEVTVF9CSVRPUFM9bQo+PiA+IC1DT05GSUdfVEVTVF9WTUFMTE9DPW0KPj4gPiArQ09O
-RklHX1RFU1RfVk1BTExPQz15Cj4+ID4gICMgQ09ORklHX1RFU1RfQlBGIGlzIG5vdCBzZXQKPj4g
-PiAgQ09ORklHX0ZJTkRfQklUX0JFTkNITUFSSz1tCj4+ID4gICMgQ09ORklHX1RFU1RfRklSTVdB
-UkUgaXMgbm90IHNldAo+PiA+Cj4+ID4KPj4gPiB0aGVuIHdlIG5vdGljZWQgc2ltaWxhciByYW5k
-b20gaXNzdWUgd2l0aCB4ODZfNjQgcmFuZGNvbmZpZyB0aGlzIHRpbWUuCj4+ID4KPj4gPiA3YTcz
-MzQ4ZTVkNDcxNWI1IDJkNzZlNzkzMTVlNDAzYWFiNTk1ZDRjODgzMAo+PiA+IC0tLS0tLS0tLS0t
-LS0tLS0gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4+ID4gICAgICAgIGZhaWw6cnVucyAg
-JXJlcHJvZHVjdGlvbiAgICBmYWlsOnJ1bnMKPj4gPiAgICAgICAgICAgIHwgICAgICAgICAgICAg
-fCAgICAgICAgICAgICB8Cj4+ID4gICAgICAgICAgICA6MTk5ICAgICAgICAgMzQlICAgICAgICAg
-IDY3OjIwMCAgIGRtZXNnLktBU0FOOm51bGwtcHRyLWRlcmVmX2luX3JhbmdlWyMtI10KPj4gPiAg
-ICAgICAgICAgIDoxOTkgICAgICAgICAzNCUgICAgICAgICAgNjc6MjAwICAgZG1lc2cuS2VybmVs
-X3BhbmljLW5vdF9zeW5jaW5nOkZhdGFsX2V4Y2VwdGlvbgo+PiA+ICAgICAgICAgICAgOjE5OSAg
-ICAgICAgIDM0JSAgICAgICAgICA2NzoyMDAgICBkbWVzZy5NZW0tSW5mbwo+PiA+ICAgICAgICAg
-ICAgOjE5OSAgICAgICAgIDM0JSAgICAgICAgICA2NzoyMDAgICBkbWVzZy5Pb3BzOmdlbmVyYWxf
-cHJvdGVjdGlvbl9mYXVsdCxwcm9iYWJseV9mb3Jfbm9uLWNhbm9uaWNhbF9hZGRyZXNzIzojWyMj
-XVNNUF9LQVNBTgo+PiA+ICAgICAgICAgICAgOjE5OSAgICAgICAgIDM0JSAgICAgICAgICA2Nzoy
-MDAgICBkbWVzZy5SSVA6ZG93bl9yZWFkX3RyeWxvY2sKPj4gPgo+PiA+IHdlIGRvbid0IGhhdmUg
-ZW5vdWdoIGtub3dsZWRnZSB0byB1bmRlcnN0YW5kIHRoZSByZWxhdGlvbnNoaXAgYmV0d2VlbiBj
-b2RlCj4+ID4gY2hhbmdlIGFuZCB0aGUgcmFuZG9tIGlzc3Vlcy4ganVzdCByZXBvcnQgd2hhdCB3
-ZSBvYnN2ZXJ2ZWQgaW4gb3VyIHRlc3RzIEZZSS4KPj4gPgo+Pgo+PiBJIHRoaW5rIHRoaXMgaXMg
-Y2F1c2VkIGJ5IGEgcmFjZSBiZXR3ZWVuIHZtYWxsb2NfdGVzdF9pbml0IGFuZCBhbGxvY190YWdf
-aW5pdC4KPj4KPj4gdm1hbGxvY190ZXN0IGFjdHVhbGx5IGRlcGVuZHMgb24gYWxsb2NfdGFnIHZp
-YSBhbGxvY190YWdfdG9wX3VzZXJzLCBiZWNhdXNlIHdoZW4KPj4gbWVtb3J5IGFsbG9jYXRpb24g
-ZmFpbHMgc2hvd19tZW0oKSB3b3VsZCBpbnZva2UgYWxsb2NfdGFnX3RvcF91c2Vycy4KPj4KPj4g
-V2l0aCBmb2xsb3dpbmcgY29uZmlndXJhdGlvbjoKPj4KPj4gQ09ORklHX1RFU1RfVk1BTExPQz15
-Cj4+IENPTkZJR19NRU1fQUxMT0NfUFJPRklMSU5HPXkKPj4gQ09ORklHX01FTV9BTExPQ19QUk9G
-SUxJTkdfRU5BQkxFRF9CWV9ERUZBVUxUPXkKPj4gQ09ORklHX01FTV9BTExPQ19QUk9GSUxJTkdf
-REVCVUc9eQo+Pgo+PiBJZiB2bWFsbG9jX3Rlc3RfaW5pdCBzdGFydHMgYmVmb3JlIGFsbG9jX3Rh
-Z19pbml0LCBzaG93X21lbSgpIHdvdWxkIGNhdXNlCj4+IGEgTlVMTCBkZWZlcmVuY2UgYmVjYXVz
-ZSBhbGxvY190YWdfY3R0eXBlIHdhcyBub3QgaW5pdCB5ZXQuCj4+Cj4+IEkgYWRkIHNvbWUgZGVi
-dWcgdG8gY29uZmlybSB0aGlzIHRoZW9yeQo+PiBkaWZmIC0tZ2l0IGEvbGliL2FsbG9jX3RhZy5j
-IGIvbGliL2FsbG9jX3RhZy5jCj4+IGluZGV4IGQ0OGI4MGYzZjAwNy4uOWI4ZTc1MDEwMTBmIDEw
-MDY0NAo+PiAtLS0gYS9saWIvYWxsb2NfdGFnLmMKPj4gKysrIGIvbGliL2FsbG9jX3RhZy5jCj4+
-IEBAIC0xMzMsNiArMTMzLDggQEAgc2l6ZV90IGFsbG9jX3RhZ190b3BfdXNlcnMoc3RydWN0IGNv
-ZGV0YWdfYnl0ZXMgKnRhZ3MsIHNpemVfdCBjb3VudCwgYm9vbCBjYW5fc2wKPj4gICAgICAgICBz
-dHJ1Y3QgY29kZXRhZyAqY3Q7Cj4+ICAgICAgICAgc3RydWN0IGNvZGV0YWdfYnl0ZXMgbjsKPj4g
-ICAgICAgICB1bnNpZ25lZCBpbnQgaSwgbnIgPSAwOwo+PiArICAgICAgIHByX2luZm8oIm1lbW9y
-eSBwcm9maWxpbmcgYWxsb2MgdG9wICVkOiAlbGx4XG4iLCBtZW1fcHJvZmlsaW5nX3N1cHBvcnQs
-IChsb25nIGxvbmcpYWxsb2NfdGFnX2N0dHlwZSk7Cj4+ICsgICAgICAgcmV0dXJuIDA7Cj4+Cj4+
-ICAgICAgICAgaWYgKGNhbl9zbGVlcCkKPj4gICAgICAgICAgICAgICAgIGNvZGV0YWdfbG9ja19t
-b2R1bGVfbGlzdChhbGxvY190YWdfY3R0eXBlLCB0cnVlKTsKPj4gQEAgLTgzMSw2ICs4MzMsNyBA
-QCBzdGF0aWMgaW50IF9faW5pdCBhbGxvY190YWdfaW5pdCh2b2lkKQo+PiAgICAgICAgICAgICAg
-ICAgc2h1dGRvd25fbWVtX3Byb2ZpbGluZyh0cnVlKTsKPj4gICAgICAgICAgICAgICAgIHJldHVy
-biBQVFJfRVJSKGFsbG9jX3RhZ19jdHR5cGUpOwo+PiAgICAgICAgIH0KPj4gKyAgICAgICBwcl9p
-bmZvKCJtZW1vcnkgcHJvZmlsaW5nIHJlYWR5ICVkOiAlbGx4XG4iLCBtZW1fcHJvZmlsaW5nX3N1
-cHBvcnQsIChsb25nIGxvbmcpYWxsb2NfdGFnX2N0dHlwZSk7Cj4+Cj4+ICAgICAgICAgcmV0dXJu
-IDA7Cj4+ICB9Cj4+Cj4+IFdoZW4gYm9vdHVwIHRoZSBrZXJuZWwsIHRoZSBsb2cgc2hvd3M6Cj4+
-Cj4+ICQgc3VkbyBkbWVzZyAtVCB8IGdyZXAgcHJvZmlsaW5nCj4+IFtGcmkgSnVuIDIwIDE3OjI5
-OjM1IDIwMjVdIG1lbW9yeSBwcm9maWxpbmcgYWxsb2MgdG9wIDE6IDAgIDwtLS0gYWxsb2NfdGFn
-X2N0dHlwZSA9PSBOVUxMCj4+IFtGcmkgSnVuIDIwIDE3OjMwOjI0IDIwMjVdIG1lbW9yeSBwcm9m
-aWxpbmcgcmVhZHkgMTogZmZmZjliMTY0MWFhMDZjMAo+Pgo+Pgo+PiB2bWFsbG9jX3Rlc3RfaW5p
-dCBzaG91bGQgaGFwcGVuZWQgYWZ0ZXIgYWxsb2NfdGFnX2luaXQgaWYgQ09ORklHX1RFU1RfVk1B
-TExPQz15LAo+PiBvciBtZW1fc2hvdygpIHNob3VsZCBjaGVjayB3aGV0aGVyIGFsbG9jX3RhZyBp
-cyBkb25lIGluaXRpYWxpemVkIHdoZW4gY2FsbGluZwo+PiBhbGxvY190YWdfdG9wX3VzZXJzCj4K
-PlRoYW5rcyBmb3IgcmVwb3J0aW5nIQo+U28sIElJVUMgaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcv
-YWxsLzIwMjUwNjIwMTk1MzA1LjExMTUxNTEtMS1oYXJyeS55b29Ab3JhY2xlLmNvbS8KPndpbGwg
-YWRkcmVzcyB0aGlzIGlzc3VlIGFzIHdlbGwuIElzIHRoYXQgY29ycmVjdD8KClllcywgdGhlIHBh
-bmljIGNhbiBiZSBmaXggYnkgdGhhdCBwYXRjaC4KCkkgc3RpbGwgZmVlbCBpdCBiZXR0ZXIgdG8g
-ZGVsYXkgdm1hbGxvY190ZXN0X2luaXQsIG1ha2UgaXQgaGFwcGVuIGFmdGVyIGFsbG9jX3RhZ19p
-bml0LgpPciwgbWF5YmUgd2UgY2FuIHByb21vdGUgYWxsb2NfdGFnX2luaXQgdG8gc29tZSBlYXJs
-eSBpbml0PyBJIHJlbWVtYmVyIHJlcG9ydGluZyBzb21lIGFsbG9jYXRpb24Kbm90IHJlZ2lzdGVy
-ZWQgYnkgbWVtb3J5IHByb2ZpbGluZyBkdXJpbmcgYm9vdCwgIApodHRwczovL2xvcmUua2VybmVs
-Lm9yZy9hbGwvMjEzZmY3ZDIuN2M2Yy4xOTQ1ZWIwYzJmZi5Db3JlbWFpbC4wMDEwNzA4MkAxNjMu
-Y29tLwoKSSB3aWxsIG1ha2Ugc29tZSB0ZXN0cywgYW5kIHVwZGF0ZSBsYXRlcgoKCkRhdmlkCgoK
-Pgo+Pgo+Pgo+Pgo+PiBEYXZpZAo+Pgo=
+On Sat, Jun 21, 2025 at 12:18:42PM +0100, Gary Guo wrote:
+[...]
+> > +
+> > +/// The annotation type for relaxed memory ordering.
+> > +pub struct Relaxed;
+> > +
+> > +/// The annotation type for acquire memory ordering.
+> > +pub struct Acquire;
+> > +
+> > +/// The annotation type for release memory ordering.
+> > +pub struct Release;
+> > +
+> > +/// The annotation type for fully-order memory ordering.
+> > +pub struct Full;
+> > +
+> > +/// Describes the exact memory ordering.
+> > +pub enum OrderingType {
+> > +    /// Relaxed ordering.
+> > +    Relaxed,
+> > +    /// Acquire ordering.
+> > +    Acquire,
+> > +    /// Release ordering.
+> > +    Release,
+> > +    /// Fully-ordered.
+> > +    Full,
+> > +}
+> 
+> Does this need to be public? I think this can cause a confusion on what
+> this is in the rendered documentation.
+> 
+
+I would like to make it public so that users can define their own method
+with ordering out of atomic mod (even out of kernel crate):
+
+    pub fn my_ordering_func<Ordering: All>(..., o: Ordering) {
+        match Ordering::TYPE {
+
+	}
+    }
+
+I just realized to do so I need to make OrderingUnit pub too (with a
+sealed supertrait of course).
+
+> IIUC this is for internal atomic impl only
+> and this is not useful otherwise. This can be moved into `internal` and
+> then `pub(super) use internal::OrderingType` to stop exposing it.
+> 
+> (Or, just `#[doc(hidden)]` so it doesn't show in the docs).
+> 
+
+Seem reasonable.
+
+> > +
+> > +mod internal {
+> > +    /// Unit types for ordering annotation.
+> > +    ///
+> > +    /// Sealed trait, can be only implemented inside atomic mod.
+> > +    pub trait OrderingUnit {
+> > +        /// Describes the exact memory ordering.
+> > +        const TYPE: super::OrderingType;
+> > +    }
+> > +}
+> > +
+> > +impl internal::OrderingUnit for Relaxed {
+> > +    const TYPE: OrderingType = OrderingType::Relaxed;
+> > +}
+[...]
+> > +
+> > +/// The trait bound for operations that only support acquire or relaxed ordering.
+> > +pub trait AcquireOrRelaxed: All {
+> > +    /// Describes whether an ordering is relaxed or not.
+> > +    const IS_RELAXED: bool = false;
+> 
+> This should not be needed. I'd prefer to the use site to just match on
+> `TYPE`.
+> 
+
+Right, I somehow missed how monomorphization works. I can drop this.
+Thanks!
+
+> > +}
+> > +
+[...]
+> > +/// The trait bound for operations that only support relaxed ordering.
+> > +pub trait RelaxedOnly: AcquireOrRelaxed + ReleaseOrRelaxed + All {}
+> > +
+> > +impl RelaxedOnly for Relaxed {}
+> 
+> Any reason that this is needed at all? Should just be a non-generic
+
+Mostly for documentation purpose, i.e. users can figure out the ordering
+from the trait bounds of the function. I will say we can probably drop
+it when we find a Release-only or Acquire-only function, but even then
+the current definition won't affect users, so I lean torwards keeping
+it.
+
+Regards,
+Boqun
+
+> function that takes a `Relaxed` directly?
+> 
