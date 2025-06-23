@@ -1,273 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011046.outbound.protection.outlook.com [40.107.130.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745BA1957FF;
-	Mon, 23 Jun 2025 07:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750664643; cv=none; b=Xh2xaOgWv6KJsmoHpNm8Opk0wha6k0p3F0xytMb8VhVa13QVq7lntN8f+qnTVhZvEp3xLccsd4QUNC5tI8Gg3Q4+BLmdTFMaBre+P3ighfiY6a2uRYiRP+3ytHB6+4j+bwXPTuxgXcZ9RJ93ThT1IU6F9PyXjSpwxfFwS96aVFM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750664643; c=relaxed/simple;
-	bh=FvVZWSxbxCHHvArP/ksDKZe8srWR5WNbNBaWxp4Q1Aw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ghNlQWGTZIj/SmVzEbRgaPPByCiyhZXO9yGDRryFGxmBkce//CYFMZehM2zUOokIavcSi10aYe3cr5hTi6gu1hA0Z99L0nivOV29eJmB2XIWki6VQwSYZym7XOF6gCMzi0nWDNkoaOecErhUaPRmMKlwy0hv76SSQu1YYd6+BVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dHl251/w; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6364D1388;
+	Mon, 23 Jun 2025 07:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750664748; cv=fail; b=IcvgXaNxzTMEW5DEYN0qzn0sKxL/B6HjwLhf+Vz5NR147j+pdHvcG4ysYRI0pqvBrUttgu2nTvtmT4pL+1pUO0Ij/7czLtFix62JB9PfCHFCuWJfMI4soPeVsy5cTiX93zyM7EriuAIeRKcAix3byj2fQOY/r4tr2DZDYNYTx3Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750664748; c=relaxed/simple;
+	bh=peDXOj4Zur8LGSgLvPrUMmfQNdE5YfI/12pJxVFXpBc=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=N68od1rO/ktMJ+jhoOTGQqQLe0dzCtX+TkQBNvz2KTO33v32YuP02aR0GbYkcn8A5r4TBJpYQAFaDccRGmtdmTqv/eFyF0bEPMHFPnIuCHZ+LpX/w6tIC8f5shAezEuy8xpOcBbLyDrlDe6Z5HDCLH9iozN1TLdzlUA5NhDJYoA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=mlwnh6dd; arc=fail smtp.client-ip=40.107.130.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dHl251/w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 177E5C4CEED;
-	Mon, 23 Jun 2025 07:43:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750664642;
-	bh=FvVZWSxbxCHHvArP/ksDKZe8srWR5WNbNBaWxp4Q1Aw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dHl251/wXN40lIxPpKuiJLq7g+cRz0OPuZjvkBC/xMaROyDdQ8w4ZrZ/Jm0YFW3B0
-	 mOLWWQvceF45KymGEVE7huhiVsitvfvHZoqe9cLRWhFQa1h8Xq7gyb/5t7qcKADrEK
-	 XPNOJcoTrNQyyyS6RTkFIj4cWsqzhujE3Bf3xMCGOBxu1Mein/CGPhzl0rxrcglnu3
-	 HiEzJCBfhvIS9si++V+jD7MCmeGmvszcG84dSFsEWCX0GVnJFRY6h9VRHWLjXjGroh
-	 n/d+u4osjwOnWk+14GQaPkcuA7kpeSpmiNNkZzW+gVhdMoNGbIv3g0V1iM6jMIEOe8
-	 hsFP1L+eIkm6w==
-Date: Mon, 23 Jun 2025 09:43:55 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 24/27] irqchip/gic-v5: Add GICv5 ITS support
-Message-ID: <aFkFu9j56S3fagHd@lpieralisi>
-References: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
- <20250618-gicv5-host-v5-24-d9e622ac5539@kernel.org>
- <87y0tmp6gn.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="mlwnh6dd"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=miw1vW73r8YHZ8sbzWHOS1vTL0YFoT04k178CfkskFxPJT5PTzablSzwszIucdyKPDyKwgZSMT5/UaozMHQZtGst+aq2xS4S1gZl7TQBIR2dS0PHDPgFr3jwgPtCXpD9NiN8yrH7QNVpLW2C6gnN8/jAIArCW+7UUzogVLP4O3G+zb7n+y777lAvEKeF0ouV13Fxw57QEXU2qbI45GngNuvlQzPtQ7fDl/+QTdXPMEQQveE6udNWSj9aLHIdOu9hpZgHcBVwXnm+CD9MMG55fpgHfADC2ILeEgEoulGhprv8mVZw1g3j3Cx7UNBLstFUwf/Ad36kpgzpNk/GQS6ckA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mZ2PruycbnXWq/64uRCovewwiAl+EoDJkwBrlyf89+o=;
+ b=ou2HICDRvEwBVmzRr33+eQj6RpDVW1aKkffPhPz49cfBOAm4CGYZD+iG+dAx54YW+tfKnKTPQZhuqrfokBc4kWwFfs66hAG9M3oVCVZWWFLbj8xOk1Wh4qHjDFfTNDIpmJL2AFliKvWrXGHd6i5ZsHIVkcrD/g/r3SrTmoaMgNqLiUrrgp3MusWNt5iev/3AufLNMz6mX4d3773RLipSE0Ga2F9JYUp8HnK8o0UhLTBkg9kvXeZB3YTGhv/KFW9fFCjg0E9OR3EMzDdIpst7MwAE8DUYUItsnpV6U8D1jt+dNObEgBEqBQXGbytlm5dhIlGDXQnkH3V/MAb31ioXjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mZ2PruycbnXWq/64uRCovewwiAl+EoDJkwBrlyf89+o=;
+ b=mlwnh6ddgFLboYr/1uPbM/ALYN3LiDuEkMdmvC8O9Y9D0XyaQkzRl4mWfGQrvmEGkSU0cBrx8d/C7vjdDuBiKXfgV1xkRGqByF1OenmY04j7zcyqF5l0cTwcV1K9tO7MYIWqy9hyZMOr8T7EzEysa5snWsCBKINYK4SamL4PKRLDvBiaQKkmBO0Hc8JECHee4Kcu5IKR/lVSfNqdKYi4G1FALvE9DyECkbzb2TRy1zNTPwTIQmBgOl/YTh1yuNv3qD3hr8F6g3bl8KivIRHIpDSBaoRRmscc2Yut0ThZqJ7EcXfiNE/+f+QmibSTdDFkjs72eT8PPPEZi6IU78wlag==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS4PR04MB9692.eurprd04.prod.outlook.com (2603:10a6:20b:4fe::20)
+ by PAXPR04MB8443.eurprd04.prod.outlook.com (2603:10a6:102:1da::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Mon, 23 Jun
+ 2025 07:45:43 +0000
+Received: from AS4PR04MB9692.eurprd04.prod.outlook.com
+ ([fe80::a2bf:4199:6415:f299]) by AS4PR04MB9692.eurprd04.prod.outlook.com
+ ([fe80::a2bf:4199:6415:f299%5]) with mapi id 15.20.8857.025; Mon, 23 Jun 2025
+ 07:45:43 +0000
+From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+To: marcel@holtmann.org,
+	luiz.dentz@gmail.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	amitkumar.karwar@nxp.com,
+	neeraj.sanjaykale@nxp.com,
+	sherry.sun@nxp.com,
+	manjeet.gupta@nxp.com
+Subject: [PATCH v5 1/2] dt-bindings: net: bluetooth: nxp: Add support for 4M baudrate
+Date: Mon, 23 Jun 2025 12:57:43 +0530
+Message-Id: <20250623072744.130594-1-neeraj.sanjaykale@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR06CA0004.apcprd06.prod.outlook.com
+ (2603:1096:4:186::20) To AS4PR04MB9692.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4fe::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y0tmp6gn.ffs@tglx>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS4PR04MB9692:EE_|PAXPR04MB8443:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6bd007b3-e661-4d44-83ef-08ddb229f4e6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|52116014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?nMzWBR5utrR/TdHtoLDrMtgtfhIYjGA6MXQtDP73HPmQrTsqRIKgOjaPNpPQ?=
+ =?us-ascii?Q?Zw1eBtAmNWbcxv1RcnMUuU0NtRxPE6HbjIy/YWk+sdhMqQOPUYg73riXZ+VH?=
+ =?us-ascii?Q?f3xdcdw48qzNOjCeqmrWo1wZlmATKPgLsZS9tQ5v0Gk50SPlgRPTUVMAlMdM?=
+ =?us-ascii?Q?cs7/6B/szKmbMbWYCKR1ZEBQklNwUQspWfWCC+aGw5Zv6ged0zSWzCYTUYLn?=
+ =?us-ascii?Q?HH36NHoinU2pyhtbsgVfLdgIColaQEBlZ4vmLjnwk0X9ONQ3XdkmLl47NIMZ?=
+ =?us-ascii?Q?BpQ/GeiBUP9XTdT7zh74agfn4PSooxa/GutwOj/3OLeV1uUOATSWAb11e07Q?=
+ =?us-ascii?Q?lOGfUZkNKlmPi81+NXQHyLCJ6v4aCGo4pMKkY0SiiZ5fVgXlctB5YfdKXj2M?=
+ =?us-ascii?Q?buziAQcMcS/UelysVXXGN6PVtP6f4GMC0PZ+uP3isuy5BitPx6BsXCf1j6HV?=
+ =?us-ascii?Q?HaSGRYLKnWQ5Y7T3QyrXfsECizUTgXCuxP9ge9q6R8jV2WOcIm8a7vFxiabN?=
+ =?us-ascii?Q?vh9TwsvAmxmdp2zrbIrVn6AGxZpnElAkKukJsRBKYug8BYndubwO4pIDZMVq?=
+ =?us-ascii?Q?iaYnr/K9/AYOEEVo5c5Vteu9gc2zorrxhogEf33zM4cDo4ykuwfaI2k7vKyD?=
+ =?us-ascii?Q?75y8s2V87ABansVZPTltxINht4fgdGp89IXBIbQqciE25/dQVskv5KnejcHv?=
+ =?us-ascii?Q?JTySIjCwBe/Ha7tSb+MLm7MZPuZWsr3onxpdCzTvUMqLenjbI80FMb3FYcB4?=
+ =?us-ascii?Q?XyiOH1p1o7imeaio0rWNnmppfEtEbQCuh6A9dP7Z3bLm/QhccAsMhk7Nkdgb?=
+ =?us-ascii?Q?E9tJLTBSKH41OLxKvNzWC7MQnW0Wyzobn9x1SP5n8QO/52IZ6z6zl998rmpM?=
+ =?us-ascii?Q?/IzIBJC2myaOiLVSBnVaj/FXgUVQyL/TcYgTQD915XZzopQgXXcdtSua5lkp?=
+ =?us-ascii?Q?chigHdcc9pcPA2jcoipyLfRxptibE0ebiQyYqvYxJ3tZLHP59usPcsASidR7?=
+ =?us-ascii?Q?iPi7Stnh7iDf4ALpnW5gixBynfU6iUaZLzM2ebsz79hyvj8VQmr/OQSPU05Q?=
+ =?us-ascii?Q?+rcBF1mi5ckD1/8aPC2cspbUA93vhxLrZk8MYKcCCyJytBFoYkh8sSk/YNqP?=
+ =?us-ascii?Q?5PDV+2HNMg7Yd3bbo6fHZAeoFVUC8UrrfhhZz4Ubfo2NJylm3bzypav9hVFb?=
+ =?us-ascii?Q?m5rH/iN8NFjCv5slUJnXcPBs6Y6TwAIQn1zfX3bl9cf2XkJGK8t5b4Ey69yG?=
+ =?us-ascii?Q?fdlQF/nLJsVs/eSDbAmRUfWUOlAJsNwezeKBRBR5zbOxklfxiT+sqRP/A6p8?=
+ =?us-ascii?Q?reZBxCRjFy5YIoxij+Cd+S0+BlcuzKo5g680eHf2As2GfNMZRr90YQ9w2TJ+?=
+ =?us-ascii?Q?KwmmIuqGf6YE4EjoC13lYd4TInDCL/gXwh6p9r0W4BrUyGCbwdp9OTvevD9J?=
+ =?us-ascii?Q?/5fKmlRdBhdrefLfuXLhCARGshYtrN59HS7MNlmDnALmSsVXdnNyuA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9692.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?0kLK4MwtN+5qUR4oCpUYgU60cVRpt5YLEh7oqLfcMkLZHSyALLMFx3/uons5?=
+ =?us-ascii?Q?JqmpHyupUUF7p+wR0l/b5NBiyO0WIpfmHtOZtB2eHKu9bl9s4+/iq6yo4yIj?=
+ =?us-ascii?Q?WI+TqnhZbZ09pMRoPow+DIQZxIcoNPAWIbUSelfMaa+0lKIx0rZROXHTH/Bo?=
+ =?us-ascii?Q?TmkmKQUCbwxfsjxuSqDQg/quwJUxUEEQK6jsdWXOllKPdDg9VXwAcgO6vHbu?=
+ =?us-ascii?Q?nvozhzNglMec/sJh1RC/rS7Slx79Qxyu+nBlORLu2GrOOTevecr4pzghlzzr?=
+ =?us-ascii?Q?OZmiXOWbOZeLsi4lS4M8pMtUTr53evy3NHtZeR8DZpsx2Czr14J1IXnOqJ+y?=
+ =?us-ascii?Q?53sjDtu27IBFdl3q0hqjHE1pDg1KNwz4rQ4+LGI6Eu9dR3CS10GGUmezTtze?=
+ =?us-ascii?Q?rsGDCNFJjqkydwB17vEMOdjfwkxc6Sp9qLl+Z6w63fwNDAuDQvmKZYdIZZRO?=
+ =?us-ascii?Q?gsIsXFZK78uhsBwqml80UovE8kGmKNWPsOZQ0H9AlvJsBdlakSFv2C3P7YIk?=
+ =?us-ascii?Q?KGGMXm4TXuV3rjLRnITCWVFue+8NMC3pPMJJopBRfScntjFw/IXnHkEFdwRZ?=
+ =?us-ascii?Q?c6goWPFYdvj2Q3/p5iSW+ReKQk6pqCSOu9e6prI/m4DG2yiCbNQ8NYxURxHX?=
+ =?us-ascii?Q?q1lte4EnPT/d3Ct3WrehUrHT5XxWEpOSxxMg8m3++oyqTCLUIikHWjIqoaHx?=
+ =?us-ascii?Q?X7rSEqKTeImdZuQRiZyCd3kbRg1/HE7z6P1MgseNEL19oToTMY/lRydNyoXh?=
+ =?us-ascii?Q?/XtEDO9Ou3y+i5syBI1wdEr7cHzvRvgTQ/xRRFEb5Ti2Og5tGU60VC7QneeD?=
+ =?us-ascii?Q?dNgY/h0jl9CRJnzBOVzX5OuQy1nnjyk+skZ1iGrcSNEtkoXEqsWly6R5Xh/D?=
+ =?us-ascii?Q?AzDZtN67DhmQHm13CuFprRo515phi1QDa7jW0lDd2K6h3g82I+8D1KLgOZu9?=
+ =?us-ascii?Q?5j4guXWpdHYGGRbb6gbyLmOp0E54oBtcKPxFQ6t63qI3lGo5emu9r9q74LSM?=
+ =?us-ascii?Q?DnSe0YjpKURBoR2syV3mEsYs0Nfdf3mOZj+Cddo1nG9QGRuQLEnCRZvjsNbO?=
+ =?us-ascii?Q?is6HlEOqGCGCUPSsyXn2oteZdQOZEZjIKTHAU6WnZHRvprX2rltmjlRzYrBf?=
+ =?us-ascii?Q?Kjdb9wTuzROFa3nBsQCNmV7MPnVYNx4Sr165TrkuL7onzPOU6a8q5fGfC/or?=
+ =?us-ascii?Q?KLQNC8HNctFPd/EjIJa0tKoH+9Jsyd/fqY0WEjC7Y4dBnczNI4esbWOh2n0k?=
+ =?us-ascii?Q?bGb4HCEeogVD740DPtxRkNW2RJpaasRYVVXi+6OeRF1UImbfEBVfg4o7UFS6?=
+ =?us-ascii?Q?2S7dKAQtdqiVwR4U1tQPbkvLwJkNzU6+zxSRQZVZb77b3WfiMVewmyY1HgB4?=
+ =?us-ascii?Q?n2bQjOoySp9Zk0q5UoG8AnFDlZdakSEFaagLNWxJzdIaPTJ/mVWcz+Qb/9of?=
+ =?us-ascii?Q?xDaq1aM1fEPG3N/J2fxASWHWfmhWbfZC0PM8NGdJljybrqE6+CsPrKUkO7za?=
+ =?us-ascii?Q?hQdsG5td7lCYENO29E/Xa2hJeeenR9ko6v1KIrLOHe9nOa150X4jLfgzyJT8?=
+ =?us-ascii?Q?DjiWCGgTYnz3Sc/KXRGrEUgDAgWShgy1CfOB664U9TEc+W/EMYSbarqALfja?=
+ =?us-ascii?Q?yQ=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6bd007b3-e661-4d44-83ef-08ddb229f4e6
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9692.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 07:45:43.2417
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ugWKFTkeMm+8AazOZbMpvsHjxajxZtJCBInM+GdDAVtBx2eB+xmfe+ek2Y7NLeokrAH6kyvCl37VxvffPZG0FAmMDKsxKHX6/yCQ/vLj0kw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8443
 
-On Fri, Jun 20, 2025 at 09:18:32PM +0200, Thomas Gleixner wrote:
-> On Wed, Jun 18 2025 at 12:17, Lorenzo Pieralisi wrote:
-> >  drivers/of/irq.c                                   |   21 +
-> >  drivers/pci/msi/irqdomain.c                        |   19 +
-> >  include/linux/msi.h                                |    5 +
-> >  include/linux/of_irq.h                             |    7 +
-> 
-> This are preparatory changes. Please split them out into a seperate patch.
+Add support for 4000000 as secondary baudrate.
 
-Done. I did not do it because some maintainers require changes to
-be added in the patch(es) that uses them.
+Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+---
+v2: Use the available 'max-speed' device tree property. (Krzysztof)
+v3: No Change
+v4: Add ref for max-speed. (Krzysztof)
+v5: Add ref for serial-peripheral-props.yaml. (Krzysztof)
+---
+ .../devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> >  ...3-its-msi-parent.c => irq-gic-its-msi-parent.c} |  187 ++-
-> >  drivers/irqchip/irq-gic-its-msi-parent.h           |   14 +
-> >  drivers/irqchip/irq-gic-v3-its.c                   |    3 +-
-> 
-> Ditto, i.e. the rename and code move, not the v5 add ons.
+diff --git a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+index 3ab60c70286f..40f6e1841fca 100644
+--- a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
++++ b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+@@ -19,6 +19,7 @@ maintainers:
+ 
+ allOf:
+   - $ref: bluetooth-controller.yaml#
++  - $ref: /schemas/serial/serial-peripheral-props.yaml#
+ 
+ properties:
+   compatible:
+@@ -34,6 +35,12 @@ properties:
+       This property depends on the module vendor's
+       configuration.
+ 
++  max-speed:
++    enum:
++      - 3000000
++      - 4000000
++    default: 3000000
++
+   firmware-name:
+     maxItems: 1
+ 
+@@ -78,6 +85,7 @@ examples:
+         bluetooth {
+             compatible = "nxp,88w8987-bt";
+             fw-init-baudrate = <3000000>;
++            max-speed = <4000000>;
+             firmware-name = "uartuart8987_bt_v0.bin";
+             device-wakeup-gpios = <&gpio 11 GPIO_ACTIVE_HIGH>;
+             nxp,wakein-pin = /bits/ 8 <18>;
+-- 
+2.34.1
 
-Done.
-
-> > +static bool its_v5_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
-> > +				     struct irq_domain *real_parent, struct msi_domain_info *info)
-> > +{
-> > +	if (!msi_lib_init_dev_msi_info(dev, domain, real_parent, info))
-> > +		return false;
-> > +
-> > +	switch (info->bus_token) {
-> > +	case DOMAIN_BUS_PCI_DEVICE_MSI:
-> > +	case DOMAIN_BUS_PCI_DEVICE_MSIX:
-> > +		/*
-> > +		 * FIXME: This probably should be done after a (not yet
-> > +		 * existing) post domain creation callback once to make
-> > +		 * support for dynamic post-enable MSI-X allocations
-> > +		 * work without having to reevaluate the domain size
-> > +		 * over and over. It is known already at allocation
-> > +		 * time via info->hwsize.
-> > +		 *
-> > +		 * That should work perfectly fine for MSI/MSI-X but needs
-> > +		 * some thoughts for purely software managed MSI domains
-> > +		 * where the index space is only limited artificially via
-> > +		 * %MSI_MAX_INDEX.
-> 
-> 
-> This comment is stale after Marc moved the prepare callback into
-> the domain creation, where the prepare callback gets hwsize for scaling.
-> 
-> The only valid caveat are software managed domains, where hwsize is
-> unspecified, but that's a different problem (and not used as of today).
-
-Right, I should have removed it. Done.
-
-> > +		 */
-> > +		info->ops->msi_prepare = its_v5_pci_msi_prepare;
-> > +		info->ops->msi_teardown = its_msi_teardown;
-> > +		break;
-> > +	case DOMAIN_BUS_DEVICE_MSI:
-> > +	case DOMAIN_BUS_WIRED_TO_MSI:
-> > +		/*
-> > +		 * FIXME: See the above PCI prepare comment. The domain
-> > +		 * size is also known at domain creation time.
-> > +		 */
-> 
-> See above.
-> 
-> > +void gicv5_irs_syncr(void)
-> > +{
-> > +	struct gicv5_irs_chip_data *irs_data;
-> > +	u32 syncr;
-> > +
-> > +	irs_data = list_first_entry_or_null(&irs_nodes,
-> > +					    struct gicv5_irs_chip_data, entry);
-> 
-> Let it stick out. You have 100 characters.
-
-Done.
-
-> > +	if (WARN_ON(!irs_data))
-> 
-> WARN_ON_ONCE() ?
-
-Done.
-
-> 
-> > +static unsigned int gicv5_its_l2sz_to_l2_bits(unsigned int sz)
-> > +{
-> > +	switch (sz) {
-> > +	case GICV5_ITS_DT_ITT_CFGR_L2SZ_64k:
-> > +		return 13;
-> > +	case GICV5_ITS_DT_ITT_CFGR_L2SZ_16k:
-> > +		return 11;
-> > +	case GICV5_ITS_DT_ITT_CFGR_L2SZ_4k:
-> > +	default:
-> > +		return 9;
-> 
-> Magic numbers pulled out of thin air?
-
-I will add defines but I thought the function name would be enough to tag
-the value with a meaning.
-
-> > +static __le64 *gicv5_its_device_get_itte_ref(struct gicv5_its_dev *its_dev,
-> > +					     u16 event_id)
-> > +{
-> > +	unsigned int l1_idx, l2_idx, l2_bits;
-> > +	__le64 *l2_itt, *l1_itt;
-> > +
-> > +	if (!its_dev->itt_cfg.l2itt) {
-> > +		__le64 *itt = its_dev->itt_cfg.linear.itt;
-> > +
-> > +		return &itt[event_id];
-> > +	}
-> > +
-> > +	l1_itt = its_dev->itt_cfg.l2.l1itt;
-> > +
-> > +	l2_bits = gicv5_its_l2sz_to_l2_bits(its_dev->itt_cfg.l2.l2sz);
-> > +
-> > +	l1_idx = event_id >> l2_bits;
-> > +
-> > +	BUG_ON(!FIELD_GET(GICV5_ITTL1E_VALID, le64_to_cpu(l1_itt[l1_idx])));
-> 
-> I assume this is truly unrecoverable
-
-At this stage, we mapped an IRQ and we are activating it, this must not
-happen (like any bug out there, granted). I can remove it, I understand
-it bothers you adding BUG_ON(), if something goes wrong there we will
-notice.
-
-> > +	l2_idx = event_id & GENMASK(l2_bits - 1, 0);
-> > +
-> > +	l2_itt = its_dev->itt_cfg.l2.l2ptrs[l1_idx];
-> > +
-> > +	return &l2_itt[l2_idx];
-> > +}
-> > +
-> ....
-> > +
-> > +	return 0;
-> > +out_free_lpi:
-> 
-> It's amazing. All the code has a gazillion of empty newlines, which just
-> take up space and have no delimiting value. But on these error labels,
-> you glue them right at the return statement (not only here, noticed that
-> before).
-
-You have a point here, will change it (and I will check other error
-labels sites).
-
-> > +	gicv5_free_lpi(lpi);
-> > +out_eventid:
-> > +	gicv5_its_free_eventid(its_dev, event_id_base, nr_irqs);
-> > +
-> > +	return ret;
-> > +}
-> 
-> > + * Taken from msi_lib_irq_domain_select(). The only difference is that
-> > + * we have to match the fwspec->fwnode parent against the domain->fwnode
-> > + * in that in GICv5 the ITS domain is represented by the ITS fwnode but
-> > + * the MSI controller (ie the ITS frames) are ITS child nodes.
-> > + */
-> > +static int gicv5_its_irq_domain_select(struct irq_domain *d, struct irq_fwspec *fwspec,
-> > +				       enum irq_domain_bus_token bus_token)
-> > +{
-> > +	const struct msi_parent_ops *ops = d->msi_parent_ops;
-> > +	u32 busmask = BIT(bus_token);
-> > +
-> > +	if (!ops)
-> > +		return 0;
-> > +
-> > +	if (fwnode_get_parent(fwspec->fwnode) != d->fwnode ||
-> > +	    fwspec->param_count != 0)
-> > +		return 0;
-> 
-> Just add a MSI flag and set it in parent_ops::required_flags and extend
-> the lib with
-> 
->         struct fwnode_handle *fwh;
-> 
->         fwh = d->flags & MAGIC ? fwnode_get_parent(fwspec->fwnode) : fwspec->fwnode;
-> 
-> No?
-
-I did not know if this use case granted a new flag. You cleared my
-concern.
-
-> > diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-> > index c2e7ba7e38f7..4a0990f46358 100644
-> > --- a/drivers/irqchip/irq-gic-v5.c
-> > +++ b/drivers/irqchip/irq-gic-v5.c
-> > @@ -57,12 +57,12 @@ static void release_lpi(u32 lpi)
-> >  	ida_free(&lpi_ida, lpi);
-> >  }
-> >  
-> > -static int gicv5_alloc_lpi(void)
-> > +int gicv5_alloc_lpi(void)
-> >  {
-> >  	return alloc_lpi();
-> >  }
-> >  
-> > -static void gicv5_free_lpi(u32 lpi)
-> > +void gicv5_free_lpi(u32 lpi)
-> >  {
-> >  	release_lpi(lpi);
-> >  }
-> 
-> Just make them global right away when you implement them. No point for
-> this kind of churn.
-
-Yes, hopefully someone will not point out that in the respective patch
-the function could be static :).
-
-Thanks a lot for your review.
-
-Lorenzo
