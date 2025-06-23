@@ -1,73 +1,121 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F5124DD0B
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369CD24EAB1;
+	Mon, 23 Jun 2025 13:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750686304; cv=none; b=L+HmthI3O73faujqgHWkDgnu6w5SE4OYih2bUsdcPfqfv8cXiS4541a6Zi0m6/7XAe0aR5gm0lO6hWIlVYRnROeMFhU3Rr2CK+TUCUFyv4lh4L0S8kZSneAOgfmKLmGO3+ArBy/K2vUr9mfuV8ADOavAfEVuwksxXfdgq0ue84g=
+	t=1750686304; cv=none; b=fIpQqBOhz2Zb+3AYjp+OTUQDfBPmMldwKa0qiV/lk3pTJoLKcbWvZ56OQ/oIl7PgC2NdJb7TGK7xEZN/Ym/AUYMoCH8l9gbc2DNWNWbyOzHGan28DuAnD8uv2CjkqPbP3TlQ2U1tIIuEC40gtd2/D0FzkUcLe26c/nnppGr//oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750686304; c=relaxed/simple;
-	bh=A5GaEWZExJrrCgH5AOTh2LEV1QSCdggk6Ok2ADs3aIo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=OewzgCfyzkcqp9uJTcsDhMZQxncYt5oHrJs7z8ijiCoBEbUD1vCtfgJnfDP+euQlAhbd375hVX8Z22BzqOp9RpELglkImKS95oaMzaxX7z6bYWZ0Ge5OA3u3DYNoPQ14XMhFh8aBAUnQbmFgyDJybk11DgZTzQyAxpFm03sJaxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ddafe52d04so135740765ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 06:45:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750686302; x=1751291102;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IKdbYS3JVAu/GQbUNVJCZZBsfueGPkGVSixRPRpLlYk=;
-        b=aSFLKAi7M1Ogj5TZYFBgIXUypygLS35BlRxc5ed7YXnxJuxfJ99HzKkWynVKrm84Ia
-         LvcO0YRSSQyH3ADygGSinVcquUxfWphbO97qpZ5c8Er7z0nVBhYhSQeKq6HQ+zhSKs6O
-         +noXnO6eKmnCeTOskGXdWwAz7zP0GQ12BPjJ3OuVoGb1vRWUbJPwT2M/ZTORW+yloGhu
-         K6P814w/Ro1nvMZCEeQmQrVzX7pU6qAzJuiv6n5WHCXSeo7NZ1gCWMAoH5uMsTM14DDc
-         pHhyBqOkwsM3fA5KddQU90ttunaOL2jzuwws1ZuISh4MrXoTm+xEiK8A7lwhCXZd1S6u
-         qvGA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0x0RVE+0VP32Vc9my6vHXwpjWqonIMWlGjYBBAa0+P7ign9xqYgHycL0LFO1As4HhI3UZEltjC8TcTe4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQFNje9dcpKjUk/U9dUDeYEjWJej994bnpConw4yHKxeNANCaO
-	pI43U3F4eA0Bi9mBo7m478hAMJQF9fSne8aZjn/qDnCKBub4R/I+2sgqLczOyJeYk9L1E/M65VL
-	WKA9sqWK9HwSKBtwQ6TiJiIqvLUigJhi5u1hflNa21FMZqLSRkWT+vHmML7g=
-X-Google-Smtp-Source: AGHT+IH4YLFhK4GAum0M6UdBtv+ihwuPUrpqtGN/omSn4BPwa4gz+qsShej5nKRy7BsgislpmHh06I+PtOEnH8945PKjEAXwTe+2
+	bh=Qpdo2JYgAWplBWZwtCweIuG180S3M/uw3ulQ5ctfcag=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ZGBKqYcVgQ/jF9TITRqpherjvNkGOAX6KFu4yAOX5A9p7x4usaUTxuYwvubm4OoQvEGICCoirvufUw4/jhMLAxqq0HOYzFmwnZ7cQj0ijqUWxTCn+jtNOXTT1HojKfE9SilXVeRQdKZGslIvKuZ15Rj99eRbzvTw01nu1vROWGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s3AyusYF; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s3AyusYF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A3EEC4CEF2;
+	Mon, 23 Jun 2025 13:45:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750686303;
+	bh=Qpdo2JYgAWplBWZwtCweIuG180S3M/uw3ulQ5ctfcag=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=s3AyusYFJTL0vRbPeCXDURpuCgzTwe+IvaQjX88PxUqQEnTb7fEKjY88l2VNL6/YX
+	 qPDZ3AeEsU9sgI3BxZjFPl8+GlzDLVOHHUTSUnPiA2Z+8oqhW5tJVJkg3WfA3DuD+k
+	 0nC9oE9068R3yQx5eO80GxvJYubWS9awRhgOsiQmZu0YQVqXutnZXhjPMWeVaitjDp
+	 73IG56JKMEt9tNzXJYTdsnr+A2OvWK1ykyNzwAOpVtBFMqwB8voDCz7VtlM2IU36w5
+	 vnRXgfKE06mmgIlJw2iAvG0afEpUidF7ygCLUqiK6nFNf2FQcKeOPX+BAgGpZyji0A
+	 jy0/EHhxwXOSw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2188:b0:3dc:875e:ed7e with SMTP id
- e9e14a558f8ab-3de38cc052amr130743005ab.12.1750686301755; Mon, 23 Jun 2025
- 06:45:01 -0700 (PDT)
-Date: Mon, 23 Jun 2025 06:45:01 -0700
-In-Reply-To: <tencent_C2882DF56C089420E9D2EC4ECD707B926F0A@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68595a5d.a00a0220.2e5631.0024.GAE@google.com>
-Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
- (3)
-From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 23 Jun 2025 15:44:58 +0200
+Message-Id: <DATYHYJVPL3L.3NLMH7PPHYU9@kernel.org>
+Cc: =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>,
+ <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <ojeda@kernel.org>, <alex.gaynor@gmail.com>, <gary@garyguo.net>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <dakr@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+ <will@kernel.org>, <longman@redhat.com>, <felipe_life@live.com>,
+ <daniel@sedlak.dev>, <bjorn3_gh@protonmail.com>
+Subject: Re: [PATCH v5 2/3] implement ww_mutex abstraction for the Rust tree
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <20250621184454.8354-1-work@onurozkan.dev>
+ <20250621184454.8354-3-work@onurozkan.dev>
+ <DASY7BECFRCT.332X5ZHZMV2W@kernel.org> <aFlQ7K_mYYbrG8Cl@Mac.home>
+In-Reply-To: <aFlQ7K_mYYbrG8Cl@Mac.home>
 
-Hello,
+On Mon Jun 23, 2025 at 3:04 PM CEST, Boqun Feng wrote:
+> On Sun, Jun 22, 2025 at 11:18:24AM +0200, Benno Lossin wrote:
+>> On Sat Jun 21, 2025 at 8:44 PM CEST, Onur =C3=96zkan wrote:
+>> > Adds Rust bindings for the kernel's `ww_mutex` infrastructure to enabl=
+e
+>> > deadlock-free acquisition of multiple related locks.
+>> >
+>> > The patch abstracts `ww_mutex.h` header and wraps the existing
+>> > C `ww_mutex` with three main types:
+>> >     - `WwClass` for grouping related mutexes
+>> >     - `WwAcquireCtx` for tracking lock acquisition context
+>> >     - `WwMutex<T>` for the actual lock
+>>=20
+>> Going to repeat my question from the previous version:
+>>=20
+>>     I don't know the design of `struct ww_mutex`, but from the code belo=
+w I
+>>     gathered that it has some special error return values that signify t=
+hat
+>>     one should release other locks.
+>>    =20
+>>     Did anyone think about making a more Rusty API that would allow one =
+to
+>>     try to lock multiple mutexes at the same time (in a specified order)=
+ and
+>>     if it fails, it would do the resetting automatically?
+>
+> But the order may not be known ahead of time, for example say you have
+> a few:
+>
+>     pub struct Foo {
+>         other: Arc<WwMutex<Foo>>,
+> 	data: i32,
+>     }
+>
+> you need to get the lock of the current object in order to know what's
+> the next object to lock.
+>
+>>=20
+>> I'm not familiar with ww_mutex, so I can't tell if there is something
+>> good that we could do.
+>>=20
+>
+> It's not a bad idea when it can apply, but we still need to support the
+> case where the order is unknown.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+I didn't have a concrete API in mind, but after having read the
+abstractions more, would this make sense?
 
-Reported-by: syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com
-Tested-by: syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com
+    let ctx: &WwAcquireCtx =3D ...;
+    let m1: &WwMutex<T> =3D ...;
+    let m2: &WwMutex<Foo> =3D ...;
 
-Tested on:
+    let (t, foo, foo2) =3D ctx
+        .begin()
+        .lock(m1)
+        .lock(m2)
+        .lock_with(|(t, foo)| &*foo.other)
+        .finish();
 
-commit:         86731a2a Linux 6.16-rc3
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12553b0c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=595d344ff0b23ac5
-dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=106e3b0c580000
+    let _: &mut T =3D t;
+    let _: &mut Foo =3D foo;
+    let _: &mut Foo =3D foo2;
 
-Note: testing is done by a robot and is best-effort only.
+---
+Cheers,
+Benno
