@@ -1,155 +1,93 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2669288539
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30C3770E2;
+	Mon, 23 Jun 2025 15:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750692211; cv=none; b=ja581wW3i2OvXlK4wkaaSk3gnmmOaULidJIrM/QrVFbBlXUx8d5nsvicNAnCRkoNCbyeqhrwo78GeAA6xcUP4exf9czJyzQ+6cSYAhIfcKxtB5NFFHCh0syI6B7aRKFwXxzO41aONrsToFc7iJx+xS0Hy7Z5V1h/woNmU58swAE=
+	t=1750692287; cv=none; b=FwmzbIBjEm5oPrN7yicyoNkd80XZCj5kBU1WLOlLp1vLEo7wryF0U6QeUHBcX967gulVbwSVQ5d6elskPtgFsapQ2qZJcq3K/ec0dWVXu4y29CqgeoW85F9SfMz6CFYoessGee8jF04dSBlZQAJRSdsylM4GcJl85X9vgXu8Uq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750692211; c=relaxed/simple;
-	bh=SVVhYZvptRHvWy6ECNSSMwCz2nb8b9mlJe/B4F5PLGo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JClCziweZbJnWLUibjGlWAoH2QAyUPwNgu3QVLd6BIiDHNkqHftlp/SQJjQ2XDbRzoLwSM1Isp4k0aZOUNPppd8xILwAYJpt1fUPpxs7CaQw83ERdD3m/4zD1gRwe+tfSx0f+bdEl/w0ZhFB0WpTcWfLnH+xJw/mEMayTPo+fn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M2fAiRSo; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750692287; c=relaxed/simple;
+	bh=wlTiKIjvWwqf6t18hxDB41x4laHO4+OvmqsPz5wPksw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=vDrcWsY19BGOM5D2k7FMqmJxWU3tnkTrt1NukI1nDYyBpbeaXZR4VIGsQMKcb0WNfk8dLQJvf9x98u2baDwBdbh8AcW4dGDdteZgQLfItOwaR6AD4J+9ZMmnOAOOlFiCmRkedEyErflqafxISP0UHasiFDe0hSnxo5ejIz/uywU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=KA9g1Hl5; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M2fAiRSo"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-235e389599fso347485ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:23:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750692208; x=1751297008; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+xKVYEt/1XAG/rDm3Qsq30ciDg7bGFCanzViwOcaGes=;
-        b=M2fAiRSoRH/yEdLHXPLjY01Lk434/zOqJuhTtvLt/PGncXuYdFn0pnNo5R5p8pa51K
-         dG/o7RKcjFrPYeLEWOeWiU3vRY3Qjhnz8YTOv89PeS4c6CW5VgelMUbaE0y6tAtBqK+7
-         dMFk9raViN9EBYvKHeAv+GMEBaaynaeTnLaaD24lSJ/kqmsxu+J/eN3kRAUm0T9Ql4b0
-         LOYM2wK0xF8Wfdsumxuj9ALp6UX+9kFxvagvawHuGOsGGAhLdmCDvVvjYmQTbCFljVNM
-         prM6N4aWWOR+7OteVl26UjBjUjyqerKXt9kinX4mkTWZ4vwiUOLKCXMS6icTgzU+0Wpf
-         BriQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750692208; x=1751297008;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+xKVYEt/1XAG/rDm3Qsq30ciDg7bGFCanzViwOcaGes=;
-        b=Jx1bRYpX8PYGquhtG5aCGkEZmGhaHS5Uu9JtIDfBPid6yUZZYY+vMxkl8mujjCFN5u
-         0Cu+O2X5YRhYKcdI37jHb2tu2P/3YI+/r1Og4Pq4Y5GUg9XzFqrss/6KW1WS5G0jnIJx
-         F2eM/Je3UCuraNf0e7P+3ewMyEhBksk4v6VeySBnfglvb8quz/MNqp8jOMupGPU3sUrl
-         vOaNhuYS6BHnwIakm/xnL5NiAZ7D74rkWccHSwg5rbSVHVMs77XtEBGWZhD0pwhrU1tc
-         P921gwk7uEi+9kT4pVWRXj9bfVw9ZWUekH4fRQth6/+LGttyo8H9Kju6eWKhgo7nuaen
-         44tw==
-X-Forwarded-Encrypted: i=1; AJvYcCXYPAZAAi0X+2Kbf1IC5Xzzh9IUOOZod5qmAOkD6hlu2VHKliO9gUrRK+rNIxYvkJaCaKhtzob496LsFXw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwntETS7mTdtsRwwEUHNy/nviCECqgKOF5Rp1QQrZpwvE8DVCnb
-	siqaMj7K5TDmVD6eyx+fC46pX0aMkFHWZJJKTGgJ0DmUu5knth3y3r+0DVRH75ZNXftBBt6MxML
-	g8SAJaHm8UxNKK9NRnYEjHzrs8f/kkfl44b98SBSC
-X-Gm-Gg: ASbGncux0QA245aXstyLwizE+vxAqnum0bj79SdAyfHp+jHsuWzp14Hp4muJgJunyQw
-	6algP1Mf/babDfBvucL7fRV2cqFFsnJOhV0xal5FyxbLALgynnZmWSRJiKjoQalVO+TzMoPRLMX
-	r/pWiI/wd9QiD/DZu0rsIbjKjXhqlZV4utR0Mo3yaGx521dabtunw=
-X-Google-Smtp-Source: AGHT+IGKDqfw73zBONPMhWTBZq5sn8fIPJr6XNb97m1huHThSghMFLDPcjpDBONMI3PYmS2dmvUHHdzvcgJaT8blGQg=
-X-Received: by 2002:a17:902:ecd2:b0:235:e1e4:efc4 with SMTP id
- d9443c01a7336-237e47a607dmr4681835ad.14.1750692207615; Mon, 23 Jun 2025
- 08:23:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KA9g1Hl5"
+Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55NFOFxO981170
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 23 Jun 2025 08:24:15 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55NFOFxO981170
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025062101; t=1750692256;
+	bh=A1jMMXa/nw7lqBnFyr8Ce3LJwcClP6AKSk/3M0i9qfA=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=KA9g1Hl56Dr7ze7uSMBmDaEo4af0rw/UOjgUFavm0WLWHKVlTPzThFkEG/sWIlhcR
+	 pdhvtbSRmnh7IUFVzzN6zGV7OS+5b6DDk9O3p+v5ciw8J6q6NmFsaDHnhK9OfQFKQ5
+	 1jOQwG5rSIVwXkntRYi3ccTte4j0Tr3RUQc/lVvIf0LdvqZRkEeWXGs5kAt46Wfr/g
+	 +QW8HSARe3/32K5n9pjFMJ5NHpOUTxhdJ1W+1sya9VRSuKd9J/7DuK++VfwV449fpy
+	 HEU0pqlrNjAFPoza97J3a8vrCZJoC6dj50hBORuCtmES8flPgwcRbXj16JLnhiuo/q
+	 +BAhyw7oMGj5Q==
+Date: Mon, 23 Jun 2025 08:24:16 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Khalid Ali <khaliidcaliy@gmail.com>, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, ubizjak@gmail.com
+CC: x86@kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] Recieve boot_param from RDI Instead of RSI
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250623081550.1262-1-khaliidcaliy@gmail.com>
+References: <20250623081550.1262-1-khaliidcaliy@gmail.com>
+Message-ID: <2D63735B-FA76-428E-8F68-8EBCAEA0985E@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623092350.3261118-2-gprocida@google.com>
-In-Reply-To: <20250623092350.3261118-2-gprocida@google.com>
-From: Sami Tolvanen <samitolvanen@google.com>
-Date: Mon, 23 Jun 2025 08:22:50 -0700
-X-Gm-Features: AX0GCFsxTT0ix79BDZcTXttlcbRoLHw5kXN43iSZKxn3LLTNwWtw8gubZbmerQY
-Message-ID: <CABCJKucSF7O8m6-QM4-J7-qTNTvFFax3=_v_kFy_3qRZZ6ym_Q@mail.gmail.com>
-Subject: Re: [PATCH] gendwarfksyms: make -T symtypes output be in name order
-To: Giuliano Procida <gprocida@google.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi Giuliano,
+On June 23, 2025 1:15:23 AM PDT, Khalid Ali <khaliidcaliy@gmail=2Ecom> wrot=
+e:
+>From: Khalid Ali <khaliidcaliy@gmail=2Ecom>
+>
+>Adjust the kernel entry point to recieve arguments from RDI instead of
+>RSI=2E
+>
+>Signed-off-by: Khalid Ali <khaliidcaliy@gmail=2Ecom>
+>---
+> arch/x86/kernel/head_64=2ES | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>
+>diff --git a/arch/x86/kernel/head_64=2ES b/arch/x86/kernel/head_64=2ES
+>index dfb5390e5c9a=2E=2Ed24fea15b6a6 100644
+>--- a/arch/x86/kernel/head_64=2ES
+>+++ b/arch/x86/kernel/head_64=2ES
+>@@ -43,7 +43,7 @@ SYM_CODE_START_NOALIGN(startup_64)
+> 	 * for us=2E  These identity mapped page tables map all of the
+> 	 * kernel pages and possibly all of memory=2E
+> 	 *
+>-	 * %RSI holds the physical address of the boot_params structure
+>+	 * %RDI holds the physical address of the boot_params structure
+> 	 * provided by the bootloader=2E Preserve it in %R15 so C function call=
+s
+> 	 * will not clobber it=2E
+> 	 *
+>@@ -56,7 +56,7 @@ SYM_CODE_START_NOALIGN(startup_64)
+> 	 * compiled to run at we first fixup the physical addresses in our page
+> 	 * tables and then reload them=2E
+> 	 */
+>-	mov	%rsi, %r15
+>+	mov	%rdi, %r15
+>=20
+> 	/* Set up the stack for verify_cpu() */
+> 	leaq	__top_init_kernel_stack(%rip), %rsp
 
-On Mon, Jun 23, 2025 at 2:26=E2=80=AFAM Giuliano Procida <gprocida@google.c=
-om> wrote:
->
-> When writing symtypes information, we iterate through the entire hash
-> table containing type expansions. The key order varies unpredictably
-> as new entries are added, making it harder to compare symtypes between
-> builds.
->
-> Resolve this by sorting the type expansions by name before output.
->
-> Signed-off-by: Giuliano Procida <gprocida@google.com>
-> ---
->  scripts/gendwarfksyms/types.c | 29 ++++++++++++++++++++++++++---
->  1 file changed, 26 insertions(+), 3 deletions(-)
->
-> diff --git a/scripts/gendwarfksyms/types.c b/scripts/gendwarfksyms/types.=
-c
-> index 7bd459ea6c59..51c1471e8684 100644
-> --- a/scripts/gendwarfksyms/types.c
-> +++ b/scripts/gendwarfksyms/types.c
-> @@ -6,6 +6,8 @@
->  #define _GNU_SOURCE
->  #include <inttypes.h>
->  #include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
->  #include <zlib.h>
->
->  #include "gendwarfksyms.h"
-> @@ -179,20 +181,41 @@ static int type_map_get(const char *name, struct ty=
-pe_expansion **res)
->         return -1;
->  }
->
-> +static int cmp_expansion_name(const void *p1, const void *p2)
-> +{
-> +       struct type_expansion *const *e1 =3D p1;
-> +       struct type_expansion *const *e2 =3D p2;
-> +
-> +       return strcmp((*e1)->name, (*e2)->name);
-> +}
-> +
->  static void type_map_write(FILE *file)
->  {
->         struct type_expansion *e;
->         struct hlist_node *tmp;
-> +       struct type_expansion **es;
-> +       size_t count =3D 0;
-> +       size_t i =3D 0;
->
->         if (!file)
->                 return;
->
-> -       hash_for_each_safe(type_map, e, tmp, hash) {
-> -               checkp(fputs(e->name, file));
-> +       hash_for_each_safe(type_map, e, tmp, hash)
-> +               ++count;
-> +       es =3D xmalloc(count * sizeof(struct type_expansion *));
-> +       hash_for_each_safe(type_map, e, tmp, hash)
-> +               es[i++] =3D e;
-> +
-> +       qsort(es, count, sizeof(struct type_expansion *), cmp_expansion_n=
-ame);
-> +
-> +       for (i =3D 0; i < count; ++i) {
-> +               checkp(fputs(es[i]->name, file));
->                 checkp(fputs(" ", file));
-> -               type_list_write(&e->expanded, file);
-> +               type_list_write(&es[i]->expanded, file);
->                 checkp(fputs("\n", file));
->         }
-> +
-> +       free(es);
+This is an ABI=2E
 
-Looks like a nice improvement. Thanks for the patch!
-
-Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
-
-Sami
+Nacked-by: H=2E Peter Anvin <hpa@zytor=2Ecom>
