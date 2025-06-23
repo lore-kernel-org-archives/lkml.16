@@ -1,103 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA4218E1F;
-	Mon, 23 Jun 2025 06:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB76518E1F;
+	Mon, 23 Jun 2025 06:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750661873; cv=none; b=m2bhRX359OFpJ7cTKjrB+CzAZKjPWCsw/5te3qs2/BmAYNNdHEGIWb1RlMYtcqfd4BEGIu/ntCK2LQFBflJKvgAF3Hj0QbPXFfMs8tDGmDgiPf5N88wPSH/JdeVTLqjc+xWV2UWuASURbqdUTwpAIoxFaFCXwFkwjJz52yTyw7g=
+	t=1750661937; cv=none; b=KDhWUQWGP+nMERmog1QMtH8zmSR7lbSJuJxmvbDIAAHHtFGwPz5RGQLddPgcPj59vMcA3q4ov5Pet4J7zhoyknU3//t02gNed+MyJ330SjvhHylU3stkbsMKQSOFOYiagy/mrbjjFoHFD0NmvW6En9PezQnAwGZzT2Bq2bTneWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750661873; c=relaxed/simple;
-	bh=nCOYStVDn/QLpiamVTaBCoFBS7vUHt5RwUh68OFIYOE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KkLLnNa6SuVsII1o3yn+DIqKltkCxxiGD8OUCKP7otVAeuoBBrN9S9PSoYOsLx8WqMC12bned/lYIMuGqjtPwE8iRROODW7/kWZ2ngvi9MKxBPZCkmzW4pk41UJsB331K1gXmg9g/p+SnxiZuJl3j1U/oCEXO5xlRes7bZK1fEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mgngnHFL; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750661937; c=relaxed/simple;
+	bh=AscXhx0QcJCjy/07ldN8aACQDcs08qv16ppqJ9DFbMQ=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=lBXo8bO8zYN1ZMrsTOIs3/TVDxKFJ6N8s6Bjs2AbKbYU17Zcs9Hxz3fNcvDrZg59AoWSOOsL7ICCXw0KWXPzI0fT3sX9hdYds7aOzgw08bHVdXfYpLjKxnttJU9LNvgzBxDppEcsXQCv6OpMfktR8LOFjqcUOhQTR4LsxHlw4EY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=imtNwEFH; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mgngnHFL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750661872; x=1782197872;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nCOYStVDn/QLpiamVTaBCoFBS7vUHt5RwUh68OFIYOE=;
-  b=mgngnHFLWDO+FPA948i/3X1LoeQF8Ov/mWu8iEcsQ+l8SSB5NCKZk0Te
-   +cJKzYik/rIvF0bju0V23o9F0sE6jpgAqlV+SnS727bQB0buFEAKT+MOZ
-   Entt5000vk47puDJCAifHPHBO3fopFKTWFk4SMmyc/ezM5KNIqNvSr0mY
-   QVQ5clxIRrusRL9IXGEFPDPA2xA9FIcxITfLz7aUPDYIDtBuUnHt2QEA0
-   euQEUPy//WHCMjKoinsZJPpIvaXCRKhLF4XMNS+2oGcfZwRctnXn4WGef
-   STlC+pOrUHzw28WsuELEzvijW41t432orHv4awqcqKdKNthC4Gp2WSK1l
-   g==;
-X-CSE-ConnectionGUID: 6g7vPuuBRySAwQDccdVU4g==
-X-CSE-MsgGUID: Wid1REBSRxC+0841LvrYlA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="40462500"
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="40462500"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 23:57:51 -0700
-X-CSE-ConnectionGUID: Kez78y6WTd+PYIxkJoywHg==
-X-CSE-MsgGUID: qkXQ4/6pR5SDKnShzSzZsw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="175111836"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 23:57:49 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uTb7h-000000095Yo-4212;
-	Mon, 23 Jun 2025 09:57:45 +0300
-Date: Mon, 23 Jun 2025 09:57:45 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 5/9] iio: adc: ad_sigma_delta: use spi_optimize_message()
-Message-ID: <aFj66Q_TmufwDhyW@smile.fi.intel.com>
-References: <20250620-iio-adc-ad7173-add-spi-offload-support-v1-0-0766f6297430@baylibre.com>
- <20250620-iio-adc-ad7173-add-spi-offload-support-v1-5-0766f6297430@baylibre.com>
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="imtNwEFH"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 73421A0119;
+	Mon, 23 Jun 2025 08:49:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=YKFIq1SeVmM/nBqAQ3Bj
+	uEtsh4GpEB7ByrAjwhyB/2E=; b=imtNwEFHZ1G6j/wXqaZupldLTlUOBRXeZcu9
+	dKO87/+hT9P0E8cDlJbdqiJA1S084NfwPEAmp51c+m5EcHRDQNccQ070em3DAqz4
+	mDci5IxTlmfQmdP2V/FxdJTh4+2WFYCAEgpeYnNpJsky327SbuI3JfWq1g908ctD
+	C4kchLcNUWPuY/BhxRUWdCM5t2TkkGAbjv8rOYmJJT6zfj6pCKxG4j5jdFfzqJkF
+	+u/kq6+jUwG+AjrGb/RGB/cSgKXtk4vp5q4YbMz1Q1TFrAYOKqiZdSCCfOVV1WH2
+	rvWTiH/+mx/RlFIyvHBUohT6qyMbeMffVunIedKI+GOU7U2gAGdh60hFLVJQaSDm
+	8x+5WiN3uEkLWtJd+Fg56iycMzwEChLRLriTqwLrn8rWsHA9Rj6hn5j3UnyjzRJo
+	v2rg9mqJfFZ1jEV+dpCHhqgWzg+fsaAHFz/+qOuOIh/duflf7Wo6mJ04wQLimZGg
+	R4vnafT1UZMAyC5NtEogpEiZbOfa5G7LHWvz3S8PPRM2IgmdU5ZYyzVxe7eFKT3B
+	dSeGLkyxFh8Nf9dXQz7prL2WKI2n9RJuICACV6MHv4U+ImbhWz2JNi4svKvhBh6Q
+	PE6qUlCn+nLtFQ+uW/Fhv/B4aXQbYVvIAksX6mKhyZIBMorFlmAPTwXzuRgpCh9f
+	HuYzF3k=
+Message-ID: <c6500082-565a-4b00-ae27-4d943586e58b@prolan.hu>
+Date: Mon, 23 Jun 2025 08:49:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620-iio-adc-ad7173-add-spi-offload-support-v1-5-0766f6297430@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+Subject: Re: [PATCH v10] dma-engine: sun4i: Simplify error handling in probe()
+To: Vinod Koul <vkoul@kernel.org>
+CC: <dmaengine@vger.kernel.org>, Chen-Yu Tsai <wens@kernel.org>, "Jernej
+ Skrabec" <jernej.skrabec@gmail.com>, Chen-Yu Tsai <wens@csie.org>, "Julian
+ Calaby" <julian.calaby@gmail.com>, Samuel Holland <samuel@sholland.org>,
+	<linux-kernel@vger.kernel.org>, <linux-sunxi@lists.linux.dev>,
+	<linux-arm-kernel@lists.infradead.org>
+References: <20250610075315.397810-1-csokas.bence@prolan.hu>
+Content-Language: en-US
+In-Reply-To: <20250610075315.397810-1-csokas.bence@prolan.hu>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: sinope.intranet.prolan.hu (10.254.0.237) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A296767155D6D7366
 
-On Fri, Jun 20, 2025 at 05:20:11PM -0500, David Lechner wrote:
-> Use spi_optimize_message() to improve the performance of buffered reads.
+
+On 2025. 06. 10. 9:53, Bence Csókás wrote:
+> Clean up error handling by using devm functions and dev_err_probe(). This
+> should make it easier to add new code, as we can eliminate the "goto
+> ladder" in sun4i_dma_probe().
 > 
-> By setting up the SPI message and pre-optimizing it in the buffer
-> postenable callback, we can reduce overhead during each sample read.
-> 
-> A rough estimate shows that this reduced the CPU usage of the interrupt
-> handler thread from 22% to 16% using an EVAL-AD4112ARDZ board on a
-> DE10-Nano (measuring a single channel at the default 6.2 kHz sample
-> rate).
+> Suggested-by: Chen-Yu Tsai <wens@kernel.org>
+> Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
+> Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
+> Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+> ---
 
-...
+Vinod, is there a problem with this patch? I'd love to hear your 
+thoughts, because it has been practically unchanged since March, and 
+only minor changes since the first submission last December. I can keep 
+rebasing it ad nauseum every time you push to dma/next, but I think we 
+both have a better use of our time. So, if you see anything that should 
+prevent this from being merged, please tell me.
 
->  	samples_buf_size += sizeof(int64_t);
-
-Missed conversion in the second patch?
-
-I have done search for these as
-
-	git grep -n 'u?int[0-9][0-9]?_t' -- $FILE(s)
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Thanks,
+Bence
 
