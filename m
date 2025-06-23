@@ -1,161 +1,258 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1132C239096
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:51:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC1E23816B
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750668675; cv=none; b=iwkNOv0syuEr/LU0oE1si7OA3O1IpDn9dvvwYZpX0zZgsdhfcCamSO77niTkh+VHSryaENLAQXXQtEDhdZO3QkjxOXyUhUnGUBcb+rNUSYjUsyMk5YTrl0bUdzeXQHC5i74iVkg91wfCMew2O60ClfV5QH5wmxh8OwtD8/7hgc8=
+	t=1750668674; cv=none; b=heIO1q0dRtNQlLY0wxwx5VLGMx3rMDw7HZuLd/3eyh6pGpnj6Syu7ootYXynYIhEPLuJzE/KL8/RqH8dKXO/xNCe81NtO3hmfzcO8yI8pb+2sSeowcZttKfezV6BJbsSOVGnamhwDXow3DwT0A0NELRWBZhPFEKxCZy7NT2A1nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750668675; c=relaxed/simple;
-	bh=CbT+W+tiJULj9yW7xTL6IzQw4d0WxvSiWbMt/Ikfrhg=;
+	s=arc-20240116; t=1750668674; c=relaxed/simple;
+	bh=MDvTxgLyP59RZb21/bXS1GWS6AmXiKBoTP5yEyyFkZg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uUL23jpc5J8omeT+3/yX0pVTDoepK0UNqjOYYb9ihvpc0zT+/Qzp/dmI2duuSCNstHcl5IhoNrOwsXrxnXbAdX4hZ06YzzvMQmMpmMXL7vqgj8kRxwNRqnqPGP7aL3Nq1BvYerzXjWhjjXxg9L604S/b/fndeRpZZRDAesKM4dE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R1gOCDje; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=cW5ezu/5DYfFon+XURec8M8/FCLUIcdUfz81NKwz88hq4M6hD/FJpH62kLINc7y1ySaEOffv2EWu3619hmZvgN0mquf9g6bap32v0iWSE9+b6bnDrI20oAVVwDd58Im4ktS9Q2i5IapuFfU14C+nd2irLOiMIY9+oI0n5PK3Mq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=mYEmUHYY; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R1gOCDje"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB365C4CEF1;
-	Mon, 23 Jun 2025 08:51:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750668674;
-	bh=CbT+W+tiJULj9yW7xTL6IzQw4d0WxvSiWbMt/Ikfrhg=;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="mYEmUHYY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750668671;
+	bh=MDvTxgLyP59RZb21/bXS1GWS6AmXiKBoTP5yEyyFkZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=R1gOCDjeMNib6vEqwp3qwarx2z44DXFp6i43dctlavcgz9awDOxXfPZgncDjVn4AR
-	 +ezcEJUnkGzwPhKosWaBX34YQ9W6rvKmKmlzFToCy9SRmMXNycD42T1n2qaGfUPsE6
-	 z+0STeMBT+U2kVOickL6Hj7v9R0uf31ZGgEMjR/0iYlQeVP+1jVtM+7V7umbvtGZh1
-	 00FnPksZUhD6fZ/HODHGntY8cudNqGoaFZkb+vGw/yZpXABIsLBQD1Co4WyGwwlcUy
-	 uC1C5eJyWEuxELv9KhgpkqSICtUK/5OeBuGs6x36izGliVRhtm6oGWFN+h7JdFzBQ7
-	 ozO2soPnyjsDA==
-From: Hans de Goede <hansg@kernel.org>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
-	Alexander Usyskin <alexander.usyskin@intel.com>
-Cc: Hans de Goede <hansg@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	b=mYEmUHYYJ39w8bsF7IGGq9d1zLYfFwfCVAo5+wcjNY/H8RguDkvtvQfQVHmYtI7yi
+	 WxXLIflev8qwNwRRY6ZXh9JzxnaWEAjAJ3OIrMLm8ofudtB9f/cq1QsJ9ly4kKLF6L
+	 +MvpN3URQUC2vJ15CC8pqQC+qOrR+fL9+7lrzNj4RCEawFKUqVbe1Z56Ela4nWFj2I
+	 RJkKex/vs7uXhEYgb6i1Sh7eeMdwMyqxRUU2XkIsk8XJVGmRa0YpDlrdPISoeyzqfv
+	 hh53WWdrms4OIcBkHPneqOMScN1RBHa9Uc0+0Sat3WrBZu6WbKqyhaHuNAIKKX0TzF
+	 PyWkDAUJRJuZQ==
+Received: from debian.. (unknown [171.76.82.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id E64A417E10D5;
+	Mon, 23 Jun 2025 10:51:07 +0200 (CEST)
+From: Vignesh Raman <vignesh.raman@collabora.com>
+To: dri-devel@lists.freedesktop.org
+Cc: daniels@collabora.com,
+	daniel@fooishbar.org,
+	helen.fornazier@gmail.com,
+	airlied@gmail.com,
+	simona.vetter@ffwll.ch,
+	robdclark@gmail.com,
+	robin.clark@oss.qualcomm.com,
+	guilherme.gallo@collabora.com,
+	sergi.blanch.torne@collabora.com,
+	valentine.burley@collabora.com,
+	lumag@kernel.org,
+	dmitry.baryshkov@oss.qualcomm.com,
+	quic_abhinavk@quicinc.com,
+	mripard@kernel.org,
+	maarten.lankhorst@linux.intel.com,
+	tzimmermann@suse.de,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 08/10] mei: vsc: Run event callback from a workqueue
-Date: Mon, 23 Jun 2025 10:50:50 +0200
-Message-ID: <20250623085052.12347-9-hansg@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250623085052.12347-1-hansg@kernel.org>
-References: <20250623085052.12347-1-hansg@kernel.org>
+Subject: [PATCH v4 1/2] drm/ci: Add jobs to validate devicetrees
+Date: Mon, 23 Jun 2025 14:20:27 +0530
+Message-ID: <20250623085033.39680-2-vignesh.raman@collabora.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250623085033.39680-1-vignesh.raman@collabora.com>
+References: <20250623085033.39680-1-vignesh.raman@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The event_notify callback in some cases calls vsc_tp_xfer(), which checks
-tp->assert_cnt and waits for it through the tp->xfer_wait wait-queue.
+Add jobs to run dt_binding_check and dtbs_check. If warnings are seen,
+exit with a non-zero error code while configuring them as warning in
+the GitLab CI pipeline.
 
-And tp->assert_cnt is increased and the tp->xfer_wait queue is woken o
-from the interrupt handler.
-
-So the interrupt handler which is running the event callback is waiting for
-itself to signal that it can continue.
-
-This happens to work because the event callback runs from the threaded
-ISR handler and while that is running the hard ISR handler will still
-get called a second / third time for further interrupts and it is the hard
-ISR handler which does the atomic_inc() and wake_up() calls.
-
-But having the threaded ISR handler wait for its own interrupt to trigger
-again is not how a threaded ISR handler is supposed to be used.
-
-Move the running of the event callback from a threaded interrupt handler
-to a workqueue since a threaded ISR should not wait for events from its
-own interrupt.
-
-This is a preparation patch for moving the atomic_inc() and wake_up() calls
-to the threaded ISR handler, which is necessary to fix a locking issue.
-
-Fixes: 566f5ca97680 ("mei: Add transport driver for IVSC device")
-Signed-off-by: Hans de Goede <hansg@kernel.org>
+Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
+Acked-by: Helen Koike <helen.fornazier@gmail.com>
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
+Acked-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 ---
- drivers/misc/mei/vsc-tp.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/misc/mei/vsc-tp.c b/drivers/misc/mei/vsc-tp.c
-index 76a6aa606a26..f5ea38f22419 100644
---- a/drivers/misc/mei/vsc-tp.c
-+++ b/drivers/misc/mei/vsc-tp.c
-@@ -18,6 +18,7 @@
- #include <linux/platform_device.h>
- #include <linux/spi/spi.h>
- #include <linux/types.h>
-+#include <linux/workqueue.h>
- 
- #include "vsc-tp.h"
- 
-@@ -76,6 +77,7 @@ struct vsc_tp {
- 
- 	atomic_t assert_cnt;
- 	wait_queue_head_t xfer_wait;
-+	struct work_struct event_work;
- 
- 	vsc_tp_event_cb_t event_notify;
- 	void *event_notify_context;
-@@ -105,19 +107,19 @@ static irqreturn_t vsc_tp_isr(int irq, void *data)
- 
- 	wake_up(&tp->xfer_wait);
- 
--	return IRQ_WAKE_THREAD;
-+	schedule_work(&tp->event_work);
+v4:
+  - The minimum supported version of LLVM for building x86 kernels is 15.0.0
+    (See https://lore.kernel.org/all/20250220-x86-bump-min-llvm-for-stackp-v1-1-ecb3c906e790@kernel.org/).
+    Use the mesa-ci containers, where LLVM_VERSION is defined at the container
+    level and is currently set to 19. Use this llvm version for compilation.
+    Use a Python virtual environment to avoid the warning: “Running pip as the 'root'
+    user can result in broken permissions and conflicting behavior with the system package manager.”
+    Also check gpu bindings.
+    
+v3:
+  - Add dt-binding-check and dtbs-check jobs to the static-checks stage.
+
+v2:
+  - Use LLVM/Clang instead of GCC to avoid architecture-specific
+    toolchains for cross-compiling.
+
+---
+ drivers/gpu/drm/ci/check-devicetrees.yml | 50 ++++++++++++++++++++++++
+ drivers/gpu/drm/ci/dt-binding-check.sh   | 19 +++++++++
+ drivers/gpu/drm/ci/dtbs-check.sh         | 22 +++++++++++
+ drivers/gpu/drm/ci/gitlab-ci.yml         |  2 +
+ drivers/gpu/drm/ci/setup-llvm-links.sh   | 13 ++++++
+ 5 files changed, 106 insertions(+)
+ create mode 100644 drivers/gpu/drm/ci/check-devicetrees.yml
+ create mode 100755 drivers/gpu/drm/ci/dt-binding-check.sh
+ create mode 100755 drivers/gpu/drm/ci/dtbs-check.sh
+ create mode 100755 drivers/gpu/drm/ci/setup-llvm-links.sh
+
+diff --git a/drivers/gpu/drm/ci/check-devicetrees.yml b/drivers/gpu/drm/ci/check-devicetrees.yml
+new file mode 100644
+index 000000000000..727bd56018b8
+--- /dev/null
++++ b/drivers/gpu/drm/ci/check-devicetrees.yml
+@@ -0,0 +1,50 @@
++.dt-check-base:
++  stage: static-checks
++  timeout: "30m"
++  variables:
++    GIT_DEPTH: 1
++    FF_USE_NEW_BASH_EVAL_STRATEGY: 'true'
++    SCHEMA: "display:gpu"
++    VENV_PATH: "/tmp/dtcheck-venv"
++  before_script:
++    - apt-get update -qq
++    # Minimum supported version of LLVM for building x86 kernels is 15.0.0.
++    # In mesa-ci containers, LLVM_VERSION is defined as a container-level property and is currently set to 19.
++    - apt-get install -y --no-install-recommends clang-${LLVM_VERSION} lld-${LLVM_VERSION} llvm-${LLVM_VERSION} python3-dev python3-venv python3-pip yamllint
++    - python3 -m venv "${VENV_PATH}"
++    - source "${VENV_PATH}/bin/activate"
++    - pip3 install dtschema
++  script:
++    - drivers/gpu/drm/ci/${SCRIPT_NAME}
++  artifacts:
++    when: on_failure
++    paths:
++      - ${ARTIFACT_FILE}
++  allow_failure:
++    exit_codes:
++      - 102
 +
-+	return IRQ_HANDLED;
- }
++dtbs-check:arm32:
++  extends:
++    - .build:arm32
++    - .dt-check-base
++  variables:
++    SCRIPT_NAME: "dtbs-check.sh"
++    ARTIFACT_FILE: "dtbs-check.log"
++
++dtbs-check:arm64:
++  extends:
++    - .build:arm64
++    - .dt-check-base
++  variables:
++    SCRIPT_NAME: "dtbs-check.sh"
++    ARTIFACT_FILE: "dtbs-check.log"
++
++dt-binding-check:
++  extends:
++    - .build
++    - .use-debian/x86_64_build
++    - .dt-check-base
++  variables:
++    SCRIPT_NAME: "dt-binding-check.sh"
++    ARTIFACT_FILE: "dt-binding-check.log"
+diff --git a/drivers/gpu/drm/ci/dt-binding-check.sh b/drivers/gpu/drm/ci/dt-binding-check.sh
+new file mode 100755
+index 000000000000..99e1c0df84b7
+--- /dev/null
++++ b/drivers/gpu/drm/ci/dt-binding-check.sh
+@@ -0,0 +1,19 @@
++#!/bin/bash
++# SPDX-License-Identifier: MIT
++
++set -euxo pipefail
++
++VENV_PATH="${VENV_PATH:-/tmp/dtschema-venv}"
++source "${VENV_PATH}/bin/activate"
++
++if ! make -j"${FDO_CI_CONCURRENT:-4}" dt_binding_check \
++        DT_SCHEMA_FILES="${SCHEMA:-}" 2>dt-binding-check.log; then
++    echo "ERROR: 'make dt_binding_check' failed. Please check dt-binding-check.log for details."
++    exit 1
++fi
++
++if [[ -s dt-binding-check.log ]]; then
++    echo "WARNING: dt_binding_check reported warnings. Please check dt-binding-check.log" \
++         "for details."
++    exit 102
++fi
+diff --git a/drivers/gpu/drm/ci/dtbs-check.sh b/drivers/gpu/drm/ci/dtbs-check.sh
+new file mode 100755
+index 000000000000..57842c452439
+--- /dev/null
++++ b/drivers/gpu/drm/ci/dtbs-check.sh
+@@ -0,0 +1,22 @@
++#!/bin/bash
++# SPDX-License-Identifier: MIT
++
++set -euxo pipefail
++
++: "${KERNEL_ARCH:?ERROR: KERNEL_ARCH must be set}"
++: "${LLVM_VERSION:?ERROR: LLVM_VERSION must be set}"
++
++./drivers/gpu/drm/ci/setup-llvm-links.sh
++
++make LLVM=1 ARCH="${KERNEL_ARCH}" defconfig
++
++if ! make -j"${FDO_CI_CONCURRENT:-4}" ARCH="${KERNEL_ARCH}" LLVM=1 dtbs_check \
++        DT_SCHEMA_FILES="${SCHEMA:-}" 2>dtbs-check.log; then
++    echo "ERROR: 'make dtbs_check' failed. Please check dtbs-check.log for details."
++    exit 1
++fi
++
++if [[ -s dtbs-check.log ]]; then
++    echo "WARNING: dtbs_check reported warnings. Please check dtbs-check.log for details."
++    exit 102
++fi
+diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/gitlab-ci.yml
+index d9e1042fc140..1dddda3d24c8 100644
+--- a/drivers/gpu/drm/ci/gitlab-ci.yml
++++ b/drivers/gpu/drm/ci/gitlab-ci.yml
+@@ -110,6 +110,7 @@ include:
+   - drivers/gpu/drm/ci/static-checks.yml
+   - drivers/gpu/drm/ci/build.yml
+   - drivers/gpu/drm/ci/test.yml
++  - drivers/gpu/drm/ci/check-devicetrees.yml
+   - 'https://gitlab.freedesktop.org/gfx-ci/lab-status/-/raw/main/lab-status.yml'
  
--static irqreturn_t vsc_tp_thread_isr(int irq, void *data)
-+static void vsc_tp_event_work(struct work_struct *work)
- {
--	struct vsc_tp *tp = data;
-+	struct vsc_tp *tp = container_of(work, struct vsc_tp, event_work);
  
- 	guard(mutex)(&tp->event_notify_mutex);
- 
- 	if (tp->event_notify)
- 		tp->event_notify(tp->event_notify_context);
--
--	return IRQ_HANDLED;
- }
- 
- /* wakeup firmware and wait for response */
-@@ -495,7 +497,7 @@ static int vsc_tp_probe(struct spi_device *spi)
- 	tp->spi = spi;
- 
- 	irq_set_status_flags(spi->irq, IRQ_DISABLE_UNLAZY);
--	ret = request_threaded_irq(spi->irq, vsc_tp_isr, vsc_tp_thread_isr,
-+	ret = request_threaded_irq(spi->irq, vsc_tp_isr, NULL,
- 				   IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
- 				   dev_name(dev), tp);
- 	if (ret)
-@@ -503,6 +505,7 @@ static int vsc_tp_probe(struct spi_device *spi)
- 
- 	mutex_init(&tp->mutex);
- 	mutex_init(&tp->event_notify_mutex);
-+	INIT_WORK(&tp->event_work, vsc_tp_event_work);
- 
- 	/* only one child acpi device */
- 	ret = acpi_dev_for_each_child(ACPI_COMPANION(dev),
-@@ -527,6 +530,7 @@ static int vsc_tp_probe(struct spi_device *spi)
- err_destroy_lock:
- 	free_irq(spi->irq, tp);
- 
-+	cancel_work_sync(&tp->event_work);
- 	mutex_destroy(&tp->event_notify_mutex);
- 	mutex_destroy(&tp->mutex);
- 
-@@ -542,6 +546,7 @@ static void vsc_tp_remove(struct spi_device *spi)
- 
- 	free_irq(spi->irq, tp);
- 
-+	cancel_work_sync(&tp->event_work);
- 	mutex_destroy(&tp->event_notify_mutex);
- 	mutex_destroy(&tp->mutex);
- }
+@@ -120,6 +121,7 @@ stages:
+   - git-archive
+   - build-for-tests
+   - build-only
++  - static-checks
+   - code-validation
+   - amdgpu
+   - i915
+diff --git a/drivers/gpu/drm/ci/setup-llvm-links.sh b/drivers/gpu/drm/ci/setup-llvm-links.sh
+new file mode 100755
+index 000000000000..ace33af82a3f
+--- /dev/null
++++ b/drivers/gpu/drm/ci/setup-llvm-links.sh
+@@ -0,0 +1,13 @@
++#!/usr/bin/env bash
++# SPDX-License-Identifier: MIT
++set -euo pipefail
++
++ln -svf "$(which clang++-${LLVM_VERSION})"      /usr/bin/clang++
++ln -svf "$(which clang-${LLVM_VERSION})"        /usr/bin/clang
++ln -svf "$(which ld.lld-${LLVM_VERSION})"       /usr/bin/ld.lld
++ln -svf "$(which lld-${LLVM_VERSION})"          /usr/bin/lld
++ln -svf "$(which llvm-ar-${LLVM_VERSION})"      /usr/bin/llvm-ar
++ln -svf "$(which llvm-nm-${LLVM_VERSION})"      /usr/bin/llvm-nm
++ln -svf "$(which llvm-objcopy-${LLVM_VERSION})" /usr/bin/llvm-objcopy
++ln -svf "$(which llvm-readelf-${LLVM_VERSION})" /usr/bin/llvm-readelf
++ln -svf "$(which llvm-strip-${LLVM_VERSION})"   /usr/bin/llvm-strip
 -- 
-2.49.0
+2.47.2
 
