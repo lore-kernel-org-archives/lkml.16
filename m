@@ -1,301 +1,207 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A13524E019;
-	Mon, 23 Jun 2025 13:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76EA32367B0
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:26:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750685180; cv=none; b=e7WdHBWQrNRzOHNrzgXKln8s+PW47MafS9jHn2QKSRyj1203w+2gJzD+eqTJkHHFwPdXrA6jvcE7cVfL6CRvnZn3cp26NTLh8nPqAOO2bLHXyZv5hHHKhyTRNKF9sxFZ3vPdppohLtFpZgox9rGu9ZW6wjNcCbfajY3ANY1nesw=
+	t=1750685219; cv=none; b=Cx+UaCpqqXH8Ig12t8PN3UHGC4NBNSRHTwMfwD9G0TZ2qcVR4Dp7ONy3j171FL4LawAtcvAp00NXvw66QUxedQc+nk6zY2EOWgduyPkJHVVjNRGOBMHMeiomCnZW1Vtln2Af6dypROK1cHEV0DZO1jN8El75SBmlUqi0+A0SsZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750685180; c=relaxed/simple;
-	bh=01ZS0geC59JuQg97iYsCYJJHGdkRPCrZsfjU9r0fFs4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k7v4o7HH15RbN7eFdq8O7CBnF1NiIOXpVPHjeLbGm/6Uc7yZ90HHSJt6EmiI3mnxtugyjfIZh8vH49rR1asyIFdPRzIBP5aNH1U7hesfV9lSyITid8dBoztXoM2UKmqlMM1T/kwrVzhKk4jG0OTN/Jwas/qkZZe6EO9ErXDdMIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QwDUdUGd; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QwDUdUGd"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4a58c2430edso45701121cf.1;
-        Mon, 23 Jun 2025 06:26:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750685176; x=1751289976; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=3eOpyFVJG9l5oUXrAK/DF72wqTy5+U/0d5OHsjl5CoM=;
-        b=QwDUdUGd7QsT8KjLHp/b5GZB504AbONqVZa9RL98F7FaRg/j8HN6y2NpyBmUTu4HLe
-         ztskqTyggPK6oVX1FSaHL6HnsSczA1TaW03/pNvv9d0pouc0IfdiSSRH2u1QiYRQZiL8
-         pyM6ZcdlGeuxyDAJNsE68wyJ9pHdrGWQ7aWL1Eca7bd6QMY8mVNKpGgdRGVbd5xBRapJ
-         dBqZP0IQcMOjCRWUYq2GsydQM57S/Wq10t5NWUUUksQr35uLFAfIso6s6TDN3A0ytoka
-         SDfM1YTL4tsp8FjGQas1/6zk5akKk8xfGPwdGsc3PUaxpsObs+SHoaqMfmr9+n7eN1aI
-         +CRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750685176; x=1751289976;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3eOpyFVJG9l5oUXrAK/DF72wqTy5+U/0d5OHsjl5CoM=;
-        b=JNKznFdywjB+FHZdqKd6Y9X4mpPSHaBKJWU03bXUgBDuh1tVOw7be23SFVPNUW1DRb
-         vngCG4ePi3ZeNYOnacOUpvfZ0wZMQWj7yjXV4spFeS2a2raCgQtcJSxZyfb/ecNaJcl1
-         OWkiG1mlApuGjxzJLOxf18JYf4WKPH93Yfzs/9HNryPLEljI+YCP4LtfVc5iQKmY7/Ce
-         0Cn0SibYQKUcmiNlaFJNoTU0YRaF+WsUEyaGfILYzPlA4NRiXT+zjnB1avtAlpWaik+H
-         3dsImL5SQUS9PP001bgqt1hLtX2tyjzOgYQtXTGSeJz/PBfvgIOA1Z6qUIR7ZjeVhrwI
-         D0Qw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhf+cVD4Y2bFEneFG6RyP/w8kA1W0aNeYOjoRyV8x3cfEJ/6yBZbNzhFHUtw+W+FZs8hKsjge2tDKEdysp4Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxU0iIkdCTI0L3LSlMBZ1Py8A6ezMXnW2SBNYRk0anNxJznBzrt
-	kP4fXpjmfdVVX97SHTSKmVt4MmulesOk0eOYe0xZCktTKz7xFKBNpIAznZfN9Q==
-X-Gm-Gg: ASbGncsl5jRQ4jKNA/D710ULR40MkxEhPzNRS0eOVTI79AK2VBTOiRZmSqbY9ksAFOl
-	vMuELlV9imOn4ItJWi4igr/HAaxqnoaLtRq3BmQgGEXg1XOMwHYEaFNLYd6xeRwVBllaVnmAbRa
-	w49N1OUs9VtVP90ftNAd/mfUnIVjo8PCoGrgf9TwNnvNOJMMUDcpoQ4tUMTBBGhOVi04HeJ/IOA
-	0FFV7bZUevN4KRGEls27bFvCKxYKNVvWrkcxhjHauDk3Y0Fs6wnB03M8GO2zDrsxK3Hg8qi12ei
-	XPHm7UYHZj2OwQqVp2T8L8FrSjEUz80DTe0kVHlDsteGmMaCtK2P5PW+X0XZ28JSU5aKHUn1/xG
-	DT+9JJjwM8uJe06Vi8+nRE+V8eboH6f/RxwSEqRHcp+ym9KFP2zk1
-X-Google-Smtp-Source: AGHT+IFXyn4krfA3+xu92n9peLo2YgUxIlQqv3LhvAerXtwNIL5NbgiUEziK5dqmkj2SfOf22+zayg==
-X-Received: by 2002:a05:622a:489a:b0:4a6:f00f:6618 with SMTP id d75a77b69052e-4a77c2ddf4fmr177575571cf.10.1750685176331;
-        Mon, 23 Jun 2025 06:26:16 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a779e5d304sm38147001cf.39.2025.06.23.06.26.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 06:26:15 -0700 (PDT)
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 7280F1200043;
-	Mon, 23 Jun 2025 09:26:15 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Mon, 23 Jun 2025 09:26:15 -0400
-X-ME-Sender: <xms:91VZaPIHX6Z14vTVHPxFKfcjg_2WIRBwgsTXTSi2Yuw_Jk_9y_5BsA>
-    <xme:91VZaDLqp67oq6PhBQJd7SpWmK1QC4ipxe5WoEiGRFV0np1EI1K6zBw3VASNylBxs
-    jb0XY_C4lQx7Agl9w>
-X-ME-Received: <xmr:91VZaHv7X3No4HoWWgOwDR5GL2lHN_vfuy26oJNdKMlF3L4ek1YVYVxRsA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddujedugecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecunecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertd
-    dttddunecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhm
-    rghilhdrtghomheqnecuggftrfgrthhtvghrnhepkeefjefgueeitdeuhfduheffledvhe
-    evffethedtudfhffejieffveeuieduheffnecuffhomhgrihhnpehkvghrnhgvlhdrohhr
-    ghdpmhhuthgvgidruggrthgrpdhmuhhtvgigrdgrshenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhp
-    vghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrd
-    hfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthht
-    ohepudelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeifohhrkhesohhnuhhroh
-    iikhgrnhdruggvvhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehruhhsthdqfhhorhdqlhhinhhugiesvhhgvg
-    hrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpth
-    htohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtoheplhhoshhsihhnsehk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrd
-    horhhgpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhm
-X-ME-Proxy: <xmx:91VZaIYBFiC1dOYWmkQ4R_AIavL-zXAvbWkUUbNbNFDabaUU-BREow>
-    <xmx:91VZaGbOiEbYKGVTQqte_26AM6EUaAP7UW4SSt7YHw0Er38XYziutA>
-    <xmx:91VZaMAhnizNuTI8WAyDIOqTzWSzb5p59Nl5VwcPfAVUWKmVeubo0A>
-    <xmx:91VZaEZwRCE5cg2K8rZGsgUpvZG78pa5tqgI-OtMIdDtDSO7UhtWZQ>
-    <xmx:91VZaKp-O-SkXk1HP7tOhOe1_EW85IZWOFSZ1AirPmI7KH_gbgJsywen>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 23 Jun 2025 09:26:14 -0400 (EDT)
-Date: Mon, 23 Jun 2025 06:26:14 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Onur =?iso-8859-1?Q?=D6zkan?= <work@onurozkan.dev>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
-	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, dakr@kernel.org, peterz@infradead.org,
-	mingo@redhat.com, will@kernel.org, longman@redhat.com,
-	felipe_life@live.com, daniel@sedlak.dev, bjorn3_gh@protonmail.com
-Subject: Re: [PATCH v5 2/3] implement ww_mutex abstraction for the Rust tree
-Message-ID: <aFlV9ky2RKrYnrJX@Mac.home>
-References: <20250621184454.8354-1-work@onurozkan.dev>
- <20250621184454.8354-3-work@onurozkan.dev>
+	s=arc-20240116; t=1750685219; c=relaxed/simple;
+	bh=sBcqW/mLnhnW+uEyQ6BkMfLELuAbcSFHWYwrmkBvRkM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YpaxvFKu8QUWS0AJLJ90b1Ug9JNhBjQzAG0pIvZWL82p34gD1HisZYkfweT++S3g8B2GFDd3avRkKlJ6EHVFFLg0QAUMPYlEo/UanpkOE0oWyujTwAr4Dptj6MTHXyw9lM2kIdhRYyRlAe0e62jJrm+uIGo8HAVMmH4uG1An7zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA28A113E;
+	Mon, 23 Jun 2025 06:26:38 -0700 (PDT)
+Received: from [10.1.29.169] (XHFQ2J9959.cambridge.arm.com [10.1.29.169])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B4E53F58B;
+	Mon, 23 Jun 2025 06:26:55 -0700 (PDT)
+Message-ID: <ed942c01-58e8-4d91-8f86-3b3645af6940@arm.com>
+Date: Mon, 23 Jun 2025 14:26:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] arm64: mm: support large block mapping when
+ rodata=full
+Content-Language: en-GB
+To: Yang Shi <yang@os.amperecomputing.com>, will@kernel.org,
+ catalin.marinas@arm.com, Miko.Lenczewski@arm.com, dev.jain@arm.com,
+ scott@os.amperecomputing.com, cl@gentwo.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250531024545.1101304-1-yang@os.amperecomputing.com>
+ <20250531024545.1101304-4-yang@os.amperecomputing.com>
+ <f036acea-1bd1-48a7-8600-75ddd504b8db@arm.com>
+ <50a4f767-0007-4f6a-8c62-398962d54029@os.amperecomputing.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <50a4f767-0007-4f6a-8c62-398962d54029@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250621184454.8354-3-work@onurozkan.dev>
 
-On Sat, Jun 21, 2025 at 09:44:53PM +0300, Onur �zkan wrote:
 [...]
-> +#[pin_data(PinnedDrop)]
-> +pub struct WwAcquireCtx<'a> {
-> +    #[pin]
-> +    inner: Opaque<bindings::ww_acquire_ctx>,
-> +    _p: PhantomData<&'a WwClass>,
-> +}
-> +
-> +// SAFETY: Used in controlled ways during lock acquisition. No race risk.
-> +unsafe impl Sync for WwAcquireCtx<'_> {}
-> +// SAFETY: Doesn't rely on thread-local state. Safe to move between threads.
-> +unsafe impl Send for WwAcquireCtx<'_> {}
-> +
 
-I don't think `WwAcquireCtx` is `Send`, if you look at C code when
-LOCKDEP is enabled, `ww_acquire_init()` calls a few `mutex_acquire()`
-and expects `ww_acquire_fini()` to call the corresponding
-`mutex_release()`, and these two have to be on the same task. Also I
-don't think there is a need for sending `WwAcquireCtx` to another
-thread.
-
-Besides, the `Sync` of `WwAcquireCtx` also doesn't make sense, I would
-drop it if there is no real usage for now.
-
-> +impl<'ctx> WwAcquireCtx<'ctx> {
-> +    /// Initializes `Self` with calling C side `ww_acquire_init` inside.
-> +    pub fn new<'class: 'ctx>(ww_class: &'class WwClass) -> impl PinInit<Self> {
-> +        let raw_ptr = ww_class.inner.get();
-> +        pin_init!(WwAcquireCtx {
-> +            inner <- Opaque::ffi_init(|slot: *mut bindings::ww_acquire_ctx| {
-> +                // SAFETY: The caller guarantees that `ww_class` remains valid.
-> +                unsafe { bindings::ww_acquire_init(slot, raw_ptr) }
-> +            }),
-> +            _p: PhantomData
-> +        })
-> +    }
-> +
-> +    /// Marks the end of the acquire phase with C side `ww_acquire_done`.
-> +    ///
-> +    /// After calling this function, no more mutexes can be acquired with this context.
-> +    pub fn done(self: Pin<&mut Self>) {
-> +        // SAFETY: The context is pinned and valid.
-> +        unsafe { bindings::ww_acquire_done(self.inner.get()) };
-> +    }
-> +
-> +    /// Returns a raw pointer to the inner `ww_acquire_ctx`.
-> +    fn as_ptr(&self) -> *mut bindings::ww_acquire_ctx {
-> +        self.inner.get()
-> +    }
-> +}
-> +
-> +#[pinned_drop]
-> +impl PinnedDrop for WwAcquireCtx<'_> {
-> +    fn drop(self: Pin<&mut Self>) {
-> +        // SAFETY: The context is being dropped and is pinned.
-> +        unsafe { bindings::ww_acquire_fini(self.inner.get()) };
-> +    }
-> +}
-> +
-[...]
-> +#[pin_data]
-> +pub struct WwMutex<'a, T: ?Sized> {
-> +    _p: PhantomData<&'a WwClass>,
-> +    #[pin]
-> +    mutex: Opaque<bindings::ww_mutex>,
-> +    data: UnsafeCell<T>,
-> +}
-> +
-> +// SAFETY: [`WwMutex`] can be shared between threads.
-> +unsafe impl<T: ?Sized + Send> Send for WwMutex<'_, T> {}
-> +// SAFETY: [`WwMutex`] can be safely accessed from multiple threads concurrently.
-> +unsafe impl<T: ?Sized + Sync> Sync for WwMutex<'_, T> {}
-
-I believe this requires `T` being `Send` as well, because if `&WwMutex`
-is shared between threads, that means any thread can access `&mut T`
-when the lock acquired.
-
-> +
-> +impl<'ww_class, T> WwMutex<'ww_class, T> {
-> +    /// Creates `Self` with calling `ww_mutex_init` inside.
-> +    pub fn new(t: T, ww_class: &'ww_class WwClass) -> impl PinInit<Self> {
-> +        let raw_ptr = ww_class.inner.get();
-> +        pin_init!(WwMutex {
-> +            mutex <- Opaque::ffi_init(|slot: *mut bindings::ww_mutex| {
-> +                // SAFETY: The caller guarantees that `ww_class` remains valid.
-> +                unsafe { bindings::ww_mutex_init(slot, raw_ptr) }
-> +            }),
-> +            data: UnsafeCell::new(t),
-> +            _p: PhantomData,
-> +        })
-> +    }
-> +}
-> +
-[...]
-> +    /// Checks if the mutex is currently locked.
-> +    pub fn is_locked(&self) -> bool {
-
-Did I miss a reply from you regarding:
-
-	https://lore.kernel.org/rust-for-linux/aFReIdlPPg4MmaYX@tardis.local/
-
-no public is_lock() please. Do an assert_is_locked() instead. We need to
-avoid users from abusing this.
-
-> +        // SAFETY: The mutex is pinned and valid.
-> +        unsafe { bindings::ww_mutex_is_locked(self.mutex.get()) }
-> +    }
-> +
-> +    /// Returns a raw pointer to the inner mutex.
-> +    fn as_ptr(&self) -> *mut bindings::ww_mutex {
-> +        self.mutex.get()
-> +    }
-> +}
-> +
-> +/// A guard that provides exclusive access to the data protected
-> +/// by a [`WwMutex`].
-> +///
-> +/// # Invariants
-> +///
-> +/// The guard holds an exclusive lock on the associated [`WwMutex`]. The lock is held
-> +/// for the entire lifetime of this guard and is automatically released when the
-> +/// guard is dropped.
-> +#[must_use = "the lock unlocks immediately when the guard is unused"]
-> +pub struct WwMutexGuard<'a, T: ?Sized> {
-> +    mutex: &'a WwMutex<'a, T>,
-> +    _not_send: NotThreadSafe,
-> +}
-> +
-> +// SAFETY: [`WwMutexGuard`] can be transferred across thread boundaries if the data can.
-> +unsafe impl<T: ?Sized + Send> Send for WwMutexGuard<'_, T> {}
-
-Nope, ww_mutex is still a mutex, you cannot acquire the lock in one task
-and release the lock on another task.
-
-> +
-> +// SAFETY: [`WwMutexGuard`] can be shared between threads if the data can.
-> +unsafe impl<T: ?Sized + Send + Sync> Sync for WwMutexGuard<'_, T> {}
-
-You don't need the `Send` here? A `&WwMutexGuard` doesn't provide the
-access to `&mut T`, so being `Sync` suffices.
-
-Regards,
-Boqun
-
-> +
-> +impl<'a, T: ?Sized> WwMutexGuard<'a, T> {
-> +    /// Creates a new guard for a locked mutex.
-> +    fn new(mutex: &'a WwMutex<'a, T>) -> Self {
-> +        Self {
-> +            mutex,
-> +            _not_send: NotThreadSafe,
-> +        }
-> +    }
-> +}
-> +
-> +impl<T: ?Sized> core::ops::Deref for WwMutexGuard<'_, T> {
-> +    type Target = T;
-> +
-> +    fn deref(&self) -> &Self::Target {
-> +        // SAFETY: We hold the lock, so we have exclusive access.
-> +        unsafe { &*self.mutex.data.get() }
-> +    }
-> +}
-> +
-> +impl<T: ?Sized> core::ops::DerefMut for WwMutexGuard<'_, T> {
-> +    fn deref_mut(&mut self) -> &mut Self::Target {
-> +        // SAFETY: We hold the lock, so we have exclusive access.
-> +        unsafe { &mut *self.mutex.data.get() }
-> +    }
-> +}
-> +
-> +impl<T: ?Sized> Drop for WwMutexGuard<'_, T> {
-> +    fn drop(&mut self) {
-> +        // SAFETY: We hold the lock and are about to release it.
-> +        unsafe { bindings::ww_mutex_unlock(self.mutex.as_ptr()) };
-> +    }
-> +}
-> -- 
-> 2.49.0
+>> +
+>> +int split_leaf_mapping(unsigned long addr)
 > 
+> Thanks for coming up with the code. It does help to understand your idea. Now I
+> see why you suggested "split_mapping(start); split_mapping(end);" model. It does
+> make the implementation easier because we don't need a loop anymore. But this
+> may have a couple of problems:
+>   1. We need walk the page table twice instead of once. It sounds expensive.
+
+Yes we need to walk twice. That may be more expensive or less expensive,
+depending on the size of the range that you are splitting. If the range is large
+then your approach loops through every leaf mapping between the start and end
+which will be more expensive than just doing 2 walks. If the range is small then
+your approach can avoid the second walk, but at the expense of all the extra
+loop overhead.
+
+My suggestion requires 5 loads (assuming the maximum of 5 levels of lookup).
+Personally I think this is probably acceptable? Perhaps we need some other
+voices here.
+
+
+>   2. How should we handle repainting? We need split all the page tables all the
+> way down to PTE for repainting between start and end rather than keeping block
+> mappings. This model doesn't work, right? For example, repaint a 2G block. The
+> first 1G is mapped by a PUD, the second 1G is mapped by 511 PMD and 512 PTEs.
+> split_mapping(start) will split the first 1G, but split_mapping(end) will do
+> nothing, the 511 PMDs are kept intact. In addition, I think we also prefer reuse
+> the split primitive for repainting instead of inventing another one.
+
+I agree my approach doesn't work for the repainting case. But I think what I'm
+trying to say is that the 2 things are different operations;
+split_leaf_mapping() is just trying to ensure that the start and end of a ragion
+are on leaf boundaries. Repainting is trying to ensure that all leaf mappings
+within a range are PTE-size. I've implemented the former and you've implemented
+that latter. Your implementation looks like meets the former's requirements
+because you are only testing it for the case where the range is 1 page. But
+actually it is splitting everything in the range to PTEs.
+
+Thanks,
+Ryan
+
+> 
+> Thanks,
+> Yang
+> 
+>> +{
+>> +    pgd_t *pgdp, pgd;
+>> +    p4d_t *p4dp, p4d;
+>> +    pud_t *pudp, pud;
+>> +    pmd_t *pmdp, pmd;
+>> +    pte_t *ptep, pte;
+>> +    int ret = 0;
+>> +
+>> +    /*
+>> +     * !BBML2_NOABORT systems should not be trying to change permissions on
+>> +     * anything that is not pte-mapped in the first place. Just return early
+>> +     * and let the permission change code raise a warning if not already
+>> +     * pte-mapped.
+>> +     */
+>> +    if (!system_supports_bbml2_noabort())
+>> +        return 0;
+>> +
+>> +    /*
+>> +     * Ensure addr is at least page-aligned since this is the finest
+>> +     * granularity we can split to.
+>> +     */
+>> +    if (addr != PAGE_ALIGN(addr))
+>> +        return -EINVAL;
+>> +
+>> +    arch_enter_lazy_mmu_mode();
+>> +
+>> +    /*
+>> +     * PGD: If addr is PGD aligned then addr already describes a leaf
+>> +     * boundary. If not present then there is nothing to split.
+>> +     */
+>> +    if (ALIGN_DOWN(addr, PGDIR_SIZE) == addr)
+>> +        goto out;
+>> +    pgdp = pgd_offset_k(addr);
+>> +    pgd = pgdp_get(pgdp);
+>> +    if (!pgd_present(pgd))
+>> +        goto out;
+>> +
+>> +    /*
+>> +     * P4D: If addr is P4D aligned then addr already describes a leaf
+>> +     * boundary. If not present then there is nothing to split.
+>> +     */
+>> +    if (ALIGN_DOWN(addr, P4D_SIZE) == addr)
+>> +        goto out;
+>> +    p4dp = p4d_offset(pgdp, addr);
+>> +    p4d = p4dp_get(p4dp);
+>> +    if (!p4d_present(p4d))
+>> +        goto out;
+>> +
+>> +    /*
+>> +     * PUD: If addr is PUD aligned then addr already describes a leaf
+>> +     * boundary. If not present then there is nothing to split. Otherwise,
+>> +     * if we have a pud leaf, split to contpmd.
+>> +     */
+>> +    if (ALIGN_DOWN(addr, PUD_SIZE) == addr)
+>> +        goto out;
+>> +    pudp = pud_offset(p4dp, addr);
+>> +    pud = pudp_get(pudp);
+>> +    if (!pud_present(pud))
+>> +        goto out;
+>> +    if (pud_leaf(pud)) {
+>> +        ret = split_pud(pudp, pud);
+>> +        if (ret)
+>> +            goto out;
+>> +    }
+>> +
+>> +    /*
+>> +     * CONTPMD: If addr is CONTPMD aligned then addr already describes a
+>> +     * leaf boundary. If not present then there is nothing to split.
+>> +     * Otherwise, if we have a contpmd leaf, split to pmd.
+>> +     */
+>> +    if (ALIGN_DOWN(addr, CONT_PMD_SIZE) == addr)
+>> +        goto out;
+>> +    pmdp = pmd_offset(pudp, addr);
+>> +    pmd = pmdp_get(pmdp);
+>> +    if (!pmd_present(pmd))
+>> +        goto out;
+>> +    if (pmd_leaf(pmd)) {
+>> +        if (pmd_cont(pmd))
+>> +            split_contpmd(pmdp);
+>> +        /*
+>> +         * PMD: If addr is PMD aligned then addr already describes a
+>> +         * leaf boundary. Otherwise, split to contpte.
+>> +         */
+>> +        if (ALIGN_DOWN(addr, PMD_SIZE) == addr)
+>> +            goto out;
+>> +        ret = split_pmd(pmdp, pmd);
+>> +        if (ret)
+>> +            goto out;
+>> +    }
+>> +
+>> +    /*
+>> +     * CONTPTE: If addr is CONTPTE aligned then addr already describes a
+>> +     * leaf boundary. If not present then there is nothing to split.
+>> +     * Otherwise, if we have a contpte leaf, split to pte.
+>> +     */
+>> +    if (ALIGN_DOWN(addr, CONT_PMD_SIZE) == addr)
+>> +        goto out;
+>> +    ptep = pte_offset_kernel(pmdp, addr);
+>> +    pte = __ptep_get(ptep);
+>> +    if (!pte_present(pte))
+>> +        goto out;
+>> +    if (pte_cont(pte))
+>> +        split_contpte(ptep);
+>> +
+>> +out:
+>> +    arch_leave_lazy_mmu_mode();
+>> +    return ret;
+>> +}
+>> ---8<---
+>>
+>> Thanks,
+>> Ryan
+>>
+> 
+
