@@ -1,98 +1,183 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C1C1E1DFE;
-	Mon, 23 Jun 2025 19:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366891E1DFE;
+	Mon, 23 Jun 2025 19:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750706707; cv=none; b=q2Hu+R+GGrlkIxEOlsKNo/4y0r/B9sSGrjOBdSqB7NXelG+xp7ckInHZKuoiop3DgSBS2HIW3500QUjGQGAjgN8OFBblxllxNatgRDz1WJh8oD6+AMBZ0aV6kdTtcQbM7+geR4tWifahpyj5/jWnNpgQFclwcRda85wc2cpmHME=
+	t=1750706729; cv=none; b=ofqf9s6Lbeic53/ynnKIX7UzNRO4VRAOoo2+u+vuwI+0rJzCoNT8Fqq2cLdZRtEMnnnKQW+nU/FZsps+eZYAtiMM/DZj1Rey+HeftHUvycrR2UOhuy2iRzaEMvXGCtA7Ws+o2JLCewZuOqNWX94uC8ms07WtDB3dNYj+I0bVZ7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750706707; c=relaxed/simple;
-	bh=rOVt0ekDWltweCaLCTF+9Wh1oLMlOw+5K9zPrhbVDr0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LjrdszmkQXDFOIjfwZPBF1+2gtu1U2vHtRnn3BKNBTrhSToIV7th9z7oYNyPIfhzMsnq8+wb4OoI1NiguHrUHqUz3GnaIMUwZNVkdJZM1qv3JL7ctNz3RV8CJLS8NkLrI14ckYt9z5LMp+umhMAYhkuQw/h90iUkeYb2AC6dt44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MZeSXzSg; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750706729; c=relaxed/simple;
+	bh=JmZmp75kdGDdC1XA59SnUh+LpRTyEr40586zQDgBptY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=KJeJqsBOy5BXTL7auIjZ7fFEtDN9C24JCxoq45liPb5HXqWED3o9OewXTiPSp3QEq7lrbcpWBvuU8fIVUC1dzoSXnpgcPVx4BIwRrvwTiQ1O0E66RLbqo7cdDsjgCsSGwci1FxiLw0VRkI6GACIoODju8da0ILQRyeAInxpF5FA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FeO73gcT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MZeSXzSg"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32b5226e6beso42282541fa.2;
-        Mon, 23 Jun 2025 12:25:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750706703; x=1751311503; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1mZHTt0VM9DkazGbD62GtKPk6Iel2GLHMmH+VCvcXL8=;
-        b=MZeSXzSgTDvShlCVZPJLHVwoXVl3hb0n8V3UxTjCVe/pjKaoneKsKfGrwlO198XGmS
-         FtCLv5PkGXhSJTR7GLPgEaauPKuFZUxMYURuwXLfWlS/I+PrFvQtWuW0+RPw1GAd5n0H
-         gCf0W7vaebtrLFRsLCyTZF7hUCiQrX9aR1gBNq4Qg1hhC6czXRf5E/+wJmB/60TAb4aR
-         abSGpSv54J4ZDWPldcJSmYZtwZnsn2N8Es9hoY9+RLSa6zL7LXMCw+ELTzgpMyqjDyiX
-         Yh3veQt7nW5Jz40+zcnMdZAW3yuTZ/tGPB8/fS+k+LSYegZMC/oLT1gOu5wLGTdBgmyd
-         aBHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750706703; x=1751311503;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1mZHTt0VM9DkazGbD62GtKPk6Iel2GLHMmH+VCvcXL8=;
-        b=oBNRGDZ7nH1R/YLFF2GwXy0PI14BBorFRclTsdb9VNX8ixkh3/yDIbn1qdkZ6FbWzO
-         Mpd2uiIBF6Y/vs5xRW/dUJ8Uf0bHHYkvkA5IaxJQbuubw7oZdlWSmdVIzx+jUbldieH3
-         Z8Z6w0ADrYmjRo3Jpp7LWCnhvDh12Ch2idgVnkd9HBB4CSSZGkp2szKtEp7DphoBjZH0
-         VKPdUfMiAwiy7MMh8fgEjBnlgQ87yLgy8AuIanEUAU4XSDeYjjvXKG6jsz/t/iHwRh/K
-         Q3BEpL1K634oo4ccEnz4IK1fBsimoaUFIaAhiTwJIHQ7aEpgkfQXDvlnJu9ge8zvnWWw
-         H1UA==
-X-Forwarded-Encrypted: i=1; AJvYcCURGpH8VW/w1afEYrrGGnYBNk7vmiLcTsYEhnIfrfccKD/ESLgIXX/hDKYBrWk1ToXE/9fXzBs3SJMLkGzO@vger.kernel.org, AJvYcCVljOXxK0zPoRbt22KifmsCq/0341DE99fA8CBMrDlrM2itrTInD32FPLXonRA9KHr4mHGXwcQr+Co=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvFUxf9yj8mQbe3um3xexSAJdF4W6sTPdoORvI5MYVcXMKCJuV
-	MBUtORK63Ycp8PQ6xMuJof4Oma+JbWNMRkaMbBVK2FMpupKSgFmRanbfTPGGbD2NUYjwQ/yblCf
-	TKZC3rHtc0LJmBZlfbuRNC7eRyOQ/Cf2z
-X-Gm-Gg: ASbGncvlKbP+P4USrkTLzTMu+kt93Q8H7sg/oprT5xxz8o04OxjvqdN9soW+MTfTAHY
-	ZDcdvaVA2H7yDT+E78jSxaCUn6H8r6HN2h3IAxORVlFvDHR4lbmbCA7U92v5t1OqFI5fZ/KK2pi
-	pB9MRuo+3St7uaVEFzdBGnexzAGxhDRNXiZMsyLzkR9nqdJrhPKOlJH/+jqA==
-X-Google-Smtp-Source: AGHT+IFu4u+dDHVpx6K5Dqdz4Es5UYLRw4rVmbwNsUoycKCYN/tcUUjEKpxREGNOK9tzL5Mv7yvKdx8FgUcK6Jhmag4=
-X-Received: by 2002:a2e:aa26:0:b0:32a:7122:58c9 with SMTP id
- 38308e7fff4ca-32b98e90beamr22406861fa.5.1750706703061; Mon, 23 Jun 2025
- 12:25:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FeO73gcT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 547A4C4CEEA;
+	Mon, 23 Jun 2025 19:25:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750706728;
+	bh=JmZmp75kdGDdC1XA59SnUh+LpRTyEr40586zQDgBptY=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=FeO73gcTq8XH956Ae2nclMOw3mYyjz70fg7p0LF9aZlXd6kO/1HiJQSWiFn0uY7ki
+	 7b4gx53xXqSJkFsDnTjij6+FDihLjATgdy/aF7lIhT7HiIY5nR5iE+G0jWt/HKc2Mm
+	 8OWFhhrbaj6Cnho8Pf7RfnSINxMjlTm+qSjumWA3izVXPqS0N9fUh6xYeSR8rXg7US
+	 eOvC+cWVT268sAjaTzVJ5+dC2OMHmT2G+6VkZ5KfVHCAZXhE3A1+YLx7zvM+etA8Qo
+	 JMvHdnQ2Whjkoh+TetyiZbL6Zv7I80PBflBpPUePpXAR1ReB1RdyAP3v2GKF5JzK+7
+	 K++7/nOKntrCw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <860684c8-a985-47bc-af30-3370f203e80d@zytor.com> <20250623183917.13132-1-khaliidcaliy@gmail.com>
-In-Reply-To: <20250623183917.13132-1-khaliidcaliy@gmail.com>
-From: Brian Gerst <brgerst@gmail.com>
-Date: Mon, 23 Jun 2025 15:24:50 -0400
-X-Gm-Features: AX0GCFvdbqcIgfbSMyoSfml-UrzHEltzomya8JZlsvay0B7QWNTyIi4zg08_Wb8
-Message-ID: <CAMzpN2jP_rtFjvL3NQLcwFCgY8uwbJvqbup-KFHVaaSh-oRCcQ@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] x86/boot: Supply boot_param in rdi instead of rsi
- from startup_64()
-To: Khalid Ali <khaliidcaliy@gmail.com>
-Cc: hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, ubizjak@gmail.com, x86@kernel.org, 
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 23 Jun 2025 21:25:23 +0200
+Message-Id: <DAU5QLRJBYMS.2OQ83W31ETX07@kernel.org>
+Cc: "Alice Ryhl" <aliceryhl@google.com>, "Danilo Krummrich"
+ <dakr@kernel.org>, "Daniel Almeida" <daniel.almeida@collabora.com>, "Miguel
+ Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Gary
+ Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Trevor Gross" <tmgross@umich.edu>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Bjorn Helgaas"
+ <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C2=B4nski?=
+ <kwilczynski@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v4 3/6] rust: irq: add support for non-threaded IRQs and
+ handlers
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com> <20250608-topics-tyr-request_irq-v4-3-81cb81fb8073@collabora.com> <aEbJt0YSc3-60OBY@pollux> <CAH5fLghDbrgO2PiKyKZ87UrtouG25xWhVP_YmcgO0fFcnvZRkQ@mail.gmail.com> <DAU0NHTHTDG4.2HNEABNAI8GHZ@kernel.org> <aFmPZMLGngAE_IHJ@tardis.local>
+In-Reply-To: <aFmPZMLGngAE_IHJ@tardis.local>
 
-On Mon, Jun 23, 2025 at 2:40=E2=80=AFPM Khalid Ali <khaliidcaliy@gmail.com>=
- wrote:
+On Mon Jun 23, 2025 at 7:31 PM CEST, Boqun Feng wrote:
+> On Mon, Jun 23, 2025 at 05:26:14PM +0200, Benno Lossin wrote:
+>> On Mon Jun 23, 2025 at 5:10 PM CEST, Alice Ryhl wrote:
+>> > On Mon, Jun 9, 2025 at 12:47=E2=80=AFPM Danilo Krummrich <dakr@kernel.=
+org> wrote:
+>> >> On Sun, Jun 08, 2025 at 07:51:08PM -0300, Daniel Almeida wrote:
+>> >> > +        dev: &'a Device<Bound>,
+>> >> > +        irq: u32,
+>> >> > +        flags: Flags,
+>> >> > +        name: &'static CStr,
+>> >> > +        handler: T,
+>> >> > +    ) -> impl PinInit<Self, Error> + 'a {
+>> >> > +        let closure =3D move |slot: *mut Self| {
+>> >> > +            // SAFETY: The slot passed to pin initializer is valid=
+ for writing.
+>> >> > +            unsafe {
+>> >> > +                slot.write(Self {
+>> >> > +                    inner: Devres::new(
+>> >> > +                        dev,
+>> >> > +                        RegistrationInner {
+>> >> > +                            irq,
+>> >> > +                            cookie: slot.cast(),
+>> >> > +                        },
+>> >> > +                        GFP_KERNEL,
+>> >> > +                    )?,
+>> >> > +                    handler,
+>> >> > +                    _pin: PhantomPinned,
+>> >> > +                })
+>> >> > +            };
+>> >> > +
+>> >> > +            // SAFETY:
+>> >> > +            // - The callbacks are valid for use with request_irq.
+>> >> > +            // - If this succeeds, the slot is guaranteed to be va=
+lid until the
+>> >> > +            // destructor of Self runs, which will deregister the =
+callbacks
+>> >> > +            // before the memory location becomes invalid.
+>> >> > +            let res =3D to_result(unsafe {
+>> >> > +                bindings::request_irq(
+>> >> > +                    irq,
+>> >> > +                    Some(handle_irq_callback::<T>),
+>> >> > +                    flags.into_inner() as usize,
+>> >> > +                    name.as_char_ptr(),
+>> >> > +                    slot.cast(),
+>> >> > +                )
+>> >> > +            });
+>> >> > +
+>> >> > +            if res.is_err() {
+>> >> > +                // SAFETY: We are returning an error, so we can de=
+stroy the slot.
+>> >> > +                unsafe { core::ptr::drop_in_place(&raw mut (*slot)=
+.handler) };
+>> >> > +            }
+>> >> > +
+>> >> > +            res
+>> >> > +        };
+>> >> > +
+>> >> > +        // SAFETY:
+>> >> > +        // - if this returns Ok, then every field of `slot` is ful=
+ly
+>> >> > +        // initialized.
+>> >> > +        // - if this returns an error, then the slot does not need=
+ to remain
+>> >> > +        // valid.
+>> >> > +        unsafe { pin_init_from_closure(closure) }
+>> >>
+>> >> Can't we use try_pin_init!() instead, move request_irq() into the ini=
+tializer of
+>> >> RegistrationInner and initialize inner last?
+>> >
+>> > We need a pointer to the entire struct when calling
+>> > bindings::request_irq. I'm not sure this allows you to easily get one?
+>> > I don't think using container_of! here is worth it.
+>>=20
+>> There is the `&this in` syntax (`this` is of type `NonNull<Self>`):
+>>=20
+>>     try_pin_init!(&this in Self {
+>>         inner: Devres::new(
+>>             dev,
+>>             RegistrationInner {
+>>                 irq,
+>>                 cookie: this.as_ptr().cast(),
+>>             },
+>>             GFP_KERNEL,
+>>         )?,
+>>         handler,
+>>         _pin: {
+>>             to_result(unsafe {
+>>                 bindings::request_irq(
+>>                     irq,
+>>                     Some(handle_irq_callback::<T>),
+>>                     flags.into_inner() as usize,
+>>                     name.as_char_ptr(),
+>>                     slot.as_ptr().cast(),
 >
-> > This is also invoked by some external bootloaders that boot the ELF
-> > image directly, even though this is strongly discouraged.
-> >
-> > Therefore this patchset is NAKed with extreme prejudice.
+> this is "this" instead of "slot", right?
 >
-> Thanks both of you peter and brian,
+>>                 )
+>>             })?;
+>>             PhantomPinned
+>>         },
+>>     })
+>>=20
+>> Last time around, I also asked this question and you replied with that
+>> we need to abort the initializer when `request_irq` returns false and
+>> avoid running `Self::drop` (thus we can't do it using `pin_chain`).
+>>=20
+>> I asked what we could do instead and you mentioned the `_: {}`
+>> initializers and those would indeed solve it, but we can abuse the
+>> `_pin` field for that :)
+>>=20
 >
-> however, the boot protocol document saying "%rsi must hold the base addre=
-ss of the struct boot_params",
-> it doesn't mention why. Maybe the document needs update to justify the re=
-asons. I wouldn't have known it
-> if you didn't tell me, so this shouldn't confuse anyone else.
+> Hmm.. but if request_irq() fails, aren't we going to call `drop` on
+> `inner`, which drops the `Devres` which will eventually call
+> `RegistrationInner::drop()`? And that's a `free_irq()` without
+> `request_irq()` succeeded.
 
-The use of RSI was inherited from the 32-bit kernel, but the real
-reason is lost to history.  It's just always been that way and there
-is no compelling reason to change it.
+That is indeed correct :(
 
+But hold on, we aren't allowed to forget the `Devres`, it's a pinned
+type and thus the pin guarantee is that it must be dropped before the
+underlying memory is freed. So the current version is unsound.
 
-Brian Gerst
+---
+Cheers,
+Benno
