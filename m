@@ -1,39 +1,33 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F12F4F1;
-	Mon, 23 Jun 2025 18:10:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFAC2D3231
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750702244; cv=none; b=YXPqKMBncc8MON4bOdGUCI2W/9sD/Hg+qLeDuHZhakbdiWvgSaQrHMf1hSUe0byq0pPgJ03aNV39L4xOIr2nCKTZhnWZ0cMrgiHIHp6hKtctNZ1ova6qEKbKsqwiF6KfeufS45LO9XjrDBSdDhQEpZ7Z8QeeFC6vh8o6s5VogKk=
+	t=1750702284; cv=none; b=oe1dCIKqmATIElpgS/yfKSHKWsCucmmOK8IgPBF0LRWxGS/0vvEhprVvXNF7xd1QTR0ipFhObk9hOSgk73ginXihWoFlSbMBI4Ay9GbQPIPsGDBMQiAidmH/paH/Eqm9WyimKUiFtWss1XvIKAcpGwPqsnbCnVggZz1DRCTX/fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750702244; c=relaxed/simple;
-	bh=7tbf/KwfAn+T9x0r52PpAXJDPtRg3KWiYur85i2RrDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=O/Dkw1I7xvTaLuRRBl2g4rC7plSdLNcwRrgTpXa2v+FU93CMQ47J1KlSJvVGN9UKAMeUXwXXI6fllSYD2KyGudH4bv2vcVzx0SCuj4xJR4teuMmr1AAQkFsWnNnaX/7sxt/EbAODQnADNWZqPH9CzhSaUASEU2lj65bmZBJDdWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=czPDQHmt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="czPDQHmt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE83EC4CEEA;
-	Mon, 23 Jun 2025 18:10:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750702243;
-	bh=7tbf/KwfAn+T9x0r52PpAXJDPtRg3KWiYur85i2RrDM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=czPDQHmtPwTTIXAXKW6k1kK6633S7vpkG8myRBSNAjyNKkYZOGFfR98rtT2xSO5qQ
-	 Mvg16fXcccD7DTni0IyRnNTLgWOJg0gueEYmb75ybz5w7yfJKCm6PwTGjVTtLzEjb2
-	 EeccXl72qdOincPXMz0ZU46BT9wvGpDuJJkFnJdDri9Nz/6/yxlYBJepq9xqGiRBTR
-	 uGi7hTdYIgWjOAqvgVDFBi7tlYT02MfVe3VVpA0ktO0+/afo9Pg+Mz12R3cNSR6N6/
-	 tYfc+4Df4q3rs7ecC3QABXBGX8EpFUPeJvYlp6SwmMkXhC3UHkIgIq08ZTknz6AuHj
-	 WWJS+JtiLo2eQ==
-Date: Mon, 23 Jun 2025 13:10:42 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	s=arc-20240116; t=1750702284; c=relaxed/simple;
+	bh=rlcBDtIMoGT3V5ey9ZFYpWVUAE/L0LnaqLbwIYm3Sys=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VqfeCGJrSxcWHoxRtLx6hBsn689bOB7hM7rq5jYOlXJFl3aqq4qTT/CQc2Yt3sVW9xx3H4t3Lx3ySzBQZpgZvjeliouNj12digd3WhlbAwkyv1ftkynpa69x0OjzunzLa/AN+thvy/Vi+MrJd5d+s+D3tr70v7mqKjO9WSUj9E4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
+	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+	id 72cc51cd-505d-11f0-a9aa-005056bdfda7;
+	Mon, 23 Jun 2025 21:11:13 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 23 Jun 2025 21:11:13 +0300
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] pci: pwrctl: fix the kerneldoc tag for private fields
-Message-ID: <20250623181042.GA1436011@bhelgaas>
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH 1/5] serial: 8250: extract serial8250_init_mctrl()
+Message-ID: <aFmYwcO9tJ4byxjz@surfacebook.localdomain>
+References: <20250623074606.456532-1-jirislaby@kernel.org>
+ <20250623074606.456532-2-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,43 +36,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250618091129.44810-1-brgl@bgdev.pl>
+In-Reply-To: <20250623074606.456532-2-jirislaby@kernel.org>
 
-On Wed, Jun 18, 2025 at 11:11:29AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> The correct tag for marking private fields in kerneldoc is "private:",
-> not capitalized "Private:". Fix the pwrctl struct to silence the
-> following warnings:
-> 
->   Warning: include/linux/pci-pwrctrl.h:45 struct member 'nb' not described in 'pci_pwrctrl'
->   Warning: include/linux/pci-pwrctrl.h:45 struct member 'link' not described in 'pci_pwrctrl'
->   Warning: include/linux/pci-pwrctrl.h:45 struct member 'work' not described in 'pci_pwrctrl'
-> 
-> Fixes: 4565d2652a37 ("PCI/pwrctl: Add PCI power control core code")
-> Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-> Closes: https://lore.kernel.org/all/20250617233539.GA1177120@bhelgaas/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Mon, Jun 23, 2025 at 09:46:02AM +0200, Jiri Slaby (SUSE) kirjoitti:
+> After commit 795158691cc0 ("serial: 8250: extract
+> serial8250_initialize()"), split serial8250_initialize() even more --
+> the mctrl part of this code can be separated into
+> serial8250_init_mctrl() -- done now.
 
-Applied to pci/pwrctrl for v6.17, thanks!
+...
 
-> ---
->  include/linux/pci-pwrctrl.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/pci-pwrctrl.h b/include/linux/pci-pwrctrl.h
-> index 7d439b0675e9..4aefc7901cd1 100644
-> --- a/include/linux/pci-pwrctrl.h
-> +++ b/include/linux/pci-pwrctrl.h
-> @@ -39,7 +39,7 @@ struct device_link;
->  struct pci_pwrctrl {
->  	struct device *dev;
->  
-> -	/* Private: don't use. */
-> +	/* private: internal use only */
->  	struct notifier_block nb;
->  	struct device_link *link;
->  	struct work_struct work;
-> -- 
-> 2.48.1
-> 
+> +static void serial8250_init_mctrl(struct uart_port *port)
+> +{
+> +	struct uart_8250_port *up = up_to_u8250p(port);
+> +
+> +	if (up->port.flags & UPF_FOURPORT) {
+> +		if (!up->port.irq)
+> +			up->port.mctrl |= TIOCM_OUT1;
+
+I am not sure I understand why it was changed from using port directly to
+up->port.
+
+> +	} else
+> +		/*
+> +		 * Most PC uarts need OUT2 raised to enable interrupts.
+> +		 */
+> +		if (port->irq)
+> +			up->port.mctrl |= TIOCM_OUT2;
+
+Having {} in this branch is also better.
+
+> +	serial8250_set_mctrl(port, port->mctrl);
+> +}
+
+...
+
+I specifically left below to point out the original code.
+
+> -	if (port->flags & UPF_FOURPORT) {
+> -		if (!port->irq)
+> -			port->mctrl |= TIOCM_OUT1;
+> -	} else {
+> -		/* Most PC uarts need OUT2 raised to enable interrupts. */
+> -		if (port->irq)
+> -			port->mctrl |= TIOCM_OUT2;
+> -	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
