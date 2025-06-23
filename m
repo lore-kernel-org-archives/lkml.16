@@ -1,137 +1,251 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAA61E87B;
-	Mon, 23 Jun 2025 22:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750716398; cv=none; b=f5CM7wxTyb38/1EN2D1qsaSpurSQ8G0TCYBbz9lg+1Bi/x+V1Vz+XiKxUAbGxJjnuIAJV5h6AIE3Yz+9XNYxBJSbAGunY9e1SFzqZo535XJkQjWmLbCcMFVndpGJn2jGBHFw0faUR1SRzNz2PXqY6+HxnfVNPKDlD6eREscwCGY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750716398; c=relaxed/simple;
-	bh=pxKBOUp1HY+Nw/MVVp0T2Sz14teeK214EuJ4fgl5xOs=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42CC7080E;
+	Mon, 23 Jun 2025 22:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750716504; cv=pass; b=r19VpoOHjotOf3Z1NlTwRHIbQ+oFOoOCymUbZDxp9Aqy6+UbmBtxifLFAdl9axfLNATmgmeSoPY+sV9dyin03zT000h1sx1eZofkN0YrBDi9i5Zlgcsu8OOgKifz+ajVA8ybtZMZ7hj1Ayp6/i5staRffSbMd+fyXJMWHpW089c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750716504; c=relaxed/simple;
+	bh=JDPs4eXH1GKDynFvyfnMIazD78wsvR6WqglIGDUk0RI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ajxaLD38ozb/hgPMo9by0FvRiRTYVWI9zpiiiH+yGr2OLPK7as6HJJD5qGSLMDvypt8SMYgSv0QrF7nM0mQJn3sTOdSlmCYe6s+hxXn2zrryAgstCMOpCI/VCytscRekJzzIN2uaymcLLzBDQOZdVvL9UHrsJzSf7gyu94FAvCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=qJtDI32i; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=G+WP2QojV/0OXelSQ5HmUvHHYCiT3EP+jE4BTy2fIZSmZhH1EgNfw9O84bJdcmf5EXgz942cYaqeR/9glLP92rEdQaexaSRahHOeELReguM+8p8LrpMFi9i4x3Sf4D4qk6r5V1Wz0mtxCR/Zjz2h/BzrEXMZIyFVNm8dInoQrRE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=G9hXsTzR; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qJtDI32i"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 0B947129;
-	Tue, 24 Jun 2025 00:06:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750716376;
-	bh=pxKBOUp1HY+Nw/MVVp0T2Sz14teeK214EuJ4fgl5xOs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qJtDI32iMAoTSqhhUYhTj8BgN6aPWUhVZvQk9ijR4B31V+nHcRVKBzhR3pjVLs6G5
-	 snM5h+aM7ZC0a9By1xaKLQEVy1M2URJn2924XHlLEqCKfXHtRbm4BZWNeapIzhy6LV
-	 ElkFxsb7MG32S3/S/ptNk9Q0wm5lnoWuUyChSZsI=
-Date: Tue, 24 Jun 2025 01:06:12 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: "Nirujogi, Pratap" <pnirujog@amd.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Hao Yao <hao.yao@intel.com>,
-	Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
-	hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org,
-	dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
-	jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com,
-	king.li@amd.com, dantony@amd.com, vengutta@amd.com,
-	dongcheng.yan@intel.com, jason.z.chen@intel.com, jimmy.su@intel.com,
-	Svetoslav.Stoilov@amd.com, Yana.Zheleva@amd.com
-Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
-Message-ID: <20250623220612.GB15951@pendragon.ideasonboard.com>
-References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
- <6a49eb11-d434-4315-8ee9-0f8aa7347de2@intel.com>
- <aEygCdk-zEqRwfoF@kekkonen.localdomain>
- <3e8364e8-22e4-42ad-a0f0-017f86fd6bf9@amd.com>
- <20250623120929.GE826@pendragon.ideasonboard.com>
- <aFlU-E_GCHWBXErq@kekkonen.localdomain>
- <20250623134200.GB29597@pendragon.ideasonboard.com>
- <b6425dbe-44e6-47b4-a06b-b9a172a8cac4@amd.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="G9hXsTzR"
+ARC-Seal: i=1; a=rsa-sha256; t=1750716490; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=YRbDsl6UDTgqiLNXD6FOOYF7QMs4k1Fof/h54LtAlOcWESaMYSLv0M/F82t7uYA6QpZoMMnYJE/YgZfr8vMlH9Vd+wgChJw+EJMJzdusBj8xRYHKg207idBBvxWLdgYinzO655PU+7j83auyS5gYrga4zrqbMtySkmH4zV2kD18=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750716490; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=/BXgpXwhzYtQIWwdqXLgsVk4WStiLAj0XHlChIgBw3M=; 
+	b=XL21455Ail7tSBw/eAf7lhtRyw5tOHGFGHcePKq5uYirNsaKLY9L765rFqUF+lsrA4ea/BOgcT3kLz1nL1+zCs6UeBQ1g7Tm65Cnl/DLKnyEjUfJ1gt+an8UNE5c5LtsCzDjAZeO4Awg/m0/Ct5b0PqLZZDmfpXWlszGAVOf4MQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750716490;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=/BXgpXwhzYtQIWwdqXLgsVk4WStiLAj0XHlChIgBw3M=;
+	b=G9hXsTzREqibMweZdE0PXJ/yFt539DBxTgFgiU0D1+YLJudVvNqIYpZXOKMfyPVL
+	2uPPmYL9u5lSzxm3ulNwoQ94vtD1/KZ/SLp76EHW3JwHJCm5a+IvSzg6zRmQqc6jO4q
+	JsvsIvix4nJrXwQ5fb+AN4ZOnLLmpTY628e+Jarc=
+Received: by mx.zohomail.com with SMTPS id 1750716488768202.2640415999;
+	Mon, 23 Jun 2025 15:08:08 -0700 (PDT)
+Received: by venus (Postfix, from userid 1000)
+	id 0B36B180AAB; Tue, 24 Jun 2025 00:08:04 +0200 (CEST)
+Date: Tue, 24 Jun 2025 00:08:03 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Amit Sunil Dhamne <amitsd@google.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Badhri Jagan Sridharan <badhri@google.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@kernel.org>, Kyle Tso <kyletso@google.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] dt-bindings: connector: extend ports property to
+ model power connections
+Message-ID: <z2wrzts6cgunxs5tc764izvrfi4i2d637zpt6tj5f4piry6j66@cke2yxhih6dg>
+References: <20250507-batt_ops-v2-0-8d06130bffe6@google.com>
+ <20250507-batt_ops-v2-1-8d06130bffe6@google.com>
+ <20250514194249.GA2881453-robh@kernel.org>
+ <b4a22161-8cab-4d76-a4b0-4bfd0d79cdc1@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="boxpunqqsxkyyd4w"
 Content-Disposition: inline
-In-Reply-To: <b6425dbe-44e6-47b4-a06b-b9a172a8cac4@amd.com>
+In-Reply-To: <b4a22161-8cab-4d76-a4b0-4bfd0d79cdc1@google.com>
+X-Zoho-Virus-Status: 1
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.4.3/250.696.82
+X-ZohoMailClient: External
 
-On Mon, Jun 23, 2025 at 05:55:14PM -0400, Nirujogi, Pratap wrote:
-> On 6/23/2025 9:42 AM, Laurent Pinchart wrote:
-> > On Mon, Jun 23, 2025 at 01:22:00PM +0000, Sakari Ailus wrote:
-> >> On Mon, Jun 23, 2025 at 03:09:29PM +0300, Laurent Pinchart wrote:
-> >>> On Mon, Jun 16, 2025 at 07:12:28PM -0400, Nirujogi, Pratap wrote:
-> >>>> On 6/13/2025 6:02 PM, Sakari Ailus wrote:
-> >>>>> On Fri, Jun 13, 2025 at 12:55:46PM +0800, Hao Yao wrote:
-> >>>>>> Hi Pratap,
-> >>>>>>
-> >>>>>> Thanks for your patch.
-> >>>>>>
-> >>>>>> This patch is written for your camera sensor module, which seems very
-> >>>>>> different from those already applied on Dell laptops (some of "Dell Pro"
-> >>>>>> series). Looking into the driver, I think this version will break the
-> >>>>>> devices using ov05c10 sensor.
-> >>>>>
-> >>>>> There never was such a driver in upstream so nothing breaks. However, in
-> >>>>> order to support these, could you check what would it take to support them
-> >>>>> using this driver and post patches, please?
-> >>>>>
-> >>>>>> I think this patch is better to be validated on existing devices, but please
-> >>>>>> do some fixes before we can do validation. Please check my comments inline.
-> >>>>>>
-> >>>>>> On 2025/6/10 03:42, Pratap Nirujogi wrote:
-> >>>>>>> Add driver for OmniVision 5.2M OV05C10 sensor. This driver
-> >>>>>>> supports only the full size normal 2888x1808@30fps 2-lane
-> >>>>>>> sensor profile.
-> >>>>>>>
-> >>>>>>> Co-developed-by: Venkata Narendra Kumar Gutta <vengutta@amd.com>
-> >>>>>>> Signed-off-by: Venkata Narendra Kumar Gutta <vengutta@amd.com>
-> >>>>>>> Co-developed-by: Bin Du <bin.du@amd.com>
-> >>>>>>> Signed-off-by: Bin Du <bin.du@amd.com>
-> >>>>>>> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
-> >>>
-> >>> [snip]
-> >>>
-> >>>>>> Hi Sakari,
-> >>>>>>
-> >>>>>> Seems there are already several camera sensors using page-based registers.
-> >>>>>> Is it a good idea to add page support in CCI interface?
-> >>>>>
-> >>>>> Sounds like a good idea as such but I'm not sure how common this really is,
-> >>>>> I think I've seen a few Omnivision sensors doing this. If implemented, I
-> >>>>> think it would be nice if the page could be encoded in the register address
-> >>>>> which V4L2 CCI would store and switch page if needed only. This would
-> >>>>> require serialising accesses, too. There's some room in CCI register raw
-> >>>>> value space so this could be done without even changing that, say, with
-> >>>>> 8-bit page and 8-bit register address.
-> >>>>
-> >>>> Hi Sakari, thank you for sharing your insights and guiding us. Could you
-> >>>> please suggest if we should take up this work implementing the helpers
-> >>>> in CCI and submit the patch or is it okay to leave it as-is for now and
-> >>>> take care of updating in future once the implementation is ready.
-> >>>
-> >>> I think it can live in the driver for now. Given that the device uses
-> >>> only 8 bits of register address, I would store the page number in bits
-> >>> 15:8 instead of bits 31:24, as the CCI helpers do not make bits 27:24
-> >>> available for driver-specific purpose.
+
+--boxpunqqsxkyyd4w
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 1/5] dt-bindings: connector: extend ports property to
+ model power connections
+MIME-Version: 1.0
+
+Hi,
+
+On Tue, May 20, 2025 at 01:10:25PM -0700, Amit Sunil Dhamne wrote:
+> Hi Rob,
+>=20
+> Thanks for your response!
+>=20
+> On 5/14/25 12:42 PM, Rob Herring wrote:
+> > On Wed, May 07, 2025 at 06:00:22PM -0700, Amit Sunil Dhamne wrote:
+> >> Extend ports property to model power lines going between connector to
+> >> charger or battery/batteries. As an example, connector VBUS can supply
+> >> power in & out of the battery for a DRP.
 > >>
-> >> I'd use the CCI private bits, the driver uses page numbers up to 4 so 4
-> >> bits are plenty for that. If we add pages to CCI later, this may be
-> >> refactored then.
-> > 
-> > That works too.
-> 
-> Thanks for your support. We will add the page number in the register 
-> address 15:8 or 11:8 and will update the implementation accordingly in 
-> the next version.
+> >> Additionally, add ports property to maxim,max33359 controller example.
+> >>
+> >> Signed-off-by: Amit Sunil Dhamne <amitsd@google.com>
+> >> ---
+> >>  .../bindings/connector/usb-connector.yaml          | 20 +++++++++++--=
+----
+> >>  .../devicetree/bindings/usb/maxim,max33359.yaml    | 25 +++++++++++++=
++++++++++
+> >>  2 files changed, 38 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/connector/usb-connector=
+=2Eyaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+> >> index 11e40d225b9f3a0d0aeea7bf764f1c00a719d615..706094f890026d324e6ece=
+8b0c1e831d04d51eb7 100644
+> >> --- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
+> >> +++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+> >> @@ -181,16 +181,16 @@ properties:
+> >> =20
+> >>    port:
+> >>      $ref: /schemas/graph.yaml#/properties/port
+> >> -    description: OF graph bindings modeling a data bus to the connect=
+or, e.g.
+> >> -      there is a single High Speed (HS) port present in this connecto=
+r. If there
+> >> -      is more than one bus (several port, with 'reg' property), they =
+can be grouped
+> >> -      under 'ports'.
+> >> +    description: OF graph binding to model a logical connection betwe=
+en a device
+> >> +      and connector. This connection may represent a data bus or powe=
+r line. For
+> >> +      e.g. a High Speed (HS) data port present in this connector or V=
+BUS line.
+> >> +      If there is more than one connection (several port, with 'reg' =
+property),
+> >> +      they can be grouped under 'ports'.
+> > 'port' and 'port@0' are equivalent. So you can't be changing its=20
+> > definition.
+>=20
+> Noted!
+>=20
+>=20
+> > I'm not sure showing a power connection with the graph is the right=20
+> > approach.
+>=20
+> I want to provide some more context and rationale behind using this desig=
+n.
+>=20
+> From a hardware perspective:
+>=20
+> The max77759/max33359 IC has Type-C port controller, charger, fuel gauge
+> (FG) ICs. The Vbus from the connector goes to/from the TCPC and connects
+> with the charger IP via circuitry & from there on to the battery. The FG
+> is connected to the battery in parallel. As it can be seen that while
+> these IPs are interconnected, there's no direct connection of the fuel
+> gauge & the connector.
+>=20
+> For this feature, I am interested in getting the reference to the FG. As
+> per graph description: "...These common bindings do not contain any
+> information about the direction or type of the connections, they just
+> map their existence." This works for my case because I just want the
+> connector to be aware of the Fuel gauge device without imposing a
+> specific directionality in terms of power supplier/supplied. This is
+> also the reason why I didn't use
+> "/schemas/power/supply/power-supply.yaml#power-supplies" binding.
+>=20
+> > We have a binding for that already with the regulator binding.
+>=20
+> I haven't explored the option of using regulator bindings. But in my
+> case I am interested in fuel gauge and unfortunately, they're modeled as
+> power_supply devices.
 
-The CCI private bits are bits 31:28.
+=46rom hardware point of view there is no direct connection at all
+between the fuel gauge and the connector. The usual hardware
+connection is
 
--- 
-Regards,
+connector -> charger -> battery
 
-Laurent Pinchart
+With the charger potentially supporting reverse operation to provide
+energy from the battery to the connector (with "battery" I assume
+a "smart" battery, so the raw cells and some kind of fuel gauge).
+
+Thus the following example should properly document the hardware
+connections:
+
+---------------------------------------
+typec-connector {
+    /* ... */
+};
+
+charger {
+    /* ... */
+    power-supplies =3D <&connector>;
+};
+
+fuel-gauge {
+    /* ... */
+    power-supplies =3D <&charger>;
+};
+---------------------------------------
+
+It means instead of the direct graph lookup for the fuel gauge,
+you would need a function walking through the graph build by the
+power-supplies phandles. But it also means that the DT properly
+describes the hardware instead of adding random graph connections.
+
+Greetings,
+
+-- Sebastian
+
+> > Perhaps the connector needs to be a supply. It's already using that=20
+> > binding in the supplying power to the connector case.
+>=20
+> Want to clarify, in this case you mean
+> /schemas/regulator/regulator.yaml#*-supply$ right?
+>=20
+> Adding to my response above, the reason I don't want to impose a
+> directionality in terms of supplier/supplied is that in case of USB Dual
+> Role Port they're dynamic i.e., when USB is source, the power is
+> supplied out of the battery (battery/FG will be supplier) and in case
+> USB is sink, battery is supplied power. Whether the connector port is in
+> source or sink role is determined on a connection to connection basis.
+> Also, the knowledge of the supply direction is of no consequence for
+> this feature.
+>=20
+>=20
+> Please let me know what you think.
+>=20
+> Thanks,
+>=20
+> Amit
+>=20
+>=20
+> > Rob
+>=20
+
+--boxpunqqsxkyyd4w
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhZ0EAACgkQ2O7X88g7
++pomEA//YVUVu98W2c34fvdaBGPXhG5LICkMydDQzHm/ycXUSLBKZdQwKFMoVYrs
+GLUUn8a5VFSCBLfcUSUTN889escHyOEwjNVZlQhGhAuwaq3AVlXPR2QchgPm/JXw
+kE9zcBKbzGk9KMPs/MdlGxF4gHJG2RULAQSYo3i6HgVCIKkPIoUYDMbTLOMBedWu
+9kNCd6JQ0w8y/aWEfE17rwkr5wO8/tEurfBri/5NTOYSHvEZOEddKlIwNis/SZR7
+BMYx8aV1cdIo+90sdyvGZdB6LQ1MbV8eI3xDOtp/8kwpvPUWUnlFmm/We1MOvrAH
+uVX1kflR63hKzTxfYFqyyQV2hCBQYGInT3jocBHYhWLOm5kkmGgODpYS3xthlMdO
+7uiP5fbHVW+SZYfkB8bjUlu3lT9IRLuvJ6KvMEBYsxvmMoANl7ZwXHssRqVTGygy
+UbLnHLdMrVgukw6qq6cgFvbN5JygzUAW4c3+1s4s5vQ0g4bAju+Ym8m25h0F5RRo
+ns9HwYaa9G+BtC/uteHyx9j7NjaSNhbmWOvp7cG+b93X7uPE2ljyvYbiPL0IGand
+W6TDVRP4sZTqL64FU/4G/0iHeBkrMc1ou2CxIMRyOLlmUJepLMpjR8aA3asuHQZ4
+iJZJQoFHn0RgQuAjG6wqSZUJXNtCBhPhDMliv811CFrC9L7SB1I=
+=jjhP
+-----END PGP SIGNATURE-----
+
+--boxpunqqsxkyyd4w--
