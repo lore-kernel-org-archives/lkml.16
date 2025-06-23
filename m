@@ -1,63 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74F222A4E5
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 22:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750716593; cv=none; b=kWH68qZ76DV424SwV3qdnwOKCXC/8Anftcj/SW+M91rpNu8A7AWHYfr+yevK1yu1U6nDEiHlJN5HxGk0sAeDqEj3KX+TW6qvqNpJzRfFIzTMNNRp2DLnc2ioVj8EoW6hnSnF+8JEU1bCTmCUHgpXJseg4xgJoxSEFjknwWeTybM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750716593; c=relaxed/simple;
-	bh=XHJhIO+Sq7wskSiBWJWy7xT3OdEvJ70rAZtPX8g5+PA=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=mZttUhbKcsabYUd5vvprGcYDFcu+r9ucVMctJqvMB5TRj/7JZWP2x93P+464+pGkOirVU+XDYCxnair3h8xtY/TLrF3g0vjjZ57+W2pbaZQuxjPhoU64pT8HqXL2XygzeQgAb7ct1Fkydel7vT5Rz0smXaKFFrRYQ775zETCDjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PTozAnqg; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PTozAnqg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99613C4CEED;
-	Mon, 23 Jun 2025 22:09:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750716593;
-	bh=XHJhIO+Sq7wskSiBWJWy7xT3OdEvJ70rAZtPX8g5+PA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=PTozAnqgfWMHcbEX8p4aR5vC1fadB8uj3WGhwdfDUFGN0P87Kv/KSiIwQAgyc9D6g
-	 /6/GKFH7S2LUpTwEWc6E6zDubgz52D7NpUtpBM7MCSQ35S01XscZavOBvS3pFN0arf
-	 yIw4DSbps2bIAspHnTeGsmonDyRY+mNHrBpaFRYQ3rmT7NK/D0WWjGdL6+pRtk9FY1
-	 KNqZwitayUACfF0A0UKVsHh54JFi31IjT8JSgjygIRtUiqLOOhr6TiUGU2X/+mu+v1
-	 N3NivpTYBvikv7pEQEwVrt73imadBZWddEv2VG/91fDM8j4Cnf27HHx0S8HstQKK3C
-	 MR3MgYt5CXERA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id E794B39FEB7E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3BA21FF2B;
 	Mon, 23 Jun 2025 22:10:21 +0000 (UTC)
-Subject: Re: [GIT PULL] f2fs fixes for 6.16-rc4
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <aFmZKyrDBDzTzs4Q@google.com>
-References: <aFmZKyrDBDzTzs4Q@google.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <aFmZKyrDBDzTzs4Q@google.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git tags/f2fs-for-6.16-rc4
-X-PR-Tracked-Commit-Id: ba8dac350faf16afc129ce6303ca4feaf083ccb1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: cb0de0e220d2233a84a2ff1afb8ffba7597d02fa
-Message-Id: <175071662074.3311076.9481880447185959769.pr-tracker-bot@kernel.org>
-Date: Mon, 23 Jun 2025 22:10:20 +0000
-To: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux F2FS Dev Mailing List <linux-f2fs-devel@lists.sourceforge.net>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750716623; cv=none; b=mxeRq0+DkdhaRgW1xnKWOrrG69cXktnaKG6zETaL8fWuGrMdBNQ3ctGKFbnRHQ4yJt34enM9STJpNe11Dpg2vtGZwyJFs8bgLd7RBIaikE4VjP/NL53COn+/r3itIPRL+psAGvxsRUyVK9V0R9EiZ0nQnUbpa5o0070kMk7NbCI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750716623; c=relaxed/simple;
+	bh=rJtgUixg3bc+6Lniu8+P4i4uXvGUZP8yfzVme7m18jg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DpL8XaVyc1Sxj3oCKthqiOCFTarbbyecjynEVvK1EIB63jPDSBlRZeuNhiyxe+AwRR0yYbMT9tLZGfZQ3Tn1GeoMTHW7Th4YKCBCNWJ3yTih203XTszhdF0hrhiBWWX2bhFLDKBfzDyCKBggg4iOrj/FvCzaVTMZLYx0prqShdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L7f4xynt; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L7f4xynt"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a528243636so2859264f8f.3;
+        Mon, 23 Jun 2025 15:10:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750716620; x=1751321420; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=g6osNOP9K2XHQbWWpjHXmBIwvo4RDOmUZ4V/GR1O0W4=;
+        b=L7f4xyntEBP+TYh3bBkYRP1Pdd8lQLVIXmcce5jM+VQuP4n2ODpZcA/R6r886FzaOf
+         yvmAwDv/Af+vXJ4b4sb/NRUWmTzsmcT6iX73cl3ITbH3Gwb78AcE+Gzb7to4CeJ8+fNG
+         GxMsqsNpHlHtYJdE3NqUWdGAIhZyXZ5sVtMiBzEB7NZOooLoCCmBjT2ga07R6OV29kSa
+         fSC+jpt0a4PKe4IIuwJTyupGn8+lU0VJLWScGzkjOCIzgPNoiJzVi2OVq2YkwFsIvtdx
+         4FGB47zO+4iSXiXk5Gd9ystHEKMc3KfgSDqGMPZAVBzY6b+XONVqj+sfFZeRz7KcoJHO
+         ZJig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750716620; x=1751321420;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g6osNOP9K2XHQbWWpjHXmBIwvo4RDOmUZ4V/GR1O0W4=;
+        b=rz9HgzImQT8OeINKD2aCqtNCFb3dY3CnVya7uhGXpuLV/zIvhvu/bxRYLS4sQlJO9u
+         YoUFFr2JazUSSc8rpgaMFuf7MU1WgMEe/hjTB+eR2VA8EPSuovYuBHIW2jdPf2EhppsM
+         WYv6xKMG8fKi5DjUjoV4k8O8UM3owyLfJBqVt9VMfQbCLoUeaDwdPDNFvEhvUv1HYMB+
+         qgEaavFBeGI0QWNHQr/cnRq4jWy9mBQEYHeu5n77eSVXM1RTJqGkGmoc4mON47EGRMpL
+         9QXiJVuM1nYLVYAyBMd1XfLiGQpLZmTA8giHPfRhYXd/Bn39G94GufVijYA/vrf8grfh
+         rLQA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQINpNe7w9z/TETPHwjnc0yMdKInCIJe9vge/WNsCqWJHgpVvYvDEb2POYcUpzGulJZD48GH5yzc9qdwg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwPPcXNDG30NetpofSV2NdEfpG7goTCJAjljvxM6tf7/4/7wSp
+	8xHCzI/BWtxJgHKOXTvECM+ocmBBMZPpHCIUBVVBh6un0KZ8pnNhd1qD
+X-Gm-Gg: ASbGnct0PVkvlQqRs+rqbWDxHgfhuYET11S90f6zSCHW1Jp3XyzF8I9OvWmFcbVSghg
+	vrV+5NfBlpxSR7svPMVxzeNuKk4pKqRhqjqCt7T8fbT0veT0je+m0unQsGZncRde2CRAaI9qjui
+	9axW3+gMXsW6ShYIIktvf5OaRI2FsSnvBp4q0zq0VOnJFE0eWXSc+B9r8YtNHmNVFXDuJMDaIgV
+	xMqyemmhMbkiFDDObnd+DRxjE3DppkZDODHV0I+vK39eOZSMQf2Fa3N5PrhIkRY/n6o+qnZkgRk
+	QSY4ASv+22OWfMfIP8s0S3TkihiIh+R+bZsoWA8yp+r29BjMl79/8uoM5YpF
+X-Google-Smtp-Source: AGHT+IEwnihSKaV9MZa8JbefwtxfYi1D+ExJQVtkVsokJq+3Xaa3axXjCwHA/ovAMgIPs5P8j8qYfg==
+X-Received: by 2002:a05:6000:2503:b0:3a5:39d7:3f17 with SMTP id ffacd0b85a97d-3a6d12e68b2mr12366601f8f.47.1750716620193;
+        Mon, 23 Jun 2025 15:10:20 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a6e8064c61sm250475f8f.36.2025.06.23.15.10.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 15:10:19 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Dave Penkler <dpenkler@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Michael Rubin <matchstick@neverthere.org>,
+	linux-staging@lists.linux.dev
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] staging: gpib: fix unset padding field copy back to userspace
+Date: Mon, 23 Jun 2025 23:09:58 +0100
+Message-ID: <20250623220958.280424-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Mon, 23 Jun 2025 18:12:59 +0000:
+The introduction of a padding field in the gpib_board_info_ioctl is
+showing up as initialized data on the stack frame being copyied back
+to userspace in function board_info_ioctl. The simplest fix is to
+initialize the entire struct to zero to ensure all unassigned padding
+fields are zero'd before being copied back to userspace.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git tags/f2fs-for-6.16-rc4
+Fixes: b8394732ff0c ("staging: gpib: Add bit and byte padding to ioctl structs")
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/staging/gpib/common/gpib_os.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/cb0de0e220d2233a84a2ff1afb8ffba7597d02fa
-
-Thank you!
-
+diff --git a/drivers/staging/gpib/common/gpib_os.c b/drivers/staging/gpib/common/gpib_os.c
+index a193d64db033..93ef5f6ce249 100644
+--- a/drivers/staging/gpib/common/gpib_os.c
++++ b/drivers/staging/gpib/common/gpib_os.c
+@@ -1774,7 +1774,7 @@ static int query_board_rsv_ioctl(struct gpib_board *board, unsigned long arg)
+ 
+ static int board_info_ioctl(const struct gpib_board *board, unsigned long arg)
+ {
+-	struct gpib_board_info_ioctl info;
++	struct gpib_board_info_ioctl info = { };
+ 	int retval;
+ 
+ 	info.pad = board->pad;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.50.0
+
