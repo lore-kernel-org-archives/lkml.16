@@ -1,120 +1,269 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2040.outbound.protection.outlook.com [40.107.94.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B56D3C30
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 06:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750659427; cv=none; b=TU7J3hX3hY0tyMPnRunIN12/QJflGYLZucJa5WGAsi0zqiOw5eWPc7ZP611oDR2FJF36KUw6yB/J7TNSeMudS91ocWAMuqKlZUH6QXg+xWXgAxEQPI+akQlS7+OZY5Ok0ycq0IcSyrzyBf2WmM4Vy4523vBhV6Co9nE4j9pqIf8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750659427; c=relaxed/simple;
-	bh=2GFKcKVw5UeaFY9S6aEsZ0Sr0nRZOqS+hi6kWIwR5jQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J6MiOJWMM7G1fc/NjEVxUbUOlRFs14Jy3DjzUbOAFv56HWa/kFm2JtbGKeiugb2xksHeXvu43+PGmXzIabUSj0yLPKNX1FDuGUqgiTG4jquyBJeGybWisFSAEV2SEsuh62CvueGC4R3/6QnKlI3KWeB4aHl0v6f0FNeN4saTWUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=T7QMiEMf; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D955C3C30;
+	Mon, 23 Jun 2025 06:17:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750659463; cv=fail; b=kCSgvbJVe47D2m2CY5K1hXUX+mvP48Oc0ZobCxHLm3Y9yIV7Cnv+pO6YNvICoKa1XXJcOywaaYQF4MNPVcV++V6euYeu8v3+BaTizz28F4s5yUYjzhI7/EzI/iguNt/cv92xeLjiObmBmLgmX9DRdwMWh9WXnurW8CltG8FQ8X4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750659463; c=relaxed/simple;
+	bh=0EVw5iEaORvrShqCWJi9bKWYiL7z4yBzXjHFFVnmrLY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=arK2XT789V8pZ4J0tT8f5a1h//hUfbGXaPUc+Q/TQFyUZ+Ix8sW2xXGfjGMx7CsKdP7sR1FKP8A33J8y+xpT+GJ8qHV/+xn4DVRnJX/8oOPYeOJRsVkisInxvUkWXf2ZhrzjbSsVAIlaq3+ghuumMcFcOgVhAAiRPXZ1jlTT6+Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gItqbjmp; arc=fail smtp.client-ip=40.107.94.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="T7QMiEMf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750659417;
-	bh=2GFKcKVw5UeaFY9S6aEsZ0Sr0nRZOqS+hi6kWIwR5jQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=T7QMiEMfvD7ulOY1Ym3hivK9TMxvLhTEowy5/k5fOZcGHpkEXlO2EbPdWd/oOXWMZ
-	 Syh3wPJc8vSnW5z9UAy9RPRm9I2HbFj18VzrmtE8QmgMI4646pGBp0I6/szYw6eApp
-	 cNRj0fHVqx9MaJHuNqx+GgT5JcQnMUXkhZfIquAPdTKCFQW+tduc8+QnbN4279MPu6
-	 lnQJ5m8N5WKSk/VHGNTYKQFOThH40UQMzgDZmpBu5t2gVlxbobfbtC4xJHfeR2qHnR
-	 sSjkRVz2hV+WcLgCFD5M0oPpRuFSuwA2838VhFoj+/evNwyzsO2+bHYGfHUaRP7vh0
-	 BHldZYz92uclA==
-Received: from fedora (unknown [IPv6:2a01:e0a:2c:6930:16f1:973:959b:9b0c])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 40BE217E0CF7;
-	Mon, 23 Jun 2025 08:16:57 +0200 (CEST)
-Date: Mon, 23 Jun 2025 08:16:51 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Chia-I Wu <olvaffe@gmail.com>
-Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] panthor: set owner field for driver fops
-Message-ID: <20250623081651.26fd2cd5@fedora>
-In-Reply-To: <20250620235053.164614-2-olvaffe@gmail.com>
-References: <20250620235053.164614-1-olvaffe@gmail.com>
-	<20250620235053.164614-2-olvaffe@gmail.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gItqbjmp"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gaCj3rLqs7Br9LqfEqMyND5wyyQgS2tD8tpeyoZFgUm3qw+x6QssdENvAaMZyV9n7dADY+Gxl+l7beKLQx/W8ZNxip+17j7tI/X7KoLKZEwNoLi9egzMN1UHH83tUJgtz9iYOm9ZLkOvKaGRFo1uGo6gqZVm5suGTKcBPTaEbHTcIAThJXmn/PW3uoLlyfbvM6ZPHfBtJYAkq/3BpwykNxuHgBLYxY2mzpIIPZEowo/F80Gn0DN5GNfu1v/3eAKL3L5eY691vxRF3uaCsUgMhfTWpTvvdAY2b31hqFYcmaMJ61aFHyfL2QPZD+0MGJpx9qj1ZMdIhC9rK1AXtWmWBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4gOgozVtpOCSn2Pi7L9sAfxZS/xQb4q/SbhlxKF3dnU=;
+ b=Ls7lahnIf4EYJ0+hIo9pw0pJiyLt78OWwJo6nZYEVdY7bagAUjLN44dkH/f4bgJGemeilSMdUY6ob57m0wF2W5q++w3Qr9CHBxP5ZqFXSwUJkYvOoNHjA64qMvzxPmImlrcdW1Xi+E/j7cFRdr/Jtbd/NrOn/aKIuapq0vhByy+QHJVl9Z+AayQPzAq5kiP7lkwtQJ4gia05pDWeX1/xl9iyafwxaYsAJW3XyKPmh+St9oaADQG0LkVWPYnfW052/iQPCFGPL2gFBaKCfEMTHxIYKVBplSAdyHDRv7kQmACeD4U+PL0uSmgrTX8gdVGh1voBYWYXJmvEZCMZwJFGPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4gOgozVtpOCSn2Pi7L9sAfxZS/xQb4q/SbhlxKF3dnU=;
+ b=gItqbjmptuOtDqmOMloRsSKeyXhTyEI/0XLD4T+XkNTAaXK9QBx5CmSZ8gHNRq9VcHEY353ETOTnre9zxXBOy0dHYfh09ZzpecnXo72DmH9OpIQnlIza0DMMk0/+Jf4ub88ErlQEIbQ1r6DNkKZmxd0mR1NYlpLhM/4qXGeySv4=
+Received: from SA9PR11CA0006.namprd11.prod.outlook.com (2603:10b6:806:6e::11)
+ by MN2PR12MB4127.namprd12.prod.outlook.com (2603:10b6:208:1d1::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.26; Mon, 23 Jun
+ 2025 06:17:39 +0000
+Received: from SN1PEPF00026368.namprd02.prod.outlook.com
+ (2603:10b6:806:6e:cafe::f9) by SA9PR11CA0006.outlook.office365.com
+ (2603:10b6:806:6e::11) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.28 via Frontend Transport; Mon,
+ 23 Jun 2025 06:17:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF00026368.mail.protection.outlook.com (10.167.241.133) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8880.14 via Frontend Transport; Mon, 23 Jun 2025 06:17:38 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 23 Jun
+ 2025 01:17:37 -0500
+Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Mon, 23 Jun 2025 01:17:35 -0500
+From: Devendra K Verma <devverma@amd.com>
+To: <devverma@amd.com>
+CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<mani@kernel.org>, <vkoul@kernel.org>
+Subject: [RESEND PATCH] dmaengine: dw-edma: Add Simple Mode Support
+Date: Mon, 23 Jun 2025 11:47:33 +0530
+Message-ID: <20250623061733.1864392-1-devverma@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB04.amd.com: devverma@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF00026368:EE_|MN2PR12MB4127:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5a559591-d18e-46ae-24d6-08ddb21da6f8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Ivw+0naQXhn7tGTqabp9JEZkD7YM8LoI9XkwE8wAFWw6qwp2bSGdHbUiNcch?=
+ =?us-ascii?Q?l/s7PTtL8D8ox0N6fq5N20ja4FJKSVQwqQenhvVDyNm+bZP84F8DOzNldVFe?=
+ =?us-ascii?Q?Frm/Vrb1i124FfxWVvgTO4M9xVaMm42XPVx6PtCHR+KxoHy6Z1Zk/vA8XoYm?=
+ =?us-ascii?Q?Al5hFm2q8kHa1rGxu1uIUvvrWegO+DhyfsMPD9DKfZkga+y1Ua/Uu8QESp0m?=
+ =?us-ascii?Q?KYQHhpEm/ZY3MTsEyr5zr2KgD8J+nl5qODo74XNR2UGIzZ/N1W0Fw2BvfVT1?=
+ =?us-ascii?Q?OO3VJBCGYVmm0HJcWkXllUOPD0CmEwpdFWMLRbgWxJfMIXjjZBsWiqlgMT8S?=
+ =?us-ascii?Q?SHEsI9p0KiZUrunl/wah9CY6XO8FhKuJyDb24aPzK9z3IAZkd24iYo8W5166?=
+ =?us-ascii?Q?7q3iddMKImGeJSp1ZTz0OCx098fa2nFR9O6TISA0rk5GRNFDyIGLKO0YjKp9?=
+ =?us-ascii?Q?ER/4zMsgRo7fRETLV1HuC5xBqnw+Yisrre8nYMd1uD6JvI7B3P4G8JahkrzA?=
+ =?us-ascii?Q?wggMMFY2DLyRuX45uO8cKFraBjz9NXpFBjiVCBW/0lYq3r8eopRRK/QPBfmr?=
+ =?us-ascii?Q?I5vbU6u8a7iMvdykLdOcQQB1FT+0AetUUjanW0mmgsRcQwHMTF3OdyhCNXDX?=
+ =?us-ascii?Q?nk5G0W9ur99JcvqbmhQfO8aD20ZfQtpoFZLG9db044LIJWHThMEH07Zgh+iR?=
+ =?us-ascii?Q?PXDWJedGW8i/DmfJlOJgkBYr9fdqI1EbB1I4COVeFAM7yFEhesqjTVdfaly8?=
+ =?us-ascii?Q?KaFRfOFZ5FvX0oDG16/kInD0S/6Fc1XMsq4hJz7ZPMFaaQ30T59hhRKDY7de?=
+ =?us-ascii?Q?CqzgUMJ+g5+BXw8fKP7m1bRupgTS9dNlEFwgiyUJSmZsRQnO9kkcQ2E0X40c?=
+ =?us-ascii?Q?HoS6urHTPPpi0YAY7mMXaOEdeAq5mW59MnXR/5kF1lRAaUTAhh2YgNMHEvch?=
+ =?us-ascii?Q?k2YsLNv1dGJ+BUk1bc6tK9PvURLBkXH528mxuls9f41EZ+MESosetDm9Obp+?=
+ =?us-ascii?Q?xr3kb7Zf/nJKIEUPxU+Rw7sJD1Kvz42vHcgOBijShP7M80jcXCqXCusBp6zY?=
+ =?us-ascii?Q?a9cdqVFZEo4AVabBzKt0wfx9fhKQVXu/M4akbIKWsqrqGqLHnZIzHnuSNEc4?=
+ =?us-ascii?Q?BKdoL1ioV/WXk5WW/5zhOU/HW37IowA9rPhA1Bct3WU4uqdzGomATqtKPsIJ?=
+ =?us-ascii?Q?MRvlMSvonmBX3ATuAcTt/j3y8LSCVx4xffVUhf1vmk1KfHIzOvQlHMf7hEOx?=
+ =?us-ascii?Q?DKBz7nPq5tm6dRkw3L8zCGnat0xTyTS2RWBPfh6AFR9NFDDma0LW20Cp0rPI?=
+ =?us-ascii?Q?K57QI474RJSsO6imbamU7hCwdNY1OmU5nfZux6+9xLzdCVJVtiGnundoYwK9?=
+ =?us-ascii?Q?SHvBOIOTxh9AWdFWvfzZQ+b+VMsnuylJG/yuhM6nss9pzlieo49hZDSc3G+r?=
+ =?us-ascii?Q?9p0J2DdmxTCY6LTwFiKibpZBaSqLPk3PX418/Re0a7YRFV1cZWPpvDlCioHZ?=
+ =?us-ascii?Q?m95Qn8Uuved4tL0mbezRgAnkNt9q1NWqu3+T?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 06:17:38.0821
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a559591-d18e-46ae-24d6-08ddb21da6f8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF00026368.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4127
 
-On Fri, 20 Jun 2025 16:50:50 -0700
-Chia-I Wu <olvaffe@gmail.com> wrote:
+The HDMA IP supports the simple mode (non-linked list).
+In this mode the channel registers are configured to initiate
+a single DMA data transfer. The channel can be configured in
+simple mode via peripheral param of dma_slave_config param.
 
-> It allows us to get rid of manual try_module_get / module_put.
-> 
-> Signed-off-by: Chia-I Wu <olvaffe@gmail.com>
+Signed-off-by: Devendra K Verma <devverma@amd.com>
+---
+ drivers/dma/dw-edma/dw-edma-core.c    | 10 +++++
+ drivers/dma/dw-edma/dw-edma-core.h    |  2 +
+ drivers/dma/dw-edma/dw-hdma-v0-core.c | 53 ++++++++++++++++++++++++++-
+ include/linux/dma/edma.h              |  8 ++++
+ 4 files changed, 72 insertions(+), 1 deletion(-)
 
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-
-> ---
->  drivers/gpu/drm/panthor/panthor_drv.c | 14 +++-----------
->  1 file changed, 3 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panthor/panthor_drv.c b/drivers/gpu/drm/panthor/panthor_drv.c
-> index 1116f2d2826ee..775a66c394544 100644
-> --- a/drivers/gpu/drm/panthor/panthor_drv.c
-> +++ b/drivers/gpu/drm/panthor/panthor_drv.c
-> @@ -1400,14 +1400,9 @@ panthor_open(struct drm_device *ddev, struct drm_file *file)
->  	struct panthor_file *pfile;
->  	int ret;
->  
-> -	if (!try_module_get(THIS_MODULE))
-> -		return -EINVAL;
-> -
->  	pfile = kzalloc(sizeof(*pfile), GFP_KERNEL);
-> -	if (!pfile) {
-> -		ret = -ENOMEM;
-> -		goto err_put_mod;
-> -	}
-> +	if (!pfile)
-> +		return -ENOMEM;
->  
->  	pfile->ptdev = ptdev;
->  	pfile->user_mmio.offset = DRM_PANTHOR_USER_MMIO_OFFSET;
-> @@ -1439,9 +1434,6 @@ panthor_open(struct drm_device *ddev, struct drm_file *file)
->  
->  err_free_file:
->  	kfree(pfile);
-> -
-> -err_put_mod:
-> -	module_put(THIS_MODULE);
->  	return ret;
->  }
->  
-> @@ -1454,7 +1446,6 @@ panthor_postclose(struct drm_device *ddev, struct drm_file *file)
->  	panthor_vm_pool_destroy(pfile);
->  
->  	kfree(pfile);
-> -	module_put(THIS_MODULE);
->  }
->  
->  static const struct drm_ioctl_desc panthor_drm_driver_ioctls[] = {
-> @@ -1555,6 +1546,7 @@ static void panthor_show_fdinfo(struct drm_printer *p, struct drm_file *file)
->  }
->  
->  static const struct file_operations panthor_drm_driver_fops = {
-> +	.owner = THIS_MODULE,
->  	.open = drm_open,
->  	.release = drm_release,
->  	.unlocked_ioctl = drm_ioctl,
+diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+index c2b88cc99e5d..4dafd6554277 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.c
++++ b/drivers/dma/dw-edma/dw-edma-core.c
+@@ -235,9 +235,19 @@ static int dw_edma_device_config(struct dma_chan *dchan,
+ 				 struct dma_slave_config *config)
+ {
+ 	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
++	struct dw_edma_peripheral_config *pconfig = config->peripheral_config;
++	unsigned long flags;
++
++	if (WARN_ON(config->peripheral_config &&
++		    config->peripheral_size != sizeof(*pconfig)))
++		return -EINVAL;
+ 
++	spin_lock_irqsave(&chan->vc.lock, flags);
+ 	memcpy(&chan->config, config, sizeof(*config));
++
++	chan->non_ll_en = pconfig ? pconfig->non_ll_en : false;
+ 	chan->configured = true;
++	spin_unlock_irqrestore(&chan->vc.lock, flags);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
+index 71894b9e0b15..c0266976aa22 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.h
++++ b/drivers/dma/dw-edma/dw-edma-core.h
+@@ -86,6 +86,8 @@ struct dw_edma_chan {
+ 	u8				configured;
+ 
+ 	struct dma_slave_config		config;
++
++	bool				non_ll_en;
+ };
+ 
+ struct dw_edma_irq {
+diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+index e3f8db4fe909..3237c807a18e 100644
+--- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
++++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+@@ -225,7 +225,7 @@ static void dw_hdma_v0_sync_ll_data(struct dw_edma_chunk *chunk)
+ 		readl(chunk->ll_region.vaddr.io);
+ }
+ 
+-static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
++static void dw_hdma_v0_ll_start(struct dw_edma_chunk *chunk, bool first)
+ {
+ 	struct dw_edma_chan *chan = chunk->chan;
+ 	struct dw_edma *dw = chan->dw;
+@@ -263,6 +263,57 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+ 	SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
+ }
+ 
++static void dw_hdma_v0_non_ll_start(struct dw_edma_chunk *chunk)
++{
++	struct dw_edma_chan *chan = chunk->chan;
++	struct dw_edma *dw = chan->dw;
++	struct dw_edma_burst *child;
++	u32 val;
++
++	list_for_each_entry(child, &chunk->burst->list, list) {
++		SET_CH_32(dw, chan->dir, chan->id, ch_en, BIT(0));
++
++		/* Source address */
++		SET_CH_32(dw, chan->dir, chan->id, sar.lsb, lower_32_bits(child->sar));
++		SET_CH_32(dw, chan->dir, chan->id, sar.msb, upper_32_bits(child->sar));
++
++		/* Destination address */
++		SET_CH_32(dw, chan->dir, chan->id, dar.lsb, lower_32_bits(child->dar));
++		SET_CH_32(dw, chan->dir, chan->id, dar.msb, upper_32_bits(child->dar));
++
++		/* Transfer size */
++		SET_CH_32(dw, chan->dir, chan->id, transfer_size, child->sz);
++
++		/* Interrupt setup */
++		val = GET_CH_32(dw, chan->dir, chan->id, int_setup) |
++				HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK |
++				HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
++
++		if (!(dw->chip->flags & DW_EDMA_CHIP_LOCAL))
++			val |= HDMA_V0_REMOTE_STOP_INT_EN | HDMA_V0_REMOTE_ABORT_INT_EN;
++
++		SET_CH_32(dw, chan->dir, chan->id, int_setup, val);
++
++		/* Channel control setup */
++		val = GET_CH_32(dw, chan->dir, chan->id, control1);
++		val &= ~HDMA_V0_LINKLIST_EN;
++		SET_CH_32(dw, chan->dir, chan->id, control1, val);
++
++		/* Ring the doorbell */
++		SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
++	}
++}
++
++static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
++{
++	struct dw_edma_chan *chan = chunk->chan;
++
++	if (!chan->non_ll_en)
++		dw_hdma_v0_ll_start(chunk, first);
++	else
++		dw_hdma_v0_non_ll_start(chunk);
++}
++
+ static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
+ {
+ 	struct dw_edma *dw = chan->dw;
+diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+index 3080747689f6..82d808013a66 100644
+--- a/include/linux/dma/edma.h
++++ b/include/linux/dma/edma.h
+@@ -101,6 +101,14 @@ struct dw_edma_chip {
+ 	struct dw_edma		*dw;
+ };
+ 
++/**
++ * struct dw_edma_peripheral_config - peripheral spicific configurations
++ * @non_ll_en:		 enable non-linked list mode of operations
++ */
++struct dw_edma_peripheral_config {
++	bool			non_ll_en;
++};
++
+ /* Export to the platform drivers */
+ #if IS_REACHABLE(CONFIG_DW_EDMA)
+ int dw_edma_probe(struct dw_edma_chip *chip);
+-- 
+2.43.0
 
