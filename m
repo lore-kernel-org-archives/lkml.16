@@ -1,147 +1,85 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909861A3168;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67CD2192EC;
 	Mon, 23 Jun 2025 09:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750672625; cv=none; b=osn4+1qJ0ClQHtmF33PV3T/OCJrjY722KatzpH2LPvS6z0FZCH3k1mgG/Zw0zV4DPetCxVk1YfeJoWMABa3Pvt0IG+Ota59Pu3U38pGiMSw1f9QOGEUjZJ0jIYIJ3NZ085x77Dbgq0/c3yzPkeXzZfh6hxFsuGX4cvJxh+pcnG0=
+	t=1750672625; cv=none; b=Sre3uj8MT7vIfTCPVdb6YNYvKYXDgYUlYwYZ4s8UT0Uwy+fXKUpLVCTiHCAHoTdfjceZaslnbUm2zyzA6ApBC1tFZxFW75nKPoUita/CVbRbieAkg+IgEW3ihJA0TLI8t1Iqplu9rQnad02uBg0pXifgf4o+pIGaOkXbtVoWNmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750672625; c=relaxed/simple;
-	bh=gl/PweAvp6KAO6MlCGfgQFmI+Q7GuzLeGH3327OmQxU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dNARSeRDZVd5O/pciGijbu9qWUdpb722n4wmbJBVVMiTHDWmyKsw/DEicMvAVUZKto7mCOty2FALIPjOphrLoRNXHVOrgjbH+3Wt8z7ELYVXCUWz4683v4yHGDuVrctA2Mk2+53GFsMP4aSJAbC9KimLXFfpXg/oefA2+Qbtpbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQk2K17nCz6HJrm;
-	Mon, 23 Jun 2025 17:54:33 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id D7A9D1402F6;
-	Mon, 23 Jun 2025 17:56:59 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
- 2025 11:56:59 +0200
-Date: Mon, 23 Jun 2025 10:56:57 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Neeraj Kumar <s.neeraj@samsung.com>
-CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>,
-	<anisa.su@samsung.com>, <vishak.g@samsung.com>, <krish.reddy@samsung.com>,
-	<arun.george@samsung.com>, <alok.rathore@samsung.com>,
-	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<gost.dev@samsung.com>, <cpgs@samsung.com>
-Subject: Re: [RFC PATCH 20/20] cxl/pmem_region: Add cxl region label
- updation and deletion device attributes
-Message-ID: <20250623105657.00003996@huawei.com>
-In-Reply-To: <1371006431.81750165382853.JavaMail.epsvc@epcpadp2new>
-References: <20250617123944.78345-1-s.neeraj@samsung.com>
-	<CGME20250617124104epcas5p41105ad63af456b5cdb041e174a99925e@epcas5p4.samsung.com>
-	<1371006431.81750165382853.JavaMail.epsvc@epcpadp2new>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	bh=U7XIW8hy4Y2hgCabhIOAkmUThrnJnj5hGEjrn7p2UNc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oibKyIY7C6LXjRP07upzNj8T9wZiIejFPYaUmlIErZiUOgCgKB59gWu2/sXEV2BIfNrP/MJtddkcr46yj5lhyyAQcSgGeMcWWHuVjFIE+trLVudTynoVtJvVFb/d3NK7mz87Q7dCG5CtbDDOsVtNr4MLVPMNHyIp0JkQOZMR5ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BkyQmY62; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BkyQmY62"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750672621;
+	bh=U7XIW8hy4Y2hgCabhIOAkmUThrnJnj5hGEjrn7p2UNc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BkyQmY627azdUczLx7oZc3igZbN0MsdTraBo/0pVjbZuOdw5mpSQ4zlCh2Gxb7qs3
+	 ShQVrFvbYRj2O9Gfm5SZk2JNDiv+hQrEFCCFFM8oGfcSjTvg6gJJ2wK+1fl11YUu6F
+	 /R5+C/eHWX6uaDf26ohy4DBQPaWOhfx7LOApKDQyDWcm2Y/AgAUu/6OeX1fP8oz+Pr
+	 8lFjROw5L08Q+p8GnF68Qxygy1v/YcMCibXVC4fM288GhOKa7jNOFjku2lgKr79erh
+	 uf2JhZHGniRMqAJOn82nwe0QskP9Grnn47MpisOqJKX79T36P0ay195xdrZZeTuUsf
+	 gqXvREbwpkoUw==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id B34E717E0CE6;
+	Mon, 23 Jun 2025 11:57:00 +0200 (CEST)
+Message-ID: <b0bd3ac2-7698-40a4-966f-25a06a15c9ff@collabora.com>
+Date: Mon, 23 Jun 2025 11:57:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] mmc: mtk-sd: disable auto CMD23 support for mt7620
+To: Shiji Yang <yangshiji66@outlook.com>, linux-mmc@vger.kernel.org,
+ Chaotian Jing <chaotian.jing@mediatek.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <OSBPR01MB16708176FE57F691359D0943BC7DA@OSBPR01MB1670.jpnprd01.prod.outlook.com>
+ <OSBPR01MB16701142441CAA0F2D12A843BC7DA@OSBPR01MB1670.jpnprd01.prod.outlook.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <OSBPR01MB16701142441CAA0F2D12A843BC7DA@OSBPR01MB1670.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 17 Jun 2025 18:09:44 +0530
-Neeraj Kumar <s.neeraj@samsung.com> wrote:
-
-> Using these attributes region label is added/deleted into LSA. These
-> attributes are called from userspace (ndctl) after region creation.
-
-These need documentation. Documentation/ABI/testing/sysfs-bus-cxl
-is probably the right place.
-
-
+Il 19/06/25 07:35, Shiji Yang ha scritto:
+> MT7628 ProgrammingGuide indicates that the host controller version
+> 3.0 and later support auto CMD23 function. However, it doesn't
+> define the SD command register BIT[29](Auto CMD23 enable bit). I
+> guess the legacy MIPS MT762x series SoCs don't support this feature
+> at all. The experiment on JDCloud RE-SP-01B(MT7621 + 128 GiB EMMC)
+> shows that disabling auto CMD23 can fix the following IO errors:
 > 
-> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
-> ---
->  drivers/cxl/core/pmem_region.c | 103 +++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h              |   1 +
->  2 files changed, 104 insertions(+)
+> [  143.344604] mtk-msdc 1e130000.mmc: msdc_track_cmd_data: cmd=6 arg=03B30101; host->error=0x00000002
+> [  143.353661] mtk-msdc 1e130000.mmc: msdc_track_cmd_data: cmd=6 arg=03B30101; host->error=0x00000002
+> [  143.362662] mtk-msdc 1e130000.mmc: msdc_track_cmd_data: cmd=6 arg=03B30101; host->error=0x00000002
+> [  143.371684] mtk-msdc 1e130000.mmc: msdc_track_cmd_data: cmd=6 arg=03B30101; host->error=0x00000002
+> [  143.380684] I/O error, dev mmcblk0boot0, sector 0 op 0x0:(READ) flags 0x80700 phys_seg 4 prio class 0
+> [  143.390414] mtk-msdc 1e130000.mmc: msdc_track_cmd_data: cmd=6 arg=03B30101; host->error=0x00000002
+> [  143.399468] mtk-msdc 1e130000.mmc: msdc_track_cmd_data: cmd=6 arg=03B30101; host->error=0x00000002
+> [  143.408516] mtk-msdc 1e130000.mmc: msdc_track_cmd_data: cmd=6 arg=03B30101; host->error=0x00000002
+> [  143.417556] mtk-msdc 1e130000.mmc: msdc_track_cmd_data: cmd=6 arg=03B30101; host->error=0x00000002
+> [  143.426590] I/O error, dev mmcblk0boot0, sector 0 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 0
+> [  143.435585] Buffer I/O error on dev mmcblk0boot0, logical block 0, async page read
 > 
-> diff --git a/drivers/cxl/core/pmem_region.c b/drivers/cxl/core/pmem_region.c
-> index a29526c27d40..f582d796c21b 100644
-> --- a/drivers/cxl/core/pmem_region.c
-> +++ b/drivers/cxl/core/pmem_region.c
-> @@ -45,8 +45,111 @@ static void cxl_pmem_region_release(struct device *dev)
->  	kfree(cxlr_pmem);
->  }
->  
-> +static ssize_t region_label_update_store(struct device *dev,
-> +					 struct device_attribute *attr,
-> +					 const char *buf, size_t len)
-> +{
-> +	struct cxl_pmem_region *cxlr_pmem = to_cxl_pmem_region(dev);
-> +	struct cxl_region *cxlr = cxlr_pmem->cxlr;
-> +	struct cxl_region_params *p = &cxlr->params;
-> +	ssize_t rc;
-> +	bool update;
-> +
-> +	rc = kstrtobool(buf, &update);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = down_write_killable(&cxl_region_rwsem);
+> Signed-off-by: Shiji Yang <yangshiji66@outlook.com>
 
-Another use case for ACQUIRE()
+Chaotian, could you please confirm that MT7628 does not support AutoCMD23?
 
-> +	if (rc)
-> +		return rc;
-> +
-> +	/* Region not yet committed */
-> +	if (update && p->state != CXL_CONFIG_COMMIT) {
-> +		dev_dbg(dev, "region not committed, can't update into LSA\n");
-> +		rc = -ENXIO;
-> +		goto out;
-> +	}
-> +
-> +	if (cxlr && cxlr->cxlr_pmem && cxlr->cxlr_pmem->nd_region) {
-> +		rc = nd_region_label_update(cxlr->cxlr_pmem->nd_region);
-> +
-> +		if (!rc)
-> +			p->region_label_state = 1;
-> +	}
-> +
-> +out:
-> +	up_write(&cxl_region_rwsem);
-> +
-> +	if (rc)
-> +		return rc;
-> +
-> +	return len;
-> +}
-
-> +
-> +static struct attribute *cxl_pmem_region_attrs[] = {
-> +	&dev_attr_region_label_update.attr,
-> +	&dev_attr_region_label_delete.attr,
-> +	NULL,
-No need for trailing commas on terminating entries as we don't want it to be easy
-to put something after them.
-
-> +};
-> +
-> +struct attribute_group cxl_pmem_region_group = {
-> +	.attrs = cxl_pmem_region_attrs,
-> +};
-> +
->  static const struct attribute_group *cxl_pmem_region_attribute_groups[] = {
->  	&cxl_base_attribute_group,
-> +	&cxl_pmem_region_group,
->  	NULL,
-Hmm. Drop this trailing comma perhaps whilst here.
->  };
-
+Thanks,
+Angelo
 
