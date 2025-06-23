@@ -1,67 +1,44 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD0E231A23;
-	Mon, 23 Jun 2025 11:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A7B219A86;
+	Mon, 23 Jun 2025 11:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750678930; cv=none; b=gPVq6w0JuL6xBSqIDmAkf0dby29AFpJ2Ipa7lcnjJETTia4D7uh+NmWupyR9wZMoPouOFKgHxnoFNrob/lkUjZyHEsfN1tS0aShPCp6gnKOssUgwbSh9yFK8EnwVukQg9qUkTFWtrNtu9I9JO/3nux+pInyqQNGL8PDv+AVtEXc=
+	t=1750678972; cv=none; b=IpNIuk6TnkIv5b1Hk0+jyaVJMu+ysc1KaaqKgUJgpZtJ6czm7uneD3XnvfpFPAjetvhhEfYGHqcLEQDrfB38BMUMH4EfhfDr9w/dutAqmdGcUb5k/GDU8txfWwaxIILLSHTU6hbgLj0oXOhrXyfqllNbCumL9In3FNx4rJfA/WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750678930; c=relaxed/simple;
-	bh=2yP9cZ7jGexoJEfMiHFFZZL1pAXX0g1/b+nBVd4xhog=;
+	s=arc-20240116; t=1750678972; c=relaxed/simple;
+	bh=2m5CfZQaw2dv5R3Bx1BYdCmiNkSM8d2I9a7oqNpDaJg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XH+uzANeYbzc3O+YRVAi1kMp8bLivytldzkBNJBuLzCNlUFaKiWyqCbBJjTuh0w/OjPV29tYrft/q5QybBTkZnznWpKh6OP0yEYQwcVM933atUj7CQCdn5XsD8EIVwk2OgpxT9+vZEMz38c+SAo6bjAu8RpdU4/V17zDZHgVGpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=PKVv51j4; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=FbTP4YF6ZYZt0fjClHQyHa244UnULPiiqT4GISgFYXkxynPwAdroTL4toWMOpF+ausimBsaTlpPTowoGkElsnh4Ib59IKIoMItdeC+tIBGAf1oHe2LUmwuK1A2HBdS/OdZf1jYbklFKcg/hmQAzJBgU5J5ts2pCLATRD9s32Lo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vJQ3ID8q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="PKVv51j4"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C043F40E00DD;
-	Mon, 23 Jun 2025 11:42:05 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 3R7aqmQKpptH; Mon, 23 Jun 2025 11:42:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1750678922; bh=bb/GKzqFVGB7gGGZBdz3PxvpScmCCPczePeWPLg6dA0=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vJQ3ID8q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68E13C4CEEA;
+	Mon, 23 Jun 2025 11:42:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750678972;
+	bh=2m5CfZQaw2dv5R3Bx1BYdCmiNkSM8d2I9a7oqNpDaJg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PKVv51j4vxLnraCY+meWk7NgzaK0rRVmiJZGLW5qgyMbE+edvYd6prQtGhNnkbS6L
-	 vWHYHHlHUEB8dE1WW6SVY4OrukhQ5xrSsgHF8c/sM999cpWZ/Pnb2/Pw+rNkSCPl1z
-	 dWhSJnFc3XRkYcpVOnu+DyiFuHf/CMOi6ApPk34t3fOFUfigd18bFL+pNuNVWhbBa8
-	 SnDKzz42AR45WES0LZC0jHBU7/ARFlKKHAvvX5oXwPQ6woUMy38URaNbd/kzDgA7ao
-	 3OAesNodURoVIE0IKjH9W5dYyJS+Xk2h44OtKAmKZmgSFgy5k5x/aA1MzBauDlDeuV
-	 mSX7gaYSNWW11ltpaqfMKssqtZZn6PqJMQitGvkhvIL4ezgd8lr7prqPY+6BePzMKC
-	 9RaGcqg/DQjpG0FUQ2rg5YOKbd46GlMSHHUB3ZilJ2UQ9ieepABTL6rNnNYJ51h+c0
-	 kjbu5HKeTVMpxJA6AinO2IvlfpCVOhlywdvR9i1tGkW1aopGanPvDm1H1qG4ptbNKK
-	 IjCuCqdKP3X08E+o9R8V7r2kwgzQ9aB8hNuKAjmPr+GjNU0CL15uwO/WnjivfPlmnY
-	 6W6ivefG5gnLfv3RtPtkpzbY6iuuy0TgmmaxT4ztBuCYGcWSoyOZKGOsEAK0mOjUOd
-	 7i7k2n8avwGtaATQqLkI7N/0=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B525140E01FC;
-	Mon, 23 Jun 2025 11:41:39 +0000 (UTC)
-Date: Mon, 23 Jun 2025 13:41:33 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	dave.hansen@linux.intel.com, Thomas.Lendacky@amd.com,
-	nikunj@amd.com, Santosh.Shukla@amd.com, Vasant.Hegde@amd.com,
-	Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com, x86@kernel.org,
-	hpa@zytor.com, peterz@infradead.org, seanjc@google.com,
-	pbonzini@redhat.com, kvm@vger.kernel.org,
-	kirill.shutemov@linux.intel.com, huibo.wang@amd.com,
-	naveen.rao@amd.com, francescolavra.fl@gmail.com,
-	tiala@microsoft.com
-Subject: Re: [RFC PATCH v7 02/37] KVM: lapic: Remove redundant parentheses
- around 'bitmap'
-Message-ID: <20250623114133.GFaFk9bRYpNeuSjXWn@fat_crate.local>
-References: <20250610175424.209796-1-Neeraj.Upadhyay@amd.com>
- <20250610175424.209796-3-Neeraj.Upadhyay@amd.com>
+	b=vJQ3ID8qLCiFR8Pxde6rF2KJJUAOZVH8hsgrPoPWLp9XsVub8YquvV1sgl7Xc7+ep
+	 owTauxF/ndQDiCzVeTf2yjAcNYDE/pW79OdZKaH6JbutbKuWrCSeGIi/Joi25lDODC
+	 uBi3KqSVZav3oTXjLfjJadHCrwVa2fHUmhMBabGYPVDhK2i1vkp/9Tmg72GCOdjQn8
+	 1la1NsNuC4JyZ59DCFc9mXQT/RJHTgQrYRjZA5yhQMrCbFzuvCAbURgwj65ULx4ayz
+	 E2Pi5T2PJt/7QLTKK7VUDglj7VtKrzyylDa9NGdbCYpWq1IBICjrRHHdWc/z9tCqyJ
+	 8ZOHbkT/1SwBg==
+Date: Mon, 23 Jun 2025 05:42:50 -0600
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, 
+	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com, shawnguo@kernel.org, 
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>
+Subject: Re: [PATCH v3 1/2] PCI: imx6: Remove apps_reset toggle in
+ _core_reset functions
+Message-ID: <kjsaipr2xq777dmiv2ac7qzrxw47nevc75j7ryma32vsnyr2le@mrwurn6rgnac>
+References: <20250616085742.2684742-1-hongxing.zhu@nxp.com>
+ <20250616085742.2684742-2-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,29 +47,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250610175424.209796-3-Neeraj.Upadhyay@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250616085742.2684742-2-hongxing.zhu@nxp.com>
 
-On Tue, Jun 10, 2025 at 11:23:49PM +0530, Neeraj Upadhyay wrote:
-> When doing pointer arithmetic in apic_test_vector() and
-> kvm_lapic_{set|clear}_vector(), remove the unnecessary
-> parentheses surrounding the 'bitmap' parameter.
+On Mon, Jun 16, 2025 at 04:57:41PM +0800, Richard Zhu wrote:
+> apps_reset is LTSSM_EN on i.MX7, i.MX8MQ, i.MX8MM and i.MX8MP platforms.
+> Since the assertion/de-assertion of apps_reset(LTSSM_EN bit) had been
+> wrappered in imx_pcie_ltssm_enable() and imx_pcie_ltssm_disable();
 > 
-> No functional change intended.
+
+What about other i.MX chipsets like 6Q and its cousins? Wouldn't this change
+affect them since they treat 'apps_reset' differently?
+
+- Mani
+
+> Remove apps_reset toggle in imx_pcie_assert_core_reset() and
+> imx_pcie_deassert_core_reset() functions. Use imx_pcie_ltssm_enable()
+> and imx_pcie_ltssm_disable() to configure apps_reset directly.
 > 
-> Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+> Fix fail to enumerate reliably PI7C9X2G608GP (hotplug) at i.MX8MM, which
+> reported By Tim.
+> 
+> Reported-by: Tim Harvey <tharvey@gateworks.com>
+> Closes: https://lore.kernel.org/all/CAJ+vNU3ohR2YKTwC4xoYrc1z-neDoH2TTZcMHDy+poj9=jSy+w@mail.gmail.com/
+> Fixes: ef61c7d8d032 ("PCI: imx6: Deassert apps_reset in imx_pcie_deassert_core_reset()")
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
 > ---
-> Changes since v6:
+>  drivers/pci/controller/dwc/pci-imx6.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
->  - Refactored and moved to the start of the series.
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 9754cc6e09b9..f5f2ac638f4b 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -860,7 +860,6 @@ static int imx95_pcie_core_reset(struct imx_pcie *imx_pcie, bool assert)
+>  static void imx_pcie_assert_core_reset(struct imx_pcie *imx_pcie)
+>  {
+>  	reset_control_assert(imx_pcie->pciephy_reset);
+> -	reset_control_assert(imx_pcie->apps_reset);
+>  
+>  	if (imx_pcie->drvdata->core_reset)
+>  		imx_pcie->drvdata->core_reset(imx_pcie, true);
+> @@ -872,7 +871,6 @@ static void imx_pcie_assert_core_reset(struct imx_pcie *imx_pcie)
+>  static int imx_pcie_deassert_core_reset(struct imx_pcie *imx_pcie)
+>  {
+>  	reset_control_deassert(imx_pcie->pciephy_reset);
+> -	reset_control_deassert(imx_pcie->apps_reset);
+>  
+>  	if (imx_pcie->drvdata->core_reset)
+>  		imx_pcie->drvdata->core_reset(imx_pcie, false);
+> @@ -1247,6 +1245,9 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp)
+>  		}
+>  	}
+>  
+> +	/* Make sure that PCIe LTSSM is cleared */
+> +	imx_pcie_ltssm_disable(dev);
+> +
+>  	ret = imx_pcie_deassert_core_reset(imx_pcie);
+>  	if (ret < 0) {
+>  		dev_err(dev, "pcie deassert core reset failed: %d\n", ret);
+> -- 
+> 2.37.1
 > 
->  arch/x86/kvm/lapic.c | 2 +-
->  arch/x86/kvm/lapic.h | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
-
-Reviewed-by: Borislav Petkov (AMD) <bp@alien8.de>
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+மணிவண்ணன் சதாசிவம்
