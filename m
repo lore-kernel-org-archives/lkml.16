@@ -1,320 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6D81DF75A;
-	Mon, 23 Jun 2025 08:44:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCEC8230BC8;
+	Mon, 23 Jun 2025 08:45:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750668300; cv=none; b=MVCCnedo9TtnporUXKZAA/DjPtQ1l7Y1I4bWIt8SnNNgjGtiiipW/qcyF0IJTmtqDql51hP1xPQwGzN6ISSlGLQ2C6T2L7HkiEpi4HZhe4ta8UJLZ2D8FawzdoScsFTHeJ+CABaJXE9g6heum+YOkZ4TFkWzVZmz4wVay8Bs4Zk=
+	t=1750668303; cv=none; b=bsReTKbe1gI8Lr4L/pgeNQCtR6Vb1IEZxHfgECPswozwBchQxdCSxc/pvSHdiAwdHvZn44BLTTuAbNSxdo1Js1rlXP6u2nit2KNVFCbN3UVYv+ywrUkA8C1E9zJSjNdb1CNAS9c4ZqBQVax10FJgP/z6fBNqhn4acdevwhCQmQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750668300; c=relaxed/simple;
-	bh=T+ZvFATpMVmo9JrjrJ0psl5XSDccDVqxEVtTuUwWGYI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=diTywZBxvYm+2XYN7UJeOZfq7d3dv1KuJfcwqX1QTT3OZ7MeAsC5z1lhRVQRx5behlR8JHz/B6OLS4Z0FvZ/LpLy/5AScTJdw4dberrgusUkBmgwgTQ6C+OIOsOlV3JNt2XfK9H4+ds1nsH0cqAEmVLHOMwMwxj28q3NpeNyHew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qSeSVtBe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750668303; c=relaxed/simple;
+	bh=jcL6rtiAtKjuo9I0c/0kjhalO87EBb/jVtbUFGMBlE4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lq5QOOtcmH6iCOhpST+eYEwFTmbpYzXBkQJfeQcuiZLZUddbCnmtH9oYBDwXnChLW5AzkXwa/M0UAGuFDKwXgf5q5EDE15IbW+aRU0biewDIS/W4dhqPZsGpkcdxPdIWQbDuPvhbhfavxaFx8hoKr5QL+dNhWWTyOfiQo/neIco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q860LwnY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qSeSVtBe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFA2CC4CEED;
-	Mon, 23 Jun 2025 08:44:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q860LwnY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72708C4CEF3;
+	Mon, 23 Jun 2025 08:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750668299;
-	bh=T+ZvFATpMVmo9JrjrJ0psl5XSDccDVqxEVtTuUwWGYI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qSeSVtBe24oPA3fxyQOIEjU6APWTd0ILLyIKNoUPlgMC/+0TiNHEq3l3qE3rN+kw6
-	 hXGrKsSt8/wXQNmnNBULq5BmlBb7gqK8KaaJRkfaIG8DlApgOhMO8NIEeYVehCdwM/
-	 eDvCQwA5LefVr1p1ZlFqdla9/blsb+eQQPZwTeuINQmlw2Gkc9FdYvfjvuEra0JcLO
-	 d2ycrAcDI8W0CQSz7WIui8aaKVg02RFR9uxGiYnOEqqjJn3+AQWk80ekdlX/xRUNT+
-	 VvAWhbkaExKX1N5xk2b2sQjKBu5BJNvNKn+dyo1lOdsAhRD5ogrCThLnEQNmWaGQIC
-	 QZ41rtsNkZIPw==
-Date: Mon, 23 Jun 2025 10:44:57 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
-	William Breathitt Gray <wbg@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.com>, 
-	Kever Yang <kever.yang@rock-chips.com>, Yury Norov <yury.norov@gmail.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Leon Romanovsky <leon@kernel.org>, Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	linux-iio@vger.kernel.org, kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>, 
-	Detlev Casanova <detlev.casanova@collabora.com>
-Subject: Re: [PATCH v2 5/7] pwm: Add rockchip PWMv4 driver
-Message-ID: <o5xaoorrqb6a3jwwpdcsowrqbo7owrjzwj4r3laytusms6txdi@ku4bvbynkwh7>
-References: <20250602-rk3576-pwm-v2-0-a6434b0ce60c@collabora.com>
- <20250602-rk3576-pwm-v2-5-a6434b0ce60c@collabora.com>
+	s=k20201202; t=1750668303;
+	bh=jcL6rtiAtKjuo9I0c/0kjhalO87EBb/jVtbUFGMBlE4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=q860LwnYEAenWL69jCL/6f84wXgm2sR1UWhDsC1+tHULRAGYryNGrSGxxvL2vK1gC
+	 nkpRh6FYHLelIF7j+NUUVLLwkmuRefpN1HqNRLJHkOvdn1st8yqDfICSXOj3MHLsGY
+	 XhldgXhgCUdroTeuYcZZFqaWi9HiizoeCctzqs8jdMhbCw2cqOFIqN0/N/3Drcs5jG
+	 CTwv03WY/jNLW3FKGpLcMucMk1M3YTnirl/u4JY3whaHWNibGIagZwpGXxFwi/6ixL
+	 KZFtNCzGMZepA4L6k48ojbaHpSiLdJ4oe0nyrc9sk2S7FT5zMwDl5yMHI3deMS02w3
+	 uac+3Qwhn+1NA==
+Message-ID: <7c55acd5-6d30-42a3-aec6-2d7aa2a640b0@kernel.org>
+Date: Mon, 23 Jun 2025 10:44:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4g26suiz7oblktsa"
-Content-Disposition: inline
-In-Reply-To: <20250602-rk3576-pwm-v2-5-a6434b0ce60c@collabora.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: sc8180x: Add video clock controller
+ node
+To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+ Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
+ Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250623-sc8180x-videocc-dt-v1-1-9d210c140600@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250623-sc8180x-videocc-dt-v1-1-9d210c140600@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 23/06/2025 10:14, Satya Priya Kakitapalli wrote:
+> Add device node for video clock controller on Qualcomm
+> SC8180X platform.
+> 
+> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+> ---
+> Add device node for video clock controller on Qualcomm
+> SC8180X platform.
+> ---
+>  arch/arm64/boot/dts/qcom/sc8180x.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc8180x.dtsi b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+> index b74ce3175d209b569e634073662307964158b340..4590c2ff68a9885d8047d728bbf2dea0236d5b8f 100644
+> --- a/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+> @@ -10,6 +10,7 @@
+>  #include <dt-bindings/clock/qcom,gpucc-sm8150.h>
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+>  #include <dt-bindings/clock/qcom,sc8180x-camcc.h>
+> +#include <dt-bindings/clock/qcom,videocc-sm8150.h>
+>  #include <dt-bindings/interconnect/qcom,icc.h>
+>  #include <dt-bindings/interconnect/qcom,osm-l3.h>
+>  #include <dt-bindings/interconnect/qcom,sc8180x.h>
+> @@ -2943,6 +2944,19 @@ usb_sec_dwc3_ss: endpoint {
+>  			};
+>  		};
+>  
+> +		videocc: clock-controller@ab00000 {
+Why are you adding the same multiple times? This was added A YEAR AGO,
+so you clearly send us some complete outdated ancient tree!
 
---4g26suiz7oblktsa
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH v2 5/7] pwm: Add rockchip PWMv4 driver
-MIME-Version: 1.0
-
-Hello Nicolas,
-
-On Mon, Jun 02, 2025 at 06:19:16PM +0200, Nicolas Frattaroli wrote:
-> +/**
-> + * rockchip_pwm_v4_round_params - convert PWM parameters to hardware
-> + * @rate: PWM clock rate to do the calculations at
-> + * @duty: PWM duty cycle in nanoseconds
-> + * @period: PWM period in nanoseconds
-> + * @offset: PWM offset in nanoseconds
-> + * @out_duty: pointer to where the rounded duty value should be stored
-> + * @out_period: pointer to where the rounded period value should be stored
-> + * @out_offset: pointer to where the rounded offset value should be stored
-> + *
-> + * Convert nanosecond-based duty/period/offset parameters to the PWM hardware's
-> + * native rounded representation in number of cycles at clock rate @rate. Should
-> + * any of the input parameters be out of range for the hardware, the
-> + * corresponding output parameter is the maximum permissible value for said
-> + * parameter with considerations to the others.
-> + */
-> +static void rockchip_pwm_v4_round_params(unsigned long rate, u64 duty,
-> +					u64 period, u64 offset, u32 *out_duty,
-> +					u32 *out_period, u32 *out_offset)
-> +{
-> +	int ret;
-> +
-> +	ret = rockchip_pwm_v4_round_single(rate, period, out_period);
-> +	if (ret)
-> +		*out_period = U32_MAX;
-
-It's strange to let rockchip_pwm_v4_round_single return failure just to
-reset it to U32_MAX here then. I'd make rockchip_pwm_v4_round_single do:
-
-	tmp = mul_u64_u64_div_u64(rate, in_val, NSEC_PER_SEC);
-	if (tmp > U32_MAX)
-		return U32_MAX
-	return tmp;
-
-and then just do
-
-	*out_period = rockchip_pwm_v4_round_single(rate, period);
-	*out_duty = rockchip_pwm_v4_round_single(rate, duty)
-	...
-
-> +
-> +	ret = rockchip_pwm_v4_round_single(rate, duty, out_duty);
-> +	if (ret || *out_duty > *out_period)
-> +		*out_duty = *out_period;
-
-You can assume that .round_wf_tohw() is called only with duty <= period.
-
-> +	ret = rockchip_pwm_v4_round_single(rate, offset, out_offset);
-> +	if (ret || *out_offset > (*out_period - *out_duty))
-> +		*out_offset = *out_period - *out_duty;
-
-Is this a hardware limitation? In general
-
-	.period_length_ns = 1000
-	.duty_length_ns = 600
-	.duty_offset_ns = 600
-
-is a valid waveform.
-
-> +}
-> +
-> +static int rockchip_pwm_v4_round_wf_tohw(struct pwm_chip *chip,
-> +					 struct pwm_device *pwm,
-> +					 const struct pwm_waveform *wf,
-> +					 void *_wfhw)
-> +{
-> +	struct rockchip_pwm_v4 *pc = to_rockchip_pwm_v4(chip);
-> +	struct rockchip_pwm_v4_wf *wfhw = _wfhw;
-> +	unsigned long rate;
-> +	int ret;
-> +
-> +	/* We do not want chosen_clk to change out from under us here */
-> +	ret = mfpwm_acquire(pc->pwmf);
-> +	if (ret)
-> +		return ret;
-> +
-> +	rate = clk_get_rate(pc->pwmf->core);
-> +
-> +	rockchip_pwm_v4_round_params(rate, wf->duty_length_ns,
-> +				     wf->period_length_ns, wf->duty_offset_ns,
-> +				     &wfhw->duty, &wfhw->period, &wfhw->offset);
-> +
-> +	if (wf->period_length_ns > 0)
-> +		wfhw->enable = PWMV4_EN_BOTH_MASK;
-> +	else
-> +		wfhw->enable = 0;
-> +
-> +	dev_dbg(&chip->dev, "tohw: duty = %u, period = %u, offset = %u, rate %lu\n",
-> +		wfhw->duty, wfhw->period, wfhw->offset, rate);
-
-This is more helpful if the input parameters (i.e. wf) is also emitted.
-
-> +	mfpwm_release(pc->pwmf);
-> +	return 0;
-> +}
-> +
-> +static int rockchip_pwm_v4_round_wf_fromhw(struct pwm_chip *chip,
-> +					   struct pwm_device *pwm,
-> +					   const void *_wfhw,
-> +					   struct pwm_waveform *wf)
-> +{
-> +	struct rockchip_pwm_v4 *pc = to_rockchip_pwm_v4(chip);
-> +	const struct rockchip_pwm_v4_wf *wfhw = _wfhw;
-> +	unsigned long rate;
-> +	int ret = 0;
-> +
-> +	/* We do not want chosen_clk to change out from under us here */
-> +	ret = mfpwm_acquire(pc->pwmf);
-> +	if (ret)
-> +		return ret;
-
-Hmm, there is little gain here. Correct me if I'm wrong, but you prevent
-a rate change only until mfpwm_release() is called, so the assertion
-ends before the caller can use the calculated parameters anyhow. So
-maybe drop the acquire/release pair?
-
-> +	rate = clk_get_rate(pc->pwmf->core);
-> +
-> +	if (rockchip_pwm_v4_is_enabled(wfhw->enable)) {
-> +		if (!rate) {
-> +			ret = -EINVAL;
-> +			goto out_mfpwm_release;
-> +		}
-> +		wf->period_length_ns = mul_u64_u64_div_u64(wfhw->period, NSEC_PER_SEC, rate);
-
-(u64)wfhw->period * NSEC_PER_SEC cannot overflow, so a plain
-multiplication and then a division is cheaper here.
-
-> +		wf->duty_length_ns = mul_u64_u64_div_u64(wfhw->duty, NSEC_PER_SEC, rate);
-> +		wf->duty_offset_ns = mul_u64_u64_div_u64(wfhw->offset, NSEC_PER_SEC, rate);
-> +	} else {
-> +		wf->period_length_ns = 0;
-> +		wf->duty_length_ns = 0;
-> +		wf->duty_offset_ns = 0;
-> +	}
-> +
-> +	dev_dbg(&chip->dev, "fromhw: duty = %llu, period = %llu, offset = %llu, rate = %lu\n",
-> +		wf->duty_length_ns, wf->period_length_ns, wf->duty_offset_ns, rate);
-
-As above, please include wfhw in the output.
-
-> +out_mfpwm_release:
-> +	mfpwm_release(pc->pwmf);
-> +	return ret;
-> +}
-> +
-> [...]
-> +static int rockchip_pwm_v4_probe(struct platform_device *pdev)
-> +{
-> +	struct rockchip_mfpwm_func *pwmf = dev_get_platdata(&pdev->dev);
-> +	struct rockchip_pwm_v4 *pc;
-> +	struct pwm_chip *chip;
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	chip = devm_pwmchip_alloc(dev, 1, sizeof(*pc));
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +
-> +	pc = to_rockchip_pwm_v4(chip);
-> +	pc->pwmf = pwmf;
-> +
-> +	ret = mfpwm_acquire(pwmf);
-> +	if (ret == -EBUSY)
-> +		dev_warn(dev, "pwm hardware already in use, can't check initial state\n");
-> +	else if (ret < 0)
-> +		return dev_err_probe(dev, ret, "couldn't acquire mfpwm in probe\n");
-> +
-> +	if (!rockchip_pwm_v4_on_and_continuous(pc))
-> +		mfpwm_release(pwmf);
-> +	else {
-> +		dev_dbg(dev, "pwm was already on at probe time\n");
-> +		ret = clk_enable(pwmf->core);
-> +		if (ret)
-> +			return dev_err_probe(dev, ret, "enabling pwm clock failed\n");
-> +		ret = clk_rate_exclusive_get(pc->pwmf->core);
-> +		if (ret) {
-> +			clk_disable(pwmf->core);
-> +			return dev_err_probe(dev, ret, "protecting pwm clock failed\n");
-> +		}
-> +	}
-> +
-> +	platform_set_drvdata(pdev, chip);
-> +
-> +	chip->ops = &rockchip_pwm_v4_ops;
-> +
-> +	ret = pwmchip_add(chip);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
-
-I like error messages starting with a capital letter.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void rockchip_pwm_v4_remove(struct platform_device *pdev)
-> +{
-> +	struct pwm_chip *chip = platform_get_drvdata(pdev);
-> +	struct rockchip_pwm_v4 *pc = to_rockchip_pwm_v4(chip);
-> +
-> +	mfpwm_remove_func(pc->pwmf);
-
-What does this function do? It is not used in .probe()'s error path?!
-
-> +	pwmchip_remove(chip);
-
-Wrong order (I think). If mfpwm_remove_func() affects operation,
-pwmchip_remove() must be called first.
-
-> +}
-> +
-> +static const struct platform_device_id rockchip_pwm_v4_ids[] = {
-> +	{ .name = "pwm-rockchip-v4", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(platform, rockchip_pwm_v4_ids);
-> +
-> +static struct platform_driver rockchip_pwm_v4_driver = {
-> +	.probe = rockchip_pwm_v4_probe,
-> +	.remove = rockchip_pwm_v4_remove,
-> +	.driver = {
-> +		.name = "pwm-rockchip-v4",
-> +	},
-> +	.id_table = rockchip_pwm_v4_ids,
-> +};
-> +module_platform_driver(rockchip_pwm_v4_driver);
-> +
-> +MODULE_AUTHOR("Nicolas Frattaroli <nicolas.frattaroli@collabora.com>");
-> +MODULE_DESCRIPTION("Rockchip PWMv4 Driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_IMPORT_NS("ROCKCHIP_MFPWM");
-
-Best regards
-Uwe
-
---4g26suiz7oblktsa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhZFAYACgkQj4D7WH0S
-/k5t6ggAjmDJYKJYUEg5lEGucA+QTWdT0UbHkO7qf1jcahM1hd34ZOp7tYXkD9wC
-m28YV1gus2tgEIqldCRmqO0y5hJhniDfOJ92BRihB50Bkg1m6hox9P4iqMRPSJnd
-uDnmATiNVdY7Et8MPEe9Y9YDACD2CKfv/DSvUxkp3la1rhIglcTMHfPDFRMnSynw
-WUgyHKQ1hLEokOyBXvXY3wlDZCTpUZQpW5eSVW6p+h+Qj/liLp7CWNbW5myK/H49
-GYN3F/oEPrF+TMASFJkOfQb4Cs+MgPWOhTZfjj693TbWuFxc1p6seTByPZN8h3gg
-8B0jF2BSQvP4BiSbf9asZfRRNTd3DQ==
-=4kAc
------END PGP SIGNATURE-----
-
---4g26suiz7oblktsa--
+Best regards,
+Krzysztof
