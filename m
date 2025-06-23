@@ -1,138 +1,232 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7071C223DE1
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 23:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C27223DE1;
+	Mon, 23 Jun 2025 23:22:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750720895; cv=none; b=YcVJt07Oe6Xk1WkuYGEV+LQNJbV0VIfcodPEgNI5foRjLdd1y+kpL+cWcd8ByHYTgXH7W2CEKNcA5nTvD+FUYae9tbqIkOBTsg8LadrfAKzvv/8VFMoq/gtC9Rl/ixFXpBebHLBW8gj0liIGdevAtSwEDKqU0Tk9ulXi7ZtupsE=
+	t=1750720931; cv=none; b=aJWF8UUvk5dZR412fdS2LROg+ijh/xj1p3lWF0XyKnUsgxbkhBnek8XTpTtF0IvvfsPGlfvkx0lBXDmFYW1xKwoR2C+pVXbSccxtyrelzLkB+o678k6AH6pUcOR2jAqdsGfmUZ7NJe/W0fJvbcUPSVsQ/WRg2A+3czNpGOPGG6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750720895; c=relaxed/simple;
-	bh=WH4MWsMMlzGlz4gM9gjAzqFE+1ORw8N7aa2D7XBLdRY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C/uYxGsXuTXUXA2t0j9f41tM6bLEUbKZzJHCSFxc6KE1jme3mkd7Dvkc/fJEOvcxFxeivMJfhQsVQk4wWcx0M8hOnW/limA99PTNW0W6jzQXDz2KM2XRylihK36nW6xWF0NjUIaBUb02nfuFczqAcWJGnbViAMCRAR5PVo4i8Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EG2vZl2e; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750720931; c=relaxed/simple;
+	bh=gKpUNb2ySame1235TpxrDwcS53OCEqx/s21YimB9rrg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=UsvRtB2heihIYHWH/knkc4czi5/oVixJ/LPWdH8oIbCaeaQ/46KPCLywZoRBk12C89Lyh00M+vvmhSm1jxxhS506BWoqHr8nsBII+gg5esuzSEjYQcv6bUOjvs0IF/eSCwpi8jgaAoskbMNiMS4E5IAdCw5DsCFB/uBBejLPuL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6oZyXJp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EG2vZl2e"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad1b94382b8so899519966b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 16:21:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750720892; x=1751325692; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3ZVkY48T502JcAD7NzXzzdEZjZODovk6qGSGgvVTsNo=;
-        b=EG2vZl2eSn+DDeq9/j9YX3jC0pcSplgy97mbeT4UYePplVpTxqWApBs8nlYWTF3/SK
-         C1WOm3RLwoK843jpfjEDOJ8ozIPMqrOQIJGH7IVCXUqbmLbr9BAs8XyMyCHWJ8Vp01xb
-         7MoGWMvvegZx2Y9vzWAcp2CtQ+AlIGHh0w9nE9b1qnPfOEiG5wUCnNcSaSWMiAzcNP0f
-         yjsrylQkC1p50waUn/eY5/EFy+03VRan+pubgLAmmqaPoAUTChWtJ8m8CaJ8RWgEN9wg
-         ZMkO0H2iy8U+717z4Vt06GHydGiWLAYTySm2Nokd19l51RmyWkTbX3a1lUbU8KM4O3NS
-         ODaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750720892; x=1751325692;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3ZVkY48T502JcAD7NzXzzdEZjZODovk6qGSGgvVTsNo=;
-        b=apJupRWuiv6BI2+l+VuX7x/2lNGZtcGH6PCsApcGQSrmQTDkoFsf4/shRmZuNvLl81
-         t6dbWR8cgRkWPSfEXY9yJznmkcSbXoiNfwSW44srS3HxAC1AoR8wIMQ4HrBJlCGcFvcl
-         blgIczPp+fXyibeYW6Pqw87uDVY5ZG/PG1/Jdh6qoC869RbAsNb8bJhfTngXWBfedZsR
-         +S+lCRDdkz1Fa4AIFDesyyMVvRXbFp5R4oV0IWK4R1HQzihemmwumOGPPDZSndYeLs17
-         srh1k2f+Q1fQ0Ukk9GArini8FP16qCovLkrinyeVIn2FA+QHdv+tEhX3mMuC0XZjG8j7
-         yoww==
-X-Forwarded-Encrypted: i=1; AJvYcCUtPltxiOJ2E5jQz06L1twwVIIbw8eNUnimbGRPUQ4pw9nSp4kWQ3x4EVqDRRzsK6ZDOF1fN2WBTGMRlVA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRWmV36IthOY0bOkznSywuXrKj7caYxMojZUcJdseKkrv+eXRD
-	5IC2LJZPb+EnAXwaXeki7vM5tfYefQFgbh0hPH2n71Swvx+ndcEYKnkWw466ZZ/fi9ZXD8QsbV+
-	wuPJVd3gio3+qWer+g1mDnkR3KV8DA9c=
-X-Gm-Gg: ASbGnct5OUdEju3RXP9rSj4zOfi41aMkjoO3koYU8r0Zefyy+nPIFcmmArmsHzgGjxO
-	tPDEyVZQEu/sCQkH4YqgRuBiApx9sFAK0SuB5Ahhyi0YDEa3eKoFMILZGDegZiBdjTzQvAREhu/
-	Zeh3DseFu3bJnq9IEgczoaNJXKUF6fa21s3f+lk26dDd3iXZHFXHaTwCjzQamFjF8U9bFFnqMvx
-	Z0WnQ==
-X-Google-Smtp-Source: AGHT+IF53yd5TzJjggB8GCsgXjHW3XfBe88y6aXb2DUIoaNxkcU59GbTifghsdJkMCaNQP84ylFD8Fm+lkPnJG8ON1s=
-X-Received: by 2002:a17:907:1ca6:b0:ae0:9fce:c578 with SMTP id
- a640c23a62f3a-ae09fcedefcmr284922166b.18.1750720891641; Mon, 23 Jun 2025
- 16:21:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6oZyXJp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE859C4CEEA;
+	Mon, 23 Jun 2025 23:22:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750720930;
+	bh=gKpUNb2ySame1235TpxrDwcS53OCEqx/s21YimB9rrg=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=J6oZyXJpeDeGnaYjzST7RnCmZ+VNN1jEUocHjcmdMapezoQQmLB1Prk/RbwK9Zftc
+	 vMEDEvyNfzcWU+bWdjaiSM/PjvvInOe4PojPOUg68GRJ41o4+oHXGyQYLJbMXaC2dA
+	 ErNT7NHdGZYAd0TkjuE2h2AmiIF1/OGefRfgb4nG7znnD2h3CHCocW/LeO/uhuy6Gz
+	 xU9lYV+Bs5Bje15Xl7pGdDn0RPqkh8Yb5GngpO0JmY1zeskr5sRNzp032Kewv3BS11
+	 +x8clZkDGkPc1y3hNG4jrmDF4ZkOmzsuOdyMdP6TV+52LJ5O+aMQKHMFk8ViCRhVh/
+	 5Unm13xkG3PKA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250620180458.5041-1-bijan311@gmail.com> <20250620202155.98021-1-sj@kernel.org>
- <aFmq5Y1zKov9__zh@gourry-fedora-PF4VCD3F>
-In-Reply-To: <aFmq5Y1zKov9__zh@gourry-fedora-PF4VCD3F>
-From: Bijan Tabatabai <bijan311@gmail.com>
-Date: Mon, 23 Jun 2025 18:21:20 -0500
-X-Gm-Features: AX0GCFvhM9bDmIKNz3hzb_T7Ftkp2AGOE2ZRMfDXHquDjGFrrsP8UEg9t-r2yYQ
-Message-ID: <CAMvvPS5ievG9Q2w1GEA5BH2mAX-XUR_=oo3AWMnDeUvyRF8jyg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 0/2] mm/damon/paddr: Allow interleaving in
- migrate_{hot,cold} actions
-To: Gregory Price <gourry@gourry.net>
-Cc: SeongJae Park <sj@kernel.org>, damon@lists.linux.dev, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, akpm@linux-foundation.org, david@redhat.com, 
-	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com, 
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com, 
-	apopple@nvidia.com, bijantabatab@micron.com, venkataravis@micron.com, 
-	emirakhur@micron.com, ajayjoshi@micron.com, vtavarespetr@micron.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 24 Jun 2025 01:22:05 +0200
+Message-Id: <DAUARTYJ118U.YW38OP8TRVO3@kernel.org>
+Cc: =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>,
+ <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <ojeda@kernel.org>, <alex.gaynor@gmail.com>, <gary@garyguo.net>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <dakr@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+ <will@kernel.org>, <longman@redhat.com>, <felipe_life@live.com>,
+ <daniel@sedlak.dev>, <bjorn3_gh@protonmail.com>, <simona@ffwll.ch>,
+ <airlied@gmail.com>, <dri-devel@lists.freedesktop.org>, <lyude@redhat.com>
+Subject: Re: [PATCH v5 2/3] implement ww_mutex abstraction for the Rust tree
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <20250621184454.8354-1-work@onurozkan.dev>
+ <20250621184454.8354-3-work@onurozkan.dev>
+ <DASY7BECFRCT.332X5ZHZMV2W@kernel.org> <aFlQ7K_mYYbrG8Cl@Mac.home>
+ <DATYHYJVPL3L.3NLMH7PPHYU9@kernel.org> <aFlpFQ4ivKw81d-y@Mac.home>
+ <DAU0ELV91E2Q.35FZOII18W44J@kernel.org> <aFmKsE_nJkaVMv0T@tardis.local>
+In-Reply-To: <aFmKsE_nJkaVMv0T@tardis.local>
 
-Hi Gregory,
-
-On Mon, Jun 23, 2025 at 2:28=E2=80=AFPM Gregory Price <gourry@gourry.net> w=
-rote:
+On Mon Jun 23, 2025 at 7:11 PM CEST, Boqun Feng wrote:
+> On Mon, Jun 23, 2025 at 05:14:37PM +0200, Benno Lossin wrote:
+>> On Mon Jun 23, 2025 at 4:47 PM CEST, Boqun Feng wrote:
+>> > On Mon, Jun 23, 2025 at 03:44:58PM +0200, Benno Lossin wrote:
+>> >> I didn't have a concrete API in mind, but after having read the
+>> >> abstractions more, would this make sense?
+>> >>=20
+>> >>     let ctx: &WwAcquireCtx =3D ...;
+>> >>     let m1: &WwMutex<T> =3D ...;
+>> >>     let m2: &WwMutex<Foo> =3D ...;
+>> >>=20
+>> >>     let (t, foo, foo2) =3D ctx
+>> >>         .begin()
+>> >>         .lock(m1)
+>> >>         .lock(m2)
+>> >>         .lock_with(|(t, foo)| &*foo.other)
+>> >>         .finish();
+>> >>=20
+>> >
+>> > Cute!
+>> >
+>> > However, each `.lock()` will need to be polymorphic over a tuple of
+>> > locks that are already held, right? Otherwise I don't see how
+>> > `.lock_with()` knows it's already held two locks. That sounds like a
+>> > challenge for implementation.
+>>=20
+>> I think it's doable if we have=20
+>>=20
+>>     impl WwActiveCtx {
 >
-> On Fri, Jun 20, 2025 at 01:21:55PM -0700, SeongJae Park wrote:
-> > Hi Bijan,
-> >
-> > On Fri, 20 Jun 2025 13:04:56 -0500 Bijan Tabatabai <bijan311@gmail.com>=
- wrote:
-> >
-> > [...]
-> > > This patch set adds the mechanism for dynamically changing how applic=
-ation
-> > > data is interleaved across nodes while leaving the policy of what the
-> > > interleave weights should be to userspace. It does this by modifying =
-the
-> > > migrate_{hot,cold} DAMOS actions to allow passing in a list of migrat=
-ion
-> > > targets to their target_nid parameter. When this is done, the
-> > > migrate_{hot,cold} actions will migrate pages between the specified n=
-odes
-> > > using the global interleave weights found at
-> > > /sys/kernel/mm/mempolicy/weighted_interleave/node<N>. This functional=
-ity
-> > > can be used to dynamically adjust how pages are interleaved by changi=
-ng the
-> > > global weights. When only a single migration target is passed to
-> > > target_nid, the migrate_{hot,cold} actions will act the same as befor=
-e.
-> >
-> > This means users are required to manipulate two interfaces.  DAMON sysf=
-s for
-> > target nodes, and weighted_interleave sysfs for weights.  I don't think=
- this
-> > coupling is very ideal.
-> >
+> I think you mean *WwAcquireCtx*
+
+Oh yeah.
+
+>>         fn begin(&self) -> WwActiveCtx<'_, ()>;
+>>     }
+>>=20
+>>     struct WwActiveCtx<'a, Locks> {
+>>         locks: Locks,
 >
-> Just tossing this out there - weighted interleave sysfs entries *should*
-> be automatic, and the preferred weights shouldn't really ever change
-> over time.  Even if they did, if it's the result of devices coming and
-> going - the updates should also be automatic.
+> This probably need to to be Result<Locks>, because we may detect
+> -DEADLOCK in the middle.
+>
+>     let (a, c, d) =3D ctx.begin()
+>         .lock(a)
+>         .lock(b) // <- `b` may be locked by someone else. So we should
+>                  // drop `a` and switch `locks` to an `Err(_)`.
+>         .lock(c) // <- this should be a no-op if `locks` is an `Err(_)`.
+>         .finish();
 
-I'm not convinced this is true. If you have a workload that can
-saturate the local bandwidth but not the remote bandwidth, wouldn't
-you want the interleave weights to be more biased towards local memory
-than you would for a workload that can saturate both the local and
-remote bandwidth?
+Hmm, I thought that we would go for the `lock_slow_path` thing, but
+maybe that's the wrong thing to do? Maybe `lock` should return a result?
+I'd have to see the use-cases...
 
-> So, in practice, a usually probably only has to twiddle DAMON.
+>>         _ctx: PhantomData<&'a WwAcquireCtx>,
+>
+> We can still take a reference to WwAcquireCtx here I think.
 
-That being said, I don't mind the idea of the mempolicy weights being
-left untouched as a reasonable starting point for bandwidth intensive
-applications and leaving the fine tuning to DAMON.
+Yeah we have to do that in order to call lock on the mutexes.
 
-Thanks,
-Bijan
+>>     }
+>>=20
+>>     impl<'a, Locks> WwActiveCtx<'a, Locks>
+>>     where
+>>         Locks: Tuple
+>>     {
+>>         fn lock<'b, T>(
+>>             self,
+>>             lock: &'b WwMutex<T>,
+>>         ) -> WwActiveCtx<'a, Locks::Append<WwMutexGuard<'b, T>>>;
+>>=20
+>>         fn lock_with<'b, T>(
+>>             self,
+>>             get_lock: impl FnOnce(&Locks) -> &'b WwMutex<T>,
+>>         ) -> WwActiveCtx<'a, Locks::Append<WwMutexGuard<'b, T>>>;
+>>         // I'm not 100% sure that the lifetimes will work out...
+>
+> I think we can make the following work?
+>
+>     impl<'a, Locks> WwActiveCtx<'a, Locks>
+>     where
+>         Locks: Tuple
+>     {
+>         fn lock_with<T>(
+> 	    self,
+> 	    get_lock: impl FnOnce(&Locks) -> &WmMutex<T>,
+> 	) -> WwActiveCtx<'a, Locks::Append<WmMutexGuard<'a, T>>
+>     }
+>
+> because with a `WwActiveCtx<'a, Locks>`, we can get a `&'a Locks`, which
+> will give us a `&'a WmMutex<T>`, and should be able to give us a
+> `WmMutexGuard<'a, T>`.
+
+I think this is more restrictive, since this will require that the mutex
+is (potentially) locked for `'a` (you can drop the guard before, but you
+can't drop the mutex itself). So again concrete use-cases should inform
+our choice here.
+
+>>         fn finish(self) -> Locks;
+>>     }
+>>=20
+>>     trait Tuple {
+>>         type Append<T>;
+>>=20
+>>         fn append<T>(self, value: T) -> Self::Append<T>;
+>>     }
+>>=20
+>
+> `Tuple` is good enough for its own, if you could remember, we have some
+> ideas about using things like this to consolidate multiple `RcuOld` so
+> that we can do one `synchronize_rcu()` for `RcuOld`s.
+
+Yeah that's true, feel free to make a patch or good-first-issue, I won't
+have time to create a series.
+
+>>     impl Tuple for () {
+>>         type Append<T> =3D (T,);
+>>=20
+>>         fn append<T>(self, value: T) -> Self::Append<T> {
+>>             (value,)
+>>         }
+>>     }
+>>    =20
+>>     impl<T1> Tuple for (T1,) {
+>>         type Append<T> =3D (T1, T);
+>>=20
+>>         fn append<T>(self, value: T) -> Self::Append<T> {
+>>             (self.0, value,)
+>>         }
+>>     }
+>>=20
+>>     impl<T1, T2> Tuple for (T1, T2) {
+>>         type Append<T> =3D (T1, T2, T);
+>>=20
+>>         fn append<T>(self, value: T) -> Self::Append<T> {
+>>             (self.0, self.1, value,)
+>>         }
+>>     }
+>>=20
+>>     /* these can easily be generated by a macro */
+>>=20
+>> > We also need to take into consideration that the user want to drop any
+>> > lock in the sequence? E.g. the user acquires a, b and c, and then drop
+>> > b, and then acquires d. Which I think is possible for ww_mutex.
+>>=20
+>> Hmm what about adding this to the above idea?:
+>>=20
+>>     impl<'a, Locks> WwActiveCtx<'a, Locks>
+>>     where
+>>         Locks: Tuple
+>>     {
+>>         fn custom<L2>(self, action: impl FnOnce(Locks) -> L2) -> WwActiv=
+eCtx<'a, L2>;
+>>     }
+>>=20
+>> Then you can do:
+>>=20
+>>     let (a, c, d) =3D ctx.begin()
+>>         .lock(a)
+>>         .lock(b)
+>>         .lock(c)
+>>         .custom(|(a, _, c)| (a, c))
+>>         .lock(d)
+>>         .finish();
+>>=20
+>
+> Seems reasonable. But we still need to present this to the end user to
+> see how much they like it. For ww_mutex I think the major user is DRM,
+> so add them into Cc list.
+
+Yeah let's see some use-cases :)
+
+---
+Cheers,
+Benno
