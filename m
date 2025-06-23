@@ -1,219 +1,251 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2071.outbound.protection.outlook.com [40.107.236.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD2E2550AD;
-	Mon, 23 Jun 2025 13:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750687050; cv=fail; b=RnYcLFzDTQYxA8d0MJDMhy8MdiFO3REonKqDPuU8HRjowC7SrcT/rA4aVo+JxjeW2wK2bPJ5S00watgAY2/lqff+OXXfYujXpNX++ZWF+doABksOcgzNC4OOsOmnwh3H7sqN8JN2kxIAupndHubWYeBWCx5gOhgLQgAHEJcrWpE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750687050; c=relaxed/simple;
-	bh=K+9y9GpMvYWqrqkfzDQGI8+jLI65eMA3LvioAQBOU8E=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=DqGQ0NejHcxexexNlSPLo5gaH/vHToTRFN8dwUK2AGhbgH9BCB74D139UWTzdPTm31SKegPzHqyavzTWl3Lds/eD2uCUmPlnEKTmuYt0Aos98vGdBUSolkZ9CE40/2KRP/XDo+cxKRbOgJgJx+9preNEOwk7rWf40TwvoofZ1bI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Q3fRIa5Y; arc=fail smtp.client-ip=40.107.236.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C764E2561D9
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:57:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750687055; cv=none; b=GE8br151vpAvzFhMgS0M+aFGO9XZa9vKTZq8aaBiSvgTu+KfIa7dgMQr57f0WI0PiWpQOMwGj1ue4rqPeJvhQkW+GwZZMKXAmIGTbT595Ve0Fn2+uW+b5TTEp2x2l1xgt0eRby0QNleI44tFQoRSD6+kNT02A7PVjxrqruaurdE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750687055; c=relaxed/simple;
+	bh=2t3YQ1+iDGqoFk0JWiw+F8ieR6NrXZIS0LcyrI8jDzE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=oEn5EiCiXDREGRFnI45gv+RulY4nEedIur3YQh5MvkvRH4FK8CS8ekjpFVKtt46cjTlhNwFjIpGbrdntuZH4oEU1rIKqA3S9i4+h/5XBJ1fOLSXsmZwMM28pitOjPs51mWb3O/OFk2xoczblaD7WtLiaZsmc06q7eZAyLibGpV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nyWeJ5id; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Q3fRIa5Y"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=M/qfwkctofS3SncJT9Zkrz1tuisHhYnpkL0HIpI/T22XxD4zxTBX1FU9O5lyey6BPAzChjvKjfad5DjjXLiFPdhjg+y31USWS0Eh+ppjYdx1s5qv2Ii+E8RnnRCpIK6YuSTF7hPwDBpLo6o+j5Pmvlw8TXLUE9CTLcHg463qZBcqFProvWDEpBIZ5bMknflYsD7TNa2L28NBB4tQYS4AiBw871X2GZZOBcx7oHCDSeFlECesWuoUjp4SN/mePgN5sStgUWdJcg4i46J9YDX70/R8YNPOTH5MDLeEsa3YbP9yJNa+BnzTG7TpwiBeP+fTYh1G79FUSj3OTgpVYJlUVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zeB6mpFid533ECQOom40pUkdHDPKCX8f/T8OJyvTQ/0=;
- b=Db4cAgkl7Rku5vl6wNlWSKQw+LkVasZRO+9iGKnQPmy18dmJdbd52JTQD5CjS09nAHCpGDzJCNIwGDKCTOrDlXfj+zASKoAbooIryD3A/Vz0H13iFkp3wpd3TGSVu/7/7BrF0+AGlutbwRu1N2JfPbhReiMl7cAmwhLsZjhH62dMOe9DAw/DuXoez6IBW1idrfOvoWnWsYQX5RE+4xn8oSIwt61SooreRAKlGKHZHxfg5bOPco5WTrrFmCxPHyVNtoZdj23grVfuD7PEIKeaRHh6RDfKszKTLdMiVLFQf3b2CBkCnHlm1A2ROKPls5xJoapxyAi39DBpYc0QzBqNxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zeB6mpFid533ECQOom40pUkdHDPKCX8f/T8OJyvTQ/0=;
- b=Q3fRIa5YvCA2AbhPzd3KEOXSUwbUGLRkKHGgdNqvSNNwaWDkxZlJ0a7GvXEKnPhMD/FQC3T8rlq0EF9cpG0+3Xfot96dFBQI44IxA8fB3A+EOIi7mrs5vlxS/Rf8bM8SZZHsoehmQKSbRJ0YB/ir1+Ig1dPzZbKlRd1bvbjzYm8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
- by SJ2PR12MB8181.namprd12.prod.outlook.com (2603:10b6:a03:4f6::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.30; Mon, 23 Jun
- 2025 13:57:23 +0000
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e%7]) with mapi id 15.20.8857.019; Mon, 23 Jun 2025
- 13:57:23 +0000
-Message-ID: <6b4b8924-c0a7-58ab-f282-93d019cd0b96@amd.com>
-Date: Mon, 23 Jun 2025 08:57:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 1/2] x86/sev/vc: fix efi runtime instruction emulation
-To: Gerd Hoffmann <kraxel@redhat.com>, linux-coco@lists.linux.dev
-Cc: kvm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
- <linux-kernel@vger.kernel.org>
-References: <20250602105050.1535272-1-kraxel@redhat.com>
- <20250602105050.1535272-2-kraxel@redhat.com>
-Content-Language: en-US
-From: Tom Lendacky <thomas.lendacky@amd.com>
-In-Reply-To: <20250602105050.1535272-2-kraxel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1P222CA0084.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:35e::25) To DM4PR12MB5070.namprd12.prod.outlook.com
- (2603:10b6:5:389::22)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nyWeJ5id"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-451ac1b43c4so21556105e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 06:57:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750687052; x=1751291852; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pe80s/Z2Rf2nyL6DrwRxXyxaDYlnzGJXM4+hg4JQ2Tk=;
+        b=nyWeJ5ideQSLnaU3tlhsHueveNxXn3UKkbRaQ66D1Ce8WWpZiun2BzLx7lLNtJza8d
+         43P9nhANsKsukoP+seAy1hhlmn0FCgcsT9A5xNczaR9NJLFJs3+tUyp+nlTDd0a04ujm
+         fwjrcqpD9j1CflRvt1/5D67dYjGVT0PzQSWF5fWbwS0SEeZAyVI/u2wJx1Pf2PC7+Jqt
+         FVI2vKJAPfVAELVfV5pB8WkE4t6rWLJpItihD5/4nY8+4Q8drLcUUB1GjJtUquNxN1v3
+         sL0Hk5VHhACZrtrDO7i9nj9I7gk6dnUEm1aOo5d2YgAGmOSoQ/o31eA3LAiiGswAZGOe
+         GbAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750687052; x=1751291852;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pe80s/Z2Rf2nyL6DrwRxXyxaDYlnzGJXM4+hg4JQ2Tk=;
+        b=OkgdcJ0XUSZ/SxFH3tYA2apSO1eHRphj9/phExgqUv0t+7KdLYtVfPlL4ItovMLp2g
+         z4cyWa3QKykJBLgmVSeBH1DGJG3Ip1DoGCt7aZNcwsR+7culmWXbsaNqqG6gyqE5Y8dw
+         S3pOyaZJg9GmNoVgC8mmXm/geiYJjAu1mhc44wyNq70uvbqrqqd0vRFJumCcVmw+lxzS
+         XJ6W/Nk3NYditqo3owMEBQsNQQzX37MvH1cZyDTPX9IuWeJJKT3/tqVWEyzSa60igxZ5
+         WWLFCLXhCbWosBhdIGubhWDAxpRaFaPpaNkG0tbixp2096zgHxusU4sUS76gTIz+7XTA
+         D1/A==
+X-Forwarded-Encrypted: i=1; AJvYcCX7o4HrKutQ9uIuhkX8qXed3BwnuhVcNa2MUYdwj0PIU9+raCIzWml1NzXROyLfhr3icqOM5u73391wE4k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUopHJV5aNniP5TeYL2lsQLjIiOYu/AIRR+gECwUjyInWfsgHr
+	YF+nB6e6UYnIsPrEcgl5rkXJyXIyyynf7qXfv3wQXeY0oZEHsPVgUvd9ppCdca43qRl1jm816hT
+	4RD2lHhXxg18m9IUgJA==
+X-Google-Smtp-Source: AGHT+IGyqmrbiVo1Mj6x+qEhclT4oIm698Y2OoRwygH0y3/K9oX48CoMODvy6PmTts9uQFZpIei9ewu/VZ99Z0k=
+X-Received: from wmrn13.prod.google.com ([2002:a05:600c:500d:b0:453:f66:5f37])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1392:b0:44a:b793:9e4f with SMTP id 5b1f17b1804b1-453659aef47mr91540655e9.19.1750687052121;
+ Mon, 23 Jun 2025 06:57:32 -0700 (PDT)
+Date: Mon, 23 Jun 2025 13:57:27 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|SJ2PR12MB8181:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5acff83d-4a9b-49e0-1132-08ddb25de0e7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SzdTVHFKL3MrYmRGMXc5ZjBCcXpnRThzd2ZLREJrMk5RQUJvRlBsZWZGNHJD?=
- =?utf-8?B?ZUZhN0YyVjRNbXZLOEhxVm85cXIwcGpRL3ZoL2ZjeExtSWN2ZWFQd0hFUWE1?=
- =?utf-8?B?a0RQdlNxUHNXVHVIQkxBa3plZUEzelhCc3dRS1k0THczd3FtTEx2QktTK1Bh?=
- =?utf-8?B?djM5cUgwRW9TWUVQb1dLSS9CalVhK3kyWFY1dW9OV3laWWdwenZjSkFURTJT?=
- =?utf-8?B?a0ptajE3aUI2c2gxWHNDR1hUemdmU1VDNjBYT0VvWE5tNytGbStLeHlGb2s4?=
- =?utf-8?B?TGdZejFmZjkzTmhzb01Pb1NlS1I5VThucVBleDFZU2RxUWo5V08rcFg0ZnJZ?=
- =?utf-8?B?TEQzSzlBdVZ0MlY5aUgzeTlMVUJFSE1WQjBxZmY5b0pKVEhhWE5DeUdUdUNL?=
- =?utf-8?B?RWNkeW5rajY0dG50bDJWazQ3eVc4QjlmMjBrYWE0dkpoTTNIMU9OZDlTb05R?=
- =?utf-8?B?Q1NaNVNMWmVJTUhNYTNnM2pWV3gxOVIyZXN1RlV0cy9ybkdwcWZqQ29ZQ1JV?=
- =?utf-8?B?STEvUDdDcTFRc0JFRDRTMnJqZ3NQdFhtQ0xvTWc2NyttalBIMTdyWkdqYWV3?=
- =?utf-8?B?NEEwQVY0VitIRjZhSUZBL29vRkFJdE9hdWFKMFMreUJuY2ZmSnZHOXNxT2Iw?=
- =?utf-8?B?ZTFwU3p0WG5RamM0MDAyN2Rma2R4M3hZWjc5N0xzbVRQT2JBYkdTN2tVS1lD?=
- =?utf-8?B?OFhTNEd2OFhGRTZkdTFmQjFLM0VTV0kvUFRURVBhUTVMaTNJaW9sNXVjeElO?=
- =?utf-8?B?M1BtZXhPeWErRmVvUGQwcERhbE9HZVVVMytNeHBINmVpN3Bxd3d4Qll0cUly?=
- =?utf-8?B?MzhMc2xkTWd2OGtJVU1YaDZaWWVBYmQ0Z2NuOHhBWWJKWWJRZnZVaUpCQXhN?=
- =?utf-8?B?SXd1c2NWbm90MGEwV3JFMGo2YnRuRlB3bFNXRlRJdHl6Mm9uNHM5U0JGT0s1?=
- =?utf-8?B?TlpaVDFFOGVFRE5qci9admpXNUJHVFlRcU1oUkhRb0dDSkFXNG12TXJDc1ZK?=
- =?utf-8?B?a2FzV1g4cUcxZ2g4Z2JPMklqdWxnUkRVWTJWQ3VaRmlnV1JoWjlGYjFKaW92?=
- =?utf-8?B?N2pQSnU5UktXRTRSSnRQcFV6Q2lHY0RmcUtpREZSNEZhYnlnc0ZCY1VDT0sw?=
- =?utf-8?B?QkJqaUxkaCt4K3pTa0tZM0h6eTVQdXhhTWZFTEJtQkMwSVdRMTdZdlZBWTVU?=
- =?utf-8?B?ZlBHVWZlU01VbHJGV2RxRFlFMUNnQS9nSG5QWWZjNGdUd1lhdFN1bWFOVUYr?=
- =?utf-8?B?eDBzUWpGZm5KN3ZZQWgzQUdFOUFwcW5nelBKWitxQm54UThCQitLQk1oY29D?=
- =?utf-8?B?dUJTSnA3ZFp5U01HTFhWU084ZHVWaVRCU2lIYWNBZXN3d2Z4a3VXQS9FdkVK?=
- =?utf-8?B?TEdvUVJoaHdGNGVjQ2JIT08xSExzNnRJdEZQTDkyaHVuanFGMVRxU1BYTEZa?=
- =?utf-8?B?Vm9ZWjM1NlRlOVlmcXpBYy9BeFFaVU1mRXMrakNzKzdTWmFweFRqN3gwK3Ay?=
- =?utf-8?B?aWd6YzV4d1F4Mndra0QyLzZaekxWWXo0WEFURjZ2REVsdFkzRzlkck8xZVlJ?=
- =?utf-8?B?Q2NYRTdmWXNTUXJwU1pPc0szSG5nZDNwc1pTM1RMWVRpTVk4SjdkS0phdkhv?=
- =?utf-8?B?ckl3SWV5K3g5UUZVWVBQejEzeUM3MWhxeTlyaUxpN2Z6aXphWklYMzY4RUwz?=
- =?utf-8?B?UmR0Vjh3ZnlzNWtZNlNNcE5FZCtVbDRRNXRVZ25vYTVmZGJlRzMzUG83OVlI?=
- =?utf-8?B?VDIvV1RBeTVOSDlzVkk0N0xlaHp3YzI4MTdVT0VrWkxwZ21TT0g4TUJxQWdG?=
- =?utf-8?B?ampkOVp5My9VZmRjQlVCRThsZkpQMTFKOHp5NFdXTXRBaVJPWldTS0tLM0dm?=
- =?utf-8?B?dy9SMTdzMkZIcHRHUUdvSGZIc3NWMnlaUmlaK1cvMkpOL1ZqcHpWc2Yxak5w?=
- =?utf-8?Q?9TXWyP4pvS4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Q2dzUi9jNyt5K29ibSt5c2Q5YTJJQUo0RlZ3b0RIQlFINzBXZXpzRnVVYW1W?=
- =?utf-8?B?S1o1QlhyRDBYRERENHJIUkhCZ0s4SWFFbnIzaHVtWXQ4bGhpN21jSHVFUGxv?=
- =?utf-8?B?Q1NQUDZlbytYOENvMHZuTEY0Z0RDQ1VrbFRsTjdHQlBFWmJUVjlLdXkxamw3?=
- =?utf-8?B?S3AyOW5hMFJQQVlJZFFUT1JrSGc5bnNGSkw2bllWUjlua0oxMWx1U1pzOWxz?=
- =?utf-8?B?NGVGNHQ2MjRlV3lOYzJ4Z2FIanN1SFN1SjlxK3ZIUTFtOUFNTDNNajQxVnpT?=
- =?utf-8?B?S0pYc3BzZGhHVFJUSnpQMERNcEwxM1B5Zk01MElGU2hiUERSZm1OV0tRREw1?=
- =?utf-8?B?aVQ3WXp5VHI2cEhzbDF1bWZuTENKMGVNS3lLYjlMTTFYUkxSQUlBRGZZM05D?=
- =?utf-8?B?aTYvTTdia2czOTFtYXJrUUFkZnNpNDdISDh1Y2IxZmUzSVVwK3czd1M0ckNi?=
- =?utf-8?B?NEpxQXE2dWd0ZWxZWDlLK0RkT3ZzVFhxaFo1ZEY5L1Q5V2c2MnJmckpRajRE?=
- =?utf-8?B?NjBIZ3B0SFJveTJBMkk0V3NVVEJrem5SZGorRDJvZmFaRTZ4eWwxeGlCYXNa?=
- =?utf-8?B?eStPMi9UK3BTaXMwbkYzeEVJeHRZc1d3a0o1SERpSWxEZDhuVnRITmpWOGVz?=
- =?utf-8?B?NUVzRWs1TEYxSjMvdWowS2tOam1IWmFlRXQvTzFRVnA5SVdhWnRQMlVaYlE3?=
- =?utf-8?B?am5tWDRIeWFMMFg3NXlwOEppWC9PMjlLclBUckpDWG45VVdPY3laMFU1MzNR?=
- =?utf-8?B?dXk0S3lsZEhzTUNRU0hkamlOc3RLYkZYRGhJMXRwNzZEb2xDSk0vNmlGRVJ2?=
- =?utf-8?B?K2t6emJRR2s5a1dqTXErZUUyNHBwb3JYTnlkOW5lanZRMDBDV3hmLzFHVXNT?=
- =?utf-8?B?QXpDaHh0MmRIRGJ3QVFHU3FsNmMrTFJRVmdFZ3h0UUgyQUJLdDhOWXhTd2Fq?=
- =?utf-8?B?T1ZZYk0yOEprcEM0RkJFRnNDOVJYSnpxZUlGNnIvZ3FmdFVJaHRlN3l4SC9U?=
- =?utf-8?B?RC9Yd0xQSnNYSWlUSjZGMG5yQTZOZ3RvVW9KNjVhTnh2MGN1Ky9mZFg5bllL?=
- =?utf-8?B?Z1VRZ09hMGM1dUh6Q2R6TmRFTHBTWWowckw2NVNJcUh2Sm9yU2plcCtiNHJa?=
- =?utf-8?B?aWhBZ0Rpbk9BeGFyNkR0VDQ2RFVPQ2N5NFlIM0FYVHNFcllmUXA5OHBkRDIv?=
- =?utf-8?B?TkFxRXJRbXFCVUZNNXhNNmhmTkowTTUySkk1S2U3WnR0aHBidkVTTGVwdUJE?=
- =?utf-8?B?OFhpNFJWaFh2cWp6aGpQTmdscGpUMDlxdUxqWCtUOW5EVDRES09HbUdab2hL?=
- =?utf-8?B?UEg1QXROVlIvYWNvdHJoQkdqS043eWpEakRVQk5oblVlRDdSSUN3ODdiNVVt?=
- =?utf-8?B?NkswVWdicFJ1TWMvclpOc3JoQ25ET2pYK28wQzFPbWRYdVJTM2hhOHJwVUFB?=
- =?utf-8?B?Y25Tc1NTeGN6cVlqUWdJcjFLaUNCWFEzS1ZoWWJTWk5WS2hDdWFQWk9iQTNk?=
- =?utf-8?B?elJNSm1oYkE0Q1I5cFF0UUIvVEx5TnlxNzhKWmNUV21lR3dMODdoaFhlVFE2?=
- =?utf-8?B?MXc4Rlh4bytkVUdOa1VwRkhJZDNkV2lZSmxsMlZXL09wcDNuOWJUNWRGY1Y0?=
- =?utf-8?B?ZHpQbVg5dFlFWnpaWG9GNHRNd2daWXhCa2dqVlh6Y1BSV2ZaNFlIY3NGaFhj?=
- =?utf-8?B?KzVFNUV5WE10RktnTGJTTnRJeGdUNXNLZEZKbkFubE1SSEE2N0ZMb3FPYzRj?=
- =?utf-8?B?V25BMzNzMjZCbVdSWE9EWnAvS1JzQnVlWDJTbVdvVTkxSHFTZVdhYkFTY2Jv?=
- =?utf-8?B?dWFMVDBhWE5zb2xhVHFQamNmNm4vcGtEOUV2SWpYWmlKc1pTQlFZT1UvVW8w?=
- =?utf-8?B?MzRvUURkMlcrSHpnS2ZpTGp2eDZXVlROTVBycGVwUk8yamdPWXcwSFNmTVVy?=
- =?utf-8?B?cnp5UlBNdVhaRTNXSVhkQ0Q2cVFSVzB2S2ZFNU5YcU1ub05tZGs1SHBENUc2?=
- =?utf-8?B?SkdFZjA4UW9ZTzJpWEJ0djBDR3ZRZTROcHg4bUxwOUx3U1RVSWMvYkRNb3Iy?=
- =?utf-8?B?ZEY4YmF5R2RTcmRXRHNXemlpbHVab0FTZThUemIyYjlCcHhDU0dLalREdU1Z?=
- =?utf-8?Q?+3dO5IR8Bh7l9PkdCrvjVxHpL?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5acff83d-4a9b-49e0-1132-08ddb25de0e7
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 13:57:23.6318
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g5JS8PBEqEsiDtRsO2ltUqwr2gmzM8bvY+ySaNb7sogRGqdH67usg8icF0jjiJfaAjqdg9G+Pkh2idxW+wTMgA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8181
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAEZdWWgC/3WNyw7CIBREf6W5azEULQmu/A/TBY8LJUFooBJNw
+ 7+L3bubM8mc2aFg9ljgNuyQsfriU+zATgPoRUaHxJvOwCibKGeUrCkEskkVkMRXj8oKySXXExc IfbVmtP59GB9z58WXLeXPcVDHX/vfVUcyEnWxKJi8WkPN3aXkAp51esLcWvsCky3Rgq8AAAA=
+X-Change-Id: 20250620-poll-table-null-bf9a6a6c569e
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6955; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=2t3YQ1+iDGqoFk0JWiw+F8ieR6NrXZIS0LcyrI8jDzE=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoWV1KsM4Kp+t7jF4ybxNf64Lro9DIeugU6c6Np
+ l/MSCgtQtSJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaFldSgAKCRAEWL7uWMY5
+ RuZSD/4ri2fmT2Uv3jxw5G4QhneLQbcMZ1aQYzCcN3b0cgY0FNFTthZ/yMn2bROMoME/tPesxjR
+ +Q0AqpF6Cfy+ePudwfPa1LJCbO/CZCTH8CzLJCtDxSnSvPhmPnbtyTqLEeZpbchyYfQtToFiSoX
+ 9QV8xQLEZvTVds1v9LJc2HwVNbLf7NwTq7y2JGphGR16evtpH/qTfdHN4Qv42VM5HmDNdN4qZg7
+ AXO37LQVcq00pwtg0zA9sMz+8jEeGDURsDbP+VyOyPASLH85M6wMPexgD76YboTX95fe2FfDaqq
+ o+Eqf+oFYoEazpBRaw8ApgipWH4S6OF+HS6Fev/c6eVuch/9pDeXbO2j7vjVH72uHSiZTVzvXLj
+ jstKMCe5VVAOKByD6X/TVR0MC13D9p0ge4551fHg0LL1omVSlsur8VnuT7hHdDdzcg8DMUVALUC
+ GPdZ+ceecQ8gZov0dhsP0GtMW5IHSFwdrMBPAH7Q0m6bQ4s2mTz4nwVCB8Vh0Ae/P4Qx/mk7FDn
+ 2cFB9sTqHN/v0fYi2ArTsCza3MVSPEtVglfbkeIe7wejl33W7jGlK0kORV8tc45OS1+R2sYGyqP
+ 2WUA+9rBD0NqP7KvCh0pRod94vACIi2OssxGoXiah5GE49txGdQF94ltnNFmCJbxw6gIOPz+BDu Fih7eO2CjWSmt1Q==
+X-Mailer: b4 0.14.2
+Message-ID: <20250623-poll-table-null-v2-1-7561174bae7a@google.com>
+Subject: [PATCH v2] poll: rust: allow poll_table ptrs to be null
+From: Alice Ryhl <aliceryhl@google.com>
+To: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	Miguel Ojeda <ojeda@kernel.org>, Christian Brauner <brauner@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On 6/2/25 05:50, Gerd Hoffmann wrote:
-> In case efi_mm is active go use the userspace instruction decoder which
-> supports fetching instructions from active_mm.  This is needed to make
-> instruction emulation work for EFI runtime code, so it can use cpuid
-> and rdmsr.
-> 
-> EFI runtime code uses the cpuid instruction to gather information about
-> the environment it is running in, such as SEV being enabled or not, and
-> choose (if needed) the SEV code path for ioport access.
-> 
-> EFI runtime code uses the rdmsr instruction to get the location of the
-> CAA page (see SVSM spec, section 4.2 - "Post Boot").
-> 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  arch/x86/coco/sev/vc-handle.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/coco/sev/vc-handle.c b/arch/x86/coco/sev/vc-handle.c
-> index 0989d98da130..01c78182da88 100644
-> --- a/arch/x86/coco/sev/vc-handle.c
-> +++ b/arch/x86/coco/sev/vc-handle.c
-> @@ -17,6 +17,7 @@
->  #include <linux/mm.h>
->  #include <linux/io.h>
->  #include <linux/psp-sev.h>
-> +#include <linux/efi.h>
->  #include <uapi/linux/sev-guest.h>
->  
->  #include <asm/init.h>
-> @@ -180,7 +181,7 @@ static enum es_result __vc_decode_kern_insn(struct es_em_ctxt *ctxt)
->  
->  static enum es_result vc_decode_insn(struct es_em_ctxt *ctxt)
->  {
-> -	if (user_mode(ctxt->regs))
-> +	if (user_mode(ctxt->regs) || current->active_mm == &efi_mm)
+It's possible for a poll_table to be null. This can happen if an
+end-user just wants to know if a resource has events right now without
+registering a waiter for when events become available. Furthermore,
+these null pointers should be handled transparently by the API, so we
+should not change `from_ptr` to return an `Option`. Thus, change
+`PollTable` to wrap a raw pointer rather than use a reference so that
+you can pass null.
 
-A comment before this would be good. Something like:
+Comments mentioning `struct poll_table` are changed to just `poll_table`
+since `poll_table` is a typedef. (It's a typedef because it's supposed
+to be opaque.)
 
-/*
- * User instruction decoding is also required for the EFI runtime. Even
- * though EFI runtime is running in kernel mode, it uses special EFI
- * virtual address mappings that require the use of efi_mm to properly
- * address and decode.
- */
+Reviewed-by: Benno Lossin <lossin@kernel.org>
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+This issue was discovered from a syzkaller report on Rust Binder.
 
-Might be too verbose, but that's the general idea.
+Intended for Christian Brauner's tree.
+---
+Changes in v2:
+- Reword safety comment on poll_wait. (Benno)
+- Link to v1: https://lore.kernel.org/r/20250620-poll-table-null-v1-1-b3fe92a4fd0d@google.com
+---
+ rust/helpers/helpers.c   |  1 +
+ rust/helpers/poll.c      | 10 +++++++
+ rust/kernel/sync/poll.rs | 68 ++++++++++++++++++------------------------------
+ 3 files changed, 37 insertions(+), 42 deletions(-)
 
-Thanks,
-Tom
+diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+index 0f1b5d11598591bc62bb6439747211af164b76d6..ff65073fe3a5220e7792306fc9ae74c416935a52 100644
+--- a/rust/helpers/helpers.c
++++ b/rust/helpers/helpers.c
+@@ -30,6 +30,7 @@
+ #include "platform.c"
+ #include "pci.c"
+ #include "pid_namespace.c"
++#include "poll.c"
+ #include "rbtree.c"
+ #include "rcu.c"
+ #include "refcount.c"
+diff --git a/rust/helpers/poll.c b/rust/helpers/poll.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..7e5b1751c2d526f2dd467fcd61dcf49294d3c20d
+--- /dev/null
++++ b/rust/helpers/poll.c
+@@ -0,0 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/export.h>
++#include <linux/poll.h>
++
++void rust_helper_poll_wait(struct file *filp, wait_queue_head_t *wait_address,
++			   poll_table *p)
++{
++	poll_wait(filp, wait_address, p);
++}
+diff --git a/rust/kernel/sync/poll.rs b/rust/kernel/sync/poll.rs
+index d7e6e59e124b09d5f0d62244ca46089e0748d544..69f1368a2151c489bdb95705d1ddac1c79bf566b 100644
+--- a/rust/kernel/sync/poll.rs
++++ b/rust/kernel/sync/poll.rs
+@@ -9,9 +9,8 @@
+     fs::File,
+     prelude::*,
+     sync::{CondVar, LockClassKey},
+-    types::Opaque,
+ };
+-use core::ops::Deref;
++use core::{marker::PhantomData, ops::Deref};
+ 
+ /// Creates a [`PollCondVar`] initialiser with the given name and a newly-created lock class.
+ #[macro_export]
+@@ -23,58 +22,43 @@ macro_rules! new_poll_condvar {
+     };
+ }
+ 
+-/// Wraps the kernel's `struct poll_table`.
++/// Wraps the kernel's `poll_table`.
+ ///
+ /// # Invariants
+ ///
+-/// This struct contains a valid `struct poll_table`.
+-///
+-/// For a `struct poll_table` to be valid, its `_qproc` function must follow the safety
+-/// requirements of `_qproc` functions:
+-///
+-/// * The `_qproc` function is given permission to enqueue a waiter to the provided `poll_table`
+-///   during the call. Once the waiter is removed and an rcu grace period has passed, it must no
+-///   longer access the `wait_queue_head`.
++/// The pointer must be null or reference a valid `poll_table`.
+ #[repr(transparent)]
+-pub struct PollTable(Opaque<bindings::poll_table>);
++pub struct PollTable<'a> {
++    table: *mut bindings::poll_table,
++    _lifetime: PhantomData<&'a bindings::poll_table>,
++}
+ 
+-impl PollTable {
+-    /// Creates a reference to a [`PollTable`] from a valid pointer.
++impl<'a> PollTable<'a> {
++    /// Creates a [`PollTable`] from a valid pointer.
+     ///
+     /// # Safety
+     ///
+-    /// The caller must ensure that for the duration of `'a`, the pointer will point at a valid poll
+-    /// table (as defined in the type invariants).
+-    ///
+-    /// The caller must also ensure that the `poll_table` is only accessed via the returned
+-    /// reference for the duration of `'a`.
+-    pub unsafe fn from_ptr<'a>(ptr: *mut bindings::poll_table) -> &'a mut PollTable {
+-        // SAFETY: The safety requirements guarantee the validity of the dereference, while the
+-        // `PollTable` type being transparent makes the cast ok.
+-        unsafe { &mut *ptr.cast() }
+-    }
+-
+-    fn get_qproc(&self) -> bindings::poll_queue_proc {
+-        let ptr = self.0.get();
+-        // SAFETY: The `ptr` is valid because it originates from a reference, and the `_qproc`
+-        // field is not modified concurrently with this call since we have an immutable reference.
+-        unsafe { (*ptr)._qproc }
++    /// The pointer must be null or reference a valid `poll_table` for the duration of `'a`.
++    pub unsafe fn from_raw(table: *mut bindings::poll_table) -> Self {
++        // INVARIANTS: The safety requirements are the same as the struct invariants.
++        PollTable {
++            table,
++            _lifetime: PhantomData,
++        }
+     }
+ 
+     /// Register this [`PollTable`] with the provided [`PollCondVar`], so that it can be notified
+     /// using the condition variable.
+-    pub fn register_wait(&mut self, file: &File, cv: &PollCondVar) {
+-        if let Some(qproc) = self.get_qproc() {
+-            // SAFETY: The pointers to `file` and `self` need to be valid for the duration of this
+-            // call to `qproc`, which they are because they are references.
+-            //
+-            // The `cv.wait_queue_head` pointer must be valid until an rcu grace period after the
+-            // waiter is removed. The `PollCondVar` is pinned, so before `cv.wait_queue_head` can
+-            // be destroyed, the destructor must run. That destructor first removes all waiters,
+-            // and then waits for an rcu grace period. Therefore, `cv.wait_queue_head` is valid for
+-            // long enough.
+-            unsafe { qproc(file.as_ptr() as _, cv.wait_queue_head.get(), self.0.get()) };
+-        }
++    pub fn register_wait(&self, file: &File, cv: &PollCondVar) {
++        // SAFETY:
++        // * `file.as_ptr()` references a valid file for the duration of this call.
++        // * `self.table` is null or references a valid poll_table for the duration of this call.
++        // * Since `PollCondVar` is pinned, its destructor is guaranteed to run before the memory
++        //   containing `cv.wait_queue_head` is invalidated. Since the destructor clears all
++        //   waiters and then waits for an rcu grace period, it's guaranteed that
++        //   `cv.wait_queue_head` remains valid for at least an rcu grace period after the removal
++        //   of the last waiter.
++        unsafe { bindings::poll_wait(file.as_ptr(), cv.wait_queue_head.get(), self.table) }
+     }
+ }
+ 
 
->  		return __vc_decode_user_insn(ctxt);
->  	else
->  		return __vc_decode_kern_insn(ctxt);
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250620-poll-table-null-bf9a6a6c569e
+
+Best regards,
+-- 
+Alice Ryhl <aliceryhl@google.com>
+
