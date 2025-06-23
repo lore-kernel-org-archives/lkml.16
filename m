@@ -1,342 +1,163 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A1317A318
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04E724728D
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750690826; cv=none; b=NHhr9tNOR3J9p/wbu3D4FEUH+Ecn/elqC9wrdfcdhawArRIg7N28X6pHdNbVZY0wdXlXmt7WjmxlC14yEGTf7cdmLKmRyBrFkaQ8gyUvE+PSD9XGEAkpI7BFoy0k7b90KWPVPNBnjh8r0228r/nWEAhZqD+0V1VxgJJ2nHYFmsA=
+	t=1750690855; cv=none; b=AwwRhyHPkJCxA6Hx+1hXsS0A1HWeCOwLlXqRrMbnHzBsjgiVdsWkqRT51RLIh3GJdm9r3Ad0Jw9ja80QYGcJJHgAOu3Kin34aefSZKQZpAIYLEBtHl8o3siv4NBAYabN3C0o+S6bRgvWY046ykaC+h8emB606mSigPP0b0UBGG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750690826; c=relaxed/simple;
-	bh=GgJ5kuwAujTWdPeQXdF9NpyEneY/99+HBlR3VaCg5ms=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nWYax6bjc9jwLRJDNO3yVFXvm1cB85hhD+0xYqr7FMO7uR4wB3ZM9LNLGIVJCxOfoQSdqe1l5VSs+ZuPJkoLGqtQOk+s9yt+xbaVuGIN/K+nYFeUkIQC4fdz/GXoJAWoYN3lT/svhrfw61VbMY9g9V+PdL/SlTKi0PSabTUHlzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=FiADIVtw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=1nhomz7w; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XfZYKIYa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=q/6dYMq5; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1750690855; c=relaxed/simple;
+	bh=IeITghrJP4iPSsALB9poQfKO0wZfiG/sVqffHWQCkRQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BjwRGupP8MDT7T+GWfnkFgaJ6j86F9m5grz9nHlVY9YLIsORq47fjgFuJutbWV/yHh0ckVzCLCSLpdpJbrmUdZsPFhIwIB746cf8M2cPVkgKYCLXF/K+FgSKeI43oWKLlQBabgt5j+jPZfboP7DD4S2rrywvQtL3Pv3SLRuZRa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=muv1LrfI; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="FiADIVtw";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="1nhomz7w";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XfZYKIYa";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="q/6dYMq5"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id F0BC221182;
-	Mon, 23 Jun 2025 15:00:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750690808; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SakuvdSrh15qJf2+NPBVuCwkmOu0Lr50m1E+QXgt7sQ=;
-	b=FiADIVtwGqMUe0P+Xi47Fpl7eXaYk+2szOI4urofCcxds6R/V+09heXi8JKMGVAhuCgnn7
-	Z2PkzXipR2+2vvV9OzH1KwqmWXl7vs8syZyQNGB3j4kInqyt43M7zzRlNw+ljzO62guXEP
-	p0bf+IY27oG4uG94tvYNhaqJdBRDPtk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750690808;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SakuvdSrh15qJf2+NPBVuCwkmOu0Lr50m1E+QXgt7sQ=;
-	b=1nhomz7wb7klnP/cNZjhmG3Q2w8ut2nPlCVupztIW2zyoZg6+A1m7N3cmBgL2F78xGvI+W
-	pK/bcMPQgs6iGrDw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750690807; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SakuvdSrh15qJf2+NPBVuCwkmOu0Lr50m1E+QXgt7sQ=;
-	b=XfZYKIYaqnDs20YYpUVXO12KsMRqL9E8mMmORRnMxHr0HD6DNUGnG7m9XzzDIIJtnNsz2I
-	2XyU5pbhyjWwAxxgSGhWnunsllHzP8fddL91JcZGO7eCb5O86Z0vGN/Nkq1YmxcIEEyW8V
-	imAeYg21FKZLfHg/S0LXMBUrQQ9ml2U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750690807;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SakuvdSrh15qJf2+NPBVuCwkmOu0Lr50m1E+QXgt7sQ=;
-	b=q/6dYMq54I/Pe6U1B64gJvnDlwA7D2/AHyQ7JaLgaOA3psEGP43OFO0M0UFXfR7fdYVO3F
-	ciIXiHghzPg/DJBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D8B1013AC9;
-	Mon, 23 Jun 2025 15:00:07 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id uEKeNPdrWWi8cQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 23 Jun 2025 15:00:07 +0000
-From: Vlastimil Babka <vbabka@suse.cz>
-Date: Mon, 23 Jun 2025 16:59:51 +0200
-Subject: [PATCH RFC 2/2] mm, madvise: move prctl_set_vma() to mm/madvise.c
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="muv1LrfI"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NEkDN5024857
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:00:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	jSlSLiXE9ML5oVRqrkn0OwhaNJ+Eurdiuji/Hh4dp2A=; b=muv1LrfI6fQfE/9N
+	bU4Ebn3xwqoNrav6Ntazr9z+L3QR9eeaVAlZuJyO2ZshGr7/cVVrOtnpaePK4rHl
+	CxTsCbxNlyj+9E+Fo/YZa4S947mMa3BC5JzypOt5fYsSekqczVIYTnVgDkm1j89h
+	77EZQCYiVJNt/+spruq+ySYXEm9OZ/1tPo69VAwyxV/GbaXD9hwsqTEUxpzlUy9m
+	IRQht1z1zUQfmTWL2T+8OnSqTquljQvx8X3uiNQV8QnvE2fKdKCtcz/oKEYGktjh
+	ctKXjJSUSh5T2lIQYFbpshob1qWDcmGkpxQGaz6YhR7lBfns8K+P9pZ1CNVrtCeg
+	zFZUBw==
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f8ymr18c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:00:52 +0000 (GMT)
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-311ef4fb5eeso3210572a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:00:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750690852; x=1751295652;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jSlSLiXE9ML5oVRqrkn0OwhaNJ+Eurdiuji/Hh4dp2A=;
+        b=ZQ5pdlZ0fSG/QWGCVspPATA93/Pl2e+WNhYPH3zLj4yl2lQ+EXnTbVY6wchtEaofSl
+         Le5/EU7d7s7LcEJZyfcwAfqiYEbqkv4r77kURrwgw5WexCXC3VcFk4X/xMxlVBxtam15
+         3X+9xLy9Bn0yZh3830S8idmBYoSQDbF0B41Afc1o8mYn0VFzHns3oGemTasgdm2uGRtL
+         XJdeVfkRMZRifznS2CZBT+BcinpO42lGcVDBdllgR6N6vAorCXysjevjdKSs1k5FopHT
+         kQGHNPg5HVuqJD7fYUrav8h5dFUjqvlNGRrFG5YbIklaWjsr/mtM7k+dlHHRHnkm17YZ
+         733A==
+X-Forwarded-Encrypted: i=1; AJvYcCWsjXMsH9Vq8k90CwiUznKZqCspwVCCOkAA8JuKyKzFZF8Z+TsNm4rm/v/ZvE48ruOSYnXUxfB8ehhZ/w8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/iPs3kvAWla5+rE4oxe6soZytzYIH3jD7OKWPzCoJ7X9GgPGG
+	8eCkapFcT9nRHAsPvYUs24a5QCOt2XDH39GtwR3Q0s20dMpDfzpRge+cIBnytSeXWGOLmuf8GTJ
+	OKTdivQt0b9byZ1pgbRtF9XS0bh6th9hgid2Ab2+K5LKsrQKX1yLycqqY6NN1rYeYxsY=
+X-Gm-Gg: ASbGncvkrKCh69jhPSusyzAenllI/sVb6pmU/3LjjApW2rm5qbbttHebAzOWZhajXMG
+	ZYDW/MnlvNzKTTCE6vtNPW8imKupdivLr4CvnQ4ZEt4BOTeW5/df1lEwz+tvnMATHZ9+4001tvQ
+	g2Iqd3PAgpMX5dbCnGgEf60MGDvWPvvg7UIep4+KhYyxLbAePzc14b881c/MguOH/g/ZNY8RzVR
+	jiYNoUaofR3ROW5aErctW/gJUw1HX6j98lB7icUBtOvtjI3SWanEemdiReBmL14gkLGVaEDvKNd
+	NqLa1vo5MfAZygCrAIPEfnPk7t0//dZCkH415lCGCSZl0DjzjvqmRxcaj+GAEt2etpSK7Ysj0cJ
+	p7Q==
+X-Received: by 2002:a17:90b:510b:b0:311:abba:53b6 with SMTP id 98e67ed59e1d1-3159f51aac2mr17078300a91.14.1750690851312;
+        Mon, 23 Jun 2025 08:00:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHGdABP063Vlk5OVUgONkfYW+i6XNH2ryukyv215HD7e7TxM3SjPrhrNyrPInpcakQhC9K4cA==
+X-Received: by 2002:a17:90b:510b:b0:311:abba:53b6 with SMTP id 98e67ed59e1d1-3159f51aac2mr17078205a91.14.1750690850497;
+        Mon, 23 Jun 2025 08:00:50 -0700 (PDT)
+Received: from [10.227.110.203] (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3158a318733sm10835361a91.38.2025.06.23.08.00.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 08:00:50 -0700 (PDT)
+Message-ID: <500a10c9-c56e-4192-818e-8e07ef6c51f4@oss.qualcomm.com>
+Date: Mon, 23 Jun 2025 08:00:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH ath-next 0/2] wifi: ath12k: use real noise floor value
+To: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
+        Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+References: <20250528-support_real_noise_floor-v1-0-04507bd3bc76@oss.qualcomm.com>
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <20250528-support_real_noise_floor-v1-0-04507bd3bc76@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-anon_name_cleanup-v1-2-04c94384046f@suse.cz>
-References: <20250623-anon_name_cleanup-v1-0-04c94384046f@suse.cz>
-In-Reply-To: <20250623-anon_name_cleanup-v1-0-04c94384046f@suse.cz>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
- David Hildenbrand <david@redhat.com>, Jann Horn <jannh@google.com>, 
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
- Michal Hocko <mhocko@suse.com>, Colin Cross <ccross@google.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
- Vlastimil Babka <vbabka@suse.cz>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6289; i=vbabka@suse.cz;
- h=from:subject:message-id; bh=GgJ5kuwAujTWdPeQXdF9NpyEneY/99+HBlR3VaCg5ms=;
- b=owEBbQGS/pANAwAIAbvgsHXSRYiaAcsmYgBoWWv1X4uIKLtSIYHzYzzLjhrnC6u70kUE6f2g/
- lcYXseHi62JATMEAAEIAB0WIQR7u8hBFZkjSJZITfG74LB10kWImgUCaFlr9QAKCRC74LB10kWI
- mvEACACVfDRHAB8UmKGXxmGoefFUbulsxeXJ+OuGoIL5echXIcfuJ8Edpbt9B0/E0/H0TsEj8ym
- CrqxdoEtbjqf0kaGm0aeo/HUMYTta5pPqahyv8ihouVWBJGcq/Ehxrr90O1TuGJslrqGPthoDYl
- 2vvVgEsaGGKVYhD4ftF+vQMyo3DHvB/ng+1FvECw3WD3E0qH9e40JlDMncR+Too20VsHsqeSL7b
- WpCdHexp2rLiCB9wLIAcqZV8t8Sqt/6txea4CaVWM0OzRBB3yTYS7B6j4HdFy5wpKRW0AuL0Kiw
- wLC/J/1VN2RlhBT4Vx+fl8Z031UiGMMGsUNXSDN3vFxi9DPq
-X-Developer-Key: i=vbabka@suse.cz; a=openpgp;
- fpr=A940D434992C2E8E99103D50224FA7E7CC82A664
-X-Spamd-Result: default: False [-8.30 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RL7wgbib1ih6q11z93xiyrfhpt)];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.cz:mid]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -8.30
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDA5MCBTYWx0ZWRfX5FXn60VjaOrd
+ iWsifWxQoEFAXCZNojQL2UpGWSj8uc5lzFSkjy7mgbumJihc9jviyyzSu7jCsDRWC0EEoWzGEQt
+ LieVN+lOvZc3oRBYtdhbyKxJZrpRKCUQj6rEe3DVKCJMGYVoJHAwPPWGzE1SMb3RzfgSu6QOiqn
+ QPakz1qpFQnwyMEB6WzQ7zhn9JlEjK730qN090iVglSS8ZjB3Dm/ffmfSjxnvZSR+Ldfvqw3W4Y
+ e9pAT/qEdh25gI9LWlz/dN0qMjgGIvrh+42w/d+PkcsTxb/ESimDmy14eWoUKnJ8CK0qRX4+LLe
+ 53/ZGuwZ+gDyLaC/WJqfEYHK//BW//1iYVZSzDR8SzBJ1eEarA6kIHuREYcbbwtjFI/ZcudXigB
+ SuM1BriiwaP0uB58+achoy52LvNd/mke3jwqpHpPcUfjjvHuI0fyHqctJuK36SN3tMXLcj2D
+X-Proofpoint-ORIG-GUID: _uM12_EI3XF8cydHt5OFWOSzAyR3y5DU
+X-Proofpoint-GUID: _uM12_EI3XF8cydHt5OFWOSzAyR3y5DU
+X-Authority-Analysis: v=2.4 cv=GLYIEvNK c=1 sm=1 tr=0 ts=68596c24 cx=c_pps
+ a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=ksen3YYlDcNkJCCezrIA:9
+ a=QEXdDO2ut3YA:10 a=uKXjsCUrEbL0IQVhDsJ9:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-23_04,2025-06-23_06,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 spamscore=0 impostorscore=0 clxscore=1015 malwarescore=0
+ bulkscore=0 mlxscore=0 mlxlogscore=999 phishscore=0 lowpriorityscore=0
+ priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506230090
 
-Setting anon_name is done via madvise_set_anon_name() and behaves a lot
-of like other madvise operations. However, apparently because madvise()
-has lacked the 4th argument and prctl() not, the userspace entry point
-has been implemented via prctl(PR_SET_VMA, ...) and handled first by
-prctl_set_vma().
+On 5/28/2025 4:23 AM, Aditya Kumar Singh wrote:
+> At present, the ATH12K_DEFAULT_NOISE_FLOOR (-95) is used to calculate RSSI
+> value, providing an estimated noise floor value. Consequently, the RSSI
+> value is also approximate. This works but however, using actual noise floor
+> value will enable the reporting of the true RSSI value.
+> 
+> The firmware possesses the necessary data to determine the actual noise
+> floor. This data is provided to the host via the WMI event
+> WMI_PDEV_RSSI_DBM_CONVERSION_PARAMS_INFO_EVENTID, which includes the
+> runtime parameters needed for calculating the real noise floor in dBm. This
+> event is triggered by the firmware during channel changes, temperature
+> offset adjustments, and hardware chainmask modifications.
+> 
+> Add support to handle and parse this WMI event. Use the received values to
+> calculate and store the noise floor value and use at the required places.
+> 
+> ---
+> Raj Kumar Bhagat (2):
+>       wifi: ath12k: handle WMI event for real noise floor calculation
+>       wifi: ath12k: use real noise floor instead of default value
+> 
+>  drivers/net/wireless/ath/ath12k/core.h   |  17 +++
+>  drivers/net/wireless/ath/ath12k/dp_mon.c |   7 +-
+>  drivers/net/wireless/ath/ath12k/dp_tx.c  |  20 ++-
+>  drivers/net/wireless/ath/ath12k/mac.c    |  14 +-
+>  drivers/net/wireless/ath/ath12k/wmi.c    | 233 ++++++++++++++++++++++++++++++-
+>  drivers/net/wireless/ath/ath12k/wmi.h    |  42 ++++++
+>  6 files changed, 324 insertions(+), 9 deletions(-)
+> ---
+> base-commit: 3d933084a072fd5fb5da54c06a017abc0412c86f
+> change-id: 20250513-support_real_noise_floor-205986936cd3
 
-Currently prctl_set_vma() lives in kernel/sys.c but it's mm code so move
-it under mm. mm/madvise.c seems to be the most straightforward place as
-that's where madvise_set_anon_name() lives, so we can stop declaring the
-latter in the header and instead declare prctl_set_vma(). It's not ideal
-as prctl is not madvise, but that's the reality we live in, as described
-above.
+This series no longer applies cleanly on ath/main, please rebase
 
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
- include/linux/mm.h | 13 +++++------
- kernel/sys.c       | 64 ------------------------------------------------------
- mm/madvise.c       | 59 +++++++++++++++++++++++++++++++++++++++++++++++--
- 3 files changed, 63 insertions(+), 73 deletions(-)
+Applying: wifi: ath12k: handle WMI event for real noise floor calculation
+Using index info to reconstruct a base tree...
+M       drivers/net/wireless/ath/ath12k/core.h
+M       drivers/net/wireless/ath/ath12k/mac.c
+M       drivers/net/wireless/ath/ath12k/wmi.c
+M       drivers/net/wireless/ath/ath12k/wmi.h
+Falling back to patching base and 3-way merge...
+Auto-merging drivers/net/wireless/ath/ath12k/wmi.h
+CONFLICT (content): Merge conflict in drivers/net/wireless/ath/ath12k/wmi.h
+Auto-merging drivers/net/wireless/ath/ath12k/wmi.c
+Auto-merging drivers/net/wireless/ath/ath12k/mac.c
+Auto-merging drivers/net/wireless/ath/ath12k/core.h
+Recorded preimage for 'drivers/net/wireless/ath/ath12k/wmi.h'
+error: Failed to merge in the changes.
+Patch failed at 0001 wifi: ath12k: handle WMI event for real noise floor calculation
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 0e0549f3d681f6c7a78e8dfa341a810e5a8f96c1..1f8c2561c8cf77e9bb695094325401c09c15f3e6 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4059,14 +4059,13 @@ unsigned long wp_shared_mapping_range(struct address_space *mapping,
- #endif
- 
- #ifdef CONFIG_ANON_VMA_NAME
--int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
--			  unsigned long len_in,
--			  struct anon_vma_name *anon_name);
-+int prctl_set_vma(unsigned long opt, unsigned long start,
-+		  unsigned long size, unsigned long arg);
- #else
--static inline int
--madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
--		      unsigned long len_in, struct anon_vma_name *anon_name) {
--	return 0;
-+static inline int prctl_set_vma(unsigned long opt, unsigned long start,
-+				unsigned long size, unsigned long arg)
-+{
-+	return -EINVAL;
- }
- #endif
- 
-diff --git a/kernel/sys.c b/kernel/sys.c
-index adc0de0aa364aebb23999f621717a5d32599921c..247d8925daa6fc86134504042832c2164b5d8277 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -2343,70 +2343,6 @@ int __weak arch_lock_shadow_stack_status(struct task_struct *t, unsigned long st
- 
- #define PR_IO_FLUSHER (PF_MEMALLOC_NOIO | PF_LOCAL_THROTTLE)
- 
--#ifdef CONFIG_ANON_VMA_NAME
--
--#define ANON_VMA_NAME_MAX_LEN		80
--#define ANON_VMA_NAME_INVALID_CHARS	"\\`$[]"
--
--static inline bool is_valid_name_char(char ch)
--{
--	/* printable ascii characters, excluding ANON_VMA_NAME_INVALID_CHARS */
--	return ch > 0x1f && ch < 0x7f &&
--		!strchr(ANON_VMA_NAME_INVALID_CHARS, ch);
--}
--
--static int prctl_set_vma(unsigned long opt, unsigned long addr,
--			 unsigned long size, unsigned long arg)
--{
--	struct mm_struct *mm = current->mm;
--	const char __user *uname;
--	struct anon_vma_name *anon_name = NULL;
--	int error;
--
--	switch (opt) {
--	case PR_SET_VMA_ANON_NAME:
--		uname = (const char __user *)arg;
--		if (uname) {
--			char *name, *pch;
--
--			name = strndup_user(uname, ANON_VMA_NAME_MAX_LEN);
--			if (IS_ERR(name))
--				return PTR_ERR(name);
--
--			for (pch = name; *pch != '\0'; pch++) {
--				if (!is_valid_name_char(*pch)) {
--					kfree(name);
--					return -EINVAL;
--				}
--			}
--			/* anon_vma has its own copy */
--			anon_name = anon_vma_name_alloc(name);
--			kfree(name);
--			if (!anon_name)
--				return -ENOMEM;
--
--		}
--
--		mmap_write_lock(mm);
--		error = madvise_set_anon_name(mm, addr, size, anon_name);
--		mmap_write_unlock(mm);
--		anon_vma_name_put(anon_name);
--		break;
--	default:
--		error = -EINVAL;
--	}
--
--	return error;
--}
--
--#else /* CONFIG_ANON_VMA_NAME */
--static int prctl_set_vma(unsigned long opt, unsigned long start,
--			 unsigned long size, unsigned long arg)
--{
--	return -EINVAL;
--}
--#endif /* CONFIG_ANON_VMA_NAME */
--
- static inline unsigned long get_current_mdwe(void)
- {
- 	unsigned long ret = 0;
-diff --git a/mm/madvise.c b/mm/madvise.c
-index ae29395b4fc7f65a449c5772b1901a90f4195885..4a8e61e2c5025726bc2ce1f323768c5b25cef2c9 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -31,6 +31,7 @@
- #include <linux/swapops.h>
- #include <linux/shmem_fs.h>
- #include <linux/mmu_notifier.h>
-+#include <linux/prctl.h>
- 
- #include <asm/tlb.h>
- 
-@@ -134,8 +135,8 @@ static int replace_anon_vma_name(struct vm_area_struct *vma,
- 	return 0;
- }
- 
--int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
--			  unsigned long len_in, struct anon_vma_name *anon_name)
-+static int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
-+		unsigned long len_in, struct anon_vma_name *anon_name)
- {
- 	unsigned long end;
- 	unsigned long len;
-@@ -165,6 +166,60 @@ int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
- 	madv_behavior.range.end = end;
- 	return madvise_walk_vmas(&madv_behavior);
- }
-+
-+#define ANON_VMA_NAME_MAX_LEN		80
-+#define ANON_VMA_NAME_INVALID_CHARS	"\\`$[]"
-+
-+static inline bool is_valid_name_char(char ch)
-+{
-+	/* printable ascii characters, excluding ANON_VMA_NAME_INVALID_CHARS */
-+	return ch > 0x1f && ch < 0x7f &&
-+		!strchr(ANON_VMA_NAME_INVALID_CHARS, ch);
-+}
-+
-+int prctl_set_vma(unsigned long opt, unsigned long addr,
-+		  unsigned long size, unsigned long arg)
-+{
-+	struct mm_struct *mm = current->mm;
-+	const char __user *uname;
-+	struct anon_vma_name *anon_name = NULL;
-+	int error;
-+
-+	switch (opt) {
-+	case PR_SET_VMA_ANON_NAME:
-+		uname = (const char __user *)arg;
-+		if (uname) {
-+			char *name, *pch;
-+
-+			name = strndup_user(uname, ANON_VMA_NAME_MAX_LEN);
-+			if (IS_ERR(name))
-+				return PTR_ERR(name);
-+
-+			for (pch = name; *pch != '\0'; pch++) {
-+				if (!is_valid_name_char(*pch)) {
-+					kfree(name);
-+					return -EINVAL;
-+				}
-+			}
-+			/* anon_vma has its own copy */
-+			anon_name = anon_vma_name_alloc(name);
-+			kfree(name);
-+			if (!anon_name)
-+				return -ENOMEM;
-+
-+		}
-+
-+		mmap_write_lock(mm);
-+		error = madvise_set_anon_name(mm, addr, size, anon_name);
-+		mmap_write_unlock(mm);
-+		anon_vma_name_put(anon_name);
-+		break;
-+	default:
-+		error = -EINVAL;
-+	}
-+
-+	return error;
-+}
- #else /* CONFIG_ANON_VMA_NAME */
- static int replace_anon_vma_name(struct vm_area_struct *vma,
- 				 struct anon_vma_name *anon_name)
-
--- 
-2.50.0
-
+/jeff
