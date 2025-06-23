@@ -1,58 +1,61 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8662524BCE8
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B68A250C06;
+	Mon, 23 Jun 2025 13:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750686323; cv=none; b=mQmO43xtXpkdi5j7zfwQH5dtN7PT5WY+RrJzS14VVIZv1hByekCPRx5x54agNgQu/QDgq2JtdRi/ScEuFUoFtwj5VhhkvdrGv8lAm9TUL0y/srq+l305PNC2iw0kNAEpa6el0q5SoOkq85gsk94n+jvcUBk/7DdihFvxTIUu520=
+	t=1750686331; cv=none; b=fyyndAQsJWcnoI5Tk2rEsV8fjOrbYbK2xCXm89A/s0zy0qzcoMVNSgR27Ip+kWeqKKrpdyy79oG1h8s6AsucPPXVg+iqHOZ9Jame4/vK+F353Ykpi/rEZTf+CIyvOQaT/marH6k624RXrmudpWB0nbvWtNgxQXI2Levxc7oBSIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750686323; c=relaxed/simple;
-	bh=AlyOK8e20E88te3l2GflfE+0qiJ/f6x6QhsyGZEf+P4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aLx1J/O3Y4UmdIiaZm+ctoiAd7ogOTfCMV+MbDYo9SkpQGCCJHN4a0mB7W9+hCMG0+7lmmm8BqYeedPdejKWEGsSvo+Y/rNSceCBB+EaGhCFamcpCylctg43wXYtuNtuxAzoyEKSgCb/42eYsnhWf0mKgI+eXgm51jfiuJk+Z+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rJWg/h1p; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750686331; c=relaxed/simple;
+	bh=cRXDOmdhqPhgJle2dQbSYvXJTReLYwhaFxGY9pmm6Zk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EEv1Av2Ke3T+X3Zbm8ZHD7aMkkaLcdqV3MYAfr5CxwYIkMTmecrNlO2ZGKQmUtbq9h68hMg3fse+0wEqbunKBvvg4Di21+afqqGRS3SY9njwQwKMgkEdhL9CrCFyfA9BAVAtavGtTEbSeZRb+nKWUya0uOHLLuzOv1wf5cT66P0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jfRqoInp; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rJWg/h1p"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750686319;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mJg67qQuLrQ9MnWPvmahOxwsNWo0ze5flYtpMSuPnYs=;
-	b=rJWg/h1pRZ4c40l0vyoOnp5O/2sl6GygdG253RGmtoOy8Nvisi6UVVA7Iu/aTD8gdOciTP
-	5fbkpziz38DlTHL877Ou4aOEuhtbVsVhigKVl/w4cb7JcOIL9CsQX5hCPY1usrsMenIybJ
-	ZfQAALi68fkBgLJhQBHv5Sm2mZXkZTI=
-From: Tao Chen <chen.dylane@linux.dev>
-To: kpsingh@kernel.org,
-	mattbobrowski@google.com,
-	song@kernel.org,
-	jolsa@kernel.org,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Tao Chen <chen.dylane@linux.dev>
-Subject: [PATCH bpf-next v5 3/3] bpf: Add show_fdinfo for kprobe_multi
-Date: Mon, 23 Jun 2025 21:43:42 +0800
-Message-ID: <20250623134342.227347-3-chen.dylane@linux.dev>
-In-Reply-To: <20250623134342.227347-1-chen.dylane@linux.dev>
-References: <20250623134342.227347-1-chen.dylane@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jfRqoInp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750686330; x=1782222330;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=cRXDOmdhqPhgJle2dQbSYvXJTReLYwhaFxGY9pmm6Zk=;
+  b=jfRqoInpadg9yrR+OKw8fYb63zv8zTtTP+/9Vx3BVh3G0SiFcF519PzA
+   Id4dcPD4z55K+Co48ujglyqkGffay44e/nuTO63LTeIrWyQ/kikAjruwo
+   Gk378Ye1CuAf4G81PN/ai31woskbplVrMU5JaBth2fH8hBYe23ELRaiG5
+   4OaBVcjN+Cw2c25MlpI7APBsv5iHhqKYyQvv5el5gnbekvCNmxo89voCU
+   tNOr9gauyGXjSZTHVH1zbDf1xDK+eVe/S5WV3jw0iPFsZQpn9n4129eaS
+   JFw+Ds5Nm5PLIqGvQKoiQdCntz0nQ2yqWNQwTctE6cVv6FJXq2s+h+0L+
+   w==;
+X-CSE-ConnectionGUID: tfeMo5TWSjWWlD+bBwvw/w==
+X-CSE-MsgGUID: XJCIXu8AQ/Sm4pKslPL0TQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="70320908"
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="70320908"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 06:45:29 -0700
+X-CSE-ConnectionGUID: +TTq4MkgRFqkYtHF9GUaGQ==
+X-CSE-MsgGUID: /0j1rY1/Rly7nyaDIPOgbg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="182651859"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa002.jf.intel.com with ESMTP; 23 Jun 2025 06:45:27 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 9CD23108; Mon, 23 Jun 2025 16:45:25 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Randolph Ha <rha051117@gmail.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-i2c@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Mika Westerberg <westeri@kernel.org>
+Subject: [PATCH v1 1/1] i2c: acpi: Replace custom code with device_match_acpi_handle()
+Date: Mon, 23 Jun 2025 16:45:21 +0300
+Message-ID: <20250623134521.158447-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,73 +63,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Show kprobe_multi link info with fdinfo, the info as follows:
+Since driver core provides a generic device_match_acpi_handle()
+we may replace the custom code with it.
 
-link_type:	kprobe_multi
-link_id:	1
-prog_tag:	33be53a4fd673e1d
-prog_id:	21
-kprobe_cnt:	8
-missed:	0
-cookie           func
-1                bpf_fentry_test1+0x0/0x20
-7                bpf_fentry_test2+0x0/0x20
-2                bpf_fentry_test3+0x0/0x20
-3                bpf_fentry_test4+0x0/0x20
-4                bpf_fentry_test5+0x0/0x20
-5                bpf_fentry_test6+0x0/0x20
-6                bpf_fentry_test7+0x0/0x20
-8                bpf_fentry_test8+0x0/0x10
-
-Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- kernel/trace/bpf_trace.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ drivers/i2c/i2c-core-acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 90209dda819..957e5b319ef 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -2623,10 +2623,37 @@ static int bpf_kprobe_multi_link_fill_link_info(const struct bpf_link *link,
- 	return err;
- }
+diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+index d2499f302b50..3445cc3b476b 100644
+--- a/drivers/i2c/i2c-core-acpi.c
++++ b/drivers/i2c/i2c-core-acpi.c
+@@ -250,7 +250,7 @@ static int i2c_acpi_get_info(struct acpi_device *adev,
  
-+#ifdef CONFIG_PROC_FS
-+static void bpf_kprobe_multi_show_fdinfo(const struct bpf_link *link,
-+					 struct seq_file *seq)
-+{
-+	struct bpf_kprobe_multi_link *kmulti_link;
-+
-+	kmulti_link = container_of(link, struct bpf_kprobe_multi_link, link);
-+
-+	seq_printf(seq,
-+		   "kprobe_cnt:\t%u\n"
-+		   "missed:\t%lu\n",
-+		   kmulti_link->cnt,
-+		   kmulti_link->fp.nmissed);
-+
-+	seq_printf(seq, "%-16s %-16s\n", "cookie", "func");
-+	for (int i = 0; i < kmulti_link->cnt; i++) {
-+		seq_printf(seq,
-+			   "%-16llu %-16pS\n",
-+			   kmulti_link->cookies[i],
-+			   (void *)kmulti_link->addrs[i]);
-+	}
-+}
-+#endif
-+
- static const struct bpf_link_ops bpf_kprobe_multi_link_lops = {
- 	.release = bpf_kprobe_multi_link_release,
- 	.dealloc_deferred = bpf_kprobe_multi_link_dealloc,
- 	.fill_link_info = bpf_kprobe_multi_link_fill_link_info,
-+#ifdef CONFIG_PROC_FS
-+	.show_fdinfo = bpf_kprobe_multi_show_fdinfo,
-+#endif
- };
- 
- static void bpf_kprobe_multi_cookie_swap(void *a, void *b, int size, const void *priv)
+ 	if (adapter) {
+ 		/* The adapter must match the one in I2cSerialBus() connector */
+-		if (ACPI_HANDLE(&adapter->dev) != lookup.adapter_handle)
++		if (!device_match_acpi_handle(&adapter->dev, lookup.adapter_handle))
+ 			return -ENODEV;
+ 	} else {
+ 		struct acpi_device *adapter_adev;
 -- 
-2.48.1
+2.47.2
 
