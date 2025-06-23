@@ -1,199 +1,113 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2B51F09A3;
-	Mon, 23 Jun 2025 06:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2179D1624C5;
+	Mon, 23 Jun 2025 06:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750659041; cv=none; b=C5ITCp30XEs4IyJOyDLtvSj9Vbjlr3UlZDZTPqzuwf5eo9RzF5bQEwIka0jeSFybhBmYyhJW/ulrDWhOqOcI7vz3FOhi+xA46Q9Ues2tgbz1KVYGXkdzIqrrJ9iu7Fmxv88erxloOqpHGFvxF53w1DoPXNC+GaD6qWW4A+A9pFY=
+	t=1750659100; cv=none; b=De6l+etj+9AbJv2DYclirRU00sYEiKRa05ygs5KBeMcHhre5dUtorHCPyDIga2C42s/NfndO7PXt08k6YzhESbz+ydUNq+0gxAw2NectBFSkn47lwnL9Nu1li25V7kn9PN19ZPz8zKvwhCVjWDfNeSliFbBCrxTrcv5FYp4EKyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750659041; c=relaxed/simple;
-	bh=izClx4fO0QxlG0vSrI5j+u7UAglO6fztpbLAObv8R60=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IWxYl6tVtRBio754VSGBLAOxnc52DEBYwOQ6w2D7GdUIXz73XROiLs+Y66LdKNxm+aapVZXymK76sI3MuXaBed/WZHBH4qNY8S4H+WMWJOkV1OCcuuZLLDYo7w3gYF4KdWk92U+XQEe5Vc4uEQk1NLathj6jcoxHKzSR6gylCQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bld7Lg0/; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750659100; c=relaxed/simple;
+	bh=uG9S9uq5V1TVuuk+S38NklO6swzSbL2R/TJNZQBZugw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fze5y46GSYKcZsPUMTuYSuQKleyd45o16J1/OLeZzEjL2K9YoraTTO0T4s8iojxnTZ0/drTAtY4TqVZYxpqbZ01CjFlL7IE3Pc4CV+OVJxpsaOAAJYHgFMkjFbhD0KRSSiHqordnOPW9p28pThHiNJnb/8tLU6wmWwCjbEIy8kE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gPRUcZK3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bld7Lg0/"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-747ef5996edso2783500b3a.0;
-        Sun, 22 Jun 2025 23:10:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750659039; x=1751263839; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qdNaQL9Tu2TPrfssmRGP1lW46RFC7Xf3kc9ghofgNjg=;
-        b=bld7Lg0/l+lGaG9IZZJkYx3uQsdUBTCUJ84fe7aLTHLAwVylDDGl2N+yHx86duQ+hf
-         iWk3+ClTvc2G5+JDK8+WHcpBV50kgcmN/da4D5ubTc16u951CzOr+Fg/j65MSgJKNdUL
-         z8QCtR8fUaDK1AMfUBToQzNefcWgKuzwYJGH/6+6VZ2O6JmJ2n31WlCboUYcG0/8wYFN
-         ecILiLguVW9LOHuNuTOI1wfY7Z4+vX5uZMcGYyAY3wBA0O07v8tmI/iZgRzL9SQUp4dR
-         ixBGq8UBm4bD+h77rCA4VLnyO5h6IFZB40+Py3qoCs6knZ9lkui0ODadIp+h2nQ28uqK
-         W8Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750659039; x=1751263839;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qdNaQL9Tu2TPrfssmRGP1lW46RFC7Xf3kc9ghofgNjg=;
-        b=TPTaWcq0L9pQj5QLc6TTKhhzpIrVjejLGypn54jdLX/nzuWFLQrGGt5pfCsdVW1owD
-         yjSqGuU2FhpTN3acMtYo0VPtA6o1tVuK5tXfx4pHaNte+l5kjfzr5U/lRHHBvXZqToqZ
-         F9ZY6Hov4P9AaM/CJ2/mNuNzj2pqhoC0pWQ+juv7mw6410W8VRVKnhx7irdT/1R/bDlx
-         Ujs2cAnCJuFL72UkqKRze9B441pk19N9Kb47VeIs3jByBSRgZ2KLxNNsEtBsL+emtUB0
-         iexGeP/kgIgTzwab/Ctqe5plYXOUlGrR2Hcv9Qu4TjF09GLBhLaHF65AVQbYM5qyJJnO
-         6lbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUbi+rNjc616gFx1WmqJ8UPrgunOgNA5sWKWhumcSSMglEnzXrJD7Y0LKRHqrYZVEbb23dwxS0yAk58@vger.kernel.org, AJvYcCVOBLHuFm9yt07pSJNgN/00/Tfx2ozvMXMOj3XtxEw3vYAO2BcQjZEumgUlyQ33U/E0wY/7+ou4@vger.kernel.org, AJvYcCVg0kV284p5Tb5JNQO/YLnrccURQ1Rvw7LVgvP9apoAivWK8PXJoS37ngrBoWuL5Dvm61wnFXDaE0yVM6jh@vger.kernel.org, AJvYcCW2ICi/oYEYdsXdXKIsh8SeQgdIM9YqvY7Bv4GgPf3JEul2MnjyImjfAzEfWZCYJHdaZx78DEIIv6h0@vger.kernel.org, AJvYcCWpidDIswsC4Q9yVIVHGbn3isPe9alrPfkuZE8maHbtzHuiazn98QJpu8J2sdG1CQ+2NtzXDyT3vw4vWncmTDM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkXfDN26tVCtQ9AdWmQmf/7Qd4ETQ9IxsJM68UIoeZzK6UTy6q
-	xn62DUeimY0wdfX6gUDJYM9GLwVEi59jlwmeLOg4Yh24LPKUodXabS0vGybbKJOp
-X-Gm-Gg: ASbGncuqBNOoKVB7MkMLjpuau2DvwFbPiuyFuD8TmqDYOkpq0A6h4QNn693ZpOvaIrE
-	tVJxIWneTuoG0avb9q2Rop3UT9ZGlCnHp2P+i0J3LyN/mWHIP9s3kmTEqa04/U9iURSdC1PKuLL
-	bESxWf+QP+lZLm8W4iCUM9MUjVNj03J02KnL4qMaNy13sTuZlYC1VKPQ/A8CKOxDpxdttDRFmnP
-	UzDN4//w8Xlor6m+jDU6xe9DKUeUHwqZYvPcQZ3j4C7fZTzq69hb9wptADRYavjgq3ljcTsTwlq
-	fkuJwTpw4lvg5bIwbF376MxLTTZqD8HDw5uvzIEVBX/+0egKC6bBEcFkK+3UlbiTZcy71Xw8Y03
-	kmHpEBZAh0rLH1D3eO2Iyzmv7d3ozQFohOwFUatQNbZpRVw==
-X-Google-Smtp-Source: AGHT+IHoBjjoSv77pVEgY+g6rKcikXxyv+N7sZn8ywOJg/2GiBRo3MVDptmc4Vvya/wsfy3DQnBNJA==
-X-Received: by 2002:a05:6a20:9191:b0:1f5:8cc8:9cbe with SMTP id adf61e73a8af0-22026e60364mr14271591637.5.1750659039259;
-        Sun, 22 Jun 2025 23:10:39 -0700 (PDT)
-Received: from bee.. (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a623e8csm7391703b3a.83.2025.06.22.23.10.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 23:10:38 -0700 (PDT)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: alex.gaynor@gmail.com,
-	dakr@kernel.org,
-	gregkh@linuxfoundation.org,
-	ojeda@kernel.org,
-	rafael@kernel.org,
-	robh@kernel.org,
-	saravanak@google.com
-Cc: a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	bhelgaas@google.com,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	david.m.ertman@intel.com,
-	devicetree@vger.kernel.org,
-	gary@garyguo.net,
-	ira.weiny@intel.com,
-	kwilczynski@kernel.org,
-	leon@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lossin@kernel.org,
-	netdev@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	tmgross@umich.edu
-Subject: [PATCH v1 3/3] rust: net::phy Change module_phy_driver macro to use module_device_table macro
-Date: Mon, 23 Jun 2025 15:09:51 +0900
-Message-ID: <20250623060951.118564-4-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250623060951.118564-1-fujita.tomonori@gmail.com>
-References: <20250623060951.118564-1-fujita.tomonori@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gPRUcZK3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FA46C4CEEF;
+	Mon, 23 Jun 2025 06:11:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750659099;
+	bh=uG9S9uq5V1TVuuk+S38NklO6swzSbL2R/TJNZQBZugw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gPRUcZK3gVCsIUJgeyMrmI5i/5wUvMdor/SFTbVyjd6TWUKMjKfkHnHrlTNlJhKz0
+	 oJfuVMnBM1/SOfqq4sJXk5k8cKHzrHfUvGg9+jHWi4WkXj5O5c5Mu0X8yeZ2czKxVv
+	 nzHJbBcQnjqkJJ6t5XmXxjWNRlLM3bClAu5DqJI/DWLo3+LldzNjM6+0u31+MjP2O7
+	 d4o+9koz1SI49+IWSEf/iR9Trlfg6LoYYcOGTkXH2ZUyKc5XCZBVF7mij367jPon9w
+	 cov9nGCNhW/pfnx7jPw2wiW/Cf5Loe6YNDTf/irmRsW4+rtCSnXmIYmaQrwip+SOQu
+	 f029YhaB5JVWw==
+Message-ID: <d6fbaa2a-81f9-42bf-9d68-020cf01a004e@kernel.org>
+Date: Mon, 23 Jun 2025 08:11:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/11] dt-bindings: serial: mediatek,uart: add MT6572
+To: wctrl@proton.me, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
+ <linux@roeck-us.net>, Sean Wang <sean.wang@mediatek.com>,
+ Russell King <linux@armlinux.org.uk>
+Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org
+References: <20250620-mt6572-v1-0-e2d47820f042@proton.me>
+ <20250620-mt6572-v1-1-e2d47820f042@proton.me>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250620-mt6572-v1-1-e2d47820f042@proton.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Change module_phy_driver macro to build device tables which are
-exported to userspace by using module_device_table macro.
+On 20/06/2025 17:40, Max Shevchenko via B4 Relay wrote:
+> From: Max Shevchenko <wctrl@proton.me>
+> 
+> Add a compatible string for serial on the MT6572 SoC.
+> 
+> Signed-off-by: Max Shevchenko <wctrl@proton.me>
 
-Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
----
- rust/kernel/net/phy.rs | 56 ++++++++++++++++++++++--------------------
- 1 file changed, 29 insertions(+), 27 deletions(-)
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
-index 940972ffadae..4d797f7b79d2 100644
---- a/rust/kernel/net/phy.rs
-+++ b/rust/kernel/net/phy.rs
-@@ -6,7 +6,7 @@
- //!
- //! C headers: [`include/linux/phy.h`](srctree/include/linux/phy.h).
- 
--use crate::{error::*, prelude::*, types::Opaque};
-+use crate::{device_id::RawDeviceId, error::*, prelude::*, types::Opaque};
- use core::{marker::PhantomData, ptr::addr_of_mut};
- 
- pub mod reg;
-@@ -750,6 +750,17 @@ pub const fn mdio_device_id(&self) -> bindings::mdio_device_id {
-     }
- }
- 
-+// SAFETY: [`DeviceId`] is a `#[repr(transparent)` wrapper of `struct mdio_device_id`
-+// and does not add additional invariants, so it's safe to transmute to `RawType`.
-+unsafe impl RawDeviceId for DeviceId {
-+    type RawType = bindings::mdio_device_id;
-+
-+    // This should never be called.
-+    fn index(&self) -> usize {
-+        0
-+    }
-+}
-+
- enum DeviceMask {
-     Exact,
-     Model,
-@@ -850,19 +861,18 @@ const fn as_int(&self) -> u32 {
- ///     }
- /// };
- ///
--/// const _DEVICE_TABLE: [::kernel::bindings::mdio_device_id; 2] = [
--///     ::kernel::bindings::mdio_device_id {
--///         phy_id: 0x00000001,
--///         phy_id_mask: 0xffffffff,
--///     },
--///     ::kernel::bindings::mdio_device_id {
--///         phy_id: 0,
--///         phy_id_mask: 0,
--///     },
--/// ];
--/// #[cfg(MODULE)]
--/// #[no_mangle]
--/// static __mod_device_table__mdio__phydev: [::kernel::bindings::mdio_device_id; 2] = _DEVICE_TABLE;
-+/// const N: usize = 1;
-+///
-+/// const TABLE: ::kernel::device_id::IdArray<::kernel::net::phy::DeviceId, (), N> =
-+///     ::kernel::device_id::IdArray::new([
-+///         ::kernel::net::phy::DeviceId(
-+///             ::kernel::bindings::mdio_device_id {
-+///                 phy_id: 0x00000001,
-+///                 phy_id_mask: 0xffffffff,
-+///             }),
-+///     ]);
-+///
-+/// ::kernel::module_device_table!("mdio", phydev, TABLE);
- /// ```
- #[macro_export]
- macro_rules! module_phy_driver {
-@@ -873,20 +883,12 @@ macro_rules! module_phy_driver {
-     };
- 
-     (@device_table [$($dev:expr),+]) => {
--        // SAFETY: C will not read off the end of this constant since the last element is zero.
--        const _DEVICE_TABLE: [$crate::bindings::mdio_device_id;
--            $crate::module_phy_driver!(@count_devices $($dev),+) + 1] = [
--            $($dev.mdio_device_id()),+,
--            $crate::bindings::mdio_device_id {
--                phy_id: 0,
--                phy_id_mask: 0
--            }
--        ];
-+        const N: usize = $crate::module_phy_driver!(@count_devices $($dev),+);
-+
-+        const TABLE: $crate::device_id::IdArray<$crate::net::phy::DeviceId, (), N> =
-+            $crate::device_id::IdArray::new([ $(($dev,())),+, ]);
- 
--        #[cfg(MODULE)]
--        #[no_mangle]
--        static __mod_device_table__mdio__phydev: [$crate::bindings::mdio_device_id;
--            $crate::module_phy_driver!(@count_devices $($dev),+) + 1] = _DEVICE_TABLE;
-+        $crate::module_device_table!("mdio", phydev, TABLE);
-     };
- 
-     (drivers: [$($driver:ident),+ $(,)?], device_table: [$($dev:expr),+ $(,)?], $($f:tt)*) => {
--- 
-2.43.0
-
+Best regards,
+Krzysztof
