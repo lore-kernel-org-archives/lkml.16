@@ -1,143 +1,203 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714C714658D;
-	Mon, 23 Jun 2025 20:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70631F3FF8
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 20:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750711798; cv=none; b=UBJ180Kgh1d7CgD9EYD8fWYfZncUi8+Clx1qOP8BLCGNDGJdT/BoWT6hZIoYTSkHUw+NsnrEag2lHYemoWoRSXGORLeKbNdgH2zfYHSAOIvG6XpGmOauX7inqaAJnmSyOXKPrYFcFZ11wGxZpjpfsBtmhKM3/BptCBASGKO9apQ=
+	t=1750711813; cv=none; b=OiCXuzrSmbhZz1ESGn1R6x9g0qTynH+JCiG45DW/S3lm8H991mN5HOGWMokUAPC/MMguPM8Kc09vIEYGQEl7dAgRJqTOVR+enEJC5MlVSCS47IvRruIBMDSv87iuBqLGInhic6cDWn1RER5DRl91dCAB0CgY4SRch6AxT8G0qqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750711798; c=relaxed/simple;
-	bh=hiRiP1mEeVcp0//Bh7jTxxu+orSUMoHruu9X+qCE/fg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ssD4B8NTeqKXTqDcJviCmtCk2fLDBZht/Cq2g7Prk5QYokS3w4LTmXQCcsftojqR+qKfCRu5/RdfadE/6EVhgNoiDn3lqpZ9L+uvQ7lc/3XKr4UHMF/jCR24HrvgXJLQ9EoRvekhsSRFQWaLe3EuL3w5c8+8APxi7XahScCAVfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=niGShkW8; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750711813; c=relaxed/simple;
+	bh=uz2ElJYIzX/cgxoKu5QBxgP+WP9haMEoF7b6RVX3zZ0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:Cc:Content-Type; b=M6Xs52DXsD3SUw9krzp8N/4vy4HXVatazeFYSupe/50wiIwwwgmYeUQJAOqlGTL5RMde2f6+rrpX6+7AxGa2fg5Ob80eOiWMEXsuNw8Xq8GNryA7YlG0xTdNj0qk13yQsGG0mqq0MUGZYLwwj75Igdclngogh31oCKzmHhhAb8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rdbabiera.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TB9qhk5V; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rdbabiera.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="niGShkW8"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2350b1b9129so34013145ad.0;
-        Mon, 23 Jun 2025 13:49:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TB9qhk5V"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-235842baba4so40687955ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:50:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750711796; x=1751316596; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=weXHogG41g/cWGKJLnZuTZtl70yy4s5IwHwPHS5+yNE=;
-        b=niGShkW8iRXMHXHF+oivKb7cIzDYxjiKOJxTrZmToKpwkB4SMVJpADx/HnfiGSqzuj
-         omUJUkJe+5XZ+Y8u2Hbjcp3bnGg1EboV6LQD/Z4NFp5aX5NyIyjj0eGeDbt93ZFyhRBn
-         7EV28IYGJNgus0Wh45SdNHh1w7qlvxC1zark/1HUsU9stApZpm5A3T4XDMaBz9qmTbZh
-         SyvKwMDpSHqTy4hNt654iGowqynHH2qiPkFUJn65t1fXMsJ9jcKFk/VVBXQM8AVL7tMC
-         ILX7h1GbKonkCPa6Pd3QI6j9vQL7Jrh0lUo/2/dCYbf7kxgL38LPx4QnXlMvVwJ2HgSS
-         ZDIQ==
+        d=google.com; s=20230601; t=1750711811; x=1751316611; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:from:subject:message-id:mime-version
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=i1zclfHGYxg3v3CZHfO4BrhgqnbUkfK0CqXRN/pzU0E=;
+        b=TB9qhk5VMjmWqowiWam6wZc28NuyGMUEWHyJeanS6vKx5aHc0cGQ9rZ0xKsCwdx/gp
+         2vRY+C85T9kOLGEuNFk8MEGKNlwLBPzm5WpmXsdoIB1dEf470oOcqjePPk+SUNjUEQCv
+         y0n2bXU3XtfgzozAUm3KJFDiYAPeOOI1RuZs/YTcIoEa+ENmbg55H5ZG6e/zm60kVUFg
+         KYpTIOYCCtaW85+DmpKtNG9wnRCKhOPXKP2Pija0gK3C+kuB7eexAQvuHxVzgoOWL1VW
+         Qjfo4SjPzyJ6G7qLEgs29XabRjQudgwhrY+syiN6iU47uzj9ZWndj7DzlR9khtJVCptl
+         8RSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750711796; x=1751316596;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=weXHogG41g/cWGKJLnZuTZtl70yy4s5IwHwPHS5+yNE=;
-        b=Ps4fGVjwo4qTvNg5vUdZKFoDfJ919FFdPAmPoei6Uf8G2ssJFmL4a1+UIj2S/lSBMx
-         kXP+Pk5D4kqhtPpl0gN1EAoZqRs2fnTmG0g+z19DQtXKqYn15V/MiGi/02PnvrMZxbf5
-         9Kq3sOS2jixc50mssbHHjmuMju0RLtzSAzNR+7hrvKYucg8rS9cGm85/7WwpULK8r/xf
-         lc09xF1hnZXb4t/6gpBiS6ZjTmGOJMZt970rfp0AJ7x+OeZnlc2AvFhKgiYyRC9kCrIa
-         7DbYiD4zFjLbCqJ42HdbjTrjC2h1N+//k1HO59HfupJdFxmc2DTPXRS80PCDtZ/p/AKX
-         iPSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVnjQTwUaKjlgoaJgaOKmjlIP6eZD7/KrrM5FfeH6DVwXsh/dt0iNEAiX86UDOz4Y0vVduqebiL@vger.kernel.org, AJvYcCX2tLwCJwQ3Ryox5xNklQXdyTWVvpbQYou1sJGXFYtetS8XwAyFhnL82Tha9fFRIKmsoXs1OSNnEjRs+lg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCqYpN6DZA91oyR5RXJVJ1f0ijYcDXlhivvlHdYBIy9BDzppGY
-	m5iPPW+YvQn7GwoqqXfMahfuIfrHI2IiIEDZwmNSR8e1HsZssrNEgnIE
-X-Gm-Gg: ASbGnctOLdroeeN6h3wRgcU08NRHh6OGblPBfY44pDWlfD9u08kGR9lfDCzojffE7hD
-	PTjGohXUvpDA7Y6Y3RlXUuLMvAaMNgND6wGCq4RXrNsebpEwsiSH2jamezhhpN6VLP2tORtCaUf
-	UVgZt4uEltvFVNO6y8BioB7KqzEeLmguXFClmjwp54ynGpvqx4yRwMtNh2x0qeVDBI/WlqSAko/
-	3o7AvFx6NMkPvNigPtCEzJB561xE4h733TfEQk2LmRkRWftm5hqeh/VWPMcEom9ASQ2BOZlngne
-	NZ9V844SmdQJE2FYr53SPBPf8XHqhQR0wpsvUQQlPd8mfItT7iuX5oEqVx9KDlJL7u9zcnKPQXc
-	YGsa2GkCp/LEtEA==
-X-Google-Smtp-Source: AGHT+IGgSkiqCgu3Tlo68vWVQORrqfMWSdM0S0CmW4fT8T2aHvF9owwjkeUL1/HhaX9k6yylZohtRA==
-X-Received: by 2002:a17:902:ea0c:b0:234:a139:120d with SMTP id d9443c01a7336-237d9779b69mr206885575ad.7.1750711796573;
-        Mon, 23 Jun 2025 13:49:56 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8673d1asm91970485ad.172.2025.06.23.13.49.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 13:49:56 -0700 (PDT)
-Message-ID: <0413c7f8-d5fb-4b6d-a97b-cbabb61b87c3@gmail.com>
-Date: Mon, 23 Jun 2025 13:49:54 -0700
+        d=1e100.net; s=20230601; t=1750711811; x=1751316611;
+        h=content-transfer-encoding:cc:from:subject:message-id:mime-version
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i1zclfHGYxg3v3CZHfO4BrhgqnbUkfK0CqXRN/pzU0E=;
+        b=UUwWtd0ZPEvgIefefJKecRW4Hmxf1dQBx2hDUkJ2WfS1LyUo2jqFya3xXrBDxKa6xF
+         QOQUwdTGB98GaKIExwReZIVtSqnTGIozl33a2pOigXfGW5OPy4erYkc8PGW5h97qBnF7
+         55ZqiBpvr5KGPTgkr81pn9Lku960oY/7zumSMQt/hdAmob3VIkX+Fe5Gu6cPCR41UXri
+         RU+i+/tyMLu9QkcO+kbV6q0FcoOc5LyspJLyXyYXc3zsGuxN080BLDF3N7+KNFyb9p24
+         MdHBeeLsxaFnTNZ1x6qK0qtARwSpQ+k0KouKnBinniu+tO2TWvBW5f0nDw9hDe9wb1mC
+         T91w==
+X-Forwarded-Encrypted: i=1; AJvYcCXo8U+LHjOyGEKNRWjIrDM1zb1cEQYvcZVdGzAhKTDKtrICB1ZSWl+Im4vz9W/kzBEPNOwdl+m2IBRhC58=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwM5CT1XjJ1jRnKsiIjkdh/6SddIpl8VCkOJbVS0O7XftLs+9RL
+	WjQC9ecShn/RewaOYdBxegRsZfcSbOyeE7pMyTM4CkaJMsGrq26WvW+cY/airiix7uLvexs99L9
+	HyqAN4kNDiuyLghWmyQ==
+X-Google-Smtp-Source: AGHT+IFDGJLG0QlqDQnT3WtSeQpyn/e6JxnM+cmkts63ncExcI0VOTu4ODfryuTASzY0kSDdxCfdlc9Zebc4m2g=
+X-Received: from pjboi14.prod.google.com ([2002:a17:90b:3a0e:b0:2ff:6132:8710])
+ (user=rdbabiera job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:ea0c:b0:234:f19a:eead with SMTP id d9443c01a7336-237d991ebf6mr221096795ad.43.1750711811223;
+ Mon, 23 Jun 2025 13:50:11 -0700 (PDT)
+Date: Mon, 23 Jun 2025 20:49:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.15 000/411] 5.15.186-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250623130632.993849527@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250623130632.993849527@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Developer-Key: i=rdbabiera@google.com; a=openpgp; fpr=639A331F1A21D691815CE090416E17CA2BBBD5C8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4465; i=rdbabiera@google.com;
+ h=from:subject; bh=v3QvCmL9HP7IokaiL57iE+36eWNE8t2pZpwDIUWeDHA=;
+ b=owGbwMvMwCFW0bfok0KS4TbG02pJDBmRe18/0r1gp+K6s+xocHazWdbV+nTXNI049hyDvny1e
+ 74vty3tKGVhEONgkBVTZNH1zzO4cSV1yxzOGmOYOaxMIEMYuDgFYCJGfgz/g/Zl2p9XaLy0cF+D
+ 94IqgSrW5ZPOHnXwm7Hi+5ZdF88+c2P47zpz06Q1Jxf7ZX3gke/xux52Wqub/fQEjXsPLzPOVus xZwMA
+X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
+Message-ID: <20250623204947.732915-2-rdbabiera@google.com>
+Subject: [PATCH v2] usb: typec: altmodes/displayport: add irq_hpd to sysfs
+From: RD Babiera <rdbabiera@google.com>
+Cc: heikki.krogerus@linux.intel.com, badhri@google.com, 
+	gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, RD Babiera <rdbabiera@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/23/25 06:02, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.15.186 release.
-> There are 411 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 25 Jun 2025 13:05:51 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.186-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Add irq_hpd sysfs node to displayport driver. This allows the userspace
+to subscribe to irq events similar to how it can subscribe to changes in
+hpd.
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+irq_hpd is read only and returns the number of irq events generated since
+driver probe. pending_irq_hpd is added so that a sysfs_emit can be
+generated if the HPD high event belonging to the same status message
+is delayed until a successful configuration.
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+Signed-off-by: RD Babiera <rdbabiera@google.com>
+Reviewed-by: Badhri Jagan Sridharan <badhri@google.com>
+---
+Changes since v1:
+* fixed bracket styling error
+---
+ .../testing/sysfs-driver-typec-displayport    | 10 +++++++
+ drivers/usb/typec/altmodes/displayport.c      | 28 +++++++++++++++++++
+ 2 files changed, 38 insertions(+)
+
+diff --git a/Documentation/ABI/testing/sysfs-driver-typec-displayport b/Doc=
+umentation/ABI/testing/sysfs-driver-typec-displayport
+index 256c87c5219a..314acd54e13e 100644
+--- a/Documentation/ABI/testing/sysfs-driver-typec-displayport
++++ b/Documentation/ABI/testing/sysfs-driver-typec-displayport
+@@ -62,3 +62,13 @@ Description:
+ 			     by VESA DisplayPort Alt Mode on USB Type-C Standard.
+ 			- 0 when HPD=E2=80=99s logical state is low (HPD_Low) as defined by
+ 			     VESA DisplayPort Alt Mode on USB Type-C Standard.
++
++What:		/sys/bus/typec/devices/.../displayport/irq_hpd
++Date:		June 2025
++Contact:	RD Babiera <rdbabiera@google.com>
++Description:
++		IRQ_HPD events are sent over the USB PD protocol in Status Update and
++		Attention messages. IRQ_HPD can only be asserted when HPD is high,
++		and is asserted when an IRQ_HPD has been issued since the last Status
++		Update. This is a read only node that returns the number of IRQ events
++		raised in the driver's lifetime.
+diff --git a/drivers/usb/typec/altmodes/displayport.c b/drivers/usb/typec/a=
+ltmodes/displayport.c
+index b09b58d7311d..7f9f1f98f450 100644
+--- a/drivers/usb/typec/altmodes/displayport.c
++++ b/drivers/usb/typec/altmodes/displayport.c
+@@ -65,6 +65,13 @@ struct dp_altmode {
+ 	enum dp_state state;
+ 	bool hpd;
+ 	bool pending_hpd;
++	u32 irq_hpd_count;
++	/*
++	 * hpd is mandatory for irq_hpd assertion, so irq_hpd also needs its own =
+pending flag if
++	 * both hpd and irq_hpd are asserted in the first Status Update before th=
+e pin assignment
++	 * is configured.
++	 */
++	bool pending_irq_hpd;
+=20
+ 	struct mutex lock; /* device lock */
+ 	struct work_struct work;
+@@ -151,6 +158,7 @@ static int dp_altmode_status_update(struct dp_altmode *=
+dp)
+ {
+ 	bool configured =3D !!DP_CONF_GET_PIN_ASSIGN(dp->data.conf);
+ 	bool hpd =3D !!(dp->data.status & DP_STATUS_HPD_STATE);
++	bool irq_hpd =3D !!(dp->data.status & DP_STATUS_IRQ_HPD);
+ 	u8 con =3D DP_STATUS_CONNECTION(dp->data.status);
+ 	int ret =3D 0;
+=20
+@@ -170,6 +178,8 @@ static int dp_altmode_status_update(struct dp_altmode *=
+dp)
+ 				dp->hpd =3D hpd;
+ 				dp->pending_hpd =3D true;
+ 			}
++			if (dp->hpd && dp->pending_hpd && irq_hpd)
++				dp->pending_irq_hpd =3D true;
+ 		}
+ 	} else {
+ 		drm_connector_oob_hotplug_event(dp->connector_fwnode,
+@@ -177,6 +187,10 @@ static int dp_altmode_status_update(struct dp_altmode =
+*dp)
+ 						      connector_status_disconnected);
+ 		dp->hpd =3D hpd;
+ 		sysfs_notify(&dp->alt->dev.kobj, "displayport", "hpd");
++		if (hpd && irq_hpd) {
++			dp->irq_hpd_count++;
++			sysfs_notify(&dp->alt->dev.kobj, "displayport", "irq_hpd");
++		}
+ 	}
+=20
+ 	return ret;
+@@ -196,6 +210,11 @@ static int dp_altmode_configured(struct dp_altmode *dp=
+)
+ 						connector_status_connected);
+ 		sysfs_notify(&dp->alt->dev.kobj, "displayport", "hpd");
+ 		dp->pending_hpd =3D false;
++		if (dp->pending_irq_hpd) {
++			dp->irq_hpd_count++;
++			sysfs_notify(&dp->alt->dev.kobj, "displayport", "irq_hpd");
++			dp->pending_irq_hpd =3D false;
++		}
+ 	}
+=20
+ 	return dp_altmode_notify(dp);
+@@ -707,10 +726,19 @@ static ssize_t hpd_show(struct device *dev, struct de=
+vice_attribute *attr, char
+ }
+ static DEVICE_ATTR_RO(hpd);
+=20
++static ssize_t irq_hpd_show(struct device *dev, struct device_attribute *a=
+ttr, char *buf)
++{
++	struct dp_altmode *dp =3D dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%d\n", dp->irq_hpd_count);
++}
++static DEVICE_ATTR_RO(irq_hpd);
++
+ static struct attribute *displayport_attrs[] =3D {
+ 	&dev_attr_configuration.attr,
+ 	&dev_attr_pin_assignment.attr,
+ 	&dev_attr_hpd.attr,
++	&dev_attr_irq_hpd.attr,
+ 	NULL
+ };
+=20
+
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+--=20
+2.50.0.rc2.761.g2dc52ea45b-goog
+
