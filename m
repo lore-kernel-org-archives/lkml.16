@@ -1,77 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5DF199FBA
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 09:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026522940F;
+	Mon, 23 Jun 2025 09:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750671847; cv=none; b=EpUjlJquOYTJ72k1EKZeGfm8VDO8mzfREqoTjwWv9wj4hdeKjcwLQKuY0XXI8f7kNPfYl7c/kEZEe342gr88W6nicGxZgHYh7FW9IweCvHypfPrZZIW02QnKGiuIwD62c/qWUC90btEqxQvhwfW1Ods2+Pr+AlqUCLsZDiwKMkM=
+	t=1750671873; cv=none; b=ZwqS+nasEOl0kuA+JtjsWVnX4uooR9xGfVc95N3u/8uam0rpdHxaSoCpW2m3PwULi1th8vaLciq5ABFZ7stA2PWbHVnKDxn44ZqwMWXeFMJ2S1fWHXoAoOVHv9HfB/XKFBisU2tzx1arOQ0sgrPJC7MVliKnogAJNupv5vFbz94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750671847; c=relaxed/simple;
-	bh=TSQKjKbpV0/LI0K3BCx+yaJWInH5iUqXSzO58gDQgoQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tlJD3O39Il5S7H3Luo05KFbsGpxwz8KZaOIn9rZzHO2/yECBuzNYlwAFRgH+5knLo2LBoHWMbMu5NbT+93Dp4LTHzFaqQweatM6KvcqvqG3IOFzgf67KODWmWmXbdczPVlfcW1eI+V0w3NZoZvQmVo1SZRrKs00kshhQQKaWrQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FtLBcBlh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750671873; c=relaxed/simple;
+	bh=0E/AaZN6qOMuMlMCYG2o1/Ze/MndbrvBCcrhbvfO9Ms=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SpEd5U/IFxFvCFTIWp7pUJmvc1PByt5E+8AdsSEwx50p32cQKZuJh3mhi0V6uz5cdKAABvgzy9VmlSGLEGWMnDF0SDbF5hh/0daS9yR+2fuagwQ4qTXmc6po3w4QVfYRqAKQd3+8ZR6vx/Bb4f+bTdVtGbTEmf0wHJ0jfzSgsuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ntrFiZG/; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtLBcBlh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 141D1C4CEEA;
-	Mon, 23 Jun 2025 09:44:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750671846;
-	bh=TSQKjKbpV0/LI0K3BCx+yaJWInH5iUqXSzO58gDQgoQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FtLBcBlhaaLUav/6SGc+n+WgyyJMK2XGPcILTeS4d09jN2LOpK9c27uTYwEc+NlOV
-	 za1SnCuaWMR4SgWYR8O1tQdAGeImwGP5W7LuVIQkf7H87cEeX+nNlRUk5AgvYt6Ana
-	 5QhAwQoPy/T7Q7JYWQskdNgkz4gRcjQ0KK7oJy69bANFnfQMhjQNIChAehwbjSTHZb
-	 W7vy08VEEajpKDBK1oOE20/iOfGYIRSG60qKHy8oV2faHuk5E25KZ2XPUqBcSTJkoZ
-	 /7w6rxkLhEr+TCOcPzsfSJaJtJT4EOIe7HCbiov4Bb7jtI5VyCBLqVs9QO6RMueIAL
-	 LAhlCJceFzDLA==
-From: Maxime Ripard <mripard@kernel.org>
-To: dri-devel@lists.freedesktop.org,
-	Vignesh Raman <vignesh.raman@collabora.com>
-Cc: Maxime Ripard <mripard@kernel.org>,
-	daniels@collabora.com,
-	daniel@fooishbar.org,
-	helen.fornazier@gmail.com,
-	airlied@gmail.com,
-	simona.vetter@ffwll.ch,
-	robin.clark@oss.qualcomm.com,
-	guilherme.gallo@collabora.com,
-	sergi.blanch.torne@collabora.com,
-	valentine.burley@collabora.com,
-	lumag@kernel.org,
-	dmitry.baryshkov@oss.qualcomm.com,
-	quic_abhinavk@quicinc.com,
-	maarten.lankhorst@linux.intel.com,
-	tzimmermann@suse.de,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/2] drm/ci: Add devicetree validation and KUnit tests
-Date: Mon, 23 Jun 2025 11:44:01 +0200
-Message-ID: <175067183351.289902.11645446324178175765.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250623085033.39680-1-vignesh.raman@collabora.com>
-References: <20250623085033.39680-1-vignesh.raman@collabora.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ntrFiZG/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750671872; x=1782207872;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=0E/AaZN6qOMuMlMCYG2o1/Ze/MndbrvBCcrhbvfO9Ms=;
+  b=ntrFiZG/bI1uaGcJw0qh7QtJNu1wb35vdaaSRDx4XmS4JW4EhYiRH2HI
+   DUpcm64FRFSvv+f0YkZOWSqLqCOD3Gfzcys/ddrquEzuPBZVVQaqChHs9
+   NVLrCXQcE4gSxqwxBkgWVpE2MB8N+zr+W58xjix54Ol33emLMccBzgkTp
+   +oLHCG+PuWu/uifmGQp91V6Fq1+tCSDE6KraA9puVXAzutsZq4OQjQnUN
+   eUgsWNvwSWhzhPItqSB4S01sfcD/zai5UkkU7Ip4Kt1xpWnterqfrnFEP
+   /Zs/wwN6DMbbGV84L/gew6lKElQuO+l70uFkP6mwDXrV9L1UbJi5vd0v5
+   g==;
+X-CSE-ConnectionGUID: k7XhyCbEQrCZndlpCZ709A==
+X-CSE-MsgGUID: 78klbsd7Tcuyd+Q38v/skg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="70438468"
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="70438468"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 02:44:31 -0700
+X-CSE-ConnectionGUID: vrNO2kbtRN6+XVxw1vmkOw==
+X-CSE-MsgGUID: fsNGcGK7QA+tT23BwSybFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="157336260"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 02:44:28 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uTdiy-000000097qN-2V8z;
+	Mon, 23 Jun 2025 12:44:24 +0300
+Date: Mon, 23 Jun 2025 12:44:24 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+	corbet@lwn.net, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	eraretuya@gmail.com
+Subject: Re: [PATCH v10 4/7] iio: accel: adxl345: add inactivity feature
+Message-ID: <aFkh-E1dG__p_G4m@smile.fi.intel.com>
+References: <20250622155010.164451-1-l.rubusch@gmail.com>
+ <20250622155010.164451-5-l.rubusch@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250622155010.164451-5-l.rubusch@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, 23 Jun 2025 14:20:26 +0530, Vignesh Raman wrote:
-> Add jobs to validate devicetrees and run KUnit tests.
+On Sun, Jun 22, 2025 at 03:50:07PM +0000, Lothar Rubusch wrote:
+> Add support for the sensor’s inactivity feature in the driver. When both
+> activity and inactivity detection are enabled, the sensor sets a link bit
+> that ties the two functions together. This also enables auto-sleep mode,
+> allowing the sensor to automatically enter sleep state upon detecting
+> inactivity.
 > 
-> Pipeline link,
-> https://gitlab.freedesktop.org/vigneshraman/msm/-/pipelines/1455734
+> Inactivity detection relies on a configurable threshold and a specified
+> time period. If sensor measurements remain below the threshold for the
+> defined duration, the sensor transitions to the inactivity state.
 > 
-> Link to v1,
-> https://lore.kernel.org/all/20250327160117.945165-1-vignesh.raman@collabora.com/
+> When an Output Data Rate (ODR) is set, the inactivity time period is
+> automatically adjusted to a sensible default. Higher ODRs result in shorter
+> inactivity timeouts, while lower ODRs allow longer durations-within
+> reasonable upper and lower bounds. This is important because features like
+> auto-sleep operate effectively only between 12.5 Hz and 400 Hz. These
+> defaults are applied when the sample rate is modified, but users can
+> override them by explicitly setting a custom inactivity timeout.
 > 
-> [...]
+> Similarly, configuring the g-range provides default threshold values for
+> both activity and inactivity detection. These are implicit defaults meant
+> to simplify configuration, but they can also be manually overridden as
+> needed.
 
-Applied to misc/kernel.git (drm-misc-next).
+...
 
-Thanks!
-Maxime
+> +static int adxl345_set_inact_time(struct adxl345_state *st, u32 val_s)
+> +{
+> +	int max_boundary = U8_MAX;
+> +	int min_boundary = 10;
+> +	unsigned int val = min(val_s, U8_MAX);
+
+Wondering if it's possible to refer here to max_boundary?
+In any case, split this assignment since it will be easier
+to maintain.
+
+> +	enum adxl345_odr odr;
+> +	unsigned int regval;
+> +	int ret;
+
+	val = min(val_s, max_boundary);
+
+> +	if (val == 0) {
+> +		ret = regmap_read(st->regmap, ADXL345_REG_BW_RATE, &regval);
+> +		if (ret)
+> +			return ret;
+> +
+> +		odr = FIELD_GET(ADXL345_BW_RATE_MSK, regval);
+> +		val = clamp(max_boundary - adxl345_odr_tbl[odr][0],
+> +			    min_boundary, max_boundary);
+> +	}
+> +
+> +	return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val);
+> +}
+
+...
+
+> +	case ADXL345_INACTIVITY:
+> +		en = FIELD_GET(ADXL345_INACT_X_EN, axis_ctrl) |
+> +			FIELD_GET(ADXL345_INACT_Y_EN, axis_ctrl) |
+> +			FIELD_GET(ADXL345_INACT_Z_EN, axis_ctrl);
+
+As I pointed out earlier. the indentation is supposed to be on the same colomn
+for 'F' letters.
+
+> +		if (!en)
+> +			return false;
+> +		break;
+
+...
+
+> +			ret = regmap_read(st->regmap,
+> +					  ADXL345_REG_TIME_INACT,
+> +					  &period);
+
+There is plenty of room on the previous lines. Depending on the next
+changes (which I believe unlikely touch this) it may be packed to two
+lines with a logical split, like
+
+			ret = regmap_read(st->regmap,
+					  ADXL345_REG_TIME_INACT, &period);
+
+It again seems the byproduct of the too strict settings of the wrap limit in
+your editor.
+
+...
+
+> +	case ADXL345_INACTIVITY:
+> +		axis_ctrl = ADXL345_INACT_X_EN | ADXL345_INACT_Y_EN |
+> +				ADXL345_INACT_Z_EN;
+
+Consider
+		axis_ctrl =
+			ADXL345_INACT_X_EN | ADXL345_INACT_Y_EN | ADXL345_INACT_Z_EN;
+
+(yes, I see that it's longer than 80, but it might worth doing it for the sake of
+ consistency with the previous suggestion).
+
+
+...
+
+>  static int adxl345_set_range(struct adxl345_state *st, enum adxl345_range range)
+>  {
+> -	return regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORMAT,
+
+> +	int ret;
+> +
+> +	ret = regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORMAT,
+>  				 ADXL345_DATA_FORMAT_RANGE,
+>  				 FIELD_PREP(ADXL345_DATA_FORMAT_RANGE, range));
+> +	if (ret)
+> +		return ret;
+
+If it's a code from the previous patch, it might make sense to introduce ret
+there.
+
+>  }
+
+...
+
+> +	case IIO_EV_INFO_PERIOD:
+> +		ret = regmap_read(st->regmap,
+> +				  ADXL345_REG_TIME_INACT,
+> +				  &period);
+
+Too short lines.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
