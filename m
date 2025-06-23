@@ -1,107 +1,139 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77BE70838;
-	Mon, 23 Jun 2025 22:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2AE70838
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 22:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750718151; cv=none; b=rnOY1OkeRrSTmCMoID8bkWuSQeK/95Zu3/r7OZ0YMTzCdsZsmnCsILLm35Y/LwIPZaYaSSM9ZiplWsrU6nbK51b5S6Pim8y+WymyLaj6sj61C0LXgorrzz2wU52tQMtZZRATDjKZE4Oimq1DKUcW58ZD5k8x9eQbmoHm+c02+j4=
+	t=1750718319; cv=none; b=Ul1vH4eOIY8cO2YaNK7ZCuyB/69aJR8U6sH54i+ramDtt89fZlzT1IZWY8W2FEXmOSi3o+lP2ugnU6CG2rAsNdsJirabC5H+IeM5HD8evYVOhFlxZhWa6IW33BQA++Ea55QZHcQbMqq11ZBZRaYhh9j0PBmHm2yP8UDUdrmU/3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750718151; c=relaxed/simple;
-	bh=iPi9bgaQMxaCP6hQ9vj6jG/kXbnYCnKdFVPUYdbaBKU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t/Qay4GG5TUj2x1V/Xw5ersPfzbQXk0+w4e4w6zSeC1hl6nrT/hDmIKDKfYD97OZ8hh84uHdybDPHQrlu1gvjkcllUsWMPWsrOg0ZBiirdqM+2obkpt5VawttJkoWXC6oKz4C88d0kPdkDAXDFQGGL1CaZ9ZCyxy5Rzdj+2133A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BmziHJ3j; arc=none smtp.client-ip=209.85.128.41
+	s=arc-20240116; t=1750718319; c=relaxed/simple;
+	bh=Vot46m2llwc5AKzlikU4JpxLwQ2E8dsYRwz55AMwOSY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H3anOzVSAo4Qr0TsoZZuJdJn6kr3tKlKGXse2paPMG6nVkjsYe2R3enEEFJEFgz8tNdk63p6A2LlGMg85CJ7E1Hp4vmL6fQsw9su53hiX8V+SSDHBup7L3tnZY8QsIPjfEtSP/FoXs78pHX9V7wo8JJ1aWd6TJwWas73UIEAUGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X/xWGwAJ; arc=none smtp.client-ip=209.85.221.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BmziHJ3j"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-453426170b6so33831575e9.1;
-        Mon, 23 Jun 2025 15:35:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/xWGwAJ"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-531a1fad7faso1515330e0c.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:38:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750718148; x=1751322948; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=w8X8+lYPNXJfIiqIH3VT7v0hy5MQ4DjDzji7la3F3Sk=;
-        b=BmziHJ3jHTf9d2pVu+IMXBplzjxxa4W1h4EDKWcAQF9cwKWik/U9S+MV0VLdQkEYJk
-         HY/lLSYQNOQWW77VsCsxJhhpvpZXcM+IyguX+9sfcdMqa9jUv6aKwNO7q8z39VqYqoZB
-         2mgP78mI0Ia7QQofdT+1noSfvwFKcFgT+alnsoQCDdeSp3ftbN0R4PF3yb7i1JVQ+GMo
-         vqGAfdeJ9AlStVwnJmOI7dNPgzcH6pIMCcu/YvvUSVOxZI/FgtEMPEJzUB2eTBa6YU6H
-         e5AQcLLs5uCOoc9ZhxLH3pcnWeSzxvzkeXGz8OjiyCXxp8w3NnAfja5V3gTO/2auJs2S
-         7HLA==
+        d=gmail.com; s=20230601; t=1750718314; x=1751323114; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zUmFnzXDP7js2cQnz6D7zC1wOg+JQ8RtXl7WzvdrZQY=;
+        b=X/xWGwAJeujFuI5CQyDdRa9dHWoDTHxAKj6rejR4T6pShohKj8+G/e4M9w162Kn7ZO
+         Cm9Lr5VxyVU+WrwGqV6Js5YElcaOCc8LqfWcbyD4nvLearpP8duWIagt4As0AGs0YofC
+         q4ni+blQUWs3blRxxXN0b5ZRk+uApBF8bv0s9gjHuFxqkBKGKKWzISBCr2NoWsU/USO0
+         85d47zhWwKT/S0iJcp52QFQz3L1PlR7YRk6O48MXxcq/XHPvd2VHGH7qeWr2XJ0fJaoq
+         2Eth++OfT0empmK7baUONC1/s8cSwKMiW03w7kpvawc3anLyJtYJ6RkF+eJfmqiEXXzJ
+         4YlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750718148; x=1751322948;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w8X8+lYPNXJfIiqIH3VT7v0hy5MQ4DjDzji7la3F3Sk=;
-        b=evh0IsK8/hMNc2HtAOnjbqBdIP8JizEeiB/bBU2CG5CHIxw6PYe9SWofFWeM/qoLeE
-         iZKmIzi2Embl6Xw/y/PCFMSEfKc3q+4m/ALb2ohmd8Q7KeSkLe5ExxlczWdER8+vTGkj
-         OcMfu0KVENyXROszwo+/kMhRK6qLV0Ppqy4zvtR4K0/ta+sPpAYs4RII4obUO2litEmL
-         qgfMpG9oNBnPysvhO5ta2MEfab8VJqfL9LcoQdz8/nTrj6CKNqAjT2wQkT1B9+rQja8p
-         QOrAp/G90s7w6DV7UaeQ1Edke7pJ1Ekp+rY/rhmewmR6rWKMCl/lHSiHubtnS8f40dch
-         LaVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWrW892+IaLLV/aEGLoc2XrRO6CAiRcD6UYswGsa4Ps+ZHTw+6XuwtyCoI1tWmJOfRCHJAijhkdFHeIGfU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeWMAbLosGQY+yBwAUEQQodanAcwe83DLO2uJ3BSg3QvrDvQo9
-	b+XrubcTLXoYiP4D05t8APp1Rn2kr7jr/rF9TtoldRV9ayc1tVE/cppg
-X-Gm-Gg: ASbGncvgksy3D1TPAXLNLXEBEKJ5lj/geJ1XtHQv2StghRf4eQ+GMJpRS6B7dUQPd8a
-	t6N5A1phhS3pBoJfGw0S18tl4neuhvGYMyFcz0k5biK4XXXe/cmy76qU2UxDgi2OPXkuImRtXhK
-	44OXBIKqi9GgByr36Ts7mbYVHOFri3kxGswhpCfa6hOedvsRCFFmxVAGqZlJUFww70SLVik2PWL
-	joKHI+8UDLxSW7rhsWPm+P/snruvebT7I2BUmQbzSjcehETrtrwJOHWo4YWvijfBw6mHzSRhAyl
-	CoNuz2olEll5doRVnOqKHudoUQBZdCOkUcCwB+JG7oSB7BFxcnhW7musJ1HZ
-X-Google-Smtp-Source: AGHT+IFZ8AJI3ew4IzWWU/Tkz1lnQ+LEc34WeS3W9X9qKZcysFcEpbE85v5c+G/NlHApltmH5vsaYw==
-X-Received: by 2002:a05:600c:458a:b0:453:92e:a459 with SMTP id 5b1f17b1804b1-4537ba90848mr6811445e9.16.1750718147995;
-        Mon, 23 Jun 2025 15:35:47 -0700 (PDT)
-Received: from localhost ([87.254.0.133])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4536470903asm125406135e9.40.2025.06.23.15.35.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 15:35:47 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Zack Rusin <zack.rusin@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Ian Forbes <ian.forbes@broadcom.com>,
-	dri-devel@lists.freedesktop.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] drm/vmwgfx: fix missing assignment to ts
-Date: Mon, 23 Jun 2025 23:35:26 +0100
-Message-ID: <20250623223526.281398-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.50.0
+        d=1e100.net; s=20230601; t=1750718314; x=1751323114;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zUmFnzXDP7js2cQnz6D7zC1wOg+JQ8RtXl7WzvdrZQY=;
+        b=fEZZxCQhcFvM1Tj82l76L0x3zESYh4fb0I+W0EiUk6WFFNufoCylrrojwtvC/UHiAh
+         QIdmiRcFWDRkIRcqBm3w1UKhEuKWZzzpvZDZuCpWLvW4RO0/RYBVVbrzwQONPRG8+6sn
+         Rw4vmec+BwAeUyUOSL9KM/quKm0ltfsfx32CrfG4YFYOy6BS1D2gSgelDO6qN7pYZSEd
+         SZO8pI9yyEgfcr5rQFHdI96f39cuyeiu2tMn+MrRBC+Fum6m5nXrONCROsaCaBuN8k/j
+         Mwh1PcH2vqxJrMeYmR994mpVXUf1J589nUOw8PEFCy7oW28qnJpXD4AhfZJl4ICv17C8
+         oRZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXwXtW/dpXLFKXXB79OIJkFDuPXc0HBQSsU7jmCIyZlO36M7NazszFHg/Ak0wfNBfG/gYw7R9tWEoE3krc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxM0opofFa/FGo6SMUJnLNHMrZbMMpI6P0YCK1w5+UtRPjVmYd7
+	DzYFiNOzVJ+yf8An5UA1a1roACWrIQB5qcQ+hdh0B6x3OChjW1yDnzHyUYtE4MTCG1hJI8GMPz1
+	s3DgtIpB9sDfXfQSt8jOUeDV6ZJGj51s=
+X-Gm-Gg: ASbGncs8C3N4hThD6kNzdSyLBH8kgNpdI6Um8gFnRKUBcOsLO5DKftldZu3rIss46yX
+	y9SHararN60kO7h311o+TWyEhTBnNX7546fH2VCbubde8SsymsKOiyrNmblwBtmvCgMTuZVUp9A
+	fJ/ZpVDKCQqUhkM+5sUb5IagYp3JNE8higxT5jt5V8qATyA/6CLj9uWQ==
+X-Google-Smtp-Source: AGHT+IHvPO2odYXDcbGrmRrQwsjTPNW6KL0+Qay7/c/xzd5IHUaT+vnq0rnt8TtuEhBzEVEr6U166TfzKZkREWU0h6k=
+X-Received: by 2002:a05:6122:45a6:b0:531:394a:23f3 with SMTP id
+ 71dfb90a1353d-531ad66f620mr7672624e0c.10.1750718313979; Mon, 23 Jun 2025
+ 15:38:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <cover.1750433500.git.lorenzo.stoakes@oracle.com> <c5094bfccb41ecd19d4e9bcaa1c4a11e00158bba.1750433500.git.lorenzo.stoakes@oracle.com>
+In-Reply-To: <c5094bfccb41ecd19d4e9bcaa1c4a11e00158bba.1750433500.git.lorenzo.stoakes@oracle.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Tue, 24 Jun 2025 10:38:22 +1200
+X-Gm-Features: Ac12FXzdIftskFtIPtygI2TAglAR91VaK4vKBaOEPPzQ58F9Qihrk9zEDPb5w_g
+Message-ID: <CAGsJ_4z6d3nxnHfiCjK-sVL=DMgW_CceeFKxvMpzwJ+rHPR=0A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] mm/madvise: remove the visitor pattern and thread
+ anon_vma state
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Lance Yang <ioworker0@gmail.com>, 
+	SeongJae Park <sj@kernel.org>, Suren Baghdasaryan <surenb@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The assignment to ts is missing on the call to ktime_to_timespec64.
-Fix this by adding the missing assignment.
+On Sat, Jun 21, 2025 at 3:33=E2=80=AFAM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
+>
+> Now we have the madvise_behavior helper struct we no longer need to mess
+> around with void* pointers in order to propagate anon_vma_name, and this
+> means we can get rid of the confusing and inconsistent visitor pattern
+> implementation in madvise_vma_anon_name().
+>
+> This means we now have a single state object that threads through most of
+> madvise()'s logic and a single code path which executes the majority of
+> madvise() behaviour (we maintain separate logic for failure injection and
+> memory population for the time being).
+>
+> We are able to remove the visitor pattern by handling the anon_vma_name
+> setting logic via an internal madvise flag - __MADV_SET_ANON_VMA_NAME. Th=
+is
+> uses a negative value so it isn't reasonable that we will ever add this a=
+s
+> a UAPI flag.
+>
+> Additionally, the madvise_behavior_valid() check ensures that
+> user-specified behaviours are strictly only those we permit which, of
+> course, this flag will be excluded from.
+>
+> We are able to propagate the anon_vma_name object through use of the
+> madvise_behavior helper struct.
+>
+> Doing this results in a can_modify_vma_madv() check for anonymous VMA nam=
+e
+> changes, however this will cause no issues as this operation is not
+> prohibited.
+>
+> We can also then reuse more code and drop the redundant
+> madvise_vma_anon_name() function altogether.
+>
+> Additionally separate out behaviours that update VMAs from those that do
+> not.
+>
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-Fixes: db6a94b26354 ("drm/vmwgfx: Implement dma_fence_ops properly")
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/gpu/drm/vmwgfx/vmwgfx_fence.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+LGTM,
+Reviewed-by: Barry Song <baohua@kernel.org>
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_fence.c b/drivers/gpu/drm/vmwgfx/vmwgfx_fence.c
-index c2294abbe753..00be92da5509 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_fence.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_fence.c
-@@ -538,7 +538,7 @@ static void vmw_event_fence_action_seq_passed(struct dma_fence *f,
- 	if (likely(eaction->tv_sec != NULL)) {
- 		struct timespec64 ts;
- 
--		ktime_to_timespec64(f->timestamp);
-+		ts = ktime_to_timespec64(f->timestamp);
- 		/* monotonic time, so no y2038 overflow */
- 		*eaction->tv_sec = ts.tv_sec;
- 		*eaction->tv_usec = ts.tv_nsec / NSEC_PER_USEC;
--- 
-2.50.0
+>
+>         /* We cannot provide prev in this lock mode. */
+> -       VM_WARN_ON_ONCE(arg->lock_mode =3D=3D MADVISE_VMA_READ_LOCK);
+> -       anon_name =3D anon_vma_name(vma);
+> -       anon_vma_name_get(anon_name);
+> +       VM_WARN_ON_ONCE(madv_behavior->lock_mode =3D=3D MADVISE_MMAP_WRIT=
+E_LOCK);
+> +
+> +       /*
 
+I=E2=80=99m wondering whether it would be more accurate to:
+
+VM_WARN_ON_ONCE(madv_behavior->lock_mode !=3D MADVISE_WRITE_LOCK);
+
+Thanks
+Barry
