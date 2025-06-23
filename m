@@ -1,108 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E240B1DE4E6;
-	Mon, 23 Jun 2025 09:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2C6230BDC;
+	Mon, 23 Jun 2025 09:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750669727; cv=none; b=VCLir0FGKDEmRaFx+WIwxEKOrLX5oq7PcCc7TLeZS50iPlPy95c8Ojgo95fAb0TvAzLdth87R8uN6V1714pxtl3V4bygfmUZ2aYgeR6zp1tg2p1Sr4M8ovK+ZreFg6pHfwcdVogvM23YwVQmR40G7f3UHqrakY2+NVrfX5ha8Fc=
+	t=1750669803; cv=none; b=BOb/HElozobQGSVJHCMeUDZkirCiR7QjG3BsGfL3kOH68xAcqbSUO7H2DBbMGysQGf7MnvhmLNIC7bWCUM7tQw6uu4dnX7SeiR/RzfFalovw3tIYJNzF42lm3k5g1uvWG/Emxw5gsJgVCWfRpOr8ebf83l8lO2fElbFBL0FaqNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750669727; c=relaxed/simple;
-	bh=W7hiJd78r+59Ny4okc/0aID6HplmUdQ4ZRFh1yeSVfc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mUX59voch042MjConPL7i5p85ThALvpRZ/5iScSQPFNhs695k2cpu5fw2w34D3/IYqHfAslE9zIzR7YYBHIwWNP1avUgpboRoj260HeAw2yRBdYOfg7j8yrK9BIUuBMgR7n7oAnATBkD4eiiLlUdN7TaroTLGc26cw+0XjAc8Bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cGQbN2C2; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cGQbN2C2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750669726; x=1782205726;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=W7hiJd78r+59Ny4okc/0aID6HplmUdQ4ZRFh1yeSVfc=;
-  b=cGQbN2C2+EloY1PliYfaVHSgvrC1C4hpz43xLMoAoEJl0oZy3rjkyPEI
-   JJ7s3vU9UJtoBLu29pNtmHAkt1GvVz+z3D/CYe/SiQ+9QEp3d8U/jqfW1
-   Cw9KMbRr/hckbg9dV+Bicr+OSq3TAAEs6/gVYuB3qvUuhli4SICGmFBzX
-   ehh9fHguvvcbgZxkLXCEpXq+8rwl2rLNiRP0uj7wIDVW0bjQzKXmgaaHS
-   /6OgdO3S3qc1heqrFieorg8hY2U9Yi87hk3iNKizN7uu2IM/FaKl6aXBw
-   iqDs4WeZjfpqNGaeUnCiayIBu1Wey6/kwuRgsrR1fZIBJay7k2B35ZOqK
-   w==;
-X-CSE-ConnectionGUID: 8Uzez2O/SASjB0A/dpnRdg==
-X-CSE-MsgGUID: dZVOpqgQTUGlQmkzto2JHw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="53007167"
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="53007167"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 02:08:42 -0700
-X-CSE-ConnectionGUID: NFYrKPxFSoSykF6AvZkAyQ==
-X-CSE-MsgGUID: OhoYh5ZHRFKw4wgUN/vAaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="151115142"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 02:08:36 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uTdAF-000000097MM-339k;
-	Mon, 23 Jun 2025 12:08:31 +0300
-Date: Mon, 23 Jun 2025 12:08:31 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 13/23] ACPI: property: Refactor
- acpi_fwnode_get_reference_args()
-Message-ID: <aFkZj2QCU2LfTI30@smile.fi.intel.com>
-References: <20250618121358.503781-1-apatel@ventanamicro.com>
- <20250618121358.503781-14-apatel@ventanamicro.com>
+	s=arc-20240116; t=1750669803; c=relaxed/simple;
+	bh=+zBnHfXEZAo3hfysRCCYnWMP6NBVypQZJ+axJ70u0jQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aUfy3vbgaWJiKueWN5A15200Q1Ljzh36vvfqQMkfG6c5Edc+hZpLAoL9hqwFYbJwr9tfBED0/BhrBAbzfGOT2FLnDJrEjLSt/FMJvIL03BN509Fa+fHbGZvmctmIop7eVfn2I8dhGdUUpOApNQufGbBi83zp2PzxSjH+vXpgRTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQj043sS6z6HJqB;
+	Mon, 23 Jun 2025 17:07:32 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2B7C21402E9;
+	Mon, 23 Jun 2025 17:09:59 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
+ 2025 11:09:58 +0200
+Date: Mon, 23 Jun 2025 10:09:57 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Neeraj Kumar <s.neeraj@samsung.com>
+CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>,
+	<anisa.su@samsung.com>, <vishak.g@samsung.com>, <krish.reddy@samsung.com>,
+	<arun.george@samsung.com>, <alok.rathore@samsung.com>,
+	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<gost.dev@samsung.com>, <cpgs@samsung.com>
+Subject: Re: [RFC PATCH 06/20] nvdimm/region_label: Add region label
+ deletion routine
+Message-ID: <20250623100957.000032a2@huawei.com>
+In-Reply-To: <1256440269.161750165204630.JavaMail.epsvc@epcpadp1new>
+References: <20250617123944.78345-1-s.neeraj@samsung.com>
+	<CGME20250617124022epcas5p2441d6c5dfaeceb744b5fc00add7ceae0@epcas5p2.samsung.com>
+	<1256440269.161750165204630.JavaMail.epsvc@epcpadp1new>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618121358.503781-14-apatel@ventanamicro.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, Jun 18, 2025 at 05:43:48PM +0530, Anup Patel wrote:
+On Tue, 17 Jun 2025 18:09:30 +0530
+Neeraj Kumar <s.neeraj@samsung.com> wrote:
+
+> Added cxl v2.1 format region label deletion routine. This function is
+> used to delete region label from LSA
 > 
-> Currently acpi_fwnode_get_reference_args() calls the public function
-> __acpi_node_get_property_reference() which ignores the nargs_prop
-> parameter. To fix this, make __acpi_node_get_property_reference() to
-> call the static acpi_fwnode_get_reference() so that callers of
-> fwnode_get_reference_args() can still pass a valid property name to
-> fetch the number of arguments.
+> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+> ---
+>  drivers/nvdimm/label.c          | 75 ++++++++++++++++++++++++++++++---
+>  drivers/nvdimm/label.h          |  6 +++
+>  drivers/nvdimm/namespace_devs.c | 12 ++++++
+>  drivers/nvdimm/nd.h             |  9 ++++
+>  include/linux/libnvdimm.h       |  1 +
+>  5 files changed, 98 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
+> index 7f33d14ce0ef..9381c50086fc 100644
+> --- a/drivers/nvdimm/label.c
+> +++ b/drivers/nvdimm/label.c
+> @@ -1034,7 +1034,8 @@ static int init_labels(struct nd_mapping *nd_mapping, int num_labels)
+>  	return max(num_labels, old_num_labels);
+>  }
+>  
+> -static int del_labels(struct nd_mapping *nd_mapping, uuid_t *uuid)
+> +static int del_labels(struct nd_mapping *nd_mapping, uuid_t *uuid,
+> +		enum label_type ltype)
+>  {
+>  	struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
+>  	struct nd_label_ent *label_ent, *e;
+> @@ -1058,8 +1059,18 @@ static int del_labels(struct nd_mapping *nd_mapping, uuid_t *uuid)
+>  		if (!nd_label)
+>  			continue;
+>  		active++;
+> -		if (!nsl_uuid_equal(ndd, &nd_label->ns_label, uuid))
+> -			continue;
+> +
+> +		if (ltype == NS_LABEL_TYPE) {
 
-Looks okay to me, but I think it's better to have more eyes here (Mika,
-Rafael?).
+Perhaps a switch is more appropriate here.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> +			if (!nsl_uuid_equal(ndd, &nd_label->ns_label, uuid))
+> +				continue;
+> +		} else if (ltype == RG_LABEL_TYPE) {
+> +			if (!nsl_uuid_equal(ndd, &nd_label->ns_label, uuid))
+> +				continue;
+> +		} else {
+> +			dev_err(ndd->dev, "Invalid label type\n");
+> +			return 0;
+> +		}
+> +
+>  		active--;
+>  		slot = to_slot(ndd, nd_label);
+>  		nd_label_free_slot(ndd, slot);
 
+> @@ -1259,6 +1271,59 @@ int nd_pmem_region_label_update(struct nd_region *nd_region)
+>  	return 0;
+>  }
+>  
+> +int nd_pmem_region_label_delete(struct nd_region *nd_region)
+> +{
+> +	int i, rc;
+> +	struct nd_interleave_set *nd_set = nd_region->nd_set;
+> +	struct nd_label_ent *label_ent;
+> +	bool is_non_rgl = false;
+> +	int ns_region_cnt = 0;
+> +
+> +	for (i = 0; i < nd_region->ndr_mappings; i++) {
+> +		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
+> +		struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
+> +
+> +		/* Find non cxl format supported ndr_mappings */
+> +		if (!ndd->cxl)
+> +			is_non_rgl = true;
+> +
+> +		/* Find if any NS label using this region */
+> +		mutex_lock(&nd_mapping->lock);
+> +		list_for_each_entry(label_ent, &nd_mapping->labels, list) {
+> +			if (!label_ent->label)
+> +				continue;
+> +
+> +			/* Check if any available NS labels has same
+
+Looks like wrong style for multiline comments in this file.
+
+			/*
+			 * Check ...
+
+> +			 * region_uuid in LSA
+> +			 */
+> +			if (nsl_region_uuid_equal(&label_ent->label->ns_label,
+> +						  &nd_set->uuid))
+> +				ns_region_cnt++;
+> +		}
+> +		mutex_unlock(&nd_mapping->lock);
+> +	}
+> +
+> +	if (is_non_rgl) {
+> +		dev_dbg(&nd_region->dev, "Region label deletion unsupported\n");
+> +		return -EINVAL;
+
+Why not bail out where you originally detect that above?
+
+> +	}
+> +
+> +	if (ns_region_cnt) {
+> +		dev_dbg(&nd_region->dev, "Region/Namespace label in use\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	for (i = 0; i < nd_region->ndr_mappings; i++) {
+> +		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
+> +
+> +		rc = del_labels(nd_mapping, &nd_set->uuid, RG_LABEL_TYPE);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	return 0;
+> +}
 
