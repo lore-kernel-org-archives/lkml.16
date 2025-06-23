@@ -1,125 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E826B253B67;
-	Mon, 23 Jun 2025 15:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7B5EAC6;
+	Mon, 23 Jun 2025 15:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750694320; cv=none; b=nToXZ0xxR8zhHDGMgvqaat42T5qeiXG0ISIsh5IutRQXdVfGDK+fygtTzTV3lP0gqmMIBnw64n4vFUvyLwLMzI7jE4nRj9jULwhXmYUNzwI1P1m1ZlhNWdw9FaOBCB3IrVSNIHl89osKI8lB7v9lAGmfUXNqqYagGRacQpmZKHo=
+	t=1750694357; cv=none; b=IHBxYver+PKSJgRlb0po7GHV+6UNLQLWu/03Fg1ncF8AxYvLpEPWMLI4ajqsXx0wt2NmKEf+WxE6rRx9D1Qlck75rB9SU+bJNjAVCvyNgM4kEOyOg5/URl6cmxTBAai1Nxq3vClyYSNW5UJ5nwYvvUSUKpRGVq8LPzW4lRleFq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750694320; c=relaxed/simple;
-	bh=MBmtOH9m6zr81wji+yIuMSpqTbR3C3+WuqdmMBu0WVU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d57bslakNdTIszY6dHd518I7wUToFRn81gU/Vr8cPa8BO9DR2bou+EL/GfnhYJOpDgzm+D6GGST4RSRT3i+eg8Ib0iReGyNaEXKXzeR2uTK1mwErrPd6z+ujJuHa6AO9C3q2SRqP6iI3smDNzpLh/goCovPEiAvfiPXPncFNgbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a/hdkmmf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750694357; c=relaxed/simple;
+	bh=5SNzJG34BaNHLNojkHzQMSWdy62ROpkWI/bAj3LGaNs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cziOfDbnfOx4lgx9AiuRQbgE2cAo6NUXy7QBhoh2FGPeh8jH+3UZFhjAfbuwuf+3D7XXrkFDtLV4hPTuaJ8UEaI8iNcIqzbOmhNLsOt/GJJin2e5M1G3ey8Mx4nAW8Sj49laad68+eI7kNU0UiQPUad5f9r3UgIR7isr665zUIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=F2WccYM9; arc=none smtp.client-ip=199.89.3.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a/hdkmmf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81277C4CEEA;
-	Mon, 23 Jun 2025 15:58:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750694317;
-	bh=MBmtOH9m6zr81wji+yIuMSpqTbR3C3+WuqdmMBu0WVU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a/hdkmmf37JuuBRRIQqHxENDG6LmCaTmsJp2DHu7KCr0mZRs4pMvtzIzwaJWRy3Xa
-	 4fYQWPNVfpITMNEkZLGMafBo6GVgCwxjW8sW0YsiqKG/unwlNXMPR4GpPrZy6AwCzZ
-	 vvAWz50fwIGN7BHS5wK8ouR+ISNxq8yd16oS8fYckmhD5hAvz0hvTy7muPjfc4kxbg
-	 QyicczYhD/4fzwCShSSpTX4eWkVEvInZKE5MBwmC2xDCqWQUWSqTN5dHU18wYrSTHG
-	 QLZyUBoHa9ZkMEWNMJZV0ebpOq8Q6Z89vV3uYkr98l4tGodaCeAaa0iiLEfybrQRRd
-	 1nRuvP660Ry6w==
-Date: Mon, 23 Jun 2025 21:24:37 +0530
-From: Naveen N Rao <naveen@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
-	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, kvm@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, Sairaj Kodilkar <sarunkod@amd.com>, 
-	Vasant Hegde <vasant.hegde@amd.com>, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Joao Martins <joao.m.martins@oracle.com>, Francesco Lavra <francescolavra.fl@gmail.com>, 
-	David Matlack <dmatlack@google.com>
-Subject: Re: [PATCH v3 20/62] KVM: SVM: Add a comment to explain why
- avic_vcpu_blocking() ignores IRQ blocking
-Message-ID: <pxtvegopzsyhn7lelksclxiiee7tumppu76553rax7octqpy7i@giclgo667htf>
-References: <20250611224604.313496-2-seanjc@google.com>
- <20250611224604.313496-22-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="F2WccYM9"
+Received: from localhost (localhost [127.0.0.1])
+	by 004.mia.mailroute.net (Postfix) with ESMTP id 4bQt7655b9zm0yQh;
+	Mon, 23 Jun 2025 15:59:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1750694353; x=1753286354; bh=cbVOYUXSPTzoe7vacJFqcLVK
+	J0SLk5Eu0pKoTubhiBY=; b=F2WccYM9LmTeP2k0Z0w2XDnB7cpL69LkjZMkl9wX
+	yGN8+V9fDrUXIjMIj9uLk/Wf3fxM61hm0vidTq+oV7dxnHlfPzeGSt7O4JkoZLgz
+	8X4X9OdVhJ+yB5dTLmbvq9h39SfSiNwGMoH+bQd6etHKsxoO2w0HEnwx9DyFocD/
+	pL0/qJN3jA598mmusewlpUFJORHeHj0PibGbMfSaKiCy5/FHRiw1yUHkJ1LEZJBI
+	KmbZqQKP0qaBs7xNfSR3o4mLqQWP7neYPNoosdYFOGk1rRIHfrSUpR9AcY6BYDFF
+	7nmzngznJxwSX/ppZmFHHdcw9vqMnMjK9ml/v5LsWVY9HQ==
+X-Virus-Scanned: by MailRoute
+Received: from 004.mia.mailroute.net ([127.0.0.1])
+ by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id pphezMWeszEu; Mon, 23 Jun 2025 15:59:13 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4bQt6z4zdPzm0yt2;
+	Mon, 23 Jun 2025 15:59:06 +0000 (UTC)
+Message-ID: <57435584-b04e-4de6-908c-018fe48ad0ac@acm.org>
+Date: Mon, 23 Jun 2025 08:59:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611224604.313496-22-seanjc@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] scsi: scsi_devinfo: remove redundant 'found'
+To: mrigendrachaubey <mrigendra.chaubey@gmail.com>,
+ James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250622055709.7893-1-mrigendra.chaubey@gmail.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250622055709.7893-1-mrigendra.chaubey@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 11, 2025 at 03:45:23PM -0700, Sean Christopherson wrote:
-> Add a comment to explain why KVM clears IsRunning when putting a vCPU,
-> even though leaving IsRunning=1 would be ok from a functional perspective.
-> Per Maxim's experiments, a misbehaving VM could spam the AVIC doorbell so
-> fast as to induce a 50%+ loss in performance.
+On 6/21/25 10:57 PM, mrigendrachaubey wrote:
+> Remove the unnecessary 'found' flag in scsi_devinfo_lookup_by_key().
+> The loop can return the matching entry directly when found, and fall
+> through to return ERR_PTR(-EINVAL) otherwise.
 > 
-> Link: https://lore.kernel.org/all/8d7e0d0391df4efc7cb28557297eb2ec9904f1e5.camel@redhat.com
-> Cc: Maxim Levitsky <mlevitsk@redhat.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: mrigendrachaubey <mrigendra.chaubey@gmail.com>
 > ---
->  arch/x86/kvm/svm/avic.c | 31 ++++++++++++++++++-------------
->  1 file changed, 18 insertions(+), 13 deletions(-)
+>   drivers/scsi/scsi_devinfo.c | 11 +++--------
+>   1 file changed, 3 insertions(+), 8 deletions(-)
 > 
-> diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-> index bf8b59556373..3cf929ac117f 100644
-> --- a/arch/x86/kvm/svm/avic.c
-> +++ b/arch/x86/kvm/svm/avic.c
-> @@ -1121,19 +1121,24 @@ void avic_vcpu_blocking(struct kvm_vcpu *vcpu)
->  	if (!kvm_vcpu_apicv_active(vcpu))
->  		return;
->  
-> -       /*
-> -        * Unload the AVIC when the vCPU is about to block, _before_
-> -        * the vCPU actually blocks.
-> -        *
-> -        * Any IRQs that arrive before IsRunning=0 will not cause an
-> -        * incomplete IPI vmexit on the source, therefore vIRR will also
-> -        * be checked by kvm_vcpu_check_block() before blocking.  The
-> -        * memory barrier implicit in set_current_state orders writing
-> -        * IsRunning=0 before reading the vIRR.  The processor needs a
-> -        * matching memory barrier on interrupt delivery between writing
-> -        * IRR and reading IsRunning; the lack of this barrier might be
-> -        * the cause of errata #1235).
-> -        */
-> +	/*
-> +	 * Unload the AVIC when the vCPU is about to block, _before_ the vCPU
-> +	 * actually blocks.
-> +	 *
-> +	 * Note, any IRQs that arrive before IsRunning=0 will not cause an
-> +	 * incomplete IPI vmexit on the source; kvm_vcpu_check_block() handles
-> +	 * this by checking vIRR one last time before blocking.  The memory
-> +	 * barrier implicit in set_current_state orders writing IsRunning=0
-> +	 * before reading the vIRR.  The processor needs a matching memory
-> +	 * barrier on interrupt delivery between writing IRR and reading
-> +	 * IsRunning; the lack of this barrier might be the cause of errata #1235).
-> +	 *
-> +	 * Clear IsRunning=0 even if guest IRQs are disabled, i.e. even if KVM
-> +	 * doesn't need to detect events for scheduling purposes.  The doorbell
+> diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
+> index a348df895dca..e364829b6079 100644
+> --- a/drivers/scsi/scsi_devinfo.c
+> +++ b/drivers/scsi/scsi_devinfo.c
+> @@ -269,17 +269,12 @@ static struct {
+>   static struct scsi_dev_info_list_table *scsi_devinfo_lookup_by_key(int key)
+>   {
+>   	struct scsi_dev_info_list_table *devinfo_table;
+> -	int found = 0;
+>   
+>   	list_for_each_entry(devinfo_table, &scsi_dev_info_list, node)
+> -		if (devinfo_table->key == key) {
+> -			found = 1;
+> -			break;
+> -		}
+> -	if (!found)
+> -		return ERR_PTR(-EINVAL);
+> +		if (devinfo_table->key == key)
+> +			return devinfo_table;
+>   
+> -	return devinfo_table;
+> +	return ERR_PTR(-EINVAL);
+>   }
 
-Nit: just IsRunning (you can drop the =0 part).
-
-Trying to understand the significance of IRQs being disabled here. Is 
-that a path KVM tries to optimize? Theoretically, it looks like we want 
-to clear IsRunning regardless of whether the vCPU is blocked so as to 
-prevent the guest from spamming the host with AVIC doorbells -- compared 
-to always keeping IsRunning set so as to speed up VM entry/exit.
-
-> +	 * used to signal running vCPUs cannot be blocked, i.e. will perturb the
-> +	 * CPU and cause noisy neighbor problems if the VM is sending interrupts
-> +	 * to the vCPU while it's scheduled out.
-> +	 */
->  	avic_vcpu_put(vcpu);
->  }
-
-Otherwise, this LGTM.
-Acked-by: Naveen N Rao (AMD) <naveen@kernel.org>
-
-
-Thanks,
-Naveen
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 
