@@ -1,45 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FD32367CC
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2892367A6
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750668670; cv=none; b=oKSNosvTHpNJz2OMSP1twOZ1YLsxkztwUO7Im6bJaufbfJQHXIF3dqTB819nwPji44kiomyO2twzj7zBLO28ERDraanduafAOCE61MiJe1gcTqu8gqdqBHiZXOBkk1tHcg7lsqLySpWvY9lq45cke7gYUEUu93VHE/kAc+Xdql0=
+	t=1750668671; cv=none; b=I8OocmNg801cRqt4Zc0I1CJGHhgxKGd+e3IsdZ6ARqbWiKPR1eSpmGBMSb/ee8tgaf9G/WbXniP7z+ZX1oksaZCcZICforntwqsUkVIbEL7gPtx1QsCSjXrGi7DOkfO+ufCs0DmSHHANn8LJn8w5jCkVK5StGEPpz3+xGxeb7jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750668670; c=relaxed/simple;
-	bh=Hwrcx7bSN2Q64gKzKoyNC9kLUgY3eRMYO5s66lvzboM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H6ejlt10a2ILpiwrfbuPdg6pxgMjU9SMChrAHkFpkjuTXlEGywPu2RkI+R7ltHsnoEwAfssgkHCM+9g/37IL0IL15AhuXthPnbPAPpY0bIXmV6SpBldvZ3kP6EyPfeV2z/f1J6WzG9QCOrkvdV1+dIWouWzG6MA2u1pNX+7nDxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BIF7OuxA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750668671; c=relaxed/simple;
+	bh=+dyykSKpkvAg1cHrSs79NNyyF4y8YNApu5EJxpATbO4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u5HazpBacIQ1FQJJci1g22Lndi7Cn0EiOWFAniWz7Btf+Laf7ddvZpX50iQom2DY0k9acMEL1s00mDl9biBmDfzA2w1nnUqCkUzlP656mq3dwRKQSa+imbxPfXeit9057G64y43oYiQLn0xkIIsgkj9HbskotiRRu2VQEBRUshA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Nw4EAU7C; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BIF7OuxA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00ACAC4CEEA;
-	Mon, 23 Jun 2025 08:51:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750668670;
-	bh=Hwrcx7bSN2Q64gKzKoyNC9kLUgY3eRMYO5s66lvzboM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BIF7OuxAWbyFWv201CpYKfPznnWRed9DUZ3f9YKrPdFJHRpZxb5fcUA2X1eE1Bykw
-	 NFXrro+S+AacGrYuaMURQwAWcoLsffnsb5zxyIy3JW4r4ehrI/dRo4e1zp7T0Xb5sC
-	 IRIJMWQngY2tkB7mhQOyq3ZlG5mvF6erVLGAUHNo1Pu4/JguoAA0k93H8fGPOL4hHs
-	 JnlJFXUgga49VnUcOH0oyyIBKLw4TRMmvTZuepm/vQAfaqZVRLcbcr3G8qe+yP7faq
-	 X63JTvhjk4uubV9UL7z6Ac9yvhD6T96Ea/HneNp5wNb/VfgtOlzS3smrT9SNDn5pI1
-	 XHe9x61oGu+aw==
-From: Hans de Goede <hansg@kernel.org>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
-	Alexander Usyskin <alexander.usyskin@intel.com>
-Cc: Hans de Goede <hansg@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Nw4EAU7C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750668667;
+	bh=+dyykSKpkvAg1cHrSs79NNyyF4y8YNApu5EJxpATbO4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Nw4EAU7CFQonoVgTc0cjbGdIeOE5CEJA0kHu40whVXl4H9hnPxs9xjLT5GzltAZ8Z
+	 MwYLkul8+HL6oJkRlrcphhDVQyA0NIdl4kZi+9x0LNVdIHCTttG6MznvsC7kZHqNk2
+	 6809ieKwKVP03rPQcgog2ERXPyUzDTjY3429AgMW2e1+2IF+Lqo0x6Jr35R4E4LMst
+	 Ma6fagq1XfoG40RJDNh+ZbHmeTiNPcz3IHjst5zbnapg5jeGzH8zhV2N30lb3GpIKP
+	 6Saj8VMJEAATaQ07RgJa3MCNf7wFlw1HK1Iio8ylYesHaEAYQfm2bRtS4jV+uqOmNp
+	 cjkR4pBlHETJA==
+Received: from debian.. (unknown [171.76.82.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 52F9D17E0CE6;
+	Mon, 23 Jun 2025 10:51:04 +0200 (CEST)
+From: Vignesh Raman <vignesh.raman@collabora.com>
+To: dri-devel@lists.freedesktop.org
+Cc: daniels@collabora.com,
+	daniel@fooishbar.org,
+	helen.fornazier@gmail.com,
+	airlied@gmail.com,
+	simona.vetter@ffwll.ch,
+	robdclark@gmail.com,
+	robin.clark@oss.qualcomm.com,
+	guilherme.gallo@collabora.com,
+	sergi.blanch.torne@collabora.com,
+	valentine.burley@collabora.com,
+	lumag@kernel.org,
+	dmitry.baryshkov@oss.qualcomm.com,
+	quic_abhinavk@quicinc.com,
+	mripard@kernel.org,
+	maarten.lankhorst@linux.intel.com,
+	tzimmermann@suse.de,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 06/10] mei: vsc: Event notifier fixes
-Date: Mon, 23 Jun 2025 10:50:48 +0200
-Message-ID: <20250623085052.12347-7-hansg@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250623085052.12347-1-hansg@kernel.org>
-References: <20250623085052.12347-1-hansg@kernel.org>
+Subject: [PATCH v4 0/2] drm/ci: Add devicetree validation and KUnit tests
+Date: Mon, 23 Jun 2025 14:20:26 +0530
+Message-ID: <20250623085033.39680-1-vignesh.raman@collabora.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,73 +63,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-vsc_tp_register_event_cb() can race with vsc_tp_thread_isr(), add a mutex
-to protect against this.
+Add jobs to validate devicetrees and run KUnit tests.
 
-Fixes: 566f5ca97680 ("mei: Add transport driver for IVSC device")
-Signed-off-by: Hans de Goede <hansg@kernel.org>
----
- drivers/misc/mei/vsc-tp.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+Pipeline link,
+https://gitlab.freedesktop.org/vigneshraman/msm/-/pipelines/1455734
 
-diff --git a/drivers/misc/mei/vsc-tp.c b/drivers/misc/mei/vsc-tp.c
-index 0feebffabdb3..76a6aa606a26 100644
---- a/drivers/misc/mei/vsc-tp.c
-+++ b/drivers/misc/mei/vsc-tp.c
-@@ -79,9 +79,8 @@ struct vsc_tp {
- 
- 	vsc_tp_event_cb_t event_notify;
- 	void *event_notify_context;
--
--	/* used to protect command download */
--	struct mutex mutex;
-+	struct mutex event_notify_mutex;	/* protects event_notify + context */
-+	struct mutex mutex;			/* protects command download */
- };
- 
- /* GPIO resources */
-@@ -113,6 +112,8 @@ static irqreturn_t vsc_tp_thread_isr(int irq, void *data)
- {
- 	struct vsc_tp *tp = data;
- 
-+	guard(mutex)(&tp->event_notify_mutex);
-+
- 	if (tp->event_notify)
- 		tp->event_notify(tp->event_notify_context);
- 
-@@ -399,6 +400,8 @@ EXPORT_SYMBOL_NS_GPL(vsc_tp_need_read, "VSC_TP");
- int vsc_tp_register_event_cb(struct vsc_tp *tp, vsc_tp_event_cb_t event_cb,
- 			    void *context)
- {
-+	guard(mutex)(&tp->event_notify_mutex);
-+
- 	tp->event_notify = event_cb;
- 	tp->event_notify_context = context;
- 
-@@ -499,6 +502,7 @@ static int vsc_tp_probe(struct spi_device *spi)
- 		return ret;
- 
- 	mutex_init(&tp->mutex);
-+	mutex_init(&tp->event_notify_mutex);
- 
- 	/* only one child acpi device */
- 	ret = acpi_dev_for_each_child(ACPI_COMPANION(dev),
-@@ -523,6 +527,7 @@ static int vsc_tp_probe(struct spi_device *spi)
- err_destroy_lock:
- 	free_irq(spi->irq, tp);
- 
-+	mutex_destroy(&tp->event_notify_mutex);
- 	mutex_destroy(&tp->mutex);
- 
- 	return ret;
-@@ -537,6 +542,7 @@ static void vsc_tp_remove(struct spi_device *spi)
- 
- 	free_irq(spi->irq, tp);
- 
-+	mutex_destroy(&tp->event_notify_mutex);
- 	mutex_destroy(&tp->mutex);
- }
- 
+Link to v1,
+https://lore.kernel.org/all/20250327160117.945165-1-vignesh.raman@collabora.com/
+
+Link to v2,
+https://lore.kernel.org/all/20250409061543.311184-1-vignesh.raman@collabora.com/
+
+Link to v3,
+https://lore.kernel.org/r/20250417030439.737924-1-vignesh.raman@collabora.com
+
+MR,
+https://gitlab.freedesktop.org/drm/msm/-/merge_requests/173
+
+This series depends on,
+https://lore.kernel.org/all/20250514050340.1418448-1-vignesh.raman@collabora.com/
+https://gitlab.freedesktop.org/drm/msm/-/merge_requests/169
+
+Vignesh Raman (2):
+  drm/ci: Add jobs to validate devicetrees
+  drm/ci: Add jobs to run KUnit tests
+
+ drivers/gpu/drm/ci/check-devicetrees.yml | 50 ++++++++++++++++++++++++
+ drivers/gpu/drm/ci/dt-binding-check.sh   | 19 +++++++++
+ drivers/gpu/drm/ci/dtbs-check.sh         | 22 +++++++++++
+ drivers/gpu/drm/ci/gitlab-ci.yml         |  4 ++
+ drivers/gpu/drm/ci/kunit.sh              | 16 ++++++++
+ drivers/gpu/drm/ci/kunit.yml             | 37 ++++++++++++++++++
+ drivers/gpu/drm/ci/setup-llvm-links.sh   | 13 ++++++
+ 7 files changed, 161 insertions(+)
+ create mode 100644 drivers/gpu/drm/ci/check-devicetrees.yml
+ create mode 100755 drivers/gpu/drm/ci/dt-binding-check.sh
+ create mode 100755 drivers/gpu/drm/ci/dtbs-check.sh
+ create mode 100755 drivers/gpu/drm/ci/kunit.sh
+ create mode 100644 drivers/gpu/drm/ci/kunit.yml
+ create mode 100755 drivers/gpu/drm/ci/setup-llvm-links.sh
+
 -- 
-2.49.0
+2.47.2
 
