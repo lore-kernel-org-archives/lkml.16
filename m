@@ -1,78 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756962D12F4;
-	Mon, 23 Jun 2025 20:19:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B1E1F5617
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 20:20:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750709981; cv=none; b=PpilK95NF6w83OIEu67xOpM6V9QcaPDWNUO5eI0BT8usitVwYIVdjnCmWn4Za8+CCRh1pREVne/ZixEyKaJQEAU6PH6dPFajHEXnbR+QRBfspaQryUX6ue15iXKmBhOj8Cui7oAQQR+76DGbdZjTWmXy6GEVDpTIV7RjUfEghZ4=
+	t=1750710003; cv=none; b=Ev+GNgiujhRLaLJpRHQu93CNcmD9GgKXiXcSqPA3sBlSnNYfgJSUtQGw0dVEPQPFnVHOpJvtf2hvY1e1VTadCey/Kk78xqlONbMFHFivIOBBAoHmZSRRfXTo34ud7d5GZ3DYJqaltr6+NbfEcihlxQkcT1dMXKhaiAek5mwNwKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750709981; c=relaxed/simple;
-	bh=9+JDx6QWgUTXG1BF4D42+O53MQeLmJgUcCobkGA3twU=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=lfITfs/BmHHob+p+ITQEgTSVveC1hUUDqTFJcYH2S9VrfHPeSbkdsdE6YHklXEydlUZs1FPXioNcyrVQGVaSXDkMdRY6fuYafbr46DIpaock/xysGUYsfmW49QUbNz8fX9P3JzmW+ms/VNa/Z5PZCLvwSNzKst/+uNdj5PIcXII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ptEy5oFS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750710003; c=relaxed/simple;
+	bh=yFEuTU9pYo/Ex+4VAEd2jxsQpXFnO25H/xgn5cagRwU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W5mfld089GdBhSW70Tl3ExowT0duD/abZWCCLsCB/C90NkQesFmOaYPVJr7+H+CVsgw0dkGZ1A+z7mql+kzYlDtRQ9IlbG4G2E+MuV5Dheo4nh+rpXizJlM3lZiR5AyDkg8eaIDyY/fglwc1YurhVQsQK9xBEmYFa+5J07SLLRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6wTUewF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ptEy5oFS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4136AC4CEED;
-	Mon, 23 Jun 2025 20:19:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6wTUewF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4B7EC4CEEA;
+	Mon, 23 Jun 2025 20:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750709979;
-	bh=9+JDx6QWgUTXG1BF4D42+O53MQeLmJgUcCobkGA3twU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ptEy5oFSod82IjZBf8NDr6qTAxQq8KnBa+jgiyPwf3mE0J1MT2K2YJ6GGtCz2wz/Q
-	 CWuOaiYiszTI6SzVIm+FzteMNSW41fT3QF8chG70KFT1MaNigwCGhq81m3eA4ErLds
-	 73FSrQ8OoUSQ0GTCpfK0hvWYN0AfkK0r5wXS2n1TrW0Z8vP0NI/sQixCCMDdJHrjht
-	 AfcMVkwaI7GNWJXanym0+3ltOiY3gOZ59WwK+okPW9uUKAVWq0vp4quWVrArAbbn95
-	 nLNPhnr981WO1GxIrNm2iofxZfX++MXFdMHUXgfZZ2XlaNENSP3V2xSnQ2CVP4zHqR
-	 gB9d5r9H0Yg/A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 710D239FEB7E;
-	Mon, 23 Jun 2025 20:20:07 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1750710002;
+	bh=yFEuTU9pYo/Ex+4VAEd2jxsQpXFnO25H/xgn5cagRwU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L6wTUewFUDNCtHB4oJx0wXgrHT6YZuOllc6p2qDz8aBFO+y4pY6pHApSoHh0nvrsG
+	 zYD3LfBRbdoqTBBamEoH8cnU8Mjvspc9ZaQXoka5BbHsNRFUhHMfr0nh1VUhz1ZJPN
+	 52+8WrP7QfBXB9mceg6N2guNsszk8ctG4ZQe2SPdtHJAzFFPeTAGKlKHJfxvyJj/y1
+	 wY7iEjdgD26AiUFr1WIDc4IcNBIGvGHiPQBqaB3kTeyAtKz5P8c0tWgJgs7jOxpQb/
+	 2YrIlsJLo3tz7V07ytAgsdGVT/I57O3S5DacaLsGwXJLilRePpbhBXDN9TS+RnfTac
+	 vSi7wHfJDFf9w==
+Date: Mon, 23 Jun 2025 10:20:01 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>
+Subject: Re: [PATCH v5 05/14] sched/deadline: Return EBUSY if dl_bw_cpus is
+ zero
+Message-ID: <aFm28aLvL0Lu7LuH@slm.duckdns.org>
+References: <20250620203234.3349930-1-joelagnelf@nvidia.com>
+ <20250620203234.3349930-6-joelagnelf@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] ethtool: pse-pd: Add missing linux/export.h
- include
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175071000625.3285687.12745921546977020249.git-patchwork-notify@kernel.org>
-Date: Mon, 23 Jun 2025 20:20:06 +0000
-References: <20250619162547.1989468-1-kory.maincent@bootlin.com>
-In-Reply-To: <20250619162547.1989468-1-kory.maincent@bootlin.com>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, lkp@intel.com,
- thomas.petazzoni@bootlin.com, o.rempel@pengutronix.de, andrew@lunn.ch,
- kuba@kernel.org, davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- horms@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620203234.3349930-6-joelagnelf@nvidia.com>
 
-Hello:
+On Fri, Jun 20, 2025 at 04:32:20PM -0400, Joel Fernandes wrote:
+> -	if (__dl_overflow(dl_b, cap, old_bw, new_bw))
+> +	// Hotplugged CPUs coming online do an enqueue but are not a part of any
+> +	// root domain containing cpu_active() CPUs. So in this case, don't mess
+> +	// with accounting and we can retry later.
+> +	if (!cpus || __dl_overflow(dl_b, cap, old_bw, new_bw))
+>  		return -EBUSY;
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Maybe match the comment style in the file?
 
-On Thu, 19 Jun 2025 18:25:47 +0200 you wrote:
-> Fix missing linux/export.h header include in net/ethtool/pse-pd.c to resolve
-> build warning reported by the kernel test robot.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506200024.T3O0FWeR-lkp@intel.com/
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> 
-> [...]
+Thanks.
 
-Here is the summary with links:
-  - [net-next] ethtool: pse-pd: Add missing linux/export.h include
-    https://git.kernel.org/netdev/net-next/c/96c16c59b705
-
-You are awesome, thank you!
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+tejun
