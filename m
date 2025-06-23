@@ -1,73 +1,71 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674F71DA23
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:10:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7339238C16
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750673429; cv=none; b=OT5N8L48/FNkjT0pBAUNdrCnU6jdQzj/eDZR3BzR/P2y+NntxRabUzs5QGQbbI1AEjuTL+mldrilVuOE8q3bEFAwOmtxOB+OsnKYHcdO3PCkD1SY47ByVJYKnNvrEA/Vfdp6MgiJy7FZQFCntCzbCarT+NPQK5eWX95SGf0KdTY=
+	t=1750673431; cv=none; b=XGwU0Dfgvwy02uKTfxBp8+dHG0938wtx+6MBODpUg2p5rKyLr6YdHAE9TXwaTixGRF/rnTeZLlhPxJI5PpAe0kbNxAXT11R7nJ9xHsv5f3afeS677tmm9omoIDIlncXLOFNpzKf0np00xoGHr3nEXzFk6vRj6jI335qw5uRWuaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750673429; c=relaxed/simple;
-	bh=3ZUFpokQoSvgZvhh8ue+5cuzKIWcZegvvPFyEZdALS0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tQoIV9sKcWL0Ekdeq+zhlqYPFpHRZgINyHBKbgR4O1enbAMmHCmRSg0zI2kWTV2EN8rCcIFqGqL4+3W7XFj2fvJ8ByoRc/PcI3Y5dENHPTn5fS0qJSkrqg3mSBCgtrBcGPesm8Bm1F2CyJiehPNp4kyimdg3u9S/abOJmKbaHuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bw9ZdiP5; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1750673431; c=relaxed/simple;
+	bh=eDafVBAEoaQvcPikWAU5UQsI3U/4ErbnstbH7OnLoVg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=h57/arVkp1ulFOChzTOSwmNU8pBTbmOIRfRD4Q81rUEALaiKNc3lh1K08uqgKixU5y82kkR3aYX/o9yTqomfcTBLoy52rXc38CCo9A7foX3EF2pApmG1hbQd5JAz9xW0XQ+E2pf+tkU7OxrEUqvwF9T+9XJ0nt4VcO9tI9Jx7xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i5PPsRZX; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bw9ZdiP5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i5PPsRZX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750673426;
+	s=mimecast20190719; t=1750673428;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ETVG0JoOYSiEcX7weCnSYJvPswL0KYtxaM6qJiyeiUU=;
-	b=Bw9ZdiP5o08vu34mHNadGljIX8KBIr2U5yl/4YZ4UObtEjhLjluBdMvzYyOSBl6p0yxxNa
-	NdHS4+nMbTGS4KQF9J/IZlk+hZ7aHml6lS8N3YDpPHgPTX97qQjuCzt4rlj6synADngoQP
-	rxPqxRitV8JfQmMYMSULViU77mqbAmQ=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	 in-reply-to:in-reply-to:references:references;
+	bh=k0QTXQBLxcMhOeb0i/VFxTw420XqKRgS33hIZfnQXmI=;
+	b=i5PPsRZXprZB1m9Qne9+d/35L2R7+JC/wpcBQa8IoMCCb71V7XHgGGIUuigpYbxvLy20aR
+	gR5jZ44POC3yorqRRy3eiQBcPCtONGoJx3sOJA4kW2/53haamnJQ4VJqsQoXk+NKyQ+Diw
+	CwN4k7G7RvBia3lRYX7o0AAsQ04i2FU=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-302-riNv-8yKMK6cSHDj3yNolQ-1; Mon, 23 Jun 2025 06:10:25 -0400
-X-MC-Unique: riNv-8yKMK6cSHDj3yNolQ-1
-X-Mimecast-MFC-AGG-ID: riNv-8yKMK6cSHDj3yNolQ_1750673424
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43e9b0fd00cso21838955e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 03:10:24 -0700 (PDT)
+ us-mta-404-V7diFA5_OfieBcuL88OY0A-1; Mon, 23 Jun 2025 06:10:27 -0400
+X-MC-Unique: V7diFA5_OfieBcuL88OY0A-1
+X-Mimecast-MFC-AGG-ID: V7diFA5_OfieBcuL88OY0A_1750673426
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4530ec2c87cso20910695e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 03:10:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750673424; x=1751278224;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ETVG0JoOYSiEcX7weCnSYJvPswL0KYtxaM6qJiyeiUU=;
-        b=AjqAHX619iUuKVIwfdDEz+exo8dO7MjHaPvsNGKLlYTQ56Gt8MMt7tHLz0qtEETl0L
-         3b7gXvOPxcxyfY0OEJjSBLcQ6Ohv7mVRxIxxjOQMwRL2FVtw6OkI4jHWKGEMIoE6QzDQ
-         Y4TqDpgcXdXOtc46ZK5YF0iyFwweoY41leMOChjZe1m+YadPIZQXDPwvRrNECELEurEd
-         FNuHVxzufY+2N2aM7YxmV40udzydTFWWONWrOQ0QailU9UzlKBPORfANeb63OeU55kmS
-         VeYxKITz6H5/XGYIe7veDBbBfNxmI/IjSKNO8WiuZfpQ8xW0Nidwfjk2s28RZ/OGDnOf
-         ZEdA==
-X-Forwarded-Encrypted: i=1; AJvYcCUrI8hEbbYihhaN+pgRw3NnpAEEAWMG9uB9If1+ceJFbJIZt8Sd49Kv6yRj80302hPe2KuyV4Y7cND4e2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzllaxbQwxBsflCJBK6m0axxRHI1ePr6NbtV6Cpd6DYkQJ5qPXr
-	HZej5wMyS7D0deH98bMKpQSPWQpkzfFHVLkZR5Ff4RKiT69a1MGhL8GytcM6tGDCbASmfD7k7XW
-	qcZc05X5XJN32VmWPTt20pHpZeKsXzOwMcE4OOuiO7vOb5lPfIHfc4djsixWEuFRITA==
-X-Gm-Gg: ASbGnctHjvxtcVWPFww8wtCksS6bMm2bbc/QfsW7NVLuYSj2d/inNZi5wzsX1o64ZpJ
-	W2J+yfB3SSWi4OygMsgaj6d0Owc0kAy6lE2RZk/Naqm8DH6Tmdmy72c3KAAU+y/4ur+vlHwREt/
-	CUjU3pUYAPZZF9/h/wYzv0GjbPLn+lcKf3bjV8OujZO/yctLNyxcSF4qbKW7LwZOZ5jTSxW3OkK
-	gKLPBxJipKVQfQqXo4b6OokuoPEVKbvqOQCyO1HujGXmpoxds9cm4wtJQxbYklC1fzE/GREmIcP
-	bFRXV527f0OpEEkmisDsdnvLNEtIxF58B/ecmAQ3lEnmIv75Gnd8WWe1z/XWMwMfzZw/Q9utJTh
-	ui0aEhBN1whgnfnl8rhQ/G7N++s39NcL+UM2Di/jOjDEyXIVAWQ==
-X-Received: by 2002:a05:600c:8588:b0:43c:f3e1:a729 with SMTP id 5b1f17b1804b1-45365e7b390mr79916065e9.12.1750673423764;
-        Mon, 23 Jun 2025 03:10:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEY7uPe04dho/W1TbrYuasoWSwlBGpD2SCy2IZOjzGhmcksEQk+lccG0ZP2nipj6wv61YR+8g==
-X-Received: by 2002:a05:600c:8588:b0:43c:f3e1:a729 with SMTP id 5b1f17b1804b1-45365e7b390mr79915805e9.12.1750673423384;
-        Mon, 23 Jun 2025 03:10:23 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159? (p200300d82f4efd008e13e3b590c81159.dip0.t-ipconnect.de. [2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f10a8csm9188410f8f.13.2025.06.23.03.10.22
+        d=1e100.net; s=20230601; t=1750673426; x=1751278226;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k0QTXQBLxcMhOeb0i/VFxTw420XqKRgS33hIZfnQXmI=;
+        b=bKJv/K3sAbPFpbfD2Jz+HjPvlKF7bU3nyEPHQ8+pbE9g2k9zdW2R9YLeiafC52gdCN
+         PU2ew4mPp7a5ehfKr5XchQHDTGBLrUvXHwAMbZsgPbN6nCqruZAZu6uyTAdxJ+ADuN+v
+         oEdul47KOeAMt5Y8T/4bCJewIi3czwaBFinsvyiiLsj3MV+afzq3oVVx9620r64qJnbz
+         dHMABPAx2L0w1B92Ouxbn1qztLbJxB236y7RixoREMzixQzvO30+ryM58QXi8RbaUiiS
+         kuAR7EoE6LDQhlsID6OM57DXCsu9RZAt4khiiTiNT1zmSyg9Rrwks2oOFcJTRphLGaTM
+         Yu6g==
+X-Forwarded-Encrypted: i=1; AJvYcCUuYiieiTcG8wlImn6vcX6raF2A26bBiJVd+MEBDsbsEQ//4ZCmUVkeaFkCc6S2tNz5HFd7wW+AFsKr/mU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylnfRomzraB4vnwtLNJK/HiUFjW+M3blxatoJL6o98UcIQXDx9
+	HAyjlzb86La7Shr/YcPZgqRm6YNos2RPUIfjYix94ec47/gaPOx+io+5LOEV2TXRMFe1VPPEhZo
+	qm/qSy4FjMzO8pyB39YU1OQW1qGB3lKZKJfXIQb6ClaNcwBN4PnPczW8H8vME1o1pjg==
+X-Gm-Gg: ASbGncsSA7H34yacc/0b4HGFdHlWW32wcSjJy1BIpFUhwvwx4Cb9eLOlh7mlrp8K9rW
+	M4fYchTOQJ9ocINHV+HdfEUVTSFJJoUt06e5JyfkuvjBuHnjUHznZVIQEp/ej0wCTQxV4DsQGmC
+	peWbDcuKlkkAUxJnxtcu/CuddkUAFLg0a+qST/bVFxp7+jDw7c1qhfmnZsTihocRwo1BDX1hRET
+	vNK3iYQVRHr6RkABxVh7HpXVOT+XEndhV8DCw6Qxx3ZgjdMWYgvzUmd8GQG9MF9FQkPoZIFH3Zq
+	QXcgIqe7CGPk9smERiAAjg/BawZ06CuuDwmc9TWFWbAiQG2Wx6ri07D7ou1YFQ==
+X-Received: by 2002:a05:600c:8594:b0:453:9b3:5b67 with SMTP id 5b1f17b1804b1-453659f8324mr45132995e9.24.1750673425999;
+        Mon, 23 Jun 2025 03:10:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHD/EDMvqV0TmgUGzrlFNaHgM4CsvQsUMw4O18DWIgIsMuiop7OwY4JI2S/azLj8QrlBp/XkA==
+X-Received: by 2002:a05:600c:8594:b0:453:9b3:5b67 with SMTP id 5b1f17b1804b1-453659f8324mr45132755e9.24.1750673425513;
+        Mon, 23 Jun 2025 03:10:25 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:c:37e0:8998:e0cf:68cc:1b62? ([2a01:e0a:c:37e0:8998:e0cf:68cc:1b62])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535eada7adsm140785055e9.35.2025.06.23.03.10.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 03:10:22 -0700 (PDT)
-Message-ID: <56862a1d-71c0-4f07-9c1a-9d70069b4d9e@redhat.com>
-Date: Mon, 23 Jun 2025 12:10:21 +0200
+        Mon, 23 Jun 2025 03:10:24 -0700 (PDT)
+Message-ID: <4d81cf64-7bf1-4a7d-8682-fc817d74c373@redhat.com>
+Date: Mon, 23 Jun 2025 12:10:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,126 +73,166 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [mm?] kernel BUG in sanity_check_pinned_pages
-To: Alexander Potapenko <glider@google.com>
-Cc: syzbot <syzbot+1d335893772467199ab6@syzkaller.appspotmail.com>,
- akpm@linux-foundation.org, axboe@kernel.dk, catalin.marinas@arm.com,
- jgg@ziepe.ca, jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, peterx@redhat.com, syzkaller-bugs@googlegroups.com
-References: <6857299a.a00a0220.137b3.0085.GAE@google.com>
- <b5aa34ed-d7d4-4445-b8bb-6187b4100682@redhat.com>
- <CAG_fn=WBBwkZZZzBMp0SO3=POgKzNaJGkU_YJKcAKRVQdEYPqw@mail.gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <CAG_fn=WBBwkZZZzBMp0SO3=POgKzNaJGkU_YJKcAKRVQdEYPqw@mail.gmail.com>
+Subject: Re: [PATCH v10 00/10] drm/i915: Add drm_panic support
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>,
+ =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>,
+ Matthew Auld <matthew.auld@intel.com>,
+ Matthew Brost <matthew.brost@intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250618094011.238154-1-jfalempe@redhat.com>
+ <c28aad52-7977-4763-9690-9aed1910c834@linux.intel.com>
+Content-Language: en-US, fr
+From: Jocelyn Falempe <jfalempe@redhat.com>
+In-Reply-To: <c28aad52-7977-4763-9690-9aed1910c834@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 23.06.25 11:53, Alexander Potapenko wrote:
-> On Mon, Jun 23, 2025 at 11:29 AM 'David Hildenbrand' via
-> syzkaller-bugs <syzkaller-bugs@googlegroups.com> wrote:
->>
->> On 21.06.25 23:52, syzbot wrote:
->>> syzbot has found a reproducer for the following issue on:
->>>
->>> HEAD commit:    9aa9b43d689e Merge branch 'for-next/core' into for-kernelci
->>> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
->>> console output: https://syzkaller.appspot.com/x/log.txt?x=1525330c580000
->>> kernel config:  https://syzkaller.appspot.com/x/.config?x=27f179c74d5c35cd
->>> dashboard link: https://syzkaller.appspot.com/bug?extid=1d335893772467199ab6
->>> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
->>> userspace arch: arm64
->>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16d73370580000
->>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=160ef30c580000
->>
->> There is not that much magic in there, I'm afraid.
->>
->> fork() is only used to spin up guests, but before the memory region of
->> interest is actually allocated, IIUC. No threading code that races.
->>
->> IIUC, it triggers fairly fast on aarch64. I've left it running for a
->> while on x86_64 without any luck.
->>
->> So maybe this is really some aarch64-special stuff (pointer tagging?).
->>
->> In particular, there is something very weird in the reproducer:
->>
->>     syscall(__NR_madvise, /*addr=*/0x20a93000ul, /*len=*/0x4000ul,
->>             /*advice=MADV_HUGEPAGE|0x800000000*/ 0x80000000eul);
->>
->> advise is supposed to be a 32bit int. What does the magical
->> "0x800000000" do?
+On 23/06/2025 09:40, Maarten Lankhorst wrote:
+> Hey,
 > 
-> I am pretty sure this is a red herring.
-> Syzkaller sometimes mutates integer flags, even if the result makes no
-> sense - because sometimes it can trigger interesting bugs.
-> This `advice` argument will be discarded by is_valid_madvise(),
-> resulting in -EINVAL.
+> Thanks for the series. I didn't see you on irc so I wanted to ask if you are planning to send a v11 with
+> the changes from void * to struct intel_panic_data and adding the VRAM support?
 
-I thought the same, but likely the upper bits are discarded, and we end 
-up with __NR_madvise succeeding.
+Yes, I'm preparing a v11, and I'm considering to do something like this, 
+to allocate the panic data with the struct intel_framebuffer:
 
-The kernel config has
+struct xe_framebuffer {
+	struct intel_framebuffer base;
+	struct xe_panic_data panic;
+};
 
-	CONFIG_TRANSPARENT_HUGEPAGE_MADVISE=y
+struct intel_framebuffer *intel_bo_alloc_framebuffer(void)
+{
+	struct xe_framebuffer *xe_fb;
 
-So without MADV_HUGEPAGE, we wouldn't get a THP in the first place.
+	xe_fb = kmalloc(sizeof(struct xe_framebuffer), GFP_KERNEL);
+	return &xe_fb->base;
+}
 
-So likely this is really just like dropping the "0x800000000"
+(And the same for i915).
+That should allow you to add battlemage support.
 
-Anyhow, I managed to reproduce in the VM using the provided rootfs on 
-aarch64. It triggers immediately, so no races involved.
+> 
+> 
+> Other than that, I think the series looks good and I'll be able to test it on my battlemage.
+> 
 
-Running the reproducer on a Fedora 42 debug-kernel in the hypervisor 
-does not trigger.
+Thanks
+
+Best regards,
 
 -- 
-Cheers,
 
-David / dhildenb
+Jocelyn
+
+> Best regards,
+> ~Maarten
+> 
+> On 2025-06-18 11:31, Jocelyn Falempe wrote:
+>> This adds drm_panic support for i915 and xe driver.
+>>
+>> I've tested it on the 4 intel laptops I have at my disposal.
+>>   * Haswell with 128MB of eDRAM.
+>>   * Comet Lake  i7-10850H
+>>   * Raptor Lake i7-1370P (with DPT, and Y-tiling).
+>>   * Lunar Lake Ultra 5 228V (with DPT, and 4-tiling, and using the Xe driver.
+>>
+>> I tested panic in both fbdev console and gnome desktop.
+>> I think it won't work yet on discrete GPU, but that can be added later.
+>>
+>> Best regards,
+>>
+>> v2:
+>>   * Add the proper abstractions to build also for Xe.
+>>   * Fix dim checkpatch issues.
+>>
+>> v3:
+>>   * Add support for Y-tiled framebuffer when DPT is enabled.
+>>
+>> v4:
+>>   * Add support for Xe driver, which shares most of the code.
+>>   * Add support for 4-tiled framebuffer found in newest GPU.
+>>
+>> v5:
+>>   * Rebase on top of git@gitlab.freedesktop.org:drm/i915/kernel.git drm-intel-next
+>>   * Use struct intel_display instead of drm_i915_private.
+>>   * Use iosys_map for intel_bo_panic_map().
+>>
+>> v6:
+>>   * Rebase on top of git@gitlab.freedesktop.org:drm/i915/kernel.git drm-intel-next
+>>   * Use struct intel_display instead of drm_i915_private for intel_atomic_plane.c
+>>
+>> v7:
+>>   * Fix mismatch {} in intel_panic_flush() (Jani Nikula)
+>>   * Return int for i915_gem_object_panic_map() (Ville Syrjälä)
+>>   * Reword commit message about alignment/size when disabling tiling (Ville Syrjälä)
+>>
+>> v8:
+>>   * Use kmap_try_from_panic() instead of vmap, to access the framebuffer.
+>>   * Add ttm_bo_kmap_try_from_panic() for the xe driver, that uses ttm.
+>>   * Replace intel_bo_panic_map() with a setup() and finish() function,
+>>     to allow mapping only one page of teh framebuffer at a time.
+>>   * Configure psr to send the full framebuffer update.
+>>
+>> v9:
+>>   * Fix comment in ttm_bo_kmap_try_from_panic(), this can *only* be called
+>>     from the panic handler (Christian König)
+>>   * Fix missing kfree() for i915_panic_pages in i915_gem_object_panic_finish()
+>>     Also change i915_panic_pages allocation to kmalloc, as kvmalloc is not
+>>     safe to call from the panic handler.
+>>   * Fix dim checkpatch warnings.
+>>
+>> v10:
+>>   * Add a private field to struct drm_scanout_buffer
+>>   * Replace static variables with new fields in struct intel_framebuffer
+>>     (Maarten Lankhorst)
+>>   * Add error handling if i915_gem_object_panic_pages() returns NULL
+>>   * Declare struct drm_scanout_buffer instead of including <drm/drm_panic.h>
+>>     in intel_bo.h
+>>
+>> Jocelyn Falempe (10):
+>>    drm/panic: Add a private field to struct drm_scanout_buffer
+>>    drm/i915/fbdev: Add intel_fbdev_get_map()
+>>    drm/i915/display/i9xx: Add a disable_tiling() for i9xx planes
+>>    drm/i915/display: Add a disable_tiling() for skl planes
+>>    drm/ttm: Add ttm_bo_kmap_try_from_panic()
+>>    drm/i915: Add intel_bo_panic_setup and intel_bo_panic_finish
+>>    drm/i915/display: Add drm_panic support
+>>    drm/i915/display: Add drm_panic support for Y-tiling with DPT
+>>    drm/i915/display: Add drm_panic support for 4-tiling with DPT
+>>    drm/i915/psr: Add intel_psr2_panic_force_full_update
+>>
+>>   drivers/gpu/drm/i915/display/i9xx_plane.c     |  23 +++
+>>   .../gpu/drm/i915/display/intel_atomic_plane.c | 170 +++++++++++++++++-
+>>   drivers/gpu/drm/i915/display/intel_bo.c       |  12 ++
+>>   drivers/gpu/drm/i915/display/intel_bo.h       |   4 +
+>>   .../drm/i915/display/intel_display_types.h    |  11 ++
+>>   drivers/gpu/drm/i915/display/intel_fb_pin.c   |   5 +
+>>   drivers/gpu/drm/i915/display/intel_fb_pin.h   |   2 +
+>>   drivers/gpu/drm/i915/display/intel_fbdev.c    |   5 +
+>>   drivers/gpu/drm/i915/display/intel_fbdev.h    |   6 +-
+>>   drivers/gpu/drm/i915/display/intel_psr.c      |  20 +++
+>>   drivers/gpu/drm/i915/display/intel_psr.h      |   2 +
+>>   .../drm/i915/display/skl_universal_plane.c    |  27 +++
+>>   drivers/gpu/drm/i915/gem/i915_gem_object.h    |   5 +
+>>   drivers/gpu/drm/i915/gem/i915_gem_pages.c     | 112 ++++++++++++
+>>   drivers/gpu/drm/i915/i915_vma.h               |   5 +
+>>   drivers/gpu/drm/ttm/ttm_bo_util.c             |  27 +++
+>>   drivers/gpu/drm/xe/display/intel_bo.c         |  61 +++++++
+>>   drivers/gpu/drm/xe/display/xe_fb_pin.c        |   5 +
+>>   include/drm/drm_panic.h                       |   6 +
+>>   include/drm/ttm/ttm_bo.h                      |   1 +
+>>   20 files changed, 507 insertions(+), 2 deletions(-)
+>>
+>>
+>> base-commit: b2f7e30d2e4a34fcee8111d713bef4f29dc23c77
+> 
 
