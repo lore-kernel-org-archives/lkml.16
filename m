@@ -1,149 +1,114 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9266F10E5
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 03:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FE610E5;
+	Mon, 23 Jun 2025 03:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750649553; cv=none; b=ngne6qQVeqRC5D0muB2IwKc27JhRKcDLMT8HiD3id/B+wlbLw/sguiNKmS051vddqmDGJ7V6K7HTH2y7vtpzY1UoP/BRxzrGTV6c12tJ8iW2QrpzfiAQ3skjnSaK9P40sHUr/0GSoMtTv0lnoffsNjPmU8JWW+v9/Awiuy1bpss=
+	t=1750649681; cv=none; b=NM+5/4Pg2hNK9UkxYmowVkqq77qopSh3A1RfgAFxB8L30/neYJzP//5p8CawuEAV/M7/+Gi8lXJV4rc0aJA1UNYa5agd2cDUfrsKh0hXjkyUR2LQwrCiic66womAWwr7mkSQOij1sdhqdfaO6TaAOmAGeRgYpmKJdpqqkP0dG40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750649553; c=relaxed/simple;
-	bh=hKdOTISBkujDncrT5eyXNt78qTDw/IJsJCbL/jX0K6s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=sBAhGdTaclf8erZpip+4P7HJCjOTfClI15jB11nZ9E8SGPH+aed699ZbBJNgATYyDg5nUxSxLhSZkpWHpfZK/pN518AKgHiudMawb+GmIT7FtNZtN23j7TV748H7GWi0MHSsHa5k8lkmnWcCHHQxIQ7XanZK0RptJo2SJBLDolI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=StstXxOK reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750649681; c=relaxed/simple;
+	bh=lXjmMI9CtZtHxfiUJTvqITe5Oo1TwGCPB0imDz+0oTg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=iHolZRkXNBP+e47Il4iS4RnkUGIaJeBku2nnzqs6G60NiSn8lB+0bsuWSTmwUWIYARWHJQSCNy88zt+P8vSr3vAELsLvZhCeQmjsH6PVLlDo4ae0hbNye9ClYRKpbvPmI89zGGU++NQb1xUeq/aNET86G8iGEJaomnPVcxf8hjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YlRqNVAH; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="StstXxOK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=qlZimJTRbyyopB6jgY6Wo/WrDxuOGPn8RdBYY2BEDeA=; b=S
-	tstXxOKNDmwUuOpk185oh3bBi/Q2KmmC9gLf+ECozRPuPq79CXWtOdMBRiYF1AUw
-	DdgVHDzG7Bzih+9aWc9W2QdirBUDWu/yc3Qk+CKxfCK/xKLI7x+Vd958wiUU3bKY
-	SvyYu5chrClP9j/FyCghlyIGXMbFpw3M9giqJ+Ggdc=
-Received: from 00107082$163.com ( [111.35.191.131] ) by
- ajax-webmail-wmsvr-40-123 (Coremail) ; Mon, 23 Jun 2025 11:16:15 +0800
- (CST)
-Date: Mon, 23 Jun 2025 11:16:15 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Suren Baghdasaryan" <surenb@google.com>
-Cc: oliver.sang@intel.com, urezki@gmail.com, ahuang12@lenovo.com,
-	akpm@linux-foundation.org, bhe@redhat.com, hch@infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lkp@intel.com,
-	mjguzik@gmail.com, oe-lkp@lists.linux.dev, harry.yoo@oracle.com,
-	kent.overstreet@linux.dev
-Subject: Re: CONFIG_TEST_VMALLOC=y conflict/race with alloc_tag_init
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <375419f4.2ba1.1979aad313a.Coremail.00107082@163.com>
-References: <202506181351.bba867dd-lkp@intel.com>
- <20250620100258.595495-1-00107082@163.com>
- <CAJuCfpFLKR7CqAHG+QjHt4wCLgWmP7dD+f5D8Jx6gHUoXSe1AA@mail.gmail.com>
- <375419f4.2ba1.1979aad313a.Coremail.00107082@163.com>
-X-NTES-SC: AL_Qu2eAvqft00s4yCabekXn0oTju85XMCzuv8j3YJeN500kSTX1SY8e3lvD0Xv2tCTKwqith6zUjxL1c5lcLdpeaNOBSBAIoJVisYvoug61gBC
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YlRqNVAH"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b31d489a76dso3064937a12.1;
+        Sun, 22 Jun 2025 20:34:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750649679; x=1751254479; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eql3VwMROrHW2B+HlytVrn2bj3G0w8gtwYP0PNEmI3k=;
+        b=YlRqNVAHYIeu1HKIbkVeMJM09NOvXKFbVDTOPfOUxB7V2JOvqJwfWXD+yoXlnExtap
+         QEU8XoU5kll0wTYQUMxohbNynX4A6QBwMRQ65BhR11t30n2ep7GdcnjJKUy9NySsBPZ9
+         Udl2ddFTR43MUIQIB1ky8kpZA3Hd4T2Y4mxWGEhNgj7TFN4uOlVUrUsqKA0vdWFDK//0
+         Jv3Rq35/dvrCLsICdaiYZHUVQcE7daltG04ch00k1lMKyykXTXvGDaLaxSMOVnqJq56t
+         p9pMVQIQka3FO4zCzSOtWmXyAWtNtglFRAmmXFE+Ce9FPTJulbp+yv1PkOBHFYsKe7A9
+         nbXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750649679; x=1751254479;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eql3VwMROrHW2B+HlytVrn2bj3G0w8gtwYP0PNEmI3k=;
+        b=h1WDwDSq8jZMzU/AwT+E3u340X+Ul2Of8Etct+wWd9OcMNIwFztuvnWHVslpXbDW7E
+         SjMBVE2E0hyjZ2hIjrQHUwrglpxJwJQ8Vr3H77LZcAx2WsAPkus9i2fSKr28pefrwIBR
+         K0AJuu/4xSZsRYT7q7wBaf4ThJmlo+K/LxrGlaA0wl86pbjc5aNTG7ps4y3NVs3U1O5N
+         aqZpOE8ZieaZ5fU+kP2sDa/SflA6maWHUx0X8SXbGvSgJyLOt1pvYbE+tmcr1rTGD4Fm
+         y3LvMJfIcWfzDux1+vi6HH4sPynBymwG2a0P3qnEynTb8+mJRZNJ2Z3dbGwNWM+IT/+I
+         erTg==
+X-Forwarded-Encrypted: i=1; AJvYcCURKO3oINduIAyHaWHjM0s6rJ/h+ReJL4PmqyKlv6qDMWWcg+dbL2n1heFMjaCQZj5v8on+doQ9@vger.kernel.org, AJvYcCW34awe0QzZJ+gdHTaN064N4g3yfqUW27Ezdp4m4loanKyqgu053J8k4PocxhzFggE7D2Uhl2y834tLbtQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjtbsQZr51eF53O83VQ+5lKbry9KIjPtBf0SKQVEUduJsEqjky
+	iSOnvChgROE8vSMmJhR+43S7yKVEyxTSJTcE67LrjqLK5x24QBEohbY7vvHAyUBE
+X-Gm-Gg: ASbGncsZJh3iq9C9AM2jylWXWjTjq6vh5TL2kcdDTRObfLXHw37zedt0OjJOKOPDIee
+	aAv1J2Hx/+VkjAlmTb3qTUs3j0L5ZtajgFo4uYHmifC+cReAW4BVmw6zMCgWGheycnxpKjm6Liu
+	G2ipCbwS36DEzWmUYkfe5u7MQV4tHBYdBwtaYDpB1hr2UNP7iVRMMamf10k6gNUV3ojOgqu3vnv
+	J4f26j606x/7ZA16MVPRiomOL8u43C2idzQhNJyS2q4R1H+NmJqYGm7adRGJXdh43paysQmKNMI
+	YossmyvF6uomghstyuzVaQJNXNTl2UNXQdHUhTrykPPeLeogTKSObuW7
+X-Google-Smtp-Source: AGHT+IEhgRl++Fx55uLO7+/lhP80b0zMUkWLxP10oWJZffLh24Wy9vh5iBElL4IOt7Ew0kK0YE6TSQ==
+X-Received: by 2002:a17:902:ebcd:b0:235:f70:fd37 with SMTP id d9443c01a7336-237d9848159mr165547735ad.19.1750649678995;
+        Sun, 22 Jun 2025 20:34:38 -0700 (PDT)
+Received: from gmail.com ([116.237.168.226])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8397243sm71818625ad.20.2025.06.22.20.34.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Jun 2025 20:34:38 -0700 (PDT)
+From: Qingfang Deng <dqfext@gmail.com>
+To: linux-ppp@vger.kernel.org,
+	Michal Ostrowski <mostrows@earthlink.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] pppoe: drop PACKET_OTHERHOST before skb_share_check()
+Date: Mon, 23 Jun 2025 11:34:31 +0800
+Message-ID: <20250623033431.408810-1-dqfext@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <190052a4.36d4.1979ac95438.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:eygvCgDnT8gAx1ho3OEhAA--.57804W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBEgF1qmhYtSo62gAFsG
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
 
-CkF0IDIwMjUtMDYtMjMgMTA6NDU6MzEsICJEYXZpZCBXYW5nIiA8MDAxMDcwODJAMTYzLmNvbT4g
-d3JvdGU6Cj4KPkF0IDIwMjUtMDYtMjMgMDY6NTA6NDQsICJTdXJlbiBCYWdoZGFzYXJ5YW4iIDxz
-dXJlbmJAZ29vZ2xlLmNvbT4gd3JvdGU6Cj4+T24gRnJpLCBKdW4gMjAsIDIwMjUgYXQgMzowM+KA
-r0FNIERhdmlkIFdhbmcgPDAwMTA3MDgyQDE2My5jb20+IHdyb3RlOgo+Pj4KPj4+IE9uIFdlZCwg
-SnVuIDE4LCAyMDI1IGF0IDAyOjI1OjM3UE0gKzA4MDAsIGtlcm5lbCB0ZXN0IHJvYm90IHdyb3Rl
-Ogo+Pj4gPgo+Pj4gPiBIZWxsbywKPj4+ID4KPj4+ID4gZm9yIHRoaXMgY2hhbmdlLCB3ZSByZXBv
-cnRlZAo+Pj4gPiAiW2xpbnV4LW5leHQ6bWFzdGVyXSBbbGliL3Rlc3Rfdm1hbGxvYy5jXSAgN2Zj
-ODViOTJkYjogTWVtLUluZm8iCj4+PiA+IGluCj4+PiA+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3Jn
-L2FsbC8yMDI1MDUwNzE1NTUuZTc1N2YxZTAtbGtwQGludGVsLmNvbS8KPj4+ID4KPj4+ID4gYXQg
-dGhhdCB0aW1lLCB3ZSBtYWRlIHNvbWUgdGVzdHMgd2l0aCB4ODZfNjQgY29uZmlnIHdoaWNoIHJ1
-bnMgd2VsbC4KPj4+ID4KPj4+ID4gbm93IHdlIG5vdGljZWQgdGhlIGNvbW1pdCBpcyBpbiBtYWlu
-bGluZSBub3cuCj4+Pgo+Pj4gPiB0aGUgY29uZmlnIHN0aWxsIGhhcyBleHBlY3RlZCBkaWZmIHdp
-dGggcGFyZW50Ogo+Pj4gPgo+Pj4gPiAtLS0gL3BrZy9saW51eC94ODZfNjQtcmFuZGNvbmZpZy0x
-NjEtMjAyNTA2MTQvZ2NjLTEyLzdhNzMzNDhlNWQ0NzE1YjU1NjVhNTNmMjFjMDFlYTdiNTRlNDZj
-YmQvLmNvbmZpZyAgIDIwMjUtMDYtMTcgMTQ6NDA6MjkuNDgxMDUyMTAxICswODAwCj4+PiA+ICsr
-KyAvcGtnL2xpbnV4L3g4Nl82NC1yYW5kY29uZmlnLTE2MS0yMDI1MDYxNC9nY2MtMTIvMmQ3NmU3
-OTMxNWU0MDNhYWI1OTVkNGM4ODMwYjdhNDZjMTlmMGYzYi8uY29uZmlnICAgMjAyNS0wNi0xNyAx
-NDo0MToxOC40NDg1NDM3MzggKzA4MDAKPj4+ID4gQEAgLTc1NTEsNyArNzU1MSw3IEBAIENPTkZJ
-R19URVNUX0lEQT1tCj4+PiA+ICBDT05GSUdfVEVTVF9NSVNDX01JTk9SPW0KPj4+ID4gICMgQ09O
-RklHX1RFU1RfTEtNIGlzIG5vdCBzZXQKPj4+ID4gIENPTkZJR19URVNUX0JJVE9QUz1tCj4+PiA+
-IC1DT05GSUdfVEVTVF9WTUFMTE9DPW0KPj4+ID4gK0NPTkZJR19URVNUX1ZNQUxMT0M9eQo+Pj4g
-PiAgIyBDT05GSUdfVEVTVF9CUEYgaXMgbm90IHNldAo+Pj4gPiAgQ09ORklHX0ZJTkRfQklUX0JF
-TkNITUFSSz1tCj4+PiA+ICAjIENPTkZJR19URVNUX0ZJUk1XQVJFIGlzIG5vdCBzZXQKPj4+ID4K
-Pj4+ID4KPj4+ID4gdGhlbiB3ZSBub3RpY2VkIHNpbWlsYXIgcmFuZG9tIGlzc3VlIHdpdGggeDg2
-XzY0IHJhbmRjb25maWcgdGhpcyB0aW1lLgo+Pj4gPgo+Pj4gPiA3YTczMzQ4ZTVkNDcxNWI1IDJk
-NzZlNzkzMTVlNDAzYWFiNTk1ZDRjODgzMAo+Pj4gPiAtLS0tLS0tLS0tLS0tLS0tIC0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLQo+Pj4gPiAgICAgICAgZmFpbDpydW5zICAlcmVwcm9kdWN0aW9u
-ICAgIGZhaWw6cnVucwo+Pj4gPiAgICAgICAgICAgIHwgICAgICAgICAgICAgfCAgICAgICAgICAg
-ICB8Cj4+PiA+ICAgICAgICAgICAgOjE5OSAgICAgICAgIDM0JSAgICAgICAgICA2NzoyMDAgICBk
-bWVzZy5LQVNBTjpudWxsLXB0ci1kZXJlZl9pbl9yYW5nZVsjLSNdCj4+PiA+ICAgICAgICAgICAg
-OjE5OSAgICAgICAgIDM0JSAgICAgICAgICA2NzoyMDAgICBkbWVzZy5LZXJuZWxfcGFuaWMtbm90
-X3N5bmNpbmc6RmF0YWxfZXhjZXB0aW9uCj4+PiA+ICAgICAgICAgICAgOjE5OSAgICAgICAgIDM0
-JSAgICAgICAgICA2NzoyMDAgICBkbWVzZy5NZW0tSW5mbwo+Pj4gPiAgICAgICAgICAgIDoxOTkg
-ICAgICAgICAzNCUgICAgICAgICAgNjc6MjAwICAgZG1lc2cuT29wczpnZW5lcmFsX3Byb3RlY3Rp
-b25fZmF1bHQscHJvYmFibHlfZm9yX25vbi1jYW5vbmljYWxfYWRkcmVzcyM6I1sjI11TTVBfS0FT
-QU4KPj4+ID4gICAgICAgICAgICA6MTk5ICAgICAgICAgMzQlICAgICAgICAgIDY3OjIwMCAgIGRt
-ZXNnLlJJUDpkb3duX3JlYWRfdHJ5bG9jawo+Pj4gPgo+Pj4gPiB3ZSBkb24ndCBoYXZlIGVub3Vn
-aCBrbm93bGVkZ2UgdG8gdW5kZXJzdGFuZCB0aGUgcmVsYXRpb25zaGlwIGJldHdlZW4gY29kZQo+
-Pj4gPiBjaGFuZ2UgYW5kIHRoZSByYW5kb20gaXNzdWVzLiBqdXN0IHJlcG9ydCB3aGF0IHdlIG9i
-c3ZlcnZlZCBpbiBvdXIgdGVzdHMgRllJLgo+Pj4gPgo+Pj4KPj4+IEkgdGhpbmsgdGhpcyBpcyBj
-YXVzZWQgYnkgYSByYWNlIGJldHdlZW4gdm1hbGxvY190ZXN0X2luaXQgYW5kIGFsbG9jX3RhZ19p
-bml0Lgo+Pj4KPj4+IHZtYWxsb2NfdGVzdCBhY3R1YWxseSBkZXBlbmRzIG9uIGFsbG9jX3RhZyB2
-aWEgYWxsb2NfdGFnX3RvcF91c2VycywgYmVjYXVzZSB3aGVuCj4+PiBtZW1vcnkgYWxsb2NhdGlv
-biBmYWlscyBzaG93X21lbSgpIHdvdWxkIGludm9rZSBhbGxvY190YWdfdG9wX3VzZXJzLgo+Pj4K
-Pj4+IFdpdGggZm9sbG93aW5nIGNvbmZpZ3VyYXRpb246Cj4+Pgo+Pj4gQ09ORklHX1RFU1RfVk1B
-TExPQz15Cj4+PiBDT05GSUdfTUVNX0FMTE9DX1BST0ZJTElORz15Cj4+PiBDT05GSUdfTUVNX0FM
-TE9DX1BST0ZJTElOR19FTkFCTEVEX0JZX0RFRkFVTFQ9eQo+Pj4gQ09ORklHX01FTV9BTExPQ19Q
-Uk9GSUxJTkdfREVCVUc9eQo+Pj4KPj4+IElmIHZtYWxsb2NfdGVzdF9pbml0IHN0YXJ0cyBiZWZv
-cmUgYWxsb2NfdGFnX2luaXQsIHNob3dfbWVtKCkgd291bGQgY2F1c2UKPj4+IGEgTlVMTCBkZWZl
-cmVuY2UgYmVjYXVzZSBhbGxvY190YWdfY3R0eXBlIHdhcyBub3QgaW5pdCB5ZXQuCj4+Pgo+Pj4g
-SSBhZGQgc29tZSBkZWJ1ZyB0byBjb25maXJtIHRoaXMgdGhlb3J5Cj4+PiBkaWZmIC0tZ2l0IGEv
-bGliL2FsbG9jX3RhZy5jIGIvbGliL2FsbG9jX3RhZy5jCj4+PiBpbmRleCBkNDhiODBmM2YwMDcu
-LjliOGU3NTAxMDEwZiAxMDA2NDQKPj4+IC0tLSBhL2xpYi9hbGxvY190YWcuYwo+Pj4gKysrIGIv
-bGliL2FsbG9jX3RhZy5jCj4+PiBAQCAtMTMzLDYgKzEzMyw4IEBAIHNpemVfdCBhbGxvY190YWdf
-dG9wX3VzZXJzKHN0cnVjdCBjb2RldGFnX2J5dGVzICp0YWdzLCBzaXplX3QgY291bnQsIGJvb2wg
-Y2FuX3NsCj4+PiAgICAgICAgIHN0cnVjdCBjb2RldGFnICpjdDsKPj4+ICAgICAgICAgc3RydWN0
-IGNvZGV0YWdfYnl0ZXMgbjsKPj4+ICAgICAgICAgdW5zaWduZWQgaW50IGksIG5yID0gMDsKPj4+
-ICsgICAgICAgcHJfaW5mbygibWVtb3J5IHByb2ZpbGluZyBhbGxvYyB0b3AgJWQ6ICVsbHhcbiIs
-IG1lbV9wcm9maWxpbmdfc3VwcG9ydCwgKGxvbmcgbG9uZylhbGxvY190YWdfY3R0eXBlKTsKPj4+
-ICsgICAgICAgcmV0dXJuIDA7Cj4+Pgo+Pj4gICAgICAgICBpZiAoY2FuX3NsZWVwKQo+Pj4gICAg
-ICAgICAgICAgICAgIGNvZGV0YWdfbG9ja19tb2R1bGVfbGlzdChhbGxvY190YWdfY3R0eXBlLCB0
-cnVlKTsKPj4+IEBAIC04MzEsNiArODMzLDcgQEAgc3RhdGljIGludCBfX2luaXQgYWxsb2NfdGFn
-X2luaXQodm9pZCkKPj4+ICAgICAgICAgICAgICAgICBzaHV0ZG93bl9tZW1fcHJvZmlsaW5nKHRy
-dWUpOwo+Pj4gICAgICAgICAgICAgICAgIHJldHVybiBQVFJfRVJSKGFsbG9jX3RhZ19jdHR5cGUp
-Owo+Pj4gICAgICAgICB9Cj4+PiArICAgICAgIHByX2luZm8oIm1lbW9yeSBwcm9maWxpbmcgcmVh
-ZHkgJWQ6ICVsbHhcbiIsIG1lbV9wcm9maWxpbmdfc3VwcG9ydCwgKGxvbmcgbG9uZylhbGxvY190
-YWdfY3R0eXBlKTsKPj4+Cj4+PiAgICAgICAgIHJldHVybiAwOwo+Pj4gIH0KPj4+Cj4+PiBXaGVu
-IGJvb3R1cCB0aGUga2VybmVsLCB0aGUgbG9nIHNob3dzOgo+Pj4KPj4+ICQgc3VkbyBkbWVzZyAt
-VCB8IGdyZXAgcHJvZmlsaW5nCj4+PiBbRnJpIEp1biAyMCAxNzoyOTozNSAyMDI1XSBtZW1vcnkg
-cHJvZmlsaW5nIGFsbG9jIHRvcCAxOiAwICA8LS0tIGFsbG9jX3RhZ19jdHR5cGUgPT0gTlVMTAo+
-Pj4gW0ZyaSBKdW4gMjAgMTc6MzA6MjQgMjAyNV0gbWVtb3J5IHByb2ZpbGluZyByZWFkeSAxOiBm
-ZmZmOWIxNjQxYWEwNmMwCj4+Pgo+Pj4KPj4+IHZtYWxsb2NfdGVzdF9pbml0IHNob3VsZCBoYXBw
-ZW5lZCBhZnRlciBhbGxvY190YWdfaW5pdCBpZiBDT05GSUdfVEVTVF9WTUFMTE9DPXksCj4+PiBv
-ciBtZW1fc2hvdygpIHNob3VsZCBjaGVjayB3aGV0aGVyIGFsbG9jX3RhZyBpcyBkb25lIGluaXRp
-YWxpemVkIHdoZW4gY2FsbGluZwo+Pj4gYWxsb2NfdGFnX3RvcF91c2Vycwo+Pgo+PlRoYW5rcyBm
-b3IgcmVwb3J0aW5nIQo+PlNvLCBJSVVDIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC8yMDI1
-MDYyMDE5NTMwNS4xMTE1MTUxLTEtaGFycnkueW9vQG9yYWNsZS5jb20vCj4+d2lsbCBhZGRyZXNz
-IHRoaXMgaXNzdWUgYXMgd2VsbC4gSXMgdGhhdCBjb3JyZWN0Pwo+Cj5ZZXMsIHRoZSBwYW5pYyBj
-YW4gYmUgZml4IGJ5IHRoYXQgcGF0Y2guCj4KPkkgc3RpbGwgZmVlbCBpdCBiZXR0ZXIgdG8gZGVs
-YXkgdm1hbGxvY190ZXN0X2luaXQsIG1ha2UgaXQgaGFwcGVuIGFmdGVyIGFsbG9jX3RhZ19pbml0
-Lgo+T3IsIG1heWJlIHdlIGNhbiBwcm9tb3RlIGFsbG9jX3RhZ19pbml0IHRvIHNvbWUgZWFybHkg
-aW5pdD8gSSByZW1lbWJlciByZXBvcnRpbmcgc29tZSBhbGxvY2F0aW9uCj5ub3QgcmVnaXN0ZXJl
-ZCBieSBtZW1vcnkgcHJvZmlsaW5nIGR1cmluZyBib290LCAgCj5odHRwczovL2xvcmUua2VybmVs
-Lm9yZy9hbGwvMjEzZmY3ZDIuN2M2Yy4xOTQ1ZWIwYzJmZi5Db3JlbWFpbC4wMDEwNzA4MkAxNjMu
-Y29tLwo+Cj5JIHdpbGwgbWFrZSBzb21lIHRlc3RzLCBhbmQgdXBkYXRlIGxhdGVyCgpUaGUgbWVt
-b3J5IGFsbG9jYXRpb25zIGluIHNjaGVkX2luaXRfZG9tYWlucyBoYXBwZW5lZCBxdWl0ZSBlYXJs
-eSwgbWF5YmUgaXQgaXMgY29yZV9pbml0Y2FsbCwgd2hpbGUKIGFsbG9jX3RhZ19pbml0IG5lZWRz
-IHJvb3RmcywgaXQgbmVlZHMgdG8gYmUgYWZ0ZXIgcm9vdGZzX2luaXRjYWxsLCBzbyBubyByZWFz
-b25hYmxlIHBsYWNlIHRvIHByb21vdGUuLi4uLi4uCkJ1dCBJIHRoaW5rIHRoaXMgZXhwbGFpbiB3
-aHkgc29tZSBhbGxvY2F0aW9uIGNvdW50ZXIgbWlzc2VkIGR1cmluZyBib290OiB0aGUgYWxsb2Nh
-dGlvbiBoYXBwZW5lZCBiZWZvcmUgYWxsb2NfdGFnX2luaXQKCgpUaGFua3MKRGF2aWQKCj4KPgo+
-RGF2aWQKPgo+Cj4+Cj4+Pgo+Pj4KPj4+Cj4+PiBEYXZpZAo+Pj4K
+Align with ip_rcv() by dropping PACKET_OTHERHOST packets before
+calling skb_share_check(). This avoids unnecessary skb processing
+for packets that will be discarded anyway.
+
+Signed-off-by: Qingfang Deng <dqfext@gmail.com>
+---
+ drivers/net/ppp/pppoe.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ppp/pppoe.c b/drivers/net/ppp/pppoe.c
+index 68e631718ab0..410effa42ade 100644
+--- a/drivers/net/ppp/pppoe.c
++++ b/drivers/net/ppp/pppoe.c
+@@ -372,9 +372,6 @@ static int pppoe_rcv_core(struct sock *sk, struct sk_buff *skb)
+ 	 * can't change.
+ 	 */
+ 
+-	if (skb->pkt_type == PACKET_OTHERHOST)
+-		goto abort_kfree;
+-
+ 	if (sk->sk_state & PPPOX_BOUND) {
+ 		ppp_input(&po->chan, skb);
+ 	} else if (sk->sk_state & PPPOX_RELAY) {
+@@ -418,6 +415,9 @@ static int pppoe_rcv(struct sk_buff *skb, struct net_device *dev,
+ 	struct pppoe_net *pn;
+ 	int len;
+ 
++	if (skb->pkt_type == PACKET_OTHERHOST)
++		goto drop;
++
+ 	skb = skb_share_check(skb, GFP_ATOMIC);
+ 	if (!skb)
+ 		goto out;
+-- 
+2.43.0
+
