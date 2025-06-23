@@ -1,94 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E53D72624
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A9F248176
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750691149; cv=none; b=ggybbGI2QTpaQyhwNkufKKqLQOHrEVvoyLEOdPkawj8sHh1smoMGKw4gNdiYaVabNET/BXRqSzgTFtV2dStD09VaaqVb7kWJeMWsgGzz4DoLekis7zBf1wW58l2Mp08mBFnV8WKw4FMGpceEqq8n3lf6twMc/zOMPadLcGX8KrA=
+	t=1750691206; cv=none; b=KPCP4jUJMW7RILRfjL29QOjWOt0LF81hkbA2g4+LkKQgD2Mk4w8k+Edoj5slQRPPSZkFpabicJ1iNm7jPDotl+x/GQdAI1YYtQgzXZHAubarj47ANKgIPF9hiYLhvYVlb9Q/Vbg53fPZEzEOlAXjU0w2NnLWz5jR7jH9g9GnOa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750691149; c=relaxed/simple;
-	bh=BGLolw1OHDgzRQRSVHu6bP4bOR6UGr5oa1nQhRO9Iaw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CC4/na7ZbeC7QhfOyiwO+/3opUV1W55cMLoAmW4ITyoWpW/R1NvkY9PtVpaehlPhsIODfgGpjkA3BdokzqjikkgNZial04VByO6UwK5/2rRB8KTRPjdC7Q+3We+I2FEVOGl0CMzvw7m44XeZONy1LXc3UwUPuOTB4ILKcvezESs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OTrAWlXE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750691206; c=relaxed/simple;
+	bh=wuFXrwwjjmEMgA8swF0EHEAsKQSn7YRia6AOViQcc2U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fpfSxVQsxCIZprNmdVifEQtKQrrPjm1eYujVdUzLHbExwWY8sEPdtUCoQpProREDBOEddk1HKBH1SW9y/OMGWA0TupRvHzK+DgO2d37p7guI28VVONkIr1lDrbvATE2SCEUAp8cz+/IEqXJDUgpX1yr8Pk8Y/KQhQTepOmGIH+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ofuqf63q; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OTrAWlXE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B6ADC4CEF1
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 15:05:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750691148;
-	bh=BGLolw1OHDgzRQRSVHu6bP4bOR6UGr5oa1nQhRO9Iaw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=OTrAWlXEqER8s3fC4Du+FufM0rb+0d3QzuwEPOc4CJXzSfmjasZZ0ZsHWFO0/AwQ7
-	 FrD9jn3Os70jLcwO5aKeSHj/NptmgTU3xti52bRB3i87HIz40JN5NOPfaabNtcvPGO
-	 dnQiuT04RZGtmk6+j++4ofRjOHbxdM5nS/36PTBReW3K3eY81Hr9cak63vuV9rKvi6
-	 x8yEWO9STV4Iq3thvAPbMVb1Kn0jesEjSjJWORdp5ZTYX9/kFB0VA61JPaqrNtC/TO
-	 /CGHkgJajmn94S+iZC1XjDXeF643pJX2DecLrk0BTQpIrCyF0c4jTsZ3igwgnn3ZdY
-	 NFq0RntRhHmWg==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-adfb562266cso778032966b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:05:48 -0700 (PDT)
-X-Gm-Message-State: AOJu0YwJud2iT3yDLLYdudcIBfJZGmng2QlwQ0COmex/YUCmOG8u9e+A
-	U9Xjz3cl9o8zIHQ5wdd+6sqkGac6kzWY+UQnljuG4kvGsqnFSDCHTPHjKHAVEXpUCJ0peXl94kw
-	vo4dsIoDfXw2X5NbIHEQdv4GONT3JUg==
-X-Google-Smtp-Source: AGHT+IG9p6Zu6Fd7+Bcgke2KZ+yJ3wzAadO6WtoYXMwwtd3LyCC7cV0CYf90lekWfovyEwjPUV+MirJCAoH2Y7zt/0k=
-X-Received: by 2002:a17:906:9c82:b0:ad8:93c0:27a5 with SMTP id
- a640c23a62f3a-ae05792716emr1179556166b.5.1750691147064; Mon, 23 Jun 2025
- 08:05:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ofuqf63q"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-40a4de175a3so2970024b6e.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:06:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750691203; x=1751296003; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=P/j2ABvQkeCCIY5OdnUsm4f6l2yn5EMgYcd1gCoSvvo=;
+        b=ofuqf63qV7wvQ1Ggu+d1azimjAgztFr8vMiAndlSU8PajIHg2bdy6A5/5k8FU0A04o
+         S151GjJEFyoRNgLY4jvBj5Msu7/s+NYsyvbWUO+3gIbe+4+mYLVRn3/sU29LM50Xtug/
+         VP0OoBhYJsNvPXDmuKk6DWCYOhdW1SfnvGgvX+3DczM/Q81oFEHNd+g86CBBple0dfb9
+         de4xyS/XPxxMmY41JVBZyf+nOD3gjqe4FQgPf50DUsO1PTa4+EQE//YFmp+HxV5PBpt7
+         S2RSBYJvh/cHAIhZM9Eu81h5+DDf/1jw+D6hhFiw7vLpAdP4UEmal7pS+d2BHxIWXa0N
+         yyjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750691203; x=1751296003;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P/j2ABvQkeCCIY5OdnUsm4f6l2yn5EMgYcd1gCoSvvo=;
+        b=NHXGytPxQzrJyIVFVX1fAGeWJBpEzstzdD7LAXjTINjI/wnp5LhYizzAQwDP+hX2qC
+         YFDD+sslsIuWnDCgfYs3V4RrY4Rzv2FsIVXYMQs+HYkGiARHXtr3CGThmxgnmrVMxr40
+         6gueRbRtC2tQOYyj41Wvt61uRrbrrGtzbfSlWIQ8mI/3sPlxZLSy5aW1Lw1TBhP6O6JL
+         Xpwsg9VayveDi0uao311scltYOI7jMV2iag10ZWDxFbzapKwmFqo56kgLr9MeiEnM/oS
+         y66s+Vi+Xqbv5B+dPM7/fc5HLrXIYnu44kc7mnT8FQgu85WAfuzOLMMzHZFW8FpR69hW
+         VhaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWI5A+F4LImci2LZMIr1uxh1tb1364L4rjY1QsEMaQQJZV9DYaaVd+IDkK2+3KQQvikAEwg+J+hCnGb2M0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+MXxObaCfaW9+yVSizwGVHTuwlHj3s0nFORIZquHuN679p/ON
+	d3mM1qmGt2uYu7nzzR7W4s3hYv7iJ0Wgezyken+X9HullQY1oJH34I98pbwgHosqC2E=
+X-Gm-Gg: ASbGncuetgcVHD6B1+21HTkE+IvxTItZQMRkq+FuSTjxkxvXnAYZ/HNTkF/LEfH9mEW
+	Cjrk3GYNvl2CwNF5HyAHqG3vV90Zm19SzcW8BcMWl7i8ypxdko0gfd3s3/e2kGtpLgnKrRqWBGT
+	mUluDVEDdpWf22fyT7aOmqrC4mUXOTuiwQuaojTg9DKHKNhLigF7S6LNg7BH7hMPemRKHubTxk9
+	eeg0TLq4mu3JhnFuDsKeMiY58WRhtSm8ZLEH6ZsEnW98MQ99hgvoKIPXktQD4+XHpyMZ4wGq2D6
+	TpAfYWBzajJ36nx/JAXa27F8B/5ng//+HfknMantsA4jsfyx7yNPjQdDZx/OU5nqm5e+rg==
+X-Google-Smtp-Source: AGHT+IFnVBRfIjftIm0z+2nD3hcauMaTIzLigckSJhjmKqki1siCULVluA8fvloI9HOD+FViAKSc5g==
+X-Received: by 2002:a05:6808:1890:b0:406:7704:b2e9 with SMTP id 5614622812f47-40ac6fe36d7mr9778035b6e.9.1750691202870;
+        Mon, 23 Jun 2025 08:06:42 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:8c3f:8b5f:5c74:76a9])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40ac6d394dfsm1419658b6e.43.2025.06.23.08.06.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 08:06:42 -0700 (PDT)
+Date: Mon, 23 Jun 2025 18:06:40 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Su Hui <suhui@nfschina.com>
+Cc: akpm@linux-foundation.org, bhe@redhat.com, vgoyal@redhat.com,
+	dyoung@redhat.com, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] fs/proc/vmcore: a few cleanups for vmcore_add_device_dump
+Message-ID: <33a9a2a5-a725-4ab0-865c-1d26e941e054@suswa.mountain>
+References: <20250623104704.3489471-1-suhui@nfschina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613130356.8080-1-james.morse@arm.com>
-In-Reply-To: <20250613130356.8080-1-james.morse@arm.com>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 23 Jun 2025 10:05:35 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKD7yOxSnfnah2gE0EodtQ4KyJ2_qXmMu2oK9i6numzwA@mail.gmail.com>
-X-Gm-Features: Ac12FXwzawAJxW0H6SL7NFHDsYDzMvsMRRXGyNtOlEIdLWJc6ed_7vQOPGHyLBs
-Message-ID: <CAL_JsqKD7yOxSnfnah2gE0EodtQ4KyJ2_qXmMu2oK9i6numzwA@mail.gmail.com>
-Subject: Re: [PATCH 0/5] cacheinfo: Set cache 'id' based on DT data
-To: James Morse <james.morse@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, sudeep.holla@arm.com, 
-	Ben Horgan <ben.horgan@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623104704.3489471-1-suhui@nfschina.com>
 
-On Fri, Jun 13, 2025 at 8:04=E2=80=AFAM James Morse <james.morse@arm.com> w=
-rote:
->
-> This series adds support for cache-ids to device-tree systems.
-> These values are exposed to user-space via
-> /sys/devices/system/cpu/cpuX/cache/indexY/id
-> and are used to identify caches and their associated CPUs by kernel inter=
-faces
-> such as resctrl.
->
-> Resctrl anticipates cache-ids are unique for a given cache level, but may
-> be sparse. See Documentation/filesystems/resctrl.rst's "Cache IDs" sectio=
-n.
->
-> Another user is PCIe's cache-steering hints, where an id provided by the
-> hardware would be needed. Today this expects a platform specific ACPI hoo=
-k
-> the program that value into the PCIe root port registers. If DT platforms
-> are ever supported, it will likely need a kernel driver to convert the
-> user-space cache-id to whatever hardware value is needed.
->
-> Rob H previously preferred to generate a cache-id from the information DT
-> already has. (Rob: does the PCIe cache-steering use-case change this?)
+On Mon, Jun 23, 2025 at 06:47:05PM +0800, Su Hui wrote:
+> There are three cleanups for vmcore_add_device_dump(). Adjust data_size's
+> type from 'size_t' to 'unsigned int' for the consistency of data->size.
+> Return -ENOMEM directly rather than goto the label to simplify the code.
+> Using scoped_guard() to simplify the lock/unlock code.
+> 
+> Signed-off-by: Su Hui <suhui@nfschina.com>
+> ---
+>  fs/proc/vmcore.c | 33 ++++++++++++++-------------------
+>  1 file changed, 14 insertions(+), 19 deletions(-)
+> 
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index 10d01eb09c43..9ac2863c68d8 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -1477,7 +1477,7 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+>  {
+>  	struct vmcoredd_node *dump;
+>  	void *buf = NULL;
+> -	size_t data_size;
+> +	unsigned int data_size;
+>  	int ret;
 
-I don't think so because who knows what values the PCI root port
-needs. It's never going to be the cache id directly since that is per
-level. So we'd need some sort of mapping. That's going to be something
-like this:
+This was in reverse Christmas tree order before.  Move the data_size
+declaration up a line.
 
-Userspace level+id -> DT cache node -> PCI RP value
+	long long_variable_name;
+	medium variable_name;
+	short name;
 
-So the first translation is the same as you have here. The 2nd
-translation might be something we put in DT or could be in PCI host
-bridge driver.
+>  
+>  	if (vmcoredd_disabled) {
+> @@ -1490,10 +1490,8 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+>  		return -EINVAL;
+>  
+>  	dump = vzalloc(sizeof(*dump));
+> -	if (!dump) {
+> -		ret = -ENOMEM;
+> -		goto out_err;
+> -	}
+> +	if (!dump)
+> +		return -ENOMEM;
+>  
+>  	/* Keep size of the buffer page aligned so that it can be mmaped */
+>  	data_size = roundup(sizeof(struct vmcoredd_header) + data->size,
+> @@ -1519,21 +1517,18 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+>  	dump->size = data_size;
+>  
+>  	/* Add the dump to driver sysfs list and update the elfcore hdr */
+> -	mutex_lock(&vmcore_mutex);
+> -	if (vmcore_opened)
+> -		pr_warn_once("Unexpected adding of device dump\n");
+> -	if (vmcore_open) {
+> -		ret = -EBUSY;
+> -		goto unlock;
+> -	}
+> -
+> -	list_add_tail(&dump->list, &vmcoredd_list);
+> -	vmcoredd_update_size(data_size);
+> -	mutex_unlock(&vmcore_mutex);
+> -	return 0;
+> +	scoped_guard(mutex, &vmcore_mutex) {
+> +		if (vmcore_opened)
+> +			pr_warn_once("Unexpected adding of device dump\n");
+> +		if (vmcore_open) {
+> +			ret = -EBUSY;
+> +			goto out_err;
+> +		}
+>  
+> -unlock:
+> -	mutex_unlock(&vmcore_mutex);
+> +		list_add_tail(&dump->list, &vmcoredd_list);
+> +		vmcoredd_update_size(data_size);
+> +		return 0;
 
-Rob
+Please, move this "return 0;" out of the scoped_guard().  Otherwise
+it's not obvious that we return zero on the success path.
+
+regards,
+dan carpenter
+
+> +	}
+>  
+>  out_err:
+>  	vfree(buf);
+> -- 
+> 2.30.2
+> 
