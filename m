@@ -1,122 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B11C23E32B;
-	Mon, 23 Jun 2025 14:47:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA37F5FDA7;
+	Mon, 23 Jun 2025 14:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750690048; cv=none; b=NfAkGwr1yWBaN8zdMROazXTAWDaulZdbsgfXAlKkjG1AoBptpKKDnjxVhcEuNXoZ/l4tKZ/prb9lZRbsjF6kEuvlD1S5jgGdzb07gM7ZXmmSC6WbGNhuz4uCjajwhCaYQ61fsYCmh0TnLwP9o1Di4DznlMmgtNwQpojTLw8xqjo=
+	t=1750690075; cv=none; b=dOVRB2RR4jE8g2M9LFQr29HZeIDAsdw/xdfs3YV9bQdZthhDQPmFNnToqXW/Fu/ysN0CIRVZcNYtTkAMeoKOrxaqwr0mr7/vYZ6kqAYgNHCS8q3ARCK1LFLQrT2fn6SceYK8FaLxefL56Gs2+OF2ny6lFoIpt9Wmbwl2Njm9858=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750690048; c=relaxed/simple;
-	bh=froFt0xlmhZpMtmmxgNvZNNlg3iicomanv7nCbBVYBA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Au8YXgE8FvpN6RCgOJCBZ5NWb8pZz6BmUulR79EJ/kTbyO5UnE0/nM5LXinNApF8/QLZ0rr+UgPW5fljVyicYHDx0ry0lsozfS1xWFXL5/TjYOMwt/b+j7OMVt1RuQHYo5V6zUm78S8KLqbehlLRF86iJiezh/ExQrS4P7irXOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FRiK45hN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750690075; c=relaxed/simple;
+	bh=Xt1hh3KfTCgYjAak5CmTzLAVgU0QVp4GVJKi1bsKKgc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lunRicJ+V58bLnUtEXpGGkZRIuc1vD548tqGESwPWtyZu3zDduHGgITxdRrgwWnuyRoJSQ7QcmSYtfaCoHaMPNspe2G8N11h8EnvXwh8/P2efLik3FFXTll1hXd5nywTZqwIa2zR1irG4ve0FLKKsdWIR7DaN1hqJ13fho0ILYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dO/vj4nR; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FRiK45hN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C853C4CEEA;
-	Mon, 23 Jun 2025 14:47:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750690047;
-	bh=froFt0xlmhZpMtmmxgNvZNNlg3iicomanv7nCbBVYBA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FRiK45hN55rAW4x5Jpy37El7vQzLspLV7ZCbGbe9TbxFYrHfUht1OgtGpmXfJ9RiY
-	 VeQe+Tn1QzzPtV5oKdG8C2BvGOyhIOlHj3cF7zXE6ICljhS5gDEeVcxUAL6I32SbxL
-	 4QbD58hiXQV2B5fVSX35p2py5DvDPx5kc/SJKDgfe0LpbLGh3wYIFZPuXHrKeZGdm1
-	 12VQh6J8rzkqtG1qVx9nS7PKkAc0iqUswbfQeZk1l/vaUjHbO87lBcLWwmLEkK664F
-	 2ZVcpsQmoIXKK7x/Zr714DrD9yXHzbDYiVwd7b7gkvTS2GlDreoZC1nDzXWKAwvUzB
-	 eK5Feuysw5Abg==
-Message-ID: <bd840fac-a698-4961-914e-80b739266e1b@kernel.org>
-Date: Mon, 23 Jun 2025 16:47:22 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dO/vj4nR"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d38cfa9773so454539385a.2;
+        Mon, 23 Jun 2025 07:47:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750690072; x=1751294872; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=TvaoQueazd6LHf+2LxXZLHdU07cbaf8jpwjp0xXouuk=;
+        b=dO/vj4nR0TnLBTo14vJBUBp+jM46W1jZrOsvP//lpW05/kFXj13ch2Q+4Ib9ksv9j3
+         wer4muKrmK5rNXCmVlc+80RShLpUozEPlurFHaFGceQ01JITAgHF+KGIQU70fOxO4PVw
+         EF7ij7mXcpfIOR4gPHGXquEpG5vvmFlXF+s1fGcfZlsurdjPStc2egJBTgIR61Ir+Eh8
+         IqPo9wK+CL7jwY1/B3Brl3ohynK501Vhn1fbTLgSAIeLE+EM6NhbM58Ow9wNthgvJSDV
+         j67F2+xI3FAc60UuMZoHZDYg+afwbLkVchvDVqciOH0rpLUiSVpxhGgOzCy3J7v8lTQY
+         zoGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750690072; x=1751294872;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TvaoQueazd6LHf+2LxXZLHdU07cbaf8jpwjp0xXouuk=;
+        b=mwJWcQ9skPKHXhJKj6iGPWypVXqajL+PU7WHPXCo88JAaTJ2mC85v9pod+qecQf2K9
+         g+chNM9QUYcGxHWQgmVoFOLFoBE02FXPumeJeVemhC3/kj3tCSsW1HTZERKu8fYBRlrQ
+         riKWl/RPKTQtchJH36VVCQ92Z70LPAyBS6ylsUjZCPHbzrVmkvBfX3uKQYjruUXswNOS
+         4seTsJ7Z4IIbnCZXxeh8pfO+fLW081MhSduNDBzylcTK7yxixre1aHq/Y0nrw2CRluCA
+         zyaSft8JRyp2xgljTA7s8pcdWjSmzr5faduXZfjTwrJUqEJPCSeqt5+bWKwzbdGwNOHd
+         AFnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpBFZZI703a37PA9VJOgz3dzRTPdMi6n+qTABIInzYsoZtaBKtlyvCx6KOfmSEdhDL+cp658RZ4S/Owng=@vger.kernel.org, AJvYcCW8ZSUt0O+wgkj1LrCVpfEWg3ZQYsH+5WmYPT422d8iLKDphS+jgBjjLb3RZBDCcq4cybMlzmHXmMRun0LRflA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcSmHB5tgePUx/KGLGh6K9Qq6fKW216sL8Al4+QGrdzKQwiN/P
+	w4S477L2kgA+s956wd+S3yjrdRYJMP1Ds780cmD7tjGvvps2Y0VQtI7Y
+X-Gm-Gg: ASbGnctux52Ri7TqutAfgMxB9Y0F6NGasbf+lmYISlBkoZxTRb/LrzScCTxY0xD6JK7
+	+9GNbJ0XQpxQwVOzeDIy8krhMoH7Ebn5aJovvkUH8QZDevQhjBRa0AEWPTiz2fimr9KyYLGkJ9A
+	Hs488G1wk88+r4fuDvWlptHQLt+4VI+r4TWVF8N3FbHXy/S0Z7SOrXfbNXvjsjObdSIIC/qZrTd
+	XvCJ0vdougf+B50t7Dje6YYLPYwN0HqrhULN7Q+dPU0+cmZMbpxcUyaq0QPaShoP1bR1wT4tHlU
+	FJk0e1vAn51YfXIVNHQB2cV/VrCcHjZt0r9CxXhZTjdmodyCkusuhhWbH9F+wqUB6kbEYkHvKRH
+	MKrjoyfM0VooG53vsDgjyc6dTTMdhLKS1l3NrFCHViWJdL3GJsNql15sbDJbGxPk=
+X-Google-Smtp-Source: AGHT+IEk7agEg+82HUhVi+K1CGvdVRT9HjAB1WcN895aPigC7lUFvGeFM2UUZYfjcen5ARVkZ43EUQ==
+X-Received: by 2002:a05:620a:24cb:b0:7c8:c9c:2a8a with SMTP id af79cd13be357-7d3f993c418mr1943684385a.49.1750690072436;
+        Mon, 23 Jun 2025 07:47:52 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f99fbe11sm393314485a.81.2025.06.23.07.47.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 07:47:52 -0700 (PDT)
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 7D6631200066;
+	Mon, 23 Jun 2025 10:47:51 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-07.internal (MEProxy); Mon, 23 Jun 2025 10:47:51 -0400
+X-ME-Sender: <xms:F2lZaPimY1UJHGPe0rsgfT-kMZNXfcNyLAT1ksh1eEydHXUbzOvqtw>
+    <xme:F2lZaMADByiiKavPDNSDNYoZGLkw4rhQG_5NzSgSVYkQmnZI00Fs1sQhM7TPKeIY9
+    uk0OEfdIuaDPut_9w>
+X-ME-Received: <xmr:F2lZaPFwu0Su5eIu44vtLM_cwKyKUBcVFHH3et65wkTNVIkcKOfRJLnw5A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddujeeftdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtugfgjgesthekredttddtudenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
+    gvrhhnpedtgeehleevffdujeffgedvlefghffhleekieeifeegveetjedvgeevueffieeh
+    hfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
+    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
+    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
+    gvrdhnrghmvgdpnhgspghrtghpthhtohepudelpdhmohguvgepshhmthhpohhuthdprhgt
+    phhtthhopehlohhsshhinheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfihorhhkse
+    honhhurhhoiihkrghnrdguvghvpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehv
+    ghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhushhtqdhfohhrqdhlihhnuh
+    igsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomh
+    dprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhopegrrdhh
+    ihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlihgtvghrhihhlh
+    esghhoohhglhgvrdgtohhm
+X-ME-Proxy: <xmx:F2lZaMQIVww3a6nZUHHp6aGw2nCIYLK6meC4QgmY-dtAO5teQU2U-Q>
+    <xmx:F2lZaMyX4rt--I-PFQh5MtlMHxwwFr63wuKrCrrTwrdyvTkgXsJk5A>
+    <xmx:F2lZaC6G0uw7h6CrU-XDI3RVGSQ8lESgYCaK7q9Bca3L1ZnZSrABvA>
+    <xmx:F2lZaBwHNgMg1EyYlwQ1BycIqUxWGpr6OtimZEmmb_ufx9MKTuzgZA>
+    <xmx:F2lZaMj75MbA0qnQM6SeYDPe0zaVTBCSsHkvSHVoDRLh4Vtitz58VWrT>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 23 Jun 2025 10:47:50 -0400 (EDT)
+Date: Mon, 23 Jun 2025 07:47:49 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Onur =?iso-8859-1?Q?=D6zkan?= <work@onurozkan.dev>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	dakr@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	will@kernel.org, longman@redhat.com, felipe_life@live.com,
+	daniel@sedlak.dev, bjorn3_gh@protonmail.com
+Subject: Re: [PATCH v5 2/3] implement ww_mutex abstraction for the Rust tree
+Message-ID: <aFlpFQ4ivKw81d-y@Mac.home>
+References: <20250621184454.8354-1-work@onurozkan.dev>
+ <20250621184454.8354-3-work@onurozkan.dev>
+ <DASY7BECFRCT.332X5ZHZMV2W@kernel.org>
+ <aFlQ7K_mYYbrG8Cl@Mac.home>
+ <DATYHYJVPL3L.3NLMH7PPHYU9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: remoteproc: fsl,imx-rproc: Add
- support for i.MX95
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Iuliana Prodan <iuliana.prodan@nxp.com>,
- Daniel Baluta <daniel.baluta@nxp.com>
-Cc: linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-References: <20250606-imx95-rproc-1-v2-0-a2bd64438be9@nxp.com>
- <20250606-imx95-rproc-1-v2-1-a2bd64438be9@nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250606-imx95-rproc-1-v2-1-a2bd64438be9@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DATYHYJVPL3L.3NLMH7PPHYU9@kernel.org>
 
-On 06/06/2025 03:55, Peng Fan (OSS) wrote:
->    fsl,entry-address:
->      $ref: /schemas/types.yaml#/definitions/uint32
->      description:
-> @@ -78,6 +85,12 @@ properties:
->      description:
->        Phandle to IOMUXC GPR block which provide access to CM7 CPUWAIT bit.
->  
-> +  fsl,lmm-id:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      This property is to specify the Logical Machine ID of the remote processor
-> +      in SoC which supports System Manager
+On Mon, Jun 23, 2025 at 03:44:58PM +0200, Benno Lossin wrote:
+> On Mon Jun 23, 2025 at 3:04 PM CEST, Boqun Feng wrote:
+> > On Sun, Jun 22, 2025 at 11:18:24AM +0200, Benno Lossin wrote:
+> >> On Sat Jun 21, 2025 at 8:44 PM CEST, Onur Özkan wrote:
+> >> > Adds Rust bindings for the kernel's `ww_mutex` infrastructure to enable
+> >> > deadlock-free acquisition of multiple related locks.
+> >> >
+> >> > The patch abstracts `ww_mutex.h` header and wraps the existing
+> >> > C `ww_mutex` with three main types:
+> >> >     - `WwClass` for grouping related mutexes
+> >> >     - `WwAcquireCtx` for tracking lock acquisition context
+> >> >     - `WwMutex<T>` for the actual lock
+> >> 
+> >> Going to repeat my question from the previous version:
+> >> 
+> >>     I don't know the design of `struct ww_mutex`, but from the code below I
+> >>     gathered that it has some special error return values that signify that
+> >>     one should release other locks.
+> >>     
+> >>     Did anyone think about making a more Rusty API that would allow one to
+> >>     try to lock multiple mutexes at the same time (in a specified order) and
+> >>     if it fails, it would do the resetting automatically?
+> >
+> > But the order may not be known ahead of time, for example say you have
+> > a few:
+> >
+> >     pub struct Foo {
+> >         other: Arc<WwMutex<Foo>>,
+> > 	data: i32,
+> >     }
+> >
+> > you need to get the lock of the current object in order to know what's
+> > the next object to lock.
+> >
+> >> 
+> >> I'm not familiar with ww_mutex, so I can't tell if there is something
+> >> good that we could do.
+> >> 
+> >
+> > It's not a bad idea when it can apply, but we still need to support the
+> > case where the order is unknown.
+> 
+> I didn't have a concrete API in mind, but after having read the
+> abstractions more, would this make sense?
+> 
+>     let ctx: &WwAcquireCtx = ...;
+>     let m1: &WwMutex<T> = ...;
+>     let m2: &WwMutex<Foo> = ...;
+> 
+>     let (t, foo, foo2) = ctx
+>         .begin()
+>         .lock(m1)
+>         .lock(m2)
+>         .lock_with(|(t, foo)| &*foo.other)
+>         .finish();
+> 
 
-As explained on IRC, none of above are suitable for DT, because these
-are soc specific. Also, post upstream your DTS, so we will see complete
-picture instead of guessing such things.
+Cute!
 
-Best regards,
-Krzysztof
+However, each `.lock()` will need to be polymorphic over a tuple of
+locks that are already held, right? Otherwise I don't see how
+`.lock_with()` knows it's already held two locks. That sounds like a
+challenge for implementation. We also need to take into consideration
+that the user want to drop any lock in the sequence? E.g. the user
+acquires a, b and c, and then drop b, and then acquires d. Which I think
+is possible for ww_mutex.
+
+Regards,
+Boqun
+
+>     let _: &mut T = t;
+>     let _: &mut Foo = foo;
+>     let _: &mut Foo = foo2;
+> 
+> ---
+> Cheers,
+> Benno
