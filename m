@@ -1,133 +1,142 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF7F1EF394
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84380239E8A;
+	Mon, 23 Jun 2025 10:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750674087; cv=none; b=gyXt86K4iBmOrSbzIO3jE1oKOVAZa7CtOb2HMRANVrmpZykETiy1cBVfhq6CuKyifvoZc6lrfz/kI6EocBaKKpcy6JFHRqQ+m7xhFs8C8WixxcqBCuS/ox9r4AzRdW3fXTocTyYIJvJ76RI7mqa5k7HGs9gKMU3JwFh8bcAkQ4U=
+	t=1750674139; cv=none; b=h7GjhgEas2p/Hi+U1a44coAeMcrYeZcCZieT+Zs2caEcx8q9bYO2G2oOpKeAVE/Ptsr14wgFHLi4VYjKQAPyH2ZGsD3x+Hucw61hd2HugYqJR+6PGNpIG5hZPHgOCiVOq0uKP+e669HDaWnpcctjfYQWp8DzbLdgklnUAtNy21Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750674087; c=relaxed/simple;
-	bh=CadnOnqUrP01j9sf1g6sUWHOFqKProxbSycYgQcVmxM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YMNLODUsyJYUGfDoQXV8A2L0C2AZgV7b1zl0XT3F4rfh2sPmr1vWFkpgfyjgzQM5Hs2SVKDKQ6OsaoBeo07oH1TTioVT1s1fSdAQjCqTQ9d6FKCRDs4lxikjYl8E2Z0VrGIOS+iRgap6iRFWCWvZpNVuEHGOIVHyCsOJQ6UZeHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MeIChkIN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750674139; c=relaxed/simple;
+	bh=buTQECq2VCKD1ICDi23k4UJqMyJjcgNtn8vEOvOp9lc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aHkltSuOZ4uPNMOZYpeRb+TRzmY8ONmb9XF4Z+dFp7izlXx0ztNGRWOOVYPbLFAGgzmZtYykN7QYnikgXn9vsIWL8R7J/ZodD5zkrCm4uKTzfek5aiuE89z9bCSKVVEvuxYAdjNOOA1UHBo56YBNq0/cJriVLjJ6Nf22fwVMTFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HbQHWs/l; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MeIChkIN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750674083;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0lgw/bD4SindaQDwTXpeWQKLQPGV/k/mx1XMIx/reNQ=;
-	b=MeIChkIN5mc9k0qLQ4zz/42LFZIUspwtuzfbWwT6CVQrEwM+5hCN8j5uDPLN1PsF0W37tJ
-	SOUsdn0eclikM/i7IOyx7+jMyYYfClPQpCMP+488KxB7UiFWvoRa5IftHbyvPoK8P+qhmU
-	pe+02ONbknHgKmx9lxQ71m9/DV0TeQA=
-Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com
- [209.85.128.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-372-TQRNAiUjPxGrnMx_4DTxhg-1; Mon, 23 Jun 2025 06:21:22 -0400
-X-MC-Unique: TQRNAiUjPxGrnMx_4DTxhg-1
-X-Mimecast-MFC-AGG-ID: TQRNAiUjPxGrnMx_4DTxhg_1750674081
-Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-707cf1b0ecbso53642217b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 03:21:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750674081; x=1751278881;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0lgw/bD4SindaQDwTXpeWQKLQPGV/k/mx1XMIx/reNQ=;
-        b=I4hSTgRPAdx7ByPHTTfTjM8xAU8Sx4b//bvm1OHxqhf/F8qeK1YRBI9j+POMm/hysv
-         ktrB236T9FAEEQ2mkWKhYJoPwoC7BJDPAU5mRmVSzxK8OH7Sh573ACv2PUoskA9KpnU3
-         qCFeuXOspZmpcx15Yd+dOcBM9HcPRbzdIEgbuVRP9l21j+4rVaIlmCZE8nR77mDdoI8j
-         9atU3YYl/MWqNO8R1d2ftDaRhjaU6M6AuTNjbYOz7kvyN31oyKSeu5US/H0njZMZqj8n
-         M5afI1/TyTQvkO/vhR29+kQ9Vr+DNF/Y/aAvOaKyI6bLCYCLbqPmmUwXetkFExtm5riZ
-         szNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdsr2RHjlHNDT8E9OtiI3u+JJJFLc7LYE/zWZ5e97QEfhazRLF4Oqx7PGFE070Kffg9Rgx6PF4GRQE0S8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxp2Xtbuk6hIUZ9GKGe245CxvShh2deAvpBcuEIXosX0s5P4qs1
-	2ChSOUkulBrls2Ioy10TXBP7AhUHBaJRIG8jxaEt+3vozDv/9VKrW2RheoIPtapSLTGHJB/tSmK
-	S3ichvbpddilxy9MqGrFyavtbPXeYz6ZIz8dt1pTpsi5Ad1fp9gffMWDCCsPpTioDIFC1TQDS0V
-	sQXhQQBs4mKA/epOkhJAIuUUjcbcdgWV3X+o1EDbAsyEWf7ZC+MCYchw==
-X-Gm-Gg: ASbGncuDPEIdFj8HSFKTijbuBDA2C8so6QEAo6Bg64KAwoJ4khaK22vNJSh+aSb0BQ5
-	0aapoPSvXaJrPmvz4Ay29bGdTW4mW5gl4hmjSLWtQBotQsYhe6WHXpQbLTX789qRe1mzxJFiASc
-	8X1yc=
-X-Received: by 2002:a05:690c:6f93:b0:711:7128:114f with SMTP id 00721157ae682-712c63c5613mr173777247b3.12.1750674081365;
-        Mon, 23 Jun 2025 03:21:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFFiDnn92RagGTfufzHsxHhTXMUufsWyR4eKoIQO45W2ta/mlkrX/GRWBBKswWX0hUbhvXY3gbxHPfx0i3Xsoc=
-X-Received: by 2002:a05:690c:6f93:b0:711:7128:114f with SMTP id
- 00721157ae682-712c63c5613mr173777017b3.12.1750674081105; Mon, 23 Jun 2025
- 03:21:21 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HbQHWs/l"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6633040E019C;
+	Mon, 23 Jun 2025 10:22:13 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id X3JkVTcSfEkT; Mon, 23 Jun 2025 10:22:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1750674123; bh=bit8kbTV4D3YTiOYptKHmiW7XfvgF+MCkFLAQajwdzk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HbQHWs/ls8gZcfaGZhZv31VGHo7gwnSdUS6tcGx5ju6fZNZNY7nrxFpxNwZjLu2Oh
+	 XS7v/Ipqm7R5Gt4bJzO3gvfy9+TK/sEn4+UhrNhM2kODyyMDVofQNtyFmoAmi4pUvu
+	 7Bof7QehSI7Qhhp6CaQIgBS2XBwOGZTRQHy9D3jF2xfNhlFkQphtrKTYysOrLuQlcd
+	 5DZW3HGSwtZej+UmB3Q7HkqF9IHfDm5nYLDrrCzgOrASUWqXO4WHmmFy2xLrJ3Y4LB
+	 +J9SiPoSMBzFfPPuo/wXAZzC1UYbclUgVJJV0P+iFAo0GOH9d0cw3TvPC97R/QbMe+
+	 kfoFG7keh2xnoyupNaPcs/pZm2+ZEEFNlcrVOP07MwYrwdVqsTN++R93nArt0KvMOY
+	 ydmbpOUhFb7ypo+ObodoI3r5FfJABlmwGtjNbrPsgjLll9uf+hsXla0XB1hZesRsII
+	 0eAaH/vcQNEBsfbaHJk/dOvuGpSfecQHK5l+IqHnYT4NReLwCFb8yC7BhdFDlja4sv
+	 s4a0Hdz4FbszW8nVDNGvy3o+s+gonkxnzBWmVYIyqizfNXpKKqigDzu+ChQ2Na2PP+
+	 ToXCf8yvBgwWs7vd0+P4AcRe9tvgUAkqSUj/RpcQUgLU50z0XqT5EuTjBVWrshIEVU
+	 ciO9IULS86WrYB8ItxO4v1dc=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D19B440E01A0;
+	Mon, 23 Jun 2025 10:21:10 +0000 (UTC)
+Date: Mon, 23 Jun 2025 12:21:05 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Xiongwei Song <xiongwei.song@windriver.com>,
+	Xin Li <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Tony Luck <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Breno Leitao <leitao@debian.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Alexei Starovoitov <ast@kernel.org>, Hou Tao <houtao1@huawei.com>,
+	Juergen Gross <jgross@suse.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>,
+	Huang Shijie <shijie@os.amperecomputing.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org, linux-mm@kvack.org,
+	Yian Chen <yian.chen@intel.com>
+Subject: Re: [PATCHv6 01/16] x86/cpu: Enumerate the LASS feature bits
+Message-ID: <20250623102105.GCaFkqkatFSbyl1YeN@fat_crate.local>
+References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
+ <20250620135325.3300848-2-kirill.shutemov@linux.intel.com>
+ <20250620163504.GCaFWNuI-8QFqAM0yI@fat_crate.local>
+ <6y2iqv6c2idn7yebaec7tyhzl5zcsrwqq4lcsokumlqeophzaf@ljnmxorblgcj>
+ <20250620182943.GDaFWolxhwogB2tTxb@fat_crate.local>
+ <tmd5llufitosphzhiik2tlemjuwyi7xkcjlhbqhibrgjjhsqcj@b3xtgub42p45>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618114409.179601-1-d.privalov@omp.ru>
-In-Reply-To: <20250618114409.179601-1-d.privalov@omp.ru>
-From: Miklos Szeredi <mszeredi@redhat.com>
-Date: Mon, 23 Jun 2025 12:21:09 +0200
-X-Gm-Features: AX0GCFvydjAk0H9SdIviYpopwIHMR0R5bzlGmZzRGrpaLGnO5vBQo-A0rDztVy8
-Message-ID: <CAOssrKddunTkNzY1ydgg-rpi1aTuq-ghgJcVuQOXnK1GH5HCtg@mail.gmail.com>
-Subject: Re: [PATCH 5.10/5.15 1/1] fuse: don't increment nlink in link()
-To: "d.privalov" <d.privalov@omp.ru>
-Cc: stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, linux-bluetooth@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	lvc-project@linuxtesting.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <tmd5llufitosphzhiik2tlemjuwyi7xkcjlhbqhibrgjjhsqcj@b3xtgub42p45>
 
-On Wed, Jun 18, 2025 at 2:00=E2=80=AFPM d.privalov <d.privalov@omp.ru> wrot=
-e:
->
-> From: Miklos Szeredi <mszeredi@redhat.com>
->
-> commit 97f044f690bac2b094bfb7fb2d177ef946c85880 upstream.
->
-> The fuse_iget() call in create_new_entry() already updated the inode with
-> all the new attributes and incremented the attribute version.
->
-> Incrementing the nlink will result in the wrong count.  This wasn't notic=
-ed
-> because the attributes were invalidated right after this.
->
-> Updating ctime is still needed for the writeback case when the ctime is n=
-ot
-> refreshed.
->
-> Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-> Signed-off-by: Dmitriy Privalov <d.privalov@omp.ru>
-> ---
->  fs/fuse/dir.c | 29 ++++++++++-------------------
->  1 file changed, 10 insertions(+), 19 deletions(-)
->
-> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-> index 4488a53a192d..7055fdc1b8ce 100644
-> --- a/fs/fuse/dir.c
-> +++ b/fs/fuse/dir.c
-> @@ -807,7 +807,7 @@ void fuse_flush_time_update(struct inode *inode)
->         mapping_set_error(inode->i_mapping, err);
->  }
->
-> -void fuse_update_ctime(struct inode *inode)
-> +static void fuse_update_ctime_in_cache(struct inode *inode)
->  {
+On Mon, Jun 23, 2025 at 11:17:02AM +0300, Kirill A. Shutemov wrote:
+> What about this:
+> 
+> LASS provides protection against a class of speculative attacks, such as
+> SLAM[1]. Add the "lass" flag to /proc/cpuinfo to indicate that the feature
+> is supported by hardware and enabled by the kernel. This allows userspace
+> to determine if the setup is secure against such attacks.
 
-Backport is wrong.  In the original patch we have
+Yeah, thanks.
 
--       fuse_invalidate_attr(inode);
+I'm still not fully on board with userspace determining whether they're
+mitigated or not but that's a general problem with our mitigations.
 
-And that line comes from 371e8fd02969 ("fuse: move
-fuse_invalidate_attr() into fuse_update_ctime()") in v5.16.
+Also, I haven't looked at the patchset yet but I think it should be also
+adding code to bugs.c to make all those vulns which it addresses, report that
+they're mitigated by LASS now in
 
-The fix is to not introduce fuse_update_ctime_in_cache(), because
-fuse_update_ctime() is already doing that.
+grep -r . /sys/devices/system/cpu/vulnerabilities/
 
-Thanks,
-Miklos
+output.
 
+Which makes your cpuinfo flag not really needed as we already have a special
+method for the mitigations reporting.
+
+But ok, it has gotten kernel enablement so stating so in cpuinfo is ok.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
