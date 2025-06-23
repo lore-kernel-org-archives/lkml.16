@@ -1,244 +1,103 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC0542065
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF7542065;
+	Mon, 23 Jun 2025 18:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750702654; cv=none; b=B1bdJyx3kpR6RqGLqmaiAH8IrMTiowhFISk3JSTFL44kgjAOxg5M/MV1At/kQKknYo/NZy+Tx0vqQWWOsaaUUOqpuTM7yQ2ccbq7voqYN728y2j45aCnH6Ic3I+/q2LI/4q+GqxpSvaCIJuweUNb8NnV2sFSEVKMqeuar0ISbrM=
+	t=1750702679; cv=none; b=JJDL/BQwuQlFHoHxqibGTZJFmcO4EtTv7SC8H2J8AhRNm2kv/h4TtET6nwOXJ4L4q8gzpzBu+qVj+Iu0EX47keoXB5G7mmuluvhlPdkhjtPstG6E2IazKZOOW6KIf20/YF4C0Q5zu7nmouuz/zeA1lVB074CgKv+iEAmkeNjZKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750702654; c=relaxed/simple;
-	bh=KjX9hbfC+EcV6h2iM+G+DkOUcQy4YEsEoFB6KGPRJiA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kk1O7SO/AllfE5ppbDx44/RuEwtx7UHA/BTTPeCodatmr+6WGOXIrwu7iSmi9wsWtTYEgdvgl6sSJqxRctl4gnNpO079ygZWyxAdxsDwyayFVHaG8LPVPnH3RcSy8e7I72zlE5JAPMI4iwJa1ZHvJs9qLGNjA24tg5C1BNNm24Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KR9WVSwQ; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750702679; c=relaxed/simple;
+	bh=pQ9xRt1uHICdtmFX8v/os4EaFlLgTRunRXJUAnYQyr8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Erbz8377MFEoWRtUO6sfoXO4QpD1bfDYd5iE1LiFI6BS4+WudDfBDY3NF7FWcGm/U9z62fomjtrGEKE0K70vzgh/9LLlC58sr8v++ZHSc+7r5EM11ieUMDzxwntATIpEDleTzVAx+ZCpoguerr/fXvSjzRMRSpyAlLX1ZTE8E1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=cHljv3vo; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KR9WVSwQ"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3ddd1a3e659so18345ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:17:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750702652; x=1751307452; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dX5nmmgwY0hBVlf7aMoDZKsFfUCvDBd1UsXXJPvN9mg=;
-        b=KR9WVSwQQBt7sfzF/1XMLux+WlKnj74YGki1pLl3EzIV/uBdw+4SZYi/0xmUYKXvJW
-         k6LKIDdzx2PgvdvR4cy8aiSH3FH7qJRZgIBmGPzDOXwRRaMVD0pdWRWPZDvhfXCAnbfo
-         07PrTT5ArA0qUe3QC0tEtGWVNTUvPxS2RbOACRlr5QjadoxlWjOZyvmwhKIhMQwzEdur
-         6wLx1/JJtR2u9fZHTW8dRsbdlFr90qxjlUCos92L4uCD5JOTThKnpQsQ3oV4VPLVoRm/
-         wEYRjWRUCQ04dfBEcdJUON4ZkM1B/z5YvA7Y2jIIRshYZF59/M/N36/jCNmV8ePD2aLW
-         cZcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750702652; x=1751307452;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dX5nmmgwY0hBVlf7aMoDZKsFfUCvDBd1UsXXJPvN9mg=;
-        b=VKpobcDh6J1BqkxkfwjxPky0nO2jwMX1Lw8Tw/oGKMfj0x3QtMxHPluGWwxeqe1nmQ
-         utMAiWDEhYC+n7B9S/ZiBTvJByB+pq9DvZUNRAj/CL0On5160Uh4YC1pmL4kbalEy2O/
-         GrbLxKbk5NW4X6t6XMMKLxf0HmKGXaq/GMtgA02eWedtDv37lmK0T8KBsDNJn0zaCb/P
-         zMugs9zreP7BzWGuhWfn9EKkqxSxnHcnkHrSLkasHAWtw82r4mHIBIUaw41FcDcHIOpW
-         vZEkeDzPNlmg3Ao2t+BDjoPYx0He+gLU4/au/4fZUHRl4rFWYDqA+z4NV16Q2OzWY1OM
-         B7/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWKfyokdizFN9iQKS6dHR+CxJZAQle7CI9F0VBvNVcjhyI8orD4Jp+J26ihF59qAQVmR039nZ3Qd4zw+v4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynRnHzmQB4pLWoytjeozj+F878tbJ4IcgwpvghNkVQQ5TBytHT
-	mvwTweAl48Ki38sng7EsvoP7qhnngW5F6LoLCC16AEoSzz9bF5ilLB2FE3lI3Otesd1t3x4S7C3
-	VTJ+H4DRtDGeaY33M2/jOcv4LBbhB5z3F6yHmZeDF
-X-Gm-Gg: ASbGnctZxcIKGQGwmTtorTv4v7yLr7MTP93XDMNAVLKH7hnldlEwwjvXhvHI6sr0W1G
-	Eezawi7aF8wStdT0OxcjWOOxbNHJeP9tZXNjS7TpNGtwmWQQHVczp+hk/MIyqdAXWNF4qoNMSpa
-	y95jRyCOrLuu0V1hcBfPuxE2RwOUD10/GKoz8yTZaRRDMj0a8Y800W96F2agz5nQUKMPOfah0h
-X-Google-Smtp-Source: AGHT+IHEDu+O4BUFjCcxZ1MyvRO2QKXmrDxBbVyqySqQfqkGQ/ogiMm9DV5FMVW18S7/nFksxFh4G8srlNjVUvQL3BA=
-X-Received: by 2002:a05:6e02:156e:b0:3dd:b826:deca with SMTP id
- e9e14a558f8ab-3df0cefdc17mr6671585ab.26.1750702651524; Mon, 23 Jun 2025
- 11:17:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cHljv3vo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=1GXg7W3rgF8fR8JO70MxOKUMa5ZEgyxSodhuCtreQpw=; b=cHljv3voGPO5Qi0Re3XTKw0TCJ
+	TPyKQ7qu872qBE0SxetnMa0o6GrX6BSUi1CcXVUl160083GSvnceLn0pAJho/wmkEO+Yrl5HDgWp3
+	DAoG/D+5D09ZyZHlRu3ql2jEYIrSkFKeHlteLMogRF71FDfo591/DrsWPuLrraPz5PPI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uTljk-00Gics-7N; Mon, 23 Jun 2025 20:17:44 +0200
+Date: Mon, 23 Jun 2025 20:17:44 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Joy Zou <joy.zou@nxp.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de,
+	catalin.marinas@arm.com, will@kernel.org, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com, ulf.hansson@linaro.org,
+	richardcochran@gmail.com, kernel@pengutronix.de, festevam@gmail.com,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+	linux-pm@vger.kernel.or, frank.li@nxp.com, ye.li@nxp.com,
+	ping.bai@nxp.com, aisheng.dong@nxp.com
+Subject: Re: [PATCH v6 5/9] arm64: dts: freescale: add i.MX91 11x11 EVK basic
+ support
+Message-ID: <8b5a8537-af16-46a1-b2ac-0374ed0f493a@lunn.ch>
+References: <20250623095732.2139853-1-joy.zou@nxp.com>
+ <20250623095732.2139853-6-joy.zou@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611233239.3098064-1-ctshao@google.com> <CAP-5=fXyB3H-msiSUGH_XqOntJNv-A2X7DtjvZO=nLzJgdTY+A@mail.gmail.com>
- <CAJpZYjVxs3yAS1-Uj_aQjkHGo+hRkHnwCbWxNsS4pT50-rvRPg@mail.gmail.com>
- <CAP-5=fWvnALUJiHrb_xzHXjseD88HF7LExs4N_Okg+UguuXsXg@mail.gmail.com>
- <CAJpZYjWUUbnNyBYXNSu_mmUrYLhNHHmdro8r08Xe0tN7nAanxg@mail.gmail.com> <aFXctF683XlLmiRy@google.com>
-In-Reply-To: <aFXctF683XlLmiRy@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 23 Jun 2025 11:17:20 -0700
-X-Gm-Features: AX0GCFuF0EDqZmQkD-2YOLJszX4GEWfGRbqDf0jEzTi5oWlapQSru5F_wWVYkXk
-Message-ID: <CAP-5=fW39O4=fu4CkcZSJWMA-5gkPaixGhWZecqMnrQt_vYsCg@mail.gmail.com>
-Subject: Re: [PATCH v1] perf stat: Fix uncore aggregation number
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623095732.2139853-6-joy.zou@nxp.com>
 
-On Fri, Jun 20, 2025 at 3:12=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hi CT,
->
-> On Thu, Jun 12, 2025 at 03:55:59PM -0700, Chun-Tse Shao wrote:
-> > Hi Ian, I actually renamed it to `aggr_nr` in v2 patch so it should be
-> > better aligned to json mode, which is using `aggregate-nunber`. But
-> > anyway I think any name other than `cpus` is better.
-> > v2 patch: lore.kernel.org/20250612225324.3315450-1-ctshao@google.com
->
-> I think "aggregation-count" is a better name, maybe abbreviated to
-> "ag_cnt".  Can we rename the JSON as well?  I'm not sure if it's
-> documented somewhere.
+> +&eqos {
+> +	phy-handle = <&ethphy1>;
+> +	phy-mode = "rgmii-id";
+> +	pinctrl-0 = <&pinctrl_eqos>;
+> +	pinctrl-1 = <&pinctrl_eqos_sleep>;
+> +	pinctrl-names = "default", "sleep";
+> +	status = "okay";
+> +
+> +	mdio {
+> +		compatible = "snps,dwmac-mdio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		clock-frequency = <5000000>;
+> +
+> +		ethphy1: ethernet-phy@1 {
+> +			reg = <1>;
+> +			realtek,clkout-disable;
+> +		};
+> +	};
+> +};
+> +
+> +&fec {
+> +	phy-handle = <&ethphy2>;
+> +	phy-mode = "rgmii-id";
+> +	pinctrl-0 = <&pinctrl_fec>;
+> +	pinctrl-1 = <&pinctrl_fec_sleep>;
+> +	pinctrl-names = "default", "sleep";
+> +	fsl,magic-packet;
+> +	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		clock-frequency = <5000000>;
+> +
+> +		ethphy2: ethernet-phy@2 {
+> +			reg = <2>;
+> +			eee-broken-1000t;
+> +			realtek,clkout-disable;
+> +		};
 
-Fwiw, I still think "counters" is a clearer, more intention revealing
-definition than "aggregation count" or "aggregation number". The term
-counter appears in the perf-stat and perf_event_open man page. In the
-perf-stat man page we have a pattern of:
+What is actually broken with EEE?  Is it actually the FEC?
 
-       --per-XXX
-           Aggregate counts per XXX for system-wide mode measurements. This=
- is a
-           useful mode to .... To enable this mode, use --per-XXX
-           in addition to -a. (system-wide). The output includes the ...
-          This is useful to gauge the amount of aggregation.
-
-It seems that the aggregated value of the counters could be confused
-for being an "aggregation count" or "aggregation number" given the man
-page definition. I think "counters" to some extent avoids this, we
-giving the number of counters aggregated. The perf-stat man page could
-certainly be clearer :-)
-
-Thanks,
-Ian
-
-> Thanks,
-> Namhyung
->
-> >
-> >
-> > On Wed, Jun 11, 2025 at 10:12=E2=80=AFPM Ian Rogers <irogers@google.com=
-> wrote:
-> > >
-> > > On Wed, Jun 11, 2025 at 8:18=E2=80=AFPM Chun-Tse Shao <ctshao@google.=
-com> wrote:
-> > > >
-> > > > Thanks for your test, Ian!
-> > > >
-> > > > I wonder if `nr_pmus` makes sense, since the column would be shared
-> > > > with multiple different pmus. WDYT?
-> > >
-> > > So each PMU in sysfs has a cpumask that specifies which CPUs perf
-> > > should pass to perf_event_open. For example, on a two socket machine
-> > > the cpumask will typically have the first CPU of each socket. If the
-> > > cpumask (or cpus) file isn't present then the cpumask is implicitly
-> > > all online CPUs. Given that the aggregation number is the number of
-> > > CPUs in the cpumask multiplied by the number of PMUs, I think the mos=
-t
-> > > neutral name is probably "counters" possibly shortened down to "ctrs"=
-.
-> > > I suspect others have better suggestions :-)
-> > >
-> > > Thanks,
-> > > Ian
-> > >
-> > > > -CT
-> > > >
-> > > > On Wed, Jun 11, 2025 at 5:16=E2=80=AFPM Ian Rogers <irogers@google.=
-com> wrote:
-> > > > >
-> > > > > On Wed, Jun 11, 2025 at 4:36=E2=80=AFPM Chun-Tse Shao <ctshao@goo=
-gle.com> wrote:
-> > > > > >
-> > > > > > Follow up:
-> > > > > > lore.kernel.org/CAP-5=3DfVDF4-qYL1Lm7efgiHk7X=3D_nw_nEFMBZFMcsn=
-OOJgX4Kg@mail.gmail.com/
-> > > > > >
-> > > > > > The patch adds unit aggregation during evsel merge the aggregat=
-ed uncore
-> > > > > > counters.
-> > > > > >
-> > > > > > Tested on a 2-socket machine with SNC3, uncore_imc_[0-11] and
-> > > > > > cpumask=3D"0,120"
-> > > > > > Before:
-> > > > > >   perf stat -e clockticks -I 1000 --per-socket
-> > > > > >   #           time socket cpus             counts unit events
-> > > > > >        1.001085024 S0        1         9615386315      clocktic=
-ks
-> > > > > >        1.001085024 S1        1         9614287448      clocktic=
-ks
-> > > > > >   perf stat -e clockticks -I 1000 --per-node
-> > > > > >   #           time node   cpus             counts unit events
-> > > > > >        1.001029867 N0        1         3205726984      clocktic=
-ks
-> > > > > >        1.001029867 N1        1         3205444421      clocktic=
-ks
-> > > > > >        1.001029867 N2        1         3205234018      clocktic=
-ks
-> > > > > >        1.001029867 N3        1         3205224660      clocktic=
-ks
-> > > > > >        1.001029867 N4        1         3205207213      clocktic=
-ks
-> > > > > >        1.001029867 N5        1         3205528246      clocktic=
-ks
-> > > > > > After:
-> > > > > >   perf stat -e clockticks -I 1000 --per-socket
-> > > > > >   #           time socket cpus             counts unit events
-> > > > >
-> > > > > I wonder if there is a better column heading than "cpus" given th=
-at
-> > > > > these are imc PMUs.
-> > > > >
-> > > > > >        1.001022937 S0       12         9621463177      clocktic=
-ks
-> > > > > >        1.001022937 S1       12         9619804949      clocktic=
-ks
-> > > > > >   perf stat -e clockticks -I 1000 --per-node
-> > > > > >   #           time node   cpus             counts unit events
-> > > > > >        1.001029867 N0        4         3206782080      clocktic=
-ks
-> > > > > >        1.001029867 N1        4         3207025354      clocktic=
-ks
-> > > > > >        1.001029867 N2        4         3207067946      clocktic=
-ks
-> > > > > >        1.001029867 N3        4         3206871733      clocktic=
-ks
-> > > > > >        1.001029867 N4        4         3206199005      clocktic=
-ks
-> > > > > >        1.001029867 N5        4         3205525058      clocktic=
-ks
-> > > > > >
-> > > > > > Suggested-by: Ian Rogers <irogers@google.com>
-> > > > > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > > >
-> > > > Added Namhyung's ack from the previous email.
-> > > > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> > > >
-> > > > >
-> > > > > Tested-by: Ian Rogers <irogers@google.com>
-> > > > >
-> > > > > Thanks,
-> > > > > Ian
-> > > > >
-> > > > > > ---
-> > > > > >  tools/perf/util/stat.c | 1 +
-> > > > > >  1 file changed, 1 insertion(+)
-> > > > > >
-> > > > > > diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> > > > > > index 355a7d5c8ab8..52266d773353 100644
-> > > > > > --- a/tools/perf/util/stat.c
-> > > > > > +++ b/tools/perf/util/stat.c
-> > > > > > @@ -527,6 +527,7 @@ static int evsel__merge_aggr_counters(struc=
-t evsel *evsel, struct evsel *alias)
-> > > > > >                 struct perf_counts_values *aggr_counts_b =3D &p=
-s_b->aggr[i].counts;
-> > > > > >
-> > > > > >                 /* NB: don't increase aggr.nr for aliases */
-> > > > > > +               ps_a->aggr[i].nr +=3D ps_b->aggr[i].nr;
-> > > > > >
-> > > > > >                 aggr_counts_a->val +=3D aggr_counts_b->val;
-> > > > > >                 aggr_counts_a->ena +=3D aggr_counts_b->ena;
-> > > > > > --
-> > > > > > 2.50.0.rc1.591.g9c95f17f64-goog
-> > > > > >
+	Andrew
