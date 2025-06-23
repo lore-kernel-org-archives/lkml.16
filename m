@@ -1,60 +1,62 @@
 Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AEA329DB7F
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:40:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA742BDC35
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:40:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750704041; cv=none; b=Yj9HSlMQ0qexo3gB6KUCoU5k6hq3ZWIETjhsuUzPeM+/byVy997QFjy7PTq0F8MO4mhRL7uxuwSzRGoAaj2naMBD+loRRW9wvGw0X//TVHW9CxVxq4CgMxfu2fodAoGTSI22hiFxLTmJWHr0cSUFdgol69IKN23an4ED3iKONmk=
+	t=1750704042; cv=none; b=FfMSDDOArdOUxhSf1AEh7uon/ZEYIhVuqjUxE2w6pPaQrMuQWD46B9UmtqgmT5LhiJbAwNPLU2Oa/ggB8RLaajTEx2tghnQt2Wc1ySNczkiBGPHjK1HNkz4zdaeBVReGlnrtk+a5NG6PZNJE89v9UzX/jXyaGaNEz6zW4sU5SxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750704041; c=relaxed/simple;
-	bh=Fg+YxudkkG3l9R+NxL2FXCTQRxlqlESyxCe/d89YqpU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=V6Oo9yApP9OgrVJIkukaY5fVv7NDZXpYRi94oB0vzXpC/UcQgkak4Ww4AXhOAZUAJhmSIw+NuxdTbs4yAf1gg8u8gSz0vgjLOTCDzdjtohkcO9rGo9FiSJG28OpteLRArsdMg/e4a0KefvhFU/u6M+NqPTRkop0FLrxiIQ3++y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GvYfH9Yu; arc=none smtp.client-ip=209.85.167.53
+	s=arc-20240116; t=1750704042; c=relaxed/simple;
+	bh=h387iw6lrE27m64daAX9Nw6jBAPHtTAhW2ZW2hOkTVc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=InOZpHfqjMvjElF58szrJLt6/Dk8F6cOgxxhEzERAl3eoTApHQAcQ0rxFZQGSNm03Fub4rmGArQ3B81QAsAUCCoOepseQmIJewjdGEeZzeT4sH6lIBdDe+fU2fD6jPRyaoh/e5PUqGF+TmUnImg2vqZhZ4b8qPvDteR+j/Druo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HTbBnePm; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GvYfH9Yu"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54e7967cf67so4316819e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:40:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HTbBnePm"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-553be4d2fbfso4513756e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:40:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750704038; x=1751308838; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SdQ4Hj+h3Z+DHU3zAkOjIkMup55iLgQ6wwen/JteTis=;
-        b=GvYfH9YuyXa2hqaGisZWoSMrf4EqZtwTW4555hiIMBNAUsxWLHdpHGivuz0LdTjO31
-         Kbuf8mwUTp68ZgxuUwc/BTIzPOZOpjJK3iGVr/LPRNRS0jKAnhrriJpLIbci1EirgvC3
-         AsyLzYlNGmT7h4AhtBofICHu0bOfIVb9elCaI6MfjaWjSiU3VrzOk6BIXiKm1GkyP0Ez
-         V1Udwj4JVRUpy7/7i46Bbj3vCcXyryk8lLmW8CKBSInzlpeN5NtpqLQD8QzIVloNYjRl
-         CiF4yeIBradSh9fjMGt75H4msnTm7kV1SflBYH4wgIIvBlkUynpNPyukrQXYmhJIJWta
-         7qIA==
+        d=gmail.com; s=20230601; t=1750704039; x=1751308839; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sFG9IxypmlJ3SQaxdodVvHUqxV7JKyHaU0cTD9oY6hU=;
+        b=HTbBnePm6eJFgkM0lS/u/Ibrd+OtUqdGJSKjgK0skyoxX91SIBD+S2fOXe5BjaRsmB
+         L8FeigAdS98Cf4z8QHTCNmF23DVQnNkL0ffxrRxadtiTVFchq5QrZ9raGMBK0trFu7xx
+         Gr6IhhKUeFkqKtVt44Y57MgVuvgNe0Jgryxm/RnajUnTItW7oFBaGGVIs3CBiE+sUjaG
+         I6qTS8zmxTXd7KKmzrdmwR6Zk9p+lzF6Xvx2LrkCdoUZtcCGL5h2ugMv6pLWxzUrgLEw
+         iywRBuB3nnKy++7+oJ0SGY868kb/vYDbIMiZET7iSg3vru5gH3LgoWW8XJLcAXtMDndu
+         MM2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750704038; x=1751308838;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SdQ4Hj+h3Z+DHU3zAkOjIkMup55iLgQ6wwen/JteTis=;
-        b=CUz5T5rUMuxGhaI8s9AiYH2KRWV03l2JxptwwFcoCAAdW+RFZsnW++0Sp/c1N6U2cv
-         DX0r2F+e7OpXjISsk415xm1c9C83zL/8wWKwRPzuFbuL3Oik8jp5v8kKRwRaqnI4srdb
-         LUI9x2fXdxCcScWw1ErXTavfuap8s6WDrKk1vPhajX+yz3k4OPb/zmIx5lee0u//fzKM
-         mN+Ti0cQrOZiogaEYDQV7FJA0x/Ln+8JvDbEQq+ohJjTTXruF9psSW/kCDNeiOxqYArr
-         sPArMZ8rVoZEqmoqVdvGWAJRArYzkOMOLMq6BKMRfnioQzeuD56DqqRKGSkvbalRSe+l
-         CNlw==
-X-Forwarded-Encrypted: i=1; AJvYcCVLgFkrTPycxYbSnbENGCSaJmDlU4fkaqtKlPHZOkb9Ivto3NHEMTzjeQoFHDJTptlf5rMj20perAK0ms0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQDrC+LxLix2g7pz1KtOWjdDvFNgzDlbBZ7lcWlSY9xZ5BCXbE
-	HHrVyAaIWq36cF/6zgfD8Rk2gxYTjqdDACYy9w9Qc6t98R810nRmCmwY
-X-Gm-Gg: ASbGncuf6PeNjwf88nXv00vr0P0PbOKHBvEFVu77QNf7JEDumDzWSedOuc9AoqkqBjF
-	mjbzLfXtV2ZNivs5evfB4QtpGfk1UPjyOmYqHeDtNejO+E2rDXaKc4oTNzvvCS+8xwJOSDLrW9J
-	L4X9ilr3Gb5j+kSppv5UAyDdaY2bu54B5VUkyrd4bRHoa/faxLCO+hzrbcY1r+nHKmbhjlUHXBB
-	IJLv6QWeMDyixnqbk0cYAbeAQiZjJDZEJoY83B92vnaBDpzivPcY78pFFRrWUjgBBSAtCiNvl7s
-	qv0uAkv/H0+sypV+CK2AQ8jH1u51aggD+LQKmw6hTEq7wJnRJxrXWNb+eA==
-X-Google-Smtp-Source: AGHT+IHbSGySEZY/bEVNQRwqngsUs+IJ329lbdUBsAWR85r4I1XszBJTeJhLo7VI5XLkdMjE15ayaw==
-X-Received: by 2002:a05:6512:691:b0:553:37b0:d992 with SMTP id 2adb3069b0e04-553e3bb3e62mr3798454e87.19.1750704037876;
-        Mon, 23 Jun 2025 11:40:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750704039; x=1751308839;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sFG9IxypmlJ3SQaxdodVvHUqxV7JKyHaU0cTD9oY6hU=;
+        b=VTc8qW5XYCclABpmcZH7X2Vfi/EmWzMm0FOwqEYmj+30F/aII2k7MTGnFHw4zL40OR
+         uaxE/1Xck04/V71iJFbBVfSaZgqQ8rwkrT36ivUgAKT+UzF8l5W5eFGXO+OK/3e8pevI
+         0LlAtDxdLSL7dxbUj3MQlgkxlgE1XeYQbugq1OjyZYz8d9E/UX6oCmhfHdVHmprdCqq8
+         gO5oCuCW0Hb2j+8XCCO2h6662CJczpyQpgeaknrngORP6C8t73UPGaiP7QRNHSKKp4z7
+         lEG0BOAO/DswZqOYEjda3tUqUqOLK4haT28UuoAhy6O45c8bETOBA1N2n7ao8PQOz+zc
+         HqVA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5zAadSuwpiM0m+O9znymlQTzpKje/btehtTmagjyKV44F/VbHTCb26mmAr5PzStsZWS1VLbfGVHAXPJg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZgb+hsp0rd3Ssjp2EOuihPUhF+TKslcfD6jG5cwdQvgjrog8c
+	8HLTmnuZH4ihJzYMQazVuI/Y4GQwanFkgKprz8XO6787yrTaFwBiPBUX
+X-Gm-Gg: ASbGncvS3LvGVoYRMs74ZsLuHEyKqTACoa8JsvTpAqw9S7UiZajul3DV439AWbs/Xn+
+	C1sog8YZQm4JwA2pTXE5nKai2+bIdYXx6SkIuDsWuSpX4FYQi/kiceRiKLeg7O44XD2h6Unyvo1
+	pPm1kUWvhTWH1t8YTWWiy7oK4IAfAhUfG+/tc7eVNZIVDTkeSGHXX2Rw6alb5J3wiynmCp4G8a0
+	pwlGo9tZxbv/3aHqfYX2F0Wux32U8/Iznf/Aw075yya6k43BifI7Jd/kHZXL4egBjTrJd1thsh5
+	LUH/sZOQUoedLYP2ESAlbVt1WfFql3JSUMm/gyp7kpQxiBlHzp0MaG2CjX9cX5QlCAn3
+X-Google-Smtp-Source: AGHT+IEfOYIWrO2ta6dUeoA8spqQLb6ATNX/Yh9Gp6X1sbe3Z0YWyzkeU5lr+qM8DXvD9za49y/lrg==
+X-Received: by 2002:a05:6512:1285:b0:553:2e59:a104 with SMTP id 2adb3069b0e04-553e3bfc3f9mr4441366e87.37.1750704038761;
+        Mon, 23 Jun 2025 11:40:38 -0700 (PDT)
 Received: from pc638.lan ([2001:9b1:d5a0:a500:2d8:61ff:fec9:d743])
         by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553e41bc2e3sm1500330e87.131.2025.06.23.11.40.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 11:40:37 -0700 (PDT)
+        Mon, 23 Jun 2025 11:40:38 -0700 (PDT)
 From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-mm@kvack.org,
@@ -64,10 +66,12 @@ Cc: linux-mm@kvack.org,
 	Harry Yoo <harry.yoo@oracle.com>,
 	Suren Baghdasaryan <surenb@google.com>,
 	David Wang <00107082@163.com>
-Subject: [PATCH 1/2] lib/test_vmalloc.c: Use late_initcall() if built-in for init ordering
-Date: Mon, 23 Jun 2025 20:40:34 +0200
-Message-Id: <20250623184035.581229-1-urezki@gmail.com>
+Subject: [PATCH 2/2] lib/test_vmalloc.c: Restrict default test mask to avoid test warnings
+Date: Mon, 23 Jun 2025 20:40:35 +0200
+Message-Id: <20250623184035.581229-2-urezki@gmail.com>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250623184035.581229-1-urezki@gmail.com>
+References: <20250623184035.581229-1-urezki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,42 +80,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When the vmalloc test code is compiled as a built-in, use late_initcall()
-instead of module_init() to defer a vmalloc test execution until most
-subsystems are up and running.
+When the vmalloc test is built into the kernel, it runs automatically
+during the boot. The current-default "run_test_mask" includes all test
+cases, including those which are designed to fail and which trigger
+kernel warnings.
 
-It avoids interfering with components that may not yet be initialized
-at module_init() time. For example, there was a recent report of memory
-profiling infrastructure not being ready early enough leading to kernel
-crash.
+These kernel splats can be misinterpreted as actual kernel bugs, leading
+to false alarms and unnecessary reports.
 
-By using late_initcall() in the built-in case, we ensure the tests are
-run at a safer point during a boot sequence.
+To address this, limit the default test mask to only the first few tests
+which are expected to pass cleanly. These tests are safe and should not
+generate any warnings unless there is a real bug.
+
+Users who wish to explicitly run specific test cases have to pass the
+run_test_mask as a boot parameter or at module load time.
 
 Cc: Harry Yoo <harry.yoo@oracle.com>
 Cc: Suren Baghdasaryan <surenb@google.com>
 Cc: David Wang <00107082@163.com>
 Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 ---
- lib/test_vmalloc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ lib/test_vmalloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/test_vmalloc.c b/lib/test_vmalloc.c
-index 1b0b59549aaf1..7264781750c96 100644
+index 7264781750c96..c1966cf72ab89 100644
 --- a/lib/test_vmalloc.c
 +++ b/lib/test_vmalloc.c
-@@ -598,7 +598,11 @@ static int __init vmalloc_test_init(void)
- 	return IS_BUILTIN(CONFIG_TEST_VMALLOC) ? 0:-EAGAIN;
- }
+@@ -41,7 +41,7 @@ __param(int, nr_pages, 0,
+ __param(bool, use_huge, false,
+ 	"Use vmalloc_huge in fix_size_alloc_test");
  
-+#ifdef MODULE
- module_init(vmalloc_test_init)
-+#else
-+late_initcall(vmalloc_test_init);
-+#endif
- 
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Uladzislau Rezki");
+-__param(int, run_test_mask, INT_MAX,
++__param(int, run_test_mask, 7,
+ 	"Set tests specified in the mask.\n\n"
+ 		"\t\tid: 1,    name: fix_size_alloc_test\n"
+ 		"\t\tid: 2,    name: full_fit_alloc_test\n"
 -- 
 2.39.5
 
