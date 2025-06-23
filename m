@@ -1,118 +1,164 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA51E26773C
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 14:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC29B26A1A3;
+	Mon, 23 Jun 2025 14:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750689603; cv=none; b=N6P2cSvwulR2HJSfP4MylVQjdWilJVkRH5tEJio3jhD/DJcOZiasXCUF4YQNfATfyNtrKvpqbvDy7QkYD/DkySZCJxOpto9Pg4h8h6c87bsUMnRzYIYXuQDKd5sOCiS/nua51qpcpwF2Tiof14btY7H2+PWqgMe0DaGDS6Twl9s=
+	t=1750689932; cv=none; b=HYODQWJuJLlEjbsfuzanMsghsfCeAlQJzzJu5pMeDE6qI2ioq01ngt5TCeKWZZY1TYMIdFCT+QVvtkgX6JDNEwGsg7IXLZB/Dehe0gZfXYvekBU07Tk9saVxEPxKFHzLfSNxiflAGXW3ikeyvpJXzdUl25drA8a6Q+97VpTlm1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750689603; c=relaxed/simple;
-	bh=lHsHchyWhA35ZLt97FqmbFUE1/lGuLeWn/i1lL1eJ44=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C6kEHzHOeGQSQz3JnGSLh6bUznWSKUu1mdC7IVOLAN528Dl9AAg8c6tgvWLZt66HKW6FRhCAKVrv7FJClrnsHL/EKAHVIroPaeg+DkbrEN2389mmvAqCQKHa1LGDVrvp3iJtv9Y0W5neQMwwLAWAXrM9wWzUpRy5ls36Z9Tuk1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PwbRHPpB; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PwbRHPpB"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-adb5cb6d8f1so669902366b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 07:40:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750689600; x=1751294400; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U9+0NuJ2HzS3oX9trIsYNygO2Vo4g11wSfp7uWlAzH4=;
-        b=PwbRHPpBhlmPizwH+MtEr6HbImm1x3JFpgi6CLiHBVXEjyet7sQl3j2Qyi4eik2Zik
-         BIovRH4zz8XIQ+QXp3ffMw2Z+3c8uCJn2Ddo+kTZ0zi6T9oLSu+XrSg3g4DldB+65T5G
-         MonlgXJ/cOuQ8WpFWS24/Pnm0y6PD1OjU2rRi7TdJy9iYoF78M7JPn5G2UMBXkWcxiBI
-         BOop7zqklgbmpO+LpN2Qny3+UBOz32giwsofy+DIFOGZ4lL+Ipb4EMDK+s1XJJsOidrE
-         AKeE1lFLqScZYVyKp4zb3G3SDtQEq6CmMUdXcZZ0RnTarLsh0M27O80owT0qdmN6vphF
-         XxMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750689600; x=1751294400;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U9+0NuJ2HzS3oX9trIsYNygO2Vo4g11wSfp7uWlAzH4=;
-        b=avyXkRJQdRcqOqVnd+kHk0FIew308wrcVchfyNcygLogu043ndLGHMoH/M/xmDkw20
-         0CI+u2Cofo0uLd3559XL/0wlD8IAU5UWdGNB7/3xmTMh66zp2SKCkIi3IXom/GXMMPoi
-         lA4MdGCtenmOzsbeus6/sjeIKCkvyv7iNpGfuPYJ05XCE5Cv0kuTgnNI8y198WetD1fG
-         BDgwWQ4jEe/dfveeAuxKmVt/L3fjnabeYUpGUzJN9gX4LPqj0dzvFlGNCdmCzLdMVUCj
-         0wToP3dQsxIEv3qtI6DchwzY71wg0zZ3SI3Us2gkXBAkfWKl46wboCc92Heia6f5Y7wi
-         6yeA==
-X-Forwarded-Encrypted: i=1; AJvYcCXoqyVA+ZxuYq7yuH2A+nE8XG6NTsOswxXnSR3+m5eBchWo5nBmdiZboHzuESkf+g+QkPLVLHBxKf/F9bY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziYwSM9QtDo/B+zThWSNEqsdXpoqOlhOfqrLuEFcLUhaKjY0PL
-	ZaP/v1+dwG7EB7RTRSzZ2Ig0zbthJ3EfbT+Idqq1Rb8UVqt5S36iSe1IPUUmf+V4v8O2Wh6alU0
-	nty6vLaPRSiqhbhHIlEWFFcyYjJFIasfLpjler0s=
-X-Gm-Gg: ASbGncvuZ+A7GnGXvzZ3wIncNILSw8wtCR43XGtV9WaqclDHOIDnI4YSOFdU4wPViIT
-	KL4MafYEU8TvMnDWZcuHK6g1QrSuchoU2sUjmdqtDEqgj/PnGo9tFXM6mwpfnuaIV9TSgTZ7HTi
-	ICVWKxJvpbKL8+VGPi9QAYoUyrGh6w2fyEAx6J2tGyd4zQ7p08o1cyOxYAEaps0HP6IZRW0UUT3
-	ER379hK85aU+eOD
-X-Google-Smtp-Source: AGHT+IGUfp3/ururE5cq94v6XTOMAtl8+WlC/gPk79G9+PbfymbTdmHbzNmhQMSy0z48u3KWdnPgfyPlB02Iw4aF8ms=
-X-Received: by 2002:a17:907:94cc:b0:adf:7740:9284 with SMTP id
- a640c23a62f3a-ae057c709c6mr1353653766b.57.1750689599796; Mon, 23 Jun 2025
- 07:39:59 -0700 (PDT)
+	s=arc-20240116; t=1750689932; c=relaxed/simple;
+	bh=EOh6xUIdqtrD2kFL8Xhl74TcdV1yYDlyoO202wzp364=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bn/w76GSVVKa0r2JKbZX1nDRPpOvT76tKbfGyDIjDd78P4LGC3Ejb4sAhC4PI1uCNo7XdT8RKxOjZ8RXW6RV0++Ti9jtvKxTSZBikKv3F/Y+wvip/X1KKxP7qjN1yE262n+iNchNCr0DzLlxC6CLy7jLMZkhcRliP7Vv/kS9Gzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DCD5B113E;
+	Mon, 23 Jun 2025 07:45:10 -0700 (PDT)
+Received: from [10.57.29.183] (unknown [10.57.29.183])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D6493F66E;
+	Mon, 23 Jun 2025 07:45:23 -0700 (PDT)
+Message-ID: <6c0e7cce-fb63-4f08-9907-9a58e0326bd3@arm.com>
+Date: Mon, 23 Jun 2025 15:45:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620231324.99607-1-sj@kernel.org> <20250621173639.35906-1-sj@kernel.org>
-In-Reply-To: <20250621173639.35906-1-sj@kernel.org>
-From: Bijan Tabatabai <bijan311@gmail.com>
-Date: Mon, 23 Jun 2025 09:39:48 -0500
-X-Gm-Features: AX0GCFt6CknS4SwAMKaZry7XGCRzawldZjC64c_mubZJ1QNsGdLh9DYniVyb5kA
-Message-ID: <CAMvvPS6yuosvLxUn8+GnGJdqE2LnfGgur0x0hTM6nqmBpU-q9Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 0/2] mm/damon/paddr: Allow interleaving in
- migrate_{hot,cold} actions
-To: SeongJae Park <sj@kernel.org>
-Cc: damon@lists.linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	akpm@linux-foundation.org, david@redhat.com, ziy@nvidia.com, 
-	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com, 
-	byungchul@sk.com, gourry@gourry.net, ying.huang@linux.alibaba.com, 
-	apopple@nvidia.com, bijantabatab@micron.com, venkataravis@micron.com, 
-	emirakhur@micron.com, ajayjoshi@micron.com, vtavarespetr@micron.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 07/43] arm64: RME: ioctls to create and configure
+ realms
+To: zhuangyiwei <zhuangyiwei@huawei.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
+ Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
+ <aneesh.kumar@kernel.org>, Emi Kisanuki <fj0570is@fujitsu.com>,
+ zhouguangwei5@huawei.com, wangyuan46@huawei.com
+References: <20250611104844.245235-1-steven.price@arm.com>
+ <20250611104844.245235-8-steven.price@arm.com>
+ <b3b709c2-a154-4b1a-b6bd-7075e6a57fd2@huawei.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <b3b709c2-a154-4b1a-b6bd-7075e6a57fd2@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 21, 2025 at 12:36=E2=80=AFPM SeongJae Park <sj@kernel.org> wrot=
-e:
->
-> On Fri, 20 Jun 2025 16:13:24 -0700 SeongJae Park <sj@kernel.org> wrote:
->
-> > On Fri, 20 Jun 2025 16:47:26 -0500 Bijan Tabatabai <bijan311@gmail.com>=
- wrote:
-> [...]
-> > > That sounds good to me! Having a prototype from you for the sysfs
-> > > interface would certainly be helpful, but if you're busy, I can take =
-a
-> > > pass at it as well.
-> >
-> > Great.  I will try to do this by this weekend.
->
-> I just posted an RFC for this:
-> https://lore.kernel.org/20250621173131.23917-1-sj@kernel.org
->
-> Note that I didn't run exhaustive tests with it, so it may have silly bug=
-s.  I
-> believe it could let you knwo what I'm thinking better than my cheap talk=
-s,
-> though ;)
-
-I only skimmed through it, but this looks good to me, thanks for
-throwing this together! I'll probe more when I use these patches for
-the next revision.
-
-I'll try to reply in that thread as well, but it was only sent to my
-work email. I'll try to set up my work Outlook client to work with the
-mailing list format, but in the future, could you also CC my personal
-email (bijan311@gmail.com)? Gmail just makes formatting for the
-mailing list easier for me.
-
-Thanks,
-Bijan
-
+On 23/06/2025 14:17, zhuangyiwei wrote:
+> Hi Steven
+> 
+> On 2025/6/11 18:48, Steven Price wrote:
+>> Add the KVM_CAP_ARM_RME_CREATE_RD ioctl to create a realm. This involves
+>> delegating pages to the RMM to hold the Realm Descriptor (RD) and for
+>> the base level of the Realm Translation Tables (RTT). A VMID also need
+>> to be picked, since the RMM has a separate VMID address space a
+>> dedicated allocator is added for this purpose.
+>>
+>> KVM_CAP_ARM_RME_CONFIG_REALM is provided to allow configuring the realm
+>> before it is created. Configuration options can be classified as:
+>>
+>>   1. Parameters specific to the Realm stage2 (e.g. IPA Size, vmid, stage2
+>>      entry level, entry level RTTs, number of RTTs in start level, LPA2)
+>>      Most of these are not measured by RMM and comes from KVM book
+>>      keeping.
+>>
+>>   2. Parameters controlling "Arm Architecture features for the VM". (e.g.
+>>      SVE VL, PMU counters, number of HW BRPs/WPs), configured by the VMM
+>>      using the "user ID register write" mechanism. These will be
+>>      supported in the later patches.
+>>
+>>   3. Parameters are not part of the core Arm architecture but defined
+>>      by the RMM spec (e.g. Hash algorithm for measurement,
+>>      Personalisation value). These are programmed via
+>>      KVM_CAP_ARM_RME_CONFIG_REALM.
+>>
+>> For the IPA size there is the possibility that the RMM supports a
+>> different size to the IPA size supported by KVM for normal guests. At
+>> the moment the 'normal limit' is exposed by KVM_CAP_ARM_VM_IPA_SIZE and
+>> the IPA size is configured by the bottom bits of vm_type in
+>> KVM_CREATE_VM. This means that it isn't easy for the VMM to discover
+>> what IPA sizes are supported for Realm guests. Since the IPA is part of
+>> the measurement of the realm guest the current expectation is that the
+>> VMM will be required to pick the IPA size demanded by attestation and
+>> therefore simply failing if this isn't available is fine. An option
+>> would be to expose a new capability ioctl to obtain the RMM's maximum
+>> IPA size if this is needed in the future.
+>>
+>> Co-developed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> Reviewed-by: Gavin Shan <gshan@redhat.com>
 [...]
+>> +static int realm_create_rd(struct kvm *kvm)
+>> +{
+>> +    struct realm *realm = &kvm->arch.realm;
+>> +    struct realm_params *params = realm->params;
+>> +    void *rd = NULL;
+>> +    phys_addr_t rd_phys, params_phys;
+>> +    size_t pgd_size = kvm_pgtable_stage2_pgd_size(kvm->arch.mmu.vtcr);
+>> +    int i, r;
+>> +    int rtt_num_start;
+>> +
+>> +    realm->ia_bits = VTCR_EL2_IPA(kvm->arch.mmu.vtcr);
+>> +    rtt_num_start = realm_num_root_rtts(realm);
+>> +
+>> +    if (WARN_ON(realm->rd || !realm->params))
+>> +        return -EEXIST;
+>> +
+>> +    if (pgd_size / RMM_PAGE_SIZE < rtt_num_start)
+>> +        return -EINVAL;
+>> +
+>> +    rd = (void *)__get_free_page(GFP_KERNEL);
+>> +    if (!rd)
+>> +        return -ENOMEM;
+>> +
+>> +    rd_phys = virt_to_phys(rd);
+>> +    if (rmi_granule_delegate(rd_phys)) {
+>> +        r = -ENXIO;
+>> +        goto free_rd;
+>> +    }
+>> +
+>> +    for (i = 0; i < pgd_size; i += RMM_PAGE_SIZE) {
+>> +        phys_addr_t pgd_phys = kvm->arch.mmu.pgd_phys + i;
+>> +
+>> +        if (rmi_granule_delegate(pgd_phys)) {
+>> +            r = -ENXIO;
+>> +            goto out_undelegate_tables;
+>> +        }
+>> +    }
+>> +
+>> +    params->s2sz = VTCR_EL2_IPA(kvm->arch.mmu.vtcr);
+>> +    params->rtt_level_start = get_start_level(realm);
+>> +    params->rtt_num_start = rtt_num_start;
+>> +    params->rtt_base = kvm->arch.mmu.pgd_phys;
+>> +    params->vmid = realm->vmid;
+>> +
+>> +    params_phys = virt_to_phys(params);
+>> +
+>> +    if (rmi_realm_create(rd_phys, params_phys)) {
+>> +        r = -ENXIO;
+>> +        goto out_undelegate_tables;
+>> +    }
+>> +
+>> +    if (WARN_ON(rmi_rec_aux_count(rd_phys, &realm->num_aux))) {
+>> +        WARN_ON(rmi_realm_destroy(rd_phys));
+> 
+> Since r has not been initialized, "goto out_undelegate_tables" leads to
+> 
+> return unknown value.
+
+Good spot! That should have a "r = -ENXIO" line in there.
+
+Thanks for the review,
+Steve
+
