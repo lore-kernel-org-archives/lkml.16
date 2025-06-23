@@ -1,104 +1,119 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC11BB663;
-	Mon, 23 Jun 2025 10:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5731A23ABB2;
+	Mon, 23 Jun 2025 10:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750673135; cv=none; b=Lv2KkVPW+vN/B8ltHY1DUztU/geiNAJqdcswuFsdSHX8Xo8plX94t/JfrovGopa2mFMmJHk1kjKhkDRvGpyDfN+NZejym2YoJTIOEJWt64b4N+NsmDnUenjV8SXez3vpLH/Ik5MNF8F97Gzk/W7lT13E/EN1wuMCEiDXs4evjp8=
+	t=1750673150; cv=none; b=e43JJ00AFfYcz4SRY0WJU/FX69ucyXd6xgOu2wKN2OPYiaZvOWgJX8GlQgs5E4HcmEwccFHTxEjPL0ZTE9l6uYK5+r5ze7ei9c5mO0SYW5psz9E1iX8G7n70jNDVeiky4ykMqOjXsfkv9FIaGu/bBUCstc1rtIleUy6+cCR67lU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750673135; c=relaxed/simple;
-	bh=vr/v7+HNQA9PBO0CTD04rUzWOcoal2+aqe6MzSRZyaA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hbwjEjoMcDo8kWNV01BgbX55KvWBmNP3tZjFuPWeTZhdO8MQQ8brXH1MaGIc8SwPIQftMm3beYyUogNn6tD/lE/KhOJEZo80sENPQEqXfHOPgncII+WQjTKML+PW3wNcqzjBAV19fz6vkgWhHjrgvHETadrZtGjl8bhqr6Rr920=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=L86h1ro2; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="L86h1ro2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=CwBZWncXMFHUNfKxRF00wCCVLbZJy1TDoDay/M48Z+I=; b=L86h1ro29XqjaL+eCgRkkXLern
-	75+0ic4ZPZQA9jgsZHU+m6s6A2g1sjBn8ch86nVuI/mPsm+t10x6oPsYBhqLPIQIrNtzVhkQykPlD
-	GS6K5lvxSgSfYFgxVCGxHbCyZJr9sJG8cHlMxOsXGWp3xZSWPA+YRD0J0ug3eUzpFk8RG8q4SVWqQ
-	TOR2KrK1AeFq1O+2IjRT6Sxz8JfV9KsVPDxIse6QRLv8ohmlIyxP9kaPKQw4t3nnlQoZnyzyHIkQL
-	h6O0JmWJF9FZOYiJ72bt6fz7XaHXYoqvT90EPSJ6+HRhkGFcR9xFgmumcVFR0doDchPrQUOcr2uVj
-	k3uVs64Q==;
-Received: from [185.15.108.45] (helo=phil.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uTe3H-00084G-Br; Mon, 23 Jun 2025 12:05:23 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Olivier Benjamin <olivier.benjamin@bootlin.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
- Nicholas Roth <nicholas@rothemail.net>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
- ~diederik/pine64-discuss@lists.sr.ht, Dragan Simic <dsimic@manjaro.org>,
- Ondrej Jirman <megi@xff.cz>
-Subject: Re: [PATCH v4 0/4] Describe the cameras in the PinePhone Pro dts
-Date: Mon, 23 Jun 2025 12:05:22 +0200
-Message-ID: <13788127.uLZWGnKmhe@phil>
-In-Reply-To: <aFj4kAXEhrR4Wbnz@kekkonen.localdomain>
-References:
- <20250620-camera-v4-0-0201a8ed5fae@bootlin.com>
- <aFj4kAXEhrR4Wbnz@kekkonen.localdomain>
+	s=arc-20240116; t=1750673150; c=relaxed/simple;
+	bh=iPNitE4nbuEDiKbUBmKidOk6gTXChF4de7gB/oOsN0g=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WjuQsvZOOB5ctQFige7MzI5Zo4/cBmQTBPNjze3JQkFEjzeYsv14oDeZ4jMOJNhS8QchZMnyLvCs5sWGq1SGCUbvJqhoDOtqG31JFt+p9mUH0MXZsfWzqWKX7omYTkpbYaHygyBGfpG+UpR6yJNlesIJTrrEaGV+adudRts3hn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQk9Z1cWTz6L5j9;
+	Mon, 23 Jun 2025 18:00:50 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0625E1402EA;
+	Mon, 23 Jun 2025 18:05:46 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
+ 2025 12:05:45 +0200
+Date: Mon, 23 Jun 2025 11:05:44 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Peter
+ Zijlstra" <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, "Linus
+ Torvalds" <torvalds@linux-foundation.org>, David Lechner
+	<dlechner@baylibre.com>, "Fabio M. De Francesco"
+	<fabio.m.de.francesco@linux.intel.com>
+Subject: Re: [PATCH v2 1/8] cleanup: Introduce ACQUIRE() and ACQUIRE_ERR()
+ for conditional locks
+Message-ID: <20250623110544.0000753d@huawei.com>
+In-Reply-To: <20250619050416.782871-2-dan.j.williams@intel.com>
+References: <20250619050416.782871-1-dan.j.williams@intel.com>
+	<20250619050416.782871-2-dan.j.williams@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Hi,
+On Wed, 18 Jun 2025 22:04:09 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Am Montag, 23. Juni 2025, 08:47:44 Mitteleurop=C3=A4ische Sommerzeit schrie=
-b Sakari Ailus:
-> Hi Olivier,
->=20
-> On Fri, Jun 20, 2025 at 05:21:31PM +0200, Olivier Benjamin wrote:
-> > This series adds support for the Pine64 PinePhone Pro's rear and front
-> > cameras in Device Tree.
-> > This is based on some of Ondrej Jirman's patches hosted in his tree at
-> > https://codeberg.org/megi/linux, but I have also fully reviewed and
-> > re-written the code from the RK3399 datasheet, the PinePhone Pro
-> > schematic, and the IMX258-0AQH5 software reference manual.
-> >=20
-> > I have tested these changes on my PinePhone Pro and am able to take
-> > photos from both cameras using libcamera's cam.
-> >=20
-> > This series has raised a question about the proper label name for the
-> > front/user camera and rear/world camera for phones.
-> > This series is using "ucam" and "wcam", which is used in a few other
-> > Rockship DTBs:
-> >  - arch/arm64/boot/dts/rockchip/px30-evb.dts
-> >  - rk3399-gru-scarlet.dtsi
-> >=20
-> > Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
->=20
-> Thanks for the patches.
->=20
-> I've picked the first two in the set, presumably the rest will be merged
-> via another tree?
+> From: Peter Zijlstra <peterz@infradead.org>
+> 
+> scoped_cond_guard(), automatic cleanup for conditional locks, has a couple
+> pain points:
+> 
+> * It causes existing straight-line code to be re-indented into a new
+>   bracketed scope. While this can be mitigated by a new helper function
+>   to contain the scope, that is not always a comfortable conversion.
+> 
+> * The return code from the conditional lock is tossed in favor of a scheme
+>   to pass a 'return err;' statement to the macro.
+> 
+> Other attempts to clean this up, to behave more like guard() [1], got hung
+> up trying to both establish and evaluate the conditional lock in one
+> statement.
+> 
+> ACQUIRE() solves this by reflecting the result of the condition in the
+> automatic variable established by the lock CLASS(). The result is
+> separately retrieved with the ACQUIRE_ERR() helper, effectively a PTR_ERR()
+> operation.
+> 
+> Link: http://lore.kernel.org/all/Z1LBnX9TpZLR5Dkf@gmail.com [1]
+> Link: http://patch.msgid.link/20250512105026.GP4439@noisy.programming.kicks-ass.net
+> Link: http://patch.msgid.link/20250512185817.GA1808@noisy.programming.kicks-ass.net
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: David Lechner <dlechner@baylibre.com>
+> Cc: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+> Not-yet-signed-off-by: Peter Zijlstra <peterz@infradead.org>
+> [djbw: wrap Peter's proposal with changelog and comments]
+> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+This looks like a nice solution.  One trivial style thing inline.
 
-correct, and with the first two being applied, I can now also safely pick
-the other two :-)
+> ---
+>  include/linux/cleanup.h | 77 ++++++++++++++++++++++++++++++++++-------
+>  include/linux/mutex.h   |  2 +-
+>  include/linux/rwsem.h   |  2 +-
+>  3 files changed, 67 insertions(+), 14 deletions(-)
+> 
+> diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
+> index 7093e1d08af0..1e1eb35cc225 100644
+> --- a/include/linux/cleanup.h
+> +++ b/include/linux/cleanup.h
+> +#define __GUARD_IS_ERR(_ptr) \
+> +	({ unsigned long _rc = (__force unsigned long)(_ptr); \
+> +	   unlikely((_rc-1) >= -MAX_ERRNO-1); })
 
-Thanks a lot
-Heiko
+Trivial but I'd have added spaces to make this
+	   unlikely((_rc - 1) >= -MAX_ERRNO - 1); })
 
+> +
+>  #define __DEFINE_GUARD_LOCK_PTR(_name, _exp) \
+>  	static inline void * class_##_name##_lock_ptr(class_##_name##_t *_T) \
+> -	{ return (void *)(__force unsigned long)*(_exp); }
+> +	{ void *_ptr = (void *)(__force unsigned long)*(_exp); \
+> +	  if (IS_ERR(_ptr)) { _ptr = NULL; } return _ptr; } \
+> +	static inline int class_##_name##_lock_err(class_##_name##_t *_T) \
+> +	{ long _rc = (__force unsigned long)*(_exp); \
+> +	  if (!_rc) { _rc = -EBUSY; } if (!IS_ERR_VALUE(_rc)) { _rc = 0; } \
+> +	  return _rc; }
+>  
 
 
