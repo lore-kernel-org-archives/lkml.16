@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5698325522D;
-	Mon, 23 Jun 2025 12:57:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AF125522B;
+	Mon, 23 Jun 2025 12:57:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750683421; cv=none; b=oI2/paM1eKx5sM7oEFx51nUU127B1PJXlhRqI9nOs7kEbqELI91xknTgXHqvRLP6MIPPPorO8WAInuB4EEZJc/8dtrnYnJgeW3WOCyd5/hzMsViooljpc7g64qMPHPCLqSVR/PvHcu+DzKRkh+2puT8ppiJkhE82Nsk1tAai16c=
+	t=1750683425; cv=none; b=UF04uJU4BK6grJBCERC8CN1WiXo3C+8vkF2FU3hsnLAV7Grn79TzCuT/PBzpFPoG7mcrtiDrSsKpRo4M/ngMiAN8eKDMpP3aH/dALLWwvF/Zt4n3v7a06g0/s4184tlvuQ1lOztC3F3M+7EA4E0p5SOpdxWlqHLiS+EjTSjBIhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750683421; c=relaxed/simple;
-	bh=7jVhqVGAjc9ZFGXbZZzkY3dEWfHE6F5nEf5rIqPjM64=;
+	s=arc-20240116; t=1750683425; c=relaxed/simple;
+	bh=OBN546Xw/XSBw1gh+gDHqku7W/MmXiHf4o1JKHEMJYY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q7rC6i6hZjAn2vUhtsK/90kbJTbxVJTE5c9D/XzvPQ/mn8+hRYBFlBxSXGQVHR/CVahodOHhql3ak3ZQH6gfiP+5yH299KoC4MwaFb0ItC5JrzjEdIiKRxbPCske14jfshuVBjJWu8NtjCxhi9Ve3dg5/rwmChNReEGIC2hsGp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XdNV0jr/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=oM7GxV4LQReYzk079v7kQii2bke3f1QTUc5h8R4qpVHNGH4czXdWJL5ZDCK4Xw6lxtVUTCdzGM5kolwSb6vs+TzqSis0infxOKTgyvk0XRvg9haNce7295gKQynMAyT1yopDsovOHAHxwT6ZuN5zbF6bguinQI82Hgu9BYSaCds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UPgE1kp6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XdNV0jr/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A48BC4CEF0;
-	Mon, 23 Jun 2025 12:56:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UPgE1kp6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5008DC4CEF3;
+	Mon, 23 Jun 2025 12:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750683420;
-	bh=7jVhqVGAjc9ZFGXbZZzkY3dEWfHE6F5nEf5rIqPjM64=;
+	s=k20201202; t=1750683424;
+	bh=OBN546Xw/XSBw1gh+gDHqku7W/MmXiHf4o1JKHEMJYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XdNV0jr/9S94RUaodZnYgQMI4wpfwTL2EOTMWES4QoCs27GyTgxxqfG9djDCNUoR+
-	 Mt3EN1dIrRKOWFu/Gf6ifwrlFwQbg1vR+XS3yT/efYpd+KqSD2uetWXoreQzvTpIJ4
-	 wpj6AK+mohhAT7xSmEVJ5KTHKyYSnDtSoXWCJ72egGkqCqfD79+ETmCbLPl+PiPCjP
-	 piYmZH7BUHBrh5dVz2XwAz8Gmyzb5QkUurTkR54wgd/iUhkEQi++4MB75eLScyaTW/
-	 iS+BC8JmlCqI574jnv3RCc5yU/Y7vaW6OHdn2o3Bu1KayICxBddyOk9XH3LnyGeBuB
-	 kGiST5CXUqPVw==
+	b=UPgE1kp6j+P7lyqJv8VobwOmGm7NFUPUKXeUTYG/cgSM4b24dUpuw8GZUG0gppLKK
+	 yM1QqMa7jMGLXOvHe/qqCWqbpPmI5t2FMBY0H9Fy2IKsu/yo47eDHkD0VTd0fgAdBn
+	 TPLk2UojF0mrQPcQM/TJjC89qnw/nNTmE1qp9Cgc7OQAXfJOzItHgpEOh3PwZAITX8
+	 BZskbY0gKuOEa7k8pEwSiWQX5klQUcyBBDiMUd/9mNRxlW+W38St9h+wQneh9VyYPu
+	 /sWHPSIgHk0etVYLiu+XwQ8VBUQfKCnHEqQYVtESe34wD23DdpwOgkqEYS1vYh4kli
+	 d6rgmfW0nQGag==
 From: Conor Dooley <conor@kernel.org>
 To: sboyd@kernel.org
 Cc: conor@kernel.org,
@@ -45,9 +45,9 @@ Cc: conor@kernel.org,
 	linux-clk@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/9] soc: microchip: add mfd drivers for two syscon regions on PolarFire SoC
-Date: Mon, 23 Jun 2025 13:56:17 +0100
-Message-ID: <20250623-rentable-eggbeater-98e9b7b64633@spud>
+Subject: [PATCH v3 4/9] reset: mpfs: add non-auxiliary bus probing
+Date: Mon, 23 Jun 2025 13:56:18 +0100
+Message-ID: <20250623-equate-ogle-0ce3293567e2@spud>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250623-levitate-nugget-08c9a01f401d@spud>
 References: <20250623-levitate-nugget-08c9a01f401d@spud>
@@ -57,160 +57,204 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4881; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=P0KwHlFPlXIpFEUesBiUq9EexeIVzEEKS9WSONg93nU=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDBmRfu9XffVtbpaP+tmulhcg8iVO3bdyucf08CTxE7K3C 63av93uKGVhEONgkBVTZEm83dcitf6Pyw7nnrcwc1iZQIYwcHEKwER+bWT4xcRqeuXNM73lk/rb WBZrlCbYScZlcMyx59RYz7ss72ccE8P/uL4j5SyS+XEb+U+lxz5fdnyqw/qu88Z/Z0ovfXnkOj8 nHwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6071; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=LdtKOZ18m1Z5XTBQK39rScuREwN0yhaKcaTMme0dp2Y=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDBmRfu8LLcs+9eZxOEiFV3+3ft+iwtWUJc4z7Uf/k9PR9 qvWH9jZUcLCIMbBICumyJJ4u69Fav0flx3OPW9h5rAygQxh4OIUgIloP2Bk2KmQKN0WK32vbGrb /GtsHQuONq7vvz+BZ8edeRLzf3Lb72b4pmvI8eXlbpvm/OwsoTmeCyeYnhJYcdqa41jT+YIwpe+ MAA==
 X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
 Content-Transfer-Encoding: 8bit
 
 From: Conor Dooley <conor.dooley@microchip.com>
 
-The control-scb and mss-top-sysreg regions on PolarFire SoC both fulfill
-multiple purposes. The former is used for mailbox functions in addition
-to the temperature & voltage sensor while the latter is used for clocks,
-resets, interrupt muxing and pinctrl.
+While the auxiliary bus was a nice bandaid, and meant that re-writing
+the representation of the clock regions in devicetree was not required,
+it has run its course. The "mss_top_sysreg" region that contains the
+clock and reset regions, also contains pinctrl and an interrupt
+controller, so the time has come rewrite the devicetree and probe the
+reset controller from an mfd devicetree node, rather than implement
+those drivers using the auxiliary bus. Wanting to avoid propagating this
+naive/incorrect description of the hardware to the new pic64gx SoC is a
+major motivating factor here.
 
 Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- drivers/soc/microchip/Kconfig               | 13 ++++++
- drivers/soc/microchip/Makefile              |  1 +
- drivers/soc/microchip/mpfs-control-scb.c    | 45 +++++++++++++++++++
- drivers/soc/microchip/mpfs-mss-top-sysreg.c | 48 +++++++++++++++++++++
- 4 files changed, 107 insertions(+)
- create mode 100644 drivers/soc/microchip/mpfs-control-scb.c
- create mode 100644 drivers/soc/microchip/mpfs-mss-top-sysreg.c
+v2:
+Implement the request to use regmap_update_bits(). I found that I then
+hated the read/write helpers since they were just bloat, so I ripped
+them out. I replaced the regular spin_lock_irqsave() stuff with a
+guard(spinlock_irqsave), since that's a simpler way of handling the two
+different paths through such a trivial pair of functions.
+---
+ drivers/reset/reset-mpfs.c | 81 ++++++++++++++++++++++++++++++--------
+ 1 file changed, 65 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/soc/microchip/Kconfig b/drivers/soc/microchip/Kconfig
-index 19f4b576f822b..31d188311e05f 100644
---- a/drivers/soc/microchip/Kconfig
-+++ b/drivers/soc/microchip/Kconfig
-@@ -9,3 +9,16 @@ config POLARFIRE_SOC_SYS_CTRL
- 	  module will be called mpfs_system_controller.
+diff --git a/drivers/reset/reset-mpfs.c b/drivers/reset/reset-mpfs.c
+index 574e59db83a4f..9c3e996f3a099 100644
+--- a/drivers/reset/reset-mpfs.c
++++ b/drivers/reset/reset-mpfs.c
+@@ -7,12 +7,15 @@
+  *
+  */
+ #include <linux/auxiliary_bus.h>
++#include <linux/cleanup.h>
+ #include <linux/delay.h>
+ #include <linux/io.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
++#include <linux/regmap.h>
+ #include <linux/reset-controller.h>
+ #include <dt-bindings/clock/microchip,mpfs-clock.h>
+ #include <soc/microchip/mpfs.h>
+@@ -27,11 +30,14 @@
+ #define MPFS_SLEEP_MIN_US	100
+ #define MPFS_SLEEP_MAX_US	200
  
- 	  If unsure, say N.
++#define REG_SUBBLK_RESET_CR	0x88u
 +
-+config POLARFIRE_SOC_SYSCONS
-+	bool "PolarFire SoC (MPFS) syscon drivers"
-+	default y
-+	depends on ARCH_MICROCHIP
-+	select MFD_CORE
-+	help
-+	  These drivers add support for the syscons on PolarFire SoC (MPFS).
-+	  Without these drivers core parts of the kernel such as clocks
-+	  and resets will not function correctly.
+ /* block concurrent access to the soft reset register */
+ static DEFINE_SPINLOCK(mpfs_reset_lock);
+ 
+ struct mpfs_reset {
+ 	void __iomem *base;
++	struct regmap *regmap;
+ 	struct reset_controller_dev rcdev;
+ };
+ 
+@@ -46,41 +52,50 @@ static inline struct mpfs_reset *to_mpfs_reset(struct reset_controller_dev *rcde
+ static int mpfs_assert(struct reset_controller_dev *rcdev, unsigned long id)
+ {
+ 	struct mpfs_reset *rst = to_mpfs_reset(rcdev);
+-	unsigned long flags;
+ 	u32 reg;
+ 
+-	spin_lock_irqsave(&mpfs_reset_lock, flags);
++	guard(spinlock_irqsave)(&mpfs_reset_lock);
 +
-+	  If unsure, and on a PolarFire SoC, say y.
++	if (rst->regmap) {
++		regmap_update_bits(rst->regmap, REG_SUBBLK_RESET_CR, BIT(id), BIT(id));
++		return 0;
++	}
+ 
+ 	reg = readl(rst->base);
+ 	reg |= BIT(id);
+ 	writel(reg, rst->base);
+ 
+-	spin_unlock_irqrestore(&mpfs_reset_lock, flags);
+-
+ 	return 0;
+ }
+ 
+ static int mpfs_deassert(struct reset_controller_dev *rcdev, unsigned long id)
+ {
+ 	struct mpfs_reset *rst = to_mpfs_reset(rcdev);
+-	unsigned long flags;
+ 	u32 reg;
+ 
+-	spin_lock_irqsave(&mpfs_reset_lock, flags);
++	guard(spinlock_irqsave)(&mpfs_reset_lock);
 +
-diff --git a/drivers/soc/microchip/Makefile b/drivers/soc/microchip/Makefile
-index 14489919fe4b3..1a3a1594b089b 100644
---- a/drivers/soc/microchip/Makefile
-+++ b/drivers/soc/microchip/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_POLARFIRE_SOC_SYS_CTRL)	+= mpfs-sys-controller.o
-+obj-$(CONFIG_POLARFIRE_SOC_SYSCONS)	+= mpfs-control-scb.o mpfs-mss-top-sysreg.o
-diff --git a/drivers/soc/microchip/mpfs-control-scb.c b/drivers/soc/microchip/mpfs-control-scb.c
-new file mode 100644
-index 0000000000000..d1a8e79c232e3
---- /dev/null
-+++ b/drivers/soc/microchip/mpfs-control-scb.c
-@@ -0,0 +1,45 @@
-+// SPDX-License-Identifier: GPL-2.0
++	if (rst->regmap) {
++		regmap_update_bits(rst->regmap, REG_SUBBLK_RESET_CR, BIT(id), 0);
++		return 0;
++	}
+ 
+ 	reg = readl(rst->base);
+ 	reg &= ~BIT(id);
+ 	writel(reg, rst->base);
+ 
+-	spin_unlock_irqrestore(&mpfs_reset_lock, flags);
+-
+ 	return 0;
+ }
+ 
+ static int mpfs_status(struct reset_controller_dev *rcdev, unsigned long id)
+ {
+ 	struct mpfs_reset *rst = to_mpfs_reset(rcdev);
+-	u32 reg = readl(rst->base);
++	u32 reg;
 +
-+#include <linux/array_size.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+
-+static const struct mfd_cell mpfs_control_scb_devs[] = {
-+	{ .name = "mpfs-tvs", },
-+};
-+
-+static int mpfs_control_scb_probe(struct platform_device *pdev)
-+{
++	if (rst->regmap)
++		regmap_read(rst->regmap, REG_SUBBLK_RESET_CR, &reg);
++	else
++		reg = readl(rst->base);
+ 
+ 	/*
+ 	 * It is safe to return here as MPFS_NUM_RESETS makes sure the sign bit
+@@ -130,11 +145,45 @@ static int mpfs_reset_xlate(struct reset_controller_dev *rcdev,
+ 	return index - MPFS_PERIPH_OFFSET;
+ }
+ 
+-static int mpfs_reset_probe(struct auxiliary_device *adev,
+-			    const struct auxiliary_device_id *id)
++static int mpfs_reset_mfd_probe(struct platform_device *pdev)
+ {
+-	struct device *dev = &adev->dev;
+ 	struct reset_controller_dev *rcdev;
 +	struct device *dev = &pdev->dev;
-+	int ret;
++	struct mpfs_reset *rst;
 +
-+	ret = mfd_add_devices(dev, PLATFORM_DEVID_NONE, mpfs_control_scb_devs,
-+			      1, NULL, 0, NULL);
-+	if (ret)
-+		return ret;
++	rst = devm_kzalloc(dev, sizeof(*rst), GFP_KERNEL);
++	if (!rst)
++		return -ENOMEM;
 +
-+	return 0;
++	rcdev = &rst->rcdev;
++	rcdev->dev = dev;
++	rcdev->ops = &mpfs_reset_ops;
++
++	rcdev->of_node = pdev->dev.parent->of_node;
++	rcdev->of_reset_n_cells = 1;
++	rcdev->of_xlate = mpfs_reset_xlate;
++	rcdev->nr_resets = MPFS_NUM_RESETS;
++
++	rst->regmap = device_node_to_regmap(pdev->dev.parent->of_node);
++	if (IS_ERR(rst->regmap))
++		dev_err_probe(dev, PTR_ERR(rst->regmap), "Failed to find syscon regmap\n");
++
++	return devm_reset_controller_register(dev, rcdev);
 +}
 +
-+static const struct of_device_id mpfs_control_scb_of_match[] = {
-+	{.compatible = "microchip,mpfs-control-scb", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, mpfs_control_scb_of_match);
-+
-+static struct platform_driver mpfs_control_scb_driver = {
++static struct platform_driver mpfs_reset_mfd_driver = {
++	.probe		= mpfs_reset_mfd_probe,
 +	.driver = {
-+		.name = "mpfs-control-scb",
-+		.of_match_table = mpfs_control_scb_of_match,
++		.name = "mpfs-reset",
 +	},
-+	.probe = mpfs_control_scb_probe,
 +};
-+module_platform_driver(mpfs_control_scb_driver);
++module_platform_driver(mpfs_reset_mfd_driver);
 +
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Conor Dooley <conor.dooley@microchip.com>");
-+MODULE_DESCRIPTION("PolarFire SoC control scb driver");
-diff --git a/drivers/soc/microchip/mpfs-mss-top-sysreg.c b/drivers/soc/microchip/mpfs-mss-top-sysreg.c
-new file mode 100644
-index 0000000000000..9b2e7b84cdba2
---- /dev/null
-+++ b/drivers/soc/microchip/mpfs-mss-top-sysreg.c
-@@ -0,0 +1,48 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/array_size.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+
-+static const struct mfd_cell mpfs_mss_top_sysreg_devs[] = {
-+	{ .name = "mpfs-reset", },
-+};
-+
-+static int mpfs_mss_top_sysreg_probe(struct platform_device *pdev)
++static int mpfs_reset_adev_probe(struct auxiliary_device *adev,
++				 const struct auxiliary_device_id *id)
 +{
-+	struct device *dev = &pdev->dev;
-+	int ret;
++	struct reset_controller_dev *rcdev;
++	struct device *dev = &adev->dev;
+ 	struct mpfs_reset *rst;
+ 
+ 	rst = devm_kzalloc(dev, sizeof(*rst), GFP_KERNEL);
+@@ -145,8 +194,8 @@ static int mpfs_reset_probe(struct auxiliary_device *adev,
+ 
+ 	rcdev = &rst->rcdev;
+ 	rcdev->dev = dev;
+-	rcdev->dev->parent = dev->parent;
+ 	rcdev->ops = &mpfs_reset_ops;
 +
-+	ret = mfd_add_devices(dev, PLATFORM_DEVID_NONE, mpfs_mss_top_sysreg_devs,
-+			      1, NULL, 0, NULL);
-+	if (ret)
-+		return ret;
-+
-+	if (devm_of_platform_populate(dev))
-+		dev_err(dev, "Error populating children\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id mpfs_mss_top_sysreg_of_match[] = {
-+	{.compatible = "microchip,mpfs-mss-top-sysreg", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, mpfs_mss_top_sysreg_of_match);
-+
-+static struct platform_driver mpfs_mss_top_sysreg_driver = {
-+	.driver = {
-+		.name = "mpfs-mss-top-sysreg",
-+		.of_match_table = mpfs_mss_top_sysreg_of_match,
-+	},
-+	.probe = mpfs_mss_top_sysreg_probe,
-+};
-+module_platform_driver(mpfs_mss_top_sysreg_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Conor Dooley <conor.dooley@microchip.com>");
-+MODULE_DESCRIPTION("PolarFire SoC mss top sysreg driver");
+ 	rcdev->of_node = dev->parent->of_node;
+ 	rcdev->of_reset_n_cells = 1;
+ 	rcdev->of_xlate = mpfs_reset_xlate;
+@@ -222,12 +271,12 @@ static const struct auxiliary_device_id mpfs_reset_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(auxiliary, mpfs_reset_ids);
+ 
+-static struct auxiliary_driver mpfs_reset_driver = {
+-	.probe		= mpfs_reset_probe,
++static struct auxiliary_driver mpfs_reset_aux_driver = {
++	.probe		= mpfs_reset_adev_probe,
+ 	.id_table	= mpfs_reset_ids,
+ };
+ 
+-module_auxiliary_driver(mpfs_reset_driver);
++module_auxiliary_driver(mpfs_reset_aux_driver);
+ 
+ MODULE_DESCRIPTION("Microchip PolarFire SoC Reset Driver");
+ MODULE_AUTHOR("Conor Dooley <conor.dooley@microchip.com>");
 -- 
 2.45.2
 
