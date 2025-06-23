@@ -1,270 +1,145 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC8E28AB16
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1DF4C83
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750704234; cv=none; b=vD3b5XCOcudurnP65xTT/TilYRJnHIfbY0i2UDYrJkC6UJbnGyWfK2gbo5AokrW/y08S9YWjOsohkDqyiGK8qXYogcHwHyNwGor8rhOgf1C29ISzjOQMl89Mz6+V71rNEYReZcfnlspfIa7MXYpKpvX4SfgmHwqhrh6dd9+8wds=
+	t=1750704346; cv=none; b=mslJITdt7Voy60lqPsMswINcZbC95uc5jEuASlwjQ3GGeacahfZ1+bHypMLpAnhmwCd6TGpyC887nOlaYf/z5q3IdndbnLCuZa+bG3aNTK3f7OVmx6FFLAukfykS3v8i7g53aKn+uiuQxL94di6uBn74/Ozyovc71NTonNad80k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750704234; c=relaxed/simple;
-	bh=Wlx/vhZkFnw8a03c+Dl8Ovf4E6nEfBgYdtYv7P3rpVs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mxkGUrRlcnijICAVE1+eYHYsfIuTswry3nJmAyeb/RvhxAYtSmdco9BQKaFYLEa6UveuFEjC7sGtkA+UVhh9o3tfJi/YA1Br5YLhKzeSw6yQMtweEoPd1dr1gOuy3iVLfwDwOVEq4+sKBgYTWCRR6WJXRIM7jtZNeboytowz8H8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WgDbFxLN; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750704346; c=relaxed/simple;
+	bh=jB4MKuZY+Ffi3QK7qpUEThxOxdtk8engxwoxg/tQK+M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=snZNb8D88DHcJOYB4WfbDeg+Oh6hiUlxVYZklOXD6UIjcP1mL87teJ4zBgdXVz0IQaRHVDZqXLSd1X8Pxl+c7Br8IKO+jNgBo1KYtvm9TwXoPFaY3Ngur6mI4TJRDK6tfJLkAXe6qHxIg7ScWthN8Yej40igh8ERuCbVgfmZ0ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WmORnRdQ; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WgDbFxLN"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NH6iDi012677;
-	Mon, 23 Jun 2025 18:43:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=S473X9Y+ghCYVJfau
-	Eqa5p6W8rSutZi8Znt3hkWfLMs=; b=WgDbFxLNEmEsR6dg81lmJ1fy1LIj79uKb
-	+WSps1n6/Ie8zGwHdp29VyVrx+5Q3tZQ8oNzV2A2iYA1wuG4LrcDPkqpc2qpFoQh
-	G2Mu4rKEJwvkv/H9gD7fbBe1YeiWhb56GQz60CdSxCrwz8lkqAMFCtkaH/HXzfSW
-	TdLZK5kB95cgJddq0VPURGT4SrUeHY7ty+OpAnwrGY9VVPnHe+BOdbTid6wpkPzX
-	/bff0nuHsDcYoZbmjFjNga+x7hVcLoGlgDGdI3QMsVQPh9Nmf1zTgb+0FuA0oOUX
-	oLhBjhHVU+hgK6h3QDdvMhfPRCCPBxnJdmeIMZ1dYUmPLdQroPB9Q==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dj5tm5mf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Jun 2025 18:43:39 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55NH8Vhg031277;
-	Mon, 23 Jun 2025 18:43:39 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e7eyrb76-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Jun 2025 18:43:38 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55NIhb0k13566236
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 23 Jun 2025 18:43:37 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0969220043;
-	Mon, 23 Jun 2025 18:43:37 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BE77120040;
-	Mon, 23 Jun 2025 18:43:36 +0000 (GMT)
-Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 23 Jun 2025 18:43:36 +0000 (GMT)
-From: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Matthew Wilcox <willy@infradead.org>, David Hildenbrand <david@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>
-Subject: [RFC PATCH 1/1] mm/debug_vm_pgtable: Use a swp_entry_t input value for swap tests
-Date: Mon, 23 Jun 2025 20:43:21 +0200
-Message-ID: <20250623184321.927418-2-gerald.schaefer@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250623184321.927418-1-gerald.schaefer@linux.ibm.com>
-References: <20250623184321.927418-1-gerald.schaefer@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WmORnRdQ"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so3664795f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 11:45:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750704343; x=1751309143; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=jB4MKuZY+Ffi3QK7qpUEThxOxdtk8engxwoxg/tQK+M=;
+        b=WmORnRdQ1bRXiW339VIWESeowWbm3d1kwGgrd3eGg2E7BAkkyCo0+ONJxnV5iX83/2
+         rkjAYl19WKJUesKyZF3cH69dmzqPrl7r1l6gPcu7Yf7pNKYQfxKsBzFqiomy871HFTk2
+         IsM0FBgb5884ryFQsSR2GU0mmARJWoWxbhkxcDfVvhgrDF4ciPS2mvUplIAr3waUmh1k
+         NFWrzTTVEX7Ybq+pxGLStlsH4d9QDGuhX8p5IgTKRLi6nviVhgEIf2E6b/OOd4DRxYN+
+         kpvZzsJXzDEu6WN0asWvbQk6FI2ZUtvKXby8qv3fCR/Wx1zkv1fZWUlA5HlhtQSRFJNZ
+         yNxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750704343; x=1751309143;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jB4MKuZY+Ffi3QK7qpUEThxOxdtk8engxwoxg/tQK+M=;
+        b=HHkmybVd9KTFsavbLHMC7K92QbsBiEoqg0ygfA7NDJyoOpGdR9zkWDBes0CE4uuVOf
+         51/W7DvvrFhwUD9YBlcBdW3LI1N1oBtnRbbad0J4ibLFGjyIqVuJE6eHh0FL7++hnbYk
+         xuXgsBsJS+11XsUQH1tfdVmkos4hwFlSRplfNQ2AidKGX2AXWdV28U0OEYT1RPpq7AIs
+         yVdcm1CNSHghGGXjOAMcb9C3jSNzHI3mkvI0g5ve8gqDiOQ3KgTUCY5OxdZqUCYaJzqq
+         wrpIOHp9Mro6uVWxtLp29YHUWjpC82zoCyMf/9eUFfoXSCYvG+rpy6DXQqxrJEgXldHS
+         mzKA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8ke20SSNLi0TCZQ3hVXUeXIbbfkMOrLJx2U64gEE2TB0S8ub6yG0zdyTV5sPyxq6a+segerEeGJgG13o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzILrjrJPsFIquTiHbp3tZGXiGjEu5j2orPV/h+KJg+2XdfdR5H
+	2LMew2HxbG3NF02R9zbW0MQdB0PGrudYNvb/wGLkTY+X9NgGgsOsVhN+KJ5aRLmHUR0=
+X-Gm-Gg: ASbGncs9RE7qS9ouGIkzXMxFTNWfQ77ix0qpvmlngnIfiUrr24y7pRYCdd/h0n1dmJf
+	ZhexLpK8DwFjhVs6L1m2M4fTV+FwbLaf2ohb1gMVq87hMmGBr0DLwePeAM9pYdMXg6cbOUS4rsp
+	SSxrwrlwRA4geD9qegdwmhEL7zSJ+y/8nAqPfYpb/yrPW3mDZlIeqhZDxHJUQcWQHfkUT5mNHLU
+	RWt7gbyMlEJFoXDl6Va/Ee1dHbKE6ZlYSQuMmlehcZvn2rxsANgabbsXDRhOs2359J1MiaZSWFH
+	wtlDRcx9x3kqSnwoIbpcDeozO3KsgEfKa/IpA/lO70k9vRXoG0djIyxKtjkTD46zRIcyHxqFteM
+	IY5M9SxOTJW16rTGDFiiV9Rln
+X-Google-Smtp-Source: AGHT+IHDRPumMTiGBj2bKfNpuQzAm+7VlyB5Tr2Ge/4ynqkxj9vUq5oRX4iaFtPKRy4untvXuea0VQ==
+X-Received: by 2002:a05:6000:40e1:b0:3a4:f607:a5ad with SMTP id ffacd0b85a97d-3a6e7206acfmr430150f8f.19.1750704343074;
+        Mon, 23 Jun 2025 11:45:43 -0700 (PDT)
+Received: from ?IPv6:2804:5078:805:6b00:58f2:fc97:371f:2? ([2804:5078:805:6b00:58f2:fc97:371f:2])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a6ca165sm9303644b3a.172.2025.06.23.11.45.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 11:45:42 -0700 (PDT)
+Message-ID: <49eed036f3c230d066ff44620c222fe5a2c3da1a.camel@suse.com>
+Subject: Re: [PATCH 1/7] printk: Make console_{suspend,resume} handle
+ CON_SUSPENDED
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, John Ogness	
+ <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>,
+  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+ <jirislaby@kernel.org>, Jason Wessel	 <jason.wessel@windriver.com>, Daniel
+ Thompson <danielt@kernel.org>, Douglas Anderson <dianders@chromium.org>,
+ Richard Weinberger <richard@nod.at>, Anton Ivanov	
+ <anton.ivanov@cambridgegreys.com>, Johannes Berg
+ <johannes@sipsolutions.net>, 	linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, 	kgdb-bugreport@lists.sourceforge.net,
+ linux-um@lists.infradead.org
+Date: Mon, 23 Jun 2025 15:45:37 -0300
+In-Reply-To: <aEq9_kOoLSQwuYBq@pathway.suse.cz>
+References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
+	 <20250606-printk-cleanup-part2-v1-1-f427c743dda0@suse.com>
+	 <aEq9_kOoLSQwuYBq@pathway.suse.cz>
+Autocrypt: addr=mpdesouza@suse.com; prefer-encrypt=mutual;
+ keydata=mDMEZ/0YqhYJKwYBBAHaRw8BAQdA4JZz0FED+JD5eKlhkNyjDrp6lAGmgR3LPTduPYGPT
+ Km0Kk1hcmNvcyBQYXVsbyBkZSBTb3V6YSA8bXBkZXNvdXphQHN1c2UuY29tPoiTBBMWCgA7FiEE2g
+ gC66iLbhUsCBoBemssEuRpLLUFAmf9GKoCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ QemssEuRpLLWGxwD/S1I0bjp462FlKb81DikrOfWbeJ0FOJP44eRzmn20HmEBALBZIMrfIH2dJ5eM
+ GO8seNG8sYiP6JfRjl7Hyqca6YsE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 9q4zn-EHraalKmcrE-a4FfMd3A3wfL6d
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDExNSBTYWx0ZWRfX5C960XE696TI kPnUVNt6WE92bk4aF/81diAJP6DewyLRIbNBDj/tqEgB/9uXJfSE+mFIq9CPv/AOhnH+rgljdRW xEyWBOKnm5bebJMDR57zX3hc/pilZ2T0XNffcZs3cncIXrWgqQy39aom7L0kKL/1geO892cSMPY
- 75YR8FHmr6KaYHtRwd1EU3Ki9RDeqMENm92uQmNfE9qx4866gYgNsUVVmhcRBMK33rkw+rR/aBR SCdT7VRM78OUnK/8qQXI+Mvj0+5vAHU4EU/xrSCKm+jhyWmEzCAcgyNx9XB0RuAjJ+efi69AAQY Mh5EkdP/PjXCW267wI23/Fqd8bECxTMeIMdtdIa1I9tMYcrQKdXORXyYa8OYKeO2KVd+Drn84ic
- YpJuV/MtEJgI0UIvUH8PYeFgAOqFVc5pWAhOJIx0V8cBbTOV/Tw4p8g/K6VsjFP1h+n3ZJTC
-X-Authority-Analysis: v=2.4 cv=MshS63ae c=1 sm=1 tr=0 ts=6859a05b cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=ZTx8QE4AkKJnx8U2w1UA:9
-X-Proofpoint-GUID: 9q4zn-EHraalKmcrE-a4FfMd3A3wfL6d
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-23_05,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
- clxscore=1011 phishscore=0 malwarescore=0 suspectscore=0 adultscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506230115
 
-The various __pte/pmd_to_swp_entry and __swp_entry_to_pte/pmd helper
-functions are expected to operate on swapped PTE/PMD entries, not on
-present and mapped entries.
+On Thu, 2025-06-12 at 13:46 +0200, Petr Mladek wrote:
+> On Fri 2025-06-06 23:53:43, Marcos Paulo de Souza wrote:
+> > Since commit 9e70a5e109a4 ("printk: Add per-console suspended
+> > state") the
+> > CON_SUSPENDED flag was introced, and this flag was being checked on
+> > console_is_usable function, which returns false if the console is
+> > suspended.
+> >=20
+> > No functional changes.
+>=20
+> I double checked potential functional changes. In particular, I
+> checked where the CON_ENABLED and CON_SUSPENDED flags were used.
+>=20
+> Both flags seems to have the same effect in most situations,
+> for example, in console_is_usable() or console_unblank().
+>=20
+> But there seems to be two exceptions: kdb_msg_write() and
+> show_cons_active(). These two functions check only
+> the CON_ENABLED flag. And they think that the console is
+> usable when the flag is set.
+>=20
+> The change in this patch would change the behavior of the two
+> functions during suspend. It is later fixed by the 3rd and 4th
+> patch. But it might cause regressions during bisections.
+>=20
+> It is probably not a big deal because the system is not much
+> usable during the suspend anyway. But still, I would feel more
+> comfortable if we prevented the "temporary" regression.
+>=20
+> I see two possibilities:
+>=20
+> =C2=A0=C2=A0 1. Merge the 3rd and 4th patch into this one. It would chang=
+e
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 the semantic in a single patch.
 
-Reflect this in the swap tests by using a swp_entry_t as input value,
-similar to how it is already done in pte_swap_exclusive_tests().
-Move the swap entry creation to init_args() and store it in args, so
-it can also be used in other functions.
+I liked the suggestion, I'll do it in the next revision. Thanks for
+looking into it!
 
-The pte/pmd_swap_tests() are also changed to compare entries instead of
-pfn values, because pte/pmd_pfn() helpers are not expected to operate on
-swapped entries. E.g. on s390, pmd_pfn() needs different shifts for leaf
-(large) and non-leaf PMDs.
-
-Also update documentation, to reflect that the helpers operate on
-swapped and not mapped entries, and use correct names, i.e.
-__swp_to_pte/pmd_entry -> __swp_entry_to_pte/pmd.
-
-For consistency, also change pte/pmd_swap_soft_dirty_tests() to use
-args->swp_entry instead of a present and mapped PTE/PMD.
-
-Signed-off-by: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
----
- Documentation/mm/arch_pgtable_helpers.rst |  8 ++--
- mm/debug_vm_pgtable.c                     | 55 ++++++++++++++---------
- 2 files changed, 38 insertions(+), 25 deletions(-)
-
-diff --git a/Documentation/mm/arch_pgtable_helpers.rst b/Documentation/mm/arch_pgtable_helpers.rst
-index af245161d8e7..e2ac76202a85 100644
---- a/Documentation/mm/arch_pgtable_helpers.rst
-+++ b/Documentation/mm/arch_pgtable_helpers.rst
-@@ -242,13 +242,13 @@ SWAP Page Table Helpers
- ========================
- 
- +---------------------------+--------------------------------------------------+
--| __pte_to_swp_entry        | Creates a swapped entry (arch) from a mapped PTE |
-+| __pte_to_swp_entry        | Creates a swap entry (arch) from a swapped PTE   |
- +---------------------------+--------------------------------------------------+
--| __swp_to_pte_entry        | Creates a mapped PTE from a swapped entry (arch) |
-+| __swp_entry_to_pte        | Creates a swapped PTE from a swap entry (arch)   |
- +---------------------------+--------------------------------------------------+
--| __pmd_to_swp_entry        | Creates a swapped entry (arch) from a mapped PMD |
-+| __pmd_to_swp_entry        | Creates a swap entry (arch) from a swapped PMD   |
- +---------------------------+--------------------------------------------------+
--| __swp_to_pmd_entry        | Creates a mapped PMD from a swapped entry (arch) |
-+| __swp_entry_to_pmd        | Creates a swapped PMD from a swap entry (arch)   |
- +---------------------------+--------------------------------------------------+
- | is_migration_entry        | Tests a migration (read or write) swapped entry  |
- +-------------------------------+----------------------------------------------+
-diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
-index 7731b238b534..3b0f83ed6c2e 100644
---- a/mm/debug_vm_pgtable.c
-+++ b/mm/debug_vm_pgtable.c
-@@ -73,6 +73,8 @@ struct pgtable_debug_args {
- 	unsigned long		fixed_pud_pfn;
- 	unsigned long		fixed_pmd_pfn;
- 	unsigned long		fixed_pte_pfn;
-+
-+	swp_entry_t		swp_entry;
- };
- 
- static void __init pte_basic_tests(struct pgtable_debug_args *args, int idx)
-@@ -754,12 +756,15 @@ static void __init pte_soft_dirty_tests(struct pgtable_debug_args *args)
- 
- static void __init pte_swap_soft_dirty_tests(struct pgtable_debug_args *args)
- {
--	pte_t pte = pfn_pte(args->fixed_pte_pfn, args->page_prot);
-+	pte_t pte;
- 
- 	if (!IS_ENABLED(CONFIG_MEM_SOFT_DIRTY))
- 		return;
- 
- 	pr_debug("Validating PTE swap soft dirty\n");
-+	pte = swp_entry_to_pte(args->swp_entry);
-+	WARN_ON(!is_swap_pte(pte));
-+
- 	WARN_ON(!pte_swp_soft_dirty(pte_swp_mksoft_dirty(pte)));
- 	WARN_ON(pte_swp_soft_dirty(pte_swp_clear_soft_dirty(pte)));
- }
-@@ -793,7 +798,9 @@ static void __init pmd_swap_soft_dirty_tests(struct pgtable_debug_args *args)
- 		return;
- 
- 	pr_debug("Validating PMD swap soft dirty\n");
--	pmd = pfn_pmd(args->fixed_pmd_pfn, args->page_prot);
-+	pmd = swp_entry_to_pmd(args->swp_entry);
-+	WARN_ON(!is_swap_pmd(pmd));
-+
- 	WARN_ON(!pmd_swp_soft_dirty(pmd_swp_mksoft_dirty(pmd)));
- 	WARN_ON(pmd_swp_soft_dirty(pmd_swp_clear_soft_dirty(pmd)));
- }
-@@ -804,17 +811,11 @@ static void __init pmd_swap_soft_dirty_tests(struct pgtable_debug_args *args) {
- 
- static void __init pte_swap_exclusive_tests(struct pgtable_debug_args *args)
- {
--	unsigned long max_swap_offset;
- 	swp_entry_t entry, entry2;
- 	pte_t pte;
- 
- 	pr_debug("Validating PTE swap exclusive\n");
--
--	/* See generic_max_swapfile_size(): probe the maximum offset */
--	max_swap_offset = swp_offset(pte_to_swp_entry(swp_entry_to_pte(swp_entry(0, ~0UL))));
--
--	/* Create a swp entry with all possible bits set */
--	entry = swp_entry((1 << MAX_SWAPFILES_SHIFT) - 1, max_swap_offset);
-+	entry = args->swp_entry;
- 
- 	pte = swp_entry_to_pte(entry);
- 	WARN_ON(pte_swp_exclusive(pte));
-@@ -838,30 +839,36 @@ static void __init pte_swap_exclusive_tests(struct pgtable_debug_args *args)
- 
- static void __init pte_swap_tests(struct pgtable_debug_args *args)
- {
--	swp_entry_t swp;
--	pte_t pte;
-+	swp_entry_t entry, arch_entry;
-+	pte_t pte, pte2;
- 
- 	pr_debug("Validating PTE swap\n");
--	pte = pfn_pte(args->fixed_pte_pfn, args->page_prot);
--	swp = __pte_to_swp_entry(pte);
--	pte = __swp_entry_to_pte(swp);
--	WARN_ON(args->fixed_pte_pfn != pte_pfn(pte));
-+	entry = args->swp_entry;
-+
-+	pte = swp_entry_to_pte(entry);
-+	WARN_ON(!is_swap_pte(pte));
-+	arch_entry = __pte_to_swp_entry(pte);
-+	pte2 = __swp_entry_to_pte(arch_entry);
-+	WARN_ON(memcmp(&pte, &pte2, sizeof(pte)));
- }
- 
- #ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
- static void __init pmd_swap_tests(struct pgtable_debug_args *args)
- {
--	swp_entry_t swp;
--	pmd_t pmd;
-+	swp_entry_t entry, arch_entry;
-+	pmd_t pmd, pmd2;
- 
- 	if (!has_transparent_hugepage())
- 		return;
- 
- 	pr_debug("Validating PMD swap\n");
--	pmd = pfn_pmd(args->fixed_pmd_pfn, args->page_prot);
--	swp = __pmd_to_swp_entry(pmd);
--	pmd = __swp_entry_to_pmd(swp);
--	WARN_ON(args->fixed_pmd_pfn != pmd_pfn(pmd));
-+	entry = args->swp_entry;
-+	pmd = swp_entry_to_pmd(entry);
-+	WARN_ON(!is_swap_pmd(pmd));
-+
-+	arch_entry = __pmd_to_swp_entry(pmd);
-+	pmd2 = __swp_entry_to_pmd(arch_entry);
-+	WARN_ON(memcmp(&pmd, &pmd2, sizeof(pmd)));
- }
- #else  /* !CONFIG_ARCH_ENABLE_THP_MIGRATION */
- static void __init pmd_swap_tests(struct pgtable_debug_args *args) { }
-@@ -1166,6 +1173,7 @@ static void __init init_fixed_pfns(struct pgtable_debug_args *args)
- 
- static int __init init_args(struct pgtable_debug_args *args)
- {
-+	unsigned long max_swap_offset;
- 	struct page *page = NULL;
- 	int ret = 0;
- 
-@@ -1248,6 +1256,11 @@ static int __init init_args(struct pgtable_debug_args *args)
- 
- 	init_fixed_pfns(args);
- 
-+	/* See generic_max_swapfile_size(): probe the maximum offset */
-+	max_swap_offset = swp_offset(pte_to_swp_entry(swp_entry_to_pte(swp_entry(0, ~0UL))));
-+	/* Create a swp entry with all possible bits set */
-+	args->swp_entry = swp_entry((1 << MAX_SWAPFILES_SHIFT) - 1, max_swap_offset);
-+
- 	/*
- 	 * Allocate (huge) pages because some of the tests need to access
- 	 * the data in the pages. The corresponding tests will be skipped
--- 
-2.48.1
-
+>=20
+> =C2=A0=C2=A0 2. First update kdb_msg_write() and show_cons_active()
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 to check both CON_ENABLE and CON_SUSPENDED=
+ flags.
+>=20
+> The 1st solution probably makes more sense because we are going
+> to remove the CON_ENABLE flag in the end. And even the merged
+> patch is small enough.
+>=20
+> Best Regards,
+> Petr
