@@ -1,65 +1,40 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C819205AB8
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 08:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64A952F88;
+	Mon, 23 Jun 2025 08:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750665899; cv=none; b=nvh5vIKs4B9zWGiooa5LPIFVNWNC7E6waIQ9QDb+CtzcH2Vc4QRIp2hessAeGc4AxN/7B+7oSGQfyVnDSajjJVrlhPwybVe1WTNhZPyw9dzuTEtIMFLccoLPf/scEYMwU9NjQtbxzGWC35TJcku6qHLlKhL6oF7ajklLuOBMw7g=
+	t=1750665935; cv=none; b=q2GlslfkYv3BY9Jy+uCMrK1VCzHpx7waUEEOdc0Yh1hlsSWefZnwF0NFTN6piQ90/QmZ4lSLochualE22Fls62iRIyV2B7jG9pB1l0xpyi3D0dvbpjqc8zS7h3U+K5bV0TzrDTzIlmllZkXDy8aWs7HsV37bwLRlyueXv/wsLwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750665899; c=relaxed/simple;
-	bh=G1w0adoxO+ajxlGkY1rIijF7bO7HKR5s4V4mGepiLAg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fqvzZ8jEJBeKVcHPknHNv2181FVnssFzeN1GAnopebMjA7B+bfdKDPfMjjhIB6kDy+3s+CdPrQGD/bgi6VfofiQnTybpal0HtHGouhi/rDHncslIluq7ndMIcWcmkaGi3cGuJa/ltcsyvgnch0+P6MsOHBC4XzJtjVXb8XLccZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=hlIr0+xG; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1750665935; c=relaxed/simple;
+	bh=NPasebUaAcEImAJDpuMO6PZ8PRDkik1d/ZK9eOZPx6o=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:Cc:
+	 In-Reply-To:Content-Type; b=becDANpBcKlUN9QKtAzeS5xdyltOvV6Fl6v493vfEJPKnW6KdWSbnZwCG8o6b2Yws/3mMtl3NMF9Zil8hIb1SierEbNEnsjvGf+xTslfDRGgYDuFgEMBszCYKQ2LgpyrTufaRtWejWj+2u/7KGl9zQMXdK+5zIJiouUeZeoS6OA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=pwY4oUm0; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="hlIr0+xG"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-23633a6ac50so53045325ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 01:04:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1750665897; x=1751270697; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4vmYNde3494s1oZAkDWHVWSrNdQuXQcEtL0WwaKvH1w=;
-        b=hlIr0+xGB14mwjiEXA1GHSOqonDemjrupW/YtxymfiQuoHKBs13aFZNwFSuIz+wYO2
-         9UDbsuw5/rxifbu4pD04jD3VXm1UyxqaQw8f/REsRRPqFEQDlAg/WH0gS9MXfnbIn6sv
-         Y1tvmZQ/Qa3V6d9mRJ04yJolXqaOeZJ8mragNHy0c0CQknPCdKTWGqZpYodPD4vwEZsj
-         wXjohd06RXos8QZM71VsBImA/OKRY7opwiVO6xR4Zphj0HTDCzC9N6VivNesaflLCsnG
-         qhyRLuBFN2n7qj+27IBQV1VUvBpJ171FXM7cc0ujx2U6lGuWJoYTvRfEHa6uzqEJXEMb
-         W8uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750665897; x=1751270697;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4vmYNde3494s1oZAkDWHVWSrNdQuXQcEtL0WwaKvH1w=;
-        b=fHXdZvlvwXL08g2AVs9xd3b9TG7/0amyrBv+rgSjWFxRGgiilqCjDxxiE7NMWCY2WZ
-         B4rMvNaKvt2HjjYsffGOQrG0yD9HWudFRavAlYams6doBlOgA3DW7dNV89kEG7DjZCov
-         T4KZI7bBMZ9GXI/65atlVi+xUeps27zdMisX7trxJbn36wwEQbttWSBQx4tkfGUtSMh1
-         VqwLBbpdDLlpvM7JrSg8+pl4vD2dUGCHSe3I7/KeoPQTUnGGUZUqFMnHSdBHa32P0Kc8
-         EuWUW2yzRooaCHOsneBN9HNIAnOTUZPHGXybyQUZMC9Xv13o1Un1b5LKFo5nb4wXCQNh
-         iybg==
-X-Forwarded-Encrypted: i=1; AJvYcCVpqGd3o12mIwfUyVds9I1dXsJTP7qzJKxys6Di9/D6dr7k17roKiLTTK8Z0zJ+XiD5wMHnPJeUPOE/JH0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwONlYLYDO6/9OqyNvbaQGTFJXM4aAcGr4N7yF3sQptSfhPmMX8
-	nKiUyADq0FCbb1t3zkluwOWMaUU/+EyauHlggAZGwt9nHVydfyQh2FN1ozwq9IThAkw=
-X-Gm-Gg: ASbGnctopzqDuLUJGl/sXufa3CFTQ84be2lXRW4oMjwUp7C7G9ra/1ae0ZLfnRD4sOi
-	oUjpjLwKYIOp7MJ5rcQbJT7nFXzRrmDatH7rejYy12M0xFB1uqjPDgDyXMD63B3vIKdZlBaFT5S
-	+0l/APR10DqDx+We0RFKJ6pZ8jen+/0b0YZ6fpa9JVeOcvtNdX6lFZ85Evr3Cuk5bn6YeaE4oIJ
-	MxE2Rs6E6WHqtrFwR/dCfRdeS3clo3fpeZpx5hhV2uegdkEacSpdaXSMcq6ymziu0BUi0N1QKh4
-	2Ssm0MJp2JgVkYm5yXV9g12sy/wbI+RTbsx5Zl/Sz0XH87IGbcoKCqBzQkmy5mBHrrsSL4EErJI
-	KGWxaPttVKd1OSZ6YxSycZFbbB8JWBnA=
-X-Google-Smtp-Source: AGHT+IGAu8sRN9d6YginLzXnR26SBrwXTWtMoIeqalY4gdd+wB4xJaqi8iWblIrCKepqAoQGghGYIw==
-X-Received: by 2002:a17:903:4b30:b0:234:8c3d:2912 with SMTP id d9443c01a7336-237d96b6361mr175973175ad.11.1750665897172;
-        Mon, 23 Jun 2025 01:04:57 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d867f8d0sm78007835ad.175.2025.06.23.01.04.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 01:04:56 -0700 (PDT)
-Message-ID: <1d9ad2a8-6ab5-4f5e-b514-4a902392e074@rivosinc.com>
-Date: Mon, 23 Jun 2025 10:04:45 +0200
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="pwY4oUm0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1750665924; x=1751270724; i=markus.elfring@web.de;
+	bh=0CeWndhcNIl5hI2uPV3nNRmJbfN7h9Zt3nquQBuC0Ks=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
+	 References:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=pwY4oUm0X8NLIU2rLJHYOoeWIpzQNf5qCqhTTVP+/0t+SwnpoGtMiQS+cjGJG3yl
+	 9KYRljd48Y9R3tmcF5zDL7m/5Za2HgbU2CsF7lkxpveecz2Li7LPtnFvi0qCJ51Tj
+	 oz7BCFvEmJuF4IFJHmz+lledSN5tJhNccU/nQGx3TVfVR6xeBlPZFR4N0v7VEyOGw
+	 HSB3GGBSryU/H0Gm4fjEjBreuTlPvKFBzLtbbl+I1ljcqaK/MdUPbcPeadICNzP6W
+	 Q1KXSHMJA9cuK/OlV1b/gml0aSHLZqaftG2JlPNtPeyRHHN/Hy0Q3T/8JadmbBSYB
+	 J3r+OMzPQUd9TYpALg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.92.229]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MyNwk-1ufvs81wrc-016rg7; Mon, 23
+ Jun 2025 10:05:24 +0200
+Message-ID: <481faa1d-7171-4657-8dc0-c37b153e6eaa@web.de>
+Date: Mon, 23 Jun 2025 10:05:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,56 +42,116 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] RISC-V: KVM: Delegate illegal instruction fault
-To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>,
- Xu Lu <luxu.kernel@bytedance.com>, anup@brainfault.org,
- atish.patra@linux.dev, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, alex@ghiti.fr
-Cc: kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-riscv <linux-riscv-bounces@lists.infradead.org>
-References: <20250620091720.85633-1-luxu.kernel@bytedance.com>
- <DARCHDIZG7IP.2VTEVNMVX8R1E@ventanamicro.com>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <DARCHDIZG7IP.2VTEVNMVX8R1E@ventanamicro.com>
+Subject: Re: Passing code replacements by APIs (for SmPL)?
+From: Markus Elfring <Markus.Elfring@web.de>
+To: cocci@inria.fr, kernel-janitors@vger.kernel.org
+References: <2dc257b4-d310-47dd-90ea-9b081727be2a@web.de>
+Content-Language: en-GB, de-DE
+Cc: LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <2dc257b4-d310-47dd-90ea-9b081727be2a@web.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:MilD3xF2BpV/G3Yl0V/B62GKXM0vi87bwwAPv1k71aM7uonjTxf
+ PhxboLO9VVpPUpcnZqXhJYsAgvJdnDeh1acHJpa/x/ivXWPw7S+rDhi9Eqkrj8dY/6KCM2d
+ lvjBKEuQzUK+GEnxp6HcjWivJetfPN85vbnIkTkMbuYFJUmdDu+4MthYi3OAfFuEHiBlIXF
+ I2NpZ9guKyRzxxUOYgwsw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:fvz84xA5Omc=;U5cZQXExZgzxEV8r85OjEiAl5V8
+ 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
+ glpj8URqhziWtOBq8rHVNGSZIN+lPTl2RI/ofg==
+
+> Desirable source code adjustments can also be generated into SmPL script variants.
+
+Will any more software users get further development ideas from an SmPL script
+like the following?
+
+
+// See also:
+// https://elixir.bootlin.com/linux/v6.16-rc2/source/include/uapi/linux/usb/ch9.h#L472-L678
+@initialize:python@
+@@
+import sys
+x = {}
+
+def store_data(action, input, code):
+    """Add information to an internal data structure."""
+    x[code] = (action, input)
+
+@find@
+expression e;
+identifier action, input;
+type input_type, return_type != void;
+@@
+ static inline return_type action(input_type input)
+ {
+ return e;
+ }
+
+@script:python collection@
+action << find.action;
+input << find.input;
+code << find.e;
+@@
+store_data(action, input, code)
+
+@finalize:python@
+@@
+if x:
+   sys.stdout.write("@replacements@\nconst struct usb_endpoint_descriptor *epd;\n@@\n(\n")
+   sys.stdout.write("|\n".join("-{}\n+{}({})\n".format(key, value[0], value[1])
+                    for key, value in x.items()))
+   sys.stdout.write(")\n")
+else:
+   sys.stderr.write("No result for this analysis!\n")
 
 
 
-On 20/06/2025 14:04, Radim Krčmář wrote:
-> 2025-06-20T17:17:20+08:00, Xu Lu <luxu.kernel@bytedance.com>:
->> Delegate illegal instruction fault to VS mode in default to avoid such
->> exceptions being trapped to HS and redirected back to VS.
->>
->> Signed-off-by: Xu Lu <luxu.kernel@bytedance.com>
->> ---
->> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
->> @@ -48,6 +48,7 @@
->> +					 BIT(EXC_INST_ILLEGAL)    | \
-> 
-> You should also remove the dead code in kvm_riscv_vcpu_exit.
-> 
-> And why not delegate the others as well?
-> (EXC_LOAD_MISALIGNED, EXC_STORE_MISALIGNED, EXC_LOAD_ACCESS,
->  EXC_STORE_ACCESS, and EXC_INST_ACCESS.)
+Would you become interested to convert contents from any header (or source) files
+into more advanced transformation approaches?
 
-Currently, OpenSBI does not delegate misaligned exception by default and
-handles misaligned access by itself, this is (partially) why we added
-the FWFT SBI extension to request such delegation. Since some supervisor
-software expect that default, they do not have code to handle misaligned
-accesses emulation. So they should not be delegated by default.
-
-Thanks,
-
-Clément
-
-> 
-> Thanks.
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
-
+Regards,
+Markus
