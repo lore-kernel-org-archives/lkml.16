@@ -1,172 +1,167 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE7624DCFD
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA98250C18
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 10:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750675102; cv=none; b=thRinGQo+54fcbR/r/hYTTffVfgs0d3UkB3XWOHTDf/gmsytToSYhOn8OHaJjhy2UUHOAhtcZa12Jhz0OGh+iPOQKDNdnZyfWFKDODJHOhKm3y7LpoWqICSjzhtuv0oJLBkFseYkt8emjCxgExxb2XOdKXNngfcVtez9uf9hPJQ=
+	t=1750675134; cv=none; b=c/DGop6ZI6RAdt6p1gfrqhJXNM/wQ0MBLrWpT0w+OB3SrFSVIOhDvAaeGnOM78CeVNHdj/VTkfiGW2xhikUfvEJurY3qFuKOYvvrO+8gIN+lYlQeS9mwTsrHnxk8qqZj/BKVkRc52skENVrZUchB6+pjn3dIwKKrjzWuEVHDBGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750675102; c=relaxed/simple;
-	bh=5ooyaI4wDPnxG5yL6wKu9KRPIbrl5gWWCG82EkHNcRQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZHKXSMbtlP8MGh3Sx44LHttM+jTQakxuqMbN7U+67nUNeAgU3hiKVhUZs7DvhnbTIHXfAz5A5JSTPKU7f1tLRY0d8TpdGgvpLpe4Jk69FX4ESIsY2BZfkoSzAmrlX84v5p3Qiy7aXePrmepDmuE5eg/yBQNpfkw5XzeK1NgnpS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E3acAskO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750675134; c=relaxed/simple;
+	bh=a+9rJACnV5ydOjRtZKCaQXvk041IvtHZA82iZCNYZik=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ABFWk8YP3CRjg30FgC021jU4iqo6aZlI27RnyAPYZlwZZLR2WDt4XZceHzrtW+GKLgpGok/iyzOcQILPm3fuywkuXOKce9ncKsoJrtqCcta7YfMX2S/LOOy8+YqgQwC8t/Ab1VBYwHc9be0QCl2ivvx3MjyxamfXl1kj27P6jmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Bzr9LmAf; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E3acAskO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750675099;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=/LN+rsWZhGokjOy4icyjolrxjXaEoKJN2Q70eJhKUPk=;
-	b=E3acAskOCIFNo8/YLiMdwqvHOMGO1q9WYaMfUtMOnTkD2Xgi7RbZHtmjeYYRjIBNTjOlFz
-	kPi91CcLNLq23rYnO7msriV8vYaBqqVs7EWtjp5hmVGk2WS3DOKlZk7+rqNMFGgs6lswp5
-	+NM0oF/ZDcI+DROk4AsQ4cyyZL2iz58=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-348-Iubc6JmwO9qLxHsnNz6x-A-1; Mon, 23 Jun 2025 06:38:18 -0400
-X-MC-Unique: Iubc6JmwO9qLxHsnNz6x-A-1
-X-Mimecast-MFC-AGG-ID: Iubc6JmwO9qLxHsnNz6x-A_1750675097
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a6d1394b07so1592405f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 03:38:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Bzr9LmAf"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a50fc819f2so3164794f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 03:38:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750675130; x=1751279930; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WX0nskovDCrGCU+wbh3ppLRpRAqYK3wcI4u2Rx3QJXw=;
+        b=Bzr9LmAf3TmVdBtS+aH9uLmlu4e+2YJuuh/rPfPVQWUG8V4laNVz/YDIqHrOMDK4Ws
+         u0av+Tun05XfbDEeAF2KS93EW1wDQJGK6gKiben3VbLuCHSyZLXUW0l+V7MC9Z8CGwvx
+         fdwrabeXWtgCItB/IP7jH06ENj1Y20Mto7A/dwIMrSYZ4pAffQhIDRTUD3UFbqw3mYAR
+         EKJPbvHCI2fHE6qKpiHSiO17PfcZpnALxunQUcKU2gJ2tEICygog3oYbSh/3CiBBUBJt
+         xt39azsSeGksEizfQQyn/GAJ9ERoUGi4bQd1niUByDUxbuaQ0pPRsddZQMB8EjQpEVu7
+         lSYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750675097; x=1751279897;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/LN+rsWZhGokjOy4icyjolrxjXaEoKJN2Q70eJhKUPk=;
-        b=QAlQ8sVSiYniB7NoI+C1YFoulq/wdoyQCi4tV/YuDOq1x4fKABUFmiXu5cq8d58/T4
-         F9Xlpy7EBaV0HexIYTLYJzf8DjV2qHiW1Knf3TxBMoy2iQqXoZJBCMeRFbhh35+X7Lhm
-         smRlJv16blJGsuilv97Y/ehlkGIPya3pQiH7726XV+hdVpc/N1EC+OFhPlroiSfZnC1l
-         1J+KdjS472VBgAhA1cgRiFQ7MQrg9RrfAYOGyv4pmMPwMhT7/owP7OGnNF7LW4oKKX9U
-         /SvvsRBgo3+Eorfj22WaP5cD/ygI6+4v+FDz+q23syBX31jS+j2NY7SN1CCLCQmWrQzn
-         AVrA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYX7gxO4u3Z1ypodtk9ogv1T1GDC++C/YODSjXm+PyBj9nhC2/Vn+Kb4CxwIxk2EispzSXEm3CNqYQPIc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBULuV2ej+XpKLH0+TRzx6ployppChWLNZKZOwlPutC7Xf65Qt
-	I6lxfg4q3PtS0IGcVVYJCTCF2y/4XomOys8I6RVihm1lU4n41QxMrCO6kXZOkL/qkBGSj8VfohH
-	nc35LWdS/loIi4D3JQzMKHPnjMN4Q+GmB1UGsOkwMOCk4tFuf28Xh/ySYU6q5G4OeZg==
-X-Gm-Gg: ASbGncvlhH0Y5OXMd434NtvkL+h8THRq+i00cmF38D06tld/SfuA1lkI+Y3KVUGgrW+
-	ZeR7g0brQVxS/iaDp08egdLASYvufQv2xf64Qq7qAR6lTKDMxpeoXQqphme5ITlbHDpzXu+3k0X
-	EbOdc9aYIWBOuU4vMdV/t+dzGwauG46Jn5pQK7yhcztDpqXkd3y5z/JEPayD0vjRapfLcv+7vmO
-	6FngVOClhobfnf56yyajQzfGEubOxJZHk9VRM9ZzdvnDubra6lFLaYxpmc4G1hRzeiQEeQtz5Fg
-	lGUs40X8NKwIdcDNllUEUaXQLRIEvewMN/ULeXHBJbZbBD61O3/2ucEyfcVaSTLXnD1U6Qhr+B/
-	BMuSlqn0cWHiGHHSifTxiaJeJJxmBCtIknomyeTOqCJPmMfSi/A==
-X-Received: by 2002:adf:9c8c:0:b0:3a4:f7af:db9c with SMTP id ffacd0b85a97d-3a6d1318226mr9357730f8f.59.1750675097222;
-        Mon, 23 Jun 2025 03:38:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IECcM+AqvRUC1A9hXYWujS1T9gYxYIu8+M512UDLAM+1KfUYKRpiKkV8XEwoTWYUAmkmNpyEw==
-X-Received: by 2002:adf:9c8c:0:b0:3a4:f7af:db9c with SMTP id ffacd0b85a97d-3a6d1318226mr9357698f8f.59.1750675096820;
-        Mon, 23 Jun 2025 03:38:16 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159? (p200300d82f4efd008e13e3b590c81159.dip0.t-ipconnect.de. [2003:d8:2f4e:fd00:8e13:e3b5:90c8:1159])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453624554cfsm77494885e9.0.2025.06.23.03.38.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 03:38:16 -0700 (PDT)
-Message-ID: <4ff361af-fd74-4d9e-b7e6-4756622109d6@redhat.com>
-Date: Mon, 23 Jun 2025 12:38:14 +0200
+        d=1e100.net; s=20230601; t=1750675130; x=1751279930;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WX0nskovDCrGCU+wbh3ppLRpRAqYK3wcI4u2Rx3QJXw=;
+        b=fD1W1ckrvOrTV2+RnDU9jMAchbYMiTLYrTkuAyGif8lKUzz7+9MQB+58LWt8g8dmBz
+         YkbPqYNJBSmLEimwzXSu8sc0nIe+pzYZocwgzbbNUi3bwThcMpTK4Jok8zZZ6YdWq6ZQ
+         6bPGfqS0K+Bvp+/z5Nu5ToJntaS6oOU2/KMh3/o1m7SdynV3SAo0cwBMeOsApA32rsg6
+         w7GQwlHGxPASZ9vjJHnLd24SgHmJTFl9P63nCWBUslfDBYg63QoNk05LUtmK6Nf5huIJ
+         DtqwOCVWj0uYWltYiQRfq8GzfxZSMHCmP+6OXTvgY1ss6Uin4rpFocx6cJlN0UCiUllk
+         DUgw==
+X-Forwarded-Encrypted: i=1; AJvYcCWW8T29iRMzD4j2BIE9PVa3F+/tORRfe73w6f28APcNysaudodwLuk84qL41y0oq8osc0SDctiao5GWW+0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpNH8xkCZXxxarLY83cSHiL75/7eU0pN7dzQy0HRF6lxiMaNZx
+	6VeWNYRv7l4+d5ile57zqixzCQiGvDE6s82ON4LyXQgZTj5IAgR8TE7hme20/K1WAgk=
+X-Gm-Gg: ASbGncuDsTtzQecWe9eoxyk41Ux4vm0FoAfiWbu+jqR6xkGkpr1bQn8REZGxLMm0OuX
+	aAs1Fg+bW/T+StQJ6NSEwAivgwymEEuGrR39NiH1GcVnTd6lj27xXjiBfbLyoVrzG3gA76c7r4A
+	ffqQAKn15DVWLiphWJibenM3PYfQvHc8VCE0CbK0XAh8EBQg/eJLeuKE8V666JQAtrYElf2SH2Y
+	yxKJCFUg07FcPaklGzoCR3Bb2Vlx+OQda4RBLxSS5atyA0Yr5r1ZTkvMh1K7Kth0B0HaY3m5DTZ
+	kSbNNwAmoR4/NL6zlw2s3e9VvWWKlxdmdxh7E8HjP0JZbna7809QQIFg/o0Jt+XXSgc3pIzYa3o
+	=
+X-Google-Smtp-Source: AGHT+IEJv6yafxxUHxjfLVB1VCjvzm8qclBCxEQhCHTewAodPefbNeppLxQ3UTSM+1HgMondPXFr1w==
+X-Received: by 2002:a05:6000:65b:b0:3a4:d953:74a1 with SMTP id ffacd0b85a97d-3a6d12da18bmr9540544f8f.23.1750675130038;
+        Mon, 23 Jun 2025 03:38:50 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a649319sm8336761b3a.109.2025.06.23.03.38.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 03:38:49 -0700 (PDT)
+Date: Mon, 23 Jun 2025 12:38:33 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Arnd Bergmann <arnd@kernel.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Arnd Bergmann <arnd@arndb.de>, Steven Rostedt <rostedt@goodmis.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] printk: kunit: support offstack cpumask
+Message-ID: <aFkuqaFn3BOvsPT-@pathway.suse.cz>
+References: <20250620192554.2234184-1-arnd@kernel.org>
+ <20250623075943-44fdf86a-adcd-478c-bf78-906145678adb@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v6 1/9] netmem: introduce struct netmem_desc
- mirroring struct page
-To: Byungchul Park <byungchul@sk.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com,
- kuba@kernel.org, almasrymina@google.com, ilias.apalodimas@linaro.org,
- harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
- davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch,
- asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
- edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, leon@kernel.org,
- ast@kernel.org, daniel@iogearbox.net, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, horms@kernel.org, linux-rdma@vger.kernel.org,
- bpf@vger.kernel.org, vishal.moola@gmail.com, hannes@cmpxchg.org,
- ziy@nvidia.com, jackmanb@google.com
-References: <20250620041224.46646-1-byungchul@sk.com>
- <20250620041224.46646-2-byungchul@sk.com>
- <8eaf52bf-4c3c-4007-afe5-a22da9f228f9@redhat.com>
- <20250623102821.GC3199@system.software.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250623102821.GC3199@system.software.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250623075943-44fdf86a-adcd-478c-bf78-906145678adb@linutronix.de>
 
-On 23.06.25 12:28, Byungchul Park wrote:
-> On Mon, Jun 23, 2025 at 11:32:16AM +0200, David Hildenbrand wrote:
->> On 20.06.25 06:12, Byungchul Park wrote:
->>> To simplify struct page, the page pool members of struct page should be
->>> moved to other, allowing these members to be removed from struct page.
->>>
->>> Introduce a network memory descriptor to store the members, struct
->>> netmem_desc, and make it union'ed with the existing fields in struct
->>> net_iov, allowing to organize the fields of struct net_iov.
->>
->> It would be great adding some result from the previous discussions in
->> here, such as that the layout of "struct net_iov" can be changed because
->> it is not a "struct page" overlay, what the next steps based on this
+On Mon 2025-06-23 08:03:29, Thomas Weißschuh wrote:
+> On Fri, Jun 20, 2025 at 09:25:20PM +0200, Arnd Bergmann wrote:
+> > From: Arnd Bergmann <arnd@arndb.de>
+> > 
+> > For large values of CONFIG_NR_CPUS, the newly added kunit test fails
+> > to build:
+> > 
+> > kernel/printk/printk_ringbuffer_kunit_test.c: In function 'test_readerwriter':
+> > kernel/printk/printk_ringbuffer_kunit_test.c:279:1: error: the frame size of 1432 bytes is larger than 1280 bytes [-Werror=frame-larger-than=]
+> > 
+> > Change this to use cpumask_var_t and allocate it dynamically when
+> > CONFIG_CPUMASK_OFFSTACK is set.
+> > 
+> > Fixes: 5ea2bcdfbf46 ("printk: ringbuffer: Add KUnit test")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  kernel/printk/printk_ringbuffer_kunit_test.c | 17 +++++++++++------
+> >  1 file changed, 11 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/kernel/printk/printk_ringbuffer_kunit_test.c b/kernel/printk/printk_ringbuffer_kunit_test.c
+> > index 4081ae051d8e..9f79bc91246e 100644
+> > --- a/kernel/printk/printk_ringbuffer_kunit_test.c
+> > +++ b/kernel/printk/printk_ringbuffer_kunit_test.c
+> > @@ -227,9 +227,12 @@ static void test_readerwriter(struct kunit *test)
+> >  	struct prbtest_thread_data *thread_data;
+> >  	struct prbtest_data *test_data;
+> >  	struct task_struct *thread;
+> > -	cpumask_t test_cpus;
+> > +	cpumask_var_t test_cpus;
+> >  	int cpu, reader_cpu;
+> >  
+> > +	if (alloc_cpumask_var(&test_cpus, GFP_KERNEL))
+> > +		return;
 > 
-> I think the network folks already know how to use and interpret their
-> data struct, struct net_iov for sure.. but I will add the comment if it
-> you think is needed.  Thanks for the comment.
+> IMO this shouldn't fail silently and instead should do:
+> 
+> KUNIT_FAIL_AND_ABORT(test, "Unable to allocate cpumask");
 
-Well, you CC MM folks like me ... :)
+Also we need to call kunit_add_action_or_reset() to free the mask
+when the test fails (aborts) instead of the free_cpumask_var() below.
 
--- 
-Cheers,
+The following changes on it top of this patch worked for me:
 
-David / dhildenb
+diff --git a/kernel/printk/printk_ringbuffer_kunit_test.c b/kernel/printk/printk_ringbuffer_kunit_test.c
+index 9f79bc91246e..850e5240222c 100644
+--- a/kernel/printk/printk_ringbuffer_kunit_test.c
++++ b/kernel/printk/printk_ringbuffer_kunit_test.c
+@@ -203,6 +203,7 @@ static int prbtest_reader(struct prbtest_data *test_data, unsigned long timeout_
+ 	return 0;
+ }
+ 
++KUNIT_DEFINE_ACTION_WRAPPER(prbtest_cpumask_cleanup, free_cpumask_var, cpumask_var_t);
+ KUNIT_DEFINE_ACTION_WRAPPER(prbtest_kthread_cleanup, kthread_stop, struct task_struct *);
+ 
+ static void prbtest_add_kthread_cleanup(struct kunit *test, struct task_struct *kthread)
+@@ -229,9 +230,11 @@ static void test_readerwriter(struct kunit *test)
+ 	struct task_struct *thread;
+ 	cpumask_var_t test_cpus;
+ 	int cpu, reader_cpu;
++	int err;
+ 
+-	if (alloc_cpumask_var(&test_cpus, GFP_KERNEL))
+-		return;
++	KUNIT_ASSERT_TRUE(test, alloc_cpumask_var(&test_cpus, GFP_KERNEL));
++	err = kunit_add_action_or_reset(test, prbtest_cpumask_cleanup, test_cpus);
++	KUNIT_ASSERT_EQ(test, err, 0);
+ 
+ 	cpus_read_lock();
+ 	/*
+@@ -279,8 +282,6 @@ static void test_readerwriter(struct kunit *test)
+ 	prbtest_reader(test_data, runtime_ms);
+ 
+ 	kunit_info(test, "completed test\n");
+-
+-	free_cpumask_var(test_cpus);
+ }
+ 
+ static struct kunit_case prb_test_cases[] = {
 
+
+Arnd, could you pleae send v2 with the above changes?
+
+Best Regards,
+Petr
