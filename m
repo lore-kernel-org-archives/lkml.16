@@ -1,105 +1,76 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1279255E23
-	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AE5D256C6C
+	for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750685509; cv=none; b=JXh+BZC60alTpFGMM6QscgTA0c8itNjUUvd0mJnaY/jAXBxnQpkOrNEOwls6l+U8o9Bbzqwvsr/5V+qoOPVxJZRKsk1DRIwtZII09kmptp/pSh/eN9bzkOibm1zHDJhG7o/1MgG2ySta/KxYf88T9yWc3VYMf+K97pp/VASxsP8=
+	t=1750685512; cv=none; b=SlffSLRzgy3oRwPjBv/c743HHWOsajMBlaLPmIxcOhBkiDzrZqitX8C0Z5j+5aRHUFwt8XcxkiPTMFeI2k3iZm8jYj2c1gcIrKr3W8s5oj2shMYV2+FvZZUoPziN3o1nLJvqBsL8PtGn7t4PX3KsX49SzBc+dCYvCbpO4ULG00U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750685509; c=relaxed/simple;
-	bh=eeI965bZjLro05LN9x1g2IrBacFgY7A1LEArY7+ur64=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=btz2i4/2uhZT3g6L4dYdotH9mfGUUsyJeDFgY1tII5gox/PDZD8K1O0ic9ia4StSqKtsrnFMWe78q8077aedlcuL9KksZZLvTeQIsSh4dKDMj2ht2b3ZYUnBrJ2wy/kx6bmA4gJz5Pl/Aak5kIo2N3KahW6Yj5bRyplJbT8xsuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=EiPUkA+W; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="EiPUkA+W"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a52874d593so4160463f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 06:31:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750685504; x=1751290304; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BcRT+NYpbdzPXOED5vFm930hD+F6AH0QJgXxP3RxDZk=;
-        b=EiPUkA+WDAXeRWNUdlerVUk095LN56mFQ77UzQrwtEmfyQLf29XuTNONjW77WoBd4a
-         Nn2wWVO1rv2/OPDVUsq6o/KV9trPUtd3Q39T1BzMrdzoIG2Sgz94s4GKysx6uZ7GwLth
-         yCOrdhvfBz6RWftkHWwhZvS5FpTxUA4r3wZco9/ckVh/AXSE0NSlzZCTENCEmZqp3HLK
-         iEUBy+g2EzVEFmbfHZ+SGNeYPjatGnelUnzBQ6ZNELINhqWqWkAVtmdHmptprby1AKan
-         JpqIcU9ONv2T4SJIPZcZfKVkNnrpgrG1eiqpTYldNyFLY6icFIAVrRoxoLy4bQR4oXNa
-         2HaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750685504; x=1751290304;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BcRT+NYpbdzPXOED5vFm930hD+F6AH0QJgXxP3RxDZk=;
-        b=jrsW0mtLQ0JdIyW03J2Jpl/iLG/5UFwjA0b81+oRZJR1SaLDO4yeKKGv+pxrLdDf7o
-         TWXtSDxs1v43W0fIRx5+QH67+A3LtGMnwNLLf+1h+pymLh9j5F1RVhk+I8Jv12Jge6fg
-         +t3iPiwo1eNPf6cBjGAij18pP4lel+HHQgVGvUL5jcA0RCkQAL/uCgpzKqrcd58G8SdN
-         0hfPGxwFir/ADS5Df/7ZsfGRfjrZ5hAK/Tk0A1WxHuFfFcjlYT3U3DDZswoJpO/iPOl6
-         /tiKy7qlVOOVL97Eah9HCIY2KiuNbrTi32N1BFIfjeTSowIkL9AthOe8cx1Wwu1CIGs4
-         iCRA==
-X-Forwarded-Encrypted: i=1; AJvYcCWK/SobLunelRGQjdWlsxS8452hcsXkjCoLIxqyJeo9PTrRkxEQQ01Fz3Tb7fcK/prOdQcVo6ef/2NMEwc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8nR9soeSmzQZ+3GAPGHfK2B9bX37M/1gZgDpw9u+zKGweR05Y
-	MAzxklzVmd/UEIgpKK/o070VZI0RGX6SGWIKtlViY/N69oYolVG3EW5/3F/D+PtaAUE=
-X-Gm-Gg: ASbGncsTLhK9K5yh5a4BN/HQ1A6IIICASf7U4j+LeNggdsMmuJGVfZxQC91r1u8nXxh
-	mQ10IWclUrlQkCmo1cM8QLvkr/fqT1/8R7nI5L12zzuUrkMksN5OzgflBeApt1/9bnWF5OJPhjH
-	ToXIGlwaPUDucWBWIPwCKyRCL7qaVqZxZX56rjA7F2R8yuH9iEN8mj/m25gWZM0F4lUsYk+CTRg
-	GM+ImlOY1GnzVB2kpEfv6Ncla/lWekii8tHwzvP9Eo1x6fKtNIY2u2RJpu7bYzRf+A8M/CJau/G
-	kyem/RaNnLm856sZzby3v5X/UIG9lM3s6+acYRSBZDipSXo5ITaisU4V2by/fXlZ
-X-Google-Smtp-Source: AGHT+IFMA6wLpwWOu66ZBT/Uwcl+XoqhLxK9+V0tMp8/c191NViuqFm+b+1J2RS5eF5XWF43kziHdw==
-X-Received: by 2002:a05:6000:491c:b0:3a4:f7dd:234b with SMTP id ffacd0b85a97d-3a6d1164217mr12380643f8f.0.1750685504100;
-        Mon, 23 Jun 2025 06:31:44 -0700 (PDT)
-Received: from toaster.lan ([2a01:e0a:3c5:5fb1:7b0f:c522:cad6:acd1])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a6d0f1808bsm9401818f8f.24.2025.06.23.06.31.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 06:31:43 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	=?UTF-8?q?Th=C3=A9o=20Lebrun?= <theo.lebrun@bootlin.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Abel Vesa <abelvesa@kernel.org>,
-	Peng Fan <peng.fan@nxp.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Jerome Brunet <jbrunet@baylibre.com>
-Cc: linux-mips@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org
-Subject: Re: (subset) [PATCH 0/4] clk: use the auxiliary device creation helper
-Date: Mon, 23 Jun 2025 15:29:56 +0200
-Message-ID: <175068537068.1888277.981802582113061223.b4-ty@baylibre.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250611-clk-aux-v1-0-fb6575ed86a7@baylibre.com>
-References: <20250611-clk-aux-v1-0-fb6575ed86a7@baylibre.com>
+	s=arc-20240116; t=1750685512; c=relaxed/simple;
+	bh=d3CjObu7ti7j2leHXsCAQMHwoeOMPWVu3hazULI9Ykc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n7oYUq18n0ZQj453jz2ILaDjZQd7hx++BaSuAQeRKUjsrohkKB8TIewY2JkGe8513tLkb+jOvJIWW89/NRXvSkP3RZBMUp0nOcKnrGtyAnYgrvZbhQCFHbkqCJ6ZFBzeF45GI/XU/xQMqK/w1+toBqypyyS4zCEa/R0oQC7jfns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91D2A113E;
+	Mon, 23 Jun 2025 06:31:32 -0700 (PDT)
+Received: from [10.1.29.169] (XHFQ2J9959.cambridge.arm.com [10.1.29.169])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E265D3F58B;
+	Mon, 23 Jun 2025 06:31:49 -0700 (PDT)
+Message-ID: <cb71d9f4-aaae-4240-88f5-50a745717f22@arm.com>
+Date: Mon, 23 Jun 2025 14:31:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/vmalloc: leave lazy MMU mode on PTE mapping error
+Content-Language: en-GB
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250623075721.2817094-1-agordeev@linux.ibm.com>
+ <107bfdb7-c8f5-45fa-872e-3e6928dc8025@arm.com>
+ <aFlQv4dx7wFU5Cql@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <aFlQv4dx7wFU5Cql@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Applied to clk-meson (clk-meson-next), thanks!
+On 23/06/2025 14:03, Alexander Gordeev wrote:
+> On Mon, Jun 23, 2025 at 01:37:11PM +0100, Ryan Roberts wrote:
+>> On 23/06/2025 08:57, Alexander Gordeev wrote:
+>>> Function vmap_pages_pte_range() enters the lazy MMU mode,
+>>> but fails to leave it in case an error is encountered.
+>>>
+>>> Reported-by: kernel test robot <lkp@intel.com>
+>>> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+>>> Closes: https://lore.kernel.org/r/202506132017.T1l1l6ME-lkp@intel.com/
+>>> Fixes: 44562c71e2cf ("mm/vmalloc: Enter lazy mmu mode while manipulating vmalloc ptes")
+>>> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+>>
+>> Ouch, sorry about that! The patch looks good to me so:
+>>
+>> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+>>
+>> I wonder an aditional Fixes: should be added for Commit 2ba3e6947aed
+>> ("mm/vmalloc: track which page-table levels were modified") though? That's the
+>> one that added the "*mask |= PGTBL_PTE_MODIFIED;" which would have also been
+>> skipped if an error occured before this patch.
+> 
+> Good catch! I think it certainly needs to be reported with Fixes
+> and I even doubt whether your commit should be mentioned at all?
 
-[4/4] clk: amlogic: axg-audio: use the auxiliary reset driver
-      https://github.com/BayLibre/clk-meson/commit/301b96e0668a
+Well I would certainly argue that my patch is broken as is. So happy to have 2
+Fixes: tags. But I'm not really sure what the rules are here...
 
-Best regards,
---
-Jerome
+> 
+>> Thanks,
+>> Ryan
+> 
+> Thanks!
+
