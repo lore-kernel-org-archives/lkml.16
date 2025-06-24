@@ -1,244 +1,218 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92244A2D;
-	Tue, 24 Jun 2025 22:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750803331; cv=fail; b=dcabip7FOy6iecVMF8Q4XE2r6M29ebPiE5p8LSRTIKkQig7at8UtAj5uU2zGeOyv8l2hE22vwORlznO1fZ0ujdeX/PZP1n7928JndQeoQRb/y5slSakO04a26WwwRiFCIe/9q+gBhn0+QSM3Ob5rJV658t/AYFzVc+kfIiqLe6A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750803331; c=relaxed/simple;
-	bh=mZDVaOv0LH8z3TpSY4Y+lVMEB3UD9psnMzbvgrRJuho=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=lFiK9ipZppVSyu6hPDGzsj65SVmig4hEZbg7DCKjLTw+RnePJb0gEKF6fRfkie8Gb/emKwLmDzMq4AVoCL/bGML381YmzNniVY5O1l1gRSldxEmDHtJTljCyiIMydfJpTQI7HnCfwmhhCX4O8s8aBq841oFQEgHXt6cz3TXme1U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HrLt9Mre; arc=fail smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F65182BC
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 22:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750803351; cv=none; b=Grb31ahdZt+jwBFyrtTXK883OdWV4pW+g+L1BXiXzQV7S47isli0+li7w1NV38qNRB23zR/OwOtSoYsynUp09YrkRmtFBegQJIg1aiuuo8TfsvoybzA2rV4FnyLhivhb1RVbiZY1koD6g2zqqXMOwy1L1Gisi4x/e3Rmw+3vovk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750803351; c=relaxed/simple;
+	bh=gwlSQUo9b3loZtV5PPRtTwSVR7W7Hsv9ks2xYKkqm9Y=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=GApIihtlFa90PC9C2R/APKmHMer9Pe2sE/7wXStvuk3Z/VgftftPeHIRi2jTjZb3v8hOzOaR2iPq+wT1/IStukl18sXU+wevSYb5gXDq0CX4betUh59Xfgmu+LvBaCD4FRUp8QQWzlPAzUdHLdUYSdZnRn+eSHesSK79h/QpGBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ksJaTaO6; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HrLt9Mre"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750803330; x=1782339330;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=mZDVaOv0LH8z3TpSY4Y+lVMEB3UD9psnMzbvgrRJuho=;
-  b=HrLt9Mrex4CfKHShSrZVD8VWOsQl8fjek1Tev7a5wdCd7Ui/u8VBhJem
-   09r9PLMfU4sT9WtwPw/HkZE9v1wwy3O6lNAZGSkJjtTPpz3dspojHVmlH
-   x9b4cB5Xk4y/UW8YcNbVrm7usG+SrSRc52y8pwfSgekunIq+TTaaPKrWn
-   QBGTWbuv7Lx0X//qT2Y7AZweUPVNlV+3jPQQILHUxv0UAjqANAWPcl8cP
-   2+szs1UQRZbkENW3uniqTc7Y3xLcXTh8Z68akpe5BDDayifwNIslvigdC
-   QGfbk155DFj95+YqpRs61CZwtOdJzp4pucsFgQJL+/j1rYT3bwp88JKFi
-   Q==;
-X-CSE-ConnectionGUID: m7AYibc9SgmUDR75ix06cg==
-X-CSE-MsgGUID: 6ncuAZSlRs2DtyGafiu0uQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="40680644"
-X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
-   d="scan'208";a="40680644"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 15:15:18 -0700
-X-CSE-ConnectionGUID: l8kMvVVgT4urwX16YMyn1w==
-X-CSE-MsgGUID: qiBoNha8QWy4GwMHq3xo5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
-   d="scan'208";a="189225415"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 15:15:12 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Tue, 24 Jun 2025 15:15:07 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Tue, 24 Jun 2025 15:15:07 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.87)
- by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Tue, 24 Jun 2025 15:15:06 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qWXkm/lvf22u9AuMC6UTJyMrhO5WscYQjpM9122giZPRg3huP6KbDOw0hA0E1cF+SVwnYLuuFUoNogTpJWue0vmAl5e+dyPhKkwdyQLINgKrNNV2uk+0qBr6fLBDYhtBLE1jmkhIQld3NSGUY2Bm59owBzlOFy+Jqd552PZAWdYwtmYeiU3IKIrT06KnnklFd4u/qeedrHf5TGoGDz1AWLE7KKtAzAeBVL/RkJHoqijjRvCeCtyuwZsQantklMfsa7WkwfAozbecEo8hnWWnMNVdh5NXhFmEd4YtocA2TQPRjoeD+l1qxETXRkk2JHFx9avloMD8M1dw82RHBb/NZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mZDVaOv0LH8z3TpSY4Y+lVMEB3UD9psnMzbvgrRJuho=;
- b=UPJbtwdctG+TLNWkuiYC84mvYxkcFmkDupSo6O69M2hXwNVgfxOsblagjIWsbbin0oWIqXllk+Ku3hfZeVwsdf9XX024y6zXzh8bDNsm0dd5dLJ5NAMMaKA9ChdsL9I2vEThPMXxhKkjMPkh7D20c1OyUqaK5Ttyb/x8pB1bEWT36StlFGUgT3WM0gxDOwLDmChe74xCCKfHS55zXXuAlU0Ek4sa5Ulo3B6E4QK9Orbm6W+/uMbo/Tflu5R4dayDJsdbeifcqwWBLRO73lkqyoRVJB0d/kutqT5NWvNhbAHpyjIVvWSx2pQsl5AdFVXrEt9I4GCjEgvxBTEMAbEbsA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
- by PH0PR11MB4999.namprd11.prod.outlook.com (2603:10b6:510:37::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Tue, 24 Jun
- 2025 22:14:50 +0000
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::edb2:a242:e0b8:5ac9]) by MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::edb2:a242:e0b8:5ac9%4]) with mapi id 15.20.8857.025; Tue, 24 Jun 2025
- 22:14:50 +0000
-From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To: "ackerleytng@google.com" <ackerleytng@google.com>, "Zhao, Yan Y"
-	<yan.y.zhao@intel.com>
-CC: "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao"
-	<xiaoyao.li@intel.com>, "Du, Fan" <fan.du@intel.com>, "Hansen, Dave"
-	<dave.hansen@intel.com>, "david@redhat.com" <david@redhat.com>,
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "tabba@google.com"
-	<tabba@google.com>, "vbabka@suse.cz" <vbabka@suse.cz>, "Shutemov, Kirill"
-	<kirill.shutemov@intel.com>, "michael.roth@amd.com" <michael.roth@amd.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"seanjc@google.com" <seanjc@google.com>, "pbonzini@redhat.com"
-	<pbonzini@redhat.com>, "binbin.wu@linux.intel.com"
-	<binbin.wu@linux.intel.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>,
-	"Peng, Chao P" <chao.p.peng@intel.com>, "Weiny, Ira" <ira.weiny@intel.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Annapurve, Vishal"
-	<vannapurve@google.com>, "jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun"
-	<jun.miao@intel.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>,
-	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge
- pages
-Thread-Topic: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge
- pages
-Thread-Index: AQHb1Yuw8TDhKPA9uUiYAoJtWQa0+LPz2/CAgAozpACAB4/5gIAA7nmAgAAX8oCAAO6tAIAAjZiAgAAGKoCACG6bAIAA3+42gAGE44CAAAPhAA==
-Date: Tue, 24 Jun 2025 22:14:48 +0000
-Message-ID: <844399f8b16027b06eefc0ef145a3cbb5ae83bc3.camel@intel.com>
-References: <aCVZIuBHx51o7Pbl@yzhao56-desk.sh.intel.com>
-	 <diqzfrgfp95d.fsf@ackerleytng-ctop.c.googlers.com>
-	 <aEEEJbTzlncbRaRA@yzhao56-desk.sh.intel.com>
-	 <CAGtprH_Vj=KS0BmiX=P6nUTdYeAZhNEyjrRFXVK0sG=k4gbBMg@mail.gmail.com>
-	 <aE/q9VKkmaCcuwpU@yzhao56-desk.sh.intel.com>
-	 <9169a530e769dea32164c8eee5edb12696646dfb.camel@intel.com>
-	 <aFDHF51AjgtbG8Lz@yzhao56-desk.sh.intel.com>
-	 <6afbee726c4d8d95c0d093874fb37e6ce7fd752a.camel@intel.com>
-	 <aFIGFesluhuh2xAS@yzhao56-desk.sh.intel.com>
-	 <0072a5c0cf289b3ba4d209c9c36f54728041e12d.camel@intel.com>
-	 <aFkeBtuNBN1RrDAJ@yzhao56-desk.sh.intel.com>
-	 <draft-diqzh606mcz0.fsf@ackerleytng-ctop.c.googlers.com>
-	 <diqzy0tikran.fsf@ackerleytng-ctop.c.googlers.com>
-	 <c69ed125c25cd3b7f7400ed3ef9206cd56ebe3c9.camel@intel.com>
-In-Reply-To: <c69ed125c25cd3b7f7400ed3ef9206cd56ebe3c9.camel@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.44.4-0ubuntu2 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|PH0PR11MB4999:EE_
-x-ms-office365-filtering-correlation-id: 6a9e85bf-bd6b-4ee2-ba41-08ddb36c88d1
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|7416014|366016|1800799024|376014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?c0oyWUhzZmV0ZUhwN3hxN29FY0tQbFNsK2h5aGtFMWcrY1lVUjFQbzBEOFU4?=
- =?utf-8?B?OS9sTVdqR0txTTZMdlV5NlcxY3JieVpRblhuTFlUVE8rbXVWUTl2a3BoV3BY?=
- =?utf-8?B?ZElLeUt6NGZSOG9GZkVlb2ZsWHluSmFucGdCUHNDRnY3NjM3QnQramdpVDk0?=
- =?utf-8?B?Z0MzOHdSb0xyUE1kQmovYVk2UUIreE9RbWNGc1ZUQmZGS0hnd1p0VTVjeHBa?=
- =?utf-8?B?QVdhZVF5M0o1b3RDMkRtZTVKdHNzUmZLYlNmbUJSQ1VKbHpJQ0YxdE9SVFNM?=
- =?utf-8?B?WjhTdDVGa0MxdThhdCtiMjFSMEpnaHRBSWRsdjRsSHFhN0F5cmRCY2FSZHpC?=
- =?utf-8?B?NUxxU2MvZ01GYnRSUWcxRzl2MysyNzg0MkhIbGJhUVBGUlUreEEzU3FIWXJD?=
- =?utf-8?B?dityN3pyUitITjBqR1VhL2xjazNxQklMSWg3VmlxUDFna0NrN3J0OGdKc0Ru?=
- =?utf-8?B?K0p6NEptZzZMYW9OS3NmNzlQZEZIWVorRzdFTHczMWpSc1dBQkVoK0htclVX?=
- =?utf-8?B?TUMyL3l0VldCZmU4azYwVUEyUHJkc2c5bWZTMTdoVCt3NlhCTkNvcmFKQnc1?=
- =?utf-8?B?QVo3VUZRTkEvcklFNTdWbjU0ODJ2UXZseFdoQWFBOE5xbnU5SWhOdjVjcWNS?=
- =?utf-8?B?NmZaTFdPY1NXL2dNM0tRQW45Q2JvWU03ZTlpdmdLVWE5K0h3RFhZVU53NVJV?=
- =?utf-8?B?bC9PaUhKOTN0NGFwOEszaEx2RUtIREkrSk1KNDZOc3dnVmg3Ym9BYm10eHhI?=
- =?utf-8?B?MnNxQ0JRMHNTZHlXanMwajNwZjZXRk1EMzlhbklmbC9MS3BlZDI4VndxZUV5?=
- =?utf-8?B?RHFlTmt0ckF6YTZpVWZ4NUsrSnU4Q0pmV1NKekxNVDZpTWxuWnAvL0hBalc2?=
- =?utf-8?B?dmtjTkZBQUt3N3MwRHl0Z0VUTWNwZkxXY1h0dGU2VDhhTGppVGgwd2RZZlZI?=
- =?utf-8?B?MThOVXl6SU1LdTl4Y3Iyeng2Mi9jWVEySmVTODBHVTRjQ3JaVlNmelpZV0VC?=
- =?utf-8?B?Zy9rZGVIN0IzV05URlM2ZFFGb2F2VjBjQXYxNnJoV012bXEyUEpOaHkySi9q?=
- =?utf-8?B?TkNiazlybEpRb0hDV004SkhnNlJBQ3lGNnJQS2ZmbmtUblhDTUlaanpUT3hW?=
- =?utf-8?B?M28yallkc2ZvR0dzM0RsRjNibXgrWDlQZFRpVmg0dmlPdjUrSldXV2JWT2F6?=
- =?utf-8?B?SytrTEV4OVp6d0UyY2RUOUI2TFp3TElBMlJTU1VLM3RFYUJ6VVlOYUtHMnJV?=
- =?utf-8?B?SnNUaG5KOW4xNFFZZTRwK2pPSHpBR3dUdzJsNnY3ZDBjcGZ5Y0JzZno2OFdr?=
- =?utf-8?B?dW5Wb0hqeVV6NWdtNjcrMXVqTERwclNKZmh4ZTdyNyt3ZFc2TkdNM05KNUt2?=
- =?utf-8?B?ZU1IelBiSjJKV1grV2pyM3NpTDFOamV5dmNIdm9aVmNRblhHNmI0SlNURk1q?=
- =?utf-8?B?aUpJSlFlRWJlcDJNUnZ2M2RQNTMwZTdLTmhYREl2VFJCOXFNdXhsc3VETHAw?=
- =?utf-8?B?VDdaQWVFU1JlVGRpc1ZIaW5tNVBMQk5Rd1ZJeXNRcSsydVBnL0xHZmpKbmQ4?=
- =?utf-8?B?eVljTnVRcGZkdmF2NUNpMURsVjN3cUxCN1FwNmVtL0t6U3Zkb3F3S2s1c1lx?=
- =?utf-8?B?Y2RKQW5HK1BkeXhNL2NlYkJIbzJJaVpxS1RzVXJoWHRMSFg0a2c1T0diZzl1?=
- =?utf-8?B?OE9tZE8rSDF4NGFHQVEzbFgrZHd0V3lla1BaYTA4eVhHYlBISExLWVMyMzEw?=
- =?utf-8?B?YUY3aWdwdmhtMUdLM1F3MTI2ZkdXT3haSkJ5YTNqYVJJN1JsRjFzTHBmdnRw?=
- =?utf-8?B?V1BhdkNUWFRLaW9aU0g1cnQyeFJHNkkyK1Y4cjUwZTd5eGZWSFhmK0JRRWVl?=
- =?utf-8?B?S25VTGl5SFNCYUg2T21ENE1vY0MwRWQ5Ti9HY0hVT0loTGd0Q1hRak9TR1Yr?=
- =?utf-8?B?eUxKYWNmSnhUSUJJSHpTNEhnc1NlWFFsdGxzaE5yc0Y2SnpobFMzTnlKclZn?=
- =?utf-8?Q?4GbOhTjJawlzuh+xrl1/1mK2hgTNDs=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Q2hJRE1FS3YrNXN6eE1QMUl2bjFXNndQNTVJem0vM2ttdDFUWlNnZGZmZzVn?=
- =?utf-8?B?ZjZNQ1UyRS9UWFVMcGNZK0kzWWhaVHZzS08rZ3ROUXF3Y1FZc01LcTZ1dkd2?=
- =?utf-8?B?MDRzVEdmdDJnTEFDbnphelhsbHJIUER0NGtnYWtSVlV0NmNXKzRveEtXL1ph?=
- =?utf-8?B?aHdjSC9PZHovcGFEL3VWWVdMMmdUL1JjL0JKSFV5b3BYLy9MZzdnQUU2WG5a?=
- =?utf-8?B?c3dEUWdIUktGQ1ladEtVc3RpdzhUSmtRblNaRFV2TVlPZk9XTWM5aGxkaGZ6?=
- =?utf-8?B?c2RWSHZLRFNITTJ2RXg0aDBYd0Z2MnNSL3ZLVk5DN3l6RUZrZ2I4MWpPcW9H?=
- =?utf-8?B?WkRMOHdvb2wxQ21iTFYzNVJNZ0lXQ1NWRENsR1BMQlo1K1l3K1AzSStzb0Zi?=
- =?utf-8?B?b3ZsS0NYc1J3U2FEQlh5WG9VdWY5eEdaQmU0WVdyaTJxVU44TzdBaDRjanhF?=
- =?utf-8?B?alRhcHVIYzZMdnhEWiticmVXei9EZTM3ZVFUVWFZdzA1UVhpbDk2SGIvNGpj?=
- =?utf-8?B?TEJha2ptRnhyL1lBMUd5UU82VFZBWlByTGp3VnJSdDgrcSt1YjVPN0pHeit0?=
- =?utf-8?B?TldiZmI4VTBJKy9Bcm1sUUk5eXdkeDc2ZUtTcThobjQ1TnU2Z3ZONDVobHhl?=
- =?utf-8?B?YUhhSDFLczBRRGZ3RVJTR0lGMDdMSmFLQ0hBMVZya1VKMmU3cjZFYUtwNHVa?=
- =?utf-8?B?aEdZWG1TejMyQUk1S1F2OUpneXVOQ0VXTnhnV3hOK3lwZWdjc0paNWNSdDJr?=
- =?utf-8?B?Wml1TEVYNXMxZm5MVW9JOXVoY2E0ZmNaT2MzdlFhNjV2bWNXZlZiMHFnTkxO?=
- =?utf-8?B?UzljUDludVJEclZoZ29TdWdnSCs3MFcwZTFtUEZ1WEtJdHhzc1ZzSklyMkl4?=
- =?utf-8?B?TzlRNkYyMzZTci9RR0xweC9uZUlLbFBIazJNbm50TlE3eHZhV3h5S3liZzZT?=
- =?utf-8?B?eUtPYVg2R05LMXp5MFIzeFJKbGtnd0puQ2RGZlpyeHVySFRsR2hveUtBV1BQ?=
- =?utf-8?B?MnJiQlRMWHQ0T1BoVkx4eHY3OFdjSG9XZk1lRG85N1I0aitMUy8rQlhyMWVH?=
- =?utf-8?B?Q0p2L2JlK2JqUXF6MG85QUpjODA0bkhJWDJLTnRRbndoYmJRYndJTjlsc05W?=
- =?utf-8?B?bTZQRzUrYWlQVThqZEx2TkIvS21vZ2ZxRUJkQ3h0K1cxdGxKWUc1cjdNMTNV?=
- =?utf-8?B?SklBWnlhTzE5eHF5TERIUU5DeHlJUCt2QzFBblFaaDFjTnlrTHkzL3BxNVhB?=
- =?utf-8?B?a1orWHFiWHIwTDZBTnExY0h4TnRJOGxhZmxSMjhQam80aUErSXREako2QXh0?=
- =?utf-8?B?eUZwL2QwaWd3dTdURzFDbHgzWkxtRFdBVnFrSE13dGdYaDgwUjEzanplL2FE?=
- =?utf-8?B?R2tOQUVlckI4RlJSZEdRTW41M0F0ZVFqRTBGZUMzZmZ4NU03NlZlNVZwV2Iv?=
- =?utf-8?B?OGRTVHF3VUw4Z3hQWStqUXJRSVNQNElKbVZZMnVKV05qT29MNlYyR3RnQlln?=
- =?utf-8?B?bGk4L2l6VW9MZ3d0aHJsb2l4S0JBcVNBNkk5RFhaSmdzeEV3cUNlcjFOYm1w?=
- =?utf-8?B?cVZFV0g3VEZBNFBzRTZ0TnJyMDVyUzZtcGF0b1NOOFJ3aklNWStHQTlXcytv?=
- =?utf-8?B?dWZ2WFFoL2xCbkRkR2s2cWc1dDd3YTF6bC9qNjFPV2ZHRmxyNW1pZkx3aHlh?=
- =?utf-8?B?TmNKdTZCaktzVlRCdDYrQ1FEUEsrQ2l1cEpIc0Nmc0NyU3RkNjFYSEQ0Zk1G?=
- =?utf-8?B?SWpjTDNHM2w5M3g3RHN2dGtBOVdJeE5XMm0zOEF0c3dwYTU5VnhLcEVOOTZX?=
- =?utf-8?B?OXQrMzFMUnIxTVJReXJlZVNhMFlZYnFUR1V0QlF3c3hzSUFPUmdNUTJmSi9F?=
- =?utf-8?B?bFkzandIM2JoeVlJOHVWS3RJUUg1THpMWDJEWWplYlVObVJoVXFqempyS0t3?=
- =?utf-8?B?d0RROWhBbFpnaVphYjJIMXp2Wlo2ejdPbkUzclBneDF1blpSQ1VOR09NZEFN?=
- =?utf-8?B?aEoySHdycHJpazZOeUdLblVGaDNBMldhUlFBdmtiSTd6VzBYS3Fac05vNFQv?=
- =?utf-8?B?QnBaSjFDSWdJakM4aTdrZDVlcHJ0VVozVHB4ZEJaRVJvcFF0eGw3K1FZcHdT?=
- =?utf-8?B?d0cvVklYcnhML1NvbWFSeXVJemlLQTBXbXlQVkErRWhoclZmUWF0ZE9iR0x4?=
- =?utf-8?Q?SWy4kUsaOynZVEDNhbdr9zo=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <001E3AF653DD3848B1A5A55F992717DF@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ksJaTaO6"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311ae2b6647so819803a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:15:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750803349; x=1751408149; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=L9H8rsZhOzIt+UI6UH9Y+2ZDnDaptTpBgxdxZU1WPLg=;
+        b=ksJaTaO6b5GibAQ6aXWFVxvaN3cFfC5SX55PR4X2p6FAA4kWzGJSVqbggEurokOZpI
+         es5hXpdX7ZEMNR7hdun/j3mS3FHPdbDUu7kTXmYXlUXVMIgtztqbgfYWcwWegaKqysOZ
+         mhlRqRNHxarH0dOUGA7uxByBSXUSvKu6T3vdOtY8j4d1kLJDNKeEjwc4Q70pxXd500Iq
+         Da+ZJ2Hd3gTYYwB9mqpT18vvY8wqSqjUh6AdIqFJiS/4xAXbdz3HhN7cMoz2GqKPtpmL
+         jEjrsjzO0qXgcZitHjbt/RsGDx+uKhSZEJZJLwzvFDswtPkTpoWMInvF84pb8OCoJME/
+         3pNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750803349; x=1751408149;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=L9H8rsZhOzIt+UI6UH9Y+2ZDnDaptTpBgxdxZU1WPLg=;
+        b=SC0L1Bd4hHKEWQRaGWK8QLIvFgf0cdcYfR/ITkArMpp7u3cVVEx+QGrakeewNAFuxs
+         /QPtQ64C933Np6brZWcsaFudLyLUA/ilcTRhI19RiSwOAeF9qEbiH+RLXP4fqJfdqMzT
+         eH0vGcvIWCoxcOHyN+8de+pHhkIy592quRHWE+sfpRe/7ANDWcjAa6fc1ubHkdGLbaB9
+         jgwyLlV/fJ213y14IdJgJa7cXPXXYOtwJ9zARoGj69p9ZbSGOFhPxBINYCoUDDaSNRO+
+         W7DznRJbHzEbRO7x/2fUH1ztQ+jW7Rr45FjJ1U1CgTGJ+l6gvZ/Bpwk2sEUyO1iQifHI
+         WS1g==
+X-Gm-Message-State: AOJu0YxwON8ddp8EqyQTpARsL0HP7ebLnyq9YkBHXP1/5lkpCVs1z01d
+	EZWPp61PJgpbyyD4JxQ+k5hpF5SlPtdZ+dXVbhWcZnxvSDVBoe9bxqylnaLd5RJ3S7bZQ88J2Mo
+	yhjq6rn7yU/NqthgJ3VmyEqKhdgjdWESZxYpgR1AHHYzo+tGeJ9lg8Fxjikon91xHRnJ1ourhKM
+	002DTH6W26aRl9d92G9AdSPJLVJBrS7dfaDI7Za3GPcpkU
+X-Google-Smtp-Source: AGHT+IHN0X75O1jyQ0O5RrXXUq94SnNifv8XciuoFnzyWufKBYKYIO8kqQ/AmI4Lk1cbTKzSMkhD5VoerdI=
+X-Received: from pjbsz14.prod.google.com ([2002:a17:90b:2d4e:b0:2fc:2c9c:880])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2709:b0:313:2adc:b4c4
+ with SMTP id 98e67ed59e1d1-315f26b2ebdmr706693a91.24.1750803349222; Tue, 24
+ Jun 2025 15:15:49 -0700 (PDT)
+Date: Tue, 24 Jun 2025 15:14:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a9e85bf-bd6b-4ee2-ba41-08ddb36c88d1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2025 22:14:48.9357
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: O987SeFmjXjhJYh2a9dshLf+fDUllt0i7z8fLVtbh23o/CgEF1bkVn5wlX56OvUBquboPDHToHyU0Btd8+GbfZS0yzrdTWUW0ZkaPBUGgUo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4999
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
+Message-ID: <20250624221545.1711008-1-ctshao@google.com>
+Subject: [PATCH v3] perf stat: Fix uncore aggregation number
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: wy.shih90@gmail.com, Chun-Tse Shao <ctshao@google.com>, Ian Rogers <irogers@google.com>, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, james.clark@linaro.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-T24gVHVlLCAyMDI1LTA2LTI0IGF0IDE1OjAwIC0wNzAwLCBSaWNrIEVkZ2Vjb21iZSB3cm90ZToN
-Cj4gTWlub3IgY29ycmVjdGlvbiBoZXJlLiBZYW4gd2FzIGNvbmNlcm5lZCBhYm91dCAqYnVncyog
-aGFwcGVuaW5nIHdoZW4gZnJlZWluZw0KPiBwYWdlcyB0aGF0IGFyZSBhY2NpZGVudGFsbHkgc3Rp
-bGwgbWFwcGVkIGluIHRoZSBTLUVQVC4gTXkgb3BpbmlvbiBpcyB0aGF0IHRoaXMNCj4gaXMgbm90
-IGVzcGVjaWFsbHkgcmlza3kgdG8gaGFwcGVuIGhlcmUgdnMgb3RoZXIgc2ltaWxhciBwbGFjZXMs
-IGJ1dCBpdCBjb3VsZCBiZQ0KPiBoZWxwZnVsIGlmIHRoZXJlIHdhcyBhIHdheSB0byBjYXRjaCBz
-dWNoIGJ1Z3MuIFRoZSBwYWdlIGZsYWcsIG9yIHBhZ2VfZXh0DQo+IGRpcmVjdGlvbiBjYW1lIG91
-dCBvZiBhIGRpc2N1c3Npb24gd2l0aCBEYXZlIGFuZCBLaXJpbGwuIElmIGl0IGNvdWxkIHJ1biBh
-bGwgdGhlDQo+IHRpbWUgdGhhdCB3b3VsZCBiZSBncmVhdCwgYnV0IGlmIG5vdCBhIGRlYnVnIGNv
-bmZpZyBjb3VsZCBiZSBzdWZmaWNpZW50LiBGb3INCj4gZXhhbXBsZSBsaWtlIENPTkZJR19QQUdF
-X1RBQkxFX0NIRUNLLiBJdCBkb2Vzbid0IG5lZWQgdG8gc3VwcG9ydCB2bWVtbWFwDQo+IG9wdGlt
-aXphdGlvbnMgYmVjYXVzZSB0aGUgZGVidWcgY2hlY2tpbmcgZG9lc24ndCBuZWVkIHRvIHJ1biBh
-bGwgdGhlIHRpbWUuDQo+IE92ZXJoZWFkIGZvciBkZWJ1ZyBzZXR0aW5ncyBpcyB2ZXJ5IG5vcm1h
-bC4NCg0KTm90ZSwgdGhpcyBpcyBzZXBhcmF0ZSBmcm9tIHRoZSBwcm9ibGVtIG9mIGhvdyB0byBo
-YW5kbGUgb3Igbm90aWZ5IFREWCB1bm1hcA0KZXJyb3JzLiBUaGF0IGlzIHN0aWxsIGFuIG9wZW4g
-cmVnYXJkbGVzcy4gQnV0IFlhbiB3YXMgY29uY2VybmVkIGlmIHdlIGRpZG4ndA0KdGFrZSBhIHJl
-ZmVyZW5jZSB3aGVuIHdlIGZpcnN0IG1hcHBlZCBpdCwgdGhhdCBpdCBjb3VsZCBiZSBtb3JlIGVy
-cm9yIHByb25lLiBTbw0KdGhpcyBmbGFnIHdhcyBhbiBhbHRlcm5hdGl2ZSB0byAqaG9sZGluZyog
-YSByZWZlcmVuY2UgZHVyaW5nIHRoZSBsaWZldGltZSBvZiBTLQ0KRVBUIG1hcHBpbmcuDQo=
+Follow up:
+lore.kernel.org/CAP-5=fVDF4-qYL1Lm7efgiHk7X=_nw_nEFMBZFMcsnOOJgX4Kg@mail.gmail.com/
+
+The patch adds unit aggregation during evsel merge the aggregated uncore
+counters. Change the name of the column to `ctrs` and `counters` for
+json mode.
+
+Tested on a 2-socket machine with SNC3, uncore_imc_[0-11] and
+cpumask="0,120"
+Before:
+  perf stat -e clockticks -I 1000 --per-socket
+  #           time socket cpus             counts unit events
+       1.001085024 S0        1         9615386315      clockticks
+       1.001085024 S1        1         9614287448      clockticks
+  perf stat -e clockticks -I 1000 --per-node
+  #           time node   cpus             counts unit events
+       1.001029867 N0        1         3205726984      clockticks
+       1.001029867 N1        1         3205444421      clockticks
+       1.001029867 N2        1         3205234018      clockticks
+       1.001029867 N3        1         3205224660      clockticks
+       1.001029867 N4        1         3205207213      clockticks
+       1.001029867 N5        1         3205528246      clockticks
+After:
+  perf stat -e clockticks -I 1000 --per-socket
+  #           time socket ctrs             counts unit events
+       1.001026071 S0       12         9619677996      clockticks
+       1.001026071 S1       12         9618612614      clockticks
+  perf stat -e clockticks -I 1000 --per-node
+  #           time node   ctrs             counts unit events
+       1.001027449 N0        4         3207251859      clockticks
+       1.001027449 N1        4         3207315930      clockticks
+       1.001027449 N2        4         3206981828      clockticks
+       1.001027449 N3        4         3206566126      clockticks
+       1.001027449 N4        4         3206032609      clockticks
+       1.001027449 N5        4         3205651355      clockticks
+
+Suggested-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+---
+v3:
+  Rename the column to `ctrs` and `counters` in json mode.
+
+v2: https://lore.kernel.org/20250612225324.3315450-1-ctshao@google.com/
+  Rename the column to `aggr_nr`.
+  Remove unnecessary comment.
+
+v1: https://lore.kernel.org/20250611233239.3098064-1-ctshao@google.com/
+
+ tools/perf/util/stat-display.c | 34 +++++++++++++++++-----------------
+ tools/perf/util/stat.c         |  2 +-
+ 2 files changed, 18 insertions(+), 18 deletions(-)
+
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 729ad5cd52cb..9cb5245a92aa 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -50,15 +50,15 @@ static int aggr_header_lens[] = {
+ };
+
+ static const char *aggr_header_csv[] = {
+-	[AGGR_CORE] 	= 	"core,cpus,",
+-	[AGGR_CACHE]	= 	"cache,cpus,",
+-	[AGGR_CLUSTER]	= 	"cluster,cpus,",
+-	[AGGR_DIE] 	= 	"die,cpus,",
+-	[AGGR_SOCKET] 	= 	"socket,cpus,",
+-	[AGGR_NONE] 	= 	"cpu,",
+-	[AGGR_THREAD] 	= 	"comm-pid,",
+-	[AGGR_NODE] 	= 	"node,",
+-	[AGGR_GLOBAL] 	=	""
++	[AGGR_CORE]	=	"core,ctrs,",
++	[AGGR_CACHE]	=	"cache,ctrs,",
++	[AGGR_CLUSTER]	=	"cluster,ctrs,",
++	[AGGR_DIE]	=	"die,ctrs,",
++	[AGGR_SOCKET]	=	"socket,ctrs,",
++	[AGGR_NONE]	=	"cpu,",
++	[AGGR_THREAD]	=	"comm-pid,",
++	[AGGR_NODE]	=	"node,",
++	[AGGR_GLOBAL]	=	""
+ };
+
+ static const char *aggr_header_std[] = {
+@@ -304,7 +304,7 @@ static void print_aggr_id_std(struct perf_stat_config *config,
+ 		return;
+ 	}
+
+-	fprintf(output, "%-*s %*d ", aggr_header_lens[idx], buf, 4, aggr_nr);
++	fprintf(output, "%-*s %*d ", aggr_header_lens[idx], buf, /*strlen("ctrs")*/ 4, aggr_nr);
+ }
+
+ static void print_aggr_id_csv(struct perf_stat_config *config,
+@@ -366,27 +366,27 @@ static void print_aggr_id_json(struct perf_stat_config *config, struct outstate
+ {
+ 	switch (config->aggr_mode) {
+ 	case AGGR_CORE:
+-		json_out(os, "\"core\" : \"S%d-D%d-C%d\", \"aggregate-number\" : %d",
++		json_out(os, "\"core\" : \"S%d-D%d-C%d\", \"counters\" : %d",
+ 			id.socket, id.die, id.core, aggr_nr);
+ 		break;
+ 	case AGGR_CACHE:
+-		json_out(os, "\"cache\" : \"S%d-D%d-L%d-ID%d\", \"aggregate-number\" : %d",
++		json_out(os, "\"cache\" : \"S%d-D%d-L%d-ID%d\", \"counters\" : %d",
+ 			id.socket, id.die, id.cache_lvl, id.cache, aggr_nr);
+ 		break;
+ 	case AGGR_CLUSTER:
+-		json_out(os, "\"cluster\" : \"S%d-D%d-CLS%d\", \"aggregate-number\" : %d",
++		json_out(os, "\"cluster\" : \"S%d-D%d-CLS%d\", \"counters\" : %d",
+ 			id.socket, id.die, id.cluster, aggr_nr);
+ 		break;
+ 	case AGGR_DIE:
+-		json_out(os, "\"die\" : \"S%d-D%d\", \"aggregate-number\" : %d",
++		json_out(os, "\"die\" : \"S%d-D%d\", \"counters\" : %d",
+ 			id.socket, id.die, aggr_nr);
+ 		break;
+ 	case AGGR_SOCKET:
+-		json_out(os, "\"socket\" : \"S%d\", \"aggregate-number\" : %d",
++		json_out(os, "\"socket\" : \"S%d\", \"counters\" : %d",
+ 			id.socket, aggr_nr);
+ 		break;
+ 	case AGGR_NODE:
+-		json_out(os, "\"node\" : \"N%d\", \"aggregate-number\" : %d",
++		json_out(os, "\"node\" : \"N%d\", \"counters\" : %d",
+ 			id.node, aggr_nr);
+ 		break;
+ 	case AGGR_NONE:
+@@ -1317,7 +1317,7 @@ static void print_header_interval_std(struct perf_stat_config *config,
+ 	case AGGR_CLUSTER:
+ 	case AGGR_CACHE:
+ 	case AGGR_CORE:
+-		fprintf(output, "#%*s %-*s cpus",
++		fprintf(output, "#%*s %-*s ctrs",
+ 			INTERVAL_LEN - 1, "time",
+ 			aggr_header_lens[config->aggr_mode],
+ 			aggr_header_std[config->aggr_mode]);
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 355a7d5c8ab8..b0205e99a4c9 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -526,7 +526,7 @@ static int evsel__merge_aggr_counters(struct evsel *evsel, struct evsel *alias)
+ 		struct perf_counts_values *aggr_counts_a = &ps_a->aggr[i].counts;
+ 		struct perf_counts_values *aggr_counts_b = &ps_b->aggr[i].counts;
+
+-		/* NB: don't increase aggr.nr for aliases */
++		ps_a->aggr[i].nr += ps_b->aggr[i].nr;
+
+ 		aggr_counts_a->val += aggr_counts_b->val;
+ 		aggr_counts_a->ena += aggr_counts_b->ena;
+--
+2.50.0.714.g196bf9f422-goog
+
