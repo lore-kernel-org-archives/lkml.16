@@ -1,158 +1,93 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891F42405EB;
-	Tue, 24 Jun 2025 16:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2480B21B9FD;
+	Tue, 24 Jun 2025 16:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750781709; cv=none; b=HLx/4rPlQ7YQgq03oeZ+ltvk7oVqeZFDaWEOy3okzNbpwtCJM9h1ZsPbGrl3zIe/4uNfCiy9qT1x3vaI3mv4zFPrGefqRcR3HAiekHgTTrJQqXktLXnfGq20ByvQogNIu9RgPsjG/4bpPGArqnLYgmQU2+5JEyt8DUGTIUDwiYY=
+	t=1750781714; cv=none; b=PIVNrGyhP3LMeYSNDHgStDLGlX9VhpaMmtwWE9S7+9Jucn7Ysjsn8AGFeLcrjvuam6MF0AhPDFKMS9bpizj+Z1ePZVlfqE7GUU4UZ3AFb7O/rqdwKRyljqV4aYgERKS6NDh1q2yM1DHyz7H2HA6x2G7XQNlbbWXpfelRSyfC958=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750781709; c=relaxed/simple;
-	bh=lvGwQAAObMcMpnGSVKYiVQnRJ15AOjLbSCae8dPzrUE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S8StAmCtOIYqMmuLbaqRA5ef6GMQGhHJmLF9UCUXjlhr9lO8HP8LIWAZTR1vkphUbYy6yvPYqJDZ8zv/wd2so6xi6cyOqG/6mOL1XLjFqKvlxVt03SQic7976lIhR9clKLXQvokuj3E+gbOO56G1+Y2YynUj1ksE9/Ij6WyAKbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bedy3yV8; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750781714; c=relaxed/simple;
+	bh=Jw+jii3AqB7qQ/n+MMga6gdlZNbQILmRGO7Jr1wVD9Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gOtXmqWOaEMT8EyrvLFmtzydBbyTbQMMfnuOZRFIj8ND5J9ytdYJzhGn2zsfuaAv1ds3OucpmBY/5/tml93zB5XD6Z615lxuQHOyeby3gO6XCuZFW1zxGWMG60cZfP4w4OLeLsJAeT7xo0Tg4IIWfFnKFu6tDLfE9/rP9pyuqq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=XsaIiYkM; arc=none smtp.client-ip=199.89.3.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bedy3yV8"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-23602481460so7816575ad.0;
-        Tue, 24 Jun 2025 09:15:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750781707; x=1751386507; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NOFa14hzPvC6t+oIp0DexT1UxNfRS4Cl15Pgd6Dy9Oc=;
-        b=bedy3yV8ASaKB6pPQpywKeazSqLRtPBDK1ZD257lN+Fy86jw7SEEM7lDAtRciw8ntj
-         YaY/d83k4zy7Jabc/TSYaY7UZNBIu5SCmGclUvZoYXnczuNhadDf11oTW4VQz+xDtfQG
-         q0fNgJYUx7/2AGp3gDIVr7GHeK/fnSOEAfFP32mQgijB1GKjjFfV3CkWwpdiVfadaLwJ
-         5d/mdqXb++yDUUvfCbUjHF8N7b32DxvHlasJADgsQfoS1TSgx+Guf1+wRXBiM3KG1Vn6
-         ceR4RPMRLaM/KrEwCW4ncw5KhOQNRX05JC4OQu060/8BPtDcdKnNUsRaUerTd2/oz+Bw
-         q7Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750781707; x=1751386507;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NOFa14hzPvC6t+oIp0DexT1UxNfRS4Cl15Pgd6Dy9Oc=;
-        b=NHUhA0n9xsRy4pr3nLB6qPMaBtfG9gXZ2kAwdQV+X6DNO/p1NxWuefiTtHZQEnsDXP
-         JjvA4Sshm+FzAOLBs9O1rjfDgPNmf91uNeaOwlhURnXzSqT02SB9fbYSKClrqKWCgTS7
-         cM4FCISfP7me6EEwkegXAAZxt2OxhuYhAzyPUSkrStg0YV0d36GuA4xreJTmZvz90i6+
-         keA9rWDC0Bnwo2tX8OrnXSaetYjnnH4HOwDeWX2xbz3yv2q3B5ODixcl7k4eamUNGsFG
-         pFMk+UXdTw96+3RVDMAVRbFlvPQdGIDwujwU38blu1VxTxMjHyn4BDd9yfODHZFKYyqm
-         e0Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDOsEI/NagvGvFUeAZGBiyvtLgD+bWbLROPUAvjlh984HtkzLDo4EuwjessB6S88g6V9dxuHDxtfE=@vger.kernel.org, AJvYcCUwKSoY0HqV6YhtgMXRLakBmBa4NxQ+6Swa435h8sm5h1OF1VlMWYfCQFKc3x5F88Vvb2zzRUpJYz2YEA4=@vger.kernel.org, AJvYcCV7mY8J5LU/ivXHRX7FWxblj0v2S5ncq2sEtNJqxwv6iqY4dffV7u/KaGsJl/i1ft3il1yx6qkxLd4DiQPZRM+Igw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVH7CbR+574UC3fJb2VQVZXzSpJV0D8PpYFatCWmlc1lUwp/G/
-	GJZcU2PqpkAKwFNSTKFbkkTdZim3pUY4izDTIFhKjlJrVN3AbPLxApXv
-X-Gm-Gg: ASbGncupjfVMfz9qe5/LkWqHDvn/gmqLAQQSiPbwP9OUghXAz2akZAWf5WtNSEINjII
-	LyFkTpP7Y0XNkYjZpcrtW2YWvwdIXG7XxOLPNtaIVU2w8vs0iN6UzTN9q2oV37e6blKDNYE9NUB
-	zEiToDohcQhDRuelTcxZKvAxhROtphOp3rtlW5+EVwf6Pb7dgEdT/KL8zejxvz8wTuxS6reC7Rv
-	ZsB+vsvbqHw0INUOMUylXP2xVvhfY54vbgHB59SrJ08+I+JJZrMgIhBlXlHzjYMWLGUDLVumoaO
-	qyU9BYNZVBIoU7nbUURdiju+7E/ntxm3UAd0NUrq8tR4MF3uf6Rfo00Rjas=
-X-Google-Smtp-Source: AGHT+IHG7rYkinFLRzsG4MwI6gkoEJZsqgBi83L3LCSzHE9voyWIDchNPTp5X+xH8/2vrw7ovBDS3g==
-X-Received: by 2002:a17:902:f54f:b0:235:ea0d:ae23 with SMTP id d9443c01a7336-2381ddd180dmr3846685ad.6.1750781706256;
-        Tue, 24 Jun 2025 09:15:06 -0700 (PDT)
-Received: from hiagonb ([67.159.246.222])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d839618esm115515765ad.33.2025.06.24.09.15.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 09:15:05 -0700 (PDT)
-Date: Tue, 24 Jun 2025 13:15:00 -0300
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@oss.nxp.com>, daniel.baluta@nxp.com,
-	iuliana.prodan@oss.nxp.com,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v5 2/3] remoteproc: imx_rproc: skip clock enable when
- M-core is managed by the SCU
-Message-ID: <20250624161500.odnopjv5jqvyyus2@hiagonb>
-References: <20250617193450.183889-1-hiagofranco@gmail.com>
- <20250617193450.183889-3-hiagofranco@gmail.com>
- <aFlvqK6SHvWHIpMn@p14s>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="XsaIiYkM"
+Received: from localhost (localhost [127.0.0.1])
+	by 003.mia.mailroute.net (Postfix) with ESMTP id 4bRVR30xytzlgqV2;
+	Tue, 24 Jun 2025 16:15:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1750781708; x=1753373709; bh=7qcQNUHgV1N9LnFZH512TXGo
+	pEde8MG1HM/QzXXuiMs=; b=XsaIiYkMwpmUAdL/lZgWAvTZXX1aPpkSW5v7Il8l
+	w1mziKN33dNk2cls8t+ni5BZYk39g4iXojYDJbtV6hbmkwtdlrntD5jMQM1CkzMW
+	yj2FhBurP9YCByVxo2Gn55Z9y9U8gD3BVRHoRmfuVv9flnYypA8mQ8fg3fSD5nm+
+	XJxNeTDZsgJTpxKiNvTNWb3u+/GjyvIf4WdT0kBOzZxj5rNn1e3/oDKhZGEWBuYX
+	bm4fHzHoQQ4K4PrCoRjvqBxdBVoPaKlSag3rV+LwFEb9bTufwNxG1tK8k07XE2Ta
+	eWIhIeCNQjocrks1rNsOyQSkLqTI6dvFWnlrbH/rIbCRqw==
+X-Virus-Scanned: by MailRoute
+Received: from 003.mia.mailroute.net ([127.0.0.1])
+ by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id a3X19X6cxwTP; Tue, 24 Jun 2025 16:15:08 +0000 (UTC)
+Received: from [100.118.141.242] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4bRVQp006CzlgqTy;
+	Tue, 24 Jun 2025 16:14:56 +0000 (UTC)
+Message-ID: <a15b8f6e-5ad5-4d16-98d4-79cf63619f6e@acm.org>
+Date: Tue, 24 Jun 2025 09:14:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFlvqK6SHvWHIpMn@p14s>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scsi: ufs: preventing bus hang crash during emergency
+ power off
+To: Bo Ye <bo.ye@mediatek.com>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Avri Altman <avri.altman@wdc.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: xiujuan.tan@mediatek.com, Qilin Tan <qilin.tan@mediatek.com>,
+ linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <20250519073814.167264-1-bo.ye@mediatek.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250519073814.167264-1-bo.ye@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Mathieu,
+On 5/19/25 12:38 AM, Bo Ye wrote:
+> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+> index 7735421e3991..a1013aea8e90 100644
+> --- a/drivers/ufs/core/ufshcd.c
+> +++ b/drivers/ufs/core/ufshcd.c
+> @@ -10262,6 +10262,7 @@ static void ufshcd_wl_shutdown(struct device *dev)
+>   		scsi_device_set_state(sdev, SDEV_OFFLINE);
+>   		mutex_unlock(&sdev->state_mutex);
+>   	}
+> +	ufshcd_wait_for_doorbell_clr(hba, 5 * USEC_PER_SEC);
+>   	__ufshcd_wl_suspend(hba, UFS_SHUTDOWN_PM);
+>   
+>   	/*
 
-On Mon, Jun 23, 2025 at 09:15:52AM -0600, Mathieu Poirier wrote:
-> Hi Hiago,
-> 
-> On Tue, Jun 17, 2025 at 04:34:49PM -0300, Hiago De Franco wrote:
-> > From: Hiago De Franco <hiago.franco@toradex.com>
-> > 
-> > For the i.MX8X and i.MX8 family SoCs, when the M-core is powered up
-> > by the bootloader, M-core and Linux are in same SCFW (System Controller
-> > Firmware) partition, so linux has permission to control M-core.
-> 
-> Ok
-> 
-> > 
-> > But when M-core is started, the SCFW will automatically enable the clock
-> 
-> I find the "But when M-core is started" part confusing.  Started by who?  And
-> are you making a distinction between "powered up" and "started"?  It is not
-> possible for someone that doesn't have HW documentation to understand what is
-> going on.
+This code path is not only triggered when using a UFSHCI 3.0 controller
+but also when using a UFSHCI 4.0 controller.
+ufshcd_wait_for_doorbell_clr() only supports the legacy single doorbell
+mode. Please make sure that the fix supports both the legacy single
+doorbell mode and MCQ.
 
-Ok, understood, I will improve this in the next revision. Just to make
-clear, I am talking about Cortex-A bootloader starting Cortex-M (U-Boot
-bootaux command in this case). This means powered up, started and
-running.
+Thanks,
 
-> 
-> > and configure the rate, and any users that want to enable the clock will
-> > get error 'LOCKED' from SCFW. So current imx_rproc.c probe function
-> > fails because clk_prepare_enable also fails. With that, the M-core power
-> > domain is powered off when it is still running, causing a SCU (System
-> > Controller Unit) fault reset, and the system restarts.
-> > 
-> > To address the issue, ignore handling the clk for i.MX8X and i.MX8 M-core,
-> > because SCFW will automatically enable and configure the clock.
-> > 
-> > Suggested-by: Peng Fan <peng.fan@nxp.com>
-> > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
-> > ---
-> > v4 -> v5:
-> >  - Unchanged.
-> > v3 -> v4:
-> >  - Unchanged.
-> > v2 -> v3:
-> >  - Unchanged.
-> > v1 -> v2:
-> >  - Commit description updated, as suggested. Fixed Peng Fan email.
-> > ---
-> >  drivers/remoteproc/imx_rproc.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> > index 74299af1d7f1..627e57a88db2 100644
-> > --- a/drivers/remoteproc/imx_rproc.c
-> > +++ b/drivers/remoteproc/imx_rproc.c
-> > @@ -1029,8 +1029,8 @@ static int imx_rproc_clk_enable(struct imx_rproc *priv)
-> >  	struct device *dev = priv->dev;
-> >  	int ret;
-> >  
-> > -	/* Remote core is not under control of Linux */
-> > -	if (dcfg->method == IMX_RPROC_NONE)
-> > +	/* Remote core is not under control of Linux or it is managed by SCU API */
-> > +	if (dcfg->method == IMX_RPROC_NONE || dcfg->method == IMX_RPROC_SCU_API)
-> >  		return 0;
-> >  
-> >  	priv->clk = devm_clk_get(dev, NULL);
-> > -- 
-> > 2.39.5
-> > 
+Bart.
