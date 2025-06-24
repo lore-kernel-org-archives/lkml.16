@@ -1,91 +1,98 @@
-Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DFF22CBF9
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBDA156B81;
+	Tue, 24 Jun 2025 12:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750769066; cv=none; b=MQ80x/7c88FDHkAUdcDvrJQ+VOihHxSUMDfzD3ukEKCCUIgY4wogu7oyrMt3O3Mkt4BGx6M4HjOxsSBQJhf31R8fUGceprVEfbyWrFG4KY6+4Kz/MHqG6k+RI5FhNz49CWety8Qc+aV62ZzWWVALg5SuK6ibj72tq5K7jXDzzLg=
+	t=1750769189; cv=none; b=Yd2S6oaNi9JsFcUSImvzlQbRRv8dbHS3aeCpQ+dSeeEKboPi/SvQaESd75pzCPMvkvZ6mhjTeulIHvYd+pUHopsSjHx+tYGUazX1/LzkWQ6SfWLwrN/sv9CIwhYtnIzxns+fB8FsQwhVvapU4SapybRZxgSTNP20dK272F+CUbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750769066; c=relaxed/simple;
-	bh=xKH1I/vrL/pyyYmCDEAIIsVLnzWhz3lMqOmryPR161I=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I5Rq6N7SvBO5/9DI7OYE4jrX8hWshQ3ln30bu+tPI+I3v8IzzMPdri8ZNqMyhvLfdZOk1lMQZ4HmRFfOsmOXjyvlV7CyuU166plYB6w/Tes6X3uu7IXPel6Sfsl4H98Ai1puwwsRq94GaA5iOt43ZB/6P/cUztvkmG/auYjGB+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=m3S457P9; arc=none smtp.client-ip=99.78.197.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1750769189; c=relaxed/simple;
+	bh=RdmvkU7zbsp1GGLnDF1okwRvijnnAgoRsQAHXDHpULM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=Q7GCTaD5wnG2ryeUMr6SwPHIo1hbHtAtRuhwobed+c3rilfJSlMWKY/CaGa6MLbYc97Q5/cpF6E0gwmGuLHYKwkplZKebThELoqxWXmLbqlgoyGQnCv7g04HojhR71hMhdcJijxtwc9ra+gD2TKcpNlcGqXMgWxfz91KU2fmVsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TbKSiOw8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="m3S457P9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1750769065; x=1782305065;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=XdhYht358jnNIuTVyQjBOMeJxFoewBGgDQ3f9ZJ5D4k=;
-  b=m3S457P9Pk1cHQ+XNSirioyikxInwVH5T3Bl9PzJ/J+0HFjDaIyYQ8+9
-   SRCXzRkhPLcps7PkNli5V8LPF7hYla0elPrulEIU/NxfKopdIb0hyRCkk
-   9yG9GtuSH8l1WpTTVO34y/jArrMANVMhb3tFh3E6mi0auPY4EcwQDbDji
-   nYuQbxlTgXhr2UGeyv2j9ScgUgS4u6OXhzZJ0JHJVjgiazu9Zaknf+7m0
-   rg+PG5mM87wBBDdB0hKNd9Xo57mRvVbVFOafHJF4ovDawGL28N5eqk/Pe
-   nULMMi3EQkchZoKfwEUU7QS7DBfFVXas5Fv2xWgix5hj1i6djGZ9Jd9ze
-   g==;
-X-IronPort-AV: E=Sophos;i="6.16,261,1744070400"; 
-   d="scan'208";a="419451125"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 12:44:22 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:32657]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.28.168:2525] with esmtp (Farcaster)
- id f4877d73-902a-40af-b5b9-7b8e179865b2; Tue, 24 Jun 2025 12:44:21 +0000 (UTC)
-X-Farcaster-Flow-ID: f4877d73-902a-40af-b5b9-7b8e179865b2
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 24 Jun 2025 12:44:21 +0000
-Received: from b0be8375a521.amazon.com (10.37.245.7) by
- EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 24 Jun 2025 12:44:20 +0000
-From: Kohei Enju <enjuk@amazon.com>
-To: <syzbot+e04e2c007ba2c80476cb@syzkaller.appspotmail.com>
-CC: <linux-kernel@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
-Subject: Re: [syzbot] [hams?] KASAN: slab-use-after-free Read in rose_get_neigh
-Date: Tue, 24 Jun 2025 21:43:20 +0900
-Message-ID: <20250624124408.28785-1-enjuk@amazon.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <6807019a.050a0220.380c13.0001.GAE@google.com>
-References: <6807019a.050a0220.380c13.0001.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TbKSiOw8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16FC6C4CEE3;
+	Tue, 24 Jun 2025 12:46:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750769188;
+	bh=RdmvkU7zbsp1GGLnDF1okwRvijnnAgoRsQAHXDHpULM=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=TbKSiOw8qOeDDDpO0G4u2IR+zED7E6RjYG4IyxZIdZjBRaqK8TkSxwz/Zxh2CB6tv
+	 VPuNpPLmIlNVRS4a54Y42deOed29dHUcWQCkFdn4bfISW52QsSDGu+Cm0s/4JC+xiS
+	 sGwMBKoJrJN1CZ/6E1prZZDSSZ2HuM/2EyP9J1yR3DBC4wa9bXY+R5EgZwPRpdruhp
+	 nej8i1IpvPioEt+zdObcQ1xJPmKDs3flKtmTb3szLJEdxfVxJ5VL9zUNsny6Y1M/OP
+	 gxeIBA15jDbDp1JzIY84KSlo46AoxG4B19HGDKBUqIgskVVVBYgcQ3hk2cpHfI7Ydz
+	 RkLHZBCMimPnQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D041UWA003.ant.amazon.com (10.13.139.105) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 24 Jun 2025 14:46:23 +0200
+Message-Id: <DAURVNHM7PKM.PLUFKFRVXR25@kernel.org>
+Cc: "Boqun Feng" <boqun.feng@gmail.com>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Danilo Krummrich" <dakr@kernel.org>, "Miguel
+ Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Gary
+ Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Trevor Gross" <tmgross@umich.edu>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Bjorn Helgaas"
+ <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C2=B4nski?=
+ <kwilczynski@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v4 3/6] rust: irq: add support for non-threaded IRQs and
+ handlers
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Daniel Almeida" <daniel.almeida@collabora.com>
+X-Mailer: aerc 0.20.1
+References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com> <20250608-topics-tyr-request_irq-v4-3-81cb81fb8073@collabora.com> <aEbJt0YSc3-60OBY@pollux> <CAH5fLghDbrgO2PiKyKZ87UrtouG25xWhVP_YmcgO0fFcnvZRkQ@mail.gmail.com> <DAU0NHTHTDG4.2HNEABNAI8GHZ@kernel.org> <aFmPZMLGngAE_IHJ@tardis.local> <aFmodsQK6iatXKoZ@tardis.local> <DAU5TAFKJQOF.2DFO7YAHZA4V2@kernel.org> <DB7F39EC-5F7D-49DA-BF2B-6200998B45E2@collabora.com>
+In-Reply-To: <DB7F39EC-5F7D-49DA-BF2B-6200998B45E2@collabora.com>
 
-#syz test
+On Tue Jun 24, 2025 at 2:31 PM CEST, Daniel Almeida wrote:
+> On 23 Jun 2025, at 16:28, Benno Lossin <lossin@kernel.org> wrote:
+>> On Mon Jun 23, 2025 at 9:18 PM CEST, Boqun Feng wrote:
+>>>    try_pin_init!(&this in Self {
+>>>        handler,
+>>>        inner: Devres::new(
+>>>            dev,
+>>>            RegistrationInner {
+>>>                // Needs to use `handler` address as cookie, same for
+>>>                // request_irq().
+>>>                cookie: &raw (*(this.as_ptr().cast()).handler),
+>>>                irq: {
+>>>                     to_result(unsafe { bindings::request_irq(...) })?;
+>>>  irq
+>>> }
+>>>             },
+>>>             GFP_KERNEL,
+>>>        )?,
+>>>        _pin: PhantomPinned
+>>>    })
+>>=20
+>> Well yes and no, with the Devres changes, the `cookie` can just be the
+>> address of the `RegistrationInner` & we can do it this way :)
+>>=20
+>> ---
+>> Cheers,
+>> Benno
+>
+>
+> No, we need this to be the address of the the whole thing (i.e.
+> Registration<T>), otherwise you can=E2=80=99t access the handler in the i=
+rq
+> callback.
 
-diff --git a/net/rose/rose_route.c b/net/rose/rose_route.c
-index 2dd6bd3a3011..a85969e2369f 100644
---- a/net/rose/rose_route.c
-+++ b/net/rose/rose_route.c
-@@ -480,6 +480,7 @@ void rose_rt_device_down(struct net_device *dev)
- 	struct rose_neigh *s, *rose_neigh;
- 	struct rose_node  *t, *rose_node;
- 	int i;
-+	unsigned char old_count;
- 
- 	spin_lock_bh(&rose_node_list_lock);
- 	spin_lock_bh(&rose_neigh_list_lock);
-@@ -497,7 +498,8 @@ void rose_rt_device_down(struct net_device *dev)
- 			t         = rose_node;
- 			rose_node = rose_node->next;
- 
--			for (i = 0; i < t->count; i++) {
-+			old_count = t->count;
-+			for (i = 0; i < old_count; i++) {
- 				if (t->neighbour[i] != s)
- 					continue;
- 
+Gotcha, so you keep the cookie field, but you should still be able to
+use `try_pin_init` & the devres improvements to avoid the use of
+`pin_init_from_closure`.
+
+---
+Cheers,
+Benno
