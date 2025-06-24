@@ -1,103 +1,97 @@
-Received: from mx9.didiglobal.com (mx9.didiglobal.com [111.202.70.124])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id E5E1D2C159D;
-	Tue, 24 Jun 2025 12:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.202.70.124
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8342BD5A4;
+	Tue, 24 Jun 2025 12:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750767343; cv=none; b=N6/XtD50NlefIPqY3rzSp5B52evU2W60+bY9oxu5uQJ1YQRyRjv3qE8ErXa2ALYdfSqp2VYrSrkmhiGX2YsIuj9Zspz7xidx6KWANwCVpVfVzBFWot837mMKmV/VMfJSQ93TFPeOSVmaVQqbf1QajBXDLkKPujRaRU6glbbUSI0=
+	t=1750767345; cv=none; b=k7CPWNAzF8R+3ahuoq2ICWTvtxW+hZwkwrZRETQWje0mjaewRb3CUstnUyQe54FzUIX1zgvi9k9x6hsBPePaGnsH+Oe4ad6TbmLm9dq3fn9E5fRDsvl4Nm9GgKNzVS469bXD75Z7MaqlptC33mgVAI3rgLjayOJv0512IK4yJ8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750767343; c=relaxed/simple;
-	bh=UUOG9CnjyAD4jWpFLTC0doAjRjHNZAiWQCI/Hwlwayg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:Content-Type:
-	 MIME-Version; b=R+9PkCRo2qa2LnOOyOA13b5xHrD+HdJeXC1UZJDAvFqQt5Tr6d4IdA95PdseZpfCk/2dNp7usfud/8dU5aABVxRGxu/XBRI9w6Dld6c/K/y0JtZF6EpAuaIVqNnQtT0Och64MDsQxknDnNR4ty/i2LVq2kYwrcOMN3H1D3OTlN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com; spf=pass smtp.mailfrom=didiglobal.com; dkim=pass (1024-bit key) header.d=didiglobal.com header.i=@didiglobal.com header.b=aA5b0ent; arc=none smtp.client-ip=111.202.70.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=didiglobal.com
+	s=arc-20240116; t=1750767345; c=relaxed/simple;
+	bh=Xx62FWVT1U6s5vNt/ztdV8jPN66m7tkPjCC9BQ+v0B8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TI5DXt1lY2aKAcTP2BETNkb6lDGaYkyKmWNdLFQF/rPxj2LBByHyIrYiZqYeqf9cmEqwCzuWxgMvNT3RjARhyTuIsN75giaR4tDt6YLTfqQ2upJidHJnSY1/DhHn9+xX0+J7qU0FkLFYM2qClC87XmeLQOsbGnIfRVLpKTmmkBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Y5VKzzUD; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=didiglobal.com header.i=@didiglobal.com header.b="aA5b0ent"
-Received: from mail.didiglobal.com (unknown [10.79.64.20])
-	by mx9.didiglobal.com (MailData Gateway V2.8.8) with ESMTPS id 06118187957BCC;
-	Tue, 24 Jun 2025 20:11:31 +0800 (CST)
-Received: from BJ01-ACTMBX-07.didichuxing.com (10.79.64.14) by
- BJ01-ACTMBX-01.didichuxing.com (10.79.64.20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Tue, 24 Jun 2025 20:12:10 +0800
-Received: from BJ03-ACTMBX-07.didichuxing.com (10.79.71.34) by
- BJ01-ACTMBX-07.didichuxing.com (10.79.64.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Tue, 24 Jun 2025 20:12:09 +0800
-Received: from BJ03-ACTMBX-07.didichuxing.com ([fe80::b00b:de35:2067:9787]) by
- BJ03-ACTMBX-07.didichuxing.com ([fe80::b00b:de35:2067:9787%7]) with mapi id
- 15.02.1748.010; Tue, 24 Jun 2025 20:12:09 +0800
-X-MD-Sfrom: chentaotao@didiglobal.com
-X-MD-SrcIP: 10.79.64.20
-From: =?gb2312?B?s8LMzszOIFRhb3RhbyBDaGVu?= <chentaotao@didiglobal.com>
-To: "tytso@mit.edu" <tytso@mit.edu>, "hch@infradead.org" <hch@infradead.org>,
-	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>, "willy@infradead.org"
-	<willy@infradead.org>, "brauner@kernel.org" <brauner@kernel.org>,
-	"jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-	"rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, "tursulin@ursulin.net"
-	<tursulin@ursulin.net>, "airlied@gmail.com" <airlied@gmail.com>
-CC: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "chentao325@qq.com" <chentao325@qq.com>,
-	=?gb2312?B?s8LMzszOIFRhb3RhbyBDaGVu?= <chentaotao@didiglobal.com>
-Subject: [PATCH v2 4/5] ext4: handle IOCB_DONTCACHE in buffered write path
-Thread-Topic: [PATCH v2 4/5] ext4: handle IOCB_DONTCACHE in buffered write
- path
-Thread-Index: AQHb5QE1yGRcX3naAEuwD6HzjMhP6Q==
-Date: Tue, 24 Jun 2025 12:12:09 +0000
-Message-ID: <20250624121149.2927-5-chentaotao@didiglobal.com>
-In-Reply-To: <20250624121149.2927-1-chentaotao@didiglobal.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Y5VKzzUD"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5475C40E019C;
+	Tue, 24 Jun 2025 12:15:33 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id JlIa62tjnAGT; Tue, 24 Jun 2025 12:15:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1750767329; bh=lMTkyq6kQanOXEnWGlmpybqV/LnRpRG/rDZlliMXUVU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y5VKzzUD3eW3pQQmM5/IYqgLXZ/S6U8M8dpzDCwYbE0lrlijqCpiqSYAR1ULWGo9q
+	 QU+vtBUKvzEHbpBQ80h2ouaOxV/evUAGk8mdBrRecn++yzRS5Ct4Fm4BzfpfnK6nMD
+	 OnFu/t2ZZuJotRLcvJJ+MtGqWkC86jQRNrExkzhLYeWqjjnM3VrJkVP3oVcvxiUiAp
+	 3ekTnZWZ6RxCGHzeEPeydj3Z32EOjF5Qjd4d/olywXiXSh5D3Ir4FotOpIlP/xKTj1
+	 j+ZZQdQk80waFpMPye50v895rYyU0eKsCN2BU3r/Mu0B5DWNflZ3jnDBfXYM+d5jzx
+	 x9aQos+UtFKO8Ir3bBxzVhbLuw+p8YqtUoB/UecPphCO+JxxrUtuD3km3wupNW6bBq
+	 TpAlZjgnLniDeu9OqTR1DPhV2rVnsD8+YkZBPfLP2R/9IbF+CA1IoVCUK3mcam7iPo
+	 jvK6LheO+XHj+sXAHQgweROU7FAI9wK2KHKt3lok63/BAAucDveK3+wIhcKBwZYqUH
+	 nmbzn1uLebTYNfm0a4L07j1yuLkTkeJCgz+Tp6UbrrIKg94OHKzaHHEXAT3xlIbUIf
+	 y1crTIQsNXPnBKPjknqDathP0R2QI60N11k5+LPT0wm0MhUf7kFRlVx365He+mR9hT
+	 M4eeUG9phqUVhz9cHNfxYFeg=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6754240E01D5;
+	Tue, 24 Jun 2025 12:15:21 +0000 (UTC)
+Date: Tue, 24 Jun 2025 14:15:14 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the tip tree
+Message-ID: <20250624121514.GBaFqW0pfVsvEgrRiW@fat_crate.local>
+References: <20250624211528.3b0b3bcb@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=didiglobal.com;
-	s=2025; t=1750767112;
-	bh=UUOG9CnjyAD4jWpFLTC0doAjRjHNZAiWQCI/Hwlwayg=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type;
-	b=aA5b0entemeSUTUM68+duldd0xmEU+TuNweqA1Zwyg6zKSSslLqekm1ZTqq53Py+k
-	 QXFs+50AmoUq8r/dLYGr5rk5tV2ZPkhF2JdL23bTlKZgWiS64ttVhcPjfpB7waWey7
-	 oOfmLnJpgrV4Epk/UiDqQZqbbMuQqN7PuMSRXEZM=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250624211528.3b0b3bcb@canb.auug.org.au>
 
-RnJvbTogVGFvdGFvIENoZW4gPGNoZW50YW90YW9AZGlkaWdsb2JhbC5jb20+DQoNCkFkZCBzdXBw
-b3J0IGZvciB0aGUgSU9DQl9ET05UQ0FDSEUgZmxhZyBpbiBleHQ0X3dyaXRlX2JlZ2luKCkgYW5k
-DQpleHQ0X2RhX3dyaXRlX2JlZ2luKCkuIFdoZW4gc2V0IGluIHRoZSBraW9jYiwgdGhlIEZHUF9E
-T05UQ0FDSEUgYml0DQppcyBwYXNzZWQgdG8gdGhlIHBhZ2UgY2FjaGUgbG9va3VwLCBwcmV2ZW50
-aW5nIHdyaXR0ZW4gcGFnZXMgZnJvbQ0KYmVpbmcgcmV0YWluZWQgaW4gdGhlIGNhY2hlLg0KDQpP
-bmx5IHRoZSBoYW5kbGluZyBsb2dpYyBpcyBpbXBsZW1lbnRlZCBoZXJlOyB0aGUgYmVoYXZpb3Ig
-cmVtYWlucw0KaW5hY3RpdmUgdW50aWwgZXh0NCBhZHZlcnRpc2VzIHN1cHBvcnQgdmlhIEZPUF9E
-T05UQ0FDSEUuDQoNClRoaXMgY2hhbmdlIHJlbGllcyBvbiBwcmlvciBwYXRjaGVzIHRoYXQgcmVm
-YWN0b3IgdGhlIHdyaXRlX2JlZ2luDQppbnRlcmZhY2UgdG8gdXNlIHN0cnVjdCBraW9jYiBhbmQg
-aW50cm9kdWNlIERPTlRDQUNIRSBoYW5kbGluZyBpbiBleHQ0Lg0KDQpQYXJ0IG9mIGEgc2VyaWVz
-IHJlZmFjdG9yaW5nIGFkZHJlc3Nfc3BhY2Vfb3BlcmF0aW9ucyB3cml0ZV9iZWdpbiBhbmQNCndy
-aXRlX2VuZCBjYWxsYmFja3MgdG8gdXNlIHN0cnVjdCBraW9jYiBmb3IgcGFzc2luZyB3cml0ZSBj
-b250ZXh0IGFuZA0KZmxhZ3MuDQoNClNpZ25lZC1vZmYtYnk6IFRhb3RhbyBDaGVuIDxjaGVudGFv
-dGFvQGRpZGlnbG9iYWwuY29tPg0KLS0tDQogZnMvZXh0NC9pbm9kZS5jIHwgNiArKysrKysNCiAx
-IGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9mcy9leHQ0L2lu
-b2RlLmMgYi9mcy9leHQ0L2lub2RlLmMNCmluZGV4IDdmZjcwMDlmOTc5OS4uM2E4MmI1MjU2NWNj
-IDEwMDY0NA0KLS0tIGEvZnMvZXh0NC9pbm9kZS5jDQorKysgYi9mcy9leHQ0L2lub2RlLmMNCkBA
-IC0xMjY5LDYgKzEyNjksOSBAQCBzdGF0aWMgaW50IGV4dDRfd3JpdGVfYmVnaW4oc3RydWN0IGtp
-b2NiICppb2NiLCBzdHJ1Y3QgYWRkcmVzc19zcGFjZSAqbWFwcGluZywNCiAJaWYgKHVubGlrZWx5
-KHJldCkpDQogCQlyZXR1cm4gcmV0Ow0KIA0KKwlpZiAoaW9jYi0+a2lfZmxhZ3MgJiBJT0NCX0RP
-TlRDQUNIRSkNCisJCWZncCB8PSBGR1BfRE9OVENBQ0hFOw0KKw0KIAl0cmFjZV9leHQ0X3dyaXRl
-X2JlZ2luKGlub2RlLCBwb3MsIGxlbik7DQogCS8qDQogCSAqIFJlc2VydmUgb25lIGJsb2NrIG1v
-cmUgZm9yIGFkZGl0aW9uIHRvIG9ycGhhbiBsaXN0IGluIGNhc2UNCkBAIC0zMDY2LDYgKzMwNjks
-OSBAQCBzdGF0aWMgaW50IGV4dDRfZGFfd3JpdGVfYmVnaW4oc3RydWN0IGtpb2NiICppb2NiLCBz
-dHJ1Y3QgYWRkcmVzc19zcGFjZSAqbWFwcGluZw0KIAkJCXJldHVybiAwOw0KIAl9DQogDQorCWlm
-IChpb2NiLT5raV9mbGFncyAmIElPQ0JfRE9OVENBQ0hFKQ0KKwkJZmdwIHw9IEZHUF9ET05UQ0FD
-SEU7DQorDQogcmV0cnk6DQogCWZncCB8PSBmZ2Zfc2V0X29yZGVyKGxlbik7DQogCWZvbGlvID0g
-X19maWxlbWFwX2dldF9mb2xpbyhtYXBwaW5nLCBpbmRleCwgZmdwLA0KLS0gDQoyLjM0LjENCg==
+On Tue, Jun 24, 2025 at 09:15:28PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> In commit
+> 
+>   e88b1627b86e ("x86/bugs: Allow ITS stuffing in eIBRS+retpoline mode also")
+> 
+> Fixes tag
+> 
+>   Fixes: 8c57ca583ebf ("x86/bugs: Restructure ITS mitigation")
+> 
+> has these problem(s):
+> 
+>   - Target SHA1 does not exist
+> 
+> Maybe you meant
+> 
+> Fixes: 61ab72c2c6bf ("x86/bugs: Restructure ITS mitigation")
+
+Fixed.
+
+Thanks Stephen!
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
