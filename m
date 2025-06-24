@@ -1,495 +1,147 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CE9254AE4
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40102571AD;
+	Tue, 24 Jun 2025 07:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750751097; cv=none; b=sVy9n+YpApUXHL1GHC84OuB+xrVe1mo7CyMhahcALga1hapdPdiCCpwytk2M/8z9PocwY2XXdLlrU1WEB/lLa7OEdvrZJnZSGEM70UjYKtpUH4SlI4dzgERb3nLYasZqeyQw0s24wf8OMVdYAzwg5mGO+7NwF8wM/6jTizyBNo0=
+	t=1750751116; cv=none; b=APJVO3THenDlBdD9HQvqUXGmwb9JLMK4YLpcbYt98iFCcB4PPmakpXU6n7YD5Kp6Gern2CYeTi6fmUaRO1nzJUzrzWuLA+mTatZj9TJpot524V43xRtA3s8lXvbjAIfrUaPdafud8CkWOkVKFLhjqLYizMVTLWLH6m7wTcVWPJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750751097; c=relaxed/simple;
-	bh=2Gos8N7U7eI6lMS55grsNeC/vu4aARhZvYGC5YE7scM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qfwR6f21JExRUODwy0iF4SnC1jWFoP5ug/s2MvkXxcA0jAM/W/btuMIICbWQNGh1m9C+5ZFvczML6qEUbt1gKT+nbs8pOvpDKlW6mZoIPiR2K2D94qGh60fdZ5ZoGRrTFbGlFQ3sNLPsPkZhbOhImebyDQkarHxmY9mRzwIYUm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=VEj+Yyi/; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1750751116; c=relaxed/simple;
+	bh=OMYfjk/HFBuh+RTKM3jVKi0nByrXItMtgixjn74Xy6A=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gLv5jK/HO+G+xSEpO/5ujEPW6GS1BlS3JgsGByJ98Bt+XgSenUcrUCNSLCXmbk5yqlWGMGNZlR1rveABJoJRD3KJOSVD0LjIrAoOgJLJqrCR4NkA7HZDjQq4B5qVRtgNKIAwh22hnBgxI0J4U7NZlwJIMQNd1rR+vEiVotzXlQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EN/DqN8S; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="VEj+Yyi/"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553b584ac96so108587e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:44:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EN/DqN8S"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so3931910f8f.1;
+        Tue, 24 Jun 2025 00:45:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1750751093; x=1751355893; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NQ2zvUmTF85vAASXhu7tdr9oFH3zCkNUtz3N25jGoPw=;
-        b=VEj+Yyi/QnPsO8IlnpjcFsOMyCknglTJeUrcwKE3SRu7GONYXgZWnMB75fOmRvxfQA
-         kKbj6JsshfjhyiIKLS/iWUG+Gzs4DOfn3Wk7LPynSmRlQGt8fjWIEApXkL/e1JRTvKhy
-         nGA5xkCmhzP+sKj5mZFt+fD4jNko7a24K07NUwe+CPJuGnkLHMf6nmWb/j0gZkdAwQyA
-         fQCSkqsV3zkUmzQ3eVopNP0t7FSrVvqinONQsrPcaf//XbJIqJKE49YZp28hkIanNJlC
-         5N7OaXVn/WahNS2TQST9uvVU4m7qKVp4Ka1bkg+UD49byw5KZdR5P5W1WebCXbB54Z2/
-         7zeg==
+        d=gmail.com; s=20230601; t=1750751113; x=1751355913; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=g0Qw5wb1qPbwmyPbsLrs16hi2rdMz6r9QLI+Zkxs80I=;
+        b=EN/DqN8SQPSyhcRP+BHiwZGHKO32f62KZ2sT8LdzHAa/b94z35+3IZGbyHDdyYQbws
+         3akHsaFvQ/cm+2vm039NwWc/xJXzNAKr77EuD9sE73L/CoULckEbSUPhhBa80+GEESda
+         6SxEtLMP6j+O3hhZqQjPNJ0teR1t8Xahx1eOz54pARkv3kQQSOhIDFMsV+XBuGdBR/hP
+         XxnYCFngrcBAx3GApXYpVeVIs3pZ1CxnKT/t4vP9ONDYCI3ereKaGxn7yXCd4FJcJu0A
+         XXywV10AYSN9w5UTBhI62VQsKBSIINZ8CQF1cx3M8BERM+bllgLaKeNV/n+cMy1xwWW8
+         XQDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750751093; x=1751355893;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NQ2zvUmTF85vAASXhu7tdr9oFH3zCkNUtz3N25jGoPw=;
-        b=aKcLHaAHE0gIU6jOTEjm9ztejxU6uiGXPB8tbtNLmiYf0eNlvcK8FG7/9+q1CVKfrJ
-         xN/KKV0+sGkDAJWWC0wplS0dRw4LIAuh6Yt76FPMgRXoNGLeJ3pUG2xyKhQ1kha5akY8
-         8pROTYZRi/2N5SxUUo8DmJDJug9K0W7VCL2iU+R93kozAO3xCn3UohCpY2tJ8Bm4/aei
-         yHAmZeLVBjsvoa9MHSY2mbmo5IM9VtQdL1k2JEjTkkTQfzIt/c1n4DLl6HnGHzIVBXrj
-         cRtVVH/uvpGOzz3AIrX4cXImpXSNwEm4I4sbQar77fQcb5MvNZ3o4nR7UqyUJj7bDGrl
-         9cRA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMnZem0ftYzEuMhsN/Q6dLaVhzFrhy27zcaqqgxJtUNZNoH82bIaWnx00BBomvdlMFFhTuTDrIQgLqVCc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKwW3Pdy19HdFcfFc4rlRUs0GtI1tgMllGRjjQfIQ4+LlerCm0
-	DgMX7CU+EpMGuzM1d8nzM+QRb26eIXKNUMK3iaYHrmD04ySddKG2QS09sWg61G6pnT/g1LPInFJ
-	bLMrdrs7WbVgMfUy+v+PcHWnbd6T+jnaq4rFKUnia1g==
-X-Gm-Gg: ASbGncvCkz1i3HDaD5f9QVK19ZS1qstnWhmVR/v4eDTb/RxlQXa60Mj+6b5R9NZb9tT
-	kubxQ5Rdcy7qwP74YEzkfO1qN6Z8ol0SL5EAwz0anm4PLDcQVILlXXrq72JXchc0BKKkUf1xBg1
-	zHiicvRTEQjBRerbcPvqimWgdymLuw8wdDxugPz7hqVG277iR2kr15KE/GLFYHre4Aq5E=
-X-Google-Smtp-Source: AGHT+IHuGVyTTobwFY1BlvknqGvpLeFrrR1bczDVqBKyOPULae3fTqXa+vIzqKtGdgWpndqn4a4uzU5Mzp70zeDiZIQ=
-X-Received: by 2002:a05:6512:1104:b0:553:aa32:4106 with SMTP id
- 2adb3069b0e04-553e3bdb2f0mr4350730e87.23.1750751093153; Tue, 24 Jun 2025
- 00:44:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750751113; x=1751355913;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g0Qw5wb1qPbwmyPbsLrs16hi2rdMz6r9QLI+Zkxs80I=;
+        b=TCqD6Rno/nS7iMJ+pJog/SWwz9+Bmi2v72lb4IGXH74vrn+5Yd+PTuQ3avUn49gJs/
+         aAbgnS3hdAbOrK8WasWYvG5DoHGJT7RTMWMg5UrBQh5jQA682NVegTWm7sM9mTV2oHUI
+         ZRtsef8F1Q3FnRWqiPsvDbvl8ZYBX+E2SUXaeN7D1vduImu16HbFZPCiVNuDaB0eT8Z5
+         YQWrgoIGbYCx1o3dIr0Lhq3hpB8BVi/tty3FlGpIpHSeOOE/Be6iHTIGeuiq3+PXDfXv
+         D8SfTTq3aZ0c1bjSnu5cdpoIhzIIVPshM0ICdrdCjnDtqQ+qf+u/+tF8s62aQFn06eeL
+         S9pw==
+X-Forwarded-Encrypted: i=1; AJvYcCV/ogYZ3i8oU54gI012FQFsNllcWdo5FwTSvglUXLgz+mqU46itKc/hJ9LFUg5+znrUheqIhDeFm6Wp@vger.kernel.org, AJvYcCWFYfdeoclyQQjUy2dLW4HS6acw+K4dthQnLdCsICON0boKCJl2c5ToVcOTYeVfrmUS7SPHmqL5u9WbkmM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywzq6EBATubhhPmPyil5BCQIPDCnssAHplGc9Q8mqjHi2t1skCY
+	o1R+sEidUjLm2bTk8YORRAYJWsH7zSRCUGlNzIByCHMmpsE1hgy7WHz2qlCXsg==
+X-Gm-Gg: ASbGncsTXTharGMCDpvnilP3eVKsLZ7YKYdpesACncqDX/apDRneYyGeGFnSLPMv3C+
+	u6oqbmEH23QYTOebgOh7AS/s7UcrAOdj/5sxNF44Ir6H+ptLPGu3xn5S1NK/A8YWkDvok0hgqGx
+	a4F0bzT/9HTqaHsdJUAKixpDsgeNGQc6p3Gl4+d7+i9w8P2A7073hUs1piez9Tv+0a6WaydTET0
+	q6QKkB1j9xx1D28kjtN8+04CN5CAslFRvkcGITx7oaJ9yPDpLHnzoT1ZYT7nQyCQYmMMqiPMW60
+	RVImnJb/p+4mzObcuGG3m+MZk6P72u2Ot7HpI54lp3OxB8VK4dQ6t+C6cirP26FwUnx2/KWsn6v
+	zLttqGMDYtFSxkNKmLw==
+X-Google-Smtp-Source: AGHT+IE0gWJM7aSHVAxN1GTQvphCOkft5ulLOzwhDZvQOYQaffQzFyUGVVNZrQjCmYXfWS8WYgK6DQ==
+X-Received: by 2002:a05:6000:2409:b0:3a6:daff:9e5 with SMTP id ffacd0b85a97d-3a6e71c5b54mr1705345f8f.7.1750751112954;
+        Tue, 24 Jun 2025 00:45:12 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4536470370fsm132895045e9.29.2025.06.24.00.45.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 00:45:11 -0700 (PDT)
+Message-ID: <685a5787.050a0220.20ff0f.fd7a@mx.google.com>
+X-Google-Original-Message-ID: <aFpXhMeTm_7QT8sj@Ansuel-XPS.>
+Date: Tue, 24 Jun 2025 09:45:08 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Andy Shevchenko <andy@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v15 1/2] math.h: provide rounddown_ull variant for
+ rounddown MACRO
+References: <20250623211116.1395-1-ansuelsmth@gmail.com>
+ <CAHp75VcWW=RaHS9Yb8BcK2Jt7qtNOQzA3eDOZQ88RQG63981cQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1750234270.git.hezhongkun.hzk@bytedance.com> <a57jjrtddjc4wjbrrjpyhfdx475zwpuetmkibeorboo7csc7aw@foqsmf5ipr73>
-In-Reply-To: <a57jjrtddjc4wjbrrjpyhfdx475zwpuetmkibeorboo7csc7aw@foqsmf5ipr73>
-From: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Date: Tue, 24 Jun 2025 15:44:16 +0800
-X-Gm-Features: Ac12FXx4DweE5nEuNVlebPGSezJ2aOynsOY_jmkaW13eT6o26dRouTnjL5vacXk
-Message-ID: <CACSyD1Pwzx62HTX9a45GW+droGXbfXeG2TGTB5M1p2qxG4vSCg@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH 0/2] Postpone memcg reclaim to
- return-to-user path
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: akpm@linux-foundation.org, tytso@mit.edu, jack@suse.com, 
-	hannes@cmpxchg.org, mhocko@kernel.org, muchun.song@linux.dev, 
-	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VcWW=RaHS9Yb8BcK2Jt7qtNOQzA3eDOZQ88RQG63981cQ@mail.gmail.com>
 
-Hi Shakeel,
-
-Thank you for your detailed feedback and sorry for the late reply.
-I need a bit more time to thoroughly review the case.
-
-On Thu, Jun 19, 2025 at 6:37=E2=80=AFAM Shakeel Butt <shakeel.butt@linux.de=
-v> wrote:
->
-> Hi Zhongkun,
->
-> Thanks for a very detailed and awesome description of the problem. This
-> is a real issue and we at Meta face similar scenarios as well. However I
-> would not go for PF_MEMALLOC_ACFORCE approach as it is easy to abuse and
-> is very manual and requires detecting the code which can cause such
-> scenarios and then case-by-case opting them in. I would prefer a dynamic
-
-Currently, our goal is to address the hung task issue caused by the
-jbd2 handle which
-has a high probability of occurring in our scenario and is more likely
-to cause problems.
-The patch only involves APIs used within the start/stop_this_handle()
-context in jbd2,
-such as memalloc_nofs_save() and can be used in other lock contexts.
-Please refer to patch 2 for further details. It appears
-that Btrfs employs a similar transactional mechanism via btrfs_trans_handle=
-, and
-makes use of memalloc_nofs_save() to safeguard metadata allocations.
-For example,
-see commit 84de76a2fb21 ("btrfs: protect space cache inode alloc with
-GFP_NOFS").
-But I'm not sure if the same problem exists.
-
-> or automated approach where the kernel detects such an issue is
-> happening and recover from it. Though a case can be made where we avoid
-> such scenarios from happening but that might not be possible everytime.
->
-
-Yes, you are right =E2=80=94 we need to identify and fix these issues case =
-by
-case. However,
-we currently have a similar mechanism, like memalloc_nofs_save(), to
-handle this.
-An automated approach would definitely be better, or alternatively, we
-could introduce
-a new memory interface to delay memory reclaim until returning to userspace=
-."
-
-> Also this is very memcg specific, I can clearly see the same scenario
-> can happen for global reclaim as well.
-
-Yes, the same scenario can occur during global reclaim =E2=80=94 we have en=
-countered it.
-However, global memory shortages are difficult to resolve. Maybe we
-can aggressively
-trigger the OOM killer before tasks enter the uninterruptible (UN) state.
-Or, a more aggressive approach would be to reduce the number of direct
-reclaim retries,
-allowing earlier access to memory reserves if the task holds the
-global resource.
-It is hard to balance.
-
->
-> I have a couple of questions below:
->
-> On Wed, Jun 18, 2025 at 07:39:56PM +0800, Zhongkun He wrote:
-> > # Introduction
+On Tue, Jun 24, 2025 at 09:08:32AM +0300, Andy Shevchenko wrote:
+> On Tue, Jun 24, 2025 at 12:11 AM Christian Marangi <ansuelsmth@gmail.com> wrote:
 > >
-> > This patchset aims to introduce an approach to ensure that memory
-> > allocations are forced to be accounted to the memory cgroup, even if
-> > they exceed the cgroup's maximum limit. In such cases, the reclaim
-> > process is postponed until the task returns to the user.
->
-> This breaks memory.max semantics. Any reason memory.high is not used
-> here. Basically instead of memory.max, use memory.high as job limit. I
-> would like to know how memory.high is lacking for your use-case. Maybe
-> we can fix that or introduce a new form of limit. However this is memcg
-> specific and will not resolve the global reclaim case.
+> > There is currently a problem with the usage of rounddown MACRO with
+> 
+> rounddown() with
+> 
+> > u64 dividends. This cause compilation error on specific arch where
+> 
+> causes
+> 
+> > 64bit division is done on 32bit system.
+> 
+> on the 32-bit
+> 
+> 
+> > To be more specific GCC try optimize the function and replace it with
+> 
+> to optimize
+> 
+> > __umoddi3 but this is actually not compiled in the kernel.
+> 
+> __umoddi3()
+> 
+> > Example:
+> > pwm-airoha.c:(.text+0x8f8): undefined reference to `__umoddi3'
+> >
+> > To better handle this, introduce a variant of rounddown MACRO,
+> 
+> rounddown(),
 
-The gpf_nofail is already breaking the memory.max semantics and this patchs=
-et
-is just breaking the limit in kernel context, and trying to reclaim or
-oom on return
-back to userspace. IIUC, memory.high will slow down the task, but we
-would prefer
-to kill the pod and let it be rescheduled on another machine, rather
-than having it blocked.
+For this and the other... Is it correct to use () for MACRO?
+I assume () should be used only for functions.
 
+> 
+> > rounddown_ull that can be used exactly for this scenario.
+> 
+> rounddown_ull()
+> 
+> > rounddown_ull new MACRO use the do_div MACRO that do the heavy work of
+> 
+> The rounddown_ull() is a new macro that uses do_div() to do the heavy work of
+> 
+> > handling internally all the magic for 64bit division on 32bit (and
+> 
+> for the 64-bit divisions on the 32-bit platforms (and
+> 
+> > indirectly fix the compilation error).
+> 
+> ...
+> 
+> > - Add this patch
+> 
+> Why are math64 APIs not usable here?
 >
-> > This is
-> > beneficial for users who perform over-max reclaim while holding multipl=
-e
-> > locks or other resources (especially resources related to file system
-> > writeback). If a task needs any of these resources, it would otherwise
-> > have to wait until the other task completes reclaim and releases the
-> > resources. Postponing reclaim to the return-to-user path helps avoid th=
-is issue.
-> >
-> > # Background
-> >
-> > We have been encountering an hungtask issue for a long time. Specifical=
-ly,
-> > when a task holds the jbd2 handler
->
-> Can you explain a bit more about jbd2 handler? Is it some global shared
-> lock or a workqueue which can only run single thread at a time.
-> Basically is there a way to get the current holder/owner of jbd2 handler
-> programmatically?
 
-Thanks to Jan Kara for providing a detailed explanation in the letter
-above. It is a shared global resource that's held by the process doing recl=
-aim.
+There isn't a rounddown API for math64.
 
-
->
-> > and subsequently enters direct reclaim
-> > because it reaches the hard limit within a memory cgroup, the system ma=
-y become
-> > blocked for a long time. The stack trace of waiting thread holding the =
-jbd2
-> > handle is as follows (and so many other threads are waiting on the same=
- jbd2
-> > handle):
-> >
-> >  #0 __schedule at ffffffff97abc6c9
-> >  #1 preempt_schedule_common at ffffffff97abcdaa
-> >  #2 __cond_resched at ffffffff97abcddd
-> >  #3 shrink_active_list at ffffffff9744dca2
-> >  #4 shrink_lruvec at ffffffff97451407
-> >  #5 shrink_node at ffffffff974517c9
-> >  #6 do_try_to_free_pages at ffffffff97451dae
-> >  #7 try_to_free_mem_cgroup_pages at ffffffff974542b8
-> >  #8 try_charge_memcg at ffffffff974f0ede
-> >  #9 charge_memcg at ffffffff974f1d0e
-> > #10 __mem_cgroup_charge at ffffffff974f391c
-> > #11 __add_to_page_cache_locked at ffffffff974313e5
-> > #12 add_to_page_cache_lru at ffffffff974324b2
-> > #13 pagecache_get_page at ffffffff974338e3
-> > #14 __getblk_gfp at ffffffff97556798
-> > #15 __ext4_get_inode_loc at ffffffffc07a5518 [ext4]
-> > #16 ext4_get_inode_loc at ffffffffc07a7fec [ext4]
-> > #17 ext4_reserve_inode_write at ffffffffc07a9fb1 [ext4]
-> > #18 __ext4_mark_inode_dirty at ffffffffc07aa249 [ext4]
-> > #19 __ext4_new_inode at ffffffffc079cbae [ext4]
-> > #20 ext4_create at ffffffffc07c3e56 [ext4]
-> > #21 path_openat at ffffffff9751f471
-> > #22 do_filp_open at ffffffff97521384
-> > #23 do_sys_openat2 at ffffffff97508fd6
-> > #24 do_sys_open at ffffffff9750a65b
-> > #25 do_syscall_64 at ffffffff97aaed14
-> >
-> > We've obtained a coredump and dumped struct scan_control from it by usi=
-ng crash tool.
-> >
-> > struct scan_control {
-> >   nr_to_reclaim =3D 32,
-> >   order =3D 0 '\000',
-> >   priority =3D 1 '\001',
-> >   reclaim_idx =3D 4 '\004',
-> >   gfp_mask =3D 17861706, __GFP_NOFAIL
-> >   nr_scanned =3D 27810,
-> >   nr_reclaimed =3D 0,
-> >   nr =3D {
-> >         dirty =3D 27797,
-> >         unqueued_dirty =3D 27797,
-> >         congested =3D 0,
-> >         writeback =3D 0,
-> >         immediate =3D 0,
-> >         file_taken =3D 27810,
-> >         taken =3D 27810
-> >   },
-> > }
-> >
->
-> What is the kernel version? Can you run scripts/gfp-translate on the
-> gfp_mask above? Does this kernel have a75ffa26122b ("memcg, oom: do not
-> bypass oom killer for dying tasks")?
-
-This kernel is 5.15+,  I think this problem is still here
-
-Parsing: 17861706
-#define ___GFP_HIGHMEM 0x02
-#define ___GFP_MOVABLE 0x08
-#define ___GFP_IO 0x40
-#define ___GFP_DIRECT_RECLAIM 0x400
-#define ___GFP_KSWAPD_RECLAIM 0x800
-#define ___GFP_NOFAIL 0x8000
-#define ___GFP_HARDWALL 0x100000
-#define ___GFP_SKIP_KASAN_POISON 0x1000000
-There is no such patch a75ffa26122b, and I think it is reasonable but
-the task holding
-the jbd2 handle is not a dying task.
-
->
-> > The ->nr_reclaimed is zero meaning there is no memory we have reclaimed=
- because
-> > most of the file pages are unqueued dirty. And ->priority is 1 also mea=
-ning we
-> > spent so much time on memory reclamation.
->
-> Is there a way to get how many times this thread has looped within
-> try_charge_memcg()?
-
-The nr_retries is MAX_RECLAIM_RETRIES, and the mem_cgroup not in oom,
-mem_cgroup 0xffff8c82a27c0800 | grep oom
-  oom_group =3D false,
-  oom_lock =3D false,
-  under_oom =3D 0
-
-Maybe we enter the try_charge_memcg in the first loop.
-I will explain it later.
-
->
-> > Since this thread has held the jbd2
-> > handler, the jbd2 thread was waiting for the same jbd2 handler, which b=
-locked
-> > so many other threads from writing dirty pages as well.
-> >
-> > 0 [] __schedule at ffffffff97abc6c9
-> > 1 [] schedule at ffffffff97abcd01
-> > 2 [] jbd2_journal_wait_updates at ffffffffc05a522f [jbd2]
-> > 3 [] jbd2_journal_commit_transaction at ffffffffc05a72c6 [jbd2]
-> > 4 [] kjournald2 at ffffffffc05ad66d [jbd2]
-> > 5 [] kthread at ffffffff972bc4c0
-> > 6 [] ret_from_fork at ffffffff9720440f
-> >
-> > Furthermore, we observed that memory usage far exceeded the configured =
-memory maximum,
-> > reaching around 38GB.
-> >
-> > memory.max  : 134896020    514 GB
-> > memory.usage: 144747169    552 GB
->
-> This is unexpected and most probably our hacks to allow overcharge to
-> avoid similar situations are causing this.
-
-Yes.
-
->
-> >
-> > We investigated this issue and identified the root cause:
-> >   try_charge_memcg:
-> >     retry charge
-> >      charge failed
-> >        -> direct reclaim
-> >         -> mem_cgroup_oom    return true=EF=BC=8Cbut selected task is i=
-n an uninterruptible state
-> >            -> retry charge
->
-> Oh oom reaper didn't help?
->
-> >
-> > In which cases, we saw many tasks in the uninterruptible (D) state with=
- a pending
-> > SIGKILL signal. The OOM killer selects a victim and returns success, al=
-lowing the
-> > current thread to retry the memory charge. However, the selected task c=
-annot acknowledge
-> > the SIGKILL signal because it is stuck in an uninterruptible state.
->
-> OOM reaper usually helps in such cases but I see below why it didn't
-> help.
->
-> > As a result,
-> > the charging task resets nr_retries and attempts to reclaim again, but =
-the victim
-> > task never exits. This causes the current thread to enter a prolonged r=
-etry loop
-> > during direct reclaim, holding the jbd2 handler for much more time and =
-leading to
-> > system-wide blocking. Why are there so many uninterruptible (D) state t=
-asks?
-> > Check the most common stack trace.
-> >
-> > crash> task_struct.__state ffff8c53a15b3080
-> >   __state =3D 2,   #define TASK_UNINTERRUPTIBLE        0x0002
-> >  0 [] __schedule at ffffffff97abc6c9
-> >  1 [] schedule at ffffffff97abcd01
-> >  2 [] schedule_preempt_disabled at ffffffff97abdf1a
-> >  3 [] rwsem_down_read_slowpath at ffffffff97ac05bf
-> >  4 [] down_read at ffffffff97ac06b1
-> >  5 [] do_user_addr_fault at ffffffff9727f1e7
-> >  6 [] exc_page_fault at ffffffff97ab286e
-> >  7 [] asm_exc_page_fault at ffffffff97c00d42
-> >
-> > Check the owner of mm_struct.mmap_lock. The task below was entering mem=
-ory reclaim
-> > holding mmap lock and there are 68 tasks in this memory cgroup, with 23=
- of them in
-> > the memory reclaim context.
-> >
->
-> The following thread has mmap_lock in write mode and thus oom-reaper is
-> not helping. Do you see "oom_reaper: unable to reap pid..." messages in
-> dmesg?
->
-> >  7 [] shrink_active_list at ffffffff9744dd46
-> >  8 [] shrink_lruvec at ffffffff97451407
-> >  9 [] shrink_node at ffffffff974517c9
-> > 10 [] do_try_to_free_pages at ffffffff97451dae
-> > 11 [] try_to_free_mem_cgroup_pages at ffffffff974542b8
-> > 12 [] try_charge_memcg at ffffffff974f0ede
-> > 13 [] obj_cgroup_charge_pages at ffffffff974f1dae
-> > 14 [] obj_cgroup_charge at ffffffff974f2fc2
-> > 15 [] kmem_cache_alloc at ffffffff974d054c
-> > 16 [] vm_area_dup at ffffffff972923f1
-> > 17 [] __split_vma at ffffffff97486c16
-> > 18 [] __do_munmap at ffffffff97486e78
-> > 19 [] __vm_munmap at ffffffff97487307
-> > 20 [] __x64_sys_munmap at ffffffff974873e7
-> > 21 [] do_syscall_64 at ffffffff97aaed14
-> >
-> > Many threads was entering the memory reclaim in UN state, other threads=
- was blocking
-> > on mmap_lock. Although the OOM killer selects a victim, it cannot termi=
-nate it.
->
-> Can you please confirm the above? Is the kernel able to oom-kill more
-> processes or if it is returning early because the current thread is
-> dying. However if the cgroup has just one big process, this doesn't
-> matter.
-
-Hi Shakeel
-
-I'm a bit confused here because I don't see any "oom_reaper: unable
-to reap pid..." or "Killed process %d (%s) total-vm:%lukB ..." messages
-in the dmesg output. However, I did find many tasks with a pending
-SIGKILL signal.
-
-If these tasks weren't killed by the OOM killer, why do they have SIGKILL
-pending in shrink context? That's why I'm unsure about this part.
-Please have a look=EF=BC=9A
-
-crash> task_struct.pending.signal.sig ffff8bc4c143e100
-  pending.signal.sig =3D {256}
-crash> task_struct.thread_info.flags ffff8bc4c143e100
-  thread_info.flags =3D 16388,  bit 2 ; #defineTIF_SIGPENDING      2
-crash> bt
-PID: 1269110  TASK: ffff8bc4c143e100  CPU: 5    COMMAND: "xx"
- #0 [] __schedule at ffffffff97abc6c9
- #1 [] preempt_schedule_common at ffffffff97abcdaa
- #2 [] __cond_resched at ffffffff97abcddd
- #3 [] shrink_lruvec at ffffffff9745120a
- #4 [] shrink_node at ffffffff974517c9
- #5 [] do_try_to_free_pages at ffffffff97451dae
- #6 [] try_to_free_mem_cgroup_pages at ffffffff974542b8
- #7 [] try_charge_memcg at ffffffff974f0ede
- #8 [] charge_memcg at ffffffff974f1d0e
- #9 [] __mem_cgroup_charge at ffffffff974f391c
-#10 [] __add_to_page_cache_locked at ffffffff974313e5
-#11 [] add_to_page_cache_lru at ffffffff974324b2
-#12 [] page_cache_ra_unbounded at ffffffff97442227
-#13 [] filemap_fault at ffffffff97434b80
-#14 [] __do_fault at ffffffff9747b870
-#15 [] __handle_mm_fault at ffffffff97480329
-#16 [] handle_mm_fault at ffffffff9748081e
-#17 [] do_user_addr_fault at ffffffff9727f01b
-#18 [] exc_page_fault at ffffffff97ab286e
-#19 [] asm_exc_page_fault at ffffffff97c00d42
-
->
-> > The
-> > task holding the jbd2 handle retries memory charge, but it fails. Recla=
-iming continues
-> > while holding the jbd2 handler. write_pages also fails while waiting fo=
-r the same jbd2
-> > handler, causing repeated shrink failures and potentially leading to a =
-system-wide block.
-> >
-> > ps | grep UN | wc -l
-> > 1463
-> >
-> > While the system has 1463 UN state tasks, so the way to break this akin=
- to "deadlock" is
-> > to let the thread holding jbd2 handler quickly exit the memory reclamat=
-ion process.
-> >
-> > We found that a related issue was reported and partially fixed in previ=
-ous patches [1][2].
-> > However, those fixes only skip direct reclamation and return a failure =
-for some cases such
-> > as readahead requests. As sb_getblk() is called multiple times in __ext=
-4_get_inode_loc()
-> > with the NOFAIL flag, the problem still exists. And it is not feasible =
-to simply remove
-> > __GFP_RECLAIMABLE when holding jbd2 handle to avoid potential very long=
- memory reclaim
-> > latency,  as __GFP_NOFAIL is not supported without __GFP_DIRECT_RECLAIM=
-.
-> >
-> > # Fundamentals
-> >
-> > This patchset introduces a new task flag of PF_MEMALLOC_ACFORCE to indi=
-cate that memory
-> > allocations are forced to be accounted to the memory cgroup, even if th=
-ey exceed the cgroup's
-> > maximum limit. The reclaim process is deferred until the task returns t=
-o the user without
-> > holding any kernel resources for memory reclamation, thereby preventing=
- priority inversion
-> > problems. Any users who might encounter potential similar issues can ut=
-ilize this new flag
-> > to allocate memory and prevent long-term latency for the entire system.
->
-> I already explained upfront why this is not the approach we want.
->
-> We do see similar situations/scenarios but due to global/shared locks in
-> btrfs but I expect any global lock or global shared resource can cause
-> such priority inversion situations.
-
-I completely agree. Doesn=E2=80=99t this mean that we should have a mechani=
-sm
-or a flag to indicate when a task is holding global resources or locks, so
-that appropriate decisions can be made in global and memcg memory
-reclaim contexts, in order to avoid holding locks or resources for an exten=
-ded
-period of time?  It would be better if we can have an automated approach th=
-at
-solves all the problems.
+-- 
+	Ansuel
