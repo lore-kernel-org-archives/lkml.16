@@ -1,249 +1,184 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FDA2E62A7
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8905F2D8785
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750776224; cv=none; b=mA7vLyI52UnT5HSQjtmD7XDkOWa6IXVW/wyttE9/KkpR7PAtGGn1U67f/C/x9DiLXyAuiHoj6GqsXC8fFw8z/3SM+ttSr3CBNP6BStBy8AkaVVQNLHwfgZXb7xjabr39/xNalm4xbu5T7jQB1r2sJvyGB4nKQ43wxr7BGZJhxwo=
+	t=1750776259; cv=none; b=GOXpnvB6/ThA/Cm7+fdQbhyqUZZoJq5LdYRZ5oRnxW8S6un+bBnr2XGrHC9OK2/RsmiEBxJ/SKvDQ1K18uCXzOMX16rnpFRgbFmpRV3cha5qpsDzddzVa2VPMVUqR94toMsu38BN0glmOTsttb1055KPqhAHJ2uww9Z1LkwXZDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750776224; c=relaxed/simple;
-	bh=6r0las+/Ii+bobt18cWF8Yd39NfjYX1RuGTPL5F1ass=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=eTgTsWY9+Fj05/RDiXPUN2Hs8Yj2HWT9vtqZaKivIpI6ZuBhm2XSInGLyFHYard2MBYyf6UPf1z6mnSRBYnyiEfBQwM3KED1QskfvGmRmJW4mLQDRhCWAcaDPlErENkWUzXxIog584Hs9buFHTFZoJpEKvPSY6Iq6ZLwUBmumlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZjdD0TwB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750776259; c=relaxed/simple;
+	bh=0Igo8v1VtsItNsT3AblHA6Ew9pac4mchXDLSX67nECA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tCApTAF1LePHv0bj0Pb1L3Iwa/ZU62ELy1Pg5juW3Jd5qbsHz15HkA9sKLigwKznIezwq4gSty3lKC4QGGCTFFlaEbCH6HfKB4ALn5ecesFSuyUtqruBXjd92qbV5vigfktz8MbG51cIEh/AF8Z6HrqGjvC2/CC08e8ZZEWE+ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=k4inht1Q; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZjdD0TwB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750776221;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AsJFD8Xb7TNUkeNMyUpPYkjT7yFBNxg0JTSP55Zxpfs=;
-	b=ZjdD0TwBv/waf+Gcdpg3c+OylPCGLvIFmQHybQ+nKl7cpZLZaW174ZXTrLBu5jYaZT0U6M
-	LCcBOh9UAFAWg1VLYzb9V9TRtOXQZprUQx8iVLI6Pod6vC5SmJ+6mxUzQU+uvYqMnWH+4q
-	547paOflWZbNsAVOiIaFiSQw3WjJdHQ=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-496--8UMVRvYOB2zBBhVPOOIaA-1; Tue, 24 Jun 2025 10:43:40 -0400
-X-MC-Unique: -8UMVRvYOB2zBBhVPOOIaA-1
-X-Mimecast-MFC-AGG-ID: -8UMVRvYOB2zBBhVPOOIaA_1750776219
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-553ea44a706so1424240e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:43:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="k4inht1Q"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55ODg8uF021627
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:44:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	XalkEpC+IPpJrudCjeVEr9SC6eR1svVywZRX2OgzbKI=; b=k4inht1QCHusHcon
+	c7j5JdwWAOqNUJn3ihSR9O02zHs5Xj8/mPqLqpm/pdqqWUz7u+nnaefFsBtp+dDQ
+	ZZr6i0lgJhRUnAPjO7VfVDrz34ltQ+6b8v/VEXHI2gfPh0PXDTnAD7YtxrWIZafA
+	bvwGJ5hwu3LzAb1zgIfCmXwV7Zc9AGtC/0DuC/f/DxE9k5t/A5IaM5T7vVQU6AO4
+	3C7r6Kkb01LTHojg6Brm7eC7w2QKE4zKQAKhjqiJL8ScUGzzkPxnthQ2IB/FKLgT
+	LAfhciDANaKoDFxSmgfHT5RENdNF0f0wm2XYMU8SrvUsDk6TeRCE9wRa49vD7La8
+	A/feYQ==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f2rpvq61-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:44:16 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5af539464so152489885a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:44:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750776219; x=1751381019;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AsJFD8Xb7TNUkeNMyUpPYkjT7yFBNxg0JTSP55Zxpfs=;
-        b=c1k/Xv/tzXVPjMKIFj+DILtojMKihXBKe1nXRgfk4rp6V5mmbMN2odRpxqa5YV21sD
-         KLafjfP9lAfQt54SK1Elvgri6tqIRVYTlxRgqXWy1H/FwsHmO5IJPxp7ZXWZZObcwC+y
-         kY3HaY6JpAdx2cRq96GLeoBH63fzhub/zYGi3j342oFzAsn9bqOHfyNC7A4cbvpjA7PL
-         VQAIc3Mey45UyeUUeNOyKgcYtSb3eMa6g+JJDsQWnqe/mQ3c+Y6MTCctpxs2PjNOWh8S
-         LOGGUbyWHhGVCLey2laJ3OFwwbiG7/lXqJu03fZZsXY3XmxvX28cQKqfWYQbDL/PJTgf
-         bV+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVeZDuZ3F8NmMbdq7eu7/BU+f9dhOhTyGReBa4bzbgtTHn397nuBpRYbbQbQliFTfNcfatLJtaE+wGBg40=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykpV9PqTqiCf2uikwnWFNj7EnMcLbmj0Ubw0pd/ZvVWbrdB+Sb
-	h5rGschUbnRGyPrJt+TLKdHvMWljKbWr6TI8m7UQllLfXBM10gj1KnzffSO94zP5EGjUi52UEKr
-	f9A5L3BFcQ0yYhr7uoBpDPkIYUMfY6+I1pmrMVSfdB6sP5yL5EcrcOmM0e4Xg8ileYA==
-X-Gm-Gg: ASbGncvXfRaYps49ZwrWkFlfYx4JJBC8z0B0xl0+Thn5B+LKyB8GuafJYvQgLdn1xRK
-	hsh7pEh2WtCdYVemouxFdunEiv65n+Jff//ePxSCWPQw57uMmEexs7yQ6hlGOHYesiT19qEBzEm
-	MMYE3JzUh1OOoXg2NtuaGKiMGOxmwYmk5lbxyty9FceSSYPttaZCwbSnjJgP3BoTOdGox1mLcJU
-	Zj63/9sNMqmrTgmIBIR+jk9I7fkTPHUjTQJAm30tLFX4/3fYx+v2d8bPGPsEfm/yhKh4rwVxs6S
-	XEJhKJ5J00sWBF8I6iwe5DDxFZFSUemDpSrJXjVQ0yzer14=
-X-Received: by 2002:ac2:51d5:0:b0:553:349c:646c with SMTP id 2adb3069b0e04-553e3bf2109mr4783134e87.27.1750776218745;
-        Tue, 24 Jun 2025 07:43:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF0aXMGFpRJQr9IDGvwiXOXGJUpblWAgU5bfHFxKSwW7q7amMW/E+3VuHA5u82kZnQnHCkEPw==
-X-Received: by 2002:ac2:51d5:0:b0:553:349c:646c with SMTP id 2adb3069b0e04-553e3bf2109mr4783111e87.27.1750776218257;
-        Tue, 24 Jun 2025 07:43:38 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553e41cdf64sm1839877e87.234.2025.06.24.07.43.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 07:43:37 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-	id 178B01B37786; Tue, 24 Jun 2025 16:43:36 +0200 (CEST)
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To: Zi Yan <ziy@nvidia.com>, David Hildenbrand <david@redhat.com>
-Cc: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
- ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
- akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com,
- andrew+netdev@lunn.ch, asml.silence@gmail.com, tariqt@nvidia.com,
- edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
- leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org,
- linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com,
- hannes@cmpxchg.org, jackmanb@google.com, "jesper@cloudflare.com"
- <jesper@cloudflare.com>
-Subject: Re: [PATCH net-next v6 9/9] page_pool: access ->pp_magic through
- struct netmem_desc in page_pool_page_is_pp()
-In-Reply-To: <42E9BEA8-9B02-440F-94BF-74393827B01E@nvidia.com>
-References: <20250620041224.46646-1-byungchul@sk.com>
- <20250620041224.46646-10-byungchul@sk.com>
- <ce5b4b18-9934-41e3-af04-c34653b4b5fa@redhat.com>
- <20250623101622.GB3199@system.software.com>
- <460ACE40-9E99-42B8-90F0-2B18D2D8C72C@nvidia.com>
- <a8d40a05-db4c-400f-839b-3c6159a1feab@redhat.com>
- <42E9BEA8-9B02-440F-94BF-74393827B01E@nvidia.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date: Tue, 24 Jun 2025 16:43:36 +0200
-Message-ID: <87o6udfbdz.fsf@toke.dk>
+        d=1e100.net; s=20230601; t=1750776255; x=1751381055;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XalkEpC+IPpJrudCjeVEr9SC6eR1svVywZRX2OgzbKI=;
+        b=VGdVM62dzM9Jp77bvhiRHz/vh5qwl7wEHVDVrpZRTfyXiDnpPrky9GxEl4y5yUSKw/
+         aeHngY0YlWafsq2I1BETb4bBofx7rm5bm1AmVHCuw7B8z5lvzN9XPRbQDzcfXsiteTq1
+         1rZYdZSyQAukMam+07sTWDsP0Vp9ffMskDw7/j83O5KZcV0LBRIlDuri+wC/H/y5hAW9
+         lshyrw5WOzcNnrUeI4Z78m5QUtTU1SvnV2191hov7TCtPVEj4uQOlo4A54BNfhZXq9wU
+         M+h2M2oD5+zifRlrMyerLNdY4INuyVRpaX8dnoDaCKetTd4+udQpFQAEQqeUuiohJBoE
+         viVg==
+X-Forwarded-Encrypted: i=1; AJvYcCUYLmRZ3Akwy8gLD2SmCCNZ9XAbjjQ6uJmjuyUxq/1GiChdt/HntPXbiYnyHSfEImWNUY/kJ3Z81FZUV1M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYZwy8GvT/CMa75AxrByFhOePMD9u3RSBWla+u74pSeLaraYs1
+	G7WCGXcPnLaDy+LKpbC+vRqJFjA6azyenLRN7nJSfE2bisLtnItV61y1vjeXmu/ze+rYLk5P7bu
+	9PtdXgiAlIUrnHsNb6c5WvhfwHpJZDTUlxYAhF4+toPPqQXxMQ+fnHT+pyG6l7M9sncc=
+X-Gm-Gg: ASbGncuG+5A9XMGB9FoDjVP/PjZ/eL/J0MagouEIuc0B2sD82SG+vWR+/y+ZDdbFf+G
+	JjQXrYGNTYVQfHXPjoDuTyNVKbQeKx3slbiVMpwL8baXPBXk9Ux8LUX+9SoBSMTM89xXulvwiVm
+	2qt7Q9aZQvl3mOnde15p51LO8Tw7iyYjYSQ4ndp90QBYRbZsSK89CSO1+H9L2GLhDpCePe27+pa
+	FtwGkyocm5ioz36+qf7T7A/FV2/sJ0xBhiielEi1Z8xHViroD2BvyWquc3WiP0QwuuxtxZi1r8A
+	n4HKbxrb/PvEWfOUBKMKM9pPDqq4SwbiHoO9sclo6rz3nuwY+ny6pU00wzB/9hO3dofdvIylasb
+	JzI4=
+X-Received: by 2002:a05:620a:a115:b0:7d4:1e05:ecae with SMTP id af79cd13be357-7d41e05f012mr194639385a.3.1750776255367;
+        Tue, 24 Jun 2025 07:44:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFVq8f37SvoPT0P8pLGhVHvvXyWJweJ5pitiEAPEdL2jkjDDdXQB3lhdYSnOQ0RtIqUeUDZag==
+X-Received: by 2002:a05:620a:a115:b0:7d4:1e05:ecae with SMTP id af79cd13be357-7d41e05f012mr194638385a.3.1750776254954;
+        Tue, 24 Jun 2025 07:44:14 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c2f4a997bsm1112538a12.81.2025.06.24.07.44.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 07:44:14 -0700 (PDT)
+Message-ID: <c4947591-4d09-4f49-8458-b993b5f95a2a@oss.qualcomm.com>
+Date: Tue, 24 Jun 2025 16:44:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] soc: qcom: rpmh: Add support to read back resource
+ settings
+To: Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maulik Shah <maulik.shah@oss.qualcomm.com>
+References: <20250623-add-rpmh-read-support-v1-0-ae583d260195@oss.qualcomm.com>
+ <20250623-add-rpmh-read-support-v1-1-ae583d260195@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250623-add-rpmh-read-support-v1-1-ae583d260195@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=NdDm13D4 c=1 sm=1 tr=0 ts=685ab9c0 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=8FWldycYYUwg2ulvLiwA:9
+ a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDEyMyBTYWx0ZWRfXx1SRinBrG2BV
+ RsT7Gf3zf0aVg7vN5DeHmJU6akcwJRqHVAZ6KwoxH62/IunIFBEzlnJrkFUHP4vGxozdqFu1KO9
+ P+osNJQ3upkaS/WmKD+6Oh97NGct1WdYvvyzH7J185WC0KKJqgff33MNcvEEF1xhzU7LySfalpm
+ P5LVvx8V7ouqBSdOe0PfN8hWZXkp2WrdwFIoERBfmAYWNiuZim5/aJz5O1Sf4ia7OGDAaCQ2Uqh
+ DcSW4f666TACzizBHiDEWng3WxM8rlkjge9xtSoEq3TFLQL1c95DZrmNj+oEO972QMwFJQ+Wd/t
+ b89y5kRHN7lV18p6CRgAVFjp/v3Zhf6Y5NFwZvLpciREulGrStFhafWydQQvvlNshn/hc07U9AF
+ 6E35Wzk761ZjkvqGhMq1B3kuAXuvm/zfvfr9F9Dum3KgQS4hws0Z2L9mGDW32w3jydeOKd4Q
+X-Proofpoint-ORIG-GUID: H6MTKqlfpuCuuKqtZm_QItQKMlS_u_Nf
+X-Proofpoint-GUID: H6MTKqlfpuCuuKqtZm_QItQKMlS_u_Nf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-24_06,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 mlxscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
+ phishscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999 adultscore=0
+ clxscore=1015 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506240123
 
-Zi Yan <ziy@nvidia.com> writes:
+On 6/23/25 6:43 PM, Kamal Wadhwa wrote:
+> From: Maulik Shah <maulik.shah@oss.qualcomm.com>
+> 
+> All rpmh_*() APIs so far have supported placing votes for various
+> resource settings but the H/W also have option to read resource
+> settings.
+> 
+> This change adds a new rpmh_read() API to allow clients
+> to read back resource setting from H/W. This will be useful for
+> clients like regulators, which currently don't have a way to know
+> the settings applied during bootloader stage.
+> 
+> Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
+> ---
 
-> On 23 Jun 2025, at 10:58, David Hildenbrand wrote:
->
->> On 23.06.25 13:13, Zi Yan wrote:
->>> On 23 Jun 2025, at 6:16, Byungchul Park wrote:
->>>
->>>> On Mon, Jun 23, 2025 at 11:16:43AM +0200, David Hildenbrand wrote:
->>>>> On 20.06.25 06:12, Byungchul Park wrote:
->>>>>> To simplify struct page, the effort to separate its own descriptor f=
-rom
->>>>>> struct page is required and the work for page pool is on going.
->>>>>>
->>>>>> To achieve that, all the code should avoid directly accessing page p=
-ool
->>>>>> members of struct page.
->>>>>>
->>>>>> Access ->pp_magic through struct netmem_desc instead of directly
->>>>>> accessing it through struct page in page_pool_page_is_pp().  Plus, m=
-ove
->>>>>> page_pool_page_is_pp() from mm.h to netmem.h to use struct netmem_de=
-sc
->>>>>> without header dependency issue.
->>>>>>
->>>>>> Signed-off-by: Byungchul Park <byungchul@sk.com>
->>>>>> Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
->>>>>> Reviewed-by: Mina Almasry <almasrymina@google.com>
->>>>>> Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
->>>>>> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
->>>>>> Acked-by: Harry Yoo <harry.yoo@oracle.com>
->>>>>> ---
->>>>>>    include/linux/mm.h   | 12 ------------
->>>>>>    include/net/netmem.h | 14 ++++++++++++++
->>>>>>    mm/page_alloc.c      |  1 +
->>>>>>    3 files changed, 15 insertions(+), 12 deletions(-)
->>>>>>
->>>>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
->>>>>> index 0ef2ba0c667a..0b7f7f998085 100644
->>>>>> --- a/include/linux/mm.h
->>>>>> +++ b/include/linux/mm.h
->>>>>> @@ -4172,16 +4172,4 @@ int arch_lock_shadow_stack_status(struct task=
-_struct *t, unsigned long status);
->>>>>>     */
->>>>>>    #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
->>>>>>
->>>>>> -#ifdef CONFIG_PAGE_POOL
->>>>>> -static inline bool page_pool_page_is_pp(struct page *page)
->>>>>> -{
->>>>>> -     return (page->pp_magic & PP_MAGIC_MASK) =3D=3D PP_SIGNATURE;
->>>>>> -}
->>>>>> -#else
->>>>>> -static inline bool page_pool_page_is_pp(struct page *page)
->>>>>> -{
->>>>>> -     return false;
->>>>>> -}
->>>>>> -#endif
->>>>>> -
->>>>>>    #endif /* _LINUX_MM_H */
->>>>>> diff --git a/include/net/netmem.h b/include/net/netmem.h
->>>>>> index d49ed49d250b..3d1b1dfc9ba5 100644
->>>>>> --- a/include/net/netmem.h
->>>>>> +++ b/include/net/netmem.h
->>>>>> @@ -56,6 +56,20 @@ NETMEM_DESC_ASSERT_OFFSET(pp_ref_count, pp_ref_co=
-unt);
->>>>>>     */
->>>>>>    static_assert(sizeof(struct netmem_desc) <=3D offsetof(struct pag=
-e, _refcount));
->>>>>>
->>>>>> +#ifdef CONFIG_PAGE_POOL
->>>>>> +static inline bool page_pool_page_is_pp(struct page *page)
->>>>>> +{
->>>>>> +     struct netmem_desc *desc =3D (struct netmem_desc *)page;
->>>>>> +
->>>>>> +     return (desc->pp_magic & PP_MAGIC_MASK) =3D=3D PP_SIGNATURE;
->>>>>> +}
->>>>>> +#else
->>>>>> +static inline bool page_pool_page_is_pp(struct page *page)
->>>>>> +{
->>>>>> +     return false;
->>>>>> +}
->>>>>> +#endif
->>>>>
->>>>> I wonder how helpful this cleanup is long-term.
->>>>>
->>>>> page_pool_page_is_pp() is only called from mm/page_alloc.c, right?
->>>>
->>>> Yes.
->>>>
->>>>> There, we want to make sure that no pagepool page is ever returned to
->>>>> the buddy.
->>>>>
->>>>> How reasonable is this sanity check to have long-term? Wouldn't we be
->>>>> able to check that on some higher-level freeing path?
->>>>>
->>>>> The reason I am commenting is that once we decouple "struct page" from
->>>>> "struct netmem_desc", we'd have to lookup here the corresponding "str=
-uct
->>>>> netmem_desc".
->>>>>
->>>>> ... but at that point here (when we free the actual pages), the "stru=
-ct
->>>>> netmem_desc" would likely already have been freed separately (remembe=
-r:
->>>>> it will be dynamically allocated).
->>>>>
->>>>> With that in mind:
->>>>>
->>>>> 1) Is there a higher level "struct netmem_desc" freeing path where we
->>>>> could check that instead, so we don't have to cast from pages to
->>>>> netmem_desc at all.
->>>>
->>>> I also thought it's too paranoiac.  However, I thought it's other issue
->>>> than this work.  That's why I left the API as is for now, it can be go=
-ne
->>>> once we get convinced the check is unnecessary in deep buddy.  Wrong?
->>>>
->>>>> 2) How valuable are these sanity checks deep in the buddy?
->>>>
->>>> That was also what I felt weird on.
->>>
->>> It seems very useful when I asked last time[1]:
->>>
->>> |> We have actually used this at Cloudflare to catch some page_pool bug=
-s.
->>
->> My question is rather, whether there is some higher-level freeing path f=
-or netmem_desc where we could check that instead (IOW, earlier).
->>
->> Or is it really arbitrary put_page() (IOW, we assume that many possible =
-references can be held)?
->
-> +Toke, who I talked about this last time.
->
-> Maybe he can shed some light on it.
+[...]
 
-As others have pointed out, basically, AFAIU: Yes, pages are *supposed*
-to go through a common freeing path where this check could reside, but
-we've had bugs where they ended up leaking anyway, which is why this
-check in MM was added in the first place.
+>  	u32 msgid;
+> -	u32 cmd_msgid = CMD_MSGID_LEN | CMD_MSGID_WRITE;
+> +	u32 cmd_msgid = CMD_MSGID_LEN;
+>  	u32 cmd_enable = 0;
+>  	struct tcs_cmd *cmd;
+>  	int i, j;
+>  
+>  	/* Convert all commands to RR when the request has wait_for_compl set */
+>  	cmd_msgid |= msg->wait_for_compl ? CMD_MSGID_RESP_REQ : 0;
+> +	cmd_msgid |= (!msg->is_read) ? CMD_MSGID_WRITE : 0;
 
-I don't recall the specifics of *what* the bug was; +Jesper who maybe does?
+if (!msg->is_read)
+	cmd_msgid |= CMD_MSGID_WRITE
 
--Toke
+looks more human-readable
 
+[...]
+
+> +/**
+> + * rpmh_read: Read a resource value
+> + *
+> + * @dev: The device making the request
+> + * @state: Must be Active state
+> + * @cmd: The payload having address of resource to read
+> + * @n: The number of elements in @cmd, must be single command
+> + *
+> + * Reads the value for the resource address given in tcs_cmd->addr
+> + * and returns the tcs_cmd->data filled with same.
+> + *
+> + * May sleep. Do not call from atomic contexts.
+> + *
+> + * Return:
+> + * * 0			- Success
+> + * * -Error             - Error code
+
+This isn't valid kerneldoc
+
+> + */
+> +int rpmh_read(const struct device *dev, enum rpmh_state state, struct tcs_cmd *cmd, u32 n)
+> +{
+> +	int ret;
+> +	DECLARE_COMPLETION_ONSTACK(compl);
+> +	DEFINE_RPMH_MSG_ONSTACK(dev, state, &compl, rpm_msg);
+
+A reverse-Christmas-tree sorting would be nice here
+
+> +
+> +	if (n != 1 || state != RPMH_ACTIVE_ONLY_STATE)
+
+if n must be one, why is it a parameter?
+
+Konrad
