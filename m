@@ -1,181 +1,130 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21888263C90
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 23:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA822CCC1;
+	Tue, 24 Jun 2025 23:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750807211; cv=none; b=T3olqWAp1kAEKHP0MhOZvcRllvLHt1HCN9nRxo9Rz2gnUjOjqMn4eOmfWFB3HUN4G2lKIBenLCgi1jyQoY5NZiiLIKuEeEBKVRVYk9tdHO4S3WRd4+3LxiWZXzUwLYY21v9MDjSSedV0v0oWwl8exdwEUK3aK0u+FgGGTSCQOQk=
+	t=1750807235; cv=none; b=VzT9F7vGiwt1XQWE/1akN2iaZbm26o/Weg3Auic9y/opvRgsGK73n54w3i1kThcYGnpVCxZKfGzFYGawfz6FLuNLLA9lyUGKnV+FceAeHriZ5cZdfTIP+DYIjQUJZEVsCsOIR4gZcFZ6Gi0aSvm4wSyDgqeR52JGLy+fPB8E6TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750807211; c=relaxed/simple;
-	bh=LlpC1YfPX0wSzNxpniPUr6menRDKhqJ5YjGVmLYKGrU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gP+Fazcl3NEAWQH129RxBWV1RGgHykR1wJAsOPKvry1YqqjAYz+okyVRt/uYxQBNxzMrWJ4gptI9FVNukv7pmmWuI3KdwX/ge6WvGvxDBw54wdkQCAX09DmB8/3XSC42BMRenwgUnfTQngsegTyV8c+AFlwI8fZCyUVlK18Mgm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=UAthxjcK; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1750807235; c=relaxed/simple;
+	bh=wOHD0SgMzZAtR543TlfjWsKkA3Vc34NprgOavgZiRkc=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=sSLYHlUEiSh5cHh3wSJr/SgRg4H4Sbi+Uu+D8yvBxDSmTxVK0pRDczrr/mVMu8On440QoabpYOSkhLYO1N98JOOfjXW+RMB/SC97JuRkcty1WvXPh/OGwma9G9FGNs4vjL1UeQkSxxOuzswKPiiFTwEvjlq+XWJD/QhBhO7HlCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pa/EmC6P; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="UAthxjcK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=V8gmztvWykFpmhkeFbGIlEUdI1CttO0IpihuArM71Qk=;
-	t=1750807209; x=1752016809; b=UAthxjcKMQ5A286Hj/YnPgDPjMRqoi31u6mQSOLK6TLuE2P
-	snaxafCGSK7wBx1K2q3pOMA7yZTTTMyxP+i3DrrDYWHgQ37dI2dGioPpmZEcZaOJxV+cChLuUXE1r
-	itrWKI8NG/wXKESV6OQ6i2oOSW9vYZYfixW2t+6RNOBmdMYJam/r8dmb1d1OdlLidIPViWRIzVNZy
-	Xs0ZnyiwTRD44myxk72cXDtLMqBZ4DKuI0f5MOYmJEBUWu5TUg5XnSnGOroZfmTKVNG+wj2asCRgC
-	1U6WfwvtPHJuYihZ/uZOE1tafekcjwDfSbug7g3HnXVC/EO9YEFCVojdxKDsl7/g==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <benjamin@sipsolutions.net>)
-	id 1uUCvs-00000009Aa0-0S6V;
-	Wed, 25 Jun 2025 01:20:04 +0200
-Message-ID: <3b407ed711c5d7e1819da7513c3e320699473b2d.camel@sipsolutions.net>
-Subject: Re: [PATCH v10 09/13] x86/um: nommu: signal handling
-From: Benjamin Berg <benjamin@sipsolutions.net>
-To: Hajime Tazaki <thehajime@gmail.com>, linux-um@lists.infradead.org
-Cc: ricarkol@google.com, Liam.Howlett@oracle.com,
- linux-kernel@vger.kernel.org
-Date: Wed, 25 Jun 2025 01:20:03 +0200
-In-Reply-To: <548dcef198b79a4f8eb166481e39abe6e13ed2e3.1750594487.git.thehajime@gmail.com>
-References: <cover.1750594487.git.thehajime@gmail.com>
-	 <548dcef198b79a4f8eb166481e39abe6e13ed2e3.1750594487.git.thehajime@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pa/EmC6P"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-23526264386so65286805ad.2;
+        Tue, 24 Jun 2025 16:20:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750807233; x=1751412033; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wOHD0SgMzZAtR543TlfjWsKkA3Vc34NprgOavgZiRkc=;
+        b=Pa/EmC6PPPfQrIWPpiXDOic4Y0NS7ozNZjfdFoLmQdraf1Puv0188ZK1zFFDQ/bZQm
+         7mR9jtHfTW2ofEs+yPzwIMfo5nJkpU4CK3aMfC+gtqPSXmGUjDq9pwsSNhkT/UVlOfBa
+         sVVhBywNcef5fzeSqfUpUUp9kp9lHm/MIlBQhOCp2ifHsE+d312a5pdJfg8G4i1xQGAY
+         H34caV5Kr2LLjv9cEWbQJ2ybKvIK7LqPXl7fvGPhNmA7H15NfiJP45V/14XDBcBs8Qon
+         LDIdSvwSKMdH5BA2RocX/DeQgLJdPekRYrdBIiafnKK414MZqLk3XbVfhKxIpDVrTAv9
+         9TGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750807233; x=1751412033;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wOHD0SgMzZAtR543TlfjWsKkA3Vc34NprgOavgZiRkc=;
+        b=BXa9jn4w1PoS+zd5fWt+1aT7jVY2wpcEu39yvGCcIVVJ8o767HaEPzN7E8vWyf5k9/
+         DDXcDdpFosmryLa1God/viI1exNLgofmAsnqKFfR5nfOt23uM6/2MTVxRq1/DnAkSkhZ
+         QfceODd2U7xwzlJc392UuyhYC5bFmCcRYg09Hmv9bQqLGNC/4fNBnfybhot5TOs3PlmB
+         DTy7+RXwN8RBeGdPmU1E15mMo7z4aZRFel/xMe7EPjzzPh5SC0pkiDGDDhOJEOdolbAC
+         IgyF7VS2xYpasH2bmlf/Pe3/wFg4izaksB42WFuoOBK4s+W6HZFoi6SwzRQQNzRMIMEV
+         RBrg==
+X-Forwarded-Encrypted: i=1; AJvYcCXXoJF1AvBreKXMQytYgeh2CyAOEMTIGFXz8d/6OpRn8ivOFN81UN07zvXPny/XxH2obW2DGEDWkiMHwpXpeDw=@vger.kernel.org, AJvYcCXZ7BBxo7M2vbb4+mGmtSriot8ErwiTObJWlDBUW6xZKYxIA9VEjdcAawUVULyv7wP6FrM12uN6l7yIOhQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4KOx28m9w+OoBEp5kXkjJCDFwgILJXzUt0diyugPYYZz3VxLK
+	PQZy9bZQKSPeFE1ocDw6KJFF0lZyW3SMWD5Iz3P31z4XgURZkqeXgtlq
+X-Gm-Gg: ASbGncsNSLbzOHTV8uLt9wFt97UKWJDo+DsHgYq8AqTX2jL5V3zKJws6ZcOrgTzrLOj
+	cyULatGmTea8Ku58HpMhbVUkKzyu3MV7cG0vpUj6SJqHkdfmw3AR8ZFNkb1s1H/ta6y46WV1A1n
+	RyzcVpUICKXIODN+KlHG3L7Dk0bf7Lmmy/shYqrjb450hjEZsgiHg4Chqtrhqn/uL4nDWLa6Xz8
+	QGmI/+QPjJbXxFtk10fDpYcI8T9QNik+DSHa5NC8LTkgfoWMCIQ9yJ9WShI2rnmkEwJCBIwb43f
+	kd5wW8Llg41sv5dIHQy7X9Yn7g5p9x5pZmMUV1HW+APXyNqwlhrgEPYxpsN3ALw7IBLU9eEtA4O
+	AAYth2r8aMdYJfj9snYX6iRTgCSpwzTQnGqx8v1wo
+X-Google-Smtp-Source: AGHT+IGJaGuRMxNfrWWSjg38U9ompKDJ8WOzfj8301tYTS2tc+Y5WQTIzkUwMler6gUdozl73qywEA==
+X-Received: by 2002:a17:902:da88:b0:234:a139:1216 with SMTP id d9443c01a7336-23824087149mr20616685ad.44.1750807233556;
+        Tue, 24 Jun 2025 16:20:33 -0700 (PDT)
+Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d839389esm117859325ad.41.2025.06.24.16.20.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 16:20:33 -0700 (PDT)
+Date: Wed, 25 Jun 2025 08:20:20 +0900 (JST)
+Message-Id: <20250625.082020.1714542193051382332.fujita.tomonori@gmail.com>
+To: a.hindborg@kernel.org
+Cc: fujita.tomonori@gmail.com, miguel.ojeda.sandonis@gmail.com,
+ alex.gaynor@gmail.com, ojeda@kernel.org, aliceryhl@google.com,
+ anna-maria@linutronix.de, bjorn3_gh@protonmail.com, boqun.feng@gmail.com,
+ dakr@kernel.org, frederic@kernel.org, gary@garyguo.net,
+ jstultz@google.com, linux-kernel@vger.kernel.org, lossin@kernel.org,
+ lyude@redhat.com, rust-for-linux@vger.kernel.org, sboyd@kernel.org,
+ tglx@linutronix.de, tmgross@umich.edu
+Subject: Re: [PATCH v3 0/5] rust: time: Convert hrtimer to use Instant and
+ Delta
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <87cyat2c8z.fsf@kernel.org>
+References: <20250624.224130.2089845741064711087.fujita.tomonori@gmail.com>
+	<87o6ud2fbx.fsf@kernel.org>
+	<87cyat2c8z.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-7
+Content-Transfer-Encoding: base64
 
-Hi,
-
-On Mon, 2025-06-23 at 06:33 +0900, Hajime Tazaki wrote:
-> This commit updates the behavior of signal handling under !MMU
-> environment. It adds the alignment code for signal frame as the frame
-> is used in userspace as-is.
->=20
-> floating point register is carefully handling upon entry/leave of
-> syscall routine so that signal handlers can read/write the contents of
-> the register.
->=20
-> It also adds the follow up routine for SIGSEGV as a signal delivery runs
-> in the same stack frame while we have to avoid endless SIGSEGV.
->=20
-> Signed-off-by: Hajime Tazaki <thehajime@gmail.com>
-> ---
-> =C2=A0arch/um/include/shared/kern_util.h=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 =
-4 +
-> =C2=A0arch/um/nommu/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
-> =C2=A0arch/um/nommu/os-Linux/signal.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- |=C2=A0 13 ++
-> =C2=A0arch/um/nommu/trap.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 194 +++++++++++=
-+++++++++++++++
-> =C2=A0arch/x86/um/nommu/do_syscall_64.c=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=
-=C2=A0 6 +
-> =C2=A0arch/x86/um/nommu/os-Linux/mcontext.c |=C2=A0 11 ++
-> =C2=A0arch/x86/um/shared/sysdep/mcontext.h=C2=A0 |=C2=A0=C2=A0 1 +
-> =C2=A0arch/x86/um/shared/sysdep/ptrace.h=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 =
-2 +-
-> =C2=A08 files changed, 231 insertions(+), 2 deletions(-)
-> =C2=A0create mode 100644 arch/um/nommu/trap.c
->=20
-> [SNIP]
-> diff --git a/arch/x86/um/nommu/os-Linux/mcontext.c b/arch/x86/um/nommu/os=
--Linux/mcontext.c
-> index c4ef877d5ea0..955e7d9f4765 100644
-> --- a/arch/x86/um/nommu/os-Linux/mcontext.c
-> +++ b/arch/x86/um/nommu/os-Linux/mcontext.c
-> @@ -6,6 +6,17 @@
-> =C2=A0#include <sysdep/mcontext.h>
-> =C2=A0#include <sysdep/syscalls.h>
-> =C2=A0
-> +static void __userspace_relay_signal(void)
-> +{
-> + /* XXX: dummy syscall */
-> + __asm__ volatile("call *%0" : : "r"(__kernel_vsyscall), "a"(39) :);
-> +}
-
-39 is NR__getpid, I assume?
-
-The "call *%0" looks like it is code for retpolin, I think this would
-currently just segfault.
-
-> +
-> +void set_mc_userspace_relay_signal(mcontext_t *mc)
-> +{
-> + mc->gregs[REG_RIP] =3D (unsigned long) __userspace_relay_signal;
-> +}
-> +
-
-And this is really confusing me. The way I am reading it, the code
-tries to do:
-   1. Rewrite RIP to jump to __userspace_relay_signal
-   2. Trigger a getpid syscall (to do "nothing"?)
-   3. Let do_syscall_64 fire the signal from interrupt_end
-
-However, then that really confuses me, because:
- * If I am reading it correctly, then this approach will destroy the
-   contents of various registers (RIP, RAX and likely more)
- * This would result in an incorrect mcontext in the userspace signal
-   handler (which could be relevant if userspace is inspecting it)
- * However, worst, rt_sigreturn will eventually jump back
-   into__userspace_relay_signal, which has nothing to return to.
- * Also, relay_signal doesn't use this? What happens for a SIGFPE, how
-   is userspace interrupted immediately in that case?
-
-
-Honestly, I really think we should take a step back and swap the
-current syscall entry/exit code. That would likely also simplify
-floating point register handling, which I think is currently
-insufficient do deal with the odd special cases caused by different
-x86_64 hardware extensions.
-
-Basically, I think nommu mode should use the same general approach as
-the current SECCOMP mode. Which is to use rt_sigreturn to jump into
-userspace and let the host kernel deal with the ugly details of how to
-do that.
-
-I believe that this requires a second "userspace" sigaltstack in
-addition to the current "IRQ" sigaltstack. Then switching in between
-the two (note that the "userspace" one is also used for IRQs if those
-happen while userspace is executing).
-
-So, in principle I would think something like:
- * to jump into userspace, you would:
-    - block all signals
-    - set "userspace" sigaltstack
-    - setup mcontext for rt_sigreturn
-    - setup RSP for rt_sigreturn
-    - call rt_sigreturn syscall
- * all signal handlers can (except pure IRQs):
-    - check on which stack they are
-      -> easy to detect whether we are in kernel mode
-    - for IRQs one can probably handle them directly (and return)
-    - in user mode:
-       + store mcontext location and information needed for rt_sigreturn
-       + jump back into kernel task stack
- * kernel task handler to continue would:
-    - set sigaltstack to IRQ stack
-    - fetch register from mcontext
-    - unblock all signals
-    - handle syscall/signal in whatever way needed
-
-Now that I wrote about it, I am thinking that it might be possible to
-just use the kernel task stack for the signal stack. One would probably
-need to increase the kernel stack size a bit, but it would also mean
-that no special code is needed for "rt_sigreturn" handling. The rest
-would remain the same.
-
-Thoughts?
-
-Benjamin
-
-> [SNIP]
-
+T24gVHVlLCAyNCBKdW4gMjAyNSAyMTowMzoyNCArMDIwMA0KQW5kcmVhcyBIaW5kYm9yZyA8YS5o
+aW5kYm9yZ0BrZXJuZWwub3JnPiB3cm90ZToNCg0KPiBBbmRyZWFzIEhpbmRib3JnIDxhLmhpbmRi
+b3JnQGtlcm5lbC5vcmc+IHdyaXRlczoNCj4gDQo+PiAiRlVKSVRBIFRvbW9ub3JpIiA8ZnVqaXRh
+LnRvbW9ub3JpQGdtYWlsLmNvbT4gd3JpdGVzOg0KPj4NCj4+PiBPbiBUdWUsIDI0IEp1biAyMDI1
+IDE1OjExOjMxICswMjAwDQo+Pj4gQW5kcmVhcyBIaW5kYm9yZyA8YS5oaW5kYm9yZ0BrZXJuZWwu
+b3JnPiB3cm90ZToNCj4+Pg0KPj4+Pj4gYW5kIGFscmVhZHkgaW50cm9kdWNlcyBwYWluIGZvcg0K
+Pj4+Pj4gb3RoZXJzIChhbmQgbGlrZWx5IGV2ZW4gbW9yZSBwYWluIHdoZW4gd2UgbmVlZCB0byBy
+ZW5hbWUgaXQgYmFjayBuZXh0DQo+Pj4+PiBjeWNsZSksIGl0IGRvZXNuJ3QgbG9vayBsaWtlIGEg
+Z29vZCBpZGVhIHRvIGtlZXAgaXQuDQo+Pj4+DQo+Pj4+IE9rLCBJJ2xsIGRyb3AgaXQuDQo+Pj4N
+Cj4+PiBEbyB5b3Ugd2FudCBtZSB0byBzZW5kIHRoZSB1cGRhdGVkIGhydGltZXIgY29udmVyc2lv
+biBwYXRjaHNldA0KPj4+ICh1c2luZyBhc18qIG5hbWVzKT8NCj4+DQo+PiBObywgSSBhbSBqdXN0
+IGFib3V0IGZpbmlzaGVkIGZpeGluZyB1cCB0aGUgcmVzdC4gWW91IGNhbiBjaGVjayBpZiBpdCBp
+cw0KPj4gT0sgd2hlbiBJIHB1c2guDQo+IA0KPiBJIHB1c2hlZCBpdCwgcGxlYXNlIGNoZWNrLg0K
+DQpUaGFua3MhDQoNClRoZSBjb21taXQgZDlmYzAwZGM3MzU0ICgicnVzdDogdGltZTogQWRkIEhy
+VGltZXJFeHBpcmVzIHRyYWl0IikgYWRkcw0KdG8gSW5zdGFudCBzdHJ1Y3R1cmU6DQoNCisgICAg
+I1tpbmxpbmVdDQorICAgIHB1YihjcmF0ZSkgZm4gYXNfbmFub3MoJnNlbGYpIC0+IGk2NCB7DQor
+ICAgICAgICBzZWxmLmlubmVyDQorICAgIH0NCg0KV291bGQgaXQgYmUgYmV0dGVyIHRvIHRha2Ug
+c2VsZiBpbnN0ZWFkIG9mICZzZWxmPw0KDQpwdWIoY3JhdGUpIGZuIGFzX25hbm9zKHNlbGYpIC0+
+IGk2NCB7DQoNCkJlY2F1c2UgdGhlIGFzX25hbm9zIG1ldGhvZCBvbiB0aGUgRGVsdGEgc3RydWN0
+IHRha2VzIHNlbGYsIHdvdWxkbqJ0IGl0DQpiZSBiZXR0ZXIgdG8ga2VlcCBpdCBjb25zaXN0ZW50
+PyBJIHRoaW5rIHRoYXQgbXkgb3JpZ2luYWwgcGF0Y2ggYWRkcw0KaW50b19uYW5vcygpIHRoYXQg
+dGFrZXMgc2VsZi4gDQoNClRoaXMgY29tbWl0IGFsc28gYWRkcyBIclRpbWVyRXhwaXJlIHN0cmFp
+dCwgd2hpY2ggYXNfbmFub3MoKSBtZXRob2QNCnRha2VzICZzZWxmOg0KDQorLy8vIFRpbWUgcmVw
+cmVzZW50YXRpb25zIHRoYXQgY2FuIGJlIHVzZWQgYXMgZXhwaXJhdGlvbiB2YWx1ZXMgaW4gW2BI
+clRpbWVyYF0uDQorcHViIHRyYWl0IEhyVGltZXJFeHBpcmVzIHsNCisgICAgLy8vIENvbnZlcnRz
+IHRoZSBleHBpcmF0aW9uIHRpbWUgaW50byBhIG5hbm9zZWNvbmQgcmVwcmVzZW50YXRpb24uDQor
+ICAgIC8vLw0KKyAgICAvLy8gVGhpcyB2YWx1ZSBjb3JyZXNwb25kcyB0byBhIHJhdyBrdGltZV90
+IHZhbHVlLCBzdWl0YWJsZSBmb3IgcGFzc2luZyB0byBrZXJuZWwNCisgICAgLy8vIHRpbWVyIGZ1
+bmN0aW9ucy4gVGhlIGludGVycHJldGF0aW9uIChhYnNvbHV0ZSB2cyByZWxhdGl2ZSkgZGVwZW5k
+cyBvbiB0aGUNCisgICAgLy8vIGFzc29jaWF0ZWQgW0hyVGltZXJNb2RlXSBpbiB1c2UuDQorICAg
+IGZuIGFzX25hbm9zKCZzZWxmKSAtPiBpNjQ7DQorfQ0KDQpUaGF0J3MgYmVjYXVzZSBhcyBJIHJl
+cG9ydGVkLCBDbGlwcHkgd2FybnMgaWYgYXNfKiB0YWtlIHNlbGYuDQoNCkFzIEFsaWNlIHBvaW50
+ZWQgb3V0LCBDbGlwcHkgZG9lc24ndCB3YXJuIGlmIGEgdHlwZSBpbXBsZW1lbnRzDQpDb3B5LiBT
+byB3ZSBjYW4gYWRkIENvcHkgdG8gSHJUaW1lckV4cGlyZXMgdHJhaXQsIHRoZW4gQ2xpcHB5IGRv
+ZXNuJ3QNCndhcm4gYWJvdXQgYXNfbmFub3MgbWV0aG9kIHRoYXQgdGFrZXMgc2VsZjoNCg0KKy8v
+LyBUaW1lIHJlcHJlc2VudGF0aW9ucyB0aGF0IGNhbiBiZSB1c2VkIGFzIGV4cGlyYXRpb24gdmFs
+dWVzIGluIFtgSHJUaW1lcmBdLg0KK3B1YiB0cmFpdCBIclRpbWVyRXhwaXJlczogQ29weSB7DQor
+ICAgIC8vLyBDb252ZXJ0cyB0aGUgZXhwaXJhdGlvbiB0aW1lIGludG8gYSBuYW5vc2Vjb25kIHJl
+cHJlc2VudGF0aW9uLg0KKyAgICAvLy8NCisgICAgLy8vIFRoaXMgdmFsdWUgY29ycmVzcG9uZHMg
+dG8gYSByYXcga3RpbWVfdCB2YWx1ZSwgc3VpdGFibGUgZm9yIHBhc3NpbmcgdG8ga2VybmVsDQor
+ICAgIC8vLyB0aW1lciBmdW5jdGlvbnMuIFRoZSBpbnRlcnByZXRhdGlvbiAoYWJzb2x1dGUgdnMg
+cmVsYXRpdmUpIGRlcGVuZHMgb24gdGhlDQorICAgIC8vLyBhc3NvY2lhdGVkIFtIclRpbWVyTW9k
+ZV0gaW4gdXNlLg0KKyAgICBmbiBhc19uYW5vcyhzZWxmKSAtPiBpNjQ7DQorfQ0KDQpJJ20gZmlu
+ZSB3aXRoIGVpdGhlciAodGFraW5nICZzZWxmIG9yIEFkZGluZyBDb3B5KS4NCg0K
