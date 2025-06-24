@@ -1,73 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC5E2C3278;
-	Tue, 24 Jun 2025 18:38:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE5C566A;
+	Tue, 24 Jun 2025 18:39:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750790319; cv=none; b=fg5l47pM5QfVfweyBS+XIhhAIu5D9KmSYiwwa/r4GlDT8qGHYd9l4LeWeR+lwccmV0264TLKRrCehR961JLc689vbG36KKnSZoFoLUx+9xRkTMYr9Yi7nKcx/PL6crP7aj9pNfYyjARRktXZgKlUg3WOqsHfwHyLVa5rBMFsTB4=
+	t=1750790392; cv=none; b=RpOee2ClNumA1hjiydXeeyC2W9ZBniFmyHHq6NdLnlEh+WlhqXcvNi7zIsDax0OfB+VEJrLogh+9ZK2kQ0ycWMjAAPDbMhgq6RhxMJMy4zGT9I8rj8x7m8sP0QJZTonsfyUMmD9G2jBKG0a8wIbPkhhfosLTXugDGBPcysdvYIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750790319; c=relaxed/simple;
-	bh=12MGJ3lrmmFf8OkAfAXMJKKOW6XXzpBxQ94ei8UVurU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EZ5gEBRXZcP7l2+Klrbx69giLrm4s/mo1hBZIFQI0/jYe5twTO6EBQejRK2QaD+84bUHw3p8H4HP6mLh6SBDJuGdSM1jxzqxVfEy///o/3z2RGT+lf2IM5zUEhFV2txbgH1Ku6mh8PjL+3ku2jeC2sBYyCsHPmBtdQglRSiLt3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yxj/vyUs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750790392; c=relaxed/simple;
+	bh=rkkAw0rgggC/S1XCaWN2yu50izCptwi1Amszzv33gCg=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=JfBKEG+FHLKyAtyvTFMXAPgkf9sGICuZ3lTKnq6sBr/q0A2zRYMogzSqA7/TXObS2wVxVMDIoo44B0RiraNyx6zRzl9rxPzb4T7HX+JxmkHvlPbrKiRC0JBAUMq3RgQK1vKl4GUzD0mPbejTkhXJD2C17d+850sKq9au+g6CGIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JiAK+Vh9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yxj/vyUs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19231C4CEE3;
-	Tue, 24 Jun 2025 18:38:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JiAK+Vh9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38BADC4CEE3;
+	Tue, 24 Jun 2025 18:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750790318;
-	bh=12MGJ3lrmmFf8OkAfAXMJKKOW6XXzpBxQ94ei8UVurU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Yxj/vyUsUz73mlrmv3JeBmXcjnkGJ0jnZacKsBhZJ8WQRgH4235IgO0KlAt6D1/Bz
-	 Zlnx4NAZiPzM6ap6/MV7xyVcvv463zsW6pQZtE5iAgV9eg8hYTT3A2iG69RwSEp4VK
-	 DxcYUiYbfo6GDIzh25HzxYN9+l5ZAwLWGfeNnBysOlaYz5RUFIaRI059VTO2339iM2
-	 8o107MHcvLdTn3ANXS0e0GGKVPyos7HOh8I8PHYwU+Eu1du85YTZIQCSQ0DksFLKUp
-	 0AdRT8Hrnpv+ZKqvnT9tyOu7H3pDUcs3DI9UGoA/6fJwAtkhO9AhZUw9IF8F+rdNv/
-	 xMjJj7qJBMJGA==
-Date: Tue, 24 Jun 2025 19:38:32 +0100
-From: Simon Horman <horms@kernel.org>
-To: Mark Bloch <mbloch@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, saeedm@nvidia.com,
-	gal@nvidia.com, leonro@nvidia.com, tariqt@nvidia.com,
-	Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	moshe@nvidia.com, Vlad Dogaru <vdogaru@nvidia.com>,
-	Yevgeny Kliteynik <kliteyn@nvidia.com>
-Subject: Re: [PATCH net-next v2 3/8] net/mlx5: HWS, Refactor and export rule
- skip logic
-Message-ID: <20250624183832.GF1562@horms.kernel.org>
-References: <20250622172226.4174-1-mbloch@nvidia.com>
- <20250622172226.4174-4-mbloch@nvidia.com>
+	s=k20201202; t=1750790392;
+	bh=rkkAw0rgggC/S1XCaWN2yu50izCptwi1Amszzv33gCg=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=JiAK+Vh96OJdFWTXzMHr/R3oO/Ixzx2szCkFrMePCLqKJ6+Ua/GENeJDTZabPiJox
+	 /bGsESm+6vZ/syTTeFVzk78r5E0T7HWPKM0mn5NTa2AcLQPlFV+sNvz/RIvOcoKiqu
+	 98SSbYKFKRbwqVTZo7TxXAPxRxgycWVHIBBU3nhDU649hVsd24ZeLrR9kgqvxebK4U
+	 YLri0l/83bjNqC/VlzJhgTpIuNJEpfumnIXkAW2k3l9QmuhpEdbN3jG6bRQzp+92jX
+	 +0MZQ6dTiBeUS7AkABMHtNCCHDDy+lrMElr/77Iv4O7URiWrAGiUaLoZoiectP2GWT
+	 KrpxxgMZ03Rkg==
+From: Mark Brown <broonie@kernel.org>
+To: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Matthew Gerlach <matthew.gerlach@altera.com>, 
+ Khairul Anuar Romli <khairulanuar.romli@altera.com>, 
+ khairul.anuar.romli@altera.com
+In-Reply-To: <4e7a4b8aba300e629b45a04f90bddf665fbdb335.1749601877.git.khairul.anuar.romli@altera.com>
+References: <4e7a4b8aba300e629b45a04f90bddf665fbdb335.1749601877.git.khairul.anuar.romli@altera.com>
+Subject: Re: [PATCH v3 1/1] spi: spi-cadence-quadspi: Fix pm runtime
+ unbalance
+Message-Id: <175079039096.261551.863281864888122610.b4-ty@kernel.org>
+Date: Tue, 24 Jun 2025 19:39:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250622172226.4174-4-mbloch@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-08c49
 
-On Sun, Jun 22, 2025 at 08:22:21PM +0300, Mark Bloch wrote:
-> From: Vlad Dogaru <vdogaru@nvidia.com>
+On Mon, 16 Jun 2025 09:13:53 +0800, khairul.anuar.romli@altera.com wrote:
+> Having PM put sync in remove function is causing PM underflow during
+> remove operation. This is caused by the function, runtime_pm_get_sync,
+> not being called anywhere during the op. Ensure that calls to
+> pm_runtime_enable()/pm_runtime_disable() and
+> pm_runtime_get_sync()/pm_runtime_put_sync() match.
 > 
-> The bwc layer will use `mlx5hws_rule_skip` to keep track of numbers of
-> RX and TX rules individually, so export this function for future usage.
+> echo 108d2000.spi > /sys/bus/platform/drivers/cadence-qspi/unbind
+> [   49.644256] Deleting MTD partitions on "108d2000.spi.0":
+> [   49.649575] Deleting u-boot MTD partition
+> [   49.684087] Deleting root MTD partition
+> [   49.724188] cadence-qspi 108d2000.spi: Runtime PM usage count underflow!
 > 
-> While we're in there, reduce nesting by adding a couple of early return
-> statements.
+> [...]
 
-I'm all for reducing nesting. But this patch has two distinct changes.
-Please consider splitting it into two patches.
+Applied to
 
-> 
-> Signed-off-by: Vlad Dogaru <vdogaru@nvidia.com>
-> Reviewed-by: Yevgeny Kliteynik <kliteyn@nvidia.com>
-> Signed-off-by: Mark Bloch <mbloch@nvidia.com>
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-...
+Thanks!
+
+[1/1] spi: spi-cadence-quadspi: Fix pm runtime unbalance
+      commit: b07f349d1864abe29436f45e3047da2bdd476462
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
