@@ -1,321 +1,119 @@
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B4321B9FD;
-	Tue, 24 Jun 2025 16:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592E62E1759;
+	Tue, 24 Jun 2025 16:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750782886; cv=none; b=iB4JOp4V8o+Hph/AHr+wFaEInqVeIuyZWzkMYZVMFInRA3qBFNJjG4DBcR3xnrAoMpTNYejz1PkDJzF7MYES8MKdE/mlXp7a7d9mMAysIflPyz/SVz53//b/AmcuzrNlJ7/5sKQ9oy/RW75EJPyV/s1VQuvsiyI9XSD/hSgkLEg=
+	t=1750782905; cv=none; b=d6tTPjIGtn96/mrCNywEZrWopZThKJtbQebiL1hTIAHQvT+zSTKn6sqv75xsb7ly4gZVPyxibLht6QLxaC7DgLqvUUh2QjxYn6Ctf/b7Xza1Oi0MKzt1yUPzDTDFi70/S/WLTW0rvtVh9p5Zjpo/pYsxIbNTEWURCX4Cyy4gcXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750782886; c=relaxed/simple;
-	bh=J5bfbWH53bUccdThrxnaKpfdQ4UnlA5QW5K+J8MBlo4=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=UKHkQGSAfLcLf5SmN6MTjKJdMbrTeWXVQyb0NTk1tmkviS6et+KDtKcq+fR8030j4drUfbWZ1c5q/XdFsaKVtubrm0o6khUFhZBAAYQbidvdtBVEcLWpj6NlVPCJcMGLrrlpZzRb6OhgMUOk1E3G96inc1EQAtCuOtb4JzxXW+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=uFlwhfDq; arc=none smtp.client-ip=23.155.224.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+	s=arc-20240116; t=1750782905; c=relaxed/simple;
+	bh=nP0aUmfHfoTLo2wVCHBobujEMyBJGemPJITa+RyCb1c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mFf1PEzGrHtNY1okCRhMe8iRhhfd04g22OjX9CdR4s8IP3C3Mr7lxmXxV5Gvh7wnLBboGxs4llr2Kj7WTqnyTASznKTn8beo5GBnWxVfX3zFp2YY6dwiTlvmyzLk4rpWLvEDm4l4pzofGutrOg9dV5CLNC0VJw+6kEhVp14EwvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gAwfFdCb; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="uFlwhfDq"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 821488286F2E;
-	Tue, 24 Jun 2025 11:34:36 -0500 (CDT)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id sPLrPr_vJ3-F; Tue, 24 Jun 2025 11:34:33 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id C4FFA8287148;
-	Tue, 24 Jun 2025 11:34:33 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com C4FFA8287148
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1750782873; bh=amzNAppIr7CphoKbkPeWe0Dr61MnvAb0JnqDfqxQ2Vo=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=uFlwhfDqfmm1ntFNbyrdybZmgGGETB+91oXVzN2qNB7ar3t4PlmUvfI6cT8DquJo1
-	 UZqDD9xiUPrdTwTTYXpQA41tn8i3OJoye0IWQqIXOyaweUfcwCAJPtoP7h0lUTPFEA
-	 PZozKbhyj6R2ScuW+ZIbC6v/RSHhPAn2Y7tI+Ifw=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 9CZvCiq25Gwc; Tue, 24 Jun 2025 11:34:33 -0500 (CDT)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 7B72E8286F2E;
-	Tue, 24 Jun 2025 11:34:33 -0500 (CDT)
-Date: Tue, 24 Jun 2025 11:34:30 -0500 (CDT)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: Krishna Kumar <krishnak@linux.ibm.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
-	Shawn Anastasio <sanastasio@raptorengineering.com>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-pci <linux-pci@vger.kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, 
-	christophe leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>
-Message-ID: <618050180.1322616.1750782870691.JavaMail.zimbra@raptorengineeringinc.com>
-In-Reply-To: <06aa6c91-9580-43a6-b63d-e219e9f363aa@linux.ibm.com>
-References: <20250618190146.GA1213349@bhelgaas> <1469323476.1312174.1750293474949.JavaMail.zimbra@raptorengineeringinc.com> <19689b53-ac23-4b48-97c7-b26f360a7b75@linux.ibm.com> <1675876510.1317449.1750518311479.JavaMail.zimbra@raptorengineeringinc.com> <06aa6c91-9580-43a6-b63d-e219e9f363aa@linux.ibm.com>
-Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention
- indicator
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gAwfFdCb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750782903; x=1782318903;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nP0aUmfHfoTLo2wVCHBobujEMyBJGemPJITa+RyCb1c=;
+  b=gAwfFdCbj0zrTNzyeOekadOyqXFFIQYpFUnLM3LKIl5oIYS4AW/3PgCf
+   VRZCS3udL1rR94cAna/KsFouAtqKFE8HLj+RAT0DAjlDBLxQ1eskuqHu7
+   TwR1BVpTtfklFAI4lH/9BrsJ+CVmsitbxg0qQbuVd/bZIW8ju0mgckbME
+   I5ULln/Y5T/G6XPCwYpEMhfWhkaqOP1u9L9uGKlzqL434yJhvXr6VHwKN
+   iw8BHMBwhZAdgGH6Aqid2N4lx+cQGmf9pxkZPe0uaQ3I72vmN77QQ7rlk
+   wSSIwyYvZIidMrb6ecK8GTux6osWJkdVOYfhapjjfcYu48d/UA2+TP0DC
+   w==;
+X-CSE-ConnectionGUID: 0kh+EjShQdCu/3kUURezVQ==
+X-CSE-MsgGUID: dXOyus2hQF+/xZEtdJrAHg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="56704625"
+X-IronPort-AV: E=Sophos;i="6.16,262,1744095600"; 
+   d="scan'208";a="56704625"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 09:35:02 -0700
+X-CSE-ConnectionGUID: ABr/3/C6TzqiHEFM5Ph9RA==
+X-CSE-MsgGUID: Ps9F2R4lQ9uqiswuj49eyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,262,1744095600"; 
+   d="scan'208";a="182848015"
+Received: from vpanait-mobl.ger.corp.intel.com (HELO mdjait-mobl) ([10.245.245.116])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 09:34:59 -0700
+Date: Tue, 24 Jun 2025 18:34:51 +0200
+From: Mehdi Djait <mehdi.djait@linux.intel.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	"Nirujogi, Pratap" <pnirujog@amd.com>, Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org, 
+	hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org, 
+	dave.stevenson@raspberrypi.com, hdegoede@redhat.com, jai.luthra@ideasonboard.com, 
+	tomi.valkeinen@ideasonboard.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com, king.li@amd.com, 
+	dantony@amd.com, vengutta@amd.com, Svetoslav.Stoilov@amd.com, 
+	Yana.Zheleva@amd.com
+Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
+Message-ID: <aslodzamkbjm6n6oherakch2nyltl6mnncl4mzr4o774oolr4t@hpegah7dq72g>
+References: <20250615000915.GQ10542@pendragon.ideasonboard.com>
+ <53674c5f-6b68-49e7-bbb0-fd06fff344c3@amd.com>
+ <8b16675a-c6ac-4619-aabe-ad2a4be6c964@amd.com>
+ <20250623220503.GA15951@pendragon.ideasonboard.com>
+ <425j7c6xvbbatdhxgjgjawzwfnjmjetg6rpnwfudbtg6qz6nay@dy5ldbuhtbvv>
+ <aFp7tuXkU1jayPum@kekkonen.localdomain>
+ <aFp78tqHhe_IhV6d@kekkonen.localdomain>
+ <20250624102745.GG15951@pendragon.ideasonboard.com>
+ <nixg4efp3zkdpd6h7kp6wkvam63batpoknov2nkgu36voks6bk@gzuackzl3l5g>
+ <aFqQEwdzSY123xps@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
-Thread-Topic: pci/hotplug/pnv_php: Enable third attention indicator
-Thread-Index: epA8na1st4b0IArDb6o4fKBjSmsoNw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFqQEwdzSY123xps@kekkonen.localdomain>
+
+Hi Sakari,
+
+On Tue, Jun 24, 2025 at 11:46:27AM +0000, Sakari Ailus wrote:
+
+[...]
+
+> 
+> I'm in favour of the latter but both should be workable.
+> 
+> Speaking of return values, devm_clk_get_optional() may also return
+> -EPROBE_DEFER. That needs to be handled.
+> 
+
+Ack.
+
+> And further on -EPROBE_DEFER, I think the helper should return
+> -EPROBE_DEFER if the "clock-frequency" property doesn't exist on non-OF
+> nodes. That signals the required software nodes required on Intel Windows
+> definitions/ipu-bridge or AMD systems aren't in place yet so really probing
+> should be deferred. This would allow removing the hacks that return
+> -EPROBE_DEFER in sensor drivers when no graph endpoint is found.
+
+device_property_read_u32() returns the following:
+
+ * Return: number of values if @val was %NULL,
+ *         %0 if the property was found (success),
+ *	   %-EINVAL if given arguments are not valid,
+ *	   %-ENODATA if the property does not have a value,
+ *	   %-EPROTO if the property is not an array of numbers,
+ *	   %-EOVERFLOW if the size of the property is not as expected.
+ *	   %-ENXIO if no suitable firmware interface is present.
 
 
+Do you mean something like this in the helper:
 
------ Original Message -----
-> From: "Krishna Kumar" <krishnak@linux.ibm.com>
-> To: "Timothy Pearson" <tpearson@raptorengineering.com>
-> Cc: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "Shawn Anastasio" <sa=
-nastasio@raptorengineering.com>, "linux-kernel"
-> <linux-kernel@vger.kernel.org>, "linux-pci" <linux-pci@vger.kernel.org>, =
-"Madhavan Srinivasan" <maddy@linux.ibm.com>,
-> "Michael Ellerman" <mpe@ellerman.id.au>, "christophe leroy" <christophe.l=
-eroy@csgroup.eu>, "Naveen N Rao"
-> <naveen@kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>
-> Sent: Tuesday, June 24, 2025 2:07:30 AM
-> Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention i=
-ndicator
+if (ret == -ENODATA && !of_node)
+	return ERR_PTR(-EPROBE_DEFER);
 
-> On 6/21/25 8:35 PM, Timothy Pearson wrote:
->>
->> ----- Original Message -----
->>> From: "Krishna Kumar" <krishnak@linux.ibm.com>
->>> To: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "Timothy Pearson"
->>> <tpearson@raptorengineering.com>, "Shawn
->>> Anastasio" <sanastasio@raptorengineering.com>
->>> Cc: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel"
->>> <linux-kernel@vger.kernel.org>, "linux-pci"
->>> <linux-pci@vger.kernel.org>, "Madhavan Srinivasan" <maddy@linux.ibm.com=
->,
->>> "Michael Ellerman" <mpe@ellerman.id.au>,
->>> "christophe leroy" <christophe.leroy@csgroup.eu>, "Naveen N Rao"
->>> <naveen@kernel.org>, "Bjorn Helgaas"
->>> <bhelgaas@google.com>, "Shawn Anastasio" <sanastasio@raptorengineering.=
-com>
->>> Sent: Friday, June 20, 2025 4:26:51 AM
->>> Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention
->>> indicator
->>> Shawn, Timothy:
->>>
->>> Thanks for posting the series of patch. Few things I wanted to do bette=
-r
->>> understand Raptor problem -
->>>
->>>
->>> 1. Last time my two patches solved all the hotunplug operation and Kern=
-el crash
->>> issue except nvme case. It did not work with
->>>
->>> =C2=A0 =C2=A0 NVME since dpc support was not there. I was not able to d=
-o that due to being
->>> =C2=A0 =C2=A0 =C2=A0 occupied in some other work.
->> With the current series all hotplug is working correctly, including not =
-only
->> NVMe on root port and bridge ports, but also suprise plug of the entire =
-PCIe
->> switch at the root port.  The lack of DPC support *might* be related to =
-the PE
->> freeze, but in any case we prefer the hotplug driver to be able to recov=
-er from
->> a PE freeze (e.g. if a bridge card is faulty and needs to be replaced) w=
-ithout
->> also requiring a reboot, so I would consider DPC implementation orthogon=
-al to
->> this patch set.
-> Sounds Good !!
->>
->>> 2. I want to understand the delta from last yr problem to this problem.=
- Is the
->>> PHB freeze or hotunplug failure happens
->>>
->>> =C2=A0=C2=A0=C2=A0 only for particular Microsemi switch or it happens w=
-ith all the switches. When
->>> =C2=A0=C2=A0=C2=A0 did this problem started coming ? Till last yr
->> Hotplug has never worked reliably for us, if it worked at all it was alw=
-ays
->> rolling the dice on whether the kernel would oops and take down the host=
-.  Even
->> if the kernel didn't oops, suprise plug and auto-add / auto-remove never=
- worked
->> beyond one remove operation.
-> I would like to see this problem may be during our zoom/teams meeting. Th=
-ough I
-> have not tested surprise plug/unplug and only tested via sysfs, you may b=
-e
-> correct but I want to have a look of this problem.
->>
->>> =C2=A0=C2=A0=C2=A0 it was not there. Is it specific to particular Hardw=
-are ? Can I get your setup
->>> =C2=A0=C2=A0=C2=A0 to test this problem and your patch ?
->> Because you will need to be able to physically plug and unplug cards and=
- drives
->> this may be a bit tricky.  Do you have access to a POWER9 host system wi=
-th a
->> x16 PCIe slot?  If so, all you need is a Supermicro SLC-AO3G-8E2P card a=
-nd some
->> random U.2 NVMe drives -- these cards are readily available and provide
->> relatively standardized OCuLink access to a Switchtec bridge.
->>
->> If you don't have access to a POWER9 host, we can set you up with remote=
- access,
->> but it won't show all of the crashing and problems that occur with surpr=
-ise
->> plug unless we set up a live debug session (video call or similar).
->=20
->=20
-> Video Call should be fine. During the call I will have a look of existing
-> problem and fix along with driver/kernel logs.
-
-Sounds good.  We'll set up a machine in the DMZ for this session so you can=
- also have access.  For anyone interested in logging on to the box for logs=
-, can you send over an SSH public key to my Email address directly?  Will g=
-et everyone added with root access to the test box prior to the call start.
-
->>
->>> 3. To me, hot unplug opertaion=C2=A0 --> AER triggering --> DPC support=
-, this flow
->>> should mask the error to reach root port/cpu and it
->>>
->>> =C2=A0=C2=A0=C2=A0 should solve the PHB freeze/ hot unplug failure oper=
-ation. If there are AER/EEH
->>> =C2=A0=C2=A0=C2=A0 related synchronization issue we need to solve them.
->>>
->>> =C2=A0=C2=A0=C2=A0 Can you pls list the issue, I will pass it to EEH/AE=
-R team. But yeah, to me if
->>> =C2=A0=C2=A0=C2=A0 AER implementation is correct and we add DPC support=
-,
->>>
->>> =C2=A0=C2=A0=C2=A0 all the error will be contained by switch itself. Th=
-e PHB/root port/cpu will not
->>> =C2=A0=C2=A0=C2=A0 be impacted by this and there should not be any free=
-ze.
->> While this is a good goal to work toward, it only solves one possible fa=
-ult
->> mode.  The patch series posted here will handle the general case of a PE=
- freeze
->> without requiring a host reboot, which is great for high-reliability sys=
-tems
->> where there might be a desire to replace the entire switch card (this ha=
-s been
->> tested with the patch series and works perfectly).
->=20
->=20
-> You may be correct on this and this is possible. If the driver and AER/EE=
-H
-> errors/events are properly
->=20
-> handled then we may not need DPC in all cases. The point of DPC was to ab=
-sorb
-> the error at switch port
->=20
-> itself so that it will not reach to PHB/Root-port/Cpu and will avoid furt=
-her
-> corruption. I was hoping that if
->=20
-> DPC gets enabled, we may not need explicit reboot for drives to come up i=
-n case
-> of surprise hot unplug.
-
-I do understand the logic here, and it would theoretically work, but again =
-it's a bit more fragile than the solution we're presenting here in that it =
-relies on another chunk of device logic to work correctly in all cases, wit=
-h the consequence of a failure being a forced reboot.
-
-With our patch series here we can hot plug and hot unplug NVMe drives all d=
-ay without requiring any reboots, including surprise plug.  DPC would simpl=
-y make this process a little bit faster, in that we don't have to wait a fe=
-w hundred milliseconds for the PE to unfreeze and the EEH driver to give up=
-.
-
-> But yeah, we can compare this with current result when this support will =
-be
-> enabled.
->=20
->>
->>> 4. Ofcourse we can pick some of the fixes from pciehp driver if its mis=
-sing in
->>> pnv_php.c. Also at the same time you have done
->>>
->>> =C2=A0=C2=A0=C2=A0 some cleanup in hot unplug path and fixed the attenu=
-ation button related code.
->>> =C2=A0=C2=A0=C2=A0 If these works fine, we can pick it. But I want to t=
-est it.
->>>
->>> =C2=A0=C2=A0=C2=A0=C2=A0 Pls provide me setup.
->>>
->>> 5. If point 3 and 4 does not solve the problem, then only we should mov=
-e to
->>> pciehp.c. But AFAIK, PPC/Powernv is DT based while pciehp.c
->>>
->>> =C2=A0=C2=A0=C2=A0=C2=A0 may be only supporting acpi (I have to check i=
-t on this).=C2=A0 We need to provide
->>> =C2=A0=C2=A0=C2=A0=C2=A0 PHB related information via DTB and maintain t=
-he related
->>>
->>> =C2=A0=C2=A0=C2=A0=C2=A0 topology information via dtb and then it can b=
-e doable. Also , we need to do
->>> =C2=A0=C2=A0=C2=A0=C2=A0 thorough planning/testing if we think to choos=
-e pciehp.c.
->>>
->>> =C2=A0=C2=A0=C2=A0=C2=A0 But yeah, lets not jump here and lets try to f=
-ix the current issues via point 3
->>> =C2=A0=C2=A0=C2=A0=C2=A0 & 4. Point 5 will be our last option.
->> If possible I would like to see this series merged vs. being blocked on =
-DPC.
->> Again, from where I sit DPC is orthogonal; many events can cause a PE fr=
-eeze
->> and implementing DPC only solves one.  We do *not* want to require a hos=
-t
->> reboot in any situation whatsoever short of a complete failure of a crit=
-ical
->> element (e.g. the PHB itself or a CPU package); our use case as deployed=
- is
->> five nines critical infrastructure, and the broken hotplug has already b=
-een the
->> sole reason we have not maintained 100% uptime on a key system.
->=20
-> If you are in hurry and want to defer DPC for some time, I am fine with i=
-t since
-> it serves larger purpose like PE freeze and NVME drives working
->=20
-> along with surprise hotplug fixes.=C2=A0 I have gone through your pnv_php=
-.c changes
-> and I am mostly fine with it. But, I would like to review it again
->=20
-> from larger prespective w.r.t to EEH & pciehp.c, so give me some time.
-
-Sure, please let me know if anything is concerning.  My goal would be to ha=
-ve this reviewed from a code quality perspective and a v2 posted at least a=
- couple of days before the video call.
-
-Also, if
-> possible you can show me
->=20
-> the problem/fix along with log=C2=A0 during video call. it would be great=
- if we can
-> meet sometimes next month in early first week may be on 5th of July.
-
-Let's plan for that -- this is somewhat urgent with Debian Trixie being rel=
-eased soon, and I want to see this repair backported.  We already ship Book=
-worm Debian kernels with completely broken VFIO and hotplug, our goal is to=
- get that all fixed for Trixie and enable the functionality our customers a=
-re paying for.
-
-> I will request few of the EEH/AER developer to have a look into the patch=
- and to
-> join the meeting if they have bandwidth. Please shoot the
->=20
-> mail/invite on krishna.kumar11@ibm.com along with this email id. I am bas=
-ed in
-> Bangalore but can be available till night 10:00 pm.
-
-Will do, thanks!
+--
+Kind Regards
+Mehdi Djait
