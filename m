@@ -1,61 +1,41 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B34F2FD870;
-	Tue, 24 Jun 2025 15:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443952FE324;
+	Tue, 24 Jun 2025 15:09:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750777759; cv=none; b=VecUv7Ye3cr5NfopD41BM/QsBcPIDOb8/mMoTRISEKYpuv9GQeTRSrvWZjItlOhYJ97DY9Lv4QHHhOG1jm1wwGE6rvenUN7P8TReQ0YM3zeC8LOAPUrTCQNKq9rchwpAXC69eHAP9LN62zZybdPEpjCdvV2G7kRdBy1w81BkX+o=
+	t=1750777761; cv=none; b=WptLX7NMqCXaxnCWNLkHTF3AzFBKBMDXODJ+ESKiqR4gLsONDcotGIP6PH+RXnstarO51Zmbs9zq1jyfyZTAU/NF2phLJSwGLnqU8Rzr3/tbZN8rhY67X070YuUyHeujpblHNfUq0RkJBYZolFT0EHHEh/h9UHr9Ih6zlYiJqnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750777759; c=relaxed/simple;
-	bh=p8hKSAxPTGypFQ4ukRy4fkUp3r3iUW8ues0RYFqVcIo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cr60zO35nAfAQJC44EQBzXO0C8DwfrnD++CDYBRkL6MX124moYbzOrpZpvrHaoe5dgnDeXhiArQj4aRz54nuXbovTS9AUqOPT62P6wWp0VY3wG5GCOuI+NfFo7g43D1UXRvDkDFte+gqP3tb7RmfUChHgy9Q3Xb/F13ltL8yLCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=vShGESwl; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1750777761; c=relaxed/simple;
+	bh=cOPHkAez0y5Ph2BKZusGcnFqM2fdFg+vRgSVJJENzrQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=t5MM0bVnPKNwNm1WLpLkMbSQ+lVPnIwouaO7CtHX2G8oM8e3esOYDvwunTkH9DRRtRWQTc6bg+euebCdKSebVQ5/MyOLywb5R74x+AQC6BJa5+oPwmCt0+hALZ7/s4I6puKiuxxELn3SkNw/5N2C54HlSK3Ro69j/MTNngBQ4rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c2t3PwPE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="vShGESwl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1750777757; x=1782313757;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=p8hKSAxPTGypFQ4ukRy4fkUp3r3iUW8ues0RYFqVcIo=;
-  b=vShGESwlcbvUp9SHlGkzz2CuHb+0sX8YLRRJz10PPhXDaylOlaaLO2WV
-   gAZTf7v+M6jFm3iKt9YgShMld0lhExDK0u/2tvd5URjkeb7YhtqpyK8m5
-   eP0n6K9igIj+7QYy2eAPO6Ni8amnxId3pqSurxSevhAUylDQAxU6B76Qn
-   UKsUPY6qAo7hthGNZlFVhFQGJ8b+6wx2ZxShspemwU6qzpnup6JUSHu6S
-   gRQJsEXSja70JM5dKwLl/XrlwdMydIgmbOzGv5s9QG8TVlYFYFCaPT1pK
-   MH9mIPBj7KBO0Tv+bGoU4JnvGVjE4tgQJF5dP7PX6JMJP039+1fbkdxdf
-   A==;
-X-CSE-ConnectionGUID: ticneE1VRpCt6c5L3blMOw==
-X-CSE-MsgGUID: o7aRdA0LRuObY6L1IPtmtA==
-X-IronPort-AV: E=Sophos;i="6.16,262,1744095600"; 
-   d="scan'208";a="210641583"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Jun 2025 08:09:15 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 24 Jun 2025 08:08:38 -0700
-Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Tue, 24 Jun 2025 08:08:38 -0700
-From: <Ryan.Wanner@microchip.com>
-To: <mturquette@baylibre.com>, <sboyd@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>
-CC: <robh@kernel.org>, <linux-clk@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<varshini.rajendran@microchip.com>
-Subject: [PATCH v2 16/32] clk: at91: clk-i2s-mux: add support for parent_hw
-Date: Tue, 24 Jun 2025 08:08:13 -0700
-Message-ID: <d94b3c0c9958469ca1c5c34961ad27d0d0b7160b.1750182562.git.Ryan.Wanner@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c2t3PwPE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A99CEC4CEF1;
+	Tue, 24 Jun 2025 15:09:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750777760;
+	bh=cOPHkAez0y5Ph2BKZusGcnFqM2fdFg+vRgSVJJENzrQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=c2t3PwPEJXbh0S2ppORdAMA4fDxmIoEBTcUmMBPSjtSlv+9PAx4F8c0N4C2o/Zhrq
+	 YOqWA6xnTZFJJjnd2pYuyZ2lffEHyw2POQbkWi+MZiTZw2LzplNODdKSHN2Zauaslr
+	 Y4hKsYl0RWKxYD/Bb2Opmzo7z0m58Dx8jQMoQfludAl6owR57VdKiVoOuUevtSJ/KO
+	 LihxZ2YBAILAQ0sW2D+4+NiCKUl4sc3zw/PXMv73XpdjDvm/aPU+VXXNrzrQ0izeWo
+	 2HvfO6Rky5LnVaHWhT9IiwA+3Ji9KK/yN9NhtcaBFla18Mur9dRQA5lqkqzdUqu02b
+	 OdKrNdPAe+PMw==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 60/66] kconfig: gconf: use gtk_dialog_get_content_area() accessor
+Date: Wed, 25 Jun 2025 00:05:48 +0900
+Message-ID: <20250624150645.1107002-61-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1750182562.git.Ryan.Wanner@microchip.com>
-References: <cover.1750182562.git.Ryan.Wanner@microchip.com>
+In-Reply-To: <20250624150645.1107002-1-masahiroy@kernel.org>
+References: <20250624150645.1107002-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,77 +43,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+GTK 3 removes many implementation details and struct members from its
+public headers.
 
-Add support for parent_hw in i2s mux clock driver.
-With this parent-child relation is described with pointers rather
-than strings making registration a bit faster.
+Use the gtk_check_menu_item_get_active() accessor.
 
-All the SoC based drivers that rely on clk-i2s-mux were adapted
-to the new API change. The switch itself for SoCs will be done
-in subsequent patches.
+[1]: https://gitlab.gnome.org/GNOME/gtk/-/blob/2.24.33/docs/reference/gtk/compiling.sgml#L85
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-[ryan.wanner@microchip.com: Remove SoC specific changes as they are
-going to be coalesced into one SoC specific commit.]
-Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- drivers/clk/at91/clk-i2s-mux.c | 6 +++++-
- drivers/clk/at91/dt-compat.c   | 2 +-
- drivers/clk/at91/pmc.h         | 1 +
- 3 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/at91/clk-i2s-mux.c b/drivers/clk/at91/clk-i2s-mux.c
-index fe6ce172b8b0..04d9fcf940fb 100644
---- a/drivers/clk/at91/clk-i2s-mux.c
-+++ b/drivers/clk/at91/clk-i2s-mux.c
-@@ -51,6 +51,7 @@ static const struct clk_ops clk_i2s_mux_ops = {
- struct clk_hw * __init
- at91_clk_i2s_mux_register(struct regmap *regmap, const char *name,
- 			  const char * const *parent_names,
-+			  struct clk_parent_data *parent_data,
- 			  unsigned int num_parents, u8 bus_id)
+ scripts/kconfig/gconf.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
+index c49401b4c9a1..58da3f13c5a0 100644
+--- a/scripts/kconfig/gconf.c
++++ b/scripts/kconfig/gconf.c
+@@ -674,7 +674,7 @@ static void on_window_size_allocate(GtkWidget *widget,
+ static gboolean on_window1_delete_event(GtkWidget *widget, GdkEvent *event,
+ 					gpointer user_data)
  {
- 	struct clk_init_data init = {};
-@@ -63,7 +64,10 @@ at91_clk_i2s_mux_register(struct regmap *regmap, const char *name,
+-	GtkWidget *dialog, *label;
++	GtkWidget *dialog, *label, *content_area;
+ 	gint result;
+ 	gint ret = FALSE;
  
- 	init.name = name;
- 	init.ops = &clk_i2s_mux_ops;
--	init.parent_names = parent_names;
-+	if (parent_data)
-+		init.parent_data = (const struct clk_parent_data *)parent_data;
-+	else
-+		init.parent_names = parent_names;
- 	init.num_parents = num_parents;
+@@ -696,7 +696,8 @@ static gboolean on_window1_delete_event(GtkWidget *widget, GdkEvent *event,
+ 					GTK_RESPONSE_CANCEL);
  
- 	i2s_ck->hw.init = &init;
-diff --git a/drivers/clk/at91/dt-compat.c b/drivers/clk/at91/dt-compat.c
-index ccdeba3a1130..2b1aa834f111 100644
---- a/drivers/clk/at91/dt-compat.c
-+++ b/drivers/clk/at91/dt-compat.c
-@@ -239,7 +239,7 @@ static void __init of_sama5d2_clk_i2s_mux_setup(struct device_node *np)
- 			continue;
+ 	label = gtk_label_new("\nSave configuration ?\n");
+-	gtk_container_add(GTK_CONTAINER(GTK_DIALOG(dialog)->vbox), label);
++	content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
++	gtk_container_add(GTK_CONTAINER(content_area), label);
+ 	gtk_widget_show(label);
  
- 		hw = at91_clk_i2s_mux_register(regmap_sfr, i2s_mux_np->name,
--					       parent_names, 2, bus_id);
-+					       parent_names, NULL, 2, bus_id);
- 		if (IS_ERR(hw))
- 			continue;
- 
-diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index fe42700df6db..a380054d580d 100644
---- a/drivers/clk/at91/pmc.h
-+++ b/drivers/clk/at91/pmc.h
-@@ -182,6 +182,7 @@ at91_clk_register_h32mx(struct regmap *regmap, const char *name,
- struct clk_hw * __init
- at91_clk_i2s_mux_register(struct regmap *regmap, const char *name,
- 			  const char * const *parent_names,
-+			  struct clk_parent_data *parent_data,
- 			  unsigned int num_parents, u8 bus_id);
- 
- struct clk_hw * __init
+ 	result = gtk_dialog_run(GTK_DIALOG(dialog));
 -- 
 2.43.0
 
