@@ -1,166 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031E1219E0;
-	Tue, 24 Jun 2025 23:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700E2219E0;
+	Tue, 24 Jun 2025 23:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750808612; cv=none; b=IVsdog/ggwELIJrzeqv79oWfHtAsMRjp+qTNGTej7KIqOfKl4E301mkjJ0b/rB/JCwM+Dsoaiw33Orv6QMFWZrcii0wGXgMEUNwErA4YaytjXfNd3cwhkF9RV7DpBWXudAjm6wTNwJtZYuOzUkVtghfHeshOaCcXAWbXXWeFJIw=
+	t=1750808652; cv=none; b=LaQ+wHI1LbbNkG57xRBvzCSvbXV4LAz7qrBJHvqVVrySJvpH54aIoYfcXPgxCJjFvNTAkAHeuurOP/EicVOPfRUiXVDD82izzpF4VY4396GwnZrTQ0P4OhvOLhiu1xfPk7pQ+xoPxf2BOaqus9YPfM8EN612Q6/NESZYHjODA1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750808612; c=relaxed/simple;
-	bh=O7gUVsiIlylvvNC3RSqE8rBUotK/U95fpKbW95m9p58=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QG/MDkMoDP5D3Du194EJUuLIYyn6D3B8alvKauyhrros2ivl9FC+fJt6M9ASJKbba5liSPipwQqSjFuWQ6aRDE1xd989Ab78Vqi8hxicJDI3Z0m3R0xZ4xF9JIPEA527gPVhxCoyqnJLM2f9k4dsrM7fQpR6yJRuJbzPOcgPc6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oHwwrfCy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750808652; c=relaxed/simple;
+	bh=gJ2Y39ij81lvq+iKRiDDGSNRlRMdUnfqavwz1La/gMA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FSh4Y0P9txgNmhHMxg3cNzGkI6nGS9xGe/WEjjk2ie7322kVmD1EH+T/Np8tT0ttHt6zsVu+epgQ1wB8SkI1DEN0XIPCyfvtttPOn4Gy47R+LD8eAgrQUrs7DEbOmIzf9R54hCZMIAy+lTGdkbzRFUvESrai0Xj+ocgVkKIMJS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=e/RG7Gxt; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oHwwrfCy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CC17C4CEE3;
-	Tue, 24 Jun 2025 23:43:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750808611;
-	bh=O7gUVsiIlylvvNC3RSqE8rBUotK/U95fpKbW95m9p58=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oHwwrfCyEPK1ZvwufktAdST/5SL1Dyk5N2PfWoDnXP8YCHiamCGRPPk52K1osjc82
-	 w+Bh0mYdEW2connnnt7i0zSVDB6cCLPFlNxcWIHGLW6aNW11v42BxHWWdf1JMoj706
-	 kdTWYNvfom/3ZMgA88KjL9scMIQ2tw8wDExlwn/07bIsLvleUqV2wSC7jCCFEF3kpH
-	 Adu+IIjCgkhRo06OByzM327Ov8OlSp2YoCTxHKollTyWLNuTGDAvG5NJtb/xozMnhU
-	 70bt6tx/xI7Nd6574PoWiphu1OZkp/ffPnYb6x7WVI9s+BhM9Rx/M3suZfAz84IaHE
-	 +q3Egn2jTI2tQ==
-Date: Wed, 25 Jun 2025 02:43:27 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-Cc: peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tpm: Replace scnprintf() with sysfs_emit() and
- sysfs_emit_at() in sysfs show functions
-Message-ID: <aFs4H0gT286-cmvC@kernel.org>
-References: <20250619123707.399022-1-chelsyratnawat2001@gmail.com>
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="e/RG7Gxt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1750808648;
+	bh=gJ2Y39ij81lvq+iKRiDDGSNRlRMdUnfqavwz1La/gMA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=e/RG7Gxtw5W3CBuHcYNGv/w6plOoXdvuDnYyw33OMFnLPx72CtSGk/mZVXDr7kvvQ
+	 lQvvNjIR1z8+dP7hIHuOSYtYQD69z1shXUbod2f8a7IMnm825YwQtkOHMr+yELaxul
+	 yHnm2INU8nEpzKBuh2vJh8kEUimMut/n87IO40InhzIg+jyeGaAHddunxB9jbcMnPe
+	 CJ5D7W+W3MQclg+FTgFRnR9fCt7vYXSiUcHhmJMZc9tDY4hV2wBBE/5Kkgn7eZSp9l
+	 IT4B8PjYymsEerPDdo/Ios43uN7yJ3Tqmm6H7hD3myXFMDgpvEPP+Pcaxzkrs5xhDd
+	 S8K/nYPNmn1Uw==
+Received: from [192.168.68.112] (unknown [180.150.112.166])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 2047A640CD;
+	Wed, 25 Jun 2025 07:44:06 +0800 (AWST)
+Message-ID: <0f495eec39fd25d71a59a56876f6142e6fe786f3.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v2 2/2] ARM: dts: aspeed: clemente: add Meta Clemente BMC
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Leo Wang <leo.jt.wang@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Kees Cook
+ <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,  "Guilherme G. Piccoli"
+ <gpiccoli@igalia.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus
+ Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	bruce.jy.hung@fii-foxconn.com, george.kw.lee@fii-foxconn.com, Leo Wang
+	 <leo.jt.wang@fii-foxconn.com>
+Date: Wed, 25 Jun 2025 09:14:05 +0930
+In-Reply-To: <20250621-add-support-for-meta-clemente-bmc-v2-2-6c5ef059149c@fii-foxconn.com>
+References: 
+	<20250621-add-support-for-meta-clemente-bmc-v2-0-6c5ef059149c@fii-foxconn.com>
+	 <20250621-add-support-for-meta-clemente-bmc-v2-2-6c5ef059149c@fii-foxconn.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619123707.399022-1-chelsyratnawat2001@gmail.com>
 
-On Thu, Jun 19, 2025 at 05:37:07AM -0700, Chelsy Ratnawat wrote:
-> Replace calls to scnprintf() with sysfs_emit() and sysfs_emit_at() in
-> sysfs show functions. These helpers are preferred in sysfs callbacks
-> because they automatically handle buffer sizing (PAGE_SIZE) and
-> improve safety and readability.
-> 
-> Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+T24gU2F0LCAyMDI1LTA2LTIxIGF0IDE1OjUxICswODAwLCBMZW8gV2FuZyB3cm90ZToKPiBGcm9t
+OiBMZW8gV2FuZyA8bGVvLmp0LndhbmdAZ21haWwuY29tPgo+IAo+IEFkZCBsaW51eCBkZXZpY2Ug
+dHJlZSBlbnRyeSBmb3IgTWV0YSBDbGVtZW50ZSBjb21wdXRlLXRyYXkKPiBCTUMgdXNpbmcgQVNU
+MjYwMCBTb0MuCj4gCj4gU2lnbmVkLW9mZi1ieTogTGVvIFdhbmcgPGxlby5qdC53YW5nQGZpaS1m
+b3hjb25uLmNvbT4KPiAtLS0KPiDCoGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC9NYWtlZmlsZcKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqDCoCAxICsKPiDCoC4uLi9kdHMv
+YXNwZWVkL2FzcGVlZC1ibWMtZmFjZWJvb2stY2xlbWVudGUuZHRzwqDCoMKgIHwgMTI1NCArKysr
+KysrKysrKysrKysrKysrKwo+IMKgMiBmaWxlcyBjaGFuZ2VkLCAxMjU1IGluc2VydGlvbnMoKykK
+PiAKPiAKCipzbmlwKgoKPiArCj4gKyZpMmMyIHsKPiArwqDCoMKgwqDCoMKgwqBzdGF0dXMgPSAi
+b2theSI7Cj4gK8KgwqDCoMKgwqDCoMKgLy8gTW9kdWxlIDAsIEV4cGFuZGVyIEAweDIwCj4gK8Kg
+wqDCoMKgwqDCoMKgaW9fZXhwYW5kZXIwOiBncGlvQDIwIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgY29tcGF0aWJsZSA9ICJueHAscGNhOTU1NSI7Cj4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoHJlZyA9IDwweDIwPjsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgZ3Bpby1jb250cm9sbGVyOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAj
+Z3Bpby1jZWxscyA9IDwyPjsKPiArwqDCoMKgwqDCoMKgwqB9Owo+ICsKCipzbmlwKgoKPiArCj4g
+KyZpb19leHBhbmRlcjAgewo+ICvCoMKgwqDCoMKgwqDCoGdwaW8tbGluZS1uYW1lcyA9Cj4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCJGUEdBX1RIRVJNX09WRVJUX0wtSSIsCj4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCJGUEdBX1JFQURZX0JNQy1JIiwKPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIkhNQ19CTUNfREVURUNULU8iLAo+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAiSE1DX1BHT09ELU8iLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAiIiwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIkJNQ19TVEJZ
+X0NZQ0xFLU8iLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiRlBHQV9FUk9UX0ZB
+VEFMX0VSUk9SX0wtSSIsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCJXUF9IV19F
+WFRfQ1RSTF9MLU8iLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiRVJPVF9GUEdB
+X1JTVF9MLU8iLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiRlBHQV9FUk9UX1JF
+Q09WRVJZX0wtTyIsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCJCTUNfRVJPVF9G
+UEdBX1NQSV9NVVhfU0VMLU8iLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiVVNC
+Ml9IVUJfUlNUX0wtTyIsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCIiLAo+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiU0dQSU9fRU5fTC1PIiwKPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIkIyQl9JT0VYUF9JTlRfTC1JIiwKPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIkkyQ19CVVNfTVVYX1JFU0VUX0wtTyI7Cj4gK307Cgppb19leHBh
+bmRlcjAgaXMgYSBub2RlIGxhYmVsIHRoYXQgeW91J3JlIGRlZmluaW5nIGluIHRoaXMgc2FtZSBz
+b3VyY2UKZmlsZS4gVGhlIGNvZGluZyBzdHlsZSBleHBlY3RhdGlvbiBpcyB0aGF0IHlvdSBkZWZp
+bmUgYWxsIHRoZQpwcm9wZXJ0aWVzIGluIHRoZSBub2RlIGl0c2VsZi4gTGFiZWwgcmVmZXJlbmNl
+cyBsaWtlIHRoZSBvbmUgYWJvdmUKc2hvdWxkIGJlIHVzZWQgd2hlbiByZWZlcmVuY2luZyBub2Rl
+cyBmcm9tIGluY2x1ZGVkIGZpbGVzLgoKUGxlYXNlIGZpeCB0aHJvdWdob3V0IChlLmcuIGF0IGxl
+YXN0IGlvX2V4cGFuZGVyMSAtIGlvX2V4cGFuZGVyMTMsIGJ1dAphbnkgb3RoZXIgaW5zdGFuY2Vz
+IGFzIHdlbGwpLgoKPiArCj4gKyZwaW5jdHJsIHsKPiArwqDCoMKgwqDCoMKgwqBwaW5jdHJsX25j
+c2kzX2RlZmF1bHQ6IG5jc2kzX2RlZmF1bHQgewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqBmdW5jdGlvbiA9ICJSTUlJMyI7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oGdyb3VwcyA9ICJOQ1NJMyI7Cj4gK8KgwqDCoMKgwqDCoMKgfTsKPiArCj4gK8KgwqDCoMKgwqDC
+oMKgcGluY3RybF9uY3NpNF9kZWZhdWx0OiBuY3NpNF9kZWZhdWx0IHsKPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgZnVuY3Rpb24gPSAiUk1JSTQiOwo+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqBncm91cHMgPSAiTkNTSTQiOwo+ICvCoMKgwqDCoMKgwqDCoH07CgpDYW4g
+eW91IHBsZWFzZSByYXRoZXIgYWRkIHRoZXNlIHRvIGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC9h
+c3BlZWQtZzYtCnBpbmN0cmwuZHRzaSBzbyBvdGhlciBib2FyZHMgY2FuIG1ha2UgdXNlIG9mIHRo
+ZW0/CgpUaGFua3MsCgpBbmRyZXcK
 
-Some comments about the commit message.
-
-Don't use "readability" as an argument as it is something that we cannot
-measure, and thus useless documentation.
-
-I neither don't understand "PAGE_SIZE" in the parentheses, or how it
-"connects" to the sentence. And what do you mean exactly by safety?
-
-Off-topic'ish:
-
-In the Jargon world, safety is actually different than security :-)
-Commercial airline planes have great safety (through redundancy)
-and not as great (information) security. Just to reflect why
-"safety" is neither an argument ...
-
-
-> ---
->  drivers/char/tpm/tpm_ppi.c | 26 +++++++++++++-------------
->  1 file changed, 13 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm_ppi.c b/drivers/char/tpm/tpm_ppi.c
-> index bc7b1b4501b3..421c6264bac9 100644
-> --- a/drivers/char/tpm/tpm_ppi.c
-> +++ b/drivers/char/tpm/tpm_ppi.c
-> @@ -52,7 +52,7 @@ static ssize_t tpm_show_ppi_version(struct device *dev,
->  {
->  	struct tpm_chip *chip = to_tpm_chip(dev);
->  
-> -	return scnprintf(buf, PAGE_SIZE, "%s\n", chip->ppi_version);
-> +	return sysfs_emit(buf, "%s\n", chip->ppi_version);
->  }
->  
->  static ssize_t tpm_show_ppi_request(struct device *dev,
-> @@ -87,11 +87,11 @@ static ssize_t tpm_show_ppi_request(struct device *dev,
->  		else {
->  			req = obj->package.elements[1].integer.value;
->  			if (tpm_ppi_req_has_parameter(req))
-> -				size = scnprintf(buf, PAGE_SIZE,
-> +				size = sysfs_emit(buf,
->  				    "%llu %llu\n", req,
->  				    obj->package.elements[2].integer.value);
->  			else
-> -				size = scnprintf(buf, PAGE_SIZE,
-> +				size = sysfs_emit(buf,
->  						"%llu\n", req);
->  		}
->  	} else if (obj->package.count == 2 &&
-> @@ -100,7 +100,7 @@ static ssize_t tpm_show_ppi_request(struct device *dev,
->  		if (obj->package.elements[0].integer.value)
->  			size = -EFAULT;
->  		else
-> -			size = scnprintf(buf, PAGE_SIZE, "%llu\n",
-> +			size = sysfs_emit(buf, "%llu\n",
->  				 obj->package.elements[1].integer.value);
->  	}
->  
-> @@ -211,9 +211,9 @@ static ssize_t tpm_show_ppi_transition_action(struct device *dev,
->  	}
->  
->  	if (ret < ARRAY_SIZE(info) - 1)
-> -		status = scnprintf(buf, PAGE_SIZE, "%d: %s\n", ret, info[ret]);
-> +		status = sysfs_emit(buf, "%d: %s\n", ret, info[ret]);
->  	else
-> -		status = scnprintf(buf, PAGE_SIZE, "%d: %s\n", ret,
-> +		status = sysfs_emit(buf, "%d: %s\n", ret,
->  				   info[ARRAY_SIZE(info)-1]);
->  	return status;
->  }
-> @@ -255,22 +255,22 @@ static ssize_t tpm_show_ppi_response(struct device *dev,
->  	res = ret_obj[2].integer.value;
->  	if (req) {
->  		if (res == 0)
-> -			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
-> +			status = sysfs_emit(buf, "%llu %s\n", req,
->  					   "0: Success");
->  		else if (res == 0xFFFFFFF0)
-> -			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
-> +			status = sysfs_emit(buf, "%llu %s\n", req,
->  					   "0xFFFFFFF0: User Abort");
->  		else if (res == 0xFFFFFFF1)
-> -			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
-> +			status = sysfs_emit(buf, "%llu %s\n", req,
->  					   "0xFFFFFFF1: BIOS Failure");
->  		else if (res >= 1 && res <= 0x00000FFF)
-> -			status = scnprintf(buf, PAGE_SIZE, "%llu %llu: %s\n",
-> +			status = sysfs_emit(buf, "%llu %llu: %s\n",
->  					   req, res, "Corresponding TPM error");
->  		else
-> -			status = scnprintf(buf, PAGE_SIZE, "%llu %llu: %s\n",
-> +			status = sysfs_emit(buf, "%llu %llu: %s\n",
->  					   req, res, "Error");
->  	} else {
-> -		status = scnprintf(buf, PAGE_SIZE, "%llu: %s\n",
-> +		status = sysfs_emit(buf, "%llu: %s\n",
->  				   req, "No Recent Request");
->  	}
->  
-> @@ -314,7 +314,7 @@ static ssize_t show_ppi_operations(acpi_handle dev_handle, char *buf, u32 start,
->  		}
->  
->  		if (ret > 0 && ret < ARRAY_SIZE(info))
-> -			str += scnprintf(str, PAGE_SIZE, "%d %d: %s\n",
-> +			str += sysfs_emit_at(str, "%d %d: %s\n",
->  					 i, ret, info[ret]);
->  	}
->  
-> -- 
-> 2.47.1
-> 
-
-BR, Jarkko
