@@ -1,233 +1,120 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF0A26B2D7
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 10:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE48284B4F;
+	Tue, 24 Jun 2025 10:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750760886; cv=none; b=bMyW4Jwx6WznHNoWne4lHrOAEWDuRvBmwJrW/N7mPA/X0IvG2peFdcWNp/SnlUy+sQPzEOyHU9CJTjMKs7wJQgkxGpnWU1JjH+TdrHfMhxjZckJB2EFq2Vk5I+CpvV+LEZtj822W8u1BpEp4xAcXGzdxXYZri2UkQ3LGYg89DSc=
+	t=1750760890; cv=none; b=YzizQTT3ocyeKlg3e4LNi8Tl6zQS3oyjX02ef1SL4bI5jLRTwon7f3dMN0d4em86j9z7vQrwnB1DXqYtLg4H5bJXQTgZgeD5RxpkzeWvc1cU0eIiqS3OlZmwVJ3vJSubO/SftW9roV+PPzqslO3tIp+RgFtMbhSwzk8vmbAbpG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750760886; c=relaxed/simple;
-	bh=p1OjU6YIg8nbWOiOSNhQGKGurpfgAli/KsTjTdOO6vw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=YMOm3j7bFyo8jnKPUP3SKIe/fylO774zYBWSU1ymn3+jC4ksifAHBJ8LhuQJn2UhP6s4a7Kb/opNwQp1hSITmU/EULESpyyGUxg79ug2XGWHXT1LxJS89XwSdaMpEKvU1WpiG+agVwHMVBgn9WN78aPwXEVq3fcZBjuXos8EJHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nuxf4uHj; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750760890; c=relaxed/simple;
+	bh=xDpe5jVrfQCNNcsPrQu4ixRrP8NOQXLLuUnqA0uqakk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MiFkxKBRAm7W7+DoqDcr8sRuTPlIB8POs7uifUsTz3PWFAmDMG599FF6nWxAeUxlCJnhCst+usVYOSRWPiiXghJShLuTOU+qCnj7zKgmjobl4sOwbxcnSERaoobVToG66pIhuG3pZ5R/Lg4vpIE1xMuwXB58P9C96uK1oORwugE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=glS1arOc; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nuxf4uHj"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O8htSV014586;
-	Tue, 24 Jun 2025 10:27:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=gMJA6NAJR2A7pml2JJY+PM
-	5teThKF5egGycriSbEEuA=; b=nuxf4uHjX8bbDtYrc9iVDIY3fYsQCe/ZpKZYCl
-	S9RvlJHaIv9ojjc+BpTPTnGwE4MLe3OYoyqdH1vH3GfSaLG1VOzMn7NKwopymLbK
-	NL05gVxAL7Bw87sZHP2ZQss6XlIpcRGgT4UJPxQHSUfPnDLx+H8fqrJVmz6ixg+o
-	3AIbSCZFI9n9IGZ7ZZISXTK8kTv5DHERnmYPkiMAh6koHepvsm6QIExBrWlZj1wJ
-	aqjt20oE2r4ifYiG+J0geHd2AkEPkQwNql2zz7gGsNqKi2BMjJZfy1zVrcX+0EwM
-	LraMzzoafsgBIctHtej9Ah85LO9w4WjjqLxsJbBmawccBpTQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f2rpuwu2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 10:27:35 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55OARXHT005103
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 10:27:33 GMT
-Received: from nsssdc-sh01-lnx.ap.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 24 Jun 2025 03:27:29 -0700
-From: Luo Jie <quic_luoj@quicinc.com>
-Date: Tue, 24 Jun 2025 18:26:59 +0800
-Subject: [PATCH v5] coccinelle: misc: Add field_modify script
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="glS1arOc"
+Received: from pendragon.ideasonboard.com (85-76-34-99-nat.elisa-mobile.fi [85.76.34.99])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 5D678741;
+	Tue, 24 Jun 2025 12:27:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750760869;
+	bh=xDpe5jVrfQCNNcsPrQu4ixRrP8NOQXLLuUnqA0uqakk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=glS1arOcoKOgAxc/xb131V/R9QliS9sEGow75/IvE63yFhmrzXvAFhEV893BDPEHt
+	 8oTQPJMYmhuJYcUyiCNRrbRsQ0xq6gRcQrriWU9e5MMdVfIeWzKBjSWoc4O75EwoUB
+	 eaPB2plIOIbRvE+HjlBx5gF506BpQQ0WUeOONjWQ=
+Date: Tue, 24 Jun 2025 13:27:45 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mehdi Djait <mehdi.djait@linux.intel.com>,
+	"Nirujogi, Pratap" <pnirujog@amd.com>,
+	Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
+	hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org,
+	dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
+	jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com,
+	king.li@amd.com, dantony@amd.com, vengutta@amd.com,
+	Svetoslav.Stoilov@amd.com, Yana.Zheleva@amd.com
+Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
+Message-ID: <20250624102745.GG15951@pendragon.ideasonboard.com>
+References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
+ <20250615000915.GQ10542@pendragon.ideasonboard.com>
+ <53674c5f-6b68-49e7-bbb0-fd06fff344c3@amd.com>
+ <8b16675a-c6ac-4619-aabe-ad2a4be6c964@amd.com>
+ <20250623220503.GA15951@pendragon.ideasonboard.com>
+ <425j7c6xvbbatdhxgjgjawzwfnjmjetg6rpnwfudbtg6qz6nay@dy5ldbuhtbvv>
+ <aFp7tuXkU1jayPum@kekkonen.localdomain>
+ <aFp78tqHhe_IhV6d@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250624-field_modify-v5-1-cd67127030e4@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAHJ9WmgC/2WO0QrCIBhGXyW8zpjO6dZV7xERpr/thzZLSxpj7
- 55bFzG6PB+cwzeSCAEhkv1mJAESRvR9hmq7IabV/RUo2syEF7wqJOPUIdzsufMW3UC5YmXjpCr
- rmpGs3AM4fC+54ylzi/Hpw7DUE5vXb0gwtQ6lkhZUOtU0XGtnLurweKHB3uyM78icSuKn//1II
- usahFPCalFpudanafoA2nxjJukAAAA=
-To: Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes
-	<linux@rasmusvillemoes.dk>,
-        Julia Lawall <Julia.Lawall@inria.fr>,
-        "Nicolas
- Palix" <nicolas.palix@imag.fr>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Oliver Upton
-	<oliver.upton@linux.dev>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Suzuki K Poulose
-	<suzuki.poulose@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>
-CC: <linux-kernel@vger.kernel.org>, <cocci@inria.fr>,
-        <linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-        <andrew@lunn.ch>, <quic_kkumarcs@quicinc.com>,
-        <quic_linchen@quicinc.com>, <quic_leiwei@quicinc.com>,
-        <quic_suruchia@quicinc.com>, <quic_pavir@quicinc.com>,
-        <Markus.Elfring@web.de>, Luo Jie
-	<quic_luoj@quicinc.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750760849; l=3729;
- i=quic_luoj@quicinc.com; s=20250209; h=from:subject:message-id;
- bh=p1OjU6YIg8nbWOiOSNhQGKGurpfgAli/KsTjTdOO6vw=;
- b=EvDaEMFMGqjUm9zmrAux1lHP3BkNmwfDspYAze/4BpA/c2GH1Z5Hyu2R+qLspqEbM5bk+GzO7
- k80tqlLBl2oCy/XIEys8rAN1Xas+bQDgH/xGJLUzmz/9xnuW4oPwOZy
-X-Developer-Key: i=quic_luoj@quicinc.com; a=ed25519;
- pk=pzwy8bU5tJZ5UKGTv28n+QOuktaWuriznGmriA9Qkfc=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=NdDm13D4 c=1 sm=1 tr=0 ts=685a7d97 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=05oQ047nAAAA:8 a=kXShSgmZOANboR8bh70A:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22 a=vNAg3JWiabyzeNEprMgK:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDA4OCBTYWx0ZWRfX7+gla0WLZTLw
- qQLIjXCkfOZkaS8Hn10W/G/bqpqNOaYtJn7i97I4Bna33DcYTdZwp2uNOIPk87z3U/K3SRM5xkV
- qWq1DebNRszuCuTAT5ajCaE4UaAJ9NvYBu5fAaXlAkIowyPuelYxhjPc9f97tuGPH6fvaT5SzBg
- JiOs4X1dYMWKt1A7t6W6aE2j5SVJYCPPmzHffAHzJIjy1FujXLS8Oent6GRuRH7YNbZbvlnssUw
- afEZ2C0wbaQPAgo+gXvFplZnEKHlbhlsGyOOiPJfEACjQtMk35drLEKpBAcAirxNdLmJM/R0Urf
- O0EhX4EoIlcyi+ULMIivKGl0fcZjPk3zQnI1pMAPGb1rVtGYSvqmoxSXzm8U9PCkKLU+rOuGmEI
- HMQHpd65VRtO4r+IDb+wLU4V/WNqBNwyzMyvHKB6Lse/YeO1mWuWF9RYRFd6shtflDX5XJa2
-X-Proofpoint-ORIG-GUID: bBYdcg27e70Jt-qUd8paLk1p9Sens5aL
-X-Proofpoint-GUID: bBYdcg27e70Jt-qUd8paLk1p9Sens5aL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-24_04,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 mlxscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
- phishscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999 adultscore=0
- clxscore=1015 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506240088
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aFp78tqHhe_IhV6d@kekkonen.localdomain>
 
-Find and suggest conversions of opencoded field modify patterns with
-the wrapper FIELD_MODIFY() API defined in include/linux/bitfield.h
-for catching the possible parameter type error in the compile time.
+On Tue, Jun 24, 2025 at 10:20:34AM +0000, Sakari Ailus wrote:
+> On Tue, Jun 24, 2025 at 10:19:35AM +0000, Sakari Ailus wrote:
+> > On Tue, Jun 24, 2025 at 10:35:18AM +0200, Mehdi Djait wrote:
+> > > On Tue, Jun 24, 2025 at 01:05:03AM +0300, Laurent Pinchart wrote:
+> > > > On Mon, Jun 23, 2025 at 05:51:48PM -0400, Nirujogi, Pratap wrote:
+> > > > > On 6/16/2025 6:49 PM, Nirujogi, Pratap wrote:
+> > > > > >>> +static int ov05c10_probe(struct i2c_client *client)
+> > > > > >>> +{
+> > > > > >>> +     struct ov05c10 *ov05c10;
+> > > > > >>> +     u32 clkfreq;
+> > > > > >>> +     int ret;
+> > > > > >>> +
+> > > > > >>> +     ov05c10 = devm_kzalloc(&client->dev, sizeof(*ov05c10), 
+> > > > > >>> GFP_KERNEL);
+> > > > > >>> +     if (!ov05c10)
+> > > > > >>> +             return -ENOMEM;
+> > > > > >>> +
+> > > > > >>> +     struct fwnode_handle *fwnode = dev_fwnode(&client->dev);
+> > > > > >>> +
+> > > > > >>> +     ret = fwnode_property_read_u32(fwnode, "clock-frequency", 
+> > > > > >>> &clkfreq);
+> > > > > >>> +     if (ret)
+> > > > > >>> +             return  dev_err_probe(&client->dev, -EINVAL,
+> > > > > >>> +                                   "fail to get clock freq\n");
+> > > > > >>
+> > > > > >> Let's try to land
+> > > > > >> https://lore.kernel.org/linux-media/20250521104115.176950-1- 
+> > > > > >> mehdi.djait@linux.intel.com/
+> > > > > >> and replace the code above with devm_v4l2_sensor_clk_get().
+> > > > > >>
+> > > > > > Ok, we will verify on our side.
+> > > > > 
+> > > > > We tried using devm_v4l2_sensor_clk_get() and found its required to add 
+> > > > > support for software_node to make it work with this driver.
+> > > > 
+> > > > Why is that ?
+> > > > 
+> > > > > Please refer 
+> > > > > the changes below and let us know if these should be submitted as a 
+> > > > > separate patch.
+> > > 
+> > > The helper is still not merged, so no patch is required.
+> > > 
+> > > I will see if a change is needed from the helper side or the OV05C10 side.
+> > 
+> > I wonder if there's a better way to figure out if you're running on a DT or
+> > ACPI based system than getting the device's parents and checking which one
+> > you find first, DT or ACPI. I think that should work for now at least.
+> 
+> Or, rather, checking for non-OF node here would probably work the best. I
+> wouldn't expect these to be software node based on DT systems ever.
 
-Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
----
-Add the helper FIELD_MODIFY() to the FIELD_XXX family of bitfield
-macros. It is functionally similar as xxx_replace_bits(), but adds
-the compile time checking to catch incorrect parameter type errors.
+Until it happens :-) And we'll handle it then.
 
-This series also converts the four instances of opencoded FIELD_MODIFY()
-that are found in the core kernel files, to instead use the new
-FIELD_MODIFY() macro. This is achieved with Coccinelle, by adding
-the script field_modify.cocci.
-
-The changes are validated on IPQ9574 SoC which uses ARM64 architecture.
----
-Changes in v5:
-- Remove ARM64 patches based on the discussion in v3 and v4 versions of
-  this series.
-- Simplify the condition selections in coccinelle script.
-- Link to v4: https://lore.kernel.org/r/20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com
-
-Changes in v4:
-- Add org, report and context mode for coccinelle script.
-- Fix other comments on coccinelle script patch.
-- Remove the FIELD_MODIFY patch as it is merged.
-- Link to v3: https://lore.kernel.org/r/20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com
-
-Changes in v3:
-- Correct the order of header files included.
-- Add the Coccinelle script field_modify.cocci..
-- Convert the opencoded FIELD_MODIFY() variants inside arm64 directory,
-  identified by field_modify.cocci.
-- Link to v2: https://lore.kernel.org/all/20250410131048.2054791-1-quic_luoj@quicinc.com/
-
-Changes in v2:
-- Update the documented example for FIELD_MODIFY().
-- Improve the commit message to describe the need for the change.
-- Link to v1: https://lore.kernel.org/all/20250318071526.1836194-1-quic_luoj@quicinc.com/
----
- scripts/coccinelle/misc/field_modify.cocci | 60 ++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
-
-diff --git a/scripts/coccinelle/misc/field_modify.cocci b/scripts/coccinelle/misc/field_modify.cocci
-new file mode 100644
-index 000000000000..7d4858c0a68d
---- /dev/null
-+++ b/scripts/coccinelle/misc/field_modify.cocci
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/// Replace below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
-+/// - reg &= ~MASK;
-+/// - reg |= FIELD_PREP(MASK, val);
-+//
-+// Confidence: High
-+// Author: Luo Jie <quic_luoj@quicinc.com>
-+// Copyright: (C) 2025 Qualcomm Innovation Center, Inc.
-+// Keywords: FIELD_PREP, FIELD_MODIFY
-+// Options: --include-headers
-+
-+virtual context
-+virtual patch
-+virtual org
-+virtual report
-+
-+@depends on context@
-+identifier reg, val;
-+constant mask;
-+symbol FIELD_PREP;
-+@@
-+
-+*reg &= ~mask;
-+*reg |= FIELD_PREP(mask, val);
-+
-+@depends on patch@
-+identifier reg, val;
-+constant mask;
-+symbol FIELD_PREP, FIELD_MODIFY;
-+@@
-+
-+-reg &= ~mask;
-+-reg |= FIELD_PREP(mask, val);
-++FIELD_MODIFY(mask, &reg, val);
-+
-+@r depends on org || report@
-+identifier reg, val;
-+constant mask;
-+symbol FIELD_PREP;
-+position p;
-+@@
-+
-+reg &= ~mask;
-+reg |= FIELD_PREP@p(mask, val);
-+
-+@script:python depends on report@
-+p << r.p;
-+x << r.reg;
-+@@
-+
-+coccilib.report.print_report(p[0], "WARNING: Consider using FIELD_MODIFY helper on %s" % (x))
-+
-+@script:python depends on org@
-+p << r.p;
-+x << r.reg;
-+@@
-+
-+msg="WARNING: Consider using FIELD_MODIFY helper on %s" % (x)
-+msg_safe=msg.replace("[","@(").replace("]",")")
-+coccilib.org.print_todo(p[0], msg_safe)
-
----
-base-commit: 0bb71d301869446810a0b13d3da290bd455d7c78
-change-id: 20250612-field_modify-27139f673881
-
-Best regards,
 -- 
-Luo Jie <quic_luoj@quicinc.com>
+Regards,
 
+Laurent Pinchart
