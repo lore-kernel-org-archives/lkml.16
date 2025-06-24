@@ -1,28 +1,64 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57247335BA;
-	Tue, 24 Jun 2025 07:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680AF248F64
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750749172; cv=none; b=rrcw7g/CPqKqC0Y4XbJfxLLR+IMh3gNWoJsUPbvb8cTdhT8k5HEbY1yFfg6Ssg7pnkEAGJzw8AUk9OpZvo4tLvkLDOL54+d8DcbB7ycx2guEcrb86l7MzPUNVhBnHn8zUjNPK6kP2CFuR6rkwiJqC5q6oobJO2it7qu9DRU/LYs=
+	t=1750749273; cv=none; b=J9PCFWn/Rxsp2RT2NmYxvSXDMTbNzlDmXTix3rLO4txIZhMVflaQKB4zJdVwHJohJff/Mn3X2qE460zveOqkDT1oLo7gkHbgoUwoZKqL+eole7zfg7QkiB2HsXxKoCDSwydeLWu3o3BAvMskPzNgL089qEpmebNVGm3qk+A6mu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750749172; c=relaxed/simple;
-	bh=hvXeIw6z9bErYdCZo9+wLIAsbPFrMgVsPaWrxP3rMsE=;
+	s=arc-20240116; t=1750749273; c=relaxed/simple;
+	bh=nET1gJEsQoUnbclWMzIn4J/kW3aT/Kgp+JNFW9tmDAQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xc+szPRhT8/IBVB4XSkHVPX+CbyWLRfEDpugp64ClB9V7P0WKVl8ewfj3aE3FNeITqnQw1uFaKUMb5q1SQraYdIV2Vrv9T+qOUDbbFiAjTJ7xX+MJQLTsF7mT8LAWBgmJzdXHFsf3wCimabtGlP6IdRA+pqMtLBpilBvnIPDSrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.36] (g36.guest.molgen.mpg.de [141.14.220.36])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 62A9761E647A8;
-	Tue, 24 Jun 2025 09:12:20 +0200 (CEST)
-Message-ID: <c92dd95b-3986-4b0c-807e-62c203a656df@molgen.mpg.de>
-Date: Tue, 24 Jun 2025 09:12:18 +0200
+	 In-Reply-To:Content-Type; b=XVFduVhTF2oIzjNutUMUcFDKH++XZOBi8HuyUZT1NVk80n/75ThKsnr4d9HrMy3dKNuF+aHBdvO86yT/jjYKhpdGxiGwIFA8f6cBm9jW81AlQc2uFyk14ir0MrhhsGSIa2wbQsaqnVOGjvXrnD7803VO5byWO4y8MSzNZMoSNeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=lVrpx2Bh; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="lVrpx2Bh"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-adb5cb6d8f1so784739166b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:14:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1750749270; x=1751354070; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=i3O/kbdN1R6dzhK7EawM1PIi5N4Kg7zW17zp/dNMj1c=;
+        b=lVrpx2BhgYIzWopTvY9/D3KfCg4rnlRwDdXedxgwj7U1PfFDTNvX52NIrgkmdqMZ0j
+         miYVcNLpQ7FNaPwituJKxl2Iji8Oo4Us/wN89CE4bnFwS4bMx92RsQoY3P/PGrsB7JYX
+         P+sXoq9mTFt2RrRDoU5K5JHX7akuEKtKnNeqjqB8+kb/YGVEakCztPiapf5E9cs9P/zH
+         c+NYaDXvSERSXVDCIdvK9g/MgkKKVu/9Wg5MuqKTlGmogmUxj8ejxiOe8ggoAYVY4+A/
+         EypTQW+kPnlragj/U6cki9g8aItLfCCKpHSgyPMGbxA2YCsLlCSdoK/xgRItPnZn7u1h
+         uozQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750749270; x=1751354070;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i3O/kbdN1R6dzhK7EawM1PIi5N4Kg7zW17zp/dNMj1c=;
+        b=SgFUiq6YmOGvYPXHd08vjSYcngMx3sb/xl5c4Pqy1ZvH/kyVuME2FM3naCg45Od0VU
+         qX6Lg5kaMvNDEEnVEjhwdunBykNKbfwE0zHnRbF/ntaKnMoZeWaTLTRhBsDFO8PsvbzQ
+         QvgDuidcptVnv/JDJE2FxjUP9/21YyJnxKMZOTqaBXNurvM1Ldm2cndAzo/hVASm2+1Y
+         qqKlcv0RVlOE17sKX/DFfvHdCV5pvM8/Qr52AcBpdggzJUZfUTHU5COf/BNAZVPjmOZ7
+         py2CvDUVgxROUtj15SiefZfKB9NMjjd/ZeyVqJuvagWLUSNURqxnY05XmCP6B15Vv2ht
+         2AKA==
+X-Forwarded-Encrypted: i=1; AJvYcCXThd/LzxWC4BL6RNHJ29BbUXIHoNOcDvyWXBldIkNnYJ/qhLWw7Kzvm5ZMNxgkoF1SE2S8foSh7+iEIpQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYysUtQ0bIzQPdul9FRp55Pa8G57SA+QiRPemhBg53zhtEPJSz
+	R4WBqYhhFXgUkqmYcroGOgXDa6iP8VNDxb7FnpfZuucmfKxg4JTIApSA9nrZy6AWZ4I=
+X-Gm-Gg: ASbGncvRKFhg1rJecUCpr5IME6zIY/MyZ34Ugq4H7fYToHOydRt8mTBY863kyJUyKhx
+	vHLojQnS4uoGz/+gDIklo2sZkEjDfZQttnAsuGXieZAXKs4vZ2lK2Zz+psu8dVj+mqWJJ2o88vQ
+	3lrHJ34GMA4YlmD8ysQUXOszzHIXGh6DdUc6u2sGDE7uopbhXh9c4dGFZZIgUE06hSRlQWom4bj
+	sFlat4XvBMyOw9oEnJvWv3k679IrXRKWipxUk65inJbAJ59hp4ANtRRHL4a1aoBoHH9hKpFq2+j
+	QBw+t+MvyEk9n8XFnFHgrEFyolRZ/K30uv+WH4fxBa/ZTrweag+Ix0hG7/hRa892Wg/URCQ=
+X-Google-Smtp-Source: AGHT+IFyqZi3XuHoAqSel9NcTyM6a8to6TnnNAlILz2CVQlPmoEe8VkJjYi2Jq9ty/8Rh1HMu6sWxA==
+X-Received: by 2002:a17:907:e2e2:b0:ae0:b3cd:8f32 with SMTP id a640c23a62f3a-ae0b3cd91cbmr16862866b.11.1750749269565;
+        Tue, 24 Jun 2025 00:14:29 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.110])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054209a40sm837830566b.173.2025.06.24.00.14.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 00:14:29 -0700 (PDT)
+Message-ID: <c3ce0abd-d924-4c8e-9cce-39d694a19418@tuxon.dev>
+Date: Tue, 24 Jun 2025 10:14:27 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,137 +66,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Bluetooth: hci_event: Add support for handling LE BIG
- Sync Lost event
-To: Li Yan <yang.li@amlogic.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, linux-bluetooth@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250624-handle_big_sync_lost_event-v1-1-c32ce37dd6a5@amlogic.com>
- <4db45281-9943-4ed7-80c6-04b39c3e9a5e@molgen.mpg.de>
- <d3ca7e7e-720a-42ef-b32e-19cd84d208a7@amlogic.com>
+Subject: Re: [PATCH] ARM: dts: microchip: sam9x7: Add HLCD controller
+To: Dharma Balasubiramani <dharma.b@microchip.com>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250611-sam9x7-dts-v1-1-7f52fcb488ad@microchip.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
 Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <d3ca7e7e-720a-42ef-b32e-19cd84d208a7@amlogic.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Dear Li,
+In-Reply-To: <20250611-sam9x7-dts-v1-1-7f52fcb488ad@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-Thank you for your immediate reply.
 
-Am 24.06.25 um 08:26 schrieb Yang Li:
-
->> Am 24.06.25 um 07:20 schrieb Yang Li via B4 Relay:
->>> From: Yang Li <yang.li@amlogic.com>
->>>
->>> When the BIS source stops, the controller sends an LE BIG Sync Lost
->>> event (subevent 0x1E). Currently, this event is not handled, causing
->>> the BIS stream to remain active in BlueZ and preventing recovery.
->>
->> How can this situation be emulated to test your patch?
+On 11.06.2025 12:17, Dharma Balasubiramani wrote:
+> Add support for HLCD controller.
 > 
-> My test environment is as follows:
-> 
-> I connect a Pixel phone to the DUT and use the phone as a BIS source for 
-> audio sharing. The DUT synchronizes with the audio stream from the phone.
-> After I pause the music on the phone, the DUT's controller reports a BIG 
-> Sync Lost event.
-
-Excuse my ignorance, but it might be good to have documented. How do you 
-connect the Pixel phone to the DUT? Pairing is not needed for BIS 
-(Broadcast Isochronous Stream), and using wireless technology no 
-connection is needed?
-
-What app do you use on the Android phone?
-
-> I believe this scenario can also be reproduced using the isotest tool. 
-> For example:
->   - Use Board A as the BIS source.
->   - Use Board B to execute scan on.
->   - Once Board B synchronizes with Board A, exit isotest on Board A.
->   - Board B should then receive the BIG Sync Lost event as well.
-
-Thank you for sharing this idea.
-
-> Additionally, the following BlueZ patch is required for proper handling 
-> of this event:
-> https://lore.kernel.org/all/20250624-bap_for_big_sync_lost-v1-1-0df90a0f55d0@amlogic.com/
-
-Yes, I saw it. Thank you.
-
->>> Signed-off-by: Yang Li <yang.li@amlogic.com>
->>> ---
->>>   include/net/bluetooth/hci.h |  6 ++++++
->>>   net/bluetooth/hci_event.c   | 23 +++++++++++++++++++++++
->>>   2 files changed, 29 insertions(+)
->>>
->>> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
->>> index 82cbd54443ac..48389a64accb 100644
->>> --- a/include/net/bluetooth/hci.h
->>> +++ b/include/net/bluetooth/hci.h
->>> @@ -2849,6 +2849,12 @@ struct hci_evt_le_big_sync_estabilished {
->>>       __le16  bis[];
->>>   } __packed;
->>>
->>> +#define HCI_EVT_LE_BIG_SYNC_LOST 0x1e
->>> +struct hci_evt_le_big_sync_lost {
->>> +     __u8    handle;
->>> +     __u8    reason;
->>> +} __packed;
->>> +
->>>   #define HCI_EVT_LE_BIG_INFO_ADV_REPORT      0x22
->>>   struct hci_evt_le_big_info_adv_report {
->>>       __le16  sync_handle;
->>> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
->>> index 66052d6aaa1d..730deaf1851f 100644
->>> --- a/net/bluetooth/hci_event.c
->>> +++ b/net/bluetooth/hci_event.c
->>> @@ -7026,6 +7026,24 @@ static void 
->>> hci_le_big_sync_established_evt(struct hci_dev *hdev, void *data,
->>>       hci_dev_unlock(hdev);
->>>   }
->>>
->>> +static void hci_le_big_sync_lost_evt(struct hci_dev *hdev, void *data,
->>> +                                         struct sk_buff *skb)
->>> +{
->>> +     struct hci_evt_le_big_sync_lost *ev = data;
->>> +     struct hci_conn *conn;
->>> +
->>> +     bt_dev_dbg(hdev, "BIG Sync Lost: big_handle 0x%2.2x", ev->handle);
->>> +
->>> +     hci_dev_lock(hdev);
->>> +
->>> +     list_for_each_entry(conn, &hdev->conn_hash.list, list) {
->>> +             if (test_bit(HCI_CONN_BIG_SYNC, &conn->flags))
->>> +                     hci_disconn_cfm(conn, HCI_ERROR_REMOTE_USER_TERM);
->>> +     }
->>> +
->>> +     hci_dev_unlock(hdev);
->>> +}
->>> +
->>>   static void hci_le_big_info_adv_report_evt(struct hci_dev *hdev, 
->>> void *data,
->>>                                          struct sk_buff *skb)
->>>   {
->>> @@ -7149,6 +7167,11 @@ static const struct hci_le_ev {
->>>                    hci_le_big_sync_established_evt,
->>>                    sizeof(struct hci_evt_le_big_sync_estabilished),
->>>                    HCI_MAX_EVENT_SIZE),
->>> +     /* [0x1e = HCI_EVT_LE_BIG_SYNC_LOST] */
->>> +     HCI_LE_EV_VL(HCI_EVT_LE_BIG_SYNC_LOST,
->>> +                  hci_le_big_sync_lost_evt,
->>> +                  sizeof(struct hci_evt_le_big_sync_lost),
->>> +                  HCI_MAX_EVENT_SIZE),
->>>       /* [0x22 = HCI_EVT_LE_BIG_INFO_ADV_REPORT] */
->>>       HCI_LE_EV_VL(HCI_EVT_LE_BIG_INFO_ADV_REPORT,
->>>                    hci_le_big_info_adv_report_evt,
-
-Kind regards,
-
-Paul
+> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+> ---
+>  arch/arm/boot/dts/microchip/sam9x7.dtsi | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+Applied to at91-dt, thanks!
