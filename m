@@ -1,94 +1,165 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB99B219E0;
-	Tue, 24 Jun 2025 11:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB761EEA5D;
+	Tue, 24 Jun 2025 11:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750763736; cv=none; b=mYGcuYKGR9hwF1l3k5KbWPKvHAySPjCzaRhBqTIFla+/uN39AN4ZOY9gOwlhaJUc02Gcn2rFnbW8aETAiCeJDd8apj/oPTO7H1koCt/Nxmk46ZWzb/1HQfvok4Qk4EwN8owJg29piyFbHY9X9hZCZFc6btF0x1R2SNjsiIsjVBQ=
+	t=1750763737; cv=none; b=WAbjM5IxrpRjdsa3/TjCPqIZfoEiqUPEj6yeBVeRRjxPv9A5sMLlFy5nwF6i0XLFPfeM6rr3ueVB1WlUQ/go4eatIjwiX9eAr3SOuolkM26pHhBWVxrl8Tgh1QAeZqVVKKB3pGI32ejHD/rhSYmSQLRRuf3UexGr/fmN813NAcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750763736; c=relaxed/simple;
-	bh=TLkqf97AKaEymQttD1QvPzOUup9tkvH4B9dgCySCB34=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=NR5wheEIC8ZMMdiT7iKUkaGXOJnMrjGkBKTr049uBVnjpl0VTe/jhu382LSWCROy2koB//uWj5hOYisXnHTqeOMnwCov+vb2bNtJA46jRQZ0vhDViUAaCBCVLJhKW9QmPoWAu2XfQMqL/oZigpQ3IjARk4Py+yzI5oHsxaQB5cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=T8gIYnqN; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1750763737; c=relaxed/simple;
+	bh=giBJWbKCZDCZomcuUzUBk68/z0/RqLrNjY/vqUVWhCI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=aNXfDVchGu9poUVqziJ1kAdxkL/o/binig+IdJj0YkDySFwYrS0vSf1KSP/zNqWRbqFizBC2mXRAoTcFQjwQrnj2OEoJ6V3vJqh5VhBjrlJGP1mdcItv7Tty5GO4eH5IJwHxQEkR8uu8REUuOyhXT/mBjNIz/eEdZREETV+R15s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=USaWoSJ2; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="T8gIYnqN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1750763730;
-	bh=PPoki8NdQDT+GsOVVWlBYak8Wz+8531cXIBDBqINZag=;
-	h=Date:From:To:Cc:Subject:From;
-	b=T8gIYnqNwEX1vS1cahTd+HSdCmqHaTlFT/80YEEtgYb9k2ekKjjnH8tdMPc/4Lyh8
-	 MciW571pz5mzvEqbbwO8r6/9lwCPY2CgwgjJfyUmZnYw4svxXVs1SFkwWal7R3LCk1
-	 vZGFXdpHDFYVoMhdSMHfLBxpbHaNhmwrVpTIUcmqboKz5140XKC0aXUN5k1DfYbt8l
-	 1VftnCJKWlWzdnjRuKUNX9ow573zIf1k3/J5LxDJ219SXtifvWrGU1KLpzf/4zNSlG
-	 u2Vg0lf1aYtx0k36NqSL7sG9rLwpLQbSIdVfjpWFAgDTISVwX6mCHGWXHMIM5ftSMO
-	 mGST84cFVRK6w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bRMnF3DCNz4x0s;
-	Tue, 24 Jun 2025 21:15:29 +1000 (AEST)
-Date: Tue, 24 Jun 2025 21:15:28 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, "Borislav Petkov (AMD)"
- <bp@alien8.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the tip tree
-Message-ID: <20250624211528.3b0b3bcb@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="USaWoSJ2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750763736; x=1782299736;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=giBJWbKCZDCZomcuUzUBk68/z0/RqLrNjY/vqUVWhCI=;
+  b=USaWoSJ2+YEEzZAMTxsCn/6yhtvqcTXvgbqKLws9/+BrsQVNkEOhPFvu
+   l2QQFsmAZ0uJjKvV35jKXdJn/AwOaEIXto4PQ47NRvYw5uaGh+1FVdl+A
+   zPz7xO+yAtM8Mz9ziwJrRooRu4jkZO03MNwEifL1QvEudOvmpIQQmqpB2
+   +K0sBdXLi5WUft5Ez+ApAk/4x2ir8QnWLQqV/LP1ozubJWKA7AnxNK0VO
+   Pz9yaVMi+3jfUHvcNz/nBS+kJ1/vROCXUaGveyr6sdiQkGYW4LpJEdhQ1
+   NpMP0rwwY03bxpK7rPZ5eX0EhjMXSWYzfePg91+PqwBaG644HBsuzqxKI
+   Q==;
+X-CSE-ConnectionGUID: wPFkYcnkTtG9hiEsl2Ucdg==
+X-CSE-MsgGUID: zu+SE7qLR0WU9cK9CpaM6w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52868942"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="52868942"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 04:15:34 -0700
+X-CSE-ConnectionGUID: sos1YxJXTWyQvlTESp5sfw==
+X-CSE-MsgGUID: dG8yJcKGQDObuBxfiZ+oVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="152397365"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.16])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 04:15:32 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 24 Jun 2025 14:15:27 +0300 (EEST)
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 1/5] serial: 8250: extract serial8250_init_mctrl()
+In-Reply-To: <b78023eb-f5ab-6287-1cd7-5db76d905eed@linux.intel.com>
+Message-ID: <4d6b65af-294c-fd02-af91-099e22420472@linux.intel.com>
+References: <20250624080641.509959-1-jirislaby@kernel.org> <20250624080641.509959-2-jirislaby@kernel.org> <b78023eb-f5ab-6287-1cd7-5db76d905eed@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/mfsg4c9pM3LCkOg0RNC4cAQ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/mixed; boundary="8323328-865615950-1750763727=:943"
 
---Sig_/mfsg4c9pM3LCkOg0RNC4cAQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Hi all,
+--8323328-865615950-1750763727=:943
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-In commit
+On Tue, 24 Jun 2025, Ilpo J=C3=A4rvinen wrote:
 
-  e88b1627b86e ("x86/bugs: Allow ITS stuffing in eIBRS+retpoline mode also")
+> On Tue, 24 Jun 2025, Jiri Slaby (SUSE) wrote:
+>=20
+> > After commit 795158691cc0 ("serial: 8250: extract
+> > serial8250_initialize()"), split serial8250_initialize() even more --
+> > the mctrl part of this code can be separated into
+> > serial8250_init_mctrl() -- done now.
+> >=20
+> > Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> > Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+>=20
+> Heh, I didn't even realize I was suggesting this :-D but it's good=20
+> nonetheless.
+>=20
+> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+>=20
+> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > ---
+> > [v2]
+> > * use port-> directly.
+> > * do not remove curly braces.
+> > Both rebase errors -- noticed by Andy.
+> > ---
+> >  drivers/tty/serial/8250/8250_port.c | 21 +++++++++++++--------
+> >  1 file changed, 13 insertions(+), 8 deletions(-)
+> >=20
+> > diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8=
+250/8250_port.c
+> > index 48c30e158cb8..0f85a2f292fc 100644
+> > --- a/drivers/tty/serial/8250/8250_port.c
+> > +++ b/drivers/tty/serial/8250/8250_port.c
+> > @@ -2216,15 +2216,8 @@ static void serial8250_THRE_test(struct uart_por=
+t *port)
+> >  =09=09up->bugs |=3D UART_BUG_THRE;
+> >  }
+> > =20
+> > -static void serial8250_initialize(struct uart_port *port)
+> > +static void serial8250_init_mctrl(struct uart_port *port)
+> >  {
+> > -=09struct uart_8250_port *up =3D up_to_u8250p(port);
+> > -=09unsigned long flags;
+> > -=09bool lsr_TEMT, iir_NOINT;
+> > -
+> > -=09serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+> > -
+> > -=09uart_port_lock_irqsave(port, &flags);
+> >  =09if (port->flags & UPF_FOURPORT) {
 
-Fixes tag
+I should have also added what I meant with my earlier suggestion. AFAICT,=
+=20
+this UPF_FOURPORT thing can only occur if SERIAL_8250_FOURPORT is enabled.
 
-  Fixes: 8c57ca583ebf ("x86/bugs: Restructure ITS mitigation")
+The challenge obviously are the if/else constructs but there are a few=20
+places that do port->flags & UPF_FOURPORT specific thing and something=20
+else otherwise. That hw-specific code could be placed into the hw-specific=
+=20
+8250_fourport.c file if the hw-specific function is made to return true=20
+if it did match, and the generic code runs otherwise.
 
-has these problem(s):
+I also have no idea why serial/sunsu.c checks UPF_FOURPORT, perhaps that's=
+=20
+copy-paste in action. :-)
 
-  - Target SHA1 does not exist
-
-Maybe you meant
-
-Fixes: 61ab72c2c6bf ("x86/bugs: Restructure ITS mitigation")
+> >  =09=09if (!port->irq)
+> >  =09=09=09port->mctrl |=3D TIOCM_OUT1;
+> > @@ -2235,6 +2228,18 @@ static void serial8250_initialize(struct uart_po=
+rt *port)
+> >  =09}
+> > =20
+> >  =09serial8250_set_mctrl(port, port->mctrl);
+> > +}
+> > +
+> > +static void serial8250_initialize(struct uart_port *port)
+> > +{
+> > +=09struct uart_8250_port *up =3D up_to_u8250p(port);
+> > +=09unsigned long flags;
+> > +=09bool lsr_TEMT, iir_NOINT;
+> > +
+> > +=09serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+> > +
+> > +=09uart_port_lock_irqsave(port, &flags);
+> > +=09serial8250_init_mctrl(port);
+> > =20
+> >  =09/*
+> >  =09 * Serial over Lan (SoL) hack:
+> >=20
+>=20
+>=20
 
 --=20
-Cheers,
-Stephen Rothwell
+ i.
 
---Sig_/mfsg4c9pM3LCkOg0RNC4cAQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhaiNAACgkQAVBC80lX
-0Gwqcwf9GchWncrg6OGIICN5lxxZhYx7tgB0KBo7TXQzrPDAO1Kl91GFEFpoSrQi
-DWeRknS5WFMCqH23Cj47ndZSbjF9eepiig4PNVg3rXxsmky03MDcjTu34hxf2cG+
-LwMjOOCUmM856AJSWIVmWraNZD25undCA6/hr4i4qHRT/ukoZ3wuLxnrde70+7OR
-k6nrFdMySWCTNO1B+ZeVYx60L58nvFY24dZYdd/RzeK8q0/BervjgiLYn9X/D2MT
-BObzmpfPmsSSjkj9amJGEQZiW35cDAx2Npzp/NPDM0SsukbdDWwyNpw2tPRNQGhQ
-W+vHgzBcVxN71hj0B74h8T8jh6ixEw==
-=V2Y0
------END PGP SIGNATURE-----
-
---Sig_/mfsg4c9pM3LCkOg0RNC4cAQ--
+--8323328-865615950-1750763727=:943--
