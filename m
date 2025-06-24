@@ -1,136 +1,189 @@
-Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E271F4607;
-	Tue, 24 Jun 2025 14:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750775099; cv=pass; b=IxjKXiOAYOTIHrPWvR5zhx/fIXnW8yGoivjfdzMgHa++Cv4ndBzrtNtnGHxo/UAyF+KFyVfZI07vNh0vJ9iPzostisKYlJkn4kZvx61eTBfI3yHINUNin9WGIw1PlpI5R6xxvp/owsPHcpP/s+2LpsGKOLxd/kxxUaYpWUb37RQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750775099; c=relaxed/simple;
-	bh=RrCfd4LRI0YthoKkMgXgWQDEDfg201AKOzW91yg3140=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QEN7wuRUcQzO//cTlhfhySubGSjrR5g7pSurGsFnST1zHNPjvr7IOacsupqhuBoebp39yv6Ci5riXZXMZ4RcoWsomzVxQv1GfxWd8ZXgaYJ7afiLTVPdvBw/wWD8jmzeKIWpv8FRL79V6TAkAxND67GTGXXfWFMdwQJ1khwMQhU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b=Y9Db3CJu; arc=pass smtp.client-ip=136.143.188.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0537296147;
+	Tue, 24 Jun 2025 14:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750775178; cv=none; b=o7/9xr2wtdr59eymBOFsSMr9+wCbOxU9aZAb/mORyt8I3U4W95VyqzvuVnJLkTd273zI5ozzIn0k7t6gGaw2jHgX9kgQhgaUYeHUFdr5y9SXxqeITzu8f3mELOOcNCNlM/58yBEv+mDFRBPIdVuAKELHCqhfJmOTfd13XEivjSo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750775178; c=relaxed/simple;
+	bh=eynJjWUT/k3SvnJtOyrQWtBtxAlzc2GDePgrT2cjc4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kLzvY5O9H+Se8McPTIjrQ8pSMBuqG/6QutQQZCkma9vr6ElmGDswGIPX6QeCOLBuzPAUVRkvy+Da0XOXN97VhHKoxwltG4sx9E8+G2ixRhj4k2LV7oqxrTc5kBTrzyVyt99zQ1QARFf7ScHAVGrmlX3cY5zew7s+Jlma3F2I12M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=n/uHS7PI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b="Y9Db3CJu"
-ARC-Seal: i=1; a=rsa-sha256; t=1750775065; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=FtqdH5fHsxD5tdO7RpQju9z7Kg83NOATY3cl0059rNyGDnnP3b9v5JTOlHY6/urmd5nUxZXc5cMU39UUrlA0hWZXJpWRMyKMEIiiJydahC6TEBGh01wTwYzKfZc9tM47Yv7ZorSRTjazwYMRLA06vjhSiZ11hNJyrRlsxIsIBNE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750775065; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=RrCfd4LRI0YthoKkMgXgWQDEDfg201AKOzW91yg3140=; 
-	b=ACM7SGKNrUHcbiaQDC0GYK/KK410dR4iCIUK8yPanKSUsXcJp94qDBrO+V9ftpLE50I7K1WyacmNirQxm7/ubHcs85iZMTb/f815+arXp/x/bnTPg2TATcQTUADIyJjJD6TtmoNrnBM8zrI6ey6j0Z8kS8BmBfee6gT2iW1uRVw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nfraprado@collabora.com;
-	dmarc=pass header.from=<nfraprado@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750775065;
-	s=zohomail; d=collabora.com; i=nfraprado@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=RrCfd4LRI0YthoKkMgXgWQDEDfg201AKOzW91yg3140=;
-	b=Y9Db3CJu+WCNT9IPnm9GUXLw/oPeRGGIdJ9OZByccR8anQcerUNem9jDBQpmBSh3
-	fsEYbTHqEY6/DS4vW0m35Mv3iNeztEuw6kqgWK1dg/nKqVabW6tRDbfUm3XKQIHqKof
-	3/O+sJ5oh376h1WzFmpK2W7xZXuOhXJkH5D7VTzw=
-Received: by mx.zohomail.com with SMTPS id 1750775063297142.35232576576414;
-	Tue, 24 Jun 2025 07:24:23 -0700 (PDT)
-Message-ID: <2762e08674df39b79dc169ef3791eaeeaff17d17.camel@collabora.com>
-Subject: Re: [PATCH v1 00/13] pmdomain: Partial refactor, add MT8196 support
-From: =?ISO-8859-1?Q?N=EDcolas?= "F. R. A. Prado" <nfraprado@collabora.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	linux-mediatek@lists.infradead.org
-Cc: robh@kernel.org, conor+dt@kernel.org, mbrugger@suse.com, 
- y.oudjana@protonmail.com, linux-pm@vger.kernel.org, ulf.hansson@linaro.org,
-  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- mandyjh.liu@mediatek.com, lihongbo22@huawei.com, wenst@chromium.org, 
- matthias.bgg@gmail.com, krzk+dt@kernel.org, kernel@collabora.com, 
- linux-arm-kernel@lists.infradead.org
-Date: Tue, 24 Jun 2025 10:24:21 -0400
-In-Reply-To: <20250623120154.109429-1-angelogioacchino.delregno@collabora.com>
-References: 
-	<20250623120154.109429-1-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="n/uHS7PI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2196C4CEE3;
+	Tue, 24 Jun 2025 14:26:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750775176;
+	bh=eynJjWUT/k3SvnJtOyrQWtBtxAlzc2GDePgrT2cjc4g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n/uHS7PI/gwgLaU0FeDz/SLTX3KDeNsYSCmc7wvdJix8rg8Fx2fwcqWwxbuOdUtJr
+	 T5boIQ9sgg1b+Ay/uVqbRWmh4aEEvBLg7EqCcWayF1qKAuihOpcPrIsNrsx2U4IZZo
+	 b0yzpcYeQqtxsWxjRQijrxSfVErB3vr+2f7kGrUY=
+Date: Tue, 24 Jun 2025 15:26:11 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Timur Tabi <timur@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+	John Hubbard <jhubbard@nvidia.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH] rust: add basic ELF sections parser
+Message-ID: <2025062405-stability-privacy-f965@gregkh>
+References: <2025053047-theology-unsaid-d6ac@gregkh>
+ <DA9AU3OBT29Z.3CX827C91I3IH@nvidia.com>
+ <2025053050-maggot-landfall-d5eb@gregkh>
+ <DA9KIGDH4IF6.2T383ZVLTJN0G@nvidia.com>
+ <2025053039-reselect-thinness-e0a2@gregkh>
+ <CAOZdJXVvmDro0Mv36grqQ6LB_1O5GzwPx+Dde+wsfu9Cu_me7A@mail.gmail.com>
+ <2025053148-gore-badass-1d1d@gregkh>
+ <DAACKTM8B9A1.3SI9LRGNMSBH3@nvidia.com>
+ <2025053117-snowy-tradition-eb9e@gregkh>
+ <DAL37D3FG3YA.TSCJ1LMJO1X8@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DAL37D3FG3YA.TSCJ1LMJO1X8@nvidia.com>
 
-On Mon, 2025-06-23 at 14:01 +0200, AngeloGioacchino Del Regno wrote:
-> This series refactors the bus protection regmaps retrieval to avoid
-> searching in all power domain devicetree subnodes for vendor
-> properties
-> to get syscons for different busses, and adds a new property which is
-> located in the power controller root node containing handles to the
-> same.
->=20
-> Retrocompatibility is retained and was tested on multiple SoCs in the
-> Collabora lab - specifically, on Genio 350/510/700/1200, and manually
-> on MT6795 Helio (Xperia M5 Smartphone), MT8186, MT8192 and MT8195
-> Chromebooks.
->=20
-> This was tested *three times*:
-> =C2=A0- Before the per-SoC conversion in drivers/pmdomain/mediatek
-> =C2=A0- With per-SoC conversion code but with *legacy* devicetree
-> =C2=A0- With per-SoC conversion code and with *new* devicetree conversion
->=20
-> All of those tests were successful on all of the aforementioned SoCs.
->=20
-> This also adds support for:
-> =C2=A0- Modem power domain for both old and new MediaTek SoCs, useful for
-> =C2=A0=C2=A0 bringing up the GSM/3G/4G/5G modem for both laptop and smart=
-phone
-> use
-> =C2=A0- RTFF MCU HW, as found in MT8196 Chromebooks and MT6991 Dimensity
-> 9400
-> =C2=A0- Hardware Voter (MT8196/MT6991), allowing ATF, remote processors
-> and
-> =C2=A0=C2=A0 the AP (Linux) to manage the same power domains through a vo=
-ter
-> MCU,
-> =C2=A0=C2=A0 avoiding power racing
-> =C2=A0- Directly controlled power domains for MT8196
-> =C2=A0- Voted power domains for MT8196
-> =C2=A0- Multimedia (voted) power domains for MT8196.
->=20
-> Note that all of the power domains for MT8196 should also work on
-> MT6991
-> but since I have no Dimensity 9400 boards, even though I'm 99.5% sure
-> that
-> it will simply work as those are the same, I avoided to add
-> compatibles
-> for 6991 as it's impossible for me to test.
->=20
-> AngeloGioacchino Del Regno (13):
-> =C2=A0 dt-bindings: power: mediatek: Document mediatek,bus-protection
-> =C2=A0 pmdomain: mediatek: Refactor bus protection regmaps retrieval
-> =C2=A0 pmdomain: mediatek: Handle SoCs with inverted SRAM power-down bits
-> =C2=A0 pmdomain: mediatek: Move ctl sequences out of power_on/off
-> functions
-> =C2=A0 pmdomain: mediatek: Add support for modem power sequences
-> =C2=A0 pmdomain: mediatek: Add support for RTFF Hardware in MT8196/MT6991
-> =C2=A0 pmdomain: mediatek: Add support for Hardware Voter power domains
-> =C2=A0 pmdomain: mediatek: Add support for secure HWCCF infra power on
-> =C2=A0 pmdomain: mediatek: Convert all SoCs to new style regmap retrieval
-> =C2=A0 arm64: dts: mediatek: Convert all SoCs to use mediatek,bus-
-> protection
-> =C2=A0 dt-bindings: power: Add support for MT8196 power controllers
-> =C2=A0 pmdomain: mediatek: Add support for MT8196 SCPSYS power domains
-> =C2=A0 pmdomain: mediatek: Add support for MT8196 HFRPSYS power domains
+On Fri, Jun 13, 2025 at 12:32:13PM +0900, Alexandre Courbot wrote:
+> Hi Greg,
+> 
+> On Sat May 31, 2025 at 10:30 PM JST, Greg KH wrote:
+> > On Sat, May 31, 2025 at 09:33:38PM +0900, Alexandre Courbot wrote:
+> >> Hi Greg,
+> >> 
+> >> On Sat May 31, 2025 at 2:45 PM JST, Greg KH wrote:
+> >> > On Fri, May 30, 2025 at 01:10:50PM -0500, Timur Tabi wrote:
+> >> >> On Fri, May 30, 2025 at 10:42 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >> >> >
+> >> >> > On Fri, May 30, 2025 at 11:34:02PM +0900, Alexandre Courbot wrote:
+> >> >> > > So to try to answer your question, I am not disagreeing that userspace
+> >> >> > > is capable of doing what we currently do in the kernel. My follow-up
+> >> >> > > questions to that are: how do we command userspace to do that work for
+> >> >> > > us when we request the firmware, how do we provide the result to the
+> >> >> > > kernel, and is this something that distros can adopt easily? I'm happy
+> >> >> > > to consider doing things this way, but would need a few pointers to look
+> >> >> > > into.
+> >> >> >
+> >> >> > Again, look at how your firmware for your devices in your laptop are
+> >> >> > loaded today.
+> >> >
+> >> > Note, I am talking about non-gpu firmare images here (wifi, usb
+> >> > controllers, etc.) that are using the firmware download subsystem for
+> >> > ages as examples of what to look at as to how to trigger a firmware
+> >> > image to be loaded by userspace into the device.
+> >> 
+> >> I would really appreciate it if you could point me precisely to one
+> >> example (a link, a function, a file) of what you are describing because
+> >> I'm starting to wonder whether we are talking about the same thing.
+> >> 
+> >> Previously I mentioned udev and CONFIG_FW_LOADER_USER_HELPER, but you
+> >> haven't confirmed whether that was what you had in mind or not. Assuming
+> >> that udev is involved, I tried to snoop events while a
+> >> `request_firwmare` call is performed using `udevadm monitor`, but that
+> >> revealed no event related to firmware loading. Then looking deeper into
+> >> the kernel documentation confirmed that the kernel does indeed a direct
+> >> filesystem lookup in request_firmware [1]. IOW, the kernel looks for the
+> >> requested file, and if it cannot find it it's game over. This matches my
+> >> observations with udevadm, as I tried requesting a non-existing file and
+> >> no uevent was generated. I don't see what user-space can do here.
+> >> 
+> >> I also tried to look up this "firmware download subsystem" you
+> >> mentioned, but couldn't find anything under that name - I suspect you
+> >> are talking about the sysfs loading mechanism, but AFAIU this depends on 
+> >> CONFIG_FW_LOADER_USER_HELPER which doesn't seem to be widely enabled
+> >> (not on my distro at least).
+> >
+> > Yes, that is what I am referring to, as you all seem to want to do
+> > "complex things without a specific filename choosen".  Look at
+> > Documentation/driver-api/firmware/fallback-mechanisms.rst for the
+> > details there.
+> >
+> > Or, better yet, just have your driver name all of the individual files
+> > that must be loaded and then no userspace things are needed.  That "big"
+> > firmware file will have already been split up into the different parts
+> > when you write it out to the filesystem, so no need to parse anything.
+> >
+> > If this isn't going to work for some reason, I think we need a better
+> > "this is EXACTLY what we need to send to the hardware for the firmware
+> > image(s) it requires" as I'm totally confused based on the different
+> > people talking on this thread about totally different hypotheticals
+> > (i.e. 12 line elf parsers in C vs. a giant elf parser in rust, random
+> > hypothetical hardware values that userspace "can not know", pointing at
+> > obsolete crazy interfaces like remoteproc that just happen to do crazy
+> > things, etc.)
+> >
+> > So step back, come up with a solid design document, and let's start over
+> > please.
+> >
+> > thanks,
+> >
+> > greg k-h
+> 
+> Sorry for the time it took to come back to you on this.
+> 
+> After further investigation, it appears that most of the points we
+> discussed were indeed orthogonal to whether we rely on ELF or the
+> filesystem to provide the different parts of the firmware, so I'd like
+> to apologize for the unneeded confusion.
+> 
+> We had an internal discussion with our firmware team about future
+> firmware releases. As it turns out, the firmware itself is undergoing an
+> overhaul, so we would like to take that opportunity to re-think the
+> release format and try to address this issue.
+> 
+> It will likely take a few months to reach a definitive design, and in
+> the meantime we would like to keep making progress on bringing up Nova
+> with the currently released firmware images. However, since Nova is
+> still in early development, we don't need to maintain long-term support
+> for these specific images.
+> 
+> Based on that, I would like to proceed as follows:
+> 
+> - Ask Danilo to include a stripped down (<30 LoC without comments) and
+>   temporary version of the ELF section unpacker in nova-core so we can
+>   use the images currently in linux-firmware for short-term development.
+>   I want to stress that this is temporary, and stable Nova will *not*
+>   support these images; this is solely to enable us to move forward for
+>   the time being.
 
-For the entire series,
+We know no user/kernel api can ever be changed in the future, so how can
+we ever accept this?
 
-Reviewed-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
+> - We (NVIDIA folks involved in Nova) will continue working with the
+>   firmware team to ensure that the upcoming redesign takes into account
+>   the kernel's requirements, especially the need to avoid unnecessary
+>   complexity in the firmware loading steps. There are other constraints
+>   of course (the hardware itself continues to evolve, with consequences
+>   for the firmware), and so we may or may not achieve everything we hope
+>   for. But we will work to keep it as simple as possible.
 
-(as I've reviewed this internally before submission)
+Great, we can wait for that work to be done, we have no deadlines or
+rush here to do it right.  Again, once we add a user/kernel api, we
+can't remove it, so let's take the time to get it right.
 
---=20
-Thanks,
+> - Once a stable firmware ABI is established and its first instance
+>   released, we will make it the minimum supported firmware version on
+>   Nova and remove the band-aid mentioned in the first point.
 
-N=C3=ADcolas
+Don't you always just move the firmware version forward on new updates
+to the kernel driver anyway?  How is this different from normal
+operation except that the user/kernel api will now be changed in a
+non-backwards-compatible way.  What will break when this happens?
+
+thanks,
+
+greg k-h
