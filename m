@@ -1,63 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4ED2D1F42
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:19:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A4328ECE2;
+	Tue, 24 Jun 2025 14:21:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750774760; cv=none; b=dltR94Ka3QnwQ2UX8n2X94335MdLqNLtq10yaHqqMbKjnnFMGlA6rOd98cnYkn+n3ETTevCYmSa2NhciSd2yhk7rgGh0kZB806ePRRIhKK7eBgcA8lU34uUxqc+mvSlT+2wtg31DHchudNUxCfbMKA6eH2NQh4a3+PHs4ZInMFc=
+	t=1750774911; cv=none; b=cipFIrvF0zB0/doUGFMCchrPQol50gEF3ykzBYM0Mbzehs8Cxql0ASOEyWcyrnvGzjEz4iLuTxL6q7GLrgrPlYrPEWbsRnIO3KclTl5Jjz/N4jNgry3dMTbjo1IPysNBNccb3kiKzHLQ81pJGV21pvidaYi+6AKYhZ8jhQGo0LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750774760; c=relaxed/simple;
-	bh=+O2XMJoIFYapG4jpDaxlSd2Kzerwe59/bvMlnOv9D9o=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=qVndCSqjdZ4e8mDY8YytLyViMxPUCAJ+KZgo5fVXef5ZKtNKLoJB5hvdc23O6gZRb9NyqEvA2/vXvnUVdihAd3xu+Tpxe8P+jMJOvAMASJLvkpDCWYQHSZt9/Cniorcym5mhQuqzP8bjftBHKIthkv2uRSZEYlgjg7K97OMoBEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tWprPhtI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750774911; c=relaxed/simple;
+	bh=QuhArafP5UQWTf6x0cnLMqtBpCyf3kg0+2McZ07EZlU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FrCW4W5ZMU93hAWQNz6E2ma/kOvvJdgd0znfM7aJv8ZFlb8AIGl6RM6FHYbyA1IhweCqefDXJ7SohauM7l3nGLvU79BLHSViVB5vnVPJpM9Q2TxJvMowW7REmo/grn++d93g9RheJ1UX12L9PgRSISo+eN2dV+g4p0G9eUAPxDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz; spf=pass smtp.mailfrom=listout.xyz; dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b=mr4EqkD0; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=listout.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tWprPhtI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EC39C4CEE3;
-	Tue, 24 Jun 2025 14:19:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750774759;
-	bh=+O2XMJoIFYapG4jpDaxlSd2Kzerwe59/bvMlnOv9D9o=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=tWprPhtIjJVwH89Vitnol25HwtwQCcdvJv5BuEtOP/ugno79OURNQxg5hpHmN526z
-	 ZaIhB2CH+kBiq6EOKGVlHFa+vsnNqOw2tcPtHgi6bMZWP2mBRAa2xRIJ72iTEQy/tn
-	 jrR7RY/W1O3EjbnCC9gyRP65kYGHORjWLNpKWc83Kv67Or1+cV4gfDXhCKeNcHy+zx
-	 /hjiCFz0qjhfxQTXX1gkJvokcEwLnRZGc91FFUY2rXCiYAYgZOzUgxA01xpFUI+HIE
-	 M6yLIau/CZNtv5GykPUtDlJWKUaib58vHk2DJKrclkSwHEQ6pAqfxFxTtOpe1QNISD
-	 Rr6otHifx9uuw==
-Message-ID: <1c6a9b6c-8bce-4a02-9dbb-a883e74c0045@kernel.org>
-Date: Tue, 24 Jun 2025 22:19:16 +0800
+	dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b="mr4EqkD0"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4bRRw920hMz9sv3;
+	Tue, 24 Jun 2025 16:21:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=listout.xyz; s=MBO0001;
+	t=1750774905;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MgHUoRfXCan2FR4wpwtdY4zXDm5OVuonVtEpuKSoTtU=;
+	b=mr4EqkD0koPcUd4uXOgWYfmaMR5Kncf93hieGQj2Fb32SvsVVn3ITcgZDILuMy7sX6+vEU
+	NBSOrzAAtYGqY7GfTqGKqctVPawLifvqAURidSrOdW4uwXliDwQ2r26z+pyxl4fO44dpcO
+	C0r/OaJIYhaTurwbdwlPU6NYypRYRU97sKvm5XsG9ZjIyTCLX5SQ739wtKNFEUCEl9mGdf
+	kTX8vPdZrWH0lq5f+ShcLpS92fDZVM4zs9aUbhZSkc6+8hVpA7jFEzbbYJV1veb/SO1ZZQ
+	ilKb5Cvz9YJMnGJ+odA/dFppLbLgNm05Ahg8Uv87tiAW/UXjNoMnS2cnvJxcbA==
+From: Brahmajit Das <listout@listout.xyz>
+To: linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: rafael@kernel.org,
+	lenb@kernel.org,
+	lv.zheng@intel.com,
+	kees@kernel.org,
+	rui.zhang@intel.com,
+	len.brown@intel.com
+Subject: [PATCH] ACPI / sysfs: Replace deprecated strcpy() with sysfs_emit
+Date: Tue, 24 Jun 2025 19:51:34 +0530
+Message-ID: <20250624142134.11317-1-listout@listout.xyz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-kernel@vger.kernel.org, bintian.wang@honor.com, feng.han@honor.com,
- niuzhiguo84@gmail.com
-Subject: Re: [f2fs-dev] [PATCH v4 2/2] f2fs: don't allow unaligned truncation
- to smaller/equal size on pinned file
-To: wangzijie <wangzijie1@honor.com>, jaegeuk@kernel.org
-References: <20250624035938.3176350-1-wangzijie1@honor.com>
- <20250624035938.3176350-2-wangzijie1@honor.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20250624035938.3176350-2-wangzijie1@honor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4bRRw920hMz9sv3
 
-On 2025/6/24 11:59, wangzijie wrote:
-> To prevent scattered pin block generation, don't allow non-section aligned truncation
-> to smaller or equal size on pinned file. But for truncation to larger size, after
-> commit 3fdd89b452c2("f2fs: prevent writing without fallocate() for pinned files"),
-> we only support overwrite IO to pinned file, so we don't need to consider
-> attr->ia_size > i_size case.
-> 
-> Signed-off-by: wangzijie <wangzijie1@honor.com>
+strcpy() is deprecated; use sysfs_emit() instead. No functional changes
+intended.
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+Link: https://github.com/KSPP/linux/issues/88
+Signed-off-by: Brahmajit Das <listout@listout.xyz>
+---
+ drivers/acpi/sysfs.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Thanks,
+diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
+index a48ebbf768f9..7ce90998ab97 100644
+--- a/drivers/acpi/sysfs.c
++++ b/drivers/acpi/sysfs.c
+@@ -181,10 +181,9 @@ static int param_set_trace_method_name(const char *val,
+ 
+ 	/* This is a hack.  We can't kmalloc in early boot. */
+ 	if (is_abs_path)
+-		strcpy(trace_method_name, val);
++		sysfs_emit(trace_method_name, "%s", val);
+ 	else {
+-		trace_method_name[0] = '\\';
+-		strcpy(trace_method_name+1, val);
++		sysfs_emit(trace_method_name, "\%s", val);
+ 	}
+ 
+ 	/* Restore the original tracer state */
+-- 
+2.50.0
+
