@@ -1,69 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834C42E610B;
-	Tue, 24 Jun 2025 18:57:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE632E7632
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 18:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750791475; cv=none; b=WEH3O5KkhN7WumhIdQthwxkgcrF6q2Pdd1rRD/7Kyjnhi9QC/u5ZtZ9PK6+gPvh5dxVjb/5p83VuQkoKnxtMUp6ihZPmqD13C/Qhn0oKtP4J1X8YjqY62k5IEFifjBcz8e1to6iKI5c1D8Q4zyOz5bdpbeRkf7C2C8s4D08goik=
+	t=1750791495; cv=none; b=gIuUNinpJAdSF68FWL/miEXKJ1aDOkl6lJFHAGwOwIAV6Q9HnIVh8PvjKlBDe8avraW5SgBDL5oG/z9KfHBKecDHtvdWhuxSD9qFm5UIKw97DQP7B8Ab2NXL/i/b4nfnljte7t9LOlnsKJkA5jhJkpxuDnzV47RabMICCp7K5sI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750791475; c=relaxed/simple;
-	bh=R/JVNUFj56dzmZhKFXGohO6nydxwlPaGPwn8nVusUnI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TN/vdjb2k4MQd2lSkR0qpsa/+WMPPQ500DdYNXvecfG2MmE9RvuKaON9vZuZvH8fPGD/vC6iae3Jm/dBATujqSMK2uzoJy10KjxjQPYVSfxGLhbuHwtmoxsvXNlOlrU+q7EPyFMY2pJTMu9c4XqHeVbge6BVTO2y37KNz5q53+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WNbViHY2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750791495; c=relaxed/simple;
+	bh=npWwWKZPd5rdEqfk5ixF6kz+HcjFPiAMk+Q3wRxBc94=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VdeeMv2KWup3DbSOvUK+bJUrz8xKV3R4eJnjyFL3JdAMGxUOZM9CHhv18R2yOejgG7qikBDBuTIWmVAZj9psN8j5zlSXT5rLtnJMHvNzfJowx5uyBGcogBGI05H5nfc3b5o6ehzHPAoRY0J4+0UBn2F6Zbk/prVDRVzkZpx0iJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TWE7unGS; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WNbViHY2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4A42C4CEE3;
-	Tue, 24 Jun 2025 18:57:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750791475;
-	bh=R/JVNUFj56dzmZhKFXGohO6nydxwlPaGPwn8nVusUnI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WNbViHY2K+SwdcW8JnCXPeCEHtQzcaPv0wZteqZPV8cANhRlE36/5DhKIxccCoyPv
-	 0xH/1zqO8ljaBeqamvXH595RYjZ3mBWG4xtjtIcJupN9S19P07+WGCIunk22jn5rpK
-	 g3UX5GGXhiXDrQwL2Ucu41arHPCx990LLgSSvJtkWzWhnDC67OpiQRq2Q+EmeRWTsC
-	 xoK38lvxzee2mfC+erkGNEtFqx6h+PKTIgdn1wSOWELfz9W/Sg2eh7VrrKIV6IRLeU
-	 LkrnlX9gIhv6tS4KS1rWh04+sCuj8x89S4jS1ZCOaTcXTOUdJvqBrsA5yIXD0yGA8L
-	 iHAjv4QmPxfHg==
-Date: Tue, 24 Jun 2025 19:57:49 +0100
-From: Simon Horman <horms@kernel.org>
-To: Mark Bloch <mbloch@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, saeedm@nvidia.com,
-	gal@nvidia.com, leonro@nvidia.com, tariqt@nvidia.com,
-	Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	moshe@nvidia.com, Vlad Dogaru <vdogaru@nvidia.com>,
-	Yevgeny Kliteynik <kliteyn@nvidia.com>
-Subject: Re: [PATCH net-next v2 5/8] net/mlx5: HWS, Decouple matcher RX and
- TX sizes
-Message-ID: <20250624185749.GH1562@horms.kernel.org>
-References: <20250622172226.4174-1-mbloch@nvidia.com>
- <20250622172226.4174-6-mbloch@nvidia.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TWE7unGS"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-32b7f41d3e6so1744891fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 11:58:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750791492; x=1751396292; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h7ui9krklnTDspgMC7AGFpPjhbbUuQIxEzApTtxeYDw=;
+        b=TWE7unGSOuUxfA+RiQdEGtRaCAkTg6IrkT6bSQZThodttjPogdODQZyNfBW7I0xwJu
+         nfX0au6WniRbRkA6iSosgwB2XHlBrOB8l1Ir84cbw6EE3+4nKpyPpjKEBG02qm7+HCo+
+         4G6OYmTl6sdT0zTlxTzay5ScHkIele/6R3nM3bspbLGecKP8S1shvdHOE3nG2fb5FlR8
+         4uB6+uMXvRdf39Cg8vJYEGKJ15dUAzj5hpGFkdKIHqmcwMN/TK1PsAsps7MqQJySIPSa
+         FslFK2BVGdK36mkdfYhLdoalgGuUOd1ZQu0ByZOY/HlAEki88ioL6yFpb8L4yP6knnQe
+         thlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750791492; x=1751396292;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h7ui9krklnTDspgMC7AGFpPjhbbUuQIxEzApTtxeYDw=;
+        b=lq2ER2MRGJPp0rOd3Kf26ggQHn1NBbhyP/1LU6/+IKD16xtpSka5FNGt9eEKMbob1r
+         /dvPLmQiUX3sn8mlKIwFZN1faJbTVHJptHXe19WjQiP2xZM6IryPYpV5IAShbmrmvGY+
+         J7G8dSkuSyF8+m3IpuXISfpHlizLX4IHRCUCyc0a2HW6CmgndvSodSphhJSAhgLZKfip
+         MpNxFQ1DyKVaYDv2oyVo7DuJvfqFfVWfcc57cwncykzOcaLRvwMS2ocKf77l91TZjZJF
+         xcAzRjXYqYh5oTqTIdyRJ4uaofagtfVrkJdk/6cqxE8/2jPtRQK/EzReWOXhzYqwBMN+
+         wW1g==
+X-Forwarded-Encrypted: i=1; AJvYcCW/tI3TrYwjzBzQra/hX82TAu/mqkY5SSk0zPux/3TUe13Excv0Xv2v8RRglAC4gUB1kwgxwJeXQsDAT+A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZFFe5v0z6M6EGiWbdNUQjg+7BVTr2g87ZmS1Bjd+QLR0KFP14
+	y2VXejurjv4kdgypaafFqVhuog+mpfLkBvcA7n+QRzXYjTh/wl2tXM9yke/WQJP8SMv0GBc5BMR
+	3WzjIcEs/CdeLy+8+ZdLOS2vtw822XuJQyTCp2CHV2w==
+X-Gm-Gg: ASbGnctVmxBaqTi69OjEvhG2Uo92qNqGaDbZ4ClvXmr//6tn6dlkF3Stvs/gW8UQwoL
+	iXk/M4obbw9qbMWsej8U7uYaVzbXKPKC1aGbqHS/oStoHP1xwmvONJGkxJh/Ld4NXyEUUnbIu7u
+	+/97rBib9CdiTwASZhxpJxSVeZ+A9B8s9tDJR/g5+M8BY=
+X-Google-Smtp-Source: AGHT+IFHkwtjvOJNCrFEWstn9L634lZ8TSAnodhGn+aKzDIVOJMa02nwLbdMCDdRl+xviZehHHIuiwGlHeUOdx9D6us=
+X-Received: by 2002:a05:651c:214b:b0:32c:a690:724b with SMTP id
+ 38308e7fff4ca-32cb968d882mr10090081fa.19.1750791491756; Tue, 24 Jun 2025
+ 11:58:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250622172226.4174-6-mbloch@nvidia.com>
+References: <20250618095858.2145209-1-demonsingur@gmail.com> <20250618095858.2145209-5-demonsingur@gmail.com>
+In-Reply-To: <20250618095858.2145209-5-demonsingur@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 24 Jun 2025 20:58:00 +0200
+X-Gm-Features: AX0GCFv3Y0xzvM4_ytzUY9wWsLoaPRcLNq10rxfdsma9gTvF5iQYKz-0B24NXH0
+Message-ID: <CACRpkdYwBAaEi--y64oVwVcAMH9z0LO5ZG_fvNK-CuxdERiYBQ@mail.gmail.com>
+Subject: Re: [PATCH v4 04/19] dt-bindings: media: i2c: max96717: add support
+ for pinctrl/pinconf
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+	=?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
+	Julien Massot <julien.massot@collabora.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"open list:MAXIM GMSL2 SERIALIZERS AND DESERIALIZERS" <linux-media@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, 
+	"open list:STAGING SUBSYSTEM" <linux-staging@lists.linux.dev>, 
+	"open list:GPIO SUBSYSTEM:Keyword:(devm_)?gpio_(request|free|direction|get|set)" <linux-gpio@vger.kernel.org>, Cosmin Tanislav <cosmin.tanislav@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 22, 2025 at 08:22:23PM +0300, Mark Bloch wrote:
-> From: Vlad Dogaru <vdogaru@nvidia.com>
-> 
-> Kernel HWS only uses FDB tables and, as such, creates two lower level
-> containers (RTCs) for each matcher: one for RX and one for TX. Allow
-> these RTCs to differ in size by converting the size part of the matcher
-> attribute to a two element array.
-> 
-> Signed-off-by: Vlad Dogaru <vdogaru@nvidia.com>
-> Reviewed-by: Yevgeny Kliteynik <kliteyn@nvidia.com>
-> Signed-off-by: Mark Bloch <mbloch@nvidia.com>
+Hi Cosmin,
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+thanks for your patch! Overall this looks good!
 
+On Wed, Jun 18, 2025 at 11:59=E2=80=AFAM Cosmin Tanislav <demonsingur@gmail=
+.com> wrote:
+
+> MAX96717 is capable of configuring various pin properties.
+>
+> Add pinctrl/pinconf properties to support this usecase.
+>
+> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+(...)
+> +      slew-rate:
+> +        description: |
+> +          Slew rate.
+> +          0 - Fastest
+> +          1 - Fast
+> +          2 - Slow
+> +          3 - Slowest
+> +        maximum: 3
+
+Would be great to have some SI units on this? Like how many milliseconds
+etc.
+
+> +      maxim,jitter-compensation:
+> +        type: boolean
+> +        description: Enables jitter compensation.
+
+What does that mean?
+
+> +      maxim,gmsl-tx:
+> +        type: boolean
+> +        description: Enable transmitting pin value to GMSL link.
+> +
+> +      maxim,gmsl-rx:
+> +        type: boolean
+> +        description: Enable receiving pin value from GMSL link.
+> +
+> +      maxim,gmsl-tx-id:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description:
+> +          Identifier used while transmitting value to GMSL link.
+> +          Default value matches the pin number.
+> +        minimum: 0
+> +        maximum: 31
+> +
+> +      maxim,gmsl-rx-id:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description:
+> +          Identifier used while receiving value from GMSL link.
+> +          Default value matches the pin number.
+> +        minimum: 0
+> +        maximum: 31
+
+Maybe add some words about what an GMSL link is somewhere?
+
+> +      maxim,rclkout-clock:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: |
+> +          Clock value.
+> +          0 - XTAL / 1 =3D 25MHz
+> +          1 - XTAL / 2 =3D 12.5MHz
+> +          2 - XTAL / 4 =3D 6.25MHz
+> +          3 - Reference PLL output
+> +        minimum: 0
+> +        maximum: 3
+
+I'm no expert but isn't this something the clock framework has some standar=
+d
+binding for? assigned-clock-rates?
+
+Yours,
+Linus Walleij
