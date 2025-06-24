@@ -1,152 +1,158 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A36835975
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 04:09:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19079221DB3;
+	Tue, 24 Jun 2025 04:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750738168; cv=none; b=CqSUiU2ypW5fiGGYQPT4cxM9e5gfZe7H9YfWZaCE39dKYiP8fPQRJhKj5qrcUtL2TMkb8KM6oSnj+767pQag+dC3CCnDlvdcIghhEEbyJB6Xtu2ue+xV+98ZtOI4IpVrjMY8zagMjpEBIUSYhb6UmWgPL6qpL1tiXs6YYAatgZk=
+	t=1750738294; cv=none; b=NDRplFCaIv0A/E43fzYoiFHdyiB5jJaH2tDdcUSfjZuqYTkqBCPYFQh2ykTYQ5XTnaqlrn6OE1pPY8eFST5aAE8iLlWhVdniAzkb0azOxX1baJN+H1JtSjmkShNpRn0i/5SRFmcxQEYwcolIBwY1R58+IAU2PIzRKyfgumneaFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750738168; c=relaxed/simple;
-	bh=llL1b/tMVw+11+IKe3ZnE3pVeGhnuAyfrOKK27BdZsI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T/azTtJZl99zrGAYO87Oi9aD+ejOgZhIBcccQmMGa7S3OcwTR7Ebx4VyH4blIsnXaSexn26ymo/hYIuJsQpsQy7jzxu5hzyGqnH7oAjawMDLMl6a1ffOVvtIH/3e6mvcG4ZzDC8zDN4I6sB4/kvmw39Pe7f8cmuH/VqbWKyhdak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Uij9b74B; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1750738294; c=relaxed/simple;
+	bh=EnoerV/xxx91jhOZdHJKKtLWyi7IcO86p6wzJFGUMZc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=aBNNIUcXffFdlXkQ7l6TJX2q3wZP3yhBMe/mLefbmSjtdXOAStPzSU3Fe4oshO1KUIws25C/97VHhZ8BatGoj2jKzPS34eDDtLsuLtQK9JC2IAtP7dxu0tphaIBXM5tBUuAF/9EGFB5VUfJRebbchg4IrjHBWlVANpfXbL0F24g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=um3I8FlZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Uij9b74B"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-742c7a52e97so6577b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 21:09:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1750738166; x=1751342966; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=iZLBQ5GMO3S5FZKU93RAqvRqbEiTSgWH++nyXw8Nmek=;
-        b=Uij9b74BSFX4VCnpzYoOrHnMEd1rTDyh0Ss38HWjhF1sJaA49vSmR9uL89VtCWZ9yp
-         pQkEXBl4QQ+s6SnhHpwqoO+D4QLzmtNBiNPb0GXBoU0OxMwzhfeNoCX8HpkHsZ+CVKbg
-         ySa1FfHVOf6oa+QhkMwOedduFzr/J83hBi13A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750738166; x=1751342966;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iZLBQ5GMO3S5FZKU93RAqvRqbEiTSgWH++nyXw8Nmek=;
-        b=o9rZSZYvGwNOZN2s5JS0zrLafLb0XAb8qG6Jm1xB1G3fdYaUy7CaQz4vAXTYLbZ2au
-         dAH5zbtUWTffOFJZhFCtm9KV6OZkZV657XBRC+2AoNZC+GZuAEllEqui09zyk12kIL0W
-         GOvY6XyBUYTOvzC6EJvCBD7v3aHSY7AojEcfJP+41liFFgrcJBn8+m1RCsUUMe2F7AJB
-         v4d4cqfJtTG4ABqam5z9HazroRexRomdk432hgXDVzCe8OL/9aG4OX5ZXn6jtuv0S8lL
-         F4igQUqPgM9qR8G8S4zmi27w8nGIPIrUg7uSLXxSXabFHmwRTS9NlUENJsSK1+0dJiv0
-         zGjA==
-X-Forwarded-Encrypted: i=1; AJvYcCXFdqZmuUTkhJPLtn8D3JYEUB4fO//eq3PUbR7AsCV4VkhdqbFu/tZi5aEYnbqMqOrF/xw67sQlvpAot9k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7Yi/m8WRAsz4VcYQMjHLnnS1XnVXpFhD4JmbdzfPugtgIOgX3
-	HRXGeQ0ZRMjsJHZbJxVP3pYOFQCcXyRpGhkATydyL1k+4wh1G50bmmUUk+dCngMjZA==
-X-Gm-Gg: ASbGncsc80uTYhY72ZQemJnNEqP460llItBkbfU+m1vJShTBFgcDpJHRjvp5A5Vh6tF
-	eGdFZwOP3P7nRiGCp8BWhUssRqCex5hMus5XBnYYtsYomolfBCEZbBs1SQuAPqSuiOT3vYq0j/A
-	mVUJkF0Zi6by4b7ze70oZGg8IaYbM4CdwEc2djH8gE5eqYIIQER44KfT96eToA/wSS3z01sG3YH
-	GW634pJWSM/j3yWhJ4QXokUAfIf95YieFQVnuwkRPv4drn27Vk1IZljLnmiSkMhPFs0KwTSDv3/
-	+mP2ewvUJV3wR0IDGqGGuVr3vgjOojx0Fpxp1w218IhftrUdeWwNK6g=
-X-Google-Smtp-Source: AGHT+IE7k5HWqp6yZ4coLK9zxOOKVUatWn7F2bJv6NZWHFFs+9T9PielkjniSbuXSSxVbFmuLwM0yQ==
-X-Received: by 2002:a05:6a00:b8f:b0:736:3ea8:4805 with SMTP id d2e1a72fcca58-7490d7a170cmr19157532b3a.7.1750738166415;
-        Mon, 23 Jun 2025 21:09:26 -0700 (PDT)
-Received: from google.com ([2401:fa00:1:10:9e4d:2f37:d5ea:8954])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749b5e4069csm679035b3a.65.2025.06.23.21.09.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 21:09:26 -0700 (PDT)
-Date: Tue, 24 Jun 2025 12:09:22 +0800
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-mediatek@lists.infradead.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, matthias.bgg@gmail.com, weiyi.lu@mediatek.com,
-	tinghan.shen@mediatek.com, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	kernel@collabora.com
-Subject: Re: [PATCH v1 1/2] arm64: dts: mediatek: mt8195: Add subsys clks for
- PCIe power domains
-Message-ID: <20250624040922.GA1077353@google.com>
-References: <20250402090615.25871-1-angelogioacchino.delregno@collabora.com>
- <20250402090615.25871-2-angelogioacchino.delregno@collabora.com>
- <CAGXv+5GHf5D3JDh+OZ-Cxf91PTAGYk2+jvuwK1gymy=k1YOo_A@mail.gmail.com>
- <33847b76-11b5-4233-a5e6-9f8fd3c691a2@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="um3I8FlZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F921C4CEEF;
+	Tue, 24 Jun 2025 04:11:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750738293;
+	bh=EnoerV/xxx91jhOZdHJKKtLWyi7IcO86p6wzJFGUMZc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=um3I8FlZWLvpQ1qgMe0+2y9cM4f6x+6T+pn8fkv2GBQmfZKLtiQaIgYavui5rqLQW
+	 YqLqTZCwzEunS+YqZrMk1lWfFPARJNs0U8I3K4Dz9l7CT3vA2nr5BAXyWPy1w8/4bU
+	 YaXuy6Nwb3BGJ40RNQk5zsrSGEbvbCgXjcz5CrCWkORfPkG6E3DmY7lvmgiYcxRYWe
+	 TfvIiR4HILL9hBUGI2Ppy1LSXxErXV9d3H0TgcpAskAa+8+P+wRpZ3ebBUWnRev9DI
+	 lz+K7ty6WqfPmdFMPDU5FpO84ppu9fcGKqXIw/H3uw9EiG2i/BXzuAxXrP0v04BhRM
+	 oxRSLWKCQox/A==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Gyeyoung Baek <gye976@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sasha Levin <sashal@kernel.org>,
+	linus.walleij@linaro.org,
+	bartosz.golaszewski@linaro.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.15 10/20] genirq/irq_sim: Initialize work context pointers properly
+Date: Tue, 24 Jun 2025 00:11:09 -0400
+Message-Id: <20250624041120.83191-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250624041120.83191-1-sashal@kernel.org>
+References: <20250624041120.83191-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.15.3
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <33847b76-11b5-4233-a5e6-9f8fd3c691a2@collabora.com>
 
-On Wed, Apr 02, 2025 at 12:07:16PM +0200, AngeloGioacchino Del Regno wrote:
-> Il 02/04/25 11:34, Chen-Yu Tsai ha scritto:
-> > On Wed, Apr 2, 2025 at 5:10 PM AngeloGioacchino Del Regno
-> > <angelogioacchino.delregno@collabora.com> wrote:
-> > > 
-> > > The PCIe MAC needs the sram to be powered on for internal IP
-> > > access and it has always worked before because the bootloader
-> > > on Chromebooks was leaving the PCIe PERI_AO MEM clocks on
-> > > before booting the kernel.
-> > > Add the SRAM (mem) clock as a subsystem clock on the PCIe MAC
-> > > P0 and P1 to correctly describe the hardware and to avoid any
-> > > issue with bootloaders behaving differently.
-> > > 
-> > > Fixes: 2b515194bf0c ("arm64: dts: mt8195: Add power domains controller")
-> > > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> > > ---
-> > >   arch/arm64/boot/dts/mediatek/mt8195.dtsi | 4 ++++
-> > >   1 file changed, 4 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/mediatek/mt8195.dtsi b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
-> > > index b33726da900b..0cb96cba727a 100644
-> > > --- a/arch/arm64/boot/dts/mediatek/mt8195.dtsi
-> > > +++ b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
-> > > @@ -792,12 +792,16 @@ power-domain@MT8195_POWER_DOMAIN_CAM_MRAW {
-> > > 
-> > >                                  power-domain@MT8195_POWER_DOMAIN_PCIE_MAC_P0 {
-> > >                                          reg = <MT8195_POWER_DOMAIN_PCIE_MAC_P0>;
-> > > +                                       clocks = <&pericfg_ao CLK_PERI_AO_PCIE_P0_MEM>;
-> > > +                                       clock-names = "ss-pextp0-mem";
-> > 
-> > Doesn't the PCIe host controller already reference this clock?
-> > 
-> > >                                          mediatek,infracfg = <&infracfg_ao>;
-> > >                                          #power-domain-cells = <0>;
-> > >                                  };
-> > > 
-> > >                                  power-domain@MT8195_POWER_DOMAIN_PCIE_MAC_P1 {
-> > >                                          reg = <MT8195_POWER_DOMAIN_PCIE_MAC_P1>;
-> > > +                                       clocks = <&pericfg_ao CLK_PERI_AO_PCIE_P1_MEM>;
-> > > +                                       clock-names = "ss-pextp1-mem";
-> > 
-> > Not this one though, since:
-> > 
-> >           /* Designer has connect pcie1 with peri_mem_p0 clock */
-> >           <&pericfg_ao CLK_PERI_AO_PCIE_P0_MEM>;
-> > 
-> 
-> I'm not sure what this comment refers to - as in, whether this is referring
-> to the board designer or to the SoC//IP designer...
+From: Gyeyoung Baek <gye976@gmail.com>
 
-When MediaTek says "designer" they are referring to the hardware designer,
-in this case I believe it would be the SoC-level hardware designer /
-integrator.
+[ Upstream commit 8a2277a3c9e4cc5398f80821afe7ecbe9bdf2819 ]
 
-> ...but if MediaTek can clarify, I'd be happy :-)
-> 
-> Cheers,
-> Angelo
-> 
-> > 
-> > ChenYu
-> > 
-> > >                                          mediatek,infracfg = <&infracfg_ao>;
-> > >                                          #power-domain-cells = <0>;
-> > >                                  };
-> > > --
-> > > 2.48.1
-> > > 
-> > > 
-> 
+Initialize `ops` member's pointers properly by using kzalloc() instead of
+kmalloc() when allocating the simulation work context. Otherwise the
+pointers contain random content leading to invalid dereferencing.
+
+Signed-off-by: Gyeyoung Baek <gye976@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250612124827.63259-1-gye976@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+
+**YES**
+
+This commit should be backported to stable kernel trees, specifically to
+the v6.11 stable series and any newer stable branches.
+
+## Detailed Explanation:
+
+### 1. **Critical Bug Fix**
+The commit fixes a serious uninitialized memory bug. The code change
+from `kmalloc()` to `kzalloc()` is critical because:
+
+```c
+// Before (buggy):
+struct irq_sim_work_ctx *work_ctx __free(kfree) =
+    kmalloc(sizeof(*work_ctx), GFP_KERNEL);
+
+// After (fixed):
+struct irq_sim_work_ctx *work_ctx __free(kfree) =
+    kzalloc(sizeof(*work_ctx), GFP_KERNEL);
+```
+
+### 2. **The Bug Impact**
+The `irq_sim_work_ctx` structure contains an `ops` member with function
+pointers:
+- `ops.irq_sim_irq_requested`
+- `ops.irq_sim_irq_released`
+
+When `irq_domain_create_sim_full()` is called with `ops=NULL` (which
+happens when using the older `irq_domain_create_sim()` API), these
+pointers are left uninitialized with random memory content.
+
+### 3. **Potential Consequences**
+The uninitialized pointers are checked in:
+- `irq_sim_request_resources()`: `if
+  (work_ctx->ops.irq_sim_irq_requested)`
+- `irq_sim_release_resources()`: `if
+  (work_ctx->ops.irq_sim_irq_released)`
+
+If these random values are non-zero, the kernel will attempt to call
+garbage function pointers, leading to:
+- **Kernel crashes/panics**
+- **Security vulnerabilities** (jumping to arbitrary memory)
+- **Unpredictable behavior**
+
+### 4. **Simple and Safe Fix**
+The fix is minimal (changing one function call) with no side effects:
+- `kzalloc()` guarantees all fields are zero-initialized
+- This ensures function pointers are NULL when not explicitly set
+- No performance impact (negligible difference for a one-time
+  allocation)
+
+### 5. **Affected Versions**
+Based on my repository analysis:
+- The bug was introduced in v6.11-rc1 (commit 011f583781fa)
+- Only kernels v6.11 and newer are affected
+- The fix should be backported to v6.11.y stable series
+
+### 6. **Missing Fixes Tag**
+The commit should have included:
+```
+Fixes: 011f583781fa ("genirq/irq_sim: add an extended irq_sim
+initializer")
+```
+
+This is a textbook example of a commit that meets stable backport
+criteria:
+- Fixes a real bug that can cause crashes
+- Small, contained change
+- No new features or architectural changes
+- Clear bugfix with minimal regression risk
+
+ kernel/irq/irq_sim.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/irq/irq_sim.c b/kernel/irq/irq_sim.c
+index 1a3d483548e2f..ae4c9cbd1b4b9 100644
+--- a/kernel/irq/irq_sim.c
++++ b/kernel/irq/irq_sim.c
+@@ -202,7 +202,7 @@ struct irq_domain *irq_domain_create_sim_full(struct fwnode_handle *fwnode,
+ 					      void *data)
+ {
+ 	struct irq_sim_work_ctx *work_ctx __free(kfree) =
+-				kmalloc(sizeof(*work_ctx), GFP_KERNEL);
++				kzalloc(sizeof(*work_ctx), GFP_KERNEL);
+ 
+ 	if (!work_ctx)
+ 		return ERR_PTR(-ENOMEM);
+-- 
+2.39.5
+
