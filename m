@@ -1,178 +1,126 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C223B251793
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 20:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD522251793;
+	Tue, 24 Jun 2025 20:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750798764; cv=none; b=RCb+Lgtm1lMwtGr4XfKPZTLubARqTR0TmP2/16A0EFaKWUOJ014Hd545RF+oFGcgVCRHTU7dQa577bv9eX8ZIBRSZu15/W43d83AbU3RmLxF0v5BFhmz+bHcO8YSd2ybx6Ck7gph/KkSb543V5LSXmGUauHATvfBVl/8dLkpwxQ=
+	t=1750798788; cv=none; b=sEDDcuTU3Uo6pnJIsU/hjhaXL7RWHpNhyr2brNJ8Xx8bWQ4vsIQWwc3F0XojOgcYlh3hw4rAaTVYa45jTggTiSNtWRVBwhF5hgmI1d5gttgeC2NK/8OKelCm6YiilZh0RPlWflgMEYRcOeAUg5Lpz8MJgRwINfaTqdotAp8p5jQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750798764; c=relaxed/simple;
-	bh=Qbq5RcKBLbJf9awkrGPL3Mn17sQ8Qc1wxnkEzefzYMY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mT3sHGywnq6y1jcxCz7iX3kzyZV/pxskhaLNN0wMaYt2DFzHW9v+m/r0Ok1DFN3sD2Xj7Ho+otQvNQt4yvRIihGqO0ovgD0O5Cjh5tuI1rF8YPuZj/+Hb2TM6XC9vRRmEwRGWpu2O8fJOPG6odZb2Axsjc6UichXCRIfR2HPB/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=k89dnIpX; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1750798788; c=relaxed/simple;
+	bh=Z41SlrC6shhXVfPH39kxoTqPrwM+ffpfDXIUClZ18i4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JaDzrzqeJ+1dsfZ1NpMLTPab6KW4kAxujT1Ff8gy6WC/QkvUdJcDDwAmc4q+ri9/KgV8tb6OKDBLEj4PdWTgE9PeRNbVCT2Hzdv+AzdKL0cT2O/TA19n6hfilxwujkY43W0eLBqzX7dVp3X+LE8AcQVwAHxWskZeySW88HLXHRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S3uUeOk7; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k89dnIpX"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22c33677183so11003925ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:59:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1750798759; x=1751403559; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GmATIdQ/ffuscr1/9tqMcccuRap6fnp/uwfwA9P/3gs=;
-        b=k89dnIpX/GegTHOnEpC2SZ7cjJC4opOMBWWKudkWPyKViubPmfCGqGKRr9m4PievPI
-         WwPq4Ovi6BHNTYXXOT8034endIXCtHUavP5obWLUmvMZIBADmFxU+416WHP9acIio4CA
-         lpt/C3E2VOsg7WUEa8e6FKGiFdnBqmolhRwQ4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750798759; x=1751403559;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GmATIdQ/ffuscr1/9tqMcccuRap6fnp/uwfwA9P/3gs=;
-        b=KWHPfRot+85zVkCm8PU2VnP/T0PrbStrqhqhJshc4lL9kYuMF/dTb2QXD6ZZ8tOg+u
-         nL9Fxpqp/1qVV8iA6LoKOPOS3qePmgNsGUEPy/hSzyWWgHHlbu6Y6NiwdOxgpdls4EEB
-         1XnuBVbPSpVTI35CNJO4z1JjtvsjlCACMYuAUE2dv+CCZyARnAThABjEC4orqH/FJxXC
-         nU093GlCKkPVg0jyIc2rcPavNce9rihktNXLeDxauOV6zKvOfxfRJ0Flciv1pNiLhsvv
-         08PYAGVMAGlmwMUHPB9sqztbsGlGHlTibPxtYzCjgKYoXR8WMzwOebHybKG6RlLqYIs3
-         azTg==
-X-Forwarded-Encrypted: i=1; AJvYcCWC5GZRtubdBQXQmy0dRaSbWez4+kdUI1IwjvcKHFloXYp1ow2V0Xr/frAtYJbj9pg2VE0zl9REUl8duoY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjwlxyWs4/iqteWTzbieZLEcUxNJRh3C16xpX7fe3YmOIT+/1P
-	mNxcACsqHv/1ca4dwfke2gE6QHe3wg7Evot3UrgYswG6QwScX0IlOmT8IqrPt/TFEtzy4R+VWP7
-	zHN4=
-X-Gm-Gg: ASbGncswEkE9gxOjNQyGzIOgdVapfNMvdAJVU0fELgY82QmPMhT8kUkWIlPCQNvMNeJ
-	SlemMtnnpsYwHiYxCRh5fcIhOrw2E/59q8SjMJIzmntAPiUZM3dJCZsDjqcxc/QWkxlVsYz07US
-	D0o6DaItWDHx30uLi2qqOX2M4tUfB/q+Zgle9nPH/cvBCrJfyDw07N5+oU8vY8mFB2p9hgkEqde
-	WIZlsWvM87LAbEjWvOgeYJ30DyhLYLjlUp9ULgI6gagrig0Bp0OwDWRCo47+pTGBPuTVSmpjJCi
-	fipY+Ygs52fG12bdY7Jc9w5sWIrrmg6OzunW8Ra5in0MFchUeq0jXUvtKSoCFLJPa6LYPmSviW5
-	1KJx0Iaw2V98lTrYiotuVhi+TqUVaFdJuIY0V
-X-Google-Smtp-Source: AGHT+IGgBeFvyP2FEhsXIiDf+86NxGLVtwls3cJNhBxDejgjaPWPwmRN4qRpEeS2zUFPmUKOMkHZyw==
-X-Received: by 2002:a17:903:b43:b0:234:c549:d9dd with SMTP id d9443c01a7336-23824384fb6mr11513525ad.48.1750798759459;
-        Tue, 24 Jun 2025 13:59:19 -0700 (PDT)
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com. [209.85.216.47])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86628ffsm113975575ad.156.2025.06.24.13.59.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 13:59:17 -0700 (PDT)
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-31393526d0dso797821a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:59:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWGfgC5XkijI+ajLm+6Yqj+VFG5a72AKvGVafzgkmvH1eP1LyuEInH3mvb8IreeznLB21GjRpNm1uqD5u8=@vger.kernel.org
-X-Received: by 2002:a17:90b:5210:b0:312:e9bd:5d37 with SMTP id
- 98e67ed59e1d1-315f2613846mr422766a91.6.1750798756465; Tue, 24 Jun 2025
- 13:59:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S3uUeOk7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750798786; x=1782334786;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Z41SlrC6shhXVfPH39kxoTqPrwM+ffpfDXIUClZ18i4=;
+  b=S3uUeOk7qJ8SG9S8PSGao/+tAlEOyp3HsKZ6N4TzCR/Oqwx+T2QNl/cQ
+   8EHapoa9n8JhCVj9KqfwuKl8txwjiCTX3lJjCm3y1aGDh724ygmkivJxG
+   uKM/OrUks9uFxtmqO+E696X5pBlvLtqKpICr/0A6kskRuW+CsP1s6Za9y
+   Q/ikyekcPyxBbwUM18am996e/8+avl/MW7lgTjd0oqheluaQQo0DtmUHC
+   qVQMl7Mnh8xq9/G7NMP+IPAGK1+IK0EeAE4KtOkgwoFOsCyq6kiMCPdyK
+   r5CccljIMUQwzDX1iHdBWhIjAQxa+5xs4aRrx9btkD2yRt8mRYrEwrvms
+   Q==;
+X-CSE-ConnectionGUID: 8gP1muU1SRSw4OQAkANWnA==
+X-CSE-MsgGUID: z4LYKnWnSHWPloALJdaUnQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52923160"
+X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
+   d="scan'208";a="52923160"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 13:59:46 -0700
+X-CSE-ConnectionGUID: jCoD3aVvSoae4EIxDw8jGw==
+X-CSE-MsgGUID: U3muxXZVRyKmGsK3DAHF+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
+   d="scan'208";a="151522934"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.108.216]) ([10.125.108.216])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 13:59:46 -0700
+Message-ID: <2a57590b-879d-4920-a20f-beb5cf63d432@intel.com>
+Date: Tue, 24 Jun 2025 13:59:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624044835.165708-1-j-choudhary@ti.com>
-In-Reply-To: <20250624044835.165708-1-j-choudhary@ti.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Tue, 24 Jun 2025 13:59:04 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WgLCwZ5De1B0Cs6MS7310xRa45po_LW7065W2bPNT3Xg@mail.gmail.com>
-X-Gm-Features: AX0GCFsuP_XCTbLoYyR2QmXPmrUMfyrQTUAlc0NxhI0dj1sXsPCFPgIpb-cazDo
-Message-ID: <CAD=FV=WgLCwZ5De1B0Cs6MS7310xRa45po_LW7065W2bPNT3Xg@mail.gmail.com>
-Subject: Re: [PATCH v6] drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort
- connector type
-To: Jayesh Choudhary <j-choudhary@ti.com>
-Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
-	Laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org, 
-	devarsht@ti.com, tomi.valkeinen@ideasonboard.com, 
-	kieran.bingham+renesas@ideasonboard.com, ernest.vanhoecke@toradex.com, 
-	jonas@kwiboo.se, jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com, 
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
-	linux-kernel@vger.kernel.org, max.oss.09@gmail.com, geert@linux-m68k.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/fpu: Delay instruction pointer fixup until after
+ after warning
+To: Chao Gao <chao.gao@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+ bp@alien8.de, mingo@kernel.org, "Chang S. Bae" <chang.seok.bae@intel.com>,
+ Eric Biggers <ebiggers@google.com>, Rik van Riel <riel@redhat.com>,
+ stable@vger.kernel.org
+References: <20250618193313.17F0EF2E@davehans-spike.ostc.intel.com>
+ <aFN4BuzSCXlcqFQz@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <aFN4BuzSCXlcqFQz@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 6/18/25 19:37, Chao Gao wrote:
+> instead of delaying the RIP fixup,
+> 
+>> 	fpu_reset_from_exception_fixup();
+>> 	return true;
+> can we do
+> 
+> 	return ex_handler_default(fixup, regs);
+> 
+> here? Similar to what other handlers ex_handler_{fault, sgx, uaccess, ...} are
+> doing.
 
-On Mon, Jun 23, 2025 at 9:48=E2=80=AFPM Jayesh Choudhary <j-choudhary@ti.co=
-m> wrote:
->
-> By default, HPD was disabled on SN65DSI86 bridge. When the driver was
-> added (commit "a095f15c00e27"), the HPD_DISABLE bit was set in pre-enable
-> call which was moved to other function calls subsequently.
-> Later on, commit "c312b0df3b13" added detect utility for DP mode. But wit=
-h
-> HPD_DISABLE bit set, all the HPD events are disabled[0] and the debounced
-> state always return 1 (always connected state).
->
-> Set HPD_DISABLE bit conditionally based on display sink's connector type.
-> Since the HPD_STATE is reflected correctly only after waiting for debounc=
-e
-> time (~100-400ms) and adding this delay in detect() is not feasible
-> owing to the performace impact (glitches and frame drop), remove runtime
-> calls in detect() and add hpd_enable()/disable() bridge hooks with runtim=
-e
-> calls, to detect hpd properly without any delay.
->
-> [0]: <https://www.ti.com/lit/gpn/SN65DSI86> (Pg. 32)
->
-> Fixes: c312b0df3b13 ("drm/bridge: ti-sn65dsi86: Implement bridge connecto=
-r operations for DP")
-> Cc: Max Krummenacher <max.krummenacher@toradex.com>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> Tested-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-> ---
->
-> Changelog v5->v6:
-> - Drop pm_runtime_mark_last_busy()
-> - Pick up tags
->
-> v5 patch link:
-> <https://lore.kernel.org/all/20250616093240.499094-1-j-choudhary@ti.com/>
->
-> Changelog v4->v5:
-> - Make suspend asynchronous in hpd_disable()
-> - Update HPD_DISABLE in probe function to address the case for when
->   comms are already enabled. Comments taken verbatim from [2]
-> - Update comments
->
-> v4 patch link:
-> <https://lore.kernel.org/all/20250611052947.5776-1-j-choudhary@ti.com/>
->
-> Changelog v3->v4:
-> - Remove "no-hpd" support due to backward compatibility issues
-> - Change the conditional from "no-hpd" back to connector type
->   but still address [1]
->
-> v3 patch link:
-> <https://lore.kernel.org/all/20250529110418.481756-1-j-choudhary@ti.com/>
->
-> Changelog v2->v3:
-> - Change conditional based on no-hpd property to address [1]
-> - Remove runtime calls in detect() with appropriate comments
-> - Add hpd_enable() and hpd_disable() in drm_bridge_funcs
->
-> v2 patch link:
-> <https://lore.kernel.org/all/20250508115433.449102-1-j-choudhary@ti.com/>
->
-> Changelog v1->v2:
-> - Drop additional property in bindings and use conditional.
-> - Instead of register read for HPD state, use dpcd read which returns 0
->   for success and error codes for no connection
-> - Add relevant history for the required change in commit message
-> - Drop RFC subject-prefix in v2
-> - Add "Cc:" tag
->
-> v1 patch link:
-> <https://lore.kernel.org/all/20250424105432.255309-1-j-choudhary@ti.com/>
->
-> [1]: <https://lore.kernel.org/all/mwh35anw57d6nvre3sguetzq3miu4kd43rokegv=
-ul7fk266lys@5h2euthpk7vq/>
-> [2]: <https://lore.kernel.org/all/CAD=3DFV=3DWvH73d78De3PrbiG7b6OaS_BysGt=
-xQ=3DmJTj4z-h0LYWA@mail.gmail.com/>
->
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 69 +++++++++++++++++++++++----
->  1 file changed, 60 insertions(+), 9 deletions(-)
-
-I'll plan to push this to drm-misc-fixes tomorrow morning unless there
-are any objections or requests for me to wait.
-
--Doug
+Yep, good idea. I don't see any reason that this should have been
+special in the first place.
