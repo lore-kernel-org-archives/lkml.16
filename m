@@ -1,78 +1,79 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7152725B684
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 22:55:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B753C25BEEA
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 22:55:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750805742; cv=none; b=Oo/0b3hN8UfhQuyrc6oUGSq6kcoF8c2Uv9jVBeGDkz026F/NFaCwkAwlTg7Tr/ACpun614o558hbbbzThX6BVCq7yGjT1K4rBOlad/hG5KFeWbfmu8leWbYNkl1sMs3SG0LEkWpyxtaZp2gJSE6PFaC6S18IfEHOyFQ+HfYI5fw=
+	t=1750805743; cv=none; b=cisvLi2SnkqGTWXCMh1GJZxaFj8cMP/OzERfo39oCRPtwzAkjRMoy42VGjSdV+TfUboA3JWBETMJkNTDxin2B06kQ8OyM0jBKCVitCJCtkffGveBD4E+iU51yemGHuxpSxHTkFWlNcjnKSn3ok81RatrCNfYe/E+F7RFceBttqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750805742; c=relaxed/simple;
-	bh=th3Ae5B/SQAWX6qLmHXpAPB7x+Q8bgonubks/T4X9/U=;
+	s=arc-20240116; t=1750805743; c=relaxed/simple;
+	bh=Qvs3OSKRQqOM9ZIlTxVsxePe5U87cmKzQZn7+r8tgeY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=c7Yl2BmqQ70Gwl9JgJ9w3UiDzJyEhvo7xUdnlnehQB/HgflCAPKvrx8aep7ILB3lsXnSH7t2Y8fWuOEOIYVXDPN9KhInvaG+g0dpmjJTPnTkT/BAxgmTSMj/8NtaflWi389zV1Yzh7KU2BPHWbdqtXppcuRgqTbsFScQnYTtrGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=N0Gk3GSW; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=VDC7tbICkD8w8iwMc7c47+S6QOzszAJgcTgxgBVRkDmP8mT00MYlpQY3DPBQn5B+saibe2iR2KiAQH1IGNfXV/goWfxDgxDDpWeJivL8B7Krn/kc8SYzRZm9/gpzpSenw5ne3gmDYZYrZht9P4fL9plyAasWRcoQEsOeWlOi4wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=V1xqbv+o; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="N0Gk3GSW"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="V1xqbv+o"
 Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55OF3wlA031794
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 22:55:39 GMT
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55OD77ip007242
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 22:55:41 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=bgLdW+b+xrw
-	utFkJoAS7ASliarNli0r6EfO3VZgj67w=; b=N0Gk3GSWnwDK4e0ANrY0jSWtvFf
-	1UOfU2wZw7mu35MG5xmsMWjfKHNZGPn5FTeGMZl4A0zOzyquAXkfseASogx6oQ/3
-	98liObGVWZlnn8SwmsWAQ8su7FW8HwVRGPpC+NuOqcqixLCInUd7Ggl58AWg5BWC
-	iZMKIb57fwCV+3mN35raW7yGiNTFgdqfThoKPMahiOCEWa0s8iVmvXhrOA2FP18K
-	m0NqGwZJyiobz5TI60uzSRGMDSyoLkinu76LSzl40D7k/QnxOCLePTY+W+Crs/3T
-	4ipj7V8LXWKwztEhrQYIopxEHxgZ+REBp6md44ySOW+cKppRKe5PPly7DVw==
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ec2682jj-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+uiAkGgQteo6o/z1D6/oqPRuT2A6kwChd2t935QW2WY=; b=V1xqbv+oZEv4f7uJ
+	RtifVIEkM2+zgmYp++sunzbAXITzrjud5fsVYOO/F4VBD2yvXwa4lFW6xx7EZUhk
+	CJJlQUywwXgdf0i5xrXG9QtaEeWjEU4i0222KBYQvHjM9N10r0Ne2cq4h0ZquHOn
+	racW4MNit/xXUZqEJ+/5Myrofv+ttLuu7IWz7Cu5OYq5Ec6PVnY6uD2xOn50hjc2
+	5Lw55vtalo5CjULbeRBq4FtMuXpkC5O+vLug7Bn30TFGQrdUKSksSDiBOoLW7iSD
+	C9m+nKwjBXlHCXryJLVFBkbIZnuWdc+Fhz555moXd4awb4dAgxwoUHwLh0fuiELU
+	nMhuLA==
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ec2682jn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 22:55:39 +0000 (GMT)
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-b00e4358a34so3673717a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:55:39 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 22:55:40 +0000 (GMT)
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b31c38d4063so3861285a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:55:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750805738; x=1751410538;
+        d=1e100.net; s=20230601; t=1750805740; x=1751410540;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bgLdW+b+xrwutFkJoAS7ASliarNli0r6EfO3VZgj67w=;
-        b=dWdLp3/JPr8NkQNpj1+aH51T5AGjSrrV/m0ZQH0sIBEKcVqvjn6R2ZcrPMxTUrX0io
-         4K3POh7vKfIRuWLPphj+Qdv3GBx3dY8hBbZmPT9MKNjVUC77EnrmFgO9w9+EiafQQsPr
-         +qa0ugsxP12dyMQm/08in7dkUapP6b05DJDEmEjkUlPabawpPUdvAqcLtihlbPnvhbrT
-         L6rfg+2M2mOUJZuUvWkxaA8+EnsVYMPRPvrzrlHikYeaQCXhgOUklLA5zOUQrFlr70oi
-         njtjqZFoCtcP7Ylua4rauD9g7ufUFqlWyWSKzsuxP27F0QP4S3dEv3QwcLckw2aMLbkt
-         nJeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6VMKyePyCDhclEko+RwagKHW/nbH88EX6EK5zn4YDHgnVNmXN1xPIKh3bL8mRqdjv3E8z/clvoqqtc5w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYNy7VjevODEZg3Bd0APOoEFzQkKB65BOjxLcvUW8fAfHFketh
-	/9z9rJxQN3TCD3GROytin3bHyBjyCVHHQIvOg1kfYs/hWui3Y2zjaVCjy1x3Ja5+sb8Uq+3ckBq
-	NIxXtLOWMWnKjlkp3OViVjir6jAs7wwm0SsTMaWZkn1RLav6C+FckyTP7SJ6cYW/iXbk=
-X-Gm-Gg: ASbGncv7O6gQAe2aqoNEtGcZuPeu84ZTf9O/leD3Cpj2sP4nULk56FU260L/LjBY7es
-	bQbYptYuOt33Co98nEXVQFfkEBtesEOWxptNAf04jUlNGU8k3B/yu1tfGHfZOTDCK5llLHX42Rf
-	koE/RoXvi2HXiFhOtKjV/gRDJacTgcBsI/E06wKqAQo7uZWU+wLhjtCeiOgq4CrBOv1BmRot4On
-	n8qSVuY0e7c9z9t58G1Lqs9ccfZkM8WanQ/JpW9fNkdci2rxeAJpMR0/pG5+dTRxXn2KeDrAgc0
-	Hmdso/IAXxRKLFL8xuMkNgnIqRjEfA+1IEfFESVpCCXgo23Tq4FDhXg5zyTU44bmlI5ymqXBnvk
-	c99sNKqAQZw==
-X-Received: by 2002:a17:90b:5867:b0:311:ba32:164f with SMTP id 98e67ed59e1d1-315f25dff48mr941735a91.8.1750805738583;
-        Tue, 24 Jun 2025 15:55:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGA+1PGk3DwG/2p8elRCOrzngH3sOpe34iA4o54hpHWqXeVT8z7hYLta/eMScjWi0EtA4uG/g==
-X-Received: by 2002:a17:90b:5867:b0:311:ba32:164f with SMTP id 98e67ed59e1d1-315f25dff48mr941699a91.8.1750805738114;
-        Tue, 24 Jun 2025 15:55:38 -0700 (PDT)
+        bh=+uiAkGgQteo6o/z1D6/oqPRuT2A6kwChd2t935QW2WY=;
+        b=mMyizxU6GGK38N3RJx6GvyhoQQu+IGKlfj9W4rYYLMso42Pnc68qxnzVDGk/jjz3fz
+         qumJdxQYErIIghSEUztYLZSh4ZbmTS8rg/eGifs+OWVvGxoW5vvkA4nSEeiEBLImFyK1
+         TAmrKJcTewFoiFry5C5PC5ydq4j4XDwn9v1ryOMx3Dc/aYMvFBnlQKZA5GKOifYz4Gm2
+         wldihPv09QC9wMu6NTklpec/C727Ep4hfFoXNinQCwXu4QubYymq4pYLNq/g+WnrLCpi
+         XmAeKmh5tZGVlaHV9MRr17caXXLp8Doxn7jxbIOfN0uth2vUIFIJiDDp1/AlNW6KX1hN
+         fA3g==
+X-Forwarded-Encrypted: i=1; AJvYcCW/77x08cgVZDy5OXOiA8T7rNF7fGYYhpOkJDWRvVp1x3obl3DO1rAdvPV94MuYDCuk5OhYXn2I6RFnK9Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbpjXKu8QwaIclHcqiJi9B6huZNzBkutYLSRJnDxsiGWrB9T9r
+	qQr2UQVKglBojkmEk+367HGEXKB2MZt55pv+3mAmiUgjYKcr8JXbC9NmE30PiZDY8gQOT1nSQUN
+	M/J/XMU4fNOv9Z7nLSWfIHeAtBkiCy2dncGCY4Ixn3cUs6Lqvrnu4jLyz30UgT5WJl8o=
+X-Gm-Gg: ASbGncuzOyLlv/JWaCG4XqjvHIRQYMstWqbKsbe5QF1+sdEkUh8/akIN1yHNY6jPeiW
+	U2njTHYWHdnunuXGhfuPUXWlUIczZTXSm6zSZpdfTEx0CP3KN7pEPhb6SQatjD20y2OMxgm0zn9
+	MUYUW+kTmfy+tuRjRwYqpxQ+ESb2csyjzbhllGggqzP9GwTmi7DEZcIvnN5hAupSeMwZBq6M1sa
+	PzNYJhPi7te9q9uEv0NSeyO6cwTN13Bt1viy45vihjGm+1/b5OlejUY3S9ezy8Jes1WUJ5q5aWX
+	YXygjjdkFv2rI5oVEI72CxadNnfRKQde9Gt2dYdn5Mfh22xer0FSKHqmdbeUMoL1PmcyhVl+D6+
+	csqn9Wd3X+w==
+X-Received: by 2002:a17:90a:c887:b0:313:1e9d:404b with SMTP id 98e67ed59e1d1-315f25c8e7amr848490a91.2.1750805739993;
+        Tue, 24 Jun 2025 15:55:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGii1z/HTJYbndXIl3QbVV7r9Sayc+qnaz/nFenH/a1CYIACL/DiGEBzq6rne4rPDDuISg8Lw==
+X-Received: by 2002:a17:90a:c887:b0:313:1e9d:404b with SMTP id 98e67ed59e1d1-315f25c8e7amr848464a91.2.1750805739553;
+        Tue, 24 Jun 2025 15:55:39 -0700 (PDT)
 Received: from hu-amelende-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f53a65adsm154949a91.11.2025.06.24.15.55.37
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f53a65adsm154949a91.11.2025.06.24.15.55.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 15:55:37 -0700 (PDT)
+        Tue, 24 Jun 2025 15:55:38 -0700 (PDT)
 From: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
 To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
         krzk+dt@kernel.org, conor+dt@kernel.org
 Cc: dmitry.baryshkov@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: soc: qcom: qcom,pmic-glink: Add qcom,subsys-name property
-Date: Tue, 24 Jun 2025 15:55:34 -0700
-Message-Id: <20250624225535.2013141-2-anjelique.melendez@oss.qualcomm.com>
+Subject: [PATCH 2/2] soc: qcom: pmic_glink: Add support for subsystem restart (SSR)
+Date: Tue, 24 Jun 2025 15:55:35 -0700
+Message-Id: <20250624225535.2013141-3-anjelique.melendez@oss.qualcomm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250624225535.2013141-1-anjelique.melendez@oss.qualcomm.com>
 References: <20250624225535.2013141-1-anjelique.melendez@oss.qualcomm.com>
@@ -82,20 +83,21 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDE4MyBTYWx0ZWRfX31Knr6QLNQpD
- RoAx0jL83BCL4oQ3ZnNmfUNdxp7y+JscXcdtbJ0FB11lxfMgVcl8iayckVHbYu0jTrJ/XrA4dSf
- /YyX6JQv2f2bX50d7V10gbz+M6GYl3yfh/0XsyTsUhLV2fXvCbuNGiueesSxA/qoUnJSeOdK9Lw
- muizl6HKg8ma9apj5EIntf1uf42q5miGCaqq7humj/glQC0+UnMc0OT7gWORqmrGCQ4tR80XovE
- z1NkKOr3AJzy4AEoNrjcLbNeohmVW5sAf9Ba0eJzWp1MBoW0iaM9/cavTFsV6u7LMttbiuReTsn
- ngIzYWurrKZwf6FpLDbuWJ2HNfGs03+mMf60DdjLLtIcrvHFGmr9gkKPtnmu6NzZ84E5bHsfSi8
- hWhxzZZ//E8o8LJI0S9lmyU1t2sqejVgF6zmkkHSJWjo86JHJLd3nk7fW7T5qQUejcIl+f9Y
-X-Authority-Analysis: v=2.4 cv=XPQwSRhE c=1 sm=1 tr=0 ts=685b2ceb cx=c_pps
- a=Qgeoaf8Lrialg5Z894R3/Q==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=dMs3LNW3c4SnNh3c2sIA:9
- a=x9snwWr2DeNwDh03kgHS:22
-X-Proofpoint-GUID: aZRYwqcSx-wlSX1tKyxOb9KEQngDkn_B
-X-Proofpoint-ORIG-GUID: aZRYwqcSx-wlSX1tKyxOb9KEQngDkn_B
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDE4MyBTYWx0ZWRfX+rqNdLHfJvii
+ HqZJL9RdOO+fVfOG3mtkjhPXypr3b577orRdj4pLEloCPPDgK6dAOst9pJJwqRJEVhSNgGyvMfM
+ ntJbsbzwaP34/1gELCwWhQb+Wrw+7ELimC/vwj7nNxnLoC+q9WWdRsR5HkUbkwdJTy9pzkOi4Dq
+ fCMsPCdfD8LqTDkT44x7oNZ1idKuE4vopgB6FZ+bhTfWFXAfbqmqPjxXqfAfYBiXA7WMgse84xx
+ zzYiZHhjfKUb4dZ09e5n02f7HpD9qSecJlah+ZVaaCRtR5OjlNPMN4xCOtDZz1m/VyR7bscIekH
+ qzHgBO2AMVXAkfgv0Yzm5IGtFIrUPASJmroSlxx2OHnIgYKgIIfA8n1xSQr5sV6IGaIXx0kKKl8
+ 9jDp0Z3+MLSTPK14D+weZFltBMguQyber90TJPqO/3Te+WdliEkG2PC0IGZG1aahkn5nwZhP
+X-Authority-Analysis: v=2.4 cv=XPQwSRhE c=1 sm=1 tr=0 ts=685b2cec cx=c_pps
+ a=rz3CxIlbcmazkYymdCej/Q==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=tIxvoA3mxl7b6XSbyz0A:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=bFCP_H2QrGi7Okbo017w:22
+X-Proofpoint-GUID: pLg2nz3YuZ2jsGtkCVWe_MX_eb2IuAj-
+X-Proofpoint-ORIG-GUID: pLg2nz3YuZ2jsGtkCVWe_MX_eb2IuAj-
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-06-24_06,2025-06-23_07,2025-03-28_01
@@ -106,29 +108,123 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  authcc= route=outbound adjust=0 reason=mlx scancount=1
  engine=8.19.0-2505280000 definitions=main-2506240183
 
-Add new "qcom,subsys-name" property to set the name of the subsystem in
-order to get subsystem restart (SSR) notifications.
+Add support for PMIC Glink clients to receive notificiation when
+the subsystem goes down and comes up again.
 
 Signed-off-by: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
 ---
- .../devicetree/bindings/soc/qcom/qcom,pmic-glink.yaml         | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/soc/qcom/pmic_glink.c | 43 +++++++++++++++++++++++++++++++++--
+ 1 file changed, 41 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,pmic-glink.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,pmic-glink.yaml
-index 4c9e78f29523..0d1f30fdc579 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,pmic-glink.yaml
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,pmic-glink.yaml
-@@ -49,6 +49,10 @@ properties:
-   '#size-cells':
-     const: 0
+diff --git a/drivers/soc/qcom/pmic_glink.c b/drivers/soc/qcom/pmic_glink.c
+index 0a6d325b195c..5121f19d63e5 100644
+--- a/drivers/soc/qcom/pmic_glink.c
++++ b/drivers/soc/qcom/pmic_glink.c
+@@ -2,6 +2,7 @@
+ /*
+  * Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
+  * Copyright (c) 2022, Linaro Ltd
++ * ​​​​Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+  */
+ #include <linux/auxiliary_bus.h>
+ #include <linux/cleanup.h>
+@@ -9,6 +10,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/remoteproc/qcom_rproc.h>
+ #include <linux/rpmsg.h>
+ #include <linux/slab.h>
+ #include <linux/soc/qcom/pdr.h>
+@@ -39,10 +41,14 @@ struct pmic_glink {
+ 	struct mutex state_lock;
+ 	unsigned int client_state;
+ 	unsigned int pdr_state;
++	unsigned int ssr_state;
  
-+  qcom,subsys-name:
-+    description: Subsystem name used for subsystem restart.
-+    $ref: /schemas/types.yaml#/definitions/string
+ 	/* serializing clients list updates */
+ 	spinlock_t client_lock;
+ 	struct list_head clients;
 +
-   orientation-gpios:
-     description: Array of input gpios for the Type-C connector orientation indication.
-       The GPIO indication is used to detect the orientation of the Type-C connector.
++	struct notifier_block ssr_nb;
++	void *ssr_handle;
+ };
+ 
+ static struct pmic_glink *__pmic_glink;
+@@ -205,10 +211,12 @@ static void pmic_glink_state_notify_clients(struct pmic_glink *pg)
+ 	unsigned long flags;
+ 
+ 	if (pg->client_state != SERVREG_SERVICE_STATE_UP) {
+-		if (pg->pdr_state == SERVREG_SERVICE_STATE_UP && pg->ept)
++		if ((pg->pdr_state == SERVREG_SERVICE_STATE_UP ||
++		     pg->ssr_state == QCOM_SSR_AFTER_POWERUP) && pg->ept)
+ 			new_state = SERVREG_SERVICE_STATE_UP;
+ 	} else {
+-		if (pg->pdr_state == SERVREG_SERVICE_STATE_DOWN || !pg->ept)
++		if (pg->pdr_state == SERVREG_SERVICE_STATE_DOWN ||
++		    pg->ssr_state == QCOM_SSR_BEFORE_SHUTDOWN || !pg->ept)
+ 			new_state = SERVREG_SERVICE_STATE_DOWN;
+ 	}
+ 
+@@ -231,6 +239,18 @@ static void pmic_glink_pdr_callback(int state, char *svc_path, void *priv)
+ 	pmic_glink_state_notify_clients(pg);
+ }
+ 
++static int pmic_glink_ssr_callback(struct notifier_block *nb, unsigned long code, void *data)
++{
++	struct pmic_glink *pg = container_of(nb, struct pmic_glink, ssr_nb);
++
++	mutex_lock(&pg->state_lock);
++	pg->ssr_state = code;
++
++	pmic_glink_state_notify_clients(pg);
++	mutex_unlock(&pg->state_lock);
++	return 0;
++}
++
+ static int pmic_glink_rpmsg_probe(struct rpmsg_device *rpdev)
+ {
+ 	struct pmic_glink *pg;
+@@ -281,6 +301,7 @@ static struct rpmsg_driver pmic_glink_rpmsg_driver = {
+ static int pmic_glink_probe(struct platform_device *pdev)
+ {
+ 	const unsigned long *match_data;
++	const char *subsys_name = NULL;
+ 	struct pdr_service *service;
+ 	struct pmic_glink *pg;
+ 	int ret;
+@@ -333,6 +354,22 @@ static int pmic_glink_probe(struct platform_device *pdev)
+ 		goto out_release_aux_devices;
+ 	}
+ 
++	if (device_property_present(&pdev->dev, "qcom,subsys-name")) {
++		device_property_read_string(&pdev->dev, "qcom,subsys-name", &subsys_name);
++		if (!subsys_name) {
++			ret = dev_err_probe(&pdev->dev, PTR_ERR(pg->ssr_handle),
++					"failed to read subsys_name string from dt\n");
++			goto out_release_aux_devices;
++		}
++		pg->ssr_nb.notifier_call = pmic_glink_ssr_callback;
++		pg->ssr_handle = qcom_register_ssr_notifier(subsys_name, &pg->ssr_nb);
++		if (IS_ERR(pg->ssr_handle)) {
++			ret = dev_err_probe(&pdev->dev, PTR_ERR(pg->ssr_handle),
++					"failed adding ssr notifier\n");
++			goto out_release_aux_devices;
++		}
++	}
++
+ 	mutex_lock(&__pmic_glink_lock);
+ 	__pmic_glink = pg;
+ 	mutex_unlock(&__pmic_glink_lock);
+@@ -360,6 +397,8 @@ static void pmic_glink_remove(struct platform_device *pdev)
+ 
+ 	pdr_handle_release(pg->pdr);
+ 
++	if (pg->ssr_handle)
++		qcom_unregister_ssr_notifier(pg->ssr_handle, &pg->ssr_nb);
+ 	if (pg->client_mask & BIT(PMIC_GLINK_CLIENT_BATT))
+ 		pmic_glink_del_aux_device(pg, &pg->ps_aux);
+ 	if (pg->client_mask & BIT(PMIC_GLINK_CLIENT_ALTMODE))
 -- 
 2.34.1
 
