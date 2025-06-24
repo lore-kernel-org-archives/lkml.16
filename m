@@ -1,72 +1,61 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C30725D201
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD4C2376E1;
+	Tue, 24 Jun 2025 08:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750754824; cv=none; b=ZxeZLTPLRGLPfKlTimmQ3X2YeL02FJF818iFa9c8Zfz7OHYutBKh5+97Xtu5E35vE9v5VnJawcpY2gpbAtCrA+P/+tMvCpr/MCdOTlO+Yk51PwxcwXLOwUK48htNZqEzR8kJkKFDmcdnkMdI4E/9lR1Lht9uRMSuS/2Bwq8ocvE=
+	t=1750754841; cv=none; b=QJp37Jl+B8MCGuOTwQBLqmNZbcdWinpyH0Hcu8bsPXSK3/TrivDa1rCxxubIkLjg4ZmO58cfFW7ibistEFy+68FcPjKRAZ9xuqpNiuGG8qVtCk9fBYXY9kOPitBTcdiGZ4m+K6KJWRyLTWx7q/8uUKxaNGzQXimlqGpKPDYHdNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750754824; c=relaxed/simple;
-	bh=ZTzM8Q7udUhE9DJc6t1DPCQpG014X2G1f7hMSSqOYZ8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=fgGNkQAT1lhXFpfc0Cn7HWTebn0Y6sCOVsEASyO1fj/32acTvCT4Ljh22SFhrf4Z2iz4H0L/U72TPzsQZSfQlhJZ9ezlBYhuzW+RpOqYA4YYm0LVBGelbQCaBUQ4StLRNLMgc4WFu6XOaZ5KZr3kctFVd9LcguwVFOPwicbb+Lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddba1b53e8so1955255ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:47:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750754822; x=1751359622;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uTy2CkZKKcNnWbVHKSnKqAf2eweC2VZddt1ot+lLKB4=;
-        b=s17rfNBDCCs8JyGXLs/MCm0duhNy1TjtchAqxpbRXX0CpTQVeLOzHmWkLG728X//3S
-         wACA+r85aaDWO29oq0jMG0lcgO/19rNzuD3ER3d0ldvKKIgmz3XEpjH9tsY/G37gBsjl
-         ++8+BG7m8c7Rw5g4S61JoFuTioHGUBX6QobjPy9cFUMiRQjjOk3jc52Mq0Ui7/9eFS8x
-         fBcPna6mgPhqPLbn5uluV3W/1n7lqYlBv1UWPTNmpN12DJcaqvP2mCUmBrZtBvfv1ouB
-         h/lpkIx/XYmSqQ1lua82Rug/16zocFB1eIsk9PWERN1RR2c8TVuo2vr8DiqADCAtM6Qf
-         nBeA==
-X-Forwarded-Encrypted: i=1; AJvYcCVU7ISctB6Cd2HVcaMBZFxh+MOQMyd+uCi4mSB1Ifkks+DedmzdL5HxT1Jk30sGP7MaI8jVTf7Okck/4ps=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFG6YksYz7za/aXN3ElMXZTFWrx1s7BzaIIgcLHB/8dQug+Hf4
-	ZbcODfVuHJPuSgTK9aaYVcoWH7cZwB+ZSn+8+08tvj+ZHpE6VKxTbbkRqx/nQsIJYuVgs8gwRO3
-	bRP34XX77nPitL+Iz9JJV/JC9ahPmyCYaCzG8lQPBCvo1hXQjQDfIDzs5GKM=
-X-Google-Smtp-Source: AGHT+IEKay6LxW0MJy2H3xz6hpoMUwLRlYxiUcY17lfQxxiSt15Pny/0TPr8x7GwSXKRrCgQFS6wqIPLFvLW9DO863h73FWGD2ng
+	s=arc-20240116; t=1750754841; c=relaxed/simple;
+	bh=bScyVOHb0BVyHX8S+iERUocAUydzqBlTmi/mEsaMen4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dqmitsw+r1YTfP+ebVSXNs3X8RM0DuV1HEFdwPBu6s62BaBsrXzyhKRpGNeX/C7fHTJs6dYOkT7lz2o8mzrVpa5UftEu08hEtUG0ULS2i3DMCEG5gRHe50UVJCpl6LAB1by5E1Tnm4GTl4y5qzThppVCFW1/l3vgptc1fHnguck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQCxN10U; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQCxN10U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8268C4CEE3;
+	Tue, 24 Jun 2025 08:47:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750754840;
+	bh=bScyVOHb0BVyHX8S+iERUocAUydzqBlTmi/mEsaMen4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BQCxN10Use2yAkGa3Kjq1SwcWBhyK6DXQf/2aOQVeAlpSlNRKKbGoTHgf/reXSBDl
+	 peAmuwedcWBdLj/+qryp6fXzpgqGXmbUSaTflHhuUlhxEqx/50q2BZ6lWt9ySbtMPK
+	 j6qvlTjmEMb+hYa6zyAfGWhpeqn2WUsFJfC9J9l57J68oNeBKj8TIKOCJaxk9rLFIB
+	 2hN+HJheFpsDjYT9PuU3uCNJ+/NiOQMAy2Q94dDPlQiS4CQHER9Og7BzU+NMr8dxnT
+	 cHg+ZmwtdTq27unPGg9kUILBr1WI01PdSYJZoqFlzYlOUrmWpt9CggJO1hZ7eFLJxy
+	 DbZJmoOEl4vCA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uTzJG-000000006Pd-2XwX;
+	Tue, 24 Jun 2025 10:47:18 +0200
+Date: Tue, 24 Jun 2025 10:47:18 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Slark Xiao <slark_xiao@163.com>
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] USB: serial: option: add Foxconn T99W640
+Message-ID: <aFpmFk-t5430Tkg4@hovoldconsulting.com>
+References: <20250620035721.6450-1-slark_xiao@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:32c1:b0:3dc:8b29:30bc with SMTP id
- e9e14a558f8ab-3de38cc3076mr178273585ab.21.1750754822258; Tue, 24 Jun 2025
- 01:47:02 -0700 (PDT)
-Date: Tue, 24 Jun 2025 01:47:02 -0700
-In-Reply-To: <20250624082559.1616-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685a6606.a00a0220.2e5631.0064.GAE@google.com>
-Subject: Re: [syzbot] [trace?] KASAN: slab-use-after-free Read in __free_filter
-From: syzbot <syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620035721.6450-1-slark_xiao@163.com>
 
-Hello,
+On Fri, Jun 20, 2025 at 11:57:21AM +0800, Slark Xiao wrote:
+> T99W640 is designed based on Qualconn SDX72 chip. There are 3
+> serial ports to be enumerated: Diag, NMEA and AT.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+> 0&1: MBIM, 2:Modem, 3:GNSS(non-serial port), 4: NMEA, 5:Diag
+> 
+> Signed-off-by: Slark Xiao <slark_xiao@163.com>
 
-Reported-by: syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com
-Tested-by: syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com
+Applied, thanks.
 
-Tested on:
-
-commit:         78f4e737 Merge tag 'for-6.16/dm-fixes' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=149eedd4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4ad206eb0100c6a2
-dashboard link: https://syzkaller.appspot.com/bug?extid=daba72c4af9915e9c894
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=12ceedd4580000
-
-Note: testing is done by a robot and is best-effort only.
+Johan
