@@ -1,130 +1,226 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396522BE7BC
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7FA3FB1B;
+	Tue, 24 Jun 2025 13:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750772915; cv=none; b=S0jwqj7USRGUePQ3Wue+mTSMrxfyiNMsb9ucieLgx15bASC7j47FQHl0ZFjUoN5iQuh5eXfg5RIHZLqOX0WqwXP7l+SAQqcq+EbQzzbs2UH+PjIxNOep4PNgMGi0tWUFl+9DkYw98LKah7n30jCCIoBlTYg9I3JBKU7zfRfYD3U=
+	t=1750772933; cv=none; b=RZXD3qFZlKUGeCUOQR9ptxtKTcJ5IS0rCXmEEo4nL7PSbvALJBMPDcPWfBjYMzP/unS+8P1Fq8+oDgs3NMJN/BJywPgHmyTQaXryTCCCDSzP7UAEY6IinXPL4l7D4dEm26N4+lJcm8hueXN1Oq/hW52Xhj0Pj2lUvEA+mbJgTd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750772915; c=relaxed/simple;
-	bh=E3V++5MfDVggiII4WpQCK+D0VM0vjMcbOBqOELEWJKM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oVoamj2MeiNaJc8BnLP339JeQlJoT9/kJeXMZEPDX/Y4ndZ8QJ+PKyhNpCVlMzJUFp27FeeuEIoZzSyDDvSO7xk4deTyQNMx1fa+XFc1ROaFyXzLVhFIeULCEIdRwbuxkE9U9J+79fAD/oXeBZQRbA4TCqMM355oLKRdK5u8EBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=W3hE5vYd; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1750772933; c=relaxed/simple;
+	bh=xGrATvnsr2No50uFgmrozZRPjRz6yymAT4fJabipdgA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VW5jEznIe1ihcxs14Z7eRYDWcffelF55bA92oXmsYfA8M8a2TbmtZGMQvDl1UJf5uPs7CWIEpaEulwYwA2qQZmgZHQ24umdzUcZ7VUPRb3XL5AMbC9kFU9KhV64NsCHDjgvhfG275b2oRXp0gBZS46Pl5jqVCqnf777msTaKtZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i1IPhwkK; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="W3hE5vYd"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-234b440afa7so5686055ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:48:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i1IPhwkK"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-234fcadde3eso74447355ad.0;
+        Tue, 24 Jun 2025 06:48:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1750772913; x=1751377713; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=H99QKyWxgJFviR9gCoeMBJLsUrcpUyL0OAKfLepv64s=;
-        b=W3hE5vYdLE3hbXF2zm8+AHWeJ3K0e0S5x6Fi4GDAlG1h7GITDqzyhhpxp/DHffjlfk
-         CdtQzCd6F3NL9pSQnlvyg6wCyaQ/EAuV7x37L2vpBgWilY+AX4hlC/aB9//xHnWB07Q9
-         6vN67oAb6dZm+v2DveOxPlMps0/ZuGhqjFZDVRuwCjH03cXvFT8Cpdubc1gWGfAUoJML
-         2o0Kuh88E6ESIrfbpZ21V22AdIdH0lzXbY/NAsnV42fkQtQ+8nSkv35ufJNRu9pKsMhY
-         QdA+704me7H65hQFpwMAcfL/yOJ3OMYAdv0Jf8bcM+zM44J6ZLPCZcVgxnWAyESVxcK2
-         eWig==
+        d=gmail.com; s=20230601; t=1750772929; x=1751377729; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hk6pB62R8/rFBBcS2uuP0R5gJUE79987GNhPqNjMRo8=;
+        b=i1IPhwkK9mwyu6TEcCvAvAE9lJxIyPzJ3p6KXhlbkGhYr4rVBUyEIYKfUOq5iEcFl8
+         msYHqZkTwWr47gHiG13WM9E+CyGTUBiSuIYVLEdfxzclEU6KwzirqwQH9YB1h4B31TL4
+         h5A6ZVENJmLTY0mVRLz2hzWGr/aV1iKJXbcqPVgbQ2j0nAuN2+6LBkp0Li6MXFZVMdme
+         4mcc7tW22Q+K8USeFyCakVVuEoqbo/Z/ATFGg2CHbURCdcdDMydH5wCrVpau9EUoPUyZ
+         sdEyRp+jxnSJJLXMfg5vJYHKUp10Ts9mA4zFz1xy7n26rPgqCPgMwnKS8L3mSGTPbap9
+         5G9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750772913; x=1751377713;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H99QKyWxgJFviR9gCoeMBJLsUrcpUyL0OAKfLepv64s=;
-        b=kOxDd/jHv9z27vEzAACInttG6bTr9Pac83Zc/4jeVQw1+7H6wrA91DY7sYylSynCVS
-         fibbBlNVVjDCmLeq+EJ8ZHpZIoBvpDVoNoD3zYwRTLKO2VrjXzSmCNolmvyWtBvKQ4SA
-         xmCOIia0owk6cadQrUHCbQog0w0x/x2QDo+PAlUKkBVSAcCbaWyBpQ1Rs7rST8kQeF4F
-         GWry0YsdGoR5jL0/m9eqqYtfQsL5E1x+1/OeN1pxJvZriwvQculGQ232tXwDZ1Hx0CSA
-         2VGBhyUP6c3uDr1CL9klZgxTVPt97uJqvCPw9nRMDq1tiAEcAvEmGm5zS0Pry0T2G88p
-         qtyw==
-X-Forwarded-Encrypted: i=1; AJvYcCUU3Tcnnij9eNylJmbFd7gsJ6ccCh32ZMZBbOMpMLXiLMgWPJ2F71VLEUIssIbclixwL2xH4Qjc5JyMOX4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIu79wec5sW/sHAYbt/3qLdXNl5kBfABmZukRiipGo3qIhxXz1
-	dEZ9Dx7KXI2mYw3NO3bOWVq1UlX8aAU8HZIYrs1s+ynrAhgBuvcUAz8vzF1BAdxc6Zg=
-X-Gm-Gg: ASbGncvNfvviNAxX2Y18LW7FX2j4F35MyEpZCuSv1PO6SFi4gc7YaEOQ3R2Oz1Mdwcm
-	CE50s1CWQPFlx3+YNgHXriN//n82N6PvbiXvr1Q+IsMwEY25fSHecXlwj4vtwgPcOf36ET9JCvq
-	+pT1fZonctaXtt9p30zFGy0hafEBmkBxwsNMpTdTia7iMl/sdwjQ6/fXVE+6F+cuRlapzC2UCm7
-	FAkx59xUSA/7LtQtkXFPlG7AYWH94O0s6T+S0+9kSFYl19T97F8Sos9r47bxveQMErf17c6HgEX
-	aq17/53f1My9P8CnBrh9Xr3FAO2Echbse9KYs74EJUZN6aUxSTzKTX1nMj27r1W5qzp+57wiWGv
-	bHM0bXJgG2pMUMOZM4wVpPt6CaCtjmfQ=
-X-Google-Smtp-Source: AGHT+IH3VVcKlPmQAwhvEtRsqViiUOznLNr6sCLhqQcLQB4C7EhcexsF4UBAe4n2C1iZkbDQyg+oRw==
-X-Received: by 2002:a17:903:4b30:b0:234:8c3d:2912 with SMTP id d9443c01a7336-237d96b6361mr256983115ad.11.1750772913474;
-        Tue, 24 Jun 2025 06:48:33 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d87391e5sm106566055ad.244.2025.06.24.06.48.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 06:48:33 -0700 (PDT)
-Message-ID: <d135d6cc-5117-4b3a-9abe-2e5fd9e3e490@rivosinc.com>
-Date: Tue, 24 Jun 2025 15:48:21 +0200
+        d=1e100.net; s=20230601; t=1750772929; x=1751377729;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Hk6pB62R8/rFBBcS2uuP0R5gJUE79987GNhPqNjMRo8=;
+        b=fWHjXppvqeQsosI+fDIj/3zZ1+xsvCJIx/5ZPGEAaTlV0SpP3t4WflHY0aX7DhhHpe
+         ozsqZZ5d70i2t+YMUJTrW6Z4ubhk0lqcWZ0mvzuoaQoPOBj6cwncXyNXleaOAppHCj4d
+         4s6lvErzn7gOdPncpisWSRVtXV2h404m0aGSA+TT+cTkrqHDJ0XrV1hwV0To7aM2BG91
+         Qr93aujPu3mecxMjj+AhJIVDVBUqyuCA+wvwT/nARkD4AW9dhAFSMCd+XUvTKUvmk5YI
+         B2SAEp53U7k39Yr3gDuAz6YPm7ZflJgri1w8PZGetfviq23Ym+sMMVKcQ5WNW5B1zWtM
+         gudg==
+X-Forwarded-Encrypted: i=1; AJvYcCW/e1t059AXH9vnfkkC88LuiNhL4FQD6y7rYS9/CuZcSBUfCS79cI1oQG2juJWSbJsNNJPvCQ5U@vger.kernel.org, AJvYcCXqZm3NMkEjLLLfXCuPrk5D9KaoOKkIXJdjsCWCZiG2NuqXpTG8kQQ9r+ujgm+x3P8IQ4yBR24sixbpToM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytNz9JRyu6NGbKOv+utuyF7N8BYZAXKvSAdiiIT7OpLYXdCqhL
+	zJIpJd9y3WyJOM4qJpX3vplAX0hg4kfV/ekfAN0shpHEPCUwUPd7GNcuJeSQSf5X
+X-Gm-Gg: ASbGnctQjet29JN1r4541cZiRvSeOpyWzIgORX/4AeyTbjY734J2FxRkybR8XTVjkzK
+	x1v1TqsiRthPowH3Q9ZGZag9YB2p0SWEnUeUVsrirDM98HJ7iATHT9uLxKWU26UFQslX6fkIcXP
+	wBs+7DCKbZeL1xsnsAmLMZ032pgaE6AH62TlapyORbRA7NOGBTtsBpCsFpoI/UHHQP3KmRyt/Ie
+	OS/l43515h7fZSbVMTvLX4cxI+gH+/CU1XLQOh0NV1NNWU3asZkenJgaPHn86CdoK0VmJk4hvf9
+	CydquybKj3bqA8aq7Jh3qJ3+i2c+w191DAZ/uZF93i0eDqTBJSCWKFfnw8K9BSLixbs5yDx8lzB
+	RpPAyycs=
+X-Google-Smtp-Source: AGHT+IElliQeDtJFb0sxRL7fqhBF58Qku40qz2wb/HqE9C6if71wyFRvz5Gor/lVluwB88KvtwlGPg==
+X-Received: by 2002:a17:903:94b:b0:234:d292:be83 with SMTP id d9443c01a7336-237d9778c65mr279303895ad.10.1750772929068;
+        Tue, 24 Jun 2025 06:48:49 -0700 (PDT)
+Received: from manjaro.domain.name ([2401:4900:1c67:6116:afb5:b6ab:2dc8:4a21])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8729490sm114526515ad.236.2025.06.24.06.48.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 06:48:48 -0700 (PDT)
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+To: linux-xfs@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: djwong@kernel.org,
+	leah.rumancik@gmail.com,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Guo Xuenan <guoxuenan@huawei.com>,
+	Pranav Tyagi <pranav.tyagi03@gmail.com>
+Subject: [PATCH 5.15.y] xfs: fix super block buf log item UAF during force shutdown
+Date: Tue, 24 Jun 2025 19:18:40 +0530
+Message-ID: <20250624134840.47853-1-pranav.tyagi03@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: Enable interrupt during exception handling
-To: Nam Cao <namcao@linutronix.de>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>,
- Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
- Alexandre Ghiti <alex@ghiti.fr>, bigeasy@linutronix.de,
- clrkwllms@kernel.org, rostedt@goodmis.org, linux-rt-devel@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>
-References: <mhng-60581B88-6FC7-4349-96B6-730D908ABF4A@palmerdabbelt-mac>
- <alpine.DEB.2.21.2506240303170.61655@angie.orcam.me.uk>
- <19cf2371-7293-4e71-a17d-669db4c8270a@rivosinc.com>
- <20250624131730.XqPd1HUR@linutronix.de>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20250624131730.XqPd1HUR@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+From: Guo Xuenan <guoxuenan@huawei.com>
 
+[ Upstream commit 575689fc0ffa6c4bb4e72fd18e31a6525a6124e0 ]
 
-On 24/06/2025 15:17, Nam Cao wrote:
-> On Tue, Jun 24, 2025 at 01:37:13PM +0200, Clément Léger wrote:
->> On 24/06/2025 04:09, Maciej W. Rozycki wrote:
->>> On Mon, 23 Jun 2025, Palmer Dabbelt wrote:
->>>> I'm kind of split on a Fixes tag here.  One could argue it's a regression, as
->>>> having interrupts disabled during exceptions is going to cause all sorts of
->>>> performance issues for users.  Seems a bit risk to just backport, though...
->>>>
->>>> That said, if nobody noticed then it's probably a good sign nobody is really
->>>> paying attention and we should just backport it before anyone notices...
->>>
->>>  Oh, someone did notice and it's not only performance, cf. 
->>> <https://lore.kernel.org/r/alpine.DEB.2.21.2501070143250.18889@angie.orcam.me.uk/>.
->>
->> I also had a series which was doing so for misaligned accesses handling,
->> but after discussion, it was not ok to do so.:
->>
->> https://lore.kernel.org/linux-riscv/20250422094419.GC14170@noisy.programming.kicks-ass.net/
-> 
-> If I understand that right, exceptions from kernel should be treated as
-> NMI, so that lockdep can tell us if exception handlers touch locks.
-> 
-> But (conditionally) enabling interrupts does not lose us that benefit. It
-> is still considered NMI by lockdep.
-> 
-> Unless I miss something, the patch is fine as is.
+xfs log io error will trigger xlog shut down, and end_io worker call
+xlog_state_shutdown_callbacks to unpin and release the buf log item.
+The race condition is that when there are some thread doing transaction
+commit and happened not to be intercepted by xlog_is_shutdown, then,
+these log item will be insert into CIL, when unpin and release these
+buf log item, UAF will occur. BTW, add delay before `xlog_cil_commit`
+can increase recurrence probability.
 
-Hi Nam,
+The following call graph actually encountered this bad situation.
+fsstress                    io end worker kworker/0:1H-216
+                            xlog_ioend_work
+                              ->xlog_force_shutdown
+                                ->xlog_state_shutdown_callbacks
+                                  ->xlog_cil_process_committed
+                                    ->xlog_cil_committed
+                                      ->xfs_trans_committed_bulk
+->xfs_trans_apply_sb_deltas             ->li_ops->iop_unpin(lip, 1);
+  ->xfs_trans_getsb
+    ->_xfs_trans_bjoin
+      ->xfs_buf_item_init
+        ->if (bip) { return 0;} //relog
+->xlog_cil_commit
+  ->xlog_cil_insert_items //insert into CIL
+                                           ->xfs_buf_ioend_fail(bp);
+                                             ->xfs_buf_ioend
+                                               ->xfs_buf_item_done
+                                                 ->xfs_buf_item_relse
+                                                   ->xfs_buf_item_free
 
-Yeah indeed, providing that all traps handlers really are reentrant, I
-think it's fine.
+when cil push worker gather percpu cil and insert super block buf log item
+into ctx->log_items then uaf occurs.
 
-Thanks,
+==================================================================
+BUG: KASAN: use-after-free in xlog_cil_push_work+0x1c8f/0x22f0
+Write of size 8 at addr ffff88801800f3f0 by task kworker/u4:4/105
 
-Clément
+CPU: 0 PID: 105 Comm: kworker/u4:4 Tainted: G W
+6.1.0-rc1-00001-g274115149b42 #136
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+1.13.0-1ubuntu1.1 04/01/2014
+Workqueue: xfs-cil/sda xlog_cil_push_work
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x4d/0x66
+ print_report+0x171/0x4a6
+ kasan_report+0xb3/0x130
+ xlog_cil_push_work+0x1c8f/0x22f0
+ process_one_work+0x6f9/0xf70
+ worker_thread+0x578/0xf30
+ kthread+0x28c/0x330
+ ret_from_fork+0x1f/0x30
+ </TASK>
 
-> 
-> Best regards,
-> Nam
+Allocated by task 2145:
+ kasan_save_stack+0x1e/0x40
+ kasan_set_track+0x21/0x30
+ __kasan_slab_alloc+0x54/0x60
+ kmem_cache_alloc+0x14a/0x510
+ xfs_buf_item_init+0x160/0x6d0
+ _xfs_trans_bjoin+0x7f/0x2e0
+ xfs_trans_getsb+0xb6/0x3f0
+ xfs_trans_apply_sb_deltas+0x1f/0x8c0
+ __xfs_trans_commit+0xa25/0xe10
+ xfs_symlink+0xe23/0x1660
+ xfs_vn_symlink+0x157/0x280
+ vfs_symlink+0x491/0x790
+ do_symlinkat+0x128/0x220
+ __x64_sys_symlink+0x7a/0x90
+ do_syscall_64+0x35/0x80
+ entry_SYSCALL_64_after_hwframe+0x63/0xcd
+
+Freed by task 216:
+ kasan_save_stack+0x1e/0x40
+ kasan_set_track+0x21/0x30
+ kasan_save_free_info+0x2a/0x40
+ __kasan_slab_free+0x105/0x1a0
+ kmem_cache_free+0xb6/0x460
+ xfs_buf_ioend+0x1e9/0x11f0
+ xfs_buf_item_unpin+0x3d6/0x840
+ xfs_trans_committed_bulk+0x4c2/0x7c0
+ xlog_cil_committed+0xab6/0xfb0
+ xlog_cil_process_committed+0x117/0x1e0
+ xlog_state_shutdown_callbacks+0x208/0x440
+ xlog_force_shutdown+0x1b3/0x3a0
+ xlog_ioend_work+0xef/0x1d0
+ process_one_work+0x6f9/0xf70
+ worker_thread+0x578/0xf30
+ kthread+0x28c/0x330
+ ret_from_fork+0x1f/0x30
+
+The buggy address belongs to the object at ffff88801800f388
+ which belongs to the cache xfs_buf_item of size 272
+The buggy address is located 104 bytes inside of
+ 272-byte region [ffff88801800f388, ffff88801800f498)
+
+The buggy address belongs to the physical page:
+page:ffffea0000600380 refcount:1 mapcount:0 mapping:0000000000000000
+index:0xffff88801800f208 pfn:0x1800e
+head:ffffea0000600380 order:1 compound_mapcount:0 compound_pincount:0
+flags: 0x1fffff80010200(slab|head|node=0|zone=1|lastcpupid=0x1fffff)
+raw: 001fffff80010200 ffffea0000699788 ffff88801319db50 ffff88800fb50640
+raw: ffff88801800f208 000000000015000a 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88801800f280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88801800f300: fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff88801800f380: fc fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                             ^
+ ffff88801800f400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88801800f480: fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+Disabling lock debugging due to kernel taint
+
+[ Backport to 5.15: context cleanly applied with no semantic changes.
+Build-tested. ]
+
+Signed-off-by: Guo Xuenan <guoxuenan@huawei.com>
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+---
+ fs/xfs/xfs_buf_item.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
+index b1ab100c09e1..ffe318eb897f 100644
+--- a/fs/xfs/xfs_buf_item.c
++++ b/fs/xfs/xfs_buf_item.c
+@@ -1017,6 +1017,8 @@ xfs_buf_item_relse(
+ 	trace_xfs_buf_item_relse(bp, _RET_IP_);
+ 	ASSERT(!test_bit(XFS_LI_IN_AIL, &bip->bli_item.li_flags));
+ 
++	if (atomic_read(&bip->bli_refcount))
++		return;
+ 	bp->b_log_item = NULL;
+ 	xfs_buf_rele(bp);
+ 	xfs_buf_item_free(bip);
+-- 
+2.49.0
 
