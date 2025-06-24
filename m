@@ -1,172 +1,108 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92A929AAF0;
-	Tue, 24 Jun 2025 20:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EAE92E9EB4;
+	Tue, 24 Jun 2025 20:30:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750796785; cv=none; b=Pf/zEIyv5GcMt1lZ3TQaM2gNYdTZx1EPwFzVNNUMDPwivnm6DEG4B07gEnBgZjXE1NVDDET6wDgUeIQCVKHQer6HBd3mZD+9UNcgFpIB3SNyxbTHCPVabWlOA9DruIdfgzmRZlb0cWkY1YBhJPYarXBQ8bXaRTvEoalQC5a2IPM=
+	t=1750797002; cv=none; b=Gy7KCe82B2CBVaM5wbMiJlVjCXNrl28xOPBs2xQDrEKf7i0mzDz5SCMo4KoYWKFXHNlyI5ETPcftQzCJVAyq7C/TtxaYGObXFsAK2iXb59Se1nr0r/SYSlyJgv77zYFQUPHmDidY79VlgLy2LOpkaESlpCp5kZU3hIow7jmZfCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750796785; c=relaxed/simple;
-	bh=8qvwSHO1+kU/s+0/nwif8OvvuO8uIInW/6Ce8eRN7RY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OUmIKyWgKE8N7N2iiYWYFuxGA5Ty2FkvF+NbS44zTCXDwz9NWlLZ7sJHrmQQNrpv0uOn2v1mpDCJx3mAep9gBujrUcIVcZ3pkxtGMIlOzYnSdRJAKUbwYKnhXDPdzW1LKn9600e7MnbuS5s7fAmBF6PdY/OuGBnz4h0OvC0+tZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Zi2H6T5z; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750797002; c=relaxed/simple;
+	bh=G5jHjUAFPaNxb766dDm6aPO5ukHke3MtXDLhg1dG6YY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XC9S6faHHUJE5rk964vezRzv8mA5UK8/iDdTNsITNN3IzjW9aDT8CS/p+dmLRG1CTIDf8/jfMN2CfcV3U5D+4OT+49rqBn185tvzfWBKZIqzPYxu7eVPDYmNW1BdSI7SBngSI2vmYWwLrnwbOvYLHx4sMYyHMBxj3bbYgx3ybMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KxnD+2w/; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Zi2H6T5z"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55OKQ6MP1955253;
-	Tue, 24 Jun 2025 15:26:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750796766;
-	bh=m4TjCvZ5Jf7Xqqe6R0pi6faNrYPWbmCQi4gwoWZ2ILQ=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=Zi2H6T5zdEo6iF+U1R3Sqp5A61gG/EGcLHULAJpH61ZlgAtb04iRpK8VjdS6b/o76
-	 SlTOb4UzcTlSZYNlrN2k+5pI7BdBgw6EZTjBKWxojuEtyxVKZWjjbO100e/N+iudK0
-	 y9qo35bYBbzGr4BbZ1LUOZJ+TKHGB7IQQ9VmKXf0=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55OKQ6gk2021547
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 24 Jun 2025 15:26:06 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 24
- Jun 2025 15:26:06 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Tue, 24 Jun 2025 15:26:05 -0500
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55OKQ5VX2374186;
-	Tue, 24 Jun 2025 15:26:05 -0500
-From: Judith Mendez <jm@ti.com>
-To: Judith Mendez <jm@ti.com>, Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
-        <linux-watchdog@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH RESEND 2/2] watchdog: rti_wdt: Add reaction control
-Date: Tue, 24 Jun 2025 15:26:05 -0500
-Message-ID: <20250624202605.1333645-3-jm@ti.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250624202605.1333645-1-jm@ti.com>
-References: <20250624202605.1333645-1-jm@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KxnD+2w/"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a6d1369d4eso588552f8f.2;
+        Tue, 24 Jun 2025 13:30:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750796999; x=1751401799; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cc1cJV8t9VucNYTqwHrmhx6iEFKvUQnQDzRDdocCpb4=;
+        b=KxnD+2w/QDVTMYS+KSpYaZ3IPmwVMpqex88t5g31MygVz4ojgC5UX9lJUmUbQcGozq
+         WQ1qCQwORp1JQN3Gcdc9nTfaDJF/UX8p+J7/S22xD1NMB9BhCzo3dKPQJxzU7OL+izP9
+         XBdmPVjwKxeSdKovcwp6LowwXOjPWsizi5e8Hck7w1SVdJNK+De3Ts/1QmB8VMritpxG
+         2+JnrYaBqbOIjDR3RyrH4ih2bsn0fl040MISY1UYEmoKz0dMUdFG8TjqBsCnCweZHkj6
+         QZv8ejhi38h2yWibsQ4dBmo9PiPMSLPET8lwe9O7AUeaSIr6CLLujSy7N4c2UBgW58x5
+         +Fww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750796999; x=1751401799;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cc1cJV8t9VucNYTqwHrmhx6iEFKvUQnQDzRDdocCpb4=;
+        b=hmwQV6uIFYGe4HE1K4YP7URDcL/q5nKA723cxCVeGAndlerwXk5DZJnMIdEZsjoagf
+         BWBIRstS+G+eyuzFNoT8qROK8xivQ+pV9Lb0bvimCBvdVeveCj/++vD1m+8VG2UxEkCg
+         LlHszPIE+2q7y/eMuVXVtfp6aL3ivcc4q8rSYxnoWacdXKVqWmvFApNMqj1DrzJwo1Vc
+         ryb09SuWJIIw6pNfVPkxfMUZrfZlXA8YZcxQQowviaWhDQXV6zRnk8J9yBB6Zq8IzXbI
+         gwRXb7oifhFVwJwriYa4vhXOZZ9pXoOtUcZ0JkSHEOP+snZ/HbAo8V1Wlh4C3NhTxCvF
+         9UWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUADtnpzcDKzY30nhJ004k8eDDLHUlCsMXbrrTJiyxeiVqwLlevNlAeeEvYF9EI7J3k2MF6jshqk/m@vger.kernel.org, AJvYcCWXB+tSItltDj023XIhpp/iWojrZPv0+pFg4w0eCEsMFbgDKjQ6lHlBv8OqBVWipDMcs2xEVwxtLw8itrWM@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnYHcpdOTQRhsqWP8OpcyGW7IfZbzGa/g5V3VHiCNLmUhxoUAG
+	FL4G2/woMRRKF+HuzBAzHb3H3DZjO4o+uMOgfUHgwIOlX3PXGJQUbguh
+X-Gm-Gg: ASbGnctk+S/Baw4REiK0P4xs9VdWsen3JtoH8x3mYL5Xhx87a48LDwC36b4PZMQo1en
+	M0RKYQ+WfeF2hovcv5qs4+pGbxqhmhIPlrnZGOwccmCNICTG4zweGlpeoyET8hNo/JqY6ahT+SK
+	88asyeL+SjMPE+0j2fNEvy2kvf29YL7a6z/rz9Tk3im3Uj0BS8S6TIZgK5+U/lhc0saiFy+ldFX
+	j/wOSOm+PG3E+RQpxgUBl2AHt3yYUcyU6rvCrHP55lqdVJfJ3ah3od2xwJj7MhDwdukuX/28sxs
+	6SJxScACJtGzvi9iIVPppaoP/186AO5ASjOApZMto/fcvY5agnrmhhd3MI/XhdvdF+HO/wQ=
+X-Google-Smtp-Source: AGHT+IHslSSf7KvDz7QkNZn4Jopu99GX8X8EENWK+B96+OCkA6cc2nKI3QeRmFM3Q4mtkbi5MWCS8g==
+X-Received: by 2002:a05:6000:4a0d:b0:3a1:fcd9:f2ff with SMTP id ffacd0b85a97d-3a6ed60c8d2mr137549f8f.12.1750796999442;
+        Tue, 24 Jun 2025 13:29:59 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4537c6e2f64sm13745905e9.2.2025.06.24.13.29.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 13:29:59 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Ira Weiny <ira.weiny@intel.com>,
+	linux-acpi@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] ACPI: APEI: EINJ: Fix check and iounmap of uninitialized pointer p
+Date: Tue, 24 Jun 2025 21:29:37 +0100
+Message-ID: <20250624202937.523013-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-This allows to configure reaction between NMI and reset for WWD.
+In the case where a request_mem_region call fails and pointer r is null
+the error exit path via label 'out' will check for a non-null pointer
+p and try to iounmap it. However, pointer p has not been assigned a
+value at this point, so it may potentially contain any garbage value.
+Fix this by ensuring pointer p is initialized to NULL.
 
-On K3 SoC's other than AM62L SoC [0], watchdog reset output is routed
-to the ESM module which can subsequently route the signal to safety
-master or SoC reset. On AM62L, the watchdog reset output is routed
-to the SoC HW reset block. So, add a new compatible for AM62l to add
-SoC data and configure reaction to reset instead of NMI.
-
-[0] https://www.ti.com/product/AM62L
-Signed-off-by: Judith Mendez <jm@ti.com>
+Fixes: 1a35c88302a3 ("ACPI: APEI: EINJ: Fix kernel test sparse warnings")
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 ---
- drivers/watchdog/rti_wdt.c | 31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+ drivers/acpi/apei/einj-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
-index d1f9ce4100a8..d419884c86c4 100644
---- a/drivers/watchdog/rti_wdt.c
-+++ b/drivers/watchdog/rti_wdt.c
-@@ -35,7 +35,8 @@
- #define RTIWWDRXCTRL	0xa4
- #define RTIWWDSIZECTRL	0xa8
+diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.c
+index 7930acd1d3f3..fc801587df8e 100644
+--- a/drivers/acpi/apei/einj-core.c
++++ b/drivers/acpi/apei/einj-core.c
+@@ -401,7 +401,7 @@ static int __einj_error_trigger(u64 trigger_paddr, u32 type,
+ 	u32 table_size;
+ 	int rc = -EIO;
+ 	struct acpi_generic_address *trigger_param_region = NULL;
+-	struct acpi_einj_trigger __iomem *p;
++	struct acpi_einj_trigger __iomem *p = NULL;
  
--#define RTIWWDRX_NMI	0xa
-+#define RTIWWDRXN_RST	0x5
-+#define RTIWWDRXN_NMI	0xa
- 
- #define RTIWWDSIZE_50P		0x50
- #define RTIWWDSIZE_25P		0x500
-@@ -63,22 +64,29 @@
- 
- static int heartbeat;
- 
-+struct rti_wdt_data {
-+	bool reset;
-+};
-+
- /*
-  * struct to hold data for each WDT device
-  * @base - base io address of WD device
-  * @freq - source clock frequency of WDT
-  * @wdd  - hold watchdog device as is in WDT core
-+ * @data - hold configuration data
-  */
- struct rti_wdt_device {
- 	void __iomem		*base;
- 	unsigned long		freq;
- 	struct watchdog_device	wdd;
-+	const struct rti_wdt_data *data;
- };
- 
- static int rti_wdt_start(struct watchdog_device *wdd)
- {
- 	u32 timer_margin;
- 	struct rti_wdt_device *wdt = watchdog_get_drvdata(wdd);
-+	u8 reaction;
- 	int ret;
- 
- 	ret = pm_runtime_resume_and_get(wdd->parent);
-@@ -101,8 +109,12 @@ static int rti_wdt_start(struct watchdog_device *wdd)
- 	 */
- 	wdd->min_hw_heartbeat_ms = 520 * wdd->timeout + MAX_HW_ERROR;
- 
--	/* Generate NMI when wdt expires */
--	writel_relaxed(RTIWWDRX_NMI, wdt->base + RTIWWDRXCTRL);
-+	/* Generate reset or NMI when timer expires/serviced outside of window */
-+	reaction = RTIWWDRXN_NMI;
-+	if (wdt->data->reset)
-+		reaction = RTIWWDRXN_RST;
-+
-+	writel_relaxed(reaction, wdt->base + RTIWWDRXCTRL);
- 
- 	/* Open window size 50%; this is the largest window size available */
- 	writel_relaxed(RTIWWDSIZE_50P, wdt->base + RTIWWDSIZECTRL);
-@@ -255,6 +267,8 @@ static int rti_wdt_probe(struct platform_device *pdev)
- 	wdd->timeout = DEFAULT_HEARTBEAT;
- 	wdd->parent = dev;
- 
-+	wdt->data = of_device_get_match_data(dev);
-+
- 	watchdog_set_drvdata(wdd, wdt);
- 	watchdog_set_nowayout(wdd, 1);
- 	watchdog_set_restart_priority(wdd, 128);
-@@ -369,8 +383,17 @@ static void rti_wdt_remove(struct platform_device *pdev)
- 	pm_runtime_disable(&pdev->dev);
- }
- 
-+static struct rti_wdt_data j7_wdt = {
-+	.reset = false,
-+};
-+
-+static struct rti_wdt_data am62l_wdt = {
-+	.reset = true,
-+};
-+
- static const struct of_device_id rti_wdt_of_match[] = {
--	{ .compatible = "ti,j7-rti-wdt", },
-+	{ .compatible = "ti,j7-rti-wdt", .data = &j7_wdt },
-+	{ .compatible = "ti,am62l-rti-wdt", .data = &am62l_wdt },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, rti_wdt_of_match);
+ 	r = request_mem_region(trigger_paddr, sizeof(trigger_tab),
+ 			       "APEI EINJ Trigger Table");
 -- 
-2.49.0
+2.50.0
 
