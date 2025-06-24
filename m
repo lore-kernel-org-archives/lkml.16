@@ -1,99 +1,108 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2833A2EACE8
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6BA2E8885
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750794177; cv=none; b=oh7bNmZKYv85suzmng7WF9fc+aoMQXaoIyhRyeB3ZQx4FjUo5B/3SXQXNTHINOJx2CsZdp69Y7wjAM9dA3tLRue7SxelOxeheBvimC7xpAjmyGH6IcSGDkraMWqf6U1lVxH05X3gnh/SzPTrHHKlStfLwpw4+sUeswo2P2IHy8g=
+	t=1750794245; cv=none; b=AtKnwlrOdCcecs4m9boKSu/CEWSDMoJM/OjvcPacSTupWD+0IU6w5tvsnXJAUN2HYefuF6lWyhq5stpUvKi2rofUvc/UG+U/ZVvEKE7lOuEu836BFAwGlmr+ZsFBF7BLSOdAGNlJ+J7mHJ/5i75n1+Cjy/zfbg8FES5kkPWmMQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750794177; c=relaxed/simple;
-	bh=dO+dW40LtZuSsCWa+WBV8jzzSSO9iLzEYTMbtOq+Yv0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=AFuYlLcjKYyqkthXYpKFQL5JaSCknibDjtscaJmRnV1Tsp8a8BO9ML1swWLwOP/spz/TVJwjxKC86SsYmQKn0SO2Pl/OYsfl2zpBwsaOGG9159YL3QCkluIlwnq6TV8/ArjQc4NgXto3E0DQMkdiSBb0BfhMl/cQ1nn+TiVpgs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nePFoL33; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750794245; c=relaxed/simple;
+	bh=mEEqXQPzSi/2DYZkyERnStSQgx8nwqj2N53hxm8wTV8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gRUw/2B0S8jo1B/sVarvXmxRJQYigmgKVzG2fCPwhTKKlIATlbMnOxPZ4zXz8wkv7XGOXIfhFfqvSZ+EoWJNaBoHjfIU1czhpwPD8gxJVSuHb/NHDteoUbrlvYuR7EvYW2yPiWEFhnP/B7yK7LCaMLL8ExGsDjnfOuMBg6dgj3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YuweBf/D; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nePFoL33"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-748fd21468cso473905b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:42:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YuweBf/D"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-55350d0eedeso960400e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:44:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750794174; x=1751398974; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=X4quOVy1erD77eB7GtW5qeTK+/ZPrDIfGhJB042CiIs=;
-        b=nePFoL33G6uVLy4L4SnqvCPgpeqyNgcL1ot/cSdZM6Xg6QdwkT4QxEtonVL6LK1Ziq
-         sVr2SbQsAHU1gfdefI2vKnUqDbx5+GEWGIFgp7+3gBd0OkKu1PIKQ3khkOQmgD569j0Y
-         RLrYwnPh/MwLev+6lX7tvavfiyYJ1Cg4oYgufh1ovHgNpw2UBkfjW4yzn59T2I1bCe9O
-         BqZOT3KhruQT7dYsEpAcMIqjOQO8udEFp8e8fvjI0KXsINa+ovuI/VGnjRLmorh5wvMN
-         0VI61dmToczMUdXZYrlvzP+9pw4STOLd43Sd2xIYz0R8MKXCJg6FFOZ3kuGrFqgXLYt+
-         OowQ==
+        d=linaro.org; s=google; t=1750794241; x=1751399041; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mEEqXQPzSi/2DYZkyERnStSQgx8nwqj2N53hxm8wTV8=;
+        b=YuweBf/Dx6SZV/ES4ka0J24b0HGZJ6DKvelBic6v7vtEMuXQYaq7y7u8fsIdzd53Ug
+         T/izPE21Rs6qf2tq2ef9l32nn0rshjyM12/1vAQggoOJJNZ+5wT/XSzDBfIGyU45+pia
+         cYKgK6nMTDq0Omn85/YCoHk2NHXo9ucAb/YO1ZbukPV5STuI5bhPdPmENeK1rLamBTpU
+         Lxq+9DTSuLoIkURW1yLjC8gwIkTVtGsvZDCKcFYHVXC8rnHKsHN4/g1sN+0kkFLLWwe3
+         0LHCplcJ5T9Sktq0SRwZpWO48uR+08HPj/Uah0eoRSDuRFQB3t9jRBa4iYSnuhXlQyVn
+         apyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750794174; x=1751398974;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X4quOVy1erD77eB7GtW5qeTK+/ZPrDIfGhJB042CiIs=;
-        b=VfgtigUhnts6mBmF4ZEB77X2BbJ+acL8Ko7eY1C4viS1TbezWYBd7/jFYvP+4l/2ry
-         RAABrVFyaqTwRnB4mq7dbd/zySIRFQeWSchoIi4qsGImxB85cKvS6jwH5DBRSWVFqsNK
-         8PrxVg2pODC5nFHYC6e1LLZpJSvKuUUqHHNLBTziKxkPcPTTjjm08+pD95oudMt7kc3F
-         wxYSgyWZNPg+Kb93WXUcZXdiXsfEPfFTLS5cYV+NziMlDKRAxmJDnq0cR+8ym9LtX4mP
-         NL9vyEZBm/eerfFieHK0hSE0cvVhVLNxIZABEc5qpfNSJyYIVrHMco0D34wm1m93nulF
-         +xog==
-X-Forwarded-Encrypted: i=1; AJvYcCX7cR4rqHRTAcfuW9bPHS+jS4v/stU9NetSW9gdAGKtzWwoLHgHpGW9pnfjNTokzsfkcO1rfJvqU6Sl/NE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yya36lirGEc0QueRHfNaLmm6T2vLct+JGAUK6OIt1IuFgGwY2rJ
-	tKWh5qlhyggTk+Y+UrSNTULYVuqumDehcovZBHf4ziGDJGsfjHfUbBcxrumwJBGu/OJ2vhwCT+/
-	FfLnQhA==
-X-Google-Smtp-Source: AGHT+IFPp/7TrD3168GEkS3WDBIVg8N4ZeR3LrjWM06mZPH5V7T+xiSLPv8PGV346ZTlZS0IgYMMeeAwzao=
-X-Received: from pfbde21.prod.google.com ([2002:a05:6a00:4695:b0:73c:26eb:39b0])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:1443:b0:220:41f6:7a6c
- with SMTP id adf61e73a8af0-2207f302f0cmr351194637.40.1750794174645; Tue, 24
- Jun 2025 12:42:54 -0700 (PDT)
-Date: Tue, 24 Jun 2025 12:38:45 -0700
-In-Reply-To: <cover.1748553480.git.thomas.lendacky@amd.com>
+        d=1e100.net; s=20230601; t=1750794241; x=1751399041;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mEEqXQPzSi/2DYZkyERnStSQgx8nwqj2N53hxm8wTV8=;
+        b=uk8WUN/7ub2AW1j6QVdTsGtv/DsOvoLAdggxcERTGaKuHfXtMlIufsZRxNPd0fQnP/
+         x4KKrY/Mo3qCcvUUh4PMHlNvdX69Pes8dbGu+IGkOsfsHNaRr+KI0zjjoro/9XnrYVoS
+         dAXRrH3sB9mq2DwbtOdL7hlB1D2sIvXY/EY8tXArriKw7hD23zdbthg3omm8FyPDXGeV
+         xaVDHLGCAzA2jp9x7RyJgFUwa2dE4p+PavNpcQ1frCjijlDDsPagiGkAkw55hNOKfbY3
+         rog1UKz9yrWe7b2KEj2JPIJphI7wnFpFezaPFj/XqpaVMr3RJjWi7U5vGrlfujGHfuSG
+         4smg==
+X-Forwarded-Encrypted: i=1; AJvYcCUAp2Z4e7+wG3LpMkM+B55Kvl4Lv8DcKLzJCqIuG6NYxRfdz5ANdQvlFZbTB7+QJYswo7K+wxG9dHpBxDU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwX02KiFaGrQ2+JznYmxF3SECAWA444VeVbKa3wM8toHj80Ac7b
+	oiUgpFSprOisLP/uJI+GReCIOyBuSUMcccnKb4+IoiydT1bGZO2OrIMNMrhLgsBeOnN03bY5BdJ
+	fW9StKB6jwz4pwIUoujMrxLk+wqhruuCnq6JC3FH/0A==
+X-Gm-Gg: ASbGncuHAyoUst/RtqVnlf4QMb9wrGaXtSDkRLDG8QAyUkzHToAkPCEYB5VIb92KWtI
+	MnXNrp0CNaOSMIOweBYLeC6uHWXUT/U09+sMZTNCy8Nb/KT/GOYehihuV4k+GkzFIOab2Qq8QbX
+	PwXCwDmV2RscXb9HJDYbFom9YFTAM9pkyhDwEdR3FZKzE=
+X-Google-Smtp-Source: AGHT+IF2ZsZmunuKbQXBbvrJ/CF+mo6d+N7b7ivEICTBxI/GH/HmsLM4r9Hm61QzUCqDuwsN/lGUxeELXR1RoBAx8E4=
+X-Received: by 2002:a2e:9e4c:0:b0:32b:7cdb:aa4d with SMTP id
+ 38308e7fff4ca-32cc657b90dmr64541fa.31.1750794241285; Tue, 24 Jun 2025
+ 12:44:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1748553480.git.thomas.lendacky@amd.com>
-X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
-Message-ID: <175079224437.515260.14294578957654984603.b4-ty@google.com>
-Subject: Re: [PATCH 0/2] Remove some hardcoded SEV-SNP guest policy checks
- during guest launch
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Michael Roth <michael.roth@amd.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20250624-gpio-mmio-pdata-v1-0-a58c72eb556a@linaro.org> <20250624-gpio-mmio-pdata-v1-2-a58c72eb556a@linaro.org>
+In-Reply-To: <20250624-gpio-mmio-pdata-v1-2-a58c72eb556a@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 24 Jun 2025 21:43:50 +0200
+X-Gm-Features: AX0GCFvZTjr80iDIOZKB_55ymASKXhThtYvBCFl997kaJ5_-KuT-0OBBGsj3psE
+Message-ID: <CACRpkdavsQJTfiwn-F+ML5MK6ADtr-31bBxLA4gV7MTAYR0YGQ@mail.gmail.com>
+Subject: Re: [PATCH RFT 2/6] gpio: mmio: get chip label and GPIO base from
+ device properties
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Lee Jones <lee@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
+	Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-omap@vger.kernel.org, patches@opensource.cirrus.com, 
+	linux-samsung-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 29 May 2025 16:17:58 -0500, Tom Lendacky wrote:
-> This series removes some guest policy checks that can be better controlled
-> by the SEV firmware.
-> 
-> - Remove the check for the SMT policy bit. Currently, a check is made to
->   ensure the SMT policy bit is set to 1. However, there is no reason for
->   KVM to do this. The SMT policy bit, when 0, is used to ensure that SMT
->   has been disabled *in the BIOS.* As this does not require any special
->   support within KVM, the check can be safely removed to allow the SEV
->   firmware to determine whether the system meets the policy.
-> 
-> [...]
+On Tue, Jun 24, 2025 at 3:19=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-Applied to kvm-x86 svm.  FWIW, I'm not entirely sure I love the idea of doing
-nothing, e.g. it'd be nice to enumerate support to userspace.  But adding a
-bunch of code to regurgitate information that's likely available to userspace
-(or more likely, the platform admin/orchestrator) doesn't seem worthwile either.
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Ahead of removing struct bgpio_pdata support from the gpio-mmio generic
+> module, let's add support for getting the relevant values from generic
+> device properties. "label" is a semi-standardized property in some GPIO
+> drivers so let's go with it. There's no standard "base" property, so
+> let's use the name "gpio-mmio,base" to tie it to this driver
+> specifically. The number of GPIOs will be retrieved using
+> gpiochip_get_ngpios() so there's no need to look it up in the software
+> node.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-I'll make sure to flag this for Paolo's eyeballs.
+This works for me.
+I wouldn't be stoked to see device trees abusing the "gpio-mmio,base"
+property all of a sudden just because it now exists as a device
+property though... I kind of wish we had a way to opt out of exposing
+this to all the sub-property paths. But it seems tiresome, so:
 
-[1/2] KVM: SVM: Allow SNP guest policy disallow running with SMT enabled
-      https://github.com/kvm-x86/linux/commit/9f4701e05fae
-[2/2] KVM: SVM: Allow SNP guest policy to specify SINGLE_SOCKET
-      https://github.com/kvm-x86/linux/commit/24be2b7956a5
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
---
-https://github.com/kvm-x86/kvm-unit-tests/tree/next
+Yours,
+Linus Walleij
