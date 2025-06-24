@@ -1,159 +1,99 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7971F4607;
-	Tue, 24 Jun 2025 14:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945491EE03D;
+	Tue, 24 Jun 2025 14:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750774487; cv=none; b=Yuuz7fNMEiuprGImNDU0gWuwGqO+OCzsvOAon6Xluh4WrQ4JV8S2YrEEWq3wntJMAwE0LQYHy9M7uR9za0YbLtGzTC276rSlc2a5vTImHBYwO90iD0xfbcnm9rTCxucX5/LdGgLnEWFRZQWJGQQR3IN6rd1tUk7VCIzFCkhET3g=
+	t=1750774524; cv=none; b=pLlgzHjBKvJlF9Z6muwR70xja75M4xWWg3sLHrfwI6ITU/BE2LUCxDOE4w5VM8z/kdqu/Zxwekd7HjhiS9G//OW9c19dMM9TVBhLsXJYjOMFob5qo065kQVV5OzsItDzTdjzxpWwGWSWj3W+iK/2W+6GtTxvsbfzy3f3imfw6qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750774487; c=relaxed/simple;
-	bh=tmOAhF2CNTR72yp25jzRdXMJ2OFtEyASCK3R92HxtEc=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=R4uMcb68j9sjJchGYu5PBr7iQU4Gm1p3g3QjDkcI4dw3EteKCvPIjZcuxBHGYUv3SjzRhb9nuRo7991YtIsPzBiUe42hYs/5S9FhhNnGlppSgqqJyAyOoBHvNgnvGhvVwY90KH/GsYLzXqOA0MgsOHRCRuj+u1ls7rv3qmqvNU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l5h9VWGL; arc=none smtp.client-ip=209.85.216.50
+	s=arc-20240116; t=1750774524; c=relaxed/simple;
+	bh=EYBB5hzcAOt18RHPivhYOpPcVF9O5sHPejxC6FiOZNY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lYqFDA5D4xwEeuQUmnfYv67M/wnxcRVU66qQSKhKXEuSuOtneg6GB/EKGFKIJ+oVbmstBFzlwQb9wqaa/C48zyb0lpFyus0ZbAkw7xZgqELg4QazxMO0h4KC+/mfNvLcf3jpEoWsqcN5n9+Q5IJsVqFi6gx5d/KY8f+gOnJQRsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XgbPzP0q; arc=none smtp.client-ip=209.85.208.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l5h9VWGL"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-315c1b0623cso2561155a91.1;
-        Tue, 24 Jun 2025 07:14:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XgbPzP0q"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-60780d74c8cso8448875a12.2;
+        Tue, 24 Jun 2025 07:15:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750774484; x=1751379284; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HGGfcffrAo9eq6TZlCoUx0e67nzgl+RHiLPtw606gqI=;
-        b=l5h9VWGLk7f0FpX20eh3/RLJm8QOHmFRiDz59eL/tZI3O02nhxBeZ8kA575nTl6uDP
-         qFfgQ6GVl3xOV9zWFzmMjtSI8Ut55Weiv+MqEYwEc4D7Jdsb5WhmLZwmCSK9ONsCp4qq
-         1l+5o9psZq2crUqsFuA7HBWggnEjKBn3GODT7mpS7XxnbsQI1Qt5NHprwEDq6tgiwm2N
-         txCwgp/0JU2ElvXy+Y1JPc9QTB9NM59gArhvmS+k+xJZ/BYQsaiB+e+rsaEZvZ2W0ect
-         l6LXBclz61WBwPXOk8g6BXJ7lxqdLYLIRY4ko2lWmwzIZdyB2gSEdCEfvgz/gFVrHwyG
-         ZDBA==
+        d=gmail.com; s=20230601; t=1750774521; x=1751379321; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TgEeZ1NwzgeNOBBLWPbhKcGNzxqxdSNPOA/Y890PEHQ=;
+        b=XgbPzP0qqvajbzsIS1f/0LfBAs5PT5E9PgDcCQzdIJZsDqZ6FLeZrzEdVk/eHaA9F/
+         ZEESBkF3xFpIH8uYHGqcDGjw6i9fUb7ZNM0AJJ6hRRjUf3jsfNh5lbnSJq9Av2bCbUiC
+         kjT54n3O1nwyXPL9Y/f8FG98uUibuUChS6jRMBeNwd6NG1ydP3qqfDKiIpLameaXisb2
+         DeKjUfOZDXWmBA+voAerEQwge7Pkxkj+UYDnlp6xDplsXYEmW49ZKEGEtTIveRJ7L0et
+         ty0qJBbGUoSmlhfm9AvKCKWWbhpILnxIeIUOrzaQ1AP9icu/I3ydYQ1JWeUuprsThWG6
+         Jqxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750774484; x=1751379284;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=HGGfcffrAo9eq6TZlCoUx0e67nzgl+RHiLPtw606gqI=;
-        b=YGguz3unckokjfwNdpUfGXx4DAzuZ+TM/HdF9fzGDPn1OSezNkrPz0MROJGOjqAiIG
-         nmXD3OteDmq5Qgike4TbZ4yecfayg0EgH2kM1430tUX1JE2Z57BYlLqEK0/amhi6NuVH
-         +E/8SRCsXPUud9bEDlNkaErhrg9HuKB9X7GCzt2RJVWdeBAQHwRduovtURrLZWxcvGM6
-         SKOjSW02fpVI7SexjirrkzK+yEcKFykUVE11tUZ6Ukk9c8YiSua/nF0YzXYsSLgKnW9V
-         ujJpXrtKcSiKoTPBWOY45ZKFcfUsMg1mhITmzBBPgtE8xZxKnk3GNbVE9sRYDqx9PDRj
-         mUXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4khJY9ZcraGJnRrPNo/ddmpJPmalCko+3BqVKRJIYMg7UTe/+DkrhxcGMylaH7CZ0owLrQbxYEf40wrMWj3U=@vger.kernel.org, AJvYcCXGCPyu3Z1bE3LjJODMaPR6nOHZ7IdEJJOsby6Fk/zcijED1n2eXi5XKAgBVMHnQRwp+Cmz9roY43smVbA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXtMSYiR6qc3oINSjOD8juSu6N/bc00pOcgpWlR0eIndgFaNSX
-	bTkpahLl4rFgR2TO5EW2DmT+kHwNNe+LGLv4tQgUtN7OgDTMvk/hYuVC
-X-Gm-Gg: ASbGncs46/mdUQvhYdn1ztl8Q++z4JeRTcEKZbIcBeo1HpALaipVtpXbG5eQNbq/CEm
-	1HwKZUoIIAX/iFtgOoZSOVAd+vvmTVSukgh3QcYF68rGsOaKmfoVW785xXbjE2BIemja3aP0hVB
-	NzsO14gJ2AeA5KLLpWdv0zkrhZ4BUpFwLv8Ev6yYTiy21JAoDuxtZiXAvE3IlF01oWLIgcKvxXB
-	WaC9dx7V2nxQiPK6HI3Ami362ikl6eYpujZCjgor8AGBKkzOHbHDHUdjyaZF1+gt9TA97DsI5Uh
-	YSietaM9YAOgVAdIQ5TuTahn7kYSbelmaAND1JDlgcN8gT+RQrC/2z8iSd0PPrB1T8ws5LdtcQf
-	PYJpINed5AU7NGDc0vPjMVaPX/3u+kxIsFSJDbQjk
-X-Google-Smtp-Source: AGHT+IGowRDyySJy1j8k0ZZKiMExfxK4WJSD9h6BhlvCpJCsl56VjiVIEvxSxPzgxpUtpydjak9mtw==
-X-Received: by 2002:a17:90a:d64f:b0:311:f684:d3cd with SMTP id 98e67ed59e1d1-3159d63d9e7mr30845175a91.12.1750774484443;
-        Tue, 24 Jun 2025 07:14:44 -0700 (PDT)
-Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159df84850sm11688244a91.13.2025.06.24.07.14.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 07:14:44 -0700 (PDT)
-Date: Tue, 24 Jun 2025 23:14:28 +0900 (JST)
-Message-Id: <20250624.231428.764205178512881259.fujita.tomonori@gmail.com>
-To: aliceryhl@google.com
-Cc: fujita.tomonori@gmail.com, miguel.ojeda.sandonis@gmail.com,
- a.hindborg@kernel.org, alex.gaynor@gmail.com, ojeda@kernel.org,
- anna-maria@linutronix.de, bjorn3_gh@protonmail.com, boqun.feng@gmail.com,
- dakr@kernel.org, frederic@kernel.org, gary@garyguo.net,
- jstultz@google.com, linux-kernel@vger.kernel.org, lossin@kernel.org,
- lyude@redhat.com, rust-for-linux@vger.kernel.org, sboyd@kernel.org,
- tglx@linutronix.de, tmgross@umich.edu
-Subject: Re: [PATCH v1 1/2] rust: time: Rename Delta's methods
- as_micros_ceil and as_millis
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <CAH5fLgjttTnev2h4J-hF-LdUTJCoryJyFm5_LqJ6_GBe+=An5Q@mail.gmail.com>
-References: <CAH5fLgjJRbjPnN58RuaBtNrY1A-tif3ohETLxdbaE4b46Hjbqg@mail.gmail.com>
-	<20250624.224923.1801832299260163743.fujita.tomonori@gmail.com>
-	<CAH5fLgjttTnev2h4J-hF-LdUTJCoryJyFm5_LqJ6_GBe+=An5Q@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1750774521; x=1751379321;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TgEeZ1NwzgeNOBBLWPbhKcGNzxqxdSNPOA/Y890PEHQ=;
+        b=C6Fe8I3ROLVTn+y/gx7aPPV7qgyOHweF2VUjrCAcbrnJXOQFV9msULi/LmmpuEJZLn
+         EwCAe1lNHooSbOwut/LxHQGYLSFLDnOLxAf/eL+w/41nDv6TiZs23cdERBHeNAP8jATE
+         gilpKIo5/nuT0Zg2Nin/9Fq3a/BbuLaqsbg5NV9MpxiW7yxtsPwAJA6op8fIUM3fUhR8
+         hxEqp59NNros37q0t10xqRyig7DyBD+nTb8MIGGh5k3zt7kC2xie154eXlvd1ErQqR5p
+         xzGRoBGgLoxANiwccmUeorGuYsz6aSI7VqaXbRnJR00bBvWAqOjkNW6DCcgN2VrrJLVZ
+         FECQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV0I7P8iMeWBVuTtqK798R/rKc3Wjg1jFXU6ZcxgpezVgJKqCt+xI35xADyaAXY+SF8ToZAqb30Q2Dg+NE=@vger.kernel.org, AJvYcCVeS0YgU2cv+1JIxvytfgyFVXxJUI3DAirNO2vq0C/+cA0KUDolV0ja89CqNFW+ayHA/muRb2xGF23jHE8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOSC5ua58HjgsWGQF6qL3JE+vJBopP6i43jWlHdngxdtunjeVI
+	xp/rsrfumcR6SEtItILyV0aP67JsQFkB7N85JJVhTlWI1Sit1i7TRChxLXjFi/dsqjoMCuTWtkI
+	/8TiYJFenYXtHmZ0m88T4lJXEcPy2xdA=
+X-Gm-Gg: ASbGncv+x5cGwNi/b+sWB9cppT4fnS+UB8X/GLyepIUG67hZQJ2koDj/LG+ua05Bbuu
+	PW13zLGZtinm3KP5PePVxFLtpK0FIR4hV015+PUxslJlzZVNKLwNsoOTHmeIf/fn5eDWXMuYLto
+	Abm8sq1CVjHHhqfsPbYk5CKqev/d2oM+YgDsLTTd9apcQ9qw==
+X-Google-Smtp-Source: AGHT+IEaLqgUCTgi/UDgbwhHHVKTVgJFfI8XH3ilfqmadSEjxKw9dZfOogiQ85oAjhJORbPUBGmOTbETdCj098Uck48=
+X-Received: by 2002:a17:907:9087:b0:ad8:a935:b8e8 with SMTP id
+ a640c23a62f3a-ae0579d1a99mr1127576466b.5.1750774520592; Tue, 24 Jun 2025
+ 07:15:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250624-bar-v4-1-9f9f9ae9f868@gmail.com>
+In-Reply-To: <20250624-bar-v4-1-9f9f9ae9f868@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 24 Jun 2025 17:14:44 +0300
+X-Gm-Features: AX0GCFuQATpLhLi-lMuhRabxfiCC90DvlL1jCZW9tpHUJF8q6CscEDY8rVRgI0w
+Message-ID: <CAHp75Ve_G=ziR7sJmKw4t3BRASogGQ1kWUsNNNWESFmmS4rVhw@mail.gmail.com>
+Subject: Re: [PATCH v4] staging: media: atomisp: fix coding style in ia_css_output.host.c
+To: LiangCheng Wang <zaq14760@gmail.com>
+Cc: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 24 Jun 2025 14:54:24 +0100
-Alice Ryhl <aliceryhl@google.com> wrote:
+On Tue, Jun 24, 2025 at 5:10=E2=80=AFPM LiangCheng Wang <zaq14760@gmail.com=
+> wrote:
+>
+> Fix multiple checkpatch.pl ERRORs and coding style issues:
+>
+> - Use tabs instead of spaces for indentation
+> - Move trailing `if` statements to multiline format
+> - Remove excessive space between type and asterisk in function
+>   arguments
+> - Move assignment operator '=3D' to the same line for static struct
+>   definitions
+> - Remove unnecessary line breaks in function definitions
+>
+> This cleanup improves code readability and follows Linux kernel
+> coding standards.
 
->> >> So would the function be defined like this?
->> >>
->> >> fn as_nanos(self) -> i64;
->> >>
->> >> If that's the case, then we've come full circle back to the original
->> >> problem; Clippy warns against using as_* names for trait methods that
->> >> take self as follows:
->> >>
->> >> warning: methods called `as_*` usually take `self` by reference or `self` by mutable reference
->> >>    --> /home/fujita/git/linux-rust/rust/kernel/time/hrtimer.rs:430:17
->> >>     |
->> >> 430 |     fn as_nanos(self) -> i64;
->> >>     |                 ^^^^
->> >>     |
->> >>     = help: consider choosing a less ambiguous name
->> >>     = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#wrong_self_convention
->> >>     = note: `-W clippy::wrong-self-convention` implied by `-W clippy::all`
->> >>     = help: to override `-W clippy::all` add `#[allow(clippy::wrong_self_convention)]`
->> >>
->> >> https://lore.kernel.org/rust-for-linux/20250610132823.3457263-2-fujita.tomonori@gmail.com/
->> >
->> > Are we missing a derive(Copy) for this type? Clippy does not emit that
->> > lint if the type is Copy:
->> > https://github.com/rust-lang/rust-clippy/issues/273
->>
->> I think that both Delta and Instant structs implement Copy.
->>
->> #[repr(transparent)]
->> #[derive(PartialEq, PartialOrd, Eq, Ord)]
->> pub struct Instant<C: ClockSource> {
->>     inner: bindings::ktime_t,
->>     _c: PhantomData<C>,
->> }
->>
->> impl<C: ClockSource> Clone for Instant<C> {
->>     fn clone(&self) -> Self {
->>         *self
->>     }
->> }
->>
->> impl<C: ClockSource> Copy for Instant<C> {}
->>
->> #[derive(Copy, Clone, PartialEq, PartialOrd, Eq, Ord, Debug)]
->> pub struct Delta {
->>     nanos: i64,
->> }
->>
->> The above warning is about the trait method.
-> 
-> Wait, it's a trait method!?
+Thanks for a new version. Now the question is, is this the only file
+in the whole (>90kLoCs!) driver that has such problems? If not, fix
+them all and update Subject respectively,
 
-Yes. Clippy warns the following implementation:
-
-pub trait HrTimerExpires {
-    fn as_nanos(self) -> i64;
-}
-
-Clippy doesn't warn when the methods on Delta and Instant are written
-similarly. So Clippy is happy about the followings:
-
-pub trait HrTimerExpires {
-    fn as_nanos(&self) -> i64;
-}
-
-impl HrTimerExpires for Delta {
-    fn as_nanos(&self) -> i64 {
-        Delta::as_nanos(*self)
-    }
-}
-
+--=20
+With Best Regards,
+Andy Shevchenko
