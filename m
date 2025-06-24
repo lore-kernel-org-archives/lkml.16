@@ -1,83 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33237221F17;
-	Tue, 24 Jun 2025 11:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB99B219E0;
+	Tue, 24 Jun 2025 11:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750763656; cv=none; b=KUT4ZfH3U5+Ueh9zzad0IVuH8vpZUzFZ9CPnnRwCAdm0hpVQOIlmyH/eAV5WOUvaAHXzoLAnMrTkmACllxikBBqcJTI4/p68sN9QI1o+3yMfP5lqBHYGGw/HKZoVPvDaCZsgDIGRxHKzCRK+SpoMk2ZqnPUaozib2M2EtCMMdIU=
+	t=1750763736; cv=none; b=mYGcuYKGR9hwF1l3k5KbWPKvHAySPjCzaRhBqTIFla+/uN39AN4ZOY9gOwlhaJUc02Gcn2rFnbW8aETAiCeJDd8apj/oPTO7H1koCt/Nxmk46ZWzb/1HQfvok4Qk4EwN8owJg29piyFbHY9X9hZCZFc6btF0x1R2SNjsiIsjVBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750763656; c=relaxed/simple;
-	bh=Us7Q1PFZzaMBawMok6kpzJbe2Glw5foEeT6W19FayVw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=hhofjdoObRbc8jDcT3GqJz6fEVz6FXHS/ei6QC26GbDmBWrZ6oVG16jLmb2EPHd5h332vPsKr9oAfZ3uQPTZwEm8m14X82cZAVWUErQ4pDeA2YGxOvcbtElhzpx45KcU5iA1pES6Z5b4RXMCOrK3QYoUIH/z+XPssUfaIhbHLzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fXoKQpDr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750763736; c=relaxed/simple;
+	bh=TLkqf97AKaEymQttD1QvPzOUup9tkvH4B9dgCySCB34=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=NR5wheEIC8ZMMdiT7iKUkaGXOJnMrjGkBKTr049uBVnjpl0VTe/jhu382LSWCROy2koB//uWj5hOYisXnHTqeOMnwCov+vb2bNtJA46jRQZ0vhDViUAaCBCVLJhKW9QmPoWAu2XfQMqL/oZigpQ3IjARk4Py+yzI5oHsxaQB5cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=T8gIYnqN; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fXoKQpDr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 363A1C4CEEE;
-	Tue, 24 Jun 2025 11:14:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750763654;
-	bh=Us7Q1PFZzaMBawMok6kpzJbe2Glw5foEeT6W19FayVw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=fXoKQpDrEY6m6qKm3fCmp+HwRy5F0dgMYA+u5GTCsLJVBhljgr3kFarHv7NooRCsU
-	 dmJ5lSMvd/xrHz8UDapUpPqrxIE0U+Df1RDQxbFcwvopL+lBo/to6IxEHbkna3v3Ln
-	 Ul0D/YRJXEhhdglDoRO4DRWoKgqrWXGx8JLH0l8mlADpXbnXbRLzYXrPfKoQjZKKRm
-	 tBbX8HVp9u3/w39v7leEK4db6Y9CLy/xS/A8CPpawqQczmMRAnqxM+9m2c+nWMBbWU
-	 2IpqDb7horrpODjDDUv8d/6Eql1tL27U8RJizLmSeQ1zbYy30fKNZabV6qxP1SrI2D
-	 b0DZcGzMRWLsw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: alex.gaynor@gmail.com,  ojeda@kernel.org,  FUJITA Tomonori
- <fujita.tomonori@gmail.com>,  aliceryhl@google.com,
-  anna-maria@linutronix.de,  bjorn3_gh@protonmail.com,
-  boqun.feng@gmail.com,  dakr@kernel.org,  frederic@kernel.org,
-  gary@garyguo.net,  jstultz@google.com,  linux-kernel@vger.kernel.org,
-  lossin@kernel.org,  lyude@redhat.com,  rust-for-linux@vger.kernel.org,
-  sboyd@kernel.org,  tglx@linutronix.de,  tmgross@umich.edu
-Subject: Re: [PATCH v3 0/5] rust: time: Convert hrtimer to use Instant and
- Delta
-In-Reply-To: <CANiq72=mDe2kB4yQnzb=kwopyUYG936pOoj80YpWk7+q6aJwbQ@mail.gmail.com>
- (Miguel
-	Ojeda's message of "Tue, 24 Jun 2025 13:08:17 +0200")
-References: <20250610132823.3457263-1-fujita.tomonori@gmail.com>
-	<175015666837.277659.5038961663728008472.b4-ty@kernel.org>
-	<CANiq72=mDe2kB4yQnzb=kwopyUYG936pOoj80YpWk7+q6aJwbQ@mail.gmail.com>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Tue, 24 Jun 2025 13:14:01 +0200
-Message-ID: <87plet4cjq.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="T8gIYnqN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1750763730;
+	bh=PPoki8NdQDT+GsOVVWlBYak8Wz+8531cXIBDBqINZag=;
+	h=Date:From:To:Cc:Subject:From;
+	b=T8gIYnqNwEX1vS1cahTd+HSdCmqHaTlFT/80YEEtgYb9k2ekKjjnH8tdMPc/4Lyh8
+	 MciW571pz5mzvEqbbwO8r6/9lwCPY2CgwgjJfyUmZnYw4svxXVs1SFkwWal7R3LCk1
+	 vZGFXdpHDFYVoMhdSMHfLBxpbHaNhmwrVpTIUcmqboKz5140XKC0aXUN5k1DfYbt8l
+	 1VftnCJKWlWzdnjRuKUNX9ow573zIf1k3/J5LxDJ219SXtifvWrGU1KLpzf/4zNSlG
+	 u2Vg0lf1aYtx0k36NqSL7sG9rLwpLQbSIdVfjpWFAgDTISVwX6mCHGWXHMIM5ftSMO
+	 mGST84cFVRK6w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bRMnF3DCNz4x0s;
+	Tue, 24 Jun 2025 21:15:29 +1000 (AEST)
+Date: Tue, 24 Jun 2025 21:15:28 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, "Borislav Petkov (AMD)"
+ <bp@alien8.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the tip tree
+Message-ID: <20250624211528.3b0b3bcb@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; boundary="Sig_/mfsg4c9pM3LCkOg0RNC4cAQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/mfsg4c9pM3LCkOg0RNC4cAQ
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> writes:
+Hi all,
 
-> On Tue, Jun 17, 2025 at 12:39=E2=80=AFPM Andreas Hindborg <a.hindborg@ker=
-nel.org> wrote:
->>
->> [1/5] rust: time: Rename Delta's methods from as_* to into_*
->>       commit: 2ed94606a0fea693e250e5b8fda11ff8fc240d37
->
-> Do we want this given the (~ongoing) discussion at
->
->     https://lore.kernel.org/rust-for-linux/20250617144155.3903431-2-fujit=
-a.tomonori@gmail.com/
->
-> ?
->
+In commit
 
-My plan is to merge it and go with `into_*`. There are pros and cons for
-both `to_*` and `into_*`. If someone has objections, they can send a new
-patch with rationale and we can revisit. Sounds OK?
+  e88b1627b86e ("x86/bugs: Allow ITS stuffing in eIBRS+retpoline mode also")
 
+Fixes tag
 
-Best regards,
-Andreas Hindborg
+  Fixes: 8c57ca583ebf ("x86/bugs: Restructure ITS mitigation")
 
+has these problem(s):
 
+  - Target SHA1 does not exist
 
+Maybe you meant
+
+Fixes: 61ab72c2c6bf ("x86/bugs: Restructure ITS mitigation")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/mfsg4c9pM3LCkOg0RNC4cAQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhaiNAACgkQAVBC80lX
+0Gwqcwf9GchWncrg6OGIICN5lxxZhYx7tgB0KBo7TXQzrPDAO1Kl91GFEFpoSrQi
+DWeRknS5WFMCqH23Cj47ndZSbjF9eepiig4PNVg3rXxsmky03MDcjTu34hxf2cG+
+LwMjOOCUmM856AJSWIVmWraNZD25undCA6/hr4i4qHRT/ukoZ3wuLxnrde70+7OR
+k6nrFdMySWCTNO1B+ZeVYx60L58nvFY24dZYdd/RzeK8q0/BervjgiLYn9X/D2MT
+BObzmpfPmsSSjkj9amJGEQZiW35cDAx2Npzp/NPDM0SsukbdDWwyNpw2tPRNQGhQ
+W+vHgzBcVxN71hj0B74h8T8jh6ixEw==
+=V2Y0
+-----END PGP SIGNATURE-----
+
+--Sig_/mfsg4c9pM3LCkOg0RNC4cAQ--
