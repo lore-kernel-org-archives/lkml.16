@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76E4172BB9
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:49:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D3519D080;
+	Tue, 24 Jun 2025 00:49:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750726180; cv=none; b=Vb/TqeVEQZWhL6UYMOKyk9TgkJnc2GpYB9kVZbz3L4ykZtSZ5rFTmWflOZ5XeY3k/KKM9uM9TEcXUeLuikyE2YlBsTV5EZuJ2syZ+TtWtINzVR4G05eLtrsxfLKGP5syU025TVHcDOL1dBdOlyx8o0I69cG6d7r83XEK4PcZyyY=
+	t=1750726182; cv=none; b=g5YdWTXmRgTsf9GWEjobgSIWNFZLKm4VoOkkXlttgkpsHDm63R3HLg4joaThcXkRSlMPHR0XsFqs4hK/5ioVdKr0QYw68r5B1TQLkn4cbim1JsEXwdlNquNqDxYY3JA3itzvLHFhBLf22dwTkAMIGMgb8M8vj4nbJba/TOCCK6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750726180; c=relaxed/simple;
-	bh=X8UulWlYl9LmJn3LksLbSQHl4U0132JMnyWRQath+zI=;
+	s=arc-20240116; t=1750726182; c=relaxed/simple;
+	bh=oZx4kiMTZ7OFx470+Dr/BC+poOIjM3y43rIaqC5bYSU=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=b5LWFx3wlxERUwdlx6P2oUHBLVEHhLSUi9PI/fcFWs1m7WUiI6tOMJDmSdzZhQtRn1bsrCD3pk/gnwpmrougFCdoNhBbzRJbMHuQsg3R+L6UhOf5VoZwUvQGgxgZrK0wH2XJ3Dxh6BrK5nJgpLE0jbJhcdXm84/FkAtDmImxPXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kMANg9pb; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=bA9309tc6NmBXcnvGy7hZRgVSHc3ZQKYojnKk8qOnf3YIKKWoWvc0sig4R5cIu00m0NgjoEA6lM10alZvh985U1wXBL1+cjJUn38PVYM1h/1MibeyImu+1PGX8wDPB8Pf1bMBhmeACEP6xaZuVMK1YKAZ1FgFwj0IGay19l8zFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tWUMDohE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kMANg9pb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74806C4CEED;
-	Tue, 24 Jun 2025 00:49:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tWUMDohE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFB1DC4CEEA;
+	Tue, 24 Jun 2025 00:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750726180;
-	bh=X8UulWlYl9LmJn3LksLbSQHl4U0132JMnyWRQath+zI=;
+	s=k20201202; t=1750726182;
+	bh=oZx4kiMTZ7OFx470+Dr/BC+poOIjM3y43rIaqC5bYSU=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=kMANg9pbkyiSlF9oitx9ECRRIjq9IurI7AwTATjQfEkO0qD407oX07uhZaJs3oNC7
-	 bJ1BtGWJZ1cJEfV5ZTZ4EUw1s7k4pqMp1+ZBgFDKLPrvgUnga8TDlwoU1Mn6Y+pXcg
-	 AXTdh4KL4fh/sUeQ4N6Q1kzcHhcnNxSY7uqITG3uoWJnqxhkUpkOiCMxPOZegr1BST
-	 bswDQ7I69jIDmKdPGZzOO9A/UkTQZxfKcB/IEu1U9Y3bt/PU0vxPlDtfvaq6fkZIDa
-	 JJ8ySnZlMDfRl+z6gqBKxTOoraDhRlWZE7wRqZXhC5r0NI+W9xf8idp6K6b51PoeyS
-	 iY4SMoiXawtMA==
+	b=tWUMDohETfbJkqNFsEtYj3C1Dq923Me8JwaTDk1fyrZ119ihuV/yknGDP5ADArYNz
+	 b+XYKWn442TvccaAGf2UoXuce+AssxuN6p00VwuXQ/AuLnTll3FoMEzTZ8zLF4Xjxh
+	 9KU6DO5DnKY2vusz1O9KiP5x5+lsYeXqX0fjh9pHtzMSDiivbkklUsBD2nmbYaUJ9b
+	 FFXdPyM4BZoSrDmd5HGbFKOqUc1l4Jha8xv04KW+fgmGUakENEe4pKmQqBHUwNA4Fv
+	 6ZcUhrw+dsAJpfv5vpXMDgmC5NBo4fH3gN3pT40xR5/3fXJfoTeB2yLN2jPCKnckYA
+	 GvwQvFp98E9kg==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADFC439FEB7D;
-	Tue, 24 Jun 2025 00:50:08 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33E3D39FEB7D;
+	Tue, 24 Jun 2025 00:50:10 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,43 +37,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: Fix sparse warning in vendor_extensions/sifive.c
+Subject: Re: [PATCH] Revert "riscv: misaligned: fix sleeping function called
+ during misaligned access handling"
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <175072620724.3349808.11810729064319282385.git-patchwork-notify@kernel.org>
-Date: Tue, 24 Jun 2025 00:50:07 +0000
-References: 
- <20250620-dev-alex-fix_sparse_sifive_v1-v1-1-efa3a6f93846@rivosinc.com>
-In-Reply-To: 
- <20250620-dev-alex-fix_sparse_sifive_v1-v1-1-efa3a6f93846@rivosinc.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
+ <175072620874.3349808.15747931060584353769.git-patchwork-notify@kernel.org>
+Date: Tue, 24 Jun 2025 00:50:08 +0000
+References: <20250620110939.1642735-1-namcao@linutronix.de>
+In-Reply-To: <20250620110939.1642735-1-namcao@linutronix.de>
+To: Nam Cao <namcao@linutronix.de>
 Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- samuel.holland@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- alex@ghiti.fr, cyan.yang@sifive.com, palmer@rivosinc.com,
- linux-kernel@vger.kernel.org, lkp@intel.com
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+ cleger@rivosinc.com, nylon.chen@sifive.com, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
 
 Hello:
 
 This patch was applied to riscv/linux.git (fixes)
 by Palmer Dabbelt <palmer@dabbelt.com>:
 
-On Fri, 20 Jun 2025 12:08:11 +0000 you wrote:
-> sparse reports the following warning:
+On Fri, 20 Jun 2025 13:09:39 +0200 you wrote:
+> This reverts commit 61a74ad25462 ("riscv: misaligned: fix sleeping function
+> called during misaligned access handling"). The commit addresses a sleeping
+> in atomic context problem, but it is not the correct fix as explained by
+> Clément:
 > 
-> arch/riscv/kernel/vendor_extensions/sifive.c:11:33: sparse: sparse: symbol 'riscv_isa_vendor_ext_sifive' was not declared. Should it be static?
-> 
-> So as this struct is only used in this file, make it static.
-> 
-> Fixes: 2d147d77ae6e ("riscv: Add SiFive xsfvqmaccdod and xsfvqmaccqoq vendor extensions")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202505072100.TZlEp8h1-lkp@intel.com/
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> "Using nofault would lead to failure to read from user memory that is paged
+> out for instance. This is not really acceptable, we should handle user
+> misaligned access even at an address that would generate a page fault."
 > 
 > [...]
 
 Here is the summary with links:
-  - riscv: Fix sparse warning in vendor_extensions/sifive.c
-    https://git.kernel.org/riscv/c/b0843f836126
+  - Revert "riscv: misaligned: fix sleeping function called during misaligned access handling"
+    https://git.kernel.org/riscv/c/2f73c62d4e13
 
 You are awesome, thank you!
 -- 
