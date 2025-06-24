@@ -1,249 +1,144 @@
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83B327F4D0
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 10:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6FF17A2E8;
+	Tue, 24 Jun 2025 10:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750760599; cv=none; b=F6C5/tSKUjCruwOBpfZG5fWnTSdx0+v+GV6z6lh6AaxHbdRoCyO6xS3U7yZ0jtuayeiUc68nNUHGiPZfbR0clGNSe/E8akCefW57t9ES6oZOJXdpN3418d7LWT68oKb5NnRg2ms2uBkFRPzf1gRFGqTKFFla0PKEViswebM8yN4=
+	t=1750760754; cv=none; b=dNGW1S1sdwofx13x3I5dMkD3HoQa8l7oacPYNgZWwh/7GLVcz7EyQAMdpj5Wms57gHBEWzlGWKJg1VUlvmbfP783UL/HVxXNRgbEi/B21yWLbdip3dKpjjpnPY/uynlo6bG2itJEpAqY+iMH6RkImugKZXeS9sQMNazQLci1M7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750760599; c=relaxed/simple;
-	bh=iuldqocFtE6ZNy3/4EKRjJJz0WtkSFbf//R7ZzarxY8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gAt0XokLJ8n5MCnm/XKaBXwUv4jYqsDkmcKmeJ8sTfaj0y8UqinniEJQ1/DZf4XmTll7fculzW9oM6eD2P505Ed1UG1QLKKlkl0Xp0Sdz1kGkZEer+g0uWGw8svtbuHDzP2Z9I1+8niSkDIJJG40AAgPG4joUYHrcUKsOaFsEL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=c7VCE/9/; arc=none smtp.client-ip=209.85.217.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1750760754; c=relaxed/simple;
+	bh=vDay8J81ygLKIuI2jhCI+PZX+/fJvYJhHaZQbh7hB0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o8tn9wPxk7D7lp2OLpeBGabr6ZqYS95xZM+DmhMU4697mnFynEBQH1moFHG39u2P4l54J5JpcMhv5e5oC8am5NtsrzozFweltscZcWrVFst6fp3F06HgK6I0xUqb0XmHBMuGMITBpJjaLIQCPFNbCYBkSehEZLsZl1xg7lp012M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OY8yIRNr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="c7VCE/9/"
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4e7949d9753so1614424137.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 03:23:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1750760597; x=1751365397; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=eGmYngvtIW060pTpRpUXHtLEMqIDs+fJERLDvV0uTEk=;
-        b=c7VCE/9/2vPWn2CxsEc56LOmJcemIwwfrgVStmVtF65TWsXXJsxUXXuVmaf6qrN+HL
-         ShPfOaJNeUhu4dUOXV1KfZxYigE152KRHK1c760lyVJDDUH34cK9Ze/UMwD7YM3jGh5r
-         rHZB+Y7qRbV1sZ9bdLIGk62JhslV3DTxArqds=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750760597; x=1751365397;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eGmYngvtIW060pTpRpUXHtLEMqIDs+fJERLDvV0uTEk=;
-        b=xIPCceL6zesHvWdn8aLhOyl3BYl2TMsR+msB9SqBNR/RN4Xr4uwYNRzxNywcvC2fMP
-         0VN2XNnqXssIyUsfd03DDFMqtqY+hYXoAcUBujEa7JSgAZmaVHjoP4nFhaZXu8+Lvv0Q
-         AaZmGHvzvsLqwgPAlK1RJcLK4QLVnxvMMT7U16AbNGObJCxf9UO0RPWjaIUk5xO5FUa0
-         gvbQdCbEsD97I5d2ph38L2BrJ6SlNU4kImNezn5TtPqxfohGpz4Z+uemXaovcjztR1cD
-         L1ZrBy0qdAeSK/q5feQa4mvI7EadLxFSqnzKPsHoOyfoxM7c3sUHwCORTZYxGte7Fgra
-         H1dA==
-X-Forwarded-Encrypted: i=1; AJvYcCVneMSk2Y1ivpkMfwzHoHcux4/P3QenA9e+vKjDhFnD/sdm99KUI41rXaKpOZQoW8icOf9mKjzGEHnhOS0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsT5ICBNhm5MLMcSDUAvS2jE827h2BOlNgOO180X0dqvhbAVNx
-	jfW4c4+xUSaSCsdxANziSiPoSbqavy2qVM8u4/8g2dqHiBwg07fcGwQpAKsWonskAodr5SIdSUd
-	MIKS7zJ2b7Qcwe5k7BRw3oQa4PUIw/2Eny7zQuQM7
-X-Gm-Gg: ASbGnctBeJJo82iNq29KDJ2Yu919ERFRt55Vc/kYyc3gzQAXr/cjC5AQy9VrVa7/NBH
-	EY6lCiulBEhyVXXW3zTKeIAM74IdM6V8ybJfRtZv6/hqv/8pmMavDDnj6T8OP6Fn7W9h+hMFxMQ
-	sOBqO4bTWCRYc7EB7HhzuWSQYyZPmKz2OTzyvRMIzRAEZSIawKO3se/JA=
-X-Google-Smtp-Source: AGHT+IGQjJUnY5pJR6vGSEOmmfYy67KMpBLeG5BlMER0Plzvw9oOo1iL9KhjzVtGWoGOUJJQnxCdWW62T3nwRGushSo=
-X-Received: by 2002:a05:6102:2c1c:b0:4e6:245b:cf5e with SMTP id
- ada2fe7eead31-4e9c2ef8dcemr10144286137.17.1750760596821; Tue, 24 Jun 2025
- 03:23:16 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OY8yIRNr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD138C4CEE3;
+	Tue, 24 Jun 2025 10:25:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750760753;
+	bh=vDay8J81ygLKIuI2jhCI+PZX+/fJvYJhHaZQbh7hB0Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OY8yIRNrKURFBHI24oxv/Y4MkVwLHUwknjWnTwnY+btkJL+9yAOKyPnB7xO8zTsA8
+	 lCyPMIfQWmwJO0qKXxMS14x4JsMNhRXbhy1hJnKd4OhfhhLr9+URrADU3M81OyunjA
+	 WOJV4QVGRSVgI0LWOFjiPciBBixnH6IIQGZSvRhI=
+Date: Tue, 24 Jun 2025 11:25:49 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	kvmarm@lists.cs.columbia.edu, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org,
+	Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
+	Julien Thierry <julien.thierry.kdev@gmail.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH 5.4 000/222] 5.4.295-rc1 review
+Message-ID: <2025062425-waggle-jaybird-ef83@gregkh>
+References: <20250623130611.896514667@linuxfoundation.org>
+ <CA+G9fYvpJjhNDS1Knh0YLeZSXawx-F4LPM-0fMrPiVkyE=yjFw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618144743.843815-1-vikas.gupta@broadcom.com>
- <20250618144743.843815-4-vikas.gupta@broadcom.com> <6735a940-bce8-43f5-a6d7-7a48ace197c8@linux.dev>
-In-Reply-To: <6735a940-bce8-43f5-a6d7-7a48ace197c8@linux.dev>
-From: Vikas Gupta <vikas.gupta@broadcom.com>
-Date: Tue, 24 Jun 2025 15:53:03 +0530
-X-Gm-Features: Ac12FXwQRAZjBl6RMQvRAgw8AETgP4X5dpsrcMKyU8huvsK-wTo0scY1dMN_oSU
-Message-ID: <CAHLZf_uQyVUA2BrRNMRx99zOWqsFZppNKi7_h_JvKezEqFwOHQ@mail.gmail.com>
-Subject: Re: [net-next, 03/10] bng_en: Add firmware communication mechanism
-To: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	michael.chan@broadcom.com, pavan.chebbi@broadcom.com, 
-	vsrama-krishna.nemani@broadcom.com, 
-	Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>, 
-	Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000007a641e06384eb731"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYvpJjhNDS1Knh0YLeZSXawx-F4LPM-0fMrPiVkyE=yjFw@mail.gmail.com>
 
---0000000000007a641e06384eb731
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Vadim,
-
-On Thu, Jun 19, 2025 at 6:13=E2=80=AFPM Vadim Fedorenko
-<vadim.fedorenko@linux.dev> wrote:
->
-> On 18/06/2025 15:47, Vikas Gupta wrote:
-> > Add support to communicate with the firmware.
-> > Future patches will use these functions to send the
-> > messages to the firmware.
-> > Functions support allocating request/response buffers
-> > to send a particular command. Each command has certain
-> > timeout value to which the driver waits for response from
-> > the firmware. In error case, commands may be either timed
-> > out waiting on response from the firmware or may return
-> > a specific error code.
+On Tue, Jun 24, 2025 at 12:46:15AM +0530, Naresh Kamboju wrote:
+> On Mon, 23 Jun 2025 at 18:40, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
 > >
-> > Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
-> > Reviewed-by: Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>
-> > Reviewed-by: Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
-> > ---
-> >   drivers/net/ethernet/broadcom/bnge/Makefile   |   3 +-
-> >   drivers/net/ethernet/broadcom/bnge/bnge.h     |  13 +
-> >   .../net/ethernet/broadcom/bnge/bnge_hwrm.c    | 503 +++++++++++++++++=
-+
-> >   .../net/ethernet/broadcom/bnge/bnge_hwrm.h    | 107 ++++
-> >   4 files changed, 625 insertions(+), 1 deletion(-)
-> >   create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm.c
-> >   create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm.h
+> > This is the start of the stable review cycle for the 5.4.295 release.
+> > There are 222 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
 > >
-> > diff --git a/drivers/net/ethernet/broadcom/bnge/Makefile b/drivers/net/=
-ethernet/broadcom/bnge/Makefile
-> > index e021a14d2fa0..b296d7de56ce 100644
-> > --- a/drivers/net/ethernet/broadcom/bnge/Makefile
-> > +++ b/drivers/net/ethernet/broadcom/bnge/Makefile
-> > @@ -3,4 +3,5 @@
-> >   obj-$(CONFIG_BNGE) +=3D bng_en.o
+> > Responses should be made by Wed, 25 Jun 2025 13:05:50 +0000.
+> > Anything received after that time might be too late.
 > >
-> >   bng_en-y :=3D bnge_core.o \
-> > -         bnge_devlink.o
-> > +         bnge_devlink.o \
-> > +         bnge_hwrm.o
-> > diff --git a/drivers/net/ethernet/broadcom/bnge/bnge.h b/drivers/net/et=
-hernet/broadcom/bnge/bnge.h
-> > index 19d85aabab4e..8f2a562d9ae2 100644
-> > --- a/drivers/net/ethernet/broadcom/bnge/bnge.h
-> > +++ b/drivers/net/ethernet/broadcom/bnge/bnge.h
-> > @@ -13,6 +13,8 @@ enum board_idx {
-> >       BCM57708,
-> >   };
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.295-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> > and the diffstat can be found below.
 > >
-> > +#define INVALID_HW_RING_ID      ((u16)-1)
-> > +
-> >   struct bnge_dev {
-> >       struct device   *dev;
-> >       struct pci_dev  *pdev;
-> > @@ -22,6 +24,17 @@ struct bnge_dev {
-> >       char            board_serialno[BNGE_VPD_FLD_LEN];
+> > thanks,
 > >
-> >       void __iomem    *bar0;
-> > +
-> > +     /* HWRM members */
-> > +     u16                     hwrm_cmd_seq;
-> > +     u16                     hwrm_cmd_kong_seq;
-> > +     struct dma_pool         *hwrm_dma_pool;
-> > +     struct hlist_head       hwrm_pending_list;
-> > +     u16                     hwrm_max_req_len;
-> > +     u16                     hwrm_max_ext_req_len;
-> > +     unsigned int            hwrm_cmd_timeout;
-> > +     unsigned int            hwrm_cmd_max_timeout;
-> > +     struct mutex            hwrm_cmd_lock;  /* serialize hwrm message=
-s */
-> >   };
->
-> It's all looks pretty similar to what is used in bnxt driver. Why do you
-> duplicate the code rather then reusing (and improving) the existing one?
->
-> I didn't look carefully, but in case it's impossible to merge hwrm code
-> from bnxt, you have to make function names prepended with bnge prefix...
+> > greg k-h
+> 
+> Regressions on arm defconfig builds with gcc-12 and clang failed on
+> the Linux stable-rc 5.4.295-rc1.
+> 
+> Regressions found on arm
+> * arm, build
+>   - clang-20-axm55xx_defconfig
+>   - clang-20-defconfig
+>   - clang-20-lkftconfig
+>   - clang-20-lkftconfig-no-kselftest-frag
+>   - clang-nightly-axm55xx_defconfig
+>   - clang-nightly-defconfig
+>   - clang-nightly-lkftconfig
+>   - gcc-12-axm55xx_defconfig
+>   - gcc-12-defconfig
+>   - gcc-12-lkftconfig
+>   - gcc-12-lkftconfig-debug
+>   - gcc-12-lkftconfig-kasan
+>   - gcc-12-lkftconfig-kunit
+>   - gcc-12-lkftconfig-libgpiod
+>   - gcc-12-lkftconfig-no-kselftest-frag
+>   - gcc-12-lkftconfig-perf
+>   - gcc-12-lkftconfig-rcutorture
+>   - gcc-8-axm55xx_defconfig
+>   - gcc-8-defconfig
+> 
+> Regression Analysis:
+>  - New regression? Yes
+>  - Reproducibility? Yes
+> 
+> Build regression: stable-rc 5.4.295-rc1 arm kvm init.S Error selected
+> processor does not support `eret' in ARM mode
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> 
+> ## Build errors
+> arch/arm/kvm/init.S: Assembler messages:
+> arch/arm/kvm/init.S:109: Error: selected processor does not support
+> `eret' in ARM mode
+> arch/arm/kvm/init.S:116: Error: Banked registers are not available
+> with this architecture. -- `msr ELR_hyp,r1'
+> arch/arm/kvm/init.S:145: Error: selected processor does not support
+> `eret' in ARM mode
+> arch/arm/kvm/init.S:149: Error: selected processor does not support
+> `eret' in ARM mode
+> make[2]: *** [scripts/Makefile.build:345: arch/arm/kvm/init.o] Error 1
+> 
+> and
+> /tmp/cc0RDxs9.s: Assembler messages:
+> /tmp/cc0RDxs9.s:45: Error: selected processor does not support `smc
+> #0' in ARM mode
+> /tmp/cc0RDxs9.s:94: Error: selected processor does not support `smc
+> #0' in ARM mode
+> /tmp/cc0RDxs9.s:160: Error: selected processor does not support `smc
+> #0' in ARM mode
+> /tmp/cc0RDxs9.s:296: Error: selected processor does not support `smc
+> #0' in ARM mode
+> make[3]: *** [/builds/linux/scripts/Makefile.build:262:
+> drivers/firmware/qcom_scm-32.o] Error 1
 
- Both the bnxt and bnge drivers follow the same protocol to send the
-requests with the firmware,
-so the HWRM mechanism is similar. I'll consider renaming the function
-names in v2.
+That's odd, both clang and gcc don't like this?  Any chance you can do
+'git bisect' to track down the offending commit?
 
->
->
->
+thanks,
 
---0000000000007a641e06384eb731
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIQXQYJKoZIhvcNAQcCoIIQTjCCEEoCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-gg3BMIIFDTCCA/WgAwIBAgIQeEqpED+lv77edQixNJMdADANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA5MTYwMDAwMDBaFw0yODA5MTYwMDAwMDBaMFsxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBS
-MyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
-vbCmXCcsbZ/a0fRIQMBxp4gJnnyeneFYpEtNydrZZ+GeKSMdHiDgXD1UnRSIudKo+moQ6YlCOu4t
-rVWO/EiXfYnK7zeop26ry1RpKtogB7/O115zultAz64ydQYLe+a1e/czkALg3sgTcOOcFZTXk38e
-aqsXsipoX1vsNurqPtnC27TWsA7pk4uKXscFjkeUE8JZu9BDKaswZygxBOPBQBwrA5+20Wxlk6k1
-e6EKaaNaNZUy30q3ArEf30ZDpXyfCtiXnupjSK8WU2cK4qsEtj09JS4+mhi0CTCrCnXAzum3tgcH
-cHRg0prcSzzEUDQWoFxyuqwiwhHu3sPQNmFOMwIDAQABo4IB2jCCAdYwDgYDVR0PAQH/BAQDAgGG
-MGAGA1UdJQRZMFcGCCsGAQUFBwMCBggrBgEFBQcDBAYKKwYBBAGCNxQCAgYKKwYBBAGCNwoDBAYJ
-KwYBBAGCNxUGBgorBgEEAYI3CgMMBggrBgEFBQcDBwYIKwYBBQUHAxEwEgYDVR0TAQH/BAgwBgEB
-/wIBADAdBgNVHQ4EFgQUljPR5lgXWzR1ioFWZNW+SN6hj88wHwYDVR0jBBgwFoAUj/BLf6guRSSu
-TVD6Y5qL3uLdG7wwegYIKwYBBQUHAQEEbjBsMC0GCCsGAQUFBzABhiFodHRwOi8vb2NzcC5nbG9i
-YWxzaWduLmNvbS9yb290cjMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5j
-b20vY2FjZXJ0L3Jvb3QtcjMuY3J0MDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9jcmwuZ2xvYmFs
-c2lnbi5jb20vcm9vdC1yMy5jcmwwWgYDVR0gBFMwUTALBgkrBgEEAaAyASgwQgYKKwYBBAGgMgEo
-CjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAN
-BgkqhkiG9w0BAQsFAAOCAQEAdAXk/XCnDeAOd9nNEUvWPxblOQ/5o/q6OIeTYvoEvUUi2qHUOtbf
-jBGdTptFsXXe4RgjVF9b6DuizgYfy+cILmvi5hfk3Iq8MAZsgtW+A/otQsJvK2wRatLE61RbzkX8
-9/OXEZ1zT7t/q2RiJqzpvV8NChxIj+P7WTtepPm9AIj0Keue+gS2qvzAZAY34ZZeRHgA7g5O4TPJ
-/oTd+4rgiU++wLDlcZYd/slFkaT3xg4qWDepEMjT4T1qFOQIL+ijUArYS4owpPg9NISTKa1qqKWJ
-jFoyms0d0GwOniIIbBvhI2MJ7BSY9MYtWVT5jJO3tsVHwj4cp92CSFuGwunFMzCCA18wggJHoAMC
-AQICCwQAAAAAASFYUwiiMA0GCSqGSIb3DQEBCwUAMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9v
-dCBDQSAtIFIzMRMwEQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWduMB4XDTA5
-MDMxODEwMDAwMFoXDTI5MDMxODEwMDAwMFowTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENB
-IC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wggEiMA0GCSqG
-SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDMJXaQeQZ4Ihb1wIO2hMoonv0FdhHFrYhy/EYCQ8eyip0E
-XyTLLkvhYIJG4VKrDIFHcGzdZNHr9SyjD4I9DCuul9e2FIYQebs7E4B3jAjhSdJqYi8fXvqWaN+J
-J5U4nwbXPsnLJlkNc96wyOkmDoMVxu9bi9IEYMpJpij2aTv2y8gokeWdimFXN6x0FNx04Druci8u
-nPvQu7/1PQDhBjPogiuuU6Y6FnOM3UEOIDrAtKeh6bJPkC4yYOlXy7kEkmho5TgmYHWyn3f/kRTv
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBUkwggQxoAMCAQICDAwWGBCozl6YWmxLnDANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAwODI4NTVaFw0yNTA5MTAwODI4NTVaMIGM
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xFDASBgNVBAMTC1Zpa2FzIEd1cHRhMScwJQYJKoZIhvcNAQkB
-Fhh2aWthcy5ndXB0YUBicm9hZGNvbS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIB
-AQCxitxy5SHFDazxTJLvP/im3PzbzyTnOcoE1o5prXLiE6zHn0Deda3D6EovNC0fvonRJQ8niP6v
-q6vTwQoZ/W8o/qhmX04G/SwcTxTc1mVpX5qk80uqpEAronNBpmRf7zv7OtF4/wPQLarSG+qPyT19
-TDQl4+3HHDyHte/Lk0xie1aVYZ8AunPjUEQi0tURx/GpcBtv39TQKwK77QY2k5PkY0EBtt6s1EVq
-1Z53HzleM75CAMHDl8NYGve9BgWmJRrMksHjn8TcXwOoXQ4QkkBXnMc3Gl+XSbAXXNw1oU96EW5r
-k0vJWVnbznBdI0eiFVP+mokagWcF65WhrJr1gzlBAgMBAAGjggHZMIIB1TAOBgNVHQ8BAf8EBAMC
-BaAwgaMGCCsGAQUFBwEBBIGWMIGTME4GCCsGAQUFBzAChkJodHRwOi8vc2VjdXJlLmdsb2JhbHNp
-Z24uY29tL2NhY2VydC9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcnQwQQYIKwYBBQUHMAGG
-NWh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwME0G
-A1UdIARGMEQwQgYKKwYBBAGgMgEoCjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxz
-aWduLmNvbS9yZXBvc2l0b3J5LzAJBgNVHRMEAjAAMEkGA1UdHwRCMEAwPqA8oDqGOGh0dHA6Ly9j
-cmwuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3JsMCMGA1UdEQQc
-MBqBGHZpa2FzLmd1cHRhQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSME
-GDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUQUO4R8Bg/yLjD8B1Jr9JLitNMlIw
-DQYJKoZIhvcNAQELBQADggEBACj8NkM/SQOdFy4b+Kn9Q/IE8KHCkf/qubyurG45FhIIv8eUflaW
-ZkYiC3z+qo7iXxFvNJ4irfvMtG+idVVrOEFa56FKvixdXk2mlzsojV7lNPlVtn8X2mry47rVMq0G
-AQPU6HuihzH/SrKdypyxv+4QqSGpLs587FN3ydGrrw8J96rBt0qqzFMt65etOx73KyU/LylBqQ+6
-oCSF3t69LpmLmIwRkXxtqIrB7m9OjROeMnXWS9+b5krW8rnUbgqiJVvWldgtno3kiKdEwnOwVjY+
-gZdPq7+WE2Otw7O0i1ReJKwnmWksFwr/sT4LYfFlJwA0LlYRHmhR+lhz9jj0iXkxggJgMIICXAIB
-ATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhH
-bG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwMFhgQqM5emFpsS5wwDQYJ
-YIZIAWUDBAIBBQCggccwLwYJKoZIhvcNAQkEMSIEINrLTssR41d/T1+P03CYZJ1nRt0YmodODXY0
-RBxXTXtPMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDYyNDEw
-MjMxN1owXAYJKoZIhvcNAQkPMU8wTTALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFl
-AwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQcwCwYJYIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUA
-BIIBABd0RrBp58gxnSpzY+1CRe0bv+/jDw8nFwXVlY0DkUXJLyu5e3k56ODKXHFM4sHyc4YFB+R1
-Dw6bnPxqVALxaGY9lOn54mwmIk9Y+vV/f+KxBYu82AioSpIv8vonCoMKzWcGHsoR9bsBvQYBK4qv
-KivO+S/cC0DnVrrcWgoM5zT2QV+oY2uCwZnJ6ni6vO0SanhZvDmjJM4d2SJjleZpaoG4Lei+LLCM
-RoNZtUisj1uJCoryZ6MzsWWhwXxAU8PQGNgaaecBFZxxdc/tEprwz7Ah9AVZG2pEBzXmPm97YQaK
-uW23tM5ZLKZIhzcEBrcjAHy/GCHkHneNk0A/kGjzVzM=
---0000000000007a641e06384eb731--
+greg k-h
