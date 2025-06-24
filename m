@@ -1,153 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8D42571B4;
-	Tue, 24 Jun 2025 22:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743453074AE
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 22:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750804454; cv=none; b=WehwZNhEJFhx00r4u2xwNyywHQWpqT5/S2HrBlmFMTUy1ZcqxA/poFsPmcPwujdKM/AV2UXW+7xw7iKJyWp7+2WG0e6/MIhyCox5Ap2fuNJjG6KpW0bc6pRxn+Qexs3Y/FavYWz+Y6eHe9+TUtV64WB2N3bNGE5QMIBdOSbF24I=
+	t=1750804487; cv=none; b=MNmJo/EhlcGEQsmY8BgkMj6XqXwCoDSnp0iw/8OaehDwCSaHMUevvTvjeyBUt9rBVGENKvq/pHREg7lDce+VyJBjuoCGOWKx577SDn6a9S8VAKnODZBMHHcYCYSOJuGrZ+YIT4LZQK8Xi3eMkfq1vJzh6tquz6HrKByiuMjxzXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750804454; c=relaxed/simple;
-	bh=eK8NMyHuwrl8dXYAwi4q/jdKZLqI0hmkAk2+xKgeAtU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=BUisn0CfKRf2LDKAfJOxjMEVIbj1phiz8ukSbzpf2VINiiVeniNJtFuO8oyS2LBp6bQgn0vH6ECfU1wzjQd8+g4tXk2YDdGEkI/RQQj9pq0CLy5i0mVLcMg6sno4w3HmNsGZ/a8PchijzgUAc9WDC34auDbtA3wLrAhX0rtlBRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ek29q7nU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750804487; c=relaxed/simple;
+	bh=mqOQ7YDav2hYhJQvVJTdR3Y18paK1zzfINIZQc/Tksc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tocv3DQW5QgHkrctyWeGuWEEC2NyeLO6/WqEZq1MY42hrWu7rxmVeAF7G9xd6lkqBUCDcXzHVHqhf6lY9g14y8xJ+s/YelBdzUwt1ngIk5wv4aejqtZoxH1sZXHG1dRVGoPWgQ36W5QW6xteLptEOCfbwCWqRsVKXqh+OC7HbcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VBn9UhOy; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ek29q7nU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AFD2C4CEE3;
-	Tue, 24 Jun 2025 22:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750804454;
-	bh=eK8NMyHuwrl8dXYAwi4q/jdKZLqI0hmkAk2+xKgeAtU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ek29q7nUOQfyYabkxpsHoxJFUrxv8u4oxmuC8/lTDIqS7HHcQq3jGJokZybHqykBW
-	 GYtNHfN4SeEJu3pKWIJ03BPB50bQ1A81gHel5osuiCrybLmmE/KwsVCdAH732vdDPI
-	 R9+hZSTHcyLv++4A7V9qdoIiJFg+b3d6xycUzlve50qiOSVhGG2K7ZA3Fdl/vNwMwA
-	 9t13cQ5CuqKSeXNjcfunzzQHokSH0uiRlFj+XPkahPCeYlm6rXI1YZAZ3Rkvp+hjXb
-	 KJPAlk1k+lL33i8KlZUBUKSIYwbjlJhNKvPW2T1ZqJvBj6/8RoBI18cquq3cbaCS27
-	 db55Tm0uixDdg==
-Date: Tue, 24 Jun 2025 17:34:13 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Timothy Pearson <tpearson@raptorengineering.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	linux-pci <linux-pci@vger.kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	christophe leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Shawn Anastasio <sanastasio@raptorengineering.com>
-Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention
- indicator
-Message-ID: <20250624223413.GA1550003@bhelgaas>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VBn9UhOy"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso2408a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:34:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750804484; x=1751409284; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=biMr0EfPKFoYywDXUPvbYBfkKcArAnlyW/BCbuWbl+M=;
+        b=VBn9UhOykxXNSsdW8Bj7PbVkHlTUm4XXbndNhXweQDJRtvpdv76dcQNgM4O/Y+RRU7
+         25aOUJT84A2L3+o0y84GLpuz1S4D/8anq+JfLziwNw9hky4uoDevKAtHwNRXhl11QFOz
+         98w01FORVued0CHPL/XCX4QnZp8B5cP8oMlA63X2ZvQ+B8MWsnEoB/3WZc4iDkr6vnmw
+         Fuor6bpZit9DjtVGgtkWD4xTFgrIzMlTK2LjQFd/EypuBuJZtUzgqS0GohYcG03xGp6g
+         hdpnYysbwI8UjPIIZENu8LJx7hcHXIzyetEgle2VqtVbcF0kEzwQwG6SykvP8O76J7q5
+         Go6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750804484; x=1751409284;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=biMr0EfPKFoYywDXUPvbYBfkKcArAnlyW/BCbuWbl+M=;
+        b=D2CnJM4z/+YbesEbPz5k0aJdYz+tyCORcEuc+cKYrrGKIKCIe7Kqa+jlDC+D4ZUozA
+         U7OowBWeFKEbKp+k7mloz9SY33IRBmTjCl7DQViiDEsQoJQIzdLUOEg0nB+n9BMt2mv/
+         RmVmtn3Fq2euWhbdQwpBV9nLArYV3un5XwAzS1z5QXfryzCn14EEnbvODHZVsHR8DgcD
+         vaI8O/5qyJbi8Afk8px2QkIvhVd1wviTUpAI5XGsESgvtQT1iYLzKLN3W6ZPIv+hOZta
+         nJ5BizN0rq7L2QQyTEn64iCKuYwzeR03YdUPtTt04EJNtRQ8aenY81G1SndzJI7ZprjM
+         /D8A==
+X-Gm-Message-State: AOJu0Yy3TUH/u94CJuwbn+YG2i58WoCLCfYo3a50laImX6XqqEwf0OP3
+	/ndYuNEoWN9xvLsaXIq1wiiQalOZC4kw3tVVcBDTyPFe1eN0F0kC7WTFJd4IveMjCVnAYRfReOO
+	pzKXAa/yp2G1xkUM7yMi38SEK5DkDNngbBUt0RPw+WTlHn4f3A7/fPZ98HaQ=
+X-Gm-Gg: ASbGncvkOS6TUXPV9qWMAjAzbMgSQWxc5dR5WUJu0hCUpebogT8MxUOmTKYD+3eHZ74
+	FLS555qWcolezsNU/3pt0ZYx+ZO2/GISORPDDG7/PW544JfF9p6xnNRBjWuAX66zNavmxvSeLRZ
+	KsLNg0JOJWC7t+yxeasIRcbwROo54pMlGjahGW3tywixY=
+X-Google-Smtp-Source: AGHT+IGyVlom+ZmT7GXmz0HeL4UsVQU3NyBoFLDHBTl/atp+JIdz2fxGFnYGVwpASG9nZ4LRyNma1LwRWwKsDs1mnsE=
+X-Received: by 2002:a05:6402:27c7:b0:607:d206:7657 with SMTP id
+ 4fb4d7f45d1cf-60c4f9ad7demr4740a12.2.1750804483639; Tue, 24 Jun 2025 15:34:43
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1469323476.1312174.1750293474949.JavaMail.zimbra@raptorengineeringinc.com>
+References: <20250530185239.2335185-1-jmattson@google.com> <20250530185239.2335185-2-jmattson@google.com>
+ <aFsX1anrZGWFsbF-@google.com>
+In-Reply-To: <aFsX1anrZGWFsbF-@google.com>
+From: Jim Mattson <jmattson@google.com>
+Date: Tue, 24 Jun 2025 15:34:29 -0700
+X-Gm-Features: Ac12FXzCwsN8NPivZZHPiGwh0dl954eI-7CnHozxpVShx7dUnu5f7IkszxcCLmo
+Message-ID: <CALMp9eTyvost6ULK7QwCroN0xaO7mmxCqWcywsKMr0OaAJwsmw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] KVM: x86: Replace growing set of *_in_guest bools
+ with a u64
+To: Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 07:37:54PM -0500, Timothy Pearson wrote:
-> ----- Original Message -----
-> > From: "Bjorn Helgaas" <helgaas@kernel.org>
-> > To: "Timothy Pearson" <tpearson@raptorengineering.com>
-> > Cc: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-pci"
-> > <linux-pci@vger.kernel.org>, "Madhavan Srinivasan" <maddy@linux.ibm.com>, "Michael Ellerman" <mpe@ellerman.id.au>,
-> > "christophe leroy" <christophe.leroy@csgroup.eu>, "Naveen N Rao" <naveen@kernel.org>, "Bjorn Helgaas"
-> > <bhelgaas@google.com>, "Shawn Anastasio" <sanastasio@raptorengineering.com>
-> > Sent: Wednesday, June 18, 2025 2:01:46 PM
-> > Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention indicator
-> 
-> > On Wed, Jun 18, 2025 at 11:58:59AM -0500, Timothy Pearson wrote:
-> >>  state
-> > 
-> > Weird wrapping of last word of subject to here.
-> 
-> I'll need to see what's up with my git format-patch setup. Apologies
-> for that across the multiple series.
+On Tue, Jun 24, 2025 at 2:25=E2=80=AFPM Sean Christopherson <seanjc@google.=
+com> wrote:
+> Can't this simply be?  The set of capabilities to disable has already bee=
+n vetted,
+> so I don't see any reason to manually process each flag.
 
-No worries.  If you can figure out how to make your mailer use the
-normal "On xxx, somebody wrote:" attribution instead of duplicating
-all those headers, that would be far more useful :)
-
-> >> +static int pnv_php_get_raw_indicator_status(struct hotplug_slot *slot, u8
-> >> *state)
-> >> +{
-> >> +	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
-> >> +	struct pci_dev *bridge = php_slot->pdev;
-> >> +	u16 status;
-> >> +
-> >> +	pcie_capability_read_word(bridge, PCI_EXP_SLTCTL, &status);
-> >> +	*state = (status & (PCI_EXP_SLTCTL_AIC | PCI_EXP_SLTCTL_PIC)) >> 6;
-> > 
-> > Should be able to do this with FIELD_GET().
-> 
-> I used the same overall structure as the pciehp_hpc driver here.  Do
-> you want me to also fix up that driver with FIELD_GET()?
-
-Nope, I think it's fine to keep this looking like pciehp for now.
-If somebody wants to use FIELD_GET() in pciehp, I'd probably be OK
-with that, but no need for you to open that can of worms.
-
-> > Is the PCI_EXP_SLTCTL_PIC part needed?  It wasn't there before, commit
-> > log doesn't mention it, and as far as I can tell, this would be the
-> > only driver to do that.  Most expose only the attention status (0=off,
-> > 1=on, 2=identify/blink).
-> > 
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +
-> >>  static int pnv_php_get_attention_state(struct hotplug_slot *slot, u8 *state)
-> >>  {
-> >>  	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
-> >>  
-> >> +	pnv_php_get_raw_indicator_status(slot, &php_slot->attention_state);
-> > 
-> > This is a change worth noting.  Previously we didn't read the AIC
-> > state from PCI_EXP_SLTCTL at all; we used php_slot->attention_state to
-> > keep track of whatever had been previously set via
-> > pnv_php_set_attention_state().
-> > 
-> > Now we read the current state from PCI_EXP_SLTCTL.  It's not clear
-> > that php_slot->attention_state is still needed at all.
-> 
-> It probably isn't.  It's unclear why IBM took this path at all,
-> given pciehp's attention handlers predate pnv-php's by many years.
-> 
-> > Previously, the user could write any value at all to the sysfs
-> > "attention" file and then read that same value back.  After this
-> > patch, the user can still write anything, but reads will only return
-> > values with PCI_EXP_SLTCTL_AIC and PCI_EXP_SLTCTL_PIC.
-> > 
-> >>  	*state = php_slot->attention_state;
-> >>  	return 0;
-> >>  }
-> >> @@ -461,7 +474,7 @@ static int pnv_php_set_attention_state(struct hotplug_slot
-> >> *slot, u8 state)
-> >>  	mask = PCI_EXP_SLTCTL_AIC;
-> >>  
-> >>  	if (state)
-> >> -		new = PCI_EXP_SLTCTL_ATTN_IND_ON;
-> >> +		new = FIELD_PREP(PCI_EXP_SLTCTL_AIC, state);
-> > 
-> > This changes the behavior in some cases:
-> > 
-> >  write 0: previously turned indicator off, now writes reserved value
-> >  write 2: previously turned indicator on, now sets to blink
-> >  write 3: previously turned indicator on, now turns it off
-> 
-> If we're looking at normalizing with pciehp with an eye toward
-> eventually deprecating / removing pnv-php, I can't think of a better
-> time to change this behavior.  I suspect we're the only major user
-> of this code path at the moment, with most software expecting to see
-> pciehp-style handling.  Thoughts?
-
-I'm OK with changing this, but I do think it would be worth calling
-out the different behavior in the commit log.
-
-Bjorn
+I love it! Thank you.
