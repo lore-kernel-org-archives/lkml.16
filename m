@@ -1,347 +1,149 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50457248F6F
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 11:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43661B393C
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750766396; cv=none; b=nkToG6YBXFYWL9VoTULhejPm2dCXhY/tzlpPJ+1i4wCDdreuVt7GShGdQD+FYCuQ/XWsy9bbykGI4NWhXJqjvgo/TAlriutuR9uSAK1Sh4S9h1fGJw0FkqkK3lhb7sAvaHvoYct6HDoexRwpRfFe2XSB20sVR/Zb6a0wKiPzqiM=
+	t=1750766419; cv=none; b=mfsSuNTt8IpAZRd1GmJaJT13bgFFHf9zQr2mMg/NOnj8gEDVnSdsIelTiGaEpR0v+bXl4phjPpFK4uxrtAJjYqRQplQZDR6+COZ5vbwUSzjTZphGNmkcrUuBZB2UsvagvKNB7HW3ColLlRA9fkgYt4MITuiFGkWCFbpJvAcpvdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750766396; c=relaxed/simple;
-	bh=GARcFyp71RX5AsU3VSTiqOEXVGJTrmu+06LIXsfBFnA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H6DjByFYdHSBi3eQ2RDL7XlF/nciN6HP7P4KuC+HZF29cz8ja6IIX+4KRDkVchNCQ9uf8RFPPKNtZVDrnb+HYLHQdm0W4Ld07hCzNuScbBobAVLSK4SoLNoKu4rzyK7W8EMDofrGEN3Rf84qxUS0g+S6QzAjeFlbH9VzOSzIEKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=wdFxdqJJ; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1750766419; c=relaxed/simple;
+	bh=5H+0ZBatIoV98zVsiGevjwnsDrxv5wtU9tnLN9LnZy0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c/cejn0f/dF5X60HxhBO/ztVZdVZAvBTMsjsS2Ltm1u/z4XxhvfHtJk2zvjfjF6Dxf29ddnqBIus8SE9ZsnL2cpm0jBIfovGIAQP+o27aELRyXFurovEpe+uhwahzCZ3Xdb5gLxFte0chWkPgFDFhNmXQbLSqfIvb7anzHKNQnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ayE572c9; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="wdFxdqJJ"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C6B2450A;
-	Tue, 24 Jun 2025 13:59:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750766375;
-	bh=GARcFyp71RX5AsU3VSTiqOEXVGJTrmu+06LIXsfBFnA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=wdFxdqJJjZ8J6Kg5GSabcL1/rLa3xr5ztQUwGkb22sKktLFgIZ6dP9yVb59mtE9rd
-	 bzQhWS1OV7XUSynpfRCUlHcyq7HOIpxF6iLEl9isoa8+F8DVld21Q6m8dJVuFx1eey
-	 FV4UMcHVx5fYM+pAXVi0/fJM5s3BG33H/NYdwLUU=
-Message-ID: <5337fc13-f7e3-4252-84db-e1129cc31e32@ideasonboard.com>
-Date: Tue, 24 Jun 2025 14:59:49 +0300
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ayE572c9"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O8ETKY011544;
+	Tue, 24 Jun 2025 12:00:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=+9C+Y37xuTD23dtTgJMKeF5k/yn5MH
+	BAcJezcH86M2s=; b=ayE572c99VaHxNMdeIYB5bpt6Ba9l6vezbfo1xfMJ1PF3E
+	781NAH3lSHtypjwepZcEjjCH9Brg2cIe9UVWsWsdYKVFgM2F9+ZQAIr52kgGiSeC
+	2LhnftfMdgju+2RJJ5fVjrKm0324A60dhIQmi8Kvcwfvp126Bq0xS75UGaTL3Wp5
+	GYhf7ldOsulO1Qi+SNiiDwW4LBT7Lu3IT7WWc0wCg5bd4WQKg5M8omyqAjslG0/j
+	4wNXcbNY7VWlx/3zhf0KpR+Zy0aVF1o98J2A8JZzQPdddsYMLBB/ltl9jCQdDsEK
+	MyC7EmiAcpdetAuTAGBkIG8QwYjc0nzYLAiDmnOQ==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dmfe8f0j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Jun 2025 12:00:06 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55O9SfgV014951;
+	Tue, 24 Jun 2025 12:00:05 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e72tm040-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Jun 2025 12:00:05 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55OC04d452429060
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 24 Jun 2025 12:00:04 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 424872004E;
+	Tue, 24 Jun 2025 12:00:04 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 172792004B;
+	Tue, 24 Jun 2025 12:00:04 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 24 Jun 2025 12:00:04 +0000 (GMT)
+Date: Tue, 24 Jun 2025 14:00:02 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Dev Jain <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: move mask update out of the atomic context
+Message-ID: <aFqTQtK8yCTlmEfx@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20250623080440.3005693-1-agordeev@linux.ibm.com>
+ <c11a4b2e-6895-43b7-9ff6-620793bf8551@arm.com>
+ <aFkgTA+02bV6nldk@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+ <f5c7ed26-b034-4600-ba29-26761eb1eef5@arm.com>
+ <4214d6d6-f8d5-43b3-a413-f576fdaf215d@redhat.com>
+ <aFpxvQxgUEdO9jd/@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+ <75717e4e-51d0-41a2-8463-45097fc3875b@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/tidss: Decouple max_pclk from tidss feats to
- remove clock dependency
-To: Jayesh Choudhary <j-choudhary@ti.com>, jyri.sarha@iki.fi,
- dri-devel@lists.freedesktop.org, devarsht@ti.com
-Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
- linux-kernel@vger.kernel.org
-References: <20250618100509.20386-1-j-choudhary@ti.com>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20250618100509.20386-1-j-choudhary@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <75717e4e-51d0-41a2-8463-45097fc3875b@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: fazFq2rDNT2-PW9A3uQh3Z2JthCXtzj0
+X-Proofpoint-GUID: fazFq2rDNT2-PW9A3uQh3Z2JthCXtzj0
+X-Authority-Analysis: v=2.4 cv=BpqdwZX5 c=1 sm=1 tr=0 ts=685a9346 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=nENOSrSBMpMrXF5MCvkA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDA5OSBTYWx0ZWRfX4glAbsng8hlX eVa8iwvTyWlWgTV7SdMAOK5zofZZQ+x7Px7ly2qJprQQBL8+IQEQKOmPIyyiDnLrKLL5WjsImvX rGYyVrz0kpzlONRJscUOmR2TlW3+CyVNSKkKnn9iKSoah6Wc/fDxl8ukidaN3pULmR67/k4IsWO
+ R3vdGZZETXvoV4njFxtmB02DppTJLUKfq3Yh2hCktazFSZbbcdu+tCp1wudbZKlGRrfgaZifedR zxP8IedlotmWNjHWqj6nVOJBdmeH8KNxSKJ5shUdgSPlXc+hR1GrzsFGfB38p1uDw5xfNi5esWe r2Xg10seD+i/aAjx1oVwryCKf1HX3pymYA8CAI5jTl8o9mx/FCj+aHgE27Oj6Fq2QvuxLoY/ZLW
+ 7LYkyan5uVbloe8w2EryraeRLnS9L6bl6klF0Beu4AP3KJRr7aQFkyX5vOGwcDgwKBW1YCJs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-24_04,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 clxscore=1015 spamscore=0 mlxlogscore=383
+ priorityscore=1501 phishscore=0 malwarescore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506240099
 
-Hi,
-
-On 18/06/2025 13:05, Jayesh Choudhary wrote:
-> TIDSS hardware by itself does not have variable max_pclk for each VP.
-> Each VP supports a fixed maximum pixel clock. K2 devices and AM62*
-> devices uses "ultra-light" version where each VP supports a max of
-> 300MHz whereas J7* devices uses TIDSS where all VP can support a
-> max pclk of 600MHz.
-> The limitation that has been modeled till now comes from the clock
-> (PLL can only be programmed to a particular max value). Due to this
-> we end up using different compatible for each SoC when the clocking
-> architecture changes for VPs, even when the hardware is essentially
-> the same.
-> max_pclk cannot be entirely removed since the display controller
-> should tell if a particular mode clock can be supported or not in crtc's
-> "mode_valid()" call. So remove "max_pclk_khz" from the static display
-> feat and add it to "tidss_device" structure which would be modified in
-> runtime. In mode_valid() call, check if a best frequency match for mode
-> clock can be found or not using "clk_round_rate()". Based on that,
-> propagate "max_pclk" and check max_clk again only if the requested mode
-> clock is greater than saved value. (As the preferred display mode is
-> usually the max resolution, driver ends up checking the maximum clock
-> the first time itself which is used in subsequent checks)
-> Since TIDSS display controller provides clock tolerance of 5%, we use
-> this while checking the max_pclk. Also, move up "dispc_pclk_diff()"
-> before it is called.
-
-An empty line between paragraphs makes the desc easier to read.
-
-> This will make the existing compatibles reusable.
+On Tue, Jun 24, 2025 at 11:40:05AM +0200, David Hildenbrand wrote:
+> On 24.06.25 11:37, Alexander Gordeev wrote:
+> > On Mon, Jun 23, 2025 at 09:45:34PM +0200, David Hildenbrand wrote:
+> > ...
+> > > Let's ask the real questions: who checks PGTBL_PTE_MODIFIED?
+> > > 
+> > > I see
+> > > 
+> > > if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
+> > > 	arch_sync_kernel_mappings(start, start + size);
+> > > 
+> > > And then
+> > > 
+> > > arch/arm/include/asm/page.h:#define ARCH_PAGE_TABLE_SYNC_MASK   PGTBL_PMD_MODIFIED
+> > > arch/x86/include/asm/pgtable-2level_types.h:#define ARCH_PAGE_TABLE_SYNC_MASK   PGTBL_PMD_MODIFIED
+> > > arch/x86/include/asm/pgtable-3level_types.h:#define ARCH_PAGE_TABLE_SYNC_MASK   PGTBL_PMD_MODIFIED
+> > > 
+> > > 
+> > > Which makes me wonder why we need PGTBL_PTE_MODIFIED at all? Is there some other check I am missing?
+> > > 
+> > > (same question regarding everything excepy PGTBL_PMD_MODIFIED, because that actually seems to be used)
+> > 
+> > AFAICT it was thought as architecture-specific:
+> > 
+> > /*
+> >   * Architectures can set this mask to a combination of PGTBL_P?D_MODIFIED values
+> >   * and let generic vmalloc and ioremap code know when arch_sync_kernel_mappings()
+> >   * needs to be called.
+> >   */
+> > #ifndef ARCH_PAGE_TABLE_SYNC_MASK
+> > #define ARCH_PAGE_TABLE_SYNC_MASK 0
+> > #endif
+> > 
+> > Not sure if that needs to be addressed at all.
 > 
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-> ---
-> 
-> Changelog v1->v2:
-> - Rebase it on linux-next after OLDI support series[0] as all of its
->   patches are reviewed and tested and it touches one of the functions
->   used.
->   
-> v1 patch link:
-> <https://lore.kernel.org/all/20250618075804.139844-1-j-choudhary@ti.com/>
-> 
-> Test log on TI's J784S4 SoC with a couple of downstream patches
-> to integrate DSI support on one of the video ports:
-> <https://gist.github.com/Jayesh2000/ad4ab87028740efa60e5eb83fb892097>
-> 
-> From the logs, we can see that for CLK ID 218 (DSS), we do not have to
-> call sci_clk_determine_rate() multiple times. So there is very little
-> overhead of this call even with multiple mode_valid() called during
-> display run.
-> From weston-simple-egl application, I have seen that there is no frame
-> drop or performance impact.
-> 
-> Once this patch gets in, I will send patches for AM62P and J722S DSS
-> support.
-> 
-> [0]: https://lore.kernel.org/all/20250528122544.817829-1-aradhya.bhatia@linux.dev/
-> 
->  drivers/gpu/drm/tidss/tidss_dispc.c | 74 ++++++++++++-----------------
->  drivers/gpu/drm/tidss/tidss_dispc.h |  1 -
->  drivers/gpu/drm/tidss/tidss_drv.h   |  2 +
->  3 files changed, 33 insertions(+), 44 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
-> index c0277fa36425..ad9ffc3685b4 100644
-> --- a/drivers/gpu/drm/tidss/tidss_dispc.c
-> +++ b/drivers/gpu/drm/tidss/tidss_dispc.c
-> @@ -58,10 +58,6 @@ static const u16 tidss_k2g_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
->  const struct dispc_features dispc_k2g_feats = {
->  	.min_pclk_khz = 4375,
->  
-> -	.max_pclk_khz = {
-> -		[DISPC_VP_DPI] = 150000,
-> -	},
-> -
->  	/*
->  	 * XXX According TRM the RGB input buffer width up to 2560 should
->  	 *     work on 3 taps, but in practice it only works up to 1280.
-> @@ -144,11 +140,6 @@ static const u16 tidss_am65x_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
->  };
->  
->  const struct dispc_features dispc_am65x_feats = {
-> -	.max_pclk_khz = {
-> -		[DISPC_VP_DPI] = 165000,
-> -		[DISPC_VP_OLDI_AM65X] = 165000,
-> -	},
-> -
->  	.scaling = {
->  		.in_width_max_5tap_rgb = 1280,
->  		.in_width_max_3tap_rgb = 2560,
-> @@ -244,11 +235,6 @@ static const u16 tidss_j721e_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
->  };
->  
->  const struct dispc_features dispc_j721e_feats = {
-> -	.max_pclk_khz = {
-> -		[DISPC_VP_DPI] = 170000,
-> -		[DISPC_VP_INTERNAL] = 600000,
-> -	},
-> -
->  	.scaling = {
->  		.in_width_max_5tap_rgb = 2048,
->  		.in_width_max_3tap_rgb = 4096,
-> @@ -315,11 +301,6 @@ const struct dispc_features dispc_j721e_feats = {
->  };
->  
->  const struct dispc_features dispc_am625_feats = {
-> -	.max_pclk_khz = {
-> -		[DISPC_VP_DPI] = 165000,
-> -		[DISPC_VP_INTERNAL] = 170000,
-> -	},
-> -
->  	.scaling = {
->  		.in_width_max_5tap_rgb = 1280,
->  		.in_width_max_3tap_rgb = 2560,
-> @@ -380,10 +361,6 @@ const struct dispc_features dispc_am62a7_feats = {
->  	 * if the code reaches dispc_mode_valid with VP1,
->  	 * it should return MODE_BAD.
->  	 */
-> -	.max_pclk_khz = {
-> -		[DISPC_VP_TIED_OFF] = 0,
-> -		[DISPC_VP_DPI] = 165000,
-> -	},
->  
->  	.scaling = {
->  		.in_width_max_5tap_rgb = 1280,
-> @@ -441,10 +418,6 @@ const struct dispc_features dispc_am62a7_feats = {
->  };
->  
->  const struct dispc_features dispc_am62l_feats = {
-> -	.max_pclk_khz = {
-> -		[DISPC_VP_DPI] = 165000,
-> -	},
-> -
->  	.subrev = DISPC_AM62L,
->  
->  	.common = "common",
-> @@ -1347,25 +1320,48 @@ static void dispc_vp_set_default_color(struct dispc_device *dispc,
->  			DISPC_OVR_DEFAULT_COLOR2, (v >> 32) & 0xffff);
->  }
->  
-> +/*
-> + * Calculate the percentage difference between the requested pixel clock rate
-> + * and the effective rate resulting from calculating the clock divider value.
-> + */
-> +unsigned int dispc_pclk_diff(unsigned long rate, unsigned long real_rate)
-> +{
-> +	int r = rate / 100, rr = real_rate / 100;
-> +
-> +	return (unsigned int)(abs(((rr - r) * 100) / r));
-> +}
-> +
-> +static int check_max_pixel_clock(struct dispc_device *dispc,
-> +				 u32 hw_videoport, unsigned long clock)
-> +{
-> +	if (clock > dispc->tidss->max_pclk[hw_videoport]) {
-> +		unsigned long round_clock = clk_round_rate(dispc->vp_clk[hw_videoport], clock);
-> +
-> +		if (dispc_pclk_diff(clock, round_clock) > 5)
-> +			return -EINVAL;
-> +
-> +		dispc->tidss->max_pclk[hw_videoport] = round_clock;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  enum drm_mode_status dispc_vp_mode_valid(struct dispc_device *dispc,
->  					 u32 hw_videoport,
->  					 const struct drm_display_mode *mode)
->  {
->  	u32 hsw, hfp, hbp, vsw, vfp, vbp;
->  	enum dispc_vp_bus_type bus_type;
-> -	int max_pclk;
->  
->  	bus_type = dispc->feat->vp_bus_type[hw_videoport];
->  
-> -	max_pclk = dispc->feat->max_pclk_khz[bus_type];
-> -
-> -	if (WARN_ON(max_pclk == 0))
-> +	if (bus_type == DISPC_VP_TIED_OFF)
->  		return MODE_BAD;
->  
->  	if (mode->clock < dispc->feat->min_pclk_khz)
->  		return MODE_CLOCK_LOW;
->  
-> -	if (mode->clock > max_pclk)
-> +	if (check_max_pixel_clock(dispc, hw_videoport, mode->clock * 1000))
->  		return MODE_CLOCK_HIGH;
->  
->  	if (mode->hdisplay > 4096)
-> @@ -1437,17 +1433,6 @@ void dispc_vp_disable_clk(struct dispc_device *dispc, u32 hw_videoport)
->  	clk_disable_unprepare(dispc->vp_clk[hw_videoport]);
->  }
->  
-> -/*
-> - * Calculate the percentage difference between the requested pixel clock rate
-> - * and the effective rate resulting from calculating the clock divider value.
-> - */
-> -unsigned int dispc_pclk_diff(unsigned long rate, unsigned long real_rate)
-> -{
-> -	int r = rate / 100, rr = real_rate / 100;
-> -
-> -	return (unsigned int)(abs(((rr - r) * 100) / r));
-> -}
-> -
->  int dispc_vp_set_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
->  			  unsigned long rate)
->  {
-> @@ -3087,6 +3072,9 @@ int dispc_init(struct tidss_device *tidss)
->  	}
->  	dev_dbg(dev, "DSS fclk %lu Hz\n", clk_get_rate(dispc->fclk));
->  
-> +	for (i = 0; i < dispc->feat->num_vps; i++)
-> +		dispc->tidss->max_pclk[i] = 0;
+> Okay, if there are no users of PGTBL_PTE_MODIFIED we could just ... remove
+> it. Dead code.
 
-I think this is not needed, the struct should be zero initialized at alloc.
+As you noticed, PGTBL_PMD_MODIFIED bit is used only. Thus, all other
+bits would have to be removed as well, not just PGTBL_PTE_MODIFIED?
 
->  	of_property_read_u32(dispc->dev->of_node, "max-memory-bandwidth",
->  			     &dispc->memory_bandwidth_limit);
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h b/drivers/gpu/drm/tidss/tidss_dispc.h
-> index b8614f62186c..45b1a8aa9089 100644
-> --- a/drivers/gpu/drm/tidss/tidss_dispc.h
-> +++ b/drivers/gpu/drm/tidss/tidss_dispc.h
-> @@ -75,7 +75,6 @@ enum dispc_dss_subrevision {
->  
->  struct dispc_features {
->  	int min_pclk_khz;
-> -	int max_pclk_khz[DISPC_VP_MAX_BUS_TYPE];
->  
->  	struct dispc_features_scaling scaling;
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_drv.h b/drivers/gpu/drm/tidss/tidss_drv.h
-> index d14d5d28f0a3..59c67ae8e721 100644
-> --- a/drivers/gpu/drm/tidss/tidss_drv.h
-> +++ b/drivers/gpu/drm/tidss/tidss_drv.h
-> @@ -22,6 +22,8 @@ struct tidss_device {
->  
->  	const struct dispc_features *feat;
->  	struct dispc_device *dispc;
-> +	long max_pclk[TIDSS_MAX_PORTS];
-> +
->  
->  	unsigned int num_crtcs;
->  	struct drm_crtc *crtcs[TIDSS_MAX_PORTS];
+That is more or less revert of at least the below commits and rewriting
+it in a PMD-focused manner:
 
-One thing to keep in mind is that if we ever change the source clk, we
-need to also clear the max_pclk for that VP.
+2ba3e6947aed ("mm/vmalloc: track which page-table levels were modified")
+d8626138009b ("mm: add functions to track page directory modifications")
 
-Shouldn't we still have a check for the DSS internal max pclk somewhere?
+That would be a completely different effort, which I am not aming at ;)
 
- Tomi
+> -- 
+> Cheers,
+> 
+> David / dhildenb
 
+Thanks!
