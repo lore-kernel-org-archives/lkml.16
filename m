@@ -1,126 +1,114 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C352571A1;
-	Tue, 24 Jun 2025 10:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6326A283CA0;
+	Tue, 24 Jun 2025 10:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750762020; cv=none; b=K6nncSBBqYcCoYg4tsOGGAFiDBkU27ZgKuslj1831qjodgGjOERwM4qIMudrdOOY64nzdQgU4CxZS8HjEuOelA3pkqEQHZy1o8FgnwT0tory3UzM2M9CCk/8giapc0vDSkFlK25LPGmObYPW/4agRTHxkENjn6/F2zJpX0IdJGQ=
+	t=1750762032; cv=none; b=sn02BOuYrpMiRp4fNaFeT0lN875H8sM9bLjzkMIe9bkqUJSYyDDrsxsygNBRrcdAk0j/8gmc9a08WtqEcaaGiFNFSDrclH3BrA3cbUq4amEoyz6UJMotuwdBOgDiCY1FJWmnh45m8KapKMuZy2Zxl1RVIuPbknzY3pf5JTVMqzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750762020; c=relaxed/simple;
-	bh=TbJ1l94P2T/t8hCGZfRYJjEcgqmtntEliTN9yS8KlY4=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=NdYVN2rUFB8ZJAOKtSEQ6R44vULLtBnNFz3zh5YzHO/bQjH0B1e1fDDFn8S1ZB5CtLqMAy4tGd3nJLuuMuybCM5dXuC6e+ndAErX1pOIfenXZwsVYclxMcp2kFiRN68qv+F0M28C1viVgN7iNINfolWMKzPsjyzp0LT+359sK+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=Nwb/3+Z9; arc=none smtp.client-ip=212.227.126.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
+	s=arc-20240116; t=1750762032; c=relaxed/simple;
+	bh=q9YNLRyxz8U7WyFP8P37wvG+tQymx7Vu2sHvl8qoV8A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PO+4GxrBcy4eo0Uhoj9zvB9vltYbUH4SWVpv8S6TFUaQi9rBauhOgtw0KBPX7qQfOA7hF0t5HL2P9SulQ8sg7Y3b82dSHO9hLEiV6P0jPLnSsO9V++xLSOfxINFuTU5FMFcx8w0a9Sq+2wnGzDSdo+ShJf6FDgRVUqvYwxXDZvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E8beRxSP; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="Nwb/3+Z9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8beRxSP"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-234bfe37cccso3195515ad.0;
+        Tue, 24 Jun 2025 03:47:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=oldschoolsolutions.biz; s=s1-ionos; t=1750762009; x=1751366809;
-	i=jens.glathe@oldschoolsolutions.biz;
-	bh=TbJ1l94P2T/t8hCGZfRYJjEcgqmtntEliTN9yS8KlY4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:From:Subject:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Nwb/3+Z9Nyhq19xcuLuDaq6UEr+mP+6YAUtHnKGW2Ham0wQuhZSSaXA7A9Tl0eEx
-	 wZmWfBSizcdjFFNzmrw0uQ0QCUXS7edRLDpE9I82r60SraIyNv8IrmzkADai3uqVC
-	 pTpbVXep06iDe5svI4qm+BcLs91ft/qymkGw66+wr+R3AMbfykZkYHK8WP698a8kq
-	 ASOxn0cre7kia7EaZV9eq2HeRBL1LQs+WdqiYrUKfw7xAnAK4nSeRTHK/ZWVV43V2
-	 K5KoemHyqOvQsdg1p7yTfi1O1ZThCGe/DgCkLYbVFWwbYFqlip4vv0yBOcMvz7Ns+
-	 nXunLPGXYixk69awig==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from [192.168.0.39] ([62.226.41.128]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mxpqo-1ufWkB01mw-00rpl8; Tue, 24 Jun 2025 12:46:49 +0200
-Message-ID: <a825ca43-40e2-48c4-8466-a13a94d3bc0a@oldschoolsolutions.biz>
-Date: Tue, 24 Jun 2025 12:46:47 +0200
+        d=gmail.com; s=20230601; t=1750762030; x=1751366830; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q9YNLRyxz8U7WyFP8P37wvG+tQymx7Vu2sHvl8qoV8A=;
+        b=E8beRxSPQ6d2P9yLyUkbMginVI2cNla0l72mrBuipYASdmVRhYAar5NyyFi4xm1+BY
+         EI37OHtbXETIa7oQ8PK1at4mDQPjlWFAL3/a7TqlyAn6Xz2uSv1RQD8/o+KJt3Iilbix
+         Q4DVyKdaZTBmQiAxC3fj0J4aME5jmTbxrGb72OXyIIcDx2GrljvT3yMq1arNhZQsFh9K
+         jadIUczfObseyY0ggoKiBqd6OGMpOE2ilnDmCufoG0sj/ayZ0RJYPZu5tIJ152Xv9El8
+         1dHD+QAWenhnZL10PsMX1sNIwwL1yKwivXE+Cp08ZZljSgnkTzDkkuZ1pa8qHnKl9nCZ
+         OmtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750762030; x=1751366830;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q9YNLRyxz8U7WyFP8P37wvG+tQymx7Vu2sHvl8qoV8A=;
+        b=fGe/QbB9srdX9D0RG2XoNZb0+j9XfJN21TDqDvzitd/vYf0CHR9z/XOiqlV1aoSjRx
+         KPVU84PgF7MDNJPKZ2b853mfU25GPooGl9+xeDwCxOv1WODkIa13jO4t7O7+wrE5dqsP
+         7HHz6pMV9c8sgdBufy21/J+yDG3qzskoVFTL/NaHEmFEdyrHhG8kLknLl1my3nLfBaxo
+         XfbPNTjSUNaZwkAqbVMnY/u2frRUbcxERZbIz1tjFO8ibDyaP8adpuCDHYD1OT1zQ+pu
+         jwegR9L135WA4cn9gsOf3KJyaKHcRS8ziTEOset93wGzLWhTeR11dWjtgQJSfH8rwLOo
+         fLjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOFjFbyH5+B4bUK/Qzf9t+e9DkURSp2vxX79zjWOtteSrxJQylimS/3rA7pXm7mnL9AsG5fttl2m61Pv4=@vger.kernel.org, AJvYcCUiW+Ah6bkkjsbXCbG33VnYDMFb2z9fCiIsDrtIddv/l4hC+Fjdi/dyKl3cKmwKTR9L67a/pUTKbJaasoMaDCWl@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwyG+U7wR9qQcUZcecazrvtwBcD4F6KDsznKiQftEUHw1A01gQ
+	+IUdz6EzINkwiaML1s7rTGQzMtD+aScOaqPbYx+kkzq0jfae2iv8NApc
+X-Gm-Gg: ASbGncvSJ8OS3u7+yK4gIUNqvT8T+qcwhsU+PEz5nNfE8BHYvnP8k4oJzQ34O0NX2Oi
+	ezhcQ94xpHS0KhGvrDqYVxw+sfbGdWZAV3KtbGGilqJhldhHoJSuB7RdCqMYhDt+nB90EhWDlJr
+	gsG0bULzRdchkarSSzeWIFIZwc1bwBIkGMdEx3fg1NecCr3YEAzeIC0UAjG534ykkZLey+FchFa
+	SXlw5X1GEZertsW8bcKkYR7Z04QZadkFjl0HAh7UuZLU79vjPuYofjurJFI6RBbQgnsOLc72wi1
+	TGdwW22BmzyVY/VnpPWuKWou2UJWaV5D9S9VObkUdcumFN/yb1hEs5pV3VxqkHbwLBUGYNtPgx7
+	NJzoN5A==
+X-Google-Smtp-Source: AGHT+IEAuZlnLUM/Oq3ydavrFM6HAFPj4rQDIaVo8ArRUvugCEeLHAbS8fik1d5nYG9tGqisHGfz/g==
+X-Received: by 2002:a17:902:e54a:b0:234:f6ba:e681 with SMTP id d9443c01a7336-237d97628bfmr283468345ad.5.1750762030536;
+        Tue, 24 Jun 2025 03:47:10 -0700 (PDT)
+Received: from DESKTOP-GIED850.localdomain ([111.202.167.6])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d860fb58sm102904785ad.99.2025.06.24.03.47.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 03:47:10 -0700 (PDT)
+From: wang lian <lianux.mm@gmail.com>
+To: lorenzo.stoakes@oracle.com
+Cc: Liam.Howlett@oracle.com,
+	akpm@linux-foundation.org,
+	brauner@kernel.org,
+	david@redhat.com,
+	gkwang@linx-info.com,
+	jannh@google.com,
+	lianux.mm@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	p1ucky0923@gmail.com,
+	ryncsn@gmail.com,
+	shuah@kernel.org,
+	sj@kernel.org,
+	vbabka@suse.cz,
+	zijing.zhang@proton.me
+Subject: Re: [PATCH] selftests: add basic test for MADV_POPULATE_(READ|WRITE)
+Date: Tue, 24 Jun 2025 18:46:54 +0800
+Message-ID: <20250624104654.4418-1-lianux.mm@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <4af59ef8-bbea-48f7-a207-8a92284fc34d@lucifer.local>
+References: <4af59ef8-bbea-48f7-a207-8a92284fc34d@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-Subject: Re: [PATCH v2] arm64: dts: qcom: x1e80100-lenovo-yoga-slim7x: add
- Bluetooth support
-To: Stephan Gerhold <stephan.gerhold@linaro.org>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Anthony Ruhier <aruhier@mailbox.org>, Johan Hovold <johan@kernel.org>
-References: <20250610-slim7x-bt-v2-1-0dcd9d6576e9@oldschoolsolutions.biz>
- <fbedfcb3-a326-4357-8d10-3be925e5df8f@oss.qualcomm.com>
- <aFlFkD7uNC_lOtHg@linaro.org>
-Content-Language: en-US
-In-Reply-To: <aFlFkD7uNC_lOtHg@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:WJ6+jCbahy8a7VMFCUXkufb8elEFng/GMGhjMPRKP/tBrAhwCMM
- I72zriWKAg2GgExytrFJ6Bq2VhyM1hFESM8P3ptcQIDhC11XCjQ/O07zhaaEG3su+IXWF5m
- ic+mr7C38i1fA02/XWZNnD3/90qgzGipRHslxq+a1wN33ox7r/KNiKCcSjhLPDRna78NylN
- P1GDp84/JTX7U1vFkH0ew==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:TAJmOecUC7w=;ovZLUIDeRg1egsK6z4Xy9dFPH1C
- 6UyZEo+4oldiop0mTYtdZxmlC/7p6hg1S4Dlp+ItT7IheUTUYj3Uo95zQb8Eqxpi/XhkA1CHy
- EwzFNO6t3tOV/t99L68neTgKNFovJjDKAF9S8/4FV7HI9vRUtLJUOf39sOyBa0J45DwgcQACI
- 7uNIhuxT4mJaLsuPRI/TA8t458P2w3MZStSZq17GrXh3huIzTgIh5/+KmvbnmKT6GRfivCxJv
- cCiMYlVjEtHQkKU77Gq8ptP8PpTs34L6/zL6OvsFNlnVsp15Y0wVp8ddCmc1wEZ2nOiIFAoPl
- ws2hzUmFDPrtjbHUF8GdnmCAmafdaAP8Sd2exNJ2nSD3DfO6N6QPquW4c5hUfVD7UULMexJWl
- icc4HcCMVRyzenEvlXfPbp0TRes/4alHsFRPKtgeVjmnNYxC2XG74WK1hiG/mG6VxmK4jbV9e
- pVAinpFeZoLMp3HQf9fLFy0m7T7vnXMW1nEFJjalVwkTuN0shRYe9pjfvWCPFTNfR1DDxouV+
- 4avfGazLD1H9pHm5WMl3yCAom8+USLAPcDL8ILVrQsqcjorOlhY4hd/9aukbTkgzfphYPqrgP
- xpn4DDqwfiwKMw5DZ3aDARwa+tc62QLXmD6jhqg97hKVH8XFb14ayVLFqVFEuAXFdY2W36NVq
- aWFh2q6ehAyYCa34yqIza1b0r2lf1xvrnPPYJ/v+FIna3Fg/Yg6HYEYnaBA/+ePaKQ/lKr49D
- B+FyJUu3zn1a2ixhAvcORzp1G65HFbSSLAH+8/fN1BxYk1+5rh9w+UoONBLjcfLS3aPt6X80R
- 5cBCdR7Cz73y/9QkjzAEz+x1HUo6WD+tQBN5BtEiUS5IJIEDV3fgGkFovsjpcn6Hw5mED5Cpp
- MyRoyyEuSYumA5a+mjwWh9EaeUC8/gTJSE74q7YWR4sOxg/7ra3jo7A5550tB5L8RHWsgoZ2Q
- +iuSFT0GswfWJfpp9IEZO9yf+66iI5CeoeXSmbCHOUc0A455Zf8dJ3FplG/fF/oVSsK4o2qPw
- v5sqRYEqa7icYe7eMlvLEBeMfdnFoPdqZ+Z3yLTvhyk8vOqxvZS44UKDjL9cT2UvB4uLuEEW3
- mwngFoelyE9H9oPoAtn7Y8Um7xle/IY1gIwnoSWE6p6STDRerhalYyo/lRtL5W1+Q8Jz2FbjM
- Rflpn7AsdL+6DEq6cOUT9YB3QzTGL5Qb98Nm84VUgo4YBXQv1gZPTDaXfQl6WcY/kyozCPhiS
- u3UTBdRwQkwDZQEWPj/dgwBkPxmdQzJU7oLbVAwfEWqIfdobBCg2i1ln1rs8Z2u+C/4EGDROk
- rsqF2CJZUnWX3hnqux8GKAroLwd9yj3D0q9nPkH9E/+uByoI6rL1eqGj5i+BIHISL057dKrU9
- 2C+c+prH9rZUscnv5EfpzVUXz7NT3hNh0e3T0=
+Content-Transfer-Encoding: 8bit
 
-Am 23.06.25 um 14:16 schrieb Stephan Gerhold:
+On Mon, Jun 24, 2025 at 00:00:00 +0000, Lorenzo Stoakes wrote:
+> Sorry if it seemed harsh, I appreciate the first patch can be difficult
+> (I still remember mine!) but hopefully it's clear the focus is on
+> getting things right technically and this is all :)
+>
+> Overall I think something more like a generalised test of
+> process_madvise() behaviour would be most valuable, as David suggested?
 
-> Well, Bjorn has already merged two instances of this description in
-> x1e80100-asus-vivobook-s15.dts and x1e80100-hp-omnibook-x14.dts, so it
-> doesn't sound fair anymore to block these kind of patches without
-> proposing an actually viable alternative solution.
-Hell yes.
-> From a quick glance at the Yoga Slim 7x mainboard, I think that WiFi/BT
-> is indeed a M.2 card there (like CRD/T14s, but unlike QCP). We haven't
-> decided on a good way to model that yet. It would be nice to have at
-> least my TODO comment that I added in the CRD/T14s commits so that it is
-> obvious that there is ideally still some rework to be done in the
-> future.
+Thank you for your helpful and constructive feedback.
 
- From my glance onto a photo of the pcb it looked soldered on without an=
-=20
-m2 slot.
+I understand that getting things right technically is critical, and I
+really appreciate your guidance and encouragement as I work on my
+first patch.
 
-I actually collected some experience with removing this card in the=20
-Snapdragon Dev Kit (its normal m2 slot there). Replaced it with an Intel=
-=20
-I226V NIC, which works with the pmu-wcn7850 definition, but not without=20
-it. So... still a bit confused why that is, but probably its also the=20
-kind of working around pcie quirks that the pwrseq-qcom_wcn driver is doin=
-g.
+I will revise the patch based on the suggestion to generalize the test
+for `process_madvise()` behavior, as David proposed.
 
-> Jens, can you add the same TODO comment that exists in the other two
-> device trees mentioned above?
+Thanks again to everyone for the insightful comments and support!
 
-I did that in v3. So it should be valid either way :)
-
-with best regards
-
-Jens
-
+Best regards,
+wang lian
 
