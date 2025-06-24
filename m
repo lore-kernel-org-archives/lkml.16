@@ -1,64 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626D12405E8;
-	Tue, 24 Jun 2025 20:46:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5542566F7;
+	Tue, 24 Jun 2025 20:47:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750798005; cv=none; b=PqOrM5CTuf0sTAztlzp78ZQauBpHlDKD4hboNFQbn/Vr2CR5UeXm4kqqkUZ9BK3Bt5aqjkeVJ4/oKR4JlVEPjK+1++uWG/AcABTmtY7bXUnVpLPAuN74YBoTbHg1DLKuQYX/oQV+P+tuH4x/rokZ/4knJL2RPTiihpvulML17Sk=
+	t=1750798024; cv=none; b=ZjyxqhhbY/22Q9lrlU74TBzioujoPQ6/LBbYyLuJNPeAAsFYHVB7g1pccRQlrx+4SfTk9ropc9qExQKPsieb/Ja7kZdK1AWzB3yvm7u0oOgiyaMQ8b6ow/z5/pH9w7bzdEA7dNv5dAxVMTdpaJSB48PTzev3xM2m5BVcxl7SvYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750798005; c=relaxed/simple;
-	bh=JE5izUwd5pMie06/3hvl6LkV32U8BqmlJuVS9TMGxOY=;
+	s=arc-20240116; t=1750798024; c=relaxed/simple;
+	bh=5aiMymTKRKEzGrxhcmcmNuJMI4pOhF6Hz3pj02mwmPg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pms2O0q5/OKMwLvAbhveCU+wkal6x3ehU4yQORtqUDWPQjVSmVd3cV4sedUPSYDiGv88VOzmuc5izlyFrtbqSclH2e52gPNao8SBXMIyzc+JuLT8HcoIf9zMXz4xvYpPAvqGsillMLpdWJugWhBhusENsWNIkLnwkWExphT6+GE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t3HOiJ7/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UCNIJwglHAQeFr/0PIGDvfj9BAJrpAsSL505VGxh2ulFHE1Ceyn3K1jJO88bWMwznwPj3UoGDhk2v7YYMKzLtrSXymEOMK172TsI+91nk9PjOzAQL6D9AWV/DAnTPMI5VdQWy/XQ1LgejWIMakDHWTsu6miZpBnMFD2rtyQAsdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UmkyQRNl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t3HOiJ7/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27284C4CEE3;
-	Tue, 24 Jun 2025 20:46:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UmkyQRNl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78420C4CEE3;
+	Tue, 24 Jun 2025 20:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750798004;
-	bh=JE5izUwd5pMie06/3hvl6LkV32U8BqmlJuVS9TMGxOY=;
+	s=k20201202; t=1750798023;
+	bh=5aiMymTKRKEzGrxhcmcmNuJMI4pOhF6Hz3pj02mwmPg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t3HOiJ7/Pketlpzx1szq3pDyKSCj7y+3Y2bzV7iH0qtrVzJMWdq7FoyevKRfFGwKc
-	 1vKM7Zt7D7+L8OYp7KiGPnO751xceQjJpvK1ZWQTrdpTs0l2Jk1BZAF5ybVRtSePEx
-	 AJsgkjExx4qFbZ6/UwmSd+9xDXfQkEekEh7l0fMh6eZnIt42aJpXcI52smpNQaIOBb
-	 ItOaCLV6sEIAtNOXnpTlpJnpf24KrcF9Rk7Rg6p+kLR+AR71wGf9a+YOBBQqACa7DF
-	 cRXUc1//xQPMuQTqYey+QzKOj1H3nBm7TYZDezzWW++QohnCF2XLu817kX9+Tih5G/
-	 Rze5A4n53qjWA==
-Date: Tue, 24 Jun 2025 22:46:36 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Igor Korotin <igor.korotin.linux@gmail.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Alex Hung <alex.hung@amd.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Remo Senekowitsch <remo@buenzli.dev>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Xiangfei Ding <dingxiangfei2009@gmail.com>,
-	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Benno Lossin <lossin@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>, Len Brown <lenb@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>
-Subject: Re: [PATCH v8 1/9] rust: device: implement FwNode::is_of_node()
-Message-ID: <aFsOrAqpBtz9OAEI@cassiopeiae>
-References: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
- <20250620151504.278766-1-igor.korotin.linux@gmail.com>
- <aFXjOod7TGSFB7wC@cassiopeiae>
+	b=UmkyQRNl0D+CeKuASF21e86Sm1f89M5d9nzHVQI8zk/dKJiYSNxWi2DfY2Zje2Ur9
+	 yJ1kzKD/zZzDabQ8NiPFOWxrDAMLbaMP+sh7Aj8yBio3EwV2iwUpTc62agLH/BErfU
+	 wQsu7eOalkCXOvc/M1gD35Oc91i8QOa+JGzpdXAjHYHq0lB44v9TBIHtGKWf1UVxW7
+	 xHn2Ef4+HlNJ7MwnTF+/traim82ZAR0QAfaawmvHL6vN5MFkklHGxNyVys2hsc9/xF
+	 QkmZKrnd+PtuDWVeMWty2Cnqa6D36SZ5IrEWf/6V0u1MjVdB9m9eGqJfvHgM/RHLuI
+	 aouhcwEZ+h33A==
+Date: Tue, 24 Jun 2025 23:47:00 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Uros Bizjak <ubizjak@gmail.com>, linux-sgx@vger.kernel.org,
+	x86@kernel.org, linux-kernel@vger.kernel.org,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] x86/sgx: Use ENCLS mnemonic in <kernel/cpu/sgx/encls.h>
+Message-ID: <aFsOxH_PNAgT-4P2@kernel.org>
+References: <20250616085716.158942-1-ubizjak@gmail.com>
+ <aFF_UwJ2XlFQSZOi@kernel.org>
+ <26b8939e-796a-4581-a41c-42e3582326bd@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,38 +48,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aFXjOod7TGSFB7wC@cassiopeiae>
+In-Reply-To: <26b8939e-796a-4581-a41c-42e3582326bd@intel.com>
 
-On Sat, Jun 21, 2025 at 12:40:02AM +0200, Danilo Krummrich wrote:
-> On Fri, Jun 20, 2025 at 04:15:04PM +0100, Igor Korotin wrote:
-> > From: Danilo Krummrich <dakr@kernel.org>
-> > 
-> > Implement FwNode::is_of_node() in order to check whether a FwNode
-> > instance is embedded in a struct device_node.
-> > 
-> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> > Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
-> > ---
-> >  MAINTAINERS                    | 1 +
-> >  rust/helpers/helpers.c         | 1 +
-> >  rust/helpers/of.c              | 8 ++++++++
-> >  rust/kernel/device/property.rs | 7 +++++++
-> >  4 files changed, 17 insertions(+)
-> >  create mode 100644 rust/helpers/of.c
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 9f724cd556f4..1e918319cff4 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -18579,6 +18579,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-> >  F:	Documentation/ABI/testing/sysfs-firmware-ofw
-> >  F:	drivers/of/
-> >  F:	include/linux/of*.h
-> > +F:	rust/helpers/of.c
+On Tue, Jun 17, 2025 at 08:01:28AM -0700, Dave Hansen wrote:
+> On 6/17/25 07:44, Jarkko Sakkinen wrote:
+> > I don't really see how this is that useful. That said, f a bug fix or
+> > feature used encls mnemonic, I'd had no problems with acking it.
 > 
-> @Rob: Any concerns about adding the OF Rust helpers to the OF entry?
+> It's not _that_ useful.
+> 
+> But old assemblers that we still want to use *NEVER* have support for
+> newfanlged instructions, so we always add new instructions with ".byte".
+> Then, a few years down the road when we've moved to just old assemblers
+> instead of super old assemblers, we move to the real instruction names.
+> 
+> This is all business as usual.
 
-Given that you proposed to use is_of_node() and rust/kernel/of.rs is under your
-MAINTAINERS entry as well, I assume this is fine.
+OK, I'm fine with this reasoning as it is neither by any means distruptive
+change either:
 
-If not, please let me know.
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+
+BR, Jarkko
