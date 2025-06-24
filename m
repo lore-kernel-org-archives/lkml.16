@@ -1,74 +1,224 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E91EC5;
-	Tue, 24 Jun 2025 01:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+Received: from mail.nfschina.com (unknown [42.101.60.213])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 15443189F3B;
+	Tue, 24 Jun 2025 01:31:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750728656; cv=none; b=K0wqw3nULcrBIXpuUxpebXVxrizyTtLB5N+UVOIFCnnIsxBxVWeT24QZpl01J/Zxoc0r6BHorBQdkMYTEHsG7RCgXjWr74XFRH370xyX/70EwJZuh01PZaJ4VRxWMsaUZzkgkUUlpVscIYfHjAPibE7IATeipFBlusbSllkUWn0=
+	t=1750728677; cv=none; b=f3OuulVicS5wH2/twDhGZJxdBl2nVTDK+e9CXLFYKYlQc3yXC3UD16n78N2cSzi3rcw9Pd6yEZ8gphgpIj+/Awgii/nVD42yaBW/I1MA0QmOLhOc6T7Ri618pBvIeUmpZY2y1qXvmY7/4Fnmy82ptJTndFIhJjqktFn23xLovXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750728656; c=relaxed/simple;
-	bh=tl/e/9ymTLqHLQqs+J9fy9WBksOUWfKXz2K9IpuEdA8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TTU+CLlZOnajxhfJm/D0J8kOclymRztPnkDKvNfLemClyOxStS7Qu8KN9CWG8d5sB5GYqmwHdWWTY8JdON02wc2PegUYFfJSfZOGYsmLgDJRdbxwjjOTeJfaG1vajyGwSDp34uHzBRkVOZT09TK4gH6hP5JibwJa9xCccM4myNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bR6ms30VDz2TSmK;
-	Tue, 24 Jun 2025 09:29:17 +0800 (CST)
-Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 07149140294;
-	Tue, 24 Jun 2025 09:30:53 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by dggpemf500002.china.huawei.com
- (7.185.36.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 24 Jun
- 2025 09:30:51 +0800
-From: Yue Haibing <yuehaibing@huawei.com>
-To: <pablo@netfilter.org>, <kadlec@netfilter.org>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<horms@kernel.org>, <fw@strlen.de>
-CC: <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yuehaibing@huawei.com>
-Subject: [PATCH net-next] netfilter: nf_tables: Remove unused nft_reduce_is_readonly()
-Date: Tue, 24 Jun 2025 09:48:18 +0800
-Message-ID: <20250624014818.3708922-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1750728677; c=relaxed/simple;
+	bh=izK6xWigpQbVX5kq0ouVraYM2E7Gku1yLtAuADFoTJY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type; b=L+M0AkW/4qYkNK3VtxUjOOWEfjYFnsS+L9nWtcN1QhOZMFW3BfCmhz/T9+b3Kd9nGQHqvG7ZS12aar9iU3IEc26fQ9nEpagNz0BlGi4GJofky5ff55Y5IeeTx+RYZyt7P9zm6LJPbS4GfH84t4I46FStB5a57zocIf+x1xbfAPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from [172.30.20.101] (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id A15D060105E92;
+	Tue, 24 Jun 2025 09:31:01 +0800 (CST)
+Message-ID: <2b28f725-03ae-4666-b13b-817cd74ad82e@nfschina.com>
+Date: Tue, 24 Jun 2025 09:31:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- dggpemf500002.china.huawei.com (7.185.36.57)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nfsd: Using guard() to simplify nfsd_cache_lookup()
+Content-Language: en-US
+To: NeilBrown <neil@brown.name>
+Cc: chuck.lever@oracle.com, jlayton@kernel.org, okorniev@redhat.com,
+ Dai.Ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Su Hui <suhui@nfschina.com>
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+In-Reply-To: <175072435698.2280845.12079422273351211469@noble.neil.brown.name>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Since commit 9e539c5b6d9c ("netfilter: nf_tables: disable expression
-reduction infra") this is unused.
+On 2025/6/24 08:19, NeilBrown wrote:
+> On Mon, 23 Jun 2025, Su Hui wrote:
+>> Using guard() to replace *unlock* label. guard() makes lock/unlock code
+>> more clear. Change the order of the code to let all lock code in the
+>> same scope. No functional changes.
+> While I agree that this code could usefully be cleaned up and that you
+> have made some improvements, I think the use of guard() is a nearly
+> insignificant part of the change.  You could easily do exactly the same
+> patch without using guard() but having and explicit spin_unlock() before
+> the new return.  That doesn't mean you shouldn't use guard(), but it
+> does mean that the comment explaining the change could be more usefully
+> focused on the "Change the order ..." part, and maybe explain what that
+> is important.
+Got it. I will focus on "Change the order ..." part in the next v2 patch.
+> I actually think there is room for other changes which would make the
+> code even better:
+> - Change nfsd_prune_bucket_locked() to nfsd_prune_bucket().  Have it
+>    take the lock when needed, then drop it, then call
+>    nfsd_cacherep_dispose() - and return the count.
+> - change nfsd_cache_insert to also skip updating the chain length stats
+>    when it finds a match - in that case the "entries" isn't a chain
+>    length. So just  lru_put_end(), return.  Have it return NULL if
+>    no match was found
+> - after the found_entry label don't use nfsd_reply_cache_free_locked(),
+>    just free rp.  It has never been included in any rbtree or list, so it
+>    doesn't need to be removed.
+> - I'd be tempted to have nfsd_cache_insert() take the spinlock itself
+>    and call it under rcu_read_lock() - and use RCU to free the cached
+>    items.
+> - put the chunk of code after the found_entry label into a separate
+>    function and instead just return RC_REPLY (and maybe rename that
+>    RC_CACHED).  Then in nfsd_dispatch(), if RC_CACHED was returned, call
+>    that function that has the found_entry code.
+>
+> I think that would make the code a lot easier to follow.  Would you like
+> to have a go at that - I suspect it would be several patches - or shall
+> I do it?
+>
+> Thanks,
+> NeilBrown
+>
+Really thanks for your suggestions!
+Yes, I'd like to do it in the next v2 patchset as soon as possible.
+I'm always searching some things I can participate in about linux kernel
+community, so it's happy for me to do this thing.
 
-Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
----
- include/net/netfilter/nf_tables.h | 5 -----
- 1 file changed, 5 deletions(-)
+regards,
+Su Hui
 
-diff --git a/include/net/netfilter/nf_tables.h b/include/net/netfilter/nf_tables.h
-index e4d8e451e935..8e487cd1ef7b 100644
---- a/include/net/netfilter/nf_tables.h
-+++ b/include/net/netfilter/nf_tables.h
-@@ -1944,11 +1944,6 @@ static inline u64 nft_net_tstamp(const struct net *net)
- #define __NFT_REDUCE_READONLY	1UL
- #define NFT_REDUCE_READONLY	(void *)__NFT_REDUCE_READONLY
- 
--static inline bool nft_reduce_is_readonly(const struct nft_expr *expr)
--{
--	return expr->ops->reduce == NFT_REDUCE_READONLY;
--}
--
- void nft_reg_track_update(struct nft_regs_track *track,
- 			  const struct nft_expr *expr, u8 dreg, u8 len);
- void nft_reg_track_cancel(struct nft_regs_track *track, u8 dreg, u8 len);
--- 
-2.34.1
-
+>
+>> Signed-off-by: Su Hui <suhui@nfschina.com>
+>> ---
+>>   fs/nfsd/nfscache.c | 99 ++++++++++++++++++++++------------------------
+>>   1 file changed, 48 insertions(+), 51 deletions(-)
+>>
+>> diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
+>> index ba9d326b3de6..2d92adf3e6b0 100644
+>> --- a/fs/nfsd/nfscache.c
+>> +++ b/fs/nfsd/nfscache.c
+>> @@ -489,7 +489,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigned int start,
+>>   
+>>   	if (type == RC_NOCACHE) {
+>>   		nfsd_stats_rc_nocache_inc(nn);
+>> -		goto out;
+>> +		return rtn;
+>>   	}
+>>   
+>>   	csum = nfsd_cache_csum(&rqstp->rq_arg, start, len);
+>> @@ -500,64 +500,61 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigned int start,
+>>   	 */
+>>   	rp = nfsd_cacherep_alloc(rqstp, csum, nn);
+>>   	if (!rp)
+>> -		goto out;
+>> +		return rtn;
+>>   
+>>   	b = nfsd_cache_bucket_find(rqstp->rq_xid, nn);
+>> -	spin_lock(&b->cache_lock);
+>> -	found = nfsd_cache_insert(b, rp, nn);
+>> -	if (found != rp)
+>> -		goto found_entry;
+>> -	*cacherep = rp;
+>> -	rp->c_state = RC_INPROG;
+>> -	nfsd_prune_bucket_locked(nn, b, 3, &dispose);
+>> -	spin_unlock(&b->cache_lock);
+>> +	scoped_guard(spinlock, &b->cache_lock) {
+>> +		found = nfsd_cache_insert(b, rp, nn);
+>> +		if (found == rp) {
+>> +			*cacherep = rp;
+>> +			rp->c_state = RC_INPROG;
+>> +			nfsd_prune_bucket_locked(nn, b, 3, &dispose);
+>> +			goto out;
+>> +		}
+>> +		/* We found a matching entry which is either in progress or done. */
+>> +		nfsd_reply_cache_free_locked(NULL, rp, nn);
+>> +		nfsd_stats_rc_hits_inc(nn);
+>> +		rtn = RC_DROPIT;
+>> +		rp = found;
+>> +
+>> +		/* Request being processed */
+>> +		if (rp->c_state == RC_INPROG)
+>> +			goto out_trace;
+>> +
+>> +		/* From the hall of fame of impractical attacks:
+>> +		 * Is this a user who tries to snoop on the cache?
+>> +		 */
+>> +		rtn = RC_DOIT;
+>> +		if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
+>> +			goto out_trace;
+>>   
+>> +		/* Compose RPC reply header */
+>> +		switch (rp->c_type) {
+>> +		case RC_NOCACHE:
+>> +			break;
+>> +		case RC_REPLSTAT:
+>> +			xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
+>> +			rtn = RC_REPLY;
+>> +			break;
+>> +		case RC_REPLBUFF:
+>> +			if (!nfsd_cache_append(rqstp, &rp->c_replvec))
+>> +				return rtn; /* should not happen */
+>> +			rtn = RC_REPLY;
+>> +			break;
+>> +		default:
+>> +			WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
+>> +		}
+>> +
+>> +out_trace:
+>> +		trace_nfsd_drc_found(nn, rqstp, rtn);
+>> +		return rtn;
+>> +	}
+>> +out:
+>>   	nfsd_cacherep_dispose(&dispose);
+>>   
+>>   	nfsd_stats_rc_misses_inc(nn);
+>>   	atomic_inc(&nn->num_drc_entries);
+>>   	nfsd_stats_drc_mem_usage_add(nn, sizeof(*rp));
+>> -	goto out;
+>> -
+>> -found_entry:
+>> -	/* We found a matching entry which is either in progress or done. */
+>> -	nfsd_reply_cache_free_locked(NULL, rp, nn);
+>> -	nfsd_stats_rc_hits_inc(nn);
+>> -	rtn = RC_DROPIT;
+>> -	rp = found;
+>> -
+>> -	/* Request being processed */
+>> -	if (rp->c_state == RC_INPROG)
+>> -		goto out_trace;
+>> -
+>> -	/* From the hall of fame of impractical attacks:
+>> -	 * Is this a user who tries to snoop on the cache? */
+>> -	rtn = RC_DOIT;
+>> -	if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
+>> -		goto out_trace;
+>> -
+>> -	/* Compose RPC reply header */
+>> -	switch (rp->c_type) {
+>> -	case RC_NOCACHE:
+>> -		break;
+>> -	case RC_REPLSTAT:
+>> -		xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
+>> -		rtn = RC_REPLY;
+>> -		break;
+>> -	case RC_REPLBUFF:
+>> -		if (!nfsd_cache_append(rqstp, &rp->c_replvec))
+>> -			goto out_unlock; /* should not happen */
+>> -		rtn = RC_REPLY;
+>> -		break;
+>> -	default:
+>> -		WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
+>> -	}
+>> -
+>> -out_trace:
+>> -	trace_nfsd_drc_found(nn, rqstp, rtn);
+>> -out_unlock:
+>> -	spin_unlock(&b->cache_lock);
+>> -out:
+>>   	return rtn;
+>>   }
+>>   
+>> -- 
+>> 2.30.2
+>>
+>>
