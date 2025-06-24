@@ -1,43 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D72D2E6112;
-	Tue, 24 Jun 2025 17:53:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D602E62D4;
+	Tue, 24 Jun 2025 17:53:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750787590; cv=none; b=rblLiv2xKatXVK2t87MLOdAYTpHIZissXtf3jjoeKzawRxtmSEo+pSLv69dRLSzvCzz7E4nb0Uix80/WEY4vrF6oNx7SKevl/84oF5YgRwr1M9Mco5flpYnVDaK2R1JBFuZuxeC/pmXUaI2ZE3Au0QgTz7nDNSr/sk+f4MZjx9c=
+	t=1750787590; cv=none; b=JlIdv/bd/lQx4hLPdwDZBwoWsnwPl7CzJ4DA6SIm3r3AJ49MKVzIU7g1e22b3SWPrA/eTSWUN6Ra6SRwwAyCaxyp15PczHLxa4c35/S0Gzx2VgR+8tp8vmjebjhJmiOwqUypZQA7NBwribk0X+qjdOlS9B5o4Mqes0UqMMrI6ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750787590; c=relaxed/simple;
-	bh=tTtHDW4KpG4xCxKti2qpyhAV6+jduLkCiFbcw7mm7Yo=;
+	bh=70BGUPIJfBa+GDWetpa3tSvN0kw12tKcdBuGqvGxeUA=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Sk2C1AdN5X77LPvDGkX7UXcqxA3oq4wdBfBaBm5OHkGRmmMN7NxYFRlM95kRgVPEewTNFIzYHqG4JU+8D1JtD0VfGMCYouSxDdLk8xBixjkXi/I9fTu9Vl58UqSsjnBMdgrS52FqNb9zc7a9olvqd6vJG0kT6CVFx3lawoRQTus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PPl19xtR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=YMVkcSDp2rEZZdHcBA2VTnbFSX13AUzMYR7NXzK61ouA376KPtcCyRAHEg+ZNudeKQ08G7PxiuEv0OC0LN1lksej1Ix15WphdpuVbj4RE7o0uesOD1c3B1/wyknlrIPZmihf+Zaa8GYqWocXo7xC8tgyZ6rypze9DYzpW9QzFas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gzpA7gEX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PPl19xtR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86D18C4AF0B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gzpA7gEX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0106BC4CEFA;
 	Tue, 24 Jun 2025 17:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750787589;
-	bh=tTtHDW4KpG4xCxKti2qpyhAV6+jduLkCiFbcw7mm7Yo=;
+	s=k20201202; t=1750787590;
+	bh=70BGUPIJfBa+GDWetpa3tSvN0kw12tKcdBuGqvGxeUA=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=PPl19xtRbwNHvg/lSDZZMYMdqkkYxk+zUrtpA0Qu/KPf4fOyAx4XWK5kzAT00qFX6
-	 +h8021rg64PEhgakPi2i+jvCzJd4ktU0WjDgzZlW8qBwp7LfdHMgHgVTiDgWVh/o43
-	 XHwexOjsteC8sic1mzAaQ9tIGLomo771R9UaR5XpCFJ1E/ZhxA2JgpoLk4vIy8SrbJ
-	 Wnr7lszkRIr/5BfF9Ft1zXBIX2xJFkPXkTVSC4yMhSWM8Xhhm2uEQf2hmbbgDTkYYN
-	 8hZVLivK17CnHPvgkiK0AwgsYmJoZD2/c+pJMQbrEpbrD8ZLLoctbEFBwmUvzHKrFA
-	 Gdz9mHkiz0Xtg==
+	b=gzpA7gEXs7/dYoALpC8j7zUB+1KBVBjW/K2bMjURUIGjyvBqAbpSNIn0FfWJ9DebU
+	 rVhv4TlLBVLN3VA5iXMDNHlzUbB35z3Oz+/SeBlkE+bzBL05KlFFQToKzGMJWLtWOK
+	 z2ZinwGoce2mbyKCCePR7/1XSlAdtdqM+UH9C6yezyJVM4C30Yxh1ylIqIoj6A9ViG
+	 RlpqmF8s1Nw+stlfOxFy53iNFeO0/ZFrQ5+eFoP6kcZe0ZvcL4vWC4nTcdrZzbS5wE
+	 NKS2GOS9B/LkdoEKzyznTfz1GqpoubBkX2UU9jSj0s2oOe82ZY1JUKZba2MQRAuV5n
+	 rpq5E1tnU+jLg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
- Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
- Howard Chu <howardchu95@gmail.com>
-In-Reply-To: <20250502204056.973977-1-namhyung@kernel.org>
-References: <20250502204056.973977-1-namhyung@kernel.org>
-Subject: Re: [PATCH] perf trace: Show zero value in STRARRAY
-Message-Id: <175078758951.337518.2774382796978951070.b4-ty@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Tianyou Li <tianyou.li@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Kan Liang <kan.liang@linux.intel.com>, wangyang.guo@intel.com, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250610040536.2390060-1-tianyou.li@intel.com>
+References: <aEeIN_u4KpLZXDBx () google ! com>
+ <20250610040536.2390060-1-tianyou.li@intel.com>
+Subject: Re: [PATCH 1/2] Read perf data file header from the file user
+ specified with -i option for perf script flamegraph
+Message-Id: <175078758996.337518.10407598236638254580.b4-ty@kernel.org>
 Date: Tue, 24 Jun 2025 10:53:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -49,15 +53,12 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Fri, 02 May 2025 13:40:56 -0700, Namhyung Kim wrote:
-> The STRARRAY macro is to print values in a pre-defined array.  But
-> sometimes it hides the value because it's 0.  The value of 0 can have a
-> meaning in this case so set 'show_zero' field.
-> 
-> For example, it can show CREATE_MAP cmd in the bpf syscall.
+On Tue, 10 Jun 2025 12:04:22 +0800, Tianyou Li wrote:
+> If specify the perf data file with -i option, the script will try to read the header information
+> regardless of the file name specified, instead it will try to access the perf.data. This simple
+> patch use the file name from -i option for command perf report --header-only to read the header.
 > 
 > 
-> [...]
 Applied to perf-tools-next, thanks!
 
 Best regards,
