@@ -1,127 +1,331 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83F83074AD;
-	Tue, 24 Jun 2025 16:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4CE770E2
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750781543; cv=none; b=QJFjWrFN7a6a0PszBeP58B10DB0WvhQnWHcnkv+HrIFzjAvLeFDbqFw6UZi8+sDBXHk2yf16SZXAllZudJMCqBeHfrZp3pEc+QFBBeEkQdzmOSKqssNMqmiCvh/fQh+h8YqyoBH7ajgqYItSkExiwrFQ6P5EvevABVZMx+OMWsg=
+	t=1750781593; cv=none; b=L2vgyB6O2j1YnFWrrLmNSXX2ixX6A+w53i0ANlx+uaHJMDnePrbJx1PtljKvSnhx+L3QvUFDIr2AlrML4QGo8e7RV2SOaj8twSnQgetTrtUjBRm5zeoS5riv0ZzZ0/b0MWo+aSurIKYLhg6mdBC4T98YkoaQyZQo/Lz6SGbIzhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750781543; c=relaxed/simple;
-	bh=JOL6WKmjohXqSHITngQz/Wj/wlzmJdN8Xapymilc6Y8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=eJYblAK4vk48EpYTlORXrMhO/pDZp2KcX35doO50ZH5lFV2MYzHMX+2Bs2cxSkmKETsS77wAShSZbpK2smQZ9p802RKDOWSaYE7elgYuvOoGwZI4Rr7Yw8QQ+IHut1hbsaaOK29442/4+1NIpg7pJNwIJGZ3AKWiDmHLghTYxjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tvC6j7Vj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750781593; c=relaxed/simple;
+	bh=pBxAy1pCFtDfRbtpB4R90EkOue4doRXdXiuaMQoVeW8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SIwOTcjN8H2HB8Jmk0lbb29rcw22wuyR2Qa1nnqyCz5j2Pmh85CwbTkFnJ06phmx/pXN+KsUXdfdY9UvxfcwKUNHKlDX/SSZ+dSvxMz/kYREndy51JnR7bWsL4pgVLtwStftMQDd2649P0MzDV7eXPjqU9qOOW+5RtKVYAuz1wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FRXIiUeV; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tvC6j7Vj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C4F1C4CEF0;
-	Tue, 24 Jun 2025 16:12:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750781543;
-	bh=JOL6WKmjohXqSHITngQz/Wj/wlzmJdN8Xapymilc6Y8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=tvC6j7VjREp+BGJeKqV/caHXrqwb4fickgxYpsMh815a0NMBs4DoXS6bY7T759l14
-	 d4pYdByP6Z3FuzrRhGV3WQbAIT/uo5MFTUQCpU0gzaYrM0B1K/DydHhwW/LyybW/Y0
-	 I1fS81yhqfSUTQlvsFShyaqIFi7hr/S6m2KmuK7Cc32Cs0pyXp6Cy/7KmtUsqE++F9
-	 XEcsqlFLfO5CcaHpDNJWJk7dvE/tlgRgZPrmyRP8vFkXZqR8CAMVCZrmmV68TxP8nw
-	 VQaNl7gpgX+WCuAGpB1dWUrF5D400I99Xx5EdS6b5vtqShAl26IVInzPqE+NEWPm2w
-	 pUXslySxKqqVQ==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Mike Rapoport <rppt@kernel.org>,
-  Jason Gunthorpe <jgg@ziepe.ca>,  jasonmiu@google.com,  graf@amazon.com,
-  changyuanl@google.com,  dmatlack@google.com,  rientjes@google.com,
-  corbet@lwn.net,  rdunlap@infradead.org,  ilpo.jarvinen@linux.intel.com,
-  kanie@linux.alibaba.com,  ojeda@kernel.org,  aliceryhl@google.com,
-  masahiroy@kernel.org,  akpm@linux-foundation.org,  tj@kernel.org,
-  yoann.congal@smile.fr,  mmaurer@google.com,  roman.gushchin@linux.dev,
-  chenridong@huawei.com,  axboe@kernel.dk,  mark.rutland@arm.com,
-  jannh@google.com,  vincent.guittot@linaro.org,  hannes@cmpxchg.org,
-  dan.j.williams@intel.com,  david@redhat.com,  joel.granados@kernel.org,
-  rostedt@goodmis.org,  anna.schumaker@oracle.com,  song@kernel.org,
-  zhangguopeng@kylinos.cn,  linux@weissschuh.net,
-  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org,
-  linux-mm@kvack.org,  gregkh@linuxfoundation.org,  tglx@linutronix.de,
-  mingo@redhat.com,  bp@alien8.de,  dave.hansen@linux.intel.com,
-  x86@kernel.org,  hpa@zytor.com,  rafael@kernel.org,  dakr@kernel.org,
-  bartosz.golaszewski@linaro.org,  cw00.choi@samsung.com,
-  myungjoo.ham@samsung.com,  yesanishhere@gmail.com,
-  Jonathan.Cameron@huawei.com,  quic_zijuhu@quicinc.com,
-  aleksander.lobakin@intel.com,  ira.weiny@intel.com,
-  andriy.shevchenko@linux.intel.com,  leon@kernel.org,  lukas@wunner.de,
-  bhelgaas@google.com,  wagi@kernel.org,  djeffery@redhat.com,
-  stuart.w.hayes@gmail.com
-Subject: Re: [RFC v2 05/16] luo: luo_core: integrate with KHO
-In-Reply-To: <CA+CK2bCA_ggpvbY+MQPaAHsN7MOzV7D3=MYvfAP4cFwhThJpPw@mail.gmail.com>
-References: <mafs0sekfts2i.fsf@kernel.org>
-	<CA+CK2bA7eAB4PvF0RXtt2DJ+FQ4DVV3x1OZrVo4q3EvgowhvJg@mail.gmail.com>
-	<mafs0sek3n0x8.fsf@kernel.org> <20250617152357.GB1376515@ziepe.ca>
-	<CA+CK2bAtO7BA5iptRfA_oa=5sUz_t-0F3Lu8oae1STnijXrPPQ@mail.gmail.com>
-	<mafs05xgtw5wn.fsf@kernel.org>
-	<CA+CK2bDWAPSmTdnD7vw4G00nPsM8R_Zefs_G+9zvSqTJqPb9Lg@mail.gmail.com>
-	<aFLr7RDKraQk8Gvt@kernel.org>
-	<CA+CK2bAnCRu+k=Q78eA4kcAebxA9NgOorhwRqu-WxC913YBsBw@mail.gmail.com>
-	<CA+CK2bB3P1vX658ErkP4_-L6WZSOCcenEwUdX1qS=poDjs=i+A@mail.gmail.com>
-	<aFP7wwCviqxujKDg@kernel.org>
-	<CA+CK2bDqO4SkUpiFahfUx2MUiE8oae9HmuaghPAnCwaJZpoTwQ@mail.gmail.com>
-	<mafs0ikkqv3ds.fsf@kernel.org>
-	<CA+CK2bCA_ggpvbY+MQPaAHsN7MOzV7D3=MYvfAP4cFwhThJpPw@mail.gmail.com>
-Date: Tue, 24 Jun 2025 18:12:14 +0200
-Message-ID: <mafs0frfpt8yp.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FRXIiUeV"
+Message-ID: <5a772bf2-aeef-4dad-881a-a7684f6b5dfc@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750781586;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GcsGLTJbKE+n2f7o4De1OfinTFhNpuXnxlPgDUg97bI=;
+	b=FRXIiUeVwB+ebT0Ji3lsvk4m/4V4VloCDbU68rxR5f3MB1PCa8I/ko/LEsSdztjHfw/hT4
+	+F63JxkPxqu77gDMTbS9wTVFwvVL1uS3RMHRWE1NzxpSNv5Xp9NkkkHIfrHv6CIKlQYww+
+	Y8BVyWkt58jfBZWKt/DTqYdevRJofMA=
+Date: Wed, 25 Jun 2025 00:12:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH bpf-next v5 1/3] bpf: Show precise link_type for
+ {uprobe,kprobe}_multi fdinfo
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>,
+ Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+References: <20250623134342.227347-1-chen.dylane@linux.dev>
+ <CAADnVQ+aZw4-3Ab9nLWrZUg78sc-SXuEGYnPrdOChw8m9sRLvw@mail.gmail.com>
+ <CAEf4BzZVw4aSpdTH+VKkG_q6J-sQwSFSCyU+-c5DcA5euP49ng@mail.gmail.com>
+ <aFpeyZnOuJ3Xr4J6@krava> <9034e367-e7e1-43b5-bd7c-70fc9a58335d@linux.dev>
+ <CAEf4BzY7TZRjxpCJM-+LYgEqe23YFj5Uv3isb7gat2-HU4OSng@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Chen <chen.dylane@linux.dev>
+In-Reply-To: <CAEf4BzY7TZRjxpCJM-+LYgEqe23YFj5Uv3isb7gat2-HU4OSng@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Jun 20 2025, Pasha Tatashin wrote:
-
-> On Fri, Jun 20, 2025 at 11:28=E2=80=AFAM Pratyush Yadav <pratyush@kernel.=
-org> wrote:
->> On Thu, Jun 19 2025, Pasha Tatashin wrote:
-[...]
->> Outside of hypervisor live update, I have a very clear use case in mind:
->> userspace memory handover (on guest side). Say a guest running an
->> in-memory cache like memcached with many gigabytes of cache wants to
->> reboot. It can just shove the cache into a memfd, give it to LUO, and
->> restore it after reboot. Some services that suffer from long reboots are
->> looking into using this to reduce downtime. Since it pretty much
->> overlaps with the hypervisor work for now, I haven't been talking about
->> it as much.
+在 2025/6/24 23:46, Andrii Nakryiko 写道:
+> On Tue, Jun 24, 2025 at 1:41 AM Tao Chen <chen.dylane@linux.dev> wrote:
 >>
->> Would you also call this use case "live update"? Does it also fit with
->> your vision of where LUO should go?
->
-> Yes, absolutely. The use case you described (preserving a memcached
-> instance via memfd) is a perfect fit for LUO's vision.
->
-> While the primary use case driving this work is supporting the
-> preservation of virtual machines on a hypervisor, the framework itself
-> is not restricted to that scenario. We define "live update" as the
-> process of updating the kernel from one version to another while
-> preserving FD-based resources and keeping selected devices
-> operational. The machine itself can be running storage, database,
-> networking, containers, or anything else.
->
-> A good parallel is Kernel Live Patching: we don't distinguish what
-> workload is running on a machine when applying a security patch; we
-> simply patch the running kernel. In the same way, Live Update is
-> designed to be workload-agnostic. Whether the system is running an
-> in-memory database, containers, or VMs, its primary goal is to enable
-> a full kernel update while preserving the userspace-requested state.
+>> 在 2025/6/24 16:16, Jiri Olsa 写道:
+>>> On Mon, Jun 23, 2025 at 01:59:18PM -0700, Andrii Nakryiko wrote:
+>>>> On Mon, Jun 23, 2025 at 10:56 AM Alexei Starovoitov
+>>>> <alexei.starovoitov@gmail.com> wrote:
+>>>>>
+>>>>> On Mon, Jun 23, 2025 at 6:44 AM Tao Chen <chen.dylane@linux.dev> wrote:
+>>>>>>
+>>>>>> Alexei suggested, 'link_type' can be more precise and differentiate
+>>>>>> for human in fdinfo. In fact BPF_LINK_TYPE_KPROBE_MULTI includes
+>>>>>> kretprobe_multi type, the same as BPF_LINK_TYPE_UPROBE_MULTI, so we
+>>>>>> can show it more concretely.
+>>>>>>
+>>>>>> link_type:      kprobe_multi
+>>>>>> link_id:        1
+>>>>>> prog_tag:       d2b307e915f0dd37
+>>>>>> ...
+>>>>>> link_type:      kretprobe_multi
+>>>>>> link_id:        2
+>>>>>> prog_tag:       ab9ea0545870781d
+>>>>>> ...
+>>>>>> link_type:      uprobe_multi
+>>>>>> link_id:        9
+>>>>>> prog_tag:       e729f789e34a8eca
+>>>>>> ...
+>>>>>> link_type:      uretprobe_multi
+>>>>>> link_id:        10
+>>>>>> prog_tag:       7db356c03e61a4d4
+>>>>>>
+>>>>>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+>>>>>> ---
+>>>>>>    include/linux/trace_events.h | 10 ++++++++++
+>>>>>>    kernel/bpf/syscall.c         |  9 ++++++++-
+>>>>>>    kernel/trace/bpf_trace.c     | 28 ++++++++++++++++++++++++++++
+>>>>>>    3 files changed, 46 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> Change list:
+>>>>>>     v4 -> v5:
+>>>>>>       - Add patch1 to show precise link_type for
+>>>>>>         {uprobe,kprobe}_multi.(Alexei)
+>>>>>>       - patch2,3 just remove type field, which will be showed in
+>>>>>>         link_type
+>>>>>>     v4:
+>>>>>>     https://lore.kernel.org/bpf/20250619034257.70520-1-chen.dylane@linux.dev
+>>>>>>
+>>>>>>     v3 -> v4:
+>>>>>>       - use %pS to print func info.(Alexei)
+>>>>>>     v3:
+>>>>>>     https://lore.kernel.org/bpf/20250616130233.451439-1-chen.dylane@linux.dev
+>>>>>>
+>>>>>>     v2 -> v3:
+>>>>>>       - show info in one line for multi events.(Jiri)
+>>>>>>     v2:
+>>>>>>     https://lore.kernel.org/bpf/20250615150514.418581-1-chen.dylane@linux.dev
+>>>>>>
+>>>>>>     v1 -> v2:
+>>>>>>       - replace 'func_cnt' with 'uprobe_cnt'.(Andrii)
+>>>>>>       - print func name is more readable and security for kprobe_multi.(Alexei)
+>>>>>>     v1:
+>>>>>>     https://lore.kernel.org/bpf/20250612115556.295103-1-chen.dylane@linux.dev
+>>>>>>
+>>>>>> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+>>>>>> index fa9cf4292df..951c91babbc 100644
+>>>>>> --- a/include/linux/trace_events.h
+>>>>>> +++ b/include/linux/trace_events.h
+>>>>>> @@ -780,6 +780,8 @@ int bpf_get_perf_event_info(const struct perf_event *event, u32 *prog_id,
+>>>>>>                               unsigned long *missed);
+>>>>>>    int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog);
+>>>>>>    int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog);
+>>>>>> +void bpf_kprobe_multi_link_type_show(const struct bpf_link *link, char *link_type, int len);
+>>>>>> +void bpf_uprobe_multi_link_type_show(const struct bpf_link *link, char *link_type, int len);
+>>>>>>    #else
+>>>>>>    static inline unsigned int trace_call_bpf(struct trace_event_call *call, void *ctx)
+>>>>>>    {
+>>>>>> @@ -832,6 +834,14 @@ bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+>>>>>>    {
+>>>>>>           return -EOPNOTSUPP;
+>>>>>>    }
+>>>>>> +static inline void
+>>>>>> +bpf_kprobe_multi_link_type_show(const struct bpf_link *link, char *link_type, int len)
+>>>>>> +{
+>>>>>> +}
+>>>>>> +static inline void
+>>>>>> +bpf_uprobe_multi_link_type_show(const struct bpf_link *link, char *link_type, int len)
+>>>>>> +{
+>>>>>> +}
+>>>>>>    #endif
+>>>>>>
+>>>>>>    enum {
+>>>>>> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+>>>>>> index 51ba1a7aa43..43b821b37bc 100644
+>>>>>> --- a/kernel/bpf/syscall.c
+>>>>>> +++ b/kernel/bpf/syscall.c
+>>>>>> @@ -3226,9 +3226,16 @@ static void bpf_link_show_fdinfo(struct seq_file *m, struct file *filp)
+>>>>>>           const struct bpf_prog *prog = link->prog;
+>>>>>>           enum bpf_link_type type = link->type;
+>>>>>>           char prog_tag[sizeof(prog->tag) * 2 + 1] = { };
+>>>>>> +       char link_type[64] = {};
+>>>>>>
+>>>>>>           if (type < ARRAY_SIZE(bpf_link_type_strs) && bpf_link_type_strs[type]) {
+>>>>>> -               seq_printf(m, "link_type:\t%s\n", bpf_link_type_strs[type]);
+>>>>>> +               if (link->type == BPF_LINK_TYPE_KPROBE_MULTI)
+>>>>>> +                       bpf_kprobe_multi_link_type_show(link, link_type, sizeof(link_type));
+>>>>>> +               else if (link->type == BPF_LINK_TYPE_UPROBE_MULTI)
+>>>>>> +                       bpf_uprobe_multi_link_type_show(link, link_type, sizeof(link_type));
+>>>>>> +               else
+>>>>>> +                       strscpy(link_type, bpf_link_type_strs[type], sizeof(link_type));
+>>>>>> +               seq_printf(m, "link_type:\t%s\n", link_type);
+>>>>>
+>>>>> New callbacks just to print a string?
+>>>>> Let's find a different way.
+>>>>>
+>>>>> How about moving 'flags' from bpf_[ku]probe_multi_link into bpf_link ?
+>>>>> (There is a 7 byte hole there anyway)
+>>>>> and checking flags inline.
+>>>>>
+>>>>> Jiri, Andrii,
+>>>>>
+>>>>> better ideas?
+>>>>
+>>>> We can just remember original attr->link_create.attach_type in
+>>>> bpf_link itself, and then have a small helper that will accept link
+>>>> type and attach type, and fill out link type representation based on
+>>>> those two. Internally we can do the special-casing of  uprobe vs
+>>>> uretprobe and kprobe vs kretprobe transparently to all the other code.
+>>>> And use that here in show_fdinfo
+>>>
+>>> but you'd still need the flags, no? to find out if it's return probe
+>>>
+>>> I tried what Alexei suggested and it seems ok and simple enough
+>>>
+>>> jirka
+>>>
+>>>
+>>> ---
+>>> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+>>> index 5dd556e89cce..287c956cdbd2 100644
+>>> --- a/include/linux/bpf.h
+>>> +++ b/include/linux/bpf.h
+>>> @@ -1702,6 +1702,7 @@ struct bpf_link {
+>>>         * link's semantics is determined by target attach hook
+>>>         */
+>>>        bool sleepable;
+>>> +     u32 flags;
+>>>        /* rcu is used before freeing, work can be used to schedule that
+>>>         * RCU-based freeing before that, so they never overlap
+>>>         */
+>>> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+>>> index 56500381c28a..f1d9ee9717a1 100644
+>>> --- a/kernel/bpf/syscall.c
+>>> +++ b/kernel/bpf/syscall.c
+>>> @@ -3228,7 +3228,14 @@ static void bpf_link_show_fdinfo(struct seq_file *m, struct file *filp)
+>>>        char prog_tag[sizeof(prog->tag) * 2 + 1] = { };
+>>>
+>>>        if (type < ARRAY_SIZE(bpf_link_type_strs) && bpf_link_type_strs[type]) {
+>>> -             seq_printf(m, "link_type:\t%s\n", bpf_link_type_strs[type]);
+>>> +             if (link->type == BPF_LINK_TYPE_KPROBE_MULTI)
+>>> +                     seq_printf(m, "link_type:\t%s\n", link->flags == BPF_F_KPROBE_MULTI_RETURN ?
+>>> +                                "kretprobe_multi" : "kprobe_multi");
+>>> +             else if (link->type == BPF_LINK_TYPE_UPROBE_MULTI)
+>>> +                     seq_printf(m, "link_type:\t%s\n", link->flags == BPF_F_UPROBE_MULTI_RETURN ?
+>>> +                                "uretprobe_multi" : "uprobe_multi");
+>>> +             else
+>>> +                     seq_printf(m, "link_type:\t%s\n", bpf_link_type_strs[type]);
+>>>        } else {
+>>>                WARN_ONCE(1, "missing BPF_LINK_TYPE(...) for link type %u\n", type);
+>>>                seq_printf(m, "link_type:\t<%u>\n", type);
+>>> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+>>> index 0a06ea6638fe..81d7a4e5ae15 100644
+>>> --- a/kernel/trace/bpf_trace.c
+>>> +++ b/kernel/trace/bpf_trace.c
+>>> @@ -2466,7 +2466,6 @@ struct bpf_kprobe_multi_link {
+>>>        u32 cnt;
+>>>        u32 mods_cnt;
+>>>        struct module **mods;
+>>> -     u32 flags;
+>>>    };
+>>>
+>>>    struct bpf_kprobe_multi_run_ctx {
+>>> @@ -2586,7 +2585,7 @@ static int bpf_kprobe_multi_link_fill_link_info(const struct bpf_link *link,
+>>>
+>>>        kmulti_link = container_of(link, struct bpf_kprobe_multi_link, link);
+>>>        info->kprobe_multi.count = kmulti_link->cnt;
+>>> -     info->kprobe_multi.flags = kmulti_link->flags;
+>>> +     info->kprobe_multi.flags = kmulti_link->link.flags;
+>>>        info->kprobe_multi.missed = kmulti_link->fp.nmissed;
+>>>
+>>>        if (!uaddrs)
+>>> @@ -2976,7 +2975,7 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+>>>        link->addrs = addrs;
+>>>        link->cookies = cookies;
+>>>        link->cnt = cnt;
+>>> -     link->flags = flags;
+>>> +     link->link.flags = flags;
+>>>
+>>>        if (cookies) {
+>>>                /*
+>>> @@ -3045,7 +3044,6 @@ struct bpf_uprobe_multi_link {
+>>>        struct path path;
+>>>        struct bpf_link link;
+>>>        u32 cnt;
+>>> -     u32 flags;
+>>>        struct bpf_uprobe *uprobes;
+>>>        struct task_struct *task;
+>>>    };
+>>> @@ -3109,7 +3107,7 @@ static int bpf_uprobe_multi_link_fill_link_info(const struct bpf_link *link,
+>>>
+>>>        umulti_link = container_of(link, struct bpf_uprobe_multi_link, link);
+>>>        info->uprobe_multi.count = umulti_link->cnt;
+>>> -     info->uprobe_multi.flags = umulti_link->flags;
+>>> +     info->uprobe_multi.flags = umulti_link->link.flags;
+>>>        info->uprobe_multi.pid = umulti_link->task ?
+>>>                                 task_pid_nr_ns(umulti_link->task, task_active_pid_ns(current)) : 0;
+>>>
+>>> @@ -3369,7 +3367,7 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+>>>        link->uprobes = uprobes;
+>>>        link->path = path;
+>>>        link->task = task;
+>>> -     link->flags = flags;
+>>> +     link->link.flags = flags;
+>>>
+>>>        bpf_link_init(&link->link, BPF_LINK_TYPE_UPROBE_MULTI,
+>>>                      &bpf_uprobe_multi_link_lops, prog);
+>>
+>> Hi, Jiri, Andrii,
+>>
+>> Jiri's patch looks more simple, and i see other struct xx_links wrap
+>> bpf_link, which have attach_type field like:
+>> struct sockmap_link {
+>>           struct bpf_link link;
+>>           struct bpf_map *map;
+>>           enum bpf_attach_type attach_type;
+>> };
+>> If we create attach_type filed in bpf_link, maybe these struct xx_link
+>> should also be modified. BTW, as Jiri said, we still can not find return
+>> probe type from attach_type.
+> 
+> You are right, I somehow was under impression that ret vs non-retprobe
+> comes from attach type as well.
+> 
+> Ok, moving flags into common bpf_link struct sounds good to me. I'd
+> still move attach_type into bpf_link, together with flags, for
+> generality (and update all those links that already include
+> attach_type as you mentioned). We can make it a single-byte field to
+> not increase bpf_link size unnecessarily (by using bitfield size).
+> 
 
-Okay, then we are on the same page and I can live with whatever name we
-go with :-)
+Well，can we complete this in two steps?
 
-BTW, I think it would be useful to make this clarification on the LUO
-docs as well so the intended use case/audience of the API is clear.
-Currently the doc string in luo_core.c only talks about hypervisors and
-VMs.
+1. Create a common field in bpf_link used for flags or attach_type, and 
+realise the precise link_type feature as Jiri and Alexei said, the 
+review of this part has been revised almost completely.
 
---=20
-Regards,
-Pratyush Yadav
+2. Move the attach_type from struct bpf_xx_link into bpf_link, this will 
+involve a lot of changes, i will send a separate patchset to finish it.
+
+>>
+>> --
+>> Best Regards
+>> Tao Chen
+
+
+-- 
+Best Regards
+Tao Chen
