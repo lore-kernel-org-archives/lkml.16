@@ -1,124 +1,249 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DD32E8898;
-	Tue, 24 Jun 2025 20:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE672550D3
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 20:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750796083; cv=none; b=BYMFAteDaPtCJJkTCi7zfEw0rCQYQjAn20uFPaOxTSoJvEYyCEufhEEUOnmcTdr5dpURpvbgQh3aFaAiYMoHU29OQJB+rhcpMZOwmNblld9FlmWgbKtPb+FReHlAEyrrnRCPEwe7S/0LNhey7q/hbRNgsDRRW455ChfFBF3+OA8=
+	t=1750796083; cv=none; b=XJDAwWahWnHoIh8Qzw1UXX5l/BIaepPEo7pUnkwKhgi11cpqkyDC3Ih8o1sZlMKUAEz/VfMnsDZZuXGfTvQYgR7m/2aNZKoRxXYxdUMI92Pbs6rgZSpTMAICslKa45Gtj0iMbnmHPAZT8zuWmKL6vLUxekD3JjBZOBGnvZiZTHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750796083; c=relaxed/simple;
-	bh=uhIaBtu5nDYQZF29WnuRATZzvZFbAKVMn+fqJ5S0vyQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eXW2JJkdVyWiG7uRo9H+3yDjuRUMlVOGoe+0GQOpnxjLbfUaTcrysniEpSIk3Jgd0u0eyLh2pMQzodVxrNHC8xJNnSVPoQ0TYx/u6tDUfIvO91aEj7L/lB4eFt/XmK3v4fsOThUxJJFsiaelfxzR4Ck1UP6XGPgKHYTrpOcwLNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TFthKog7; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=kcL0cNSlO6mnJ6CE0453W1DJuh3tCx3/N4e0pmAMZ24=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KvHs1IW2WK1MG2sVYub2OAjUArM95ImdnR4Me4M0CmwFGWXlqe6XslKnErQ4D2hbphVZvcJVdrUrzzwD8qxQciYuVFfooWwPAB8zlurr++/IQ+TuwzqnvG66wxRf8GTXm7zOTaOp1Z9sr/W2rxzuwMB9iyOIkNq8V162q6CH5nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PUMeLFoW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFthKog7"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2363616a1a6so49964285ad.3;
-        Tue, 24 Jun 2025 13:14:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750796082; x=1751400882; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oKwNZGxUka13BV0lgvKYQ+62h1vPzm83K1NHrGIKb+E=;
-        b=TFthKog7A/soOWNx37oSE+CS1rttdjDo0us1hDg3vEjN8IG3xqiy7RQ8dnf2zx/DY9
-         RvjxPMkIrPdO5p3ebPol/a+CgdQZQ4mlV86i0uDLhnHNoaHR52twe4Pm9psLpzA9DOt7
-         u325uDhuMK4mIyQDghvdqpDV41EDm6AhM6T89MmY9D/RTrydCybx1r8HD2od6F8ncMRu
-         buXswTpvV3l8GTB9y7w8SGDSQWr7deyL5cQXOybhRJSdKk2efat1SIse61zb15kReRom
-         q/lAT0syIZYrNeH6V9ySqnqpLoWAIntKA5eR4xF9Z08xz6/8I9Si7w/Y6I+Pj1+rzRnO
-         zknw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750796082; x=1751400882;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oKwNZGxUka13BV0lgvKYQ+62h1vPzm83K1NHrGIKb+E=;
-        b=RcNowD719t896s/hhgwrmrwezIuDldWe4PFRkaOAuX/kpnZSXiPxBwFRXmmunJkZS3
-         Lon67BPOPpvaFw1N57PmKbUFccjkyNmoPGjd3/R8BFSBDvhhPKB9vOQMMbQpdhNIAYuQ
-         G6FLDKmDsqpsfCTmsl9GchzN9ZtSQapCmQJrzrYnPCY5Ns4gBEwW9w1JpdAhCIqv8Nak
-         XoS5LnEzLrtWJA6YxK8fMoiYLZksaSY+X+l+tTzbXIgJ3DCrA5rb5PPIMQVVPMgq9/oo
-         5HqTPWOrHvFoLYzYisHC4SSrApeVYqvdVr4Xu3yOMEw1ULGVPCKTzwb78yK75qphX7+b
-         YSVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVDmHOPg3LeJn6Fw8SrLfhpTg/y9lVKnGPTNoEO0iSNcAfju6Zuk56GZnMOFKRHbBmsl4t6oS5hfFkHjoWATdaD@vger.kernel.org, AJvYcCVgf9LbqUqB2nGlmZOk0IOaGQVXI6AMl4X9pcnhQHZZxejvOgDTDLuvwQIi5ZWEA0cdS143uUH5aDwPaJY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+WimZ2MeUvJgRSHR5fD9fy0e71uSV1dQLy9WwiezZJMycTLmZ
-	SPzUXQVjHGbTLcgdea3ZBWtocrtb7FXG3+RrJ4vkQQj9O3TUvPIpZKQC0Pi/BqLN
-X-Gm-Gg: ASbGnctB8Of+RGfNaLvNU+TZ8fdfFBCzhnELyaNwGSl1xIu16Uyg2HQlsick4XV3ExZ
-	q7l0Yhlmf7RSddX1Vz0nV0lngCRx70N4C8QpyP+mLX9GvVPkDbmVNmthk7GBK2V7XXNDUmwaxg3
-	0y+Zd7xiNIuEGPiCetIDjm4mjDfY4kd3OUJb9fyboazlPMQwH6HkH/pJcwjTbzayTZP5GcOhJSm
-	a824nEEb0TuU4UpyCdAcF9jXEjC9KJ9gX0pmHVGqdhAcicW+DiXI5Vs9puFMNH43M72QJRmxYRI
-	cAaF4flrjvBTHhGxfOR90AhuhGgB+lkS0SyqhcD8JKvu8tePhp1Aea8jSF+ndb3t
-X-Google-Smtp-Source: AGHT+IEfzhn/g0z0I1uRydSMgKrQHJta/n3L63zk3PQzFdLue29xSPwQp4px+2tL4bP+pg3xXUTRzw==
-X-Received: by 2002:a17:902:da86:b0:234:b131:15a with SMTP id d9443c01a7336-23823f94e3fmr11884165ad.4.1750796081719;
-        Tue, 24 Jun 2025 13:14:41 -0700 (PDT)
-Received: from p920.. ([2001:569:799a:1600:9f1f:4826:a6d0:7822])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3158a12c9b9sm15094476a91.0.2025.06.24.13.14.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 13:14:41 -0700 (PDT)
-From: Moon Hee Lee <moonhee.lee.ca@gmail.com>
-To: shuah@kernel.org
-Cc: dwmw@amazon.co.uk,
-	mingo@kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Moon Hee Lee <moonhee.lee.ca@gmail.com>
-Subject: [PATCH] selftests/kexec: fix test_kexec_jump build and ignore generated binary
-Date: Tue, 24 Jun 2025 13:14:38 -0700
-Message-ID: <20250624201438.89391-1-moonhee.lee.ca@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PUMeLFoW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750796080;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MpswX9CeYFwqxV2+s21tSoizpPJHKG6Ho7VniV3X4Tw=;
+	b=PUMeLFoW1A6QD8CfJfDJ2KXccMAglobns+Vh7wAJ3sgzFZt5m1dwGplfp1MbFhVJf4drmp
+	x1HCW4rzha9cS/9MZVEuqkC1/J870OPFiiv+BS/rluFuP5m6Tn6lLnjOmC9aFXQMt7Sx0w
+	g+lOSsy/4gsv/uvSl2vJaY8B8fjuWlI=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-18-5LbBZxgQPcSwyk4vLV8pZA-1; Tue,
+ 24 Jun 2025 16:14:35 -0400
+X-MC-Unique: 5LbBZxgQPcSwyk4vLV8pZA-1
+X-Mimecast-MFC-AGG-ID: 5LbBZxgQPcSwyk4vLV8pZA_1750796073
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0311A19560B2;
+	Tue, 24 Jun 2025 20:14:33 +0000 (UTC)
+Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.179])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 32307180045B;
+	Tue, 24 Jun 2025 20:14:30 +0000 (UTC)
+From: Anusha Srivatsa <asrivats@redhat.com>
+Date: Tue, 24 Jun 2025 15:13:05 -0500
+Subject: [PATCH] panel/simple-simple: Identify simple DPI panels using
+ .compatible field
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250624-b4-simple-panel-regression-v1-1-a5adf92a7c17@redhat.com>
+X-B4-Tracking: v=1; b=H4sIANAGW2gC/x3MQQqDQAxG4atI1g1oqiJepXQx1l8N2OmQgAji3
+ Tu6/BbvHeQwhVNfHGTY1PUXM6pHQZ8lxBmsYzZJKU3ZSs1Dza7ftIJTiFjZMBv8yrgLeA5BOpk
+ glAfJMOl+z1/v8/wDlerxC2wAAAA=
+X-Change-ID: 20250624-b4-simple-panel-regression-8ae3ba282fe2
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Francesco Dolcini <francesco@dolcini.it>, 
+ Anusha Srivatsa <asrivats@redhat.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750796000; l=7046;
+ i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
+ bh=kcL0cNSlO6mnJ6CE0453W1DJuh3tCx3/N4e0pmAMZ24=;
+ b=Oync0rm63Wr+egSAoKVm0V/1mZPYmfkM+U8w49SDLCrXNtXYMqaO6Knl/tvZQimVOEqed1E4u
+ CH8Rg+saix/DJnQAnr8fP2t579abWBMlSyOMCS8WAfOsJgs5qRSdxyG
+X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
+ pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-The test_kexec_jump program builds correctly when invoked from the top-level
-selftests/Makefile, which explicitly sets the OUTPUT variable. However,
-building directly in tools/testing/selftests/kexec fails with:
+Currently driver is checking for desc == &panel_dpi to do the DPI
+specific panel desc allocations. This looks hacky.
 
-  make: *** No rule to make target '/test_kexec_jump', needed by 'test_kexec_jump.sh'.  Stop.
+The panel allocation in panel_simple_probe() breaks due to not having
+the desc for DPI scenario. This patch does the following:
 
-This failure occurs because the Makefile rule relies on $(OUTPUT), which is
-undefined in direct builds.
+- Rename panel_dpi_probe() to panel_dpi_get_desc() and call it before
+panel allocation. panel_dpi_get_desc() returns a panel desc unlike
+panel_dpi_probe() which returned an int. This way driver has a known
+connector type while allocating the panel.
+- panel_dpi_get_desc() returns a panel desc
+- Add a simple helper is_panel_dpi() to identify a simple DPI panel from
+a simple panel based on .compatible field
 
-Fix this by listing test_kexec_jump in TEST_GEN_PROGS, the standard way to
-declare generated test binaries in the kselftest framework. This ensures the
-binary is built regardless of invocation context and properly removed by
-make clean.
-
-Also add the binary to .gitignore to avoid tracking it in version control.
-
-Signed-off-by: Moon Hee Lee <moonhee.lee.ca@gmail.com>
+Fixes: de04bb0089a9 ("drm/panel/panel-simple: Use the new allocation in place of devm_kzalloc()")
+Suggested-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Suggested-by: Maxime Ripard <mripard@kernel.org>
+Cc: Francesco Dolcini <francesco@dolcini.it>
+Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
 ---
- tools/testing/selftests/kexec/.gitignore | 2 ++
- tools/testing/selftests/kexec/Makefile   | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/kexec/.gitignore
+Seeing the below trace due to the changes introduced by:
+Commit de04bb0089a9 ("drm/panel/panel-simple: Use the new allocation in place of devm_kzalloc()")
 
-diff --git a/tools/testing/selftests/kexec/.gitignore b/tools/testing/selftests/kexec/.gitignore
-new file mode 100644
-index 000000000000..5f3d9e089ae8
---- /dev/null
-+++ b/tools/testing/selftests/kexec/.gitignore
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+test_kexec_jump
-diff --git a/tools/testing/selftests/kexec/Makefile b/tools/testing/selftests/kexec/Makefile
-index e3000ccb9a5d..874cfdd3b75b 100644
---- a/tools/testing/selftests/kexec/Makefile
-+++ b/tools/testing/selftests/kexec/Makefile
-@@ -12,7 +12,7 @@ include ../../../scripts/Makefile.arch
+[   12.089274] ------------[ cut here ]------------
+[   12.089303] WARNING: CPU: 0 PID: 96 at drivers/gpu/drm/bridge/panel.c:377 devm_drm_of_get_bridge+0xac/0xb8
+[   12.130808] Modules linked in: v4l2_jpeg pwm_imx27(+) imx_vdoa gpu_sched panel_simple imx6_media(C) imx_media_common
+(C) videobuf2_dma_contig pwm_bl gpio_keys v4l2_mem2mem fuse ipv6 autofs4
+[   12.147774] CPU: 0 UID: 0 PID: 96 Comm: kworker/u8:3 Tainted: G         C          6.16.0-rc1+ #1 PREEMPT
+[   12.157446] Tainted: [C]=CRAP
+[   12.160418] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+[   12.166953] Workqueue: events_unbound deferred_probe_work_func
+[   12.172805] Call trace:
+[   12.172815]  unwind_backtrace from show_stack+0x10/0x14
+[   12.180598]  show_stack from dump_stack_lvl+0x68/0x74
+[   12.185674]  dump_stack_lvl from __warn+0x7c/0xe0
+[   12.190407]  __warn from warn_slowpath_fmt+0x1b8/0x1c0
+[   12.195567]  warn_slowpath_fmt from devm_drm_of_get_bridge+0xac/0xb8
+[   12.201949]  devm_drm_of_get_bridge from imx_pd_probe+0x58/0x164
+[   12.207976]  imx_pd_probe from platform_probe+0x5c/0xb0
+[   12.213220]  platform_probe from really_probe+0xd0/0x3a4
+[   12.218551]  really_probe from __driver_probe_device+0x8c/0x1d4
+[   12.224486]  __driver_probe_device from driver_probe_device+0x30/0xc0
+[   12.230942]  driver_probe_device from __device_attach_driver+0x98/0x10c
+[   12.237572]  __device_attach_driver from bus_for_each_drv+0x90/0xe4
+[   12.243854]  bus_for_each_drv from __device_attach+0xa8/0x1c8
+[   12.249614]  __device_attach from bus_probe_device+0x88/0x8c
+[   12.255285]  bus_probe_device from deferred_probe_work_func+0x8c/0xcc
+[   12.261739]  deferred_probe_work_func from process_one_work+0x154/0x2dc
+[   12.268371]  process_one_work from worker_thread+0x250/0x3f0
+[   12.274043]  worker_thread from kthread+0x12c/0x24c
+[   12.278940]  kthread from ret_from_fork+0x14/0x28
+[   12.283660] Exception stack(0xd0be9fb0 to 0xd0be9ff8)
+[   12.288720] 9fa0:                                     00000000 00000000 00000000 00000000
+[   12.296906] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   12.305089] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[   12.312050] ---[ end trace 0000000000000000 ]---
+---
+ drivers/gpu/drm/panel/panel-simple.c | 38 +++++++++++++++++++++---------------
+ 1 file changed, 22 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 0a3b26bb4d731c54614e24e38018c308acd5367a..2e6fd545100388a9d53183a5621e7b8fdb4148ae 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -26,6 +26,7 @@
+ #include <linux/i2c.h>
+ #include <linux/media-bus-format.h>
+ #include <linux/module.h>
++#include <linux/of_device.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+@@ -432,8 +433,7 @@ static const struct drm_panel_funcs panel_simple_funcs = {
  
- ifeq ($(IS_64_BIT)$(ARCH_PROCESSED),1x86)
- TEST_PROGS += test_kexec_jump.sh
--test_kexec_jump.sh: $(OUTPUT)/test_kexec_jump
-+TEST_GEN_PROGS := test_kexec_jump
- endif
+ static struct panel_desc panel_dpi;
  
- include ../lib.mk
+-static int panel_dpi_probe(struct device *dev,
+-			   struct panel_simple *panel)
++static struct panel_desc *panel_dpi_get_desc(struct device *dev)
+ {
+ 	struct display_timing *timing;
+ 	const struct device_node *np;
+@@ -445,17 +445,17 @@ static int panel_dpi_probe(struct device *dev,
+ 	np = dev->of_node;
+ 	desc = devm_kzalloc(dev, sizeof(*desc), GFP_KERNEL);
+ 	if (!desc)
+-		return -ENOMEM;
++		return NULL;
+ 
+ 	timing = devm_kzalloc(dev, sizeof(*timing), GFP_KERNEL);
+ 	if (!timing)
+-		return -ENOMEM;
++		return NULL;
+ 
+ 	ret = of_get_display_timing(np, "panel-timing", timing);
+ 	if (ret < 0) {
+ 		dev_err(dev, "%pOF: no panel-timing node found for \"panel-dpi\" binding\n",
+ 			np);
+-		return ret;
++		return NULL;
+ 	}
+ 
+ 	desc->timings = timing;
+@@ -473,9 +473,7 @@ static int panel_dpi_probe(struct device *dev,
+ 	/* We do not know the connector for the DT node, so guess it */
+ 	desc->connector_type = DRM_MODE_CONNECTOR_DPI;
+ 
+-	panel->desc = desc;
+-
+-	return 0;
++	return desc;
+ }
+ 
+ #define PANEL_SIMPLE_BOUNDS_CHECK(to_check, bounds, field) \
+@@ -570,6 +568,15 @@ static int panel_simple_override_nondefault_lvds_datamapping(struct device *dev,
+ 	return 0;
+ }
+ 
++static bool is_panel_dpi(struct device *dev)
++{
++	const struct of_device_id *match;
++
++	match = of_match_device(dev->driver->of_match_table, dev);
++
++	return strcmp(match->compatible, "panel_dpi");
++}
++
+ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
+ {
+ 	struct panel_simple *panel;
+@@ -579,6 +586,10 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
+ 	u32 bus_flags;
+ 	int err;
+ 
++	/* Is this simple panel a DPI panel */
++	if (is_panel_dpi(dev))
++		desc = panel_dpi_get_desc(dev);
++
+ 	panel = devm_drm_panel_alloc(dev, struct panel_simple, base,
+ 				     &panel_simple_funcs, desc->connector_type);
+ 	if (IS_ERR(panel))
+@@ -611,16 +622,11 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
+ 			return -EPROBE_DEFER;
+ 	}
+ 
+-	if (desc == &panel_dpi) {
+-		/* Handle the generic panel-dpi binding */
+-		err = panel_dpi_probe(dev, panel);
+-		if (err)
+-			goto free_ddc;
+-		desc = panel->desc;
+-	} else {
++	if (is_panel_dpi(dev))
++		goto free_ddc;
++	else
+ 		if (!of_get_display_timing(dev->of_node, "panel-timing", &dt))
+ 			panel_simple_parse_panel_timing_node(dev, panel, &dt);
+-	}
+ 
+ 	if (desc->connector_type == DRM_MODE_CONNECTOR_LVDS) {
+ 		/* Optional data-mapping property for overriding bus format */
+
+---
+base-commit: 10357824151262636fda879845f8b64553541106
+change-id: 20250624-b4-simple-panel-regression-8ae3ba282fe2
+
+Best regards,
 -- 
-2.43.0
+Anusha Srivatsa <asrivats@redhat.com>
 
