@@ -1,172 +1,177 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9492522A7;
-	Tue, 24 Jun 2025 08:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9F525D53E
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750754134; cv=none; b=fYYwsdnUpwyOqFpEGCJd+bSURCgEmZSkTvBIjIudlBtmDk++XU04agUQkNsyPev5vsfJwscWpjYp9vl2aS1Yy3jDSuzvn/t0Vyt7IGA311oVXIcSZ0MXGL4Qf5QMFtEV5nXSwBqyp4qZwnQ5lz3WKGizoox2JrFnhw15n2RBub0=
+	t=1750754141; cv=none; b=MyBPUM8x400j8SxWrVFxHQQ4WCvZy6VGfZs3o9tgHSvmUPSbTBXr0SW2MQzcwQWjZUyJcsdpvJ0xCdOyByKpDgcxxbR6Q3IbZ2JjQt66+KE1nlVwY4qIkZvpgFc/GJE0RhPTAPqCzJP9wHkZFBRAolLvZiNToeCcUTQUVw4h1M8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750754134; c=relaxed/simple;
-	bh=WyQDQWnqq81OoIwpxZisCxByRiTBJQZ/Ifg54KE6Tv4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b21Q2+pIuwwRaKr3Twi7x01KjKexVkPM0S+Kkr2vXVXeG5nLnitc61lAGkg82Wa5nlLcD2n4MkjMoEN1GclATy80smy/+Nd3FmLashZBmqyNFIV5uxVJa28v6EU1Fu4m7P59VYQwQ8krH6cjs0RmxVI1zJywVHRutjoM46ymqL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DWGDQDr0; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DWGDQDr0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750754133; x=1782290133;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=WyQDQWnqq81OoIwpxZisCxByRiTBJQZ/Ifg54KE6Tv4=;
-  b=DWGDQDr0c9WjW+NCxIWo3Cj9nOT1OHEujYd96VXZdp6tbWwJr0EzSQol
-   zAuYsyaVqVZSJzlLimoe+gzJ9kq7jQEd9FIm1uvXf0lM4PSY2GZLejq83
-   DlvyOU5gNRvW7KEK4q7a2GyAX2T7KYeqtjJX8fEznMb+5A8zfIviQNC3A
-   pcYdRbMb34RExKACale2Jw0G1vC+9zXOVg9DQW67qXig39zVQTJte8Ii2
-   4MSwu87jELOVXqlIOtKJ5erzdrpl/BmIIdux42Qw2UlR1h3LMJXIuvnGF
-   baCwgf07nRMv+MpJ0lTMrCFak9k3lSKVzeYUXhnRz5oLwW2b7DO+rXtBc
-   Q==;
-X-CSE-ConnectionGUID: SLzij9CuQRm6H4h5F4l2HQ==
-X-CSE-MsgGUID: XKGyYQ75R+yVXeAqxX9sAw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="53076016"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="53076016"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 01:35:32 -0700
-X-CSE-ConnectionGUID: IjHWV/EAQoWkLJ+O+ajfSA==
-X-CSE-MsgGUID: jjCN4NDjS8qGJDsLkEYJhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="175456235"
-Received: from bergbenj-mobl1.ger.corp.intel.com (HELO mdjait-mobl) ([10.245.244.224])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 01:35:28 -0700
-Date: Tue, 24 Jun 2025 10:35:18 +0200
-From: Mehdi Djait <mehdi.djait@linux.intel.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: "Nirujogi, Pratap" <pnirujog@amd.com>, 
-	Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org, sakari.ailus@linux.intel.com, 
-	hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org, 
-	dave.stevenson@raspberrypi.com, hdegoede@redhat.com, jai.luthra@ideasonboard.com, 
-	tomi.valkeinen@ideasonboard.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com, king.li@amd.com, 
-	dantony@amd.com, vengutta@amd.com, Svetoslav.Stoilov@amd.com, 
-	Yana.Zheleva@amd.com
-Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
-Message-ID: <425j7c6xvbbatdhxgjgjawzwfnjmjetg6rpnwfudbtg6qz6nay@dy5ldbuhtbvv>
-References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
- <20250615000915.GQ10542@pendragon.ideasonboard.com>
- <53674c5f-6b68-49e7-bbb0-fd06fff344c3@amd.com>
- <8b16675a-c6ac-4619-aabe-ad2a4be6c964@amd.com>
- <20250623220503.GA15951@pendragon.ideasonboard.com>
+	s=arc-20240116; t=1750754141; c=relaxed/simple;
+	bh=DY8VfVXh807HpqhQSvP05svNfSrRH+64YMmFIomMOs4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l44bi6vELsT35YtJhLl6+NDbCJIYSduCvDas9nUkRf9BK86W+mhBH0LbqFvmiOSiZwxs16G3gfT0X968shM+lB0IIzN1ssCUKq1FE4f4q7QKmJPRwsA71jy+pswb38c5efR69fQ2JUbP4OAv7hvbi+m630KLYalLbZDNmlXOsss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 3122758250d611f0b29709d653e92f7d-20250624
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:2399aed0-3dbb-4733-8ad9-882089a3a0b0,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:e4d7ca572d61b1a74d34c9c0b6b80160,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
+	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
+	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 3122758250d611f0b29709d653e92f7d-20250624
+Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
+	(envelope-from <xialonglong@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 917961575; Tue, 24 Jun 2025 16:35:32 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id 5B686160038C1;
+	Tue, 24 Jun 2025 16:35:32 +0800 (CST)
+X-ns-mid: postfix-685A6354-1975593342
+Received: from [172.25.120.23] (unknown [172.25.120.23])
+	by node4.com.cn (NSMail) with ESMTPA id 9885616001A03;
+	Tue, 24 Jun 2025 08:35:28 +0000 (UTC)
+Message-ID: <910a462a-8d4d-4b5d-941c-ba1396e287dc@kylinos.cn>
+Date: Tue, 24 Jun 2025 16:35:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250623220503.GA15951@pendragon.ideasonboard.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] mm/ksm: add ksm_pages_sharing for each process to
+ calculate profit more accurately
+To: xu.xin16@zte.com.cn, david@redhat.com
+Cc: akpm@linux-foundation.org, chengming.zhou@linux.dev, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, shr@devkernel.io, corbet@lwn.net,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz
+References: <202506181714096412Nvp5B3BkFpi3-CKLQ9ep@zte.com.cn>
+From: Longlong Xia <xialonglong@kylinos.cn>
+In-Reply-To: <202506181714096412Nvp5B3BkFpi3-CKLQ9ep@zte.com.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-Hi Laurent, Hi Pratap,
 
-Thank you for the patch
+=E5=9C=A8 2025/6/18 17:14, xu.xin16@zte.com.cn =E5=86=99=E9=81=93:
+>>>> and /proc/self/ksm_stat/ to indicate the saved pages of this process=
+.
+>>>> (not including ksm_zero_pages)
+>>> Curious, why is updating ksm_process_profit() insufficient and we als=
+o
+>>> have to expose ksm_pages_sharing?
+>>>
+>> Since ksm_process_profit() uses ksm_merging_pages(pages_sharing +
+>> pages_shared) to calculate the profit for individual processes,
+>>
+>> while general_profit uses pages_sharing for profit calculation, this c=
+an
+>> lead to the total profit calculated for each process being greater tha=
+n
+>> that of general_profit.
+>>
+>> Additionally, exposing ksm_pages_sharing under /proc/self/ksm_stat/ ma=
+y
+>> be sufficient.
+>>
+> Hi,
+>
+> Althorugh it's true, however, this patch maybe not okay. It can only en=
+sure
+> that the sum of each process's profit roughly equals the system's gener=
+al_profit
+> , but gives totally wrong profit result for some one process. For examp=
+le, when
+> two pages from two different processes are merged, one process's page_s=
+hared
+> increments by +1, while the other's pages_sharing increments by +1, whi=
+ch
+> resulting in different calculated profits for the two processes, even t=
+hough
+> their actual profits are identical. If in more extreme cases, this coul=
+d even
+> render a process's profit entirely unreadable.
+>
+> Lastly, do we really need each process=E2=80=99s profit sum to perfectl=
+y match the general
+> profit, or we just want a rough estimate of the process=E2=80=99s profi=
+t from KSM ?
+>
+Hi,
 
-On Tue, Jun 24, 2025 at 01:05:03AM +0300, Laurent Pinchart wrote:
-> (CC'ing Mehdi)
-> 
-> On Mon, Jun 23, 2025 at 05:51:48PM -0400, Nirujogi, Pratap wrote:
-> > On 6/16/2025 6:49 PM, Nirujogi, Pratap wrote:
-> > >>> +static int ov05c10_probe(struct i2c_client *client)
-> > >>> +{
-> > >>> +     struct ov05c10 *ov05c10;
-> > >>> +     u32 clkfreq;
-> > >>> +     int ret;
-> > >>> +
-> > >>> +     ov05c10 = devm_kzalloc(&client->dev, sizeof(*ov05c10), 
-> > >>> GFP_KERNEL);
-> > >>> +     if (!ov05c10)
-> > >>> +             return -ENOMEM;
-> > >>> +
-> > >>> +     struct fwnode_handle *fwnode = dev_fwnode(&client->dev);
-> > >>> +
-> > >>> +     ret = fwnode_property_read_u32(fwnode, "clock-frequency", 
-> > >>> &clkfreq);
-> > >>> +     if (ret)
-> > >>> +             return  dev_err_probe(&client->dev, -EINVAL,
-> > >>> +                                   "fail to get clock freq\n");
-> > >>
-> > >> Let's try to land
-> > >> https://lore.kernel.org/linux-media/20250521104115.176950-1- 
-> > >> mehdi.djait@linux.intel.com/
-> > >> and replace the code above with devm_v4l2_sensor_clk_get().
-> > >>
-> > > Ok, we will verify on our side.
-> > 
-> > We tried using devm_v4l2_sensor_clk_get() and found its required to add 
-> > support for software_node to make it work with this driver.
-> 
-> Why is that ?
-> 
-> > Please refer 
-> > the changes below and let us know if these should be submitted as a 
-> > separate patch.
+In extreme cases, stable nodes may be distributed quite unevenly, which=20
+is due to stable nodes not being per mm, of course.
+There are also situations where there are 1000 pairs of pages, with the=20
+pages within each pair being identical, while each pair is different=20
+from all other pages.
+This results in the number of page_sharing and page_shared being the=20
+same. This way, using ksm_merging_pages(page_sharing + page_shared)=20
+averages a 50% error.
+In practical testing, we may only need to enable KSM for specific=20
+applications and calculate the total benefits of these processes.
+Since page_shared is also included in the statistics, this may lead to=20
+the calculated benefits being higher than the actual ones.
+In practical testing, the error may reach 20%. For example, in one test,=20
+the total benefits of all processes were estimated to be around 528MB,
+while the profit calculated through general_profit was only around 428MB.
+The theoretical error may be around 50%.
 
-The helper is still not merged, so no patch is required.
+If we expose the ksm_pages_sharing for each process, we can not only=20
+calculate the actual benefits
 
-I will see if a change is needed from the helper side or the OV05C10 side.
+but also determine how many ksm_pages_shared there are by the difference=20
+between ksm_merging_pages and ksm_pages_sharing of each process.
 
-> 
-> Mehdi, do you have any comment ?
-> 
+>>
+>>> Hm, I am wondering if that works. Stable nodes are not per MM, so
+>>> can't we create an accounting imbalance for one MM somehow?
+>>>
+>>> (did not look into all the details, just something that came to mind)
+>>>
+>> Indeed, using the method in this patch to calculate ksm_pages_sharing
+>> for each process to determine ksm_pages_shared
+>>
+>> can sometimes result in negative values for ksm_pages_shared.
+>>
+>> example for calculate mm->ksm_pages_shared=EF=BC=9A
+>>
+>>           if (rmap_item->hlist.next) {
+>>               ksm_pages_sharing--;
+>>               rmap_item->mm->ksm_pages_sharing--;
+>>
+>>           } else {
+>>               ksm_pages_shared--;
+>>                rmap_item->mm->ksm_pages_shared--; // can be negative
+>>           }
+>>
+>>           rmap_item->mm->ksm_merging_pages--;
+>>
+>>
+>> Would it be possible to compare the ratio of each process's rmap_item =
+to
+>> the total rmap_item and the ratio of the process's page_shared to the
+>> total page_shared
+>>
+>> to assess this imbalance? For now, I don't have any better ideas.
+> Although stable_node is not per-mm, if you really add ksm_shared to mm,
+> it won't cause negative ksm_pages_shared, because the count of ksm_shar=
+ed
+> will only be attributed to the process of the first rmap_item.
+Yes, it was the incorrect method I used during testing that led to the=20
+negative values.
+After the improvement, it has not occurred again.
 
-No comment for now: I will investigate this.
+Thank you for your time.
+Best regards,
+Longlong Xia
 
---
-Kind Regards
-Mehdi Djait
 
-> > ---
-> > @@ -645,16 +645,16 @@ struct clk *devm_v4l2_sensor_clk_get(struct device 
-> > *dev, const char *id)
-> >          const char *clk_id __free(kfree) = NULL;
-> >          struct clk_hw *clk_hw;
-> >          struct clk *clk;
-> > -       bool acpi_node;
-> > +       bool is_node;
-> >          u32 rate;
-> >          int ret;
-> > 
-> >          clk = devm_clk_get_optional(dev, id);
-> >          ret = device_property_read_u32(dev, "clock-frequency", &rate);
-> > -       acpi_node = is_acpi_node(dev_fwnode(dev));
-> > +       is_node = is_acpi_node(dev_fwnode(dev)) || 
-> > is_software_node(dev_fwnode(dev));
-> > 
-> >          if (clk) {
-> > -               if (!ret && acpi_node) {
-> > +               if (!ret && is_node) {
-> >                          ret = clk_set_rate(clk, rate);
-> >                          if (ret) {
-> >                                  dev_err(dev, "Failed to set clock rate: 
-> > %u\n",
-> > @@ -668,7 +668,7 @@ struct clk *devm_v4l2_sensor_clk_get(struct device 
-> > *dev, const char *id)
-> >          if (ret)
-> >                  return ERR_PTR(ret);
-> > 
-> > -       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !acpi_node)
-> > +       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !is_node)
-> >                  return ERR_PTR(-ENOENT);
-> > 
-> >          if (!id) {
-> > ----
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
+
+
