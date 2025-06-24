@@ -1,111 +1,192 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD4127AC48;
-	Tue, 24 Jun 2025 09:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB4127F4F5
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:17:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750756615; cv=none; b=HWLMQeWmYi5ph2TihBmkCcLHfHInlTCW9jhTIUI+yiVepGLBo4tH4gzrimNl7p9ShH/PLNrLM7QvsgZaOTVGJ0XigrR6TqtwAx5m3S153lCgC/f+BC8Ne5TtdXEe3xsfcMGUSqRTWXC+NKqe1jBuYwbUozys25KJwAVFCJZ+U3E=
+	t=1750756637; cv=none; b=TmtzplZFJOw9CHqUPhKS2VBhUU7EkymDGeChk0yoTli545bUic10BmDwMUTUfiTV1P5zpYODTqRPu9668PuWlXvtzSbDCm/cI1kQHXH/rarUzrGGZ80Yt5U74S0IYOniaJWlTdm+hOv2ihRCZsWAl2kHVV/qd9ypXaIPip+hIYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750756615; c=relaxed/simple;
-	bh=1UkrTPngst7ysoOn0/y2t6Rdz+jkdOaSrNS6D53UmbE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZQWK0eqE93b8adGTWPgH/BCpsdkuxTaj8Ebv+GzDhbqPhXc4jbrEl3zoXd0IkyYmOPUEN0wwFmZ2NCkjpzevcoCK8WlPZ4lgnAIjrv66yXVLZhLOV3LPWR9RMauZL1uL0JTCin8JgqQuxpqrArbSC3loLaWH/FhC9jHLkmvILhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c1eVO5Lj; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750756637; c=relaxed/simple;
+	bh=/605AmhGbAfDeIETNYnNawRr46IUCgfjgXQHfhn4OgQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gFcOIHxNFpjX2xv6g3FpM6GJb/+uRdgqZKKSQlzKJiS8TxqoXTWcV0bjehR08S5CGOvxKeyLZDj8heUoQuIIn2FOVvIIDbknoivpwsxJ7l2MO6zEr6XkmnRiBwVlrKEfxd40tl1mDQZJ4cOHLEiGHMNg6XwNgfDiX1a2SfnkHOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q/E1bzjB; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c1eVO5Lj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750756614; x=1782292614;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1UkrTPngst7ysoOn0/y2t6Rdz+jkdOaSrNS6D53UmbE=;
-  b=c1eVO5LjSb/yussrT2SFDU3lpWW8ljgfAXYZzK6bR4dAwjVYQgMuyVT9
-   7d7OYoX79g12JzT5y9uBtZTGanaihLHGXMa8UFSjDOA5egWtaaMXwF8yM
-   MbOntRPxUxOZfeSWo82xqZo9CS7JqV4zrEW/IS+5cIUz46wHo5AwrHda6
-   unOt4nomXA3f+/3bHcDo+CAPemCNh2FZTTybc/DLLZgPoYr0RykyfQuDo
-   LVJhNcB/RAz8iKf5f7Z3iucutcPLoM1jyB+NQ437CoLbJY8eTGSDQI00m
-   EHXrTTwJ4BX7G+Af3e3s+Sz39OW/0qHN7Z/gK572P4n9s3P+CP5bOaks7
-   Q==;
-X-CSE-ConnectionGUID: R+ZLZZaUShiIYcnMPPV4fQ==
-X-CSE-MsgGUID: LQdtCnb0TzWeu7vLx8NE0A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56663887"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="56663887"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 02:16:53 -0700
-X-CSE-ConnectionGUID: XEvBU3DYQlOCQIQGZievow==
-X-CSE-MsgGUID: V8wyaJoJTFyROARz7z3xFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="182889254"
-Received: from kuha.fi.intel.com ([10.237.72.152])
-  by orviesa002.jf.intel.com with SMTP; 24 Jun 2025 02:16:50 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 24 Jun 2025 12:16:48 +0300
-Date: Tue, 24 Jun 2025 12:16:48 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 6/8] usb: typec: ucsi: yoga-c630: correct response for
- GET_CURRENT_CAM
-Message-ID: <aFptAN0CsQycSc-2@kuha.fi.intel.com>
-References: <20250621-c630-ucsi-v1-0-a86de5e11361@oss.qualcomm.com>
- <20250621-c630-ucsi-v1-6-a86de5e11361@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q/E1bzjB"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32aabfd3813so44451101fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:17:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750756633; x=1751361433; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=r0iPOvxdd1+R1sWyl977efxlDLfDFP8LBWLuB/lbhrw=;
+        b=Q/E1bzjBw67MpwSPxXoLSdSghe/Ce+MfF8SZc3Rx8srTY4PIYbgkTOGyyy7azvtUG1
+         JF3stOVziISLgnGBEwThPGpr4ZW0FFaghb024aNh9e2ZjDhQ1+2n8jBgtRavAhGWZ1dO
+         M8woPQbYHEmiExiXPN/exf/Z8mCY39r2LTIIY8Ei3vp4dkcxCp1otuMPRcbXaAUw4WQS
+         aEvDF/yo34KITGrcm8OjDGsbsT9nZtyrenE7XAhaGokZgZCFo/E7UNgkleKc0Eol1VPg
+         khQsShys6OM20IIxQKF9vJtF1F5eWg5u9dPoyRs7Hgkos2o6I5uqNjLwimBztbOqf4aN
+         DuhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750756633; x=1751361433;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r0iPOvxdd1+R1sWyl977efxlDLfDFP8LBWLuB/lbhrw=;
+        b=DkPfndFPHWbdZzXGKMjjeK2+WVpeHEF/p84eXzWHNV2VqB9hNaI/UA+I0RG+JmDd9+
+         wJPRDsQGdjhBx4Ds1UxE+874tbZ3HlwbUKBbfx+v3in9uEW+kFo/JEiSzN7ZrTVPdvHv
+         eflPLF9BdU237nvalzI6G0r0v7Leyn+LX8wM4xWfmIIHT2McJkyy+lxEFCMMpbymYbh/
+         LSY2NkN9yPge4R1vX0Rj0D/Tte3avCw0wcoDbl06WzX/qz0LQIz0pRlQZVSgSZZKOgmJ
+         w7eK3n7WJmwH80sVCORi+speTd4vrImbuhgpRVwSrPln7xInbZlrjfwiC/Cd9vJYJROq
+         O2Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCWibCVX2wLOqHMooJjkln8m4NgYaWF8sM1+NpM9zBsbdZ2pSNT0vLf815lLDhQCyuI2tK8h9wa/i2z4g8Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxo1gtOMV+kfOqWdx9jq0GaLYY2ftk9l0BtBjmm9z8qY6v3WIXR
+	yFq8rJnlrMsyXBao/SaOEXR74ofFhKBti+PUj0OLTabgC5lvmtIpmWVAc4csQS+cJKj315J/SuQ
+	PtNykcOxkIUVNfd1KQYFkqJlpCYkj6wjFcQUmhNEB
+X-Gm-Gg: ASbGncsY8+cpIgHTARePENaUqTiuqL2EiMIdSeWrHGuYg5zG76N44fuUKZLzq0u1gWa
+	qBDSdsHBjB8jCqsKv1CCBEwZoMmcACPX7nefvY1wf0fh8A6VZekPny4vqwiVlm6E8hL6qPr5FB/
+	JebuIyWIWBredwGESXi7lEdLxss5T8RzpqXrOFCQ2GquiLVKNpbUR2v3tigIaalGG0aIMK3rZdc
+	IPl
+X-Google-Smtp-Source: AGHT+IGD0AD7nL9psVg42SQAr7/G4s8Vqp9RY8v1mqTFDOSfiaH+DNQTWGTac+zcDwvEIrO7POg1pz7X+xSnL83Jg0M=
+X-Received: by 2002:a2e:be92:0:b0:32a:7386:ca13 with SMTP id
+ 38308e7fff4ca-32b98f17070mr45211481fa.22.1750756633312; Tue, 24 Jun 2025
+ 02:17:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250621-c630-ucsi-v1-6-a86de5e11361@oss.qualcomm.com>
+References: <cover.1747817128.git.dvyukov@google.com> <138c29bd5f5a0a22270c9384ecc721c40b7d8fbd.1747817128.git.dvyukov@google.com>
+ <CACT4Y+ZcQV3JWEaeh7BXNwXUsoH6RcVRyG2iNUA+_mrOBOHfNA@mail.gmail.com>
+In-Reply-To: <CACT4Y+ZcQV3JWEaeh7BXNwXUsoH6RcVRyG2iNUA+_mrOBOHfNA@mail.gmail.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Tue, 24 Jun 2025 11:17:02 +0200
+X-Gm-Features: AX0GCFtx9xo4E4KpHl5vuVPWiygHr-7wuE4SYxFwbhYZWVvp6RZryjcT_it7kDc
+Message-ID: <CACT4Y+anDdNU9rh1xsDRs7vZRfXbbvjFS3RRBu1zVejrp11Scw@mail.gmail.com>
+Subject: Re: [PATCH v7 3/4] rseq: Make rseq work with protection keys
+To: mathieu.desnoyers@efficios.com, peterz@infradead.org, boqun.feng@gmail.com, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, aruna.ramakrishna@oracle.com, 
+	elver@google.com
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Jun 21, 2025 at 09:13:01PM +0300, Dmitry Baryshkov wrote:
-> On Lenovo Yoga C630 the EC handles GET_CURRENT_CAM command, but it
-> returns 1 if DisplayPort is active and 0 otherwise. However in order to
-> let UCSI drivers handle AltModes correctly, it should return 0 / 0xff.
-> Correct returned value.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+On Wed, 21 May 2025 at 10:59, Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Wed, 21 May 2025 at 10:52, Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > If an application registers rseq, and ever switches to another pkey
+> > protection (such that the rseq becomes inaccessible), then any
+> > context switch will cause failure in __rseq_handle_notify_resume()
+> > attempting to read/write struct rseq and/or rseq_cs. Since context
+> > switches are asynchronous and are outside of the application control
+> > (not part of the restricted code scope), temporarily switch to
+> > pkey value that allows access to the 0 (default) PKEY.
+> >
+> > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+> > Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> > Cc: Boqun Feng <boqun.feng@gmail.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+> > Cc: x86@kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Fixes: d7822b1e24f2 ("rseq: Introduce restartable sequences system call")
+>
+> Dave, can you please ack this patch? Ingo said he was waiting for your
+> review before taking this to -tip.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Are there any remaining concerns with this series? If not, Thomas,
+Ingo, can you please take this to -tip tree?
 
-> ---
->  drivers/usb/typec/ucsi/ucsi_yoga_c630.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/typec/ucsi/ucsi_yoga_c630.c b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
-> index 506faf31b6e3a056e067f2bb69f5e9e5ea40e514..76afd128d42a2573ff55433f815c2773462a6426 100644
-> --- a/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
-> +++ b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
-> @@ -111,7 +111,15 @@ static int yoga_c630_ucsi_sync_control(struct ucsi *ucsi,
->  		return 0;
->  	}
->  
-> -	return ucsi_sync_control_common(ucsi, command, cci, data, size);
-> +	ret = ucsi_sync_control_common(ucsi, command, cci, data, size);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* UCSI_GET_CURRENT_CAM is off-by-one on all ports */
-> +	if (UCSI_COMMAND(command) == UCSI_GET_CURRENT_CAM && data)
-> +		((u8 *)data)[0]--;
-> +
-> +	return ret;
->  }
->  
->  static bool yoga_c630_ucsi_update_altmodes(struct ucsi *ucsi,
-> 
-> -- 
-> 2.39.5
-
--- 
-heikki
+> > ---
+> > Changes in v7:
+> >  - Added Mathieu's Reviewed-by
+> >
+> > Changes in v6:
+> >  - Added a comment to struct rseq with MPK rules
+> >
+> > Changes in v4:
+> >  - Added Fixes tag
+> >
+> > Changes in v3:
+> >  - simplify control flow to always enable access to 0 pkey
+> >
+> > Changes in v2:
+> >  - fixed typos and reworded the comment
+> > ---
+> >  include/uapi/linux/rseq.h |  4 ++++
+> >  kernel/rseq.c             | 11 +++++++++++
+> >  2 files changed, 15 insertions(+)
+> >
+> > diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
+> > index c233aae5eac90..019fd248cf749 100644
+> > --- a/include/uapi/linux/rseq.h
+> > +++ b/include/uapi/linux/rseq.h
+> > @@ -58,6 +58,10 @@ struct rseq_cs {
+> >   * contained within a single cache-line.
+> >   *
+> >   * A single struct rseq per thread is allowed.
+> > + *
+> > + * If struct rseq or struct rseq_cs is used with Memory Protection Keys,
+> > + * then the assigned pkey should either be accessible whenever these structs
+> > + * are registered/installed, or they should be protected with pkey 0.
+> >   */
+> >  struct rseq {
+> >         /*
+> > diff --git a/kernel/rseq.c b/kernel/rseq.c
+> > index b7a1ec327e811..88fc8cb789b3b 100644
+> > --- a/kernel/rseq.c
+> > +++ b/kernel/rseq.c
+> > @@ -10,6 +10,7 @@
+> >
+> >  #include <linux/sched.h>
+> >  #include <linux/uaccess.h>
+> > +#include <linux/pkeys.h>
+> >  #include <linux/syscalls.h>
+> >  #include <linux/rseq.h>
+> >  #include <linux/types.h>
+> > @@ -424,11 +425,19 @@ static int rseq_ip_fixup(struct pt_regs *regs)
+> >  void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
+> >  {
+> >         struct task_struct *t = current;
+> > +       pkey_reg_t saved_pkey;
+> >         int ret, sig;
+> >
+> >         if (unlikely(t->flags & PF_EXITING))
+> >                 return;
+> >
+> > +       /*
+> > +        * Enable access to the default (0) pkey in case the thread has
+> > +        * currently disabled access to it and struct rseq/rseq_cs has
+> > +        * 0 pkey assigned (the only supported value for now).
+> > +        */
+> > +       saved_pkey = enable_zero_pkey_val();
+> > +
+> >         /*
+> >          * regs is NULL if and only if the caller is in a syscall path.  Skip
+> >          * fixup and leave rseq_cs as is so that rseq_sycall() will detect and
+> > @@ -441,9 +450,11 @@ void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
+> >         }
+> >         if (unlikely(rseq_update_cpu_node_id(t)))
+> >                 goto error;
+> > +       write_pkey_val(saved_pkey);
+> >         return;
+> >
+> >  error:
+> > +       write_pkey_val(saved_pkey);
+> >         sig = ksig ? ksig->sig : 0;
+> >         force_sigsegv(sig);
+> >  }
+> > --
+> > 2.49.0.1143.g0be31eac6b-goog
+> >
