@@ -1,79 +1,40 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40102571AD;
-	Tue, 24 Jun 2025 07:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE9372617
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750751116; cv=none; b=APJVO3THenDlBdD9HQvqUXGmwb9JLMK4YLpcbYt98iFCcB4PPmakpXU6n7YD5Kp6Gern2CYeTi6fmUaRO1nzJUzrzWuLA+mTatZj9TJpot524V43xRtA3s8lXvbjAIfrUaPdafud8CkWOkVKFLhjqLYizMVTLWLH6m7wTcVWPJU=
+	t=1750751168; cv=none; b=jaflj4Bk/4l/LLMYsc4yV4Ff7z84GZu8xLx2EOfgGGPugVb3xnfgAveFjl03/EQTKN7ATW9S9Vw1fCgTam0U0n08sxP/5S44OXRRccoj+DPR5e0hh48fNn3mP6Ln536WcFmCJ1EfipkyWxoGjYVh6bZn+mGtXrlJw3urhnnp7Pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750751116; c=relaxed/simple;
-	bh=OMYfjk/HFBuh+RTKM3jVKi0nByrXItMtgixjn74Xy6A=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gLv5jK/HO+G+xSEpO/5ujEPW6GS1BlS3JgsGByJ98Bt+XgSenUcrUCNSLCXmbk5yqlWGMGNZlR1rveABJoJRD3KJOSVD0LjIrAoOgJLJqrCR4NkA7HZDjQq4B5qVRtgNKIAwh22hnBgxI0J4U7NZlwJIMQNd1rR+vEiVotzXlQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EN/DqN8S; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750751168; c=relaxed/simple;
+	bh=vlL/YfOAh6ZfyEaYxM/VBBUTlhM3GzXsVMD5GoAJ7Rw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ejcvWEnLmngKmD/fYfNo8LNqn6fcza7Cx+rRqZqrO3Eff79BsDvdPq0XVGXYGpPhNIC/COetqJnzqz3RaEEn3ia7sfTiYlXpExTMSuXa0bRHpyGEwjJakYAesL8zqBalu3skuqpAG09C719aLuRVUjykyRgo8kvQplNL2pZHBl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=kU1rFC9u; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EN/DqN8S"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so3931910f8f.1;
-        Tue, 24 Jun 2025 00:45:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750751113; x=1751355913; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=g0Qw5wb1qPbwmyPbsLrs16hi2rdMz6r9QLI+Zkxs80I=;
-        b=EN/DqN8SQPSyhcRP+BHiwZGHKO32f62KZ2sT8LdzHAa/b94z35+3IZGbyHDdyYQbws
-         3akHsaFvQ/cm+2vm039NwWc/xJXzNAKr77EuD9sE73L/CoULckEbSUPhhBa80+GEESda
-         6SxEtLMP6j+O3hhZqQjPNJ0teR1t8Xahx1eOz54pARkv3kQQSOhIDFMsV+XBuGdBR/hP
-         XxnYCFngrcBAx3GApXYpVeVIs3pZ1CxnKT/t4vP9ONDYCI3ereKaGxn7yXCd4FJcJu0A
-         XXywV10AYSN9w5UTBhI62VQsKBSIINZ8CQF1cx3M8BERM+bllgLaKeNV/n+cMy1xwWW8
-         XQDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750751113; x=1751355913;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g0Qw5wb1qPbwmyPbsLrs16hi2rdMz6r9QLI+Zkxs80I=;
-        b=TCqD6Rno/nS7iMJ+pJog/SWwz9+Bmi2v72lb4IGXH74vrn+5Yd+PTuQ3avUn49gJs/
-         aAbgnS3hdAbOrK8WasWYvG5DoHGJT7RTMWMg5UrBQh5jQA682NVegTWm7sM9mTV2oHUI
-         ZRtsef8F1Q3FnRWqiPsvDbvl8ZYBX+E2SUXaeN7D1vduImu16HbFZPCiVNuDaB0eT8Z5
-         YQWrgoIGbYCx1o3dIr0Lhq3hpB8BVi/tty3FlGpIpHSeOOE/Be6iHTIGeuiq3+PXDfXv
-         D8SfTTq3aZ0c1bjSnu5cdpoIhzIIVPshM0ICdrdCjnDtqQ+qf+u/+tF8s62aQFn06eeL
-         S9pw==
-X-Forwarded-Encrypted: i=1; AJvYcCV/ogYZ3i8oU54gI012FQFsNllcWdo5FwTSvglUXLgz+mqU46itKc/hJ9LFUg5+znrUheqIhDeFm6Wp@vger.kernel.org, AJvYcCWFYfdeoclyQQjUy2dLW4HS6acw+K4dthQnLdCsICON0boKCJl2c5ToVcOTYeVfrmUS7SPHmqL5u9WbkmM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywzq6EBATubhhPmPyil5BCQIPDCnssAHplGc9Q8mqjHi2t1skCY
-	o1R+sEidUjLm2bTk8YORRAYJWsH7zSRCUGlNzIByCHMmpsE1hgy7WHz2qlCXsg==
-X-Gm-Gg: ASbGncsTXTharGMCDpvnilP3eVKsLZ7YKYdpesACncqDX/apDRneYyGeGFnSLPMv3C+
-	u6oqbmEH23QYTOebgOh7AS/s7UcrAOdj/5sxNF44Ir6H+ptLPGu3xn5S1NK/A8YWkDvok0hgqGx
-	a4F0bzT/9HTqaHsdJUAKixpDsgeNGQc6p3Gl4+d7+i9w8P2A7073hUs1piez9Tv+0a6WaydTET0
-	q6QKkB1j9xx1D28kjtN8+04CN5CAslFRvkcGITx7oaJ9yPDpLHnzoT1ZYT7nQyCQYmMMqiPMW60
-	RVImnJb/p+4mzObcuGG3m+MZk6P72u2Ot7HpI54lp3OxB8VK4dQ6t+C6cirP26FwUnx2/KWsn6v
-	zLttqGMDYtFSxkNKmLw==
-X-Google-Smtp-Source: AGHT+IE0gWJM7aSHVAxN1GTQvphCOkft5ulLOzwhDZvQOYQaffQzFyUGVVNZrQjCmYXfWS8WYgK6DQ==
-X-Received: by 2002:a05:6000:2409:b0:3a6:daff:9e5 with SMTP id ffacd0b85a97d-3a6e71c5b54mr1705345f8f.7.1750751112954;
-        Tue, 24 Jun 2025 00:45:12 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4536470370fsm132895045e9.29.2025.06.24.00.45.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 00:45:11 -0700 (PDT)
-Message-ID: <685a5787.050a0220.20ff0f.fd7a@mx.google.com>
-X-Google-Original-Message-ID: <aFpXhMeTm_7QT8sj@Ansuel-XPS.>
-Date: Tue, 24 Jun 2025 09:45:08 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Lukas Wunner <lukas@wunner.de>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Andy Shevchenko <andy@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v15 1/2] math.h: provide rounddown_ull variant for
- rounddown MACRO
-References: <20250623211116.1395-1-ansuelsmth@gmail.com>
- <CAHp75VcWW=RaHS9Yb8BcK2Jt7qtNOQzA3eDOZQ88RQG63981cQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="kU1rFC9u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1750751160;
+	bh=vlL/YfOAh6ZfyEaYxM/VBBUTlhM3GzXsVMD5GoAJ7Rw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kU1rFC9ugJyr0FZotbyThQpa7ifP7PNoPaACC3KeLBVxUad+HDSGs/T9vWaPioaTB
+	 mOyBAzsonASxGpM0Jj88DMRC72Krimpz3UrdQv2gkr2Ch4fo86rJZ3DFeglyvHX33h
+	 gP0Bnq8N3MDV3DnIilImV35+hYB6VIfjOYlCcYHs=
+Date: Tue, 24 Jun 2025 09:46:00 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Willy Tarreau <w@1wt.eu>
+Cc: linux-kernel@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 2/3] tools/nolibc: add a new target
+ "headers_all_archs" to loop over all archs
+Message-ID: <a7bf2a5f-1d72-460e-8cff-1c7e31bda3c8@t-8ch.de>
+References: <20250620103705.10208-1-w@1wt.eu>
+ <20250620103705.10208-3-w@1wt.eu>
+ <4c48147d-aebc-4a2c-a60f-eba2e90584ed@t-8ch.de>
+ <20250624062002.GD30919@1wt.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,65 +44,73 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VcWW=RaHS9Yb8BcK2Jt7qtNOQzA3eDOZQ88RQG63981cQ@mail.gmail.com>
+In-Reply-To: <20250624062002.GD30919@1wt.eu>
 
-On Tue, Jun 24, 2025 at 09:08:32AM +0300, Andy Shevchenko wrote:
-> On Tue, Jun 24, 2025 at 12:11 AM Christian Marangi <ansuelsmth@gmail.com> wrote:
-> >
-> > There is currently a problem with the usage of rounddown MACRO with
+On 2025-06-24 08:20:02+0200, Willy Tarreau wrote:
+> On Mon, Jun 23, 2025 at 11:56:29PM +0200, Thomas Weißschuh wrote:
+> > On 2025-06-20 12:37:04+0200, Willy Tarreau wrote:
+> > > This target allows to install the nolibc headers for all supported
+> > > architectures at once, just like it is in the development tree. This
+> > > is a first step to support full multi-architecture support.
+> > > 
+> > > Signed-off-by: Willy Tarreau <w@1wt.eu>
+> > > ---
+> > >  tools/include/nolibc/Makefile | 10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > > 
+> > > diff --git a/tools/include/nolibc/Makefile b/tools/include/nolibc/Makefile
+> > > index 9197c79b267a4..8de6ac5cec425 100644
+> > > --- a/tools/include/nolibc/Makefile
+> > > +++ b/tools/include/nolibc/Makefile
+> > > @@ -23,6 +23,8 @@ else
+> > >  Q=@
+> > >  endif
+> > >  
+> > > +nolibc_supported_archs := aarch64 arm loongarch m68k mips powerpc riscv s390 sparc x86
+> > > +
+> > >  nolibc_arch := $(patsubst arm64,aarch64,$(ARCH))
+> > >  arch_file := arch-$(nolibc_arch).h
+> > >  all_files := \
+> > > @@ -83,6 +85,7 @@ help:
+> > >  	@echo "  all                 call \"headers\""
+> > >  	@echo "  clean               clean the sysroot"
+> > >  	@echo "  headers             prepare a sysroot in \$${OUTPUT}sysroot"
+> > > +	@echo "  headers_all_archs   prepare a multi-arch sysroot in \$${OUTPUT}sysroot"
+> > >  	@echo "  headers_standalone  like \"headers\", and also install kernel headers"
+> > >  	@echo "  help                this help"
+> > >  	@echo ""
+> > > @@ -110,6 +113,13 @@ headers_standalone: headers
+> > >  	$(Q)$(MAKE) -C $(srctree) headers
+> > >  	$(Q)$(MAKE) -C $(srctree) headers_install INSTALL_HDR_PATH=$(OUTPUT)sysroot
+> > >  
+> > > +# installs headers for all archs at once.
+> > > +headers_all_archs:
+> > > +	$(Q)mkdir -p "$(OUTPUT)sysroot"
+> > > +	$(Q)mkdir -p "$(OUTPUT)sysroot/include"
+> > > +	$(Q)cp --parents $(all_files) arch.h "$(OUTPUT)sysroot/include/"
+> > > +	$(Q)cp $(addsuffix .h,$(addprefix arch-,$(nolibc_supported_archs))) "$(OUTPUT)sysroot/include/"
+> > 
+> > IMO we could always just install all architecture headers.
+> > It's not much code after all.
+> > If it is a problem for a user they can either just delete the
+> > superfluous architectures or do 'mv arch-$foo.h arch.h; rm arch-*.h'.
 > 
-> rounddown() with
-> 
-> > u64 dividends. This cause compilation error on specific arch where
-> 
-> causes
-> 
-> > 64bit division is done on 32bit system.
-> 
-> on the 32-bit
-> 
-> 
-> > To be more specific GCC try optimize the function and replace it with
-> 
-> to optimize
-> 
-> > __umoddi3 but this is actually not compiled in the kernel.
-> 
-> __umoddi3()
-> 
-> > Example:
-> > pwm-airoha.c:(.text+0x8f8): undefined reference to `__umoddi3'
-> >
-> > To better handle this, introduce a variant of rounddown MACRO,
-> 
-> rounddown(),
-
-For this and the other... Is it correct to use () for MACRO?
-I assume () should be used only for functions.
-
-> 
-> > rounddown_ull that can be used exactly for this scenario.
-> 
-> rounddown_ull()
-> 
-> > rounddown_ull new MACRO use the do_div MACRO that do the heavy work of
-> 
-> The rounddown_ull() is a new macro that uses do_div() to do the heavy work of
-> 
-> > handling internally all the magic for 64bit division on 32bit (and
-> 
-> for the 64-bit divisions on the 32-bit platforms (and
-> 
-> > indirectly fix the compilation error).
-> 
-> ...
-> 
-> > - Add this patch
-> 
-> Why are math64 APIs not usable here?
+> I wanted to do that first, then thought that maybe some would like
+> to only install the nolibc headers because they already have the
+> UAPI headers from another source (local libc, distro packages,
+> toolchain etc). Even for us during nolibc development, not having
+> to iterate through all archs to reinstall everything is a huge time
+> saver.
 >
+> However, I had another idea that floated in my mind, which is that
+> given that we're only saving a few small arch-* files by not
+> installing all archs all the time, maybe we should replace the
+> "headers" target to always install nolibc headers for all archs
+> like above, and keep the uapi headers install separate (only one
+> or all). This would remove the need for the target above whose
+> role is a bit ambiguous. What do you think ?
 
-There isn't a rounddown API for math64.
+That is exactly what I tried to express :-)
 
--- 
-	Ansuel
+
+Thomas
