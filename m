@@ -1,143 +1,222 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77DC19D080
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56AACA2D;
+	Tue, 24 Jun 2025 00:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750724259; cv=none; b=p4ehuAzoRpcmhNbcgPqkicqKm8D4aiGnlmBzzbUkTTEOlq3ufKtshazD/GtXxkA8cEWimbGK5PMDmlhFVrJ1bwbnUA4zQghEbmVoJwnJGh46lgck+gpoa5mE1EOJWSZhJcM7uHorpu93a0vZPPX82PBMu6tYqn+3V4iRxaK5ccU=
+	t=1750724367; cv=none; b=YPA6eTdybKNtfd4w6UwUUuXMhJBMXWrSAXjtR2ad1QHKp4NnGNYGEneGLWS+GMesL1WhzBvH1Fqr1RvmY5z7wpW5r+lmge02fswYLbaYN+UCBi5aOW9UF8xjQy07pMu21ASYH6HsmUYwv8eDloppbTxaTTJqZxGXKRiq+XQ5FQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750724259; c=relaxed/simple;
-	bh=o+v4lK1Ijp81f8YHyslKho/ngACy3vmkWV/zLRrVAJo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=nnJX36r4fLkdDr6NGR7n1TcrV/kJcNdKAjG9rXiJyVVIVaxTcA2RK/mTsCZYE0vuf+kBUn6oIi9MlWAjoJ7xRCO1IUwskPeE7E+ctAz4ttMtmeIBJwsdQ77oOmelXC08pAqin1DlQJijyZXNAx8aas8oKV2Up4e3hXfZq9IeQkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p55P0z+J; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p55P0z+J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE676C4CEEA;
-	Tue, 24 Jun 2025 00:17:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750724258;
-	bh=o+v4lK1Ijp81f8YHyslKho/ngACy3vmkWV/zLRrVAJo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=p55P0z+JRFL5pp9PD2HqnGNMfSFW7SSI0qHf2U3z3GM7VlrggFqN+vzMDR8a7ZxH8
-	 rEAju40FWlxjaVY/RO+PJ3xVMeMKViCqxLWGQ6VNIvb2yItQacd4O4CQm4kgYS7sEW
-	 3x4VGycouXtbl8pLtC83FgmzzvLdThzLllqYYw1tzDrWAgIttb2Ebjn1fhANRc59aC
-	 ofeRsR9H7M7tniwEE/qcokBerA3CDNK8HMrAuQT0Jgm/xIRW+DlbyFaef8i7h/NHPR
-	 BV3H+Tul0ym9DilUAujzYljY6mQrGYcKjnXv+DaVTgalB7SknhfAGwWQ3q4pv2HFR3
-	 OH+bRecZsFy6A==
-Date: Tue, 24 Jun 2025 09:17:31 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Lance Yang <ioworker0@gmail.com>
-Cc: akpm@linux-foundation.org, zi.li@linux.dev, anna.schumaker@oracle.com,
- boqun.feng@gmail.com, joel.granados@kernel.org, jstultz@google.com,
- kent.overstreet@linux.dev, leonylgao@tencent.com,
- linux-kernel@vger.kernel.org, longman@redhat.com, mhiramat@kernel.org,
- mingo@redhat.com, mingzhe.yang@ly.com, peterz@infradead.org,
- rostedt@goodmis.org, senozhatsky@chromium.org, tfiga@chromium.org,
- will@kernel.org, Lance Yang <lance.yang@linux.dev>
-Subject: Re: [PATCH RFC 1/3] locking/rwsem: make owner helpers globally
- available
-Message-Id: <20250624091731.f4d3cf296943ce45e97a631f@kernel.org>
-In-Reply-To: <20250612042005.99602-2-lance.yang@linux.dev>
-References: <20250612042005.99602-1-lance.yang@linux.dev>
-	<20250612042005.99602-2-lance.yang@linux.dev>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750724367; c=relaxed/simple;
+	bh=PavnqtiwB/fsXssZwmJ6jM960QXao6ToQorgMfbx6B8=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=RTLCx9tVGU/f2zW7gWAdgfcqJBnde5aN91HcW8Gu3AcDDt+kbxt2nrys04z5m+A1cfSOD8lASouH0LMoEF5Pmq9tH6NkoGJ+LwfJSm5RYTRIMVHLVgtZxf2AUmZOxVnrKlvczEAVPaxtRIIfGGn57oMpm9hFj1sktYeyspANsV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uTrNf-003YDs-0I;
+	Tue, 24 Jun 2025 00:19:19 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+From: "NeilBrown" <neil@brown.name>
+To: "Su Hui" <suhui@nfschina.com>
+Cc: chuck.lever@oracle.com, jlayton@kernel.org, okorniev@redhat.com,
+ Dai.Ngo@oracle.com, tom@talpey.com, "Su Hui" <suhui@nfschina.com>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] nfsd: Using guard() to simplify nfsd_cache_lookup()
+In-reply-to: <20250623122226.3720564-1-suhui@nfschina.com>
+References: <20250623122226.3720564-1-suhui@nfschina.com>
+Date: Tue, 24 Jun 2025 10:19:16 +1000
+Message-id: <175072435698.2280845.12079422273351211469@noble.neil.brown.name>
 
-On Thu, 12 Jun 2025 12:19:24 +0800
-Lance Yang <ioworker0@gmail.com> wrote:
+On Mon, 23 Jun 2025, Su Hui wrote:
+> Using guard() to replace *unlock* label. guard() makes lock/unlock code
+> more clear. Change the order of the code to let all lock code in the
+> same scope. No functional changes.
 
-> From: Lance Yang <lance.yang@linux.dev>
-> 
-> In preparation for extending blocker tracking to support rwsems, make the
-> rwsem_owner() and is_rwsem_reader_owned() helpers globally available for
-> determining if the blocker is a writer or one of the readers.
-> 
+While I agree that this code could usefully be cleaned up and that you
+have made some improvements, I think the use of guard() is a nearly
+insignificant part of the change.  You could easily do exactly the same
+patch without using guard() but having and explicit spin_unlock() before
+the new return.  That doesn't mean you shouldn't use guard(), but it
+does mean that the comment explaining the change could be more usefully
+focused on the "Change the order ..." part, and maybe explain what that
+is important.
 
-Looks good to me.
+I actually think there is room for other changes which would make the
+code even better:
+- Change nfsd_prune_bucket_locked() to nfsd_prune_bucket().  Have it
+  take the lock when needed, then drop it, then call
+  nfsd_cacherep_dispose() - and return the count.
+- change nfsd_cache_insert to also skip updating the chain length stats
+  when it finds a match - in that case the "entries" isn't a chain
+  length. So just  lru_put_end(), return.  Have it return NULL if
+  no match was found
+- after the found_entry label don't use nfsd_reply_cache_free_locked(),
+  just free rp.  It has never been included in any rbtree or list, so it
+  doesn't need to be removed.
+- I'd be tempted to have nfsd_cache_insert() take the spinlock itself
+  and call it under rcu_read_lock() - and use RCU to free the cached
+  items.=20
+- put the chunk of code after the found_entry label into a separate
+  function and instead just return RC_REPLY (and maybe rename that
+  RC_CACHED).  Then in nfsd_dispatch(), if RC_CACHED was returned, call
+  that function that has the found_entry code.
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+I think that would make the code a lot easier to follow.  Would you like
+to have a go at that - I suspect it would be several patches - or shall
+I do it?
 
-Thanks!
+Thanks,
+NeilBrown
 
-> Signed-off-by: Lance Yang <lance.yang@linux.dev>
+
+
+>=20
+> Signed-off-by: Su Hui <suhui@nfschina.com>
 > ---
->  include/linux/rwsem.h  | 12 ++++++++++++
->  kernel/locking/rwsem.c |  8 +++++---
->  2 files changed, 17 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
-> index c8b543d428b0..544853bed5b9 100644
-> --- a/include/linux/rwsem.h
-> +++ b/include/linux/rwsem.h
-> @@ -132,6 +132,18 @@ static inline int rwsem_is_contended(struct rw_semaphore *sem)
->  	return !list_empty(&sem->wait_list);
->  }
->  
-> +#if defined(CONFIG_DEBUG_RWSEMS) || defined(CONFIG_DETECT_HUNG_TASK_BLOCKER)
-> +/*
-> + * Return just the real task structure pointer of the owner
-> + */
-> +extern struct task_struct *rwsem_owner(struct rw_semaphore *sem);
+>  fs/nfsd/nfscache.c | 99 ++++++++++++++++++++++------------------------
+>  1 file changed, 48 insertions(+), 51 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
+> index ba9d326b3de6..2d92adf3e6b0 100644
+> --- a/fs/nfsd/nfscache.c
+> +++ b/fs/nfsd/nfscache.c
+> @@ -489,7 +489,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigned =
+int start,
+> =20
+>  	if (type =3D=3D RC_NOCACHE) {
+>  		nfsd_stats_rc_nocache_inc(nn);
+> -		goto out;
+> +		return rtn;
+>  	}
+> =20
+>  	csum =3D nfsd_cache_csum(&rqstp->rq_arg, start, len);
+> @@ -500,64 +500,61 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigne=
+d int start,
+>  	 */
+>  	rp =3D nfsd_cacherep_alloc(rqstp, csum, nn);
+>  	if (!rp)
+> -		goto out;
+> +		return rtn;
+> =20
+>  	b =3D nfsd_cache_bucket_find(rqstp->rq_xid, nn);
+> -	spin_lock(&b->cache_lock);
+> -	found =3D nfsd_cache_insert(b, rp, nn);
+> -	if (found !=3D rp)
+> -		goto found_entry;
+> -	*cacherep =3D rp;
+> -	rp->c_state =3D RC_INPROG;
+> -	nfsd_prune_bucket_locked(nn, b, 3, &dispose);
+> -	spin_unlock(&b->cache_lock);
+> +	scoped_guard(spinlock, &b->cache_lock) {
+> +		found =3D nfsd_cache_insert(b, rp, nn);
+> +		if (found =3D=3D rp) {
+> +			*cacherep =3D rp;
+> +			rp->c_state =3D RC_INPROG;
+> +			nfsd_prune_bucket_locked(nn, b, 3, &dispose);
+> +			goto out;
+> +		}
+> +		/* We found a matching entry which is either in progress or done. */
+> +		nfsd_reply_cache_free_locked(NULL, rp, nn);
+> +		nfsd_stats_rc_hits_inc(nn);
+> +		rtn =3D RC_DROPIT;
+> +		rp =3D found;
 > +
-> +/*
-> + * Return true if the rwsem is owned by a reader.
-> + */
-> +extern bool is_rwsem_reader_owned(struct rw_semaphore *sem);
-> +#endif
+> +		/* Request being processed */
+> +		if (rp->c_state =3D=3D RC_INPROG)
+> +			goto out_trace;
 > +
->  #else /* !CONFIG_PREEMPT_RT */
->  
->  #include <linux/rwbase_rt.h>
-> diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-> index 2ddb827e3bea..6cb29442d4fc 100644
-> --- a/kernel/locking/rwsem.c
-> +++ b/kernel/locking/rwsem.c
-> @@ -181,11 +181,11 @@ static inline void rwsem_set_reader_owned(struct rw_semaphore *sem)
->  	__rwsem_set_reader_owned(sem, current);
+> +		/* From the hall of fame of impractical attacks:
+> +		 * Is this a user who tries to snoop on the cache?
+> +		 */
+> +		rtn =3D RC_DOIT;
+> +		if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
+> +			goto out_trace;
+> =20
+> +		/* Compose RPC reply header */
+> +		switch (rp->c_type) {
+> +		case RC_NOCACHE:
+> +			break;
+> +		case RC_REPLSTAT:
+> +			xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
+> +			rtn =3D RC_REPLY;
+> +			break;
+> +		case RC_REPLBUFF:
+> +			if (!nfsd_cache_append(rqstp, &rp->c_replvec))
+> +				return rtn; /* should not happen */
+> +			rtn =3D RC_REPLY;
+> +			break;
+> +		default:
+> +			WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
+> +		}
+> +
+> +out_trace:
+> +		trace_nfsd_drc_found(nn, rqstp, rtn);
+> +		return rtn;
+> +	}
+> +out:
+>  	nfsd_cacherep_dispose(&dispose);
+> =20
+>  	nfsd_stats_rc_misses_inc(nn);
+>  	atomic_inc(&nn->num_drc_entries);
+>  	nfsd_stats_drc_mem_usage_add(nn, sizeof(*rp));
+> -	goto out;
+> -
+> -found_entry:
+> -	/* We found a matching entry which is either in progress or done. */
+> -	nfsd_reply_cache_free_locked(NULL, rp, nn);
+> -	nfsd_stats_rc_hits_inc(nn);
+> -	rtn =3D RC_DROPIT;
+> -	rp =3D found;
+> -
+> -	/* Request being processed */
+> -	if (rp->c_state =3D=3D RC_INPROG)
+> -		goto out_trace;
+> -
+> -	/* From the hall of fame of impractical attacks:
+> -	 * Is this a user who tries to snoop on the cache? */
+> -	rtn =3D RC_DOIT;
+> -	if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
+> -		goto out_trace;
+> -
+> -	/* Compose RPC reply header */
+> -	switch (rp->c_type) {
+> -	case RC_NOCACHE:
+> -		break;
+> -	case RC_REPLSTAT:
+> -		xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
+> -		rtn =3D RC_REPLY;
+> -		break;
+> -	case RC_REPLBUFF:
+> -		if (!nfsd_cache_append(rqstp, &rp->c_replvec))
+> -			goto out_unlock; /* should not happen */
+> -		rtn =3D RC_REPLY;
+> -		break;
+> -	default:
+> -		WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
+> -	}
+> -
+> -out_trace:
+> -	trace_nfsd_drc_found(nn, rqstp, rtn);
+> -out_unlock:
+> -	spin_unlock(&b->cache_lock);
+> -out:
+>  	return rtn;
 >  }
->  
-> -#ifdef CONFIG_DEBUG_RWSEMS
-> +#if defined(CONFIG_DEBUG_RWSEMS) || defined(CONFIG_DETECT_HUNG_TASK_BLOCKER)
->  /*
->   * Return just the real task structure pointer of the owner
->   */
-> -static inline struct task_struct *rwsem_owner(struct rw_semaphore *sem)
-> +struct task_struct *rwsem_owner(struct rw_semaphore *sem)
->  {
->  	return (struct task_struct *)
->  		(atomic_long_read(&sem->owner) & ~RWSEM_OWNER_FLAGS_MASK);
-> @@ -194,7 +194,7 @@ static inline struct task_struct *rwsem_owner(struct rw_semaphore *sem)
->  /*
->   * Return true if the rwsem is owned by a reader.
->   */
-> -static inline bool is_rwsem_reader_owned(struct rw_semaphore *sem)
-> +bool is_rwsem_reader_owned(struct rw_semaphore *sem)
->  {
->  	/*
->  	 * Check the count to see if it is write-locked.
-> @@ -205,7 +205,9 @@ static inline bool is_rwsem_reader_owned(struct rw_semaphore *sem)
->  		return false;
->  	return rwsem_test_oflags(sem, RWSEM_READER_OWNED);
->  }
-> +#endif
->  
-> +#ifdef CONFIG_DEBUG_RWSEMS
->  /*
->   * With CONFIG_DEBUG_RWSEMS configured, it will make sure that if there
->   * is a task pointer in owner of a reader-owned rwsem, it will be the
-> -- 
-> 2.49.0
-> 
+> =20
+> --=20
+> 2.30.2
+>=20
+>=20
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
