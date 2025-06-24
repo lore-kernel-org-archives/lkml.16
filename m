@@ -1,93 +1,90 @@
-Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2480B21B9FD;
-	Tue, 24 Jun 2025 16:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952E52CA8;
+	Tue, 24 Jun 2025 16:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750781714; cv=none; b=PIVNrGyhP3LMeYSNDHgStDLGlX9VhpaMmtwWE9S7+9Jucn7Ysjsn8AGFeLcrjvuam6MF0AhPDFKMS9bpizj+Z1ePZVlfqE7GUU4UZ3AFb7O/rqdwKRyljqV4aYgERKS6NDh1q2yM1DHyz7H2HA6x2G7XQNlbbWXpfelRSyfC958=
+	t=1750781743; cv=none; b=PoDyzWKt3b3TsTiZfnlnRQrOdHEQ7u9pl1D8vN8+nfhtiwEZbcAW3vo+eRW1aeYMkO0raHSUM3YyawCS/+UBCB/6j0ByIMNchKr1BvCQDYJJTtP5Y1MU4w5lOpCATNh8CxAJheqMirOhoZK6SCR49xThX7QqvFYNpRWsvCdTyEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750781714; c=relaxed/simple;
-	bh=Jw+jii3AqB7qQ/n+MMga6gdlZNbQILmRGO7Jr1wVD9Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gOtXmqWOaEMT8EyrvLFmtzydBbyTbQMMfnuOZRFIj8ND5J9ytdYJzhGn2zsfuaAv1ds3OucpmBY/5/tml93zB5XD6Z615lxuQHOyeby3gO6XCuZFW1zxGWMG60cZfP4w4OLeLsJAeT7xo0Tg4IIWfFnKFu6tDLfE9/rP9pyuqq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=XsaIiYkM; arc=none smtp.client-ip=199.89.3.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1750781743; c=relaxed/simple;
+	bh=57KGGXFeYzK3SWKuPuzos71t2DB02nUIsE5M3fgI7hw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Usraz2iRleMblEpbSLJGk10IycYfCpk69+1VXy2vb2eX/ZrFUtTm+/CGyXElYxeKi3ua5ndeZiUs8eGpPWLtCq/OukgNa+U6UeBSo2C93JhVzUw2YkHxcqtR0KBcQ99gKGS5ZytaQli/nB3WR+ZEASknB4417GK017JLFZohdtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UZLEobQR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="XsaIiYkM"
-Received: from localhost (localhost [127.0.0.1])
-	by 003.mia.mailroute.net (Postfix) with ESMTP id 4bRVR30xytzlgqV2;
-	Tue, 24 Jun 2025 16:15:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1750781708; x=1753373709; bh=7qcQNUHgV1N9LnFZH512TXGo
-	pEde8MG1HM/QzXXuiMs=; b=XsaIiYkMwpmUAdL/lZgWAvTZXX1aPpkSW5v7Il8l
-	w1mziKN33dNk2cls8t+ni5BZYk39g4iXojYDJbtV6hbmkwtdlrntD5jMQM1CkzMW
-	yj2FhBurP9YCByVxo2Gn55Z9y9U8gD3BVRHoRmfuVv9flnYypA8mQ8fg3fSD5nm+
-	XJxNeTDZsgJTpxKiNvTNWb3u+/GjyvIf4WdT0kBOzZxj5rNn1e3/oDKhZGEWBuYX
-	bm4fHzHoQQ4K4PrCoRjvqBxdBVoPaKlSag3rV+LwFEb9bTufwNxG1tK8k07XE2Ta
-	eWIhIeCNQjocrks1rNsOyQSkLqTI6dvFWnlrbH/rIbCRqw==
-X-Virus-Scanned: by MailRoute
-Received: from 003.mia.mailroute.net ([127.0.0.1])
- by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id a3X19X6cxwTP; Tue, 24 Jun 2025 16:15:08 +0000 (UTC)
-Received: from [100.118.141.242] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4bRVQp006CzlgqTy;
-	Tue, 24 Jun 2025 16:14:56 +0000 (UTC)
-Message-ID: <a15b8f6e-5ad5-4d16-98d4-79cf63619f6e@acm.org>
-Date: Tue, 24 Jun 2025 09:14:52 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UZLEobQR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EB27C4CEE3;
+	Tue, 24 Jun 2025 16:15:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750781743;
+	bh=57KGGXFeYzK3SWKuPuzos71t2DB02nUIsE5M3fgI7hw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UZLEobQROqAuzu4WGUq3ilnyh0W3kf7mHHZLhm59Bq+kmmatsj9yzu6Vz7vWpQUZ3
+	 ZMKHK1O6dphmww8tlmC9n0JJYD7HDSq98/onavbNuW0BKxtI9b2PDfy+hxL1079pLK
+	 I825s0pdnz7Ib7A1502mkKCoqocwCD0UZ2hwsBaKJYhraDX4AStrq8UVEhEGDfwONJ
+	 Lyro5JtRvr4SjQKVxfI/0ks6LaPXYUE2DSvnu1jKC0SlEvZPZwAxG6+u9ZsWoMEAS0
+	 o0Sy1FuogCmKsTUdqWD7lhHltZCF8CD8+NFINHff9hFG0VCjLOpFdvfYQ+AKKb7ERy
+	 cbALbi6aTGErg==
+Date: Tue, 24 Jun 2025 18:15:36 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
+	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] rust: devres: get rid of Devres' inner Arc
+Message-ID: <aFrPKAxHfAetcQzz@cassiopeiae>
+References: <20250622164050.20358-1-dakr@kernel.org>
+ <20250622164050.20358-4-dakr@kernel.org>
+ <aFizv7suXTADJU3f@Mac.home>
+ <aFrBvwFrUGD45TeF@cassiopeiae>
+ <aFrIbRA9b9LOxFQ3@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scsi: ufs: preventing bus hang crash during emergency
- power off
-To: Bo Ye <bo.ye@mediatek.com>, Alim Akhtar <alim.akhtar@samsung.com>,
- Avri Altman <avri.altman@wdc.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: xiujuan.tan@mediatek.com, Qilin Tan <qilin.tan@mediatek.com>,
- linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20250519073814.167264-1-bo.ye@mediatek.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250519073814.167264-1-bo.ye@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFrIbRA9b9LOxFQ3@Mac.home>
 
-On 5/19/25 12:38 AM, Bo Ye wrote:
-> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-> index 7735421e3991..a1013aea8e90 100644
-> --- a/drivers/ufs/core/ufshcd.c
-> +++ b/drivers/ufs/core/ufshcd.c
-> @@ -10262,6 +10262,7 @@ static void ufshcd_wl_shutdown(struct device *dev)
->   		scsi_device_set_state(sdev, SDEV_OFFLINE);
->   		mutex_unlock(&sdev->state_mutex);
->   	}
-> +	ufshcd_wait_for_doorbell_clr(hba, 5 * USEC_PER_SEC);
->   	__ufshcd_wl_suspend(hba, UFS_SHUTDOWN_PM);
->   
->   	/*
+On Tue, Jun 24, 2025 at 08:46:53AM -0700, Boqun Feng wrote:
+> On Tue, Jun 24, 2025 at 05:18:23PM +0200, Danilo Krummrich wrote:
+> > On Sun, Jun 22, 2025 at 06:54:07PM -0700, Boqun Feng wrote:
+> > > I think you also need to mention that `inner` only remains valid until
+> > > `inner.devm.complete_all()` unblocks `Devres::drop()`, because after
+> > > `Devres::drop()`'s `devm.wait_for_completion()` returns, `inner` may be
+> > > dropped or freed.
+> > 
+> > I think of it the other way around: The invariant guarantees that `inner` is
+> > *always* valid.
+> > 
+> > The the `drop_in_place(inner)` call has to justify that it upholds this
+> > invariant, by ensuring that at the time it is called no other code that accesses
+> > `inner` can ever run.
+> > 
+> > Defining it the other way around would make the `inner()` accessor unsafe.
+> 
+> Maybe I wasn't clear enough, I meant in the following function:
+> 
+>     unsafe extern "C" fn devres_callback(ptr: *mut kernel::ffi::c_void) {
+> -        let ptr = ptr as *mut DevresInner<T>;
+> -        // Devres owned this memory; now that we received the callback, drop the `Arc` and hence the
+> -        // reference.
+> -        // SAFETY: Safe, since we leaked an `Arc` reference to devm_add_action() in
+> -        //         `DevresInner::new`.
+> -        let inner = unsafe { Arc::from_raw(ptr) };
+> +        // SAFETY: In `Self::new` we've passed a valid pointer to `Inner` to `devm_add_action()`,
+> +        // hence `ptr` must be a valid pointer to `Inner`.
+> +        let inner = unsafe { &*ptr.cast::<Inner<T>>() };
+> 
+> ^ this `inner` was constructed by reborrowing from `ptr`, but it should
+> only be used before the following `inner.devm.complete_all()`...
 
-This code path is not only triggered when using a UFSHCI 3.0 controller
-but also when using a UFSHCI 4.0 controller.
-ufshcd_wait_for_doorbell_clr() only supports the legacy single doorbell
-mode. Please make sure that the fix supports both the legacy single
-doorbell mode and MCQ.
-
-Thanks,
-
-Bart.
+Oh, so you meant adding this to the safety comment. Yes, that makes sense. Maybe
+ScopeGuard works too, as you say.
