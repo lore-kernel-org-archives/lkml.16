@@ -1,144 +1,241 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010035.outbound.protection.outlook.com [52.101.69.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFD017A2F8
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750732824; cv=none; b=KkbR0faTcVvkGC1kEoEzIUz3E8rdkO7E8KxpPzhUVZjY0WsS0K3AP7F28nOSwyERit2MAXouvB6WkFnKvMaZaZyHHYSPyr2qqCKQuX2N0VWkGFwNNPg2OIoW9QnjHv2CJurfEylGaqHIsCzeM+hfKyiJbVcVrf1pXWOa9OAJLZ4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750732824; c=relaxed/simple;
-	bh=enTOF6FIzn9wWsAyYbgHTZ9l+Kvoh1jGzhMq4Ig/1JY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VUO8brQtlcOXSg1vlRAZ9bDvZFBsTLJF2ulPXHm7MQb9KxPEUyg2SHB1Fq0xZOLjus1H/LKfQK9IGVQBxO0GECzViNzeRU3yhWD+MNpK/p51gFlqcim7Z6KkouytTjsNRUfgpMq7CumywkJKh3QuThPCAB/hu4zrOJfdWJmqu8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=auQ/emyc; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1ED3256D
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.35
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750732960; cv=fail; b=DSEK2DYsKj8rIE0nq84zz/nKj0NWrIH1waIAjmVxlF8GBMMN0/gaF3y+bvAnlRW6H+vK5DLnpcZFlu0jJOkM6Sa66M42HkwqHzm1SvWovGLhTzQsss05sQRryzM5wp9PhsmmV/rPvN/eQ5svaRrnheorffodgX6lTW745XOAW24=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750732960; c=relaxed/simple;
+	bh=izECqI+xY44QYP8YKw7rIx+3l3K23m0Phx8daH/bPgA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ih0HLq3Y0CHuVdRdzUdsF+5d6D2kOk65Lar3yXXwZaLdNNfYi6NyM8YiovxlaXbwh1h0/pJ7c7et5Q43EHmFW40W6T8XNA2hBmpYZrJawY1CgogR/6pC09KuNK0tgXtKwQGRb3x9CRc4n6dBcPeBikhnHan1KfXQcGgRhWBC8hI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=KH9ZuxQx; arc=fail smtp.client-ip=52.101.69.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="auQ/emyc"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a5828d26e4so733508f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 19:40:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1750732820; x=1751337620; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NwpXcIqfYnXwglQhFL6GpMu90ycYFYBcj7QErSUqSgA=;
-        b=auQ/emyc/8mZNSoUU0/QoytTMJPExQbMJTeEVeVoV7v+deakUfMdwPrWHgLSMLiJgN
-         biyfaNkla4q3bkAOHge+NgSL7IW3eHtiLqscqWtKGGR3WNVn7bLmrRHzP9IyHOpUgduq
-         ACrt2JUdC39RG78KRFp3JacKuwUNY7fEocQL0cBinrKdIEH4pn2BGnwCdqf6WDa8VyvP
-         Smi5Gy/kOb6t0YD1SDuQlN7vLisnZiFLTt0HOHsW0Ikvzibk44CsgJAkOocVg5b5zbKp
-         i6CjM0PRKszrur0VHdPgJ4ic5DUMlM1tdUW4h4sV6A+YYQ5WrqzVDf6DyDT9AH6QK2S8
-         OhJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750732820; x=1751337620;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NwpXcIqfYnXwglQhFL6GpMu90ycYFYBcj7QErSUqSgA=;
-        b=SIcrnRsshJWxWDWTG087BrpcxnlLXzuctzcz84BsMFaMOPOHJa0ONkLildrZ/61CeY
-         04BI7Oq/wkIFjF5ADCKUgEl3FA/Zdrjh6x+zrtu8bsOut2FaBEGhz0D9RHZ4ZSzir8O+
-         b25rK7gN/PXAcjU6nlGEvzNd5hbvd7fwpi1he5Ea9sW8hslVtsFjv/y/pCJppaSdhzx1
-         Xkyzl78H9jWbyZ9bIKu04zR393B/z7Kw3QA+BXVEWDZKAvMHMs9EvV2hyNsXexojlZNU
-         9FfpBfVHKz8SGNQXNzBscqBsIBKpzhuPEEZXYSCG/62qib99E1iaIECnmPjyxOLP8Jvj
-         bh5w==
-X-Gm-Message-State: AOJu0YyjBUdlWVf+Q6jPBEwL6WUVvAKMQn4ENoDhWgAr31FJQN+Y3Ld2
-	WoFyMSdBo995x4Sex3E3vOR3xQ4N/4NXzjoy6xcpS6tnRC8pgDM7kGAEi5+7DzLXQxg=
-X-Gm-Gg: ASbGncufkLYJnIRs7PqML1Y30Rv6fr6N4CnBM7WIxWROkh57PfAm0haU2KPCgWHoKbK
-	X8eVt87jQsVOhzSSrbx7gik6kQKb0pT1acOhr9A91aYXuQsaqXUITcnUx4gcEGAlZRx6fNQaEn9
-	szy+OIf0Q6W0zLb/oUovzHLlnuB3YRW9nrU2zxYiEB1WS9RSd75J3Awyii8Trf5GzatLTgeHkeW
-	FtMD2bESrTAoMqhkOhFMvmiglZErFuE725OezQ1jMZzYdmARKamx1oZlS3+txwGUNKBW45+jNRp
-	VUexvHQifONJaZlEUnyWKWeIym2T2BWdemKEvsH8m7uOqmpFHI9g1FBufSmcM7rDZw8=
-X-Google-Smtp-Source: AGHT+IEbqdclaAWUAWaYHwVY2zKq3xTnPeMuXhaeWz6w8mGwqFsDw03lzO3ccYAE94DQmRS/3SPWxA==
-X-Received: by 2002:a05:6000:2486:b0:3a5:3369:52f3 with SMTP id ffacd0b85a97d-3a6d12d736emr3843326f8f.3.1750732820059;
-        Mon, 23 Jun 2025 19:40:20 -0700 (PDT)
-Received: from [10.202.32.28] ([202.127.77.110])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3158a331babsm11877556a91.46.2025.06.23.19.40.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 19:40:19 -0700 (PDT)
-Message-ID: <c9467d9e-5cac-49b8-b839-179dc79d0bce@suse.com>
-Date: Tue, 24 Jun 2025 10:40:15 +0800
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="KH9ZuxQx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NJFv7mFbCTYupkLF1ECubqpmdTWkOfla1N409PwTmMZ51kv6RvvAOt57v7Myg0meqPbwpuFeM5nLXivHiTQSoMmtK7Ct8u+m692vKUgie/xLLJycP1AR3CFT4BoSxRtyf7TaLLO+sstiXzdTtH6h2zH37oSDIRUjJ7+y2job1oRQvNhUJjgb1dMUf7tVa7mFl95MSyCMUk6aqA7YWeueXvlqDW6b4Wu5anu896weUYzQToJ9nSuV8E+o72BMTrg7EzDEcTeNii8II2n7bEJyEAPlaNPk1ypMdcki3PzOJBvZ9kDP0FFkOIJQUhbqlMp47GpMAYeWp6mcAA8bRfj/tg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Mlx7Wzvck+LDM+vom4QWU8wPz5vyE0oqs558/YD9ALU=;
+ b=yCqRHQT+9RicyXETRm8luQzLBGhyPbvPaYIN8UsBFtO1exIOJy8HrG/yQmbMqh6Uujb/0bRfFNnHNBt4j7ZdQMFDeLq7EZuXynF22RPV4Sp1cI4uIFXDZ3Lmx/4yzgqt93Tu00E2K0439IrwHqlk6TwW0O3VIRd58dn1Z+meXv3x7OEmf7C7Gm70jziroPdzYU0fRSLxIe/PbYniIb0wQVHAvz+rvnnDH5+7aZFmQbzXJGJwKpX5YKiOFnCxStM2uz7qlKRXWGcwXHJL1K58YTsyd77/dn406AGaiqtaEa4l+bA3oiUtqaCxzKriMgrxpMDhQ4y03QMqZ1wYlhDRZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mlx7Wzvck+LDM+vom4QWU8wPz5vyE0oqs558/YD9ALU=;
+ b=KH9ZuxQxi1O1LnqxfNe+LpzFUrToAIgN76+6cnKamPGLhI0d71kM2JCYYUVLNbLeebOThfilNL+VNRUkhDlBWj5xyl8IvYE5QcjZAly8bvi+DPK1FRVhDTW+uyLPK0rSmbuFU/TWLQS98GaVd099v27CEq8x1NXQIVkxSXWETexfEBgAvUl0rpUD8VNIq2zQPNQTMEoKBTungFt/EBwbZ6FYcTZC7WWPBc0jz5eYbnzOYMTrC8/qXZWspMFRAh/PNEQoFhmInL83cLskW7fKKU5uiBPlldXAaZOw3j9MF9q5ombDYOwCGZ7WAeSghbbLRhyMNkwraE5CK6CD2/xoZg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
+ by AM7PR04MB7112.eurprd04.prod.outlook.com (2603:10a6:20b:113::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Tue, 24 Jun
+ 2025 02:42:34 +0000
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90%5]) with mapi id 15.20.8857.026; Tue, 24 Jun 2025
+ 02:42:34 +0000
+Message-ID: <1d8908b1-b38e-4226-9433-cd9405c7ca63@nxp.com>
+Date: Tue, 24 Jun 2025 10:44:03 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 2/5] drm/bridge: get the bridge returned by
+ drm_bridge_chain_get_first_bridge()
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Hui Pu <Hui.Pu@gehealthcare.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+References: <20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-v8-0-0321845fcafb@bootlin.com>
+ <20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-v8-2-0321845fcafb@bootlin.com>
+ <be6a4d90-2c6e-42be-9948-df1840fd2f83@nxp.com>
+ <20250623160903.01c56bfc@booty>
+From: Liu Ying <victor.liu@nxp.com>
+Content-Language: en-US
+In-Reply-To: <20250623160903.01c56bfc@booty>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2P153CA0006.APCP153.PROD.OUTLOOK.COM (2603:1096::16) To
+ AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ocfs2: kill osb->system_file_mutex lock
-To: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
- Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
- Joseph Qi <joseph.qi@linux.alibaba.com>, jiangyiwen <jiangyiwen@huawei.com>,
- Andrew Morton <akpm@linux-foundation.org>, ocfs2-devel@lists.linux.dev,
- Diogo Jahchan Koike <djahchankoike@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <934355dd-a0b1-4e53-93ac-0a7ae7458051@I-love.SAKURA.ne.jp>
- <faf70481-09dd-4c7a-bd43-f1e8bec877cb@suse.com>
- <675ea747-5c05-410c-888c-fe6dd2b48d87@I-love.SAKURA.ne.jp>
-From: Heming Zhao <heming.zhao@suse.com>
-Content-Language: en-US
-In-Reply-To: <675ea747-5c05-410c-888c-fe6dd2b48d87@I-love.SAKURA.ne.jp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|AM7PR04MB7112:EE_
+X-MS-Office365-Filtering-Correlation-Id: a19c0aa7-dda8-495c-657a-08ddb2c8c5cd
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?NjZ2Y2szWUZqei90SWpBZWdFNDEzUXpndmtjSGZPRUlNL3Q2NjFISmtpU0hx?=
+ =?utf-8?B?Z21IRnFES0Z3RStDK0NxdzRYdmZiQTR1d0NRb28wenpaVWt4UnhhbmtWajZw?=
+ =?utf-8?B?djhMS3pHcFJEUGtiUWNqTTV6MHBxdjlpRDRaMXZ0RGEwTEs4K1BQSzN2LzFJ?=
+ =?utf-8?B?RGJDNzh6dURxZjZvQVJYZzcrY01rNzJSRjZTbzFQU0Q1VDlTTlU5NSs2K2ZU?=
+ =?utf-8?B?Z1kwNTJXT1BVMWNmMUJsTi95SEtlOW5JYjVwY0ZJMWZab0gwa2VPVzVaVGht?=
+ =?utf-8?B?a0Z0K2tOMHNRdE92amhWZituMDFUWHRMM2tMcHh5S05HUUhKUkRtU25nMXBp?=
+ =?utf-8?B?eWtsOHdjSFdsMVRlU1ZXTVN1bm5EZUplVTFiMmVyS1U0c3Y1dDNlNDBoZFVs?=
+ =?utf-8?B?Z0NFV3R2QmhWbTR4M1IwMm11N0VpRVgwSmpmZkZzU1JiclZ6MnJCVXhNTEF5?=
+ =?utf-8?B?VjF3RGtCS3BkTGF0bHh0SGZYWGR3Y3NCczdrV2pqbHpuMFdGMXVUS0ZPR2NX?=
+ =?utf-8?B?WmNYZTFMdnZHZW81Q3RVQ2MwYlloTjEyUGlFQmdNdWtRcGNBdHRNaWV6ZjVi?=
+ =?utf-8?B?SVYvY2M3WDhNL0NKR0Y0VExkaUhHNFRlUmRpWjFlMDRzTDdlUmRIZG82b0hu?=
+ =?utf-8?B?anVrSm9ZNnV6Tm9qS0tVRUNqZkNZVlhxaXRDU0Z5U3l2Y2hneHpUMEFBVWJL?=
+ =?utf-8?B?Rk5RWFh1Z055UFJnY1Avc2RpY2Z4OEhIRmlaSlRpS1BoSjdwNWp0RG1NR1Rq?=
+ =?utf-8?B?R2dRcndTamZKRXp6VXBzYUEzTUFUN0I3U3dzQnpJa3dJYUZaeWMrWG5sdmVm?=
+ =?utf-8?B?T1c1b2Z2ZHJLMWI5bXJ1dkJ1Y0N5VlFTVlMvVmVuN2Jyd0Y0N3FMczJwS3lm?=
+ =?utf-8?B?VEJ5Y2NKTHNNTTYwTVk4SzRPeEV6ZTdhRXgreDcrTFZoOGQ1STdQMWpQbDln?=
+ =?utf-8?B?NXV4TW84cHpITk1wYW4wb1hBNFQxODdlckYrRjZMM3hEemhySVc4azhETHdh?=
+ =?utf-8?B?UjZWYkpxbXFaek5STzNqNUZGbVZBSU9TYUg1T1hGQ3VZQW5GSE8rd1lod3Vt?=
+ =?utf-8?B?YTlySHVPbEpsdkFCYUJJc0FkK3JNeFNaMTdoWThXU0o5Ylo4djh0UFl2eU1m?=
+ =?utf-8?B?U0xvZzRBdkFJYWVrNVNFWnJrRWJ6eWdUWXlHazJ6MzNZUUtNMVo5OWtOSUl1?=
+ =?utf-8?B?RWVmYnRoOEFRd1N3RlRKYVlMTjJMd0JnU3hoVlV3YWNPVlk2WjlOYUpuSkVU?=
+ =?utf-8?B?YVpqalNUUjFrcWFVTFRXWGp4T3cyVFZRUjFNWEtrZmY2ajVxQXBJVEpFSTFE?=
+ =?utf-8?B?NFIxcFBVQno2bksvZVFwMjluVENYWG9UT3dibWk4UTB4TWwxNHFDUktscjZu?=
+ =?utf-8?B?aUsvcVFkUHBYclEzeEl1ZDF6ZFAwbFplMW9kemVEamlURUhuYnUyVE9xK2RD?=
+ =?utf-8?B?MnRtY2I3d1ZFcldwQlFzcmdTdkx4Y1VEK2Z1cmtVbTNsVlQyN0g2MU1sajJ0?=
+ =?utf-8?B?NlBaOXpXT0ZFNFQwTzFjTHFoK08xN3czQUlLM25NSXN4czJVSUMySzI2Nnc4?=
+ =?utf-8?B?c1V5V09nR0h3eGFwQWsyZmhFdVZtYjQrY3Jab00yeDEzUUQ5Y1FjVlB1SW9p?=
+ =?utf-8?B?UHYxc1lLZzB3NzVCWVBVU3Z3NE03WHJVNnJvWDNtQ1VtSk1pZ3MwZlR2T1hV?=
+ =?utf-8?B?ZjI1ZmcxbHZMd2c3SmRDOVlaUzkvODEzakhKM2crcDZDT3JYdVJpZloxaFhh?=
+ =?utf-8?B?a3ZOY3JTMjJpanAzdEhuQmc3TVhYZ3VHemJPckNBZTZKOXV5b1lmYUZEMWNH?=
+ =?utf-8?B?VzY3cmk2eGJZQVFRWVBYVWZwZ3Y3UU0wUnlzSFlyaEFIdlp5MnoxU2E4Tjc3?=
+ =?utf-8?B?RlBHeHdGUFZPbGREMjRPNHlZUFJLL00rR2VERnRHV2NMRE1qcGszMXh1MXlw?=
+ =?utf-8?Q?YV6auGJiYtQ=3D?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?RVhHOCt1ZE4zcHZqazFudWxpLzBzVU1MeEdiOU5uMTZucnN0K3ZzQVJFZVdh?=
+ =?utf-8?B?ZEd4V2l5eFE0dEJRdzRTYyswMUFGSXZ6NDBldlpMSll4UUEwUkFnRUZhbEsy?=
+ =?utf-8?B?N2NtMFF4VTVudkF2anQ1dE1UWUVvZUxDTDFkTHZXQ0E0Uy9BTzZmam9rWElM?=
+ =?utf-8?B?bFJxUVFmeVNYSEFKYnV6TWZFdXVwOHpkTWlFejhpMUNIbXhGVXdXZTdVY2pU?=
+ =?utf-8?B?eGd4Q2NtaUg2Uk8rbmVTbFByenpGdGFVNUVnaFRzSjRwaWNmZC9hZjE0dXlw?=
+ =?utf-8?B?RTBmLzNERjZCVTB4eld4MHpTZVFvd0p6bVQ1QWl6aG53akQ5REo1WThMRzRG?=
+ =?utf-8?B?RnZDcnZOMW52aEphSUFtWVVRSHdJVll1b3NxM0xFdG1tc0VpUmhSdVhRRXBX?=
+ =?utf-8?B?ZXJ2enp6NGVlcTE3YmxhYWkrLzE1SkRkR1ZuSjhjME1kUjhOTENpNGs3bWpP?=
+ =?utf-8?B?VWoxTXBJQlNZa0RKK3ZuRVRrdW5HcjRySlUwM0FqdktQVkFkQnNEQ3h4dzJM?=
+ =?utf-8?B?MmUzTWRzVHppUFJmY3YrZkNiQVRhZEo3Z3hZbVAxQ292RzRoeFhhUG9KQ0V0?=
+ =?utf-8?B?NS81a2p5bzQvRGZvUU5NZFZoUGNscnBNNWhKemgvWE1tZVE4UkpURjhJRFdk?=
+ =?utf-8?B?QXgzZHJEM2JwcUVRRXdlWk1VdXpyNTdxdHFBdmh0MzFHQnNUWk1uT0JYdXls?=
+ =?utf-8?B?bUFuclIyemxjN29OL0c2elZESHNMakVPVVJTejdlK214TXJzcFhLTEFmUTc0?=
+ =?utf-8?B?UUR0K0tsR2w4QWlhY0p6SThwV242MU5pZllJdDZHR2dRMlJqR2YxZmx5U0Jy?=
+ =?utf-8?B?TXIyTGdDRmtIL2VxWmRzZU55dVRmenB1MXZVRzNzS0dKUTNkZ2NMYlJhTTV1?=
+ =?utf-8?B?SVpsTFpEODlGM1Y0V0JtRHVXUldJVkZHVU1XeEQzWHQzVjVQOVhJM2VPM1VP?=
+ =?utf-8?B?V3ZsKzFCWVllSHJ6V280QXJyOTNOa2FJaTVpTVoxbzVubGJvZU5DRWdhMVFr?=
+ =?utf-8?B?cFZIZ2xPSGh1Z0dMWjc1TURtc1RIWUx2T2UzMlM1QVRjUVdoeWtTbkxoNUlO?=
+ =?utf-8?B?TmdEbFBzYS85SklXVEVnNUp3WTdjK2dxazBoTmpPMDR1UjJ5MFhCa1pkeVJ3?=
+ =?utf-8?B?Qkc3WThqT0hlSlNEMExrU1F1Rkg4NS8xYzNOenFVWXdNWXlobTEwUG5wRm8x?=
+ =?utf-8?B?MlJnYTBwdUhyeklTem5tMVV4UVFBWVdpRHFtS1lkQmZpdlJRbnR0b0hHRElz?=
+ =?utf-8?B?YjZXRE1qZDcvMFVSV1RiSjRxRHBza2k5ZG9CTEIzeVRNeXJSaUxIVVNaTDVp?=
+ =?utf-8?B?OG9tQVhTazM4TGZCM0EraDFuL0lNK2VwZGowOERDbkh2NzAvcEE2UTlLWkJN?=
+ =?utf-8?B?K3c4RHlqcm0wK2gxakl2WjhuV0IxTXhCTVF5MGxSWEF5ZGpTR3k4cWdWVG05?=
+ =?utf-8?B?dFZjTUdIU2Y2YjZweWxvUjRrdjg3STA5Lyt2THNydk5SNXlYdnZlR20wL2pk?=
+ =?utf-8?B?VjhvaC9hREdyNk5ZZmlzR1UrelhMKzR2MGhEaGhvYVdTMzJYdVRJUTJOU1Jm?=
+ =?utf-8?B?K3J5aUtrUTRLR1lEaFdGc3BQRzdmWDhJN250dU12Z0xQNkpJMGVWaXdVdjZi?=
+ =?utf-8?B?T0NqYmhsazdZZlU5ODF4S09HRzNhMjB1Unh0VjNHU3RldVZ4VHZpZlBva3Iz?=
+ =?utf-8?B?WDJwN05lVFFna3JPeVA2dmkveTd3QUk5eTh3d2ZxMUdHYytvNHMxRFJtWFli?=
+ =?utf-8?B?ajBFSEtXUUVvTlB1Y2srajJrN0ZOMTVuT3BxRVhkM2dxSkU2UlFwMmxLRDhP?=
+ =?utf-8?B?MHNkUnI2QVhOMnZENC9WNEx5MzY1cDdoR2pNVWRhSElRNGtuTmZoTVRZNDNV?=
+ =?utf-8?B?NWkvU2hCa2V6OURvdnNjcU1JNHRwcXJ3ay8rUGtybzJOcVE3L0htYkNUenNj?=
+ =?utf-8?B?SGRJcmllVjYwOTBGRmtJQmpOcTE4OWNyOWk5OEpvTjdSd2dGSzc5UjdzSWpq?=
+ =?utf-8?B?OFZYc3h6VUZmYlBJMVdaWGNEcFQ0djFWeFVBSTJEQkp2NEg4a1VTaENQYTRu?=
+ =?utf-8?B?WWdGREF3U2hnVDZNalFjMGhBWGdMWXAwTU5IT0N5WWNxc1JBOG9BeHJCYUgr?=
+ =?utf-8?Q?JJ6GVzzhw0khc/OExTE7Tylts?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a19c0aa7-dda8-495c-657a-08ddb2c8c5cd
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 02:42:34.1215
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CrYfyvHYWxi/lzVtH5mmyeduPcownbbfwyZHzh+CugG0Yzr3iIDXBAGLZa6L2ph2OgGR59A4kdBrbFl/blFItw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7112
 
-On 6/24/25 10:17, Tetsuo Handa wrote:
-> On 2025/06/24 10:33, Heming Zhao wrote:
->>> @@ -112,11 +110,10 @@ struct inode *ocfs2_get_system_file_inode(struct ocfs2_super *osb,
->>>        inode = _ocfs2_get_system_file_inode(osb, type, slot);
+On 06/23/2025, Luca Ceresoli wrote:
+> Hello Liu,
+
+Luca,
+
+> 
+> On Mon, 23 Jun 2025 10:56:13 +0800
+> Liu Ying <victor.liu@nxp.com> wrote:
+> 
+>> On 06/21/2025, Luca Ceresoli wrote:
+>>> drm_bridge_chain_get_first_bridge() returns a bridge pointer that the
+>>> caller could hold for a long time. Increment the refcount of the returned
+>>> bridge and document it must be put by the caller.  
 >>
->> In my view, the key of commit 43b10a20372d is to avoid calling
->> _ocfs2_get_system_file_inode() twice, which lead refcnt+1 but no place to
->> do refcnt-1.
+>> To make sure the incremented refcount is decremented once this patch is
+>> applied, does it make sense to squash patch 3, 4 and 5 into this one?
 > 
-> My understanding is that concurrently calling _ocfs2_get_system_file_inode() itself
-> is OK, for the caller of ocfs2_get_system_file_inode() is responsible for calling
-> iput().
+> I see there is a trade off here between bisectability and patch
+> readability.
+> 
+> However about bisectability the problem is limited for this series. To
+> get an actual get/put imbalance you'd have to be able to remove the
+> bridge, but removing (part of) the bridge chain is not at all supported
+> right now, and it won't be until after chapter 4 of this work (see
+> cover letter).
+> 
+> However I realize there is an issue if:
+> * patch 2 is applied but patches 3/4/5 are not
+>   (it does not make sense to apply this series partially, but this
+>   might happen when cherry-picking?)
 
-We have different perspectives on calling _ocfs2_get_system_file_inode().
-In the current code logic, _ocfs2_get_system_file_inode() is expected to
-be called only once. Subsequent local system inodes will be retrieved from
-the cache (via get_local_system_inode()).
+Yes for cherry-picking and bisecting.
+
+> * an entire DRM card is removed where
+>   drm_bridge_chain_get_first_bridge() is used by some components
+> 
+> If both happen we'd have a get without put, thus a missing free and a
+> memory leak for the container struct.
+
+Yes, that's a memory leak.
 
 > 
-> The problem commit 43b10a20372d fixed is that there was no mechanism to avoid
-> concurrently calling
+> Note that, besides drm_bridge_chain_get_first_bridge() that this
+> series covers, there are various other accessors: see items 1.E.{2..8}
+
+IIUC, without those items addressed, the issue we have is use-after-free,
+but not the memory leak this patch introduces(without squash).
+
+> in cover letter. For some of those there are many more changes to apply
+> because they are called in more places. Squashing them would result in
+> a really large patch that is likely hard to review and manage.
+
+If the squash is done for each item separately and properly, I'd say
+the memory leak issue can be avoided.  I assume patches for each item
+would not be large.
+
 > 
->    *arr = igrab(inode);
+> So I'll leave the decision to DRM subsystem maintainers. For the time
+> being I'm keeping the current approach given that Maxime already
+> reviewed these patches in the past, not squashed.
 > 
-> which will result in failing to call iput() for raced references when
-> ocfs2_release_system_inodes() is called.
-> 
->>
->>>          /* add one more if putting into array for first time */
->>> -    if (arr && inode) {
->>> -        *arr = igrab(inode);
->>> -        BUG_ON(!*arr);
->>> +    if (inode && arr && !*arr && !cmpxchg(&(*arr), NULL, inode)) {
->>
->> Bypassing the refcnt+1 here is not a good idea. We should do refcnt+1
->> before returning to the caller.
->>
->>> +        inode = igrab(inode);
-> 
-> We do refcnt+1 immediately after cmpxchg() succeeds, for
-> ocfs2_release_system_inodes() which clears *arr is the place for
-> doing refcnt-1.
-> 
->>> +        BUG_ON(!inode);
->>>        }
->>> -    mutex_unlock(&osb->system_file_mutex);
->>>        return inode;
->>>    }
->>>    
->>
+> Best regards,
+> Luca
 > 
 
-In my view, your patch has logical errors - at least from my perspective,
-I have to vote NAK.
-
-In my view, for this syzbot bug, the better solution is to block/deny write
-operations during the ocfs2 mounting phase.
-There are many syzbot bugs related to writing data during the mounting phase.
-I don't believe there is any reason a user would want to write data before the
-filesystem is mounted.
-
+-- 
+Regards,
+Liu Ying
