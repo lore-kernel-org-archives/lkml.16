@@ -1,176 +1,249 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690952E62A1;
-	Tue, 24 Jun 2025 14:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FDA2E62A7
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750776224; cv=none; b=a3Pff/isyShgm+BNDhLix6AFjw++udjnkbZQy+Nw/72AYmm45eV9LKQia3BCHktnTCWv+yoBEYHYlPXd0ZC1aYPJK2NkwLgaKAqxivK98wf79SMc2J5b4QurngEvQypRVmOW76mNiOXpZyMjkFE97RDUok/EjqsGj99dTm7PNLQ=
+	t=1750776224; cv=none; b=mA7vLyI52UnT5HSQjtmD7XDkOWa6IXVW/wyttE9/KkpR7PAtGGn1U67f/C/x9DiLXyAuiHoj6GqsXC8fFw8z/3SM+ttSr3CBNP6BStBy8AkaVVQNLHwfgZXb7xjabr39/xNalm4xbu5T7jQB1r2sJvyGB4nKQ43wxr7BGZJhxwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750776224; c=relaxed/simple;
-	bh=Y7BP8KdPd8H6cxd2c8dwNisTp7TEPtBxOSdosnEuTr8=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=jTcSBzOet8qWeFh2bHH4TxG1NpzZ3o7cPGTxTpAoplkXITvjOdeZK3q3wkESEOS+vslYOyGh/aCYqZWuvpJ4qzN37zghlMmzdp+5iWnfa4iFZ2NOHvIcOjCRFn1ZlhOV54JPgHfI87dRxgboIuWH1L5OqGKpgiAs3U0Q+CQBWys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=S3y6qg2Y; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	bh=6r0las+/Ii+bobt18cWF8Yd39NfjYX1RuGTPL5F1ass=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=eTgTsWY9+Fj05/RDiXPUN2Hs8Yj2HWT9vtqZaKivIpI6ZuBhm2XSInGLyFHYard2MBYyf6UPf1z6mnSRBYnyiEfBQwM3KED1QskfvGmRmJW4mLQDRhCWAcaDPlErENkWUzXxIog584Hs9buFHTFZoJpEKvPSY6Iq6ZLwUBmumlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZjdD0TwB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="S3y6qg2Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1750776196; x=1751380996; i=markus.elfring@web.de;
-	bh=slW1HY6NogLYGpkBA3UndyleR92HTWdOgcZcNz1CxfI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=S3y6qg2YxQOAz4en194ljaCRjuxyoyAkS/MvRk/bPNjjCho0wCppuruhe09MS31q
-	 0CMp+nYPuPvdfcQ2v1cnuFmKz1BIrBSkQbk4izL9JAMXzHOyEQuaZsDxU+ww7VMkC
-	 j/rdygfiv7QUjphvS+hHKP5kx2EyMXC+Wf3sL8a7hm4mYcm2reif/tX6BJwUDGBJm
-	 SXdhoGWqTX8Qn3GVGha5+Mup9dahy+tbC7kaDB/JykmVbSWjXFEyBjtxHNOqHlC7H
-	 +JxWWMMbFfGT8tfUl4tOUuo7PFIj2ogDawhctLkPuZpwwg9cF8hcKLmjsCrRzncEv
-	 RjXGxcu5KA3ARjCA7Q==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.69.200]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MWi5i-1uEggu28gy-00Q4GN; Tue, 24
- Jun 2025 16:43:16 +0200
-Message-ID: <b4544835-2cac-4501-bcf4-6f105e3667d4@web.de>
-Date: Tue, 24 Jun 2025 16:43:10 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZjdD0TwB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750776221;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AsJFD8Xb7TNUkeNMyUpPYkjT7yFBNxg0JTSP55Zxpfs=;
+	b=ZjdD0TwBv/waf+Gcdpg3c+OylPCGLvIFmQHybQ+nKl7cpZLZaW174ZXTrLBu5jYaZT0U6M
+	LCcBOh9UAFAWg1VLYzb9V9TRtOXQZprUQx8iVLI6Pod6vC5SmJ+6mxUzQU+uvYqMnWH+4q
+	547paOflWZbNsAVOiIaFiSQw3WjJdHQ=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-496--8UMVRvYOB2zBBhVPOOIaA-1; Tue, 24 Jun 2025 10:43:40 -0400
+X-MC-Unique: -8UMVRvYOB2zBBhVPOOIaA-1
+X-Mimecast-MFC-AGG-ID: -8UMVRvYOB2zBBhVPOOIaA_1750776219
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-553ea44a706so1424240e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:43:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750776219; x=1751381019;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AsJFD8Xb7TNUkeNMyUpPYkjT7yFBNxg0JTSP55Zxpfs=;
+        b=c1k/Xv/tzXVPjMKIFj+DILtojMKihXBKe1nXRgfk4rp6V5mmbMN2odRpxqa5YV21sD
+         KLafjfP9lAfQt54SK1Elvgri6tqIRVYTlxRgqXWy1H/FwsHmO5IJPxp7ZXWZZObcwC+y
+         kY3HaY6JpAdx2cRq96GLeoBH63fzhub/zYGi3j342oFzAsn9bqOHfyNC7A4cbvpjA7PL
+         VQAIc3Mey45UyeUUeNOyKgcYtSb3eMa6g+JJDsQWnqe/mQ3c+Y6MTCctpxs2PjNOWh8S
+         LOGGUbyWHhGVCLey2laJ3OFwwbiG7/lXqJu03fZZsXY3XmxvX28cQKqfWYQbDL/PJTgf
+         bV+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVeZDuZ3F8NmMbdq7eu7/BU+f9dhOhTyGReBa4bzbgtTHn397nuBpRYbbQbQliFTfNcfatLJtaE+wGBg40=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykpV9PqTqiCf2uikwnWFNj7EnMcLbmj0Ubw0pd/ZvVWbrdB+Sb
+	h5rGschUbnRGyPrJt+TLKdHvMWljKbWr6TI8m7UQllLfXBM10gj1KnzffSO94zP5EGjUi52UEKr
+	f9A5L3BFcQ0yYhr7uoBpDPkIYUMfY6+I1pmrMVSfdB6sP5yL5EcrcOmM0e4Xg8ileYA==
+X-Gm-Gg: ASbGncvXfRaYps49ZwrWkFlfYx4JJBC8z0B0xl0+Thn5B+LKyB8GuafJYvQgLdn1xRK
+	hsh7pEh2WtCdYVemouxFdunEiv65n+Jff//ePxSCWPQw57uMmEexs7yQ6hlGOHYesiT19qEBzEm
+	MMYE3JzUh1OOoXg2NtuaGKiMGOxmwYmk5lbxyty9FceSSYPttaZCwbSnjJgP3BoTOdGox1mLcJU
+	Zj63/9sNMqmrTgmIBIR+jk9I7fkTPHUjTQJAm30tLFX4/3fYx+v2d8bPGPsEfm/yhKh4rwVxs6S
+	XEJhKJ5J00sWBF8I6iwe5DDxFZFSUemDpSrJXjVQ0yzer14=
+X-Received: by 2002:ac2:51d5:0:b0:553:349c:646c with SMTP id 2adb3069b0e04-553e3bf2109mr4783134e87.27.1750776218745;
+        Tue, 24 Jun 2025 07:43:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF0aXMGFpRJQr9IDGvwiXOXGJUpblWAgU5bfHFxKSwW7q7amMW/E+3VuHA5u82kZnQnHCkEPw==
+X-Received: by 2002:ac2:51d5:0:b0:553:349c:646c with SMTP id 2adb3069b0e04-553e3bf2109mr4783111e87.27.1750776218257;
+        Tue, 24 Jun 2025 07:43:38 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553e41cdf64sm1839877e87.234.2025.06.24.07.43.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 07:43:37 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id 178B01B37786; Tue, 24 Jun 2025 16:43:36 +0200 (CEST)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To: Zi Yan <ziy@nvidia.com>, David Hildenbrand <david@redhat.com>
+Cc: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
+ ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+ akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com,
+ andrew+netdev@lunn.ch, asml.silence@gmail.com, tariqt@nvidia.com,
+ edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+ leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org,
+ linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com,
+ hannes@cmpxchg.org, jackmanb@google.com, "jesper@cloudflare.com"
+ <jesper@cloudflare.com>
+Subject: Re: [PATCH net-next v6 9/9] page_pool: access ->pp_magic through
+ struct netmem_desc in page_pool_page_is_pp()
+In-Reply-To: <42E9BEA8-9B02-440F-94BF-74393827B01E@nvidia.com>
+References: <20250620041224.46646-1-byungchul@sk.com>
+ <20250620041224.46646-10-byungchul@sk.com>
+ <ce5b4b18-9934-41e3-af04-c34653b4b5fa@redhat.com>
+ <20250623101622.GB3199@system.software.com>
+ <460ACE40-9E99-42B8-90F0-2B18D2D8C72C@nvidia.com>
+ <a8d40a05-db4c-400f-839b-3c6159a1feab@redhat.com>
+ <42E9BEA8-9B02-440F-94BF-74393827B01E@nvidia.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Tue, 24 Jun 2025 16:43:36 +0200
+Message-ID: <87o6udfbdz.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- Al Viro <viro@zeniv.linux.org.uk>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Yan Zhen <yanzhen@vivo.com>
-Content-Language: en-GB, de-DE
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
- Chen Ni <nichen@iscas.ac.cn>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] usb: gadget: fsl: Use usb_endpoint_type() rather than
- duplicating its implementation
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:I7qV3JknpoGbkjG1a5NsvY0sDnSX3fJTGBJC1TXjonrd3RCs2Zw
- cgUYPHMBS312n6EAGFi+WxAGdCU8b/AI9G7I1f6f1tuAS4GPbJf9Zn3XWmiY8qKVYzl+2PK
- 3uTr6yXTta/Fv3xqoGqaGkiAiaTgv9kRBS1BfrW7exkDhhJWEQQGVZnjZc84HSzczaYc1m/
- kCE/33R8XfEtc8b3YOwwg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:njaM1S0s3ZE=;/vbP6Fd1kSwSsr0GwcvLAImMc0p
- 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
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 24 Jun 2025 16:33:53 +0200
+Zi Yan <ziy@nvidia.com> writes:
 
-Reuse existing functionality from usb_endpoint_type() instead of keeping
-duplicate source code.
+> On 23 Jun 2025, at 10:58, David Hildenbrand wrote:
+>
+>> On 23.06.25 13:13, Zi Yan wrote:
+>>> On 23 Jun 2025, at 6:16, Byungchul Park wrote:
+>>>
+>>>> On Mon, Jun 23, 2025 at 11:16:43AM +0200, David Hildenbrand wrote:
+>>>>> On 20.06.25 06:12, Byungchul Park wrote:
+>>>>>> To simplify struct page, the effort to separate its own descriptor f=
+rom
+>>>>>> struct page is required and the work for page pool is on going.
+>>>>>>
+>>>>>> To achieve that, all the code should avoid directly accessing page p=
+ool
+>>>>>> members of struct page.
+>>>>>>
+>>>>>> Access ->pp_magic through struct netmem_desc instead of directly
+>>>>>> accessing it through struct page in page_pool_page_is_pp().  Plus, m=
+ove
+>>>>>> page_pool_page_is_pp() from mm.h to netmem.h to use struct netmem_de=
+sc
+>>>>>> without header dependency issue.
+>>>>>>
+>>>>>> Signed-off-by: Byungchul Park <byungchul@sk.com>
+>>>>>> Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+>>>>>> Reviewed-by: Mina Almasry <almasrymina@google.com>
+>>>>>> Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+>>>>>> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+>>>>>> Acked-by: Harry Yoo <harry.yoo@oracle.com>
+>>>>>> ---
+>>>>>>    include/linux/mm.h   | 12 ------------
+>>>>>>    include/net/netmem.h | 14 ++++++++++++++
+>>>>>>    mm/page_alloc.c      |  1 +
+>>>>>>    3 files changed, 15 insertions(+), 12 deletions(-)
+>>>>>>
+>>>>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>>>>>> index 0ef2ba0c667a..0b7f7f998085 100644
+>>>>>> --- a/include/linux/mm.h
+>>>>>> +++ b/include/linux/mm.h
+>>>>>> @@ -4172,16 +4172,4 @@ int arch_lock_shadow_stack_status(struct task=
+_struct *t, unsigned long status);
+>>>>>>     */
+>>>>>>    #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
+>>>>>>
+>>>>>> -#ifdef CONFIG_PAGE_POOL
+>>>>>> -static inline bool page_pool_page_is_pp(struct page *page)
+>>>>>> -{
+>>>>>> -     return (page->pp_magic & PP_MAGIC_MASK) =3D=3D PP_SIGNATURE;
+>>>>>> -}
+>>>>>> -#else
+>>>>>> -static inline bool page_pool_page_is_pp(struct page *page)
+>>>>>> -{
+>>>>>> -     return false;
+>>>>>> -}
+>>>>>> -#endif
+>>>>>> -
+>>>>>>    #endif /* _LINUX_MM_H */
+>>>>>> diff --git a/include/net/netmem.h b/include/net/netmem.h
+>>>>>> index d49ed49d250b..3d1b1dfc9ba5 100644
+>>>>>> --- a/include/net/netmem.h
+>>>>>> +++ b/include/net/netmem.h
+>>>>>> @@ -56,6 +56,20 @@ NETMEM_DESC_ASSERT_OFFSET(pp_ref_count, pp_ref_co=
+unt);
+>>>>>>     */
+>>>>>>    static_assert(sizeof(struct netmem_desc) <=3D offsetof(struct pag=
+e, _refcount));
+>>>>>>
+>>>>>> +#ifdef CONFIG_PAGE_POOL
+>>>>>> +static inline bool page_pool_page_is_pp(struct page *page)
+>>>>>> +{
+>>>>>> +     struct netmem_desc *desc =3D (struct netmem_desc *)page;
+>>>>>> +
+>>>>>> +     return (desc->pp_magic & PP_MAGIC_MASK) =3D=3D PP_SIGNATURE;
+>>>>>> +}
+>>>>>> +#else
+>>>>>> +static inline bool page_pool_page_is_pp(struct page *page)
+>>>>>> +{
+>>>>>> +     return false;
+>>>>>> +}
+>>>>>> +#endif
+>>>>>
+>>>>> I wonder how helpful this cleanup is long-term.
+>>>>>
+>>>>> page_pool_page_is_pp() is only called from mm/page_alloc.c, right?
+>>>>
+>>>> Yes.
+>>>>
+>>>>> There, we want to make sure that no pagepool page is ever returned to
+>>>>> the buddy.
+>>>>>
+>>>>> How reasonable is this sanity check to have long-term? Wouldn't we be
+>>>>> able to check that on some higher-level freeing path?
+>>>>>
+>>>>> The reason I am commenting is that once we decouple "struct page" from
+>>>>> "struct netmem_desc", we'd have to lookup here the corresponding "str=
+uct
+>>>>> netmem_desc".
+>>>>>
+>>>>> ... but at that point here (when we free the actual pages), the "stru=
+ct
+>>>>> netmem_desc" would likely already have been freed separately (remembe=
+r:
+>>>>> it will be dynamically allocated).
+>>>>>
+>>>>> With that in mind:
+>>>>>
+>>>>> 1) Is there a higher level "struct netmem_desc" freeing path where we
+>>>>> could check that instead, so we don't have to cast from pages to
+>>>>> netmem_desc at all.
+>>>>
+>>>> I also thought it's too paranoiac.  However, I thought it's other issue
+>>>> than this work.  That's why I left the API as is for now, it can be go=
+ne
+>>>> once we get convinced the check is unnecessary in deep buddy.  Wrong?
+>>>>
+>>>>> 2) How valuable are these sanity checks deep in the buddy?
+>>>>
+>>>> That was also what I felt weird on.
+>>>
+>>> It seems very useful when I asked last time[1]:
+>>>
+>>> |> We have actually used this at Cloudflare to catch some page_pool bug=
+s.
+>>
+>> My question is rather, whether there is some higher-level freeing path f=
+or netmem_desc where we could check that instead (IOW, earlier).
+>>
+>> Or is it really arbitrary put_page() (IOW, we assume that many possible =
+references can be held)?
+>
+> +Toke, who I talked about this last time.
+>
+> Maybe he can shed some light on it.
 
-The source code was transformed by using the Coccinelle software.
+As others have pointed out, basically, AFAIU: Yes, pages are *supposed*
+to go through a common freeing path where this check could reside, but
+we've had bugs where they ended up leaking anyway, which is why this
+check in MM was added in the first place.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/usb/gadget/udc/fsl_qe_udc.c   | 4 ++--
- drivers/usb/gadget/udc/fsl_udc_core.c | 6 ++----
- 2 files changed, 4 insertions(+), 6 deletions(-)
+I don't recall the specifics of *what* the bug was; +Jesper who maybe does?
 
-diff --git a/drivers/usb/gadget/udc/fsl_qe_udc.c b/drivers/usb/gadget/udc/=
-fsl_qe_udc.c
-index aacfde06387c..6ee3da32cc4e 100644
-=2D-- a/drivers/usb/gadget/udc/fsl_qe_udc.c
-+++ b/drivers/usb/gadget/udc/fsl_qe_udc.c
-@@ -533,7 +533,7 @@ static int qe_ep_init(struct qe_udc *udc,
- 	/* Refer to USB2.0 spec table 9-13,
- 	*/
- 	if (pipe_num !=3D 0) {
--		switch (desc->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) {
-+		switch (usb_endpoint_type(desc)) {
- 		case USB_ENDPOINT_XFER_BULK:
- 			if (strstr(ep->ep.name, "-iso")
- 					|| strstr(ep->ep.name, "-int"))
-@@ -636,7 +636,7 @@ static int qe_ep_init(struct qe_udc *udc,
-=20
- 	/* initialize ep structure */
- 	ep->ep.maxpacket =3D max;
--	ep->tm =3D (u8)(desc->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK);
-+	ep->tm =3D (u8) usb_endpoint_type(desc);
- 	ep->ep.desc =3D desc;
- 	ep->stopped =3D 0;
- 	ep->init =3D 1;
-diff --git a/drivers/usb/gadget/udc/fsl_udc_core.c b/drivers/usb/gadget/ud=
-c/fsl_udc_core.c
-index 4dea8bc30cf6..19c74ba82e16 100644
-=2D-- a/drivers/usb/gadget/udc/fsl_udc_core.c
-+++ b/drivers/usb/gadget/udc/fsl_udc_core.c
-@@ -599,16 +599,14 @@ static int fsl_ep_enable(struct usb_ep *_ep,
- 	struct_ep_qh_setup(udc, (unsigned char) ep_index(ep),
- 			(unsigned char) ((desc->bEndpointAddress & USB_DIR_IN)
- 					?  USB_SEND : USB_RECV),
--			(unsigned char) (desc->bmAttributes
--					& USB_ENDPOINT_XFERTYPE_MASK),
-+			(unsigned char) usb_endpoint_type(desc),
- 			max, zlt, mult);
-=20
- 	/* Init endpoint ctrl register */
- 	dr_ep_setup((unsigned char) ep_index(ep),
- 			(unsigned char) ((desc->bEndpointAddress & USB_DIR_IN)
- 					? USB_SEND : USB_RECV),
--			(unsigned char) (desc->bmAttributes
--					& USB_ENDPOINT_XFERTYPE_MASK));
-+			(unsigned char) usb_endpoint_type(desc));
-=20
- 	spin_unlock_irqrestore(&udc->lock, flags);
- 	retval =3D 0;
-=2D-=20
-2.50.0
+-Toke
 
