@@ -1,113 +1,99 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from forward501d.mail.yandex.net (forward501d.mail.yandex.net [178.154.239.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5614230996;
-	Tue, 24 Jun 2025 12:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF241230996;
+	Tue, 24 Jun 2025 12:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750768746; cv=none; b=jcIKjiP82/R/zM86NZ7F0Q9SkWmR2z6EBLAp1zAMJgKYa4qv4dTyvyNVXK1p1sx6yZT6STiskO1aCpRs3NZBiVOcuxK5+nu4hWb00FeBPF5Ua5Q4keeugvYA0SAZp5tpQN3rZ0+cqd8qAICb5lew8ZhC3uylitHgFSpR6SqFDQ0=
+	t=1750768754; cv=none; b=mV1Kpri6Y7/uQMDEFWTBwHlKDzL+DobN+0FLOwpgwC906Nh2Q5SBk3X58ixa172lrFxB21vZ8bS9wAM/in8cgw4/2k0FiKTLn7dV1osMqWQ6jgZ5WOW7dRhMnAWcBYPVHGPySVGZi5KJo5jIuqVPk81XI88+6JFHNnTtBrFJBwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750768746; c=relaxed/simple;
-	bh=4P8wd9h5Go264P/9N+8xDjMZjsgekEEzsS81qXtyA0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uhmLS5kOz7GHtI0eTmTMmeyD7cVP5FHHUadTVbbJn0eSfI18GGpJ4855hOe69dUuXEEGOq0bo/dNjq0me8zp0ur3PreGk+XgmrZ1BJSu9ziD6VVQWuB5aTvv1Bhg7nuFueeelUa3rJg8OhSz4wNRBV6rAk/kLQNyrz4NxoNWkNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=W6GHJ9nD; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1750768754; c=relaxed/simple;
+	bh=IiZvAA3FleTUiDWA3EVVuuyPPqVxWqgsxdcovX1m2xg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kSVg86QDW3+lZQ5KmKi9nD+xbsRFys3w05PGKtJ7vbF/F1bSQUR9nJQk8YeNl2iNtadk1XCF5a7FTbiMb6G4ZCyzg17SVjhaqdc6ddI24938iriHjKX3FcNzTmUrkISh2z4nk0XWWXAF2jLTlA3OS+8wvNEUHTC3AalTlVWZpbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=PKF81/DS; arc=none smtp.client-ip=178.154.239.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W6GHJ9nD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=0hakl0/kYPdggumUkyNzKLxp5ngjPrYeJTMOFwUQIRA=; b=W6GHJ9nDe8Pjyc8lP/+jiNtUot
-	tEV2YfGRhCnLYBES0b6YVkr8LBiUF8sj81PF+eHHOH1G3NPn5GhDshzrr8iZec7DNgrnHoHIgfSG8
-	mYmlXBZl7lUIdQOM2ADjdzD8dbkUx8tszlW3N1dar2Zy0fyxFeHZS12t5fZeqO5eB2UkDd0+i2LQe
-	CVMMgiq3wc/JqmPHJU3WZgdiw5jCGKKKximG6PYpCDZLy4Ldbx1q0hWJIQY3rljTUpDloQIypJBOF
-	rn4Ulq7/ZtTByPIQ+Wy3e4+mD8O4K3gVvFFnzCcVR/VwzsMkQWMdSNvbnor6GQbfYMgBKqbW/87Mq
-	hM4pGj5Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uU2vU-00000005bfF-49O8;
-	Tue, 24 Jun 2025 12:39:00 +0000
-Date: Tue, 24 Jun 2025 05:39:00 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: David Howells <dhowells@redhat.com>
-Cc: Christoph Hellwig <hch@infradead.org>, Andrew Lunn <andrew@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Mina Almasry <almasrymina@google.com>, willy@infradead.org,
-	Christian Brauner <brauner@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>, netdev@vger.kernel.org,
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Leon Romanovsky <leon@kernel.org>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: How to handle P2P DMA with only {physaddr,len} in bio_vec?
-Message-ID: <aFqcZMXUYx6qqDx_@infradead.org>
-References: <aFlaxwpKChYXFf8A@infradead.org>
- <2135907.1747061490@warthog.procyon.org.uk>
- <1069540.1746202908@warthog.procyon.org.uk>
- <165f5d5b-34f2-40de-b0ec-8c1ca36babe8@lunn.ch>
- <0aa1b4a2-47b2-40a4-ae14-ce2dd457a1f7@lunn.ch>
- <1015189.1746187621@warthog.procyon.org.uk>
- <1021352.1746193306@warthog.procyon.org.uk>
- <1098395.1750675858@warthog.procyon.org.uk>
- <1143687.1750755725@warthog.procyon.org.uk>
+	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="PKF81/DS"
+Received: from mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:832b:0:640:fda5:0])
+	by forward501d.mail.yandex.net (Yandex) with ESMTPS id 0F5F661A1F;
+	Tue, 24 Jun 2025 15:31:10 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 4VSEOs8LaeA0-juFvfTtH;
+	Tue, 24 Jun 2025 15:31:08 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
+	s=mail; t=1750768269;
+	bh=KUzUZlPWU3SLSvntobllY0hRQ6erceKcqtakC8llS30=;
+	h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
+	b=PKF81/DS5QIdXChUVJRELAbFDbbjMSk6Zhd0TJmV3md1Art5XzZuq8Ua3WNksVxHD
+	 /J327gmOHntnzMqVRBcj5qtBasPiJajsEXHfyOAp8XHJykcWm3KaT5fa3pl6MpjB7G
+	 qu4FRG7y6EK6KCXMxCq/0f4G4TIjcObdueQ6IBgI=
+Authentication-Results: mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
+Date: Tue, 24 Jun 2025 15:31:02 +0300
+From: Onur <work@onurozkan.dev>
+To: "Benno Lossin" <lossin@kernel.org>
+Cc: "Boqun Feng" <boqun.feng@gmail.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <ojeda@kernel.org>,
+ <alex.gaynor@gmail.com>, <gary@garyguo.net>, <a.hindborg@kernel.org>,
+ <aliceryhl@google.com>, <tmgross@umich.edu>, <dakr@kernel.org>,
+ <peterz@infradead.org>, <mingo@redhat.com>, <will@kernel.org>,
+ <longman@redhat.com>, <felipe_life@live.com>, <daniel@sedlak.dev>,
+ <bjorn3_gh@protonmail.com>, <simona@ffwll.ch>, <airlied@gmail.com>,
+ <dri-devel@lists.freedesktop.org>, <lyude@redhat.com>
+Subject: Re: [PATCH v5 2/3] implement ww_mutex abstraction for the Rust tree
+Message-ID: <20250624153102.3961f377@nimda.home>
+In-Reply-To: <DAUM8B2ZUMFQ.25R95W7IDAEHM@kernel.org>
+References: <20250621184454.8354-1-work@onurozkan.dev>
+	<20250621184454.8354-3-work@onurozkan.dev>
+	<DASY7BECFRCT.332X5ZHZMV2W@kernel.org>
+	<aFlQ7K_mYYbrG8Cl@Mac.home>
+	<DATYHYJVPL3L.3NLMH7PPHYU9@kernel.org>
+	<aFlpFQ4ivKw81d-y@Mac.home>
+	<DAU0ELV91E2Q.35FZOII18W44J@kernel.org>
+	<aFmKsE_nJkaVMv0T@tardis.local>
+	<DAUARTYJ118U.YW38OP8TRVO3@kernel.org>
+	<20250624083437.1e50d54c@nimda.home>
+	<DAUM8B2ZUMFQ.25R95W7IDAEHM@kernel.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1143687.1750755725@warthog.procyon.org.uk>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 24, 2025 at 10:02:05AM +0100, David Howells wrote:
-> > There isn't a very easy way.  Also because if you actually need to do
-> > peer to peer transfers, you right now absolutely need the page to find
-> > the pgmap that has the information on how to perform the peer to peer
-> > transfer.
+On Tue, 24 Jun 2025 10:20:48 +0200
+"Benno Lossin" <lossin@kernel.org> wrote:
+
+> On Tue Jun 24, 2025 at 7:34 AM CEST, Onur wrote:
+> > Should we handle this in the initial implementation or leave it for
+> > follow-up patches after the core abstraction of ww_mutex has landed?
 > 
-> Are you expecting P2P to become particularly common?
-
-What do you mean with 'particularly common'?  In general it's a very
-niche thing.  But in certain niches it gets used more and more.
-
-> Because page struct
-> lookups will become more expensive because we'll have to do type checking and
-> Willy may eventually move them from a fixed array into a maple tree - so if we
-> can record the P2P flag in the bio_vec, it would help speed up the "not P2P"
-> case.
-
-As said before, the best place for that is a higher level structure than
-the bio_vec.
-
-> Do we actually need 32 bits for bv_len, especially given that MAX_RW_COUNT is
-> capped at a bit less than 2GiB?  Could we, say, do:
+> Since you're writing these abstractions specifically for usage in
+> drm, I think we should look at the intended use-cases there and then
+> decide on an API.
 > 
->  	struct bio_vec {
->  		phys_addr_t	bv_phys;
->  		u32		bv_len:31;
-> 		u32		bv_use_p2p:1;
->  	} __packed;
+> So maybe Lyude or Dave can chime in :)
+> 
+> If you (or someone else) have another user for this API that needs it
+> ASAP, then we can think about merging this and improve it later. But
+> if we don't have a user, then we shouldn't merge it anyways.
 
-I've already heard people complain 32-bit might not be enough :) 
+I don't think this is urgent, but it might be better to land the basic
+structure first and improve it gradually I think? I would be happy to
+continue working for the improvements as I don't plan to leave it as
+just the initial version.
 
-> And rather than storing the how-to-do-P2P info in the page struct, does it
-> make sense to hold it separately, keyed on bv_phys?
+I worked on the v5 review notes, but if we are going to consider
+designing a different API, then it doesn't make much sense to send a v6
+patch before finishing the design, which requires additional people in
+the topic. That would also mean some of the ongoing review discussion
+would be wasted.
 
-Maybe.  But then you need to invent your own new refcounting for the
-section representing the hot pluggable p2p memory.
+---
 
-> Also, is it possible for the networking stack, say, to trivially map the P2P
-> memory in order to checksum it?  I presume bv_phys in that case would point to
-> a mapping of device memory?
-
-P2P is always to MMIO regions.  So you can access it using the usual
-MMIO helpers.
-
+Regards,
+Onur
