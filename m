@@ -1,172 +1,80 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BB727AC57
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CE9D19F480
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750756057; cv=none; b=jj3gpti9nm91GWcP1JWHBaAyE65gC9eXvFVQCUWaUobTA9lYXDoMRQJAztM8e31E6eIQR+qH+BYw2DQ+ttQVIfyb397xhEf8kxk2Ott/zfvDNkyZ2Xg63R9zqx/yZ3oth1/Hg8HKxn7/jx8TcWR9roAD7R2T/UocCxN8GaDGG4I=
+	t=1750756068; cv=none; b=vEj4+lkqFl3p/FgV2EL8FId7V+wi+kpK2IpsDUZysnm/7kvj9AcxfltrY1bmZUwlC+UjBWpU9L9WI92oc7aGvjrX1VtAuiP+9UFaIpd6/c3f/0nKl3A23yvFbovgWuFXcIm2G7WkPIagQRz4StexLPFcKx3Ht84klcchL1D89u8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750756057; c=relaxed/simple;
-	bh=wCs4i87jJYOsPZ2Vm1E8RoZR7ejFzjqL1pmElM07eyQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=S7bJ3Jbh9Drg08u+/xWs3UFJpgvHX663m1ebpDen6d8eWOHbGX2rH8K7fHZO66AESwhNzt4uxM7lsXpFAsGqp9IKk57V6iZfYy8xC8wDMC12BG57UtbT24AsIxBmcxwwWVFt6yKwyyj/5+wrA90ng3G0VBrzAymcmZCXMc/7HG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=O1wdHTTg; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1750756068; c=relaxed/simple;
+	bh=PXxv1x4vMj8HtH6mDoDCzo/S/O1hLgYUGm2bvINLW8g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=ka/AsJn8f0rvwdkjXb7cQ6YuMl7Kn60sTH+TZbJXxVjrHGhHdyD/nFg6VngLZuAF9g3K7mJb5ustsvLW3YO95xNZ+Jw/YVbYvChDZwZriZ3vXzsuWu4EAane1/bZIJGiLcKeL3rysgcmqwSBy80vYr+htz8c5o3HyqA50k/eQHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=L2mjg3x6 reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="O1wdHTTg"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O78SQJ017397;
-	Tue, 24 Jun 2025 05:07:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=1t/j9
-	5uo+rfdf+7ItOaKA2g2tv6TYJM7N8IK0++IJpY=; b=O1wdHTTg48sIy+J8ZwHu2
-	ZTibfzR53HIQEpg/Pfhh9A907UJyObV5h38KBeCElyYbJDPycTxdpcidKIan0vaV
-	dnAgsbogHoHmuch21xfQ6cnDcZUTUEymt3556aHUuG30rB7ArwLC2OaHDkf3FSlp
-	waJrs/QNFC/KktcmKhEVhLK8PzfjvVNXJeilZu3Rwp9wN0RJzl2qoPQVNRJKcKYd
-	0BsvixWDEKC/fUVCIIbgzs4NBkLfU2WKsBdk3LUNh8FollFyJuiB3R0zcS9bqMPG
-	/pzI8yKdV9r5csuZXYpEr8GcGjjPqiGVXwK5jgaRp49RnzWyu5bwvTd9KlT7Tqcr
-	w==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 47f43a6g06-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 05:07:21 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 55O97IBc012640
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 24 Jun 2025 05:07:18 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Tue, 24 Jun 2025 05:07:18 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Tue, 24 Jun 2025 05:07:18 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
- Transport; Tue, 24 Jun 2025 05:07:18 -0400
-Received: from HYB-DlYm71t3hSl.ad.analog.com (HYB-DlYm71t3hSl.ad.analog.com [10.44.3.55] (may be forged))
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 55O973aq007498;
-	Tue, 24 Jun 2025 05:07:13 -0400
-From: Jorge Marques <jorge.marques@analog.com>
-Date: Tue, 24 Jun 2025 11:06:06 +0200
-Subject: [PATCH v3 3/3] i3c: master: dw: Use i3c_writel_fifo() and
- i3c_readl_fifo()
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="L2mjg3x6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=AJtl+7U6LDrFg/qEQD3I4MJY8fflm/Bd3d5juOYtBlY=; b=L
+	2mjg3x6IZ47fmg9peX8RRCP2wdic9Vai5lyZfci6lXzrf0cZKLrGCe4+EbjQ9kuF
+	oEOMZpa69GfYBY/c+kbaWQQfcfQYUUiRRNzum25vTx9jZ3V3Gq4waD2Qx7IbHm2v
+	VVlcVMC6ZpzfTHcoWjJxUfNRBUOHqZRX6uNz/6EScM=
+Received: from 00107082$163.com ( [111.35.191.166] ) by
+ ajax-webmail-wmsvr-40-138 (Coremail) ; Tue, 24 Jun 2025 17:07:15 +0800
+ (CST)
+Date: Tue, 24 Jun 2025 17:07:15 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc: "Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	LKML <linux-kernel@vger.kernel.org>, "Baoquan He" <bhe@redhat.com>,
+	"Harry Yoo" <harry.yoo@oracle.com>,
+	"Suren Baghdasaryan" <surenb@google.com>
+Subject: Re:[PATCH 1/2] lib/test_vmalloc.c: Use late_initcall() if built-in
+ for init ordering
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <20250623184035.581229-1-urezki@gmail.com>
+References: <20250623184035.581229-1-urezki@gmail.com>
+X-NTES-SC: AL_Qu2eAvueuUgo4ySbZ+kZnEYQheY4XMKyuPkg1YJXOp80iCXp/hEFeXBPAETKwcOtMz6tvxe6XzRR9O1eYKR/YotLYXjwF9/upYrzi2UFi4Fl
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250624-i3c-writesl-readsl-v3-3-63ccf0870f01@analog.com>
-References: <20250624-i3c-writesl-readsl-v3-0-63ccf0870f01@analog.com>
-In-Reply-To: <20250624-i3c-writesl-readsl-v3-0-63ccf0870f01@analog.com>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Frank Li
-	<Frank.Li@nxp.com>,
-        =?utf-8?q?Przemys=C5=82aw_Gaj?= <pgaj@cadence.com>
-CC: <linux-i3c@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        "Jorge
- Marques" <jorge.marques@analog.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750756023; l=2104;
- i=jorge.marques@analog.com; s=20250303; h=from:subject:message-id;
- bh=wCs4i87jJYOsPZ2Vm1E8RoZR7ejFzjqL1pmElM07eyQ=;
- b=KsrDy+vX0StOQy9eXsmLzz2Qtjbs+wEjPnKUNxUGhNF9SYiReu1JSoUwdha9exn85ufrhQvOx
- IgGd54NbjntDJ8lSC0+lFW2dpK0YTufxla98reI3+FwrucIwUI7ABwJ
-X-Developer-Key: i=jorge.marques@analog.com; a=ed25519;
- pk=NUR1IZZMH0Da3QbJ2tBSznSPVfRpuoWdhBzKGSpAdbg=
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDA3NyBTYWx0ZWRfX4szgUOkXI/D+
- SEYNQvAr6OucyRV5x0RemVaNzpNnhQ0k5bkJxMDRm7PhDax3zT+Elro0UlJv8MiZzqyhZR9cv3Q
- AzCQlJop3ZL4Zu2v2JmMBZXWWMztFPqesMZW2YSHuMjxYxy1z7BUGhTXB/TJ9bRpgwA0fbixZPd
- 1aZeAhnciIskKIOPD6jbJoLrnZyn/ZlKieTimAAOE4OmlLZNQKYQDIntcCG6Go6/iDM82AVmGpR
- J2Qus2ts5QtPRDGtM0blAvRwSb+jjw+nbgF9RSFq6X75s6e1h+RO5JDLiSR9bwQAobxSm4pb4hi
- r/SHyHourQVB1crxuScUckmOalNWgp2yAgongmq2C2XDCbqeJB3e6x8Q8qeFVTRRO5ThYsJfqNJ
- ZCd10bzApq+TtmxSHxOILuWnDcA+hjOD0clKuPAgjS/I4fjHsb6qHNVs4Zl2DIT+W5m8oiWP
-X-Authority-Analysis: v=2.4 cv=PuGTbxM3 c=1 sm=1 tr=0 ts=685a6ac9 cx=c_pps
- a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=gAnH3GRIAAAA:8 a=HIdXEUdWjxm5DSZX9lgA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: Tw9L9c6SN7TFMlD-MWZHESK-5RmbKTot
-X-Proofpoint-GUID: Tw9L9c6SN7TFMlD-MWZHESK-5RmbKTot
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-24_03,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 priorityscore=1501 phishscore=0 mlxscore=0 mlxlogscore=808
- malwarescore=0 adultscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
- suspectscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506240077
+Message-ID: <5686796f.8f47.197a1310b6d.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:iigvCgD3L9vEalpoZKAjAA--.21015W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBd2qmhaYIw2TAACs9
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-Use common inline i3c_writel_fifo()/i3c_readl_fifo() methods to
-simplify code since the FIFO of controller is a 32bit width.
-
-Signed-off-by: Jorge Marques <jorge.marques@analog.com>
----
- drivers/i3c/master/dw-i3c-master.c | 25 ++++---------------------
- 1 file changed, 4 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
-index 611c22b72c1572ddf717c8ad473e44a3b8fcceaf..886f8b74defda31ae93248467d144f9c8c561581 100644
---- a/drivers/i3c/master/dw-i3c-master.c
-+++ b/drivers/i3c/master/dw-i3c-master.c
-@@ -23,6 +23,7 @@
- #include <linux/reset.h>
- #include <linux/slab.h>
- 
-+#include "../internals.h"
- #include "dw-i3c-master.h"
- 
- #define DEVICE_CTRL			0x0
-@@ -336,37 +337,19 @@ static int dw_i3c_master_get_free_pos(struct dw_i3c_master *master)
- static void dw_i3c_master_wr_tx_fifo(struct dw_i3c_master *master,
- 				     const u8 *bytes, int nbytes)
- {
--	writesl(master->regs + RX_TX_DATA_PORT, bytes, nbytes / 4);
--	if (nbytes & 3) {
--		u32 tmp = 0;
--
--		memcpy(&tmp, bytes + (nbytes & ~3), nbytes & 3);
--		writesl(master->regs + RX_TX_DATA_PORT, &tmp, 1);
--	}
--}
--
--static void dw_i3c_master_read_fifo(struct dw_i3c_master *master,
--				    int reg,  u8 *bytes, int nbytes)
--{
--	readsl(master->regs + reg, bytes, nbytes / 4);
--	if (nbytes & 3) {
--		u32 tmp;
--
--		readsl(master->regs + reg, &tmp, 1);
--		memcpy(bytes + (nbytes & ~3), &tmp, nbytes & 3);
--	}
-+	i3c_writel_fifo(master->regs + RX_TX_DATA_PORT, bytes, nbytes);
- }
- 
- static void dw_i3c_master_read_rx_fifo(struct dw_i3c_master *master,
- 				       u8 *bytes, int nbytes)
- {
--	return dw_i3c_master_read_fifo(master, RX_TX_DATA_PORT, bytes, nbytes);
-+	i3c_readl_fifo(master->regs + RX_TX_DATA_PORT, bytes, nbytes);
- }
- 
- static void dw_i3c_master_read_ibi_fifo(struct dw_i3c_master *master,
- 					u8 *bytes, int nbytes)
- {
--	return dw_i3c_master_read_fifo(master, IBI_QUEUE_STATUS, bytes, nbytes);
-+	i3c_readl_fifo(master->regs + IBI_QUEUE_STATUS, bytes, nbytes);
- }
- 
- static struct dw_i3c_xfer *
-
--- 
-2.49.0
-
+CkF0IDIwMjUtMDYtMjQgMDI6NDA6MzQsICJVbGFkemlzbGF1IFJlemtpIChTb255KSIgPHVyZXpr
+aUBnbWFpbC5jb20+IHdyb3RlOgo+V2hlbiB0aGUgdm1hbGxvYyB0ZXN0IGNvZGUgaXMgY29tcGls
+ZWQgYXMgYSBidWlsdC1pbiwgdXNlIGxhdGVfaW5pdGNhbGwoKQo+aW5zdGVhZCBvZiBtb2R1bGVf
+aW5pdCgpIHRvIGRlZmVyIGEgdm1hbGxvYyB0ZXN0IGV4ZWN1dGlvbiB1bnRpbCBtb3N0Cj5zdWJz
+eXN0ZW1zIGFyZSB1cCBhbmQgcnVubmluZy4KPgo+SXQgYXZvaWRzIGludGVyZmVyaW5nIHdpdGgg
+Y29tcG9uZW50cyB0aGF0IG1heSBub3QgeWV0IGJlIGluaXRpYWxpemVkCj5hdCBtb2R1bGVfaW5p
+dCgpIHRpbWUuIEZvciBleGFtcGxlLCB0aGVyZSB3YXMgYSByZWNlbnQgcmVwb3J0IG9mIG1lbW9y
+eQo+cHJvZmlsaW5nIGluZnJhc3RydWN0dXJlIG5vdCBiZWluZyByZWFkeSBlYXJseSBlbm91Z2gg
+bGVhZGluZyB0byBrZXJuZWwKPmNyYXNoLgo+Cj5CeSB1c2luZyBsYXRlX2luaXRjYWxsKCkgaW4g
+dGhlIGJ1aWx0LWluIGNhc2UsIHdlIGVuc3VyZSB0aGUgdGVzdHMgYXJlCj5ydW4gYXQgYSBzYWZl
+ciBwb2ludCBkdXJpbmcgYSBib290IHNlcXVlbmNlLgo+Cj5DYzogSGFycnkgWW9vIDxoYXJyeS55
+b29Ab3JhY2xlLmNvbT4KPkNjOiBTdXJlbiBCYWdoZGFzYXJ5YW4gPHN1cmVuYkBnb29nbGUuY29t
+Pgo+Q2M6IERhdmlkIFdhbmcgPDAwMTA3MDgyQDE2My5jb20+Cj5TaWduZWQtb2ZmLWJ5OiBVbGFk
+emlzbGF1IFJlemtpIChTb255KSA8dXJlemtpQGdtYWlsLmNvbT4KPi0tLQo+IGxpYi90ZXN0X3Zt
+YWxsb2MuYyB8IDQgKysrKwo+IDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykKPgo+ZGlm
+ZiAtLWdpdCBhL2xpYi90ZXN0X3ZtYWxsb2MuYyBiL2xpYi90ZXN0X3ZtYWxsb2MuYwo+aW5kZXgg
+MWIwYjU5NTQ5YWFmMS4uNzI2NDc4MTc1MGM5NiAxMDA2NDQKPi0tLSBhL2xpYi90ZXN0X3ZtYWxs
+b2MuYwo+KysrIGIvbGliL3Rlc3Rfdm1hbGxvYy5jCj5AQCAtNTk4LDcgKzU5OCwxMSBAQCBzdGF0
+aWMgaW50IF9faW5pdCB2bWFsbG9jX3Rlc3RfaW5pdCh2b2lkKQo+IAlyZXR1cm4gSVNfQlVJTFRJ
+TihDT05GSUdfVEVTVF9WTUFMTE9DKSA/IDA6LUVBR0FJTjsKPiB9Cj4gCj4rI2lmZGVmIE1PRFVM
+RQo+IG1vZHVsZV9pbml0KHZtYWxsb2NfdGVzdF9pbml0KQo+KyNlbHNlCj4rbGF0ZV9pbml0Y2Fs
+bCh2bWFsbG9jX3Rlc3RfaW5pdCk7Cgo+KyNlbmRpZgoKCldoZW4gTU9EVUxFIGRlZmluZWQswqAg
+bGF0ZV9pbml0Y2FsbCBpcyBkZWZpbmVkIGFzIG1vZHVsZV9pbml0IGluIC4vaW5jbHVkZS9saW51
+eC9tb2R1bGUuaApJIHRoaW5rIHRoZSBNT0RVTEUgY2hlY2sgaGVyZSBpcyByZWR1bmRhbnQsICAo
+aXQgaXMgY2xlYXJlciB0aG91Z2gpCgoKCgo+IAo+IE1PRFVMRV9MSUNFTlNFKCJHUEwiKTsKPiBN
+T0RVTEVfQVVUSE9SKCJVbGFkemlzbGF1IFJlemtpIik7Cj4tLSAKPjIuMzkuNQo=
