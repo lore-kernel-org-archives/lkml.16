@@ -1,179 +1,157 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A643325A349
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:43:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D7E1C07C4
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750758233; cv=none; b=FtfUp154Q7BjjzlG91/al7CKTX2OsgeoOqXNsxM8ygGSs+oxjhe7HophPVInNWAyZtxnZUF9xSBXF6VezQPQEp3LhxihalQFbvhqcpmg00NLLoIel7kOmL/scJ+Kp5pHGQ8O9LgV1VJaKrtH3mHKSEwnbrnru9OL4W7AFFQ+nc4=
+	t=1750758448; cv=none; b=u2g/fEu2/NgsIe35NXLu4Mlr/D++etLXWrZEbyOu4AzOeYnaa7t0oFBmLNIcUUJ6fNOjjaMdt1WGHZFIz9vzyxBGZWwNpy6HozxFYsNN1/NtWDt7idVbaSke0I56XDIREAVkg0DaD/iEUTrgMmrXZCpQZCcxCpuooiF6svwf+8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750758233; c=relaxed/simple;
-	bh=y+lVCog8q6xqbcMrrBwIMZgIVzO1M4jftVOt6ZQsEoo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j/8grHgIkhLqvA6/+wD9wg11Rc4Q9kAs51X1qa/l6wCsWtUk7SQhTl17lCRQxBGG3V8C86tUZjqUyhka8yS1MyW+iFYMqYzfVOSQRvr97IrRfWbj/S+BpbH/m8sjbL4tKrYnCAKHt11JbMONf8dCIOCx8ITkJg/S2fNgm9FsHn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TX6YirGd; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TX6YirGd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750758230;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Wkz2HmRnrtAFPO13Q5j0a0RO64CPiFWvlD9dGHL1glU=;
-	b=TX6YirGdSAAKbVcyqw66z9GbTa/roID49pEb/hzhl459UW6rK7xPFTlZq5hMgZDLMuaLmy
-	k/IIRbHWE8lvtDgTb8GtuUltxwB/jzlpBXjsHA81hRTvFVaf/M9VoHhpDDK9TLw2Agaqke
-	uuJnTkIwhhbK2jbRj0svFg5AIWybO7Y=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-202-v2X5MDhUMSmsJ_8HAY3n6A-1; Tue, 24 Jun 2025 05:40:09 -0400
-X-MC-Unique: v2X5MDhUMSmsJ_8HAY3n6A-1
-X-Mimecast-MFC-AGG-ID: v2X5MDhUMSmsJ_8HAY3n6A_1750758008
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-451d5600a54so1915965e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:40:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750758008; x=1751362808;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wkz2HmRnrtAFPO13Q5j0a0RO64CPiFWvlD9dGHL1glU=;
-        b=j485Sh3WBiZABlxS5nYtBAVXblzfueP8Ai9aiF9cWCJGaaRCRYxzN1fphMMagVMuNB
-         hHKkjLBg/TC4S9sGIiv3/zTgHcKnX0dCEK+AET+YUSyje6QHyNATFcirawDeLNOH9IkM
-         TYCNbxsR/YLiN6cu+WSTEUB5zzGwsp6byV3BI6Uqmih37uOo5ax1S6fzBC32hTq+qzKC
-         Y9+DrWHFQ0Wr/cs1x7tWWDnMEFrSYu5O/Oy5X9hndcKFHYZnoLEu+q4ER0hXfkMvnh+o
-         V1o2KWmofPjJFKXJpzlqf2DW3YrnYHOL5u98M1iAMQ1YEgmawd/tRpoEW8GcmYtkr4Kn
-         n9lA==
-X-Forwarded-Encrypted: i=1; AJvYcCWtB29Bzw+beLZKBBVzHUON+d5/ndH5SdVIjrpaH9k0qcfeCaClIJonJ2nA34hPmV9ICVsMowOXnq99pq4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz859gVNppblHz0+MIIdMKuE4phg0YKJaSKAEGwMMqq/qD9jHYN
-	Gqn4yGzrv5quNerB/dSuW4JsF94RG6+LvJblorXpjK+VH5JmpUUJqdSb/LKAvAcy8RC0VM64koP
-	Cl3CCGcWcFf9LJml974skfW25mb08zEbY4s5tJjs3cmraasm1l6Fu2qoeE/DNuDW0YQ==
-X-Gm-Gg: ASbGncvXwCsy0JZoVqtLRhVqKGn/wYSri3vxGzlkAMPwqE8TP3OwRJoXX2GW9KP96RG
-	YgMRhFXcllKOBbeEEJVxnSyHdER86wFOwvKxxrtDKwPzpiMvkUJwbGiJeuIcN/+5O/+RkO1GsWH
-	Opw3o/oAQ0AZq99jQW2agCfXFr2z1CenvEgP35DZNgYF78UpN4OhsYl8pAFj0WciTSACEGbbaIW
-	04AI+dwh87zr531GaQLjH3Ugw3WTE9QhipKbo4w0WzEwxZAcniasXBxVMQrXJp6lJjrF2LO7HAB
-	EJtYwpbMBl5I1WCS0aYrrzCml73ugCxTXFI9iQ0kOM+VSOF8OBkkq+Y=
-X-Received: by 2002:a05:600c:468b:b0:442:f98e:f37 with SMTP id 5b1f17b1804b1-453658ba2e3mr140094485e9.21.1750758007828;
-        Tue, 24 Jun 2025 02:40:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFJQC0liegHgcGebdfeGF2STlfVSp0cZcixQYIvtKZpGiiJJKAUUGgl09iG8B8dw+f4ZD8h6w==
-X-Received: by 2002:a05:600c:468b:b0:442:f98e:f37 with SMTP id 5b1f17b1804b1-453658ba2e3mr140094245e9.21.1750758007399;
-        Tue, 24 Jun 2025 02:40:07 -0700 (PDT)
-Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4536470370fsm136043985e9.29.2025.06.24.02.40.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 02:40:06 -0700 (PDT)
-Message-ID: <75717e4e-51d0-41a2-8463-45097fc3875b@redhat.com>
-Date: Tue, 24 Jun 2025 11:40:05 +0200
+	s=arc-20240116; t=1750758448; c=relaxed/simple;
+	bh=8rR4TgJpip5g/XvJwoVV7iyGd6lp1NNv6BYYgLnbeH0=;
+	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
+	 Subject:Content-Type; b=KKWnmAKguEX/s9lppbG6R3CemrGCvw0PDde01r2n1iE7IFx0fqyPlUxwjZZ5RZXQ9kV5vv/aEjjy3VdQnfjXaQFvTGRLrtJVZVZuSGHuLbq+9xHV0Pk+plS9/X/GzgofZNTxy0FXP00tYYnkOysaXNWO4/HU12Eb3C81yHNaC2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bRKqT1h2Tz5DBq2;
+	Tue, 24 Jun 2025 17:47:17 +0800 (CST)
+Received: from xaxapp02.zte.com.cn ([10.88.97.241])
+	by mse-fl2.zte.com.cn with SMTP id 55O9l9iv067596;
+	Tue, 24 Jun 2025 17:47:09 +0800 (+08)
+	(envelope-from xu.xin16@zte.com.cn)
+Received: from mapi (xaxapp02[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Tue, 24 Jun 2025 17:47:11 +0800 (CST)
+Date: Tue, 24 Jun 2025 17:47:11 +0800 (CST)
+X-Zmail-TransId: 2afa685a741fffffffffdb9-d505a
+X-Mailer: Zmail v1.0
+Message-ID: <20250624174711752wxRCqiy0LZGukb1R7z_6D@zte.com.cn>
+In-Reply-To: <910a462a-8d4d-4b5d-941c-ba1396e287dc@kylinos.cn>
+References: 202506181714096412Nvp5B3BkFpi3-CKLQ9ep@zte.com.cn,910a462a-8d4d-4b5d-941c-ba1396e287dc@kylinos.cn
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: move mask update out of the atomic context
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Dev Jain <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250623080440.3005693-1-agordeev@linux.ibm.com>
- <c11a4b2e-6895-43b7-9ff6-620793bf8551@arm.com>
- <aFkgTA+02bV6nldk@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
- <f5c7ed26-b034-4600-ba29-26761eb1eef5@arm.com>
- <4214d6d6-f8d5-43b3-a413-f576fdaf215d@redhat.com>
- <aFpxvQxgUEdO9jd/@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-Content-Language: en-US
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aFpxvQxgUEdO9jd/@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+From: <xu.xin16@zte.com.cn>
+To: <xialonglong@kylinos.cn>
+Cc: <david@redhat.com>, <akpm@linux-foundation.org>,
+        <chengming.zhou@linux.dev>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <shr@devkernel.io>, <corbet@lwn.net>,
+        <lorenzo.stoakes@oracle.com>, <Liam.Howlett@oracle.com>,
+        <vbabka@suse.cz>
+Subject: =?UTF-8?B?562U5aSNOiBbUEFUQ0ggMS8xXSBtbS9rc206IGFkZCBrc21fcGFnZXNfc2hhcmluZyBmb3IgZWFjaCBwcm9jZXNzIHRvIGNhbGN1bGF0ZSBwcm9maXQgbW9yZSBhY2N1cmF0ZWx5?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 55O9l9iv067596
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 685A7425.000/4bRKqT1h2Tz5DBq2
 
-On 24.06.25 11:37, Alexander Gordeev wrote:
-> On Mon, Jun 23, 2025 at 09:45:34PM +0200, David Hildenbrand wrote:
-> ...
->> Let's ask the real questions: who checks PGTBL_PTE_MODIFIED?
->>
->> I see
->>
->> if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
->> 	arch_sync_kernel_mappings(start, start + size);
->>
->> And then
->>
->> arch/arm/include/asm/page.h:#define ARCH_PAGE_TABLE_SYNC_MASK   PGTBL_PMD_MODIFIED
->> arch/x86/include/asm/pgtable-2level_types.h:#define ARCH_PAGE_TABLE_SYNC_MASK   PGTBL_PMD_MODIFIED
->> arch/x86/include/asm/pgtable-3level_types.h:#define ARCH_PAGE_TABLE_SYNC_MASK   PGTBL_PMD_MODIFIED
->>
->>
->> Which makes me wonder why we need PGTBL_PTE_MODIFIED at all? Is there some other check I am missing?
->>
->> (same question regarding everything excepy PGTBL_PMD_MODIFIED, because that actually seems to be used)
+> >>>> and /proc/self/ksm_stat/ to indicate the saved pages of this process.
+> >>>> (not including ksm_zero_pages)
+> >>> Curious, why is updating ksm_process_profit() insufficient and we also
+> >>> have to expose ksm_pages_sharing?
+> >>>
+> >> Since ksm_process_profit() uses ksm_merging_pages(pages_sharing +
+> >> pages_shared) to calculate the profit for individual processes,
+> >>
+> >> while general_profit uses pages_sharing for profit calculation, this can
+> >> lead to the total profit calculated for each process being greater than
+> >> that of general_profit.
+> >>
+> >> Additionally, exposing ksm_pages_sharing under /proc/self/ksm_stat/ may
+> >> be sufficient.
+> >>
+> > Hi,
+> >
+> > Althorugh it's true, however, this patch maybe not okay. It can only ensure
+> > that the sum of each process's profit roughly equals the system's general_profit
+> > , but gives totally wrong profit result for some one process. For example, when
+> > two pages from two different processes are merged, one process's page_shared
+> > increments by +1, while the other's pages_sharing increments by +1, which
+> > resulting in different calculated profits for the two processes, even though
+> > their actual profits are identical. If in more extreme cases, this could even
+> > render a process's profit entirely unreadable.
+> >
+> > Lastly, do we really need each process’s profit sum to perfectly match the general
+> > profit, or we just want a rough estimate of the process’s profit from KSM ?
+> >
+> Hi,
 > 
-> AFAICT it was thought as architecture-specific:
+> In extreme cases, stable nodes may be distributed quite unevenly, which 
+> is due to stable nodes not being per mm, of course.
+> There are also situations where there are 1000 pairs of pages, with the 
+> pages within each pair being identical, while each pair is different 
+> from all other pages.
+> This results in the number of page_sharing and page_shared being the 
+> same. This way, using ksm_merging_pages(page_sharing + page_shared) 
+> averages a 50% error.
+
+In your tests, I don't agree 50% error because your
+assumption that process benefit equals pages_sharing is fundamentally flawed.
+
+The issue lies in what is the most accurate definition of process KSM profit.
+Since stable_node isn't per-mm, we cannot calculate a process's
+benefit solely based on pages_sharing. The cost of stable_node should be split
+fairly among every process sharing this stable_node, rather than being assigned
+to a single individual.
+
+It's inaccurate to claim that when two processes' pages merge into a
+single KSM page, one process gains 4k - sizeof(rmap_item) while
+the other gains 0 ? This is unfair to the second process, as it actively
+participated in the KSM merge.
+
+
+The most accurate and fair profit caculation should be:
+
+    profit = (ksm_merging_pages - united_stable_nodes)*PAGE_SIZE - sizeof(rmap_items)*ksm_rmap_items
+
+where 'united_stable_nodes' is (stable_node)/shared_process. This is too complex.
+
+For example: process A with one page is merged with process B with one page
+
+process A      process B
+    page          page
+     \           /
+      \         /
+       \       /
+        \     /
+        Ksm Page
+
+A: pages_sharing(1), pages_shared(0)
+B: pages_sharing(0), pages_shared(1)
+
+then
+
+profit(A) = (pages_sharing + pages_shared - united_stable_nodes)*4K- sizeof(rmap_items)*ksm_rmap_items
+
+          = (1 + 0 - 1/2)*4k-sizeof(rmap_items)*ksm_rmap_items
+
+          = 0.5*4k - sizeof(rmap_items)*ksm_rmap_items
+
+profit(A) = (pages_sharing + pages_shared - united_stable_nodes)*4K- sizeof(rmap_items)*ksm_rmap_items
+
+	  = (0 + 1 - 1/2)*4k-sizeof(rmap_items)*ksm_rmap_items
+
+          = 0.5*4k - sizeof(rmap_items)*ksm_rmap_items
+
+
+> In practical testing, we may only need to enable KSM for specific 
+> applications and calculate the total benefits of these processes.
+> Since page_shared is also included in the statistics, this may lead to 
+> the calculated benefits being higher than the actual ones.
+> In practical testing, the error may reach 20%. For example, in one test, 
+> the total benefits of all processes were estimated to be around 528MB,
+> while the profit calculated through general_profit was only around 428MB.
+> The theoretical error may be around 50%.
 > 
-> /*
->   * Architectures can set this mask to a combination of PGTBL_P?D_MODIFIED values
->   * and let generic vmalloc and ioremap code know when arch_sync_kernel_mappings()
->   * needs to be called.
->   */
-> #ifndef ARCH_PAGE_TABLE_SYNC_MASK
-> #define ARCH_PAGE_TABLE_SYNC_MASK 0
-> #endif
+> If we expose the ksm_pages_sharing for each process, we can not only 
+> calculate the actual benefits
 > 
-> Not sure if that needs to be addressed at all.
-
-Okay, if there are no users of PGTBL_PTE_MODIFIED we could just ... 
-remove it. Dead code.
-
--- 
-Cheers,
-
-David / dhildenb
-
+> but also determine how many ksm_pages_shared there are by the difference 
+> between ksm_merging_pages and ksm_pages_sharing of each process.
