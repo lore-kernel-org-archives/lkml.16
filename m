@@ -1,83 +1,182 @@
-Received: from submarine.notk.org (submarine.notk.org [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64EEA22258C;
-	Tue, 24 Jun 2025 07:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD24227E8F;
+	Tue, 24 Jun 2025 07:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750748589; cv=none; b=RfrbfyiFkYTIHCuD2NkBXmdxIWTLEPFOO+l5HVRpkZQQOk9dFng006Nril4QfzGtD3+GEGnaPpDBpUGcQx/m3+4zb3gMxtxn2UY5TlNwmBLH1sevO7Ez7tLGldrgYoLZjMYfWrgZh2ugiP4DdLJGdQJ2Hia4zRNTUDOW+7o8EZA=
+	t=1750748590; cv=none; b=HW9XjA1Jvw8FMkwKqNFMbhN+bp8aXFO0f9fPs2n5kiApiQRC1E97xO2AGaCLc7kKeBk2Uv0d5oQ58okZzD7VE+nZN/1Mr75blMXRq/0kN9BhePD1h9DKy15y4kn6MBLLAv88xctNsChr6RHS7WkSHiQkZCvA2tdiee+5QItpSAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750748589; c=relaxed/simple;
-	bh=XOD1QPRKZMAXGA5MaZaHtwrD+CxKUTaDpa/4tHaEFoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sS98DCop9u7uL7lKGGhinpJ+K1x7eQ7eraccb6mSU2oqHImGFfn5LwY9FobK8uCpyIZtPmIDaqSvG2yoCrcYX69OXNTS3c055QHAVyJmkx8PNFhM+iTYBLDZAEZurl9g6e4AjEuuVXRqoRLcvQHpFdi7sdLinfbd6ThgC6qFMy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=yBONtD2M; arc=none smtp.client-ip=62.210.214.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="yBONtD2M"
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id B76BD14C2D3;
-	Tue, 24 Jun 2025 09:02:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1750748580;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Cp+L8jxaNWQ/VZWl/gG/gGy4pfGeCsfwYLw/hzTr0s4=;
-	b=yBONtD2MqCr2UZsn+GD7EgMSDf7AVZG9j81sywJhaKCU4GMLeQTJoUnQvf33TZz+BFtdYp
-	bLB7ulGAqfV2UaVYuqf8ZylbkKCV8NDEYZ46dkaU5c9RCSBT02lP7+jMrNC52guvbk5UZ9
-	xHkU+iL8P912cWtahighLbcC7YPLd6RGQ1G1A3j1UM7RkiZm7KR2XthxunNgkH7J1r6O0Q
-	rBuKqn4A3NhyhPPaeAZEsmXJvf4ycVKkffIUNwy2mtc54E1Hs5DI3JjqaLUtPKXGpXJLf3
-	/aZqGJl+YKPczSppDJs08SCeonYcrFesOrCvy2eoOZAwVZyT2iTvS1BweLzWzQ==
-Received: from localhost (gaia.codewreck.org [local])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id e75e798f;
-	Tue, 24 Jun 2025 07:02:54 +0000 (UTC)
-Date: Tue, 24 Jun 2025 16:02:39 +0900
-From: Dominique Martinet <asmadeus@codewreck.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 5.10 000/355] 5.10.239-rc1 review
-Message-ID: <aFpNj5SrxHFBU14c@codewreck.org>
-References: <20250623130626.716971725@linuxfoundation.org>
+	s=arc-20240116; t=1750748590; c=relaxed/simple;
+	bh=F5wbZ0hJ0JoYIWdMRRqSqMD0TydLNMWlujeCLdfcppU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=rqoI2G77VI+rH0TqjIQ0YAEDzmVu5T7vl4BH+UFk3rUsx39Vw/r2rp7Aep/IWoYHh9KQEezQcVJfFQ53vZfgU+aRzLlPlumQ2yn13fapWksIpXcUPG4A3/AV/F/qj9tX39SZZ0wE+xENhiqYeixqtoYT9o3Eongro0eR70v6rVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bRG990pWsz6DB68;
+	Tue, 24 Jun 2025 15:02:21 +0800 (CST)
+Received: from frapeml100007.china.huawei.com (unknown [7.182.85.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id E90FC1404A6;
+	Tue, 24 Jun 2025 15:03:04 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (7.182.85.71) by
+ frapeml100007.china.huawei.com (7.182.85.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 24 Jun 2025 09:03:04 +0200
+Received: from frapeml500008.china.huawei.com ([7.182.85.71]) by
+ frapeml500008.china.huawei.com ([7.182.85.71]) with mapi id 15.01.2507.039;
+ Tue, 24 Jun 2025 09:03:04 +0200
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+To: liulongfang <liulongfang@huawei.com>, "alex.williamson@redhat.com"
+	<alex.williamson@redhat.com>, "jgg@nvidia.com" <jgg@nvidia.com>, "Jonathan
+ Cameron" <jonathan.cameron@huawei.com>
+CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linuxarm@openeuler.org" <linuxarm@openeuler.org>
+Subject: RE: [PATCH v4 1/3] migration: update BAR space size
+Thread-Topic: [PATCH v4 1/3] migration: update BAR space size
+Thread-Index: AQHb2dGm67ktikNh8k6km+yGJfGW1bQR963A
+Date: Tue, 24 Jun 2025 07:03:04 +0000
+Message-ID: <3ec5ffdee2f64c74a82093c06612f59b@huawei.com>
+References: <20250610063251.27526-1-liulongfang@huawei.com>
+ <20250610063251.27526-2-liulongfang@huawei.com>
+In-Reply-To: <20250610063251.27526-2-liulongfang@huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250623130626.716971725@linuxfoundation.org>
 
-Greg Kroah-Hartman wrote on Mon, Jun 23, 2025 at 03:03:21PM +0200:
-> This is the start of the stable review cycle for the 5.10.239 release.
-> There are 355 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 25 Jun 2025 13:05:51 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.239-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-> and the diffstat can be found below.
 
-Aside of the build problem on arm64 (and a resume bug on our end that
-seems to have gotten more likely, but does not look caused by this
-update) this looks good to me:
 
-Tested 7b5e3f5b0ebc ("Linux 5.10.239-rc1") on:
-- arm i.MX6ULL (Armadillo 640)
-- arm64 i.MX8MP (Armadillo G4)
+> -----Original Message-----
+> From: liulongfang <liulongfang@huawei.com>
+> Sent: Tuesday, June 10, 2025 7:33 AM
+> To: alex.williamson@redhat.com; jgg@nvidia.com; Shameerali Kolothum
+> Thodi <shameerali.kolothum.thodi@huawei.com>; Jonathan Cameron
+> <jonathan.cameron@huawei.com>
+> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> linuxarm@openeuler.org; liulongfang <liulongfang@huawei.com>
+> Subject: [PATCH v4 1/3] migration: update BAR space size
+>=20
+> On the new hardware platform, the live migration configuration region
+> is moved from VF to PF. The VF's own configuration space is
+> restored to the complete 64KB, and there is no need to divide the
+> size of the BAR configuration space equally.
+>=20
+> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+> ---
+>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 36 ++++++++++++++-----
+>  1 file changed, 27 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+> b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+> index 2149f49aeec7..b16115f590fd 100644
+> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+> @@ -1250,6 +1250,28 @@ static struct hisi_qm *hisi_acc_get_pf_qm(struct
+> pci_dev *pdev)
+>  	return !IS_ERR(pf_qm) ? pf_qm : NULL;
+>  }
+>=20
+> +static size_t hisi_acc_get_resource_len(struct vfio_pci_core_device *vde=
+v,
+> +					unsigned int index)
+> +{
+> +	struct hisi_acc_vf_core_device *hisi_acc_vdev =3D
+> +			hisi_acc_drvdata(vdev->pdev);
+> +
+> +	/*
+> +	 * On the old HW_V3 device, the ACC VF device BAR2
+> +	 * region encompasses both functional register space
+> +	 * and migration control register space.
+> +	 * only the functional region should be report to Guest.
+> +	 *
+> +	 * On the new HW device, the migration control register
+> +	 * has been moved to the PF device BAR2 region.
+> +	 * The VF device BAR2 is entirely functional register space.
+> +	 */
+> +	if (hisi_acc_vdev->pf_qm->ver =3D=3D QM_HW_V3)
+> +		return (pci_resource_len(vdev->pdev, index) >> 1);
+> +
+> +	return pci_resource_len(vdev->pdev, index);
+> +}
+> +
+>  static int hisi_acc_pci_rw_access_check(struct vfio_device *core_vdev,
+>  					size_t count, loff_t *ppos,
+>  					size_t *new_count)
+> @@ -1260,8 +1282,9 @@ static int hisi_acc_pci_rw_access_check(struct
+> vfio_device *core_vdev,
+>=20
+>  	if (index =3D=3D VFIO_PCI_BAR2_REGION_INDEX) {
+>  		loff_t pos =3D *ppos & VFIO_PCI_OFFSET_MASK;
+> -		resource_size_t end =3D pci_resource_len(vdev->pdev, index) /
+> 2;
+> +		resource_size_t end;
+>=20
+> +		end =3D hisi_acc_get_resource_len(vdev, index);
+>  		/* Check if access is for migration control region */
+>  		if (pos >=3D end)
+>  			return -EINVAL;
+> @@ -1282,8 +1305,9 @@ static int hisi_acc_vfio_pci_mmap(struct
+> vfio_device *core_vdev,
+>  	index =3D vma->vm_pgoff >> (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT);
+>  	if (index =3D=3D VFIO_PCI_BAR2_REGION_INDEX) {
+>  		u64 req_len, pgoff, req_start;
+> -		resource_size_t end =3D pci_resource_len(vdev->pdev, index) /
+> 2;
+> +		resource_size_t end;
+>=20
+> +		end =3D PAGE_ALIGN(hisi_acc_get_resource_len(vdev, index));
 
-No obvious regression in dmesg or basic tests:
-Tested-by: Dominique Martinet <dominique.martinet@atmark-techno.com>
--- 
-Dominique Martinet
+I think I have commented on this before. The above PAGE_ALIGN will change t=
+he=20
+behavior on HW_V3 with 64K PAGE_SIZE kernel. The end will become 64K which
+is not what we want on HW_V3. Could you please check that again.
+
+Thanks,
+Shameer
+
+>  		req_len =3D vma->vm_end - vma->vm_start;
+>  		pgoff =3D vma->vm_pgoff &
+>  			((1U << (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT)) - 1);
+> @@ -1330,7 +1354,6 @@ static long hisi_acc_vfio_pci_ioctl(struct
+> vfio_device *core_vdev, unsigned int
+>  	if (cmd =3D=3D VFIO_DEVICE_GET_REGION_INFO) {
+>  		struct vfio_pci_core_device *vdev =3D
+>  			container_of(core_vdev, struct vfio_pci_core_device,
+> vdev);
+> -		struct pci_dev *pdev =3D vdev->pdev;
+>  		struct vfio_region_info info;
+>  		unsigned long minsz;
+>=20
+> @@ -1345,12 +1368,7 @@ static long hisi_acc_vfio_pci_ioctl(struct
+> vfio_device *core_vdev, unsigned int
+>  		if (info.index =3D=3D VFIO_PCI_BAR2_REGION_INDEX) {
+>  			info.offset =3D
+> VFIO_PCI_INDEX_TO_OFFSET(info.index);
+>=20
+> -			/*
+> -			 * ACC VF dev BAR2 region consists of both
+> functional
+> -			 * register space and migration control register
+> space.
+> -			 * Report only the functional region to Guest.
+> -			 */
+> -			info.size =3D pci_resource_len(pdev, info.index) / 2;
+> +			info.size =3D hisi_acc_get_resource_len(vdev,
+> info.index);
+>=20
+>  			info.flags =3D VFIO_REGION_INFO_FLAG_READ |
+>  					VFIO_REGION_INFO_FLAG_WRITE |
+> --
+> 2.24.0
+
