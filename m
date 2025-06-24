@@ -1,95 +1,65 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D0417A2E2
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D13C1946DF;
+	Tue, 24 Jun 2025 19:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750792573; cv=none; b=dEu57kHjTAk8OEosJuBtO6MVd1qlrHuRWFFNA4iwz33v1uTx8Y7iTkKEFo1+EkKidFMGtbFooBErVO+Ls0dAFf1Yy6DNL/3kf5ICteNr2lfKWte9wCHgV36fPmJxPAyNsEakRzk+f4CYsLivzSBgfqZ0DTH9R5HybLVvybcHImk=
+	t=1750792683; cv=none; b=ohU3pRwZg3vO4XAr6Grrp6ehjhXDJLlPpc37NPWhuU5C7SMwS230WHd9JOFwVOE1JaFGNW9RuHfCSHNzKylQQAddnyA3Q2JBvYEG47GaRXxtCLrYX2aJAnQuUxQivaqMKOuyOgcOQT/CgS9fLmzmBF7cGuTKkFadmKVNNbegRbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750792573; c=relaxed/simple;
-	bh=ihWWakMukXt8Os5zOHseSTg4tzKTY1m9zw8OxkJuiHM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q9K7aq1IeOnh6TXo0Bu0Sc0UWQMS3SorgD1XDI3j0tOYV9iOgGTxwgjTjDQPUj/xyIq7sLN2pLDRuRqItEX5YoYXKJsPLT5iiCyuHIcf0xGQe8rcrxNXtDTGKR9xmZ+A2aOs92CEONRxwvAPa+i/PJx2WUJIBZei1Nv/KqU/LzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YpSnrxcg; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YpSnrxcg"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-55350d0eedeso932914e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:16:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750792570; x=1751397370; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ihWWakMukXt8Os5zOHseSTg4tzKTY1m9zw8OxkJuiHM=;
-        b=YpSnrxcgP6His/jiye0hx5Tm1sOZSmfyn0sJdK7DtV9f4uim+LANBvNc8LUDl59lLm
-         tmmhp313Uz4S7donnbcaJ0JF8NUMpc6Ru7CAILtRtikbmGbIJ/zYLAFaxY0r88YudGZ/
-         IBVp+hHIyGZSLR2Gx2jimgSI/BP5toWa06oBMJiqFYDidQZR/4Rr3hxf7XQUVJV60xVW
-         Tlokco5egdeRs4+5XGuxNlEE+fpWvz9wyffeD/e/LgwAw1bP6yVrL/Jur3ZmDKS2AP2S
-         h3ik/aD+ZmHB6NYpNm9mNZnARiM137HofJmqV3k1b7n3bhIN4uOKhHI+uj11rxunhcoq
-         g1ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750792570; x=1751397370;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ihWWakMukXt8Os5zOHseSTg4tzKTY1m9zw8OxkJuiHM=;
-        b=OiFGlN9GxFmuBi2Av/67XDdXmmC2brr6/CbvmD1L02z/fFnHlSsn0LZio+5JlfMKkA
-         qKjvjz8x54qBFXES1YpLZLzolJCj+ynLkgs+8v7KhLKkXJYgnxofZFXYdx7MYS8RIXpC
-         dtoqxm/UQuE1H23NROu666ciXWloevj636z7NGQMj7FqRL1tx5e4YoN5HPdUuTtNTKSf
-         58A35W9yQbc8ZpPdPyqndV7t/ggaDGv/nY9FKW8OusUyvNn5lEJTMHADTqoYn/1ZMU3U
-         S9s8D4/WF1XA6cu8HQJPwhtd+8Yg3lohqWYnq66fmkmvHhddZdozo/WrNCvBrfADI2iO
-         BxPA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUHeSZ+zLykUP5sacsrtDF1t8n5XU5q3KvIzQrtg4lbgC5yYCV1inQVq7cUe5hhItLTXxT4d3/z1hXQ8o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4Bumy9mu2s2C5AEsTz6oO+bgY66Z25tDIxbniK9CP+OtViLxf
-	u5oe8808gWJ/a8kULTU8csUx6Wt33BDNe5+/iAVXTU/YGxi5i+D0QIQ5vvNp2tZHpkqGtMBpUp9
-	lSK+mrE7HxAnV7AFL5FzpPvwiOZQZTYwJqTrQtia5bg==
-X-Gm-Gg: ASbGncsRRQxIC1BIE57+USW2JMRCeZql3hDXT3ISCwkSF9ATvhB0cpEXGXfNE3eqT92
-	xsP4w+nQ4UtFqfC6s0w7tewHtCtkoIAootPq2FIl5O/iErCh7IVVZStFcz9VbwyUWuUIKC6pX//
-	Iv00TWqM5iFjp0MOdI4/tFojyx/eGb8EYlp6GrEXQ4cT4=
-X-Google-Smtp-Source: AGHT+IHmRRS+snn9ezdisZXjq9pNKvNF1NOIie7MqflwaPNY3SKz61GchJJ41LtKpgJIpimyXyrJyvJ1Pacxv1Ru12U=
-X-Received: by 2002:ac2:4c45:0:b0:552:1c1b:561 with SMTP id
- 2adb3069b0e04-554fdd23ba8mr18893e87.23.1750792570121; Tue, 24 Jun 2025
- 12:16:10 -0700 (PDT)
+	s=arc-20240116; t=1750792683; c=relaxed/simple;
+	bh=kZA5lKAdVilY05q/LztHGQnTYuZbYLC88LIVV0JhcX8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=vGUzxwFHyb4/WnogLewGcP7PSFWX1qvdhtzMjIHj5Gz0g+K/v0NvjlbQIdLneTfk+26scfxTHWaaFnKtKWDIA6/h2VUpRFRYL0e7r2wgx8J/RElcW2p2aUVupUxSBWVKJ6pclCmglCQP+FPcnc2S0UdSieKZzdrpyB2UGplEnKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 5B80D1A0F5E;
+	Tue, 24 Jun 2025 19:17:59 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 83BF21A;
+	Tue, 24 Jun 2025 19:17:57 +0000 (UTC)
+Date: Tue, 24 Jun 2025 15:17:56 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
+ syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] tracing: Fix filter logic error
+Message-ID: <20250624151756.47f03db9@batman.local.home>
+In-Reply-To: <tencent_4EF87A626D702F816CD0951CE956EC32CD0A@qq.com>
+References: <6859ea24.a00a0220.2e5631.0044.GAE@google.com>
+	<tencent_4EF87A626D702F816CD0951CE956EC32CD0A@qq.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620010345.11247-1-chenyuan_fl@163.com> <20250620012708.16709-1-chenyuan_fl@163.com>
-In-Reply-To: <20250620012708.16709-1-chenyuan_fl@163.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 24 Jun 2025 21:15:58 +0200
-X-Gm-Features: AX0GCFs0q4vtQFV_NNK7FgYpbrOMY93VLrNBvqqOTi5xPuc96sQtOMY9VoZarF0
-Message-ID: <CACRpkdaA8UQYX8bFeHn4JCxLgK_-UxR_n=ZCZmgbk8tqSgnFAw@mail.gmail.com>
-Subject: Re: [PATH v2] pinctrl: sunxi: Fix memory leak on krealloc failure in sunxi_pctrl_dt_node_to_map
-To: Yuan Chen <chenyuan_fl@163.com>
-Cc: wens@csie.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Yuan Chen <chenyuan@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 83BF21A
+X-Rspamd-Server: rspamout08
+X-Stat-Signature: dai31syqxb7wd6whabpgzy6tgo5njzkm
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+jx2MUeNqHQdJNzrMHAe+nb8YxAiZZBa0=
+X-HE-Tag: 1750792677-896582
+X-HE-Meta: U2FsdGVkX1/pLr/kp0PrxXqtgeJK3g734I5M3c1C8xcSgM2wdSe7q4xfGbMWDQMUfPocOx6HBDt7tYa07cFrjX/TyJfxmQix3kipf0SqA5z0ayHL0hoRjdA5+HZx6AK/ojEf5aenT/og3X8y/Gze9IBUTNLzIHC3Pz6oyKbAXgYj7iaQ9izk7WYp+CXuW9sS7LWsY4XZwgVNEXz3hWDTkQhAaCLhh9xmhFHsmUthgU13rSF0sJqKJQMLXVqyQ250rITuuBTp4P07OqtBOSLEdcKkggyTi2K7TeMGrrLEX/v7UiDdKQGIEHDNclFaemxKhigvSYMz9qjhM7WIWrjzcOlhNtKQHSLoAhKxkB2UIimtHQF7xLlHdQ==
 
-On Fri, Jun 20, 2025 at 3:27=E2=80=AFAM Yuan Chen <chenyuan_fl@163.com> wro=
-te:
+On Tue, 24 Jun 2025 14:38:46 +0800
+Edward Adam Davis <eadavis@qq.com> wrote:
 
-> From: Yuan Chen <chenyuan@kylinos.cn>
->
-> In sunxi_pctrl_dt_node_to_map(), when krealloc() fails to resize the pinc=
-trl_map
-> array, the function returns -ENOMEM directly without freeing the previous=
-ly
-> allocated *map buffer. This results in a memory leak of the original kmal=
-loc_array
-> allocation.
->
-> Fixes: e11dee2e98f8 ("pinctrl: sunxi: Deal with configless pins")
-> Signed-off-by: Yuan Chen <chenyuan@kylinos.cn>
+> If the processing of the tr->events loop fails, the filter that has been
+> added to filter_head will be released twice in free_filter_list(&head->rcu)
+> and __free_filter(filter).
+> 
+> After adding the filter of tr->events, add the filter to the filter_head
+> process to avoid triggering uaf.
 
-Patch applied for fixes!
+Ah that was the kmalloc that failed.
 
-Yours,
-Linus Walleij
+Thanks,
+
+-- Steve
