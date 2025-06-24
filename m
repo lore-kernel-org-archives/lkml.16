@@ -1,33 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796A4170A26;
-	Tue, 24 Jun 2025 07:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962B31AB6F1
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750751942; cv=none; b=LXP/8119bCa+lnt/jfJKSxkgT5yV3pcgJueZJynSJ1/bi7CwLlL69Kp9a8PDjLl1bGFPbtctsOrzCyszowxlWr7IXVYLTv4uYCJx0dQNOsaw2UhBnyPa6bRiQegKcPKEMZRUBmWevI0pP8eSqMypTcfUAJCT0vswNpCPk2oHcqU=
+	t=1750752131; cv=none; b=T4nKSwyj/uQpKk1GNJ8UMl885klNQnUxIArHoDgSMv1osc64YORLXmbe1J1wQzqFj+iaYJW00ZHW/9p2nYQGkzvhP5lH9yN5piM5V1hOHvrm913hiNst9xbtgKGyFQe1j71yTu4a9qFbJ7p5BQU9UVH0VIFtMfCTsLeFflZrseA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750751942; c=relaxed/simple;
-	bh=Tpk9nEBMWAS48jykeOPBazFFwPA7+l9NUdlVWnRC1Rk=;
+	s=arc-20240116; t=1750752131; c=relaxed/simple;
+	bh=6RJ35Le43lWBAzVG4/jUlEyKbx+1PoEcme8RrymJVbo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kDLBJo83rV9JgpTLbBcTSYsHlrUM3N89CBd7JATYbLJaHw7YBChxsJtuaDcbBcEr0y5WYD5AQMj9f8NW5WWXysArgB6/ZHm33/6Vb+ssa8Q1i/UABkpiy+q1DcZrM0LTjuIdgtHgLhL6IBK6vA7/AfN87P5sI/bhkS6PVuIet4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ivumPyLd; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=jhuqTaRq1GBgpuo/n9X+ItndYdjL0WMsLxCmSZZWQp5vH37xwcCdqwQ5LRRHVNtzOzrVQ12+Hg6D1pas5JzCjNuV3kO7sZlY6Wpb86EYQPSYLcrPxfKj9eidUmTjfWLxGwroBrOLnfj8Vk0h540uHQtnfv+zuii/wGG1WM7bljc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FjtZ9j/g; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ivumPyLd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7954C4CEE3;
-	Tue, 24 Jun 2025 07:59:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750751941;
-	bh=Tpk9nEBMWAS48jykeOPBazFFwPA7+l9NUdlVWnRC1Rk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ivumPyLdcEyp1IRRnB3/3Q1byXHW7q7QqLVRJDf0tafAnwpNlFS/14/Qc+IHe+OOc
-	 3GS+AWqTkkpahupS9FLpMtZNmNXj7OepTZejR1ghno3uPD9htjR1WKOJupJ0mAJgp3
-	 PzeI4Ap527b1dlxonzggQAj/T9zmRGgYwbHDOzYS1luEQT3UYrEH1YVqs5DJRu/qTi
-	 hg2wkApSFGVn54YAT9XCZAFMV13q5h2rWhUHQ4A+QMtFD4fm2gGJqPxEu3d13eHFf8
-	 kRg3Jg6M4yWgbYX7z0QO1sgqpVoCf55bZ8bqB5JDSrZor7asfNtGpo9vDqhef5CyJ3
-	 zHXeTqDHiycRQ==
-Message-ID: <bdda29d8-f30d-47e3-987f-a2cdb855f4d0@kernel.org>
-Date: Tue, 24 Jun 2025 09:58:59 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FjtZ9j/g"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ade30256175so894003166b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:02:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750752128; x=1751356928; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lFrQ1pMI4pxJoYVMvbXoXA6AuXo1ZRbUlGABw1ebDAQ=;
+        b=FjtZ9j/gJmuoimsIpJ05k5xEkNDfCoDGapX3l4j+Jdq9LpQ4pvjf0Z4Mo6WfeF3Fhu
+         XLTsenPkQ42iUb33GxaswOuFn5ybQXr8qIZdcOuzrB8Jz7mM8Rg4vgoNG81syg09LGD7
+         HFANUtMQO9MGy6b7XubBajJNnRG9U6CJel2tVB3kuao/4K/wzwHPnj1l30QlzXMrO+ei
+         TXhuFJuMtE0ern+xFp1vVZWj/eu5XUSay/NgPB9gfd18OJX/KYM277jvuaPf6nkdxf7h
+         E+elcmLs4/BlZfp+371mxjthjxXlTtTlo408Lq3WeQ81Gqq5zF7OYnuxMMXDGnzBiMtW
+         ewBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750752128; x=1751356928;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lFrQ1pMI4pxJoYVMvbXoXA6AuXo1ZRbUlGABw1ebDAQ=;
+        b=nKA3Xvv0n9r9fYa2ZscweTK0h3KKyPX87r+mVoAz5FABGM6XFy/IzY7pyVTNR2sLi7
+         sYKZRqK//S+ct7XzKg35WFKYZ1EBy1k/EdXmOmjbT0/xYbyF7/8FL9yrDVVr1xvVhaEX
+         ZSpDjfX60pVUv5QH2gb/WrwmVxBQR82WlDarzfJz+pSiGIa0obPNy1NH+LpMFa2YqoFz
+         jhmqbTN6saaWe19qqLe5ACPI6ufhw6suwu1/EBBgn8v5EVKx9mFQqdexFWwR2gt++7YA
+         HvoHT7StvW6pTp6zjIZ9XrYwVwEUNAp5HRwBybsUX/KcmdaIDQrI6ejuZsZtuvs3yscA
+         dUPw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8fZ0+16H7W74FbEY5hHoJr27ruguAzCFWRe80UWoTu7DRdCs6igiRXs/RUEzn/bfcMVqhMVTjDPM0qAg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXsqIp9OSrz6vhi2zOwRm3jn7iHarHUru0YLDpIIGGoBzv/Zur
+	seB9uXVaNjHCLRSlsB8Ndatv98F8a6KN8rPk9dtluC3TDD2ZPqM68xug+OgOI5v7Yh4=
+X-Gm-Gg: ASbGncsxfHGWXF0X96VSIGPcIcRcxp7s9y8CCFa1+uzX0djuTDGqMzO8lCTngy7MCmT
+	4TIHqqR2GKWSFaKFFvXEjyEwAP1mIq2JEw9M3o25muyhziCaTLBFglNxfxgEKUcbJXFaQr6SN8y
+	kQOyTe5dzgC6y4QtSPJd93xIsbFVkbCTJ80i4I4jmED/UonrWIN3ewQrR7m1eQ9GtjvdRQnZC2C
+	4ATOEQ8+4cP3pAMhrUsPiHaERKkufGqaU5KdmrEVpNCiYRFgx05NACoLHIWJV3qUTr0aukbrKGN
+	0CedhGBtZ7IhvB8xr6Xp0l0ramuyKx/vucpOV1NAH3aK5ENRHv9/j1eM9OuoJA/yHfFNK07pwYE
+	rAp4gtXtBcbBJrFg1CKiNZrSmH783
+X-Google-Smtp-Source: AGHT+IEdr+PvVsdvmAzpLHvmFL07SmrEujVejrlyKeJmYOHXna0duMtEQ8+NC1MXRgl8ZmvM7PXCkg==
+X-Received: by 2002:a17:906:794d:b0:adb:e08:5e77 with SMTP id a640c23a62f3a-ae0579c3084mr1501065066b.20.1750752127797;
+        Tue, 24 Jun 2025 01:02:07 -0700 (PDT)
+Received: from ?IPV6:2001:a61:137e:6d01:d4a1:a0e5:eaa3:6f3b? ([2001:a61:137e:6d01:d4a1:a0e5:eaa3:6f3b])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae086a98f6dsm398436666b.32.2025.06.24.01.02.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 01:02:07 -0700 (PDT)
+Message-ID: <f2419bb9-2d81-4a6d-838d-b404e3ce7786@suse.com>
+Date: Tue, 24 Jun 2025 10:02:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,78 +67,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: build warning after merge of the tty tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Greg KH <greg@kroah.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250624163933.301e7859@canb.auug.org.au>
+Subject: Re: [RFC PATCH] usb_wwan : add locking around shared port data in two
+ FIXME-marked places
+To: Abinash Singh <abinashlalotra@gmail.com>, johan@kernel.org
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Abinash Singh <abinashsinghlalotra@gmail.com>
+References: <20250620101747.39037-1-abinashsinghlalotra@gmail.com>
 Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20250624163933.301e7859@canb.auug.org.au>
+From: Oliver Neukum <oneukum@suse.com>
+In-Reply-To: <20250620101747.39037-1-abinashsinghlalotra@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 24. 06. 25, 8:39, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the tty tree, today's linux-next build (htmldocs) produced
-> this warning:
-> 
-> drivers/tty/tty_port.c:400: warning: expecting prototype for tty_port_tty_hangup(). Prototype was for __tty_port_tty_hangup() instead
-> 
-> Introduced by commit
-> 
->    2b5eac0f8c6e ("tty: introduce and use tty_port_tty_vhangup() helper")
+Hi,
 
-I noticed, fix sent yesterday:
-https://lore.kernel.org/all/20250623074606.456532-6-jirislaby@kernel.org/
+On 20.06.25 12:17, Abinash Singh wrote:
+> Fix two locking-related FIXME comments by adding a mutex
+>   to protect shared fields in `usb_wwan_port_private`.
+> 
+> - In `usb_wwan_dtr_rts()`, access to `rts_state`
+> and `dtr_state` is now protected by `portdata->lock`.
+> - In `usb_wwan_tiocmset()`, access to `rts_state`
+>   and `dtr_state` is now also synchronized with the same mutex.
+> 
+> These changes prevent possible data races
+> and inconsistent state updates when the port is written concurrently.
 
-I need to respin and send a v2 of the series.
+unfortunately this patch is rather problematic because
 
-thanks,
--- 
-js
-suse labs
+1. you never initialize the mutex
+2. these values are read in usb_wwan_send_setup(), where you don't take the lock
+
+Now, as usb_wwan_send_setup() is called right after you drop
+the mutex, this patch is kind of inelegant.
+
+	Sorry
+		Oliver
+
