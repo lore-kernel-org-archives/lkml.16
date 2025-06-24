@@ -1,176 +1,147 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2081.outbound.protection.outlook.com [40.107.236.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F749255F27;
-	Tue, 24 Jun 2025 06:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750747970; cv=fail; b=KnwmKkGpeFkVdH55itXQew6GIpGhUWuT33PVAIw8q+eB25QgSxXs1UBiNOrdwdHGDFcY/x6ooBXLJceBkDMWidxHye6xBm3MIVGaZiX6CVkZ+7uJr8LZMG2HBp9KzesFtsS8lYcJPFJyo7KdVTgAb9ri6cFZPpbH9w1jLndluYE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750747970; c=relaxed/simple;
-	bh=YdmzL/KVWV3oS8eFpvkGljpaj0Ar5EC8UPEt4tTcEjo=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RZtgGkebrOfD25fJVmc3DounN4G5dqtQKuSFt00kYIyrMqOLFb/MprqyeIUCyIVi5S3w0lfyHOTywNk1jJrd651lMM5gjY1me+nZYYnSx0LQg1pfBWShW6Nrc0iLzXQN8Dn9uYUfBFIXi93YlgirW/w+g1BVM0jn+fP0Z6b4gUY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=NdmGKnjf; arc=fail smtp.client-ip=40.107.236.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5A6248869;
+	Tue, 24 Jun 2025 06:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750748072; cv=none; b=gCG40byzmhTyfBev4RZvoTzs0lxNPX9XEmRd0JMrVaEFM7sf/vOcfesFGNrHtcuFU+1BbtO9iKaDXKlbPc8AIeIFKYyu5/KmZhkE+W0vSe5BCGW/lYVDf9Cp+5HViCXvorlsDUrF71AZVKDBQcLnqOcRyi8ZqQO5iRfRlL6Z3ZI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750748072; c=relaxed/simple;
+	bh=MqPVVn60QZsD3GUpLYhu+hDEi72E8HlooHIEzEBl2es=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qOm6iWJoT2iUsOwjmGVm1XTX740t07srrlkZWrcuoElOo6uI5N922T9mkoIzgRiV46xg18xZ/+/y49eEQc/yl6TogFUgRwBSHJAOQVVQINgBe1mivV6D/ihah1aytM5A0mTo1Ava1XR9Hobtw3N99cdOuPhkex1XKdF3SEO9JzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F9XCxgFX; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="NdmGKnjf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=frdALnpTZ674wO7xbBFq9fV6YhcZwny5a4dwkp9Ogs0eOMKB/B84IF8ezHSkWlIjbBKlY35zvUguw53HEPktszHuy+FuaLi93L/aoSRRNZkFuDZwxakuYTWVQtWBJeQsXkRtp16vorb73PaiuWv2gVQilTGR99Oilu2/hAFqESv6CFr+Qy+N8bm3P+6ODC57qK44N03g3icuQ+unuaej6Y0mHGtTW+ou586nee9oqH7owEjEypLeDOQqeO7j50m9oMC3EeXdj4Da7c7j924kvUdUMzbl3VNIoetdUlFbReW6q8aSSoG5JNmv1iBCjoPxv5aqsofj3D3AW439ZpJwLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OKkbp7kt0q5NDBFRAmiuEBTlvTXPQB48csboL7bBG6g=;
- b=SWlIfJdzgy2QsmRu6r2T1aGI/ZaiFRmMy+auSpsyjayWfm4H1DxFQcqEby+gZzGIwh/zIZPu9rfnLD9dmcu6/R6xSDE/khohPm0qkSuVSwN59/RZ9iEsA41Ns4jpF5tCNspys4OX7B1Y0UB3w4E7QFHTwaSUdbyUVCwsBNiz0kjtVJMakPXqZpbhaomEcWz1fpnSTZdJdPk0v4jazqVoHYAxmKMbG6mnLgJ3I2GKbeQjwE/kHP5XV5oKOX8iWl+sF6MQCbu+45tgYCQhFdQec1CSm3MF6LYdXeGhtDpgUlGOw2JqQYa7nH810sG8eBx7Q32rvfvHE8/vVVhDmrPafA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
- dkim=pass header.d=altera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OKkbp7kt0q5NDBFRAmiuEBTlvTXPQB48csboL7bBG6g=;
- b=NdmGKnjf6HBN/k0Z+gWXZjtQDTI0vPLa/EIl015hJtsUxOhum4DG0d3NN0u59wN35+n3ZLQkIGhKZJi2DXEnUUO+3e6cXnBolowkcBKYc++TyDSenmRy16Mvw10Sn/hEGRrPtGjWxrDGBrZsjJRdN25lP+mlCrnh7ICBWQOYvLDmZChsryqhmuOzrUaYb8T/CUZA6Iv6xZT6YlHwboH3ISJcIpeFOHnegux/wf0k8D9M1LBEUV+j7vk4S02OmRbIIvMkKb2/83lTtkpzwiOCP3C3oXHSjUfFphYrEYmK1yKrPD4jid52GGrLou+FYy28oZBalOKKSkvZhNoYBrxhhg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=altera.com;
-Received: from BN9PR03MB6089.namprd03.prod.outlook.com (2603:10b6:408:11a::9)
- by PH0PR03MB6335.namprd03.prod.outlook.com (2603:10b6:510:aa::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Tue, 24 Jun
- 2025 06:52:46 +0000
-Received: from BN9PR03MB6089.namprd03.prod.outlook.com
- ([fe80::b94:a1cc:3ca:eb37]) by BN9PR03MB6089.namprd03.prod.outlook.com
- ([fe80::b94:a1cc:3ca:eb37%4]) with mapi id 15.20.8857.026; Tue, 24 Jun 2025
- 06:52:46 +0000
-From: yankei.fong@altera.com
-To: Dinh Nguyen <dinguyen@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list),
-	Matthew Gerlach <matthew.gerlach@altera.com>
-Subject: [PATCH 4/4] arm64: dts: socfpga: agilex5: Add 4-bit SPI bus width
-Date: Tue, 24 Jun 2025 14:52:28 +0800
-Message-Id: <b822d960e1600ddc218bed1f927cceb65a3ede40.1750747163.git.yan.kei.fong@altera.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1750747163.git.yan.kei.fong@altera.com>
-References: <cover.1750747163.git.yan.kei.fong@altera.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BY5PR03CA0021.namprd03.prod.outlook.com
- (2603:10b6:a03:1e0::31) To BN9PR03MB6089.namprd03.prod.outlook.com
- (2603:10b6:408:11a::9)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F9XCxgFX"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22c33677183so700865ad.2;
+        Mon, 23 Jun 2025 23:54:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750748070; x=1751352870; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rq36PiS01h5y6219zqAsB82yoW0N7OYfIxqCT84G0SE=;
+        b=F9XCxgFX1HvZIiDOEslRFHN1Vm+2zqBY1Anlt2G/q/eI7cVz7fXLJ84nZxhA7ErGDF
+         6cflE+ihlnPbKYt3yu51CJxM6Eq8fbkOo6KhLA/M+EHepCX/ihjWQiaelxvSjBM3dz7B
+         53P+k7F8chnHxcbodY9BMTBbI7Lw5CNkmwpvzKE7UwXb1brYpAGZEpxPtNfLPiFsmMTf
+         vFbnJKaMgYItKlICJVqvM04X+f9NRBgRfQO4/O16H2XdOciQaWvxa4e1jcldPa8ocQAQ
+         VqMHCpI6/ZuO6uClQWpsmUYimZfu2rcPQl7fRFiBSMYvJlju80FCUeElZpGPlQacwwRq
+         G8bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750748070; x=1751352870;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Rq36PiS01h5y6219zqAsB82yoW0N7OYfIxqCT84G0SE=;
+        b=cNg/2WU+Cn0tTwHRsZPcUJdkKs/1vI0Nw6kkvpuf4zDooDQLofHfWY+PoYUe2xuXmE
+         TcVehlNCGi7p3642eNAZA0beXoWVU4CDdGekOMifEez1T0nnxW4z3T1EeVWoxD47vs4D
+         f7C2YvO21vk68koPE8f5tkYw/fvC6uDs004tjYJ0JQTGMGgvWC3sdK+d/0MiQQjG1Xsp
+         bRi+sruIEMnb+XzrtfKZsMa7w7kEy6T5Xx+MXb1ed4BusOBucLr1I8BaSIN/y5eVIPye
+         VYTJusyByCfh1wTtlku0lG9XEsiEJviJaxGLgZAkWG4f5LYmO4hVhg1wd5x8PSdn9oUV
+         Aqzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVcBL01TfuebM1go3bmq4k0qfFIXr8hgh/KprjN5eNCimUly2f8Zf8SmEpcyS0GIWnt9R/aXbo3lN1bsKU=@vger.kernel.org, AJvYcCXuSvPfE3JfjcShi2obzRoioS+FVVc3q8VEbzQ8HWxf4FptazczClqJLcdaAmVnhSfvN4/by1RgkjlLSu2x@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlGnIshVhQG7DEYis3e3b+yIhjc7d04yULPa0sxt2PIPJrM7oD
+	CFbpPc2Nn+qpHkc4vNJ5QkT4ziJcYtqG6alqBDXAPo5QROkYserBaDP1
+X-Gm-Gg: ASbGnctrcqyTSkR1p5LygckgaEQJT3fV2Rpjoh7qPeaT00dbzWCrbxQaJ1R+8B6aVpA
+	guH9dq5nNpKKhLFhRZvVIB68rybs4pfitc0M+NuU2e9tc8ftTdc5GM0EwB9SACmY/zaY06jxiSe
+	ZSKSVOgEvUrGV3sFD/sRWuwp47Kht5GQlnKoI8s3Q8rptahelbf5tza6wr/88jiGHTIKi141y9r
+	tUOAdjuQGtmswV0AfWn4PEJ2Nrh6RI5eyqQsLMm7AGYyRVUKykfMEK8u8GGFulmVhj8kZ1Rk2FH
+	wvcFyqbqxnqznsPiA/LMbSGN8l+C/+kNinFolTggXa9IZ5lulmI60PXiXjdR6msBMIb3+NIP73e
+	J8EbP9eUU
+X-Google-Smtp-Source: AGHT+IH5pyZm7P7J2EfWIsHZRYckdeS+Nzz4NZU6SqKekD1+3E8CxcQmOTtSAh1E7juugZ+IquzevA==
+X-Received: by 2002:a17:903:1b50:b0:235:ef79:2997 with SMTP id d9443c01a7336-237d9ab5f95mr200445445ad.47.1750748070208;
+        Mon, 23 Jun 2025 23:54:30 -0700 (PDT)
+Received: from SH-PF2ZPNXA.Hygon.cn ([112.64.138.194])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8393893sm100144205ad.25.2025.06.23.23.54.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 23:54:29 -0700 (PDT)
+From: Mengbiao Xiong <xisme1998@gmail.com>
+To: thomas.lendacky@amd.com,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net
+Cc: john.allen@amd.com,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mengbiao Xiong <xisme1998@gmail.com>
+Subject: [PATCH v2] crypto: ccp - Fix crash when rebind ccp device for ccp.ko
+Date: Tue, 24 Jun 2025 14:54:18 +0800
+Message-Id: <20250624065418.1743-1-xisme1998@gmail.com>
+X-Mailer: git-send-email 2.34.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN9PR03MB6089:EE_|PH0PR03MB6335:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1e259a0f-f7fb-4ba2-7b10-08ddb2ebb9f8
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ybBP69CCBsFRduSpdFxuaDDmvmrz2Eq77y/yJ5OKI4f3JBXeZKdiRxcbKGu5?=
- =?us-ascii?Q?6sQqj0e1oiXZiPaZk2J6rdTxBxvGRPUmxP68A4JvkTTDE87b6veYOK1DzMFO?=
- =?us-ascii?Q?ub+nisQfw4dRUcqT/yxh3JnU8znjcqCRYEx40yBhTBtpPBV6Mq3yuR+0Z3tl?=
- =?us-ascii?Q?aaPv9fI24UWX8Brh3GURD29txkFQ6jCzcZJZ2QPOXfXq75KqarlS5hxOajkU?=
- =?us-ascii?Q?jlWc8KxDAdCP8NLzzd3D2GrSgfXdrUPQ9iqt0vW9xQRwW2l+0vmfLRObYODG?=
- =?us-ascii?Q?e7QttXnnDueZMwbVF14W49228In+4T5ohR43uVCOEi1EcNxTXlPNkPLDtz3e?=
- =?us-ascii?Q?nyQIAqHpjIDI2lFVM1bHRqSGL6ewwZohCIEzlDlevwsl+SDj1T4so5YurTUJ?=
- =?us-ascii?Q?wFgARu1j68Xpglnzbd9ukEmZfrOdJJOHfF3U+sytoRoq+eTAM5VS6CM0N0BS?=
- =?us-ascii?Q?4wTG7tvqsIEetKqMTB5R688cJW2bpUOIkFi8eE2pdghIBHSADqkEvUdE1MKx?=
- =?us-ascii?Q?xAI7O7meB1tam0ewS7g+CCxP9ELARnUnTQ8RXdnSOBn1DadPP4nrr0pUsVXn?=
- =?us-ascii?Q?AnTkhp6iXsJKOa3mLJHdZ1C8+m/+7NcFnaxyBMKbCqHWxrDAC3ErmzDMnh4l?=
- =?us-ascii?Q?yx+IoyUMD9GP7yIk3iS3vaCnVGoyIngx8Kcpk5v3wH0zwvGAP4tz2oZ7sPW+?=
- =?us-ascii?Q?+q8Wimi41gjWeQ23A4CZnp+E0IXHFAWmzFG0F8UF4OlHtfvfsM9YFETAWDjR?=
- =?us-ascii?Q?T2x50W7sss8EMgiORWtMkU3j5+ESOg8IrZh6DYiGpItlC4LkbwPKpoH7ZGpc?=
- =?us-ascii?Q?bWJDGC3AzIZEiMjECPj2Rzmm4UKdE3GcPzHQmKwM0gBIq0oZakwysVQMScan?=
- =?us-ascii?Q?4squN3u2RC00qgO9xAp6csUdBcXL+ylKizN5F0osg5y7sFblW3JsRbS430Hs?=
- =?us-ascii?Q?8Wya3zUvc3jVf/IXCFGdmnmvG4VWj97Sn2olGBJtkq5vDSl3vw1lKcvQp09K?=
- =?us-ascii?Q?t4WTlt2mPVa6v8lW83TsTvYCeR5cdMHov3Y2+2VbFy2w8xiIANLgsE+BzYPD?=
- =?us-ascii?Q?jXJSJAYNRTTxtQxSsB45f5u6anvaMjgpzveloaV/1QSg8E2P0KONpxkDCvqe?=
- =?us-ascii?Q?LPnfbO9CS6aZagAd+l7cUaa8e8+czktZo8M8E35j1OealJQnNF2DpOkAolbS?=
- =?us-ascii?Q?MdMP3WqoFL48wMoNglx5TMvnP306LLmJb9vcWJBbm8M34DSWYXz4p1SZ/Fzw?=
- =?us-ascii?Q?pScsHbtI21WzuT7txGnr5ps4Wb/mMqbSoAMT6QhghL9yUGT62sC82YyjQTg+?=
- =?us-ascii?Q?edjFDpjZ4x8AvW3HopTwhPzR0dDZWW14ZokpwT3CKueFA2KgjUtJCkSuO9zH?=
- =?us-ascii?Q?FIz50LNLVBwqRmTvW6rDLwabU13Q26LUwYrhrtqrAb3OsidDzlVTewRnDORS?=
- =?us-ascii?Q?t8YNuGf8JyI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR03MB6089.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?UG9y2f9dWnfFop4SjVpUVRuVgZJHs4G999tXC/2pPh8BJf/XDH50UR294oYR?=
- =?us-ascii?Q?57wmWFu/oWG+Ge6UXtzLnO+h3RVzvNrmGCLOSVDc8X2BlKfQ0NFLV+i77noq?=
- =?us-ascii?Q?Fxs3P3CiycpxhP4yDp89EWEcY1WzGv5XuYyy11W8KSBkQeSC55XehapBIRhO?=
- =?us-ascii?Q?39qdQ3C+5fUkMoFf7vK4BlcI7ONtls4LLDfmO3eCNZz49KpMIUpRe4ansz/e?=
- =?us-ascii?Q?X1UkwgnqM3zB/daDIVJcaEUsAot+bysF3K0o7PI7ht9sDq0Tis6xhSkbaQhe?=
- =?us-ascii?Q?lkf2P+x6QJpZdeyy8QTCE/DASIQo71BDvKNAg87uiSjpS351GjGwRChpuRa8?=
- =?us-ascii?Q?t5doZ5c92JQ3HlDNm4egnEP4lCGhYggYVMc2AVjDNKcO7vCRbBeh3GB3lXM3?=
- =?us-ascii?Q?dUZNDo/OhqqzwtzeYeNIkGS0YRlXpPg5k/OSd2aEymFP4fV1R0R1BzP18OS6?=
- =?us-ascii?Q?twp2qoY8JvfWrh1gb9tTVGZnq5Yf/XEGh5sZXNmmReazsQ8j6ViLKgnuJ63b?=
- =?us-ascii?Q?7ABHjQ7NhRW50gAxRoO/8PUWQG2g7BHGIqwQ+S21FG06Xe0v4WAWoqGN5QiA?=
- =?us-ascii?Q?XfltIIR6JuengO9OBbB/nrUqbg8KMwd3XIyUTGho1T9zVcGexSw0ntXQjXgQ?=
- =?us-ascii?Q?Fh9vsd3mrxhCD/ZmKACd+8wqgiKFzwhYYBs6o/lZJzUUyr00J+8LEVWHW0rX?=
- =?us-ascii?Q?4TQnhpJKyC0LjgD1vJm/suvvDwbZyxgCs7cIzZmdIWlvimADy1QDBqhO6bvp?=
- =?us-ascii?Q?JRjgxXZGqlx4puB6ANUbbjLYLLUxREZ3eGCCP/AOnAI7u/aeVm6flbkBFAH8?=
- =?us-ascii?Q?Aw3unsb55jx/FtjUVp4odNVtE034r62cpQL11qAcIqa2orMGjJlt4eQjUXuS?=
- =?us-ascii?Q?EofQ9qP7JHbopphfh4CMc19ViY4Sw/lzhfhyIH0znBDKmHoRHmkZsDjZcr19?=
- =?us-ascii?Q?vKLzMimoeFXUjn4M5tFNHCDmT0A44N7HqjjUp1wBshHb+O0dARikc8q2VAuV?=
- =?us-ascii?Q?fcNl6FhWKbtxzQGOCCvHEDjPCPXMJLzleraP07hP4JJA5LpKU+V3C6BVjYrU?=
- =?us-ascii?Q?/qi3e9PQHaBQfSa3j1UbDVYLL13MWk8uhRAGEF3nRSpPLV6Dyaqunizx3Tud?=
- =?us-ascii?Q?CY+imtC35rRK8Zvhw0wIXcN5gqAdkS7sWxs5edxHxZh4F8J640zEYgsgSlk0?=
- =?us-ascii?Q?GxOabiRgVYRWfACw3mwsOYkH98QSVk0vSjCxkRMLCyNrAN5zSat0/JLALkwi?=
- =?us-ascii?Q?lxDDbAMESknu7QUgb9dq1fRl/m4rTxOAYLVqCLz2O9RPu/TeLNV3+Lz2vhC7?=
- =?us-ascii?Q?f6RXHAs1NmnW56U7FHbGjaZKv19T1YHnFOMwZivynOlpBdq3THAE7zbQ58Pu?=
- =?us-ascii?Q?mRKHzSX7M6/kr2qi18EjIrAjDHh7sB3oM1CngNPAW3z7hwBtMHnMwTVI0odg?=
- =?us-ascii?Q?nlRh3u8Ve8fozsM4m2O+VFnto8C+6lNuAae+9ermTu+hH3hUZ3Rf0TOH8Qlb?=
- =?us-ascii?Q?DsVN98B33os0iFTHtiZqPGrOTaEdTBXjPvt02N/PVy+oNGlPMr4Xn2z4uvHG?=
- =?us-ascii?Q?0kfe1JfFAh5rgPnPrhWnMIE3Dc3l4sUZjYgvXJ2G?=
-X-OriginatorOrg: altera.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e259a0f-f7fb-4ba2-7b10-08ddb2ebb9f8
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR03MB6089.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 06:52:46.7046
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bo4zfGQ0ocgNe65CEgYo08w8TbbmqtNFfe/S1+9wjxotqsRmFQTrWHvHeRkBj6dUZwoIrLzMpXUw6rfcPxG3yA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR03MB6335
+Content-Transfer-Encoding: 8bit
 
-From: "Fong, Yan Kei" <yan.kei.fong@altera.com>
+When CONFIG_CRYPTO_DEV_CCP_DEBUGFS is enabled, rebinding
+the ccp device causes the following crash:
 
-Add spi-tx-bus-width and spi-rx-bus-width properties with
-value 4 to the agilex5 device tree.
-This update configures the SPI controller to use a 4-bit
-bus width for both transmission and reception,
-potentially improving SPI throughput and
-matching the hardware capabilities more closely.
+$ echo '0000:0a:00.2' > /sys/bus/pci/drivers/ccp/unbind
+$ echo '0000:0a:00.2' > /sys/bus/pci/drivers/ccp/bind
 
-Signed-off-by: Fong, Yan Kei <yan.kei.fong@altera.com>
-Reviewed-by: Matthew Gerlach <matthew.gerlach@altera.com>
+[  204.976930] BUG: kernel NULL pointer dereference, address: 0000000000000098
+[  204.978026] #PF: supervisor write access in kernel mode
+[  204.979126] #PF: error_code(0x0002) - not-present page
+[  204.980226] PGD 0 P4D 0
+[  204.981317] Oops: Oops: 0002 [#1] SMP NOPTI
+...
+[  204.997852] Call Trace:
+[  204.999074]  <TASK>
+[  205.000297]  start_creating+0x9f/0x1c0
+[  205.001533]  debugfs_create_dir+0x1f/0x170
+[  205.002769]  ? srso_return_thunk+0x5/0x5f
+[  205.004000]  ccp5_debugfs_setup+0x87/0x170 [ccp]
+[  205.005241]  ccp5_init+0x8b2/0x960 [ccp]
+[  205.006469]  ccp_dev_init+0xd4/0x150 [ccp]
+[  205.007709]  sp_init+0x5f/0x80 [ccp]
+[  205.008942]  sp_pci_probe+0x283/0x2e0 [ccp]
+[  205.010165]  ? srso_return_thunk+0x5/0x5f
+[  205.011376]  local_pci_probe+0x4f/0xb0
+[  205.012584]  pci_device_probe+0xdb/0x230
+[  205.013810]  really_probe+0xed/0x380
+[  205.015024]  __driver_probe_device+0x7e/0x160
+[  205.016240]  device_driver_attach+0x2f/0x60
+[  205.017457]  bind_store+0x7c/0xb0
+[  205.018663]  drv_attr_store+0x28/0x40
+[  205.019868]  sysfs_kf_write+0x5f/0x70
+[  205.021065]  kernfs_fop_write_iter+0x145/0x1d0
+[  205.022267]  vfs_write+0x308/0x440
+[  205.023453]  ksys_write+0x6d/0xe0
+[  205.024616]  __x64_sys_write+0x1e/0x30
+[  205.025778]  x64_sys_call+0x16ba/0x2150
+[  205.026942]  do_syscall_64+0x56/0x1e0
+[  205.028108]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[  205.029276] RIP: 0033:0x7fbc36f10104
+[  205.030420] Code: 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 8d 05 e1 08 2e 00 8b 00 85 c0 75 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 f3 c3 66 90 41 54 55 49 89 d4 53 48 89 f5
+
+This patch sets ccp_debugfs_dir to NULL after destroying it in
+ccp5_debugfs_destroy, allowing the directory dentry to be
+recreated when rebinding the ccp device.
+
+Tested on AMD Ryzen 7 1700X.
+
+Fixes: 3cdbe346ed3f ("crypto: ccp - Add debugfs entries for CCP information")
+Signed-off-by: Mengbiao Xiong <xisme1998@gmail.com>
 ---
- arch/arm64/boot/dts/intel/socfpga_agilex5_socdk.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/crypto/ccp/ccp-debugfs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex5_socdk.dts b/arch/arm64/boot/dts/intel/socfpga_agilex5_socdk.dts
-index d3b913b7902c..853e260c3976 100644
---- a/arch/arm64/boot/dts/intel/socfpga_agilex5_socdk.dts
-+++ b/arch/arm64/boot/dts/intel/socfpga_agilex5_socdk.dts
-@@ -57,6 +57,8 @@ flash@0 {
- 		cdns,tsd2d-ns = <50>;
- 		cdns,tchsh-ns = <4>;
- 		cdns,tslch-ns = <4>;
-+		spi-tx-bus-width = <4>;
-+		spi-rx-bus-width = <4>;
+diff --git a/drivers/crypto/ccp/ccp-debugfs.c b/drivers/crypto/ccp/ccp-debugfs.c
+index a1055554b..dc26bc22c 100644
+--- a/drivers/crypto/ccp/ccp-debugfs.c
++++ b/drivers/crypto/ccp/ccp-debugfs.c
+@@ -319,5 +319,8 @@ void ccp5_debugfs_setup(struct ccp_device *ccp)
  
- 		partitions {
- 			compatible = "fixed-partitions";
+ void ccp5_debugfs_destroy(void)
+ {
++	mutex_lock(&ccp_debugfs_lock);
+ 	debugfs_remove_recursive(ccp_debugfs_dir);
++	ccp_debugfs_dir = NULL;
++	mutex_unlock(&ccp_debugfs_lock);
+ }
 -- 
-2.25.1
+2.17.1
 
