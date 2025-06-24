@@ -1,109 +1,104 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 600322222D2
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 17:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498AC2222D2;
+	Tue, 24 Jun 2025 17:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750786595; cv=none; b=rwoseaz4KH/xTTuaN8inbaby0tNl6ZEZkcw/JkrRj9LngDdERUFIRK9Yqw+Rm0YC6K+AEIGqoCQRzxcUwSebr4T/hNP2alj0zdMty1aoNKtRFjCTbdVe5RXNhx2lfNZ0Ks8TVPXPqX6hogw3Q0Uka2J8r6Xpupi98QjqJlmlx6M=
+	t=1750786669; cv=none; b=t0OoCVeKblDgfs1F1tkbgV5h4OqTb/iKmfX9k3qSY6MojgmiQooDbgQMUAe6dk1Gp/wrAadIW4MHKLDThSFlbLk+90E9kzz0wVLw+3VCXiycXKLrgv+RrnGTBOv6NIQjTeeJ9sS9/ARVMuly0Ot4gGlk3vRpJ97XsZF2WI5kklE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750786595; c=relaxed/simple;
-	bh=zJPn55FN4b4Ivnh/o+8rVt+pDkYbSpkmmie7pToD4CA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=csH+kqu8ghmX+L+sRNH2jjcPbb0ugegoQ1uIzynZ5Ufz8+En/ct2bcWQCbHl2ClEJfFnzL78kSlDRdMOQ9Lm10lrihenVH9X48rIVa/lh7WgCRR02w3IqP5ilTw5C+gFo8pt9hxuQ5hh1wVoIVM7rDmUK4sCizd6jUjEc96JA7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 613AA113E;
-	Tue, 24 Jun 2025 10:36:15 -0700 (PDT)
-Received: from [10.57.29.113] (unknown [10.57.29.113])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7FC4E3F58B;
-	Tue, 24 Jun 2025 10:36:31 -0700 (PDT)
-Message-ID: <33672077-77b9-476c-9565-b78aae2a38de@arm.com>
-Date: Tue, 24 Jun 2025 18:36:29 +0100
+	s=arc-20240116; t=1750786669; c=relaxed/simple;
+	bh=a5PVovFsmpphhcC1hWSRAtIoVL1Eo6VMJ/WYND+fSEw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qsMysS9km7xlg149r+sYW+D1bl8lvihjsUbH+MStAGXwnV9jk92LTETjqOM5/bzmjUBEQkZfoZcSrAiaa2vXSd+xmEF7/y6Zg+0fkWhvmUxb4QnPbMc30AxPMXY1l4gRIwiNOWBt4+H/aTB0Zw2xh6Z/YpGcQz8BdXe51m6/5U4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c8cGsNaW; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c8cGsNaW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DFD0C4CEE3;
+	Tue, 24 Jun 2025 17:37:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750786669;
+	bh=a5PVovFsmpphhcC1hWSRAtIoVL1Eo6VMJ/WYND+fSEw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=c8cGsNaWX0fVjLDqhSwlSne+Kyd6+LJLh5qhacvj0X6mFJuLHg+C9m57qwBDPRfZ3
+	 rqgygKXQcSa/x8Z75ECE7OZGL/yiYeNeMAX3s3gg5dN1YHTOR9YSKLshkHmVGLCoy/
+	 YgeZ+O1sPAsxMhBNsKJzquiGANTOfxaaPdDYEAubc0U4uUYsetpWRhk6Vil6T0Lj91
+	 cOfdKwHFltAJrMDKXsZ9oqoOGvqz1gc4oU4EacJjUgt7NTZQRAd1UdZybzZ0+TXoEP
+	 BJGw9DylKyBS87f6VgKEH4N7rAdsX7OdTvPEO1ArkGcnuT4GDyeInsvI9X6FYMK9Hi
+	 m+oqoCGQTKZAQ==
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4a43afb04a7so40811221cf.0;
+        Tue, 24 Jun 2025 10:37:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVvjUQ5kZ28r6/9dwx2ZN+3psXNwe5oxrUhGI+AjGLjePHIOD8bj6A1cr/r9Xu/TqzvSeBlhE/OU66QtN9/@vger.kernel.org, AJvYcCVvlB9qBoor/XRDUMwI+Q3peEaiA+TfNymgYpDN1AUvsOvMTA2lO5jAYOdnpOeUom1Wo0SrDFC0Y0t4o5QdCG+xn0qneZoL@vger.kernel.org, AJvYcCXiGYVc4gXZk93ADE1g/Fz1Ucvl6BnYjK+9cOd+1LJTNmJx/LN5lZ1fZTNMVcURVfiAj7woGCzKihopWUFb@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrtIohEGsYHfsCXxVRcaekKbEet5gMBl2f/J03UM4hX0uGI31x
+	uSqKm3gbDq5NIOZeEXrcNpqlga/Y3eA7c80i+M4Bm0hdJoZwNslDBPkLQxmo9Elbc21iPrRgoYN
+	Y6hOUPMSSow3aC0ds19bKmaQn9kppClI=
+X-Google-Smtp-Source: AGHT+IHrLg1ZHp9UwVuJJHNbLnUi5fWv+f+FjuAnJJGFt+bl5ul6NjqhpyEZp+PcNDwB+wrEAEizIr5VdXAFoiU6IZY=
+X-Received: by 2002:a05:622a:1310:b0:4a7:146b:c5e5 with SMTP id
+ d75a77b69052e-4a7c06cbaf9mr3336251cf.21.1750786668241; Tue, 24 Jun 2025
+ 10:37:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] iommu: mtk_iommu_v1: Simplify by dropping local
- 'mtk_mapping' variable
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Yong Wu <yong.wu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-References: <20250624-syscon-phandle-args-iommu-v3-0-1a36487d69b8@linaro.org>
- <20250624-syscon-phandle-args-iommu-v3-3-1a36487d69b8@linaro.org>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250624-syscon-phandle-args-iommu-v3-3-1a36487d69b8@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250617061116.3681325-1-song@kernel.org> <20250617061116.3681325-2-song@kernel.org>
+ <htn4tupeslsrhyzrqt7pi34tye7tpp7amziiwflfpluj3u2nhs@e2axcpfuucv5>
+In-Reply-To: <htn4tupeslsrhyzrqt7pi34tye7tpp7amziiwflfpluj3u2nhs@e2axcpfuucv5>
+From: Song Liu <song@kernel.org>
+Date: Tue, 24 Jun 2025 10:37:36 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW5GKn=0HWDKkmOMTge_rCEJ+UMRNnmo7HpT-gwtURHpiw@mail.gmail.com>
+X-Gm-Features: AX0GCFtrQZFESJoWau6EG2iZopaA5_plWDAcACcPjqKr1AYhYf7Gc2RQxxN8qhg
+Message-ID: <CAPhsuW5GKn=0HWDKkmOMTge_rCEJ+UMRNnmo7HpT-gwtURHpiw@mail.gmail.com>
+Subject: Re: [PATCH v5 bpf-next 1/5] namei: Introduce new helper function path_walk_parent()
+To: Jan Kara <jack@suse.cz>
+Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, 
+	daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk, 
+	brauner@kernel.org, kpsingh@kernel.org, mattbobrowski@google.com, 
+	m@maowtm.org, neil@brown.name
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-06-24 1:22 pm, Krzysztof Kozlowski wrote:
-> Storing 'data->mapping' in local variable in
-> mtk_iommu_v1_probe_finalize() does not make the code easier to read.
-> Use the 'data->mapping' directly.
-> 
-> ARM64 W=1 builds also complain with:
-> 
->    mtk_iommu_v1.c:512:28: error: variable 'mtk_mapping' set but not used [-Werror,-Wunused-but-set-variable]
-> 
-> but this is not being fixed here and 'data' still won't be used in such
-> compile test.
+Hi Jan,
 
-Sorry, I guess that's on me for doing the COMPILE_TEST stubs the lazy 
-way... TBH I'm still not sure this driver hasn't completely bitrotted, 
-but if we're touching it at all we should probably actually fix the 
-warning, e.g.:
+On Tue, Jun 24, 2025 at 5:18=E2=80=AFAM Jan Kara <jack@suse.cz> wrote:
+>
+> On Mon 16-06-25 23:11:12, Song Liu wrote:
+> > This helper walks an input path to its parent. Logic are added to handl=
+e
+> > walking across mount tree.
+> >
+> > This will be used by landlock, and BPF LSM.
+> >
+> > Suggested-by: Neil Brown <neil@brown.name>
+> > Signed-off-by: Song Liu <song@kernel.org>
+>
+> Looks good to me. Feel free to add:
+>
+> Reviewed-by: Jan Kara <jack@suse.cz>
 
--#define arm_iommu_attach_device(...)   -ENODEV
-+#define arm_iommu_attach_device(d, m)  ((void)m, -ENODEV)
+Thanks for the review!
 
-or perhaps make it a less lazy static inline.
+[...]
 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-> 
-> Old warning is changed now to:
-> 
->    error: variable 'data' set but not used [-Werror,-Wunused-but-set-variable]
-> ---
->   drivers/iommu/mtk_iommu_v1.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
-> index 66824982e05fbfdda224276ad41b90f9d5f9ca4e..bbe3e9d901c69ac6405d9549a4481fc80f1adb80 100644
-> --- a/drivers/iommu/mtk_iommu_v1.c
-> +++ b/drivers/iommu/mtk_iommu_v1.c
-> @@ -509,14 +509,12 @@ static struct iommu_device *mtk_iommu_v1_probe_device(struct device *dev)
->   
->   static void mtk_iommu_v1_probe_finalize(struct device *dev)
->   {
-> -	struct dma_iommu_mapping *mtk_mapping;
->   	struct mtk_iommu_v1_data *data;
->   	int err;
->   
->   	data        = dev_iommu_priv_get(dev);
+> > + *
+> > + * Returns: either an ERR_PTR() or the chosen parent which will have h=
+ad
+> > + * the refcount incremented.
+> > + */
+>
+> The behavior with LOOKUP_NO_XDEV is kind of odd (not your fault) and
+> interestingly I wasn't able to find a place that would depend on the path
+> being updated in that case. So either I'm missing some subtle detail (qui=
+te
+> possible) or we can clean that up in the future.
 
-And for the sake of a readability cleanup you may as well fold this into 
-the declaration line as well. And then maybe also whack a __maybe_unused 
-on it, for even less effort than the first silly thing I thought of 
-above... :)
+We have RESOLVE_NO_XDEV in uapi/linux/openat2.h, so I guess we
+cannot really remove it?
 
 Thanks,
-Robin.
+Song
 
-> -	mtk_mapping = data->mapping;
->   
-> -	err = arm_iommu_attach_device(dev, mtk_mapping);
-> +	err = arm_iommu_attach_device(dev, data->mapping);
->   	if (err)
->   		dev_err(dev, "Can't create IOMMU mapping - DMA-OPS will not work\n");
->   }
-> 
-
+[...]
