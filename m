@@ -1,48 +1,65 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17B32A1A4;
-	Tue, 24 Jun 2025 12:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D9D2A1A4
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750768459; cv=none; b=p/K5LsEu9+eMEf0T6UUvc1KWGiOL00ydUViVWQ8geXCact4Hh+T0AHo7sKMfsTaKk9iZhVU/KwMcR4m2fCkaioUnklNN2kjmz4YMchwgWTwHbFLOGbiECkb2Nl4Yp8OsLMAzQ9mjCQGHvLu2rtxarZWvsYxUAuxc0N/jgo49l6Y=
+	t=1750768468; cv=none; b=YftpHJmERX6uQN9yQ7Mr3JXXcg+w+hSP4aGw+fjqd7Ya+Qr+vTGJNMGUI+vGMIfdql/0hBIjmRUOOEsMNZnfioGZneefDXk2jUJsyumv4DhgxBJlgwORAy/AFuNjncpb6w9/Vg4eoNPUZjykLMO8n6x0D+XrxOn11Tk2GBjexIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750768459; c=relaxed/simple;
-	bh=qpUJhe+I6inaOi8XEJxl1i0wO7ikyMvxs506f3ASNYs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=skl2zhjDYRg2iGkB6BC2r+ghaAXCJx78KkgVUDj0iGQ6nZO8bmPqvr3BUsW6/2QSsvOt2nTMS0tP0RnXcBb+Qrm+OO0NlgVeYv9gCc2AtTwpqwhz7vWLVSHnjHFEPlplTx7NzYmZx0bSCzBu0NXFGlMhGI9tLb53+PZeeJ9/TDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=B60uKzSK; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750768468; c=relaxed/simple;
+	bh=pXe7mh6oWYpWHD6Luq3LwEGMdyeebDuSUVNPJIYCh/0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kbVLMLoJQsfOMJpsnNm/nq8XXr8dPQDWDEBD0GORrClVTL3dRFa1CkLvDgGav8pVu+CFMrFL2jlGJ7R90DKEN14PhlV4LVkGNGeGEpn24u+YnhnUWtyrszlosUCdLnwX0H8IIEErnq9eGSJktcsYMUzWtMEWxtwuvFyjdQE0ukQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=0s18LKW8; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="B60uKzSK"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O8JEUv022214;
-	Tue, 24 Jun 2025 12:34:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	EZr+40Q/dN05pjVpffCdVFAZ6Av8oGgvoYGP3+OxK5U=; b=B60uKzSK9Aah1JzW
-	VVZvvWj5ipjdPyyB900PTYEd/BhWnksDdw5+AAWyKgxgfsjoNpdrfQcXC/rpUyXG
-	iPLblIVEKEhgSZG4rqxgTfSOVQ3mcD+Zsf6sy4zDCiHvUd2VsGcmTsonqSeYhTNS
-	axswK1rNZfUmHDuMUiURr7MGHrLDdGpC7Bm3iyXyP/TcFssh7kQeXK4sw2ZbKkpb
-	zIk3xQ772CjSKggJwrN/R+0vjM+OirDJg7LZgwO8PMCMFSBW0eh+c9Y4Q/fO2Gbo
-	WetfHN0PBYsP6xQ9PTHHF6W+lGG7Jrl0zcJiXG5HTDBrc1tQqvSfhFr3wv7hQU+K
-	R+3KFw==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fdfwt9sb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 12:34:10 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55OCY9fp016286
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 12:34:09 GMT
-Received: from [10.239.133.66] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 24 Jun
- 2025 05:34:07 -0700
-Message-ID: <5e378fe7-90ec-4453-b549-1106f9d0cfef@quicinc.com>
-Date: Tue, 24 Jun 2025 20:33:36 +0800
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="0s18LKW8"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b31befde0a0so3310601a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 05:34:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1750768465; x=1751373265; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e4g8uqfEyxK4e23jks872m0MzV60CxGR0j6EZKqSw+A=;
+        b=0s18LKW8EGkl/JeE2QdslNsxB0zfDBOGsPJm3Ax8syq/UgqIuYAdUXvd3bfCHP0a32
+         3Gl3zdNZ+3BA4nu56UlFJZgV/4oBFwUtZvYG4qnO5bc/2VngfhbwKc/UabF0/9Xd7ROc
+         qA0C948S3SPzEgvYgXzhZQFjlFXzdBPb5fGhNWM005P1FZvyVsSJLZ0EbtU4qMqlvxMn
+         NUnaiwmsOWyXhEGhgT8B+hMeKyTjqAZbmR/1c17wzToclUPza1FjnSHLcvlzD/zOjlIC
+         kfwEblF3z/5bZMLIXmsVWrr2+5WFVWwU6MpvNnRKm5KYpIM+RsbjB/dYdv6VBtzPFvpH
+         fXgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750768465; x=1751373265;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e4g8uqfEyxK4e23jks872m0MzV60CxGR0j6EZKqSw+A=;
+        b=wwDPigoxw0Tv80mZT9vM+7vGIPJj/SXgAq/EcSSDpbl+hiYGNuT2wYNeUnSwOBjNX3
+         wsa8nxqid5tBsexgABEWGaUbU65srD7ZlnepIbL13fmruqgw6xVVNO3pJ8szwgTH9Pyc
+         UhPAai4s55vQK7aybcQicP2HRNKUtfHzxtfJF58IH+SLz9du6xCcHuHDj3I56bGJJAMv
+         kEQ+tBECE0a0su1CMWtfZCOiXL+kfZ0fKYLlCnkBOBqmZVVqyBbGSHQkyBx2sA0wMiTd
+         jd9QymP+wsZnPQKhFPVm89DT+bdZOHRfwcUcyLmkpwxIMXEyDqXLh/zAdi6i9CtdStQ3
+         J3Lw==
+X-Gm-Message-State: AOJu0Yy4B3DacmhTIyH9/tVwiFPxZL+wR8XPg+Q6XWnLPXuxs7TCFwfT
+	PiaHrxq9HWLF0Z8dN4gM0K9YdmaKnrRgULeEgYV06AU4rVUIpR2DXdBhPBrMvPjzhxnGubM1pbV
+	eGGgDlWU=
+X-Gm-Gg: ASbGncvF49mEUesG8kZUFg52uCIRMAJQqdL01sbenUdWwgr4iivHpGb9LDrVnL5isxi
+	8wsO4z31ASrPcfqcG9ibShJJXQinu2T82foU9vV5KRnkVU41rVC3kloksCLRS2NqBOG80ym0AUP
+	HOzkn+dSxDTVvN9X7LOFV4fItoI16q54oCu0lRx+Dn94BpGjOh5sH5afI0mZKpVqmJWDJ0ijH9s
+	an8BAzvKWXQv5um51p0FAQ0Rtk6LiRipnWeDypaLWx/Kx0gKWCeQtJH46Iudm58nFDmh2YNbmga
+	mVPPQN3J27NSh1lf5hg4S3ns8w1Za+GS6c8/GdJE5k2hRpDzvDifaW23JDHaQ7zR+SILpzSJU+9
+	ApUjHSsfPJMdIqJELYHIkh8Lt+9wlayM=
+X-Google-Smtp-Source: AGHT+IHsolEBsB17JOv56ZkLQLKUprSHlHWGldG2RpmmEc+KrH0Ju+lZQLb9kCaXus6DJYnPnRgE5Q==
+X-Received: by 2002:a17:90b:1c8a:b0:313:db0b:75d7 with SMTP id 98e67ed59e1d1-3159d8d89ebmr23403183a91.27.1750768464993;
+        Tue, 24 Jun 2025 05:34:24 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3158a2f31ddsm14342885a91.31.2025.06.24.05.34.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 05:34:24 -0700 (PDT)
+Message-ID: <1aaeb582-8619-42b2-9390-84d288c6d2fd@rivosinc.com>
+Date: Tue, 24 Jun 2025 14:34:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,350 +67,704 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] wifi: mac80211: Prevent disconnect reports when no AP
- is associated
-To: Johannes Berg <johannes@sipsolutions.net>,
-        <miriam.rachel.korenblit@intel.com>
-CC: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <syzbot+5a7b40bcb34dea5ca959@syzkaller.appspotmail.com>,
-        Zhongqiu Han
-	<quic_zhonhan@quicinc.com>
-References: <20250620032011.1102373-1-quic_zhonhan@quicinc.com>
- <a5078d3c7f3d1c2281a3f5a50386fdb7072935bb.camel@sipsolutions.net>
+Subject: Re: [PATCH v3] selftests: riscv: add misaligned access testing
+To: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Shuah Khan <shuah@kernel.org>,
+ Alexandre Ghiti <alex@ghiti.fr>
+References: <20250522125103.4127219-1-cleger@rivosinc.com>
 Content-Language: en-US
-From: Zhongqiu Han <quic_zhonhan@quicinc.com>
-In-Reply-To: <a5078d3c7f3d1c2281a3f5a50386fdb7072935bb.camel@sipsolutions.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 1oz8pxn3BR7064wjOa2tySkwVmI1eznF
-X-Proofpoint-ORIG-GUID: 1oz8pxn3BR7064wjOa2tySkwVmI1eznF
-X-Authority-Analysis: v=2.4 cv=MtZS63ae c=1 sm=1 tr=0 ts=685a9b42 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=P-IC7800AAAA:8
- a=VwQbUJbxAAAA:8 a=stkexhm8AAAA:8 a=WmAPXemx3fBSO5k2XtMA:9 a=QEXdDO2ut3YA:10
- a=zY0JdQc1-4EAyPf5TuXT:22 a=d3PnA9EDa4IxuAV0gXij:22 a=pIW3pCRaVxJDc-hWtpF8:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDEwNSBTYWx0ZWRfX4zYJSrKcIJEm
- hbEerxR9Le12/kWCFC2URFI6Q4w54ZAlnzMCqqXcIG0Bna8f3BmOGOuyRK8DBBQtHZhv36oPmi1
- iTkjhneBBvwwrckaoSOaltbohYWzvxjtzfVzyDrjzge8gNqurY5U2VRaNVQENDAzWjKNPnvxs25
- frpJFEWG7h8R+3hF+kTi5nsr4uD2MTkOtHpYjxVtj0qC3FjmiJsargymqOt674Cpxnd34ylvwoO
- QEkq1E3u3ugjp/vBMLxF2qBfhSXj/yNVY3Z6S2UUJKAbnf1tPLnzuHoR58AEA3GMVrSQzQyedd0
- p8bBbWVDbQNNvmkhnwePFaHoRATEfTC940Xi3gZNbhPseFTv4pHJl4ErULfeCExoliWcTvFedHf
- Ope/4ZYoJPV67TLOjSZtbaYFOLmDbp+wI21G0spHnPxrzU3a2kq6/Ysm2znkqbBv78uhyfCy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-24_05,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 impostorscore=0 suspectscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 spamscore=0 malwarescore=0 priorityscore=1501
- lowpriorityscore=0 clxscore=1015 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506240105
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <20250522125103.4127219-1-cleger@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 6/20/2025 7:13 PM, Johannes Berg wrote:
-> On Fri, 2025-06-20 at 11:20 +0800, Zhongqiu Han wrote:
->>
->> - Rebased on top of current next.
->> - Update the v2 code implementation:
->>    - Remove zero-initialization of frame_buf
+Gentle ping.
+
+Thanks,
+
+Clément
+
+On 22/05/2025 14:51, Clément Léger wrote:
+> This selftest tests all the currently emulated instructions (except for
+> the RV32 compressed ones which are left as a future exercise for a RV32
+> user). For the FPU instructions, all the FPU registers are tested.
 > 
-> You could keep that I guess, but we shouldn't claim it's any relation
-> with fixing the bug. Just as a cleanliness thing maybe?
-
-Hi johannes
-Thanks for the review~
-
-yes, we can keep it.
-
-
+> Signed-off-by: Clément Léger <cleger@rivosinc.com>
 > 
->>    - Remove WARN_ON and early return in ieee80211_report_disconnect()
->>    - Change the return type of ieee80211_set_disassoc(). If
->>      ieee80211_report_disconnect() uses the frame_buf initialized by
->>      ieee80211_set_disassoc(), its invocation is now conditional based
->>      on the return value of ieee80211_set_disassoc().
+> ---
 > 
-> I don't understand this change ... surely syzbot couldn't have run into
-> an uninitialized buffer after the WARN_ON since it has panic_on_warn. So
-> why all these changes:
-
-yes, syzbot couldn't have run into an uninitialized buffer after the
-WARN_ON on **patch v2** such as:
-
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -4433,6 +4433,10 @@ static void ieee80211_report_disconnect(struct 
-ieee80211_sub_if_data *sdata,
-  		.u.mlme.data = tx ? DEAUTH_TX_EVENT : DEAUTH_RX_EVENT,
-  		.u.mlme.reason = reason,
-  	};
-+	struct sta_info *ap_sta = sta_info_get(sdata, sdata->vif.cfg.ap_addr);
-+
-+	if (WARN_ON(!ap_sta))
-+		return;
-
-
-
-
-Why did patch v3 override patch v2: Only check if the frame_buf has been
-initialized by ieee80211_set_disassoc.
-
-func ieee80211_report_disconnect() must use valid(initialized) frame_buf
-to call cfg80211_tx_mlme_mgmt() or cfg80211_rx_mlme_mgmt(),
-
-there are 2 condition:
-condition 1: func ieee80211_report_disconnect() does not use a frame_buf
-initialized by ieee80211_set_disassoc, so it is not affected by commit
-687a7c8a7227 ("wifi: mac80211: change disassoc sequence a bit").
-
-https://elixir.bootlin.com/linux/v6.15.3/source/net/mac80211/mlme.c#L4915
-https://elixir.bootlin.com/linux/v6.15.3/source/net/mac80211/mlme.c#L4963
-https://elixir.bootlin.com/linux/v6.15.3/source/net/mac80211/mlme.c#L9740
-https://elixir.bootlin.com/linux/v6.15.3/source/net/mac80211/mlme.c#L9761
-
-
-condition 2:.func ieee80211_report_disconnect() use a frame_buf
-initialized by ieee80211_set_disassoc(), in such case, once
-ieee80211_set_disassoc
-early return and not call ieee80211_send_deauth_disassoc(), frame_buf
-will be uninitialized. i want to fix this by current patch v3.
-
-commit 687a7c8a7227 ("wifi: mac80211: change disassoc sequence a bit").
-add one more early return case:
-
-https://elixir.bootlin.com/linux/v6.15.3/source/net/mac80211/mlme.c#L3936
-
-static void ieee80211_set_disassoc(struct ieee80211_sub_if_data *sdata,
-				   u16 stype, u16 reason, bool tx,
-				   u8 *frame_buf)
-{
-	struct ieee80211_if_managed *ifmgd = &sdata->u.mgd;
-	struct ieee80211_local *local = sdata->local;
-	struct sta_info *ap_sta = sta_info_get(sdata, sdata->vif.cfg.ap_addr);
-	unsigned int link_id;
-	u64 changed = 0;
-	struct ieee80211_prep_tx_info info = {
-		.subtype = stype,
-		.was_assoc = true,
-		.link_id = ffs(sdata->vif.active_links) - 1,
-	};
-
-	lockdep_assert_wiphy(local->hw.wiphy);
-
-	if (WARN_ON(!ap_sta))--------------->commit 687a7c8a7227
-		return;
-
-	if (WARN_ON_ONCE(tx && !frame_buf))
-		return;
-
-	if (WARN_ON(!ifmgd->associated))-------------> the caller of
-ieee80211_set_disassoc and ieee80211_report_disconnect has check the
-this case.
-		return;
-
-so as long as ieee80211_set_disassoc() early return, it maybe better not
-to call ieee80211_report_disconnect().
-
-from your comments on patch v2:
-https://lore.kernel.org
-all/4ed3cfbc1a5b80bb3577f73b8c2b19ce830eeff5.camel@sipsolutions.net/
-
-"You're adding a WARN_ON() that's now guaranteed to trigger, no
-Shouldn't the caller (also) be fixed?
-"
-I would also like to add a check (!ap_sta) in the caller of
-ieee80211_report_disconnect(), but the logic appears to be somewhat
-complex, because I'm not certain if it is evaluated together with the (
-ifmgd->associated) condition. I'm worried it might introduce new bugs.
-
-https://elixir.bootlin.com/linux/v6.15.3/source/net/mac80211/mlme.c#L4946
-https://elixir.bootlin.com/linux/v6.15.3/source/net/mac80211/mlme.c#L9085
-https://elixir.bootlin.com/linux/v6.15.3/source/net/mac80211/mlme.c#L4907
-
-in summary, why did patch v3 override patch v2:
-(1) When ieee80211_report_disconnect uses a frame_buf initialized by
-ieee80211_set_disassoc, we determine whether to call
-ieee80211_report_disconnect based on whether ieee80211_set_disassoc has
-already initialized it. This approach is more comprehensive than the one
-in patch v2, which only checks WARN_ON(!ap_sta) inside
-ieee80211_report_disconnect. It also allows for an early check before
-calling ieee80211_report_disconnect.
-
-(2) According to your comments on patch v2, it might also be necessary
-to perform the check in the caller of ieee80211_report_disconnect.
-However, if we simply check (!ap_sta), I'm concerned it could introduce
-new issues if it's not clear where exactly that check should be placed.
-
-
+> Note: This test can be executed with the FWFT series [1] or using an SBI
+> firmware that delegates misaligned traps by default. If using QEMU,
+> you will need the patches mentioned at [2] so that misaligned accesses
+> will generate a trap.
 > 
->> -static void ieee80211_set_disassoc(struct ieee80211_sub_if_data *sdata,
->> +/*
->> + * Note that if ieee80211_report_disconnect() relies on the *frame_buf
->> + * initialized by this function, then it must only be called if this function
->> + * returns true; otherwise, it may use an uninitialized buffer.
->> + */
->> +static bool ieee80211_set_disassoc(struct ieee80211_sub_if_data *sdata,
->>   				   u16 stype, u16 reason, bool tx,
->>   				   u8 *frame_buf)
->>   {
->> @@ -3935,13 +3940,13 @@ static void ieee80211_set_disassoc(struct ieee80211_sub_if_data *sdata,
->>   	lockdep_assert_wiphy(local->hw.wiphy);
->>   
->>   	if (WARN_ON(!ap_sta))
->> -		return;
->> +		return false;
->>   
->>   	if (WARN_ON_ONCE(tx && !frame_buf))
->> -		return;
->> +		return false;
->>   
->>   	if (WARN_ON(!ifmgd->associated))
->> -		return;
->> +		return false;
->>   
->>   	ieee80211_stop_poll(sdata);
->>   
->> @@ -4168,6 +4173,8 @@ static void ieee80211_set_disassoc(struct ieee80211_sub_if_data *sdata,
->>   
->>   	memset(ifmgd->userspace_selectors, 0,
->>   	       sizeof(ifmgd->userspace_selectors));
->> +
->> +	return true;
->>   }
+> Note: This commit was part of a series [3] that was partially merged.
 > 
-> here to have a return value? It's only false when you had a WARN_ON()
-> which means there's a bug elsewhere?
-
-Maybe there is some misunderstanding.
-in patch v2, WARN_ON() is added in ieee80211_report_disconnect() to
-direct avoid use uninitialized frame_buf.
-
-in patch v3, add return value on ieee80211_set_disassoc() to determine
-if frame_buf has been initialized. if return false, will not call
-ieee80211_report_disconnect().
-
-
+> Note: the remaining checkpatch errors are not applicable to this tests
+> which is a user-space one and does not use the kernel headers. Macros
+> with complex values can not be enclosed in do while loop since they are
+> generating functions.
 > 
->>   static void ieee80211_reset_ap_probe(struct ieee80211_sub_if_data *sdata)
->> @@ -4448,6 +4455,7 @@ static void __ieee80211_disconnect(struct ieee80211_sub_if_data *sdata)
->>   	struct ieee80211_local *local = sdata->local;
->>   	struct ieee80211_if_managed *ifmgd = &sdata->u.mgd;
->>   	u8 frame_buf[IEEE80211_DEAUTH_FRAME_LEN];
->> +	bool report_disconnect;
->>   
->>   	lockdep_assert_wiphy(local->hw.wiphy);
->>   
->> @@ -4477,20 +4485,22 @@ static void __ieee80211_disconnect(struct ieee80211_sub_if_data *sdata)
->>   		}
->>   	}
->>   
->> -	ieee80211_set_disassoc(sdata, IEEE80211_STYPE_DEAUTH,
->> -			       ifmgd->driver_disconnect ?
->> -					WLAN_REASON_DEAUTH_LEAVING :
->> -					WLAN_REASON_DISASSOC_DUE_TO_INACTIVITY,
->> -			       true, frame_buf);
->> +	report_disconnect = ieee80211_set_disassoc(sdata, IEEE80211_STYPE_DEAUTH,
->> +						   ifmgd->driver_disconnect ?
->> +						   WLAN_REASON_DEAUTH_LEAVING :
->> +						   WLAN_REASON_DISASSOC_DUE_TO_INACTIVITY,
->> +						   true, frame_buf);
->>   	/* the other links will be destroyed */
->>   	sdata->vif.bss_conf.csa_active = false;
->>   	sdata->deflink.u.mgd.csa.waiting_bcn = false;
->>   	sdata->deflink.u.mgd.csa.blocked_tx = false;
->>   	ieee80211_vif_unblock_queues_csa(sdata);
->>   
->> -	ieee80211_report_disconnect(sdata, frame_buf, sizeof(frame_buf), true,
->> -				    WLAN_REASON_DISASSOC_DUE_TO_INACTIVITY,
->> -				    ifmgd->reconnect);
->> +	if (report_disconnect)
->> +		ieee80211_report_disconnect(sdata, frame_buf, sizeof(frame_buf),
->> +					    true, WLAN_REASON_DISASSOC_DUE_TO_INACTIVITY,
->> +					    ifmgd->reconnect);
->> +
->>   	ifmgd->reconnect = false;
+> Link: https://lore.kernel.org/all/20250424173204.1948385-1-cleger@rivosinc.com/ [1]
+> Link: https://lore.kernel.org/all/20241211211933.198792-1-fkonrad@amd.com/ [2]
+> Link: https://lore.kernel.org/linux-riscv/20250422162324.956065-1-cleger@rivosinc.com/ [3]
 > 
-> So all of that also doesn't really do anything.
-
-Maybe there is misunderstanding, if ieee80211_set_disassoc return false,
-it avoids using an uninitialized frame_buf by not calling
-ieee80211_report_disconnect. In patch v2, this was handled by adding a
-separate (!ap_sta) check inside ieee80211_report_disconnect to prevent
-further execution.
-
-Both approaches effectively prevent the current syzbot-reported bug.
-
+> V3:
+>  - Fixed a segfault and a sign extension error found when compiling with
+>   -O<x>, x != 0 (Alex)
+>  - Use inline assembly to generate the sigbus and avoid GCC
+>    optimizations
 > 
-> But then the rest of the patch also doesn't seem to do anything, so what
-> am I missing?
+> V2:
+>  - Fix commit description
+>  - Fix a few errors reported by checkpatch.pl
 > 
-> Does the bug even still exist? Looking at the code now, I feel like
-> ccbaf782390d ("wifi: mac80211: rework the Tx of the deauth in
-> ieee80211_set_disassoc()") probably fixed this issue?
-
-this commit should not. What we're currently concerned about is how to
-prevent ieee80211_set_disassoc from returning early before
-ieee80211_send_deauth_disassoc is called to initialize frame_buf.
-
-
-
-ccbaf782390d ("wifi: mac80211: rework the Tx of the deauth in
- > ieee80211_set_disassoc()") partial change:
--       if (tx)
--               ieee80211_flush_queues(local, sdata, true);
-+       ieee80211_flush_queues(local, sdata, true);
-
--       /* deauthenticate/disassociate now */
--       if (tx || frame_buf) {
-+       if (tx) {
-                 drv_mgd_prepare_tx(sdata->local, sdata, &info);
-
-                 ieee80211_send_deauth_disassoc(sdata, 
-sdata->vif.cfg.ap_addr,
-                                                sdata->vif.cfg.ap_addr, 
-stype,
--                                              reason, tx, frame_buf);
--       }
-+                                              reason, true, frame_buf);
-
--       /* flush out frame - make sure the deauth was actually sent */
--       if (tx)
-+               /* flush out frame - make sure the deauth was actually 
-sent */
-                 ieee80211_flush_queues(local, sdata, false);
-
--       if (tx || frame_buf)
-                 drv_mgd_complete_tx(sdata->local, sdata, &info);
-+       } else if (frame_buf) {
-+               ieee80211_send_deauth_disassoc(sdata, 
-sdata->vif.cfg.ap_addr,
-+                                              sdata->vif.cfg.ap_addr, 
-stype,
-+                                              reason, false, frame_buf);
-+       }
-
-
-If ieee80211_set_disassoc is responsible for initializing frame_buf,
-then the address of frame_buf will definitely not be null. Regardless of
-whether tx is true or not, ieee80211_send_deauth_disassoc will be
-called, and frame_buf will be initialized.
-Our goal is to ensure that ieee80211_set_disassoc does not return
-prematurely before ieee80211_send_deauth_disassoc is invoked.
-
-Besides, maybe patch v2 should also fix the issue. Please kindly let me
-the update~
-
-Thank you for your time and the discussion~
-
-
-
+>  tools/testing/selftests/riscv/Makefile        |   2 +-
+>  .../selftests/riscv/misaligned/.gitignore     |   1 +
+>  .../selftests/riscv/misaligned/Makefile       |  12 +
+>  .../selftests/riscv/misaligned/common.S       |  33 +++
+>  .../testing/selftests/riscv/misaligned/fpu.S  | 180 +++++++++++++
+>  tools/testing/selftests/riscv/misaligned/gp.S | 103 +++++++
+>  .../selftests/riscv/misaligned/misaligned.c   | 253 ++++++++++++++++++
+>  7 files changed, 583 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/testing/selftests/riscv/misaligned/.gitignore
+>  create mode 100644 tools/testing/selftests/riscv/misaligned/Makefile
+>  create mode 100644 tools/testing/selftests/riscv/misaligned/common.S
+>  create mode 100644 tools/testing/selftests/riscv/misaligned/fpu.S
+>  create mode 100644 tools/testing/selftests/riscv/misaligned/gp.S
+>  create mode 100644 tools/testing/selftests/riscv/misaligned/misaligned.c
 > 
-> johannes
+> diff --git a/tools/testing/selftests/riscv/Makefile b/tools/testing/selftests/riscv/Makefile
+> index 099b8c1f46f8..95a98ceeb3b3 100644
+> --- a/tools/testing/selftests/riscv/Makefile
+> +++ b/tools/testing/selftests/riscv/Makefile
+> @@ -5,7 +5,7 @@
+>  ARCH ?= $(shell uname -m 2>/dev/null || echo not)
+>  
+>  ifneq (,$(filter $(ARCH),riscv))
+> -RISCV_SUBTARGETS ?= abi hwprobe mm sigreturn vector
+> +RISCV_SUBTARGETS ?= abi hwprobe mm sigreturn vector misaligned
+>  else
+>  RISCV_SUBTARGETS :=
+>  endif
+> diff --git a/tools/testing/selftests/riscv/misaligned/.gitignore b/tools/testing/selftests/riscv/misaligned/.gitignore
+> new file mode 100644
+> index 000000000000..5eff15a1f981
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/.gitignore
+> @@ -0,0 +1 @@
+> +misaligned
+> diff --git a/tools/testing/selftests/riscv/misaligned/Makefile b/tools/testing/selftests/riscv/misaligned/Makefile
+> new file mode 100644
+> index 000000000000..1aa40110c50d
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/Makefile
+> @@ -0,0 +1,12 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2021 ARM Limited
+> +# Originally tools/testing/arm64/abi/Makefile
+> +
+> +CFLAGS += -I$(top_srcdir)/tools/include
+> +
+> +TEST_GEN_PROGS := misaligned
+> +
+> +include ../../lib.mk
+> +
+> +$(OUTPUT)/misaligned: misaligned.c fpu.S gp.S
+> +	$(CC) -g3 -static -o$@ -march=rv64imafdc $(CFLAGS) $(LDFLAGS) $^
+> diff --git a/tools/testing/selftests/riscv/misaligned/common.S b/tools/testing/selftests/riscv/misaligned/common.S
+> new file mode 100644
+> index 000000000000..8fa00035bd5d
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/common.S
+> @@ -0,0 +1,33 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2025 Rivos Inc.
+> + *
+> + * Authors:
+> + *     Clément Léger <cleger@rivosinc.com>
+> + */
+> +
+> +.macro lb_sb temp, offset, src, dst
+> +	lb \temp, \offset(\src)
+> +	sb \temp, \offset(\dst)
+> +.endm
+> +
+> +.macro copy_long_to temp, src, dst
+> +	lb_sb \temp, 0, \src, \dst,
+> +	lb_sb \temp, 1, \src, \dst,
+> +	lb_sb \temp, 2, \src, \dst,
+> +	lb_sb \temp, 3, \src, \dst,
+> +	lb_sb \temp, 4, \src, \dst,
+> +	lb_sb \temp, 5, \src, \dst,
+> +	lb_sb \temp, 6, \src, \dst,
+> +	lb_sb \temp, 7, \src, \dst,
+> +.endm
+> +
+> +.macro sp_stack_prologue offset
+> +	addi sp, sp, -8
+> +	sub sp, sp, \offset
+> +.endm
+> +
+> +.macro sp_stack_epilogue offset
+> +	add sp, sp, \offset
+> +	addi sp, sp, 8
+> +.endm
+> diff --git a/tools/testing/selftests/riscv/misaligned/fpu.S b/tools/testing/selftests/riscv/misaligned/fpu.S
+> new file mode 100644
+> index 000000000000..a7ad4430a424
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/fpu.S
+> @@ -0,0 +1,180 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2025 Rivos Inc.
+> + *
+> + * Authors:
+> + *     Clément Léger <cleger@rivosinc.com>
+> + */
+> +
+> +#include "common.S"
+> +
+> +#define CASE_ALIGN		4
+> +
+> +.macro fpu_load_inst fpreg, inst, precision, load_reg
+> +.align CASE_ALIGN
+> +	\inst \fpreg, 0(\load_reg)
+> +	fmv.\precision fa0, \fpreg
+> +	j 2f
+> +.endm
+> +
+> +#define flw(__fpreg) fpu_load_inst __fpreg, flw, s, a4
+> +#define fld(__fpreg) fpu_load_inst __fpreg, fld, d, a4
+> +#define c_flw(__fpreg) fpu_load_inst __fpreg, c.flw, s, a4
+> +#define c_fld(__fpreg) fpu_load_inst __fpreg, c.fld, d, a4
+> +#define c_fldsp(__fpreg) fpu_load_inst __fpreg, c.fldsp, d, sp
+> +
+> +.macro fpu_store_inst fpreg, inst, precision, store_reg
+> +.align CASE_ALIGN
+> +	fmv.\precision \fpreg, fa0
+> +	\inst \fpreg, 0(\store_reg)
+> +	j 2f
+> +.endm
+> +
+> +#define fsw(__fpreg) fpu_store_inst __fpreg, fsw, s, a4
+> +#define fsd(__fpreg) fpu_store_inst __fpreg, fsd, d, a4
+> +#define c_fsw(__fpreg) fpu_store_inst __fpreg, c.fsw, s, a4
+> +#define c_fsd(__fpreg) fpu_store_inst __fpreg, c.fsd, d, a4
+> +#define c_fsdsp(__fpreg) fpu_store_inst __fpreg, c.fsdsp, d, sp
+> +
+> +.macro fp_test_prologue
+> +	move a4, a1
+> +	/*
+> +	 * Compute jump offset to store the correct FP register since we don't
+> +	 * have indirect FP register access (or at least we don't use this
+> +	 * extension so that works on all archs)
+> +	 */
+> +	sll t0, a0, CASE_ALIGN
+> +	la t2, 1f
+> +	add t0, t0, t2
+> +	jr t0
+> +.align	CASE_ALIGN
+> +1:
+> +.endm
+> +
+> +.macro fp_test_prologue_compressed
+> +	/* FP registers for compressed instructions starts from 8 to 16 */
+> +	addi a0, a0, -8
+> +	fp_test_prologue
+> +.endm
+> +
+> +#define fp_test_body_compressed(__inst_func) \
+> +	__inst_func(f8); \
+> +	__inst_func(f9); \
+> +	__inst_func(f10); \
+> +	__inst_func(f11); \
+> +	__inst_func(f12); \
+> +	__inst_func(f13); \
+> +	__inst_func(f14); \
+> +	__inst_func(f15); \
+> +2:
+> +
+> +#define fp_test_body(__inst_func) \
+> +	__inst_func(f0); \
+> +	__inst_func(f1); \
+> +	__inst_func(f2); \
+> +	__inst_func(f3); \
+> +	__inst_func(f4); \
+> +	__inst_func(f5); \
+> +	__inst_func(f6); \
+> +	__inst_func(f7); \
+> +	__inst_func(f8); \
+> +	__inst_func(f9); \
+> +	__inst_func(f10); \
+> +	__inst_func(f11); \
+> +	__inst_func(f12); \
+> +	__inst_func(f13); \
+> +	__inst_func(f14); \
+> +	__inst_func(f15); \
+> +	__inst_func(f16); \
+> +	__inst_func(f17); \
+> +	__inst_func(f18); \
+> +	__inst_func(f19); \
+> +	__inst_func(f20); \
+> +	__inst_func(f21); \
+> +	__inst_func(f22); \
+> +	__inst_func(f23); \
+> +	__inst_func(f24); \
+> +	__inst_func(f25); \
+> +	__inst_func(f26); \
+> +	__inst_func(f27); \
+> +	__inst_func(f28); \
+> +	__inst_func(f29); \
+> +	__inst_func(f30); \
+> +	__inst_func(f31); \
+> +2:
+> +.text
+> +
+> +#define __gen_test_inst(__inst, __suffix) \
+> +.global test_ ## __inst; \
+> +test_ ## __inst:; \
+> +	fp_test_prologue ## __suffix; \
+> +	fp_test_body ## __suffix(__inst); \
+> +	ret
+> +
+> +#define gen_test_inst_compressed(__inst) \
+> +	.option arch,+c; \
+> +	__gen_test_inst(c_ ## __inst, _compressed)
+> +
+> +#define gen_test_inst(__inst) \
+> +	.balign 16; \
+> +	.option push; \
+> +	.option arch,-c; \
+> +	__gen_test_inst(__inst, ); \
+> +	.option pop
+> +
+> +.macro fp_test_prologue_load_compressed_sp
+> +	copy_long_to t0, a1, sp
+> +.endm
+> +
+> +.macro fp_test_epilogue_load_compressed_sp
+> +.endm
+> +
+> +.macro fp_test_prologue_store_compressed_sp
+> +.endm
+> +
+> +.macro fp_test_epilogue_store_compressed_sp
+> +	copy_long_to t0, sp, a1
+> +.endm
+> +
+> +#define gen_inst_compressed_sp(__inst, __type) \
+> +	.global test_c_ ## __inst ## sp; \
+> +	test_c_ ## __inst ## sp:; \
+> +		sp_stack_prologue a2; \
+> +		fp_test_prologue_## __type ## _compressed_sp; \
+> +		fp_test_prologue_compressed; \
+> +		fp_test_body_compressed(c_ ## __inst ## sp); \
+> +		fp_test_epilogue_## __type ## _compressed_sp; \
+> +		sp_stack_epilogue a2; \
+> +		ret
+> +
+> +#define gen_test_load_compressed_sp(__inst) gen_inst_compressed_sp(__inst, load)
+> +#define gen_test_store_compressed_sp(__inst) gen_inst_compressed_sp(__inst, store)
+> +
+> +/*
+> + * float_fsw_reg - Set a FP register from a register containing the value
+> + * a0 = FP register index to be set
+> + * a1 = addr where to store register value
+> + * a2 = address offset
+> + * a3 = value to be store
+> + */
+> +gen_test_inst(fsw)
+> +
+> +/*
+> + * float_flw_reg - Get a FP register value and return it
+> + * a0 = FP register index to be retrieved
+> + * a1 = addr to load register from
+> + * a2 = address offset
+> + */
+> +gen_test_inst(flw)
+> +
+> +gen_test_inst(fsd)
+> +#ifdef __riscv_compressed
+> +gen_test_inst_compressed(fsd)
+> +gen_test_store_compressed_sp(fsd)
+> +#endif
+> +
+> +gen_test_inst(fld)
+> +#ifdef __riscv_compressed
+> +gen_test_inst_compressed(fld)
+> +gen_test_load_compressed_sp(fld)
+> +#endif
+> diff --git a/tools/testing/selftests/riscv/misaligned/gp.S b/tools/testing/selftests/riscv/misaligned/gp.S
+> new file mode 100644
+> index 000000000000..f53f4c6d81dd
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/gp.S
+> @@ -0,0 +1,103 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2025 Rivos Inc.
+> + *
+> + * Authors:
+> + *     Clément Léger <cleger@rivosinc.com>
+> + */
+> +
+> +#include "common.S"
+> +
+> +.text
+> +
+> +.macro __gen_test_inst inst, src_reg
+> +	\inst a2, 0(\src_reg)
+> +	move a0, a2
+> +.endm
+> +
+> +.macro gen_func_header func_name, rvc
+> +	.option arch,\rvc
+> +	.global test_\func_name
+> +	test_\func_name:
+> +.endm
+> +
+> +.macro gen_test_inst inst
+> +	.option push
+> +	gen_func_header \inst, -c
+> +	__gen_test_inst \inst, a0
+> +	.option pop
+> +	ret
+> +.endm
+> +
+> +.macro __gen_test_inst_c name, src_reg
+> +	.option push
+> +	gen_func_header c_\name, +c
+> +	 __gen_test_inst c.\name, \src_reg
+> +	.option pop
+> +	ret
+> +.endm
+> +
+> +.macro gen_test_inst_c name
+> + 	__gen_test_inst_c \name, a0
+> +.endm
+> +
+> +
+> +.macro gen_test_inst_load_c_sp name
+> +	.option push
+> +	gen_func_header c_\name\()sp, +c
+> +	sp_stack_prologue a1
+> +	copy_long_to t0, a0, sp
+> +	c.ldsp a0, 0(sp)
+> +	sp_stack_epilogue a1
+> +	.option pop
+> +	ret
+> +.endm
+> +
+> +.macro lb_sp_sb_a0 reg, offset
+> +	lb_sb \reg, \offset, sp, a0
+> +.endm
+> +
+> +.macro gen_test_inst_store_c_sp inst_name
+> +	.option push
+> +	gen_func_header c_\inst_name\()sp, +c
+> +	/* Misalign stack pointer */
+> +	sp_stack_prologue a1
+> +	/* Misalign access */
+> +	c.sdsp a2, 0(sp)
+> +	copy_long_to t0, sp, a0
+> +	sp_stack_epilogue a1
+> +	.option pop
+> +	ret
+> +.endm
+> +
+> +
+> + /*
+> + * a0 = addr to load from
+> + * a1 = address offset
+> + * a2 = value to be loaded
+> + */
+> +gen_test_inst lh
+> +gen_test_inst lhu
+> +gen_test_inst lw
+> +gen_test_inst lwu
+> +gen_test_inst ld
+> +#ifdef __riscv_compressed
+> +gen_test_inst_c lw
+> +gen_test_inst_c ld
+> +gen_test_inst_load_c_sp ld
+> +#endif
+> +
+> +/*
+> + * a0 = addr where to store value
+> + * a1 = address offset
+> + * a2 = value to be stored
+> + */
+> +gen_test_inst sh
+> +gen_test_inst sw
+> +gen_test_inst sd
+> +#ifdef __riscv_compressed
+> +gen_test_inst_c sw
+> +gen_test_inst_c sd
+> +gen_test_inst_store_c_sp sd
+> +#endif
+> +
+> diff --git a/tools/testing/selftests/riscv/misaligned/misaligned.c b/tools/testing/selftests/riscv/misaligned/misaligned.c
+> new file mode 100644
+> index 000000000000..50cd8f5ece94
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/misaligned.c
+> @@ -0,0 +1,253 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2025 Rivos Inc.
+> + *
+> + * Authors:
+> + *     Clément Léger <cleger@rivosinc.com>
+> + */
+> +#include <signal.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <linux/ptrace.h>
+> +#include "../../kselftest_harness.h"
+> +
+> +#include <stdlib.h>
+> +#include <stdio.h>
+> +#include <stdint.h>
+> +#include <float.h>
+> +#include <errno.h>
+> +#include <math.h>
+> +#include <string.h>
+> +#include <signal.h>
+> +#include <stdbool.h>
+> +#include <unistd.h>
+> +#include <inttypes.h>
+> +#include <ucontext.h>
+> +
+> +#include <sys/prctl.h>
+> +
+> +#define stringify(s) __stringify(s)
+> +#define __stringify(s) #s
+> +
+> +#define VAL16	0x1234U
+> +#define VAL32	0x5EADBEEFUL
+> +#define VAL64	0x45674321D00DF789ULL
+> +
+> +#define VAL_float	78951.234375
+> +#define VAL_double	567890.512396965789589290
+> +
+> +static bool float_equal(float a, float b)
+> +{
+> +	float scaled_epsilon;
+> +	float difference = fabsf(a - b);
+> +
+> +	// Scale to the largest value.
+> +	a = fabsf(a);
+> +	b = fabsf(b);
+> +	if (a > b)
+> +		scaled_epsilon = FLT_EPSILON * a;
+> +	else
+> +		scaled_epsilon = FLT_EPSILON * b;
+> +
+> +	return difference <= scaled_epsilon;
+> +}
+> +
+> +static bool double_equal(double a, double b)
+> +{
+> +	double scaled_epsilon;
+> +	double difference = fabsl(a - b);
+> +
+> +	// Scale to the largest value.
+> +	a = fabs(a);
+> +	b = fabs(b);
+> +	if (a > b)
+> +		scaled_epsilon = DBL_EPSILON * a;
+> +	else
+> +		scaled_epsilon = DBL_EPSILON * b;
+> +
+> +	return difference <= scaled_epsilon;
+> +}
+> +
+> +#define fpu_load_proto(__inst, __type) \
+> +extern __type test_ ## __inst(unsigned long fp_reg, void *addr, unsigned long offset, __type value)
+> +
+> +fpu_load_proto(flw, float);
+> +fpu_load_proto(fld, double);
+> +fpu_load_proto(c_flw, float);
+> +fpu_load_proto(c_fld, double);
+> +fpu_load_proto(c_fldsp, double);
+> +
+> +#define fpu_store_proto(__inst, __type) \
+> +extern void test_ ## __inst(unsigned long fp_reg, void *addr, unsigned long offset, __type value)
+> +
+> +fpu_store_proto(fsw, float);
+> +fpu_store_proto(fsd, double);
+> +fpu_store_proto(c_fsw, float);
+> +fpu_store_proto(c_fsd, double);
+> +fpu_store_proto(c_fsdsp, double);
+> +
+> +#define gp_load_proto(__inst, __type) \
+> +extern __type test_ ## __inst(void *addr, unsigned long offset, __type value)
+> +
+> +gp_load_proto(lh, uint16_t);
+> +gp_load_proto(lhu, uint16_t);
+> +gp_load_proto(lw, uint32_t);
+> +gp_load_proto(lwu, uint32_t);
+> +gp_load_proto(ld, uint64_t);
+> +gp_load_proto(c_lw, uint32_t);
+> +gp_load_proto(c_ld, uint64_t);
+> +gp_load_proto(c_ldsp, uint64_t);
+> +
+> +#define gp_store_proto(__inst, __type) \
+> +extern void test_ ## __inst(void *addr, unsigned long offset, __type value)
+> +
+> +gp_store_proto(sh, uint16_t);
+> +gp_store_proto(sw, uint32_t);
+> +gp_store_proto(sd, uint64_t);
+> +gp_store_proto(c_sw, uint32_t);
+> +gp_store_proto(c_sd, uint64_t);
+> +gp_store_proto(c_sdsp, uint64_t);
+> +
+> +#define TEST_GP_LOAD(__inst, __type_size)					\
+> +TEST(gp_load_ ## __inst)							\
+> +{										\
+> +	int offset, ret;							\
+> +	uint8_t buf[16] __attribute__((aligned(16)));				\
+> +										\
+> +	ret = prctl(PR_SET_UNALIGN, PR_UNALIGN_NOPRINT);			\
+> +	ASSERT_EQ(ret, 0);							\
+> +										\
+> +	for (offset = 1; offset < (__type_size) / 8; offset++) {		\
+> +		uint ## __type_size ## _t val = VAL ## __type_size;		\
+> +		uint ## __type_size ## _t *ptr = (uint ## __type_size ## _t *)(buf + offset); \
+> +		memcpy(ptr, &val, sizeof(val));					\
+> +		val = test_ ## __inst(ptr, offset, val);			\
+> +		EXPECT_EQ(VAL ## __type_size, val);				\
+> +	}									\
+> +}
+> +
+> +TEST_GP_LOAD(lh, 16);
+> +TEST_GP_LOAD(lhu, 16);
+> +TEST_GP_LOAD(lw, 32);
+> +TEST_GP_LOAD(lwu, 32);
+> +TEST_GP_LOAD(ld, 64);
+> +#ifdef __riscv_compressed
+> +TEST_GP_LOAD(c_lw, 32);
+> +TEST_GP_LOAD(c_ld, 64);
+> +TEST_GP_LOAD(c_ldsp, 64);
+> +#endif
+> +
+> +#define TEST_GP_STORE(__inst, __type_size)					\
+> +TEST(gp_load_ ## __inst)							\
+> +{										\
+> +	int offset, ret;							\
+> +	uint8_t buf[16] __attribute__((aligned(16)));				\
+> +										\
+> +	ret = prctl(PR_SET_UNALIGN, PR_UNALIGN_NOPRINT);			\
+> +	ASSERT_EQ(ret, 0);							\
+> +										\
+> +	for (offset = 1; offset < (__type_size) / 8; offset++) {		\
+> +		uint ## __type_size ## _t val = VAL ## __type_size;		\
+> +		uint ## __type_size ## _t *ptr = (uint ## __type_size ## _t *)(buf + offset); \
+> +		memset(ptr, 0, sizeof(val));					\
+> +		test_ ## __inst(ptr, offset, val);				\
+> +		memcpy(&val, ptr, sizeof(val));					\
+> +		EXPECT_EQ(VAL ## __type_size, val);				\
+> +	}									\
+> +}
+> +TEST_GP_STORE(sh, 16);
+> +TEST_GP_STORE(sw, 32);
+> +TEST_GP_STORE(sd, 64);
+> +#ifdef __riscv_compressed
+> +TEST_GP_STORE(c_sw, 32);
+> +TEST_GP_STORE(c_sd, 64);
+> +TEST_GP_STORE(c_sdsp, 64);
+> +#endif
+> +
+> +#define __TEST_FPU_LOAD(__type, __inst, __reg_start, __reg_end)			\
+> +TEST(fpu_load_ ## __inst)							\
+> +{										\
+> +	int ret, offset, fp_reg;						\
+> +	uint8_t buf[16] __attribute__((aligned(16)));				\
+> +										\
+> +	ret = prctl(PR_SET_UNALIGN, PR_UNALIGN_NOPRINT);			\
+> +	ASSERT_EQ(ret, 0);							\
+> +										\
+> +	for (fp_reg = __reg_start; fp_reg < __reg_end; fp_reg++) {		\
+> +		for (offset = 1; offset < 4; offset++) {			\
+> +			void *load_addr = (buf + offset);			\
+> +			__type val = VAL_ ## __type ;				\
+> +										\
+> +			memcpy(load_addr, &val, sizeof(val));			\
+> +			val = test_ ## __inst(fp_reg, load_addr, offset, val);	\
+> +			EXPECT_TRUE(__type ##_equal(val, VAL_## __type));	\
+> +		}								\
+> +	}									\
+> +}
+> +#define TEST_FPU_LOAD(__type, __inst) \
+> +	__TEST_FPU_LOAD(__type, __inst, 0, 32)
+> +#define TEST_FPU_LOAD_COMPRESSED(__type, __inst) \
+> +	__TEST_FPU_LOAD(__type, __inst, 8, 16)
+> +
+> +TEST_FPU_LOAD(float, flw)
+> +TEST_FPU_LOAD(double, fld)
+> +#ifdef __riscv_compressed
+> +TEST_FPU_LOAD_COMPRESSED(double, c_fld)
+> +TEST_FPU_LOAD_COMPRESSED(double, c_fldsp)
+> +#endif
+> +
+> +#define __TEST_FPU_STORE(__type, __inst, __reg_start, __reg_end)		\
+> +TEST(fpu_store_ ## __inst)							\
+> +{										\
+> +	int ret, offset, fp_reg;						\
+> +	uint8_t buf[16] __attribute__((aligned(16)));				\
+> +										\
+> +	ret = prctl(PR_SET_UNALIGN, PR_UNALIGN_NOPRINT);			\
+> +	ASSERT_EQ(ret, 0);							\
+> +										\
+> +	for (fp_reg = __reg_start; fp_reg < __reg_end; fp_reg++) {		\
+> +		for (offset = 1; offset < 4; offset++) {			\
+> +										\
+> +			void *store_addr = (buf + offset);			\
+> +			__type val = VAL_ ## __type ;				\
+> +										\
+> +			test_ ## __inst(fp_reg, store_addr, offset, val);	\
+> +			memcpy(&val, store_addr, sizeof(val));			\
+> +			EXPECT_TRUE(__type ## _equal(val, VAL_## __type));	\
+> +		}								\
+> +	}									\
+> +}
+> +#define TEST_FPU_STORE(__type, __inst) \
+> +	__TEST_FPU_STORE(__type, __inst, 0, 32)
+> +#define TEST_FPU_STORE_COMPRESSED(__type, __inst) \
+> +	__TEST_FPU_STORE(__type, __inst, 8, 16)
+> +
+> +TEST_FPU_STORE(float, fsw)
+> +TEST_FPU_STORE(double, fsd)
+> +#ifdef __riscv_compressed
+> +TEST_FPU_STORE_COMPRESSED(double, c_fsd)
+> +TEST_FPU_STORE_COMPRESSED(double, c_fsdsp)
+> +#endif
+> +
+> +TEST_SIGNAL(gen_sigbus, SIGBUS)
+> +{
+> +	uint32_t val = VAL32;
+> +	uint8_t buf[16] __attribute__((aligned(16)));
+> +	int ret;
+> +
+> +	ret = prctl(PR_SET_UNALIGN, PR_UNALIGN_SIGBUS);
+> +	ASSERT_EQ(ret, 0);
+> +
+> +	asm volatile("sw %0, 1(%1)" : : "r"(val), "r"(buf) : "memory");
+> +}
+> +
+> +int main(int argc, char **argv)
+> +{
+> +	int ret, val;
+> +
+> +	ret = prctl(PR_GET_UNALIGN, &val);
+> +	if (ret == -1 && errno == EINVAL)
+> +		ksft_exit_skip("SKIP GET_UNALIGN_CTL not supported\n");
+> +
+> +	exit(test_harness_run(argc, argv));
+> +}
 
-
--- 
-Thx and BRs,
-Zhongqiu Han
