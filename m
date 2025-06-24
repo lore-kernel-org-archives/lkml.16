@@ -1,285 +1,224 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CC742065
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750748377; cv=none; b=mhO4FSFYY66uAgUxD2Lrv+IDMWi4iJkDR4dIDeYHfCFnIhEKGcdIaXaMPU0tpztIKNnLNTwY/IPnb/F7R6UGrtzQCez0CViEc+fwt9wToh3MuCiwV1r7thgwzte31rCIXYZG2f6XDW1Ct+lpZ7jf50iUX3MzXOCz7PV/32frcGw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750748377; c=relaxed/simple;
-	bh=jLGPvCfoQ08N6eX9uE9WM+NCPLN8fkLTJXyvmrpq8R0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n0lREfycttePqqtxk/jT7gjms7u6smlmJ9wo8A2yrxEyOgtHS31jL5oNyUqQKEFWGTf5TsE7lQW9cHPSxbpt+LgGK82hz0rIAkWB5WShumDkUayncA9YTZ53v6OkRta1v0QCVH4o098r4sqEhQu+qhLW1mdh1eq+WVDIfzkv9aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tr7bOapn; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9D242065
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750748481; cv=fail; b=A6U4V3JFF4d6QbyzMAIMKfAaH7L3BaTkp1RErUyIHnOEbYdckRMdMcfekaTqmoo11EXp76NjsD4KsJzcRELNurh4MA+sQ6LglGbvZYtXMFBqVDKFB4IZl2kS0P9W5B8kVnOS5Lll3J1gYwMCLTQV1sd/ZAutsTkytarZFuShaYk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750748481; c=relaxed/simple;
+	bh=739iXV3xzuk8ZBjHREtGp+OnjMMIYC5G/9LEiNYWtaU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=WmcA5PHg29Ch3QhnykYwuRFpH81CJn42Pd4+ZAHoseC0toPEjOyVHotD17XZQzh9j9WmsHOLIcO3OebHAuz0bqdAbSQSq3qu7hCHB13/uDfCrc+xUBWa4V59uoAjwjweN2jbuq6qu3nr9k91dvQNpDtVvhpH4euYVCPOTEYxC2A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yi73JRpO; arc=fail smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tr7bOapn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B3A4C4CEE3;
-	Tue, 24 Jun 2025 06:59:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750748375;
-	bh=jLGPvCfoQ08N6eX9uE9WM+NCPLN8fkLTJXyvmrpq8R0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Tr7bOapneHO5jhGsnJpcXb6VUuxZdRweqgHcJMpTCuX+Rvt4a0o9XtpyEtS782HzE
-	 NRfQfBA0d82ZiGXPzvgpkT3IF9b96FNsOAfSmDxzgKeqyQqPlAE8Bop0zpKCpSjm3N
-	 5ICWFueK9MzewW7o056st9s//I6b0Q9cxjsr0TLtVfGSYOwDGuEXlVCGIvQ9LBWcqU
-	 NGqkhxnXom8iUUbcSZBi5h388O3h9YqKCt0UVXrvswSjCuHUlvRkgp4rCCBGVKYKte
-	 GC7ZiBOuFg9FVDoX4wR6Wzx/SsOX0CnkSofVRpUXblOw0U3XcpGl4T+ASRQUAJxVnq
-	 4i9MxnZsxQusA==
-Date: Tue, 24 Jun 2025 08:59:32 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Dharma Balasubiramani <dharma.b@microchip.com>
-Cc: Manikandan Muralidharan <manikandan.m@microchip.com>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Sandeep Sheriker M <sandeep.sheriker@microchip.com>
-Subject: Re: [PATCH v3] drm/bridge: microchip-lvds: fix bus format mismatch
- with VESA displays
-Message-ID: <20250624-complex-russet-deer-c1d9b3@houat>
-References: <20250624-microchip-lvds-v3-1-c3c6f1e40516@microchip.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yi73JRpO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750748479; x=1782284479;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=739iXV3xzuk8ZBjHREtGp+OnjMMIYC5G/9LEiNYWtaU=;
+  b=Yi73JRpOWoHIXKisf6ITNvgOzqv9xzlzE3ojOQAEJLf0PjayiEEZqTa2
+   8Zzs9F+wufoktxAC6P00EOfZzU1XBPcR2DGopMNyoGj/5zd8F/DjJ8gOg
+   eY4LgtPto02dld1igPABw9A/MnIvSQ1L10yiqjHewb6PECvzTzjVWB+Uc
+   fwzTYyWRG2AhWQaiRRxv1yWbfef0ydcQk3JKkL4sjVsqeMF6TkQlaneLH
+   I0XCK86WpwWRKDQpYLtB3tYT8Fy7deKWr6BDngLZrXxr5GV0U/qfNp+7B
+   QE7lKaR/0PLdx0111F/1ouWT86WIrQgCCeVHw6CUZrsJfl1Ffv5x5Zy8F
+   A==;
+X-CSE-ConnectionGUID: 4RfUjCJVS/2WR6c9TCXkjA==
+X-CSE-MsgGUID: NV3MRvAhRl+j5QW5YUEscQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52094224"
+X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
+   d="scan'208";a="52094224"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 00:01:18 -0700
+X-CSE-ConnectionGUID: enj/tQqMT8uwM7EqNvmvqg==
+X-CSE-MsgGUID: 9mhxAVmHTM6ylXKxEercVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
+   d="scan'208";a="155844136"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 00:01:17 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 24 Jun 2025 00:01:17 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Tue, 24 Jun 2025 00:01:17 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (40.107.92.58) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 24 Jun 2025 00:01:15 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Hj2T7auy3MYXzlvAL8cbXMp8NaCvZxCWpWqffoFt7W8765T3xSjYl70+BnWP+QXM5EF2SVWiQCSxKc7QWu7NjMbEVj6u6deW5YxyXG3scUGa+KXSgPyl2hsp0+L3rTzjpSePCju8/U7Iyk+yEWCMKJup9EOXrSbujFg6gX2aBysYDAMP/owlf/4FGm6MHw+SHPfxJIbuaoCc8q3Jb9n56jVqNa0b1hfD/k7/MLLNh8JW8tRY3kkWPLwnGWQS8/afiHmnZcfhgAu3dCXinP7zOAmnMKOByMxFrVYsktYfA39Gakfdh6fsttXu7x51tJzxb7qIH99bMTgmZDa+J99ocw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=739iXV3xzuk8ZBjHREtGp+OnjMMIYC5G/9LEiNYWtaU=;
+ b=nZOeD8LRoG4QKDaFNOk169LEc2AU47kE9/AEqcfGOLxmtsykt0Sfd8QuRQMGvGt6qO9z6XuH6Yv1QH8XGU3idnA84YdpXSMjgz/NiXYH8CmIFewSWvnKUnK22s1MnQUm7TDavmaPiRuW7mNHvgbh2pKQkV2VUit4VJIDe9M0b9hRB3v+ZUv6j1l8CEKcwWkeay2p5jFmThp3T89FQc0SU9ZK23R/IUnT/Bt9spwjbWL8vI2SxMcYx9wkdRCnMpnlmtZhoHZglx3SaOVszk+iYUn7q5AMKk68MEzNdxTC8rKWrz9Iau9MjwllvwOnUGVZGCsVKvEoQbyl3uow8DML1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from IA1PR11MB6370.namprd11.prod.outlook.com (2603:10b6:208:3ae::8)
+ by SJ5PPF1EED2E381.namprd11.prod.outlook.com (2603:10b6:a0f:fc02::817) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Tue, 24 Jun
+ 2025 07:00:54 +0000
+Received: from IA1PR11MB6370.namprd11.prod.outlook.com
+ ([fe80::401f:1d9b:38a6:444d]) by IA1PR11MB6370.namprd11.prod.outlook.com
+ ([fe80::401f:1d9b:38a6:444d%3]) with mapi id 15.20.8857.026; Tue, 24 Jun 2025
+ 07:00:54 +0000
+From: "Usyskin, Alexander" <alexander.usyskin@intel.com>
+To: Hans de Goede <hansg@kernel.org>, Sakari Ailus
+	<sakari.ailus@linux.intel.com>, Stanislaw Gruszka
+	<stanislaw.gruszka@linux.intel.com>
+CC: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 02/10] mei: vsc: Don't re-init VSC from mei_vsc_hw_reset()
+ on stop
+Thread-Topic: [PATCH 02/10] mei: vsc: Don't re-init VSC from
+ mei_vsc_hw_reset() on stop
+Thread-Index: AQHb5Bv5MJHcXv2QJka3zcpaX4AiorQR1Knw
+Date: Tue, 24 Jun 2025 07:00:54 +0000
+Message-ID: <IA1PR11MB6370F9796B6ADF1B765D05A9ED78A@IA1PR11MB6370.namprd11.prod.outlook.com>
+References: <20250623085052.12347-1-hansg@kernel.org>
+ <20250623085052.12347-3-hansg@kernel.org>
+In-Reply-To: <20250623085052.12347-3-hansg@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA1PR11MB6370:EE_|SJ5PPF1EED2E381:EE_
+x-ms-office365-filtering-correlation-id: 24230aff-f36a-47e5-536b-08ddb2ecdce3
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?bW5vZzM1MnZWVUc1ejVJWUdWTUY0MnJkaldDUjFxZTRadWFER01INlREbGxO?=
+ =?utf-8?B?VnpYVzFRa1pCc3dyR3J1Q1pmc0pLNlY2clFiY2VMN2hPKzFpRUxLWFkwTVc5?=
+ =?utf-8?B?V0tYYm5NNVUwYXJla2hibXlmek50dUtWVDJSekhKaW04OS9jM0tnK2dONUxN?=
+ =?utf-8?B?bkFBdmhTZWVxRU9ZYUZ5VFVoOExEVU5TbnRpcFpUUm9iVGFnT29Dd1pERWEv?=
+ =?utf-8?B?YjhtMnd0THlDbjZiOFFyaG1GbTE5VlNweEtBNGM2VjhTRHFXVUk4SGpVZkln?=
+ =?utf-8?B?M2Z2ZFc2bFRKWDJOOWNZQU80UHQzL0Z0Wk9MWXlnRWNIYTBINjg3bHVGMXp0?=
+ =?utf-8?B?ZzczVEMyWkpKNEJIVVVBdVJlL0Q5djArUXdXUU9UYllQaFBEbm94Y2hSRDNZ?=
+ =?utf-8?B?RVRJNkFXTExlRVdFRkpKeVFkNitRcDBQRVU5clo4QzY5ZlI4blFZOUFFaEk2?=
+ =?utf-8?B?dDZ1SUcwa01wdHk5ZTcyVlY4Q3VnN1plRElwVno5ektqRTYzUExCeXBDMVV6?=
+ =?utf-8?B?M3J0OHQzWUVkOHdnSFJaTGhHVGVWL1l5YklhbTNxdHFkeG1NNE1UNzZrK2pZ?=
+ =?utf-8?B?RFgreFNlZFJGUWorRzRMUGdOaExSZm9tVXhkVmY1czRwOVlwempNYy93cEhm?=
+ =?utf-8?B?VFdRbzVhNnlsNjZmcUhaSE5yVkdZUXlSVklUbHJTR0NPVndsYmF6VzhFcC9r?=
+ =?utf-8?B?dXpMSGh6dHAwMGNkdFcrM0w1OWpERWRZdlI3bFN6bjZHNjkwMnl1elg0dHZa?=
+ =?utf-8?B?MWkzcmRvVEpNU1JaNVRsRkRwV0FJS3BpUkk0Z3JUN0dwOE05aG1aNWhiMnlP?=
+ =?utf-8?B?eEhRUDNwcmlwSFVYWkNTZVpxRDRrZ3lSNkVnZ1BqVWpibUhERWhTMG54VVdX?=
+ =?utf-8?B?WlU3RytJTmM0TWNsNTN3UmQ1SzZtM2R0N1JlMEpxUVcxWFJqOUdmQVduMU9i?=
+ =?utf-8?B?Nzk0QXhLb3haMEp5WmRxMmJ5Wm5MUEc4QTU1MFVwY3VCaWkwUnZSQ3RhU0J1?=
+ =?utf-8?B?TkRpL0l1T2dwQTlMUng0S1J6V092QnpOV010aDl6ZkVoZ1ZsYUgyTW96eEMr?=
+ =?utf-8?B?MGkrOTJ2NElFZ2pJWFVhMWtqbDRXelgrb3RZd3NGWG1vUHc0SWJSemlORk9o?=
+ =?utf-8?B?c3k5aHU3bDRVdG9pTmRudnhNbHlNNTM1ak1wQWorNUdKL2tnbWxjT25tS3Nh?=
+ =?utf-8?B?cWQ4bWFOYkgxVmd4V29ybGlMbDI0Z1dTaStYSnpiVnhnQTl4WTArYS9YYmVp?=
+ =?utf-8?B?dk9yeXhndFJqdkUzOWxwN05tVlBGa3YvVXk3bmRuSXh5VEZDZFdEYXJVeEVv?=
+ =?utf-8?B?SVRmRVJwS0NxZXJYd1lQU0xwaDN3ZHA0citFTzQrTXpVQm1xSllwZmVrY1BL?=
+ =?utf-8?B?UUFWMWJrOGRKU29iTjhWM25jblNOb0I5a3E3ekFma3Z5Y0VNNXR3blk4QUZI?=
+ =?utf-8?B?dkNSWUdhZzNLTlFjc2d5TUZDbGNOQ2dFd3EveVFLTHF1Tmx4U0x0ZFpDUnRY?=
+ =?utf-8?B?Y05YMW9PZ3BRNTQ4dENoeXR4cWllZGFJSVJuUEZMZ0hud1lyNHZOK01jM0xW?=
+ =?utf-8?B?L0prbHB4VCthTkdlM1VnTWU3MEtGZ0xxaytPdVpPNmpueU5RRUtwb1FQTDF5?=
+ =?utf-8?B?OWhRYlJqK0pWU0sxeVpJVTRmNWcybkpsMlV2bUF3a0kwMGtYeExiNGhydWRF?=
+ =?utf-8?B?ekNjVThOZXJXSEM2anFYRE9MV29MOFJxM1hIbGgxcktiM1dKUXh6SC9Kb0Uz?=
+ =?utf-8?B?b2FDeFdkb0p2ZFNzLzY0d3ZXa2VFcDJWREV1ZVNFSGZlM0hJRTJySHA2M1Mv?=
+ =?utf-8?B?Q3Y1QzhEMXptY3FMTXNONUZKdEw0czk2WVduLzh4ZzJ6eS9YOG1hU1g2K3B2?=
+ =?utf-8?B?RjRSMkJ6YXRwanFWNXlOWDF4WlY4ZjRDbnZQVjZHbTRPRGZzbVJnM2pta0hS?=
+ =?utf-8?B?dWovWnVNNlE4WUw4YU9rckhoQ3RVN0JoejYxcXJVRk94bGdmeVlJNEIvck9G?=
+ =?utf-8?Q?DJrF4Te+EDtNUrHHq9EYBQsvQa57Ns=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB6370.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VkxDYjZRdnZiUjVXSmFyaFZuVHJtb3dZMmRDNVJHMEhoS1RiWEdtcUduVTJj?=
+ =?utf-8?B?aUNmMy9rVzEzbEVwNkluckx1ZnRnZHpvQ0VTMTRkSEZwR21kbXZKZGRtbDRN?=
+ =?utf-8?B?UEhsYUpVOUd1TTd2NU1HSUVaejZPaElRN0JxakZwQXVVanQyZ3dya3Rma1hU?=
+ =?utf-8?B?L3hEc1NDc1ZKN1FTbjBaUjhDckMyMnBsYjJLSFNBR1ZOS2JXU2dJdG56SHJY?=
+ =?utf-8?B?Z2RET2c5elQrcTFwT0RJZGtUdEdPT0NlVUhLUmMxd3l1TFFSWXVFbzY0R0lz?=
+ =?utf-8?B?SEZBZ2pCWVZSaG1CZmRVcDZXMXlhZ0Nkem1TTjlod0Nla3ZRT21lS1R0WlhG?=
+ =?utf-8?B?Q2ZGZE45WnBnYkR4a1Iyb2NtR2N4RVdBQytIY0hPdGRHQWNRZ1ZBaGVVYVhj?=
+ =?utf-8?B?aXFkaEI1Zmw3elZkc2pkT1BSSGIxMWZIRXR2RTh2N09sS2VMcVlveGt3dHhQ?=
+ =?utf-8?B?bnhsYmZEci9IRFN2cWIycG5FU2hmU0l2c3pNN3pGSE5jVmVzLzRwcjZVTVhz?=
+ =?utf-8?B?OExobTQ5dllLaGtzSTZRS0NLeG8zNHl5UVBqNXo1RTArNTkzMHIrOW9HWUFp?=
+ =?utf-8?B?MnpCUlFKdGswWFNQcElrSEpwRkU2VFMxT2dnbGtXRWU3eDJjbUZFNXBoRHVj?=
+ =?utf-8?B?QWZDd0MwS2Q5dUdYcXBlSC9QL1Q4ZFBuWWw5NzFlNlIxeVR0ZXpvRjlpc0dP?=
+ =?utf-8?B?WHdsdlVnbGtvOGVnVGdwRFZTZXVRZThBTUdkY2lXeXlBNkJINWdpRkFXeUx3?=
+ =?utf-8?B?MXF1WEpoczJ4NU1tM0JWSDU3emx4RXN5cGNQeW1yeStFSkRpU040M3hod0lC?=
+ =?utf-8?B?cmlsYTRmTy9tWDgvdUpIRTF0WDJ0enVyZS9BbTF1ZGpDbUJvWUhqcmpTdERm?=
+ =?utf-8?B?S0FYM2RxLzlGdFQ4K0pUWlpmMDllQ0ZFK1dtZHQvaWp6VUlJZ0l3aFBmTmhU?=
+ =?utf-8?B?clhrVm5LTHNhMFNLWUpyaE9VdjMya0llM2J6a2VXMTFzNk5UUGN5N0lkZmE2?=
+ =?utf-8?B?b2xoN0xSTnQvYTVDNExSd2JDQVNSbjZHSEdnR2puWXRWOUM0UktaTmtsMmZY?=
+ =?utf-8?B?clByQ045c3d2MW92TlhDZkVoTHR4TGJDZnhoV2lLa3NIQlJqRzY5dE5hL3or?=
+ =?utf-8?B?YmZxVlNkM2ZmVCtzTnNMMnU4M0JxWVU5d0NHcUtCZkVHMnA5M1E3QVBCaGpa?=
+ =?utf-8?B?bUk5S1NsdWNDbGxPZ3I0MHJsNGgrRXFSbGZYaHBLcktMa1V3MEpWOXE5SDcr?=
+ =?utf-8?B?eEJ5QW96NjNOTmNMWDdIMGVycHZnREVBOUJoMmtId1p0U1FjQnprTG5pblJv?=
+ =?utf-8?B?cVN0cWxMZzJzYXp6MmlGNWp3dkRWT1IwSkhHRjRMSDJQdnUxRklGdkpDVFJY?=
+ =?utf-8?B?TDM1dmhIVWNrT0N0YUgrWU1oenNNR3hTc0U2Z3FtMGovbUlDZmNhL1lZS3dS?=
+ =?utf-8?B?eXNIT3M1WE13ZTBaTEFTL1RYOEYrbDVQc01wck9QcktaUFVnelR0TUR1enl1?=
+ =?utf-8?B?aEJEZmNkRmpnLzU5MjdYNkNBdEJ0VURUTnA1djBnRmljL3R2YXNMUzkrNHd6?=
+ =?utf-8?B?dVpxVFVkMk50Y2lBYVN0RldrcktrRjI3bVBjdHcxTkpmTWJ4QS9qRVpxeW1o?=
+ =?utf-8?B?eUV6ZkV4aFdvTm9ra2VNdEllT1VGelJOT0ZvZHVrdXk3Q1N3Sk5tVXJQRVM1?=
+ =?utf-8?B?a09BSUVGY0VERmk3M2N3T1J1OHRKay9jR3NTbXBIb2M2QmlRc3ZzOGcxeTAv?=
+ =?utf-8?B?cGgxcWxCQ08vRTlvZ0RBSm5CenVxSkcySVZKc3NrWGtrbU9KSEZKci9lOWo0?=
+ =?utf-8?B?cXhITVNrTGYzeXRzdktZUHdhQWtEaFFubnRueWhRWk5BWFFGblVEaThDL3Ns?=
+ =?utf-8?B?VEVIQlpjVmZrM0VMN3Q0djB5VkdCUytMRFhTU0dSZjdvK1lyQ1lBNFhCRFJz?=
+ =?utf-8?B?Vk1oMjkzcWtXaktzSkRUTFNHVHVJNWVFejZVKzlRSWEzdnZDK0lxbUlHY1gy?=
+ =?utf-8?B?QnNPK3FhSXRITUF0bURTSHRtRXh5eEpJQ0lIWDU5Y0RKK2NZaTVnaHk2eVJa?=
+ =?utf-8?B?YlpxSHlaWkFpL0l2cXBjMG1MaU5iWWk2TG1UQVRoNjFrYVRiWStyWTBaeXlW?=
+ =?utf-8?Q?JOjZRVzsmRv8zsGlrxjvf1JOV?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="6ngqa3iwquyt5oba"
-Content-Disposition: inline
-In-Reply-To: <20250624-microchip-lvds-v3-1-c3c6f1e40516@microchip.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB6370.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24230aff-f36a-47e5-536b-08ddb2ecdce3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2025 07:00:54.4080
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: m2VSb8Q+57j/dXYHsmZWb6bN2H58tMP30mcuNHD4k48cJfzlKCvlliRQluNiH+aJlmzGkEH3GQVRFwV9O7HLznoFN+JiScucvQh7nFIL9qs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF1EED2E381
+X-OriginatorOrg: intel.com
 
-
---6ngqa3iwquyt5oba
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3] drm/bridge: microchip-lvds: fix bus format mismatch
- with VESA displays
-MIME-Version: 1.0
-
-Hi,
-
-On Tue, Jun 24, 2025 at 10:10:25AM +0530, Dharma Balasubiramani wrote:
-> From: Sandeep Sheriker M <sandeep.sheriker@microchip.com>
->=20
-> The LVDS controller was hardcoded to JEIDA mapping, which leads to
-> distorted output on panels expecting VESA mapping.
->=20
-> Update the driver to dynamically select the appropriate mapping and
-> pixel size based on the panel's advertised media bus format. This
-> ensures compatibility with both JEIDA and VESA displays.
->=20
-> Modernize the bridge ops to use atomic_enable/disable, and retrieve
-> the bus format from the connector via the atomic bridge state.
->=20
-> Additionally, drop the drm_panel field as it is unused.
->=20
-> Signed-off-by: Sandeep Sheriker M <sandeep.sheriker@microchip.com>
-> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-> ---
-> Changes in v3:
-> - Use BIT(0) instead of 1.
-> - Drop the panel field of the mchp_lvds structure.
-> - Drop the inner parentheses in write in serialiser_on().
-> - Link to v2: https://lore.kernel.org/r/20250623-microchip-lvds-v2-1-8ecb=
-abc6abc4@microchip.com
->=20
-> Changes in v2:
-> - Switch to atomic bridge functions
-> - Drop custom connector creation
-> - Use drm_atomic_get_new_connector_for_encoder()
-> - Link to v1: https://lore.kernel.org/r/20250618-microchip-lvds-v1-1-1eae=
-5acd7a82@microchip.com
-
-Looking much better now, thanks!
-
-I still have few comments, see below.
-
->  drivers/gpu/drm/bridge/microchip-lvds.c | 70 +++++++++++++++++++++++++--=
-------
->  1 file changed, 54 insertions(+), 16 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/bridge/microchip-lvds.c b/drivers/gpu/drm/br=
-idge/microchip-lvds.c
-> index 9f4ff82bc6b4..e7b68fb4bec0 100644
-> --- a/drivers/gpu/drm/bridge/microchip-lvds.c
-> +++ b/drivers/gpu/drm/bridge/microchip-lvds.c
-> @@ -11,6 +11,7 @@
->  #include <linux/component.h>
->  #include <linux/delay.h>
->  #include <linux/jiffies.h>
-> +#include <linux/media-bus-format.h>
->  #include <linux/mfd/syscon.h>
->  #include <linux/of_graph.h>
->  #include <linux/pinctrl/devinfo.h>
-> @@ -41,9 +42,11 @@
-> =20
->  /* Bitfields in LVDSC_CFGR (Configuration Register) */
->  #define LVDSC_CFGR_PIXSIZE_24BITS	0
-> +#define LVDSC_CFGR_PIXSIZE_18BITS	BIT(0)
->  #define LVDSC_CFGR_DEN_POL_HIGH		0
->  #define LVDSC_CFGR_DC_UNBALANCED	0
->  #define LVDSC_CFGR_MAPPING_JEIDA	BIT(6)
-> +#define LVDSC_CFGR_MAPPING_VESA		0
-> =20
->  /*Bitfields in LVDSC_SR */
->  #define LVDSC_SR_CS	BIT(0)
-> @@ -56,7 +59,6 @@ struct mchp_lvds {
->  	struct device *dev;
->  	void __iomem *regs;
->  	struct clk *pclk;
-> -	struct drm_panel *panel;
->  	struct drm_bridge bridge;
->  	struct drm_bridge *panel_bridge;
->  };
-> @@ -76,9 +78,10 @@ static inline void lvds_writel(struct mchp_lvds *lvds,=
- u32 offset, u32 val)
->  	writel_relaxed(val, lvds->regs + offset);
->  }
-> =20
-> -static void lvds_serialiser_on(struct mchp_lvds *lvds)
-> +static void lvds_serialiser_on(struct mchp_lvds *lvds, u32 bus_format)
->  {
->  	unsigned long timeout =3D jiffies + msecs_to_jiffies(LVDS_POLL_TIMEOUT_=
-MS);
-> +	u8 map, pix_size;
-> =20
->  	/* The LVDSC registers can only be written if WPEN is cleared */
->  	lvds_writel(lvds, LVDSC_WPMR, (LVDSC_WPMR_WPKEY_PSSWD &
-> @@ -93,11 +96,24 @@ static void lvds_serialiser_on(struct mchp_lvds *lvds)
->  		usleep_range(1000, 2000);
->  	}
-> =20
-> +	switch (bus_format) {
-> +	case MEDIA_BUS_FMT_RGB666_1X7X3_SPWG:
-> +		map =3D LVDSC_CFGR_MAPPING_JEIDA;
-> +		pix_size =3D LVDSC_CFGR_PIXSIZE_18BITS;
-> +		break;
-> +	case MEDIA_BUS_FMT_RGB888_1X7X4_SPWG:
-> +		map =3D LVDSC_CFGR_MAPPING_VESA;
-> +		pix_size =3D LVDSC_CFGR_PIXSIZE_24BITS;
-> +		break;
-> +	default:
-> +		map =3D LVDSC_CFGR_MAPPING_JEIDA;
-> +		pix_size =3D LVDSC_CFGR_PIXSIZE_24BITS;
-> +		break;
-> +	}
-> +
->  	/* Configure the LVDSC */
-> -	lvds_writel(lvds, LVDSC_CFGR, (LVDSC_CFGR_MAPPING_JEIDA |
-> -				LVDSC_CFGR_DC_UNBALANCED |
-> -				LVDSC_CFGR_DEN_POL_HIGH |
-> -				LVDSC_CFGR_PIXSIZE_24BITS));
-> +	lvds_writel(lvds, LVDSC_CFGR, map | LVDSC_CFGR_DC_UNBALANCED |
-> +		    LVDSC_CFGR_DEN_POL_HIGH | pix_size);
-> =20
->  	/* Enable the LVDS serializer */
->  	lvds_writel(lvds, LVDSC_CR, LVDSC_CR_SER_EN);
-> @@ -113,7 +129,8 @@ static int mchp_lvds_attach(struct drm_bridge *bridge,
->  				 bridge, flags);
->  }
-
-It looks like this part is originally what the patch was about...
-
-> -static void mchp_lvds_enable(struct drm_bridge *bridge)
-> +static void mchp_lvds_atomic_pre_enable(struct drm_bridge *bridge,
-> +					struct drm_atomic_state *state)
->  {
->  	struct mchp_lvds *lvds =3D bridge_to_lvds(bridge);
->  	int ret;
-> @@ -129,11 +146,35 @@ static void mchp_lvds_enable(struct drm_bridge *bri=
-dge)
->  		dev_err(lvds->dev, "failed to get pm runtime: %d\n", ret);
->  		return;
->  	}
-> +}
-> +
-> +static void mchp_lvds_atomic_enable(struct drm_bridge *bridge,
-> +				    struct drm_atomic_state *state)
-> +{
-> +	struct mchp_lvds *lvds =3D bridge_to_lvds(bridge);
-> +	struct drm_connector *connector;
-> +
-> +	/* default to jeida-24 */
-> +	u32 bus_format =3D MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA;
-> +
-> +	connector =3D drm_atomic_get_new_connector_for_encoder(state, bridge->e=
-ncoder);
-> +	if (connector && connector->display_info.num_bus_formats)
-> +		bus_format =3D connector->display_info.bus_formats[0];
-> =20
-> -	lvds_serialiser_on(lvds);
-> +	lvds_serialiser_on(lvds, bus_format);
->  }
-> =20
-> -static void mchp_lvds_disable(struct drm_bridge *bridge)
-> +static void mchp_lvds_atomic_disable(struct drm_bridge *bridge,
-> +				     struct drm_atomic_state *state)
-> +{
-> +	struct mchp_lvds *lvds =3D bridge_to_lvds(bridge);
-> +
-> +	/* Turn off the serialiser */
-> +	lvds_writel(lvds, LVDSC_CR, 0);
-> +}
-> +
-> +static void mchp_lvds_atomic_post_disable(struct drm_bridge *bridge,
-> +					  struct drm_atomic_state *state)
->  {
->  	struct mchp_lvds *lvds =3D bridge_to_lvds(bridge);
-> =20
-> @@ -143,8 +184,10 @@ static void mchp_lvds_disable(struct drm_bridge *bri=
-dge)
-> =20
->  static const struct drm_bridge_funcs mchp_lvds_bridge_funcs =3D {
->  	.attach =3D mchp_lvds_attach,
-> -	.enable =3D mchp_lvds_enable,
-> -	.disable =3D mchp_lvds_disable,
-> +	.atomic_pre_enable =3D mchp_lvds_atomic_pre_enable,
-> +	.atomic_enable =3D mchp_lvds_atomic_enable,
-> +	.atomic_disable =3D mchp_lvds_atomic_disable,
-> +	.atomic_post_disable =3D mchp_lvds_atomic_post_disable,
->  };
-
-=2E.. But this is basically just switching the bridge to use atomic
-variants of its hooks. It's not directly related to the change, so it
-should be split into another patch.
-
-The split from enable to atomic_pre_enable / atomic_enable would also be
-good in another separate patch.
-
-> =20
->  static int mchp_lvds_probe(struct platform_device *pdev)
-> @@ -179,13 +222,8 @@ static int mchp_lvds_probe(struct platform_device *p=
-dev)
->  			"can't find port point, please init lvds panel port!\n");
->  		return -ENODEV;
->  	}
-> -
-> -	lvds->panel =3D of_drm_find_panel(port);
->  	of_node_put(port);
-> =20
-> -	if (IS_ERR(lvds->panel))
-> -		return -EPROBE_DEFER;
-> -
->  	lvds->panel_bridge =3D devm_drm_of_get_bridge(dev, dev->of_node, 1, 0);
-
-And this part is yet another thing.
-
-Maxime
-
---6ngqa3iwquyt5oba
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaFpM0AAKCRAnX84Zoj2+
-drjIAYDnq4ecrd/T6q7R94YP6rLPNLF2rwe9Pm3d0I20bFZPJpwVN94S42YtizBN
-7yeYtmEBgIaFn6kwFgjs2At/9Dhqpf+bifvBteSHGap2vs4fQTn9NbIvMRCcO8+5
-+Ljk1e3nQQ==
-=wsPB
------END PGP SIGNATURE-----
-
---6ngqa3iwquyt5oba--
+PiBTdWJqZWN0OiBbUEFUQ0ggMDIvMTBdIG1laTogdnNjOiBEb24ndCByZS1pbml0IFZTQyBmcm9t
+IG1laV92c2NfaHdfcmVzZXQoKQ0KPiBvbiBzdG9wDQo+IA0KPiBtZWlfdnNjX2h3X3Jlc2V0KCkg
+Z2V0cyBjYWxsZWQgZnJvbSBtZWlfc3RhcnQoKSBhbmQgbWVpX3N0b3AoKSBpbg0KPiB0aGUgbGF0
+dGVyIGNhc2Ugd2UgZG8gbm90IG5lZWQgdG8gcmUtaW5pdCB0aGUgVlNDIGJ5IGNhbGxpbmcgdnNj
+X3RwX2luaXQoKS4NCj4gDQo+IG1laV9zdG9wKCkgb25seSBoYXBwZW5zIG9uIHNodXRkb3duIGFu
+ZCBkcml2ZXIgdW5iaW5kLiBPbiBzaHV0ZG93biB3ZQ0KPiBkb24ndCBuZWVkIHRvIGxvYWQgKyBi
+b290IHRoZSBmaXJtd2FyZSBhbmQgaWYgdGhlIGRyaXZlciBsYXRlciBpcw0KPiBib3VuZCB0byB0
+aGUgZGV2aWNlIGFnYWluIHRoZW4gbWVpX3N0YXJ0KCkgd2lsbCBkbyBhbm90aGVyIHJlc2V0Lg0K
+PiANCj4gVGhlIGludHJfZW5hYmxlIGZsYWcgaXMgdHJ1ZSB3aGVuIGNhbGxlZCBmcm9tIG1laV9z
+dGFydCgpIGFuZCBmYWxzZSBvbg0KPiBtZWlfc3RvcCgpLiBTa2lwIHZzY190cF9pbml0KCkgd2hl
+biBpbnRyX2VuYWJsZSBpcyBmYWxzZS4NCj4gDQo+IFRoaXMgYXZvaWRzIHVubmVjZXNzYXJpbHkg
+dXBsb2FkaW5nIHRoZSBmaXJtd2FyZSwgd2hpY2ggdGFrZXMgMTEgc2Vjb25kcy4NCj4gVGhpcyBj
+aGFuZ2UgcmVkdWNlcyB0aGUgcG93ZXJvZmYvcmVib290IHRpbWUgYnkgMTEgc2Vjb25kcy4NCj4g
+DQoNClJldmlld2VkLWJ5OiAgQWxleGFuZGVyIFVzeXNraW4gPGFsZXhhbmRlci51c3lza2luQGlu
+dGVsLmNvbT4NCg0KPiBGaXhlczogMzg2YTc2NmM0MTY5ICgibWVpOiBBZGQgTUVJIGhhcmR3YXJl
+IHN1cHBvcnQgZm9yIElWU0MgZGV2aWNlIikNCj4gU2lnbmVkLW9mZi1ieTogSGFucyBkZSBHb2Vk
+ZSA8aGFuc2dAa2VybmVsLm9yZz4NCj4gLS0tDQo+ICBkcml2ZXJzL21pc2MvbWVpL3BsYXRmb3Jt
+LXZzYy5jIHwgMyArKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykNCj4gDQo+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21pc2MvbWVpL3BsYXRmb3JtLXZzYy5jIGIvZHJpdmVycy9t
+aXNjL21laS9wbGF0Zm9ybS12c2MuYw0KPiBpbmRleCA0MzU3NjBiMWU4NmYuLjFhYzg1ZjAyNTFj
+NSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9taXNjL21laS9wbGF0Zm9ybS12c2MuYw0KPiArKysg
+Yi9kcml2ZXJzL21pc2MvbWVpL3BsYXRmb3JtLXZzYy5jDQo+IEBAIC0yNTYsNiArMjU2LDkgQEAg
+c3RhdGljIGludCBtZWlfdnNjX2h3X3Jlc2V0KHN0cnVjdCBtZWlfZGV2aWNlDQo+ICptZWlfZGV2
+LCBib29sIGludHJfZW5hYmxlKQ0KPiANCj4gIAl2c2NfdHBfcmVzZXQoaHctPnRwKTsNCj4gDQo+
+ICsJaWYgKCFpbnRyX2VuYWJsZSkNCj4gKwkJcmV0dXJuIDA7DQo+ICsNCj4gIAlyZXR1cm4gdnNj
+X3RwX2luaXQoaHctPnRwLCBtZWlfZGV2LT5kZXYpOw0KPiAgfQ0KPiANCj4gLS0NCj4gMi40OS4w
+DQoNCg==
