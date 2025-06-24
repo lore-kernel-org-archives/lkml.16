@@ -1,87 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB62C2C15A3;
-	Tue, 24 Jun 2025 14:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750773755; cv=none; b=XH84cxtvzW9HiBYmiJhMwrRReqnq2wlEwgU0F49GbeBHwJDIhJA5Wn0850wJRB6k9JxlrxLp3M1KIBsb/7ynf5FTLBPHiljbLa+LaWik2uJcf164iAc4Xy3vXmaXxvxkJy79x2iN4OjyMcQFLsbtfqpWuz74ampbA430baV4xlU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750773755; c=relaxed/simple;
-	bh=0jXyK2KxOnQeocRhBtX6DHW3qKYWO5X4okDglyyLHB8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y/1ROr4d8zjKFxHjWxMX3jORCZzCr8blt3E8urAa5qCUtMAflauCtOEG1MVaytj4SWiAdbD0kYh27kZOobNIvnxlDSV2dnqia/O1+/5mAgaVKshsRwCtmsywdVR3GnC7hGTS2yagDToPCQwKJnmT4M7dW88gC2G/pwKn1XEvayk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=koJCslDJ; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D922D1BC07A
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750773785; cv=pass; b=mXpv7SGPd7+CRsCJ9/NzTL3kc6pNw+5JsUQIZOwOUYj4QNfmfOfKKcUn6OZWH1cPfoxOqX3w2mGVAuV5mMa25yWaNzxZ0Y3mpNf5Ndt/yQTRr6pTJ+vp+xcGzdOHr2QSF1F87Vana0+qoJG+r6LTVxSXVtGLt0Ff4nPW2TW9+ig=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750773785; c=relaxed/simple;
+	bh=t69YTjZk7tAK9ZA0DgcSUtUe67tniRoABYvdwA60U40=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=l49bzBFiBQQyFF2bKp6lFEsokQ9NC8Yns/yrGeuBDmKieKHaC869IOTU39ndVSYK5ssz1gDJVqKJM2T2lLCI3Qcay0DZKCTZnS0q0XhSh86A0/erIbnH1ppZYCnb4+3DWmdHmqgTu0l6KDw4jyzpnm0uETkSDS8RvIGPLN21B/E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=B8uF7g3+; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="koJCslDJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750773754; x=1782309754;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0jXyK2KxOnQeocRhBtX6DHW3qKYWO5X4okDglyyLHB8=;
-  b=koJCslDJmlcRAPjki/8ose1liFShYwQgpK3Zv4fLOX1+g9xSnIL3m+Ha
-   nQ10Tsh5YlIQhfcJ2kHTqLQhKV6geKyskR2YsdWf8i3jHVssjgX+yUTsm
-   Q+efKHCHW8Ph1XDobIUj3t5HLtKFEV+9oYHwsshHVEbq6tQLJqK7s2pJH
-   T3AzBol9ajdJSzBjZYAZpYO+r4ZhMN8wwJGDspmk/dTMJeFfDoH9veXo9
-   giDZdZUU3MqJ+eHvSV33ONPI8jFSPPnleDYtRT+Lv11gTP0y+cS59BG0s
-   f5dKeHdnaGnE1X2uV0rsvN5+VVKmhVfcqtu/XXdGNYLtdhnlvxkn+HsrS
-   Q==;
-X-CSE-ConnectionGUID: TBc57wgZQlCyUxid/jOwEQ==
-X-CSE-MsgGUID: ceUnbQFNQf6i9qFXBqDKbw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52244676"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="52244676"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 07:02:33 -0700
-X-CSE-ConnectionGUID: k3OOOs0DRSSQe+FZydan+w==
-X-CSE-MsgGUID: pRhfOAVNSIq/gw/SKclo3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="157698101"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 07:02:32 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uU4EG-00000009UGl-0Yqs;
-	Tue, 24 Jun 2025 17:02:28 +0300
-Date: Tue, 24 Jun 2025 17:02:27 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-staging@lists.linux.dev
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [rft, PATCH v2 0/3] media: atomisp: replace math macros
-Message-ID: <aFqv8-sSqA7yxnMo@smile.fi.intel.com>
-References: <20250519155028.526453-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="B8uF7g3+"
+ARC-Seal: i=1; a=rsa-sha256; t=1750773731; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=hTX5MReisYbZvR19q4tWS0xnt3oKhKEGdUG2U9bUjLZUfS/wtlWWjGe7pHBxy6r/khJ05F142qABMsFAAzp/jEIQRVJMOTlt/9XX+QPv2q73IwdOrgT1+zRshdi7GNrxYnsftBBZU/Z3O+P6j4oh6+o8tu8XrhY8yX5j2xrmS1I=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750773731; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ZL8NA9JQOJu6c3IEyUcRza2BGeeEksbdoW9f7dUeKPk=; 
+	b=cBzAl7CvVzTHxwj+eQl7WL4drYgg4esDcR+zSJ4Uk5cA0pc81/cSlxwfKR3ZtXBD4mQtuIjbAOwgvbFwYFi5u3qaCEJKPCyCS7E+CeXtsFQscAiLKXri/0xW1QZC0qefFTSFIAZre1IScpTL/eqe26T2rDOmMrahdOaARGzrc/A=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=linux.beauty;
+	spf=pass  smtp.mailfrom=me@linux.beauty;
+	dmarc=pass header.from=<me@linux.beauty>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750773731;
+	s=zmail; d=linux.beauty; i=me@linux.beauty;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=ZL8NA9JQOJu6c3IEyUcRza2BGeeEksbdoW9f7dUeKPk=;
+	b=B8uF7g3+1EZ2cR31mzscQN/sJSLpPip83it4n2wpApifPdMn/0imV1OuZ9zK6rNT
+	44PT4hvIKGcQ75OzM+G4JB9ZAsycwBkPyAPC7xvd2JSvQS6WtWOGq4s6mRgbibtwzII
+	pxwiYfMu5SINKR0R23BSsVAlX46OWOkwUGkk8wXc=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1750773728425534.8013543798188; Tue, 24 Jun 2025 07:02:08 -0700 (PDT)
+Date: Tue, 24 Jun 2025 22:02:08 +0800
+From: Li Chen <me@linux.beauty>
+To: "Thomas Gleixner" <tglx@linutronix.de>
+Cc: "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+	"Dave Hansen" <dave.hansen@linux.intel.com>, "x86" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	"Peter Zijlstra" <peterz@infradead.org>,
+	"K Prateek Nayak" <kprateek.nayak@amd.com>,
+	"Sohil Mehta" <sohil.mehta@intel.com>,
+	"Brian Gerst" <brgerst@gmail.com>,
+	"Patryk Wlazlyn" <patryk.wlazlyn@linux.intel.com>,
+	"linux-kernel" <linux-kernel@vger.kernel.org>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	"Li Chen" <chenl311@chinatelecom.cn>
+Message-ID: <197a23f047d.1095ea2d92028509.1160531071010499395@linux.beauty>
+In-Reply-To: <875xglntx1.ffs@tglx>
+References: <20250624080810.66821-1-me@linux.beauty>
+ <20250624080810.66821-3-me@linux.beauty> <875xglntx1.ffs@tglx>
+Subject: Re: [PATCH 2/2] x86/smpboot: avoid SMT domain attach/destroy if SMT
+ is not enabled
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519155028.526453-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-On Mon, May 19, 2025 at 06:46:46PM +0300, Andy Shevchenko wrote:
-> Kill unused definitions that may use custom macros from math_support.h
-> and reduce usage of the latter and even kill some of them at the end
-> of the series.
-> 
-> Please, apply only after tests that confirm everything is working
-> as expected.
+Hi Thomas.=20
 
-Hans, have you had any chance to test this?
+ ---- On Tue, 24 Jun 2025 21:36:10 +0800  Thomas Gleixner <tglx@linutronix.=
+de> wrote ---=20
+ > On Tue, Jun 24 2025 at 16:08, Li Chen wrote:
+ > > From: Li Chen <chenl311@chinatelecom.cn>
+ > >
+ > > Currently, the SMT domain is added into sched_domain_topology
+ > > by default if CONFIG_SCHED_SMT is enabled.
+ > >
+ > > If cpu_attach_domain finds that the CPU SMT domain=E2=80=99s cpumask_w=
+eight
+ >=20
+ > If cpu_attach_domain()
+ >=20
+ > IIRC, I told you that before.
+ >=20
+ > > is just 1, it will destroy_sched_domain it.
+ > >
+ > > On a large machine, such as one with 512 cores, this results in
+ > > 512 redundant domain attach/destroy operations.
+ > >
+ > > We can avoid these unnecessary operations by simply checking
+ >=20
+ > s/We can avoid/Avoid/
+ >=20
+ > Care to read my reviews? If you disagree, then discuss it with me, but
 
--- 
-With Best Regards,
-Andy Shevchenko
+I'm sorry that I forget to say that your previous wording review have alrea=
+dy been fixed in v2 https://lore.kernel.org/all/20250624085559.69436-3-me@l=
+inux.beauty/
 
+And I would replace cpu_attach_domain with cpu_attach_domain().
 
+Sorry for wasting your time.=20
+
+ > silently ignoring it them is not an option.
+ >=20
+ > > cpu_smt_num_threads and not inserting SMT domain into x86_topology if =
+SMT
+ >=20
+ > not inserting? That's not what this new version does.
+ >=20
+ > > +static void __init maybe_remove_smt_level(void)
+ > > +{
+ > > +    if (cpu_smt_num_threads <=3D 1) {
+ > > +        /*
+ > > +         * SMT level is x86_topology[0].  Shift the array left by one=
+,
+ > > +         * keep the sentinel { NULL } at the end.
+ > > +         */
+ > > +        memmove(&x86_topology[0], &x86_topology[1],
+ > > +            sizeof(x86_topology) - sizeof(x86_topology[0]));
+ > > +        memset(&x86_topology[ARRAY_SIZE(x86_topology) - 1], 0,
+ > > +               sizeof(x86_topology[0]));
+ >=20
+ > So this sets the last entry in the array, aka the original sentinel in
+ > the last array entry, to zero...
+ >=20
+ > This is completely pointless. The above memmove() copies
+ >=20
+ >     topo[1 .. (N - 1)]=20
+ > to
+ >     topo[0 .. (N - 2)]
+ >=20
+ > Where N =3D ARRAY_SIZE(topo).
+ >=20
+ > Therefore
+ >         topo[N - 1] =3D=3D NULL
+ > and
+ >         topo[N - 2] =3D=3D NULL
+ >=20
+ > No?
+ >=20
+ > But then what's worse is that you fail to take that removal into account
+ > for the x86_has_numa_in_package case, which still unconditionally sets
+ > topo[N - 2] to zero even if the SMT level had been removed...
+ >=20
+ > Please take your time and do not rush out half baked stuff.
+=20
+Sorry again for my mistake. I will fix it in v3.
+
+Regards,
+Li
