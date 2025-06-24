@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68522222B2;
-	Tue, 24 Jun 2025 04:12:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71499221DB9;
+	Tue, 24 Jun 2025 04:12:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750738324; cv=none; b=CgFyZTY6CWtjj07MIBod+nWHgacD64f2lLnR78VLW/NA+LPihF5Z4FbsEQfK0ZUBLVfUzcOl1KLfZW+7OG+A5ijYpWl837Bar0LEEnnunDM1svgB///5+wez6kdiNb/jQ328eWlEnDnBkwlGMHEY26d86mWw9bLjwJJcpYFfe0c=
+	t=1750738349; cv=none; b=odTNmZNLqayLnMY54vTwf5pT2KbUJUvWn2XmUxjRkkd63wAVmeVCsZYodjtwxANAjiU4eMZpsOC+O+SVifq5hy+OIkdgdWPvb6XeC3/y44MOS6pKPSNbiaxy0Dl9jeBN29EWW7+1iG2DZxZAaEN760rWAxkqwni5Os8Z1+VHhmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750738324; c=relaxed/simple;
-	bh=Agt89TWTOEFBnlXqWudwdz1D5f20DRlxhULiflHXSIc=;
+	s=arc-20240116; t=1750738349; c=relaxed/simple;
+	bh=rLddNe/nnzDT9dMGrRUhyBQ3DXTEI3PuyQdZ/xRDGHo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uVMox735mVGEwlf/s/Coakq0iVg/78gPViqPXgALS4SxF9JKll+j/32lPDcFJeOFv/+DLMCqxSNdWGOzOBRcOAj78Nz6rkRrik7M6b8jjf9+5LesQJhm2NkiCqe+++qIa4SH6H9vThWZGakSgKnawyh2ErRH80H3AJHctkwaQrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZWaQtlKU; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=PHgNdrfgC6Yf/NI2/9guybolSHBEJJJvnu7XWDsl2UF3S/UQJfK5GDaxEWd8keXd2v29TL2BBsO022aLs4swFdeexuDCNBuWIVOvKbYOl6IXewsS8z3W3ED5oTj0i4wsXEY1ctyuU65Atv/GEZiJ05w5EDrVoyYEM52kYTJprV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k6rzopWU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZWaQtlKU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61CABC4CEE3;
-	Tue, 24 Jun 2025 04:12:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k6rzopWU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE341C4CEF2;
+	Tue, 24 Jun 2025 04:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750738324;
-	bh=Agt89TWTOEFBnlXqWudwdz1D5f20DRlxhULiflHXSIc=;
+	s=k20201202; t=1750738349;
+	bh=rLddNe/nnzDT9dMGrRUhyBQ3DXTEI3PuyQdZ/xRDGHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZWaQtlKUVO83ts2BHvVHrcqM+LVMlGi3cC0danrSWjOpd24unPi9WBT8S1DrwmfWa
-	 PrO7Y8dQx9SG0AtHCbYAP+cDjwLgUvrl5xRjg2iaK58VSHqhtBKUX49E1UVU37ljE5
-	 kYetFWszNAOjf2Fatb7wcoUN2HqtcJwqKe+mDeOl3LYos72Rs4xwFWf0wNGLe9rNS+
-	 OtrCVuA9WwkOFcC1FpPCb7MgKIMMBskUNLbtUezc7H1YFrxTnzMrVAx3RND+YlVf1O
-	 76O7VKsr/Lr566f6IGF99dVvjhGk3Y9q8gGXIUGbiYa3VeVQ9QfhOQttVQeCarEFIm
-	 NxsR8b22SCoJw==
+	b=k6rzopWUa6AFYpfzLD9jjfHdm4ezX41zr9BgEBPOS5NRm8u7Xp+ApcW+rjpNzWM2u
+	 +r3YoEaFNW+cIrre8h6TBW6JFDI1yLNvCaORvE8HBuUB5Y8ALD8RYTWm3rI3MAvmaJ
+	 Z7+5KcRm5KXGdTnR7GGLdpL+sTfS7BmybBeKSboXwTZC/XI8GJllT9cl7tQv8eYf8J
+	 69WveHOsqPQCmFglKdhRleaBL61E04Fznj6HLpAxekJxNc483QeCkfgZvzPGYuziuA
+	 fRHxlfr8oUlqAZrHNvL4e+d0K75Kf3UpVAhlsgDxAoftuhY7DFCUR2viQKr/7SB4ak
+	 kiZzQSKMwlQPA==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -34,12 +34,12 @@ Cc: Heiko Stuebner <heiko@sntech.de>,
 	Sasha Levin <sashal@kernel.org>,
 	lgirdwood@gmail.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 12/19] regulator: fan53555: add enable_time support and soft-start times
-Date: Tue, 24 Jun 2025 00:11:41 -0400
-Message-Id: <20250624041149.83674-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 11/18] regulator: fan53555: add enable_time support and soft-start times
+Date: Tue, 24 Jun 2025 00:12:07 -0400
+Message-Id: <20250624041214.84135-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250624041149.83674-1-sashal@kernel.org>
-References: <20250624041149.83674-1-sashal@kernel.org>
+In-Reply-To: <20250624041214.84135-1-sashal@kernel.org>
+References: <20250624041214.84135-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,7 +48,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.34
+X-stable-base: Linux 6.6.94
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
@@ -207,7 +207,7 @@ follows established patterns in the regulator subsystem.
  1 file changed, 14 insertions(+)
 
 diff --git a/drivers/regulator/fan53555.c b/drivers/regulator/fan53555.c
-index bd9447dac5967..c282236959b18 100644
+index 48f312167e535..8912f5be72707 100644
 --- a/drivers/regulator/fan53555.c
 +++ b/drivers/regulator/fan53555.c
 @@ -147,6 +147,7 @@ struct fan53555_device_info {
