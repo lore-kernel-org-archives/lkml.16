@@ -1,37 +1,37 @@
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50511E104E;
-	Tue, 24 Jun 2025 03:37:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C04B1C5D46;
+	Tue, 24 Jun 2025 03:38:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750736279; cv=none; b=efm0liNjjyELPSiqFedZ+Vk1z8qWZ2RW9wzKd0JCqtYtFki5rEc9TOucIdAVCkcPNTsHmguQZujumnftQKWa7+/CVodG7IHZWRi1yCTHbnDRiUtAFJurR0xYi2pFWFJ5dRLxJVQ5++kVzWBIm6g/mLCEoznVK8+H3IcnqgLk81E=
+	t=1750736284; cv=none; b=T++wg9+GG9vfRMd6V4olDPyypK1nAf4EHfa6LRbAB+xvN427rrBnbPPFOrxYsRJ9fR5bFwJQmD+s/mWX4CBRoKKOobgYlwSrANygJwH+Nw8DYk+ivNG9ouS52BgQD8V/u37nO7KFRxYQ8syDBfsTLzCULVdTvc0GtWdABfH4geU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750736279; c=relaxed/simple;
-	bh=utj6oBPEshKFYwO2HO/ggqVFO3Kb+yCOYzljkrGuNps=;
+	s=arc-20240116; t=1750736284; c=relaxed/simple;
+	bh=d+V7TBTT7wJrr7gsE8yUz9MFL39onShxcUURX4hS+s0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F9Y/soAZ5zmHnImgyN1MPMSbJvEtKSE5VKX3MiJw2Ba+O1fytd/K0+vBAHwsn1xKQStgilAg+4PYuExKBC45Vo0xAW8VjjgqS3i1782hGdGE6tnLNELowXwmDToRx1aF3786dgEfgWN6uSOWgf35PyzP89ZAZjguFHJLLpFabek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=cj8iFtp0; arc=none smtp.client-ip=178.21.23.139
+	 MIME-Version; b=TqGx9Rvrcar6LYsgzgWccU7is0JnbpX00yhZHzaD9IvSAz57PQJEW5xCighkPoJdQsRgkVhMcq9vlVw1BYn+iooHahcoBZRP9bLI1cQeeO3eZrw1bmiraiAB5sPheep2uvtnRBSSL9eiNN1lreGHwVgyr35YZCTDPU0aAsmUrVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=edNjQeyB; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="cj8iFtp0"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="edNjQeyB"
 Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 2DC3025C70;
-	Tue, 24 Jun 2025 05:37:55 +0200 (CEST)
+	by disroot.org (Postfix) with ESMTP id 6075D25A48;
+	Tue, 24 Jun 2025 05:38:01 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id heJSJyhvlytP; Tue, 24 Jun 2025 05:37:54 +0200 (CEST)
+ id HtQydR2Gl-zu; Tue, 24 Jun 2025 05:38:00 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1750736274; bh=utj6oBPEshKFYwO2HO/ggqVFO3Kb+yCOYzljkrGuNps=;
+	t=1750736280; bh=d+V7TBTT7wJrr7gsE8yUz9MFL39onShxcUURX4hS+s0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=cj8iFtp0URBtjAOERfABgOSKtzq7oUscHvrpNVl1OEAHDQzVlT4hv5XFUyRrtQMmf
-	 NJDR0n5Kem4lZ7zenOubi0l1yNiqrheS+ddPtbOSrdGHzmEThlYV+KOpxrF15I8pQ5
-	 BTGxqDkFuxYZ8uuW5hRwciECaIDG1qcyQm5e4KYkyFpVU98Y/5/AkXpMm4zxDDtBIN
-	 AUcdUP8zdi/pY/E0p6osVmEyflJDChaSSSrcX/SsTtklOq8U2gtHj23qWb4soxVl/x
-	 /ing0fQl16HAHj3zWelZ80GPR2RdcGgF/oJCPPm7gf6YVrOyyhNLotDCgGz4ZFoIxT
-	 zoz7nZN827cQA==
+	b=edNjQeyBjh/kZEAZkXTpAcuLponkhnf2jL0XQBXfbBH0pYTGCVlHIHOYb+xnoHuys
+	 DQSs/7cQYdJqePqr6OeBth0iyLSn1VStEtLHwzC5F8LSI0lld8lRr4I7A3MXWjJtXV
+	 yjCXAlzyD0VoLa16BLEn9eTvMwMidvkDASJy5X5SvtUALctDrAN8nC24PRxtrRMuFy
+	 TWgNld4PzHh/fRVI020Ksmy+DfJHS9awMwSOZjvm2YmNbAW59HiEVpAU+qY6SDQhdn
+	 CQQtIXQuoDb04TepS9zDemUMafiZ9+5F/24QrD7qP49TVISvILQ+TOs4tr+XdB/wyx
+	 y8aZD7KkSqTdQ==
 From: Yao Zi <ziyao@disroot.org>
 To: Vinod Koul <vkoul@kernel.org>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
@@ -51,11 +51,10 @@ Cc: linux-phy@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v4 1/6] dt-bindings: soc: rockchip: Add RK3528 pipe-phy GRF syscon
-Date: Tue, 24 Jun 2025 03:37:28 +0000
-Message-ID: <20250624033733.50197-2-ziyao@disroot.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 2/6] dt-bindings: phy: rockchip: naneng-combphy: Add power-domains property
+Date: Tue, 24 Jun 2025 03:37:29 +0000
+Message-ID: <20250624033733.50197-3-ziyao@disroot.org>
 In-Reply-To: <20250624033733.50197-1-ziyao@disroot.org>
 References: <20250624033733.50197-1-ziyao@disroot.org>
 Precedence: bulk
@@ -66,27 +65,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add compatible string for pipe-phy GRF found on RK3528 SoC, which
-controls misc settings for the integrated naneng-combphy.
+Though isn't described in existing devicetrees, most Rockchip combphys
+belong to a specific power-domain of the SoC. Taking RK3588 as example,
+combphy 0 and combphy 2 belong to the PD_BUS domain. Document the
+power-domains property to allow describing the information correctly
+in devicetree.
 
 Signed-off-by: Yao Zi <ziyao@disroot.org>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- Documentation/devicetree/bindings/soc/rockchip/grf.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml   | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-index ccdcc889ba8e..8ddd963838f5 100644
---- a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-+++ b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-@@ -16,6 +16,7 @@ properties:
-           - enum:
-               - rockchip,rk3288-sgrf
-               - rockchip,rk3528-ioc-grf
-+              - rockchip,rk3528-pipe-phy-grf
-               - rockchip,rk3528-vo-grf
-               - rockchip,rk3528-vpu-grf
-               - rockchip,rk3562-ioc-grf
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
+index 3e101c3c5ea9..db293d2fbf1a 100644
+--- a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
+@@ -45,6 +45,9 @@ properties:
+   phy-supply:
+     description: Single PHY regulator
+ 
++  power-domains:
++    maxItems: 1
++
+   rockchip,enable-ssc:
+     type: boolean
+     description:
 -- 
 2.49.0
 
