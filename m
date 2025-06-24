@@ -1,77 +1,75 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D8428ECE2
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:23:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9432DA742;
+	Tue, 24 Jun 2025 14:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750775035; cv=none; b=XmetL0+GMUXA8flOhijztPF+2QJyizPMn6u3dRKJjmhOyVnOs55Nc+i8MzG/lruDKQfbkLLkndRXm24KM/8Bnwde3NOiCZLEXoIPcmPuPCBvLDZ+i7EA4EM8kq2K5TAMuQvg/Bp27DvZPdp+UneLHe6zRCQBi2c0+y7Kh9n6Llg=
+	t=1750775040; cv=none; b=cYdKoThma+1/fTS4b6zcQkWE9gy9+8X4AAjRDxZbrqJyfcj1fOfwDQnO5nPN/jhbGs60wcsxzS7/nq3hjPxsEfVU7Cf78f2ApRKsAux0oYYWaNEEZhSJ01a8tltY5nuZmBIS8A+6dvb82UnvDUHMIu0Ee/q8kwgeG8PfvQJKsCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750775035; c=relaxed/simple;
-	bh=2BUfcgCrJNd4CKMKzefVZR+8SKV18VIfH+NHbCQsXS4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NodHlrwSnO0uC3GFgDCK9psmFwJiSHN3AnuZau0RSw0hm5WktPk8u5aixMJIDUfVH9OB4KEYbQ1khP4+OmTwC0q9kbgk/sA/vD+4oJeZCxjlBFpca0HycBmDib1AgMj4E2xwrQjKacx+Cvz5fmeFsIfzuyh1ynsJzqzk5UEicTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ki3e8wtC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+Ox1q9up; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ki3e8wtC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+Ox1q9up"
-Date: Tue, 24 Jun 2025 16:23:50 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750775032;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lrpSBL/DLIzI8Jp1GABlBZa1QLU8cOGFC43YvRyDTwg=;
-	b=ki3e8wtCd9SJ7t9BIbk/33RI2H3L4u1EgoQsMqDtqMTIucEh+FwvCt6HLpzmcgpfiQk2LK
-	9ZIWfpRTRuthrnt+vbLsy9Bm8osVRcZ0sKoVpCiN2+o0gCrwELuoU2JwEgQEx/LOxXbTSd
-	b9f+NTbWKejtUmZVGDhIV7Dkw9MbMlwPCFISMIvS/k5ErRAHRN3q1yT1EPYWVqa3M7rUTX
-	qnrtAVkJeMkr88US/gVcQb2bq4tGi45elRV+1UrugGKc+OeBDiDwCs01YwKw/JBjkG1fNV
-	0wyUbsTRfFDhlwQUZewhAT9FNC4SkCyzdD5A9/0pa5zxYKSs0bJYk4+z1zCsNw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750775032;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lrpSBL/DLIzI8Jp1GABlBZa1QLU8cOGFC43YvRyDTwg=;
-	b=+Ox1q9upvHIs+HqG0mecMSWkZTr4CpN8Ir6qcIVFg6RmjyCmJcl5BucqBcplFnhDne/GxY
-	/krpYf0/y4Tu7cCQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
-	Nam Cao <namcao@linutronix.de>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-	Alexandre Ghiti <alex@ghiti.fr>, clrkwllms@kernel.org,
-	rostedt@goodmis.org, linux-rt-devel@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: Enable interrupt during exception handling
-Message-ID: <20250624142350.xZ_DdClH@linutronix.de>
-References: <mhng-60581B88-6FC7-4349-96B6-730D908ABF4A@palmerdabbelt-mac>
- <alpine.DEB.2.21.2506240303170.61655@angie.orcam.me.uk>
- <19cf2371-7293-4e71-a17d-669db4c8270a@rivosinc.com>
- <20250624131730.XqPd1HUR@linutronix.de>
- <d135d6cc-5117-4b3a-9abe-2e5fd9e3e490@rivosinc.com>
- <20250624140815.GU1613200@noisy.programming.kicks-ass.net>
- <20250624141130.gZVv4WnP@linutronix.de>
- <20250624141801.GV1613200@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1750775040; c=relaxed/simple;
+	bh=tNRMEI5nf/iadR8D6N7pjAraSpW4joOIs6wUn9W8s9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RA9+Gy9TitIGjYMeNFsdSRSI44eT1KfBsE0s0ighoeiBl2+772L0tgV7whn/dFpPQoqzEJc5srjido7lm8hBmScIaNfayDI96uDm4Sh4ToLXUpQR6v9vviIhVWRRXNwBALc8rwkNGu9QykERElueWhcUYV7lF68SJui8MUpWTZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 845DD1D71EB;
+	Tue, 24 Jun 2025 14:23:50 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id E66972002D;
+	Tue, 24 Jun 2025 14:23:47 +0000 (UTC)
+Date: Tue, 24 Jun 2025 10:23:46 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org, Andy
+ Shevchenko <andriy.shevchenko@linux.intel.com>, Rasmus Villemoes
+ <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Petr Mladek <pmladek@suse.com>, Jonathan Corbet <corbet@lwn.net>, Andrew
+ Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [RFC 1/2] lib/vsprintf: Add support for pte_t
+Message-ID: <20250624102346.4e175914@batman.local.home>
+In-Reply-To: <aFqj7CYRcEHFAi2e@casper.infradead.org>
+References: <20250618041235.1716143-1-anshuman.khandual@arm.com>
+	<20250618041235.1716143-2-anshuman.khandual@arm.com>
+	<aFQP8LzVMctf6XH5@casper.infradead.org>
+	<d5a86ef8-a58c-4abc-8312-08406c847edc@arm.com>
+	<aFqj7CYRcEHFAi2e@casper.infradead.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250624141801.GV1613200@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: frj4m14cmjrhgb7eecmi3eiez9m7q7g7
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: E66972002D
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+IrmPdEPDMTQPOYQJLheFaIW5Jwe/VI6I=
+X-HE-Tag: 1750775027-262139
+X-HE-Meta: U2FsdGVkX18ZrWvhIVM6zP5G4nszQvGFvGRorQIfUXNQqKlbCXpYq4P7CUojbbp0ixwYRObH4yt956p5nl1byTSPn6rmNm6mermFvf8IGge05jqBii1cCrollhwtGUVmMMW6lHLsGbWAghzsNCXOsWK5NNqhZ+zyryw5ueiKh+JwG+E/DgXwbFoEi6oD3PgnP0mr7CFUGrmWw8bT66SI5ZZLRoEo1khBGdQKrfty//dfldLIbXacD+hNzpES83s6x83uv276GQNyDXYAkEMOqH4CgBX0KJaRcsoHvM0A3FoBp04QHQr1GqNp6H9ixTiPlZiJMXk7MPFFrfrV7nFxKIQr/29/hhkDzE3I1xqZrGfcyQpCXecjzwn+QEEisL76HtKkQINQrqFL5ybj0CPjAQ==
 
-On 2025-06-24 16:18:01 [+0200], Peter Zijlstra wrote:
-> I'm confused, sending signals is for exception from userspace. That has
-> nothing to do with exceptions from kernelspace being NMI like.
+On Tue, 24 Jun 2025 14:11:08 +0100
+Matthew Wilcox <willy@infradead.org> wrote:
 
-Yes. See the original submission
-	https://lore.kernel.org/linux-riscv/20250620114346.1740512-1-namcao@linutronix.de/
+> On Fri, Jun 20, 2025 at 01:42:53PM +0530, Anshuman Khandual wrote:
+> > On 19/06/25 6:56 PM, Matthew Wilcox wrote:  
+> > > Unfortunately, the one example you've converted shows why this is a bad
+> > > idea.  You're passing a pmd_t pointer to a function which is assuming a
+> > > pte_t pointer.  And a pmd_t and a pte_t are sometimes different sizes!
+> > > (eg sometimes one is 64 bit and the other 32 bit).  
+> > 
+> > As discussed on a separate thread, this might be addressed via separate
+> > printf formats for each page table level e.g %ppte, %ppmd, and %ppud etc.   
+> 
+> There's still no typechecking!
 
-Sebastian
+There's lots of %pX formats that have no type checking. I think this is
+an issue. Could we have one of the static checkers test these? Smatch,
+sparse, whatever? Or maybe they do and I'm unaware of it?
+
+-- Steve
