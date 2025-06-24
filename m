@@ -1,117 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03562989BA
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0066291C01;
+	Tue, 24 Jun 2025 12:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750769963; cv=none; b=TrZ7Ddw+KU2GU+cm7yH2I4KGlTBp53UspbX/Bx7KVm61t2iuWDiR6/1HpUq3a+FcSB8gS+a6z4U0vVI+vHpEaN1ZPd0vKbmbaWtQNPFdR4sr2WsvJhK012dOf5cW8zSld2i9sPwmpjbDY7M5nw1qnOZsgAp4ttCOs1Vmxx8tEBM=
+	t=1750769972; cv=none; b=k8AiJlJhTaCpL/IgplAVdjH16KyI1EAApFzwKDaK8FSBCXTixF0kshODao++z5P8IOaZBEsdMJcdcHuo5HjxeMSD3FqfMoBQiNet5jgumHwu0rvQbrsasvCPDhPWuUdU1g3Wi8+3+mqltEF6Gb/Pdoh8PyksNNnoca0vwPrWcCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750769963; c=relaxed/simple;
-	bh=cvjizOyEIrXT0uNzm92zKYYShRNkJo9Vg/UPBBijHiE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CS91nx56LkUwGJ4kLxpujuiBkgLjt4rQTRDT+Kgr9IM/qzrIZM+2YF7LZS7KJnocI7wfF24bYMCDL0xZXMrK54rAHwvo7E0et5VjPpPk9BS89eXppqEqzHdgGPSf/3mDkrYTOBfQjQVJGfLeZgHBM46d83A7OX5pFggH+C36/q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U/Q4qtrZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750769972; c=relaxed/simple;
+	bh=dAYn0EfssAKk4QNI5cjNInqaycsqKktvQcISKWckjNg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SVFHnq8PyVuX2kgdE9yCz96cq3qrhhrw0QNjOgNlVJp4rEfXw7es78FHAZ4Ch2uA7QfDuI156Js1/YorkQ1KglhQqlIwuG1SZCQZ4kevZQlB6b0Sjtdlgxw9InhF8QgNXqZsBcxCApWLU9UEpfmJJOZNCG5dy1oj7vtX6qaZ1Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kx+wNX8K; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U/Q4qtrZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750769960;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cvjizOyEIrXT0uNzm92zKYYShRNkJo9Vg/UPBBijHiE=;
-	b=U/Q4qtrZGdrzjCv8wXEu8VgUPxieiG7B+xBcXJxxC0+/JS0/1866Y7fNHgNd041YFvP5BC
-	PllQUyXs0IC/24m0zU59R51+Ax6hWGqlpELfnXp6ffHU1ypN0l9puiQpnWVfVxWtfKXlmw
-	aMxcAAkrrqk6fkOoC3GDVSO6d5EmbuA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-227-HN2R91cOOBm627y49SaxvA-1; Tue, 24 Jun 2025 08:59:19 -0400
-X-MC-Unique: HN2R91cOOBm627y49SaxvA-1
-X-Mimecast-MFC-AGG-ID: HN2R91cOOBm627y49SaxvA_1750769958
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-450d244bfabso42548885e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 05:59:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750769957; x=1751374757;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kx+wNX8K"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e8179a42475so388593276.0;
+        Tue, 24 Jun 2025 05:59:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750769970; x=1751374770; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cvjizOyEIrXT0uNzm92zKYYShRNkJo9Vg/UPBBijHiE=;
-        b=k0ct1sGukmLFNkeXPlXQqhjbfDhFuBluENlOYd/q4Ccpo6uGlv1BCVYYRWVkxM6Z+w
-         ELnOylnOC/ciclGkXEO9edXFxFkcUaMqjP4Kp8POvmoVPdTEJZy/K9NV/gDADMeexoe4
-         9ePYqCEo2M2s5Qg4SRJwQeMUt4AoZan/Np6r5OBNsySfTlhUgQtluvhEFnYdYPDfwSQK
-         RK/gnD3x53u2iv+WcctUQw0n4DLhSKzN1ZJW9JLAUs4XbX3PY4zOgLJbD9MuF18j4YMU
-         LbctwRA9cS/2XalXwbbVaZmTjtf4JglJhC4Jh+52MLgUGubv6UQ1nzmG9sNUFy+cEGn3
-         c9Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCVU2URVgszQTShIroQ36eEUWBbEr8Sg1QU8d6TfzNbcojqHDERVHk+xlcDVGTFVGP+DDcRvMPUaaCrVbmA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzI9uRLor+mYGXinTLuOaojzOL3yiCp0b2tedXkJpBkixCvr9Bw
-	gfQLYu9jBsysCNSN9cRQ+/rV38ET7+tpPMSLvD7ByG+J+xcxUIbwokPx05l5YebF5YLGJ0DMj/R
-	MwCZuVSPn5KY7leKUINt+ekITWwsm48kHNWMYdxOw09d1BsSwFLHfdm1DPOAd/BUQyZaQ+AEVmQ
-	==
-X-Gm-Gg: ASbGnct2IUdklB+cINhjq0fKqaWqJXpvPgrHvIX/LvUyCQMPFaqziVHQwuLwfbaIBQD
-	EkfuV3g8vzcp4UW04CEC1EIa0PdKdyijKnY9kXjGKmf5Gazj4QQytzsdAQ0PcX7ZayNK67oKvEw
-	W6zx2n4r8W405TckbKCy70kXxhFqoPVkYSeexOPzBXpfIj9CEu6D9OgWmx8o4BVwDMtMB9mcOKA
-	lUuMs1ffQbvqo+q+4LEiO19wttzUd9WrvFw5Qpid//fz9tgaS/0Y+RGVJwJtzwHMAyccCzHIA4i
-	xCCSOgznNy+fhqLcYkXDQlMQBK0QPXDuMGTBPbqncXH9p5PpDcA=
-X-Received: by 2002:a05:6000:2a11:b0:3a6:d5fd:4687 with SMTP id ffacd0b85a97d-3a6d5fd4736mr7854409f8f.18.1750769957119;
-        Tue, 24 Jun 2025 05:59:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHdRZ8CfwkSXztROaY4TycHnHhL1k06+rocp1kDLUayQBRlXpJlPKQEcii6Pk2TGDSE1aNzuA==
-X-Received: by 2002:a05:6000:2a11:b0:3a6:d5fd:4687 with SMTP id ffacd0b85a97d-3a6d5fd4736mr7854390f8f.18.1750769956710;
-        Tue, 24 Jun 2025 05:59:16 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([176.206.4.96])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e8106a69sm1868210f8f.79.2025.06.24.05.59.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 05:59:15 -0700 (PDT)
-Date: Tue, 24 Jun 2025 14:59:13 +0200
-From: Juri Lelli <juri.lelli@redhat.com>
-To: luca abeni <luca.abeni@santannapisa.it>
-Cc: Marcel Ziswiler <marcel.ziswiler@codethink.co.uk>,
-	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vineeth Pillai <vineeth@bitbyteword.org>
-Subject: Re: SCHED_DEADLINE tasks missing their deadline with
- SCHED_FLAG_RECLAIM jobs in the mix (using GRUB)
-Message-ID: <aFqhId-qMFNyPD1s@jlelli-thinkpadt14gen4.remote.csb>
-References: <aDgrOWgYKb1_xMT6@jlelli-thinkpadt14gen4.remote.csb>
- <8d6dd3013b05225541821132398cb7615cdd874e.camel@codethink.co.uk>
- <aFFdseGAqImLtVCH@jlelli-thinkpadt14gen4.remote.csb>
- <880890e699117e02d984ba2bb391c63be5fd71e8.camel@codethink.co.uk>
- <aFUqELdqM8VcyNCh@jlelli-thinkpadt14gen4.remote.csb>
- <20250620113745.6833bccb@luca64>
- <20250620161606.2ff81fb1@nowhere>
- <aFV-HEwOTq0a37ax@jlelli-thinkpadt14gen4.remote.csb>
- <20250620185248.634101cc@nowhere>
- <aFpYl53ZMThWjQai@jlelli-thinkpadt14gen4.remote.csb>
+        bh=HXEGXnz0a+df5W+FfhZnrWhPAiPAElZm0f8fsVZX0Fw=;
+        b=Kx+wNX8K70MK+tvgRdFYoE8xp/gTt95iZAa5PRJ+W+ORn31V04zsrCIDcBbGQNEI3f
+         qMiRg/zwt5QDZZMVju9rB/1BsoVn/cjeAc9DWwHUhPOLRwrV0YWW7znVHs/Ki83aJKak
+         U9xM14+GaSXqNhyCoMzIsIYN2ZXsxw0LHUxpltH48LDhQIQeeGJ8N9g+amYh4+pgqlQk
+         bkQabxypoYNpzZrHqcmti+kcbFW2Zbvo8iKMv3bn6dYXnAYi79kPtoAPCEJZjfQd6ew/
+         rq/pJ1U99wXe5oF91d0S3Vn6AF+dx1jxFjw+qWomFtc4z8ibN5Owu3GE/EKguylZPXNT
+         FHxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750769970; x=1751374770;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HXEGXnz0a+df5W+FfhZnrWhPAiPAElZm0f8fsVZX0Fw=;
+        b=dqDxCmWA8j0E+DE6SdNUD3YHRQKs5WRf9O9HJ+yumQAtg9DA5SDHF35AOJJWL+94X3
+         x1f/0Z9/yzq7ooieAaa0dwVFYSSgX1zqbVW6mf3T4pKUl9wWnzdO6EuUdmGT6cuY2ufT
+         /VKBQRULTJ2RiykG7/ddvqrBOtx/edzCxDAFqXCKcCcZFstaDLbzAQbS6E9xOrGT/MsJ
+         OW9kf6xi9Fnl+KnM/jQgHfmOmsjTmpDoZfGWi7Z3CTvhwlO1++VcD0fsWbBLLGWkdyyr
+         WECAmkKZSjGlrHJUsXrHgNKLHfBMhaY73bsm5E5EoqV/e5V+EyNlS6EqETyp2jvwVMHi
+         LV9w==
+X-Forwarded-Encrypted: i=1; AJvYcCUCrRyurOkbPresZ7auMSmmDiZNy/SZ2/LlgNbACo2AGVtEFj+UTcbzuvaHOntzdWXuTyQCFLLpBGGK7bzA@vger.kernel.org, AJvYcCX74vUESwk7qVuMxs2XPlzBUnA7B9/JYSEId6yLjvqSHt/hLT98PE8XCxltYNV1wKLf4WpYb5qs@vger.kernel.org, AJvYcCXD8wAPyaRJNxAqk/dEATOJh38DAxCokVg3hTi6AZrpkDHunCfVb16r9INiLXCToj3Jx4btb4kS0xA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzbep/vU9x7pyD1dlZQTUs1kpEe4hntODIqch7dPws8FEIX1CYl
+	6KlUCeDwBLKw7654he6BLoWyKT2cmUX2Mt1Ussvcv/ZeNNK8jDEEWNZfgcWnhzu3hyVJg+h051/
+	xB/i0XtSnryQbZFL+CyI4RTG5UykZOyw=
+X-Gm-Gg: ASbGnct+vGiVXw1c5nUbUr6jzd9Ouu9NFicam03gImLE4SpYNbmIUfT1IhpOObvRMon
+	19utBg19pFHfhdLJPyhBGZFGc4W6dNq+GlYb+RpqiQ4/1SmRIJmt8aNGpqX8IFzlXbZlyhtNbQt
+	StYPGd+sTxbv9102H0C98eQ/w4CQh9XwotTNshr+P5to2n+IQwvmCWeKw=
+X-Google-Smtp-Source: AGHT+IFvCeaZzKHMdYWrE1NUmXGqOeTl6mqBUnlIc9WE5OJM9ZB0ZpndjNLaByWjgS1VW99YxVSV89DUdGGvZOd+CoM=
+X-Received: by 2002:a05:6902:2e09:b0:e82:14ac:77eb with SMTP id
+ 3f1490d57ef6-e842bd144bamr8550147276.8.1750769969472; Tue, 24 Jun 2025
+ 05:59:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFpYl53ZMThWjQai@jlelli-thinkpadt14gen4.remote.csb>
+References: <20250622090720.190673-1-abdelrahmanfekry375@gmail.com> <fb0f1e3c-2229-4860-b46a-b99f6dbfdfe6@redhat.com>
+In-Reply-To: <fb0f1e3c-2229-4860-b46a-b99f6dbfdfe6@redhat.com>
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Date: Tue, 24 Jun 2025 15:59:18 +0300
+X-Gm-Features: AX0GCFvvC-fqrHPcAXlNkROP7sMaBEpAgC6_zly4W-ELrMge3AhPG2o-bdZmr3E
+Message-ID: <CAGn2d8OguuLUkRaT68MkL0_VJ5hh5CZfONCaruEHcASdxfJbDA@mail.gmail.com>
+Subject: Re: [PATCH net-next v5] docs: net: sysctl documentation cleanup
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: corbet@lwn.net, davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	kuba@kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, skhan@linuxfoundation.com, jacob.e.keller@intel.com, 
+	alok.a.tiwari@oracle.com, bagasdotme@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello again,
-
-On 24/06/25 09:49, Juri Lelli wrote:
-
-...
-
-> The following seem to at least cure the problem after boot. Things are
-> still broken after cpusets creation. Moving to look into that, but
-> wanted to share where I am so that we don't duplicate work.
-
-I ended up with two additional patches that seem to make things a little
-better at my end. You can find them at
-
-https://github.com/jlelli/linux/tree/upstream/fix-grub
-
-Marcel, Luca, can you please give them a quick try to check if they do
-any good?
-
-Thanks!
-Juri
-
+On Tue, Jun 24, 2025 at 3:54=E2=80=AFPM Paolo Abeni <pabeni@redhat.com> wro=
+te:
+>
+> On 6/22/25 11:07 AM, Abdelrahman Fekry wrote:
+> > @@ -593,10 +629,16 @@ tcp_min_rtt_wlen - INTEGER
+> >       Default: 300
+> >
+> >  tcp_moderate_rcvbuf - BOOLEAN
+> > -     If set, TCP performs receive buffer auto-tuning, attempting to
+> > +     If enabled, TCP performs receive buffer auto-tuning, attempting t=
+o
+> >       automatically size the buffer (no greater than tcp_rmem[2]) to
+> > -     match the size required by the path for full throughput.  Enabled=
+ by
+> > -     default.
+> > +     match the size required by the path for full throughput.
+> > +
+> > +     Possible values:
+> > +
+> > +     - 0 (disabled)
+> > +     - 1 (enabled)
+> > +
+> > +     Default: 0 (disabled)
+>
+> This uncorrectly changes the default value: should be 1.
+>
+> >  icmp_echo_ignore_broadcasts - BOOLEAN
+> > -     If set non-zero, then the kernel will ignore all ICMP ECHO and
+> > +     If enabled, then the kernel will ignore all ICMP ECHO and
+> >       TIMESTAMP requests sent to it via broadcast/multicast.
+> >
+> > -     Default: 1
+> > +     Possible values:
+> > +
+> > +     - 0 (disabled)
+> > +     - 1 (enabled)
+> > +
+> > +     Default: 0 (disabled)
+>
+> Same here.
+>
+Thanks for feedback , will change it and look for other mistakes
+> /P
+>
