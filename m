@@ -1,171 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011008.outbound.protection.outlook.com [52.101.65.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619222550D3;
-	Tue, 24 Jun 2025 20:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750795477; cv=none; b=imOw7k47KFLOjZ8NNH3Ta+m4Xhu1sIfmfNvAO074LJcwRTEx8Kbey395naV3/CThlGGMR0EHEZvxfoN5JhVH1cyC31IDjD88q2foyk0RrG+3Ea/Ukllxy5FhG5rBKHKmyGOS0JJXiFZampo5aK9A2S5u+AQ/gmiWsMCihLIeEfg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750795477; c=relaxed/simple;
-	bh=tEkUdq1odJrlYhz8HYpjE+yPq4W/M576DWxjgEaSfHs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OeAC7kUN3BznUuNQvOtzcTg1XCIazkez/uVTxAYROFuB8f8S4P0fgJc/e0/DGuZKOVUW3+qvSZ4RaLWfbRYgfLC3r5VZeZYTT+1OXCMf8yYfkzAYaXCn0pF4ambTmWJChcYxcP/KWJcH8n715fmyUi9exOHjBWbQtaRcpJA2WCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQVak04n; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6B92550D3;
+	Tue, 24 Jun 2025 20:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750795498; cv=fail; b=KAWlerwiouYvsp271aQ3C6YK/png3VaniLJ0wuWujzkGefLHRx/3UqphDhFykUcLYtoN+YuVppfceQ8fSgFbgmOUutA6NU/0G/IpHkxMwDm0QrtPobgL1zCQPiMuYwqjpG8TQZ5u6lVoxvOURZSLhLf53HxeEwmGz3UQmYHWZGY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750795498; c=relaxed/simple;
+	bh=ifr0YDWguOv/ny2XIUa3wijmCCZ0FCnP2txU5WjPijM=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=R8JH6StExvZe4yftS58z9URbTOeKUj9GpsMDEt7t0znJ9rGo0a6AH5/FLi3r5H1a8IOIvie/7fBUrK6RWLwWq8HJydT9Ep5GOFBX3WrlcvFC0A9SBoLgd5htaJ8ORoFzSJUEw+C5z/Y42IUXjzs15NmMbYecx7kiRZB2/ANqKWU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=FiIcaa9d; arc=fail smtp.client-ip=52.101.65.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQVak04n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 159F3C4CEE3;
-	Tue, 24 Jun 2025 20:04:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750795477;
-	bh=tEkUdq1odJrlYhz8HYpjE+yPq4W/M576DWxjgEaSfHs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WQVak04n6bC1dU+kq2uaBhkZJh596RELXHzX4GiuU1H8h0GAz9d0cdV13ZVX5Kcf4
-	 xG89w31/FDXSfSf8vPAa+GFITgvkVOtLHHQuOqLlA858ZkdWrfqYHjxVqpgIlAJdo5
-	 34dHXZrwpDjMDE7Kb90GjxcusCvvF1vO0esbkTfNCsNVJ2E4nXWQRhLky1JToz86kj
-	 A8swqRlQ4fr8qbsSXfzyHe/PzAk5gYhl+0mfK+6hQ9wFP5wbb5gRuV0vTFLPAleun+
-	 49Kfeq5WI+cTLM7dKHB9Df97viSqgqCYHd0CQCGzukaJR18zqlQSsury0QLBUCGhno
-	 20bZbvode9lyw==
-Date: Tue, 24 Jun 2025 16:04:34 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: kees@kernel.org, elver@google.com, linux-api@vger.kernel.org,
-	linux-kernel@vger.kernel.org, tools@kernel.org,
-	workflows@vger.kernel.org
-Subject: Re: [RFC 00/19] Kernel API Specification Framework
-Message-ID: <aFsE0ogdbKupvt7o@lappy>
-References: <aFNYQkbEctT6N0Hb@lappy>
- <20250623132803.26760-1-dvyukov@google.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="FiIcaa9d"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eQG9L0B3hqGmW4rSw9gssAC6a5Hl/SFnmQVpMzfgn1Xhy4xGQZPhiqceLsw/BOJdW9rsJ5BIpE4D9pQ48/Ndcl2hAc+rD86k7d298URvc3ygGI0mAJ7nKuDHjhdagV4l9H886hJ6dCD6qBDU1N1gz97DYX77HpgvmFs5wczqgaFy9zAvgaIwqx+6R/w4DE0KvyGtP+DylFUy8JnsAW/lLnSqTFxu2UiMWyNToYiJw6ZCn7C+afus6oBpGHYO2LmW867oGW0q4OdZ8va97Bqs1U+jEwpq+gWT/cytky0pb5Cr6wpyjlrwlrkg2/5DzcIRCENh1OeuXvsGQSqU7NRUfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OnA27UNgLMuk8u78Gr+jPZjpwSy4n6ovLKfrdClEOpM=;
+ b=ACZ2tuL9wtsoAmA9Byu0mDoOyWMVhAqBvcKvMnqekkfmG1rlz0+vTR5MdMOM2cuBDT4sd9J4uS5EEcK9msBgCi/VScfDivma1q1mv/a7GkLNrJLi1cPiFqtFDwmk8D/9IsQzMAjPy/+ZoJiUh3bAOZKdXAKkzMapztH3Ih9xGdavUbFi94CDYH/tgpdy+FaoqJaSANrNXuwCZ3UPxTI9GfB47k+NIBrqr0lblcpwYLXjCHs/qG00QIMQWxtzQ8/yDUCjr280UM46uJdtaeveSGSkKwLyvdzk/piLnYIC+perpbqOykj6ILX+PNJljm5IaeLkTBWxK/fhu+5hifABJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OnA27UNgLMuk8u78Gr+jPZjpwSy4n6ovLKfrdClEOpM=;
+ b=FiIcaa9dmwiAb0pcWcJ6fCEU0LA/fxBDpL3G1+5FeLVfHghks7Zm6zClHorjK8PuihlWCv1h0zmfaA9xaUdvGz2NdVQFlFiyxKVoNiefmDGqRmwtmZjMkA8ytVrG2DyYoOSTb9U2caV4VRuk6yR5f80Up/GqZlEHFCv5DPBBFa/zEFS6vefGt832T3DvtlGO40xq7Qpk4uKn/F016WwMWA1zvlZdjqhXSvnNWNn0DFKHW8VXKY5Qc2p7+iZhA8vVFPDZI5bDh9aXCx8YyAHo2haJThLqczWKTnrBkxnJ+dDLLhQ+Q5Cq0PjsY1xBl26nEz7LKNM7rMMa/saAWZlubw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DBBPR04MB7899.eurprd04.prod.outlook.com (2603:10a6:10:1e1::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.30; Tue, 24 Jun
+ 2025 20:04:54 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8880.015; Tue, 24 Jun 2025
+ 20:04:54 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: Vladimir Zapolskiy <vz@mleia.com>,
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Animesh Agarwal <animeshagarwal28@gmail.com>,
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/LPC32XX SOC SUPPORT),
+	linux-i2c@vger.kernel.org (open list:I2C SUBSYSTEM HOST DRIVERS),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list)
+Cc: imx@lists.linux.dev
+Subject: [PATCH 1/1] dt-bindings: i2c: nxp,pnx-i2c: allow clocks property
+Date: Tue, 24 Jun 2025 16:04:43 -0400
+Message-Id: <20250624200444.2514331-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: AS4P190CA0005.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5de::17) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250623132803.26760-1-dvyukov@google.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBBPR04MB7899:EE_
+X-MS-Office365-Filtering-Correlation-Id: f620c42a-7d89-4f2a-8b8b-08ddb35a62ce
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|52116014|7416014|1800799024|366016|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?7/nWQbGoqY1anR6SasCfByWyhDonMMhivbT6ZuaeUAPcKeNpJqK154WrFKzT?=
+ =?us-ascii?Q?PXpo4sSrWyE6qENqtXjSmbS8ntGcQ0rX2y8s1e/W3tLIq05+YTjEdBqw/Xv2?=
+ =?us-ascii?Q?/9CfZ7RASuXTmwvXtY5J2OIoSjULg18FcMneS6CmMmpNkMs8zrr/QBayClkG?=
+ =?us-ascii?Q?s+6A+0X47mE6pS90fRUbC9yrM9QmUswh3ZjdNj1R2MeEcQdy+H7ogdBKrM+i?=
+ =?us-ascii?Q?b9s8EVZILAg7jh6LyePJju6BaRM4n+koBJ8tQWtZJkCFqoHACe9JiYX67zo3?=
+ =?us-ascii?Q?QBa2UTpP3dwYUpWtkqvl+/G8OAv3MChACETGvCMNifxCI/CcTbdy4yfXmngU?=
+ =?us-ascii?Q?a1Mscc4i+b7GWqVR9eDYJw6Mee0zbo1x8LVs46xIOTmHG/l9rPzD9X4NxEX8?=
+ =?us-ascii?Q?YP6NTmHrjp/rmlB4B3+tCiw954jJFnTJmZmAhhokzmGijzHwBpkGsfKTu65q?=
+ =?us-ascii?Q?W/MJib+d1gBuvOZPgz4muGXY4w7I2MRI/pqqx3ftGFyQubfgBd4/HrDm9Hcs?=
+ =?us-ascii?Q?y9YzU3IYITgg664HuAAcRJ02VJN3QmoZZwEun0ViwMzKz2PS3CqmzVQNWQIQ?=
+ =?us-ascii?Q?aBvj+V9vMqjWpMhuwB52qSmWPpQM2WfgtXwh7YOpSEuhT1ydalrK6DwxDRwm?=
+ =?us-ascii?Q?qv6C+/BvF8y+cYouqEsY5D0S6tJ4Zud6Qt8c2ohhteXZQLYmhPi3Jcj9E6gQ?=
+ =?us-ascii?Q?wV2WEzXKYORvCNGv2DZgWlWZZNnopKvx0o30RN+Mui5QXT8fMAR+kvM56eXi?=
+ =?us-ascii?Q?Bt09rPFyeupJ1eoa17HEN892rmRalMLVM2qKYL9bUmXihlvTsDQafIT9VuJb?=
+ =?us-ascii?Q?42at5VXl0v24KDzhHzENhtebQpfdGa9i1pZAFO8KGQ2ASTXnV0rZIpKG2uqi?=
+ =?us-ascii?Q?iAj6/cB5+lfBVFnMQCIDHlWIcOEHXg6YVsi9vPyBmp6KKe+Y3Zmj0f/ef246?=
+ =?us-ascii?Q?pyK7nUctxP+9gIc+fnz28NmoRr5vOf3SznJJR3PwDUbm12reG/oMTHiqhmaI?=
+ =?us-ascii?Q?6qPQqDlESYybkZrk+AWK+cQ6hKie4YWvHpJMM+2pSOXt8qSR7dLKpd+GFUkM?=
+ =?us-ascii?Q?Efs6e4Z91U51KHj+MiCHNMprfJvMQirzBiIRPTWPN0nUdIV7oV3ZikpL02Tl?=
+ =?us-ascii?Q?0DIg/pUO8R24XcAAadKDPi1US657hoxm3GZ4rsaoixncSBX5ev7pRiCW2A2R?=
+ =?us-ascii?Q?RRAFdlE1QCvEvbHcqFlwnbpmmqJFcf+u+t4B1Lt+hvzhU+cbwrsbnGjS29w3?=
+ =?us-ascii?Q?1ftUa2ccI4idlzjz60D12q/zz2SwrfGtOR6wMcc8yAkAkBOTpOSeNPH84KeH?=
+ =?us-ascii?Q?M0rdKEuvcoW3J4egJ5RbwTFRHp271MUbuR4ithNZQfTZUyfuhKJRtAmWmvTz?=
+ =?us-ascii?Q?TV5VZ1Iuo1TdUJh8J0ZO1NSwrTrmIFU2eODlVFHToReaXME5GWZN9W+qriRQ?=
+ =?us-ascii?Q?b6D3OkkBKBRWBmmixbtk2dNkh0GEFhP4BPFyZRpLk+nKM9dsU1M7w9T8e1Bo?=
+ =?us-ascii?Q?CqLnF6+rQb2BKYY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(7416014)(1800799024)(366016)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?uC0o+JewlfGCn9wEAqW6i9y729gEZyAl7n66UJzvQ6vlbq+0sfQzuBXL5857?=
+ =?us-ascii?Q?yTQ1jhAUkNK2zbTKbgWXDKrLaQzsbsIzU5gMZVPzjlcaR8yFhm1X72pr7h3e?=
+ =?us-ascii?Q?HZYyf1X4LHhvGUG+D4Agn7naNKDf4scOnxKxSXdCy8b1IJFJqfcUPeCfR9R/?=
+ =?us-ascii?Q?QlnEEtdJtnHMiMZvZyigYZnTYvdL6VapFHh/AhIspg78y+iu+oat3eDwr9bY?=
+ =?us-ascii?Q?tBl31BinlbJuNi9UAjhn7PVBR9fz3u/hYMOwIME+0g4MC4fRgrHB2hYW0JRv?=
+ =?us-ascii?Q?QjVYy9Y06Wn7RlgH7638pzcjrfxo9Hi+f+ImSrvaXeapGwjU0hIj48gFVQpw?=
+ =?us-ascii?Q?G2kmnjFpzVru7cOgO4Eq2Z2wI4xKxJBCwJgmgfsdehFI49XJ/u/t2nh0C3LI?=
+ =?us-ascii?Q?t5dsf4T+p50LwQhJqJBhzQbtSErQHFuoKhdNjWbNXNi3+4m8d5BkO/fckGP3?=
+ =?us-ascii?Q?a0XLPKuALDT4ubmTYtMaYIoL2JIbbxPXwVyXZpfirTx58uPaOh6LIAZpYbHC?=
+ =?us-ascii?Q?G9wUBKAqugkBGdKFqo9zzoDu1d7aHXwTvfkIynjoPVY36mEEUd1YkykhwdcX?=
+ =?us-ascii?Q?DY8RQzvfOD6W5lkSTYXfkMTOKS5ZfH8EzHr9sOucfbxEkLr2IOJlGHcTWPbV?=
+ =?us-ascii?Q?H07M/mbddl5TDDLx9gD2viywpFfhyYoQsCmOrXEC1OSdYSP9NSx9oBjbZlE1?=
+ =?us-ascii?Q?EEcwsCqCjDESU3Hhq7qqFGHu7MVM0jI/x9IgXxxT5QmPyeSKBPCWbh8Y4Udm?=
+ =?us-ascii?Q?tFv2yL+ltHx3DxbSzKUSyQPgNBEd/GmBlJG+NVRNEpWW5gJAdUM7BINkNBNP?=
+ =?us-ascii?Q?+KJp8K8zzVmiwSS8SdLmzerTIjqt25+gszj7/ObTBicYkaZqO3zx0xLv2suu?=
+ =?us-ascii?Q?FExLog2f2mdSkh7VX6mETNHjbfiSs9i4QouqDghklGRnyG/fOSHksByCyOJa?=
+ =?us-ascii?Q?FEIchy3h2Od3Gni7GinX0KhDp7mvWNcm1sLLfGyzsPwJrhBtyx5gBtEJbJFy?=
+ =?us-ascii?Q?o9kQWaYxUGXOiucMPRU857O6Gi6tIRRQExMKThmX8J54B/2IMnOszPj39aAD?=
+ =?us-ascii?Q?krkg7IP4S2FXF0bQ97KM6WRlieu8OCIDsm4BkJPuxk1eLqX8AL/IVI8gTH6c?=
+ =?us-ascii?Q?G3AtB6RoNXyT3NKIdQAEqUUM4Jf7umtj47ad7cNY44iX+kCBHSw4JeZiv6I3?=
+ =?us-ascii?Q?pV23fozxqX90EQA7l9W8AOBnkFGnXCBgfkpFb8pWfmnsq7Q1EuTP6lY3/5wm?=
+ =?us-ascii?Q?xdahszCuo3ylsod3oUFfds3U6hKrM14Ukbx+XCRIMGcuiwCCJUSzqgZBxSLC?=
+ =?us-ascii?Q?eCuiPjQIO7yUhVGulz08AkvTV/BWnWrNn1JtTs9nqBL5lyfxndODzm5lGWtV?=
+ =?us-ascii?Q?8hzvEuyajHDueZejpIRNrBLcTsEonzk9UlZZECqNW5BobJWNpc1rEwPmYlYQ?=
+ =?us-ascii?Q?2nytqlzh0JHQPtAF2sz3ZjNzWmQM+3yh9KriUWnUxjCJr/1CBKfdNptat8lT?=
+ =?us-ascii?Q?e3KJQM5ioPEreUVJJt8imMVrW7+R1tUj5y1E79O+j52G1M5SBnoPtgN9iigM?=
+ =?us-ascii?Q?TBQvbDrKQjrLp5WObncsqqbyRQ+M04GXeWQWoLex?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f620c42a-7d89-4f2a-8b8b-08ddb35a62ce
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 20:04:54.5564
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DGGkJ3x7ihhy7gAvKx5O5Ew4U2fBVEbP5BLpBNEgd171xNeZx3ZDdo8Uq9tVRosTAV7SYGiTpGy77zX7rAeWEw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7899
 
-On Mon, Jun 23, 2025 at 03:28:03PM +0200, Dmitry Vyukov wrote:
->Nice!
->
->A bag of assorted comments:
->
->1. I share the same concern of duplicating info.
->If there are lots of duplication it may lead to failure of the whole effort
->since folks won't update these and/or they will get out of sync.
->If a syscall arg is e.g. umode_t, we already know that it's an integer
->of that enum type, and that it's an input arg.
->In syzkaller we have a Clang-tool:
->https://github.com/google/syzkaller/blob/master/tools/syz-declextract/clangtool/declextract.cpp
->that extracts a bunch of interfaces automatically:
->https://raw.githubusercontent.com/google/syzkaller/refs/heads/master/sys/linux/auto.txt
->Though, oviously that won't have user-readable string descriptions, can't be used as a source
->of truth, and may be challenging to integrate into kernel build process.
->Though, extracting some of that info automatically may be nice.
->
->2. Does this framework ensure that the specified info about args is correct?
->E.g. number of syscall args, and their types match the actual ones?
->If such things are not tested/validated during build, I afraid they will be
->riddled with bugs over time.
+Allow clocks property to fix below CHECK_DTB warnings:
+  arch/arm/boot/dts/nxp/lpc/lpc3250-ea3250.dtb: i2c@300 (nxp,pnx-i2c): Unevaluated properties are not allowed ('clocks' was unexpected)
 
-This is an answer for both (1) and (2): yes! In my mind, whatever we
-spec out needs to be enforced, because otherwise it will go out of sync.
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+ Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-In this RFC, take a look at the code guarded by
-CONFIG_KAPI_RUNTIME_CHECKS: the idea is that we can enable runtime
-checks that verify the things you've mentioned above (and more).
-
->3. To reduce duplication we could use more type information, e.g. I was always
->frustrated that close is just:
->
->SYSCALL_DEFINE1(close, unsigned int, fd)
->
->whereas if we would do:
->
->typedef int fd_t;
->SYSCALL_DEFINE1(close, fd_t, fd)
->
->then all semantic info about the arg is already in the code.
-
-Yup. It would also be great if we completely drop the SYSCALL_DEFINE()
-part and have it be automatically generated by the spec itself, but I
-couldn't wrap my head around doing this in C macro just yet.
-
->4. If we specify e.g. error return values here with descirptions,
->can that be used as the source of truth to generate man pages?
->That would eliminate some duplication.
-
-Ideally yes. One of the formatters that the kapi tool has (see the last
-patch in this series) is the RST formatter that could be used to
-generate documentation similar to man pages.
-
->5. We have a long standing dream that kernel developers add fuzzing descirpions
->along with new kernel interfaces. So far we got very few contributions to syzkaller
->from kernel developers. This framework can serve as the way to do it, which is nice.
-
-This was one of the main usecases I had in mind.
-
-In return, we can get back from syzkaller a body of automatically
-generated tests that we can embed into our testing CIs.
-
->6. What's the goal of validation of the input arguments?
->Kernel code must do this validation anyway, right.
->Any non-trivial validation is hard, e.g. even for open the validation function
->for file name would need to have access to flags and check file precense for
->some flags combinations. That may add significant amount of non-trivial code
->that duplicates main syscall logic, and that logic may also have bugs and
->memory leaks.
-
-Mostly to catch divergence from the spec: think of a scenario where
-someone added a new param/flag/etc but forgot to update the spec - this
-will help catch it.
-
-Ideally it would also prevent some of the issues that syzkaller is so
-good at finding :)
-
->7. One of the most useful uses of this framework that I see if testing kernel
->behavior correctness. I wonder what properties we can test with these descirptions,
->and if we can add more useful info for that purpose.
->Argument validation does not help here (it's userspace bugs at best).
->Return values potentially may be useful, e.g. if we see a return value that's
->not specified, potentially it's a kernel bug.
->Side-effects specification potentially can be used to detect logical kernel bugs,
->e.g. if a syscall does not claim to change fs state, but it does, it's a bug.
->Though, a more useful check should be failure/concurrency atomicity.
->Namely, if a syscall claims to not alter state on failure, it shouldn't do so.
->Concurrency atomicity means linearizability of concurrent syscalls
->(side-effects match one of 2 possible orders of syscalls).
->But for these we would need to add additional flags to the descriptions
->that say that a syscall supports failure/concurrency atomicity.
-
-I agree: being able to fuzz for more than just kernel splats will be
-great.
-
->8. It would be useful to have a mapping of file_operations to actual files in fs.
->Otherwise the exposed info is not very actionable, since there is no way to understand
->what actual file/fd the ioctl's can be applied to.
-
-Ack. The ioctl() part is a bit hand weavy right now, and at the very
-least we'd need to spec out ioctl() itself. It's more of a demonstration
-of how it could look like rather than being too useful at this point.
-
->9. I see that syscalls and ioctls say:
->KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
->Can't we make this implicit? Are there any other options?
-
-Maybe? I wasn't sure how we'd describe somthing like getpid() which
-isn't supposed to sleep.
-
->Similarly an ioctl description says it releases a mutex (.released = true,),
->all ioctls/syscalls must release all acquired mutexes, no?
->Generally, the less verbose the descriptions are, the higher chances of their survival.
->+Marco also works static compiler-enforced lock checking annotations,
->I wonder if they can be used to describe this in a more useful way.
-
-I was thinking about stuff like futex or flock which can return with a
-lock back to userspace.
-
+diff --git a/Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml b/Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml
+index 798a6939b8948..e645784b77d3a 100644
+--- a/Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml
++++ b/Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml
+@@ -22,6 +22,9 @@ properties:
+   interrupts:
+     maxItems: 1
+ 
++  clocks:
++    maxItems: 1
++
+   clock-frequency:
+     default: 100000
+ 
 -- 
-Thanks,
-Sasha
+2.34.1
+
