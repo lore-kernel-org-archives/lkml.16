@@ -1,89 +1,136 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A20022AE5D;
-	Tue, 24 Jun 2025 11:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8FC2868B2;
+	Tue, 24 Jun 2025 11:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750766208; cv=none; b=h6FRK9JB/eqh6pSK1VwiY/ISEiwZlEYUR//Oy2BOf6C4TCYwgxxHKrosFHpriTd8PmaqiuPa0SmDI3b6Uni/346PB47trmEICIY+4xN3G0BrvHdpwLuvLdcZ9lyN5H/YjoWgiO7ECNMKciY30OtPbx3N1WlerxzMtNuIlOcmh+w=
+	t=1750766210; cv=none; b=kzMLEuVpWMeyTe8QKXXM0Z6T5grMiauyLJbNRs4hDf4M1gm3OYfEKoiSsNTadYZr6+20RWhaSW9FpII7YvmujsGQDcEpbjstDVwiXNvNMC1dpGxN3s6EclwakcXNxp+TXw3cd7upjvc5PytEu7Y/1uF41ObJoOXi5gJIl+Ha3NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750766208; c=relaxed/simple;
-	bh=4Gb8SOZItbW+wIwmtb5Q/gL4wOxUhzrF5mJlDtp1XkM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PCipwto2n7Rn7l9Z4QFktvtDYeS9yF6YuSAczea/GNei7X3o7wWLwS/xmeSXBVwI313808ztF+2maGPQuKe3Nf0d0/RFssbg99xuDD1zmP0qO1T2PQ91q+z8YTGDNi/oMwNrIxPWZUYqXh+n7FjiAsHBDmPIybYqCAltKT1nH/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RwD7iGie; arc=none smtp.client-ip=209.85.128.44
+	s=arc-20240116; t=1750766210; c=relaxed/simple;
+	bh=KtW1i2V2kg/cYDLAU9F/MnvVyp3btDwEoBN7+vmgFR8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UzpsF69GaX1QPmot54uanPcR3Vje1eQTYsOhj2YbHHcEVMrl0aJBSioPB8+aPWJraWQNFregdUTfggBLWGZEf/OtRuNYl7nSGSqSKD4PymAlVPSGstsA45J1ef/EjlFRKzG34UGFxIByTQ40u/JQdeYv8gKDXD1Dyq0rCTVHVD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tcp9b2Cb; arc=none smtp.client-ip=209.85.208.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwD7iGie"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4537deebb01so3099615e9.0;
-        Tue, 24 Jun 2025 04:56:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tcp9b2Cb"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-32b4876dfecso62323421fa.1;
+        Tue, 24 Jun 2025 04:56:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750766206; x=1751371006; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=R5eEIvr9JcE4paU6Nr7MR5Mat6t5/855zPOooiaqaHM=;
-        b=RwD7iGieh2vDByYikIUEcnAZ0R1Rp8sSNqmXOTJcbqJqk3jwLrR9LafHeDv5tXS1du
-         UG+gdkIX95iXO7426UkvHOvl147ISJU7YeAWkiTMoZ2PEjosoqTRUR+H6DPSAz2ZZmps
-         951LVqJJL4ToG9KP34t9Ve4nMsWEGQKeY/BUaO5Ch//uQQ4BLrrO1wMIXXgb3bqL48Tf
-         pQGs5FbdLpqMK07NiQQJhWPPrIVNhTcJtE1bZbXlOLUGMvv8pUPhpwBIKuQwc7rrjQ/I
-         loRsI4Px8aeYcTEqaaFwgRhahFEyrDwXZPRtfeePzFq52wSuf2WLApUs71mKvRcg5gbJ
-         mtHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750766206; x=1751371006;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1750766207; x=1751371007; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=R5eEIvr9JcE4paU6Nr7MR5Mat6t5/855zPOooiaqaHM=;
-        b=cNmRfSVYyEIVOsh3YY9c5pbRo70hoc91oHCzoTQrzXAkbOuGEqshBLfuanvD8eewmD
-         Qj6ieUGrI9MRSegMwzq6rG6msQq2BySHt6V6eS8FwXjy1A0hEDP3qRYhlH0Gx+rqRoZf
-         BR+NZU+wozKq09Os2MJwP2x+aeJS3c0d5F/OeJFRhS+V672as8Pt4P6qVyhFLEN/vWsX
-         ImozVmj4NtrG6u0OYh7MqG5PvbRAbQ+i3XYRvUrflz/yKrMP2PyJQ3UUjv8HhuKhH/lG
-         fXVCXe0+0kreysEF4HMpm5CcVDpZHDou1qwx9QC2X9IuVyCVaGzJT3UexCFNkaRARWk2
-         97ZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUla4F40IJj33aCBmm9yqM/fPbvO7NHbjRafUjTGU4xFAt5T7FX+B7ARVYx5g/0NYS1s4w1UeC4@vger.kernel.org, AJvYcCVbBWsZGUdJVZVSQiGuN+1rgi7wpPs5UeWdhSiYfPXmRgXDVRMYniY5+shYWVUkKELIv57WrF/gbKvunrD8@vger.kernel.org, AJvYcCWm/5IHwP2vS8aDGiR071yunG32aX0mJDXydf4vRExB/nLPFJrt8J1DhW/AYRWJcKMngt3xr7KiZjgntQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxK4S+M4fF/NxigfhjPB+SUMkt4yoDzDIls+kKnbrktiCv3XuT+
-	HjXaaEl9CP72ia+BEVbcyNSOvpSatX2WdURS8Ly45NKMdY1qdRfvZ+Kg
-X-Gm-Gg: ASbGncvrLU4eU/zOF059kxLEiWL3izXDG+bv8ZdyCmyl/i2hfNepbnBJyDdEIQC7GeE
-	e3e4Yi6i8tAh2htrQg61ezM9dbHZ+9f8IYtA+8hdVrQcWU/x2f4VOvLNdhYQiLMKQSSyceUF9tD
-	X1OqqSkVExbvOGFgtV2V5pGbB8zInx2QhY8BV10LXZX3ZXYQ5T8EQFFITOUA2VVKraOqlB3/GMT
-	yWhMvSfYBakE21CP1KvIXK04PtALeCZhRHU9R/fiWESxEvrtE2tpnsQKYe/dRR7gZt340TqJ4CG
-	/4A5sdqjkUyrHU41cjSD/ywp/VJke16e2myGUC8goQE/msY5qcrvw5NQjw==
-X-Google-Smtp-Source: AGHT+IF5uc4Crgzm9C/NUWTssWPsc1rQwpNZ40qhHDiLYTtLtTW3bFcM2LE+mpuBnDDXgWUMAWxfWQ==
-X-Received: by 2002:a05:600c:8b37:b0:43d:fa59:cc8f with SMTP id 5b1f17b1804b1-453657bfda0mr145918725e9.33.1750766205354;
-        Tue, 24 Jun 2025 04:56:45 -0700 (PDT)
-Received: from gmail.com ([2a02:c7c:f4f0:900:7f3f:914:11c0:78c0])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535e98b4bbsm171329205e9.15.2025.06.24.04.56.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 04:56:44 -0700 (PDT)
-Date: Tue, 24 Jun 2025 12:56:40 +0100
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: Aditya Garg <gargaditya08@live.com>
-Cc: jikos@kernel.org, bentiss@kernel.org, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] HID: appletb-kbd: fix slab use-after-free bug in
- appletb_kbd_probe
-Message-ID: <aFqSaznWWrxkEs1b@gmail.com>
-References: <20250623230812.31927-1-qasdev00@gmail.com>
- <PN3PR01MB95977E7AB0C3A8E3EFE3DA7CB878A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+        bh=sFeNxL6o7rovHjVJ3x+dZzZqwBMWzp7CPxUvhXDuIQU=;
+        b=Tcp9b2CbgnUTry3T7VFetKI9DKpeGxFyjjHDC2Ze+0x6PvkBtqAM3kurU/8Xb6vp8u
+         NO7s5RnCA5ujAXz2uFaY2OFXeJ6uwkLxwl8fH3fapwhFgWqwDrTPZ3rGKablhRMXd2Rb
+         Yj0vgM4zph0bexVA1Bo7xWO3pdFEMyd9ezVTkQvUSwFUD1C5Vito4E68cB9JqGFoHYtR
+         Jkcjj++afpJAq6M4J9NIFKhPzzOJpU1P44Pf8gx9ta0GIdp+nQ1ICbsi3qUyKvl3EAwt
+         sevGvqX+a4dDavHQGukn4elMa5BPJc+2JLcwVom7cTSsCLDbYt5LvHMX4XtP7aDG4Vro
+         ssXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750766207; x=1751371007;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sFeNxL6o7rovHjVJ3x+dZzZqwBMWzp7CPxUvhXDuIQU=;
+        b=STTsa0uKN4ixkLQZ/ONK/vdthvf743ZX7BgLCeUpfaKHd4Iml6Ey5r1cBytxYxJkUw
+         9O/8wRmojKZjmoxO58HImz+HTmKbS3AjPfGzwczbR6kR+P2858ttTa4UIoMLwylxeKLP
+         pTus8gn895Ci9mqsJzWfXHn8aoM9XqlIlZEuB/M2+SFPQHLvjHSHEsbsOxyysqahHV6V
+         CnqzMjltwccbPQeboXZOSF/mKjF5ZSUD36cYdrEwwvE342tvVvyOJOEMUJqMCRmOjN4f
+         QFq3rqdRWN+du2vB5Xn6TZvZqa03L9e20IO08w56H7QbtqinoMPz0eWJcHm+nyTrdOfu
+         rtrg==
+X-Forwarded-Encrypted: i=1; AJvYcCUo1i90FXYX337sYuTC+BTNRHIY9L2n18Gjjtg9Dh5aoB5VuKMQOrVoipZf3ivbyk4L8tcOTuQf@vger.kernel.org, AJvYcCW8f+c14/FF/MVVzdfVymZqewgGFZzd+OqNjuG0xbp/frW4BqScoWXJGLCDp1pllabwGhYv2gJixW8XQJg=@vger.kernel.org, AJvYcCXyWjXervYc1M2mgWdQ8CDGy1VFY3vwRZ5nyhG2OrJj/O6lACR+4mTtGGkOwaqU1e1F2GHC/7ZqABpsb+lrMMM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxzc+HawXuUXpm/rI9ZT2KtqkmH1tEMFaxfauzflqYlJFsWIzKV
+	eOXytPnJ2XyS7dJmzXbj9EKVu7GZHNJ/u68XJHw+ZF3O+KuYIpYaMhGNUstRxrWUqKIjiWGDV7M
+	GEug/QafYNnTJLODVFJwHCNemolsfg/xAyqdH
+X-Gm-Gg: ASbGncv8cYPPZwBV4lDTucfj/MnekVxrYg1SSQXm6C1idhrOZ2Zd++ljJRmEgvxgAtl
+	stm1vdi+Q1scGpxTsKvy3b5R/01/F9XCGbHpcUEAlYBcgIQmf6vNv9K308vxEZS/pEubjJWIw/1
+	kWXP+9QtDtK4adQWdxhZnnHR3xpI90rw9RmOjLIx4CJ2IShG2Tw7aMFw==
+X-Google-Smtp-Source: AGHT+IEj9s4F0ahzMjJ0Hf3Bz6S35/B/DG+wfdAm7F1HuJfjumlwP99TcCQkTXEH81704n7fM0jf6yFaY10IQJM8qQA=
+X-Received: by 2002:a05:651c:2221:b0:32b:7811:d451 with SMTP id
+ 38308e7fff4ca-32cb966df25mr7216351fa.16.1750766206695; Tue, 24 Jun 2025
+ 04:56:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PN3PR01MB95977E7AB0C3A8E3EFE3DA7CB878A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+References: <20250611-correct-type-cast-v1-1-06c1cf970727@gmail.com> <aFk8-_TNeV51v2OA@google.com>
+In-Reply-To: <aFk8-_TNeV51v2OA@google.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 24 Jun 2025 04:56:08 -0700
+X-Gm-Features: AX0GCFvYFe-WDZ7ND52DmG8rRUjBbsH8xIg-zyKPEWgjGwePyEOsya6C5IxsScA
+Message-ID: <CAJ-ks9nsjSOBE8LQtWpC5r98WAekXwzC9yDZxHdsJ=p1BX5ZYw@mail.gmail.com>
+Subject: Re: [PATCH] rust: cast to the proper type
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>, Trevor Gross <tmgross@umich.edu>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, 
+	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 24, 2025 at 10:57:05AM +0530, Aditya Garg wrote:
-> Ok this makes sense. Probably execute time_delete_sync only when there is kbd->backlight_dev in appletb_kbd_remove as well. Currently it is being executed unconditionally.
+On Mon, Jun 23, 2025 at 4:39=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
+rote:
+>
+> On Wed, Jun 11, 2025 at 06:28:47AM -0400, Tamir Duberstein wrote:
+> > Use the ffi type rather than the resolved underlying type.
+> >
+> > Fixes: f20fd5449ada ("rust: core abstractions for network PHY drivers")
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+>
+> Please use unqualified imports.
 
-Good point, will resend v2
+OK, I will change this to two patches in v2; the first will change all
+ffi references in this file to unqualified, the second will be this
+with unqualified references.
 
-Thanks,
-Qasim
-> 
-> > 	hid_hw_close(hdev);
-> > stop_hw:
-> > 	hid_hw_stop(hdev);
+>
+> >  rust/kernel/net/phy.rs | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
+> > index 32ea43ece646..905e6534c083 100644
+> > --- a/rust/kernel/net/phy.rs
+> > +++ b/rust/kernel/net/phy.rs
+> > @@ -163,17 +163,17 @@ pub fn set_speed(&mut self, speed: u32) {
+> >          let phydev =3D self.0.get();
+> >          // SAFETY: The struct invariant ensures that we may access
+> >          // this field without additional synchronization.
+> > -        unsafe { (*phydev).speed =3D speed as i32 };
+> > +        unsafe { (*phydev).speed =3D speed as crate::ffi::c_int };
+>
+> unsafe { (*phydev).speed =3D speed as c_int };
+>
+> >      }
+> >
+> >      /// Sets duplex mode.
+> >      pub fn set_duplex(&mut self, mode: DuplexMode) {
+> >          let phydev =3D self.0.get();
+> >          let v =3D match mode {
+> > -            DuplexMode::Full =3D> bindings::DUPLEX_FULL as i32,
+> > -            DuplexMode::Half =3D> bindings::DUPLEX_HALF as i32,
+> > -            DuplexMode::Unknown =3D> bindings::DUPLEX_UNKNOWN as i32,
+> > -        };
+> > +            DuplexMode::Full =3D> bindings::DUPLEX_FULL,
+> > +            DuplexMode::Half =3D> bindings::DUPLEX_HALF,
+> > +            DuplexMode::Unknown =3D> bindings::DUPLEX_UNKNOWN,
+> > +        } as crate::ffi::c_int;
+>
+> I would keep the imports on each line.
+>
+> let v =3D match mode {
+>     DuplexMode::Full =3D> bindings::DUPLEX_FULL as c_int,
+>     DuplexMode::Half =3D> bindings::DUPLEX_HALF as c_int,
+>     DuplexMode::Unknown =3D> bindings::DUPLEX_UNKNOWN as c_int,
+> };
+
+Could you help me understand why that's better?
