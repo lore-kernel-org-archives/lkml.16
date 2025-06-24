@@ -1,106 +1,172 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DBF25B67E;
-	Tue, 24 Jun 2025 08:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D960B25C70F;
+	Tue, 24 Jun 2025 08:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750753964; cv=none; b=TQUfX3NZ9FCJ87ttVsA8EXzmjYJWXBJMVOl1/u4DqCZuDccqr1o7C1A0sQaDjbj9nfJwckQE5JD9LQ3nzciBUawB7hxGqf8ek6P3nhGXVSQCSfGkTxCbSjmKRJIzwXFyoDWkliifsqrXSjbWe1p8iKgguzNg6Wyz+HiczfUlajk=
+	t=1750753985; cv=none; b=ocJwTPE2Ygb0i9vZSepUk2Tal56vq30pn/XzeJwqMMGUc0FajiCDD2a6y7+c6ErtjJsMPtNsSAVcCw6IiNIa9gkUR1QyE6L3iYTXeQUebcO/TmnLowa2xDb3MCrzn9DbiZPxKPE7bGNog9neTO34N4oPf9S4U1OJAgWDUZXfQg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750753964; c=relaxed/simple;
-	bh=IP9zZ6vX1r03ltWl8w9ViI+/XIllLTAlSCc4K5E75r8=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=fW6C5WTHgx1JVsRSyvw3nyG641+Av2heJ1HNMJlETCD15QK+GBDVNDKs4Wq+vrADqrOf/lvBtSm7owuXYqNJoEdHe0W4aLAslKgnCf+0yNO5XLlbtKY6/0OEOLF0gpdzCtOd4/P6yux49ufsg7uQ41l/5ojVk14LdjrWfzBx/P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=gngyiwTB; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1750753985; c=relaxed/simple;
+	bh=kcXxuLYDeFqIEPL+ofXn+D0asrg1ymOU8WT5ZTAyRIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s57WfDOVt0wNTNZL1JpfhwHXjhw6ygYz2pl9n5bJ3Tw1hnhgZpD8IKThZ/hdQk8XvqqfXulpGvOvo7M3fcFQzoZP5nV16cnlWkwJ/xp1TraQSFbExp+s1DNPBlU3JrET8TSyfQW8/ZnuByHYzBsOTtDqQ5aEZhwGww+HYtfdRGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dk/Fi2ya; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="gngyiwTB"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750753953; h=Message-ID:Subject:Date:From:To;
-	bh=xto8ohKa0ryNBVBrFTAZ50J9YmnkUMJE78zO1Eob+DM=;
-	b=gngyiwTB5wl/4ql3qUvMypZMauRuizllboob2BX57Qp1w+UpUZLzVz/fVm4PcPL4yt3P48jIe7dxgEV/GisbBuXZ3Yk4RQciJkSUf0C4oPCUeTyDmPpWD9agWctx8XxnNqJLo2HkqHPk6etNFmpfKI+VyPzcybtwOHhrnk4Co8E=
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0WegCBpn_1750753630 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 24 Jun 2025 16:27:11 +0800
-Message-ID: <1750753624.9023402-5-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH net v2 2/2] virtio-net: xsk: rx: move the xdp->data adjustment to buf_to_xdp()
-Date: Tue, 24 Jun 2025 16:27:04 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: Bui Quang Minh <minhquangbui99@gmail.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>,
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
- Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org,
- Bui Quang Minh <minhquangbui99@gmail.com>,
- netdev@vger.kernel.org
-References: <20250621144952.32469-1-minhquangbui99@gmail.com>
- <20250621144952.32469-3-minhquangbui99@gmail.com>
-In-Reply-To: <20250621144952.32469-3-minhquangbui99@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dk/Fi2ya"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a5257748e1so3298429f8f.2;
+        Tue, 24 Jun 2025 01:33:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750753980; x=1751358780; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HAcUzdSSJoRNC6czCmlN0ZjREWVQ1d/qdtR05/VTcrw=;
+        b=Dk/Fi2ya7akwEiL5+2r2pGSe0N98l6VyzXSVeTcW0iMzXxcSYCjpKqGg9i5a9BnGkV
+         q7cCF4bHpYBRYULmUJaNuXb1n91QNtVsb9KJvX4p3uWNJFO4A+Q1mMubz1GPJHzDsh58
+         WdNs2C+bC+LUsC+gVT8qazf0nSdIhk4sZxjHgkxgMASL6QwImkOyiJTcA5o86gMvZHEF
+         DAT0jOQED75oQS9r5sSjitJuq7CI7tOIVSy2PTlaYSFFToxsTM2fCnmT0iR4HcjeLT9+
+         27kEOpRS9/qBwfpRUW7jBdyOR++VM0Nrs3fnPJRgsxlu6eW3nMEqcuTmMCLiqWYgk+2K
+         anAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750753980; x=1751358780;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HAcUzdSSJoRNC6czCmlN0ZjREWVQ1d/qdtR05/VTcrw=;
+        b=WCSnnYNWTt/2NrQ91GLQnSwf4STdeuffWGEHmgo4RGeMb66SVsW16Kg/gCY9+kUwyN
+         l8KTwza0Nq4hHJTb1uekVBQXFARennqy6kpA+ilp+BYT3zdO1k27RcoUTbsoFIH7SbX4
+         AXLJhH5ERVmKdmuLCbW2KqDe0Eu9N7O9nsxM5aaH6EgmuDQp71tz2zP/Ihs3bt5FVlJ2
+         jGViFJMn9Hu/KWvk+m0YYV5iuyo2hKzgeKMJYTj4Lpp9I4QR0G2LcuYoKWJnUGsICNF8
+         YuXjzMLzZtt0evpXrBBcdKkusw2PNkoY72Khsmc6j1YcDCxiIDfVTNwJBorQ84R0ko1j
+         Qmag==
+X-Forwarded-Encrypted: i=1; AJvYcCWMrfqbjj0DsFapRRIxkbCxZGt3Iis9nyLwRF/UIfBkzb1ogjv5odLGXXwKRigv2K4kgiJ7IOMtxZraOLzb@vger.kernel.org, AJvYcCXmkghB5daATBMPKjuA5ZdcdcZmugkF5icEJMYsRlB3RchYOyeOvajw6r/SSpoEQ/uxRPFhIsa3bS8OvSco@vger.kernel.org
+X-Gm-Message-State: AOJu0YwE0VHylL0ToEpkFidNGiCh0zaAk8k8ZGitTIWVGDlZMmCmICPc
+	15/Gc73pqWPTCE0DqKuXLUyJSEdd/b6MGkliOkblsYhpLSxBcfoBy9YG
+X-Gm-Gg: ASbGncsGmBtvZm+5C7vUMaOOKtKlo1yX8T+ifZPgmSHTuooHF9tpYWpU7Tj8aw/jUlQ
+	nHSFHyTJCbVCnFfl+Q3RZGwpuXTXl+bxkL/dfvLa1Ts6s1b4T15pqkU67KnWmt0PDGVUZuQ19iX
+	QIWqb7e5K+0gnV3aTzJy7gVXkwi+KQ8wwdjZwb3NKPimMCgrvoh90RVyUs5tn0lVEg/UrGUr0uA
+	VjgQmL5h/cHJybBFGt//46Ci9QzfQPZTcec0AaBaerZEMQ6Qgyc5yyrnqc4OlAtGhGjpt2vSFnJ
+	qf56CTXNsLD0M0KsdmHg4oKJ8Mk589Q7OzeT8c8RqztfzFsYR6oMB6v7+jIvP1Mrr88ll9gLceQ
+	KVxgsOoL9ejT9HNyArRD1Zm65
+X-Google-Smtp-Source: AGHT+IFa8wKlAMcVrotXu5zgRzJw7hFatpGh+UkLiPFv+ni6YiXds6pDi5irzSKPmq0uy7jsxhYgzw==
+X-Received: by 2002:a05:6000:645:b0:3a4:fefb:c8d3 with SMTP id ffacd0b85a97d-3a6d130e802mr13287583f8f.40.1750753979983;
+        Tue, 24 Jun 2025 01:32:59 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e810caefsm1285937f8f.87.2025.06.24.01.32.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 01:32:59 -0700 (PDT)
+Date: Tue, 24 Jun 2025 09:32:58 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
+ <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan
+ <maddy@linux.ibm.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
+ Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
+ <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, Davidlohr Bueso
+ <dave@stgolabs.net>, Andre Almeida <andrealmeid@igalia.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 0/5] powerpc: Implement masked user access
+Message-ID: <20250624093258.4906c0e0@pumpkin>
+In-Reply-To: <ff2662ca-3b86-425b-97f8-3883f1018e83@csgroup.eu>
+References: <cover.1750585239.git.christophe.leroy@csgroup.eu>
+	<20250622172043.3fb0e54c@pumpkin>
+	<ff2662ca-3b86-425b-97f8-3883f1018e83@csgroup.eu>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 21 Jun 2025 21:49:52 +0700, Bui Quang Minh <minhquangbui99@gmail.com> wrote:
-> This commit does not do any functional changes. It moves xdp->data
-> adjustment for buffer other than first buffer to buf_to_xdp() helper so
-> that the xdp_buff adjustment does not scatter over different functions.
->
-> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+On Tue, 24 Jun 2025 07:27:47 +0200
+Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
 
-Reviewed-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> Le 22/06/2025 =C3=A0 18:20, David Laight a =C3=A9crit=C2=A0:
+> > On Sun, 22 Jun 2025 11:52:38 +0200
+> > Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
+> >  =20
+> >> Masked user access avoids the address/size verification by access_ok().
+> >> Allthough its main purpose is to skip the speculation in the
+> >> verification of user address and size hence avoid the need of spec
+> >> mitigation, it also has the advantage to reduce the amount of
+> >> instructions needed so it also benefits to platforms that don't
+> >> need speculation mitigation, especially when the size of the copy is
+> >> not know at build time. =20
+> >=20
+> > It also removes a conditional branch that is quite likely to be
+> > statically predicted 'the wrong way'. =20
+>=20
+> But include/asm-generic/access_ok.h defines access_ok() as:
+>=20
+> 	#define access_ok(addr, size) likely(__access_ok(addr, size))
+>=20
+> So GCC uses the 'unlikely' variant of the branch instruction to force=20
+> the correct prediction, doesn't it ?
 
-> ---
->  drivers/net/virtio_net.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index 1eb237cd5d0b..4e942ea1bfa3 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -1159,7 +1159,19 @@ static struct xdp_buff *buf_to_xdp(struct virtnet_info *vi,
->  		return NULL;
->  	}
->
-> -	xsk_buff_set_size(xdp, len);
-> +	if (first_buf) {
-> +		xsk_buff_set_size(xdp, len);
-> +	} else {
-> +		/* This is the same as xsk_buff_set_size but with the adjusted
-> +		 * xdp->data.
-> +		 */
-> +		xdp->data = xdp->data_hard_start + XDP_PACKET_HEADROOM;
-> +		xdp->data -= vi->hdr_len;
-> +		xdp->data_meta = xdp->data;
-> +		xdp->data_end = xdp->data + len;
-> +		xdp->flags = 0;
-> +	}
-> +
->  	xsk_buff_dma_sync_for_cpu(xdp);
->
->  	return xdp;
-> @@ -1284,7 +1296,7 @@ static int xsk_append_merge_buffer(struct virtnet_info *vi,
->  			goto err;
->  		}
->
-> -		memcpy(buf, xdp->data - vi->hdr_len, len);
-> +		memcpy(buf, xdp->data, len);
->
->  		xsk_buff_free(xdp);
->
-> --
-> 2.43.0
->
+Nope...
+Most architectures don't have likely/unlikely variants of branches.
+So all gcc can do is decide which path is the fall-through and
+whether the branch is forwards or backwards.
+Additionally unless there is code in both the 'if' and 'else' clauses
+the [un]likely seems to have no effect.
+So on simple cpu that predict 'backwards branches taken' you can get
+the desired effect - but it may need an 'asm comment' to force the
+compiler to generate the required branches (eg forwards branch directly
+to a backwards unconditional jump).
+
+On x86 it is all more complicated.
+I think the pre-fetch code is likely to assume 'not taken' (but might
+use stale info on the cache line).
+The predictor itself never does 'static prediction' - it is always
+based on the referenced branch prediction data structure.
+So, unless you are in a loop (eg running a benchmark!) there is pretty
+much a 50% chance of a branch mispredict.
+
+I've been trying to benchmark different versions of the u64 * u64 / u64
+function - and I think mispredicted branches make a big difference.
+I need to sit down and sequence the test cases so that I can see
+the effect of each branch!
+
+>=20
+> >  =20
+> >> Unlike x86_64 which masks the address to 'all bits set' when the
+> >> user address is invalid, here the address is set to an address in
+> >> the gap. It avoids relying on the zero page to catch offseted
+> >> accesses. On book3s/32 it makes sure the opening remains on user
+> >> segment. The overcost is a single instruction in the masking. =20
+> >=20
+> > That isn't true (any more).
+> > Linus changed the check to (approx):
+> > 	if (uaddr > TASK_SIZE)
+> > 		uaddr =3D TASK_SIZE;
+> > (Implemented with a conditional move) =20
+>=20
+> Ah ok, I overlooked that, I didn't know the cmove instruction, seem=20
+> similar to the isel instruction on powerpc e500.
+
+It got added for the 386 - I learnt 8086 :-)
+I suspect x86 got there first...
+
+Although called 'conditional move' I very much suspect the write is
+actually unconditional.
+So the hardware implementation is much the same as 'add carry' except
+the ALU operation is a simple multiplex.
+Which means it is unlikely to be speculative.
+
+	David
+
+
+>=20
+> Christophe
+>=20
+
