@@ -1,68 +1,51 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF33F6136
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 03:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521BB1E32B9
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 03:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750735689; cv=none; b=so5904JkIb9RrrhMhSTeFEM22iUzwOUNCwXgbiho4y7V+i3d/gxhecqPOPLxTuxZ0TmORWt3avM3eq7dg2LjfE4Hk0GUg00U1Nr96qZHwxuswHQ/St2e8gd5ghqpOb9kkZbMkbGSSQ3d/ycnQOcq1l8SxMmHIQCQ04ashKQirVU=
+	t=1750735691; cv=none; b=XfkzA2OvowW7tMC9owXj3p6qv0hdjJNidi1oOKyTzVOqgIgvuHrtIU4DBDaBKHiX+AucTtXAzUhrSZ0vMxYhGBvLxjydQpFBXoL4lnI9TJYkKIGTxBZjTcI1stRzhCEDDd9lVR7/G1j1HbuZGPAmOJRiUjMj/ok3Cavj5Zw6ZV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750735689; c=relaxed/simple;
-	bh=cqw6JEqDhdhKGXINh/3HQ7aZRmYsqeQNrrQ5p0mndV4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MDJziIUYeMprV/Pm4/JxM39+FvpjsrvnHfizi7Q8MDv3LgptoDGrLtrtKtIfpW0Zp3P80Irf3so70CjfH26AQY7jZlzQWzdmbl68s4eDe2syrLUrLFbWqqzbQM9hiXUgrVuBsX9l40kKSPyVcKLfbBwcE8y6hpI85lvejkug5NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YfuXHcO9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750735691; c=relaxed/simple;
+	bh=nhmDOnyhNSm/GM78QvuNqf1euT1YRwPkp6GB9AGQ3Q0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uwzoCyiRCuCEsi9Noh2bB7/3ZoxY7ijMpN2TOVER+dbngTPG8pFQkpawqlHz65OUKA9KyW6dPosysP/ultFQbzvnd4RJ52hVvHQYhqDZYqhP4m+pzJrPYy9Kl5XGACwTBT/imqifWxVeiwmUPTKvfzP9L3bVK5nFm5Trg14L4rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=bOKHZfhY; arc=none smtp.client-ip=192.19.144.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YfuXHcO9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750735685;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lduNiml1XRAu/rYd6hqPFR/Za2w+2GO7RpqGcJJcN78=;
-	b=YfuXHcO995/ERHCp4GbLmTf0JgcduuaTWnzRz83KZ2vuX/gexI5t7ZWaxJitXGfXzlViSB
-	PG5YraDv/l2H15IMwuNskmiXbQ4B2o8vqLIRboky4ohyPsfUwvo+XolkcBDnUjEGAPFZI5
-	MNPFCGzqlTJZ96qSpG1XTP7OPScsVxw=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-450-gOKxKQ0AOnSDb6OSJkqpmw-1; Mon,
- 23 Jun 2025 23:28:03 -0400
-X-MC-Unique: gOKxKQ0AOnSDb6OSJkqpmw-1
-X-Mimecast-MFC-AGG-ID: gOKxKQ0AOnSDb6OSJkqpmw_1750735681
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="bOKHZfhY"
+Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 4DF7BC0003EF;
+	Mon, 23 Jun 2025 20:28:08 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 4DF7BC0003EF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1750735688;
+	bh=nhmDOnyhNSm/GM78QvuNqf1euT1YRwPkp6GB9AGQ3Q0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bOKHZfhYwMeA2D+tTuCm7LJ//j3j+zUoleg992VsCPKkPzQOcsHEi+qmFRPtNFsZa
+	 vBj1a9DmHUS9+qobgrKZvfJbfNJRZq2tSITQN2yPJcPh8egX88W4h+MUHhRZCOHdnr
+	 Vp6CCZXifKW7P9JIw3/AyorjQtrzBVQN/w/QAQLo=
+Received: from stbirv-lnx-1.igp.broadcom.net (stbirv-lnx-1.igp.broadcom.net [10.67.48.32])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2249B19560A3;
-	Tue, 24 Jun 2025 03:28:01 +0000 (UTC)
-Received: from dell-per7425-02.rhts.eng.pek2.redhat.com (dell-per7425-02.rhts.eng.pek2.redhat.com [10.73.116.18])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EA73830001A1;
-	Tue, 24 Jun 2025 03:27:53 +0000 (UTC)
-From: Li Wang <liwang@redhat.com>
-To: akpm@linux-foundation.org,
-	lorenzo.stoakes@oracle.com,
-	linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Keith Lucas <keith.lucas@oracle.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Shuah Khan <shuah@kernel.org>
-Subject: [PATCH v2] ksm_tests: Skip hugepage test when Transparent Hugepages are disabled
-Date: Tue, 24 Jun 2025 11:27:48 +0800
-Message-ID: <20250624032748.393836-1-liwang@redhat.com>
-In-Reply-To: <20250621004808.368878-1-liwang@redhat.com>
-References: <20250621004808.368878-1-liwang@redhat.com>
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id E76F21800052E;
+	Mon, 23 Jun 2025 20:28:07 -0700 (PDT)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: linux-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Kieran Bingham <kbingham@kernel.org>,
+	Tony Ambardar <tony.ambardar@gmail.com>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v2] scripts/gdb: Fix interrupts.py after maple tree conversion
+Date: Mon, 23 Jun 2025 20:27:45 -0700
+Message-Id: <20250624032751.1094840-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,226 +53,388 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Some systems (e.g. minimal or real-time kernels) may not enable
-Transparent Hugepages (THP), causing MADV_HUGEPAGE to return EINVAL.
-This patch introduces a runtime check using the existing THP sysfs
-interface and skips the hugepage merging test (`-H`) when THP is
-not available.
+In commit 721255b9826b ("genirq: Use a maple tree for interrupt
+descriptor management"), the irq_desc_tree was replaced with a
+sparse_irqs tree using a maple tree structure.
 
-To avoid those failures:
+A new module (mapletree.py) is added whose mtree_load() implementation
+is largely copied after the C version and uses the same variable and
+intermediate function names wherever possible to ensure that both the C
+and Python version be updated in the future.
 
-  # -----------------------------
-  # running ./ksm_tests -H -s 100
-  # -----------------------------
-  # ksm_tests: MADV_HUGEPAGE: Invalid argument
-  # [FAIL]
-  not ok 1 ksm_tests -H -s 100 # exit=2
-
-  # --------------------
-  # running ./khugepaged
-  # --------------------
-  # Reading PMD pagesize failed# [FAIL]
-  not ok 1 khugepaged # exit=1
-
-  # --------------------
-  # running ./soft-dirty
-  # --------------------
-  # TAP version 13
-  # 1..15
-  # ok 1 Test test_simple
-  # ok 2 Test test_vma_reuse dirty bit of allocated page
-  # ok 3 Test test_vma_reuse dirty bit of reused address page
-  # Bail out! Reading PMD pagesize failed# Planned tests != run tests (15 != 3)
-  # # Totals: pass:3 fail:0 xfail:0 xpass:0 skip:0 error:0
-  # [FAIL]
-  not ok 1 soft-dirty # exit=1
-  # SUMMARY: PASS=0 SKIP=0 FAIL=1
-
-  # -------------------
-  # running ./migration
-  # -------------------
-  # TAP version 13
-  # 1..3
-  # # Starting 3 tests from 1 test cases.
-  # #  RUN           migration.private_anon ...
-  # #            OK  migration.private_anon
-  # ok 1 migration.private_anon
-  # #  RUN           migration.shared_anon ...
-  # #            OK  migration.shared_anon
-  # ok 2 migration.shared_anon
-  # #  RUN           migration.private_anon_thp ...
-  # # migration.c:196:private_anon_thp:Expected madvise(ptr, TWOMEG, MADV_HUGEPAGE) (-1) == 0 (0)
-  # # private_anon_thp: Test terminated by assertion
-  # #          FAIL  migration.private_anon_thp
-  # not ok 3 migration.private_anon_thp
-  # # FAILED: 2 / 3 tests passed.
-  # # Totals: pass:2 fail:1 xfail:0 xpass:0 skip:0 error:0
-  # [FAIL]
-  not ok 1 migration # exit=1
-
-Signed-off-by: Li Wang <liwang@redhat.com>
-Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Joey Gouly <joey.gouly@arm.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Keith Lucas <keith.lucas@oracle.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Fixes: 721255b9826b ("genirq: Use a maple tree for interrupt descriptor management")
+Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
+Changes in v2:
 
-Notes:
-    v1 --> v2:
-        * replaces printf() + return KSFT_SKIP with a standardized
-          ksft_test_result_skip() call and return in soft-dirty.c
-          to avoid test build issue.
+- do a proper Python implementation of mtree_load() since we cannot
+  assume that context in which we will be interfacing with the target
+  permits making direct function calls from the kernel.
 
- tools/testing/selftests/mm/khugepaged.c   |  5 +++++
- tools/testing/selftests/mm/ksm_tests.c    |  6 ++++++
- tools/testing/selftests/mm/migration.c    |  8 ++++++++
- tools/testing/selftests/mm/soft-dirty.c   |  9 ++++++++-
- tools/testing/selftests/mm/thp_settings.c | 11 +++++++++++
- tools/testing/selftests/mm/thp_settings.h |  2 ++
- 6 files changed, 40 insertions(+), 1 deletion(-)
+ scripts/gdb/linux/constants.py.in |   7 +
+ scripts/gdb/linux/interrupts.py   |  10 +-
+ scripts/gdb/linux/mapletree.py    | 252 ++++++++++++++++++++++++++++++
+ scripts/gdb/linux/xarray.py       |  28 ++++
+ 4 files changed, 292 insertions(+), 5 deletions(-)
+ create mode 100644 scripts/gdb/linux/mapletree.py
+ create mode 100644 scripts/gdb/linux/xarray.py
 
-diff --git a/tools/testing/selftests/mm/khugepaged.c b/tools/testing/selftests/mm/khugepaged.c
-index 8a4d34cce36b..6822eb7ea58e 100644
---- a/tools/testing/selftests/mm/khugepaged.c
-+++ b/tools/testing/selftests/mm/khugepaged.c
-@@ -1190,6 +1190,11 @@ int main(int argc, char **argv)
- 		.read_ahead_kb = 0,
- 	};
+diff --git a/scripts/gdb/linux/constants.py.in b/scripts/gdb/linux/constants.py.in
+index d5e3069f42a7..c3886739a028 100644
+--- a/scripts/gdb/linux/constants.py.in
++++ b/scripts/gdb/linux/constants.py.in
+@@ -20,6 +20,7 @@
+ #include <linux/of_fdt.h>
+ #include <linux/page_ext.h>
+ #include <linux/radix-tree.h>
++#include <linux/maple_tree.h>
+ #include <linux/slab.h>
+ #include <linux/threads.h>
+ #include <linux/vmalloc.h>
+@@ -93,6 +94,12 @@ LX_GDBPARSED(RADIX_TREE_MAP_SIZE)
+ LX_GDBPARSED(RADIX_TREE_MAP_SHIFT)
+ LX_GDBPARSED(RADIX_TREE_MAP_MASK)
  
-+	if (!thp_is_enabled()) {
-+		printf("Transparent Hugepages not available\n");
-+		return KSFT_SKIP;
-+	}
++/* linux/maple_tree.h */
++LX_VALUE(MAPLE_NODE_SLOTS)
++LX_VALUE(MAPLE_RANGE64_SLOTS)
++LX_VALUE(MAPLE_ARANGE64_SLOTS)
++LX_GDBPARSED(MAPLE_NODE_MASK)
 +
- 	parse_test_type(argc, argv);
+ /* linux/vmalloc.h */
+ LX_VALUE(VM_IOREMAP)
+ LX_VALUE(VM_ALLOC)
+diff --git a/scripts/gdb/linux/interrupts.py b/scripts/gdb/linux/interrupts.py
+index 8bd0d7108ae0..1401be6a28fb 100644
+--- a/scripts/gdb/linux/interrupts.py
++++ b/scripts/gdb/linux/interrupts.py
+@@ -7,7 +7,7 @@ import gdb
+ from linux import constants
+ from linux import cpus
+ from linux import utils
+-from linux import radixtree
++from linux import mapletree
  
- 	setbuf(stdout, NULL);
-diff --git a/tools/testing/selftests/mm/ksm_tests.c b/tools/testing/selftests/mm/ksm_tests.c
-index e80deac1436b..b77462b5c240 100644
---- a/tools/testing/selftests/mm/ksm_tests.c
-+++ b/tools/testing/selftests/mm/ksm_tests.c
-@@ -15,6 +15,7 @@
- #include "../kselftest.h"
- #include <include/vdso/time64.h>
- #include "vm_util.h"
-+#include "thp_settings.h"
+ irq_desc_type = utils.CachedType("struct irq_desc")
  
- #define KSM_SYSFS_PATH "/sys/kernel/mm/ksm/"
- #define KSM_FP(s) (KSM_SYSFS_PATH s)
-@@ -527,6 +528,11 @@ static int ksm_merge_hugepages_time(int merge_type, int mapping, int prot,
- 	unsigned long scan_time_ns;
- 	int pagemap_fd, n_normal_pages, n_huge_pages;
+@@ -23,12 +23,12 @@ def irqd_is_level(desc):
+ def show_irq_desc(prec, irq):
+     text = ""
  
-+	if (!thp_is_enabled()) {
-+		printf("Transparent Hugepages not available\n");
-+		return KSFT_SKIP;
-+	}
+-    desc = radixtree.lookup(gdb.parse_and_eval("&irq_desc_tree"), irq)
++    desc = mapletree.mtree_load(gdb.parse_and_eval("&sparse_irqs"), irq)
+     if desc is None:
+         return text
+ 
+-    desc = desc.cast(irq_desc_type.get_type())
+-    if desc is None:
++    desc = desc.cast(irq_desc_type.get_type().pointer())
++    if desc == 0:
+         return text
+ 
+     if irq_settings_is_hidden(desc):
+@@ -221,7 +221,7 @@ class LxInterruptList(gdb.Command):
+             gdb.write("CPU%-8d" % cpu)
+         gdb.write("\n")
+ 
+-        if utils.gdb_eval_or_none("&irq_desc_tree") is None:
++        if utils.gdb_eval_or_none("&irq_desc_tree") or utils.gdb_eval_or_none("&sparse_irqs") is None:
+             return
+ 
+         for irq in range(nr_irqs):
+diff --git a/scripts/gdb/linux/mapletree.py b/scripts/gdb/linux/mapletree.py
+new file mode 100644
+index 000000000000..d52d51c0a03f
+--- /dev/null
++++ b/scripts/gdb/linux/mapletree.py
+@@ -0,0 +1,252 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++#  Maple tree helpers
++#
++# Copyright (c) 2025 Broadcom
++#
++# Authors:
++#  Florian Fainelli <florian.fainelli@broadcom.com>
 +
- 	map_size *= MB;
- 	size_t len = map_size;
- 
-diff --git a/tools/testing/selftests/mm/migration.c b/tools/testing/selftests/mm/migration.c
-index 1e3a595fbf01..a306f8bab087 100644
---- a/tools/testing/selftests/mm/migration.c
-+++ b/tools/testing/selftests/mm/migration.c
-@@ -5,6 +5,8 @@
-  */
- 
- #include "../kselftest_harness.h"
-+#include "thp_settings.h"
++import gdb
 +
- #include <strings.h>
- #include <pthread.h>
- #include <numa.h>
-@@ -185,6 +187,9 @@ TEST_F_TIMEOUT(migration, private_anon_thp, 2*RUNTIME)
- 	uint64_t *ptr;
- 	int i;
- 
-+	if (!thp_is_enabled())
-+		SKIP(return, "Transparent Hugepages not available");
++from linux import utils
++from linux import constants
++from linux import xarray
 +
- 	if (self->nthreads < 2 || self->n1 < 0 || self->n2 < 0)
- 		SKIP(return, "Not enough threads or NUMA nodes available");
- 
-@@ -214,6 +219,9 @@ TEST_F_TIMEOUT(migration, shared_anon_thp, 2*RUNTIME)
- 	uint64_t *ptr;
- 	int i;
- 
-+	if (!thp_is_enabled())
-+		SKIP(return, "Transparent Hugepages not available");
++maple_tree_root_type = utils.CachedType("struct maple_tree")
++maple_node_type = utils.CachedType("struct maple_node")
++maple_enode_type = utils.CachedType("void")
 +
- 	if (self->nthreads < 2 || self->n1 < 0 || self->n2 < 0)
- 		SKIP(return, "Not enough threads or NUMA nodes available");
- 
-diff --git a/tools/testing/selftests/mm/soft-dirty.c b/tools/testing/selftests/mm/soft-dirty.c
-index 8e1462ce0532..8a3f2b4b2186 100644
---- a/tools/testing/selftests/mm/soft-dirty.c
-+++ b/tools/testing/selftests/mm/soft-dirty.c
-@@ -6,8 +6,10 @@
- #include <stdint.h>
- #include <malloc.h>
- #include <sys/mman.h>
++maple_dense = 0
++maple_leaf_64 = 1
++maple_range_64 = 2
++maple_arange_64 = 3
 +
- #include "../kselftest.h"
- #include "vm_util.h"
-+#include "thp_settings.h"
- 
- #define PAGEMAP_FILE_PATH "/proc/self/pagemap"
- #define TEST_ITERATIONS 10000
-@@ -78,8 +80,13 @@ static void test_hugepage(int pagemap_fd, int pagesize)
- {
- 	char *map;
- 	int i, ret;
--	size_t hpage_len = read_pmd_pagesize();
- 
-+	if (!thp_is_enabled()) {
-+		ksft_test_result_skip("Transparent Hugepages not available\n");
-+		return;
-+	}
++class Mas(object):
++    ma_active = 0
++    ma_start = 1
++    ma_root = 2
++    ma_none = 3
++    ma_pause = 4
++    ma_overflow = 5
++    ma_underflow = 6
++    ma_error = 7
 +
-+	size_t hpage_len = read_pmd_pagesize();
- 	if (!hpage_len)
- 		ksft_exit_fail_msg("Reading PMD pagesize failed");
- 
-diff --git a/tools/testing/selftests/mm/thp_settings.c b/tools/testing/selftests/mm/thp_settings.c
-index ad872af1c81a..bad60ac52874 100644
---- a/tools/testing/selftests/mm/thp_settings.c
-+++ b/tools/testing/selftests/mm/thp_settings.c
-@@ -381,3 +381,14 @@ unsigned long thp_shmem_supported_orders(void)
- {
- 	return __thp_supported_orders(true);
- }
++    def __init__(self, mt, first, end):
++        if mt.type == maple_tree_root_type.get_type().pointer():
++            self.tree = mt.dereference()
++        elif mt.type != maple_tree_root_type.get_type():
++            raise gdb.GdbError("must be {} not {}"
++                               .format(maple_tree_root_type.get_type().pointer(), mt.type))
++        self.tree = mt
++        self.index = first
++        self.last = end
++        self.node = None
++        self.status = self.ma_start
++        self.min = 0
++        self.max = -1
 +
-+bool thp_is_enabled(void)
-+{
-+	if (access(THP_SYSFS, F_OK) != 0)
-+		return false;
++    def is_start(self):
++        # mas_is_start()
++        return self.status == self.ma_start
 +
-+	int mode = thp_read_string("enabled", thp_enabled_strings);
++    def is_ptr(self):
++        # mas_is_ptr()
++        return self.status == self.ma_root
 +
-+	/* THP is considered enabled if it's either "always" or "madvise" */
-+	return mode == 1 || mode == 3;
-+}
-diff --git a/tools/testing/selftests/mm/thp_settings.h b/tools/testing/selftests/mm/thp_settings.h
-index fc131d23d593..6c07f70beee9 100644
---- a/tools/testing/selftests/mm/thp_settings.h
-+++ b/tools/testing/selftests/mm/thp_settings.h
-@@ -84,4 +84,6 @@ void thp_set_read_ahead_path(char *path);
- unsigned long thp_supported_orders(void);
- unsigned long thp_shmem_supported_orders(void);
- 
-+bool thp_is_enabled(void);
++    def is_none(self):
++        # mas_is_none()
++        return self.status == self.ma_none
 +
- #endif /* __THP_SETTINGS_H__ */
++    def root(self):
++        # mas_root()
++        return self.tree['ma_root'].cast(maple_enode_type.get_type().pointer())
++
++    def start(self):
++        # mas_start()
++        if self.is_start() is False:
++            return None
++
++        self.min = 0
++        self.max = ~0
++
++        while True:
++            self.depth = 0
++            root = self.root()
++            if xarray.xa_is_node(root):
++                self.depth = 0
++                self.status = self.ma_active
++                self.node = mte_safe_root(root)
++                self.offset = 0
++                if mte_dead_node(self.node) is True:
++                    continue
++
++                return None
++
++            self.node = None
++            # Empty tree
++            if root is None:
++                self.status = self.ma_none
++                self.offset = constants.LX_MAPLE_NODE_SLOTS
++                return None
++
++            # Single entry tree
++            self.status = self.ma_root
++            self.offset = constants.LX_MAPLE_NODE_SLOTS
++
++            if self.index != 0:
++                return None
++
++            return root
++
++        return None
++
++    def reset(self):
++        # mas_reset()
++        self.status = self.ma_start
++        self.node = None
++
++def mte_safe_root(node):
++    if node.type != maple_enode_type.get_type().pointer():
++        raise gdb.GdbError("{} must be {} not {}"
++                           .format(mte_safe_root.__name__, maple_enode_type.get_type().pointer(), node.type))
++    ulong_type = utils.get_ulong_type()
++    indirect_ptr = node.cast(ulong_type) & ~0x2
++    val = indirect_ptr.cast(maple_enode_type.get_type().pointer())
++    return val
++
++def mte_node_type(entry):
++    ulong_type = utils.get_ulong_type()
++    val = None
++    if entry.type == maple_enode_type.get_type().pointer():
++        val = entry.cast(ulong_type)
++    elif entry.type == ulong_type:
++        val = entry
++    else:
++        raise gdb.GdbError("{} must be {} not {}"
++                           .format(mte_node_type.__name__, maple_enode_type.get_type().pointer(), entry.type))
++    return (val >> 0x3) & 0xf
++
++def ma_dead_node(node):
++    if node.type != maple_node_type.get_type().pointer():
++        raise gdb.GdbError("{} must be {} not {}"
++                           .format(ma_dead_node.__name__, maple_node_type.get_type().pointer(), node.type))
++    ulong_type = utils.get_ulong_type()
++    parent = node['parent']
++    indirect_ptr = node['parent'].cast(ulong_type) & ~constants.LX_MAPLE_NODE_MASK
++    return indirect_ptr == node
++
++def mte_to_node(enode):
++    ulong_type = utils.get_ulong_type()
++    if enode.type == maple_enode_type.get_type().pointer():
++        indirect_ptr = enode.cast(ulong_type)
++    elif enode.type == ulong_type:
++        indirect_ptr = enode
++    else:
++        raise gdb.GdbError("{} must be {} not {}"
++                           .format(mte_to_node.__name__, maple_enode_type.get_type().pointer(), enode.type))
++    indirect_ptr = indirect_ptr & ~constants.LX_MAPLE_NODE_MASK
++    return indirect_ptr.cast(maple_node_type.get_type().pointer())
++
++def mte_dead_node(enode):
++    if enode.type != maple_enode_type.get_type().pointer():
++        raise gdb.GdbError("{} must be {} not {}"
++                           .format(mte_dead_node.__name__, maple_enode_type.get_type().pointer(), enode.type))
++    node = mte_to_node(enode)
++    return ma_dead_node(node)
++
++def ma_is_leaf(tp):
++    result = tp < maple_range_64
++    return tp < maple_range_64
++
++def mt_pivots(t):
++    if t == maple_dense:
++        return 0
++    elif t == maple_leaf_64 or t == maple_range_64:
++        return constants.LX_MAPLE_RANGE64_SLOTS - 1
++    elif t == maple_arange_64:
++        return constants.LX_MAPLE_ARANGE64_SLOTS - 1
++
++def ma_pivots(node, t):
++    if node.type != maple_node_type.get_type().pointer():
++        raise gdb.GdbError("{}: must be {} not {}"
++                           .format(ma_pivots.__name__, maple_node_type.get_type().pointer(), node.type))
++    if t == maple_arange_64:
++        return node['ma64']['pivot']
++    elif t == maple_leaf_64 or t == maple_range_64:
++        return node['mr64']['pivot']
++    else:
++        return None
++
++def ma_slots(node, tp):
++    if node.type != maple_node_type.get_type().pointer():
++        raise gdb.GdbError("{}: must be {} not {}"
++                           .format(ma_slots.__name__, maple_node_type.get_type().pointer(), node.type))
++    if tp == maple_arange_64:
++        return node['ma64']['slot']
++    elif tp == maple_range_64 or tp == maple_leaf_64:
++        return node['mr64']['slot']
++    elif tp == maple_dense:
++        return node['slot']
++    else:
++        return None
++
++def mt_slot(mt, slots, offset):
++    ulong_type = utils.get_ulong_type()
++    return slots[offset].cast(ulong_type)
++
++def mtree_lookup_walk(mas):
++    ulong_type = utils.get_ulong_type()
++    n = mas.node
++
++    while True:
++        node = mte_to_node(n)
++        tp = mte_node_type(n)
++        pivots = ma_pivots(node, tp)
++        end = mt_pivots(tp)
++        offset = 0
++        while True:
++            if pivots[offset] >= mas.index:
++                break
++            if offset >= end:
++                break
++            offset += 1
++
++        slots = ma_slots(node, tp)
++        n = mt_slot(mas.tree, slots, offset)
++        if ma_dead_node(node) is True:
++            mas.reset()
++            return None
++            break
++
++        if ma_is_leaf(tp) is True:
++            break
++
++    return n
++
++def mtree_load(mt, index):
++    ulong_type = utils.get_ulong_type()
++    # MT_STATE(...)
++    mas = Mas(mt, index, index)
++    entry = None
++
++    while True:
++        entry = mas.start()
++        if mas.is_none():
++            return None
++
++        if mas.is_ptr():
++            if index != 0:
++                entry = None
++            return entry
++
++        entry = mtree_lookup_walk(mas)
++        if entry is None and mas.is_start():
++            continue
++        else:
++            break
++
++    if xarray.xa_is_zero(entry):
++        return None
++
++    return entry
+diff --git a/scripts/gdb/linux/xarray.py b/scripts/gdb/linux/xarray.py
+new file mode 100644
+index 000000000000..f4477b5def75
+--- /dev/null
++++ b/scripts/gdb/linux/xarray.py
+@@ -0,0 +1,28 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++#  Xarray helpers
++#
++# Copyright (c) 2025 Broadcom
++#
++# Authors:
++#  Florian Fainelli <florian.fainelli@broadcom.com>
++
++import gdb
++
++from linux import utils
++from linux import constants
++
++def xa_is_internal(entry):
++    ulong_type = utils.get_ulong_type()
++    return ((entry.cast(ulong_type) & 3) == 2)
++
++def xa_mk_internal(v):
++    return ((v << 2) | 2)
++
++def xa_is_zero(entry):
++    ulong_type = utils.get_ulong_type()
++    return entry.cast(ulong_type) == xa_mk_internal(257)
++
++def xa_is_node(entry):
++    ulong_type = utils.get_ulong_type()
++    return xa_is_internal(entry) and (entry.cast(ulong_type) > 4096)
 -- 
-2.49.0
+2.34.1
 
