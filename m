@@ -1,142 +1,268 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2080.outbound.protection.outlook.com [40.107.223.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E8A2DA740
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750778411; cv=none; b=H0MyoWxBof+UgCXQiXeM9IRs1fPVD+Lhnug3I1D+EENo2IMCxcO5P1uSqsVUAXxTW5f3rWJrzi5SJHjaf/T+nfIxJWosZtP7Lc8o/e/C2hBXBrBU4YlY79fACY9aJUrw8HDgQ4op7IflE2x8EN09dvRiUspO8/ETjPgJeI1UFpI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750778411; c=relaxed/simple;
-	bh=Vm3A6wHZ/yoyBgE0EAf83UZWXKbrAMUvq94GaHakSHk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=FSR2Ocoo2EaIJWcwndVUUXoESPGb/SB4NyPxofqCtD4/dOctJ15m8D1cJOgVmYsAP4g2bpB4nfwPpO7HI9SEtnvYvsZsZv4BvlMg6BFYEDtS+Sb1ihVkFU0ztpCkTKogZEXEnlf9g1yE2B/QW/TKdhEq9JXy2L8k2KVMA5wZHuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GbulfpFz; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE1C2D9EFA;
+	Tue, 24 Jun 2025 15:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750778463; cv=fail; b=Z3gR4uI7BTpDi8Z6W/pnmkHY6+TV1npotnoIvyz+RdSx1uTV8/WHXFCC03IGN7Re+Fefw+/E/kB+UQ3RCRSHL36BoGzNVE7NGUvZthF1Jay4CTGnAbPaCz5S/FR1uI5bwilGwJhQTtfjNG1/JE3JWMUDtsJ/rYS36ZqG4heVcog=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750778463; c=relaxed/simple;
+	bh=yjW4hf/f51KQqvpYX9VUfFjybu/CWt27z8r/LC4J7Ek=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=uk2dfXKyZZahgRpOaxO6OHNm/P2HaqjufukHBARTxyJWRO3lIMXe0s86Yd3L5N2UT7JUyJ28CeJ5/UuGOuyrsu+ES6/ZftJIJibWrvWrvmySzeXKY7lsV4n7Nl/VuEqpnXLJhmkagYhr/PmvV4xlOjk4da4d00Om/wc5yFTDFV8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=XwrK0/yO; arc=fail smtp.client-ip=40.107.223.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GbulfpFz"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-311d670ad35so5219273a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:20:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750778409; x=1751383209; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vGRfoH9LdFtGM39WnIuEZlC9+8YFZhcusYM4kwtNz9g=;
-        b=GbulfpFzVniqykzkj1T0Fwd4FIgupk9wVLQnjO1XZ0dHCI4paq6IWRzII0f4ADdtF6
-         Vw5y8dzKjjy5hfkHoHo/Oraknp1ykeYbxZTOebR9g46Lx558voUmyyYhTQbj2WLOagRT
-         2kw4zB5oXCKgahHLvdxVjVIPZhbRXF51t8MJxwARH8QNczaTsF+Hn+ghw03huk1j6mkb
-         eXOyi88F59ApYjVABVDA/HEIUaQ9VN1cm2/UimCsVwwd3p3rnBXXFnjc+ryV0rwA0B1Y
-         xz9nYsxjbeARbmbpa5Tn3xUwG63t0yutOK6hnrqWrpX5BWQNVRGm3P5yUOJH/UmHv5Px
-         JLkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750778409; x=1751383209;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vGRfoH9LdFtGM39WnIuEZlC9+8YFZhcusYM4kwtNz9g=;
-        b=dPeVS7b9l+tzpeavc3Sr640ftR0gjV/llxzqghMgcs29WvhPMROVVPV4yvAxM/kyQx
-         Y7CLcRucmdr422kehaSSa2ScUhBv3slw+hSk8Dp1s9yjsl+RZrsSTihHOcsJ6qs5/43z
-         cGAWXpgbpPVdzITn8ttFi5f7wyb36ZKBavAhoygLXZeKx3rOpk/182YP4q2JVEPe227o
-         4YNRcxNhmeIZy/sE6wpd9eVCA+HwOl7knzIMyh5xzewlEAu+pQAFKMmPrIyvKem4e7RI
-         r+sO+cIBt1D8cJ/hNNqpBIAAWfc0tA9ZUNh+1aNPSLCL4Ho+VMJfn7i0L1xJ/FFdF2s/
-         XJWA==
-X-Forwarded-Encrypted: i=1; AJvYcCXY6ijIXrjSUgcHxeWxl1bS1dyYNmXUA2LW4/7svq7cpDyHF93+zpX/g0hrKs3do9JTuahYODeLOo3uL5c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOjMCUwbBdzhVlTSK9y6v5nXnm66sBgQOmxu1gO6WIUGiMeoSd
-	bQfv2Yv1yTz+qRaz8E6HGbheo1Wb+ov7KKSusBNkKRibu367kKglzZDW57sWRFUKOttkcKxZfsU
-	KttTeMA==
-X-Google-Smtp-Source: AGHT+IGY1sNiClwBZTcmK97/eMChbdF+koURDQ4b/nqndAH0Pf6+wiOIfdVBF86RlKu8osKt9rWO6gJhKmc=
-X-Received: from pjn14.prod.google.com ([2002:a17:90b:570e:b0:30a:7da4:f075])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4c11:b0:312:26d9:d5b4
- with SMTP id 98e67ed59e1d1-3159d8c7e55mr28632166a91.17.1750778408771; Tue, 24
- Jun 2025 08:20:08 -0700 (PDT)
-Date: Tue, 24 Jun 2025 08:20:07 -0700
-In-Reply-To: <20250328171205.2029296-4-xin@zytor.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="XwrK0/yO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Cky+gRcsPlUBpYrQ2yJNB6iHuvLGH6DpGaNGoTQGT66sZ/MCnbipfn1Tlva2ZmihfS0bkcCR8/xu5+2DdDC00wFBzDzu2+JNokkZCXIuna9He5Eh8LIlVaHWx/UX4JJL8NWtk/lcDr0EhHisw/FtT5LGVBqgPECAcsmhq46FpKzPnT9ErZwSFB32fqWQ1RdeqxK/codw1UZIH8H9j8ir1j9JqFn6da9QH0I2EuuQFpWyUQv2Z7dPH5cDQYzKlEeihP4psG90tXJ5ki/HkFNPlECWZvrkmA0TDSF6l4Pz4Xtqrsq4Q96BVNkg9b5JOfCrmbj64Kt+XTx6cf267UBadg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QroMoyZrMmkDz9f4PQapFhY53j7cOmDdCR5Sffsj1DU=;
+ b=IesZ8Nbce1oc2lSeSIBCVyblVmf0O5XeGMtxzwxL3GFW5mDvGFfbctLSuAQwT/ASlEHRnV3JjvlhjXxcKidYQ/W7kCGknNgOROrX2yK4pZW9sc1I7elwprzyAH5U43+ccVDfOH/SmvsGDA8Gw0wg6g9MPVO42B+tiB/eBXRn157jaeWB2lyoiiyH58+hUgXMJR2/EF4dntfYJycE7DL9pIwFJqSBzLN2csAZWPlPE5fTEZW4sz8f4DGg/IOFle1UATvdfwXywSsWsJjVBZQl7cnhxnJfyhPX7eiQSdRquSyb03nKmSBjTGMFv6+CHy1T1XGaxHTXQzvOCsuFBjpHmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QroMoyZrMmkDz9f4PQapFhY53j7cOmDdCR5Sffsj1DU=;
+ b=XwrK0/yO2uq5mzxVhkA2Z3lWE/Fid9mSVlG0zgYRjV4H7gYI3iGdi8g7Lz1RuTe7bvb5eU/a3YG8yfA2vzZDdpVeiOBZRfvgQgatVvjGXbESV/60XOSBD24C1MjSZ6qGFD1nMCupS7yZ2cKuOf9eV2oB/m+PNoPvD3D60o66bjg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
+ by IA1PR12MB6115.namprd12.prod.outlook.com (2603:10b6:208:3e9::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.20; Tue, 24 Jun
+ 2025 15:20:58 +0000
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e%7]) with mapi id 15.20.8857.019; Tue, 24 Jun 2025
+ 15:20:58 +0000
+Message-ID: <5d3d3bfe-d8c7-185b-8e48-6f032873c8b3@amd.com>
+Date: Tue, 24 Jun 2025 10:20:55 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] crypto/ccp: Fix locking on alloc failure handling
+To: Alexey Kardashevskiy <aik@amd.com>, linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Ashish Kalra <ashish.kalra@amd.com>,
+ John Allen <john.allen@amd.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Michael Roth <michael.roth@amd.com>
+References: <20250617094354.1357771-1-aik@amd.com>
+ <a0ce9850-cde4-4e17-997b-ad06a76a23d6@amd.com>
+ <7d4bde18-bbb7-4177-8577-b96c16f80d1d@amd.com>
+Content-Language: en-US
+From: Tom Lendacky <thomas.lendacky@amd.com>
+In-Reply-To: <7d4bde18-bbb7-4177-8577-b96c16f80d1d@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BN9PR03CA0901.namprd03.prod.outlook.com
+ (2603:10b6:408:107::6) To DM4PR12MB5070.namprd12.prod.outlook.com
+ (2603:10b6:5:389::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250328171205.2029296-1-xin@zytor.com> <20250328171205.2029296-4-xin@zytor.com>
-Message-ID: <aFrCJzodXP0sT6Ny@google.com>
-Subject: Re: [PATCH v4 03/19] KVM: VMX: Disable FRED if FRED consistency
- checks fail
-From: Sean Christopherson <seanjc@google.com>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: pbonzini@redhat.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, corbet@lwn.net, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	hpa@zytor.com, andrew.cooper3@citrix.com, luto@kernel.org, 
-	peterz@infradead.org, chao.gao@intel.com, xin3.li@intel.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|IA1PR12MB6115:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9a7f7193-2daa-45e7-4fa4-08ddb332b89e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?R1FRTWpKa0J0YjBJcDlYY2FqOVZGLzJ2OGpJQ3BKRnQyb3VKUXBIbm56Tnhk?=
+ =?utf-8?B?QnVJSmVJMlRUbER2L3dOYm5XSkxIWGxRcCtBeGlZQWtFNG01Qng3QU13Ky81?=
+ =?utf-8?B?RmVVNWR2SGlSOU15L2NPVC9jNUhsRXRNdURReUo0VVZSZFhremJYWkFzZXlO?=
+ =?utf-8?B?TzM3Z2RNUzFnemx6dkZXYzBxR1NhN1lkZE9ydEJGRG1HR2Q0ejFnMU9yeUg5?=
+ =?utf-8?B?QWF3bWRJMmVHb1YzVHh1bElMc2hjMm1kRk5aZE5OMkMzaTFvcG53dGd5amJl?=
+ =?utf-8?B?Q2pBZENSMytoL1owSSs4N0NQMTBSdm9zc1pTYmg4bWZKWERqSHptRm5lRUxP?=
+ =?utf-8?B?NnB0eFpnSVVFWEw2QkFsS2JSZEdYd3VtVXlRVFl6OURPVU54eldldXlvcHRx?=
+ =?utf-8?B?MHVGcXNwSHI5QWF5NFErZElNOE4wVGFnMk5aa3BMenVYdzNpczkva2t6NWN3?=
+ =?utf-8?B?RGhKMG00V1liYlh0NHhPUGtWYmdjUHRieEFENXlKc0JMZFNhS3ViN2VPRUdt?=
+ =?utf-8?B?Nm9RTElCazVTdVROMG9Bd2RjYjRXL2N4SGhPN1pVWWFTNC9wU0dsdDFJejlo?=
+ =?utf-8?B?YkhYa01POXFnUmlWc3NmRDF1eHZiUUxzRUdoaTJ0bCtBRGVmK1dPR2VBOXVE?=
+ =?utf-8?B?U0FIc2NERnJ5L2tRRnJlUm9ZS2h0NUs5dnNLODNqakQrY1ZvRkJSdEY4VkJh?=
+ =?utf-8?B?U3h3c28vZ1A3M3ozczRhdGpBYVRIeVd6TjI2dUEwWHhkOWgwQ09kZHlOajAw?=
+ =?utf-8?B?VTdZUnV5NWhDVllCVnVEZmZORkhuVXplM0JPMXRqc2hjOWpoZzVnWStEcGtB?=
+ =?utf-8?B?UmJFUzlNZ0EvdlRSRjBxMVlRbk9jTTM0MlRFVW5uSlZaTWdjWXpKbUZMWjZM?=
+ =?utf-8?B?cEtZMnhoNUJXV1EwNzNKQTA2UHo3NC9WcUZhRldZb3FJRERqZDdBRlNMeU9q?=
+ =?utf-8?B?KzRhaHBaSGhtS3Y4T0JDTXUwa1VJd1YyZGZlM2RjWnkxTW1ZQjlIUWx5YW9R?=
+ =?utf-8?B?dit3Ti9QMjcrNWpVRlc3eHEvbzUrNWE5RFRtMUFwR3NESjFFcndZZElDYW5T?=
+ =?utf-8?B?T3p1TGJ3TVBEYjdHYU9zbkZqU2oveG1oaUMwcjVsdzNJUTIyVWdyYXppeU9t?=
+ =?utf-8?B?UU5RbDNVekg5WGxtdUZzN2ZGbExlYytYV0lQYzZXTFNtdk00UVNwZkptVjlJ?=
+ =?utf-8?B?Vzg2ZFFoRkowVVZDaWFwbzZRbzJyeDlCZjFzVUoxanZRYXZyWmJPSHFqWXdE?=
+ =?utf-8?B?Y2x1bEw1ODdqSGpuRlk3bjRtaEtZL2g2dUc1eDJEMkFhWldTbjVPTThtSWIx?=
+ =?utf-8?B?RUZGWEdrWmVvczVqVkhCVHI1Mjg1NWZtYXNFQUp2SVo0eStNRGYzM0xQcWRi?=
+ =?utf-8?B?VlFselJmZ1VKRnEwZ0pRZ3hZSHpCZGxQb3o4bFRBZ0dheHFmM0FNVEFGa3hs?=
+ =?utf-8?B?dUhONVBMS0NLckE2U2s4YUJxeEUrbHhnQnRvRlQvUThrK1ZoTklRa0x3ZE1J?=
+ =?utf-8?B?a1VHUFI3bWxrancxTkI2V1JJSFFxOW45OXVPSmx1NG50cUMyaFY3UjFVYmtl?=
+ =?utf-8?B?WDNMK085M2wrSEdmZ0FEelh6d3UzWW96NFVvM0VsSDRSU3diWGhoRHA5MXpv?=
+ =?utf-8?B?cGxtell4cm9rUVozQTRHVWRheUZuRXM2c1NtcWN6OWdmVHovUGhRRmRCRW8r?=
+ =?utf-8?B?T1J0Mm42RDlaY3NZcC9qcTF4dUtRL3VSUC9mWGVKWjJuNEdDVTdWSE1ScXYv?=
+ =?utf-8?B?SzNjY1h5cERsRzQxVk1zTENxR1FsRkNHL29jTXhYbHlUOXMwaDlhVldFL1Iy?=
+ =?utf-8?B?YVRQZmF4b1JWMCtIYk5RUHZiaDgydW9yWDY0Q3NGVzdEZHpSQUh6N0pMNWZM?=
+ =?utf-8?B?bFpxcWlKZTU2bS9xd3l1TXBLdnBsTTY1S2lDYzlnZ0FFSys2bGlGWVlXZW1r?=
+ =?utf-8?Q?abWzN/fE89s=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NlEwV1BwMEkxUlM2UnUvRmZNOTlPWnRtTDVzSnh2T2QzTytCbURwSWRvbXNW?=
+ =?utf-8?B?Z0FJS2FtOTZRUmJReEFRVzlqUWVHZktjQzh6NlVXai9TYWF5VHdpbXZaZnhM?=
+ =?utf-8?B?WjlQMzBFWmpOWHN2dkdSMTVvQ2NtTURDbmR0ZS9FTWgrbERVMy9wUkVrUEtu?=
+ =?utf-8?B?R3krOEt5emdBdWVOSGdOVFJZMm5CU2VwRksvL0dVYzlockhFdWRUSDc0T1li?=
+ =?utf-8?B?WmhNelhmSWhhZGhlL1BkSzREVHAvNmFMSXYwRWRoK1RhUDQzZUlUNXgxTkVl?=
+ =?utf-8?B?Q1ZMZ2RlY3AwOEdnWi82ZWNtcWdObXhJbGVXU3VyQmh5QUtQTHhTUjc0VnIz?=
+ =?utf-8?B?VGFUcVlWN0wwVEV4RFdTYlk2anpmYU9ZaGVNNG8zZzhvSndYTkdNZnFvU1Fp?=
+ =?utf-8?B?YTExN2wzVVBSN3hud2hkWEdBQ3BicHhjbWNwUHVITjBFZ3l5NGNiSDBxRUl0?=
+ =?utf-8?B?ZXhTTHJEZDRFbTVhT3hhQkR1WXlFUzV3ODNGYXJxVWNJb1N1STBDak0rcWQx?=
+ =?utf-8?B?WVdKeGlsV0YxOG1vbklXT2xkbDF5K2o5TERSVzU0aWk5a3pBV1hJbHBGOEpN?=
+ =?utf-8?B?N2JjdzRwQkJQTlBiY3QwclUwMjlVUlZxUXZMY0MrdU5aTWtoOURJMndwNC9y?=
+ =?utf-8?B?dzdsRys1dThXT1BKdFM0KzhiZ2NqV1dXMVNFUUppUGluVzVPcG1INDFpQTJo?=
+ =?utf-8?B?alY2REJ3QjlmTkc3TVdCbllKY1dMbElveWRLYkRpSzhuZ3VnREF2QStIZGtT?=
+ =?utf-8?B?bDdGSjFiOG5JUHVQQ2QxNnMwWURNK0d3VU05ZlBPc3ZMeG1tWkpZM1R5RWNo?=
+ =?utf-8?B?Y3NJUk9PbWFvdGpPUTF1SFBGQS8yM2xZRUoyWVBsQ1YvdExkcURuYktUbXJK?=
+ =?utf-8?B?TWNjaEFCTUxqOS9VWFJPUEFpUDJkNFZRTjNHeXR2Y0dUWVp1Tm9WWjJ1ckFW?=
+ =?utf-8?B?WUFyejFhbHVJSGhkbm9VbW5OZlAzT2x4aG03M01SekdXSWdTdHNYaFU0eEJn?=
+ =?utf-8?B?V2xhNUIwaVdQRXMzVVNWbVAvOHkzQTdVMHFqek4xMlBwaWpSOXFNdUlXci9I?=
+ =?utf-8?B?K3VMRFBwa2dqV0FZYysxOTNJSDNJN1ppSmNXVE1qd3lJVS9QTmpRSVo1VllS?=
+ =?utf-8?B?ZzZCd2tReXdnRDg1aEk1ak9tajQzcWdFRG5teGMzRVN0Q3FUSU1QTlV5OHJy?=
+ =?utf-8?B?SUlXRk11MEp1dHAyRTlVWlZkak5KVWNvdjJzcUNBNWF6ZlpwUFp5VTlQeEd0?=
+ =?utf-8?B?SWgzVHU2a3psN0Vja1RxbVZIc1FJUWhvakM4aDV6MHJ4T1dua2cwcVozTFVF?=
+ =?utf-8?B?QzFYMURjTE5PTmZaWkdhQmpJckgwd3hXQ2kzSlJWdC9BRmdPTWJ2VHlubnY2?=
+ =?utf-8?B?YTM1Qk5LN3BEU0pWTk9sMUFtREFKTjNqcTU3U01vNUxTSUIvREU5ejdGcDVU?=
+ =?utf-8?B?YWt6cXYzYTlVSVBRVmQ1aS93dHVQczRUREdFNkVxS0twRThUTkZpRTduU1Ju?=
+ =?utf-8?B?amp0YSt6c3FycW1wV05nOFVia1NBdmJOY3Evd1liajNlbEd6VXZFVU1OK0RH?=
+ =?utf-8?B?d3laT0UvMUpkdUx0LzRqdGVqMUlWcktGK3ExNnBQU2ZaRm9rWUF6WHpydUNM?=
+ =?utf-8?B?NWJmNllKN1NCdHFFdlB3UUloVkNlYVRZTmt3aWNyVENOTVZkM3F1aGRwN3JL?=
+ =?utf-8?B?NDJWdTFsSmJ2Ui9haWpmZEU4eTFwY0FDZ0JJQWYyRElHNmlONThkV1JraU5P?=
+ =?utf-8?B?cEs5U2FJamY3SktjcmkvMFNKSzV1VTBLOFg3c3hhb1NsVVJtaTFHNzhZWUVC?=
+ =?utf-8?B?a3g5bzFnTWwyQ3NEaTFPUGxVY0tpTEhmUUJOdHljbUNuSHM5SEwycTVrcHJX?=
+ =?utf-8?B?RERneUdpSFlDSUUvcnk5YWFhcUpwOHhKdWZWSVExZTF5Wnh3RVc4ZVZNZXV5?=
+ =?utf-8?B?QXd6SEhRdmhHelY1b2JrR0pidjhXUjJTVHJFOHBYSFhVaStLQXgyY2hrQ2dn?=
+ =?utf-8?B?bkxPODhadFMwM3BIcGZ5ZjRLL3NSNnB0RGszYVlTTTE4Y1htNFRCNWlHY0NM?=
+ =?utf-8?B?WVJkVmRkOFlTSXkzSzNzREZXb0ExMjNObVdRRjJ0UDFKdWpzbVRUUDdiTGRo?=
+ =?utf-8?Q?GSYXCWZ6VN2VVrOAG5+APG/19?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a7f7193-2daa-45e7-4fa4-08ddb332b89e
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 15:20:58.6334
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +nwRDGwXWCRTg7BVnZTHGg2kRKXHVQgwMp7oqBObdkQZ09HwknGIyTd2oJA91Z7MBx4YW3QiweuaH4tamfG3Uw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6115
 
-On Fri, Mar 28, 2025, Xin Li (Intel) wrote:
-> From: Xin Li <xin3.li@intel.com>
+On 6/23/25 20:41, Alexey Kardashevskiy wrote:
+> On 21/6/25 05:20, Tom Lendacky wrote:
+>> On 6/17/25 04:43, Alexey Kardashevskiy wrote:
+>>> The __snp_alloc_firmware_pages() helper allocates pages in the firmware
+>>> state (alloc + rmpupdate). In case of failed rmpupdate, it tries
+>>> reclaiming pages with already changed state. This requires calling
+>>> the PSP firmware and since there is sev_cmd_mutex to guard such calls,
+>>> the helper takes a "locked" parameter so specify if the lock needs to
+>>> be held.
+>>>
+>>> Most calls happen from snp_alloc_firmware_page() which executes without
+>>> the lock. However
+>>>
+>>> commit 24512afa4336 ("crypto: ccp: Handle the legacy TMR allocation
+>>> when SNP is enabled")
+>>>
+>>> switched sev_fw_alloc() from alloc_pages() (which does not call the
+>>> PSP) to
+>>> __snp_alloc_firmware_pages() (which does) but did not account for the fact
+>>> that sev_fw_alloc() is called from __sev_platform_init_locked()
+>>> (via __sev_platform_init_handle_tmr()) and executes with the lock held.
+>>>
+>>> Add a "locked" parameter to __snp_alloc_firmware_pages().
+>>> Make sev_fw_alloc() use the new parameter to prevent potential deadlock in
+>>> rmp_mark_pages_firmware() if rmpupdate() failed.
+>>
+>> Would it make sense to add the locked parameter to sev_fw_alloc(), too?
 > 
-> Do not virtualize FRED if FRED consistency checks fail.
+> That would be another patch then, this one is a fix ;)
 > 
-> Either on broken hardware, or when run KVM on top of another hypervisor
-> before the underlying hypervisor implements nested FRED correctly.
+> and I'd probably just ditch both snp_alloc_firmware_page() and
+> sev_fw_alloc(), rename __snp_alloc_firmware_pages() to
+> snp_alloc_firmware_page() and just use this one everywhere. Nobody needs
+> page struct anyway, and the locking will be clear everywhere. Also do the
+> same for snp_free_firmware_page().
 > 
-> Suggested-by: Chao Gao <chao.gao@intel.com>
-> Signed-off-by: Xin Li <xin3.li@intel.com>
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> Tested-by: Shan Kang <shan.kang@intel.com>
-> Reviewed-by: Chao Gao <chao.gao@intel.com>
-> ---
+> It is just that snp_alloc_firmware_page() and snp_free_firmware_page() are
+> EXPORT_SYMBOL_GPL,
 > 
-> Change in v4:
-> * Call out the reason why not check FRED VM-exit controls in
->   cpu_has_vmx_fred() (Chao Gao).
-> ---
->  arch/x86/kvm/vmx/capabilities.h | 11 +++++++++++
->  arch/x86/kvm/vmx/vmx.c          |  3 +++
->  2 files changed, 14 insertions(+)
+>> Right now there is only one caller of sev_fw_alloc(), but in the future,
+>> if some other path should call sev_fw_alloc() and that path doesn't have
+>> the lock, then we'll miss taking it.
 > 
-> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-> index b2aefee59395..b4f49a4690ca 100644
-> --- a/arch/x86/kvm/vmx/capabilities.h
-> +++ b/arch/x86/kvm/vmx/capabilities.h
-> @@ -400,6 +400,17 @@ static inline bool vmx_pebs_supported(void)
->  	return boot_cpu_has(X86_FEATURE_PEBS) && kvm_pmu_cap.pebs_ept;
->  }
->  
-> +static inline bool cpu_has_vmx_fred(void)
-> +{
-> +	/*
-> +	 * setup_vmcs_config() guarantees FRED VM-entry/exit controls
-> +	 * are either all set or none.  So, no need to check FRED VM-exit
-> +	 * controls.
-> +	 */
-> +	return cpu_feature_enabled(X86_FEATURE_FRED) &&
+> I'd rather just ditch sev_fw_alloc(), does not look very useful. Thanks,
 
-Drop the cpu_feature_enabled().  These helpers are all about checking raw CPU
-support; whether or not the kernel is configured to support FRED is irrelevant.
+Ok, I'm good with this patch for the fix. Can you also provide a follow up
+patch(es) to address what you've discussed?
 
-[For these helpers; KVM obviously needs to account for FRED support in other
- paths, but that should be automagically handled by kvm_set_cpu_caps()]
+For the fix:
+Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
 
+Thanks,
+Tom
 
-> +		(vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_FRED);
-> +}
-> +
->  static inline bool cpu_has_notify_vmexit(void)
->  {
->  	return vmcs_config.cpu_based_2nd_exec_ctrl &
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index e38545d0dd17..ab84939ace96 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -8052,6 +8052,9 @@ static __init void vmx_set_cpu_caps(void)
->  		kvm_cpu_cap_check_and_set(X86_FEATURE_DTES64);
->  	}
->  
-> +	if (!cpu_has_vmx_fred())
-> +		kvm_cpu_cap_clear(X86_FEATURE_FRED);
-> +
->  	if (!enable_pmu)
->  		kvm_cpu_cap_clear(X86_FEATURE_PDCM);
->  	kvm_caps.supported_perf_cap = vmx_get_perf_capabilities();
-> -- 
-> 2.48.1
+> 
+> 
+> 
+>> Thanks,
+>> Tom
+>>
+>>>
+>>> Fixes: 24512afa4336 ("crypto: ccp: Handle the legacy TMR allocation
+>>> when SNP is enabled")
+>>> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
+>>> ---
+>>>   drivers/crypto/ccp/sev-dev.c | 8 ++++----
+>>>   1 file changed, 4 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
+>>> index 3451bada884e..16a11d5efe46 100644
+>>> --- a/drivers/crypto/ccp/sev-dev.c
+>>> +++ b/drivers/crypto/ccp/sev-dev.c
+>>> @@ -434,7 +434,7 @@ static int rmp_mark_pages_firmware(unsigned long
+>>> paddr, unsigned int npages, boo
+>>>       return rc;
+>>>   }
+>>>   -static struct page *__snp_alloc_firmware_pages(gfp_t gfp_mask, int
+>>> order)
+>>> +static struct page *__snp_alloc_firmware_pages(gfp_t gfp_mask, int
+>>> order, bool locked)
+>>>   {
+>>>       unsigned long npages = 1ul << order, paddr;
+>>>       struct sev_device *sev;
+>>> @@ -453,7 +453,7 @@ static struct page
+>>> *__snp_alloc_firmware_pages(gfp_t gfp_mask, int order)
+>>>           return page;
+>>>         paddr = __pa((unsigned long)page_address(page));
+>>> -    if (rmp_mark_pages_firmware(paddr, npages, false))
+>>> +    if (rmp_mark_pages_firmware(paddr, npages, locked))
+>>>           return NULL;
+>>>         return page;
+>>> @@ -463,7 +463,7 @@ void *snp_alloc_firmware_page(gfp_t gfp_mask)
+>>>   {
+>>>       struct page *page;
+>>>   -    page = __snp_alloc_firmware_pages(gfp_mask, 0);
+>>> +    page = __snp_alloc_firmware_pages(gfp_mask, 0, false);
+>>>         return page ? page_address(page) : NULL;
+>>>   }
+>>> @@ -498,7 +498,7 @@ static void *sev_fw_alloc(unsigned long len)
+>>>   {
+>>>       struct page *page;
+>>>   -    page = __snp_alloc_firmware_pages(GFP_KERNEL, get_order(len));
+>>> +    page = __snp_alloc_firmware_pages(GFP_KERNEL, get_order(len), true);
+>>>       if (!page)
+>>>           return NULL;
+>>>   
 > 
