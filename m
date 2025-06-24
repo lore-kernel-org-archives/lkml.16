@@ -1,159 +1,216 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7035279DC8;
-	Tue, 24 Jun 2025 10:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A19279DC8;
+	Tue, 24 Jun 2025 10:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750761602; cv=none; b=eLTli0ktk3OGSdwkj2alWoYQ8YmJslW6yqHy7UHSCIvE9Tg0kR6pxHvM0IpooNpT6Sxu4dNOak/E0lYqNLeL18ilC+CgH5KxulYX2hVDTR/QJm6mKwGoELT0nyqupjrfAlTQx70eEyjAH6BiFCReUsW9sibijuWmAeh+yqjDiXw=
+	t=1750761607; cv=none; b=jBdUwDUNri/EOqrm5kjsjiAoJcepYN1RPBHtUPlcI+utZrX4vHGKC8JrfQu7eLk2nZeBez4VVwFHyE1Nb0oKhCptOrJFV/PR/KC60JE9i6+vB0CalgZaD4of8bzBqCRDb8zBo00+kmDjhzkKw8OBYqaEg5PQL6t1y7DxZOHmoug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750761602; c=relaxed/simple;
-	bh=XgW7u+cppxBGsC7FwEGR//C0SsF7znnagrv2bfxGCNI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=MIYGnR0wJFgmQoG8Stwu37juTISodHNejUqEkbWZiED/gyDhE4YTpRtiljUVNPsu/bi+62jTNzdCnchF3B0wQ4p3RUY+djTycGFG1bOvHPCkv89V4geCP9SGU7vdVgY9kF85Y8zizCDckBtwo8epcsuMRfY28jCHMd9CSnXN8oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=IAttkQBD; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750761607; c=relaxed/simple;
+	bh=f8XsI5O1CkfkYFDeROjVLKjcyy9Tl6y4vwZNlHiFsyg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=RASDgoa9P94TdrpI1W91tg257cW/56rp4OpUy1zGOud0g3K4yQHxX0S4NnDqFOXPTzt99DWWTo4mV97PZ3foJ8ibEnxBZ//EsgrT5YL4ywINwv7OWiwl33cu2UxteQ3f9FGjaOS1iko2dDIx3jJQEq8DLUa4qCf2dMEoKJLqbXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v1IFWcFr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3q5D0uT4; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IAttkQBD"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55OAdrQc1138040;
-	Tue, 24 Jun 2025 05:39:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750761593;
-	bh=1UndgjPOX1TCSZCvOeL9kzhOH9nzk/4CegsNiR3QXeQ=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=IAttkQBDiEJkOHEDXHW7005DUZQuTbMFNZRmHM/51KZe3O/UWLyeI6xH4ipGx5q/t
-	 WDGQwOiybs4H2rRBnLYoUAK5H4LaAM6MzcinXU6ykw1sAxcTNe39nQ666dUOUM2nYN
-	 92UEYeue8BTdelqz0Qp6gvm/Z7gdGaOWpzCfUnPc=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55OAdrwh4136188
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 24 Jun 2025 05:39:53 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 24
- Jun 2025 05:39:52 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Tue, 24 Jun 2025 05:39:52 -0500
-Received: from [172.24.227.38] (ula0502350.dhcp.ti.com [172.24.227.38])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55OAdl6T1625959;
-	Tue, 24 Jun 2025 05:39:48 -0500
-Message-ID: <c4362d9e-62a4-4c28-b1cd-c338467f92ae@ti.com>
-Date: Tue, 24 Jun 2025 16:09:47 +0530
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v1IFWcFr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3q5D0uT4"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750761604;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PmKtYLO9DDYaj9Me5RnB2od40m2nfSC9/3iVyLRTgPc=;
+	b=v1IFWcFrbObYtAZ/RT0Kppv2+R1ysQJUiAOhyBDBdBD7GRafKVhWIJlEp4M1/MAbW7r3Ca
+	o8ExT+FJNwE1MLi5ZHj7mixRk7DPF7y0JESsK+b/BXPx0H36L3GknAlPGKQ80sDZSd8kX8
+	c7tk3xzYOhkh9+PB8l0sOAqBJbObspXXOYombtNTWorYQc/dnlFuIdXCWjoZNydWHsEEfw
+	BxAB1cxurgSdDrVSKVwi91WSkw72/7/zhYIxKx2zfbMR8WyyBWVel7X/khQj5qlBzANr+W
+	waHxljQ3WDmwbOBvDQ6fj/PD/LbBRXtKBrQTzgU9iEnxcn0NlO2wYO/ak4OZtw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750761604;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PmKtYLO9DDYaj9Me5RnB2od40m2nfSC9/3iVyLRTgPc=;
+	b=3q5D0uT4oSfP2VhfCp/l4dQktoBuSpc64H38sBuCNB8bE8D63GfRugryCyLDa3R+2guT87
+	o5CUyJOaQUdlplCw==
+To: Pan Chuang <panchuang@vivo.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui
+ <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Miquel Raynal
+ <miquel.raynal@bootlin.com>, Markus Mayer <mmayer@broadcom.com>, Broadcom
+ internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ zhanghongchen <zhanghongchen@loongson.cn>, Yinbo Zhu
+ <zhuyinbo@loongson.cn>, Amit Kucheria <amitk@kernel.org>, Thara Gopinath
+ <thara.gopinath@gmail.com>, Niklas =?utf-8?Q?S=C3=B6derlund?=
+ <niklas.soderlund@ragnatech.se>, Geert Uytterhoeven
+ <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Heiko
+ Stuebner <heiko@sntech.de>, Bartlomiej Zolnierkiewicz
+ <bzolnier@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar
+ <alim.akhtar@samsung.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, Vasily Khoruzhick
+ <anarsoul@gmail.com>, Yangtao Li <tiny.windzz@gmail.com>, Chen-Yu Tsai
+ <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
+ <samuel@sholland.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan
+ Hunter <jonathanh@nvidia.com>, Kunihiko Hayashi
+ <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, Srinivas Pandruvada
+ <srinivas.pandruvada@linux.intel.com>, Greg KH
+ <gregkh@linuxfoundation.org>, Peter Zijlstra <peterz@infradead.org>,
+ =?utf-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>,
+ Conor Dooley
+ <conor.dooley@microchip.com>, Julien Panis <jpanis@baylibre.com>, Arnd
+ Bergmann <arnd@arndb.de>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=
+ <u.kleine-koenig@baylibre.com>,
+ Colin Ian King <colin.i.king@gmail.com>, Raphael Gallais-Pou
+ <rgallaispou@gmail.com>, Patrice Chotard <patrice.chotard@foss.st.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, "Jiri Slaby (SUSE)"
+ <jirislaby@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Andrew Morton <akpm@linux-foundation.org>, Costa Shulyupin
+ <costa.shul@redhat.com>, Yury Norov <yury.norov@gmail.com>, Cheng-Yang
+ Chou <yphbchou0911@gmail.com>, Caleb Sander Mateos
+ <csander@purestorage.com>, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ imx@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-sunxi@lists.linux.dev,
+ linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: Yangtao Li <frank.li@vivo.com>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=
+ <u.kleine-koenig@pengutronix.de>, Jonathan Cameron
+ <Jonathan.Cameron@Huawei.com>, Pan Chuang <panchuang@vivo.com>
+Subject: Re: [PATCH v6 01/24] genirq/devres: Add
+ devm_request_threaded_irq_probe() and devm_request_irq_probe()
+In-Reply-To: <20250623123054.472216-2-panchuang@vivo.com>
+References: <20250623123054.472216-1-panchuang@vivo.com>
+ <20250623123054.472216-2-panchuang@vivo.com>
+Date: Tue, 24 Jun 2025 10:13:10 +0200
+Message-ID: <87h605o8vd.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv4 2/6] dt-bindings: arm: ti: Add bindings for AM62D2 SoC
-To: Krzysztof Kozlowski <krzk@kernel.org>, <nm@ti.com>, <vigneshr@ti.com>,
-        <praneeth@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <khasim@ti.com>, <v-singh1@ti.com>, <afd@ti.com>, <bb@ti.com>,
-        <devarsht@ti.com>
-References: <20250623141253.3519546-1-p-bhagat@ti.com>
- <20250623141253.3519546-3-p-bhagat@ti.com>
- <2e26a403-fac2-4217-8525-24e39d4c92c5@kernel.org>
-Content-Language: en-US
-From: Paresh Bhagat <p-bhagat@ti.com>
-In-Reply-To: <2e26a403-fac2-4217-8525-24e39d4c92c5@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain
 
-Hi Krzysztof,
+On Mon, Jun 23 2025 at 20:30, Pan Chuang wrote:
+> +/**
+> + * devm_request_threaded_irq_probe - request irq for a managed device with error msg (recommended in probe)
+> + * @dev:	Device to request interrupt for
+> + * @irq:	Interrupt line to allocate
+> + * @handler:	Function to be called when the IRQ occurs
+> + * @thread_fn:	Function to be called in a threaded interrupt context. NULL
+> + *		for devices which handle everything in @handler
+> + * @irqflags:	Interrupt type flags
+> + * @devname:	An ascii name for the claiming device, dev_name(dev) if NULL
+> + * @dev_id:	A cookie passed back to the handler function
+> + * @info:	Optional additional error log
+> + *
+> + * This is a variant of the devm_request_threaded_irq function.
+> + * It will print an error message by default when the request fails,
+> + * and the consumer can add a special error msg.
+> + *
+> + * Except for the extra @info argument, this function takes the
+> + * same arguments and performs the same function as
+> + * devm_request_threaded_irq(). IRQs requested with this function will be
+> + * automatically freed on driver detach.
 
-Thanks for the review.
+I really have to ask why you need the extra info argument. It's not
+providing any really value.
 
-On 23/06/25 19:55, Krzysztof Kozlowski wrote:
-> On 23/06/2025 16:12, Paresh Bhagat wrote:
->> The AM62D2 SoC belongs to the K3 Multicore SoC architecture with DSP core
->> targeted for applications needing high-performance Digital Signal
->> Processing. It is used in applications like automotive audio systems,
->> professional sound equipment, radar and radio for aerospace, sonar in
->> marine devices, and ultrasound in medical imaging. It also supports
->> precise signal analysis in test and measurement tools.
-> Drop all marketing stuff.
->
->> Some highlights of AM62D2 SoC are:
-> This is not a product brochure.
->
-> A nit, subject: drop second/last, redundant "bindings". The
-> "dt-bindings" prefix is already stating that these are bindings.
-> See also:
-> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+What's important when the interrupt request fails?
 
+    1) The device, which is identifiable by @devname and/or dev_name(@dev)
 
-Will fix this in next version. Thanks
->
->
->
->> * Quad-Cortex-A53s (running up to 1.4GHz) in a single cluster. Dual/Single
->>    core variants are provided in the same package to allow HW compatible
->>    designs.
->> * One Device manager Cortex-R5F for system power and resource management,
->>    and one Cortex-R5F for Functional Safety or general-purpose usage.
->> * DSP with Matrix Multiplication Accelerator(MMA) (up to 2 TOPS) based on
->>    single core C7x.
->> * 3x Multichannel Audio Serial Ports (McASP) Up to 4/6/16 Serial Data Pins
->>    which can Transmit and Receive Clocks up to 50MHz, with multi-channel I2S
->>    and TDM Audio inputs and outputs.
->> * Integrated Giga-bit Ethernet switch supporting up to a total of two
->>    external ports with TSN capable to enable audio networking features such
->>    as, Ethernet Audio Video Bridging (eAVB) and Dante.
->> * 9xUARTs, 5xSPI, 6xI2C, 2xUSB2, 3xCAN-FD, 3x eMMC and SD, OSPI memory
->>    controller, 1x CSI-RX-4L for Camera, eCAP/eQEP, ePWM, among other
->>    peripherals.
->> * Dedicated Centralized Hardware Security Module with support for secure
->>    boot, debug security and crypto acceleration and trusted execution
->>    environment.
->> * One 32 bit DDR Subsystem that supports LPDDR4, DDR4 memory types.
->> * Low power mode support: Partial IO support for CAN/GPIO/UART wakeup.
+    2) The interrupt number
 
-I will refine the first two paragraphs to be very concise.
+    3) The error code
 
+If you want to be more expressive then you can also print out the
+handler function symbols, which makes it even more useful to map back
+into the affected driver.
 
->>
->> This SoC is of part K3 AM62x family, which includes the AM62A and AM62P
->> variants. While the AM62A and AM62D are largely similar, the AM62D is
->> specifically targeted for general-purpose DSP applications, whereas the
->> AM62A focuses on edge AI workloads. A key distinction is that the AM62D
->> does not include multimedia components such as the video encoder/decoder,
->> MJPEG encoder, Vision Processing Accelerator (VPAC) for image signal
->> processing, or the display subsystem. Additionally, the AM62D has a
->> different pin configuration compared to the AM62A, which impacts
->> embedded software development.
+As you cited correctly I said back then:
 
+  "So there is certainly an argument to be made that this particular
+   function should print a well formatted and informative error
+   message."
 
-This section is important as it clarifies the difference between AM62a 
-and AM62d, as we are reusing AM62a dtsi files for AM62d. Let me know if 
-you need a shorter version.
+This particular function is: devm_request_threaded_irq().
 
+IOW, I did not ask you should go an create a new one, right?
 
->>
->> This adds dt bindings for TI's AM62D2 family of devices.
->>
->> More details about the SoCs can be found in the Technical Reference Manual:
->> https://www.ti.com/lit/pdf/sprujd4
->>
->> Signed-off-by: Paresh Bhagat <p-bhagat@ti.com>
->
-> And what happened with the previous comments?
+The extra @info argument is just proliferating the nonsensical
+information which driver developers put into the output. I just looked
+through a couple of your thermal patches (hint, I had to chase them
+manually because you failed to thread them properly). While most of them
+provide NULL, the two adding 'alarm' are really not providing any useful
+information.
 
+The point is, that the information is aimed at developers and not to be
+helpful for Joe User to identify/fix a problem. If the driver
+developer/maintainer is not able to track back the information (name,
+number, error code) to the driver in question, then the added "foo" info
+is not going to make him any smarter.
 
-Yep there were some indentation problems earlier, which is fixed in this 
-version. There was also an ack from Conor Dooley in v3. I will include that.
+If that happens, then being able to map it back to the driver is only 1%
+of the problem analysis, simply because you need to decode the
+underlying problem (DT, vector exhaustion, memory exhaustion ....) to be
+able to address it.
 
+So just make devm_request.*irq() emit a uniform and informative message
+on fail and you can go and remove all the homebrewn useless error prints
+from the drivers.
 
->
-> Reach internally TI so they will coach you how to send patches upstream.
->
-> Best regards,
-> Krzysztof
+It does not matter at all if there are duplicated error messages for a
+release or two until all drivers have been cleaned up. This is not the
+common case and only rarely triggered. So what?
+
+> +int devm_request_threaded_irq_probe(struct device *dev, unsigned int irq,
+> +				    irq_handler_t handler, irq_handler_t thread_fn,
+> +				    unsigned long irqflags, const char *devname,
+> +				    void *dev_id, const char *info)
+> +{
+> +	int rc;
+> +
+> +	rc = devm_request_threaded_irq(dev, irq, handler, NULL, irqflags, devname, dev_id);
+
+This is just wrong as you fail to hand in thread_fn.
+
+Q: How was this code ever tested?
+A: Not at all.
+
+> Could you please consider merging the entire series into your branch? 
+
+You're seriously asking that for something which is so obviously broken?
+
+> +	if (rc) {
+> +		return dev_err_probe(dev, rc, "Failed to request %sinterrupt %u %s %s\n",
+> +				     thread_fn ? "threaded " : "", irq, devname ? : dev_name(dev),
+> +				     info ? : "");
+
+This is wrong too because devm_request_threaded_irq() allows you to hand
+in both a hard interrupt and a threaded handler and either one of them
+can be NULL.
+
+So what you want to add in devm_request_threaded_irq() is something like
+this:
+
+	if (rc < 0) {
+		return dev_err_probe(dev, rc, "request_irq(%u) %pS %pS %s\n",
+                        	     handler, thread_fn, devname ? : "");
+        }
+
+dev_err_probe() already prefixes the caller string with 'error ', so
+there is no need for a lenghty 'failed to request ....' novel.
+
+Thanks,
+
+        tglx
