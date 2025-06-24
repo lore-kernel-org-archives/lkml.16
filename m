@@ -1,174 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71272D23B8
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0D72C1590;
+	Tue, 24 Jun 2025 15:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750777165; cv=none; b=EVr9RN5pqNcHgodq1QUozEyC6I0JdUJ6r+6M5ekIEujxJLJcSvP1LpI6ensNBUtX9u9Apt5R+8db/Y8xAW6oh29TtYaNrZDeP3NXfdG0evBEQSEG7LfMtwhc7F34kD8H+KEVj/FYU7Fj9IA5NgHHVA3cmmFDtttMCKKJYU0L3hs=
+	t=1750777237; cv=none; b=INQL5cmCHufmafUMPF/DkQG1saV77AxOLlPb0yR1DM1LQJmlcDdjbYtA1e+UtCMNIMsWi13BrVg4tfymqZfWazvsi/m26xK8HuPsQuNhZ3zAyMRiPGCFmf0NDrXGoreNgC2UvEK8jU8TiCTcxPoOw/EMe3IJvUiBNTZceqJEZfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750777165; c=relaxed/simple;
-	bh=gSrgyF7nkaMy9jgn9VB3Vel47cqINKRy4i1jm+eFhC4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fNj7fttLZMOCsW0fKAMBQl+VF+JyiSpswPMJeZJExynjCO3FIldJ2tzPJw2/mB8R/DHs920WiVyeK92ygdLdVtrxxE+5h1Jn2Jbgibq4/It5bGrgfJuWQUkl5O+6nv/7b+BDqlOTn6BtEiIaQFNsqtvxx2KNCsiBHLTuY2RzRc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gWTDlOAk; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
+	s=arc-20240116; t=1750777237; c=relaxed/simple;
+	bh=R3yjv+0wYnNEtTMO8SBzprJW3ICc+hObnUMrM7Ptmno=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bbx9UEa/1t5gAt84vjw7EuA8EbM2O11I8pNfnCVlwBv9ZKMnSuvYJ0h6ZeDKgzDMPv4Z7Q8HE10u1/Tw35WnpNCBR0pSPg91MeG0JVPZNVWyA8e/zrkG7WVG/cI39ci4ewFSNkZBggxHmRGwhPCR1sLvVBjPjN/0d6vS7NzZ03U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VWLkT13X; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gWTDlOAk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750777164; x=1782313164;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=gSrgyF7nkaMy9jgn9VB3Vel47cqINKRy4i1jm+eFhC4=;
-  b=gWTDlOAkJRQ0hmMhHdTCU67fZHRNaSsy/UnAvF+0hNsDaUz0He4GoheD
-   e7myDV05nDjk9MPiiXwg2+kTRaZbv4vROK99vE6sKbnlWApiWLkq7ox6h
-   vboIv1XoxDlwRbAKfH5bQ3DmgdB9g2c8IWMkKMPpknTizTor240uncjQs
-   phU3l92cIziHKh6ef7eMVxpXNRiVBttlhIDNJG+EnuEqjPx8XSXP9/YHF
-   jMnuMeiG+7/MeJuC/q2/IktfrUUHnrnjnXm1SoqbabPPRwYg7rzRVzAes
-   oabHHhdlUQjGfNO8KRWBRHDoFQEA8r2Jtlq6YhyKfSQoz5/7bmgQRDXJ1
-   g==;
-X-CSE-ConnectionGUID: Uu/9ThEmS7amvCm64Zva1Q==
-X-CSE-MsgGUID: G1B1uq5ZSGmBhd79kuDwSA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="64080068"
-X-IronPort-AV: E=Sophos;i="6.16,262,1744095600"; 
-   d="scan'208";a="64080068"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 07:59:23 -0700
-X-CSE-ConnectionGUID: Io0QpRsIQ4OlnmQfnbD6Sg==
-X-CSE-MsgGUID: 7EFsW7Y6QIeGEVJtNFNuGQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,262,1744095600"; 
-   d="scan'208";a="152435025"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa008.jf.intel.com with ESMTP; 24 Jun 2025 07:59:22 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 71D81224; Tue, 24 Jun 2025 17:59:20 +0300 (EEST)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: dave.hansen@intel.com
-Cc: acme@redhat.com,
-	aik@amd.com,
-	akpm@linux-foundation.org,
-	alexander.shishkin@linux.intel.com,
-	andrew.cooper3@citrix.com,
-	ardb@kernel.org,
-	ast@kernel.org,
-	bp@alien8.de,
-	brijesh.singh@amd.com,
-	changbin.du@huawei.com,
-	christophe.leroy@csgroup.eu,
-	corbet@lwn.net,
-	daniel.sneddon@linux.intel.com,
-	dave.hansen@linux.intel.com,
-	ebiggers@google.com,
-	geert+renesas@glider.be,
-	houtao1@huawei.com,
-	hpa@zytor.com,
-	jgg@ziepe.ca,
-	jgross@suse.com,
-	jpoimboe@kernel.org,
-	kai.huang@intel.com,
-	kees@kernel.org,
-	kirill.shutemov@linux.intel.com,
-	leitao@debian.org,
-	linux-doc@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux@rasmusvillemoes.dk,
-	luto@kernel.org,
-	mcgrof@kernel.org,
-	mhiramat@kernel.org,
-	michael.roth@amd.com,
-	mingo@kernel.org,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	paulmck@kernel.org,
-	pawan.kumar.gupta@linux.intel.com,
-	peterz@infradead.org,
-	rick.p.edgecombe@intel.com,
-	rppt@kernel.org,
-	sandipan.das@amd.com,
-	shijie@os.amperecomputing.com,
-	sohil.mehta@intel.com,
-	tglx@linutronix.de,
-	tj@kernel.org,
-	tony.luck@intel.com,
-	vegard.nossum@oracle.com,
-	x86@kernel.org,
-	xin3.li@intel.com,
-	xiongwei.song@windriver.com,
-	ytcoode@gmail.com
-Subject: [PATCH] x86/vsyscall: Do not require X86_PF_INSTR to emulate vsyscall
-Date: Tue, 24 Jun 2025 17:59:18 +0300
-Message-ID: <20250624145918.2720487-1-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <265eef27-aecb-479e-a293-c2e88d69e6ec@intel.com>
-References: <265eef27-aecb-479e-a293-c2e88d69e6ec@intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VWLkT13X"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=g1WgOkP4gt8nwCNgZux4aVi+SEORxoTzX5CyUlmMViY=; b=VWLkT13X1HdqxVW29bEotP0ulm
+	4fkJFH4xdWXFRhNA48yW2YmXv+6qa6ZKaidJqdmQVDlezYzKwmH3IRKOASiTP7D9I5FfxPyJeISVE
+	50bENnTUFIDG9ygePqiY3d3fduJg6jqQObsWFoN1I1RO97n4LJAlfmgcJnYu1PJg4y54bxL9NScjN
+	WoU8rlAHJwOlClSvK21NAxSLByvUZK4wccCs2+cj8EEV2HSDc/vLknrzOCQgTYve99LMIYq6YwcrF
+	VnCEOlSwmj9E8HTLW46N8dGh4Wnnt44q4OXuZUyS1KI8VcW6kW0WmvQum0sjRY0bsHR7SxWxBIuRi
+	5sVQuSKQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uU58I-00000005TTn-1wOF;
+	Tue, 24 Jun 2025 15:00:22 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0C4C7307E51; Tue, 24 Jun 2025 17:00:21 +0200 (CEST)
+Date: Tue, 24 Jun 2025 17:00:21 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 08/14] unwind deferred: Use bitmask to determine
+ which callbacks to call
+Message-ID: <20250624150021.GX1613200@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org>
+ <20250611010429.105907436@goodmis.org>
+ <20250620081542.GK1613200@noisy.programming.kicks-ass.net>
+ <20250624105538.6336a717@batman.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250624105538.6336a717@batman.local.home>
 
-emulate_vsyscall() expects to see X86_PF_INSTR in PFEC on a vsyscall
-page fault, but the CPU does not report X86_PF_INSTR if neither
-X86_FEATURE_NX nor X86_FEATURE_SMEP are enabled.
+On Tue, Jun 24, 2025 at 10:55:38AM -0400, Steven Rostedt wrote:
 
-X86_FEATURE_NX should be enabled on nearly all 64-bit CPUs, except for
-early P4 processors that did not support this feature.
+> > Which is somewhat inconsistent;
+> > 
+> >   __clear_bit()/__set_bit()
+> 
+> Hmm, are the above non-atomic?
 
-Instead of explicitly checking for X86_PF_INSTR, compare the fault
-address to RIP.
-
-On machines with X86_FEATURE_NX enabled, issue a warning if RIP is equal
-to fault address but X86_PF_INSTR is absent.
-
-Originally-by: Dave Hansen <dave.hansen@intel.com>
-Link: https://lore.kernel.org/all/bd81a98b-f8d4-4304-ac55-d4151a1a77ab@intel.com
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reported-by: Andrew Cooper <andrew.cooper3@citrix.com>
-Reviewed-by: Andrew Cooper <andrew.cooper3@citrix.com>
----
- arch/x86/entry/vsyscall/vsyscall_64.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
-index c9103a6fa06e..0b0e0283994f 100644
---- a/arch/x86/entry/vsyscall/vsyscall_64.c
-+++ b/arch/x86/entry/vsyscall/vsyscall_64.c
-@@ -124,7 +124,8 @@ bool emulate_vsyscall(unsigned long error_code,
- 	if ((error_code & (X86_PF_WRITE | X86_PF_USER)) != X86_PF_USER)
- 		return false;
- 
--	if (!(error_code & X86_PF_INSTR)) {
-+	/* Avoid emulation unless userspace was executing from vsyscall page: */
-+	if (address != regs->ip) {
- 		/* Failed vsyscall read */
- 		if (vsyscall_mode == EMULATE)
- 			return false;
-@@ -136,13 +137,16 @@ bool emulate_vsyscall(unsigned long error_code,
- 		return false;
- 	}
- 
-+
-+	/* X86_PF_INSTR is only set when NX is supported: */
-+	if (cpu_feature_enabled(X86_FEATURE_NX))
-+		WARN_ON_ONCE(!(error_code & X86_PF_INSTR));
-+
- 	/*
- 	 * No point in checking CS -- the only way to get here is a user mode
- 	 * trap to a high address, which means that we're in 64-bit user code.
- 	 */
- 
--	WARN_ON_ONCE(address != regs->ip);
--
- 	if (vsyscall_mode == NONE) {
- 		warn_bad_vsyscall(KERN_INFO, regs,
- 				  "vsyscall attempted with vsyscall=none");
--- 
-2.47.2
-
+Yes, ctags or any other code browser of you choice should get you to
+their definition, which has a comment explaining the non-atomicy of
+them.
