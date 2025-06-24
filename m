@@ -1,275 +1,188 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D880027AC45
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750769725; cv=none; b=e1CiMF8H1nSrMV6VS3jWhapHPTcgoPqYle0SwbMsltB2VHl46O4BTBtadUAEMTdkZpnod0GLHCTDClcqp5H6Lw4KBB5k9g643z6anBVnSVkvpb5ub5ax/CaDvc/QoCM1bCJZD2RC4+mE3B8Xz/1yXd96TZhfgwbCHMRfN/226Ww=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750769725; c=relaxed/simple;
-	bh=3agW45/orkxK4TWq6pZ9P6YJQuzYqnefcIdgkf60dXY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hj6Ji965VGTP3GE4sbCFUe/L3GR4vuGsnjOF1L776mShe3DlaHg0CC81MLd4ws4CMH9Hq//mJ/GSORzNwg4eYhbdlNEghLtf+nTEPQfwkKmnliAqoTe/YCexn1o6MjplC0A1gc9iO8pDrLDLTVJXamsh4yyuja/Y6ybAmyqM2lQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EI++tI+B; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC53F239E7E;
+	Tue, 24 Jun 2025 12:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.152.168
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750769735; cv=fail; b=OEf96t6MDW2pWlj552KlK3hypNldfCdCybxnXssnydTs1tO5jjYHqxMOhF7Qsphqf6J1+/oMSwuHka41DTCDAgQoWDeZbKCvYehPpir2qjGMHdwHPP69/fc1kFRxhnz1CKNeZbDK3R7EvKW0/OjlgyYRdh2kz5Dz80yxFuiodhs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750769735; c=relaxed/simple;
+	bh=90f9nqYUSecDSC9W3CSZILgSOuH2865W5Z5w0LiE+Bc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=J7L/vdfK374CFKWhLTGPUS2Ef0UmaLZSfNk6o321tDvsrB4qbi2jJRWx+4t51GVGqdp1/1FDIM6qqMbgyELqh+7QzinqzKQa2CDkgv0sp+E1i8J3UDSgcC7JPrARojJXx+GtEIjDh7ZdUwB0saDUsRgvmx7a6jUggqx1yj2RveY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=lRBiMfSL; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=STAhiLbw; arc=fail smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EI++tI+B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750769723;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=clpzns1bthf3rKA1DeKUctJa7cobMWM9337ool6Tph0=;
-	b=EI++tI+BVLm7H0HD+/A4WWBPesYpiwkAFPa9S9g56n5pUAz6FWCfTvYrb0QawTwbx3BQUa
-	R7FTGoLHJ9cE7Iy2iSW5P+5iyUo8iSDJEV7tv6Ca3Uu5WEt4pMZO2Z1rZc+nqOnuxc6gkn
-	/xFlOu9WOxMrobgoujEiDesm7zQwq14=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-227-6kYyZpilPtW8xlOBt_7-bQ-1; Tue, 24 Jun 2025 08:55:21 -0400
-X-MC-Unique: 6kYyZpilPtW8xlOBt_7-bQ-1
-X-Mimecast-MFC-AGG-ID: 6kYyZpilPtW8xlOBt_7-bQ_1750769720
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a579058758so2292986f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 05:55:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750769720; x=1751374520;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=clpzns1bthf3rKA1DeKUctJa7cobMWM9337ool6Tph0=;
-        b=k0bt7C7/7WqYrtpAr/t9fpkkL3yfS8O80+34O+9mdFVmK2vuWtmqqoYeA1fRGqVE+h
-         vtc4bZT+9Z8PJJlcjvfkxGJEg2NtpInbFDhJ6PjZa0uz0j1zuOo0f1fyJt+QkTIuQana
-         3+hth0BZy3kA44nlYRk/PgRS9BBTQzTnvHCmM9C5MhlRDl+a0O1pFSFEmnlTQQdWUP9t
-         lNpTf3nZzT5PRfHJe3lfQ0B0wDbbsSb9x4xTOLjkFEMSdVDQV62YNUUpJBpSD0Gv64r2
-         XPsu49kfHGoPy4WhQ7qPjF85RoaFlC3L16JZZSeLgw8iKIARejJUlx+63XXjMCAILPc8
-         5S5g==
-X-Forwarded-Encrypted: i=1; AJvYcCUS7lnkmj+PPw+Fmnsmp/YqwlrfiPJl+MarMSB+t6tB+BWXa78U+BteNLGJUvuzz+DLGe2H1FXp8GB3u/Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYZ8RKCkADCjnEpvxOnxRVipLc22AsT6B1j9hpVJQ2TWx7TjjC
-	l3Bd8UmRljDFltYm9jDdj5adqHrsQcledruFW/8mfh7CHtXA0u5SB4q9VuqTPgzdHjJkBhWGR3a
-	BktllhGhm5193QPV8EGPA07U2OPcSWFE/XPWeUUTaNPjuZQ6Kwisq89Km6Y0tSvd4WQ==
-X-Gm-Gg: ASbGncupxi5czMKbzCiKjAnfDyxGdTFkLt15tHVPUUmF79c48llkDwwzzmO9SS5KV5h
-	5xOnMHCgYmw7JpeFSiXr+vxWCugQ9jOo/4c0jeQNP8f9vu0qZeZc/OnKG/5IvRxsxE/Vsh4ffPg
-	TBc3BNXqgss4ngQhuuCr4IQByj+Kpp3Ile1ozhvnSwoNwbAIlyQIrK51EWb2RjjTbm1saze2+0a
-	ohYA4EydAncUAnqWpGyp3n/Kg5eKvBQwHQ6Yf86xcltIYDGmQV0imNN6LoSqetMuRJzgN5lDLDR
-	r/gvBIPSOLOMUzM4fWsqjdXqxU2t2YVIxK1uESKy5BaaQnHP+sGZo8k=
-X-Received: by 2002:a05:6000:1a8f:b0:3a5:2d42:aa17 with SMTP id ffacd0b85a97d-3a6d12d53e2mr13305409f8f.31.1750769720073;
-        Tue, 24 Jun 2025 05:55:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFh4THL5emWc0HD1tw3nsNZYj1VEaMpjz22Eur+XQ2rV2HeBYN4VCIAezpif1T43Wtj7fZ/Bg==
-X-Received: by 2002:a05:6000:1a8f:b0:3a5:2d42:aa17 with SMTP id ffacd0b85a97d-3a6d12d53e2mr13305369f8f.31.1750769719620;
-        Tue, 24 Jun 2025 05:55:19 -0700 (PDT)
-Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535e97ac4asm173506505e9.3.2025.06.24.05.55.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 05:55:19 -0700 (PDT)
-Message-ID: <a694398c-9f03-4737-81b9-7e49c857fcbe@redhat.com>
-Date: Tue, 24 Jun 2025 14:55:18 +0200
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="lRBiMfSL";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="STAhiLbw"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O5NKUH028155;
+	Tue, 24 Jun 2025 07:55:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=PODMain02222019; bh=ZBYZT1PDpivkzJjD
+	+NXi7eqZ8aPABfMl0+PQV1Gf+l8=; b=lRBiMfSLx8t9xzBPPGWXhH7VNjA8RqUy
+	9FomS0U5ctTAwTpeel4hY45odxkcRo60PPk6CpRovtTdLlfRJYOH6Aoqh/DrBNX4
+	Qgholsl02Y3VTApOIzBRAR74hRvdb5qHAmb6DwRN07e95qwnzzgDeXcVA3Bsk2L4
+	29DCzrdAYn1eTtQvwkAKnz05zHoFpiKxfrFmz5pBQxpgcJ8gl0nRFYl0EqI+BkTK
+	uGpKBiaASPvl+ZEcuK7g0C79o0C6UCPD3eoQX3hAMEouYHOw8bbh47q6j+daM061
+	2hi1dKP1YZMI1RYkYt6Rl3L4IAf7p1BwbP/CCXPo8Fk00fz0OfiqSQ==
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11on2092.outbound.protection.outlook.com [40.107.236.92])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 47e5tyu5bd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Jun 2025 07:55:21 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iHs7vtxGW9snX3a47MoT2ZnSSIC4/tZg5OItf/ZvNjIMF71yBbkaEIt8zVrMuFNn9cy5ImLURizs2RhUgYbBmUBM7EisxysA8xELUmWunq1thX/M8oY4EClBH4XIsg41pnav0DOVRjw+E6O67HAC6Z73M84tMFgXLBJhMMo9qXCCyKYoS3AgpYIpIZyUzl3Jjx65s4EBcfSUBXmqtlpkqIoucyDTC0FTbjzbvIYFhscT3IbiVQw1kEEMcj5MK7DDhtyiDLOlJTAUipOjd69gVkf4qu0lEG1ZxgXQo53wWpRo2jgiVrnzTyQekk88eaKY58THss2HuuCysFXWhskCxw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZBYZT1PDpivkzJjD+NXi7eqZ8aPABfMl0+PQV1Gf+l8=;
+ b=GW+2UajzGJf0wDGBh5N2Q/k/v2j62AG1sSZHbNCqC6Jx0y+DgjvJ80CuUUkziRM991wxI8GnjO4kKcLRtSzsk3CAzPp+mcKcxN6B41/S4D//jfzPTXL/VuS2gP4ZhaBbMYKuWCYapqM0LqzCQeqdZYqdXGNxqfewQLUoX6bNj2mLt05a1VoXBlnPxs6+4De4NCjvRrkn2M0h+6PpN4y6hE7EgF3Zb92+0RyRjdq8pkNU9NJRudcqlDbT0xXYtAwtBSUjAIG3gY1RWVE4/5EJY47xmfV/j0RsItdttb5dImStN0xU3I+icmAjFqVVBEunj2SL/JMAY7Jlt02uJ2uDvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 84.19.233.75) smtp.rcpttodomain=cirrus.com
+ smtp.mailfrom=opensource.cirrus.com; dmarc=fail (p=reject sp=reject pct=100)
+ action=oreject header.from=opensource.cirrus.com; dkim=none (message not
+ signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZBYZT1PDpivkzJjD+NXi7eqZ8aPABfMl0+PQV1Gf+l8=;
+ b=STAhiLbwJ1vPigsLjq6b7WQW5TsnTm3wJ2NhwbLBFJjh8Fi3UOGkH8lYK/UGu2C3xSeUf7rV9GTPZN2itqvkHWPjs1XijH/TPHKGCKT+hhl9YCG92KWb+sl+KUYc7wh57LDrbG2Lio/KaxameB0RGkKExuY2E1HEYZ2cPBqv70c=
+Received: from SJ0PR13CA0031.namprd13.prod.outlook.com (2603:10b6:a03:2c2::6)
+ by DS2PR19MB9125.namprd19.prod.outlook.com (2603:10b6:8:2ba::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.15; Tue, 24 Jun
+ 2025 12:55:19 +0000
+Received: from MWH0EPF000989E7.namprd02.prod.outlook.com
+ (2603:10b6:a03:2c2:cafe::c5) by SJ0PR13CA0031.outlook.office365.com
+ (2603:10b6:a03:2c2::6) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.15 via Frontend Transport; Tue,
+ 24 Jun 2025 12:55:18 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
+ smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
+Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
+ does not designate 84.19.233.75 as permitted sender)
+ receiver=protection.outlook.com; client-ip=84.19.233.75;
+ helo=edirelay1.ad.cirrus.com;
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ MWH0EPF000989E7.mail.protection.outlook.com (10.167.241.134) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.14
+ via Frontend Transport; Tue, 24 Jun 2025 12:55:17 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 893FA406540;
+	Tue, 24 Jun 2025 12:55:15 +0000 (UTC)
+Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id 7AC9582024A;
+	Tue, 24 Jun 2025 12:55:15 +0000 (UTC)
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: vkoul@kernel.org
+Cc: yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev,
+        peter.ujfalusi@linux.intel.com, patches@opensource.cirrus.com,
+        linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] soundwire: Correct some property names
+Date: Tue, 24 Jun 2025 13:55:07 +0100
+Message-Id: <20250624125507.2866346-1-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] mm: Support batched unmap for lazyfree large
- folios during reclamation
-To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
- linux-mm@kvack.org
-Cc: baolin.wang@linux.alibaba.com, chrisl@kernel.org, ioworker0@gmail.com,
- kasong@tencent.com, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- lorenzo.stoakes@oracle.com, ryan.roberts@arm.com, v-songbaohua@oppo.com,
- x86@kernel.org, ying.huang@intel.com, zhengtangquan@oppo.com
-References: <20250214093015.51024-1-21cnbao@gmail.com>
- <20250214093015.51024-4-21cnbao@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250214093015.51024-4-21cnbao@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989E7:EE_|DS2PR19MB9125:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 3b3663d6-0beb-4616-d891-08ddb31e5e92
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|61400799027|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?HKeNOsU7TqymFyW2ZmPuutfgWS04aTl5UcrYQvBI8AYYBTMUGGaLGbf1aUmD?=
+ =?us-ascii?Q?f7edXB8c/4iXTHgz3Q4wh92qhlFh+uYmOoCwjutHswB9exAwQnie2i7hfDBp?=
+ =?us-ascii?Q?jijSJNHYZliIB1+CW/BlCYmmOm/QBPFQXWHV2RRz9N2zu10yFkegBjzD53NC?=
+ =?us-ascii?Q?Bibuc2ihF24StTam32Gf6bOehDRlJdzeQDuN6Vy1yx2aMuJZIfbo5B5B1DYy?=
+ =?us-ascii?Q?OdGj3D+fQsz8OkpQH09mT6x1mloBn3Q/q5nUvioZxMt56gsr/9mBeW1khizh?=
+ =?us-ascii?Q?hEP+gqsGs12m/FWv1aFhi0+7EVi7VU8T8qX3FQGr8MWRaHv66M/oCb/fDmAl?=
+ =?us-ascii?Q?8Gcb2SAvknugEIvEIw8rl3cc3KenyLwmhkwG+/lY2RFm5/6m2Y6PwTI0Vl3z?=
+ =?us-ascii?Q?LwSVpNiurF+OrwfNTkXLpAmYncjA9/nwlVnR/7cNJMfyqVTCVfIcSoFM/zmQ?=
+ =?us-ascii?Q?9I7iQ5QgejrMeWUw/6SLx8RewcbdfL4+MZnC4uTpNs/qhEFlq3CrT/eTnjx6?=
+ =?us-ascii?Q?Hw4SNQaPBEDseY2gYlJkc6zOkgi2i1HWk1FtyKaKI/yfYzdw671GOv58Y/yd?=
+ =?us-ascii?Q?EVMMb3mHRcJQ3Y7CDhk+YYS0okU4f967IsJWfBXdRSPovAheVfBnbm4pDaZW?=
+ =?us-ascii?Q?0a9N9ftviOoJSESg/LgAl9tL5uDqOpN7Q+zyUCx7zzFaw/miPwRdRUSUHhLU?=
+ =?us-ascii?Q?E9J1U0gtWMKaUzsLzSfyulen9exManQ348qBQbWRtIewTgBc657OThn/q7NE?=
+ =?us-ascii?Q?oa2avubDc76YLKO+68EdZm8DejxXXO3dO4GomXWf2Ht96cxzD+NkXg+ueOOw?=
+ =?us-ascii?Q?EJbtg6Gku3eJrNJ0oUNUINbX5GG9McHo8Kl8/VeGFYEGa/F9isMBM5QzJogI?=
+ =?us-ascii?Q?vwFvBg3JAuQwXsfYFqV0arZSlBLTXo5fY97W+XT+LD9jbdJnO9/XmeOtwh23?=
+ =?us-ascii?Q?/wJutPoaF1VjUOl1XN2DH1y5H2GxCjXd9VBc8h3z+UuEF2QMkozGd4qwhP+y?=
+ =?us-ascii?Q?jJQYiIZO3kEyV3SbkswuzcylE7ArjxQQqtLaMDqv11eqUvwzilb9tddKAB66?=
+ =?us-ascii?Q?mrpxDWzkwGw9Dbgd5yQucssLVHw1yWRkGfZS/n8BQoBScF2Sd5bvtrdVLcmN?=
+ =?us-ascii?Q?sJ/2IO01OPwYcJQjKwU5HsdHGJb86lyoAxr103ZWKP05V6zeyF4cPieevqvj?=
+ =?us-ascii?Q?UUYQ8/IGO1i8xDIz9GKSsIr4oR4rq0yLIyL6Nn1zz6xmnerSxv30wCrReFqm?=
+ =?us-ascii?Q?aad50PnqLoRJofDd5jZXfTw7hNtUSuer3NeTWuReLGnLy8h1Dbj9NIsn+6fM?=
+ =?us-ascii?Q?wOPmrgVQ1Gn3Xam4b35op11j7n30L4rdc8R3Jp/DOWPNQUj5neiKR+mFCsdl?=
+ =?us-ascii?Q?SOC5oan4LOt/JZkXDcOKHTNXPKoMs46plrQ8/qESk4iUWBWgZf0fDjRZdgg0?=
+ =?us-ascii?Q?sGBl7A6zWYbeDMFQgMsGGoOqNRslCw/zWxKnEVdSlRgsY5odTgxoVFTr802o?=
+ =?us-ascii?Q?0K5GLJpAjVX1GPfQ8ElANQ1Il0FDKUKfz3vI?=
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(61400799027)(36860700013);DIR:OUT;SFP:1102;
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 12:55:17.0241
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b3663d6-0beb-4616-d891-08ddb31e5e92
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000989E7.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS2PR19MB9125
+X-Proofpoint-GUID: 4m9C5g88TXowsa6wKtTz7CXUNx9h2FAf
+X-Proofpoint-ORIG-GUID: 4m9C5g88TXowsa6wKtTz7CXUNx9h2FAf
+X-Authority-Analysis: v=2.4 cv=P9E6hjAu c=1 sm=1 tr=0 ts=685aa039 cx=c_pps a=ukPxkxUSPpxepupZOhEPAQ==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=6IFa9wvqVegA:10
+ a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10 a=w1d2syhTAAAA:8 a=RQNzq2AmoFGRCCu33-8A:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDEwOSBTYWx0ZWRfX/plFqI3/DOy7 gKWnp7PDiDhBhhS37KuUZ8Q0+4rivDDxTbqyytosnQCKaESya1J62Ny+lIqzCDGjszg6iYag0He uD7Q30fwUaiYZDEaRHPKep7KPP5r4WNi6XoVDdCedynD7ZGdQI8LsT8POwFSMR9G0+0i7zLUTno
+ trpPvR+pyZ+ngo/jSA2ygv9Xx4L5nesdbGdvp+tinl80IF0LBvvQ/QGeDIDhSb0OXe8nuw0T0Mv +KrzsZthZWy6HB218txG22KDqnBg7xMmxloskcLKXqOwNrpMSyaNBT/hOLWfLY2x9cc1OI5SYK+ cKbl01uQn9r0+1endkrOuHQPLc8MRDrOFxL96kjlYSBir5olqLmz3gthFwFjBY105vtW0HzSFyt
+ msDLPyunShEcVvb9AksLN8/gw+VELxykZIp//CfbyvLyzqsxVGk/nrcHhEIRbqE1JVW6x/Pn
+X-Proofpoint-Spam-Reason: safe
 
-On 14.02.25 10:30, Barry Song wrote:
-> From: Barry Song <v-songbaohua@oppo.com>
-> 
-> Currently, the PTEs and rmap of a large folio are removed one at a time.
-> This is not only slow but also causes the large folio to be unnecessarily
-> added to deferred_split, which can lead to races between the
-> deferred_split shrinker callback and memory reclamation. This patch
-> releases all PTEs and rmap entries in a batch.
-> Currently, it only handles lazyfree large folios.
-> 
-> The below microbench tries to reclaim 128MB lazyfree large folios
-> whose sizes are 64KiB:
-> 
->   #include <stdio.h>
->   #include <sys/mman.h>
->   #include <string.h>
->   #include <time.h>
-> 
->   #define SIZE 128*1024*1024  // 128 MB
-> 
->   unsigned long read_split_deferred()
->   {
->   	FILE *file = fopen("/sys/kernel/mm/transparent_hugepage"
-> 			"/hugepages-64kB/stats/split_deferred", "r");
->   	if (!file) {
->   		perror("Error opening file");
->   		return 0;
->   	}
-> 
->   	unsigned long value;
->   	if (fscanf(file, "%lu", &value) != 1) {
->   		perror("Error reading value");
->   		fclose(file);
->   		return 0;
->   	}
-> 
->   	fclose(file);
->   	return value;
->   }
-> 
->   int main(int argc, char *argv[])
->   {
->   	while(1) {
->   		volatile int *p = mmap(0, SIZE, PROT_READ | PROT_WRITE,
->   				MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-> 
->   		memset((void *)p, 1, SIZE);
-> 
->   		madvise((void *)p, SIZE, MADV_FREE);
-> 
->   		clock_t start_time = clock();
->   		unsigned long start_split = read_split_deferred();
->   		madvise((void *)p, SIZE, MADV_PAGEOUT);
->   		clock_t end_time = clock();
->   		unsigned long end_split = read_split_deferred();
-> 
->   		double elapsed_time = (double)(end_time - start_time) / CLOCKS_PER_SEC;
->   		printf("Time taken by reclamation: %f seconds, split_deferred: %ld\n",
->   			elapsed_time, end_split - start_split);
-> 
->   		munmap((void *)p, SIZE);
->   	}
->   	return 0;
->   }
-> 
-> w/o patch:
-> ~ # ./a.out
-> Time taken by reclamation: 0.177418 seconds, split_deferred: 2048
-> Time taken by reclamation: 0.178348 seconds, split_deferred: 2048
-> Time taken by reclamation: 0.174525 seconds, split_deferred: 2048
-> Time taken by reclamation: 0.171620 seconds, split_deferred: 2048
-> Time taken by reclamation: 0.172241 seconds, split_deferred: 2048
-> Time taken by reclamation: 0.174003 seconds, split_deferred: 2048
-> Time taken by reclamation: 0.171058 seconds, split_deferred: 2048
-> Time taken by reclamation: 0.171993 seconds, split_deferred: 2048
-> Time taken by reclamation: 0.169829 seconds, split_deferred: 2048
-> Time taken by reclamation: 0.172895 seconds, split_deferred: 2048
-> Time taken by reclamation: 0.176063 seconds, split_deferred: 2048
-> Time taken by reclamation: 0.172568 seconds, split_deferred: 2048
-> Time taken by reclamation: 0.171185 seconds, split_deferred: 2048
-> Time taken by reclamation: 0.170632 seconds, split_deferred: 2048
-> Time taken by reclamation: 0.170208 seconds, split_deferred: 2048
-> Time taken by reclamation: 0.174192 seconds, split_deferred: 2048
-> ...
-> 
-> w/ patch:
-> ~ # ./a.out
-> Time taken by reclamation: 0.074231 seconds, split_deferred: 0
-> Time taken by reclamation: 0.071026 seconds, split_deferred: 0
-> Time taken by reclamation: 0.072029 seconds, split_deferred: 0
-> Time taken by reclamation: 0.071873 seconds, split_deferred: 0
-> Time taken by reclamation: 0.073573 seconds, split_deferred: 0
-> Time taken by reclamation: 0.071906 seconds, split_deferred: 0
-> Time taken by reclamation: 0.073604 seconds, split_deferred: 0
-> Time taken by reclamation: 0.075903 seconds, split_deferred: 0
-> Time taken by reclamation: 0.073191 seconds, split_deferred: 0
-> Time taken by reclamation: 0.071228 seconds, split_deferred: 0
-> Time taken by reclamation: 0.071391 seconds, split_deferred: 0
-> Time taken by reclamation: 0.071468 seconds, split_deferred: 0
-> Time taken by reclamation: 0.071896 seconds, split_deferred: 0
-> Time taken by reclamation: 0.072508 seconds, split_deferred: 0
-> Time taken by reclamation: 0.071884 seconds, split_deferred: 0
-> Time taken by reclamation: 0.072433 seconds, split_deferred: 0
-> Time taken by reclamation: 0.071939 seconds, split_deferred: 0
-> ...
-> 
-> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> ---
->   mm/rmap.c | 72 ++++++++++++++++++++++++++++++++++++++-----------------
->   1 file changed, 50 insertions(+), 22 deletions(-)
-> 
-> diff --git a/mm/rmap.c b/mm/rmap.c
-> index 89e51a7a9509..8786704bd466 100644
-> --- a/mm/rmap.c
-> +++ b/mm/rmap.c
-> @@ -1781,6 +1781,25 @@ void folio_remove_rmap_pud(struct folio *folio, struct page *page,
->   #endif
->   }
->   
-> +/* We support batch unmapping of PTEs for lazyfree large folios */
-> +static inline bool can_batch_unmap_folio_ptes(unsigned long addr,
-> +			struct folio *folio, pte_t *ptep)
-> +{
-> +	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
-> +	int max_nr = folio_nr_pages(folio);
+The DisCo properties should be mipi-sdw-paging-supported and
+mipi-sdw-bank-delay-supported, with an 'ed' on the end. Correct the
+property names used in sdw_slave_read_prop().
 
-Let's assume we have the first page of a folio mapped at the last page 
-table entry in our page table.
+The internal flag bank_delay_support is currently unimplemented, so that
+being read wrong does not currently affect anything. The two existing
+users for this helper and the paging_support flag rt1320-sdw.c and
+rt721-sdca-sdw.c both manually set the flag in their slave properties,
+thus are not affected by this bug either.
 
-What prevents folio_pte_batch() from reading outside the page table?
+Fixes: 56d4fe31af77 ("soundwire: Add MIPI DisCo property helpers")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+ drivers/soundwire/mipi_disco.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
+diff --git a/drivers/soundwire/mipi_disco.c b/drivers/soundwire/mipi_disco.c
+index 65afb28ef8fab..c69b78cd0b620 100644
+--- a/drivers/soundwire/mipi_disco.c
++++ b/drivers/soundwire/mipi_disco.c
+@@ -451,10 +451,10 @@ int sdw_slave_read_prop(struct sdw_slave *slave)
+ 			"mipi-sdw-highPHY-capable");
+ 
+ 	prop->paging_support = mipi_device_property_read_bool(dev,
+-			"mipi-sdw-paging-support");
++			"mipi-sdw-paging-supported");
+ 
+ 	prop->bank_delay_support = mipi_device_property_read_bool(dev,
+-			"mipi-sdw-bank-delay-support");
++			"mipi-sdw-bank-delay-supported");
+ 
+ 	device_property_read_u32(dev,
+ 			"mipi-sdw-port15-read-behavior", &prop->p15_behave);
 -- 
-Cheers,
-
-David / dhildenb
+2.39.5
 
