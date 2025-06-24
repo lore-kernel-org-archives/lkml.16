@@ -1,527 +1,145 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB8B307496
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:01:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7861E2E2EE2
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750791686; cv=none; b=Dp1Bpc5Ni17wMpAkpsy8Q0YbKsBVWAd98XBMyMCo6lYumX/OCp4VowWbfZnnSoGSR/ERGMo2auZDF4InD22GKs7FshcegdJkvG/y8mRC8aD5BkFrHkYjbvdhwTc4kjraG6E27YIM5OY4tTQ2PUqoa5nLNNRc4WqwDrdGPtCfdp8=
+	t=1750791693; cv=none; b=Z2gnRAXEXyeE7KvtM/ClrwmvZcvPHfVZISzv1xIMBWyf8j/p2blCiVVz58nsX9k/vnfrhvcb7RbpsJmojBVC8XSnCk11LFoKmXE07OVmmIlBIOvP0ENNDe9aDCdJAILN0ivr8BK4GgnH2RicgCii8U70qWsvt+HFuCdLwt6/xAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750791686; c=relaxed/simple;
-	bh=NTbTSItUgVE9/Bsh/xikMpsoTCBDProJ8pw3I95/Zes=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YM6xHUBKurfGq+vbmMgZ5NxYp6ZD9XTfR1gLvMn2ucp+zNtdly6AoHxhzOEyT7VVxfFfUlCq+22oA0dK9zKl23rToHm1/Oe/EjOETX+xL7WTLxMWdE1icBVmzVQFwbTfeIJBm1jLi5wCWSOXwQPe5pepgNt9peMcNDFjoVcuKOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rfLkPrn1; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rfLkPrn1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=P70Dp+RvfffTKzpsdOKQTOFC8Y6uuF3EzU8USAJQXoA=; b=rfLkPrn1iD9dY36JF+pGuwOAoX
-	lKg6+oDaIzQSZv8fieD1h/UkPE0Y2wp6g1tm3dCorUa1EenvuBY98BJHOlszvdRLb/3ymXlWBqL+v
-	bv484AJMdacqnV9MZl0zS3xNqSWQwIQg4YKtAt5jRCknQGPe0yU8mpVka12Q5rSakf10jjQz3Rgss
-	ez4GGoOymDXpphUoqXlgYS344epJ53macXJSapQ7Rqdd/i9clV+2VFA8n6D7p5Hx0FJ3cC4TFZkMs
-	uc7KwxLZkjXHgRMsYUkcjBywIdDq16QHzeTLwQfTTGQHmOuPaOT37fzpAS5/5fjrK5+gx0ze2wXtO
-	2KTz8HAw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uU8tU-00000007PZj-1mdO;
-	Tue, 24 Jun 2025 19:01:20 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 07C15307E4E; Tue, 24 Jun 2025 21:01:19 +0200 (CEST)
-Date: Tue, 24 Jun 2025 21:01:18 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Chris Mason <clm@meta.com>, linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: futex performance regression from "futex: Allow automatic
- allocation of process wide futex hash"
-Message-ID: <20250624190118.GB1490279@noisy.programming.kicks-ass.net>
-References: <3ad05298-351e-4d61-9972-ca45a0a50e33@meta.com>
- <20250604092815.UtG-oi0v@linutronix.de>
- <372d8277-7edb-4f78-99bd-6d23b8f94984@meta.com>
- <20250604200808.hqaWJdCo@linutronix.de>
- <aa6154d1-726c-4da1-a27b-69d2e8b449c6@meta.com>
- <20250606070638.2Wk45AMk@linutronix.de>
+	s=arc-20240116; t=1750791693; c=relaxed/simple;
+	bh=aLbjzGn3hzN5Fq6w7CtCUl1BXq0gsouE4GYG1t0lspk=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=QwP+mi+4AEq6Zg8NIn7OFyhhaeYpUEOnddWpNGEGAB9J474kwD7awDpzmOVgH/QXr6JJlUK5R5qNnagsA+/+VrI80A4Myt6Chh0ypclIX79cnFiXJkRuPiggh/gh/C/Q/aghT2tbt61E+cOztRuql3P9+jekqry63j0buva/+6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-8730ca8143eso17560739f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:01:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750791690; x=1751396490;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IOvYSfw98Ac/jQWJsoM3q6nQovEyYvJrIRvActnfmmM=;
+        b=djHRdw0MlckkvlMYdgoEoyRvj7mzfY1qgpM5HznZXPC2TPhQADq5yC55wH8D07a258
+         165l2l6nHBapbFWJtTfApcCXzkqeT6IpEqQ1dTtIWxq3XZFkUTKZdD+eXid0sMOl8o9f
+         U2S9e2E1+tZ5RR0bhBJtaTQvlfSzO24VyMc5l+XAxv5uLQ9XQmOO52ZmH2DXH/uA+mK7
+         Cy3lOv6GXW8TlPldCwaRLVilkTeLb6d21BImAJWO1w0MCtlHTTJwMGTNcSBetmSfjLi8
+         FrPclJf7hfyv+EieinfEe3qmxAOVhIbySVQ7LekndxV5IFQL7w6OfOXOBOHbrPeS2XpV
+         Dk3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX8vTTqqYXQhz9/AVLFWRilt0Cd4cZXpSoOl8sVFvz2uYU9WGhBZoA8wc84oCvdfIceoQKBzuHdPizK/QA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzulXUVY7+xKFW43Gsr4B7TBvdPty+5yTjwr3l/JgdPRwz+AzMx
+	UqCSKPxsKIeVs534ZuejmAQ/9ZzpLuZ3HluWk6sdaRZCAMQmyOaOEWwdPow2GU9goYCAs1m9Agc
+	oRaDd54DTcfp4uAv9KM+Jw5weWoqSyvmx8uqOAnIUn70n/l52pvEuJWOzoiQ=
+X-Google-Smtp-Source: AGHT+IG7+GPURfTvJJvK9gYGxwEVHE4cSiZVyXneCEvyulhlT45YXEg683sFuig0o1SoRqAzQF83kBYJ3rutPqVBjZx+yD7zze0z
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250606070638.2Wk45AMk@linutronix.de>
+X-Received: by 2002:a05:6e02:214d:b0:3dc:7b3d:6a45 with SMTP id
+ e9e14a558f8ab-3df32a29005mr1897865ab.0.1750791690607; Tue, 24 Jun 2025
+ 12:01:30 -0700 (PDT)
+Date: Tue, 24 Jun 2025 12:01:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685af60a.a00a0220.2e5631.0092.GAE@google.com>
+Subject: [syzbot] [perf?] WARNING in perf_pending_task
+From: syzbot <syzbot+2fe61cb2a86066be6985@syzkaller.appspotmail.com>
+To: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
+	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
+	namhyung@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 06, 2025 at 09:06:38AM +0200, Sebastian Andrzej Siewior wrote:
-> On 2025-06-05 20:55:27 [-0400], Chris Mason wrote:
-> > >> We've got large systems that are basically dedicated to single
-> > >> workloads, and those will probably miss the larger global hash table,
-> > >> regressing like schbench did.  Then we have large systems spread over
-> > >> multiple big workloads that will love the private tables.
-> > >>
-> > >> In either case, I think growing the hash table as a multiple of thread
-> > >> count instead of cpu count will probably better reflect the crazy things
-> > >> multi-threaded applications do?  At any rate, I don't think we want
-> > >> applications to need prctl to get back to the performance they had on
-> > >> older kernels.
-> > > 
-> > > This is only an issue if all you CPUs spend their time in the kernel
-> > > using the hash buckets at the same time.
-> > > This was the case in every benchmark I've seen so far. Your thing might
-> > > be closer to an actual workload.
-> > > 
-> > 
-> > I didn't spend a ton of time looking at the perf profiles of the slower
-> > kernel, was the bottleneck in the hash chain length or in contention for
-> > the buckets?
-> 
-> Every futex operation does a rcuref_get() (which is an atomic inc) on
-> the private hash. This is before anything else happens. If you have two
-> threads, on two CPUs, which simultaneously do a futex() operation then
-> both do this rcuref_get(). That atomic inc ensures that the cacheline
-> bounces from one CPU to the other. On the exit of the syscall there is a
-> matching rcuref_put().
+Hello,
 
-How about something like this (very lightly tested)...
+syzbot found the following issue on:
 
-the TL;DR is that it turns all those refcounts into per-cpu ops when
-there is no hash replacement pending (eg. the normal case), and only
-folds the lot into an atomic when we really care about it.
+HEAD commit:    b67ec639010f Merge tag 'i2c-for-6.16-rc3' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17715b0c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d11f52d3049c3790
+dashboard link: https://syzkaller.appspot.com/bug?extid=2fe61cb2a86066be6985
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10f15b0c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1692ab0c580000
 
-There's some sharp corners still.. but it boots and survives the
-(slightly modified) selftest.
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-b67ec639.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3bcb2b262d02/vmlinux-b67ec639.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/f5d4477f1e2e/bzImage-b67ec639.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+2fe61cb2a86066be6985@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 5309 at kernel/events/core.c:7211 perf_sigtrap kernel/events/core.c:7211 [inline]
+WARNING: CPU: 0 PID: 5309 at kernel/events/core.c:7211 perf_pending_task+0x319/0x400 kernel/events/core.c:7325
+Modules linked in:
+CPU: 0 UID: 0 PID: 5309 Comm: syz-executor122 Not tainted 6.16.0-rc2-syzkaller-00378-gb67ec639010f #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:perf_sigtrap kernel/events/core.c:7211 [inline]
+RIP: 0010:perf_pending_task+0x319/0x400 kernel/events/core.c:7325
+Code: 85 8f 00 00 00 41 fe 4d 00 eb 05 e8 21 4f cd ff 48 83 c4 18 5b 41 5c 41 5d 41 5e 41 5f 5d e9 4e 34 76 09 cc e8 08 4f cd ff 90 <0f> 0b 90 41 80 3c 1c 00 0f 85 02 ff ff ff e9 05 ff ff ff 44 89 e1
+RSP: 0018:ffffc9000d41f9d0 EFLAGS: 00010293
+RAX: ffffffff81f2fe18 RBX: dffffc0000000000 RCX: ffff888032cbc880
+RDX: 0000000000000000 RSI: 0000000074971a36 RDI: 0000000000000000
+RBP: 0000000074971a36 R08: ffffffff8fa10af7 R09: 1ffffffff1f4215e
+R10: dffffc0000000000 R11: ffffffff81f2fb00 R12: 1ffff110035f390f
+R13: ffff888032cbc880 R14: ffff88801af9cad8 R15: ffff88801af9c878
+FS:  0000000000000000(0000) GS:ffff88808d251000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000000018 CR3: 000000000df38000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ task_work_run+0x1d1/0x260 kernel/task_work.c:227
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6b5/0x22e0 kernel/exit.c:964
+ do_group_exit+0x21c/0x2d0 kernel/exit.c:1105
+ get_signal+0x1286/0x1340 kernel/signal.c:3034
+ arch_do_signal_or_restart+0x9a/0x750 arch/x86/kernel/signal.c:337
+ exit_to_user_mode_loop+0x75/0x110 kernel/entry/common.c:111
+ exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
+ syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
+ do_syscall_64+0x2bd/0x3b0 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f9ae420dab9
+Code: Unable to access opcode bytes at 0x7f9ae420da8f.
+RSP: 002b:00007ffd20a313c8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
+RAX: 0000000000000003 RBX: 0000000000000000 RCX: 00007f9ae420dab9
+RDX: ffffffffffffffff RSI: 0000000000000000 RDI: 0000200000000000
+RBP: 00007f9ae42805f0 R08: 0000000000000000 R09: 0000000000000006
+R10: ffffffffffffffff R11: 0000000000000246 R12: 0000000000000001
+R13: 431bde82d7b634db R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+
 
 ---
- include/linux/futex.h                              |  12 +-
- include/linux/mm_types.h                           |   5 +
- kernel/futex/core.c                                | 238 +++++++++++++++++++--
- .../selftests/futex/functional/futex_priv_hash.c   |  11 +-
- 4 files changed, 239 insertions(+), 27 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/include/linux/futex.h b/include/linux/futex.h
-index b37193653e6b..5f92c7a8ba57 100644
---- a/include/linux/futex.h
-+++ b/include/linux/futex.h
-@@ -85,17 +85,11 @@ int futex_hash_prctl(unsigned long arg2, unsigned long arg3, unsigned long arg4)
- #ifdef CONFIG_FUTEX_PRIVATE_HASH
- int futex_hash_allocate_default(void);
- void futex_hash_free(struct mm_struct *mm);
--
--static inline void futex_mm_init(struct mm_struct *mm)
--{
--	RCU_INIT_POINTER(mm->futex_phash, NULL);
--	mm->futex_phash_new = NULL;
--	mutex_init(&mm->futex_hash_lock);
--}
-+int futex_mm_init(struct mm_struct *mm);
- 
- #else /* !CONFIG_FUTEX_PRIVATE_HASH */
- static inline int futex_hash_allocate_default(void) { return 0; }
--static inline void futex_hash_free(struct mm_struct *mm) { }
-+static inline int futex_hash_free(struct mm_struct *mm) { return 0; }
- static inline void futex_mm_init(struct mm_struct *mm) { }
- #endif /* CONFIG_FUTEX_PRIVATE_HASH */
- 
-@@ -118,7 +112,7 @@ static inline int futex_hash_allocate_default(void)
- {
- 	return 0;
- }
--static inline void futex_hash_free(struct mm_struct *mm) { }
-+static inline int futex_hash_free(struct mm_struct *mm) { return 0; }
- static inline void futex_mm_init(struct mm_struct *mm) { }
- 
- #endif
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index d6b91e8a66d6..0f0662157066 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -1070,6 +1070,11 @@ struct mm_struct {
- 		struct mutex			futex_hash_lock;
- 		struct futex_private_hash	__rcu *futex_phash;
- 		struct futex_private_hash	*futex_phash_new;
-+		/* futex-ref */
-+		unsigned long			futex_batches;
-+		struct rcu_head			futex_rcu;
-+		atomic_long_t			futex_atomic;
-+		unsigned int			__percpu *futex_ref;
- #endif
- 
- 		unsigned long hiwater_rss; /* High-watermark of RSS usage */
-diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index 90d53fb0ee9e..cfa7c105a7dc 100644
---- a/kernel/futex/core.c
-+++ b/kernel/futex/core.c
-@@ -42,7 +42,6 @@
- #include <linux/fault-inject.h>
- #include <linux/slab.h>
- #include <linux/prctl.h>
--#include <linux/rcuref.h>
- #include <linux/mempolicy.h>
- #include <linux/mmap_lock.h>
- 
-@@ -65,7 +64,7 @@ static struct {
- #define futex_queues	(__futex_data.queues)
- 
- struct futex_private_hash {
--	rcuref_t	users;
-+	int		state;
- 	unsigned int	hash_mask;
- 	struct rcu_head	rcu;
- 	void		*mm;
-@@ -129,6 +128,12 @@ static struct futex_hash_bucket *
- __futex_hash(union futex_key *key, struct futex_private_hash *fph);
- 
- #ifdef CONFIG_FUTEX_PRIVATE_HASH
-+static bool futex_ref_get(struct futex_private_hash *fph);
-+static bool futex_ref_put(struct futex_private_hash *fph);
-+static bool futex_ref_is_dead(struct futex_private_hash *fph);
-+
-+enum { FR_PERCPU = 0, FR_ATOMIC };
-+
- static inline bool futex_key_is_private(union futex_key *key)
- {
- 	/*
-@@ -142,15 +147,14 @@ bool futex_private_hash_get(struct futex_private_hash *fph)
- {
- 	if (fph->immutable)
- 		return true;
--	return rcuref_get(&fph->users);
-+	return futex_ref_get(fph);
- }
- 
- void futex_private_hash_put(struct futex_private_hash *fph)
- {
--	/* Ignore return value, last put is verified via rcuref_is_dead() */
- 	if (fph->immutable)
- 		return;
--	if (rcuref_put(&fph->users))
-+	if (futex_ref_put(fph))
- 		wake_up_var(fph->mm);
- }
- 
-@@ -243,14 +247,18 @@ static bool __futex_pivot_hash(struct mm_struct *mm,
- 	fph = rcu_dereference_protected(mm->futex_phash,
- 					lockdep_is_held(&mm->futex_hash_lock));
- 	if (fph) {
--		if (!rcuref_is_dead(&fph->users)) {
-+		if (!futex_ref_is_dead(fph)) {
- 			mm->futex_phash_new = new;
- 			return false;
- 		}
- 
- 		futex_rehash_private(fph, new);
- 	}
--	rcu_assign_pointer(mm->futex_phash, new);
-+	new->state = FR_PERCPU;
-+	scoped_guard (rcu) {
-+		mm->futex_batches = get_state_synchronize_rcu();
-+		rcu_assign_pointer(mm->futex_phash, new);
-+	}
- 	kvfree_rcu(fph, rcu);
- 	return true;
- }
-@@ -289,9 +297,7 @@ struct futex_private_hash *futex_private_hash(void)
- 		if (!fph)
- 			return NULL;
- 
--		if (fph->immutable)
--			return fph;
--		if (rcuref_get(&fph->users))
-+		if (futex_private_hash_get(fph))
- 			return fph;
- 	}
- 	futex_pivot_hash(mm);
-@@ -1527,16 +1533,214 @@ static void futex_hash_bucket_init(struct futex_hash_bucket *fhb,
- #define FH_IMMUTABLE	0x02
- 
- #ifdef CONFIG_FUTEX_PRIVATE_HASH
-+
-+/*
-+ * futex-ref
-+ *
-+ * Heavily inspired by percpu-rwsem/percpu-refcount; not reusing any of that
-+ * code because it just doesn't fit right.
-+ *
-+ * Dual counter, per-cpu / atomic approach like percpu-refcount, except it
-+ * re-initializes the state automatically, such that the fph swizzle is also a
-+ * transition back to per-cpu.
-+ */
-+
-+static void futex_ref_rcu(struct rcu_head *head);
-+
-+static void __futex_ref_atomic_begin(struct futex_private_hash *fph)
-+{
-+	struct mm_struct *mm = fph->mm;
-+
-+	/*
-+	 * The counter we're about to switch to must have fully switched;
-+	 * otherwise it would be impossible for it to have reported success
-+	 * from futex_ref_is_dead().
-+	 */
-+	WARN_ON_ONCE(atomic_long_read(&mm->futex_atomic) != 0);
-+
-+	/*
-+	 * Set the atomic to the bias value such that futex_ref_{get,put}()
-+	 * will never observe 0. Will be fixed up in __futex_ref_atomic_end()
-+	 * when folding in the percpu count.
-+	 */
-+	atomic_long_set(&mm->futex_atomic, LONG_MAX);
-+	smp_store_release(&fph->state, FR_ATOMIC);
-+
-+	call_rcu_hurry(&mm->futex_rcu, futex_ref_rcu);
-+}
-+
-+static void __futex_ref_atomic_end(struct futex_private_hash *fph)
-+{
-+	struct mm_struct *mm = fph->mm;
-+	unsigned int count = 0;
-+	long ret;
-+	int cpu;
-+
-+	/*
-+	 * Per __futex_ref_atomic_begin() the state of the fph must be ATOMIC
-+	 * and per this RCU callback, everybody must now observe this state and
-+	 * use the atomic variable.
-+	 */
-+	WARN_ON_ONCE(fph->state != FR_ATOMIC);
-+
-+	/*
-+	 * Therefore the per-cpu counter is now stable, sum and reset.
-+	 */
-+	for_each_possible_cpu(cpu) {
-+		unsigned int *ptr = per_cpu_ptr(mm->futex_ref, cpu);
-+		count += *ptr;
-+		*ptr = 0;
-+	}
-+
-+	/*
-+	 * Re-init for the next cycle.
-+	 */
-+	this_cpu_inc(*mm->futex_ref); /* 0 -> 1 */
-+
-+	/*
-+	 * Add actual count, subtract bias and initial refcount.
-+	 *
-+	 * The moment this atomic operation happens, futex_ref_is_dead() can
-+	 * become true.
-+	 */
-+	ret = atomic_long_add_return(count - LONG_MAX - 1, &mm->futex_atomic);
-+	if (!ret)
-+		wake_up_var(mm);
-+
-+	WARN_ON_ONCE(ret < 0);
-+}
-+
-+static void futex_ref_rcu(struct rcu_head *head)
-+{
-+	struct mm_struct *mm = container_of(head, struct mm_struct, futex_rcu);
-+	struct futex_private_hash *fph = rcu_dereference_raw(mm->futex_phash);
-+
-+	if (fph->state == FR_PERCPU) {
-+		/*
-+		 * Per this extra grace-period, everybody must now observe
-+		 * fph as the current fph and no previously observed fph's
-+		 * are in-flight.
-+		 *
-+		 * Notably, nobody will now rely on the atomic
-+		 * futex_ref_is_dead() state anymore so we can begin the
-+		 * migration of the per-cpu counter into the atomic.
-+		 */
-+		__futex_ref_atomic_begin(fph);
-+		return;
-+	}
-+
-+	__futex_ref_atomic_end(fph);
-+}
-+
-+/*
-+ * Drop the initial refcount and transition to atomics.
-+ */
-+static void futex_ref_drop(struct futex_private_hash *fph)
-+{
-+	struct mm_struct *mm = fph->mm;
-+
-+	/*
-+	 * Can only transition the current fph;
-+	 */
-+	WARN_ON_ONCE(rcu_dereference_raw(mm->futex_phash) != fph);
-+
-+	/*
-+	 * In order to avoid the following scenario:
-+	 *
-+	 * futex_hash()			__futex_pivot_hash()
-+	 *   guard(rcu);		  guard(mm->futex_hash_lock);
-+	 *   fph = mm->futex_phash;
-+	 *				  rcu_assign_pointer(&mm->futex_phash, new);
-+	 *				futex_hash_allocate()
-+	 *				  futex_ref_drop()
-+	 *				    fph->state = FR_ATOMIC;
-+	 *				    atomic_set(, BIAS);
-+	 *
-+	 *   futex_private_hash_get(fph); // OOPS
-+	 *
-+	 * Where an old fph (which is FR_ATOMIC) and should fail on
-+	 * inc_not_zero, will succeed because a new transition is started and
-+	 * the atomic is bias'ed away from 0.
-+	 *
-+	 * There must be at least one full grace-period between publishing a
-+	 * new fph and trying to replace it.
-+	 */
-+	if (poll_state_synchronize_rcu(mm->futex_batches)) {
-+		/*
-+		 * There was a grace-period, we can begin now.
-+		 */
-+		__futex_ref_atomic_begin(fph);
-+		return;
-+	}
-+
-+	call_rcu_hurry(&mm->futex_rcu, futex_ref_rcu);
-+}
-+
-+static bool futex_ref_get(struct futex_private_hash *fph)
-+{
-+	struct mm_struct *mm = fph->mm;
-+
-+	guard(preempt)();
-+
-+	if (smp_load_acquire(&fph->state) == FR_PERCPU) {
-+		this_cpu_inc(*mm->futex_ref);
-+		return true;
-+	}
-+
-+	return atomic_long_inc_not_zero(&mm->futex_atomic);
-+}
-+
-+static bool futex_ref_put(struct futex_private_hash *fph)
-+{
-+	struct mm_struct *mm = fph->mm;
-+
-+	guard(preempt)();
-+
-+	if (smp_load_acquire(&fph->state) == FR_PERCPU) {
-+		this_cpu_dec(*mm->futex_ref);
-+		return false;
-+	}
-+
-+	return atomic_long_dec_and_test(&mm->futex_atomic);
-+}
-+
-+static bool futex_ref_is_dead(struct futex_private_hash *fph)
-+{
-+	struct mm_struct *mm = fph->mm;
-+
-+	guard(preempt)();
-+
-+	if (smp_load_acquire(&fph->state) == FR_PERCPU)
-+		return false;
-+
-+	return atomic_long_read(&mm->futex_atomic) == 0;
-+}
-+
-+// TODO propagate error
-+int futex_mm_init(struct mm_struct *mm)
-+{
-+	mutex_init(&mm->futex_hash_lock);
-+	RCU_INIT_POINTER(mm->futex_phash, NULL);
-+	mm->futex_phash_new = NULL;
-+	/* futex-ref */
-+	atomic_long_set(&mm->futex_atomic, 0);
-+	mm->futex_batches = get_state_synchronize_rcu();
-+	mm->futex_ref = alloc_percpu(unsigned int);
-+	if (!mm->futex_ref)
-+		return -ENOMEM;
-+	this_cpu_inc(*mm->futex_ref); /* 0 -> 1 */
-+	return 0;
-+}
-+
- void futex_hash_free(struct mm_struct *mm)
- {
- 	struct futex_private_hash *fph;
- 
-+	free_percpu(mm->futex_ref);
- 	kvfree(mm->futex_phash_new);
- 	fph = rcu_dereference_raw(mm->futex_phash);
--	if (fph) {
--		WARN_ON_ONCE(rcuref_read(&fph->users) > 1);
-+	if (fph)
- 		kvfree(fph);
--	}
- }
- 
- static bool futex_pivot_pending(struct mm_struct *mm)
-@@ -1549,7 +1753,7 @@ static bool futex_pivot_pending(struct mm_struct *mm)
- 		return true;
- 
- 	fph = rcu_dereference(mm->futex_phash);
--	return rcuref_is_dead(&fph->users);
-+	return futex_ref_is_dead(fph);
- }
- 
- static bool futex_hash_less(struct futex_private_hash *a,
-@@ -1598,11 +1802,11 @@ static int futex_hash_allocate(unsigned int hash_slots, unsigned int flags)
- 		}
- 	}
- 
--	fph = kvzalloc(struct_size(fph, queues, hash_slots), GFP_KERNEL_ACCOUNT | __GFP_NOWARN);
-+	fph = kvzalloc(struct_size(fph, queues, hash_slots),
-+		       GFP_KERNEL_ACCOUNT | __GFP_NOWARN);
- 	if (!fph)
- 		return -ENOMEM;
- 
--	rcuref_init(&fph->users, 1);
- 	fph->hash_mask = hash_slots ? hash_slots - 1 : 0;
- 	fph->custom = custom;
- 	fph->immutable = !!(flags & FH_IMMUTABLE);
-@@ -1645,7 +1849,7 @@ static int futex_hash_allocate(unsigned int hash_slots, unsigned int flags)
- 				 * allocated a replacement hash, drop the initial
- 				 * reference on the existing hash.
- 				 */
--				futex_private_hash_put(cur);
-+				futex_ref_drop(cur);
- 			}
- 
- 			if (new) {
-diff --git a/tools/testing/selftests/futex/functional/futex_priv_hash.c b/tools/testing/selftests/futex/functional/futex_priv_hash.c
-index 24a92dc94eb8..1238a7178715 100644
---- a/tools/testing/selftests/futex/functional/futex_priv_hash.c
-+++ b/tools/testing/selftests/futex/functional/futex_priv_hash.c
-@@ -97,6 +97,7 @@ static void create_max_threads(void *(*thread_fn)(void *))
- 		ret = pthread_create(&threads[i], NULL, thread_fn, NULL);
- 		if (ret)
- 			ksft_exit_fail_msg("pthread_create failed: %m\n");
-+		usleep(5000);
- 	}
- }
- 
-@@ -131,6 +132,7 @@ int main(int argc, char *argv[])
- 	int use_global_hash = 0;
- 	int ret;
- 	int c;
-+	int retry = 2;
- 
- 	while ((c = getopt(argc, argv, "cghv:")) != -1) {
- 		switch (c) {
-@@ -208,11 +210,18 @@ int main(int argc, char *argv[])
- 	 */
- 	ksft_print_msg("Online CPUs: %d\n", online_cpus);
- 	if (online_cpus > 16) {
-+again:
- 		futex_slotsn = futex_hash_slots_get();
- 		if (futex_slotsn < 0 || futex_slots1 == futex_slotsn) {
- 			ksft_print_msg("Expected increase of hash buckets but got: %d -> %d\n",
- 				       futex_slots1, futex_slotsn);
--			ksft_exit_fail_msg(test_msg_auto_inc);
-+			if (--retry) {
-+				usleep(500000);
-+				goto again;
-+			} else {
-+				ksft_test_result_fail(test_msg_auto_inc);
-+//				ksft_exit_fail_msg(test_msg_auto_inc);
-+			}
- 		}
- 		ksft_test_result_pass(test_msg_auto_inc);
- 	} else {
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
