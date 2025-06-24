@@ -1,87 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4193FB1B;
-	Tue, 24 Jun 2025 20:45:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626D12405E8;
+	Tue, 24 Jun 2025 20:46:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750797900; cv=none; b=pYs7gQ2Tm8aeOj96e48umWuRX4mFE/VSiFmEWiGzT8Iht7/BBGTn8I9Br5ey1VPb04sIzk6R8hY7Ubc8LQEoSYB6P8deGctavrvMqT1jA1YQ4Iio5Nu/ieAitFfjEIioPsihj6eSV+3PH9RmN+9LVZdia+KYbuv6QEG09iwfPtg=
+	t=1750798005; cv=none; b=PqOrM5CTuf0sTAztlzp78ZQauBpHlDKD4hboNFQbn/Vr2CR5UeXm4kqqkUZ9BK3Bt5aqjkeVJ4/oKR4JlVEPjK+1++uWG/AcABTmtY7bXUnVpLPAuN74YBoTbHg1DLKuQYX/oQV+P+tuH4x/rokZ/4knJL2RPTiihpvulML17Sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750797900; c=relaxed/simple;
-	bh=AoFPMCIxkttPg56+0un4riAb99bPvrJcXHuKXirc4kE=;
+	s=arc-20240116; t=1750798005; c=relaxed/simple;
+	bh=JE5izUwd5pMie06/3hvl6LkV32U8BqmlJuVS9TMGxOY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E8n4FQ+PTIjAD6taOMYxbl3zSjqh8jLajEoMHKfzWML4uTm3UG9fNFN2mGeMft8eUlZavbF526uO41CiZ+qLm5OBUgbZZIIKp79UxjIR6+As1ZwXCXWyy9Rf54Ea135nMxAg1an4e455TdN6IsYHYO/CWukWs4MxXBPNuF4SEK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DdnrfDP1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pms2O0q5/OKMwLvAbhveCU+wkal6x3ehU4yQORtqUDWPQjVSmVd3cV4sedUPSYDiGv88VOzmuc5izlyFrtbqSclH2e52gPNao8SBXMIyzc+JuLT8HcoIf9zMXz4xvYpPAvqGsillMLpdWJugWhBhusENsWNIkLnwkWExphT6+GE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t3HOiJ7/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DdnrfDP1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96D80C4CEE3;
-	Tue, 24 Jun 2025 20:44:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t3HOiJ7/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27284C4CEE3;
+	Tue, 24 Jun 2025 20:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750797900;
-	bh=AoFPMCIxkttPg56+0un4riAb99bPvrJcXHuKXirc4kE=;
+	s=k20201202; t=1750798004;
+	bh=JE5izUwd5pMie06/3hvl6LkV32U8BqmlJuVS9TMGxOY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DdnrfDP1H9mNBSpD5Y2HOlveUi/wqHGE06OJbvGfgz9LAgedeeFvamygl27k74DLg
-	 z3wshVBWK9q1KHtT53hcQNy9dVSFLbDWB+b+9NhOzwT0OUGYBC7oCWwGP66REdulcR
-	 ExUvcH/dJKv6VUs1oqrteB9roCwoHyjNFixHjaKU0GQxtk+tEWDi7zPhYYlHYGwpRV
-	 AH5Qtf0XvLBOODaXlYkMBtEnvZHCbEpwgTE9Ypyt8oY/tYQ86nWLr99rpX+B/BdOVD
-	 m6cOd7LPHkd71mK4yhsI+SD46i8WHOe2lEHsrccjP1jJXfvEbmhSnBUZog9qwAK75k
-	 p0hUTMnVqPt5Q==
-Date: Tue, 24 Jun 2025 23:44:56 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S . Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>,
-	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-	Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] mm: update architecture and driver code to use
- vm_flags_t
-Message-ID: <aFsOSL8hht-ZojTC@kernel.org>
-References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
- <b6eb1894abc5555ece80bb08af5c022ef780c8bc.1750274467.git.lorenzo.stoakes@oracle.com>
+	b=t3HOiJ7/Pketlpzx1szq3pDyKSCj7y+3Y2bzV7iH0qtrVzJMWdq7FoyevKRfFGwKc
+	 1vKM7Zt7D7+L8OYp7KiGPnO751xceQjJpvK1ZWQTrdpTs0l2Jk1BZAF5ybVRtSePEx
+	 AJsgkjExx4qFbZ6/UwmSd+9xDXfQkEekEh7l0fMh6eZnIt42aJpXcI52smpNQaIOBb
+	 ItOaCLV6sEIAtNOXnpTlpJnpf24KrcF9Rk7Rg6p+kLR+AR71wGf9a+YOBBQqACa7DF
+	 cRXUc1//xQPMuQTqYey+QzKOj1H3nBm7TYZDezzWW++QohnCF2XLu817kX9+Tih5G/
+	 Rze5A4n53qjWA==
+Date: Tue, 24 Jun 2025 22:46:36 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Igor Korotin <igor.korotin.linux@gmail.com>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Remo Senekowitsch <remo@buenzli.dev>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Benno Lossin <lossin@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>, Len Brown <lenb@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>
+Subject: Re: [PATCH v8 1/9] rust: device: implement FwNode::is_of_node()
+Message-ID: <aFsOrAqpBtz9OAEI@cassiopeiae>
+References: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
+ <20250620151504.278766-1-igor.korotin.linux@gmail.com>
+ <aFXjOod7TGSFB7wC@cassiopeiae>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,55 +67,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b6eb1894abc5555ece80bb08af5c022ef780c8bc.1750274467.git.lorenzo.stoakes@oracle.com>
+In-Reply-To: <aFXjOod7TGSFB7wC@cassiopeiae>
 
-On Wed, Jun 18, 2025 at 08:42:54PM +0100, Lorenzo Stoakes wrote:
-> --- a/arch/x86/kernel/cpu/sgx/encl.c
-> +++ b/arch/x86/kernel/cpu/sgx/encl.c
-> @@ -279,7 +279,7 @@ static struct sgx_encl_page *__sgx_encl_load_page(struct sgx_encl *encl,
->  
->  static struct sgx_encl_page *sgx_encl_load_page_in_vma(struct sgx_encl *encl,
->  						       unsigned long addr,
-> -						       unsigned long vm_flags)
-> +						       vm_flags_t vm_flags)
->  {
->  	unsigned long vm_prot_bits = vm_flags & VM_ACCESS_FLAGS;
->  	struct sgx_encl_page *entry;
-> @@ -520,9 +520,9 @@ static void sgx_vma_open(struct vm_area_struct *vma)
->   * Return: 0 on success, -EACCES otherwise
->   */
->  int sgx_encl_may_map(struct sgx_encl *encl, unsigned long start,
-> -		     unsigned long end, unsigned long vm_flags)
-> +		     unsigned long end, vm_flags_t vm_flags)
->  {
-> -	unsigned long vm_prot_bits = vm_flags & VM_ACCESS_FLAGS;
-> +	vm_flags_t vm_prot_bits = vm_flags & VM_ACCESS_FLAGS;
->  	struct sgx_encl_page *page;
->  	unsigned long count = 0;
->  	int ret = 0;
-> @@ -605,7 +605,7 @@ static int sgx_encl_debug_write(struct sgx_encl *encl, struct sgx_encl_page *pag
->   */
->  static struct sgx_encl_page *sgx_encl_reserve_page(struct sgx_encl *encl,
->  						   unsigned long addr,
-> -						   unsigned long vm_flags)
-> +						   vm_flags_t vm_flags)
->  {
->  	struct sgx_encl_page *entry;
->  
-> diff --git a/arch/x86/kernel/cpu/sgx/encl.h b/arch/x86/kernel/cpu/sgx/encl.h
-> index f94ff14c9486..8ff47f6652b9 100644
-> --- a/arch/x86/kernel/cpu/sgx/encl.h
-> +++ b/arch/x86/kernel/cpu/sgx/encl.h
-> @@ -101,7 +101,7 @@ static inline int sgx_encl_find(struct mm_struct *mm, unsigned long addr,
->  }
->  
->  int sgx_encl_may_map(struct sgx_encl *encl, unsigned long start,
-> -		     unsigned long end, unsigned long vm_flags);
-> +		     unsigned long end, vm_flags_t vm_flags);
->  
->  bool current_is_ksgxd(void);
->  void sgx_encl_release(struct kref *ref);
- 
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+On Sat, Jun 21, 2025 at 12:40:02AM +0200, Danilo Krummrich wrote:
+> On Fri, Jun 20, 2025 at 04:15:04PM +0100, Igor Korotin wrote:
+> > From: Danilo Krummrich <dakr@kernel.org>
+> > 
+> > Implement FwNode::is_of_node() in order to check whether a FwNode
+> > instance is embedded in a struct device_node.
+> > 
+> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> > Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+> > ---
+> >  MAINTAINERS                    | 1 +
+> >  rust/helpers/helpers.c         | 1 +
+> >  rust/helpers/of.c              | 8 ++++++++
+> >  rust/kernel/device/property.rs | 7 +++++++
+> >  4 files changed, 17 insertions(+)
+> >  create mode 100644 rust/helpers/of.c
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 9f724cd556f4..1e918319cff4 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -18579,6 +18579,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+> >  F:	Documentation/ABI/testing/sysfs-firmware-ofw
+> >  F:	drivers/of/
+> >  F:	include/linux/of*.h
+> > +F:	rust/helpers/of.c
+> 
+> @Rob: Any concerns about adding the OF Rust helpers to the OF entry?
 
-BR, Jarkko
+Given that you proposed to use is_of_node() and rust/kernel/of.rs is under your
+MAINTAINERS entry as well, I assume this is fine.
+
+If not, please let me know.
