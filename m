@@ -1,92 +1,67 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DAAD2206BE
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1DB722D4C3;
+	Tue, 24 Jun 2025 19:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750793158; cv=none; b=gt0LPzzWrbxeccfMNlp8L8kC0aSpiX2MkL0Wnnv1MoPvuxlbC1aNgUFN/IPIF5HZO2Jnnmgxr7l6TEplMqDPU/9sNN2IPXSttiuZiHY1ZQkNB8Vttb1Tpj4dcBUTMKG4k5Ppj+VavKNJqgWWn3Zg/mys8/ZRG9M9GYR0ccG+LTc=
+	t=1750793278; cv=none; b=bQS6JbU53hiXzV7I8zQ1IonbyeWrD8hgUyFS6i2Gfr1QbikEdpEUdGFGwb5iG8OoFFXlGaB+lTUsxbjcopxfCTbOegICTsrONbUt1BoKgiE8OCrWcP2dgNHFdSvf6AYwpGGa9LolrBHuQYF51xiSrPuOVpSUH6iqAPCGmJaFsdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750793158; c=relaxed/simple;
-	bh=O/XxGCdRT5677dIKZkpmfz5WR25prUU7MyTPbxh5LeU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uHl3Ep48yJfvjhCOzcP9I74OT8INcxS85oKuHy7HD4zSBb9v0SiGaQm9RIn4oh11cFdGxiF34L9CjPmWl0VQqsJIYaC0U9suB4F7ZiTs8Z1PrAGVeZxfRNDwyOHRdEU+FF75mrvGXuWlKABtNRdA+ne/0ajxCZuVRMWm3R7QE6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NfnnfCxV; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NfnnfCxV"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-553ba7f11cbso1030579e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:25:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750793153; x=1751397953; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O/XxGCdRT5677dIKZkpmfz5WR25prUU7MyTPbxh5LeU=;
-        b=NfnnfCxVTZd7vJZFXIchr7HQxz24q5dE3bI375lFdIApdI7qd/26Sm94VXv8x3c6R+
-         O7LJTo5jU/r5UzkGKdGV/NoRkZRNmeH0FR96bZKyxvRuSy4p3Xg1K6XqkWmGC4HR0c9M
-         o/PgO2urM/sgfqUcvotKMLq1dLY85QBtM5UmqPDvVune8qP8yZ6YZ2bPzaGh8cyAi185
-         WIvdXEhhOX34oEZPA05gqJARP9gOtZv+DVtpPYUieA7nyS1YwzFL72W+brZ0c7qxAigk
-         lVAuaev1I5brqTRXjyTCShajxLrIqUzELaJfqqXABMQw0OkVZFwZxn0gIS5+2+4kKonY
-         38Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750793153; x=1751397953;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=O/XxGCdRT5677dIKZkpmfz5WR25prUU7MyTPbxh5LeU=;
-        b=WLMtBnocXboUwO+7ptX/VA8qw0PpUNEgYrhGyEdY0iz8xQC8EwyFgDiXzeeinIamKo
-         aPKXbAV/IcD+Be6jrR+hluxkcCqJ2GDze0SeTBnq3gU5IjVjwJ+/7Wfpwe1ra/UKidLA
-         zcdye++ablGE5mGKcJU/ThyPgzvIevs8BPQRYLkX4QpZbGoIM+Wg/D+uEvN2Cjk++tZm
-         1CuDNq3YLa4D84xbS3+njx8GvhicsTxEKipTPtOVsHdSBEF1w3mtPFzgKYDzP3KuaPdo
-         oL+0vlHce8hwGe5cmCaqABVxCTuOqsY8Q86xsDKPntlQ5xSCkWzTkn/RZhf19s87a1Rj
-         AejQ==
-X-Forwarded-Encrypted: i=1; AJvYcCURJCawX9V/LWr+HDZLCahgfIck8MZ03L+jK2O/KxXzIE0H3nkvNFIx3Mee0qChc0gMlCfLV4VqHx9iTYU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsPuyspCPY9J2jcRaE0XUhRz7nEblxTgSBcjJhbr8bnK84PTH4
-	+JzMwOyx2/zYzxrghksstWvnb0VDoXrXQIiUXbB5uVfTWdwHl0L7emqaOi9YmmrGV3RL7XgZeJ1
-	CvPav15D4u5+UcWddcERshtytyE9eztAOQ3tdOi4iSg==
-X-Gm-Gg: ASbGncv0ti1pR1DyJRuX16uFLLd39QGeaFJwWg8fpjm8u3qphYGTvOP32vmSKtGBQCE
-	wEK/3Kge0HYpJY120M7+MIRqUEZwGiEImFM9eegprYFau8K3K1aD9nL89Za0kzMjnP5eWas2krf
-	ZM7W0trXCVMUGSkS/DdKwwldyal+hwElHpD78qp4KU/II=
-X-Google-Smtp-Source: AGHT+IGfIYY9ja6+MyS7nJgRCe0NKGQFj0wJs4m710HBtSTQrEiLVhY3RtHa3mZNxJGIIiJJmkhYu1xm5OosUwV6rEg=
-X-Received: by 2002:a05:6512:4018:b0:553:a740:18aa with SMTP id
- 2adb3069b0e04-554fdd19f31mr29838e87.22.1750793153546; Tue, 24 Jun 2025
- 12:25:53 -0700 (PDT)
+	s=arc-20240116; t=1750793278; c=relaxed/simple;
+	bh=EmKrkmrGNow4ZgVvb7DHBI4PdW+wNF09nrDNzAON91g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=skAoXPCTZdtOW+zYDe2p0S/x9GFu2GWbi0ejwb0MUUO3m4Rf/K4+g5OylZ29WvZMnaOFOqCXhWXihdKISSPitfRE38XN+y2mMs+1XiNyMaaCI840OxFe+xh3oE3qoEhALC03jKCCpsCHgPIjV6NbhGxjWObSx4kTme+Lhn1Nu+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+X-CSE-ConnectionGUID: BV0tFG9ZT0edBPxm6UPkUg==
+X-CSE-MsgGUID: bXlZBeQ0RxeW8g3gNFptaQ==
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 25 Jun 2025 04:27:55 +0900
+Received: from mulinux.example.org (unknown [10.26.240.23])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 056D4406C864;
+	Wed, 25 Jun 2025 04:27:52 +0900 (JST)
+From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>
+Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] clk: renesas: rzv2h: Add missing include file
+Date: Tue, 24 Jun 2025 20:27:48 +0100
+Message-Id: <20250624192748.340196-1-fabrizio.castro.jz@renesas.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620-gpiod-is-equal-improv-v1-0-a75060505d2c@linaro.org> <20250620-gpiod-is-equal-improv-v1-2-a75060505d2c@linaro.org>
-In-Reply-To: <20250620-gpiod-is-equal-improv-v1-2-a75060505d2c@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 24 Jun 2025 21:25:40 +0200
-X-Gm-Features: AX0GCFs59E-1SHptMGQVMOGsJv3WHoWXZBWNBNSQupjPdwTjOjfHVsxUuY8gVro
-Message-ID: <CACRpkdaF_h69v3JWdfu=m0BFV43jyDVvXaD_f-De61DEcB6qzQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: make gpiod_is_equal() arguments stricter
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 20, 2025 at 2:58=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+File `rzv2h-cpg.h` makes use of data types defined in `types.h`,
+but it's not including it, which could translate to build errors.
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> It makes no sense for a GPIO descriptor comparator to return true when
-> the arguments passed to it are NULL or IS_ERR(). Let's validate both and
-> return false unless both are valid GPIO descriptors.
->
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> Link: https://lore.kernel.org/all/Z_aFBfjb17JxOwyk@black.fi.intel.com/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Include `types.h` to fix this problem.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+---
+ drivers/clk/renesas/rzv2h-cpg.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Yours,
-Linus Walleij
+diff --git a/drivers/clk/renesas/rzv2h-cpg.h b/drivers/clk/renesas/rzv2h-cpg.h
+index 7321b085f937..25e0a9e5761b 100644
+--- a/drivers/clk/renesas/rzv2h-cpg.h
++++ b/drivers/clk/renesas/rzv2h-cpg.h
+@@ -9,6 +9,7 @@
+ #define __RENESAS_RZV2H_CPG_H__
+ 
+ #include <linux/bitfield.h>
++#include <linux/types.h>
+ 
+ /**
+  * struct pll - Structure for PLL configuration
+-- 
+2.34.1
+
