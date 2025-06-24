@@ -1,134 +1,236 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9ED72CA8
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779763595C;
+	Tue, 24 Jun 2025 16:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750781757; cv=none; b=aMLDnYboL10Bds6gWpbmEeVPMp5L/+AsioDJU/wOoCNB4qIwQ/4CvPsKLZ5Hg0ZX+WFjHKhGH61uDMh3sAS2ib2guO9aQVIsSA8ThdmHL1oWZkZMkhu7yPXcDUeInTYP2DwS0eMWi/vdkC01yUckjZNFyRwGeVsDQ6KpRuxzCes=
+	t=1750781790; cv=none; b=pHGGvGXl0b5P/b9JsWJ3xWLbW9SDV+TM6faLKFLp9R+Wm7pcDa0g6nbzFZka87TkLakwcQ3VCzYEi0H4+50n5XVUVhQ4FXSguNXaGBT2u2ZLkhegxqB4afdUH8g9CqJA/RYhrBtpC2FzfWqbCiTHg+EMgxy99ZW3+z4DC2mgctU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750781757; c=relaxed/simple;
-	bh=cnqRmP3MWftqLsVV3rIWse2EOfNLNh9JhYIyXhzOGog=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dKSF4ojy8vdpsbtAz5+mph8OTl90eBuvTY2BXxSuBxAYMDylSBQ1fVtDHwD2UMxEhRozSRjLBMHIC4BtkLlKq9CVawMHDA5BtMs9Tkg3/ixxlAZvgrlh0MbKDxPC/Qn1h2fk6E5TmKc1X7u2+KjTxOG7ZGjAFNmimonv/SDUDJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VJP8ug+t; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750781790; c=relaxed/simple;
+	bh=Ful3X5gaG+VN/GcBJoWOhNCCpGbKmM2mX6QOM+vLVE4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WxkVzGe1wq0q9yBA2UoWtyd5EqnGRiG4nHe1plwEbV1VU0xCHqEaR6Z5IuBiWQLh0q017rmul1D/0dkp1RRvbNXyi0q0Slhf1tPVm+TAoo/yfttGs0koEEF0EnN+Fgu/F06LxQvawHZTnsuaJ7As2zRbdl4JUh4K1N0c9MnB1PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S0k7v/s9; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VJP8ug+t"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O8wVo2014954
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:15:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Qyfhlor21ICWZh+rc4+fdzgPyjA2dUWzPSk1D9SVOxw=; b=VJP8ug+t6fivQjJ9
-	2HdIITE3R/FvdMiFv/sFzLfYQdjlR6LZfI0tk+12LkzUfCaWvffmwc90exzRsxKK
-	UnvVLM0QdfIFKK+CvwZyvict5EgEX4l+GIzBh+GhR8MSXn2oiaR4/+EXpwiN/sQa
-	e4l8j0Y9W72UPEnouis0Zg28oux4KNQ2zXElHUE+oSMvlgF9qw74nBZ46+2+rqnb
-	TOdKOpXc0klR2Ak36eoxs8eTTBQvXx/CjBDtfPduiIA4CSIorzhA+cINUYInl5ee
-	Y+H4INM1M28qQRnvek+Qna+bQ6Mc0dwgilAqPxMJroBoYT5qmIF94fsCByFje5pz
-	EdjfSA==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f2rpw12c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:15:54 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2356ce66d7cso71969585ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:15:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0k7v/s9"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-23649faf69fso57887175ad.0;
+        Tue, 24 Jun 2025 09:16:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750781788; x=1751386588; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/870Boz396KhiKkW2Y/w4rRxMqu8ONnC6P23AzGhkmE=;
+        b=S0k7v/s9Hvx/9Gc9I68giIfvCCaHv+i/q5BXa48HQe02gxqmH1JS/V0BgZwzFhHktq
+         WhorAcluSHFqlre2SZBPgnmFWODVqieqfMDifEDyNDFcHlJrVYtNmmNgMIMWWodHxM+B
+         8zJX7/8P1mOiypGGmSjg/boTy758Q3UID83yLzxra79E6BteQo3U5ffCshC2EVOF4J6A
+         OcSOxMf3wIn29jsTnRtiszgYh0kG5z4atYKxEY+seqnjENAX6GMBBWWocTutYFJrEKO3
+         sX1UYJtph4hHgtktDDjgYDPF7NtZktCig2ff9WYNsJlx7tnw8M/QYpv8WAQfv4GIfUBs
+         7x+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750781753; x=1751386553;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qyfhlor21ICWZh+rc4+fdzgPyjA2dUWzPSk1D9SVOxw=;
-        b=VW/L8vWaBOROFdChMN2L2BIJMArOd9YdyBiTFVFZdm3lxKHSv5O0ZK64/xt1EmO1EE
-         FYt9IU0aN3afJRkWYh2J+w1n7diav5UM9Mi09mNLtbYhPwSEEnDol1jWcYOpOWw+bNpK
-         tYrvscVajw8xj4l6RokHj6CUCaa2hb1Zm6pfxFfwyTkRaCFVFwtPgkIjOyfROfl7n3i2
-         PyzbSTMdSmndJZfy4KPUFVxW31/5oUEbaqkpoPSjNrI68/57bDAlajv/bY8PUbZMlSPz
-         1rKuVHpht8SNwmGh2BJp5yUSR0fEcGvpeLBx3qFbhtIM3zOyAfAEFsNVyV7F2NFi8DEt
-         CV/A==
-X-Forwarded-Encrypted: i=1; AJvYcCViipxJX0YE9H5CJm0/Gw1m3oOhqGHMsLuLJMgy5/fFaHntaLSvqqP90OSGTYBdQ6SD33AoRbR7MOqNiVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSSQon5TvdevFpJyDEx0tBKEQxx70FBaWqsQy0kYyntlojJLqI
-	5CYDOXfjFkv8SASXw/HFldu0W2tEY3pG/utT+SaWqeJoJIeLn6DymJeo+GjppLezTT4K62NVIQ8
-	ipD8BqNDdGBnAK3TAwI1Cl/fxG7eKz0OxRYfjd5dN4gEQMdbCOfB2ZDxtsX4NLwkRC5q9mChmYn
-	Y=
-X-Gm-Gg: ASbGnct71UUf49/n7NL10YGyf1Yxj/vr352AAAh8aqUeVlLIu51Emrh2avTMMMt6Kax
-	xymjunHfZlx1X2Ave9BEMbv6JR5C/qbTlEyGQk+ux6eR4IA3wQ2unIXVQmMwDQMKDKAwS/6T52o
-	/bx+ydZXecboZoK8bynGXf3sq36b0Fe6cQX6dimPH6bkPrXuernAJJlIrY6y+SgXgn+tg3ZPr/J
-	/Up4EkV+HvQYHEOjjkBPd1u1HpX5KtvwDBkTEMwdcgPGhd+hIEX1baOR3634y6Cup2EG2n5gwZm
-	Smel4sw1EpC6T691fYZNl+OFBUAI4rj4SeJQjfT48V6Uo+5AiIpbLI2dsjkE4DCXSpTScxInYVM
-	ojkgcMNCJ/tDLgxQ=
-X-Received: by 2002:a17:902:fc44:b0:234:e655:a632 with SMTP id d9443c01a7336-237d9b19e2cmr287442545ad.51.1750781752988;
-        Tue, 24 Jun 2025 09:15:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH3GDtY6uAafIPWUwLJ9fdR1mlv1odipIGVPfHXlQOfWlJDASFtqBzLLuEVdFTlA964kKvR6g==
-X-Received: by 2002:a17:902:fc44:b0:234:e655:a632 with SMTP id d9443c01a7336-237d9b19e2cmr287442015ad.51.1750781752475;
-        Tue, 24 Jun 2025 09:15:52 -0700 (PDT)
-Received: from [192.168.1.111] (c-73-202-227-126.hsd1.ca.comcast.net. [73.202.227.126])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8695440sm113338745ad.185.2025.06.24.09.15.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 09:15:52 -0700 (PDT)
-Message-ID: <377affe8-fa88-4ade-9cf8-aaeaaabee679@oss.qualcomm.com>
-Date: Tue, 24 Jun 2025 09:15:51 -0700
+        d=1e100.net; s=20230601; t=1750781788; x=1751386588;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/870Boz396KhiKkW2Y/w4rRxMqu8ONnC6P23AzGhkmE=;
+        b=R8jkWuHel0axb1e0KLX2T7qdnBpS+Qqc7P3Q+k8y7x2H6H+nr7/6BVPLAiBWJ1OcHh
+         MKRNYkJhTIt9J7qz7bumATmj3dw4p/j/mqq1MzQSYZvIFXZhsSeBjhbsjflvBOubXvd8
+         17VifPk8JVK0mO2tNu0ESl+FroJfDBBNPinZs23PbysW64KrrxDXsHOd1hF145T0mTn1
+         DQO6cws5L/mqnV3xXfZnhgyg0sj2Yc7kXYLuJdt6JTy3udAU9IKOyroKafgucwbmkXvF
+         Tbw3obtYLkbX1cC+Y0idmq8d0uath4WbHjHBKFCGwRFkOsZsfhUZdZ/1ILQFQgJZ9SDL
+         0VVw==
+X-Forwarded-Encrypted: i=1; AJvYcCWW6xDkt0vx7HkjD8f6p4tNZDZP5VGmhnfQ8LMe3ncR+mUa9odxXJPwoQimSeNurJiUnGb2MO1ma3y108KpK8UBCw==@vger.kernel.org, AJvYcCXWAsRN/O1Dh2zC+49M6JzztD8tuZj0TZ5Mthe29MwMUO8c/o+csFEXQmaZbcgWk2IyTqEp9jpxRDRlXCE=@vger.kernel.org, AJvYcCXrhCD8phUHBxKfiCUp7k3gQvDkTGAFqde8rd3mK7J26VlUmfsp5YdS755C8gowhMdEL+fSvdwT9Yw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZ+w6Bl+8RJS3UahQdzSIP6FXq5PCjcaqreDXklN0TQbEACt4S
+	3trmki+jpmNeW/eXxlXM4UTWpNRaJCsj182iR5tDq4iC3rroAvaMG2jE
+X-Gm-Gg: ASbGncsND9Ds+uBWZoEyImO0cKuNZu8UqdtgAuAu4qOGCBFKNMI40WKPYaavcF0YBYb
+	CrXca3vg+8BF+11lIQYqtovty1jjtHZhB84fq8LqwyDVb5HEUaDFNckdBam2bCCDXnGcO4S594/
+	7leOvwgwggw10NutmMsWvSugR/OPl/Px4m9e7CGcez/e4Rg9Vml/GS9r/qZdDRNWo/2MvDEr2+P
+	wKBathPl7uehSPposMj7tMliqFimvs0zFqAa0LmpHuUl8i62q9Ya7NjLJrrqH0lW5LeZ+rcPdb+
+	+/0UkH7sS0HXQN8f6d/MnOJm7wTBVgdzCcohlNhwVuJNttmhvSloRdFHwL4=
+X-Google-Smtp-Source: AGHT+IEB7+JGugYqV5zduLPORaFjWnC/NvHOQ1eCIFSqcy93HLbICht89vczTaXjsuDyhkTFRVgqjQ==
+X-Received: by 2002:a17:902:ce8c:b0:235:880:cf8a with SMTP id d9443c01a7336-237d97fbc21mr269719685ad.15.1750781787597;
+        Tue, 24 Jun 2025 09:16:27 -0700 (PDT)
+Received: from hiagonb ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23809a8ee2esm16496185ad.227.2025.06.24.09.16.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 09:16:26 -0700 (PDT)
+Date: Tue, 24 Jun 2025 13:16:21 -0300
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@oss.nxp.com>, daniel.baluta@nxp.com,
+	iuliana.prodan@oss.nxp.com,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v5 3/3] remoteproc: imx_rproc: detect and attach to
+ pre-booted remote cores
+Message-ID: <20250624161621.fezba5p3dmecnor6@hiagonb>
+References: <20250617193450.183889-1-hiagofranco@gmail.com>
+ <20250617193450.183889-4-hiagofranco@gmail.com>
+ <aFly61yCMttkp12e@p14s>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: ath11k: fix suspend use-after-free after probe
- failure
-To: Johan Hovold <johan@kernel.org>, Johan Hovold <johan+linaro@kernel.org>
-Cc: Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
-        ath11k@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Baochen Qiang <quic_bqiang@quicinc.com>
-References: <20250624082022.15469-1-johan+linaro@kernel.org>
- <aFpingRwP3foaKJ9@hovoldconsulting.com>
- <43b978a5-c1c3-450d-8340-dc1a6dddc884@oss.qualcomm.com>
-From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Content-Language: en-US
-In-Reply-To: <43b978a5-c1c3-450d-8340-dc1a6dddc884@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=NdDm13D4 c=1 sm=1 tr=0 ts=685acf3a cx=c_pps
- a=JL+w9abYAAE89/QcEU+0QA==:117 a=e70TP3dOR9hTogukJ0528Q==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=qSSGdmx9Lv0nWuJ4rdQA:9
- a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10 a=324X-CrmTo6CU4MGRt3R:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDEzNiBTYWx0ZWRfX2T6I2XmLEtTX
- /+X+3ERbirpzTHdIBKl4zeBQLuK3/i0m/zdPnunwl4vPpNAINDxHseQIhgRrBZhS54jhm6tsnNV
- s6aDEAAwTc0mOrG24UqQnjFtkdAeIBW0tVQUyhjEFRjNULW2L+Godj+aigyTi3aLUoB/CwAePt4
- 5+UIUnFzM/Y6aEcXnponn4DvMGLUsgNGfAXe+0om4NaSWHEAnZoTXHe8UnHX3jaAH7qkioeAlsi
- jDk/5pAeWbcFpKEUm7UXXZfrxPuxAIjuZfnAG6FpMN8rKFN9tumuFVEYakl3YWLkX0NLv8SRA08
- yGSynaFExJ/hvQYxCRWV/eZnZJ9OVHVE+22rhAx+ydfMc2poFohwb9SKFPfJcnf487dC5eReoCI
- YF3joHioH7bk8FE2tu6zAK7cewn7M3rkaoE8oQCaO7v5gwsQ7dw6utIXkFfOUph2J1Eeo+5d
-X-Proofpoint-ORIG-GUID: UdeyvGbCH3sisyO8RMILip-OmST_AfGq
-X-Proofpoint-GUID: UdeyvGbCH3sisyO8RMILip-OmST_AfGq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-24_06,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 mlxscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
- phishscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999 adultscore=0
- clxscore=1015 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506240136
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFly61yCMttkp12e@p14s>
 
-On 6/24/2025 8:11 AM, Jeff Johnson wrote:
-> On 6/24/2025 1:32 AM, Johan Hovold wrote:
->> On Tue, Jun 24, 2025 at 10:20:22AM +0200, Johan Hovold wrote:
->>> Make sure to deregister the PM notifier to avoid a use-after-free on
->>> suspend in case core initialisation fails (e.g. due to missing
->>> firmware).
->>
->> Not sure it matters in this case, but forgot to include:
->>
->> Tested-on: WCN6855 hw2.0 WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.41
+On Mon, Jun 23, 2025 at 09:29:47AM -0600, Mathieu Poirier wrote:
+> On Tue, Jun 17, 2025 at 04:34:50PM -0300, Hiago De Franco wrote:
+> > From: Hiago De Franco <hiago.franco@toradex.com>
+> > 
+> > When the remote core is started before Linux boots (e.g., by the
+> > bootloader), the driver currently is not able to attach because it only
+> > checks for cores running in different partitions. If the core was kicked
 > 
-> I'll add that.
-> I'll also change the Link: to Closes: per checkpatch:
-> 
-> WARNING:BAD_REPORTED_BY_LINK: Reported-by: should be immediately followed by Closes: with a URL to the report
+> Again, we have a nomenclature issue here with "If the core was kicked by the
+> bootloader".  What does "kicked" mean here?  Is it just powered and held in
+> reset or is it executing.  And are you referring to the A core or the M core?
 
-Please check pending patch:
-https://git.kernel.org/pub/scm/linux/kernel/git/ath/ath.git/commit/?h=pending&id=2418079880408c5ae0b2a93f72af044eaff18cb6
+Ok, same here, I will improve this in the next revision. Thanks.
+
+> 
+> 
+> > by the bootloader, it is in the same partition as Linux and it is
+> > already up and running.
+> > 
+> > This adds power mode verification through dev_pm_genpd_is_on(), enabling
+> > the driver to detect when the remote core is already running and
+> > properly attach to it if all the power domain devices are on.
+> > 
+> > To accomplish this, we need to avoid passing any attach_data or flags to
+> > dev_pm_domain_attach_list(), letting the platform device become a
+> > consumer of the power domain provider. With that the current power state
+> > of the genpds will not change, allowing the detection of the remote core
+> > power state.
+> > 
+> > We enable and sync the device runtime PM during probe to make sure the
+> > power domains are correctly managed when the core is controlled by the
+> > kernel.
+> > 
+> > Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
+> > ---
+> > v4 -> v5:
+> >  - pm_runtime_get_sync() removed in favor of
+> >    pm_runtime_resume_and_get(). Now it also checks the return value of
+> >    this function.
+> >  - Added pm_runtime_disable() and pm_runtime_put() to imx_rproc_remove()
+> >    function.
+> > v3 -> v4:
+> >  - Changed to use the new dev_pm_genpd_is_on() function instead, as
+> >    suggested by Ulf. This will now get the power status of the two
+> >    remote cores power domains to decided if imx_rpoc needs to attach or
+> >    not. In order to do that, pm_runtime_enable() and
+> >    pm_runtime_get_sync() were introduced and pd_data was removed.
+> > v2 -> v3:
+> >  - Unchanged.
+> > v1 -> v2:
+> >  - Dropped unecessary include. Removed the imx_rproc_is_on function, as
+> >    suggested.
+> > ---
+> >  drivers/remoteproc/imx_rproc.c | 37 +++++++++++++++++++++++++++++-----
+> >  1 file changed, 32 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> > index 627e57a88db2..b53083f2553e 100644
+> > --- a/drivers/remoteproc/imx_rproc.c
+> > +++ b/drivers/remoteproc/imx_rproc.c
+> > @@ -18,6 +18,7 @@
+> >  #include <linux/of_reserved_mem.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/pm_domain.h>
+> > +#include <linux/pm_runtime.h>
+> >  #include <linux/reboot.h>
+> >  #include <linux/regmap.h>
+> >  #include <linux/remoteproc.h>
+> > @@ -890,10 +891,8 @@ static int imx_rproc_partition_notify(struct notifier_block *nb,
+> >  static int imx_rproc_attach_pd(struct imx_rproc *priv)
+> >  {
+> >  	struct device *dev = priv->dev;
+> > -	int ret;
+> > -	struct dev_pm_domain_attach_data pd_data = {
+> > -		.pd_flags = PD_FLAG_DEV_LINK_ON,
+> > -	};
+> > +	int ret, i;
+> > +	bool detached = true;
+> >  
+> >  	/*
+> >  	 * If there is only one power-domain entry, the platform driver framework
+> > @@ -902,7 +901,22 @@ static int imx_rproc_attach_pd(struct imx_rproc *priv)
+> >  	if (dev->pm_domain)
+> >  		return 0;
+> >  
+> > -	ret = dev_pm_domain_attach_list(dev, &pd_data, &priv->pd_list);
+> > +	ret = dev_pm_domain_attach_list(dev, NULL, &priv->pd_list);
+> > +	/*
+> > +	 * If all the power domain devices are already turned on, the remote
+> > +	 * core is already up when the kernel booted (e.g. kicked by the
+> > +	 * bootloader). In this case attach to it.
+> 
+> Same comment as above.  What got kicked?  A core or M core.  And what does
+> "kicked" mean?  I can guess what is happening but guessing rarely leads to
+> anything positive.
+> 
+> In the next revision, please use other words than "kicked".
+
+Noted, thanks.
+
+> 
+> 
+> > +	 */
+> > +	for (i = 0; i < ret; i++) {
+> > +		if (!dev_pm_genpd_is_on(priv->pd_list->pd_devs[i])) {
+> > +			detached = false;
+> > +			break;
+> > +		}
+> > +	}
+> > +
+> > +	if (detached)
+> > +		priv->rproc->state = RPROC_DETACHED;
+> > +
+> 
+> Ok for the above.
+> 
+> >  	return ret < 0 ? ret : 0;
+> >  }
+> >  
+> > @@ -1146,6 +1160,15 @@ static int imx_rproc_probe(struct platform_device *pdev)
+> >  		}
+> >  	}
+> >  
+> > +	if (dcfg->method == IMX_RPROC_SCU_API) {
+> > +		pm_runtime_enable(dev);
+> > +		ret = pm_runtime_resume_and_get(dev);
+> > +		if (ret) {
+> > +			dev_err(dev, "pm_runtime get failed: %d\n", ret);
+> > +			goto err_put_clk;
+> > +		}
+> > +	}
+> > +
+> >  	ret = rproc_add(rproc);
+> >  	if (ret) {
+> >  		dev_err(dev, "rproc_add failed\n");
+> > @@ -1171,6 +1194,10 @@ static void imx_rproc_remove(struct platform_device *pdev)
+> >  	struct rproc *rproc = platform_get_drvdata(pdev);
+> >  	struct imx_rproc *priv = rproc->priv;
+> >  
+> > +	if (priv->dcfg->method == IMX_RPROC_SCU_API) {
+> > +		pm_runtime_disable(priv->dev);
+> > +		pm_runtime_put(priv->dev);
+> > +	}
+> >  	clk_disable_unprepare(priv->clk);
+> >  	rproc_del(rproc);
+> >  	imx_rproc_put_scu(rproc);
+> > -- 
+> > 2.39.5
+> > 
