@@ -1,88 +1,112 @@
-Received: from smtp153-162.sina.com.cn (smtp153-162.sina.com.cn [61.135.153.162])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4C9258CDA
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.135.153.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11E42571DD;
+	Tue, 24 Jun 2025 08:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750753624; cv=none; b=WKy3q8WPvpSX2azkOSVpWUieJeX2K9YQXPocLAXMc+Z7/3wL72qLkQvakww+Vjyr+LzZ59gSbAduM4FcVSulnGMy02KgzW58L49uGw1cgh4z/k2qjuGSZLGTP8NGdKpjWrnZ+Rx9PbuHd/4wAwmKAWprLAnqI0YPwz+ySnWh/ok=
+	t=1750753658; cv=none; b=f19qqcjhDp1opw2781nsVZ2oCqJdbSp90tLtCHPkQ5Ds2Ow9sprZPmnG2LDOn0PCSz+kmlCAN/hh40u05T7ZibWNWhwbKF9py0teLI4zTAiY62yGT751xlaEDZgX7HnqlI0le9aAaF7Qk6kjLGfNmdj4s1v6r0ZYtuFtp+TgN2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750753624; c=relaxed/simple;
-	bh=MK/0sV9iPODGMfIvaSoqDQLATEj45R3OjlM3rNrtZLI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ox1Qz1ipeGJXMnJhV9GIcYuOCmTUs89pCYb729lxKp7M9PS7uwBN1adbAm0TJquToxtxS+W0D3druJxI6HGF5tIyw+n2C+lOuLHQ84m2/JRF3iLSfSVFGQXbpTojzSG5V9P3xfIjTBaocQwnGoLAsSJE4FJVwV9Qabj3WAwRXvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=61.135.153.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
-	by sina.com (10.54.253.31) with ESMTP
-	id 685A612100006786; Tue, 24 Jun 2025 16:26:11 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 3424196816267
-X-SMAIL-UIID: CA572E708C92455AB66B99258C176F7C-20250624-162611-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [trace?] KASAN: slab-use-after-free Read in __free_filter
-Date: Tue, 24 Jun 2025 16:25:58 +0800
-Message-ID: <20250624082559.1616-1-hdanton@sina.com>
-In-Reply-To: <6859ea24.a00a0220.2e5631.0044.GAE@google.com>
-References: 
+	s=arc-20240116; t=1750753658; c=relaxed/simple;
+	bh=H9y34vir+9nirPEjwoiMIfT3bIIQ67ZyNybg+nCN+Vs=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=FOnKJSRmCa1XRZoT9N6Yj9MU2phgh9D+B8tff0nfKJRSxcuTpYXonBCTuBq24kzSGetxDXlo50Lw4mlwaxH0foZhl5kXIWJZaBtj20FPCwElGAKEynYnzHVBdGVfOJI7+JOQNlIviN91WcvS56/lZGked53NT+RqBBb9w656w80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ntiLKVGj; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ntiLKVGj"
+Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55O8M1nR1268415
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 24 Jun 2025 01:22:02 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55O8M1nR1268415
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025062101; t=1750753324;
+	bh=/GcMmlSpVmJGdK70vVLdVq+WGghRjcWXQ50iTcyNOcA=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=ntiLKVGj72JidONcwsNyF7DiOUmQsTszeaPpNemwiXD6CPdpKiW9vohotZJ/Uypgh
+	 1g5A/YBi/YEX1VbFBd5znZPwQ71z8MhTOIB9sgTundppHmWvz2rpdGfYCcZ8tJO9u+
+	 OoIEreNgnqijK49eia3xSxorTmqUuEiQr65WeF+uVFzQmzEdrfC5ZDMACjjVumZyLS
+	 dKFSVjbOay6ynxoXAyfVIUCOsknfeZJ4Qyr7DJ+7+5ZZy5uSJ2aUlTLPc/BCDyVwUs
+	 ojq2ITfPl9h3690j9i1ylwg3seoaa3MSTMp99lLAi4NM34mJTXaK7RnV+YEBN6fACC
+	 I5SNz2Sn1RArw==
+Date: Tue, 24 Jun 2025 01:22:00 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Khalid Ali <khaliidcaliy@gmail.com>, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, corbet@lwn.net
+CC: luto@kernel.org, peterz@infradead.org, ardb@kernel.org,
+        jan.kiszka@siemens.com, kbingham@kernel.org,
+        kirill.shutemov@linux.intel.com, michael.roth@amd.com,
+        rick.p.edgecombe@intel.com, brijesh.singh@amd.com,
+        sandipan.das@amd.com, jgross@suse.com, thomas.lendacky@amd.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-mm@kvack.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCHv2_0/3=5D_x86=3A_Make_5-level_p?=
+ =?US-ASCII?Q?aging_support_unconditional_for_x86-64?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250624081400.2284-1-khaliidcaliy@gmail.com>
+References:  <20250624081400.2284-1-khaliidcaliy@gmail.com>
+Message-ID: <3EB75889-2194-402F-AF85-2CC96DA5D8F2@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-> Date: Mon, 23 Jun 2025 16:58:28 -0700
-> syzbot found the following issue on:
-> 
-> HEAD commit:    86731a2a651e Linux 6.16-rc3
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1611eb0c580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=4ad206eb0100c6a2
-> dashboard link: https://syzkaller.appspot.com/bug?extid=daba72c4af9915e9c894
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13b16dd4580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17c7bb0c580000
+On June 24, 2025 1:11:15 AM PDT, Khalid Ali <khaliidcaliy@gmail=2Ecom> wrot=
+e:
+>>Both Intel and AMD CPUs support 5-level paging, which is expected to
+>>become more widely adopted in the future=2E
+>>
+>>Remove CONFIG_X86_5LEVEL=2E
+>>
+>>In preparation to that remove CONFIG_DYNAMIC_MEMORY_LAYOUT and make
+>>SPARSEMEM_VMEMMAP the only memory model=2E
+>>
+>>v2:
+>> - Fix 32-bit build by wrapping p4d_set_huge() and p4d_clear_huge() in
+>>   #if CONFIG_PGTABLE_LEVELS > 4;
+>> - Rebased onto current tip/master;
+>>
+>>Kirill A=2E Shutemov (3):
+>>  x86/64/mm: Always use dynamic memory layout
+>>  x86/64/mm: Make SPARSEMEM_VMEMMAP the only memory model
+>>  x86/64/mm: Make 5-level paging support unconditional
+>>
+>> Documentation/arch/x86/cpuinfo=2Erst            |  8 ++---
+>> =2E=2E=2E/arch/x86/x86_64/5level-paging=2Erst         |  9 ------
+>> arch/x86/Kconfig                              | 32 ++-----------------
+>> arch/x86/Kconfig=2Ecpufeatures                  |  4 ---
+>> arch/x86/boot/compressed/pgtable_64=2Ec         | 11 ++-----
+>> arch/x86/boot/header=2ES                        |  4 ---
+>> arch/x86/boot/startup/map_kernel=2Ec            |  5 +--
+>> arch/x86/include/asm/page_64=2Eh                |  2 --
+>> arch/x86/include/asm/page_64_types=2Eh          | 11 -------
+>> arch/x86/include/asm/pgtable_64_types=2Eh       | 24 --------------
+>> arch/x86/kernel/alternative=2Ec                 |  2 +-
+>> arch/x86/kernel/head64=2Ec                      |  4 ---
+>> arch/x86/kernel/head_64=2ES                     |  2 --
+>> arch/x86/mm/init=2Ec                            |  4 ---
+>> arch/x86/mm/init_64=2Ec                         |  9 +-----
+>> arch/x86/mm/pgtable=2Ec                         |  2 +-
+>> drivers/firmware/efi/libstub/x86-5lvl=2Ec       |  2 +-
+>> scripts/gdb/linux/pgtable=2Epy                  |  4 +--
+>> 18 files changed, 13 insertions(+), 126 deletions(-)
+>
+>I think i am too late, however this is completely wrong=2E There are stil=
+l processors that doesn't support
+>5-level paging which is mordern=2E We may call those processors old, howe=
+ver they are still common and used=2E
+>
+>So this patch seem too early for that=2E Some intel core-i5 and core-i7 d=
+oesn't support 5-level paging at all=2E
+>
+>This will break x86_64 cpus that doesn't support 5-level paging=2E
 
-#syz test
-
---- x/kernel/trace/trace_events_filter.c
-+++ y/kernel/trace/trace_events_filter.c
-@@ -1429,6 +1429,7 @@ static void filter_free_subsystem_filter
- 	struct trace_event_file *file;
- 	struct filter_head *head;
- 	struct filter_list *item;
-+	int free_filter = 1;
- 
- 	head = kmalloc(sizeof(*head), GFP_KERNEL);
- 	if (!head)
-@@ -1442,6 +1443,7 @@ static void filter_free_subsystem_filter
- 
- 	item->filter = filter;
- 	list_add_tail(&item->list, &head->list);
-+	free_filter = 0;
- 
- 	list_for_each_entry(file, &tr->events, list) {
- 		if (file->system != dir)
-@@ -1467,7 +1469,8 @@ static void filter_free_subsystem_filter
- 			continue;
- 		__free_subsystem_filter(file);
- 	}
--	__free_filter(filter);
-+	if (free_filter)
-+		__free_filter(filter);
- }
- 
- int filter_assign_type(const char *type)
---
+Uh, no=2E Kernels compiled with 5-level support also support 4 levels=2E
