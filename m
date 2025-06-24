@@ -1,80 +1,80 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E692E173F
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035572E173F
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750783294; cv=none; b=g5RRqfml/7g894dTn02UWXDlE1EeQlp0e9KGd8HSItfw+OxeMLj9/BUmGKsyflMJsZAwyi2Zgg3rRk+Uf7Iub3LYQBVLVD0msF1o7kh3qeXvVo1YpsM0JyB6N89MkOoBLh9t0iokBLvTtnSCyd2ic3rYWUStkJB51gri776R1SI=
+	t=1750783349; cv=none; b=B6pBWZ4bSYGjZhalt+scTFK27iExtyRGpLAv4bHtXz24KCH7KumV5GeiBM57MTPo93SY6w2/RvugexOSOc5O+0xBnWFRH8XQmFCfWZzBgdrHb0uvtUuDPb1NfvqN2DL1vGIgFwq4jfPdtDVTYYaRoCedMZhamzKOt98sH54HW1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750783294; c=relaxed/simple;
-	bh=x65Ewv2tZRUJ94RhrLAqeJGokTMa9GeR8NA6xDJY9IQ=;
+	s=arc-20240116; t=1750783349; c=relaxed/simple;
+	bh=sS6oPK/y4DeUMKsrNmASTo4+i5mRvGEGbnfMs+Jf8Qs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bEVUcvJcNLddTUBf+fBrgGU8GyYgKxbL7yNpRyxugJpj8OOW/Uf+E++Hox8XnA2Z+NUDzQlecjDIMMUa6NsJO3Km2TXZqwpdtweTarwhlJgFpZQ+aBcLVY6Z+wftli3pvCNmzFEq37bBpxYlqOM5qe5aOMzsYVLDskRHC/7f3jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XY0sX/Lq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=0zvWTsG9; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XY0sX/Lq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=0zvWTsG9; arc=none smtp.client-ip=195.135.223.130
+	 In-Reply-To:Content-Type; b=Nk958ht0oNkVPD5dPGrgm4ce5oGAKsM3kNfx6IWCIZpqsZTjYY68/VkxM6l/vJrGy97XNv5nCCPRFAKeydPZNMnLVNi1/VspB6gR7JTnhEA7tJd2rEPz9aUPhHjFfbl9R/FP1+PDTevOLoilYj0hQ8V4hYQtzKJEoI2//ow9nn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=RfJyXQ3N; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=/pAEJ8qs; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=gW1APbNI; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=PPNEwgn+; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XY0sX/Lq";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0zvWTsG9";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XY0sX/Lq";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0zvWTsG9"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="RfJyXQ3N";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="/pAEJ8qs";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="gW1APbNI";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="PPNEwgn+"
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 429562127A;
-	Tue, 24 Jun 2025 16:41:30 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 08F011F46E;
+	Tue, 24 Jun 2025 16:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750783290; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1750783346; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=rOxFyGGxyrhLelMzeWJRkz/5Ww35ZM+RSq38op+klpY=;
-	b=XY0sX/LqI9ZkXl19Binw6YkEJNWmGhhwoCp8Mcd/KVJFyHBV8RVS3nEXGF1Uu9d9BE7hVR
-	NbFbCUsfHn9645Om+IubEpOwUmNKJA83gpLCQaWEQH+T5fl2KfUIYEAb/Dv/4pZaq63wTn
-	nrQ8yPhcUFWqEBEUvcaIGwsTL2gwUo8=
+	bh=ZFQaXyLiqOLXgKDRGaL9SqPl20x4REIwT660m90ebpk=;
+	b=RfJyXQ3NbUh29IVa0iW371sqNc9hwGHVGw8wqIPHQf+zKuqAcA5ShJRsHh5FT1b7sr2itk
+	qR4nFr3lkkKT5vrsnMoGAWRTidkXzsiFZ4H9cFe+ZPuLgAIOr7v0GvFuLEwQZPVRwwFxNU
+	Kyf2USXAQFz0aENXwz9zX/Q8+MOMOcM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750783290;
+	s=susede2_ed25519; t=1750783346;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=rOxFyGGxyrhLelMzeWJRkz/5Ww35ZM+RSq38op+klpY=;
-	b=0zvWTsG9S3jCf+E2LkAoQDxr5bgVYVu/p34EOMRiLFBufLQBiSSbIj0D6zzW6YjhXGs4EF
-	P2Cw2fFmlUHx5sAg==
-Authentication-Results: smtp-out1.suse.de;
+	bh=ZFQaXyLiqOLXgKDRGaL9SqPl20x4REIwT660m90ebpk=;
+	b=/pAEJ8qsKpKcRnohW9FNivOu4VaJ2dpdBaAs1SGqbDbLkWeItjlYIdQ+PEbp59BdEkfH5i
+	CDMQ+3griU4geeCA==
+Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750783290; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1750783345; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=rOxFyGGxyrhLelMzeWJRkz/5Ww35ZM+RSq38op+klpY=;
-	b=XY0sX/LqI9ZkXl19Binw6YkEJNWmGhhwoCp8Mcd/KVJFyHBV8RVS3nEXGF1Uu9d9BE7hVR
-	NbFbCUsfHn9645Om+IubEpOwUmNKJA83gpLCQaWEQH+T5fl2KfUIYEAb/Dv/4pZaq63wTn
-	nrQ8yPhcUFWqEBEUvcaIGwsTL2gwUo8=
+	bh=ZFQaXyLiqOLXgKDRGaL9SqPl20x4REIwT660m90ebpk=;
+	b=gW1APbNIG/TCnhYRdmChlqx4N3HPtW0CMpYLXfwGnaFfXjUFAsY0mJYYkeHjM7oZT0h6S8
+	L8ultAAhfQNiO42Wz7MylN5xOhQszuWH/R0DmdhiJsBQNYfwXv9QjQYak3rzDAKIROcWvP
+	YJEWWWsLxcZkd9iKaLPPrl0hO+0v+Gw=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750783290;
+	s=susede2_ed25519; t=1750783345;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=rOxFyGGxyrhLelMzeWJRkz/5Ww35ZM+RSq38op+klpY=;
-	b=0zvWTsG9S3jCf+E2LkAoQDxr5bgVYVu/p34EOMRiLFBufLQBiSSbIj0D6zzW6YjhXGs4EF
-	P2Cw2fFmlUHx5sAg==
+	bh=ZFQaXyLiqOLXgKDRGaL9SqPl20x4REIwT660m90ebpk=;
+	b=PPNEwgn+wTuQmM9fE0z/rC/E/wDkXIgvrwnCG6gRPO1njaxvPCB3+ReMwphoxAPMOZyPax
+	4a7hoTQdiL8IjODA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2A1D513A24;
-	Tue, 24 Jun 2025 16:41:30 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E876B13A24;
+	Tue, 24 Jun 2025 16:42:24 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gz13CTrVWmjxIgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 24 Jun 2025 16:41:30 +0000
-Message-ID: <50d38e67-8246-41c6-82f2-c5e3892d8767@suse.cz>
-Date: Tue, 24 Jun 2025 18:41:29 +0200
+	id eW51OHDVWmg4IwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 24 Jun 2025 16:42:24 +0000
+Message-ID: <992cff93-9ac9-40f9-a104-d9de0f3b8ef7@suse.cz>
+Date: Tue, 24 Jun 2025 18:42:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,18 +84,16 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 1/4] mm, madvise: simplify anon_name handling
 Content-Language: en-US
-To: Suren Baghdasaryan <surenb@google.com>,
- David Hildenbrand <david@redhat.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Jann Horn <jannh@google.com>,
- Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>,
- Colin Cross <ccross@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
+ David Hildenbrand <david@redhat.com>, Jann Horn <jannh@google.com>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Colin Cross <ccross@google.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
 References: <20250624-anon_name_cleanup-v2-0-600075462a11@suse.cz>
  <20250624-anon_name_cleanup-v2-1-600075462a11@suse.cz>
- <e6e20d9e-ceb4-4e18-8859-5255ef1aa525@redhat.com>
- <CAJuCfpFQedeU-cnsV9PX4SEz5ZS9oHMVzt7HirWExAKoU5y89w@mail.gmail.com>
+ <60186e91-bf02-4d39-b745-ffb4e62632cb@lucifer.local>
 From: Vlastimil Babka <vbabka@suse.cz>
 Autocrypt: addr=vbabka@suse.cz; keydata=
  xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
@@ -136,9 +134,9 @@ Autocrypt: addr=vbabka@suse.cz; keydata=
  rywqgzTUhHFKKF6/9L/lYtrNcHU8Z6Y4Ju/MLUiNYkmtrGIMnkjKCiRqlRrZE/v5YFHbayRD
  dJKXobXTtCBYpLJM4ZYRpGZXne/FAtWNe4KbNJJqxMvrTOrnIatPj8NhBVI0RSJRsbilh6TE
  m6M14QORSWTLRg==
-In-Reply-To: <CAJuCfpFQedeU-cnsV9PX4SEz5ZS9oHMVzt7HirWExAKoU5y89w@mail.gmail.com>
+In-Reply-To: <60186e91-bf02-4d39-b745-ffb4e62632cb@lucifer.local>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Spam-Flag: NO
 X-Spam-Score: -4.30
 X-Spamd-Result: default: False [-4.30 / 50.00];
@@ -159,38 +157,98 @@ X-Spamd-Result: default: False [-4.30 / 50.00];
 	FROM_EQ_ENVFROM(0.00)[];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,suse.cz:email,oracle.com:email]
 X-Spam-Level: 
 
-On 6/24/25 16:28, Suren Baghdasaryan wrote:
-> On Tue, Jun 24, 2025 at 6:58 AM David Hildenbrand <david@redhat.com> wrote:
+On 6/24/25 17:26, Lorenzo Stoakes wrote:
+> On Tue, Jun 24, 2025 at 03:03:45PM +0200, Vlastimil Babka wrote:
+>> Since the introduction in 9a10064f5625 ("mm: add a field to store names
+>> for private anonymous memory") the code to set anon_name on a vma has
+>> been using madvise_update_vma() to call replace_anon_vma_name(). Since
+>> the former is called also by a number of other madvise behaviours that
+>> do not set a new anon_name, they have been passing the existing
+>> anon_name of the vma to make replace_vma_anon_name() a no-op.
 >>
->> On 24.06.25 15:03, Vlastimil Babka wrote:
->> > Since the introduction in 9a10064f5625 ("mm: add a field to store names
->> > for private anonymous memory") the code to set anon_name on a vma has
->> > been using madvise_update_vma() to call replace_anon_vma_name(). Since
->> > the former is called also by a number of other madvise behaviours that
->> > do not set a new anon_name, they have been passing the existing
->> > anon_name of the vma to make replace_vma_anon_name() a no-op.
+>> This is rather wasteful as it needs anon_vma_name_eq() to determine the
+>> no-op situations, and checks for when replace_vma_anon_name() is allowed
+>> (the vma is anon/shmem) duplicate the checks already done earlier in
+>> madvise_vma_behavior(). It has also lead to commit 942341dcc574 ("mm:
+>> fix use-after-free when anon vma name is used after vma is freed")
+>> adding anon_name refcount get/put operations exactly to the cases that
+>> actually do not change anon_name - just so the replace_vma_anon_name()
+>> can keep safely determining it has nothing to do.
+>>
+>> The recent madvise cleanups made this suboptimal handling very obvious,
+>> but happily also allow for an easy fix. madvise_update_vma() now has the
+>> complete information whether it's been called to set a new anon_name, so
+>> stop passing it the existing vma's name and doing the refcount get/put
+>> in its only caller madvise_vma_behavior().
+>>
+>> In madvise_update_vma() itself, limit calling of replace_anon_vma_name()
+>> only to cases where we are setting a new name, otherwise we know it's a
+>> no-op. We can rely solely on the __MADV_SET_ANON_VMA_NAME behaviour and
+>> can remove the duplicate checks for vma being anon/shmem that were done
+>> already in madvise_vma_behavior().
+>>
+>> Additionally, by using vma_modify_flags() when not modifying the
+>> anon_name, avoid explicitly passing the existing vma's anon_name and
+>> storing a pointer to it in struct madv_behavior or a local variable.
+>> This prevents the danger of accessing a freed anon_name after vma
+>> merging, previously fixed by commit 942341dcc574.
+>>
+>> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 > 
-> s/replace_vma_anon_name/replace_anon_vma_name
-
-Hm right, thanks. The problem is that it was indeed originally called
-replace_vma_anon_name() (later renamed) and I was copy/pasting while looking
-at commit 9a10064f5625... will send a fixed up changelog in a reply to patch
-1/4.
-
->>
->> Acked-by: David Hildenbrand <david@redhat.com>
+> Cheers, LGTM so:
 > 
-> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> 
+> I made sure to do some stress-ng --madvise testing with this series (+ my recent
+> fix) applied :P all good.
 
-Thanks!
+Thanks for that!
 
+>> ---
+>>  mm/madvise.c | 37 +++++++++++++------------------------
+>>  1 file changed, 13 insertions(+), 24 deletions(-)
 >>
->> --
->> Cheers,
+>> diff --git a/mm/madvise.c b/mm/madvise.c
+>> index 4491bf080f55d6d1aeffb2ff0b8fdd28904af950..fca0e9b3e844ad766e83ac04cc0d7f4099c74005 100644
+>> --- a/mm/madvise.c
+>> +++ b/mm/madvise.c
+>> @@ -176,25 +176,29 @@ static int replace_anon_vma_name(struct vm_area_struct *vma,
+>>  }
+>>  #endif /* CONFIG_ANON_VMA_NAME */
+>>  /*
+>> - * Update the vm_flags on region of a vma, splitting it or merging it as
+>> - * necessary.  Must be called with mmap_lock held for writing;
+>> - * Caller should ensure anon_name stability by raising its refcount even when
+>> - * anon_name belongs to a valid vma because this function might free that vma.
+>> + * Update the vm_flags and/or anon_name on region of a vma, splitting it or
+>> + * merging it as necessary. Must be called with mmap_lock held for writing.
+>>   */
+>>  static int madvise_update_vma(vm_flags_t new_flags,
+>>  		struct madvise_behavior *madv_behavior)
+>>  {
+>> -	int error;
+>>  	struct vm_area_struct *vma = madv_behavior->vma;
+>>  	struct madvise_behavior_range *range = &madv_behavior->range;
+>>  	struct anon_vma_name *anon_name = madv_behavior->anon_name;
+>> +	bool set_new_anon_name = madv_behavior->behavior == __MADV_SET_ANON_VMA_NAME;
+>>  	VMA_ITERATOR(vmi, madv_behavior->mm, range->start);
 >>
->> David / dhildenb
+>> -	if (new_flags == vma->vm_flags && anon_vma_name_eq(anon_vma_name(vma), anon_name))
+>> +	if (new_flags == vma->vm_flags && (!set_new_anon_name ||
+>> +			anon_vma_name_eq(anon_vma_name(vma), anon_name)))
+>>  		return 0;
 >>
+>> -	vma = vma_modify_flags_name(&vmi, madv_behavior->prev, vma,
+>> +	if (set_new_anon_name)
+>> +		vma = vma_modify_flags_name(&vmi, madv_behavior->prev, vma,
+>>  			range->start, range->end, new_flags, anon_name);
+> 
+> I will do a follow up (doesn't really belong here I'd say as involves change to
+> modify code) that makes this vma_modify_name() or vma_modify_anon_name() as this
+> is the only caller and we don't care about flags here :)
+
+Oh right, good idea!
 
