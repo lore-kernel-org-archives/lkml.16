@@ -1,130 +1,152 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FB220A5D8;
-	Tue, 24 Jun 2025 07:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36A6372
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750748688; cv=none; b=oCI1Dz5bdjO8SstMb9Eu6cjbvObOX9HjOrK1wgQswGDEd6Nc19MVK0RYcr1u2IWbjRNECeeT4iRptfRH+i8lXCXcHHLQyLniqkaTEf4Z7ZTSIRqNVOueJi/IZpQXwZP5NVnRat8SYwHs7OVzR34hIuFoAiBbUFV+LDX0GP5P3Fo=
+	t=1750748688; cv=none; b=aCRMxtz3YVxlDTSyW3um2+0Sw4SZqvHA60DP+WFpsuhRaV6gYKuF2Mf+8YV56EtYgUylkVr0237WUmo8D/tfjmeNHPIuanHMcsCOeKYmZBE/06Ciyj4SrcJ4HJwJC93WM2GWhsoYU8Hq/SVljGwp7/BO76FF0Ut3y0Jkq3l6mo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750748688; c=relaxed/simple;
-	bh=3L8zVA2ueuJ98h4O9ApjC8lw44r2R1R4pYIOlzcPuI8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZHZg4Utz5SL4feoCchUMibAo+H1OzoUQqWJezHqISFeMWph16p/od9h4mN7VQ1F8mslVDAn4/Ynee5hvarXHEnvPYoCTlidSJ0PrGzaY27QLbctSXiiYdpc3d06gQ4oO187VI3fxGzw3J/CV2oFQWymqGkpOuAhQMk0H7gevQes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HctFox7l; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=XNIc3kjYQjwXXUBYl3GyECf4oKKi0byLqTBYhJEe+0E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q1F6IKQxJF3fd/inmWRRch3UbHPvDiDXfxUqyns6rDtq4T6x0QLaHvdyvKP3OCq6kj9jJp/NHaZWhsbyAzXhym9Mc59suGBK3DvCbh/L/1+CCgZdfClt3HSEpc1UGQ0sVBd5Zs07fGmPCi1ttRZT6zsp5tpEmY7zB9Jo7EbC51g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=qyeOMxAV; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HctFox7l"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a4fb9c2436so47247f8f.1;
-        Tue, 24 Jun 2025 00:04:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="qyeOMxAV"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad93ff9f714so17501766b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:04:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750748685; x=1751353485; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ldoS5jcwhFZyQ+2I13CKfPxsMRdOZ6a+TpT13V19plU=;
-        b=HctFox7lAZajpt3/OKoqmps+BjVWw8vzo3RCTAMlhMhyJvB/lp7uGZQN5q5T6NIWgo
-         E8OS/LaVNcMX1zgInwnqoIk9ZqdoQtWrQA5cobBh0l5VDr1TFVLv0BTwE/pKTqJXVh10
-         +2rN98MOb5QAVuKsUnX3bxxV7DxUjciprFEgYSEAocSfuAdvUMOm0XYEImGSciNgMQ4b
-         YTpXixhoWa941rHp+Kw3N2RJVLZ3VZSHPpZugkDfg9nQOWFedPmLm26TqD0eOO6PAQfI
-         5taiDV66o6A40HLXFYDqANpUVypNMh+sXaFltOsOvT0DRmusM4rdbJNGp86Yte/b9Nz2
-         qaZg==
+        d=tuxon.dev; s=google; t=1750748684; x=1751353484; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HLbitD9Yz365jr3BdIqraX9XTg2iaE+GPbMQNtnpays=;
+        b=qyeOMxAVfGluDNmUE2YUVwQ5UogysrKhUtf0vcZtebOiPukoLQj8nPbzzrNYFgYF4z
+         fS6aWdrpNHCWgZywfpBZeWB13JIvRlvYTsM7110xWRr4kZLexKfIinD6WRxzrwJRcgkx
+         pFAa0AjI0UfUaYYtiqrvEHURaIfgu1YdDmFsM8+0LDFWnpCQq1DGJ3i7yuqQXxI50y0S
+         ehtWKFpZv7V7BWWibGXVl97mUwmbGTm0vyyIG31e3YHqhTxp9pmbODJJ11wmSCEeP96J
+         dioFwdF6xm1fiqD1//P0o/2Bh4ogPQ7XAKvBbW1ysLqx5jD4Rejx/liTsdTT2g7ElX6q
+         g5mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750748685; x=1751353485;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1750748684; x=1751353484;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ldoS5jcwhFZyQ+2I13CKfPxsMRdOZ6a+TpT13V19plU=;
-        b=K2PLrfWfzVXQ50uZ+9/zefINNtfuBgDEgBg2vNEfzVlNRK/YQ3x891YmenhugtbpM6
-         7qOw/CQqYvirYxbMoHCmweGO5pXw/OdjPgHRZFb+XUKfWsBA7/CfZWPZ0yRHRXuZXDqQ
-         YZHQa+DV+ct4aowaedcxRj3BzLjgLuybZMANdEL1Ldno+ChEXUAjhzdHENX/nhKu+2pA
-         SQPjAGup8mqqbdCXuxx1aeTcXMtcBAlAQFY/ZCfjj6TvhDFIxxmtKI1cTibOjj5dK5A4
-         wA3ci9ZdSI+6n/b7AeVMxxGl7LntNEPp6uyC7WsBhtlAGC48sVnnmN68hJoVWTE57eAI
-         5Hqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUPoEBo6hhAFcXApUZi2Nhrbi2DMenS3ZYSRQLbHoJTKDfMO9Rs/yxdMCFrN3b9zdO69VEAGUkz3Ye+Mg==@vger.kernel.org, AJvYcCVuYohlBeNIKEpd9Zt080BYtIHqtcufZO3ChN6llBt3RBNgh7egYJfnFz2TId7uwtbz7iYf9EHay1G8cOL+@vger.kernel.org, AJvYcCWg4vKwK9aow3i3NR+RFSc1ZYk5f2oIF0K3vpG0YL5ZpGcxzHQmRiwWpgeiY4P3ER4+PIJgxmzk0h/H@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyxi2ZL0RXDL/MNssb3xUijwMF9sWyqIZQIhvPTvsDwSctPtT4e
-	Fis7jtUsG5OwAcWibyzFnHed7yFKY34yk6mEydw7tZF5GodXVK3tk71T
-X-Gm-Gg: ASbGncuNQoGzDQi+bOWlbWw6tRyMP0TA70ZkOu6gGD83rqE36556G954nRHPpgAVnVh
-	3StkN5pSXlxEnjEbxLIbr06s5MFoudqMTuZPCA97VYq48UALnVdyIZxWi+i7F9yBZY89PWmvyUd
-	A4j3g+uIhqHOdkBFHSiC+J+wWDk1vHz7e9FOUaB3MXSKCYWudbQ9f8xDPMTUJ36Uv3dPhKTyqvP
-	XV9bMY/J6hDhsfEzRF36WODroQdk0buyAM2Q2yMKZ8rFEqBglhGoPFeA5jxqYwaYL1jFUmleQea
-	puY/X9StAiyj0rIXJRdi7mzzMkBaDHpOHwf+XQh3l+SNcwTFBbFG3ZxvHO4=
-X-Google-Smtp-Source: AGHT+IFLnIIvnfFaira7QlQiLZpMYoYe8pvFntKV59gZwf40Yu7Kvn30zOxxdw3g68qAAQQUPUQLCg==
-X-Received: by 2002:a05:6000:4284:b0:3a5:2f23:376f with SMTP id ffacd0b85a97d-3a6d129de4cmr13306333f8f.13.1750748684895;
-        Tue, 24 Jun 2025 00:04:44 -0700 (PDT)
-Received: from legfed1 ([2a00:79c0:6bf:b400:47ca:3373:65d:a678])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805d21fsm1131162f8f.23.2025.06.24.00.04.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 00:04:44 -0700 (PDT)
-Date: Tue, 24 Jun 2025 09:04:42 +0200
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: dimitri.fedrau@liebherr.com, Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>, linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v3] pwm: mc33xs2410: add support for temperature sensors
-Message-ID: <20250624070442.GA3383@legfed1>
-References: <20250619-mc33xs2410-hwmon-v3-1-301731e49f8f@liebherr.com>
- <cviovwci5fgtyina7p7zqjns7cwveivy3vetqhhagwmrlc2gm2@jrqgorif7xff>
+        bh=HLbitD9Yz365jr3BdIqraX9XTg2iaE+GPbMQNtnpays=;
+        b=NFFfRCW1ewf5Cjol/28qr7BFk98CsdvWecbEWBIf8b2XKR8Tq9JhnEb1Pf9L2gBawL
+         WvDmtjUxPO7aoQ//IMGgtkUagl3K2NHjQHFgYpa5GFpa5drJTlqXCt5fah3xPfH5W4Mv
+         laG9XJtV5zbUWFVrdxuOepXk+iKjRfLGMlkOJfkC2znBVoPrII+D7FglannetwFjlVSz
+         qnaFvQxD54ykRPTFFHZkC4uyIoF/V4LAxsyPnl9OUGNkigeW7qr1zzPdZw8lpv+Kco8s
+         hLaaecTQdsEAH1r1hSx6viCp2kGDFA4lsXEvsXTgd15UjG1oJgLJEs/NJg2QiHrbMBOG
+         EOXw==
+X-Forwarded-Encrypted: i=1; AJvYcCWhjTzy/82X61ZNquu9qiKhcn9P5Kx+OBue3840JSDKoGwS4d+MRxUIo0LhiDO7Cz4CvnbU6DakjE6Qdgg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+xCnzD/Ud63nPrWz90uqa+QYufkRizhTE/4aCEyD5ZIj26hvE
+	ffYUSPLTpFIu/Sa1UtNUQ417N6Zk7Ul4GfFxnnQGolLAiFqkyvppTWN/gYcct9bd00E=
+X-Gm-Gg: ASbGnctFKubuuqOtoJFtvM3CulhEkYFQ1AxBAvf1e4MrAOftij9mtpNSxu/r8l4XJha
+	or5UoX27p8XRnWzVTi1cDkeVJGvzNno3KHSMqzyUW/9Jcm0S2HrTVbqHZBrx7+9jY0JiXWpRNP6
+	sDXs/4KhK+fwGHFWxcNVc8K1A85UglRn/bpVr6vDIfsD1OSoIbJULsytHN1hbxnCEEEL3C7WYs5
+	9Xxgvy9N+8iADWYcLwuddh8vb7cJBqpvhK1QW66/D+6Fti05cJA9yH4bpQZUyXUpiq99+wW3vOu
+	dmDc18GiEmaoNV2fslrFuLADylZPgaEnpCUPrzhrDx27hbKiimmGNb31sfaVH9cj3+Lowf+POOH
+	JRhHvXQ==
+X-Google-Smtp-Source: AGHT+IH9JmPa7BbH+tgIB0uoiJ2JP68fJ2WltDdUQv4ZUEycK4uvEtfSZLwyJj/VT7FzXEaxap3DCQ==
+X-Received: by 2002:a17:906:6a05:b0:ace:cc7f:8abe with SMTP id a640c23a62f3a-ae057b39bdfmr1676502066b.31.1750748683722;
+        Tue, 24 Jun 2025 00:04:43 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.110])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053ecbf72sm817956566b.47.2025.06.24.00.04.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 00:04:42 -0700 (PDT)
+Message-ID: <c51b2b64-24a7-4e14-bdd8-c4a356423100@tuxon.dev>
+Date: Tue, 24 Jun 2025 10:04:40 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cviovwci5fgtyina7p7zqjns7cwveivy3vetqhhagwmrlc2gm2@jrqgorif7xff>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] clk: at91: sam9x7: update pll clk ranges
+To: Varshini Rajendran <varshini.rajendran@microchip.com>,
+ mturquette@baylibre.com, sboyd@kernel.org, nicolas.ferre@microchip.com,
+ alexandre.belloni@bootlin.com, linux-clk@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Patrice Vilchez <Patrice.Vilchez@microchip.com>
+References: <20250610084503.69749-1-varshini.rajendran@microchip.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <20250610084503.69749-1-varshini.rajendran@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Uwe,
+Hi, Varshini,
 
-Am Mon, Jun 23, 2025 at 11:07:24AM +0200 schrieb Uwe Kleine-König:
-> hello Dimitri,
+On 10.06.2025 11:45, Varshini Rajendran wrote:
+> Update the min, max ranges of the PLL clocks according to the latest
+> datasheet to be coherent in the driver. This patch apparently solves
+> issues in obtaining the right sdio frequency.
 > 
-> On Thu, Jun 19, 2025 at 07:32:42PM +0200, Dimitri Fedrau via B4 Relay wrote:
-> > @@ -29,6 +30,8 @@
-> >  
-> >  #include <linux/spi/spi.h>
-> >  
-> > +/* ctrl registers */
-> > +
-> >  #define MC33XS2410_GLB_CTRL			0x00
-> >  #define MC33XS2410_GLB_CTRL_MODE		GENMASK(7, 6)
-> >  #define MC33XS2410_GLB_CTRL_MODE_NORMAL		FIELD_PREP(MC33XS2410_GLB_CTRL_MODE, 1)
-> > @@ -51,6 +54,21 @@
-> >  
-> >  #define MC33XS2410_WDT				0x14
-> >  
-> > +#define MC33XS2410_TEMP_WT			0x29
-> > +#define MC33XS2410_TEMP_WT_MASK			GENMASK(7, 0)
-> > +
-> > +/* diag registers */
-> > +
-> > +/* chan in { 1 ... 4 } */
-> > +#define MC33XS2410_OUT_STA(chan)		(0x02 + (chan) - 1)
-> > +#define MC33XS2410_OUT_STA_OTW			BIT(8)
-> > +
-> > +#define MC33XS2410_TS_TEMP_DIE			0x26
-> > +#define MC33XS2410_TS_TEMP_MASK			GENMASK(9, 0)
+> Fixes: 33013b43e271 ("clk: at91: sam9x7: add sam9x7 pmc driver")
+> Suggested-by: Patrice Vilchez <Patrice.Vilchez@microchip.com>
+> Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
+> ---
+>  drivers/clk/at91/sam9x7.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
 > 
-> Keep the registers in address order please
-> 
-Aren't they ? There are "ctrl" and "diag" registers and I didn't mix up
-adresses. There is a comment for each of them when defines start.
+> diff --git a/drivers/clk/at91/sam9x7.c b/drivers/clk/at91/sam9x7.c
+> index cbb8b220f16b..ffab32b047a0 100644
+> --- a/drivers/clk/at91/sam9x7.c
+> +++ b/drivers/clk/at91/sam9x7.c
+> @@ -61,44 +61,44 @@ static const struct clk_master_layout sam9x7_master_layout = {
+>  
+>  /* Fractional PLL core output range. */
+>  static const struct clk_range plla_core_outputs[] = {
+> -	{ .min = 375000000, .max = 1600000000 },
+> +	{ .min = 800000000, .max = 1600000000 },
+>  };
+>  
+>  static const struct clk_range upll_core_outputs[] = {
+> -	{ .min = 600000000, .max = 1200000000 },
+> +	{ .min = 600000000, .max = 960000000 },
+>  };
+>  
+>  static const struct clk_range lvdspll_core_outputs[] = {
+> -	{ .min = 400000000, .max = 800000000 },
+> +	{ .min = 600000000, .max = 1200000000 },
+>  };
+>  
+>  static const struct clk_range audiopll_core_outputs[] = {
+> -	{ .min = 400000000, .max = 800000000 },
+> +	{ .min = 600000000, .max = 1200000000 },
+>  };
+>  
+>  static const struct clk_range plladiv2_core_outputs[] = {
+> -	{ .min = 375000000, .max = 1600000000 },
+> +	{ .min = 800000000, .max = 1600000000 },
+>  };
+>  
+>  /* Fractional PLL output range. */
+>  static const struct clk_range plla_outputs[] = {
+> -	{ .min = 732421, .max = 800000000 },
+> +	{ .min = 400000000, .max = 800000000 },
+>  };
+>  
+>  static const struct clk_range upll_outputs[] = {
+> -	{ .min = 300000000, .max = 600000000 },
+> +	{ .min = 300000000, .max = 480000000 },
+>  };
+>  
+>  static const struct clk_range lvdspll_outputs[] = {
+> -	{ .min = 10000000, .max = 800000000 },
+> +	{ .min = 175000000, .max = 550000000 },
+>  };
+>  
+>  static const struct clk_range audiopll_outputs[] = {
+> -	{ .min = 10000000, .max = 800000000 },
+> +	{ .min = 0, .max = 300000000 },
 
-> > +/* chan in { 1 ... 4 } */
-> > +#define MC33XS2410_TS_TEMP(chan)		(0x2f + (chan) - 1)
-> 
-> I wonder if it would be cleaner if this was abstracted using mfd. Then
-> the hwmon driver could live in drivers/hwmon
-> 
-I will have a look into auxiliary devices as Guenter proposed in a
-following mail.
+Is this min value something valid?
 
-> Liebe Grüße
-> Uwe
-
-Viele Grüße
-Dimitri
+Thank you,
+Claudiu
