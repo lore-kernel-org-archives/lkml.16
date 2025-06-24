@@ -1,72 +1,65 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5CF2C1583
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E8B293C48
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750771740; cv=none; b=hcT98OqSJbW+m4/4Y/qsrFwmua4niJxRWaShAKFCNOMJkFbeiETadACaqEGHqeFKJoRgcEPVcHv6MevOeCsHVbqkqWVSHxvL5zt8LzdNJD0rcn/dH8HKHzWJjMfHmAmiM8HBc4Lg67qO3wf2NtWKM/5rMb0Hjq5G1Dh7vUzyeBs=
+	t=1750771892; cv=none; b=HqQEcLHP1eMl+2d2h9U4hVSttXWdNzn54aNcyaO6Bg/PTeoMPRKXdXfA2EjFP+35z2drTDFOpTowOw6FvlLnbv06Toep/FgC6HkIFw3C9P3MdzoTDJfJUauyXHIJwP43Wv1AQsw7szHMBwq5YdpsNbQ3VUoEm9mjz5Ipuh+UQv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750771740; c=relaxed/simple;
-	bh=Kq2queKYiWK77xeA7BlasqdaXnXERjuMkIMarM++d/c=;
+	s=arc-20240116; t=1750771892; c=relaxed/simple;
+	bh=SNPpj7vjjty2f4GcEPbvBgmWRu/gVwdJZznlDEc11KA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bBkz4i+Ivcm/6bHSEgnvLq8Q17aq3UihPk3DfCzv/GBlerNNmzJUruwPBU41CB4dGRI+5FvNnxxgHh7exmldAWT9qw3wtqHUhzZ5sbG2Pgu0AHscaX9qK5Rb8iJfnmF5lH1/aBIeB+IwP20y/gpPBUrR/RmT+Yw2KSuOttGb+xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kpYPKUN3; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=CG7wdgDaTlAYo9TQdvg4zpqIfHrJdfabbHEIdgv8KpGaPNFYbAebnHGJHL4oy3dNzH8zwcxVx6aKFpDQS1BLFx2V9w2bkVFjK5lUyVelVOOPpTyWi2b563BnXeYjSS7TsU1lYfPz42DZGIboLOaXWZZPKoJ430zhCC2BBgIdpDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uA/M4pTs; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kpYPKUN3"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O7JvZ1021620
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:28:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	qPEA4wWOBi3YOtgcaFrbSGcrL6j9MPJBC/grGvjBzWA=; b=kpYPKUN3znQtt8K9
-	z1hmTSKeR/6a4fmLW8ZxbnVJlYM9gjSq0k/3shIZ/0s4iE9EX5R5BmLUVyk+sePk
-	Jafd3n6sbLkzKt8Nkpw7bg1R97E2gUaJuynxU4vEUYZfaM32yPbhj4lAxKu2L0Tq
-	7//1HAaGx/IHTf+OkttAr++DQt6VZ+5YCbh+cDt9y+OqGyG1YxAf2eJc6YaIhIh0
-	klG9FD9tMt4bwtTQUt7MlY1cG0zQ7xDNquyHa/72MgqGOfdNPUb8h92BZa5J9YNi
-	CgNXV+wRfhUuE3LZAnOYEAEmFnpd+y7mVdb3yEjj5LMplwfQz1UFTg5hTSWI72JX
-	6YH0xg==
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ec266gjt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:28:57 +0000 (GMT)
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b31bc3128fcso6884263a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:28:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uA/M4pTs"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-553d27801b4so451624e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:31:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750771889; x=1751376689; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1ixsChjPXVo6tgSzutDLAX1rFKh+YpL/is6uOUSR1ZI=;
+        b=uA/M4pTsWXNxuf26ML3cTsvaYGniT0CiXnLKgZxOAcimj1IMmRoCKQ+t7mdCN7+G7s
+         R1pxZKRaCQImOqnK5QZatW35asTsAVsxGrmyvoNx2nOD+XdESCpDVEYoN8eIB8yUVvwW
+         ItXi3nkXiBiWprcC+5qzZ3qQeuOYk0+e4MI84xFHEcygVIo2XT+b44WBB/pXJjFLadQ6
+         SM+JRHNrWmE1wzowI4NNRRrIYppGag2JiaYQ4bGKQF0YvclWMd7WSR15yKOpvupevg9C
+         UeGvcXqTKcu9Uln5ywIafagCFY9wql3hoIGj978PwXsc3GoNe5mXhbJMPsFpbxDp60wO
+         s5iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750771737; x=1751376537;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1750771889; x=1751376689;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qPEA4wWOBi3YOtgcaFrbSGcrL6j9MPJBC/grGvjBzWA=;
-        b=C2X2wJ2Ym0mpx7lyYp9esZML+OMvk/+b+M62Doy5uAJiM0KPwJ0MdS8YrWq5dOSjE4
-         fvyOaEG8ExDvK+Aw8zi8c6d7T4+f9b7330QfgylRT3UtbR5tjAHSmUpwFz8LkXKfXrIN
-         vLvXIpnQWg/VCeCXMbD9hDzP5DzxypDc/Rfv9TBq5IRJu2X01aOJafQ9ribWOD75S9kI
-         qelgqUrOPKbw20At9J0U8+P6T1lUQmTB93geUqjVIVUVdHl+kQAm37ythjOZ1W14MKQ0
-         ApY7ug8LQcSjEBrrNKqP1TIECHIU8xvDCrRnxSsDFQeu6L4V5+O5ekCBXE5Sh3ECo7cx
-         IOXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVgz78jtG163JnMxVNtWVu4UP90jzMqSPDc9KMDhILYLKltyMCwxogFgp8xsazg35e9oW7XNsDZIy8GXvI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZ1xWZPgYhwlnCSWcviBJY2o65pjtdmtArCubrKRJs3idvSVsX
-	FHPCOf0dkEyU+kofnraVoH7ihRCN6cHwILj5yockl3m1tiARDKzIzdIs3vtFgHMmT0nk1wQ7ZSd
-	tDEaepRLWrYDkCTP+Xs8VGX/iLRp/PWAHAt5h6XZdSv2DrS3qAORyCFOkVccVfnVIq5c=
-X-Gm-Gg: ASbGncvDc8k6qfps/f1j5SHSXhXEE+eWZWa41Z7cLO3ZTNiUAA5blukyhQDVx6p5qGJ
-	cBckRVxGiwprSU/A1StEklVRiM1y4N6eoa7Lli+QVquuUxSrJDoc0lgZEfM1NX/Ko/3tDbgxy7r
-	jFrbcFyyR3eN38Ge9YKQdiyhtxqK5eSHHjWmDt/GlNEkqZON6xRKO9FPDyna06TOmL5mJKY+2MF
-	CHwUB4twdvmlfp6BV6IhrKlF/o0kLKfwR5M2jfy6f1Vpl6kiAN8xTZ4OUAlceva1pcwyfDRcBS3
-	a11kr+wyGF2l4rpKoacrgKal1fFfYFSHwNonkhMjdX50pH0LAnw=
-X-Received: by 2002:a17:90a:d888:b0:311:c970:c9c0 with SMTP id 98e67ed59e1d1-3159d8c41a8mr22338343a91.22.1750771737071;
-        Tue, 24 Jun 2025 06:28:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHBuLhxpe1LePkqlXex3v+gwLfmUkPle+4L0M+QPnAqLvByeLjot0QMO16fa1+0SFfLZT8AbA==
-X-Received: by 2002:a17:90a:d888:b0:311:c970:c9c0 with SMTP id 98e67ed59e1d1-3159d8c41a8mr22338273a91.22.1750771736450;
-        Tue, 24 Jun 2025 06:28:56 -0700 (PDT)
-Received: from [10.217.217.28] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159e0483desm10686245a91.32.2025.06.24.06.28.48
+        bh=1ixsChjPXVo6tgSzutDLAX1rFKh+YpL/is6uOUSR1ZI=;
+        b=AA6czvS41BpubgnzTgs2PVx0qrao3qENZUfl3OktPvFmMSwocGc9sZQ2ZXVJb35F7h
+         qfMzbr3XEB8YsChVJCdt6ML6ufH74bfeuTci3env07Z2cSFzl2Dk/+k/dhidvio7av/q
+         8WeoNf04AroU2Xt3lUVjBjHELPMaiE9+Q0eRDXrkUXntmLo/ZbUd1GUr0VTvz7hM0Vul
+         LoEPwEfvYfScbt0MyAUZBA9G8HpcecL7NgCtGSGEGtgz/blg8PycwJZrf38HSr8vwtCk
+         //Ec8+KPK189MTHvpgXXPvHr9AATsqcg7dUoYmoTYnup0uUCj8ArA6MEBpoKYA12OW5B
+         l6MQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWoAgw1BPj7v34t3290z5Z172AReu22349mu0DAC7+BQXUAmZUro0AXOtt+Gu/Ovi7JeL0xiSp7cmBAjfE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYiGcGRa6PC3tqQwK+IGbhcNjRfDJP6OGuauAlvhgozc3PihAa
+	J3gmvDXzpUJMAWyL7PwAprry8giLHOemjeOpfkyt8jVwduRN5/SxR8wJuaW7Pad2zIg=
+X-Gm-Gg: ASbGnct4UpkVoxr4A3ryvzWc6ULUcjDZpGGuZSfLI8jBUBTd0gVKAqBaq3bui6j28Uy
+	EB/8vtIc0CQDREhpCAZuYtttnISKooelSSr5HTIBJ3D2BndlbrWbUo9rwv/PxErr7NPf5gELXeW
+	NvGlMaMWLbnG6HOBJ/a3/oVZUhw4JBvSK56Mi9Q9mlcn98D2JirQecP3NTxAavg/yo36ztqdSDr
+	u6OU/3A6sD9TV8ni6ikJDiMj3hjSyrxSZpus5qTG7UhiFJaHcWOyplqcY1nYnk5+HjpOXEgt2P5
+	swkJlckHYBH5VRz2d0iufd9PsJWvTR28tbp8R5C0jUw9whq34blvIX7tzh/mZWUbnc61qCUdaEV
+	jLZ6de8hPD+8KK8zpPscKZubVJXaueSJrqS2wV6xJ
+X-Google-Smtp-Source: AGHT+IGwGCymU8RONA+nhcXdhqLM3PrHi9ooRcM+SCxJHnCXXQhmrBOwn+PHm3whE+vhvRviZRDUzA==
+X-Received: by 2002:a05:6512:3086:b0:553:2874:8efb with SMTP id 2adb3069b0e04-553e3c079b7mr1854622e87.11.1750771888708;
+        Tue, 24 Jun 2025 06:31:28 -0700 (PDT)
+Received: from [192.168.1.4] (88-112-131-206.elisa-laajakaista.fi. [88.112.131.206])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553e41bbba4sm1837510e87.109.2025.06.24.06.31.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 06:28:56 -0700 (PDT)
-Message-ID: <b453e9c1-c87d-457b-8ee8-4b82a6417385@oss.qualcomm.com>
-Date: Tue, 24 Jun 2025 18:58:47 +0530
+        Tue, 24 Jun 2025 06:31:28 -0700 (PDT)
+Message-ID: <9fc448d5-5c16-446f-ba89-ce4681b5c76d@linaro.org>
+Date: Tue, 24 Jun 2025 16:31:27 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,188 +67,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V6 5/5] thermal: qcom: add support for PMIC5 Gen3 ADC
- thermal monitoring
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: robh@kernel.org, krzysztof.kozlowski@linaro.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, agross@kernel.org, andersson@kernel.org,
-        lumag@kernel.org, dmitry.baryshkov@oss.qualcomm.com,
-        konradybcio@kernel.org, daniel.lezcano@linaro.org, sboyd@kernel.org,
-        amitk@kernel.org, thara.gopinath@gmail.com, lee@kernel.org,
-        rafael@kernel.org, subbaraman.narayanamurthy@oss.qualcomm.com,
-        david.collins@oss.qualcomm.com, anjelique.melendez@oss.qualcomm.com,
-        quic_kamalw@quicinc.com, rui.zhang@intel.com, lukasz.luba@arm.com,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, cros-qcom-dts-watchers@chromium.org,
-        quic_skakitap@quicinc.com, neil.armstrong@linaro.org,
-        stephan.gerhold@linaro.org
-References: <20250509110959.3384306-1-jishnu.prakash@oss.qualcomm.com>
- <20250509110959.3384306-6-jishnu.prakash@oss.qualcomm.com>
- <20250511141120.58941a45@jic23-huawei>
-Content-Language: en-US
-From: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
-In-Reply-To: <20250511141120.58941a45@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v6 5/5] arm64: dts: qcom: x1e80100: Add CAMSS block
+ definition
+Content-Language: ru-RU
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Robert Foss <rfoss@kernel.org>,
+ Todor Tomov <todor.too@gmail.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <20250314-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v6-0-edcb2cfc3122@linaro.org>
+ <20250314-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v6-5-edcb2cfc3122@linaro.org>
+From: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+In-Reply-To: <20250314-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v6-5-edcb2cfc3122@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDExMyBTYWx0ZWRfX+QAIR5aE4GBQ
- PmV2sJ6EsACX+scQ8OKkT8X98SxzzXoAi4fayTMlBULJAarB3Kml4CrVcpZahtnzs3NKdxpSs+a
- A8bzNbKEOJSzI1ltRRKA6pvqOk71DQrBMh5kvxW8WEoM+GuM1zsPYQ9eHSRUK1NJm8fBZvXnn0Z
- op6HJhkm1uiO4V625fXBBigBlYl8rdE2OX35R0iiiD8MixbMt5QIAHEe8m+gGtHBHAUA5X4bnpc
- 3O6Y6Z/xltRFOsdmx1c/QCS5uwDpD5vnzbjtygMWqsMkKt8iF51RWPEjfyjdUjNp5cOT3RGZHNO
- c39D/09dkx/mTYJ/nYoncpS930WiLOrsYBkky8k3bVm40Twmhy+Odvfrl1exNwHG2PtaZSs30q/
- /xgi0c+hj6oQrnXwvcKt6vOIsPxOvN8ufwlLu9P+KceuS85ERUMVn4YXwj6lt5iVXytkF2Wy
-X-Authority-Analysis: v=2.4 cv=XPQwSRhE c=1 sm=1 tr=0 ts=685aa81a cx=c_pps
- a=rz3CxIlbcmazkYymdCej/Q==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
- a=f4knV5qyKpdAkpOjOqoA:9 a=QEXdDO2ut3YA:10 a=bFCP_H2QrGi7Okbo017w:22
-X-Proofpoint-GUID: qwALdG0H1mhup58Wgfg7RSAD_ZuT2UZn
-X-Proofpoint-ORIG-GUID: qwALdG0H1mhup58Wgfg7RSAD_ZuT2UZn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-24_05,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 impostorscore=0 clxscore=1015 suspectscore=0 mlxscore=0
- spamscore=0 phishscore=0 malwarescore=0 mlxlogscore=866 bulkscore=0
- priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506240113
 
-Hi Jonathan,
+On 3/14/25 15:14, Bryan O'Donoghue wrote:
+> Add dtsi to describe the xe180100 CAMSS block
+> 
+> 4 x CSIPHY
+> 2 x CSID
+> 2 x CSID Lite
+> 2 x IFE
+> 2 x IFE Lite
+> 
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Reviewed-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> ---
+>   arch/arm64/boot/dts/qcom/x1e80100.dtsi | 185 +++++++++++++++++++++++++++++++++
+>   1 file changed, 185 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> index 4ae0f67a634a982143df7aa933ec4de697f357a5..ee78c630e2a1c38643c9222a6d6fff4cc1216a47 100644
+> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> @@ -5195,6 +5195,191 @@ cci1_i2c1: i2c-bus@1 {
+>   			};
+>   		};
+>   
+> +		camss: isp@acb6000 {
+> +			compatible = "qcom,x1e80100-camss";
+> +
+> +			reg = <0 0x0acb7000 0 0x2000>,
 
-On 5/11/2025 6:41 PM, Jonathan Cameron wrote:
-> On Fri,  9 May 2025 16:39:59 +0530
-> Jishnu Prakash <jishnu.prakash@oss.qualcomm.com> wrote:
-> 
->> Add support for ADC_TM part of PMIC5 Gen3.
->>
->> This is an auxiliary driver under the Gen3 ADC driver, which implements the
->> threshold setting and interrupt generating functionalities of QCOM ADC_TM
->> drivers, used to support thermal trip points.
->>
->> Signed-off-by: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
-> Hi Jishnu,
-> 
-> A few minor things inline.
-> 
-> Jonathan
-> 
->> diff --git a/drivers/thermal/qcom/qcom-spmi-adc-tm5-gen3.c b/drivers/thermal/qcom/qcom-spmi-adc-tm5-gen3.c
->> new file mode 100644
->> index 000000000000..c63822635f10
->> --- /dev/null
->> +++ b/drivers/thermal/qcom/qcom-spmi-adc-tm5-gen3.c
-> 
->> +static int adc_tm5_register_tzd(struct adc_tm5_gen3_chip *adc_tm5)
->> +{
->> +	unsigned int i, channel;
->> +	struct thermal_zone_device *tzd;
->> +
->> +	for (i = 0; i < adc_tm5->nchannels; i++) {
->> +		channel = V_CHAN(adc_tm5->chan_props[i].common_props);
->> +		tzd = devm_thermal_of_zone_register(adc_tm5->dev, channel,
->> +						    &adc_tm5->chan_props[i],
->> +						    &adc_tm_ops);
->> +
->> +		if (IS_ERR(tzd)) {
->> +			if (PTR_ERR(tzd) == -ENODEV) {
->> +				dev_warn(adc_tm5->dev,
->> +					 "thermal sensor on channel %d is not used\n",
->> +					 channel);
->> +				continue;
->> +			}
->> +			return dev_err_probe(adc_tm5->dev, PTR_ERR(tzd),
->> +					     "Error registering TZ zone:%ld for channel:%d\n",
->> +					     PTR_ERR(tzd), channel);
->> +		}
->> +		adc_tm5->chan_props[i].tzd = tzd;
->> +		devm_thermal_add_hwmon_sysfs(adc_tm5->dev, tzd);
-> 
-> Can fail so unusual not to see an error check.  Add a comment if intended.
->
+There is an inconsistency between the unit address and the first
+value of the 'reg' property, it shall be fixed.
 
-I just added it this way initially as I saw it was called without an error check
-following it in other places in the kernel. I'll add an error check. 
- 
->> +	}
->> +	return 0;
->> +}
-> 
->> +
->> +static int adc_tm5_probe(struct auxiliary_device *aux_dev,
->> +			 const struct auxiliary_device_id *id)
->> +{
->> +	struct adc_tm5_gen3_chip *adc_tm5;
->> +	struct tm5_aux_dev_wrapper *aux_dev_wrapper;
->> +	struct device *dev = &aux_dev->dev;
->> +	int i, ret;
->> +
->> +	adc_tm5 = devm_kzalloc(&aux_dev->dev, sizeof(*adc_tm5), GFP_KERNEL);
-> 
-
-...
-
->> +	/*
->> +	 * This drvdata is only used in the function (adctm_event_handler)
->> +	 * called by parent ADC driver in case of TM violation on the first SDAM.
->> +	 */
->> +	auxiliary_set_drvdata(aux_dev, adc_tm5);
->> +
->> +	ret = devm_add_action(adc_tm5->dev, adc5_gen3_clear_work, adc_tm5);
-> 
-> I'd add a comment on what this is undoing as normally devm clean up matches
-> something being started and there is no obvious sign of what that is here.
-
-This is meant to cancel any existing instances of tm_handler_work scheduled
-by a TM interrupt, at the time of module removal. I'll add a comment for it.
-
-> 
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = adc_tm5_register_tzd(adc_tm5);
-> 
-> return adc_tm5...
-> 
->> +	if (ret)
->> +		return ret;
->> +
->> +	return 0;
->> +}
-> 
->> +static int __init adctm5_init_module(void)
->> +{
->> +	return auxiliary_driver_register(&adctm5gen3_auxiliary_drv.adrv);
->> +}
->> +
->> +static void __exit adctm5_exit_module(void)
->> +{
->> +	auxiliary_driver_unregister(&adctm5gen3_auxiliary_drv.adrv);
->> +}
->> +
->> +module_init(adctm5_init_module);
->> +module_exit(adctm5_exit_module);
-> 
-> module_auxiliary_driver() not work for some reason?
-
-Yes, it's because module_auxiliary_driver() relies on its input parameter
-to create variable names for some of the function calls it does internally
-and this goes wrong leading to compilation errors, if the input parameter
-is more complex than a simple variable name.
-
-I had described this issue earlier and you had agreed with me too, in this mail:
-https://lore.kernel.org/all/20250301032901.7b38fed4@jic23-huawei/
-
-I'll address your other comments in the next patch series.
-
-Thanks,
-Jishnu
-
-
-> 
->> +
->> +MODULE_DESCRIPTION("SPMI PMIC Thermal Monitor ADC driver");
->> +MODULE_LICENSE("GPL");
->> +MODULE_IMPORT_NS("QCOM_SPMI_ADC5_GEN3");
-> 
-
+-- 
+Best wishes,
+Vladimir
