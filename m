@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D4C2EACEB;
-	Tue, 24 Jun 2025 18:07:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20D92EE262;
+	Tue, 24 Jun 2025 18:07:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750788473; cv=none; b=VEsxFioiAQubAVavPGwoN+SO5ehrL1Hf5wDoqJ/ILDzMxtwzqzJaxurlfI5cN4/E7C5ewro7hOknRuWlVxe15CUA0vaDxpyK+mSzbfv8xUfOO1qmdmaR6ubdh9jgON1SQJkgC4Tt/K+QQ8vQ8sfjNcK9L01+hH6BCQPNY+56ENE=
+	t=1750788475; cv=none; b=ZBito1GgtYC/n/mlTqAoMfISnaQbHUNcDiLBXYXJwt0t2LboBaYSx5L1rJt06pWH3nnAvB/cDF3lngOJSbAYXTPnxs3WP6d2w3r2QuXwmaAZoaKplVmt77wPKfGpB2szZx0jnI+lgVJtthBDBQqmfdGv0Rx3/QABBTDwSRNNTVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750788473; c=relaxed/simple;
-	bh=4ncdpXSO1AcorBFghjh4VdlegUm8B8gFpzFE2L5+6uU=;
+	s=arc-20240116; t=1750788475; c=relaxed/simple;
+	bh=P2s5mEiKe4Hy2Gm3hQTnSt3MLEij7AIBPkgx8m8Hkmk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uUgsLcaqfp7QpPmfKPXmfir5uxxgBEc2JBEOAy29xOMhFcwbb3NHGI8rvlM61/p6c0866pm0ffY3jme/DpHaSM3ilQpKFvMlWP++9K4CKuCZEtt0NCuXGys4Yvupqe7DkfmZTmFnRoE9wh2sl1QPIzIPwsjoo3nzojpdWjpdhOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gajpN+Lu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=geoQLV41whp5yxHLHejeGJ7N7Akza4tBsFcoTcxaKPO0R9FqZCG5HbmFWwI3B5v28Ovyp/uQl0rvgCU909rm4cGR2pznV7/mTfnCD2VwN83a+JwAYxdmvjewlg9zwKZVwaA78GCsh7xO0hxwpnNfjXiLHGOzAu85yxy/qwutN44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eFLw/GaQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gajpN+Lu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9D00C4CEF4;
-	Tue, 24 Jun 2025 18:07:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eFLw/GaQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 086DFC4CEF0;
+	Tue, 24 Jun 2025 18:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750788472;
-	bh=4ncdpXSO1AcorBFghjh4VdlegUm8B8gFpzFE2L5+6uU=;
+	s=k20201202; t=1750788475;
+	bh=P2s5mEiKe4Hy2Gm3hQTnSt3MLEij7AIBPkgx8m8Hkmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gajpN+LuSjZRo0h+9xASTgvhhTtmmjBz6ZmJlpH5lSJRXlpu66qHk6EKUgIjLNRaN
-	 7iwBebip/tW37TgS4bZVKWQre1H/NwCbbXHUbRf8wg8ViwYfZ861OkMeB/5P5MU6rA
-	 0XTGIRTBq4DkiejqdS5qS1rpI87waYWE6Ie08bXhfYGSB6txiXUONEekLo/hNbNyaK
-	 k6CTn5cX8ynuOJC9Du0O4urkIGO9r2dnu7OD0EI74sjk2ReatbRQI/MnSa1KTucN7x
-	 044jcES/ejVW/1avpA9cSAo5iZbT5PZlyrxRrEkZsF/xPZ9x7PRtrAXM8xR8XdQT7B
-	 TI5PfnLqPA3dQ==
+	b=eFLw/GaQn0hIuMJkSGIWzNA1oP92BIwUbBC5h3opTLIhdDhD+Wx+slCQrzIMZcfxH
+	 UsbtysRwLU/eg8GUehFYZAJCEGWKzJ11+mbnxsyRV6Ixx+rrwnDP1GkxX9Hs8me4dv
+	 Usw65WUQ4yi+iUgZbT7kU1rknFITV1GCt+oYDBhRaA+rHEwv9c2ObncrL+IJo7RQd9
+	 JrnNEuc/FH2C7Syh+J9xesa4eABQZUdi8mnoghgavJR6+ljjPrOIDfOtRQWyUyAXOO
+	 p7Ha6pm85528dv2UzcedZVqDx0l8S2EYC+Wl5vuuxVfoPvEaDm5W2oREd/PpGqfrsS
+	 05SWJG3mGozmA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: linux-doc@vger.kernel.org,
@@ -33,9 +33,9 @@ Cc: linux-doc@vger.kernel.org,
 	workflows@vger.kernel.org,
 	tools@kernel.org,
 	Sasha Levin <sashal@kernel.org>
-Subject: [RFC v2 09/22] exec: add API specification for execveat
-Date: Tue, 24 Jun 2025 14:07:29 -0400
-Message-Id: <20250624180742.5795-10-sashal@kernel.org>
+Subject: [RFC v2 15/22] kernel/api: add debugfs interface for kernel API specifications
+Date: Tue, 24 Jun 2025 14:07:35 -0400
+Message-Id: <20250624180742.5795-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250624180742.5795-1-sashal@kernel.org>
 References: <20250624180742.5795-1-sashal@kernel.org>
@@ -47,374 +47,425 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add comprehensive kernel API specification for the execveat() system
-call.
+Add a debugfs interface to expose kernel API specifications at runtime.
+This allows tools and users to query the complete API specifications
+through the debugfs filesystem.
+
+The interface provides:
+- /sys/kernel/debug/kapi/list - lists all available API specifications
+- /sys/kernel/debug/kapi/specs/<name> - detailed info for each API
+
+Each specification file includes:
+- Function name, version, and descriptions
+- Execution context requirements and flags
+- Parameter details with types, flags, and constraints
+- Return value specifications and success conditions
+- Error codes with descriptions and conditions
+- Locking requirements and constraints
+- Signal handling specifications
+- Examples, notes, and deprecation status
+
+This enables runtime introspection of kernel APIs for documentation
+tools, static analyzers, and debugging purposes.
 
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/exec.c | 342 +++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 340 insertions(+), 2 deletions(-)
+ kernel/api/Kconfig        |  20 +++
+ kernel/api/Makefile       |   5 +-
+ kernel/api/kapi_debugfs.c | 340 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 364 insertions(+), 1 deletion(-)
+ create mode 100644 kernel/api/kapi_debugfs.c
 
-diff --git a/fs/exec.c b/fs/exec.c
-index fd0c88f7be33b..078781d4510f0 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -2029,8 +2029,8 @@ DEFINE_KERNEL_API_SPEC(sys_execve)
- 	KAPI_PARAM_END
+diff --git a/kernel/api/Kconfig b/kernel/api/Kconfig
+index fde25ec70e134..d2754b21acc43 100644
+--- a/kernel/api/Kconfig
++++ b/kernel/api/Kconfig
+@@ -33,3 +33,23 @@ config KAPI_RUNTIME_CHECKS
+ 	  development. The checks use WARN_ONCE to report violations.
  
- 	KAPI_RETURN("long", "Does not return on success; negative error code on error")
--		.type = KAPI_TYPE_INT,
--		.check_type = KAPI_RETURN_ERROR_CHECK,
-+		KAPI_RETURN_TYPE(KAPI_TYPE_INT)
-+		KAPI_RETURN_CHECK_TYPE(KAPI_RETURN_ERROR_CHECK)
- 	KAPI_RETURN_END
- 
- 	KAPI_ERROR(0, -E2BIG, "E2BIG", "Argument list too long",
-@@ -2369,6 +2369,344 @@ SYSCALL_DEFINE3(execve,
- 	return do_execve(getname(filename), argv, envp);
- }
- 
+ 	  If unsure, say N.
 +
-+/* Valid flag combinations for execveat */
-+static const s64 execveat_valid_flags[] = {
-+	0,
-+	AT_EMPTY_PATH,
-+	AT_SYMLINK_NOFOLLOW,
-+	AT_EXECVE_CHECK,
-+	AT_EMPTY_PATH | AT_SYMLINK_NOFOLLOW,
-+	AT_EMPTY_PATH | AT_EXECVE_CHECK,
-+	AT_SYMLINK_NOFOLLOW | AT_EXECVE_CHECK,
-+	AT_EMPTY_PATH | AT_SYMLINK_NOFOLLOW | AT_EXECVE_CHECK,
++config KAPI_SPEC_DEBUGFS
++	bool "Export kernel API specifications via debugfs"
++	depends on KAPI_SPEC
++	depends on DEBUG_FS
++	help
++	  This option enables exporting kernel API specifications through
++	  the debugfs filesystem. When enabled, specifications can be
++	  accessed at /sys/kernel/debug/kapi/.
++
++	  The debugfs interface provides:
++	  - A list of all available API specifications
++	  - Detailed information for each API including parameters,
++	    return values, errors, locking requirements, and constraints
++	  - Complete machine-readable representation of the specs
++
++	  This is useful for documentation tools, static analyzers, and
++	  runtime introspection of kernel APIs.
++
++	  If unsure, say N.
+diff --git a/kernel/api/Makefile b/kernel/api/Makefile
+index 4120ded7e5cf1..07b8c007ec156 100644
+--- a/kernel/api/Makefile
++++ b/kernel/api/Makefile
+@@ -4,4 +4,7 @@
+ #
+ 
+ # Core API specification framework
+-obj-$(CONFIG_KAPI_SPEC)		+= kernel_api_spec.o
+\ No newline at end of file
++obj-$(CONFIG_KAPI_SPEC)		+= kernel_api_spec.o
++
++# Debugfs interface for kernel API specs
++obj-$(CONFIG_KAPI_SPEC_DEBUGFS)	+= kapi_debugfs.o
+\ No newline at end of file
+diff --git a/kernel/api/kapi_debugfs.c b/kernel/api/kapi_debugfs.c
+new file mode 100644
+index 0000000000000..bf65ea6a49205
+--- /dev/null
++++ b/kernel/api/kapi_debugfs.c
+@@ -0,0 +1,340 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Kernel API specification debugfs interface
++ *
++ * This provides a debugfs interface to expose kernel API specifications
++ * at runtime, allowing tools and users to query the complete API specs.
++ */
++
++#include <linux/debugfs.h>
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/seq_file.h>
++#include <linux/kernel_api_spec.h>
++#include <linux/slab.h>
++#include <linux/string.h>
++
++/* External symbols for kernel API spec section */
++extern struct kernel_api_spec __start_kapi_specs[];
++extern struct kernel_api_spec __stop_kapi_specs[];
++
++static struct dentry *kapi_debugfs_root;
++
++/* Helper function to print parameter type as string */
++static const char *param_type_str(enum kapi_param_type type)
++{
++	switch (type) {
++	case KAPI_TYPE_INT: return "int";
++	case KAPI_TYPE_UINT: return "uint";
++	case KAPI_TYPE_PTR: return "ptr";
++	case KAPI_TYPE_STRUCT: return "struct";
++	case KAPI_TYPE_UNION: return "union";
++	case KAPI_TYPE_ARRAY: return "array";
++	case KAPI_TYPE_FD: return "fd";
++	case KAPI_TYPE_ENUM: return "enum";
++	case KAPI_TYPE_USER_PTR: return "user_ptr";
++	case KAPI_TYPE_PATH: return "path";
++	case KAPI_TYPE_FUNC_PTR: return "func_ptr";
++	case KAPI_TYPE_CUSTOM: return "custom";
++	default: return "unknown";
++	}
++}
++
++/* Helper to print parameter flags */
++static void print_param_flags(struct seq_file *m, u32 flags)
++{
++	seq_printf(m, "    flags: ");
++	if (flags & KAPI_PARAM_IN) seq_printf(m, "IN ");
++	if (flags & KAPI_PARAM_OUT) seq_printf(m, "OUT ");
++	if (flags & KAPI_PARAM_INOUT) seq_printf(m, "INOUT ");
++	if (flags & KAPI_PARAM_OPTIONAL) seq_printf(m, "OPTIONAL ");
++	if (flags & KAPI_PARAM_CONST) seq_printf(m, "CONST ");
++	if (flags & KAPI_PARAM_USER) seq_printf(m, "USER ");
++	if (flags & KAPI_PARAM_VOLATILE) seq_printf(m, "VOLATILE ");
++	if (flags & KAPI_PARAM_DMA) seq_printf(m, "DMA ");
++	if (flags & KAPI_PARAM_ALIGNED) seq_printf(m, "ALIGNED ");
++	seq_printf(m, "\n");
++}
++
++/* Helper to print context flags */
++static void print_context_flags(struct seq_file *m, u32 flags)
++{
++	seq_printf(m, "Context flags: ");
++	if (flags & KAPI_CTX_PROCESS) seq_printf(m, "PROCESS ");
++	if (flags & KAPI_CTX_HARDIRQ) seq_printf(m, "HARDIRQ ");
++	if (flags & KAPI_CTX_SOFTIRQ) seq_printf(m, "SOFTIRQ ");
++	if (flags & KAPI_CTX_NMI) seq_printf(m, "NMI ");
++	if (flags & KAPI_CTX_SLEEPABLE) seq_printf(m, "SLEEPABLE ");
++	if (flags & KAPI_CTX_ATOMIC) seq_printf(m, "ATOMIC ");
++	if (flags & KAPI_CTX_PREEMPT_DISABLED) seq_printf(m, "PREEMPT_DISABLED ");
++	if (flags & KAPI_CTX_IRQ_DISABLED) seq_printf(m, "IRQ_DISABLED ");
++	seq_printf(m, "\n");
++}
++
++/* Show function for individual API spec */
++static int kapi_spec_show(struct seq_file *m, void *v)
++{
++	struct kernel_api_spec *spec = m->private;
++	int i;
++
++	seq_printf(m, "Kernel API Specification\n");
++	seq_printf(m, "========================\n\n");
++
++	/* Basic info */
++	seq_printf(m, "Name: %s\n", spec->name);
++	seq_printf(m, "Version: %u\n", spec->version);
++	seq_printf(m, "Description: %s\n", spec->description);
++	if (strlen(spec->long_description) > 0)
++		seq_printf(m, "Long description: %s\n", spec->long_description);
++
++	/* Context */
++	print_context_flags(m, spec->context_flags);
++	seq_printf(m, "\n");
++
++	/* Parameters */
++	if (spec->param_count > 0) {
++		seq_printf(m, "Parameters (%u):\n", spec->param_count);
++		for (i = 0; i < spec->param_count; i++) {
++			struct kapi_param_spec *param = &spec->params[i];
++			seq_printf(m, "  [%d] %s:\n", i, param->name);
++			seq_printf(m, "    type: %s (%s)\n",
++				   param_type_str(param->type), param->type_name);
++			print_param_flags(m, param->flags);
++			if (strlen(param->description) > 0)
++				seq_printf(m, "    description: %s\n", param->description);
++			if (param->size > 0)
++				seq_printf(m, "    size: %zu\n", param->size);
++			if (param->alignment > 0)
++				seq_printf(m, "    alignment: %zu\n", param->alignment);
++
++			/* Print constraints if any */
++			if (param->constraint_type != KAPI_CONSTRAINT_NONE) {
++				seq_printf(m, "    constraints:\n");
++				switch (param->constraint_type) {
++				case KAPI_CONSTRAINT_RANGE:
++					seq_printf(m, "      type: range\n");
++					seq_printf(m, "      min: %lld\n", param->min_value);
++					seq_printf(m, "      max: %lld\n", param->max_value);
++					break;
++				case KAPI_CONSTRAINT_MASK:
++					seq_printf(m, "      type: mask\n");
++					seq_printf(m, "      valid_bits: 0x%llx\n", param->valid_mask);
++					break;
++				case KAPI_CONSTRAINT_ENUM:
++					seq_printf(m, "      type: enum\n");
++					seq_printf(m, "      count: %u\n", param->enum_count);
++					break;
++				case KAPI_CONSTRAINT_CUSTOM:
++					seq_printf(m, "      type: custom\n");
++					if (strlen(param->constraints) > 0)
++						seq_printf(m, "      description: %s\n",
++							   param->constraints);
++					break;
++				default:
++					break;
++				}
++			}
++			seq_printf(m, "\n");
++		}
++	}
++
++	/* Return value */
++	seq_printf(m, "Return value:\n");
++	seq_printf(m, "  type: %s\n", spec->return_spec.type_name);
++	if (strlen(spec->return_spec.description) > 0)
++		seq_printf(m, "  description: %s\n", spec->return_spec.description);
++
++	switch (spec->return_spec.check_type) {
++	case KAPI_RETURN_EXACT:
++		seq_printf(m, "  success: == %lld\n", spec->return_spec.success_value);
++		break;
++	case KAPI_RETURN_RANGE:
++		seq_printf(m, "  success: [%lld, %lld]\n",
++			   spec->return_spec.success_min,
++			   spec->return_spec.success_max);
++		break;
++	case KAPI_RETURN_FD:
++		seq_printf(m, "  success: valid file descriptor (>= 0)\n");
++		break;
++	case KAPI_RETURN_ERROR_CHECK:
++		seq_printf(m, "  success: error check\n");
++		break;
++	case KAPI_RETURN_CUSTOM:
++		seq_printf(m, "  success: custom check\n");
++		break;
++	default:
++		break;
++	}
++	seq_printf(m, "\n");
++
++	/* Errors */
++	if (spec->error_count > 0) {
++		seq_printf(m, "Errors (%u):\n", spec->error_count);
++		for (i = 0; i < spec->error_count; i++) {
++			struct kapi_error_spec *err = &spec->errors[i];
++			seq_printf(m, "  %s (%d): %s\n",
++				   err->name, err->error_code, err->description);
++			if (strlen(err->condition) > 0)
++				seq_printf(m, "    condition: %s\n", err->condition);
++		}
++		seq_printf(m, "\n");
++	}
++
++	/* Locks */
++	if (spec->lock_count > 0) {
++		seq_printf(m, "Locks (%u):\n", spec->lock_count);
++		for (i = 0; i < spec->lock_count; i++) {
++			struct kapi_lock_spec *lock = &spec->locks[i];
++			const char *type_str;
++			switch (lock->lock_type) {
++			case KAPI_LOCK_MUTEX: type_str = "mutex"; break;
++			case KAPI_LOCK_SPINLOCK: type_str = "spinlock"; break;
++			case KAPI_LOCK_RWLOCK: type_str = "rwlock"; break;
++			case KAPI_LOCK_SEMAPHORE: type_str = "semaphore"; break;
++			case KAPI_LOCK_RCU: type_str = "rcu"; break;
++			case KAPI_LOCK_SEQLOCK: type_str = "seqlock"; break;
++			default: type_str = "unknown"; break;
++			}
++			seq_printf(m, "  %s (%s): %s\n",
++				   lock->lock_name, type_str, lock->description);
++			if (lock->acquired)
++				seq_printf(m, "    acquired by function\n");
++			if (lock->released)
++				seq_printf(m, "    released by function\n");
++		}
++		seq_printf(m, "\n");
++	}
++
++	/* Constraints */
++	if (spec->constraint_count > 0) {
++		seq_printf(m, "Additional constraints (%u):\n", spec->constraint_count);
++		for (i = 0; i < spec->constraint_count; i++) {
++			seq_printf(m, "  - %s\n", spec->constraints[i].description);
++		}
++		seq_printf(m, "\n");
++	}
++
++	/* Signals */
++	if (spec->signal_count > 0) {
++		seq_printf(m, "Signal handling (%u):\n", spec->signal_count);
++		for (i = 0; i < spec->signal_count; i++) {
++			struct kapi_signal_spec *sig = &spec->signals[i];
++			seq_printf(m, "  %s (%d):\n", sig->signal_name, sig->signal_num);
++			seq_printf(m, "    direction: ");
++			if (sig->direction & KAPI_SIGNAL_SEND) seq_printf(m, "send ");
++			if (sig->direction & KAPI_SIGNAL_RECEIVE) seq_printf(m, "receive ");
++			if (sig->direction & KAPI_SIGNAL_HANDLE) seq_printf(m, "handle ");
++			if (sig->direction & KAPI_SIGNAL_BLOCK) seq_printf(m, "block ");
++			if (sig->direction & KAPI_SIGNAL_IGNORE) seq_printf(m, "ignore ");
++			seq_printf(m, "\n");
++			seq_printf(m, "    action: ");
++			switch (sig->action) {
++			case KAPI_SIGNAL_ACTION_DEFAULT: seq_printf(m, "default"); break;
++			case KAPI_SIGNAL_ACTION_TERMINATE: seq_printf(m, "terminate"); break;
++			case KAPI_SIGNAL_ACTION_COREDUMP: seq_printf(m, "coredump"); break;
++			case KAPI_SIGNAL_ACTION_STOP: seq_printf(m, "stop"); break;
++			case KAPI_SIGNAL_ACTION_CONTINUE: seq_printf(m, "continue"); break;
++			case KAPI_SIGNAL_ACTION_CUSTOM: seq_printf(m, "custom"); break;
++			case KAPI_SIGNAL_ACTION_RETURN: seq_printf(m, "return"); break;
++			case KAPI_SIGNAL_ACTION_RESTART: seq_printf(m, "restart"); break;
++			default: seq_printf(m, "unknown"); break;
++			}
++			seq_printf(m, "\n");
++			if (strlen(sig->description) > 0)
++				seq_printf(m, "    description: %s\n", sig->description);
++		}
++		seq_printf(m, "\n");
++	}
++
++	/* Additional info */
++	if (strlen(spec->examples) > 0) {
++		seq_printf(m, "Examples:\n%s\n\n", spec->examples);
++	}
++	if (strlen(spec->notes) > 0) {
++		seq_printf(m, "Notes:\n%s\n\n", spec->notes);
++	}
++	if (strlen(spec->since_version) > 0) {
++		seq_printf(m, "Since: %s\n", spec->since_version);
++	}
++	if (spec->deprecated) {
++		seq_printf(m, "DEPRECATED");
++		if (strlen(spec->replacement) > 0)
++			seq_printf(m, " - use %s instead", spec->replacement);
++		seq_printf(m, "\n");
++	}
++
++	return 0;
++}
++
++static int kapi_spec_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, kapi_spec_show, inode->i_private);
++}
++
++static const struct file_operations kapi_spec_fops = {
++	.open = kapi_spec_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = single_release,
 +};
 +
-+DEFINE_KERNEL_API_SPEC(sys_execveat)
-+	KAPI_DESCRIPTION("Execute a new program relative to a directory file descriptor")
-+	KAPI_LONG_DESC("Executes the program referred to by the combination of fd and filename. "
-+		       "This system call is useful when implementing a secure execution environment "
-+		       "or when the calling process has an open file descriptor but no access to "
-+		       "the corresponding pathname. Like execve(), it replaces the current process "
-+		       "image with a new process image.")
-+	KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
++/* Show all available API specs */
++static int kapi_list_show(struct seq_file *m, void *v)
++{
++	struct kernel_api_spec *spec;
++	int count = 0;
 +
-+	KAPI_PARAM(0, "fd", "int", "Directory file descriptor")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
-+		KAPI_PARAM_TYPE(KAPI_TYPE_FD)
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_NONE)
-+		KAPI_PARAM_CONSTRAINT("AT_FDCWD for current directory, or valid directory file descriptor")
-+	KAPI_PARAM_END
++	seq_printf(m, "Available Kernel API Specifications\n");
++	seq_printf(m, "===================================\n\n");
 +
-+	KAPI_PARAM(1, "filename", "const char __user *", "Pathname of the program to execute")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN | KAPI_PARAM_USER | KAPI_PARAM_OPTIONAL)
-+		KAPI_PARAM_TYPE(KAPI_TYPE_PATH)
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_NONE)
-+		KAPI_PARAM_CONSTRAINT("Relative or absolute path; empty string with AT_EMPTY_PATH to use fd directly")
-+	KAPI_PARAM_END
++	for (spec = __start_kapi_specs; spec < __stop_kapi_specs; spec++) {
++		seq_printf(m, "%s - %s\n", spec->name, spec->description);
++		count++;
++	}
 +
-+	KAPI_PARAM(2, "argv", "const char __user *const __user *", "Array of argument strings passed to the new program")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN | KAPI_PARAM_USER)
-+		KAPI_PARAM_TYPE(KAPI_TYPE_USER_PTR)
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_NONE)
-+		KAPI_PARAM_CONSTRAINT("NULL-terminated array of pointers to null-terminated strings")
-+	KAPI_PARAM_END
++	seq_printf(m, "\nTotal: %d specifications\n", count);
++	return 0;
++}
 +
-+	KAPI_PARAM(3, "envp", "const char __user *const __user *", "Array of environment strings for the new program")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN | KAPI_PARAM_USER)
-+		KAPI_PARAM_TYPE(KAPI_TYPE_USER_PTR)
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_NONE)
-+		KAPI_PARAM_CONSTRAINT("NULL-terminated array of pointers to null-terminated strings in form key=value")
-+	KAPI_PARAM_END
++static int kapi_list_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, kapi_list_show, NULL);
++}
 +
-+	KAPI_PARAM(4, "flags", "int", "Execution flags")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
-+		KAPI_PARAM_TYPE(KAPI_TYPE_INT)
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_MASK)
-+		KAPI_PARAM_VALID_MASK(AT_EMPTY_PATH | AT_SYMLINK_NOFOLLOW | AT_EXECVE_CHECK)
-+		KAPI_PARAM_CONSTRAINT("0 or combination of AT_EMPTY_PATH, AT_SYMLINK_NOFOLLOW, and AT_EXECVE_CHECK")
-+	KAPI_PARAM_END
++static const struct file_operations kapi_list_fops = {
++	.open = kapi_list_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = single_release,
++};
 +
-+	/* Return specification */
-+	KAPI_RETURN("long", "Does not return on success (except with AT_EXECVE_CHECK which returns 0); negative error code on error")
-+		KAPI_RETURN_TYPE(KAPI_TYPE_INT)
-+		KAPI_RETURN_CHECK_TYPE(KAPI_RETURN_ERROR_CHECK)
-+	KAPI_RETURN_END
++static int __init kapi_debugfs_init(void)
++{
++	struct kernel_api_spec *spec;
++	struct dentry *spec_dir;
 +
-+	/* Error codes */
-+	KAPI_ERROR(0, -E2BIG, "E2BIG", "Argument list too long", "The total size of argv and envp exceeds the system limit.")
-+	KAPI_ERROR(1, -EACCES, "EACCES", "Permission denied", "Search permission denied on a component of the path, file is not regular, or execute permission denied for file or interpreter.")
-+	KAPI_ERROR(2, -EBADF, "EBADF", "Bad file descriptor", "fd is not a valid file descriptor, or (rare bug) all file descriptors are closed when executing a script.")
-+	KAPI_ERROR(3, -EFAULT, "EFAULT", "Bad address", "filename, argv, or envp points outside accessible address space.")
-+	KAPI_ERROR(4, -EINVAL, "EINVAL", "Invalid flags or executable format", "Invalid flags specified, or ELF executable has more than one PT_INTERP segment.")
-+	KAPI_ERROR(5, -EIO, "EIO", "I/O error", "An I/O error occurred while reading from the file system.")
-+	KAPI_ERROR(6, -EISDIR, "EISDIR", "Is a directory", "An ELF interpreter was a directory.")
-+	KAPI_ERROR(7, -ELIBBAD, "ELIBBAD", "Invalid ELF interpreter", "An ELF interpreter was not in a recognized format.")
-+	KAPI_ERROR(8, -ELOOP, "ELOOP", "Too many symbolic links", "Too many symbolic links encountered, or AT_SYMLINK_NOFOLLOW was specified but filename refers to a symbolic link.")
-+	KAPI_ERROR(9, -EMFILE, "EMFILE", "Too many open files", "The per-process limit on open file descriptors has been reached.")
-+	KAPI_ERROR(10, -ENAMETOOLONG, "ENAMETOOLONG", "Filename too long", "filename or one of the strings in argv or envp is too long.")
-+	KAPI_ERROR(11, -ENFILE, "ENFILE", "System file table overflow", "The system-wide limit on open files has been reached.")
-+	KAPI_ERROR(12, -ENOENT, "ENOENT", "File not found", "The file filename or an interpreter does not exist, or filename is empty and AT_EMPTY_PATH was not specified in flags.")
-+	KAPI_ERROR(13, -ENOEXEC, "ENOEXEC", "Exec format error", "An executable is not in a recognized format, is for wrong architecture, or has other format errors preventing execution.")
-+	KAPI_ERROR(14, -ENOMEM, "ENOMEM", "Out of memory", "Insufficient kernel memory available.")
-+	KAPI_ERROR(15, -ENOTDIR, "ENOTDIR", "Not a directory", "A component of the path prefix is not a directory, or fd is not a directory when a relative path is given.")
-+	KAPI_ERROR(16, -EPERM, "EPERM", "Operation not permitted", "The filesystem is mounted nosuid, the user is not root, and the file has set-user-ID or set-group-ID bit set.")
-+	KAPI_ERROR(17, -ETXTBSY, "ETXTBSY", "Text file busy", "The executable was open for writing by one or more processes.")
-+	KAPI_ERROR(18, -EAGAIN, "EAGAIN", "Resource temporarily unavailable", "RLIMIT_NPROC limit exceeded - too many processes for this user.")
-+	KAPI_ERROR(19, -EINTR, "EINTR", "Interrupted by signal", "The exec was interrupted by a signal during setup phase.")
++	/* Create main directory */
++	kapi_debugfs_root = debugfs_create_dir("kapi", NULL);
 +
-+	/* Signal specifications */
-+	KAPI_SIGNAL(0, 0, "FATAL_SIGNALS", KAPI_SIGNAL_RECEIVE, KAPI_SIGNAL_ACTION_TERMINATE)
-+		KAPI_SIGNAL_CONDITION("Fatal signal pending during exec setup")
-+		KAPI_SIGNAL_DESC("Fatal signals (checked via fatal_signal_pending()) can interrupt exec during setup phases like de_thread(). This causes exec to fail and the process to exit.")
-+		KAPI_SIGNAL_TIMING(KAPI_SIGNAL_TIME_DURING)
-+		KAPI_SIGNAL_PRIORITY(0)
-+		KAPI_SIGNAL_INTERRUPTIBLE
-+		KAPI_SIGNAL_ERROR(-EINTR)
-+		KAPI_SIGNAL_STATE_REQ(KAPI_SIGNAL_STATE_RUNNING)
-+		KAPI_SIGNAL_RESTARTABLE
-+	KAPI_SIGNAL_END
++	/* Create list file */
++	debugfs_create_file("list", 0444, kapi_debugfs_root, NULL, &kapi_list_fops);
 +
-+	KAPI_SIGNAL(1, SIGKILL, "SIGKILL", KAPI_SIGNAL_SEND, KAPI_SIGNAL_ACTION_TERMINATE)
-+		KAPI_SIGNAL_TARGET("All other threads in the thread group")
-+		KAPI_SIGNAL_CONDITION("Multi-threaded process doing exec")
-+		KAPI_SIGNAL_DESC("During de_thread(), zap_other_threads() sends SIGKILL to all other threads in the thread group to ensure only the execing thread survives.")
-+		KAPI_SIGNAL_TIMING(KAPI_SIGNAL_TIME_DURING)
-+		KAPI_SIGNAL_PRIORITY(0)
-+		KAPI_SIGNAL_QUEUE("Cannot be blocked, caught, or ignored")
-+	KAPI_SIGNAL_END
++	/* Create specs subdirectory */
++	spec_dir = debugfs_create_dir("specs", kapi_debugfs_root);
 +
-+	KAPI_SIGNAL(2, 0, "ALL_HANDLERS", KAPI_SIGNAL_HANDLE, KAPI_SIGNAL_ACTION_CUSTOM)
-+		KAPI_SIGNAL_CONDITION("Signal has a handler installed")
-+		KAPI_SIGNAL_DESC("flush_signal_handlers() resets all signal handlers to SIG_DFL except for signals that are ignored (SIG_IGN). This happens after de_thread() completes.")
-+		KAPI_SIGNAL_TIMING(KAPI_SIGNAL_TIME_DURING)
-+		KAPI_SIGNAL_PRIORITY(1)
-+		KAPI_SIGNAL_QUEUE("Handler information cleared from signal struct")
-+		KAPI_SIGNAL_STATE_REQ(KAPI_SIGNAL_STATE_RUNNING)
-+		KAPI_SIGNAL_SA_FLAGS_FORBID(SA_SIGINFO | SA_ONSTACK | SA_RESTART | SA_NODEFER | SA_RESETHAND)
-+		KAPI_SIGNAL_INTERRUPTIBLE
-+	KAPI_SIGNAL_END
++	/* Create a file for each API spec */
++	for (spec = __start_kapi_specs; spec < __stop_kapi_specs; spec++) {
++		debugfs_create_file(spec->name, 0444, spec_dir, spec, &kapi_spec_fops);
++	}
 +
-+	KAPI_SIGNAL(3, 0, "IGNORED_SIGNALS", KAPI_SIGNAL_IGNORE, KAPI_SIGNAL_ACTION_CUSTOM)
-+		KAPI_SIGNAL_CONDITION("Signal disposition is SIG_IGN")
-+		KAPI_SIGNAL_DESC("Signals set to SIG_IGN are preserved across exec. This is POSIX-compliant behavior allowing parent processes to ignore signals in children.")
-+		KAPI_SIGNAL_TIMING(KAPI_SIGNAL_TIME_DURING)
-+		KAPI_SIGNAL_PRIORITY(1)
-+		KAPI_SIGNAL_QUEUE("Ignored signals remain ignored")
-+		KAPI_SIGNAL_STATE_REQ(KAPI_SIGNAL_STATE_RUNNING)
-+		KAPI_SIGNAL_INTERRUPTIBLE
-+	KAPI_SIGNAL_END
++	pr_info("Kernel API debugfs interface initialized\n");
++	return 0;
++}
 +
-+	KAPI_SIGNAL(4, 0, "PENDING_SIGNALS", KAPI_SIGNAL_HANDLE, KAPI_SIGNAL_ACTION_CUSTOM)
-+		KAPI_SIGNAL_CONDITION("Any pending signals")
-+		KAPI_SIGNAL_DESC("All pending signals are cleared during exec. This includes both thread-specific and process-wide pending signals.")
-+		KAPI_SIGNAL_TIMING(KAPI_SIGNAL_TIME_DURING)
-+		KAPI_SIGNAL_PRIORITY(1)
-+		KAPI_SIGNAL_QUEUE("All pending signals discarded")
-+		KAPI_SIGNAL_STATE_REQ(KAPI_SIGNAL_STATE_RUNNING)
-+		KAPI_SIGNAL_INTERRUPTIBLE
-+	KAPI_SIGNAL_END
++static void __exit kapi_debugfs_exit(void)
++{
++	debugfs_remove_recursive(kapi_debugfs_root);
++}
 +
-+	KAPI_SIGNAL(5, 0, "TIMER_SIGNALS", KAPI_SIGNAL_HANDLE, KAPI_SIGNAL_ACTION_CUSTOM)
-+		KAPI_SIGNAL_CONDITION("Timer-generated signals pending")
-+		KAPI_SIGNAL_DESC("flush_itimer_signals() clears any pending timer signals (SIGALRM, SIGVTALRM, SIGPROF) to prevent confusion in the new program.")
-+		KAPI_SIGNAL_TIMING(KAPI_SIGNAL_TIME_DURING)
-+		KAPI_SIGNAL_PRIORITY(1)
-+		KAPI_SIGNAL_QUEUE("Timer signals cleared from pending queue")
-+		KAPI_SIGNAL_STATE_REQ(KAPI_SIGNAL_STATE_RUNNING)
-+		KAPI_SIGNAL_INTERRUPTIBLE
-+	KAPI_SIGNAL_END
-+
-+	KAPI_SIGNAL(6, SIGCHLD, "SIGCHLD", KAPI_SIGNAL_SEND, KAPI_SIGNAL_ACTION_DEFAULT)
-+		KAPI_SIGNAL_TARGET("Parent process when this process exits")
-+		KAPI_SIGNAL_CONDITION("Process exit after exec")
-+		KAPI_SIGNAL_DESC("The exit_signal is set to SIGCHLD during exec, ensuring the parent will receive SIGCHLD when this process terminates.")
-+		KAPI_SIGNAL_TIMING(KAPI_SIGNAL_TIME_EXIT)
-+		KAPI_SIGNAL_PRIORITY(2)
-+		KAPI_SIGNAL_QUEUE("Standard signal delivery to parent")
-+		KAPI_SIGNAL_STATE_REQ(KAPI_SIGNAL_STATE_RUNNING)
-+		KAPI_SIGNAL_INTERRUPTIBLE
-+	KAPI_SIGNAL_END
-+
-+	KAPI_SIGNAL(7, 0, "SIGALTSTACK", KAPI_SIGNAL_HANDLE, KAPI_SIGNAL_ACTION_CUSTOM)
-+		KAPI_SIGNAL_CONDITION("Process had alternate signal stack")
-+		KAPI_SIGNAL_DESC("Any alternate signal stack (sigaltstack) is not preserved across exec. The new program starts with no alternate stack.")
-+		KAPI_SIGNAL_TIMING(KAPI_SIGNAL_TIME_DURING)
-+		KAPI_SIGNAL_PRIORITY(1)
-+		KAPI_SIGNAL_QUEUE("Alternate stack configuration cleared")
-+		KAPI_SIGNAL_STATE_REQ(KAPI_SIGNAL_STATE_RUNNING)
-+		KAPI_SIGNAL_SA_FLAGS_FORBID(SA_ONSTACK)
-+		KAPI_SIGNAL_INTERRUPTIBLE
-+	KAPI_SIGNAL_END
-+
-+	KAPI_SIGNAL(8, SIGTRAP, "SIGTRAP", KAPI_SIGNAL_SEND, KAPI_SIGNAL_ACTION_DEFAULT)
-+		KAPI_SIGNAL_TARGET("Current process")
-+		KAPI_SIGNAL_CONDITION("Process is being traced (PTRACE_ATTACH or PTRACE_TRACEME)")
-+		KAPI_SIGNAL_DESC("If the process is being traced, a SIGTRAP is sent to the process after successful exec. This allows debuggers to gain control after the new program is loaded but before it starts executing.")
-+		KAPI_SIGNAL_TIMING(KAPI_SIGNAL_TIME_EXIT)
-+		KAPI_SIGNAL_PRIORITY(1)
-+		KAPI_SIGNAL_QUEUE("Standard signal delivery")
-+		KAPI_SIGNAL_STATE_REQ(KAPI_SIGNAL_STATE_TRACED)
-+		KAPI_SIGNAL_SA_FLAGS_REQ(SA_SIGINFO)
-+		KAPI_SIGNAL_INTERRUPTIBLE
-+	KAPI_SIGNAL_END
-+
-+	KAPI_SIGNAL(9, SIGSEGV, "SIGSEGV", KAPI_SIGNAL_SEND, KAPI_SIGNAL_ACTION_COREDUMP)
-+		KAPI_SIGNAL_TARGET("Current process")
-+		KAPI_SIGNAL_CONDITION("Past point-of-no-return and exec fails")
-+		KAPI_SIGNAL_DESC("If exec fails after the point-of-no-return (after de_thread() or exec_mmap()), SIGSEGV is sent to terminate the process with a core dump.")
-+		KAPI_SIGNAL_TIMING(KAPI_SIGNAL_TIME_DURING)
-+		KAPI_SIGNAL_PRIORITY(0)
-+		KAPI_SIGNAL_ERROR(-EINTR)
-+		KAPI_SIGNAL_QUEUE("Cannot be blocked")
-+		KAPI_SIGNAL_STATE_FORBID(KAPI_SIGNAL_STATE_ZOMBIE | KAPI_SIGNAL_STATE_DEAD)
-+		KAPI_SIGNAL_INTERRUPTIBLE
-+	KAPI_SIGNAL_END
-+
-+	KAPI_SIGNAL(10, 0, "BLOCKED_SIGNALS", KAPI_SIGNAL_BLOCK, KAPI_SIGNAL_ACTION_CUSTOM)
-+		KAPI_SIGNAL_CONDITION("Signal mask inherited from caller")
-+		KAPI_SIGNAL_DESC("The signal mask is preserved across exec. Blocked signals remain blocked in the new program unless it explicitly changes the mask.")
-+		KAPI_SIGNAL_TIMING(KAPI_SIGNAL_TIME_ANYTIME)
-+		KAPI_SIGNAL_PRIORITY(2)
-+		KAPI_SIGNAL_QUEUE("Signal mask preserved across exec")
-+		KAPI_SIGNAL_STATE_REQ(KAPI_SIGNAL_STATE_RUNNING)
-+		KAPI_SIGNAL_INTERRUPTIBLE
-+	KAPI_SIGNAL_END
-+
-+	KAPI_SIGNAL(11, 0, "REALTIME_SIGNALS", KAPI_SIGNAL_HANDLE, KAPI_SIGNAL_ACTION_CUSTOM)
-+		KAPI_SIGNAL_CONDITION("Realtime signals (SIGRTMIN-SIGRTMAX)")
-+		KAPI_SIGNAL_DESC("Realtime signals are handled like standard signals - handlers reset to default, pending signals cleared, but signal mask preserved.")
-+		KAPI_SIGNAL_TIMING(KAPI_SIGNAL_TIME_DURING)
-+		KAPI_SIGNAL_PRIORITY(1)
-+		KAPI_SIGNAL_QUEUE("Pending realtime signals discarded")
-+		KAPI_SIGNAL_STATE_REQ(KAPI_SIGNAL_STATE_RUNNING)
-+		KAPI_SIGNAL_INTERRUPTIBLE
-+	KAPI_SIGNAL_END
-+
-+	/* Side effects */
-+	KAPI_SIDE_EFFECT(0, KAPI_EFFECT_PROCESS_STATE | KAPI_EFFECT_FREE_MEMORY | KAPI_EFFECT_ALLOC_MEMORY,
-+			 "process image",
-+			 "Replaces entire process image including code, data, heap, and stack")
-+	KAPI_SIDE_EFFECT_END
-+
-+	KAPI_SIDE_EFFECT(1, KAPI_EFFECT_MODIFY_STATE | KAPI_EFFECT_RESOURCE_DESTROY,
-+			 "file descriptors",
-+			 "Closes all file descriptors with close-on-exec flag set")
-+		KAPI_EFFECT_CONDITION("FD_CLOEXEC flag set")
-+	KAPI_SIDE_EFFECT_END
-+
-+	KAPI_SIDE_EFFECT(2, KAPI_EFFECT_MODIFY_STATE,
-+			 "signal handlers",
-+			 "Resets all signal handlers to default, preserves ignored signals")
-+	KAPI_SIDE_EFFECT_END
-+
-+	KAPI_SIDE_EFFECT(3, KAPI_EFFECT_PROCESS_STATE | KAPI_EFFECT_SIGNAL_SEND,
-+			 "thread group",
-+			 "Kills all other threads in the thread group with SIGKILL")
-+		KAPI_EFFECT_CONDITION("Multi-threaded process")
-+	KAPI_SIDE_EFFECT_END
-+
-+	KAPI_SIDE_EFFECT(4, KAPI_EFFECT_MODIFY_STATE,
-+			 "process attributes",
-+			 "Clears pending signals, timers, alternate signal stack, and various process attributes")
-+	KAPI_SIDE_EFFECT_END
-+
-+	KAPI_SIDE_EFFECT(5, KAPI_EFFECT_FILESYSTEM,
-+			 "executable file",
-+			 "Opens and reads the executable file, may trigger filesystem operations")
-+	KAPI_SIDE_EFFECT_END
-+
-+	KAPI_SIDE_EFFECT(6, KAPI_EFFECT_MODIFY_STATE,
-+			 "security context",
-+			 "May change SELinux/AppArmor context based on file labels and transitions")
-+		KAPI_EFFECT_CONDITION("LSM enabled")
-+	KAPI_SIDE_EFFECT_END
-+
-+	KAPI_SIDE_EFFECT(7, KAPI_EFFECT_MODIFY_STATE | KAPI_EFFECT_FREE_MEMORY,
-+			 "shared memory",
-+			 "Detaches and unmaps all POSIX shared memory regions (shm_open/mmap)")
-+	KAPI_SIDE_EFFECT_END
-+
-+	/* State transitions */
-+	KAPI_STATE_TRANS(0, "process memory",
-+			 "old program image", "new program image",
-+			 "Complete replacement of process address space with new program")
-+	KAPI_STATE_TRANS_END
-+
-+	KAPI_STATE_TRANS(1, "process credentials",
-+			 "current credentials", "potentially modified credentials",
-+			 "May change effective UID/GID based on file permissions")
-+		KAPI_STATE_TRANS_COND("setuid/setgid binary")
-+	KAPI_STATE_TRANS_END
-+
-+	KAPI_STATE_TRANS(2, "thread state",
-+			 "multi-threaded", "single-threaded",
-+			 "Process becomes single-threaded after killing other threads")
-+		KAPI_STATE_TRANS_COND("Multi-threaded process")
-+	KAPI_STATE_TRANS_END
-+
-+	KAPI_STATE_TRANS(3, "signal state",
-+			 "custom handlers and pending signals", "default handlers, no pending signals",
-+			 "Signal handling reset to clean state for new program")
-+	KAPI_STATE_TRANS_END
-+
-+	KAPI_STATE_TRANS(4, "file descriptor table",
-+			 "contains close-on-exec FDs", "close-on-exec FDs closed",
-+			 "All file descriptors marked FD_CLOEXEC are closed during exec")
-+		KAPI_STATE_TRANS_COND("FDs with FD_CLOEXEC")
-+	KAPI_STATE_TRANS_END
-+
-+	KAPI_STATE_TRANS(5, "working directory",
-+			 "fd-relative operations", "resolved to absolute paths",
-+			 "Directory fd operations resolved before exec completes")
-+		KAPI_STATE_TRANS_COND("Using dirfd != AT_FDCWD")
-+	KAPI_STATE_TRANS_END
-+
-+	/* Locking information */
-+	KAPI_LOCK(0, "cred_guard_mutex", KAPI_LOCK_MUTEX)
-+		KAPI_LOCK_DESC("Protects against concurrent credential changes during exec")
-+		KAPI_LOCK_ACQUIRED
-+		KAPI_LOCK_DESC("Ensures atomic credential transition during exec process")
-+	KAPI_LOCK_END
-+
-+	KAPI_LOCK(1, "sighand->siglock", KAPI_LOCK_SPINLOCK)
-+		KAPI_LOCK_DESC("Protects signal handler modifications")
-+		KAPI_LOCK_ACQUIRED
-+		KAPI_LOCK_RELEASED
-+		KAPI_LOCK_DESC("Taken during signal handler reset and pending signal clearing")
-+	KAPI_LOCK_END
-+
-+	KAPI_SIDE_EFFECT_COUNT(8)
-+	KAPI_STATE_TRANS_COUNT(6)
-+
-+	.error_count = 20,
-+	.param_count = 5,
-+	.since_version = "3.19",
-+	.examples = "/* Execute /bin/echo using AT_FDCWD */\n"
-+		    "char *argv[] = { \"echo\", \"hello\", NULL };\n"
-+		    "char *envp[] = { \"PATH=/bin\", NULL };\n"
-+		    "execveat(AT_FDCWD, \"/bin/echo\", argv, envp, 0);\n\n"
-+		    "/* Execute via file descriptor */\n"
-+		    "int fd = open(\"/bin/echo\", O_PATH);\n"
-+		    "execveat(fd, \"\", argv, envp, AT_EMPTY_PATH);\n\n"
-+		    "/* Execute relative to directory fd */\n"
-+		    "int dirfd = open(\"/bin\", O_RDONLY | O_DIRECTORY);\n"
-+		    "execveat(dirfd, \"echo\", argv, envp, 0);",
-+	KAPI_NOTES("execveat() was added to allow fexecve() to be implemented on systems that "
-+		   "do not have /proc mounted. When filename is an empty string and AT_EMPTY_PATH "
-+		   "is specified, the file descriptor fd specifies the file to be executed. "
-+		   "AT_SYMLINK_NOFOLLOW prevents following symbolic links. "
-+		   "AT_EXECVE_CHECK (since Linux 6.12) only checks if execution would be allowed "
-+		   "without actually executing. Like execve(), on success execveat() does not return "
-+		   "(except with AT_EXECVE_CHECK which returns 0).\n\n"
-+		   "Known bug: If a script is executed and the close-on-exec flag is set for all "
-+		   "file descriptors (including 0, 1, and 2), the execveat() call can fail with "
-+		   "EBADF when the kernel tries to open the interpreter, as it needs an available "
-+		   "file descriptor slot.")
-+	.signal_count = 9,
-+	.lock_count = 2,
-+KAPI_END_SPEC;
-+
- SYSCALL_DEFINE5(execveat,
- 		int, fd, const char __user *, filename,
- 		const char __user *const __user *, argv,
++/* Initialize as part of kernel, not as a module */
++fs_initcall(kapi_debugfs_init);
+\ No newline at end of file
 -- 
 2.39.5
 
