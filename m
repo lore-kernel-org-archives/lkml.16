@@ -1,112 +1,107 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from out203-205-221-173.mail.qq.com (out203-205-221-173.mail.qq.com [203.205.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11E42571DD;
-	Tue, 24 Jun 2025 08:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44DEE257ACA;
+	Tue, 24 Jun 2025 08:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750753658; cv=none; b=f19qqcjhDp1opw2781nsVZ2oCqJdbSp90tLtCHPkQ5Ds2Ow9sprZPmnG2LDOn0PCSz+kmlCAN/hh40u05T7ZibWNWhwbKF9py0teLI4zTAiY62yGT751xlaEDZgX7HnqlI0le9aAaF7Qk6kjLGfNmdj4s1v6r0ZYtuFtp+TgN2A=
+	t=1750753678; cv=none; b=XvKXX4NzGpL9vEWGCqlitUVu6qcl6CHGpVNhLYpLbzX8y9CN82c0c07A+OnXSJrOPNcxfLeQoBDTWFVs6Z47QdH0z6wKdUIkxxqZrkFpYQRsr4HvdTDjS4ZT9PM3zvzE+s5Vm5x6dd+/b2iWLYWzThNYOCkNiCLo4dpPA4nWaCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750753658; c=relaxed/simple;
-	bh=H9y34vir+9nirPEjwoiMIfT3bIIQ67ZyNybg+nCN+Vs=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=FOnKJSRmCa1XRZoT9N6Yj9MU2phgh9D+B8tff0nfKJRSxcuTpYXonBCTuBq24kzSGetxDXlo50Lw4mlwaxH0foZhl5kXIWJZaBtj20FPCwElGAKEynYnzHVBdGVfOJI7+JOQNlIviN91WcvS56/lZGked53NT+RqBBb9w656w80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ntiLKVGj; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1750753678; c=relaxed/simple;
+	bh=XdXYCnjRgqwOkrvlCdU3yHEE6yIMMFDPC4AjfWaa+Bg=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=q99fMWXJRHRzGPyGDEKYdOqw22ar+Hqww3v7rWBDe+w+yMctfcA0gb8TFPSHXt990HUbOa4icT+GHJ7NCZhMYSq/Szrk2K4WKnixCuqYZkYJtWrNhbVT6QyjkCE46heofPstFdhVkT9qdwyv2edx+4c50TJIoggY2ifM2ikOlGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=a8dlEUfA; arc=none smtp.client-ip=203.205.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ntiLKVGj"
-Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55O8M1nR1268415
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 24 Jun 2025 01:22:02 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55O8M1nR1268415
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025062101; t=1750753324;
-	bh=/GcMmlSpVmJGdK70vVLdVq+WGghRjcWXQ50iTcyNOcA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=ntiLKVGj72JidONcwsNyF7DiOUmQsTszeaPpNemwiXD6CPdpKiW9vohotZJ/Uypgh
-	 1g5A/YBi/YEX1VbFBd5znZPwQ71z8MhTOIB9sgTundppHmWvz2rpdGfYCcZ8tJO9u+
-	 OoIEreNgnqijK49eia3xSxorTmqUuEiQr65WeF+uVFzQmzEdrfC5ZDMACjjVumZyLS
-	 dKFSVjbOay6ynxoXAyfVIUCOsknfeZJ4Qyr7DJ+7+5ZZy5uSJ2aUlTLPc/BCDyVwUs
-	 ojq2ITfPl9h3690j9i1ylwg3seoaa3MSTMp99lLAi4NM34mJTXaK7RnV+YEBN6fACC
-	 I5SNz2Sn1RArw==
-Date: Tue, 24 Jun 2025 01:22:00 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Khalid Ali <khaliidcaliy@gmail.com>, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, corbet@lwn.net
-CC: luto@kernel.org, peterz@infradead.org, ardb@kernel.org,
-        jan.kiszka@siemens.com, kbingham@kernel.org,
-        kirill.shutemov@linux.intel.com, michael.roth@amd.com,
-        rick.p.edgecombe@intel.com, brijesh.singh@amd.com,
-        sandipan.das@amd.com, jgross@suse.com, thomas.lendacky@amd.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-mm@kvack.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCHv2_0/3=5D_x86=3A_Make_5-level_p?=
- =?US-ASCII?Q?aging_support_unconditional_for_x86-64?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250624081400.2284-1-khaliidcaliy@gmail.com>
-References:  <20250624081400.2284-1-khaliidcaliy@gmail.com>
-Message-ID: <3EB75889-2194-402F-AF85-2CC96DA5D8F2@zytor.com>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="a8dlEUfA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1750753669;
+	bh=JKkXa37Boy9N6ftzZePrOeiWpn/48tEY39AZQiHVcWQ=;
+	h=From:To:Cc:Subject:Date;
+	b=a8dlEUfADMInh2LtcETgrUMJ135Q3//7fXXivRHUc4lpusRMQGIBeIyXHC2OpoiR9
+	 EmVrURl4w0Pt6MBoCMC32KPZ65/fB9DawUTsuQJOkpmqFRXk1K/rdUbu+o5HRS0A6M
+	 yWeZEIisWyoyg+bMZ5pHr8uzKYR+RSSo3haoNWhw=
+Received: from KernelDevBox.byted.org ([115.190.40.13])
+	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
+	id 6DA23CD4; Tue, 24 Jun 2025 16:27:26 +0800
+X-QQ-mid: xmsmtpt1750753646th3ofuslc
+Message-ID: <tencent_C32D0CB0210F2605605435098E9BFC5AD107@qq.com>
+X-QQ-XMAILINFO: MinfFaxlAYcM9vZt8jNniaXm0if7ASEbcANM8kDoSvgX5HIhl4DGltA2aVZrGw
+	 ai5AMsygM5dhCGE2Z0mbOFQoVjXtjY1PzFUO2pEs3wFrTUHogrN67kwZWs1khMNKumwnSBp1nT2i
+	 Nq7N9JUyMXkDnblnBXnTn7TWGhRlTzf3Q96cg4IamtMEXWYqRcX/0hSx4jpPHgS+YlO5cglgAcBq
+	 93DGbHB4TsmsaechYy1t0nZkKaNb3f/+XSY7XEPrieBlWexLFHtxcdJdMfh8MdfnCyu+UN/S3MY9
+	 36AtNT7hEAU/9I4+OFmXu1cUGnQpkZoR/6NZH+gEqHLZnDPFSer/FwQl0mcjL9f8DIJyXCTI3KQU
+	 hrjwooXxp6N59rztdHv6JHXxHRLtl1iwMt2H6gg8EZ2E46iqEp+9SJ/ICN3DpwavyeJ5yyNVzlwu
+	 V2rY/HcxJ3Pqmk/2l0TkKY+JLsNebv8nOixdSZxu5AbyrYCHxEbLgs7pyZWrocEDdFHaWYuqUc/W
+	 JIaw2sPsKc5aSFj5+gqIgeV4gqzD1YClIpDxzkr1SN5Tc3nNczAYMYBbWA7o318HXgEVU1+neenJ
+	 X3kG3bQ9+WYaejVIYep1a+/qocGwixrfwE7tSn1fH9krGGWLKegVOXVHqd997FUix3XQwlrRt6c4
+	 5EPsQSCYbbVs/hMqk6V3LB0k9ND/c05fV2WxbmlW23o3p97nKIoiL/O3f3AH8n7A6eyvXyflVQ5p
+	 c6HvTpmiyz0oQY33l5EoWir5XAoPYk1MmNrPxYQBFWAM+8LUdDF/5I6IhpUDndjy1ZAyoQ/s/js/
+	 ITarvoA59MmXdx1Qv1F0HhvXgJcIoFpCUgD062G4JeCEOFxSWhk9WM/Lxk8//p2jbOgDiC7KIXcy
+	 eBQjNf6Qrpgras5ITY2XNR8CCwiFqPJELehN8vWyPG/sdLfZDB9z3Iwo3Vz8m6p0N9ZNWC2OEVBG
+	 rAOSLssBlQvU3mubcMkCrQjkY3kA93dVoGm2MbRKB06cnxdbuPwACQTnblqJmcbF89GjYwO4o=
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: Zhang Shurong <zhang_shurong@foxmail.com>
+To: jacopo@jmondi.org
+Cc: mchehab@kernel.org,
+	u.kleine-koenig@pengutronix.de,
+	hverkuil@xs4all.nl,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zhang Shurong <zhang_shurong@foxmail.com>
+Subject: [PATCH v4] media: rj54n1cb0c: Fix memleak in rj54n1_probe()
+Date: Tue, 24 Jun 2025 16:27:24 +0800
+X-OQ-MSGID: <20250624082724.1225931-1-zhang_shurong@foxmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On June 24, 2025 1:11:15 AM PDT, Khalid Ali <khaliidcaliy@gmail=2Ecom> wrot=
-e:
->>Both Intel and AMD CPUs support 5-level paging, which is expected to
->>become more widely adopted in the future=2E
->>
->>Remove CONFIG_X86_5LEVEL=2E
->>
->>In preparation to that remove CONFIG_DYNAMIC_MEMORY_LAYOUT and make
->>SPARSEMEM_VMEMMAP the only memory model=2E
->>
->>v2:
->> - Fix 32-bit build by wrapping p4d_set_huge() and p4d_clear_huge() in
->>   #if CONFIG_PGTABLE_LEVELS > 4;
->> - Rebased onto current tip/master;
->>
->>Kirill A=2E Shutemov (3):
->>  x86/64/mm: Always use dynamic memory layout
->>  x86/64/mm: Make SPARSEMEM_VMEMMAP the only memory model
->>  x86/64/mm: Make 5-level paging support unconditional
->>
->> Documentation/arch/x86/cpuinfo=2Erst            |  8 ++---
->> =2E=2E=2E/arch/x86/x86_64/5level-paging=2Erst         |  9 ------
->> arch/x86/Kconfig                              | 32 ++-----------------
->> arch/x86/Kconfig=2Ecpufeatures                  |  4 ---
->> arch/x86/boot/compressed/pgtable_64=2Ec         | 11 ++-----
->> arch/x86/boot/header=2ES                        |  4 ---
->> arch/x86/boot/startup/map_kernel=2Ec            |  5 +--
->> arch/x86/include/asm/page_64=2Eh                |  2 --
->> arch/x86/include/asm/page_64_types=2Eh          | 11 -------
->> arch/x86/include/asm/pgtable_64_types=2Eh       | 24 --------------
->> arch/x86/kernel/alternative=2Ec                 |  2 +-
->> arch/x86/kernel/head64=2Ec                      |  4 ---
->> arch/x86/kernel/head_64=2ES                     |  2 --
->> arch/x86/mm/init=2Ec                            |  4 ---
->> arch/x86/mm/init_64=2Ec                         |  9 +-----
->> arch/x86/mm/pgtable=2Ec                         |  2 +-
->> drivers/firmware/efi/libstub/x86-5lvl=2Ec       |  2 +-
->> scripts/gdb/linux/pgtable=2Epy                  |  4 +--
->> 18 files changed, 13 insertions(+), 126 deletions(-)
->
->I think i am too late, however this is completely wrong=2E There are stil=
-l processors that doesn't support
->5-level paging which is mordern=2E We may call those processors old, howe=
-ver they are still common and used=2E
->
->So this patch seem too early for that=2E Some intel core-i5 and core-i7 d=
-oesn't support 5-level paging at all=2E
->
->This will break x86_64 cpus that doesn't support 5-level paging=2E
+rj54n1_probe() won't clean all the allocated resources in fail
+path, which may causes the memleaks. Add v4l2_ctrl_handler_free() to
+prevent memleak.
 
-Uh, no=2E Kernels compiled with 5-level support also support 4 levels=2E
+Fixes: f187352dcd45 ("media: i2c: Copy rj54n1cb0c soc_camera sensor driver")
+Signed-off-by: Zhang Shurong <zhang_shurong@foxmail.com>
+---
+Changes in v2:
+- Fixed compile error
+Changes in v3:
+- Fixed coding style warnings identified by scripts/checkpatch.pl
+Changes in v4:
+- remove empty line between signed-off message and Fixes tag
+- Moved ctrl_handler assignment after the error check
+- Used existing error label for better code flow
+---
+ drivers/media/i2c/rj54n1cb0c.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/media/i2c/rj54n1cb0c.c b/drivers/media/i2c/rj54n1cb0c.c
+index b7ca39f63dba..6dfc91216851 100644
+--- a/drivers/media/i2c/rj54n1cb0c.c
++++ b/drivers/media/i2c/rj54n1cb0c.c
+@@ -1329,10 +1329,13 @@ static int rj54n1_probe(struct i2c_client *client)
+ 			V4L2_CID_GAIN, 0, 127, 1, 66);
+ 	v4l2_ctrl_new_std(&rj54n1->hdl, &rj54n1_ctrl_ops,
+ 			V4L2_CID_AUTO_WHITE_BALANCE, 0, 1, 1, 1);
+-	rj54n1->subdev.ctrl_handler = &rj54n1->hdl;
+-	if (rj54n1->hdl.error)
+-		return rj54n1->hdl.error;
+ 
++	if (rj54n1->hdl.error) {
++		ret = rj54n1->hdl.error;
++		goto err_free_ctrl;
++	}
++
++	rj54n1->subdev.ctrl_handler = &rj54n1->hdl;
+ 	rj54n1->clk_div		= clk_div;
+ 	rj54n1->rect.left	= RJ54N1_COLUMN_SKIP;
+ 	rj54n1->rect.top	= RJ54N1_ROW_SKIP;
+-- 
+2.39.5
+
