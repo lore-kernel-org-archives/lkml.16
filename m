@@ -1,189 +1,285 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB5D42065
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CC742065
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750748322; cv=none; b=p0PWFn2w+8vp+CkKMACu8dotTX9qDBT45LlfnayXBVrSJ974UQtvXS25FAR+DkypM5e+T53MO6UbO3IvsGy17zUmXGr6hj2LzaF0ovg4UvmmRRKL4QaVgbZekGYLbkUAbkjGGDUCVBlDqoDJkHNGwuR3l4HxARF+g8QVsFK4ASI=
+	t=1750748377; cv=none; b=mhO4FSFYY66uAgUxD2Lrv+IDMWi4iJkDR4dIDeYHfCFnIhEKGcdIaXaMPU0tpztIKNnLNTwY/IPnb/F7R6UGrtzQCez0CViEc+fwt9wToh3MuCiwV1r7thgwzte31rCIXYZG2f6XDW1Ct+lpZ7jf50iUX3MzXOCz7PV/32frcGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750748322; c=relaxed/simple;
-	bh=5NFJWL8elR69ius4IY4VKebKUQrDucxI3Pdog9iOITg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TyDEb6zWSP6qWKjc5DdiksB6NpEO5oWkvNfHYTU9MJ0KkBqgwsQRco1cUreO0GUVTB3VXA0em/jhyx14saracqwYSEJnYTTgV3g7BhDMXUQEODbAJm9J1tPq8zXZBnrMRKQExsPRRZpb8WUPj7JZa0KOL5AK7xq0jwhBFvrHIsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=k6liGdmd; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750748377; c=relaxed/simple;
+	bh=jLGPvCfoQ08N6eX9uE9WM+NCPLN8fkLTJXyvmrpq8R0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n0lREfycttePqqtxk/jT7gjms7u6smlmJ9wo8A2yrxEyOgtHS31jL5oNyUqQKEFWGTf5TsE7lQW9cHPSxbpt+LgGK82hz0rIAkWB5WShumDkUayncA9YTZ53v6OkRta1v0QCVH4o098r4sqEhQu+qhLW1mdh1eq+WVDIfzkv9aQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tr7bOapn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="k6liGdmd"
-Message-ID: <14ead790-9ad2-4f57-b116-b994343a1dce@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750748314;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IKI5/MOk7JGcErI274Eq5dNQsujTc+eRoCB9W5qx9Eo=;
-	b=k6liGdmdrM43wz5Sw7cTud98t9UQFbcDP4CnMpzMyhH0i2Rx6EBnyHcVavqOHW4gUIJn6+
-	0OWODkcLlMJGI/vosO/7PZpTpuTpyD8Z8nxAtz5lz9bvhC/ppwc1Hop4fdDzFrVxlikGiU
-	G8HjbyN9r9zLcHy2vfowNEDpY2MFMUI=
-Date: Mon, 23 Jun 2025 23:58:24 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tr7bOapn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B3A4C4CEE3;
+	Tue, 24 Jun 2025 06:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750748375;
+	bh=jLGPvCfoQ08N6eX9uE9WM+NCPLN8fkLTJXyvmrpq8R0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Tr7bOapneHO5jhGsnJpcXb6VUuxZdRweqgHcJMpTCuX+Rvt4a0o9XtpyEtS782HzE
+	 NRfQfBA0d82ZiGXPzvgpkT3IF9b96FNsOAfSmDxzgKeqyQqPlAE8Bop0zpKCpSjm3N
+	 5ICWFueK9MzewW7o056st9s//I6b0Q9cxjsr0TLtVfGSYOwDGuEXlVCGIvQ9LBWcqU
+	 NGqkhxnXom8iUUbcSZBi5h388O3h9YqKCt0UVXrvswSjCuHUlvRkgp4rCCBGVKYKte
+	 GC7ZiBOuFg9FVDoX4wR6Wzx/SsOX0CnkSofVRpUXblOw0U3XcpGl4T+ASRQUAJxVnq
+	 4i9MxnZsxQusA==
+Date: Tue, 24 Jun 2025 08:59:32 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Dharma Balasubiramani <dharma.b@microchip.com>
+Cc: Manikandan Muralidharan <manikandan.m@microchip.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, Sandeep Sheriker M <sandeep.sheriker@microchip.com>
+Subject: Re: [PATCH v3] drm/bridge: microchip-lvds: fix bus format mismatch
+ with VESA displays
+Message-ID: <20250624-complex-russet-deer-c1d9b3@houat>
+References: <20250624-microchip-lvds-v3-1-c3c6f1e40516@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v6 03/23] RISC-V: Add defines for the SBI message proxy
- extension
-To: Anup Patel <apatel@ventanamicro.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>,
- Thomas Gleixner <tglx@linutronix.de>, "Rafael J . Wysocki"
- <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Len Brown <lenb@kernel.org>,
- Sunil V L <sunilvl@ventanamicro.com>, Rahul Pathak
- <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>,
- Andrew Jones <ajones@ventanamicro.com>,
- Samuel Holland <samuel.holland@sifive.com>, Anup Patel
- <anup@brainfault.org>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250618121358.503781-1-apatel@ventanamicro.com>
- <20250618121358.503781-4-apatel@ventanamicro.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <20250618121358.503781-4-apatel@ventanamicro.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="6ngqa3iwquyt5oba"
+Content-Disposition: inline
+In-Reply-To: <20250624-microchip-lvds-v3-1-c3c6f1e40516@microchip.com>
 
 
-On 6/18/25 5:13 AM, Anup Patel wrote:
-> Add defines for the new SBI message proxy extension which is part
-> of the SBI v3.0 specification.
->
-> Co-developed-by: Rahul Pathak <rpathak@ventanamicro.com>
-> Signed-off-by: Rahul Pathak <rpathak@ventanamicro.com>
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+--6ngqa3iwquyt5oba
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3] drm/bridge: microchip-lvds: fix bus format mismatch
+ with VESA displays
+MIME-Version: 1.0
+
+Hi,
+
+On Tue, Jun 24, 2025 at 10:10:25AM +0530, Dharma Balasubiramani wrote:
+> From: Sandeep Sheriker M <sandeep.sheriker@microchip.com>
+>=20
+> The LVDS controller was hardcoded to JEIDA mapping, which leads to
+> distorted output on panels expecting VESA mapping.
+>=20
+> Update the driver to dynamically select the appropriate mapping and
+> pixel size based on the panel's advertised media bus format. This
+> ensures compatibility with both JEIDA and VESA displays.
+>=20
+> Modernize the bridge ops to use atomic_enable/disable, and retrieve
+> the bus format from the connector via the atomic bridge state.
+>=20
+> Additionally, drop the drm_panel field as it is unused.
+>=20
+> Signed-off-by: Sandeep Sheriker M <sandeep.sheriker@microchip.com>
+> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
 > ---
->   arch/riscv/include/asm/sbi.h | 63 ++++++++++++++++++++++++++++++++++++
->   include/linux/wordpart.h     |  8 +++++
->   2 files changed, 71 insertions(+)
->
-> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-> index 341e74238aa0..59a7285ff956 100644
-> --- a/arch/riscv/include/asm/sbi.h
-> +++ b/arch/riscv/include/asm/sbi.h
-> @@ -10,6 +10,7 @@
->   #include <linux/types.h>
->   #include <linux/cpumask.h>
->   #include <linux/jump_label.h>
-> +#include <linux/wordpart.h>
->   
->   #ifdef CONFIG_RISCV_SBI
->   enum sbi_ext_id {
-> @@ -36,6 +37,7 @@ enum sbi_ext_id {
->   	SBI_EXT_STA = 0x535441,
->   	SBI_EXT_NACL = 0x4E41434C,
->   	SBI_EXT_FWFT = 0x46574654,
-> +	SBI_EXT_MPXY = 0x4D505859,
->   
->   	/* Experimentals extensions must lie within this range */
->   	SBI_EXT_EXPERIMENTAL_START = 0x08000000,
-> @@ -430,6 +432,67 @@ enum sbi_fwft_feature_t {
->   
->   #define SBI_FWFT_SET_FLAG_LOCK			BIT(0)
->   
-> +enum sbi_ext_mpxy_fid {
-> +	SBI_EXT_MPXY_GET_SHMEM_SIZE,
-> +	SBI_EXT_MPXY_SET_SHMEM,
-> +	SBI_EXT_MPXY_GET_CHANNEL_IDS,
-> +	SBI_EXT_MPXY_READ_ATTRS,
-> +	SBI_EXT_MPXY_WRITE_ATTRS,
-> +	SBI_EXT_MPXY_SEND_MSG_WITH_RESP,
-> +	SBI_EXT_MPXY_SEND_MSG_WITHOUT_RESP,
-> +	SBI_EXT_MPXY_GET_NOTIFICATION_EVENTS
-> +};
+> Changes in v3:
+> - Use BIT(0) instead of 1.
+> - Drop the panel field of the mchp_lvds structure.
+> - Drop the inner parentheses in write in serialiser_on().
+> - Link to v2: https://lore.kernel.org/r/20250623-microchip-lvds-v2-1-8ecb=
+abc6abc4@microchip.com
+>=20
+> Changes in v2:
+> - Switch to atomic bridge functions
+> - Drop custom connector creation
+> - Use drm_atomic_get_new_connector_for_encoder()
+> - Link to v1: https://lore.kernel.org/r/20250618-microchip-lvds-v1-1-1eae=
+5acd7a82@microchip.com
+
+Looking much better now, thanks!
+
+I still have few comments, see below.
+
+>  drivers/gpu/drm/bridge/microchip-lvds.c | 70 +++++++++++++++++++++++++--=
+------
+>  1 file changed, 54 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/bridge/microchip-lvds.c b/drivers/gpu/drm/br=
+idge/microchip-lvds.c
+> index 9f4ff82bc6b4..e7b68fb4bec0 100644
+> --- a/drivers/gpu/drm/bridge/microchip-lvds.c
+> +++ b/drivers/gpu/drm/bridge/microchip-lvds.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/component.h>
+>  #include <linux/delay.h>
+>  #include <linux/jiffies.h>
+> +#include <linux/media-bus-format.h>
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/of_graph.h>
+>  #include <linux/pinctrl/devinfo.h>
+> @@ -41,9 +42,11 @@
+> =20
+>  /* Bitfields in LVDSC_CFGR (Configuration Register) */
+>  #define LVDSC_CFGR_PIXSIZE_24BITS	0
+> +#define LVDSC_CFGR_PIXSIZE_18BITS	BIT(0)
+>  #define LVDSC_CFGR_DEN_POL_HIGH		0
+>  #define LVDSC_CFGR_DC_UNBALANCED	0
+>  #define LVDSC_CFGR_MAPPING_JEIDA	BIT(6)
+> +#define LVDSC_CFGR_MAPPING_VESA		0
+> =20
+>  /*Bitfields in LVDSC_SR */
+>  #define LVDSC_SR_CS	BIT(0)
+> @@ -56,7 +59,6 @@ struct mchp_lvds {
+>  	struct device *dev;
+>  	void __iomem *regs;
+>  	struct clk *pclk;
+> -	struct drm_panel *panel;
+>  	struct drm_bridge bridge;
+>  	struct drm_bridge *panel_bridge;
+>  };
+> @@ -76,9 +78,10 @@ static inline void lvds_writel(struct mchp_lvds *lvds,=
+ u32 offset, u32 val)
+>  	writel_relaxed(val, lvds->regs + offset);
+>  }
+> =20
+> -static void lvds_serialiser_on(struct mchp_lvds *lvds)
+> +static void lvds_serialiser_on(struct mchp_lvds *lvds, u32 bus_format)
+>  {
+>  	unsigned long timeout =3D jiffies + msecs_to_jiffies(LVDS_POLL_TIMEOUT_=
+MS);
+> +	u8 map, pix_size;
+> =20
+>  	/* The LVDSC registers can only be written if WPEN is cleared */
+>  	lvds_writel(lvds, LVDSC_WPMR, (LVDSC_WPMR_WPKEY_PSSWD &
+> @@ -93,11 +96,24 @@ static void lvds_serialiser_on(struct mchp_lvds *lvds)
+>  		usleep_range(1000, 2000);
+>  	}
+> =20
+> +	switch (bus_format) {
+> +	case MEDIA_BUS_FMT_RGB666_1X7X3_SPWG:
+> +		map =3D LVDSC_CFGR_MAPPING_JEIDA;
+> +		pix_size =3D LVDSC_CFGR_PIXSIZE_18BITS;
+> +		break;
+> +	case MEDIA_BUS_FMT_RGB888_1X7X4_SPWG:
+> +		map =3D LVDSC_CFGR_MAPPING_VESA;
+> +		pix_size =3D LVDSC_CFGR_PIXSIZE_24BITS;
+> +		break;
+> +	default:
+> +		map =3D LVDSC_CFGR_MAPPING_JEIDA;
+> +		pix_size =3D LVDSC_CFGR_PIXSIZE_24BITS;
+> +		break;
+> +	}
 > +
-> +enum sbi_mpxy_attribute_id {
-> +	/* Standard channel attributes managed by MPXY framework */
-> +	SBI_MPXY_ATTR_MSG_PROT_ID		= 0x00000000,
-> +	SBI_MPXY_ATTR_MSG_PROT_VER		= 0x00000001,
-> +	SBI_MPXY_ATTR_MSG_MAX_LEN		= 0x00000002,
-> +	SBI_MPXY_ATTR_MSG_SEND_TIMEOUT		= 0x00000003,
-> +	SBI_MPXY_ATTR_MSG_COMPLETION_TIMEOUT	= 0x00000004,
-> +	SBI_MPXY_ATTR_CHANNEL_CAPABILITY	= 0x00000005,
-> +	SBI_MPXY_ATTR_SSE_EVENT_ID		= 0x00000006,
-> +	SBI_MPXY_ATTR_MSI_CONTROL		= 0x00000007,
-> +	SBI_MPXY_ATTR_MSI_ADDR_LO		= 0x00000008,
-> +	SBI_MPXY_ATTR_MSI_ADDR_HI		= 0x00000009,
-> +	SBI_MPXY_ATTR_MSI_DATA			= 0x0000000A,
-> +	SBI_MPXY_ATTR_EVENTS_STATE_CONTROL	= 0x0000000B,
-> +	SBI_MPXY_ATTR_STD_ATTR_MAX_IDX,
-> +	/*
-> +	 * Message protocol specific attributes, managed by
-> +	 * the message protocol specification.
-> +	 */
-> +	SBI_MPXY_ATTR_MSGPROTO_ATTR_START	= 0x80000000,
-> +	SBI_MPXY_ATTR_MSGPROTO_ATTR_END		= 0xffffffff
-> +};
+>  	/* Configure the LVDSC */
+> -	lvds_writel(lvds, LVDSC_CFGR, (LVDSC_CFGR_MAPPING_JEIDA |
+> -				LVDSC_CFGR_DC_UNBALANCED |
+> -				LVDSC_CFGR_DEN_POL_HIGH |
+> -				LVDSC_CFGR_PIXSIZE_24BITS));
+> +	lvds_writel(lvds, LVDSC_CFGR, map | LVDSC_CFGR_DC_UNBALANCED |
+> +		    LVDSC_CFGR_DEN_POL_HIGH | pix_size);
+> =20
+>  	/* Enable the LVDS serializer */
+>  	lvds_writel(lvds, LVDSC_CR, LVDSC_CR_SER_EN);
+> @@ -113,7 +129,8 @@ static int mchp_lvds_attach(struct drm_bridge *bridge,
+>  				 bridge, flags);
+>  }
+
+It looks like this part is originally what the patch was about...
+
+> -static void mchp_lvds_enable(struct drm_bridge *bridge)
+> +static void mchp_lvds_atomic_pre_enable(struct drm_bridge *bridge,
+> +					struct drm_atomic_state *state)
+>  {
+>  	struct mchp_lvds *lvds =3D bridge_to_lvds(bridge);
+>  	int ret;
+> @@ -129,11 +146,35 @@ static void mchp_lvds_enable(struct drm_bridge *bri=
+dge)
+>  		dev_err(lvds->dev, "failed to get pm runtime: %d\n", ret);
+>  		return;
+>  	}
+> +}
 > +
-> +/* Possible values of MSG_PROT_ID attribute */
-> +enum sbi_mpxy_msgproto_id {
-> +	SBI_MPXY_MSGPROTO_RPMI_ID = 0x0
-> +};
+> +static void mchp_lvds_atomic_enable(struct drm_bridge *bridge,
+> +				    struct drm_atomic_state *state)
+> +{
+> +	struct mchp_lvds *lvds =3D bridge_to_lvds(bridge);
+> +	struct drm_connector *connector;
 > +
-> +/* RPMI message protocol specific MPXY attributes */
-> +enum sbi_mpxy_rpmi_attribute_id {
-> +	SBI_MPXY_RPMI_ATTR_SERVICEGROUP_ID = SBI_MPXY_ATTR_MSGPROTO_ATTR_START,
-> +	SBReviewed-by: Atish Patra <atishp@rivosinc.com>I_MPXY_RPMI_ATTR_SERVICEGROUP_VERSION,
-> +	SBI_MPXY_RPMI_ATTR_IMPL_ID,
-> +	SBI_MPXY_RPMI_ATTR_IMPL_VERSION,
-> +	SBI_MPXY_RPMI_ATTR_MAX_ID
-> +};
+> +	/* default to jeida-24 */
+> +	u32 bus_format =3D MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA;
 > +
-> +/* Encoding of MSG_PROT_VER attribute */
-> +#define SBI_MPXY_MSG_PROT_VER_MAJOR(__ver)	upper_16_bits(__ver)
-> +#define SBI_MPXY_MSG_PROT_VER_MINOR(__ver)	lower_16_bits(__ver)
-> +#define SBI_MPXY_MSG_PROT_MKVER(__maj, __min)	make_u32_from_two_u16(__maj, __min)
+> +	connector =3D drm_atomic_get_new_connector_for_encoder(state, bridge->e=
+ncoder);
+> +	if (connector && connector->display_info.num_bus_formats)
+> +		bus_format =3D connector->display_info.bus_formats[0];
+> =20
+> -	lvds_serialiser_on(lvds);
+> +	lvds_serialiser_on(lvds, bus_format);
+>  }
+> =20
+> -static void mchp_lvds_disable(struct drm_bridge *bridge)
+> +static void mchp_lvds_atomic_disable(struct drm_bridge *bridge,
+> +				     struct drm_atomic_state *state)
+> +{
+> +	struct mchp_lvds *lvds =3D bridge_to_lvds(bridge);
 > +
-> +/* Capabilities available through CHANNEL_CAPABILITY attribute */
-> +#define SBI_MPXY_CHAN_CAP_MSI			BIT(0)
-> +#define SBI_MPXY_CHAN_CAP_SSE			BIT(1)
-> +#define SBI_MPXY_CHAN_CAP_EVENTS_STATE		BIT(2)
-> +#define SBI_MPXY_CHAN_CAP_SEND_WITH_RESP	BIT(3)
-> +#define SBI_MPXY_CHAN_CAP_SEND_WITHOUT_RESP	BIT(4)
-> +#define SBI_MPXY_CHAN_CAP_GET_NOTIFICATIONS	BIT(5)
+> +	/* Turn off the serialiser */
+> +	lvds_writel(lvds, LVDSC_CR, 0);
+> +}
 > +
->   /* SBI spec version fields */
->   #define SBI_SPEC_VERSION_DEFAULT	0x1
->   #define SBI_SPEC_VERSION_MAJOR_SHIFT	24
-> diff --git a/include/linux/wordpart.h b/include/linux/wordpart.h
-> index 5a7b97bb7c95..ed8717730037 100644
-> --- a/include/linux/wordpart.h
-> +++ b/include/linux/wordpart.h
-> @@ -31,6 +31,14 @@
->    */
->   #define lower_16_bits(n) ((u16)((n) & 0xffff))
->   
-> +/**
-> + * make_u32_from_two_u16 - return u32 number by combining
-> + * two u16 numbers.
-> + * @hi: upper 16 bit number
-> + * @lo: lower 16 bit number
-> + */
-> +#define make_u32_from_two_u16(hi, lo)	(((u32)(hi) << 16) | (u32)(lo))
-> +
->   /**
->    * REPEAT_BYTE - repeat the value @x multiple times as an unsigned long value
->    * @x: value to repeat
-LGTM.
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
+> +static void mchp_lvds_atomic_post_disable(struct drm_bridge *bridge,
+> +					  struct drm_atomic_state *state)
+>  {
+>  	struct mchp_lvds *lvds =3D bridge_to_lvds(bridge);
+> =20
+> @@ -143,8 +184,10 @@ static void mchp_lvds_disable(struct drm_bridge *bri=
+dge)
+> =20
+>  static const struct drm_bridge_funcs mchp_lvds_bridge_funcs =3D {
+>  	.attach =3D mchp_lvds_attach,
+> -	.enable =3D mchp_lvds_enable,
+> -	.disable =3D mchp_lvds_disable,
+> +	.atomic_pre_enable =3D mchp_lvds_atomic_pre_enable,
+> +	.atomic_enable =3D mchp_lvds_atomic_enable,
+> +	.atomic_disable =3D mchp_lvds_atomic_disable,
+> +	.atomic_post_disable =3D mchp_lvds_atomic_post_disable,
+>  };
+
+=2E.. But this is basically just switching the bridge to use atomic
+variants of its hooks. It's not directly related to the change, so it
+should be split into another patch.
+
+The split from enable to atomic_pre_enable / atomic_enable would also be
+good in another separate patch.
+
+> =20
+>  static int mchp_lvds_probe(struct platform_device *pdev)
+> @@ -179,13 +222,8 @@ static int mchp_lvds_probe(struct platform_device *p=
+dev)
+>  			"can't find port point, please init lvds panel port!\n");
+>  		return -ENODEV;
+>  	}
+> -
+> -	lvds->panel =3D of_drm_find_panel(port);
+>  	of_node_put(port);
+> =20
+> -	if (IS_ERR(lvds->panel))
+> -		return -EPROBE_DEFER;
+> -
+>  	lvds->panel_bridge =3D devm_drm_of_get_bridge(dev, dev->of_node, 1, 0);
+
+And this part is yet another thing.
+
+Maxime
+
+--6ngqa3iwquyt5oba
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaFpM0AAKCRAnX84Zoj2+
+drjIAYDnq4ecrd/T6q7R94YP6rLPNLF2rwe9Pm3d0I20bFZPJpwVN94S42YtizBN
+7yeYtmEBgIaFn6kwFgjs2At/9Dhqpf+bifvBteSHGap2vs4fQTn9NbIvMRCcO8+5
++Ljk1e3nQQ==
+=wsPB
+-----END PGP SIGNATURE-----
+
+--6ngqa3iwquyt5oba--
