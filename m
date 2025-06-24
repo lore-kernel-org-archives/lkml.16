@@ -1,412 +1,213 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE9215853B
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271B22D1F68
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:29:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750775317; cv=none; b=bajH07Bs7Exyks9dayNCo7TDs1pF+Oom9di3RlpLDT7i18Qwnnh9TlwIXalmRjYsyXpuPnfROKikxGgwNaGj+jqMbv3nNAcPUI1VXgEf8Ol158uGyacDPCAS4+rbqkJyHFsNV5c15P8h+KFVqZUhPH/rMdrpoP/zi1/T38oVijo=
+	t=1750775353; cv=none; b=WqzpApcNofL1aem9jJL9lPLiP2pfb2JcCNt6m+PpH3/SDvzPc8S8tDo4vyEn5m2gTiIdtO6kueWoIEyxvEwDQzZGqPa0+QGsYS5ujseXs+/UsAru1HNINbEPoLHzDI59V4zKC9QH/1JtwrcItM03SgdHkfx+UwDQIZveQjdMxgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750775317; c=relaxed/simple;
-	bh=mTYvJfN2xuWQsVAHTwNShzkisvw8P0xI6BmLshD2djA=;
+	s=arc-20240116; t=1750775353; c=relaxed/simple;
+	bh=82DrN4PaXXS11j+9j66dZOi17onQ0rog+GYdZPUzWQs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CVUf2MBcLLZ4xDMorcns+cNR//doOcwsExzGSJRna5AcM2TDiew8UG6rbyRJvTMR7VEnIP78DbWRoz35t/mxAVQDAu/VRSq5yDL8s44FgdS8yYRJ85gKwyrzA+PezTkoud9pGarnzzVOrnWyV80gzqYYI685nzIgJF90XopAPGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=YYRQ4ebm; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	 To:Cc:Content-Type; b=Qyl//m3oPldISY6EF0Xz1FORayP7obNb1yKOFPz348DaXxQOrJy6J9AnAEod1n5g0q3doWU/aZOjaf6HpOkWCe2nOq2DXMLfQSvJ9QdqLmdgmfh11FizOV3TlGS+eypk4Vy1l1dvw/XpvOi3vP3wqtOnCAoxPQOzEqv/9e2fwdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XgjQflek; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="YYRQ4ebm"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4a44b3526e6so5773981cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:28:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XgjQflek"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a58197794eso175051cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:29:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1750775314; x=1751380114; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750775351; x=1751380151; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uDewiSmD4MwwrX0+a8LW2QGw9oFX/YyFBm3ct0LvRo0=;
-        b=YYRQ4ebmBl9pg0Fuufraid4TmzLnDb+ukaZXvRSLDrP+WKIrxXo7tdqt0y6bgzrkJz
-         iBkRQyawmJneP97BEwgNq8WRF1s1ymPyqGMIZdlCKHQp0LY0tXe7MmmIXIW38DGWrVlP
-         pQdTmM9wArDqnmjL7WPFeUJfSEFM16zgaANIiJ5NnCXGmdoWEK2qDlzobliqBvpI+1g0
-         Ooxjt/SF60vFDwwIUcugRRFS+FHAq0JCrYAGSxe1tz+7UVje2yk8xhe6g+8M4HjY85hv
-         iIeSjN3lBWyKRplmPCv1cTDvwMWbfldYvtYIlESxsfO4oOlVD4iArkgVmtUVOp3vej0z
-         GH2Q==
+        bh=hSD2mYfxNDB+dLwDFCI+VBJcy2/hQ3H1VYIqXhGlYFI=;
+        b=XgjQflekNV54SL9GUvWgBbhauJGsiz+xkiH7lMF/zx4Iuc4ZJOuf0hqhl7pyCXcJpi
+         ssX2fKGf0dP9L4UzY7jt5tTf+t/VX2xoroMnuZB9ktCW3VckFJkKETBzlpIhebOBkJXZ
+         G2lZMEzQZGDL3l8gtpmnv/qWAzFIhH6JmVmGMBbs1SMAYvEnEUVKqsfDv93UFRoD5StR
+         0fMraYER6R9u9wgD7gDnH1bc3i4hUroslgXuu06VK2bYbHrpHMdEOyOikrj1Qldb/3F0
+         3D7NTnrADPIeiCQX4qPwJUJMBhmc4cFI0oHMagvZScd/bCyNWiVfsuIZODJ9Z6HFF5gb
+         ykdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750775314; x=1751380114;
+        d=1e100.net; s=20230601; t=1750775351; x=1751380151;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uDewiSmD4MwwrX0+a8LW2QGw9oFX/YyFBm3ct0LvRo0=;
-        b=KdeeJQRFr2iT5fuOA+HU5zssrzgj7b4/W9cRL079G+dXZz5U3H1Iud+xAnkUcLJD74
-         zSXQ07gJ9p47YJUPS1HN5ZqQZCI8NdXORdORPuuz0U+dXMwwzFfPnKJiALPmfyZsk8Bs
-         88zTGG4lI0UMFfdbfWdHJ1MqbWqj3rpD4EifQh7l+9RsWFO3EsevvjBXWeTJOgVyQKHs
-         4g2YIYTnagf3PTRFR0r2AWv7E2OlC+yDNUm6xSCSDRRcjTvXshMh9X0Y2LNCpvg9ts0B
-         2vqTQbj7iJdq3IdjdfDff6MPeBd7ARRcpO8dOid+dSNuT6I6iHuM7J+X47H3dBe++jF5
-         2LMw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVkOUX71iviVKs7waV/1B9K/uPLosiC3Akfs6kiruiS0G2TdJTbkW2vQ2YnEAtlScPRtIQFwOaNJHMqCg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxo2Moi5cIJFSEtJBU+Yy45/L0g+qz26rL/Lw+RdEeGwXRhRHMA
-	DCCBLCk5eXCQPjPHXHg7VvrieQX2aOe+xdo8048kXklBOhlLbPEigwy2uNjYBUBZvZmBZUE2wlN
-	oksgyHWa/owjdW4rfT2ijAr8Zcnsiv7rtEBt/3gIbKg==
-X-Gm-Gg: ASbGnctvY3/Nnl3L/ASta6uE7D8pMAwnaXKSuPK8peoou4aHoKZ9/LWUYDfk1Yx3v3X
-	2THSM6L7OHTszmR2KKc4mW7h6Y3SWPGzUKX6krJPXEwDmz7/m7nBEtCgojVRB7XCChgGffRYcaR
-	qU7SxT3gGX4+Fb1mijYy6hpgWKBw74nWhmm4G1q+Fvzrf23QVjTgU=
-X-Google-Smtp-Source: AGHT+IGFEQhzykPbe/44QRJkdNddUzd4cfvP60odxaU1YoPeESZ4f1vixxl/WUpJLfMlzvla3CLnCoyoFqQUs9WlBsk=
-X-Received: by 2002:ac8:5849:0:b0:4a1:3b18:598a with SMTP id
- d75a77b69052e-4a77a1fed3dmr258991591cf.5.1750775313494; Tue, 24 Jun 2025
- 07:28:33 -0700 (PDT)
+        bh=hSD2mYfxNDB+dLwDFCI+VBJcy2/hQ3H1VYIqXhGlYFI=;
+        b=EI/bRaA+bFHDfTF6PBTsNnrKBzH+UaEJ4Qoy3++goB4eegpbaj7LuLJIp8zfr2Sbra
+         VGpw/Av0ZNu96ksX0l/VKqIfDBqC3nzbL6ipLG2HpZbZlvDU7/SiTHelv14G59S/aQVD
+         go5tA1rexRmyjsJ/FVfg8C5RxP5nWOcbe8bDrRwxPHCc5LwOPKhPvyeUZGjz7IL5BLZP
+         ehGVWTWT7cSXvPRXq1qQ5uV6Cheyszctr5p6eOD2zY1B07Pvo7WH95YZPOH/2XoRhREs
+         qVR2ongUR6pxp/pVPatLn2X4meQQEWcmosh3FEgYa7ILKg6IpklVlmO9ike7GM8Vp9/V
+         o/pA==
+X-Forwarded-Encrypted: i=1; AJvYcCWAycUV7WI1uchyzVV3tK1SzNPKTGHWqAaip8YRmKrupzh4NN58gvRECGV656FDnXwpYM2E683RMl0uFqc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLsySix2u2qFBmMW3FzBw7bboPiTQ4urYjx+09Zax/yVSTrmOA
+	UsGoRV7kONzXqsXa1gCH8CVN+mkn5zqbXa8IGQpk5h06xCaoZ02Psnv0AZH9upzWs0u6NNxC/yv
+	gj7PxIMWKR6anPnsltuym7GySTqsRt/dpZk1uGqJy
+X-Gm-Gg: ASbGncveOHLZoH+/eHPuVFe7Ugkigsc622YjtXoQGmsRKx6PQWWMEcjMU8pW0PD4Czs
+	VIRMSCacglRxXnmxnF5q/lsz83Rk1yCrE7gDTdh1GgssJGb5/rQZNErZGXY/0gDiazuUk86Uw+u
+	gJ8DklSraV7qcdC/KOHjPdkmNtk7bIWCJ2HNPoWHsptIymil10JWlchVumHuj3IlaEGjwfzA7P+
+	A==
+X-Google-Smtp-Source: AGHT+IEFMI9Z2wOmOoEl6+Gqr+r5GZMQn0E+Ub3SjHdvnw+ICeQc3UNbC7lwI6PyYtFkpoyIcT8V7lNB2r1BCDrj5BM=
+X-Received: by 2002:a05:622a:344:b0:49c:ffd4:abcc with SMTP id
+ d75a77b69052e-4a7b171567emr3429201cf.27.1750775350498; Tue, 24 Jun 2025
+ 07:29:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
- <20250515182322.117840-11-pasha.tatashin@soleen.com> <20250624-akzeptabel-angreifbar-9095f4717ca4@brauner>
-In-Reply-To: <20250624-akzeptabel-angreifbar-9095f4717ca4@brauner>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Tue, 24 Jun 2025 10:27:56 -0400
-X-Gm-Features: AX0GCFtlnh5qP7763PBCjBm3puXOqOkkcghSRVKRQ0u-_lovPxMsol3pu7S1kPY
-Message-ID: <CA+CK2bBu4ex9O5kPcR7++DVg3RM8ZWg3BCpcc6CboJ=aG8mVmQ@mail.gmail.com>
-Subject: Re: [RFC v2 10/16] luo: luo_ioctl: add ioctl interface
-To: Christian Brauner <brauner@kernel.org>
-Cc: pratyush@kernel.org, jasonmiu@google.com, graf@amazon.com, 
-	changyuanl@google.com, rppt@kernel.org, dmatlack@google.com, 
-	rientjes@google.com, corbet@lwn.net, rdunlap@infradead.org, 
-	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, ojeda@kernel.org, 
-	aliceryhl@google.com, masahiroy@kernel.org, akpm@linux-foundation.org, 
-	tj@kernel.org, yoann.congal@smile.fr, mmaurer@google.com, 
-	roman.gushchin@linux.dev, chenridong@huawei.com, axboe@kernel.dk, 
-	mark.rutland@arm.com, jannh@google.com, vincent.guittot@linaro.org, 
-	hannes@cmpxchg.org, dan.j.williams@intel.com, david@redhat.com, 
-	joel.granados@kernel.org, rostedt@goodmis.org, anna.schumaker@oracle.com, 
-	song@kernel.org, zhangguopeng@kylinos.cn, linux@weissschuh.net, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
-	gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org, 
-	cw00.choi@samsung.com, myungjoo.ham@samsung.com, yesanishhere@gmail.com, 
-	Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com, 
-	aleksander.lobakin@intel.com, ira.weiny@intel.com, 
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
-	stuart.w.hayes@gmail.com, ptyadav@amazon.de
+References: <20250624-anon_name_cleanup-v2-0-600075462a11@suse.cz>
+ <20250624-anon_name_cleanup-v2-1-600075462a11@suse.cz> <e6e20d9e-ceb4-4e18-8859-5255ef1aa525@redhat.com>
+In-Reply-To: <e6e20d9e-ceb4-4e18-8859-5255ef1aa525@redhat.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 24 Jun 2025 07:28:59 -0700
+X-Gm-Features: Ac12FXzjUywJN_m_OazPDhVZ_Bpe8eTuhidb-3HMvM1fE8Nqso1HTUWVB-CSsdw
+Message-ID: <CAJuCfpFQedeU-cnsV9PX4SEz5ZS9oHMVzt7HirWExAKoU5y89w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] mm, madvise: simplify anon_name handling
+To: David Hildenbrand <david@redhat.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Jann Horn <jannh@google.com>, Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
+	Colin Cross <ccross@google.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 24, 2025 at 5:51=E2=80=AFAM Christian Brauner <brauner@kernel.o=
-rg> wrote:
+On Tue, Jun 24, 2025 at 6:58=E2=80=AFAM David Hildenbrand <david@redhat.com=
+> wrote:
 >
-> On Thu, May 15, 2025 at 06:23:14PM +0000, Pasha Tatashin wrote:
-> > Introduce the user-space interface for the Live Update Orchestrator
-> > via ioctl commands, enabling external control over the live update
-> > process and management of preserved resources.
+> On 24.06.25 15:03, Vlastimil Babka wrote:
+> > Since the introduction in 9a10064f5625 ("mm: add a field to store names
+> > for private anonymous memory") the code to set anon_name on a vma has
+> > been using madvise_update_vma() to call replace_anon_vma_name(). Since
+> > the former is called also by a number of other madvise behaviours that
+> > do not set a new anon_name, they have been passing the existing
+> > anon_name of the vma to make replace_vma_anon_name() a no-op.
+
+s/replace_vma_anon_name/replace_anon_vma_name
+
 > >
-> > Create a misc character device at /dev/liveupdate. Access
-> > to this device requires the CAP_SYS_ADMIN capability.
+> > This is rather wasteful as it needs anon_vma_name_eq() to determine the
+> > no-op situations, and checks for when replace_vma_anon_name() is allowe=
+d
+
+s/replace_vma_anon_name/replace_anon_vma_name
+
+> > (the vma is anon/shmem) duplicate the checks already done earlier in
+> > madvise_vma_behavior(). It has also lead to commit 942341dcc574 ("mm:
+> > fix use-after-free when anon vma name is used after vma is freed")
+> > adding anon_name refcount get/put operations exactly to the cases that
+> > actually do not change anon_name - just so the replace_vma_anon_name()
+
+s/replace_vma_anon_name/replace_anon_vma_name
+
+> > can keep safely determining it has nothing to do.
 > >
-> > A new UAPI header, <uapi/linux/liveupdate.h>, defines the necessary
-> > structures. The magic number is registered in
-> > Documentation/userspace-api/ioctl/ioctl-number.rst.
+> > The recent madvise cleanups made this suboptimal handling very obvious,
+> > but happily also allow for an easy fix. madvise_update_vma() now has th=
+e
+> > complete information whether it's been called to set a new anon_name, s=
+o
+> > stop passing it the existing vma's name and doing the refcount get/put
+> > in its only caller madvise_vma_behavior().
 > >
-> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> > In madvise_update_vma() itself, limit calling of replace_anon_vma_name(=
+)
+> > only to cases where we are setting a new name, otherwise we know it's a
+> > no-op. We can rely solely on the __MADV_SET_ANON_VMA_NAME behaviour and
+> > can remove the duplicate checks for vma being anon/shmem that were done
+> > already in madvise_vma_behavior().
+> >
+> > Additionally, by using vma_modify_flags() when not modifying the
+> > anon_name, avoid explicitly passing the existing vma's anon_name and
+> > storing a pointer to it in struct madv_behavior or a local variable.
+> > This prevents the danger of accessing a freed anon_name after vma
+> > merging, previously fixed by commit 942341dcc574.
+> >
+> > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 > > ---
-> >  .../userspace-api/ioctl/ioctl-number.rst      |   1 +
-> >  drivers/misc/liveupdate/Makefile              |   1 +
-> >  drivers/misc/liveupdate/luo_ioctl.c           | 199 ++++++++++++
-> >  include/linux/liveupdate.h                    |  34 +-
-> >  include/uapi/linux/liveupdate.h               | 300 ++++++++++++++++++
-> >  5 files changed, 502 insertions(+), 33 deletions(-)
-> >  create mode 100644 drivers/misc/liveupdate/luo_ioctl.c
-> >  create mode 100644 include/uapi/linux/liveupdate.h
+> >   mm/madvise.c | 37 +++++++++++++------------------------
+> >   1 file changed, 13 insertions(+), 24 deletions(-)
 > >
-> > diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Docum=
-entation/userspace-api/ioctl/ioctl-number.rst
-> > index 7a1409ecc238..279c124048f2 100644
-> > --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-> > +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> > @@ -375,6 +375,7 @@ Code  Seq#    Include File                         =
-                  Comments
-> >  0xB8  01-02  uapi/misc/mrvl_cn10k_dpi.h                              M=
-arvell CN10K DPI driver
-> >  0xB8  all    uapi/linux/mshv.h                                       M=
-icrosoft Hyper-V /dev/mshv driver
-> >                                                                       <=
-mailto:linux-hyperv@vger.kernel.org>
-> > +0xBA  all    uapi/linux/liveupdate.h                                 <=
-mailto:Pasha Tatashin <pasha.tatashin@soleen.com>
-> >  0xC0  00-0F  linux/usb/iowarrior.h
-> >  0xCA  00-0F  uapi/misc/cxl.h                                         D=
-ead since 6.15
-> >  0xCA  10-2F  uapi/misc/ocxl.h
-> > diff --git a/drivers/misc/liveupdate/Makefile b/drivers/misc/liveupdate=
-/Makefile
-> > index b4cdd162574f..7a0cd08919c9 100644
-> > --- a/drivers/misc/liveupdate/Makefile
-> > +++ b/drivers/misc/liveupdate/Makefile
-> > @@ -1,4 +1,5 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> > +obj-y                                        +=3D luo_ioctl.o
-> >  obj-y                                        +=3D luo_core.o
-> >  obj-y                                        +=3D luo_files.o
-> >  obj-y                                        +=3D luo_subsystems.o
-> > diff --git a/drivers/misc/liveupdate/luo_ioctl.c b/drivers/misc/liveupd=
-ate/luo_ioctl.c
-> > new file mode 100644
-> > index 000000000000..76c687ff650b
-> > --- /dev/null
-> > +++ b/drivers/misc/liveupdate/luo_ioctl.c
-> > @@ -0,0 +1,199 @@
-> > +// SPDX-License-Identifier: GPL-2.0
+> > diff --git a/mm/madvise.c b/mm/madvise.c
+> > index 4491bf080f55d6d1aeffb2ff0b8fdd28904af950..fca0e9b3e844ad766e83ac0=
+4cc0d7f4099c74005 100644
+> > --- a/mm/madvise.c
+> > +++ b/mm/madvise.c
+> > @@ -176,25 +176,29 @@ static int replace_anon_vma_name(struct vm_area_s=
+truct *vma,
+> >   }
+> >   #endif /* CONFIG_ANON_VMA_NAME */
+> >   /*
+> > - * Update the vm_flags on region of a vma, splitting it or merging it =
+as
+> > - * necessary.  Must be called with mmap_lock held for writing;
+> > - * Caller should ensure anon_name stability by raising its refcount ev=
+en when
+> > - * anon_name belongs to a valid vma because this function might free t=
+hat vma.
+> > + * Update the vm_flags and/or anon_name on region of a vma, splitting =
+it or
+> > + * merging it as necessary. Must be called with mmap_lock held for wri=
+ting.
+> >    */
+> >   static int madvise_update_vma(vm_flags_t new_flags,
+> >               struct madvise_behavior *madv_behavior)
+> >   {
+> > -     int error;
+> >       struct vm_area_struct *vma =3D madv_behavior->vma;
+> >       struct madvise_behavior_range *range =3D &madv_behavior->range;
+> >       struct anon_vma_name *anon_name =3D madv_behavior->anon_name;
+> > +     bool set_new_anon_name =3D madv_behavior->behavior =3D=3D __MADV_=
+SET_ANON_VMA_NAME;
+> >       VMA_ITERATOR(vmi, madv_behavior->mm, range->start);
+> >
+> > -     if (new_flags =3D=3D vma->vm_flags && anon_vma_name_eq(anon_vma_n=
+ame(vma), anon_name))
+> > +     if (new_flags =3D=3D vma->vm_flags && (!set_new_anon_name ||
+> > +                     anon_vma_name_eq(anon_vma_name(vma), anon_name)))
+> >               return 0;
+> >
+> > -     vma =3D vma_modify_flags_name(&vmi, madv_behavior->prev, vma,
+> > +     if (set_new_anon_name)
+> > +             vma =3D vma_modify_flags_name(&vmi, madv_behavior->prev, =
+vma,
+> >                       range->start, range->end, new_flags, anon_name);
+> > +     else
+> > +             vma =3D vma_modify_flags(&vmi, madv_behavior->prev, vma,
+> > +                     range->start, range->end, new_flags);
 > > +
-> > +/*
-> > + * Copyright (c) 2025, Google LLC.
-> > + * Pasha Tatashin <pasha.tatashin@soleen.com>
-> > + */
-> > +
-> > +/**
-> > + * DOC: LUO ioctl Interface
-> > + *
-> > + * The IOCTL user-space control interface for the LUO subsystem.
-> > + * It registers a misc character device, typically found at ``/dev/liv=
-eupdate``,
-> > + * which allows privileged userspace applications (requiring %CAP_SYS_=
-ADMIN) to
-> > + * manage and monitor the LUO state machine and associated resources l=
-ike
-> > + * preservable file descriptors.
-> > + */
-> > +
-> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > +
-> > +#include <linux/errno.h>
-> > +#include <linux/file.h>
-> > +#include <linux/fs.h>
-> > +#include <linux/init.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/miscdevice.h>
-> > +#include <linux/module.h>
-> > +#include <linux/uaccess.h>
-> > +#include <uapi/linux/liveupdate.h>
-> > +#include "luo_internal.h"
-> > +
-> > +static int luo_ioctl_fd_preserve(struct liveupdate_fd *luo_fd)
-> > +{
-> > +     struct file *file;
-> > +     int ret;
-> > +
-> > +     file =3D fget(luo_fd->fd);
-> > +     if (!file) {
-> > +             pr_err("Bad file descriptor\n");
-> > +             return -EBADF;
-> > +     }
-> > +
-> > +     ret =3D luo_register_file(&luo_fd->token, file);
-> > +     if (ret)
-> > +             fput(file);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static int luo_ioctl_fd_unpreserve(u64 token)
-> > +{
-> > +     return luo_unregister_file(token);
-> > +}
-> > +
-> > +static int luo_ioctl_fd_restore(struct liveupdate_fd *luo_fd)
-> > +{
-> > +     struct file *file;
-> > +     int ret;
-> > +     int fd;
-> > +
-> > +     fd =3D get_unused_fd_flags(O_CLOEXEC);
-> > +     if (fd < 0) {
-> > +             pr_err("Failed to allocate new fd: %d\n", fd);
-> > +             return fd;
-> > +     }
-> > +
-> > +     ret =3D luo_retrieve_file(luo_fd->token, &file);
-> > +     if (ret < 0) {
-> > +             put_unused_fd(fd);
-> > +
-> > +             return ret;
-> > +     }
-> > +
-> > +     fd_install(fd, file);
-> > +     luo_fd->fd =3D fd;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int luo_open(struct inode *inodep, struct file *filep)
-> > +{
-> > +     if (!capable(CAP_SYS_ADMIN))
-> > +             return -EACCES;
-> > +
-> > +     if (filep->f_flags & O_EXCL)
-> > +             return -EINVAL;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static long luo_ioctl(struct file *filep, unsigned int cmd, unsigned l=
-ong arg)
-> > +{
-> > +     void __user *argp =3D (void __user *)arg;
-> > +     struct liveupdate_fd luo_fd;
-> > +     enum liveupdate_state state;
-> > +     int ret =3D 0;
-> > +     u64 token;
-> > +
-> > +     if (_IOC_TYPE(cmd) !=3D LIVEUPDATE_IOCTL_TYPE)
-> > +             return -ENOTTY;
-> > +
-> > +     switch (cmd) {
-> > +     case LIVEUPDATE_IOCTL_GET_STATE:
-> > +             state =3D READ_ONCE(luo_state);
-> > +             if (copy_to_user(argp, &state, sizeof(luo_state)))
-> > +                     ret =3D -EFAULT;
-> > +             break;
-> > +
-> > +     case LIVEUPDATE_IOCTL_EVENT_PREPARE:
-> > +             ret =3D luo_prepare();
-> > +             break;
-> > +
-> > +     case LIVEUPDATE_IOCTL_EVENT_FREEZE:
-> > +             ret =3D luo_freeze();
-> > +             break;
-> > +
-> > +     case LIVEUPDATE_IOCTL_EVENT_FINISH:
-> > +             ret =3D luo_finish();
-> > +             break;
-> > +
-> > +     case LIVEUPDATE_IOCTL_EVENT_CANCEL:
-> > +             ret =3D luo_cancel();
-> > +             break;
-> > +
-> > +     case LIVEUPDATE_IOCTL_FD_PRESERVE:
-> > +             if (copy_from_user(&luo_fd, argp, sizeof(luo_fd))) {
-> > +                     ret =3D -EFAULT;
-> > +                     break;
-> > +             }
-> > +
-> > +             ret =3D luo_ioctl_fd_preserve(&luo_fd);
-> > +             if (!ret && copy_to_user(argp, &luo_fd, sizeof(luo_fd)))
-> > +                     ret =3D -EFAULT;
-> > +             break;
-> > +
-> > +     case LIVEUPDATE_IOCTL_FD_UNPRESERVE:
-> > +             if (copy_from_user(&token, argp, sizeof(u64))) {
-> > +                     ret =3D -EFAULT;
-> > +                     break;
-> > +             }
-> > +
-> > +             ret =3D luo_ioctl_fd_unpreserve(token);
-> > +             break;
-> > +
-> > +     case LIVEUPDATE_IOCTL_FD_RESTORE:
-> > +             if (copy_from_user(&luo_fd, argp, sizeof(luo_fd))) {
-> > +                     ret =3D -EFAULT;
-> > +                     break;
-> > +             }
-> > +
-> > +             ret =3D luo_ioctl_fd_restore(&luo_fd);
-> > +             if (!ret && copy_to_user(argp, &luo_fd, sizeof(luo_fd)))
-> > +                     ret =3D -EFAULT;
-> > +             break;
-> > +
-> > +     default:
-> > +             pr_warn("ioctl: unknown command nr: 0x%x\n", _IOC_NR(cmd)=
-);
-> > +             ret =3D -ENOTTY;
-> > +             break;
-> > +     }
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static const struct file_operations fops =3D {
-> > +     .owner          =3D THIS_MODULE,
-> > +     .open           =3D luo_open,
-> > +     .unlocked_ioctl =3D luo_ioctl,
-> > +};
-> > +
-> > +static struct miscdevice liveupdate_miscdev =3D {
-> > +     .minor =3D MISC_DYNAMIC_MINOR,
-> > +     .name  =3D "liveupdate",
-> > +     .fops  =3D &fops,
-> > +};
+> >       if (IS_ERR(vma))
+> >               return PTR_ERR(vma);
+> >
+> > @@ -203,11 +207,8 @@ static int madvise_update_vma(vm_flags_t new_flags=
+,
+> >       /* vm_flags is protected by the mmap_lock held in write mode. */
+> >       vma_start_write(vma);
+> >       vm_flags_reset(vma, new_flags);
+> > -     if (!vma->vm_file || vma_is_anon_shmem(vma)) {
+> > -             error =3D replace_anon_vma_name(vma, anon_name);
+> > -             if (error)
+> > -                     return error;
+> > -     }
+> > +     if (set_new_anon_name)
+> > +             return replace_anon_vma_name(vma, anon_name);
 >
-> I'm not sure why people are so in love with character device based apis.
-> It's terrible. It glues everything to devtmpfs which isn't namespacable
-> in any way. It's terrible to delegate and extremely restrictive in terms
-> of extensiblity if you need additional device entries (aka the loop
-> driver folly).
+> Took me a second to find where this is already checked (->
+> madvise_vma_behavior()).
 >
-> One stupid question: I probably have asked this before and just swapped
-> out that I a) asked this already and b) received an explanation. But why
-> isn't this a singleton simple in-memory filesystem with a flat
-> hierarchy?
+> :)
+>
+> Acked-by: David Hildenbrand <david@redhat.com>
 
-Hi Christian,
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
 
-Thank you for the detailed feedback and for raising this important
-design question. I appreciate the points you've made about the
-benefits of a filesystem-based API.
-
-I have thought thoroughly about this and explored various alternatives
-before settling on the ioctl-based interface. This design isn't a
-sudden decision but is based on ongoing conversations that have been
-happening for over two years at LPC, as well as incorporating direct
-feedback I received on LUOv1 at LSF/MM.
-
-The choice for an ioctl-based character device was ultimately driven
-by the specific lifecycle and dependency management requirements of
-the live update process. While a filesystem API offers great
-advantages in visibility and hierarchy, filesystems are not typically
-designed to be state machines with the complex lifecycle, dependency,
-and ownership tracking that LUO needs to manage.
-
-Let me elaborate on the key aspects that led to the current design:
-
-1. session based lifecycle management: The preservation of an FD is
-tied to the open instance of /dev/liveupdate. If a userspace agent
-opens /dev/liveupdate, registers several FDs for preservation, and
-then crashes or exits before the prepare phase is triggered, all FDs
-it registered are automatically unregistered. This "session-scoped"
-behavior is crucial to prevent leaking preserved resources into the
-next kernel if the controlling process fails. This is naturally
-handled by the open() and release() file operations on a character
-device. It's not immediately obvious how a similar automatic,
-session-based cleanup would be implemented with a singleton
-filesystem.
-
-2. state machine: LUO is fundamentally a state machine (NORMAL ->
-PREPARED -> FROZEN -> UPDATED -> NORMAL). As part of this, it provides
-a crucial guarantee: any resource that was successfully preserved but
-not explicitly reclaimed by userspace in the new kernel by the time
-the FINISH event is triggered will be automatically cleaned up and its
-memory released. This prevents leaks of unreclaimed resources and is
-managed by the orchestrator, which is a concept that doesn't map
-cleanly onto standard VFS semantics.
-
-3. dependency tracking: Unlike normal files, preserved resources for
-live update have strong, often complex interdependencies. For example,
-a kvmfd might depend on a guestmemfd; an iommufd can depend on vfiofd,
-eventfd, memfd, and kvmfd. LUO's current design provides explicit
-callback points (prepare, freeze) where these dependencies can be
-validated and tracked by the participating subsystems. If a dependency
-is not met when we are about to freeze, we can fail the entire
-operation and return an error to userspace. The cancel callback
-further allows this complex dependency graph to be unwound safely. A
-filesystem interface based on linkat() or unlink() doesn't inherently
-provide these critical, ordered points for dependency verification and
-rollback.
-
-While I agree that a filesystem offers superior introspection and
-integration with standard tools, building this complex, stateful
-orchestration logic on top of VFS seemed to be forcing a square peg
-into a round hole. The ioctl interface, while more opaque, provides a
-direct and explicit way to command the state machine and manage these
-complex lifecycle and dependency rules.
-
-Thanks,
-Pasha
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
