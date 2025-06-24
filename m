@@ -1,127 +1,103 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6257F50F;
-	Tue, 24 Jun 2025 02:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6F31DFE12;
+	Tue, 24 Jun 2025 02:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750732128; cv=none; b=LXq4mVFkSjNi4BpjOihB8keFAq1TR42pltKsUq8F8r4iKEwhibkOqlhibrdMJWMyM/G4pmqFEPPclIB6iegJN/AFK/oEm9EOnHNQK5MPkCMY9X+J4eVD/onqGcXWuB+G2FS4QmigwyYnxF7Mmk6MX2Di3bc5OigPh+yaC7H4G+M=
+	t=1750732159; cv=none; b=lR0JHaLnQjZnvNxBSr3k9o2C/vp6wNQPc+mE7ozYmGtqFLA82mr0PhwMYqmzp88DRRRFUHDZLjCeh/6kUmjXUWMPltA/WwSRH7lOxjgb8y/OaXPYltCGKh//S7dl1x80PMZykgcpEJP9ScWuZBBzAxJ4LS9yJPXClFuLrwB1qyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750732128; c=relaxed/simple;
-	bh=zqZunaHZ8pQiSS5PmcKL6vSLxeXji8wT6D1iH8su6Nc=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=mZU06gk6DLo4KmScbSetZRaj8PFJ56fFB8T8cg1YRxdWU4HK06UnkU2A3sX+S2y9e6G4FCfKTJGVuG1vQFtZ2BiN0sfBbfrLAYlHnEZCvOlwGT/4AK9Ie5w2BYiFP6QK8SuxUYY77p63D0B5AYV5ag9OV1RGOj6w7jlgEXGcbRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=sy2KWOAJ; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1750732159; c=relaxed/simple;
+	bh=aCq7pU8kNb4mHcl6rtEIZfZyJWT3bMbgZHNQ3Cyafh4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JPjf5pRhd52OzssruU8yPmgmkdIk25dZrCs5/dSLKITvAGXiUzR8jttFDCLzV5txCxLfXK27je4zmobLpQw0SHBli+Ofs/6lAZJZIuqt0+ljKAWm2Wz4ssmdIkObGd6CFo229RRlpNMYT5VDoAO+bhgmp12R3G5dU8JkGyPbbHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DN9qdWgY; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="sy2KWOAJ"
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 55O2SYW302855972, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1750732114; bh=uBvqEueoCGRKtiHHzprOXSUige7h75N5qAm/5I+YmXw=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=sy2KWOAJ/fZmscI54IjS6et/sEq8j89IjLP/b6eju0JVxjFo2nxUN/qPcWMt0i5Et
-	 hdPoJw5lxHhdQRLyLVow2MEpCToftHeaNLxsIehuvsatz0MkoaA+KxGJXgiZq7IRwP
-	 ckqGb2Ot5QfJJ80P2pMt+CCOsqe9oH0JwpCAOQXL8QIDUNM9rmKqWWC5F0Qei2c6R3
-	 HFSu86FL9JJnZ5FO8JxKoLJHMAep0lviCwWqIIDvHFyBfCeAMEYQtqTkwRVHsDpdoh
-	 lWd0XPweDixd/OzoYeWHjqm9QcJwYYeeGvCIs3QeRet+4ik+AiMbJjZiK4VW2F7yFv
-	 1oXJxnGBTqMjQ==
-Received: from mail.realtek.com (rtkexhmbs02.realtek.com.tw[172.21.6.41])
-	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 55O2SYW302855972
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 24 Jun 2025 10:28:34 +0800
-Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
- RTKEXHMBS02.realtek.com.tw (172.21.6.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 24 Jun 2025 10:28:47 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 24 Jun 2025 10:28:47 +0800
-Received: from RTEXDAG02.realtek.com.tw ([fe80::1d65:b3df:d72:eb25]) by
- RTEXDAG02.realtek.com.tw ([fe80::1d65:b3df:d72:eb25%5]) with mapi id
- 15.01.2507.035; Tue, 24 Jun 2025 10:28:47 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Pei Xiao <xiaopei01@kylinos.cn>,
-        "linux-wireless@vger.kernel.org"
-	<linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] wifi: rtw88: coex: Use bitwise instead of arithmetic operator for flags
-Thread-Topic: [PATCH] wifi: rtw88: coex: Use bitwise instead of arithmetic
- operator for flags
-Thread-Index: AQHb5Kzf/JZXLElinkWikwA/8Zj8yrQRlYXA
-Date: Tue, 24 Jun 2025 02:28:46 +0000
-Message-ID: <910133af3684449cab0dba7a9389df04@realtek.com>
-References: <530c4d8c788a875690948f0f5029e3091aaab5d4.1750730099.git.xiaopei01@kylinos.cn>
-In-Reply-To: <530c4d8c788a875690948f0f5029e3091aaab5d4.1750730099.git.xiaopei01@kylinos.cn>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DN9qdWgY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750732158; x=1782268158;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=aCq7pU8kNb4mHcl6rtEIZfZyJWT3bMbgZHNQ3Cyafh4=;
+  b=DN9qdWgYVaPlRxSQCVP/G9AzezzZR+CeW7E3r1ZaHdjOLzac4ffSuPib
+   V4eWZGQeIPQTjmCi2imaWksKmaZPmjUPfIBev93YGe5raA/usuN5delcM
+   MBOcxRAaQljl1NIE3akWaLv03bEO5Mw7Edt1CE9NIw1DKIU9besEanR7U
+   6M12+Fypr4S20ZWCBa4HgAIEAeObyXNTkkbq7ceVE9ycZl9UFOefhoO3T
+   X9GOT71mCsTSFqeWnBvmjawAYLf7f+9RnTUPP14sFBSHSRTwK70098fkP
+   4bxAHlQA8jVYUyx4hcipo0504aI9k7yAX7mIBy97zm6/VXHc7EmM/RBm0
+   g==;
+X-CSE-ConnectionGUID: AYELB+vNSEKptdvvDNFABw==
+X-CSE-MsgGUID: +GWRGvdzTC6/IW/eCFSskg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56629117"
+X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
+   d="scan'208";a="56629117"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 19:29:17 -0700
+X-CSE-ConnectionGUID: yMfGDS/9QleenYCj1nIOxw==
+X-CSE-MsgGUID: KnB9MCWvQ7y/CioVZQ06Rg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
+   d="scan'208";a="182808464"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 23 Jun 2025 19:29:14 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uTtPK-000Rdi-1a;
+	Tue, 24 Jun 2025 02:29:10 +0000
+Date: Tue, 24 Jun 2025 10:29:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sai Krishna Musham <sai.krishna.musham@amd.com>, bhelgaas@google.com,
+	lpieralisi@kernel.org, kw@linux.com, mani@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	cassel@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michal.simek@amd.com, bharat.kumar.gogada@amd.com,
+	thippeswamy.havalige@amd.com, sai.krishna.musham@amd.com
+Subject: Re: [PATCH v3 2/2] PCI: amd-mdb: Add support for PCIe RP PERST#
+ signal handling
+Message-ID: <202506241020.rPD1a2Vr-lkp@intel.com>
+References: <20250618080931.2472366-3-sai.krishna.musham@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618080931.2472366-3-sai.krishna.musham@amd.com>
 
-Pei Xiao <xiaopei01@kylinos.cn> wrote:
-> This silences the following coccinelle warning:
->   WARNING: sum of probable bitmasks, consider |
->=20
-> Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
-> ---
->  drivers/net/wireless/realtek/rtw88/coex.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
->=20
-> diff --git a/drivers/net/wireless/realtek/rtw88/coex.c b/drivers/net/wire=
-less/realtek/rtw88/coex.c
-> index 64904278ddad..37788aca200b 100644
-> --- a/drivers/net/wireless/realtek/rtw88/coex.c
-> +++ b/drivers/net/wireless/realtek/rtw88/coex.c
-> @@ -1500,23 +1500,23 @@ static u8 rtw_coex_algorithm(struct rtw_dev *rtwd=
-ev)
->         case BPM_HFP:
->                 algorithm =3D COEX_ALGO_HFP;
->                 break;
-> -       case           BPM_HID:
-> -       case BPM_HFP + BPM_HID:
-> +       case BPM_HID:
-> +       case BPM_HFP | BPM_HID:
->                 algorithm =3D COEX_ALGO_HID;
->                 break;
-> -       case BPM_HFP           + BPM_A2DP:
-> -       case           BPM_HID + BPM_A2DP:
-> -       case BPM_HFP + BPM_HID + BPM_A2DP:
-> +       case BPM_HFP | BPM_A2DP:
-> +       case BPM_HID | BPM_A2DP:
-> +       case BPM_HFP | BPM_HID | BPM_A2DP:
->                 algorithm =3D COEX_ALGO_A2DP_HID;
->                 break;
-> -       case BPM_HFP                      + BPM_PAN:
-> -       case           BPM_HID            + BPM_PAN:
-> -       case BPM_HFP + BPM_HID            + BPM_PAN:
-> +       case BPM_HFP | BPM_PAN:
-> +       case BPM_HID | BPM_PAN:
-> +       case BPM_HFP | BPM_HID | BPM_PAN:
+Hi Sai,
 
-Please just replace '+' by '|'. Keep spaces. People can be easier to see th=
-e
-combination of BT profiles.
+kernel test robot noticed the following build warnings:
 
->                 algorithm =3D COEX_ALGO_PAN_HID;
->                 break;
-> -       case BPM_HFP           + BPM_A2DP + BPM_PAN:
-> -       case           BPM_HID + BPM_A2DP + BPM_PAN:
-> -       case BPM_HFP + BPM_HID + BPM_A2DP + BPM_PAN:
-> +       case BPM_HFP | BPM_A2DP | BPM_PAN:
-> +       case BPM_HID | BPM_A2DP | BPM_PAN:
-> +       case BPM_HFP | BPM_HID | BPM_A2DP | BPM_PAN:
->                 algorithm =3D COEX_ALGO_A2DP_PAN_HID;
->                 break;
->         case                                BPM_PAN:
-> --
-> 2.25.1
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.16-rc3 next-20250623]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Sai-Krishna-Musham/dt-bindings-PCI-amd-mdb-Add-reset-gpios-property-for-PCIe-RP-PERST-handling/20250618-161100
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250618080931.2472366-3-sai.krishna.musham%40amd.com
+patch subject: [PATCH v3 2/2] PCI: amd-mdb: Add support for PCIe RP PERST# signal handling
+config: csky-randconfig-002-20250621 (https://download.01.org/0day-ci/archive/20250624/202506241020.rPD1a2Vr-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506241020.rPD1a2Vr-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506241020.rPD1a2Vr-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> Warning: drivers/pci/controller/dwc/pcie-amd-mdb.c:68 struct member 'perst_gpio' not described in 'amd_mdb_pcie'
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
