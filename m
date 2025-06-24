@@ -1,173 +1,214 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9D31E4A9
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 11:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E97927AC3C;
+	Tue, 24 Jun 2025 11:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750764755; cv=none; b=maqRPVuayOMKmjssicsb8htKzvLL1im6qN4xKJLVECWPzYBHZe80xSEXlFb6HJQpiOLGemk5IG432894VUt4vRT04fS2P6D9tAGtksx7CtJ11qvKaEElY6xX4sdyUrzdjZDqfP8fvntecJx41bDiuv6DV62j9zK0q7X0qa1a9Is=
+	t=1750764850; cv=none; b=pyx0jQzGIR/XMBAL8LQfiufaq4E4rqzdGpbA5LufQUgCSGK+pPLo73uB8Ic1W0NSc54sXFmaOjnde5MvNLXMeXvQfdChy6lfrC/DtxXj3QfbOfP4LeZKdD43uyKqraGSTgGeJ92KVHaoC9zHcHwPzyKvMpWw6GPzsPZeHBRh10Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750764755; c=relaxed/simple;
-	bh=YjsSnZC24Kub1Mxl3I4TTuRSc2vRsTnTW31HJ1TbpB0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fvTUAKDPpHocMkSjgULh/Gsw0B6xXnsVv2e5+FDjcwfXj27MjuC9trynqN7AzyytisZ/l7MyGIdPmwhisx+oVQpCHnDUhTdoaF8g9vmE3KoTiI8dafKJdOMGZ0uKQoDuteMf86yH1H9iJt/tGAmmV+YnwIHBXA0ZMW9Mn6blaOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=Gq40pf+S; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1750764850; c=relaxed/simple;
+	bh=r6oASjfdT53/q55FsTiqjOy2t9dDTh2M+chbw4uwmB8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=glHxvCqrauT1VghhuGGumCGaDMb2v1RJgRAY/rnybdCOMrz3438xVLg/7ElM6uwhUzzbNeW4At8PvPvs5DATax3M/p7LSCWTEYqXVqfJqkw6HuSRUZXgwnJnjB9+Azz8ureOreCu1ws5Tp+tAuJzde0b8D44rdJHlGOoO+UCBuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=TBbphgmw; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Gq40pf+S"
-X-UUID: e70394c250ee11f0b33aeb1e7f16c2b6-20250624
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=nqHVGMxhDg52YSCi1jgl7ccHJpCWVWC3C9YGgQGOt9A=;
-	b=Gq40pf+SfwLUvv9DiX3g+fwWPt6caPt6bBMiwRseDJBIzc9jWlOz9bZtaP3qfSwo/HlYOLrfzOdc9sfppRN4Y7dC40//bhrcjaosr0sFgNYlKQnY9O+BPRFPTOz+RW6Rg3uPU3gUYV47caj8iH7V9wIRffY53MTAeAmmL4mTA9k=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.2,REQID:a362b9e9-1171-44f7-8900-a212da373129,IP:0,UR
-	L:0,TC:0,Content:0,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-30
-X-CID-META: VersionHash:9eb4ff7,CLOUDID:a131955f-2aa0-4c76-8faa-804d844c7164,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:2,IP:nil
-	,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:
-	1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: e70394c250ee11f0b33aeb1e7f16c2b6-20250624
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
-	(envelope-from <jason-jh.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 402374836; Tue, 24 Jun 2025 19:32:25 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Tue, 24 Jun 2025 19:32:23 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Tue, 24 Jun 2025 19:32:23 +0800
-From: Jason-JH Lin <jason-jh.lin@mediatek.com>
-To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, David Airlie <airlied@gmail.com>
-CC: Philipp Zabel <p.zabel@pengutronix.de>, Daniel Vetter <daniel@ffwll.ch>,
-	Matthias Brugger <matthias.bgg@gmail.com>, Jason-JH Lin
-	<jason-jh.lin@mediatek.com>, Nancy Lin <nancy.lin@mediatek.com>, Singo Chang
-	<singo.chang@mediatek.com>, Paul-PL Chen <paul-pl.chen@mediatek.com>,
-	Yongqiang Niu <yongqiang.niu@mediatek.com>, Zhenxing Qin
-	<zhenxing.qin@mediatek.com>, Xiandong Wang <xiandong.wang@mediatek.com>,
-	Sirius Wang <sirius.wang@mediatek.com>, Xavier Chang
-	<xavier.chang@mediatek.com>, Jarried Lin <jarried.lin@mediatek.com>, Fei Shao
-	<fshao@chromium.org>, Chen-yu Tsai <wenst@chromium.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v2] drm/mediatek: Add wait_event_timeout when disabling plane
-Date: Tue, 24 Jun 2025 19:31:41 +0800
-Message-ID: <20250624113223.443274-1-jason-jh.lin@mediatek.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="TBbphgmw"
+Received: from pendragon.ideasonboard.com (85-76-34-99-nat.elisa-mobile.fi [85.76.34.99])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id D2ED1EFF;
+	Tue, 24 Jun 2025 13:33:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750764829;
+	bh=r6oASjfdT53/q55FsTiqjOy2t9dDTh2M+chbw4uwmB8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TBbphgmwtPohsqsiQqmg50c2ghEjF7L0ck0yyGUPMymlfNVNXFeJYTaP83vY08JnE
+	 fDF4p3A1TplmBSuJBqOUu5XyROqxtG1+azuWzKBmJJDT7bYbbv9AUZoXHQ3EQPdzJG
+	 HU7uDbV4gEPRwQaZHiXdyMgmikkBTnSZNTOgiuus=
+Date: Tue, 24 Jun 2025 14:33:44 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Mehdi Djait <mehdi.djait@linux.intel.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	"Nirujogi, Pratap" <pnirujog@amd.com>,
+	Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
+	hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org,
+	dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
+	jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com,
+	king.li@amd.com, dantony@amd.com, vengutta@amd.com,
+	Svetoslav.Stoilov@amd.com, Yana.Zheleva@amd.com
+Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
+Message-ID: <20250624113344.GJ15951@pendragon.ideasonboard.com>
+References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
+ <20250615000915.GQ10542@pendragon.ideasonboard.com>
+ <53674c5f-6b68-49e7-bbb0-fd06fff344c3@amd.com>
+ <8b16675a-c6ac-4619-aabe-ad2a4be6c964@amd.com>
+ <20250623220503.GA15951@pendragon.ideasonboard.com>
+ <425j7c6xvbbatdhxgjgjawzwfnjmjetg6rpnwfudbtg6qz6nay@dy5ldbuhtbvv>
+ <aFp7tuXkU1jayPum@kekkonen.localdomain>
+ <aFp78tqHhe_IhV6d@kekkonen.localdomain>
+ <20250624102745.GG15951@pendragon.ideasonboard.com>
+ <nixg4efp3zkdpd6h7kp6wkvam63batpoknov2nkgu36voks6bk@gzuackzl3l5g>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+In-Reply-To: <nixg4efp3zkdpd6h7kp6wkvam63batpoknov2nkgu36voks6bk@gzuackzl3l5g>
 
-Our hardware registers are set through GCE, not by the CPU.
-DRM might assume the hardware is disabled immediately after calling
-atomic_disable() of drm_plane, but it is only truly disabled after the
-GCE IRQ is triggered.
+On Tue, Jun 24, 2025 at 01:27:03PM +0200, Mehdi Djait wrote:
+> On Tue, Jun 24, 2025 at 01:27:45PM +0300, Laurent Pinchart wrote:
+> > On Tue, Jun 24, 2025 at 10:20:34AM +0000, Sakari Ailus wrote:
+> > > On Tue, Jun 24, 2025 at 10:19:35AM +0000, Sakari Ailus wrote:
+> > > > On Tue, Jun 24, 2025 at 10:35:18AM +0200, Mehdi Djait wrote:
+> > > > > On Tue, Jun 24, 2025 at 01:05:03AM +0300, Laurent Pinchart wrote:
+> > > > > > On Mon, Jun 23, 2025 at 05:51:48PM -0400, Nirujogi, Pratap wrote:
+> > > > > > > On 6/16/2025 6:49 PM, Nirujogi, Pratap wrote:
+> > > > > > > >>> +static int ov05c10_probe(struct i2c_client *client)
+> > > > > > > >>> +{
+> > > > > > > >>> +     struct ov05c10 *ov05c10;
+> > > > > > > >>> +     u32 clkfreq;
+> > > > > > > >>> +     int ret;
+> > > > > > > >>> +
+> > > > > > > >>> +     ov05c10 = devm_kzalloc(&client->dev, sizeof(*ov05c10), 
+> > > > > > > >>> GFP_KERNEL);
+> > > > > > > >>> +     if (!ov05c10)
+> > > > > > > >>> +             return -ENOMEM;
+> > > > > > > >>> +
+> > > > > > > >>> +     struct fwnode_handle *fwnode = dev_fwnode(&client->dev);
+> > > > > > > >>> +
+> > > > > > > >>> +     ret = fwnode_property_read_u32(fwnode, "clock-frequency", 
+> > > > > > > >>> &clkfreq);
+> > > > > > > >>> +     if (ret)
+> > > > > > > >>> +             return  dev_err_probe(&client->dev, -EINVAL,
+> > > > > > > >>> +                                   "fail to get clock freq\n");
+> > > > > > > >>
+> > > > > > > >> Let's try to land
+> > > > > > > >> https://lore.kernel.org/linux-media/20250521104115.176950-1- 
+> > > > > > > >> mehdi.djait@linux.intel.com/
+> > > > > > > >> and replace the code above with devm_v4l2_sensor_clk_get().
+> > > > > > > >>
+> > > > > > > > Ok, we will verify on our side.
+> > > > > > > 
+> > > > > > > We tried using devm_v4l2_sensor_clk_get() and found its required to add 
+> > > > > > > support for software_node to make it work with this driver.
+> > > > > > 
+> > > > > > Why is that ?
+> > > > > > 
+> > > > > > > Please refer 
+> > > > > > > the changes below and let us know if these should be submitted as a 
+> > > > > > > separate patch.
+> > > > > 
+> > > > > The helper is still not merged, so no patch is required.
+> > > > > 
+> > > > > I will see if a change is needed from the helper side or the OV05C10 side.
+> > > > 
+> > > > I wonder if there's a better way to figure out if you're running on a DT or
+> > > > ACPI based system than getting the device's parents and checking which one
+> > > > you find first, DT or ACPI. I think that should work for now at least.
+> > > 
+> > > Or, rather, checking for non-OF node here would probably work the best. I
+> > > wouldn't expect these to be software node based on DT systems ever.
+> > 
+> > Until it happens :-) And we'll handle it then.
+> 
+> So we have the following:
+> 
+> - The problem with this driver is due to lack of proper ACPI
+>   description. HW is already shipping and AMD will work on better ACPI
+>   description for future models. See [1]
 
-Additionally, the cursor plane in DRM uses async_commit, so DRM will
-not wait for vblank and will free the buffer immediately after calling
-atomic_disable().
+If that's the same way that Intel said during the IPU3 days they would
+work on better ACPI description for future models, I think the IPU6
+shows us how that went :-)
 
-To prevent the framebuffer from being freed before the layer disable
-settings are configured into the hardware, which can cause an IOMMU
-fault error, a wait_event_timeout has been added to wait for the
-ddp_cmdq_cb() callback,indicating that the GCE IRQ has been triggered.
+> - software_node can also be used on DT systems
 
-Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
-Signed-off-by: Jason-JH Lin <jason-jh.lin@mediatek.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- drivers/gpu/drm/mediatek/mtk_crtc.c  | 31 ++++++++++++++++++++++++++++
- drivers/gpu/drm/mediatek/mtk_crtc.h  |  1 +
- drivers/gpu/drm/mediatek/mtk_plane.c |  5 +++++
- 3 files changed, 37 insertions(+)
+They can, but for this purpose, they really shouldn't. That's why I
+prefer approach two, we shouldn't enable a mechanism that nobody should
+be using on OF platforms.
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_crtc.c b/drivers/gpu/drm/mediatek/mtk_crtc.c
-index 8f6fba4217ec..0c856cc679de 100644
---- a/drivers/gpu/drm/mediatek/mtk_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_crtc.c
-@@ -719,6 +719,37 @@ int mtk_crtc_plane_check(struct drm_crtc *crtc, struct drm_plane *plane,
- 	return 0;
- }
- 
-+void mtk_crtc_plane_disable(struct drm_crtc *crtc, struct drm_plane *plane)
-+{
-+	struct mtk_crtc *mtk_crtc = to_mtk_crtc(crtc);
-+	struct mtk_plane_state *plane_state = to_mtk_plane_state(plane->state);
-+	int i;
-+
-+	/* no need to wait for disabling the plane by CPU */
-+	if (!mtk_crtc->cmdq_client.chan)
-+		return;
-+
-+	if (!mtk_crtc->enabled)
-+		return;
-+
-+	/* set pending plane state to disabled */
-+	for (i = 0; i < mtk_crtc->layer_nr; i++) {
-+		struct drm_plane *mtk_plane = &mtk_crtc->planes[i];
-+		struct mtk_plane_state *mtk_plane_state = to_mtk_plane_state(mtk_plane->state);
-+
-+		if (mtk_plane->index == plane->index) {
-+			memcpy(mtk_plane_state, plane_state, sizeof(*plane_state));
-+			break;
-+		}
-+	}
-+	mtk_crtc_update_config(mtk_crtc, false);
-+
-+	/* wait for planes to be disabled by CMDQ */
-+	wait_event_timeout(mtk_crtc->cb_blocking_queue,
-+			   mtk_crtc->cmdq_vblank_cnt == 0,
-+			   msecs_to_jiffies(500));
-+}
-+
- void mtk_crtc_async_update(struct drm_crtc *crtc, struct drm_plane *plane,
- 			   struct drm_atomic_state *state)
- {
-diff --git a/drivers/gpu/drm/mediatek/mtk_crtc.h b/drivers/gpu/drm/mediatek/mtk_crtc.h
-index 388e900b6f4d..828f109b83e7 100644
---- a/drivers/gpu/drm/mediatek/mtk_crtc.h
-+++ b/drivers/gpu/drm/mediatek/mtk_crtc.h
-@@ -21,6 +21,7 @@ int mtk_crtc_create(struct drm_device *drm_dev, const unsigned int *path,
- 		    unsigned int num_conn_routes);
- int mtk_crtc_plane_check(struct drm_crtc *crtc, struct drm_plane *plane,
- 			 struct mtk_plane_state *state);
-+void mtk_crtc_plane_disable(struct drm_crtc *crtc, struct drm_plane *plane);
- void mtk_crtc_async_update(struct drm_crtc *crtc, struct drm_plane *plane,
- 			   struct drm_atomic_state *plane_state);
- struct device *mtk_crtc_dma_dev_get(struct drm_crtc *crtc);
-diff --git a/drivers/gpu/drm/mediatek/mtk_plane.c b/drivers/gpu/drm/mediatek/mtk_plane.c
-index 655106bbb76d..59edbe26f01e 100644
---- a/drivers/gpu/drm/mediatek/mtk_plane.c
-+++ b/drivers/gpu/drm/mediatek/mtk_plane.c
-@@ -285,9 +285,14 @@ static void mtk_plane_atomic_disable(struct drm_plane *plane,
- 	struct drm_plane_state *new_state = drm_atomic_get_new_plane_state(state,
- 									   plane);
- 	struct mtk_plane_state *mtk_plane_state = to_mtk_plane_state(new_state);
-+	struct drm_plane_state *old_state = drm_atomic_get_old_plane_state(state,
-+									   plane);
-+
- 	mtk_plane_state->pending.enable = false;
- 	wmb(); /* Make sure the above parameter is set before update */
- 	mtk_plane_state->pending.dirty = true;
-+
-+	mtk_crtc_plane_disable(old_state->crtc, plane);
- }
- 
- static void mtk_plane_atomic_update(struct drm_plane *plane,
+> [1] https://lore.kernel.org/lkml/0d801367-da24-4596-83d9-08ccd89ca670@redhat.com/
+> 
+> Now going back to the helper. If we want to support this case:
+> 
+> Approach 1: software_node || acpi
+> 
+> --- a/drivers/media/v4l2-core/v4l2-common.c
+> +++ b/drivers/media/v4l2-core/v4l2-common.c
+> @@ -682,16 +682,17 @@ struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
+>         const char *clk_id __free(kfree) = NULL;
+>         struct clk_hw *clk_hw;
+>         struct clk *clk;
+> -       bool acpi_node;
+> +       bool acpi_sw_node;
+>         u32 rate;
+>         int ret;
+>  
+>         clk = devm_clk_get_optional(dev, id);
+>         ret = device_property_read_u32(dev, "clock-frequency", &rate);
+> -       acpi_node = is_acpi_node(dev_fwnode(dev));
+> +       acpi_sw_node = is_acpi_node(dev_fwnode(dev)) ||
+> +                      is_software_node(dev_fwnode(dev));
+>  
+>         if (clk) {
+> -               if (!ret && acpi_node) {
+> +               if (!ret && acpi_sw_node) {
+>                         ret = clk_set_rate(clk, rate);
+>                         if (ret) {
+>                                 dev_err(dev, "Failed to set clock rate: %u\n",
+> @@ -705,7 +706,7 @@ struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
+>         if (ret)
+>                 return ERR_PTR(ret);
+>  
+> -       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !acpi_node)
+> +       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !acpi_sw_node)
+>                 return ERR_PTR(-ENOENT);
+>  
+>         if (!id) {
+> 
+> 
+> Approach 2: of_node
+> 
+> --- a/drivers/media/v4l2-core/v4l2-common.c
+> +++ b/drivers/media/v4l2-core/v4l2-common.c
+> @@ -682,16 +682,16 @@ struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
+>         const char *clk_id __free(kfree) = NULL;
+>         struct clk_hw *clk_hw;
+>         struct clk *clk;
+> -       bool acpi_node;
+> +       bool of_node;
+>         u32 rate;
+>         int ret;
+>  
+>         clk = devm_clk_get_optional(dev, id);
+>         ret = device_property_read_u32(dev, "clock-frequency", &rate);
+> -       acpi_node = is_acpi_node(dev_fwnode(dev));
+> +       of_node = is_of_node(dev_fwnode(dev));
+>  
+>         if (clk) {
+> -               if (!ret && acpi_node) {
+> +               if (!ret && !of_node) {
+>                         ret = clk_set_rate(clk, rate);
+>                         if (ret) {
+>                                 dev_err(dev, "Failed to set clock rate: %u\n",
+> @@ -705,7 +705,7 @@ struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
+>         if (ret)
+>                 return ERR_PTR(ret);
+>  
+> -       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !acpi_node)
+> +       if (!IS_ENABLED(CONFIG_COMMON_CLK) || of_node)
+>                 return ERR_PTR(-ENOENT);
+>  
+>         if (!id) {
+
 -- 
-2.43.0
+Regards,
 
+Laurent Pinchart
