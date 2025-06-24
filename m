@@ -1,98 +1,87 @@
-Received: from out203-205-221-242.mail.qq.com (out203-205-221-242.mail.qq.com [203.205.221.242])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8438D2C158B
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.242
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB62C2C15A3;
+	Tue, 24 Jun 2025 14:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750773754; cv=none; b=gaZmDJhJY6tZpLp2T7aAPc5Gw1OKVFUwL/f/Sn4u9LGqBog75G7r12hbJTii+uZx4wpGw+uL4V+whJBjFa1+832R5LIbol5PFwklVVCXj/Z5tZ0oFGJQX7NFF857b7V2kXMRuB3COBNcrjWjr+Jlcxj9ezkEdVL1689O1GpCVRo=
+	t=1750773755; cv=none; b=XH84cxtvzW9HiBYmiJhMwrRReqnq2wlEwgU0F49GbeBHwJDIhJA5Wn0850wJRB6k9JxlrxLp3M1KIBsb/7ynf5FTLBPHiljbLa+LaWik2uJcf164iAc4Xy3vXmaXxvxkJy79x2iN4OjyMcQFLsbtfqpWuz74ampbA430baV4xlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750773754; c=relaxed/simple;
-	bh=F81MkQGwFJzCnvHxH0OXEMF+pgVliNXtH0SLmFjk75c=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=K/B+ge2ETsCBxwqnKey2QxC08zzODuh+ANKaofPi+Xyq2ByDlUMkfRkXikv7nuJOtEkMKcni8nH6buK0qLbHe3kbXVVPfjXKiJsaG8BP36TYAHaYyrI8K/MxdxFaVFn04xnTaAko2UQTp5NsqIOCBoVzgPC8x+jtaQavgFksFhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Y8h1iAiG; arc=none smtp.client-ip=203.205.221.242
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1750773755; c=relaxed/simple;
+	bh=0jXyK2KxOnQeocRhBtX6DHW3qKYWO5X4okDglyyLHB8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y/1ROr4d8zjKFxHjWxMX3jORCZzCr8blt3E8urAa5qCUtMAflauCtOEG1MVaytj4SWiAdbD0kYh27kZOobNIvnxlDSV2dnqia/O1+/5mAgaVKshsRwCtmsywdVR3GnC7hGTS2yagDToPCQwKJnmT4M7dW88gC2G/pwKn1XEvayk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=koJCslDJ; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Y8h1iAiG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1750773741; bh=t60h/E1hMd521+buKWx/qNzgsjnZi8H0bTEIedjzT0Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Y8h1iAiGLH6BrDLiAhcw/omLO+z6CzN+WZU0m6SDYAOoJKNje07sv+lkvBHglm8/b
-	 gijFpofGG3MQKX5N4T7ueGCZzgUmo3lu0jfMYbGATfoZ57QBNe78j9CNqTAZHKBQ8d
-	 mjJ2mSyU0ygxk/rfn0qwuVSwSGvt5ZR1GTrQnLTc=
-Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id E0BB2C8C; Tue, 24 Jun 2025 21:56:11 +0800
-X-QQ-mid: xmsmtpt1750773371tnfh3idsj
-Message-ID: <tencent_86C09604E922EC06CE1479EA6C582EC56C0A@qq.com>
-X-QQ-XMAILINFO: NQR8mRxMnur93WNAedUAiGvMbVKd9ddk0WL+cXr91gLps5VvHIHXyL8b9iu4PM
-	 Jvp7hUj/62Rleh9ZbvhkdYMTDjZnaJ0p33neXFXYTMnoPTXdx6UfXV7Hg6qEWvvMNOe4AmKLOp0q
-	 XwwTfHDnKl9p2w7V2LkXl0XPia7LDE/0nFOrPPQUIulCFghNM4ZCAm9R6XgmslCjg864NeV7ybgO
-	 8HWR4ld0DTy+V36yvdqcyEPDLoR5XtQaYI9f6phza6o+OG/i4/pNSKbbwDknWqoAAOKHRnwgm/lK
-	 TXWB5lacjjEsTtuTDu3j+1DMNhv+pWLLDhG4+6pex0gi9sndJnjliO/iyW1Ix9YtWWKh44t9i770
-	 V7Xw8j9NX0pBIdhPAPz0F8RNMLhN9oJeHcUbyGO/apphViixji2jLonlgDctVdvt8QYPZZKsMgWU
-	 lFGBp/BaLzpaljDFmINXFkzapqW4YZj5MfnJZQP5C3GvyQtbFzt46D4CWzfrGwk1W9dgNv8+kvUi
-	 oSO7eR78tRjpbiTFdjKBxCzYTuDxO2pBRuVaZRWH5nHeKGXD+4uDD3nWqFw0rD1xgHZstxTRWLxZ
-	 Q8MlhU093+WSuP8FQbxtxnVw5uKblAcgdSh53OmGBprply6nqdCmgnH73Ch5ObpkXSBaSH4ihsy7
-	 ourTExfnHszXNdknQuBb/yydiF2Fe1MFO6OHGK+5YuoGGuOBiGWXM+lAegE0l8zQnUftE4DxPtzf
-	 R4F0ypglCRfFuA2HFEZ5FZCIwwHn7iZZVgGpPK/PFFHUS/h4+LFeGT38lxP900SQw/02CjR9I5E5
-	 tsjil+xCUke4v8hW4/lTqRJeD/SiNv/0bPxRCoUtBEeUTs/50yjc2CKn1HpBm6f4+lByyiRxJQYp
-	 NHGhhd0WWntPLx55Waht26RoFKjP4blY1XBuYEffaP0SEfCpGDUCPAVXVNdoDs/p5ebHsLXHLx
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+fa90fcaa28f5cd4b1fc1@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [btrfs?] possible deadlock in btrfs_read_chunk_tree
-Date: Tue, 24 Jun 2025 21:56:11 +0800
-X-OQ-MSGID: <20250624135610.295300-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <685aa401.050a0220.2303ee.0009.GAE@google.com>
-References: <685aa401.050a0220.2303ee.0009.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="koJCslDJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750773754; x=1782309754;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0jXyK2KxOnQeocRhBtX6DHW3qKYWO5X4okDglyyLHB8=;
+  b=koJCslDJmlcRAPjki/8ose1liFShYwQgpK3Zv4fLOX1+g9xSnIL3m+Ha
+   nQ10Tsh5YlIQhfcJ2kHTqLQhKV6geKyskR2YsdWf8i3jHVssjgX+yUTsm
+   Q+efKHCHW8Ph1XDobIUj3t5HLtKFEV+9oYHwsshHVEbq6tQLJqK7s2pJH
+   T3AzBol9ajdJSzBjZYAZpYO+r4ZhMN8wwJGDspmk/dTMJeFfDoH9veXo9
+   giDZdZUU3MqJ+eHvSV33ONPI8jFSPPnleDYtRT+Lv11gTP0y+cS59BG0s
+   f5dKeHdnaGnE1X2uV0rsvN5+VVKmhVfcqtu/XXdGNYLtdhnlvxkn+HsrS
+   Q==;
+X-CSE-ConnectionGUID: TBc57wgZQlCyUxid/jOwEQ==
+X-CSE-MsgGUID: ceUnbQFNQf6i9qFXBqDKbw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52244676"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="52244676"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 07:02:33 -0700
+X-CSE-ConnectionGUID: k3OOOs0DRSSQe+FZydan+w==
+X-CSE-MsgGUID: pRhfOAVNSIq/gw/SKclo3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="157698101"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 07:02:32 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uU4EG-00000009UGl-0Yqs;
+	Tue, 24 Jun 2025 17:02:28 +0300
+Date: Tue, 24 Jun 2025 17:02:27 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-staging@lists.linux.dev
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [rft, PATCH v2 0/3] media: atomisp: replace math macros
+Message-ID: <aFqv8-sSqA7yxnMo@smile.fi.intel.com>
+References: <20250519155028.526453-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519155028.526453-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-#syz test
+On Mon, May 19, 2025 at 06:46:46PM +0300, Andy Shevchenko wrote:
+> Kill unused definitions that may use custom macros from math_support.h
+> and reduce usage of the latter and even kill some of them at the end
+> of the series.
+> 
+> Please, apply only after tests that confirm everything is working
+> as expected.
 
-diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
-index 237e60b53192..c2ce1eb53ad7 100644
---- a/fs/btrfs/super.c
-+++ b/fs/btrfs/super.c
-@@ -1864,11 +1864,10 @@ static int btrfs_get_tree_super(struct fs_context *fc)
- 	fs_devices = device->fs_devices;
- 	fs_info->fs_devices = fs_devices;
- 
-+	mutex_unlock(&uuid_mutex);
- 	sb = sget_fc(fc, btrfs_fc_test_super, set_anon_super_fc);
--	if (IS_ERR(sb)) {
--		mutex_unlock(&uuid_mutex);
-+	if (IS_ERR(sb))
- 		return PTR_ERR(sb);
--	}
- 
- 	set_device_specific_options(fs_info);
- 
-@@ -1887,6 +1886,7 @@ static int btrfs_get_tree_super(struct fs_context *fc)
- 		 * But the fs_info->fs_devices is not opened, we should not let
- 		 * btrfs_free_fs_context() to close them.
- 		 */
-+		mutex_lock(&uuid_mutex);
- 		fs_info->fs_devices = NULL;
- 		mutex_unlock(&uuid_mutex);
- 
-@@ -1906,6 +1906,7 @@ static int btrfs_get_tree_super(struct fs_context *fc)
- 		 */
- 		ASSERT(fc->s_fs_info == NULL);
- 
-+		mutex_lock(&uuid_mutex);
- 		ret = btrfs_open_devices(fs_devices, mode, sb);
- 		mutex_unlock(&uuid_mutex);
- 		if (ret < 0) {
+Hans, have you had any chance to test this?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
