@@ -1,99 +1,89 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945491EE03D;
-	Tue, 24 Jun 2025 14:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330C924EAB1
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750774524; cv=none; b=pLlgzHjBKvJlF9Z6muwR70xja75M4xWWg3sLHrfwI6ITU/BE2LUCxDOE4w5VM8z/kdqu/Zxwekd7HjhiS9G//OW9c19dMM9TVBhLsXJYjOMFob5qo065kQVV5OzsItDzTdjzxpWwGWSWj3W+iK/2W+6GtTxvsbfzy3f3imfw6qw=
+	t=1750774570; cv=none; b=QYLC1DHn2FMgsyCcqyfDyxV3mJ2np6UKpU/lMby2xfOM87qGkEFyMG/p3rS883haRYwidh+BVaetBO2gllIyb1UjlzNv2pICm0x1hqv52nVdmk/NpFKDawjwUvFfJcRL+Md+rArvFqzbsFKl13YXqQUs3ASqtF3iFqGJb/9bjo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750774524; c=relaxed/simple;
-	bh=EYBB5hzcAOt18RHPivhYOpPcVF9O5sHPejxC6FiOZNY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lYqFDA5D4xwEeuQUmnfYv67M/wnxcRVU66qQSKhKXEuSuOtneg6GB/EKGFKIJ+oVbmstBFzlwQb9wqaa/C48zyb0lpFyus0ZbAkw7xZgqELg4QazxMO0h4KC+/mfNvLcf3jpEoWsqcN5n9+Q5IJsVqFi6gx5d/KY8f+gOnJQRsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XgbPzP0q; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750774570; c=relaxed/simple;
+	bh=APRJ75gDDgjrFelZorQyx/we/9Q0+eEodhRUdBFHpAQ=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=TV/Dypz+kFnjppNRILa6V+uxp3V1IOmF7C//I/KQFElc6hqo03ELYxzWZ4c6e47MMQyOC38TAeQLSkphXlf7NErowodd2q7QVldhsJA+Rf3PCJF0693/mpLjmP8+XNL4bggK/HKOP6/ixsJlc5eGurLj2PqtYXXbp00GWKnnsz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rAk4Wn24; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XgbPzP0q"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-60780d74c8cso8448875a12.2;
-        Tue, 24 Jun 2025 07:15:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750774521; x=1751379321; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TgEeZ1NwzgeNOBBLWPbhKcGNzxqxdSNPOA/Y890PEHQ=;
-        b=XgbPzP0qqvajbzsIS1f/0LfBAs5PT5E9PgDcCQzdIJZsDqZ6FLeZrzEdVk/eHaA9F/
-         ZEESBkF3xFpIH8uYHGqcDGjw6i9fUb7ZNM0AJJ6hRRjUf3jsfNh5lbnSJq9Av2bCbUiC
-         kjT54n3O1nwyXPL9Y/f8FG98uUibuUChS6jRMBeNwd6NG1ydP3qqfDKiIpLameaXisb2
-         DeKjUfOZDXWmBA+voAerEQwge7Pkxkj+UYDnlp6xDplsXYEmW49ZKEGEtTIveRJ7L0et
-         ty0qJBbGUoSmlhfm9AvKCKWWbhpILnxIeIUOrzaQ1AP9icu/I3ydYQ1JWeUuprsThWG6
-         Jqxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750774521; x=1751379321;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TgEeZ1NwzgeNOBBLWPbhKcGNzxqxdSNPOA/Y890PEHQ=;
-        b=C6Fe8I3ROLVTn+y/gx7aPPV7qgyOHweF2VUjrCAcbrnJXOQFV9msULi/LmmpuEJZLn
-         EwCAe1lNHooSbOwut/LxHQGYLSFLDnOLxAf/eL+w/41nDv6TiZs23cdERBHeNAP8jATE
-         gilpKIo5/nuT0Zg2Nin/9Fq3a/BbuLaqsbg5NV9MpxiW7yxtsPwAJA6op8fIUM3fUhR8
-         hxEqp59NNros37q0t10xqRyig7DyBD+nTb8MIGGh5k3zt7kC2xie154eXlvd1ErQqR5p
-         xzGRoBGgLoxANiwccmUeorGuYsz6aSI7VqaXbRnJR00bBvWAqOjkNW6DCcgN2VrrJLVZ
-         FECQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV0I7P8iMeWBVuTtqK798R/rKc3Wjg1jFXU6ZcxgpezVgJKqCt+xI35xADyaAXY+SF8ToZAqb30Q2Dg+NE=@vger.kernel.org, AJvYcCVeS0YgU2cv+1JIxvytfgyFVXxJUI3DAirNO2vq0C/+cA0KUDolV0ja89CqNFW+ayHA/muRb2xGF23jHE8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOSC5ua58HjgsWGQF6qL3JE+vJBopP6i43jWlHdngxdtunjeVI
-	xp/rsrfumcR6SEtItILyV0aP67JsQFkB7N85JJVhTlWI1Sit1i7TRChxLXjFi/dsqjoMCuTWtkI
-	/8TiYJFenYXtHmZ0m88T4lJXEcPy2xdA=
-X-Gm-Gg: ASbGncv+x5cGwNi/b+sWB9cppT4fnS+UB8X/GLyepIUG67hZQJ2koDj/LG+ua05Bbuu
-	PW13zLGZtinm3KP5PePVxFLtpK0FIR4hV015+PUxslJlzZVNKLwNsoOTHmeIf/fn5eDWXMuYLto
-	Abm8sq1CVjHHhqfsPbYk5CKqev/d2oM+YgDsLTTd9apcQ9qw==
-X-Google-Smtp-Source: AGHT+IEaLqgUCTgi/UDgbwhHHVKTVgJFfI8XH3ilfqmadSEjxKw9dZfOogiQ85oAjhJORbPUBGmOTbETdCj098Uck48=
-X-Received: by 2002:a17:907:9087:b0:ad8:a935:b8e8 with SMTP id
- a640c23a62f3a-ae0579d1a99mr1127576466b.5.1750774520592; Tue, 24 Jun 2025
- 07:15:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rAk4Wn24"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0381C4CEE3;
+	Tue, 24 Jun 2025 14:16:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750774569;
+	bh=APRJ75gDDgjrFelZorQyx/we/9Q0+eEodhRUdBFHpAQ=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=rAk4Wn249dTFd5Emt922vdewi1qVT7QCVZohFukFQw4dcOVJku25zBI3VpJP2lK69
+	 SJyBwiuT35xOz3jIg99MsQ05HgliYrr1dVFnuPYOB/ED+wTvq3t/mnGAvmT9bj5jDt
+	 2QlqM2ZYFz5t40L4dU2eZDbELsneQxQJZX4pySq4zXhKELBwgR75s1vfOMalbo6Jhg
+	 EohaP61uzhO8jsTzsdEUmIBDNvEMDOjhqUo5sH1qqsO71nGMaeWMRpsGodVjeM1M+R
+	 rWzjx78pUfMR0fC0wV9WjlsGCi8rm56Ot+wHIxA/W534CLbSlMnG4nd7tETauMZylk
+	 NONDtjPx9F4dQ==
+Message-ID: <1669c05c-7468-4347-a924-cfc4145c8c75@kernel.org>
+Date: Tue, 24 Jun 2025 22:16:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624-bar-v4-1-9f9f9ae9f868@gmail.com>
-In-Reply-To: <20250624-bar-v4-1-9f9f9ae9f868@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 24 Jun 2025 17:14:44 +0300
-X-Gm-Features: AX0GCFuQATpLhLi-lMuhRabxfiCC90DvlL1jCZW9tpHUJF8q6CscEDY8rVRgI0w
-Message-ID: <CAHp75Ve_G=ziR7sJmKw4t3BRASogGQ1kWUsNNNWESFmmS4rVhw@mail.gmail.com>
-Subject: Re: [PATCH v4] staging: media: atomisp: fix coding style in ia_css_output.host.c
-To: LiangCheng Wang <zaq14760@gmail.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
+ Abinash Singh <abinashsinghlalotra@gmail.com>,
+ syzbot+b8c1d60e95df65e827d4@syzkaller.appspotmail.com
+Subject: Re: [PATCH v2] f2fs: fix KMSAN uninit-value in extent_info usage
+To: Abinash Singh <abinashlalotra@gmail.com>,
+ linux-f2fs-devel@lists.sourceforge.net
+References: <20250619120933.125932-1-abinashsinghlalotra@gmail.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20250619120933.125932-1-abinashsinghlalotra@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 24, 2025 at 5:10=E2=80=AFPM LiangCheng Wang <zaq14760@gmail.com=
-> wrote:
->
-> Fix multiple checkpatch.pl ERRORs and coding style issues:
->
-> - Use tabs instead of spaces for indentation
-> - Move trailing `if` statements to multiline format
-> - Remove excessive space between type and asterisk in function
->   arguments
-> - Move assignment operator '=3D' to the same line for static struct
->   definitions
-> - Remove unnecessary line breaks in function definitions
->
-> This cleanup improves code readability and follows Linux kernel
-> coding standards.
+On 2025/6/19 20:09, Abinash Singh wrote:
+> KMSAN reported a use of uninitialized value in `__is_extent_mergeable()` and
+> `__is_back_mergeable()` via the read extent tree path.
+> 
+> The root cause is that `get_read_extent_info()` only initializes three fields
+> (`fofs`, `blk`, `len`) of `struct extent_info`, leaving the remaining fields
+> uninitialized. This leads to undefined behavior when those fields are accessed
+> later, especially during extent merging.
+> 
+> Fix it by zero-initializing the `extent_info` struct before population.
+> 
 
-Thanks for a new version. Now the question is, is this the only file
-in the whole (>90kLoCs!) driver that has such problems? If not, fix
-them all and update Subject respectively,
+It needs to add a fixes line, otherwise, it looks good to me.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Thanks,
+
+> Reported-by: syzbot+b8c1d60e95df65e827d4@syzkaller.appspotmail.com
+> Signed-off-by: Abinash Singh <abinashsinghlalotra@gmail.com>
+> 
+> ---
+> v2 : Corrected Author name
+> ---
+>   fs/f2fs/extent_cache.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/f2fs/extent_cache.c b/fs/f2fs/extent_cache.c
+> index cfe925a3d555..4ce19a310f38 100644
+> --- a/fs/f2fs/extent_cache.c
+> +++ b/fs/f2fs/extent_cache.c
+> @@ -414,7 +414,7 @@ void f2fs_init_read_extent_tree(struct inode *inode, struct folio *ifolio)
+>   	struct f2fs_extent *i_ext = &F2FS_INODE(&ifolio->page)->i_ext;
+>   	struct extent_tree *et;
+>   	struct extent_node *en;
+> -	struct extent_info ei;
+> +	struct extent_info ei = {0};
+>   
+>   	if (!__may_extent_tree(inode, EX_READ)) {
+>   		/* drop largest read extent */
+
