@@ -1,222 +1,152 @@
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56AACA2D;
-	Tue, 24 Jun 2025 00:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF5B18C00;
+	Tue, 24 Jun 2025 00:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750724367; cv=none; b=YPA6eTdybKNtfd4w6UwUUuXMhJBMXWrSAXjtR2ad1QHKp4NnGNYGEneGLWS+GMesL1WhzBvH1Fqr1RvmY5z7wpW5r+lmge02fswYLbaYN+UCBi5aOW9UF8xjQy07pMu21ASYH6HsmUYwv8eDloppbTxaTTJqZxGXKRiq+XQ5FQQ=
+	t=1750724407; cv=none; b=unNF2KnTijb9YOUZNDFI5tx+5wekdbU0AkJxtQ0LF/y5jX2XmJAAqXgRv+HPZfswj0YT7hASFEFDmW0BqlyhUz+9XHh4clTFCzfrCLNP5Z/bsKOWGsLxXwyqNdJOxv/CP3ri+r0ww4yDAKApnkJdVNS6lvV5LNdFCNfYpi/Mhvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750724367; c=relaxed/simple;
-	bh=PavnqtiwB/fsXssZwmJ6jM960QXao6ToQorgMfbx6B8=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=RTLCx9tVGU/f2zW7gWAdgfcqJBnde5aN91HcW8Gu3AcDDt+kbxt2nrys04z5m+A1cfSOD8lASouH0LMoEF5Pmq9tH6NkoGJ+LwfJSm5RYTRIMVHLVgtZxf2AUmZOxVnrKlvczEAVPaxtRIIfGGn57oMpm9hFj1sktYeyspANsV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uTrNf-003YDs-0I;
-	Tue, 24 Jun 2025 00:19:19 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1750724407; c=relaxed/simple;
+	bh=UxPzqUQ7sTw2TlVQA2cbOYqdV5OnqTbLThGmxZqQwkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T1DNeDk34h/eP5Mda7HDNPq08zgOX6G35Mqs8CRH9doRCxMzD66RUZLAy5+DwUehunRyeX0/ZokHh7aL/oWbGufCC/y0shswpj9WmfdS51mnHCwfNGPwJuGtVKfCvqg18HP1YpFE9589oNrqciaCzisMziNHDXL46+fU07vabQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=YfONmPFD; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="YfONmPFD"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 2E02A8DB;
+	Tue, 24 Jun 2025 02:19:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750724386;
+	bh=UxPzqUQ7sTw2TlVQA2cbOYqdV5OnqTbLThGmxZqQwkw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YfONmPFDYVqQpe0De7ohK0OyINnBBWHmFl28ynWdM04WoLrY2ULNBdMJpujfEF9+5
+	 DClpydXjGkE5U1iOuxEQcrGlBp/kVnLcWfp64VPQGL62TMdQ8OneB+emJ+JhN40FVR
+	 LbhkyKu+fDHOOeSJVTKdhloVEswf0Itanf9y7qtA=
+Date: Tue, 24 Jun 2025 03:19:42 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: "Nirujogi, Pratap" <pnirujog@amd.com>
+Cc: Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
+	sakari.ailus@linux.intel.com, hverkuil@xs4all.nl,
+	bryan.odonoghue@linaro.org, krzk@kernel.org,
+	dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
+	jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com,
+	king.li@amd.com, dantony@amd.com, vengutta@amd.com,
+	Svetoslav.Stoilov@amd.com, Yana.Zheleva@amd.com,
+	Mehdi Djait <mehdi.djait@linux.intel.com>
+Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
+Message-ID: <20250624001942.GF15951@pendragon.ideasonboard.com>
+References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
+ <20250615000915.GQ10542@pendragon.ideasonboard.com>
+ <53674c5f-6b68-49e7-bbb0-fd06fff344c3@amd.com>
+ <8b16675a-c6ac-4619-aabe-ad2a4be6c964@amd.com>
+ <20250623220503.GA15951@pendragon.ideasonboard.com>
+ <163655af-2a3d-4489-ac7a-4ee31d3980e2@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Su Hui" <suhui@nfschina.com>
-Cc: chuck.lever@oracle.com, jlayton@kernel.org, okorniev@redhat.com,
- Dai.Ngo@oracle.com, tom@talpey.com, "Su Hui" <suhui@nfschina.com>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] nfsd: Using guard() to simplify nfsd_cache_lookup()
-In-reply-to: <20250623122226.3720564-1-suhui@nfschina.com>
-References: <20250623122226.3720564-1-suhui@nfschina.com>
-Date: Tue, 24 Jun 2025 10:19:16 +1000
-Message-id: <175072435698.2280845.12079422273351211469@noble.neil.brown.name>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <163655af-2a3d-4489-ac7a-4ee31d3980e2@amd.com>
 
-On Mon, 23 Jun 2025, Su Hui wrote:
-> Using guard() to replace *unlock* label. guard() makes lock/unlock code
-> more clear. Change the order of the code to let all lock code in the
-> same scope. No functional changes.
+On Mon, Jun 23, 2025 at 07:28:46PM -0400, Nirujogi, Pratap wrote:
+> On 6/23/2025 6:05 PM, Laurent Pinchart wrote:
+> > On Mon, Jun 23, 2025 at 05:51:48PM -0400, Nirujogi, Pratap wrote:
+> >> On 6/16/2025 6:49 PM, Nirujogi, Pratap wrote:
+> >>>>> +static int ov05c10_probe(struct i2c_client *client)
+> >>>>> +{
+> >>>>> +     struct ov05c10 *ov05c10;
+> >>>>> +     u32 clkfreq;
+> >>>>> +     int ret;
+> >>>>> +
+> >>>>> +     ov05c10 = devm_kzalloc(&client->dev, sizeof(*ov05c10),
+> >>>>> GFP_KERNEL);
+> >>>>> +     if (!ov05c10)
+> >>>>> +             return -ENOMEM;
+> >>>>> +
+> >>>>> +     struct fwnode_handle *fwnode = dev_fwnode(&client->dev);
+> >>>>> +
+> >>>>> +     ret = fwnode_property_read_u32(fwnode, "clock-frequency",
+> >>>>> &clkfreq);
+> >>>>> +     if (ret)
+> >>>>> +             return  dev_err_probe(&client->dev, -EINVAL,
+> >>>>> +                                   "fail to get clock freq\n");
+> >>>>
+> >>>> Let's try to land
+> >>>> https://lore.kernel.org/linux-media/20250521104115.176950-1-
+> >>>> mehdi.djait@linux.intel.com/
+> >>>> and replace the code above with devm_v4l2_sensor_clk_get().
+> >>>>
+> >>> Ok, we will verify on our side.
+> >>
+> >> We tried using devm_v4l2_sensor_clk_get() and found its required to add
+> >> support for software_node to make it work with this driver.
+> > 
+> > Why is that ?
+> 
+> Its because the i2c_client device is initialized with swnode in the 
+> x86/platform driver.
+> 
+> https://github.com/torvalds/linux/blob/master/drivers/platform/x86/amd/amd_isp4.c#L235
 
-While I agree that this code could usefully be cleaned up and that you
-have made some improvements, I think the use of guard() is a nearly
-insignificant part of the change.  You could easily do exactly the same
-patch without using guard() but having and explicit spin_unlock() before
-the new return.  That doesn't mean you shouldn't use guard(), but it
-does mean that the comment explaining the change could be more usefully
-focused on the "Change the order ..." part, and maybe explain what that
-is important.
+So there's no information provided in the _DSD for the sensor ?
 
-I actually think there is room for other changes which would make the
-code even better:
-- Change nfsd_prune_bucket_locked() to nfsd_prune_bucket().  Have it
-  take the lock when needed, then drop it, then call
-  nfsd_cacherep_dispose() - and return the count.
-- change nfsd_cache_insert to also skip updating the chain length stats
-  when it finds a match - in that case the "entries" isn't a chain
-  length. So just  lru_put_end(), return.  Have it return NULL if
-  no match was found
-- after the found_entry label don't use nfsd_reply_cache_free_locked(),
-  just free rp.  It has never been included in any rbtree or list, so it
-  doesn't need to be removed.
-- I'd be tempted to have nfsd_cache_insert() take the spinlock itself
-  and call it under rcu_read_lock() - and use RCU to free the cached
-  items.=20
-- put the chunk of code after the found_entry label into a separate
-  function and instead just return RC_REPLY (and maybe rename that
-  RC_CACHED).  Then in nfsd_dispatch(), if RC_CACHED was returned, call
-  that function that has the found_entry code.
+Looking at that platform driver, it matches the device based on the
+sensor ACPI HID only ("OMNI5C10"). That doesn't seem quite right, I
+think you need a DMI match as well. You can't assume that OMNI5C10,
+which identifies the sensor, will always map to specific platform
+integration data (connected to an AMD ISP, using a particular link
+frequency, ...), can you ?
 
-I think that would make the code a lot easier to follow.  Would you like
-to have a go at that - I suspect it would be several patches - or shall
-I do it?
+> >> Please refer
+> >> the changes below and let us know if these should be submitted as a
+> >> separate patch.
+> > 
+> > Mehdi, do you have any comment ?
+> > 
+> >> ---
+> >> @@ -645,16 +645,16 @@ struct clk *devm_v4l2_sensor_clk_get(struct device
+> >> *dev, const char *id)
+> >>           const char *clk_id __free(kfree) = NULL;
+> >>           struct clk_hw *clk_hw;
+> >>           struct clk *clk;
+> >> -       bool acpi_node;
+> >> +       bool is_node;
+> >>           u32 rate;
+> >>           int ret;
+> >>
+> >>           clk = devm_clk_get_optional(dev, id);
+> >>           ret = device_property_read_u32(dev, "clock-frequency", &rate);
+> >> -       acpi_node = is_acpi_node(dev_fwnode(dev));
+> >> +       is_node = is_acpi_node(dev_fwnode(dev)) || is_software_node(dev_fwnode(dev));
+> >>
+> >>           if (clk) {
+> >> -               if (!ret && acpi_node) {
+> >> +               if (!ret && is_node) {
+> >>                           ret = clk_set_rate(clk, rate);
+> >>                           if (ret) {
+> >>                                   dev_err(dev, "Failed to set clock rate: %u\n",
+> >> @@ -668,7 +668,7 @@ struct clk *devm_v4l2_sensor_clk_get(struct device
+> >> *dev, const char *id)
+> >>           if (ret)
+> >>                   return ERR_PTR(ret);
+> >>
+> >> -       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !acpi_node)
+> >> +       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !is_node)
+> >>                   return ERR_PTR(-ENOENT);
+> >>
+> >>           if (!id) {
+> >> ----
 
-Thanks,
-NeilBrown
+-- 
+Regards,
 
-
-
->=20
-> Signed-off-by: Su Hui <suhui@nfschina.com>
-> ---
->  fs/nfsd/nfscache.c | 99 ++++++++++++++++++++++------------------------
->  1 file changed, 48 insertions(+), 51 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-> index ba9d326b3de6..2d92adf3e6b0 100644
-> --- a/fs/nfsd/nfscache.c
-> +++ b/fs/nfsd/nfscache.c
-> @@ -489,7 +489,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigned =
-int start,
-> =20
->  	if (type =3D=3D RC_NOCACHE) {
->  		nfsd_stats_rc_nocache_inc(nn);
-> -		goto out;
-> +		return rtn;
->  	}
-> =20
->  	csum =3D nfsd_cache_csum(&rqstp->rq_arg, start, len);
-> @@ -500,64 +500,61 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigne=
-d int start,
->  	 */
->  	rp =3D nfsd_cacherep_alloc(rqstp, csum, nn);
->  	if (!rp)
-> -		goto out;
-> +		return rtn;
-> =20
->  	b =3D nfsd_cache_bucket_find(rqstp->rq_xid, nn);
-> -	spin_lock(&b->cache_lock);
-> -	found =3D nfsd_cache_insert(b, rp, nn);
-> -	if (found !=3D rp)
-> -		goto found_entry;
-> -	*cacherep =3D rp;
-> -	rp->c_state =3D RC_INPROG;
-> -	nfsd_prune_bucket_locked(nn, b, 3, &dispose);
-> -	spin_unlock(&b->cache_lock);
-> +	scoped_guard(spinlock, &b->cache_lock) {
-> +		found =3D nfsd_cache_insert(b, rp, nn);
-> +		if (found =3D=3D rp) {
-> +			*cacherep =3D rp;
-> +			rp->c_state =3D RC_INPROG;
-> +			nfsd_prune_bucket_locked(nn, b, 3, &dispose);
-> +			goto out;
-> +		}
-> +		/* We found a matching entry which is either in progress or done. */
-> +		nfsd_reply_cache_free_locked(NULL, rp, nn);
-> +		nfsd_stats_rc_hits_inc(nn);
-> +		rtn =3D RC_DROPIT;
-> +		rp =3D found;
-> +
-> +		/* Request being processed */
-> +		if (rp->c_state =3D=3D RC_INPROG)
-> +			goto out_trace;
-> +
-> +		/* From the hall of fame of impractical attacks:
-> +		 * Is this a user who tries to snoop on the cache?
-> +		 */
-> +		rtn =3D RC_DOIT;
-> +		if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
-> +			goto out_trace;
-> =20
-> +		/* Compose RPC reply header */
-> +		switch (rp->c_type) {
-> +		case RC_NOCACHE:
-> +			break;
-> +		case RC_REPLSTAT:
-> +			xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
-> +			rtn =3D RC_REPLY;
-> +			break;
-> +		case RC_REPLBUFF:
-> +			if (!nfsd_cache_append(rqstp, &rp->c_replvec))
-> +				return rtn; /* should not happen */
-> +			rtn =3D RC_REPLY;
-> +			break;
-> +		default:
-> +			WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
-> +		}
-> +
-> +out_trace:
-> +		trace_nfsd_drc_found(nn, rqstp, rtn);
-> +		return rtn;
-> +	}
-> +out:
->  	nfsd_cacherep_dispose(&dispose);
-> =20
->  	nfsd_stats_rc_misses_inc(nn);
->  	atomic_inc(&nn->num_drc_entries);
->  	nfsd_stats_drc_mem_usage_add(nn, sizeof(*rp));
-> -	goto out;
-> -
-> -found_entry:
-> -	/* We found a matching entry which is either in progress or done. */
-> -	nfsd_reply_cache_free_locked(NULL, rp, nn);
-> -	nfsd_stats_rc_hits_inc(nn);
-> -	rtn =3D RC_DROPIT;
-> -	rp =3D found;
-> -
-> -	/* Request being processed */
-> -	if (rp->c_state =3D=3D RC_INPROG)
-> -		goto out_trace;
-> -
-> -	/* From the hall of fame of impractical attacks:
-> -	 * Is this a user who tries to snoop on the cache? */
-> -	rtn =3D RC_DOIT;
-> -	if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
-> -		goto out_trace;
-> -
-> -	/* Compose RPC reply header */
-> -	switch (rp->c_type) {
-> -	case RC_NOCACHE:
-> -		break;
-> -	case RC_REPLSTAT:
-> -		xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
-> -		rtn =3D RC_REPLY;
-> -		break;
-> -	case RC_REPLBUFF:
-> -		if (!nfsd_cache_append(rqstp, &rp->c_replvec))
-> -			goto out_unlock; /* should not happen */
-> -		rtn =3D RC_REPLY;
-> -		break;
-> -	default:
-> -		WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
-> -	}
-> -
-> -out_trace:
-> -	trace_nfsd_drc_found(nn, rqstp, rtn);
-> -out_unlock:
-> -	spin_unlock(&b->cache_lock);
-> -out:
->  	return rtn;
->  }
-> =20
-> --=20
-> 2.30.2
->=20
->=20
-
+Laurent Pinchart
