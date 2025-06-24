@@ -1,116 +1,101 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8879223BCFF;
-	Tue, 24 Jun 2025 08:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338E223BCFF
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750753140; cv=none; b=XPMBh8gYtyiigPWfJ4cCbAjHPYj32r8rXEaKOWHhRQeT8Fk0eyIgGwGg8cw9GucgL8G5MoqiQytX7OpWyky9R6rIi39qqieX9g3qQnECMYFXNXxkUjGzNz4bQqJia3p+eu4bixZ+kqVV5rQ0FDSpQWy+ZVOc4eOPiOzz0kD8T6E=
+	t=1750753154; cv=none; b=Q80ABkjpZyQgGRkM6JXCcc3t4vFMF5fQHiBrN+D+KAzIOTjvRgAmdKzNPz75rWBl0fV4+/1EpellWta7+JXVx6HXpWcspetSwVEJPdnRm+5OankBJEtj7NbhS66DUpHFGzaauN4DLa0uNon6Du0zk4iuWw2Ot7o1+myASQCmmXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750753140; c=relaxed/simple;
-	bh=z34k/rz5oU4KRhHSyCwlYWpvC4hE0GFChAVXhYLHPqs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G3LfUu8VgmxSeDAv5m5v8bBMluyaIgAslXsbBX7M2qBZ6CmlhJrzuSM2JcGsbsob4a1OtzA3tkT7O3VG7/zsZUnXWXUxI04ntMI+od7zUy75tY3O6TnpnPaG9ICxdjRML1PbtB5yTxPBiraRv82o/V057vYnCipUDZ1qNotyZhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.207.111.194])
-	by gateway (Coremail) with SMTP id _____8Axx2ltX1poxxYcAQ--.28731S3;
-	Tue, 24 Jun 2025 16:18:54 +0800 (CST)
-Received: from ubuntu.. (unknown [111.207.111.194])
-	by front1 (Coremail) with SMTP id qMiowMCxbsVsX1po5oYoAQ--.60731S2;
-	Tue, 24 Jun 2025 16:18:53 +0800 (CST)
-From: Ming Wang <wangming01@loongson.cn>
-To: Ard Biesheuvel <ardb@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	linux-efi@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: lixuefeng@loongson.cn,
-	chenhuacai@loongson.cn,
-	gaojuxin@loongson.cn
-Subject: [PATCH] efi/loongarch: Reserve EFI memory map region
-Date: Tue, 24 Jun 2025 16:18:52 +0800
-Message-ID: <20250624081852.1563985-1-wangming01@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1750753154; c=relaxed/simple;
+	bh=veO6F7myXH23/l8pZJTYL/+cG25MIh24hmrup24rlgk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p779shy6LIYI1F+XwY++6UnGM7O3TGMurKPruTzmeCLqEnVOHXZR62Ws2cdt/GdE2uXuMhFDKP0EauQ7RPbo2K2mwNZf9tsRgG7fXXlCkkPZt5FLaiuOlBgy3ppGcD7tAj9Xi6eIJ1mSJgwpoItbxjQwdnYr3lGdVyDe0WvpCbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JdD8YJ+r; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JdD8YJ+r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750753154; x=1782289154;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=veO6F7myXH23/l8pZJTYL/+cG25MIh24hmrup24rlgk=;
+  b=JdD8YJ+rD+Zel+VKZ530ockgPHAX9nZAere5bUa+HWlKByLtiSDPIpAh
+   y+3c1atvFsg1PbzQEHthJdJ70iKzVymXUT/kc63JbF1t1PbYTSUdwy6wh
+   OsTvULXzyG2zZNy2Lb54uj/QpCdCYjmveoFh0eyl4nA3NKr4sC4KICQv9
+   3QI5lH90IfUBBgeZuAGSZme0sLV1/wtUwgVPs8wRJ7XR3v/lVL+SQs6EH
+   OKNlEQO57/c9Yow7zz9SyiBLUCBs/ZHwmUYCMZHkZljj5sJbprS5PYF3F
+   VcNTQBBrt2bu0/zlKQGk7BlVOcUMty0vC3oQ3mnE9vjPY/OqlmXe7ZvwE
+   Q==;
+X-CSE-ConnectionGUID: eSrrGQUUTwqYV7dOtr6oNQ==
+X-CSE-MsgGUID: dEDS7388QAmUUBhB3AWApg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56763966"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="56763966"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 01:19:13 -0700
+X-CSE-ConnectionGUID: Z0lLToT4SLOs3MmC/TtBig==
+X-CSE-MsgGUID: g5OKnNdiScmqzJCM8VFGmQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="151986381"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa006.fm.intel.com with ESMTP; 24 Jun 2025 01:19:09 -0700
+Date: Tue, 24 Jun 2025 16:11:36 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Baolu Lu <baolu.lu@linux.intel.com>
+Cc: jgg@nvidia.com, jgg@ziepe.ca, kevin.tian@intel.com, will@kernel.org,
+	aneesh.kumar@kernel.org, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, joro@8bytes.org, robin.murphy@arm.com,
+	shuah@kernel.org, nicolinc@nvidia.com, aik@amd.com,
+	dan.j.williams@intel.com, yilun.xu@intel.com
+Subject: Re: [PATCH v2 3/4] iommufd: Destroy vdevice on idevice destroy
+Message-ID: <aFpduJmdcru6r1kd@yilunxu-OptiPlex-7050>
+References: <20250623094946.1714996-1-yilun.xu@linux.intel.com>
+ <20250623094946.1714996-4-yilun.xu@linux.intel.com>
+ <a2fddab4-bc85-46f6-9008-57a26e099698@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxbsVsX1po5oYoAQ--.60731S2
-X-CM-SenderInfo: 5zdqwzxlqjiio6or00hjvr0hdfq/1tbiAgEDEmhZ3+0IvAAAsl
-X-Coremail-Antispam: 1Uk129KBj93XoW7CF1kuF1rCr4UXr48Aw4UWrX_yoW8Kr17p3
-	4xAr4kKrs5AFn3X34xG3y8uF45ua93K34fWF9Iyr909ws8AF1xZr4ftFyY9ay2qr4kGw1j
-	gFn8Ca4Iva1DJabCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20x
-	vEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jbYFAUUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a2fddab4-bc85-46f6-9008-57a26e099698@linux.intel.com>
 
-The EFI memory map at 'boot_memmap' is crucial for kdump to understand
-the primary kernel's memory layout. This memory region, typically part
-of EFI Boot Services (BS) data, can be overwritten after ExitBootServices
-if not explicitly preserved by the kernel.
+On Tue, Jun 24, 2025 at 11:32:01AM +0800, Baolu Lu wrote:
+> On 6/23/25 17:49, Xu Yilun wrote:
+> > Destroy iommufd_vdevice(vdev) on iommufd_idevice(idev) destroy so that
+> > vdev can't outlive idev.
+> > 
+> > iommufd_device(idev) represents the physical device bound to iommufd,
+> > while the iommufd_vdevice(vdev) represents the virtual instance of the
+> > physical device in the VM. The lifecycle of the vdev should not be
+> > longer than idev. This doesn't cause real problem on existing use cases
+> > cause vdev doesn't impact the physical device, only provides
+> > virtualization information. But to extend vdev for Confidential
+> > Computing(CC), there are needs to do secure configuration for the vdev,
+> > e.g. TSM Bind/Unbind. These configurations should be rolled back on idev
+> > destroy, or the external driver(VFIO) functionality may be impact.
+> > 
+> > Building the association between idev & vdev requires the two objects
+> > pointing each other, but not referencing each other.
+> 
+> Does this mean each idevice can have at most a single vdevice? Is it
 
-This commit addresses this by:
-1. Calling memblock_reserve() to reserve the entire physical region
-   occupied by the EFI memory map (header + descriptors). This prevents
-   the primary kernel from reallocating and corrupting this area.
-2. Setting the EFI_PRESERVE_BS_REGIONS flag in efi.flags. This indicates
-   that efforts have been made to preserve critical BS data regions,
-   which can be useful for other kernel subsystems or debugging.
+Yes, I got this idea from here.
 
-These changes ensure the original EFI memory map data remains intact,
-improving kdump reliability and potentially aiding other EFI-related
-functionalities that might rely on preserved BS data.
+https://lore.kernel.org/all/20250604132403.GJ5028@nvidia.com/
 
-Signed-off-by: Ming Wang <wangming01@loongson.cn>
----
- arch/loongarch/kernel/efi.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+> possible that different PASIDs of a physical device are assigned to
+> userspace for different purposes, such that there is a need for multiple
+> vdevices per idevice?
 
-diff --git a/arch/loongarch/kernel/efi.c b/arch/loongarch/kernel/efi.c
-index de21e72759ee..98b1f0c030fc 100644
---- a/arch/loongarch/kernel/efi.c
-+++ b/arch/loongarch/kernel/efi.c
-@@ -135,6 +135,7 @@ void __init efi_init(void)
- 	tbl = early_memremap_ro(boot_memmap, sizeof(*tbl));
- 	if (tbl) {
- 		struct efi_memory_map_data data;
-+		phys_addr_t reserve_size = sizeof(*tbl) + tbl->map_size;
- 
- 		data.phys_map		= boot_memmap + sizeof(*tbl);
- 		data.size		= tbl->map_size;
-@@ -144,6 +145,18 @@ void __init efi_init(void)
- 		if (efi_memmap_init_early(&data) < 0)
- 			panic("Unable to map EFI memory map.\n");
- 
-+		/*
-+		 * Reserve the physical memory region occupied by the EFI
-+		 * memory map table (header + descriptors). This is crucial
-+		 * for kdump, as the kdump kernel relies on this original
-+		 * memmap passed by the bootloader. Without reservation,
-+		 * this region could be overwritten by the primary kernel.
-+		 * Also, set the EFI_PRESERVE_BS_REGIONS flag to indicate that
-+		 * critical boot services data regions like this are preserved.
-+		 */
-+		memblock_reserve((phys_addr_t)boot_memmap, reserve_size);
-+		set_bit(EFI_PRESERVE_BS_REGIONS, &efi.flags);
-+
- 		early_memunmap(tbl, sizeof(*tbl));
- 	}
- 
--- 
-2.43.0
+Mm.. I don't have a clear idea how SIOV assignment work with iommufd,
+may come back later.
 
+Thanks,
+Yilun
