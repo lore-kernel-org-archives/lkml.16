@@ -1,117 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1E726A1AF;
-	Tue, 24 Jun 2025 08:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8949926A1AE
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750754467; cv=none; b=fDkkvK350wD98maJKVh4Tk3q/ZdbbbkZNhI5viqPlSQqwAXWBYHPxc213ygbZsfFIY/M9XkOHC/y6iTKtsgD4BVgHWaCY+5PIuS2E8jROFdhFw3kTo/tzr3YHlJJuA5pl6b6kNjiCzxLQCDeXoIx9NJfc7ercj5ZN1RaXnWSUgE=
+	t=1750754467; cv=none; b=BOGk9aGD6YSQYIZQRjpzS+HEBuiOCO8eOY4snQbAdyK9lEvYeyPdkRC/qHS+04DSb0ap6kWnAb8u9qGhhZrkcdTYzPlR13DenAb/4+CIawZdVWmcat4jaDbNxWoxQkWHOgdamAX+V687CNFd7hFoIVyy2gE2OB5gfFlRb6W7ni8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750754467; c=relaxed/simple;
-	bh=lk/Bjbk3+mv2kt1pFlaZGlKw+GtH7lYshtGhsBg9vOE=;
+	bh=zdAtxHvqY91gdiWBUFT7jBGg+f5hSLcaeJSjeAJNEVw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SWYv5lCrUsoRonE5OlEa1VaEoQ2+Q52Qxg2+jXPWZV4czMIzwA6sRQUsNDA8IJtn0H0NVAlY1ekzyED2+RjJodIkGBd42sIGFtt0rtEvkpCwomQKGjHgKGGEJY6ExCHAOI82P1GBti73B0cBx+orOLnmZf31N3hOQ8biAYj9un0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RM3RFYz2; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=tSXFnLx01w4M09c6lKjKCd1J4jWIig+V+KZyDS4M6CkW6fMHL7fTi9t8PPaY2tl47QS/0sm0LefwPqJHh+Njj0JTwNhfrJcHtn94qwioOeqHEO2lIfaJ+MZ7nwTAddB8qJZG/60ioQvPVi1oqX2ZObAUa/YboGTj5ftrKOqckDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UH1V3t9S; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RM3RFYz2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750754466; x=1782290466;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=lk/Bjbk3+mv2kt1pFlaZGlKw+GtH7lYshtGhsBg9vOE=;
-  b=RM3RFYz2MlOP5PuB+EoqdxPUZhfzl76uO25LhTe9JnxzJnLGFLOwweb+
-   9UQYkvlVITse0hT4a2LcWqdj4RtnzCFIHhP20vPLkF26rIMHg0bIAvh6u
-   nL8+cT77KF7+bVWh6umk5pOqr54Du4jj7oiUqrnxX0aqvdLCm6Iz49xC6
-   nCyBEPEXE/lfeGDL28hzKU7H7IGE7Stc+xJUzXg+WaXVxcIgXETi/INQa
-   2nBOluU0JzV9K2shDNqERRPC7AvDWU0hbBLBDTXF5zTjxzNFqESvLAVMK
-   gx4y3TQPGomh2I1mL8Qf5onoWdqigjA59mfomf0PZwkgJq8Zvkb9rldmB
-   w==;
-X-CSE-ConnectionGUID: hspw5SaWS0myPvGf3UGmIg==
-X-CSE-MsgGUID: dpDd350pRKmBr0h5fUdKMA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56767603"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="56767603"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 01:41:04 -0700
-X-CSE-ConnectionGUID: Y1JWHM/TS56NQPtvgGoqkA==
-X-CSE-MsgGUID: fkadjsdbTMmZ/LPRDfxMVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="182737850"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 01:41:02 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uTzD9-00000009Q80-11EQ;
-	Tue, 24 Jun 2025 11:40:59 +0300
-Date: Tue, 24 Jun 2025 11:40:58 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Lukas Wunner <lukas@wunner.de>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Andy Shevchenko <andy@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v15 1/2] math.h: provide rounddown_ull variant for
- rounddown MACRO
-Message-ID: <aFpkmjlc-14xxkn4@smile.fi.intel.com>
-References: <20250623211116.1395-1-ansuelsmth@gmail.com>
- <CAHp75VcWW=RaHS9Yb8BcK2Jt7qtNOQzA3eDOZQ88RQG63981cQ@mail.gmail.com>
- <685a5787.050a0220.20ff0f.fd7a@mx.google.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UH1V3t9S"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a510432236so3731234f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:41:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750754463; x=1751359263; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=42Y2N6ebar+wiBFiVwZ+1np3R1M+VYIv1aIQkqIKk40=;
+        b=UH1V3t9S4NXkPqOqyNyHVbHAvxkVhK777/oSyAzWRZWd6k92Hp4OfCtbGtwNzDa4NO
+         aHhBhJNq4Q3A+nOxolkOrzG72lygIik4Y4E+LWv/mSGQbN9iz3HUSvmv0HQK5PYMdQvj
+         brqPqcaUXH96LLCaWAUegv/ZlT7PD9EU1kzbq4fve7XPzLifVTz0o4UWYAj7PQBeOQSr
+         JRgXLjd1gtNqd/KDijBDLEv9x2tEREMuAv+kC35tuY2gJl9ERBaTJVwENE4mCpoAXrMP
+         czg3WpLW9ng2/Ip1qS6Kg1UNBBG9QOQPV57fiSUcR4QzdS9omCKPVzKAT84JEmwyzS9d
+         /10A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750754463; x=1751359263;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=42Y2N6ebar+wiBFiVwZ+1np3R1M+VYIv1aIQkqIKk40=;
+        b=HA8kC/MqM1IbgjjCt6/QI+uix9VtWMaUt3RfpPOgJCmA5RyQBcHYzWrQjWafIh7ECk
+         jCSQ672Ysw2Ole9dhWzXwlhXn25/lTA/OME94JIXtnFhQHoSMMv4iU7+KE0PiPiuFzt5
+         abj/WpOoivywwchgszfW283sBotMYxEe+W8n+QtSsbhWnGw8qN1ybGT211AEbQdW0PqN
+         yt62I6hG2d63rd41KTzPheXOY4mWHBZjX2kKzPNW2I8BevbfiUYwvI8nB/s4poYkdAJH
+         di5vx1rQWPNNJU5h2iYrDb8FQXiEEq8oFipkvLOrp6Evk1Bp5LXA8bBvx7WpqJZdCY92
+         AKUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCViXVZodPqc2eaC8YDRitPLq3ujhF8Eo7hIM8xkb2g3sRmEaf4DCd+18JkNkULg+v0Hkb5c+II0h79W6Bw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxA807jPAW48RLny8MG/y/s5/sakrRb4EseT8ekMJ7HR5gOYOXc
+	4rK1Fa9bjBJ5kwNyso19PUIRK3A9XeZodwHUtNR693C/7SfVG57SU8VoDeR0MiddP1o=
+X-Gm-Gg: ASbGnctc02EwCLMQjQqy6K78HRLdGne3RAgUFNMRBpWHUXJ4WIlfPz5cM6jBNouMfnz
+	NNE0EiMpiEWjtCamtGDiEtdZy0GjEU8LtaF4TWAzLTLk6N2UYFKAcCLym2wBKPLAp/Jr2xFGyHy
+	/HI0NFMa534UPLhVGblkJv0JKFs71Khkfu9ov8wYWDTlC6QhWbye4XG6hWRnnty7vShfFDHEIVG
+	Mcb+pQUc4qbmUpZcCtzgc1zp07msjlEI0n2KLMCWJTiyoRTip3Pnk/+LOrnR2yIx/etwUqsogyA
+	Bxl9bgRDvZfvOa4s9aarPBA7Lam41F+FmcP+Oh0FVe+zuO7rykINPOBXVR2Z/5IE
+X-Google-Smtp-Source: AGHT+IHSGyDwoYjnGgDbPlFSLTlqgEue3oGk1SeNKtOch4nBjPOzzj8KWkuWYgkah6BLwc+G22XXxA==
+X-Received: by 2002:a05:6000:3111:b0:3a1:fcd6:1e6b with SMTP id ffacd0b85a97d-3a6d1334011mr11624969f8f.57.1750754462679;
+        Tue, 24 Jun 2025 01:41:02 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749b5e08e52sm1231044b3a.9.2025.06.24.01.40.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 01:41:02 -0700 (PDT)
+Date: Tue, 24 Jun 2025 10:40:46 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Marcos Paulo de Souza <mpdesouza@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Jason Wessel <jason.wessel@windriver.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	kgdb-bugreport@lists.sourceforge.net, linux-um@lists.infradead.org
+Subject: Re: [PATCH 2/7] printk: Use consoles_suspended flag when
+ suspending/resuming all consoles
+Message-ID: <aFpkQHwNCslbKSP6@pathway.suse.cz>
+References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
+ <20250606-printk-cleanup-part2-v1-2-f427c743dda0@suse.com>
+ <aExBo-8cVOy6GegR@pathway.suse.cz>
+ <84y0tmiidg.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <685a5787.050a0220.20ff0f.fd7a@mx.google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <84y0tmiidg.fsf@jogness.linutronix.de>
 
-On Tue, Jun 24, 2025 at 09:45:08AM +0200, Christian Marangi wrote:
-> On Tue, Jun 24, 2025 at 09:08:32AM +0300, Andy Shevchenko wrote:
-> > On Tue, Jun 24, 2025 at 12:11 AM Christian Marangi <ansuelsmth@gmail.com> wrote:
-
-...
-
-> > rounddown(),
+On Fri 2025-06-20 16:49:07, John Ogness wrote:
+> On 2025-06-13, Petr Mladek <pmladek@suse.com> wrote:
+> >> diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+> >> index fd12efcc4aeda8883773d9807bc215f6e5cdf71a..72de12396e6f1bc5234acfdf6dcc393acf88d216 100644
+> >> --- a/kernel/printk/nbcon.c
+> >> +++ b/kernel/printk/nbcon.c
+> >> @@ -1147,7 +1147,7 @@ static bool nbcon_kthread_should_wakeup(struct console *con, struct nbcon_contex
+> >>  	cookie = console_srcu_read_lock();
+> >>  
+> >>  	flags = console_srcu_read_flags(con);
+> >> -	if (console_is_usable(con, flags, false)) {
+> >> +	if (console_is_usable(con, flags, false, consoles_suspended)) {
+> >
+> > The new global console_suspended value has the be synchronized the
+> > same way as the current CON_SUSPENDED per-console flag.
+> > It means that the value must be:
+> >
+> >   + updated only under console_list_lock together with
+> >     synchronize_rcu().
+> >
+> >   + read using READ_ONCE() under console_srcu_read_lock()
 > 
-> For this and the other... Is it correct to use () for MACRO?
-> I assume () should be used only for functions.
-
-When it takes argument, yes. When it doesn't then you don't put it.
-
-...
-
-> > rounddown_ull()
-
-Btw, I don't like name for this, it's better to be in math64 with the u64 or similar suffixes like it's used for div/mul variants.
-
-Also add a roundup to make the API symmetrical (yes, it's okay that it has no
-users, it's a macro and doesn't consume memory at run-time).
-
-...
-
-> > > - Add this patch
-> > 
-> > Why are math64 APIs not usable here?
+> Yes.
 > 
-> There isn't a rounddown API for math64.
+> > I am going to propose more solutions because no one is obviously
+> > the best one.
+> 
+> [...]
+> 
+> > Variant C:
+> > ==========
+> >
+> > Remove even @flags parameter from console_is_usable() and read both
+> > values there directly.
+> >
+> > Many callers read @flags only because they call console_is_usable().
+> > The change would simplify the code.
+> >
+> > But there are few exceptions:
+> >
+> >    2. Another exception is __pr_flush() where console_is_usable() is
+> >       called twice with @use_atomic set "true" and "false".
+> >
+> >       We would want to read "con->flags" only once here. A solution
+> >       would be to add a parameter to check both con->write_atomic
+> >       and con->write_thread in a single call.
+> 
+> Or it could become a bitmask of printing types to check:
+> 
+> #define ATOMIC_PRINTING 0x1
+> #define NONATOMIC_PRINTING 0x2
+> 
+> and then __pr_flush() looks like:
+> 
+> if (!console_is_usable(c, flags, ATOMIC_PRINTING|NONATOMIC_PRINTING)
 
-Then implementing it there (in math64.h) looks to me natural thingy that will
-implicitly suggest this.
+I like this. It will help even in all other cases when one mode is needed.
+I mean that, for example:
 
--- 
-With Best Regards,
-Andy Shevchenko
+   console_is_usable(c, flags, ATOMIC_PRINTING)
 
+is more self-explaining than
 
+   console_is_usable(c, flags, true)
+
+Best Regards,
+Petr
