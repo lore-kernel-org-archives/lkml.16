@@ -1,82 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B3D24E014;
-	Tue, 24 Jun 2025 07:29:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABB82550A4;
+	Tue, 24 Jun 2025 07:29:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750750163; cv=none; b=Qv7+jQzqvEyEjlVhmbjq/N1b8srOeBrhlQ9RgI8lwE8fI/LINDxyjZFl51zxiIBKmFVMQLx5dbdNmT/NrxPh24zt6RziTp94Yh58snxQCGMq/N+A/XPud4Oz6gu4TI6Ff/v5o5w3+aX9HqY4WoDpFeZISJbD9+wL1ANfAG5n5X0=
+	t=1750750169; cv=none; b=hBsFc5K0/l0sh0T4zSLHfbkrfw9Enm0IWLP/7Dk89BsiPa8yJ4skiCtEEQ5rgFcAf1oYm9tDJNvNxbIvjOGPUUiXW0y7Kt82//ffDPjGiYzDbPrA7vNmfiYXxnQJqG8P/wl9DtvHWUMWnxHMVWBTJ9Z0CEGQMDecDyaB8qzlHBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750750163; c=relaxed/simple;
-	bh=O27h05PvealtzA1SswhnPXVG+5x+RcHWMCkh/jC3fzg=;
+	s=arc-20240116; t=1750750169; c=relaxed/simple;
+	bh=AIK2LQnI0Fr6rSBceS6Vs/7J3Mt1l/fq68vg6ZWA7xY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iYTOtlWXvh1iiHZzgSieIqkjMd/EQVVgPoISNzJVB98rSJ56OFFMWnBCO96EwGH0j/RTtQ+zJT3iE+uEUhPCTA+TFbuDyf4BRs9gAnzsOfmncN1pbFoglNnOxFbpIPezrVXjG++7QR/a6KSnMewXqnaaVDtw79CdNZqaenXEuUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qPEmQW1i; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=sNIr1hpcuRH39Kk6JabLoE+obn4ZLUgjpgkQDTCHpiTK3vXuLpa41a7SZVSQ12+iGbvm10HWLYt9NvhGDxeBilS65cXH3iiOLKMJItd7wrHtKZE5FWf5QymTo9Uf2QuuEzMoSlY7SubX7WMfxE2CtVedf+69Raokr5pioIUZgbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=INdGmHE0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qPEmQW1i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D785C4CEEF;
-	Tue, 24 Jun 2025 07:29:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="INdGmHE0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85D59C4CEF1;
+	Tue, 24 Jun 2025 07:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750750163;
-	bh=O27h05PvealtzA1SswhnPXVG+5x+RcHWMCkh/jC3fzg=;
+	s=k20201202; t=1750750168;
+	bh=AIK2LQnI0Fr6rSBceS6Vs/7J3Mt1l/fq68vg6ZWA7xY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qPEmQW1inTq4Rpz5TUtePLSc6M6wPN0iX9FAI+ANN3bNbUoGhlMxDrBNp4HIv9N8O
-	 IfZFoam4LndvThNLZjiuuozIkQldFXvt6eumbSasbO4ll51KjH0wpn7w+p2gDtX4le
-	 SNr5kv6XvlY85pE7L3jZNdA1+qRcUn8eegbfyVTvFCFubK7H1VfA6H140rF76hBRAN
-	 k5AMMfiXVOBLFR6KPhbmH55pm91lEbGhYT4zMSW/D6IO1TbA4sM566MkDttt0VMA+m
-	 697fFdIMkAx7lPtBbZ/GqzgVUgykeoUilBk51aczraYcbmI58+/DmBDu8uGqPobKaX
-	 TjlOImCORjQLQ==
-Date: Tue, 24 Jun 2025 09:29:20 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Joy Zou <joy.zou@nxp.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	shawnguo@kernel.org, s.hauer@pengutronix.de, catalin.marinas@arm.com, will@kernel.org, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, 
-	ulf.hansson@linaro.org, richardcochran@gmail.com, kernel@pengutronix.de, 
-	festevam@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-pm@vger.kernel.or, frank.li@nxp.com, ye.li@nxp.com, 
-	ping.bai@nxp.com, aisheng.dong@nxp.com
-Subject: Re: [PATCH v6 0/9] Add i.MX91 platform support
-Message-ID: <t5lg2iw2ha3xpqnce64k4xgaim3f2shfe4ccgnqggtouzy2lc3@se4e6ldggjtx>
-References: <20250623095732.2139853-1-joy.zou@nxp.com>
+	b=INdGmHE02uSmZsmqCajakdsQfLlPMSPd/z8ZvXimIJJXIvCt7iEgB4YYA4zQI8OTa
+	 7lJHKDaFJIhePG6J7VnXDqoi9ImReyrAFOUco4W3jSejBD1chXNZAksqn90VwWp9DV
+	 YExfhdDCYRNDLVvs3QTmANd+sAkif5aA8UzKWXKHOMSWBMDEzbNkvaoKRk0tuVde+m
+	 n8Yu+rpHCgzDj78D3CcotCtiue2rlqgwbUMXe5h0LGKPUx2V9da3M83l9Q58ZoYeM2
+	 1a94uHnRAnhc7AEr3MVwN0tY1k92UFzECSNm9TnsZawmf/hgZZv5zcHL2mSKfQW69D
+	 RemlgTa/vo6mw==
+Date: Tue, 24 Jun 2025 09:29:25 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Dimitri Fedrau <dima.fedrau@gmail.com>
+Cc: dimitri.fedrau@liebherr.com, Jean Delvare <jdelvare@suse.com>, 
+	Guenter Roeck <linux@roeck-us.net>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v3] pwm: mc33xs2410: add support for temperature sensors
+Message-ID: <u4aigv7nhsqygisyrhcohq25tvktsukjexng6zddib6kvj6hwl@vaa2pset4qbi>
+References: <20250619-mc33xs2410-hwmon-v3-1-301731e49f8f@liebherr.com>
+ <cviovwci5fgtyina7p7zqjns7cwveivy3vetqhhagwmrlc2gm2@jrqgorif7xff>
+ <20250624070442.GA3383@legfed1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7vlhrsw6pmzxempg"
 Content-Disposition: inline
-In-Reply-To: <20250623095732.2139853-1-joy.zou@nxp.com>
-
-On Mon, Jun 23, 2025 at 05:57:23PM +0800, Joy Zou wrote:
-> The design of i.MX91 platform is very similar to i.MX93.
-> Extracts the common parts in order to reuse code.
-> 
-> The mainly difference between i.MX91 and i.MX93 is as follows:
-> - i.MX91 removed some clocks and modified the names of some clocks.
-> - i.MX91 only has one A core.
-> - i.MX91 has different pinmux.
-> - i.MX91 has updated to new temperature sensor same with i.MX95.
-> 
-> ---
-> Changes for v6:
-> - add changelog in per patch.
-> - correct commit message spell for patch #1.
-> - merge rename imx93.dtsi to imx91_93_common.dtsi and move i.MX93
->   specific part from imx91_93_common.dtsi to imx93.dtsi for patch #3.
-> - modify the commit message for patch #3.
-> - restore copyright time and add modification time for common dtsi for patch #3.
-> - remove unused map0 label in imx91_93_common.dtsi for patch #3.
-> - remove tmu related node for patch #4.
-> - remove unused regulators and pinctrl settings for patch #5.
-> - add new modification for aliases change patch #6.
+In-Reply-To: <20250624070442.GA3383@legfed1>
 
 
-Where are the links to the previous versions? Why are you not using b4?
+--7vlhrsw6pmzxempg
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3] pwm: mc33xs2410: add support for temperature sensors
+MIME-Version: 1.0
 
-Best regards,
-Krzysztof
+On Tue, Jun 24, 2025 at 09:04:42AM +0200, Dimitri Fedrau wrote:
+> Hi Uwe,
+>=20
+> Am Mon, Jun 23, 2025 at 11:07:24AM +0200 schrieb Uwe Kleine-K=F6nig:
+> > hello Dimitri,
+> >=20
+> > On Thu, Jun 19, 2025 at 07:32:42PM +0200, Dimitri Fedrau via B4 Relay w=
+rote:
+> > > @@ -29,6 +30,8 @@
+> > > =20
+> > >  #include <linux/spi/spi.h>
+> > > =20
+> > > +/* ctrl registers */
+> > > +
+> > >  #define MC33XS2410_GLB_CTRL			0x00
+> > >  #define MC33XS2410_GLB_CTRL_MODE		GENMASK(7, 6)
+> > >  #define MC33XS2410_GLB_CTRL_MODE_NORMAL		FIELD_PREP(MC33XS2410_GLB_C=
+TRL_MODE, 1)
+> > > @@ -51,6 +54,21 @@
+> > > =20
+> > >  #define MC33XS2410_WDT				0x14
+> > > =20
+> > > +#define MC33XS2410_TEMP_WT			0x29
+> > > +#define MC33XS2410_TEMP_WT_MASK			GENMASK(7, 0)
+> > > +
+> > > +/* diag registers */
+> > > +
+> > > +/* chan in { 1 ... 4 } */
+> > > +#define MC33XS2410_OUT_STA(chan)		(0x02 + (chan) - 1)
+> > > +#define MC33XS2410_OUT_STA_OTW			BIT(8)
+> > > +
+> > > +#define MC33XS2410_TS_TEMP_DIE			0x26
+> > > +#define MC33XS2410_TS_TEMP_MASK			GENMASK(9, 0)
+> >=20
+> > Keep the registers in address order please
+>
+> Aren't they ? There are "ctrl" and "diag" registers and I didn't mix up
+> adresses. There is a comment for each of them when defines start.
 
++#define MC33XS2410_TEMP_WT                     0x29
+=2E..
++#define MC33XS2410_TS_TEMP_DIE                 0x26
+
+> > > +/* chan in { 1 ... 4 } */
+> > > +#define MC33XS2410_TS_TEMP(chan)		(0x2f + (chan) - 1)
+> >=20
+> > I wonder if it would be cleaner if this was abstracted using mfd. Then
+> > the hwmon driver could live in drivers/hwmon
+> >=20
+> I will have a look into auxiliary devices as Guenter proposed in a
+> following mail.
+
+FTR: auxiliary device is also fine for me.
+
+Best regards
+Uwe
+
+--7vlhrsw6pmzxempg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhaU9IACgkQj4D7WH0S
+/k5DxAf+P3GugKuOyN+mF0JasySC6A4I4dHuRHgesRzkUS0WETYZiDHn/qVcnVsf
+3A0x6ZiewS1joqgJtXNBvN/t/zVP0/BoN57tNUkhKMb5VtWPw0xG8k3pMY9w+x02
+L6jyHsAVd4x6Wph8mbcRXg3BnkE/sXLZP/+mnyLVXMQIIJwMyUDoz2U897LCkA/k
+DkHxYuMVnz5qSLUFOedeA7lfcSrdLjLP74DrUofP+wgqmLxdVOBE/O+Wf1LMhgO+
+IuRN1wQu8KGSdqROSRnOCjWVEipp2eGU0gHxLCkUVpMzdfXWQT+H+hmso0l6mUkD
+bDihzmaYvaqlWtePwEEYEkC5V1Ltmw==
+=65/L
+-----END PGP SIGNATURE-----
+
+--7vlhrsw6pmzxempg--
