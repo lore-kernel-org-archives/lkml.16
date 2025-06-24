@@ -1,133 +1,138 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C3A307496;
-	Tue, 24 Jun 2025 23:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF55219E0;
+	Tue, 24 Jun 2025 23:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750807782; cv=none; b=HQLiZ6fiKuUVs4xS0nwnpg13pLpZUzUbh53K6lSKHaSHVCMQdrbf5tHKbO/qtTI55tJq9xi9U8iCxINQ022XxZGa9YEYIhMVhNvyQJxEFHZawY4vG+aA1rWvrgZqGlnD+z5q+Z19SLM8EfPQpgx1bkahRgAhqF7l6hfW2xf6U8M=
+	t=1750807855; cv=none; b=thtMkcIeKSlbtjDysD6tjzsd7H4omM3ElbxOZA4UThX9Exase8X0W1s07iMZEFIPgancWFIF0VRAY6c0QMTJel4kKpO8lkeNSGBsN/oeGFzm+qSMLcQS1H8yI0wHsjycZxfNBEyL/dAKrCUTD3goZVQ/evGHfG0/otnXDNyJkxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750807782; c=relaxed/simple;
-	bh=xR1VxE1d3RNG0sLv7RMcv3K5Qbpf5L5T+lS6bx5Hmgk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W39WZr12tBd/U7jSbta6Ci6iewcMlYRbO2jn3UAcrOm7oas0epm4MZfjpJNOpwurKe5A+Y4Fisb/5sVBJCWjFYbEidWLksxM9vqDr7UCC/MNfg4roZTMBNz7OqCjxcgQgKcRLLv+us53yoJyJLZJaoNxiWENXWjMZ/j+RGBq/gE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J/lOJUr+; arc=none smtp.client-ip=209.85.214.180
+	s=arc-20240116; t=1750807855; c=relaxed/simple;
+	bh=Jjj9Sw5/Yg/WSIm4Bw8DdgxuDLsEKillPb+D3EaALyI=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=iDxEvI9nK4/7J9n05E2HO2ZuVvJLCZbtDvTPCtwQkow6NE8xd/KxrzO5qz6CKkBdpebQ2lNW9a+t1l+dj1xt/0XlrNZPxYfSCicN9bs9m2amBT8fN9qsMzeGeHNPShq7avKr2MyHJzaH5dUERp12Sq7CA11hyXvRftDOQGRtiTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nSKpEk6s; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J/lOJUr+"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2360ff7ac1bso9401685ad.3;
-        Tue, 24 Jun 2025 16:29:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSKpEk6s"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-747fc7506d4so4520933b3a.0;
+        Tue, 24 Jun 2025 16:30:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750807780; x=1751412580; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=n6fm/H9Stdspnutu+TLyawJSiAgcj1Gfpx7qEAHQgQE=;
-        b=J/lOJUr+qAKL3nc4Kmy7nDI3freJmEBPKGKbItWlETYPh0NG2DY6noWd2/RpezIseX
-         l5ViOqA31R2dQsIzaNOLeKU0y4SFgdIYD4pXSV0dJpqDGfhteXVK1a7M5tTsbxQbscxT
-         VMoFiFV9V2rir3ankgxkPa5n30bfxycAayeANUZO4NXdCrHh8XnfQfdouDpRV9unTAy1
-         u1LK9bkRw9LS7Y4M8Ht/sAOt3WU5iiu8H8LPPANExd/8ZhKvp07ORx0VP2SjW4vW5nux
-         ahxTJCjQEzVBS9EwxKvaqOq1FZhafdZemwQaw7PDpC3lv6KCiWM1mShacfSdYKoQBfbi
-         XmCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750807780; x=1751412580;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1750807853; x=1751412653; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=n6fm/H9Stdspnutu+TLyawJSiAgcj1Gfpx7qEAHQgQE=;
-        b=Wu6R3cVbdVmQ2utfU1sbk5zhiwEbzD9ku9fjQpEtWLVB4qMxQWucWlfzIWJFJ0QB99
-         bBHU0FSW0dV3ZYKgrxvdoYx9mFnSQBLaxmZ06cE3pRdinhKdiIOqDosmaBUwXgUj96K4
-         7CT9h6kuFFyYKCPDYx5bQJvpqB28YjR6zhBjP2dAElAzNtVWWO+KoHWaiBpahV7MaGXg
-         dOi/9XxQrDwmOybbwR3tkF9TyPc0AbNAT+Gc2tsHNM15VAsXyyHDYcuMIImmtyJoQ/J0
-         VgkA5X2i2l0UqMGFpgWcQxa9ZmJIWq3geNjEGEjGByLrdlW6kiWPNOSo5LkeOrOopiqN
-         ibOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqeNCn5M23oKt9a8zRZkifIhJDsJhkyP6JS0iizwQO3d3xsY8Sq5I7I+vg0cRKp88/sqBXzF7h@vger.kernel.org, AJvYcCXA7CpgpogGGnfMNmDTpyYGSQrMHVQKV00YIVp/EQacqubdJ3G//2E20GG1M3/7krldWKcGfkJELdRHD2s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzg59jjB7z3qVfM6ab6cS5V3BiaH3hxNF9+seO2XKk90Rx0X2We
-	ciATm7hIZh+m8kT1L9CpAPxE3+aoVNdyY7dEUCa1zljxE+GIqRQUILrN
-X-Gm-Gg: ASbGncvlZ/lVqj6bel9/hlhnZ2cyO2S6lVnOeObyNzGrHvELYjG0ZLixBj19oyN4dxv
-	8PeUPGEaVXt04Ui+AQUGOv/vjCfFX4CIRnzi1KpAbzM8c4eHnNW+i01pyPxqdytm/Q8KXpvoNZ0
-	MNa2z3vdqfEeNYd1xgpWVwDx/7axIzs4C0FPoIBfac2IYVe47vOM3xyIUvYymVDGlwgVoVwl7ge
-	QpmtIxvTCzYDBSbPbJ3F1jb8BvLcF8+HaYSkWNAuW4X9Lo5RGE1JC4xtzRYQe0WjFK5/nBy1eYg
-	YhvBeywXHn2XBSAwW2ZsyHmu9sTeokuk4s9pAPfkGk3rIPPMuTwuiUzkm8WuHpXtHg==
-X-Google-Smtp-Source: AGHT+IEurEcCEzFHGYcLfmTMbllSIDe2jA403j16rnCUXO3D2XMiCx7Vj1ahivKWJW0hYGsPajBJ2A==
-X-Received: by 2002:a17:903:17cb:b0:234:a139:1206 with SMTP id d9443c01a7336-238247833d9mr17774705ad.40.1750807779696;
-        Tue, 24 Jun 2025 16:29:39 -0700 (PDT)
-Received: from io.local ([159.196.197.79])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83959dasm121584645ad.2.2025.06.24.16.29.34
+        bh=SXg7K6a+LlCzoRmiWZXv5KV4rBgXR72g3KNBalWNjPs=;
+        b=nSKpEk6sCLxgAKCnQd9qUBffuTdhmbIu9/yT2Y6tK8T6eGqnNJuVAzW/B1m2WaNQT2
+         zYMMc834OENQFG+Kah8udK4t4PXx/4etIieP8KxNJMkDrAZPiVT7XkKDkjT/kZXnmjwL
+         +lkDHXe/30YUhnkT/SNPoL33I1+y/iLizY6GcxXcg3LiEqsy0PYv3WX806hLJSN4/wip
+         +y0JHBqg4bYCoL1Hsm8kiX1GflkZNzgq5H1+R45MgdTLUrpn94Lgv4O9ylyIY6ATQt32
+         OczkuDOOLRVEWZYTeIBcEbe0RuUMDmrxZBzAkF9PLErGvO3kXm/dGNVrTRJOS4on7wqq
+         wQVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750807853; x=1751412653;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SXg7K6a+LlCzoRmiWZXv5KV4rBgXR72g3KNBalWNjPs=;
+        b=KbJVSEHMzDC1zkguftN/7EBEcs9+C2P9/iKzlSdLvkASI5QjO/G6OJ6QWLzkPhvMAO
+         hdW3luTjddQsKq04mMzQ2k9fdwZEDlDNrVZi2eeEOHOrL/1XWNQhxvCLClSZDhrl7vBy
+         Y5qm2z8k19L5H6ANsE20U4/wdNCPRMdmlV9AJgSNQ2UMEB1zET6ScjbrPGWS4WM/CoVK
+         MYt21tdqB0XyWA19L/eGALqv2rcu8s2/NVo5PC6PhtRpIf2ssvFWruFgf6YBm9fYqxwP
+         0VnVx3t11HwvdYW/KaT5vpj4mAKx5W82anqkzXOk68kMjOy0F/C+7q/+upZNJ3Fgol+R
+         nd4g==
+X-Forwarded-Encrypted: i=1; AJvYcCVg+ae2qSIWwzmZNBewsFe9PyYU+ttjuP52P/S6MFJgO7B/bSNeWt/M758Zgi+EEzIN/1LOsLjlFBRUtwA=@vger.kernel.org, AJvYcCXunLm/mlCTkNDhlzPUNrZbRPJ6S1QYd0GGXowW1EMcI8xyNZjk8QXx2pRy8xYgA1mq4MgfpGEtMw087qrIgvw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsAC9ESmHBvTFAo8rl6Ani0DOC7IE7j1p5pslb532SJMFh8M9N
+	G1U5NcshdcI8URPUhbunP2vIo7IHXw8jTcvl9X3cBFKBvm1P8UIHEvd5
+X-Gm-Gg: ASbGncsIjutTMTp8XGAXvAViJn9tcrQ+DTfR7edlB/8eklEIPOjhiaR3hA2Oz1QY3gA
+	02urmp8BiD3Sk4vchIk2qolWHxExCSLgrrDYtBw6Q1Lh+n/NAVMun3oaRbppAL4R8ZM0OiqapBf
+	tTP9tn6NPdOyGk071YYfWbvIb+bw/FtQfd1wwzTE50lSNSA7GttJKhbjaOUFPWPuPTR2GP5Z04w
+	3sgV90wgGesS8ynjhBpMDtczaLu4x9MpTS8og1OZV7b8z6Hk4SOxvrRCluHyRWYESvjUslLZt9q
+	NQ5Hsn9vxdBIngFKY9yud7c8Iscc2nlTNn/Y5iO/FfG7p7cmHrELmrevYUqtkZJnM2Km30fiFD+
+	Jleqhvw0sg7UsvEuzHReQ4cOiuTriCLM119ouF755
+X-Google-Smtp-Source: AGHT+IFVOHLnfz9Syhj6oOfkcR1iMjeOxNJ71fXfmk/eQVkIAMWAd/lELwmaP3i3v3Jyv1qWvBsHJw==
+X-Received: by 2002:a05:6a00:3a1b:b0:736:34a2:8a23 with SMTP id d2e1a72fcca58-74ad456522emr1357989b3a.15.1750807852873;
+        Tue, 24 Jun 2025 16:30:52 -0700 (PDT)
+Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749b5e1f61dsm2871246b3a.37.2025.06.24.16.30.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 16:29:39 -0700 (PDT)
-From: Jamie Bainbridge <jamie.bainbridge@gmail.com>
-To: Simon Horman <horms@kernel.org>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Michal Schmidt <mschmidt@redhat.com>,
-	Brett Creeley <brett.creeley@amd.com>,
-	Ivan Vecera <ivecera@redhat.com>
-Cc: Jamie Bainbridge <jamie.bainbridge@gmail.com>,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net] i40e: When removing VF MAC filters, only check PF-set MAC
-Date: Wed, 25 Jun 2025 09:29:18 +1000
-Message-Id: <c856f16e6ab37286733174c0fcf12bc72b677096.1750807588.git.jamie.bainbridge@gmail.com>
-X-Mailer: git-send-email 2.39.5
+        Tue, 24 Jun 2025 16:30:52 -0700 (PDT)
+Date: Wed, 25 Jun 2025 08:30:37 +0900 (JST)
+Message-Id: <20250625.083037.1910124819838055415.fujita.tomonori@gmail.com>
+To: miguel.ojeda.sandonis@gmail.com
+Cc: a.hindborg@kernel.org, alex.gaynor@gmail.com, ojeda@kernel.org,
+ fujita.tomonori@gmail.com, aliceryhl@google.com, anna-maria@linutronix.de,
+ bjorn3_gh@protonmail.com, boqun.feng@gmail.com, dakr@kernel.org,
+ frederic@kernel.org, gary@garyguo.net, jstultz@google.com,
+ linux-kernel@vger.kernel.org, lossin@kernel.org, lyude@redhat.com,
+ rust-for-linux@vger.kernel.org, sboyd@kernel.org, tglx@linutronix.de,
+ tmgross@umich.edu
+Subject: Re: [PATCH v3 0/5] rust: time: Convert hrtimer to use Instant and
+ Delta
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <CANiq72kHocyULzwqxS51XeSEhsJpccfNFc+QYE67yvfvS8BApw@mail.gmail.com>
+References: <CANiq72nwaxszEbn6O3xZi6H9P+U=5N0ugK1n9qBRteQwKXQSaw@mail.gmail.com>
+	<87wm912sjg.fsf@kernel.org>
+	<CANiq72kHocyULzwqxS51XeSEhsJpccfNFc+QYE67yvfvS8BApw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-When the PF is processing an Admin Queue message to delete a VF's MACs
-from the MAC filter, we currently check if the PF set the MAC and if
-the VF is trusted.
+On Tue, 24 Jun 2025 23:13:49 +0200
+Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
 
-This results in undesirable behaviour, where if a trusted VF with a
-PF-set MAC sets itself down (which sends an AQ message to delete the
-VF's MAC filters) then the VF MAC is erased from the interface.
+> On Tue, 24 Jun 2025 at 15:11, Andreas Hindborg <a.hindborg@kernel.org> wrote:
+>>
+>> None of the options are the right choice.
+> 
+> That is fine (it is also what I have been arguing in the other thread
+> and in previous times), but that does not imply `into_*` is not a bad
+> choice if we really want to follow upstream.
+> 
+>> Cost and ownership _do_ line
+>> up for `into_*` in this case.
+> 
+> No, ownership definitely doesn't line up: `Delta` is not `Copy` and
+> there is no conceptual ownership transfer. While it says "owned ->
+> owned", not being `Copy` is quite important here: the guidelines
 
-This results in the VF losing its PF-set MAC which should not happen.
+Just to clarify, Delta implements Copy:
 
-There is no need to check for trust at all, because an untrusted VF
-cannot change its own MAC. The only check needed is whether the PF set
-the MAC. If the PF set the MAC, then don't erase the MAC on link-down.
+#[derive(Copy, Clone, PartialEq, PartialOrd, Eq, Ord, Debug)]
+pub struct Delta {
+    nanos: i64,
+}
 
-Resolve this by changing the deletion check only for PF-set MAC.
+But it's just i64 so your point is that there is no conceptual
+ownership transfer, right?
 
-(the out-of-tree driver has also intentionally removed the check for VF
-trust here with OOT driver version 2.26.8, this changes the Linux kernel
-driver behaviour and comment to match the OOT driver behaviour)
 
-Fixes: ea2a1cfc3b201 ("i40e: Fix VF MAC filter removal")
-Signed-off-by: Jamie Bainbridge <jamie.bainbridge@gmail.com>
----
-v2: Reword commit message as suggested by Simon Horman.
----
- drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-index 88e6bef69342c2e65d8d5b2d7df5ac2cc32ee3d9..45ccbb1cdda0a33527852096ee9759fc19db3a5d 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-@@ -3137,10 +3137,10 @@ static int i40e_vc_del_mac_addr_msg(struct i40e_vf *vf, u8 *msg)
- 		const u8 *addr = al->list[i].addr;
- 
- 		/* Allow to delete VF primary MAC only if it was not set
--		 * administratively by PF or if VF is trusted.
-+		 * administratively by PF.
- 		 */
- 		if (ether_addr_equal(addr, vf->default_lan_addr.addr)) {
--			if (i40e_can_vf_change_mac(vf))
-+			if (!vf->pf_set_mac)
- 				was_unimac_deleted = true;
- 			else
- 				continue;
--- 
-2.39.5
-
+> clarify in an example for a `Copy` type that if the input is not
+> consumed then it should not be `into_*`.
+> 
+> Sure, "Variable" cost means anything could go there, but that doesn't
+> tell us much, i.e. if it was completely free, we could just as well
+> pick `as_`, which would actually provide some information since you
+> know it needs to be cheap.
+> 
+> So the whole argument for `into_*` is... "it says 'Variable' cost so
+> it lines up"?
+> 
+> Now, what I argued is that we may just as well define our own rules,
+> since that table is confusing and doesn't cover all cases. If we do
+> that, then you could propose things like "all owned->owned methods are
+> `into_*`", which I think is what you are essentially implying here.
+> 
+>> I do not think that is settled.
+> 
+> If you think so, then the patch shouldn't be applied.
+> 
+> Cheers,
+> Miguel
+> 
