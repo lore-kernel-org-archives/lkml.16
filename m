@@ -1,302 +1,279 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CB0770E2
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9103074AB;
+	Tue, 24 Jun 2025 16:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750780923; cv=none; b=GGeAKaxG+KRrBK6PRCJNkxwwm50c73BkoqqfVNr6Mx3SFuDz6XNc8vFeT/YugR9mPA0DpVLo8Hrm3gXfRNjDMu5G/edAyf9fjRgjn+raBWuO58xDFjlHQQHN9PKrBzuku/rSCWqWMB+9ntxmztif4ThInPVAHZtG+NQThqwzzdU=
+	t=1750780963; cv=none; b=m9AZzW+hPqGqamP7T3ftKRmzRu/uJRQ3uFwEQxyCOhpXvIvosbfuGgSLpiqkZQO4dIVZCRgosAZkTlKZEUA9lG0AgIQdUY63acCAled11Wf3SZWCVmW9ws/8WUhCUz/lFGRfwWT0/b9Htx3MPdBB6+/KYL8luL3o6Dncxe9QP/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750780923; c=relaxed/simple;
-	bh=dy2arLagEzPcGqOL9oOnZw9S6LfuN84ri/cTpUjLYR4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PrRApvVDunVS5wDLrBtk2sYOh2zPHjEv83FpsjUy3h2Z1N+FqPUJsKK5gTsTlbxy4xUvsmtsBInar9MWelN13/VVxEye/fLjVWmBmd30+ca6hShLu8+IE6nCeHkEXv984VvpSC8oN+FKnTCRvtrlcBgA2UY2P0ApxlhOwUlyTIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XS7G+GuO; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750780963; c=relaxed/simple;
+	bh=FPCSlDVYJ3mJwkIKhhgrkGwH4ruAR20+CRSWbEpS8NA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mJ8lLoCV24+3M8e+l9jYXSAT9v7D9m+7egsDuLoTHYlmxVqcpJA1URzyo9b0K2oPE60DDVNoQpXit6V6TEFM4gC3Eyj1J5X+MHb0qjUUCumD5OyFNZWQ3Ib9C5ich8ZhLcV/VCukuDvd9U+y2BuJPfSqzBxGmQldI59FeNS7u2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n+/ZQg3E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XS7G+GuO"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ade33027bcfso98300466b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:02:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750780919; x=1751385719; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Lj9ti25DVp/MGP0VBReireOtkSjPAThxOLJ5ng8BnTs=;
-        b=XS7G+GuOlXuMdwiRgw9lx/0RY79b8wpDja7It6KAH1MPbJir1pf/qP0V3s5vRLNFhA
-         YIQu3Y9vxR/qeOaVaVYFz4kKr7Rd4u3UAbxxTrP09axE66+ySYBykrgVXJllTBeUiPyG
-         R7CPC8dB/MDL9aKuG8YASw4re3SvveOzF6mor3PQOwEmtehyl0YswzDJIdVMK0rvDqvc
-         ISYug5T4D/y1jxYDHI9JO1D8xkvEIt9yXrNpvpWAKOaIkm5EsT6PWQmGEotkOj84FYsQ
-         gFF4nC0wLXv5Ys7SH7ZbIHB4GQpJjrbVtrlUCvKG/PXUS44bilVoAIEG3PyF8h9IQM2M
-         z0kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750780919; x=1751385719;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Lj9ti25DVp/MGP0VBReireOtkSjPAThxOLJ5ng8BnTs=;
-        b=b6n683kj+LDvwzynD5CPAm8aiCuDk5oBD2Hjoxa32sPA21wfUWMiWV9sfn8CDB61/s
-         Pw4RyFCg55jnQ+ELVHcTJ652lesmaha78q18Y5EjzlrNryVXcjcgWW/aSeHYPmyvKYgv
-         UrTXIfCq7cpY5jeZIS9c1d5oZ0pV7QtYtYn5Sb0/9WqAL7zMuWXyLz2VLWA+iwZALqm1
-         2tzvw57U+7eiDHnFlR3CKQtigB8nugHhLNx7lrcUq+/ALHVKOzKHt7PHsmw0yCIV0+Ow
-         aJFo8sNqhoEP3x7dP5qW7crMJBwop3v3vx1WvCNpOS1e5jhKxbBPDQXsKN+6286veB5+
-         Ni2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVsqITRLCy3G9q+Ni3BUp+xoR+pNGBeTjsMl7wrigF7negD3ZGazbBLTzWyA4A8HAUcYDXvC7c2HHBD+3g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzvCNjjHhBPR/adEtaVTJGpKRtHpErnu8XKZe4uFPnSQijplW5
-	v018tQxzEllBZlJuylna/RhLHpouIHZgrl1CUhTo//9ytYVB1eN1tHtnPz7nGZTBz1h755+cFcc
-	hvSWfmnRZhXt2pwGDv+pVPXvPF8h1JeE=
-X-Gm-Gg: ASbGnctxV8sZRCWqAxIvkLRTJyVkDeuL2T0ZZb79jrtq4VD/3cZlSnwpfv5dipguWX7
-	SPaV1c8pOmKYR1Zu0DYPdw+dOfDsoILGD5MPP7NG88O084HXRC67T/ldtk+X2LX2h4g/DK7Dl+v
-	KPdj1M1Y0xOPRcCZER+XLGv8vakkXcI9E0LDNKzywm9mx6ukvg7LswXxTIOxCJxCycXNBrOczcb
-	X5a
-X-Google-Smtp-Source: AGHT+IE/rWo4LuQGQejkWuVAPfLkl7Xd0TELdgXEOKjve26xpJrrIkyPL0Z+tx9IZv45YFFgvtKu4whEyIbe0FKZE6w=
-X-Received: by 2002:a17:907:3f1c:b0:ae0:a2c8:9e48 with SMTP id
- a640c23a62f3a-ae0a2c8a829mr561593466b.46.1750780917604; Tue, 24 Jun 2025
- 09:01:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n+/ZQg3E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41142C4CEE3;
+	Tue, 24 Jun 2025 16:02:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750780962;
+	bh=FPCSlDVYJ3mJwkIKhhgrkGwH4ruAR20+CRSWbEpS8NA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n+/ZQg3Eo0DYsVZpgfKjlHN/ec6EHGcm0Kz+VDqNGyfGTZlPD0T/0+rk6LxkAb+IF
+	 /EnxzEzdA6UkghrvTuQEvZC1VIK/6pxCcm7Um9CkcMsGfrDvL28BFwq0JYV67oaNvF
+	 DHORjlAvYhtsVDuQW5HGeVCSfKzTmd+XhHjjxe8/aeHwOHWhveFouxaQEZEBrji4gt
+	 kedCy4q5qt3RQqjK8HRoFQCahCnPxJ5lKREnu65VNaYHoD4KbTXGJIZ/iyKhB11OiL
+	 FRAkzhP2xOFkqqXnr/paG5FamftxJPSwzLmMF9oCrqmEI78Pzvvt4J3/ar08XSZ1DZ
+	 cRQBvwhgAybYQ==
+Date: Tue, 24 Jun 2025 17:02:35 +0100
+From: Lee Jones <lee@kernel.org>
+To: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Sebastian Reichel <sre@kernel.org>, Frank Li <Frank.li@nxp.com>,
+	imx@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-pm@vger.kernel.org, Abel Vesa <abelvesa@kernel.org>,
+	Abel Vesa <abelvesa@linux.com>, Robin Gong <b38343@freescale.com>,
+	Robin Gong <yibin.gong@nxp.com>,
+	Enric Balletbo i Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH v7 2/6] mfd: pf1550: add core mfd driver
+Message-ID: <20250624160235.GM795775@google.com>
+References: <20250612-pf1550-v7-0-0e393b0f45d7@savoirfairelinux.com>
+ <20250612-pf1550-v7-2-0e393b0f45d7@savoirfairelinux.com>
+ <20250619130337.GA795775@google.com>
+ <aFWrxtArHjb5nc0M@fedora>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMvvPS4CNzc7gSF8Z+6ogB212V+GDJyW9PXrrrP+wMyDNfXKqg@mail.gmail.com>
- <20250624003408.47807-1-sj@kernel.org>
-In-Reply-To: <20250624003408.47807-1-sj@kernel.org>
-From: Bijan Tabatabai <bijan311@gmail.com>
-Date: Tue, 24 Jun 2025 11:01:46 -0500
-X-Gm-Features: AX0GCFtU5OmQ3KbpVJJoMB-ovknWAN2BFV8iD6U8wxsZVmH28WGU-r0OqL4pEVg
-Message-ID: <CAMvvPS5kgOJtb6U+9TwEqSDYn0R2FG6rAPWjS98hAdHr4jkKbg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/2] mm/damon/paddr: Allow multiple migrate targets
-To: SeongJae Park <sj@kernel.org>
-Cc: damon@lists.linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	akpm@linux-foundation.org, david@redhat.com, ziy@nvidia.com, 
-	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com, 
-	byungchul@sk.com, gourry@gourry.net, ying.huang@linux.alibaba.com, 
-	apopple@nvidia.com, bijantabatab@micron.com, venkataravis@micron.com, 
-	emirakhur@micron.com, ajayjoshi@micron.com, vtavarespetr@micron.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aFWrxtArHjb5nc0M@fedora>
 
-On Mon, Jun 23, 2025 at 7:34=E2=80=AFPM SeongJae Park <sj@kernel.org> wrote=
-:
->
-> On Mon, 23 Jun 2025 18:15:00 -0500 Bijan Tabatabai <bijan311@gmail.com> w=
-rote:
->
-> [...]
-> > Hi SeongJae,
+On Fri, 20 Jun 2025, Samuel Kayode wrote:
+
+> Hi Lee,
+> 
+> Thanks a lot for the review.
+> 
+> On Thu, Jun 19, 2025 at 02:03:37PM +0100, Lee Jones wrote:
+> > > +static int pf1550_read_otp(const struct pf1550_dev *pf1550, unsigned int index,
+> > 
+> > What does OTP mean?
 > >
-> > I really appreciate your detailed response.
-> > The quota auto-tuning helps, but I feel like it's still not exactly
-> > what I want. For example, I think a quota goal that stops migration
-> > based on the memory usage balance gets quite a bit more complicated
-> > when instead of interleaving all data, we are just interleaving *hot*
-> > data. I haven't looked at it extensively, but I imagine it wouldn't be
-> > easy to identify how much data is hot in the paddr setting,
->
-> I don't think so, and I don't see why you think so.  Could you please
-> elaborate?
+> It's a One-Time Programmable memory with configuration for the pf1550. I will
+> expand on this in the commit description of the next version.
 
-Elaborated below.
+Place it in a comment please.
 
-> > especially
-> > because the regions can contain a significant amount of unallocated
-> > data.
->
-> In the case, unallocated data shouldn't be accessed at all, so the region=
- will
-> just look cold to DAMON.
+> > Why do you have to write to 4 registers first?
+> > 
+> The pf1550 was designed such that the registers of the accompanying OTP is
+> accessed indirectly. Valid keys have to be written to specific pf1550
+> registers. After writing the keys, the address of the OTP register to be read
+> is then written to PF1550_TEST_REG_FMRADDR and its corresponding value read from
+> PF1550_TEST_REG_FMRDATA.
 
-"Significant" was too strong of a word, but if physical memory is
-fragmented, couldn't there be a non-negligible amount of unallocated
-memory in a hot region? If so, I think it would mean that you cannot
-simply take a sum of the sizes of the hot regions in each node to
-compute how the hot data is interleaved because those regions may
-contain unallocated memory that shouldn't count for that calculation.
-Does that make sense?
+In a comment please.  If I wondered, so with others.
 
-It's very possible I might be overthinking this and it won't be an
-issue in practice. It might be best to not worry about it until it
-becomes an issue in practice.
+> > This should all be made clear in some way or another.
+> > 
+> I'll be adding comments on this in the next version.
 
-> > Also, if the interleave weights changed, for example, from 11:9
-> > to 10:10, it would be preferable if only 5% of data is migrated;
-> > however, with the round robin approach, 50% would be.
+Great!
 
-Elaborating more on this:
-Imagine a process begins with a weights of 3 and 2 for node 0 and 1
-respectively in both DAMON and the weighted interleave policy. If you
-looked at the which node a page resides in for a group of contiguous
-pages, it would be something like this (using letters to represent the
-virtual addresses):
+> > > +			   unsigned int *val)
+> > > +{
+> > > +	int ret = 0;
+> > > +
+> > > +	ret = regmap_write(pf1550->regmap, PF1550_PMIC_REG_KEY, 0x15);
+> > 
+> > No magic numbers.  These should all be defined.
+> Will do.
+> > 
+> > > +	if (ret)
+> > > +		goto read_err;
+> > > +	ret = regmap_write(pf1550->regmap, PF1550_CHARG_REG_CHGR_KEY2, 0x50);
+> > > +	if (ret)
+> > > +		goto read_err;
+> > > +	ret = regmap_write(pf1550->regmap, PF1550_TEST_REG_KEY3, 0xab);
+> > > +	if (ret)
+> > > +		goto read_err;
+> > > +	ret = regmap_write(pf1550->regmap, PF1550_TEST_REG_FMRADDR, index);
+> > > +	if (ret)
+> > > +		goto read_err;
+> > > +	ret = regmap_read(pf1550->regmap, PF1550_TEST_REG_FMRDATA, val);
+> > > +	if (ret)
+> > > +		goto read_err;
+> > > +
+> > > +	return 0;
+> > > +
+> > > +read_err:
+> > > +	dev_err_probe(pf1550->dev, ret, "read otp reg %x found!\n", index);
+> ...
+> > > +static int pf1550_add_child_device(struct pf1550_dev *pmic,
+> > > +				   const struct mfd_cell *cell,
+> > > +				   struct regmap_irq_chip_data *pdata,
+> > 
+> > This is not pdata.
+> > 
+> > > +				   int pirq,
+> > > +				   const struct regmap_irq_chip *chip,
+> > > +				   struct regmap_irq_chip_data **data)
+> > > +{
+> > > +	struct device *dev = pmic->dev;
+> > > +	struct irq_domain *domain;
+> > > +	int irq, ret;
+> > > +
+> > > +	irq = regmap_irq_get_virq(pdata, pirq);
+> > > +	if (irq < 0)
+> > > +		return dev_err_probe(dev, irq,
+> > > +				     "Failed to get parent vIRQ(%d) for chip %s\n",
+> > > +				     pirq, chip->name);
+> > > +
+> > > +	ret = devm_regmap_add_irq_chip(dev, pmic->regmap, irq,
+> > > +				       IRQF_ONESHOT | IRQF_SHARED |
+> > > +				       IRQF_TRIGGER_FALLING, 0, chip, data);
+> > > +	if (ret)
+> > > +		return dev_err_probe(dev, ret,
+> > > +				     "Failed to add %s IRQ chip\n",
+> > > +				     chip->name);
+> > > +
+> > > +	domain = regmap_irq_get_domain(*data);
+> > > +
+> > > +	return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE, cell, 1,
+> > > +				    NULL, 0, domain);
+> > 
+> > Why can't all 3 devices be registered in one call?
+> > 
+> The 3 devices use different regmap_irq_chip s. I have to register them
+> separately cause they have different irq domains but perhaps there is a better
+> way to handle this?
 
-A -> node 0
-B -> node 0
-C -> node 0
-D -> node 1
-E -> node 1
-F -> node 0
-G -> node 0
-H -> node 0
-I -> node 1
-J -> node 1
+That's okay, just do 3 calls.
 
-If we use a user defined quota autotuning mechanism like you described
-in [1] to stop DAMON interleaving when we detect that the data is
-interleaved correctly, no interleaving would happen, which is good.
-However, let's say we change the DAMON weights to be 4:1. My
-understanding is that DAMON applies the scheme to regions in ascending
-order of physical address (for paddr schemes), so if using the
-round-robin algorithm you provided in [2], the interleaving would
-apply to the pages in node 0 first, then node 1. For the sake of
-simplicity, let's say in this scenario the pages in the same node are
-sorted by their virtual address, so the interleaving would be applied
-in the order ABCFGHDEIJ. This would result in the following page
-placement
+Must neater than what we have here.
 
-A -> node 0
-B -> node 0
-C -> node 0
-D -> node 0
-E -> node 0
-F -> node 0
-G -> node 1
-H -> node 0
-I -> node 0
-J -> node 1
+> > > +}
+> > 
+> > To be honest, the premise around this function is a bit of a mess.
+> > 
+> > Please move all of this into .probe().
+> Will do.
+> > 
+> > > +static int pf1550_i2c_probe(struct i2c_client *i2c)
+> > > +{
+> > > +	const struct mfd_cell *regulator = &pf1550_regulator_cell;
+> > > +	const struct mfd_cell *charger = &pf1550_charger_cell;
+> > > +	const struct mfd_cell *onkey = &pf1550_onkey_cell;
+> > > +	unsigned int reg_data = 0, otp_data = 0;
+> > > +	struct pf1550_dev *pf1550;
+> > > +	int ret = 0;
+> > > +
+> > > +	pf1550 = devm_kzalloc(&i2c->dev, sizeof(*pf1550), GFP_KERNEL);
+> > > +	if (!pf1550)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	i2c_set_clientdata(i2c, pf1550);
+> > > +	pf1550->dev = &i2c->dev;
+> > > +	pf1550->i2c = i2c;
+> > 
+> > What are you storing i2c for?
+> > 
+> It doesn't need to be stored.
+> > Either store dev and irq OR i2c.  You don't need all three.
+> > 
+> Will do.
+> > > +	ret = regmap_read(pf1550->regmap, PF1550_PMIC_REG_DEVICE_ID, &reg_data);
+> > > +	if (ret < 0 || reg_data != PF1550_DEVICE_ID)
+> > > +		return dev_err_probe(pf1550->dev, ret ?: -EINVAL,
+> > > +				     "device not found!\n");
+> > 
+> > Are you sure?  What if the wrong device was found?
+> >
+> I can change the error log here to "Invalid device ID: ..."?
 
-So, four pages, D, E, F, G,  and I, have been migrated. However, if
-they were interleaved using their virtual addresses*, only pages D and
-I would have been migrated.
-
-* Technically, the mempolicy code interleaves based on the offset from
-the start of the VMA, but that difference doesn't change this example.
-
-> > Finally, and I
-> > forgot to mention this in my last message, the round-robin approach
-> > does away with any notion of spatial locality, which does help the
-> > effectiveness of interleaving [1].
-
-Elaborating more on this.
-As implied by the comment in [3], interleaving works better the finer
-grained it is done in virtual memory. As an extreme example, if you
-had weights of 3:2, putting the first 60% of a process's data in node
-0 and the remaining 40% in node 1 would satisfy the ratio globally,
-but you would likely not see the benefits of interleaving. We can see
-in the example above that your round-robin approach does not maintain
-the desired interleave ratio locally, even though it does globally.
-
-> We could use the probabilistic interleaving, if this is the problem?
-
-I don't think so. In the above example, with probabilistic
-interleaving, you would still migrate, on average, 20% of the pages in
-node 0 and 80% of the pages in node 1. Similarly, the probablistic
-interleaving also does not consider the virtual address, so it
-wouldn't maintain the interleave ratio locally in the virtual address
-space either.
-
-> > I don't think anything done with
-> > quotas can get around that.
->
-> I think I'm not getting your points well, sorry.  More elaboration of you=
-r
-> concern would be helpful.
-
-I elaborated more above. Hopefully that clears up any confusion. If
-you still have questions, maybe it would be easier to e-meet and have
-a live discussion about it? I see you have a DAMON chat slot open
-tomorrow at 9:30 PT [4]. If you have nothing else scheduled, maybe
-that would be a good time to chat?
-
-[...]
-
-> > I see where you're coming from. I think the crux of this difference is
-> > that in my use case, the set of nodes we are monitoring is the same as
-> > the set of nodes we are migrating to, while in the use case you
-> > describe, the set of nodes being monitored is disjoint from the set of
-> > migration target nodes.
->
-> I understand and agree this difference.
->
-> > I think this in particular makes ping ponging
-> > more of a problem for my use case, compared to promotion/demotion
-> > schemes.
->
-> But again I'm failing at understanding this, sorry.  Could I ask more
-> elaborations?
-
-Sure, and sorry for needing to elaborate so much.
-
-What I was trying to say is that in the case where a scheme is
-monitoring the same nodes it is migrating to, when it detects a hot
-region, it will interleave the pages in the region between the nodes.
-If there are two nodes, and assuming the access pattern was uniform
-across the region, we have now turned one hot region into two. Using
-the algorithms you provided earlier, the next time the scheme is
-applied, it will interleave both of those regions again because the
-only information it has about where to place pages is how many pages
-it has previously interleaved. Using virtual addresses to interleave
-solves this problem by providing one and only one location a page
-should be in given a set of interleave weights.
-
-When a scheme is monitoring one set of nodes and migrating to another
-disjoint set of nodes, you don't have this problem because once the
-pages are migrated, they won't be considered by the scheme until some
-other scheme moves those pages back into the monitored nodes.
-
-Does that make sense?
+Right.  Invalid or unsupported, etc.
 
 > >
-> > > If you really need this virtual address space based
-> > > deterministic behavior, it would make more sense to use virtual addre=
-ss spaces
-> > > monitoring (damon-vaddr).
-> >
-> > Maybe it does make sense for me to implement vaddr versions of the
-> > migrate actions for my use case.
->
-> Yes, that could also be an option.
+> ...
+> > > +	/* add top level interrupts */
+> > > +	ret = devm_regmap_add_irq_chip(pf1550->dev, pf1550->regmap, pf1550->irq,
+> > > +				       IRQF_ONESHOT | IRQF_SHARED |
+> > > +				       IRQF_TRIGGER_FALLING,
+> > > +				       0, &pf1550_irq_chip,
+> > > +				       &pf1550->irq_data);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = pf1550_add_child_device(pf1550, regulator, pf1550->irq_data,
+> > > +				      PF1550_IRQ_REGULATOR,
+> > > +				      &pf1550_regulator_irq_chip,
+> > > +				      &pf1550->irq_data_regulator);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = pf1550_add_child_device(pf1550, onkey, pf1550->irq_data,
+> > > +				      PF1550_IRQ_ONKEY,
+> > > +				      &pf1550_onkey_irq_chip,
+> > > +				      &pf1550->irq_data_onkey);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = pf1550_add_child_device(pf1550, charger, pf1550->irq_data,
+> > > +				      PF1550_IRQ_CHG,
+> > > +				      &pf1550_charger_irq_chip,
+> > > +				      &pf1550->irq_data_charger);
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +static int pf1550_suspend(struct device *dev)
+> > > +{
+> > > +	struct i2c_client *i2c = container_of(dev, struct i2c_client, dev);
+> > > +	struct pf1550_dev *pf1550 = i2c_get_clientdata(i2c);
+> > 
+> > You can swap all of this for:
+> > 
+> > 	struct pf1550_dev *pf1550 = dev_get_drvdata(dev).
+> > 
+> Will do.
+> > > +
+> > > +	if (device_may_wakeup(dev)) {
+> > > +		enable_irq_wake(pf1550->irq);
+> > > +		disable_irq(pf1550->irq);
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int pf1550_resume(struct device *dev)
+> > > +{
+> > > +	struct i2c_client *i2c = container_of(dev, struct i2c_client, dev);
+> > > +	struct pf1550_dev *pf1550 = i2c_get_clientdata(i2c);
+> > 
+> > As above.
+> > 
+> > > +
+> > > +	if (device_may_wakeup(dev)) {
+> > > +		disable_irq_wake(pf1550->irq);
+> > > +		enable_irq(pf1550->irq);
+> > 
+> > I would normally expect these to be around the opposite way to the ones
+> > in .suspend().
+> Do you mean enable_irq_wake and disable_irq in .resume() and the opposite for
+> .suspend()?
 
-Given how much my explanations here stressed that having access to the
-virtual addresses solves the problems I mentioned, I think the path
-forward for the next revision should be:
+Yes.  Or whatever fits best.
 
-1) Have the paddr migration scheme use the round-robin interleaving
-that you provided - This would be good for the use case you described
-where you promote pages from a node into multiple nodes of the same
-tier.
-2) Implement a vaddr migration scheme that uses the virtual address
-based interleaving - This is useful for my target use case of
-balancing bandwidth utilization between nodes?
+Maybe the h/w doesn't work that way, I just found it odd.
 
-If the vaddr scheme proves insufficient down the line for my use case,
-we can have another discussion at that time.
-How does this sound to you?
-
-> > One thing that gives me pause about
-> > this, is that, from what I understand, it would be harder to have
-> > vaddr schemes apply to processes that start after damon begins. I
-> > think to do that, one would have to detect when a process starts, and
-> > then do a damon tune to upgrade the targets list? It would be nice if,
-> > say, you could specify a cgroup as a vaddr target and track all
-> > processes in that cgroup, but that would be a different patchset for
-> > another day.
->
-> I agree that could be a future thing to do.  Note that DAMON user-space t=
-ool
-> implements[1] a similar feature.
-
-Thanks, I'll take a look at that.
-
-[...]
-
-Thanks again for the time you are spending on these discussions. I do
-appreciate it, and I hope I'm not taking up too much of your time.
-
-Bijan
-
-[1] https://lore.kernel.org/damon/20250623175204.43917-1-sj@kernel.org/
-[2] https://lore.kernel.org/damon/20250621180215.36243-1-sj@kernel.org/
-[3] https://elixir.bootlin.com/linux/v6.16-rc3/source/mm/mempolicy.c#L213
-[4] https://lore.kernel.org/damon/20250620205819.98472-1-sj@kernel.org/T/#t
+-- 
+Lee Jones [李琼斯]
