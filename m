@@ -1,129 +1,92 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409B126CE3A;
-	Tue, 24 Jun 2025 16:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5005C286430;
+	Tue, 24 Jun 2025 16:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750783886; cv=none; b=hk6IX4EVzT2S5TpapGWH+nsBeymEMHKS3FrMUuypHx7zxDxNFpMw26u96jw8j0zWQZXd8C2jn9XnosLBQtmndU69njFj7FfFF5X71NeFQtnYnF0UFu5aI2Cr2EGbdFn2SQGWNr144LqkXPkPL/pgXbMMkhuDvT8Jj79UZtzVUgo=
+	t=1750783892; cv=none; b=a29vWjsGVHbLYNrO5cUGqMRCO25/8+cRfORkREzX4h0vVtTTOdADjpwT3+rdflvt68W3ry0ze4pXwC25YacuTMIpbjjJOER5W9o0QcJto6LFPqY6++mdonmR1aR5L0Z1kU3PfcDSib9MaxTgfYl41BL4z62YlSozCI9E+Go7gIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750783886; c=relaxed/simple;
-	bh=AiSxuv5HxZMNtApOoLbB35JJtKGcdtw9e0HZIZ/TyZg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XYuHcBEJ476uItfN2wgilZA4AkZjCn9TXzjCSmPoAcShDXQHfspcuvndHESHjAcAr3PEaOdRxYDxJme6bvNRnGGFShTUsBt/tvCW+WmBTHpIoUdvxhY5xw/l5mgdtWxA+xLQtWmB5onCFXNk5iXlPQUdNk9929bKFt2APs+wn7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jwQ8H5h6; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750783892; c=relaxed/simple;
+	bh=1wSlBTA9NchzeWz0Bz19osXwHKWn6c1flflhLXXn9Q4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PUD9N0JpA+0fiYXiSDQ5rpyf/bB6mv+vkdU1EbzNyUXyu3v6JC2RYDMqWga4d569I9KWE8410Zf0ghWO5CL4lGWvx19ryIG5lUM4J+cgsUMzMAvMbBbTqu32bawEtpH2D4Y/EhHsHEnwFvqQ4qn7zWx4t1rrVyk2U5+bBNHBdfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TJzds/RD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jwQ8H5h6"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-70e2a7a2ce6so5781277b3.0;
-        Tue, 24 Jun 2025 09:51:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750783884; x=1751388684; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1aNMblES8+W9zguUJXcCu5sB/4LcjKP0kbkG8Rw2PGQ=;
-        b=jwQ8H5h6SndZnXu+xghinLkcXG3OX4fwius4U2UED1qX9lINgZnG0spOoKcpYhVTj4
-         C/Hz3rYIC9d4ySrKImw3xbEf6FGCR1QaL9qFQgUGbW/WdYbRhp2uEIdpMCAbn/2gsu0V
-         m5vpNi3CiEVkVuKO8KTvv7ma9N/qqU0R6Ov2kaR7GB+c9fL47Yt+J3y2+MYVBNzWmwrI
-         LJl6xQWW3OPLBp4vi1w+FgaP6I7Sp9lJ+ZcKOv6qvvXv0ncwNlUlJFXVeozAmj+LDU2e
-         Sa/PbccDfc7rV8TAFCACtAtX3HUcWMXvzngBAfeOv5EYh/5X4/nYJ1y65Og+jr/LoRi/
-         rHWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750783884; x=1751388684;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1aNMblES8+W9zguUJXcCu5sB/4LcjKP0kbkG8Rw2PGQ=;
-        b=tL4Ozwm86CAYLQne9xkxLxUJcGb2TSKuwwHvm5yhqg57QflfE2kn79uFCHxYdJFm1v
-         OGESl+PE+1idTwd2Ja049w5NRYxuCMdYKqs5RhNz6vqeDI1G4/uuk05BZJbzeLgx36bq
-         iIHxgnpdRdcadsiZ4SbnOvz9Z8A56tqmqhEpahJxpGBuztHYJsCzjXH3P2wQNJ5eMtIM
-         NdMph8kt1kVv0kpwkViwX5mKIoYa9ypeh2yOMd1kc6Qf/T4Bd5mfklP4Sp6SRFVOf9aR
-         I7USYHRARXHOwAfH6URkQactYBVyo7OAh5EJnztE9wa5fLGiqI4lc5gq3TjcfIGlKa5K
-         gOmg==
-X-Forwarded-Encrypted: i=1; AJvYcCVu/NR4OV+sF3tjfDmIe78soxGKsIW91Lo5QG2zhNCdubb+mg8uvhrGwW5GEc6Z4yZ99v20m7LqsK0bAco=@vger.kernel.org, AJvYcCX5z87JJ5xL/sKs+xn8OEpIodogXGhl28sCOg4Vj7G4O7x6g9dSjP+RGaOVJrDSNZmP3jZUgmNArlPybO8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2SwIb7VbzcXUg8eKnPt3CJhw6SfFPKBFWHRUPFKgwEr4GHoQ2
-	O0SRATqmvfvVIVSnW4MbSkHC2Ou7unNNsqsYgZAtUXaZxHH1fevtPyCg9oFLMGJajpWfsbhGsoV
-	bc0j8pyZgJ2PRi71c2TC7RnLhujO4r39wpLj6znQ=
-X-Gm-Gg: ASbGncsCgfijkwo7EXJeaDzEUloZUmXrCy9/ay9gYWtIVzPDfuEtiN4l72BTCFnogop
-	0RL+3UNvAbdeYYUn29FSWjf/IrMDH21MElusxsIlSWCZdKKCx9dBT+dX+OEzkKZUIgRPG2GVrYI
-	Zuk/DXsx2pHtb86bUcULwZXTD1RTI9d0VVentb8CR22QpD
-X-Google-Smtp-Source: AGHT+IFvySyYmmprnpyVyhwpIu4WBOO54IkG3q4Wj4yrofJybtMktjxvro9rxh6SNN1fBpdkveNbK2qrkNRqB/JNu0o=
-X-Received: by 2002:a05:690c:9418:10b0:713:fff3:62ad with SMTP id
- 00721157ae682-713fff363abmr9550197b3.8.1750783884004; Tue, 24 Jun 2025
- 09:51:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TJzds/RD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 858A9C4CEE3;
+	Tue, 24 Jun 2025 16:51:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750783891;
+	bh=1wSlBTA9NchzeWz0Bz19osXwHKWn6c1flflhLXXn9Q4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TJzds/RDFtYpk28pkYM55SIIh0W+QHJZC5e+VKIbK2VrrtoWqqiL4d3s4wq/8qoOP
+	 D03HN4b91z/Tu8BJXGV4Cmh0Uw3V6kGZ7/NLflTky5C0eJ2Im2cwPw0UmmHAZfytGN
+	 7Op3Z4Ag8aojtbF8zbnx+u3edkoK8AvgXDiQGq8GWsjzybENZfa9BGj8fTGAGDrPN+
+	 VdGimLMnjjmugFk9ExRK+CnwzyEBX3kmfK3hI5Axm92gkjHRoacmeSCIILQapcG6GU
+	 //CLqIlaNyUWCJdnmJxyqIq7KIVQWGxDDSY5BBLY+mAAiU+3C/wNuciyIg+Kd0sNu2
+	 2HZ7m8Im5fubg==
+Date: Tue, 24 Jun 2025 17:51:28 +0100
+From: Simon Horman <horms@kernel.org>
+To: Thomas Fourier <fourier.thomas@gmail.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, Chas Williams <3chas3@gmail.com>,
+	"moderated list:ATM" <linux-atm-general@lists.sourceforge.net>,
+	"open list:ATM" <netdev@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] atm: idt77252: Add missing `dma_map_error()`
+Message-ID: <20250624165128.GA1562@horms.kernel.org>
+References: <20250624064148.12815-3-fourier.thomas@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624144943.39297-1-abdelrahmanfekry375@gmail.com> <cef03d37-715c-47a8-81d4-0872d505c39b@suswa.mountain>
-In-Reply-To: <cef03d37-715c-47a8-81d4-0872d505c39b@suswa.mountain>
-From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-Date: Tue, 24 Jun 2025 19:51:10 +0300
-X-Gm-Features: Ac12FXxABhb6t8CKkGLO-NpOFkS7LjmlrS7vwFTKrrjOeRsEPArjRkBlf_f3hNI
-Message-ID: <CAGn2d8ML8eTcN2G18B7FYkapROnOeAKJir5fJvOXDdXTLY43aQ@mail.gmail.com>
-Subject: Re: [PATCH v2] staging: media: atomisp: remove debug sysfs attributes
- active_bo and free_bo
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: andy@kernel.org, hdegoede@redhat.com, mchehab@kernel.org, 
-	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-staging@lists.linux.dev, skhan@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250624064148.12815-3-fourier.thomas@gmail.com>
 
-On Tue, Jun 24, 2025 at 7:31=E2=80=AFPM Dan Carpenter <dan.carpenter@linaro=
-.org> wrote:
->
-> On Tue, Jun 24, 2025 at 05:49:43PM +0300, Abdelrahman Fekry wrote:
-> >  int hmm_init(void)
-> >  {
-> >       int ret;
-> > @@ -130,14 +48,6 @@ int hmm_init(void)
-> >        */
-> >       dummy_ptr =3D hmm_alloc(1);
-> >
-> > -     if (!ret) {
-> > -             ret =3D sysfs_create_group(&atomisp_dev->kobj,
-> > -                                      atomisp_attribute_group);
-> > -             if (ret)
-> > -                     dev_err(atomisp_dev,
-> > -                             "%s Failed to create sysfs\n", __func__);
-> > -     }
-> > -
-> >       return ret;
->
->
-> It's really unclear how this "return ret;" is supposed to work.  Was
-> that part of the sysfs_create_group()?
->
-yes , but still it can be set by hmm_bo_device_init so even after removing
-sysfs_create_group , ret value depends on another function.
+On Tue, Jun 24, 2025 at 08:41:47AM +0200, Thomas Fourier wrote:
+> The DMA map functions can fail and should be tested for errors.
+> 
+> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+> ---
+>  drivers/atm/idt77252.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/atm/idt77252.c b/drivers/atm/idt77252.c
+> index 1206ab764ba9..f2e91b7d79f0 100644
+> --- a/drivers/atm/idt77252.c
+> +++ b/drivers/atm/idt77252.c
+> @@ -852,6 +852,8 @@ queue_skb(struct idt77252_dev *card, struct vc_map *vc,
+>  
+>  	IDT77252_PRV_PADDR(skb) = dma_map_single(&card->pcidev->dev, skb->data,
+>  						 skb->len, DMA_TO_DEVICE);
+> +	if (dma_mapping_error(&card->pcidev->dev, IDT77252_PRV_PADDR(skb)))
+> +		return -ENOMEM;
+>  
+>  	error = -EINVAL;
+>  
+> @@ -1857,6 +1859,8 @@ add_rx_skb(struct idt77252_dev *card, int queue,
+>  		paddr = dma_map_single(&card->pcidev->dev, skb->data,
+>  				       skb_end_pointer(skb) - skb->data,
+>  				       DMA_FROM_DEVICE);
+> +		if (dma_mapping_error(&card->pcidev->dev, paddr))
+> +			goto outpoolrm;
+>  		IDT77252_PRV_PADDR(skb) = paddr;
+>  
+>  		if (push_rx_skb(card, skb, queue)) {
+> @@ -1871,6 +1875,7 @@ add_rx_skb(struct idt77252_dev *card, int queue,
+>  	dma_unmap_single(&card->pcidev->dev, IDT77252_PRV_PADDR(skb),
+>  			 skb_end_pointer(skb) - skb->data, DMA_FROM_DEVICE);
+>  
+> +outpoolrm:
+>  	handle = IDT77252_PRV_POOL(skb);
+>  	card->sbpool[POOL_QUEUE(handle)].skb[POOL_INDEX(handle)] = NULL;
 
+Hi Thomas,
 
-> >  }
-> >
-> > @@ -145,7 +55,7 @@ void hmm_cleanup(void)
-> >  {
-> >       if (dummy_ptr =3D=3D mmgr_EXCEPTION)
-> >               return;
-> > -     sysfs_remove_group(&atomisp_dev->kobj, atomisp_attribute_group);
-> > +
-> >
->
-> You've introduced two blank lines in a row here.  (checkpatch.pl -f
-> will complain).
->
-noted , will fix it , and send v3
-> regards,
-> dan carpenter
->
-> >       /* free dummy memory first */
-> >       hmm_free(dummy_ptr);
-> > --
-> > 2.25.1
-> >
+Can sb_pool_remove() be used here?
+It seems to be the converse of sb_pool_add().
+And safer than the code above.
+But perhaps I'm missing something.
