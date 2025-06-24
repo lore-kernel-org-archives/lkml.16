@@ -1,122 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03AD2E11D3;
-	Tue, 24 Jun 2025 16:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E141F3074AB
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750781101; cv=none; b=rZQls6dP14t71ZcgbwMBXvJkejpi4ChkqcFYhfPMC8e3BBFPrSZIAHL4G5QUlUJH2c5B3De+XLq4rebcXriFeBICmwyj9iVt7NTatQJCfKoppEzAJnA/6X4UwV84ncVPODCwM3VzgdUk4m+Cb9ZI1rQCWieOFIRFd+nhua16i6Y=
+	t=1750781189; cv=none; b=NdZZO3RzVfBTtiL3akCg+mOkIuAFtBI0CvxcF8njZmNkHnMPdk1Rlwm66cBLYXfC1iF+HKc/43Nmh9Ps0A99u4O3vohIWWqXjUG2RR82o0nMJPzw0mH2fGOpWiWYH3RPsKcT8yvWz3MurvVEZ6kGLdd6vOckPoWv3sC02mzzIe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750781101; c=relaxed/simple;
-	bh=h35+iqWPfBuYqEWe71ovWfkRt/Oz+j7GFp+J5yhUpkw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=QsD5RoedzjBPF5eP/4W9lfyKFuoi6GO2xTmAfLPMjpcjU3ADy1HxOUXQHEIVGNsUIbODrocAmSRXtLiPAqUe9GaAJ0hmzkkauVaCuQVe+ytagAqMraALGDbvGIaJEXbIrPU6mxN33Vce8dZNW+lqHMl7yc29+GEwqASkTQ5Zb7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cB52xsF2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750781189; c=relaxed/simple;
+	bh=xlkLlcSf0h/ZKVboOWy/I0VnhwHvItq4orD9GOCGulY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VFiTdIlHejA5W9kiVYELZyfSwakIhqe9AVrmvSrqrNZuQOP9jw/R30FgcACuLNOXmjSfEQ225RzeWQHJ5DGfL9fYv0Gmwp9Y6gQ7krxjlH7GTd+ln9rdxreL403R1XnGYnRj+eeeLK3y6H8VMtOeW/a69QpDBn9RfmIhNScBVzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=uDPIkN+M; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cB52xsF2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62569C4CEE3;
-	Tue, 24 Jun 2025 16:04:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750781100;
-	bh=h35+iqWPfBuYqEWe71ovWfkRt/Oz+j7GFp+J5yhUpkw=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=cB52xsF2NjUTAiDKSfI0ZrZPJ57Zux+QNb3QW1Adxqw/ViaxkVdbczs+N0Pla6wfY
-	 egor1k49RoEpslU9lKt0MQtc2bu3t33Ct8X66CAkVEhaEGz5wcXwFSYibfv9EMp2f2
-	 BDFlsmY/PWBz6WwtdSbheG6pfgN0vBqhE0i18m3L5K0zgrDHdwbLbX+moiP1Enhd1V
-	 5+V5E5eIVhJnWE4CAso5wz3s1d3mWojeroH0Lx0o9BO7VId1PwyCcQquFBXVhxZg1J
-	 5tol9sNvylVgmyYvpUoJg11Oc8n2PXZmVQfuOTJhIq7IbS2O6Tj6VtAkY1f0EpaLLV
-	 uySCiiImtfErQ==
-Message-ID: <eb5e2b27-58a9-4ee4-a1d8-b2df8ecbd13a@kernel.org>
-Date: Tue, 24 Jun 2025 18:04:54 +0200
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="uDPIkN+M"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4e742dc97so14496f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:06:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750781184; x=1751385984; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1cid1BQIElBt/p0v4bYFzQjvCg76HYy8SFF6cbZxptU=;
+        b=uDPIkN+MxQJODh4HrRhooG1FQJ4LQef7MRE94aUugdM1U4b52i2Av1Yi/G7SYu7kHX
+         cs9vw65qc+H9RawGU8rsA8eNK+o0a8/bPlWm+1KccLM00Ahe1AiK9899wBGnQCfTw4Pr
+         q53Vt0rcYwKtrC4Mz3wtmrnDHrKOvg55gEFHB0yXk2Ejx5DowG9sao8xpkr76yoDRPLO
+         RreRMPn3Ud4dGHk5Yn5e78jj3Dlv5NRJTFmeJktqbMNFfhPgg8rLdy/HqpP9teZRa4P3
+         /Jf1EZXrcZT7lWfBYI22jThmv5oo6cN5IW6T1gQcN1hLN4pjP3YaGlRlCv0Ip81sEPtG
+         O++Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750781184; x=1751385984;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1cid1BQIElBt/p0v4bYFzQjvCg76HYy8SFF6cbZxptU=;
+        b=i0i4K6RCfmUCpW09X2nNjEZffHEWWzBAH4ZJhSb0XXgP6u9LAbljsRb6EXsPcX7Z4S
+         2A8qltFz/E/pjDMHxsK1KJjNDAVbDERqL8+yxt5L/0ksYpwUtGpE29cQRU8WL37sEPJM
+         RzfYQ9tKpizFh1PpMaN1fshZgqAqwsgZlSUUYi6mgZuf+pF7nV39pVWBFcKGZ+3H8duo
+         AYZc41Jn3Mktsog9a7/mZu4ZodjfQcgUSrEZt8iWEWhITx4s7De+L6pfEq3ZaR8ogEVi
+         aKlqXfT8qlEpXSR89Llr/GsZv9QzGqlpiBnEZTOJm1+QPxf19z/LFfktAoUtGz2y7roY
+         JzNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWjGb0i6qSk0cdkUaZjgK1+SRO0L4u5gGbW3oHaeMkkIvjllRsvyZsBtRCcWPcPPz3/jD012zP7ZBNEckI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyW89PnpeDOJMc3Gb+Y5totI254fzxD5rz0TYbzPtmwPTw2gbo4
+	q0v0c6EJJIFd8GkIbsPnNICLNeUb3hmfpH3xFDvl5WPeUMwQz96yWmwhLgwQt2+afMw=
+X-Gm-Gg: ASbGncur0aX3kp90FyF2zX4uGd2pBal5TLGkk8kB3BcGpGdzhPPrc4asdbDyAsTvSed
+	ea0Oti7McXf2MhOBd/AQ0uNuZ8NaLMBf8SgzQQi9dlkDRrH+ntJyuC1Ul3sG+6QnR0LGH1jv8HZ
+	xfDie6PeMg7HCJU4hyZcxkcF97g/nI/ym98mfqR27VhEG5kQ1PCHGabfjSqeawRmaHTARfx6GNI
+	0Msp/7cTAfYNkVOLncRGcNhxxdLpYxF/LqI68GagGIf3obBfadCuG/89/ks9NJf1rQ5qVVp9F1I
+	Ivlf062xvNNut2+1ugirFFQIjuyJN8ca+5t7HFww6RFAr4zswAFsgFdwMURCXxCpjeJJeRCzfcc
+	H
+X-Google-Smtp-Source: AGHT+IE7QrYdODMg+rQ3Qulq63j+JWzcWyuaiscjncp3n+omTYlc5+kTNiqEaBdrxSFrvdg+ETe++Q==
+X-Received: by 2002:a05:6000:2913:b0:3a5:8934:4959 with SMTP id ffacd0b85a97d-3a6e720e285mr3568635f8f.27.1750781183884;
+        Tue, 24 Jun 2025 09:06:23 -0700 (PDT)
+Received: from toaster.baylibre.com ([2a01:e0a:3c5:5fb1:9dad:c694:2b52:ea7d])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-453646cb64csm151933805e9.4.2025.06.24.09.06.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 09:06:23 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH v2 0/2] NTB: epf: add vNTB support for Renesas rcar
+ platform
+Date: Tue, 24 Jun 2025 18:06:15 +0200
+Message-Id: <20250624-ntb-rcar-support-v2-0-8c0e5cf69c4d@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 10/29] dt-bindings: reset: Add MediaTek MT8196 Reset
- Controller binding
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Laura Nao <laura.nao@collabora.com>, mturquette@baylibre.com,
- sboyd@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
- p.zabel@pengutronix.de, richardcochran@gmail.com
-Cc: guangjie.song@mediatek.com, wenst@chromium.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
- kernel@collabora.com
-References: <20250624143220.244549-1-laura.nao@collabora.com>
- <20250624143220.244549-11-laura.nao@collabora.com>
- <ae13aeea-bf44-49e5-82c6-5e369ea96d84@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <ae13aeea-bf44-49e5-82c6-5e369ea96d84@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPfMWmgC/x3MQQ5AMBBA0avIrE0iUypcRSyoKbOpZopIxN01l
+ m/x/wOJVThBXzygfEmSPWRQWYDbprAyypINVFFTWaoxHDOqmxTTGeOuB7IxXetb6xpDkLOo7OX
+ +l8P4vh+x54qEYgAAAA==
+X-Change-ID: 20250624-ntb-rcar-support-e3397f76c532
+To: Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>, 
+ Allen Hubbe <allenbh@gmail.com>
+Cc: ntb@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Frank Li <Frank.li@nxp.com>, 
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+ Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1448; i=jbrunet@baylibre.com;
+ h=from:subject:message-id; bh=xlkLlcSf0h/ZKVboOWy/I0VnhwHvItq4orD9GOCGulY=;
+ b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBoWsz8XitbW65TZA5BSG3j7AAxJ1XgMryQBWpCW
+ JJZGFjrqiSJAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCaFrM/AAKCRDm/A8cN/La
+ hTuRD/4qu3puCsQNgW95NrBlI2j7ugbs47thV9vS7IwWYXIeU+7jkSUFYV1h5NwVSBQxc5y8O4a
+ nF//2TP0H2gFfLPOnZnclShKUc3/87jGsoX5f3O23NtBKTVrQfLWDWw91bGJp+R+Q1G1h1ywh/k
+ dPs+EPuTvcWiUn/eJaD2BdKAswPoXpyPAKu7wVOZpds0h+IVm6hJ25t8NW15EqyykUsGG3yZUbo
+ oEvkOXRrtbQY/zFgBYQKkMuxJckauImcPO4+Trb7zakem1pozwOJKvnCQTdLPodLEe0JgmoT6Lm
+ 1pZTu9/dUwR08CFEvYgVgixi7uz8twJNAuIIiem7X9cp0DR3e6WWiDmlrSgcl66rbzLm1sTXLbF
+ LYlndHEx+14Z8JEr2NnDRYzrfY9JPjYj6JJ09McQWpN99/ACkukjpyfSGSOEHOMnL4qrdSq5Jy+
+ ECpm1oYOCLoHMDw96rv71iK4dSWtIetcRXdmrCkMoVwBv9IhqHdgOv3F7QkB0q6yC59n24l+5lg
+ A0Q/hOBTzX18ETZvuop/MX9qE/Q8OtJ5bI7Ued21bAwuBpk512fVFp7K9VZNwZOYpyRvySEM0O2
+ 5xz7jN4SXKBUD5ADPkh9+JUpaQyfQgjx7zO6OB1xVupE6NSmrFor9FT0FlAkD0jFfgccPYO4rNS
+ /u5FJ5NPjsoepUw==
+X-Developer-Key: i=jbrunet@baylibre.com; a=openpgp;
+ fpr=F29F26CF27BAE1A9719AE6BDC3C92AAF3E60AED9
 
-On 24/06/2025 18:03, Krzysztof Kozlowski wrote:
-> On 24/06/2025 16:32, Laura Nao wrote:
->> From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->>
->> Add a binding for the PEXTP0/1 and UFS reset controllers found in
->> the MediaTek MT8196 Chromebook SoC.
->>
->> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->> Signed-off-by: Laura Nao <laura.nao@collabora.com>
->> ---
->>  .../reset/mediatek,mt8196-resets.h            | 26 +++++++++++++++++++
->>  1 file changed, 26 insertions(+)
->>  create mode 100644 include/dt-bindings/reset/mediatek,mt8196-resets.h
-> 
-> No improvements.
+This patchset adds support create vNTB link between rcar platforms
+This was tested on rcar gen4.
 
-I see the license got fixed, so half improvements. My other comment stays.
+The changes here are for the RC side of things. The EP side was sent here
+[2]. There is a runtime dependency to get a working vNTB link between the
+two but no compile time dependency. It should be safe for 2 series to go
+along in different trees, even during the same cycle.
 
-Respond to the comments instead.
+It may seem like we are starting straight from v2, but a v1 of PATCH 1 has
+been sent along the v1 of EP side series [1], for illustration. Starting
+from v2 to avoid any confusion.
+
+Changes in v2:
+- Rename barno to barno_map
+- Drop unnecessary default values
+- Actually add rcar support with an product id provided by Renesas
+- Link to v1: https://lore.kernel.org/r/20250505-pci-vntb-bar-mapping-v1-4-0e0d12b2fa71@baylibre.com
+
+[1]: https://lore.kernel.org/r/20250505-pci-vntb-bar-mapping-v1-0-0e0d12b2fa71@baylibre.com
+[2]: https://lore.kernel.org/r/20250603-pci-vntb-bar-mapping-v2-0-fc685a22ad28@baylibre.com
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+Jerome Brunet (2):
+      NTB: epf: Allow arbitrary BAR mapping
+      NTB: epf: Add Renesas rcar support
+
+ drivers/ntb/hw/epf/ntb_hw_epf.c | 120 +++++++++++++++++++++++-----------------
+ 1 file changed, 69 insertions(+), 51 deletions(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250624-ntb-rcar-support-e3397f76c532
 
 Best regards,
-Krzysztof
+-- 
+Jerome
+
