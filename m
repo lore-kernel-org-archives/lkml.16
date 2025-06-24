@@ -1,25 +1,72 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37CFB28ECEF;
-	Tue, 24 Jun 2025 13:28:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA072C1590
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750771686; cv=none; b=FaVfEwVM/OAVHFnvWyz8JtUSkzOdk/TY+MIdXAP/M4zLcR6YCXpuIlasn3bS8hTcMP4UUX1MFuxS3Bk2zDcRMs+mf9Olkvek63y0keWKwbWkprwmd4Majv+WBWcNn467uLZJhnl8AYwc/sEanUSSWFI5kGQ5AAQe+KS5pgmjbn8=
+	t=1750771703; cv=none; b=aXNm7L5voJOtG0Lj6EnBFN7wIsVXSpjs6JwbP4o9j4BmwdTbg5KUhEGAbRFK1xBfyRoBS+mihRESPBObvh4vMrEa7esNjjSMwgBvscTiezgiS6I/a0zIj3Nc1phBLv7uMHcK3NNAbHP+jEACJ3YPvv/KVXfBnZY+EdZsmFuWBDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750771686; c=relaxed/simple;
-	bh=p9Y8HlbZozCgsx+nCkc/8qbLEDTDlPNxuRzYxo2IPmo=;
+	s=arc-20240116; t=1750771703; c=relaxed/simple;
+	bh=lasfdr/TaGl7iQzxXsOYnVe4ZWgSTCOhymdRSnVVl4w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hlEsudAEF0opWy1q2Z4/pF3k0PN/o5QUTR6ffGgvFnwNUk/NWYtZ2TiET7WpFA1GbBqYMznum9ZeTj92mQnYTpA+QjAGEs+Yribd2C1R12SUTEalgv+uk5Z8hieksYt8IwVgLpjEFjuaHJrVSICcWGrZKMR1k0YvPHkkB9QyAYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A9B7113E;
-	Tue, 24 Jun 2025 06:27:45 -0700 (PDT)
-Received: from [10.57.29.71] (unknown [10.57.29.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C468A3F58B;
-	Tue, 24 Jun 2025 06:27:58 -0700 (PDT)
-Message-ID: <a8c3df16-a460-49bb-ba4e-1a07135d24e5@arm.com>
-Date: Tue, 24 Jun 2025 14:27:57 +0100
+	 In-Reply-To:Content-Type; b=HLCsbc49kxQrTN2wQf1LG8GX1jyMNcdEQ1wWhvxlQtp9ZZS5VqcOUXdBM+TcXpHTVR73I2yjl23CHIr9bu7vxm3O1xNC7+oWiaYze9+NjUlHATGwF4cfTWKLh3J0nhBV8fr/XsF2hTokqbPdqKA5SrprMUbwDz2YfYfPRyAsoQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=AqAMrige; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="AqAMrige"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O8w21F024367
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:28:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	1xHRBt7S0QkIA0FEcCi54MhIM2gOS2cQRRBECPdtA7s=; b=AqAMrigeblmVfCoT
+	kN8W6W+otX543cHItr3bjmHFVsVSHtXCDJyad9/KThtNRIKUK5pDTu1gguqFgnKs
+	0lycQRdRxm0ydG8ysuZynBq8LkKdLz7Uapzu/V4IAyiQE34KUOov6oOzVA+9eUZO
+	uQtJuzTfFrQ0hfEsbh9q3ZQakhi5Qbx3V1U9hvA4zPKEobkca3j0Vs2NhYlR41+K
+	SedpIlwyeKvid+p9Z6YyAbnTVIx79TQExIxCObbUODJ2Zr0SgAxS6ds+83t36hzl
+	DJaex7bbfvnMjogaKmbi7YLIdyNfeP336VNMBAz+cWA0hdmux4LjUaJssx3pvR+Q
+	1QAIuA==
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f3bgc85f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:28:20 +0000 (GMT)
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-b31bc3128fcso6883443a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:28:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750771700; x=1751376500;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1xHRBt7S0QkIA0FEcCi54MhIM2gOS2cQRRBECPdtA7s=;
+        b=bnHpOfwvhBsYdxkeMO1MUIjTv3cXg8Fj1We1yXtad6xt2vYJN3ryVkOzfZHcReGV83
+         dEaS32zAvhmufp+tGZu4nJ/8gCJELclfbselsW1FoF8iQNARu5vjdqp6TBDZId+IF10W
+         7HVSR07Irss/FZGnUyjz86pOiJianSQNCbipmfHlEMA9piSfaqNVrZ1IRF3zGlQ10Svt
+         GvBemwhqmEXFYd9rIKUilj9Vr7MYMmb8Jomt0c8f7YSBeBTmE74dztoWGCHHjdnTKIin
+         NqZbcifcq6bpfJqfBgm8tQSFSQkHaJgecEO6YKEjkAPxKOcr7X/z0nCsNUiIk38KDnqY
+         i9EA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0WTb+CEAW5vENdcJn2hSD73121/e513+Rgksrw7RJsqFaFKtBOQXHcXlHk6q/4NSMMZ9Qw/dw05WXrRs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkSSp82F2L/8z+Y5VEcQ2V5zDLjQiudSeYOa4HQVBBUjGu8ln2
+	SySyjIbnHi07h6dNhDI8FLmiCabgyogP3a5abwtBjOKGzbK+vw4+i+AWfeAku710JRnV2Z4+Lur
+	ftLhVYsmzuUU4GSt0E389+TIzcrJt0/YWa3kmVkQIEnSmwDDxSSO3WihMViKUt8hW9+4=
+X-Gm-Gg: ASbGncsPvN3a6UB1LUaesZrujenCILtEnTIiV3TKaADnxPFpaUyoZ+1Fu1NvHCDFS9d
+	0yuWm3n2niqi3HoR1IfAcrLbRfmaZirxeyhPVwYEV5WHovv8FGSAtaCp2I6eZqSPrY0AFIa4Izm
+	paz1drNOzVZ4bqREGEvekYIuylznT1uarGxseRLIF5ClZa3nfWVCEnkWnp22zGxU41lRUznb8Fc
+	64Yh4JkcNXsio1Jzj2rsUkmF7Rl7hrHz9Mo/oI6zNTdX+3aPiqYqeJr+pyI8jQQxJph/AwqVRHK
+	Mh55KsHV7vkLcu7f5ENsDb4ETVFS+cQhp7ITvx4Dzm0RNgeIcXA=
+X-Received: by 2002:a05:6a00:3e0b:b0:747:bd28:1ca1 with SMTP id d2e1a72fcca58-7490d663700mr28575633b3a.3.1750771699606;
+        Tue, 24 Jun 2025 06:28:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHhSkFmD+5UXG4jGrsUbcWVvnGV+HYRoYvsylLGuSpLZ0cZAFjd7dWnoz7KErNAGSRJxIUwtQ==
+X-Received: by 2002:a05:6a00:3e0b:b0:747:bd28:1ca1 with SMTP id d2e1a72fcca58-7490d663700mr28575577b3a.3.1750771699195;
+        Tue, 24 Jun 2025 06:28:19 -0700 (PDT)
+Received: from [10.217.217.28] ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749c882f5b8sm1961515b3a.95.2025.06.24.06.28.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 06:28:18 -0700 (PDT)
+Message-ID: <c7361a7e-a1e6-4327-ac7c-243fd8846f7d@oss.qualcomm.com>
+Date: Tue, 24 Jun 2025 18:58:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,211 +74,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 06/10] dt-bindings: npu: rockchip,rknn: Add bindings
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Kever Yang <kever.yang@rock-chips.com>, Daniel Stone <daniel@fooishbar.org>,
- Da Xue <da@libre.computer>, Jeff Hugo <jeff.hugo@oss.qualcomm.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250606-6-10-rocket-v7-0-dc16cfe6fe4e@tomeuvizoso.net>
- <20250606-6-10-rocket-v7-6-dc16cfe6fe4e@tomeuvizoso.net>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250606-6-10-rocket-v7-6-dc16cfe6fe4e@tomeuvizoso.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH V6 3/5] dt-bindings: iio: adc: Add support for QCOM PMIC5
+ Gen3 ADC
+To: Neil Armstrong <neil.armstrong@linaro.org>, jic23@kernel.org,
+        robh@kernel.org, krzysztof.kozlowski@linaro.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, agross@kernel.org, andersson@kernel.org,
+        lumag@kernel.org, dmitry.baryshkov@oss.qualcomm.com,
+        konradybcio@kernel.org, daniel.lezcano@linaro.org, sboyd@kernel.org,
+        amitk@kernel.org, thara.gopinath@gmail.com, lee@kernel.org,
+        rafael@kernel.org, subbaraman.narayanamurthy@oss.qualcomm.com,
+        david.collins@oss.qualcomm.com, anjelique.melendez@oss.qualcomm.com,
+        quic_kamalw@quicinc.com
+Cc: rui.zhang@intel.com, lukasz.luba@arm.com, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        cros-qcom-dts-watchers@chromium.org, quic_skakitap@quicinc.com,
+        stephan.gerhold@linaro.org
+References: <20250509110959.3384306-1-jishnu.prakash@oss.qualcomm.com>
+ <20250509110959.3384306-4-jishnu.prakash@oss.qualcomm.com>
+ <8736dea0-2a5b-49d8-8445-239e5d11174e@linaro.org>
+Content-Language: en-US
+From: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+In-Reply-To: <8736dea0-2a5b-49d8-8445-239e5d11174e@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: gvlQRwyAWkob1GEVHBuXyMK0seiQkUse
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDExMyBTYWx0ZWRfXyI6LdAy0ge/j
+ 8OBXSI6xjyrXslvv5wE1xNaegbFhvyHqWSinQ4QdfLPWnrQ3GU4GHXGVUi6+6YCC+TYnl7ynT4C
+ /g+3qn8d3FnMPifJlCETO6uwJ7VcpAtw+8BXDByAGdZJuVfTcrYBb7i13aCz5ekYBImW24QbItd
+ VmuWly4ChE06pZY3zv9BxJc4jl50l51RnEkESnNvnsyNE3/hhHaNi5Egm02QE+Po+WgkGmuFKxi
+ zr55JyjABFwNUoi8THODaa5s0QSbr4D/doj4cRqw6sYoRAtkC7yA093tSWxIwERFiRTYNlR3wJq
+ BGh2xAs66KywGkNAdqEuAzzrnPqgt0o5xDohKNz+z9WfL9oje468w71saqbKg+NUp39ZKx10Eg2
+ /TDbfCoL85axMB83a/kLjZZNcZbQkc57yZLb/2fdphjFzrveBDDUQzsz45ulItDlcCqzuZrO
+X-Authority-Analysis: v=2.4 cv=L4kdQ/T8 c=1 sm=1 tr=0 ts=685aa7f5 cx=c_pps
+ a=Oh5Dbbf/trHjhBongsHeRQ==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
+ a=Bk9QF8R_Bm2aD44dtyUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=_Vgx9l1VpLgwpw_dHYaR:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: gvlQRwyAWkob1GEVHBuXyMK0seiQkUse
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-24_05,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 malwarescore=0 bulkscore=0 clxscore=1015 suspectscore=0
+ adultscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
+ spamscore=0 phishscore=0 mlxlogscore=999 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506240113
 
-On 2025-06-06 7:28 am, Tomeu Vizoso wrote:
-> Add the bindings for the Neural Processing Unit IP from Rockchip.
-> 
-> v2:
-> - Adapt to new node structure (one node per core, each with its own
->    IOMMU)
-> - Several misc. fixes from Sebastian Reichel
-> 
-> v3:
-> - Split register block in its constituent subblocks, and only require
->    the ones that the kernel would ever use (Nicolas Frattaroli)
-> - Group supplies (Rob Herring)
-> - Explain the way in which the top core is special (Rob Herring)
-> 
-> v4:
-> - Change required node name to npu@ (Rob Herring and Krzysztof Kozlowski)
-> - Remove unneeded items: (Krzysztof Kozlowski)
-> - Fix use of minItems/maxItems (Krzysztof Kozlowski)
-> - Add reg-names to list of required properties (Krzysztof Kozlowski)
-> - Fix example (Krzysztof Kozlowski)
-> 
-> v5:
-> - Rename file to rockchip,rk3588-rknn-core.yaml (Krzysztof Kozlowski)
-> - Streamline compatible property (Krzysztof Kozlowski)
-> 
-> v6:
-> - Remove mention to NVDLA, as the hardware is only incidentally related
->    (Kever Yang)
-> - Mark pclk and npu clocks as required by all clocks (Rob Herring)
-> 
-> v7:
-> - Remove allOf section, not needed now that all nodes require 4 clocks
->    (Heiko Stübner)
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->   .../bindings/npu/rockchip,rk3588-rknn-core.yaml    | 118 +++++++++++++++++++++
->   1 file changed, 118 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/npu/rockchip,rk3588-rknn-core.yaml b/Documentation/devicetree/bindings/npu/rockchip,rk3588-rknn-core.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..0588c085a723a34f4fa30a9680ea948d960b092f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/npu/rockchip,rk3588-rknn-core.yaml
-> @@ -0,0 +1,118 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/npu/rockchip,rk3588-rknn-core.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Neural Processing Unit IP from Rockchip
-> +
-> +maintainers:
-> +  - Tomeu Vizoso <tomeu@tomeuvizoso.net>
-> +
-> +description:
-> +  Rockchip IP for accelerating inference of neural networks.
-> +
-> +  There is to be a node per each core in the NPU. In Rockchip's design there
-> +  will be one core that is special because it is able to redistribute work to
-> +  the other cores by forwarding register writes and sharing data. This special
-> +  core is called the top core and should have the compatible string that
-> +  corresponds to top cores.
+Hi Neil,
 
-Say a future SoC, for scaling reasons, puts down two or more whole NPUs 
-rather than just increasing the number of sub-cores in one? How is a DT 
-consumer then going to know which "cores" are associated with which "top 
-cores"? I think at the very least they want phandles in one direction or 
-the other, but if there is a real functional hierarchy then I'd be 
-strongly tempted to have the "core" nodes as children of their "top 
-core", particularly since "forwarding register writes" sounds absolutely 
-like something which could justify being represented as a "bus" in the 
-DT sense.
+On 5/9/2025 8:05 PM, neil.armstrong@linaro.org wrote:
+> 
+> Hi,
+> On 09/05/2025 13:09, Jishnu Prakash wrote:
+>> For the PMIC5-Gen3 type PMICs, ADC peripheral is present in HW for the
+>> following PMICs: PMK8550, PM8550, PM8550B and PM8550VX PMICs.
+>>
+>> It is similar to PMIC5-Gen2, with SW communication to ADCs on all PMICs
+>> going through PBS(Programmable Boot Sequence) firmware through a single
+>> register interface. This interface is implemented on SDAM (Shared
+>> Direct Access Memory) peripherals on the master PMIC PMK8550 rather
+>> than a dedicated ADC peripheral.
+>>
+>> Add documentation for PMIC5 Gen3 ADC and macro definitions for ADC
+>> channels and virtual channels (combination of ADC channel number and
+>> PMIC SID number) per PMIC, to be used by clients of this device.
+> 
+> The following is missing to allow it to be a qcom,spmi-pmic subnode:
+> 
+> =========================><================================================
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+> index 11da55644262..b97f0e7b269e 100644
+> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+> @@ -127,6 +127,7 @@ patternProperties:
+>    "^adc@[0-9a-f]+$":
+>      type: object
+>      oneOf:
+> +      - $ref: /schemas/iio/adc/qcom,spmi-adc5-gen3.yaml#
+>        - $ref: /schemas/iio/adc/qcom,spmi-iadc.yaml#
+>        - $ref: /schemas/iio/adc/qcom,spmi-rradc.yaml#
+>        - $ref: /schemas/iio/adc/qcom,spmi-vadc.yaml#
+> =========================><================================================
+> 
+> Thanks,
+> Neil
+> 
+
+Thanks for catching this, I'll add a patch for this in my next patch series.
+Although I tried running full dt_binding_check and dtbs_check in my local
+workspace with my three binding patches applied, I could not see any error
+related to this, I'm not sure why.
 
 Thanks,
-Robin.
+Jishnu
 
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: '^npu@[a-f0-9]+$'
-> +
-> +  compatible:
-> +    enum:
-> +      - rockchip,rk3588-rknn-core-top
-> +      - rockchip,rk3588-rknn-core
-> +
-> +  reg:
-> +    maxItems: 3
-> +
-> +  reg-names:
-> +    items:
-> +      - const: pc
-> +      - const: cna
-> +      - const: core
-> +
-> +  clocks:
-> +    maxItems: 4
-> +
-> +  clock-names:
-> +    items:
-> +      - const: aclk
-> +      - const: hclk
-> +      - const: npu
-> +      - const: pclk
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  iommus:
-> +    maxItems: 1
-> +
-> +  npu-supply: true
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 2
-> +
-> +  reset-names:
-> +    items:
-> +      - const: srst_a
-> +      - const: srst_h
-> +
-> +  sram-supply: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - iommus
-> +  - power-domains
-> +  - resets
-> +  - reset-names
-> +  - npu-supply
-> +  - sram-supply
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/rockchip,rk3588-cru.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/power/rk3588-power.h>
-> +    #include <dt-bindings/reset/rockchip,rk3588-cru.h>
-> +
-> +    bus {
-> +      #address-cells = <2>;
-> +      #size-cells = <2>;
-> +
-> +      npu@fdab0000 {
-> +        compatible = "rockchip,rk3588-rknn-core-top";
-> +        reg = <0x0 0xfdab0000 0x0 0x1000>,
-> +              <0x0 0xfdab1000 0x0 0x1000>,
-> +              <0x0 0xfdab3000 0x0 0x1000>;
-> +        reg-names = "pc", "cna", "core";
-> +        assigned-clocks = <&scmi_clk SCMI_CLK_NPU>;
-> +        assigned-clock-rates = <200000000>;
-> +        clocks = <&cru ACLK_NPU0>, <&cru HCLK_NPU0>,
-> +                 <&scmi_clk SCMI_CLK_NPU>, <&cru PCLK_NPU_ROOT>;
-> +        clock-names = "aclk", "hclk", "npu", "pclk";
-> +        interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH 0>;
-> +        iommus = <&rknn_mmu_top>;
-> +        npu-supply = <&vdd_npu_s0>;
-> +        power-domains = <&power RK3588_PD_NPUTOP>;
-> +        resets = <&cru SRST_A_RKNN0>, <&cru SRST_H_RKNN0>;
-> +        reset-names = "srst_a", "srst_h";
-> +        sram-supply = <&vdd_npu_mem_s0>;
-> +      };
-> +    };
-> +...
-> 
+
+>>
+>> Signed-off-by: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+>> ---
+>> Changes since v5:
 
