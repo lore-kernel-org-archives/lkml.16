@@ -1,125 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61EEC2C3769
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998E12D321A;
+	Tue, 24 Jun 2025 14:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750774314; cv=none; b=YaVeb9T/g9Tx8nF56huxuLxMUrAgU5mwzT86IKoBZFQsisuRd69UB7eGOUdOQ+/a0C6xI3DMvkhNhL03jFINStKvQkcbUp0/ERvbUG410UT7RRg2BopOGw2WRo3JEZSAKH33VOn/RoZk7ntB6kd6iYAQJ7kVW0F2ex8ofsEfgpI=
+	t=1750774329; cv=none; b=VAORIai9T1210yFZXtlEFrYoe5OuHt3yaEhcsBjspX7Yww63Rt4T95eHuYhhPI35eaZ/BVS1mYbor6D4fzYBF08cr/nVVmxW50GxLOJ2KfsukNJGNsFeeC9tbiXuRavLT+8GUTrkI/H2nZrZgf+o/6hrlcxsUA+lXWQRqjTUrK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750774314; c=relaxed/simple;
-	bh=Gsme+zfIKoFJ26sAHfvBEk62kt8F+ueupl48uTmKDVk=;
+	s=arc-20240116; t=1750774329; c=relaxed/simple;
+	bh=4dm738puZ65QLTh1P55lsRhIe1MAbrJwqSEKF9VP3/o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PM2vGoyy0YKBf3zJfxmK2mGS9qa0Gcs+81ynrtIRlqHYPnYVUz2FEtzAspfACpopVXRRNOCSti2R1Mqe7KPof2HtNU0OGnrhl3+B2xl4WhKdECl7Jqo5xnrR2nQax09HWKsuJbLBSX7yIdPYddWGvx5WReCBom+nUV3P+YOic0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tf/fOa/Z; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gBnURJ8q/+Wzi0iz5xnIDKShQFsiIlm3b/iulrXTezTZOHjl8j4UEYsr+AkURFOLIekd3DVnDoGzpfzNZsIC0977EbI3aptm/tlSsvGGBrZQcLfJg0YfL+vZrWHn10Yscc13PuAG8zhA3gDFAVDccpitjae7M+BORhdHtiuzbyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J+EBbfyl; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tf/fOa/Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93DE8C4CEE3;
-	Tue, 24 Jun 2025 14:11:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750774312;
-	bh=Gsme+zfIKoFJ26sAHfvBEk62kt8F+ueupl48uTmKDVk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tf/fOa/Z9YL09J+RAROCTsQgtxv5kEUH0A4WKlGicvvMRiHCCZVzCR7LGVCpUG9qk
-	 Xtzn4pw+EIJuGxc5IgavWiEL2IigrbwU3/BuLykiTCI05+KplSJhQeDnBFKCcpW5tf
-	 38Km+kEZ0muYbF4Bj3AvwUxByLhq0+uYPEiB+RBcRR+SZivaLiQY/JnR/Hpd1m0Ta9
-	 ijGhk9Yek8ivVQ5mO8f/98Y/5ZTW+iHV1XaH4SYmYeQDvHfe2faIoZo27iEHWaone8
-	 wmFhE/+YEOSKLf+OFC0/7Dhy1TQDYwqtpHtrXdxOIG8cDYAOlOAbdHTpB4xEbW2JOL
-	 A1tZTCiGfBVqg==
-Date: Tue, 24 Jun 2025 16:11:50 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Waiman Long <longman@redhat.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: Re: [PATCH v5 5/6] cgroup/cpuset: Fail if isolated and nohz_full
- don't leave any housekeeping
-Message-ID: <aFqyJiE0EeJdHYd_@localhost.localdomain>
-References: <20250508145319.97794-8-gmonaco@redhat.com>
- <20250508145319.97794-13-gmonaco@redhat.com>
- <aCyRhAeGwLSVf2LZ@localhost.localdomain>
- <3acad4a1a07ccbde615ea19eb13a96f37d4a3a2f.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J+EBbfyl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750774328; x=1782310328;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4dm738puZ65QLTh1P55lsRhIe1MAbrJwqSEKF9VP3/o=;
+  b=J+EBbfylPT8duSwa7tNGfo5Xv6RHFo4mLMeJruvWRl2PcoVnKUH6MhVH
+   m1GmwwJPKwia3IwOMHhY+C+TKp9EtdWbp1BP222ekRzA4ZaR5s3jKdqW5
+   OhERNdpRfLvdgIIJ5sOf9S1Jx1M9Y+jQG/BXRi4b8NCFX3TGkZk2049aP
+   1zFvKl+UNF9li9FEvdcPrRMSq9WrNkzuYJiKDD2oEMkc2NeJB3hV1cT3t
+   5UlUDd8KFUDlLHUtkBtnTnFJNI4WTnmX6O32VYECgfzJapPXvjHGE9ijf
+   HmScgwl+SFojH2yJh59Ardw4RAeNTIXvVFuUQFKy5rtcITjh125nwEUyM
+   g==;
+X-CSE-ConnectionGUID: Fq5CM6gmQ+eNNZY3JpS9rA==
+X-CSE-MsgGUID: QsiHW7CsTCmpJyfc1tNqPA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="53150686"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="53150686"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 07:12:07 -0700
+X-CSE-ConnectionGUID: 8ZOIuYKkQGymaEdHLXfZnw==
+X-CSE-MsgGUID: gMcqmGEqSQKlAZAVTf9w6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="152092947"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa007.jf.intel.com with ESMTP; 24 Jun 2025 07:12:06 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 58B6E224; Tue, 24 Jun 2025 17:12:04 +0300 (EEST)
+Date: Tue, 24 Jun 2025 17:12:04 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH v2 3/5] serial: 8250: rename lsr_TEMT, iir_NOINT to
+ lowercase
+Message-ID: <aFqyNIQMED6ora95@black.fi.intel.com>
+References: <20250624080641.509959-1-jirislaby@kernel.org>
+ <20250624080641.509959-4-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3acad4a1a07ccbde615ea19eb13a96f37d4a3a2f.camel@redhat.com>
+In-Reply-To: <20250624080641.509959-4-jirislaby@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-(Sorry for the delay, I forgot to reply that one)
+On Tue, Jun 24, 2025 at 10:06:39AM +0200, Jiri Slaby (SUSE) wrote:
+> There are already variables like 'iir_noint1' and 'iir_noint2'. Follow
+> the preexisting lowercase naming of variables. So s/lsr_TEMT/lsr_temt/
+> and 'iir_NOINT' likewise.
 
-Le Fri, May 23, 2025 at 01:15:44PM +0200, Gabriele Monaco a écrit :
-> On Tue, 2025-05-20 at 16:28 +0200, Frederic Weisbecker wrote:
-> > 
-> > Apparently you can't trigger the same with isolcpus=0-6, for some
-> > reason.
-> > 
-> > One last thing, nohz_full makes sure that we never offline the
-> > timekeeper
-> > (see tick_nohz_cpu_down()). The timekeeper also never shuts down its
-> > tick
-> > and therefore never go idle, from tmigr perspective, this way when a
-> > nohz_full
-> > CPU shuts down its tick, it makes sure that its global timers are
-> > handled by
-> > the timekeeper in last resort, because it's the last global migrator,
-> > always
-> > alive.
-> > 
-> > But if the timekeeper is HK_TYPE_DOMAIN, or isolated by cpuset, it
-> > will go out
-> > of the tmigr hierarchy, breaking the guarantee to have a live global
-> > migrator
-> > for nohz_full.
-> > 
-> > That one is a bit more tricky to solve. The easiest is to forbid the
-> > timekeeper
-> > from ever being made unavailable. It is also possible to migrate the
-> > timekeeping duty
-> > to another common housekeeper.
-> > 
-> > We probably need to do the latter...
-> 
-> I'm thinking about this again, is it really worth the extra complexity?
-> 
-> The tick CPU is already set as the boot CPU and if the user requests it
-> as nohz_full, that's not accepted.
-
-Actually that's possible, unfortunately...
-
-> In my understanding, this typically happens on CPU0 and this CPU is
-> kinda special and is advised to stay as housekeeping. As far as I
-> understand, when nohz_full is enabled, the tick CPU cannot change.
-
-It can change, fortunately on early boot.
-
-> 
-> Said that, I'd reconsider force keeping the tick CPU in the hierarchy
-> no matter if we isolate it or not when nohz_full is active (e.g. what
-> you mentioned as the /easy/ way).
-> We'd not prevent domain isolation (as the user requested), but allow a
-> bit more noise just on that CPU for the sake of keeping things simple
-> while not falling into dangerous corner cases.
-> If that's still a problem for the user, they are probably better off
-> either selecting a different mask or setting nohz_full consistently
-> (I'm still wondering how common a scenario this is).
-> 
-> Am I missing something here?
-
-Agreed, forcing the tick CPU to stay in the hierarchy when nohz_full is
-enabled is the easiest.
-
-Thanks.
-
-> 
-> Thanks,
-> Gabriele
-> 
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
-Frederic Weisbecker
-SUSE Labs
+With Best Regards,
+Andy Shevchenko
+
+
