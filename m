@@ -1,66 +1,66 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D482D1F72
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161352D1F40
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750775554; cv=none; b=jhFNAIyoGTC4qhHTSraYqPwG7UObP2OlvXa1WbDRLsMhC/5O6wyP/KXcoIghUBSWLnxm6zl06djRX42Ha4lnVjIjFKMf0tMCgdx8j9Z27lRrfWTzV7ss880tCGzpdk2nR3FW5JYjN6xsgwzb9Stu0OCEjWy3kUezKwKv8Ln2WKA=
+	t=1750775555; cv=none; b=LkUo9mqd/mmwKKDI3MJd2vB62aGOJwb/vqFmOXvNiKrui3OR7jzuG7QGk/p6aHlhdickzV5UWQI0M/USeOAWAgASOW85/3B85eo8Mz1NKjqoLP+LZdNsBRyhBPQvjlhbXwzxZhEbj3mB/DenB3d1uKcFwEERuiUfkWKibPdqLQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750775554; c=relaxed/simple;
-	bh=tcNUMicj3q2TZD7z9sDFdteTWDh+GHAvsTNL8/OskaM=;
+	s=arc-20240116; t=1750775555; c=relaxed/simple;
+	bh=+D4uOP5vHeDxcBfKnALP9BU1U70aiP8xL1HjoKmbPi8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TiLjUkzqSQUQ8FPy7oC1KFgVlpOisXAYh0ki9pAq6sdf2aoQQ7lNaBpIPcy6TC1UhFlcaqjqi0CNTGqbzPgdXoqR4Q91oI2HylQuWZNBUNfLQOoBAbYiZW7AHXur+qjHcgqBBowvi7q7hn9rBbSgxXY1lzWyCtwcE/HL3iJfCZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=TETDxPIL; arc=none smtp.client-ip=209.85.128.42
+	 In-Reply-To:To:Cc; b=alFQG1/UsgJTQGIq5eIAY48lyRPXBO6wsmvmkBdiFcDzQqaR+/5ec+pJrsNzzz6kSf3Bb/f3XvNxZBZR6+qlvX1F4CyDqO7sFt+tLNpZobTdZEWB9NxaeDHxm/mEnQEGzBq6arjQC3wkF0Q/GXaPHDHjgEggXQ4YyONdq2y5c6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=E3iuHZEo; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="TETDxPIL"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4535fbe0299so29979645e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:32:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="E3iuHZEo"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a588da60dfso3288858f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:32:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750775551; x=1751380351; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750775552; x=1751380352; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Uw4x1TQGrA/MBrQhecsgMke6peLxrAZP3r5KIxkbAtg=;
-        b=TETDxPILO55Ud+j3nze9oeolKb6BqHKX6phmmNUG7U+lq6UFdqPhhRjsy/SJv0HTI/
-         SpVIJ5oIVWSCSSwhMDjtQGGekrRJAEw51PyVu2JFjrgYNbnKOpCqlD3oX2QQDuI3Mtfx
-         PIs4qzhBQXH+fBVBMgvbk149rlVz5LDYKEB/n0PIzFkA+O1E0Udy195M2ShyFwLKbrRG
-         DEwqPkRVHIjb9sEcF0me9IZpyTGRV/Fb9MeTER0V6APYOELWmxu4lRzqGX8iwaJCddwR
-         +kdDiSy+HBixZ+18KJzCc4nU0w9xTwH+kolAH/cxXbdHlM4icORE6aPCDnn5kjH/7e4W
-         ruHA==
+        bh=Su6uvjagrhQm2+A4aWPWKHya+70faQtybJRQwFqh2Vo=;
+        b=E3iuHZEo1qd2MBwOsLW4xPg/WrQnQNcw9Co8QtOnkETssppD1IYMns/SWzOmiunvJE
+         sXDBI+NXeLR3evRKQ3XZst8PXVTzKzP7Bt11BrIpxySPzxEH/jUguLUYY/5iKODZfSeR
+         Kc/9Z+Tw6gRhTbLMHCursn4Ic59eo3YXBfusxm5+X5lDW9nAsb7Vj0CfVU7rxfENNo2B
+         xhnkOCkEcXrZY4F0yyzK6uMZj0lRC5+oME3EY2kvGaFXwtdQc2KA9ixu8QVSKoE2QSBn
+         VRUogYdD2kqW9sC27WnNw10HpZ/o2acksuVZhU0LWQztT+RwhlKEMBxMPc9nygcdJVeH
+         8GqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750775551; x=1751380351;
+        d=1e100.net; s=20230601; t=1750775552; x=1751380352;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Uw4x1TQGrA/MBrQhecsgMke6peLxrAZP3r5KIxkbAtg=;
-        b=Wvwwybc63LK5MY7npJr1yleDpMHWWi8tLfRrL0IFubB1KcOHp0wHz1pVrTx8ouRyPD
-         /iFF61daNiNitN2WXnBQELCdHjt8Y+ZF/blebWh3SmlxlYYL0tgnk17dRRmepRlgTUGg
-         YLiQoydqL7htDo6BN5FySVLbY7LttukFfc4I/Km3MZj02zAr7XVZFpcDmAoGTon+fYbK
-         plOlEZz2dqtE7dlNDaHrljCtksjctQSwyPvg+f3IByzS//79e6MG5nrEJETctzSD/s/E
-         RMCTFA4AlaLpuD8k45g9sVawInJIvIXxwmlefdEtFK9IPDH/Y0u+0d96Gm5WBprGjkFF
-         TdQA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ+sYXl6bd/h/qowZQOZNSr7XeWqnQdQDjHUeAyVRENuqKYNQNXuf8HVUjKxn/ESqw/oz84kdqLNOd8ZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIknOpcBGoxD86YyjH4q8GS3Ll+sRqXbG3uEjBYOFH9QEwXgUi
-	LiQSB9CJZ90N46H5LmBuj1BSkTIaZWbEvxwijvUN1LpaUgGCWhixvYRU75zPODmlE+o=
-X-Gm-Gg: ASbGnct8xLyFIXCR4krWWkfzmVaiXP6ZwXbH0DTvlakXru+LAEpdzo8Z6SPlnzqpfp3
-	JyWEbVcHEInxjMxllMAkYr3M1VDLFQ8S6t47XxVV1JiZU6nKg74TNXb+qNoVUptWo/7CAkrJHlE
-	LQYwnwAIIV+mg1LRQp0q19sZGLmxH5OxoGJbMWg+n3T+HgqhPzTPuTfQxiR4SZ1CwmoM1xwF4CT
-	Kjh1BlqTVKZbOin59+xa1WvAUvg1/Hcga4U/4sG1mgqNeWf6K0rVpnKPpdGveCZOV5jD9qOeXJo
-	GH3aCvIjSbYaKHuNPeGD+vVYzNyIxLDOG+SSW/rPRQpokgM1swQ1BA6fmz2vJFSGTdk=
-X-Google-Smtp-Source: AGHT+IGnv9OAm6kU3yC9OQdJrsGHg+VSoZWXLELg2p5G3m4MaLGEgPnmo4tXgJNKP087uSEZKo6VwQ==
-X-Received: by 2002:a05:600c:1f0e:b0:43d:563:6fef with SMTP id 5b1f17b1804b1-453659ec182mr147580495e9.21.1750775550906;
-        Tue, 24 Jun 2025 07:32:30 -0700 (PDT)
+        bh=Su6uvjagrhQm2+A4aWPWKHya+70faQtybJRQwFqh2Vo=;
+        b=JjqR6cwp3f9giAQVxIvOvbhkZ9hJR3U84GHVnbJBoiMlzo8PhVkqAFoLIjWvouReaJ
+         6giKuLfrjF4oSDv7Jaoh2b1UN4EA6AtZVu1sGANvT0XV7iGC1i8OBV8QeWwi+WTO6pNj
+         8d98zRKN+ag6zvTTxdLrreDxhODpDNh+TOEISATsE6uxcMPIRohw6mkSwfo+ULF50ed9
+         VLptB7s0/xGDhPodxhJwviVPTqtIyi17e307foVkBn7zlmUqSuvepVH7h8EpBcHM/IFl
+         /DM8XrYw3YK1n94cHBzRDUfUpRbKnWkkGcEnqFGoB0CHgCc0sZrJqTyaNPyvd0ENPXJ2
+         Wt7A==
+X-Forwarded-Encrypted: i=1; AJvYcCUooSP1pbCTbhjIU+aeDYruXFPMLcuEmRStaEELyPnJyaRseP+zUIAYbk90J4PoZ1aosh5eypheS17uDz8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVhR7WNeCmyrmpIi2ceBMIe2fCfbEuHnTj/+otN4MwsA2Yav6Y
+	szs3l7mmItgXAI6esGC3hgjw+OsCgG7T/T6htH+BMIV3MuJ4O8pZngZWvF59I8faJao=
+X-Gm-Gg: ASbGncvLUF2wyaHyySdBVVPt1DZi0vmgsiMdxTiAg8VYxjjoxNr4IHk3EFVVFpwMmG9
+	GubZ+UuV0IRQwb/DZdY0cemvTf1xgE0VgjNmRQ/ln4W2d6IFJZQ1LgmxJ9iKWwgdVVXiMyDv+kB
+	9e7CkOEyoeIJcNlarcjz7kTpifWuoqwb7cP3qMayLpcJNEcaPaUxuKO/ev5dJADVvwzqoTIXOm8
+	2FLeoYA7zr6F9VwFwIhxe0MWsMnFDmXLlQvZQ73554AxU4aJxze/hjGHAqDuWKtml8JM3al8zhJ
+	gePHErFIc7SC3GM2jg3DdvfmLNIU2rMbooDXldqZItRnDBxfyjbhfeKKpOpnXT4JTCs=
+X-Google-Smtp-Source: AGHT+IEqXp+4046/1a48emVv6WT4DJQxmL7NALHH1PRyVleJz/05O5wIr5faYMuecDyE7ZJ2se4mJw==
+X-Received: by 2002:a05:6000:3c5:b0:3a5:2208:41e3 with SMTP id ffacd0b85a97d-3a6d11910bdmr15012296f8f.4.1750775552199;
+        Tue, 24 Jun 2025 07:32:32 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:34d2:109c:3293:19e9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ead2a84sm178512935e9.32.2025.06.24.07.32.29
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ead2a84sm178512935e9.32.2025.06.24.07.32.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 07:32:30 -0700 (PDT)
+        Tue, 24 Jun 2025 07:32:31 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 24 Jun 2025 16:32:20 +0200
-Subject: [PATCH 3/5] pwrseq: add defines for return values of the match()
- callback
+Date: Tue, 24 Jun 2025 16:32:21 +0200
+Subject: [PATCH 4/5] pwrseq: qcom-wcn: use new defines for match() return
+ values
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250624-pwrseq-match-defines-v1-3-a59d90a951f1@linaro.org>
+Message-Id: <20250624-pwrseq-match-defines-v1-4-a59d90a951f1@linaro.org>
 References: <20250624-pwrseq-match-defines-v1-0-a59d90a951f1@linaro.org>
 In-Reply-To: <20250624-pwrseq-match-defines-v1-0-a59d90a951f1@linaro.org>
 To: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
@@ -80,80 +80,64 @@ Cc: linux-riscv@lists.infradead.org, linux-pm@vger.kernel.org,
  linux-kernel@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2025;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1386;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=J8hhxEPGTDWzHxMDIGZhdqk+RbnXtaJ73h/HNS5w2Tg=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoWrb6545ElYvrc1gET2OFrM9gsPHxKk7OK16+E
- 9Xxp5PPJKOJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaFq2+gAKCRARpy6gFHHX
- cldDEAC9QFYvQdgFCGmN1OsF83q9dP6J3ttzdmws4vnanU/xhmtw5AvNBLkGJnyf4wiuUnhY9mS
- LsUBGrVxyeZlPf3WACN8cUMUqb3hhQY55Qszvh7fRvs0I2OF/OCai/HLPvzX0v92HIYJ+iSR6We
- 3MpJmzSDBWEXsEG8Hhz0bNys37m9+IL+PlWbQ68d0LfokWAUpfXTwBUa4+jwQMKVJcrGCyTnu8r
- hpHAEEwMRHRMsWt2i/ifysJANuqldhaThp6Rny0pK0Ymwa28RP445JPMWqGK43wjhO/e6y3RX21
- ZvM9Qs4uP/EEzMDEVzFGfRYfq4GpNP63Q9efcGYe/tohWCydW2dBOYVD1ZZ2tVu4bauoHpamPyB
- 64HT0qbLoZA1CIUYyXpwY+q3zUwaHeJcKlK8EdM3R+PJnSjXb1x2BB2V/CqC+01JQ8nJG/CFzR0
- pop1bz38H32jBaud5py5CTPMwkztfda0zwstBFJuW+YyZk74gs2wRroCbE4hVJKtbSvZShBpC61
- d1+S20Sp7XJphn2nm8HNpOIm6T8WlSdpgwfNHJyKY5p2obqwPJhvS/tNbKKVkGNE/MO/Nov3kkG
- XmEonDNdAVE+6z+Z7zXH4Y6rLyOJ0MjOygcURMP+OB+XJvBdzjJcX/JgdMYzQ7ehCkr0JWgeXgq
- +V4Rib0enUeuJFg==
+ bh=77i3qsK8qByImTRYb4pkjjreQflQxYOmzaELISuv1AU=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoWrb6J4keJ9TSryqRVLq4WC3+bSEZseJ5nqpe8
+ M3As9C59KGJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaFq2+gAKCRARpy6gFHHX
+ cixRD/4tJVxOEb4GTPQqaMf4hfMmoPFTISVrXRdKDvzvP/b5etdhaf1p8cC1M6B7lM1EY+PHv2Z
+ w+2pYEK2H9Y5Pcb5Xp+Y6+R+6co52Bs6cYt9hAFx5gcMMlT+pqgsZL7dv0C+F4R5O/xiD5BNI5K
+ VSMrGU4/X44cV2vWMy+UKrwX1/LclxmXne6FGAzQYbtnTVc9Ih7zskmYRzGA9p1VQSHqSv0cQcf
+ onW996VTqs1Dgho0f/60A1yk+nHFLhDeZfehyrCGPmfq/zNhnw4OZ64tk1VA+Qm3CnB9cetvSUl
+ Q4rtCRYwa8r+vB/COWEVm0ZVTJByInGp/I4OZCrFQ/YsElf79EKxoX15+IyheuLCu3Fqp7VCrY9
+ ZBv+HWVDSvZa3EPeGpViCOfTdTkA44HYmiA9DxKgz9QQYCQVP5Yn0opW7+sobI5rMZf0TAx6+I1
+ qUEC1GHiB96dMQ/+IEe/OzpA+dsHAWuhEEEoj4Fko/A08lrzyKTorkdHuBYREl+51kgqxhIgc6d
+ MAdo+EyC8tkiO7A+C9FBe/Pn3xKpyFry0XNnKLaMUdwRfeS//da9BTQq/k+r6C3JPYMFfYDO/nO
+ jjcflV7gpIhEVx4KdYG2+jiIlCzR89FKZxe3XAifglZpWmGJfZ0g+cLdM7k0Pv82mDdJ9zU5JeY
+ FYLiN6A8e1oUI/g==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Instead of using 0 and 1 as magic numbers, let's add proper defines
-whose names tell the reader what the meaning behind them is.
+Replace the magic numbers with proper defines we now have in the header.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/power/sequencing/core.c | 6 +++---
- include/linux/pwrseq/provider.h | 3 +++
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ drivers/power/sequencing/pwrseq-qcom-wcn.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/power/sequencing/core.c b/drivers/power/sequencing/core.c
-index 0ffc259c6bb6c8333ba1fc5e6ab43e42ba0d3524..190564e55988557940206b059fef52981bd49e5b 100644
---- a/drivers/power/sequencing/core.c
-+++ b/drivers/power/sequencing/core.c
-@@ -628,7 +628,7 @@ static int pwrseq_match_device(struct device *pwrseq_dev, void *data)
- 		return 0;
+diff --git a/drivers/power/sequencing/pwrseq-qcom-wcn.c b/drivers/power/sequencing/pwrseq-qcom-wcn.c
+index e8f5030f2639a69254ad5efe0a313d2f3d10fa1d..f14801b4c28e53c5905fd2345b773c2aa96af44c 100644
+--- a/drivers/power/sequencing/pwrseq-qcom-wcn.c
++++ b/drivers/power/sequencing/pwrseq-qcom-wcn.c
+@@ -341,12 +341,12 @@ static int pwrseq_qcom_wcn_match(struct pwrseq_device *pwrseq,
+ 	 * device.
+ 	 */
+ 	if (!of_property_present(dev_node, "vddaon-supply"))
+-		return 0;
++		return PWRSEQ_NO_MATCH;
  
- 	ret = pwrseq->match(pwrseq, match_data->dev);
--	if (ret <= 0)
-+	if (ret == PWRSEQ_NO_MATCH || ret < 0)
- 		return ret;
+ 	struct device_node *reg_node __free(device_node) =
+ 			of_parse_phandle(dev_node, "vddaon-supply", 0);
+ 	if (!reg_node)
+-		return 0;
++		return PWRSEQ_NO_MATCH;
  
- 	/* We got the matching device, let's find the right target. */
-@@ -651,7 +651,7 @@ static int pwrseq_match_device(struct device *pwrseq_dev, void *data)
- 
- 	match_data->desc->pwrseq = pwrseq_device_get(pwrseq);
+ 	/*
+ 	 * `reg_node` is the PMU AON regulator, its parent is the `regulators`
+@@ -355,9 +355,9 @@ static int pwrseq_qcom_wcn_match(struct pwrseq_device *pwrseq,
+ 	 */
+ 	if (!reg_node->parent || !reg_node->parent->parent ||
+ 	    reg_node->parent->parent != ctx->of_node)
+-		return 0;
++		return PWRSEQ_NO_MATCH;
  
 -	return 1;
 +	return PWRSEQ_MATCH_OK;
  }
  
- /**
-@@ -684,7 +684,7 @@ struct pwrseq_desc *pwrseq_get(struct device *dev, const char *target)
- 			       pwrseq_match_device);
- 	if (ret < 0)
- 		return ERR_PTR(ret);
--	if (ret == 0)
-+	if (ret == PWRSEQ_NO_MATCH)
- 		/* No device matched. */
- 		return ERR_PTR(-EPROBE_DEFER);
- 
-diff --git a/include/linux/pwrseq/provider.h b/include/linux/pwrseq/provider.h
-index cbc3607cbfcfeb5acbc94908a1eb4a861159dc41..33b3d2c2e39decafac6c6fca9254ad4329d90e94 100644
---- a/include/linux/pwrseq/provider.h
-+++ b/include/linux/pwrseq/provider.h
-@@ -13,6 +13,9 @@ struct pwrseq_device;
- typedef int (*pwrseq_power_state_func)(struct pwrseq_device *);
- typedef int (*pwrseq_match_func)(struct pwrseq_device *, struct device *);
- 
-+#define PWRSEQ_NO_MATCH 0
-+#define PWRSEQ_MATCH_OK 1
-+
- /**
-  * struct pwrseq_unit_data - Configuration of a single power sequencing
-  *                           unit.
+ static int pwrseq_qcom_wcn_probe(struct platform_device *pdev)
 
 -- 
 2.48.1
