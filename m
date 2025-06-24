@@ -1,115 +1,114 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F1ED35946;
-	Tue, 24 Jun 2025 07:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0A5BA49;
+	Tue, 24 Jun 2025 07:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750750384; cv=none; b=Pw+tGtxpJl6y09znBhZWO89t5fShs0+bTNMKX+cTqJdCTJrB4jzVW+RwiEzyWmCjwBmfzjx6fop8a+OpvUMQhqo3fd06W0c9/V+LhPI61G9kBdCzVuKmQVgIt/OIIqCTahHSNdS/rfo2l6B4tBIuh+fQ0Lls6qVI7vgph8V3qUw=
+	t=1750750396; cv=none; b=OtpkIJ05bXIK74YmZP7xLp0LkE31tRsUlftGFiP4BL1SJAdfzxOBcNzsRd5ixj/8E4CDwCdHqsRnbt75bTciAS3MSPQevJAzyHhCch7jtEfIzEDhBsh8DGrVyIcSzcJ3toAgYq4OIV3/I2+WnefgEdMqCr/AnArcoayJkp81Ync=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750750384; c=relaxed/simple;
-	bh=i/Ol8jMxEi4pHVy0h903kwfq3V4w6RRvwM4KIRBq2W4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=B6pVNocsOn6IjHDyQeQznXJpwCN0HOTaoFaB3MZycSdXXxin3oEeTboC99JndmwxdSaT6ctDLjSlbLn00l6DVW4CSPWoKwk49dtsLkXPaoYDhWz484GpzPnT8HLH03uVxvPX338BrkAaPVbTJ3k+kDXnewqZPGG2hngb35eFFcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=otskjeCf; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1750750396; c=relaxed/simple;
+	bh=x0tGnbgqwLjk77W9xb8ogsnnZO9WRIj3MP86BXNQhUo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NEDgPsr1Xiur+oq9R/LiXCh0P/yarnXwMBO2VkZvXrBPdZlnj6kVm7NTFTU5QAcwx4xnqcGqwgqRr8BzpQTVVX4vmLWIrlxRK3JXAyL6n6wcBQ2ORnW60rN+qBihAbPFRlrQcpnrhrNzEkKXAjWX7mWQfA6EI+XRxssBQg57Nrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QZljYiKK; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="otskjeCf"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O6JuYa019415;
-	Tue, 24 Jun 2025 09:32:49 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=E0Qbsc0rAt1t7y4ukc6Btf
-	5nsvzhwyyO68ZK3wJPBe4=; b=otskjeCforBxF8o36rJ1Y4oDWvX6C/dVwZ4KFf
-	AdfPJ9EGFwMPPlE3FY3BfULRzSY+fMo32h3D3Z6FTF/nGLOhBKhW/Jv6u8DumG6j
-	PUWQhwcF+jqQCsK/n5XorA/bbkLfHqxfdBhXu7VenrtIyqUMEHkTODsZ+oL3soyd
-	3cI4DqF7gmPP0gHVejLYrfgWD73Uuk03mrOUQzLMb8XEr8KLwFCIEcf+0g3Pq9kc
-	WjkOzT9QVC29kY8JxcDUjapPFSQDxyaDmSdeFqDHttgH98WtnhKWKNu7s+ixgl1A
-	t5vKw8HKRWA1TiTvSpaDrA/ZJxiHnEgh+cEU0JJlhZMgD4Zg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dkmjk2fv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 09:32:49 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B3A7E40044;
-	Tue, 24 Jun 2025 09:31:44 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6CDFAAC0B47;
-	Tue, 24 Jun 2025 09:31:44 +0200 (CEST)
-Received: from localhost (10.48.87.237) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 24 Jun
- 2025 09:31:44 +0200
-From: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Date: Tue, 24 Jun 2025 09:31:37 +0200
-Subject: [PATCH RESEND] dmaengine: stm32-dma: configure next sg only if
- there are more than 2 sgs
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QZljYiKK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750750396; x=1782286396;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=x0tGnbgqwLjk77W9xb8ogsnnZO9WRIj3MP86BXNQhUo=;
+  b=QZljYiKKT9LrDKxN+u5cHr5G0ueaHjZej8HWXAL9r3tJPmcBduvp+Guu
+   UPRBd4HansUVKUFx7f8TNXT9qSlFjbzHwwmdYHPKjOTIogCka2zi61fB4
+   CUoGsjohOrjz7NEoGtUdrLk+y/K/dknPI8D7IPVojVgDwYlZv8zYnkn83
+   QVMrCPzpnXHAt2HNFaIVFadrDMMScPvxeRIXOHNOHJKb3U/mM5gFP13iA
+   ZlQm9IiqydhIhkKp+ESjvgKAE1u0yHzOB82fJn/9QmemQSvmVOeoyaOAo
+   HSNowjyQjPRz4yK0XLactft2VqB0qujboeIbGIWvIKLN7tJ5oNOSeVrrb
+   Q==;
+X-CSE-ConnectionGUID: VQeSogX0Qf+FbDKEkpyvVQ==
+X-CSE-MsgGUID: qLS8Fh7ZSDGDsYILY+EIVQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="64038275"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="64038275"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 00:33:15 -0700
+X-CSE-ConnectionGUID: BZOgtye7QOuK2mwuUCZeqQ==
+X-CSE-MsgGUID: IoL2Bha0Si6j4SRmvQiPVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="189035968"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 00:33:10 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uTy9S-00000009PEv-3F8X;
+	Tue, 24 Jun 2025 10:33:06 +0300
+Date: Tue, 24 Jun 2025 10:33:06 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+	corbet@lwn.net, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	eraretuya@gmail.com
+Subject: Re: [PATCH v10 4/7] iio: accel: adxl345: add inactivity feature
+Message-ID: <aFpUsv5fWYJk4vxW@smile.fi.intel.com>
+References: <20250622155010.164451-1-l.rubusch@gmail.com>
+ <20250622155010.164451-5-l.rubusch@gmail.com>
+ <aFkh-E1dG__p_G4m@smile.fi.intel.com>
+ <CAFXKEHan_7+BVshb12JZLH8CJtSPuwv=H_vC2kUWkS411wsqaA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250624-stm32_dma_dbm_fix-v1-1-337c40d6c93e@foss.st.com>
-X-B4-Tracking: v=1; b=H4sIAFhUWmgC/32NsQ6CMBRFf4W82RJa2mKcGGR10NEQArwiHUpNH
- yEa0n+34QMc77m55+5AJlhDcMl2CGazZP2SAj9lMM798jLMYsogCqEKXShGqytFh67vcHDdZD+
- sHM5aVByVRAlp9w4m4cP5hHvzaG5XaBOfLa0+fI+rjR/tH+vGGWdSalVJXWKFup48UU5rPnoHb
- YzxB4W5a3K8AAAA
-X-Change-ID: 20250605-stm32_dma_dbm_fix-3b86271d54d4
-To: Vinod Koul <vkoul@kernel.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC: <dmaengine@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Amelie Delaunay <amelie.delaunay@foss.st.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-24_02,2025-06-23_07,2025-03-28_01
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFXKEHan_7+BVshb12JZLH8CJtSPuwv=H_vC2kUWkS411wsqaA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-DMA operates in Double Buffer Mode (DBM) when the transfer is cyclic and
-there are at least two periods.
-When DBM is enabled, the DMA toggles between two memory targets (SxM0AR and
-SxM1AR), indicated by the SxSCR.CT bit (Current Target).
-There is no need to update the next memory address if two periods are
-configured, as SxM0AR and SxM1AR are already properly set up before the
-transfer begins in the stm32_dma_start_transfer() function.
-This avoids unnecessary updates to SxM0AR/SxM1AR, thereby preventing
-potential Transfer Errors. Specifically, when the channel is enabled,
-SxM0AR and SxM1AR can only be written if SxSCR.CT=1 and SxSCR.CT=0,
-respectively. Otherwise, a Transfer Error interrupt is triggered, and the
-stream is automatically disabled.
+On Mon, Jun 23, 2025 at 11:06:44PM +0200, Lothar Rubusch wrote:
+> On Mon, Jun 23, 2025 at 11:44 AM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
----
- drivers/dma/stm32/stm32-dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+...
 
-diff --git a/drivers/dma/stm32/stm32-dma.c b/drivers/dma/stm32/stm32-dma.c
-index 917f8e9223739af853e492d97cecac0e95e0aea3..0e39f99bce8be8c38fe33dd0246012910243d831 100644
---- a/drivers/dma/stm32/stm32-dma.c
-+++ b/drivers/dma/stm32/stm32-dma.c
-@@ -744,7 +744,7 @@ static void stm32_dma_handle_chan_done(struct stm32_dma_chan *chan, u32 scr)
- 		/* cyclic while CIRC/DBM disable => post resume reconfiguration needed */
- 		if (!(scr & (STM32_DMA_SCR_CIRC | STM32_DMA_SCR_DBM)))
- 			stm32_dma_post_resume_reconfigure(chan);
--		else if (scr & STM32_DMA_SCR_DBM)
-+		else if (scr & STM32_DMA_SCR_DBM && chan->desc->num_sgs > 2)
- 			stm32_dma_configure_next_sg(chan);
- 	} else {
- 		chan->busy = false;
+> > > +     case ADXL345_INACTIVITY:
+> > > +             en = FIELD_GET(ADXL345_INACT_X_EN, axis_ctrl) |
+> > > +                     FIELD_GET(ADXL345_INACT_Y_EN, axis_ctrl) |
+> > > +                     FIELD_GET(ADXL345_INACT_Z_EN, axis_ctrl);
+> >
+> > As I pointed out earlier. the indentation is supposed to be on the same colomn
+> > for 'F' letters.
+> >
+> 
+> Let me allow a stupid question, when you mean on the same column, the
+> above is wrong? Can you give me an example here how to fix it?
 
----
-base-commit: de266931dd996fc2cb8ee8b5d12e39ea463e3f36
-change-id: 20250605-stm32_dma_dbm_fix-3b86271d54d4
+Your mail client mangles the original text (TABs) and it's most likely
+impossible to see on your side what I meant (I already answered once with
+the example).
 
-Best regards,
+Here is the example, use https://lore.kernel.org/linux-iio to see it via Web
+
+		en = FIELD_GET(ADXL345_INACT_X_EN, axis_ctrl) |
+		     FIELD_GET(ADXL345_INACT_Y_EN, axis_ctrl) |
+		     FIELD_GET(ADXL345_INACT_Z_EN, axis_ctrl);
+
+All 'F' letters occupy the same (by number) column in the sequential lines.
+
+P.S.
+Also you seems ignored my ask to remove the context you are not replying to.
+
 -- 
-Amelie Delaunay <amelie.delaunay@foss.st.com>
+With Best Regards,
+Andy Shevchenko
+
 
