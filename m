@@ -1,156 +1,95 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76243FB1B
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D118728EA4D;
+	Tue, 24 Jun 2025 14:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750774012; cv=none; b=HOWYKhRlFYT55k1YvBKXzne8O3S301sRM0krI2199kRUd1pihG0Sz7MSqYgYkqg+i9WlCkm0IvZexGozWxwCcnQ7Ny7Q7I/nxyG7XQ7rXMcGhoDQWlOsF61gGk4BYJr6hX5vnV/3kFkeRfLsqw+LGMPGQj55qMU0hd/mtTy8lEQ=
+	t=1750774106; cv=none; b=uZmX/h7Q3CylkHCyWEJ2clNciS1YyT1tuEUh9rL8zJTkty0cww9DoR4V/1um6z6KdeTraNf9bppZfV+GAqbOzMmGklBHTL32WYkKwIWdCG+inZhxGiVc+FPYoHldB6tPg4cmk9Pm5ESPvoXLd9hYv8WerJa9zR3elpNmBbvx/6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750774012; c=relaxed/simple;
-	bh=UJRHi8VtXi0j/haWMkbtDJW892NNvRpaYGNjw5eC2rk=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Im37gq+vdeT+lPf3uCOxY4yJUNhJw1CEGZ7E0dJ3lOHAGn56h0zp33yPivcURQZW8xT0gmsTxXAhLYyFx2Yx+s43GckFrO/hMko52QGBl2lLT9CT4ZmF2i3kMMi43c5gNG8q4U9EnGo84QEydSRdjp2KBQSx8Qcd6B3DAM/PHyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fbFdQ33T; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750774106; c=relaxed/simple;
+	bh=iV4gr/3BWV7NDdHOhEsRqVulf21qeRC85FDYk+HLPN8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VmqVB/tEeemMer8psKI8C61mREx5335X04hWhjzq8a74IwqkZxskKvE0828PB79D56MQ6C5/UYY4T2Dsglb8mp36Q8LS0i73StTjcMu3AHjHQLGx8m4YQgdlwUL6e5RlYTBvnkUM0DUVdywZfQuJ24bcbWQGgCkdWdPukm3awLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LWuD3VSW; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fbFdQ33T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750774009;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=brO5UuNwsnXhxkPr+JOlVZidvfGcar9TQL7N5I3jMjU=;
-	b=fbFdQ33T9njlZocZwr1cXAr2k4IzlNGjrdB3mwHrV8t1h5+xXxui4vuappoNoUoi4pdTnp
-	dmpnQLI5vg4+h/CNn1NjGSStZ2wzcPfd4HNPqG+vbRgq4l10wWFw7GGmutTqnLEI0lM1tG
-	Ohq1uRIE6k/KgYRR8F3aUFt++0H0BXE=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-669-CeehLaTOPqyf9kQgxTeUgw-1; Tue, 24 Jun 2025 10:06:48 -0400
-X-MC-Unique: CeehLaTOPqyf9kQgxTeUgw-1
-X-Mimecast-MFC-AGG-ID: CeehLaTOPqyf9kQgxTeUgw_1750774007
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a56b3dee17so3023835f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:06:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750774007; x=1751378807;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=brO5UuNwsnXhxkPr+JOlVZidvfGcar9TQL7N5I3jMjU=;
-        b=lwaluHTpPGWSGyETYmVWpLuVv7b5ximRUTedsmSlwQ48eI2k73LxIZpEEB+iElLuOn
-         PWEIRIBSTHrVYL03vofRdP5N4OQvC5QOLoieMDscmnuqm/PvaQ0Ui2NR1YfXsP52wHUo
-         jLzE9mI8s2yLJYNURCh66oHfVBmOS8WcsIEPIQBTBgE6vm+SzMsSzqfpnEdkQHfiUXQZ
-         WhiOom99ZAyxm0H/b2ppiR8acpkY15QBVhTT3Xbi+HpOg7jkLKo9uMMdr3w06o4XyLlY
-         +h9TL2HNcdz73GG6Bs3e2pJ9J+hADgUsq4LFrpxjul9KNTgbzgwjm5S+et0P1tE/6vGE
-         KfJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJZDYrfK01c7EkvE67wfpHtYBC3IdHfR/X/hhNi/ceru2QaR2XD89Et3elw0RKobp2m0YOFKtjInYRmtM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzTk3mNhmSc8dGvCzjYt+Vsn2VDIcx9bQhvhALEimUQ9pI783t
-	lMlBI9KSLISNTJYQI10wRqbuGffT01fBYi1pm2k7DapAGU7ZyB9B618W6+GSKwlnKx7yhP4HbVI
-	zhWzu4cgih8cEr6Na7+xXGZnDQRp1muj1Q2KPHVmhiddqNyMmMzSz5vByVbwUaBbR9g==
-X-Gm-Gg: ASbGncvqX9r/O72W9zvB7lu91p7YaHQvCZm8fDKW9pa5pukt4joqID0b1+5QD0I4+6k
-	5q2vfOsYjPLP6JfD9anYML6S1L/pYxukV581mdLOEH0a/0MmS9z/PvKFNf/K/5Rp1Z5K2FR20cQ
-	otHZgvAmCUK1DxgXv1sLRAX6wfBSIjVh06HUaVaCzMngQ/qwf5+KsI95ipqgifds0ymUk5d5L1m
-	mMGeSdQ640aEMandZrRjjFql/X5zQDxTpTZXjdVPomYF5UWAM7HQMnFPB/1CWRSSTbgp0XvvwAp
-	yWVGRjxYNMCO4///TVu8KTueEYiVMifuT8hmoDmoQSdj+E8C
-X-Received: by 2002:a05:6000:2f87:b0:3a4:e238:6496 with SMTP id ffacd0b85a97d-3a6e71ff6f8mr3308743f8f.18.1750774005262;
-        Tue, 24 Jun 2025 07:06:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEVp06bRQQvPg3FHzH2flFRw42os0cqFBHF8/BB9ghA7E2Q+8IGEbezOEuwDl14iBcDWO2ncg==
-X-Received: by 2002:a05:6000:2f87:b0:3a4:e238:6496 with SMTP id ffacd0b85a97d-3a6e71ff6f8mr3308533f8f.18.1750774003248;
-        Tue, 24 Jun 2025 07:06:43 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45366b4d0adsm131794625e9.14.2025.06.24.07.06.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 07:06:42 -0700 (PDT)
-Message-ID: <1bc41a7a5bd46860318b0417fa27121758f28448.camel@redhat.com>
-Subject: Re: [PATCH v6 6/6] timers: Exclude isolated cpus from timer migation
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
- <frederic@kernel.org>, Waiman Long <longman@redhat.com>
-Date: Tue, 24 Jun 2025 16:06:41 +0200
-In-Reply-To: <878qlhnunz.ffs@tglx>
-References: <20250530142031.215594-1-gmonaco@redhat.com>
-	 <20250530142031.215594-7-gmonaco@redhat.com> <875xgqqrel.ffs@tglx>
-	 <b33dcafca895da1d9c64a7d6ab771952a932e579.camel@redhat.com>
-	 <878qlhnunz.ffs@tglx>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LWuD3VSW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=LJ52+yqkREKU2n9YRiyK+/2J+b9eohTa6Rk0szUFEOE=; b=LWuD3VSWymEY53n/WlHmdkJc/b
+	YzK3kQa/G79T7gG+xtXFq2WZipwh5UpGA0W0fv0YtNLauDcMNjOnBv1btZyeFtV47UJun+SZwUEXV
+	uDI0vzvMP0wy/8jEW/w0jQ/fDClDP3IEx+LUUiLQOFT0uNwf9zUcb6H8gGMHv4YFN7hiBj7I8hs/W
+	Qj3vvnez6pTwAY1sUw30W3AVI3NbRi9TCjvVxAuwKxRiliZRkCWUz01DxPxWiuB31Nu3R0+k94OrY
+	pgrjcuyCsoZewvIJ2Xsks3X7KduKPHK7se76aexBvCpHZga1JxgBiSe3YGu8Pcox0h6x6PNnuqr/v
+	w87ENWuw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uU4Js-00000005SFZ-33Ob;
+	Tue, 24 Jun 2025 14:08:16 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 905AB307E51; Tue, 24 Jun 2025 16:08:15 +0200 (CEST)
+Date: Tue, 24 Jun 2025 16:08:15 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
+Cc: Nam Cao <namcao@linutronix.de>, "Maciej W. Rozycki" <macro@orcam.me.uk>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+	Alexandre Ghiti <alex@ghiti.fr>, bigeasy@linutronix.de,
+	clrkwllms@kernel.org, rostedt@goodmis.org,
+	linux-rt-devel@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: Enable interrupt during exception handling
+Message-ID: <20250624140815.GU1613200@noisy.programming.kicks-ass.net>
+References: <mhng-60581B88-6FC7-4349-96B6-730D908ABF4A@palmerdabbelt-mac>
+ <alpine.DEB.2.21.2506240303170.61655@angie.orcam.me.uk>
+ <19cf2371-7293-4e71-a17d-669db4c8270a@rivosinc.com>
+ <20250624131730.XqPd1HUR@linutronix.de>
+ <d135d6cc-5117-4b3a-9abe-2e5fd9e3e490@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d135d6cc-5117-4b3a-9abe-2e5fd9e3e490@rivosinc.com>
 
+On Tue, Jun 24, 2025 at 03:48:21PM +0200, Clément Léger wrote:
+> 
+> 
+> On 24/06/2025 15:17, Nam Cao wrote:
+> > On Tue, Jun 24, 2025 at 01:37:13PM +0200, Clément Léger wrote:
+> >> On 24/06/2025 04:09, Maciej W. Rozycki wrote:
+> >>> On Mon, 23 Jun 2025, Palmer Dabbelt wrote:
+> >>>> I'm kind of split on a Fixes tag here.  One could argue it's a regression, as
+> >>>> having interrupts disabled during exceptions is going to cause all sorts of
+> >>>> performance issues for users.  Seems a bit risk to just backport, though...
+> >>>>
+> >>>> That said, if nobody noticed then it's probably a good sign nobody is really
+> >>>> paying attention and we should just backport it before anyone notices...
+> >>>
+> >>>  Oh, someone did notice and it's not only performance, cf. 
+> >>> <https://lore.kernel.org/r/alpine.DEB.2.21.2501070143250.18889@angie.orcam.me.uk/>.
+> >>
+> >> I also had a series which was doing so for misaligned accesses handling,
+> >> but after discussion, it was not ok to do so.:
+> >>
+> >> https://lore.kernel.org/linux-riscv/20250422094419.GC14170@noisy.programming.kicks-ass.net/
+> > 
+> > If I understand that right, exceptions from kernel should be treated as
+> > NMI, so that lockdep can tell us if exception handlers touch locks.
+> > 
+> > But (conditionally) enabling interrupts does not lose us that benefit. It
+> > is still considered NMI by lockdep.
+> > 
+> > Unless I miss something, the patch is fine as is.
 
-
-On Tue, 2025-06-24 at 15:20 +0200, Thomas Gleixner wrote:
-> On Tue, Jun 24 2025 at 10:05, Gabriele Monaco wrote:
->=20
-> Please trim your replies. It's a pain to scroll through 160 quotes
-> lines
-> to find the gist of the mail...
->=20
-> > On Fri, 2025-06-20 at 19:00 +0200, Thomas Gleixner wrote:
-> > > > +	if ((!housekeeping_cpu(cpu, HK_TYPE_DOMAIN) ||
-> > > > +	=C2=A0=C2=A0=C2=A0=C2=A0 cpuset_cpu_is_isolated(cpu)) &&
-> > > > +	=C2=A0=C2=A0=C2=A0 housekeeping_cpu(cpu, HK_TYPE_KERNEL_NOISE) &&
-> > > > +	=C2=A0=C2=A0=C2=A0 tick_nohz_cpu_hotpluggable(cpu))
-> > > > +		return 0;
-> > >=20
-> > > Same nonsense as above.
-> > >=20
-> > tmigr_cpu_available is called at boot time and is applying also the
-> > boot time isolation parameters (tmigr_isolated_exclude_cpumask is
-> > only
-> > used by the cpuset code).
-> >=20
-> > Now let's assume a machine booted with the arguments isolcpus=3D0-3
-> > nohz_full=3D5-7.
-> >=20
-> > Without checking for tick_nohz_cpu_hotpluggable() here, we would
-> > not
-> > set the tick cpu (0) as available at boot, ending up in the
-> > unwanted
-> > corner cases discussed in the v5 of the series.
-> >=20
-> > I could remove this call here (which is mostly redundant after
-> > boot)
-> > and enable explicitly the tick cpu in another way, but this still
-> > seems
-> > cleaner to me.
-> >=20
-> > Does it make sense to you? Is the comment in the code unclear?
->=20
-> It does not make sense and the comment does not change that.
->=20
-> The point is that tmigr_init() is an early initcall which is invoked
-> before SMP is initialized and APs are brought up.
->=20
-> At this point CPU0 can neither be isolated nor nohz full for obvious
-> reasons, no?
->=20
-
-Right, but as far as I understood, the first call to=20
-tmigr_set_cpu_available() happens after the isolcpus parameter has been
-parsed so we know at least cpu0 is going to be isolated.
-
-On my machine it works reliably this way. I'm a bit lost in the init
-code but seeing housekeeping_init() before rcu_init(), which in turn
-should be required for some RCU-related early_initcalls, makes me
-believe this order is guaranteed to be respected.
-Or am I missing something?
-
-Thanks,
-Gabriele
+I'm confused, you're wanting to conditionally enable interrupts from a
+kernel exception while its NMI like? *WHY* ?!
 
