@@ -1,79 +1,171 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from out203-205-221-210.mail.qq.com (out203-205-221-210.mail.qq.com [203.205.221.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D855291C09;
-	Tue, 24 Jun 2025 14:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1392D23B8;
+	Tue, 24 Jun 2025 14:35:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750775707; cv=none; b=rosGYeweKeNqjFG9CHDquaUzOQm5q9bWk7chYK4zY/vrLO5VUpTM5AMgPGVphdpizpP2ryxE1vq/yLs9/uEkxx901bZOq0P+CogjPSguUYo9Cs0Lzwz8s3f3ZoCkluTb1DMXtOH6XfhTl/uuQGOSqpSFQfMsHeB5r2nj12YGbzY=
+	t=1750775731; cv=none; b=uniD5J4EVEAfE6vj06nb7eMjRNMbkstx+8B/C4TURmM/cebAHyg0Qo+WQQpjsYh7UIbzVe9Jeo2NQ2Z9PLeBEOIeuhbaFgE4nj1A5dZm8n2AnugiWsIGdUoYWdBA7WhGxPxXXmtPs1iDCW5itr7nXi6YOHxblP47Yv35RMxBVv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750775707; c=relaxed/simple;
-	bh=xdTfpxDZzCS30NH7J9FZx9r2GnHM46JXMgjn8uCu54o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RUzvKIXdyBwaZweUftNqBT8yzpzxe4tl1rRUsd7fssOeb7sM51EtptFpRmKPZsC/na22Y5hIdIaR/gPY0dW54yN9/cPYKkWGZwRQ8wESi2I16emj1umnepqjlckjSOG8+AxkMHSHq83uKb5PFLapnFvJwZOJvDpgqmnL/X0sdGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=poqq7hHY; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750775731; c=relaxed/simple;
+	bh=XWUoSHK9ZFJwMOXvEylhqSbkKPrkssdXq5HfgyRyxVU=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=oSsvXiXNS/3RYABCdI5xjwNHYEhUIjAECDOKCegzNt/nAJuAxQxbmEXoDny0jsbI7Qy1zVkqm2UKQW0wa2tv36BnJgpHTCcndKbR84KwXWXfD77o4q0ZShEL36KmvhcdJtmLwSyxbRDLJuAbDCCatuPvoG3u/6hqooVvbJiTgKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=kOZAN9rz; arc=none smtp.client-ip=203.205.221.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="poqq7hHY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=DyOk14eUc32P6w82vpyuzaHeCuPZSG8D+2f7eCuUwY0=; b=poqq7hHYMP6HTbyqyrgvFlYdYz
-	zYh0lCtHZrkpFTJ2BsSx25VNC8pJw3iqCqu1isssiO1Oh+qLqAusXbQP9FTLQcZkljrOgpiyjf5wb
-	r4MUmRITnFUGs94hQRtFxuz6q9Boe5JomK4QMGEOaShNmBGHOAs7zAhn+CVUAjHR3qd17B4OvH9mO
-	H0uVnOSWRnloKFCXHoEHxzatoAIL335aNDKDiOlKQv3BX9Mbw79mTZX3Srv8Vgv4sdPe+DWadse20
-	lNTAstXIRl+md6y8JyfQz4uGrw+zx84oDLXTQ71PJh1belrKoTWv87eVXs852LWrkNcIzwth/nijX
-	fSvQ78RQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uU4jj-00000006pFk-07Ar;
-	Tue, 24 Jun 2025 14:34:59 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 64FC1307E51; Tue, 24 Jun 2025 16:34:58 +0200 (CEST)
-Date: Tue, 24 Jun 2025 16:34:58 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Nam Cao <namcao@linutronix.de>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-	Alexandre Ghiti <alex@ghiti.fr>, clrkwllms@kernel.org,
-	rostedt@goodmis.org, linux-rt-devel@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: Enable interrupt during exception handling
-Message-ID: <20250624143458.GW1613200@noisy.programming.kicks-ass.net>
-References: <mhng-60581B88-6FC7-4349-96B6-730D908ABF4A@palmerdabbelt-mac>
- <alpine.DEB.2.21.2506240303170.61655@angie.orcam.me.uk>
- <19cf2371-7293-4e71-a17d-669db4c8270a@rivosinc.com>
- <20250624131730.XqPd1HUR@linutronix.de>
- <d135d6cc-5117-4b3a-9abe-2e5fd9e3e490@rivosinc.com>
- <20250624140815.GU1613200@noisy.programming.kicks-ass.net>
- <20250624141130.gZVv4WnP@linutronix.de>
- <20250624141801.GV1613200@noisy.programming.kicks-ass.net>
- <20250624142350.xZ_DdClH@linutronix.de>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="kOZAN9rz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1750775422; bh=WzKuairL6klH+H3Pk4Z77kBpxk6VjGhy/vtLbAwqk5I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=kOZAN9rzKb1q9tF3m9+4tgSWGTydQYU7tqSKNjd8QI5toYZBZXpCMs+yLA/jrGFWz
+	 MztBaNrGn4q8RGvK4URp+blG7wJJa6rmSmb9KAa5lprZ+fxfm+F1IWS4fBYbofnGM1
+	 3n1eVUXGYwc1ZtWplOyca7bJ4Rh6gPHC7UZuv0o0=
+Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
+	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
+	id 7922C4AA; Tue, 24 Jun 2025 22:30:18 +0800
+X-QQ-mid: xmsmtpt1750775418tjjf65ee2
+Message-ID: <tencent_C857B761776286CB137A836B096C03A34405@qq.com>
+X-QQ-XMAILINFO: N+vldBj843eNUXLV7XGtfaVgQimuVCxUrR6sPDEC+V9drvLoQjxq8Pv10JL9qj
+	 QWzIDij1izxZ3rRoaZUVLlAyN78/87L7WCOVeezIiR9vKaFN4jYeNutAnPJxqdfFSlooFVszfigi
+	 2iuCejs/o3458aXvQPAxDSMAsUQzall0XG7XUDmTSkSeyEUWm0/4D8hn5g/NbyTwTezC67hKjr9r
+	 nRNb4JowPS/u7WJ/YFK84gsTtPSm6U526ThhyJV6twb38qd1iaeIfi0DzzQm1MYiY3EOTm/DKivB
+	 UGJahcbWwZ9oPBC2RW6WRGFj45SdSfeMVFtv23iO5vzSYjujgKTM+IhOQcuv67Gd62jsCUmlCdxM
+	 q1PmxA1WYrnbXnklyLrCHM55rxP07C0ZZjJvUxcmIl5Xf6eZsK4/NFTgTQq/QDrSyaHOINRAFAQs
+	 7fQ4m1iFCQPlfS1UdA2mfSTO7yDXfqYrYD4Rtild/wxcji8mlGccDglqHvNvKjD+J73syu8NQquj
+	 yijzY8Jd1ccEryqr6g+lmJ3e349WLTXVvMTwKem93BS5g/dqa6zy2Y6E+wYxOMKbV1WNSvngSjdv
+	 vE8cLw2b2zrDPbA8klrDw1b5MegVOC2qAoxCwV+Dzx1Ww4aebWsxpMPrYCPPQD4e3XInI64RUtOE
+	 Iu4n+CzWJ4Z5pmf8e3p90k1KJwrZwv6lFijBKGqQUzIlq2bTc5bAllVwAKKDpDvJ8voFm1GivxZH
+	 BfskME/+hrVx3S9rD8S+TYMu70w4Wf4rCXt/9X1P1pxTKkue5D7ikiqtxqtn6Kd7W2WAQSbiEGel
+	 bhTYNbsIz9eMc571bglMHK2dPuvJIN75KiXtQIdlp8lYwbN4xM8h+jOskOWYcjvCInaztB4FBdIA
+	 LSG5+RFEotLgRjBO4lL2pdTcb7MplQauzOrBwOFcFSbycHlA8OzS4HlYJv72PNFoq1rxOrpSVp0S
+	 I9xgWT0/rkfJOk7l0DslLYiCnEuTySlS1hsWaa8ctNZpVsXNayHr1KhosOUgeCh9bqpHRcYPZDNF
+	 onVL95pQ==
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+fa90fcaa28f5cd4b1fc1@syzkaller.appspotmail.com
+Cc: clm@fb.com,
+	dsterba@suse.com,
+	josef@toxicpanda.com,
+	linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	wqu@suse.com
+Subject: [PATCH next] btrfs: fix deadlock in btrfs_read_chunk_tree
+Date: Tue, 24 Jun 2025 22:30:12 +0800
+X-OQ-MSGID: <20250624143011.327069-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <685aa401.050a0220.2303ee.0009.GAE@google.com>
+References: <685aa401.050a0220.2303ee.0009.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624142350.xZ_DdClH@linutronix.de>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 24, 2025 at 04:23:50PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2025-06-24 16:18:01 [+0200], Peter Zijlstra wrote:
-> > I'm confused, sending signals is for exception from userspace. That has
-> > nothing to do with exceptions from kernelspace being NMI like.
-> 
-> Yes. See the original submission
-> 	https://lore.kernel.org/linux-riscv/20250620114346.1740512-1-namcao@linutronix.de/
+Remove the lock uuid_mutex outside of sget_fc() to avoid the deadlock
+reported by [1].
 
-I'm still confused, that code is trying to enable IRQs in the
-from-kernel part. That's insane.
+[1]
+-> #1 (&type->s_umount_key#41/1){+.+.}-{4:4}:
+       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+       down_write_nested+0x9d/0x200 kernel/locking/rwsem.c:1693
+       alloc_super+0x204/0x970 fs/super.c:345
+       sget_fc+0x329/0xa40 fs/super.c:761
+       btrfs_get_tree_super fs/btrfs/super.c:1867 [inline]
+       btrfs_get_tree_subvol fs/btrfs/super.c:2059 [inline]
+       btrfs_get_tree+0x4c6/0x12d0 fs/btrfs/super.c:2093
+       vfs_get_tree+0x8f/0x2b0 fs/super.c:1804
+       do_new_mount+0x24a/0xa40 fs/namespace.c:3902
+       do_mount fs/namespace.c:4239 [inline]
+       __do_sys_mount fs/namespace.c:4450 [inline]
+       __se_sys_mount+0x317/0x410 fs/namespace.c:4427
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-Can some Risc-V person explain why a from-kernel exception would ever
-result in a signal?!?!
+-> #0 (uuid_mutex){+.+.}-{4:4}:
+       check_prev_add kernel/locking/lockdep.c:3168 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
+       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
+       __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
+       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+       __mutex_lock_common kernel/locking/mutex.c:602 [inline]
+       __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:747
+       btrfs_read_chunk_tree+0xef/0x2170 fs/btrfs/volumes.c:7462
+       open_ctree+0x17f2/0x3a10 fs/btrfs/disk-io.c:3458
+       btrfs_fill_super fs/btrfs/super.c:984 [inline]
+       btrfs_get_tree_super fs/btrfs/super.c:1922 [inline]
+       btrfs_get_tree_subvol fs/btrfs/super.c:2059 [inline]
+       btrfs_get_tree+0xc6f/0x12d0 fs/btrfs/super.c:2093
+       vfs_get_tree+0x8f/0x2b0 fs/super.c:1804
+       do_new_mount+0x24a/0xa40 fs/namespace.c:3902
+       do_mount fs/namespace.c:4239 [inline]
+       __do_sys_mount fs/namespace.c:4450 [inline]
+       __se_sys_mount+0x317/0x410 fs/namespace.c:4427
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&type->s_umount_key#41/1);
+                               lock(uuid_mutex);
+                               lock(&type->s_umount_key#41/1);
+  lock(uuid_mutex);
+
+ *** DEADLOCK ***
+
+Fixes: 7aacdf6feed1 ("btrfs: delay btrfs_open_devices() until super block is created")
+Reported-by: syzbot+fa90fcaa28f5cd4b1fc1@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=fa90fcaa28f5cd4b1fc1
+Tested-by: syzbot+fa90fcaa28f5cd4b1fc1@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ fs/btrfs/super.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+index 237e60b53192..c2ce1eb53ad7 100644
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -1864,11 +1864,10 @@ static int btrfs_get_tree_super(struct fs_context *fc)
+ 	fs_devices = device->fs_devices;
+ 	fs_info->fs_devices = fs_devices;
+ 
++	mutex_unlock(&uuid_mutex);
+ 	sb = sget_fc(fc, btrfs_fc_test_super, set_anon_super_fc);
+-	if (IS_ERR(sb)) {
+-		mutex_unlock(&uuid_mutex);
++	if (IS_ERR(sb))
+ 		return PTR_ERR(sb);
+-	}
+ 
+ 	set_device_specific_options(fs_info);
+ 
+@@ -1887,6 +1886,7 @@ static int btrfs_get_tree_super(struct fs_context *fc)
+ 		 * But the fs_info->fs_devices is not opened, we should not let
+ 		 * btrfs_free_fs_context() to close them.
+ 		 */
++		mutex_lock(&uuid_mutex);
+ 		fs_info->fs_devices = NULL;
+ 		mutex_unlock(&uuid_mutex);
+ 
+@@ -1906,6 +1906,7 @@ static int btrfs_get_tree_super(struct fs_context *fc)
+ 		 */
+ 		ASSERT(fc->s_fs_info == NULL);
+ 
++		mutex_lock(&uuid_mutex);
+ 		ret = btrfs_open_devices(fs_devices, mode, sb);
+ 		mutex_unlock(&uuid_mutex);
+ 		if (ret < 0) {
+-- 
+2.43.0
+
