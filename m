@@ -1,205 +1,172 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A37B2E7657
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D14126C02
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750776298; cv=none; b=jsHymzOHlHItBfeBUwuKpYounFYU1KR27uQyOjvAtSJXw5SMhqVM3BYP1RIbyTCliGTgPtmSJWql1pIkBM63d7EaTmfJ5lzopkIo7+pEK/FNuVY0k97uLyA4gZpfqCCiILChZ4gZfWzIUZQ58SF0kAGh4i0lspd1smH2HxjPYfg=
+	t=1750776374; cv=none; b=du4r0TeXDBz4TFcvc6aeOzEnzf+crclEmE674XdzFsJM+gxw8SUs8wqPcNBHT1XkAdvnzUOn2csMwOK3WRCxXE28BieX9VEI2ElpOTbOyo4kcWD9tAyxKdTJSC0qe2zymYoVHaGKf4TPAwpQ6WVYto2JBZHmxZOTyDJfTnMr0gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750776298; c=relaxed/simple;
-	bh=PMtBkVKWw5Pna9jZlC5WnAmSVHkdhULOnJd14bo0Luc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UrXP43UAbfUDYYJaBe73hNWz//vqElx7JbKD03vEPmecMReJmZpXNmm9dEK9xQSSPw0oVRNNTrsDcbywJo60fJzdAeRL6yauSlpob8tLhLLqQi1QYldfjYPwUy+zLzNEW7q4xxHzJoGgg8ca4cWe4wUFhlDfV9kEanqqoPKbKT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZQHZa6P6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750776374; c=relaxed/simple;
+	bh=fpQtH3m+Buy5V0o+6pHjXk30B76hPNJiMVvgv6xQqyA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TbYcrblGPfjECDcocxx84KE8rnNIzrYnmJzThTUMq79hQEOuT2xnaRWuN9usUbQrmQa80HMr+SDaGlJmkyVGp2wQTFDvNRXijnE6Hb25Cyw9DGOfxId3f7qFaW9z/3ADCjngtNCubr71hNciQNuzxWFPdYyZmd5MEnaDMIExHRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TXAzOaKH; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZQHZa6P6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750776296;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mLcxxnqRZ5+f05tvB52Bk6zB2CYTD16ghvbgMe9EAr8=;
-	b=ZQHZa6P6xt0ehj8rjdW1iuboq96R6pYNNK4Fj2pwe8TlBnhj2gVHZJCy09XnYpHz6IoBF6
-	UfqDTgCCcmyQFaoWYBwLtV+lpFKY1tkqgREAwl8pXZleVNjcGHcS91aqWZ0dXhRdF4h8fW
-	jbrINC9Xog8PFkrPCeDnN2CbYq465j0=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-635-zuxdedVwMy-QqFG4SU6urQ-1; Tue, 24 Jun 2025 10:44:53 -0400
-X-MC-Unique: zuxdedVwMy-QqFG4SU6urQ-1
-X-Mimecast-MFC-AGG-ID: zuxdedVwMy-QqFG4SU6urQ_1750776293
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-450df53d461so40445205e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:44:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TXAzOaKH"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-451ebd3d149so30320835e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:46:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750776371; x=1751381171; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6B17wxUutzGipZBNrlcMNl3UtuYA1TkBjtVYOtdCY5U=;
+        b=TXAzOaKHGyOWtFsL387yaBkF5aHmPVQKABupRR0ICweAX6SsBn734ZX531IYn0P/UV
+         tA3ATzIREmE2ptjhwia5wlH3fyVrNATcCFF8EsaTkOeeCwK+6OaGk1C7sE+7bN8DUHmK
+         MJ3IYJhXHjXRWbs9Bzw6nVuqv3bXfrlK7iRWdwIiq+QrhLEzFOO7qc8GE12PBZmWD5Sd
+         esf6tlJa3mCh/aB79yrBgMbmNbzLdpeZn2bRCzs4UuoSYTYmMmlsOK0L41H/B0pRz/y4
+         40RUrqMRjpUnuQlCG1Sb1XTSSa122PvV2S7OKXme0AznTmLOXQYSXLS60fXT4D+CU9me
+         KYVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750776292; x=1751381092;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mLcxxnqRZ5+f05tvB52Bk6zB2CYTD16ghvbgMe9EAr8=;
-        b=XsOoRYd/TiRos0LUQkc8ohJbjcGEM3gs9wU+o1G7r3sjhrnYLzAixFBKU72Xe93QRE
-         gDCQJPKASVQ3PBtTWiqFjc6iVrxRf6uviI7Zzlny7v5gFm9y6xX+2X0aqdoakcWugVXz
-         u7wLmOVEYBVrVKsuRR5T9ha8GKKBIq6npIXBFR+v7QFXGZwFFwjD56oGXRiiD/PMFsb8
-         1RPk+eefxKgf5Dmi3+S4vvPJkrTaTWwEnKtJerURJuHk6eR4ippRr5MGkJPA5onqvM3E
-         GVsD65aWIe2JvJx6K0u+lItvqCnzMhh0XYu1v4DjrxAmzAFyrJy3Np4ycxktn1u5vc2Z
-         BfEw==
-X-Gm-Message-State: AOJu0YxfV3/XTIW1Mda3/wB54BhBoYNnOPI37EBu0NoPRmRm/JAHAlRV
-	dItp0Hd63DjsVUILEsXItD70wmDsVEERDo15b/O3/1vtskpJ4IPJq6AozLdQRkY2npVMcbWSFti
-	yIVKhApXIhahh9n4lwUChpO/t1V5IRaP2pYDUNA6LrbTJAy7rNbY/KiHqTIZPSDUzRxFkJ/hvdv
-	Zn
-X-Gm-Gg: ASbGncurTQcWKLhQbgXUOToA4fCA37ROqI152nTRZA4hK76mSYHAFfclC1vb0c7kCVd
-	y/PXWw1ydd4LnpmrRERW9geIM17vsgBBaVGYqYh+q1bHwiBtu29UTfGT7+CYlMIyks52+3SdyZ7
-	uYYjNxGsL1dlb95Rs8bmL/aCaIXeyR1kNLU4rQVLsL7bpaY3gcXRVCh2drLWeqwuU4JR48tNJ18
-	A9RJKM1P/0LDAyWSSrUD0URUorSgiuhJCtZdlMiTfly5UOlDufE8Wy3dVJ6KZn0IIOnsh01lVU6
-	6ecaSYQBAnMX3nsNgfPps9d/Hk8e9KL3xH7VjhTasppWZmzg
-X-Received: by 2002:a05:600c:4fc5:b0:453:2066:4a26 with SMTP id 5b1f17b1804b1-453659ee9famr167525215e9.16.1750776292490;
-        Tue, 24 Jun 2025 07:44:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEH+bnvqk5AdSusPNS/x+/GsWWWythv10L4NSLOB5NqoePKQqBx7+VdoIha2cWe8D+LTySvCA==
-X-Received: by 2002:a05:600c:4fc5:b0:453:2066:4a26 with SMTP id 5b1f17b1804b1-453659ee9famr167524865e9.16.1750776292042;
-        Tue, 24 Jun 2025 07:44:52 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646cb57fsm146342375e9.1.2025.06.24.07.44.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 07:44:51 -0700 (PDT)
-Message-ID: <e2b2e78a9c66973d90a9dbeea83b88b97182c36e.camel@redhat.com>
-Subject: Re: [RFC PATCH v2 09/12] rv: Replace tss monitor with more complete
- sts
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
- Jonathan Corbet	 <corbet@lwn.net>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Ingo Molnar	
- <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Tomas Glozar	
- <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
- john.ogness@linutronix.de
-Date: Tue, 24 Jun 2025 16:44:49 +0200
-In-Reply-To: <20250624073609.OA9Q1V4g@linutronix.de>
-References: <20250514084314.57976-1-gmonaco@redhat.com>
-	 <20250514084314.57976-10-gmonaco@redhat.com>
-	 <20250624073609.OA9Q1V4g@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+        d=1e100.net; s=20230601; t=1750776371; x=1751381171;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6B17wxUutzGipZBNrlcMNl3UtuYA1TkBjtVYOtdCY5U=;
+        b=ETbCgcnwTB8rSm9EXIV+vVjUGjdOqK8Ql60i4DxJvn5lDOqNIXz58sWGh/bk/ZR7oM
+         c8Xy9l9cnZeMZHhlG18ldWbYDDDqqAQ1hijJoi+8CT0MYe1NiyJYjg3akcqfCckX1tCu
+         yB9vF0mlDBSmivWApdey6Qg8jDNP5z8B7GP6VZmGo7+LtYJhabhyhZiarDJPfsrkkgzU
+         A1Ji13fKp3nHvaarzDtLMvw+J2pfPiV/0ziF8fWs0PrBi3qSWsvj1u0m/LPcMT9VulhX
+         otsDhL4N/iy8EmDUKjLYUDWHevIc6Sg2aogFn66wKKYcDKjkBMuWnQ9H3ecoIIld6CGl
+         rexg==
+X-Forwarded-Encrypted: i=1; AJvYcCXa/uoCPD78iTAHnp4QOEYh/J/xeJvg32DOb2TL49r/jJQI5nXgldB0IXboG2QWORldwALiZn4P5X+DCJY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTJ2PJG1/UdSMCSHqJ9LinRopVUOg3qIoBswSLVbh4dp3Q0DJG
+	RRRYPZnIOms6zYXsw4+k8wfGIKYpuB6Xk85MLmhr4X3ZuuZvI5hh22J92bzjaTXfjxO2e9flmm6
+	BETY78w+kNgPA1ZewkSjfJvwRmu7N1Q3wHHDb6O2+
+X-Gm-Gg: ASbGncsxwFiXs1Y2OjZBsiGGwxSP4CG8Pvg/1gkafnj6+2HgTcMpLCc8GWQPH6gldph
+	PFG72N/trXOmj2xrCHfcHITZr2T7Ng8kIM3F717bxlrEL8tQXvTR3Ios/9P1JwPnZvfuYoCdkgL
+	7fvqNRm1jehFFSPFhgbN7boyG3HM2Q8dfKtEKKYNhDXQpZXRcAxONEyBNrTT0t/P2f4io9aVPZW
+	3djbCV7mVw=
+X-Google-Smtp-Source: AGHT+IGGEmbBkLAeQIpZqVAS8Ho8nmfsMx3x32gEmNIuKsK216VxXuTQqNoiOeA6GmRO962D5XNQECF2AhVfeUhb1Sc=
+X-Received: by 2002:a05:6000:2182:b0:3a5:8a68:b81b with SMTP id
+ ffacd0b85a97d-3a6d130e818mr12513027f8f.44.1750776370669; Tue, 24 Jun 2025
+ 07:46:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <CAH5fLgjJRbjPnN58RuaBtNrY1A-tif3ohETLxdbaE4b46Hjbqg@mail.gmail.com>
+ <20250624.224923.1801832299260163743.fujita.tomonori@gmail.com>
+ <CAH5fLgjttTnev2h4J-hF-LdUTJCoryJyFm5_LqJ6_GBe+=An5Q@mail.gmail.com> <20250624.231428.764205178512881259.fujita.tomonori@gmail.com>
+In-Reply-To: <20250624.231428.764205178512881259.fujita.tomonori@gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 24 Jun 2025 15:45:45 +0100
+X-Gm-Features: Ac12FXwClnNuGLTT3yqGfd5t9mEBU8F0w4jwSmqRtUpckTCZ-bsUZFevPpAelbM
+Message-ID: <CAH5fLgi7R9iVXwU+k6vvQYHyxix-sU_OL0nKZsbnuuFDJjAMTA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] rust: time: Rename Delta's methods as_micros_ceil
+ and as_millis
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: miguel.ojeda.sandonis@gmail.com, a.hindborg@kernel.org, 
+	alex.gaynor@gmail.com, ojeda@kernel.org, anna-maria@linutronix.de, 
+	bjorn3_gh@protonmail.com, boqun.feng@gmail.com, dakr@kernel.org, 
+	frederic@kernel.org, gary@garyguo.net, jstultz@google.com, 
+	linux-kernel@vger.kernel.org, lossin@kernel.org, lyude@redhat.com, 
+	rust-for-linux@vger.kernel.org, sboyd@kernel.org, tglx@linutronix.de, 
+	tmgross@umich.edu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jun 24, 2025 at 3:14=E2=80=AFPM FUJITA Tomonori
+<fujita.tomonori@gmail.com> wrote:
+>
+> On Tue, 24 Jun 2025 14:54:24 +0100
+> Alice Ryhl <aliceryhl@google.com> wrote:
+>
+> >> >> So would the function be defined like this?
+> >> >>
+> >> >> fn as_nanos(self) -> i64;
+> >> >>
+> >> >> If that's the case, then we've come full circle back to the origina=
+l
+> >> >> problem; Clippy warns against using as_* names for trait methods th=
+at
+> >> >> take self as follows:
+> >> >>
+> >> >> warning: methods called `as_*` usually take `self` by reference or =
+`self` by mutable reference
+> >> >>    --> /home/fujita/git/linux-rust/rust/kernel/time/hrtimer.rs:430:=
+17
+> >> >>     |
+> >> >> 430 |     fn as_nanos(self) -> i64;
+> >> >>     |                 ^^^^
+> >> >>     |
+> >> >>     =3D help: consider choosing a less ambiguous name
+> >> >>     =3D help: for further information visit https://rust-lang.githu=
+b.io/rust-clippy/master/index.html#wrong_self_convention
+> >> >>     =3D note: `-W clippy::wrong-self-convention` implied by `-W cli=
+ppy::all`
+> >> >>     =3D help: to override `-W clippy::all` add `#[allow(clippy::wro=
+ng_self_convention)]`
+> >> >>
+> >> >> https://lore.kernel.org/rust-for-linux/20250610132823.3457263-2-fuj=
+ita.tomonori@gmail.com/
+> >> >
+> >> > Are we missing a derive(Copy) for this type? Clippy does not emit th=
+at
+> >> > lint if the type is Copy:
+> >> > https://github.com/rust-lang/rust-clippy/issues/273
+> >>
+> >> I think that both Delta and Instant structs implement Copy.
+> >>
+> >> #[repr(transparent)]
+> >> #[derive(PartialEq, PartialOrd, Eq, Ord)]
+> >> pub struct Instant<C: ClockSource> {
+> >>     inner: bindings::ktime_t,
+> >>     _c: PhantomData<C>,
+> >> }
+> >>
+> >> impl<C: ClockSource> Clone for Instant<C> {
+> >>     fn clone(&self) -> Self {
+> >>         *self
+> >>     }
+> >> }
+> >>
+> >> impl<C: ClockSource> Copy for Instant<C> {}
+> >>
+> >> #[derive(Copy, Clone, PartialEq, PartialOrd, Eq, Ord, Debug)]
+> >> pub struct Delta {
+> >>     nanos: i64,
+> >> }
+> >>
+> >> The above warning is about the trait method.
+> >
+> > Wait, it's a trait method!?
+>
+> Yes. Clippy warns the following implementation:
+>
+> pub trait HrTimerExpires {
+>     fn as_nanos(self) -> i64;
+> }
+>
+> Clippy doesn't warn when the methods on Delta and Instant are written
+> similarly. So Clippy is happy about the followings:
+>
+> pub trait HrTimerExpires {
+>     fn as_nanos(&self) -> i64;
+> }
+>
+> impl HrTimerExpires for Delta {
+>     fn as_nanos(&self) -> i64 {
+>         Delta::as_nanos(*self)
+>     }
+> }
 
+If it's a trait method, then it should take &self because you don't
+know whether it's Copy.
 
-On Tue, 2025-06-24 at 09:36 +0200, Nam Cao wrote:
-> On Wed, May 14, 2025 at 10:43:11AM +0200, Gabriele Monaco wrote:
-> > diff --git a/kernel/trace/rv/monitors/tss/tss_trace.h
-> > b/kernel/trace/rv/monitors/sts/sts_trace.h
-> > similarity index 67%
-> > rename from kernel/trace/rv/monitors/tss/tss_trace.h
-> > rename to kernel/trace/rv/monitors/sts/sts_trace.h
-> > index 4619dbb50cc0..d78beb58d5b3 100644
-> > --- a/kernel/trace/rv/monitors/tss/tss_trace.h
-> > +++ b/kernel/trace/rv/monitors/sts/sts_trace.h
-> > @@ -4,12 +4,12 @@
-> > =C2=A0 * Snippet to be included in rv_trace.h
-> > =C2=A0 */
-> > =C2=A0
-> > -#ifdef CONFIG_RV_MON_TSS
-> > -DEFINE_EVENT(event_da_monitor, event_tss,
-> > +#ifdef CONFIG_RV_MON_STS
-> > +DEFINE_EVENT(event_da_monitor, event_sts,
-> > =C2=A0	=C2=A0=C2=A0=C2=A0=C2=A0 TP_PROTO(char *state, char *event, char=
- *next_state,
-> > bool final_state),
-> > =C2=A0	=C2=A0=C2=A0=C2=A0=C2=A0 TP_ARGS(state, event, next_state, final=
-_state));
-> > =C2=A0
-> > -DEFINE_EVENT(error_da_monitor, error_tss,
-> > +DEFINE_EVENT(error_da_monitor, error_sts,
-> > =C2=A0	=C2=A0=C2=A0=C2=A0=C2=A0 TP_PROTO(char *state, char *event),
-> > =C2=A0	=C2=A0=C2=A0=C2=A0=C2=A0 TP_ARGS(state, event));
-> > -#endif /* CONFIG_RV_MON_TSS */
-> > +#endif /* CONFIG_RV_MON_STS */
->=20
-> You are changing the tracepoint's name. Should we worry about
-> breaking
-> userspace?
->=20
-
-Well, to be extremely picky, although that's what git shows, I'm not
-changing tracepoints names, I'm removing tracepoints and adding similar
-ones with different names.
-
-That said, you're bringing a very good point, I guess removing/adding
-monitors is going to be something quite common in the near future.
-
-> It probably doesn't matter at the moment, because I doubt anyone is
-> really
-> relying on this tracepoint. But I think we should have a definite
-> stance on
-> this, for future references.
->=20
-> I have seen tracepoints being changed (I know of [1][2][3], I was one
-> of
-> them :P), so it seems to be considered okay. But adding userspace
-> tools to
-> the equation and it doesn't make sense to me. For example, lttng is
-> using
-> the page_fault tracepoints [4], which is broken by [3].
->=20
-> If this should be stable user API, then we should starting thinking
-> about
-> better API which allows changes like this to happen. Otherwise, they
-> should
-> be clearly documented to be unstable.
->=20
-> (I think I may also need to change my rtapp's tracepoint names at
-> some point
-> in the future, that's why I am asking)
->=20
-
-As you mentioned, nobody is likely relying on those tracepoints names
-at the moment, but I would rather be cautious basing userspace tools on
-some monitors to exist at all.
-
-In my opinion, RV tracepoints are useful as an alternative of
-reactors/rv userspace tool but cannot be used without considering the
-RV interface itself (e.g. available_monitors and friends).
-
-We could at least stick to the following assumptions:
-1. monitors can change names, be added or removed
-2. tracepoints are consistent to monitor names (in available_monitors)
-3. the tracepoint structure does not change (i.e. event_/error_, args.)
-   (can change for new monitors types where seen fit)
-
-If in the future we allow the possibility to build RV monitors as BPF
-programs, we'd probably also allow monitors without tracepoints at all,
-but I'd say for now those assumptions are sensible.
-
-What do you think?
-
-Thanks,
-Gabriele
-
-> Best regards,
-> Nam
->=20
-> [1] commit dbb6ecb328cb ("btrfs: tracepoints: simplify raid56
-> events")
-> [2] commit 244132c4e577 ("tracing/timers: Rename the hrtimer_init
-> event to hrtimer_setup")
-> [3]
-> https://lore.kernel.org/lkml/2dda8c03-072a-43b2-af0c-bb996d64c388@cs.wisc=
-.edu/#t
-> [4]
-> https://github.com/lttng/lttng-modules/blob/master/include/instrumentatio=
-n/events/arch/x86/exceptions.h#L88C48-L88C63
-
+Alice
