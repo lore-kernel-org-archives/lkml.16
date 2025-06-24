@@ -1,221 +1,116 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E2526D4CA
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 23:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352EF26B2A9
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 23:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750807540; cv=none; b=JW4pGLle9cHwWcq5stXzeU/Az7T7Csnulo+SoKCtReKbHEwzs0tomwWu5dovx7pR/g4EZq0PpWu6ktdCFCBzNpReo5Wngp5B1CttNhB73MQp014C89rKGzOqKdIxTSb4QUHp4o5nLJShAtBy9S+qclAcaWFN2z7gdrp4I1RNqmg=
+	t=1750807568; cv=none; b=Ic9nSeSaj5VtoCmxb8U5E/ilF+KcYP4M4OAa24rTWvVOTefA7AMykvIJRHoHZ2Mf1T7iLUygplnJFltwga+tcRI6iGPBUFLKHGd4dyL0PFpeKtonKSK8b6YVjw0LDsWoxFbBQS/+ZI56Am56lss5jIUsuPNkwMzlSlZxpkmAl7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750807540; c=relaxed/simple;
-	bh=WDzSTNiQY+qV7dKBRUBzob8WCH99zUFjPP8hF3kQqxA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=o85nRw7Z2JtCx0ugwDR17xeZDti6gZf5YL1LTWItTm1gFqS81Ye6Z9Qi/ADLiiIKx8Cvjquj9juvVTEvGKvoZZUl+XwPcU/vzRz4M2yn1IAvYZPqkKvpcqHKfZRx+DtkIMFwv2cs4aL23oy3vZ1OUg8s2cBSPGNplp2sHoHBvLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mmaurer.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mn7bUtZC; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mmaurer.bounces.google.com
+	s=arc-20240116; t=1750807568; c=relaxed/simple;
+	bh=tlQ5FvOMjbX6Z8YhpXnrzKrOO8FlQxeVzUe9JhzvgiY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MxxuXgyumG+XUgQn07lQLgiOFPt1X8Zr3r8/yW4rxr8+SOG7YuOwhZ9/ekbKKmehnjQ9R+Ps0CFMGmcT9HP9QYtNY/gDrIQgclRXEE8iXFUGAQrpAp4ocsu1COBzOOWEliIOlN6U5aWEvVu8DVJNV498YF9qTde0QqYxQ7AbgYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=QJerJa5X; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mn7bUtZC"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2355651d204so9220655ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:25:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="QJerJa5X"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-714066c7bbbso3306577b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:26:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750807538; x=1751412338; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wkeVq1E5WpVIx5plYjGpkBVjaJU2TFimIzI1IO1cqVg=;
-        b=mn7bUtZCAsPtoRXDY6RONBoNfo6odNKLU+TKm3MoQ5xs1ipOhl3FnNtjZbWSpkML5L
-         iROJLiOPAfcshIFIFldKejcEJc32LkeAL9B8lhsOWg9mhh9khNorzZ2ybrfnEqL8LhPv
-         sjpLwjrQptyQ4i6YYgPfr9iyfiQ363Xiht7trS587iQUhx/K80/BePZ3NwZcbJrqmElk
-         bGDPhPePXyCuEfwSoE/078JRl3QtWLmh6k8iW2vl2QOACpT76iAS+scfDDDYiNrm2GuY
-         wvknotfaKaJXFA6iuu1VwKUZyVbvuahMiz+E7AcMpfpMtuUthsyWNCJSrsmI9sMfM1wA
-         Y4FQ==
+        d=paul-moore.com; s=google; t=1750807564; x=1751412364; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A5KAAp0hg3rI6FMNaXq3I4//0zQjQR1hKb9wxZe7KLQ=;
+        b=QJerJa5XSXpX3z0qka1G2FdLIn5C2XLSIGsFBFpTEPkIlUdx++9GV2e4VuXWCszTJA
+         9AGXX4NLoP7/U4t1JjJjVvI/tYOBxNsCWJkebJqYyAaXbCZ7ofjYXhqMJNyVPqs2FHMk
+         JWoK18nalzr6WA76/MEaLPvgsfjRhT88cWmLrihb122RGbDk9q+aWzdfETbdXVyM3kky
+         wlbGzGa0u2QXWKf8vp1jr7b4MNHZ2Vv06SMDH0t3LprWg66xvmBM9lJK1mLF2EBTT2e/
+         4J2lobOmCGiTlaRPgrKstWYWCl3BlIvC9Cqm5bClMPGWUPS1jZ7Rp78WBRTBTHM8Ke0C
+         Yk1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750807538; x=1751412338;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wkeVq1E5WpVIx5plYjGpkBVjaJU2TFimIzI1IO1cqVg=;
-        b=lUeZ16ngx17U4N6jmAGaQw5YRJ5VFbG4ImOJtHDpICb09iXwtAwwmIOZI8V0oIB2Ac
-         8zzlWdqggeHUiUEGAtI17d9zQWhImCGyRyDxAmfY55NrgH3pLNOHU0LuODdfojQEGRbI
-         Rt4WmELExLpIahhMAe/M5a9qOBwXUWdp/RXjJFgRO835w8vbqOYhEFd0xpvQSxgOlSkO
-         KURMEKaWqzhKaFH7CV23JVYNLkSQCEdeAUmsLSUEVQ1jeUghl1egtEJ7HA72LyStxS+f
-         RfjpyQl0rXx064NWxNjzAnHuS7lKIz4vBSY17SxntUzYKqcYdZdMwy+AXEd0Bmpr5S0J
-         tSWg==
-X-Gm-Message-State: AOJu0YxLvV6TVO0YcBcx6LiDin8zBv4cI0dovinKH8qg3oeeJL7QANoK
-	ZKp5TtKs+oYWeHQC2EsPOvM9t2t+4PRL8HaJ8s6SZ2dbHipUTgaoSgwnTo/AveANY2etNPCbUle
-	elGzYNEdDKA==
-X-Google-Smtp-Source: AGHT+IG59WXtCObOt4XcsMlpLJMNcD870RwnX1ihIW7Swuyf7GgiywBE9MtajTjTBGqQkYhu7FHulTUEDEK2
-X-Received: from pjff12.prod.google.com ([2002:a17:90b:562c:b0:312:f31a:af55])
- (user=mmaurer job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1a0d:b0:234:c65f:6c0f
- with SMTP id d9443c01a7336-23823f7e593mr11576885ad.8.1750807538509; Tue, 24
- Jun 2025 16:25:38 -0700 (PDT)
-Date: Tue, 24 Jun 2025 23:25:25 +0000
-In-Reply-To: <20250624-debugfs-rust-v7-0-9c8835a7a20f@google.com>
+        d=1e100.net; s=20230601; t=1750807564; x=1751412364;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A5KAAp0hg3rI6FMNaXq3I4//0zQjQR1hKb9wxZe7KLQ=;
+        b=nB8CIp+rZuwOnfEizmqU2EoO7FxxpB6RvEqv/IL9bCX3k55YlyRNI1NIzUWt6c5uAw
+         bemTWewpAgNUuwEk+rloMiQtMVoI+tnYGQExNW3ike6DMTu1cwzN8AEqVy7hRJpfVFH1
+         Uf/sGs1Mwusp6ATL6VaVBfAnjYo9L9BxbJEBzBC4YlAJ2yMOdh4nvEtUXNOnAsXCCosI
+         nSHWuJVLDWQAkJEBuNLGsFLDuo8KYvy2mm7igb01OsaAUK9045a2JCgk9I+BLnwSplQJ
+         OvVspkLWZaw84604WW0G49jNfo/ED+pFCtJT+saVm2NYXZwUpGGgxCj7PLVKd38i54Cc
+         D5qg==
+X-Forwarded-Encrypted: i=1; AJvYcCV4prqoJVLXJ3csbeYALzeXBgN/jhM0aXpjQkosICMkEyzVIzxZ6C+qN3M9lEaPqYQKJ60V4fh+CzzN2Pw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywcakv3SwbcU9gPOae1U3I2g/tbpbK/IaX523zXojJV3wHSfPXc
+	7c7i8JwSkXdN+uo/IOk69lHcz9CwUhaPA2327KQv/pi/HbqI/gzqwDHQ1PAjoz6XIosL8xxowLm
+	T6Gjg9B49M+K6hYcOvYFqR9XFeanU0vqJ3g+ur4aE
+X-Gm-Gg: ASbGncsUZcaeyhqSs9idDF2vAXiy61GJ/Ab6eZkXUMCgsE7X+2dJJOCMzwK75h+citG
+	7nNU+BX/5nOraeONmgRbFFNZLoEhkFDQ6xarpIOC6XE8AE6/EZUIU/QX6PaLE83mCYFypglB7iF
+	SWgr5bTvQe1mNqhzUU5I5Gmv+qGqd2UxWXJarMDSFxj/w=
+X-Google-Smtp-Source: AGHT+IFETM7yorOza0u5Xc4IPvb1Wj6Cy5A1k0l3kUM+G0H9Gtr1V6n15kmn5i3dgL3ZfArcgzsK9tCF6fhB/AUVhNs=
+X-Received: by 2002:a05:690c:2505:b0:70e:719e:743 with SMTP id
+ 00721157ae682-71406df28fcmr14100307b3.26.1750807564156; Tue, 24 Jun 2025
+ 16:26:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250624-debugfs-rust-v7-0-9c8835a7a20f@google.com>
-X-Developer-Key: i=mmaurer@google.com; a=ed25519; pk=2Ezhl7+fEjTOMVFpplDeak2AdQ8cjJieLRVJdNzrW+E=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750807526; l=5578;
- i=mmaurer@google.com; s=20250429; h=from:subject:message-id;
- bh=WDzSTNiQY+qV7dKBRUBzob8WCH99zUFjPP8hF3kQqxA=; b=v82r7IiZAkdfElUQ+cJ0GXgZDJ+IVd49arpB5Tsb6nsKe2eIuF685RVdXOWn9LK/+La+Ghe0n
- mCsrgCmUfUsDwZi9++meuohf5ApmzYrMxGor5szoc3KzS7uevhc/OAc
-X-Mailer: b4 0.14.2
-Message-ID: <20250624-debugfs-rust-v7-6-9c8835a7a20f@google.com>
-Subject: [PATCH v7 6/6] rust: samples: Add debugfs sample
-From: Matthew Maurer <mmaurer@google.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Timur Tabi <ttabi@nvidia.com>, Benno Lossin <lossin@kernel.org>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Matthew Maurer <mmaurer@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20250624-add_myself_to_lockdown_maintainers-v1-1-bed2bc934666@ssi.gouv.fr>
+In-Reply-To: <20250624-add_myself_to_lockdown_maintainers-v1-1-bed2bc934666@ssi.gouv.fr>
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 24 Jun 2025 19:25:53 -0400
+X-Gm-Features: Ac12FXxqbHuHNKN2wU9KiVvFlrrwz5yfJ7Mf5VRJd7P5lrOrY1rBggH5fBMw9ks
+Message-ID: <CAHC9VhS_QLEJrVVKNNtViFXcnaysseH5mFj9jMq7RK4u3to2yg@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Add Xiu and myself as Lockdown maintainers
+To: nicolas.bouchinet@oss.cyber.gouv.fr
+Cc: Xiu Jianfeng <xiujianfeng@huawei.com>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Provides an example of using the Rust DebugFS bindings.
+On Tue, Jun 24, 2025 at 10:49=E2=80=AFAM <nicolas.bouchinet@oss.cyber.gouv.=
+fr> wrote:
+>
+> From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+>
+> The Lockdown LSM has been unmaintained for some time now. It requires
+> some work to ensure it works as intended.
+>
+> Xiu Jianfeng and I volunteer to maintain the LSM.
+>
+> Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+> ---
+>  MAINTAINERS | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-Signed-off-by: Matthew Maurer <mmaurer@google.com>
----
- MAINTAINERS                  |  1 +
- samples/rust/Kconfig         | 11 +++++++
- samples/rust/Makefile        |  1 +
- samples/rust/rust_debugfs.rs | 76 ++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 89 insertions(+)
+Thank you both for volunteering to maintain the Lockdown LSM!
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 551e3a6a16d9051a2d58a77614c458287da2bdcc..f55c99cb2907655d109cb1fa248cdec803b5ce9a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7374,6 +7374,7 @@ F:	rust/kernel/devres.rs
- F:	rust/kernel/driver.rs
- F:	rust/kernel/faux.rs
- F:	rust/kernel/platform.rs
-+F:	samples/rust/rust_debugfs.rs
- F:	samples/rust/rust_driver_platform.rs
- F:	samples/rust/rust_driver_faux.rs
- 
-diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
-index 7f7371a004ee0a8f67dca99c836596709a70c4fa..01101db41ae31b08a86d048cdd27da8ef9bb23a2 100644
---- a/samples/rust/Kconfig
-+++ b/samples/rust/Kconfig
-@@ -62,6 +62,17 @@ config SAMPLE_RUST_DMA
- 
- 	  If unsure, say N.
- 
-+config SAMPLE_RUST_DEBUGFS
-+	tristate "DebugFS Test Module"
-+	depends on DEBUG_FS
-+	help
-+	  This option builds the Rust DebugFS Test module sample.
-+
-+	  To compile this as a module, choose M here:
-+	  the module will be called rust_debugfs.
-+
-+	  If unsure, say N.
-+
- config SAMPLE_RUST_DRIVER_PCI
- 	tristate "PCI Driver"
- 	depends on PCI
-diff --git a/samples/rust/Makefile b/samples/rust/Makefile
-index bd2faad63b4f3befe7d1ed5139fe25c7a8b6d7f6..61276222a99f8cc6d7f84c26d0533b30815ebadd 100644
---- a/samples/rust/Makefile
-+++ b/samples/rust/Makefile
-@@ -4,6 +4,7 @@ ccflags-y += -I$(src)				# needed for trace events
- obj-$(CONFIG_SAMPLE_RUST_MINIMAL)		+= rust_minimal.o
- obj-$(CONFIG_SAMPLE_RUST_MISC_DEVICE)		+= rust_misc_device.o
- obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
-+obj-$(CONFIG_SAMPLE_RUST_DEBUGFS)		+= rust_debugfs.o
- obj-$(CONFIG_SAMPLE_RUST_DMA)			+= rust_dma.o
- obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
- obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM)	+= rust_driver_platform.o
-diff --git a/samples/rust/rust_debugfs.rs b/samples/rust/rust_debugfs.rs
-new file mode 100644
-index 0000000000000000000000000000000000000000..6af9177c711a07764f0323e03a72d115287f1205
---- /dev/null
-+++ b/samples/rust/rust_debugfs.rs
-@@ -0,0 +1,76 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+// Copyright (C) 2025 Google LLC.
-+
-+//! Sample DebugFS exporting module
-+
-+use core::sync::atomic::{AtomicU32, Ordering};
-+use kernel::c_str;
-+use kernel::debugfs::{Dir, File};
-+use kernel::prelude::*;
-+use kernel::sync::{new_mutex, Arc};
-+
-+module! {
-+    type: RustDebugFs,
-+    name: "rust_debugfs",
-+    authors: ["Matthew Maurer"],
-+    description: "Rust DebugFS usage sample",
-+    license: "GPL",
-+}
-+
-+struct RustDebugFs {
-+    // As we only hold these for drop effect (to remove the directory/files) we have a leading
-+    // underscore to indicate to the compiler that we don't expect to use this field directly.
-+    _debugfs: Dir,
-+    _subdir: Dir,
-+    _file: File,
-+    _file_2: File,
-+}
-+
-+static EXAMPLE: AtomicU32 = AtomicU32::new(8);
-+
-+impl kernel::Module for RustDebugFs {
-+    fn init(_this: &'static ThisModule) -> Result<Self> {
-+        // Create a debugfs directory in the root of the filesystem called "sample_debugfs".
-+        let debugfs = Dir::new(c_str!("sample_debugfs"));
-+
-+        // Create a subdirectory, so "sample_debugfs/subdir" now exists.
-+        let sub = debugfs.subdir(c_str!("subdir"));
-+
-+        // Create a single file in the subdirectory called "example" that will read from the
-+        // `EXAMPLE` atomic variable.
-+        // We `forget` the result to avoid deleting the file at the end of the scope.
-+        let file = sub.fmt_file(c_str!("example"), &EXAMPLE, &|example, f| {
-+            writeln!(f, "Reading atomic: {}", example.load(Ordering::Relaxed))
-+        });
-+        // Now, "sample_debugfs/subdir/example" will print "Reading atomic: 8\n" when read.
-+
-+        // Change the value in the variable displayed by the file. This is intended to demonstrate
-+        // that the module can continue to change the value used by the file.
-+        EXAMPLE.store(10, Ordering::Relaxed);
-+        // Now, "sample_debugfs/subdir/example" will print "Reading atomic: 10\n" when read.
-+
-+        // In addition to globals, we can also attach any kind of owned data. Most commonly, this
-+        // will look like an `Arc<MyObject>` as those can be shared with the rest of the module.
-+        let my_arc = Arc::pin_init(new_mutex!(10), GFP_KERNEL)?;
-+        // An `Arc<Mutex<usize>>` doesn't implement display, so let's give explicit instructions on
-+        // how to print it
-+        let file_2 = sub.fmt_file(c_str!("arc_backed"), my_arc.clone(), &|val, f| {
-+            writeln!(f, "locked value: {:#010x}", *val.lock())
-+        });
-+
-+        // Since it's an `Arc` and we cloned it, we continue to have access to `my_arc`. If this
-+        // were real, we'd probably stash it in our module struct and do something with it when
-+        // handling real calls.
-+        *my_arc.lock() = 99;
-+
-+        // Save the handles we want to preserve to our module object. They will be automatically
-+        // cleaned up when our module is unloaded.
-+        Ok(Self {
-+            _debugfs: debugfs,
-+            _subdir: sub,
-+            _file: file,
-+            _file_2: file_2,
-+        })
-+    }
-+}
+I'll leave this patch on the list for a bit to see if others have any
+concerns, reviewed-by tags, etc. that they want to add, but as far as
+I'm concerned right now you two have the job :)
 
--- 
-2.50.0.714.g196bf9f422-goog
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0c1d245bf7b84f8a78b811e0c9c5a3edc09edc22..776c7fffcaec08f71faf27405=
+99f0b4570179832 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14060,8 +14060,10 @@ F:     Documentation/admin-guide/LSM/LoadPin.rst
+>  F:     security/loadpin/
+>
+>  LOCKDOWN SECURITY MODULE
+> +M:     Nicolas Bouchinet <nicolas.bouchinet@oss.cyber.gouv.fr>
+> +M:     Xiu Jianfeng <xiujianfeng@huawei.com>
+>  L:     linux-security-module@vger.kernel.org
+> -S:     Odd Fixes
+> +S:     Maintained
+>  T:     git https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/lsm.g=
+it
+>  F:     security/lockdown/
 
+--=20
+paul-moore.com
