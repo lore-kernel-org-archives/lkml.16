@@ -1,114 +1,174 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843E629E11A;
-	Tue, 24 Jun 2025 17:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D774822DA06
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 17:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750785388; cv=none; b=InmasqXGIFRn8AvhfEqkkpN8UcmHuf4FPAdhHDwcKzE/UW/3PL3sOioqzgcdgsGo73pjfDJmGJfw8X9KfrSz2hoAdFAx1mhsLYUwsXH7cJw4hb0/IwBSuIvZ05Dffzmc2i4g6K4zlAfNSodfE9lau0e6o52c9s6oAjODksBJH7w=
+	t=1750785408; cv=none; b=DFj7yxZFu6hS9O4HjB37emL71Dvs0LW31m0qOhLLR39LSgS+k0vCwDicCLTCuxAw5pQWh8Lvz4VXcQ3gg4mmcZjUuMyb28ToKkEPY0fOh7XalBQmoIeHQW4eQai1d6cLMvcLIWOHPK4AfpoI2VXliWJwYm+X+OO+XkHzLD32M0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750785388; c=relaxed/simple;
-	bh=Rjqlr72DkilY+EySouYneYmVIUMYqgPm965OFc1l1Ro=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=QqorSmhdJOZjxR4vPbCTFdX5EjD+qFpBv1BpzJzxpN3a1WGaaBwUDpdf/DWrJUwtLts/SIMDJElwgxne8s14JZ+OIxS6k/z1Elxx+MBC0dK67f+cVbsX7fozbBtgMu0Um6A0urEpNPvmphDWJKCX1Re3q8QM6YT5gVQFsWDvVeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=J/vRH/+B; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Obj2wfVK; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1750785408; c=relaxed/simple;
+	bh=UzeZm2Dy/mhkv8CVcruISnEH4zMnwLd2oQpCKisf3RM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=hX1NikUDPlnu4LHiJrx0O+4JYP30Ai60kjI2f0x3jYcOIZSlXl+JgFE2vvcKALNm3oPwldNnT7PtJnxXaU75aIRYzU8hjv2gIYs6lqqaHrmgIkqPgqVRYfP+eXWat0BVACoRaCXn++pJu+Dg/h0rcC6KazjkgLCsNRjab6DNMNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B7mdwUhf; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="J/vRH/+B";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Obj2wfVK"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 6F60E7A007E;
-	Tue, 24 Jun 2025 13:16:25 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Tue, 24 Jun 2025 13:16:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1750785385;
-	 x=1750871785; bh=fctDsDMWHBR/t5waMvZ9RXnK1n58vAkyAk91dxqNlRI=; b=
-	J/vRH/+B8R02a+FvhcVUMNBKlgaeL5+P9Xk2PSTSvXq2ibL8165LyWTrAj55L604
-	erpe0O4BqzRL0GclKDU623GFgdtDZAMtNnV2N2YKYl/zgOg5XtFEb6BhDOtEmbu1
-	8pkdCFnCpiEXFWH+2eHzYyQhso2Lmj1p/0g6LZitcoH3c3hvBg+E5fjZ3TE2RE8C
-	whKJ/78y7lQWpPFqjS0TS/V7F9ZfhB49ekSWvlNIayDy3QR5ErzQNe7K7QOrztOo
-	y7zl9zQ+MyjJZFIKhHodSQGC2FiQj/+CpTvusT0zNn9knmFmGUp/f19ii6FxZvIz
-	Ity3zz6XLtE/Hao34Zge7w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1750785385; x=
-	1750871785; bh=fctDsDMWHBR/t5waMvZ9RXnK1n58vAkyAk91dxqNlRI=; b=O
-	bj2wfVKUmfYRuVVsYtFm1ikgl1DbcvQ2OvqySPl1qRHrTf3dgd3KeiXzE6sj665a
-	KxN0gM46dQPZcGZYlAvKEH6/4UH3A1/mK4owct21w/mh0DScuiA6ZeZ7B5rF23Cq
-	6KHW+KrW/dSh8LsUGtgfXe9ADN8ty8Q/BUGz4ntLhP8uw8fktD75ubEuX8evUElz
-	m6a5g3WBx54Icbr2CKXHpb7M+qOyPinCqDSvoMwDVtnkiw+hAFGJzCxIKnB+QR4o
-	xRkgIeQ1W/wtGctOfj+xP5d4vq14VaEh2C7EmuREarsP+Yh2L/VP/2xxQ0D7QkPJ
-	iMBIdV91kCeMd2gtt0HRw==
-X-ME-Sender: <xms:aN1aaKF-va6G3DxzgjEzE95S7xDTEuGvyZ1OunDS8txdPT01f0D1GQ>
-    <xme:aN1aaLWs1Ui1kAyMmK7TAbJ6i83_Gq_CbI3Ael58AOZ8EdY9HgRxvbIUryjoBRF-c
-    8GSQF30QfoVT3ntD0g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvtdegiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
-    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopedutddpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtohepohhlthgvrghnvhesghhmrghilhdrtghomhdprhgtphhtthhopegsrh
-    hoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjrghmvghsrdgtlhgrrhhk
-    sehlihhnrghrohdrohhrghdprhgtphhtthhopehimhigsehlihhsthhsrdhlihhnuhigrd
-    guvghvpdhrtghpthhtohephhgthheslhhsthdruggvpdhrtghpthhtohepfhhrrghnkhdr
-    lhhisehngihprdgtohhmpdhrtghpthhtoheplhgrrhhishgrrdhgrhhighhorhgvsehngi
-    hprdgtohhmpdhrtghpthhtohepvhhlrgguihhmihhrrdholhhtvggrnhesnhigphdrtgho
-    mhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdroh
-    hrgh
-X-ME-Proxy: <xmx:aN1aaEJ_YSCskkwPh85OvNsuU4L1V4fXX-wBhoNc72LdkR2Ebu5bfw>
-    <xmx:aN1aaEHnkzPmCJrrqgv5VgPtvZCsS6jWraLvZke1fJiW8COaZH7O5g>
-    <xmx:aN1aaAWh7aHfPn6hBdw23I634XZkdbbfnSlw5gDjuMgnxwm9SptVAg>
-    <xmx:aN1aaHOpWrikzgBx6W-q4KTd8cdbJefcL1caipgAhObjUFgjPuw4-Q>
-    <xmx:ad1aaCgMcdFbG-8fjZ1iAQJGCtUh-6AdBbj6_EYekY8R3fWjFTrewGbX>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id CD1C1700068; Tue, 24 Jun 2025 13:16:24 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B7mdwUhf"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-311d670ad35so5337579a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 10:16:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750785405; x=1751390205; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lPtppNiFBf/kpQxTJ/QVNZEJkcz7SYItGSNnHN7Dvg4=;
+        b=B7mdwUhfmyh890YqVNJFPe5Nezb256WFO9AQlg3FrSZmbJmJttNJ3EtaK4VyjygNVg
+         nwAf1HeXXjxY1pqHQXAsEx0hXC6IRXKoxHmfxKF0h6sBCUgYkmemaO/hi+czmkw1MZCo
+         9L5RBiNPnRre8UigRtSSCiB0Kbf5mcgkTAldgPKD4FUB19Yc0SLPZUC/6JTP7VGaG5NA
+         ihwcgxprUSTsb6PUj23AxkHAOTLnNN2uG3zIK7Q0Tr8pS4Yk0IpSo4Kx3CBq9nBPhGyA
+         6d+wXI+rfOOtLvhlG5wlr+5oBeZCHvw+1yed8LJ9/IsMMfCybvLsKyMxQh/PeYrPF2sX
+         gOPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750785405; x=1751390205;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lPtppNiFBf/kpQxTJ/QVNZEJkcz7SYItGSNnHN7Dvg4=;
+        b=fauiWMhu5dJt2rH1UAj4sngH3WQM1bzArRM8Ex/AbfVN9neP0iNyPueVn4skEBeoTU
+         PVTBq9VCTSGkw8xZBwc0nbcLGpMYjo9xoqQS5LHvi0njknbd92BECZMs2TBQz+MtvXEY
+         YPKLqWXx6DQdzQG+Gbp9Wx8X+mWGGucs6hAcP65DFVnda8TUNLcvAvVwgPZd1/FMEbeM
+         zbaseh6TSw2Mbov7vRts60FF+qKT02vJxibeRcxMnEtWFSJaxllw7+loWYSgYYnMVqLk
+         VFDuOI6Qq5QxCl4+bXVPNtnN7pa1oqTWT6gKWRqDDWI6ekZRcxP83tSZBRwCN1wgb/9F
+         cepQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXx+ii4qOnz0FoDNGGJIs/Ykpq9B5zXcxQfg8V34MG7UtNqwxpJjQWRqXc8fGy/rkvkFvQwCfgxqCm4EGg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJcLeioQfjSIRCbb1yFWpYfjPAVm9jdOJopJi4Bfo1nkt9/iEN
+	isG4OJcDonEx0sJRCVFvXn8EoU31kba2japhAxEyivDQ2eSNpdNhqDsyFzyzLRnmigLmMvyTl5k
+	g/hQx/g==
+X-Google-Smtp-Source: AGHT+IFQh6rUf6fsoF1t2iLUmyALBoHLClEocHM1YgkuSdWwDe4MSrhtzjYWYkrbMppOXI0EHromoCwUqBk=
+X-Received: from pjbqo12.prod.google.com ([2002:a17:90b:3dcc:b0:311:f699:df0a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2650:b0:313:dcf4:37bc
+ with SMTP id 98e67ed59e1d1-3159d8fee49mr23229037a91.34.1750785405290; Tue, 24
+ Jun 2025 10:16:45 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Tue, 24 Jun 2025 10:16:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-ThreadId: T588a20d0ffbb3e40
-Date: Tue, 24 Jun 2025 19:16:04 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Frank Li" <Frank.li@nxp.com>, "James Clark" <james.clark@linaro.org>
-Cc: "Vladimir Oltean" <olteanv@gmail.com>, "Mark Brown" <broonie@kernel.org>,
- "Vladimir Oltean" <vladimir.oltean@nxp.com>,
- "Larisa Grigore" <larisa.grigore@nxp.com>, "Christoph Hellwig" <hch@lst.de>,
- linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
-Message-Id: <290fc244-e88f-47a3-8dd3-0ec27eb5c60b@app.fastmail.com>
-In-Reply-To: <aFrSgJ5xZfccEX9x@lizhi-Precision-Tower-5810>
-References: <20250624-james-nxp-spi-dma-v3-0-e7d574f5f62c@linaro.org>
- <20250624-james-nxp-spi-dma-v3-3-e7d574f5f62c@linaro.org>
- <aFrSgJ5xZfccEX9x@lizhi-Precision-Tower-5810>
-Subject: Re: [PATCH v3 3/6] spi: spi-fsl-dspi: Stub out DMA functions
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
+Message-ID: <20250624171637.485616-1-seanjc@google.com>
+Subject: [RFC PATCH] PCI: Support Immediate Readiness on devices without PM capabilities
+From: Sean Christopherson <seanjc@google.com>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>, Vipin Sharma <vipinsh@google.com>, 
+	Aaron Lewis <aaronlewis@google.com>, Sean Christopherson <seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 24, 2025, at 18:29, Frank Li wrote:
-> On Tue, Jun 24, 2025 at 11:35:33AM +0100, James Clark wrote:
->> This will allow the build to succeed with !CONFIG_HAS_DMA, either due to
->> a randconfig build test or when the target only uses one of the non-DMA
->
-> I supposed you met kbuild error. If yes, can you add kbuild build report
-> tags.
+Query support for Immediate Readiness irrespective of whether or not the
+device supports PM capabilities, as nothing in the PCIe spec suggests that
+Immediate Readiness is in any way dependent on PM functionality.
 
-Actually I would suggest making it a dependency on CONFIG_DMA_ENGINE
-instead of CONFIG_HAS_DMA, since that is the more relevant symbol.
+Opportunistically add a comment to explain why "errors" during PM setup
+are effectively ignored.
 
-It would also be simpler to enforce this in Kconfig if we only
-care about users that use the DMA support. 
+Fixes: d6112f8def51 ("PCI: Add support for Immediate Readiness")
+Cc: David Matlack <dmatlack@google.com>
+Cc: Vipin Sharma <vipinsh@google.com>
+Cc: Aaron Lewis <aaronlewis@google.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
 
-      Arnd
+RFC as I'm not entirely sure this is useful/correct.
+
+Found by inspection when debugging a VFIO VF passthrough issue that turned out
+to be 907a7a2e5bf4 ("PCI/PM: Set up runtime PM even for devices without PCI PM").
+
+The folks on the Cc list are looking at parallelizing VF assignment to avoid
+serializing the 100ms wait on FLR.  I'm hoping we'll get lucky and the VFs in
+question do (or can) support PCI_STATUS_IMM_READY.
+
+ drivers/pci/pci.c | 40 +++++++++++++++++++++++++---------------
+ 1 file changed, 25 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 9e42090fb108..cd91adbf0269 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3198,33 +3198,22 @@ void pci_pm_power_up_and_verify_state(struct pci_dev *pci_dev)
+ 	pci_update_current_state(pci_dev, PCI_D0);
+ }
+ 
+-/**
+- * pci_pm_init - Initialize PM functions of given PCI device
+- * @dev: PCI device to handle.
+- */
+-void pci_pm_init(struct pci_dev *dev)
++static void __pci_pm_init(struct pci_dev *dev)
+ {
+ 	int pm;
+-	u16 status;
+ 	u16 pmc;
+ 
+-	device_enable_async_suspend(&dev->dev);
+-	dev->wakeup_prepared = false;
+-
+-	dev->pm_cap = 0;
+-	dev->pme_support = 0;
+-
+ 	/* find PCI PM capability in list */
+ 	pm = pci_find_capability(dev, PCI_CAP_ID_PM);
+ 	if (!pm)
+-		goto poweron;
++		return;
+ 	/* Check device's ability to generate PME# */
+ 	pci_read_config_word(dev, pm + PCI_PM_PMC, &pmc);
+ 
+ 	if ((pmc & PCI_PM_CAP_VER_MASK) > 3) {
+ 		pci_err(dev, "unsupported PM cap regs version (%u)\n",
+ 			pmc & PCI_PM_CAP_VER_MASK);
+-		goto poweron;
++		return;
+ 	}
+ 
+ 	dev->pm_cap = pm;
+@@ -3265,11 +3254,32 @@ void pci_pm_init(struct pci_dev *dev)
+ 		/* Disable the PME# generation functionality */
+ 		pci_pme_active(dev, false);
+ 	}
++}
++
++/**
++ * pci_pm_init - Initialize PM functions of given PCI device
++ * @dev: PCI device to handle.
++ */
++void pci_pm_init(struct pci_dev *dev)
++{
++	u16 status;
++
++	device_enable_async_suspend(&dev->dev);
++	dev->wakeup_prepared = false;
++
++	dev->pm_cap = 0;
++	dev->pme_support = 0;
++
++	/*
++	 * Note, support for the PCI PM spec is optional for legacy PCI devices
++	 * and for VFs.  Continue on even if no PM capabilities are supported.
++	 */
++	__pci_pm_init(dev);
+ 
+ 	pci_read_config_word(dev, PCI_STATUS, &status);
+ 	if (status & PCI_STATUS_IMM_READY)
+ 		dev->imm_ready = 1;
+-poweron:
++
+ 	pci_pm_power_up_and_verify_state(dev);
+ 	pm_runtime_forbid(&dev->dev);
+ 	pm_runtime_set_active(&dev->dev);
+
+base-commit: 86731a2a651e58953fc949573895f2fa6d456841
+-- 
+2.50.0.714.g196bf9f422-goog
+
