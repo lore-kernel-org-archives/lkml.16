@@ -1,98 +1,197 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1C0253950
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C6D253950
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750750407; cv=none; b=ls3F0Gey5EalBZXEoirBy2QnIDJxZrySwr2FNY6Ab8YjlswqvtF7m+SmpgacGqFB9voskzAVZ1KseOOKRjcUMTsI1fdYTUKB/dW0FQiIiRk+4STqR8ldpJD4jv0RgbxhLUDGM/bdQ0yw3r0B8Icdy4Zgqvu2vcs0oyCTjudoZLs=
+	t=1750750463; cv=none; b=uNkRQJ/ugt05sGLINv/cGhxXANL1ChVFCfZpEIBXuL9XutPR+KVPQ1YPbW0PYtzde8toHdv0jmwwFmDtrDqpqpaSYqbklLeFn+QT0s7J+ZbydXStoNntfdiTO/8SIHdQifiO6l7GNC4whwKJYEfaJiYeTqzWwcw5puZ/dkl8D5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750750407; c=relaxed/simple;
-	bh=MeqGFNohGS/UtYjbbo1m1v78LUNtCclwggCbgSPV57g=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=BNk12fgVKh3Qv3bG5cq93+P9UJNQxGt63mdGqbkaH3BGF5rh7I3fuWOowF6Q3+oIt2aK6ZFgkG0GtyFCqUOcQyLBhaFeMvoNpEVWNjCtpXdbyk1jAIGSGVJt/Tg7UfMLqTAe4RIXBRbf/AdcLoLoofzVCdN4VwxZCevebmWJBd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3df2d0b7c50so1595675ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:33:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750750404; x=1751355204;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lwAeDL4uXrRxotGYDd6+WSH1XlQXeR92VyGqeuNWUPw=;
-        b=dA1J+q96sUKP0PHn1aqri2FK8kHWtTm4Jx4ZWVL8qHSFJGCA3oScMej5y1YaLtw1kv
-         Lesnt2x/JCVHfLdeDaeAccqU7FNfMC5/Os9MpLwMS3MLpHjV/3ui+unZo1biDBApll6k
-         3x5diuPufWsZ0Fir2Ac3US3ZdROROjbc7SttbVM3JhZdP3767I01sz8aAfidskSLhxdy
-         Bs5oXIN35l0U11PchDblOjlYZV7xWrUHRmeBOiMbbcIM1IfcDVoWJiSS+41FhGf2NqKp
-         5P3iT/Vw4IkN4zmbEPHzUwEYURIJEi8s8tjqvNIEb0yOyUyF9FlS8p0SVw2WbQw8myuX
-         ETOA==
-X-Forwarded-Encrypted: i=1; AJvYcCUnvjw5prKOxhbjKHRe6JxrSayddckNuc7qMpXEqJJZ2bEnAhalf/ue5+cjDZHgY58BTD40+yn9ktZ2pQU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3IdX3IATALqB6uFCS7eG6Vs4ZC2VDLy1eZnjOyLf3IY6UCS6Y
-	LDbpDo1xlfuyfBwUWViQ96UlcLgZGMZzPMDGsrN1Cp+MYSqdgKO1x2+rPP9vU+4aXZ2uxZv27Y3
-	lJH3VrqwxVJp+t4O5KBg/47CqvLXPh+tKJb21v+k2pjSq+ZIdwRE5MyfDOHY=
-X-Google-Smtp-Source: AGHT+IHu6murt6u/PZyZTSIcUyKz2pY0qGxTZPtECK46mjpD9QQFcB4AQfBUeY1tG/ABYktrXd1DAQqgr39+BdQev1/MD6UlG3BA
+	s=arc-20240116; t=1750750463; c=relaxed/simple;
+	bh=YTXRCkvu7qSZ/EDO3CbMr8KTG59gWoO+OL9yjRDnS20=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WtXdKst/i6RUIkyO/yjmpuhvS+4y3RdG03OFRX8Mt4m/hvka8TeJpPn4M2XZ6X664YsJdtpdEKyET6OC/9ca+eqnHAJkfm91DAFCCIDVv0qqPYvMm0RDFeorQ7xnqKVDnO1rs+9CVpP70OWpzwErGQGIR4xM0FvXy4Q0Wo0AalE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WBp45qX8; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WBp45qX8"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750750456;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1YQ6o0gaAmTShG6pgXKTsFdI+bf++XYLB8FSp+/GC1c=;
+	b=WBp45qX8iJNubO30r1BQXDfA0jQdD7M633OBgLxIHab96qkHzFetiMrytfqmQimesVXVbV
+	LUfl7fUDW4cbjGluGqFUWP7sd+cZAT/XKDWVl+BNxJkgKDKpRPd4pD4wXZDWL+7JbPmRnb
+	7Eu4QjtBkplKUap9Lj+keOR1FhgA2MU=
+From: Dongsheng Yang <dongsheng.yang@linux.dev>
+To: mpatocka@redhat.com,
+	agk@redhat.com,
+	snitzer@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	dan.j.williams@intel.com,
+	Jonathan.Cameron@Huawei.com
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	dm-devel@lists.linux.dev,
+	Dongsheng Yang <dongsheng.yang@linux.dev>
+Subject: [PATCH v1 01/11] dm-pcache: add pcache_internal.h
+Date: Tue, 24 Jun 2025 07:33:48 +0000
+Message-ID: <20250624073359.2041340-2-dongsheng.yang@linux.dev>
+In-Reply-To: <20250624073359.2041340-1-dongsheng.yang@linux.dev>
+References: <20250624073359.2041340-1-dongsheng.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3d88:b0:3dd:b808:be59 with SMTP id
- e9e14a558f8ab-3de38ce17a4mr184303075ab.21.1750750404673; Tue, 24 Jun 2025
- 00:33:24 -0700 (PDT)
-Date: Tue, 24 Jun 2025 00:33:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685a54c4.050a0220.2303ee.0004.GAE@google.com>
-Subject: [syzbot] Monthly btrfs report (Jun 2025)
-From: syzbot <syzbot+list02d191bb80c00a2f200e@syzkaller.appspotmail.com>
-To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hello btrfs maintainers/developers,
+Consolidate common PCACHE helpers into a new header so that subsequent
+patches can include them without repeating boiler-plate.
 
-This is a 31-day syzbot report for the btrfs subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/btrfs
+- Logging macros with unified prefix and location info.
+- Common constants (KB/MB helpers, metadata replica count, CRC seed).
+- On-disk metadata header definition and CRC helper.
+- Sequence-number comparison that handles wrap-around.
+- pcache_meta_find_latest() to pick the newest valid metadata copy.
 
-During the period, 0 new issues were detected and 1 were fixed.
-In total, 39 issues are still open and 100 have already been fixed.
-
-Some of the still happening issues:
-
-Ref  Crashes Repro Title
-<1>  4190    Yes   WARNING in btrfs_space_info_update_bytes_may_use
-                   https://syzkaller.appspot.com/bug?extid=8edfa01e46fd9fe3fbfb
-<2>  1382    Yes   BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low! (7)
-                   https://syzkaller.appspot.com/bug?extid=74f79df25c37437e4d5a
-<3>  880     Yes   WARNING in btrfs_commit_transaction (2)
-                   https://syzkaller.appspot.com/bug?extid=dafbca0e20fbc5946925
-<4>  752     Yes   WARNING in btrfs_create_pending_block_groups (2)
-                   https://syzkaller.appspot.com/bug?extid=b0643a1387dac0572b27
-<5>  495     Yes   general protection fault in btrfs_root_node
-                   https://syzkaller.appspot.com/bug?extid=9c3e0cdfbfe351b0bc0e
-<6>  454     Yes   WARNING in btrfs_chunk_alloc
-                   https://syzkaller.appspot.com/bug?extid=e8e56d5d31d38b5b47e7
-<7>  439     Yes   WARNING in cleanup_transaction
-                   https://syzkaller.appspot.com/bug?extid=021d10c4d4edc87daa03
-<8>  324     Yes   WARNING in btrfs_remove_chunk
-                   https://syzkaller.appspot.com/bug?extid=e8582cc16881ec70a430
-<9>  304     Yes   WARNING in lookup_inline_extent_backref
-                   https://syzkaller.appspot.com/bug?extid=d6f9ff86c1d804ba2bc6
-<10> 241     Yes   WARNING in btrfs_release_global_block_rsv (2)
-                   https://syzkaller.appspot.com/bug?extid=48ed002119c0f19daf63
-
+Signed-off-by: Dongsheng Yang <dongsheng.yang@linux.dev>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/md/dm-pcache/pcache_internal.h | 116 +++++++++++++++++++++++++
+ 1 file changed, 116 insertions(+)
+ create mode 100644 drivers/md/dm-pcache/pcache_internal.h
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+diff --git a/drivers/md/dm-pcache/pcache_internal.h b/drivers/md/dm-pcache/pcache_internal.h
+new file mode 100644
+index 000000000000..4d3b55a22638
+--- /dev/null
++++ b/drivers/md/dm-pcache/pcache_internal.h
+@@ -0,0 +1,116 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++#ifndef _PCACHE_INTERNAL_H
++#define _PCACHE_INTERNAL_H
++
++#include <linux/delay.h>
++#include <linux/crc32c.h>
++
++#define pcache_err(fmt, ...)							\
++	pr_err("dm-pcache: %s:%u " fmt, __func__, __LINE__, ##__VA_ARGS__)
++#define pcache_info(fmt, ...)							\
++	pr_info("dm-pcache: %s:%u " fmt, __func__, __LINE__, ##__VA_ARGS__)
++#define pcache_debug(fmt, ...)							\
++	pr_debug("dm-pcache: %s:%u " fmt, __func__, __LINE__, ##__VA_ARGS__)
++
++#define PCACHE_KB			(1024ULL)
++#define PCACHE_MB			(1024 * PCACHE_KB)
++
++/* Maximum number of metadata indices */
++#define PCACHE_META_INDEX_MAX		2
++
++#define PCACHE_CRC_SEED			0x3B15A
++/*
++ * struct pcache_meta_header - PCACHE metadata header structure
++ * @crc: CRC checksum for validating metadata integrity.
++ * @seq: Sequence number to track metadata updates.
++ * @version: Metadata version.
++ * @res: Reserved space for future use.
++ */
++struct pcache_meta_header {
++	__u32 crc;
++	__u8  seq;
++	__u8  version;
++	__u16 res;
++};
++
++/*
++ * pcache_meta_crc - Calculate CRC for the given metadata header.
++ * @header: Pointer to the metadata header.
++ * @meta_size: Size of the metadata structure.
++ *
++ * Returns the CRC checksum calculated by excluding the CRC field itself.
++ */
++static inline u32 pcache_meta_crc(struct pcache_meta_header *header, u32 meta_size)
++{
++	return crc32c(PCACHE_CRC_SEED, (void *)header + 4, meta_size - 4);
++}
++
++/*
++ * pcache_meta_seq_after - Check if a sequence number is more recent, accounting for overflow.
++ * @seq1: First sequence number.
++ * @seq2: Second sequence number.
++ *
++ * Determines if @seq1 is more recent than @seq2 by calculating the signed
++ * difference between them. This approach allows handling sequence number
++ * overflow correctly because the difference wraps naturally, and any value
++ * greater than zero indicates that @seq1 is "after" @seq2. This method
++ * assumes 8-bit unsigned sequence numbers, where the difference wraps
++ * around if seq1 overflows past seq2.
++ *
++ * Returns:
++ *   - true if @seq1 is more recent than @seq2, indicating it comes "after"
++ *   - false otherwise.
++ */
++static inline bool pcache_meta_seq_after(u8 seq1, u8 seq2)
++{
++	return (s8)(seq1 - seq2) > 0;
++}
++
++/*
++ * pcache_meta_find_latest - Find the latest valid metadata.
++ * @header: Pointer to the metadata header.
++ * @meta_size: Size of each metadata block.
++ *
++ * Finds the latest valid metadata by checking sequence numbers. If a
++ * valid entry with the highest sequence number is found, its pointer
++ * is returned. Returns NULL if no valid metadata is found.
++ */
++static inline void __must_check *pcache_meta_find_latest(struct pcache_meta_header *header,
++					u32 meta_size, u32 meta_max_size,
++					void *meta_ret)
++{
++	struct pcache_meta_header *meta, *latest = NULL;
++	u32 i, seq_latest = 0;
++	void *meta_addr;
++
++	meta = meta_ret;
++
++	for (i = 0; i < PCACHE_META_INDEX_MAX; i++) {
++		meta_addr = (void *)header + (i * meta_max_size);
++		if (copy_mc_to_kernel(meta, meta_addr, meta_size)) {
++			pcache_err("hardware memory error when copy meta");
++			return ERR_PTR(-EIO);
++		}
++
++		/* Skip if CRC check fails */
++		if (meta->crc != pcache_meta_crc(meta, meta_size))
++			continue;
++
++		/* Update latest if a more recent sequence is found */
++		if (!latest || pcache_meta_seq_after(meta->seq, seq_latest)) {
++			seq_latest = meta->seq;
++			latest = (void *)header + (i * meta_max_size);
++		}
++	}
++
++	if (latest) {
++		if (copy_mc_to_kernel(meta_ret, latest, meta_size)) {
++			pcache_err("hardware memory error");
++			return ERR_PTR(-EIO);
++		}
++	}
++
++	return latest;
++}
++
++#endif /* _PCACHE_INTERNAL_H */
+-- 
+2.43.0
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
