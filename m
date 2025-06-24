@@ -1,158 +1,302 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8949926A1AE
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE4526A1B6;
+	Tue, 24 Jun 2025 08:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750754467; cv=none; b=BOGk9aGD6YSQYIZQRjpzS+HEBuiOCO8eOY4snQbAdyK9lEvYeyPdkRC/qHS+04DSb0ap6kWnAb8u9qGhhZrkcdTYzPlR13DenAb/4+CIawZdVWmcat4jaDbNxWoxQkWHOgdamAX+V687CNFd7hFoIVyy2gE2OB5gfFlRb6W7ni8=
+	t=1750754491; cv=none; b=QbvZFQMShmzuTf2ykiZF6ij0ijFTuJ6dNYq7LZEnsgOtQY6YdWDQwIGNf5Zm4xEp2omhwXWr5OuQbLNyTsvVXMR0XFpvrwUtZAjpK8RZjZoSUWhX+bc0pjk70mRxAv3so/HPo0gBKRWpzH+iF+ledbTUTSPWlQHJf5bMLFXUc+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750754467; c=relaxed/simple;
-	bh=zdAtxHvqY91gdiWBUFT7jBGg+f5hSLcaeJSjeAJNEVw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tSXFnLx01w4M09c6lKjKCd1J4jWIig+V+KZyDS4M6CkW6fMHL7fTi9t8PPaY2tl47QS/0sm0LefwPqJHh+Njj0JTwNhfrJcHtn94qwioOeqHEO2lIfaJ+MZ7nwTAddB8qJZG/60ioQvPVi1oqX2ZObAUa/YboGTj5ftrKOqckDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UH1V3t9S; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1750754491; c=relaxed/simple;
+	bh=ztZh7mz/a3j9KG8cS+UzY10q30DeYc8CF1/dXuCQmsE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZI2L8DQlR/YGPp6Dg/Au6lLRdxt4FjyXmL1jDodAEsjjtJ9SshapkSEbNeEAgan8+NYvpoG09vqCH3b8ZPwkw751AhHUcWLSA9JEVM/IGH3KFGtdy/pAzyAJE4J2xy24U5ashe/x1L2zBuw4GFr9CRoyKSuNL9pkjt+BuQW35N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rGHG0uzv; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UH1V3t9S"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a510432236so3731234f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:41:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1750754463; x=1751359263; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=42Y2N6ebar+wiBFiVwZ+1np3R1M+VYIv1aIQkqIKk40=;
-        b=UH1V3t9S4NXkPqOqyNyHVbHAvxkVhK777/oSyAzWRZWd6k92Hp4OfCtbGtwNzDa4NO
-         aHhBhJNq4Q3A+nOxolkOrzG72lygIik4Y4E+LWv/mSGQbN9iz3HUSvmv0HQK5PYMdQvj
-         brqPqcaUXH96LLCaWAUegv/ZlT7PD9EU1kzbq4fve7XPzLifVTz0o4UWYAj7PQBeOQSr
-         JRgXLjd1gtNqd/KDijBDLEv9x2tEREMuAv+kC35tuY2gJl9ERBaTJVwENE4mCpoAXrMP
-         czg3WpLW9ng2/Ip1qS6Kg1UNBBG9QOQPV57fiSUcR4QzdS9omCKPVzKAT84JEmwyzS9d
-         /10A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750754463; x=1751359263;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=42Y2N6ebar+wiBFiVwZ+1np3R1M+VYIv1aIQkqIKk40=;
-        b=HA8kC/MqM1IbgjjCt6/QI+uix9VtWMaUt3RfpPOgJCmA5RyQBcHYzWrQjWafIh7ECk
-         jCSQ672Ysw2Ole9dhWzXwlhXn25/lTA/OME94JIXtnFhQHoSMMv4iU7+KE0PiPiuFzt5
-         abj/WpOoivywwchgszfW283sBotMYxEe+W8n+QtSsbhWnGw8qN1ybGT211AEbQdW0PqN
-         yt62I6hG2d63rd41KTzPheXOY4mWHBZjX2kKzPNW2I8BevbfiUYwvI8nB/s4poYkdAJH
-         di5vx1rQWPNNJU5h2iYrDb8FQXiEEq8oFipkvLOrp6Evk1Bp5LXA8bBvx7WpqJZdCY92
-         AKUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCViXVZodPqc2eaC8YDRitPLq3ujhF8Eo7hIM8xkb2g3sRmEaf4DCd+18JkNkULg+v0Hkb5c+II0h79W6Bw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxA807jPAW48RLny8MG/y/s5/sakrRb4EseT8ekMJ7HR5gOYOXc
-	4rK1Fa9bjBJ5kwNyso19PUIRK3A9XeZodwHUtNR693C/7SfVG57SU8VoDeR0MiddP1o=
-X-Gm-Gg: ASbGnctc02EwCLMQjQqy6K78HRLdGne3RAgUFNMRBpWHUXJ4WIlfPz5cM6jBNouMfnz
-	NNE0EiMpiEWjtCamtGDiEtdZy0GjEU8LtaF4TWAzLTLk6N2UYFKAcCLym2wBKPLAp/Jr2xFGyHy
-	/HI0NFMa534UPLhVGblkJv0JKFs71Khkfu9ov8wYWDTlC6QhWbye4XG6hWRnnty7vShfFDHEIVG
-	Mcb+pQUc4qbmUpZcCtzgc1zp07msjlEI0n2KLMCWJTiyoRTip3Pnk/+LOrnR2yIx/etwUqsogyA
-	Bxl9bgRDvZfvOa4s9aarPBA7Lam41F+FmcP+Oh0FVe+zuO7rykINPOBXVR2Z/5IE
-X-Google-Smtp-Source: AGHT+IHSGyDwoYjnGgDbPlFSLTlqgEue3oGk1SeNKtOch4nBjPOzzj8KWkuWYgkah6BLwc+G22XXxA==
-X-Received: by 2002:a05:6000:3111:b0:3a1:fcd6:1e6b with SMTP id ffacd0b85a97d-3a6d1334011mr11624969f8f.57.1750754462679;
-        Tue, 24 Jun 2025 01:41:02 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749b5e08e52sm1231044b3a.9.2025.06.24.01.40.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 01:41:02 -0700 (PDT)
-Date: Tue, 24 Jun 2025 10:40:46 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Marcos Paulo de Souza <mpdesouza@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Jason Wessel <jason.wessel@windriver.com>,
-	Daniel Thompson <danielt@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	kgdb-bugreport@lists.sourceforge.net, linux-um@lists.infradead.org
-Subject: Re: [PATCH 2/7] printk: Use consoles_suspended flag when
- suspending/resuming all consoles
-Message-ID: <aFpkQHwNCslbKSP6@pathway.suse.cz>
-References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
- <20250606-printk-cleanup-part2-v1-2-f427c743dda0@suse.com>
- <aExBo-8cVOy6GegR@pathway.suse.cz>
- <84y0tmiidg.fsf@jogness.linutronix.de>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rGHG0uzv"
+Message-ID: <9034e367-e7e1-43b5-bd7c-70fc9a58335d@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750754485;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gCp9O6FP7lAapUYvR/E0GJYFRXsfzMtADoUf1M9Lpw4=;
+	b=rGHG0uzvuVO7/8YuzW9HIMvfUNk/DM7SPLU+z+vdhmW5mn4ZrJuQYmq2ryBQZKsIvQhh+I
+	ZUErfP4AaC/zKDi+kHZKU3Rk+ric2qRwNLrprgU3s5cC9ZWvufex3unYigFEY8U5o1F2VA
+	bVNfD72bHeWMBEGgmrxrvJtMYRGFWrw=
+Date: Tue, 24 Jun 2025 16:41:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84y0tmiidg.fsf@jogness.linutronix.de>
+Subject: Re: [PATCH bpf-next v5 1/3] bpf: Show precise link_type for
+ {uprobe,kprobe}_multi fdinfo
+To: Jiri Olsa <olsajiri@gmail.com>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>,
+ Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+References: <20250623134342.227347-1-chen.dylane@linux.dev>
+ <CAADnVQ+aZw4-3Ab9nLWrZUg78sc-SXuEGYnPrdOChw8m9sRLvw@mail.gmail.com>
+ <CAEf4BzZVw4aSpdTH+VKkG_q6J-sQwSFSCyU+-c5DcA5euP49ng@mail.gmail.com>
+ <aFpeyZnOuJ3Xr4J6@krava>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Chen <chen.dylane@linux.dev>
+In-Reply-To: <aFpeyZnOuJ3Xr4J6@krava>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri 2025-06-20 16:49:07, John Ogness wrote:
-> On 2025-06-13, Petr Mladek <pmladek@suse.com> wrote:
-> >> diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
-> >> index fd12efcc4aeda8883773d9807bc215f6e5cdf71a..72de12396e6f1bc5234acfdf6dcc393acf88d216 100644
-> >> --- a/kernel/printk/nbcon.c
-> >> +++ b/kernel/printk/nbcon.c
-> >> @@ -1147,7 +1147,7 @@ static bool nbcon_kthread_should_wakeup(struct console *con, struct nbcon_contex
-> >>  	cookie = console_srcu_read_lock();
-> >>  
-> >>  	flags = console_srcu_read_flags(con);
-> >> -	if (console_is_usable(con, flags, false)) {
-> >> +	if (console_is_usable(con, flags, false, consoles_suspended)) {
-> >
-> > The new global console_suspended value has the be synchronized the
-> > same way as the current CON_SUSPENDED per-console flag.
-> > It means that the value must be:
-> >
-> >   + updated only under console_list_lock together with
-> >     synchronize_rcu().
-> >
-> >   + read using READ_ONCE() under console_srcu_read_lock()
+在 2025/6/24 16:16, Jiri Olsa 写道:
+> On Mon, Jun 23, 2025 at 01:59:18PM -0700, Andrii Nakryiko wrote:
+>> On Mon, Jun 23, 2025 at 10:56 AM Alexei Starovoitov
+>> <alexei.starovoitov@gmail.com> wrote:
+>>>
+>>> On Mon, Jun 23, 2025 at 6:44 AM Tao Chen <chen.dylane@linux.dev> wrote:
+>>>>
+>>>> Alexei suggested, 'link_type' can be more precise and differentiate
+>>>> for human in fdinfo. In fact BPF_LINK_TYPE_KPROBE_MULTI includes
+>>>> kretprobe_multi type, the same as BPF_LINK_TYPE_UPROBE_MULTI, so we
+>>>> can show it more concretely.
+>>>>
+>>>> link_type:      kprobe_multi
+>>>> link_id:        1
+>>>> prog_tag:       d2b307e915f0dd37
+>>>> ...
+>>>> link_type:      kretprobe_multi
+>>>> link_id:        2
+>>>> prog_tag:       ab9ea0545870781d
+>>>> ...
+>>>> link_type:      uprobe_multi
+>>>> link_id:        9
+>>>> prog_tag:       e729f789e34a8eca
+>>>> ...
+>>>> link_type:      uretprobe_multi
+>>>> link_id:        10
+>>>> prog_tag:       7db356c03e61a4d4
+>>>>
+>>>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+>>>> ---
+>>>>   include/linux/trace_events.h | 10 ++++++++++
+>>>>   kernel/bpf/syscall.c         |  9 ++++++++-
+>>>>   kernel/trace/bpf_trace.c     | 28 ++++++++++++++++++++++++++++
+>>>>   3 files changed, 46 insertions(+), 1 deletion(-)
+>>>>
+>>>> Change list:
+>>>>    v4 -> v5:
+>>>>      - Add patch1 to show precise link_type for
+>>>>        {uprobe,kprobe}_multi.(Alexei)
+>>>>      - patch2,3 just remove type field, which will be showed in
+>>>>        link_type
+>>>>    v4:
+>>>>    https://lore.kernel.org/bpf/20250619034257.70520-1-chen.dylane@linux.dev
+>>>>
+>>>>    v3 -> v4:
+>>>>      - use %pS to print func info.(Alexei)
+>>>>    v3:
+>>>>    https://lore.kernel.org/bpf/20250616130233.451439-1-chen.dylane@linux.dev
+>>>>
+>>>>    v2 -> v3:
+>>>>      - show info in one line for multi events.(Jiri)
+>>>>    v2:
+>>>>    https://lore.kernel.org/bpf/20250615150514.418581-1-chen.dylane@linux.dev
+>>>>
+>>>>    v1 -> v2:
+>>>>      - replace 'func_cnt' with 'uprobe_cnt'.(Andrii)
+>>>>      - print func name is more readable and security for kprobe_multi.(Alexei)
+>>>>    v1:
+>>>>    https://lore.kernel.org/bpf/20250612115556.295103-1-chen.dylane@linux.dev
+>>>>
+>>>> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+>>>> index fa9cf4292df..951c91babbc 100644
+>>>> --- a/include/linux/trace_events.h
+>>>> +++ b/include/linux/trace_events.h
+>>>> @@ -780,6 +780,8 @@ int bpf_get_perf_event_info(const struct perf_event *event, u32 *prog_id,
+>>>>                              unsigned long *missed);
+>>>>   int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog);
+>>>>   int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog);
+>>>> +void bpf_kprobe_multi_link_type_show(const struct bpf_link *link, char *link_type, int len);
+>>>> +void bpf_uprobe_multi_link_type_show(const struct bpf_link *link, char *link_type, int len);
+>>>>   #else
+>>>>   static inline unsigned int trace_call_bpf(struct trace_event_call *call, void *ctx)
+>>>>   {
+>>>> @@ -832,6 +834,14 @@ bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+>>>>   {
+>>>>          return -EOPNOTSUPP;
+>>>>   }
+>>>> +static inline void
+>>>> +bpf_kprobe_multi_link_type_show(const struct bpf_link *link, char *link_type, int len)
+>>>> +{
+>>>> +}
+>>>> +static inline void
+>>>> +bpf_uprobe_multi_link_type_show(const struct bpf_link *link, char *link_type, int len)
+>>>> +{
+>>>> +}
+>>>>   #endif
+>>>>
+>>>>   enum {
+>>>> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+>>>> index 51ba1a7aa43..43b821b37bc 100644
+>>>> --- a/kernel/bpf/syscall.c
+>>>> +++ b/kernel/bpf/syscall.c
+>>>> @@ -3226,9 +3226,16 @@ static void bpf_link_show_fdinfo(struct seq_file *m, struct file *filp)
+>>>>          const struct bpf_prog *prog = link->prog;
+>>>>          enum bpf_link_type type = link->type;
+>>>>          char prog_tag[sizeof(prog->tag) * 2 + 1] = { };
+>>>> +       char link_type[64] = {};
+>>>>
+>>>>          if (type < ARRAY_SIZE(bpf_link_type_strs) && bpf_link_type_strs[type]) {
+>>>> -               seq_printf(m, "link_type:\t%s\n", bpf_link_type_strs[type]);
+>>>> +               if (link->type == BPF_LINK_TYPE_KPROBE_MULTI)
+>>>> +                       bpf_kprobe_multi_link_type_show(link, link_type, sizeof(link_type));
+>>>> +               else if (link->type == BPF_LINK_TYPE_UPROBE_MULTI)
+>>>> +                       bpf_uprobe_multi_link_type_show(link, link_type, sizeof(link_type));
+>>>> +               else
+>>>> +                       strscpy(link_type, bpf_link_type_strs[type], sizeof(link_type));
+>>>> +               seq_printf(m, "link_type:\t%s\n", link_type);
+>>>
+>>> New callbacks just to print a string?
+>>> Let's find a different way.
+>>>
+>>> How about moving 'flags' from bpf_[ku]probe_multi_link into bpf_link ?
+>>> (There is a 7 byte hole there anyway)
+>>> and checking flags inline.
+>>>
+>>> Jiri, Andrii,
+>>>
+>>> better ideas?
+>>
+>> We can just remember original attr->link_create.attach_type in
+>> bpf_link itself, and then have a small helper that will accept link
+>> type and attach type, and fill out link type representation based on
+>> those two. Internally we can do the special-casing of  uprobe vs
+>> uretprobe and kprobe vs kretprobe transparently to all the other code.
+>> And use that here in show_fdinfo
 > 
-> Yes.
+> but you'd still need the flags, no? to find out if it's return probe
 > 
-> > I am going to propose more solutions because no one is obviously
-> > the best one.
+> I tried what Alexei suggested and it seems ok and simple enough
 > 
-> [...]
+> jirka
 > 
-> > Variant C:
-> > ==========
-> >
-> > Remove even @flags parameter from console_is_usable() and read both
-> > values there directly.
-> >
-> > Many callers read @flags only because they call console_is_usable().
-> > The change would simplify the code.
-> >
-> > But there are few exceptions:
-> >
-> >    2. Another exception is __pr_flush() where console_is_usable() is
-> >       called twice with @use_atomic set "true" and "false".
-> >
-> >       We would want to read "con->flags" only once here. A solution
-> >       would be to add a parameter to check both con->write_atomic
-> >       and con->write_thread in a single call.
 > 
-> Or it could become a bitmask of printing types to check:
-> 
-> #define ATOMIC_PRINTING 0x1
-> #define NONATOMIC_PRINTING 0x2
-> 
-> and then __pr_flush() looks like:
-> 
-> if (!console_is_usable(c, flags, ATOMIC_PRINTING|NONATOMIC_PRINTING)
+> ---
+> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> index 5dd556e89cce..287c956cdbd2 100644
+> --- a/include/linux/bpf.h
+> +++ b/include/linux/bpf.h
+> @@ -1702,6 +1702,7 @@ struct bpf_link {
+>   	 * link's semantics is determined by target attach hook
+>   	 */
+>   	bool sleepable;
+> +	u32 flags;
+>   	/* rcu is used before freeing, work can be used to schedule that
+>   	 * RCU-based freeing before that, so they never overlap
+>   	 */
+> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> index 56500381c28a..f1d9ee9717a1 100644
+> --- a/kernel/bpf/syscall.c
+> +++ b/kernel/bpf/syscall.c
+> @@ -3228,7 +3228,14 @@ static void bpf_link_show_fdinfo(struct seq_file *m, struct file *filp)
+>   	char prog_tag[sizeof(prog->tag) * 2 + 1] = { };
+>   
+>   	if (type < ARRAY_SIZE(bpf_link_type_strs) && bpf_link_type_strs[type]) {
+> -		seq_printf(m, "link_type:\t%s\n", bpf_link_type_strs[type]);
+> +		if (link->type == BPF_LINK_TYPE_KPROBE_MULTI)
+> +			seq_printf(m, "link_type:\t%s\n", link->flags == BPF_F_KPROBE_MULTI_RETURN ?
+> +				   "kretprobe_multi" : "kprobe_multi");
+> +		else if (link->type == BPF_LINK_TYPE_UPROBE_MULTI)
+> +			seq_printf(m, "link_type:\t%s\n", link->flags == BPF_F_UPROBE_MULTI_RETURN ?
+> +				   "uretprobe_multi" : "uprobe_multi");
+> +		else
+> +			seq_printf(m, "link_type:\t%s\n", bpf_link_type_strs[type]);
+>   	} else {
+>   		WARN_ONCE(1, "missing BPF_LINK_TYPE(...) for link type %u\n", type);
+>   		seq_printf(m, "link_type:\t<%u>\n", type);
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 0a06ea6638fe..81d7a4e5ae15 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -2466,7 +2466,6 @@ struct bpf_kprobe_multi_link {
+>   	u32 cnt;
+>   	u32 mods_cnt;
+>   	struct module **mods;
+> -	u32 flags;
+>   };
+>   
+>   struct bpf_kprobe_multi_run_ctx {
+> @@ -2586,7 +2585,7 @@ static int bpf_kprobe_multi_link_fill_link_info(const struct bpf_link *link,
+>   
+>   	kmulti_link = container_of(link, struct bpf_kprobe_multi_link, link);
+>   	info->kprobe_multi.count = kmulti_link->cnt;
+> -	info->kprobe_multi.flags = kmulti_link->flags;
+> +	info->kprobe_multi.flags = kmulti_link->link.flags;
+>   	info->kprobe_multi.missed = kmulti_link->fp.nmissed;
+>   
+>   	if (!uaddrs)
+> @@ -2976,7 +2975,7 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+>   	link->addrs = addrs;
+>   	link->cookies = cookies;
+>   	link->cnt = cnt;
+> -	link->flags = flags;
+> +	link->link.flags = flags;
+>   
+>   	if (cookies) {
+>   		/*
+> @@ -3045,7 +3044,6 @@ struct bpf_uprobe_multi_link {
+>   	struct path path;
+>   	struct bpf_link link;
+>   	u32 cnt;
+> -	u32 flags;
+>   	struct bpf_uprobe *uprobes;
+>   	struct task_struct *task;
+>   };
+> @@ -3109,7 +3107,7 @@ static int bpf_uprobe_multi_link_fill_link_info(const struct bpf_link *link,
+>   
+>   	umulti_link = container_of(link, struct bpf_uprobe_multi_link, link);
+>   	info->uprobe_multi.count = umulti_link->cnt;
+> -	info->uprobe_multi.flags = umulti_link->flags;
+> +	info->uprobe_multi.flags = umulti_link->link.flags;
+>   	info->uprobe_multi.pid = umulti_link->task ?
+>   				 task_pid_nr_ns(umulti_link->task, task_active_pid_ns(current)) : 0;
+>   
+> @@ -3369,7 +3367,7 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+>   	link->uprobes = uprobes;
+>   	link->path = path;
+>   	link->task = task;
+> -	link->flags = flags;
+> +	link->link.flags = flags;
+>   
+>   	bpf_link_init(&link->link, BPF_LINK_TYPE_UPROBE_MULTI,
+>   		      &bpf_uprobe_multi_link_lops, prog);
 
-I like this. It will help even in all other cases when one mode is needed.
-I mean that, for example:
+Hi, Jiri, Andrii,
 
-   console_is_usable(c, flags, ATOMIC_PRINTING)
+Jiri's patch looks more simple, and i see other struct xx_links wrap 
+bpf_link, which have attach_type field like:
+struct sockmap_link {
+         struct bpf_link link;
+         struct bpf_map *map;
+         enum bpf_attach_type attach_type;
+};
+If we create attach_type filed in bpf_link, maybe these struct xx_link 
+should also be modified. BTW, as Jiri said, we still can not find return 
+probe type from attach_type.
 
-is more self-explaining than
-
-   console_is_usable(c, flags, true)
-
-Best Regards,
-Petr
+-- 
+Best Regards
+Tao Chen
