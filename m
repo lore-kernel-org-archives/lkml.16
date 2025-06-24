@@ -1,242 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516CE1F5617;
-	Tue, 24 Jun 2025 12:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F521F5617;
+	Tue, 24 Jun 2025 12:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750766956; cv=none; b=IjiQt8QPQ6y+SUPdm+0ge6kmYnL73pZz03mDFrSygeZjphsJI4yKEFabji3AQFiqcajUZWgBz0qxsi5qkT6cGl7/Ms0e2b6ChgDlkKJb8Id17ffeGhkBFwXMyfunLilOdOqvUPXnHdsu9gOKM1Pa9xid/nShOdy9La0tolgpGbI=
+	t=1750767053; cv=none; b=nFj7w3X5qAwFy656KT9iQ+gIUNwFYAyItGbfSMpr8BREBpYJgRTYuXr7XONf+yZKpM63vZS3qINpuWc49+/I9i5a8YIPTIYvK+L9tmJio723lGkg29yGEDJ9hJ4GTe103YimCIF3exZ9HG/fA57zOY1HkvMOaWzB5tPUJxmV2vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750766956; c=relaxed/simple;
-	bh=/vAqvIEqJPIi0Da0SxWzNOxYlkISJ45iZrs1A/XX4sQ=;
+	s=arc-20240116; t=1750767053; c=relaxed/simple;
+	bh=svt/KgpTl1UQdBWjOCi02AXSgJP8MSaLDBl0In/0Pzo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oXdW+TPOYXtw8kspudmQwsATXLvLVogBSTMN7N37mLg4NZfYxRYJcRg8s+dK5eUmCBVynw2k8Mh76g6XfgNoeIII3bp3iFD1pmuF2UdxmgNHnLklhBQa5/iC2VVNCaOrrPkdxZS/fWc3PAO7oWpp126tarmdzvOUhWAhbYI1wd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YjKp9ENB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YjKp9ENB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 231BEC4CEE3;
-	Tue, 24 Jun 2025 12:09:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750766956;
-	bh=/vAqvIEqJPIi0Da0SxWzNOxYlkISJ45iZrs1A/XX4sQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YjKp9ENB80dSE47uAe2UMoR15d4+qFJrSpCmManquFuhtQabx4Jj37DnElEFqDyF7
-	 pQ3/Q+2vfinH5iCyatHNsenznD07gKqCF5gEeyaV5PZ2ELgrhy5cxp5H7fGB44VBSA
-	 SfUKRSU3+pWkKYnNv1d12BKx1VbBQGp/0iZaST6vN2wT6vnu2R0EEPdvS6aznCYPAO
-	 v6BArlObt8uwaXxYaiHjzNzS63MFz1APnx9CNjEhPI5saCaGW3hLfAACsMN4ArFYzY
-	 RNSuGu0R0MOK6mvoAxmgHnUxUfgjOIgdEp1TF3HDvWX2M9vogpRnmA5g3CueU/WUC1
-	 8ODFhjq4xEGFQ==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6070293103cso9713828a12.0;
-        Tue, 24 Jun 2025 05:09:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU7kePAmvlz+KH+a1ZY4hA7sUKV7mJL8CJwsVIWL4InDEOSX4POpyMqhwuPlVmybpr2/cesAM9/Lvera4dB@vger.kernel.org, AJvYcCVtsbWrUTVQ9g9uZ/1+vnjndT6M6wKhJmYlfc+l5PSBebNrGU5jkpL3gOFjXWQ3YU4KHMg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxckzj/0ZoOs+aNBtx2REWpUy2U4XdoBOwNLbXXmh7VEOHXcQa2
-	v1lYx9253M0H5svXZlvmsTLLYFCJCO9GHbEtJ2rNKMDFXqZaLJJoeTxiLyZcQFmE4QWS1l4g6PX
-	BQQyrNoyQMmgmLR75cgoz9KVWI73BT8k=
-X-Google-Smtp-Source: AGHT+IEveyCryxR0Z96AZhwmOCgZi8eKVX7D3TPLzSH1SnTfi0MTzrer7b/f9zklQ8gZxs+eyrySxOrrhUkPfF0fehU=
-X-Received: by 2002:a05:6402:1eca:b0:60c:3c23:2950 with SMTP id
- 4fb4d7f45d1cf-60c3c232b00mr1090202a12.8.1750766954698; Tue, 24 Jun 2025
- 05:09:14 -0700 (PDT)
+	 To:Cc:Content-Type; b=lQHGISchQsTpbMXqHoJtotYNxDMvBtI1uNdT8T2KkD4hAHCkb6pbrx7AvQoDIpvHJhwu9JFILce7d1dc07MXou8Rn9A/j9cN9FxFXOYoGZGMnB1s89gSGUDcSORLHa5u1hvAkyTznDXzU016dPBYLDhLcGCcLS91xHxQeQKf6WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4e9a109035bso3820412137.1;
+        Tue, 24 Jun 2025 05:10:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750767050; x=1751371850;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mr7Tfc01vfHuBtZDbQIwiPabXFzT1mWwxVomhbQ8jNg=;
+        b=gM74n4xdu/bnvVN7mQv5OVlyFJtkNdof4hSpZ9Fxw4qa5l5ep0Br0U/uHWxGxfJBoT
+         ExoMaxNeJsroLU3WHn72WWtWS2fh7riP5JWY8bi71uMyMCuetzdqTPK3VcwrvKtwVD7u
+         Wd4LDdFU1FcTXYD1N2XYw7uyChboWfB7SkrdW9mxgJIL4XrZ42c3rWUcx4cIEwCZdoUR
+         7jzoZIRrZQRq30Kdanca3vEut6MFPxHSnJOeeQoBNeQDPRYiFBwoCkHIMad38YrWKxPz
+         rLY+3dl3GZkZMhx3sXuYaYH4uKuXgdeG+7xYQ4G+PfclNjyOX445zdxm+5DAGdWSOuS4
+         e6Nw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbEbk9tGuGqrINGc/RYzbnOOgoF/Mwnmpgb4eArQYkEjxkdrn0ldLxjjsTvVjTicPFopPLa7c+rr4=@vger.kernel.org, AJvYcCVU17TCHNp3e/9NDq+OMJnTppHk4sJEhGvlroQtxWwHVBQQZ7t6PLNabBPgdviwSHAjU8IoqV+lt9YYRC8=@vger.kernel.org, AJvYcCXu8E7oDU7+MKjJWBCZiBYqCPlsgdPyQ+c7vBLEdcDnK3vTg0pqvcxtSJnJHqmedv7CL4IA33CHfKLwONIyk3e9LPY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfU2Cf1voWZyGKSJjSsjEb8VLoipbMley30vYhTBQHo4acatXf
+	LQgtvqqWYnwPaQEIFT/xCXor79bAowWwPZoc6/OsuWlBL5BbFLD8bf1yWY3R8S5N
+X-Gm-Gg: ASbGnctNAQkZKeuFBlMfP0CHG1+0Nk/KHYc3BpfgUuzvzmYhi7Uwrat5pEgyN+jn+Oe
+	EftiSqRjUcGxtfg8BFcRbWdCIIS5ulJ7pMuJ3Q0rnzFRupMRaoj3o2nGiXDgPW2dtrtn4mGKkmv
+	TRvO33f0/yEr9Ev0lUOqDf5bzAKOlrGZNEGjbxXvb37g9MxfGIcWO+Qkjsaw3YNjeflO0wAKG7N
+	oN6dZnBdG/t9BS04pvzKwC7QJW3pQLesGt4qEmsivkLldMiwS1E5VzHXlALX82858THcCv+0snA
+	BlHZjRwuASpU4UCu6Tk9724MFid5e+h+7Udf0u9cMOjB7AgjSxyJuIVyH1hzXHStVBnUY+g24yq
+	tiSrjhEk9d4JAxDf9olg75Y6O
+X-Google-Smtp-Source: AGHT+IFzPV6lGahCPZM10hz/RD8kJ154DeNa80y71Uq88UWlu8u+px8xBjYaeHlVj54i6i9YJGWLyQ==
+X-Received: by 2002:a05:6102:2ad0:b0:4e9:b612:9013 with SMTP id ada2fe7eead31-4e9c2bc7cc9mr9535500137.13.1750767049603;
+        Tue, 24 Jun 2025 05:10:49 -0700 (PDT)
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8811acfa12csm1646905241.5.2025.06.24.05.10.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 05:10:48 -0700 (PDT)
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-87f36c458afso3418357241.1;
+        Tue, 24 Jun 2025 05:10:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVK2X8+VO5aPojiwV3PH9ubC/Ym1OmnSXESz0HiR/fVbdOtZPzzJmL+9iY95lsn2PLUuY15dDQKCd1N2LicD9d8AFI=@vger.kernel.org, AJvYcCVSVjS6vLBWQyJM/iFfh+EelHT77bqkzhbOpe+knTd5uOPhZN9/R1fJZ9dZA7hEUAKJK7US2S77eN6kztk=@vger.kernel.org, AJvYcCXXMCw0in+8ajdrdptpECHwxuUzh4j1OJYHnDQntfIKb/hwtfDWROU5JcamV83sk7ogBDScLdykUUU=@vger.kernel.org
+X-Received: by 2002:a05:6102:8016:b0:4df:9e8b:8cad with SMTP id
+ ada2fe7eead31-4e9c2c6dcb7mr9458493137.22.1750767048099; Tue, 24 Jun 2025
+ 05:10:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528104032.1237415-1-jianghaoran@kylinos.cn>
- <CAEyhmHTg3xNMBrSxXQj96pvfD83t6_RHRT_GGtbBzOpAKztDpw@mail.gmail.com> <68ec5a7f3cc63dc19397b3ce0649716e0fac8d49.camel@kylinos.cn>
-In-Reply-To: <68ec5a7f3cc63dc19397b3ce0649716e0fac8d49.camel@kylinos.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 24 Jun 2025 20:09:01 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5NrGb9ofaKdqUQ3Qc6RK3c=Ngy6KsxX2GaOqUb0SQRdw@mail.gmail.com>
-X-Gm-Features: AX0GCFtD9EvAyNu7eh4iPlep1b-5L2uW3s302vwNzQO9z7kJzBC_8U1UEiAYI6I
-Message-ID: <CAAhV-H5NrGb9ofaKdqUQ3Qc6RK3c=Ngy6KsxX2GaOqUb0SQRdw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: BPF: Optimize the calculation method of
- jmp_offset in the emit_bpf_tail_call function
-To: jianghaoran <jianghaoran@kylinos.cn>
-Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel@xen0n.name, yangtiezhu@loongson.cn, 
-	haoluo@google.com, jolsa@kernel.org, sdf@fomichev.me, kpsingh@kernel.org, 
-	john.fastabend@gmail.com, yonghong.song@linux.dev, song@kernel.org, 
-	eddyz87@gmail.com, martin.lau@linux.dev, andrii@kernel.org, 
-	daniel@iogearbox.net
+References: <20250523134025.75130-1-ulf.hansson@linaro.org>
+ <fd4cfe7a-e29b-4237-b82f-48354deead3b@ideasonboard.com> <CAPDyKFpprO=HGuiHX3MQ_+m1YRnaWG=XwCx8-fSdXak8VBDUbQ@mail.gmail.com>
+ <CAPDyKFpXcpwkacnYqWz2vxaTd7pW5bSRa2F063BryFxVNEAmPA@mail.gmail.com> <CAMuHMdXGS+efbbQ_Pn1iYhQ1aWc_DuJ-CBN=jxfjwOWxTRx+9Q@mail.gmail.com>
+In-Reply-To: <CAMuHMdXGS+efbbQ_Pn1iYhQ1aWc_DuJ-CBN=jxfjwOWxTRx+9Q@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 24 Jun 2025 14:10:34 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVit2WtjmFUHctBjndAo33Dibsg-GrOyFj98==gxk5rEw@mail.gmail.com>
+X-Gm-Features: Ac12FXypYh-k6otCqY6pCtpIjWF0CfZNia3ZUPKNyrqASzd2JswYUEhHL-kiM-Y
+Message-ID: <CAMuHMdVit2WtjmFUHctBjndAo33Dibsg-GrOyFj98==gxk5rEw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/21] pmdomain: Add generic ->sync_state() support to genpd
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Saravana Kannan <saravanak@google.com>, 
+	Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Michael Grzeschik <m.grzeschik@pengutronix.de>, Bjorn Andersson <andersson@kernel.org>, 
+	Abel Vesa <abel.vesa@linaro.org>, Peng Fan <peng.fan@oss.nxp.com>, 
+	Johan Hovold <johan@kernel.org>, Maulik Shah <maulik.shah@oss.qualcomm.com>, 
+	Michal Simek <michal.simek@amd.com>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi, Haoran,
+On Mon, 23 Jun 2025 at 17:06, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Mon, 23 Jun 2025 at 16:21, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> > On Thu, 19 Jun 2025 at 13:40, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> > > rcar_gen4_sysc_pd_init() is an early_initcall, which I guess is the
+> > > reason for these problems, as the genpd_provider_bus has not been
+> > > registered that early (it's done at core_initcall)
+> > >
+> > > Do you think it would be possible to move rcar_gen4_sysc_pd_init() to
+> > > a postcore/arch_initcall?
+> >
+> > I did some investigation around this and found that both
+> > drivers/pmdomain/renesas/rcar-gen4-sysc.c and
+> > drivers/pmdomain/renesas/rcar-sysc.c are registering their genpd
+> > providers at the early_initcall() level.
+> >
+> > I was trying to find (by browsing renesas DTSes and looking into
+> > drivers) if there is any consumers that actually relies on this, but
+> > so far the earliest consumer I have found is the
+> > drivers/irqchip/irq-renesas-irqc.c, but that's at postcore_initcall().
+> > Of course, it's difficult to say if my analysis is complete as there
+> > are a lot of platform variants and I didn't check them all.
+> >
+> > Maybe we should just give it a try and move both two drivers above to
+> > postcore_initcall and see if it works (assuming the irq-renesas-irqc
+> > supports -EPROBE_DEFER correctly too).
+> >
+> > If this doesn't work, I think we need to find a way to allow deferring
+> > the call to device_add() in of_genpd_provider_add*() for genpd
+> > provider's devices.
+>
+> Commit dcc09fd143bb97c2 ("soc: renesas: rcar-sysc: Add DT support for
+> SYSC PM domains") explains:
+>
+>    "Initialization is done from an early_initcall(), to make sure the PM
+>     Domains are initialized before secondary CPU bringup."
+>
+> but that matters only for arm32 systems (R-Car Gen1 and Gen2).
+> Arm64 systems (R-Car Gen3 and Gen4) use PSCI for CPU PM Domain control.
 
-On Fri, May 30, 2025 at 9:22=E2=80=AFAM jianghaoran <jianghaoran@kylinos.cn=
-> wrote:
->
->
->
->
->
-> =E5=9C=A8 2025-05-29=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 10:02 +0800=EF=
-=BC=8CHengqi Chen=E5=86=99=E9=81=93=EF=BC=9A
-> > Hi Haoran,
-> >
-> > On Wed, May 28, 2025 at 6:40=E2=80=AFPM Haoran Jiang <
-> > jianghaoran@kylinos.cn
-> > > wrote:
-> > > For a ebpf subprog JIT=EF=BC=8Cthe last call bpf_int_jit_compile
-> > > function will
-> > > directly enter the skip_init_ctx process. At this point,
-> > > out_offset =3D -1,
-> > > the jmp_offset in emit_bpf_tail_call is calculated
-> > > by #define jmp_offset (out_offset - (cur_offset)) is a negative
-> > > number,
-> > > which does not meet expectations.The final generated assembly
-> > > as follow.
-> > >
-> > > 54:     bgeu            $a2, $t1, -8        # 0x0000004c
-> > > 58:     addi.d          $a6, $s5, -1
-> > > 5c:     bltz            $a6, -16            # 0x0000004c
-> > > 60:     alsl.d          $t2, $a2, $a1, 0x3
-> > > 64:     ld.d            $t2, $t2, 264
-> > > 68:     beq             $t2, $zero, -28     # 0x0000004c
-> > >
-> > > Before apply this patch, the follow test case will reveal soft
-> > > lock issues.
-> > >
-> > > cd tools/testing/selftests/bpf/
-> > > ./test_progs --allow=3Dtailcalls/tailcall_bpf2bpf_1
-> > >
-> > > dmesg:
-> > > watchdog: BUG: soft lockup - CPU#2 stuck for 26s!
-> > > [test_progs:25056]
-> > >
-> >
-> > This is a known issue. Does this change pass all tailcall tests ?
-> > If not, please refer to the tailcall hierarchy patchset([1]).
-> > We should address it once and for all. Thanks.
-Do you mean you will update this patch?
+[...]
 
-Huacai
+> As expected, there is no impact on R-Car H3 ES2.0.
+> I will test on R-Car V4M tomorrow, but expect no issues.
 
-> >
-> >   [1]:
-> > https://lore.kernel.org/bpf/20240714123902.32305-1-hffilwlqm@gmail.com/
-> >
-> > Thanks,I'll keep looking into these patches.
-> > > Signed-off-by: Haoran Jiang <
-> > > jianghaoran@kylinos.cn
-> > > >
-> > > ---
-> > >  arch/loongarch/net/bpf_jit.c | 28 +++++++++-------------------
-> > >  1 file changed, 9 insertions(+), 19 deletions(-)
-> > >
-> > > diff --git a/arch/loongarch/net/bpf_jit.c
-> > > b/arch/loongarch/net/bpf_jit.c
-> > > index fa1500d4aa3e..d85490e7de89 100644
-> > > --- a/arch/loongarch/net/bpf_jit.c
-> > > +++ b/arch/loongarch/net/bpf_jit.c
-> > > @@ -208,9 +208,7 @@ bool bpf_jit_supports_far_kfunc_call(void)
-> > >         return true;
-> > >  }
-> > >
-> > > -/* initialized on the first pass of build_body() */
-> > > -static int out_offset =3D -1;
-> > > -static int emit_bpf_tail_call(struct jit_ctx *ctx)
-> > > +static int emit_bpf_tail_call(int insn, struct jit_ctx *ctx)
-> > >  {
-> > >         int off;
-> > >         u8 tcc =3D tail_call_reg(ctx);
-> > > @@ -220,9 +218,8 @@ static int emit_bpf_tail_call(struct
-> > > jit_ctx *ctx)
-> > >         u8 t2 =3D LOONGARCH_GPR_T2;
-> > >         u8 t3 =3D LOONGARCH_GPR_T3;
-> > >         const int idx0 =3D ctx->idx;
-> > > -
-> > > -#define cur_offset (ctx->idx - idx0)
-> > > -#define jmp_offset (out_offset - (cur_offset))
-> > > +       int tc_ninsn =3D 0;
-> > > +       int jmp_offset =3D 0;
-> > >
-> > >         /*
-> > >          * a0: &ctx
-> > > @@ -232,8 +229,11 @@ static int emit_bpf_tail_call(struct
-> > > jit_ctx *ctx)
-> > >          * if (index >=3D array->map.max_entries)
-> > >          *       goto out;
-> > >          */
-> > > +       tc_ninsn =3D insn ? ctx->offset[insn+1] - ctx-
-> > > >offset[insn] :
-> > > +               ctx->offset[0];
-> > >         off =3D offsetof(struct bpf_array, map.max_entries);
-> > >         emit_insn(ctx, ldwu, t1, a1, off);
-> > > +       jmp_offset =3D tc_ninsn - (ctx->idx - idx0);
-> > >         /* bgeu $a2, $t1, jmp_offset */
-> > >         if (emit_tailcall_jmp(ctx, BPF_JGE, a2, t1, jmp_offset)
-> > > < 0)
-> > >                 goto toofar;
-> > > @@ -243,6 +243,7 @@ static int emit_bpf_tail_call(struct
-> > > jit_ctx *ctx)
-> > >          *       goto out;
-> > >          */
-> > >         emit_insn(ctx, addid, REG_TCC, tcc, -1);
-> > > +       jmp_offset =3D tc_ninsn - (ctx->idx - idx0);
-> > >         if (emit_tailcall_jmp(ctx, BPF_JSLT, REG_TCC,
-> > > LOONGARCH_GPR_ZERO, jmp_offset) < 0)
-> > >                 goto toofar;
-> > >
-> > > @@ -254,6 +255,7 @@ static int emit_bpf_tail_call(struct
-> > > jit_ctx *ctx)
-> > >         emit_insn(ctx, alsld, t2, a2, a1, 2);
-> > >         off =3D offsetof(struct bpf_array, ptrs);
-> > >         emit_insn(ctx, ldd, t2, t2, off);
-> > > +       jmp_offset =3D tc_ninsn - (ctx->idx - idx0);
-> > >         /* beq $t2, $zero, jmp_offset */
-> > >         if (emit_tailcall_jmp(ctx, BPF_JEQ, t2,
-> > > LOONGARCH_GPR_ZERO, jmp_offset) < 0)
-> > >                 goto toofar;
-> > > @@ -263,22 +265,11 @@ static int emit_bpf_tail_call(struct
-> > > jit_ctx *ctx)
-> > >         emit_insn(ctx, ldd, t3, t2, off);
-> > >         __build_epilogue(ctx, true);
-> > >
-> > > -       /* out: */
-> > > -       if (out_offset =3D=3D -1)
-> > > -               out_offset =3D cur_offset;
-> > > -       if (cur_offset !=3D out_offset) {
-> > > -               pr_err_once("tail_call out_offset =3D %d,
-> > > expected %d!\n",
-> > > -                           cur_offset, out_offset);
-> > > -               return -1;
-> > > -       }
-> > > -
-> > >         return 0;
-> > >
-> > >  toofar:
-> > >         pr_info_once("tail_call: jump too far\n");
-> > >         return -1;
-> > > -#undef cur_offset
-> > > -#undef jmp_offset
-> > >  }
-> > >
-> > >  static void emit_atomic(const struct bpf_insn *insn, struct
-> > > jit_ctx *ctx)
-> > > @@ -916,7 +907,7 @@ static int build_insn(const struct bpf_insn
-> > > *insn, struct jit_ctx *ctx, bool ext
-> > >         /* tail call */
-> > >         case BPF_JMP | BPF_TAIL_CALL:
-> > >                 mark_tail_call(ctx);
-> > > -               if (emit_bpf_tail_call(ctx) < 0)
-> > > +               if (emit_bpf_tail_call(i, ctx) < 0)
-> > >                         return -EINVAL;
-> > >                 break;
-> > >
-> > > @@ -1342,7 +1333,6 @@ struct bpf_prog
-> > > *bpf_int_jit_compile(struct bpf_prog *prog)
-> > >         if (tmp_blinded)
-> > >                 bpf_jit_prog_release_other(prog, prog =3D=3D
-> > > orig_prog ? tmp : orig_prog);
-> > >
-> > > -       out_offset =3D -1;
-> > >
-> > >         return prog;
-> > >
-> > > --
-> > > 2.43.0
-> > >
->
->
+R-Car V4M is fine, too.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
