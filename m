@@ -1,234 +1,72 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878D72C3761
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BCD22D9ED
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750771174; cv=none; b=X36UmdnF4rkGc/1uQ55CVrl9LdkBZN52yZ0ybg8TQB7FadstNKsAdjLBlrehjrbti5IZcPC/SDZY2BuAsOIsJW1GjrDZRqMwtRhQnl90npPRyX4L8GduSCLf2JdIgpSl2/tfDeTEKHys0st4a5rvjeUS5E51P75gyBA1ueG9cbM=
+	t=1750771205; cv=none; b=EmuVEiKgK92h+fJXb0vzE/sdIG0+UVVnhHoj9Rl4In8wyN2NFl21LI1Vcb/kijKzSm5RvWuxKSI/sBhvHO/djgcqOiucRN7YpMHyrp2ndEUo8+nDyWwKRsL8uIbtIdrK1Fu2/PMKi8/U5EFJHKHYt3XTNttXzccetwDdb2oPNFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750771174; c=relaxed/simple;
-	bh=42CM0Y9wbPob7M9n1TchKbAWBw3fz3skePpGaPIjouI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FUltOsEJGc0yeIxUHGwHfbyhSW8ddsjciDpaAPimY3xKQM/H6Ngfp61fONqSbaAOgqXK5L8bRrrhr/r9qGcWwrH9OmRo14Ze0lDBsIwsiawBdHeBqvX57jfRweVtJSpUJcvE98QNMF0J16evR/nst2Bzi1Ypzsc4YRW4egJtoOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Q2kcqtiR; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Q2kcqtiR"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-451d7b50815so42400695e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:19:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750771171; x=1751375971; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g2B/kiSHHHZJxgJh/qvuyiyzLHnz4/qgrmBlSv19H08=;
-        b=Q2kcqtiRgx94eX2fm8UtBXVyHHzFpTm1uGLlfYZ1q/P/iFTszbdXHbTc5NZfOqbscY
-         00ekfCRJN+DMLy0AE+DUY2JJIcf6rWKs06d+1XwammUzxkfcWPogGTUpwq/d5PHAdpiA
-         ukEMcqRf7jbsuBI+t8y2Y32MZS6ZAEm5XyGVsH0QRA3VdDaDEX2bn06MPGdn7AaRYM0O
-         7TR6VU10MJKyBiOki1ICzM30QZQTQObPBBcR03lI9Z9vf/AYGD1hYoo9BU6SD6GSdDsP
-         3DG96/5Wy2z1Q8YQ3Qt86e5cqmBZsxNm9th+Dyf8eoqOJLxWcc+IltY0H/je3a61ycOi
-         cajA==
+	s=arc-20240116; t=1750771205; c=relaxed/simple;
+	bh=AOHa4ResgBNUehI6K64yTHMm3/Zz62jE04/aYUhhjeg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=gzjogGcuwfYi23sl7lw5kNmvTZEg3zYIOcALw8KY9oleEkeTHx1mxerj5GyO81qa328Ek1R2Ui5qWZ+Z/KNN8qXjgezIVPZxlEYtji9fJD9tc9tWCe9GOpa7bw24NMEs9e4dukH4YAsoQk7Vvr8eBGaywivS0A7DVgUG20NHCvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ddbec809acso5228365ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:20:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750771171; x=1751375971;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g2B/kiSHHHZJxgJh/qvuyiyzLHnz4/qgrmBlSv19H08=;
-        b=SrF6M/xDXQDd+vAkA3zvB9VEsJWB2QrBDpeEIDCLmI/qZRaxeQYM7xITmdgZ62Uw4a
-         c12NO/0K4nnqT/QBU9qDyI9fc/Vjn9l4ZdPGlNxF3IaffHb2z7eJSCCa3ateHvGLkTI8
-         DK9is6eoqbGPPE7q68TkmQYovO54ExcqP9/Ckjc0WCm3leEOKq8GLc4+kYJuUW92sCbu
-         DQiLLhHoULR6g3/u+EQ6833lkjOwqBq22mtGFCMUg20Umz7FDk8Y2iJQDWvEZ3Z2BHU1
-         34DV2qvNZOou4VMUX1M+QPYQQ2ow3AqsRKS+VVrwkG7ZBEFB++2ZTexIT1TMU1aq5yEu
-         YYwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX7jLFAcX25t6MlJD6RA9v/wDo1vVWH9V/8D2a0rlX3UEd9WURbPvCPodiGKKhU2PCZcqDp9sR5T0FZmqY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGxnAr4SOJS6aKn7W4WIXgGRtWxCR1adgB6r0hLQzNzqGeKyjz
-	CwVi49WccgAMC4lL4RBlkpxdt/KsTScPvx1sf/bAuS+yf7+CT8GkI3gdRbMReWIh9Ds=
-X-Gm-Gg: ASbGncuaOomoTaOcdbNqvXxRe69XAAhGP9dTV8/B78Vt+SR+R2f2BGuT7qvPBwG5wxq
-	udmoubyVokQjJJeCmfmhJRlMuc+nrzd+zFSP5NL0jBk1Mw100RC22URQCMN5A+3gx+ibEnWAYxX
-	ctGGk1GXfKRiuyNPsdcHBazDo0tdhKixB7b/Lp7TUK33A6Mj1Kk2YinMyPZs/WGpR8hdsogYrYr
-	n79PsrxKlr9UxeoYRaa8zGsQqPbP6CnNOhtyJot+O1GHCAObuEDt59HceiVAcMLq0e5nc3m+CTh
-	9RVEYLUWqMMBWXRO3ZknGh+zzXeFrDDXzXq1+Dl4UFP9+LmrnD+BJA+51O1UNY7x/A==
-X-Google-Smtp-Source: AGHT+IEonwGwTEN0PQTTY5zvr8GZMj5f2L5JRFileQvI4Ft8kxR7RvhZm0EGSz4y5sH3Ydfuq5cdmg==
-X-Received: by 2002:a5d:5f53:0:b0:3a6:eb59:f37f with SMTP id ffacd0b85a97d-3a6eb59f3d2mr816690f8f.12.1750771170749;
-        Tue, 24 Jun 2025 06:19:30 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:34d2:109c:3293:19e9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646fd74asm141302195e9.22.2025.06.24.06.19.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 06:19:30 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 24 Jun 2025 15:19:17 +0200
-Subject: [PATCH RFT 6/6] gpio: mmio: remove struct bgpio_pdata
+        d=1e100.net; s=20230601; t=1750771202; x=1751376002;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bqd4Nkc2yPJj9J5fXP2VqvBOm7ZkxyTTb2cdD/KBJyY=;
+        b=m7RX4LBcyQiRwSV34Nuw5lv5WfjNMAynBy1WAff0EGTs3k/vcm+lmV7oTzYr5aS+z5
+         ddq7pOQvEUkadh23amfjW+flPYYZwpXahT2zB4GBECN8/3iTCA2IGRodu0g+d9234GrK
+         E2oT7OtN7i8m6nedTh5uMRrMRZow2Ybr3JvrkLpqA6s+/Thlsg86FgdzC4QpmOrfxdHN
+         w+hCo56eY73M3wbuB8Qwj23dSypjVjtRLCHwJx6FQQLIGljKRnu7tWwaPMHIn/vYrept
+         W88ZWU3dByqiA96s+ebxBFOZXA/wm5sS9XYwq1zIqcD7KzchIyy4Qm5KuzF/TNvHahLM
+         mSgg==
+X-Forwarded-Encrypted: i=1; AJvYcCVvqU+5reiHlrksPKI6VXLptJWsXc1yVggXdhLBny3mZWu19edYgdCxtHu9OkLYFLDuFKon86lsA1aFBNE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjC9SZaBnobJ9WMnZJTPHTv93/nz8one4a6qoljlDz28m/b6QV
+	ZWqBuA2nW/QtsU9n9eo/Bak++NZWAMgovF7yuuDmaac+TEqsfe+gJGdT5MABd17Oh9HDwW59wtx
+	skGh3yr4Ec0VX1wUIy4pgmdqRBBX8HbLY/fwejE6iGI+5iDYfKF5+tV74jA0=
+X-Google-Smtp-Source: AGHT+IHmIOnqoShy371d9mjV1q/FRb0l5ztWpNzAmS4txzj4Rsv8x14nhqtM5lD40Lke9QKTWoAlhE6RJjMYDbdZt6I6PZas7MEl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250624-gpio-mmio-pdata-v1-6-a58c72eb556a@linaro.org>
-References: <20250624-gpio-mmio-pdata-v1-0-a58c72eb556a@linaro.org>
-In-Reply-To: <20250624-gpio-mmio-pdata-v1-0-a58c72eb556a@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>, 
- Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Tony Lindgren <tony@atomide.com>, 
- Russell King <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
- patches@opensource.cirrus.com, linux-samsung-soc@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3644;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=H3M3IpDQpY9NSlvQzNFcRcqnugqGexh8ZnJKDM0pSQk=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoWqXYsMqxCAK8bVz8LUzIFa3A10IhSZWnxZZsN
- y8r7RVwjcSJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaFql2AAKCRARpy6gFHHX
- ck/vEACtGvpcJ1rDqsgHSQ1GwautrZv4YEuXxKtBnuKN+NKbKghxnTNRHCCpyNXnCtxEbtiq7y8
- OjE8GYR13yIXh+1q7W+hK73xOKZZYp7OKgszPx6sc1XZVxQVUFaZZK9l1IKT36uV6GMdzHkBYTR
- VLXV1B8i3FYqgT9VVJiXlPCTeYkyRt3bOhslU2Wgf/i82p19bvW99oZ4odEgC+BAXpMEMOmb1bi
- s5gUjdNfaISr8OhvHIWmDOSjqnwnwMcBVPl6VnI8/Zy1bFo7DjaU0rTYcGDQMwoJ8jn1PRPbkKA
- J5vsXCQOkCe7CkMs7A0u1AQgbX4gQtST2Nun3Zndjk/OX1P4k+m6YU65hzs6kC2BI/ApH1pmCct
- tLlsIUDjPM8WAgsc1U4Y6WYVmSJf7SIVAy1uFDwLeKn3C1TzF93zb1HhF9fSeZNGNydcCtyh3ZO
- siD6Gb8u4cOa6kAtcEekj9BY2HBt7dl9Z1pIfRWL+6IbZX3PKftx6KkQKEFm3Br4FnQMSY8Vnti
- /yhgqO320uLRS6bIOZH70S91IcTigcwHdVkj8ndRazqgDc6pDaQ1xsUAE7CAk3hjnF4RoXaU3hs
- 1vkdBp6qaOnwhfLDadsq11vMZoW8jZDv6A35M6PSY1zuGWL2uHZdVsOOc4AtnOGEblLXaWZDaar
- J16/cpP8OIkWQHw==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+X-Received: by 2002:a92:c26c:0:b0:3dd:c18b:c03e with SMTP id
+ e9e14a558f8ab-3de38c21fe9mr174949445ab.5.1750771202539; Tue, 24 Jun 2025
+ 06:20:02 -0700 (PDT)
+Date: Tue, 24 Jun 2025 06:20:02 -0700
+In-Reply-To: <20250624124408.28785-1-enjuk@amazon.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685aa602.050a0220.2303ee.000a.GAE@google.com>
+Subject: Re: [syzbot] [hams?] KASAN: slab-use-after-free Read in rose_get_neigh
+From: syzbot <syzbot+e04e2c007ba2c80476cb@syzkaller.appspotmail.com>
+To: enjuk@amazon.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hello,
 
-With no more users, we can now remove struct bgpio_pdata. Move the
-relevant bits from bgpio_parse_fw() into bgpio_pdev_probe() while
-maintaining the logical ordering (get flags before calling
-bgpio_init()).
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-mmio.c    | 65 +++++++++++----------------------------------
- include/linux/gpio/driver.h |  6 -----
- 2 files changed, 15 insertions(+), 56 deletions(-)
+Reported-by: syzbot+e04e2c007ba2c80476cb@syzkaller.appspotmail.com
+Tested-by: syzbot+e04e2c007ba2c80476cb@syzkaller.appspotmail.com
 
-diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-index 8108aa8e6b86ae3d0b520a0f22a09689ab1d9bc5..cf4d3f968af52bb750038d32f78d1c39498d3f06 100644
---- a/drivers/gpio/gpio-mmio.c
-+++ b/drivers/gpio/gpio-mmio.c
-@@ -734,39 +734,6 @@ static const struct of_device_id bgpio_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, bgpio_of_match);
- 
--static struct bgpio_pdata *bgpio_parse_fw(struct device *dev, unsigned long *flags)
--{
--	struct bgpio_pdata *pdata;
--	const char *label;
--	unsigned int base;
--	int ret;
--
--	if (!dev_fwnode(dev))
--		return NULL;
--
--	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
--	if (!pdata)
--		return ERR_PTR(-ENOMEM);
--
--	pdata->base = -1;
--
--	if (device_is_big_endian(dev))
--		*flags |= BGPIOF_BIG_ENDIAN_BYTE_ORDER;
--
--	if (device_property_read_bool(dev, "no-output"))
--		*flags |= BGPIOF_NO_OUTPUT;
--
--	ret = device_property_read_string(dev, "label", &label);
--	if (!ret)
--		pdata->label = label;
--
--	ret = device_property_read_u32(dev, "gpio-mmio,base", &base);
--	if (!ret && base <= INT_MAX)
--		pdata->base = base;
--
--	return pdata;
--}
--
- static int bgpio_pdev_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -778,18 +745,10 @@ static int bgpio_pdev_probe(struct platform_device *pdev)
- 	void __iomem *dirin;
- 	unsigned long sz;
- 	unsigned long flags = 0;
-+	unsigned int base;
- 	int err;
- 	struct gpio_chip *gc;
--	struct bgpio_pdata *pdata;
--
--	pdata = bgpio_parse_fw(dev, &flags);
--	if (IS_ERR(pdata))
--		return PTR_ERR(pdata);
--
--	if (!pdata) {
--		pdata = dev_get_platdata(dev);
--		flags = pdev->id_entry->driver_data;
--	}
-+	const char *label;
- 
- 	r = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dat");
- 	if (!r)
-@@ -821,17 +780,23 @@ static int bgpio_pdev_probe(struct platform_device *pdev)
- 	if (!gc)
- 		return -ENOMEM;
- 
-+	if (device_is_big_endian(dev))
-+		flags |= BGPIOF_BIG_ENDIAN_BYTE_ORDER;
-+
-+	if (device_property_read_bool(dev, "no-output"))
-+		flags |= BGPIOF_NO_OUTPUT;
-+
- 	err = bgpio_init(gc, dev, sz, dat, set, clr, dirout, dirin, flags);
- 	if (err)
- 		return err;
- 
--	if (pdata) {
--		if (pdata->label)
--			gc->label = pdata->label;
--		gc->base = pdata->base;
--		if (pdata->ngpio > 0)
--			gc->ngpio = pdata->ngpio;
--	}
-+	err = device_property_read_string(dev, "label", &label);
-+	if (!err)
-+		gc->label = label;
-+
-+	err = device_property_read_u32(dev, "gpio-mmio,base", &base);
-+	if (!err && base <= INT_MAX)
-+		gc->base = base;
- 
- 	platform_set_drvdata(pdev, gc);
- 
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 97cc75623261917e9b3624e1e636d2432c0db205..4b984e8f8fcdbba5c008fc67ff0557bda11df40b 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -718,12 +718,6 @@ const unsigned long *gpiochip_query_valid_mask(const struct gpio_chip *gc);
- /* get driver data */
- void *gpiochip_get_data(struct gpio_chip *gc);
- 
--struct bgpio_pdata {
--	const char *label;
--	int base;
--	int ngpio;
--};
--
- #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
- 
- int gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *gc,
+Tested on:
 
--- 
-2.48.1
+commit:         78f4e737 Merge tag 'for-6.16/dm-fixes' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=157e6b70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4ec8b4e4d31ae914
+dashboard link: https://syzkaller.appspot.com/bug?extid=e04e2c007ba2c80476cb
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=140b470c580000
 
+Note: testing is done by a robot and is best-effort only.
