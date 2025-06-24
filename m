@@ -1,115 +1,86 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3617D22A4EF;
-	Tue, 24 Jun 2025 08:48:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1101248F64;
+	Tue, 24 Jun 2025 08:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750754888; cv=none; b=GR406Wc50m4QnkfDl5NO/qrJnSyvasaJ28tTbZCgDvp0v5FrSlWYy1GlGBWgL71GTvXk2daO3iLenV6MwDuIrLQTsJTIRj9eJtTfKOZEi8W7GUj0hyKLlSR2SgkoKk2yScxe5unAUBUGFaJ5t27FBcQcVRQVSdw0X30pjJtVNHk=
+	t=1750754994; cv=none; b=LAaFx24i1TP91IgCD4aj58culE9lSM1cMJZttxsnTcNAM1im96LOkzm7SkVvutOVAxIuPaxHS5li8/djsXNLBSAsPqUjdMNCrXlgYcMPIPx6HrRHk20ozKz0NpQGF4FKr7tzYAHYMy8LIvqA8f1PzMKg6OvTafmVhCTCK1LHNP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750754888; c=relaxed/simple;
-	bh=NOQI8g4dfs0HYeDLDwfEccbzpLfED7N9UEukFoQp9WI=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bqJzHqj4dKHlNzpd1tZtfCJD++34AxAzloMKMb4avBmj4LHi8N/7lZ+kC9ZaWGoKvVcOV9RsUKFj5wEZXevFVIWprpezFlGEqEVpAdpyy0w62j3KLcedKBzQ1HvNDrxCvcNbCj91av1miG2j0ab+aFxKuzNGcjofpdpDlroy30w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UFP07deC; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750754994; c=relaxed/simple;
+	bh=YW6HmDpuHGkqkfv8nhM6MCfMIQCl8pDzgCgyTV+Z5sI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lV8iE6/u8IsKixX/cZpA53GEHOPw0NICSfSBZjHLhBnCLtPu0jYIyHUII19rT/5gZGrCrUtzDZqCKdDvTHPj80m+xwmUxowjU0cr/nX1st+1QGHOHJPn18EcDbrfGKqci0S1UyVNydI85JRpLKiKs8aa1ogWMgKuCQu0HbiJSZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=knexF1x0; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UFP07deC"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a6cdc27438so4307964f8f.2;
-        Tue, 24 Jun 2025 01:48:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750754884; x=1751359684; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Rv7eKaKc5LbryF7yhD1E8x8iFqDYhUljO3uszUBAt5g=;
-        b=UFP07deC6z4/6jjjv2MXWxLfUv9T8tY9PcypyH7kQ/GON9ahmXtmeVvwf/C6/fI4Sj
-         hTryGn3eC5IGslILyFIdqe+x38tOA3SY6nrAJJCVUJlp2WcLWyyYmWWS8pW4GTYvn0zg
-         0z8VuCIxGacI+Enz9VPalK+6zM2XACCUb4Z+wMOMQMB5W2zt04B28ZklsvbQG61sC3I6
-         sBG/lyPVX3vbJPLDC8hzmEHDUpTroVics3ZvXKMuUzu8+KFmNHOkwSJHt0VSClqthuYJ
-         O+CdfJHNmOaZZZD3zDFAEmbQCoLxNy9iNmCkWtMDNtHAi+sR6PISrdT8wISP7GCFODMu
-         qh0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750754884; x=1751359684;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rv7eKaKc5LbryF7yhD1E8x8iFqDYhUljO3uszUBAt5g=;
-        b=CurCQB4W2bA1oP1QO8FE4CzGkPu5CaPkbCQpo4iUazTZpVw34eYpjiFANbWeRiWVYX
-         RerRkXPBntLz1istZxBKm73dM5syX7GTCHV2GU77pfMk431Jownr4+QBx8jL8twhteHg
-         jtFlFz196GdTp92s4ysvenaP9vmhGAC9EZ4NgMpBO1VNVOpXS90094samCWRaK/DDlbn
-         F8ykk2Kr78Em2EpvfNIyyt3n0WuAaBTPEzkfpMAcOImrwPViGvT3L1DyIZa19rvgZ/+W
-         +iJFCNCDCVpf3qUzlIPwu/kDiJl0QvtCXb/nkIiFtteILIc+OLYMZ+ZLTwRtTIsq8SWg
-         B9Fg==
-X-Forwarded-Encrypted: i=1; AJvYcCUtzRoFGBmhfEUZB/t41L2ED7IHC2FpAF7OnBap/SLaz14ToUQoQDVhOaH4YaiXvlGrAYcT06Ftcldy@vger.kernel.org, AJvYcCWk9kzk+0PGVsE97Y/bRAwIzY94l1NWbRW35zhZc/SFLkMhq0rLI2kzZBhmcZCIWnq45edJsd1ksettaJA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoeEoxCWQLIHMZm/78ktotMfDTYD4lbWK6aok8+X8CZANyrAUw
-	S0DsRC/m5f1dmE9KguNZ9s9cOLdF5z+6FQ0m+fuCCPX7kgugIm6OB5dk
-X-Gm-Gg: ASbGncsT5xn+Y6v/RILMTos73pT/LjRhprOt/XFgqUPSEpLvXgJ6viAne/L/E3w4Bxy
-	jic0jZra1HGWnz2QJ9QGsGwGC/qRFqanK/A+di7k1kxUoGLO5bSu/lE7E6g4UWquMxQ1DLbfkub
-	QJJrmN5nv9I1+sa+4R3TTITdjN6v6lOAr8k6Vs+sigQLKqJUtbLlNc2fNKa+yfdja9NQljmutw0
-	BdttP05a9rCCBWkU+PdQSusQkoQ5TC3V3TT6cQVFyMVl3zcBzUMayEBNcMIJheV2pqSI4NtJeI1
-	fH3Htpk1yUJ0y6AWrU08uzVnCtWNUPKXR8cVe8ewJWXusQfpO0K/9Az28BW0umCZMMitraQvbq4
-	aWnNKDw/je3AE1loN2Q==
-X-Google-Smtp-Source: AGHT+IFn++j+s5vAIqZEneBuH1SwkdqABSpMqqdDh6+kFSBu93Z8sJ+i3oZcwTtUI6k9wNIxDrILFQ==
-X-Received: by 2002:a5d:5846:0:b0:3a4:e6e6:a026 with SMTP id ffacd0b85a97d-3a6d131708fmr13724969f8f.28.1750754884379;
-        Tue, 24 Jun 2025 01:48:04 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646cb641sm140195965e9.3.2025.06.24.01.48.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 01:48:03 -0700 (PDT)
-Message-ID: <685a6643.050a0220.167500.2f82@mx.google.com>
-X-Google-Original-Message-ID: <aFpmQO-woMQLx2Lf@Ansuel-XPS.>
-Date: Tue, 24 Jun 2025 10:48:00 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Lukas Wunner <lukas@wunner.de>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Andy Shevchenko <andy@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v15 1/2] math.h: provide rounddown_ull variant for
- rounddown MACRO
-References: <20250623211116.1395-1-ansuelsmth@gmail.com>
- <CAHp75VcWW=RaHS9Yb8BcK2Jt7qtNOQzA3eDOZQ88RQG63981cQ@mail.gmail.com>
- <685a5787.050a0220.20ff0f.fd7a@mx.google.com>
- <aFpkmjlc-14xxkn4@smile.fi.intel.com>
- <CAHp75VdNm_3ASFytiY616KsbbhfKFOicCwwNATbFQA68ZgVbdA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="knexF1x0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750754994; x=1782290994;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YW6HmDpuHGkqkfv8nhM6MCfMIQCl8pDzgCgyTV+Z5sI=;
+  b=knexF1x061mUllfCld8EekyqEU9/It3TKasVL3XNoAhctdZ/H1x+f3A/
+   8UF0vOYvwtSGEV/YDQMmQx879Vv8zxjAtJq57xgsKiDY0WR27iXcf8NOh
+   LP2ICtDOkCQMJg5Ldb6ub7QWVZ57kNAu86WPxhok5rlwdm9IAYMg7cFVw
+   oMpkKbWsqd9TjPZks/CorB+DrbSmJ9aA00wG8Q4v9Nj82dZMsW1TUcdcS
+   eSDk385acX7S0FJYraK164kYD/kQ2GG/Fc2WVO93kOAG8f12b2OV4EO8+
+   7NQtW0G3sSGhMk4d0sG4DBMRkTj0jbJ4z20295McjPftfQdhv5medKBWd
+   g==;
+X-CSE-ConnectionGUID: YLOiH5d/RqaUyuvF/fB6GQ==
+X-CSE-MsgGUID: xT71BtvvRN+W+/MnyuhcfA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="75524517"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="75524517"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 01:49:53 -0700
+X-CSE-ConnectionGUID: 5pZhCsH7R2u5jNP7KLc8/w==
+X-CSE-MsgGUID: fmBM3rclSY+nZBFzSDNmCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="156237993"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa003.jf.intel.com with ESMTP; 24 Jun 2025 01:49:48 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 8D246138; Tue, 24 Jun 2025 11:49:45 +0300 (EEST)
+Date: Tue, 24 Jun 2025 11:49:45 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Khalid Ali <khaliidcaliy@gmail.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, corbet@lwn.net, luto@kernel.org, 
+	peterz@infradead.org, ardb@kernel.org, jan.kiszka@siemens.com, kbingham@kernel.org, 
+	michael.roth@amd.com, rick.p.edgecombe@intel.com, brijesh.singh@amd.com, 
+	sandipan.das@amd.com, jgross@suse.com, thomas.lendacky@amd.com, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-efi@vger.kernel.org, 
+	linux-mm@kvack.org
+Subject: Re: [PATCHv2 0/3] x86: Make 5-level paging support unconditional for
+ x86-64
+Message-ID: <m3i4z5ell2lhtpverw5slnxidd32lmtqcdpwcljtr5betki6s5@kiq2bibj5lt2>
+References: <20250516091534.3414310-1-kirill.shutemov@linux.intel.com>
+ <20250624081400.2284-1-khaliidcaliy@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VdNm_3ASFytiY616KsbbhfKFOicCwwNATbFQA68ZgVbdA@mail.gmail.com>
+In-Reply-To: <20250624081400.2284-1-khaliidcaliy@gmail.com>
 
-On Tue, Jun 24, 2025 at 11:44:10AM +0300, Andy Shevchenko wrote:
-> On Tue, Jun 24, 2025 at 11:41 AM Andy Shevchenko
-> <andriy.shevchenko@intel.com> wrote:
-> > On Tue, Jun 24, 2025 at 09:45:08AM +0200, Christian Marangi wrote:
-> > > On Tue, Jun 24, 2025 at 09:08:32AM +0300, Andy Shevchenko wrote:
-> > > > On Tue, Jun 24, 2025 at 12:11 AM Christian Marangi <ansuelsmth@gmail.com> wrote:
-> 
-> ...
-> 
-> > > > rounddown_ull()
-> >
-> > Btw, I don't like name for this, it's better to be in math64 with the u64 or similar suffixes like it's used for div/mul variants.
-> >
-> > Also add a roundup to make the API symmetrical (yes, it's okay that it has no
-> > users, it's a macro and doesn't consume memory at run-time).
-> 
-> Ha, there is already roundup_u64() in math64!
->
+On Tue, Jun 24, 2025 at 08:11:15AM +0000, Khalid Ali wrote:
+> This will break x86_64 cpus that doesn't support 5-level paging.
 
-Ha indeed! I was searching for roundup_64 and I missed the last tiny
-function in math64.h. My bad.
+No, it won't.
+
+The patchset removes compile-time config option to disable 5-level paging.
+After tha patchset all kernels will be built with 5-level paging *support*.
+
+The actual paging mode is chosen at boot time based on machine
+capabilities and kernel command line. Older HW will boot in 4-level paging
+mode just fine.
 
 -- 
-	Ansuel
+  Kiryl Shutsemau / Kirill A. Shutemov
