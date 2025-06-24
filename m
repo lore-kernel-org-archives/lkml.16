@@ -1,137 +1,175 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96B327AC28
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A732C27AC28;
+	Tue, 24 Jun 2025 09:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750756819; cv=none; b=OrId+ujxnZDgoIvJkStM5NIQpFGNKIMW+XEQ9YF97WjRTzFdw9MfA7218RIQC+QD4RLOTREmu4lbslxXlMBwD7xy4N9slnhDFKK3TTcWEMvhjxWzXBLcNKeduD6YXJqxNCWuzwv7+N/WTxGDuUJlDvwfqSrk6UliLY4sQCqM/F0=
+	t=1750756825; cv=none; b=jKdq+NpBiY0w1pAeF0PXhifisqMTFhr4efYISxWhD+ZYhGXYWe9m8+OKS344aLSYYP1ABHnSCDi88r2VB6laElj3NdPhZXOabrYx+vjm/0VTe0Gpp3LtKGrNPLu3kftcKAZvsQ7wo3RjaGtpyq3WmXO9Wz3grstPXAAR1VfsV6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750756819; c=relaxed/simple;
-	bh=r7b9+YdEXsnWpLlEGtT7fhWq6i3byVNh3eeoZJlx1pg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ce1rzZOvWQ5mEmU7xMZnMzqKDAAHYbj+Tu8Y/bW8w0qkPDBkcOdJ/dJz6AfpyJGz5kHKi/+D1HuIjzxJpt9qpAWEkJ/N6YcGbiOmXSuMrVjWgrkyeeOrv7PzVgI1EpG/h0JdlCZqojGo/f8xgbmeAVBNmB8TFeU1kvBJM9u4yO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FiKd6Dyk; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750756825; c=relaxed/simple;
+	bh=jZE+IgGesHcyfgzN3nG1+Ne+xiYv2cRxteQP8fTHOXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kW1nMZGVEanonli86E/w1Ma/J5R5gIP2L3PuF2rB/GiqsWyRvFmLpYcRZvl6mNe/+NBz0rQW+D8jMk3IOfWfyZgzz/ukOHPjFMUSspq99u3HkTX96rBop0MTV0d3OjUCMqBjVCrH44T2a9ScXL4O7AjIlXmVsxXkHwRh9R5txrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S+txhFkQ; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FiKd6Dyk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750756816;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0jdlbyzwhOvR0TOSckRhTiUQnf05D9iDWTr7qMjHW2U=;
-	b=FiKd6DykwVcBqYb8pTfsG0o7MPVFM9KzmQVx7w0+tr7VwOcC6qN+9CJxXau8WO0NPawKES
-	HWDn9Mc6AxQ8fhkKUZhhJsJRJZZ5GLpkQbI9aB6Gx4wF/pFFRM7+aOUDItjYhxtpiTyxbY
-	rx5vvc1E27oBuQd0SPEh0YosJHTPTXY=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-91-8ZHb4k9NNJe7QcAG0M1cqg-1; Tue, 24 Jun 2025 05:20:14 -0400
-X-MC-Unique: 8ZHb4k9NNJe7QcAG0M1cqg-1
-X-Mimecast-MFC-AGG-ID: 8ZHb4k9NNJe7QcAG0M1cqg_1750756814
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f65a705dso2819512f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:20:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750756813; x=1751361613;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0jdlbyzwhOvR0TOSckRhTiUQnf05D9iDWTr7qMjHW2U=;
-        b=VFS7V3afzyphSGm9wkL+Tp3lhxlpAE2DVdSsq1NhXhMcN3O/95NUanSQd8RXPq/79u
-         9robnH6GWbZPglTMmRhbw0KXJges8qLpIxdTQfTKYjqm3pjjgCTJ+7ogfS+0tj+WzGq7
-         Y1TipPIqVnAPElscbFctNo9G4eFbiIsPV2ORGQo2cL/aXbjENw9BbuOtdxU/aCPAGAih
-         i7X0j5y9JFTl+QFR9q62NAMJmaAoqEGOG2GSa4iVscJswa/zz9V5vLuQRB2l4O4O6hhm
-         xCsVDtVfcaTsU+UAPmQgTZ9AVBcJSTf7Z0RKeOvV6ipyRaVqO/jTfP9QMNL7CGbx5IUG
-         3KwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWz7fQwUxHmLO8NAbNqb1EwqxB8XnBouUgZA9UCb2DB1mHeFCEFmBXjE6qdDiygCechjvW9SgpFpWkF3n0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxz3qPbV+eLTlFwAZh2UGLFPsfs2A/BK0j7GN8cY+xVHTx3Ah4F
-	a2KIv+vPFZPKYFXLDkbgf/EUwSzf6SJWchSWFSAi2OoLbtz120JkH4S75yvAumntl1729bCTaC5
-	ExcTg7YB/RKNXm9uCTdpO820VIKeJGvtq4p7+mwu6bVHDph4twwRyqGQQ/Ckf8RBesg==
-X-Gm-Gg: ASbGnctquCCzpjl7c33kBYdkCvhRh//PCl9NvgCVJZGuTnsoGFCvmuCBQVEPBcK/oFZ
-	YPkCNhYkbRw5DOdjIeQVwDNp0JJjJ33HWGuPCOYC614tNj0uNiXOcZaSqXKXXtmAGcpSKsxZDfO
-	ECIuai9mUDbbDws9xybVO99sJtmeeSh75EDswJnzxSqPDmaI/gt3Fuqaq4rn8V54OGv2EoRZ779
-	brtWK4wP6uZvtgyowDcXComn9IKdLJNhZDyEFZE+B80QLvnQWy4R3scFmkT/qNxbG5nAsOICiK5
-	lP6YNuh1ym1X212AJHBSUh3T6O/em9VQy34gHE6G627aQZco3G8fPWOVn/Tszmcq
-X-Received: by 2002:a5d:5846:0:b0:3a4:e6e6:a026 with SMTP id ffacd0b85a97d-3a6d131708fmr13847255f8f.28.1750756813575;
-        Tue, 24 Jun 2025 02:20:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG90ssd/Q7UJyYLoQ/soeF+R1DyWoiSsSC9z7zTe1BY8pnooxTi/4aCxQxIMA8YQroBd4jqAA==
-X-Received: by 2002:a5d:5846:0:b0:3a4:e6e6:a026 with SMTP id ffacd0b85a97d-3a6d131708fmr13847222f8f.28.1750756813145;
-        Tue, 24 Jun 2025 02:20:13 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:f0e:9070:527b:9dff:feef:3874? ([2a01:e0a:f0e:9070:527b:9dff:feef:3874])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e810b140sm1417562f8f.80.2025.06.24.02.20.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 02:20:12 -0700 (PDT)
-Message-ID: <55346a73-d20e-494a-a287-6874216457c8@redhat.com>
-Date: Tue, 24 Jun 2025 11:20:10 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S+txhFkQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750756824; x=1782292824;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jZE+IgGesHcyfgzN3nG1+Ne+xiYv2cRxteQP8fTHOXE=;
+  b=S+txhFkQM9R/lswsNimIYdK8oHnFHJdZBloZoFdl5ozLY8brwKaM/9kE
+   ljVFV+j/MZpwjDXsOcEOl+JgONI3cMPkBbO0UjZaLT4HXYeuNvsmUPgw/
+   9to3G3KyVCmtf4ZlIPu06QtwH44ThuKu7t1FUG0rkhuzRxZ50QRJ2Jn07
+   0P9xDpxSH4dK+QWc1HL17UuOhm0Dw/cjBFeKwGtNv2x8tuWa+Z0OAZQ/J
+   UZ6pFKSX2IjDI3IOf2m50NRARQglujsKLtUGN/Hy76hKQCJjCbpVBFjNe
+   1+9X3kp2W3uUaWQj5GoohhS16dFt37CL/QVj8/XgFIzwRaihTrutIQCpJ
+   A==;
+X-CSE-ConnectionGUID: Gl+SGGEsScOLUm3+iA7egQ==
+X-CSE-MsgGUID: pgga4psmTYubGiQvJ/RMnQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="55618257"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="55618257"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 02:20:23 -0700
+X-CSE-ConnectionGUID: ouSwOgoxRtml5VKPffnURg==
+X-CSE-MsgGUID: 06FqYvbYTImAMHK+suunGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="151995889"
+Received: from kuha.fi.intel.com ([10.237.72.152])
+  by fmviesa006.fm.intel.com with SMTP; 24 Jun 2025 02:20:20 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 24 Jun 2025 12:20:19 +0300
+Date: Tue, 24 Jun 2025 12:20:18 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 7/8] usb: typec: ucsi: yoga-c630: handle USB / HPD
+ messages to set port orientation
+Message-ID: <aFpt0j21dOWAnNvR@kuha.fi.intel.com>
+References: <20250621-c630-ucsi-v1-0-a86de5e11361@oss.qualcomm.com>
+ <20250621-c630-ucsi-v1-7-a86de5e11361@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: KVM: arm64: vgic-its: Return -ENXIO to invalid
- KVM_DEV_ARM_VGIC_GRP_CTRL attrs
-Content-Language: en-US
-To: David Woodhouse <dwmw2@infradead.org>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Jing Zhang <jingzhangos@google.com>,
- Kunkun Jiang <jiangkunkun@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Sebastian Ott <sebott@redhat.com>, Maxim Levitsky <mlevitsk@redhat.com>,
- Keisuke Nishimura <keisuke.nishimura@inria.fr>,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <bbbddd56135399baf699bc46ffb6e7f08d9f8c9f.camel@infradead.org>
- <5e22442e-ddf8-4f5d-b7e4-5e2c9bf783b0@redhat.com>
- <0f86df0c2866114898da1e9f4274e23b3d1c38b4.camel@infradead.org>
-From: Eric Auger <eauger@redhat.com>
-In-Reply-To: <0f86df0c2866114898da1e9f4274e23b3d1c38b4.camel@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250621-c630-ucsi-v1-7-a86de5e11361@oss.qualcomm.com>
 
-Hi David,
-
-On 6/24/25 11:01 AM, David Woodhouse wrote:
-> On Tue, 2025-06-24 at 09:25 +0200, Eric Auger wrote:
->> Hi David,
->>
->> On 6/23/25 3:22 PM, David Woodhouse wrote:
->>> From: David Woodhouse <dwmw@amazon.co.uk>
->>>
->>> A preliminary version of a hack to invoke unmap_all_vpes() from an ioctl
->>> didn't work very well. We eventually determined this was because we were
->>> invoking it on the wrong file descriptor, but not getting an error.
->>>
->>> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
->>
->> In the corresponding doc (virt/kvm/devices/arm-vgic-its.rst)
->> it is said about possible returned values:
->>      -ENXIO  ITS not properly configured as required prior to setting
->>              this attribute
->> which does not exactly match your situation. Shouldn't we also update
->> the doc or change the returned value?
+On Sat, Jun 21, 2025 at 09:13:02PM +0300, Dmitry Baryshkov wrote:
+> Parse USB / HPD messages from EC in order to set the orientation of the
+> corresponding Type-C port, letting connected USB 3 devices to enjoy
+> SuperSpeed connection rather than beign limited to HighSpeed only (if
+> the orientation didn't match).
 > 
-> Hi Eric, thanks for looking at this.
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+
+> ---
+>  drivers/usb/typec/ucsi/ucsi_yoga_c630.c | 42 +++++++++++++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
 > 
-> I think this is OK because the -ENXIO return is covered by the high-
-> level description of KVM_[GS]ET_DEVICE_ATTR in virt/kvm/api.rst:
+> diff --git a/drivers/usb/typec/ucsi/ucsi_yoga_c630.c b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
+> index 76afd128d42a2573ff55433f815c2773462a6426..f85170417d19cdc5ae39a15e2f97010259ef12f6 100644
+> --- a/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
+> +++ b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
+> @@ -7,15 +7,25 @@
+>   */
+>  #include <linux/auxiliary_bus.h>
+>  #include <linux/bitops.h>
+> +#include <linux/bitfield.h>
+>  #include <linux/completion.h>
+>  #include <linux/container_of.h>
+>  #include <linux/module.h>
+>  #include <linux/notifier.h>
+>  #include <linux/string.h>
+>  #include <linux/platform_data/lenovo-yoga-c630.h>
+> +#include <linux/usb/typec_dp.h>
+>  
+>  #include "ucsi.h"
+>  
+> +#define LENOVO_EC_USB_MUX	0x08
+> +
+> +#define USB_MUX_MUXC	GENMASK(1, 0)
+> +#define USB_MUX_CCST	GENMASK(3, 2)
+> +#define USB_MUX_DPPN	GENMASK(7, 4)
+> +#define USB_MUX_HPDS	BIT(8)
+> +#define USB_MUX_HSFL	GENMASK(11, 9)
+> +
+>  struct yoga_c630_ucsi {
+>  	struct yoga_c630_ec *ec;
+>  	struct ucsi *ucsi;
+> @@ -144,6 +154,12 @@ static bool yoga_c630_ucsi_update_altmodes(struct ucsi *ucsi,
+>  	return false;
+>  }
+>  
+> +static void yoga_c630_ucsi_update_connector(struct ucsi_connector *con)
+> +{
+> +	if (con->num == 1)
+> +		con->typec_cap.orientation_aware = true;
+> +}
+> +
+>  static const struct ucsi_operations yoga_c630_ucsi_ops = {
+>  	.read_version = yoga_c630_ucsi_read_version,
+>  	.read_cci = yoga_c630_ucsi_read_cci,
+> @@ -152,8 +168,33 @@ static const struct ucsi_operations yoga_c630_ucsi_ops = {
+>  	.sync_control = yoga_c630_ucsi_sync_control,
+>  	.async_control = yoga_c630_ucsi_async_control,
+>  	.update_altmodes = yoga_c630_ucsi_update_altmodes,
+> +	.update_connector = yoga_c630_ucsi_update_connector,
+>  };
+>  
+> +static void yoga_c630_ucsi_read_port0_status(struct yoga_c630_ucsi *uec)
+> +{
+> +	int val;
+> +	unsigned int muxc, ccst, dppn, hpds, hsfl;
+> +
+> +	val = yoga_c630_ec_read16(uec->ec, LENOVO_EC_USB_MUX);
+> +
+> +	muxc = FIELD_GET(USB_MUX_MUXC, val);
+> +	ccst = FIELD_GET(USB_MUX_CCST, val);
+> +	dppn = FIELD_GET(USB_MUX_DPPN, val);
+> +	hpds = FIELD_GET(USB_MUX_HPDS, val);
+> +	hsfl = FIELD_GET(USB_MUX_HSFL, val);
+> +
+> +	dev_dbg(uec->ucsi->dev, " mux %04x (muxc %d ccst %d dppn %d hpds %d hsfl %d)\n",
+> +		val,
+> +		muxc, ccst, dppn, hpds, hsfl);
+> +
+> +	if (uec->ucsi->connector && uec->ucsi->connector[0].port)
+> +		typec_set_orientation(uec->ucsi->connector[0].port,
+> +				      ccst == 1 ?
+> +				      TYPEC_ORIENTATION_REVERSE :
+> +				      TYPEC_ORIENTATION_NORMAL);
+> +}
+> +
+>  static int yoga_c630_ucsi_notify(struct notifier_block *nb,
+>  				 unsigned long action, void *data)
+>  {
+> @@ -164,6 +205,7 @@ static int yoga_c630_ucsi_notify(struct notifier_block *nb,
+>  	switch (action) {
+>  	case LENOVO_EC_EVENT_USB:
+>  	case LENOVO_EC_EVENT_HPD:
+> +		yoga_c630_ucsi_read_port0_status(uec);
+>  		ucsi_connector_change(uec->ucsi, 1);
+>  		return NOTIFY_OK;
+>  
 > 
-> Errors:
-> 
->   =====   =============================================================
->   ENXIO   The group or attribute is unknown/unsupported for this device
->           or hardware support is missing.
-> 
+> -- 
+> 2.39.5
 
-Ah OK I missed that. Anyway that's not a big deal I think.
-
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-
-Eric
-
-
+-- 
+heikki
