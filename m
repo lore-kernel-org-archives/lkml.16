@@ -1,74 +1,106 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF01F283FC2;
-	Tue, 24 Jun 2025 10:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB21328643D
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 10:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750760519; cv=none; b=ipmRLYf33JhOK3Tsyqy0LSjxcnVUKSy2JeEe56nAJGZuoEhxpctHZ1Nf0n48aMEVdKhrivlrcdE1uRTwHc7AcA2J2u9i9RKV/QFlrTHAXsI7MdxPTt6jnLiYpiwfJXfQ8n9PUyynVOQ2rQzfdEdpehI+1QcH+i6jmHPnsUZ13zI=
+	t=1750760531; cv=none; b=U1DqcJJjaZdTG9HV2s9WGsa7cwwqD44b8qvCxeLSOYp/TZUyn4U3YZ3mTWJmqWoTAn/7SJzZOcYTI/mCISgGNqdHtdEinxSfJo8+496VHZQ3mZ1LBWrQOT3mbm8vUvQlmrjerGA/LLEX67VvLeaRTJTKX9ERFD4SBlz08ZSCrN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750760519; c=relaxed/simple;
-	bh=xVBjYjyHVcAd9u6O5sIbNKO+DGpxmCGDh13/yKOwerc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gdQRF6RrH3Q2eJ/XUWhFbVKo1BziWQ+WL/AC4OBu/PUdL63xskt3I6SIics8R3WoXq1nmow2IG6gh7pVJJ234+BqKr86s0kqH0mNRLPFdmgnow8OGxP0YsptdTWY7KvdkNq9k45+qUI4h/tHxfc//G8GtrfHuD2evujRJqmu0/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52B7C113E;
-	Tue, 24 Jun 2025 03:21:39 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 738E73F63F;
-	Tue, 24 Jun 2025 03:21:55 -0700 (PDT)
-Date: Tue, 24 Jun 2025 11:21:52 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Dhruva Gole <d-gole@ti.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Ranjani Vaidyanathan <ranjani.vaidyanathan@nxp.com>,
-	Chuck Cannon <chuck.cannon@nxp.com>
-Subject: Re: [PATCH 2/2] firmware: arm_scmi: power_control: Set
- SCMI_SYSPOWER_IDLE in pm resume
-Message-ID: <20250624-agile-moth-of-blizzard-c7babf@sudeepholla>
-References: <20250620-scmi-pm-v1-0-c2f02cae5122@nxp.com>
- <20250620-scmi-pm-v1-2-c2f02cae5122@nxp.com>
- <20250623125750.kzwndmcf5yo3siao@lcpd911>
- <20250623142957.GA10415@nxa18884-linux>
- <20250623-organic-foamy-tamarin-fefa30@sudeepholla>
- <PAXPR04MB8459E323E3C77A96272BC1728878A@PAXPR04MB8459.eurprd04.prod.outlook.com>
+	s=arc-20240116; t=1750760531; c=relaxed/simple;
+	bh=EAplqW2ugJAkvDa+aOJIODUp0iAnSPiEybzJg50wrII=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kg23fQ0XUhqti5h9f7WiWERxmFj41iXi3CV4Yc+lDJmL2od2GJ/Q+/VrGv70G3tMJnBYcanys9/0HAwv1y+1HY3I7FYxnBxbP+55u4EOSxcB4Szdrf/2x9fjFI7vbcRCunV0EJX5tHuumoVLS8LPFFCU813P3fm2HdyqVuvamgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ht9+kCU/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ht9+kCU/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750760528;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LBSg8EY7sp1BX+AXcNCVD/E1en0mg8rYiqbGQhd2mHE=;
+	b=ht9+kCU/TnJPD5agk2ZyZrHPVFM7ysb93WKE3bVa5uFZmPCMewDQyCnpnaZg9NcoaauYvZ
+	9Ttgi5DofF3c7u7gG3RTYCz1NeqSVBkc+aBWg8PgTTatYc9K0mbZn4/1Mt603GE0kb6QgI
+	aEIUG9aFSxHPb7v2tGWFgdd6Eduuyro=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-135-jrYxJhiYNVa_w2NTc71tOg-1; Tue, 24 Jun 2025 06:22:07 -0400
+X-MC-Unique: jrYxJhiYNVa_w2NTc71tOg-1
+X-Mimecast-MFC-AGG-ID: jrYxJhiYNVa_w2NTc71tOg_1750760526
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ade6db50b9cso30104566b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 03:22:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750760526; x=1751365326;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LBSg8EY7sp1BX+AXcNCVD/E1en0mg8rYiqbGQhd2mHE=;
+        b=AtnQLLpSPfqNn2o1Jnf31EVV1sqXvFNbMyMNB01bOaAzxx1BON8dtjBMqkGtTlAR27
+         Gkc34dMj7BWcsl87f1RtOhu0/6GC5kzkKKzVfhR8niRA0wyv1qtVKL7IdVJBai0K47BU
+         kyRMTZMavw0YJrpJnQli3lHSJTJW+/fUDfCZZipqz8fOWp1D+z++p9c3JazmOHdq1r0s
+         p/Z55V/L9HN1DCM4Na5LMqk0c+LJ4mtYLrOM3OGExctAOCrujV0r+1FHt1NVBXzK92Rq
+         DeCddJaNLAJJvqORoHUptHXayXu88dgjKGkLnWGgCLqNVFVdamqglnmGfzMR6Oud0xFZ
+         OGbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfg53sEmljnz2b20SRohB1A/sMn44ffyPtLBuiufQxYZh2HSKIH6V0mRx+SROj8V8jUtTeJz+z2OfHEE4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKYBV+I6pVSoXT2sIvpZjO8fh2D4PMSi1rEt3lKioEDST/3/uG
+	x4ttc83wSwFgxad5sRwgFBcEpuUmrICd+HmxDNSQCHTMSml7o3manxPxEllz1Ny7NVD74uNS9TS
+	BYAar5me6gXUEMO/aIKhg/w98nNXZIdYDjSr8VwV9GS6RW3RgkfiqVYV92/Raj/GsbyvI40/bu5
+	0hWSJZdyEtpLwCqwgSHXJMcJqIfgXB/5HG6hQpdf5m
+X-Gm-Gg: ASbGnctt3W/unO7htG2Io64Mc87RGy06jnnFy+pZVWs53ULTMhR8sXmjMeXyRsGbwPb
+	LtWRBUPaqwMu8u6j7XmgIcwdEz7BCoPktA4/+iTzW7iqpUEDPVHJYwtWI+rwIKWvgKfmkSOs0pO
+	8gwHB+
+X-Received: by 2002:a17:906:8924:b0:ae0:ad5c:4185 with SMTP id a640c23a62f3a-ae0ad5c4bb6mr127042066b.57.1750760525918;
+        Tue, 24 Jun 2025 03:22:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFK7idR9ddwSthjp78IPlVH980PF43V9ofMCipwNRyRw+Vq3cABVYLahb6LovHNST8gpasNwDNrhBfNArPnPZc=
+X-Received: by 2002:a17:906:8924:b0:ae0:ad5c:4185 with SMTP id
+ a640c23a62f3a-ae0ad5c4bb6mr127039766b.57.1750760525506; Tue, 24 Jun 2025
+ 03:22:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR04MB8459E323E3C77A96272BC1728878A@PAXPR04MB8459.eurprd04.prod.outlook.com>
+References: <20250617001838.114457-1-linux@treblig.org> <CAJaqyWfD1xy+Y=fn1x8uXTMQuq8ewVV9MsttzCxLACJJZg2A2Q@mail.gmail.com>
+In-Reply-To: <CAJaqyWfD1xy+Y=fn1x8uXTMQuq8ewVV9MsttzCxLACJJZg2A2Q@mail.gmail.com>
+From: Lei Yang <leiyang@redhat.com>
+Date: Tue, 24 Jun 2025 18:21:28 +0800
+X-Gm-Features: Ac12FXzfQeWK8ouZps9YTtPNR42ROlRbSB3jIfmuYcflJDxiz6fBrlpSiur_mHY
+Message-ID: <CAPpAL=xgBK3qqNdaiR=OwbiMaA_5VpouE4YfaEyYghkHxJ0CtQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] vringh small unused functions
+To: Eugenio Perez Martin <eperezma@redhat.com>
+Cc: linux@treblig.org, mst@redhat.com, horms@kernel.org, jasowang@redhat.com, 
+	xuanzhuo@linux.alibaba.com, kvm@vger.kernel.org, 
+	virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 24, 2025 at 01:23:10AM +0000, Peng Fan wrote:
-> > 
-> > Just to summarise my understanding here at very high level, the issue
-> > exists as the second notification by an agent to the Linux to suspend
-> > the system wakes up the system from suspend state. Since the
-> > interrupts are enabled before the thaw_processes() (which eventually
-> > continues the execution of scmi_suspend_work_func() to set the state
-> > to SCMI_SYSPOWER_IDLE, the scmi_userspace_notifier() is executed
-> > much before and ends up ignoring the request as the state is still not
-> > set to SCMI_SYSPOWER_IDLE. There is a race which your patch is
-> > addressing.
-> 
-> Thanks for writing this down, It is very correct and clear.
-> 
+Tested this series of patches with virtio-net regression tests,
+everything works fine.
 
-While I am not against adding bus PM ops as it can be useful elsewhere,
-just wonder if this usecase is a good use of it. Does setting the state
-before the pm_suspend() call suffice. I still need to think through the
-possible race with that solution, but just asking you to check if that
-helps.
+Tested-by: Lei Yang <leiyang@redhat.com>
 
--- 
-Regards,
-Sudeep
+On Tue, Jun 17, 2025 at 8:31=E2=80=AFPM Eugenio Perez Martin
+<eperezma@redhat.com> wrote:
+>
+> On Tue, Jun 17, 2025 at 2:18=E2=80=AFAM <linux@treblig.org> wrote:
+> >
+> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> >
+> > Hi,
+> >   The following pair of patches remove a bunch of small functions
+> > that have been unused for a long time.
+> >
+>
+> Acked-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+>
+> Thanks!
+>
+>
+
