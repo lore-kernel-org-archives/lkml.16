@@ -1,134 +1,128 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67191291C2D
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:32:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720D52D1907
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750775546; cv=none; b=e93JXwhI2oU73z+zgcvZH9cT73Lm1OwGXAUeZQYhp6O6hOHIvSLrjEQZcWx2esUSCaan+Q6i1PVBjzZ0e+b2D+uMiaMX956NXrBLjrUtbrKMRI6m7GYeNVRGc1RR4y/Z/FOl/SFf2pkeXIKRnPQSTbcjEZnxGzB94vVpwKHgC/U=
+	t=1750775551; cv=none; b=lFIWYSfBApFexdpeTpXtmx/2A4ZZdF3u5vqDE4y7LdYRUWSnDHONIxZ7mXrdMhd1jPCYsOyelIiTukXcXwiKs0BT5ke4juQbb8Hak7P1/sS9m8v/ypMki04DwqXEl3r3OfdT3Ess+8ARuhT4ucLd4HOi1zkei7uM2kmlK8XsZeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750775546; c=relaxed/simple;
-	bh=/n7FMNMINwO4mp0WyIHGBmD2FtlJIjDt+/3cn/GQT88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FjDItbsunBbk9IgMNHlACJU882pxoqZ5bwRYQtoxk3pNmR5/hPchcPc/HOaL6hz03dkMLBmzf7NPUgdrD0jwKaSZxkNKwfdApRwfuW79+IYJTz3cqI+y7PZPRJGAR39IC31MegY4G3EzeKvRe61laaBx0ThMvFogWCxP3R1S+vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DMmufwzr; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750775551; c=relaxed/simple;
+	bh=qL9XmUvWaq5tHfaWx1V5LuweXRKdi1ZrjKkrO+YSNmw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DWTapWdY8dt8Usy6bY8VOIB2s+CTl21tPopUiEjllp3a1nIi+5R88EzeOeyxU7BTzqk3THwLst1j2tBBfQtEr2OKvUskLJf/1V+6XBSN+kU9Hnxd5AqCLBr/k29/IGM6XEbM8yjnQ28unai4FOGunaQ+aS3tuRv3EnfICc5Hj/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0EAFe1RT; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DMmufwzr"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-453749af004so3182015e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:32:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0EAFe1RT"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a5257748e1so3623348f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:32:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750775543; x=1751380343; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=smIRAyIvWrWgWNT4Occwud1SoHjbpdF912MDUcyeXtU=;
-        b=DMmufwzr2r8y0AA1nLFo/nDOAwwNVSjhbMiW7aiI7fYH7eDwSljfyUAaMemawNNJQb
-         bQgqaHPinoVe39sPKwfvoXw3yZkEhYWw+6wv1VRPS1U2X9NoOXgcbF6lSnkToh2fZy/g
-         lvrJwCl6X+3y4xFTpnz23soQVl8P1uyrb0NSO7JtLsahRpbprCbjtTGBF3UrRMJ+FOg7
-         bfwhuI1VOelqCogt3KMP4ObMOA4wlYPhSbkflBNjDgfaZH3T/W3PpRTZtmriWk8hbc2i
-         9Sv1b4iucgj7bGIA0+my5HAzSL/VAWqiXqs+9gwvSFAR9N7sKSxsVFnCDAyIe0lzyGUU
-         X6ZQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750775548; x=1751380348; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=B/7dQju2CZeLI5d0OlTARaTle2Uj51q+BbaBg8wUzJM=;
+        b=0EAFe1RTEz0BLt/FrR23WBsQ/aUei6oBJohWZ+bO4PLFJXfoMu2YkIyT0GoKf5mpBb
+         OKR0+SqBdouRt/0Js7jjhPgSfFQAPLvh9oKtyUTB3Z39/GVzx1NxbUpUpC0HCcnOgNgm
+         XpfWt7irb0GvgP2LPROhDVCro9/ck0trsCEvA9sRxGPMVk6WB2UvCpfC5Tsl1im87oB9
+         6xvi/JojQKo4jGeP43M9Ygt4ul2NvHpFuf8rBQgWFxoBeudBjnvK5VwslbjFcn+AxMOB
+         Cwja1Gm6Uz/wVIklFt+PjpbjnE91l8bRZRb1trimK/dyRDs41T+hizkO9GpcUP4qrqg/
+         yU/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750775543; x=1751380343;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=smIRAyIvWrWgWNT4Occwud1SoHjbpdF912MDUcyeXtU=;
-        b=iPml/3FyjfMTYVAxs/h1QB8kRFo9wsvojOr9Ty65ry8skU9vYZ8fx4Z8pz1U/i+ATn
-         mUCC9xEtH/Js1xSMLanRi5/Q/83GsyHsr2cKu75xyIeexrsC9Dm7XR+qE4l5aGOF9u1A
-         BYQx2xfjNdRyHuzG7iWV7iBrmjXIseaUillOLnNMCgEeU8QGAZsVv9g8ccP4KvZfGr7v
-         jURZK2qENZZqwjvtTYnlll+TpdgC6D/f3cttebNTqHoG9g0FS9D5c6ef/yQ4ohKx5Vf8
-         n3MrAAKLBB6z55TeX95QPX/YAN/1DP1T2cOvkLnpycmqhmATJbHXKbZ7oRYQH1De+qcu
-         wQiw==
-X-Forwarded-Encrypted: i=1; AJvYcCVZmLeaDAqAvhLAiGff3rwjGOYTWyoViUrsqWQxSZ+s3q8sESQOhrnJjKBLUjd4o0bS/osUjT6MyM+COTk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgmpJLmHsO+6nvqVY3FmOLjfNsKSjquD6U9BnC8A1pVDTA1cA2
-	BWCIbhM0G9jzyXuZbd+bpE6YPwzvcpaJZmL2uDc7Zsus59CaLKp9BkogX/hVfKB8t54=
-X-Gm-Gg: ASbGncu0Ff4nVewrsfRtuNGO8CmrPNr1MOEcvTiihe7taUDjNIZFnzWz08RTHPO6m8F
-	rlaIcGFnb8OEPbAYzWaNbJ3VOETu2q9q9gK9Z4a+MpCYdlJO15GpDbHqugcgyRB/XmY+23VNkNO
-	xAJpOZYLqT3oRrIV/sI4eX2vl9DZs+SAnCzZcvtME3b3x/Ff8wgt8wRO3m2xDBDeXIkTWH2otI9
-	Loz+Rx4gUk7MEG1iPzu3FfS2lZbS0NFqskF0PujN18h3szvlgLG6GQK54fbqOPlQCK9laKsfzjU
-	dq+FD+5xjLIWTD5WBwCq4v09ZDSMxrVkVkLwtJO4xrf9olZ4teFafeoDYNlystLGYmbiStJpl7H
-	4F+VxlpzldOkYazX98vIjOJoc
-X-Google-Smtp-Source: AGHT+IETvUDQWVsb/wzbqO2lFNliysTWuRtBcrxUHsrBFmsF2UJ5OYfM8LC1Cq6w+Os/lZA54+A4bw==
-X-Received: by 2002:a05:600c:1906:b0:43d:4686:5cfb with SMTP id 5b1f17b1804b1-453659b8997mr148222785e9.27.1750775542596;
-        Tue, 24 Jun 2025 07:32:22 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805cda7sm2123628f8f.26.2025.06.24.07.32.21
+        d=1e100.net; s=20230601; t=1750775548; x=1751380348;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B/7dQju2CZeLI5d0OlTARaTle2Uj51q+BbaBg8wUzJM=;
+        b=IqaQNJXWeL+FiQUFEIXb6brgp0QlR9ltkUh08bllyuO1avqibgsvL8lrhAo4P1QEg3
+         uufQ9pc/2tvX1UHghNHTZJqgY40H1jeiqzNZ6RV0IWAVL73Euee4iq59dMjIBg6abzuf
+         QHtCumUttP+YBdyfHr+tGzIVt6GENDaMZPDBxp4TRZO2KGUYNnU97BdeIzP4C4g+Qm2g
+         ESY4B9HwGXMieGNvP5vCUxPw21T5HQedU8MG/TMN5UvlVltn++34oDZTmhIucoHl94fz
+         7MZfv3LLTJKP8B9dihsxOYInQiaz61Z+8Z05XFntQnQJfZkVzdUL+ZhlRtrf8PSzZcDD
+         PhSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVA2mJGfXL2A4RJ4pc4z1UtIpM5kI/EohFDCK7VPniY6A++MO4+Y950T9ONnQ6V7I43YZu4YnniDkrr7Ro=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2a7PQE8C0NEgDLd+G9wIs3XNVyMAq39ct20Q2um6vbDs0FPeJ
+	okGsZsdBccQM1llr3+ASOyqt+icoMtdlZ+Qu+EnDGHQMXvZ/emj5vrev/ewEKGhG5lk=
+X-Gm-Gg: ASbGncvXs445LtCz70KQzx0tOl4k1wYQ7/TgGSCSyg7nbZVTOpMmGEG2ulpZB+JO5fy
+	o1jQvvaGQqrZRgDUd1RHAFLhhsRNlq/I4VlFyrIcsYUe7NcyFlv+6AD6gVbKrzKSFhhfhg/MkVU
+	jbg1RI2336EB8Nuh6eVYWidOkUTw7M+fDu/C40rnkU0BtIO+zqqb0uOPRvLW0kKPjvIomrWOWmJ
+	R2KjclFr/OswRPEEfDSzgd+hYlU+wWUJlqCrWqtxg0B6epbqGlCP94PnGa8YVzb3lh8dzD+dYOY
+	+pGMLJXEDBwP101tAy9tfSMOaoEcfHErjIQGOgbutSybrj2PlBw2oObhcfv/J2jDpBY=
+X-Google-Smtp-Source: AGHT+IHImXCD0PRHI4M7v4iVLzEcYBW7djJvPwpqCRg7wUTNPed+BG1KF5ix/KPWpzBJJQPBFgd2ag==
+X-Received: by 2002:a05:6000:4b0b:b0:3a4:f66a:9d31 with SMTP id ffacd0b85a97d-3a6d12dbda2mr14879216f8f.16.1750775547583;
+        Tue, 24 Jun 2025 07:32:27 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:34d2:109c:3293:19e9])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ead2a84sm178512935e9.32.2025.06.24.07.32.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 07:32:22 -0700 (PDT)
-Date: Tue, 24 Jun 2025 16:32:20 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-	Pohsun Su <pohsuns@nvidia.com>, Robert Lin <robelin@nvidia.com>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/2] clocksource/drivers/timer-tegra186: Avoid 64-bit
- divide operation
-Message-ID: <aFq29Fr5c2TAZOYO@mai.linaro.org>
-References: <20250614175556.922159-1-linux@roeck-us.net>
+        Tue, 24 Jun 2025 07:32:27 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 0/5] pwrseq: replace magic numbers with defines for match()
+ return values
+Date: Tue, 24 Jun 2025 16:32:17 +0200
+Message-Id: <20250624-pwrseq-match-defines-v1-0-a59d90a951f1@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250614175556.922159-1-linux@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPG2WmgC/x2MQQqEMBAEvyJz3gENGl2/sngIsdU5mNWMqCD+3
+ eCxKKouUkSBUptdFLGLyj8kKD4Z+cmFESx9YjK5qXJrSl6OqFh5dpufuMcgAcoOvrRNUcN+QSl
+ dYhLnu/119/0AI6qNWWYAAAA=
+X-Change-ID: 20250624-pwrseq-match-defines-aec46817e69e
+To: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
+ Fu Wei <wefu@redhat.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Ulf Hansson <ulf.hansson@linaro.org>, 
+ Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: linux-riscv@lists.infradead.org, linux-pm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1246;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=qL9XmUvWaq5tHfaWx1V5LuweXRKdi1ZrjKkrO+YSNmw=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoWrb56VtEbN8jrXfh++pA9Tt/a91zSI2thLGP6
+ Zb3X5N2VSWJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaFq2+QAKCRARpy6gFHHX
+ cs66D/9nnDqDh8+Uk6m4QTPNKsT8dOx6VegPWlRe/pW2j2o1y4gS8tZrc+2iV21gq7fF4mxnmiN
+ SZJ+VE3IBUWkbI469tBUamwvJmopwlvIWXBbpvLmns5TuVfg2ziCF6b9f53xUGr0ptLAxC7xt2+
+ 6ofUKyshmn4ReWIk/gfyRUG6F20k9fUbxcm0IL0CKHADAcWOhEGdAYBu33Hna7oJTzahusPUZvg
+ zGR91MBSHbd4Xxp77OJZRhjuYDIm8kYhYaN16zs08H6GX/OxlJrm2bXf6+qRb10/mu9xZlACjZf
+ mVW3bszsPHgUBF8/RPQ/SEO8frUA59kInVGDYJ1J8XgmcLqE8sqfui5C0rREjVHO/Qgr8/CCgi1
+ c0sIkUxzX4PjQB8EGSGkks0qHUt0+bwvKoh7mwO20lRlgxCBGSPhybLH5uJ2mHANOBJNHDpzZJI
+ wcJ5JG9eCbuNApPD8E22Lr03o/197nRm6I5uGOBXWW5Tt6QgI/kOr04mMYtVR4RZYThbaA3b72S
+ pS4feJHuF7MukcvxVQmLyKCrFVbn99hheJXgJsGlzyGDMUiwbS0CrQoJ+YzV/o9I+pFub/k3naU
+ XBQK0UV1GCUgIHc9UNYX4IpDnXhF5652trnNl9Iva/DbXSbEUbGAdR+MPdzj27BUa2+W+Lp7aEA
+ opBD6qhhZj6HaKw==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On Sat, Jun 14, 2025 at 10:55:55AM -0700, Guenter Roeck wrote:
-> Building the driver on xtensa fails with
-> 
-> tensa-linux-ld: drivers/clocksource/timer-tegra186.o:
-> 	in function `tegra186_timer_remove':
-> timer-tegra186.c:(.text+0x350):
-> 	undefined reference to `__udivdi3'
-> 
-> Avoid the problem by rearranging the offending code to avoid the 64-bit
-> divide operation.
-> 
+We currently use 0 or 1 as magic numbers returned from the match()
+callback. It's more readable to replace them with proper defines whose
+names indicate the meaning. While at it: fix a build issue with the
+thead-gpu driver I noticed and extend build coverage for the drivers.
 
-Hi Guenter,
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (5):
+      pwrseq: thead-gpu: add missing header
+      pwrseq: extend build coverage for pwrseq drivers with COMPILE_TEST=y
+      pwrseq: add defines for return values of the match() callback
+      pwrseq: qcom-wcn: use new defines for match() return values
+      pwrseq: thead-gpu: use new defines for match() return values
 
-Arnd posted a version which seems more complete.
+ drivers/power/sequencing/Kconfig            |  4 ++--
+ drivers/power/sequencing/core.c             |  6 +++---
+ drivers/power/sequencing/pwrseq-qcom-wcn.c  |  8 ++++----
+ drivers/power/sequencing/pwrseq-thead-gpu.c | 12 +++++++-----
+ include/linux/pwrseq/provider.h             |  3 +++
+ 5 files changed, 19 insertions(+), 14 deletions(-)
+---
+base-commit: d4c2d9b5b7ceed14a3a835fd969bb0699b9608d3
+change-id: 20250624-pwrseq-match-defines-aec46817e69e
 
-https://lore.kernel.org/all/20250620111939.3395525-1-arnd@kernel.org/
-
-> Fixes: 28c842c8b0f5 ("clocksource/drivers/timer-tegra186: Add WDIOC_GETTIMELEFT support")
-> Cc: Pohsun Su <pohsuns@nvidia.com>
-> Cc: Robert Lin <robelin@nvidia.com>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
->  drivers/clocksource/timer-tegra186.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clocksource/timer-tegra186.c b/drivers/clocksource/timer-tegra186.c
-> index e5394f98a02e..7b506de65438 100644
-> --- a/drivers/clocksource/timer-tegra186.c
-> +++ b/drivers/clocksource/timer-tegra186.c
-> @@ -267,7 +267,7 @@ static unsigned int tegra186_wdt_get_timeleft(struct watchdog_device *wdd)
->  	 * counter value to the time of the counter expirations that
->  	 * remain.
->  	 */
-> -	timeleft += (((u64)wdt->base.timeout * USEC_PER_SEC) / 5) * (4 - expiration);
-> +	timeleft += ((u64)wdt->base.timeout * (USEC_PER_SEC / 5)) * (4 - expiration);
->  
->  	/*
->  	 * Convert the current counter value to seconds,
-> -- 
-> 2.45.2
-> 
-
+Best regards,
 -- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
