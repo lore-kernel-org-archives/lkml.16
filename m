@@ -1,299 +1,253 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2057.outbound.protection.outlook.com [40.107.92.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446E03FE7;
-	Tue, 24 Jun 2025 01:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750729277; cv=none; b=ZNuN4YU6HLUEQfDrBlYWYkQFFXmcS8HLasNh7oL/I0TlblIC4c3iCtBpZqgc/6+WcDQrVhv44bSj+o0KS5SCKQ41wujd0uE4noGkefUo6L/mjxQRuX/iTCbg7M0g5LBiuwwgePZOfGvhlbx/JXDe/1+eQXtd7ExtKp5w1GSh3G4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750729277; c=relaxed/simple;
-	bh=xTw8C4+9xWfpNpVUJzqazGEWhQRzloD/T24WRdD/EsM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hfC21E80jMED5lRnEqUoMSAzVAD2Hff4g8wmiSzYD2QO9iy/CVvuA61/7lLsVtQAPCNk5zwWmdGJ+vELt76kDTeyDFd9VMFdkEK9sA+IYT3Dwu55UGLAtP9HF6RGIBXhBEtKaIfNEvoruUGqwXjErJTNxEYv/mU7tO6kUOMn9ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iQrno7Sg; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47CB23FE7;
+	Tue, 24 Jun 2025 01:41:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750729312; cv=fail; b=p85DgRkbfix3XusEQrpBkZ77FlcLxUxORjCKS7dJO1AggVCXrchtMdyqkSVvGh1rjKOhP+a5FtO/42FtkXcMxydShRqcgMvLA+hDgfuCiNRmj87TzGzTYWfn5e9KtJUQ+jnZsMfTSEfROFDPrTMGda++A2xB+Lj98XiM+e7snBw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750729312; c=relaxed/simple;
+	bh=sA3gSQWptIoDazZKSFF7glXJDKOd7cdkWK5FKMVrFXQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=sWvJdm8DtNlG8+tygKqqctkAAq/BN6oXRtMohkjXKt8m0m+7i5T9xrjEA3KPE4TrXE6U5yiIDplpRzASMPHpTFziAJ7xi9ybkRqCIy4L/HupLP5+XG5wjIeGaSCjVvOucoxvlyT1arFOkqzBggS3xQH/m9ty/F0UChpEXCuYFfc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OXCvXtRK; arc=fail smtp.client-ip=40.107.92.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iQrno7Sg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750729275; x=1782265275;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xTw8C4+9xWfpNpVUJzqazGEWhQRzloD/T24WRdD/EsM=;
-  b=iQrno7SgEi8J/nwD7OC1hrHN2RecfAOv7ti7Ls22UZ/XGFrhFsLpUK8u
-   xUuP9g9P+ges/mPU1KiJ+keyIx1g8VWlWweydO4xE4aLGNSkEo8Btrp/0
-   1VI1zF2yt/y30vWl8hUXka8JdJio3BNccWFgyTzySxQPL5/+tojxIQyUy
-   7LgPk/4cehJCWwWg73ok3RnlCb+T61dwfRtRfOGJA+S+INNIFQ9enWJvt
-   NGgRQgM/WLvuxBdFY1SOrxYFc25SvBBaRvuctfJqFZOiyNKYi/yF8MiEY
-   4gvQkz4/sYaEZbGv9owBgzH4pFEen7tmrCuVzWLZnAm/tVieD1bJyQy2M
-   A==;
-X-CSE-ConnectionGUID: j/aJpISrTLGedC1c3xaBVg==
-X-CSE-MsgGUID: sRLVVrnGTp+g2DWEyi+Fdg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="78370852"
-X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="78370852"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 18:41:14 -0700
-X-CSE-ConnectionGUID: g3d6drugTFOitUzpZgjjQA==
-X-CSE-MsgGUID: lTRzyx2QRXWpUs4kfZb+Uw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="152274922"
-Received: from unknown (HELO [10.238.128.162]) ([10.238.128.162])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 18:41:10 -0700
-Message-ID: <c526eb25-571e-427a-93e9-3afdaa6ca413@linux.intel.com>
-Date: Tue, 24 Jun 2025 09:41:07 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OXCvXtRK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=piu0EaON7LZ8QTNsHuOz79V9fMlZhPDH0s01IBTWcfHFnZG1rMpK3pIriIqYVYRtlfDz4384ICf5csA2R4B58J17ey54XsK4UQhaMdt6Viif1eCgk8FnP/islD5gySs2hbi5vHWx/ORwj0/t3yslaq4RtW+a5zJNh9hpHIHiwtM0hGuvW0TG9+M0Qgn2u/dkUPrObKx/720iGfP32hHFjGGSP8w8uIgbBcVebOQV+6EvmyzRR5ZcCJaw37Zd4VJnwJ1BT1lieX7k8fskQ+TVFycKqN7qFAF8v2BFAh/RJp3HDncON7ypM5u6PCWrBUO5sJuRV/Bz0/HR8vsCN9ssoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3iAiF8Zu9rXLyzw6XGAROwfbPfope7pjV8NeaSEV0To=;
+ b=AcOcOehi9yIZdmR+YmaegEKpvHrDa4014e3jgpqy5YlwPegwMGIA7e6EJxzHLhJh4xgbXESPyJQjqJavoCuNDEJQXLc24ozG+KIvw3OL9L4OmBQFS/QCWryr3rTS05agmHTFjlJRRvB+PU3BYr4JnY6S85qKBjUCkiVtjciBQmKdH1b/EXpbAVKnywIsrW6L37BxpQ2Zql0EHihrLM+Ojkg6otkmkRMexyn1YucHQZHPYL9N3C14bmtB5iV1IEkfPBP8fvZD2pPV+8i4KBo5uaBddALYmjc+xPbhJrDPU+sPUul9Hbjofhy0DAdMSFi3qFaU7HF8FJEGhw+FjuKAcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3iAiF8Zu9rXLyzw6XGAROwfbPfope7pjV8NeaSEV0To=;
+ b=OXCvXtRKyHuehOAoTLievqH7KhciBAjYBtdFsWhsOzWIK+Ff8AlsN4mvU+z84bH5yt/bGzF/k51TDLL1+Irmhg6MqyjXC8yno+8cX03a5Mb4fKcHKRnN0Xys0dJ1mLMZwwRag1iLzaLQTSk0vXYSq4wODicQOUS3nYAgXpYe1x0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
+ by DM3PR12MB9287.namprd12.prod.outlook.com (2603:10b6:8:1ac::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Tue, 24 Jun
+ 2025 01:41:47 +0000
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::1e6b:ca8b:7715:6fee]) by CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::1e6b:ca8b:7715:6fee%7]) with mapi id 15.20.8857.019; Tue, 24 Jun 2025
+ 01:41:47 +0000
+Message-ID: <7d4bde18-bbb7-4177-8577-b96c16f80d1d@amd.com>
+Date: Tue, 24 Jun 2025 11:41:41 +1000
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH] crypto/ccp: Fix locking on alloc failure handling
+To: Tom Lendacky <thomas.lendacky@amd.com>, linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Ashish Kalra <ashish.kalra@amd.com>,
+ John Allen <john.allen@amd.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Michael Roth <michael.roth@amd.com>
+References: <20250617094354.1357771-1-aik@amd.com>
+ <a0ce9850-cde4-4e17-997b-ad06a76a23d6@amd.com>
+Content-Language: en-US
+From: Alexey Kardashevskiy <aik@amd.com>
+In-Reply-To: <a0ce9850-cde4-4e17-997b-ad06a76a23d6@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SY8P282CA0027.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:29b::25) To CH3PR12MB9194.namprd12.prod.outlook.com
+ (2603:10b6:610:19f::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] x86/traps: Initialize DR7 by writing its
- architectural reset value
-To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, stable@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- seanjc@google.com, pbonzini@redhat.com, peterz@infradead.org,
- sohil.mehta@intel.com, brgerst@gmail.com, tony.luck@intel.com,
- fenghuay@nvidia.com
-References: <20250620231504.2676902-1-xin@zytor.com>
- <20250620231504.2676902-3-xin@zytor.com>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-Autocrypt: addr=haifeng.zhao@linux.intel.com; keydata=
- xsDNBGdk+/wBDADPlR5wKSRRgWDfH5+z+LUhBsFhuVPzmVBykmUECBwzIF/NgKeuRv2U0GT1
- GpbF6bDQp6yJT8pdHj3kk612FqkHVLlMGHgrQ50KmwClPp7ml67ve8KvCnoC1hjymVj2mxnL
- fdfjwLHObkCCUE58+NOCSimJOaicWr39No8t2hIDkahqSy4aN2UEqL/rqUumxh8nUFjMQQSR
- RJtiek+goyH26YalOqGUsSfNF7oPhApD6iHETcUS6ZUlytqkenOn+epmBaTal8MA9/X2kLcr
- IFr1X8wdt2HbCuiGIz8I3MPIad0Il6BBx/CS0NMdk1rMiIjogtEoDRCcICJYgLDs/FjX6XQK
- xW27oaxtuzuc2WL/MiMTR59HLVqNT2jK/xRFHWcevNzIufeWkFLPAELMV+ODUNu2D+oGUn/6
- BZ7SJ6N6MPNimjdu9bCYYbjnfbHmcy0ips9KW1ezjp2QD+huoYQQy82PaYUtIZQLztQrDBHP
- 86k6iwCCkg3nCJw4zokDYqkAEQEAAc0pRXRoYW4gWmhhbyA8aGFpZmVuZy56aGFvQGxpbnV4
- LmludGVsLmNvbT7CwQcEEwEIADEWIQSEaSGv5l4PT4Wg1DGpx5l9v2LpDQUCZ2T7/AIbAwQL
- CQgHBRUICQoLBRYCAwEAAAoJEKnHmX2/YukNztAL/jkfXzpuYv5RFRqLLruRi4d8ZG4tjV2i
- KppIaFxMmbBjJcHZCjd2Q9DtjjPQGUeCvDMwbzq1HkuzxPgjZcsV9OVYbXm1sqsKTMm9EneL
- nCG0vgr1ZOpWayuKFF7zYxcF+4WM0nimCIbpKdvm/ru6nIXJl6ZsRunkWkPKLvs9E/vX5ZQ4
- poN1yRLnSwi9VGV/TD1n7GnpIYiDhYVn856Xh6GoR+YCwa1EY2iSJnLj1k9inO3c5HrocZI9
- xikXRsUAgParJxPK80234+TOg9HGdnJhNJ3DdyVrvOx333T0f6lute9lnscPEa2ELWHxFFAG
- r4E89ePIa2ylAhENaQoSjjK9z04Osx2p6BQA0uZuz+fQh9TDqh4JRKaq50uPnM+uQ0Oss2Fx
- 4ApWvrG13GsjGF5Qpd7vl0/gxHtztDcr5Kln6U1i5FW0MP1Z6z/JRI2WPED1dnieA6/tBqwj
- oiHixmpw4Zp/5gITmGoUdF1jTwXcYC7cPM/dvsCZ1AGgdmk/ic7AzQRnZPv9AQwA0rdIWu25
- zLsl9GLiZHGBVZIVut88S+5kkOQ8oIih6aQ8WJPwFXzFNrkceHiN5g16Uye8jl8g58yWP8T+
- zpXLaPyq6cZ1bfjmxQ7bYAWFl74rRrdots5brSSBq3K7Q3W0v1SADXVVESjGa3FyaBMilvC/
- kTrx2kqqG+jcJm871Lfdij0A5gT7sLytyEJ4GsyChsEL1wZETfmU7kqRpLYX+l44rNjOh7NO
- DX3RqR6JagRNBUOBkvmwS5aljOMEWpb8i9Ze98AH2jjrlntDxPTc1TazE1cvSFkeVlx9NCDE
- A6KDe0IoPB2X4WIDr58ETsgRNq6iJJjD3r6OFEJfb/zfd3W3JTlzfBXL1s2gTkcaz6qk/EJP
- 2H7Uc2lEM+xBRTOp5LMEIoh2HLAqOLEfIr3sh1negsvQF5Ll1wW7/lbsSOOEnKhsAhFAQX+i
- rUNkU8ihMJbZpIhYqrBuomE/7ghI/hs3F1GtijdM5wG7lrCvPeEPyKHYhcp3ASUrj8DMVEw/
- ABEBAAHCwPYEGAEIACAWIQSEaSGv5l4PT4Wg1DGpx5l9v2LpDQUCZ2T7/QIbDAAKCRCpx5l9
- v2LpDSePC/4zDfjFDg1Bl1r1BFpYGHtFqzAX/K4YBipFNOVWPvdr0eeKYEuDc7KUrUYxbOTV
- I+31nLk6HQtGoRvyCl9y6vhaBvcrfxjsyKZ+llBR0pXRWT5yn33no90il1/ZHi3rwhgddQQE
- 7AZJ6NGWXJz0iqV72Td8iRhgIym53cykWBakIPyf2mUFcMh/BuVZNj7+zdGHwkS+B9gIL3MD
- GzPKkGmv7EntB0ccbFVWcxCSSyTO+uHXQlc4+0ViU/5zw49SYca8sh2HFch93JvAz+wZ3oDa
- eNcrHQHsGqh5c0cnu0VdZabSE0+99awYBwjJi2znKp+KQfmJJvDeSsjya2iXQMhuRq9gXKOT
- jK7etrO0Bba+vymPKW5+JGXoP0tQpNti8XvmpmBcVWLY4svGZLunmAjySfPp1yTjytVjWiaL
- ZEKDJnVrZwxK0oMB69gWc772PFn/Sz9O7WU+yHdciwn0G5KOQ0bHt+OvynLNKWVR+ANGrybN
- 8TCx1OJHpvWFmL4Deq8=
-In-Reply-To: <20250620231504.2676902-3-xin@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|DM3PR12MB9287:EE_
+X-MS-Office365-Filtering-Correlation-Id: a648c5d3-a19f-4a40-15d1-08ddb2c04836
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eDdCdXpKd2xpTGl6RXU2YnEyV1ppTEwxV0I0QU1WZFh3MnkyL2N3NUlSVmZs?=
+ =?utf-8?B?NGtTNDN5N3RaMnkxRnpDSkoyZTk1ekhnYk5zL3Q2Y0JwcCtGQjdKVllRS3Y2?=
+ =?utf-8?B?MFpaUGhVQTZQMjJ5eVJodGRoWlRiR3l3NktMQ2hmM0ZlbUhzU1hhUXJjSGZ1?=
+ =?utf-8?B?TFB3RkVTei85Wk9MbzJEVVd3b2pxaGkwYkVQU1R0bFYrMXRBZW1HK3ZGSHRp?=
+ =?utf-8?B?RjlIK285UDVQVlhPaGdDMkRMLzAwS3BoOVIxSTNhR2pOMG9IVGhpQU9SS2hP?=
+ =?utf-8?B?T081ZGdzVEdIRTRXTVE4aG81KzBkRVFrWXlDMUtRZUtTeDZ3Z3drbEhsNU1V?=
+ =?utf-8?B?WGd5RGZxZkxrblViRGJlZGFvUmNROTh4eWdjZFpjWFhMR2VhcHN2WnRDMGNY?=
+ =?utf-8?B?bWExUzlRU0VCc3RtVUpRMDNOSDVMaTMxTVc3Y0F0cVcxMmpsM0VUYjd4N2w5?=
+ =?utf-8?B?NkxyV2lidEdieUdkQmJpYktnY3ZPNk81WndkY2NTVlg2T09iTGFTSzFLelBu?=
+ =?utf-8?B?T1dBaVVQL1hTdGNIdjV0QURjaFBJYko4enZuTUJOSWVQU2Mrb09zMUViZE5x?=
+ =?utf-8?B?ZUpSSEhwbnBtV3lld2xtTzNUVUN1eHQ1WTBQV3NjUFJIcTRDUVJBSjhVK1Rv?=
+ =?utf-8?B?NXllUXpXWXlWR0dJNnMzWEVKRWptUk1ZRDE3S0lRNzJqYXdtZnNRejdsM1ZX?=
+ =?utf-8?B?L1ZCVTQyRTBwN2xMR2RWZW9DdjhZbGJEUTdWdHB0T3dQUmdzZW92clMrV3lT?=
+ =?utf-8?B?c2xvaEZ4RVlrUHRDTUFYUzhaUTVnSE9SM0xLUFFrMDRxd3dwYXU3eDdqdkc2?=
+ =?utf-8?B?SXpTSU4xdkNrdVFqd3RjSU1BRmdaU05kTm5KMmVIQTN3bjVxd1JwM0phbmZ6?=
+ =?utf-8?B?VU1OZVBib2pJQk9jRWdTWDFoNEJKUDlSZVQ1dTJicnZBb1RGWHVPcE1LbkQr?=
+ =?utf-8?B?ZmNnU2pUbDhGSHlPVUdZOGpPcjRnRno3ZzJmOTRUbjBPbHBaWWgvaDcvZ0lB?=
+ =?utf-8?B?WmRXLzdmVDNHaHNBbUFKTGxOZUNlU1o2UURkQ0xGWS9MSlB2RFA1YjhXQ25F?=
+ =?utf-8?B?TnF5Qi9ZbkJrVTVPTDdWL2UrK1pHMGhQald6cnpXV2FGaUlwZW4rdU5jZlJV?=
+ =?utf-8?B?ZDFNV28zbkNQcGVrWGxROVZMaTBLZnhQMGhyTkZZWUlhcjFpWFdzVzh2Q2JQ?=
+ =?utf-8?B?UGFKOXBBK05sWkk1NnllOUVlNEpMVTJJVENLSERRMWc5Zk9wMXhUMmJUNkRS?=
+ =?utf-8?B?eDVNL2g2NHV5eEtGWm15SDY5cCs4SWl5MGtLZTZkQUo1Y1lVdGpBcDk1ekpz?=
+ =?utf-8?B?bXJic3pESzhGK3dMN0s2b3hJM0gzVHNkS0JJL0xkd1hQVG1KWlU1OU9ueWY5?=
+ =?utf-8?B?NU5UU09QUmJJa0YzTitYWi9IMmpqUmc4UjdBZUZZSVpIdmRocVEvMkoyblVK?=
+ =?utf-8?B?K0V3bHlHRGtxeE9xMnhxYU1uR1dWSHc3bGppQVpBZk5mYTliYy8wUFlxMmgv?=
+ =?utf-8?B?MjdvUXBGeDNYTS9QOXcyU2tJb0JXUXJ0NDkvY2dlUmFWbUFQcVVjelYxL3FR?=
+ =?utf-8?B?elk2Tm04TnUxZ3hZOTh3ajg0STFYZWhTL2NxVkVKZlAvUXBRS1N1clEvRDFI?=
+ =?utf-8?B?b0xmS0NoZE13NlBwbkF3TFNrakRnVXJ2S1Y0aU54R3NRUVpIci82bEl5Q0tP?=
+ =?utf-8?B?NzZRMnF0UjdLZ2JobGFINER0UnE5K0xaU1JjWWtZQU5aalVkRWpXY1oxZmor?=
+ =?utf-8?B?Y1d0NXZaS3U2TVI0NzVac1hLRDVpeGlra3dHa044OGc5R2p0dzFFeGw5TDlX?=
+ =?utf-8?B?SkZDaGJ0anVFSW8yZDFKY2Q2OUpqd3Fhc1B6eHkxUDdiNFMyN0ZuNitRTnNr?=
+ =?utf-8?B?djZQb1ljWm9KTTJ0OVJSVURCWjRxWGpzMWYrNWVrV0NRbnc9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Z2pPbmZYV1FxcDIwNkRFUnp3cjdwRFV1WEhYeXVTY3pacXhxQVE3MFVrZnpJ?=
+ =?utf-8?B?TDZLLy9YRXNkWmxzQVFGYzZpUTlEVWY2V2ZOeGdaSnl4NlhLRlRwQnFWZUZo?=
+ =?utf-8?B?Z3RlMmpnTTNWZVRwTlZmeGM1cWJENDU3T0hYSnBDdXArYW5VMVpCaFE2TWkw?=
+ =?utf-8?B?YmZDUFpuQmowYTRyOEpzUVJ4MVlRR2ovK3pEeUMyajhqQkFrU2NHdi9rNUVL?=
+ =?utf-8?B?d3Jac08yYjk1b0dVVkhJdWkrcnBsVDZSY0xkbWtQVmJubm9ZRUZkRjN6ODBC?=
+ =?utf-8?B?QVBWdXozb0dTL2k1TG1ETzFVaFd5Z0NaUFdLd0RiUGgyazE3eVpYMFpqbGRy?=
+ =?utf-8?B?a01SSXovK0RYNjZUTjhPNUZDTFBPV3RXd093MUVIb0xUVlJEbktpb0lPV1Vj?=
+ =?utf-8?B?QVF3Vm91d2xES1ZlaHU0M2VWTFB0bGZzNnIxVTYvV3FjWGdWS05ZZ0U0dHI5?=
+ =?utf-8?B?aUQrTnp4WHZ3SCs2UGVjc1k1ZEhSYlJicG5XNlNTdVRnVURoUHZCa244TjBG?=
+ =?utf-8?B?VlNTRjc4NkRGQ0ZBZThJbldzSG82TlNPT0F2L2JNVTI5Z2JIZGJZMlAyTE1o?=
+ =?utf-8?B?VzlQaWpKWUM0dWxBODllVzBWMUVzRGVWanpVd0VyQVZ3SjhwajE5dEdQMkli?=
+ =?utf-8?B?bDZDL2JhOFB6eEY5cmVjTjlITWNpOC9HVHQwM1I4Mk5ZQmZ5Qmx1QVBXMDVU?=
+ =?utf-8?B?Y2xVMFpUeGx4M3NRc1loeE5SWUpyaXdYQTlidGRLN1lncUdiR0hLRHg0S1VK?=
+ =?utf-8?B?RjJjWWhtRmNPelRnTC9rMTk4aklvTWRmV2ZMSllLZnR1YWw0bGFkNEpFSHJH?=
+ =?utf-8?B?akxhcVJwaWNYOXRpdlNYU3lGYTRaKzNJd2UyUkRSV2NRZzJvcmJEQjRiem05?=
+ =?utf-8?B?R0loTkZlWlF5eDA0a2VSamNpMlBGUzBKUXlLenFiWlJYbWJPRWtLVDR1N2tE?=
+ =?utf-8?B?czZicytRNENGK21KSDFuZGNaZWxPd0tEdW8yKytCbk56YUpsTlNidlVHazFS?=
+ =?utf-8?B?Mjh4Q3QrYkVFT29BNVg4d3VvM1V2dW5WNnpkRVpreTBBdzlYaUt2ekd0akty?=
+ =?utf-8?B?Q1ZtRkxheGRGNzRiQW5QQk05Y1pRemtMbksrUjhnR0RGZGNWN05zUzlpWVJn?=
+ =?utf-8?B?Ry81TWJqQ0lrMTg3TXNraDA0M0RnOWJMTWlPT1FtQWlpcldwbUNKK2lvS1NN?=
+ =?utf-8?B?UkhLVGVCSUNmYlhNUHhEV2VvSnlYQjlKWTJ2SVo2VksyNnRjUlFOZWtsdGZp?=
+ =?utf-8?B?NlZuZDFqeURRdCsvVzB3RU1iMHdzZWh6VkFFcWFSdDFRaFZIeUgzcUNTUldx?=
+ =?utf-8?B?dmk0S2dpRVF5Z05XazNrbUxTamxRL1lVa2N5RXYrWFY5aUgrUkpvM1ZCRUY5?=
+ =?utf-8?B?aDhkMUdnQ2wyTG1CRHd6WHVPOVZHdlUxNzV1WW5iUEk4QXhiamtCMTBmZENL?=
+ =?utf-8?B?TXVoaU9QZlMrZklKdEovMDNENXd1dFRzUEg0M2pKdWVncmFkTjVtYlJSZWdQ?=
+ =?utf-8?B?S0tmQ2s0ZDh5QzBMcXBCZ2t1TmZ4UUVkNkJHelFEd1BLWjVOb1RieUNNckVq?=
+ =?utf-8?B?REJMclR0ay9KWVl1ME5HaUlxazkyRXJFQWlZQ0lsL0tjL0x4aThQdXZ4RTdx?=
+ =?utf-8?B?SUt3dUxralJycllxQ3VZZ2NldTl0bEpsNTNKTmQyM0l4aG1hMHJFYkplRWl5?=
+ =?utf-8?B?OWRxVlNsMUo3V3ZHZi9YOWw0MDJDYndlQlcwbWtOb0hYQnNzOXd5L1FmSWxF?=
+ =?utf-8?B?MExyamlSYlRpRjRFakNqTTBkWWpXQ2lLbWxsNWJ5MjBsMEpFV2wzeEFvRDRu?=
+ =?utf-8?B?dHpNcHpmZ3ZYZHoxM3FnV2x3OXg5OTdxajhScWJIZE01K1U2SjhPbXNOV0t1?=
+ =?utf-8?B?aTBvMWxaZzh5K2VKTkxTbnN2WWpkUitnaTArbFZkYjQ5eWdZZTI4OHJ4eXRT?=
+ =?utf-8?B?MkFRVm9rTWRjVlZIVnBocmEwKytjSExFQVZoL1RKZzlPcVpmVlNiZ3FUUlho?=
+ =?utf-8?B?LzBkL0dMczNWVm90WlZoZjJ5WUdrWDFGWGI4WDZ1UjdocEs4U2w3MDRTTHpy?=
+ =?utf-8?B?ZDdMT2tyZnlVeEJnaFhwN1hBeThjbis4L0xidTdBWklCYkNGc01OQkROQ3lj?=
+ =?utf-8?Q?2yfKS47qLyOgAmSlUDD58+fC1?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a648c5d3-a19f-4a40-15d1-08ddb2c04836
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 01:41:47.5452
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: B+N58b+oWKrgpGbcZO3sGMHzjRQOQT12vmCUKok7BH6hLqvygmrlxYWOF23LQ8tGel8IQ9Xntpmxw9h2AU+gvQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9287
 
 
-在 2025/6/21 7:15, Xin Li (Intel) 写道:
-> Initialize DR7 by writing its architectural reset value to always set
-> bit 10, which is reserved to '1', when "clearing" DR7 so as not to
-> trigger unanticipated behavior if said bit is ever unreserved, e.g. as
-> a feature enabling flag with inverted polarity.
->
-> Tested-by: Sohil Mehta <sohil.mehta@intel.com>
-> Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-> Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Acked-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> Cc: stable@vger.kernel.org
-> ---
->
-> Change in v4:
-> *) Cc stable for backporting, just in case bit 10 of DR7 has become
->     unreserved on new hardware, even though clearing it doesn't
->     currently cause any real issues (Dave Hansen).
->
-> Changes in v3:
-> *) Reword the changelog using Sean's description.
-> *) Explain the definition of DR7_FIXED_1 (Sohil).
-> *) Collect TB, RB, AB (PeterZ, Sohil and Sean).
->
-> Changes in v2:
-> *) Use debug register index 7 rather than DR_CONTROL (PeterZ and Sean).
-> *) Use DR7_FIXED_1 as the architectural reset value of DR7 (Sean).
-> ---
->   arch/x86/include/asm/debugreg.h | 19 +++++++++++++++----
->   arch/x86/include/asm/kvm_host.h |  2 +-
->   arch/x86/kernel/cpu/common.c    |  2 +-
->   arch/x86/kernel/kgdb.c          |  2 +-
->   arch/x86/kernel/process_32.c    |  2 +-
->   arch/x86/kernel/process_64.c    |  2 +-
->   arch/x86/kvm/x86.c              |  4 ++--
->   7 files changed, 22 insertions(+), 11 deletions(-)
->
-> diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debugreg.h
-> index 363110e6b2e3..a2c1f2d24b64 100644
-> --- a/arch/x86/include/asm/debugreg.h
-> +++ b/arch/x86/include/asm/debugreg.h
-> @@ -9,6 +9,14 @@
->   #include <asm/cpufeature.h>
->   #include <asm/msr.h>
->   
-> +/*
-> + * Define bits that are always set to 1 in DR7, only bit 10 is
-> + * architecturally reserved to '1'.
-> + *
-> + * This is also the init/reset value for DR7.
-> + */
-> +#define DR7_FIXED_1	0x00000400
-> +
->   DECLARE_PER_CPU(unsigned long, cpu_dr7);
->   
->   #ifndef CONFIG_PARAVIRT_XXL
-> @@ -100,8 +108,8 @@ static __always_inline void native_set_debugreg(int regno, unsigned long value)
->   
->   static inline void hw_breakpoint_disable(void)
->   {
-> -	/* Zero the control register for HW Breakpoint */
-> -	set_debugreg(0UL, 7);
-> +	/* Reset the control register for HW Breakpoint */
-> +	set_debugreg(DR7_FIXED_1, 7);
 
-Given you have it be adhere to SDM about the DR7 reversed bits setting,
+On 21/6/25 05:20, Tom Lendacky wrote:
+> On 6/17/25 04:43, Alexey Kardashevskiy wrote:
+>> The __snp_alloc_firmware_pages() helper allocates pages in the firmware
+>> state (alloc + rmpupdate). In case of failed rmpupdate, it tries
+>> reclaiming pages with already changed state. This requires calling
+>> the PSP firmware and since there is sev_cmd_mutex to guard such calls,
+>> the helper takes a "locked" parameter so specify if the lock needs to
+>> be held.
+>>
+>> Most calls happen from snp_alloc_firmware_page() which executes without
+>> the lock. However
+>>
+>> commit 24512afa4336 ("crypto: ccp: Handle the legacy TMR allocation when SNP is enabled")
+>>
+>> switched sev_fw_alloc() from alloc_pages() (which does not call the PSP) to
+>> __snp_alloc_firmware_pages() (which does) but did not account for the fact
+>> that sev_fw_alloc() is called from __sev_platform_init_locked()
+>> (via __sev_platform_init_handle_tmr()) and executes with the lock held.
+>>
+>> Add a "locked" parameter to __snp_alloc_firmware_pages().
+>> Make sev_fw_alloc() use the new parameter to prevent potential deadlock in
+>> rmp_mark_pages_firmware() if rmpupdate() failed.
+> 
+> Would it make sense to add the locked parameter to sev_fw_alloc(), too?
 
-then no reason to leave patch[1/2] to set_debugreg(0, 7) alone.
+That would be another patch then, this one is a fix ;)
 
-did I miss something here ?
+and I'd probably just ditch both snp_alloc_firmware_page() and sev_fw_alloc(), rename __snp_alloc_firmware_pages() to snp_alloc_firmware_page() and just use this one everywhere. Nobody needs page struct anyway, and the locking will be clear everywhere. Also do the same for snp_free_firmware_page().
+
+It is just that snp_alloc_firmware_page() and snp_free_firmware_page() are EXPORT_SYMBOL_GPL,
+
+> Right now there is only one caller of sev_fw_alloc(), but in the future,
+> if some other path should call sev_fw_alloc() and that path doesn't have
+> the lock, then we'll miss taking it.
+
+I'd rather just ditch sev_fw_alloc(), does not look very useful. Thanks,
 
 
-Thanks,
 
-Ethan
-
-
->   
->   	/* Zero-out the individual HW breakpoint address registers */
->   	set_debugreg(0UL, 0);
-> @@ -125,9 +133,12 @@ static __always_inline unsigned long local_db_save(void)
->   		return 0;
->   
->   	get_debugreg(dr7, 7);
-> -	dr7 &= ~0x400; /* architecturally set bit */
-> +
-> +	/* Architecturally set bit */
-> +	dr7 &= ~DR7_FIXED_1;
->   	if (dr7)
-> -		set_debugreg(0, 7);
-> +		set_debugreg(DR7_FIXED_1, 7);
-> +
->   	/*
->   	 * Ensure the compiler doesn't lower the above statements into
->   	 * the critical section; disabling breakpoints late would not
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index b4a391929cdb..639d9bcee842 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -31,6 +31,7 @@
->   
->   #include <asm/apic.h>
->   #include <asm/pvclock-abi.h>
-> +#include <asm/debugreg.h>
->   #include <asm/desc.h>
->   #include <asm/mtrr.h>
->   #include <asm/msr-index.h>
-> @@ -249,7 +250,6 @@ enum x86_intercept_stage;
->   #define DR7_BP_EN_MASK	0x000000ff
->   #define DR7_GE		(1 << 9)
->   #define DR7_GD		(1 << 13)
-> -#define DR7_FIXED_1	0x00000400
->   #define DR7_VOLATILE	0xffff2bff
->   
->   #define KVM_GUESTDBG_VALID_MASK \
-> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-> index 0f6c280a94f0..27125e009847 100644
-> --- a/arch/x86/kernel/cpu/common.c
-> +++ b/arch/x86/kernel/cpu/common.c
-> @@ -2246,7 +2246,7 @@ EXPORT_PER_CPU_SYMBOL(__stack_chk_guard);
->   static void initialize_debug_regs(void)
->   {
->   	/* Control register first -- to make sure everything is disabled. */
-> -	set_debugreg(0, 7);
-> +	set_debugreg(DR7_FIXED_1, 7);
->   	set_debugreg(DR6_RESERVED, 6);
->   	/* dr5 and dr4 don't exist */
->   	set_debugreg(0, 3);
-> diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
-> index 102641fd2172..8b1a9733d13e 100644
-> --- a/arch/x86/kernel/kgdb.c
-> +++ b/arch/x86/kernel/kgdb.c
-> @@ -385,7 +385,7 @@ static void kgdb_disable_hw_debug(struct pt_regs *regs)
->   	struct perf_event *bp;
->   
->   	/* Disable hardware debugging while we are in kgdb: */
-> -	set_debugreg(0UL, 7);
-> +	set_debugreg(DR7_FIXED_1, 7);
->   	for (i = 0; i < HBP_NUM; i++) {
->   		if (!breakinfo[i].enabled)
->   			continue;
-> diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
-> index a10e180cbf23..3ef15c2f152f 100644
-> --- a/arch/x86/kernel/process_32.c
-> +++ b/arch/x86/kernel/process_32.c
-> @@ -93,7 +93,7 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode,
->   
->   	/* Only print out debug registers if they are in their non-default state. */
->   	if ((d0 == 0) && (d1 == 0) && (d2 == 0) && (d3 == 0) &&
-> -	    (d6 == DR6_RESERVED) && (d7 == 0x400))
-> +	    (d6 == DR6_RESERVED) && (d7 == DR7_FIXED_1))
->   		return;
->   
->   	printk("%sDR0: %08lx DR1: %08lx DR2: %08lx DR3: %08lx\n",
-> diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-> index 8d6cf25127aa..b972bf72fb8b 100644
-> --- a/arch/x86/kernel/process_64.c
-> +++ b/arch/x86/kernel/process_64.c
-> @@ -133,7 +133,7 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode,
->   
->   	/* Only print out debug registers if they are in their non-default state. */
->   	if (!((d0 == 0) && (d1 == 0) && (d2 == 0) && (d3 == 0) &&
-> -	    (d6 == DR6_RESERVED) && (d7 == 0x400))) {
-> +	    (d6 == DR6_RESERVED) && (d7 == DR7_FIXED_1))) {
->   		printk("%sDR0: %016lx DR1: %016lx DR2: %016lx\n",
->   		       log_lvl, d0, d1, d2);
->   		printk("%sDR3: %016lx DR6: %016lx DR7: %016lx\n",
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index b58a74c1722d..a9d992d5652f 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -11035,7 +11035,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->   
->   	if (unlikely(vcpu->arch.switch_db_regs &&
->   		     !(vcpu->arch.switch_db_regs & KVM_DEBUGREG_AUTO_SWITCH))) {
-> -		set_debugreg(0, 7);
-> +		set_debugreg(DR7_FIXED_1, 7);
->   		set_debugreg(vcpu->arch.eff_db[0], 0);
->   		set_debugreg(vcpu->arch.eff_db[1], 1);
->   		set_debugreg(vcpu->arch.eff_db[2], 2);
-> @@ -11044,7 +11044,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->   		if (unlikely(vcpu->arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT))
->   			kvm_x86_call(set_dr6)(vcpu, vcpu->arch.dr6);
->   	} else if (unlikely(hw_breakpoint_active())) {
-> -		set_debugreg(0, 7);
-> +		set_debugreg(DR7_FIXED_1, 7);
->   	}
->   
->   	vcpu->arch.host_debugctl = get_debugctlmsr();
+> Thanks,
+> Tom
+> 
+>>
+>> Fixes: 24512afa4336 ("crypto: ccp: Handle the legacy TMR allocation when SNP is enabled")
+>> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
+>> ---
+>>   drivers/crypto/ccp/sev-dev.c | 8 ++++----
+>>   1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
+>> index 3451bada884e..16a11d5efe46 100644
+>> --- a/drivers/crypto/ccp/sev-dev.c
+>> +++ b/drivers/crypto/ccp/sev-dev.c
+>> @@ -434,7 +434,7 @@ static int rmp_mark_pages_firmware(unsigned long paddr, unsigned int npages, boo
+>>   	return rc;
+>>   }
+>>   
+>> -static struct page *__snp_alloc_firmware_pages(gfp_t gfp_mask, int order)
+>> +static struct page *__snp_alloc_firmware_pages(gfp_t gfp_mask, int order, bool locked)
+>>   {
+>>   	unsigned long npages = 1ul << order, paddr;
+>>   	struct sev_device *sev;
+>> @@ -453,7 +453,7 @@ static struct page *__snp_alloc_firmware_pages(gfp_t gfp_mask, int order)
+>>   		return page;
+>>   
+>>   	paddr = __pa((unsigned long)page_address(page));
+>> -	if (rmp_mark_pages_firmware(paddr, npages, false))
+>> +	if (rmp_mark_pages_firmware(paddr, npages, locked))
+>>   		return NULL;
+>>   
+>>   	return page;
+>> @@ -463,7 +463,7 @@ void *snp_alloc_firmware_page(gfp_t gfp_mask)
+>>   {
+>>   	struct page *page;
+>>   
+>> -	page = __snp_alloc_firmware_pages(gfp_mask, 0);
+>> +	page = __snp_alloc_firmware_pages(gfp_mask, 0, false);
+>>   
+>>   	return page ? page_address(page) : NULL;
+>>   }
+>> @@ -498,7 +498,7 @@ static void *sev_fw_alloc(unsigned long len)
+>>   {
+>>   	struct page *page;
+>>   
+>> -	page = __snp_alloc_firmware_pages(GFP_KERNEL, get_order(len));
+>> +	page = __snp_alloc_firmware_pages(GFP_KERNEL, get_order(len), true);
+>>   	if (!page)
+>>   		return NULL;
+>>   
 
 -- 
-"firm, enduring, strong, and long-lived"
+Alexey
 
