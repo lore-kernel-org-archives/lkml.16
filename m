@@ -1,25 +1,71 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03E4572617;
-	Tue, 24 Jun 2025 10:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE9072617
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 10:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750760269; cv=none; b=RqnfwM+BV4C3Zbdv8Y2juiEe3qS4QJI+4WjTDkaHC7pw63QgtnC9XO1W+9pA8NIsgfQdu65Zu5A27qF35OsQ7bBYLYzDrWp/B0+R+muQ3hvwwrfGmrR/tkEks0aKbcJ0TQx7N7pd79sUWA9AmYPfXGgElLcELuSRFY8SqlOrXQw=
+	t=1750760280; cv=none; b=DtZe0T5kYkV2IAm9OVMw7Dp3ul1f1OIDR9IQNcuK+F0UiYbBNNDKdEaNGY094H2f9ZDrzdtbtHUyayPe71WywLuxHPJl53fQgFhKlRVThrFYCkOI4x7eNJSDxTZ5ewhJbs0ri+u20on+7W7+y/jQaeIQCdvBA0k2Xw4WNkQw0BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750760269; c=relaxed/simple;
-	bh=OTFHXtpBsk961vNqAKQ8GBFCVAr6XXS9h7UJRv9p6/8=;
+	s=arc-20240116; t=1750760280; c=relaxed/simple;
+	bh=yxsot7li7aWDbMpJ2M7l364+PdHRsIkunx/znJIFHqg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ey/BJ348SlHyEZMWImb1fylV+5eLr/J62NBgLVwgtBnbd8CVAhGtbquwzHgBz7hHf6Gb5t4BUag5964NtlFd5ljQ500iHUeypBR82WfI74/LhkB3JHjIoz/yMYfgt1UjqKesODHCW5r2v8h1gjtCjbGHXt598SBTGKV51fLPdpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 64914106F;
-	Tue, 24 Jun 2025 03:17:28 -0700 (PDT)
-Received: from [10.57.29.71] (unknown [10.57.29.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 288333F63F;
-	Tue, 24 Jun 2025 03:17:42 -0700 (PDT)
-Message-ID: <cce6854f-a859-40e2-8ce9-dc33aa822754@arm.com>
-Date: Tue, 24 Jun 2025 11:17:40 +0100
+	 In-Reply-To:Content-Type; b=qUIwspXVmuhRx49+kw2QpNEP3nDz0eGVITNjkyFPjuck2UoOPBskaOBQBbGZof0LkAdXvwTXI5MNOsN0l10YQlSNgwS/kFlK7AOy2+x84jHxu4LYvf65EuKcTLH9/x0k0AhgMHhEpaRQUGRGFYrTixtaZS4l49gFXqWKmkucHqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OrI5DA8H; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OrI5DA8H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750760278;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+Ln5HyZtk161hcYqwhzfMAZcN7gULO9uaQ38rDIrK1c=;
+	b=OrI5DA8HTTgU616DVfh8LjHprq3PBVscNX2h0uz39bJ7fpMPMnsAwSFooGpn81NEXqmJZs
+	MOtPkpGwVmO+370np92LOyG5VRc4MJhFq1XDy8IqYjx6lHjZTUNgo7IBr+klvtQ6vAh29W
+	sKQJrAePY70O3Uldt7FQjvLJuTm+4gQ=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-121-5PdMjuYCOna6r7iKwdwvzg-1; Tue, 24 Jun 2025 06:17:57 -0400
+X-MC-Unique: 5PdMjuYCOna6r7iKwdwvzg-1
+X-Mimecast-MFC-AGG-ID: 5PdMjuYCOna6r7iKwdwvzg_1750760276
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a578958000so1888291f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 03:17:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750760276; x=1751365076;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+Ln5HyZtk161hcYqwhzfMAZcN7gULO9uaQ38rDIrK1c=;
+        b=HwShdcnA+t5zdjgP3ldjBFd8UqqFTK02mOFDREk492isa2LsjaG8qd3h5lw8lX5XmA
+         YYDegfXNM3HGt7kktNkWHCQCusPa3bl+Vit0Mvmjd+e+zBk/1Rro5DxypPoEZBQw9gnE
+         GJ+ZyCOapP5eIxFljMM/Djz/kLNzMfmUr1M78kCvhQGSilWT2teDSEzgpZm8KKlVY0i4
+         42AHPhdPANtJdGE/Ny9Z7RrMa1mNZmbqmNW9kbbbMgjejxD1JrUVg66UNIK9/GhJxIrg
+         J7zbgh9409A44xaakZ9YxeDGJ8fFTLMlgnfcc49zufjV2Bm6yapLIfLvsl6N4grWIKj0
+         xkFA==
+X-Forwarded-Encrypted: i=1; AJvYcCW6mU4ncvJ2ATA6wOxbv5fdnN1aFISPcHOaR/T9KR6k6+1GMAowQj6NuvIEN2mDUcw0Uysw1O1HQEWsn0M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+e6m5Qo7g1cx0LtLN2DWS2f7QgdD70d0fU9ihwPyTmDUyKjRT
+	+9scil/rOLR3ipuai/Qo0cpbKEXNFGO2uxbt9mOtpJA/+FlmvMVrjwRu9B3joCXI5fk2a5wJgRF
+	H9mKhForZpEbB3fxqq3UVl44ZhvG1AKyXtchMjrFApjgkgH6sio/JjcvsCcC/2vtIww==
+X-Gm-Gg: ASbGncsoCNyKIZFtdvrXrGo39vn3myH5qYdanu8Vfykdi+ECxNpC7wFLjAIU4njIAYW
+	ReCK1+dLUzrISzi+CKBf96pwz9SXawLhQHmL0LGZjfWtQE37n0fIO4J5HgVY1KpiVMfj7X9JIvb
+	Jd3z2ioMWa67k93lpJ7TZO2cQp0SH4F4sCS97ekx0KotyqSIXIF5NWsl6ju9wgXjLTSPg9R850b
+	7IOglPiEYxCWfbMyY+fYEVS2wB3FNQN1SFWiCk3FTIRaSuBrguh4YOE0mIlNYWTI8VYmO4G9k56
+	e98cB74FLO8Owh8+TnriNPdXuYlGPg==
+X-Received: by 2002:a05:6000:2008:b0:3a4:f902:3872 with SMTP id ffacd0b85a97d-3a6d129da9fmr11398665f8f.19.1750760275754;
+        Tue, 24 Jun 2025 03:17:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEC4ngUxIcnD6ERbm/m/k7RkxkipdZ9Ie1YqBmuu6Vuw2RA4r/70TZrgIw6mV8PBPv7d8OamQ==
+X-Received: by 2002:a05:6000:2008:b0:3a4:f902:3872 with SMTP id ffacd0b85a97d-3a6d129da9fmr11398635f8f.19.1750760275245;
+        Tue, 24 Jun 2025 03:17:55 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:2445:d510::f39? ([2a0d:3344:2445:d510::f39])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535e97adf3sm169365045e9.8.2025.06.24.03.17.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 03:17:54 -0700 (PDT)
+Message-ID: <e6654755-3aa1-4f4b-a6ab-c7568d8a5d4e@redhat.com>
+Date: Tue, 24 Jun 2025 12:17:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,379 +73,80 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 03/10] accel/rocket: Add IOCTL for BO creation
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Kever Yang <kever.yang@rock-chips.com>, Daniel Stone <daniel@fooishbar.org>,
- Da Xue <da@libre.computer>, Jeff Hugo <jeff.hugo@oss.qualcomm.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-References: <20250606-6-10-rocket-v7-0-dc16cfe6fe4e@tomeuvizoso.net>
- <20250606-6-10-rocket-v7-3-dc16cfe6fe4e@tomeuvizoso.net>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250606-6-10-rocket-v7-3-dc16cfe6fe4e@tomeuvizoso.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2 2/2] virtio-net: xsk: rx: move the xdp->data
+ adjustment to buf_to_xdp()
+To: Bui Quang Minh <minhquangbui99@gmail.com>, netdev@vger.kernel.org
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20250621144952.32469-1-minhquangbui99@gmail.com>
+ <20250621144952.32469-3-minhquangbui99@gmail.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250621144952.32469-3-minhquangbui99@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-06-06 7:28 am, Tomeu Vizoso wrote:
-> This uses the SHMEM DRM helpers and we map right away to the CPU and NPU
-> sides, as all buffers are expected to be accessed from both.
+On 6/21/25 4:49 PM, Bui Quang Minh wrote:
+> This commit does not do any functional changes. It moves xdp->data
+> adjustment for buffer other than first buffer to buf_to_xdp() helper so
+> that the xdp_buff adjustment does not scatter over different functions.
 > 
-> v2:
-> - Sync the IOMMUs for the other cores when mapping and unmapping.
-> 
-> v3:
-> - Make use of GPL-2.0-only for the copyright notice (Jeff Hugo)
-> 
-> v6:
-> - Use mutexes guard (Markus Elfring)
-> 
-> v7:
-> - Assign its own IOMMU domain to each client, for isolation (Daniel
->    Stone and Robin Murphy)
-> 
-> Reviewed-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
-> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
 > ---
->   drivers/accel/rocket/Makefile        |   3 +-
->   drivers/accel/rocket/rocket_device.c |   4 ++
->   drivers/accel/rocket/rocket_device.h |   2 +
->   drivers/accel/rocket/rocket_drv.c    |   7 ++-
->   drivers/accel/rocket/rocket_gem.c    | 115 +++++++++++++++++++++++++++++++++++
->   drivers/accel/rocket/rocket_gem.h    |  27 ++++++++
->   include/uapi/drm/rocket_accel.h      |  44 ++++++++++++++
->   7 files changed, 200 insertions(+), 2 deletions(-)
+>  drivers/net/virtio_net.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/accel/rocket/Makefile b/drivers/accel/rocket/Makefile
-> index abdd75f2492eaecf8bf5e78a2ac150ea19ac3e96..4deef267f9e1238c4d8bd108dcc8afd9dc8b2b8f 100644
-> --- a/drivers/accel/rocket/Makefile
-> +++ b/drivers/accel/rocket/Makefile
-> @@ -5,4 +5,5 @@ obj-$(CONFIG_DRM_ACCEL_ROCKET) := rocket.o
->   rocket-y := \
->   	rocket_core.o \
->   	rocket_device.o \
-> -	rocket_drv.o
-> +	rocket_drv.o \
-> +	rocket_gem.o
-> diff --git a/drivers/accel/rocket/rocket_device.c b/drivers/accel/rocket/rocket_device.c
-> index a05c103e117e3eaa6439884b7acb6e3483296edb..5e559104741af22c528914c96e44558323ab6c89 100644
-> --- a/drivers/accel/rocket/rocket_device.c
-> +++ b/drivers/accel/rocket/rocket_device.c
-> @@ -4,6 +4,7 @@
->   #include <linux/array_size.h>
->   #include <linux/clk.h>
->   #include <linux/dev_printk.h>
-> +#include <linux/mutex.h>
->   
->   #include "rocket_device.h"
->   
-> @@ -16,10 +17,13 @@ int rocket_device_init(struct rocket_device *rdev)
->   	if (err)
->   		return err;
->   
-> +	mutex_init(&rdev->iommu_lock);
-> +
->   	return 0;
->   }
->   
->   void rocket_device_fini(struct rocket_device *rdev)
->   {
-> +	mutex_destroy(&rdev->iommu_lock);
->   	rocket_core_fini(&rdev->cores[0]);
->   }
-> diff --git a/drivers/accel/rocket/rocket_device.h b/drivers/accel/rocket/rocket_device.h
-> index b5d5f1479d56e2fde59bbcad9de2b58cef9a9a4d..10acfe8534f00a7985d40a93f4b2f7f69d43caee 100644
-> --- a/drivers/accel/rocket/rocket_device.h
-> +++ b/drivers/accel/rocket/rocket_device.h
-> @@ -13,6 +13,8 @@
->   struct rocket_device {
->   	struct drm_device ddev;
->   
-> +	struct mutex iommu_lock;
-> +
->   	struct rocket_core *cores;
->   	unsigned int num_cores;
->   };
-> diff --git a/drivers/accel/rocket/rocket_drv.c b/drivers/accel/rocket/rocket_drv.c
-> index b38a5c6264cb4e74d5e381adaeba1426e576fa56..2b8a88db20c408f313f4f4fe36b051c9d5e4829b 100644
-> --- a/drivers/accel/rocket/rocket_drv.c
-> +++ b/drivers/accel/rocket/rocket_drv.c
-> @@ -6,6 +6,7 @@
->   #include <drm/drm_gem.h>
->   #include <drm/drm_ioctl.h>
->   #include <drm/drm_of.h>
-> +#include <drm/rocket_accel.h>
->   #include <linux/array_size.h>
->   #include <linux/clk.h>
->   #include <linux/component.h>
-> @@ -16,6 +17,7 @@
->   #include <linux/pm_runtime.h>
->   
->   #include "rocket_drv.h"
-> +#include "rocket_gem.h"
->   
->   static int
->   rocket_open(struct drm_device *dev, struct drm_file *file)
-> @@ -46,6 +48,8 @@ rocket_postclose(struct drm_device *dev, struct drm_file *file)
->   static const struct drm_ioctl_desc rocket_drm_driver_ioctls[] = {
->   #define ROCKET_IOCTL(n, func) \
->   	DRM_IOCTL_DEF_DRV(ROCKET_##n, rocket_ioctl_##func, 0)
-> +
-> +	ROCKET_IOCTL(CREATE_BO, create_bo),
->   };
->   
->   DEFINE_DRM_ACCEL_FOPS(rocket_accel_driver_fops);
-> @@ -55,9 +59,10 @@ DEFINE_DRM_ACCEL_FOPS(rocket_accel_driver_fops);
->    * - 1.0 - initial interface
->    */
->   static const struct drm_driver rocket_drm_driver = {
-> -	.driver_features	= DRIVER_COMPUTE_ACCEL,
-> +	.driver_features	= DRIVER_COMPUTE_ACCEL | DRIVER_GEM,
->   	.open			= rocket_open,
->   	.postclose		= rocket_postclose,
-> +	.gem_create_object	= rocket_gem_create_object,
->   	.ioctls			= rocket_drm_driver_ioctls,
->   	.num_ioctls		= ARRAY_SIZE(rocket_drm_driver_ioctls),
->   	.fops			= &rocket_accel_driver_fops,
-> diff --git a/drivers/accel/rocket/rocket_gem.c b/drivers/accel/rocket/rocket_gem.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..61b7f970a6885aa13784daa1222611a02aa10dee
-> --- /dev/null
-> +++ b/drivers/accel/rocket/rocket_gem.c
-> @@ -0,0 +1,115 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright 2024-2025 Tomeu Vizoso <tomeu@tomeuvizoso.net> */
-> +
-> +#include <drm/drm_device.h>
-> +#include <drm/drm_utils.h>
-> +#include <drm/rocket_accel.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/iommu.h>
-> +
-> +#include "rocket_device.h"
-> +#include "rocket_drv.h"
-> +#include "rocket_gem.h"
-> +
-> +static void rocket_gem_bo_free(struct drm_gem_object *obj)
-> +{
-> +	struct rocket_device *rdev = to_rocket_device(obj->dev);
-> +	struct rocket_gem_object *bo = to_rocket_bo(obj);
-> +	size_t unmapped;
-> +
-> +	drm_WARN_ON(obj->dev, bo->base.pages_use_count > 1);
-> +
-> +	guard(mutex)(&rdev->iommu_lock);
-> +
-> +	unmapped = iommu_unmap(bo->domain, bo->base.sgt->sgl->dma_address, bo->size);
-> +	drm_WARN_ON(obj->dev, unmapped != bo->size);
-> +
-> +	/* This will unmap the pages from the IOMMU linked to core 0 */
-
-This means "DMA-unmap the pages", right? If things have been done 
-correctly then the iommu_unmap() above will already have removed the 
-actual translation all cores' IOMMUs were using.
-
-> +	drm_gem_shmem_free(&bo->base);
-> +}
-> +
-> +static const struct drm_gem_object_funcs rocket_gem_funcs = {
-> +	.free = rocket_gem_bo_free,
-> +	.print_info = drm_gem_shmem_object_print_info,
-> +	.pin = drm_gem_shmem_object_pin,
-> +	.unpin = drm_gem_shmem_object_unpin,
-> +	.get_sg_table = drm_gem_shmem_object_get_sg_table,
-> +	.vmap = drm_gem_shmem_object_vmap,
-> +	.vunmap = drm_gem_shmem_object_vunmap,
-> +	.mmap = drm_gem_shmem_object_mmap,
-> +	.vm_ops = &drm_gem_shmem_vm_ops,
-> +};
-> +
-> +struct drm_gem_object *rocket_gem_create_object(struct drm_device *dev, size_t size)
-> +{
-> +	struct rocket_gem_object *obj;
-> +
-> +	obj = kzalloc(sizeof(*obj), GFP_KERNEL);
-> +	if (!obj)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	obj->base.base.funcs = &rocket_gem_funcs;
-> +
-> +	return &obj->base.base;
-> +}
-> +
-> +int rocket_ioctl_create_bo(struct drm_device *dev, void *data, struct drm_file *file)
-> +{
-> +	struct rocket_file_priv *rocket_priv = file->driver_priv;
-> +	struct drm_rocket_create_bo *args = data;
-> +	struct rocket_device *rdev = to_rocket_device(dev);
-> +	struct drm_gem_shmem_object *shmem_obj;
-> +	struct rocket_gem_object *rkt_obj;
-> +	struct drm_gem_object *gem_obj;
-> +	struct sg_table *sgt;
-> +	int ret;
-> +
-> +	shmem_obj = drm_gem_shmem_create(dev, args->size);
-> +	if (IS_ERR(shmem_obj))
-> +		return PTR_ERR(shmem_obj);
-> +
-> +	gem_obj = &shmem_obj->base;
-> +	rkt_obj = to_rocket_bo(gem_obj);
-> +
-> +	rkt_obj->domain = rocket_priv->domain;
-> +	rkt_obj->size = args->size;
-> +	rkt_obj->offset = 0;
-> +
-> +	ret = drm_gem_handle_create(file, gem_obj, &args->handle);
-> +	drm_gem_object_put(gem_obj);
-> +
-> +	guard(mutex)(&rdev->iommu_lock);
-> +
-> +	if (ret)
-> +		goto err;
-> +
-> +	sgt = drm_gem_shmem_get_pages_sgt(shmem_obj);
-> +	if (IS_ERR(sgt)) {
-> +		ret = PTR_ERR(sgt);
-> +		goto err;
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index 1eb237cd5d0b..4e942ea1bfa3 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -1159,7 +1159,19 @@ static struct xdp_buff *buf_to_xdp(struct virtnet_info *vi,
+>  		return NULL;
+>  	}
+>  
+> -	xsk_buff_set_size(xdp, len);
+> +	if (first_buf) {
+> +		xsk_buff_set_size(xdp, len);
+> +	} else {
+> +		/* This is the same as xsk_buff_set_size but with the adjusted
+> +		 * xdp->data.
+> +		 */
+> +		xdp->data = xdp->data_hard_start + XDP_PACKET_HEADROOM;
+> +		xdp->data -= vi->hdr_len;
+> +		xdp->data_meta = xdp->data;
+> +		xdp->data_end = xdp->data + len;
+> +		xdp->flags = 0;
 > +	}
 > +
-> +	ret = iommu_map_sgtable(rocket_priv->domain,
-> +				shmem_obj->sgt->sgl->dma_address,
+>  	xsk_buff_dma_sync_for_cpu(xdp);
+>  
+>  	return xdp;
+> @@ -1284,7 +1296,7 @@ static int xsk_append_merge_buffer(struct virtnet_info *vi,
+>  			goto err;
+>  		}
+>  
+> -		memcpy(buf, xdp->data - vi->hdr_len, len);
+> +		memcpy(buf, xdp->data, len);
+>  
+>  		xsk_buff_free(xdp);
+>  
 
-Is this expected to be a DMA address implicitly generated by the 
-dma_map_sg() in drm_gem_shmem_get_pages_sgt()? I would strongly 
-recommend against relying on that - at the moment it happens that 
-iommu-dma still does complete dma_map_* operations in the unattached DMA 
-ops domain, mostly redundantly, but I've long been meaning to optimise 
-that so that it only performs any necessary cache maintenance on the 
-underlying memory when the caller is already using their own IOMMU 
-domain. At that point the returned DMA address is likely to just be the 
-PA, and this tactic probably won't work.
+I'm unsure if this change is in the right direction because it almost
+open-code the existing xsk_buff_set_size() helper - any changes there
+should be reflected here, too.
 
-> +				shmem_obj->sgt,
-> +				IOMMU_READ | IOMMU_WRITE);
-> +	if (ret < 0 || ret < args->size) {
-> +		drm_err(dev, "failed to map buffer: size=%d request_size=%u\n",
-> +			ret, args->size);
-> +		ret = -ENOMEM;
-> +		goto err;
-> +	}
-> +
-> +	/* iommu_map_sgtable might have aligned the size */
-> +	rkt_obj->size = ret;
-> +	dma_sync_sgtable_for_device(dev->dev, shmem_obj->sgt, DMA_BIDIRECTIONAL);
-
-What's this for? The buffer is already in for_device state when it 
-initially comes back from get_pages_sgt, and hasn't even been touched 
-yet anyway.
+Also AFAICS xdp->data will now carry a different value, and I guess such
+change is user-visible from the attached xdp program. The commit message
+should at least mentions such fact.
 
 Thanks,
-Robin.
 
-> +	args->offset = drm_vma_node_offset_addr(&gem_obj->vma_node);
-> +	args->dma_address = sg_dma_address(shmem_obj->sgt->sgl);
-> +
-> +	return 0;
-> +
-> +err:
-> +	drm_gem_shmem_object_free(gem_obj);
-> +
-> +	return ret;
-> +}
-> diff --git a/drivers/accel/rocket/rocket_gem.h b/drivers/accel/rocket/rocket_gem.h
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..e8a4d6213fd80419be2ec8af04583a67fb1a4b75
-> --- /dev/null
-> +++ b/drivers/accel/rocket/rocket_gem.h
-> @@ -0,0 +1,27 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/* Copyright 2024-2025 Tomeu Vizoso <tomeu@tomeuvizoso.net> */
-> +
-> +#ifndef __ROCKET_GEM_H__
-> +#define __ROCKET_GEM_H__
-> +
-> +#include <drm/drm_gem_shmem_helper.h>
-> +
-> +struct rocket_gem_object {
-> +	struct drm_gem_shmem_object base;
-> +
-> +	struct iommu_domain *domain;
-> +	size_t size;
-> +	u32 offset;
-> +};
-> +
-> +struct drm_gem_object *rocket_gem_create_object(struct drm_device *dev, size_t size);
-> +
-> +int rocket_ioctl_create_bo(struct drm_device *dev, void *data, struct drm_file *file);
-> +
-> +static inline
-> +struct  rocket_gem_object *to_rocket_bo(struct drm_gem_object *obj)
-> +{
-> +	return container_of(to_drm_gem_shmem_obj(obj), struct rocket_gem_object, base);
-> +}
-> +
-> +#endif
-> diff --git a/include/uapi/drm/rocket_accel.h b/include/uapi/drm/rocket_accel.h
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..95720702b7c4413d72b89c1f0f59abb22dc8c6b3
-> --- /dev/null
-> +++ b/include/uapi/drm/rocket_accel.h
-> @@ -0,0 +1,44 @@
-> +/* SPDX-License-Identifier: MIT */
-> +/*
-> + * Copyright © 2024 Tomeu Vizoso
-> + */
-> +#ifndef __DRM_UAPI_ROCKET_ACCEL_H__
-> +#define __DRM_UAPI_ROCKET_ACCEL_H__
-> +
-> +#include "drm.h"
-> +
-> +#if defined(__cplusplus)
-> +extern "C" {
-> +#endif
-> +
-> +#define DRM_ROCKET_CREATE_BO			0x00
-> +
-> +#define DRM_IOCTL_ROCKET_CREATE_BO		DRM_IOWR(DRM_COMMAND_BASE + DRM_ROCKET_CREATE_BO, struct drm_rocket_create_bo)
-> +
-> +/**
-> + * struct drm_rocket_create_bo - ioctl argument for creating Rocket BOs.
-> + *
-> + */
-> +struct drm_rocket_create_bo {
-> +	/** Input: Size of the requested BO. */
-> +	__u32 size;
-> +
-> +	/** Output: GEM handle for the BO. */
-> +	__u32 handle;
-> +
-> +	/**
-> +	 * Output: DMA address for the BO in the NPU address space.  This address
-> +	 * is private to the DRM fd and is valid for the lifetime of the GEM
-> +	 * handle.
-> +	 */
-> +	__u64 dma_address;
-> +
-> +	/** Output: Offset into the drm node to use for subsequent mmap call. */
-> +	__u64 offset;
-> +};
-> +
-> +#if defined(__cplusplus)
-> +}
-> +#endif
-> +
-> +#endif /* __DRM_UAPI_ROCKET_ACCEL_H__ */
-> 
+Paolo
 
