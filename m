@@ -1,88 +1,132 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD5B2D8796;
-	Tue, 24 Jun 2025 15:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750777708; cv=pass; b=CJN11n6P7gBHPpOp3jLlF2CZ8TEw7HFoJWeL8o4ME5rsetxTsKk+q1XoAA1IaOXAKKS+PYFXOlCWDW3pqb5f2MvsYxavu8u4QHLj5l2ibjdRCImXTh71nlh0k+941rAjCz/gwrLniMZ1CsuMC+JXRD+fgGUsCQ5y6exTPBqhCSc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750777708; c=relaxed/simple;
-	bh=iFbya3akG5s+WS6JIinMfQGqethChzDGcRe3Sr4acZc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PT2Zl5qUhYC9Lv2eOUIOXL3U8spbnK1mCycxLJtcwmF+IFfZryZeVY4QNMoZMxwhv/LH5tJWiXwcJSxBxIQ31ofDoWvQHFiGWLbvaG4d4pWeULLiZiofBIe8cbSfBuXJxWNbxQvuC33HFlfcXant53LLVOdyfjb9UDVnvnmMb8U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b=FtptMFis; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BD82EA744;
+	Tue, 24 Jun 2025 15:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750777711; cv=none; b=ZfdBq4Vnq9mCcoa2DgfNoeKw/0MkjJIRyCGgc6PuybEy9NPQEpzpFOaflr8XuI7V2jG4H4iXNAO0QAHufETzNBguwKfjmq+zqaLwG1I1MFJ9SEst3Eq8gVrkqjWaUxNdCCxuHONgH91lUVee5fTqHyDuVRMY8IxBnU7Legyb9Jc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750777711; c=relaxed/simple;
+	bh=m8Ej33GQzB/O0lVEDaPm6wBaX2XKl7jtMagUdTuAqt0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lPJFHGBJHNq6774Wy1ojLF9QIvWBiZBtkUJqpJV0vzYG4HdzGpvOABZCYLUwjbtBvUPLuVWTeiu5Bk6psJE0dHAP5ONr2Btkt88qQJATBMWSbPbIa2KGsKvDOI8oE683ttp3GDUyTcakc6TVhLmzo439aPPAXF7aDPtmH2d0hds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rgZh15Q2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b="FtptMFis"
-ARC-Seal: i=1; a=rsa-sha256; t=1750777688; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=j2T9YRPFmYHllAw3Uj+oprvkwNlJuGisTI3I33f9NyyOLPlWD6NhDuy8il1fatk6YzWEAT6XrwlVprtYlftjxk9KXOsWei8/WM3Jt7ueJrqur5UIHs774ZonkCokIsotBBlJA4kWHqrxlsQ/c7E/JH4JKQE0rPpWjI9PNf1xW8s=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750777688; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=iFbya3akG5s+WS6JIinMfQGqethChzDGcRe3Sr4acZc=; 
-	b=h7IxcQ8JPbIC+RE7fTXushzJnYfvEgD8fnuk9Ek59B5Jzz1fUgofQK4SM3ff/+xMIY0rpevizoPXVMBIQJ0JKYpeDAh6oiZD0AxG6tW3hbvbPtaXshOwW54ZZl2eCFnt5w4+LpDIYsNhWD8cCV7Eh2g+WgSa+AdzNWgXGsXtnRE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nfraprado@collabora.com;
-	dmarc=pass header.from=<nfraprado@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750777688;
-	s=zohomail; d=collabora.com; i=nfraprado@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=iFbya3akG5s+WS6JIinMfQGqethChzDGcRe3Sr4acZc=;
-	b=FtptMFisHQLd/sJ12WNGMcjoOI8gkU4MkUTPkZnp2DNG7YTgyEFoITQdqnxu4Wre
-	UYnu71dhwT3nmywqje6WNh6p5cf3qD3zmUCKG3tK3F/VyLInOFxJD9JHoFNLg2FX/Uj
-	9++aNZ2IsPHD1rdDv629KMriuxFmGV+VSst6vEVY=
-Received: by mx.zohomail.com with SMTPS id 1750777687203110.75444813457466;
-	Tue, 24 Jun 2025 08:08:07 -0700 (PDT)
-Message-ID: <639e695859d632c9527d76876df2a48287197fb9.camel@collabora.com>
-Subject: Re: [PATCH v1 0/5] iio: Add support for MT6363/6373 Auxiliary ADC
-From: =?ISO-8859-1?Q?N=EDcolas?= "F. R. A. Prado" <nfraprado@collabora.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	jic23@kernel.org
-Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
- robh@kernel.org,  krzk+dt@kernel.org, conor+dt@kernel.org,
- matthias.bgg@gmail.com,  linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,  linux-mediatek@lists.infradead.org,
- kernel@collabora.com
-Date: Tue, 24 Jun 2025 11:08:05 -0400
-In-Reply-To: <20250623120028.108809-1-angelogioacchino.delregno@collabora.com>
-References: 
-	<20250623120028.108809-1-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rgZh15Q2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4159C4CEE3;
+	Tue, 24 Jun 2025 15:08:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750777710;
+	bh=m8Ej33GQzB/O0lVEDaPm6wBaX2XKl7jtMagUdTuAqt0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=rgZh15Q2lHVz5aZKbGguxCW0n30I1j38k0eTJP0Zxr97SVoQHjmofPJSszyO1ujUU
+	 eifuaVVYXEhJi9Ge+0+9oBdXFVmMT5yU8FxITicUXOB6ymAmf/neVCeU/yRSUjpgEp
+	 aENXxvZEF44qYK/KIqIUWJABWtVXxB7Fgez+4HhzMwhsmd3AxJkTF4hL7+cTxeDavM
+	 KMMT2HHQS2HyMCnHZQNqDPFAHiWXVZ45geiKmOv2v8Dsqwiw7czuBA3XJ4BRR9lJCi
+	 nnPTNJexUm6qUVusngC5aq89HZAE5bviMNHigS6eV/euNPvqeU0XvC3adFfYBE4c3U
+	 05TpIqE1FOZtQ==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 36/66] kconfig: gconf: use GtkFileChooser in on_load1_activate()
+Date: Wed, 25 Jun 2025 00:05:24 +0900
+Message-ID: <20250624150645.1107002-37-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250624150645.1107002-1-masahiroy@kernel.org>
+References: <20250624150645.1107002-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2025-06-23 at 14:00 +0200, AngeloGioacchino Del Regno wrote:
-> This series adds support for the Auxiliary ADC IP found on the new
-> MediaTek MT6363 and MT6373 PMICs, found on board designs featuring
-> the MT8196 Chromebook SoC or the MT6991 Dimensity 9400 Smartphone
-> SoC.
->=20
-> AngeloGioacchino Del Regno (5):
-> =C2=A0 dt-bindings: iio: adc: mt6359: Add bindings for MT6363 PMIC AuxADC
-> =C2=A0 dt-bindings: iio: adc: mt6359: Add bindings for MT6373 PMIC AuxADC
-> =C2=A0 iio: adc: mt6359: Add ready register index and mask to channel dat=
-a
-> =C2=A0 iio: adc: mt6359: Add support for MediaTek MT6363 PMIC AUXADC
-> =C2=A0 iio: adc: mt6359: Add support for MediaTek MT6373 PMIC AUXADC
+gtk_file_selection_new() is deprecated, and gtk_file_chooser_dialog_new()
+should be used instead. [1]
 
-For the entire series:
+[1]: https://gitlab.gnome.org/GNOME/gtk/-/blob/2.24.33/docs/reference/gtk/tmpl/gtkfilesel.sgml?ref_type=tags#L156
 
-Reviewed-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-(as I internally reviewed this before submission)
+ scripts/kconfig/gconf.c | 58 ++++++++++++++++++++---------------------
+ 1 file changed, 29 insertions(+), 29 deletions(-)
 
---=20
-Thanks,
+diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
+index 8c60b9f25eaa..f33f39d50f3d 100644
+--- a/scripts/kconfig/gconf.c
++++ b/scripts/kconfig/gconf.c
+@@ -157,38 +157,38 @@ static void text_insert_msg(const char *title, const char *message)
+ 
+ /* Menu & Toolbar Callbacks */
+ 
+-
+-static void
+-load_filename(GtkFileSelection * file_selector, gpointer user_data)
+-{
+-	const gchar *fn;
+-
+-	fn = gtk_file_selection_get_filename(GTK_FILE_SELECTION
+-					     (user_data));
+-
+-	if (conf_read(fn))
+-		text_insert_msg("Error", "Unable to load configuration !");
+-	else
+-		display_tree_part();
+-}
+-
+ static void on_load1_activate(GtkMenuItem *menuitem, gpointer user_data)
+ {
+-	GtkWidget *fs;
++	GtkWidget *dialog;
++	GtkFileChooser *chooser;
++	gint res;
+ 
+-	fs = gtk_file_selection_new("Load file...");
+-	g_signal_connect(GTK_OBJECT(GTK_FILE_SELECTION(fs)->ok_button),
+-			 "clicked",
+-			 G_CALLBACK(load_filename), (gpointer) fs);
+-	g_signal_connect_swapped(GTK_OBJECT
+-				 (GTK_FILE_SELECTION(fs)->ok_button),
+-				 "clicked", G_CALLBACK(gtk_widget_destroy),
+-				 (gpointer) fs);
+-	g_signal_connect_swapped(GTK_OBJECT
+-				 (GTK_FILE_SELECTION(fs)->cancel_button),
+-				 "clicked", G_CALLBACK(gtk_widget_destroy),
+-				 (gpointer) fs);
+-	gtk_widget_show(fs);
++	dialog = gtk_file_chooser_dialog_new("Load file...",
++					     GTK_WINDOW(user_data),
++					     GTK_FILE_CHOOSER_ACTION_OPEN,
++					     "_Cancel", GTK_RESPONSE_CANCEL,
++					     "_Open", GTK_RESPONSE_ACCEPT,
++					     NULL);
++
++	chooser = GTK_FILE_CHOOSER(dialog);
++	gtk_file_chooser_set_filename(chooser, conf_get_configname());
++
++	res = gtk_dialog_run(GTK_DIALOG(dialog));
++	if (res == GTK_RESPONSE_ACCEPT) {
++		char *filename;
++
++		filename = gtk_file_chooser_get_filename(chooser);
++
++		if (conf_read(filename))
++			text_insert_msg("Error",
++					"Unable to load configuration!");
++		else
++			display_tree_part();
++
++		g_free(filename);
++	}
++
++	gtk_widget_destroy(GTK_WIDGET(dialog));
+ }
+ 
+ static void on_save_activate(GtkMenuItem *menuitem, gpointer user_data)
+-- 
+2.43.0
 
-N=C3=ADcolas
