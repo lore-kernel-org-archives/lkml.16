@@ -1,55 +1,55 @@
-Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52ADF26AA91
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 23:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB6226B744
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 23:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750807147; cv=none; b=rLwSw+yaxypCenrJkllJbB751u0Bwe4ZVw0KFKClD7IgEupf2OwgBczjQxNse/njoGDWzkP4sYilmWsbdBsPNJesUxV/qcUztLqt9V+idHTFJGSdeyqO1yYdthc7e+yDkly3CSM03qMXhZ6sIunQ5qkcJfqU7xTTBAyJmTMD0ZM=
+	t=1750807151; cv=none; b=ZRO/V6rdGqIXLEmuqIEpvnyr3lUO4ZLC3G7/2hjjkEESVWcEvc8V4+773oYXozKtNnCIhfWp3Ueb6BzTlj71PHqtSnmDVsZVK+859VvnPp1bZU8+CMoTQhTCL9wwmlMcKKA6OShwfax1zeJYD+H+X6H9R4gCfdN0aSUMH4/oki0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750807147; c=relaxed/simple;
-	bh=UP7c8EZMJCmdtSRgS/00+UGz7KyMyLEWykYE2tYt5nQ=;
+	s=arc-20240116; t=1750807151; c=relaxed/simple;
+	bh=Ov7KYM5urbb+duQlFNaUQMctYTgtbQGKJ1mEoTEkiAk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VxsHCAWqNeUALGkvnkB3Td77uKSTmSU3fV3fFTpGi6BvZ5KEcFI1Ezv6yaS0ZMGb0ACajSolwye1oulwGOIIoFoMNPwHnvHhPcGnTFDLSsgYGDe05+lpRTcurPyCFI67DNcnFNnqlorW0HkBSaHUFge1kKFIUAnE0lKti6BpAdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s35A0cot; arc=none smtp.client-ip=209.85.160.73
+	 To:Cc:Content-Type; b=bVe+tVBtkeQx2tQ5GQpDO/z8Xg8Lq28+fpykPRCRHEdR4QTKy0P26aukUnzl8LSpBGa5SHzfXIjb2KBvh1wtBX8sHXZgnHT9uqmqfGDrd+lsIxUqevhga9PyI2Zt4kVhmzDpXxpOkT64B/l1CU44YTJZFSIvknxishroWOgtaAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=StgIEZNo; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s35A0cot"
-Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2e933923303so3944863fac.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:19:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="StgIEZNo"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74890390d17so716027b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:19:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750807144; x=1751411944; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750807148; x=1751411948; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=c3nTtbe0Tv/hCcFjA75rcndb1ZtC/Z05byf6Qgte1y0=;
-        b=s35A0cotC0RZvQYmz67TRf3d8l/OuEH9XcTfCAAAEiN+SA+R5WlYmu8RmDQyJ2SWnX
-         JmUpl40WHHbZ8JiuiYKVvuSSa00X565vnqN0Vxpqa9yrLHA7nQg52Gs6s3wV1gMCR8nJ
-         jhAHtd1M2XaYVw+B04uoeaUz++HtFSkFBauWSESAg7pNy9GIQbyduXS26vMHRCGceLcB
-         YlsCc6yJgzJoCqyg+CQrcmWxxVkufRWJuRMa9cWCkw9xIbon0s/DTT3RlYeMt2/pm/72
-         MyaoeoacT3kR+Pno5/scNW3oQWTrgL5pUjLzyuprrGKVPvoNGP6ZwA/VxYcIQeKA25dE
-         gc3Q==
+        bh=B1kPy2JCJb4zSJWeggG32MlvxkW2zq73XjOq2Ztu1jk=;
+        b=StgIEZNotgRr9KbKx1Hkb8wAaV2I80CrDLcL8H+MAojsJn6LXNJ1iKHEyYiGeypeij
+         HTKFJsQ1FA/4jqcKChjtGrxjQY37MngWgANyuvZLwAWHLGi8vwy7e/Y7nPaTdjh40FBi
+         TzS9L8m51/MRflJ2WQk0QmJY6eK4nYyOTcKh2p9GsFGR28QMyOcJ7hBGk6XjxO5yr2CT
+         wyYk/KLgfXN4W6mHBzEN/yQ9eEG+m2yVFqNtmTUJmJsvk4xrSu2UHavbQ6ORSLtNxG9I
+         qXu2SDBDJUGnlU623uJbgzCgS/dq4XXtkSYrbGCnL90yJhSbNdlD6lITncc2B09YBVxl
+         P+TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750807144; x=1751411944;
+        d=1e100.net; s=20230601; t=1750807148; x=1751411948;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c3nTtbe0Tv/hCcFjA75rcndb1ZtC/Z05byf6Qgte1y0=;
-        b=K8GQ1OmqUeWv3OPfpUsoYYSgym1tRLk02wrDYJxSkL8BtXiZDSKDIp89DyMX3uliZw
-         JeyG3P/KSZA7xUkT65wQytcoLOCOZmL5lW9HrSrGlDuvtthzhP1y68MEEFHqU+rFMO3Z
-         nuQwkyEfrjKHm6sl06TC915aFq3FUFyv3aEaOA1wDTBqb371urLaDfh9iiDihYKdwdiN
-         xtGurUTYmJTSVrZkHTJkFz4HXv2awUqFB7SIXkoNZBgGTaAGeYgmgXkaX20F6x7Qtdvg
-         DwxFCguEfonAOvIq8d/Fv4rp+1GXeabvXphiapSfl3gBkxxLP06TVJsdq/2Osfj88uzU
-         N63A==
-X-Forwarded-Encrypted: i=1; AJvYcCXzmT8wmvMGIhLW3iLmedQ8P6CyTrtT5KyS3zndRsVCpdV63dIP/ze+Ov48MR6AHTqg7VyiuteVfXT81KU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfPgt37qsFq9MGJnixV9FltQzSqHFZgDrA8dfdALL4a9vFMjys
-	C/PmBQfXJq1BTZi9eBv+icGUWdAG2aYR88kZKm2GmUGPTbZZopZYAZCN6dxixoIrcXos/FXZisq
-	fQPogzegqOA==
-X-Google-Smtp-Source: AGHT+IFXWZZ1CRCWcrDta6qiLM+gayDxk+xFJqGOzfqYGuNTUXFKwCrv6FyBo0yt7uR6ntZsx4wgNnWjQYGt
-X-Received: from oabtd5.prod.google.com ([2002:a05:6871:8785:b0:2d5:2492:cc14])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6871:6101:b0:2bc:7811:5bb8
- with SMTP id 586e51a60fabf-2efb2367241mr929848fac.18.1750807144437; Tue, 24
- Jun 2025 16:19:04 -0700 (PDT)
-Date: Tue, 24 Jun 2025 16:18:35 -0700
+        bh=B1kPy2JCJb4zSJWeggG32MlvxkW2zq73XjOq2Ztu1jk=;
+        b=GBRvKREuYPpQiMiSi/0QGEMsaykCDcKaSuQLW+7yuzCrWqi+q+SFJEIujhbrDc4lrk
+         qbFMCLRuCYquYu6SqQPHaq35jsO6Cw8sRSlXlfsX2H3ITViW1pgNqwzfG2hJHX/JKPo5
+         424KgXQ061b8EWRQafVmYReOtyX7paWiZJwZ9nUlKSlpD+ep+kgKB/X9egagdFq2BZMl
+         q63xQ+r2n4nq0ABK66/dtBwfd6psY2Q/7yi/GeKikcT2t9egdHPhLn7SRhTLViUmF7tB
+         Y1X17TgapTUvafQu4cVJugvaJ9R8QwlU0VAmyEOOUffqsf0KI2SvyNZQLclVYBm8ZtoN
+         QvOw==
+X-Forwarded-Encrypted: i=1; AJvYcCXiVmvaSUmZ3+Ax+1QJFOvRFmG/RHF8fdUI9hqgIY52syq5+ZO8oMBcqRN46st5/bGNIbtD/TS5rn5QRa0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgX3OLR1gzysh963LxuqAeaIbz1lAgVH3VQeax88XI77tt1a9T
+	7LCch9coNie+skVpqk4MYOjHjSKid9BFmUYyeLl0i1H33k//pAvUL5u1VCwq7GtgZpri8qqBDfL
+	EOs54Z9Hntg==
+X-Google-Smtp-Source: AGHT+IFM/3RFuKFIfuGzUEOUqlkqwyLCKg/Cqd+4H1d7Z9aSC+KCwBKw4SxuPZ/gbvXQWKoQuXWIxobHNqhB
+X-Received: from pfbfa15.prod.google.com ([2002:a05:6a00:2d0f:b0:749:2cc7:bd89])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1826:b0:748:fcfa:8bd5
+ with SMTP id d2e1a72fcca58-74ad4462622mr1658511b3a.3.1750807148521; Tue, 24
+ Jun 2025 16:19:08 -0700 (PDT)
+Date: Tue, 24 Jun 2025 16:18:37 -0700
 In-Reply-To: <20250624231837.179536-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250624231837.179536-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250624231837.179536-2-irogers@google.com>
-Subject: [PATCH v4 1/3] perf parse-events: Avoid scanning PMUs that can't
- contain events
+Message-ID: <20250624231837.179536-4-irogers@google.com>
+Subject: [PATCH v4 3/3] perf tests: Add a DRM PMU test
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -76,182 +75,100 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add perf_pmus__scan_for_event that only reads sysfs for pmus that
-could contain a given event.
+The test opens any DRM devices so that the shell has fdinfo files
+containing the DRM data. The test then uses perf stat to make sure the
+events can be read.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.c | 33 ++++++++-------
- tools/perf/util/pmus.c         | 77 ++++++++++++++++++++++++++++++++++
- tools/perf/util/pmus.h         |  2 +
- 3 files changed, 97 insertions(+), 15 deletions(-)
+ tools/perf/tests/shell/drm_pmu.sh | 78 +++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
+ create mode 100755 tools/perf/tests/shell/drm_pmu.sh
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index d1965a7b97ed..4cd64ffa4fcd 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -490,7 +490,7 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
- 	int ret = 0;
- 	struct evsel *first_wildcard_match = NULL;
- 
--	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
-+	while ((pmu = perf_pmus__scan_for_event(pmu, name)) != NULL) {
- 		LIST_HEAD(config_terms);
- 		struct perf_event_attr attr;
- 
-@@ -1681,7 +1681,8 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 
- 	INIT_LIST_HEAD(list);
- 
--	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
-+	while ((pmu = perf_pmus__scan_for_event(pmu, event_name)) != NULL) {
+diff --git a/tools/perf/tests/shell/drm_pmu.sh b/tools/perf/tests/shell/drm_pmu.sh
+new file mode 100755
+index 000000000000..e629fe0e8463
+--- /dev/null
++++ b/tools/perf/tests/shell/drm_pmu.sh
+@@ -0,0 +1,78 @@
++#!/bin/bash
++# DRM PMU
++# SPDX-License-Identifier: GPL-2.0
 +
- 		if (parse_events__filter_pmu(parse_state, pmu))
- 			continue;
- 
-@@ -1760,19 +1761,21 @@ int parse_events_multi_pmu_add_or_add_pmu(struct parse_events_state *parse_state
- 
- 	pmu = NULL;
- 	/* Failed to add, try wildcard expansion of event_or_pmu as a PMU name. */
--	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
--		if (!parse_events__filter_pmu(parse_state, pmu) &&
--		    perf_pmu__wildcard_match(pmu, event_or_pmu)) {
--			if (!parse_events_add_pmu(parse_state, *listp, pmu,
--						  const_parsed_terms,
--						  first_wildcard_match,
--						  /*alternate_hw_config=*/PERF_COUNT_HW_MAX)) {
--				ok++;
--				parse_state->wild_card_pmus = true;
--			}
--			if (first_wildcard_match == NULL)
--				first_wildcard_match =
--					container_of((*listp)->prev, struct evsel, core.node);
-+	while ((pmu = perf_pmus__scan_matching_wildcard(pmu, event_or_pmu)) != NULL) {
++set -e
 +
-+		if (parse_events__filter_pmu(parse_state, pmu))
-+			continue;
++output=$(mktemp /tmp/perf.drm_pmu.XXXXXX.txt)
 +
-+		if (!parse_events_add_pmu(parse_state, *listp, pmu,
-+					  const_parsed_terms,
-+					  first_wildcard_match,
-+					  /*alternate_hw_config=*/PERF_COUNT_HW_MAX)) {
-+			ok++;
-+			parse_state->wild_card_pmus = true;
-+		}
-+		if (first_wildcard_match == NULL) {
-+			first_wildcard_match =
-+				container_of((*listp)->prev, struct evsel, core.node);
- 		}
- 	}
- 	if (ok)
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index 3bbd26fec78a..e0094f56b8e7 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -19,6 +19,7 @@
- #include "tool_pmu.h"
- #include "print-events.h"
- #include "strbuf.h"
-+#include "string2.h"
- 
- /*
-  * core_pmus:  A PMU belongs to core_pmus if it's name is "cpu" or it's sysfs
-@@ -350,6 +351,82 @@ struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu)
- 	return NULL;
- }
- 
-+struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const char *event)
-+{
-+	bool use_core_pmus = !pmu || pmu->is_core;
++cleanup() {
++  rm -f "${output}"
 +
-+	if (!pmu) {
-+		/* Hwmon filename values that aren't used. */
-+		enum hwmon_type type;
-+		int number;
-+		/*
-+		 * Core PMUs, other sysfs PMUs and tool PMU can take all event
-+		 * types or aren't wother optimizing for.
-+		 */
-+		unsigned int to_read_pmus =  PERF_TOOL_PMU_TYPE_PE_CORE_MASK |
-+			PERF_TOOL_PMU_TYPE_PE_OTHER_MASK |
-+			PERF_TOOL_PMU_TYPE_TOOL_MASK;
-+
-+		/* Could the event be a hwmon event? */
-+		if (parse_hwmon_filename(event, &type, &number, /*item=*/NULL, /*alarm=*/NULL))
-+			to_read_pmus |= PERF_TOOL_PMU_TYPE_HWMON_MASK;
-+
-+		pmu_read_sysfs(to_read_pmus);
-+		pmu = list_prepare_entry(pmu, &core_pmus, list);
-+	}
-+	if (use_core_pmus) {
-+		list_for_each_entry_continue(pmu, &core_pmus, list)
-+			return pmu;
-+
-+		pmu = NULL;
-+		pmu = list_prepare_entry(pmu, &other_pmus, list);
-+	}
-+	list_for_each_entry_continue(pmu, &other_pmus, list)
-+		return pmu;
-+	return NULL;
++  trap - EXIT TERM INT
 +}
 +
-+struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const char *wildcard)
-+{
-+	bool use_core_pmus = !pmu || pmu->is_core;
-+
-+	if (!pmu) {
-+		/*
-+		 * Core PMUs, other sysfs PMUs and tool PMU can have any name or
-+		 * aren't wother optimizing for.
-+		 */
-+		unsigned int to_read_pmus =  PERF_TOOL_PMU_TYPE_PE_CORE_MASK |
-+			PERF_TOOL_PMU_TYPE_PE_OTHER_MASK |
-+			PERF_TOOL_PMU_TYPE_TOOL_MASK;
-+
-+		/*
-+		 * Hwmon PMUs have an alias from a sysfs name like hwmon0,
-+		 * hwmon1, etc. or have a name of hwmon_<name>. They therefore
-+		 * can only have a wildcard match if the wildcard begins with
-+		 * "hwmon".
-+		 */
-+		if (strisglob(wildcard) ||
-+		    (strlen(wildcard) >= 5 && strncmp("hwmon", wildcard, 5) == 0))
-+			to_read_pmus |= PERF_TOOL_PMU_TYPE_HWMON_MASK;
-+
-+		pmu_read_sysfs(to_read_pmus);
-+		pmu = list_prepare_entry(pmu, &core_pmus, list);
-+	}
-+	if (use_core_pmus) {
-+		list_for_each_entry_continue(pmu, &core_pmus, list) {
-+			if (perf_pmu__wildcard_match(pmu, wildcard))
-+				return pmu;
-+		}
-+		pmu = NULL;
-+		pmu = list_prepare_entry(pmu, &other_pmus, list);
-+	}
-+	list_for_each_entry_continue(pmu, &other_pmus, list) {
-+		if (perf_pmu__wildcard_match(pmu, wildcard))
-+			return pmu;
-+	}
-+	return NULL;
++trap_cleanup() {
++  echo "Unexpected signal in ${FUNCNAME[1]}"
++  cleanup
++  exit 1
 +}
++trap trap_cleanup EXIT TERM INT
 +
- static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
- {
- 	bool use_core_pmus = !pmu || pmu->is_core;
-diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-index 8def20e615ad..2794d8c3a466 100644
---- a/tools/perf/util/pmus.h
-+++ b/tools/perf/util/pmus.h
-@@ -19,6 +19,8 @@ struct perf_pmu *perf_pmus__find_by_type(unsigned int type);
- 
- struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu);
- struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
-+struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const char *event);
-+struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const char *wildcard);
- 
- const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
- 
++# Array to store file descriptors and device names
++declare -A device_fds
++
++# Open all devices and store file descriptors. Opening the device will create a
++# /proc/$$/fdinfo file containing the DRM statistics.
++fd_count=3 # Start with file descriptor 3
++for device in /dev/dri/*
++do
++  if [[ ! -c "$device" ]]
++  then
++    continue
++  fi
++  major=$(stat -c "%Hr" "$device")
++  if [[ "$major" != 226 ]]
++  then
++    continue
++  fi
++  echo "Opening $device"
++  eval "exec $fd_count<\"$device\""
++  echo "fdinfo for: $device (FD: $fd_count)"
++  cat "/proc/$$/fdinfo/$fd_count"
++  echo
++  device_fds["$device"]="$fd_count"
++  fd_count=$((fd_count + 1))
++done
++
++if [[ ${#device_fds[@]} -eq 0 ]]
++then
++  echo "No DRM devices found [Skip]"
++  cleanup
++  exit 2
++fi
++
++# For each DRM event
++err=0
++for p in $(perf list --raw-dump drm-)
++do
++  echo -n "Testing perf stat of $p. "
++  perf stat -e "$p" --pid=$$ true > "$output" 2>&1
++  if ! grep -q "$p" "$output"
++  then
++    echo "Missing DRM event in: [Failed]"
++    cat "$output"
++    err=1
++  else
++    echo "[OK]"
++  fi
++done
++
++# Close all file descriptors
++for fd in "${device_fds[@]}"; do
++  eval "exec $fd<&-"
++done
++
++# Finished
++cleanup
++exit $err
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
