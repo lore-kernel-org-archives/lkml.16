@@ -1,168 +1,95 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB46B42056
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9890942056;
+	Tue, 24 Jun 2025 09:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750755635; cv=none; b=FQPdbiAZETc51+FvlhCm9l+lzvI4kPJ+pAX+ee9st6VgvfUK5cGxki4uiEJHy98Tfo71IPELcVuUg1ZkqXjjwlqFjaZYoEeCSnJ3DPCQGz1PKb01j4cLGkTirtzDGuLcVB6HGszGvtExdNRrcpXPi2xmWkoTxUv7ctPW+a/D7M8=
+	t=1750755670; cv=none; b=safuryLgmGgskqaorOzOTvUyzmuG5KWm7KhrYkq2W3lL7OzuEPs9BpvhI1gl7Jkl4cnsUFqaZwJ+mtPmddNV25XzZJ1vRxY3PaMCnqAdgPeX46gm0AlU9ZAwyUUqdP3iO+dRW0hXyw0sbmUVL7WDIHv2/kqCv67VxNW6J093xpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750755635; c=relaxed/simple;
-	bh=U2xQx0rn/8aGgc9dHIi1/pHNKm2foU2fX57mEUJHDOQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uoPMEfqJcS+eznhTDSr+MIJzUzUTFrGpBZoDGuFGpOGgnlvSC65KwjyLEsN6utYyrsZoKz9dQqo5lJUJXL0bbITjJ66sH6AfQinAc1txFGgCkzzO//+6Jn2g0pAk3JJ+ayHxlcN8iaJi6uPjX9tR6xBiRRvSQccY1f6hyxs5N18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IkwDwFTM; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IkwDwFTM"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O7Jvua021620
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:00:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=+NyI67ThhjfZFCRQE5F28n
-	vgsys0I1SbZpACtlofh+8=; b=IkwDwFTMSuXG9jdTws0CFK7qIZG5tWP2fN3wkd
-	3gRD87tpG8nMMVMvxvDuVk0VeT1ArQDxN6i9SYktiPn31zQyRmoPjGAmi0wPferz
-	TTGlR1nJefA6WbMWc6g4otZeYoCy6qx7H3CxpfEpPeJwHrCeJwVRzijS+a6R/z0g
-	62LYG+vB0B9SFk7NbLlVQ9nK6AtqdVSnAXNdQZgGRUB8ZlXYuNfOs/HXOldBThLr
-	pchatsxw3HgKyrCb/P83EQaCf/oOVNA5vfzHn905XFrwmmw4rApFSHKBStI/uGPA
-	jsLUpMenfoSWaZzjX+KnlMSbsPg0bXkUl21VFDklU4sy3ogA==
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ec265ppx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:00:32 +0000 (GMT)
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b2fa1a84566so3108449a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:00:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750755632; x=1751360432;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+NyI67ThhjfZFCRQE5F28nvgsys0I1SbZpACtlofh+8=;
-        b=IM7rZlyG0Qw6sJw9qmBgvDFpcS2QZ+eBtutnjgIEjIo0wqAzk2yAZoLkG6nCJST2sf
-         xI8Fzu7JWzRzh3silUFr9Ck6sF3nhsIfKVozSqMBEJKRLO5FXCNXoxGcnMz27Lf1ITWO
-         HSDWHLYpLOxPqFZaT+wPOmgzPAvk4E9eCxbCaeA36KNaIDNUS6I33lfOCuDYo0owgeyT
-         oYURYTlmkQ14inSsJW8+qnHbeYGi8lPUVmeoatrDP+elNsGMC0u1J2PvWX0yr9Z5T176
-         4LuVcU7w760lVp0Wos3wEzfWvLKntrxb6VQH7ywQJwHbfLvKJmI2JwpgOKCbJptT8EwO
-         UnXA==
-X-Forwarded-Encrypted: i=1; AJvYcCWhRbp1igy4z+LuVCis65U/xikLtf2zOPy8pq8DYOER8eSoUXBZw7QUlbEYEtUpj5R3XVvew7xHX1zieiQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwS/ncuQ12eSTnyd7HuvYDVAmwfUhMv8MBQoIHfwLzVSLH8yWnM
-	v3auLdIlWC3Kd05vGNeDwVCfxizKYdFdmruypqom72iAw/OPDQnXfKrcLgq3eFgGrSuPhBAzOky
-	YQksdMMifdp8R1gCaoYt74hSdt9hjGMcQh3hAf5WyI5Vz3XoxrS/M+Sx4fMykUeSc8gA=
-X-Gm-Gg: ASbGncuN6Efg3X00130ErzYkGh0K6CojsbptPxCFBSzAIgZ63TGKHRfNbif/ifAKkbB
-	sIAh2A7JSmlaztR9ByWS9vTjYHlIe4dwNE8QyjFtF4tOP3s+GccRrj/10QleYDUlzeVZnEWnhoN
-	vmnV9aKH4DO4dcQcZn1GTLrOSd7s1KHYoPOnd9OR975UiyHpRjInJQEE9y2JUARj0IZCMdZnd8n
-	M045/2yjcYt+4p6Hk4t3nTT+WKuh4dXg+BwPAygGurdWybXaD56tAcsUgFyK7ZFy7y4qVC/FOJe
-	wu4k680+aWzfAudyRHb20VpRayQg4GVhG/uTyh1f50/r7DiZziJ3C3fuZVpZbJhfaxjzRCuTsvr
-	AXaFZ5zZJ4eY4/AVTXM+dP5UWQPj0R3HjEcrR92ulDqevJJqeBhJeka3/aQ==
-X-Received: by 2002:a05:6a20:6a0f:b0:1f5:6c7b:8920 with SMTP id adf61e73a8af0-22026e7e31emr24033266637.9.1750755631854;
-        Tue, 24 Jun 2025 02:00:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGdcVenNkz5UxzXqMMWqPIWW9v1GT19pnFNZ9q4LN+b4fsLANqDhBzMgjxLlovaHaAcmWCGpw==
-X-Received: by 2002:a05:6a20:6a0f:b0:1f5:6c7b:8920 with SMTP id adf61e73a8af0-22026e7e31emr24033213637.9.1750755631339;
-        Tue, 24 Jun 2025 02:00:31 -0700 (PDT)
-Received: from hu-kathirav-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749b5e08d11sm1269076b3a.20.2025.06.24.02.00.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 02:00:30 -0700 (PDT)
-From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-Date: Tue, 24 Jun 2025 14:30:26 +0530
-Subject: [PATCH v2] arm64: dts: qcom: ipq5424: Describe the 4-wire UART SE
+	s=arc-20240116; t=1750755670; c=relaxed/simple;
+	bh=ym8ZJ8HnMKNuw/1GIATjLymB1F4nNq9fQbsL8uL4Cbg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FDu3YXr7hcxj7+4M+M5hC7ejit1Ly5vy/IljAkW85oaP95gcnvLdCPlh4KOFESvhA0gpToGpJEyodSCNNmZVs/FvdarVEVNFNbFd+UQ1xGb7KaLxYB6l98GMUClwkCam82tlH53dzN46Dh7qyPmDYqTtJ90ocbtlKfhqIUlXdq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: bbe6c31e50d911f0b29709d653e92f7d-20250624
+X-CTIC-Tags:
+	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN
+	HR_FROM_NAME, HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER
+	HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT
+	HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED
+	SA_TRUSTED, SA_EXISTED, SN_TRUSTED, SN_EXISTED, SPF_NOPASS
+	DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, GTI_FG_BS
+	GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI
+	AMN_C_BU
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:fe8d6283-d40c-4c07-8076-fa4c0cfd3419,IP:0,U
+	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:20
+X-CID-INFO: VERSION:1.1.45,REQID:fe8d6283-d40c-4c07-8076-fa4c0cfd3419,IP:0,URL
+	:0,TC:0,Content:0,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:20
+X-CID-META: VersionHash:6493067,CLOUDID:29580cf158e892b1abf01c06d477fab6,BulkI
+	D:250624170055CA7XSDA3,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|102,TC:n
+	il,Content:0|50,EDM:5,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil
+	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-UUID: bbe6c31e50d911f0b29709d653e92f7d-20250624
+X-User: xiaopei01@kylinos.cn
+Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <xiaopei01@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1371568635; Tue, 24 Jun 2025 17:00:53 +0800
+From: Pei Xiao <xiaopei01@kylinos.cn>
+To: tiwai@suse.com,
+	perex@perex.cz,
+	quic_wcheng@quicinc.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Pei Xiao <xiaopei01@kylinos.cn>
+Subject: [PATCH v2] ALSA: usb-audio: qcom: fix NULL pointer dereference in qmi_stop_session
+Date: Tue, 24 Jun 2025 17:00:47 +0800
+Message-Id: <86ac2939273ac853535049e60391c09d7688714e.1750755508.git.xiaopei01@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250624-ipq5424_hsuart-v2-1-6566dabfe4a6@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAClpWmgC/3WMwQ6CMBAFf4Xs2ZK2tIie/A9DTClFNhEKXSAa0
- n+3cvfyknnJzA7kAjqCa7ZDcBsS+jGBPGVgezM+HcM2MUguNS+lYjjNWkn16Gk1YWFVI4qyKS7
- WiAqSNAXX4fsI3uvEPdLiw+fob+L3/k1tgglmlDuLlvPOcn3zRPm8mpf1w5CngTrG+AW4bRgas
- wAAAA==
-X-Change-ID: 20250624-ipq5424_hsuart-8b136b39ca18
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750755628; l=1705;
- i=kathiravan.thirumoorthy@oss.qualcomm.com; s=20230906;
- h=from:subject:message-id; bh=U2xQx0rn/8aGgc9dHIi1/pHNKm2foU2fX57mEUJHDOQ=;
- b=89q++4S8stJPzoWdCgNns6o4Lzix0HmD6nfkstc2DzbtOCEG0+3QGXanhUbYsUqdvcINowyh7
- VFneObFsUxeDfpn+lxap3tWCipkNtc14jIlwtS477HYWANAlFrM9Ar6
-X-Developer-Key: i=kathiravan.thirumoorthy@oss.qualcomm.com; a=ed25519;
- pk=xWsR7pL6ch+vdZ9MoFGEaP61JUaRf0XaZYWztbQsIiM=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDA3NiBTYWx0ZWRfX+5ZiPUvwHD2Q
- F7ho7pFEqLEal3+hxmvdgXsQWXN4/mxbfuDINeO8pZ3udC9WLYiPoPLh1rp4jqNPbttnxvogAXF
- 0zbWIrBuaRm4j1ii33ZcDCKP6p3k6ZAUNBEyXkuC2jWT4eTHIyEY2hAhFUnjCDvMt8AWm3cSM29
- 1TJhBzBu6jaO7hEUflVpNVQ4F/QGbURJM/qU2LIRp7yFbgGlr3z8sBoG1YWAU6WzMqJnhaxGfwJ
- 1C4Vba+iLzGHOrQuj7Jz3X7076D3pxUjYY23FY0o5tgqbFi8N6IozdxepYfS8RFIY77FLH7Ty8p
- b07GaMPWUoZooRArW5a3Kq8WffhYnE2PnuRUk+dpH5JaBQE4E6Q4F60+IEnUoyI+utARAWHFA9q
- B9JVmMjLwYWE2BcgUPqEMPwNowplvir6MbbG3YAI0kdlXLhQD8+luf9obdQtUqdFv3v1ANIo
-X-Authority-Analysis: v=2.4 cv=XPQwSRhE c=1 sm=1 tr=0 ts=685a6930 cx=c_pps
- a=rz3CxIlbcmazkYymdCej/Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
- a=EDESvqxZEWg_xnwLgQYA:9 a=QEXdDO2ut3YA:10 a=bFCP_H2QrGi7Okbo017w:22
-X-Proofpoint-GUID: 80kPUPM_0P3xJBEdcOHbLig2ZnnBPeRg
-X-Proofpoint-ORIG-GUID: 80kPUPM_0P3xJBEdcOHbLig2ZnnBPeRg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-24_03,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 impostorscore=0 clxscore=1015 suspectscore=0 mlxscore=0
- spamscore=0 phishscore=0 malwarescore=0 mlxlogscore=944 bulkscore=0
- priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506240076
+Content-Transfer-Encoding: 8bit
 
-QUPv3 in IPQ5424 consists of six Serial Engines (SEs). Describe the
-first SE, which supports a 4-wire UART configuration suitable for
-applications such as HS-UART.
+The find_substream() call may return NULL, but the error path
+dereferenced 'subs' unconditionally via dev_err(&subs->dev->dev, ...),
+causing a NULL pointer dereference when subs is NULL.
 
-Note that the required initialization for this SE is not handled by the
-bootloader. Therefore, add the SE node in the device tree but keep it
-disabled. Enable it once Linux gains support for configuring the SE,
-allowing to use in relevant RDPs.
+Fix by switching to &uadev[idx].udev->dev which is always valid
+in this context.
 
-Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
 ---
-Changes in v2:
-- Correct the interrupt number
-- Link to v1: https://lore.kernel.org/r/20250624-ipq5424_hsuart-v1-1-a4e71d00fc05@oss.qualcomm.com
+v2: use uadev[idx].udev->dev
 ---
- arch/arm64/boot/dts/qcom/ipq5424.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ sound/usb/qcom/qc_audio_offload.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq5424.dtsi b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
-index 66bd2261eb25d79051adddef604c55f5b01e6e8b..2b8499422a8a9a2f63e1af9ae8c189bafe690514 100644
---- a/arch/arm64/boot/dts/qcom/ipq5424.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
-@@ -417,6 +417,15 @@ qupv3: geniqup@1ac0000 {
- 			#address-cells = <2>;
- 			#size-cells = <2>;
- 
-+			uart0: serial@1a80000 {
-+				compatible = "qcom,geni-uart";
-+				reg = <0 0x01a80000 0 0x4000>;
-+				clocks = <&gcc GCC_QUPV3_UART0_CLK>;
-+				clock-names = "se";
-+				interrupts = <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+
- 			uart1: serial@1a84000 {
- 				compatible = "qcom,geni-debug-uart";
- 				reg = <0 0x01a84000 0 0x4000>;
-
----
-base-commit: f817b6dd2b62d921a6cdc0a3ac599cd1851f343c
-change-id: 20250624-ipq5424_hsuart-8b136b39ca18
-
-Best regards,
+diff --git a/sound/usb/qcom/qc_audio_offload.c b/sound/usb/qcom/qc_audio_offload.c
+index 5bc27c82e0af..975c1f93e48f 100644
+--- a/sound/usb/qcom/qc_audio_offload.c
++++ b/sound/usb/qcom/qc_audio_offload.c
+@@ -759,7 +759,7 @@ static void qmi_stop_session(void)
+ 			subs = find_substream(pcm_card_num, info->pcm_dev_num,
+ 					      info->direction);
+ 			if (!subs || !chip || atomic_read(&chip->shutdown)) {
+-				dev_err(&subs->dev->dev,
++				dev_err(&uadev[idx].udev->dev,
+ 					"no sub for c#%u dev#%u dir%u\n",
+ 					info->pcm_card_num,
+ 					info->pcm_dev_num,
 -- 
-Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+2.25.1
 
