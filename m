@@ -1,220 +1,176 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EA33596A
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB561CAA4
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:13:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750727338; cv=none; b=OHCgXAls7h9ca+JN8SYuWQp/WnfAd5hVKymM944mW2tZ1Z5UKaeWsZ7WCEfdUKFe4x7Tg+fIZCOl2Q/FmCrbaFVZyw5g7RCjUJZfbJq/5IasFrHIkEiXzaqZx+owrO3nXsHdJ7Qsq0D64o11rdCVlpRWAgqin8ciNjYrBW9kQz4=
+	t=1750727621; cv=none; b=GKVyYXiLjKGwSnuYbF0llmPk+GFUyUk8nlcRnPJMYWzkjdA8OMgtLnxXCGszI4Q6l1zMFvoILwXh9WUjpalxAJKhqGEfpGBZP7BQuhdYfrRGoMnkbK1S9odtClrF3I2ixbyL7sbOFnOJ7z3tMsmZ3EKuWwLru4I2G0ouIkdZSzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750727338; c=relaxed/simple;
-	bh=eMWw5ndDbEfv1KodSgKvCMSmFJsOwgM3lU98zojLdNc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sHL6kd2jvSQl/cs+5wxd98JIvQfVEx/UKBidqoPbZMdxtjzh6AnqJxJ3d8lAdLcWL+IP6dWAJXmYe4VRYFdD2V6EnQJcSP3Exv2b7LoFHVzRcepbALWRuMEj3cyHkF97OlEvsHN2UC5RTs6bjW4oyfV5JUhzUK70XtArOgzFg64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r5Dcc6Yg; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750727621; c=relaxed/simple;
+	bh=VGy/OrSdS+zEFlmp155vWuQT9qZwR0kehtJ/PDkK2tU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sgv+VToMYkwKeDBJUkIqm6F8N7fMeJ1Oz6Dpx8DDC8HhE7Ori2r7ObNvQIQQVrbpnM7DkbsteuUTl8LbWk8YsZyoXq6I8iZf3p89TLwbVPa/+NxgmNpeJZnnNqxClPPrvC3FpB1fsnbvHPk1i+v5bGulUcIlkTe4ps/Q6BCoJu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=a0qZF8Sm; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r5Dcc6Yg"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2358de17665so40501875ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:08:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750727336; x=1751332136; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xJ1lEgrEzsoYiZqICzDazvRV6mMCnWUn1uxHW03+Hc0=;
-        b=r5Dcc6YgSJ5lofGjUV71HeXIAc3oT4VaiVR8j6UOs/coBevWihWMp38aGWdFmGL2hH
-         4sImx+CgEF3iFgzpTgZ2KZw0zJS/+fcOAE++Qhdcyjpyk305XuqYzFjtGEx9On74ikx/
-         SRq5cqYWmbA0nhoIfh/7SRzQEwU2AUfklQIcyg0F5YNAkebFCC2GblpbY4UGpk92VGQv
-         szoBdWYW3+Tb4e4celpWIpdBkSdgFk1ENlks50F3sI7qGd+MB3aAK42vyvW83A3bHHLc
-         i9CqJ/xbUrwgC7+OtSF5740AECZgKsD1BbF2XWSgrRCIMdowGe4KmRnBROIIW1dJz4fz
-         fW4Q==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="a0qZF8Sm"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NJBsQH020768
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:13:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=omXN1QrVaEAiubR5W6h2cDwi
+	TSFzei86M2WLLnOPK30=; b=a0qZF8SmTs7735/XCiRuZZs4mxqKXYVSoc7aUyPx
+	dcDwp4CPxO+lr7gNSHJQNWdbUBs2mel9+vucNtHy3iLhzGw8Md3N9hfwsnk/+t4x
+	a+zSXB4CwkrgaTy+GJVyPL6nB/eNaxYG4aHm+OytwYR+TtxF7Zd4k+VuRdJgP0Qh
+	+W+S8vf/MYauBLwbktii/LMppVIY9lk/1rPyChuUfWXvzHoPU4WzHRarhgPSvgZ3
+	gVD//TB+PbhkraPwmK9Gnz8ZoTLCjlLBZoCD11NG6whfNLupawYo0khaL4pMqou/
+	I/qvJDXRNTw+emFi8j4o0oFkwkoIdpS5BttrRiDvJS5qtA==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f4b3t8fx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:13:38 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6fabb9286f9so105595606d6.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:13:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750727336; x=1751332136;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xJ1lEgrEzsoYiZqICzDazvRV6mMCnWUn1uxHW03+Hc0=;
-        b=fmABaxpfww2s2badrMtnb00OcJP7Duj0ClVppWz21goTkZSLjfGSrHrQgzjyXjM8HF
-         RfytWd2JdmxM9zGirmnHp86Yid5FRB/h6wtMLb+b1PefOwpYrZTw6elOOIk3vh73xlIn
-         tNYNX2+MgKYRucPTLlLdjW1HB6sWQ/cjB2fBk/DVFlcrqNTaBNtMNbkrpIJiOEcI3QDU
-         hdILIQMorkklso6iu9Vv5NrFddVd2Xqp7aK+t2zIq17GWIqBsvg/cKAvqHzL/hpewnU4
-         VJ4A6/kRUnuqHSgZAQ1aZEkEFi6zVswr7NG7WtXeMxY80Uzl4szqOBXFWxZDt6DOEjNB
-         A/bQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX04/Ld6xD0L9vmvVEMtO01NSSoMDlNJHJbiVFi0TmFFVhUejLogwu96ddzYYfMaHTWim75BPOzFN/xhQs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkJpP+K9qTnyzM7qj+Lx2vO296V3wsXNug+VObFZMRb3DV190a
-	38X2/s7h/j33dCiRiirw6wBMsWQ3mL02Q+ipeG2Cfrdrrrm9nBwA9wdf/iODo2+lKBcd1W6hBBP
-	d9o7D7w==
-X-Google-Smtp-Source: AGHT+IEHgG5RCDlHOHYvIT1InI/X9679DE6zAj9fXBZdlryoSXwTtJsa10m//EULIFNlj4a8kg5hHySHPSw=
-X-Received: from plap2.prod.google.com ([2002:a17:902:f082:b0:223:690d:fd84])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ea0c:b0:235:e71e:a37b
- with SMTP id d9443c01a7336-237d99bcf92mr232624445ad.34.1750727336094; Mon, 23
- Jun 2025 18:08:56 -0700 (PDT)
-Date: Mon, 23 Jun 2025 18:08:54 -0700
-In-Reply-To: <20250326194423.3717668-3-yosry.ahmed@linux.dev>
+        d=1e100.net; s=20230601; t=1750727617; x=1751332417;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=omXN1QrVaEAiubR5W6h2cDwiTSFzei86M2WLLnOPK30=;
+        b=EfH7b6Sx82Ck8m5pDtrX2sGUnhsKVmzrmtHO300NXVaJ4VqGlLwJxmy/10gAOxZSrt
+         FBEjup637DHe9vAoUvqi72shK6eO94hRseybugdf7LGLNaPlcQWUbSHNBQdGQeuuagm/
+         jJIzf3M1/lFXcafHlEDyCOl2CbNgbydpwao58f4afq9uYcPlCh1tjHG+lPK68F/mbTum
+         eE0yragzah0GLxbZDSXGSDDuKgS/7hrC6QTreiXnRBZSNro5UHyDl09zg0Y1HrS6tADj
+         R/xlxjZaJYFHZ0oYDT+qk8CWXxT6WIpCdneQxpetcXNyyYLFOgpyFMJaWlW+a0TADvyR
+         bD5g==
+X-Forwarded-Encrypted: i=1; AJvYcCUsmAuCEjKr3c2aICz6BoOu4VWwqXRnEFPmyZqY0OCeIAEbA/0/avH5rAXR1sGcmEsCXDRzPctnnXbWrrM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5eo9lcXHfRcg/vU3qDKUEGTXetO/6HKjFE8qgWgDqUw4ATRme
+	oJvwd8nTs1drA/oHl/tzOxvubwGzjSkKX43o7U0oeIyoWzzBtNK+FQ/LjO6zfu2qPLcUDeoSY6H
+	MSXYy/eJI1xu92BkNYk7PCC8wjhDjcuV2YXqSLIhZjpFQv0hXvmMoEPGnHD3WF/RixWI=
+X-Gm-Gg: ASbGncv6F1QPLz1c37v/e5D1uUpX4lxgw4wamxgt57V/h1gG/n8punC/msuK7Dji4Jb
+	C4aRa72wDOTZ44ZeBD8lJVQEjkIVz8BJns3prdXbsBBmqLrbvebGzWCGm0GAH6L9xhjF14oTHBF
+	7zxxXmjZn1KnkA2tGR9SA1RQdqRRvFliSDSwArAw5APx4++xIY89GLWcZLxEX9lkNsFYqG7maD5
+	JLvUpjrT6OAQ/RdvcXVNfiZzGRs5TJFpdYpK6tAfn9aG1CDKF1qSs6pC+CqYMZBzw7NmQYUBaJj
+	u6jk11Y06nmul+87ZmhCqmjZXLSrB0zajdH64XG4059/LcJdRM1xtLmDeP4I5qK9EAgygNlZMD5
+	gtj/RnEefBVi2Q08FD5Job5odMOTIjtpuAjQ=
+X-Received: by 2002:a05:6214:4885:b0:6fa:9f9b:8df0 with SMTP id 6a1803df08f44-6fd0a534772mr247011496d6.20.1750727617396;
+        Mon, 23 Jun 2025 18:13:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHf0auLpYN0CUaZzjP0PLyXb21cf4Pz4vSa1TJZLvFhizd8MrDZr4jH9F8IbE472UXCsUvp7g==
+X-Received: by 2002:a05:6214:4885:b0:6fa:9f9b:8df0 with SMTP id 6a1803df08f44-6fd0a534772mr247011186d6.20.1750727616959;
+        Mon, 23 Jun 2025 18:13:36 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32b980dd1bcsm14793011fa.95.2025.06.23.18.13.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 18:13:36 -0700 (PDT)
+Date: Tue, 24 Jun 2025 04:13:34 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Johan Hovold <johan@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] firmware: qcom: uefisecapp: add support for R/O
+ UEFI vars
+Message-ID: <diarijcqernpm4v5s6u22jep3gzdrzy7o4dtw5wzmlec75og6y@wlbyjbtvnv3s>
+References: <20250621-more-qseecom-v2-0-6e8f635640c5@oss.qualcomm.com>
+ <20250621-more-qseecom-v2-2-6e8f635640c5@oss.qualcomm.com>
+ <aFloifxONXnQbVg6@hovoldconsulting.com>
+ <aFlps9iUcD42vN4w@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250326193619.3714986-1-yosry.ahmed@linux.dev>
- <20250326194423.3717668-1-yosry.ahmed@linux.dev> <20250326194423.3717668-3-yosry.ahmed@linux.dev>
-Message-ID: <aFn6pqLr6pShBfaU@google.com>
-Subject: Re: [RFC PATCH 22/24] KVM: nSVM: Handle INVLPGA interception correctly
-From: Sean Christopherson <seanjc@google.com>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jim Mattson <jmattson@google.com>, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Rik van Riel <riel@surriel.com>, Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFlps9iUcD42vN4w@hovoldconsulting.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDAwOCBTYWx0ZWRfX2Prfx422IjTV
+ xUyFeHz1Fnv8lUsPXmPVL78/SrdWVa5x8F7ce6U4Z8qcSdHNjoFMqIdWB/AcTZQcT2UBLB6EUKc
+ VBTyM4qUFdfxqC3fMMsX5zC4cRmIQIMiY0uE1Ji8ZQ1DOjM+Jppex6D7OWiOhXlQIkewRk0fXix
+ eH2pKmzVcJKDeh5zmKPOqGZCfgHnGMJDU+fgz/7hFmerR4OZtOpHhWS88Ew6NFi0eSpkrIgPeY+
+ F/ed1B1Lb4jobQUjbyWlfGXBZO3Co7iWox3wzJ0SZgM2eLaBkivN9olrR5GjpWo5FbnL3We63SB
+ J1ViVuKgZ+sKXGbWE1TG/dSVPBZ+a4WSQNM+c02CKTzwTpQBOUD+55ynv7NsZURrB0D55I8keg7
+ 2QXIGExuLct7zJoOuROzuophMBihE9MWnN85ZBkBDdHRYayepqm8F2CtTC1Bx63yKjF/MwHQ
+X-Proofpoint-ORIG-GUID: S-clbjohoJJb2of2_EY0IyS87oAm3-nh
+X-Proofpoint-GUID: S-clbjohoJJb2of2_EY0IyS87oAm3-nh
+X-Authority-Analysis: v=2.4 cv=A8BsP7WG c=1 sm=1 tr=0 ts=6859fbc2 cx=c_pps
+ a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=kl57v_HrwZeO2vo7P20A:9 a=CjuIK1q_8ugA:10
+ a=1HOtulTD9v-eNWfpl4qZ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-23_08,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0
+ phishscore=0 adultscore=0 impostorscore=0 suspectscore=0 mlxscore=0
+ clxscore=1015 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506240008
 
-On Wed, Mar 26, 2025, Yosry Ahmed wrote:
-> Currently, INVPLGA interception handles it like INVLPG, which flushes
-> L1's TLB translations for the address. It was implemented in this way
-> because L1 and L2 shared an ASID. Now, L1 and L2 have separate ASIDs. It
-> is still harmless to flush L1's translations, but it's only correct
-> because all translations are flushed on nested transitions anyway.
+On Mon, Jun 23, 2025 at 04:50:27PM +0200, Johan Hovold wrote:
+> On Mon, Jun 23, 2025 at 04:45:30PM +0200, Johan Hovold wrote:
+> > On Sat, Jun 21, 2025 at 10:56:11PM +0300, Dmitry Baryshkov wrote:
+> > > For some platforms (e.g. Lenovo Yoga C630) we don't yet know a way to
+> > > update variables in the permanent storage. However being able to read
+> > > the vars is still useful as it allows us to get e.g. RTC offset.
+> > > 
+> > > Add a quirk for QSEECOM specifying that UEFI variables for this platform
+> > > should be registered in read-only mode.
+> > > 
+> > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> > > ---
+> > >  drivers/firmware/qcom/qcom_qseecom_uefisecapp.c | 18 +++++++++++++++++-
+> > >  include/linux/firmware/qcom/qcom_qseecom.h      |  2 ++
+> > >  2 files changed, 19 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/firmware/qcom/qcom_qseecom_uefisecapp.c b/drivers/firmware/qcom/qcom_qseecom_uefisecapp.c
+> > > index 98a463e9774bf04f2deb0f7fa1318bd0d2edfa49..05f700dcb8cf3189f640237ff0e045564abb8264 100644
+> > > --- a/drivers/firmware/qcom/qcom_qseecom_uefisecapp.c
+> > > +++ b/drivers/firmware/qcom/qcom_qseecom_uefisecapp.c
+> > > @@ -792,6 +792,12 @@ static efi_status_t qcuefi_query_variable_info(u32 attr, u64 *storage_space, u64
+> > >  	return status;
+> > >  }
+> > >  
+> > > +static const struct efivar_operations qcom_efivars_ro_ops = {
+> > > +	.get_variable = qcuefi_get_variable,
+> > > +	.get_next_variable = qcuefi_get_next_variable,
+> > > +	.query_variable_info = qcuefi_query_variable_info,
+> > > +};
+> > 
+> > It looks like the efivars implementation does not support read-only
+> > efivars and this will lead to NULL pointer dereferences whenever you try
+> > to write a variable.
 > 
-> In preparation for stopping unconditional flushes on nested transitions,
-> handle INVPLGA interception properly. If L1 specified zero as the ASID,
-> this is equivalent to INVLPG, so handle it as such. Otherwise, use
-> INVPLGA to flush the translations of the appropriate ASID tracked by
-> KVM, if any. Sync the shadow MMU as well, as L1 invalidated L2's
-> mappings.
+> Ok, efivarfs seems to support it, but you'd crash when setting a
+> variable from the kernel (e.g. from the RTC driver).
+
+Ack, I'll fix it.
+
 > 
-> Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
-> ---
->  arch/x86/include/asm/kvm_host.h |  2 ++
->  arch/x86/kvm/mmu/mmu.c          |  5 +++--
->  arch/x86/kvm/svm/svm.c          | 36 +++++++++++++++++++++++++++++++--
->  3 files changed, 39 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index d881e7d276b12..a158d324168a0 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -2237,6 +2237,8 @@ int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
->  		       void *insn, int insn_len);
->  void kvm_mmu_print_sptes(struct kvm_vcpu *vcpu, gpa_t gpa, const char *msg);
->  void kvm_mmu_invlpg(struct kvm_vcpu *vcpu, gva_t gva);
-> +void __kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
-> +			       u64 addr, unsigned long roots, bool gva_flush);
->  void kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
->  			     u64 addr, unsigned long roots);
->  void kvm_mmu_invpcid_gva(struct kvm_vcpu *vcpu, gva_t gva, unsigned long pcid);
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index e2b1994f12753..d3baa12df84e7 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -6355,8 +6355,8 @@ static void kvm_mmu_invalidate_addr_in_root(struct kvm_vcpu *vcpu,
->  	write_unlock(&vcpu->kvm->mmu_lock);
->  }
->  
-> -static void __kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
-> -				      u64 addr, unsigned long roots, bool gva_flush)
-> +void __kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
-> +			       u64 addr, unsigned long roots, bool gva_flush)
+> > Also not sure how useful it is to only be able to read variables,
+> > including for the RTC where you'll end up with an RTC that's always
+> > slightly off due to drift (even if you can set it when booting into
+> > Windows or possibly from the UEFI setup).
+> > 
+> > Don't you have any SDAM blocks in the PMICs that you can use instead for
+> > a proper functioning RTC on these machines?
 
-I don't love passing a boolean to avoid a flush.  I especially don't like it in
-this case because vmx_flush_tlb_gva() has similar logic.  Unfortunately, I don't
-see a better option at this point. :-/
+I'd rather not poke into an SDAM, especially since we don't have docs
+which SDAM blocks are used and which are not.
 
-If we do keep the param, it needs to be something like @flush_gva, because I
-read @gva_flush as "this is a gva flush", and got all kinds of confused when
-reading the code.
+I think the slightly drifted RTC is still much better than ending up
+with an RTC value which is significantly off, because it was set via the
+file modification time.
 
->  {
->  	int i;
->  
-> @@ -6382,6 +6382,7 @@ static void __kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu
->  			kvm_mmu_invalidate_addr_in_root(vcpu, mmu, addr, mmu->prev_roots[i].hpa);
->  	}
->  }
-> +EXPORT_SYMBOL_GPL(__kvm_mmu_invalidate_addr);
->  
->  void kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
->  			     u64 addr, unsigned long roots)
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 3649707c61d3e..4b95fd6b501e6 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -2505,6 +2505,7 @@ static int clgi_interception(struct kvm_vcpu *vcpu)
->  
->  static int invlpga_interception(struct kvm_vcpu *vcpu)
->  {
-> +	struct vcpu_svm *svm = to_svm(vcpu);
->  	gva_t gva = kvm_rax_read(vcpu);
->  	u32 asid = kvm_rcx_read(vcpu);
->  
-> @@ -2514,8 +2515,39 @@ static int invlpga_interception(struct kvm_vcpu *vcpu)
->  
->  	trace_kvm_invlpga(to_svm(vcpu)->vmcb->save.rip, asid, gva);
->  
-> -	/* Let's treat INVLPGA the same as INVLPG (can be optimized!) */
-> -	kvm_mmu_invlpg(vcpu, gva);
+Anyway, let me pick up some more patches in the next revision, maybe it
+would be more obvious why I'd like to get R/O support.
 
-This code needs to do a noncanonical check (assuming we can't figure out a way
-to shoehorn this into kvm_mmu_invlpg()).  Consuming gva here for the asid != 0
-case might be "fine", because INVLPGA won't fault, but it's still a bug, e.g. I
-don't know what will happen when KVM tries to synchronize MMUs.
-
-Another reason I don't love the @flush_gva param :-/
-
-> +	/*
-> +	 * APM is silent about using INVLPGA to flush the host ASID (i.e. 0).
-> +	 * Do the logical thing and handle it like INVLPG.
-> +	 */
-> +	if (asid == 0) {
-
-	if (!asid)
-
-> +		kvm_mmu_invlpg(vcpu, gva);
-> +		return kvm_skip_emulated_instruction(vcpu);
-> +	}
-> +
-> +	/*
-> +	 * Check if L1 specified the L2 ASID we are currently tracking. If it
-> +	 * isn't, do nothing as we have to handle the TLB flush when switching
-> +	 * to the new ASID anyway.
-> +	 */
-
-Please avoid pronoouns.  And try not to allude to behavior; the above doesn't
-actually say what happens when switching to a new ASID, only that "we have to
-handle the TLB flush".  E.g.
-
-	/*
-	 * Flush hardware TLB entries only if L1 is flushing KVM's currently
-	 * tracked L2 ASID.  KVM does a full TLB flush when L1 runs a VMCB with
-	 * a different L2 ASID.
-	 */
- 
-> +	if (asid == svm->nested.last_asid)
-> +		invlpga(gva, svm_nested_asid(vcpu->kvm));
-> +
-> +	/*
-> +	 * If NPT is disabled, sync the shadow page tables as L1 is invalidating
-> +	 * mappings for L2. Sync all roots as ASIDs are not tracked in the MMU
-> +	 * role.
-> +	 *
-> +	 * As we are not flushing the current context, skip the gva flush from
-> +	 * __kvm_mmu_invalidate_addr(), it would flush the wrong ASID anyway.
-> +	 * The correct TLB flush was done above (if needed).
-> +	 *
-> +	 * This always operates on root_mmu because L1 and L2 share an MMU when
-> +	 * NPT is disabled. This can be optimized by invalidating guest roots
-> +	 * only.
-
-Heh, I had a comment typed up about only need to sync guest roots, and then I
-read this literal comment. :-)
-
-> +	 */
-> +	if (!npt_enabled)
-> +		__kvm_mmu_invalidate_addr(vcpu, &vcpu->arch.root_mmu, gva,
-> +					  KVM_MMU_ROOTS_ALL, false);
->  
->  	return kvm_skip_emulated_instruction(vcpu);
->  }
-> -- 
-> 2.49.0.395.g12beb8f557-goog
-> 
+-- 
+With best wishes
+Dmitry
