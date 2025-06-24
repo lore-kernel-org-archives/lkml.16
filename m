@@ -1,95 +1,98 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99412ECD09
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFF72ECD3E
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750794099; cv=none; b=gp9p8rPuck62SeVURvwM3+3IQECDO71Hp2esxX1JKyegwR85P7D2sexcEE23IoI49Y/RRlKhs/mHC/4poDQJqhRzGssg7xvs3IVIzQTeI+gjxMNJBoAr9/kD66GQnSB0lqS+qQNnVbsO8b/UPenLys83Y0FUsP4uPmf8ut6v5OI=
+	t=1750794101; cv=none; b=Ig56+1IaF3mqpaKU+DuZ8Z1z0g432jUFiYwJulPz1NBfDQMyxX/tlBUlVsrVwbl7N5b1RXJDRkHrcbevhSLqO9qv1aMQlGToHg3sen8BYrsQJxm0gl5fJE+g+Y7fXlFTpOTxFk5uKrc18bAmhMGEWukluGt3shG6ca7XhFvWS3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750794099; c=relaxed/simple;
-	bh=2nLhiuszQCMDLT7NsBho1d/3PYZ4meNwMxat0ECG8J0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VzdiWwpxKWdJX33xSgWwzLy8OQY1RjbB9Rvt2QnN2cvxe2MkzN+uUHrHgEU20oYx6J5HQA9tpsnqfdwHTYkm7xRhqBhMvPAxSyTph2VdOVH04C09t7+wAZbofpssn7rq+zn9LkoYcIs2YRNjeiy4uadQF6Di4gBXEvenXi21bJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TYt+v66u; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750794101; c=relaxed/simple;
+	bh=EnSuPTvF4DhnwZO1Ijbg2f9PLrxOuT35VfH6B31Xb+4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=P01U2ocIjlEBEagk7AyINX48uktJpifkl5VveX0378Q4k9FDBOsNiNW8y0VpB/EUUCokp0bzULx7kwfPvmWf+Z8jdYxFZQ5TBRF9/PheAlTTLPOwMwYLQPqRrBco99WxeMBtN2dF/d01ynGZJc4PPwSvyLTqHio0YpYWdbjoNUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p+Y8pUAs; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TYt+v66u"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-310447fe59aso72184001fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:41:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p+Y8pUAs"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-31315427249so958702a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:41:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750794095; x=1751398895; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2nLhiuszQCMDLT7NsBho1d/3PYZ4meNwMxat0ECG8J0=;
-        b=TYt+v66uVRtdBCH9H4QW6IdRV6c/mtAgiEKCU2v/jOAZP1gJ1A/c5/GLBlLxt7rdiO
-         AutgSujhqabyUhE2uifVgFIZ9/6zpUAsIgUXgUYKRh/sB90YlempQGeq00/4ERqNCBWr
-         enb9QwoEC4r8SDamuq3aZh5kZJnzN3Vu3SnDdg//2EOu55sw/6ZzlBXOq6L34r0/CzQt
-         Lv9Q5KSzOLsg8gqwiXQEFcdOKmo8oMNjAsZGm7FaPRXrCBFtm8dnTvqkyIbaemVY1wlQ
-         Gr/7OuTfpPuCldYQIYA7fCZuXCHbgWuHfTXem+gfFHKDcvoGCqQgjMOnonWNsxP6epzB
-         oaKw==
+        d=google.com; s=20230601; t=1750794099; x=1751398899; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/TcDR0ilC08SnX/gngiJov3sYl1/0VcHc8Gnu/5DjpQ=;
+        b=p+Y8pUAstNDnqNeT2taK+wDdjfyHqZwQGkytolXDoadIaFlgE9pgHoD5jXpON8KqRj
+         OIRUZYBX+Pn0E1aDCAxPR5nSbdtS/MhqMaegtDFvqCe6hU/MZT8B0Rpa02dph5M129DU
+         LtCEDybmWO9ObWugIjWWWuKrB9NVdjI1pa9x+o0BpJOwCtuOSGEkYW7PF9fN9lZ+XXWT
+         FJtRjFEy32M0dYYb/QsIUDiKPQyakbDcGHDvsMZ25GRU0hoHJWP26O1EUwvCoc7D7jn2
+         hNXnqFcMvVUYYBwtGgr60PaPJmrdUTIZVFM8do/Uc2tkZn+CK5/1Nl9mxD1dIV/tZWKL
+         iu7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750794095; x=1751398895;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2nLhiuszQCMDLT7NsBho1d/3PYZ4meNwMxat0ECG8J0=;
-        b=rKGeAG0y0kdabrSxtuQDrBU9eImprvqTTEDfuO+/Cxw+doWkyPGy3tl6+xMrPLdKrz
-         IioEp3pfraiM3VfkKo9ZYppKAUUBo4Kvlxr2+UuFtKWyIWZonOO9W8kiQ/F+1vg/EAMW
-         HDMFXLMwOQHXJKzys1ob2CbOOqvQQoGRkLDWS5o5KJDh3435eUOJNjj0wrxPCkPe7g03
-         pBtf2vR8o/LuFFYpQzMDsFaR2rL/+tnHWYxnQp4XdB4h/s6wkTsv29HlnvP73z9DXa55
-         opv3XeYZsU6MjSlyIXBQAuUyocIt8DnbkXpb3CX6Zw5GtPpqDCcc1xJtiqVSVQwKTWjj
-         Layg==
-X-Forwarded-Encrypted: i=1; AJvYcCXVO9m7bQSU8W3uQw3Mad6+ZpWaAwKJ0qSZv4Ye7XP+sCHTp/w5dPI8spaEkhafMrkbJu+ChkYdErEvSpE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqKt8WXYKh5pjxAuOWi5NPx80fzIFZI7yNhU361i5wPLQWQx/4
-	8utH4UWgSbQOvSm8pLSpKcmdTFg2pGqmPo3JwDMR+TPIQCVA9rVZHsGGurwQKZGEjusq/VxIXQJ
-	x/Sl6W5DWy9vrsLDX9spiFyxKs+40X6k3ZvJEj15Y5g==
-X-Gm-Gg: ASbGnct/RqyzpPH8TbeN7EC2x/w1Q/3CEy3YibJDMFETJPAL5+UkSOBRe3xOQB5KrVM
-	341A8GosnNKLyh7kZtoj60ja1G7nElvW9IFf6E078n9KBBKjKzmdDwiQKCm7mA08rshcmr+yTTG
-	Fgf6/rAKKwi5kKMbFYDX8xdnlDglF23EdyCdubOCnKsf8=
-X-Google-Smtp-Source: AGHT+IGgAuc3iJtRYb+OK2rDM3TlkSrDgGEbgeVIFtkTDVdAbZ8WB/KP/SQ/rIDTOfAZi97Vwex02jPn22o+QO9h4sI=
-X-Received: by 2002:a2e:a4b6:0:b0:32b:8778:6f06 with SMTP id
- 38308e7fff4ca-32cc64fe7edmr63161fa.18.1750794094847; Tue, 24 Jun 2025
- 12:41:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750794099; x=1751398899;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/TcDR0ilC08SnX/gngiJov3sYl1/0VcHc8Gnu/5DjpQ=;
+        b=P1MFwKoLmnCUnDq+P5gUhbdbEihExscGUqXg8kXx8T+hQggAFuGiatpHjtWMCbRySS
+         tqdComFuk+WC6F24Qe7W0w/pY/Xo7aRVNdWS68mkEc3Y8PZ03ws/hD1EYG2mT7IBAWem
+         Lt6wUnouzRyOphBKwhZJ3K3VDpR3TqYRogDbp4fDK7UiEYZP1PxRpnaveRf2eecG+Sd0
+         Ol3es2YOas7CEtKNDeZtyePcOlF+eKTO93bGVj/yv9K5MTv/W2p2eoXLt9uD1ZGikLs5
+         hWWYepcZZJNCdi0yKKXay2tC5PFGd9iv+kOrQfW4A97AgPCPpvpZOny3ZRJTq1j5zg64
+         yFMg==
+X-Forwarded-Encrypted: i=1; AJvYcCX3NgSUrghkgTtkfJrdfA1EW95lBdIRVloNzYksB/HpDxFQoTUDOkPjeEAdOQYYUoAKYO4ut3jTVAOmUCg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkzOQlbe93xGO3hyosyEyGMfYZV3XVDJZ8ReaCzX8Iuc6M6wv+
+	MoyxcQv/IbRnmEsF9W5ch/nAy2XEAVRyahdjt/EW8lnCqzhjLy/5kcQqgInDPGI/4BPzg1Xq9da
+	LAgM/6g==
+X-Google-Smtp-Source: AGHT+IFbBoWMRk0OScINUnw6Tc/wO2MzRodBFr/PyAQsm0W8Pkgc1eEhPr2RMhZpwxAHIhiM9y/OwUpIO2I=
+X-Received: from pjbsc5.prod.google.com ([2002:a17:90b:5105:b0:2fc:3022:36b8])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2c85:b0:312:e6f1:c05d
+ with SMTP id 98e67ed59e1d1-315f25e7388mr192262a91.2.1750794099336; Tue, 24
+ Jun 2025 12:41:39 -0700 (PDT)
+Date: Tue, 24 Jun 2025 12:38:30 -0700
+In-Reply-To: <20250605195018.539901-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250624-gpio-mmio-pdata-v1-0-a58c72eb556a@linaro.org> <20250624-gpio-mmio-pdata-v1-1-a58c72eb556a@linaro.org>
-In-Reply-To: <20250624-gpio-mmio-pdata-v1-1-a58c72eb556a@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 24 Jun 2025 21:41:23 +0200
-X-Gm-Features: AX0GCFu-CBprmbPmDb8uoIG_yV6pNxQGi2vFucZMy5qL34U2BG3ecQIKj4_p--o
-Message-ID: <CACRpkdbG9WSuErEvcNGnt6bSqMVk31PuLGykaLw8XToVFnAc-Q@mail.gmail.com>
-Subject: Re: [PATCH RFT 1/6] gpio: mmio: drop the big-endian platform device variant
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Lee Jones <lee@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
-	Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-omap@vger.kernel.org, patches@opensource.cirrus.com, 
-	linux-samsung-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250605195018.539901-1-seanjc@google.com>
+X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
+Message-ID: <175079323951.521058.7931806146009208206.b4-ty@google.com>
+Subject: Re: [PATCH 0/4] KVM: x86: Fix WFS vs. pending SMI WARN
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzbot+c1cbaedc2613058d5194@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, Jun 24, 2025 at 3:19=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+On Thu, 05 Jun 2025 12:50:14 -0700, Sean Christopherson wrote:
+> Fix a user-triggerable WARN that syzkaller found by stuffing INIT_RECEIVED,
+> a.k.a. WFS, and then putting the vCPU into VMX Root Mode (post-VMXON).  Use
+> the same approach KVM uses for dealing with "impossible" emulation when
+> running a !URG guest, and simply wait until KVM_RUN to detect that the vCPU
+> has architecturally impossible state.
+> 
+> Sean Christopherson (4):
+>   KVM: x86: Drop pending_smi vs. INIT_RECEIVED check when setting
+>     MP_STATE
+>   KVM: x86: WARN and reject KVM_RUN if vCPU's MP_STATE is SIPI_RECEIVED
+>   KVM: x86: Move INIT_RECEIVED vs. INIT/SIPI blocked check to KVM_RUN
+>   KVM: x86: Refactor handling of SIPI_RECEIVED when setting MP_STATE
+> 
+> [...]
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> There are no more users of the "basic-mmio-gpio-be" platform device ID
-> in the kernel. We can safely drop it.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Applied to kvm-x86 misc, thanks!
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+[1/4] KVM: x86: Drop pending_smi vs. INIT_RECEIVED check when setting MP_STATE
+      https://github.com/kvm-x86/linux/commit/c4a37acc5193
+[2/4] KVM: x86: WARN and reject KVM_RUN if vCPU's MP_STATE is SIPI_RECEIVED
+      https://github.com/kvm-x86/linux/commit/16777ebded41
+[3/4] KVM: x86: Move INIT_RECEIVED vs. INIT/SIPI blocked check to KVM_RUN
+      https://github.com/kvm-x86/linux/commit/0fe3e8d804fd
+[4/4] KVM: x86: Refactor handling of SIPI_RECEIVED when setting MP_STATE
+      https://github.com/kvm-x86/linux/commit/58c81bc1e71d
 
-Yours,
-Linus Walleij
+--
+https://github.com/kvm-x86/kvm-unit-tests/tree/next
