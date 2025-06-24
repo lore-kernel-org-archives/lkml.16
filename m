@@ -1,138 +1,132 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5C923E336;
-	Tue, 24 Jun 2025 13:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728C21A3BC0
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750772981; cv=none; b=aFMrSiEo0BJJjo7HIpCA9Mwe1u77a7wcWgwyoC1QlmQqUXhUoSGj0FNH62hl7jDmuzu9iVjMqxFip/ZA3RsGlUVB1mD6SGUYeVFFoNR7M6oJptSTTNB0HEtU/PEiLYo4EuKQAuzG/c3o66PhwsxsXrf8ThMzMbp+XcTP/XX2b/w=
+	t=1750773040; cv=none; b=YFkLOzXWiuJEQl5Gx3yUk9jZ+u/TxISMMrGZGLkOPxdtNZ5rVU2UK/6yeVhnsx3LwBm+IQZQ3VNgt40PmtHiP0n1Yb5jaTn7uPzItjnr6BQqoaC9ua3Va7Xc0Wa0YnUjzTBHNRJUvFYo+iMPvCmmbIBA0au7o9zRxJGQxVNH44w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750772981; c=relaxed/simple;
-	bh=oqjGCqo+3jPtMvnW+xPAtBoGDiiD+tGkyyZIw+G6SsU=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=SGXzjV1Qg7Rp2N/FhNGAwTUfDbcTtd58kP/u9BhL49WlBAZ73C5j57OGHHpy7IUZim39Hy9VJKXuXIRxnHQNK7OFJ1t/nRu4pahK9BfASXlJaW/LsKuJL5e8dRPwP75L5kjL5kMztmXTDkJSD9a/sfkYJScFx5Sdv6zhZAo7A1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f0AMqJ8+; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750773040; c=relaxed/simple;
+	bh=x869jf+HcyzdISYV8dZz/gWjbV7ixtQEFmQ5vF/GuAw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ThTqUH6m/VcQbAvONSFyRIAnmhMtOAtew6sHpQYuZM37vaJ3pZC1tGi19vYgtnF8VkwIdTZzgsIul50URMGqCg/B2/q4Xk3vivhpky62DBTh87SlJmPz/bnkNKZjOV/eJZ0goROomp7o2wBvwJMY9cqNV792JtE9Xy8ea4AOYks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I5r9o4Gg; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0AMqJ8+"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b271f3ae786so406487a12.3;
-        Tue, 24 Jun 2025 06:49:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I5r9o4Gg"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a589d99963so5246087f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:50:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750772980; x=1751377780; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1D3QdEAPCGyd4A120mlOM8Gbdnk1+ZP4/PAl9Roc7GQ=;
-        b=f0AMqJ8+ZIkz8JQWxYIDyHKmlIptwLOBSQpwTpmUDBTwChVRFOnvtUAA6dOX7nOMf/
-         6cD1fZqFmW3/s2vLtEXsa6AG21ur7hOgKyOoX09pNEN8Yz0eQN+1uTpmiTKnJ/b7zv8l
-         pbOpr1KEYEk/2rQ6RLzFLVrZAzDmFZAS8Pe5ByqZBOdmSJ4lsag2Ay4foWbGDtfaWnrP
-         nc4aHyBtHXiLS9o2zODHLoTZpTmqSaLuaNu2eTwysHFX5SxGBP/9WUTiRR/QPFQqPEb0
-         YuQShVVRTiyaQEY/r5/UvShhEO33eCd3CNev8kmgKT7IRMF6wlEzEtJEfuaqr9u4fADO
-         lyvA==
+        d=google.com; s=20230601; t=1750773037; x=1751377837; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FuSC/X9PgRtXfhqHGEt/bUX/whB0bmpCwcmqOcOnono=;
+        b=I5r9o4GgFQqOT2VKpPuuA08Pox05fWwiGLcfPgMr1HF7tBq4EekoNHX6VICtq2yfI7
+         1VxW+kd76dgIfs80w6WqvlC9hcZUT0xV+Pi7oeRvMrK9js1r8fRFjxrvNLK5o0QsYIOo
+         9AsAAuhAgvhPwkJStJfxdmTWvQ3OfiKzM54RT1o5OWNgXRzuv+/hzmqWm58QtUWFqUoW
+         1ZGlae8NoSkLYsGHBhvTGdWBCGLRZG/zbkqiITTWqmQfAWK6bgs/s3zU+g4VBz6uUf+S
+         RIzxL6sSRrcZtMtHYyvBwmYn1vQG5svcfWHH9/EBOHFXl9HA2lWh2vzk/tbxkeVunFVR
+         qeWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750772980; x=1751377780;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1D3QdEAPCGyd4A120mlOM8Gbdnk1+ZP4/PAl9Roc7GQ=;
-        b=kjVF/VqGwR/tdFjH9oiJfqUVwopwjE7dEVFIwTibr9c3Ep5RxozGcGaQvIEF2WPlz9
-         4x3R5WmvwGTHSEjrECom7galmFls+uzELee/0CPxR4n32KFE+zJaDEZCZVA4w4CGvGUq
-         mZuVdJ0dW+yuHVSlT8Fp5yUTeSyfhwe6USloqmKH83qPVy8XMNFN8CssWu/xQuTtDBhx
-         l7UdpPLrktKyIqX8m5tH4L8F60QmoBAhHeRu4H8zK8nlr4vkTprfKTdpBSA7e9wHDRKR
-         7JaaUTf9aJN5tcrEsPdxW97jaYUdK3LF7VlRDXSZkj5jy4NpQ896OLT83P3ohbmlPQOF
-         6q6w==
-X-Forwarded-Encrypted: i=1; AJvYcCU+hJBmm+e98NdNgb0u5Xw4QRdBsY7y+7bTvuLgJuZrgGFi/zOwXLUSxc7oONV4+hUuBVdniR9NWZStvwU=@vger.kernel.org, AJvYcCUf03+nXwF43MYj+i4lbTD5NDCgT+3XR17GyEP+Mc0I+KVll15+K5HmU5/M5owrm75TK61+OHziCDCNVXiOYDo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0ikLkTWFGTkOLjUmoYCRguziAxv7P4PKUwygBnGU8HRgWXWTB
-	ZI/AMNOC1dZGdrNzh+e9fREaoZMQNap4kLPyqfvec2ToYaBULA7aUn7O
-X-Gm-Gg: ASbGncvsty6wVGxnHLnkmHEOagFDK78Asgdj/bKUR+jheqmV7aaxrTA2W0ACELMOf8a
-	yTgBaV5jh3/qqzcICgfx0kGwPMM0H+Aqv5iMJEnJAhrJNPUx9CCYHsK/uC4ZC064N/TL1r+FL7h
-	DyzMAX/0X+9G8EBgwwFWqfdigHL1uSE1XxT5fOJOl0sEYEgydaZL8AWqEQ3ngxcmM4z8+jhCub3
-	yERLmqYQn9EY77gAGInKLTmurL3A8ynsJf6+yAewuLmMDv24pF2isA9Mnp/bD2dEgtGWlO29SKn
-	0kM9kErfM8JiyhP6Xm9cZyrT64CZbFkR26f+grty25AgOzwlFIBp6TgKA/yIQmEw14fEtQygh3x
-	cXojlF4qAPi8kQkm7YJx1DItUfc3l+GKJYzGOOj7W
-X-Google-Smtp-Source: AGHT+IH09BoG9Y25KaozOAWn8XkeE8DpcA4nq7ILpLesorAZDceyoUHgWz2VqSLwz8qJawXqMxjsTA==
-X-Received: by 2002:a05:6a20:4310:b0:203:c461:dd36 with SMTP id adf61e73a8af0-22026ca838fmr27618037637.6.1750772979687;
-        Tue, 24 Jun 2025 06:49:39 -0700 (PDT)
-Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749c8851b26sm1828905b3a.122.2025.06.24.06.49.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 06:49:39 -0700 (PDT)
-Date: Tue, 24 Jun 2025 22:49:23 +0900 (JST)
-Message-Id: <20250624.224923.1801832299260163743.fujita.tomonori@gmail.com>
-To: aliceryhl@google.com
-Cc: fujita.tomonori@gmail.com, miguel.ojeda.sandonis@gmail.com,
- a.hindborg@kernel.org, alex.gaynor@gmail.com, ojeda@kernel.org,
- anna-maria@linutronix.de, bjorn3_gh@protonmail.com, boqun.feng@gmail.com,
- dakr@kernel.org, frederic@kernel.org, gary@garyguo.net,
- jstultz@google.com, linux-kernel@vger.kernel.org, lossin@kernel.org,
- lyude@redhat.com, rust-for-linux@vger.kernel.org, sboyd@kernel.org,
- tglx@linutronix.de, tmgross@umich.edu
-Subject: Re: [PATCH v1 1/2] rust: time: Rename Delta's methods
- as_micros_ceil and as_millis
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <CAH5fLgjJRbjPnN58RuaBtNrY1A-tif3ohETLxdbaE4b46Hjbqg@mail.gmail.com>
-References: <CANiq72mBfTr0cdj_4Cpdk62h2k+Y5K3NSs54_1-9jiszMZ6AuA@mail.gmail.com>
-	<20250619.160844.1477802332578239775.fujita.tomonori@gmail.com>
-	<CAH5fLgjJRbjPnN58RuaBtNrY1A-tif3ohETLxdbaE4b46Hjbqg@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1750773037; x=1751377837;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FuSC/X9PgRtXfhqHGEt/bUX/whB0bmpCwcmqOcOnono=;
+        b=ENeZmIZCvp35yXqEAZFjiBaeoDqZs3D0gX0s1NlgZo0DJ2SwrVZfm9mrZUJ91QuhHf
+         H91RigPAjam4+rx2FVcmwAxMpOjDemfWafWt0M+6uY5dyOcDfg2GuQF6fCIU6MaY67Sl
+         Vwgpp3fABjvTrrqGOq3kzG5sKNgz99xXRpk5lurFmz9cBM0BtjZW+x3bw+WymaKu2sFo
+         Gm+ej6s/PKlivUZ7nBNC+03Txfkphu9xUyWk6bCNXtnQd8GkiHLnEbEz96SoJ6HyTuMx
+         +2p/5Ag38a5RGY7H28PolfOX79/+P9QGtQnywOVhZtEtJ4tG1ws5aWK/LK7G+hfecErs
+         7RZA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4i5yo2FJC7MinoMJ+28i/SV3gy5STrYZrJCZT+zhA3IEdUURZks12t2ns2GBEpiBsBOrxOdhNkRGmhlc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysXyOhkaEyhTzdZPRJ7YMyKeXIAmtEnNR0bhmjvX/vlo94Fe80
+	OH1l4JkExYhV9V8dfyx8QfbqRiTiivHkfsH1PqdFAZM6lWsTrnOdYXsbpX0sGUtsaF5Nezz1Zq3
+	Kv4+BuMAUaSjQvgXMwv/RasRpcughgIZmrUCmdQMY
+X-Gm-Gg: ASbGncssJuUN6+OSU1K6tYRec5NhmdURwBLvmygrwDshiWryKnIe4rjvwBzA6M1XJaX
+	Opnsz8b6+tOR/PoPlrZlqEenLNXfUa5CmI/Ek6SkmLCj42ZnagxLkP13i4/8fKFsmJyo9CNWVSJ
+	BO8W5nFSsWXjpTeJ5q7enFfDAoO8qFTkuE2aOHMgMJbK5Ow+SQbQJ8qL8=
+X-Google-Smtp-Source: AGHT+IGnrnePw+dcT7/yyqAE5xLybA6KvH5/W9NCQoo7oBZLRLyIwlJ7wVikWfPRtL8Ejq0gVIGBHa1DhIpdduVksJE=
+X-Received: by 2002:a05:6000:4021:b0:3a4:ef36:1f4d with SMTP id
+ ffacd0b85a97d-3a6d12e419bmr12601998f8f.38.1750773036600; Tue, 24 Jun 2025
+ 06:50:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
+ <20250608-topics-tyr-request_irq-v4-3-81cb81fb8073@collabora.com>
+ <aEbJt0YSc3-60OBY@pollux> <CAH5fLghDbrgO2PiKyKZ87UrtouG25xWhVP_YmcgO0fFcnvZRkQ@mail.gmail.com>
+ <DAU0NHTHTDG4.2HNEABNAI8GHZ@kernel.org> <aFmPZMLGngAE_IHJ@tardis.local>
+ <aFmodsQK6iatXKoZ@tardis.local> <DAU5TAFKJQOF.2DFO7YAHZA4V2@kernel.org>
+ <DB7F39EC-5F7D-49DA-BF2B-6200998B45E2@collabora.com> <DAURVNHM7PKM.PLUFKFRVXR25@kernel.org>
+In-Reply-To: <DAURVNHM7PKM.PLUFKFRVXR25@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 24 Jun 2025 14:50:23 +0100
+X-Gm-Features: Ac12FXxhBUp0laB6o-uk241zbrLxNt97_Zs06jxl60wtCBp8pHCACUlpYJSNp-I
+Message-ID: <CAH5fLggs=mUi0xAEuiLvZrua4qrMYjBDEmyK8xc-kkXVyUKRog@mail.gmail.com>
+Subject: Re: [PATCH v4 3/6] rust: irq: add support for non-threaded IRQs and handlers
+To: Benno Lossin <lossin@kernel.org>
+Cc: Daniel Almeida <daniel.almeida@collabora.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C2=B4nski?= <kwilczynski@kernel.org>, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 24 Jun 2025 13:15:32 +0100
-Alice Ryhl <aliceryhl@google.com> wrote:
+On Tue, Jun 24, 2025 at 1:46=E2=80=AFPM Benno Lossin <lossin@kernel.org> wr=
+ote:
+>
+> On Tue Jun 24, 2025 at 2:31 PM CEST, Daniel Almeida wrote:
+> > On 23 Jun 2025, at 16:28, Benno Lossin <lossin@kernel.org> wrote:
+> >> On Mon Jun 23, 2025 at 9:18 PM CEST, Boqun Feng wrote:
+> >>>    try_pin_init!(&this in Self {
+> >>>        handler,
+> >>>        inner: Devres::new(
+> >>>            dev,
+> >>>            RegistrationInner {
+> >>>                // Needs to use `handler` address as cookie, same for
+> >>>                // request_irq().
+> >>>                cookie: &raw (*(this.as_ptr().cast()).handler),
+> >>>                irq: {
+> >>>                     to_result(unsafe { bindings::request_irq(...) })?=
+;
+> >>>  irq
+> >>> }
+> >>>             },
+> >>>             GFP_KERNEL,
+> >>>        )?,
+> >>>        _pin: PhantomPinned
+> >>>    })
+> >>
+> >> Well yes and no, with the Devres changes, the `cookie` can just be the
+> >> address of the `RegistrationInner` & we can do it this way :)
+> >>
+> >> ---
+> >> Cheers,
+> >> Benno
+> >
+> >
+> > No, we need this to be the address of the the whole thing (i.e.
+> > Registration<T>), otherwise you can=E2=80=99t access the handler in the=
+ irq
+> > callback.
+>
+> Gotcha, so you keep the cookie field, but you should still be able to
+> use `try_pin_init` & the devres improvements to avoid the use of
+> `pin_init_from_closure`.
 
->> So would the function be defined like this?
->>
->> fn as_nanos(self) -> i64;
->>
->> If that's the case, then we've come full circle back to the original
->> problem; Clippy warns against using as_* names for trait methods that
->> take self as follows:
->>
->> warning: methods called `as_*` usually take `self` by reference or `self` by mutable reference
->>    --> /home/fujita/git/linux-rust/rust/kernel/time/hrtimer.rs:430:17
->>     |
->> 430 |     fn as_nanos(self) -> i64;
->>     |                 ^^^^
->>     |
->>     = help: consider choosing a less ambiguous name
->>     = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#wrong_self_convention
->>     = note: `-W clippy::wrong-self-convention` implied by `-W clippy::all`
->>     = help: to override `-W clippy::all` add `#[allow(clippy::wrong_self_convention)]`
->>
->> https://lore.kernel.org/rust-for-linux/20250610132823.3457263-2-fujita.tomonori@gmail.com/
-> 
-> Are we missing a derive(Copy) for this type? Clippy does not emit that
-> lint if the type is Copy:
-> https://github.com/rust-lang/rust-clippy/issues/273
+It sounds like this is getting too complicated and that
+`pin_init_from_closure` is the simpler way to go.
 
-I think that both Delta and Instant structs implement Copy.
-
-#[repr(transparent)]
-#[derive(PartialEq, PartialOrd, Eq, Ord)]
-pub struct Instant<C: ClockSource> {
-    inner: bindings::ktime_t,
-    _c: PhantomData<C>,
-}
-
-impl<C: ClockSource> Clone for Instant<C> {
-    fn clone(&self) -> Self {
-        *self
-    }
-}
-
-impl<C: ClockSource> Copy for Instant<C> {}
-
-#[derive(Copy, Clone, PartialEq, PartialOrd, Eq, Ord, Debug)]
-pub struct Delta {
-    nanos: i64,
-}
-
-
-The above warning is about the trait method.
+Alice
