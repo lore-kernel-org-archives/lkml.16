@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F8220C004
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:40:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DD9224893
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:40:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750725633; cv=none; b=rxyaxkp2VxL+Ki0PiAWGznqN2vQ+2Hw95mmUyUoXoXZ630uNSjcHuTgg2uwLnH9a0li3bWqo439YZ0c8WVZfUM8MTJKBzPSr8LefO+wCZWRH3M6BFrwlcp/QvVfhmZh9rBOlqO9X3RtY+3dj82+GsXSWoEfPIZkdSR66g2VSjtE=
+	t=1750725635; cv=none; b=G/dZILP6GAIndYcmTB/yhA4fqS6lVGmmDbqvuaEBnywg2wgfkhspxux0qo7J7v4DmHd8LMslCCtOO6waSWFXRxe26FzTJE9mwP7cXiA1HPF5o4vQES1pGvMCvwkKSue31ioFE9/jc60461rZVgHHwvQ7nfVXY+zyhHAHCf2qUBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750725633; c=relaxed/simple;
-	bh=JOohz5CpylJwMb4/VsRDLhJkRFPmCKGfkJaLP7xenXI=;
+	s=arc-20240116; t=1750725635; c=relaxed/simple;
+	bh=1QaGdT1B3rkESvxrLYFCDis8gtHomEyLyKP9dJD4WTc=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=MKjvVp+pS6Bi24i5NlloVBEkVvIwbHewLSYCMahDXeQ5h3duJEqT4SJN3DMMQ63Pla/DVgT0dS4e/ITsz1IHWvAZLsBDNkVOWAkBfLi2dAk410PgYpswBIKPB+RmBHCJcyxwjaMUK06iNPoqV0AaZR+2oCX9JhM6MaL4rJWK8OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lJ+CORPX; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=M5AGv/QBKTEcA0U1vTknY/pPF3ThGYFJ2QE8SL2CdDSepSCrplcq+5f3ZXJKo1S+nTSlYr+ymcy8DgTeN7pRzNrTOKnbBptPyfza7XWI4lbUtNSwozRX9+m0lS+4vW3uBBQ3CFEc/vCvWGgfpYY++/FLxy8AjA9Z5JX7klRQZB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SiqjhOvf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lJ+CORPX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D002C4CEED;
-	Tue, 24 Jun 2025 00:40:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SiqjhOvf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6A8BC4CEEF;
+	Tue, 24 Jun 2025 00:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750725633;
-	bh=JOohz5CpylJwMb4/VsRDLhJkRFPmCKGfkJaLP7xenXI=;
+	s=k20201202; t=1750725634;
+	bh=1QaGdT1B3rkESvxrLYFCDis8gtHomEyLyKP9dJD4WTc=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=lJ+CORPX1P+4hVWu2i3ap2zVfOuP2N9D7HiQZcMuWW7LV31tGTO7cvUODjuONN0dz
-	 WVQ9VLjoXSJq+F+ioTXpNtH8j/7PHamUhqrqAjA1UpjhAbfy89tErAJGRAjTOg5jAb
-	 0nls2/PF0UmYj9DT+UUSpUAH1a/mkQWeZfbdgkPkLfQcTVDYJXgiJ+SpmrV3AIafjz
-	 wL8hmPBPqP0WQXjZDhlPEiM8ZQzNkOk6cel2VMOqwA2DPzCMcHRTTPF/PN7IHijvqw
-	 q865XCIYev6eJPNxlw2CER7niJAnXfWwCSJolzkoA2gW5pWp/LFIb2aDmwQYDuZ5kT
-	 oQro+bWCrqfWg==
+	b=SiqjhOvfP/t9KHGcnRs/HkQukfOxDwgi3xvScwaH9kDQQEtXY/cVAlLwSZr0irtUJ
+	 9F2JoSZMSoxNCvNq6jTq2piUP+JZJRdk8Wp5glKrQNah054f9mHBt8J75aj4MyMKF7
+	 Ibx5+JOn/Hn60uzg8o+rVVLCpoJfflYEBJ4aTLuKhcU2FfU/i5FkoJZV013wSjiDFO
+	 rOCMZk2a+Gnhyn2O7bBjXAQl7D+b42uLpr8+LvTZG9MWiBXDwkFlf2DcZv7g/xxIKW
+	 iehPqJCW420ZPvcDTkOieqoUZDm3+ymbTgKNeA8S8qOcpcDYQS/xOZA8IAFZEBdFrd
+	 O7//jb24whb6w==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70CB339FEB7D;
-	Tue, 24 Jun 2025 00:41:01 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAF4A39FEB7D;
+	Tue, 24 Jun 2025 00:41:02 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,63 +37,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to avoid invalid wait context issue
+Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: compress: change the first parameter
+ of page_array_{alloc, free} to sbi
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <175072566023.3346761.5670110283778494132.git-patchwork-notify@kernel.org>
-Date: Tue, 24 Jun 2025 00:41:00 +0000
-References: <20250611084218.62774-1-chao@kernel.org>
-In-Reply-To: <20250611084218.62774-1-chao@kernel.org>
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net
+ <175072566148.3346761.3757288798816544278.git-patchwork-notify@kernel.org>
+Date: Tue, 24 Jun 2025 00:41:01 +0000
+References: <1749779445-29125-1-git-send-email-zhiguo.niu@unisoc.com>
+In-Reply-To: <1749779445-29125-1-git-send-email-zhiguo.niu@unisoc.com>
+To: Zhiguo Niu <zhiguo.niu@unisoc.com>
+Cc: jaegeuk@kernel.org, chao@kernel.org, ke.wang@unisoc.com,
+ linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ baocong.liu@unisoc.com, Hao_hao.Wang@unisoc.com
 
 Hello:
 
-This patch was applied to jaegeuk/f2fs.git (dev)
+This series was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Wed, 11 Jun 2025 16:42:18 +0800 you wrote:
-> =============================
-> [ BUG: Invalid wait context ]
-> 6.13.0-rc1 #84 Tainted: G           O
-> -----------------------------
-> cat/56160 is trying to lock:
-> ffff888105c86648 (&cprc->stat_lock){+.+.}-{3:3}, at: update_general_status+0x32a/0x8c0 [f2fs]
-> other info that might help us debug this:
-> context-{5:5}
-> 2 locks held by cat/56160:
->  #0: ffff88810a002a98 (&p->lock){+.+.}-{4:4}, at: seq_read_iter+0x56/0x4c0
->  #1: ffffffffa0462638 (f2fs_stat_lock){....}-{2:2}, at: stat_show+0x29/0x1020 [f2fs]
-> stack backtrace:
-> CPU: 0 UID: 0 PID: 56160 Comm: cat Tainted: G           O       6.13.0-rc1 #84
-> Tainted: [O]=OOT_MODULE
-> Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-> Call Trace:
->  <TASK>
->  dump_stack_lvl+0x88/0xd0
->  dump_stack+0x14/0x20
->  __lock_acquire+0x8d4/0xbb0
->  lock_acquire+0xd6/0x300
->  _raw_spin_lock+0x38/0x50
->  update_general_status+0x32a/0x8c0 [f2fs]
->  stat_show+0x50/0x1020 [f2fs]
->  seq_read_iter+0x116/0x4c0
->  seq_read+0xfa/0x130
->  full_proxy_read+0x66/0x90
->  vfs_read+0xc4/0x350
->  ksys_read+0x74/0xf0
->  __x64_sys_read+0x1d/0x20
->  x64_sys_call+0x17d9/0x1b80
->  do_syscall_64+0x68/0x130
->  entry_SYSCALL_64_after_hwframe+0x67/0x6f
-> RIP: 0033:0x7f2ca53147e2
+On Fri, 13 Jun 2025 09:50:44 +0800 you wrote:
+> No logic changes, just cleanup and prepare for fixing the UAF issue
+> in f2fs_free_dic.
 > 
-> [...]
+> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+> Signed-off-by: Baocong Liu <baocong.liu@unisoc.com>
+> ---
+>  fs/f2fs/compress.c | 40 ++++++++++++++++++++--------------------
+>  1 file changed, 20 insertions(+), 20 deletions(-)
 
 Here is the summary with links:
-  - [f2fs-dev] f2fs: fix to avoid invalid wait context issue
-    https://git.kernel.org/jaegeuk/f2fs/c/90d5c9ba3ed9
+  - [f2fs-dev,1/2] f2fs: compress: change the first parameter of page_array_{alloc, free} to sbi
+    https://git.kernel.org/jaegeuk/f2fs/c/8e2a9b656474
+  - [f2fs-dev,2/2] f2fs: compress: fix UAF of f2fs_inode_info in f2fs_free_dic
+    https://git.kernel.org/jaegeuk/f2fs/c/39868685c2a9
 
 You are awesome, thank you!
 -- 
