@@ -1,58 +1,67 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D4919DF4A;
-	Tue, 24 Jun 2025 18:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97D319DF4A;
+	Tue, 24 Jun 2025 18:45:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750790727; cv=none; b=VcQIBSz+sfe88Wv1YIoSzhW22kOYGbZgEGpQ6spZJPtmYV8DVtBLLJUs3qOJBafnGGPMjQ+6O7S31lfYrlUKBpHE0GXHWIjJmV7Jrp7xeDmY9kK9veP4YlydQc3Hpd8nxSFjfd2wft9OkQYwXhplrCDTW1wC5PXqJv/Ho7z/F0A=
+	t=1750790749; cv=none; b=tPL/IjP+MXothwzWLRRF1fkiRmNcoJRJu1hAv2pkqdtHFjxqhGn/UFRg7T9zryqWUOWKaWioiIPRIH8NMxSjBNYMgAY0Mdh++9d4oqyBgliCwaSNSALrQxlwmO1NsO03HETpsRYdGfKBCxZYL6kdhlQvwiE7fJ8s47BX+E10PL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750790727; c=relaxed/simple;
-	bh=vRXHOyqOVrh/WjrVP/FxcEH9B6f07cCVn3pPNylhkhE=;
+	s=arc-20240116; t=1750790749; c=relaxed/simple;
+	bh=mpigxhq/5ZYuhiGJZPIBKkiwd+dsvZCPwQyOMPGbrh0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P4lKMzPpXZYWJ6XZ1x3gjSiwpGBs+9y85zOvcennv5NBqY9c+VBcWrc2trlryBUR/u7/xyupxl1L/U93ggj32xtjI1UeVhyDcZs39tDvoly6SiSzLQgoUIecrqtkJpXYv97kmyGLCUW5If68H3PVtHImS9F0lzQ/5URdEv2AtpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=gWneGnWp; arc=none smtp.client-ip=198.47.19.245
+	 MIME-Version:Content-Type; b=e5bZJmiShtc70GpKu809020fF0ZZL3vraXIR0BOxUEL/kKJf9e5om95I3LnSS0AI1P9/WRaWn5fhZeL5K6vT0wyZeiAZbX97WeKOwoSRxmrbkTuqOX/WqM3pBvo26VwVjjVcqawMSuCwV8Quf7nVtx3yjua0OKtpjhzuH6pVDVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HH21uuRe; arc=none smtp.client-ip=198.47.23.234
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gWneGnWp"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55OIjElo1631197;
-	Tue, 24 Jun 2025 13:45:14 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HH21uuRe"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55OIjadm1238609;
+	Tue, 24 Jun 2025 13:45:36 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750790714;
-	bh=GAGKM7aXbOThzO3wjO02xo7P0wtUNQ0S1F+BZCBLq6s=;
+	s=ti-com-17Q1; t=1750790736;
+	bh=jCehJ/03vgXo43v5fdkPlxCVgkwl4XEINgeHUUIjpIM=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=gWneGnWpxwzthlB+TfYFTXuRBh1kVLIS1e+8hYFA6E9W4x4Um/wOqQ0Ra/fJXBIOH
-	 NvtXD4V+9pUOwHhjmIKpQJL944tk+WyVlRp8ZP1C7KgDomkvAuSv8tAD2k58xIf2o9
-	 40+xoa1dwDkc3jeshfytvtPBXGh6hK9Tx9eN23JU=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55OIjDpU523860
+	b=HH21uuRenlyBJrmpV8tV01ggfubYZdd8TpKLoLY4vv8nKQow7ioeLe/uR1A7OxrGW
+	 BMwK7Vxb7qbdWjIW9/IOgMng+DZiWBd9y6KpFb73zyAg1uuKtCgImdTZ3sky1aaxHu
+	 pCS33fARrH9UJeYIpbS+Dio8MKVy5f4JIc1HFnOI=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55OIjatH264462
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 24 Jun 2025 13:45:13 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 24 Jun 2025 13:45:36 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 24
- Jun 2025 13:45:13 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2025 13:45:35 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Tue, 24 Jun 2025 13:45:13 -0500
+ Frontend Transport; Tue, 24 Jun 2025 13:45:35 -0500
 Received: from uda0132425.dhcp.ti.com (uda0132425.dhcp.ti.com [172.24.227.245])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55OIj9eA1992686;
-	Tue, 24 Jun 2025 13:45:10 -0500
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55OIjVbv1993190;
+	Tue, 24 Jun 2025 13:45:32 -0500
 From: Vignesh Raghavendra <vigneshr@ti.com>
-To: <nm@ti.com>, <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, Wadim Egorov <w.egorov@phytec.de>
+To: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Emanuele Ghidoli <ghidoliemanuele@gmail.com>
 CC: Vignesh Raghavendra <vigneshr@ti.com>,
+        Emanuele Ghidoli
+	<emanuele.ghidoli@toradex.com>,
+        Francesco Dolcini
+	<francesco.dolcini@toradex.com>,
         <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <upstream@lists.phytec.de>
-Subject: Re: [PATCH] arm64: dts: ti: k3-am642-phyboard-electra: Fix PRU-ICSSG Ethernet ports
-Date: Wed, 25 Jun 2025 00:15:08 +0530
-Message-ID: <175079060327.1874839.13802437150014477290.b4-ty@ti.com>
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [PATCH v1] arm64: dts: ti: k3-am62-verdin: Enable pull-ups on I2C buses
+Date: Wed, 25 Jun 2025 00:15:30 +0530
+Message-ID: <175079060330.1874839.7299512877628097063.b4-ty@ti.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250521053339.1751844-1-w.egorov@phytec.de>
-References: <20250521053339.1751844-1-w.egorov@phytec.de>
+In-Reply-To: <20250528110741.262336-1-ghidoliemanuele@gmail.com>
+References: <20250528110741.262336-1-ghidoliemanuele@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,23 +72,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Wadim Egorov,
+Hi Emanuele Ghidoli,
 
-On Wed, 21 May 2025 07:33:39 +0200, Wadim Egorov wrote:
-> For the ICSSG PHYs to operate correctly, a 25 MHz reference clock must
-> be supplied on CLKOUT0. Previously, our bootloader configured this
-> clock, which is why the PRU Ethernet ports appeared to work, but the
-> change never made it into the device tree.
+On Wed, 28 May 2025 13:07:37 +0200, Emanuele Ghidoli wrote:
+> Enable internal bias pull-ups on the SoC-side I2C buses that do not have
+> external pull resistors populated on the SoM. This ensures proper
+> default line levels.
 > 
-> Add clock properties to make EXT_REFCLK1.CLKOUT0 output a 25MHz clock.
 > 
-> [...]
 
 I have applied the following to branch ti-k3-dts-next on [1].
 Thank you!
 
-[1/1] arm64: dts: ti: k3-am642-phyboard-electra: Fix PRU-ICSSG Ethernet ports
-      commit: 945e48a39c957924bc84d1a6c137da039e13855b
+[1/1] arm64: dts: ti: k3-am62-verdin: Enable pull-ups on I2C buses
+      commit: bdf4252f736cc1d2a8e3e633c70fe6c728f0756e
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent up the chain during
