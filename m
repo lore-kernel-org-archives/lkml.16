@@ -1,89 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7D126CE03
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:47:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5D726CE27
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750780072; cv=none; b=QCXXo5VSpktoZwSCVGtAK9nY8iVXolcjb4tvcwWp8xsZ8gg9UQHuqC/P5+VtBqcLedyOKQMjZl/ujTZe7mbE/8inytFmAjWEQBiW6BUruM2WA5dHnKNSx0I+P8inWJe+BNGBWAAz2tfy42yORUIhB9P8npzwN3UP1os2aHbC7Ok=
+	t=1750780104; cv=none; b=IRmVXbgX5HMww8Kd1roS+XkNUKfsN/i20k/Y7D4g7Bd4jUyVH86s3PfmmMkJIWsgrJYW6fNTEU8mmB3tVBYOUxWzxT6yd7q+2O2TkGn98wvYo85vHBxtkmmNZ02qNWP158CrfI/8xov0EcEhCLZB1NsKfoVGWv+rjrEYQRGiZQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750780072; c=relaxed/simple;
-	bh=V12aEpzV/DOmJEBEoaRR/ZKo/PtjZw1phR40ONf9LIQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XeHkeVULcmCz3ZRTUyaFf/h9UUukHKyxKjp8ys91Z2QK5Dr2nQkPveFfAW0+o7XviTyeFp1suDUQ1c3lZTwSFSQpdJWSAXnhDiX+EwFfzOdYuFtIVXpiOKcaz+3q8lMUrkVVJjurTuivwbTw0sIs6JHoeZj9JN+UwP3WCJWK0Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Q+IEGHmu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750780104; c=relaxed/simple;
+	bh=rqei9qBreDzFSqhyPq1Txm+8zbw8z7r1ww2hWrMKJh0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QQI/F10cNJ9+Q3KlkqnkTpAyxReoZH5pcOltBvclZm1b4tqfQt3kA9VUIiv0dn4SIhHaSlgzctPN3U+883ULzMcDBsRkZ2t836Bm/Qikl//I73YFqebqSqEAGhVCJciRwR0UkUKI4XGqSAP2e94Jg3MxC8eqrBjKVvPC7U+4szE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=BhHSA2zl; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Q+IEGHmu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BE5AC4CEE3;
-	Tue, 24 Jun 2025 15:47:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750780071;
-	bh=V12aEpzV/DOmJEBEoaRR/ZKo/PtjZw1phR40ONf9LIQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q+IEGHmuimyQ4zYbDGnM9XFJSwYTwWvfO1sG0KZmtNEZL3PWZ1KKOU7LPme5Azb7Z
-	 34ftbfJvxxBY3befXmiba4OEc6vhvlxzHHtkljRK7Tnhe+gT0j/amblL8+oLVXe6jw
-	 /pqB76Vy3BfSoP+iA4S9+SYwA9ulsuGhIaf9y8eY=
-Date: Tue, 24 Jun 2025 16:47:49 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-	Zijun Hu <zijun.hu@oss.qualcomm.com>
-Subject: Re: [PATCH 2/3] char: misc: Rename a local variable in misc_init()
-Message-ID: <2025062401-prenatal-hazily-7fc5@gregkh>
-References: <20250620-fix_mischar-v1-0-6c2716bbf1fa@oss.qualcomm.com>
- <20250620-fix_mischar-v1-2-6c2716bbf1fa@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="BhHSA2zl"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e7db5c13088so4326241276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:48:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1750780101; x=1751384901; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kRkzc87wo0o4+fEkDS/rWH1wXvAXrHEHezkVOh191HE=;
+        b=BhHSA2zlXOnHP1d+OBpbvliqHEb/R4UbyTKaLTYSLe5qun23JSomAs3HcV8dyuFrc4
+         j/B+wiMipVBz5QTW0lzYvsF3iD6+x7IXyFMYxW0fk9A3cUnjBHfncBbAh3LzW++0G8Uq
+         GI15R4dP6hQmvJdwLfBcMIX3CepUGLwhrFTZGBfU6whn68MS6JZPj8J+UtgJmQfTOVfb
+         lE1Kur3f2QwWAuZL4HLzmvrdOra5JMqid01VXgCafnB67lXUwnbI7IpR1oAw50D2xpfL
+         5NNPlUuQEPcplxs1q9JGWSlQrf4tHa9zwgRY5nQe+EWmOZ9+liZrstyaamJLYJQRN3B6
+         0XHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750780101; x=1751384901;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kRkzc87wo0o4+fEkDS/rWH1wXvAXrHEHezkVOh191HE=;
+        b=Zq8rDJ7RoFpKgJl1OlYTp3HZsrmqCcIGDat+pQ5fPlLOSZbPHRmlH/cE1FohFRvuhX
+         VtVOv8As60vrC90Q907fRDkgL63UEXyLK39Xp7K1S8LXvewuh2SyT3aF2t6ZAZAqcsVC
+         FADo9OqWs1eV1jeF6HcmJSw7KzLHmldhomJoh8eF5w5eYS0dNG20aKaxxlt8TmKbOmPh
+         ZWxbKyfgqF0vogOdPnOEKodY15tT+4h47aKEUlKWnhBjsMNYArp1dkWgSVspehpc98/4
+         DSp+LsQaZ3z26uMsVteB2oSHyBOtdp0GLjuG/RYVPp4S2WCrRABbaLhK0D9ZwkbGkUSH
+         dOBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWRiU0I+zD8CD6M0zqruhTAAfPNu1rAQNLGv+1FslfMmiyhrWNqdxtg8sjQbH3CKIq1Rc7Ahm5pANXH1wQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPCqPHcXuvix57+ra2muorJ6oQwOEYexDOHUEQwADhZg6yfagd
+	1H83wG/2d5gnMQYR0kqzmB01OncbJCC+raSRjDqrqrrSoYSCYmDPVKLyXuf881z7W17nzmmoyjJ
+	Pa4HEg1PJyWkfFsPC/Pp5fwmHzOdyq97P20fbhROHPcogKp06JjA=
+X-Gm-Gg: ASbGncv36izVc0ZipCt7+Qlx81x+ZWf+iRkWBtY2UbnkGdVA9qCR954c8l9jhIYwo4/
+	cdh5llyEwq9mZE8QAtTsrw2KtcHBeIhKKTkcwkR0F6oDL5rYyE0itiJxydyshveJcMunCPnY2hv
+	5NGnjaTVyrDHOaHDOwGM0MYESPeoUxVnCMELz+9HUiJVE=
+X-Google-Smtp-Source: AGHT+IGCpAeeUvZuZrw41qBq6J0MfQKxEfqrEfdYhhQKITSwhrGmgEUBNlv5e3NpZvf1rvm31aCzNc2JqujqgB8FjeI=
+X-Received: by 2002:a05:6902:1501:b0:e81:4f52:9983 with SMTP id
+ 3f1490d57ef6-e85f1e276e5mr4942310276.19.1750780101225; Tue, 24 Jun 2025
+ 08:48:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620-fix_mischar-v1-2-6c2716bbf1fa@oss.qualcomm.com>
+References: <20250624014108.3686460-1-yuehaibing@huawei.com> <aFqZxu_Slzmux6jj@lei>
+In-Reply-To: <aFqZxu_Slzmux6jj@lei>
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 24 Jun 2025 11:48:10 -0400
+X-Gm-Features: Ac12FXyLFEZgUbk_F14XoflEPfnghAr6Ptvan38PrR4N4Rw4pEnI3vksc5gaw-o
+Message-ID: <CAHC9VhQ50UM6LxnUT7PSrGKNdbuUFJmZQmir1HtrQg_C9j6x2Q@mail.gmail.com>
+Subject: Re: [PATCH -next] security: Remove unused declaration cap_mmap_file()
+To: sergeh@kernel.org
+Cc: Yue Haibing <yuehaibing@huawei.com>, jmorris@namei.org, serge@hallyn.com, 
+	casey@schaufler-ca.com, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 20, 2025 at 10:35:19PM +0800, Zijun Hu wrote:
-> From: Zijun Hu <zijun.hu@oss.qualcomm.com>
-> 
-> Local variable @ret is not used for return value in misc_init().
-> 
-> Give it a different name @pde.
-> 
-> Signed-off-by: Zijun Hu <zijun.hu@oss.qualcomm.com>
-> ---
->  drivers/char/misc.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/char/misc.c b/drivers/char/misc.c
-> index d5accc10a110098f7090dd0f900bc5fae5f75f74..f5ef8c175adb559e67dfe905d43d1404b249cc9e 100644
-> --- a/drivers/char/misc.c
-> +++ b/drivers/char/misc.c
-> @@ -289,9 +289,9 @@ EXPORT_SYMBOL(misc_deregister);
->  static int __init misc_init(void)
->  {
->  	int err;
-> -	struct proc_dir_entry *ret;
-> +	struct proc_dir_entry *pde;
+On Tue, Jun 24, 2025 at 8:27=E2=80=AFAM <sergeh@kernel.org> wrote:
+> On Tue, Jun 24, 2025 at 09:41:08AM +0800, Yue Haibing wrote:
+> > Commit 3f4f1f8a1ab7 ("capabilities: remove cap_mmap_file()")
+> > removed the implementation but leave declaration.
+> >
+> > Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+>
+> Hm, how did I not catch that?  Thanks.
 
-"pde" is an odd name.
+At least you weren't the idiot who wrote the original patch ;)
 
-> -	ret = proc_create_seq("misc", 0, NULL, &misc_seq_ops);
-> +	pde = proc_create_seq("misc", 0, NULL, &misc_seq_ops);
+I'll grab this for the LSM tree in a bit unless you want to take it.
 
-Why not "misc_proc_file" as a better name?
+> Reviewed-by: Serge Hallyn <serge@hallyn.com>
+>
+> > ---
+> >  include/linux/security.h | 2 --
+> >  1 file changed, 2 deletions(-)
+> >
+> > diff --git a/include/linux/security.h b/include/linux/security.h
+> > index dba349629229..e8d9f6069f0c 100644
+> > --- a/include/linux/security.h
+> > +++ b/include/linux/security.h
+> > @@ -193,8 +193,6 @@ int cap_inode_getsecurity(struct mnt_idmap *idmap,
+> >                         struct inode *inode, const char *name, void **b=
+uffer,
+> >                         bool alloc);
+> >  extern int cap_mmap_addr(unsigned long addr);
+> > -extern int cap_mmap_file(struct file *file, unsigned long reqprot,
+> > -                      unsigned long prot, unsigned long flags);
+> >  extern int cap_task_fix_setuid(struct cred *new, const struct cred *ol=
+d, int flags);
+> >  extern int cap_task_prctl(int option, unsigned long arg2, unsigned lon=
+g arg3,
+> >                         unsigned long arg4, unsigned long arg5);
+> > --
+> > 2.34.1
 
->  	err = class_register(&misc_class);
->  	if (err)
->  		goto fail_remove;
-> @@ -305,7 +305,7 @@ static int __init misc_init(void)
->  	pr_err("unable to get major %d for misc devices\n", MISC_MAJOR);
->  	class_unregister(&misc_class);
->  fail_remove:
-> -	if (ret)
-> +	if (pde)
-
-Again, "pde" is a rough name, let's pick a better one please.
-
-thanks,
-
-greg k-h
+--=20
+paul-moore.com
