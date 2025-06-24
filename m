@@ -1,82 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BEA1F4C87;
-	Tue, 24 Jun 2025 09:09:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A43226B740
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:09:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750756183; cv=none; b=J/OZ5uNtZApnzkCy6P16XhC9KGwT4tuNAlyIsePb81aX8R0tEcJtk6ZBKmtHR4jxwUk0o7eCPnzk21NxbZkMogvI9IMZAri8g38DZwotf1b6BT7QIFdqYmTKouSn3EnpB81g9IxTEIZAmGj82Gd9Bpquc9vZIAerk3pIZvv+q3E=
+	t=1750756196; cv=none; b=Rt5yTHU9OIcLOdflpgry+G3nrT4XwybWL/Wt+KOBDPP/tnDpZlc/mba7Oxurpart4G/iwhpVUfYgwBH+h1l/poCdpkUCwrtaAoFXV9xJKx/UYex8QNmlmIs9A5N1YqvfEnZpBmYMtVj94OIzBVck8n6QYVS9WotJt3/AwlenJY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750756183; c=relaxed/simple;
-	bh=kUUEg/dc1C0N7OzuDwlVPne5kfMH80qMuZXAZy4i0GI=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=avT+N0EFLULGYskq56qbwvTw1TvCSrlT26+6jC6HB14eFs+VMGDpMG/7iIocSayY7fZUFYCnUwXzxQYuwoXkSPWL06DwdqvmFztCdMGIwYhxv5sWKqxuksV3OVCLhTc4Se2UlFxbKIlPwyD7cGXL/coiKcgBFJv73qxfQapeMcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UWHGNamx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750756196; c=relaxed/simple;
+	bh=oxJVBcprBlyRyXuehTvJpzRAd0H/PXSR6otU+soCaI8=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=JYb7UBqp02J7UfoAeMghVampGWFBxjz1FsBP+rnnux0CKqyvSx+0U1uL682R4m8WzKN60HvRDkOoKARaynp33SPboG+JItVjT5uWXwZuyP0UKb4jGRSIy4Vuu5ILj28zVm8+ycODIO75BRAA1l1896u3hW3QxcdVlxt6h/W68YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RtFonMOk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UWHGNamx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12508C4CEEF;
-	Tue, 24 Jun 2025 09:09:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RtFonMOk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3373C4CEE3;
+	Tue, 24 Jun 2025 09:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750756183;
-	bh=kUUEg/dc1C0N7OzuDwlVPne5kfMH80qMuZXAZy4i0GI=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=UWHGNamxfa/TVPN7KKRLdAV12RBKm57TmROV9koR0Fsqvs7IKqDOoxn1w7mwH28d0
-	 MyRNve9Z79gUX/gRfASZReg9r9URH0RvPktxvGe6Lr/lJf26nkbqRK9vl8D4tjoasP
-	 kPEK6v5kwDRlxWkOJHSEakejwHERu7DlfR9ds0F8KLP1rOR/h7Qx1SajJvD5DTbSIn
-	 KaH4Yq7EEzAFG1z8VaeRnZwVbOWjIzCt6OhAdNR5DPxL/DmvWpzOPwBbgrp8NBAbYU
-	 sypoxWn5+rlEN7f/phhPxsnBu6n4cpKOqHZn5Ffiiauokj1gIHqHzb0tL4nIEiX0YY
-	 FebXP2ZqNpQHQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33CF838111DD;
-	Tue, 24 Jun 2025 09:10:11 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1750756195;
+	bh=oxJVBcprBlyRyXuehTvJpzRAd0H/PXSR6otU+soCaI8=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=RtFonMOkAIH5R3soF88T3khCH09DQhDHemHywOhVptjn8Y7Bcx+/tQW9n29UOZE9e
+	 HAAggi4Rtzjs9wa2bRETGm83JjdMkOMf1yDmyszcd/GDgb+Aky+fzHAiktLqXHa7Cx
+	 JlUbjYUYIggsPRYr/OFXXxxGA74hW3IQNW4hnWEAqKDDZ2HzPKEkYVIr5AcY6S4XxC
+	 Oyuuas+FVPuN8TYMseHNEeLSkFCU//WV1lsQ6hDFeYMQff2n0KqPBtWVKLmL6q6Sb7
+	 WGJ4NB+UBX+u8593d50hlX6aOK/tQI0A2LPtBB1cvZKOHaxQ2/SlxNNWycQhwAhY/H
+	 71WSauuwALKgw==
+Message-ID: <02756532-4e17-4b41-9f48-157b0dbc1db2@kernel.org>
+Date: Tue, 24 Jun 2025 17:09:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/2] PSE: Improve documentation clarity
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175075621015.3463713.6658210960670653659.git-patchwork-notify@kernel.org>
-Date: Tue, 24 Jun 2025 09:10:10 +0000
-References: <20250620-poe_doc_improve-v1-0-96357bb95d52@bootlin.com>
-In-Reply-To: <20250620-poe_doc_improve-v1-0-96357bb95d52@bootlin.com>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: o.rempel@pengutronix.de, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, thomas.petazzoni@bootlin.com,
- piotr.kubik@adtran.com, netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, pilhyun.kim@sk.com
+Subject: Re: [PATCH v3] f2fs: enable tuning of boost_zoned_gc_percent via
+ sysfs
+To: "yohan.joung" <yohan.joung@sk.com>, jaegeuk@kernel.org
+References: <20250618060414.97-1-yohan.joung@sk.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20250618060414.97-1-yohan.joung@sk.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello:
+On 2025/6/18 14:04, yohan.joung wrote:
+> to allow users to dynamically tune
+> the boost_zoned_gc_percent parameter
 
-This series was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+Well, it seem this patch did two things:
 
-On Fri, 20 Jun 2025 12:02:38 +0200 you wrote:
-> Thanks to new PSE driver being proposed on the mailinglist figured out
-> there was some unclear documentation, which lead the developer on the
-> wrong path. Clarify these documentation.
+1. fix to check upper boundary for value of gc_boost_zoned_gc_percent.
+2. allow need_to_boost_gc() to use last value of boost_zoned_gc_percent 
+dynamically.
+
+Can you please split this patch to two?
+
+Thanks,
+
 > 
-> The changes focus on clarifying the setup_pi_matrix callback behavior
-> and improving device tree binding descriptions, particularly around
-> channel-to-PI mapping relationships that are critical for proper PSE
-> controller integration.
+> Signed-off-by: yohan.joung <yohan.joung@sk.com>
+> ---
+>   fs/f2fs/gc.h    | 3 ++-
+>   fs/f2fs/sysfs.c | 7 +++++++
+>   2 files changed, 9 insertions(+), 1 deletion(-)
 > 
-> [...]
-
-Here is the summary with links:
-  - [net-next,1/2] dt-bindings: pse: tps23881: Clarify channels property description
-    https://git.kernel.org/netdev/net-next/c/42fa8f17e453
-  - [net-next,2/2] net: pse-pd: tps23881: Clarify setup_pi_matrix callback documentation
-    https://git.kernel.org/netdev/net-next/c/dad51ea09040
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+> diff --git a/fs/f2fs/gc.h b/fs/f2fs/gc.h
+> index 5c1eaf55e127..11fba7636af7 100644
+> --- a/fs/f2fs/gc.h
+> +++ b/fs/f2fs/gc.h
+> @@ -194,6 +194,7 @@ static inline bool has_enough_invalid_blocks(struct f2fs_sb_info *sbi)
+>   static inline bool need_to_boost_gc(struct f2fs_sb_info *sbi)
+>   {
+>   	if (f2fs_sb_has_blkzoned(sbi))
+> -		return !has_enough_free_blocks(sbi, LIMIT_BOOST_ZONED_GC);
+> +		return !has_enough_free_blocks(sbi,
+> +				sbi->gc_thread->boost_zoned_gc_percent);
+>   	return has_enough_invalid_blocks(sbi);
+>   }
+> diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+> index 75134d69a0bd..d0ec9963ff1b 100644
+> --- a/fs/f2fs/sysfs.c
+> +++ b/fs/f2fs/sysfs.c
+> @@ -628,6 +628,13 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
+>   		return count;
+>   	}
+>   
+> +	if (!strcmp(a->attr.name, "gc_boost_zoned_gc_percent")) {
+> +		if (t > 100)
+> +			return -EINVAL;
+> +		*ui = (unsigned int)t;
+> +		return count;
+> +	}
+> +
+>   #ifdef CONFIG_F2FS_IOSTAT
+>   	if (!strcmp(a->attr.name, "iostat_enable")) {
+>   		sbi->iostat_enable = !!t;
 
