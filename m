@@ -1,342 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E2B2C324F;
-	Tue, 24 Jun 2025 13:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D045F28F528
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750772833; cv=none; b=Sa1S8L5BlHBTEoAsHxcsidv1xrnkJcwlSNOjl6fivSu6R5dD34RzdN6tOjc+msiNw6Et7jGVzWTF0dpots+6TP5bDBaSRRreqssj8NuLDhtGXZ243War0Weh5ZhH3le8LeGTvylBSXYqAU6BovfyzwC9eNpoFziaXTjZxK5TeO0=
+	t=1750772850; cv=none; b=cr5IALavI8maPEdWMC8rLGAQ5oLlURsTwdYT8xK84j3txFFcJaAJXiRYMd+9gavWdULHucF8SWXdR8CH6jZVDbHQefALxDmj6HzrIIWzMI/MQGpzTPQdoBE4rVAOBcaI3FuaEDaDc7kimQB1MLj5L0GK2J1GHVMZR6C6L1+0HXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750772833; c=relaxed/simple;
-	bh=jr6TVyH5tYJl1OotHhDU7NHVSPLSs5hnVmnDmy0upMQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GsX/HRyxXxFESbM/uK7Seaa4H8rkCG2LPS4eRcENAoFWpUABlRG4CG5gsRRT6Z/bkvEziTEwO1/YfQvKUfRY20p6fEuIbMHt6732fhO/s484gjgl5N2vBcehUP44X5I5sBjMlIfTerS0IoIFt9R9eXu3267G0pTJL4CtAcF+3XQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PfTQEwUu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750772850; c=relaxed/simple;
+	bh=FPqOE17+APKrELMb456PcHqUROKib4uvVIedL0A/K7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CI/c0SkIuqTvZA2XbsG3408PlhL1mUK8Y4C2kBPYV3U4KeyrzHHPwiIz/Tb+EP9eaxt9Tt2/MDeqINUf9I7Jx90Ruaz2CcCdGPnANbVVcRPyarysL2+i5SXqckA3iPPNOHle/rdadDMFD6AgKnjgF7Ly5n24K4cO9a65QuTrveg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Xq1039Am; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PfTQEwUu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D4A4C4CEF5;
-	Tue, 24 Jun 2025 13:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750772833;
-	bh=jr6TVyH5tYJl1OotHhDU7NHVSPLSs5hnVmnDmy0upMQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PfTQEwUuA60kTOOWci6wmFUpT7K8CxP/lf2877Mbo9/xxhqkbGj33/bFRwbSfhszd
-	 +zYjcKl8RSp2foJf2CQ9ZCcRSSD+AZx4bQNR4H1FZJps1n1z9d1fxVMWuX3AAjdFD0
-	 JQ8ByBL7nvD3RpwvTwrMgxD2fbR2UG6ahUXc1nxUeFwDZ0TlNJuIFrO1agGxEBAzLo
-	 cLS1DgcwSw350cL4PxXpd+Dt1EAx1wHDQ3AH3NqyBOdiirMEcYD8UEFi/C6Qk2B0fG
-	 C0wZLbIrLchfrJUPoyZ3jzFXwN0pyyQLmi17xruKCGDHpyA4aLllybXDGoaRztDQe+
-	 PBkK8+EmR5MaA==
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-6060a70ba80so2820345eaf.2;
-        Tue, 24 Jun 2025 06:47:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU7+RzumE5p3Ga5OMe9YXH+CvjiRgaC5aqJ+TKizoZeLTSmkOT9IIkl8SaO9+sv7wHNrQojqqQKeTqE@vger.kernel.org, AJvYcCXNhahqwcc3vMGPgWnCMzMVme4O5LEr2gPFgYiDkTgjacHSkUlHO6gCpSqmoxFlXKSpNFLwXDXe2MVsqem0@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPJGk14g+jQXPfEYDe3u7ccliOhr+XJsdaFZ+dtJutZBQBpdN9
-	z435ESlQk+zq+lU1ZuXzmtA8WiG+Atkid5Gb0QSWB5KOPrv+jwBTGaWOvJvMokL363OSzCLW+gx
-	u0/RN2EysjIgtCLUrEaMMXgI0C1bIhXc=
-X-Google-Smtp-Source: AGHT+IHWNLr3rdFDrzU9E0f2akoWvlQqd3I3juKx1o457TNbG3wq4LQW6nQ1ipgBYVPRbgrAyF6iniET71uJ1FTULEU=
-X-Received: by 2002:a4a:ee08:0:b0:611:96c0:535f with SMTP id
- 006d021491bc7-61196c05588mr912296eaf.8.1750772832142; Tue, 24 Jun 2025
- 06:47:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Xq1039Am"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a6e8b1fa37so730440f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:47:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1750772847; x=1751377647; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ycq0kX3Vn1ZpP7yxI/jdDggIlJCstgVkDpgaYIcdwgY=;
+        b=Xq1039AmgKM/kRcKJpfQ+M+EFxzjmDkRzQMPsUNm7yPox9qqQPD3Im3dKZM04UGQDg
+         C1zj9a4aRodqr5W7zjqczr7f5arr2EI/V0oWfhezuoW2mH6NF9K9TWCEUSMOPaxQ5Jz1
+         3kKgq7t7mpn8TcCBzXwS0KniE01VAj7OuAl7MBhw6Ug00DlPWsIUwF3BENyif5X4Csrt
+         fFiN8muVCFpktfDzicjbZnFOzmEgnf+47ZOMjY91OeplRnpLrr9WksTl7j6lrfNGTXhX
+         fTjpCuDt6ioLbCy/vba/iFFPpsFhZnljIPtPtoTozTqj4X2Qfg0PADUmkGxyThxSGlR+
+         ajxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750772847; x=1751377647;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ycq0kX3Vn1ZpP7yxI/jdDggIlJCstgVkDpgaYIcdwgY=;
+        b=JJRhwC+gI6Hn08lpscoKAys3WOIDt++rkA0l0WyfnHO5Dz0DGHKIkvaw4bW6jvvG3K
+         iRfaEJ1K0NTXQG7Qf8908BBgdfFE4D1FkTi93NtP6jWluF+97iiVI6Ogc9Zz3pzgfmDe
+         HjOMzZj4jM+BgNR+O6JJH+hAOq0LdIyEi1m25F/9qdme34EP6II83flSuMiY8Z3pBHnG
+         ENH+OJzX1NisxmEcNaCh+Na7dRilwCDozrpItMpuqy6nbTx+mRu3HeClr8yIvjCuYNpo
+         OzcNiDwdI0d1LbMxixsSb1PNxRX6pmmJez0RzbIxeJ3xnvrJedX5bbbmrC2gaeQAVXcW
+         Zxmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUFMSlsEVql93EI6JJUlGWIOIdH2CtRjd9Z7V9Lef+Qandv1zm4kM8pPRbOeoES71+n19b98g2VB4rKWus=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0lEuf5c4uPosH2Z7ltqTXJmdEA78Z08ZNbrBmztwkV3o+mKcr
+	r1CXsbdumHcqSzahjJnpFpKPAYD+cQsw69mOFtwoCxxshvikyHy+jSVQYAQrZhaKBOU=
+X-Gm-Gg: ASbGncvNrs/kbUIosodIicJOY84Sf1AvavnYDc9cyuINQcmQsY/asoFDU0b+a3mCPpX
+	2oefH6QFxvlb3xqjf/uaMMpBwyXcZOCXAiRo2uiWfPUb1fmWGqluXWk8iwJvDGs0TL12lwx2jJb
+	B3aOa2FSBHt9gm2IeCvxYjRaRexjHO4SWTfjxDhdnm7s+hcu+k3HPG0vdbQCrw4Ke+y7vyAo8on
+	h4hYO6sLRBjjBYe8PVHGkHjJfBBy604wyOf2KZawOJkVPm1SAO2fYjjzLrXayFZe5cp5XlMBnz+
+	0H3APTkSA82cUQ0utQHO5oFe0Hh+MvwgyrT2/Jtb1lKnlfIiGg==
+X-Google-Smtp-Source: AGHT+IHb76B6ik9Yt3pkD/SAdLPqXg65db3i1R0WxXLtr/BPlZTDKztKX7BSnwY0vPSiL+IcBDUqLw==
+X-Received: by 2002:a05:6000:2211:b0:3a4:ed62:c7e1 with SMTP id ffacd0b85a97d-3a6d12c455cmr12967179f8f.12.1750772847157;
+        Tue, 24 Jun 2025 06:47:27 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200::5485])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e80f259dsm2035419f8f.50.2025.06.24.06.47.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 06:47:26 -0700 (PDT)
+Date: Tue, 24 Jun 2025 15:47:26 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: zhouquan@iscas.ac.cn
+Cc: anup@brainfault.org, atishp@atishpatra.org, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org
+Subject: Re: [PATCH 5/5] KVM: riscv: selftests: Add bfloat16 extension to
+ get-reg-list test
+Message-ID: <20250624-044127e80c3700d93f114280@orel>
+References: <cover.1750164414.git.zhouquan@iscas.ac.cn>
+ <65752029ed1ae331a9ac867a6fef2e63a797569e.1750164414.git.zhouquan@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624133739.25215-1-listout@listout.xyz>
-In-Reply-To: <20250624133739.25215-1-listout@listout.xyz>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 24 Jun 2025 15:46:58 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jSk-NrovSq5En6qOureQXFbCsJLChorbgYXQdYfa0m3w@mail.gmail.com>
-X-Gm-Features: AX0GCFuloK1-5LEjv3L3bpF5HjxsvvcaFAjbJ6DsLustfZbwQ_ulkgg_e7G-kDM
-Message-ID: <CAJZ5v0jSk-NrovSq5En6qOureQXFbCsJLChorbgYXQdYfa0m3w@mail.gmail.com>
-Subject: Re: [PATCH] ACPI / sysfs: Replace deprecated and unsafe functions
- with sysfs_emit
-To: Brahmajit Das <listout@listout.xyz>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, rafael@kernel.org, lenb@kernel.org, 
-	lv.zheng@intel.com, kees@kernel.org, rui.zhang@intel.com, len.brown@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65752029ed1ae331a9ac867a6fef2e63a797569e.1750164414.git.zhouquan@iscas.ac.cn>
 
-On Tue, Jun 24, 2025 at 3:38=E2=80=AFPM Brahmajit Das <listout@listout.xyz>=
- wrote:
->
-> acpi/sysfs.c has many instances of unsafe or deprecated functions such
-> as sprintf, strcpy. This patch relaces them with sysfs_emit to safer
-
-"replaces"
-
-> alternavtive and better following of kernel API.
-
-"alternative"
-
-1. Have you tested all of the affected interfaces and verified that
-they still work as expected after the changes?
-2. While the replaced functions are unsafe in principle, is the usage
-of them in any places affected by this patch actually unsafe?
-
-> Signed-off-by: Brahmajit Das <listout@listout.xyz>
+On Tue, Jun 17, 2025 at 09:10:50PM +0800, zhouquan@iscas.ac.cn wrote:
+> From: Quan Zhou <zhouquan@iscas.ac.cn>
+> 
+> The KVM RISC-V allows Zfbfmin/Zvfbfmin/Zvfbfwma extensions for Guest/VM
+> so add them to get-reg-list test.
+> 
+> Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
 > ---
->  drivers/acpi/sysfs.c | 87 ++++++++++++++++++++++----------------------
->  1 file changed, 43 insertions(+), 44 deletions(-)
+>  tools/testing/selftests/kvm/riscv/get-reg-list.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/kvm/riscv/get-reg-list.c b/tools/testing/selftests/kvm/riscv/get-reg-list.c
+> index ebdc34b58bad..e5a07e000b66 100644
+> --- a/tools/testing/selftests/kvm/riscv/get-reg-list.c
+> +++ b/tools/testing/selftests/kvm/riscv/get-reg-list.c
+> @@ -80,6 +80,7 @@ bool filter_reg(__u64 reg)
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCF:
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCMOP:
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFA:
+> +	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFBFMIN:
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFH:
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFHMIN:
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZICBOM:
+> @@ -104,6 +105,8 @@ bool filter_reg(__u64 reg)
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZTSO:
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVBB:
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVBC:
+> +	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVFBFMIN:
+> +	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVFBFWMA:
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVFH:
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVFHMIN:
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVKB:
+> @@ -535,6 +538,7 @@ static const char *isa_ext_single_id_to_str(__u64 reg_off)
+>  		KVM_ISA_EXT_ARR(ZCF),
+>  		KVM_ISA_EXT_ARR(ZCMOP),
+>  		KVM_ISA_EXT_ARR(ZFA),
+> +		KVM_ISA_EXT_ARR(ZFBFMIN),
+>  		KVM_ISA_EXT_ARR(ZFH),
+>  		KVM_ISA_EXT_ARR(ZFHMIN),
+>  		KVM_ISA_EXT_ARR(ZICBOM),
+> @@ -559,6 +563,8 @@ static const char *isa_ext_single_id_to_str(__u64 reg_off)
+>  		KVM_ISA_EXT_ARR(ZTSO),
+>  		KVM_ISA_EXT_ARR(ZVBB),
+>  		KVM_ISA_EXT_ARR(ZVBC),
+> +		KVM_ISA_EXT_ARR(ZVFBFMIN),
+> +		KVM_ISA_EXT_ARR(ZVFBFWMA),
+>  		KVM_ISA_EXT_ARR(ZVFH),
+>  		KVM_ISA_EXT_ARR(ZVFHMIN),
+>  		KVM_ISA_EXT_ARR(ZVKB),
+> @@ -1138,6 +1144,7 @@ KVM_ISA_EXT_SIMPLE_CONFIG(zcd, ZCD);
+>  KVM_ISA_EXT_SIMPLE_CONFIG(zcf, ZCF);
+>  KVM_ISA_EXT_SIMPLE_CONFIG(zcmop, ZCMOP);
+>  KVM_ISA_EXT_SIMPLE_CONFIG(zfa, ZFA);
+> +KVM_ISA_EXT_SIMPLE_CONFIG(zfbfmin, ZFBFMIN);
+>  KVM_ISA_EXT_SIMPLE_CONFIG(zfh, ZFH);
+>  KVM_ISA_EXT_SIMPLE_CONFIG(zfhmin, ZFHMIN);
+>  KVM_ISA_EXT_SUBLIST_CONFIG(zicbom, ZICBOM);
+> @@ -1162,6 +1169,8 @@ KVM_ISA_EXT_SIMPLE_CONFIG(zkt, ZKT);
+>  KVM_ISA_EXT_SIMPLE_CONFIG(ztso, ZTSO);
+>  KVM_ISA_EXT_SIMPLE_CONFIG(zvbb, ZVBB);
+>  KVM_ISA_EXT_SIMPLE_CONFIG(zvbc, ZVBC);
+> +KVM_ISA_EXT_SIMPLE_CONFIG(zvfbfmin, ZVFBFMIN);
+> +KVM_ISA_EXT_SIMPLE_CONFIG(zvfbfwma, ZVFBFWMA);
+>  KVM_ISA_EXT_SIMPLE_CONFIG(zvfh, ZVFH);
+>  KVM_ISA_EXT_SIMPLE_CONFIG(zvfhmin, ZVFHMIN);
+>  KVM_ISA_EXT_SIMPLE_CONFIG(zvkb, ZVKB);
+> @@ -1213,6 +1222,7 @@ struct vcpu_reg_list *vcpu_configs[] = {
+>  	&config_zcf,
+>  	&config_zcmop,
+>  	&config_zfa,
+> +	&config_zfbfmin,
+>  	&config_zfh,
+>  	&config_zfhmin,
+>  	&config_zicbom,
+> @@ -1237,6 +1247,8 @@ struct vcpu_reg_list *vcpu_configs[] = {
+>  	&config_ztso,
+>  	&config_zvbb,
+>  	&config_zvbc,
+> +	&config_zvfbfmin,
+> +	&config_zvfbfwma,
+>  	&config_zvfh,
+>  	&config_zvfhmin,
+>  	&config_zvkb,
+> -- 
+> 2.34.1
 >
-> diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
-> index a48ebbf768f9..c3bb7af79fcb 100644
-> --- a/drivers/acpi/sysfs.c
-> +++ b/drivers/acpi/sysfs.c
-> @@ -94,23 +94,23 @@ static int param_get_debug_layer(char *buffer, const =
-struct kernel_param *kp)
->         int result =3D 0;
->         int i;
->
-> -       result =3D sprintf(buffer, "%-25s\tHex        SET\n", "Descriptio=
-n");
-> +       result =3D sysfs_emit(buffer, "%-25s\tHex        SET\n", "Descrip=
-tion");
->
->         for (i =3D 0; i < ARRAY_SIZE(acpi_debug_layers); i++) {
-> -               result +=3D sprintf(buffer + result, "%-25s\t0x%08lX [%c]=
-\n",
-> +               result +=3D sysfs_emit(buffer + result, "%-25s\t0x%08lX [=
-%c]\n",
->                                   acpi_debug_layers[i].name,
->                                   acpi_debug_layers[i].value,
->                                   (acpi_dbg_layer & acpi_debug_layers[i].=
-value)
->                                   ? '*' : ' ');
->         }
->         result +=3D
-> -           sprintf(buffer + result, "%-25s\t0x%08X [%c]\n", "ACPI_ALL_DR=
-IVERS",
-> +           sysfs_emit(buffer + result, "%-25s\t0x%08X [%c]\n", "ACPI_ALL=
-_DRIVERS",
->                     ACPI_ALL_DRIVERS,
->                     (acpi_dbg_layer & ACPI_ALL_DRIVERS) =3D=3D
->                     ACPI_ALL_DRIVERS ? '*' : (acpi_dbg_layer & ACPI_ALL_D=
-RIVERS)
->                     =3D=3D 0 ? ' ' : '-');
->         result +=3D
-> -           sprintf(buffer + result,
-> +           sysfs_emit(buffer + result,
->                     "--\ndebug_layer =3D 0x%08X ( * =3D enabled)\n",
->                     acpi_dbg_layer);
->
-> @@ -122,17 +122,17 @@ static int param_get_debug_level(char *buffer, cons=
-t struct kernel_param *kp)
->         int result =3D 0;
->         int i;
->
-> -       result =3D sprintf(buffer, "%-25s\tHex        SET\n", "Descriptio=
-n");
-> +       result =3D sysfs_emit(buffer, "%-25s\tHex        SET\n", "Descrip=
-tion");
->
->         for (i =3D 0; i < ARRAY_SIZE(acpi_debug_levels); i++) {
-> -               result +=3D sprintf(buffer + result, "%-25s\t0x%08lX [%c]=
-\n",
-> +               result +=3D sysfs_emit(buffer + result, "%-25s\t0x%08lX [=
-%c]\n",
->                                   acpi_debug_levels[i].name,
->                                   acpi_debug_levels[i].value,
->                                   (acpi_dbg_level & acpi_debug_levels[i].=
-value)
->                                   ? '*' : ' ');
->         }
->         result +=3D
-> -           sprintf(buffer + result, "--\ndebug_level =3D 0x%08X (* =3D e=
-nabled)\n",
-> +           sysfs_emit(buffer + result, "--\ndebug_level =3D 0x%08X (* =
-=3D enabled)\n",
->                     acpi_dbg_level);
->
->         return result;
-> @@ -181,11 +181,11 @@ static int param_set_trace_method_name(const char *=
-val,
->
->         /* This is a hack.  We can't kmalloc in early boot. */
->         if (is_abs_path)
-> -               strcpy(trace_method_name, val);
-> +               sysfs_emit(trace_method_name, "%s", val);
->         else {
-> -               trace_method_name[0] =3D '\\';
-> -               strcpy(trace_method_name+1, val);
-> +               sysfs_emit(trace_method_name, "\%s", val);
->         }
-> +       pr_info("tracepoint: %s", trace_method_name);
->
->         /* Restore the original tracer state */
->         (void)acpi_debug_trace(trace_method_name,
-> @@ -255,13 +255,13 @@ static int param_set_trace_state(const char *val,
->  static int param_get_trace_state(char *buffer, const struct kernel_param=
- *kp)
->  {
->         if (!(acpi_gbl_trace_flags & ACPI_TRACE_ENABLED))
-> -               return sprintf(buffer, "disable\n");
-> +               return sysfs_emit(buffer, "disable\n");
->         if (!acpi_gbl_trace_method_name)
-> -               return sprintf(buffer, "enable\n");
-> +               return sysfs_emit(buffer, "enable\n");
->         if (acpi_gbl_trace_flags & ACPI_TRACE_ONESHOT)
-> -               return sprintf(buffer, "method-once\n");
-> +               return sysfs_emit(buffer, "method-once\n");
->         else
-> -               return sprintf(buffer, "method\n");
-> +               return sysfs_emit(buffer, "method\n");
->  }
->
->  module_param_call(trace_state, param_set_trace_state, param_get_trace_st=
-ate,
-> @@ -282,7 +282,7 @@ static int param_get_acpica_version(char *buffer,
->  {
->         int result;
->
-> -       result =3D sprintf(buffer, "%x\n", ACPI_CA_VERSION);
-> +       result =3D sysfs_emit(buffer, "%x\n", ACPI_CA_VERSION);
->
->         return result;
->  }
-> @@ -366,9 +366,8 @@ static int acpi_table_attr_init(struct kobject *table=
-s_obj,
->         if (table_attr->instance > 1 || (table_attr->instance =3D=3D 1 &&
->                                          !acpi_get_table
->                                          (table_header->signature, 2, &he=
-ader))) {
-> -               snprintf(instance_str, sizeof(instance_str), "%u",
-> -                        table_attr->instance);
-> -               strcat(table_attr->filename, instance_str);
-> +               sysfs_emit(instance_str, "%u%s", table_attr->instance,
-> +                          table_attr->filename);
->         }
->
->         table_attr->attr.size =3D table_header->length;
-> @@ -687,7 +686,7 @@ static ssize_t counter_show(struct kobject *kobj,
->             acpi_irq_not_handled;
->         all_counters[num_gpes + ACPI_NUM_FIXED_EVENTS + COUNT_GPE].count =
-=3D
->             acpi_gpe_count;
-> -       size =3D sprintf(buf, "%8u", all_counters[index].count);
-> +       size =3D sysfs_emit(buf, "%8u", all_counters[index].count);
->
->         /* "gpe_all" or "sci" */
->         if (index >=3D num_gpes + ACPI_NUM_FIXED_EVENTS)
-> @@ -698,29 +697,29 @@ static ssize_t counter_show(struct kobject *kobj,
->                 goto end;
->
->         if (status & ACPI_EVENT_FLAG_ENABLE_SET)
-> -               size +=3D sprintf(buf + size, "  EN");
-> +               size +=3D sysfs_emit(buf + size, "  EN");
->         else
-> -               size +=3D sprintf(buf + size, "    ");
-> +               size +=3D sysfs_emit(buf + size, "    ");
->         if (status & ACPI_EVENT_FLAG_STATUS_SET)
-> -               size +=3D sprintf(buf + size, " STS");
-> +               size +=3D sysfs_emit(buf + size, " STS");
->         else
-> -               size +=3D sprintf(buf + size, "    ");
-> +               size +=3D sysfs_emit(buf + size, "    ");
->
->         if (!(status & ACPI_EVENT_FLAG_HAS_HANDLER))
-> -               size +=3D sprintf(buf + size, " invalid     ");
-> +               size +=3D sysfs_emit(buf + size, " invalid     ");
->         else if (status & ACPI_EVENT_FLAG_ENABLED)
-> -               size +=3D sprintf(buf + size, " enabled     ");
-> +               size +=3D sysfs_emit(buf + size, " enabled     ");
->         else if (status & ACPI_EVENT_FLAG_WAKE_ENABLED)
-> -               size +=3D sprintf(buf + size, " wake_enabled");
-> +               size +=3D sysfs_emit(buf + size, " wake_enabled");
->         else
-> -               size +=3D sprintf(buf + size, " disabled    ");
-> +               size +=3D sysfs_emit(buf + size, " disabled    ");
->         if (status & ACPI_EVENT_FLAG_MASKED)
-> -               size +=3D sprintf(buf + size, " masked  ");
-> +               size +=3D sysfs_emit(buf + size, " masked  ");
->         else
-> -               size +=3D sprintf(buf + size, " unmasked");
-> +               size +=3D sysfs_emit(buf + size, " unmasked");
->
->  end:
-> -       size +=3D sprintf(buf + size, "\n");
-> +       size +=3D sysfs_emit(buf + size, "\n");
->         return result ? result : size;
->  }
->
-> @@ -885,27 +884,27 @@ void acpi_irq_stats_init(void)
->                 char *name;
->
->                 if (i < num_gpes)
-> -                       sprintf(buffer, "gpe%02X", i);
-> +                       sysfs_emit(buffer, "gpe%02X", i);
->                 else if (i =3D=3D num_gpes + ACPI_EVENT_PMTIMER)
-> -                       sprintf(buffer, "ff_pmtimer");
-> +                       sysfs_emit(buffer, "ff_pmtimer");
->                 else if (i =3D=3D num_gpes + ACPI_EVENT_GLOBAL)
-> -                       sprintf(buffer, "ff_gbl_lock");
-> +                       sysfs_emit(buffer, "ff_gbl_lock");
->                 else if (i =3D=3D num_gpes + ACPI_EVENT_POWER_BUTTON)
-> -                       sprintf(buffer, "ff_pwr_btn");
-> +                       sysfs_emit(buffer, "ff_pwr_btn");
->                 else if (i =3D=3D num_gpes + ACPI_EVENT_SLEEP_BUTTON)
-> -                       sprintf(buffer, "ff_slp_btn");
-> +                       sysfs_emit(buffer, "ff_slp_btn");
->                 else if (i =3D=3D num_gpes + ACPI_EVENT_RTC)
-> -                       sprintf(buffer, "ff_rt_clk");
-> +                       sysfs_emit(buffer, "ff_rt_clk");
->                 else if (i =3D=3D num_gpes + ACPI_NUM_FIXED_EVENTS + COUN=
-T_GPE)
-> -                       sprintf(buffer, "gpe_all");
-> +                       sysfs_emit(buffer, "gpe_all");
->                 else if (i =3D=3D num_gpes + ACPI_NUM_FIXED_EVENTS + COUN=
-T_SCI)
-> -                       sprintf(buffer, "sci");
-> +                       sysfs_emit(buffer, "sci");
->                 else if (i =3D=3D num_gpes + ACPI_NUM_FIXED_EVENTS + COUN=
-T_SCI_NOT)
-> -                       sprintf(buffer, "sci_not");
-> +                       sysfs_emit(buffer, "sci_not");
->                 else if (i =3D=3D num_gpes + ACPI_NUM_FIXED_EVENTS + COUN=
-T_ERROR)
-> -                       sprintf(buffer, "error");
-> +                       sysfs_emit(buffer, "error");
->                 else
-> -                       sprintf(buffer, "bug%02X", i);
-> +                       sysfs_emit(buffer, "bug%02X", i);
->
->                 name =3D kstrdup(buffer, GFP_KERNEL);
->                 if (name =3D=3D NULL)
-> @@ -937,7 +936,7 @@ static void __exit interrupt_stats_exit(void)
->
->  static ssize_t pm_profile_show(struct kobject *kobj, struct kobj_attribu=
-te *attr, char *buf)
->  {
-> -       return sprintf(buf, "%d\n", acpi_gbl_FADT.preferred_profile);
-> +       return sysfs_emit(buf, "%d\n", acpi_gbl_FADT.preferred_profile);
->  }
->
->  static const struct kobj_attribute pm_profile_attr =3D __ATTR_RO(pm_prof=
-ile);
-> @@ -946,7 +945,7 @@ static ssize_t enabled_show(struct kobject *kobj, str=
-uct kobj_attribute *attr, c
->  {
->         struct acpi_hotplug_profile *hotplug =3D to_acpi_hotplug_profile(=
-kobj);
->
-> -       return sprintf(buf, "%d\n", hotplug->enabled);
-> +       return sysfs_emit(buf, "%d\n", hotplug->enabled);
->  }
->
->  static ssize_t enabled_store(struct kobject *kobj, struct kobj_attribute=
- *attr,
-> @@ -1000,7 +999,7 @@ void acpi_sysfs_add_hotplug_profile(struct acpi_hotp=
-lug_profile *hotplug,
->  static ssize_t force_remove_show(struct kobject *kobj,
->                                  struct kobj_attribute *attr, char *buf)
->  {
-> -       return sprintf(buf, "%d\n", 0);
-> +       return sysfs_emit(buf, "%d\n", 0);
->  }
->
->  static ssize_t force_remove_store(struct kobject *kobj,
-> --
-> 2.50.0
->
->
+
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
