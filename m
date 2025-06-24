@@ -1,41 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888842EE980;
-	Tue, 24 Jun 2025 15:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3582D9EC4;
+	Tue, 24 Jun 2025 15:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750777725; cv=none; b=qqawr3U0OkUzf+lLjJHhtspGD3n3NCo18HXOk1VnRzGcG8z0QTzKwWzmEl9sUimhuhQTE7kOvJHmzOMprrWUXLyx8uW5DvY298isDNRZpWUGno8rX+K0Jd45wY4fBMil+CLmpDztsgDlbG/yKpaEDAra5eulGGhOupgbmMQ3Pkk=
+	t=1750777725; cv=none; b=sxWT71uEWnYC4UbvXNuxrHKkq1+uoatFRYXvKtkdhcTsAKbkuBXOyldrD4EO+icAwi1FMk38DPgu/NFwGu+k/F7+LI/Kwo5JMnMKmkctFKrsy3Io0TTQQMrnX2HdsV11wuK3RKKZFqGfMPgf13f1Xpx0mOD77GKL64Dn9uDBQ8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750777725; c=relaxed/simple;
-	bh=xp6446iJXQaQj/u0PWhIbBfp6TSCs3uvRB+uvz0SEZ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tsEaSpP8c/c66dGUDLAu3OafNztMw7qvBwF97SUsqsFA1kiATFxs/aZqm+rCAX2sOwbX2jkkLI8stwEzCYwqDfU+P62mnAzobrDrkUiwb/PTCXl8F0KnGyYNt5D8/KuIROGxsj2+De1ZsFmlxAqM2TDc52+jARJjkZD2FyJKYRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S8SlOiFI; arc=none smtp.client-ip=10.30.226.201
+	bh=U9oBpf5k/2VA8D3h5A5m5gaTWpXc8Aart4fOHM4laT8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=j2rGgQXkx0Y0BpCCds11ybllfX7i58AO+Ysnypuok3sRSfNQMWtaBZmDIGoTt8ilGhqILiJ583FKbPG32ZRHUxyiyaDdKjNcTpAPV0xxR+W6felCrG0Cf0G1w01xu35qOsu/3iQo3H3281cRmzMMG936nmRYxyMxEjSwDPBhTKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=XAuxEEi/; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S8SlOiFI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 347ADC4CEE3;
-	Tue, 24 Jun 2025 15:08:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750777725;
-	bh=xp6446iJXQaQj/u0PWhIbBfp6TSCs3uvRB+uvz0SEZ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=S8SlOiFIYJpF1C+2PRMsC7cLXAHMLdbJeXqkmTc7rC8Su0ahvTQXdfZlngIobBEOw
-	 Z1sayoA4YjjVQtZeRm6axJ2kK4aySJifS+aMxuVzU/PVNDLAiYeiWadvw7b5feeA8v
-	 fZbb6z009Z5GUYqVyQiBnOou/QtuJImOR83hbKL+xpJHGIqFIH0DukJhPpEAB3XUlW
-	 417nH0WiWbO4J50SYx36FmSjXkANDtsN0X8foAQZwtNaF0jPpWXHhowSw/CDQT24jW
-	 ZWMwdXwxX5HF69bTq84JNbfXd+mCSyx4aOfrZWss5wjt44Vg1v9gogKF55gHFpHr5L
-	 9MHf+oKJkpeIQ==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 43/66] kconfig: gconf: preserve menu selection when switching view mode
-Date: Wed, 25 Jun 2025 00:05:31 +0900
-Message-ID: <20250624150645.1107002-44-masahiroy@kernel.org>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="XAuxEEi/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1750777724; x=1782313724;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=U9oBpf5k/2VA8D3h5A5m5gaTWpXc8Aart4fOHM4laT8=;
+  b=XAuxEEi/d2F+NJvU2aaqiQPYkXutI/FIrTcQ1mytOYEgjzF9hV8IzRlt
+   79KF6TaakS+8MG+EhWZgK56cXDxG8zFXuMmKBDYC2dzvD5qcZVAJZgNWN
+   pZXXwmPOuOId+0xXK91kEY7e5I2WBt9aErxjAJASgQzNt1Y/dPXoIaFH1
+   fGOnB8aVEqk+9WZZn7eueojZlDyv7D7b7zWl8Gj5YZFsg5z8FiV7RhU9h
+   3ZRjgeqPHg/m8JVScfx1vFqO5ZFnMX1J6Va4mqACSeKrg7w4LwI4LfGAQ
+   uGT+eM3B5t28qZCbEtdcBiJItpx07ZJFHR+nRW9CpjVLBeH9I/2sJYfh+
+   Q==;
+X-CSE-ConnectionGUID: 4+RzxTN1Qsa6vG3Bpty4nA==
+X-CSE-MsgGUID: ITLVdiLFT6OeW9wi0pYzVQ==
+X-IronPort-AV: E=Sophos;i="6.16,262,1744095600"; 
+   d="scan'208";a="42688166"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Jun 2025 08:08:41 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 24 Jun 2025 08:08:36 -0700
+Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Tue, 24 Jun 2025 08:08:35 -0700
+From: <Ryan.Wanner@microchip.com>
+To: <mturquette@baylibre.com>, <sboyd@kernel.org>,
+	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>
+CC: <robh@kernel.org>, <linux-clk@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<varshini.rajendran@microchip.com>, Ryan Wanner <Ryan.Wanner@microchip.com>
+Subject: [PATCH v2 00/32] clk: at91: add support for parent_data and
+Date: Tue, 24 Jun 2025 08:07:57 -0700
+Message-ID: <cover.1750182562.git.Ryan.Wanner@microchip.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250624150645.1107002-1-masahiroy@kernel.org>
-References: <20250624150645.1107002-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,164 +60,99 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Preserve the current menu selection when switching to a different view
-mode, as it improves usability.
+From: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+This series adds support for parent data and parent _hw on the at91
+clock drivers. This also updates all the SoC specific clock drivers to
+use this format as well.
 
- scripts/kconfig/gconf.c | 86 +++++++++++++++++++++++++++++++++++++----
- 1 file changed, 78 insertions(+), 8 deletions(-)
+This is a continuation of the V1 of this series here [1].
 
-diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
-index cf9345ba23ce..184678dd4fa6 100644
---- a/scripts/kconfig/gconf.c
-+++ b/scripts/kconfig/gconf.c
-@@ -47,6 +47,7 @@ static GtkTreeStore *tree1, *tree2;
- static GtkTreeModel *model1, *model2;
- 
- static struct menu *browsed; // browsed menu for SINGLE/SPLIT view
-+static struct menu *selected; // selected entry
- 
- enum {
- 	COL_OPTION, COL_NAME, COL_NO, COL_MOD, COL_YES, COL_VALUE,
-@@ -68,6 +69,47 @@ static void conf_changed(bool dirty)
- 
- /* Utility Functions */
- 
-+static void _select_menu(GtkTreeView *view, GtkTreeModel *model,
-+			 GtkTreeIter *parent, struct menu *match)
-+{
-+	GtkTreeIter iter;
-+	gboolean valid;
-+
-+	valid = gtk_tree_model_iter_children(model, &iter, parent);
-+	while (valid) {
-+		struct menu *menu;
-+
-+		gtk_tree_model_get(model, &iter, COL_MENU, &menu, -1);
-+
-+		if (menu == match) {
-+			GtkTreeSelection *selection;
-+			GtkTreePath *path;
-+
-+			/*
-+			 * Expand parents to reflect the selection, and
-+			 * scroll down to it.
-+			 */
-+			path = gtk_tree_model_get_path(model, &iter);
-+			gtk_tree_view_expand_to_path(view, path);
-+			gtk_tree_view_scroll_to_cell(view, path, NULL, TRUE,
-+						     0.5, 0.0);
-+			gtk_tree_path_free(path);
-+
-+			selection = gtk_tree_view_get_selection(view);
-+			gtk_tree_selection_select_iter(selection, &iter);
-+		}
-+
-+		_select_menu(view, model, &iter, match);
-+
-+		valid = gtk_tree_model_iter_next(model, &iter);
-+	}
-+}
-+
-+static void select_menu(GtkTreeView *view, struct menu *match)
-+{
-+	_select_menu(view, gtk_tree_view_get_model(view), NULL, match);
-+}
-+
- static void set_view_mode(enum view_mode mode)
- {
- 	view_mode = mode;
-@@ -89,24 +131,40 @@ static void set_view_mode(enum view_mode mode)
- 
- 	switch (mode) {
- 	case SINGLE_VIEW:
--		browsed = &rootmenu;
-+		if (selected)
-+			browsed = menu_get_parent_menu(selected) ?: &rootmenu;
-+		else
-+			browsed = &rootmenu;
- 		display_tree_part();
-+		select_menu(GTK_TREE_VIEW(tree2_w), selected);
- 		gtk_widget_set_sensitive(single_btn, FALSE);
- 		break;
- 	case SPLIT_VIEW:
-+		browsed = NULL;
-+		if (selected) {
-+			if (selected->type == M_MENU)
-+				browsed = selected;
-+			else
-+				browsed = menu_get_parent_menu(selected);
-+		}
- 		gtk_tree_store_clear(tree2);
- 		display_list();
-+		if (browsed)
-+			display_tree(tree2, browsed);
-+		select_menu(GTK_TREE_VIEW(tree1_w), browsed);
-+		select_menu(GTK_TREE_VIEW(tree2_w), selected);
- 		gtk_widget_set_sensitive(split_btn, FALSE);
- 		break;
- 	case FULL_VIEW:
- 		gtk_tree_store_clear(tree2);
- 		display_tree(tree2, &rootmenu);
-+		select_menu(GTK_TREE_VIEW(tree2_w), selected);
- 		gtk_widget_set_sensitive(full_btn, FALSE);
- 		break;
- 	}
- 
--	if (mode != SINGLE_VIEW)
--		gtk_widget_set_sensitive(back_btn, FALSE);
-+	gtk_widget_set_sensitive(back_btn,
-+				 mode == SINGLE_VIEW && browsed != &rootmenu);
- }
- 
- static void text_insert_help(struct menu *menu)
-@@ -603,6 +661,8 @@ static gboolean on_treeview2_button_press_event(GtkWidget *widget,
- 		return FALSE;
- 	gtk_tree_model_get(model, &iter, COL_MENU, &menu, -1);
- 
-+	selected = menu;
-+
- 	col = column2index(column);
- 	if (event->type == GDK_2BUTTON_PRESS) {
- 		enum prop_type ptype;
-@@ -712,8 +772,12 @@ static gboolean on_treeview1_button_press_event(GtkWidget *widget,
- 	if (event->type == GDK_2BUTTON_PRESS)
- 		toggle_sym_value(menu);
- 
--	browsed = menu;
--	display_tree_part();
-+	selected = menu;
-+
-+	if (menu->type == M_MENU) {
-+		browsed = menu;
-+		display_tree_part();
-+	}
- 
- 	gtk_tree_view_set_cursor(view, path, NULL, FALSE);
- 	gtk_widget_grab_focus(tree2_w);
-@@ -1006,10 +1070,16 @@ static void _display_tree(GtkTreeStore *tree, struct menu *menu,
- 	enum prop_type ptype;
- 	GtkTreeIter iter;
- 
--	if (menu == &rootmenu)
--		browsed = &rootmenu;
--
- 	for (child = menu->list; child; child = child->next) {
-+		/*
-+		 * REVISIT:
-+		 * menu_finalize() creates empty "if" entries.
-+		 * Do not confuse gtk_tree_model_get(), which would otherwise
-+		 * return "if" menu entry.
-+		 */
-+		if (child->type == M_IF)
-+			continue;
-+
- 		prop = child->prompt;
- 		ptype = prop ? prop->type : P_UNKNOWN;
- 
+This has been tested on the SAMA5* SoCs, the sam9x* SoCs, and the SAMA7*
+SoCs.
+
+Changes v1 -> V2:
+- Remove all the small sama7g54 SoC driver changes and put them in their
+  own patch.
+- Add the SAMA7D65 and the SAM9X75 to this update.
+- Add a patch to move all common used macros into the pmc.h file.
+- Update changes from v6.6 to v6.16.
+- Remove patches that where style fixes and include those in the update.
+
+1) https://lore.kernel.org/all/20230727053156.13587-1-claudiu.beznea@tuxon.dev/
+
+
+Claudiu Beznea (29):
+  clk: at91: pmc: add macros for clk_parent_data
+  clk: at91: clk-sam9x60-pll: use clk_parent_data
+  clk: at91: clk-peripheral: switch to clk_parent_data
+  clk: at91: clk-main: switch to clk parent data
+  clk: at91: clk-utmi: use clk_parent_data
+  clk: at91: clk-master: use clk_parent_data
+  clk: at91: clk-programmable: use clk_parent_data
+  clk: at91: clk-generated: use clk_parent_data
+  clk: at91: clk-usb: add support for clk_parent_data
+  clk: at91: clk-system: use clk_parent_data
+  clk: at91: clk-pll: add support for parent_hw
+  clk: at91: clk-audio-pll: add support for parent_hw
+  clk: at91: clk-plldiv: add support for parent_hw
+  clk: at91: clk-h32mx: add support for parent_hw
+  clk: at91: clk-i2s-mux: add support for parent_hw
+  clk: at91: clk-smd: add support for clk_parent_data
+  clk: at91: clk-slow: add support for parent_hw
+  clk: at91: dt-compat: switch to parent_hw and parent_data
+  clk: at91: sam9x60: switch to parent_hw and parent_data
+  clk: at91: sama5d2: switch to parent_hw and parent_data
+  clk: at91: sama5d3: switch to parent_hw and parent_data
+  clk: at91: sama5d4: switch to parent_hw and parent_data
+  clk: at91: at91sam9x5: switch to parent_hw and parent_data
+  clk: at91: at91rm9200: switch to parent_hw and parent_data
+  clk: at91: at91sam9260: switch to parent_hw and parent_data
+  clk: at91: at91sam9g45: switch to parent_hw and parent_data
+  clk: at91: at91sam9n12: switch to parent_hw and parent_data
+  clk: at91: at91sam9rl: switch to clk_parent_data
+  clk: at91: sama7g5: switch to clk_parent_data
+
+Ryan Wanner (3):
+  clk: at91: pmc: Move macro to header file
+  clk: at91: sam9x75: switch to parent_hw and parent_data
+  clk: at91: sama7d65: switch to clk_parent_data
+
+ drivers/clk/at91/at91rm9200.c       |  95 ++++----
+ drivers/clk/at91/at91sam9260.c      | 136 ++++++------
+ drivers/clk/at91/at91sam9g45.c      |  89 ++++----
+ drivers/clk/at91/at91sam9n12.c      | 106 ++++-----
+ drivers/clk/at91/at91sam9rl.c       |  63 +++---
+ drivers/clk/at91/at91sam9x5.c       | 125 ++++++-----
+ drivers/clk/at91/clk-audio-pll.c    |  28 ++-
+ drivers/clk/at91/clk-generated.c    |   8 +-
+ drivers/clk/at91/clk-h32mx.c        |  11 +-
+ drivers/clk/at91/clk-i2s-mux.c      |   6 +-
+ drivers/clk/at91/clk-main.c         |  16 +-
+ drivers/clk/at91/clk-master.c       |  24 +-
+ drivers/clk/at91/clk-peripheral.c   |  16 +-
+ drivers/clk/at91/clk-pll.c          |   9 +-
+ drivers/clk/at91/clk-plldiv.c       |  11 +-
+ drivers/clk/at91/clk-programmable.c |   8 +-
+ drivers/clk/at91/clk-sam9x60-pll.c  |  14 +-
+ drivers/clk/at91/clk-slow.c         |   8 +-
+ drivers/clk/at91/clk-smd.c          |  10 +-
+ drivers/clk/at91/clk-system.c       |   8 +-
+ drivers/clk/at91/clk-usb.c          |  41 ++--
+ drivers/clk/at91/clk-utmi.c         |  16 +-
+ drivers/clk/at91/dt-compat.c        |  80 +++++--
+ drivers/clk/at91/pmc.h              |  66 +++---
+ drivers/clk/at91/sam9x60.c          | 117 +++++-----
+ drivers/clk/at91/sam9x7.c           | 330 ++++++++++++++++------------
+ drivers/clk/at91/sama5d2.c          | 168 +++++++-------
+ drivers/clk/at91/sama5d3.c          | 122 +++++-----
+ drivers/clk/at91/sama5d4.c          | 129 +++++------
+ drivers/clk/at91/sama7d65.c         | 116 +++++-----
+ drivers/clk/at91/sama7g5.c          | 111 +++++-----
+ 31 files changed, 1110 insertions(+), 977 deletions(-)
+
 -- 
 2.43.0
 
