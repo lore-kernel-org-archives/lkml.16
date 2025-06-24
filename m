@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC02D2D3A8C;
-	Tue, 24 Jun 2025 15:08:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C372D3A8C;
+	Tue, 24 Jun 2025 15:08:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750777693; cv=none; b=rEU2e01Waw51hl+2QQZfkHaDWN557voenO5RbjI3mej9nJqdOGpBAH0hyUqIZwJWB4fwfc9IvFAGT6kxgfeA7YKXzeKiizNeHw9Yt5BwvPNm1BOWI9OlMNLm6A8zh/b8dRftamr4hsrCUR4ud57nT0IJhEhXQpFoNq6JLDyhlGE=
+	t=1750777698; cv=none; b=gRjSbuzF35Bc0mU5WapwPyKiVzJoVxn+xqfrVRWYL9lke5nVZjY7qiMq0pWiiCzzGURm6b36ZCXiXHzHY+u4gRlJrrHEyuWIssZD2vv+OaNSrX1mrYdsJ04NDOY0otVOzfww/s4tqeXAaq2PcOm/28/sb9WV3AYB3MewjzOYdlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750777693; c=relaxed/simple;
-	bh=/xvw+d2DNr170zbN4wOZ/bwy5K0kVuVgb6lKgCGnKSc=;
+	s=arc-20240116; t=1750777698; c=relaxed/simple;
+	bh=lQOXS5XkltNaHpRChFfbCSkSPUttaa14aTnxpjQhsUk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gRWShLBSH7Ky/6IAeRiKivIvFtLqGASpBsMVOPyclWHjLgSX+bhoLymwUUkj+FNIOiQEBrjHn1U3L+Ns6B6AkmdOUOQj9myCthxDBS0YD3a7nJ15+Ic66b1NPZXUUj9/mGGxnNf36X87PbiMoVZbaof0pWPJeMaCBIXS5lVFHfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a1aN+PPH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GdItSTjAhDEB8BJ8KWx3M8bW0WHfu+seI7b8zDUki8jgycrqQcU6RtKxOPIW5OkOUmiE0NzZUaw7LVdziYjRT0oFdSnPe+CmR8hgbiUxZko/BRllh22WZ0LhnLNwHQD/BvrutL32cL2h60CfCmgiZARZ9Oomp6sfu/NDW9SRxBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BaKt3QGX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a1aN+PPH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 403D0C4CEE3;
-	Tue, 24 Jun 2025 15:08:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BaKt3QGX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 075BCC4CEE3;
+	Tue, 24 Jun 2025 15:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750777693;
-	bh=/xvw+d2DNr170zbN4wOZ/bwy5K0kVuVgb6lKgCGnKSc=;
+	s=k20201202; t=1750777698;
+	bh=lQOXS5XkltNaHpRChFfbCSkSPUttaa14aTnxpjQhsUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=a1aN+PPHeMciK+x4HGVeoVftWFXqsfpj0bzYsSBR8LDoEtvUkFr6Zk74U3bFLHISN
-	 oeEL29yggnX6VrREF7YJMthwnl7fzYiuY7iGgsk1e55xaUKyeeSlemdutKDBxpH3YM
-	 3I6ZYSFahFNR4Gg/mNeWbq5gS5ZhVhqCOTVVm7iE8R7tlwZywezVDlKs99smNphuBe
-	 TUUr0KzK3j4jrgZCQn/iKwj74HnBMxVEHzwVFT1ePB5135MJY3F8Euotxy36aKA653
-	 8eu7+8QZvMTX4jbmg7RMq+F4Rzb9KmlO9C0U6reqWs/HqYd6p3QpJNjdmudu4g5JOU
-	 4MHeWS+utlW9A==
+	b=BaKt3QGXpi6YjTdDXLnstbuJZx4TRUipgR/8OYL5+WU8aaYjADx3WbmHsrw4/8lBx
+	 4EX0yRGvIgTHM0vtUZdIlnlxBb+OG3PMppOrg3J5GPB/tVhmBXAnxRmt58j8j8pdbC
+	 rNmQS8NGo/hRzruWF9KYb1R3HYq7YkZ3DAX0ojVshp/vFc9wP+PadGfkJgKAaJ8lwh
+	 1OMpr5u13f8khc/jdU/xc5f3BHr7+iCr5Iecttm47iV21uP1Tux7xZtX9qV+g5B9DQ
+	 ulqhgYfy1saarvvZlOl6GSYgKomJfSWmbt5ya2Ifm3HhUpMrUY1jt2KczPIacgBYB4
+	 PF7BAA+MLS0hQ==
 From: Masahiro Yamada <masahiroy@kernel.org>
 To: linux-kbuild@vger.kernel.org
 Cc: Masahiro Yamada <masahiroy@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 28/66] kconfig: gconf: move button1 initialization below
-Date: Wed, 25 Jun 2025 00:05:16 +0900
-Message-ID: <20250624150645.1107002-29-masahiroy@kernel.org>
+Subject: [PATCH 30/66] kconfig: gconf: remove glade_xml_signal_autoconnect() call
+Date: Wed, 25 Jun 2025 00:05:18 +0900
+Message-ID: <20250624150645.1107002-31-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250624150645.1107002-1-masahiroy@kernel.org>
 References: <20250624150645.1107002-1-masahiroy@kernel.org>
@@ -44,40 +44,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Collect the toolbar-related code in one place.
+Now that all signals are connected manually, this is no longer
+unnecessary.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/kconfig/gconf.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ scripts/kconfig/gconf.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
-index 530ad6aa42d0..bed4c86c2085 100644
+index 02bbb7ce4c4a..09537245213a 100644
 --- a/scripts/kconfig/gconf.c
 +++ b/scripts/kconfig/gconf.c
-@@ -1144,9 +1144,7 @@ static void init_main_window(const gchar *glade_file)
- 	tree2_w = glade_xml_get_widget(xml, "treeview2");
- 	text_w = glade_xml_get_widget(xml, "textview3");
+@@ -1120,7 +1120,6 @@ static void init_main_window(const gchar *glade_file)
+ 	xml = glade_xml_new(glade_file, "window1", NULL);
+ 	if (!xml)
+ 		g_error("GUI loading failed !\n");
+-	glade_xml_signal_autoconnect(xml);
  
--	back_btn = glade_xml_get_widget(xml, "button1");
--	gtk_widget_set_sensitive(back_btn, FALSE);
--
-+	/* menubar */
- 	widget = glade_xml_get_widget(xml, "show_name1");
- 	gtk_check_menu_item_set_active((GtkCheckMenuItem *) widget,
- 				       show_name);
-@@ -1159,6 +1157,10 @@ static void init_main_window(const gchar *glade_file)
- 	gtk_check_menu_item_set_active((GtkCheckMenuItem *) widget,
- 				       show_value);
- 
-+	/* toolbar */
-+	back_btn = glade_xml_get_widget(xml, "button1");
-+	gtk_widget_set_sensitive(back_btn, FALSE);
-+
- 	save_btn = glade_xml_get_widget(xml, "button3");
- 	save_menu_item = glade_xml_get_widget(xml, "save1");
- 	conf_set_changed_callback(conf_changed);
+ 	main_wnd = glade_xml_get_widget(xml, "window1");
+ 	g_signal_connect(main_wnd, "destroy",
 -- 
 2.43.0
 
