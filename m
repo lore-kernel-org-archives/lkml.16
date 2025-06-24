@@ -1,121 +1,119 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 005D21DFFC;
-	Tue, 24 Jun 2025 12:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33EE2980A1;
+	Tue, 24 Jun 2025 12:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750769445; cv=none; b=oE9eEVfnRAuoDAtWlcXRP3nWlUeRvKBB63AA0qP0gJZpZrMLBm6qSeBlzvgy0pee07iNfLWIREjYnjd/u8ib0I4IQhc5nXYdmqszaDMIWQPMHMP84jYc0lFCF3smfP+UXBpO8uUfoU8yBj5dxZhg3CIRq1t+r1B3rkPZXhQeh+E=
+	t=1750769459; cv=none; b=FQYn8ybd8EA7trxHx4iyv6vsrkzBy2oWAKgZSosSPMYo9QYT0XLewoxtcnc01POHTFd8Nq77+tVHNw1dIBQ2py9S9NSHU34SlLcgygMt16J06JVF/k5nmKUiqeHVTDZ/SCwfKvQ7u01MPD4XL9GqK1IS2PbGo9A4ufna0X39rnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750769445; c=relaxed/simple;
-	bh=GyodmIXznG8GSgL/Ai3LAgH/nDuaIi0hljP1HBMPTe4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=di3X5Z+Ufu3AIldNgj+3U5n0oE4uWtLt5GfLjBco8uxWJopUJPkDeWwagkCDJ6GUMKr8zbeGZQ2JBKM5OXdHnxzdZStMwNFl0ZNGVk+kFHbhdsN28uG6t7joYtM/nr+wIQC5PxHGMr738c5FU/alN00U5fNKksxUU02EQGH8Si4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25A03106F;
-	Tue, 24 Jun 2025 05:50:23 -0700 (PDT)
-Received: from e124191.cambridge.arm.com (e124191.cambridge.arm.com [10.1.197.45])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D7073F66E;
-	Tue, 24 Jun 2025 05:50:37 -0700 (PDT)
-Date: Tue, 24 Jun 2025 13:50:32 +0100
-From: Joey Gouly <joey.gouly@arm.com>
-To: Steven Price <steven.price@arm.com>
-Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Alexandru Elisei <alexandru.elisei@arm.com>,
-	Christoffer Dall <christoffer.dall@arm.com>,
-	Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-	Gavin Shan <gshan@redhat.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>,
-	Alper Gun <alpergun@google.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-	Emi Kisanuki <fj0570is@fujitsu.com>
-Subject: Re: [PATCH v9 28/43] arm64: RME: Allow checking SVE on VM instance
-Message-ID: <20250624125032.GA111675@e124191.cambridge.arm.com>
-References: <20250611104844.245235-1-steven.price@arm.com>
- <20250611104844.245235-29-steven.price@arm.com>
+	s=arc-20240116; t=1750769459; c=relaxed/simple;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MkFYeuY+Y6b+sWAs5XDCidBewyJgPybVprf2/qFk2HOTWFO4JzwQI7L3iG9jVETKOZmU/WLVKONTOkM+rhLdn1+KBCzlyGfC3uVLofEF/mpgzxJ0YASf1FcWWsSrLpvvFokPqdnK2hNzHvZfgzVFGrV/AvTUkbmklu8Vw0KTgnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=TTNLzfxA; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="TTNLzfxA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1750769453; x=1751374253; i=rwarsow@gmx.de;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=TTNLzfxAWPqVorOkmt7tbY+S4KrfvHqhZJo/wnb0c9e1XyORR7eEfls/D8IZD8SD
+	 JB4a7QAcrPzHtRQvbVGlnEpNWiWHkCCr1IrtSe+7C0lEvsQQKp2TeGKo/ZHc6K3Gr
+	 fFgjGu629Mov+rte6Qm352z5f9F9E6LiKkXBh6eSbAgpXO0ucahwXmcnLLF1dY01V
+	 Pto+yGtvDTdLmf0QhQajNBF1ir4RwuJsZ/MyXgBuOWj27fgUJrDlnnTK+UZ/P6PlC
+	 3W6IMCnkCt0y8KiCFfgF7dmUhqJoFw2pkKTbUt5xhVkqNFkC7RFkYG65OzfhcjUQm
+	 HZgTdly39h2dvPUXkw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.200.20] ([46.142.35.16]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M72sJ-1uOF1O0oUJ-00GPtV; Tue, 24
+ Jun 2025 14:50:53 +0200
+Message-ID: <1dc07d84-b19e-440b-9a49-6a34cd73f3b5@gmx.de>
+Date: Tue, 24 Jun 2025 14:50:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611104844.245235-29-steven.price@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.15 000/588] 6.15.4-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250624121449.136416081@linuxfoundation.org>
+From: Ronald Warsow <rwarsow@gmx.de>
+Content-Language: de-DE, en-US
+In-Reply-To: <20250624121449.136416081@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:YfHN219fMgd8XtyQpXiI4uiUFd0ajSFLmBBT5maCiSdGcNMm4K9
+ jkeTGTIwZF9tL8cBIQheWL5UIqejgDlfs/UNxYTJz/nEKN6pcfolwk2gEY1fX3djZ+QzOmW
+ DyO0yD9WqVTU39MLqxEk31awXAoXIdB0melyCHQ+Twyf5oXZ8TzExTQIi/S23QHd02Gdo0K
+ KQ7xyNJF0ZkDgEziXiDEw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:gBy6ai+Js54=;RynbtzxjGkVdmOmIqJglyTXcoCz
+ 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
 
-On Wed, Jun 11, 2025 at 11:48:25AM +0100, Steven Price wrote:
-> From: Suzuki K Poulose <suzuki.poulose@arm.com>
-> 
-> Given we have different types of VMs supported, check the
-> support for SVE for the given instance of the VM to accurately
-> report the status.
-> 
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> Reviewed-by: Gavin Shan <gshan@redhat.com>
+Hi Greg
 
-Reviewed-by: Joey Gouly <joey.gouly@arm.com>
+no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
 
-> ---
->  arch/arm64/include/asm/kvm_rme.h | 2 ++
->  arch/arm64/kvm/arm.c             | 5 ++++-
->  arch/arm64/kvm/rme.c             | 5 +++++
->  3 files changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
-> index 2d7d7233c525..af5150c084ce 100644
-> --- a/arch/arm64/include/asm/kvm_rme.h
-> +++ b/arch/arm64/include/asm/kvm_rme.h
-> @@ -94,6 +94,8 @@ void kvm_init_rme(void);
->  u32 kvm_realm_ipa_limit(void);
->  u32 kvm_realm_vgic_nr_lr(void);
->  
-> +bool kvm_rme_supports_sve(void);
-> +
->  int kvm_realm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap);
->  int kvm_init_realm_vm(struct kvm *kvm);
->  void kvm_destroy_realm(struct kvm *kvm);
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index 4eb229b6c315..d1ef12fe6176 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -426,7 +426,10 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->  		r = get_kvm_ipa_limit();
->  		break;
->  	case KVM_CAP_ARM_SVE:
-> -		r = system_supports_sve();
-> +		if (kvm_is_realm(kvm))
-> +			r = kvm_rme_supports_sve();
-> +		else
-> +			r = system_supports_sve();
->  		break;
->  	case KVM_CAP_ARM_PTRAUTH_ADDRESS:
->  	case KVM_CAP_ARM_PTRAUTH_GENERIC:
-> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
-> index 5f1fdefc0364..6bd21223a8be 100644
-> --- a/arch/arm64/kvm/rme.c
-> +++ b/arch/arm64/kvm/rme.c
-> @@ -38,6 +38,11 @@ static bool rme_has_feature(unsigned long feature)
->  	return !!u64_get_bits(rmm_feat_reg0, feature);
->  }
->  
-> +bool kvm_rme_supports_sve(void)
-> +{
-> +	return rme_has_feature(RMI_FEATURE_REGISTER_0_SVE_EN);
-> +}
-> +
->  static int rmi_check_version(void)
->  {
->  	struct arm_smccc_res res;
-> -- 
-> 2.43.0
-> 
+Thanks
+
+Tested-by: Ronald Warsow <rwarsow@gmx.de>
+
