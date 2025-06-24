@@ -1,82 +1,103 @@
-Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A782C15B6;
-	Tue, 24 Jun 2025 13:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750773044; cv=pass; b=J2aeMxAZ0dztvuS0Q9y+jkGCHyZHnnsUMUMSn54FI7ZhGNuE2+QqwlCkG0kiN/pmdWTFogrLKg7tdhUpPcDl/ilJA8Z2ekLFc5nMBZ2bqKuMBtLKT3sAgG240pulB4aG14WmR5LuqRQNADKKFJAwfNzjLw5qqDs1ElzQxvXvfgE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750773044; c=relaxed/simple;
-	bh=3LDQcD87Wri+XCeuQushsbc9uN7RNaVkwTY6s9v+ves=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fpGd2NuBrgIHx6V0Ly6aLANR/BZ1Ea3cLXM3vW3372H0dCAsEtoFG1miVaKaHu3lLtVF3KrVhjg3Es3TfSNRq3w5JCnIbzhnC77cQegtO0rVHk/Fh9z8EDmI8LXenuXEtUz68+6ao051QdCZZUK6aVDG/S/JE6FNd/aUtjlJXmU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b=ASSplS6Q; arc=pass smtp.client-ip=136.143.188.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A87D23E336;
+	Tue, 24 Jun 2025 13:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750773058; cv=none; b=rttg3ztKm4bMfoUbIPanbYC8Kn+l06WLjk94zTcWhl8jUC78s9J3KxdHrVqF0HqXBLh5CfK3BiMuTSN3HNCWJ+tk8VKhZPuoeIZ2T5a/zZ5FDlROhMVlW+3K8BqSeWiVDJ4HevZE2ll96suX6LxPiIjye1KDu6vP1PVgKgwtmkI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750773058; c=relaxed/simple;
+	bh=0u8rfWjQgNMd3JSn2W3AZTA1DNb5PlWDUIQ/f/uQPQU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Vvj3NSW8xw0Lmfqpo+pBilf9VTOfp7AdAAs8KmXckEE45PlvPvZ4VvrfqL4fuRYqCOmhrbpvDclYhurFwSHPLqV+3kbwQBRsFeTy7iS6SIGwI95qI+ZJZwUis5NbdQf5gRTDligyjICbxPq+sdsUR+pVlH4zN0A9TpTlWfspavU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KwtN/2eW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b="ASSplS6Q"
-ARC-Seal: i=1; a=rsa-sha256; t=1750772999; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=HLWWqkzJBSCO02jmpwtlHthMZkWiBpHDnf9cvDr3XP5JhIgB6ehWRY6etS5qQ3U2jqmFx34awjXzhso7eJFhX5EOhiqfJ5ZHmGnnra78heE07TXhd/wG+BEhJe5hzhKDNHPt3riYBEsBLtGJ9QZMfxmv2RLtAzE4AYibe1ZdM74=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750772999; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=3LDQcD87Wri+XCeuQushsbc9uN7RNaVkwTY6s9v+ves=; 
-	b=HXugNEJocg/1EDbe7DPsj2aiYUr7PPRE9V/OktHI8VLRCLiHt6ulZqwUXlKgCvC40ROmSVEekb39878ixPgRwXvU+XRpAIVHfoJvEIMHdQl6WcD5OnlNkPkT1alb0WVDbMFLkubaEO9/YPBiBnnPXE/Vm0m1kFZfB4xDIa4hIAg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nfraprado@collabora.com;
-	dmarc=pass header.from=<nfraprado@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750772999;
-	s=zohomail; d=collabora.com; i=nfraprado@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=3LDQcD87Wri+XCeuQushsbc9uN7RNaVkwTY6s9v+ves=;
-	b=ASSplS6QQZVezYgDHp0gixP86wG7iGU3qlgQy9LSg316kfeJOzDAHHmJ77C+IPG4
-	avXEF0Po3g0xyJmam+yzmlcU/Vu6RfmZYxRd9o41SfeVhbpRrHWzGSJj3E/eistQYDT
-	y/I66yC7rRH7qlu2Zui/copKRLnoQL2WGKqCNH1k=
-Received: by mx.zohomail.com with SMTPS id 175077299645558.67407326984835;
-	Tue, 24 Jun 2025 06:49:56 -0700 (PDT)
-Message-ID: <52bcdfcfe84db4be9eeb7b7ebe926e990e460c03.camel@collabora.com>
-Subject: Re: [PATCH 0/3] Add MT8196 compatibles to bindings
-From: =?ISO-8859-1?Q?N=EDcolas?= "F. R. A. Prado" <nfraprado@collabora.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	devicetree@vger.kernel.org
-Cc: qii.wang@mediatek.com, andi.shyti@kernel.org, robh@kernel.org, 
- krzk+dt@kernel.org, conor+dt@kernel.org, matthias.bgg@gmail.com, 
- gregkh@linuxfoundation.org, jirislaby@kernel.org,
- daniel.lezcano@linaro.org,  tglx@linutronix.de, linux-i2c@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org,  linux-serial@vger.kernel.org,
- kernel@collabora.com
-Date: Tue, 24 Jun 2025 09:49:24 -0400
-In-Reply-To: <20250611110800.458164-1-angelogioacchino.delregno@collabora.com>
-References: 
-	<20250611110800.458164-1-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KwtN/2eW"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DD9B4C4CEE3;
+	Tue, 24 Jun 2025 13:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750773056;
+	bh=0u8rfWjQgNMd3JSn2W3AZTA1DNb5PlWDUIQ/f/uQPQU=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=KwtN/2eWAgx7EDn19yJiPPcCpd2+xiWhCVq4w8a7Ho4oIsFVbikMF51qaMs9CDdqi
+	 4+w8sSP85tPnDxSVCr9RptU7wMy/Nqqrxh9xRXObIerRSiIf/NAMuHmR3TONMZSh8q
+	 EwDGs60Tlq0wXn63Syd4IzqQKi+TklyuTp4LxgS0yn50cRy3v0jKlSYqShT0GD03EN
+	 i1qEySVm7QEJhZci+1TKWb+2eOHIHxgtz2xD4dJwHudpNhQEoH0pj3fJV06mVKMShR
+	 p90YT5tEbbNJehkGVf/BoKrqvxCYEh2YJ+SjTQcB9v00T799eBPzBaGIMkO0iFo+dh
+	 jbjRrttE+nInQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AE0C71157;
+	Tue, 24 Jun 2025 13:50:56 +0000 (UTC)
+From: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
+Date: Tue, 24 Jun 2025 08:50:44 -0500
+Subject: [PATCH] lib: packing: Include necessary headers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250624-packing-includes-v1-1-c23c81fab508@amd.com>
+X-B4-Tracking: v=1; b=H4sIADOtWmgC/x3MQQqAIBBA0avIrBNKNKKrRItyxhoKE6UIxLsnL
+ d/i/wyJIlOCUWSI9HDiy1d0jQC7L34jyVgNqlWm7ZWWYbEH+02yt+eNlKRBo/XakcOhh5qFSI7
+ ffznNpXwe61EOYgAAAA==
+X-Change-ID: 20250624-packing-includes-5d544b1efd86
+To: Vladimir Oltean <olteanv@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Nathan Lynch <nathan.lynch@amd.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750773056; l=1124;
+ i=nathan.lynch@amd.com; s=20241010; h=from:subject:message-id;
+ bh=1ATmUuW12KVE9D3wPQ8yQHOTVuSIERg6h39NE9Fw3aU=;
+ b=MCdarkHUxzygavkxODWUEUPh919s6qS4cud9Js0mf9mhf3nB8iySPhbIPLiptdn8Dt04gpKzc
+ dds3LJ/Fj87BQiwrZReydyBFp7UXuZfCALw1r2AnszssNfMKYt3rtU3
+X-Developer-Key: i=nathan.lynch@amd.com; a=ed25519;
+ pk=ZR637UTGg5YLDj56cxFeHdYoUjPMMFbcijfOkAmAnbc=
+X-Endpoint-Received: by B4 Relay for nathan.lynch@amd.com/20241010 with
+ auth_id=241
+X-Original-From: Nathan Lynch <nathan.lynch@amd.com>
+Reply-To: nathan.lynch@amd.com
 
-On Wed, 2025-06-11 at 13:07 +0200, AngeloGioacchino Del Regno wrote:
-> This series adds compatibles for MT8196 (Chromebooks) and MT6991
-> (Smartphones) for HW that is fully compatible with older SoCs.
->=20
-> AngeloGioacchino Del Regno (3):
-> =C2=A0 dt-bindings: timer: mediatek,timer: Add MediaTek MT8196 compatible
-> =C2=A0 dt-bindings: serial: mediatek,uart: Add compatible for MT8196
-> =C2=A0 dt-bindings: i2c: i2c-mt65xx: Add MediaTek MT8196/6991 compatibles
+From: Nathan Lynch <nathan.lynch@amd.com>
 
-For the whole series,
+packing.h uses ARRAY_SIZE(), BUILD_BUG_ON_MSG(), min(), max(), and
+sizeof_field() without including the headers where they are defined,
+potentially causing build failures.
 
-Reviewed-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
+Fix this in packing.h and sort the result.
 
---=20
-Thanks,
+Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
+---
+ include/linux/packing.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-N=C3=ADcolas
+diff --git a/include/linux/packing.h b/include/linux/packing.h
+index 0589d70bbe0434c418f41b842f92b3300a107762..20ae4d452c7bb4069eb625ba332d617c2a840193 100644
+--- a/include/linux/packing.h
++++ b/include/linux/packing.h
+@@ -5,8 +5,12 @@
+ #ifndef _LINUX_PACKING_H
+ #define _LINUX_PACKING_H
+ 
+-#include <linux/types.h>
++#include <linux/array_size.h>
+ #include <linux/bitops.h>
++#include <linux/build_bug.h>
++#include <linux/minmax.h>
++#include <linux/stddef.h>
++#include <linux/types.h>
+ 
+ #define GEN_PACKED_FIELD_STRUCT(__type) \
+ 	struct packed_field_ ## __type { \
+
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250624-packing-includes-5d544b1efd86
+
+Best regards,
+-- 
+Nathan Lynch <nathan.lynch@amd.com>
+
+
