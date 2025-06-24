@@ -1,22 +1,64 @@
-Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 15443189F3B;
-	Tue, 24 Jun 2025 01:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6405C189F3B
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750728677; cv=none; b=f3OuulVicS5wH2/twDhGZJxdBl2nVTDK+e9CXLFYKYlQc3yXC3UD16n78N2cSzi3rcw9Pd6yEZ8gphgpIj+/Awgii/nVD42yaBW/I1MA0QmOLhOc6T7Ri618pBvIeUmpZY2y1qXvmY7/4Fnmy82ptJTndFIhJjqktFn23xLovXo=
+	t=1750728795; cv=none; b=dmCVA7cFP97qRS53i+epQHP+Wraxf7DbTdKkT+ZDLPh5YMfU2lZ9gAh459SmxZoSOKIFVTp9+r1H2UxGQRW5eE4juLk2XXyrUYu+PnE8uuvC68paIg4gA7bsf6VmCh+5nmmDTTWH+ejUK2RupwOQ2bnfU39JlB94jE4WVLUhEj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750728677; c=relaxed/simple;
-	bh=izK6xWigpQbVX5kq0ouVraYM2E7Gku1yLtAuADFoTJY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type; b=L+M0AkW/4qYkNK3VtxUjOOWEfjYFnsS+L9nWtcN1QhOZMFW3BfCmhz/T9+b3Kd9nGQHqvG7ZS12aar9iU3IEc26fQ9nEpagNz0BlGi4GJofky5ff55Y5IeeTx+RYZyt7P9zm6LJPbS4GfH84t4I46FStB5a57zocIf+x1xbfAPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from [172.30.20.101] (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id A15D060105E92;
-	Tue, 24 Jun 2025 09:31:01 +0800 (CST)
-Message-ID: <2b28f725-03ae-4666-b13b-817cd74ad82e@nfschina.com>
-Date: Tue, 24 Jun 2025 09:31:00 +0800
+	s=arc-20240116; t=1750728795; c=relaxed/simple;
+	bh=6p+408MQpHytDrmhkcz+mmecWcdbhzehShay90+zkUI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VVmmATRnxzpjOxenAHulicSi00tJAxkpoQCcrGP3WugyGQTCUw//ctlxtJRe7LpSZ5owuU+lu+rUyk/0inTQPXQe50fwq7k7q+lRgNgce38zeJtJ/8rTK8vrU6BrA0Tyi9JzrkANGsO4qoLOeGSGtEaa3KkSRuvVwD8VdozTxoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=aeeFHLHE; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="aeeFHLHE"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a52878d37aso730587f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:33:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750728791; x=1751333591; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xHCKLmpVjEQudH3qzY65MufqOC1HcXRqB++GHgObSkA=;
+        b=aeeFHLHEoLCxCTPAfaw2B2cyTiZ9ddc+ak13xP4ORIEDiBh6WC/M90bYTVwGPdcLQj
+         zcGJn3Bjmqpm73ICfH8RmoPoG7+4tlqY3TicJUSujVVxNoAVtss5P3Cleh0r3qg6OpSp
+         h4x1kxksToAFFV2lFqjc3KpWuA5e31voJpMM3Iutzh/UdfROJZIeF1wlCZrRWZRYzmIL
+         E1vGd5VXY3jz9zjE1c+Cb3OyBQXnPQopJ9CDOzTF4QeRqTmfLnsrzwFSed1iZkkBBLmM
+         WYVhnpQDiPgbzkeASF/XlA4wlKSi0asf24YVowEQLZS8XmXoYN1N6gBgB1E/DziR38LR
+         y74w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750728791; x=1751333591;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xHCKLmpVjEQudH3qzY65MufqOC1HcXRqB++GHgObSkA=;
+        b=lF6W5LzGfo0KBwbpvuFyfmk1r1u68NvdIky+ButW9DfprYixhzOlc4t94RH8NpThtZ
+         uwO4LkMZ4g0wgkvP8rURdx2TH3PFooRQ6dK1alUvE3xjm/HzTJfSwee4lhCDFRkkOR+4
+         GHAehU2sbbMmq/i+ngrv3qS+FbLFW+sWKi/XMAK5DoP2ThCuehgc5smUcEy5qLblyTQU
+         ohzw99fmNN2YtUikbQlU1EQ1wSR0BxbERbBbTqSTZ4WjOT7NQHacK4gQ/wOfhcoN5Aea
+         H9YRv/LdLe8DbQKORj5vTb7XsRw7ZtaGmXRMIWYMd9K5smdRZgAxPjZtkvlGgprHK0X9
+         y3Lg==
+X-Gm-Message-State: AOJu0Yx4vzEDeFwR59Xa8o14nAj6lPifImGOaDcHSgmZ1xk5153qyx3h
+	6cRsxUB+8ZkrgvDDslyX7iwU/+aJqECQNyREccnflITDskZcA/vHuPYoUBrlkNyucTE=
+X-Gm-Gg: ASbGncsfTjYGATCMyjbDTmpEgk4CALQxLLSf2qa7EV1CAT/uQgFQHriukTaeJqCcal5
+	U1DOsfUiSCapSkAqOPy8WITNAI238h8LvRBPx958wYnhCf34kNvCVlUdQiJ1j2fFmH3oWiEL9uA
+	Dms7x0I1dPP+OTYC7yaJW7nNUrrviXuKgSVBUBYUcgJoDJOdcQt2yaGgjbc5Bt+nthYI2Yv3nrd
+	1m1DZ/ruJzxEJFl64mENSbX5/CqWnbnQs9UT6m197tS8w4TI0Tguh9Yrm3Fx1Ttt4BusiWN9Cub
+	RMylUxMD4kL/oLGj9G94HBR+Nr/Kt6CE64VnXi8F7ZIOOvAjQnYoyQwP4PeS+X21kpzyGOqmt14
+	iKA==
+X-Google-Smtp-Source: AGHT+IHbfpmIDPmqnU8cy+Q9IV2WuX88shLGTNNvcbapHH0ZNP+AcjRX9uwgvLrVr3YI9Yof+6Sl7A==
+X-Received: by 2002:a05:6000:40c9:b0:3a4:eeeb:7e70 with SMTP id ffacd0b85a97d-3a6d12dfaf2mr4201936f8f.4.1750728790593;
+        Mon, 23 Jun 2025 18:33:10 -0700 (PDT)
+Received: from [10.202.32.28] ([202.127.77.110])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749b5e4068esm399198b3a.63.2025.06.23.18.33.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 18:33:09 -0700 (PDT)
+Message-ID: <faf70481-09dd-4c7a-bd43-f1e8bec877cb@suse.com>
+Date: Tue, 24 Jun 2025 09:33:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -24,201 +66,128 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nfsd: Using guard() to simplify nfsd_cache_lookup()
+Subject: Re: [PATCH] ocfs2: kill osb->system_file_mutex lock
+To: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+ Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+ Joseph Qi <joseph.qi@linux.alibaba.com>, jiangyiwen <jiangyiwen@huawei.com>,
+ Andrew Morton <akpm@linux-foundation.org>, ocfs2-devel@lists.linux.dev
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <934355dd-a0b1-4e53-93ac-0a7ae7458051@I-love.SAKURA.ne.jp>
+From: Heming Zhao <heming.zhao@suse.com>
 Content-Language: en-US
-To: NeilBrown <neil@brown.name>
-Cc: chuck.lever@oracle.com, jlayton@kernel.org, okorniev@redhat.com,
- Dai.Ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Su Hui <suhui@nfschina.com>
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From: Su Hui <suhui@nfschina.com>
-In-Reply-To: <175072435698.2280845.12079422273351211469@noble.neil.brown.name>
+In-Reply-To: <934355dd-a0b1-4e53-93ac-0a7ae7458051@I-love.SAKURA.ne.jp>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2025/6/24 08:19, NeilBrown wrote:
-> On Mon, 23 Jun 2025, Su Hui wrote:
->> Using guard() to replace *unlock* label. guard() makes lock/unlock code
->> more clear. Change the order of the code to let all lock code in the
->> same scope. No functional changes.
-> While I agree that this code could usefully be cleaned up and that you
-> have made some improvements, I think the use of guard() is a nearly
-> insignificant part of the change.  You could easily do exactly the same
-> patch without using guard() but having and explicit spin_unlock() before
-> the new return.  That doesn't mean you shouldn't use guard(), but it
-> does mean that the comment explaining the change could be more usefully
-> focused on the "Change the order ..." part, and maybe explain what that
-> is important.
-Got it. I will focus on "Change the order ..." part in the next v2 patch.
-> I actually think there is room for other changes which would make the
-> code even better:
-> - Change nfsd_prune_bucket_locked() to nfsd_prune_bucket().  Have it
->    take the lock when needed, then drop it, then call
->    nfsd_cacherep_dispose() - and return the count.
-> - change nfsd_cache_insert to also skip updating the chain length stats
->    when it finds a match - in that case the "entries" isn't a chain
->    length. So just  lru_put_end(), return.  Have it return NULL if
->    no match was found
-> - after the found_entry label don't use nfsd_reply_cache_free_locked(),
->    just free rp.  It has never been included in any rbtree or list, so it
->    doesn't need to be removed.
-> - I'd be tempted to have nfsd_cache_insert() take the spinlock itself
->    and call it under rcu_read_lock() - and use RCU to free the cached
->    items.
-> - put the chunk of code after the found_entry label into a separate
->    function and instead just return RC_REPLY (and maybe rename that
->    RC_CACHED).  Then in nfsd_dispatch(), if RC_CACHED was returned, call
->    that function that has the found_entry code.
->
-> I think that would make the code a lot easier to follow.  Would you like
-> to have a go at that - I suspect it would be several patches - or shall
-> I do it?
->
-> Thanks,
-> NeilBrown
->
-Really thanks for your suggestions!
-Yes, I'd like to do it in the next v2 patchset as soon as possible.
-I'm always searching some things I can participate in about linux kernel
-community, so it's happy for me to do this thing.
+Hello,
 
-regards,
-Su Hui
+Protecting refcnt with a mutex is the right approach, and commit 43b10a20372d
+did it properly.
+However, I don't see how your patch fixes the syzbot report [1]. Could you
+elaborate on the root cause analysis?
 
->
->> Signed-off-by: Su Hui <suhui@nfschina.com>
->> ---
->>   fs/nfsd/nfscache.c | 99 ++++++++++++++++++++++------------------------
->>   1 file changed, 48 insertions(+), 51 deletions(-)
->>
->> diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
->> index ba9d326b3de6..2d92adf3e6b0 100644
->> --- a/fs/nfsd/nfscache.c
->> +++ b/fs/nfsd/nfscache.c
->> @@ -489,7 +489,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigned int start,
->>   
->>   	if (type == RC_NOCACHE) {
->>   		nfsd_stats_rc_nocache_inc(nn);
->> -		goto out;
->> +		return rtn;
->>   	}
->>   
->>   	csum = nfsd_cache_csum(&rqstp->rq_arg, start, len);
->> @@ -500,64 +500,61 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigned int start,
->>   	 */
->>   	rp = nfsd_cacherep_alloc(rqstp, csum, nn);
->>   	if (!rp)
->> -		goto out;
->> +		return rtn;
->>   
->>   	b = nfsd_cache_bucket_find(rqstp->rq_xid, nn);
->> -	spin_lock(&b->cache_lock);
->> -	found = nfsd_cache_insert(b, rp, nn);
->> -	if (found != rp)
->> -		goto found_entry;
->> -	*cacherep = rp;
->> -	rp->c_state = RC_INPROG;
->> -	nfsd_prune_bucket_locked(nn, b, 3, &dispose);
->> -	spin_unlock(&b->cache_lock);
->> +	scoped_guard(spinlock, &b->cache_lock) {
->> +		found = nfsd_cache_insert(b, rp, nn);
->> +		if (found == rp) {
->> +			*cacherep = rp;
->> +			rp->c_state = RC_INPROG;
->> +			nfsd_prune_bucket_locked(nn, b, 3, &dispose);
->> +			goto out;
->> +		}
->> +		/* We found a matching entry which is either in progress or done. */
->> +		nfsd_reply_cache_free_locked(NULL, rp, nn);
->> +		nfsd_stats_rc_hits_inc(nn);
->> +		rtn = RC_DROPIT;
->> +		rp = found;
->> +
->> +		/* Request being processed */
->> +		if (rp->c_state == RC_INPROG)
->> +			goto out_trace;
->> +
->> +		/* From the hall of fame of impractical attacks:
->> +		 * Is this a user who tries to snoop on the cache?
->> +		 */
->> +		rtn = RC_DOIT;
->> +		if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
->> +			goto out_trace;
->>   
->> +		/* Compose RPC reply header */
->> +		switch (rp->c_type) {
->> +		case RC_NOCACHE:
->> +			break;
->> +		case RC_REPLSTAT:
->> +			xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
->> +			rtn = RC_REPLY;
->> +			break;
->> +		case RC_REPLBUFF:
->> +			if (!nfsd_cache_append(rqstp, &rp->c_replvec))
->> +				return rtn; /* should not happen */
->> +			rtn = RC_REPLY;
->> +			break;
->> +		default:
->> +			WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
->> +		}
->> +
->> +out_trace:
->> +		trace_nfsd_drc_found(nn, rqstp, rtn);
->> +		return rtn;
->> +	}
->> +out:
->>   	nfsd_cacherep_dispose(&dispose);
->>   
->>   	nfsd_stats_rc_misses_inc(nn);
->>   	atomic_inc(&nn->num_drc_entries);
->>   	nfsd_stats_drc_mem_usage_add(nn, sizeof(*rp));
->> -	goto out;
->> -
->> -found_entry:
->> -	/* We found a matching entry which is either in progress or done. */
->> -	nfsd_reply_cache_free_locked(NULL, rp, nn);
->> -	nfsd_stats_rc_hits_inc(nn);
->> -	rtn = RC_DROPIT;
->> -	rp = found;
->> -
->> -	/* Request being processed */
->> -	if (rp->c_state == RC_INPROG)
->> -		goto out_trace;
->> -
->> -	/* From the hall of fame of impractical attacks:
->> -	 * Is this a user who tries to snoop on the cache? */
->> -	rtn = RC_DOIT;
->> -	if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
->> -		goto out_trace;
->> -
->> -	/* Compose RPC reply header */
->> -	switch (rp->c_type) {
->> -	case RC_NOCACHE:
->> -		break;
->> -	case RC_REPLSTAT:
->> -		xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
->> -		rtn = RC_REPLY;
->> -		break;
->> -	case RC_REPLBUFF:
->> -		if (!nfsd_cache_append(rqstp, &rp->c_replvec))
->> -			goto out_unlock; /* should not happen */
->> -		rtn = RC_REPLY;
->> -		break;
->> -	default:
->> -		WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
->> -	}
->> -
->> -out_trace:
->> -	trace_nfsd_drc_found(nn, rqstp, rtn);
->> -out_unlock:
->> -	spin_unlock(&b->cache_lock);
->> -out:
->>   	return rtn;
->>   }
->>   
->> -- 
->> 2.30.2
->>
->>
+My review comments are inline below.
+
+[1]: https://syzkaller.appspot.com/bug?extid=1fed2de07d8e11a3ec1b
+
+On 6/21/25 23:56, Tetsuo Handa wrote:
+> Since calling _ocfs2_get_system_file_inode() twice with the same
+> arguments returns the same address, there is no need to serialize
+> _ocfs2_get_system_file_inode() using osb->system_file_mutex lock.
+> 
+> Kill osb->system_file_mutex lock in order to avoid AB-BA deadlock.
+> cmpxchg() will be sufficient for avoiding the inode refcount leak
+> problem which commit 43b10a20372d ("ocfs2: avoid system inode ref
+> confusion by adding mutex lock") tried to address.
+> 
+> Reported-by: Diogo Jahchan Koike <djahchankoike@gmail.com>
+'Reported-by' should be: https://syzkaller.appspot.com/bug?extid=1fed2de07d8e11a3ec1b
+
+> Closes: https://lkml.kernel.org/r/000000000000ff2d7a0620381afe@google.com
+I don't think we need 'Closes'.
+
+> Fixes: 43b10a20372d ("ocfs2: avoid system inode ref confusion by adding mutex lock")
+> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> Cc: jiangyiwen <jiangyiwen@huawei.com>
+> Cc: Joseph Qi <joseph.qi@huawei.com>
+> Cc: Joel Becker <jlbec@evilplan.org>
+> Cc: Mark Fasheh <mfasheh@suse.com>
+The 'CC's are also useless.
+
+> ---
+>   fs/ocfs2/ocfs2.h   | 2 --
+>   fs/ocfs2/super.c   | 2 --
+>   fs/ocfs2/sysfile.c | 9 +++------
+>   3 files changed, 3 insertions(+), 10 deletions(-)
+> 
+> diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
+> index 6aaa94c554c1..8bdeea60742a 100644
+> --- a/fs/ocfs2/ocfs2.h
+> +++ b/fs/ocfs2/ocfs2.h
+> @@ -494,8 +494,6 @@ struct ocfs2_super
+>   	struct rb_root	osb_rf_lock_tree;
+>   	struct ocfs2_refcount_tree *osb_ref_tree_lru;
+>   
+> -	struct mutex system_file_mutex;
+> -
+>   	/*
+>   	 * OCFS2 needs to schedule several different types of work which
+>   	 * require cluster locking, disk I/O, recovery waits, etc. Since these
+> diff --git a/fs/ocfs2/super.c b/fs/ocfs2/super.c
+> index 3d2533950bae..4461daf909cf 100644
+> --- a/fs/ocfs2/super.c
+> +++ b/fs/ocfs2/super.c
+> @@ -1997,8 +1997,6 @@ static int ocfs2_initialize_super(struct super_block *sb,
+>   	spin_lock_init(&osb->osb_xattr_lock);
+>   	ocfs2_init_steal_slots(osb);
+>   
+> -	mutex_init(&osb->system_file_mutex);
+> -
+>   	atomic_set(&osb->alloc_stats.moves, 0);
+>   	atomic_set(&osb->alloc_stats.local_data, 0);
+>   	atomic_set(&osb->alloc_stats.bitmap_data, 0);
+> diff --git a/fs/ocfs2/sysfile.c b/fs/ocfs2/sysfile.c
+> index 53a945da873b..b63af8d64904 100644
+> --- a/fs/ocfs2/sysfile.c
+> +++ b/fs/ocfs2/sysfile.c
+> @@ -98,11 +98,9 @@ struct inode *ocfs2_get_system_file_inode(struct ocfs2_super *osb,
+>   	} else
+>   		arr = get_local_system_inode(osb, type, slot);
+>   
+> -	mutex_lock(&osb->system_file_mutex);
+>   	if (arr && ((inode = *arr) != NULL)) {
+>   		/* get a ref in addition to the array ref */
+>   		inode = igrab(inode);
+> -		mutex_unlock(&osb->system_file_mutex);
+>   		BUG_ON(!inode);
+>   
+
+I agree the above mutex_lock and mutex_unlock is useless. we can remove it
+without any problem.
+
+>   		return inode;
+> @@ -112,11 +110,10 @@ struct inode *ocfs2_get_system_file_inode(struct ocfs2_super *osb,
+>   	inode = _ocfs2_get_system_file_inode(osb, type, slot);
+
+In my view, the key of commit 43b10a20372d is to avoid calling
+_ocfs2_get_system_file_inode() twice, which lead refcnt+1 but no place to
+do refcnt-1.
+
+>   
+>   	/* add one more if putting into array for first time */
+> -	if (arr && inode) {
+> -		*arr = igrab(inode);
+> -		BUG_ON(!*arr);
+> +	if (inode && arr && !*arr && !cmpxchg(&(*arr), NULL, inode)) {
+
+Bypassing the refcnt+1 here is not a good idea. We should do refcnt+1
+before returning to the caller.
+
+> +		inode = igrab(inode);
+> +		BUG_ON(!inode);
+>   	}
+> -	mutex_unlock(&osb->system_file_mutex);
+>   	return inode;
+>   }
+>   
+
