@@ -1,61 +1,41 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98142EF65C;
-	Tue, 24 Jun 2025 15:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D233D2EF9C2;
+	Tue, 24 Jun 2025 15:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750777728; cv=none; b=HPPB5DYHf9dARDyp3W7IrUJT7teQB7sTxrDCPjkRI/UC8YBWkkt6D6M+a8ULxFb/lBfXph7VslnJJgeffqGK08+OYxuaQ2ytSLNq7CXSL2UWVArCBJJ0kvdcEiR14Kn/5m65cHKABlayZJtaToGV6/oJV5oDuTaqC1mrehSqR24=
+	t=1750777727; cv=none; b=KrOyNKfvU06pZdJOXx3wsgFUlhH42xWKd7O8GLpO0QSiDwY6Q4TSl9kyNNUYT+bDZBAhU8j4isZCoORx287zytVe9Uso5y98oO932OvnIy/F5XgXKFZgL4vKOu3oawKtldwHPmjEYZP2zdzwrLSOY58NV6Su/kEr4jPd2aoOGi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750777728; c=relaxed/simple;
-	bh=/z69PibqywpVDUupVFU5et9XVf8qDTlwUsinAZCZ8UM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TZzvnOlYvp8TSTG6I6WQNQ4Gwju3/SDSnlvuBZFXACceIHAUoZZHAyGTabDwgvE1mRyEwj2G2ioyUUVxOFoqF1scP8Z6vJNRF70we38XkuyKf7+fkVZNHpxzw54xag5kODWvf1tj3CW4lpdxPSmHpT57Md9M4cVPiA61xC4ZPDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Fm8R0HCu; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1750777727; c=relaxed/simple;
+	bh=dHj/8m+PzvEdiBpLDRqkqti7Prwdtu9fZA/ul8s9JWQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=T38sJ2fuNqXlb8QfyrNIgBwXpz2wV1jlxc0NmA3WEeG0j4CdJfQCKlEK2EVNRKUHKIoHN6sItilEVNIuimKXDcZ3Ji99G6HIbeKlPy6dd3KdoER8ptoZDqq1S5OlTytvhcuBLBXA+pGOl5UHogoswtFYbVRd6saJrSA5+nFRfFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fxde2rzE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Fm8R0HCu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1750777726; x=1782313726;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/z69PibqywpVDUupVFU5et9XVf8qDTlwUsinAZCZ8UM=;
-  b=Fm8R0HCulFPUEIKiIaTdB1QVVhlFV+0/4wYusE/StVgA7pm8cg1fL6bU
-   HzpMfjjp4mE/DOHWDC2XHu0XWO/KpXh/aA8z/1qgZ8jHYktH+hk1RdlFL
-   CI3yeEbGqd4T9dbr35HxSwRL8DmQKuBahRo0EWQKinYJ2hG/UmR+4gYL4
-   1pwrgaBX2DWDcqLHdRQNiwPzZhgj1+ZbyXKeTss/qqmrsN/SPLaozaj2B
-   3Ue3ns7/iZI/JWqt9p4gj6w5Jm60M/UO6hObwCpkWzMYIWjBhtjbjGcO0
-   qmG+EXMbN0Fd/PvxWXj03HxAJ5dwt3J2hl95y+Lugp3myvSV/H9x4amOn
-   g==;
-X-CSE-ConnectionGUID: 4+RzxTN1Qsa6vG3Bpty4nA==
-X-CSE-MsgGUID: Q0O/25CwQsu2txuQI1HkOw==
-X-IronPort-AV: E=Sophos;i="6.16,262,1744095600"; 
-   d="scan'208";a="42688174"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Jun 2025 08:08:43 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 24 Jun 2025 08:08:36 -0700
-Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Tue, 24 Jun 2025 08:08:36 -0700
-From: <Ryan.Wanner@microchip.com>
-To: <mturquette@baylibre.com>, <sboyd@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>
-CC: <robh@kernel.org>, <linux-clk@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<varshini.rajendran@microchip.com>
-Subject: [PATCH v2 04/32] clk: at91: clk-peripheral: switch to clk_parent_data
-Date: Tue, 24 Jun 2025 08:08:01 -0700
-Message-ID: <94aa65af65553f4251bcc9ca6420c8feafc27324.1750182562.git.Ryan.Wanner@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fxde2rzE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B0D2C4CEF1;
+	Tue, 24 Jun 2025 15:08:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750777727;
+	bh=dHj/8m+PzvEdiBpLDRqkqti7Prwdtu9fZA/ul8s9JWQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Fxde2rzEZjiqeLGiV4x9/YbpF0fMJyiBZqOSbUfa80tBYNI9sfhjJWz7NV2JoOxK5
+	 kOEdoSTY9TgWrXrtxCDjDe4Pw0VkRr7FaTvtSFkET58KCAd6cyaakYTv4swI5H9rDP
+	 /os7ejyhwHUiRcX+q/4gQezGNLmpi/VxKXaD0EO4i04rmENs5jpO0XNBtXaWMSx1kR
+	 iAfuZH0pzELmx42Li2MV435ip+8GgBBcFP+Vd7NDlIZb6AgJz2O9/mEzP9AqmK7BPI
+	 0GYieIbwvanvry4mBIE4RnCWGWP9kvv/bCA+UYMfPEJqV5W3sRelU7eSvB28vxvOZ4
+	 L/3u2oX4a2TEQ==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 44/66] kconfig: gconf: use GtkTreeModelFilter to control row visibility
+Date: Wed, 25 Jun 2025 00:05:32 +0900
+Message-ID: <20250624150645.1107002-45-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1750182562.git.Ryan.Wanner@microchip.com>
-References: <cover.1750182562.git.Ryan.Wanner@microchip.com>
+In-Reply-To: <20250624150645.1107002-1-masahiroy@kernel.org>
+References: <20250624150645.1107002-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,103 +43,350 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Currently, update_tree() adds/removes entries to show/hide rows.
+This approach is extremely complicated.
 
-Use struct clk_parent_data instead of parent_hw.
+Use the tree model filter to control row visibility instead.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-[ryan.wanner@microchip.com: Remove the SoC specific changes those will
-be added in a later commit. And adjust commit message]
-Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
+Do not toggle the MENU_CHANGED flag, as it is hard to control
+this correctly.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- drivers/clk/at91/clk-peripheral.c | 16 ++++++++--------
- drivers/clk/at91/pmc.h            |  4 ++--
- 2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/clk/at91/clk-peripheral.c b/drivers/clk/at91/clk-peripheral.c
-index c173a44c800a..ed97b3c0a66b 100644
---- a/drivers/clk/at91/clk-peripheral.c
-+++ b/drivers/clk/at91/clk-peripheral.c
-@@ -97,7 +97,7 @@ static const struct clk_ops peripheral_ops = {
+ scripts/kconfig/gconf.c | 217 +++++++++++++++-------------------------
+ 1 file changed, 80 insertions(+), 137 deletions(-)
+
+diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
+index 184678dd4fa6..a0cc7cb98670 100644
+--- a/scripts/kconfig/gconf.c
++++ b/scripts/kconfig/gconf.c
+@@ -59,7 +59,9 @@ enum {
+ static void display_list(void);
+ static void display_tree(GtkTreeStore *store, struct menu *menu);
+ static void display_tree_part(void);
+-static void update_tree(struct menu *src, GtkTreeIter * dst);
++static gchar **fill_row(struct menu *menu);
++static void set_node(GtkTreeStore *tree, GtkTreeIter *node,
++		     struct menu *menu, gchar **row);
  
- struct clk_hw * __init
- at91_clk_register_peripheral(struct regmap *regmap, const char *name,
--			     const char *parent_name, struct clk_hw *parent_hw,
-+			     const char *parent_name, struct clk_parent_data *parent_data,
- 			     u32 id)
+ static void conf_changed(bool dirty)
  {
- 	struct clk_peripheral *periph;
-@@ -105,7 +105,7 @@ at91_clk_register_peripheral(struct regmap *regmap, const char *name,
- 	struct clk_hw *hw;
- 	int ret;
+@@ -110,6 +112,47 @@ static void select_menu(GtkTreeView *view, struct menu *match)
+ 	_select_menu(view, gtk_tree_view_get_model(view), NULL, match);
+ }
  
--	if (!name || !(parent_name || parent_hw) || id > PERIPHERAL_ID_MAX)
-+	if (!name || !(parent_name || parent_data) || id > PERIPHERAL_ID_MAX)
- 		return ERR_PTR(-EINVAL);
- 
- 	periph = kzalloc(sizeof(*periph), GFP_KERNEL);
-@@ -114,8 +114,8 @@ at91_clk_register_peripheral(struct regmap *regmap, const char *name,
- 
- 	init.name = name;
- 	init.ops = &peripheral_ops;
--	if (parent_hw)
--		init.parent_hws = (const struct clk_hw **)&parent_hw;
-+	if (parent_data)
-+		init.parent_data = (const struct clk_parent_data *)parent_data;
- 	else
- 		init.parent_names = &parent_name;
- 	init.num_parents = 1;
-@@ -448,7 +448,7 @@ struct clk_hw * __init
- at91_clk_register_sam9x5_peripheral(struct regmap *regmap, spinlock_t *lock,
- 				    const struct clk_pcr_layout *layout,
- 				    const char *name, const char *parent_name,
--				    struct clk_hw *parent_hw,
-+				    struct clk_parent_data *parent_data,
- 				    u32 id, const struct clk_range *range,
- 				    int chg_pid, unsigned long flags)
++static void _update_row_visibility(GtkTreeView *view)
++{
++	GtkTreeModelFilter *filter = GTK_TREE_MODEL_FILTER(gtk_tree_view_get_model(view));
++
++	gtk_tree_model_filter_refilter(filter);
++}
++
++static void update_row_visibility(void)
++{
++	if (view_mode == SPLIT_VIEW)
++		_update_row_visibility(GTK_TREE_VIEW(tree1_w));
++	_update_row_visibility(GTK_TREE_VIEW(tree2_w));
++}
++
++static void _update_tree(GtkTreeStore *store, GtkTreeIter *parent)
++{
++	GtkTreeModel *model = GTK_TREE_MODEL(store);
++	GtkTreeIter iter;
++	gboolean valid;
++
++	valid = gtk_tree_model_iter_children(model, &iter, parent);
++	while (valid) {
++		struct menu *menu;
++
++		gtk_tree_model_get(model, &iter, COL_MENU, &menu, -1);
++
++		if (menu)
++			set_node(store, &iter, menu, fill_row(menu));
++
++		_update_tree(store, &iter);
++
++		valid = gtk_tree_model_iter_next(model, &iter);
++	}
++}
++
++static void update_tree(GtkTreeStore *store)
++{
++	_update_tree(store, NULL);
++	update_row_visibility();
++}
++
+ static void set_view_mode(enum view_mode mode)
  {
-@@ -457,7 +457,7 @@ at91_clk_register_sam9x5_peripheral(struct regmap *regmap, spinlock_t *lock,
- 	struct clk_hw *hw;
- 	int ret;
+ 	view_mode = mode;
+@@ -328,24 +371,21 @@ static void on_set_option_mode1_activate(GtkMenuItem *menuitem,
+ 					 gpointer user_data)
+ {
+ 	opt_mode = OPT_NORMAL;
+-	gtk_tree_store_clear(tree2);
+-	display_tree(tree2, &rootmenu);	/* instead of update_tree to speed-up */
++	update_row_visibility();
+ }
  
--	if (!name || !(parent_name || parent_hw))
-+	if (!name || !(parent_name || parent_data))
- 		return ERR_PTR(-EINVAL);
+ static void on_set_option_mode2_activate(GtkMenuItem *menuitem,
+ 					 gpointer user_data)
+ {
+ 	opt_mode = OPT_ALL;
+-	gtk_tree_store_clear(tree2);
+-	display_tree(tree2, &rootmenu);	/* instead of update_tree to speed-up */
++	update_row_visibility();
+ }
  
- 	periph = kzalloc(sizeof(*periph), GFP_KERNEL);
-@@ -465,8 +465,8 @@ at91_clk_register_sam9x5_peripheral(struct regmap *regmap, spinlock_t *lock,
- 		return ERR_PTR(-ENOMEM);
+ static void on_set_option_mode3_activate(GtkMenuItem *menuitem,
+ 					 gpointer user_data)
+ {
+ 	opt_mode = OPT_PROMPT;
+-	gtk_tree_store_clear(tree2);
+-	display_tree(tree2, &rootmenu);	/* instead of update_tree to speed-up */
++	update_row_visibility();
+ }
  
- 	init.name = name;
--	if (parent_hw)
--		init.parent_hws = (const struct clk_hw **)&parent_hw;
-+	if (parent_data)
-+		init.parent_data = (const struct clk_parent_data *)parent_data;
- 	else
- 		init.parent_names = &parent_name;
- 	init.num_parents = 1;
-diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index b43f6652417f..b6f2aca1e1fd 100644
---- a/drivers/clk/at91/pmc.h
-+++ b/drivers/clk/at91/pmc.h
-@@ -226,13 +226,13 @@ at91_clk_sama7g5_register_master(struct regmap *regmap,
+ static void on_introduction1_activate(GtkMenuItem *menuitem, gpointer user_data)
+@@ -559,7 +599,7 @@ static void renderer_edited(GtkCellRendererText * cell,
  
- struct clk_hw * __init
- at91_clk_register_peripheral(struct regmap *regmap, const char *name,
--			     const char *parent_name, struct clk_hw *parent_hw,
-+			     const char *parent_name, struct clk_parent_data *parent_data,
- 			     u32 id);
- struct clk_hw * __init
- at91_clk_register_sam9x5_peripheral(struct regmap *regmap, spinlock_t *lock,
- 				    const struct clk_pcr_layout *layout,
- 				    const char *name, const char *parent_name,
--				    struct clk_hw *parent_hw,
-+				    struct clk_parent_data *parent_data,
- 				    u32 id, const struct clk_range *range,
- 				    int chg_pid, unsigned long flags);
+ 	sym_set_string_value(sym, new_def);
  
+-	update_tree(&rootmenu, NULL);
++	update_tree(tree2);
+ 
+ free:
+ 	gtk_tree_path_free(path);
+@@ -590,9 +630,9 @@ static void change_sym_value(struct menu *menu, gint col)
+ 			newval = yes;
+ 		sym_set_tristate_value(sym, newval);
+ 		if (view_mode == FULL_VIEW)
+-			update_tree(&rootmenu, NULL);
++			update_tree(tree2);
+ 		else if (view_mode == SPLIT_VIEW) {
+-			update_tree(browsed, NULL);
++			update_tree(tree2);
+ 			display_list();
+ 		}
+ 		else if (view_mode == SINGLE_VIEW)
+@@ -613,9 +653,9 @@ static void toggle_sym_value(struct menu *menu)
+ 
+ 	sym_toggle_tristate_value(menu->sym);
+ 	if (view_mode == FULL_VIEW)
+-		update_tree(&rootmenu, NULL);
++		update_tree(tree2);
+ 	else if (view_mode == SPLIT_VIEW) {
+-		update_tree(browsed, NULL);
++		update_tree(tree2);
+ 		display_list();
+ 	}
+ 	else if (view_mode == SINGLE_VIEW)
+@@ -842,7 +882,6 @@ static gchar **fill_row(struct menu *menu)
+ 	row[COL_NAME] = g_strdup(sym->name);
+ 
+ 	sym_calc_value(sym);
+-	menu->flags &= ~MENU_CHANGED;
+ 
+ 	if (sym_is_choice(sym)) {	// parse childs for getting final value
+ 		struct menu *child;
+@@ -947,120 +986,6 @@ static void set_node(GtkTreeStore *tree, GtkTreeIter *node,
+ 	g_object_unref(pix);
+ }
+ 
+-/* Find a node in the GTK+ tree */
+-static GtkTreeIter found;
+-
+-/*
+- * Find a menu in the GtkTree starting at parent.
+- */
+-static GtkTreeIter *gtktree_iter_find_node(GtkTreeIter *parent,
+-					   struct menu *tofind)
+-{
+-	GtkTreeIter iter;
+-	GtkTreeIter *child = &iter;
+-	gboolean valid;
+-	GtkTreeIter *ret;
+-
+-	valid = gtk_tree_model_iter_children(model2, child, parent);
+-	while (valid) {
+-		struct menu *menu;
+-
+-		gtk_tree_model_get(model2, child, 6, &menu, -1);
+-
+-		if (menu == tofind) {
+-			memcpy(&found, child, sizeof(GtkTreeIter));
+-			return &found;
+-		}
+-
+-		ret = gtktree_iter_find_node(child, tofind);
+-		if (ret)
+-			return ret;
+-
+-		valid = gtk_tree_model_iter_next(model2, child);
+-	}
+-
+-	return NULL;
+-}
+-
+-
+-/*
+- * Update the tree by adding/removing entries
+- * Does not change other nodes
+- */
+-static void update_tree(struct menu *src, GtkTreeIter * dst)
+-{
+-	struct menu *child1;
+-	GtkTreeIter iter, tmp;
+-	GtkTreeIter *child2 = &iter;
+-	gboolean valid;
+-	GtkTreeIter *sibling;
+-	struct symbol *sym;
+-	struct menu *menu1, *menu2;
+-
+-	valid = gtk_tree_model_iter_children(model2, child2, dst);
+-	for (child1 = src->list; child1; child1 = child1->next) {
+-
+-		sym = child1->sym;
+-
+-	      reparse:
+-		menu1 = child1;
+-		if (valid)
+-			gtk_tree_model_get(model2, child2, COL_MENU,
+-					   &menu2, -1);
+-		else
+-			menu2 = NULL;	// force adding of a first child
+-
+-		if ((opt_mode == OPT_NORMAL && !menu_is_visible(child1)) ||
+-		    (opt_mode == OPT_PROMPT && !menu_has_prompt(child1)) ||
+-		    (opt_mode == OPT_ALL    && !menu_get_prompt(child1))) {
+-
+-			/* remove node */
+-			if (gtktree_iter_find_node(dst, menu1) != NULL) {
+-				memcpy(&tmp, child2, sizeof(GtkTreeIter));
+-				valid = gtk_tree_model_iter_next(model2,
+-								 child2);
+-				gtk_tree_store_remove(tree2, &tmp);
+-				if (!valid)
+-					return;		/* next parent */
+-				else
+-					goto reparse;	/* next child */
+-			} else
+-				continue;
+-		}
+-
+-		if (menu1 != menu2) {
+-			if (gtktree_iter_find_node(dst, menu1) == NULL) {	// add node
+-				if (!valid && !menu2)
+-					sibling = NULL;
+-				else
+-					sibling = child2;
+-				gtk_tree_store_insert_before(tree2,
+-							     child2,
+-							     dst, sibling);
+-				set_node(tree2, child2, menu1, fill_row(menu1));
+-				if (menu2 == NULL)
+-					valid = TRUE;
+-			} else {	// remove node
+-				memcpy(&tmp, child2, sizeof(GtkTreeIter));
+-				valid = gtk_tree_model_iter_next(model2,
+-								 child2);
+-				gtk_tree_store_remove(tree2, &tmp);
+-				if (!valid)
+-					return;	// next parent
+-				else
+-					goto reparse;	// next child
+-			}
+-		} else if (sym && (child1->flags & MENU_CHANGED)) {
+-			set_node(tree2, child2, menu1, fill_row(menu1));
+-		}
+-
+-		update_tree(child1, child2);
+-
+-		valid = gtk_tree_model_iter_next(model2, child2);
+-	}
+-}
+-
+-
+ /* Display the whole tree (single/split/full view) */
+ static void _display_tree(GtkTreeStore *tree, struct menu *menu,
+ 			  GtkTreeIter *parent)
+@@ -1083,8 +1008,6 @@ static void _display_tree(GtkTreeStore *tree, struct menu *menu,
+ 		prop = child->prompt;
+ 		ptype = prop ? prop->type : P_UNKNOWN;
+ 
+-		menu->flags &= ~MENU_CHANGED;
+-
+ 		if ((view_mode == SPLIT_VIEW)
+ 		    && !(child->flags & MENU_ROOT) && (tree == tree1))
+ 			continue;
+@@ -1093,12 +1016,8 @@ static void _display_tree(GtkTreeStore *tree, struct menu *menu,
+ 		    && (tree == tree2))
+ 			continue;
+ 
+-		if ((opt_mode == OPT_NORMAL && menu_is_visible(child)) ||
+-		    (opt_mode == OPT_PROMPT && menu_has_prompt(child)) ||
+-		    (opt_mode == OPT_ALL    && menu_get_prompt(child))) {
+-			gtk_tree_store_append(tree, &iter, parent);
+-			set_node(tree, &iter, child, fill_row(child));
+-		}
++		gtk_tree_store_append(tree, &iter, parent);
++		set_node(tree, &iter, child, fill_row(child));
+ 
+ 		if ((view_mode != FULL_VIEW) && (ptype == P_MENU)
+ 		    && (tree == tree2))
+@@ -1313,6 +1232,20 @@ static void init_main_window(const gchar *glade_file)
+ 	gtk_widget_show(main_wnd);
+ }
+ 
++static gboolean visible_func(GtkTreeModel *model, GtkTreeIter  *iter,
++			     gpointer data)
++{
++	struct menu *menu;
++
++	gtk_tree_model_get(model, iter, COL_MENU, &menu, -1);
++
++	if (!menu)
++		return FALSE;
++
++	return menu_is_visible(menu) || opt_mode == OPT_ALL ||
++		(opt_mode == OPT_PROMPT && menu_has_prompt(menu));
++}
++
+ static void init_tree_model(void)
+ {
+ 	tree2 = gtk_tree_store_new(COL_NUMBER,
+@@ -1344,8 +1277,13 @@ static void init_left_tree(void)
+ 	GtkCellRenderer *renderer;
+ 	GtkTreeSelection *sel;
+ 	GtkTreeViewColumn *column;
++	GtkTreeModel *filter;
+ 
+-	gtk_tree_view_set_model(view, model1);
++	filter = gtk_tree_model_filter_new(model1, NULL);
++
++	gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER(filter),
++					       visible_func, NULL, NULL);
++	gtk_tree_view_set_model(view, filter);
+ 
+ 	column = gtk_tree_view_column_new();
+ 	gtk_tree_view_append_column(view, column);
+@@ -1379,9 +1317,14 @@ static void init_right_tree(void)
+ 	GtkCellRenderer *renderer;
+ 	GtkTreeSelection *sel;
+ 	GtkTreeViewColumn *column;
++	GtkTreeModel *filter;
+ 	gint i;
+ 
+-	gtk_tree_view_set_model(view, model2);
++	filter = gtk_tree_model_filter_new(model2, NULL);
++
++	gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER(filter),
++					       visible_func, NULL, NULL);
++	gtk_tree_view_set_model(view, filter);
+ 
+ 	column = gtk_tree_view_column_new();
+ 	gtk_tree_view_append_column(view, column);
 -- 
 2.43.0
 
