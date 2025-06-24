@@ -1,202 +1,208 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C5230E84D;
-	Tue, 24 Jun 2025 08:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E3E2586FE
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750753154; cv=none; b=jmoEIRglcZG9MX1W+ozl8G14YZsJB0aw3ge8lG893fdFfJnBCtC8R7Eix9cuQ3cMHfjmUhS8xYSP1cFCGH72JmL1cZbpuDPVvpfvx5X9O3IaQArb6wKDzWDGOEtZSa7D7+2dmvDpA0dSqu+SHH1d+8f3tkQnF6BJgl2YkXkMg4E=
+	t=1750753157; cv=none; b=m4FnVlRVUWZb+lnSxPE+YdhWXYpc4R838oGGgEeOOQ6NWKepIR94r6Mq9cBUwjKThZb0DYWTAbLGQ11E6DQrXcXFEUtdxDYfcLCpjFn1xG716rc36160Hqj1MN6IcAfZ30Z7aCHUouyCfsorpbPuoWMTrEbK2avrye1uzEPHfQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750753154; c=relaxed/simple;
-	bh=5a9phdz7D6n6ePqfkDs1A4rTHLxpcrtrt0JxKFR2lYM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AJ083PGw0hnvRZqKlOaouXVovfX1QkXAaoyFdle4rT5Wn5VZvrk72dOhMXoghOCYZuYfEPhthY3Rx33mD9QO6EfjhY9dGbwZmG4fqlZNQ4Uou2cKauVkHmv0oR0I7PsCnliH4XpZfa8DkZ8fjkwb1FwWJ1qkxn5kdPu6hQE+s2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XDs9HEBs; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750753157; c=relaxed/simple;
+	bh=yL2j1876ItKV5RfwVnsodHgDStUVkQIYx65k9vE3WvI=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=W84C9ZGUolRfVk4B4LoekWs568UcG47NUOf6RSm8s1ZB8zCrws/xUmasmnvlZz0KRJjkCUd5LdF3Ql7plfW2XqN4a45c67zty6TJ4BOHxi2Lg1ZoqIxlfXlvihNQR4V08fIQXg8nHHKQpimEIkqqReoAP6M4mw72whvQ0smQywg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JWTmC9+X; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDs9HEBs"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-706e7babc4eso2061507b3.2;
-        Tue, 24 Jun 2025 01:19:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750753151; x=1751357951; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VHgEsigv797toVCzAe7I/zuMfsGR9eA4wJiGN0BxYF0=;
-        b=XDs9HEBsARdDPgmEx6c0O6kp7IqywRFfgRgO2mjimrzbQGz4h9mOi5ofuCQUaLmyWF
-         mBH9Xc3UqM3ZBSWFSEa0OgK80l6jb+JCuHY2tN2HB0mMvRwigDSQv9gOLufKO3WNQAVi
-         HFKnLZg4/drRtARPvO4Z+i1ISecCtbX619e5jnolKi0tGE29glx8uFStbfK1vPrhFIdH
-         RhVwNPNEsxaaaxW+gBTFf198OqVeRIQFZ1ggN9c2x/Efe7ZRrvYACaMPM2HOpcOHHfQw
-         PHdz2fo84zsOyKKmqzuwRlUoatxIE+rSbyE/pO30dYxLXXfg7Qwkc77L3yAD72ZNY4u8
-         zUrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750753151; x=1751357951;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VHgEsigv797toVCzAe7I/zuMfsGR9eA4wJiGN0BxYF0=;
-        b=VZgYEHTvCqKg0/hviVe0M23mnSmaGqWAL+/vM9Ra1e1txj+7EYrd3cASNq26YVaXXM
-         wmRAudNbKkBEq/rT20mmV81NzI7m+MauDknnMTpSUXI0RwIqc6iwEZf83c3Pl40YvmCy
-         lgS/6TlvZYJhNKKML0yeWYAqGbGTsRKYqLJ11myuGvn1kzWMOYmgqiIAmpRCbmAtk93q
-         5Al9vc2S8OeqneQjq5nC7Y4RMj81lA31Cfh+o2rxiEDnSwDEOfYlfhoLpNED4eu8xdq3
-         WpdbGu5tSc8lvP7mNCtlwWfmoqDsFHN9f204Nj96xOAdrIb6Dcag7nl6r7autGDowzwB
-         HKpw==
-X-Forwarded-Encrypted: i=1; AJvYcCUsQB27rwFCLPGWihNP9MhGctIunuNcrI+XaT//byq9B+NRAzTCiGRk4KuxZQCufsFFMqoVFOes/IdQ@vger.kernel.org, AJvYcCUwgIf2sC/khVBqnRw/ZWnpvWihHnNvv+iF7NuQEqREiTbO+FOHU3dCxE9+NlvEE6ymSNy/uSTyCPU=@vger.kernel.org, AJvYcCVkanBSb7nMMDBq+QIu+LFWsdRTb6MVsv06CzNyxxixrD6Hjs5lLJJAsYutl5kJPxkVP+wfDi4sVO3ytfup@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtEuO6EIDLAJgh0NWAR3C8E/oCAbDZcKBAaroAI+sEVQiDrQt4
-	M8yegOWpxKi/ZRGx1+M+juyXIzxqsmPRJPwMFckUU2N83XyB4/E+ygAWU3LrnrOd7uY7sYxJjPx
-	MOKWbJQkvPvfWS2hZ82EYWns8nz5lpXc=
-X-Gm-Gg: ASbGncudaN6Zr8EkP62TTZiAUQxO0py6Jze3X1Y6778WGhStGBeE+jOzcC/KssDce35
-	CKPVN+YcJodDCtIqEr8vg/ntInq77IURKEG9nHiX8zP+tJx73JTwvmMK/FKKmS0xXZhqRa/dUez
-	nxa+tWYflj4rvqC1SMF3qAyp1ZHmjvTsdWXX7Nue80ac1dW+hYbgNVpw==
-X-Google-Smtp-Source: AGHT+IEobZ95YPFh7gSnrVYpj1c1HgaveoCeuvwSoyJpoS0Z6TFC3YdT/2xXv5PXGSxYfKmeryT51rEuyJZlHWDM/K8=
-X-Received: by 2002:a05:690c:c14:b0:70e:7613:e31b with SMTP id
- 00721157ae682-712c639043emr99303287b3.2.1750753151474; Tue, 24 Jun 2025
- 01:19:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JWTmC9+X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750753154;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xDy6AvQbreGo32VdcKEdzgul1ZGWwn4DfyAjOh6GrKU=;
+	b=JWTmC9+XHK2wHv8CIBiN1Ub4UBHcYPQMjtPWTpazM/aBVgrsuxMRfNJJ2r8/7znoYK1jow
+	muY7uGzC2Y60KCLA27BUsW+J1GFc87Np8FtsI8ZHuzKnmrqzjvua7/uXfCMlvUgbgcgXxp
+	mRAu64THIEVN67I0Evn6FjrU3WkzJBw=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-441-bSqnsK-3PnOUK6GkZIcx0w-1; Tue,
+ 24 Jun 2025 04:19:10 -0400
+X-MC-Unique: bSqnsK-3PnOUK6GkZIcx0w-1
+X-Mimecast-MFC-AGG-ID: bSqnsK-3PnOUK6GkZIcx0w_1750753149
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 01C861800268;
+	Tue, 24 Jun 2025 08:19:09 +0000 (UTC)
+Received: from ws.net.home (unknown [10.45.226.128])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BB1BF19560A3;
+	Tue, 24 Jun 2025 08:19:06 +0000 (UTC)
+Date: Tue, 24 Jun 2025 10:19:03 +0200
+From: Karel Zak <kzak@redhat.com>
+To: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	util-linux@vger.kernel.org
+Subject: [ANNOUNCE] util-linux v2.41.1
+Message-ID: <wnfaquaapqknjnu2bdvddkp2xbleowfcr2g3cqiewpl54oclmi@mrseflcu5nyk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250622155010.164451-1-l.rubusch@gmail.com> <20250622155010.164451-7-l.rubusch@gmail.com>
- <aFkpv0CUkateel8q@smile.fi.intel.com> <CAFXKEHb9Fbd_UOF90EumEtns82VPhYBrLZ=JtmhVJ4pJsT=q-g@mail.gmail.com>
- <aFpV1f1qapCQunVO@smile.fi.intel.com>
-In-Reply-To: <aFpV1f1qapCQunVO@smile.fi.intel.com>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Tue, 24 Jun 2025 10:18:35 +0200
-X-Gm-Features: AX0GCFu3oFpqSYvU-4eggzmfabKFBuG-nKLi0LF1UG8mCx-7osic9bYVrJ7mkcw
-Message-ID: <CAFXKEHYhXekE29Ljfv=c7oRuzo0irWtJNM7fjW516xQ-ydsm=Q@mail.gmail.com>
-Subject: Re: [PATCH v10 6/7] iio: accel: adxl345: extend inactivity time for
- less than 1s
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, 
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, eraretuya@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Tue, Jun 24, 2025 at 9:38=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
->
-> On Mon, Jun 23, 2025 at 11:21:01PM +0200, Lothar Rubusch wrote:
-> > On Mon, Jun 23, 2025 at 12:17=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@intel.com> wrote:
-> > > On Sun, Jun 22, 2025 at 03:50:09PM +0000, Lothar Rubusch wrote:
->
-> ...
->
-> > > > -static int adxl345_set_inact_time(struct adxl345_state *st, u32 va=
-l_s)
-> > > > +static int adxl345_set_inact_time(struct adxl345_state *st, u32 va=
-l_int,
-> > > > +                               u32 val_fract)
-> > > >  {
-> > > >       int max_boundary =3D U8_MAX;
-> > > >       int min_boundary =3D 10;
-> > > > -     unsigned int val =3D min(val_s, U8_MAX);
-> > > > +     unsigned int val;
-> > >
-> > > You see, I even suggested splitting this assignment to begin with.
-> > > The change will be clearer with that done.
-> > >
-> > > >       enum adxl345_odr odr;
-> > > >       unsigned int regval;
-> > > >       int ret;
-> > > >
-> > > > -     if (val =3D=3D 0) {
-> > > > +     if (val_int =3D=3D 0 && val_fract =3D=3D 0) {
-> >
-> > The case for 0sec, 0.0 or setting "0" and fract will consequently be
-> > "0". 0 is an invalid input for this period and sensor, so it will
-> > default to an optimized period based on given ODR.
-> >
-> > > > +             /* Generated inactivity time based on ODR */
-> > > >               ret =3D regmap_read(st->regmap, ADXL345_REG_BW_RATE, =
-&regval);
-> > > >               if (ret)
-> > > >                       return ret;
-> > >
-> > > >               odr =3D FIELD_GET(ADXL345_BW_RATE_MSK, regval);
-> > > >               val =3D clamp(max_boundary - adxl345_odr_tbl[odr][0],
-> > > >                           min_boundary, max_boundary);
-> > > > +             st->inact_time_ms =3D MILLI * val;
-> > > > +
-> > > > +             /* Inactivity time in s */
-> > > > +             return regmap_write(st->regmap, ADXL345_REG_TIME_INAC=
-T, val);
-> > > > +     } else if (val_int =3D=3D 0 && val_fract > 0) {
-> > >
-> > > val_fract check is not needed here.
-> >
-> > Case for e.g. 0.123, numbers under 1s. This goes into the free-fall reg=
-ister.
->
-> 0.0 is already checked above, and since the val_fract is unsigned this is=
- check
-> is redundant.
->
-> > > > +             /* time < 1s, free-fall */
-> > > > +
-> > > > +             /*
-> > > > +              * Datasheet max. value is 255 * 5000 us =3D 1.275000=
- seconds.
-> > > > +              *
-> > > > +              * Recommended values between 100ms and 350ms (0x14 t=
-o 0x46)
-> > > > +              */
-> > > > +             st->inact_time_ms =3D DIV_ROUND_UP(val_fract, MILLI);
-> > > > +
-> > > > +             return regmap_write(st->regmap, ADXL345_REG_TIME_FF,
-> > > > +                                 DIV_ROUND_CLOSEST(val_fract, 5));
-> > > > +     } else if (val_int > 0) {
-> > >
-> > > if now is redundant here, right?
-> >
-> > So, this will be 1s through 255s. Periods above 1sec. This goes into
-> > the inactivity register.
->
-> See above,
->
 
-I agree, that checking for val_fract is actually done as a sub case of
-val_int, and only if val_int was 0. So, would the following make it
-clearer?
+The util-linux stable release 2.41.1 is now available at
+                                  
+  http://www.kernel.org/pub/linux/utils/util-linux/v2.41/
+                                  
+Feedback and bug reports, as always, are welcomed.
+                                  
+  Karel         
 
-if (val_int  =3D=3D 0) {
-    if (val_fract =3D=3D 0) {
-        // 0 provided, default values
-    } else {
-        // >0s, e.g. 0.123s, use free-fall register
-} else {
-    // 1s - 255s, use inactivity register
-}
 
-Actually - I did not touch that - I saw some places where I'm already
-using nested if/else in the third level. I guess, by the style advice
-according to switch/case, this also applies to if/else, right?
+util-linux 2.41.1 Release Notes
+===============================
 
-If yes, when the according parts go into another round, I might give
-it a try to separate as well using helper functions.
+autotools:
+    - don't use wide-character ncurses if --disable-widechar (by Karel Zak)
 
-Best,
-L
+cfdisk:
+    - fix memory leak and possible NULL dereference [gcc-analyzer] (by Karel Zak)
 
-> > > > +             /* Time >=3D 1s, inactivity */
-> > > > +             st->inact_time_ms =3D MILLI * val_int;
-> > > > +
-> > > > +             return regmap_write(st->regmap, ADXL345_REG_TIME_INAC=
-T, val_int);
-> > > >       }
-> > > >
-> > > > -     return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val);
-> > > > +     /* Do not support negative or wrong input. */
-> > > > +     return -EINVAL;
-> > > >  }
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+column:
+    - fix compiler warning for non-widechar compilation (by Karel Zak)
+
+fdformat:
+    - use size_t and ssize_t (by Karel Zak)
+
+fdisk:
+    - fix possible memory leak (by Karel Zak)
+
+fdisk,partx:
+    - avoid strcasecmp() for ASCII-only strings (by Karel Zak)
+
+findmnt:
+    - fix -k option parsing regression (by Karel Zak)
+
+hardlink:
+    - define more function as inline (by Karel Zak)
+    - fix performance regression (inefficient signal evaluation) (by Karel Zak)
+    - Use macro for verbose output (by Karel Zak)
+
+include/cctype:
+    - fix string comparison (by Karel Zak)
+
+include/mount-api-utils:
+    - include linux/unistd.h (by Thomas Weißschuh)
+
+libblkid:
+    - Fix crash while parsing config with libeconf (by Stanislav Brabec)
+    - befs fix underflow (by Milan Broz)
+    - avoid strcasecmp() for ASCII-only strings (by Karel Zak)
+
+libblkid/src/topology/dm:
+    - fix fscanf return value check to match expected number of parsed items (by Mingjie Shen)
+
+libfdisk:
+    - avoid strcasecmp() for ASCII-only strings (by Karel Zak)
+
+libmount:
+    - (subdir) restrict for real mounts only (by Karel Zak)
+    - (subdir) remove unused code (by Karel Zak)
+    - avoid calling memset() unnecessarily (by Karel Zak)
+    - avoid strcasecmp() for ASCII-only strings (by Karel Zak)
+    - fix --no-canonicalize regression (by Karel Zak)
+
+libuuid:
+    - fix uuid_time on macOS without attribute((alias)) (by Eugene Gershnik)
+
+lsblk:
+    - use ID_PART_ENTRY_SCHEME as fallback for PTTYPE (by Karel Zak)
+    - avoid strcasecmp() for ASCII-only strings (by Karel Zak)
+
+lscpu:
+    - fix possible buffer overflow in cpuinfo parser (by Karel Zak)
+    - Fix loongarch op-mode output with recent kernel (by Xi Ruoyao)
+
+lsfd:
+    - (bug fix) scan the protocol field of /proc/net/packet as a hex number (by Masatake YAMATO)
+    - fix the description for PACKET.PROTOCOL column (by Masatake YAMATO)
+
+lsns:
+    - enhance compilation without USE_NS_GET_API (by Karel Zak)
+    - fix undefined reference to add_namespace_for_nsfd #3483 (by Thomas Devoogdt)
+
+meson:
+    - add feature for translated documentation (by Thomas Weißschuh)
+    - remove tinfo dependency from 'more' (by Thomas Weißschuh)
+    - fix manadocs for libsmartcols and libblkid (by Karel Zak)
+    - fix po-man installation (by Karel Zak)
+
+misc:
+    - never include wchar.h (by Karel Zak)
+
+more:
+    - fix broken ':!command' command key (by cgoesche)
+    - fix implicit previous shell_line execution #3508 (by cgoesche)
+
+mount:
+    - (man) add missing word (by Jakub Wilk)
+
+namespace.h:
+    - fix compilation on Linux < 4.10 (by Thomas Devoogdt)
+
+po:
+    - update uk.po (from translationproject.org) (by Yuri Chornoivan)
+    - update sr.po (from translationproject.org) (by Мирослав Николић)
+    - update ro.po (from translationproject.org) (by Remus-Gabriel Chelu)
+    - update pt.po (from translationproject.org) (by Pedro Albuquerque)
+    - update pl.po (from translationproject.org) (by Jakub Bogusz)
+    - update nl.po (from translationproject.org) (by Benno Schulenberg)
+    - update ja.po (from translationproject.org) (by YOSHIDA Hideki)
+    - update hr.po (from translationproject.org) (by Božidar Putanec)
+    - update fr.po (from translationproject.org) (by Frédéric Marchal)
+    - update es.po (from translationproject.org) (by Antonio Ceballos Roa)
+    - update de.po (from translationproject.org) (by Mario Blättermann)
+    - update cs.po (from translationproject.org) (by Petr Písař)
+
+po-man:
+    - merge changes (by Karel Zak)
+    - update sr.po (from translationproject.org) (by Мирослав Николић)
+    - update de.po (from translationproject.org) (by Mario Blättermann)
+
+tests:
+    - (test_mkfds::mapped-packet-socket) add a new parameter, protocol (by Masatake YAMATO)
+
+treewide:
+    - add ul_ to parse_timestamp() function name (by Karel Zak)
+    - add ul_ to parse_switch() function name (by Stanislav Brabec)
+    - add ul_ to parse_size() function name (by Karel Zak)
+    - add ul_ to parse_range() function name (by Karel Zak)
+    - fix optional arguments usage (by Karel Zak)
+    - avoid strcasecmp() for ASCII-only strings (by Karel Zak)
+
+Wipefs:
+    - improve --all descriptions for whole-disks (by Karel Zak)
+
+Misc:
+    - Do not call exit() on code ending in shared libraries (by Cristian Rodríguez)
+    - remove two leftover license lines from colors.{c,h} (by Benno Schulenberg)
+    - remove "Copyright (C) ...." notes from files that claim no copyright (by Benno Schulenberg)
+    - correct the full name of the GPL in various files (by Benno Schulenberg)
+    - Make scols_column_set_data_func docs visible (by FeRD (Frank Dana))
+    - Do not use strerror on shared libraries (by Cristian Rodríguez)
+    - Fix typo in blkdiscard docs (by pls-no-hack)
+    - lib/fileeq.c Fix a typo in message. (by Masanari Iida)
+
+-- 
+ Karel Zak  <kzak@redhat.com>
+ http://karelzak.blogspot.com
+
