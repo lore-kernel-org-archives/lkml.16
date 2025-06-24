@@ -1,56 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13EF82777F1
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C337427AC25;
+	Tue, 24 Jun 2025 14:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750773567; cv=none; b=SCQV4kFdf/2r5YbZGPNvrlMpo+isJbVuBjfP4SThqbwBxYMg2n5HbTqB2gseEUWIRRgPgOi+UEaTpb8dD4JXQjn7xKXoPGLkFBOddQ+riH72mUjeL/VHhFJUKdNlYzRXQjNta8lE32HKFQ9k8TGD6wMU4EqybSRf4TiMWLW151s=
+	t=1750773716; cv=none; b=n4tE2T3FbdzqDZae7ywTH0ltgTgmQt6kmwGJeIHdgeo55r5TTbgOefDSB1aH9QBq+9sOg+UdkyYzSY71x+oM4+yYxIqTgMnTLT15Mt9toRTRJl+r5uqnMAyJnXLY4S6EMcmj6PmVAzntMRPqAiwv+gBJUER+CopYgze7I4oMfXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750773567; c=relaxed/simple;
-	bh=/Gyc5091KzQg/q17GrBJ5edGPnJe/JOe8V92hRTFeCE=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=JL5jq04TGxiV+CgVKLWFVFML1qp0702/0uZEgRWDnmwOxXU6NaPeCRQgK6/SrRwD6aNBBTDQQ7sxjpHiWmYlXx3AC2OfdLHfDu4O6nMZqvr8KVXPlqCKuu2/XwFSbvfC0tn0TTZUTOmMIuPS/R/xSr44FvFkxMjVbvwzhUdALvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pM19i3t6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750773716; c=relaxed/simple;
+	bh=qe/lKzDIKQb9yrByvn2o2OiLeZ837IOlRXcF3CcOVxY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ykg+VvU8/J8SP+A1P4zld+0MA6BXCfkYflkC2s+ihJEzrI2x9ao7G/EYq1TS0qVL4rbPdF9V5H/IKtP9X3mEEqDWH4FVYbPRmiNMefMEnL9x55OKmCUubvPSBM54rXVgWKK4Nz6foj4FwyZIPrxysRdfAZxYlnnjDohNvz3gjPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OFg/HG1h; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pM19i3t6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C50A4C4CEE3;
-	Tue, 24 Jun 2025 13:59:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750773566;
-	bh=/Gyc5091KzQg/q17GrBJ5edGPnJe/JOe8V92hRTFeCE=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=pM19i3t6tZ0p/u4nT2IZxtnyDBOzqMQyZw2WthHRvxBrmwmZaVaZGji3SiJM6+28a
-	 PUr4/MY1LWbuSbwpa36DJzJGqWSo2NYJLjfG36tqr5ixjjNMi95qpnwtqlGEa2gBGz
-	 9LmIZuKTHCTbfujTbPbTaASqSy0Te39aA3VMAnYjJ1XsaLCL6KaYX7fZW3Osc81PEO
-	 Vx2haExHwYBDr2q5QCXHpX8aT/h9LDxhP50IarR7tMU0WPiti+RDQJNAlZeAA9uuy2
-	 15GSUfEfn0/Ci5+9w7W2UyGfElNyHqX1j61+PWpa/Vx7jo2IsCWYR259sAERWaJYMk
-	 EuyUs7soa288Q==
-Message-ID: <aa15ae08-4875-4349-9cc0-ffa0491afa58@kernel.org>
-Date: Tue, 24 Jun 2025 21:59:22 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OFg/HG1h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750773714; x=1782309714;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qe/lKzDIKQb9yrByvn2o2OiLeZ837IOlRXcF3CcOVxY=;
+  b=OFg/HG1hvZ6L4XxcdKofaXr5E3+wuY5PNS6t6tjxB8qmZnnTbWs9cTRZ
+   YFNh/obsPCVggJ8+jY52SqXIeG5w+NRlPZDT4xx4YlnyMUkS/UQLymqOT
+   6eQgKYrhND2yv9ZrGQ4TZ9dl4idQa47J8OJ8vc1xtONmxWXnDgkzZb/Mf
+   cR3Aa92cWpbYIKrbQu+84lgpyYrAiOM0o3cIvpX8Uzj0GraFfHu11QqNz
+   5C1Kj3nZkNXNtmwr1Carw4yDo9BECnGi88fCxZyfcWNY26Jdj0LPpujOT
+   sr/go9jS2NCIam/sfEytZKE9QZ2Ia6xndbUCi8MksiUAefvfMkVAOjQWu
+   Q==;
+X-CSE-ConnectionGUID: EcylcUW5RgS7FD3D4eoctA==
+X-CSE-MsgGUID: eYtG+Z2TQx6A3f+wAlnx3w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="40628397"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="40628397"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 07:01:50 -0700
+X-CSE-ConnectionGUID: NcaZkpcHSr6VkMpll0qrAQ==
+X-CSE-MsgGUID: 9v/ZDIeDRXS0b/f/E5hikA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="152450367"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 07:01:31 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uU4DI-00000009UFW-2HG9;
+	Tue, 24 Jun 2025 17:01:28 +0300
+Date: Tue, 24 Jun 2025 17:01:28 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v1 1/1] MIPS: Alchemy: Remove unused forward declaration
+Message-ID: <aFqvuIzH2zo5X76q@smile.fi.intel.com>
+References: <20250531194346.3630898-1-andriy.shevchenko@linux.intel.com>
+ <aEv_y5Lfe3Dul48I@smile.fi.intel.com>
+ <aEwMFVSPzc-mV1ve@alpha.franken.de>
+ <aEweZReuPzQ_hq8L@smile.fi.intel.com>
+ <aEwy2Ud08nHHAdED@alpha.franken.de>
+ <aEydkh4EkKu6w2NJ@surfacebook.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, mcgrof@kernel.org, Swarna Prabhu <s.prabhu@samsung.com>
-Subject: Re: [PATCH] f2fs: Fix the typos in comments
-To: Swarna Prabhu <sw.prabhu6@gmail.com>, jaegeuk@kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-References: <20250617174047.1511951-1-s.prabhu@samsung.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20250617174047.1511951-1-s.prabhu@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEydkh4EkKu6w2NJ@surfacebook.localdomain>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On 2025/6/18 01:40, Swarna Prabhu wrote:
-> This patch fixes minor typos in comments in f2fs.
+On Sat, Jun 14, 2025 at 12:52:18AM +0300, Andy Shevchenko wrote:
+> Fri, Jun 13, 2025 at 04:16:57PM +0200, Thomas Bogendoerfer kirjoitti:
+> > On Fri, Jun 13, 2025 at 03:49:41PM +0300, Andy Shevchenko wrote:
+> > > On Fri, Jun 13, 2025 at 01:31:33PM +0200, Thomas Bogendoerfer wrote:
+> > > > On Fri, Jun 13, 2025 at 01:39:07PM +0300, Andy Shevchenko wrote:
+> > > > > On Sat, May 31, 2025 at 10:43:46PM +0300, Andy Shevchenko wrote:
+
+...
+
+> > > > > I think we can take it via GPIO tree if there is no reply.
+> > > > 
+> > > > please do
+> > > 
+> > > Acked-by?
+> > 
+> > Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 > 
-> Signed-off-by: Swarna Prabhu <s.prabhu@samsung.com>
+> Thank you! Bart, seems we are all set to route this via GPIO tree. Do you have
+> any objections?
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+Bart, can you apply this one, please? Or do you have objections?
 
-Thanks,
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
