@@ -1,97 +1,97 @@
-Received: from mail.postale.io (mail.postale.io [3.139.204.210])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C3528540E;
-	Tue, 24 Jun 2025 10:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.139.204.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CB2246BAC
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 10:27:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750760836; cv=none; b=VWh8wtcP2wda6kgQPDWVISStuxOMdwcV9cDWte0Wqx7tAVWQKeT6BpRPVsqU0fJiTUQQcWQ6joHmStTzIncunS/qAYd89o2FEYiFNeoTercHI82RbaljlY02W+9ona/DYNpcTyEizGd/kOwt1782BiUYturIZAIf+InXDmGoQX4=
+	t=1750760871; cv=none; b=k5gFkLUgC9uu73ADX/xXQJ38v9XpIwsC0p1ddXTicKEy8TKUngppVd66qvAfKIPRwCEnMbYTCYjn31bAVovjp6dlz5DNROJu6LIxPSNao6Tjff9MBu70eSESIV4HCwf+P+8DD8Mk7GOikEoQcPLuXGPYstm/8sP4Yw4EhG1d1FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750760836; c=relaxed/simple;
-	bh=O9zlFX91oenyG4CVaS60rfnjqCpK1mYsOXbULDWIf5A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oWiHnH7DEHzrVqfahnCpzt4zZG6zCA4YoMwaIDfJn8ly1vvGa5GLBmflkTzhteWUok3WAnOkSaRat9N5jXgBDsDHxv4/dsseMWLktOIRyHF/uuEBM9LVRSlmfcHb+XZbrHnqMdvfkHDvpydPY72kUhRjguQIouuWxJGJvAC2SpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=glxys.nl; spf=pass smtp.mailfrom=glxys.nl; dkim=pass (1024-bit key) header.d=glxys.nl header.i=@glxys.nl header.b=j8mEjhpn; arc=none smtp.client-ip=3.139.204.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=glxys.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=glxys.nl
+	s=arc-20240116; t=1750760871; c=relaxed/simple;
+	bh=pDZomwFVAqxwd8ytzWmvj98Fz/CdKe8JzSOM8VijVvM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OUx8C08rvT3qduWMNXv1GWXDi3FHQnj6DHC76WGvO+DhZ1IPKTNfLo1W4ldhHt95KUiqTC001GVoTMzNVWVxNGoSqFPQGEejXdPLjdJfTi0sQXvc8BZsOBmmqw7TTcvhLfPAJJ6D04cqnff62yGtGMKm1vO9Upc7F4Fky/98iCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=fOi26Anj; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=glxys.nl header.i=@glxys.nl header.b="j8mEjhpn"
-Authentication-Results: mail.postale.io;
-	auth=pass (plain)
-From: GalaxySnail <me@glxys.nl>
-To: simont@opensource.cirrus.com
-Cc: david.rhodes@cirrus.com,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	lkp@intel.com,
-	me@glxys.nl,
-	oe-kbuild-all@lists.linux.dev,
-	patches@opensource.cirrus.com,
-	perex@perex.cz,
-	rf@opensource.cirrus.com,
-	tiwai@suse.com
-Subject: [PATCH v3] ALSA: hda: add MODULE_FIRMWARE for cs35l41/cs35l56
-Date: Tue, 24 Jun 2025 18:17:17 +0800
-Message-ID: <20250624101716.2365302-2-me@glxys.nl>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <002901dbe4ef$57d0cce0$077266a0$@opensource.cirrus.com>
-References: <002901dbe4ef$57d0cce0$077266a0$@opensource.cirrus.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fOi26Anj"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55OARREn1136591;
+	Tue, 24 Jun 2025 05:27:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750760847;
+	bh=leF+8r/i1VKvIWB6nQ7uhXoKOvqvB/ZNgSapVQ/nSUY=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=fOi26AnjpKaChSPPaiwmNS5y5+VtZvBBA/Qw7my3g9UJ+XcwkxNAhwA0Z3wiYRGDS
+	 93ufb+mC4xsMhZWw6g6VcziaPsYXMtlnTCBX5LgP/d7+gSPYDUSrSzHnrz9V8reaXF
+	 HPJwrsaUpaVcpY//eVazK5RMDWnlM0apWSepgibA=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55OARRKo4126359
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Tue, 24 Jun 2025 05:27:27 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 24
+ Jun 2025 05:27:27 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Tue, 24 Jun 2025 05:27:27 -0500
+Received: from localhost (lcpd911.dhcp.ti.com [172.24.227.226])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55OARQV51344460;
+	Tue, 24 Jun 2025 05:27:27 -0500
+Date: Tue, 24 Jun 2025 15:57:26 +0530
+From: Dhruva Gole <d-gole@ti.com>
+To: Markus Schneider-Pargmann <msp@baylibre.com>
+CC: Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner
+	<tglx@linutronix.de>,
+        Vishal Mahaveer <vishalm@ti.com>, Kevin Hilman
+	<khilman@baylibre.com>,
+        Sebin Francis <sebin.francis@ti.com>,
+        Kendall Willis
+	<k-willis@ti.com>, Akashdeep Kaur <a-kaur@ti.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] clocksource/drivers/timer-ti-dm: Fix property name
+ in comment
+Message-ID: <20250624102726.pzk3zc6hbrmete2g@lcpd911>
+References: <20250623-topic-ti-dm-clkevt-v6-16-v1-0-b00086761ee1@baylibre.com>
+ <20250623-topic-ti-dm-clkevt-v6-16-v1-1-b00086761ee1@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Received: from localhost (Unknown [127.0.0.1])
-	by mail.postale.io  with ESMTPSA id 16D3340E-BF98-4835-A7E2-9319636AC841.1
-	envelope-from <me@glxys.nl>
-	tls TLS_AES_256_GCM_SHA384 (authenticated bits=0);
-	Tue, 24 Jun 2025 10:26:00 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=glxys.nl; s=s20221125375;
-	h=from:subject:date:message-id:to:cc:mime-version;
-	bh=O9zlFX91oenyG4CVaS60rfnjqCpK1mYsOXbULDWIf5A=;
-	b=j8mEjhpnM+a8LzHzap7NERcwSu9MmiziuKrKLBL/vHOjRN6vxg3Zl9M+WIdYAlCLGuyIxFVcp8
-	/swJnL4OC3GLGoZ5P8KfFviP5+v+vuLxrUPg5tgG9jwl3xJQPmo4FMCO+AByQlCjociXJgyDYTSt
-	DLTq3qE5MjoNF+llTSpB4=
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250623-topic-ti-dm-clkevt-v6-16-v1-1-b00086761ee1@baylibre.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-add firmware information in the .modinfo section, so that userspace
-tools can find out firmware required by cs35l41/cs35l56 kernel module
+On Jun 23, 2025 at 21:24:28 +0200, Markus Schneider-Pargmann wrote:
+> ti,always-on property doesn't exist. ti,timer-alwon is meant here. Fix
+> this minor bug in the comment.
+> 
+> Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
+> ---
+>  drivers/clocksource/timer-ti-dm-systimer.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clocksource/timer-ti-dm-systimer.c b/drivers/clocksource/timer-ti-dm-systimer.c
+> index 985a6d08512b42f499b3e243eb69cc9674bc8e53..fb0a3cc23b5a35e2906a253d36ccef2baccca50a 100644
+> --- a/drivers/clocksource/timer-ti-dm-systimer.c
+> +++ b/drivers/clocksource/timer-ti-dm-systimer.c
+> @@ -226,7 +226,7 @@ static bool __init dmtimer_is_preferred(struct device_node *np)
+>   * Some omap3 boards with unreliable oscillator must not use the counter_32k
+>   * or dmtimer1 with 32 KiHz source. Additionally, the boards with unreliable
+>   * oscillator should really set counter_32k as disabled, and delete dmtimer1
+> - * ti,always-on property, but let's not count on it. For these quirky cases,
+> + * ti,timer-alwon property, but let's not count on it. For these quirky cases,
 
-Signed-off-by: GalaxySnail <me@glxys.nl>
----
-Thanks for your review!
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
 
-v2 -> v3: fixed typo
-v1 -> v2: fixed missing ';' in the previous patch
-
- sound/pci/hda/cs35l41_hda.c | 2 ++
- sound/pci/hda/cs35l56_hda.c | 4 ++++
- 2 files changed, 6 insertions(+)
-
-diff --git a/sound/pci/hda/cs35l41_hda.c b/sound/pci/hda/cs35l41_hda.c
-index d5bc81099d0d..17cdce91fdbf 100644
---- a/sound/pci/hda/cs35l41_hda.c
-+++ b/sound/pci/hda/cs35l41_hda.c
-@@ -2085,3 +2085,5 @@ MODULE_IMPORT_NS("SND_SOC_CS_AMP_LIB");
- MODULE_AUTHOR("Lucas Tanure, Cirrus Logic Inc, <tanureal@opensource.cirrus.com>");
- MODULE_LICENSE("GPL");
- MODULE_IMPORT_NS("FW_CS_DSP");
-+MODULE_FIRMWARE("cirrus/cs35l41-*.wmfw");
-+MODULE_FIRMWARE("cirrus/cs35l41-*.bin");
-diff --git a/sound/pci/hda/cs35l56_hda.c b/sound/pci/hda/cs35l56_hda.c
-index 3f2fd32f4ad9..eedd8fdd3b8b 100644
---- a/sound/pci/hda/cs35l56_hda.c
-+++ b/sound/pci/hda/cs35l56_hda.c
-@@ -1122,3 +1122,7 @@ MODULE_IMPORT_NS("SND_SOC_CS_AMP_LIB");
- MODULE_AUTHOR("Richard Fitzgerald <rf@opensource.cirrus.com>");
- MODULE_AUTHOR("Simon Trimmer <simont@opensource.cirrus.com>");
- MODULE_LICENSE("GPL");
-+MODULE_FIRMWARE("cirrus/cs35l54-*.wmfw");
-+MODULE_FIRMWARE("cirrus/cs35l54-*.bin");
-+MODULE_FIRMWARE("cirrus/cs35l56-*.wmfw");
-+MODULE_FIRMWARE("cirrus/cs35l56-*.bin");
 -- 
-2.50.0
-
+Best regards,
+Dhruva Gole
+Texas Instruments Incorporated
