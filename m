@@ -1,64 +1,64 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B5026CE05
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBF026CE00;
+	Tue, 24 Jun 2025 15:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750779199; cv=none; b=X7nbKw5Rgj2hZM1HR9BV17VTrIMe4CzTcMMTZ1oAOldeF7Vo9uwsm6ks8Ac5349o/hzaHPQZ/1RwwmTlkXZGJkemsGJu0E+U48GDkLEgrIJQSBvMYjrWS+WnlkJmygj4ow8j58kS43eESX83MNfRpVABX5YObPY68uYSRmdMjuw=
+	t=1750779201; cv=none; b=MxnKoWXrSCqnqhnPuWB9I1+M37rpkoldb8kCWtM5NbMIWy8fKNGR9OHuI4aJdowpEOhda+ZSDo7QmrWdY4zoQYa4FF/8WFXh/YN1o6eX1L4YCRJYGGwAAT8fX4yKAZ5UMABO2RiS9xfAnnomLxth7PqJXTIHIMbi4h3S2EBqaWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750779199; c=relaxed/simple;
-	bh=5V0P1fSmYxDSgpS/o/vNsmbsCRW9oZrAWixnLT8nAsY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hLnk86t7lSU7CzMyfU3I9BCLvvciEk5wnPQnRM7/Vh0rERESQj8MoziDYSXvVeCKM/gQ5P/V2Ae/WSOcepk2DMLNg2u/LFYgahOdzvUtla37ypik2VIl1z++Dg9x4gALMn2rX0T/HODEmrS2yM7TalBNOY14GzPxcgUu+MKiW6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gxSriVND; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=S5Og8P0v; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750779201; c=relaxed/simple;
+	bh=q6zc5t1ffrY54UuAj9wfKtHgj2vJk8nzvm5t/rgZlJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=lI85s+DNBFTcMGTRdI/7FrYiFsJuit7sQ93JwQDnH+m3mVrSAliaadbUiKZviF9TtJimxGrn+k+JsFXW2VbzWAlTy48QDYW3mR599XxOiHQ00mQ2JKX2cdxkBpUaA2Xf6FKHLkV+Xbd3Tmi82g+v1X36e17YvQwj4h/iC/fHYnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tAdJn0S2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gxSriVND";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S5Og8P0v"
-Date: Tue, 24 Jun 2025 17:33:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750779195;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PBrzg5DCuHrE1OY+QwXkYAH3DJNsPYdSW7dnUZCTfyk=;
-	b=gxSriVND0Umc1rzkQrowmw7fLnGOU0KC7P7VlIYi3MHtfr1jmWIR3tWpp0OsN0CW7tPSc7
-	SlPxftUHUyx0rW9Av6YeE9wBkPRBwij2J9O32AjYjfh9DDn/wHnY2igOlJGBerF9p2DHC9
-	nItHplqYTT1zIq0hybApyVIsvalJhnmW+BqcqEyXix+bQb5W8aC6fBh0Ulpv+C1mEYmo2a
-	qQZhm7lgfmD6DDyYkBvePQt6CFfs+LLDktcczrRf6NAumtIw4imroSSFjzwK509FGqMYq/
-	iRo64jZl/ZXYKWHi4SinwzyzU3508zqE0hsaMSzgxX+CKWgW5H0xAR1BM9QGAQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750779195;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PBrzg5DCuHrE1OY+QwXkYAH3DJNsPYdSW7dnUZCTfyk=;
-	b=S5Og8P0vHyE3rai9+oFP5AquPdi3KPrrqARx0pEPwNeBj/xJU/A/R29GcX0CAt5veRBwA6
-	+NUrjc8Ux0vAlBDA==
-From: Nam Cao <namcao@linutronix.de>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-	Alexandre Ghiti <alex@ghiti.fr>, clrkwllms@kernel.org,
-	rostedt@goodmis.org, linux-rt-devel@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: Enable interrupt during exception handling
-Message-ID: <20250624153314.2Mwvvjmy@linutronix.de>
-References: <mhng-60581B88-6FC7-4349-96B6-730D908ABF4A@palmerdabbelt-mac>
- <alpine.DEB.2.21.2506240303170.61655@angie.orcam.me.uk>
- <19cf2371-7293-4e71-a17d-669db4c8270a@rivosinc.com>
- <20250624131730.XqPd1HUR@linutronix.de>
- <d135d6cc-5117-4b3a-9abe-2e5fd9e3e490@rivosinc.com>
- <20250624140815.GU1613200@noisy.programming.kicks-ass.net>
- <20250624141130.gZVv4WnP@linutronix.de>
- <20250624141801.GV1613200@noisy.programming.kicks-ass.net>
- <20250624142350.xZ_DdClH@linutronix.de>
- <20250624143458.GW1613200@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tAdJn0S2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61216C4CEE3;
+	Tue, 24 Jun 2025 15:33:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750779199;
+	bh=q6zc5t1ffrY54UuAj9wfKtHgj2vJk8nzvm5t/rgZlJ4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=tAdJn0S2KFY7K9z1dPx1SBSRAXjgZzFEpuX9Cz8uE2gOzckJHxm7jz+0gdwzWO+ex
+	 CwT0ZhtL3tH9wwwdwjZBylW6D+MQ0M2HcWcRC2oWuS9rz02Rbu4tw8KGNnF3XJ80hQ
+	 iNmEoquScWaakp/njFSojt3F09lCIqgde2eukZOpgCGkqxK8JMJ4CbFm4/h2AGuVwS
+	 ITwBL8mhY6G4yj+CNxqP8lp9R651VyBgDXFGPM+uwbPELKLg4tpfsbFb2UGECQ8kOP
+	 v4pAFDhjBxAWCSbz34wWUDKlhtjtMzRHLkBhFjVhGsk0f9wG0bP/QpPAl++srzrNwW
+	 oQSp5ec0EoFFA==
+Date: Tue, 24 Jun 2025 10:33:18 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"joel@jms.id.au" <joel@jms.id.au>,
+	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
+	"vkoul@kernel.org" <vkoul@kernel.org>,
+	"kishon@kernel.org" <kishon@kernel.org>,
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
+	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"elbadrym@google.com" <elbadrym@google.com>,
+	"romlem@google.com" <romlem@google.com>,
+	"anhphan@google.com" <anhphan@google.com>,
+	"wak@google.com" <wak@google.com>,
+	"yuxiaozhang@google.com" <yuxiaozhang@google.com>,
+	BMC-SW <BMC-SW@aspeedtech.com>
+Subject: Re: =?utf-8?B?5Zue6KaGOiBbUEFUQw==?= =?utf-8?Q?H?= 7/7] pci: aspeed:
+ Add ASPEED PCIe host controller driver
+Message-ID: <20250624153318.GA1477975@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,31 +67,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250624143458.GW1613200@noisy.programming.kicks-ass.net>
+In-Reply-To: <SEYPR06MB51342E52B3C4A7AFD42485039D7CA@SEYPR06MB5134.apcprd06.prod.outlook.com>
 
-On Tue, Jun 24, 2025 at 04:34:58PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 24, 2025 at 04:23:50PM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2025-06-24 16:18:01 [+0200], Peter Zijlstra wrote:
-> > > I'm confused, sending signals is for exception from userspace. That has
-> > > nothing to do with exceptions from kernelspace being NMI like.
+On Fri, Jun 20, 2025 at 06:05:20AM +0000, Jacky Chou wrote:
+> > > Introduce PCIe Root Complex driver for ASPEED SoCs. Support RC
+> > > initialization, reset, clock, IRQ domain, and MSI domain setup.
+> > > Implement platform-specific setup and register configuration for
+> > > ASPEED. And provide PCI config space read/write and INTx/MSI interrupt
+> > > handling.
+
+> > > +static int aspeed_ast2600_rd_conf(struct pci_bus *bus, unsigned int devfn,
+> > > +				  int where, int size, u32 *val)
+> > > +{
+> > > +	struct aspeed_pcie *pcie = bus->sysdata;
+> > > +	u32 bdf_offset;
+> > > +	int rx_done_fail = 0, slot = PCI_SLOT(devfn);
+> > > +	u32 cfg_val, isr, type = 0;
+> > > +	u32 link_sts = 0;
+> > > +	int ret;
+> > > +
+> > > +	/* Driver may set unlock RX buffere before triggering next TX config
+> > > +*/
+> > > +	writel(PCIE_UNLOCK_RX_BUFF | readl(pcie->reg + H2X_DEV_CTRL),
+> > > +	       pcie->reg + H2X_DEV_CTRL);
+> > > +
+> > > +	if (bus->number == 128 && slot != 0 && slot != 8)
+> > > +		return PCIBIOS_DEVICE_NOT_FOUND;
+> > > +	type = (bus->number > 128);
 > > 
-> > Yes. See the original submission
-> > 	https://lore.kernel.org/linux-riscv/20250620114346.1740512-1-namcao@linutronix.de/
+> > Weird.  What's all this?  Some kind of device you want to hide?
+> > Deserves a hint about what's special.
 > 
-> I'm still confused, that code is trying to enable IRQs in the
-> from-kernel part. That's insane.
-> 
-> Can some Risc-V person explain why a from-kernel exception would ever
-> result in a signal?!?!
+> The bus range in our AST2600 design is just starting from 128.
+> There is no something special.  I will use the child_ops that is in
+> struct pci_host_bridge to distinguish the rc bridge and the other
+> bus.
 
-Exceptions from kernel do not raise signals. Enabling irqs there is not
-necessary, I can remove that part.
-
-But for my curiousity, do you mind elaborating why it is insane to enable
-irqs in from-kernel exception handling?
-
-For "NMI-like" exceptions, (I think) I get it, the context would be messed
-up. But what about the others, e.g. kernel page faults?
-
-Best regards,
-Nam
+Is the 128 root bus number hardwired into the RC?  Maybe it should be
+described in DT?
