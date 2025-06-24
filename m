@@ -1,61 +1,41 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91ED2EFDAF;
-	Tue, 24 Jun 2025 15:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272322F273A;
+	Tue, 24 Jun 2025 15:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750777731; cv=none; b=c+Dby6hGHzLaEnGNsNjZ0mBWkeajUf11etW49hLigeqobX/eyPZLUc4U94wDaH9T2BWT5xKRsZ4cng/s/ndW1poDl918RSaigR3p1Yl6xjDGaIexjEDcx3IJI1umdf4Z2u1fco1PBi19anC45dxi1QxBYUBXgVCnhFb0ywwlsfo=
+	t=1750777732; cv=none; b=j5s4o/keDybFEIi9l2W21tqxv+1rn1/CSUd4F5W+J4aMflELx7ekm8FI+aH7+6Ltik7qotmyeKlxT0vh2Mi7n48SU9PgbF/9UCHH6u1Y+HmhPot2EZsJE309g1kOfsAqkiAHRGlZE+cLpnVB/zobj2PujE6L8LTKgVWIajr6ZyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750777731; c=relaxed/simple;
-	bh=hp9bs1IqXyCPrYq1/MdaARbYzcOOz47PKwT4z0/XYaw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B+mPPQJfhDg7WNA4yhc30OGbHMGUhnG9i0LX6S4d3gU9XBg1yJovUgH5bqP8oclnm9ijfKO3u9aHRfrNy2s3Gy1saT78E2zHTfJ36Ns7CBWEXePQj2cxIdaVCHtGCtkDpDq6wnfADL2INLGCf0f4kmzD96QNT9bwPDB27iK1Xzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=ImXWw9dZ; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1750777732; c=relaxed/simple;
+	bh=TYExhak6MbqHe07uVTZCXrE91anp6T9Nx3wR/oydH6A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FXelHb/04l2/jKgbZErd/eGfZmPdQE9hl3h4LCS6tuza/ZDesb5gj+LXZfAw1TP9cN70f9/Wx8w4IMqcdxYK+0L8oesh+1t9NSEBoW+JjmUJuTPTbkNAKLPJhMySrin1xxCl08Q2kggmOky0nojlqTHDk20UTbL/aSGucKgRGIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gkHUt0BO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ImXWw9dZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1750777728; x=1782313728;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hp9bs1IqXyCPrYq1/MdaARbYzcOOz47PKwT4z0/XYaw=;
-  b=ImXWw9dZC+z21Ksl2YOp5x87HwWODMro3mIRZqKz1HvuJmq45UEimKRJ
-   kgoGIBWcYOHGO89GGCCDvij7fz0EYBtQOQUtrFC6gWqp/dKXxm408pifP
-   TPfAsrrHa/pJGR/5m+RiZRH1FCavlMcyxHeGE/YQJHsPhN3qb3ZYyJa4Y
-   /1QeiC06NFJpfLEiZShNInx/olotPMq9FDtK0SzlB1O+gxngUe6rvBZkx
-   dGUKik33cZxd5jvY/g6rSM7tNMOmKmiRtZpv4y9ZWf2ynxlY+H2LmUfq/
-   EXeabm4GGnNQCXIM3AoaJfV6TGhpudL4qMDxWotZMnV0IQrLBeRViHTGe
-   Q==;
-X-CSE-ConnectionGUID: 4+RzxTN1Qsa6vG3Bpty4nA==
-X-CSE-MsgGUID: nIYkURz8Q+ubsa6mo1wPvA==
-X-IronPort-AV: E=Sophos;i="6.16,262,1744095600"; 
-   d="scan'208";a="42688177"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Jun 2025 08:08:44 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 24 Jun 2025 08:08:36 -0700
-Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Tue, 24 Jun 2025 08:08:36 -0700
-From: <Ryan.Wanner@microchip.com>
-To: <mturquette@baylibre.com>, <sboyd@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>
-CC: <robh@kernel.org>, <linux-clk@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<varshini.rajendran@microchip.com>
-Subject: [PATCH v2 06/32] clk: at91: clk-utmi: use clk_parent_data
-Date: Tue, 24 Jun 2025 08:08:03 -0700
-Message-ID: <a6cf52f26fa3b221f601ce492325b0135963ebbf.1750182562.git.Ryan.Wanner@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gkHUt0BO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A184C4CEF3;
+	Tue, 24 Jun 2025 15:08:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750777731;
+	bh=TYExhak6MbqHe07uVTZCXrE91anp6T9Nx3wR/oydH6A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gkHUt0BOl4kdJWPJuX+N6iCKkN0crmgOsB9Pv9Z/Ja0FmiMmpW33R30frxbPGDNuE
+	 P9y3zNltD/wmbnVKljFtu+P4AuO3Owpy+EbN1M8OvhDI8J8ZKJKZlsTX9Drz+iOvHM
+	 hZaLJaJuCtFeU7psc5Ljawff1/CONzAexfB3th2NAFxgq2/ME17zJO6UH92Gl+qOeC
+	 /S1QXg/HeSM/oFEWTM7e7p4Z/GfZ5+i0YWQe2gtUA1eOck+Th6Gw7SKDgvT+RqV+Wu
+	 2Mhsj/ats5pVKzRurtp1ym+gadW9CJ94UUWhGVZCN7NO2GWIkKFIVasw/YS9llTfFj
+	 dAM0BRuq2shfA==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 46/66] kconfig: gconf: remove init_tree_model()
+Date: Wed, 25 Jun 2025 00:05:34 +0900
+Message-ID: <20250624150645.1107002-47-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1750182562.git.Ryan.Wanner@microchip.com>
-References: <cover.1750182562.git.Ryan.Wanner@microchip.com>
+In-Reply-To: <20250624150645.1107002-1-masahiroy@kernel.org>
+References: <20250624150645.1107002-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,98 +43,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Move the relevant code into init_left_tree() or init_right_tree().
 
-Use struct clk_parent_data instead of struct parent_hw as this leads
-to less usage of __clk_get_hw() in SoC specific clock drivers and simpler
-conversion of existing SoC specific clock drivers from parent_names to
-modern clk_parent_data structures.
-
-Signed-off-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-[ryan.wanner@microchip.com: Remove SoC specific changes into a separate
-commit.]
-Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- drivers/clk/at91/clk-utmi.c | 16 ++++++++--------
- drivers/clk/at91/pmc.h      |  4 ++--
- 2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/clk/at91/clk-utmi.c b/drivers/clk/at91/clk-utmi.c
-index b991180beea1..38ffe4d712a5 100644
---- a/drivers/clk/at91/clk-utmi.c
-+++ b/drivers/clk/at91/clk-utmi.c
-@@ -144,7 +144,7 @@ static struct clk_hw * __init
- at91_clk_register_utmi_internal(struct regmap *regmap_pmc,
- 				struct regmap *regmap_sfr,
- 				const char *name, const char *parent_name,
--				struct clk_hw *parent_hw,
-+				struct clk_parent_data *parent_data,
- 				const struct clk_ops *ops, unsigned long flags)
- {
- 	struct clk_utmi *utmi;
-@@ -152,7 +152,7 @@ at91_clk_register_utmi_internal(struct regmap *regmap_pmc,
- 	struct clk_init_data init = {};
- 	int ret;
- 
--	if (!(parent_name || parent_hw))
-+	if (!(parent_name || parent_data))
- 		return ERR_PTR(-EINVAL);
- 
- 	utmi = kzalloc(sizeof(*utmi), GFP_KERNEL);
-@@ -161,8 +161,8 @@ at91_clk_register_utmi_internal(struct regmap *regmap_pmc,
- 
- 	init.name = name;
- 	init.ops = ops;
--	if (parent_hw)
--		init.parent_hws = (const struct clk_hw **)&parent_hw;
-+	if (parent_data)
-+		init.parent_data = (const struct clk_parent_data *)parent_data;
- 	else
- 		init.parent_names = &parent_name;
- 	init.num_parents = 1;
-@@ -185,10 +185,10 @@ at91_clk_register_utmi_internal(struct regmap *regmap_pmc,
- struct clk_hw * __init
- at91_clk_register_utmi(struct regmap *regmap_pmc, struct regmap *regmap_sfr,
- 		       const char *name, const char *parent_name,
--		       struct clk_hw *parent_hw)
-+		       struct clk_parent_data *parent_data)
- {
- 	return at91_clk_register_utmi_internal(regmap_pmc, regmap_sfr, name,
--			parent_name, parent_hw, &utmi_ops, CLK_SET_RATE_GATE);
-+			parent_name, parent_data, &utmi_ops, CLK_SET_RATE_GATE);
+ scripts/kconfig/gconf.c | 36 ++++++++++++++++--------------------
+ 1 file changed, 16 insertions(+), 20 deletions(-)
+
+diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
+index 32cf6ae0e5f2..0977d906bea6 100644
+--- a/scripts/kconfig/gconf.c
++++ b/scripts/kconfig/gconf.c
+@@ -1245,17 +1245,13 @@ static gboolean visible_func(GtkTreeModel *model, GtkTreeIter  *iter,
+ 		(opt_mode == OPT_PROMPT && menu_has_prompt(menu));
  }
  
- static int clk_utmi_sama7g5_prepare(struct clk_hw *hw)
-@@ -287,8 +287,8 @@ static const struct clk_ops sama7g5_utmi_ops = {
- 
- struct clk_hw * __init
- at91_clk_sama7g5_register_utmi(struct regmap *regmap_pmc, const char *name,
--			       const char *parent_name, struct clk_hw *parent_hw)
-+			       const char *parent_name, struct clk_parent_data *parent_data)
+-static void init_tree_model(void)
++static void init_left_tree(void)
  {
- 	return at91_clk_register_utmi_internal(regmap_pmc, NULL, name,
--			parent_name, parent_hw, &sama7g5_utmi_ops, 0);
-+			parent_name, parent_data, &sama7g5_utmi_ops, 0);
- }
-diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index e32a5e85d08f..d9a04fddb0b1 100644
---- a/drivers/clk/at91/pmc.h
-+++ b/drivers/clk/at91/pmc.h
-@@ -299,10 +299,10 @@ at91rm9200_clk_register_usb(struct regmap *regmap, const char *name,
- struct clk_hw * __init
- at91_clk_register_utmi(struct regmap *regmap_pmc, struct regmap *regmap_sfr,
- 		       const char *name, const char *parent_name,
--		       struct clk_hw *parent_hw);
-+		       struct clk_parent_data *parent_data);
+-	tree2 = gtk_tree_store_new(COL_NUMBER,
+-					  G_TYPE_STRING, G_TYPE_STRING,
+-					  G_TYPE_STRING, G_TYPE_STRING,
+-					  G_TYPE_STRING, G_TYPE_STRING,
+-					  G_TYPE_POINTER, GDK_TYPE_COLOR,
+-					  G_TYPE_BOOLEAN, GDK_TYPE_PIXBUF,
+-					  G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
+-					  G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
+-					  G_TYPE_BOOLEAN);
++	GtkTreeView *view = GTK_TREE_VIEW(tree1_w);
++	GtkCellRenderer *renderer;
++	GtkTreeSelection *sel;
++	GtkTreeViewColumn *column;
++	GtkTreeModel *filter;
  
- struct clk_hw * __init
- at91_clk_sama7g5_register_utmi(struct regmap *regmap, const char *name,
--			       const char *parent_name, struct clk_hw *parent_hw);
-+			       const char *parent_name, struct clk_parent_data *parent_data);
+ 	tree1 = gtk_tree_store_new(COL_NUMBER,
+ 				   G_TYPE_STRING, G_TYPE_STRING,
+@@ -1266,15 +1262,6 @@ static void init_tree_model(void)
+ 				   G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
+ 				   G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
+ 				   G_TYPE_BOOLEAN);
+-}
+-
+-static void init_left_tree(void)
+-{
+-	GtkTreeView *view = GTK_TREE_VIEW(tree1_w);
+-	GtkCellRenderer *renderer;
+-	GtkTreeSelection *sel;
+-	GtkTreeViewColumn *column;
+-	GtkTreeModel *filter;
  
- #endif /* __PMC_H_ */
+ 	filter = gtk_tree_model_filter_new(GTK_TREE_MODEL(tree1), NULL);
+ 
+@@ -1317,6 +1304,16 @@ static void init_right_tree(void)
+ 	GtkTreeModel *filter;
+ 	gint i;
+ 
++	tree2 = gtk_tree_store_new(COL_NUMBER,
++				   G_TYPE_STRING, G_TYPE_STRING,
++				   G_TYPE_STRING, G_TYPE_STRING,
++				   G_TYPE_STRING, G_TYPE_STRING,
++				   G_TYPE_POINTER, GDK_TYPE_COLOR,
++				   G_TYPE_BOOLEAN, GDK_TYPE_PIXBUF,
++				   G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
++				   G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
++				   G_TYPE_BOOLEAN);
++
+ 	filter = gtk_tree_model_filter_new(GTK_TREE_MODEL(tree2), NULL);
+ 
+ 	gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER(filter),
+@@ -1439,7 +1436,6 @@ int main(int ac, char *av[])
+ 
+ 	/* Load the interface and connect signals */
+ 	init_main_window(glade_file);
+-	init_tree_model();
+ 	init_left_tree();
+ 	init_right_tree();
+ 
 -- 
 2.43.0
 
