@@ -1,142 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D856253B47;
-	Tue, 24 Jun 2025 07:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC3025394A
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750750092; cv=none; b=Km+UVoTT/eK9QAOabAQAbl4TV/MPC/QklqAaxYwL8e6ptTtoWgSbGcifjsG8tHUBlEjIUraE1HwNXQOnxoPj5f/aaflSwGnLWLiEqokxibyzhXfGy1URTa9BIJB32j/ea6kueD3ZR4LBVhFed90iX0oDJbS9Oxrt1VFuNoSr+r0=
+	t=1750750112; cv=none; b=TOx28nIDfXrzM+t2jXuGQVjBp3F6FePCSmoBe9dseLQB6pbjClQqvMaISHKZypJ3hc9b3af7Ex4b1vqxn6z/6Cxh9cXya7T+JVHQgMzF9+McXoHp7gvTFMkZgydUaZyVoLZvEjLvkvbOshZuqLFNkGNEfYWshzNhwj5G9gHKxEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750750092; c=relaxed/simple;
-	bh=UpuqpA1vESFJrEGfO1lC4nqQldZ8FEUumluvqyaDbBk=;
+	s=arc-20240116; t=1750750112; c=relaxed/simple;
+	bh=E0MHYIBtJb1pjGFFLLtjW6ldijZKZX8x+CorPvQl3vU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hrVITrr7jg7EIf1FKNK1nRNvtn1yEWeiiITTBLO+SpE90YXzd2WjcGtPLd5WCOayBEMc1vs/JvwfRqbdhvN5wk5bx6pjtCHT60DnPy/YJzFyplkaKTf7YH14wwCLWB1X7+IVABQuBTfnKPAKywbFRw2ZqaBHxU6PnB52PjpYRmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VQoBOm1u; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=A+9xKtdludvSb5PH76kyq0rfSZP3wmIXJ6/34Qtwv0Xkkyb4i5yfaf8ftkuCBpOuq0Ub+0nSo7qBRb4KMc/xVkx21hjcf7ST6wESQFFkK2wEtCXYqINEEUzn2Nvus2Kwjcmmz1hS/NwQB9UhgexctE1bvMwcUHWyM9wUN9SMp10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DqFTQJCz; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VQoBOm1u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750750091; x=1782286091;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=UpuqpA1vESFJrEGfO1lC4nqQldZ8FEUumluvqyaDbBk=;
-  b=VQoBOm1uPuTdsZ3ADKs6GM/2mj4roeU+5cwnLuzrAZTdQ4iMYZf1mIHD
-   D593yxPbQtkN4NyQX/u2qj8/fvKZI4Gj+7vIesExR3ioUszkiX0QVUPLR
-   cMxM8OpLn3c/pmVZNkMQNtFjnQeVosSzWizgrQr1Dbsxr+BEXqmB8wYli
-   dsf+Q7l5BcqVXc3z3P2pQ+ls2h2Mn1x9kFgW2N4io0quocmHYNfNL8ZJH
-   xkHOnpxXJW5aBFaveXyQJ2fKDK50b4HthwTLsjvAauCZ4rCO91QrwsyFH
-   T0WjDjHO+vM5uwkKT9qvHd1L51edOTRZeNv1w6K+47JfOiFeZwv2fheXM
-   w==;
-X-CSE-ConnectionGUID: A+DgpJoERG2qzfuIz2IkpA==
-X-CSE-MsgGUID: 71ZKqBfeT02lAJHoIcgxjA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="64037746"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="64037746"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 00:28:10 -0700
-X-CSE-ConnectionGUID: Z71nk8nYRuilM5ZhEUrI1g==
-X-CSE-MsgGUID: 9J55saeBROyC+lAS1DxVoA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="189035512"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 00:28:07 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uTy4Y-00000009PAK-47rV;
-	Tue, 24 Jun 2025 10:28:02 +0300
-Date: Tue, 24 Jun 2025 10:28:02 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
-	corbet@lwn.net, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	eraretuya@gmail.com
-Subject: Re: [PATCH v10 3/7] iio: accel: adxl345: add activity event feature
-Message-ID: <aFpTgoEIkWorp_pQ@smile.fi.intel.com>
-References: <20250622155010.164451-1-l.rubusch@gmail.com>
- <20250622155010.164451-4-l.rubusch@gmail.com>
- <aFkfjAekGJTU5o71@smile.fi.intel.com>
- <CAFXKEHbGThKzMxg=aZMgVEZ2S2hUoGAOoE5wu_vCuzEPqL0+cA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DqFTQJCz"
+Date: Tue, 24 Jun 2025 00:28:05 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750750096;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lc032N2dP+96gZo5C4cwrU+RJ37ABZ5fu4zPpJwktik=;
+	b=DqFTQJCzyv7ZW1hvEieX7Tv1cH2uTdFq+CU5nxIqcXQzUMK7fJNSfc1ljHoatbsDfahyJy
+	A/drSdnfKA4r++oWZYI67rUXxdDdMTS78irjNs8L0Ja5xCl/c9X+xBvTINGbvVjcqLLx4a
+	JKirWyEfgoAsJNKWk2g5AXAJMBIikM8=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Colton Lewis <coltonlewis@google.com>
+Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net,
+	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+	maz@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 01/23] arm64: cpufeature: Add cpucap for HPMN0
+Message-ID: <aFpThZIE2PxjVAVw@linux.dev>
+References: <aFYAXjzICzgmSyLI@linux.dev>
+ <gsntqzza9uxp.fsf@coltonlewis-kvm.c.googlers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFXKEHbGThKzMxg=aZMgVEZ2S2hUoGAOoE5wu_vCuzEPqL0+cA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <gsntqzza9uxp.fsf@coltonlewis-kvm.c.googlers.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Jun 23, 2025 at 10:57:39PM +0200, Lothar Rubusch wrote:
-> On Mon, Jun 23, 2025 at 11:34 AM Andy Shevchenko
-> <andriy.shevchenko@intel.com> wrote:
-> > On Sun, Jun 22, 2025 at 03:50:06PM +0000, Lothar Rubusch wrote:
-
-...
-
-> > > +     case IIO_EV_TYPE_MAG:
-> > > +             return adxl345_read_mag_config(st, dir,
-> > > +                                            ADXL345_ACTIVITY);
-> >
-> > It looks like you set the editor to wrap at 72 characters, but here the single
-> > line less than 80! Note that the limit is *exactly* 80 character.
-> >
+On Mon, Jun 23, 2025 at 06:25:38PM +0000, Colton Lewis wrote:
+> Oliver Upton <oliver.upton@linux.dev> writes:
 > 
-> I have my setup adjusted to 80 characters. Anyway, the cases here is
-> different, it needs
-> to be seen in context of the follow up patches. I tried to prepare the
-> patches now in a way
-> where changes are mostly "added". Is this correct and desired patch preparation?
+> > On Fri, Jun 20, 2025 at 10:13:01PM +0000, Colton Lewis wrote:
+> > > Add a capability for FEAT_HPMN0, whether MDCR_EL2.HPMN can specify 0
+> > > counters reserved for the guest.
 > 
-> In the particular case, this patch now adds ACTIVITY. A follow up
-> patch will add INACTIVITY.
-> Since this is still building up, it will add yet another argument to
-> those functions, i.e.
-> > > +             return adxl345_write_mag_config(st, dir,
-> > > +                                             ADXL345_ACTIVITY,
+> > > This required changing HPMN0 to an UnsignedEnum in tools/sysreg
+> > > because otherwise not all the appropriate macros are generated to add
+> > > it to arm64_cpu_capabilities_arm64_features.
 > 
-> will become, later
-> > >               return adxl345_write_mag_config(st, dir,
-> > >                                               ADXL345_ACTIVITY,
-> > > +                                             ADXL345_INACTIVITY,
+> > > Signed-off-by: Colton Lewis <coltonlewis@google.com>
+> > > ---
+> > >   arch/arm64/kernel/cpufeature.c | 8 ++++++++
+> > >   arch/arm64/tools/cpucaps       | 1 +
+> > >   arch/arm64/tools/sysreg        | 6 +++---
+> > >   3 files changed, 12 insertions(+), 3 deletions(-)
+> 
+> > > diff --git a/arch/arm64/kernel/cpufeature.c
+> > > b/arch/arm64/kernel/cpufeature.c
+> > > index b34044e20128..278294fdc97d 100644
+> > > --- a/arch/arm64/kernel/cpufeature.c
+> > > +++ b/arch/arm64/kernel/cpufeature.c
+> > > @@ -548,6 +548,7 @@ static const struct arm64_ftr_bits ftr_id_mmfr0[] = {
+> > >   };
+> 
+> > >   static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
+> > > +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,
+> > > ID_AA64DFR0_EL1_HPMN0_SHIFT, 4, 0),
+> > >   	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,
+> > > ID_AA64DFR0_EL1_DoubleLock_SHIFT, 4, 0),
+> > >   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE,
+> > > ID_AA64DFR0_EL1_PMSVer_SHIFT, 4, 0),
+> > >   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,
+> > > ID_AA64DFR0_EL1_CTX_CMPs_SHIFT, 4, 0),
+> > > @@ -2896,6 +2897,13 @@ static const struct arm64_cpu_capabilities
+> > > arm64_features[] = {
+> > >   		.matches = has_cpuid_feature,
+> > >   		ARM64_CPUID_FIELDS(ID_AA64MMFR0_EL1, FGT, FGT2)
+> > >   	},
+> > > +	{
+> > > +		.desc = "Allow MDCR_EL2.HPMN = 0",
+> 
+> > This feedback still stands...
+> 
+> > 		.desc = "HPMN0",
+> 
+> > [*] https://lore.kernel.org/kvm/aD4ijUaSGm9b2g5H@linux.dev/
+> 
+> Sorry for ignoring your previous feedback. I looked at the other .desc
+> fields and they had more descriptive English, so I think this one should
+> be more than "FEAT_HPMN0" for consistency.
+> 
+> If you insist I'll change it.
 
-Yeah, but with the difference that you still remove the added line in the case
-above (as this example is not the same as what we are talking about).
+I'm not exactly sold on the merits of using descriptive names for the
+capabilities, as the architecture extension names are exact terms that
+can be related back to documentation.
 
-I think you wanted more something like
-
-		return adxl345_read_mag_config(st, dir,
-					       ADXL345_ACTIVITY);
-
-ito become
-
-		return adxl345_read_mag_config(st, dir,
-					       ADXL345_INACTIVITY,
-					       ADXL345_ACTIVITY);
-
-> To make the change more additive, I did linebreaks earlier than 80
-> characters. Is this
-> legitimate in this case?
-
-I think so.
-
-> If so, I'll keep all related formatting as is (and will only change
-> the other requests).
-
-Sure.
-
-> Otherwise, I can do it differently and adopt all the formatting
-> changes to prioritize 80 characters.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Oliver
