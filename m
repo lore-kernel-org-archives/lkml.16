@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059C22E2F1C;
-	Tue, 24 Jun 2025 15:08:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3FC2E339E;
+	Tue, 24 Jun 2025 15:08:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750777683; cv=none; b=e1cBvhO+boNYZutW3/Z/oao427z+4TrU/PsigmBrlR6KNfgpIMXbi+LrC91pR9KlLc+SwW6cQaDnyEKY9MRFntsXvUquarQbfn/yjaVYl108kuTj2A7yf2bPdfty6JQOrjFkNZa/ek0zGJXyaJMWmBQQCSDw2ZkRUNFE2pQubOo=
+	t=1750777687; cv=none; b=vGczkCAjZtvHP/A+XqpeJPi1h4k8ArpksCQe2cNS3ndDrjh2s/NCkkO+qsQES+maKv2tBvFDRIMjmiz9SOCks6jyKBHVWisGiQtToa/PXU1vrNCFv1cv7Y1wp7ggNv4Wu5vjrWWxFQzmQn25r/g/WQJ3mRnnwmrLAm9LOHI27ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750777683; c=relaxed/simple;
-	bh=KlL9W2ov30wUEU9PFO719dWCIY+6KkZeRfGU12+ns2M=;
+	s=arc-20240116; t=1750777687; c=relaxed/simple;
+	bh=bNtsGGjTyO9WQwrZ3YIZD66hIR2SF4mfZ+K5q+4ZGA0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZRv2SCxdUyKdOSGpCgC+nHTZHiybMm60qwxUqaVhHlVRa2eCaKR9UldJfORCDMfTcOYSoplAjYj4Xx2WuhZS2xEknYgOEUqvhVb1zyJ4MEoObTcAUQR1XKPvSYn60LXs61Qhk7lQa1vjQ8/o17H1ft4qusXyLNfcF3FqMEBARkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BozZJFMH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aMOQQqnSd98COO5lPzAJk2bxNg3FHGkHeHRBES1uSJCFUPb8+gAligc/2RTl5QvqhZaghJl+2YU9LC5+OblA4bq+PMfVJnIETsy5hZ71NEOCspenR7dpXOgp1ZfQHPatbssYL0x0//ASIiH1aXxznvReBsPsK75vq2t1fYCdMo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oRo5HgTw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BozZJFMH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5551C4CEE3;
-	Tue, 24 Jun 2025 15:08:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oRo5HgTw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF707C4CEE3;
+	Tue, 24 Jun 2025 15:08:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750777682;
-	bh=KlL9W2ov30wUEU9PFO719dWCIY+6KkZeRfGU12+ns2M=;
+	s=k20201202; t=1750777687;
+	bh=bNtsGGjTyO9WQwrZ3YIZD66hIR2SF4mfZ+K5q+4ZGA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BozZJFMHZQcVNl5vQdsPpiFpCYlyV211zoPRMKBWj9goX5OGdYRpsIuFx6sz0g6p2
-	 +o9oLt6LPwLEwEyUJPb8uTHsk0sL3xLpefmp/PYAkztKCGgpNcQK4VcPApi1K+Faa5
-	 2SJtNIvEkBUmfqDb21AyWPb3jYg/e8G5ML0Znmfw8bTrXHfEesrN09O4L8OfWxCb71
-	 qhc/LQFyXAoEPsGX2rjEikIVhICpjUXA9WD0MSqQ79uz6CNEJVZhtTAN6SY/V99UGC
-	 rRVVUBgGhh27nktAAvSXS0QaafVTDXM8gcXB9Le54HtQM4WFEfT2VQNBDwK6N5vsvl
-	 N/HTeHfY7+QsQ==
+	b=oRo5HgTwvObh2V6UGb1kJwqCYnsD2uqG+zmG4J0GlcdtJGGlbd9SeeTvfVbR7VfOM
+	 cO0oT0D31rNeEj23v6iQS4YjBbKZNKgruVfvjANiU3v4v8jxqxfJTsTCD1f+9DzRZj
+	 wSzZbeKc7dain/uCJzPF1CpTHSnB6F5VYsdqkaSuwKaNGPnXCcuWFS+i+L74lWKYjr
+	 /LF2sPzutmDmlLkfWFAgtmuEgvpb0Z+35dqfYkivPPI0MpDWXYrbUZRe6pu4aTGs+t
+	 iaOgAaEaA4kzPW6C2qXbnOOO3mDII4/fzo0x//6fVJ1Dhk14Ffbph+0ATP7PttORpx
+	 vqvhNhc/1yvwQ==
 From: Masahiro Yamada <masahiroy@kernel.org>
 To: linux-kbuild@vger.kernel.org
 Cc: Masahiro Yamada <masahiroy@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 23/66] kconfig: gconf: add static qualifiers to variables
-Date: Wed, 25 Jun 2025 00:05:11 +0900
-Message-ID: <20250624150645.1107002-24-masahiroy@kernel.org>
+Subject: [PATCH 25/66] kconfig: gconf: refactor view setting code
+Date: Wed, 25 Jun 2025 00:05:13 +0900
+Message-ID: <20250624150645.1107002-26-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250624150645.1107002-1-masahiroy@kernel.org>
 References: <20250624150645.1107002-1-masahiroy@kernel.org>
@@ -44,51 +44,138 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-I also removed unnecessary initializers.
+Factor out common code for setting the view into a new function,
+set_view_mode().
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/kconfig/gconf.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ scripts/kconfig/gconf.c | 74 +++++++++++++++++++++--------------------
+ 1 file changed, 38 insertions(+), 36 deletions(-)
 
 diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
-index 4fff931f34fc..0d5a02706bcb 100644
+index 9d06c050b270..b67ebff3f288 100644
 --- a/scripts/kconfig/gconf.c
 +++ b/scripts/kconfig/gconf.c
-@@ -32,20 +32,20 @@ static gboolean show_range = TRUE;
- static gboolean show_value = TRUE;
- static int opt_mode = OPT_NORMAL;
+@@ -18,7 +18,7 @@
+ #include <unistd.h>
+ #include <time.h>
  
--GtkWidget *main_wnd = NULL;
--GtkWidget *tree1_w = NULL;	// left  frame
--GtkWidget *tree2_w = NULL;	// right frame
--GtkWidget *text_w = NULL;
--GtkWidget *hpaned = NULL;
--GtkWidget *vpaned = NULL;
--GtkWidget *back_btn = NULL;
--GtkWidget *save_btn = NULL;
--GtkWidget *save_menu_item = NULL;
-+static GtkWidget *main_wnd;
-+static GtkWidget *tree1_w;	// left  frame
-+static GtkWidget *tree2_w;	// right frame
-+static GtkWidget *text_w;
-+static GtkWidget *hpaned;
-+static GtkWidget *vpaned;
-+static GtkWidget *back_btn;
-+static GtkWidget *save_btn;
-+static GtkWidget *save_menu_item;
+-enum {
++enum view_mode {
+ 	SINGLE_VIEW, SPLIT_VIEW, FULL_VIEW
+ };
  
--GtkTextTag *tag1, *tag2;
-+static GtkTextTag *tag1, *tag2;
+@@ -70,6 +70,39 @@ static void conf_changed(bool dirty)
  
--GtkTreeStore *tree1, *tree2, *tree;
--GtkTreeModel *model1, *model2;
-+static GtkTreeStore *tree1, *tree2, *tree;
-+static GtkTreeModel *model1, *model2;
+ /* Utility Functions */
  
- static struct menu *current; // current node for SINGLE view
- static struct menu *browsed; // browsed node for SPLIT view
++static void set_view_mode(enum view_mode mode)
++{
++	view_mode = mode;
++
++	if (mode == SPLIT_VIEW) { // two panes
++		gint w;
++
++		gtk_widget_show(tree1_w);
++		gtk_window_get_default_size(GTK_WINDOW(main_wnd), &w, NULL);
++		gtk_paned_set_position(GTK_PANED(hpaned), w / 2);
++	} else {
++		gtk_widget_hide(tree1_w);
++		gtk_paned_set_position(GTK_PANED(hpaned), 0);
++	}
++
++	switch (mode) {
++	case SINGLE_VIEW:
++		current = &rootmenu;
++		display_tree_part();
++		break;
++	case SPLIT_VIEW:
++		gtk_tree_store_clear(tree2);
++		display_list();
++		break;
++	case FULL_VIEW:
++		gtk_tree_store_clear(tree2);
++		display_tree(&rootmenu);
++		break;
++	}
++
++	if (mode != SINGLE_VIEW)
++		gtk_widget_set_sensitive(back_btn, FALSE);
++}
+ 
+ static void text_insert_help(struct menu *menu)
+ {
+@@ -435,35 +468,19 @@ void on_load_clicked(GtkButton * button, gpointer user_data)
+ 
+ void on_single_clicked(GtkButton * button, gpointer user_data)
+ {
+-	view_mode = SINGLE_VIEW;
+-	gtk_widget_hide(tree1_w);
+-	current = &rootmenu;
+-	display_tree_part();
++	set_view_mode(SINGLE_VIEW);
+ }
+ 
+ 
+ void on_split_clicked(GtkButton * button, gpointer user_data)
+ {
+-	gint w;
+-	view_mode = SPLIT_VIEW;
+-	gtk_widget_show(tree1_w);
+-	gtk_window_get_default_size(GTK_WINDOW(main_wnd), &w, NULL);
+-	gtk_paned_set_position(GTK_PANED(hpaned), w / 2);
+-	gtk_tree_store_clear(tree2);
+-	display_list();
+-
+-	/* Disable back btn, like in full mode. */
+-	gtk_widget_set_sensitive(back_btn, FALSE);
++	set_view_mode(SPLIT_VIEW);
+ }
+ 
+ 
+ void on_full_clicked(GtkButton * button, gpointer user_data)
+ {
+-	view_mode = FULL_VIEW;
+-	gtk_widget_hide(tree1_w);
+-	gtk_tree_store_clear(tree2);
+-	display_tree(&rootmenu);
+-	gtk_widget_set_sensitive(back_btn, FALSE);
++	set_view_mode(FULL_VIEW);
+ }
+ 
+ 
+@@ -1039,11 +1056,6 @@ static void _display_tree(struct menu *menu, GtkTreeIter *parent)
+ 		    || (view_mode == FULL_VIEW)
+ 		    || (view_mode == SPLIT_VIEW))*/
+ 
+-		/* Change paned position if the view is not in 'split mode' */
+-		if (view_mode == SINGLE_VIEW || view_mode == FULL_VIEW) {
+-			gtk_paned_set_position(GTK_PANED(hpaned), 0);
+-		}
+-
+ 		if (((view_mode == SINGLE_VIEW) && (menu->flags & MENU_ROOT))
+ 		    || (view_mode == FULL_VIEW)
+ 		    || (view_mode == SPLIT_VIEW))
+@@ -1368,17 +1380,7 @@ int main(int ac, char *av[])
+ 
+ 	conf_read(NULL);
+ 
+-	switch (view_mode) {
+-	case SINGLE_VIEW:
+-		display_tree_part();
+-		break;
+-	case SPLIT_VIEW:
+-		display_list();
+-		break;
+-	case FULL_VIEW:
+-		display_tree(&rootmenu);
+-		break;
+-	}
++	set_view_mode(view_mode);
+ 
+ 	gtk_main();
+ 
 -- 
 2.43.0
 
