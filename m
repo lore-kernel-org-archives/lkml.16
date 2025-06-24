@@ -1,139 +1,95 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E0B170826
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:14:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D0417A2E2
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750792486; cv=none; b=qGj7ztr2I5YRdMP+2e9+kK8f/t93mv3+f109BA28749F31WjuaH8OwvFlvqsvWBiOlpAFhEWoGiekNnTdM1i6HTtgnoMVTkWCT/P4Z3vKIy1O+Uv6O37YWLlucT/5GSQ784QBopepGYw3oZMrPmVoPqLijUkqvmNOcSrv0COI1M=
+	t=1750792573; cv=none; b=dEu57kHjTAk8OEosJuBtO6MVd1qlrHuRWFFNA4iwz33v1uTx8Y7iTkKEFo1+EkKidFMGtbFooBErVO+Ls0dAFf1Yy6DNL/3kf5ICteNr2lfKWte9wCHgV36fPmJxPAyNsEakRzk+f4CYsLivzSBgfqZ0DTH9R5HybLVvybcHImk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750792486; c=relaxed/simple;
-	bh=cK7invMTv+9Zp7Jn4wlj0VrbbXjyQPoL+BsvlYDJisg=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=PIMAJA7+qlA6c0qIP3alyK3gH4C0swsBKwYhIT2dj5OZhdSwni8oKTcNOV0jvmeuCYq1OQbiqRpLno2tgWtRCdSENlAvbJnzcQGnIda3hzqSnI9kI9BM4yc6FJoxdeXWLzrC6f6dKz2eeZmnNvjfOGzMdIVJtEABFEtenYSG8IY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info; spf=pass smtp.mailfrom=jacekk.info; dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b=2RSihIXY; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jacekk.info
+	s=arc-20240116; t=1750792573; c=relaxed/simple;
+	bh=ihWWakMukXt8Os5zOHseSTg4tzKTY1m9zw8OxkJuiHM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q9K7aq1IeOnh6TXo0Bu0Sc0UWQMS3SorgD1XDI3j0tOYV9iOgGTxwgjTjDQPUj/xyIq7sLN2pLDRuRqItEX5YoYXKJsPLT5iiCyuHIcf0xGQe8rcrxNXtDTGKR9xmZ+A2aOs92CEONRxwvAPa+i/PJx2WUJIBZei1Nv/KqU/LzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YpSnrxcg; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b="2RSihIXY"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ade5ca8bc69so148192966b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:14:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YpSnrxcg"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-55350d0eedeso932914e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:16:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jacekk.info; s=g2024; t=1750792482; x=1751397282; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=i758Ky8oE7yqylYD7uxqKekAUdnnIo9/om6cPhIxexM=;
-        b=2RSihIXYBaARMmmAJsJDzbRT0yLw4QdNW2T3Rsu92AEGdG7uhAPc1BYJnCDPPyAcRz
-         G26wW71Ihexpl87JCL047vogM0cmt3fz/XOkUqlyhRDt1vsCl4cIX2lYJJDGVS7HJbAZ
-         M0wkr8+CbSJzBrg2Lp8ySqOuPkfv8HVAPjEKrKZePn7supzsFiGA9e+yw2UCrP1DLvJl
-         BOMxMe+WACJsgy1Mg18kZ61k4BmVAD4QnXxFgsvKBUzbjqd9K/PR/AqgL53vXzP6i8ex
-         eCyJ47Gi+rigFro+n57xIjtywkhvdSYyKEEFeM4y45YpMz6So8NNxVFiBsIfYLlAXsz7
-         hJIw==
+        d=linaro.org; s=google; t=1750792570; x=1751397370; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ihWWakMukXt8Os5zOHseSTg4tzKTY1m9zw8OxkJuiHM=;
+        b=YpSnrxcgP6His/jiye0hx5Tm1sOZSmfyn0sJdK7DtV9f4uim+LANBvNc8LUDl59lLm
+         tmmhp313Uz4S7donnbcaJ0JF8NUMpc6Ru7CAILtRtikbmGbIJ/zYLAFaxY0r88YudGZ/
+         IBVp+hHIyGZSLR2Gx2jimgSI/BP5toWa06oBMJiqFYDidQZR/4Rr3hxf7XQUVJV60xVW
+         Tlokco5egdeRs4+5XGuxNlEE+fpWvz9wyffeD/e/LgwAw1bP6yVrL/Jur3ZmDKS2AP2S
+         h3ik/aD+ZmHB6NYpNm9mNZnARiM137HofJmqV3k1b7n3bhIN4uOKhHI+uj11rxunhcoq
+         g1ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750792482; x=1751397282;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i758Ky8oE7yqylYD7uxqKekAUdnnIo9/om6cPhIxexM=;
-        b=GwarIh8ysEnzfyv1azASIvTKTSE95p1eXePzj9pwaQDSWT79F+7pwS6mLQDeKTTqje
-         PHBPRyI+BhiSD6wKDwZosXjqdmWoVnSz7cHKR5zNEQqcxl+RpYa5+4lv9mlg8BdcFQrv
-         2t2pb/LGWCLPhcUbs9VCnjf6DyC2pEumplrI8llCuq3JrGDVjCOsSNt1Evm0eCBeEpUx
-         gmxYwjwxlnSzwVuLOlmueZvN2kIkcS6etNiglBdBwUFChz9tm5KjgQB4VzLs7vNalxpj
-         IVNNh6BI0hbhCF5F0lZ9GOnPUrXmNaaUzzPSjDZHZlwvgebwOfY/kHwmA8I2LddOatE/
-         DlUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVHtomPKPTnnYrYIg/8m0VB8UFUvY/pvbAH4VznsfNtw2UOGGr+WhmZBWoPXTAL8TTK+FHWklrr0rHoy+U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLbJw4VIlyO7PRK9cIoyuwm7Hd03b56GDuXZ23qjesEtopoZH4
-	Nab2bGw2SsAuKQqkU5u53oMW5Mscd5xU6VEYE42IIZlVUMYYpeSRy8D+UHq0nIyB4g==
-X-Gm-Gg: ASbGncsuwfMBsYdoSvQ2WxZjJc2RJrUhMM5P+UdlmT02zbJ1XYFmKg+QTflQVViJAuR
-	VXcpxam01t+ZYHvMqO9UVxzAJB3hP/Hc6H2IRO+vyePemMP5LvJYzwuQVr46mDDqDhkUjFBSEI6
-	uccKD+LFmTedVQyGlDRVZOcv/72E3YyiiYF4dYTnd5mayAamUO5rdeLme9L7w+OC/6FfwGM9WBB
-	o2zisnMACJ/gcP17w2CSVuze79zrlc3SnGuFDfopLxw2NDIaUHUJ1j/Lvw/UtQED00uS70Nod7B
-	pB3QCGsrWTYSGcXcTjLrn45u3fUR6ScpQZ5WC9Gg58wBlPKBuEQF95iO+RSoZQTr
-X-Google-Smtp-Source: AGHT+IGh+3ym/VJWtnmWq08iSJurV2ZoLlMoR+D33CMj9G53fcjK4wozO3Eitkg2sk8zbnY3++b52Q==
-X-Received: by 2002:a17:907:9622:b0:add:ede0:b9d4 with SMTP id a640c23a62f3a-ae0beca03f0mr44977866b.0.1750792481952;
-        Tue, 24 Jun 2025 12:14:41 -0700 (PDT)
-Received: from [192.168.0.114] ([91.196.212.106])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0b5b764ecsm83597666b.5.2025.06.24.12.14.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 12:14:41 -0700 (PDT)
-From: Jacek Kowalski <jacek@jacekk.info>
-X-Google-Original-From: Jacek Kowalski <Jacek@jacekk.info>
-Message-ID: <5c75ef9b-12f5-4923-aef8-01d6c998f0af@jacekk.info>
-Date: Tue, 24 Jun 2025 21:14:40 +0200
+        d=1e100.net; s=20230601; t=1750792570; x=1751397370;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ihWWakMukXt8Os5zOHseSTg4tzKTY1m9zw8OxkJuiHM=;
+        b=OiFGlN9GxFmuBi2Av/67XDdXmmC2brr6/CbvmD1L02z/fFnHlSsn0LZio+5JlfMKkA
+         qKjvjz8x54qBFXES1YpLZLzolJCj+ynLkgs+8v7KhLKkXJYgnxofZFXYdx7MYS8RIXpC
+         dtoqxm/UQuE1H23NROu666ciXWloevj636z7NGQMj7FqRL1tx5e4YoN5HPdUuTtNTKSf
+         58A35W9yQbc8ZpPdPyqndV7t/ggaDGv/nY9FKW8OusUyvNn5lEJTMHADTqoYn/1ZMU3U
+         S9s8D4/WF1XA6cu8HQJPwhtd+8Yg3lohqWYnq66fmkmvHhddZdozo/WrNCvBrfADI2iO
+         BxPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUHeSZ+zLykUP5sacsrtDF1t8n5XU5q3KvIzQrtg4lbgC5yYCV1inQVq7cUe5hhItLTXxT4d3/z1hXQ8o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4Bumy9mu2s2C5AEsTz6oO+bgY66Z25tDIxbniK9CP+OtViLxf
+	u5oe8808gWJ/a8kULTU8csUx6Wt33BDNe5+/iAVXTU/YGxi5i+D0QIQ5vvNp2tZHpkqGtMBpUp9
+	lSK+mrE7HxAnV7AFL5FzpPvwiOZQZTYwJqTrQtia5bg==
+X-Gm-Gg: ASbGncsRRQxIC1BIE57+USW2JMRCeZql3hDXT3ISCwkSF9ATvhB0cpEXGXfNE3eqT92
+	xsP4w+nQ4UtFqfC6s0w7tewHtCtkoIAootPq2FIl5O/iErCh7IVVZStFcz9VbwyUWuUIKC6pX//
+	Iv00TWqM5iFjp0MOdI4/tFojyx/eGb8EYlp6GrEXQ4cT4=
+X-Google-Smtp-Source: AGHT+IHmRRS+snn9ezdisZXjq9pNKvNF1NOIie7MqflwaPNY3SKz61GchJJ41LtKpgJIpimyXyrJyvJ1Pacxv1Ru12U=
+X-Received: by 2002:ac2:4c45:0:b0:552:1c1b:561 with SMTP id
+ 2adb3069b0e04-554fdd23ba8mr18893e87.23.1750792570121; Tue, 24 Jun 2025
+ 12:16:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH v3 2/2] e1000e: ignore factory-default checksum value on TGP
- platform
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Vlad URSU <vlad@ursu.me>
-References: <91030e0c-f55b-4b50-8265-2341dd515198@jacekk.info>
-Content-Language: en-US
-In-Reply-To: <91030e0c-f55b-4b50-8265-2341dd515198@jacekk.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250620010345.11247-1-chenyuan_fl@163.com> <20250620012708.16709-1-chenyuan_fl@163.com>
+In-Reply-To: <20250620012708.16709-1-chenyuan_fl@163.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 24 Jun 2025 21:15:58 +0200
+X-Gm-Features: AX0GCFs0q4vtQFV_NNK7FgYpbrOMY93VLrNBvqqOTi5xPuc96sQtOMY9VoZarF0
+Message-ID: <CACRpkdaA8UQYX8bFeHn4JCxLgK_-UxR_n=ZCZmgbk8tqSgnFAw@mail.gmail.com>
+Subject: Re: [PATH v2] pinctrl: sunxi: Fix memory leak on krealloc failure in sunxi_pctrl_dt_node_to_map
+To: Yuan Chen <chenyuan_fl@163.com>
+Cc: wens@csie.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Yuan Chen <chenyuan@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-As described by Vitaly Lifshits:
+On Fri, Jun 20, 2025 at 3:27=E2=80=AFAM Yuan Chen <chenyuan_fl@163.com> wro=
+te:
 
-> Starting from Tiger Lake, LAN NVM is locked for writes by SW, so the
-> driver cannot perform checksum validation and correction. This means
-> that all NVM images must leave the factory with correct checksum and
-> checksum valid bit set.
+> From: Yuan Chen <chenyuan@kylinos.cn>
+>
+> In sunxi_pctrl_dt_node_to_map(), when krealloc() fails to resize the pinc=
+trl_map
+> array, the function returns -ENOMEM directly without freeing the previous=
+ly
+> allocated *map buffer. This results in a memory leak of the original kmal=
+loc_array
+> allocation.
+>
+> Fixes: e11dee2e98f8 ("pinctrl: sunxi: Deal with configless pins")
+> Signed-off-by: Yuan Chen <chenyuan@kylinos.cn>
 
-Unfortunately some systems have left the factory with an empty checksum.
-NVM is not modifiable on this platform, hence ignore checksum 0xFFFF on
-Tiger Lake systems to work around this.
+Patch applied for fixes!
 
-Signed-off-by: Jacek Kowalski <Jacek@jacekk.info>
-Tested-by: Vlad URSU <vlad@ursu.me>
-Fixes: 4051f68318ca9 ("e1000e: Do not take care about recovery NVM checksum")
-Cc: stable@vger.kernel.org
----
-v2: new check to fix yet another checksum issue
-v2 -> v3: fix variable bein compared, drop u16 cast
- drivers/net/ethernet/intel/e1000e/defines.h | 3 +++
- drivers/net/ethernet/intel/e1000e/nvm.c     | 5 +++++
- 2 files changed, 8 insertions(+)
-
-diff --git a/drivers/net/ethernet/intel/e1000e/defines.h b/drivers/net/ethernet/intel/e1000e/defines.h
-index 8294a7c4f122..2dcf46080533 100644
---- a/drivers/net/ethernet/intel/e1000e/defines.h
-+++ b/drivers/net/ethernet/intel/e1000e/defines.h
-@@ -638,6 +638,9 @@
- /* For checksumming, the sum of all words in the NVM should equal 0xBABA. */
- #define NVM_SUM                    0xBABA
- 
-+/* Factory-default checksum value */
-+#define NVM_CHECKSUM_FACTORY_DEFAULT 0xFFFF
-+
- /* PBA (printed board assembly) number words */
- #define NVM_PBA_OFFSET_0           8
- #define NVM_PBA_OFFSET_1           9
-diff --git a/drivers/net/ethernet/intel/e1000e/nvm.c b/drivers/net/ethernet/intel/e1000e/nvm.c
-index e609f4df86f4..56f2434bd00a 100644
---- a/drivers/net/ethernet/intel/e1000e/nvm.c
-+++ b/drivers/net/ethernet/intel/e1000e/nvm.c
-@@ -558,6 +558,11 @@ s32 e1000e_validate_nvm_checksum_generic(struct e1000_hw *hw)
- 		checksum += nvm_data;
- 	}
- 
-+	if (hw->mac.type == e1000_pch_tgp && nvm_data == NVM_CHECKSUM_FACTORY_DEFAULT) {
-+		e_dbg("Factory-default NVM Checksum on TGP platform - ignoring\n");
-+		return 0;
-+	}
-+
- 	if (checksum != (u16)NVM_SUM) {
- 		e_dbg("NVM Checksum Invalid\n");
- 		return -E1000_ERR_NVM;
--- 
-2.47.2
+Yours,
+Linus Walleij
