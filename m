@@ -1,184 +1,212 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF2D2BF3CA
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2A0182BC;
+	Tue, 24 Jun 2025 13:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750770262; cv=none; b=LC9q6+3H8JmtmL+U2ju7jDBYubQrlYPNQ/A0r6cAIEdW0SwF7GENvGhN1Lh+2jGscYSrZFmzkg4+KoiQEytPgT5149c/pMXcqpMn358KHzsygrqH1aOSCJen5kZ2GRZL3y82x3UV6ZWszqk+dR6l558M7yeT2ASzJslHfiWa3JQ=
+	t=1750770334; cv=none; b=bsv3e1j0T8aO0gRfD9V0pIy6vgXAKD7wId82i+byILxZSvWx5ileEP63kcjuTUn5PaR9xNd30RF/5hjFNmw9zfScfapy31chOX77uMk6vpCC2xZXC+VUVUnQJElzk8rXHCL0bKYCC/3xuqkOtSROwjhEist4V/2zMMJDfSgBqyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750770262; c=relaxed/simple;
-	bh=MQKowZ3zRpM28etUCfcetudpyb05NjBVDfvr3BSFbxk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bkspDt9b8jsobj+VbOjvJNmLvGVJzO1qngmPkVKbZol/OP/k+Con1ftHy2Ediic5LldvR5BLUNQ83cUAIip+Kfxm/fVQXFIFnzMkULTi2fW45+03x7cnCQvTH7fqWgFJbvnDSIfESm7vCw/XqdSSJFCpQ+PQBPOquOCvyoOu53o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=U6t4sxbl; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750770334; c=relaxed/simple;
+	bh=kGyeSWwPfNqY8c6qb1h6FLEVc9UbMJzgCLbeazagA7s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NGpdCEDSxUbWh+I3VZF+32g84c95RWt+PyyoMLBzrDuEaRgfdst7DyO9RgccQN42upgVRLeqcTuj6Hn7Tit7+8eNdAPx3fUJE5B+/MBgzG30WK9XlK0gpr4UNRtRDkOrvrfC7C9vdP3Rbx86Nae/lDFeL95cnb5Y3xaXLXJ9iKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XtgBVdTI; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="U6t4sxbl"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O8CqMV021069
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:04:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	O/495hC0vUVuxQ++cW8y15Nw00kbXFjpRqZMO89lgJs=; b=U6t4sxblEbxZw/wO
-	VG0uUjXknWQQqGCpI9mmEwKPWr3FXrpXOHnxHx0PX6ANP6B+CO+UHiniqrRusYma
-	8J0IuPqxRlbLIaAmHJIoB3d/kxb2Uj1VCLfjYMuq0N1clpEOYK/H3i4ijHJqhlRN
-	ZhYWJx/RXMKPONXftVcuaO4zircF10rUqLDgm0KnnMbjzHSuNzDpRIXCN8th5wBy
-	1+ybZaTQY41tBIoGQ2HhOtQe1CSPqWaSWRZyVsmvLCM9vri6FwSFB2+bRs1IWKrX
-	sR5/IwPDLENbpNrNQEd1+I9rBgN6Ouk66Et45hqW9ejz9cDLXHrwu6Hy8juVXrdE
-	lPtXsg==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f4b3v25v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:04:20 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-23692793178so4130125ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:04:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750770259; x=1751375059;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O/495hC0vUVuxQ++cW8y15Nw00kbXFjpRqZMO89lgJs=;
-        b=k2aAhhzYN21hsAMX65YOWOtP8GledAYvT/6xw80hq5wR7adrUFk6mHmDJzZ7FUonDG
-         CF+5r0/b8gBv93S17oc8jNPGHDPHni8glkNQUibOhyT3S+OZArl/Cviz2hRr1cq3+zVg
-         e6Nold31ej/jFrSWuOx2FnoCfIDWMWVHCyOV8G0buQzBjiPHntuqs6MDAEm2HFtZ4mYV
-         6czb1lCIFt3U4Bjyf6L6b4TvtVfQrG7ADL6A21AR9Gbsn/RTFjaNl1Qm8BFd/3K9aM8E
-         o4vtw26tL5dcltPQ7dkyQPWdKJv8FYIcA92CU44KI5kn14CtGORfWgGdF+9y1K6snyN6
-         /j8g==
-X-Forwarded-Encrypted: i=1; AJvYcCUjd0e3voN95xWmQQP/48/dWq9TKjBkVBoJgKPSgkJL0zrOvskfdzT5N33t6vwB4wa7uodlGVIXYTXXTc4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwA50GPce2sIGsOVnx/z6I0QhQc2hqVqFiVMeym0XcoUAHf62d
-	M89LsXnVct50X6BzW60jA2SMO9B8SA/vefOQEfguVr7UIBZrmx1h778QFkjzY/CZfQeeSb/MGYp
-	C/TDseIXS5SPpCAeuF47vyOjkGIu1ybs/70MvvNw72R4F+cLs4z4T8i6XXQk7VFSaAoYlPmtnel
-	8=
-X-Gm-Gg: ASbGncs3bASVtGx4TnIK3ILUGxlx2Y2sxYk8xnHKm7CcM3gBdf32rcGpV+73E4ati4Y
-	E+zY+UlqxxGU5aRHXZJSGDkCDiRZyznaQxloFyIwyIshago0sEY4CmYsmradXYE/f3AD0Vmrr1h
-	NO+9XhjLZTUX7zP5pUhxBopEl0x/n8VxlXAeLa81JA+hcU5QDDFW6/KYvjEqut6LaNLdks5o5RW
-	LD1PYPbTRlyJGIWRQEK7/O7Lkin/EV9PHw/fDYpKUVusjPYZ4qICbvu+OsAJdPIhT+ovhaHz2O2
-	QtLdsvppsZ5mMRs20RPUc6TjGJ6zBjyl2hz0lMVdbHzOaEDf+gasl11iJw==
-X-Received: by 2002:a17:903:8cc:b0:234:8f5d:e3c0 with SMTP id d9443c01a7336-237d9767a10mr202186115ad.6.1750770259259;
-        Tue, 24 Jun 2025 06:04:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE9tPnXoLF91QSG183P4Nqg3xkGhJKkNxAVBtQTPbRr76iNpa84omAzPiPt/Ao9F7KIQhX8og==
-X-Received: by 2002:a17:903:8cc:b0:234:8f5d:e3c0 with SMTP id d9443c01a7336-237d9767a10mr202185245ad.6.1750770258270;
-        Tue, 24 Jun 2025 06:04:18 -0700 (PDT)
-Received: from [192.168.0.126] ([175.101.107.119])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f1241efbsm10331324a12.36.2025.06.24.06.04.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 06:04:17 -0700 (PDT)
-Message-ID: <a46b9870-207b-45a1-b3e6-5c13e1857640@oss.qualcomm.com>
-Date: Tue, 24 Jun 2025 18:34:14 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XtgBVdTI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750770333; x=1782306333;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=kGyeSWwPfNqY8c6qb1h6FLEVc9UbMJzgCLbeazagA7s=;
+  b=XtgBVdTIsC6FO0JhBOtUe5Rxbgg7/U5WO2mSHJUMceV/aUrE6artdMLc
+   uezbx4bIRjfvwGNb/BSFs/XunyCEEOsmPvwCqXn+4W1ik+ltdgFocdtSL
+   1DpCQGk19uIhReVjDePpa1jOzfef8wK6fk4+ZkmkHrpMr1HCfeOcjt4YI
+   WIMRaLPFO/bnLgHB2YVq87csT7oI450hYGPeio7AEHV8AJDdJ6bfaXQLD
+   A9ENBhui/LFZUkPW/DW4xVqzHUUBFbmkq9XYk3TcRA5SeGHH1+p6EKGdQ
+   qH0oCL8yNv9zS77aLdmfBQ3xBsOQ1QvUlI6QhCkSBtiwU5ND0VtborHW+
+   w==;
+X-CSE-ConnectionGUID: b5r2D6evSwiwZTnyyiaLqQ==
+X-CSE-MsgGUID: hXSDTVIiRhWB22ROi4TQCg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="64436179"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="64436179"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 06:05:33 -0700
+X-CSE-ConnectionGUID: yx5S08Y/Tj22QfpDWdefuQ==
+X-CSE-MsgGUID: i9+uPxK2STCA4XdUDpP6OA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="182787385"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 06:05:29 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uU3L4-00000009TQw-0NDt;
+	Tue, 24 Jun 2025 16:05:26 +0300
+Date: Tue, 24 Jun 2025 16:05:25 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Andy Shevchenko <andy@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v15 2/2] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <aFqilRNwsUafDtOm@smile.fi.intel.com>
+References: <20250623211116.1395-1-ansuelsmth@gmail.com>
+ <20250623211116.1395-2-ansuelsmth@gmail.com>
+ <CAHp75VcEJ0w5rcyq_DSHHunYanU5S9OgnRz1t8XervXqGQCX4w@mail.gmail.com>
+ <685a64d5.df0a0220.1f9a42.38b0@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] usb: dwc3: qcom: Implement glue callbacks to
- facilitate runtime suspend
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250610091357.2983085-1-krishna.kurapati@oss.qualcomm.com>
- <20250610091357.2983085-3-krishna.kurapati@oss.qualcomm.com>
- <20250623233211.aeehndz2nxqovepd@synopsys.com>
-Content-Language: en-US
-From: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
-In-Reply-To: <20250623233211.aeehndz2nxqovepd@synopsys.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDExMCBTYWx0ZWRfXyKUaA34Q1ezO
- H7KPhawtHJuszo4Vy19ILK1eCZ8/zUTCQSkoL6NnpUG5W9B220JwOPaO6gZe+rW8e8Bwa0a37lZ
- BUWVYDeKqk8ZUMCM7I0EAo3234sX9glv3PN9UH2aOgNbZYxfkatBp3fDF1iHGnoYnxgwYQwcQdK
- ycBKSFskovGi9+fOWmrlnxxQnrscPOKLv2XV27lGiOdeRYiegARbK9yYwrkBDz0lWoPjziBroqX
- uQqPsu6e0wl+iP21R8NMe1InR6n56HVWTziW4zzjxa/HNGWmxtjA4r8+ujVldUe4U25Q8lylqyk
- URen1oB4Q0L/84LypxaRsdiJJp8n2dT/Z45B8HSgzT+T/kL69aG8o7j0ZisWMc/xY7M2xJFrXk7
- w7ytpgOH5aADtspT0e5jXlvMr+439QeYOKBi9msacZAkOVtJz+gbCZuhGSmV46IjP7qnOnY3
-X-Proofpoint-ORIG-GUID: byr33BS32OUWHsQLQvUtIVk_QGHpYKO7
-X-Proofpoint-GUID: byr33BS32OUWHsQLQvUtIVk_QGHpYKO7
-X-Authority-Analysis: v=2.4 cv=A8BsP7WG c=1 sm=1 tr=0 ts=685aa254 cx=c_pps
- a=JL+w9abYAAE89/QcEU+0QA==:117 a=yWXLeC16oIbqf35128AjHQ==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=z0btSGuGm7FRfGALX-gA:9
- a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-24_05,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 mlxlogscore=900 malwarescore=0 spamscore=0 bulkscore=0
- phishscore=0 adultscore=0 impostorscore=0 suspectscore=0 mlxscore=0
- clxscore=1015 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506240110
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <685a64d5.df0a0220.1f9a42.38b0@mx.google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
+On Tue, Jun 24, 2025 at 10:41:54AM +0200, Christian Marangi wrote:
+> On Tue, Jun 24, 2025 at 09:37:26AM +0300, Andy Shevchenko wrote:
+> > On Tue, Jun 24, 2025 at 12:11 AM Christian Marangi <ansuelsmth@gmail.com> wrote:
 
+...
 
-On 6/24/2025 5:02 AM, Thinh Nguyen wrote:
-> On Tue, Jun 10, 2025, Krishna Kurapati wrote:
->> On Qualcomm DWC3 dual-role controllers, the conndone/disconnect events in
->> device mode are generated by controller when software writes to QSCRATCH
->> registers in Qualcomm Glue layer rather than the vbus line being routed to
->> dwc3 core IP for it to recognize and generate these events.
->>
->> UTMI_OTG_VBUS_VALID  bit of QSCRATCH_HS_PHY_CTRL register needs to be set
->> to generate a connection done event and to be cleared for the controller to
->> generate a disconnect event during cable removal. When the disconnect is
->> not generated upon cable removal, the "connected" flag of dwc3 is left
->> marked as "true" and it blocks suspend routines and for that to happen upon
->> cable removal, the cable disconnect notification coming in via set_role
->> call need to be provided to the Qualcomm glue layer as well.
->>
->> Currently, the way DWC3 core and Qualcomm legacy glue driver are designed,
->> there is no mechanism through which the DWC3 core can notify the Qualcomm
->> glue layer of any role changes which it receives via role switch. To
->> register these glue callbacks at probe time, for enabling core to notify
->> glue layer, the legacy Qualcomm driver has no way to find out when the
->> child driver probe was successful since it does not check for the same
->> during of_platform_populate.
->>
->> Hence implement the following glue callbacks for flattened Qualcomm glue
->> driver:
->>
->> 1. set_role: To pass role switching information from drd layer to glue.
->> This information is needed to identify NONE/DEVICE mode switch and modify
->> QSCRATCH to generate connect-done event on device mode entry and disconnect
->> event on cable removal in device mode.
->>
->> 2. run_stop: When booting up in device mode, if autouspend is enabled and
->> userspace doesn't write UDC on boot, controller enters autosuspend. After
->> this, if the userspace writes to UDC in the future, run_stop notifier is
->> required to enable UTMI_OTG_VBUS_VALID of QSCRATCH so that connect done
->> event is generated after run_stop(1) is done to finish enumeration.
->>
->> Signed-off-by: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
->> ---
->>   drivers/usb/dwc3/dwc3-qcom.c | 82 ++++++++++++++++++++++++++++++++----
->>   1 file changed, 73 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
->> index ca7e1c02773a..d40b52e2ba01 100644
->> --- a/drivers/usb/dwc3/dwc3-qcom.c
->> +++ b/drivers/usb/dwc3/dwc3-qcom.c
->> @@ -89,6 +89,12 @@ struct dwc3_qcom {
->>   	bool			pm_suspended;
->>   	struct icc_path		*icc_path_ddr;
->>   	struct icc_path		*icc_path_apps;
->> +
->> +	/*
->> +	 * Current role changes via usb_role_switch_set_role callback protected
->> +	 * internally by mutex lock.
->> +	 */
->> +	enum usb_role		current_role;
+> > > +config PWM_AIROHA
+> > > +       tristate "Airoha PWM support"
+> > > +       depends on ARCH_AIROHA || COMPILE_TEST
+> > 
+> > > +       depends on OF
+> > 
+> > There is nothing dependent on this. If you want to enable run-time,
+> > why not using this in conjunction with the COMPILE_TEST?
+
+Yes, I understand that. Maybe you should have dropped versioning of the series
+:-)
+
+> > > +       select REGMAP_MMIO
+
+...
+
+> > > +#include <linux/bitfield.h>
+> > > +#include <linux/bitops.h>
+> > > +#include <linux/err.h>
+> > 
+> > > +#include <linux/gpio.h>
+> > 
+> > Have you had a chance to read the top of that header file?
+> > No, just no. This header must not be used in the new code.
 > 
-> Can we just track the current role through dwc3 core instead of an
-> addition field in the glue?
+> As you can see by the changelog this is very old code so I wasn't
+> aware.
+
+Understood.
+
+> > > +#include <linux/io.h>
+> > > +#include <linux/iopoll.h>
+> > > +#include <linux/math64.h>
+> > > +#include <linux/mfd/syscon.h>
+> > > +#include <linux/module.h>
+> > 
+> > > +#include <linux/of.h>
+> > 
+> > Nothing is used from this header. You actually missed mod_devicetable.h.
+> > 
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/pwm.h>
+> > > +#include <linux/regmap.h>
+> > 
+> > Missing headers, such as types.h.
+> > Please, follow the IWYU principle.
 > 
+> Aside from types do you have hint of other missing header?
 
-Core caches only mode. We need ROLE NONE to identify cable connect. So 
-adding that in glue to keep track.
+Just above :-)
 
-Regards,
-Krishna,
+> Do you have a tool to identify the missing header?
+
+Unfortunately no tool available, this is just by experience of reviewing code
+and doing some cleanups in include/ area.
+
+The rule of thumb, for anythin you use, check which header provides that type
+or API. But OTOH don't be too pedantic about it, types.h, for example, covers
+a lot of basic kernel types and many compiler attributes and so on, no need
+to take care of those separately.
+
+TL;DR: you should go through your code and check it.
+
+...
+
+> > > +       u64 initialized;
+> > 
+> > Is it bitmap? This looks really weird, at least a comment is a must to
+> > explain why 64-bit for the variable that suggests (by naming) only a
+> > single bit.
+> 
+> There could be 33 PWM channel so it doesn't fit a u32. This is why u64.
+> I feel bitmap might be overkill for the task but if requested, I will
+> change it.
+
+Why? It has a shortcuts for unsigned long, so it should give you no difference
+on 64-bit compilation. 32-bit might suffer a bit, but if you curious you may
+check it. The ask here is only based on the variable naming and unclearness of
+how many bits are in use. Also bitmap will help to understand the code better.
+
+For instance, here
+
+	DEFINE_BITMAP(initialized, 33); // or rather a definition for 33
+
+will give immediate understanding how this is used and what are the limits.
+With u64 it;s unclear what you will do with a potential garbage in the upper
+bits, for example.
+
+So, let's say I prefer to see bitmap types and APIs here based on the above
+examples.
+
+...
+
+> > This entire function reminds me of something from util_macros.h or
+> > bsearch.h or similar. Can you double check that you really can't
+> > utilise one of those?
+> 
+> I checked and bsearch can't be used and and for util_macros the closest
+> can't be used. As explained in previous revision, it's not simply a
+> matter of finding the closest value but it's about finding a value that
+> is closest to the period_ns and only with that condition satisfied one
+> closest to the duty. We can't mix them as search for the closest of
+> both.
+
+Perhaps adding a comment on top to summarize this, or did I miss it?
+
+...
+
+> > > +       pc->buckets[bucket].used &= ~BIT_ULL(hwpwm);
+> > 
+> > Oh, why do you need 'used' to be also 64-bit?
+
+Right, but I mean why does each of the buckets require a 64-bit value? Can it
+be handled in a single bitmap or so?
+
+Or is it used like a cluster of the PWMs in one bucket?
+It feels like bitmap APIs can also improve the implementation here.
+
+> In the extreme case, a bucket can be used by all 33 PWM channel.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
