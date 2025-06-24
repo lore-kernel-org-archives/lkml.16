@@ -1,195 +1,239 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3FB2E174B
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750782725; cv=none; b=oX8EM1hRI8dLtOJxkOOLz4U8JxTY0i5+zTuiYO56oYYt+9nRTseSrFDzV5NPTQOxHJ9M0gOVqlPF2b63tdyIa9oQQFMSvcucrkNWAaM3yT27LqchVLPxrJ28owGbBLIMgVppcT6MooPRqPnYXzfPicBVEz+vY6hKq7dHNI49LCM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750782725; c=relaxed/simple;
-	bh=olUyBWxDQPtIHZXCrj2D5nX3VCAezpOoJNhDp42CoSw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=FHHYZE9F1ZCV4EEkKl6dGGw37Fuvsfymr5lm5PIu7fH/aF2vTA1M0G1wxRjlh0q3noZWvylzhZQtR/dVpBer45ddHvvcGEs5thHVCPOWrP72amGAk7OET/4bixR7Ryst9EZbPYIiKZ6PpRwz5JJKScieU56+FHuIwTdlhDXzGYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xvPOu6Yq; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429F0307482;
+	Tue, 24 Jun 2025 16:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.152.168
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750782831; cv=fail; b=R4uyOFjfuw8cUrwqZtUq8NnDHywkwQKtpkMlfN4XjdMxr8gVkKKq7MrKqzD7GPC9ZtQ0O1lz/1Tec7vdG70ncuimp+uch5TAZBRuJCZI7SC3GBkFfCmFzjFn35R+DwJfvOnUB3qYaXxK/CdSyX+gTA8Oy/oZJbDoZ6KOnKVgih4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750782831; c=relaxed/simple;
+	bh=Lq02ZTJ1ZA9FOQwUAVKziSs/2ifJsCgbOI85FewAar4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KAq8nlp6RJo3lHjp+h7fv/FFgasau4mBHcam/yLwbP+TCLLq5GlCRvep75NOsXUJ6YlI/8CV/tW62P5xcwJBy6yH7xH3ZJjT3dB/NqwMn5wx64w9cuFzOF/3s57anSV0z9oe4URrhzA+fpWoPciZqVZaM0BlMct2mAz4tj3cWL4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=Pm16jtSP; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=A2E1j3Dy; arc=fail smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xvPOu6Yq"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2356ce55d33so9947475ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:32:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Pm16jtSP";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="A2E1j3Dy"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55OFkC2d004868;
+	Tue, 24 Jun 2025 11:33:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=PODMain02222019; bh=d3xUs7/QH36EumsRUg
+	tEAnuG3e/09qoWa1IDz0zFh38=; b=Pm16jtSPltgWA/T8ICT5b4aHLbwxC5r0Mg
+	+U6Fg3+cjY0myiuOcxatYw5Ur+4dck6nAB+LjQTq4UxOD1usBokKGF7eh9VQBEN2
+	+vInb+DpCZZT1YHKCPRWCX9xYSD6i5/2ArGfihU7YC4RyIDn0On5xNEjTjwRFGUU
+	XpEFGgfn8JRzTnerq3ygQ/VA7swUVhJw83wC/NKnwaavyQwDtOUdDlJOvX2ZB5aD
+	jv+6+98qEIpqg3vDTZCBqgHEK8gCONhbQH8bAhOBrTp3WfRMwFcLUMWtS3UfH6sw
+	vRur6IVpPKKmiSSLPSzb7/0QRhmRvxvYyD35ZyvKMBTBN1CtmfGg==
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10on2115.outbound.protection.outlook.com [40.107.94.115])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 47e5tyuhxf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Jun 2025 11:33:16 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NfoUosT2ZumJ01PICf4S0MuoH/1NMxPKTE1q6G5RDHf/6JuGzNAbmxYkWjnPYrl5k7IjdcntiJhuAXkqxRGLLdbGtpZCkCJUGNDvIbhpq2uTglH6Lgdfy9ls0BdJA1lsycX1NpoiQS5n2r7OByRrP/eZjk7qQLf81uN5y+qn0IGKBzp1N+rnKk30DpYXC5wguWbrUx04LklIiRRgfS6aDdpj7lfFEmG8TYzi4Z9s+QmOjsWN5RB+Gj5J6HBe1S2IH/NR0JGddh5iCTgsHtC07LAWKGBkTcvtlzwF04xmVDUdkXEeE5tbSfEy1vaiDDQuJZPVtiRP6885+7fQlbLyqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=d3xUs7/QH36EumsRUgtEAnuG3e/09qoWa1IDz0zFh38=;
+ b=JJG4p/Op25MO3RFcE7kzdHnBE/V/wEtY5+wyCFsgWhccaZVC45dor0RwChLMpoWB1vtengTBO2KC7O8q+x2Ji5VH3Kz3DfnnqQQ7HDB+T6D6c2nM1rroziF+jtFkFTvXz9/6hAPWMwjX4z3ntvM4Sz25wPH5vav6r92b680P6rtXInbIMcLNwWTh1rjHZAazK9KUdWKUc2LyFXWmm+0A8JFy07Cp9ZXoc/yMejhdtotF8ib1RupYPSrrJxDfgGumAcvMm3GgmoHF4oDJ+xXraWYaHGsJMZ8MkAElzbIsd452hzatAo7wh7nAhoABu/Y5WusqfSiiuWcdsYvrKzHhBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 84.19.233.75) smtp.rcpttodomain=arm.com smtp.mailfrom=opensource.cirrus.com;
+ dmarc=fail (p=reject sp=reject pct=100) action=oreject
+ header.from=opensource.cirrus.com; dkim=none (message not signed); arc=none
+ (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750782723; x=1751387523; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XsS+ElmraQqT2Fu4rLd2/fa1KgRzuoHdf4Xkll7wCgE=;
-        b=xvPOu6Yq0qfmEirTPIub+feLaP0bKw0C/EHwdQydB8CvJzHyuuzCmCFqPVzk4uGoeV
-         y5HuIk8c9Nxpzo8CQcV67pO8+Ucgoyab2wyMRtqY/djPf0cJ0Y8QcSSItdZ/9skcmIhZ
-         pctY9I4K7ZrjCZ7p7EDpMGjgD5sXkDbzyboAiwbhDBl0cK39zTj3hjosM0gmFZWhfhxh
-         BBQQrRVrFsrSdXfKpwaeRQ7xKfePbhT1ySP2GUIYW62Oipc3TCgkWhWOOeQ26brNq9vW
-         DGTCGsJ0Kcdmp4xnfls12O9JhmfUoYSws2O97Dn89US58+qMBfWmgL7EAve4wAaeOlCA
-         LLlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750782723; x=1751387523;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XsS+ElmraQqT2Fu4rLd2/fa1KgRzuoHdf4Xkll7wCgE=;
-        b=BFvuyTsRv2rOeBnKNenFM6x0XB5lc1zvmh1E3spkPnjPW1jFXk9u3rbMXI3A11mL/N
-         JWfMBAGhniNcSYPz2s4JwSF6KbS9BOwMpaCZIKHvOiVqVieTdEKK6GDGI5BW1GabJzWy
-         tlEVbk1iJ+InY8ZtfBX/133FN1oKN57xKnm8z4dDraUUAyRRBfkBbyThKiGH/lfsHT/3
-         FxuPuPxXI1odZUahRh8AC/P07VlXrI/MxMUEWf0c8mIIie673gBfxP5XNcfOv28lp6UZ
-         /Tsg/oHP6DW5Ys9KxkppGcaPxqytl2M9g/IOV2YUzE69rFVU6MtqRiSH2tn5lt+QQiLv
-         3vRA==
-X-Forwarded-Encrypted: i=1; AJvYcCXYbEoa7DHmif4GzuC4ElekXnvNVsr0UGx0T56VcQWvXJoobyttd2chQrmtP3yvyvagyO8+204Gw6BXZXY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXXoAGsfI/lyk83pa6GxXDX4YF0I/h9QcObT7eCIL3JuW90oKG
-	a/Oateg2sU/vVqZW8ob41pN936F4jefQ5L34bMZSAltyJPXEdiSjIWqJvygtzYafHYlxS49zH88
-	aOBEXeg==
-X-Google-Smtp-Source: AGHT+IEGQw4P+7gI/qlyHfyN7lsnbcl2WppeAde2ZamzUdLwVr0mYJgpyGapX/fOe6J7uhawtLrxthKo/zo=
-X-Received: from pgho22.prod.google.com ([2002:a63:fb16:0:b0:b2c:4226:67db])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:1589:b0:21f:4631:811c
- with SMTP id adf61e73a8af0-22026ec726cmr22498760637.19.1750782723360; Tue, 24
- Jun 2025 09:32:03 -0700 (PDT)
-Date: Tue, 24 Jun 2025 09:32:01 -0700
-In-Reply-To: <20250328171205.2029296-15-xin@zytor.com>
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d3xUs7/QH36EumsRUgtEAnuG3e/09qoWa1IDz0zFh38=;
+ b=A2E1j3DyJASQCPDucv2DFtSQjsaGsLU4/fUPN+RkA9+1t2ZzpdkuZaZzlRQ7kYE7w9Ro2jgEBNoF4ooXLb+5K5JOMBtHn6njvZbmcH9ArHqlJ4MZ3YCWNaupTHQ7v5cIHsrZYkf2yF5Xieppq6dHl15zd+IJcu0Hl3ifJlFa8nw=
+Received: from BL1PR13CA0029.namprd13.prod.outlook.com (2603:10b6:208:256::34)
+ by IA1PR19MB8977.namprd19.prod.outlook.com (2603:10b6:208:592::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.18; Tue, 24 Jun
+ 2025 16:33:06 +0000
+Received: from BL6PEPF00020E60.namprd04.prod.outlook.com
+ (2603:10b6:208:256:cafe::d6) by BL1PR13CA0029.outlook.office365.com
+ (2603:10b6:208:256::34) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.16 via Frontend Transport; Tue,
+ 24 Jun 2025 16:33:05 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
+ smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
+Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
+ does not designate 84.19.233.75 as permitted sender)
+ receiver=protection.outlook.com; client-ip=84.19.233.75;
+ helo=edirelay1.ad.cirrus.com;
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ BL6PEPF00020E60.mail.protection.outlook.com (10.167.249.21) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.14
+ via Frontend Transport; Tue, 24 Jun 2025 16:33:04 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id E688F406541;
+	Tue, 24 Jun 2025 16:33:03 +0000 (UTC)
+Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id CB0C982024A;
+	Tue, 24 Jun 2025 16:33:03 +0000 (UTC)
+Date: Tue, 24 Jun 2025 17:33:01 +0100
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, broonie@kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>,
+        Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-omap@vger.kernel.org, patches@opensource.cirrus.com,
+        linux-samsung-soc@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH RFT 5/6] ARM: s3c: crag6410: use generic device
+ properties for gpio-mmio
+Message-ID: <aFrTPd1qCPDjtZuo@opensource.cirrus.com>
+References: <20250624-gpio-mmio-pdata-v1-0-a58c72eb556a@linaro.org>
+ <20250624-gpio-mmio-pdata-v1-5-a58c72eb556a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250328171205.2029296-1-xin@zytor.com> <20250328171205.2029296-15-xin@zytor.com>
-Message-ID: <aFrTAT-xTLmlwO5V@google.com>
-Subject: Re: [PATCH v4 14/19] KVM: VMX: Dump FRED context in dump_vmcs()
-From: Sean Christopherson <seanjc@google.com>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: pbonzini@redhat.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, corbet@lwn.net, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	hpa@zytor.com, andrew.cooper3@citrix.com, luto@kernel.org, 
-	peterz@infradead.org, chao.gao@intel.com, xin3.li@intel.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250624-gpio-mmio-pdata-v1-5-a58c72eb556a@linaro.org>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF00020E60:EE_|IA1PR19MB8977:EE_
+X-MS-Office365-Filtering-Correlation-Id: 785992ec-5e4a-45a0-41a9-08ddb33ccb85
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|61400799027|376014|7416014|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?K3BX2UA6HZYXBf8vgybyzMD/bezGcn/s5JPLbvbLgjbA4llOeW8+S2xuogEM?=
+ =?us-ascii?Q?tbWr/S6+R0fu7Ozu1FZjr/QqDNvdOe1QVmsJS/TKlJGDew+AySBqu9TAj0Db?=
+ =?us-ascii?Q?ubgOFTT6nQuxU9q7UrojmXRjNexa7VEko/OLxUny8KmHAKFs/BfwiN6Grjz8?=
+ =?us-ascii?Q?YO6G217ugZUJoV+2NBMPrTQ/G5HlpUMKzBhCaOgaS9odxnz2pPfsFW6QzIQb?=
+ =?us-ascii?Q?gF1rfrqVmCErpAc3442BTIOAzwmAih3zQh2LvvDK7g18vwJwblKi6HIl/4Rk?=
+ =?us-ascii?Q?sj24eLNxdTpLQlN2w/Hu8CzkiNOdxTBt8GNidxgbSJJudX9quxwA2T/rQdrg?=
+ =?us-ascii?Q?0+mdp6L+CYva7puqfJQQprmf95cL/8eA2hqohGkggIBG69/U7yzabdXLUdWM?=
+ =?us-ascii?Q?LeCuLqUvmbUkIIpkxbPhr8OAlX1jf7eBBE1Xj1Jsbarie1ksycWdgG5NLSBh?=
+ =?us-ascii?Q?XwiKRt0phNvtFbkXdR7beUuHld0zf9as+Xw0VE2uxocThZNVmDJLTP196q9X?=
+ =?us-ascii?Q?4oFTHsGfhNP3RMwDN9YsUEouDXzwiJfZIOVfH6oLjFN5DfY2Iakv824yxX4+?=
+ =?us-ascii?Q?FgS56G3m1YuhsWqc+qe//1VwPLjlf1jx8Xo5rAOp84MqvO35dXjYvo9nMJjw?=
+ =?us-ascii?Q?8gQxP94WOldDZuzQW4EMMz14ztegXyVFUExy8VoAcOhUoSZwbCt7kXN2pNrN?=
+ =?us-ascii?Q?Usn/MNkU7VhSZlAe8b/Ntd1Tk5jmJhK5Go3UE5ptd8ZRW/xMHnyOqYsZqkOf?=
+ =?us-ascii?Q?cQjo98H+HkarPrWRqNsHcHNUH0bmY7sSWkvZN4SaU2PpjAUgh/Zxut8gKfAi?=
+ =?us-ascii?Q?PBqAnlDZgDNUj0JiUJatqpfiFsFjdRXp81Zo4pAhlvag9R/H1Nx5KtV3UcIK?=
+ =?us-ascii?Q?aHWS5r84zV+iJcTBHxvZEnrBFleaz1T5FHHogFGp7OTYu330w3/rkaYxN+as?=
+ =?us-ascii?Q?tng1TcJpIFeVMB+tb+Bm8+IMKONDQYVMNne4Kkahk3E9NtvO5irqtUGMsQDq?=
+ =?us-ascii?Q?YT8NVUFoM0NZBmCg9avwY45UY6S9gBydORoxXX7GxJpvIOXGCLMN7NHM3ea+?=
+ =?us-ascii?Q?kJ5t0ipruLu79og72bWD4aOe+53V6OsXkVMPnalLrPXc284Rb344VIgCphs6?=
+ =?us-ascii?Q?kepqjZBGHWSHAHryTtJT800zRrXTXpkHuO+lauN4XDgXxYfPl4qpY+Itoq9g?=
+ =?us-ascii?Q?n+IZPrawBfEFLIUM5rpVrQbFzVlRN4dMWFUvu72EvjEO5CTMOEUqIDcnogJw?=
+ =?us-ascii?Q?GxbSv5cAFfdp40zXeYIAswKL3OdHxmhvJE8T1Y7Lqys0p75jSDD02kHrgFk5?=
+ =?us-ascii?Q?hOVij4GyLXYaCcQ4e9yGgCgpPnAhegOozzpsvWppWGsKtOiPDmScrVfSRJ3K?=
+ =?us-ascii?Q?XR3IHb24gz5qEPsHP/DKhpim7lXNw9MKEaDGlrEnJAl3bqf54qTo62UvygZj?=
+ =?us-ascii?Q?kOBumMk6kw1kuoiYxlWj7ZNPRSK4dqovvsEqueZ1tnbZCjfrvqBDk/wdtzXF?=
+ =?us-ascii?Q?V9Yxa71MuXswgND9BS6DNjX1csE0S1iCoIfY?=
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(61400799027)(376014)(7416014)(82310400026)(36860700013);DIR:OUT;SFP:1102;
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 16:33:04.8321
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 785992ec-5e4a-45a0-41a9-08ddb33ccb85
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF00020E60.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR19MB8977
+X-Proofpoint-GUID: ZQt-f-3nz8359pso-uLaADZgX12VTExO
+X-Proofpoint-ORIG-GUID: ZQt-f-3nz8359pso-uLaADZgX12VTExO
+X-Authority-Analysis: v=2.4 cv=P9E6hjAu c=1 sm=1 tr=0 ts=685ad34c cx=c_pps a=hUWYbYsE//NbN4hV8CcKzg==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10 a=KKAkSRfTAAAA:8 a=w1d2syhTAAAA:8 a=mHJfey2NssgqMvmkAUYA:9 a=CjuIK1q_8ugA:10 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDEzOCBTYWx0ZWRfX9I7CoQVwd/PO sB8KgU4hvgDyB6KsZwhuekZUgRNJaUAps0dEIyU4C/lOx1ADvwfiU0Cy7qItqaW/5JtSlqeV8dA swau5i9YCpCF2RtWy3tjIm5oei73RSl8dp3LDVEf7WcY7RMV5F4u+x3HUjKb0hSZJHTZm8DJcDf
+ fY/7BmvGogeDknETIbWVmRDpl8zkkHaTVD6NciuNPc5NnOeaMgv7snUJDwmHtoQH+YNqzxRfyJY sbgsw1qLX8Gl/1QLrHS+t/bGBJbsVkptp6C2A7Zn6o43JNzXZyQuhAn5sS3Wwis78qI8VEg7QJx kn0+fSLot/9fKwS9aVEijpzB6/68fpwoB3lpnTGzlplOP1nl2iyzKeSs8JuezrDMiBDCvdKUUbZ
+ UZvTtciZNEkMJMis/4/EhGw7QwXpdWeM6arIt1IYmm1db4EKhWPeZawpUOEEDuj4ns7qMveh
+X-Proofpoint-Spam-Reason: safe
 
-On Fri, Mar 28, 2025, Xin Li (Intel) wrote:
-> From: Xin Li <xin3.li@intel.com>
+On Tue, Jun 24, 2025 at 03:19:16PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Add FRED related VMCS fields to dump_vmcs() to dump FRED context.
+> The GPIO device in crag6410 is registered with struct bgpio_pdata passed
+> as platform_data to the gpio-mmio driver. We want to remove the
+> bgpio_pdata from the kernel and the gpio-mmio driver is now also able to
+> get the relevant values from the software node. Set up device properties
+> and switch to using platform_device_info to register the device as
+> platform_add_devices() doesn't allow us to pass device properties to the
+> driver model.
 > 
-> Signed-off-by: Xin Li <xin3.li@intel.com>
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> Tested-by: Shan Kang <shan.kang@intel.com>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
+
++ Broonie, as I think he might still use Cragganmore for testing.
+
+But from my side I think it looks fine to me.
+
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+
+Thanks,
+Charles
+
+>  arch/arm/mach-s3c/mach-crag6410.c | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
 > 
-> Change in v3:
-> * Use (vmentry_ctrl & VM_ENTRY_LOAD_IA32_FRED) instead of is_fred_enabled()
->   (Chao Gao).
-> 
-> Changes in v2:
-> * Use kvm_cpu_cap_has() instead of cpu_feature_enabled() (Chao Gao).
-> * Dump guest FRED states only if guest has FRED enabled (Nikolay Borisov).
-> ---
->  arch/x86/kvm/vmx/vmx.c | 40 +++++++++++++++++++++++++++++++++-------
->  1 file changed, 33 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index c76015e1e3f8..03855d6690b2 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6462,7 +6462,7 @@ void dump_vmcs(struct kvm_vcpu *vcpu)
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
->  	u32 vmentry_ctl, vmexit_ctl;
->  	u32 cpu_based_exec_ctrl, pin_based_exec_ctrl, secondary_exec_control;
-> -	u64 tertiary_exec_control;
-> +	u64 tertiary_exec_control, secondary_vmexit_ctl;
->  	unsigned long cr4;
->  	int efer_slot;
+> diff --git a/arch/arm/mach-s3c/mach-crag6410.c b/arch/arm/mach-s3c/mach-crag6410.c
+> index e5df2cb51ab27896d9dd80571f421e959db1fd1e..028169c7debf325ab6f51475d3595b92b1307189 100644
+> --- a/arch/arm/mach-s3c/mach-crag6410.c
+> +++ b/arch/arm/mach-s3c/mach-crag6410.c
+> @@ -252,14 +252,17 @@ static struct resource crag6410_mmgpio_resource[] = {
+>  	[0] = DEFINE_RES_MEM_NAMED(S3C64XX_PA_XM0CSN4, 1, "dat"),
+>  };
 >  
-> @@ -6473,6 +6473,8 @@ void dump_vmcs(struct kvm_vcpu *vcpu)
+> -static struct platform_device crag6410_mmgpio = {
+> +static const struct property_entry crag6410_mmgpio_props[] = {
+> +	PROPERTY_ENTRY_U32("gpio-mmio,base", MMGPIO_GPIO_BASE),
+> +	{ }
+> +};
+> +
+> +static struct platform_device_info crag6410_mmgpio_devinfo = {
+>  	.name		= "basic-mmio-gpio",
+>  	.id		= -1,
+> -	.resource	= crag6410_mmgpio_resource,
+> -	.num_resources	= ARRAY_SIZE(crag6410_mmgpio_resource),
+> -	.dev.platform_data = &(struct bgpio_pdata) {
+> -		.base	= MMGPIO_GPIO_BASE,
+> -	},
+> +	.res		= crag6410_mmgpio_resource,
+> +	.num_res	= ARRAY_SIZE(crag6410_mmgpio_resource),
+> +	.properties	= crag6410_mmgpio_props,
+>  };
 >  
->  	vmentry_ctl = vmcs_read32(VM_ENTRY_CONTROLS);
->  	vmexit_ctl = vmcs_read32(VM_EXIT_CONTROLS);
-> +	secondary_vmexit_ctl = cpu_has_secondary_vmexit_ctrls() ?
-> +			       vmcs_read64(SECONDARY_VM_EXIT_CONTROLS) : 0;
->  	cpu_based_exec_ctrl = vmcs_read32(CPU_BASED_VM_EXEC_CONTROL);
->  	pin_based_exec_ctrl = vmcs_read32(PIN_BASED_VM_EXEC_CONTROL);
->  	cr4 = vmcs_readl(GUEST_CR4);
-> @@ -6519,6 +6521,16 @@ void dump_vmcs(struct kvm_vcpu *vcpu)
->  	vmx_dump_sel("LDTR:", GUEST_LDTR_SELECTOR);
->  	vmx_dump_dtsel("IDTR:", GUEST_IDTR_LIMIT);
->  	vmx_dump_sel("TR:  ", GUEST_TR_SELECTOR);
-> +	if (vmentry_ctl & VM_ENTRY_LOAD_IA32_FRED)
-> +		pr_err("FRED guest: config=0x%016llx, stack_levels=0x%016llx\n"
-> +		       "RSP0=0x%016llx, RSP1=0x%016llx\n"
-> +		       "RSP2=0x%016llx, RSP3=0x%016llx\n",
-> +		       vmcs_read64(GUEST_IA32_FRED_CONFIG),
-> +		       vmcs_read64(GUEST_IA32_FRED_STKLVLS),
-> +		       __rdmsr(MSR_IA32_FRED_RSP0),
-
-There is no guarantee the vCPU's FRED_RSP is loaded in hardware at this point.
-I think you need to use vmx_read_guest_fred_rsp0().
-
-> +		       vmcs_read64(GUEST_IA32_FRED_RSP1),
-> +		       vmcs_read64(GUEST_IA32_FRED_RSP2),
-> +		       vmcs_read64(GUEST_IA32_FRED_RSP3));
->  	efer_slot = vmx_find_loadstore_msr_slot(&vmx->msr_autoload.guest, MSR_EFER);
->  	if (vmentry_ctl & VM_ENTRY_LOAD_IA32_EFER)
->  		pr_err("EFER= 0x%016llx\n", vmcs_read64(GUEST_IA32_EFER));
-> @@ -6566,6 +6578,16 @@ void dump_vmcs(struct kvm_vcpu *vcpu)
->  	       vmcs_readl(HOST_TR_BASE));
->  	pr_err("GDTBase=%016lx IDTBase=%016lx\n",
->  	       vmcs_readl(HOST_GDTR_BASE), vmcs_readl(HOST_IDTR_BASE));
-> +	if (vmexit_ctl & SECONDARY_VM_EXIT_LOAD_IA32_FRED)
-> +		pr_err("FRED host: config=0x%016llx, stack_levels=0x%016llx\n"
-> +		       "RSP0=0x%016lx, RSP1=0x%016llx\n"
-> +		       "RSP2=0x%016llx, RSP3=0x%016llx\n",
-> +		       vmcs_read64(HOST_IA32_FRED_CONFIG),
-> +		       vmcs_read64(HOST_IA32_FRED_STKLVLS),
-> +		       (unsigned long)task_stack_page(current) + THREAD_SIZE,
-
-Maybe add a helper in arch/x86/include/asm/fred.h to generate the desired RSP0?
-Not sure it's worth doing that just for this code.
-
-> +		       vmcs_read64(HOST_IA32_FRED_RSP1),
-> +		       vmcs_read64(HOST_IA32_FRED_RSP2),
-> +		       vmcs_read64(HOST_IA32_FRED_RSP3));
->  	pr_err("CR0=%016lx CR3=%016lx CR4=%016lx\n",
->  	       vmcs_readl(HOST_CR0), vmcs_readl(HOST_CR3),
->  	       vmcs_readl(HOST_CR4));
-> @@ -6587,25 +6609,29 @@ void dump_vmcs(struct kvm_vcpu *vcpu)
->  	pr_err("*** Control State ***\n");
->  	pr_err("CPUBased=0x%08x SecondaryExec=0x%08x TertiaryExec=0x%016llx\n",
->  	       cpu_based_exec_ctrl, secondary_exec_control, tertiary_exec_control);
-> -	pr_err("PinBased=0x%08x EntryControls=%08x ExitControls=%08x\n",
-> -	       pin_based_exec_ctrl, vmentry_ctl, vmexit_ctl);
-> +	pr_err("PinBased=0x%08x EntryControls=0x%08x\n",
-> +	       pin_based_exec_ctrl, vmentry_ctl);
-> +	pr_err("ExitControls=0x%08x SecondaryExitControls=0x%016llx\n",
-> +	       vmexit_ctl, secondary_vmexit_ctl);
->  	pr_err("ExceptionBitmap=%08x PFECmask=%08x PFECmatch=%08x\n",
->  	       vmcs_read32(EXCEPTION_BITMAP),
->  	       vmcs_read32(PAGE_FAULT_ERROR_CODE_MASK),
->  	       vmcs_read32(PAGE_FAULT_ERROR_CODE_MATCH));
-> -	pr_err("VMEntry: intr_info=%08x errcode=%08x ilen=%08x\n",
-> +	pr_err("VMEntry: intr_info=%08x errcode=%08x ilen=%08x event_data=%016llx\n",
->  	       vmcs_read32(VM_ENTRY_INTR_INFO_FIELD),
->  	       vmcs_read32(VM_ENTRY_EXCEPTION_ERROR_CODE),
-> -	       vmcs_read32(VM_ENTRY_INSTRUCTION_LEN));
-> +	       vmcs_read32(VM_ENTRY_INSTRUCTION_LEN),
-> +	       kvm_cpu_cap_has(X86_FEATURE_FRED) ? vmcs_read64(INJECTED_EVENT_DATA) : 0);
->  	pr_err("VMExit: intr_info=%08x errcode=%08x ilen=%08x\n",
->  	       vmcs_read32(VM_EXIT_INTR_INFO),
->  	       vmcs_read32(VM_EXIT_INTR_ERROR_CODE),
->  	       vmcs_read32(VM_EXIT_INSTRUCTION_LEN));
->  	pr_err("        reason=%08x qualification=%016lx\n",
->  	       vmcs_read32(VM_EXIT_REASON), vmcs_readl(EXIT_QUALIFICATION));
-> -	pr_err("IDTVectoring: info=%08x errcode=%08x\n",
-> +	pr_err("IDTVectoring: info=%08x errcode=%08x event_data=%016llx\n",
->  	       vmcs_read32(IDT_VECTORING_INFO_FIELD),
-> -	       vmcs_read32(IDT_VECTORING_ERROR_CODE));
-> +	       vmcs_read32(IDT_VECTORING_ERROR_CODE),
-> +	       kvm_cpu_cap_has(X86_FEATURE_FRED) ? vmcs_read64(ORIGINAL_EVENT_DATA) : 0);
->  	pr_err("TSC Offset = 0x%016llx\n", vmcs_read64(TSC_OFFSET));
->  	if (secondary_exec_control & SECONDARY_EXEC_TSC_SCALING)
->  		pr_err("TSC Multiplier = 0x%016llx\n",
+>  static struct platform_device speyside_device = {
+> @@ -373,7 +376,6 @@ static struct platform_device *crag6410_devices[] __initdata = {
+>  	&crag6410_gpio_keydev,
+>  	&crag6410_dm9k_device,
+>  	&s3c64xx_device_spi0,
+> -	&crag6410_mmgpio,
+>  	&crag6410_lcd_powerdev,
+>  	&crag6410_backlight_device,
+>  	&speyside_device,
+> @@ -871,6 +873,7 @@ static void __init crag6410_machine_init(void)
+>  
+>  	pwm_add_table(crag6410_pwm_lookup, ARRAY_SIZE(crag6410_pwm_lookup));
+>  	platform_add_devices(crag6410_devices, ARRAY_SIZE(crag6410_devices));
+> +	platform_device_register_full(&crag6410_mmgpio_devinfo);
+>  
+>  	gpio_led_register_device(-1, &gpio_leds_pdata);
+>  
+> 
 > -- 
 > 2.48.1
 > 
